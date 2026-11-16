@@ -143,6 +143,35 @@ prototyp `signal_rail_guide_*` (klasa LOD urządzeń przejazdu). Oznakowanie poz
   dopuszcza proporcje tabliczki (naprawione, 1 passed). `test_rail_approach_0268.py`: 17 passed, 4 skipped.
   Pełne `tests/gis` po tej poprawce nie było powtarzane.
 
+## Walidacja po ADR 0272 (s23, r3 / r3b — stan obowiązujący; sekcja wyżej opisuje r2 z krawężnikiem)
+Po scaleniu main (int-dk65-s22) i #138 (ADR 0272) DW671 przy przejeździe **nie ma krawężnika**: pobocze gruntowe,
+linie krawędziowe (override `dw671-ground-shoulder*`). Wspólna regeneracja 17 kafli:
+`docs/reports/INTEGRATION-2026-11-16-rail-xsec.md`.
+- **Build** `build_world --region dw671-tykocin-01 --context` (r3b) exit 0. `rail.json`: `road_width_m` **7,26**
+  (strefa przejazdu = jezdnia utwardzona; filtr poboczy w `build_world._rail_plan`, bez niego 10,61 m wg recenzji
+  #138), `approach_attach` = {crossings 1, **kerb_cut_m 0,0**, missed []} — gałąź URBAN `attach()` jest tu bezczynna,
+  rów nad płytami płaski (`ditch_m: 0`); `roads_qa`: „P-4 level crossing approach” 1, „P-14 level crossing” 2,
+  „P-7b edge line” 12; oba wloty A-9 + T-SA, 90 km/h `authored_override`, słupki 150 / 100 / 50 m, a G-1c wlotu SW
+  **47 m** (`shifted_m: -3`, p. 8); `dropped` [].
+- **Słupki prowadzące: 24** (`red_white`), 5,1…20,1 m od skrajnej szyny co 3 m po obu stronach obu wlotów, oś 0,25 m
+  za poboczem gruntowym (`guide_off`, `U1_BEHIND_SHOULDER_M` WORKING_VALUE). `U1_BARRIER_GAP_M` 1,0 → 1,5 m: przy
+  1,0 m dwa słupki skośnego przejazdu wypadały < 1 m od masztu lewego sygnalizatora i były pomijane (r3: 22 szt.).
+- **Rendery** r3b (import exit 0, VQA Low i High exit 0, High `rendered=60`):
+  `artifacts/rail-dk65-s22/vqa/r3b/dw671-tykocin-01/{Low,High}`, podglądy `artifacts/rail-dk65-s22/vqa/r3/jpg/
+  r3b-tykocin-*.jpg` i `dw671-tykocin-01-*.jpg` (r3). Obejrzane High: `rail-x0-near-b` — po 6 słupków na stronę za
+  poboczem, P-4, linie krawędziowe; `rail-x0-top` — płyty, P-14 ×2, urządzenia w 4 ćwiartkach; r3 `rail-x0-far-b` —
+  A-9 + tablica + G-1a, `rail-x0-side-eye`, `rail-x0-near-a`, `rail-xing-from-sw`. Zgodność z Mapillary
+  828893548045009 wyraźnie lepsza niż w r2 (pobocze, linie krawędziowe); nadal brak barier stalowych, sieci trakcyjnej
+  i pasów akustycznych (Otwarte 3–4). Low r3b nieoglądany.
+- **Budżet kadrów High r3b** (siatki tris / draws inst. / instancje): rail-xing-close-ne 102 364 / 74 / 271;
+  rail-xing-from-sw 384 724 / 103 / 591; rail-xing-top 79 058 / 49 / 79; rail-track-along 190 242 / 80 / 336;
+  rail-x0-far-a 112 007 / 93 / 362; rail-x0-side-eye 131 660 / 74 / 312. Względem r2 siatki +6…+15 tys. tris na kadr
+  (profil pobocza ADR 0272, nie znaki). Szacunek edytora; build Windows / telefon: nie mierzono.
+- **Testy**: `test_rail_approach_0268.py` 22 passed; `test_rural_xsec_0272.py -k rail_zone` 1 passed; pełne
+  `tests/gis` po r3: 1827 passed, 5 failed (żaden z tego ADR — opis w raporcie INTEGRATION); EditMode 956 / 957.
+- **dk65-01, 02, 04** (r3): A-10 bez tablicy, `speed_src: default` 50 km/h → 100 m (dk65-01 wlot b 49 m, § 78
+  ust. 3 zd. 1; dk65-04 przejazd Białostocka na krawędzi kafla: „no room”), G-3 + U-1a co 3 m od 4 m.
+
 ## Zależność od krawężnika przy przejeździe (pod PR #138 / ADR 0272 — pobocze gruntowe DW671)
 Przejrzane `git diff origin/main...origin/rural-xsec-0272 -- tools/worldgen` (bez scalania):
 1. `attach()` — gałąź URBAN (zejście krawężnika do 0) stanie się na DW671 bezczynna: `kerb_cut_m` 17,9 → 0 (liczby
@@ -160,7 +189,7 @@ Przejrzane `git diff origin/main...origin/rural-xsec-0272 -- tools/worldgen` (be
 6. **Konflikty tekstowe przy scalaniu**: `roads/network.py` (obie gałęzie dopisują pola `EdgeSection` i argumenty
    w tym samym wywołaniu `EdgeSection(... provenance=prov ...)` — zachować oba) oraz możliwie `roads/build_world.py`
    (wywołanie planu rail z `road_footprint_polygon`).
-Po scaleniu: `build_world` tykocina + r3 tych samych 15 kamer.
+Zrobione w r3 / r3b — wynik w sekcji „Walidacja po ADR 0272”; p. 2 rozwiązany przez `guide_off`.
 
 ## Otwarte
 0. Zrzut z urządzenia (krytyk P0-2): zamiast telefonu — zrzut z buildu Windows kamer `rail_xing_close_ne`,

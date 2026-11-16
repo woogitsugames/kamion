@@ -1,6 +1,5 @@
 # INTEGRATION 2026-11-16 — rail (ADR 0223 / 0268) + #138 (ADR 0272) na main z int-dk65-s22: jedna regeneracja 17 kafli
-Agent `rail-dk65-s22`, gałąź `rail-dk65-s22` (worktree `.claude/worktrees/rail-dk65-s22`). Stan: **WSTĘPNY** — czeka na
-dwa odłączone kroki (sekcja „W toku”). Werdykt na końcu.
+Agent `rail-dk65-s22`, gałąź `rail-dk65-s22` (worktree `.claude/worktrees/rail-dk65-s22`). Stan: końcowy. Werdykt na końcu.
 
 ## Co scalono
 1. `git merge origin/main` (`f9a742f0d`, main 507a3406b z int-dk65-s22). Konflikty: `roads/network.py` (pola
@@ -51,7 +50,7 @@ Po zmianach po r3 uruchomione: `test_rail_approach_0268.py` 22 passed; `test_sta
   poboczem, A-9 + tablica + G-1a na 150 m (już nie przy latarni), P-4, P-14, płyty. `rail.json` po r3b: `road_width_m`
   7,26, **24** słupki (5,1…20,1 m co 3 m), G-1c wlotu SW **47 m** (`shifted_m: -3` — poza wylotem drogi serwisowej;
   przy krawężniku w r2b było 45 m), `kerb_cut_m` 0,0 (brak krawężnika), `dropped` []. Render r3 pokazuje 22 słupki
-  (stan sprzed r3b) — r3b w toku.
+  (stan sprzed r3b); kadry r3b — „Kroki domykające”.
 - **Ełcka dk65-02, dk65-03** (`rev-elcka`, `top-elcka`, `drive-mid`): wąski asfalt z poboczem żwirowym, bariery stoją
   na krawędzi pobocza, nie w skarpie. Szerokości w metrach nie mierzyłem z kadru — liczby z testów ADR 0272
   (6,76 m). dk65-04, dk65-05 w ruchu ulicznym: nieoglądane osobno.
@@ -66,19 +65,29 @@ Po zmianach po r3 uruchomione: `test_rail_approach_0268.py` 22 passed; `test_sta
   scalaniu. Porównania piksel-do-piksela z r3 int-dk65 nie zrobiłem (w `artifacts/int-dk65-s22` znalazłem tylko
   starszy kadr `knyszyn-r1` sprzed ronda kompaktowego).
 
-## W toku (odłączone)
-1. `regen.ps1 -Tiles dw671-tykocin-01 -Mode unity -Tag r3b` → `vqa/r3b/dw671-tykocin-01/{Low,High}` (24 słupki w kadrze).
-2. `artifacts/rail-dk65-s22/tools/start06.ps1` → `logs/start06.status`: reimport dk65-06 (importer wypala `startS`
-   z katalogu), VQA High `vqa/start06/dk65-06/High`, EditMode `-Filter StartClearanceTests`.
+## Kroki domykające (zakończone)
+1. **Tykocin r3b** (`regen-unity.status`: import, VQA Low, VQA High — exit 0; High `rendered=60`):
+   `artifacts/rail-dk65-s22/vqa/r3b/dw671-tykocin-01/{Low,High}`. Obejrzane High `rail-x0-near-b`, `rail-x0-top`
+   (podglądy `vqa/r3/jpg/r3b-tykocin-*.jpg`): po 6 słupków na stronę każdego wlotu (24), za poboczem gruntowym;
+   przejazd, P-4, P-14, urządzenia bez zmian. G-1c wlotu SW 47 m — z `rail.json` (w tych kadrach słupek jest za kamerą).
+2. **Start dk65-06** (`logs/start06.status`: import exit 0, VQA High exit 0, EditMode `-Filter StartClearanceTests`
+   exit 0 — 45 / 45 passed): `artifacts/rail-dk65-s22/vqa/start06/dk65-06/High`. Obejrzane `chase`, `truck-rear34`
+   (podglądy `vqa/r3/jpg/start06-*.jpg`): zestaw stoi na prawym pasie prostej za rondem, droga przed nim wolna.
+   Zamknięcia krawędzi kafla za zestawem nie ma w tych kadrach — odległość ≥ 25 m za zamknięciem potwierdza test
+   StartClearance, nie obraz.
+3. `git merge origin/main` (eb00d41ea; pc-shadows, lamp-test, docs): konflikt tylko `docs/LICENSES.md` (wiersz
+   `world-rail-0217` z main + wiersz `world-xsec-0272`). Z main przyszły zmiany C# renderingu
+   (`PcTierTable.cs`, `PcTreeShadowReachTests`) i `fidelity_qa.json` C — **po tym scaleniu EditMode ani pytest nie
+   były powtarzane** (zmiany nie dotykają `tools/worldgen` ani kafli tej regeneracji).
 
 ## Otwarte
 - Szew 11|knyszyn-s (asfalt 7,3 / 6,78 m) + czerwony test 0233 — chmura D15.
 - Zrzut z buildu Windows kamer przejazdu (zamiast telefonu) — lider po scaleniu; ocena `visual-critic` r3.
 - `approach_speed_kmh: 90` DW671 = WORKING_VALUE do potwierdzenia zdjęciem / wizją lokalną (ADR 0268 p. 7).
 - Fidelity C i stan `Data/raw` regionu C — lider.
-- ADR 0268 „Walidacja” opisuje r2 (krawężnik); liczby po ADR 0272 są w tym raporcie.
 
 ## Werdykt
-**Gotowe do scalenia: TAK warunkowo** — po `start06-editmode exit=0` i obejrzeniu kadrów r3b / start06; jedyny czerwony
-test wynikający z tej gałęzi to szew 11|knyszyn-s (świadoma decyzja lidera).
+**Gotowe do scalenia: TAK.** Zastrzeżenia jawne: (1) czerwony `test_dk65_seam_knyszyn_0233` na szwie 11|knyszyn-s to
+skutek decyzji lidera (otwarte D15); (2) 4 pozostałe faile pytest to fidelity C i stan wspólnego `Data/raw` regionu C;
+(3) po ostatnim `git merge origin/main` testy nie były powtarzane.
 Scalenie: `git merge --no-ff origin/rail-dk65-s22`, potem `uv run --project tools/worldgen python tools/worldgen/fidelity/run.py`.
