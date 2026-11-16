@@ -266,3 +266,24 @@ pwsh scripts/build-region-packs.ps1 -SkipBuild -Push -Serial RFGL34SJYDZ   # adb
 # logcat: "[PACKS] install set …: installed [common,dk65-06,…]"; start regionu wymaga diffu z załącznika A (po #104)
 pwsh scripts/device-metrics.ps1 -Serial RFGL34SJYDZ -Launch -DurationSeconds 90   # PSS/FPS sceny z paczki vs w APK
 ```
+
+## §9 Uzupełnienie s23 (D30, chmura D r8): na PC odroczone — w main tylko kontrakt w teście (ADR 0273 §10)
+Wniosek `docs/reports/ANALYSIS-2026-11-16-regionpacks-pc.md` (sesja P, wariant B): na PC (D73, platforma główna) paczki nie
+są potrzebne do dystrybucji — rozmiar mieści się w buildzie (ADR 0261: 4 923 MB przy celu ≤ 25 GB z D74), łatki robi kanał
+(butler / depoty, ADR 0271; rozmiar delty `UNVERIFIED`), a zestaw paczek jest spójny tylko w obrębie jednego przebiegu
+budowy (§3). Potrzebne zostają jako **przyszłe DLC i wersja telefonowa** (docs/10 §3, D73 Etap 9+), więc:
+- **W main (PR „Streaming kafli + kontrakt paczek”):** interfejs `Game.World.Streaming.ITileSceneSource` (styk §4 / ADR
+  0273 pkt 3–4 w wersji minimalnej) + `TileSceneSourceContractTests` z dublerem paczki: nazwy scen w paczce
+  (`RegionScenes.SceneNameFor` / `TileSceneNameFor`, klucz `(region, tier)` z tierami `Low`/`High`), jedno `done` na
+  `Acquire`, dzierżawy liczone referencjami (menu + streamer), odmowa bez dzierżawy (brak sceny kafla, błąd wczytania),
+  scena z buildu nigdy z paczki.
+- **Poza main** (gałąź `regionpacks-0234`, PR #112 do zamknięcia przez lidera/właściciela jako wchłonięty): runtime
+  `Game.World.Packs` (§3 manifest + SHA-256, §4 stany, §5 instalacja `incoming/`), `RegionPackCommands`/`RegionPackPlanner`
+  (§2), `scripts/build-region-packs.ps1`, `scripts/estimate-region-packs.py` (§7), `RegionPackTests` (50 testów),
+  załącznik A (menu). Tabela §7 zostaje jako źródło `worldMemoryHighMB` w `tile_graph.json` (ADR 0273 pkt 6).
+- **Warunek powrotu:** odpowiedź właściciela na `docs/10` §3a (model DLC na PC, regiony doinstalowywane) albo start Etapu 9
+  (telefon). Wtedy: cherry-pick z `regionpacks-0234`, implementacja `ITileSceneSource` przechodząca kontrakt, build paczek
+  Win64 tylko w teście „ścieżka nie zgniła” (np. 1 region `-InstallLocal` raz na rundę integracji, analiza §5 pkt 4), ryzyko
+  brakujących wariantów shaderów w bundlach (`UNVERIFIED`) do sprawdzenia na buildzie.
+- `docs/10` §3 nadal mówi o Addressables, a ten ADR wybrał czyste AssetBundles — do ujednolicenia przez właściciela
+  dokumentu przy decyzji §3a (bez zmiany w tym PR).

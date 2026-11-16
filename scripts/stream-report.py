@@ -4,7 +4,7 @@
         [--frames <persistentDataPath>/diag/frametimes.csv] [--memory artifacts/win/mem.csv] \
         [--threshold-ms 33.3] [--max-spikes 12] [--memory-limit-mb 6144] [--gate]
 
-Reads only what the game already prints: "[STREAM] ..." (WorldStreamer), "[PACKS] ..." (a future region-pack source, ADR 0273 §9 - none in the base game),
+Reads only what the game already prints: "[STREAM] ..." (WorldStreamer), "[PACKS] ..." (a future region-pack source, ADR 0273 §10 - none in the base game),
 "[SAFETY] reset ..." (WorldSafetyNet), frametimes.csv (DiagnosticsSampler: frame,t_s,frame_ms,...) and a memory CSV
 with columns t_s,working_set_mb[,private_mb] (PowerShell sampler in ADR 0273). Works for a Windows player log and for a
 logcat dump (Android). --gate: exit 1 when a criterion of ADR 0273 §7 fails (resets, late tiles, spikes, memory).

@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 namespace Game.World.Streaming
 {
     /// <summary>
-    /// Where the streamer gets a tile scene from (ADR 0273 §3, §9). The base game has ONE implementation: the player build
+    /// Where the streamer gets a tile scene from (ADR 0273 §3, §10). The base game has ONE implementation: the player build
     /// (<see cref="BuildTileSource"/>, scenes added by <c>-Regions</c>). A region pack (ADR 0234: AssetBundle with the tile
     /// scene, ref-counted lease) is a FUTURE second implementation for DLC / the phone - its contract is fixed here and checked
-    /// by <c>TileSceneSourceContractTests</c> with a test double; the pack runtime itself is not in the game (ADR 0234 §11).
+    /// by <c>TileSceneSourceContractTests</c> with a test double; the pack runtime itself is not in the game (ADR 0234 §9).
     /// Called only on tile events (install, load, unload), never per frame.
     /// </summary>
     public interface ITileSceneSource

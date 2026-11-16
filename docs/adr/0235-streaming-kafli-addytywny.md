@@ -106,3 +106,20 @@ field, a scena zawiera też słońce, wolumen, kamerę, ciężarówkę i bootstr
 - (P2-6) Interpolacja `Rigidbody` przy rebase: PlayMode ma teraz asercję skoku pozy renderowanej < 0,05 m (WORKING_VALUE).
 - Liczby do zmierzenia na A16: czas `load`/`activation` z logu `[STREAM] ready`, hitch `UnloadUnusedAssets`, PSS przy
   2–3 kaflach (zwłaszcza C + Maczka + Kleeberga), p95/p99 klatki w oknie wczytania.
+
+## Uzupełnienie s23 (D30, chmura D r8) — wejście do main jako opt-in na PC (ADR 0273 §10)
+- Nowy PR z gałęzi `streaming-pc-s23` (= `streaming-0235` + merge `origin/main` 16.11), zastępuje zamknięty #114.
+  Streaming **opt-in**: `stream=1` (Windows `-stream 1`, Android `-e stream 1`); bez flagi scena jak dziś.
+- **Styk z grą = jedna instrukcja** w `DrivingLabBootstrap.Start`: `WorldStreamer.TryInstallFromLaunch(...)` (ADR 0273 §10
+  pkt 3). Okablowanie przeniesione do streamera: przypięty kafel z `SafePoseBuffer` sieci bezpieczeństwa, przesunięcie tego
+  bufora przy rebase (przed `FloatingOrigin.Notify`), subskrypcja `PathFollowerDriverInput.Offset` na czas życia streamera.
+  `WorldSafetyNet.cs` = main; prostokąt sieci regionu startowego poszerzany do sumy połączonych kafli dostępnych
+  (`WidenStartBoundary`, ADR 0273 §10 pkt 4 — skutki i dokładna poprawka po int-h3 tamże, pkt 5).
+- `ITileSceneSource` zostaje; domyślne źródło to `BuildTileSource` (tylko build). Wstawki `RegionPackService.Existing`
+  usunięte — streamer nie zna `Game.World.Packs` (tego katalogu nie ma w grze).
+- Testy dodane: `WorldStreamerHook0273Tests` (hak wyłączony = brak komponentu i nietknięty prostokąt; region spoza grafu;
+  poszerzenie prostokąta; przypięcie z bufora póz + słuchacz origin; **zero GC** 600 klatek `Update` + zapytań sieci),
+  `TileSceneSourceContractTests`; `Decide_AllocatesNothing` na `GcAllocCounter` (Recorder; wcześniejszy pomiar bajtów był
+  pod Mono zawsze 0 — test nie mógł spaść). Pod .NET 8: 32/32, `Decide` 0 B (wcześniejsze 24 B znikło po rozgrzewce).
+- Otwarte bez zmian: P2-3 (`StreetLamps.SetHeads` globalne), P2-5 (GPS tylko region startowy), pomiar szwu z dwoma kaflami
+  High w C (recenzja #114 P1-1), baza pamięci procesu Windows.

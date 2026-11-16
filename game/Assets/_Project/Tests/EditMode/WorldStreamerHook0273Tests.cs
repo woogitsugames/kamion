@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Game.Tests
 {
     /// <summary>
-    /// ADR 0273 §9 (D30, s23): the single hook of the driving scene (<see cref="WorldStreamer.TryInstallFromLaunch"/>) and
+    /// ADR 0273 §10 (D30, s23): the single hook of the driving scene (<see cref="WorldStreamer.TryInstallFromLaunch"/>) and
     /// zero GC in the streamer's steady frame loop. A streamer is built by hand on a synthetic 3 x 1 tile grid (no scenes):
     /// Init on a start root, safe-pose pinning, the widened safety-net rectangle, the origin listener and the per-frame
     /// Update + safety queries counted with <see cref="GcAllocCounter"/> (Recorder "GC.Alloc", ADR 0244 / PR #118 pattern).

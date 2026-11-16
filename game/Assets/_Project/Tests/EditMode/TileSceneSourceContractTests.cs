@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Game.Tests
 {
     /// <summary>
-    /// ADR 0234 §11 / ADR 0273 §9: the region-pack CONTRACT kept from PR #112 without the pack system. The base game streams
+    /// ADR 0234 §9 / ADR 0273 §10: the region-pack CONTRACT kept from PR #112 without the pack system. The base game streams
     /// tile scenes only from the player build (<see cref="BuildTileSource"/>); a future pack source (DLC, phone) must be a
     /// drop-in <see cref="ITileSceneSource"/> that passes the same contract as <see cref="PackDouble"/> here:
     /// <list type="number">
@@ -198,7 +198,7 @@ namespace Game.Tests
             Assert.IsFalse(src.FromPack("dk65-07", RegionScenes.LowTier));
             Assert.DoesNotThrow(() => src.Release("dk65-07", RegionScenes.LowTier), "Release is a no-op for the build");
             Assert.IsNull(Type.GetType("Game.World.Packs.RegionPackService, Game.World"),
-                "ADR 0273 §9: the pack runtime (#112) is not in the base game; only this contract is");
+                "ADR 0273 §10: the pack runtime (#112) is not in the base game; only this contract is");
         }
     }
 }

@@ -172,7 +172,7 @@ namespace Game.World.Streaming
         }
 
         /// <summary>
-        /// The single hook of the driving scene (ADR 0273 §9, <c>DrivingLabBootstrap.Start</c>, one statement): installs the
+        /// The single hook of the driving scene (ADR 0273 §10, <c>DrivingLabBootstrap.Start</c>, one statement): installs the
         /// streamer only when it is switched on - <see cref="EnabledOverride"/> or the launch argument <c>stream=1</c> - and
         /// the start region has an available neighbour tile scene; otherwise returns null and the scene is exactly as before
         /// (closed region edge). Everything the bootstrap used to wire by hand is done here, so Game.Gameplay keeps one line:
@@ -184,7 +184,7 @@ namespace Game.World.Streaming
         /// streamer's lifetime;</item>
         /// <item>the start region's <see cref="WorldBoundary"/> rectangle widened to the union of the available tiles
         /// (<see cref="TileGraph.LocalUnionBounds"/>) BEFORE the safety net reads it in its Start, so an open seam is not
-        /// "out of bounds" (see ADR 0273 §9 for the exact edge semantics and the follow-up for WorldSafetyNet).</item>
+        /// "out of bounds" (see ADR 0273 §10 for the exact edge semantics and the follow-up for WorldSafetyNet).</item>
         /// </list>
         /// Allocates once (component, delegates, graph); nothing per frame.
         /// </summary>
@@ -246,7 +246,7 @@ namespace Game.World.Streaming
 
         /// <summary>
         /// Widens the start region's drivable rectangle (<see cref="WorldBoundary.minEN"/>/<see cref="WorldBoundary.maxEN"/>,
-        /// region-local) to the union of the start tile and every available tile (ADR 0273 §9). The streamer's own tile
+        /// region-local) to the union of the start tile and every available tile (ADR 0273 §10). The streamer's own tile
         /// rectangles were taken in <see cref="Init"/> and are not affected.
         /// </summary>
         public bool WidenStartBoundary(WorldRegionRoot start)
@@ -273,7 +273,7 @@ namespace Game.World.Streaming
             b.minEN = min;
             b.maxEN = max;
             Debug.Log(string.Format(CultureInfo.InvariantCulture,
-                "[STREAM] safety-net rectangle of {0} widened to the union of {1} tiles: E {2:F0}..{3:F0} N {4:F0}..{5:F0} m (region-local; ADR 0273 §9)",
+                "[STREAM] safety-net rectangle of {0} widened to the union of {1} tiles: E {2:F0}..{3:F0} N {4:F0}..{5:F0} m (region-local; ADR 0273 §10)",
                 Graph.Tiles[StartTile].id, n, min.x, max.x, min.y, max.y));
             return true;
         }

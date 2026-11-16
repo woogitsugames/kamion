@@ -122,3 +122,84 @@ uv run python scripts/stream-report.py --log artifacts/logs/win-run-<ts>.log --f
 pwsh scripts/build-android.ps1 -Regions 'bialystok-industrial-c,bialystok-maczka,bialystok-kleeberga' -Install -Serial RFGL34SJYDZ
 pwsh scripts/device-metrics.ps1 -Serial RFGL34SJYDZ -Launch -DurationSeconds 180 -Tier Low -Scene WorldC -Autopilot route -Speed 50 -Extra 'stream=1'
 ```
+
+## §10 Uzupełnienie s23 (D30, chmura D r8): wdrożenie na PC — streaming opt-in, kontrakt paczek tylko w teście, jeden hak
+Podstawa: `docs/reports/ANALYSIS-2026-11-16-regionpacks-pc.md` §5 (sesja P): na PC paczki nie są potrzebne do dystrybucji
+(build d67 + 4 = 4 923 MB, ADR 0261, przy celu ≤ 25 GB z D74), streaming jest. Gałąź `streaming-pc-s23` = `streaming-0235`
++ merge `origin/main` (16.11). Zastępuje zamknięty #114; wchłania z #112 tylko kontrakt. Kod **nieskompilowany w Unity**.
+
+1. **Pkt 5 (PC) zmieniony:** paczki na PC **odroczone do decyzji właściciela z `docs/10` §3a** (model DLC, kanał).
+   `build-region-packs.ps1` nie wchodzi do procesu wydania PC; `package-windows.py` (ADR 0271) pakuje sam build.
+   Pkt 3 i 4 obowiązują jako **kontrakt** przyszłego źródła paczek, nie jako kod w grze.
+2. **Kontrakt paczek tylko w teście.** W grze zostaje interfejs `ITileSceneSource` (`IsAvailable`, `Acquire` z jednym
+   wywołaniem `done`, `Release`, `FromPack`) i jedyna implementacja `BuildTileSource` (sceny `_Tile` z buildu, `-Regions`).
+   Obsługa dzierżaw w `WorldStreamer` (korutyna `Acquire` → `LoadSceneAsync`, `Release` po `UnloadSceneAsync`/`OnDestroy`)
+   zostaje — to punkt podpięcia przyszłej paczki. `TileSceneSourceContractTests` (EditMode) sprawdza kontrakt na
+   `BuildTileSource` i na dublerze paczki (`PackDouble`: licznik dzierżaw jak `RegionPackLeases` z #112): nazwy
+   `World_<id>[_High]_Tile`, niedostępny kafel = `done(false)` bez dzierżawy, dokładnie jedno `done`, liczenie referencji
+   (menu + streamer), odmowa paczki bez sceny kafla i nieudanego wczytania bez dzierżawy, scena z buildu nigdy z paczki.
+   **Poza grą** (zostaje na gałęzi `regionpacks-0234`, PR #112 do zamknięcia jako wchłonięty): `Game.World.Packs`
+   (manifest `regionpacks.json`, SHA-256, instalacja z `incoming/`, ścieżki, serwis, resolver, etykiety, `RegionPackLeases`),
+   `RegionPackCommands`/`RegionPackPlanner` (build AssetBundles Win64/Android), `build-region-packs.ps1`,
+   `estimate-region-packs.py`, `RegionPackTests`, załącznik A ADR 0234 (menu). Przywrócenie = cherry-pick z tej gałęzi +
+   implementacja `ITileSceneSource` przechodząca `TileSceneSourceContractTests`.
+3. **Jeden hak w `DrivingLabBootstrap.cs`** (plik w lokalnej integracji lidera int-h3 / PR chmury H; +2 linie, jedna
+   instrukcja, w bloku tworzenia `WorldSafetyNet`):
+   ```csharp
+   Game.World.Streaming.WorldStreamer.TryInstallFromLaunch(gameObject, regionRoot, vehicle.transform, vehicle.Body,
+       platform.GetLaunchArgument("stream"), SafetyNet.SafePoses, SafetyNet.safeMinAge, RouteDriver.Offset);
+   ```
+   Bez `stream=1` (lub `WorldStreamer.EnabledOverride`) zwraca null i niczego nie dodaje — scena jak dziś. Wszystko, co
+   wcześniejsza wersja gałęzi dopisywała w bootstrapie i w `WorldSafetyNet.cs`, robi teraz streamer (`Game.World`):
+   tier treści z nazwy sceny, budżet z `QualityTiers`, przypięty kafel z `SafePoseBuffer` (pkt 8), przesunięcie bufora póz
+   i ścieżki autopilota przy rebase (subskrypcja na czas życia streamera). `WorldSafetyNet.cs` = **main bez zmian**;
+   poza hakiem nie ma zmian w `game/Assets/_Project/{UI,Gameplay}/**`. Właściwość `DrivingLabBootstrap.Streamer` usunięta —
+   test PlayMode bierze `WorldStreamer.Active`.
+4. **Sieć bezpieczeństwa bez zmiany `WorldSafetyNet`.** `WorldSafetyNet` (main) czyta prostokąt `WorldBoundary` regionu
+   startowego raz, w `Start`, który wykona się po haku. Hak poszerza ten prostokąt (`WorldStreamer.WidenStartBoundary`,
+   `TileGraph.LocalUnionBounds`) do sumy kafli **dostępnych i połączonych** z kaflem startowym, każdy pomniejszony o wcięcie
+   kafla startowego (prostokąt kafla → prostokąt jezdny). Skutki do czasu poprawki z pkt 5:
+   - otwarty szew nie jest „poza mapą” (0 resetów `OutOfBounds` na szwie — kryterium pkt 7 bez zmian);
+   - na zewnętrznych krawędziach korytarza wewnątrz prostokąta nie ma ostrzeżenia „Koniec mapy za ok. 250 m”; zamknięcia
+     (bariery + kolider, ADR 0169) stoją; wyjazd w pustkę łapie detekcja spadku / braku podłoża (`WorldExitMonitor`) i reset
+     na przypiętą bezpieczną pozę;
+   - po wyładowaniu regionu startowego (`region == null`) sieć działa jak dziś bez granic (tylko spadek / brak podłoża).
+5. **Poprawka dla lidera po int-h3 (opcjonalna, NIE w tym PR):** dokładna krawędź sumy gotowych kafli w `WorldSafetyNet.Check`:
+   ```csharp
+   var streamer = Game.World.Streaming.WorldStreamer.Active;
+   if (streamer != null && streamer.TryInsideDistance(p, out float streamed)) inside = streamed;
+   else if (m_HasBounds && region != null) { /* jak dziś */ }
+   ```
+   **Bez** subskrypcji `SafePoses.Offset` do `FloatingOrigin.Moved` w `WorldSafetyNet` — bufor przesuwa streamer
+   (podwójne przesunięcie = reset w złe miejsce).
+6. **Zero GC w pętli jazdy** (CLAUDE.md; wzór ADR 0244 / PR #118 — `GcAllocCounter`, Recorder „GC.Alloc”, bo
+   `GC.GetAllocatedBytesForCurrentThread` pod Mono w edytorze zwraca 0): `Decide_AllocatesNothing` przepisany na
+   `GcAllocCounter.AssertZero`; nowy `WorldStreamerHook0273Tests.SteadyFrameLoop_UpdateAndSafetyQueries_AllocateNothing`
+   (600 klatek `WorldStreamer.Update` z decyzją w każdej klatce + `TryInsideDistance` + punkt odrodzenia, po rozgrzewce).
+   Zdarzenia kafla (wczytanie, aktywacja, rebase, log) alokują raz z założenia (ADR 0235). Test PlayMode dk65-03→04 mierzy
+   „GC Allocated In Frame” w przejeździe.
+7. **Budżet:** streaming domyślnie wyłączony, brak zmian w `generated/*`, scenach i danych regionów → kamery regionu C bez
+   zmian (0 tris). Przy `-stream 1` na szwie widać dwa kafle (recenzja #114 P1-1) — pomiar lidera (pkt 7), nie szacunek.
+
+### Testy (s23, chmura)
+- .NET 8 + NUnit (harness bez Unity, zaślepki `JsonUtility`/`SceneUtility`, `GcAllocCounter` na
+  `GC.GetAllocatedBytesForCurrentThread`): `WorldStreamingPolicyTests` 23 (bez 2 testów z `GameObject`/`RegionBuildList`),
+  `TileSceneSourceContractTests` 8, `LocalUnionBounds` 1 — **32/32**, w tym `Decide_AllocatesNothing` = 0 B.
+- pytest `tests/gis -k "tile_graph or stream or 0235 or 0273"` — **11 passed**.
+- NIEuruchomione (lider): EditMode (`WorldStreamerHook0273Tests` 5 testów z `GameObject`, kontrakt i polityka w Unity),
+  PlayMode `WorldStreamingPlayModeTests`, build Windows `-stream 1`, A16.
+
+### Komendy dla lidera (s23; zastępują linię „paczki PC (dodatek)” powyżej)
+```powershell
+pwsh scripts/test.ps1 -Platform EditMode -Filter 'Game.Tests.WorldStreamingPolicyTests;Game.Tests.TileSceneSourceContractTests;Game.Tests.WorldStreamerHook0273Tests'
+pwsh scripts/test.ps1 -Platform EditMode
+pwsh scripts/import-region.ps1 -Region dk65-03 ; pwsh scripts/import-region.ps1 -Region dk65-04   # sceny _Tile
+pwsh scripts/test.ps1 -Platform PlayMode -Filter 'Game.Tests.WorldStreamingPlayModeTests'                      # scenariusz dk65-03 → 04
+pwsh scripts/build-windows.ps1 -Regions 'd67' -Slot
+pwsh scripts/build-windows.ps1 -SkipBuild -Run -Tier High -Scene bialystok-industrial-c -Autopilot route -Speed 90 -Fps 60 -RunSeconds 1500 -ShotSeconds 60 -ExtraPlayerArgs '-stream','1'
+uv run python scripts/stream-report.py --log artifacts/logs/win-run-<ts>.log --frames "$env:USERPROFILE/AppData/LocalLow/woogitsugames/Kamion/diag/frametimes.csv" --memory artifacts/win/mem.csv --threshold-ms 33.3 --memory-limit-mb 6144 --gate
+# A16 (opcjonalnie, drugi pomiar):
+pwsh scripts/build-android.ps1 -Regions 'bialystok-industrial-c,bialystok-maczka,bialystok-kleeberga' -Install -Serial RFGL34SJYDZ
+pwsh scripts/device-metrics.ps1 -Serial RFGL34SJYDZ -Launch -DurationSeconds 180 -Tier Low -Scene WorldC -Autopilot route -Speed 50 -Extra 'stream=1'
+```
+W logu przy `-stream 1`: `[STREAM] on: …`, `[STREAM] safety-net rectangle of … widened …`, `[STREAM] pinned …`.

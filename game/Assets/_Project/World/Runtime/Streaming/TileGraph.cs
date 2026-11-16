@@ -188,7 +188,7 @@ namespace Game.World.Streaming
         /// Bounding rectangle of the tiles reachable from <paramref name="origin"/> through neighbours with
         /// <paramref name="include"/>[i] == true, in the region-local frame of the origin tile: east = x − origin.anchorX,
         /// north = y − origin.anchorY [m]. The origin's own rectangle counts only with <paramref name="withOrigin"/> (the
-        /// streamer uses the origin's drivable WorldBoundary rectangle instead). ADR 0273 §9: the safety-net rectangle of the
+        /// streamer uses the origin's drivable WorldBoundary rectangle instead). ADR 0273 §10: the safety-net rectangle of the
         /// start region while streaming. Allocates two small arrays (install time only). False when nothing was added.
         /// </summary>
         public bool LocalUnionBounds(int origin, bool[] include, out double minE, out double minN, out double maxE, out double maxN, bool withOrigin = true)
