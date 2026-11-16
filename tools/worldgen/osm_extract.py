@@ -27,7 +27,10 @@ from fetch_osm import REPO_ROOT, download, load_manifest
 WORK_CRS = "EPSG:2180"
 # Białystok + ring road/S8/S19 surroundings + the DK65 corridor to Knyszyn (ADR 0203/0204), WGS84
 # (lon_min, lat_min, lon_max, lat_max). The bbox is part of the cache key.
-BBOX_WGS84 = (22.80, 53.05, 23.32, 53.38)
+# world2-s23 (ADR 0231 ring): west to 22.60 and north to 53.50 - the old box (22.80 / 53.38) cut the tiles `monki`,
+# `monki-e`, `dk65-monki-07`, `tykocin`, `dw671-tykocin-09` (their roads.graph.json came out empty or without DK65).
+# The ring tiles + 600 m span lon 22.740-23.211, lat 53.087-53.426 (EPSG:2180 -> WGS84, computed from regions.py).
+BBOX_WGS84 = (22.60, 53.05, 23.32, 53.50)
 
 ROAD_TAGS = (
     "highway", "name", "ref", "lanes", "lanes:forward", "lanes:backward", "maxspeed",
