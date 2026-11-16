@@ -10,7 +10,7 @@
     "z_max_evrf2007": 139.63,
     "z_min_evrf2007": 119.67
    },
-   "bytes": 10703432,
+   "bytes": 10684912,
    "file": "Data/raw/derived/knyszyn/world/chunk_0_0.glb",
    "forest_cells": [],
    "id": "0_0",
@@ -20,9 +20,9 @@
     "sha256": "9369c4d155e63c7f925dc3447a2fc4323bd4ebae8cbf938feb9917011e16575f"
    },
    "low": {
-    "bytes": 5980492,
+    "bytes": 5975496,
     "file": "Data/raw/derived/knyszyn/world/chunk_0_0.low.glb",
-    "sha256": "b2b318dd676a49fd8d6ab6b73d7ae2d6f3fdb0ecf28a705b79a5bad498f2f37f"
+    "sha256": "78a607bb8c75bc867d041c3f35643493d2ebbcc78682401123fb1e9d79be518e"
    },
    "materials": [
     "brick_red",
@@ -60,7 +60,6 @@
     "road_gravel",
     "roof_membrane",
     "roof_metal_graphite",
-    "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
     "terrain_grass",
@@ -69,17 +68,17 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "0d1ebeba702949b3f5869cf5bd678b8bee06032effadebf683bbcb20042b8f60",
+   "sha256": "cc44d59c2003386e776d46b493b6eaeb3f98467610e36dc753cf925768432948",
    "triangles": {
-    "buildings": 6031,
-    "buildings_lod1": 909,
+    "buildings": 5844,
+    "buildings_lod1": 826,
     "markings": 296,
     "paved": 607,
     "plot_ground": 1869,
     "plots": 1435,
     "plots_low": 997,
     "road": 8503,
-    "road_collision": 4569,
+    "road_collision": 4574,
     "terrain_lod0": 136052,
     "terrain_lod1": 34676,
     "terrain_lod2": 8704,
@@ -96,24 +95,23 @@
     "z_max_evrf2007": 139.44,
     "z_min_evrf2007": 122.55
    },
-   "bytes": 12554772,
+   "bytes": 12594928,
    "file": "Data/raw/derived/knyszyn/world/chunk_0_1.glb",
    "forest_cells": [],
    "id": "0_1",
    "instances": {
-    "count": 120,
+    "count": 115,
     "file": "Data/raw/derived/knyszyn/world/instances_0_1.json",
-    "sha256": "02657ef97285887c591948ca881f3534f87b5b014843e81bd0842badd28780cb"
+    "sha256": "e61ad6290c4bd7d04b8668642972bc482dc10da94316f87520aec71a6d47ef31"
    },
    "low": {
-    "bytes": 6888072,
+    "bytes": 6918108,
     "file": "Data/raw/derived/knyszyn/world/chunk_0_1.low.glb",
-    "sha256": "5c20a9b8a600540b92eea6b913211acaf94b2f5debac11b0c3e12b09aa189c08"
+    "sha256": "815439cdd6891f3f49da4f5cc012902007f8908bd766b80114285e592b4ef900"
    },
    "materials": [
     "apron_paving_light",
     "brick_red",
-    "brick_red__far_ribbon",
     "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
@@ -158,6 +156,7 @@
     "road_paving",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "sidewalk_paving_red",
@@ -171,17 +170,17 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "93ca087afa9d01b71411e8c916955970966bc78d81483519a95170f82d2e765e",
+   "sha256": "60eed302cf702337dcf0d96a0914dfc932980d16b6e843df896ff92d145f0ec2",
    "triangles": {
-    "buildings": 14961,
-    "buildings_lod1": 4537,
+    "buildings": 14709,
+    "buildings_lod1": 4525,
     "markings": 527,
     "paved": 3776,
-    "plot_ground": 1966,
-    "plots": 2884,
-    "plots_low": 2236,
+    "plot_ground": 2166,
+    "plots": 3618,
+    "plots_low": 2662,
     "road": 18053,
-    "road_collision": 14561,
+    "road_collision": 14705,
     "terrain_lod0": 137479,
     "terrain_lod1": 36103,
     "terrain_lod2": 8704,
@@ -198,23 +197,22 @@
     "z_max_evrf2007": 140.44,
     "z_min_evrf2007": 122.58
    },
-   "bytes": 22084964,
+   "bytes": 21963692,
    "file": "Data/raw/derived/knyszyn/world/chunk_0_2.glb",
    "forest_cells": [],
    "id": "0_2",
    "instances": {
-    "count": 75,
+    "count": 71,
     "file": "Data/raw/derived/knyszyn/world/instances_0_2.json",
-    "sha256": "be98adfb44215f80f6aa85f11340d449c4ce8595d96ed9a24ba128fec9d7fd8d"
+    "sha256": "cf9d0f62d4519cb5ecf1f70205c0907adaf24f38918e75ebbc12e44d22d73d97"
    },
    "low": {
-    "bytes": 9892844,
+    "bytes": 9870704,
     "file": "Data/raw/derived/knyszyn/world/chunk_0_2.low.glb",
-    "sha256": "205380bebe2d55e91bb386f8154979d44c5a6a4f20501296af79b582f049d775"
+    "sha256": "0b3be75b06d269803920b840516e074a7735688cb3adbad1c9bd8440c7bcf743"
    },
    "materials": [
     "brick_red",
-    "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
     "collision_building",
@@ -232,14 +230,8 @@
     "plaster_beige",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_light__far_office",
-    "plaster_light__far_ribbon",
     "plaster_white",
-    "plaster_white__far_office",
-    "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -248,6 +240,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -256,16 +249,16 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "595617309599cb7f6e81ac952cc701fc8b02b49bf1c03e3d5c525e129898d300",
+   "sha256": "0398f35f3679609534f4912ca40c3c6762a590eb8bb917cec3aa1856f3504716",
    "triangles": {
-    "buildings": 74578,
-    "buildings_lod1": 12163,
+    "buildings": 73278,
+    "buildings_lod1": 11843,
     "markings": 180,
-    "plot_ground": 34262,
-    "plots": 41813,
-    "plots_low": 30007,
+    "plot_ground": 34290,
+    "plots": 41773,
+    "plots_low": 29963,
     "road": 11750,
-    "road_collision": 22757,
+    "road_collision": 22765,
     "terrain_lod0": 137830,
     "terrain_lod1": 36454,
     "terrain_lod2": 8704,
@@ -282,24 +275,22 @@
     "z_max_evrf2007": 137.99,
     "z_min_evrf2007": 123.54
    },
-   "bytes": 14120912,
+   "bytes": 14210804,
    "file": "Data/raw/derived/knyszyn/world/chunk_0_3.glb",
    "forest_cells": [],
    "id": "0_3",
    "instances": {
-    "count": 94,
+    "count": 81,
     "file": "Data/raw/derived/knyszyn/world/instances_0_3.json",
-    "sha256": "6415459583c0c211f0029409b83c396b27b604f750919da8533a629ae4f6aa0e"
+    "sha256": "170acfb3a56049cdfd09b0c2499541383b288f09488c2f6c3585f7fae10dfdac"
    },
    "low": {
-    "bytes": 6926180,
+    "bytes": 7101072,
     "file": "Data/raw/derived/knyszyn/world/chunk_0_3.low.glb",
-    "sha256": "0d873448366fe3913f0ffa9e7320f9fbdb69a820a79b1f00dff0783613b7aa4e"
+    "sha256": "8e28d1db1a80b994131b6d76de563a3a47a85e3ea26ef817410d8b41308537a9"
    },
    "materials": [
     "brick_red",
-    "brick_red__far_office",
-    "brick_red__far_ribbon",
     "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
@@ -318,17 +309,10 @@
     "hall_wall_silver",
     "marking_white",
     "plaster_beige",
-    "plaster_beige__far_office",
     "plaster_beige__far_ribbon",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_light__far_ribbon",
-    "plaster_white",
-    "plaster_white__far_office",
-    "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -338,6 +322,7 @@
     "road_paving",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -348,21 +333,21 @@
     "wood_planks_green",
     "yard_paving"
    ],
-   "sha256": "004a9e1dc02f882343c7fb32c372046c214b7fff4a6b7ec405131b4b8d5e8e89",
+   "sha256": "3df0869de4d42e8976ad0d76512ffe643076495aecf5baedbabcaef312ce806b",
    "triangles": {
-    "buildings": 31482,
-    "buildings_lod1": 5392,
+    "buildings": 28870,
+    "buildings_lod1": 4995,
     "markings": 183,
-    "plot_ground": 10159,
-    "plots": 14844,
-    "plots_low": 10934,
-    "road": 2605,
-    "road_collision": 7782,
+    "plot_ground": 11733,
+    "plots": 18211,
+    "plots_low": 13565,
+    "road": 2609,
+    "road_collision": 8650,
     "terrain_lod0": 135751,
     "terrain_lod1": 34375,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
-    "wires": 204
+    "wires": 212
    }
   },
   {
@@ -374,7 +359,7 @@
     "z_max_evrf2007": 160.79,
     "z_min_evrf2007": 123.86
    },
-   "bytes": 14952892,
+   "bytes": 15003712,
    "file": "Data/raw/derived/knyszyn/world/chunk_0_4.glb",
    "forest_cells": [
     {
@@ -404,14 +389,14 @@
    ],
    "id": "0_4",
    "instances": {
-    "count": 256,
+    "count": 244,
     "file": "Data/raw/derived/knyszyn/world/instances_0_4.json",
-    "sha256": "6962ec9fe6e8e8c472a9cb6e185e26fde594cda24388c57c7c97209cf4226203"
+    "sha256": "c84d1a40363894de4e5044293d739e9a4e588f24601897c07bc4ed98fff483fd"
    },
    "low": {
-    "bytes": 7612152,
+    "bytes": 7713712,
     "file": "Data/raw/derived/knyszyn/world/chunk_0_4.low.glb",
-    "sha256": "a0915ddcf74f75177535be8566ca2f53bee7f7a88902f4c2c65e58209f8f6eef"
+    "sha256": "8ca5eee61af724327c61a061dac5ea275af5ef5c0f6115bc0229af286e98d0f9"
    },
    "materials": [
     "brick_red",
@@ -439,16 +424,11 @@
     "hall_wall_silver",
     "marking_white",
     "plaster_beige",
-    "plaster_beige__far_office",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
     "plaster_light__far_ribbon",
     "plaster_white",
-    "plaster_white__far_office",
-    "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -458,6 +438,7 @@
     "road_paving",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "sidewalk_paving",
@@ -469,24 +450,24 @@
     "yard_asphalt",
     "yard_paving"
    ],
-   "sha256": "78965b4fbe0e311b7d7f0653393f34a7635f4922eb6cc99894d8efbd3f5f8ad2",
+   "sha256": "38c99516a5c848acc7b6874df0c58610182891689a36c85d3f9e91ed24765582",
    "triangles": {
-    "buildings": 29675,
-    "buildings_lod1": 5158,
+    "buildings": 28098,
+    "buildings_lod1": 4816,
     "forest_hlod": 128,
     "furniture": 2701,
     "markings": 315,
     "paved": 896,
-    "plot_ground": 13495,
-    "plots": 16952,
-    "plots_low": 12412,
-    "road": 8880,
-    "road_collision": 12222,
-    "terrain_lod0": 137162,
-    "terrain_lod1": 35786,
+    "plot_ground": 14637,
+    "plots": 18726,
+    "plots_low": 13742,
+    "road": 8894,
+    "road_collision": 12805,
+    "terrain_lod0": 137182,
+    "terrain_lod1": 35806,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
-    "wires": 400
+    "wires": 446
    }
   },
   {
@@ -498,19 +479,19 @@
     "z_max_evrf2007": 160.79,
     "z_min_evrf2007": 121.43
    },
-   "bytes": 12789804,
+   "bytes": 12766736,
    "file": "Data/raw/derived/knyszyn/world/chunk_0_5.glb",
    "forest_cells": [],
    "id": "0_5",
    "instances": {
-    "count": 168,
+    "count": 159,
     "file": "Data/raw/derived/knyszyn/world/instances_0_5.json",
-    "sha256": "c02841e6a7238fba95c3f9998d971835394b89e09cc539a0801232f464213843"
+    "sha256": "f6b0b77e59d3ade55aefb7c41ec343fb4ebec67f246d255e848d0f9136da7f16"
    },
    "low": {
-    "bytes": 6584836,
+    "bytes": 6648264,
     "file": "Data/raw/derived/knyszyn/world/chunk_0_5.low.glb",
-    "sha256": "bcef58528744a9d82e8f3b9fe3e4ea2c3da3fe1f36aa9003fff54210b0425c6d"
+    "sha256": "c0a98f6c066def10405552706af434d4394ff3cae12ef0a274459ae4922b4e41"
    },
    "materials": [
     "brick_red",
@@ -540,14 +521,10 @@
     "hall_wall_silver",
     "marking_white",
     "plaster_beige",
-    "plaster_beige__far_office",
-    "plaster_beige__far_ribbon",
     "plaster_cream",
     "plaster_grey",
     "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_light__far_office",
     "plaster_white",
     "plinth_dark",
     "plot_kit",
@@ -557,6 +534,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "sidewalk_paving",
@@ -566,18 +544,18 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "cb948cb83fb195ef6820432d7f97cf8c91c91dc61ca0c43424952e5c7608504c",
+   "sha256": "e197a0b662709ad699fd6dc02d1f7b84a01919542154861876aa457a68b12304",
    "triangles": {
-    "buildings": 21394,
-    "buildings_lod1": 3696,
+    "buildings": 19280,
+    "buildings_lod1": 3321,
     "furniture": 3673,
-    "markings": 64,
+    "markings": 62,
     "paved": 561,
-    "plot_ground": 7111,
-    "plots": 8917,
-    "plots_low": 6523,
-    "road": 1372,
-    "road_collision": 5668,
+    "plot_ground": 7732,
+    "plots": 10613,
+    "plots_low": 7585,
+    "road": 1376,
+    "road_collision": 6043,
     "terrain_lod0": 135479,
     "terrain_lod1": 34103,
     "terrain_lod2": 8704,
@@ -594,25 +572,24 @@
     "z_max_evrf2007": 135.63,
     "z_min_evrf2007": 115.68
    },
-   "bytes": 13594176,
+   "bytes": 13535244,
    "file": "Data/raw/derived/knyszyn/world/chunk_0_6.glb",
    "forest_cells": [],
    "id": "0_6",
    "instances": {
-    "count": 167,
+    "count": 164,
     "file": "Data/raw/derived/knyszyn/world/instances_0_6.json",
-    "sha256": "01fb4c1c8d7a7f745c93bcdb313056414775bed7285e907bd12542c590bb65ac"
+    "sha256": "e58bbb1e83e1936840dba2ab3349d4d3df6a24b8abb8a144661224162b87ebb0"
    },
    "low": {
-    "bytes": 7407052,
+    "bytes": 7415588,
     "file": "Data/raw/derived/knyszyn/world/chunk_0_6.low.glb",
-    "sha256": "1e3dae7046773ac9ae6d95295647098f55e8c8adedd5a7a28faa1866228a2444"
+    "sha256": "9e56058cb07d39c28aac979a62c8862936c00c8ba09aa2f8373c9ba12e571dd0"
    },
    "materials": [
     "apron_paving_light",
     "bed_stones",
     "brick_red",
-    "brick_red__far_office",
     "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
@@ -637,15 +614,10 @@
     "marking_yard",
     "plaster_band_grey",
     "plaster_beige",
-    "plaster_beige__far_office",
     "plaster_cream",
     "plaster_grey",
     "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_light__far_ribbon",
-    "plaster_white",
-    "plaster_white__far_office",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -654,6 +626,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "shoulder_gravel",
@@ -666,18 +639,18 @@
     "yard_asphalt",
     "yard_paving"
    ],
-   "sha256": "284e0bd54be72b2dd8fc7271aa834e81d49c59e73ed4cc0f9b35bd4c74e94bb6",
+   "sha256": "b84911df4c8008b4fe5f7e271cc818818e61e0ea792e6ae4b883e874e93306dd",
    "triangles": {
-    "buildings": 19692,
-    "buildings_lod1": 3250,
+    "buildings": 18656,
+    "buildings_lod1": 3060,
     "furniture": 700,
     "markings": 1305,
     "paved": 482,
-    "plot_ground": 9542,
-    "plots": 9885,
-    "plots_low": 7051,
+    "plot_ground": 9746,
+    "plots": 10206,
+    "plots_low": 7305,
     "road": 12346,
-    "road_collision": 11838,
+    "road_collision": 11950,
     "terrain_lod0": 135684,
     "terrain_lod1": 34308,
     "terrain_lod2": 8704,
@@ -740,19 +713,19 @@
     "z_max_evrf2007": 139.46,
     "z_min_evrf2007": 120.19
    },
-   "bytes": 14240908,
+   "bytes": 14184580,
    "file": "Data/raw/derived/knyszyn/world/chunk_1_0.glb",
    "forest_cells": [],
    "id": "1_0",
    "instances": {
-    "count": 146,
+    "count": 142,
     "file": "Data/raw/derived/knyszyn/world/instances_1_0.json",
-    "sha256": "1bb97ed2b1742cb6cb86dc7cc97e86b74f6defc8deadc305ec5246db93b6829d"
+    "sha256": "98bc1218a996219750631e5d951ad74d1465f873746be8be0a5585dd96afa3f8"
    },
    "low": {
-    "bytes": 7232472,
+    "bytes": 7266388,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_0.low.glb",
-    "sha256": "6c8392f8ccdf76ab62b6c01582f0e690084088b78770c7127b9a28ba7c24879f"
+    "sha256": "854fdce8e281430e1479d451845e59de31afa0da7d5668e6ae9a856aadbd608c"
    },
    "materials": [
     "brick_red",
@@ -775,15 +748,10 @@
     "hall_wall_silver",
     "marking_white",
     "plaster_beige",
-    "plaster_beige__far_office",
-    "plaster_beige__far_ribbon",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
     "plaster_light",
-    "plaster_light__far_office",
     "plaster_white",
-    "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -794,6 +762,7 @@
     "road_paving",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -803,22 +772,22 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "0c81dc4870d77e2df308be7c3e6d4eef8a2fa4b7eebe08dc2d675002274e86f9",
+   "sha256": "ba75fb9dd1d1e00c08673d1d8c6a22355927b3a2e4fe859a2e71206411712345",
    "triangles": {
-    "buildings": 27737,
-    "buildings_lod1": 4673,
+    "buildings": 26123,
+    "buildings_lod1": 4377,
     "markings": 644,
     "paved": 91,
-    "plot_ground": 11632,
-    "plots": 16015,
-    "plots_low": 12046,
-    "road": 8126,
-    "road_collision": 10071,
-    "terrain_lod0": 136328,
-    "terrain_lod1": 34952,
+    "plot_ground": 12311,
+    "plots": 16478,
+    "plots_low": 12323,
+    "road": 8128,
+    "road_collision": 10400,
+    "terrain_lod0": 136352,
+    "terrain_lod1": 34976,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
-    "wires": 547
+    "wires": 553
    }
   },
   {
@@ -830,7 +799,7 @@
     "z_max_evrf2007": 140.33,
     "z_min_evrf2007": 124.26
    },
-   "bytes": 17501360,
+   "bytes": 17424300,
    "file": "Data/raw/derived/knyszyn/world/chunk_1_1.glb",
    "forest_cells": [
     {
@@ -848,18 +817,17 @@
    ],
    "id": "1_1",
    "instances": {
-    "count": 434,
+    "count": 429,
     "file": "Data/raw/derived/knyszyn/world/instances_1_1.json",
-    "sha256": "cadaa59d96ccd87befacc6e70d2568e9924a9971b20ed83663594fc6e349b5a5"
+    "sha256": "1c64dd74b8c0cedd23c047790fe44e93f5e5c1000eb21e82080063749db36fdd"
    },
    "low": {
-    "bytes": 8566100,
+    "bytes": 8583076,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_1.low.glb",
-    "sha256": "d14270aa0cfaf802370188317b9492b9d6e580460833db55428178956850687d"
+    "sha256": "2d76361ff487cc46d39269f64099bd902865c9633aad24f385f265bee8c9528a"
    },
    "materials": [
     "brick_red",
-    "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
     "collision_building",
@@ -879,10 +847,7 @@
     "plaster_beige",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_light__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -891,6 +856,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -901,20 +867,20 @@
     "yard_behaton",
     "yard_paving"
    ],
-   "sha256": "62e939be6793b205d57c2f60145e7f871640b20735a5baaddd66975b07667f71",
+   "sha256": "746540974872d94f2d3eb092c66aa33848ce3cd67448cf9c73cb63d0feb4e702",
    "triangles": {
-    "buildings": 43937,
-    "buildings_lod1": 7543,
+    "buildings": 42243,
+    "buildings_lod1": 7218,
     "forest_hlod": 159,
     "markings": 571,
     "paved": 83,
-    "plot_ground": 21664,
-    "plots": 27628,
-    "plots_low": 19829,
-    "road": 13369,
-    "road_collision": 17332,
-    "terrain_lod0": 137431,
-    "terrain_lod1": 36055,
+    "plot_ground": 21986,
+    "plots": 28383,
+    "plots_low": 20298,
+    "road": 13361,
+    "road_collision": 17502,
+    "terrain_lod0": 137455,
+    "terrain_lod1": 36079,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 1151
@@ -929,24 +895,22 @@
     "z_max_evrf2007": 141.32,
     "z_min_evrf2007": 125.39
    },
-   "bytes": 18648644,
+   "bytes": 18522488,
    "file": "Data/raw/derived/knyszyn/world/chunk_1_2.glb",
    "forest_cells": [],
    "id": "1_2",
    "instances": {
-    "count": 90,
+    "count": 80,
     "file": "Data/raw/derived/knyszyn/world/instances_1_2.json",
-    "sha256": "f449d0ce700c64ec1cbfe265f2e3502429abfa5eb6b62ad98446382287b2b084"
+    "sha256": "3a861d7900d9422456e4a574494e51ef8a2d9751129d37c227eed33e0c57a256"
    },
    "low": {
-    "bytes": 8799348,
+    "bytes": 8811840,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_2.low.glb",
-    "sha256": "8db945eb7f6e17696b1d948e7dd86b09f43e49d76d53e80bcfeab42138c30429"
+    "sha256": "d833b36bdf72aaae7989bcd62cc76231e6690629b386da6bb2a3f6e9ff126267"
    },
    "materials": [
     "brick_red",
-    "brick_red__far_office",
-    "brick_red__far_ribbon",
     "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
@@ -967,13 +931,8 @@
     "plaster_beige",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
     "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_light__far_ribbon",
-    "plaster_white",
-    "plaster_white__far_office",
-    "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -983,6 +942,7 @@
     "road_paving",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -992,21 +952,21 @@
     "wood_planks_green",
     "yard_paving"
    ],
-   "sha256": "70a256fc2079d612e93ca79a2035b7cbb33f302eea8fd2325480e7bd2a28fe19",
+   "sha256": "d8a46dc1a0bfee466d06484643d6ccac8c2475d91ee2c9f2221e7fdd4d01792f",
    "triangles": {
-    "buildings": 53962,
-    "buildings_lod1": 9402,
+    "buildings": 51827,
+    "buildings_lod1": 8932,
     "markings": 238,
-    "plot_ground": 24314,
-    "plots": 31989,
-    "plots_low": 23301,
-    "road": 8962,
-    "road_collision": 17349,
-    "terrain_lod0": 137042,
-    "terrain_lod1": 35666,
+    "plot_ground": 24780,
+    "plots": 32489,
+    "plots_low": 23625,
+    "road": 8964,
+    "road_collision": 17601,
+    "terrain_lod0": 137074,
+    "terrain_lod1": 35698,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
-    "wires": 639
+    "wires": 655
    }
   },
   {
@@ -1018,23 +978,22 @@
     "z_max_evrf2007": 140.56,
     "z_min_evrf2007": 125.27
    },
-   "bytes": 13955916,
+   "bytes": 13860792,
    "file": "Data/raw/derived/knyszyn/world/chunk_1_3.glb",
    "forest_cells": [],
    "id": "1_3",
    "instances": {
-    "count": 149,
+    "count": 146,
     "file": "Data/raw/derived/knyszyn/world/instances_1_3.json",
-    "sha256": "629269db0cb59a5ba8e65454d0213ac4111287de2c7b7dc1378afec9d01e9d9b"
+    "sha256": "fac141d111f8052dd75bdfaa6091b63ec3395a3a2ed6d3e583ea977f2e37821e"
    },
    "low": {
-    "bytes": 7226312,
+    "bytes": 7212536,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_3.low.glb",
-    "sha256": "adbd1d16d6dbdbe20c54b0f872a768b759cde909497888bb8126493d5ff57050"
+    "sha256": "922335fcb80600680e8b78b7105e931bd2be284698478d6f2c20fae93f81673c"
    },
    "materials": [
     "brick_red",
-    "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
     "collision_building",
@@ -1055,12 +1014,7 @@
     "plaster_beige__far_office",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
     "plaster_light",
-    "plaster_light__far_ribbon",
-    "plaster_white",
-    "plaster_white__far_office",
-    "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -1069,6 +1023,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "showroom_glass",
@@ -1080,17 +1035,17 @@
     "yard_asphalt",
     "yard_paving"
    ],
-   "sha256": "a1e1ebdfbec581ffa52a01d12f8eb30a474c6c7a6a63ed32b8fe01a5feb52499",
+   "sha256": "9f9cd0d0925d2338e59fe42f645adae3389a83941ada4143fda990011fae32cb",
    "triangles": {
-    "buildings": 24343,
-    "buildings_lod1": 4172,
+    "buildings": 23281,
+    "buildings_lod1": 3970,
     "markings": 645,
     "paved": 317,
-    "plot_ground": 12005,
-    "plots": 14683,
-    "plots_low": 10845,
+    "plot_ground": 12042,
+    "plots": 14669,
+    "plots_low": 10835,
     "road": 8463,
-    "road_collision": 10778,
+    "road_collision": 10783,
     "terrain_lod0": 136387,
     "terrain_lod1": 35011,
     "terrain_lod2": 8704,
@@ -1107,26 +1062,25 @@
     "z_max_evrf2007": 147.63,
     "z_min_evrf2007": 123.45
    },
-   "bytes": 16681064,
+   "bytes": 16489280,
    "file": "Data/raw/derived/knyszyn/world/chunk_1_4.glb",
    "forest_cells": [],
    "id": "1_4",
    "instances": {
-    "count": 191,
+    "count": 182,
     "file": "Data/raw/derived/knyszyn/world/instances_1_4.json",
-    "sha256": "52292bff986c0fd4fa5c5f5c5e57564280b6d6bb30bd150c66242e0b8325d649"
+    "sha256": "976220c9e32b2caac980e45a5c51cc24dfc168643c15571b7d33c0ba91223171"
    },
    "low": {
-    "bytes": 7910680,
+    "bytes": 7893088,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_4.low.glb",
-    "sha256": "c9e855541c3dc5996fc0273dc0f4fe888d2efede0e3f067b62ab25f4ee5f2dfd"
+    "sha256": "91e355eea957ac9661a623a567040877c646fda64f83f4d5ccfa53511e143b9b"
    },
    "materials": [
     "balcony_slab",
     "bench_wood",
     "brick_red",
     "brick_red__far_office",
-    "brick_red__far_ribbon",
     "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
@@ -1158,15 +1112,15 @@
     "plaster_band_grey",
     "plaster_beige",
     "plaster_beige__far_office",
-    "plaster_beige__far_ribbon",
     "plaster_cream",
     "plaster_grey",
     "plaster_grey__far_block",
     "plaster_grey__far_office",
     "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_light__far_office",
     "plaster_light__far_ribbon",
+    "plaster_peach",
+    "plaster_peach__far_ribbon",
     "plaster_white",
     "plaster_white__far_office",
     "plaster_white__far_ribbon",
@@ -1179,9 +1133,9 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
-    "showroom_glass",
     "sidewalk_paving",
     "soffit_boards",
     "steel_painted",
@@ -1195,18 +1149,18 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "210ede2805c3f763966ea600df62e93157c9457c3d3abbe062e325a3daed6e0f",
+   "sha256": "208ad74dd1090ac5fd6929cec9303ddb3f0ed17320a9e10198e3be417fb3104f",
    "triangles": {
-    "buildings": 44584,
-    "buildings_lod1": 8581,
+    "buildings": 42191,
+    "buildings_lod1": 8197,
     "furniture": 300,
     "markings": 1410,
     "paved": 1786,
     "plot_ground": 13553,
-    "plots": 19862,
-    "plots_low": 12627,
+    "plots": 19846,
+    "plots_low": 12623,
     "road": 11839,
-    "road_collision": 13709,
+    "road_collision": 13751,
     "terrain_lod0": 136889,
     "terrain_lod1": 35513,
     "terrain_lod2": 8704,
@@ -1223,19 +1177,19 @@
     "z_max_evrf2007": 145.09,
     "z_min_evrf2007": 118.77
    },
-   "bytes": 15497448,
+   "bytes": 15471180,
    "file": "Data/raw/derived/knyszyn/world/chunk_1_5.glb",
    "forest_cells": [],
    "id": "1_5",
    "instances": {
-    "count": 229,
+    "count": 222,
     "file": "Data/raw/derived/knyszyn/world/instances_1_5.json",
-    "sha256": "6f07f64bc6010b0c10eff077ebaabbed084bff6bb1767a405dd3d20efb750abc"
+    "sha256": "a3cd43f0bb0ef31510c37e612c1e275581d089e446bbb98b092500d4ba6093b2"
    },
    "low": {
-    "bytes": 7239268,
+    "bytes": 7311500,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_5.low.glb",
-    "sha256": "d12f892c7f3f9954bba2fb2bfd237fc9b359d6e84d88103ae927c9116964806b"
+    "sha256": "c5f64530a7d72f74912bc504c2b0cef98aa73a2b8f6b069d303528f7ae025363"
    },
    "materials": [
     "balcony_slab",
@@ -1268,12 +1222,10 @@
     "plaster_accent_grey",
     "plaster_accent_grey__far_block",
     "plaster_beige",
-    "plaster_beige__far_office",
     "plaster_beige__far_ribbon",
     "plaster_cream",
     "plaster_grey",
     "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
     "plaster_light__far_office",
     "plaster_light__far_ribbon",
@@ -1289,10 +1241,12 @@
     "road_gravel",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "showroom_glass",
     "sidewalk_paving",
+    "sidewalk_paving_red",
     "soffit_boards",
     "steel_painted",
     "terrain_grass",
@@ -1302,20 +1256,20 @@
     "wood_planks_green",
     "yard_paving"
    ],
-   "sha256": "2a1caad73a72f92112db4527ee8cf3092bd2f6ae297fc1075bf1190063e9b144",
+   "sha256": "b42715440aa0851c9d64bdf9464a77b0d092b5c917e14c1d940521e72a95c469",
    "triangles": {
-    "buildings": 44914,
-    "buildings_lod1": 6557,
+    "buildings": 42803,
+    "buildings_lod1": 6198,
     "furniture": 688,
-    "markings": 519,
-    "paved": 224,
-    "plot_ground": 11687,
-    "plots": 12615,
-    "plots_low": 9348,
-    "road": 6228,
-    "road_collision": 10028,
-    "terrain_lod0": 136255,
-    "terrain_lod1": 34879,
+    "markings": 517,
+    "paved": 1336,
+    "plot_ground": 12211,
+    "plots": 13755,
+    "plots_low": 9979,
+    "road": 6250,
+    "road_collision": 10703,
+    "terrain_lod0": 136271,
+    "terrain_lod1": 34895,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 351
@@ -1342,7 +1296,7 @@
    "low": {
     "bytes": 5562596,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_6.low.glb",
-    "sha256": "b84f97eabed663e5b4cf84328e1ea45a62895b4bd8ec88d5211bacac2273d645"
+    "sha256": "1f30b4b7f441dd84c79b449a00119abb64f1ce092d1c5a88d9fd38ae3fb37cc4"
    },
    "materials": [
     "brick_red",
@@ -1385,7 +1339,7 @@
     "yard_asphalt",
     "yard_paving"
    ],
-   "sha256": "a665e92467444509f8458490e14d299b3afeb11daf574a90e5b3172452206c2a",
+   "sha256": "69c9d7e1d8252f8b56011c1a94f3b57969322f689f603215a3b85892a18f4088",
    "triangles": {
     "buildings": 2075,
     "buildings_lod1": 300,
@@ -1412,19 +1366,19 @@
     "z_max_evrf2007": 129.53,
     "z_min_evrf2007": 113.31
    },
-   "bytes": 10239872,
+   "bytes": 10223916,
    "file": "Data/raw/derived/knyszyn/world/chunk_1_7.glb",
    "forest_cells": [],
    "id": "1_7",
    "instances": {
-    "count": 166,
+    "count": 165,
     "file": "Data/raw/derived/knyszyn/world/instances_1_7.json",
-    "sha256": "ea7678b03b6cda2013d68faaf338ef87e7dcd82a4b0c52a9e07b5b701b74e07a"
+    "sha256": "89c4b7124272ff7be5ef459601f30ff875cb0b349cb726c041baac2c968e34e8"
    },
    "low": {
-    "bytes": 5828456,
+    "bytes": 5826900,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_7.low.glb",
-    "sha256": "2065ce24cda05bb4a63779db87b71007c091329199f4cd9ecca8b7c11d15c933"
+    "sha256": "441871194fdb01375ce3cc1e48a571ffebb441cc61c258f2d85dd5474f5d7e31"
    },
    "materials": [
     "canopy_steel",
@@ -1447,8 +1401,6 @@
     "hall_wall_ivory",
     "hall_wall_silver",
     "marking_white",
-    "plaster_beige",
-    "plaster_beige__far_office",
     "plaster_cream",
     "plaster_light",
     "plinth_dark",
@@ -1459,6 +1411,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_vent",
     "shoulder_gravel",
     "soffit_boards",
@@ -1468,16 +1421,16 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "8d996adeec268ef6adf58714a15aa1231a7ae694c1c8eac3af5ee5d8281325a4",
+   "sha256": "617127843f3b936cd179d597b66ce006967e1afdfc23e53a1b46ee98e0d7166c",
    "triangles": {
-    "buildings": 3215,
-    "buildings_lod1": 409,
+    "buildings": 3017,
+    "buildings_lod1": 415,
     "markings": 757,
     "plot_ground": 375,
     "plots": 706,
     "plots_low": 576,
     "road": 8422,
-    "road_collision": 3827,
+    "road_collision": 3829,
     "terrain_lod0": 135744,
     "terrain_lod1": 34368,
     "terrain_lod2": 8704,
@@ -1494,7 +1447,7 @@
     "z_max_evrf2007": 154.41,
     "z_min_evrf2007": 119.5
    },
-   "bytes": 10241532,
+   "bytes": 10124880,
    "file": "Data/raw/derived/knyszyn/world/chunk_2_0.glb",
    "forest_cells": [
     {
@@ -1512,14 +1465,14 @@
    ],
    "id": "2_0",
    "instances": {
-    "count": 182,
+    "count": 180,
     "file": "Data/raw/derived/knyszyn/world/instances_2_0.json",
-    "sha256": "47f44a2300a92b6e51584cfcef4bb26501f07f46742b5bf119437005c245881b"
+    "sha256": "079fad88fa781ff2489b9c1578baccaf468f7cae663835e85480b6c43dd43243"
    },
    "low": {
-    "bytes": 5675544,
+    "bytes": 5698864,
     "file": "Data/raw/derived/knyszyn/world/chunk_2_0.low.glb",
-    "sha256": "da17cc795369f465c4f8af79ceed0bca0a2cf7cfa7f39b6ca6de768e52371c1e"
+    "sha256": "60d6b8541e36e47174b390345ce25a96e8d2b4c9ace5985938d5dba12275cbea"
    },
    "materials": [
     "brick_red",
@@ -1538,11 +1491,9 @@
     "facade_atlas",
     "hall_flashing",
     "plaster_grey",
-    "plaster_grey__far_ribbon",
     "plaster_light",
     "plaster_light__far_office",
     "plaster_white",
-    "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -1551,24 +1502,24 @@
     "road_gravel",
     "roof_membrane",
     "roof_metal_graphite",
-    "roof_tiles_red",
+    "roof_sheet_grey",
     "soffit_boards",
     "terrain_grass",
     "window_sill",
     "wire",
     "yard_paving"
    ],
-   "sha256": "c1cd38ef0ea83785842bb03bfdd5fafdd084262bc54726dbd2ab58791365fa8f",
+   "sha256": "8e028156d5705b994c430c17ebcd9fea3c1bc7945bc85cab79f51505d9870ed8",
    "triangles": {
-    "buildings": 5530,
-    "buildings_lod1": 633,
+    "buildings": 3403,
+    "buildings_lod1": 526,
     "forest_hlod": 55,
     "markings": 86,
-    "plot_ground": 998,
-    "plots": 1246,
-    "plots_low": 944,
+    "plot_ground": 1228,
+    "plots": 1773,
+    "plots_low": 1335,
     "road": 2965,
-    "road_collision": 1779,
+    "road_collision": 1928,
     "terrain_lod0": 135449,
     "terrain_lod1": 34073,
     "terrain_lod2": 8704,
@@ -1585,19 +1536,19 @@
     "z_max_evrf2007": 152.88,
     "z_min_evrf2007": 120.1
    },
-   "bytes": 12584052,
+   "bytes": 12458488,
    "file": "Data/raw/derived/knyszyn/world/chunk_2_1.glb",
    "forest_cells": [],
    "id": "2_1",
    "instances": {
-    "count": 127,
+    "count": 121,
     "file": "Data/raw/derived/knyszyn/world/instances_2_1.json",
-    "sha256": "5a5f3410a866af592f3b78a3a85799aa94d0ace97444b46079243796099c7724"
+    "sha256": "74120aa6084b4b190db2e355cc63b2547468af8eae6ff8a4995dde7447d2dc60"
    },
    "low": {
-    "bytes": 6331200,
+    "bytes": 6352344,
     "file": "Data/raw/derived/knyszyn/world/chunk_2_1.low.glb",
-    "sha256": "e0c1cd66d6a35915e017916231a7723856b1bf004452553c3f0ced82bee45f77"
+    "sha256": "a4e5df21923ac0eff71ab818168880cd68b93e0de35585ed12528c4ef4478ddb"
    },
    "materials": [
     "brick_red",
@@ -1629,7 +1580,6 @@
     "plaster_light__far_office",
     "plaster_light__far_ribbon",
     "plaster_white",
-    "plaster_white__far_office",
     "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
@@ -1639,6 +1589,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -1647,16 +1598,16 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "2a0d873786667ddac7698e7c61475298a25d0619c6191848eafae1ccebba41c4",
+   "sha256": "66219f04aaa72a3987ed7bf26550d0446ac0561d4cad6259be1fc56988d36747",
    "triangles": {
-    "buildings": 23673,
-    "buildings_lod1": 3227,
+    "buildings": 21076,
+    "buildings_lod1": 2880,
     "markings": 88,
-    "plot_ground": 5216,
-    "plots": 6314,
-    "plots_low": 4733,
+    "plot_ground": 5565,
+    "plots": 7081,
+    "plots_low": 5078,
     "road": 5335,
-    "road_collision": 4959,
+    "road_collision": 5204,
     "terrain_lod0": 135937,
     "terrain_lod1": 34561,
     "terrain_lod2": 8704,
@@ -1673,23 +1624,22 @@
     "z_max_evrf2007": 140.42,
     "z_min_evrf2007": 122.85
    },
-   "bytes": 13687564,
+   "bytes": 13627112,
    "file": "Data/raw/derived/knyszyn/world/chunk_2_2.glb",
    "forest_cells": [],
    "id": "2_2",
    "instances": {
-    "count": 153,
+    "count": 145,
     "file": "Data/raw/derived/knyszyn/world/instances_2_2.json",
-    "sha256": "d7fd1da67592e37f7a50cd6760d7d9acbe164aadfac038ee3deb569def6bc0ef"
+    "sha256": "9308783600517639567f63398884b5a8e6ab83fe84461f529cff79b8f963c706"
    },
    "low": {
-    "bytes": 6957684,
+    "bytes": 6972312,
     "file": "Data/raw/derived/knyszyn/world/chunk_2_2.low.glb",
-    "sha256": "f79345b73df4f2b7243e30521e8bebc6dde71d6a3a5fd8560796f3195bb14d78"
+    "sha256": "6e5d3955ab718e05b6f210a028f71dbde025b0a0fb5ccef55e8c9374364b9643"
    },
    "materials": [
     "brick_red",
-    "brick_red__far_office",
     "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
@@ -1711,11 +1661,8 @@
     "plaster_beige",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
     "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_light__far_office",
-    "plaster_light__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -1724,6 +1671,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -1733,18 +1681,18 @@
     "wood_planks_green",
     "yard_paving"
    ],
-   "sha256": "0a4d0d57fd90531b99780b3c4026efebf675508aa6ed17d2106f02220491ba3c",
+   "sha256": "20eab8a69dec82b738608b888c36cdd8f59129c87cdc7c9c22f65c3570ba15c1",
    "triangles": {
-    "buildings": 25250,
-    "buildings_lod1": 4437,
+    "buildings": 23906,
+    "buildings_lod1": 4145,
     "markings": 242,
-    "plot_ground": 11232,
-    "plots": 14877,
-    "plots_low": 10810,
+    "plot_ground": 11760,
+    "plots": 15101,
+    "plots_low": 10868,
     "road": 4008,
-    "road_collision": 7869,
-    "terrain_lod0": 135954,
-    "terrain_lod1": 34578,
+    "road_collision": 8135,
+    "terrain_lod0": 135946,
+    "terrain_lod1": 34570,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 280
@@ -1759,24 +1707,22 @@
     "z_max_evrf2007": 140.93,
     "z_min_evrf2007": 121.51
    },
-   "bytes": 13949012,
+   "bytes": 13980184,
    "file": "Data/raw/derived/knyszyn/world/chunk_2_3.glb",
    "forest_cells": [],
    "id": "2_3",
    "instances": {
-    "count": 105,
+    "count": 98,
     "file": "Data/raw/derived/knyszyn/world/instances_2_3.json",
-    "sha256": "852a414bb4aa6ae999ac3d52330ddf399a1f2ec89fe6327ffae6ea96bbd7cb73"
+    "sha256": "1ca08062756687efd2e3cfa62c7baabb39b9adf3b36d421ea22e51ddffc1a4f0"
    },
    "low": {
-    "bytes": 7053404,
+    "bytes": 7100676,
     "file": "Data/raw/derived/knyszyn/world/chunk_2_3.low.glb",
-    "sha256": "2283534a31826b548bd6cfa4cb77cec802ca0ea87b3ed762f8edfb6392c80d9e"
+    "sha256": "2b40a89b7f44f64b8b0694c2956a3e4edc248d3ba6dcf31a644671769cfae53c"
    },
    "materials": [
     "brick_red",
-    "brick_red__far_ribbon",
-    "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
     "collision_building",
@@ -1793,12 +1739,9 @@
     "hall_wall_silver",
     "marking_white",
     "plaster_beige",
-    "plaster_beige__far_office",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
     "plaster_light",
-    "plaster_light__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -1807,6 +1750,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -1816,18 +1760,18 @@
     "wood_planks",
     "yard_paving"
    ],
-   "sha256": "357e9b594a20674c3822638220093cd0ce4ed970c0d11daff8f42564c8de4606",
+   "sha256": "27f5585c4f590847f2927a6651980c73bf85855dd339f8abfda12b9682d5fb1e",
    "triangles": {
-    "buildings": 26608,
-    "buildings_lod1": 4515,
+    "buildings": 25750,
+    "buildings_lod1": 4387,
     "markings": 130,
-    "plot_ground": 12406,
-    "plots": 15467,
-    "plots_low": 11209,
+    "plot_ground": 12856,
+    "plots": 16551,
+    "plots_low": 11881,
     "road": 3971,
-    "road_collision": 8292,
-    "terrain_lod0": 136041,
-    "terrain_lod1": 34665,
+    "road_collision": 8558,
+    "terrain_lod0": 136037,
+    "terrain_lod1": 34661,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 482
@@ -1842,19 +1786,19 @@
     "z_max_evrf2007": 138.64,
     "z_min_evrf2007": 119.57
    },
-   "bytes": 14856452,
+   "bytes": 14865760,
    "file": "Data/raw/derived/knyszyn/world/chunk_2_4.glb",
    "forest_cells": [],
    "id": "2_4",
    "instances": {
-    "count": 125,
+    "count": 116,
     "file": "Data/raw/derived/knyszyn/world/instances_2_4.json",
-    "sha256": "ff78477af1d4f04e02483b2e1e5ad419738f9726c530f2551e0a50eda8bfd77d"
+    "sha256": "ea9f57ca119f83d8c9692e795a987aeb6b874465f63ac8fb2394078d4717f9ec"
    },
    "low": {
-    "bytes": 7349700,
+    "bytes": 7403676,
     "file": "Data/raw/derived/knyszyn/world/chunk_2_4.low.glb",
-    "sha256": "aef5a7ef5a381d9575304a448b3588f0a7d13783f71a01ae075ce02d06146e6f"
+    "sha256": "6c5e71dcee1e7c8b9d886c8bd2f1b60a1577169b537e23221803f77296092fe1"
    },
    "materials": [
     "brick_red",
@@ -1875,17 +1819,11 @@
     "hall_wall_silver",
     "marking_white",
     "plaster_beige",
-    "plaster_beige__far_office",
-    "plaster_beige__far_ribbon",
     "plaster_cream",
     "plaster_grey",
     "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_light__far_office",
     "plaster_light__far_ribbon",
-    "plaster_white",
-    "plaster_white__far_office",
-    "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -1894,6 +1832,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -1903,18 +1842,18 @@
     "wood_planks",
     "yard_paving"
    ],
-   "sha256": "7c3c74a3e993e5278740f104468a8c2e60cdfb82dacee0ae8028e12c6245da85",
+   "sha256": "753863e6f698636a034c45b944a1d4a75b353274ef67d6d2181b6f07b6bf613d",
    "triangles": {
-    "buildings": 33517,
-    "buildings_lod1": 5906,
+    "buildings": 31968,
+    "buildings_lod1": 5549,
     "markings": 163,
-    "plot_ground": 14803,
-    "plots": 17179,
-    "plots_low": 12873,
-    "road": 3729,
-    "road_collision": 10173,
-    "terrain_lod0": 136002,
-    "terrain_lod1": 34626,
+    "plot_ground": 15314,
+    "plots": 18873,
+    "plots_low": 13895,
+    "road": 3727,
+    "road_collision": 10432,
+    "terrain_lod0": 136014,
+    "terrain_lod1": 34638,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 433
@@ -1929,25 +1868,24 @@
     "z_max_evrf2007": 138.69,
     "z_min_evrf2007": 118.79
    },
-   "bytes": 15914484,
+   "bytes": 15633204,
    "file": "Data/raw/derived/knyszyn/world/chunk_2_5.glb",
    "forest_cells": [],
    "id": "2_5",
    "instances": {
-    "count": 123,
+    "count": 111,
     "file": "Data/raw/derived/knyszyn/world/instances_2_5.json",
-    "sha256": "2f92123e4fd1af1dcd6acac677cb64a8979013861e715c93c2648581f78e702e"
+    "sha256": "261ca1347413d0f59fa936623116f7e4d41a6d5e436ccc39dafaecf727525774"
    },
    "low": {
-    "bytes": 7375212,
+    "bytes": 7353184,
     "file": "Data/raw/derived/knyszyn/world/chunk_2_5.low.glb",
-    "sha256": "7859f54bb0b1b721b099007b9ae7d342c439ea6db80e5a7e1523f3867e0f4ea7"
+    "sha256": "3eb1cfd1ab7a21331c6eadee9cd2fdbd3fcaa21c9311011f3f03ed2b6b5c66f0"
    },
    "materials": [
     "balcony_slab",
     "brick_red",
     "brick_red__far_office",
-    "brick_red__far_ribbon",
     "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
@@ -1977,8 +1915,6 @@
     "plaster_cream",
     "plaster_cream__far_block",
     "plaster_grey",
-    "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
     "plaster_light__far_office",
     "plaster_white",
@@ -1992,6 +1928,7 @@
     "road_gravel",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -2001,17 +1938,17 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "c1d7dde360714d763ef4e622020a1d98d352e6ccbda82b7f32f3ac2340813865",
+   "sha256": "a0b2561508494292a197e143f122cda557d62a61648bfc2c501797c73d74a1c6",
    "triangles": {
-    "buildings": 47256,
-    "buildings_lod1": 6673,
+    "buildings": 43657,
+    "buildings_lod1": 5956,
     "markings": 190,
     "paved": 135,
-    "plot_ground": 13149,
-    "plots": 17071,
-    "plots_low": 12869,
+    "plot_ground": 13340,
+    "plots": 17423,
+    "plots_low": 13063,
     "road": 5420,
-    "road_collision": 10224,
+    "road_collision": 10327,
     "terrain_lod0": 136134,
     "terrain_lod1": 34758,
     "terrain_lod2": 8704,
@@ -2028,7 +1965,7 @@
     "z_max_evrf2007": 130.91,
     "z_min_evrf2007": 115.5
    },
-   "bytes": 11996168,
+   "bytes": 12064588,
    "file": "Data/raw/derived/knyszyn/world/chunk_2_6.glb",
    "forest_cells": [
     {
@@ -2070,14 +2007,14 @@
    ],
    "id": "2_6",
    "instances": {
-    "count": 327,
+    "count": 325,
     "file": "Data/raw/derived/knyszyn/world/instances_2_6.json",
-    "sha256": "e28cae900ced41c017f4ebdaa121763deb38f4c3504f52fc12150953e20c8621"
+    "sha256": "50ad2fb7af72071f4fff6a8d7252d32b4e4cc1db0c19352ac17b0397bfcd8ee4"
    },
    "low": {
-    "bytes": 6382604,
+    "bytes": 6418792,
     "file": "Data/raw/derived/knyszyn/world/chunk_2_6.low.glb",
-    "sha256": "b82ec8fdb2ec05c185b0296f7c1fc2c21e8d24229aa34284efaac5b5d1a20338"
+    "sha256": "628008518ee5eb55c69ea503b51a237b5f60db71b60b57a91e9b9153949558ea"
    },
    "materials": [
     "brick_red",
@@ -2105,14 +2042,9 @@
     "hall_wall_white",
     "marking_white",
     "plaster_beige",
-    "plaster_beige__far_office",
-    "plaster_beige__far_ribbon",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_white",
-    "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -2122,6 +2054,7 @@
     "road_gravel",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "roof_vent",
@@ -2134,18 +2067,18 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "7eaaafd5a9cc2f14fd6d57ae94c4f95414e29e8d022d023e9ad08203dc7f369b",
+   "sha256": "3c2b4669c44777c6defea52247c3cd945ef85e903449d855515fc382079e1d00",
    "triangles": {
-    "buildings": 15111,
-    "buildings_lod1": 2656,
+    "buildings": 14969,
+    "buildings_lod1": 2651,
     "forest_hlod": 268,
     "markings": 278,
     "paved": 127,
-    "plot_ground": 4849,
-    "plots": 6308,
-    "plots_low": 4716,
+    "plot_ground": 5142,
+    "plots": 7256,
+    "plots_low": 5264,
     "road": 7351,
-    "road_collision": 5839,
+    "road_collision": 6010,
     "terrain_lod0": 136154,
     "terrain_lod1": 34778,
     "terrain_lod2": 8704,
@@ -2162,7 +2095,7 @@
     "z_max_evrf2007": 129.02,
     "z_min_evrf2007": 113.07
    },
-   "bytes": 9665196,
+   "bytes": 9661776,
    "file": "Data/raw/derived/knyszyn/world/chunk_2_7.glb",
    "forest_cells": [
     {
@@ -2186,7 +2119,7 @@
      ],
      "id": "11_28",
      "mix": "mixed",
-     "trees": 148,
+     "trees": 145,
      "tris": 289
     },
     {
@@ -2204,17 +2137,16 @@
    ],
    "id": "2_7",
    "instances": {
-    "count": 470,
+    "count": 448,
     "file": "Data/raw/derived/knyszyn/world/instances_2_7.json",
-    "sha256": "760e4e85bbbcaf54aba703fd3efbb3fce029fb9c2e239e663b0f7731bebca79f"
+    "sha256": "cb86c0cc1b5cff4f4fc93aabd2ef79cd4e9fb74fa368f53c10e16b785da97894"
    },
    "low": {
-    "bytes": 5469240,
+    "bytes": 5478080,
     "file": "Data/raw/derived/knyszyn/world/chunk_2_7.low.glb",
-    "sha256": "77185330eda4a81225673bee2ffeef421c9655d276960055dfe26020ceb7239e"
+    "sha256": "8040fc347b032a57340b6f0e0a71b1a2960657acb59f5b98845ebe94e740367e"
    },
    "materials": [
-    "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
     "collision_building",
@@ -2226,16 +2158,15 @@
     "fab_drainage",
     "facade_atlas",
     "hall_flashing",
-    "plaster_beige",
-    "plaster_beige__far_ribbon",
+    "plaster_cream",
     "plaster_light",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
     "reveal_plaster",
     "road_asphalt",
-    "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_red",
     "soffit_boards",
     "terrain_grass",
@@ -2243,17 +2174,17 @@
     "wire",
     "wood_planks_green"
    ],
-   "sha256": "c6f232d72f013394aca4b06402b08b5cb755957f2debd7db03407fcc5ee1622f",
+   "sha256": "dec9949d012ab63d20ef6256f7ac7d429267a6d1f8ef40c36569f89483bfe89d",
    "triangles": {
-    "buildings": 1472,
-    "buildings_lod1": 268,
+    "buildings": 1118,
+    "buildings_lod1": 200,
     "forest_hlod": 515,
     "markings": 12,
-    "plot_ground": 219,
-    "plots": 762,
-    "plots_low": 438,
+    "plot_ground": 399,
+    "plots": 996,
+    "plots_low": 520,
     "road": 672,
-    "road_collision": 426,
+    "road_collision": 538,
     "terrain_lod0": 135200,
     "terrain_lod1": 33824,
     "terrain_lod2": 8704,
@@ -2427,23 +2358,22 @@
     "z_max_evrf2007": 150.72,
     "z_min_evrf2007": 118.96
    },
-   "bytes": 11989392,
+   "bytes": 11922760,
    "file": "Data/raw/derived/knyszyn/world/chunk_3_2.glb",
    "forest_cells": [],
    "id": "3_2",
    "instances": {
-    "count": 150,
+    "count": 148,
     "file": "Data/raw/derived/knyszyn/world/instances_3_2.json",
-    "sha256": "c7941dfd1eb1c7ad843f21b7fe40b583b30672f9172419a34ad99317d38af1e7"
+    "sha256": "7ffc4dfa7600a86cd1335ae30748697a58f22bf9fea0d57a52ab9c8fb467902c"
    },
    "low": {
-    "bytes": 6433392,
+    "bytes": 6422248,
     "file": "Data/raw/derived/knyszyn/world/chunk_3_2.low.glb",
-    "sha256": "5045acc0838cb0dd9f795abac561122dae68a107fe9c37978b1675f2219debbf"
+    "sha256": "0a28c4d021f43b24e29f41a753c8e30cd0234ae6d27de258558ca5b66fe4b744"
    },
    "materials": [
     "brick_red",
-    "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
     "collision_building",
@@ -2462,9 +2392,6 @@
     "plaster_cream",
     "plaster_grey",
     "plaster_light",
-    "plaster_light__far_office",
-    "plaster_white",
-    "plaster_white__far_office",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -2473,6 +2400,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "soffit_boards",
@@ -2481,14 +2409,14 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "60945d03341cab19d38fcaeaec1395a8a49e7fd446c35f73e02ada69561fd8bf",
+   "sha256": "414e7c4a5a6bd3e6d0ddb0c5ca693cfec160179b52f58e2fec70a8b16eea8408",
    "triangles": {
-    "buildings": 13742,
-    "buildings_lod1": 2278,
+    "buildings": 13024,
+    "buildings_lod1": 2130,
     "markings": 76,
     "plot_ground": 7672,
-    "plots": 8868,
-    "plots_low": 6726,
+    "plots": 8866,
+    "plots_low": 6724,
     "road": 4976,
     "road_collision": 5931,
     "terrain_lod0": 135872,
@@ -2507,7 +2435,7 @@
     "z_max_evrf2007": 135.6,
     "z_min_evrf2007": 117.38
    },
-   "bytes": 10189076,
+   "bytes": 10189068,
    "file": "Data/raw/derived/knyszyn/world/chunk_3_3.glb",
    "forest_cells": [],
    "id": "3_3",
@@ -2519,7 +2447,7 @@
    "low": {
     "bytes": 5648436,
     "file": "Data/raw/derived/knyszyn/world/chunk_3_3.low.glb",
-    "sha256": "fc4023980d863bf6e375c8f281fb37905bbdb73e5329b700d20996c73fbf8048"
+    "sha256": "7019d5b73fdd8bc57258acf377752fdb2683941b84d32e551f510f5f8fdbf985"
    },
    "materials": [
     "brick_red",
@@ -2559,7 +2487,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "a40d3a51605738b20f589da9d9751f5078aefb73d1460d10750da2832d373ec5",
+   "sha256": "715a8804f339dca726fe70d1182fcba86e7e7dc23950f772a87dbe09e71e487c",
    "triangles": {
     "buildings": 4724,
     "buildings_lod1": 775,
@@ -2597,7 +2525,7 @@
    "low": {
     "bytes": 5375784,
     "file": "Data/raw/derived/knyszyn/world/chunk_3_4.low.glb",
-    "sha256": "03ba9db429c29117226b603e67527989b6853eac5a159ef5e85a134a2091896e"
+    "sha256": "2441f1355426a12ae40c57a71cce53dc982eab7b2b8f3608bb747de4d48164fa"
    },
    "materials": [
     "collision_building",
@@ -2619,7 +2547,7 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "ea7e1c71663b539c02a4cc663a41758646c532f4ba16e0b8d6a8548411217467",
+   "sha256": "9acc52f7720b8b9be58e034b0c459403609ea95e83f60968f294d26b9e636d3b",
    "triangles": {
     "buildings": 235,
     "buildings_lod1": 27,
@@ -2643,19 +2571,19 @@
     "z_max_evrf2007": 136.77,
     "z_min_evrf2007": 116.36
    },
-   "bytes": 13240688,
+   "bytes": 13194000,
    "file": "Data/raw/derived/knyszyn/world/chunk_3_5.glb",
    "forest_cells": [],
    "id": "3_5",
    "instances": {
-    "count": 159,
+    "count": 154,
     "file": "Data/raw/derived/knyszyn/world/instances_3_5.json",
-    "sha256": "dadccc012cf69dc9491e3a1da30da36bb1af7030c078aee402e74ffa785c66a7"
+    "sha256": "6bd819bab050fbafa71eb2ca2bad8cf348d58c55ed43b27f40909a2c4d916214"
    },
    "low": {
-    "bytes": 6513536,
+    "bytes": 6522932,
     "file": "Data/raw/derived/knyszyn/world/chunk_3_5.low.glb",
-    "sha256": "d7f6acf0b99f55f960184b7984f00c4744f1fc01481cf014e4fb7b95ff8e5c56"
+    "sha256": "431c7170876666fc3f44796bf8404f34b07ed866ec04ebb40c63a5cf7622eccd"
    },
    "materials": [
     "brick_red",
@@ -2696,6 +2624,7 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
     "roof_tiles_brown",
     "roof_tiles_red",
     "roof_vent",
@@ -2707,16 +2636,16 @@
     "wood_planks_green",
     "yard_paving"
    ],
-   "sha256": "58c92475aa0efa5f5e51a1333f2c528b96adf00bf0965d14aa3b5be9d466486d",
+   "sha256": "e6313506c2d07cc30762b2563b798b35bdddcd46d0e58006a24e82d63ec9f4fa",
    "triangles": {
-    "buildings": 28476,
-    "buildings_lod1": 4548,
+    "buildings": 27549,
+    "buildings_lod1": 4323,
     "markings": 49,
-    "plot_ground": 7296,
-    "plots": 8891,
-    "plots_low": 6086,
+    "plot_ground": 7555,
+    "plots": 9123,
+    "plots_low": 6218,
     "road": 3670,
-    "road_collision": 6132,
+    "road_collision": 6275,
     "terrain_lod0": 135634,
     "terrain_lod1": 34258,
     "terrain_lod2": 8704,
@@ -2733,23 +2662,22 @@
     "z_max_evrf2007": 129.59,
     "z_min_evrf2007": 113.5
    },
-   "bytes": 10417152,
+   "bytes": 10420540,
    "file": "Data/raw/derived/knyszyn/world/chunk_3_6.glb",
    "forest_cells": [],
    "id": "3_6",
    "instances": {
-    "count": 177,
+    "count": 171,
     "file": "Data/raw/derived/knyszyn/world/instances_3_6.json",
-    "sha256": "475890bc0b817999b71a21a057d74a0dfd558b97f9cd2b11cba94427cd1a4076"
+    "sha256": "7ebe8b84fbd4e0ed4d5c4e9787d772842c2b70d39ae077d21a9e11fd4778ffd2"
    },
    "low": {
-    "bytes": 5742812,
+    "bytes": 5761544,
     "file": "Data/raw/derived/knyszyn/world/chunk_3_6.low.glb",
-    "sha256": "7b378083617f1cb92c5a884dc5ea7c2eab44366c1283bf7b2635a694e09a44db"
+    "sha256": "b24239607098f30b68908bb30a296a252ad95d9ddde35d438ddb75c38dbc0c5a"
    },
    "materials": [
     "brick_red",
-    "brick_red__far_office",
     "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
@@ -2775,10 +2703,7 @@
     "plaster_cream",
     "plaster_grey",
     "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_white",
-    "plaster_white__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -2787,6 +2712,8 @@
     "road_asphalt",
     "roof_membrane",
     "roof_metal_graphite",
+    "roof_sheet_grey",
+    "roof_tiles_brown",
     "roof_tiles_red",
     "roof_vent",
     "showroom_glass",
@@ -2799,17 +2726,17 @@
     "yard_asphalt",
     "yard_paving"
    ],
-   "sha256": "1d22b668c9a03d218610f2b028f783db8eec6a20038aedf042bb40c00f0784fe",
+   "sha256": "939dd6cb5a59cb5c08b3cefc080d279c387704f0559799f5b96f94f9f8534739",
    "triangles": {
-    "buildings": 6614,
-    "buildings_lod1": 1131,
+    "buildings": 6198,
+    "buildings_lod1": 1036,
     "markings": 118,
     "paved": 895,
-    "plot_ground": 873,
-    "plots": 975,
-    "plots_low": 734,
+    "plot_ground": 1077,
+    "plots": 1415,
+    "plots_low": 1040,
     "road": 4080,
-    "road_collision": 2570,
+    "road_collision": 2710,
     "terrain_lod0": 135687,
     "terrain_lod1": 34311,
     "terrain_lod2": 8704,
@@ -2915,7 +2842,7 @@
     "z_max_evrf2007": 127.24,
     "z_min_evrf2007": 117.89
    },
-   "bytes": 9443408,
+   "bytes": 9443396,
    "file": "Data/raw/derived/knyszyn/world/chunk_4_1.glb",
    "forest_cells": [],
    "id": "4_1",
@@ -2925,9 +2852,9 @@
     "sha256": "8ac2924d51f4b56df8abee2619cea38b571c0c7f16930f16c4423288457b67e7"
    },
    "low": {
-    "bytes": 5367932,
+    "bytes": 5367916,
     "file": "Data/raw/derived/knyszyn/world/chunk_4_1.low.glb",
-    "sha256": "3b7b859318ed72773b08ed7a4d99d83744395099e124345dc7d6be0bbfe0f0ca"
+    "sha256": "e0fc7c40ec69a59e392f73c9cfb708244b9b609831d000b402e3fb224c64fd95"
    },
    "materials": [
     "chimney_brick",
@@ -2942,12 +2869,12 @@
     "plot_kit",
     "plot_lawn",
     "reveal_plaster",
-    "roof_tiles_brown",
+    "roof_metal_graphite",
     "soffit_boards",
     "terrain_grass",
     "window_sill"
    ],
-   "sha256": "7b227cfa2802e8877fe8d3de236ccbcd1b47fd8106859c96e33b615bafe62ca0",
+   "sha256": "2ffefe9abe418edc75384e715c71504d74f97c416269e827e980729b471225d1",
    "triangles": {
     "buildings": 382,
     "buildings_lod1": 56,
@@ -3087,23 +3014,21 @@
     "z_max_evrf2007": 130.69,
     "z_min_evrf2007": 115.03
    },
-   "bytes": 9822016,
+   "bytes": 9787968,
    "file": "Data/raw/derived/knyszyn/world/chunk_4_5.glb",
    "forest_cells": [],
    "id": "4_5",
    "instances": {
-    "count": 163,
+    "count": 162,
     "file": "Data/raw/derived/knyszyn/world/instances_4_5.json",
-    "sha256": "067c865d913564cb7861d5446c7fe477a0b6b3b7f4066ee5ea50ca16c0e66b16"
+    "sha256": "5e1082c006dd4189bba06caa8d44784a0371d6cf64c35267d2d6a783b5edaeb9"
    },
    "low": {
-    "bytes": 5486884,
+    "bytes": 5481860,
     "file": "Data/raw/derived/knyszyn/world/chunk_4_5.low.glb",
-    "sha256": "41c5603e6450ae305f266d037bdc8fefefd56c8445fda392037f38ccf7035dd2"
+    "sha256": "4eca9f9208989be451f53762929c6c3718db85f491addfe412556730d54a9545"
    },
    "materials": [
-    "brick_red",
-    "brick_red__far_office",
     "canopy_steel",
     "chimney_brick",
     "collision_building",
@@ -3118,8 +3043,6 @@
     "hall_wall_silver",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
     "plinth_dark",
     "plot_kit",
@@ -3129,21 +3052,20 @@
     "roof_membrane",
     "roof_metal_graphite",
     "roof_tiles_brown",
-    "roof_tiles_red",
     "soffit_boards",
     "terrain_grass",
     "window_sill",
     "wire",
     "yard_paving"
    ],
-   "sha256": "3618478bd74f516f8aa44554afee6600c643c2ff21c92253222b1798bf7c9f7a",
+   "sha256": "df4752afadced411f0991f1855337cff7c1d447ca822537dba54f5aa8ddd9e33",
    "triangles": {
-    "buildings": 3209,
-    "buildings_lod1": 575,
-    "plot_ground": 901,
-    "plots": 1120,
-    "plots_low": 870,
-    "road_collision": 642,
+    "buildings": 2836,
+    "buildings_lod1": 495,
+    "plot_ground": 941,
+    "plots": 1173,
+    "plots_low": 915,
+    "road_collision": 669,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -3160,29 +3082,27 @@
     "z_max_evrf2007": 131.89,
     "z_min_evrf2007": 113.52
    },
-   "bytes": 11660884,
+   "bytes": 11693444,
    "file": "Data/raw/derived/knyszyn/world/chunk_4_6.glb",
    "forest_cells": [],
    "id": "4_6",
    "instances": {
-    "count": 236,
+    "count": 230,
     "file": "Data/raw/derived/knyszyn/world/instances_4_6.json",
-    "sha256": "dd98da92cc4e09b4953028e7d8e9b1dcc43916071fa5b919316d1848e738e110"
+    "sha256": "6cf447bd786c0b239dd4c60547084f2058171ef97c12a604989297f3e8e20349"
    },
    "low": {
-    "bytes": 6383780,
+    "bytes": 6441012,
     "file": "Data/raw/derived/knyszyn/world/chunk_4_6.low.glb",
-    "sha256": "8ba04ecaf1b438ec1994a4894ba3ba6cd038ed3b287ba4c3bf2a977a388c88d7"
+    "sha256": "795620bf738cc9cc7e58536659ecf988864f25b91bfe74a449ffa21d52f5ed8a"
    },
    "materials": [
     "barrier_steel",
     "brick_red",
-    "brick_red__far_office",
     "brick_red__far_ribbon",
     "bridge_concrete",
     "bridge_kerb",
     "bridge_soffit",
-    "canopy_steel",
     "chimney_brick",
     "collision_asphalt",
     "collision_building",
@@ -3202,12 +3122,7 @@
     "plaster_beige",
     "plaster_cream",
     "plaster_grey",
-    "plaster_grey__far_office",
-    "plaster_grey__far_ribbon",
     "plaster_light",
-    "plaster_light__far_ribbon",
-    "plaster_white",
-    "plaster_white__far_office",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -3217,7 +3132,7 @@
     "road_gravel",
     "roof_membrane",
     "roof_metal_graphite",
-    "roof_tiles_brown",
+    "roof_sheet_grey",
     "roof_tiles_red",
     "sidewalk_paving",
     "soffit_boards",
@@ -3227,20 +3142,20 @@
     "yard_asphalt",
     "yard_paving"
    ],
-   "sha256": "4b904aeb8e27bf16f50c090194905138862335dc1bcd23b95070e816f18485fa",
+   "sha256": "9bb0c8aee347372e3124a7d2d7c95485a92b7d3d1e77b2506b0d5f775078e7ec",
    "triangles": {
     "bridge": 1070,
-    "buildings": 10950,
-    "buildings_lod1": 1822,
+    "buildings": 10051,
+    "buildings_lod1": 1646,
     "markings": 495,
     "paved": 701,
-    "plot_ground": 4548,
-    "plots": 5472,
-    "plots_low": 4362,
-    "road": 7458,
-    "road_collision": 6688,
-    "terrain_lod0": 136518,
-    "terrain_lod1": 35142,
+    "plot_ground": 5493,
+    "plots": 6367,
+    "plots_low": 4911,
+    "road": 7464,
+    "road_collision": 7117,
+    "terrain_lod0": 136538,
+    "terrain_lod1": 35162,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 425
@@ -4416,7 +4331,7 @@
      "vertices": 13711
     }
    },
-   "sha256": "ed2e67a3de73d94b8e38c73e33df2403b44a0781e2be51ebdff8556acb9e9278",
+   "sha256": "fb6bfe2dce927b29ce6817b7b01bad7365c477dcdecb4fb2d88c3a892c94b0c9",
    "skyline": {
     "landmark_stack_proxies": [],
     "min_building_h_m": 24.0,
@@ -4469,7 +4384,7 @@
      "vertices": 4892
     }
    },
-   "sha256": "0733a6cf6fed7d8c021a0eb0ae2a4368245166f62f5bdd3feb85454965c18268",
+   "sha256": "e3ddd7db325cca3e22892c6dff664ff8597299c314d4aaf971d25ddaafe6f3d1",
    "skyline": {
     "landmark_stack_proxies": [],
     "min_building_h_m": 24.0,
@@ -8132,6 +8047,20 @@
    "texture_set": "roof_tiles",
    "tint_linear": true
   },
+  "roof_sheet_grey": {
+   "color": [
+    0.3,
+    0.31,
+    0.32
+   ],
+   "rough": 0.6,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "roof_tiles"
+  },
   "roof_tiles_brown": {
    "color": [
     0.11,
@@ -9140,7 +9069,7 @@
  "sources_sha256": {
   "generated/osm_context.json": "ae4237e05e9b3f00b243175b307743c03f5650c012b800e06f0f9d72f7a68f98",
   "heightmap.r16 (Data/raw)": "309c5fe6503e6ead00e5ddb4daafb1053944acb70d37c2777cc9f65c420a2f52",
-  "overrides.yaml": "6b16bd18c180caacff441f47c795a19035e1c9f51689332df535eb1ede5f2daf",
+  "overrides.yaml": "ca1c904a3b90190af2dce0c2a55abd7a3480b68d625c1167ac0ab8b61835a035",
   "roads.graph.json": "be6b3b5629f67fd533d95386a42ef220e0aecc3621ebb61105547f80ac680439",
   "terrain.json": "36279e41ff3952cd7b8963778865c082fc315ca18ddf2eb8633888428f3d821f"
  },
