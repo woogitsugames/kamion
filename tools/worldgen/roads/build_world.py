@@ -829,7 +829,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     t0 = time.time()
     log = (lambda *a: print(f"[world {time.time() - t0:6.1f}s]", *a)) if verbose else (lambda *a: None)
     # pass 1: geometry with the raw NMT -> bridge decks -> remove deck-contaminated NMT under them
-    w0 = pipeline.build(region_id)
+    w0 = pipeline.build(region_id, collision=False)     # ADR 0281 K1a: pass 1 never reads the collision layer
     deck_parts = [p for p in w0.buf.parts if p.layer == "bridge" and not p.src.endswith(":parapet")]
     for p in deck_parts:
         p.footprint = True

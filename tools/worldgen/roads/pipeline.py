@@ -89,7 +89,10 @@ def build_network(region_id: str, graph: dict | None = None):
     return net, graph, overrides, stats
 
 
-def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None, side_edit=None) -> World:
+def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None, side_edit=None,
+          collision: bool = True) -> World:
+    """collision=False skips the coarse collision ribbons / patches (layer 'collision' only): pass 1 of build_world
+    reads only the road / bridge layers (ADR 0281 K1a)."""
     region = load_region(region_id)
     origin = (region["origin"]["x"], region["origin"]["y"])
     rdir = REGIONS / region_id
@@ -161,11 +164,13 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
         stats["side_edit"] = side_edit(net)
     for c in net.chains:
         M.build_ribbon(buf, net, c)
-        M.build_ribbon(buf, net, c, coarse=True)
+        if collision:
+            M.build_ribbon(buf, net, c, coarse=True)
     stats["median_fills"] = M.build_median_fills(buf, net)           # ADR 0146
     for j in juncs:
         M.build_patch(buf, net, j, stats=stats["patch"])
-        M.build_patch(buf, net, j, coarse=True)
+        if collision:
+            M.build_patch(buf, net, j, coarse=True)
     GO.build(buf, net, gore_plan)                                    # paved gores / P-21 (ADR 0077)
     stats["compact_roundabouts"] = CR.build(buf, net, juncs)         # ADR 0218 5c: apron annulus + centre island
     stats["sides_on_carriageway_culled"] = M.cull_sides_on_carriageway(buf)

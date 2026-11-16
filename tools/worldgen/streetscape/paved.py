@@ -20,6 +20,7 @@ cast concrete and asphalt yards end flush (no kerb, standards.PAVED_EDGING).
 
 from __future__ import annotations
 
+import hashlib
 import math
 
 import numpy as np
@@ -204,6 +205,13 @@ def _trim_spikes(g):
     return g
 
 
+# ADR 0281 (K2): the footprint was unioned 5x per build_world (pass 1 plots, pass 2 stage, cycleway paint, gate 3
+# signs) - the same triangles gave the same polygon at ~38 s a call. Memo keyed by the SHA-256 of the triangle array
+# (shape + bytes) actually unioned: a hit returns the polygon of byte-identical input, a miss computes as before.
+_FOOTPRINT_MEMO: dict = {}
+_FOOTPRINT_MEMO_MAX = 4
+
+
 def road_footprint_polygon(parts, bounds=None):
     """Union of ground road surface triangles (carriageways, kerbs, sidewalks, junction patches)."""
     tris = [p.V[p.T][:, :, :2] for p in parts if p.footprint]
@@ -214,6 +222,18 @@ def road_footprint_polygon(parts, bounds=None):
         x0, y0, x1, y1 = bounds
         mn, mx = T.min(1), T.max(1)
         T = T[(mx[:, 0] >= x0) & (mn[:, 0] <= x1) & (mx[:, 1] >= y0) & (mn[:, 1] <= y1)]
+    T = np.ascontiguousarray(T, dtype=np.float64)
+    key = (T.shape, hashlib.sha256(T.tobytes()).hexdigest())
+    hit = _FOOTPRINT_MEMO.get(key)
+    if hit is None:
+        hit = _road_footprint_union(T)
+        if len(_FOOTPRINT_MEMO) >= _FOOTPRINT_MEMO_MAX:
+            _FOOTPRINT_MEMO.pop(next(iter(_FOOTPRINT_MEMO)))
+        _FOOTPRINT_MEMO[key] = hit
+    return hit
+
+
+def _road_footprint_union(T):
     polys = shapely.polygons(np.concatenate([T, T[:, :1]], axis=1))
     polys = polys[shapely.area(polys) > 1e-4]
     return shapely.make_valid(shapely.union_all(polys, grid_size=0.01))
@@ -313,6 +333,9 @@ def dominant_angle(poly):
 
 def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
     """Paved surface parts (layer 'paved', footprint) + edging / flange strips + collision."""
+    # ADR 0281 (K4a): the NaN-filled grids are the same for every item / ring - built once per call (lazily, so an
+    # empty `paved` costs nothing), not 748 + 818 times over the full 2049^2 grid
+    zfill = zf0 = None
     for item in paved:
         poly, mat = item["poly"], item["mat"]
         T2 = triangulate(poly)
@@ -322,8 +345,9 @@ def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
         q = np.round(P * 1000).astype(np.int64)
         u, first, inv = np.unique(q, axis=0, return_index=True, return_inverse=True)
         P = P[first]
-        Z = bilinear(np.nan_to_num(zgrid, nan=np.nanmean(zgrid[np.isfinite(zgrid)]) if np.isfinite(zgrid).any() else 0),
-                     hf, P[:, 0], P[:, 1])
+        if zfill is None:
+            zfill = np.nan_to_num(zgrid, nan=np.nanmean(zgrid[np.isfinite(zgrid)]) if np.isfinite(zgrid).any() else 0)
+        Z = bilinear(zfill, hf, P[:, 0], P[:, 1])
         V = np.column_stack([P, Z + S.PAVED_LIFT])
         T = inv.ravel().reshape(-1, 3)
         a = dominant_angle(poly)
@@ -335,7 +359,9 @@ def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
         UV1 = np.column_stack([np.minimum(dedge, 50.0), np.minimum(dwall, 50.0)])
         buf.add(item.get("layer", "paved"), mat, V, UV, T, footprint=True, src=item["id"], UV1=UV1)      # layer: ADR 0114
         buf.add("collision", "collision_" + S.SURFACE_OF.get(mat, "asphalt"), V, UV, T, src=item["id"])
-        _edges(buf, item, zgrid, hf, roads_poly)
+        if zf0 is None:
+            zf0 = np.nan_to_num(zgrid, nan=0.0)
+        _edges(buf, item, zgrid, hf, roads_poly, zf=zf0)
 
 
 EDGE_TOL_XY_M = 0.002       # ADR 0221: an edge vertex may be dropped when it lies this close to the chord in plan
@@ -385,7 +411,31 @@ def _edge_keep(P, Z, skip, nout=None):
     return np.flatnonzero(keep)
 
 
-def _edges(buf, item, zgrid, hf, roads_poly=None):
+NEAR_CLIP_PAD_M = 1.0       # ADR 0281 K4b: window margin around the query points (> any distance tested)
+NEAR_RECHECK_M = 1e-6       # ... and the band around the threshold re-tested against the whole polygon
+
+
+def near_road(pts_xy, roads_poly, dist):
+    """shapely.distance(points, roads_poly) < dist, without measuring every point against the footprint of the whole
+    tile (71 k vertices on C: 12.6 s -> 0.4 s per build_meshes, ADR 0281 K4b). The polygon is clipped to the points'
+    box + NEAR_CLIP_PAD_M: every nearest point closer than `dist` lies inside that window, so the distances below `dist`
+    are the same. Only the clipped edges carry new end points (round-off ~1e-13 m), so a distance within
+    NEAR_RECHECK_M of the threshold is measured again on the whole polygon - the boolean equals the original call."""
+    pts_xy = np.asarray(pts_xy, float)
+    pts = shapely.points(pts_xy)
+    if not len(pts_xy) or dist >= NEAR_CLIP_PAD_M:
+        return shapely.distance(pts, roads_poly) < dist
+    x0, y0 = pts_xy.min(0) - NEAR_CLIP_PAD_M
+    x1, y1 = pts_xy.max(0) + NEAR_CLIP_PAD_M
+    d = shapely.distance(pts, shapely.clip_by_rect(roads_poly, x0, y0, x1, y1))
+    out = d < dist                       # NaN (nothing of the polygon in the window): the true distance is > pad
+    amb = np.abs(d - dist) < NEAR_RECHECK_M
+    if amb.any():
+        out[amb] = shapely.distance(pts[amb], roads_poly) < dist
+    return out
+
+
+def _edges(buf, item, zgrid, hf, roads_poly=None, zf=None):
     """Outer edge: concrete edging strip (paving blocks) or flush flange (concrete / asphalt)."""
     if item.get("park_flush") is True:
         return
@@ -411,7 +461,8 @@ def _edges(buf, item, zgrid, hf, roads_poly=None):
         d = np.gradient(P, axis=0)
         d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
         nout = np.column_stack([d[:, 1], -d[:, 0]])        # right of travel = outside for CCW ring
-        zf = np.nan_to_num(zgrid, nan=0.0)
+        if zf is None:
+            zf = np.nan_to_num(zgrid, nan=0.0)
         Z = bilinear(zf, hf, P[:, 0], P[:, 1]) + S.PAVED_LIFT
         n = len(P)
         s = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
@@ -427,7 +478,7 @@ def _edges(buf, item, zgrid, hf, roads_poly=None):
         # no edging / flange where the area meets a road surface (the road owns that edge)
         if roads_poly is not None and not roads_poly.is_empty:
             mid = 0.5 * (P[1:] + P[:-1])
-            skip = shapely.distance(shapely.points(mid), roads_poly) < 0.6
+            skip = near_road(mid, roads_poly, 0.6)
         else:
             skip = np.zeros(n - 1, bool)
         # ADR 0188: no edging / flange either where the area abuts its sibling strip (cycle track | footway of one
