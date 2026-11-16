@@ -1,5 +1,7 @@
 # 06 — Pierścień regionów: Mońki, Tykocin, DW671 — WIP
 
+Stan ewidencji głównej na 16.11.2026: **34 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+
 Cel: rozpoznawalny układ miejsc i planowane zmiany, z rozróżnieniem projektu od stanu wykonanego. Nowy materiał: **2 ortofoto GUGiK + 2 komunikaty tekstowe link-only**, 0 nowych fotografii ulicznych. Każdy ortokadr obejrzany osobno. Wycinki obejmują 400×400m, oryginały1600×1600px przy0.25m/px poza gitem; miniatury800×800. Pełne bbox/URL/SHA i zapytania skorowidza w `data/wms-overviews.json`. Źródło środka to węzeł miejscowości OSM, nie deklarowany geometryczny środek rynku.
 
 ## Tykocin

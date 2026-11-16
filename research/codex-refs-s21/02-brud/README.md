@@ -1,8 +1,10 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
+Stan ewidencji głównej na 16.11.2026: **23 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+
 Aktualny manifest:23rekordy=21kadrów(14lokalnych/7link-only)+2dokumenty, w tym odrzucenia/AUX. Nie23kwalifikacje. [RejestrA/B/C](qualification-ledger-round18/README.md) rozdziela wymagania bez ich obniżania.
 
-A:≥20łącznie — rozpoznana dolna granica5treściowych źródeł (3rdzeniowe158/182/183 +1Krone zlekkim miejscowymfilmem +1RoadTour source-dependent). B:≥12NOWYCH z≥1000pxdrzwi i ruchem/zarazpotrasie — potwierdzone1źródłoWesternExpress, liczone raz zP18-182/CR6. C-zima-A:1source-dependent, C-Europa-A / zima-B / Europa-B:0potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. 45/88rekordówP18 obejrzanych,43NOT_REVIEWED. Całe20/12/6/6niepotwierdzone; nie przyjmujemy statusówbezoglądu.
+A:≥20łącznie — rozpoznana dolna granica5treściowych źródeł (3rdzeniowe158/182/183 +1Krone zlekkim miejscowymfilmem +1RoadTour source-dependent). B:≥12NOWYCH z≥1000pxdrzwi i ruchem/zarazpotrasie — potwierdzone1źródłoWesternExpress, liczone raz zP18-182/CR6. C-zima-A:1source-dependent, C-Europa-A / zima-B / Europa-B:0potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. 70/88 rekordów P18 obejrzanych, 18 NOT_REVIEWED. Całe20/12/6/6niepotwierdzone; nie przyjmujemy statusówbezoglądu.
 
 Źródłowy typnaczepy, brud zamiast powłoki/rdzy, zimowy kontekst i europejska droga mają osobne dowody. Stare kadry nie stają się nowymiB; mniejszy nowy kadrA nie spełniaB. Wycinki/aliasy jednego zdjęcia nie zwiększają wyniku. Szczegółowe historyczne poszukiwania i erraty poniżej.
 

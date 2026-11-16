@@ -1,6 +1,8 @@
 # 03 — Knyszyn: bryły i detale fasad — WIP
 
-Stan bieżący:SOURCED [manifest]36rekordy, w tym4nowe kadry pracującej fontanny(3dzień+1noc), wszystkie link-onlyARR. Nocna fotografia pokazuje tony niebieskie/cyjanowe/różowofioletowe w wodzie i osobne odbicia. Liczba dysz, obiegów, metryka, typ lamp/program oraz aktualność2026UNVERIFIED; projekt2019 nie jest dokumentacją wykonawczą. Szczegóły fountain-active-round7 i fountain-night-round8.
+Stan ewidencji głównej na 16.11.2026: **38 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+
+Wcześniejszy etap:SOURCED [manifest]36rekordy, w tym4nowe kadry pracującej fontanny(3dzień+1noc), wszystkie link-onlyARR. Nocna fotografia pokazuje tony niebieskie/cyjanowe/różowofioletowe w wodzie i osobne odbicia. Liczba dysz, obiegów, metryka, typ lamp/program oraz aktualność2026UNVERIFIED; projekt2019 nie jest dokumentacją wykonawczą. Szczegóły fountain-active-round7 i fountain-night-round8.
 
 Cel: dać sesji rynku rozróżnienia brył, kolorów i detali, które gubią się w ogólnym opisie „1–2 kondygnacje”. Pięć kadrów obejrzano osobno ponownie. To pogłębienie istniejącego K1, **0 nowych pobrań zdjęć**, 5 pomniejszeń lokalnych kopii K1, 0 kadrów link-only. Licencje i autorów ponownie sprawdzono przez Commons API; zapis w `data/licences-commons.json`. Daty 2009/2012/2024, aktualny stan 2026 UNVERIFIED. Miniatury ≤ 800 px. To nie są zdjęcia właściciela.
 

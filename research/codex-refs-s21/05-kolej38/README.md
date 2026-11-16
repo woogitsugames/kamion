@@ -1,6 +1,8 @@
 # 05 — Linia38: elektryfikacja i stan zastany kontra projekt — WIP
 
-Stan bieżący:15 rekordów —6 dokumentacyjnych,4 danychOSM,1orto,2 lokalne fotografie stacji oraz2link-only kadry1przejazdu DW671 z2019. KategoriaB jest udokumentowana dla km29+522 w obwieszczeniu2025; przypisanie do konkretnych fotografii i stan wyposażenia2026 nadalUNVERIFIED. Źródłowe3kV DC uzupełniono z dwóch dokumentówPKP, nie wyłącznie z OSM.
+Stan ewidencji głównej na 16.11.2026: **17 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+
+Wcześniejszy etap:15 rekordów —6 dokumentacyjnych,4 danychOSM,1orto,2 lokalne fotografie stacji oraz2link-only kadry1przejazdu DW671 z2019. KategoriaB jest udokumentowana dla km29+522 w obwieszczeniu2025; przypisanie do konkretnych fotografii i stan wyposażenia2026 nadalUNVERIFIED. Źródłowe3kV DC uzupełniono z dwóch dokumentówPKP, nie wyłącznie z OSM.
 
 W gicie tylko odnośniki, własne parafrazy i dozwolone miniatury. BinariaPKP oraz ich rendery poza gitem.
 

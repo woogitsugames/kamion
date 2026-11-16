@@ -1,6 +1,8 @@
 # 07 — Białystok trasa C / Dojlidy: referencje i luki — WIP
 
-Stan bieżący:15rekordów głównego manifestu. Są dokumenty, znany kadr ronda,2historyczneMapillary i3nowe link-only fotografieUM. Liczba rekordów nie jest liczbą zdjęć ani kwalifikacji. Poniższe starsze sekcje zachowują historię poprzednich przeglądów; bieżące dodatki wostatnichsekcjach.
+Stan ewidencji głównej na 16.11.2026: **18 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+
+Wcześniejszy etap:15rekordów głównego manifestu. Są dokumenty, znany kadr ronda,2historyczneMapillary i3nowe link-only fotografieUM. Liczba rekordów nie jest liczbą zdjęć ani kwalifikacji. Poniższe starsze sekcje zachowują historię poprzednich przeglądów; bieżące dodatki wostatnichsekcjach.
 
 Cel: uzupełnić backlog S21 źródłami, nie zmieniając generatorów. W pierwszym przeglądzie historycznym: **0 kadrów pobranych, 0 kadrów link-only**, 4 wiersze dokumentacyjne (3 fakty z jednego komunikatu + 1 kontrola publicznych metadanych). To nie jest pakiet zdjęciowy. Nie pobrano ani nie opisano zdjęć z galerii miejskiej.
 
