@@ -26,6 +26,8 @@ SURFACE_MAT = {"asphalt": "road_asphalt", "asphalt_new": "road_asphalt_new", "pa
                "gravel": "road_gravel", "fine_gravel": "road_gravel", "unpaved": "road_gravel",
                "ground": "road_gravel", "dirt": "road_gravel"}
 
+SIDEWALK_TAGS = ("sidewalk", "sidewalk:left", "sidewalk:right", "sidewalk:both")   # ADR 0237 D38
+
 # side profile families
 URBAN, ISLAND, RURAL, MEDIAN_RURAL = 0, 1, 2, 3
 WALK_MATS = ["curb_concrete", "sidewalk_paving", "bridge_concrete", "verge_grass", "road_asphalt"]
@@ -111,6 +113,10 @@ class EdgeSection:
                                      # lip from the rule / `apron`); field None = generator default (ROUNDABOUT_APRON_W)
     compact: dict | None = None      # authored (ADR 0218 5c): ring of a compact roundabout built as one junction
                                      # (roads.compact_roundabout); options dict, {} = defaults
+    # ADR 0237 D38: raw OSM `surface` and the `sidewalk*` tags of the way (implied sidewalks, streetscape.pavements).
+    # roads.graph.json does not carry `sidewalk*` yet (roadgraph keeps a fixed tag list): None until it does.
+    surface_osm: str | None = None
+    osm_sidewalk: dict | None = None
     provenance: dict = field(default_factory=dict)
 
     def lane_w_at(self, hw):
@@ -193,7 +199,9 @@ def edge_section(e: dict) -> EdgeSection:
         turn_fwd=split(tl if oneway else tf), turn_bwd=split(None if oneway else tb), provenance=prov,
         maxspeed_src=(a.get("maxspeed") or {}).get("src"),
         ref=_v(a, "ref"),
-        osm_shoulder={k: _v(a, k) for k in ("shoulder", "shoulder:width", "shoulder:surface") if _v(a, k) is not None} or None)
+        osm_shoulder={k: _v(a, k) for k in ("shoulder", "shoulder:width", "shoulder:surface") if _v(a, k) is not None} or None,
+        surface_osm=surf,
+        osm_sidewalk={k: _v(a, k) for k in SIDEWALK_TAGS if _v(a, k) is not None} or None)
 
 
 @dataclass
@@ -1084,6 +1092,9 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
     all_tree = shapely.STRtree([LineString(c.line.p) for c in all_chains])
     ft_tree = shapely.STRtree(footways) if footways else None
     wk_tree = shapely.STRtree(walkways) if walkways else ft_tree
+    from streetscape import pavements as PV          # ADR 0237 D38: implied sidewalks (opt-in per region)
+    implied = PV.implied_plan(net)
+    implied_m = 0.0
 
     for c in net.chains:
         n = len(c.line.s)
@@ -1176,6 +1187,20 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             med_s = np.array([median[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) > 0.45
             walk_d = np.interp(np.arange(n), idx, walk_s.astype(float)) > 0.5
             med_d = np.interp(np.arange(n), idx, med_s.astype(float)) > 0.5
+            if implied is not None and not c.roundabout:
+                def _sec_of(i, side=side):
+                    sec_ = net.sec_list[int(c.sec_idx[i])]
+                    os_ = {"L": "left", "R": "right"}[side]
+                    if bool(c.meta["rev"][i]):
+                        os_ = {"left": "right", "right": "left"}[os_]
+                    return sec_, os_
+                # an open-road edge (rural, ADR 0272) and a median keep their profile, even with sidewalk=yes
+                imp, _imp_yes, _imp_no = PV.implied_mask(c, sgn, idx, _sec_of, implied[0], implied[1], wk_tree,
+                                                         med_d | rural_d[side])
+                add = imp & ~walk_d
+                walk_d = walk_d | imp
+                implied_m += float(add.sum() * DENSE)
+                c.meta.setdefault("implied_sidewalk_m", {})[side] = round(float(add.sum() * DENSE), 1)
             rural_here = rural_d[side] & ~(walk_d & ~med_d)
             kind = np.where(rural_here | (not built_up), RURAL, URBAN)
             h = np.full(n, S.KERB_HEIGHT)
@@ -1271,6 +1296,8 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             c.side[side] = {"kind": kind, "walk": walk_d, "median": med_d, "raw": {"h": h, "w": w, "depth": depth},
                             "mat": mat, "verge": verge}
         structure_sides(c, c.bridge)
+    if implied is not None:
+        net.implied_sidewalk_m = round(implied_m, 1)     # ADR 0237 D38: metres of sidewalk added by the rule
 
 
 def _tight_side(c, sgn, idx, kind, h, w, depth, mat, tree, chains, trims=False):
