@@ -4,14 +4,16 @@ Gałąź `plots-k3b-analysis` (baza `origin/main` `8401944b6`). **Tylko analiza*
 prototyp K3b zrobiony i zmierzony lokalnie (worktree w scratchpad), bez ADR. Kontekst: raport D22
 `docs/reports/WORLDGEN-PERF-2026-11-16.md` §4 K3 (PR #149), ADR 0281 (K3a weszło, K3b pominięte, bo „zmienia bajty”).
 
-## 1. Wynik: DONE (z jednym brakiem: pełny build kleeberga przed/po — §3.3)
+## 1. Wynik: DONE
 
 **Rekomendacja: WDROŻYĆ Z WARUNKIEM** (§7). Na kaflu C prototyp K3b daje **bajtowo identyczne wyjście**
 `build_world` (228/228 plików, SHA-256) przy **planie działek 12× szybszym** (`region_plan` 108,6 → 9,1 s). Na
 kleeberga plan działek **16× szybciej** (1 409 → 89,8 s, czyli −22 min z ok. 48 min u lidera, ESTIMATED), a jedyna
 różnica to **5 z 815 działek** z dziurą (wycięty sąsiedni dom w środku działki) uproszczoną inaczej — do 0,35 m,
 **wyłącznie na wewnętrznych pierścieniach**. Płoty, bramy, furtki, dojazdy, obniżenia krawężników: identyczne
-(różnica ≤ 1,1·10⁻¹³ m). Determinizm między procesami i `PYTHONHASHSEED`: zachowany.
+(różnica ≤ 1,1·10⁻¹³ m). Pełny build kleeberga: 19/219 plików inne — 7 kawałków (trawnik `plot_ground` +26 tris,
+`road_collision` +10 tris w całym kaflu, 340 węzłów terenu przy tych 5 działkach), build 2 698 → 1 414 s.
+Determinizm między procesami i `PYTHONHASHSEED`: zachowany.
 
 ## 2. Prototyp (co dokładnie zmienia K3b)
 
@@ -69,7 +71,21 @@ biegu przywrócony do czystego (`git checkout -- generated landmarks`).
 
 ### 3.3 Kleeberga — pełny build
 
-KL_FULL_PLACEHOLDER
+Ta sama procedura, main ×1 i K3b ×1 (równolegle, load 3–5; build main trwa 45 min w chmurze, drugiej pary nie
+robiłem). **219 plików, 19 różnych** (lista + `compare_world.py`: `docs/reports/k3b/kleeberga_full_build_diff.txt`):
+
+| plik | co się zmieniło |
+|---|---|
+| `world/chunk_{3_5,4_5,6_5,6_6}.glb` + `.low.glb` | `plot_ground` +10/+3/+10/+3 tris, `road_collision` +4/+1/+2/+1 tris (`world_manifest.json`) |
+| `world/chunk_3_7.glb` + `.low.glb` | `road_collision` +2 tris |
+| `world/chunk_{3_4,5_0,5_6}.glb` (+ `.low` 3_4, 5_6) | ta sama liczba trójkątów i bajtów — przesunięte wierzchołki terenu |
+| `world/terrain_conformed.npy` | **340 węzłów** (z 2049²) w 14 skupiskach, wszystkie przy 5 działkach z §4; max \|Δz\| 0,32 m (krok dopasowania terenu pod nawierzchnię — z płaskim NMT to jedyna wysokość, która może się zmienić) |
+| `gen/world_manifest.json` | SHA/bajty/trójkąty powyższych kawałków |
+| `gen/streetscape_qa.json` | `mesh_budget.per_chunk[29,37,53,54]` `tris_high_static` +10/+3/+10/+3 (low tak samo); `plots.list[140,425,779].c` (środek działki, 0,1 m) |
+| `gen/roads_qa.json` | `summary.footprint_nodes` 986 949 → 986 932 (−17) |
+
+`instances_*.json`, warstwy `plots`/`plots_low` (płoty, bramy, rośliny ogrodów), budynki, drogi: identyczne. Budżet:
++3…+10 tris na kawałek (≤ 0,005 % kawałka), `mesh_budget.frame_estimate` bez zmiany — neutralnie.
 
 ## 4. Wpływ na wygląd
 
@@ -83,9 +99,11 @@ KL_FULL_PLACEHOLDER
   `da4c8df1…` 0,35 m / −6,6 m²; `2BE4B431-6834…` 0,29 m / −6,6 m²; `2BE4B431-65F2…` 0,29 m / −4,8 m²;
   `2BE4B431-6919…` 0,26 m / −2,1 m²; `2BE4B431-6F58…` 0,23 m / −1,7 m². Skutek: brzeg trawnika działki
   (`plot_ground`) wokół cudzego domu przesunięty o ≤ 0,35 m; dyskretne decyzje (płot/brama/furtka/dojazd/
-  obniżenie krawężnika, styl, wysokość) — **żadna nie zmieniona**. Rośliny ogrodu losowane w obrysie działki mogą
-  przesunąć się lub zniknąć w tych 5 działkach (UNVERIFIED — zależy od wyniku §3.3). Z wysokości kabiny pas
-  ≤ 35 cm trawy przy ścianie domu w głębi ogrodu: oceniam jako niewidoczny bez porównania A/B (ESTIMATED).
+  obniżenie krawężnika, styl, wysokość) — **żadna nie zmieniona**; rośliny ogrodów i instancje też identyczne
+  (§3.3). Zmienia się tylko trawnik (+26 tris w kaflu) i teren pod nim (340 węzłów, ≤ 0,32 m) w pasie ≤ 0,35 m wokół
+  cudzego domu w głębi ogrodu, 25–60 m od ulicy. Z kabiny: oceniam jako niewidoczne (ESTIMATED; potwierdzić
+  kamerą tylko jeśli któraś z kamer kontrolnych kleeberga patrzy na te działki — pozycje w `kleeberga_plot_diffs.png`,
+  środki działek w układzie kafla: (−85, −1012), (−104, −272), (167, −496), (531, −639), (551, −474) m).
 
 ## 5. Determinizm (ADR 0173)
 
@@ -110,6 +128,11 @@ KL_FULL_PLACEHOLDER
 | kleeberga | `layout` (3 729) | [549,1; 568,3] → 558,7 | [27,7; 30,7] → 29,2 | −530 s |
 | kleeberga | `plan_access` (z relayout) | [343,0; 354,8] → 348,9 | [42,7; 46,8] → 44,8 | −304 s |
 
+Pełny build kleeberga (1 bieg każdy, równolegle): main **2 698,1 s** → K3b **1 414,2 s** (−47,6 %);
+`stage.plan_plots` 1 756,9 → 192,8 s, `plots.region_plan` 1 642,1 → 80,2 s. `plots.build` 313 → 449 s i `stage.run`
+590 → 850 s w K3b to obciążenie (K3b był w tych etapach, gdy main liczył plan działek i szły biegi `normalize`;
+K3b nie zmienia `plots.build`) — do potwierdzenia u lidera.
+
 Pełny build C (te same warunki, timery `profile_build_world`): main 851,2 s (1 bieg, load 5–7) vs K3b 614,9 / 617,8 s;
 `stage.plan_plots` 217,6 → 86,3 s; `plots.region_plan` 120,9 → 7,7 s. Część różnicy całości to obciążenie maszyny —
 **przypisuję K3b tylko zysk z wiersza `region_plan` (≈ −110 s chmury ≈ −70 s u lidera, ESTIMATED ×0,6 wg D22)**.
@@ -125,8 +148,8 @@ Co zostaje po K3b (kleeberga, pełny build K3b, timery): `plots.build` 449 s (ro
    numerów). HIT samo jest bajtowo identyczne nawet w `region_plan` i może wejść bez warunku.
 2. Warunek: przebudowa C na prawdziwym NMT daje **bajtowo identyczny** wynik (jak w chmurze), a na kleeberga różnice
    ograniczone do działek z dziurami (`compare_plots.py diff`: `gate_changed`, `wicket_count_changed`,
-   `access_changed`, `run_count_changed` puste; Hausdorff ≤ 0,3 m + tolerancja `simplify`) i oględziny kamer z
-   działkami. Jeśli warunek nie przejdzie — zostawić HIT, resztę cofnąć.
+   `access_changed`, `run_count_changed` puste; Hausdorff ≤ 0,35 m tylko w działkach z dziurą) + `compare_world.py`
+   z różnicami tylko w kawałkach tych działek (jak §3.3). Jeśli warunek nie przejdzie — zostawić HIT, resztę cofnąć.
 3. Wariant odrzucony na teraz: `shapely.normalize(...)` przed `simplify(0.3)` w `plan` (`plots.py:333`). Z nim K3b vs
    main+normalize jest identyczne do 1,1·10⁻¹³ m także na kleeberga (807/815 bajtowo, 8 × 10⁻¹³, 0 > 1 mm) — wynik
    przestaje zależeć od kształtu `obs`. Ale sam `normalize` to jednorazowa zmiana wszystkich kafli: C 40/99 obrysów
@@ -160,7 +183,8 @@ pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting clear -OutputDir a
 `test_house_greenery_0163.py`, `test_pavements_0237.py`, `tools/worldgen/tests/test_perf_0281.py` — **92 passed**
 (298 s); `test_determinism_0173.py` + `tests/gis/test_determinism.py` — 8 passed, 1 skipped. Testy porównujące
 liczby z `generated/*` kafli nie zmienią się dla C (bajty identyczne); dla kleeberga — tylko jeśli §3.3 pokaże różnice
-w QA JSON (do sprawdzenia po przebudowie). Przy wdrożeniu dodać test równoważności (jak `test_perf_0281.py`):
+w QA JSON — pokazał tylko `per_chunk` trójkąty i `plots.list[].c` w `streetscape_qa.json` oraz `footprint_nodes`
+w `roads_qa.json`; `grep` w `tests/gis` i `tools/worldgen/tests` nie znajduje asercji na tych polach kleeberga. Przy wdrożeniu dodać test równoważności (jak `test_perf_0281.py`):
 `plan()` main-formuła vs okno na syntetycznym kaflu (dom wewnątrz cudzej działki — przypadek z §4) z tolerancją
 `simplify`.
 
@@ -170,7 +194,7 @@ w QA JSON (do sprawdzenia po przebudowie). Przy wdrożeniu dodać test równowa�
 - `tools/worldgen/tests/test_compare_plots.py` (nowy, 2 testy): `uv run --project tools/worldgen python -m pytest
   tools/worldgen/tests/test_compare_plots.py -q` → 2 passed.
 - `docs/reports/k3b/`: `k3b_prototype.diff`, `c_region_plan_diff.json`, `kleeberga_region_plan_diff.json`,
-  `c_sha256_main.txt`, `kleeberga_plot_diffs.png`.
+  `c_sha256_main.txt`, `kleeberga_full_build_diff.txt`, `kleeberga_plot_diffs.png`.
 - ten raport, `STATUS.md`.
 
 ## 10. Rozróżnienie, ryzyka
