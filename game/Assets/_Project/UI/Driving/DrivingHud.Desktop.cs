@@ -24,6 +24,7 @@ namespace Game.UI.Driving
         RectTransform m_DStrip, m_DTell, m_DExtRow;
         Text m_DSpeed, m_DGear, m_DAir1, m_DAir2, m_DRpm, m_DRet, m_DCruise;
         Image m_DAir1Bar, m_DAir2Bar, m_DRpmBar, m_DTurnL, m_DTurnR;
+        GameObject m_DSlotL, m_DSlotR;
         readonly RectTransform[] m_DTile = new RectTransform[HudWarnings.MaxShown];
         readonly Image[] m_DTileBg = new Image[HudWarnings.MaxShown];
         readonly Text[] m_DTileText = new Text[HudWarnings.MaxShown];
@@ -45,7 +46,7 @@ namespace Game.UI.Driving
         /// <summary>Monitor HUD visibility as last resolved (tests, captures).</summary>
         public HudVisibility DesktopVisibility => m_Vis;
 
-        const float StripW = 640f, RowH = 112f;
+        const float StripW = 720f, RowH = 112f, TileW = 184f, TilePitch = 192f;
 
         void BuildDesktop()
         {
@@ -56,11 +57,11 @@ namespace Game.UI.Driving
             var bg = m_DStrip.gameObject.AddComponent<Image>();
             bg.color = P.HudPanel; bg.raycastTarget = false;
 
-            m_DSpeed = DLabel(m_DStrip, "Speed", "0", strong, 64, TextAnchor.MiddleRight, P.Ink, new Vector2(12f, 14f), new Vector2(172f, 84f));
-            DLabel(m_DStrip, "SpeedUnit", HudTexts.KmH, m_Font, 22, TextAnchor.LowerLeft, P.InkMuted, new Vector2(190f, 26f), new Vector2(60f, 30f));
-            DRule(m_DStrip, "Rule1", new Vector2(256f, 16f), new Vector2(1f, 80f));
-            m_DGear = DLabel(m_DStrip, "Gear", "N", strong, 50, TextAnchor.MiddleCenter, P.Ink, new Vector2(258f, 14f), new Vector2(110f, 84f));
-            DRule(m_DStrip, "Rule2", new Vector2(370f, 16f), new Vector2(1f, 80f));
+            m_DSpeed = DLabel(m_DStrip, "Speed", "0", strong, 68, TextAnchor.MiddleRight, P.Ink, new Vector2(12f, 12f), new Vector2(184f, 88f));
+            DLabel(m_DStrip, "SpeedUnit", HudTexts.KmH, m_Font, 22, TextAnchor.LowerLeft, P.InkMuted, new Vector2(202f, 26f), new Vector2(66f, 30f));
+            DRule(m_DStrip, "Rule1", new Vector2(276f, 16f), new Vector2(1f, 80f));
+            m_DGear = DLabel(m_DStrip, "Gear", "N", strong, 52, TextAnchor.MiddleCenter, P.Ink, new Vector2(278f, 14f), new Vector2(114f, 84f));
+            DRule(m_DStrip, "Rule2", new Vector2(394f, 16f), new Vector2(1f, 80f));
             m_DAir1 = AirRow(1, 62f, out m_DAir1Bar);
             m_DAir2 = AirRow(2, 20f, out m_DAir2Bar);
 
@@ -68,28 +69,30 @@ namespace Game.UI.Driving
             m_DExtRow = Rect("ExtendedRow", m_DStrip);
             Place(m_DExtRow, Vector2.zero, new Vector2(0f, RowH), new Vector2(StripW, DesktopHudLayout.ExtendedRowHeight));
             DRule(m_DExtRow, "RuleTop", new Vector2(12f, 0f), new Vector2(StripW - 24f, 1f));
-            m_DRpm = DLabel(m_DExtRow, "Rpm", "0", strong, 26, TextAnchor.MiddleRight, P.Ink, new Vector2(12f, 30f), new Vector2(96f, 34f));
-            DLabel(m_DExtRow, "RpmUnit", HudTexts.Rpm, m_Font, 18, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(114f, 30f), new Vector2(110f, 34f));
-            m_DRpmBar = DBar(m_DExtRow, "RpmBar", new Vector2(16f, 16f), new Vector2(224f, 6f));
-            DLabel(m_DExtRow, "RetCaption", HudTexts.Retarder, m_Font, 18, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(262f, 50f), new Vector2(140f, 26f));
-            m_DRet = DLabel(m_DExtRow, "Ret", "0", strong, 26, TextAnchor.MiddleLeft, P.Ink, new Vector2(262f, 12f), new Vector2(140f, 36f));
-            DLabel(m_DExtRow, "CruiseCaption", HudTexts.BrakeCruise, m_Font, 18, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(410f, 50f), new Vector2(218f, 26f));
-            m_DCruise = DLabel(m_DExtRow, "Cruise", HudTexts.Off, strong, 26, TextAnchor.MiddleLeft, P.Ink, new Vector2(410f, 12f), new Vector2(218f, 36f));
+            m_DRpm = DLabel(m_DExtRow, "Rpm", "0", strong, 28, TextAnchor.MiddleRight, P.Ink, new Vector2(12f, 30f), new Vector2(100f, 36f));
+            DLabel(m_DExtRow, "RpmUnit", HudTexts.Rpm, m_Font, 20, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(118f, 30f), new Vector2(120f, 36f));
+            m_DRpmBar = DBar(m_DExtRow, "RpmBar", new Vector2(16f, 16f), new Vector2(240f, 6f));
+            DLabel(m_DExtRow, "RetCaption", HudTexts.Retarder, m_Font, 20, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(290f, 50f), new Vector2(150f, 28f));
+            m_DRet = DLabel(m_DExtRow, "Ret", "0", strong, 28, TextAnchor.MiddleLeft, P.Ink, new Vector2(290f, 12f), new Vector2(150f, 38f));
+            DLabel(m_DExtRow, "CruiseCaption", HudTexts.BrakeCruise, m_Font, 20, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(460f, 50f), new Vector2(248f, 28f));
+            m_DCruise = DLabel(m_DExtRow, "Cruise", HudTexts.Off, strong, 28, TextAnchor.MiddleLeft, P.Ink, new Vector2(460f, 12f), new Vector2(248f, 38f));
             m_DExtRow.gameObject.SetActive(false);
 
             // ---- telltale row: arrow slots at the ends, warning tiles between (no background of its own)
             m_DTell = Zone("DesktopTelltales", DesktopHudLayout.TelltaleSize);
             m_DTurnL = ArrowSlot("TurnLeft", 0f, false);
             m_DTurnR = ArrowSlot("TurnRight", DesktopHudLayout.TelltaleSize.x - 64f, true);
+            m_DSlotL = m_DTurnL.transform.parent.gameObject;
+            m_DSlotR = m_DTurnR.transform.parent.gameObject;
             for (int i = 0; i < m_DTile.Length; i++)
             {
                 var t = Rect("Warning" + i, m_DTell);
-                Place(t, Vector2.zero, new Vector2(72f + i * 168f, 0f), new Vector2(160f, DesktopHudLayout.TelltaleSize.y));
+                Place(t, Vector2.zero, new Vector2(76f + i * TilePitch, 0f), new Vector2(TileW, DesktopHudLayout.TelltaleSize.y));
                 m_DTileBg[i] = t.gameObject.AddComponent<Image>();
                 m_DTileBg[i].color = P.TellRed; m_DTileBg[i].raycastTarget = false;
-                m_DTileText[i] = DLabel(t, "Text", "", strong, 17, TextAnchor.MiddleCenter, P.Ink, Vector2.zero, new Vector2(160f, DesktopHudLayout.TelltaleSize.y));
+                m_DTileText[i] = DLabel(t, "Text", "", strong, 20, TextAnchor.MiddleCenter, P.Ink, new Vector2(6f, 0f), new Vector2(TileW - 12f, DesktopHudLayout.TelltaleSize.y));
                 m_DTileText[i].horizontalOverflow = HorizontalWrapMode.Wrap;
-                m_DTileText[i].resizeTextForBestFit = true; m_DTileText[i].resizeTextMinSize = 12; m_DTileText[i].resizeTextMaxSize = 17;
+                m_DTileText[i].resizeTextForBestFit = true; m_DTileText[i].resizeTextMinSize = 16; m_DTileText[i].resizeTextMaxSize = 20;
                 m_DTile[i] = t;
                 t.gameObject.SetActive(false);
             }
@@ -99,10 +102,10 @@ namespace Game.UI.Driving
 
         Text AirRow(int circuit, float y, out Image bar)
         {
-            DLabel(m_DStrip, "AirLabel" + circuit, circuit == 1 ? "1" : "2", m_Font, 20, TextAnchor.MiddleCenter, P.InkMuted, new Vector2(382f, y), new Vector2(24f, 30f));
-            bar = DBar(m_DStrip, "AirBar" + circuit, new Vector2(410f, y + 12f), new Vector2(118f, 6f));
-            var v = DLabel(m_DStrip, "Air" + circuit, "0,0", UiFonts.Strong, 26, TextAnchor.MiddleRight, P.Ink, new Vector2(530f, y), new Vector2(60f, 30f));
-            DLabel(m_DStrip, "AirUnit" + circuit, HudTexts.Bar, m_Font, 18, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(594f, y), new Vector2(40f, 30f));
+            DLabel(m_DStrip, "AirLabel" + circuit, circuit == 1 ? "1" : "2", m_Font, 20, TextAnchor.MiddleCenter, P.InkMuted, new Vector2(408f, y), new Vector2(26f, 30f));
+            bar = DBar(m_DStrip, "AirBar" + circuit, new Vector2(438f, y + 12f), new Vector2(140f, 6f));
+            var v = DLabel(m_DStrip, "Air" + circuit, "0,0", UiFonts.Strong, 28, TextAnchor.MiddleRight, P.Ink, new Vector2(584f, y), new Vector2(68f, 32f));
+            DLabel(m_DStrip, "AirUnit" + circuit, HudTexts.Bar, m_Font, 20, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(656f, y), new Vector2(56f, 32f));
             return v;
         }
 
@@ -287,12 +290,17 @@ namespace Game.UI.Driving
             // turn signals (lit with the flasher)
             int sig = m_Ctx.TurnSignalLever != null ? m_Ctx.TurnSignalLever() : 0;
             bool lit = sig != 0 && m_Ctx.TurnSignalLit != null && m_Ctx.TurnSignalLit();
-            int turnKey = lit ? sig + 10 : 0;
+            int turnKey = (lit ? sig + 10 : 0) + (m_D.ShowStrip ? 100 : 0);
             if (turnKey != m_DLastTurn)
             {
                 m_DLastTurn = turnKey;
-                m_DTurnL.color = lit && (sig == -1 || sig == 2) ? P.TellGreen : P.TellOff;
-                m_DTurnR.color = lit && (sig == 1 || sig == 2) ? P.TellGreen : P.TellOff;
+                bool l = lit && (sig == -1 || sig == 2), r = lit && (sig == 1 || sig == 2);
+                m_DTurnL.color = l ? P.TellGreen : P.TellOff;
+                m_DTurnR.color = r ? P.TellGreen : P.TellOff;
+                // Cab view with live cab screens: the cluster in the dash has the arrows; here they appear only while lit.
+                bool always = m_D.ShowStrip;
+                if (m_DSlotL.activeSelf != (always || l)) m_DSlotL.SetActive(always || l);
+                if (m_DSlotR.activeSelf != (always || r)) m_DSlotR.SetActive(always || r);
             }
 
             // warnings
@@ -310,7 +318,7 @@ namespace Game.UI.Driving
             if (!same)
             {
                 m_DWarnCount = n;
-                float x0 = DesktopHudLayout.TelltaleSize.x * 0.5f - (n * 160f + Mathf.Max(0, n - 1) * 8f) * 0.5f;
+                float x0 = DesktopHudLayout.TelltaleSize.x * 0.5f - (n * TileW + Mathf.Max(0, n - 1) * (TilePitch - TileW)) * 0.5f;
                 for (int i = 0; i < m_DWarn.Length; i++)
                 {
                     m_DWarnShown[i] = m_DWarn[i];
@@ -321,7 +329,7 @@ namespace Game.UI.Driving
                     m_DTileBg[i].color = red ? P.TellRed : P.TellAmber;
                     m_DTileText[i].color = red ? P.Ink : P.InkOnLight;
                     m_DTileText[i].text = HudTexts.Warning(m_DWarn[i]);
-                    m_DTile[i].anchoredPosition = new Vector2(x0 + i * 168f, 0f);
+                    m_DTile[i].anchoredPosition = new Vector2(x0 + i * TilePitch, 0f);
                 }
             }
 

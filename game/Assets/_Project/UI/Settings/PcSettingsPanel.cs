@@ -428,7 +428,7 @@ namespace Game.UI.Settings
         {
             var c = m_Content;
             Header(c, T.SectionMirrorWindows, ref y);
-            Segments(c, ref y, T.MirrorWindows, T.OffOn, () => m_MirrorsPending ? 1 : 0, i => m_MirrorsPending = i == 1);
+            Segments(c, ref y, T.MirrorWindows, T.OffOnPlural, () => m_MirrorsPending ? 1 : 0, i => m_MirrorsPending = i == 1);
             Func<bool> on = () => m_MirrorsPending;
             Stepper(c, ref y, T.MirrorSize, () => Pct(m_HudPending.MirrorSize),
                 d => m_HudPending.MirrorSize = HudPrefsData.Step(m_HudPending.MirrorSize, d, HudPreferences.MirrorSizeStep, HudPreferences.MirrorSizeMin, HudPreferences.MirrorSizeMax), on);

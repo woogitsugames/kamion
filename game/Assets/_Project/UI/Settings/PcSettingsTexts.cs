@@ -30,6 +30,7 @@ namespace Game.UI.Settings
         public static readonly string[] WindowModeLabels = { "okno", "bez ramki", "pełny ekran" };
         public const string Vsync = "Synchronizacja pionowa";
         public static readonly string[] OffOn = { "wyłączona", "włączona" };
+        public static readonly string[] OffOnPlural = { "wyłączone", "włączone" };
         public const string FpsCap = "Limit klatek";
         public const string FpsNoCap = "bez limitu";
         public const string FpsByVsync = "jak monitor";

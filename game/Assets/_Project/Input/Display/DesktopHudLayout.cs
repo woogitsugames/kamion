@@ -72,10 +72,10 @@ namespace Game.Controls
     public static class DesktopHudLayout
     {
         public const float Margin = 32f, Gap = 16f;
-        public static readonly Vector2 StripSize = new Vector2(640f, 112f);
+        public static readonly Vector2 StripSize = new Vector2(720f, 112f);
         /// <summary>Second row of the extended detail (rev counter, endurance brake, brake cruise, trailer).</summary>
         public const float ExtendedRowHeight = 84f;
-        public static readonly Vector2 TelltaleSize = new Vector2(640f, 52f);
+        public static readonly Vector2 TelltaleSize = new Vector2(720f, 52f);
         public static readonly Vector2 ReverseSize = new Vector2(560f, 316f);
         public static readonly Vector2 DevToggleSize = new Vector2(150f, 56f);
         public static readonly Vector2 DevPanelSize = new Vector2(424f, 378f);
