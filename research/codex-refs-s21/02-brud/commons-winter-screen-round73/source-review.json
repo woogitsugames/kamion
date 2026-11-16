@@ -1,0 +1,48 @@
+{
+  "review_date": "2026-11-16",
+  "reviewer": "root",
+  "method": "Individual full-image IAB screenshot observation; no screenshot saved",
+  "actual_full_images": [
+    {
+      "page": "https://commons.wikimedia.org/wiki/File:Truck_in_Monchegorsk.jpg",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/7/79/Truck_in_Monchegorsk.jpg",
+      "author": "kallerna",
+      "license": "CC BY-SA3.0",
+      "dimensions": [
+        3400,
+        2370
+      ],
+      "result": "FAIL_NO_REAR_DOORS_VISIBLE"
+    },
+    {
+      "page": "https://commons.wikimedia.org/wiki/File:LKW_im_Schnee_in_Stuttgart,_2007.jpg",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/3/36/LKW_im_Schnee_in_Stuttgart%2C_2007.jpg",
+      "author": "andy.mendyk",
+      "license": "CC BY-SA3.0",
+      "dimensions": [
+        2592,
+        1944
+      ],
+      "result": "FAIL_REAR_SURFACE_UNREADABLE"
+    }
+  ],
+  "metadata_only": [
+    {
+      "photo": "Bring4256427848",
+      "result": "DUPLICATE_R10_NO_NEW_IMAGE_VIEW"
+    },
+    {
+      "photo": "Winter3272868600",
+      "result": "METADATA_RIGID_TRUCK_NO_NEW_IMAGE_VIEW"
+    }
+  ],
+  "new_accepted_photos": 0,
+  "new_downloaded_photos": 0,
+  "new_A_B_winter_Europe": 0,
+  "new_AUX": 0,
+  "limitations": [
+    "Category membership/title never substitutes for image observation",
+    "No global absence claim",
+    "Coordinates/capture timestamps from Commons, no independent geolocation or clock audit"
+  ]
+}
