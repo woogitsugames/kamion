@@ -48,7 +48,8 @@ pieszych mniej w C (węzeł OSM 2882674807).
 | EditMode | 965: 962 passed, 2 failed (oba znane `CarPaintMaterialTests.DepositionChannel_*`), 1 skipped; 0 nowych | 3 min |
 | import C / Dojlidy | exit 0 / exit 0 (`IMPORT_RESULT: OK`, 64 chunki każdy) | 10 min / 9 min 44 s |
 | VQA after (5 komórek) | exit 0 ×5; 0 linii błędów shadera w logach | 2 min 23 s |
-| pełny pytest | PYTEST_PLACEHOLDER | |
+| pełny pytest (1. przebieg) | `tests/gis`: 1878 passed, **1 failed**, 3 skipped, 2 xfailed; `tools/perf/tests` 61 passed | 20 min 2 s |
+| pełny pytest (2. przebieg, drzewo końcowe z OD-005) | PYTEST2_PLACEHOLDER | |
 
 Before = Reuse jest uzasadnione tym, że `generated/` C i Dojlid w main różniło się od scalenia c-regen2 (`e4fad6868`)
 tylko `fidelity_qa.json`, a sceny `_Generated` w main są z 15.11 16:59 (sprzed c-regen2) — świeże before wymagałoby
@@ -142,7 +143,8 @@ diffu w `Rendering/` i `ProjectSettings/`.
 5. Kamery MA-010 `au_r_s1160` i `ortho_putry` z warunku recenzji #93 nie były renderowane (nie ma ich w zestawie
    kontrolnym VQA); Putry oceniony na `putry-above` i `g3b_rondo_put_above`.
 6. Zapas C `stretch_04`: 14 540 trójkątów. `dk8_dk19_exit` urósł o 12 001 High po #119 — przy kolejnych zmianach lasu obserwować.
-7. Stary #93 zamknąć jako zastąpiony gałęzią `-rebased` (lider / właściciel).
+7. OD-005: wpis `dk8-seam-kerb-od005-c` czeka na przebudowę C (sekcja wyżej).
+8. Stary #93 zamknąć jako zastąpiony gałęzią `-rebased` (lider / właściciel).
 
 ## Komenda scalenia
 ```
