@@ -67,3 +67,11 @@ Low względem pierwotnego before: **FAIL** warunku bez pogorszenia. Dla 50 kamer
 High: **PASS** limitu 2 mln tris na kamerę, maksimum 1 250 399 z instancjami na `cab-mirror-front`; maksymalna suma szacowanych draws to 848 na `tykocka-into-town`. Clear i dusk dają identyczne wartości geometryczne. Są to szacunki CPU edytora przed SRP batchingiem, nie pomiary GPU ani telefonu; shadow draws są osobnym wskaźnikiem.
 
 Before zawiera 51 kamer, r14 70; 50 ma te same nazwy. Dawna błędnie nazwana `rynek-fountain` nie występuje już pod tą nazwą; zgodność pozycji `plac-wschodni-from-east` nie została tu zweryfikowana. Porównanie ograniczają także zmiany main: ADR 0219 uzupełnił właściwe dane far-field, a ADR 0262 zmienił pozycję startu ciężarówki. Nie zmierzono osobnego wkładu tych zmian, więc nie przypisujemy im całości wzrostu ani nie uznajemy Low za spełnione. Szczegóły i ścieżki statystyk są w `artifacts/knyszyn-rynek-0227/AUDYT.md`.
+
+## Iteracja r15 — próba koron i budżet
+
+Próba rozjaśnienia koron nie przeszła przeglądu i została wycofana. Rendery r15 dokumentują tę próbę, nie stan po jej wycofaniu; potrzebna kolejna przebudowa i ocena.
+
+W r15 **High PASS** limitu 2 mln tris na kamerę: maksimum 1 250 401 z instancjami (`cab-mirror-front`). **Low FAIL** względem before: największy wzrost sumy szacowanych draws siatek i instancji 240 → 303 (+63, `dk65-inlet-south`), na 34 z 50 kamer o tych samych nazwach wystąpił wzrost. Największy wzrost sumy tris 272 290 → 310 078 (+37 788, `truck-side`).
+
+R14 → r15: 70 wspólnych kamer, draws i szacowane shadow draws bez zmian; tris wzrosły na 37 kamerach, maksymalnie o 22 w Low i High. Przyczyna nie została osobno zmierzona. Clear i dusk mają te same wyniki geometryczne. Jak w r14 są to szacunki CPU edytora, nie pomiary GPU; ograniczenia porównania z before pozostają aktualne. Szczegóły w `artifacts/knyszyn-rynek-0227/AUDYT.md`.
