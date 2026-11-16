@@ -164,3 +164,93 @@ przed usunięciem worktree; junctions odpiąć `cmd /c rmdir`.
 - #109: przejście `DepthNormals` (SSAO Ultra); log mipów `fence_mesh.png`.
 - #122: data nalotu NMPT, bramy 5,9 × 6,6 m — do oceny na `photo_P11-094`.
 - Lekkie testy z `-k` na całym `tests/gis` trwają tu ok. 7,5 min (kolekcja 1650 testów) — w etapie 2 podawać pliki.
+
+---
+
+# ETAP 2 — wykonany (16.11, łańcuch lidera `stage2-chain.ps1`, potem poprawki i ponowne rendery)
+
+Stan gałęzi: `HEAD_PLACEHOLDER`, zawiera main `6e6fe972f` (merge `4129c4297`; z main przyszły tylko dokumenty, `rail_bed.png`
+i 3 pliki C# spawn-fix r2 — zero kodu świata, więc `60-postmerge.ps1` nie był potrzebny). #123 i #119 nadal poza gałęzią.
+
+## Przebieg (wszystkie kroki z `exit=` w plikach statusu)
+| krok | wynik | czas |
+|---|---|---|
+| `00-prep` | exit 0 po poprawce lidera (`$derived` jako tablica; commit `ae761cca4`) | 1 min 38 s |
+| `10-before -Mode Reuse` | rendery `c-regen-s22/after` jako before (bez Low overcast i kamer G3) | sekundy |
+| `20-regen` | 13 kroków exit 0; `build_world` C 9 min 47 s, Dojlidy 7 min 21 s; budżet exit 0; audyt cieni exit 0; `region.yaml` Dojlid cofnięty (tylko `manifest_sha256`) | 24 min 46 s |
+| `40-unity` | EditMode 788: 785 passed, 2 failed (oba znane `CarPaintMaterialTests.DepositionChannel_*`), 1 skipped; import C exit 0 (12 min 18 s), Dojlidy exit 0 (9 min 54 s); 12 komórek VQA exit 0 | 30 min |
+| `50-pytest` (1. przebieg) | 1650 passed, **3 failed**, 3 skipped, 2 xfailed (985 s); `tools/perf/tests` exit 0 | 16,5 min |
+| ponowne rendery po poprawce shadera | 12 komórek exit 0, 0 błędów shadera w logach | 5 min 16 s |
+| `50-pytest` (2. przebieg, po poprawkach i merge main) | PYTEST2_PLACEHOLDER | |
+| `45-editmode` (po poprawce shadera i merge main) | EDITMODE2_PLACEHOLDER | |
+
+Nowe testy EditMode z PR-ów (pierwsza kompilacja tego C#): `FenceMeshCoverageTests` 23/23, `ThinShadowCasterTests` 57/57,
+`GpuAbOverridesTests` 19/19, `LightPostPolicyTests` 12/12, `WorldPbr*` 19/19. Efekty uboczne Unity: brak diffu w
+`game/Assets/_Project/Rendering` i `ProjectSettings` po przebiegu (`unity/unity-side-effects.diffstat.txt` pusty).
+
+## Budżet (zmierzone, `regen/budget.log`)
+| | przed | po | zapas / limit |
+|---|---|---|---|
+| C `stretch_04` High (`frame_estimate`) | 1 986 314 | **1 985 807** (−507) | 14 193 do 2 M |
+| C `stretch_04` Low | 938 349 | 938 274 (−75) | |
+| C `route_onramp_andersa_above` High | 1 966 981 | 1 966 411 (−570) | |
+| C największy wzrost Low | | `stretch_03` +282 (+0,05 %) | próg +2 % |
+| C materiały `stretch_04` High | 153 | 155 | budżet draws 800 |
+| Dojlidy max High (`photo_P11-063`) | 1 768 028 | 1 768 010 | 231 990 |
+| Dojlidy największy wzrost | | `route_s1675` +270 High, +0,07 % Low (`route_s1980`) | |
+| far_field Low C / Dojlidy | 25 389 / 23 907 | bez zmian | ≤ 30 000 |
+| materiały manifestu (oba regiony) | 331 | 336 | |
+| edytor `stretch-04` High / Low (`trisExact`) | 1 067 263 / 312 831 | 1 067 394 / 312 956 | draws 1085 / 463 bez zmian |
+
+- Spadek w C to kategoria `props` (bramownice i tablice z #124: `stretch_04` −772, `g3b_eye_s1482` −2 128).
+- **Niezgodność z szacunkiem recenzji #125 („0 trójkątów”):** `roads` +4…+178 i `terrain` do +174 na kamerę w C
+  (`stretch_04` +159 / +106). `pavements.tris_in == tris_out` (C 15 979, przemianowanie materiału nic nie dodaje), więc
+  przyrost pochodzi z obniżeń krawężników na przejściach (`plots.crossing_kerb`: C 25 obniżonych z 90 przejść, Dojlidy
+  16 z 85) — przyczyna wskazana z rozkładu kategorii, nie zmierzona osobno. Skala: poniżej 0,02 % kadru.
+- `pavements`: C `path_asphalt` 240 m², kostka 24 460 m², 0 nieaktualnych override; Dojlidy czerwony pas
+  `mickiewicza-kuronia-red-block-strip` zastosowany (64,6 m², 32 trójkąty), 0 nieaktualnych.
+- `gate3_landmarks.stale` puste w obu regionach; `diagrams_replaced` w C: regułowa E-1 `E-1_79161` zastąpiona przez
+  portal p40 (8,4 m).
+- Cienie Low (#110), ten sam import, A/B przełącznikami (`stats.txt`): `g3a_eye_s0412` 19 → 5 drawów casterów
+  (3 230 → 2 596 trójkątów), `g3b_eye_s1482` 12 → 1 (2 272 → 28), `g3b_eye_s1282` 10 → 3, `g3b_eye_s1682` 20 → 14.
+
+## Błędy znalezione przez przebudowę i poprawione w gałęzi
+1. **P0 — płot z siatki renderował się na magenta** (#109, commit `a2a5dfa64`). `FenceMeshForward.hlsl` wołał
+   `IsAlphaToMaskAvailable()`, a URP 17 deklaruje tę funkcję tylko pod `_ALPHATEST_ON`, którego ten pass celowo nie
+   kompiluje (28 błędów „undeclared identifier” w logach VQA; EditMode tego nie łapie, bo testy czytają plik, nie
+   kompilują shadera). Zastąpione globalem `_AlphaToMaskAvailable != 0.0`. Pierwsze rendery zostały jako dowód w
+   `artifacts/c-regen2-s23/after-r1-magenta/`; `after/` to rendery po poprawce.
+2. **3 testy czerwone po przebudowie C** (#124, commit `6a337b125`) — wszystkie to testy niedostosowane do stanu po
+   przebudowie, nie błędy generatora:
+   - `test_direction_signs_0236.py:304` — `KeyError`: prototypy bramownic w bibliotece zmieniły nazwy
+     (`sign_gantry_14_61_b6` → `14_62_b6`, `sign_cantilever_L8_86` → `L8_72`); test porównuje teraz z biblioteką w gicie.
+   - `test_streetscape.py:290` — zestaw landmarków nie znał nowej bramownicy `andersa-putry-e1-advance-gantry`.
+   - `test_world_v34.py:139` — żadne rondo trasy nie miało już regułowej E-1; test uznaje E-1 przejętą przez
+     bramownicę z `diagrams_replaced`. Otwarte: `route_checks` w generatorze nadal nie liczy tablic na bramownicach.
+3. Trzy „znane czerwone” testy main (forest_0187, road_fidelity, world_v31) w tym worktree **przeszły**.
+   Skipy: 2 × `test_dk65_seam_knyszyn_0233` (GLB dk65-11 starsze niż overrides — inny region), 1 × 0236 (oczekiwany).
+
+## Oględziny before | after (pary w `artifacts/c-regen2-s23/view/`)
+Obejrzane przeze mnie; **bez `visual-critic` i bez porównania ze zdjęciami właściciela** — to zostaje dla lidera.
+- **Płoty #109** (`kwadrat-park-gate`, `kuronia2-front`, `photo-P11-001`, Low i High): po poprawce shadera siatka jest
+  równą, drobną kratą zamiast porwanych poziomych kresek. Na Low z bliska widać ziarno szumu (kropkowanie) — do oceny
+  w ruchu. Palisada i słupki bez zmian.
+- **Cienie Low #110** (`g3a_eye_s0412`, A/B na jednym imporcie): znikają porwane plamy cienia głowic latarni na
+  jezdni; cień wiaduktu i bariery zostaje. Na `route-putry-entry-signs` nie ma już cieni masztów sygnalizacji.
+  Acne na ścianach hal przy biasie 0,4/0,3 nie zauważyłem na obejrzanych kadrach (nie mierzone).
+- **Drogowskazy #124** (`g3b-eye-s1482`): wysięgnik p37 ma teraz E-1 ze schematem skrzyżowania 4,6 × 1,85 m zamiast
+  listy 5 wierszy 4,6 × 3,3 m. **Na Low napisy są z tej odległości nieczytelne** (wcześniej czytelne). Zgodne ze
+  źródłem R2-081, ale to ryzyko dla rozpoznawalności G3b — do oceny krytyka. Kratownica LOD1 nadal czyta się jako kratownica.
+- **Krawężniki / chodniki #125**: na obejrzanych kadrach (`route-putry-entry-signs`, `photo-P11-063`) nie widzę różnicy
+  nawierzchni ani obniżeń; czerwony pas P11-063 potwierdzony tylko w QA (`overrides_applied`), nie wzrokiem.
+- **Dojlidy #122** (`kuronia2-front`, `photo-P11-001`): K3 wyższy, szara okładzina kasetowa z pasami okien zamiast
+  ciemnej attyki; hala przy Kuronia wyższa (18,92 m). Brak dziur i brakujących obiektów.
+- Zastrzeżenie do par: before pochodzi z s22 (inna pozycja startu ciężarówki po spawn-fix 0262 wpływa na `truck-at-gate`).
+
+## Do commita weszło
+`generated/` C i Dojlid, manifesty far_field, `props_meta.json`, `street_props.glb`, tablice znaków (4 nowe PNG).
+Cofnięte jako efekty uboczne: `materials_spec.json` (inne `png_bytes` lokalnego kodera PNG), `build_manifest.json`
+Dojlid (hash `region.yaml` z CRLF), `viaduct_putry_underdeck.spec.json` (same końce linii).
+
+## Gotowość
+GOTOWOSC_PLACEHOLDER
