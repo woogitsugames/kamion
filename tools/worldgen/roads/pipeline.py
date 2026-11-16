@@ -63,6 +63,32 @@ def _authored_paved_polygon(override, origin):
                    [np.asarray(h, float) - offset for h in override.get("holes_epsg2180", [])])
 
 
+def _junction_surface_patches(overrides, origin, junctions, net):
+    """Validate opt-in visual material zones; invalid entries are reported as stale."""
+    from shapely.geometry import Polygon
+    allowed = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
+    by_id = {j.id: j for j in junctions}
+    out = {}
+    for o in overrides:
+        if o.get("kind") != "junction_surface_patch":
+            continue
+        oid = o.get("id", "<junction_surface_patch:missing-id>")
+        try:
+            jid = o["junction"]
+            material = o["material"]
+            if not isinstance(oid, str) or not oid or material not in allowed or jid not in by_id or jid in out:
+                raise ValueError("invalid id, material, junction or duplicate junction")
+            poly = _authored_paved_polygon(o, origin)
+            boundary = Polygon([p for p, _ in by_id[jid].boundary])
+            if not poly.is_valid or poly.is_empty or poly.area <= 1e-6 or not boundary.is_valid or poly.intersection(boundary).area <= 1e-6:
+                raise ValueError("invalid polygon or no junction overlap")
+            out[jid] = {"polygon": poly, "material": material}
+            net.overrides_applied.append({"id": oid, "targets": [jid]})
+        except (KeyError, TypeError, ValueError, IndexError):
+            net.overrides_stale.append(oid)
+    return out
+
+
 def build_network(region_id: str, graph: dict | None = None):
     """The road network with its final centre lines and widths (before sides, junctions and heights): graph +
     overrides + width tapers + fork alignment. Shared by build() and scripts/export-route.py, so the start route
@@ -132,6 +158,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     net.overrides_stale += net.cycle_report.get("overrides_stale", [])
     Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards)
     juncs = J.build_junctions(net, pts)
+    visual_surface_patches = _junction_surface_patches(overrides, origin, juncs, net)
     # second pass now that the junction trims are known: side profiles beside another carriageway are checked
     # right up to the junction patch (ADR 0076: verge / kerb of one branch on the lane of the other)
     Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards, trims=True)
@@ -155,7 +182,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
         M.build_ribbon(buf, net, c, coarse=True)
     stats["median_fills"] = M.build_median_fills(buf, net)           # ADR 0146
     for j in juncs:
-        M.build_patch(buf, net, j, stats=stats["patch"])
+        M.build_patch(buf, net, j, stats=stats["patch"], visual_surface_patch=visual_surface_patches.get(j.id))
         M.build_patch(buf, net, j, coarse=True)
     GO.build(buf, net, gore_plan)                                    # paved gores / P-21 (ADR 0077)
     stats["compact_roundabouts"] = CR.build(buf, net, juncs)         # ADR 0218 5c: apron annulus + centre island

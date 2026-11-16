@@ -710,3 +710,15 @@ overrides:
     confidence: medium
     verify: compare the crossing with the 2025 orthophoto and owner photos
     set: {surface: paving_stones}
+  - id: market-entrance-surface-0227
+    kind: junction_surface_patch
+    junction: 'j:n1134847155'
+    material: road_paving
+    polygon_epsg2180: [[760780.2, 613306.45], [760819.0, 613316.45], [760820.5, 613310.64], [760781.68, 613300.64]]
+    reason: >-
+      SOURCED: GUGiK 2025 and owner photographs show light paving inside the market entrance. ESTIMATED:
+      polygon follows the local service crossing, with a 1.6 m working clearance from the nominal 6 m
+      Jagiellonska carriageway; boundary uncertainty at least 1–2 m. WORKING_VALUE: 6 m patch width.
+      Visual material only; road network, carriageway height and collision remain unchanged.
+    confidence: medium
+    verify: compare eye-level and aerial render, ensure entrance paving and seam do not intrude on Jagiellonska

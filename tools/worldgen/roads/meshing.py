@@ -934,7 +934,52 @@ def _star_center(poly):
     return None
 
 
-def build_patch(buf, net, j, coarse=False, stats=None):
+def _add_patch_surface(buf, layer, mat, V, UV, T, footprint, src, UV1, spec):
+    """Split only an opted-in visual patch, preserving the original triangle planes and UVs."""
+    if spec is None or spec["material"] == mat:
+        buf.add(layer, mat, V, UV, T, footprint=footprint, src=src, UV1=UV1)
+        return
+    import shapely
+    from shapely.geometry import Polygon
+
+    result = {mat: [[], [], [], []], spec["material"]: [[], [], [], []]}
+    for ids in np.asarray(T, int):
+        points = V[ids, :2]
+        basis = np.column_stack((points[1] - points[0], points[2] - points[0]))
+        if abs(np.linalg.det(basis)) < 1e-12:
+            continue
+        tri = Polygon(points)
+        for material, region in ((spec["material"], tri.intersection(spec["polygon"])),
+                                 (mat, tri.difference(spec["polygon"]))):
+            if region.is_empty or region.area < 1e-10:
+                continue
+            vertices, uvs, uv1s, triangles = result[material]
+            shapes = [region] if region.geom_type == "Polygon" else list(region.geoms)
+            for shape in shapes:
+                if shape.geom_type != "Polygon" or shape.area < 1e-10:
+                    continue
+                for piece in shapely.constrained_delaunay_triangles(shape).geoms:
+                    xy = np.asarray(piece.exterior.coords, float)[:3, :2]
+                    cross = np.linalg.det(np.stack((xy[1] - xy[0], xy[2] - xy[0])))
+                    if abs(cross) < 1e-10:
+                        continue
+                    if cross < 0:
+                        xy = xy[[0, 2, 1]]
+                    bc = np.linalg.solve(basis, (xy - points[0]).T).T
+                    weights = np.column_stack((1 - bc.sum(axis=1), bc))
+                    start = len(vertices)
+                    vertices.extend(weights @ V[ids])
+                    uvs.extend(weights @ UV[ids])
+                    if UV1 is not None:
+                        uv1s.extend(weights @ UV1[ids])
+                    triangles.append((start, start + 1, start + 2))
+    for material, (vertices, uvs, uv1s, triangles) in result.items():
+        if triangles:
+            buf.add(layer, material, vertices, uvs, triangles, footprint=footprint, src=src,
+                    UV1=uv1s if UV1 is not None else None)
+
+
+def build_patch(buf, net, j, coarse=False, stats=None, visual_surface_patch=None):
     bnd = j.boundary
     if len(bnd) < 3:
         return
@@ -981,8 +1026,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
                 i1 = (i + 1) % n
                 T.append((b0 + i, b1 + i, b1 + i1))
                 T.append((b0 + i, b1 + i1, b0 + i1))
-        buf.add(layer, mat, V, V[:, :2].copy(), np.array(T), footprint=(layer == "road" and not coarse), src=j.id,
-                UV1=None if coarse else _patch_uv1(net, j, V, poly))
+        _add_patch_surface(buf, layer, mat, V, V[:, :2].copy(), np.array(T), footprint=(layer == "road" and not coarse), src=j.id,
+                           UV1=None if coarse else _patch_uv1(net, j, V, poly), spec=None if coarse else visual_surface_patch)
         if stats is not None:
             stats["polar"] = stats.get("polar", 0) + 1
     else:
@@ -991,8 +1036,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
             res = _repair_fill(poly, zb, ph, S.PATCH_COLLISION_SPACING_M if coarse else 2.5)
             if res is not None:
                 V, T = res
-                buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id,
-                UV1=None if coarse else _patch_uv1(net, j, V, poly))
+                _add_patch_surface(buf, layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id,
+                                   UV1=None if coarse else _patch_uv1(net, j, V, poly), spec=None if coarse else visual_surface_patch)
                 if stats is not None:
                     stats["repaired"] = stats.get("repaired", 0) + 1
                     stats.setdefault("repaired_ids", []).append(j.id)
@@ -1016,8 +1061,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
                 T = np.array(ear_clip(poly))
                 kind = "earclip"
             V = np.column_stack([poly, zb])
-        buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id,
-                UV1=None if coarse else _patch_uv1(net, j, V, poly))
+        _add_patch_surface(buf, layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id,
+                                   UV1=None if coarse else _patch_uv1(net, j, V, poly), spec=None if coarse else visual_surface_patch)
         if stats is not None:
             stats[kind] = stats.get(kind, 0) + 1
             if kind == "earclip":
