@@ -1,0 +1,159 @@
+{
+ "approach": [],
+ "approach_attach": {
+  "crossings": 0,
+  "kerb_cut_m": 0.0,
+  "missed": []
+ },
+ "approach_outside_tile": [],
+ "approach_rules": [],
+ "bed_qa": {
+  "buried_crown_stations": 1,
+  "crown_edge_above_terrain_m": {
+   "max": 0.121,
+   "min": -1.092,
+   "p50": 0.12
+  },
+  "open_toe_stations": 0,
+  "stations": 816,
+  "step_m": 2.0,
+  "toe_buried_m": {
+   "max": 1.517,
+   "min": 0.174,
+   "p50": 0.187
+  },
+  "visible_width_m": {
+   "model": 3.86,
+   "orthophoto_m": [
+    3.5,
+    4.5
+   ],
+   "p50": 3.86,
+   "status": "ESTIMATED (GUGiK 0.1 m 2025, n = 10)"
+  }
+ },
+ "clearance": {
+  "frame": "(lateral from track axis, height above top of rail)",
+  "min_marker_distance_m": null,
+  "profile_m": [
+   [
+    -1.6,
+    0.0
+   ],
+   [
+    -2.2,
+    0.4
+   ],
+   [
+    -2.2,
+    4.0
+   ],
+   [
+    -1.6,
+    6.0
+   ],
+   [
+    1.6,
+    6.0
+   ],
+   [
+    2.2,
+    4.0
+   ],
+   [
+    2.2,
+    0.4
+   ],
+   [
+    1.6,
+    0.0
+   ]
+  ],
+  "status": "UNVERIFIED simplified structure gauge (ADR 0217)"
+ },
+ "conform": {
+  "abs_p95_m": 2.098,
+  "cut_max_m": 3.264,
+  "fill_max_m": 1.003,
+  "nodes": 17995
+ },
+ "crossings": [],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "heading": "compass degrees clockwise from north (Unity: Y rotation)",
+ "markers": [],
+ "region": "dk65-03",
+ "schema": "truck-sim-pl/rail/1",
+ "skipped": [
+  {
+   "src": "osm:way/339410499:0",
+   "why": "railway=platform"
+  },
+  {
+   "src": "osm:node/2180237516",
+   "why": "railway=halt"
+  },
+  {
+   "src": "osm:node/11868991995",
+   "why": "railway=milestone"
+  },
+  {
+   "src": "osm:node/11869001790",
+   "why": "railway=milestone"
+  }
+ ],
+ "track_km": 1.689,
+ "tracks": [
+  {
+   "bridge": true,
+   "electrified": "contact_line",
+   "gauge_mm": 1435.0,
+   "gauge_src": "osm",
+   "length_m": 57.5,
+   "maxspeed_kmh": 100.0,
+   "name": null,
+   "ref": "38",
+   "service": null,
+   "src": "osm:way/41533341:0",
+   "tracks": 1,
+   "tracks_src": "default",
+   "usage": "main"
+  },
+  {
+   "bridge": false,
+   "electrified": "contact_line",
+   "gauge_mm": 1435.0,
+   "gauge_src": "osm",
+   "length_m": 49.7,
+   "maxspeed_kmh": 100.0,
+   "name": "Rail Baltica",
+   "ref": "38",
+   "service": null,
+   "src": "osm:way/173466803:0",
+   "tracks": 1,
+   "tracks_src": "default",
+   "usage": "main"
+  },
+  {
+   "bridge": false,
+   "electrified": "contact_line",
+   "gauge_mm": 1435.0,
+   "gauge_src": "osm",
+   "length_m": 1581.7,
+   "maxspeed_kmh": 100.0,
+   "name": "Rail Baltica",
+   "ref": "38",
+   "service": null,
+   "src": "osm:way/406675496:0",
+   "tracks": 1,
+   "tracks_src": "default",
+   "usage": "main"
+  }
+ ],
+ "triangles": {
+  "rail_crossing": 0,
+  "rail_lod0": 22992,
+  "rail_lod1": 3060,
+  "rail_lod2": 172
+ },
+ "warnings": []
+}

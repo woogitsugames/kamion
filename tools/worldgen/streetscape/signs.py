@@ -621,9 +621,130 @@ def c9():
     return im
 
 
+# ------------------------------------------------------------------------------------------------ ADR 0268
+# Signs of the approach to a level crossing (Dz.U. 2025 poz. 1105 § 79). Faces redrawn from the colour patterns of
+# Dz.U. 2019 poz. 2310 (PDF p. 41: A-9, A-10; p. 51: G-1a-f, G-2), viewed 2026-11-15; simplified pictograms from
+# primitives, no traced artwork. Plate sizes: RECT below.
+TRI_UP_TOP = (S - (S - 16) * math.sqrt(3) / 2) / 2      # px: apex row of the upright warning triangle (side S - 16)
+# code -> (width m, height m) of rectangular plates. WORKING_VALUE: proportions measured on the colour patterns
+# (G-1: 80 x 265 px, G-2: 185 x 265 px); absolute sizes UNVERIFIED (Dz.U. 2019 poz. 2311 zał. 1 rozdz. 8 not read:
+# the PDF is > 10 MB). "T-SA" = tablica "Sygnalizacja automatyczna" (§ 79 pkt 6): the regulation gives no pattern -
+# white board, black frame and lettering, UNVERIFIED design and size.
+RECT = {**{f"G-1{k}": (0.30, 1.00) for k in "abcdef"}, "G-2": (0.35, 0.50), "T-SA": (0.90, 0.36)}
+
+
+def _tri_up():
+    """Upright warning triangle: red border, yellow field. Returns (image, draw)."""
+    im = _img()
+    d = ImageDraw.Draw(im)
+    s = S - 16
+    h = s * math.sqrt(3) / 2
+    top = TRI_UP_TOP
+    outer = [(S / 2, top), (S - 8, top + h), (8, top + h)]
+    d.polygon(outer, fill=RED)
+    k = 0.80
+    cx, cy = S / 2, top + 2 * h / 3
+    d.polygon([(cx + (x - cx) * k, cy + (y - cy) * k) for x, y in outer], fill=YELLOW)
+    return im, d
+
+
+def a9():
+    """A-9 "przejazd kolejowy z zaporami": black fence (4 pickets on 2 rails)."""
+    im, d = _tri_up()
+    x0, x1, yb = S * 0.30, S * 0.70, S * 0.80
+    for k in range(4):
+        x = x0 + (x1 - x0) * (k + 0.5) / 4
+        w = S * 0.030
+        d.polygon([(x - w, yb), (x - w, S * 0.57), (x, S * 0.52), (x + w, S * 0.57), (x + w, yb)], fill=BLACK)
+    for y in (0.62, 0.72):
+        d.rectangle([x0 - S * 0.02, S * y - S * 0.016, x1 + S * 0.02, S * y + S * 0.016], fill=BLACK)
+    return im
+
+
+def a10():
+    """A-10 "przejazd kolejowy bez zapór": black steam locomotive in side view (simplified)."""
+    im, d = _tri_up()
+    yb = S * 0.80                                                    # rail
+    d.rectangle([S * 0.27, yb - 5, S * 0.73, yb + 3], fill=BLACK)
+    d.rectangle([S * 0.33, S * 0.62, S * 0.60, S * 0.735], fill=BLACK)   # boiler
+    d.rectangle([S * 0.56, S * 0.555, S * 0.69, S * 0.735], fill=BLACK)  # cab
+    d.rectangle([S * 0.545, S * 0.535, S * 0.705, S * 0.565], fill=BLACK)  # cab roof
+    d.rectangle([S * 0.595, S * 0.60, S * 0.655, S * 0.655], fill=YELLOW)  # cab window
+    d.polygon([(S * 0.36, S * 0.62), (S * 0.345, S * 0.545), (S * 0.415, S * 0.545), (S * 0.40, S * 0.62)], fill=BLACK)
+    d.ellipse([S * 0.455, S * 0.585, S * 0.505, S * 0.635], fill=BLACK)   # dome
+    d.polygon([(S * 0.33, S * 0.735), (S * 0.285, S * 0.775), (S * 0.33, S * 0.775)], fill=BLACK)   # pilot
+    for x in (0.375, 0.47, 0.565, 0.65):
+        d.ellipse([S * x - 21, yb - 44, S * x + 21, yb - 2], fill=BLACK)
+    for cx_, cy_, r in ((0.40, 0.49, 15), (0.45, 0.455, 19), (0.515, 0.43, 22)):   # smoke
+        d.ellipse([S * cx_ - r, S * cy_ - r, S * cx_ + r, S * cy_ + r], fill=BLACK)
+    return im
+
+
+def g1(code):
+    """G-1a-f "słupek wskaźnikowy": white field, red frame, 3 / 2 / 1 red bars; on the right-hand posts (a-c) the bars
+    fall towards the carriageway (down to the left), on the left-hand posts (d-f) they are mirrored."""
+    w, h = 154, S
+    im = _img(w, h)
+    d = ImageDraw.Draw(im)
+    d.rectangle([0, 0, w - 1, h - 1], fill=RED)
+    b = 9
+    d.rectangle([b, b, w - 1 - b, h - 1 - b], fill=WHITE)
+    n = {"a": 3, "b": 2, "c": 1, "d": 3, "e": 2, "f": 1}[code[-1]]
+    left = code[-1] in "def"
+    bar, rise = h * 0.118, (w - 2 * b) * 0.50          # bar thickness (vertical), rise across the plate
+    pitch = h * 0.30
+    for k in range(n):
+        yc = h / 2 + (k - (n - 1) / 2) * pitch
+        ya, yb_ = (yc - rise / 2, yc + rise / 2) if left else (yc + rise / 2, yc - rise / 2)   # y at left / right edge
+        d.polygon([(b, ya - bar / 2), (w - 1 - b, yb_ - bar / 2), (w - 1 - b, yb_ + bar / 2), (b, ya + bar / 2)],
+                  fill=RED)
+    return im
+
+
+def g2():
+    """G-2 "sieć pod napięciem": white plate with a black frame, yellow warning triangle with a black lightning bolt,
+    yellow panel with the black legend of the pattern."""
+    w, h = 358, S
+    im = _img(w, h)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=18, fill=BLACK)
+    d.rounded_rectangle([7, 7, w - 8, h - 8], radius=12, fill=WHITE)
+    tri = [(w / 2, 40), (w - 44, 300), (44, 300)]
+    d.polygon(tri, fill=BLACK)
+    cx, cy = w / 2, (40 + 300 + 300) / 3
+    d.polygon([(cx + (x - cx) * 0.86, cy + (y - cy) * 0.86) for x, y in tri], fill=(250, 226, 40))
+    d.polygon([(w * 0.53, 105), (w * 0.44, 190), (w * 0.505, 190), (w * 0.455, 262), (w * 0.47, 262), (w * 0.44, 285),
+               (w * 0.405, 255), (w * 0.425, 258), (w * 0.47, 205), (w * 0.40, 205), (w * 0.47, 105)], fill=BLACK)
+    d.rectangle([20, 330, w - 21, h - 22], fill=(250, 226, 40))
+    for k, (txt, px) in enumerate((("Nie dotykać", 34), ("Przewodów trakcyjnych!", 21), ("Zagrożenie dla życia!", 21))):
+        f = _font(px)
+        tw = d.textlength(txt, font=f)
+        d.text(((w - tw) / 2, 345 + k * 44), txt, font=f, fill=BLACK)
+    return im
+
+
+def t_sa():
+    """Tablica informacyjna "Sygnalizacja automatyczna" (Dz.U. 2025 poz. 1105 § 79 pkt 6) - UNVERIFIED design."""
+    w, h = S, 205
+    im = _img(w, h)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=14, fill=BLACK)
+    d.rounded_rectangle([6, 6, w - 7, h - 7], radius=10, fill=WHITE)
+    for k, txt in enumerate(("Sygnalizacja", "automatyczna")):
+        f = _font(58)
+        tw = d.textlength(txt, font=f)
+        d.text(((w - tw) / 2, 26 + k * 78), txt, font=f, fill=BLACK)
+    return im
+
+
+
 FACES = {"A-7": ("triangle", a7), "B-20": ("octagon", b20), "C-12": ("disc", c12), "D-1": ("diamond", d1),
          "D-6": ("square", lambda: square("D-6")), "D-15": ("square", lambda: square("D-15")),
-         "B-1": ("disc", b1), "B-2": ("disc", b2), "B-36": ("disc", b36), "C-9": ("disc", c9)}
+         "B-1": ("disc", b1), "B-2": ("disc", b2), "B-36": ("disc", b36), "C-9": ("disc", c9),
+         # ADR 0268: approach to a level crossing (plates of rail_approach.py only; furniture.sign_assembly never
+         # stacks them - "triangle_up" / "rect" are handled by props.plate)
+         "A-9": ("triangle_up", a9), "A-10": ("triangle_up", a10), "G-2": ("rect", g2), "T-SA": ("rect", t_sa),
+         **{f"G-1{k}": ("rect", (lambda k=k: g1(f"G-1{k}"))) for k in "abcdef"}}
 KNOWN = set(FACES)
 
 

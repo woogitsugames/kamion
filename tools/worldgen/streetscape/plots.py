@@ -681,7 +681,7 @@ def gate_access(m, n, w, net, carriage, block=None):
         _, c, s, side, i = best
         d = c.side[side]
         kind, mat = int(d["kind"][i]), int(d["mat"][i])
-        acc.update(chain=c.id, side=side, s=float(s), kind=kind, walk=NW.WALK_MATS[mat], ok=True,
+        acc.update(chain=c.id, side=side, s=float(s), kind=kind, walk=NW.walk_mat(mat), ok=True,
                    kerbed=kind == NW.URBAN and mat != NW.MAT_FLUSH_ROAD)
         if kind in (NW.URBAN, NW.RURAL) and mat != NW.MAT_FLUSH_ROAD:
             drop = {"chain": c.id, "side": side, "s": float(s), "half": w / 2 + 0.4}

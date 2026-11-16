@@ -214,6 +214,9 @@ def edge_lines(sec, hw, dirn):
     return out
 
 
+RAIL_P4_LEN_M = 50.0       # ADR 0268 WORKING_VALUE: P-4 on each approach of a level crossing, from the outer rail
+
+
 def unmarked(sec) -> bool:
     """ADR 0215 (owner D65 p.6): a carriageway under construction / not open to traffic carries no horizontal
     markings at all (authored `set: {construction: true}`, roads.closures)."""
@@ -632,7 +635,23 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                             strip(buf, c, sa, sb, lat_c + off, S.LINE_W_NARROW, "P-4")
                         cnt("P-4 double centre line")
                     else:
-                        _segmented(buf, c, sa, sb, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
+                        # ADR 0268: P-4 double continuous line on the approaches to a level crossing and across it
+                        # (Dz.U. 2025 poz. 1105 § 79 pkt 4 lit. b); length RAIL_P4_LEN_M is a WORKING_VALUE
+                        rx = sorted((max(sa, x["s"] - x["rail_d"] - RAIL_P4_LEN_M), min(sb, x["s"] + x["rail_d"] + RAIL_P4_LEN_M))
+                                    for x in c.meta.get("rail_xings", []))
+                        cur = sa
+                        for xa, xb in rx:
+                            if xb - xa < 0.5:
+                                continue
+                            xa = max(xa, cur)
+                            if xa > cur:
+                                _segmented(buf, c, cur, xa, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
+                            for off in (-0.12, 0.12):
+                                strip(buf, c, xa, xb, lat_c + off, S.LINE_W_NARROW, "P-4")
+                            cnt("P-4 level crossing approach")
+                            cur = max(cur, xb)
+                        if sb > cur:
+                            _segmented(buf, c, cur, sb, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
                         cnt("P-1 centre line")
                 for k_e, (lat_e, _) in enumerate(edge_lines(sec, hw, dirn)):
                     lat_fn = (lambda ss_, k_e=k_e, sec=sec, dirn=dirn: edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0])
@@ -827,6 +846,38 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     for k in ("P-10", "P-13"):
         if cr_rep[k]:
             cnt(f"{k} at compact roundabout", cr_rep[k])
+    # ADR 0268: P-14 before a level crossing of category A-D (Dz.U. 2025 poz. 1105 § 79 pkt 4 lit. e), 2.0 m before the
+    # crossing devices beside the carriageway (S.P14_BEFORE_SIGNAL, zał. 2 pkt 4.2.5). Only on carriageways that carry
+    # markings at all (highway in MARKED): the local roads of the other crossings are unmarked - reported, not painted.
+    for c in net.chains:
+        for x in c.meta.get("rail_xings", []):
+            for trav in (1.0, -1.0):                      # travel direction along the chain, towards the crossing
+                d0 = x["device_d"] + S.P14_BEFORE_SIGNAL
+                s_mid = x["s"] - trav * (d0 + S.P14_DEPTH / 2)
+                if not (c.t_a + 1.0 < s_mid < c.length - c.t_b - 1.0):
+                    cnt("P-14 level crossing skipped (road end)")
+                    continue
+                sec = c.section(s_mid, secs)
+                dn = int(c.dirn[c.idx(s_mid)])
+                if dn * trav < 0:
+                    continue                              # one-way against this approach
+                if unmarked(sec) or sec.highway not in MARKED:
+                    cnt("P-14 level crossing skipped (unmarked road)")
+                    continue
+                hw = float(c.hw_at(s_mid))
+                lat_c, _, _ = lane_layout(sec, hw, dn or 1)
+                if dn != 0 or lat_c is None:
+                    lo, hi = -hw, hw
+                elif trav > 0:
+                    lo, hi = -hw, lat_c
+                else:
+                    lo, hi = lat_c, hw
+                lo, hi = lo + 0.15, hi - 0.15
+                xl = lo
+                while xl + S.P14_LEN <= hi + 1e-6:
+                    strip_cross(buf, c, s_mid, S.P14_DEPTH, xl, xl + S.P14_LEN)
+                    xl += S.P14_LEN + S.P14_GAP
+                cnt("P-14 level crossing")
     report["markings"] = counts
 
 
