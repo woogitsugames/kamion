@@ -202,3 +202,8 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 [R24](baseline-remote-round24/README.md):cztery nowe indywidualne oglądy120/132/145/151, pokrycie53/88P18,35NOT_REVIEWED.120 ma widoczny tył Moran, lecz para skrzydeł i brud niepotwierdzone;132 to bok naczepy wywrotki,145 drewniane burty,151 pojedyncza roletaFedEx. PrzyrostA/B0/0. Cztery podglądyCC tylko raw, bez większych oryginałów i bez zmiany historycznegoP18/ledger18.
 
 [R25](winter-editorial-round25/README.md):jeden nowy link-onlyAUX ChristianPetrich/SINTEF zAquaHoy/Nofima pokazuje oblodzone dolne fragmenty dwóch drzwi, próg i sople. Dostępne630×420; typ całego pojazdu i wysokość całych drzwi niepotwierdzone. Artykuł dotyczy wody z transportu ryb, więc nie nazwano nalotu drogową solą ani nie przeniesiono składu na fotografię. PrzyrostA/B/C0. Reuters zakończony naDeviceCheck bez ponawiania; PIXTA odrzucony po obejrzeniu przodu/boku. WszystkoARRlink-only,0pobrań/screenshotów; nie zmieniono głównego23 ani dolnych granic5A(zograniczeniami)/1B.
+
+
+## Pozostałe stareID — runda27
+
+[baseline-remaining-round27](baseline-remaining-round27/README.md):6nowych rozłącznychID115/128/129/130/161/170 po indywidualnym oglądzie agenta, root osobno3z6.5fotografii i1render,6podglądów pozaGit,0nowychGitminiatur/przyrostuA/B. Pokrycie59/88rekordówP18,29NOT_REVIEWED.130render odrzucony;129Jedinstvo w tle, głównyTomislavSajko;161tył naprawdę widoczny, brud drzwi niepotwierdzony;170tył kabinyVolvo nie naczepa. Rozmiar obrazu nie zastąpił pomiaru drzwi; staryA bez dodatkowego progu1000px.
