@@ -1014,7 +1014,7 @@ CAMS = {
     "zbl_lampy": dict(loc=(-2.5, -14.9, 1.3), target=(-0.75, -12.0, 0.95), lens=40),
     # framed on the axles from dims.json (moves with the tridem, D79 / ADR 0280)
     "zbl_kolo": dict(loc=(-3.9, T.AXLES[1] + 2.3, 0.85), target=(-1.1, T.AXLES[1], 0.62), lens=32),
-    # top view (ortho, rear to the right) cut at 1.20 m above ground (near clip): the roof tarp and the deck are removed,
+    # top view (ortho, front / kingpin to the right) cut at 1.20 m above ground (near clip): the roof tarp and the deck are removed,
     # so the tridem, mudguards, side guards and landing gear are visible against the frame
     "gora": dict(loc=(0.0, -6.0, 30.0), rot=(0.0, 0.0, math.radians(90)), ortho=15.6, clip=30.0 - 1.20),
     "zbl_noga": dict(loc=(3.4, -0.4, 1.05), target=(0.9, -2.3, 0.85), lens=36),
@@ -1085,7 +1085,7 @@ def qa_renders(a, tex, roots, objs0, manifest):
     cam("bok")
     render("bok_szary_overcast_lod0.jpg", "Naczepa | LOD0 | bok (ortho) | pochmurno | podpory opuszczone")
     cam("gora")
-    render("gora_szary_overcast_lod0.jpg", "Naczepa | LOD0 | z góry, przekrój 1,20 m (ortho, tył w prawo) | osie od sworznia "
+    render("gora_szary_overcast_lod0.jpg", "Naczepa | LOD0 | z góry, przekrój 1,20 m (ortho, przód w prawo) | osie od sworznia "
                                            + " / ".join(f"{-y:.2f}" for y in T.AXLES) + " m | pochmurno")
     cam("zbl_kolo")
     render("zbl_kolo_overcast_lod0.jpg", "Naczepa | LOD0 | tridem 385/65 R22.5, felgi stalowe, natrysk z kół | pochmurno")
