@@ -1,3 +1,29 @@
 # Authored overrides of region bialystok-mickiewicza (ADR 0278, owner D81). Every entry survives a re-import; coordinates are
 # region-local E/N (origin EPSG:2180 780043, 592127) or EPSG:2180 where the key says so.
-overrides: []
+overrides:
+  - id: dk19-branickiego-carriageway-width
+    target: {osm_way: [25447094, 279890330, 405335405]}
+    reason: >-
+      DK19 Branickiego between pl. Antonowicza and rondo Meyera, both one-way carriageways (ref 19 only; the 8 t part NW of the square is not touched). BDOT10k gives 7.0 m per carriageway.
+      GUGiK orthophoto WMS cross-sections (tools/worldgen/qa/ortho_xsec.py, step 40 m, ADR 0272):
+      16 usable stations on 3 of the 3 ways, asphalt run incl. the kerb line median
+      8.40 m (quartiles 8.20-9.00 m, reading +-0.3 m); innermost bright lines left and right of the
+      axis 7.15 m apart (median of 14 stations). Set to 2 x 3.50 m + 2 x 0.50 m = 8.00 m between kerbs (WORKING_VALUE inside the measured range,
+      kerbstones not resolved at the WMS resolution). Lanes = OSM lanes=2. Turn-pocket ways (3-4 lanes) keep
+      the generator rule. Stations: artifacts/dk19-tiles-s23/xsec/*40*.json.
+    confidence: medium
+    verify: owner drive or a street-level photo of the section (Panoramax returned 0 photos on 2026-11-16)
+    set: {lanes: 2, lane_width: 3.5, edge_strip: 0.5}
+  - id: dw678-ciolkowskiego-carriageway-width
+    target: {osm_way: [236884707, 236884708, 243052037, 243052038, 248117601, 257124463, 258564450, 258564451, 279872871, 279872872, 385980695, 385980696, 522524788, 522524802, 540735092, 540735093, 591783717, 616181082, 616181223, 636536003, 636536006, 665617711, 665617712, 665619497, 665619499, 665619501, 665619504, 665619505, 1308260886]}
+    reason: >-
+      DW678 Ciolkowskiego from rondo Meyera towards Dojlidy, both one-way carriageways; the two ways crossing the south seam (279881972, 279876738) keep the BDOT width of the locked neighbour bialystok-dojlidy (7.0 m) so the seam has one width. BDOT10k gives 7.0 m per carriageway.
+      GUGiK orthophoto WMS cross-sections (tools/worldgen/qa/ortho_xsec.py, step 40 m, ADR 0272):
+      37 usable stations on 9 of the 29 ways, asphalt run incl. the kerb line median
+      8.20 m (quartiles 8.15-8.35 m, reading +-0.3 m); innermost bright lines left and right of the
+      axis 7.20 m apart (median of 21 stations). Set to 2 x 3.50 m + 2 x 0.50 m = 8.00 m between kerbs (WORKING_VALUE inside the measured range,
+      kerbstones not resolved at the WMS resolution). Lanes = OSM lanes=2. Turn-pocket ways (3-4 lanes) keep
+      the generator rule. Stations: artifacts/dk19-tiles-s23/xsec/*40*.json.
+    confidence: medium
+    verify: owner drive or a street-level photo of the section (Panoramax returned 0 photos on 2026-11-16)
+    set: {lanes: 2, lane_width: 3.5, edge_strip: 0.5}

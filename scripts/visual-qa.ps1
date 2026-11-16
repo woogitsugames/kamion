@@ -45,7 +45,10 @@ param(
     # Measurement mask: '<renderer>[:<slot>][;...]' also writes <id>_mask.png with those slots flat magenta.
     [string]$Mask = '',
     # ADR 0056: also write <id>_envcube.png (the vehicle reflection cube of that frame, 6 faces).
-    [switch]$EnvDump
+    [switch]$EnvDump,
+    # Editor platform of the run (ADR 0261): a checkout whose Library is imported for Win64 must render with Win64,
+    # otherwise Unity switches back to Android and re-imports every asset.
+    [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android'
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -74,7 +77,7 @@ if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 if ($EnvDump) { $qaArgs += @('-qaEnvDump', '1') }
 $runStart = Get-Date
-$code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
+$code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs -BuildTarget $BuildTarget
 
 $result = Select-String -Path $log -Pattern 'VISUALQA_RESULT:.*' | Select-Object -Last 1
 

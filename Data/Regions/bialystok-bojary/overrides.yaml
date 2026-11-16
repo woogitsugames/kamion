@@ -1,3 +1,16 @@
 # Authored overrides of region bialystok-bojary (ADR 0278, owner D81). Every entry survives a re-import; coordinates are
 # region-local E/N (origin EPSG:2180 780043, 594175) or EPSG:2180 where the key says so.
-overrides: []
+overrides:
+  - id: dk19-piastowska-70-carriageway-width
+    target: {osm_way: [137540631, 194922745, 665625574, 672162901]}
+    reason: >-
+      DK19 Piastowska, the two one-way carriageways of the 70 km/h section north of the 50 km/h zone. BDOT10k gives 7.0 m per carriageway.
+      GUGiK orthophoto WMS cross-sections (tools/worldgen/qa/ortho_xsec.py, step 40 m, ADR 0272):
+      13 usable stations on 2 of the 4 ways, asphalt run incl. the kerb line median
+      8.25 m (quartiles 8.10-8.40 m, reading +-0.3 m); innermost bright lines left and right of the
+      axis 6.95 m apart (median of 13 stations). Set to 2 x 3.50 m + 2 x 0.50 m = 8.00 m between kerbs (WORKING_VALUE inside the measured range,
+      kerbstones not resolved at the WMS resolution). Lanes = OSM lanes=2. Turn-pocket ways (3-4 lanes) keep
+      the generator rule. Stations: artifacts/dk19-tiles-s23/xsec/*40*.json.
+    confidence: medium
+    verify: owner drive or a street-level photo of the section (Panoramax returned 0 photos on 2026-11-16)
+    set: {lanes: 2, lane_width: 3.5, edge_strip: 0.5}
