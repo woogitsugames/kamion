@@ -40,7 +40,7 @@ class Combination:
     kp_front: float = 1.60           # kingpin -> trailer front (DERIVED, dims.json)
     kp_rear: float = 12.00           # kingpin -> trailer rear (SOURCED, 96/53/EC Annex I 1.6)
     trailer_half_w: float = 1.275    # 2.55 / 2 (SOURCED limit, 96/53/EC Annex I 1.2)
-    trailer_axles: tuple = (6.39, 7.70, 9.01)   # kingpin -> axles (trailer.json, WORKING_VALUE), none steered
+    trailer_axles: tuple = (6.32, 7.63, 8.94)   # kingpin -> axles (trailer.json, D79/ADR 0280: 7,63 m SOURCED), none steered
     trailer_track: float = 2.04      # wheel centres (WORKING_VALUE)
     trailer_tyre_w: float = 0.385    # 385/65 R22.5 (DERIVED)
     L2: float | None = None          # effective trailer wheelbase; None = middle axle of the tridem (ESTIMATED)
