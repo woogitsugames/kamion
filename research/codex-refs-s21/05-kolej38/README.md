@@ -76,3 +76,8 @@ Typu sieci nie przeliczano z kodu na wysokość/rozstaw słupów. Parametr pręd
 ## Komunikaty wykonawców — runda10
 
 [contractor-ground-round10](contractor-ground-round10/README.md):3pełne teksty komunikatów INTOP/Unibep/PUW,0kandydatów zdjęciowych z pewnym podpisemFasty/Knyszyn,0obrazów obejrzanych/pobranych. Umowa/wybór oferty/pozwolenie i data publikacji nie lokalizują ilustracji ani nie dowodzą wykonania lub uruchomienia infrastruktury. Ograniczony przegląd, bez globalnego wniosku o nieistnieniu zdjęć. Główny17bez zmian.
+
+
+## Dalszy trop mapowania — runda11
+
+[crossing-document-map-round11](crossing-document-map-round11/README.md):odczytano wyłącznie nagłówek publicznego dokumentu RDOŚ, docelowa strona nie załadowała się wweb ani przy pojedynczym zwykłym otwarciu wChrome. Jeden download skończył się timeoutem bez pliku, bez dalszych pobrań i wariantów hosta. Fragment indeksu wymienia kilka dróg/obiektów, lecz nie dowodzi relacjiDW671→29+522. Nie przyjęto mapowania ani nowego materiału do generatora; zakres odcinka2od25+204 jest właściwy do dalszej weryfikacji29km.0mediów/0pobrań zachowanych/0OSM-Overpass/Commons. Główny17 bez zmian; PENDING nie oznacza braku dokumentów.
