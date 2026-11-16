@@ -93,20 +93,27 @@ namespace Game.Tests
         [Test]
         public void ManifestPhysicsCrosscheck_AllRowsMatch()
         {
+            // = tools/blender/truck/trailer/check_export.py ALLOWED_MISMATCH (documented owner decisions, not the axles)
+            string[] allowed = { "tyre radius: mesh free", "cargo front z", "cargo height", "combination length" };
             var bad = new List<string>();
-            foreach (var t in Json.Arr(LoadManifest()["physics_crosscheck"]))
-                foreach (var r in Json.Arr(Json.Obj(t)["rows"]))
-                {
-                    var row = Json.Obj(r);
-                    if (!(row["match"] is bool ok && ok)) bad.Add(Json.Str(row["item"]));
-                }
+            int axleRows = 0;
+            foreach (var r in Json.Arr(Json.Obj(LoadManifest()["physics_crosscheck"])["rows"]))
+            {
+                var row = Json.Obj(r);
+                string item = Json.Str(row["item"]);
+                if (item.StartsWith("axle ")) axleRows++;
+                if (row["match"] is bool ok && ok) continue;
+                bool doc = false;
+                foreach (var a in allowed) doc |= item.StartsWith(a);
+                if (!doc) bad.Add(item);
+            }
+            Assert.That(axleRows, Is.EqualTo(3), "axle 1..3 rows in physics_crosscheck");
             Assert.That(bad, Is.Empty, "physics_crosscheck mismatches: " + string.Join("; ", bad));
         }
 
         [Test]
         public void Lod0Fbx_WheelGeometry_CentredOnPhysicsAxles()
         {
-            var def = Def();
             var lod0 = Json.Obj(Json.Obj(LoadManifest()["lods"])["LOD0"]);
             string src = Path.Combine(EditorTools.RepoRoot, Json.Str(lod0["file"]));
             Assert.That(File.Exists(src) && new FileInfo(src).Length > 1024, "missing FBX (or LFS pointer): " + src);
@@ -118,10 +125,36 @@ namespace Game.Tests
             TruckAssetBuilder.ApplyModelSettings(mi);
             mi.materialImportMode = ModelImporterMaterialImportMode.None;
             mi.SaveAndReimport();
-            var root = AssetDatabase.LoadAssetAtPath<GameObject>(dst);
-            Assert.That(root, Is.Not.Null, dst);
+            AssertFbxOnAxles(dst);
+        }
 
+        /// <summary>The LOD0 FBX the art prefab was built from (TrailerAssetBuilder copy in Assets/_Generated, outside git).</summary>
+        [Test]
+        public void GeneratedLod0Fbx_UsedByArtPrefab_OnPhysicsAxles()
+        {
+            string p = "Assets/_Generated/Trailer/Source/SM_Trailer_LOD0.fbx";
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(p) == null) Assert.Ignore(p + " not built: run TrailerAssetBuilder.BuildBatch");
+            AssertFbxOnAxles(p);
+        }
+
+        static void AssertFbxOnAxles(string assetPath)
+        {
+            var def = Def();
+            var root = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            Assert.That(root, Is.Not.Null, assetPath);
             var errors = new List<string>();
+            // AXLE_n empties (axle centre line, from the same AXLES list as the axle beams, mudguards and side guards)
+            int axles = 0;
+            foreach (var t in root.GetComponentsInChildren<Transform>(true))
+            {
+                var a = Regex.Match(t.name, @"^AXLE_([123])(_LOD0)?$");
+                if (!a.Success) continue;
+                Vector3 p = root.transform.InverseTransformPoint(t.position);
+                float want = (float)def.axles[a.Groups[1].Value[0] - '1'].positionZ;
+                if (Mathf.Abs(p.z - want) > Tol || Mathf.Abs(p.x) > Tol) errors.Add($"{assetPath} {t.name} at ({p.x:F4}, {p.z:F4}) vs axle z {want:F4}");
+                axles++;
+            }
+            if (axles != 3) errors.Add($"{assetPath}: {axles} AXLE_n empties (want 3)");
             int n = 0;
             foreach (var mf in root.GetComponentsInChildren<MeshFilter>(true))
             {
