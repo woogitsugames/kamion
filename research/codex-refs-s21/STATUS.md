@@ -1,13 +1,13 @@
 # Status codex-refs-s21
 
-Stan danych: 16.11.2026, po pakiecie tree-plan-round18 (80395743b). Cel ciągły aktywny; research/codex-refs-s21 → PR100 → main, bez scalania. Czasy kolejnych zapisów podawane w Brukseli.
+Stan danych po 8394cc13d, 16.11.2026. Cel ciągły aktywny; research/codex-refs-s21 → PR100 → main, bez scalania. Czasy zapisów live w Brukseli.
 
 | Pakiet | Rekordy głównego manifestu | Ograniczenia |
 |---|---:|---|
 | 01 lampy | 60 | Nie 60 homologowanych tylnych lamp. |
 | 02 brud | 27 | 25 kadrów (14 lokalnych, 11 link-only) + 2 dokumenty, również odrzucenia/AUX. |
 | 03 Knyszyn | 40 | Historyczne kadry i dane; zdjęcia właściciela wyłącznie opis tekstowy. |
-| 04 DK65 | 27 | Projekt, ortofoto i przepisy mają oddzielne daty i zakresy. |
+| 04 DK65 | 29 | Projekt, ortofoto i przepisy mają oddzielne daty i zakresy. |
 | 05 kolej 38 | 21 | Mapowanie lokalnego przejazdu do ID/kilometrażu nadal otwarte. |
 | 06 pierścień | 38 | Różne miasta i daty, bez łączenia w stan 2026. |
 | 07 Białystok/Dojlidy | 22 | Geometria i dokumenty; lokalne B-5/B-18/wyjątki nadal niepotwierdzone. |
@@ -30,14 +30,14 @@ Białystok: BR14 dwa Mapillary Batorego dzień/noc z2019, tylko przeglądarka i 
 
 Normy UNECE mają datowane wersje i konkretne paragrafy w pakietach. R148 UE2021: minimum kat.5 0,6cd; maksimum single11a1000,11b/11c1200cd z warunkami. Nie deklarujemy z tego pełnej aktualności2026. R48 pakiet skuteczny26.09.2025 nie rozstrzyga homologacji starego pojazdu. Odblask CIL mcd/lx i emisja cd pozostają rozdzielone.
 
-Kontrola po 80395743b: 456 poprawnych JSON, 93 rastry ≤800px, brak plików >5MB w śledzonym research/codex-refs-s21. Metryki z git ls-files i lokalnego odczytu, nie liczby kadrów zaakceptowanych. Pliki raw i duże dokumenty poza Git. Media/firmy link-only ARR, brak kopii zdjęć właściciela. Commons ograniczony pojedynczy obieg odzyskany po kontrolowanym200; Flickr pobrania STOP po429. OSM/Overpass bez ponawiania blokowanych zapytań.
+Aktualny losowy audyt lamp: [R46](01-lampy/qualification-audit-round46/README.md), seed2026111602, 12/60 rekordów =20%,13 obrazów,0zastępstw i0NOT_REVIEWED. CO WIDAĆ i wartość sprawdzone równolegle,12PASS_WITH_LIMITS bez nowych sprzeczności. To nie audyt pozostałych48 ani wszystkich licencji/zastosowań. Snapshot skopiowano po pierwszych oglądach, ale z hashem zgodnym z zapisanym przed oglądami; kolejność jawna. Stary audyt10/49 pozostaje osobny. R42 wcześniej skorygowano kolor/kształt makra etykiety, które odziedziczyły opis całej lampy.
 
-Gotowe do scalenia po recenzji lidera: NIE. Następne: nowe zimowe kontrole drogowe R50, nowe tylne lampy R40, źródło przejazdu koło Knyszyna R14; każdy wynik recenzowany oddzielnie. Bez Unity/adb/kodu gry.
+R43: oficjalny tekst ECE/TRANS/WP.29/2018/159/Rev.1 z03.01.2019, wskazany na okładce R1502020, pobrany zUN. Root i agent niezależnie obejrzeli bitmapę tabeli5/§5.2.3.1: α20′ →450/200/150, α1°30′ →12/8/8mcd/lx przy kolumnachV/H0/0,±10/0,±5/±20. Nie podmieniono dowodu bitmapy2020 ani nie ogłoszono aktualności2026. To odblask, nie emisja cd.
 
-Aktualizacja po e7112ae4e: R50 i R40 bez nowego A/B lub czytelnego E. KE14 dodaje1scenę przejazdu i1tekst, główny05=21. Root potwierdził nierozstrzygnięty materiał paneli i brak ID. Kontrola JSON po tych pakietach:461 poprawnych plików. Poprzedni licznik456 był datowanym snapshotem. Następne zadania agentów R51/R41/Mońki pozostają aktywne.
+FB19: dwa nowe kadry Fast z27.06.2020, picturehoover, agent i root w publicznym UI Mapillary/OSM. Jeden czerwonołososiowy zjazd, ziarniste pobocze i trawiaste obniżenie.0potwierdzonych przystanków. K1km10.417/dk65-02 dotyczy punktu selekcji, nie udowodnionej pozycji obu kamer. Bez geometrii przepustu, materiału i wymiarów z domysłu. Główny04=29.
 
-Po22c52fdd3: MońkiMS12 dwa nowe historyczne widoki znanego dworca, tył/bok/otoczenie,0nowych budynków. Główny06=38. R53 nowy kadr Florida po pełnym i natywnym oglądzie pozostaje PENDING filmu na drzwiach,0A/B. R51 trzy leads bez obrazów, nie fotografie. Kontrola469poprawnychJSON/93rastry≤800px. Liczniki kwalifikacji M59/M61 bez zmian.
+Najnowszy brud: UR54-001 wyraźniejszy film prawego skrzydła; UR55-004 A_PASS_LIMITED_LOCAL tylko krótkie smugi na czerwonym prawym panelu pod odblaskiem, reszta przeważnie czysta. A9 z wcześniejszymi ograniczeniami; B1, zimaA2 iEuropa-drogaA1 bez dalszego przyrostu. R56 trzy ekspozycje dwóch chłodni pozostająPENDING, a obraz myjni nie ma pary drzwi. Nie liczono światła/rdzy/napraw/cienia jako brudu drogowego.
 
-Po93bcb400d: nowyUR54-001 po niezależnych oglądach zwiększa A do8; B1 i zimaA2/Europa-drogaA1 bez przyrostu. Dwa inne tyły R54 pozostają PENDING powierzchni. PG16 odsyła do2 istniejących kadrów Putry, bez nowej fotografii/kopii; ukryta konstrukcja UNVERIFIED. R43 ma6 komórek CIL potwierdzonych z bitmapy tekstu2019 przez root i agenta, bez podmiany statusu2020/aktualności2026. R42 poprawiono kolumny koloru/kształtu makra etykiety, które odziedziczyły opis całej lampy. Bieżąca walidacja:482 poprawneJSON,93rastry≤800px,0plików>5MB, główneID unikalne i lokalne ścieżki sprawdzone po rozdzieleniu wieloplikowych pól. Cel aktywny; agenci R55/lampy44/Fasty19.
+Kontrola śledzonych referencji po8394cc13d:491 poprawnychJSON,93rastry≤800px,0plików>5MB; główneID unikalne,93lokalne ścieżki istnieją po poprawnym rozdzieleniu pól wieloplikowych. Zakres diff wobec7f830369c wyłącznie research/codex-refs-s21 i docs/LICENSES.md. Duże/raw pozaGit; prywatne zdjęcia bez kopii; media/firmy wyłącznie link-onlyARR. Commons ograniczony pojedynczy obieg; Flickr nowe pobraniaSTOP po429. BezUnity/adb/kodu gry.
 
-Po7513ffc4c: UR55-004 przyjęty A_PASS_LIMITED_LOCAL tylko dla krótkich smug na czerwonym prawym panelu pod odblaskiem, reszta przeważnie czysta; film całej powierzchni/chemia/trasa niepotwierdzone. A9 z ograniczeniami, B1, zimoweA2/Europa-drogaA1 bez przyrostu. R44 odczyt E1/10R-05 6854 dotyczy EMC,0nowej homologacji fotometrycznej.485poprawnychJSON, pozostałe parametry walidacji bez zmian. Cel ciągły aktywny; agenci R56/Fasty19/lampy45.
+Gotowe do scalenia po recenzji lidera: NIE. Cel ciągły aktywny. Następne zadania: brudR57, lampyR47, południowe podejście doKnyszyna/kafel dk65-11R20. Wpis live ostatnio05:03Bruksela, następny około06:03. Wyniki robocze nie zwiększają liczników przed odbiorem.
