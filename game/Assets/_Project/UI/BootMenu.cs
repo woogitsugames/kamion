@@ -36,6 +36,11 @@ namespace Game.UI
         readonly List<Action> m_Refresh = new List<Action>();
         Font m_Font;
         RectTransform m_Safe;
+        // ADR 0276: every menu item lives in this block (stretched over the safe area); the block moves vertically so the
+        // diagnostics overlay never covers the title or a button (MenuOverlayLayout, shared with DiagnosticsOverlay).
+        RectTransform m_Block;
+        Rect m_BlockBounds;
+        float m_AppliedShift = float.NaN;
         UiViewport m_View;
         // ADR 0265: navigation rows per column (left = starts + region picker, right = options).
         readonly List<List<Selectable[]>> m_Nav = new List<List<Selectable[]>> { new List<Selectable[]>(), new List<Selectable[]>() };
@@ -55,9 +60,35 @@ namespace Game.UI
         /// <summary>Tests / captures: lay out for a screen of the given form factor (ADR 0265: monitors 16:9 .. 32:9).</summary>
         public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi, bool desktop) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi, desktop); m_View.Refresh(); }
 
+        /// <summary>Vertical shift of the menu block applied to make room for the diagnostics overlay (ADR 0276; tests).</summary>
+        public float BlockShift => float.IsNaN(m_AppliedShift) ? 0f : m_AppliedShift;
+        /// <summary>Bounding box of the menu items before the shift (centre origin, y up, canvas units; tests).</summary>
+        public Rect BlockBounds => m_BlockBounds;
+
+        void OnEnable() { if (m_Block != null) PublishBlock(); }
+
+        void OnDisable() => MenuOverlayBoard.MenuActive = false;
+
+        void PublishBlock()
+        {
+            MenuOverlayBoard.MenuActive = true;
+            MenuOverlayBoard.MenuBlock = m_BlockBounds;
+        }
+
+        /// <summary>ADR 0276: shift the block as the shared layout says (allocation-free, every frame).</summary>
+        void ApplyOverlayLayout()
+        {
+            if (m_Block == null || m_View == null) return;
+            MenuOverlayBoard.Solve(m_View.SizeUnits, out var r);
+            if (r.MenuShiftY == m_AppliedShift) return;
+            m_AppliedShift = r.MenuShiftY;
+            m_Block.anchoredPosition = new Vector2(0f, r.MenuShiftY);
+        }
+
         void Update()
         {
             m_View?.Refresh();   // rotation, fold / unfold: scale + safe area follow, the block stays centred
+            ApplyOverlayLayout();
             UiFocus.RestoreIfLost(this, m_FirstItem);   // ADR 0265: the pad never gets stuck without a selection
         }
 
@@ -150,15 +181,15 @@ namespace Game.UI
             if (m_RegionIndex < 0) return y;   // no region of the catalog in this APK: no picker
             const float arrowW = 96f, rowH = 88f;
             y -= 8f;
-            Label(m_Safe, "HeaderRegion", "REGION — START NA POCZĄTKU TRASY", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(left, y - 36f), new Vector2(ColW, 36f));
+            Label(m_Block, "HeaderRegion", "REGION — START NA POCZĄTKU TRASY", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(left, y - 36f), new Vector2(ColW, 36f));
             y -= 44f;
-            var prev = Button(m_Safe, "<", new Vector2(left, y - rowH), new Vector2(arrowW, rowH), 40, TextAnchor.MiddleCenter, () => StepRegion(-1));
+            var prev = Button(m_Block, "<", new Vector2(left, y - rowH), new Vector2(arrowW, rowH), 40, TextAnchor.MiddleCenter, () => StepRegion(-1));
             prev.name = RegionPrevName;
-            var next = Button(m_Safe, ">", new Vector2(left + ColW - arrowW, y - rowH), new Vector2(arrowW, rowH), 40, TextAnchor.MiddleCenter, () => StepRegion(1));
+            var next = Button(m_Block, ">", new Vector2(left + ColW - arrowW, y - rowH), new Vector2(arrowW, rowH), 40, TextAnchor.MiddleCenter, () => StepRegion(1));
             next.name = RegionNextName;
             m_Nav[0].Add(new[] { prev.GetComponent<Selectable>(), next.GetComponent<Selectable>() });
             float bw = ColW - 2f * (arrowW + Gap);
-            var box = Rect("RegionBox", m_Safe);
+            var box = Rect("RegionBox", m_Block);
             Place(box, new Vector2(left + arrowW + Gap, y - rowH), new Vector2(bw, rowH));
             var bg = box.gameObject.AddComponent<Image>();
             bg.color = k_Panel; bg.raycastTarget = false;
@@ -171,7 +202,7 @@ namespace Game.UI
                 t.resizeTextForBestFit = true; t.resizeTextMinSize = 16; t.resizeTextMaxSize = t.fontSize;
             }
             y -= rowH + Gap;
-            var go = Button(m_Safe, RegionStartLabel, new Vector2(left, y - BtnH), new Vector2(ColW, BtnH), 31, TextAnchor.MiddleLeft, StartRegion);
+            var go = Button(m_Block, RegionStartLabel, new Vector2(left, y - BtnH), new Vector2(ColW, BtnH), 31, TextAnchor.MiddleLeft, StartRegion);
             go.name = RegionStartName;
             m_RegionStart = go.GetComponent<Button>();
             m_Nav[0].Add(new Selectable[] { m_RegionStart });
@@ -196,22 +227,25 @@ namespace Game.UI
             m_View = new UiViewport(canvas);
             m_Safe = m_View.SafeArea;
             m_View.Refresh();
+            m_Block = Rect("Block", m_Safe);
+            m_Block.anchorMin = Vector2.zero; m_Block.anchorMax = Vector2.one;
+            m_Block.offsetMin = m_Block.offsetMax = Vector2.zero;
 
             // Centred block: left column starts, gap 80, right column options.
             float total = 2 * ColW + 80f, left = -total * 0.5f, right = left + ColW + 80f;
             float top = 400f;   // block top (centre-anchored, y up)
 
-            Label(m_Safe, "Title", "TRUCK SIM PL — TEST WRAŻEŃ", 28, TextAnchor.LowerLeft, k_Amber, new Vector2(left, top + 52f), new Vector2(total, 44f));
+            Label(m_Block, "Title", "TRUCK SIM PL — TEST WRAŻEŃ", 28, TextAnchor.LowerLeft, k_Amber, new Vector2(left, top + 52f), new Vector2(total, 44f));
 
             // ---- left: starts
-            Label(m_Safe, "HeaderStart", "WYBIERZ START", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(left, top - 8f), new Vector2(ColW, 36f));
+            Label(m_Block, "HeaderStart", "WYBIERZ START", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(left, top - 8f), new Vector2(ColW, 36f));
             float y = top - 52f;
             for (int i = 0; i < starts.Count; i++)
             {
                 var s = starts[i];
                 string label = s.label;
                 var action = s.action;
-                var b = Button(m_Safe, label, new Vector2(left, y - BtnH), new Vector2(ColW, BtnH), 31, TextAnchor.MiddleLeft, () =>
+                var b = Button(m_Block, label, new Vector2(left, y - BtnH), new Vector2(ColW, BtnH), 31, TextAnchor.MiddleLeft, () =>
                 {
                     Debug.Log(Options.StartLine(label));
                     action();
@@ -224,7 +258,7 @@ namespace Game.UI
             if (regions != null && regions.Count > 0) y = BuildRegionPicker(regions, left, y);
 
             // ---- right: options
-            Label(m_Safe, "HeaderOptions", "OPCJE", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(right, top - 8f), new Vector2(ColW, 36f));
+            Label(m_Block, "HeaderOptions", "OPCJE", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(right, top - 8f), new Vector2(ColW, 36f));
             float oy = top - 52f;
             Segments("Pora dnia (trasy)", StartMenuOptions.LightingLabels, right, ref oy,
                 () => Options.Lighting, i => Options.SetLighting(i));
@@ -238,21 +272,25 @@ namespace Game.UI
             oy -= 8f;
             // Settings and "Informacje" (attributions + licences, LICENSES-AUDIT-S20 R-P0-1) share one row: the block height is unchanged.
             const float aboutW = 250f;
-            var settingsBtn = Button(m_Safe, "Ustawienia sterowania", new Vector2(right, oy - 80f), new Vector2(ColW - aboutW - Gap, 80f), 32, TextAnchor.MiddleCenter, () => openSettings?.Invoke());
-            var aboutBtn = Button(m_Safe, AboutLabel, new Vector2(right + ColW - aboutW, oy - 80f), new Vector2(aboutW, 80f), 32, TextAnchor.MiddleCenter, () => openAbout?.Invoke());
+            var settingsBtn = Button(m_Block, "Ustawienia sterowania", new Vector2(right, oy - 80f), new Vector2(ColW - aboutW - Gap, 80f), 32, TextAnchor.MiddleCenter, () => openSettings?.Invoke());
+            var aboutBtn = Button(m_Block, AboutLabel, new Vector2(right + ColW - aboutW, oy - 80f), new Vector2(aboutW, 80f), 32, TextAnchor.MiddleCenter, () => openAbout?.Invoke());
             m_Nav[1].Add(new[] { settingsBtn.GetComponent<Selectable>(), aboutBtn.GetComponent<Selectable>() });
             if (m_OpenPcSettings != null)
             {
                 // ADR 0270: display / graphics / audio screen, one full-width row under the settings row; part of the
                 // pad / keyboard grid of ADR 0265 (review #136 P2-2).
                 oy -= 80f + Gap;
-                var pcBtn = Button(m_Safe, Game.UI.Settings.PcSettingsTexts.MenuButton, new Vector2(right, oy - 80f), new Vector2(ColW, 80f), 32, TextAnchor.MiddleCenter,
+                var pcBtn = Button(m_Block, Game.UI.Settings.PcSettingsTexts.MenuButton, new Vector2(right, oy - 80f), new Vector2(ColW, 80f), 32, TextAnchor.MiddleCenter,
                     () => m_OpenPcSettings?.Invoke());
                 pcBtn.name = PcSettingsName;
                 m_Nav[1].Add(new[] { pcBtn.GetComponent<Selectable>() });
             }
-            Label(m_Safe, "Footer", "DrivingLab ma stałe światło. W jeździe: przycisk Menu wraca tutaj bez restartu aplikacji.\nWersja: " + BuildInfo.Current.ShortLabel,
+            Label(m_Block, "Footer", "DrivingLab ma stałe światło. W jeździe: przycisk Menu wraca tutaj bez restartu aplikacji.\nWersja: " + BuildInfo.Current.IdentityLabel,
                 22, TextAnchor.UpperLeft, k_Muted, new Vector2(right, oy - 80f - 12f - 70f), new Vector2(ColW, 70f)).horizontalOverflow = HorizontalWrapMode.Wrap;
+
+            m_BlockBounds = MeasureBlock(m_Block);
+            PublishBlock();
+            ApplyOverlayLayout();
 
             UiFocus.EnsureEventSystem();
             UiFocus.ApplyGrid(m_Nav);
@@ -261,14 +299,32 @@ namespace Game.UI
             foreach (var r in m_Refresh) r();
         }
 
-        void OnDestroy() => UiFocus.Pop(this, false);
+        void OnDestroy()
+        {
+            UiFocus.Pop(this, false);
+            MenuOverlayBoard.MenuActive = false;
+        }
+
+        /// <summary>Bounding box of the direct children (all centre-anchored with a bottom-left pivot, see <see cref="Place"/>).</summary>
+        static Rect MeasureBlock(RectTransform block)
+        {
+            float xMin = float.MaxValue, yMin = float.MaxValue, xMax = float.MinValue, yMax = float.MinValue;
+            for (int i = 0; i < block.childCount; i++)
+            {
+                var c = (RectTransform)block.GetChild(i);
+                Vector2 p = c.anchoredPosition, s = c.sizeDelta;
+                xMin = Mathf.Min(xMin, p.x); yMin = Mathf.Min(yMin, p.y);
+                xMax = Mathf.Max(xMax, p.x + s.x); yMax = Mathf.Max(yMax, p.y + s.y);
+            }
+            return xMin > xMax ? default : Rect.MinMaxRect(xMin, yMin, xMax, yMax);
+        }
 
         /// <summary>Re-reads tier / fps / lighting (the options can also change from outside, e.g. a launch argument).</summary>
         public void RefreshNow() { foreach (var r in m_Refresh) r(); }
 
         void Segments(string title, string[] names, float x, ref float y, Func<int> current, Action<int> set)
         {
-            Label(m_Safe, "Label " + title, title, 26, TextAnchor.LowerLeft, k_Text, new Vector2(x, y - 34f), new Vector2(ColW, 34f));
+            Label(m_Block, "Label " + title, title, 26, TextAnchor.LowerLeft, k_Text, new Vector2(x, y - 34f), new Vector2(ColW, 34f));
             y -= 40f;
             float gap = 8f, w = (ColW - gap * (names.Length - 1)) / names.Length, h = 66f;
             var images = new Image[names.Length];
@@ -276,7 +332,7 @@ namespace Game.UI
             for (int i = 0; i < names.Length; i++)
             {
                 int idx = i;
-                var b = Button(m_Safe, names[i], new Vector2(x + i * (w + gap), y - h), new Vector2(w, h), 28, TextAnchor.MiddleCenter, () => { set(idx); RefreshNow(); });
+                var b = Button(m_Block, names[i], new Vector2(x + i * (w + gap), y - h), new Vector2(w, h), 28, TextAnchor.MiddleCenter, () => { set(idx); RefreshNow(); });
                 images[i] = b.GetComponent<Image>();
                 row[i] = b.GetComponent<Selectable>();
             }

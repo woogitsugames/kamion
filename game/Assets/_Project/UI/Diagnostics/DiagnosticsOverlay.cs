@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using Game.Controls;
 using Game.Core;
 using Game.Platform;
 using Game.Rendering;
@@ -16,6 +17,9 @@ namespace Game.UI
     /// Diagnostics overlay (uGUI, built in code — no prefab to keep in sync). Canvas is
     /// Screen Space - Camera so the editor visual-QA runner can capture it with Camera.Render.
     /// Layout stays inside Screen.safeArea (camera cutout / rounded corners).
+    /// ADR 0276: the panel and the buttons are placed by <see cref="MenuOverlayLayout"/> together with the start menu
+    /// (<see cref="MenuOverlayBoard"/>) - nothing covers the menu title or its buttons; without a menu the historic
+    /// place (panel top-left, buttons top-right) is kept.
     /// </summary>
     public sealed class DiagnosticsOverlay : MonoBehaviour
     {
@@ -30,6 +34,11 @@ namespace Game.UI
         Canvas m_Canvas;
         RectTransform m_SafeArea;
         GameObject m_Panel;
+        RectTransform m_PanelRt;
+        readonly RectTransform[] m_ButtonRts = new RectTransform[MenuOverlayLayout.ButtonCount];
+        bool m_UserShowPanel = true;
+        MenuOverlayResult m_AppliedLayout;
+        bool m_LayoutApplied;
         Text m_Body;
         Text m_FpsButtonLabel;
         Text m_TierButtonLabel;
@@ -75,11 +84,12 @@ namespace Game.UI
             m_View = new UiViewport(m_Canvas);   // scale by the shorter side / DPI + safe area (ADR 0079)
             m_SafeArea = m_View.SafeArea;
 
-            // Text panel, top-left of the safe area.
+            // Text panel: top-left of the safe area unless the start menu needs the room (ADR 0276, ApplyLayout).
             var panelRt = NewRect("Panel", m_SafeArea);
             m_Panel = panelRt.gameObject;
-            panelRt.anchorMin = panelRt.anchorMax = panelRt.pivot = new Vector2(0f, 1f);
-            panelRt.anchoredPosition = new Vector2(24f, -24f);
+            m_PanelRt = panelRt;
+            panelRt.anchorMin = panelRt.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRt.pivot = new Vector2(0f, 1f);
             var bg = m_Panel.AddComponent<Image>();
             bg.color = k_PanelColor;
             bg.raycastTarget = false;
@@ -102,26 +112,59 @@ namespace Game.UI
             m_Body.verticalOverflow = VerticalWrapMode.Overflow;
             m_Body.raycastTarget = false;
 
-            // Buttons column, top-right of the safe area.
+            // Buttons: a column top-right, or a column / row in another right-hand corner while the start menu is open
+            // (ADR 0276). Each button is placed by ApplyLayout (no layout group: the arrangement changes).
             var buttons = NewRect("Buttons", m_SafeArea);
-            buttons.anchorMin = buttons.anchorMax = buttons.pivot = new Vector2(1f, 1f);
-            buttons.anchoredPosition = new Vector2(-24f, -24f);
-            buttons.sizeDelta = new Vector2(300f, 0f);
-            var col = buttons.gameObject.AddComponent<VerticalLayoutGroup>();
-            col.spacing = 14f;
-            col.childControlWidth = col.childControlHeight = true;
-            col.childForceExpandWidth = true;
-            col.childForceExpandHeight = false;
-            buttons.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            buttons.anchorMin = Vector2.zero; buttons.anchorMax = Vector2.one;
+            buttons.offsetMin = buttons.offsetMax = Vector2.zero;
 
             m_FpsButtonLabel = NewButton(buttons, font, "FpsButton", () => { QualityTiers.ToggleFrameRate(); RefreshNow(); });
             m_TierButtonLabel = NewButton(buttons, font, "TierButton", () => { QualityTiers.Next(); RefreshNow(); });
-            m_HideButtonLabel = NewButton(buttons, font, "HideButton", () => { m_Panel.SetActive(!m_Panel.activeSelf); RefreshNow(); });
+            m_HideButtonLabel = NewButton(buttons, font, "HideButton", () => { m_UserShowPanel = !m_UserShowPanel; ApplyLayout(); RefreshNow(); });
+            for (int i = 0; i < m_ButtonRts.Length; i++) m_ButtonRts[i] = (RectTransform)buttons.GetChild(i);
 
             EnsureEventSystem();
 
             m_Header = BuildHeader();
             m_View.Refresh();
+            ApplyLayout();
+        }
+
+        void OnEnable() { MenuOverlayBoard.OverlayActive = true; m_LayoutApplied = false; }
+
+        void OnDisable() => MenuOverlayBoard.OverlayActive = false;
+
+        /// <summary>ADR 0276: publish the panel state, solve the shared layout with the start menu and apply it when it
+        /// changed. Allocation-free (structs, cached RectTransforms); runs every frame.</summary>
+        void ApplyLayout()
+        {
+            if (m_PanelRt == null) return;
+            MenuOverlayBoard.OverlayActive = isActiveAndEnabled;
+            MenuOverlayBoard.PanelShown = m_UserShowPanel;
+            if (m_Panel.activeSelf)
+                MenuOverlayBoard.PanelSize = MenuOverlayLayout.ReservePanel(MenuOverlayBoard.PanelSize, m_PanelRt.rect.size);
+            MenuOverlayBoard.Solve(m_View.SizeUnits, out var r);
+            if (m_LayoutApplied && r.SameAs(m_AppliedLayout)) return;
+            m_LayoutApplied = true;
+            m_AppliedLayout = r;
+
+            bool show = r.Panel != OverlayPanelPlace.Collapsed;
+            if (m_Panel.activeSelf != show) m_Panel.SetActive(show);
+            if (show)
+            {
+                bool top = r.Panel == OverlayPanelPlace.TopLeft;
+                m_PanelRt.pivot = new Vector2(0f, top ? 1f : 0f);
+                m_PanelRt.anchoredPosition = new Vector2(r.PanelRect.xMin, top ? r.PanelRect.yMax : r.PanelRect.yMin);
+            }
+            for (int i = 0; i < m_ButtonRts.Length; i++)
+            {
+                var b = MenuOverlayLayout.ButtonRect(r.Buttons, r.ButtonsRect, MenuOverlayBoard.ButtonSize, MenuOverlayBoard.ButtonSpacing, i);
+                var rt = m_ButtonRts[i];
+                rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+                rt.pivot = Vector2.zero;
+                rt.anchoredPosition = b.position;
+                rt.sizeDelta = b.size;
+            }
         }
 
         static RectTransform NewRect(string name, Transform parent)
@@ -138,8 +181,7 @@ namespace Game.UI
             var rt = NewRect(name, parent);
             var img = rt.gameObject.AddComponent<Image>();
             img.color = k_ButtonColor;
-            var le = rt.gameObject.AddComponent<LayoutElement>();
-            le.minHeight = le.preferredHeight = 84f;
+            rt.sizeDelta = MenuOverlayBoard.ButtonSize;   // placed by ApplyLayout (ADR 0276)
             var button = rt.gameObject.AddComponent<Button>();
             button.targetGraphic = img;
             button.onClick.AddListener(onClick);
@@ -169,7 +211,7 @@ namespace Game.UI
         {
             var b = BuildInfo.Current;
             var sb = new StringBuilder(512);
-            sb.Append("KAMION ").Append(b.ShortLabel);
+            sb.Append("KAMION ").Append(b.IdentityLabel);   // ADR 0276: git sha + content hash of the player data
             if (b.development) sb.Append(" DEV");
             sb.Append("  ·  Unity ").Append(b.unityVersion).Append('\n');
             sb.Append("Device: ").Append(SystemInfo.deviceModel)
@@ -184,6 +226,7 @@ namespace Game.UI
         void Update()
         {
             m_View.Refresh();
+            ApplyLayout();
             if (Time.unscaledTime >= m_NextRefresh) RefreshNow();
         }
 
@@ -207,7 +250,7 @@ namespace Game.UI
                 m_LastTierLevel = tierLevel;
                 m_TierButtonLabel.text = "Jakość: " + QualityTiers.Current;
             }
-            bool hidden = !m_Panel.activeSelf;
+            bool hidden = !m_UserShowPanel;
             if (m_LastHideLabel != hidden)
             {
                 m_LastHideLabel = hidden;
