@@ -3,12 +3,13 @@ import numpy as np
 import pytest
 import yaml
 from pathlib import Path
+from types import SimpleNamespace
 from shapely.geometry import Point, Polygon, box
 from shapely import affinity
 from shapely.ops import unary_union
 
-from roads import pipeline
-from streetscape import paved, stage
+from roads import network, pipeline, standards
+from streetscape import paved, stage, vegetation
 
 
 def _source():
@@ -71,8 +72,11 @@ def test_real_market_bands_islands_and_spruce_clearance():
     market = [x for x in data if x.get("id", "").startswith(("market-paving-", "market-landscaping-"))]
     assert len(market) == 8
     outer = next(x for x in market if x["id"] == "market-paving-base-0227")
+    assert outer.get("bare_soil_holes") is True
+    assert all(x.get("bare_soil") is True for x in market if x["kind"] == "unpaved_area")
     poly = Polygon(outer["polygon_epsg2180"], outer["holes_epsg2180"])
     assert poly.is_valid and 4500 < poly.area < 6000
+    assert outer["material"] == "apron_paving_light"
     islands = [Polygon(hole) for hole in outer["holes_epsg2180"]]
     islands += [Polygon(x["polygon_epsg2180"]) for x in market if x["kind"] == "unpaved_area"]
     red = [Polygon(x["polygon_epsg2180"]) for x in market if x.get("material") == "sidewalk_paving_red"]
@@ -96,3 +100,58 @@ def test_real_market_bands_islands_and_spruce_clearance():
     for island in islands:
         local = affinity.translate(island, -origin[0], -origin[1])
         assert covered.intersection(local.buffer(-.1)).area < .1
+
+
+def test_light_market_paving_uses_paving_collision():
+    class Accumulator:
+        def __init__(self):
+            self.parts = []
+
+        def add(self, *args, **kwargs):
+            self.parts.append((args, kwargs))
+
+    buf = Accumulator()
+    hf = SimpleNamespace(x0=0., y1=10.)
+    item = {"id": "market", "poly": box(1, 1, 5, 5), "mat": "apron_paving_light", "park_flush": True}
+    paved.build_meshes(buf, [item], np.ones((11, 11)), hf)
+    assert standards.SURFACE_OF["apron_paving_light"] == "paving"
+    assert any(args[0] == "collision" and args[1] == "collision_paving" for args, _ in buf.parts)
+
+
+def test_bare_soil_opt_in_is_bounded_and_keeps_hard_mask_unchanged():
+    hf = SimpleNamespace(z=np.zeros((31, 31)), x0=0., y1=30.)
+    col = np.zeros((31, 31, 4), dtype=np.float32)
+    col[..., 1] = .2
+    hard = np.zeros((31, 31), dtype=bool)
+    hard[15, 15] = True
+    before_hard = hard.copy()
+    island = [[10, 10], [20, 10], [20, 20], [10, 20]]
+    unpaved = {"id": "bed", "kind": "unpaved_area", "polygon_en": island, "bare_soil": True}
+    without_optin = [{k: v for k, v in unpaved.items() if k != "bare_soil"}]
+    assert np.array_equal(vegetation.authored_bare_ground(col, hf, (0, 0), without_optin, hard), col)
+    painted = vegetation.authored_bare_ground(col, hf, (0, 0), [unpaved], hard)
+    assert painted[16, 14, 3] > 0
+    assert np.array_equal(painted[15, 15], col[15, 15])  # road / paving preserved
+    assert np.array_equal(painted[0, 0], col[0, 0])    # no spill outside island
+    assert np.array_equal(painted[..., :1], col[..., :1])
+    assert np.array_equal(painted[..., 2], col[..., 2])
+    assert np.array_equal(hard, before_hard)
+    assert not col[..., 3].any()
+    holes = _area([island])
+    holes["bare_soil_holes"] = True
+    assert np.array_equal(vegetation.authored_bare_ground(col, hf, (0, 0), [holes], hard), painted)
+
+
+def test_market_service_overrides_change_only_two_intended_edges():
+    import json
+
+    root = Path(__file__).resolve().parents[2]
+    graph = json.loads((root / "Data/Regions/knyszyn/roads.graph.json").read_text(encoding="utf8"))
+    overrides = yaml.safe_load((root / "Data/Regions/knyszyn/overrides.yaml").read_text(encoding="utf8"))["overrides"]
+    market = [o for o in overrides if o["id"] in ("market-interior-service-paving-0227", "market-crossing-service-paving-0227")]
+    assert len(market) == 2
+    net = network.load(graph, (761611., 612607.), market)
+    target = ["w498482913:4898870294-4898870293", "w498483028:4898906615-4898870293"]
+    untouched = ["w498483028:4898911740-4898906615", "w498483028:4898911741-4898911740"]
+    assert all(net.sections[e].surface_mat == "road_paving" for e in target)
+    assert all(net.sections[e].surface_mat == "road_gravel" for e in untouched)

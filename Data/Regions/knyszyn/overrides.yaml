@@ -476,7 +476,8 @@ overrides:
   - id: market-paving-base-0227
     kind: paved_area
     park_flush: true
-    material: yard_paving
+    material: apron_paving_light
+    bare_soil_holes: true  # ESTIMATED: soil colour from owner photos, not a paved/hard mask
     polygon_epsg2180:
     - - 760803.0
       - 613208.0
@@ -593,6 +594,7 @@ overrides:
     verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
   - id: market-landscaping-island-1-0227
     kind: unpaved_area
+    bare_soil: true
     polygon_epsg2180:
     - - 760775.0
       - 613340.8
@@ -613,6 +615,7 @@ overrides:
     verify: inspect render and compare against 2025 orthophoto
   - id: market-landscaping-island-2-0227
     kind: unpaved_area
+    bare_soil: true
     polygon_epsg2180:
     - - 760780.0
       - 613316.4
@@ -631,6 +634,7 @@ overrides:
     verify: inspect render and compare against 2025 orthophoto
   - id: market-landscaping-island-8-0227
     kind: unpaved_area
+    bare_soil: true
     polygon_epsg2180:
     - - 760801.0
       - 613220.6
@@ -689,3 +693,20 @@ overrides:
       crown centre as stem position, approximately 2 m uncertainty. WORKING_VALUE: 9 m height.
     confidence: medium
     verify: confirm it is not refused by hard mask and compare the eye-level render
+
+  - id: market-interior-service-paving-0227
+    target: {osm_way: [498482913]}
+    reason: >-
+      SOURCED: 2025 GUGiK orthophoto and owner photos show light block paving along this service way inside the market.
+      ESTIMATED: surface classification as paving_stones; existing path geometry and width are unchanged.
+    confidence: medium
+    verify: compare the passage and its collision surface to owner photos and street-level render
+    set: {surface: paving_stones}
+  - id: market-crossing-service-paving-0227
+    target: {edge: "w498483028:4898906615-4898870293"}
+    reason: >-
+      SOURCED: GUGiK 2025 and owner photos show the market crossing paved in light blocks.
+      ESTIMATED: surface classification; only this edge within the market is changed, other way segments remain intact.
+    confidence: medium
+    verify: compare the crossing with the 2025 orthophoto and owner photos
+    set: {surface: paving_stones}

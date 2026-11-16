@@ -709,6 +709,39 @@ def ground_masks(src, origin, hf, dist_road, forests, cleared=()):
     return C.astype(np.float32)
 
 
+def authored_bare_ground(col, hf, origin, overrides, hard_mask):
+    """Colour opted-in planting islands as bare soil without adding hard geometry.
+
+    The alpha channel is the existing terrain bare-soil mask. The painted area
+    is limited to the authored rings and never modifies hard surfaces, the hard
+    mask, collision, or vegetation placement. No opt-in means an exact no-op.
+    """
+    from shapely.geometry import Polygon
+    from . import construction_site as CS
+
+    origin = np.asarray(origin, float)
+    polys = []
+    for o in overrides or []:
+        if o.get("kind") == "paved_area" and o.get("bare_soil_holes") is True:
+            polys.extend(Polygon(np.asarray(h, float) - origin) for h in o.get("holes_epsg2180", []))
+        elif o.get("kind") == "unpaved_area" and o.get("bare_soil") is True:
+            ring = np.asarray(o["polygon_en"], float) if "polygon_en" in o else np.asarray(o["polygon_epsg2180"], float) - origin
+            polys.append(Polygon(ring))
+    if not polys:
+        return col
+    if any(not p.is_valid or p.is_empty or p.area <= 0 for p in polys):
+        raise ValueError("authored bare-soil polygon is invalid")
+    soil = PV.rasterize_polys(polys, hf) & ~np.asarray(hard_mask, dtype=bool)
+    if not soil.any():
+        return col
+    # ground_colour provides the existing soil tone; restrict its soft falloff
+    # back to the authored grid cells so it cannot colour nearby driveways.
+    painted = CS.ground_colour(col, soil, hf)
+    out = col.copy()
+    out[soil] = painted[soil]
+    return out
+
+
 # ADR 0163 (corrects ADR 0154): ceilings of mature city trees, G7 # 12 (Ebben S01-S07, measurement G7-T03). ADR 0154
 # used birch 23 m and raised / widened the garden crowns of the tree library (x 1.2-1.35, up to 20.4 m): on their
 # sparse stems they read as stone pines (review 2026-11-13). The broadleaf garden trees of a region with an

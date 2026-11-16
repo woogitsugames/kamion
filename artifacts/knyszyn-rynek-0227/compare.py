@@ -11,7 +11,8 @@ out.mkdir(parents=True,exist_ok=True)
 market = {
  12: ('12-targowica-pion.jpg', 'market-owner-12.png'),
  13: ('13-targowica-ukos.jpg', 'market-owner-13.png'),
- 14: ('14-targowica-wiaty-poziom.jpg', 'market-jagiellonska-qa.png'),
+ 14: ('14-targowica-wiaty-poziom.jpg', 'market-owner-14-close.png'
+      if (root/iteration/tier/'market-owner-14-close.png').exists() else 'market-jagiellonska-qa.png'),
 }
 for n in range(1,15):
  if n in market:

@@ -680,15 +680,15 @@
    "fov_deg": 60.0,
    "id": "market_jagiellonska_qa",
    "look_at": [
-    -783.118,
-    698.593,
-    129.22
+    -775.118,
+    694.593,
+    129.19
    ],
    "note": "place camera: QA only, ESTIMATED: southwest of the southern shelter, looking north along the market; approximate owner photo 14 framing requires render verification.",
    "pos": [
-    -809.0,
-    602.0,
-    129.22
+    -801.0,
+    598.0,
+    129.19
    ],
    "type": "persp"
   },
@@ -721,6 +721,38 @@
     -987.0,
     -611.0,
     212.2
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "market_owner_12",
+   "look_at": [
+    -904.03,
+    644.808,
+    -57088.251
+   ],
+   "note": "place camera: QA only, ESTIMATED drone pose for owner photo 12; no EXIF. Requires image comparison and adjustment; eye-level recognition remains the acceptance criterion.",
+   "pos": [
+    -807.0,
+    669.0,
+    207.47
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "market_owner_13",
+   "look_at": [
+    -821.0,
+    639.603,
+    148.651
+   ],
+   "note": "place camera: QA only, ESTIMATED oblique drone pose for owner photo 13; no EXIF. Requires image comparison and adjustment; eye-level recognition remains the acceptance criterion.",
+   "pos": [
+    -871.0,
+    553.0,
+    226.78
    ],
    "type": "persp"
   },
