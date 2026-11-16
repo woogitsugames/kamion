@@ -3,7 +3,7 @@
 Automatycznie generowany przez `tools/docs/adr_index.py` — nie edytuj ręcznie.
 Ponowne wygenerowanie: `python3 tools/docs/adr_index.py` (z katalogu głównego repo).
 
-Liczba ADR: **250** (numery 0001–None, z lukami — patrz raport audytu).
+Liczba ADR: **251** (numery 0001–None, z lukami — patrz raport audytu).
 
 | Numer | Tytuł | Status | Data | Link |
 |---|---|---|---|---|
@@ -256,4 +256,5 @@ Liczba ADR: **250** (numery 0001–None, z lukami — patrz raport audytu).
 | 0283 | HUD monitora, menu ustawień i okienka lusterek: przeprojektowanie (D84) | Proposed (chmura D r9, zadanie D40, gałąź `hud-redesign-0283`), 2026-11-16. Do weryfikacji w Unity (EditMode, | 2026-11-16 | [0283-hud-menu-lusterka-pc-redesign.md](0283-hud-menu-lusterka-pc-redesign.md) |
 | 0284 | noc na PC: reflektory mijania wg UN R112 kl. B, 16 pul latarni, highlight na tierach PC | Proposed (agent night-pc-s23, rendering-perf, gałąź `night-pc-s23`), 2026-11-16. Numer nada lider. | 2026-11-16 | [0284-noc-pc-reflektory-r112-pule-16.md](0284-noc-pc-reflektory-r112-pule-16.md) |
 | 0285 | trasy łączące korytarza streamingu (Białystok → Knyszyn → Tykocin bez przerw) | Proposed (agent stream-gaps-s23, 2026-11-16). Numer nadaje lider przy scalaniu (0283 zajęty przez HUD/menu #1… | 2026-11-16 | [0285-trasy-laczace-korytarza-streamingu.md](0285-trasy-laczace-korytarza-streamingu.md) |
+| 0286 | Dźwięk na PC: import PCM dla Standalone, wyjście audio playera Windows, pomiar miksu w playerze | Proposed (agent audio-pc-s23, gałąź `audio-pc-s23`), 2026-11-16. **Numer do potwierdzenia przez lidera** | 2026-11-16 | [0286-audio-pc-pcm-wyjscie.md](0286-audio-pc-pcm-wyjscie.md) |
 | ???? | ADR DRAFT — Direct3D 11 jako domyślne API grafiki playera Windows (D3D12 jako drugie + furtka `-force-d3d12`) | **Proposed** — 2026-11-16, szkic P24 (sesja P r8, gałąź `adr-d3d11-draft` z `origin/main` @ `eebb9813c`). | 2026-11-16 | [DRAFT-d3d11-default.md](DRAFT-d3d11-default.md) |
