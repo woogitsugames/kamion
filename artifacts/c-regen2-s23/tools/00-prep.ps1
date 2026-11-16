@@ -11,8 +11,8 @@ function Copy-Dir([string]$rel) {
     robocopy $src $dst /E /MT:16 /R:1 /W:1 /NFL /NDL /NJH /NJS /NP *> "$O/robocopy-$($rel -replace '[\\/]', '_').log"
     "copy $rel robocopy=$LASTEXITCODE (0-7 ok, >=8 error) $(Get-Date -Format s)" | Add-Content $St
 }
-$derived = if (-not $RegionsOnly) { @('Data/raw/derived') } else { @('Data/raw/derived/cache') + ($Regions | ForEach-Object { "Data/raw/derived/$_" }) }
-foreach ($d in $derived + @('game/Assets/_Generated', 'game/Library')) { Copy-Dir $d }
+$derived = @(if (-not $RegionsOnly) { 'Data/raw/derived' } else { @('Data/raw/derived/cache') + @($Regions | ForEach-Object { "Data/raw/derived/$_" }) })
+foreach ($d in @($derived) + @('game/Assets/_Generated', 'game/Library')) { Copy-Dir $d }   # @() - a lone string + array would concatenate text (lead s23 fix)
 foreach ($j in 'gugik', 'osm', 'refs', 'mapillary', 'fab') {
     $p = "Data/raw/$j"; $ok = (Test-Path $p) -and ((Get-Item $p).Attributes -band [IO.FileAttributes]::ReparsePoint)
     "junction $p ok=$([bool]$ok)" | Add-Content $St
