@@ -766,3 +766,21 @@ overrides:
     confidence: medium
     verify: compare the crossing with the 2025 orthophoto and owner photos
     set: {surface: paving_stones}
+
+  # --- ADR 0227 dopisek D41 (rynek-p1-s23): own blocks, appended at the end; entries above are untouched ---
+  # (d) outer diameter of the DK65 x DW671 compact roundabout. A separate entry so the value is a one-line change;
+  # merged with knyszyn-roundabout-compact (roads/network.py: compact_roundabout options merge in file order).
+  - id: knyszyn-roundabout-outer-diameter-d41
+    target: {osm_way: [1426801304]}
+    reason: >-
+      WORKING_VALUE 26.0 m: outer kerb diameter of the ring carriageway. OSM ring axis r 8.65 m + authored ring width
+      5.0 m gives 22.3 m (22.6 m in docs), the lead's reading of owner drone photo 9 by car lengths is about 26 m
+      (docs/reports/INTEGRATION-2026-11-16-rynek-s23.md section 7, OPEN-DECISIONS OD-046). NOT MEASURED: the GUGiK
+      orthophoto 2025-05-27 predates the roundabout, the photo is not in git. Accepted range 14-40 m and at most
+      max(2 m, 40 %) from the fitted axis radius, else this entry is stale and the OSM radius stays. Change only this
+      number; the splitter lengths of knyszyn-roundabout-dk65-split-s / -n are measured from the split node, so the
+      islands get ~1.8 m shorter at the ring when the ring grows (re-check on photo 9).
+    confidence: low
+    verify: render rondo_dk65_top next to owner photo 9 (cars 4.5 m as the scale), adjust this value, rerun swept_path.py
+    set:
+      compact_roundabout: {outer_diameter_m: 26.0}

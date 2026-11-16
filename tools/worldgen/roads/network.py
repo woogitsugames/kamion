@@ -470,7 +470,9 @@ def apply_edge_overrides(net: Network, edges, overrides):
                         net.overrides_stale.append(ov["id"])
                     sec.provenance["compact_roundabout_rejected"] = st["compact_roundabout"]
                 else:
-                    sec.compact = dict(co_)
+                    # ADR 0227 D41: several overrides may put options on one ring (e.g. a separate, easily edited
+                    # `outer_diameter_m` entry): merged in file order, a later key wins; provenance = the last one
+                    sec.compact = {**(getattr(sec, "compact", None) or {}), **co_}
                     sec.provenance["compact_roundabout"] = f"authored_override:{ov['id']}"
             if "turn_lanes" in st:
                 sec.turn_fwd = [t for t in str(st["turn_lanes"]).split("|")] if st["turn_lanes"] else None

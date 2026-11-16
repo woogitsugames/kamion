@@ -487,7 +487,9 @@ def test_knyszyn_islands_have_the_authored_lengths(knyszyn):
         own = [pg for _, pg in sp.splitters if pg.distance(LineString(m["mid"])) < 0.5]
         r = [np.hypot(*(np.asarray(pg.exterior.coords) - sp.center).T) for pg in own]
         ext[CR._arm_way(net, a)] = (min(x.min() for x in r) - sp.r_out, max(x.max() for x in r) - sp.r_out, len(own))
-    assert 28.0 <= ext[286990127][1] <= 33.0, ext                # DK65 south
+    # D41 (ADR 0227): the authored outer diameter 26 m moves the ring kerb ~1.85 m out, the split nodes stay -> the
+    # islands are that much shorter from the ring edge (split lengths to be re-scaled on photo 9 with OD-046)
+    assert 27.0 <= ext[286990127][1] <= 33.0, ext                # DK65 south
     assert 33.0 <= ext[232511646][1] <= 38.0, ext                # DK65 north (rynek-s23: photo 9, >= 34 m)
     assert all(lo == pytest.approx(sp.opts["splitter_gap_m"], abs=0.3) for lo, hi, n in ext.values()), ext
     assert all(n in (1, 2) for lo, hi, n in ext.values()) and ext[286990127][2] == ext[232511646][2] == 2
@@ -507,7 +509,8 @@ def _knyszyn_adr0218():
     region = PL.load_region("knyszyn")
     origin = (region["origin"]["x"], region["origin"]["y"])
     graph = json.loads((PL.REGIONS / "knyszyn" / "roads.graph.json").read_text(encoding="utf-8"))
-    ov = [copy.deepcopy(o) for o in PL.load_overrides("knyszyn") if o.get("kind") != CS.KIND]
+    ov = [copy.deepcopy(o) for o in PL.load_overrides("knyszyn") if o.get("kind") != CS.KIND
+          and o.get("id") != "knyszyn-roundabout-outer-diameter-d41"]        # D41 (ADR 0227): not in the 0218 build
     next(o for o in ov if o["id"] == "knyszyn-roundabout-compact")["set"] = {
         "compact_roundabout": {"closing_r_m": 6.0, "splitter_w_m": 3.6, "lane_w_m": 4.0}}
     net = Nw.load(graph, origin, ov)
