@@ -93,3 +93,6 @@ Główny manifest29rekordów. [Kościół](monki-landmark-round7/README.md):2now
 ### Mońki — dworzec, tył i bok, maj2025
 
 Dwa nowe kadry Katarzyny Niedźwieckiej/NID uzupełniają znany dworzec o elewację od torów i bok oraz chodnik, ulicę i ogrodzenie. Oba niezależnie obejrzane przez root; nie są nowymi budynkami. Rytm otworów, ubytki, łamany spadek dachu i rdzawobrązowa barwa opisane z kadru. Nazwa dachu mansardowego i użytkowe poddasze to osobny opis źródłowy NID. Formalna liczba kondygnacji nie wynika z liczenia okien. Licencja CC BY-NC-ND3.0PL, tylko link-only,0kopii i0pobrań. Szczegóły oraz daty w [MS12](monki-station-rear-round12/README.md).
+
+
+R13: dwa nowe widoki dawnego zespołu Bernardynów w Tykocinie, Klasztorna1, Katarzyna Niedźwiecka, listopad2025 według NID. Agent i root obejrzeli oba osobno; cały widoczny obrys dachów, dwa poziomy okien, dziedziniec i zewnętrzna długa elewacja. Jeden kompleks, nie dwa budynki. CC BY-NC-ND3.0PL wyłącznie link-only. Główny40.
