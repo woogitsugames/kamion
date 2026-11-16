@@ -948,8 +948,7 @@ def tree_dims(r, species, key, in_plot=True):
     return round(H, 2), round(min(cb, 0.45 * H), 2), sprite
 
 
-def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False,
-                low_perimeter_cards=False):
+def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False):
     """A broadleaf garden tree in the plot kit (ADR 0163), habit by species: the stem to the crown base, crossed whole-
     crown cards (the habit's silhouette with its limbs), and - full variant of the dense habits - the crown's dark
     core and leaf sprays lying on its skin, so it is a volume from every side and from above, not a paper cross.
@@ -974,23 +973,12 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
     else:
         kit.box(p, np.array([math.cos(a0), math.sin(a0)]), tr, tr, z - 0.1, zt, bark, top=False, shift=top - p)
     W = 2.0 * r * 1.06
-    if lite and low_perimeter_cards:
-        # Four non-crossing sides: 4 x 2 triangles, equal to the two fan cards.
-        # WORKING_VALUE, only an opt-in comparison; may look boxy edge-on.
-        half_side = .70 * r
-        for i in range(4):
-            angle = a0 + .4 + i * math.pi / 2
-            tangent = np.array([math.cos(angle), math.sin(angle)])
-            outward = np.array([tangent[1], -tangent[0]])
-            PLT.card(kit, cc + outward * half_side, z + cb - .02 * hc,
-                     sprite, 2 * half_side, hc, angle)
-    else:
-        for i in range(cards):                               # unchanged default geometry
-            wj = 0.90 + 0.20 * PLT.hfloat(key, "cw", i)
-            hj = 0.97 + 0.10 * PLT.hfloat(key, "ch", i)
-            off = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.24 * r
-            shade = 0.50 + 0.10 * PLT.hfloat(key, "co", i) if lite and core and DENSE[species] > 0.0 else None
-            PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards, occ_mid=shade)
+    for i in range(cards):                                   # no card repeats another: width, height and axis differ, so
+        wj = 0.90 + 0.20 * PLT.hfloat(key, "cw", i)          # the crown is not a ball from any side (same in full / lite)
+        hj = 0.97 + 0.10 * PLT.hfloat(key, "ch", i)
+        off = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.24 * r
+        shade = 0.50 + 0.10 * PLT.hfloat(key, "co", i) if lite and core and DENSE[species] > 0.0 else None
+        PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards, occ_mid=shade)
     dense = DENSE[species]
     occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
     if lite and core and dense > 0.0:
@@ -1242,9 +1230,6 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
         crown_model = o.get("crown_model", "kit")
         if crown_model not in ("kit", "garden_trial", "linden_study_r3"):
             raise ValueError(f"tree_groups {o['id']}: unknown crown_model {crown_model!r}")
-        low_perimeter_cards = o.get("low_perimeter_cards", False)
-        if not isinstance(low_perimeter_cards, bool) or (low_perimeter_cards and crown_model != "garden_trial"):
-            raise ValueError(f"tree_groups {o['id']}: invalid low_perimeter_cards")
         spw = o.get("species") or {"maple": 1.0}
         if any(s not in KIT_SPECIES for s in spw):
             raise ValueError(f"tree_groups {o['id']}: form kit knows {sorted(KIT_SPECIES)}")
@@ -1275,8 +1260,7 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
             if crown_model in ("linden_study_r3", "garden_trial"):
                 # Study keeps the previous Low mesh exactly; its High/Low crown
                 # silhouettes differ and the switch still needs visual QA.
-                garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=2, core=True,
-                            low_perimeter_cards=low_perimeter_cards)
+                garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=2, core=True)
             else:
                 _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=True)
             if groups is None:
