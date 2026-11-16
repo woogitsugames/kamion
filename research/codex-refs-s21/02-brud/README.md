@@ -297,3 +297,5 @@ R71, 16.11.2026: root potwierdził nowy silnie zabrudzony zimowy S.KO472995. A14
 R69, peer 16.11.2026 po R71: dwie nowe referencje ograniczonych lokalnych smug pod dolnymi okuciami, bez twierdzenia o gęstym filmie całych drzwi. A16/B1, zimaA3, Europa-drogaA2. Główny34:32kadry (14lokalnych/18link-only)+2dokumenty. Lokalizacja sprzedaży nie dowodzi europejskiej drogi; góra Talsona ucięta nie jest samodzielną przesłanką odrzutu A.
 
 R75: jeden nowy mocny wizualnie zimowy tył z HCT, str185, root peer100/150%. Typ sprzęgu pozostaje UNVERIFIED, więc A_PENDING_TYPE_ONLY, nie nowyA ani kwalifikowana zima. A16/B1,zimaA3,Europa-drogaA2 bez zmian. Główny35:33kadry14lokalnych/19link-only+2dokumenty. R72/73 negatywne oglądy, R74 Nofima bez rozstrzygnięcia typu.
+
+FruehaufAFF,16.11.2026:1 nowy kadr cienkiego pionowego filmu na obu zamkniętych jasnych skrzydłach, rootobejrzał. A17/B1,zimaA3,Europa-roadA2. Nie dowód soli; rama i brunatne ślady metalu osobno. Całyobraz1200×900 wyklucza1000pxdrzwiB, trasaUNVERIFIED. Manifest36:34kadry(14lokalnych/20link-only)+2dokumenty.

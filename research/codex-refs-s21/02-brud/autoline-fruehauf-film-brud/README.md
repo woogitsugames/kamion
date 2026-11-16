@@ -1,0 +1,15 @@
+# Nowy tył Fruehauf — drobne pionowe smugi
+
+2026-11-16, date-only. **1 nowa ekspozycja A_CONTENT_PASS, 0 B, 0 zimowych, 0 potwierdzonych europejskich dróg, 0 pobrań.** Koordynator niezależnie obejrzał dokładną bitmapę 1200 × 900 i potwierdził A_CONTENT_PASS: drobny szary pionowy film na obu panelach, mocniejszy na bliższym prawym; rama/platforma osobno. Globalny licznik aktualizuje wyłącznie koordynator. ARR wyłącznie link-only, bez kopii fotografii ani screenshotów.
+
+[Oferta Fruehauf ZM53290](https://autoline.info/-/sale/closed-box-semi-trailers/Fruehauf/Non-specifie--26110916425824310600) podaje typ `closed box semi-trailer`, rok 2015-01, stan używany i windę. To źródłowe potwierdzenie naczepy, dodatkowo pełny kadr pokazuje długą skrzynię i trzy tylne osie. Data 9.11.2026 jest datą oferty, nie ekspozycji. Adres sprzedawcy we Francji nie stanowi europejskiej drogi ani GPS kadru.
+
+Osobiście obejrzano obraz 1/6 na stronie, w dużej galerii i osobno tę samą bitmapę otwartą standardowym menu „Otwórz grafikę w nowej karcie”. SOURCED [tytuł natywnej karty Chrome]: **1200 × 900 px**. ESTIMATED wysokość drzwi w tej bitmapie około **500–660 px**, zależnie od oddalonej/bliższej krawędzi perspektywy. To jedna ekspozycja, nie trzy fotografie. Brak dowodu ruchu lub bezpośredniego powrotu z trasy; B odpada także geometrycznie.
+
+Na jasnych panelach pary drzwi widoczne są liczne drobne szare pionowe ślady; wyraźniejsze na bliższym prawym skrzydle. Od góry przez środek występuje drobne szarzenie, dół ma miejscowe przygaszenia przy osprzęcie. ESTIMATED przydatny zakres na prawym polu h=0,2–0,95, na lewym h=0,1–0,85, gdzie h=0 oznacza dół drzwi. Granice są orientacyjne, bez wyprowadzenia metrów. Smug nie policzono: nakładają się i mają nieostre granice. Nie utożsamiono ciemnych prętów/cieni z brudem; rama, platforma windy i brunatne ślady na metalu są osobnymi powierzchniami. Brak śniegu i podstaw do identyfikacji chemii osadu. Nie jest to przykład równie mocnego filmu jak Tonar R57.
+
+Deduplikacja przed oglądem: ID ZM53290, identyfikator oferty 26110916425824310600 oraz potem actual asset 1794235378313527430 sprawdzone w P18 i s21; brak wcześniejszych trafień. Wizualnie nie jest wcześniejszym Tonarem, czerwonym Struikiem ani Lamberetem JF52527. Wynik nie dowodzi wykluczenia każdego możliwego niezarejestrowanego duplikatu w internecie.
+
+Selekcja obejmowała też Samro LR44809: osobiście obejrzane kadry 1/8 i 4/8 pokazują front z centralnym osprzętem, zieloną uszkodzoną powłoką i czerwonymi odsłonięciami, a nie docelową parę tylnych drzwi. Nie dopisano ich jako referencji M61. Dawna oferta Fruehauf YJ52104 jest sprzedana, bez własnej galerii; nie opisano jej obrazu z sąsiednich ofert. Nowy ZM53290 wybrano z jawnego linku podobnych ofert.
+
+Nie używano Commons/Flickr, map Google, logowania, API galerii, proxy ani wariantów większych obrazów. Natywne UI sky zakończone komunikatem zwolnienia Chrome; dostępny tutaj interfejs nie ma narzędzia `completion_summary`. Bez parentów, Git i kodu gry.
