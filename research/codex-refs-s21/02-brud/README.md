@@ -282,3 +282,6 @@ R59: trzy obejrzane sceny, bez nowej kwalifikacji. R60: trzy nowe tyły S.KO, ro
 
 
 R63: samokontrola3/11przyjętychA, seed20261115, snapshot/hash sprzed losowania. FR60-003/Knight009/UR54-001 ponownie obejrzane przez agenta,0podmian/0NOT_REVIEWED, A potwierdzone z ograniczeniami. Root odtworzył hash i losowanie; nie nazwano samokontroli niezależną recenzją.0nowych zdjęć/B.
+
+
+R64 Wabash: root potwierdził miejscowy dolny szary film obu pól po oglądzie1:1 i osobny typ naczepy. A12 z ograniczeniami/B1; zimaA2, Europa-drogaA1 bez zmian. Duże drzwi1320–1450pxEST nie zastępują dowodu trasy. Knapen nadalPENDING. Główny30:28kadrów(14lokalnych/14link-only)+2dokumenty.
