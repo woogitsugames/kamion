@@ -67,3 +67,6 @@ Dotyczy też PR #97 (roundabout-0218, rondo Knyszyn) i K1 (średnica osi ~17,6 m
 Dla gry: rondo = authored z ortofoto (średnica zewnętrzna i wyspy mierzyć na ortofoto GUGiK, nie zgadywać); opaska przejezdna = `truck_apron` z #97; wyspa wewnętrzna jako piasek/żwir + niskie krzewy.
 
 4. Raportuj zestawienia „zdjęcie właściciela | render” dla każdego kadru (zdjęcia tylko lokalnie w artifacts, nie w gicie). Lider pokaże je właścicielowi do oceny rozpoznawalności.
+
+## Targowica — pliki zdjęć (s23, 15.11 23:2x)
+Właściciel dał pliki; zapisane lokalnie (gitignored, tylko referencja, nie jako tekstury; zdjęcia 12–13 mają znak wodny „Knyszyn Miasto i Gmina”): `Data/raw/refs/owner-knyszyn-2026-11-15/12-targowica-pion.jpg` (pionowe z drona: 4 wiaty w jednej linii równolegle do ulicy — 3 obok siebie + 1 osobno po prawej, dachy czterospadowe ciemnoszare, panele PV na pierwszej z lewej; pasy czerwonej kostki między wiatami; długi budynek handlowy za placem), `13-targowica-ukos.jpg` (ukośne z drona: mały pawilon z żółtą elewacją i dachem namiotowym w narożniku, ogrodzenie panelowe od ulicy, miejsca postojowe wyznaczone czerwoną kostką), `14-targowica-wiaty-poziom.jpg` (poziom oczu: wiaty na słupach, stoły/ławy pod dachem, kostka betonowa szara, wyspy z kruszywem w krawężnikach).

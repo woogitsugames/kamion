@@ -413,7 +413,8 @@ namespace Game.Gameplay
         {
             if (!string.IsNullOrEmpty(menuRegion) && menuRegion != sceneRegion)
                 Debug.LogWarning("[START] menu region " + menuRegion + " but the scene holds " + sceneRegion);
-            float s = m_RouteS >= 0f ? m_RouteS : RegionStart.DefaultStartS;
+            // Baked spawn point used as is (no route_s, nothing moved): log where it stands, not the 12 m default (ADR 0262).
+            float s = m_RouteS >= 0f ? m_RouteS : spawnPoint != null ? NearestRouteS(route, spawnPoint.position) : RegionStart.DefaultStartS;
             Vector2 en = RegionStart.LocalPointAt(route.points, route.distances, s);
             var road = RegionStart.FindRoad(Game.Core.Navigation.RouteGraph.Load(sceneRegion), en);
             Debug.Log(RegionStart.Describe(sceneRegion, s, en, road));
