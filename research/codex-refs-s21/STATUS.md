@@ -1,6 +1,6 @@
 # Status referencji codex-refs-s21
 
-Stan po `f9dbf2b94`, 16.11.2026. Cel ciągły pozostaje aktywny. Gałąź `research/codex-refs-s21`, [PR100](https://github.com/woogitsugames/kamion/pull/100), bez scalania.
+Stan po `f9dbf2b94`, 16.11.2026. Cel ciągły wstrzymany na prośbę użytkownika; nieukończony. Gałąź `research/codex-refs-s21`, [PR100](https://github.com/woogitsugames/kamion/pull/100), bez scalania.
 
 | Pakiet | Rekordy głównego manifestu | Co oznacza liczba |
 |---|---:|---|
@@ -107,3 +107,7 @@ R4: wskazana uprzednio P4-001 to R48; brak potwierdzonej lokalnejbitmapyR4 wspra
 R31odebrany16.11.2026: główny03=59. Nowa ekspozycja znanegokościoła, NIDstan2015, NCNDwyłącznielink, relacja mur–brama–chodnik–krawężnik–jezdnia, rootpeer. Cokółsamychścian zasłonięty.0nowychbudynków/metryki/headinguznazwyelewacji. WciążA17/B1i pozostałemanifestybezprzyrostu.
 
 Ostatni odbiór16.11.2026 przed wyhamowaniem:06R21MEDIATEKA1nowaekspozycjaPARTIAL,pobrane0/link-only1. MEDIATEKA/4czytelne;dół/bokiucięte,auta zasłaniajągrunt.0nowychodrębnychbudynków i beznawierzchni. Rootobejrzał. Główny06=52;pozostałelicznikibezzmiany. Szczegóływznowienia wWZNOWIENIE.md.
+
+## Wyhamowanie na prośbę użytkownika
+
+2026-11-16T08:59:26+01:00 Bruksela. Odebrano wszystkie rozpoczęte pakiety. Dalsze rundy wstrzymane; cel nieukończony, progi pozostają otwarte. Stan i kolejka wznowienia: [WZNOWIENIE.md](WZNOWIENIE.md). Końcowa kontrola snapshot043ec4128:JSON670,rastry99≤800px,lokalneścieżki100,0błędów/plików>5MB. Główne manifesty65/36/59/42/25/52/30. Brak aktywnych agentów badawczych i rezerwacjiChrome. PR100bezscalania.

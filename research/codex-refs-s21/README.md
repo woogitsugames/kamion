@@ -18,4 +18,4 @@ SOURCED wymaga konkretnego źródła; ESTIMATED oznacza oszacowanie, UNVERIFIED 
 
 Media i firmy: link-only, all rights reserved, bez pobierania lub screenshotów w repo. Licencjonowane miniatury ≤800px mają źródła i atrybucje w manifestach oraz docs/LICENSES.md. Duże pliki i legalne materiały raw poza Git w Data/raw/refs/codex-s21. Zdjęć właściciela nie kopiowano. Bez Unity, adb i zmian kodu gry.
 
-Cel pozostaje aktywny; nieosiągnięte progi są jawne. Nowe wyniki czekają na odrębną recenzję, a starsze datowane fragmenty README są historią pracy, nie nadpisują STATUS.md.
+Cel wstrzymany na prośbę użytkownika; nieosiągnięte progi są jawne. Wznowienie: [WZNOWIENIE.md](WZNOWIENIE.md). Nowe wyniki czekają na odrębną recenzję, a starsze datowane fragmenty README są historią pracy, nie nadpisują STATUS.md.
