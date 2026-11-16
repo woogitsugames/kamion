@@ -20,6 +20,7 @@ sys.path.insert(0, str(REPO / "tools" / "worldgen"))
 sys.path.insert(0, str(REPO / "tools" / "worldgen" / "qa"))
 REGIONS = {"bialystok-industrial-c": (777995.0, 596223.0), "bialystok-dojlidy": (780043.0, 590079.0)}
 DATA = Path(__file__).parent / "data"
+C_TRIS_HIGH_LIMIT = 2_000_000                       # tile C per-frame High triangle limit (test_world_v31, ADR 0221)
 _HF = SimpleNamespace(sample=lambda x, y: np.full(np.shape(x), 100.0))
 ROAD = box(-50, -30, 80, -10)                       # a road south of the synthetic buildings
 
@@ -192,6 +193,19 @@ def test_proportions_carry_a_status():
     assert BM.storey_plan("block", 15.8, {"storeys": 5}) == BM.storey_plan("block", 15.8, {"storeys": 5}, "wielka_plyta")
 
 
+def test_storey_plan_keeps_the_kamienica_fit_with_the_0242_storeys_fixed_rule():
+    """Merge #122 x #123 (review s22 #123): the storey range of the subtype must survive the storeys_fixed branch -
+    a reset `lo, hi = block range` after it would drop a 3.9 m kamienica storey (fits 2.8-4.0, not 2.6-3.8)."""
+    from streetscape import buildings_mesh as BM
+    h = 0.6 + 0.8 + 2 * 3.9
+    assert BM.storey_plan("block", h, {"storeys": 2}, "kamienica") == (2, pytest.approx(3.9), 0.6)
+    assert BM.storey_plan("block", h, {"storeys": 2}, "kamienica") == BM.storey_plan(
+        "block", h, {"storeys": 2, "storeys_fixed": True}, "kamienica")
+    # ADR 0242: an authored count is kept whatever the storey height, for an office as before
+    n, sh, zb = BM.storey_plan("office", 15.4, {"storeys": 3, "storeys_fixed": True})
+    assert n == 3 and zb == BM.ZBASE["office"] and sh > 4.6
+
+
 # ------------------------------------------------------------------------------------------- meshes
 def test_tenement_has_a_pitched_roof_and_window_rows_on_both_lods():
     buf, rep = _build(_b(TENEMENT, w=22.0, d=11.0))
@@ -300,10 +314,20 @@ def test_triangle_budget_is_not_above_the_baseline(budget):
         assert res["materials"][layer] <= base["materials"][layer], (rid, layer)
     assert cams and all(c["delta_high"] <= 0 and c["delta_low"] <= 0 for c in cams), [
         (c["camera"], c["delta_high"], c["delta_low"]) for c in cams if c["delta_high"] > 0 or c["delta_low"] > 0]
+    # The estimate is the committed frame_estimate (read from generated/streetscape_qa.json at test time - never a
+    # number copied from another world state) + the harness delta, so it must not exceed the QA and must keep the
+    # 2 M High per-frame limit of tile C (docs/06 §6, ADR 0221).
+    qa = json.loads((REPO / "Data" / "Regions" / rid / "generated" / "streetscape_qa.json").read_text(encoding="utf-8"))
+    fe = {f["camera"]: f for f in qa["mesh_budget"]["frame_estimate"]}
+    for c in cams:
+        if "est_tris_high" in c:
+            assert c["qa_tris_high"] == fe[c["camera"]]["tris_high"], c["camera"]
+            assert c["est_tris_high"] <= c["qa_tris_high"] and c["est_tris_low"] <= c["qa_tris_low"], c["camera"]
     if rid == "bialystok-industrial-c":
         s4 = next(c for c in cams if c["camera"] == "stretch_04")
-        assert s4["qa_tris_high"] == 2022535 and s4["est_tris_high"] < s4["qa_tris_high"]
-        assert s4["est_tris_low"] < s4["qa_tris_low"]
+        assert s4["est_tris_high"] <= C_TRIS_HIGH_LIMIT, s4
+        assert all(c["est_tris_high"] <= C_TRIS_HIGH_LIMIT for c in cams if "est_tris_high" in c), [
+            (c["camera"], c["est_tris_high"]) for c in cams if c.get("est_tris_high", 0) > C_TRIS_HIGH_LIMIT]
 
 
 def test_authored_and_untouched_buildings_are_bit_identical(budget):
