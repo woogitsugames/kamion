@@ -77,7 +77,7 @@ namespace Game.Rendering
             [Tooltip("Cab-view local shadow lift strength (CabInteriorLighting, review r4 L1; 0 = off)")] public float cabShadowLift;
             [Tooltip("Real point lights at the nearest street lamps at dusk (0 = emission only); they light vehicles and props")] public int streetLights;
             [Tooltip("ADR 0062: analytic light pools of the N lamps nearest the view on Kamion/World Surface at dusk (no lights, " +
-                     "a uniform-branch loop in the world shader; 0 = off, max 8)")] public int lampPools;
+                     "a uniform-branch loop in the world shader; 0 = off, max StreetLamps.MaxPools = 16)")] public int lampPools;
             [Tooltip("ADR 0191: GGX highlight of each lamp pool on the world surfaces (the long streak of a lamp on asphalt " +
                      "towards the viewer; ~12 ALU per pool on lit pixels at dusk / night only)")] public bool lampPoolSpecular;
             [Tooltip("ADR 0192: Off = no lit windows at dusk / night (facade atlas, LOD1 rows, far facades). Inverted so tiers saved " +

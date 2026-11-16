@@ -71,6 +71,14 @@ nie scalony; ta zmiana nie dotyka `TruckLights` ani assetów pojazdu.
   `after1-wet/` (High night, `rq_wet=1`), zestawienia `view/` (góra przed, dół po), `view-wet/` (sucho/mokro), `lum-before-after1.txt`.
   Obejrzane: knyszyn High/Low night cab-driver (wiązka na DK65, widoczne kolano odcięcia 15° na barierze), dk65-inlet-south,
   rynek-grodzienska-north (dalsze pule); WorldC High night cab-driver (plama wiązki do ~40 m), driver-andersa (sucho/mokro).
+- Przypadki brzegowe (`edge/`, High night, A/B przez `-Rq` w tej samej gałęzi): reflektory on / `rq_headlamps=0` na
+  WorldC cab-gate, truck-at-gate, truck-front, stretch-05-docks i knyszyn truck-at-gate, tykocka-into-town: przepalenia
+  bez zmian (≤ 0,04 %), cab-gate p90 pasa 34,1 → 40,1 (kontenery i jezdnia w wiązce), pozostałe ±0,1 — bez widocznego
+  przecieku światła za ściany w tych kadrach (przesłaniania nadal brak, Otwarte 3). 16 vs `rq_lamppools=8` (wraca też
+  ogniskowa 30 m): route-onramp-andersa — dalszy odcinek jezdni (> ~100 m) i elewacja hali w tle oświetlone zamiast
+  ciemnej dziury, p50 26,1 → 27,0; tykocka-into-town 23,1 → 23,6; kadry bliskie bez zmian (zysk tylko na długich prostych).
+- Obrysówki: pełne kadry `after1/WorldC/High-night/truck-rear34`, `lamp-trailer` — boczne bursztynowe i górna czerwona
+  obrysówka czytelne jako małe punkty (bez zmian w tej gałęzi; fotometria świateł tylnych = ADR 0197 / PR #79).
 - Liczby (luma pasa dolnego, p50): knyszyn High night cab-driver 9,1 → 11,0, dk65-inlet-south 10,1 → 13,8; WorldC High
   night cab-driver p90 32,0 → 37,1; zmierzch ±0–1,4; przepalenia bez zmian (≤ 0,11 %).
 - EditMode (`artifacts/night-pc-s23/editmode-20261116-192935.xml`): 1132, 1109 pass, 22 fail, 1 skip. `PcNightLightingTests`
