@@ -1,0 +1,63 @@
+{
+  "checked_at_brussels": "2026-11-16T01:01:00.397350+01:00",
+  "P18_claims": [
+    {
+      "file": "research/mistral/p18-trailer-soiling/sources.md",
+      "line": 105,
+      "claim": "About2400 metadata/48winterPoland thumbnails",
+      "assessment": "UNVERIFIED as evidence; no concrete itemIDs/sequenceIDs/request response provided alongside claim"
+    },
+    {
+      "file": "research/mistral/p18-trailer-soiling/README.md",
+      "line": 121,
+      "claim": "48winterPoland thumbnails",
+      "assessment": "UNVERIFIED as evidence; repeats aggregate screening claim, not reproducible item list"
+    },
+    {
+      "file": "research/mistral/p18-trailer-soiling/sources.md",
+      "line": 83,
+      "claim": "0 inWarsaw bbox and broader lackPoland",
+      "assessment": "Old narrow result does not justify global absencePoland; other local records have actualPoland itemIDs"
+    }
+  ],
+  "local_concrete_metadata_checked": [
+    {
+      "file": "research/gate3-spots-s21/meta_panoramax.json",
+      "records": 10,
+      "collections": [
+        "989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3",
+        "b3131ba1-86e3-4528-a0ff-a754528bba5b"
+      ],
+      "capture_dates": [
+        "2019-08-15",
+        "2019-09-01"
+      ],
+      "status": "Actual itemIDs andGPS present, datedAug/Sep2019 rather than requested winter. No image content reviewed in this round; do not infer actual weather from month alone."
+    },
+    {
+      "file": "research/cloud/p25-krywlany-forest/data/panoramax_pick.json",
+      "records": 13,
+      "collections": [
+        "989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3",
+        "b3131ba1-86e3-4528-a0ff-a754528bba5b"
+      ],
+      "capture_dates": [
+        "2019-08-15",
+        "2019-09-01"
+      ],
+      "status": "Actual itemIDs andGPS present, datedAug/Sep2019 rather than requested winter. No image content reviewed in this round; do not infer actual weather from month alone."
+    }
+  ],
+  "winter_sequence_identified": false,
+  "other_existing_search_evidence": [
+    {
+      "file": "research/codex-refs-s21/03-knyszyn/new-round2/data/panoramax-city-search.json",
+      "result": "features[]; no winter itemID"
+    },
+    {
+      "file": "research/codex-refs-s21/07-bialystok-dojlidy/route-c-signs-round5/README.md",
+      "result": "Earlier2narrow2024plus searches empty; not global coverage proof"
+    }
+  ],
+  "limitations": "Scoped textual/metadata inspection, not an exhaustive forensic inventory of every historic research archive. No winter sequence proven from inspected files."
+}

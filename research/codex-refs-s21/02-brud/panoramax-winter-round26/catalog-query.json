@@ -1,0 +1,17 @@
+{
+  "requested_at_brussels": "2026-11-16T01:00:02.623667+01:00",
+  "request_url": "https://api.panoramax.xyz/api/search?bbox=23.120%2C53.220%2C23.160%2C53.330&datetime=2025-12-01T00%3A00%3A00Z%2F2026-02-28T23%3A59%3A59Z&limit=12",
+  "parameters": {
+    "bbox": "23.120,53.220,23.160,53.330",
+    "datetime": "2025-12-01T00:00:00Z/2026-02-28T23:59:59Z",
+    "limit": 12
+  },
+  "bbox_reason": "Small corridor around known DK65 segment from local p25 Panoramax GPS points, south of Knyszyn toward Fasty; bbox not proof any returned item lies on road. Calendar winter alone not proof snow.",
+  "requests": 1,
+  "http_status": 200,
+  "response": {
+    "features": [],
+    "links": []
+  },
+  "decision": "STOP_AFTER_ZERO_RESULTS"
+}

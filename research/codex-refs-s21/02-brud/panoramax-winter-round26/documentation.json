@@ -1,0 +1,29 @@
+{
+  "read_before_catalog_search": true,
+  "sources": [
+    {
+      "url": "https://docs.panoramax.fr/backend/api/api/",
+      "used": "Collections correspond to sequences; items pictures; STAC-basedHTTPAPI. No authentication or upload used."
+    },
+    {
+      "url": "https://docs.panoramax.fr/backend/dev/STAC_compatibility/",
+      "used": "STAC compatibility overview; not a source for any photo license."
+    },
+    {
+      "url": "https://docs.panoramax.fr/backend/install/settings/",
+      "used": "Picture license comes from configured instance/link; unspecified license consideredproprietary. No photo license assumed from brand."
+    },
+    {
+      "url": "https://docs.panoramax.fr/federated-catalog/overview/",
+      "used": "Federation harvestsmetadata, pictures remain at sourceinstances; a limited emptyquery is not global absence."
+    },
+    {
+      "url": "https://api.panoramax.xyz/openapi.json",
+      "used": "GET/api/search documentedparametersbbox,datetime,limit; datetimeRFC3339interval applies capturedate; observed defaultlimit10. Queriedlimit12, no pagination."
+    },
+    {
+      "url": "https://api.stacspec.org/v1.0.0/item-search/",
+      "used": "bbox westernlongitude,southernlatitude,easternlongitude,northernlatitude; datetimeintervalRFC3339."
+    }
+  ]
+}
