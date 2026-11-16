@@ -1,3 +1,10 @@
+# STATUS — D27 effective-graph-s23 (czytniki grafu → pipeline.effective_graph, dopisek ADR 0274)
+
+- [1] Baza: origin/main + origin/roundabout2-0274 (#144). `pipeline.effective_graph(region, graph=None, applied=, stale=)` = jedyny
+  loader; `carriageway_split.node_aliases()` (+ pole `split_of` węzła). export-route: alias zamiast heurystyki `endswith("s")`;
+  route_start.json knyszyn i C odtworzone bajt w bajt (bez zmian w Data/).
+- NASTĘPNY KROK: przepięcie navgraph/build_route_graph.py + measure_axis_offset, nav map, map-audit-cameras, validate, water_banks.
+
 # STATUS — D14 roundabout2-0274 (rondo Knyszyn, ADR 0274)
 
 - [1] `tools/worldgen/qa/roundabout_ortho.py` + `docs/reports/roundabout-0274/`: ortofoto GUGiK w punkcie ronda = arkusz
