@@ -70,6 +70,8 @@ def test_bdot_extraction_excludes_crossing_source_and_lod_rectangle(tmp_path, mo
 
     monkeypatch.setattr(FF, "REPO", tmp_path)
     monkeypatch.setattr(pyogrio, "read_dataframe", lambda *args, **kwargs: Frame())
+    # ADR 0219: the ring powiaty come from PRG boundaries; origin (0, 0) is a synthetic place outside them
+    monkeypatch.setattr(FF.PW, "powiaty_for_bbox", lambda bbox: ("2061",))
     gis = FF.extract_ring_gis("fixture", 0, 0)
     assert [b["id"] for b in gis["buildings"]] == ["external-hall"]
     assert gis["boundary_exclusions"]["bdot_source"] == 2

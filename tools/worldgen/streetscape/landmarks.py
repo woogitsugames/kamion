@@ -10,6 +10,10 @@
                       `panels: [{rows, arrow}]` (stacked panels in one frame column), `style: e1_cross` (`top`,
                       `left`, `right` rows around a crossroads diagram), `style: vms` (`lines` of an LED message
                       sign), `lat_shift_m` (board centre moved left (+) of the lane centre, in travel terms).
+                      ADR 0236 (research R2 + [ZNAKI-Z1]): faces are laid out by the norm (streetscape.sign_norms:
+                      d = 210 mm, rows 0.50 m + 0.35 m; `size_m` optional for every style), arrow `fork_right`
+                      and `frame: single` (one frame around stacked panels: an E-1 with a forked arrow), `top` of
+                      an e1_cross may be several rows; `r2` / `kartaview` / `orthophoto` = provenance copied to QA.
                       `form: cantilever` (ADR 0069): one column on `column_side` (L / R of travel, `column_offset_m`
                       behind the carriageway side strip) and a lattice arm over the boards. Board faces are our
                       own schematic drawings (signs.overhead_board); bottom edge 5.20 m above the road
@@ -59,7 +63,7 @@ def _board_rows(graph, bd, rep, oid):
     if "panels" in bd:                              # ADR 0162: stacked panels, each with its own arrow
         return [(list(r[0]), r[1]) for pn in bd["panels"] for r in pn["rows"]]
     if bd.get("style") == "e1_cross":
-        return [(list(bd["top"][0]), bd["top"][1])] + [(list(r[0]), r[1]) for r in bd["left"] + bd["right"]]
+        return SG._rows(bd["top"]) + [(list(r[0]), r[1]) for r in bd["left"] + bd["right"]]
     if bd.get("style") == "vms":
         return [([], t) for t in bd["lines"]]
     if "rows" in bd:
@@ -125,15 +129,16 @@ def build(pl, net, graph, overrides, origin, boards, report):
                     key = "OB_" + hashlib.sha1(
                         repr((rows, [float(v) for v in size], len(bd["lanes"]))).encode()).hexdigest()[:8]
                 if "panels" in bd or bd.get("style") or bd.get("arrow"):     # ADR 0162 (G3 2024 frames)
-                    spec = {k: bd[k] for k in ("panels", "style", "arrow", "top", "left", "right", "lines") if k in bd}
+                    spec = {k: bd[k] for k in ("panels", "style", "arrow", "top", "left", "right", "lines", "frame")
+                            if k in bd}
                     key = "OB_" + hashlib.sha1(repr((sorted(spec.items()), rows, size)).encode()).hexdigest()[:8]
                 if key not in boards:
                     if "panels" in bd:
                         im, wm, hm = SG.panel_board([{"rows": [(list(r[0]), r[1]) for r in pn["rows"]],
                                                       "arrow": pn.get("arrow", "down")} for pn in bd["panels"]],
-                                                    size_m=size)
+                                                    size_m=size, single_frame=bd.get("frame") == "single")
                     elif bd.get("style") == "e1_cross":
-                        im, wm, hm = SG.e1_cross_board((list(bd["top"][0]), bd["top"][1]),
+                        im, wm, hm = SG.e1_cross_board(SG._rows(bd["top"]),
                                                        [(list(r[0]), r[1]) for r in bd["left"]],
                                                        [(list(r[0]), r[1]) for r in bd["right"]], size)
                     elif bd.get("style") == "vms":
@@ -197,7 +202,8 @@ def build(pl, net, graph, overrides, origin, boards, report):
                                     "at": [round(float(v), 1) for v in ctr],
                                     "boards": [{"key": k, "rows": [[r[0], r[1]] for r in _board_rows(graph, bd, None, o["id"])]}
                                                for (k, _, _), bd in zip(items, o["boards"])],
-                                    "mapillary": o.get("mapillary", [])})
+                                    "mapillary": o.get("mapillary", []),
+                                    **{k: o[k] for k in ("r2", "kartaview", "orthophoto") if o.get(k)}})
         elif o.get("kind") == "landmark":
             x, y = o["epsg2180"]
             p = np.array([x - ox, y - oy])

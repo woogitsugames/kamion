@@ -10,7 +10,8 @@ overrides:
     polygon_en: [[322.9, 495.2], [369.6, 491.9], [372.2, 491.7], [372.0, 527.7], [364.6, 528.2], [364.1, 520.5],
                  [357.1, 520.9], [329.4, 507.5], [323.8, 507.8]]
     cut_from: ["bdot:27a0721d-eb46-4021-a0be-dc26db73e398"]
-    height_m: 14.0
+    height_m: 15.4            # ADR 0242: GUGiK NMPT 0.5 m - roof 169.46 (p50 of the ring) above ground_z below; was 14.0
+    ground_z_evrf2007: 154.0  # NMPT ground along the south (Kuronia) wall 153.9-154.1; west gable 154.6-154.8
     storeys: 4
     function: biurowiec
     reason: >-
@@ -468,6 +469,7 @@ overrides:
   - id: dojlidy-lod1-base-datum
     kind: building_rules
     lod1_base_datum: true
+    hall_openings_at_ground: true     # ADR 0242 (review s20-0185 P1-5): door / gate sills from the ground under them
     reason: >-
       Review 0179: the north hall of the Kuronia plant ~12 % too tall in frame P11-094, extra white blocks behind
       the block of Kuronia 3 (P11-001). The LoD1 2024 measuredHeight is the height of the LoD1 solid above its
@@ -485,7 +487,7 @@ overrides:
     polygon_en: [[683.3, 384.1], [670.6, 389.5], [656.4, 356.2], [643.1, 361.9], [604.9, 272.7], [618.2, 267.0],
                  [630.8, 261.6]]
     cut_from: ["bdot:2BE4B431-BC59-1BF0-E053-CC2BA8C0D140"]
-    height_m: 12.2
+    height_m: 13.2            # ADR 0242: GUGiK NMPT 0.5 m - wing roof 165.25 (p5-p95 165.05-165.66); the photo estimate was 12.2
     ground_z_evrf2007: 152.06
     function: produkcyjny
     reason: >-
@@ -522,8 +524,11 @@ overrides:
       Adds to rosti-hall-colour (sets of one building are merged, ADR 0185).
     confidence: medium
     verify: owner photo session (Kuronia, north wall of the plant, with a scale); wall height vs LoD1 18.92 m
-    set: {wall_material: hall_wall_smooth, hall_windows: false, hall_sign: false, hall_plinth_z: 152.9,
-          height_m: 16.9}
+    # ADR 0242: `height_m: 16.9` (0185, read off one photo with an EXIF GPS pose) is withdrawn. GUGiK NMPT 0.5 m
+    # (WCS DSM_PL-EVRF2007-NH): roof of the tall hall 171.04-171.16 along the north wall = 19.0 m above the LoD1
+    # base 152.06 - the LoD1 2024 height 18.92 m stands. 16 courses x 1.15 m + 0.5 m plinth = 18.9 m: the module
+    # of hall_wall_smooth and the count of the photo agree at this height (review s20-0185 P1-2, second hypothesis).
+    set: {wall_material: hall_wall_smooth, hall_windows: false, hall_sign: false, hall_plinth_z: 152.9}
   - id: kuronia3-office-block-facades
     target: {building: "override:kuronia3-office-block"}
     reason: >-
@@ -535,11 +540,16 @@ overrides:
       the review asks). Other walls: bands on the long ones, short ones blank (not photographed, WORKING_VALUE).
     confidence: medium
     verify: owner photo session (Kuronia 3 from the cycle path); north and east walls
+    # ADR 0242 (review s20-0185 P1-1): cassette cladding with horizontal joints (cladding_cassette_grey: courses
+    # 1.15 m, butt joints 3.5 m, WORKING_VALUE) instead of the vertical panels of 0185, which read as a sheet-metal
+    # shed. storeys_fixed: three storeys of (15.4 - 1.1) / 3 = 4.77 m (over the 4.6 m office limit of the rule);
+    # sill 2.6 / head 4.1 m keep the photo proportions of 0185 (sills 0.19 / 0.50 / 0.81 of the wall, band 0.10).
     set:
       storeys: 3
-      wall_material: cladding_vertical_grey
+      storeys_fixed: true
+      wall_material: cladding_cassette_grey
       facades:
-        - {facing: [N, NE, E, SE, S, SW, W, NW], min_len_m: 20.0, windows: ribbon, sill_m: 2.3, head_m: 3.6,
+        - {facing: [N, NE, E, SE, S, SW, W, NW], min_len_m: 20.0, windows: ribbon, sill_m: 2.6, head_m: 4.1,
            spans: [[0.12, 1.0]]}
         - {facing: [N, NE, E, SE, S, SW, W, NW], min_len_m: 0.0, windows: blank}
   # ================================================================ ADR 0196 (dojind-0196): plant at Kuronia 2, gates,
@@ -557,14 +567,18 @@ overrides:
       the LoD1 height; hall_wall_graphite = the existing graphite sheet; hall_bands false = one colour.
     confidence: high
     verify: M63 (cladding module); owner photo session
-    set: {wall_material: hall_wall_graphite, hall_bands: false}
+    # ADR 0242 (review s20-0196 P1 "hala wystaje ponad front"): GUGiK NMPT 0.5 m - the hall has a low gable roof,
+    # eave 168.07 on the Kuronia side / 168.57 on the SE side, ridge 170.1; LoD1 12.72 (168.89) is the mean roof.
+    # The prism of the game ends at the Kuronia eave: 168.07 - 156.17 (LoD1 base) = 11.9 m.
+    set: {wall_material: hall_wall_graphite, hall_bands: false, height_m: 11.9}
   - id: kuronia2-corner-portal
     kind: building_part
     name: dark corner block of the front of the plant at Kuronia 2 (west corner)
     polygon_en: [[63.9, 337.0], [60.7, 343.6], [59.4, 342.9], [59.2, 343.4], [58.2, 342.9], [58.4, 342.4], [48.6, 337.6],
                  [48.3, 338.0], [47.4, 337.6], [50.7, 330.7]]
     cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
-    height_m: 9.0
+    height_m: 9.9             # ADR 0242: NMPT roof 167.5 + 0.5 m parapet frame (edge sample 168.04; WORKING_VALUE) above ground_z
+    ground_z_evrf2007: 158.1  # NMPT ground in front of the SW wall 157.9-158.3
     storeys: 2
     function: biurowiec
     reason: >-
@@ -584,19 +598,25 @@ overrides:
         wall: plaster_white
         plinth_m: 0.3
         glass_lod1: hall_flashing
-        fascia: {material: hall_flashing, height_m: 2.6, facings: [N, NE, E, SE, S, SW, W, NW]}
+        # ADR 0242 (review s20-0196 P2): the frame is mid grey cladding, LIGHTER than the graphite hall behind it
+        # (photo: block 127/114/98 against hall 85/86/83 sRGB = ~1.8x in linear light; r4 had hall_flashing 0.045
+        # against the hall 0.08). plaster_accent_grey 0.20 = the material these parts draw already (no new draw),
+        # 2.5x the hall - WORKING_VALUE. min_len_m 0: the dark ground floor also on the 0.5 m returns of the
+        # blocks (r4: light vertical strips through the ground floor). Rows x 9.35 / 7.2 (the heights of NMPT).
+        fascia: {material: plaster_accent_grey, height_m: 2.6, facings: [N, NE, E, SE, S, SW, W, NW]}
         accents:
-          - {facing: [N, NE, E, SE, S, SW, W, NW], span: [0.0, 1.0], material: plaster_accent_grey, z: [0.3, 3.3], min_len_m: 1.0}
-          - {facing: [SW, NW], span: [0.0, 0.1], material: hall_flashing, z: [3.3, 99.0], min_len_m: 5.0}
-          - {facing: [SW, NW], span: [0.9, 1.0], material: hall_flashing, z: [3.3, 99.0], min_len_m: 5.0}
+          - {facing: [N, NE, E, SE, S, SW, W, NW], span: [0.0, 1.0], material: plaster_accent_grey, z: [0.3, 4.3], min_len_m: 0.0}
+          - {facing: [SW, NW], span: [0.0, 0.1], material: plaster_accent_grey, z: [4.3, 99.0], min_len_m: 5.0}
+          - {facing: [SW, NW], span: [0.9, 1.0], material: plaster_accent_grey, z: [4.3, 99.0], min_len_m: 5.0}
         glazing:
-          - {facing: [SW, NW], span: [0.16, 0.84], z: [4.0, 5.8], window_m: [1.6, 1.5], min_len_m: 5.0, margin_m: 0.8}
+          - {facing: [SW, NW], span: [0.16, 0.84], z: [4.9, 6.9], window_m: [1.6, 1.5], min_len_m: 5.0, margin_m: 0.8}
   - id: kuronia2-front-portal
     kind: building_part
     name: second dark block of the front of the plant at Kuronia 2 (SW wall)
     polygon_en: [[62.6, 330.5], [53.1, 325.8], [56.8, 318.1], [66.4, 322.8]]
     cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
-    height_m: 9.0
+    height_m: 9.9             # ADR 0242: NMPT roof 167.5 + 0.5 m parapet frame (edge sample 168.04; WORKING_VALUE) above ground_z
+    ground_z_evrf2007: 158.1  # NMPT ground in front of the SW wall 157.9-158.3
     storeys: 2
     function: biurowiec
     reason: >-
@@ -612,7 +632,8 @@ overrides:
     name: light bay between the two dark blocks of the front at Kuronia 2
     polygon_en: [[51.4, 329.9], [53.3, 326.0], [62.4, 330.4], [60.0, 335.2], [51.0, 330.8]]
     cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
-    height_m: 7.2
+    height_m: 9.35            # ADR 0242: NMPT roof 167.33-167.52 (the whole front is one level); was 7.2
+    ground_z_evrf2007: 158.1
     storeys: 2
     function: biurowiec
     reason: >-
@@ -627,16 +648,17 @@ overrides:
         plinth_m: 0.3
         glass_lod1: hall_flashing
         accents:
-          - {facing: [N, NE, E, SE, S, SW, W, NW], span: [0.0, 1.0], material: plaster_accent_grey, z: [0.3, 3.3], min_len_m: 1.0}
-        glazing:
-          - {facing: SW, span: [0.03, 0.97], z: [4.2, 5.9], pitch_m: 1.5, min_len_m: 5.0, margin_m: 0.8}
-          - {facing: SW, span: [0.03, 0.97], z: [1.0, 2.8], window_m: [2.4, 2.2], min_len_m: 5.0, margin_m: 0.8}
+          - {facing: [N, NE, E, SE, S, SW, W, NW], span: [0.0, 1.0], material: plaster_accent_grey, z: [0.3, 4.3], min_len_m: 0.0}
+        glazing:       # ADR 0242: rows x 9.35 / 7.2 (proportions of the photo kept at the NMPT height)
+          - {facing: SW, span: [0.03, 0.97], z: [5.5, 7.7], pitch_m: 1.5, min_len_m: 5.0, margin_m: 0.8}
+          - {facing: SW, span: [0.03, 0.97], z: [1.3, 3.6], window_m: [2.4, 2.2], min_len_m: 5.0, margin_m: 0.8}
   - id: kuronia2-office-wing
     kind: building_part
     name: long low office wing along the SW front of the plant at Kuronia 2
     polygon_en: [[87.7, 278.3], [66.1, 322.6], [57.1, 318.2], [78.5, 274.4], [79.4, 274.2], [85.7, 277.3], [86.2, 277.5]]
     cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
-    height_m: 7.2
+    height_m: 9.35            # ADR 0242: NMPT roof 167.33-167.52 (the whole front is one level); was 7.2
+    ground_z_evrf2007: 158.1
     storeys: 2
     function: biurowiec
     reason: >-
@@ -656,8 +678,9 @@ overrides:
     polygon_en: [[63.6, 336.9], [64.1, 335.8], [187.7, 394.8], [184.0, 402.5], [183.5, 402.9], [182.7, 402.7], [60.8, 343.3],
                  [63.9, 337.0]]
     cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
-    height_m: 7.2
-    storeys: 2
+    height_m: 5.35            # ADR 0242: NMPT roof 162.35-162.56 (one storey, roof plant to 165.5); was 7.2
+    ground_z_evrf2007: 157.1  # NMPT ground on the Kuronia side 157.0-157.2
+    storeys: 1
     function: biurowiec
     reason: >-
       Photos P11-005 (left half of the frame) and P11-059: a low annex runs along the whole Kuronia side of the hall,
@@ -674,14 +697,16 @@ overrides:
         plinth_m: 0.3
         glass_lod1: hall_flashing
         accents:
-          - {facing: [N, NE, E, SE, S, SW, W, NW], span: [0.0, 1.0], material: plaster_accent_grey, z: [0.3, 3.3], min_len_m: 1.0}
+          - {facing: [N, NE, E, SE, S, SW, W, NW], span: [0.0, 1.0], material: plaster_accent_grey, z: [0.3, 2.6], min_len_m: 0.0}
         glazing:
-          - {facing: NW, span: [0.02, 0.98], z: [1.2, 2.6], window_m: [1.6, 6.4], min_len_m: 20.0, margin_m: 2.0}
+          - {facing: NW, span: [0.02, 0.98], z: [1.0, 2.2], window_m: [1.6, 6.4], min_len_m: 20.0, margin_m: 2.0}
   - id: rosti-north-wall-gates
     kind: wall_gates
     gates:
-      - {at_en: [733.7, 362.4], width_m: 4.5, height_m: 5.0}
-      - {at_en: [697.8, 377.8], width_m: 4.5, height_m: 5.0}
+      # ADR 0242 (review s20-0196 P2 "bramy za małe"): 85 px of gate against 245 px of wall (0196) x the wall of
+      # 18.9 m confirmed by NMPT = 6.6 m (the review reads 0.40 = 7.5 m); width keeps the 0.9 aspect. UNVERIFIED.
+      - {at_en: [733.7, 362.4], width_m: 5.9, height_m: 6.6}
+      - {at_en: [697.8, 377.8], width_m: 5.9, height_m: 6.6}
     reason: >-
       Photo P11-094 (camera local 776.6 387.2): two sectional gates in the north wall of the north hall, the second
       identity mark of that wall after the board (review s19-0179 P2). Bearings from the frame (f = 753 px at
@@ -812,3 +837,71 @@ overrides:
       edges with P-23 bicycle symbols on both sides and no red crossing carpet.
     confidence: high
     verify: none
+  # ---------------------------------------------------------------- ADR 0216b: LED heads on the city LED tender streets
+  - id: lamp-policy-led-tender-0216b
+    kind: lamp_policy
+    family: led
+    cct_k: 4000
+    # every roads.graph way named like a street of the awarded LED contract (lot II); the generator changes only the
+    # older side-street poles (sodium head -> flat LED head, same pole and position) on these ways
+    target: {osm_way: [13960984, 25447110, 107761797, 107761798, 142912580, 203121432, 206333509, 236885858, 236885859,
+                       236885860, 258564444, 258564446, 258564447, 258564448, 258564452, 275237226, 275237230, 275237231,
+                       275237232, 275237234, 275237242, 275244659, 275253388, 275255319, 275255320, 275256822, 279876738,
+                       279881972, 335052157, 335052159, 353943956, 353943959, 443103344, 529725120, 532805223, 532805224,
+                       538810157, 552379030, 553322811, 553322812, 553323253, 553323254, 609748642, 609748643, 616184917,
+                       616184918, 616184920, 616184922, 616185295, 631663133, 671082727, 671082729, 691820489, 691820490,
+                       691820491, 691820492, 977514047, 977514050, 1363833563, 1540798842, 1563021884, 1564083903,
+                       1564083904, 1564109694]}
+    streets:   # OSM name -> item of TED 769998-2024 (contract award, 2024-12-17)
+      Myśliwska: "14) na ul. Myśliwskiej"
+      Sępia: "15) na ul. Sępiej"
+      Kormoranów: "16) na ul. Kormoranów"
+      Adama Mickiewicza: "18) na ul. A.Mickiewicza"
+      Franciszka Karpińskiego: "19) na ul. F. Karpińskiego"
+      Jacka Kuronia: "22) na ul. J. Kuronia"
+      Dywizjonu 303: "23) na ul. Dywizjonu 303"
+      Spadochroniarzy: "24) na ul. Spadochroniarzy"
+      Pułkownika Czesława Hake: "25) na ul. Cz.Hake"
+      Konstantego Ciołkowskiego: "28) na ul. K. Ciołkowskiego"
+    unverified_streets: [Borsucza, Grabowa, Jaskółcza, Krecia, Królicza, Praw Kobiet, Szpacza, Wiewiórcza, Zajęcza,
+                         Żurawia, "(unnamed living_street / service)"]
+    sources: ["https://ted.europa.eu/pl/notice/-/detail/769998-2024", "https://ted.europa.eu/pl/notice/-/detail/122818-2024",
+              "https://miastobialystok.ezamawiajacy.pl/pn/miastobialystok/demand/notice/public/122716/details (ZDM-VII.7021.1.7.2024 s. 1 pkt 2a: 4000 K)",
+              "research/led-tenders-0216b/ted_notices.json", "research/night-lamps-s21/README.md section 4"]
+    reason: >-
+      City of Bialystok LED tender lot II (TED contract notice 122818-2024, contract award 769998-2024 of 2024-12-17):
+      "dostawa i montaz energooszczednych opraw ledowych" on 31 streets, among them the Dojlidy streets listed above;
+      ZDM technical conditions of the same procedure (platform notice 122716) require 4000 K (K69 section 4). The
+      older side-street poles of these streets keep their shape and position and get the flat LED head of ADR 0216.
+      Streets in `unverified_streets` are in no LED notice of the city (TED search 2022-2026) and OSM has no lamp
+      tags here (0 street_lamp nodes in the tile): their sodium head stays, type UNVERIFIED. The notice names the
+      street, not the section or the installation date: installed state 2026 UNVERIFIED (no night photo after the
+      replacement).
+    confidence: medium
+    verify: owner - night photo of Mickiewicza / Kormoranow (LED or sodium) and of one unlisted street (Zurawia, Krecia)
+  # ================================================================ ADR 0237 (kerbs-0237, research R6): footways, kerbs
+  - id: pavements-0237
+    kind: pavement_rules
+    sidewalk_bdot: true
+    estate_slabs: false
+    crossing_kerb_drops: true
+    cycle_paver_material: sidewalk_paving
+    reason: >-
+      Research R6 pavements-kerbs (PR #65, review REVIEW-2026-11-15-s21-cloudD-65-pavements-kerbs.md). As in region C;
+      cycle_paver_material = grey blocks: every cycle track on the Dojlidy frames is grey (R6-110, 7 of 7 frames;
+      ADR 0188), so the one BDOT10k cycle path laid in blocks that no OSM way describes (c5b6041e..., 146 m east of
+      Kuronia 3) must not come out red. It was `cycle_red`, a flat colour (252 m2).
+    confidence: medium
+    verify: lead - visual-qa World_bialystok-dojlidy, photo_P11-001 / photo_P11-063
+  - id: mickiewicza-kuronia-red-block-strip
+    kind: sidewalk_surface
+    surface: paving_red
+    polygon_en: [[-67.5, 405.3], [-53.1, 376.8], [-56.5, 375.0], [-70.9, 403.6]]
+    reason: >-
+      Photo P11-063 (R6 frame F38, Commons CC0): a strip of red-brown concrete blocks between two grey edgings along
+      the west kerb of Mickiewicza (OSM way 258564446, the SE-bound carriageway), 3-5.5 m in front of the camera
+      (resected position -67.0 393.5, heading 100 deg, ADR 0186). The polygon is the band 4.5-8.3 m right of the way's
+      axis over stations 28-60 m; it only renames footway triangles that the generator lays there. Position from the
+      photo geometry, not from the orthophoto (not available in the cloud session).
+    confidence: low
+    verify: lead - 2024 orthophoto + render of camera photo_P11-063; listed in streetscape_qa.json pavements.overrides_stale when nothing is laid there

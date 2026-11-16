@@ -33,8 +33,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from roads import decals as DC           # noqa: E402
 from roads import markings as MK          # noqa: E402
 from roads import meshing as M            # noqa: E402
+from roads.network import lane_w_of       # noqa: E402
 from roads import pipeline                # noqa: E402
 from roads import standards as S          # noqa: E402
+from roads import tunnels as TN           # noqa: E402
 from terrain_mesh import chunks as CH     # noqa: E402
 from terrain_mesh import conform as CF    # noqa: E402
 from terrain_mesh.gltf import GLB, GLTF_AXES, smooth_normals  # noqa: E402
@@ -45,14 +47,19 @@ from streetscape import export as PR      # noqa: E402
 # plots (ADR 0124): the kit geometry of the house plots (fences, gates, garden plants; one material) - LOD0 / LOD1 like
 # `furniture`, a shadow caster, with a shorter range in the mirror cameras (Game.World.PlotViewCull)
 LAYERS = ("road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_low", "furniture", "plots", "plots_low", "wires",
-          "water", "banks", "banks_low", "collision")
+          "water", "banks", "banks_low", "rail_lod0", "rail_lod1", "rail_lod2", "rail_crossing", "collision")
+# rail_* (ADR 0217): railway track bed per LoD + level-crossing panels, only in regions with the opt-in rail stage
 # water (ADR 0210): only regions with the opt-in water stage have it; elsewhere the layer is empty and nothing changes
 # banks / banks_low (ADR 0213): reed belt ribbons of the water stage (High / Low-Medium variant, node `banks`), same rule
 # plots_low (ADR 0132): the plot kit of the Low / Medium chunk variant (streetscape.plots.Kit.low) - written there under
 # the node name `plots`; the High GLB carries `plots` only
 NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"), ("plot_ground", "plot_ground"),
          ("buildings", "buildings"), ("buildings_low", "buildings_lod1"), ("furniture", "furniture"), ("plots", "plots"),
-         ("wires", "wires"), ("water", "water"), ("banks", "banks"), ("collision", "road_collision"))
+         ("wires", "wires"), ("water", "water"), ("banks", "banks"), ("rail_lod0", "rail_lod0"),
+         ("rail_lod1", "rail_lod1"), ("rail_lod2", "rail_lod2"), ("rail_crossing", "rail_crossing"),
+         ("collision", "road_collision"))
+# ADR 0217: the Low / Medium GLB variant carries no detailed buildings and no LoD0 track (sleepers)
+LOW_EXCLUDE = ("buildings", "rail_lod0")
 
 
 def DEFAULT_OUT(region_id):
@@ -108,6 +115,22 @@ MATERIALS = {
     "bridge_kerb": {"color": [0.19, 0.186, 0.176], "rough": 0.9, "surface": "concrete_kerb",
                     "texture_set": "kerb_concrete_1m"},
     "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett"},
+    # ADR 0218 / owner D71 + D75: truck apron of the Knyszyn roundabout = light concrete block paving, clearly lighter
+    # than the asphalt. Block pattern = the generated set paving_20x10_grey (ADR 0022; the engine tint is
+    # color / set mean = 1.6, like bridge_kerb re-tints kerb_concrete_1m); albedo 0.42 WORKING_VALUE: new concrete
+    # blocks in the range of concrete 0.3-0.4 and above (table header), set so that on the owner's drone photo 9 the
+    # apron reads lighter than the sidewalk paving (0.26) and the aged kerb (0.28); the JPEG is tone-mapped, so the
+    # photo ratio apron / ring asphalt (2.1-2.4 in linear luminance) is only a lower bound. Game: 0.42 / 0.081 = 5.2.
+    # ground_grime (render knyszyn r2): the importer default for block sets (damp pools darkened by 0.42 over 16 % of
+    # the area) read as grey blotches on the light apron of a NEW roundabout; pools almost off, joints kept. WORKING_VALUE
+    "apron_paving_light": {"color": [0.42, 0.42, 0.415], "rough": 0.85, "surface": "paving_stones",
+                           "texture_set": "paving_20x10_grey",
+                           "ground_grime": {"damp_darkening": 0.05, "damp_threshold": 0.85, "joint_dirt": 0.35,
+                                            "damp_gloss": 0.1}},
+    # ADR 0218 5c: inside of the centre island of a compact roundabout - sand / fine gravel, clearly darker than the
+    # light apron (owner photo 9: sandy bed with small plantings; lead review r2: island_gravel 0.41 read as light as
+    # the apron). Albedo WORKING_VALUE (damp sand 0.2-0.3), generated set gravel_compacted, tint 0.27 / 0.20.
+    "island_sand": {"color": [0.30, 0.265, 0.21], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     # viaducts: precast-concrete modulation map projected in world metres (the deck / pier meshes have no metric UV);
     # albedo from the CC0 Bieżeństwa photo (piers mid grey, soffit in its own shadow, REVIEW r3 W4). WORKING_VALUE
     # sky_occ (ADR 0060): the soffit and the deck underside face a road the deck itself shades
@@ -197,12 +220,14 @@ WATER_MATERIALS = {
 def glb_materials():
     global _GLB_MATS
     if _GLB_MATS is None:
-        _GLB_MATS = {**MATERIALS, **PR.glb_materials(), **WATER_MATERIALS}
+        from streetscape import rail as _RL
+        _GLB_MATS = {**MATERIALS, **PR.glb_materials(), **WATER_MATERIALS, **_RL.RAIL_MATERIALS}
     return _GLB_MATS
 
 
+
 WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
-        "sidewalk_paving", "apron_sett"}
+        "sidewalk_paving", "apron_sett", "apron_paving_light", "sidewalk_paving_red", "sidewalk_slabs"}      # + ADR 0237 footway types
 
 
 def sha(b: bytes) -> str:
@@ -243,7 +268,9 @@ def assemble(parts, layers, half):
             # ADR 0123: kerbs on a deck are exported as `bridge_kerb` (same kerb set, darker: road film, REVIEW
             # s10-0117 P1-3) - a rename at export only, so every QA / fidelity rule keyed on curb_concrete still
             # sees them; the bridge mesh had a curb_concrete primitive for exactly these triangles (no extra draw)
-            mat_out = "bridge_kerb" if (p.layer == "bridge" and p.mat == "curb_concrete") else p.mat
+            # ADR 0237: the same for the surface type of a footway (streetscape.pavements sets `export_mat`)
+            mat_out = ("bridge_kerb" if (p.layer == "bridge" and p.mat == "curb_concrete")
+                       else getattr(p, "export_mat", None) or p.mat)
             g = groups.setdefault((key, p.layer, mat_out), [])
             g.append((pi, p.V, N, p.UV, p.T[sel], p.UV1, p.COL))
     out = {}
@@ -301,58 +328,6 @@ VERGE_TERRAIN_MAX_LOD = 1     # strips ride on terrain LOD0 / LOD1 (to 300 m); b
 
 def _is_verge(p):
     return p.layer == "road" and p.src.endswith(":vg")
-
-
-TUNNEL_ZONE_M = 9.0        # ADR 0206: terrain nodes this close to a tunnel way's axis are held below its surface
-TUNNEL_UPPER_ROAD_M = 2.0  # other road footprints higher than the tunnel road by this much keep their terrain ...
-TUNNEL_KEEP_UPPER_M = 7.0  # ... when farther than this from the axis (lane edge ~4 m + one 4 m collision cell)
-
-
-def keep_tunnel_cut(w, region_id, zc):
-    """ADR 0206: a road tagged tunnel=yes (OSM layer < 0) under an at-grade road (rondo Szymańskiego over the DK8
-    cutting) is not modelled as a tunnel. The terrain conform takes the HIGHER road per node, and the NMT itself keeps
-    the ring's ground between the carriageways, so the terrain (and its 4 m collision mesh terrain_lod2) closed the
-    lower road 0.3-4 m above its surface. Here every terrain node within TUNNEL_ZONE_M of a tunnel way's own axis
-    (not its whole chain) goes to just below the tunnel road (surface of the nearest tunnel-road footprint node -
-    0.35 m), so no 4 m collision triangle over the carriageway has a high vertex. Nodes under other, higher road
-    footprints (at-grade slip roads beside the cutting) keep their terrain beyond TUNNEL_KEEP_UPPER_M. In place on zc; the upper road keeps its own
-    mesh and collision. Returns stats (empty when the region has no such way, so other regions are unchanged)."""
-    g = json.loads((pipeline.REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8"))
-    edges = [e for e in g["edges"]
-             if str(e["attrs"].get("tunnel", {}).get("v", "no")) not in ("no", "building_passage")
-             and e["attrs"]["highway"]["v"] not in ("service", "living_street", "footway", "path", "cycleway")]
-    if not edges:
-        return {}
-    eids = {e["id"] for e in edges}
-    chain_ids = {c.id for c in w.net.chains if any(w.net.sec_list[i].edge_id in eids for i in c.sec_idx)}
-    road = [p for p in w.buf.parts if p.layer == "road" and p.footprint]
-    tun = [p for p in road if p.src in chain_ids]
-    if not tun:
-        return {"ways": sorted({e["osm_way"] for e in edges}), "cells": 0}
-    tz, tmask = CF.rasterise(tun, w.hf)
-    oz, omask = CF.rasterise([p for p in road if p.src not in chain_ids], w.hf)
-    from scipy.ndimage import distance_transform_edt
-    H, W = zc.shape
-    axis = np.zeros((H, W), bool)
-    ox, oy = w.hf.ox, w.hf.oy
-    for e in edges:
-        P = np.array(e["geometry"], float) - (ox, oy)
-        for a, b in zip(P[:-1], P[1:]):
-            for t in np.linspace(0.0, 1.0, max(2, int(np.hypot(*(b - a)) / 0.5) + 1)):
-                q = a + (b - a) * t
-                i, j = int(round(q[0] - w.hf.x0)), int(round(w.hf.y1 - q[1]))
-                if 0 <= i < W and 0 <= j < H:
-                    axis[j, i] = True
-    dist = distance_transform_edt(~axis)
-    zone = dist <= TUNNEL_ZONE_M
-    _d, (jj, ii) = distance_transform_edt(~tmask, return_indices=True)
-    floor = tz[jj, ii] - 0.35                   # surface of the nearest tunnel-road node, minus the road build-up
-    upper = omask & (oz > floor + 0.35 + TUNNEL_UPPER_ROAD_M) & ~tmask
-    sel = zone & ~(upper & (dist > TUNNEL_KEEP_UPPER_M)) & (zc > floor)
-    drop = zc[sel] - floor[sel]
-    zc[sel] = floor[sel]
-    return {"ways": sorted({e["osm_way"] for e in edges}), "chains": sorted(chain_ids), "cells": int(sel.sum()),
-            "max_drop_m": round(float(drop.max()) if drop.size else 0.0, 2)}
 
 
 def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
@@ -494,7 +469,7 @@ def cameras_generic(region_id, w):
         hw = float(c.hw_at(cs))
         tch, nch = c.line.frame(cs)
         trav = 1 if float(np.dot(tch, t)) > 0 else -1
-        lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)
+        lat_l = -trav * (hw - sec.edge_strip - float(lane_w_of(sec, hw)) / 2)
         if getattr(sec, "lane_edges", None):
             lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
         q = c.line.offset_point(cs, lat_l)
@@ -579,7 +554,7 @@ def cameras_industrial_c(region_id, w):
         # rightmost lane centre in travel direction
         tch, nch = c.line.frame(cs)
         trav = 1 if float(np.dot(tch, t)) > 0 else -1
-        lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)     # rightmost lane of travel
+        lat_l = -trav * (hw - sec.edge_strip - float(lane_w_of(sec, hw)) / 2)     # rightmost lane of travel
         if getattr(sec, "lane_edges", None):
             lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
         q = c.line.offset_point(cs, lat_l)
@@ -881,6 +856,29 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         w.water.banks_doc = WB.load(region_id)          # ADR 0213 (None: banks as in ADR 0210)
         log("water plan:", len(w.water.report["bodies"]), "bodies,", w.water.report["water_nodes"], "nodes,",
             len(w.water.report["profiles"]), "centre lines")
+    from streetscape import rail as RL
+    w.rail = None
+    if RL.enabled(w.region):          # ADR 0217: opt-in per region (region.yaml `rail: {enabled: true}`)
+        rsrc = RL.load(region_id)
+        if rsrc is None:
+            raise RuntimeError(f"{region_id}: rail stage enabled but generated/rail_sources.json missing "
+                               f"(run build_region.py --region {region_id})")
+        import shapely
+        from shapely.geometry import LineString as _LS
+        from streetscape import paved as PV_
+        bb = w.region["bbox"]
+        tile_local = shapely.box(bb["xmin"] - w.origin[0], bb["ymin"] - w.origin[1], bb["xmax"] - w.origin[0],
+                                 bb["ymax"] - w.origin[1])
+        ground_lines = []
+        for c in w.net.chains:        # ground road centre lines (bridge stations dropped: no level crossing there)
+            on = ~c.bridge if c.bridge is not None else np.ones(len(c.line.p), bool)
+            for run in np.split(np.arange(len(on)), np.where(np.diff(on.astype(int)) != 0)[0] + 1):
+                if len(run) >= 2 and on[run[0]]:
+                    ground_lines.append(_LS(c.line.p[run]))
+        w.rail = RL.Plan(rsrc, w.origin, tile_local,
+                         PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines,
+                         overrides=pipeline.load_overrides(region_id))
+        log("rail plan:", len(w.rail.tracks), "tracks,", len(w.rail.crossings), "level crossings")
     st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
     if w.water is not None:
         st["col"] = w.water.bank_colours(st["col"])
@@ -896,11 +894,6 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         mid = p + d * (0.5 * (u0 + u1))
         w.stats["hero_docks"].append({"mid": mid, "d": d, "nout": nout, "z": dk["yard_z"], "n": len(dk["docks"])})
     log(f"terrain conformed: footprint {int(rmask.sum())} road + {int(mask.sum() - rmask.sum())} paved nodes")
-    tcut = keep_tunnel_cut(w, region_id, zc)
-    if tcut:
-        w.stats["tunnel_cut"] = tcut
-        log("tunnel cuttings kept open (ADR 0206):", tcut)
-
     def on_ground_road(q):
         i = int(round(q[0] - w.hf.x0))
         j = int(round(w.hf.y1 - q[1]))
@@ -938,17 +931,41 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     w.stats["gores"]["kerb_tris_in_fill"] = GO.kerbs_in_fills(w.buf, w.gore_plan)
     log("kerb triangles inside paved gore fills:", w.stats["gores"]["kerb_tris_in_fill"])
     log("hero bridges", {k: [x["id"] if isinstance(x, dict) else x for x in v] for k, v in w.stats["hero_bridges"].items()})
+    from streetscape import pavements as PVM              # ADR 0237: sidewalk surface types (export material only)
+    st["report"]["pavements"] = PVM.run(w, region_id, log)
+
+    # ADR 0211 (replaces ADR 0206 keep_tunnel_cut): cut-and-cover slab, tunnel / retaining walls, ground on the slab;
+    # holds the terrain down under it (zc in place). Regions without a tunnel road: ({}, None), nothing changes.
+    tstats, low_cut = TN.build(w, region_id, zc, rmask, st["instances"],
+                               json.loads((pipeline.REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8")),
+                               log)
+    if tstats:
+        w.stats["tunnel"] = tstats
+        log("tunnels (ADR 0211):", {k: v for k, v in tstats.items() if k != "walls"},
+            "walls", [(x["side"], x["len_m"], x["h_max_m"]) for x in tstats["walls"]])
 
     half = w.region["bbox"]["width_m"] / 2
     e0 = w.region["bbox"]["xmin"] - w.origin[0]
     n0 = w.region["bbox"]["ymax"] - w.origin[1]
-    terrain = CH.build_chunks(zc, mask if w.water is None else (mask | w.water.lod_mask()), e0, n0,
-                              w.region["bbox"]["width_m"], col=st["col"])
+    _lod_mask = mask if w.water is None else (mask | w.water.lod_mask())
+    if w.rail is not None and w.rail.lod_mask() is not None:      # ADR 0217: coarse LoDs never above the ballast
+        _lod_mask = _lod_mask | w.rail.lod_mask()
+    terrain = CH.build_chunks(zc, _lod_mask, e0, n0, w.region["bbox"]["width_m"], col=st["col"], low_cut=low_cut)
     log("terrain chunks", len(terrain))
     w.stats["verge_strips"] = merge_verge_into_terrain(terrain, w.buf.parts, half, st["col"], e0, n0)
     log("verge strips in terrain", w.stats["verge_strips"])
     if w.water is not None:
         w.water.sheet(w.buf, CH.CHUNK_M, log)
+    if w.rail is not None:
+        from scipy import ndimage as _nd
+        # the profile stands on the smoothed ground that the terrain was levelled to (Plan.conform in the stage)
+        _gg = w.rail.ground_grid if w.rail.ground_grid is not None else _nd.gaussian_filter(zc, RL.GROUND_SMOOTH_M)
+        _ground = RL.grid_sampler(_gg, w.hf)
+        _zc = RL.grid_sampler(zc, w.hf)
+        _rz = RL.grid_sampler(road_z, w.hf, fallback=_zc)
+        w.rail.build(w.buf, _ground, _rz, log)
+        log("rail bed QA", w.rail.bed_qa(_zc, _ground, _rz))
+    _src_tally([p for p in w.buf.parts if not _is_verge(p)], half)
     roads = assemble([p for p in w.buf.parts if not _is_verge(p)], LAYERS, half)
     log("road chunks", len(roads))
 
@@ -959,6 +976,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
         inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
     props_meta = PR.export(st["codes"], st["boards"], props_library_dir(region_id, out_root))
+    if w.rail is not None:             # ADR 0217: rail_bed.png beside the region's generated textures
+        _pdr = props_library_dir(region_id, out_root)
+        w.rail.export_textures((Path(_pdr).parent / "textures") if _pdr else (PR.ART / "textures"))
     if w.water is not None:            # ADR 0213: water_reeds.png beside the region's generated textures
         _pd = props_library_dir(region_id, out_root)
         w.water.export_textures((Path(_pd).parent / "textures") if _pd else (PR.ART / "textures"))
@@ -1003,7 +1023,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                 glb_lo.add_mesh(f"terrain_lod{li}", prims, {"lod": li, "spacing_m": CH.LODS[li]})
         for layer, node in NODES:
             prims = layers.get({"plots": "plots_low", "banks": "banks_low"}.get(layer, layer), [])
-            if prims and layer != "buildings":
+            if prims and layer not in LOW_EXCLUDE:
                 glb_lo.add_mesh(node, prims, {"layer": layer, "collision": layer == "collision"})
         for cid, c in cells:
             glb_lo.add_mesh(f"forest_hlod_{cid}", c["prims"], {"layer": "forest_hlod", "cell": cid,
@@ -1095,6 +1115,21 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                 (pipeline.REGIONS / region_id / "water_banks.json").read_bytes().replace(b"\r\n", b"\n"))
         write_json(gen / "water_qa.json", {"schema": "truck-sim-pl/water-qa/1", "region": region_id,
                                            **w.water.report})
+    if w.rail is not None:
+        manifest["materials"] = {**manifest["materials"], **RL.RAIL_MATERIALS}
+        srcs["generated/rail_sources.json"] = sha(RL.sources_path(region_id).read_bytes().replace(b"\r\n", b"\n"))
+        for k, what in (("rail_lod0", "ballast + sleepers + rails (5 m stations)"),
+                        ("rail_lod1", "ballast + rails (10 m stations), sleepers painted in the rail_bed tile"),
+                        ("rail_lod2", "flat bed band (20 m stations), sleepers and rails painted in the tile")):
+            manifest["nodes"][k] = (f"railway track bed (ADR 0217) {k[-4:]}: {what}; bed UV0 = (0.5 + lateral m / "
+                                    f"{RL.RT.TEX_W_M} m from the track axis, along m / {RL.TILE_M} m); "
+                                    "High GLB carries LoD0-2, Low GLB LoD1-2")
+        manifest["nodes"]["rail_crossing"] = ("level-crossing panels at road height + %.3f m (ADR 0217); "
+                                              "UV0 = local metres" % RL.PANEL_LIFT)
+        manifest["rail"] = {"triangles": w.rail.report["triangles"], "track_km": w.rail.report["track_km"],
+                            "crossings": len(w.rail.crossings), "markers": "generated/rail.json",
+                            "conform": w.rail.report.get("conform"), "bed_qa": w.rail.report.get("bed_qa")}
+        write_json(gen / "rail.json", w.rail.out_json(region_id))
     write_json(gen / "world_manifest.json", manifest)
     qa = qa_report(w, mk_report, mask)
     write_json(gen / "roads_qa.json", qa)
@@ -1207,6 +1242,34 @@ LOD_POLICY = {
             "tree": [[35, "tris_lod1"], [400, "tris_lod2"]], "forest_hlod_m": 70, "forest_hlod_cull_m": 1000,
             "lod_bias": 0.5, "furn": 400},
 }
+
+
+def _src_tally(parts, half):
+    """Diagnostics (ADR 0221): with KAMION_SRC_TALLY=<file.json> write triangles per chunk and per
+    `layer|material|source class` of the road layers (road, bridge, markings, paved), so a budget regression can be
+    attributed to the generator stage that caused it. No effect on the build output."""
+    import os
+    import re
+    dst = os.environ.get("KAMION_SRC_TALLY")
+    if not dst:
+        return
+    out = {}
+    for p in parts:
+        if p.layer not in ("road", "bridge", "markings", "paved"):
+            continue
+        src = p.src or ""
+        if "@" in src:
+            cls = src.split("@", 1)[0]
+        else:
+            m = re.search(r":([a-z_]+)$", src)
+            cls = m.group(1) if m else re.sub(r"[0-9a-fA-F-]{6,}|\d+", "#", src)[:24]
+        c = p.V[p.T].mean(axis=1)
+        ci, cj = chunk_of(c[:, 0], c[:, 1], half)
+        for a, b in zip(ci.tolist(), cj.tolist()):
+            d = out.setdefault(f"{int(a)}_{int(b)}", {})
+            k = f"{p.layer}|{p.mat}|{cls}"
+            d[k] = d.get(k, 0) + 1
+    Path(dst).write_text(json.dumps(out, sort_keys=True, indent=0), encoding="utf-8")
 
 
 def _bbox_dist(b, p):

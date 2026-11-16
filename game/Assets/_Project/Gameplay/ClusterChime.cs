@@ -67,7 +67,7 @@ namespace Game.Gameplay
         void Chime()
         {
             ChimesPlayed++;
-            m_Source.PlayOneShot(m_Clip, volume);
+            m_Source.PlayOneShot(m_Clip, volume * Game.Core.AudioMixLevels.Ui);   // ADR 0270: "Sygnały kabiny" volume
         }
     }
 }

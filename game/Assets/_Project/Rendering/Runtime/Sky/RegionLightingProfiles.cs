@@ -6,7 +6,7 @@ namespace Game.Rendering
     /// <summary>
     /// ADR 0216: per-region lighting data (Data/Regions/lighting_profiles.json, owner D65 p.7-8). A profile lists the regions
     /// it applies to; later profiles override earlier ones field by field. Regions not listed keep the global behaviour
-    /// (tile C, Dojlidy). Read by the world import (WorldSceneBuilder) and written to the scene's EnvironmentLighting.
+    /// (e.g. Maczka, Kleeberga; tile C and Dojlidy are listed since ADR 0216b). Read by the world import (WorldSceneBuilder) and written to the scene's EnvironmentLighting.
     /// </summary>
     [Serializable]
     public sealed class RegionLightingProfiles
