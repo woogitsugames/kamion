@@ -96,7 +96,7 @@
     "z_max_evrf2007": 139.44,
     "z_min_evrf2007": 122.55
    },
-   "bytes": 12690772,
+   "bytes": 12690188,
    "file": "Data/raw/derived/knyszyn/world/chunk_0_1.glb",
    "forest_cells": [],
    "id": "0_1",
@@ -106,11 +106,12 @@
     "sha256": "1b00d4d2bff720b7aacb251557c1c4d021cfa75b6612dbde55b9513c1ebf108e"
    },
    "low": {
-    "bytes": 6898056,
+    "bytes": 6897308,
     "file": "Data/raw/derived/knyszyn/world/chunk_0_1.low.glb",
-    "sha256": "31cc53fb9c9487d39a52d4d2a4d45666d3545a2f0e6227165e4b0da14fd6f553"
+    "sha256": "d6edbcf0bcd3fc7715f5e61f7542c9cd0564c4d34eb3d627d1bd5a07be6ec75c"
    },
    "materials": [
+    "apron_paving_light",
     "brick_red",
     "brick_red__far_ribbon",
     "canopy_steel",
@@ -170,11 +171,11 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "eafa7b29a6007f4a5322ce59aca9829fa04a3c415c95f3be9d09984ae7c31001",
+   "sha256": "8fd0a5b8540034a0e0e496f700af39d39f9b74bf85b147dc4b4309d2b8783dbf",
    "triangles": {
     "buildings": 16643,
     "buildings_lod1": 4699,
-    "markings": 529,
+    "markings": 527,
     "paved": 3779,
     "plot_ground": 1966,
     "plots": 2884,
@@ -9087,6 +9088,18 @@
     "w286990127:1134813637-4898926854",
     "w286990127:2906549567-1134813637"
    ]
+  },
+  {
+   "id": "market-interior-service-paving-0227",
+   "targets": [
+    "w498482913:4898870294-4898870293"
+   ]
+  },
+  {
+   "id": "market-crossing-service-paving-0227",
+   "targets": [
+    "w498483028:4898906615-4898870293"
+   ]
   }
  ],
  "overrides_stale": [],
@@ -9095,7 +9108,7 @@
  "sources_sha256": {
   "generated/osm_context.json": "ae4237e05e9b3f00b243175b307743c03f5650c012b800e06f0f9d72f7a68f98",
   "heightmap.r16 (Data/raw)": "309c5fe6503e6ead00e5ddb4daafb1053944acb70d37c2777cc9f65c420a2f52",
-  "overrides.yaml": "303854ba5b5a77601d88aeb9b5174aba684c1d447971eb5df9e2873bf2910561",
+  "overrides.yaml": "ac1317e8c4a4ab270944cc177a34eca5906fa29a014d40f65805b42edfc989e9",
   "roads.graph.json": "be6b3b5629f67fd533d95386a42ef220e0aecc3621ebb61105547f80ac680439",
   "terrain.json": "36279e41ff3952cd7b8963778865c082fc315ca18ddf2eb8633888428f3d821f"
  },

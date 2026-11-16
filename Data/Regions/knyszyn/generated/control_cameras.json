@@ -744,15 +744,31 @@
    "fov_deg": 55.0,
    "id": "market_owner_13",
    "look_at": [
-    -821.0,
-    639.603,
-    148.651
+    -777.913,
+    637.314,
+    148.529
    ],
    "note": "place camera: QA only, ESTIMATED oblique drone pose for owner photo 13; no EXIF. Requires image comparison and adjustment; eye-level recognition remains the acceptance criterion.",
    "pos": [
-    -871.0,
-    553.0,
-    226.78
+    -711.0,
+    563.0,
+    218.55
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "market_owner_14_close",
+   "look_at": [
+    -773.618,
+    699.593,
+    129.235
+   ],
+   "note": "place camera: QA only, ESTIMATED closer eye-level pose for owner photo 14; verify against image and obstacles.",
+   "pos": [
+    -799.5,
+    603.0,
+    129.235
    ],
    "type": "persp"
   },
