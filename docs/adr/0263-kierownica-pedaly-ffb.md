@@ -83,3 +83,21 @@ Wymaga zgody lidera (nowy katalog `Plugins/`, ewentualnie zmiana `ProjectSetting
 
 ## Budżet
 Zero alokacji na krok (test). Koszt CPU: kilka działań na klatkę i na krok fizyki — pomijalny (nie mierzony; ESTIMATED).
+
+## Uzupełnienie s23 (zgodność z kodem), 2026-11-16
+Stan `origin/main` `0d91ee7db`.
+- **Force feedback nie ma dziś sterownika wyjścia.** `PcWheel.Sink` = `NullForceFeedbackSink.Instance`
+  (`Input/PcWheel.cs:15`), który ma `Available => false` (`Input/ForceFeedback.cs:21-24`); poza nim istnieje tylko
+  `RecordingForceFeedbackSink` do testów (`ForceFeedback.cs:32`). Model FFB liczy moment, ale na kierownicę nic nie trafia,
+  dopóki nie powstanie natywny sink (propozycja SDL3 / Windows.Gaming.Input wyżej).
+- **Brak kreatora kalibracji i panelu kierownicy w grze.** `WheelSettings`, `AxisCalibrator`, `AxisAutoDetect` są
+  używane tylko w `Game.Controls` (`Input/WheelAxis.cs`, `PcWheel.cs`, `WheelDeviceProfile.cs`, `HidWheelDriverInput.cs`,
+  `WheelSettings.cs`); żaden plik `UI/` ich nie używa. Ustawienia kierownicy USB da się dziś zmienić tylko w PlayerPrefs
+  `controls.wheel` (`WheelSettings.cs:14`). Kalibracja: pierwszy odczyt osi = środek (`HidWheelDriverInput.cs:98`).
+- **Dwa różne zakresy kierownicy:**
+  kierownica USB — 270–900° (`WheelSteeringMap.cs:22`), `rangeDeg = 0` = domyślny z profilu (`WheelSettings.cs:22-23`),
+  w profilach 540° (`Resources/Controls/wheel_profiles.json:35`; uwaga: środek przedziału 270–900 to 585°, więc
+  „środek przedziału” w tabeli wyżej jest przybliżeniem); kierownica **dotykowa** (D70) — domyślnie 270°
+  (`ControlSettings.cs:32`), zakres 180–900° co 90° w „Ustawieniach sterowania” (`ControlSettings.cs:21`,
+  `ControlSettingsPanel.cs:188`). D70 mówi o kierownicy dotykowej (270° domyślnie, 900° w ustawieniach) i nie podaje
+  minimum — 180° to wartość z kodu.

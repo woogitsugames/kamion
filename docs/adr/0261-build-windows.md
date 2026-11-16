@@ -96,3 +96,19 @@ Maszyna deweloperska (Ultra 7 270K Plus, 64 GB, RTX 5070, D3D12) — **NIE refer
 - `fullscreenMode`, domyślna rozdzielczość okna, ikona, nazwa produktu w ProjectSettings — decyzja lidera.
 - Referencyjny PC i docelowy FPS (ADR 0260); limit 60 fps i tier High to WORKING_VALUE.
 - Scripting backend Standalone = Mono (domyślny w ProjectSettings); IL2CPP do rozważenia przy wydaniu.
+
+## Uzupełnienie s23 (zgodność z kodem), 2026-11-16
+Stan `origin/main` `0d91ee7db`; tekst wyżej zostaje jako zapis decyzji z 15.11, poniżej to, co dziś mówi kod.
+- **§3 launchery:** skrypt tworzy **trzy** pliki: `Kamion-okno.cmd`, `Kamion-knyszyn.cmd` (`-scene knyszyn`) i
+  `Kamion-knyszyn-w.cmd` (`-scene knyszyn-w`) — `scripts/build-windows.ps1:94-96`. Do zip testera trafia tylko
+  `Kamion-okno.cmd` i launcher regionu, który jest w buildzie (ADR 0271, uzupełnienie s23).
+- **§5 tier domyślny:** bez `-tier` i bez zapisanego wyboru tier nie jest już stałym High — dobiera go sprzęt (ADR 0269):
+  `GameBootstrap.cs:71-76` → `PcTierTable.DefaultFor` (`PcTierTable.cs:154`), pułap High (`PcTierTable.cs:125`).
+  Progi: ADR 0270, uzupełnienie s23.
+- **§6 i „Otwarte” — klawiatura i pad są konfigurowalne:** `PcInputBridge` wyłącza `KeyboardDriverInput` i wstawia
+  `KeyboardBindingsDriverInput` + `GamepadDriverInput` na akcjach ADR 0264 (`PcInputBridge.cs:60-65`); zmiana przypisań:
+  „Ustawienia sterowania” → „KLAWIATURA I PAD” (`ControlSettingsPanel.cs:181-182`, `InputBindingsPanel.cs:190-192`),
+  zapis `input_bindings.json` (`InputBindingsStore.cs:53`). Zdanie „Mapowanie klawiszy i pada nie jest konfigurowalne”
+  w „Otwarte” jest nieaktualne.
+- **Klawisze spoza listy §6:** Tab = kamera (obok C) i L = lusterka w okienkach (`DrivingActionCatalog.cs:84-85`).
+  Pełna lista domyślnych przypisań: `DrivingActionCatalog.cs:66-90` i `docs/owner/JAK-GRAC-PC.md` §2.
