@@ -5,7 +5,8 @@
 - Krok 4: tabela High: SSAO off, soft High, karty 1.0, capture co klatkę; Ultra: SSAO off, scale 1.5, karty 1.5; assety z generatora. Po: kabina czysta, drzewa pełniejsze.
 - Krok 5: player przed (exe e28533ca31, knyszyn-w autopilot 50, 1080p okno, -Fps 1000): High 395 fps p50 2,52 ms, Ultra 258 fps p50 3,82 ms (inny Unity równolegle — orientacyjne).
 - Krok 6: exe d6e60131d6 (knyszyn-w): `[PC_TIER] High … ssao=False`, Ultra scale=1,5; kabina w playerze czysta. Orientacyjnie (1080p okno, -Fps 1000, autopilot 50, cicha maszyna, różne buildy): High 437→450 fps (p50 2,22→2,19 ms, p99 3,09→2,91), Ultra 269→274 fps (p50 3,69→3,60, p99 4,52→4,65; 1 klatka 39 ms). EditMode PcGraphicsTier* 15/15.
-- NASTĘPNY KROK (lider): przegląd + scalenie; komendy w ADR 0269 „Rewizja pc-visual-s23”; mobilny Ultra ma ten sam artefakt SSAO w kabinie (decyzja dla telefonu).
+- Krok 7: izolacja kosztu na exe d6e60131d6 (orientacyjnie): Ultra scale 1,5 vs 1,0 @1080p 274 vs 276 fps (≈0); @1440p 225 vs 265 fps (+0,57 ms p50); High karty 1,0 vs 0,75: 450 vs 432 fps (szum). EditMode PcGraphicsTier* 16/16. Otwarte: schodkowy cień osłony zegarów na desce (był też przed, maskowany SSAO) — `cmp/crop-dash-*.png`.
+- NASTĘPNY KROK (lider): przegląd + scalenie (ADR 0269 „Rewizja pc-visual-s23”); decyzja: mobilny Ultra ma ten sam artefakt SSAO; Ultra 1,5 na 4K do pomiaru.
 
 # STATUS — D42 physics-determinism-s23
 
