@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    ADR 0244: plain .NET 8 tests of the Unity-independent helpers of the driving-loop GC audit (frame CSV formatting of
+    the Boot diagnostics sampler). The sources are compiled straight from the Unity project (same pattern as
+    tools/about-runner and tools/physics-runner, ADR 0004), so the game and these tests build the same code.
+    Run: dotnet test tools/loop-runner/Tests/LoopTests.csproj -c Release
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>LoopRunner.Tests</RootNamespace>
+    <!-- Unity 6 compiles C# 9; keep the shared sources within that language version. -->
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RollForward>Major</RollForward>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../../game/Assets/_Project/Telemetry/FrameCsvFormat.cs" LinkBase="Telemetry" />
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+</Project>

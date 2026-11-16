@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   Tester helper (ADR 0271): pack the Kamion player logs, crash reports and basic PC info into one zip on the Desktop.
 .DESCRIPTION
@@ -12,7 +12,9 @@
     system.txt: Windows version, CPU, RAM, GPU name/driver/VRAM, displays, free disk space, game folder + exe SHA256
     dxdiag.txt only with -DxDiag (slow, ~30 s; contains more hardware detail)
   Privacy: the Windows user name and the computer name are replaced by <user> / <pc> in every text file;
-  nothing is uploaded anywhere — the tester sends the zip manually.
+  nothing is uploaded anywhere — the tester sends the zip manually. Crash dumps (*.dmp) are binary and are NOT
+  anonymized (they can contain the Windows user name in paths); -NoCrashes leaves them out (review #134 P2-2).
+  The build identity (build-id.json next to the exe, ADR 0276: git sha + content hash) goes into system.txt.
 .EXAMPLE
   powershell -NoProfile -ExecutionPolicy Bypass -File collect-logs.ps1
   powershell -NoProfile -ExecutionPolicy Bypass -File collect-logs.ps1 -DxDiag -OutDir D:\
@@ -24,6 +26,7 @@ param(
     [string]$Product = 'Kamion',          # ProjectSettings.asset productName
     [string]$OutDir = '',                 # default: Desktop
     [int]$MaxCrashes = 5,
+    [switch]$NoCrashes,                   # review #134 P2-2: crash dumps are not anonymized
     [switch]$DxDiag,
     [switch]$NoAnonymize
 )
@@ -57,7 +60,8 @@ foreach ($f in 'Player.log', 'Player-prev.log') { [void](Copy-IfExists (Join-Pat
 [void](Copy-IfExists (Join-Path $logDir 'diag') (Join-Path $logOut 'diag'))
 
 # ---------------------------------------------------------------- crash reports (newest first)
-if (Test-Path -LiteralPath $crashDir) {
+if ($NoCrashes) { $notes.Add("skipped $crashDir (-NoCrashes)") }
+elseif (Test-Path -LiteralPath $crashDir) {
     $crashOut = Join-Path $stage 'crashes'
     New-Item -ItemType Directory -Force $crashOut | Out-Null
     Get-ChildItem -LiteralPath $crashDir -Directory | Sort-Object LastWriteTime -Descending | Select-Object -First $MaxCrashes |
@@ -91,6 +95,11 @@ $exe = Join-Path $PSScriptRoot 'Kamion.exe'
 if (Test-Path -LiteralPath $exe) {
     $sys.Add("GAME     $PSScriptRoot")
     $sys.Add("EXE      SHA256 $((Get-FileHash -Algorithm SHA256 -LiteralPath $exe).Hash.ToLower())")
+    $buildId = Join-Path $PSScriptRoot 'build-id.json'
+    if (Test-Path -LiteralPath $buildId) {
+        try { $bid = Get-Content -LiteralPath $buildId -Raw | ConvertFrom-Json; $sys.Add("BUILD    git $($bid.gitSha) content $($bid.contentHash)") }
+        catch { $sys.Add("BUILD    build-id.json unreadable") }
+    }
     $readme = Join-Path $PSScriptRoot 'README.txt'
     if (Test-Path -LiteralPath $readme) { $sys.Add("PACKAGE  $((Get-Content -LiteralPath $readme -TotalCount 2)[1])") }
 } else { $sys.Add("GAME     collect-logs.ps1 is not next to Kamion.exe ($PSScriptRoot)") }
@@ -122,5 +131,6 @@ try {
     exit 1
 } finally { Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue }
 Write-Host "Gotowe: $zip"
+if (-not $NoCrashes) { Write-Host 'Uwaga: zrzuty awarii (*.dmp) w paczce mogą zawierać nazwę użytkownika Windows (nie są anonimizowane).' }
 Write-Host 'Wyślij ten plik autorowi gry (możesz go najpierw otworzyć i sprawdzić zawartość).'
 exit 0

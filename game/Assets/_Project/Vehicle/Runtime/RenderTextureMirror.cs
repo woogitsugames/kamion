@@ -44,6 +44,17 @@ namespace Game.Vehicle.Runtime
         public static bool DueSchedule => !Legacy && (MirrorOverrides.DueSchedule ?? DueScheduleFor(Level));
         public static bool DueScheduleFor(int level) => level == 2;
         /// <summary>
+        /// ADR 0243 (D70): with the class II mirrors shown as fixed on-screen windows (<see cref="RenderTextureMirror.ForceRender"/>)
+        /// Low also uses the due-based step, without spare fill (<see cref="MirrorInsetBudget"/>). rq_mirror_rate 0 = the old
+        /// round-robin (A/B), rq_mirror_legacy = the pre-0068 configuration.
+        /// </summary>
+        public static bool DueScheduleWith(bool insets) => !Legacy && (MirrorOverrides.DueSchedule ?? MirrorInsetBudget.DueFor(Level, insets));
+        /// <summary>Spare-slot fill of the due-based step (ADR 0068 High while driving; never under the ADR 0243 Low window policy).</summary>
+        public static bool FillSpare(int level, bool insets, bool standing) => MirrorInsetBudget.FillSpareFor(level, insets, standing);
+        /// <summary>ADR 0243: <see cref="MirrorIntervalFor(int,int,bool)"/>, or the Low window policy (<see cref="MirrorInsetBudget"/>).</summary>
+        public static float MirrorIntervalFor(int level, int r46Class, bool standing, bool insets) =>
+            MirrorInsetBudget.Applies(level, insets) ? MirrorInsetBudget.Interval(r46Class, standing) : MirrorIntervalFor(level, r46Class, standing);
+        /// <summary>
         /// Target refresh interval in frames per UN R46 class (2 = class II, 4 = IV, 5 = V, 6 = VI) for the due-based schedule.
         /// While driving: II 2, IV 4, V/VI 4 (= ADR 0046 High at 60 FPS: 30 / 15 / 15 Hz). Standing (speed &lt; 0.5 m/s and yaw
         /// rate &lt; 3 deg/s for 0.5 s): the mirror image does not move with the truck, IV x2, V/VI x4 (7.5 / 3.75 Hz); class
@@ -299,7 +310,8 @@ namespace Game.Vehicle.Runtime
         {
             int count = s_All.Count;
             if (s_Entries.Length < count) System.Array.Resize(ref s_Entries, count * 2);   // safety; normally sized in OnEnable
-            bool due = VehicleCameraBudget.DueSchedule;
+            bool insets = ForceRender;   // ADR 0243: class II shown as HUD windows (D70)
+            bool due = VehicleCameraBudget.DueScheduleWith(insets);
             int level = VehicleCameraBudget.Level;
             for (int i = 0; i < count; i++)
             {
@@ -311,11 +323,11 @@ namespace Game.Vehicle.Runtime
                 s_Entries[i].phase = m.phase;
                 s_Entries[i].main = m.main;
                 s_Entries[i].candidate = m.m_Candidate;
-                s_Entries[i].interval = VehicleCameraBudget.MirrorIntervalFor(level, cls, Standing);
+                s_Entries[i].interval = VehicleCameraBudget.MirrorIntervalFor(level, cls, Standing, insets);
                 s_Entries[i].fill = cls <= 4;
             }
             int n = due
-                ? MirrorRefreshSchedule.StepDue(s_Entries, count, VehicleCameraBudget.MirrorsPerFrame, !Standing)
+                ? MirrorRefreshSchedule.StepDue(s_Entries, count, VehicleCameraBudget.MirrorsPerFrame, VehicleCameraBudget.FillSpare(level, insets, Standing))
                 : MirrorRefreshSchedule.Step(s_Entries, count, VehicleCameraBudget.MirrorsPerFrame, VehicleCameraBudget.MainMirrorSlots);
             RendersScheduled += n;
             int frame = Time.frameCount;

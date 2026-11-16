@@ -52,6 +52,24 @@ namespace Game.Gameplay
             return l;
         }
 
+        /// <summary>Message for the start menu after a start that found no free place for the combination (ADR 0277);
+        /// "" = none. Set by the region scene, shown once by the Boot menu.</summary>
+        public static string StartFailure { get; private set; } = "";
+
+        /// <summary>ADR 0277: the region scene could not place the combination; the Boot menu shows <paramref name="message"/> once.</summary>
+        public static void SetStartFailure(string message)
+        {
+            StartFailure = message ?? "";
+            Pending = false; RouteS = -1f; RouteEndS = -1f;
+        }
+
+        /// <summary>Returns the start-failure message once and clears it ("" = none).</summary>
+        public static string ConsumeStartFailure()
+        {
+            string m = StartFailure; StartFailure = "";
+            return m;
+        }
+
         /// <summary>Returns the pending request once and clears it.</summary>
         public static bool Consume(out float routeS, out float routeEndS)
         {
