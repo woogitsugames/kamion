@@ -5,8 +5,8 @@ Gałąź `int-stream-s23` = `origin/main` (a6c713a8f) + `origin/streaming-pc-s23
 junctions do main (`derived` = ReparsePoint, świat nieprzebudowywany).
 
 ## Werdykt
-**Gotowe do scalenia: TAK** (warunek: zielony powtórny EditMode po `merge origin/main`, status
-`artifacts/live/int-stream-s23-postmerge.status`; zrzuty dokładnie na szwie — otwarte, niżej).
+**Gotowe do scalenia: TAK** (EditMode po `merge origin/main`: 41/41 z filtrem streamingu, 17:00; zrzuty dokładnie na szwie
+i PlayMode — otwarte, niżej).
 **#112 (`regionpacks-0234`) do zamknięcia jako wchłonięty** (kontrakt `ITileSceneSource` + testy kontraktu są w #157). #114 zastąpiony.
 
 ## Wynik
