@@ -220,12 +220,17 @@ jednokierunkowe DK65 4,5 m zamiast 6,0 m z BDOT10k (zdjęcie 9: ~4,2 m, ESTIMATE
 wysepki poza pasami; pełny pierścień opaski (promienie, próg, spadek), wyspa, asfalt nie przebija; klucz błędny /
 nie na pierścieniu = stale; klucz tylko w kaflu knyszyn.
 
-**Znane / otwarte.** (a) Wysepka na wlocie S jest krótka (OSM rozdziela jezdnie 17 m przed pierścieniem; długa
-wysepka z azylem ze zdjęcia 9 wymaga poszerzenia jezdni DK65 przed rondem — osobny override). (b) Brak nasadzeń i
-kamieni na wyspie. (c) Linie P-13 / przejścia stoją na końcach ramion dwukierunkowych (przy węźle rozdziału), nie
-przy samym pierścieniu. (d) Tor śladu zestawu (§3) policzony dla pierścienia 5,0 + 3,2 m nadal obowiązuje, ale
-przejazd przez wloty z wysepkami 12 cm wymaga jazdy próbnej (PlayMode / właściciel). (e) Trasa startowa knyszyn
-wymaga ponownego eksportu po zmianie obrysu.
+**Otwarte (lider zaakceptował geometrię r3 do scalenia, 2026-11-16; dopracowanie w osobnym zadaniu).**
+- (a) Szerokie płaty asfaltu między ramionami (wyokrąglenia wylot → wlot z domknięcia 6 m; na zdjęciu 9 ciaśniej).
+- (b) Wysepka na wlocie S krótka (~8 m): OSM rozdziela jezdnie 17 m przed pierścieniem; długa wysepka z azylem ze
+  zdjęcia 9 wymaga override poszerzenia jezdni DK65 przed rondem.
+- (c) Brak nasadzeń i kamieni na wyspie (zdjęcie 9: niskie krzewy, kamienie); góra wyspy ma promieniste cieniowanie
+  wachlarza trójkątów (render r3 z góry).
+- (d) Linie P-13 / przejścia stoją na końcach ramion dwukierunkowych (przy węźle rozdziału), nie przy pierścieniu.
+- (e) Tor śladu zestawu (§3) dla pierścienia 5,0 + 3,2 m obowiązuje, ale przejazd przez wloty z wysepkami 12 cm
+  nie był jechany (PlayMode / właściciel); `tests/physics/swept_path_gate3.py` nie uruchamiany na nowej geometrii.
+- (f) Trasa startowa knyszyn wyeksportowana ponownie po zmianie: przesunięcie ≤ 0,02 m (eksport idzie po osiach
+  łańcuchów, nie po płycie); 1,9–2,0 m od wysepek E / S.
 
 ## 6. Otwarte
 - Zdjęcia właściciela już są (15.11; §5a): potwierdzają 4 wloty jednopasowe, wyspę dwustrefową i jasną opaskę.
