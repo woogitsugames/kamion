@@ -1,15 +1,15 @@
 # Status referencji codex-refs-s21
 
-Stan po `f7ce31652`, 16.11.2026. Cel ciągły pozostaje aktywny. Gałąź `research/codex-refs-s21`, [PR100](https://github.com/woogitsugames/kamion/pull/100), bez scalania.
+Stan po `f415174f8`, 16.11.2026. Cel ciągły pozostaje aktywny. Gałąź `research/codex-refs-s21`, [PR100](https://github.com/woogitsugames/kamion/pull/100), bez scalania.
 
 | Pakiet | Rekordy głównego manifestu | Co oznacza liczba |
 |---|---:|---|
 | 01 lampy | 65 | Także przednie, pomocnicze i niekwalifikowane referencje. |
-| 02 brud | 34 | 32 kadry: 14 lokalnych i 18 link-only, oraz 2 dokumenty. |
+| 02 brud | 35 | 33 kadry: 14 lokalnych i 19 link-only, oraz 2 dokumenty. |
 | 03 Knyszyn | 53 | Różne daty; zdjęcia właściciela wyłącznie jako obserwacje tekstowe. |
-| 04 DK65 | 39 | Zdjęcia, ortofoto, dokumenty i jeden rekord BDL. |
-| 05 kolej 38 | 22 | Dokumenty i kadry nie tworzą automatycznie mapowania lokalnego przejazdu. |
-| 06 pierścień | 45 | Różne miasta, daty i stopnie identyfikacji obiektów. |
+| 04 DK65 | 40 | Zdjęcia, ortofoto, dokumenty i jeden rekord BDL. |
+| 05 kolej 38 | 23 | Dokumenty i kadry nie tworzą automatycznie mapowania lokalnego przejazdu. |
+| 06 pierścień | 46 | Różne miasta, daty i stopnie identyfikacji obiektów. |
 | 07 Białystok/Dojlidy | 26 | Także historyczne odniesienia i powtórne oglądy. |
 
 SOURCED: lokalne główne manifesty. Liczby nie oznaczają spełnienia progów FIX. Wierszy podkatalogów nie sumujemy z głównymi jako nowych ekspozycji.
@@ -56,8 +56,10 @@ Region: Bernardyni w Tykocinie to jeden kompleks w dwóch kadrach2025, NCND tylk
 
 ## Kontrola i następny krok
 
-Kontrola po09380a1da: **581 poprawnych śledzonych JSON,94 rastry≤800px,0plików>5MB**. Późniejsze R59 i R16 zawierają wyłącznie metadane/parafrazy/linki; bez nowych rastrów. Poprzednie93 lokalne ścieżki były sprawdzone w snapshot5f245675d; nie przedstawiamy ich jako ponownego audytu bieżącego manifestu. Główne ID unikalne. Zakres diff wobec7f830369c wyłącznie research/codex-refs-s21 i docs/LICENSES.md. Legalne raw pozaGit; media/firmy wyłącznie link-onlyARR; NCND tylko linki; zdjęcia właściciela bez kopii. Bez Unity/adb/kodu gry.
+Kontrola po f415174f8: **600 poprawnych śledzonych JSON,95 rastrów≤800px,96 istniejących lokalnych ścieżek głównych manifestów,0plików>5MB**. Główne ID unikalne. Zakres diff wobec7f830369c wyłącznie research/codex-refs-s21 i docs/LICENSES.md. Legalne raw pozaGit; media/firmy wyłącznie link-onlyARR; NCND tylko linki; zdjęcia właściciela bez kopii. Bez Unity/adb/kodu gry.
 
 Commons: dwa ograniczone pojedyncze API200, bez nowych obrazów; Flickr nowe pobraniaSTOP. Jedno zawieszone własne git-HTTPS przerwano po weryfikacji procesu; ponowny push zakończył się poprawnie, bez dotykania innych sesji. Live zapisano07:04:54Bruksela, następny około08:05.
 
-Gotowe do scalenia po recenzji lidera: **NIE**. R69/R71 brudu, R18 nawierzchni, R22/23 modeli i R16 zamku odebrane. R59 klosz Krone to negatywny odczyt, bez nowej referencji. Następne: zimowe europejskie tyły, kadry poboczy DK65 i luki Białystok/Dojlidy. Wyniki robocze nie zwiększają liczników przed odbiorem.
+Gotowe do scalenia po recenzji lidera: **NIE**. R69/R71 brudu, R18 nawierzchni, R22/23 modeli i R16 zamku odebrane. R59 klosz Krone to negatywny odczyt, bez nowej referencji. Następne: nowe fizyczne E na tylnych lampach, sąsiednia bryła Rynku i elewacje przemysłowe Białegostoku. Wyniki robocze nie zwiększają liczników przed odbiorem.
+
+Aktualizacja16.11.2026 po f415174f8: R6 dodaje pięć warunków testu z publikacji2010 (root s1/8/9/23), nie rytm drogowy. R75 HCT: nowy mocny brud+śnieg, lecz A_PENDING_TYPE_ONLY (sprzęg/wózek niepewny), więc A16/B1/zimaA3/EuropaA2 bez wzrostu. R72/73 negatywne oglądy, R74 Nofima nadal tylko typ UNVERIFIED. R26 orto dk65-09 pokazuje pasy i korony, nie potwierdza rowu/przepustu/zjazdu; data nalotu nieznana. PLK R19 opisuje mechanizm wyszukania, bez nowego lokalnego ID. Region R17 to zwykły wlot2017 z czerwonymi poręczami, nie udowodnione rondo. Brzeska R20 pozostaje luką po ograniczonym UI. Goniec3/2020 R24 ma1 AUX robót fontanny, bez finalnych dysz/krat i bez awansu głównego manifestu.
