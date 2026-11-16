@@ -1,0 +1,35 @@
+{
+  "snapshot_date": "2026-11-16 DATE_ONLY",
+  "accepted_sources": [
+    {
+      "url": "https://www.gov.pl/web/gddkia-zielona-gora/zima-w-pelni-a-my-dzialamy-zimowe-utrzymanie-drog-krajowych",
+      "access": "pełny tekst HTML przez web; sekcja materiałowa odczytana",
+      "document_date": "2021-02-10",
+      "pdf_or_table": "brak tabeli; nie twierdzić kontroli tabeli"
+    },
+    {
+      "url": "https://www.archiwum.gddkia.gov.pl/pl/a/62/utrzymanie-zimowe-drog-krajowych-w-wielkopolsce",
+      "access": "pełny tekst HTML przez web; sekcja materiałowa odczytana",
+      "document_date": "2009-11-15",
+      "scope": "sezon 2009/2010",
+      "pdf_or_table": "brak tabeli"
+    }
+  ],
+  "failed_documents": [
+    {
+      "url": "https://www.archiwum.gddkia.gov.pl/userfiles/articles/z/zarzadzenia-generalnego-dyrektor_24305/zarzadzenie%2031.pdf",
+      "outcome": "Jedna próba bezpośrednia timeout; brak PDF, brak weryfikacji wytycznych 2017",
+      "raw_log": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\02-brud\\winter-maintenance-context-round68\\source2017-access.json"
+    },
+    {
+      "url": "https://goworowo.pl/wp-content/uploads/2025/11/Plan-odsniezania-drog-krajowych-GDDKIA.pdf",
+      "outcome": "web indeksował 4 strony, lecz rzeczywisty GET 404 i wizualny podgląd 404; nie odczytano stron ani tabel, liczb ze snippetu NIE użyto"
+    }
+  ],
+  "raw_pdf_count": 0,
+  "new_photographs": 0,
+  "no_temperature_dose_or_concentration_conversions": true,
+  "no_inference_to_trailer_deposit_chemistry": true,
+  "current_DK65_application": "UNVERIFIED",
+  "old_zud2006_table_status": "UNCHANGED_PENDING_VISUAL"
+}
