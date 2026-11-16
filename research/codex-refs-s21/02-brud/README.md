@@ -253,3 +253,7 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Nowe brudne drzwi — runda39
 
 [company-doors-round39](company-doors-round39/README.md):5 nowych osobno obejrzanych kadrów ARR,1 przyjętyA i4 odrzucenia. AutoReview39-A01 niezależnie potwierdzony przez root: mocny film, jasne pionowe przerwy i pismo, bez awansu B/zimy/Europy. Główny24; dolna granicaA6 z ograniczeniami/B1. Zero pobrań. Starsze bilanseA5 zachowano jako historię, nie aktualną kwalifikację.
+
+## Zimowe kadry — runda40
+
+[editorial-road-doors-round40](editorial-road-doors-round40/README.md):6 osobno obejrzanych nowych ekspozycji link-onlyARR,0 nowychA/B. YleAUX pokazuje biały odkład na ramie/podnośniku, bez pewności typu naczepy i chemii; dwie ekspozycjeDoba jednego zestawu na źródłowo wskazanej drodze, ale film tyłu niepewny. Główny24, dolna granicaA6 z ograniczeniami/B1 bez zmian.
