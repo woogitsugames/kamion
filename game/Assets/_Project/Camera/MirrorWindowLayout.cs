@@ -58,6 +58,7 @@ namespace Game.Cameras
         /// </summary>
         public static void SolveTouch(float width, Rect centre, float top, float gap, float margin, float bottomLimit, out MirrorWindowResult r)
         {
+            r = default;
             r.Left = new Rect(centre.x - gap - TouchSize.x, top - TouchSize.y, TouchSize.x, TouchSize.y);
             r.Right = new Rect(centre.xMax + gap, top - TouchSize.y, TouchSize.x, TouchSize.y);
             r.Fits = r.Left.xMin >= margin - 1e-3f && r.Right.xMax <= width - margin + 1e-3f && r.Left.yMin >= bottomLimit - 1e-3f;

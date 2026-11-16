@@ -133,3 +133,6 @@ koszt lusterka na G57 to głównie cull/submit/geometria, nie wypełnianie (ADR 
 ## Wynik
 
 (do uzupełnienia przez lidera po pomiarze A16)
+- **Poprawka testu (H12):** `Controls0243Tests.Windows_Layout_DoesNotAllocate` liczył `GC.GetAllocatedBytesForCurrentThread`, które pod Mono
+  w edytorze zwraca 0 — test nie mógł paść w Unity. Teraz `GcAllocCounter.AssertZero` (Recorder „GC.Alloc”, wzorzec ADR 0244) i obejmuje
+  oba tryby jednej logiki (`SolveTouch` + `Solve`). Runner .NET zostaje przy `GetAllocatedBytesForCurrentThread` (poprawne na CoreCLR).

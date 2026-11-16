@@ -208,22 +208,29 @@ namespace Game.Tests.EditMode
             Assert.AreEqual(168, Mathf.RoundToInt(VehicleCameraBudget.MirrorHeightFor(0) * 0.75f));
         }
 
+        /// <summary>
+        /// H12: counted with <see cref="GcAllocCounter"/> (Recorder "GC.Alloc"). GC.GetAllocatedBytesForCurrentThread is 0 under
+        /// Mono in the editor, so the former check could not fail in Unity (the .NET runner keeps it - valid on CoreCLR).
+        /// Both form factors of the one layout (touch + monitor) and the Low window budget.
+        /// </summary>
         [Test]
         public void Windows_Layout_DoesNotAllocate()
         {
             var cl = new Rect(620f, 900f, 440f, 156f);
             var safe = new Rect(80f, 0f, 2260f, 1080f);
             float acc = 0f;
-            Place(1680f, cl, 1056f, 12f, 24f, 24f, out _, out _);   // JIT
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 1000; i++)
+            void Run()
             {
-                Place(1680f + i, cl, 1056f, 12f, 24f, 24f, out Rect l, out Rect r);
-                acc += MirrorWindowLayout.ToScreenPixels(l, safe, 1.2f).x + (MirrorWindowLayout.Inside(r, safe) ? 1f : 0f)
-                    + MirrorWindowLayout.TexelsPerPixel(168, 1f) + MirrorInsetBudget.Interval(4, i % 2 == 0)
-                    + MirrorInsetBudget.ExpectedRendersPerFrame(i % 5, false);
+                for (int i = 0; i < 1000; i++)
+                {
+                    Place(1680f + i, cl, 1056f, 12f, 24f, 24f, out Rect l, out Rect r);
+                    MirrorWindowLayout.Solve(new MirrorWindowInput { Width = 2560f + i, Height = 1440f, Centre = cl, Aspect = 0.55f, SideReserve = 162f }, out var m);
+                    acc += MirrorWindowLayout.ToScreenPixels(l, safe, 1.2f).x + (MirrorWindowLayout.Inside(r, safe) ? 1f : 0f) + m.Left.width
+                        + MirrorWindowLayout.TexelsPerPixel(168, 1f) + MirrorInsetBudget.Interval(4, i % 2 == 0)
+                        + MirrorInsetBudget.ExpectedRendersPerFrame(i % 5, false);
+                }
             }
-            Assert.AreEqual(0, System.GC.GetAllocatedBytesForCurrentThread() - before, "layout / budget maths must not allocate");
+            GcAllocCounter.AssertZero(Run, warmup: Run, message: "mirror window layout / budget maths must not allocate");
             Assert.Greater(acc, 0f);
         }
 
