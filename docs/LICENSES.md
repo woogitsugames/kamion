@@ -638,3 +638,8 @@ Dwie miniatury w research/codex-refs-s21/06-region-ring/tykocin-facades-round8/f
 ### codex-refs-s21: DworzecMońki (runda9)
 
 06-region-ring/monki-civic-round9/files/06-MC9-01.jpg: HenrykBorawski, CC BY-SA3.0 https://creativecommons.org/licenses/by-sa/3.0/ . ŹródłoCommons Dworzec_kolejowy_w_Mońkach_1.jpg, pełnyURLwmanifest.csv. Podgląd960×720pomniejszony do800×600, bezcropu/korektbarw.0pełnychoryginałów. Hashminiatury jawnieoddzielony odoryginału, data18.04.2014 zCommons.
+
+
+### codex-refs-s21: korony drzew DK65 (runda17)
+
+Dwa wycinki ortofotomapy GUGiK w `research/codex-refs-s21/04-dk65/tree-crowns-round17/files/TC17-01.jpg` i `TC17-02.jpg`: źródło publiczny WMS GUGiK, bbox, parametry, daty pobrania i atrybucja w manifest.csv i sources.json. Każdy800×800px, skala mapowa0,3m/px nie oznacza źródłowego GSD. Zasady bezpłatnego wykorzystania ortofotomapy z oficjalnej informacji GUGiK wskazane w pakiecie; bez przypisania fikcyjnej licencji CC. Nie dodano podpisów, prywatnych zdjęć ani materiałów komercyjnych.
