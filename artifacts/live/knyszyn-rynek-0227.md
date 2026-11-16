@@ -222,3 +222,7 @@
 - 2026-11-16 01:17 +01:00 — R13 build aktywny, dwie lipy mają uproszczone Low oraz trial High; król, tarcza i ptak poprawione jako proxy. GIS 1472 passed dotyczył R7; końcowe testy i budżet OPEN. Rozbieżność baseline: ADR 0262 zmienił pozycję ciężarówki, kosztu nie rozdzielono.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r13.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r13.done`
 
+
+- 2026-11-16 01:47 +01:00 — GIS R13: 1632 passed, 29 skipped, 3 xfailed, 4 failed; brak instancji Białystok C i stary cache GIS. Cache przebudowany lokalnie schema 12; trwa weryfikacja instancji i testów. R13 Low względem R11 maks. +14 tris, draws bez zmian; względem before budżet Low nadal OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/cache-c.done; git status -sb` 
+
