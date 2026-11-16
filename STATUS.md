@@ -1,5 +1,6 @@
 # STATUS — build-hygiene-s23 (porządki przed pełnym buildem Windows)
-- Krok 1: `scripts/check-build-scenes.py` — lista scen regionów z katalogu (te same reguły co RegionBuildList/RegionCatalog.Resolve), braki Low/Tile/High, pokrycie katalogu (d67-full = każdy region katalogu, każdy Data/Regions/<id> w katalogu), porównanie z logiem buildu. Main: d67-full 21/21 Low+High, 0/21 scen `_Tile`; ostatni pełny build (log 20261116-035803) zawiera dk65-03/04, 44 sceny. Pierścień (ADR 0231, 18 kafli) tylko na `origin/world2-s23` (katalog 39, check OK).
-- Krok 2: `postbuild-windows.py` — korytarz tylko gdy w buildzie jest `World_knyszyn-s_Tile` (bez kafla streaming trzyma szew zamknięty); nowe `Kamion-d3d11.cmd` i `Kamion-korytarz-d3d11.cmd` (`-force-d3d11`); nazwy zastrzeżone. README w zipie: korytarz, skróty regionów, D3D11, CrashDumps. `collect-logs.ps1`: `%LOCALAPPDATA%\CrashDumps\Kamion*.dmp` (2 najnowsze, ≤ 1 GB, `-NoCrashes` honorowane; przetestowane PS 5.1 i 7).
-- pytest tests/dist: 48 passed.
-- NASTĘPNY KROK: `python scripts/package-windows.py artifacts/win/kamion-0.1.0-e28533ca31-regions --dry-run` (z main) + analiza import-region (zadania 3–5).
+- Krok 1: `scripts/check-build-scenes.py` — sceny regionów z katalogu (reguły RegionBuildList/RegionCatalog.Resolve), braki Low/Tile/High, D86 (kafel Low bez High = FAIL), pokrycie katalogu, porównanie z logiem. Main 17.11: d67-full 21/21 Low+High, 0/21 `_Tile`; ostatni pełny build ma dk65-03/04. Pierścień tylko na origin/world2-s23 (39, check OK).
+- Krok 2: postbuild — korytarz tylko z `World_knyszyn-s_Tile`; `Kamion-d3d11.cmd`, `Kamion-korytarz-d3d11.cmd`; README w zipie; `collect-logs.ps1` zbiera CrashDumps (PS 5.1 i 7 sprawdzone).
+- Krok 3–5: dry-run paczki (e28533ca31, 13104cf215: exit 0, bez korytarza), analiza importu równoległego i lista kontrolna: `docs/reports/CHECKLIST-2026-11-16-full-build-windows.md`.
+- pytest tests/dist: 49 passed. Bez Unity (brak zmian C#).
+- NASTĘPNY KROK (lider): scalić world2-s23, potem tę gałąź; `python scripts/check-build-scenes.py --regions d67-full --require-tiles --require-high`.
