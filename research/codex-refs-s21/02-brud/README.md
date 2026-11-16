@@ -1,10 +1,12 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Stan ewidencji głównej na 16.11.2026: **24 rekordy** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **25 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
-Aktualny manifest:24 rekordy =22 kadry (14 lokalnych/8 link-only)+2 dokumenty, w tym odrzucenia/AUX. Nie24 kwalifikacje. [RejestrA/B/C](qualification-ledger-round18/README.md) rozdziela wymagania bez ich obniżania.
+Aktualny manifest: 25 rekordów = 23 kadry (14 lokalnych / 9 link-only) + 2 dokumenty, w tym odrzucenia i AUX. To nie 25 kwalifikacji. [Rejestr A/B/C](qualification-ledger-round18/README.md) zachowuje historyczny snapshot.
 
-A:≥20łącznie — rozpoznana dolna granica6 treściowych źródeł (3 rdzeniowe158/182/183 +1 Krone z lekkim miejscowym filmem +1 RoadTour source-dependent +1 AutoReview39-A01). B:≥12NOWYCH z≥1000pxdrzwi i ruchem/zarazpotrasie — potwierdzone1źródłoWesternExpress, liczone raz zP18-182/CR6. C-zima-A:1source-dependent, C-Europa-A / zima-B / Europa-B:0potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. 88/88 rekordów P18 ma odsyłacz do zapisanego oglądu; 0 brakujących odsyłaczy. Indeks baseline-remaining-round47 zawiera 87 znormalizowanych URL, w tym aliasy i rozpoznany render, więc nie oznacza 88 fotografii ani kwalifikacji. Całe20/12/6/6niepotwierdzone; nie przyjmujemy statusówbezoglądu.
+A ≥20 łącznie: rozpoznana dolna granica 7 źródeł z ograniczeniami — Knight/Western/Premier, Krone z lekkim filmem, RoadTour source-dependent, AutoReview39 i nowy RI49-001. B ≥12 nowych z drzwiami ≥1000px i ruchem/zaraz po trasie: nadal 1 źródło WesternExpress, liczone raz z P18-182/CR6. Zima-A: 2 (1 starszy source-dependent i 1 RI49 z widocznym śniegiem); Europa-droga-A: 1 (RI49, A1 w Polsce). Zima-B i Europa-B: 0 potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. RI49 ma cały obraz 1201×904px i drzwi ESTIMATED 500–560px, więc B nie spełnia.
+
+88/88 rekordów P18 ma odsyłacz do zapisanego oglądu w [indeksie R47](baseline-remaining-round47/coverage-88-id-index.csv). 87 znormalizowanych URL obejmuje aliasy i rozpoznany render; nie oznacza 88 fotografii ani kwalifikacji. Wymagania 20/12/6/6 pozostają otwarte.
 
 Źródłowy typnaczepy, brud zamiast powłoki/rdzy, zimowy kontekst i europejska droga mają osobne dowody. Stare kadry nie stają się nowymiB; mniejszy nowy kadrA nie spełniaB. Wycinki/aliasy jednego zdjęcia nie zwiększają wyniku. Szczegółowe historyczne poszukiwania i erraty poniżej.
 
