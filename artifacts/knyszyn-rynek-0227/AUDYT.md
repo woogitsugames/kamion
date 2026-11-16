@@ -161,3 +161,16 @@ Dane `r18/{Low,High}-{clear,dusk}/stats.txt` obejmują po 72 kamery we wszystkic
 Dwie nowe kamery bez baseline before ani r17: `rynek-king-back-0227` Low 364 draws / 340 477 tris, High 594 / 847 374; `rynek-king-profile-0227` Low 273 / 270 450, High 372 / 473 360. Suma obejmuje siatki i instancje.
 
 Low względem before nadal **FAIL**: na 34 z 50 kamer o tych samych nazwach wzrosły draws, maksymalnie 240 → 303 (+63, `dk65-inlet-south`); tris wzrosły na 42, maksymalnie 272 290 → 310 078 (+37 788, `truck-side`). Before zawiera 51 nazw, r18 72; dawna `rynek-fountain` nie ma potwierdzonego odpowiednika do porównania. Szacunki CPU edytora przed SRP batchingiem nie są pomiarem GPU ani telefonu; ograniczenia porównania i diagnostykę jednej kamery opisano powyżej.
+
+## Iteracja r19 — budżet i przestawione kamery
+
+R19 obejmuje 72 kamery w każdym z czterech wariantów; clear i dusk mają identyczne wyniki geometryczne. High **PASS**: maksimum 1 250 401 tris z instancjami (`cab-mirror-front`), maksymalnie 848 szacowanych draws (`tykocka-into-town`). Low względem before nadal **FAIL**: 34 z 50 kamer o tych samych nazwach ma wzrost draws, maksymalnie 240 → 303 (+63, `dk65-inlet-south`); tris wzrosły na 42, maksymalnie 272 290 → 310 078 (+37 788, `truck-side`). Maksima Low to 369 575 tris (`grodzienska-podlaska`) i 489 draws (`goniadzka-jagiellonska`).
+
+R18 → r19: 70 z 72 kamer ma identyczną liczbę rendererów, draws, shadow draws i tris. Dwa przestawione kadry pomnika, bez baseline before, mają następujące wyniki (draws / tris z instancjami):
+
+| Kamera | Low r18 → r19 | High r18 → r19 |
+|---|---:|---:|
+| `rynek-king-back-0227` | 364 / 340 477 → 359 / 292 593 | 594 / 847 374 → 620 / 832 620 |
+| `rynek-king-profile-0227` | 273 / 270 450 → 450 / 338 213 | 372 / 473 360 → 641 / 796 017 |
+
+Shadow draws nie zmieniły się na żadnej z 72 kamer. Różnice w przestawionych kadrach nie dowodzą zmiany kosztu geometrii przy niezmiennym widoku. Dane są szacunkami CPU edytora przed SRP batchingiem, nie pomiarami GPU ani telefonu; ograniczenia porównania z before pozostają aktualne.

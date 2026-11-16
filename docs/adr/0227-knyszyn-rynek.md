@@ -101,3 +101,9 @@ Zbieżność wyniku 240 bez pojazdu z pierwotnym before nie dowodzi przyczyny ca
 Cztery warianty obejmują po 72 kamery; clear i dusk mają identyczne wartości geometryczne. Na 70 kamerach wspólnych z r17 draws, tris, shadow draws i liczba rendererów są identyczne. High **PASS**: maksimum 1 250 401 tris z instancjami (`cab-mirror-front`), maksymalnie 848 draws (`tykocka-into-town`). Low względem before nadal **FAIL**: 34 z 50 kamer o tych samych nazwach ma wzrost draws, maksymalnie 240 → 303 (+63, `dk65-inlet-south`); maksymalny wzrost tris 272 290 → 310 078 (+37 788, `truck-side`).
 
 Nowe kamery bez baseline before i r17: `rynek-king-back-0227` Low 364 draws / 340 477 tris, High 594 / 847 374; `rynek-king-profile-0227` Low 273 / 270 450, High 372 / 473 360. To szacunki CPU edytora z instancjami przed SRP batchingiem, nie pomiary GPU ani telefonu. Ograniczenia porównania i diagnostyka `dk65-inlet-south` pozostają aktualne.
+
+## Iteracja r19 — budżet edytora
+
+R19 obejmuje 72 kamery w każdym wariancie; clear i dusk mają identyczne wyniki geometryczne. High **PASS**: maksimum 1 250 401 tris z instancjami (`cab-mirror-front`), maksimum 848 draws (`tykocka-into-town`). Low względem before nadal **FAIL**: wzrost draws na 34 z 50 kamer o tych samych nazwach, maksymalnie 240 → 303 (+63, `dk65-inlet-south`); maksymalny wzrost tris 272 290 → 310 078 (+37 788, `truck-side`).
+
+R18 → r19: 70 z 72 kamer bez zmian liczby rendererów, draws, shadow draws i tris; dwa kadry pomnika przestawiono. `rynek-king-back-0227` Low 364 / 340 477 → 359 / 292 593, High 594 / 847 374 → 620 / 832 620; `rynek-king-profile-0227` Low 273 / 270 450 → 450 / 338 213, High 372 / 473 360 → 641 / 796 017 (draws / tris z instancjami). Nie mają baseline before, a zmiana kadru ogranicza porównanie. To szacunki CPU edytora przed SRP batchingiem, nie pomiary GPU ani telefonu. Szczegóły w `artifacts/knyszyn-rynek-0227/AUDYT.md`.
