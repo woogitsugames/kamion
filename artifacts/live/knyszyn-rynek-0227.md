@@ -218,3 +218,7 @@
 - 2026-11-16 01:11 +01:00 — R12: dwie lipy bardziej przestrzenne, ale plamiste; przy tym samym stanie co R11 +2044 tris Low, draws bez zmian. R13 uruchomiona: Low wraca do lekkiej geometrii identycznej z R11, High zachowuje trial 3D; poprawione proxy króla, tarcza i ptak. Ryzyko skoku LOD oraz budżet do oceny.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r13.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r13.done`
 
+
+- 2026-11-16 01:17 +01:00 — R13 build aktywny, dwie lipy mają uproszczone Low oraz trial High; król, tarcza i ptak poprawione jako proxy. GIS 1472 passed dotyczył R7; końcowe testy i budżet OPEN. Rozbieżność baseline: ADR 0262 zmienił pozycję ciężarówki, kosztu nie rozdzielono.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r13.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r13.done`
+
