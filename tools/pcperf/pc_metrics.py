@@ -9,6 +9,8 @@ Wejście (katalog z `scripts/pc-metrics.ps1` albo sam `-metrics <dir>` playera):
                  (opcjonalny, z liczników Windows / nvidia-smi w pc-metrics.ps1; puste pole = brak danych)
 
 Wyjście: `<dir>/pc-report.json` i `<dir>/pc-report.md`; porównanie z budżetem klasy z `budgets/pc-budgets.json`.
+Rodzaj pomiaru (`measurement_kind`, D76): `reference` / `emulation` / `informational` wg `budgets/pc-machines.json`;
+`gate_eligible` = PASS i (reference albo emulation ze zgodną konfiguracją klasy).
 Kod wyjścia: 0 = w budżecie (PASS / INCOMPLETE bez FAIL), 1 = poza budżetem (FAIL), 2 = pomiar nieważny lub brak danych.
 
 Percentyle: nearest rank (rank = ceil(p·n), jak `FrameTimeStats`, `PcMetricsMath` i scripts/device-metrics.ps1).
@@ -27,11 +29,14 @@ from typing import Any
 
 RUN_FORMAT = "kamion/pc-metrics/1"
 BUDGET_FORMAT = "kamion/pc-budgets/1"
+MACHINES_FORMAT = "kamion/pc-machines/1"
 FRAMES_HEADER = ["frame", "t_s", "frame_ms", "cpu_main_ms", "gpu_ms", "draw_calls", "batches", "setpass", "tris", "gc_count", "scene"]
 MEMORY_HEADER = ["t_s", "allocated_mb", "reserved_mb", "mono_used_mb", "mono_heap_mb", "gfx_driver_mb", "gc_count"]
 PROCESS_HEADER = ["t_s", "working_set_mb", "private_mb", "gpu_dedicated_mb", "gpu_shared_mb", "gpu_temp_c", "gpu_util_pct"]
 REPORT_THRESHOLDS_MS = (16.7, 33.3, 50.0, 66.7, 100.0)
 DEFAULT_BUDGET = Path(__file__).resolve().parent / "budgets" / "pc-budgets.json"
+DEFAULT_MACHINES = Path(__file__).resolve().parent / "budgets" / "pc-machines.json"
+MEASUREMENT_KINDS = ("reference", "emulation", "informational")
 
 EXIT_OK, EXIT_FAIL, EXIT_INVALID = 0, 1, 2
 
@@ -138,6 +143,32 @@ def load_budget(path: Path) -> dict[str, Any]:
     if b.get("format") != BUDGET_FORMAT:
         raise FormatError(f"{path.name}: format {b.get('format')!r} != {BUDGET_FORMAT!r}")
     return b
+
+
+def load_machines(path: Path) -> dict[str, Any]:
+    """Maszyny pomiarowe (D76). Sprawdza strukturę, bo literówka w pliku po cichu zmieniłaby wynik bramki."""
+    m = json.loads(path.read_text(encoding="utf-8"))
+    if m.get("format") != MACHINES_FORMAT:
+        raise FormatError(f"{path.name}: format {m.get('format')!r} != {MACHINES_FORMAT!r}")
+    for kind in ("reference", "emulation"):
+        if not isinstance(m.get(kind), list):
+            raise FormatError(f"{path.name}: '{kind}' musi być listą")
+        for e in m[kind]:
+            if not e.get("id") or not isinstance(e.get("match"), dict) or not e["match"]:
+                raise FormatError(f"{path.name}: wpis {kind} bez 'id' albo pustego 'match'")
+            unknown = set(e["match"]) - set(MATCH_KEYS)
+            if unknown:
+                raise FormatError(f"{path.name}: {e['id']}: nieznane klucze match {sorted(unknown)}")
+            if not isinstance(e.get("classes"), (dict, list)) or not e["classes"]:
+                raise FormatError(f"{path.name}: {e['id']}: brak 'classes'")
+            if kind == "emulation":
+                if not isinstance(e["classes"], dict):
+                    raise FormatError(f"{path.name}: {e['id']}: 'classes' emulacji musi być obiektem klasa -> konfiguracja")
+                for cname, cfg in e["classes"].items():
+                    missing = [k for k in EMULATION_KEYS if k not in cfg]
+                    if missing:
+                        raise FormatError(f"{path.name}: {e['id']}/{cname}: brak {missing}")
+    return m
 
 
 # ---------------------------------------------------------------- analiza
@@ -276,6 +307,7 @@ def cross_check(in_game: dict[str, Any] | None, ft: dict[str, Any] | None, tol_m
 
 
 def is_reference_machine(run: dict[str, Any], budget: dict[str, Any]) -> bool:
+    """Stary mechanizm: dokładne gpu+cpu z `referenceMachines` w pliku budżetu (zachowany dla zgodności)."""
     sysj = run.get("system") or {}
     for m in budget.get("referenceMachines") or []:
         if m.get("gpu") == sysj.get("gpu") and m.get("cpu") == sysj.get("cpu"):
@@ -283,8 +315,98 @@ def is_reference_machine(run: dict[str, Any], budget: dict[str, Any]) -> bool:
     return False
 
 
+# klucz w `match` -> pole run.json system; *Contains = wszystkie podciągi muszą wystąpić, *Excludes = żaden (bez wielkości liter)
+MATCH_KEYS = {
+    "gpuContains": "gpu", "gpuExcludes": "gpu", "gpuVendorContains": "gpuVendor",
+    "cpuContains": "cpu", "cpuExcludes": "cpu", "deviceModelContains": "deviceModel",
+}
+EMULATION_KEYS = ("resolution", "tier", "targetFps", "vSyncCount", "fullScreenModes")
+
+
+def machine_matches(system: dict[str, Any] | None, match: dict[str, Any]) -> bool:
+    sysj = system or {}
+    for key, field in MATCH_KEYS.items():
+        needles = match.get(key)
+        if not needles:
+            continue
+        if isinstance(needles, str):
+            needles = [needles]
+        hay = str(sysj.get(field) or "").casefold()
+        if key.endswith("Excludes"):
+            if any(n.casefold() in hay for n in needles):
+                return False
+        elif not hay or not all(n.casefold() in hay for n in needles):
+            return False
+    return True
+
+
+def _entry_has_class(entry: dict[str, Any], cls_name: str) -> bool:
+    c = entry.get("classes")
+    return cls_name in c if isinstance(c, (dict, list)) else False
+
+
+def emulation_mismatch(run: dict[str, Any], cfg: dict[str, Any]) -> list[str]:
+    """Różnice warunków runu względem metody emulacji klasy (D76). Brak pola w run.json = niezgodność (nie da się potwierdzić)."""
+    d = run.get("display") or {}
+    out = []
+    res = cfg.get("resolution")
+    if res and [d.get("width"), d.get("height")] != list(res):
+        out.append(f"rozdzielczość {d.get('width')}x{d.get('height')} != emulacja {res[0]}x{res[1]}")
+    if cfg.get("tier") and d.get("qualityName") != cfg["tier"]:
+        out.append(f"tier {d.get('qualityName')} != emulacja {cfg['tier']}")
+    if cfg.get("targetFps") and d.get("targetFrameRate") != cfg["targetFps"]:
+        out.append(f"limit FPS {d.get('targetFrameRate')} != emulacja {cfg['targetFps']}")
+    if "vSyncCount" in cfg and d.get("vSyncCount") != cfg["vSyncCount"]:
+        out.append(f"VSync {d.get('vSyncCount')} != emulacja {cfg['vSyncCount']} (wymagane -VSync 0)")
+    modes = cfg.get("fullScreenModes")
+    if modes and d.get("fullScreenMode") not in modes:
+        out.append(f"tryb ekranu {d.get('fullScreenMode')} nie jest jednym z {', '.join(modes)}")
+    return out
+
+
+def classify_measurement(run: dict[str, Any], budget: dict[str, Any] | None, machines: dict[str, Any] | None,
+                         cls_name: str | None) -> dict[str, Any]:
+    """Rodzaj pomiaru: reference (prawdziwy sprzęt klasy) / emulation (D76, zgodna konfiguracja) / informational."""
+    out: dict[str, Any] = {"kind": "informational", "machine": None, "decision": None, "reasons": [], "annotation": None}
+    if budget is None or not cls_name:
+        out["reasons"].append("brak klasy budżetu (--class) — liczby bez porównania")
+        return out
+    system = run.get("system")
+    if is_reference_machine(run, budget):
+        out.update(kind="reference", machine="pc-budgets.json:referenceMachines")
+        return out
+    m = machines or {}
+    for e in m.get("reference") or []:
+        if _entry_has_class(e, cls_name) and machine_matches(system, e["match"]):
+            out.update(kind="reference", machine=e["id"], decision=e.get("decision"))
+            return out
+    for e in m.get("emulation") or []:
+        if not machine_matches(system, e["match"]):
+            continue
+        if not _entry_has_class(e, cls_name):
+            out["reasons"].append(f"maszyna {e['id']} nie emuluje klasy {cls_name} (emuluje: {', '.join(e['classes'])})")
+            continue
+        mism = emulation_mismatch(run, e["classes"][cls_name])
+        if mism:
+            out["machine"] = e["id"]
+            out["reasons"].extend(f"konfiguracja niezgodna z metodą emulacji: {x}" for x in mism)
+            continue
+        cfg = e["classes"][cls_name]
+        dec = e.get("decision", "D76")
+        real = cfg.get("realHardware") or f"klasy {cls_name}"
+        out.update(kind="emulation", machine=e["id"], decision=dec,
+                   annotation=f"EMULACJA ({dec}) — nie zastępuje pomiaru na sprzęcie klasy {cls_name} ({real}) "
+                              f"przed obietnicą wymagań sprzętowych")
+        return out
+    if not out["reasons"]:
+        sysj = system or {}
+        out["reasons"].append(f"maszyna (GPU {sysj.get('gpu')!r}, CPU {sysj.get('cpu')!r}) nie jest w pc-machines.json "
+                              f"jako referencyjna ani emulująca klasę {cls_name}")
+    return out
+
+
 def evaluate(r: Run, budget: dict[str, Any] | None, cls_name: str | None, warmup_s: float | None = None,
-             allow_mismatch: bool = False) -> dict[str, Any]:
+             allow_mismatch: bool = False, machines: dict[str, Any] | None = None) -> dict[str, Any]:
     if warmup_s is None and budget is not None and "warmupSeconds" not in (r.run.get("options") or {}):
         warmup_s = float(budget.get("warmupSeconds", 5.0))
     a = analyze(r, warmup_s)
@@ -330,7 +452,12 @@ def evaluate(r: Run, budget: dict[str, Any] | None, cls_name: str | None, warmup
         verdict = "INVALID"
     report["checks"] = checks
     report["verdict"] = verdict
-    report["gate_eligible"] = bool(report.get("reference_machine")) and verdict == "PASS"
+    meas = classify_measurement(r.run, budget, machines, cls_name)
+    if verdict != "PASS" and meas["kind"] != "informational":
+        meas["reasons"].append(f"werdykt {verdict} (bramkę zalicza tylko PASS)")
+    report["measurement_kind"] = meas["kind"]
+    report["measurement"] = meas
+    report["gate_eligible"] = verdict == "PASS" and meas["kind"] in ("reference", "emulation")
     return report
 
 
@@ -362,9 +489,21 @@ def render_md(rep: dict[str, Any]) -> str:
     L.append("# Raport pomiaru PC (ADR 0266)")
     L.append("")
     L.append(f"**Werdykt budżetu: {rep['verdict']}**" + (f" — klasa `{rep['class']['name']}` ({rep['class']['status']})" if rep.get("class") else ""))
+    meas = rep.get("measurement") or {}
+    kind = rep.get("measurement_kind", "informational")
+    if meas.get("annotation"):
+        L.append(f"**{meas['annotation']}.**")
+        L.append("")
     if rep.get("class"):
-        ref = "TAK" if rep.get("reference_machine") else "NIE (maszyna pomiarowa — wynik informacyjny, nie zalicza bramki)"
-        L.append(f"Maszyna referencyjna: {ref}. Wszystkie progi to `WORKING_VALUE` do decyzji właściciela.")
+        ref = "TAK" if rep.get("reference_machine") else "NIE"
+        kind_txt = {"reference": "pomiar referencyjny (prawdziwy sprzęt klasy)",
+                    "emulation": f"emulacja klasy na maszynie `{meas.get('machine')}` ({meas.get('decision')})",
+                    "informational": "wynik informacyjny, nie zalicza bramki"}[kind]
+        gate = "TAK" if rep.get("gate_eligible") else "NIE"
+        L.append(f"Rodzaj pomiaru: **{kind}** — {kind_txt}. Zalicza bramkę: **{gate}**. Maszyna referencyjna: {ref}. "
+                 f"Wszystkie progi to `WORKING_VALUE` do decyzji właściciela.")
+        for reason in meas.get("reasons") or []:
+            L.append(f"- Dlaczego nie zalicza: {reason}")
     for reason in rep["invalid_reasons"]:
         L.append(f"- POMIAR NIEWAŻNY: {reason}")
     for mm in (rep.get("class") or {}).get("context_mismatch", []):
@@ -427,6 +566,8 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Raport pomiaru PC (ADR 0266)")
     ap.add_argument("run_dir", type=Path)
     ap.add_argument("--budget", type=Path, default=DEFAULT_BUDGET)
+    ap.add_argument("--machines", type=Path, default=DEFAULT_MACHINES,
+                    help="maszyny referencyjne / emulujące klasy (D76), format kamion/pc-machines/1")
     ap.add_argument("--class", dest="cls", default=None, help="min | zalecany | wysoki (brak = bez porównania)")
     ap.add_argument("--warmup", type=float, default=None, help="nadpisuje rozgrzewkę z run.json [s]")
     ap.add_argument("--allow-context-mismatch", action="store_true",
@@ -436,7 +577,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         r = load_run(args.run_dir)
         budget = load_budget(args.budget) if args.cls else None
-        rep = evaluate(r, budget, args.cls, args.warmup, args.allow_context_mismatch)
+        machines = None
+        if args.cls and (args.machines != DEFAULT_MACHINES or DEFAULT_MACHINES.exists()):
+            machines = load_machines(args.machines)
+        rep = evaluate(r, budget, args.cls, args.warmup, args.allow_context_mismatch, machines)
     except (FileNotFoundError, FormatError, KeyError, ValueError) as e:
         print(f"pc_metrics: {e}", file=sys.stderr)
         return EXIT_INVALID
@@ -446,7 +590,7 @@ def main(argv: list[str] | None = None) -> int:
     Path(str(prefix) + ".md").write_text(render_md(rep), encoding="utf-8")
     ft = rep["metrics"].get("frame_ms") or {}
     print(f"verdict={rep['verdict']} frames={rep['metrics']['frames_window']} p50={ft.get('p50')} p95={ft.get('p95')} "
-          f"p99={ft.get('p99')} -> {prefix}.md")
+          f"p99={ft.get('p99')} -> {prefix}.md kind={rep['measurement_kind']} gate_eligible={str(rep['gate_eligible']).lower()}")
     return exit_code(rep)
 
 

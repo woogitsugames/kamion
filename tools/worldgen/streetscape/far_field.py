@@ -41,6 +41,7 @@ from shapely.geometry import LineString, Point, Polygon, box, shape
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from roads import pipeline                # noqa: E402
+from roads import profile as RP           # noqa: E402
 from terrain_mesh.gltf import GLB, GLTF_AXES  # noqa: E402
 
 import powiaty as PW                       # noqa: E402  (ADR 0219)
@@ -223,16 +224,15 @@ class BorderElevation:
         self.west_sm = np.append(sm[3 * n_seg:4 * n_seg], sm[0])
 
     @classmethod
-    def from_region(cls, region_id: str, half: float = 1024.0, step_m: float = 16.0) -> "BorderElevation":
-        derived = REPO / "Data" / "raw" / "derived" / region_id
-        npy = derived / "world" / "terrain_conformed.npy"
+    def from_region(cls, region_id: str, half: float = 1024.0, step_m: float = 16.0,
+                    out_root: Path | None = None) -> "BorderElevation":
+        world = Path(out_root) if out_root is not None else REPO / "Data" / "raw" / "derived" / region_id / "world"
+        npy = world / "terrain_conformed.npy"
         if npy.exists():
             zc = np.load(npy)
         else:
-            r16 = derived / "heightmap_2049.r16"
             tm = json.loads((pipeline.REGIONS / region_id / "terrain.json").read_text(encoding="utf-8"))
-            raw = np.fromfile(r16, dtype="<u2").reshape(tm["samples"], tm["samples"])
-            zc = tm["z_min_m"] + (raw / 65535.0) * (tm["z_max_m"] - tm["z_min_m"])
+            zc = RP.load_heightfield(tm, REPO, (0.0, 0.0)).z
 
         h_rows, w_cols = zc.shape
 
@@ -1710,7 +1710,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
     out_root = out_root or (REPO / "Data" / "raw" / "derived" / region_id / "world")
     out_root.mkdir(parents=True, exist_ok=True)
 
-    elev = BorderElevation.from_region(region_id, half=half)
+    elev = BorderElevation.from_region(region_id, half=half, out_root=out_root)
     gis = extract_ring_gis(region_id, ox, oy, half=half)
     building_exclusion = region_building_exclusion(region_id, ox, oy, half)
 

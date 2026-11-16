@@ -48,6 +48,7 @@ RAPORT: format z §4
 - `git worktree` + gałąź na zadanie (`feat/<agent>/<opis>`); lider scala po review.
 - **Jeden proces Unity na katalog projektu.** Każdy worktree z Unity ma własny `Library/` (koszt dysku i importu) — dlatego agenci pracujący głównie w C# czystym, Pythonie i Blenderze nie potrzebują otwierać Unity; testy EditMode/PlayMode i buildy idą przez **kolejkę lidera** (lub `build-qa`) sekwencyjnie.
 - Testy czystego C# fizyki — także poza Unity (projekt .NET z tymi samymi źródłami), żeby `vehicle-physics` iterował bez edytora.
+- Dane poza gitem w worktree (`scripts/new-agent-worktree.ps1`): `Data/raw/{derived,gugik,osm,refs,mapillary,fab}` to junctions do main, nie kopie (D43, 16.11 — świat zbudowany w kopii `derived` przepadł z worktree). Worktree z kopią `derived` (starszy albo `-CopyDerived`): przed usunięciem skopiuj kafel do main — `robocopy .claude\worktrees\<wt>\Data\raw\derived\<kafel> Data\raw\derived\<kafel> /E /MT:16` — albo zbuduj go w main. Usuwanie: najpierw `cmd /c rmdir` na junctionach, potem `git worktree remove --force --force` (szczegóły: `docs/owner/AGENT-RULES.md` p. 7a).
 - Konflikt plików = stop, rebase, zgłoszenie liderowi.
 - Review krzyżowe: kod jednego agenta przegląda inny (lub lider). `visual-critic` przegląda każdą zmianę wizualną.
 

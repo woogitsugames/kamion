@@ -1,0 +1,68 @@
+{
+  "audyt_s21": {
+    "data": "2026-11-15",
+    "wiersze_manifestu": 106,
+    "seed": 20261115,
+    "metoda_losowania": "KADRY = P16-201…223 (23), INNE = reszta (83); g=random.Random(20261115); g.sample(KADRY,6); g.sample(INNE,16) → 22/106 = 20,8 %",
+    "kadry": {
+      "metoda": "każdy kadr ponownie OBEJRZANY osobnym wywołaniem w dniu audytu (pliki z files/ lub miniatura 1280 px dla usuniętych)",
+      "zgodne": 5,
+      "niezgodne_poprawione": 1,
+      "wiersze": [
+        {
+          "id": "P16-201",
+          "wynik": "zgodne",
+          "sprawdzone": "lampy L w narożnikach zderzaka, górny pas czerwony z pomarańczowymi końcami, panel ostrzegawczy zamiast tablicy"
+        },
+        {
+          "id": "P16-206",
+          "wynik": "zgodne",
+          "sprawdzone": "lampy 4-sekcyjne poziome na zderzaku, tablica na ramie powyżej, odblaskowe tablice ostrzegawcze"
+        },
+        {
+          "id": "P16-210",
+          "wynik": "zgodne",
+          "sprawdzone": "widok z boku, rampa otwarta, lamp tylnych nie widać → USUNIĘTY"
+        },
+        {
+          "id": "P16-212",
+          "wynik": "zgodne",
+          "sprawdzone": "po 2 okrągłe czerwone lampy na stronę, rdza i brud belki"
+        },
+        {
+          "id": "P16-216",
+          "wynik": "niezgodne → poprawione",
+          "korekta": "dopisane okrągłe odblaski w białej obwódce i małe bursztynowe lampki przy narożnikach"
+        },
+        {
+          "id": "P16-220",
+          "wynik": "zgodne",
+          "sprawdzone": "ciężarówka nocą z przodu, przednia tablica → USUNIĘTY"
+        }
+      ]
+    },
+    "inne": {
+      "metoda": "cytat z kolumny cytat wyszukany w XHTML Cellar PL pobranym 2026-11-15 (CELEX 42021X1719 / 42021X1721 / 42021X1718; normalizacja HTML, NBSP)",
+      "wynik": "15 zgodnych (P16-044 zgodny po normalizacji zapisu przypisów „( 1 )”), P16-303 — strona sklepu niepowtarzalna (status SOURCED (sklep, odczyt 13.11))",
+      "wiersze": [
+        "P16-012",
+        "P16-021",
+        "P16-023",
+        "P16-040",
+        "P16-041",
+        "P16-043",
+        "P16-044",
+        "P16-050",
+        "P16-062",
+        "P16-084",
+        "P16-111",
+        "P16-121",
+        "P16-123",
+        "P16-124",
+        "P16-127",
+        "P16-303"
+      ]
+    }
+  },
+  "audyt_poprzedni_m59": "seed 20261113, 22 PASS / 0 FAIL — unieważniony co do kadrów (oznaczenia PREV-VIEW, opisy sprzeczne z obrazem wg przeglądu s20); zachowany w historii gita"
+}

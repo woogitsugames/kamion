@@ -1,0 +1,130 @@
+{
+ "plots": [
+  815,
+  815
+ ],
+ "only_a": [],
+ "only_b": [],
+ "order_same": true,
+ "poly_bytes_same": 802,
+ "poly_bytes_diff": 13,
+ "poly_vertex_count_diff": 0,
+ "hausdorff_m": {
+  "p50": 1.1368683772161603e-13,
+  "p90": 0.2932340175081908,
+  "p99": 0.3422404169402661,
+  "p100": 0.34887359387621286
+ },
+ "hausdorff_over": {
+  "1mm": 5,
+  "10cm": 5,
+  "1m": 0
+ },
+ "worst": [
+  [
+   0.34887359387621286,
+   "bdot:da4c8df1-1894-11ed-8342-b8ca3aa2e5c2",
+   656.246,
+   649.655
+  ],
+  [
+   0.29359711940999017,
+   "bdot:2BE4B431-6834-1BF0-E053-CC2BA8C0D140",
+   876.306,
+   869.698
+  ],
+  [
+   0.2917816099009932,
+   "bdot:2BE4B431-65F2-1BF0-E053-CC2BA8C0D140",
+   1571.886,
+   1567.119
+  ],
+  [
+   0.2647006151923145,
+   "bdot:2BE4B431-6919-1BF0-E053-CC2BA8C0D140",
+   590.567,
+   588.491
+  ],
+  [
+   0.2342542491844692,
+   "bdot:2BE4B431-6F58-1BF0-E053-CC2BA8C0D140",
+   696.611,
+   694.92
+  ],
+  [
+   1.1368683772161603e-13,
+   "bdot:2BE4B431-B6A7-1BF0-E053-CC2BA8C0D140",
+   546.459,
+   546.459
+  ],
+  [
+   1.1368683772161603e-13,
+   "bdot:2BE4B431-AE6E-1BF0-E053-CC2BA8C0D140",
+   412.101,
+   412.101
+  ],
+  [
+   1.1368683772161603e-13,
+   "bdot:2BE4B431-ACF4-1BF0-E053-CC2BA8C0D140",
+   520.293,
+   520.293
+  ]
+ ],
+ "layout_same": 800,
+ "layout_diff": 15,
+ "run_endpoint_max_diff_m": 1.1368683772161603e-13,
+ "gate_changed": [],
+ "wicket_count_changed": [],
+ "access_changed": [],
+ "run_count_changed": [],
+ "fence_len_changed": [],
+ "fence_len_total_m": [
+  61166.473,
+  61166.473
+ ],
+ "gates": [
+  607,
+  607
+ ],
+ "runs": [
+  3710,
+  3710
+ ],
+ "drops_same": true,
+ "drops": [
+  607,
+  607
+ ],
+ "access_stats": [
+  {
+   "moved": 118,
+   "removed": 54,
+   "removed_no_carriageway": 23,
+   "removed_junction": 31
+  },
+  {
+   "moved": 118,
+   "removed": 54,
+   "removed_no_carriageway": 23,
+   "removed_junction": 31
+  }
+ ],
+ "timers_s": [
+  {
+   "plan": 835.44,
+   "door_zones": 3.97,
+   "layout": 549.13,
+   "gate_access": 40.25,
+   "plan_access": 343.04,
+   "region_plan": 1430.6
+  },
+  {
+   "plan": 7.33,
+   "door_zones": 5.05,
+   "layout": 27.67,
+   "gate_access": 42.13,
+   "plan_access": 42.68,
+   "region_plan": 86.49
+  }
+ ]
+}

@@ -383,7 +383,7 @@ def route_polyline(region_id, w):
     """Start route (D4 candidate) as local polyline with per-vertex edge id (cameras, QA)."""
     import networkx as nx
     import roadgraph
-    graph = json.loads((pipeline.REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8"))
+    graph = pipeline.effective_graph(region_id)                   # ADR 0274: with the authored carriageway splits
     re_f = pipeline.REGIONS / region_id / "route_endpoints.json"   # ADR 0166: per-region authored route ends
     if re_f.exists():
         route = json.loads(re_f.read_text(encoding="utf-8"))
@@ -829,7 +829,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     t0 = time.time()
     log = (lambda *a: print(f"[world {time.time() - t0:6.1f}s]", *a)) if verbose else (lambda *a: None)
     # pass 1: geometry with the raw NMT -> bridge decks -> remove deck-contaminated NMT under them
-    w0 = pipeline.build(region_id)
+    w0 = pipeline.build(region_id, collision=False)     # ADR 0281 K1a: pass 1 never reads the collision layer
     deck_parts = [p for p in w0.buf.parts if p.layer == "bridge" and not p.src.endswith(":parapet")]
     for p in deck_parts:
         p.footprint = True
@@ -1476,6 +1476,9 @@ def qa_report(w, mk_report, mask):
             "seam_tapers": w.stats.get("seam_tapers", []),             # ADR 0275
             "seam_shoulders": w.stats.get("seam_shoulders", {}),
             "sides_on_carriageway_culled": w.stats.get("sides_on_carriageway_culled", {}),
+            # review s23 D18 P1: `built` / `notes` of every compact roundabout (ADR 0218 5c, 0274) - a silent failure of
+            # the centre island or of the outline must show in the QA file, not only in a render
+            "compact_roundabouts": w.stats.get("compact_roundabouts", []),
             "verge_strips": w.stats.get("verge_strips", {}),
             "fork_shifts": w.stats.get("fork_shifts", []),
             "gores": w.stats.get("gores", {}),

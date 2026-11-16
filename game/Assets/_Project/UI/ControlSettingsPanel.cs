@@ -185,6 +185,8 @@ namespace Game.UI
             }
             Header(content, "KIEROWNICA DOTYKOWA", left, ref y);
             Segment(content, left, ref y, "Chwyt", "obrót", "przesuw", () => Settings.wheelDragGrab, v => Settings.wheelDragGrab = v);
+            // D70 / ADR 0243: 270 deg comfort is the default, 900 deg simulator one tap away; the stepper keeps the grid between.
+            Segment(content, left, ref y, "Zakres: komfort/sym.", "270°", "900°", () => Settings.TouchWheelSimRange, v => Settings.SetTouchWheelPreset(v));
             Stepper(content, left, ref y, "Zakres kierownicy", () => F0(Settings.wheelRangeDeg) + "°", d => Settings.wheelRangeDeg = Step(Settings.wheelRangeDeg, d, 90f, ControlSettings.RangeMin, ControlSettings.RangeMax));
             Stepper(content, left, ref y, "Czułość", () => Pct(Settings.wheelSensitivity), d => Settings.wheelSensitivity = Step(Settings.wheelSensitivity, d, 0.1f, ControlSettings.GainMin, ControlSettings.GainMax));
             Stepper(content, left, ref y, "Samocentrowanie", () => Settings.centreStrength <= 0.001f ? "wyłączone" : Pct(Settings.centreStrength), d => Settings.centreStrength = Step(Settings.centreStrength, d, 0.1f, ControlSettings.CentreMin, ControlSettings.CentreMax));
@@ -224,6 +226,8 @@ namespace Game.UI
             Header(content, "KAMERA (WIDOK Z KABINY)", right, ref y);
             Stepper(content, right, ref y, "Czułość rozglądania", () => Pct(Settings.lookSensitivity), d => Settings.lookSensitivity = Step(Settings.lookSensitivity, d, 0.1f, ControlSettings.LookMin, ControlSettings.LookMax));
             Stepper(content, right, ref y, "Pole widzenia", () => F0(Settings.cabFov) + "°", d => Settings.cabFov = Step(Settings.cabFov, d, 5f, ControlSettings.FovMin, ControlSettings.FovMax));
+            // D70 / ADR 0243: class II mirrors as fixed on-screen windows (default) or seen by looking around the cab.
+            Segment(content, right, ref y, "Lusterka", "okienka", "rozglądanie", () => !Settings.mirrorInsets, v => Settings.mirrorInsets = !v);
             Segment(content, right, ref y, "Ruch głowy", "włączony", "wyłączony", () => !Settings.headMotion, v => Settings.headMotion = !v);
             y += 18f;
             Header(content, "DŹWIĘK", right, ref y);

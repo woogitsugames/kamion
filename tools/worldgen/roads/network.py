@@ -46,6 +46,11 @@ APRON_LIGHT = "apron_paving_light"
 APRON_MATS = ("apron_sett", APRON_LIGHT)     # mountable apron surfaces (drivable, not a carriageway, not a walk)
 TRUCK_APRON_MATS = {5: "apron_sett", 6: "road_concrete", 7: "road_asphalt", 8: APRON_LIGHT}
 WALK_MATS = WALK_MATS + [TRUCK_APRON_MATS[k] for k in sorted(TRUCK_APRON_MATS)]   # codes 5-8 resolve everywhere
+assert all(WALK_MATS[k] == v for k, v in TRUCK_APRON_MATS.items()), "truck apron codes must index WALK_MATS"
+# Carriageway-class apron surfaces (review s23 D18 P2-7): meshing.cull_sides_on_carriageway treats road_* as a
+# carriageway and removes kerbs / lips standing on it, so these aprons are flush (lip 0) - a raised lip is rejected.
+TRUCK_APRON_FLUSH_CODES = (6, 7)
+EDGE_LINE_SPACING_M = (2.0, 30.0)   # WORKING_VALUE: accepted authored edge_line_spacing (narrowest lane .. widest carriageway)
 TRUCK_APRON_CODE = {"kostka": 5, "sett": 5, "beton": 6, "concrete": 6, "asfalt": 7, "asphalt": 7,
                     "kostka_jasna": 8, "paving": 8}
 # WORKING_VALUE: accepted width_m range. Below 0.2 m (the kerb-side gutter strip) the strip would be meshed as
@@ -231,12 +236,27 @@ class Chain:
     def zc(self, s):
         return self.interp(self.z, s)
 
+    def _crossfall_arrays(self):
+        """(nan_to_num(e), isnan(e) as float) of the current e, cached per e array (ADR 0281 K1c: crossfall_z is
+        called ~700 k times per build_world). e is only ever replaced (profile.crossfall / match_crossfall_at_nodes
+        assign a new array); the cached source is made read-only so an in-place write fails loudly instead of
+        leaving the cache stale."""
+        src = getattr(self, "_xf_src", None)
+        if src is None or src is not self.e:
+            e = self.e
+            if isinstance(e, np.ndarray) and e.flags.writeable and e.flags.owndata:
+                e.flags.writeable = False
+            self._xf_src = e
+            self._xf = (np.nan_to_num(e, nan=0.0), np.isnan(e).astype(float))
+        return self._xf
+
     def crossfall_z(self, s, lat):
         """Surface height on the carriageway at station s, lateral lat (left +)."""
         s = np.asarray(s, float)
         lat = np.asarray(lat, float)
-        e = self.interp(np.nan_to_num(self.e, nan=0.0), s)
-        roof = self.interp(np.isnan(self.e).astype(float), s) > 0.5
+        e0, nan_e = self._crossfall_arrays()
+        e = self.interp(e0, s)
+        roof = self.interp(nan_e, s) > 0.5
         hw = self.hw_at(s)
         latc = np.clip(lat, -hw, hw)
         return self.zc(s) + np.where(roof, -S.CROSSFALL * np.abs(latc), e * latc)
@@ -246,6 +266,13 @@ class Chain:
 
     def section(self, s, sections):
         return sections[int(self.sec_idx[self.idx(s)])]
+
+
+def _qbox(q, r):
+    """Query box of a point: the envelope of q.buffer(r) (bounds of a GEOS point buffer are exactly x -+ r, y -+ r -
+    tests/test_perf_0281.py), so STRtree.query returns the same candidates in the same order, without building the
+    33-vertex circle per station (ADR 0281 K1b)."""
+    return shapely.box(q.x - r, q.y - r, q.x + r, q.y + r)
 
 
 @dataclass
@@ -261,6 +288,9 @@ class Network:
 
 def load(graph: dict, origin, overrides: list | None = None) -> Network:
     ox, oy = origin
+    from . import carriageway_split as CS            # ADR 0274: authored split of a two-way road before a node
+    cs_applied, cs_stale = [], []
+    graph = CS.apply(graph, overrides, cs_applied, cs_stale)
     nodes = {}
     for n in graph["nodes"]:
         nodes[n["id"]] = {"id": n["id"], "xy": np.array([n["x"] - ox, n["y"] - oy]), "deg": 0,
@@ -282,12 +312,16 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
         nodes[b]["deg"] += 1
     sections = {eid: edge_section(e) for eid, (e, _, _, _) in edges.items()}
     net = Network(nodes=nodes, sections=sections, sec_list=[], chains=[], origin=(ox, oy))
+    net.overrides_applied += cs_applied
+    net.overrides_stale += cs_stale
     apply_edge_overrides(net, edges, overrides or [])
     net.sec_list = [sections[k] for k in sorted(sections)]
     sec_index = {s.edge_id: i for i, s in enumerate(net.sec_list)}
     net.chains = build_chains(nodes, edges)
     for c in net.chains:
         prepare_chain(c, net, sec_index)
+    from . import compact_roundabout as CR_          # ADR 0274: designed lanes of kerb-mode compact roundabouts
+    CR_.lay_lanes(net)
     return net
 
 
@@ -310,6 +344,10 @@ def _truck_apron(v) -> dict | None:
     code = TRUCK_APRON_CODE.get(str(v.get("material", "kostka")).lower())
     if code is None:
         return None
+    if code in TRUCK_APRON_FLUSH_CODES:
+        if "height_m" in v and h > 0.0:
+            return None
+        h = 0.0
     return {"width_m": w, "height_m": h, "material": TRUCK_APRON_MATS[code], "code": code}
 
 
@@ -402,8 +440,15 @@ def apply_edge_overrides(net: Network, edges, overrides):
             if "edge_line_spacing" in st:
                 # ADR 0220: measured line-to-line distance (research K1, orthophoto 0.1 m); markings.edge_lines keeps
                 # the lines markings.EDGE_LINE_MIN_INSET inside the carriageway edge where the carriageway is narrower
-                sec.edge_line_spacing = float(st["edge_line_spacing"])
-                sec.provenance["edge_line_spacing"] = f"authored_override:{ov['id']}"
+                els = st["edge_line_spacing"]
+                if (isinstance(els, bool) or not isinstance(els, (int, float))
+                        or not EDGE_LINE_SPACING_M[0] <= float(els) <= EDGE_LINE_SPACING_M[1]):      # NaN fails too
+                    if ov["id"] not in net.overrides_stale:
+                        net.overrides_stale.append(ov["id"])
+                    sec.provenance["edge_line_spacing_rejected"] = repr(els)
+                else:
+                    sec.edge_line_spacing = float(els)
+                    sec.provenance["edge_line_spacing"] = f"authored_override:{ov['id']}"
             if "apron" in st:
                 sec.apron = str(st["apron"])
             if "truck_apron" in st:
@@ -418,10 +463,9 @@ def apply_edge_overrides(net: Network, edges, overrides):
             if "compact_roundabout" in st:
                 # ADR 0218 5c: the whole roundabout (ring + one-way feeders) is one junction; ring ways only
                 co_ = st["compact_roundabout"]
-                co_ = {} if co_ in (None, True) else co_
-                ok_ = isinstance(co_, dict) and set(co_) <= {"closing_r_m", "splitter_w_m", "splitter_gap_m",
-                                                              "island_fill", "lane_w_m", "lane_clear_m"}
-                if not ok_ or not sec.roundabout:
+                from . import compact_roundabout as CR_
+                co_ = CR_.validate({} if co_ is None or co_ is True else co_)
+                if co_ is None or not sec.roundabout:
                     if ov["id"] not in net.overrides_stale:
                         net.overrides_stale.append(ov["id"])
                     sec.provenance["compact_roundabout_rejected"] = st["compact_roundabout"]
@@ -1065,7 +1109,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 hits = np.zeros(len(idx))
                 for j, i in enumerate(idx):
                     q = Point(*(c.line.p[i] + c.line.n[i] * sg * (c.hw[i] + S.RURAL_FOOT_M / 2)))
-                    hits[j] = 1.0 if wk_tree is not None and len(wk_tree.query(q.buffer(S.RURAL_FOOT_M / 2 + 1.0))) else 0.0
+                    hits[j] = 1.0 if wk_tree is not None and len(wk_tree.query(_qbox(q, S.RURAL_FOOT_M / 2 + 1.0))) else 0.0
                 hs = np.array([hits[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) >= 0.2
                 path_d[side_] = np.interp(np.arange(n), idx, hs.astype(float)) > 0.5
                 rural_d[side_] = np.ones(n, bool)
@@ -1104,14 +1148,14 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 hw = c.hw[i]
                 if ft_tree is not None:
                     q = Point(*(p + nrm * (hw + S.KERB_TOP_W + 1.1)))
-                    near = ft_tree.query(q.buffer(1.4))
+                    near = ft_tree.query(_qbox(q, 1.4))
                     walk[j] = 1.0 if len(near) and min(footways[k].distance(q) for k in near) <= 1.4 else 0.0
                 if c.dirn[i] != 0 and ow_tree is not None:
                     tdir = c.line.t[i] * c.dirn[i]
                     for dist in (3.0, 6.0, 10.0, 15.0, 22.0):
                         q = Point(*(p + nrm * (hw + dist)))
                         hit = False
-                        for k in ow_tree.query(q.buffer(3.0)):
+                        for k in ow_tree.query(_qbox(q, 3.0)):
                             oc = ow_meta[int(k)]
                             if oc is c:
                                 continue

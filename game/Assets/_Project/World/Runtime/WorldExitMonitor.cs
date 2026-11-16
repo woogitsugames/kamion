@@ -55,6 +55,12 @@ namespace Game.World
         public int Count => m_Count;
         public void Clear() { m_Head = 0; m_Count = 0; }
 
+        /// <summary>Floating-origin rebase (ADR 0235): the stored world positions move with the world.</summary>
+        public void Offset(Vector3 offset)
+        {
+            for (int i = 0; i < m_Poses.Length; i++) m_Poses[i].position += offset;
+        }
+
         public void Record(float time, Vector3 position, float yawDeg)
         {
             m_Poses[m_Head] = new Pose { position = position, yawDeg = yawDeg, time = time };

@@ -170,7 +170,8 @@ namespace Game.Tests
                 StringAssert.Contains("no region", errors[0]);
             }
 
-            string tmp = Path.Combine(Path.GetTempPath(), "kamion-build-regions-empty-test.json");
+            // Unique name: two Unity slots may run EditMode at once (review #129 P2-3, ADR 0276).
+            string tmp = Path.Combine(Path.GetTempPath(), "kamion-build-regions-empty-" + Path.GetRandomFileName() + ".json");
             File.WriteAllText(tmp, @"{""schema"": ""truck-sim-pl/build-regions/1"", ""regions"": []}");
             try
             {

@@ -13,7 +13,7 @@ Wszystkie wersje **zweryfikuj w oficjalnych źródłach w dniu instalacji**. Lic
 | Kod | C#, asmdef per moduł; **Windows x64: backend Mono** (ADR 0261), IL2CPP dopiero po pomiarze A/B przed pierwszym wydaniem (ADR 0271); 🔒 Android: IL2CPP, ARM64 | Burst/Jobs/Mathematics dla fizyki i generacji |
 | Fizyka | **Własny solver pojazdu** + PhysX jako kolizje/ciała | `docs/04`. WheelCollider tylko jako punkt odniesienia w testach |
 | Wejście | Input System (nowy), za warstwą `IDriverInput` (D56) | **PC: klawiatura + pad** (ADR 0261, przypisania ADR 0264), kierownica/pedały z FFB (ADR 0263), HUD pod monitor (ADR 0265), menu ustawień PC (ADR 0270); 🔒 telefon: dotyk + gyro |
-| Treść/DLC | Addressables; regiony przez `-Regions` w buildzie (ADR 0229) | `docs/10`. **PC: paczka zip, itch.io najpierw, Steam po decyzji właściciela** (ADR 0271, `docs/12`). 🔒 Play Asset Delivery dla Google Play |
+| Treść/DLC | Build z regionami (`-Regions`, zestawy `d67`/`d67-full`, ADR 0229/0267) + streaming kafli w buildzie (ADR 0235/0273); kontrakt paczek AssetBundle tylko w teście (ADR 0234 §9); Addressables wycofane w s23 | `docs/10`. **PC: paczka zip, itch.io najpierw, Steam po decyzji właściciela** (ADR 0271, `docs/12`). 🔒 Play Asset Delivery dla Google Play (do decyzji przy publikacji, `docs/10` §3.7) |
 | Audio | FMOD for Unity (sprawdź warunki darmowej licencji indie) albo Unity Audio + własny mikser | `docs/08` |
 | Testy | Unity Test Framework (EditMode/PlayMode), pytest dla narzędzi | |
 | Profilowanie | **PC:** `scripts/pc-metrics.ps1` + `tools/pcperf` (ADR 0266: klatki, CPU/GPU, draw calls, RAM/VRAM procesu, `nvidia-smi`), Unity Profiler, Memory Profiler, Frame Debugger, RenderDoc. 🔒 Telefon: Android GPU Inspector, Arm Performance Studio (Samsung A zwykle ma Mali), Snapdragon Profiler (Adreno), `scripts/device-metrics.ps1` | Dowód bramki = player Windows, nie edytor (`docs/03`) |
@@ -59,7 +59,7 @@ To jest odpowiedź na pytanie „czy trzeba konkretne connectory albo skille?”
 |---|---|---|
 | **Unity MCP** (np. „MCP for Unity” CoplayDev/unity-mcp; sprawdź też, czy Unity wydało oficjalny serwer MCP i który jest aktywnie utrzymywany) | Odczyt konsoli, uruchamianie testów, operacje na scenach/prefabach, zrzuty z kamer edytora | **Wysoki** |
 | **Blender MCP** (ahujasid/blender-mcp) | Interaktywna praca na scenie Blendera, podgląd viewportu, szybkie iteracje modelu ciężarówki | **Wysoki** (obok skryptów headless) |
-| **Context7** (aktualna dokumentacja bibliotek) | Unity 6.3 API, URP, Addressables, Input System — bez halucynacji o starych API | Wysoki |
+| **Context7** (aktualna dokumentacja bibliotek) | Unity 6.3 API, URP, AssetBundles/SceneManager, Input System — bez halucynacji o starych API | Wysoki |
 | GitHub | przez `gh` CLI — osobny MCP niepotrzebny | — |
 
 Zasada: MCP to wygoda, nie zależność. Każda operacja krytyczna (build, generacja mapy, eksport modelu, testy) musi też działać **headless ze skryptu**, żeby była odtwarzalna i dostępna dla subagentów.

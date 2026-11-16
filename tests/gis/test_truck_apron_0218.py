@@ -154,10 +154,26 @@ def test_island_shrinks_by_the_extra_apron_width():
 @pytest.mark.parametrize("mat,expect", [("beton", "road_concrete"), ("asfalt", "road_asphalt"),
                                         ("kostka_jasna", "apron_paving_light")])
 def test_truck_apron_other_surfaces(mat, expect):
-    net = _net(_ov(width_m=2.5, height_m=0.03, material=mat))
+    # review s23 D18 P2-7: a carriageway-class apron (beton / asfalt) is flush - no lip for cull_sides_on_carriageway
+    # to remove; only the block-paving aprons carry an authored lip
+    ov = _ov(width_m=2.5, material=mat) if expect.startswith("road_") else _ov(width_m=2.5, height_m=0.03, material=mat)
+    net = _net(ov)
+    assert not net.overrides_stale
     r, z = _radii(_mesh(net), expect)
     inner = r < R_AXIS - 2.0 + 0.05                                    # the apron strip, not the ring carriageway
     assert r[inner].max() - r[inner].min() == pytest.approx(2.5, abs=0.2)
+    if expect.startswith("road_"):
+        ta = net.sec_list[int(_rings(net)[0].sec_idx[0])].truck_apron
+        assert ta["height_m"] == 0.0
+
+
+@pytest.mark.parametrize("mat", ["beton", "asfalt", "concrete", "asphalt"])
+def test_carriageway_class_apron_with_a_lip_is_stale(mat):
+    """review s23 D18 P2-7: `road_concrete` / `road_asphalt` are carriageways for meshing.cull_sides_on_carriageway,
+    which would remove the lip and the island kerb beside it - a raised lip on them is rejected, not built."""
+    net = _net(_ov(width_m=2.5, height_m=0.03, material=mat))
+    assert net.overrides_stale and all(net.sec_list[int(c.sec_idx[0])].truck_apron is None for c in _rings(net))
+    assert not _net(_ov(width_m=2.5, height_m=0.0, material=mat)).overrides_stale
 
 
 def test_width_only_moves_the_island_kerb_and_keeps_the_rule_surface():

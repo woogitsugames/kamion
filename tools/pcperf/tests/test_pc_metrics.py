@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import pc_metrics as pm  # noqa: E402
 
 BUDGET = Path(__file__).resolve().parents[1] / "budgets" / "pc-budgets.json"
+MACHINES = Path(__file__).resolve().parents[1] / "budgets" / "pc-machines.json"
 
 
 # ---------------------------------------------------------------- dane syntetyczne
@@ -19,7 +20,8 @@ BUDGET = Path(__file__).resolve().parents[1] / "budgets" / "pc-budgets.json"
 def make_run(tmp: Path, frame_ms: list[float], *, fps_dt: float | None = None, width=1920, height=1080, tier="High",
              target_fps=60, warmup=5.0, editor=False, focus_lost=0, end="duration", draws=1500, tris=2_000_000,
              gc_step_at: list[int] | None = None, loads=None, memory=True, process=True, private_peak=4000.0,
-             vram_peak=3000.0, gpu="Synthetic GPU", cpu="Synthetic CPU", dropped=0) -> Path:
+             vram_peak=3000.0, gpu="Synthetic GPU", cpu="Synthetic CPU", dropped=0, vsync=0,
+             fullscreen="FullScreenWindow", gpu_vendor="X") -> Path:
     d = tmp / "run"
     d.mkdir(parents=True, exist_ok=True)
     lines = [",".join(pm.FRAMES_HEADER)]
@@ -46,10 +48,10 @@ def make_run(tmp: Path, frame_ms: list[float], *, fps_dt: float | None = None, w
         "format": pm.RUN_FORMAT, "label": "test", "endReason": end, "isEditor": editor, "platform": "WindowsPlayer",
         "unityVersion": "6000.3.28f1", "appVersion": "0.1.0", "development": False, "buildLabel": "0.1.0 (abc)",
         "commandLine": "Kamion.exe -metrics x",
-        "system": {"os": "Windows 11", "cpu": cpu, "gpu": gpu, "gpuVendor": "X", "graphicsApi": "Direct3D 12",
+        "system": {"os": "Windows 11", "cpu": cpu, "gpu": gpu, "gpuVendor": gpu_vendor, "graphicsApi": "Direct3D 12",
                    "deviceModel": "PC", "cpuCores": 12, "cpuFrequencyMHz": 3600, "systemMemoryMb": 32768, "gpuMemoryMb": 12000},
-        "display": {"width": width, "height": height, "vSyncCount": 0, "targetFrameRate": target_fps, "qualityLevel": 2,
-                    "refreshRateHz": 144.0, "fullScreenMode": "FullScreenWindow", "qualityName": tier},
+        "display": {"width": width, "height": height, "vSyncCount": vsync, "targetFrameRate": target_fps, "qualityLevel": 2,
+                    "refreshRateHz": 144.0, "fullScreenMode": fullscreen, "qualityName": tier},
         "options": {"seconds": 90.0, "warmupSeconds": warmup, "start": "region", "vsyncOverride": -1, "maxFps": 1000},
         "recording": {"windowStartRealtime_s": 12.0, "drivingReadyRealtime_s": -1.0, "frames": len(frame_ms),
                       "droppedFrames": dropped, "focusLost": focus_lost, "gcAtStart": 10, "gcAtEnd": gc, "memorySamples": 40,
@@ -304,3 +306,185 @@ def test_cross_check_with_in_game_percentiles(tmp_path):
     (d / "run.json").write_text(json.dumps(j))
     cc2 = pm.evaluate(pm.load_run(d), None, None)["cross_check"]
     assert cc2["ok"] is False and cc2["max_diff_ms"] == pytest.approx(1.0)
+
+
+# ---------------------------------------------------------------- D76: emulacja klas na maszynie deweloperskiej
+
+DEV_GPU = dict(gpu="NVIDIA GeForce RTX 5070", gpu_vendor="NVIDIA", cpu="Intel(R) Core(TM) Ultra 7 270K Plus")
+MIN_EMU = dict(width=1920, height=1080, tier="Low", target_fps=30, vram_peak=1500.0)   # VRAM min <= 1792 MB
+REC_EMU = dict(width=1920, height=1080, tier="High", target_fps=60)
+
+
+def _eval(d, cls, machines=None, **kw):
+    return pm.evaluate(pm.load_run(d), pm.load_budget(BUDGET), cls,
+                       machines=pm.load_machines(MACHINES) if machines is None else machines, **kw)
+
+
+@pytest.mark.parametrize("cls,cond,ms", [("min", MIN_EMU, 30.0), ("zalecany", REC_EMU, 15.0)])
+def test_emulation_matching_config_is_gate_eligible(tmp_path, cls, cond, ms):
+    d = make_run(tmp_path, steady(6000, ms), **DEV_GPU, **cond)
+    rep = _eval(d, cls)
+    assert rep["verdict"] == "PASS", rep["checks"]
+    assert rep["measurement_kind"] == "emulation"
+    assert rep["gate_eligible"] is True
+    assert rep["reference_machine"] is False
+    assert rep["measurement"]["machine"] == "dev-rtx5070" and rep["measurement"]["decision"] == "D76"
+    ann = rep["measurement"]["annotation"]
+    assert ann.startswith("EMULACJA (D76)") and f"klasy {cls}" in ann and "przed obietnicą wymagań" in ann
+    md = pm.render_md(rep)
+    assert "EMULACJA (D76) — nie zastępuje pomiaru na sprzęcie klasy " + cls in md
+    assert "Zalicza bramkę: **TAK**" in md
+
+
+def test_emulation_fail_verdict_not_eligible(tmp_path):
+    frames = steady(6000, 15.0)
+    frames[3000] = 120.0
+    d = make_run(tmp_path, frames, **DEV_GPU, **REC_EMU)
+    rep = _eval(d, "zalecany")
+    assert rep["verdict"] == "FAIL" and rep["measurement_kind"] == "emulation" and rep["gate_eligible"] is False
+    assert pm.exit_code(rep) == 1
+
+
+@pytest.mark.parametrize("cls,kw,needle", [
+    ("zalecany", dict(REC_EMU, width=2560, height=1440), "rozdzielczość"),
+    ("zalecany", dict(REC_EMU, tier="Ultra"), "tier"),
+    ("min", dict(MIN_EMU, target_fps=60), "limit FPS"),
+    ("zalecany", dict(REC_EMU, vsync=1), "VSync"),
+    ("zalecany", dict(REC_EMU, fullscreen="Windowed"), "tryb ekranu"),
+])
+def test_emulation_config_mismatch_is_informational(tmp_path, cls, kw, needle):
+    d = make_run(tmp_path, steady(6000, 15.0), **DEV_GPU, **kw)
+    rep = _eval(d, cls, allow_mismatch=True)       # nawet PASS przy --allow-context-mismatch nie zalicza
+    assert rep["measurement_kind"] == "informational"
+    assert rep["gate_eligible"] is False
+    assert rep["measurement"]["machine"] == "dev-rtx5070"
+    assert any(needle in r for r in rep["measurement"]["reasons"]), rep["measurement"]["reasons"]
+    assert rep["measurement"]["annotation"] is None
+    assert "Dlaczego nie zalicza" in pm.render_md(rep)
+
+
+def test_vsync_mismatch_alone_keeps_verdict_but_not_gate(tmp_path):
+    # VSync nie jest warunkiem klasy w budżecie -> werdykt PASS, ale emulacja wymaga VSync 0
+    d = make_run(tmp_path, steady(6000, 15.0), **DEV_GPU, **REC_EMU, vsync=1)
+    rep = _eval(d, "zalecany")
+    assert rep["verdict"] == "PASS" and rep["gate_eligible"] is False and rep["measurement_kind"] == "informational"
+    assert pm.exit_code(rep) == 0
+
+
+@pytest.mark.parametrize("gpu,vendor", [("NVIDIA GeForce RTX 4070", "NVIDIA"), ("NVIDIA GeForce RTX 5070 Ti", "NVIDIA"),
+                                        ("Synthetic GPU", "X")])
+def test_unmatched_gpu_is_informational(tmp_path, gpu, vendor):
+    d = make_run(tmp_path, steady(6000, 15.0), gpu=gpu, gpu_vendor=vendor, **REC_EMU)
+    rep = _eval(d, "zalecany")
+    assert rep["verdict"] == "PASS"
+    assert rep["measurement_kind"] == "informational" and rep["gate_eligible"] is False
+    assert "nie jest w pc-machines.json" in rep["measurement"]["reasons"][0]
+
+
+def test_dev_machine_class_without_emulation_is_informational(tmp_path):
+    d = make_run(tmp_path, steady(6000, 15.0), **DEV_GPU, width=2560, height=1440, tier="Ultra", target_fps=60)
+    rep = _eval(d, "wysoki")
+    assert rep["verdict"] == "PASS" and rep["measurement_kind"] == "informational"
+    assert "nie emuluje klasy wysoki" in rep["measurement"]["reasons"][0]
+
+
+def test_reference_entry_in_machines_file_is_gate_eligible(tmp_path):
+    d = make_run(tmp_path, steady(6000, 30.0), gpu="NVIDIA GeForce GTX 660", gpu_vendor="NVIDIA",
+                 cpu="Intel(R) Core(TM) i5-6400 CPU @ 2.70GHz", **MIN_EMU, vsync=1, fullscreen="Windowed")
+    machines = pm.load_machines(MACHINES)
+    machines["reference"] = [{"id": "test-gtx660", "classes": ["min"],
+                              "match": {"gpuContains": ["GTX 660"], "cpuContains": ["i5-6400"]}}]
+    rep = _eval(d, "min", machines=machines)
+    assert rep["measurement_kind"] == "reference" and rep["gate_eligible"] is True
+    assert rep["measurement"]["annotation"] is None
+    assert "EMULACJA" not in pm.render_md(rep)
+    rep2 = _eval(d, "zalecany", machines=machines, allow_mismatch=True)   # wpis tylko dla klasy min
+    assert rep2["measurement_kind"] == "informational"
+
+
+def test_legacy_reference_machines_in_budget_still_work(tmp_path):
+    d = make_run(tmp_path, steady(6000, 15.0), gpu="Ref GPU", cpu="Ref CPU")
+    budget = pm.load_budget(BUDGET)
+    budget["referenceMachines"] = [{"gpu": "Ref GPU", "cpu": "Ref CPU", "class": "zalecany"}]
+    rep = pm.evaluate(pm.load_run(d), budget, "zalecany")      # bez pliku maszyn (stare wywołanie)
+    assert rep["measurement_kind"] == "reference" and rep["gate_eligible"] is True
+
+
+def test_old_run_json_without_display_fields(tmp_path):
+    """Stary / niepełny run.json: brak vSyncCount, fullScreenMode i gpuVendor -> nie wywraca się, emulacja niepotwierdzona."""
+    d = make_run(tmp_path, steady(6000, 15.0), **DEV_GPU, **REC_EMU)
+    j = json.loads((d / "run.json").read_text())
+    del j["display"]["vSyncCount"], j["display"]["fullScreenMode"], j["system"]["gpuVendor"]
+    (d / "run.json").write_text(json.dumps(j))
+    rep = _eval(d, "zalecany")
+    assert rep["verdict"] == "PASS"
+    assert rep["measurement_kind"] == "informational" and rep["gate_eligible"] is False
+    j.pop("system")
+    (d / "run.json").write_text(json.dumps(j))
+    rep2 = _eval(d, "zalecany")
+    assert rep2["measurement_kind"] == "informational"
+    pm.render_md(rep2)
+
+
+def test_no_class_is_informational(tmp_path):
+    d = make_run(tmp_path, steady(6000, 15.0), **DEV_GPU, **REC_EMU)
+    rep = pm.evaluate(pm.load_run(d), None, None, machines=pm.load_machines(MACHINES))
+    assert rep["measurement_kind"] == "informational" and rep["gate_eligible"] is False
+
+
+def test_cli_emulation_default_machines_file(tmp_path, capsys):
+    d = make_run(tmp_path, steady(6000, 30.0), **DEV_GPU, **MIN_EMU)
+    assert pm.main([str(d), "--class", "min"]) == 0
+    rep = json.loads((d / "pc-report.json").read_text(encoding="utf-8"))
+    assert rep["measurement_kind"] == "emulation" and rep["gate_eligible"] is True
+    assert "EMULACJA (D76)" in (d / "pc-report.md").read_text(encoding="utf-8")
+    out = capsys.readouterr().out
+    assert out.startswith("verdict=PASS ") and "kind=emulation gate_eligible=true" in out
+    empty = tmp_path / "m.json"
+    empty.write_text(json.dumps({"format": pm.MACHINES_FORMAT, "reference": [], "emulation": []}))
+    assert pm.main([str(d), "--class", "min", "--machines", str(empty)]) == 0
+    assert json.loads((d / "pc-report.json").read_text(encoding="utf-8"))["measurement_kind"] == "informational"
+    assert pm.main([str(d), "--class", "min", "--machines", str(tmp_path / "brak.json")]) == 2
+    bad = tmp_path / "bad.json"
+    bad.write_text(json.dumps({"format": "x"}))
+    assert pm.main([str(d), "--class", "min", "--machines", str(bad)]) == 2
+
+
+def test_machines_file_schema_and_consistency_with_budget():
+    m = pm.load_machines(MACHINES)
+    b = pm.load_budget(BUDGET)
+    assert m["format"] == "kamion/pc-machines/1" and m["decision"] == "D76"
+    assert m["reference"] == []                     # prawdziwy sprzęt klas jeszcze nie wskazany
+    ids = [e["id"] for e in m["reference"] + m["emulation"]]
+    assert len(ids) == len(set(ids))
+    dev = next(e for e in m["emulation"] if e["id"] == "dev-rtx5070")
+    assert set(dev["classes"]) == {"min", "zalecany"}      # D76: tylko min i zalecany
+    assert pm.machine_matches({"gpu": "NVIDIA GeForce RTX 5070", "gpuVendor": "NVIDIA"}, dev["match"])
+    assert not pm.machine_matches({"gpu": "NVIDIA GeForce RTX 5070 Ti", "gpuVendor": "NVIDIA"}, dev["match"])
+    for e in m["emulation"]:
+        assert e.get("method") and e.get("decision") == "D76"
+        for cname, cfg in e["classes"].items():
+            assert cname in b["classes"], cname
+            bc = b["classes"][cname]
+            # metoda emulacji = warunki klasy z budżetu (rozdzielczość, tier, limit FPS) + VSync wył.
+            assert list(cfg["resolution"]) == list(bc["resolution"]), cname
+            assert cfg["tier"] == bc["tier"] and cfg["targetFps"] == bc["targetFps"], cname
+            assert cfg["vSyncCount"] == 0
+            assert set(cfg["fullScreenModes"]) <= {"FullScreenWindow", "ExclusiveFullScreen", "MaximizedWindow", "Windowed"}
+            assert cfg.get("realHardware")
+
+
+@pytest.mark.parametrize("mutate", [
+    lambda m: m.update(format="kamion/pc-machines/0"),
+    lambda m: m.update(reference=None),
+    lambda m: m["emulation"][0]["match"].update(gpuNameIs="x"),
+    lambda m: m["emulation"][0]["classes"]["min"].pop("vSyncCount"),
+    lambda m: m["emulation"][0].update(classes=["min"]),
+])
+def test_machines_file_validation_rejects_bad_entries(tmp_path, mutate):
+    m = json.loads(MACHINES.read_text(encoding="utf-8"))
+    mutate(m)
+    p = tmp_path / "pc-machines.json"
+    p.write_text(json.dumps(m), encoding="utf-8")
+    with pytest.raises(pm.FormatError):
+        pm.load_machines(p)

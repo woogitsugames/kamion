@@ -1,0 +1,105 @@
+--- a/tools/worldgen/streetscape/plots.py
++++ b/tools/worldgen/streetscape/plots.py
+@@ -262,9 +262,13 @@
+     road_clear = roads_poly.buffer(ROAD_CLEAR_M)
+     bar_u = shapely.unary_union([b.buffer(0.5) for b in barriers]) if barriers else None
+     static = [road_clear] + [o.buffer(1.0) for o in obstacles] + ([bar_u] if bar_u is not None else [])
++    # K3b (prototype): the whole-tile obstacles are unioned ONCE; every group sees only its window of them
++    static_u = shapely.union_all(static)
+     groups = _groups(houses)
+     all_house = {h["id"]: h["poly"] for h in houses}
+-    plots, laid = [], []
++    h_ids = list(all_house)
++    h_tree = shapely.STRtree([all_house[h] for h in h_ids])
++    plots, laid, laid_b = [], [], []
+     for g in groups:
+         key = f"{seed}{g[0]['id']}"
+         foot = shapely.unary_union([h["poly"] for h in g])
+@@ -278,7 +282,9 @@
+         for du, dv in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+             d = eu * du + ev * dv
+             p0 = c + eu * (bb[1] if du > 0 else bb[0] if du < 0 else cu) + ev * (bb[3] if dv > 0 else bb[2] if dv < 0 else cv)
+-            hit = LineString([p0, p0 + d * ROAD_SEARCH_M]).intersection(roads_poly)
++            ray = LineString([p0, p0 + d * ROAD_SEARCH_M])
++            x0, y0, x1, y1 = ray.bounds
++            hit = ray.intersection(shapely.clip_by_rect(roads_poly, x0 - 1.0, y0 - 1.0, x1 + 1.0, y1 + 1.0))
+             if not hit.is_empty:
+                 dist = float(Point(*p0).distance(hit))
+                 if best is None or dist < best[0]:
+@@ -299,15 +305,21 @@
+             mg = [mb if du > 0 else mf, mf if du > 0 else mb, ms[0], ms[1]]
+         else:
+             mg = [ms[0], ms[1], mb if dv > 0 else mf, mf if dv > 0 else mb]
+-        others = [p.buffer(0.8) for hid, p in all_house.items() if hid not in {h["id"] for h in g}
+-                  and p.distance(foot) < 40.0]
+-        obs = shapely.unary_union(static + others + laid) if (static or others or laid) else Polygon()
+-
+         def rect(m):
+             cs = [(bb[0] - m[0], bb[2] - m[2]), (bb[1] + m[1], bb[2] - m[2]), (bb[1] + m[1], bb[3] + m[3]),
+                   (bb[0] - m[0], bb[3] + m[3])]
+             return Polygon([c + eu * u + ev * v for u, v in cs])
+         poly = rect(mg)
++        # margins only shrink, so every rect / cut below lies inside the start rect: obstacles outside it + 1 m
++        # (> the 0.8 m house buffer and the 0.01 m cut buffer) cannot change any intersection / difference
++        wx0, wy0, wx1, wy1 = poly.bounds
++        wx0, wy0, wx1, wy1 = wx0 - 1.0, wy0 - 1.0, wx1 + 1.0, wy1 + 1.0
++        gids = {h["id"] for h in g}
++        cand = sorted(int(i) for i in h_tree.query(shapely.box(wx0, wy0, wx1, wy1)))
++        others = [all_house[h_ids[i]].buffer(0.8) for i in cand if h_ids[i] not in gids
++                  and all_house[h_ids[i]].distance(foot) < 40.0]
++        laid_w = [q for q, (a0, b0, a1, b1) in zip(laid, laid_b) if a0 <= wx1 and a1 >= wx0 and b0 <= wy1 and b1 >= wy0]
++        obs = shapely.union_all([shapely.clip_by_rect(static_u, wx0, wy0, wx1, wy1)] + others + laid_w)
+         for _ in range(60):
+             a0 = poly.intersection(obs).area
+             if a0 < 0.3:
+@@ -354,6 +366,7 @@
+                       "surface": "paving" if hfloat(key, "surf") < SURFACE_BY_AGE[age] else "gravel", "key": key,
+                       "house_h": float(props.get("height_m") or 6.0)})
+         laid.append(poly)
++        laid_b.append(poly.bounds)
+     return plots
+ 
+ 
+@@ -833,8 +846,19 @@
+     # ADR 0124 (review 0114 P1-r8-c "schody przed płotem", P2-r8-b "płot przecina bramę garażu"): no fence crosses
+     # the door steps of a house or the clear depth in front of a garage door
+     zones = [z["zone"] for z in steps.values()] + [d[3] for d in gdoors]
+-    cut = shapely.unary_union([roads_poly.buffer(0.3), bpoly.buffer(0.3)] + [z.buffer(0.15) for z in zones])
+-    shapely.prepare(cut)
++    cut_all = shapely.unary_union([roads_poly.buffer(0.3), bpoly.buffer(0.3)] + [z.buffer(0.15) for z in zones])
++    cut_memo = {}
++
++    def cut_of(plot):
++        # K3b (prototype): layout() only asks about the cut along the plot edges (difference / intersects) and within
++        # 0.8 m of them (distance): the whole-tile cut clipped to the plot bounds + 2 m gives the same answers
++        k = plot["id"]
++        if k not in cut_memo:
++            x0, y0, x1, y1 = plot["poly"].bounds
++            q = shapely.clip_by_rect(cut_all, x0 - 2.0, y0 - 2.0, x1 + 2.0, y1 + 2.0)
++            shapely.prepare(q)
++            cut_memo[k] = q
++        return cut_memo[k]
+     near0 = [sg for b in barriers for sg in _segments(b)]
+ 
+     def lay_all(overrides):
+@@ -842,7 +866,7 @@
+         near.add(near0)
+         for plot in plots:
+             o = overrides.get(plot["id"], {})
+-            plot["lay"] = layout(plot, cut, near, plot["garages"], gate_s=o.get("gate_s"), no_gate=o.get("no_gate", False),
++            plot["lay"] = layout(plot, cut_of(plot), near, plot["garages"], gate_s=o.get("gate_s"), no_gate=o.get("no_gate", False),
+                                  garage_doors=plot["garage_doors"])
+             near.add(plot["lay"]["segs"])
+     for plot in plots:
+@@ -863,9 +887,9 @@
+             near.add(near0)
+             if gate_s is None:
+                 ovr[plot["id"]] = {"no_gate": True}
+-                return layout(plot, cut, near, plot["garages"], no_gate=True, garage_doors=plot["garage_doors"])
++                return layout(plot, cut_of(plot), near, plot["garages"], no_gate=True, garage_doors=plot["garage_doors"])
+             ovr[plot["id"]] = {"gate_s": gate_s}
+-            return layout(plot, cut, near, plot["garages"], gate_s=gate_s, garage_doors=plot["garage_doors"])
++            return layout(plot, cut_of(plot), near, plot["garages"], gate_s=gate_s, garage_doors=plot["garage_doors"])
+         shapely.prepare(bpoly)
+         drops, astats = plan_access(plots, net, carriage, relayout, block=bpoly)
+         lay_all(ovr)                                         # final fences with every moved / removed gate in place
