@@ -1,0 +1,8 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\logs\visual-qa-World_dk65-04-20261115-234000.log -buildTarget Android -quit -executeMethod Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras -qaScene World_dk65-04 -qaWidth 1280 -qaHeight 720 -qaTier Low -qaOutput C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\spawn-fix-0262\renders\dk65-04 -qaLighting clear -qaCameras truck-at-gate,cab-gate
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 24368)
+shutdown crash NOT accepted: signature=False freshPng=2 expected=2
+OSTRZEŻENIE: Unity exited with code -1073741819 during mono cleanup (abort_threads, no crash stack) AFTER writing all 2 frames; accepted (ADR 0083).
+VISUALQA_RESULT: OK rendered=2 dir=C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\spawn-fix-0262\renders\dk65-04
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\spawn-fix-0262\renders\dk65-04\cab-gate.png  956 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\spawn-fix-0262\renders\dk65-04\truck-at-gate.png  1 016 KB
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\logs\visual-qa-World_dk65-04-20261115-234000.log

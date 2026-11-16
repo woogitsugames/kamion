@@ -1,5 +1,5 @@
 # ADR 0262 — start regionu za zamknięciem krawędzi kafla, nigdy w zaporach
-Status: Proposed (agent `spawn-fix-0262`, s22, gałąź `spawn-fix-0262`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+Status: Accepted — kod w main `5f51007ee` (s23, recenzja `docs/reports/REVIEW-2026-11-15-s23-code-spawn-fix-0262.md`: SCAL warunkowo); oględziny 20/20 regionów i sekcja „Wyniki” uzupełnione 2026-11-16 (agent `spawn-fix-0262`).
 Powiązane: ADR 0229 (wybór regionu, `region_catalog.json`, `startS`), ADR 0169 (jedno źródło zamknięć krawędzi kafla,
 60 m w głąb), ADR 0082 (`WorldBoundary`, siatka bezpieczeństwa), ADR 0214/0215 + D65 (plac budowy S19, stara DK65).
 
@@ -61,6 +61,54 @@ Draws/tris: bez zmian (żadnej nowej geometrii). Runtime: jednorazowo przy starc
   collidera, a ciągnik przesuwany po trasie przez 300 m nie trafia na nic na jezdni (region bez sceny = pominięty).
 - Wyniki przebiegów i rendery: sekcja „Wyniki” niżej.
 
+## Wyniki (2026-11-16)
+Źródła liczb: stacje zamknięć — `artifacts/spawn-fix-0262/editmode-red.log` (prawdziwe `ResolveClosures`, przebieg sprzed
+scalenia z main; po nim zmieniły się tylko trasy dk65-11 i knyszyn-s, po 1 linii `route_start.json`); `startS` i długość
+trasy — `region_catalog.json` po scaleniu `origin/main` (`1311c25de`). „Wolne” = stacja zamknięcia wyjazdowego (albo
+koniec trasy, gdy trasa nie wychodzi przez zamknięcie) minus `startS`; od zderzaka 5,15 m mniej. Rendery edytora:
+reimport Low + kamery `truck-at-gate` / `cab-gate` (clear, 1280×720) w worktree na `221a30be4` (przed scaleniem),
+20/20 `import=0 qa=0` (`artifacts/spawn-fix-0262/renders/<id>.status`, arkusze `renders/_sheets/<id>.jpg`).
+Wszystkie 20 par obejrzane.
+
+| Region | Zamknięcie wjazd. [m] | Wyjazd. [m] | startS [m] | Trasa [m] | Wolne [m] | Render edytora (oględziny) |
+|---|---|---|---|---|---|---|
+| bialystok-industrial-c | brak | brak (szlaban bazy 244) | 12 | 2397,47 | — | bez renderu w tym zadaniu; zrzut exe OK |
+| bialystok-maczka | 61,2 | 1993,8 | 90 | 2054,08 | 1903,8 | OK; zestaw na obiekcie z barierami, w kadrze widać deski drogi bocznej poniżej — własne zamknięcie zasłania zestaw (potwierdza je liczba, nie obraz) |
+| bialystok-kleeberga | 60,0 | 2161,0 | 90 | 2221,20 | 2071,0 | OK; zapory za naczepą; zestaw stoi na lewym z trzech pasów jezdni (trasa nie biegnie prawym pasem) |
+| bialystok-knyszynska | 20,8 | 2902,2 | 90 | 2961,35 | 2812,2 | OK; zapory daleko z tyłu; zestaw na pasie ze strzałką „prosto”, nie na skrajnym prawym |
+| dk65-01 | 60,0 | 571,6 | 90 | 631,76 | 481,6 | OK |
+| dk65-02 | 60,0 | 2340,7 | 90 | 2400,68 | 2250,7 | OK |
+| dk65-03 | 60,0 | — | 90 | 484,43 | 394,4 (koniec trasy) | OK |
+| dk65-04 | 60,0 | 2074,5 | 90 | 2079,43 | 1984,5 | OK; ~40 m przed kabiną wlot drogi bocznej z lewej |
+| dk65-05 | 14,5 | 2141,9 | 90 | 2201,88 | 2051,9 | OK; zapory ~75 m z tyłu, start za skrzyżowaniem z wysepką, wiata po prawej |
+| dk65-06 | 54,6 | 1641,8 | 90 | 1701,95 | 1551,8 | OK z uwagą: start na wlocie ronda (węzeł ~9 m przed zderzakiem wg recenzji), przed kabiną wyspa ronda; przejazd wolny, ale to nie prosta |
+| dk65-07 | 60,0 | 862,4 | 90 | 865,60 | 772,4 | OK; wlot drogi bocznej z lewej ~30 m przed kabiną |
+| dk65-08 | 60,0 | 2295,1 | 90 | 2355,15 | 2205,1 | OK |
+| dk65-09 | 60,0 | — | 90 | 352,36 | 262,4 (koniec trasy) | OK; < 300 m, bo trasa się kończy |
+| dk65-10 | 60,0 | 2555,4 | 90 | 2615,35 | 2465,4 | OK |
+| dk65-11 | 60,0 (stara trasa) | — | 90 | 377,82 | 287,8 (koniec trasy) | OK; < 300 m, bo trasa się kończy |
+| knyszyn-s | 60,0 (stara trasa) | 2360,7 | 90 | 2420,72 | 2270,7 | OK |
+| knyszyn | 60,0 | — | 90 | 1159,85 | 1069,9 (koniec trasy) | OK |
+| knyszyn-w | 53,9 | 1928,7 | 90 | 1988,70 | 1838,7 | OK; w dolnej krawędzi kadru kamery zewnętrznej obiekt tuż przy kamerze (kosmetyka kamery kontrolnej) |
+| dk65-monki-01 | 60,0 | 1125,0 | 90 | 1185,04 | 1035,0 | OK |
+| dw671-tykocin-01 | 60,0 | 2567,3 | 90 | 2608,56 | 2477,3 | OK; wąska jezdnia bez linii krawędziowych, zestaw na prawej połowie |
+| bialystok-dojlidy | 60,3 | 2129,9 | 90 | 2133,17 | 2039,9 | OK; trasa kończy się 3,3 m za rzędem wyjazdowym (nie na krawędzi kafla) |
+
+W każdym z 20 renderów: zestaw stoi na jezdni w osi pasa, rząd zapór z deskami jest za naczepą (albo zasłonięty —
+maczka), przed kabiną nie ma zapór ani przeszkód na pasie do granicy widoczności. Wymóg „≥ 300 m wolnej trasy”
+potwierdza test `WorldScenes` (ciągnik przesuwany 300 m po trasie bez collidera) — zielony 61/61 w przebiegu sprzed
+scalenia (`artifacts/spawn-fix-0262/editmode-green.xml`); przebieg lidera `artifacts/int-pc-s23/editmode-20261115-225152.xml`
+(730/731) nie zawiera `StartClearanceTests`. Przebieg po scaleniu: patrz niżej „Po scaleniu”.
+
+**Exe Windows** (`artifacts/int-pc-s23/starts/`, build `cc3e1ee900-dirty`, High, start `scene=<scena>` bez menu,
+7 zrzutów obejrzanych): bialystok-industrial-c, bialystok-dojlidy, dk65-05, dk65-11, knyszyn-s, knyszyn,
+dw671-tykocin-01 — 7/7 droga przed kabiną wolna; w lusterkach tykocina i dk65-11 widać zapory za zestawem; kadr
+dk65-05 zgadza się z renderem edytora z 90 m (ta sama wiata i bariera). Tykocin (scena zapieczona ze starym spawnem)
+uratował bezpiecznik: log `start moved along the route: route_s 12.0 -> 85.0 (region-edge closure on the route)` —
+runtime daje wjazd + 25 = 85 m, katalog/menu 90 m.
+**Uwaga do logów:** w pozostałych sześciu logach linia `[START] region=… route_s=12.0 en=…` NIE jest pozycją startu:
+`DrivingLabBootstrap.LogRegionStart` przy starcie z zapieczonego spawnu (bez `route_s`, bez przesunięcia) wypisuje
+`DefaultStartS` = 12 m i z niego liczy `en`. Dowodem pozycji są zrzuty, nie ta linia.
 ## Otwarte
 1. **300 m wolnej trasy**: dk65-09 (trasa 352 m) i dk65-11 (378 m) mają po starcie 90 m tylko ~262 / ~288 m trasy;
    na tym odcinku nie ma zamknięcia, ale wymóg „≥ 300 m” jest tam spełniony tylko jako „do końca trasy”.
