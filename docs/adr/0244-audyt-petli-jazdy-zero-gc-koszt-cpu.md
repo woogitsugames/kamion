@@ -80,3 +80,22 @@ floata (`t_s` > 1000 s). Parser `perfgate` i `device-metrics.ps1` czytają liczb
 - DrivingLab (bramki 1–2) nie przeszukuje sceny co klatkę.
 - Ryzyko: kod C# skompilowany w chmurze tylko składniowo (Roslyn, C# 9) i w .NET (`FrameCsvFormat`); kompilacja Unity, EditMode, PlayMode
   i pomiar na A16 — lider.
+
+## Uzupełnienie H12 (2026-11-16): ścieżki wejścia PC po ADR 0263/0264/0265
+Gałąź scalona z main (PC: kierownica HID + FFB, pad, klawiatura z rampą, HUD na monitor, bramka menu #131 P1-1). Przegląd kodu
+ścieżek co klatkę / co krok: `GamepadDriverInput.Sample`, `KeyboardBindingsDriverInput.Sample`, `HidWheelDriverInput.Sample`
+/`SampleBlocked`, `PcWheel.StepForceFeedback` → `ForceFeedbackModel.Step`, `DriverInputMixer.Sample` (bramka `is IMenuGatedInput`),
+`PcInputBridge.Update`, `UiFocus.HasModal`, `DrivingHud.RefreshNow`/`UpdateLayout` (tryb monitora, `MirrorWindowLayout`,
+`UiViewport.Refresh`, `TouchControlsPolicy.Current`). **Nie znaleziono alokacji w pętli** (przegląd; jedyne alokacje są w
+czasie podłączenia: `FindDevice`/`Bind`, subskrypcja `onDeviceChange` przy pierwszej próbce, `DrivingActions` w `Start`).
+Nowe testy (`GcAllocCounter`, Recorder „GC.Alloc”):
+| test | co mierzy |
+|---|---|
+| EditMode `PcInputGc0244Tests.PcSession_MixerPadKeysWheelForceFeedback_WithMenuGate_ZeroGcAlloc` | 600 klatek miksera w kolejności bootstrapu (pad, klawiatura z akcjami, stara klawiatura wył., kierownica HID, dotyk, gyro) z **wirtualnymi urządzeniami** Input System (Gamepad, Keyboard, Joystick dodane refleksją poza pomiarem — asmdef testów nie widzi `Unity.InputSystem`), profil kierownicy na układzie Joystick obejmujący oś, pedały, łopatki, przyciski, H-shifter; bramka menu otwierana/zamykana; 2 kroki FFB na klatkę z dostępnym ujściem (`RecordingForceFeedbackSink`) |
+| EditMode `PcInputGc0244Tests.PcSession_NoVirtualDevices_IdleWheel_ZeroGcAlloc` | to samo bez urządzeń wirtualnych: kierownica bez dopasowania (gałąź bezczynna, FFB nieaktywne → `Stop`) |
+| PlayMode `PcHudGc0244Tests.DesktopHud_MirrorWindows_500Refreshes_ZeroGcAlloc` | 500 × `DrivingHud.RefreshNow` w trybie monitora (1920×1080 i 2560×1080, okna lusterek z `MirrorWindowLayout`, zmienne tempomat/dźwignia/kierunkowskazy) |
+Istniejące testy tych ścieżek (bez zmian): `PcWheelDataTests` (krok kierownicy + FFB, logika bez urządzenia), `MenuInputGateTests.Gate_DoesNotAllocate`,
+`PadKeyboardInputTests.Steps_AllocateNothing` (filtr gałki, rampa klawiszy). **Testy Unity NIEuruchomione** (chmura bez Unity):
+`AddDevice(string,string,string)`/`MakeCurrent` przez refleksję są UNVERIFIED w EditMode — jeśli test nie doda urządzenia, padnie
+na asercji obecności (`Assert.IsNotNull(Current("Gamepad"))`), nie przejdzie po cichu. Propozycja dla lidera (asmdef): dodać
+`Unity.InputSystem` do `Game.Tests.EditMode` (#133 P2-2), wtedy refleksję zastąpi `InputSystem.AddDevice<Gamepad>()`.
