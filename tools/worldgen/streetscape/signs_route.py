@@ -35,6 +35,7 @@ from roads import standards as S
 from roads.network import RURAL
 
 from . import brand_filter as BF
+from . import built_up as BU
 from . import furniture as FU
 from . import sign_norms as SN
 from . import signs as SG
@@ -47,11 +48,38 @@ MIN_RING_R_DIAGRAM = 18.0
 DIAGRAM_MIN_M = 40.0            # shorter approach chains (split by nodes) carry the board at L - 10 m, >= 40 m
 
 
-def parse_traffic_sign(v):
-    """'PL:B-33[40];PL:A-7' / 'PL:A-7,B-33[50]' -> ['B-33_40', 'A-7'] (only PL: or bare codes)."""
+VALUE_CODES = {"B-33": "maxspeed", "B-18": "maxweight"}   # code -> OSM tag of the node that carries its value
+
+
+def _num(v):
+    """'10' / '7.5' / '10 t' -> float, else None (OSM values with units other than t / km/h are not converted)."""
+    m = re.fullmatch(r"\s*(\d+(?:[.,]\d+)?)\s*(t|km/h)?\s*", str(v or ""))
+    return float(m.group(1).replace(",", ".")) if m else None
+
+
+def _val_code(code, val):
+    v = _num(val)
+    if v is None or v <= 0:
+        return None
+    return f"{code}_{int(v) if float(v).is_integer() else v}"
+
+
+def parse_traffic_sign(v, tags=None):
+    """'PL:B-33[40];PL:A-7' / 'PL:A-7,B-33[50]' -> ['B-33_40', 'A-7'] (only PL: or bare codes).
+    ADR 0279 P1 (D25): the value of B-33 / B-18 comes from the brackets or else from the node tag (`maxspeed` /
+    `maxweight`, OSM wiki Key:traffic_sign); the generic `traffic_sign=maxspeed` + `maxspeed=<n>` is a B-33;
+    `traffic_sign=city_limit` (OSM: start of the built-up area) is a D-42 for the mapped direction. A code that needs a
+    value and has none stays bare (`B-33`, `B-18`) - reported as unknown, never invented: Z1 pkt 3.2.19 "Na znaku
+    podaje się wartość" (a B-18 without its number does not exist)."""
     out = []
     if not v:
         return out
+    tags = tags or {}
+    if str(v).strip() == "maxspeed":
+        c = _val_code("B-33", tags.get("maxspeed"))
+        return [c or "B-33"]
+    if str(v).strip() == "city_limit":
+        return ["D-42"]
     for part in re.split(r"[;,]", v):
         part = part.strip()
         if ":" in part:
@@ -62,8 +90,8 @@ def parse_traffic_sign(v):
         if not m:
             continue
         code, val = m.group(1), m.group(2)
-        if code == "B-33" and val and val.isdigit():
-            out.append(f"B-33_{int(val)}")
+        if code in VALUE_CODES:
+            out.append(_val_code(code, val if val else tags.get(VALUE_CODES[code])) or code)
         else:
             out.append(code)
     return out
@@ -82,7 +110,7 @@ def osm_signs(pl, net, src, origin, juncs, report, codes):
     for nd in src["osm"]["nodes"]:
         t = nd["tags"]
         hw = t.get("highway")
-        plates = parse_traffic_sign(t.get("traffic_sign"))
+        plates = parse_traffic_sign(t.get("traffic_sign"), t)
         if not plates and hw in ("give_way", "stop") and t.get("direction") in ("forward", "backward"):
             q = np.asarray(nd["geometry"]["coordinates"], float) - origin
             if any(np.hypot(*(q - c)) < 25.0 for c in centres):
@@ -91,10 +119,13 @@ def osm_signs(pl, net, src, origin, juncs, report, codes):
             rep["give_way_stop"] += 1
         if not plates:
             continue
-        known = [c for c in plates if c in SG.KNOWN or c.startswith("B-33_")]
+        known = [c for c in plates if SG.is_known(c)]
         for c in plates:
             if c not in known:
                 rep["unknown"][c] = rep["unknown"].get(c, 0) + 1
+                if c in VALUE_CODES:          # ADR 0279: a sign whose number is not in the data is not built
+                    rep.setdefault("needs_value", []).append({"osm_node": nd["osm_node"], "code": c,
+                                                              "tag": VALUE_CODES[c]})
         if not known:
             continue
         q = np.asarray(nd["geometry"]["coordinates"], float) - origin
@@ -122,7 +153,19 @@ def osm_signs(pl, net, src, origin, juncs, report, codes):
             codes.add(cd)
             rep["placed"][cd] = rep["placed"].get(cd, 0) + 1
         pl.pts.setdefault("sign", []).append((p[0], p[1]))
+        if known == ["D-42"] and str(t.get("traffic_sign", "")).strip() == "city_limit" and d in ("forward", "backward") \
+                and int(c.dirn[c.idx(s)]) == 0:
+            # Z1 pkt 5.2.49: D-43 on the right of the opposite direction, in the same cross-section as the D-42
+            kind2, _h2, w2, ext2 = FU.side_surface_offset(c, "L" if dn > 0 else "R", s)
+            off2 = float(c.hw_at(s)) + (S.KERB_TOP_W + S.SIGN_LATERAL if kind2 != RURAL else ext2 + 0.5)
+            p2 = c.line.offset_point(s, -side_sgn * off2)
+            if not pl.near("sign", p2, 1.5):
+                for cd in FU.sign_assembly(pl, p2, travel, ["D-43"], f"osm:node/{nd['osm_node']}:D-43", sidewalk=w2 > 0.5):
+                    codes.add(cd)
+                    rep["placed"][cd] = rep["placed"].get(cd, 0) + 1
+                pl.pts.setdefault("sign", []).append((p2[0], p2[1]))
     report["osm_signs"] = rep
+    BU.rule_signs(pl, net, src, origin, juncs, report, codes)       # ADR 0279 P1: D-42 / D-43 by rule
 
 
 def _attrs_at(net, graph_attrs, c, s):
@@ -247,9 +290,14 @@ def roundabout_signs(pl, net, juncs, graph_attrs, report, codes, boards, src=Non
                         pl.pts.setdefault("sign", []).append((p[0], p[1]))
                         rep["c9_islands"] += 1
                 # E-1 diagram on major approaches of large roundabouts
+                has_e1 = False
                 if cls in ("GP", "G") and radius >= MIN_RING_R_DIAGRAM and a.L > DIAGRAM_MIN_M + 10:
-                    _diagram(pl, net, graph_attrs, j, a, _ring_arms(net, juncs, j), boards, rep)
+                    has_e1 = bool(_diagram(pl, net, graph_attrs, j, a, _ring_arms(net, juncs, j), boards, rep))
+                if src is not None:
+                    _a8(pl, net, j, a, has_e1, BU.area_for(net, src, origin), rep, codes)
             elif dn < 0 or dn == 0:
+                if dn == 0 and src is not None:        # two-way arm = an entry too (junction_signs: A-7 + C-12)
+                    _a8(pl, net, j, a, False, BU.area_for(net, src, origin), rep, codes)
                 dests, refs, name = _arm_label(net, graph_attrs, a)
                 lines = dests[:2] if dests else ([_short(name)] if name else [])
                 if not lines or cls in ("D", "L") and not dests:
@@ -332,6 +380,48 @@ def _diagram(pl, net, graph_attrs, j, entry, arms, boards, rep):
     pl.pts.setdefault("sign", []).append((p[0], p[1]))
     rep["diagrams"] += 1
     rep["diagram_at"].append([round(float(p[0]), 1), round(float(p[1]), 1)])
+    return True
+
+
+def _a8(pl, net, j, entry, has_e1, area, rep, codes):
+    """ADR 0279 P1: A-8 "skrzyżowanie o ruchu okrężnym" before a roundabout entry (also the compact roundabout of
+    roads.compact_roundabout) - rule of Dz.U. 2026 poz. 132 (pkt 2.2.9), distance pkt 2.1.2; see built_up.needs_a8."""
+    c = entry.chain
+    trim = c.t_a if entry.end == "a" else c.t_b
+    s0 = float(entry.s(min(trim + 5.0, entry.L)))
+    sec = c.section(s0, net.sec_list)
+    need, why = BU.needs_a8(c.line.point(s0), sec, area, has_e1)
+    out = rep.setdefault("a8", [])
+    item = {"junction": str(j.id), "entry": str(c.id), "why": why, "placed": False}
+    out.append(item)
+    if not need:
+        return
+    bu = BU.is_built_up(area, c.line.point(s0))
+    v = BU.legal_speed(sec, bu)
+    dist = BU.a8_distance_m(v)
+    d = trim + dist
+    lim = entry.L - 5.0
+    if d > lim:
+        if v > BU.FAST_KMH or lim - trim < 30.0:
+            item["why"] += f"; dropped: approach {entry.L - trim:.0f} m < {dist:.0f} m"
+            return
+        d = lim
+    s = float(entry.s(d))
+    if c.bridge[c.idx(s)]:
+        item["why"] += "; dropped: on a bridge"
+        return
+    dn = -1 if entry.end == "a" else 1              # inbound travel along s
+    tang, _ = c.line.frame(s)
+    kind, _h, w, ext = FU.side_surface_offset(c, "R" if dn > 0 else "L", s)
+    off = float(c.hw_at(s)) + (S.KERB_TOP_W + S.SIGN_LATERAL if kind != RURAL else ext + 0.5)
+    p = c.line.offset_point(s, -dn * off)
+    if pl.near("sign", p, 1.5):
+        item["why"] += "; dropped: another sign within 1.5 m"
+        return
+    for cd in FU.sign_assembly(pl, p, -tang * dn, ["A-8"], f"rule:roundabout_a8:{j.id}", sidewalk=w > 0.5):
+        codes.add(cd)
+    pl.pts.setdefault("sign", []).append((p[0], p[1]))
+    item.update(placed=True, d_m=round(d - trim, 1), v_kmh=v)
 
 
 def route_audit(items, route_P, net, juncs, report):

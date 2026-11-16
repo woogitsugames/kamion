@@ -701,7 +701,11 @@ def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
     centres = []
     for code in reversed(plates):              # plates listed top first
         shape, _ = SG.face(code)
-        size = S.SIGN_SIZE[shape] * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
+        if shape == "rect":                    # ADR 0279: D-42 / D-43 boards, T-1 plates under a warning sign
+            size = SG.rect_size(code)[1]
+        else:
+            size = S.SIGN_SIZE["triangle" if shape == "triangle_up" else shape] * (
+                math.sqrt(3) / 2 if shape in ("triangle", "triangle_up") else 1.0)
         centres.append((code, zc + size / 2, shape))
         zc += size + 0.05
     pl.items[-1]["sz"] = round(zc - zb + 0.05, 3)
@@ -709,6 +713,9 @@ def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
         if shape == "triangle":                  # inverted triangle: centroid 1/3 from the top edge
             h = S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2
             zcen = zcen - h / 2 + 2 * h / 3
+        elif shape == "triangle_up":             # upright triangle (A-8): centroid 1/3 from the bottom edge
+            h = S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2
+            zcen = zcen - h / 2 + h / 3
         pl.add(f"plate_{code}", p, yaw, z=zcen, src=src)
     return [c for c, _, _ in centres]
 
@@ -737,6 +744,7 @@ def junction_signs(pl, net, juncs, ctx_points, report, codes):
             codes.add(cd)
             cnt[cd] = cnt.get(cd, 0) + 1
         pl.pts.setdefault("sign", []).append((p[0], p[1]))
+        return True
 
     pts = {}
     for q in ctx_points:
@@ -757,7 +765,10 @@ def junction_signs(pl, net, juncs, ctx_points, report, codes):
         for a in inb:
             r = RANK[a.cls(net.sec_list)]
             if r > best and a.cls(net.sec_list) in ("Z", "L", "G") or (r > best and (stop or give) and r < 6):
-                put(a, ["B-20" if stop else "A-7"], f"rule:minor:{j.id}")
+                code = "B-20" if stop else "A-7"
+                if put(a, [code], f"rule:minor:{j.id}"):
+                    # ADR 0279 P1: built_up.advance_signs adds A-7 + T-1 / "Stop" 150-300 m before (v > 60 km/h)
+                    j.minor_signs = list(getattr(j, "minor_signs", None) or []) + [(j.arms.index(a), code)]
             elif r == best and best <= RANK["Z"] and max(ranks) > best and max(ranks) < 6:
                 put(a, ["D-1"], f"rule:major:{j.id}")
     report["junction_signs"] = cnt
