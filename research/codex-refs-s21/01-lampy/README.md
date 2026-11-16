@@ -1,6 +1,6 @@
 # 01 — Lampy i fotometria — WIP
 
-Stan ewidencji głównej na 16.11.2026: **60 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **62 rekordy** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Cel: uzupełnić lukę M59-FIX zdjęciami lamp ciągników i naczep z czytelną homologacją oraz przepisami. Stan: **NIESPEŁNIONE**.
 
@@ -226,3 +226,8 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ### Nowe zbliżenie emisji — Transbud R47
 
 Jeden kadr AUX pokazuje własne światło dużej tylnej lampy oraz sąsiedniej czerwonej lampki, potwierdzone także przez root w natywnej skali. Sam duży klosz około550–590px ESTIMATED przy obrazie2134×1423; E, funkcje i pora dnia UNVERIFIED. Nie zwiększa wspólnej kwalifikowanej grupy15/4/3. Nie dopisano go do głównego manifestu60, zachowano osobny jawny [manifest AUX R47](rear-lens-emission-round47/manifest.csv). Żadne jasne pole nie stało się samo w sobie normatywną barwą lub dowodem funkcji.
+
+
+### Przednia Scania — FA51
+
+Dwa kadry jednej części, także niezależny rootpeer: fizyczne makroE1/4147 oraz przód optyki. PL/25 iHC/HR/RL/A/1a czytelne, osobne10R tylkoEMC. Dalsze małe symbole/serie, funkcjonalne komory iON/nocUNVERIFIED. Nie przeniesionoE z etykiety na odczyt przedniej powierzchni. Główny manifest62; losowy audytR46 dotyczy wcześniejszego snapshotu60, nie jest automatycznym audytem nowych2wierszy. Dwa nowe kadryFA51 mają własny celowy rootpeer. Tylny15 bez przyrostu. [FA51](front-approval-round51/README.md).
