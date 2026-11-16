@@ -62,3 +62,39 @@ Consequences.
   after 60 s). The limits are unchanged and pass (5 mm and 0.5 mm), but the trailer margin is now small.
 - Feel: pressing the accelerator with P on gives an idle engine, no movement and a warning. Releasing P (~0.8 s spring
   release) and pressing again gives an ordinary launch.
+
+## Addendum 2026-11-16 (D42): determinism of the .NET runner — scenario runs own their definitions
+
+Context. `RobustnessTests.SameScenario_Twice_IsBitIdentical` failed now and then in CI with no physics change:
+`lane_change_80@laden40` (jobs 132991506125, 133424729280: „DIFFERS (2979 sample bits, 7 check values) first: sample 21
+(t = 0.22 s)”), `fuzz_flat_wet_laden40` (jobs 132970328885, 133240722071, 133452003127; first difference at 1.58 / 30.25 /
+5.54 s), and once `Stage2Tests.Combination_DtVariation_IsConsistent(lane_change_80@laden40)` (job 132910519426). A rerun
+passed every time. All of them are coupled combinations; the common factor is the trailer / fifth wheel, not the 40 t load.
+
+Cause (runner, not the physics). `ScenarioRunner.Setup` built every scenario from the one cached `ScenarioRunner.Defs`,
+and the models keep references to their definitions (`FifthWheel.Def`, `VehicleModel.Def`, `TrailerModel.Def`).
+`TouchSteeringTests.Residual_PlateFrictionSweep_Diagnostic` set `s.Combo.FifthWheel.Def.plateFrictionCreepRateDegS` to
+0 / 0.25 / 0.5 / 2 / 4 deg/s for 20 s runs and put the shipped 1.0 back in `finally`, which wrote into the shared cache.
+xUnit runs test classes in parallel in one process, so any combination scenario running on another thread at the same
+time (the plate-friction creep acts from the first steering input, t = 0.22 s in the lane change) used a different
+fifth-wheel friction in one of its two runs. Solver, `Dictionary` order, time, random numbers and JIT tiering were
+checked and excluded: the same scenario gives the same bits in a fresh process with `DOTNET_TieredCompilation=0`,
+`DOTNET_JITMinOpts=1`, `DOTNET_TieredPGO=0`, and `DOTNET_EnableAVX2=0`, and the FuzzDriver is seeded. Secondary: `Defs` used
+`_defs ??= Load()`, which is a race on the first call (two threads can each get their own instance, and then
+`ApplyGeometry`'s `ReferenceEquals` guard misses and edits a copy that another run is using).
+
+Decision.
+- `Setup(sc, opt, defs: null)` loads a fresh, run-private `DefinitionSet` (0.68 ms each, measured with 200 loads; a run takes
+  about 200 ms). A test that changes a definition through its model now changes only its own run. The shared `Defs`
+  stays only for tests that read definitions. It is a `Lazy<T>` (thread-safe first load), and the docs say not to modify it.
+- The diagnostic test no longer saves and restores the value. It sets it on its own run.
+- Regression tests (`RobustnessTests`): `Setup_DefinitionsArePrivateToTheRun` and
+  `SameScenario_Twice_IsBitIdentical_WhileAnotherThreadTweaksDefinitions`. The second runs the bit comparison of
+  `lane_change_80@laden40` while a second thread builds combinations and changes their fifth-wheel definitions. Without the fix
+  both fail 20 / 20, with the signature from CI (first difference at sample 22, t = 0.23 s, 2978 bits).
+- The game is not affected. Unity builds one vehicle from its own definitions and has no parallel test runs. The parallel
+  xUnit run in CI stays as it is: parallel runs are now a check of run isolation, not something to work around.
+
+Proof (loops of `dotnet test tools/physics-runner/Tests -c Release`, 4 vCPU, .NET 8.0.428, numbers in the PR):
+before the fix, `RobustnessTests` + `TouchSteeringTests.Residual_PlateFrictionSweep_Diagnostic` in one process failed in
+every iteration; after the fix the same filter, `RobustnessTests` alone, and the full suite give 0 failures.

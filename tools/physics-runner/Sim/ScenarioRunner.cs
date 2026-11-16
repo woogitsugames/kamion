@@ -75,8 +75,15 @@ namespace PhysicsRunner.Sim
 
     public static class ScenarioRunner
     {
-        static DefinitionSet _defs;
-        public static DefinitionSet Defs => _defs ??= DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir);
+        // D42 (ADR 0004 addendum 2026-11-16): the cache is shared by every xUnit test class, and xUnit runs test classes in parallel in
+        // one process. Lazy<T> (ExecutionAndPublication) makes the first load race-free, so every caller sees one instance and
+        // ApplyGeometry's ReferenceEquals guard holds. Scenario runs never use it (see Setup): definitions are mutable
+        // public-field objects, and a test that tweaked one through its model (s.Combo.FifthWheel.Def...) changed the
+        // physics of every combination run in flight on other threads - the CI bit-determinism flake of lane_change_80@laden40 /
+        // fuzz_flat_wet_laden40.
+        static readonly Lazy<DefinitionSet> s_Defs = new Lazy<DefinitionSet>(() => DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir));
+        /// <summary>Shared read-only view of the production JSONs for tests that inspect definitions. Do not mutate; scenario runs load their own copy.</summary>
+        public static DefinitionSet Defs => s_Defs.Value;
 
         public static Quat LookRotation(Vec3 forward, Vec3 up)
         {
@@ -148,11 +155,16 @@ namespace PhysicsRunner.Sim
             return c;
         }
 
-        /// <summary>Creates the models and bodies placed at static equilibrium on the ground. defs = test-provided definition set (comparison tests); null = the production JSONs.</summary>
+        /// <summary>
+        /// Creates the models and bodies placed at static equilibrium on the ground. defs = test-provided definition set (comparison
+        /// tests); null = a fresh load of the production JSONs owned by this run (0.7 ms), never the shared <see cref="Defs"/>:
+        /// the models keep references to their definitions, so a run must not share mutable definitions with runs on other
+        /// threads (D42, ADR 0004 addendum 2026-11-16).
+        /// </summary>
         public static SimContext Setup(Scenario sc, RunOptions opt, DefinitionSet defs = null)
         {
-            if (sc.overrides.HasGeometry) defs = ApplyGeometry(defs ?? DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir), sc);
-            defs ??= Defs;
+            defs ??= DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir);
+            if (sc.overrides.HasGeometry) defs = ApplyGeometry(defs, sc);
             var settings = new SolverSettings { substeps = opt.Substeps ?? sc.substeps };
             var tractor = defs.CreateModel(sc.vehicle, settings);
             TrailerModel trailer = null;
@@ -289,7 +301,7 @@ namespace PhysicsRunner.Sim
         /// </summary>
         public static DefinitionSet ApplyGeometry(DefinitionSet defs, Scenario sc)
         {
-            if (ReferenceEquals(defs, _defs)) defs = DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir);
+            if (s_Defs.IsValueCreated && ReferenceEquals(defs, s_Defs.Value)) defs = DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir);
             var o = sc.overrides;
             if (o.fifthWheelZ.HasValue)
             {
