@@ -214,3 +214,7 @@
 - 2026-11-16 00:51 +01:00 — R11 cztery warianty OK, High max 1 250 405 tris; Low +63 draws w dk65-inlet-south vs before, lecz kadr R11 zawiera pełną ciężarówkę zamiast szarej atrapy baseline, więc udział far-field nieustalony. R12 start: 2 lipy 3D w lokalnym worldgen, testy kierunkowe 6 passed, pomiar OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r12.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r12.done`
 
+
+- 2026-11-16 01:11 +01:00 — R12: dwie lipy bardziej przestrzenne, ale plamiste; przy tym samym stanie co R11 +2044 tris Low, draws bez zmian. R13 uruchomiona: Low wraca do lekkiej geometrii identycznej z R11, High zachowuje trial 3D; poprawione proxy króla, tarcza i ptak. Ryzyko skoku LOD oraz budżet do oceny.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r13.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r13.done`
+
