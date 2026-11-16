@@ -1,6 +1,6 @@
 # Status codex-refs-s21
 
-Aktualizacja: 2026-11-16 01:33 Europe/Brussels. Cel ciągły aktywny. Gałąź `research/codex-refs-s21`, zwykły PR #100, bez scalania. Kolejne zadania: dalszy audytP18, zatoki/przystankiDK65 i nowa rodzina fizycznej tylnej lampy zE. Roboczych wyników nie zalicza się automatycznie.
+Aktualizacja: 2026-11-16 02:04 Europe/Brussels. Cel ciągły aktywny. Gałąź `research/codex-refs-s21`, zwykły PR #100, bez scalania. Kolejne zadania: dalszy audytP18, zatoki/przystankiDK65 i nowa rodzina fizycznej tylnej lampy zE. Roboczych wyników nie zalicza się automatycznie.
 
 | Pakiet | Rekordy głównego manifestu | Stan |
 |---|---:|---|
@@ -10,7 +10,7 @@ Aktualizacja: 2026-11-16 01:33 Europe/Brussels. Cel ciągły aktywny. Gałąź `
 | 04 DK65 | 23 | Oznakowanie, pobocza, BDL i historyczny opis dendrologiczny. |
 | 05 kolej 38 | 17 | Zasilanie/typ sieci, dokument kategorii i historyczne widoki; mapowanie punktu pozostaje otwarte. |
 | 06 pierścień | 32 | Mońki, Tykocin, most i rondo/ramię DW671-DK64. |
-| 07 Białystok/Dojlidy | 16 | Dokumenty i geometria, brak potwierdzonych B-5/B-18/wyjątków. |
+| 07 Białystok/Dojlidy | 18 | Dokumenty i geometria, brak potwierdzonych B-5/B-18/wyjątków. |
 
 01: Actros KOITO ma po dwóch odczytach E13/13106 i `00DCR PL 01 1a 02 A 00 RL` oraz27.5 na tej samej etykiecie. Dwa kadry jednej części, bez przyrostu tylnych/emisji/nocy. EcopointII to dwa zdjęcia jednego klosza bez obudowy: E9 i S1/2a/IIIA/AR/F1/SM1 pewne, pełny numer1853/R1/serie UNVERIFIED. Katalog6611489 wskazuje całą lewą lampęHybrid, nie dowodzi numeru klosza. EuropointII E9/5497 pozostaje oddzielnym odczytem; E9/6985 EuropointIII dotyczy tylko grupySM1/IA. CE/MD/10R nie zastępują fotometrii. Historyczny audyt10/45 ma10zgodnych/0sprzecznych opisów, dobór celowy; to snapshot, nie przepisany audyt wszystkich49. Progi15tylnych/4włączone/3nocne/5ciężkich tablicowych otwarte.
 
@@ -28,7 +28,7 @@ Normy: datowane wersje, bez deklaracji aktualności2026. R48 dokument16.10.2014,
 
 07: raport miasta2025 odnotowuje wdrożenie ograniczeń, lecz B-5/B-18/wyjątki i stan2026 nieustalone. TekstUM rozróżnia tranzyt3.5t od Mickiewicza8t; zdjęcia pokazują geometrię, nie czytelne zakazyHGV. PABWileńska–Poleska ma projektowe2×2/pas3.5m/7zatok, nie as-built ani675Centrum. GIS nadal LEGAL_REVIEW_REQUIRED dla konkretnego zbioru. Maczka25.03.2015 suchy/zielony, nie zimowy; ograniczony brak wyników katalogu nie dowodzi globalnej nieobecności zdjęć.
 
-Kontrola śledzonych plików: 91 rastrów≤800px, 342 poprawnychJSON, unikalne główneID, lokalne ścieżki istnieją, bez plików>5MB i zapytań zparametrami dostępowymi. Zmiany tylko research/codex-refs-s21 i docs/LICENSES.md. Raw/duże dokumenty pozaGit, prywatne obrazy bez kopii. Metryki:10niezmierzonych godzin wycofano do potwierdzonej daty w jawnej erracie,2README poprawiono; EXIF/publikacje/HTTP i zmierzony zapisActrosa bez zmian. Bez kodu gry,Unity,adb.
+Kontrola śledzonych plików: 91 rastrów≤800px, 358 poprawnychJSON, unikalne główneID, lokalne ścieżki istnieją, bez plików>5MB i zapytań zparametrami dostępowymi. Zmiany tylko research/codex-refs-s21 i docs/LICENSES.md. Raw/duże dokumenty pozaGit, prywatne obrazy bez kopii. Metryki:10niezmierzonych godzin wycofano do potwierdzonej daty w jawnej erracie,2README poprawiono; EXIF/publikacje/HTTP i zmierzony zapisActrosa bez zmian. Bez kodu gry,Unity,adb.
 
 Gotowe do scalenia po recenzji lidera: NIE. Cel pozostaje aktywny; kolejne pakiety zbierane i recenzowane oddzielnie.
 
@@ -39,3 +39,5 @@ Najnowsze opublikowane:03street-furniture11 dwa historyczneCCkadry2012 tablicy i
 Najnowszy obieg:02baseline28 sześć kolejnych ID,65/88audytowanych,23NOT_REVIEWED;0A/B.01PR20 Vignal156780/LC8:3link-only kadry1części, zastosowanie źródłowe, E/ON/nocUNVERIFIED, AUXpoza49.04BS11 nowy historyczny przystanekEłcka2020,1link-only/0pobrań; wiata/znak/peron/krawężnik/zatoka/bariera, GPSkamery/ławka/stan2026UNVERIFIED. Następne zadania: zimowe firmowePDFtylko ogląd natywny, lokalne zdjęcia wykonawcówLK38 oraz zabudowaMońk.
 
 Najnowszy stan:02r30 pięć rzeczywistych nowych oglądów110/135/141/152/163,168HTTP429nieobejrzany,70/88pokrycia/18NOT_REVIEWED/0A/B.02r31 sześćmetadanych,0oglądów po wspólnymSTOP. Commons wszystkie nowe żądania wstrzymane bezretry/mirrorów/zgadywaniaRetry-After; cel nadalaktywny, inne źródła i lokalne materiały obsługiwane.02r29 dwa firmowePDFtylko natywnyogląd,2kadryKnapenAUX/PENDINGi czystyKässbohrer,0A/B/zimy; dokumentekspertyzy niezimowaekspozycja.06MC9 dworzecMońki2014,1nowyCCkadr po dwóchoglądach, główny32.01HS21 możliwa jednoczesność R482014 iUN2024draft bezdowoduadoption. Następneaktywnetaski:01HS22łańcuchprzyjęcia,03detalemałejarchitektury z istniejącychpublicznychkadrów,07zimoweulice bezCommons.
+
+Aktualne uzupełnienie: nowy czytelny fizyczny znak L / E9 / 00 4127 w HP25, zgodny odczyt agenta i root; 3 kadry jednej niekompletnej części, PN/ciężkie zastosowanie pozostają UNVERIFIED. Chereau LRC23 ma rzeczywistą emisję czerwonych dolnych lamp, potwierdzoną dwoma oglądami; wielkość pojedynczej obudowy BORDERLINE, 0 strict closeup delta. M59 dopuszcza zmierzch/noc, nie dodajemy wymogu wyłącznie ścisłej nocy. R48 HF24: nota C.N.513.2025 potwierdza skutki pakietu od 26.09.2025; powiązanie Supp.1/09 i ref100 przez HA22. Zakres dla starego konkretnego pojazdu i cały tekst2026 nadal nieustalone. Maczka WS10: jeden historyczny kadr śniegu przy DDR z lutego2012, drugi AUX mokrej drogi2022; główny07=18. Knyszyn PF12 pogłębia ławki/donicę/bruki/ruszt z2 istniejących fotografii, 0 nowych ekspozycji. Nowe M61 r32/r33/r34 nie zwiększyły A/B; badano otwartą parę, nakładkę, dalekie tyły oraz zimowy przód, bez wymuszania kwalifikacji.
