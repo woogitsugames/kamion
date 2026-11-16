@@ -144,6 +144,24 @@ namespace Game.Tests
             }
         }
 
+        [Test]
+        public void MobileTiers_SsaoFlagMatchesTheirAssetSoPhonesAreUnchanged()
+        {
+            // The renderer switch above follows Tier.ssao; on phones the flag must equal what the quality level's asset
+            // already renders (renderer 0 with SSAO), or a phone tier would silently lose / not gain SSAO.
+            var profile = QualityProfile.Load();
+            Assert.IsNotNull(profile);
+            for (int i = 0; i < QualitySettings.names.Length; i++)
+            {
+                if (!(QualitySettings.GetRenderPipelineAssetAt(i) is UniversalRenderPipelineAsset a)) continue;
+                if (!profile.TryGet(QualitySettings.names[i], out var t)) continue;
+                bool assetSsao = false;
+                var r0 = a.rendererDataList.Length > 0 ? a.rendererDataList[0] : null;
+                if (r0 != null) foreach (var f in r0.rendererFeatures) if (f is ScreenSpaceAmbientOcclusion && f.isActive) assetSsao = true;
+                Assert.AreEqual(assetSsao, t.ssao, $"{QualitySettings.names[i]}: QualityProfile.ssao vs {a.name} renderer 0");
+            }
+        }
+
         static int RendererIndexOf(UniversalAdditionalCameraData d) =>
             (int)typeof(UniversalAdditionalCameraData).GetField("m_RendererIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(d);
 

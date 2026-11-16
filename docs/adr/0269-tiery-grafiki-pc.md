@@ -93,10 +93,11 @@ i World_knyszyn-w_High, 1920×1080, przed/po: `artifacts/pc-visual-s23/{before,a
 - **Inne zmiany High/Ultra:** High soft shadows High (wariant trzymany przez mobilny Ultra), karty drzew 1,0 (Ultra 1,5),
   capture co klatkę; Ultra render scale 1,5. Low/Medium bez zmian (assety bez różnic).
 - **Sprawdzone i bez zmian:** dystans/kaskady cieni (ablacja 250 m / 8192 na High: RMSE ≤ 0,008, różnica niewidoczna
-  z kabiny — zostaje 150 m / 4096), LOD bias (ablacja 3,0: RMSE ≈ 0 — siatki świata prawie nie mają LOD), przerzedzanie/cull/HLOD
+  z kabiny — zostaje 150 m / 4096), LOD bias (ablacja `rq_lod` w visual-qa NIEWAŻNA: override działa tylko w Play, `QualityProfileApplier` l. 116 — do sprawdzenia w playerze), przerzedzanie/cull/HLOD
   lasu (ablacja 400 m: las HLOD dalej = rzadsza ściana drzew, gorzej), anizotropia (już 16× ForceEnable), tekstury (mip 0),
-  TAA/STP (wykluczone: MSAA + alpha-to-coverage liści, ADR 0269), bloom/tonemapping/mgła — jeden skalibrowany wygląd
-  na wszystkich tierach (docs/06 §4), zmiana = decyzja kierunku artystycznego, nie tieru.
+  TAA/STP (wykluczone: MSAA + alpha-to-coverage liści, ADR 0269), tonemapping Neutral (VP_World), bloom — brak
+  w VP_World (docs/06: zero przesadnego bloomu), mgła/atmosfera = `WorldAtmosphere` wspólna dla tierów; jeden skalibrowany
+  wygląd na wszystkich tierach (docs/06 §4), zmiana = decyzja kierunku artystycznego, nie tieru.
 - Koszt (orientacyjny, maszyna dewelopera ≠ referencja, D76): w raporcie agenta i `artifacts/pc-visual-s23/player`.
 
 ## Ryzyka
