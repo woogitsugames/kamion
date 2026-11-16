@@ -370,6 +370,30 @@ def _edge_keep(P, Z, skip, nout=None):
     return np.flatnonzero(keep)
 
 
+NEAR_CLIP_PAD_M = 1.0       # ADR 0281 K4b: window margin around the query points (> any distance tested)
+NEAR_RECHECK_M = 1e-6       # ... and the band around the threshold re-tested against the whole polygon
+
+
+def near_road(pts_xy, roads_poly, dist):
+    """shapely.distance(points, roads_poly) < dist, without measuring every point against the footprint of the whole
+    tile (71 k vertices on C: 12.6 s -> 0.4 s per build_meshes, ADR 0281 K4b). The polygon is clipped to the points'
+    box + NEAR_CLIP_PAD_M: every nearest point closer than `dist` lies inside that window, so the distances below `dist`
+    are the same. Only the clipped edges carry new end points (round-off ~1e-13 m), so a distance within
+    NEAR_RECHECK_M of the threshold is measured again on the whole polygon - the boolean equals the original call."""
+    pts_xy = np.asarray(pts_xy, float)
+    pts = shapely.points(pts_xy)
+    if not len(pts_xy) or dist >= NEAR_CLIP_PAD_M:
+        return shapely.distance(pts, roads_poly) < dist
+    x0, y0 = pts_xy.min(0) - NEAR_CLIP_PAD_M
+    x1, y1 = pts_xy.max(0) + NEAR_CLIP_PAD_M
+    d = shapely.distance(pts, shapely.clip_by_rect(roads_poly, x0, y0, x1, y1))
+    out = d < dist                       # NaN (nothing of the polygon in the window): the true distance is > pad
+    amb = np.abs(d - dist) < NEAR_RECHECK_M
+    if amb.any():
+        out[amb] = shapely.distance(pts[amb], roads_poly) < dist
+    return out
+
+
 def _edges(buf, item, zgrid, hf, roads_poly=None, zf=None):
     """Outer edge: concrete edging strip (paving blocks) or flush flange (concrete / asphalt)."""
     poly, mat = item["poly"], item["mat"]
@@ -411,7 +435,7 @@ def _edges(buf, item, zgrid, hf, roads_poly=None, zf=None):
         # no edging / flange where the area meets a road surface (the road owns that edge)
         if roads_poly is not None and not roads_poly.is_empty:
             mid = 0.5 * (P[1:] + P[:-1])
-            skip = shapely.distance(shapely.points(mid), roads_poly) < 0.6
+            skip = near_road(mid, roads_poly, 0.6)
         else:
             skip = np.zeros(n - 1, bool)
         # ADR 0188: no edging / flange either where the area abuts its sibling strip (cycle track | footway of one

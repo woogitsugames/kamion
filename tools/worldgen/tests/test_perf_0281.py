@@ -171,3 +171,21 @@ def test_textures_cached_and_equal_to_the_single_literal():
            **{k: EX.SG.png_bytes(im) for k, im in EX.CB.textures().items()}}
     assert list(a) == list(ref)
     assert all(a[k] == ref[k] for k in ref)
+
+
+# ------------------------------------------------------------------------------------------- K4b
+def test_near_road_equals_distance_on_whole_polygon():
+    rng = np.random.default_rng(44)
+    roads = shapely.union_all([shapely.LineString(rng.uniform(0, 800, (2, 2))).buffer(rng.uniform(2, 6))
+                               for _ in range(40)])
+    shapely.prepare(roads)
+    for _ in range(300):
+        c = rng.uniform(-50, 850, 2)
+        pts = c + rng.normal(0, rng.uniform(1, 40), (rng.integers(1, 60), 2))
+        ref = shapely.distance(shapely.points(pts), roads) < 0.6
+        assert np.array_equal(PV.near_road(pts, roads, 0.6), ref)
+    # points exactly on / around the threshold are re-measured on the whole polygon
+    edge = np.asarray(roads.geoms[0].exterior.coords if roads.geom_type == "MultiPolygon" else roads.exterior.coords)
+    q = edge[:50] + np.array([0.6, 0.0])
+    assert np.array_equal(PV.near_road(q, roads, 0.6), shapely.distance(shapely.points(q), roads) < 0.6)
+    assert not PV.near_road(np.array([[5000.0, 5000.0]]), roads, 0.6).any()
