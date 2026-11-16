@@ -110,3 +110,5 @@ R15: dwa nowe uliczne kadry Ełckiej w Mońkach, szurek forHere10.08.2017. Root 
 16.11.2026 R18:2nowe NIDlink-only ekspozycje alumnatu (stan2016), root obaobejrzał. PierwszyAUX placu z częściowo zasłoniętym niskim budynkiem obokkościoła; drugi długa elewacja/zaokrąglona partia/gzyms/ubytekpowłoki/bruk. Nie przypisywać wieżkościoła alumnatowi.1nazwanyobiekt, nieodkrycie nigdy niewidzianejbryły; pierwszykredytautora niejednoznaczny. NCND3PL,0kopii, metryka/dataEXIF/2026UNVERIFIED. Główny48.
 
 R19: nowy komunikatGDDKiA27.02.2026 o przebudowieDK65/DW671Knyszyn na rondo, jezdnia7→12m i pobocza0,75m. Zakres prac, nie dowód odbioru;12mnieśrednica.0obejrzanych zdjęć,1dokument, główny manifest49.
+
+SIMR19: nowy nazwany budynekMońkiKościelna41,1fotoARRlink-only, rootobejrzał. Tekstgminy3kondygnacje, wydarzenie23.10.2026/publikacja26.10.2026 odrębne od ekspozycjiUNVERIFIED. Typdachu zasłonięty; manifest50rekordów.
