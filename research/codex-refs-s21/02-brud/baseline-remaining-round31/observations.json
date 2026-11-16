@@ -1,0 +1,178 @@
+{
+  "recorded_at_brussels": "2026-11-16T01:28:42.717780+01:00",
+  "scope": "Six distinct reserved sourceIDs; metadata only. No claim of completed visual audit.",
+  "reservation_coordination": {
+    "ours": [
+      "P18-112",
+      "P18-114",
+      "P18-116",
+      "P18-123",
+      "P18-124",
+      "P18-125"
+    ],
+    "knyszyn_round30": [
+      "P18-110",
+      "P18-135",
+      "P18-141",
+      "P18-152",
+      "P18-163",
+      "P18-168"
+    ],
+    "disjoint": true
+  },
+  "requests": {
+    "official_metadata_batch": 1,
+    "metadata_timing": "Before learning of fresh429; no subsequent metadata request",
+    "image_requests_this_round": 0,
+    "images_downloaded": 0,
+    "new_HTTP429_in_our_requests": 0,
+    "shared_stop_trigger": "Agentknyszyn reportedHTTP429 on P18-168 preview in round30; coordinator confirmed stop allCommonsimages and metadata",
+    "retry_after": "UNKNOWN_NOT_OBSERVED_BY_THIS_AGENT; do not request anew to inspectheader",
+    "retries": 0,
+    "mirrors_or_variants": 0
+  },
+  "local_copy_check": {
+    "method": "rg --files mainresearch and mainData/raw/refs/codex-s21 for exactP18ids or distinctive titles; no corresponding file found",
+    "scope_limit": "Filename-based scoped check only; not a forensic scan of all disks/archives"
+  },
+  "individually_reviewed_images": 0,
+  "coverage_increment": 0,
+  "coverage_reference": "Latest own consolidated baseline round28:65/88records reviewed; round31 adds0. Concurrent round30 coverage is not merged/recounted here; root integrates separately. The six reserved sourceIDs remain NOT_REVIEWED.",
+  "qualification_delta": {
+    "A": 0,
+    "B": 0,
+    "winter": 0,
+    "Europe_road": 0
+  },
+  "rows": [
+    {
+      "id": "P18-123",
+      "source": "https://commons.wikimedia.org/wiki/File:3_trucks,_Orlen,_Wichr%C3%B3w,_2024_(01).jpg",
+      "source_key": "commons:3 trucks, Orlen, Wichrów, 2024 (01).jpg",
+      "author": "Bahnfrend",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "photo_date_declared_source": "2024-08-05",
+      "original_px_declared_source": [
+        3606,
+        2027
+      ],
+      "metadata_only_description": "A line up of three trucks (L–R: a DAF XF, a Volvo FH13 and a Ford F-Max) at the Orlen petrol station, Wichrów, Lower Silesian Voivodeship, Poland",
+      "observation_status": "NOT_REVIEWED_DEFERRED_COMMONS429",
+      "own_image_observation": "NONE; source text not own visual observation",
+      "A": "NOT_REVIEWED",
+      "B": "NOT_NEW_BASELINE; visual criteria NOT_REVIEWED",
+      "winter": "NOT_REVIEWED",
+      "Europe_road": "NOT_REVIEWED",
+      "door_height_native_px": "UNVERIFIED; source dimensions not door dimensions"
+    },
+    {
+      "id": "P18-112",
+      "source": "https://commons.wikimedia.org/wiki/File:Europ%C3%A4isches_Trucker-Treffen_in_Passau_-14.JPG",
+      "source_key": "commons:Europäisches Trucker-Treffen in Passau -14.JPG",
+      "author": "High Contrast",
+      "license": "CC BY 3.0 de",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/de/deed.en",
+      "photo_date_declared_source": "2013",
+      "original_px_declared_source": [
+        4193,
+        2796
+      ],
+      "metadata_only_description": "Das Europäisches Trucker-Treffen in Passau im Jahr 2013.",
+      "observation_status": "NOT_REVIEWED_DEFERRED_COMMONS429",
+      "own_image_observation": "NONE; source text not own visual observation",
+      "A": "NOT_REVIEWED",
+      "B": "NOT_NEW_BASELINE; visual criteria NOT_REVIEWED",
+      "winter": "NOT_REVIEWED",
+      "Europe_road": "NOT_REVIEWED",
+      "door_height_native_px": "UNVERIFIED; source dimensions not door dimensions"
+    },
+    {
+      "id": "P18-114",
+      "source": "https://commons.wikimedia.org/wiki/File:Iggy_Madden_Transport_heads_West..._(7151944665).jpg",
+      "source_key": "commons:Iggy Madden Transport heads West... (7151944665).jpg",
+      "author": "Peter Mooney",
+      "license": "CC BY-SA 2.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+      "photo_date_declared_source": "2012-05-07 10:00",
+      "original_px_declared_source": [
+        4288,
+        2848
+      ],
+      "metadata_only_description": "A super capture of Iggy Madden Transport's 2010 Scania R500 Topline as she heads west from Dublin on the N4 through Clonard on a wet Bank Holiday Monday morning - 7th May 2012. The rain just cleared for the photograph - as you can see from the splash around the wheels.",
+      "observation_status": "NOT_REVIEWED_DEFERRED_COMMONS429",
+      "own_image_observation": "NONE; source text not own visual observation",
+      "A": "NOT_REVIEWED",
+      "B": "NOT_NEW_BASELINE; visual criteria NOT_REVIEWED",
+      "winter": "NOT_REVIEWED",
+      "Europe_road": "NOT_REVIEWED",
+      "door_height_native_px": "UNVERIFIED; source dimensions not door dimensions"
+    },
+    {
+      "id": "P18-124",
+      "source": "https://commons.wikimedia.org/wiki/File:Renault_T-Truck,_Orlen,_Wichr%C3%B3w,_2024_(01).jpg",
+      "source_key": "commons:Renault T-Truck, Orlen, Wichrów, 2024 (01).jpg",
+      "author": "Bahnfrend",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "photo_date_declared_source": "2024-08-05",
+      "original_px_declared_source": [
+        3347,
+        2232
+      ],
+      "metadata_only_description": "A Renault T-Truck and curtainside semi-trailer at the Orlen petrol station, Wichrów, Lower Silesian Voivodeship, Poland",
+      "observation_status": "NOT_REVIEWED_DEFERRED_COMMONS429",
+      "own_image_observation": "NONE; source text not own visual observation",
+      "A": "NOT_REVIEWED",
+      "B": "NOT_NEW_BASELINE; visual criteria NOT_REVIEWED",
+      "winter": "NOT_REVIEWED",
+      "Europe_road": "NOT_REVIEWED",
+      "door_height_native_px": "UNVERIFIED; source dimensions not door dimensions"
+    },
+    {
+      "id": "P18-125",
+      "source": "https://commons.wikimedia.org/wiki/File:Renault_T-Truck,_Orlen,_Wichr%C3%B3w,_2024_(02).jpg",
+      "source_key": "commons:Renault T-Truck, Orlen, Wichrów, 2024 (02).jpg",
+      "author": "Bahnfrend",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "photo_date_declared_source": "2024-08-05",
+      "original_px_declared_source": [
+        3375,
+        1899
+      ],
+      "metadata_only_description": "A Renault T-Truck and curtainside semi-trailer at the Orlen petrol station, Wichrów, Lower Silesian Voivodeship, Poland",
+      "observation_status": "NOT_REVIEWED_DEFERRED_COMMONS429",
+      "own_image_observation": "NONE; source text not own visual observation",
+      "A": "NOT_REVIEWED",
+      "B": "NOT_NEW_BASELINE; visual criteria NOT_REVIEWED",
+      "winter": "NOT_REVIEWED",
+      "Europe_road": "NOT_REVIEWED",
+      "door_height_native_px": "UNVERIFIED; source dimensions not door dimensions"
+    },
+    {
+      "id": "P18-116",
+      "source": "https://commons.wikimedia.org/wiki/File:Scania_R_144_LA_4X2_M_Trex_IJmuiden_Holland_(1).jpg",
+      "source_key": "commons:Scania R 144 LA 4X2 M Trex IJmuiden Holland (1).jpg",
+      "author": "Joost J. Bakker from IJmuiden",
+      "license": "CC BY 2.0",
+      "license_url": "https://creativecommons.org/licenses/by/2.0",
+      "photo_date_declared_source": "2009-08-29 14:06",
+      "original_px_declared_source": [
+        3764,
+        2788
+      ],
+      "metadata_only_description": "Scania R 144 LA 4X2 M Trex IJmuiden Holland",
+      "observation_status": "NOT_REVIEWED_DEFERRED_COMMONS429",
+      "own_image_observation": "NONE; source text not own visual observation",
+      "A": "NOT_REVIEWED",
+      "B": "NOT_NEW_BASELINE; visual criteria NOT_REVIEWED",
+      "winter": "NOT_REVIEWED",
+      "Europe_road": "NOT_REVIEWED",
+      "door_height_native_px": "UNVERIFIED; source dimensions not door dimensions"
+    }
+  ],
+  "media_files": 0,
+  "parent_or_git_changes": false,
+  "next_step": "Await coordinator new task; no new source/host probing after stop."
+}

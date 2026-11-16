@@ -222,3 +222,8 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Ogląd5 i zatrzymanie429 — runda30
 
 [baseline-remaining-round30](baseline-remaining-round30/README.md):110/135/141/152/163 indywidualnie obejrzane przez agenta,0A/B.168nieobejrzaneHTTP429,STOPbezretry/hostów. Pokrycie70/88rekordów,18NOT_REVIEWED, po sprawdzeniu rozłączności z65. Metadane6nieznaczą6oglądów.110/152różne kadrytej samejroletywystawowej,141śnieg beztylnychdrzwi,163otwarta skrzynia.0miniaturGit, podglądyrawpozaGit. NieutrwalonyRetry-AfterUNVERIFIED, bez zgadywania czasu oczekiwania.
+
+
+## Rozłączna rezerwacja bez pobrań — runda31
+
+[baseline-remaining-round31](baseline-remaining-round31/README.md):112/114/116/123/124/125 mają wcześniej odczytane licencje/metadane, ale0oglądów. Po wspólnym429zatrzymano przed pierwszym obrazem, bez nowych żądań metadanych/hostów/mirrorów. Brak pasujących lokalnychkopii w ograniczonym przeglądzie nie dowodzi globalnego braku.0przyrostupokrycia/A/B; root osobno zintegrował r30do70/88,18NOT_REVIEWED. Sześćwciążnieobejrzanych.
