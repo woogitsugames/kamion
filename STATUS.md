@@ -10,3 +10,4 @@
 - NASTĘPNY KROK: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter 'WorldStreamer|WorldStreaming|RouteLinks' (przez unity-slot, odłączone)
 - krok 4: ADR 0283 (numer tymczasowy) z diagnozą, planem Dojlid i znaleziskami szwów. EditMode w toku (artifacts/stream-gaps-s23/editmode1.status). NASTĘPNY KROK: po exit= — kopia _Generated/World + Library z int-stream-s23, build -Regions 19 -Slot, przejazd -scene knyszyn-s -stream 1 -Autopilot route.
 - krok 5: EditMode Win64 filtr streamingu 46/46 PASS (w tym 5 nowych RouteLinks). Kopia _Generated + Library z int-stream-s23 (sceny _Tile 19 regionów) w toku: artifacts/stream-gaps-s23/copy.status
+- krok 6: kopia OK (robocopy 3). chain.ps1 (build 19 regionów → przejazd knyszyn-s -stream 1 route_s 1900, 70 km/h, zrzut 60 s) w tle: artifacts/stream-gaps-s23/chain.status
