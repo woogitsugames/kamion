@@ -325,6 +325,7 @@ def test_legal_speed_and_a8_rule():
     assert BU.needs_a8((100, 0), sec_def, inside, has_e1=False)[0] is True       # outside the built-up area
     assert BU.needs_a8((0, 0), sec_def, inside, has_e1=False)[0] is False        # built-up, 50 km/h
     assert BU.needs_a8((0, 0), sec_osm, inside, has_e1=False)[0] is True         # built-up but 70 km/h
+    assert BU.needs_a8((100, 0), sec_def, inside, has_e1=False, kerbed=True)[0] is False   # kerbed street = built-up
     assert BU.a8_distance_m(90.0) == 250.0 and BU.a8_distance_m(70.0) == 150.0 and BU.a8_distance_m(50.0) == 50.0
 
 

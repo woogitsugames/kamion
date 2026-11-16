@@ -95,7 +95,7 @@ def legal_speed(sec, built_up: bool) -> float:
     return SPEED_BUILT_UP if built_up else SPEED_OUTSIDE
 
 
-def _kerbed(c, s):
+def kerbed(c, s):
     for side in ("L", "R"):
         if FU.side_surface_offset(c, side, s)[0] != RURAL:
             return True
@@ -110,7 +110,7 @@ def runs(c, a):
     ss = np.arange(0.0, L + 1e-6, STEP_M)
     P = c.line.point(ss)
     inside = shapely.contains_xy(a, P[:, 0], P[:, 1]) if not a.is_empty else np.zeros(len(ss), bool)
-    inside = np.asarray(inside, bool) | np.array([_kerbed(c, float(s)) for s in ss])
+    inside = np.asarray(inside, bool) | np.array([kerbed(c, float(s)) for s in ss])
     out = []
     k0 = 0
     for k in range(1, len(ss) + 1):
@@ -184,7 +184,9 @@ def rule_signs(pl, net, src, origin, juncs, report, codes):
     osm_pts = []
     from .signs_route import parse_traffic_sign            # local: signs_route imports this module
     for nd in (src.get("osm") or {}).get("nodes", []):
-        if any(c in OSM_BOUNDARY for c in parse_traffic_sign(nd["tags"].get("traffic_sign"), nd["tags"])):
+        ts = str(nd["tags"].get("traffic_sign", "")).strip()
+        # city_name (E-17a, the place-name board) stands at the boundary too: no rule pair next to it
+        if ts == "city_name" or any(c in OSM_BOUNDARY for c in parse_traffic_sign(ts, nd["tags"])):
             osm_pts.append(np.asarray(nd["geometry"]["coordinates"], float) - origin)
     rep["osm_boundary_nodes"] = len(osm_pts)
     for c, s, dn_in in boundaries(net, a):
@@ -225,7 +227,7 @@ def advance_signs(pl, net, juncs, a, rep, codes):
                     break
                 s = float(arm.s(d))
                 sec = c.section(s, net.sec_list)
-                v = legal_speed(sec, is_built_up(a, c.line.point(s)))
+                v = legal_speed(sec, kerbed(c, s) or is_built_up(a, c.line.point(s)))
                 if v <= FAST_KMH:
                     break
                 if c.bridge[c.idx(s)]:
@@ -241,7 +243,8 @@ def advance_signs(pl, net, juncs, a, rep, codes):
                     break
             if not ok:
                 sec0 = c.section(float(arm.s(min(d_sign + 1.0, arm.L))), net.sec_list)
-                v0 = legal_speed(sec0, is_built_up(a, c.line.point(float(arm.s(min(d_sign, arm.L))))))
+                s0 = float(arm.s(min(d_sign, arm.L)))
+                v0 = legal_speed(sec0, kerbed(c, s0) or is_built_up(a, c.line.point(s0)))
                 if v0 > FAST_KMH:
                     rep["advance_dropped"].append({"junction": str(j.id), "code": code, "arm_m": round(float(arm.L), 1),
                                                    "v_kmh": v0, "why": "approach shorter than 150 m or no clear post"})
@@ -254,13 +257,13 @@ def a8_distance_m(v_kmh: float) -> float:
     return float(min(max(lo_rec, lo_ok), hi_ok))
 
 
-def needs_a8(entry_xy, sec, a, has_e1: bool) -> tuple[bool, str]:
+def needs_a8(entry_xy, sec, a, has_e1: bool, kerbed: bool = False) -> tuple[bool, str]:
     """Dz.U. 2026 poz. 132 (pkt 2.2.9): A-8 unless an E-1 stands before the roundabout or the roundabout lies in the
     built-up area and is visible from far enough. No sight-distance data -> visibility is ASSUMED only where the
     approach speed is the built-up default (<= 50 km/h); a faster approach in a built-up area gets the A-8."""
     if has_e1:
         return False, "E-1 before the roundabout"
-    bu = is_built_up(a, entry_xy)
+    bu = kerbed or is_built_up(a, entry_xy)          # a kerbed street counts as built-up (as in runs())
     v = legal_speed(sec, bu)
     if not bu:
         return True, "outside the built-up area"
@@ -269,5 +272,5 @@ def needs_a8(entry_xy, sec, a, has_e1: bool) -> tuple[bool, str]:
     return False, "built-up, <= 50 km/h: assumed visible (UNVERIFIED, no sight-distance data)"
 
 
-__all__ = ["area", "area_for", "is_built_up", "legal_speed", "runs", "boundaries", "rule_signs", "advance_signs",
+__all__ = ["area", "area_for", "is_built_up", "kerbed", "legal_speed", "runs", "boundaries", "rule_signs", "advance_signs",
            "a8_distance_m", "needs_a8"]

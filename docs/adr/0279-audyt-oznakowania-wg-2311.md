@@ -55,3 +55,22 @@ Dz.U. 2024 poz. 1251 `text.pdf` sha256 `de6c1f33…fccb`). Strony = strony Dz.U.
 
 Niezmienione dane kafli (w tym knyszyn). Lider przy world3: przebudowa `streetscape_sources` (build_region — nowe
 `maxweight`), potem build_world; render `rail-x0-*` (dw671), `junctions_cameras` (C), kamery DK65.
+
+### Wpływ na kafle przy world3 (pomiar: stage znaków na prawdziwych danych kafli, wysokość płaska, bez Data/raw)
+| Kafel | Nowe znaki pionowe | Linie |
+|---|---|---|
+| bialystok-dojlidy | B-5 ×3, B-33 z `traffic_sign=maxspeed` ×7 | P-12 ×2 (zamiast P-13), P-14 ×15 przesunięte |
+| bialystok-kleeberga | B-33 ×4 | P-14 ×14 przesunięte |
+| bialystok-industrial-c (C) | **0** (A-8: 5 wlotów z E-1, 2 zabudowane ≤ 50 / za krótkie) | P-14 ×27 przesunięte (ta sama liczba trójkątów) |
+| bialystok-maczka / knyszynska | 0 (knyszynska: para reguły wygaszona przez OSM `city_name` w 265 m) | P-12 ×8 / ×2, P-14 ×18 |
+| knyszyn | A-8 ×1 (DK65, OSM 90 km/h, 250 m), B-33 ×4; B-18 ×2 pominięte (`needs_value`, w bieżącym OSM `maxweight` 10 i 15 t — wejdą po przebudowie `streetscape_sources`) | P-12 ×6 |
+| knyszyn-w / dk65-01 | B-33 ×1 / ×1 | knyszyn-w P-12 ×2 |
+| dk65-02, dw671-tykocin-01 | D-42 + D-43 ×1 (reguła) | — |
+| dk65-04 | D-42 + D-43 (OSM `city_limit`, Dobrzyniewo Duże) | — |
+| dk65-08 | D-42 + D-43 ×3 (reguła) | dk65-06 P-12 ×1 |
+| knyszyn-s | D-42 + D-43 ×2 (reguła) | — |
+| dw671-tykocin-01 + kafle z przejazdami (dk65-01…04) | sygnalizatory / G-3 / rogatki odsunięte (≈ +1,6–2,9 m), U-1a i P-14 przejazdu za nimi; DW671: 23 z 24 słupków U-1a (ostatni w wylocie drogi bocznej) | — |
+Razem ≈ 35 nowych zestawów (15 słupków reguł + ~20 z OSM). Budżet: zestaw = słupek 30 tris + tarcza 60–176 tris
+(LoD0); +1 materiał/draw na nowy kod w kaflu (instancjonowanie). Region C: 0 nowych znaków, P-14 przesunięte
+(trójkąty bez zmian) → budżet C neutralny (stretch_04 bez zmian). A-7 + T-1: reguła działa (testy), ale na kaflach
+0 wystąpień — drogi podporządkowane mają krawężniki z generatora (= zabudowa → 50 km/h) i brak OSM `maxspeed` > 60.

@@ -390,13 +390,13 @@ def _a8(pl, net, j, entry, has_e1, area, rep, codes):
     trim = c.t_a if entry.end == "a" else c.t_b
     s0 = float(entry.s(min(trim + 5.0, entry.L)))
     sec = c.section(s0, net.sec_list)
-    need, why = BU.needs_a8(c.line.point(s0), sec, area, has_e1)
+    need, why = BU.needs_a8(c.line.point(s0), sec, area, has_e1, kerbed=BU.kerbed(c, s0))
     out = rep.setdefault("a8", [])
     item = {"junction": str(j.id), "entry": str(c.id), "why": why, "placed": False}
     out.append(item)
     if not need:
         return
-    bu = BU.is_built_up(area, c.line.point(s0))
+    bu = BU.kerbed(c, s0) or BU.is_built_up(area, c.line.point(s0))
     v = BU.legal_speed(sec, bu)
     dist = BU.a8_distance_m(v)
     d = trim + dist
