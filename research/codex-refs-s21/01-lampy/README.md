@@ -234,3 +234,6 @@ Dwa kadry jednej części, także niezależny rootpeer: fizyczne makroE1/4147 or
 
 
 R52: dwa kadry jednego przedniego reflektora MAN/ZKW. Root niezależnie obejrzał makro 1:1 i cały przód: fizyczne E12/112029, HCR/A/1a. Główny manifest64; tylny limit bez przyrostu, ON i noc niepotwierdzone. Szczegóły w front-approval-round52.
+
+
+R50: autentyczny tekst2022/92, tabela8s23, również drukuje120cd single11a-c; §142raportu1166 nie zmienia tych komórek. Dwa niezależne oglądy bitmap zgodne. Przyczyna późniejszego1200cd i pełna aktualność2026 pozostają nieustalone; nie ustawiamy120 w generatorze.2dokumenty,0zdjęć,bez zmiany głównego64.

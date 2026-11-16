@@ -1,0 +1,63 @@
+{
+  "review_date": "2026-11-16",
+  "method": "Two official UN symbol lookups returned200, generic UA; PDFs/renders raw only. Root independently viewed both covers,proposal23,report22. Font fallback warnings Symbol/ArialUnicode retained; numeric exponents and text readable.",
+  "proposal": {
+    "url": "https://documents.un.org/api/symbol/access?l=en&s=ECE%2FTRANS%2FWP.29%2F2022%2F92&t=pdf",
+    "http": 200,
+    "bytes": 1008380,
+    "sha256": "c6bd4018f3bf532d15301be76ebee27d6348f83cbe9e6f90aa16319b563f3916",
+    "pages": 56,
+    "cover_date": "2022-04-08",
+    "viewed_pages": [
+      1,
+      23
+    ]
+  },
+  "report": {
+    "url": "https://documents.un.org/api/symbol/access?l=en&s=ECE%2FTRANS%2FWP.29%2F1166&t=pdf",
+    "http": 200,
+    "bytes": 696297,
+    "sha256": "07cfae956ae922e38c5c9e4025d857d07f64f0fbd6302df1111d2093c7203cf0",
+    "pages": 49,
+    "cover_date": "2022-07-04",
+    "viewed_pages": [
+      1,
+      22
+    ]
+  },
+  "table8": {
+    "cat5_min_cd": 0.6,
+    "single_max_11a_cd": 120,
+    "single_max_11b_cd": 120,
+    "single_max_11c_cd": 120,
+    "marked_D_11a_b_c_cd": 600,
+    "locator": "WP29/2022/92 printed/PDF23 table8; direct bitmap read, not prescribed current2026values"
+  },
+  "para142": {
+    "locator": "WP29/1166 printed/PDF22 paragraph142 agenda4.14.4",
+    "amendments_for_2022_92": [
+      "Header fourthcolumn tables3,4,6,7,8 reference3.3.2.1.5.2 replaced by3.3.2.5.2",
+      "Annex4 paragraph1.2 secondline deletes if"
+    ],
+    "finding": "No change of numerical intensity cells specified for2022/92 in this paragraph. Adjacent paragraph143 concerns2022/93, a different document."
+  },
+  "conclusion": "Printed120cd is also present in authentic proposal referenced by Am5, not only Am5 compilation. Paragraph142 does not resolve later1200cd discrepancy. No legal cause/current2026 status inferred.",
+  "peer_status": "CONFIRMED independent agent lampy two bitmap readings",
+  "blind_peer": {
+    "reader": "lampy",
+    "date": "2026-11-16",
+    "method": "Separate view_image of proposal23 and report22, no HTTP or reading root conclusions",
+    "cat5_min_cd": 0.6,
+    "single_11a_b_c_cd": [
+      120,
+      120,
+      120
+    ],
+    "D_11a_b_c_cd": [
+      600,
+      600,
+      600
+    ],
+    "para142": "Header reference3.3.2.1.5.2 to3.3.2.5.2 in tables3/4/6/7/8; Annex4 paragraph1.2 deletion. No numerical cell change for2022/92. Paragraph143 is2022/93."
+  }
+}
