@@ -1,0 +1,46 @@
+{
+  "review_date": "2026-11-16",
+  "backlog": "B-123: Brzeska/Buska — luka zdjęć referencyjnych",
+  "choice": "Buska: układ osiedlowej ulicy/pętli, nawierzchnia, styki zjazdów i zieleni",
+  "status": "STABLE_ZERO — UI nie pokazało zielonego pokrycia Buskiej w wybranym miejscu; 0 fotografii obejrzanych",
+  "offline_source": "Istniejący Data/raw/osm/podlaskie-261108.osm.pbf; read-only pyosmium, brak nowych zapytań OSM/Overpass",
+  "osm_attribution": "© OpenStreetMap contributors; ODbL 1.0",
+  "selected_way": {
+    "id": 69667331,
+    "tags_literal": {
+      "name": "Buska",
+      "highway": "living_street",
+      "oneway": "yes",
+      "maxspeed": "20",
+      "source:maxspeed": "PL:living_street"
+    },
+    "stored_middle_vertex_lon_lat": [
+      23.1483117,
+      53.1531241
+    ],
+    "limitation": "Tagi wyłącznie do wyboru miejsca i kontekstu. Nie są odczytem znaku ani dowodem prawnej organizacji ruchu w 2026. Punkt osi nie jest GPS kamery."
+  },
+  "dedup": "Brak dotychczasowej przyjętej fotografii Buskiej w głównym07; znane Batorego i zimowe Maczka wyłączone. Dokładne nowe ID zdjęć wymagają kontroli po wyborze.",
+  "text_screening": "Celowane wyszukiwanie Buska Białystok zdjęcia nie wskazało pewnego nowego miejskiego ujęcia ulicy. Odrzucono ogólne galerie miasta, mieszkania i relacje kryminalne bez oglądania ich fotografii. Nie jest to dowód braku zdjęć całej ulicy.",
+  "limits": {
+    "mapillary_points": 1,
+    "max_viewed_frames": 2,
+    "media_downloads": 0,
+    "new_osm_requests": 0,
+    "commons": "STOP",
+    "flickr_downloads": "STOP"
+  },
+  "map_ui": {
+    "url": "https://www.mapillary.com/app/?lat=53.1531241&lng=23.1483117&z=18&mapStyle=OpenStreetMap",
+    "map_and_capture_mode": "OpenStreetMap i All captures — obramowane wybory obejrzane w menu",
+    "actions": "Jeden punkt i jeden stopień oddalenia dla otoczenia tej samej pętli; brak klikania innych ulic",
+    "result": "Brak zielonej sekwencji na pokazanej Buskiej; sąsiednia Aleja Tysiąclecia z pokryciem nie była substytutem",
+    "limit": "Nie dowodzi globalnego braku zdjęć; viewport nie GPS kamery"
+  },
+  "counts": {
+    "photos_viewed": 0,
+    "new_references": 0,
+    "downloaded_media": 0,
+    "map_points": 1
+  }
+}
