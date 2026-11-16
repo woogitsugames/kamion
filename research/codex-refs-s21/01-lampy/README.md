@@ -1,6 +1,6 @@
 # 01 — Lampy i fotometria — WIP
 
-Stan ewidencji głównej na 16.11.2026: **58 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **60 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Cel: uzupełnić lukę M59-FIX zdjęciami lamp ciągników i naczep z czytelną homologacją oraz przepisami. Stan: **NIESPEŁNIONE**.
 
@@ -217,3 +217,7 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Dwie dalsze lampki tablicy — runda37
 
 [heavy-plate-round37](heavy-plate-round37/README.md):4nowe kadry2fizycznych części; root dodatkowoobejrzał3/4 i pełne stronyVignal. Nowy fizycznyL/00/E2/7001. Jedna ciężka aplikacja przez dokładnyOE→Midlum, druga przez wspólną referencję serwisowąEPP98zciężkimi modelami — ograniczenia wariantu/montażu jawne. Reprezentacja tablicowa10samodzielnychkadrów5urządzeń+5detalipomocniczych, nie5czytelnychECE/certyfikatów. Główny58, tylny15nadal4PASS+1warunkowy,ON/zmierzch bez przyrostu.
+
+## Scania — piąty tylny kadrPASS, runda38
+
+[rear-approval-round38](rear-approval-round38/README.md): fizyczneE2 na dużym uszkodzonym kloszu po dwóch odczytach; źródłoweOE2860827 do ciągnika odczytane osobno. RA38-01 spełnia udokumentowany filtrE/typu/geometrii, bez dopisywania pełnego numeru czy sprawności. Etykieta10R jako osobnySUPPORT/EMC. Tylny bilans5PASS+1warunkowy,ON0/zmierzch0 wPASS; nie zamknięcie15/4/3. Główny60.

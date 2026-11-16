@@ -1,0 +1,27 @@
+{
+  "review_date": "2026-11-16",
+  "reviewer": "root",
+  "frame_reviewed": "01-RA38-01",
+  "method": "Odrębny IABogląd dopasowany i natywny1:1 obrazu2560×1920, bez kopiiARR",
+  "physical_E_read": "E2 w okręgu na czerwonym kloszu wyraźne; numer i funkcjeUNVERIFIED",
+  "geometry": "PASS_10_PERCENT z dużym marginesem; duży fragment fizycznej lampy zajmuje większość szerokości",
+  "source_subtype_check": {
+    "url": "https://autoline.info/-/sale/tail-light-glass/truck-tractor/Scania--26041015301121861400",
+    "read_in_public_IAB": true,
+    "literal_fields": [
+      "Scania S/R/P/G...2860827...for truck tractor",
+      "Part number2860827",
+      "Seller stock890-021GLASS",
+      "Referral Code2860827 i2860828"
+    ],
+    "limits": "Źródłowe zastosowanie zgodnegoOE klosza wciągniku; nie dowód demontażu ani transfer aprobaty zamiennika. Webtool niedostępny, zwykła publiczna strona odczytana bez logowania/CAPTCHA; nie otwierano map/StreetView ani formularzy."
+  },
+  "decision": "01-RA38-01 PASS jako piąty tylny kadr: typ ze źródła, geometria i fizycznyE. Nie dodano obowiązku pełnego numeru/kompletności/sprawności.",
+  "support_frame": "01-RA38-02 EMC_ONLY; root nie oglądał tej etykiety, brak awansu fotometrycznego",
+  "current_rear_lower_bound": 5,
+  "remaining_conditional": [
+    "UP4-03"
+  ],
+  "new_ON": 0,
+  "new_dusk_night": 0
+}
