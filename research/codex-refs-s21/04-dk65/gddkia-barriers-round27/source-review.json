@@ -1,0 +1,57 @@
+{
+  "review_date": "2026-11-16",
+  "result": "0 nowych obejrzanych fotografii; brak awansu referencji",
+  "dedup": {
+    "checked": [
+      "parent04",
+      "temporary-marking-round21",
+      "yellow-road-marking-round25",
+      "K1"
+    ],
+    "article_known": "04-D01/D02 zawierają odczyt tekstu komunikatu, nie ogląd zdjęcia.",
+    "asset_check": "Dokładny identyfikator 94bfaddc-f273-4a3d-9d40-b37c40b30c26 nie występuje we wcześniejszych 04. Odrębności ekspozycji wizualnie nie potwierdzono, bo brak renderu."
+  },
+  "candidate": {
+    "source": "https://www.gov.pl/web/gddkia-bialystok/dwie-eski-polaczone-kolo-bialegostoku",
+    "article_publication_date": "2026-10-20 — SOURCED nagłówek strony",
+    "image": "https://www.gov.pl/photo/format/94bfaddc-f273-4a3d-9d40-b37c40b30c26/resolution/1920x810",
+    "provenance": "Dokładny odsyłacz obrazu 37 w pełnym odczycie publicznej strony; nie odgadywano wariantów.",
+    "photo_author": "UNVERIFIED; publikujący GDDKiA Oddział Białystok",
+    "photo_date": "UNVERIFIED; nie utożsamiono z publikacją",
+    "photo_license": "CC BY-NC-ND 4.0 wg stopki gov.pl dla materiałów audiowizualnych, o ile nie stwierdzono inaczej. Poza dozwolonym zestawem do pobierania — wyłącznie link, bez kopii.",
+    "view_status": "NOT_VIEWED",
+    "observation": null,
+    "tile": "UNVERIFIED; nie przypisano dk65-03 ani kilometrażu",
+    "stage_limit": "Komunikat opisuje otwarcie odcinka, nie sam stan placu budowy; nie wyprowadzono obrazu robót z tytułu/altu."
+  },
+  "access_log": [
+    {
+      "source": "https://www.gov.pl/web/gddkia-bialystok/dwie-eski-polaczone-kolo-bialegostoku",
+      "method": "web tekst",
+      "result": "Odczyt pełnego tekstu i stopki; źródło/odnośnik galerii ustalone."
+    },
+    {
+      "source": "https://www.gov.pl/web/gddkia-bialystok/zmiana-organizacji-ruchu-na-drodze-krajowej-nr-65",
+      "method": "web",
+      "result": "Timeout; brak ponowienia, nie oglądano zdjęcia."
+    },
+    {
+      "source": "https://www.gov.pl/web/gddkia-bialystok/dwie-eski-polaczone-kolo-bialegostoku",
+      "method": "Chrome zwykła nawigacja",
+      "result": "Timeout Page.navigate; nowa karta pozostała about:blank."
+    },
+    {
+      "source": "https://www.gov.pl/photo/format/94bfaddc-f273-4a3d-9d40-b37c40b30c26/resolution/1920x810",
+      "method": "Chrome pojedynczy odczyt dokładnego linku zdjęcia z wcześniej odczytanej strony",
+      "result": "Timeout Page.navigate; świeży AX i obraz ekranu potwierdziły about:blank. Brak dalszych wariantów i ponowień."
+    }
+  ],
+  "counts": {
+    "new_images_individually_viewed": 0,
+    "downloaded_media": 0,
+    "saved_screenshots": 0,
+    "new_photographic_refs": 0
+  },
+  "completion_summary_done": true,
+  "restrictions": "Bez Commons/Flickr/OSM/Google, bez wyłączania TLS, brak zapisanych mediów i zmian parentów."
+}
