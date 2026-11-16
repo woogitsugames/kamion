@@ -19,3 +19,4 @@
 - Naczepa: `park_brake_hold_no_interlock` 55,2 mm to przeciek relaksacji (4 mm/s bez końca), nie 7,63 m. Poprawka w TrailerModel: 14,4 mm (ustala się).
 - Pętle: provoke 198/200 → 0/200; Robustness 0/200 → 0/200; pełny zestaw 0/30 → 0/30 (289/289).
 - NASTĘPNY KROK: lider: `pwsh scripts/test.ps1 -Platform EditMode` (TrailerModel.cs współdzielony z Unity), potem scalenie PR.
+- Krok 2b/3: merge origin/main 07f4ed61a (konflikty pipeline.py, STATUS.md), katalog --check 0; derived 25 kafli skopiowane do main (robocopy exit=1, zgodne). NASTĘPNY KROK: wynik pytest (artifacts/world2-s23/logs/pytest.log) → git push -u origin world2-s23
