@@ -1,0 +1,50 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE_PARTIAL — jedna rzeczywiście obejrzana scena monitoringu, bez dokładnego ID przejazdu i bez źródłowego materiału nawierzchni",
+  "dedup": "Nowe dokładne URL KPP 106478 i SITK / oferta bez trafień w dotychczasowym05. Nie powtarzano fotografii DW671 2019, stacji Fasty, Starosielc ani niedostępnego banku konferencji.",
+  "sources": [
+    {
+      "url": "https://monki.policja.gov.pl/p10/aktualnosci/106478,Niebezpieczna-sytuacja-na-przejezdzie-kolejowym.html",
+      "kind": "Pierwotny publiczny komunikat KPP Mońki",
+      "publication_date": "2025-10-10",
+      "text_read": true,
+      "text_finding": "W rejonie Knyszyna opisano wjazd pojazdu między opuszczające się zapory.",
+      "location_limit": "Brak w odczytanym tekście numeru przejazdu, drogi i kilometrażu. Nie utożsamiono go z 29+522 lub DW671.",
+      "media": "Publiczny player; link pobrania 728.13 KB nieużyty. Brak pobrań mediów.",
+      "visual_status": "VIEWED — opublikowany kadr w galerii oraz fragment playera; nie każda sekunda filmu",
+      "still_url": "https://monki.policja.gov.pl/dokumenty/zalaczniki/125/125-278733.png",
+      "video_link_not_downloaded": "https://monki.policja.gov.pl/dokumenty/zalaczniki/125/125-278713.mp4",
+      "camera_overlay_literal": "22-08-2025 12:58:12 — strefa i poprawność zegara UNVERIFIED"
+    },
+    {
+      "url": "https://sitk.bialystok.pl/oferta/",
+      "kind": "Pierwotny publiczny opis usług i historii opracowań projektanta",
+      "locator": "Działalność Statutowa Oddziału, sekcja 2004",
+      "text_read": true,
+      "text_finding": "SITK deklaruje opracowanie projektu budowlanego i wykonawczego przejścia DW671 przez linię Białystok–Ełk, z dojazdami i samoczynną sygnalizacją przejazdową.",
+      "limit": "Historyczna deklaracja wykonania dokumentacji; nie odbiór fizycznej instalacji, nie jej model, nie nawierzchnia, nie kilometraż i nie stan 2026. Bez zdjęć lub dokumentów pobranych ze strony."
+    }
+  ],
+  "excluded": [
+    {
+      "source": "files.girlc.at — PFU i PZT LK38",
+      "reason": "Niedozwolony mirror. Wyniki indeksu nie były źródłem przyjętych liczb ani podstawą otwarcia/pobrania."
+    },
+    {
+      "source": "Polrails6818",
+      "reason": "Opis nawierzchni peronów nie jest dowodem nawierzchni konkretnego przejazdu; nie pobierano zdjęć"
+    },
+    {
+      "source": "Istniejące05/crossing-category-source-round6 i round11",
+      "reason": "KategoriaB 29+522 już znana; wcześniej niedostępnego PDF RDOŚ nie ponawiano"
+    }
+  ],
+  "counts": {
+    "new_source_scenes_viewed": 1,
+    "published_still_viewed": 1,
+    "video_fragments_viewed": 1,
+    "downloaded_media": 0,
+    "confirmed_crossing_id": 0,
+    "confirmed_surface_material": 0
+  }
+}

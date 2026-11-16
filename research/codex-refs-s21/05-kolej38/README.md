@@ -1,6 +1,6 @@
 # 05 — Linia38: elektryfikacja i stan zastany kontra projekt — WIP
 
-Stan ewidencji głównej na 16.11.2026: **19 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **21 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Wcześniejszy etap:15 rekordów —6 dokumentacyjnych,4 danychOSM,1orto,2 lokalne fotografie stacji oraz2link-only kadry1przejazdu DW671 z2019. KategoriaB jest udokumentowana dla km29+522 w obwieszczeniu2025; przypisanie do konkretnych fotografii i stan wyposażenia2026 nadalUNVERIFIED. Źródłowe3kV DC uzupełniono z dwóch dokumentówPKP, nie wyłącznie z OSM.
 
@@ -87,3 +87,8 @@ Typu sieci nie przeliczano z kodu na wysokość/rozstaw słupów. Parametr pręd
 ## Starosielce — publiczna galeriaPLK, runda13
 
 [plk-starosielce-ground-round13](plk-starosielce-ground-round13/README.md):2 nowe indywidualnie obejrzane fotografie MateuszaOstrzyżka, źródłowy marzec2020 przed przebudową. Tory/podkłady w kruszywie, płyty i żółta linia peronu, podpory/przewody. JawnaBY-NC-ND4.0, wyłącznie link-only bez kopii. Nie Fasty/Knyszyn, nie przejazd drogowy, bez napięcia/metrów/obecnegostanu. Główny19.
+
+
+### Nowy przejazd — KE14, 16.11.2026
+
+Jedna nowa scena KPP Mońki z rejonu Knyszyna, niezależnie obejrzana przez agenta i root: dwa toki jednego toru, prostokątne podziały paneli, jasne płyty obok, linie jezdni, bariery, belka zapory i tylne tarcze sygnalizatora. Nadruk22-08-2025 12:58:12 to niezweryfikowany zegar kamery; publikacja10.10.2025 osobno. Dokładne ID/GPS/DW671/29+522, materiał paneli i kategoria A–D UNVERIFIED. Film i kadr tej samej sceny nie zwiększają liczby ekspozycji. Osobny tekst SITK o projekcie z2004 nie jest dowodem wykonania ani wyposażenia tej sceny. Dwa nowe rekordy:1scena+1dokument, wyłącznie link-only ARR, bez pobrań. Szczegóły w [pakiecie KE14](knyszyn-equipment-round14/README.md).
