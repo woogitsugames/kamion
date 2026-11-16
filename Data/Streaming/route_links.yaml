@@ -2,9 +2,9 @@
 # tiles whose own control route (route_start.json, ADR 0203-0214) does not end on the seam towards the next tile.
 # Each link lies inside ONE tile; its lane polyline is computed by tools/worldgen/streaming/route_links.py with the same
 # code as scripts/export-route.py (effective graph -> networkx shortest path -> roads.route.lane_route).
-# Runtime: WorldStreamer.ContinueRoute appends a link when its first point meets the autopilot path end (<= routeJoinM);
-# a link with replaces_route is appended INSTEAD of that tile's start route (same first point)
-# and its tile is Ready; links of destination != the chosen one (launch argument `-route_to`, default tykocin) are skipped.
+# Runtime: WorldStreamer.ContinueRoute appends a link when its first point meets the autopilot path end (<= routeJoinM)
+# and its tile is Ready; links of destination != the chosen one (launch argument `-route_to`, default tykocin) are skipped;
+# a link with replaces_route is appended INSTEAD of that tile's start route (same first point).
 # These are NOT authored_overrides of the region (route_endpoints.json / overrides.yaml stay untouched): spawn, cameras and
 # the region catalog keep using each tile's own start route.
 schema: truck-sim-pl/route-links/1
