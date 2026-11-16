@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-16",
+  "source_index": "https://bdl.lasy.gov.pl/portal/uslugi-ogc",
+  "layer_metadata": "https://mapserver.bdl.lasy.gov.pl/arcgis/rest/services/WMS_BDL/MapServer/6",
+  "request": {
+    "url": "https://mapserver.bdl.lasy.gov.pl/arcgis/rest/services/WMS_BDL/MapServer/6/query?f=json&geometry=765618.6%2C606031.9&geometryType=esriGeometryPoint&inSR=2180&spatialRel=esriSpatialRelIntersects&outFields=adress_forest%2Carea_type_cd%2Csite_type_cd%2Cspecies_cd_d%2Cspecies_age%2Ca_year%2Cpart_cd&returnGeometry=false",
+    "params": {
+      "f": "json",
+      "geometry": "765618.6,606031.9",
+      "geometryType": "esriGeometryPoint",
+      "inSR": "2180",
+      "spatialRel": "esriSpatialRelIntersects",
+      "outFields": "adress_forest,area_type_cd,site_type_cd,species_cd_d,species_age,a_year,part_cd",
+      "returnGeometry": "false"
+    },
+    "http": 200,
+    "sha256": "b0d9344eca0a06f61aaa49b2be0298214b45262ba74e70b295d747f46a85bf18",
+    "layer_source": "Public directory layer6 Wydzielenia pozaPGL LP wgPUL; same selected forest point, fields explicitly bounded; no owner info or geometry requested"
+  },
+  "raw_attributes": {
+    "adress_forest": "B020320009-104   -a   -00",
+    "area_type_cd": "D-STAN    ",
+    "site_type_cd": "BŚW    ",
+    "species_cd_d": "SO       ",
+    "species_age": 100,
+    "a_year": 2017,
+    "part_cd": "5  "
+  },
+  "selection": {
+    "existing_ortho": "../tree-crowns-round17/files/TC17-02.jpg",
+    "existing_bbox_epsg2180": [
+      765558.6,
+      605971.9,
+      765798.6,
+      606211.9
+    ],
+    "forest_point_px": [
+      200,
+      600
+    ],
+    "forest_point_epsg2180": [
+      765618.6,
+      606031.9
+    ],
+    "pixel_formula": "x=minx+200*0.3;y=maxy-600*0.3; pixel-center convention gives0.15m difference, below visual/georeferencing uncertainty",
+    "K1_context": "km20,d k65-08; route-context not nationalchainage",
+    "visual": "Root re-viewed existing800px ortho, selected separate dense wooded patch southwest of road. Not a new image or species identification."
+  },
+  "raw_api_requests": {
+    "GetCapabilities": 1,
+    "WMS_GetFeatureInfo": 2,
+    "REST_point_queries": 2,
+    "http_all": 200,
+    "WMS_both": "empty FeatureCollection; not evidence of absent trees",
+    "REST_PGL_layer5": "empty; not absenceof forest",
+    "REST_nonPGL_layer6": "one feature, no geometry or owner fields requested"
+  },
+  "limits": [
+    "SO retained as literal code; species name not independently decoded",
+    "species_age100 and a_year2017 retained as separate raw fields; reference date/units not independently established, do not age forward to2026",
+    "part_cd5 not translated to50percent without dictionary",
+    "Selected roadside crown377,310 got no feature in WMS; forest-context point200,600 different",
+    "No transfer to individual roadside trees, spacing, trunk offset or current management status"
+  ],
+  "licence": "Publicly exposed BDL data; own field reading and links only, no CC assigned or geometry copied"
+}

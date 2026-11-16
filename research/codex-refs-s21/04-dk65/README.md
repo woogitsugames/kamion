@@ -112,3 +112,6 @@ R21: trzy nowe kadry robót DK65 z lipca2026, agent i root osobno obejrzeli. Tab
 
 
 R22 Knyszyn: dwa nowe kadry historycznego centrum z artykułu2022. Jeden pokazuje przeszkloną wiatę, ławkę i znak z autobusem; drugi posadzkę/ławki/słup ogłoszeniowy, bez wiaty. Root oba obejrzał. Jedno miejsce,0potwierdzonych wcięć zatoki i0nowych GPS/kafli. Relacja do obecnej DK65 nieustalona. Główny36. Dla sesji Knyszyn przydatne także nawierzchnie i mała architektura.
+
+
+R23BDL: punkt w gęściej zadrzewionym fragmencie istniejącegoTC17-02 zwrócił1rekord warstwy pozaPGL6: kodSO, species_age100,a_year2017. Bez automatycznego rozwinięcia kodu/datowania wieku i bez przeniesienia na pojedyncze drzewa przy jezdni.0nowych zdjęć. Główny37.
