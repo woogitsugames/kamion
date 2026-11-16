@@ -330,3 +330,7 @@
 - 2026-11-16 08:09 +01:00 — R24 build/import/4 warianty OK: 4 wiaty, 2 budynki i świerk obecne; kamera 14 zasłonięta ścianą, poprawiona. Północny płot przycięty poza korytarz service, test 2 passed; dodane kamery porównawcze 12/13 ESTIMATED. R25 build trwa; budżet i ostateczne testy OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r25.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r25.done` 
 
+
+- 2026-11-16 08:14 +01:00 — R24: wiaty/budynki/świerk wygenerowane; kadr 14 zasłaniała ściana. Kamera przesunięta na plac, płot przycięty przy service (2 testy passed), dodane szacunkowe kamery 12/13. R25 build trwa; wstępne High max 1 250 321 tris PASS, Low before FAIL i koszt targowicy w analizie.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r25.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r25.done` 
+
