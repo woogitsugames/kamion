@@ -1,0 +1,16 @@
+# Runda 50 — zimowe relacje i kontrola kopii prasowych
+
+Ogląd 16 listopada 2026, data dzienna. Cztery publiczne obrazy otwarto i obejrzano osobno w natywnym Chrome, bez pobrań, kopii i zapisanych screenshotów. **Konserwatywnie 3 odrębne ekspozycje + 1 porównanie niepotwierdzonego nowego kadru tej samej sceny.** Nie są to cztery nowe brudne tyły. Wszystko ARR link-only. Commons i Flickr nieużywane; poprzedniego 49-001 nie powtarzano i nie szukano jego pierwotnego komunikatu.
+
+**Przyrost A 0 / B 0 / zimowe A 0 / Europe-road A 0.** Typowa pułapka selekcji okazała się rzeczywista: kadr odśnieżania dachu nie pokazuje docelowej pary drzwi, a żółty agregat chłodniczy w Gołdapi jest na przedniej ścianie. Nie zwiększono statystyki zimowych tyłów za sam rzeczywisty śnieg.
+
+- 50-001: publiczna fotografia Polizei NRW Köln w relacji Kerpen/A4/A61, śnieg na dachu zielonej zabudowy, brak czytelnej pary i okuć. Osoby z narzędziem nie nazwano policjantem tylko na podstawie podpisu instytucji. Rozmiar SOURCED 1008 × 612.
+- 50-002: KPP Gołdap/Radio5, relacja Grabowo/DW650 z 4 stycznia 2025. Indywidualny kadr pokazuje połączenie ciągnika i agregat z przodu chłodni, bez tyłu. Rozmiar SOURCED 1000 × 563. Pozostałe obrazy małej galerii były selekcją kierunku ujęcia, bez kolejnych indywidualnych opisów.
+- 50-003: NEWS5/Lars Haubner/TAG24, pełny nocny zestaw po zdarzeniu na dojeździe do A3 przy Neumarkt 9 stycznia 2026. Tył jest mały, silnie zabarwiony oświetleniem; filmu i pary nie potwierdzono wystarczająco. Rozmiar SOURCED 1200 × 800, drzwi ESTIMATED 280–340 px. B geometria nie przechodzi.
+- 50-D01: NEWS5/Lars Haubner/Merkur, dokładny kadr 6/13 dotyczy tej samej sceny Neumarkt/A3. Podobna kompozycja i ustawienie, większy widok radiowozu, inna redakcyjna anonimizacja. Odrębność ekspozycji UNVERIFIED, więc nie liczono drugiego zdjęcia. Rozmiar SOURCED 1100 × 619, drzwi ESTIMATED 220–270 px. To porównanie dedup, nie kolejny PASS.
+
+Ważna errata lokalizacji: nagłówek TAG24 zawiera A70, lecz podpis i treść wybranego kadru mówią o dojeździe do A3 przy Neumarkt. W galerii Merkur zdjęcia 3–5 są z A70/Gochsheim, ale obejrzany 41056346 to pozycja 6/13 z A3. Nie połączono lokalizacji różnych fotografii jednego artykułu. Przycięcia, anonimizacja i większa/szersza reprodukcja nie tworzą nowej ekspozycji.
+
+Selekcja tekstowa obejmowała pierwotne komunikaty Policji z Przasnysza 75628 i portal 226396 oraz artykuł o odśnieżaniu. W dostępnych odczytach nie było docelowych fotografii, więc nie zamieniano opisów zdarzeń w obserwacje drzwi. Autokult odmówił robotom; nie obchodzono. Nie wracano do wcześniej nieczynnych URL ani nie wywoływano logowania/CAPTCHA. Całość ma konkretne źródła w manifeście, z rozdzieleniem dat publikacji/aktualizacji i źródłowych dat zdarzeń.
+
+Nie ustalano chemii soli ze śniegu lub barwy lamp. B weryfikowano wyłącznie wobec rzeczywiście załadowanych bitmap; parametr URL nie był dowodem samodzielnie. Wszystkie dostępne obrazy tej rundy są niższe niż 1000 px, a same drzwi mniejsze. A wymaga treści bez progu 1000, ale brak czytelnej pary lub pewnego filmu pozostawił kadry poza A. Brak awansu globalnych 20 / 12 / 6 / 6. Parent, P18, ledger i Git nietknięte. Chrome zwolniono po completion_summary dla lampy, potem knyszyn.
