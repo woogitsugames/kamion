@@ -18,7 +18,7 @@ worldMemoryMB: WORLD_MEMORY Low of the import of each region, as cited in ADR 02
 pamieci", sources ADR 0188 / 0203 / 0205-0214). ESTIMATED: values from different days; a regeneration can change them.
 The run-time streamer uses them only to keep the sum of loaded tiles under the tier budget (WORKING_VALUE).
 worldMemoryHighMB (ADR 0273): WORLD_MEMORY High of the same imports, as tabulated in ADR 0234 §7 (sources: the region
-ADRs 0188 / 0204-0214, also in scripts/estimate-region-packs.py); used when the High content tier streams (PC High/Ultra).
+ADRs 0188 / 0204-0214; the pack estimator script stays on branch regionpacks-0234); used when the High content tier streams (PC High/Ultra).
 Standard library + PyYAML (worldgen project).
 """
 from __future__ import annotations

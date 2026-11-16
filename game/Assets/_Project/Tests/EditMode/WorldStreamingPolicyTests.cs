@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Game.Editor.Build;
 using Game.World;
-using Game.World.Packs;
 using Game.World.Streaming;
 using NUnit.Framework;
 using UnityEngine;
@@ -313,19 +312,23 @@ namespace Game.Tests
         [Test]
         public void Decide_AllocatesNothing()
         {
+            // GcAllocCounter (Recorder "GC.Alloc", pattern of ADR 0244 / PR #118): GC.GetAllocatedBytesForCurrentThread is 0
+            // under Mono in the editor, so the old byte delta could never fail there.
             var g = TileGraph.LoadDefault();
             var p = new StreamingPolicy(g, new StreamingSettings());
             int c = g.IndexOf("dk65-03");
             p.InitResident(c);
             var cmd = new StreamCommand[8];
-            for (int i = 0; i < 50; i++) p.Decide(768700, 599200, 0f, 20f, cmd);   // warm-up (JIT)
-            long before = GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 2000; i++)
+            int step = 0;
+            Action frames = () =>
             {
-                int n = p.Decide(768700 + i * 0.01, 599200 + i * 0.05, 0f, 20f, cmd);
-                for (int k = 0; k < n; k++) p.SetState(cmd[k].tile, cmd[k].op == StreamOp.Load ? TileState.Ready : TileState.Unloaded);
-            }
-            Assert.AreEqual(0, GC.GetAllocatedBytesForCurrentThread() - before, "StreamingPolicy.Decide must not allocate");
+                for (int i = 0; i < 2000; i++, step++)
+                {
+                    int n = p.Decide(768700 + step * 0.01, 599200 + step * 0.05, 0f, 20f, cmd);
+                    for (int k = 0; k < n; k++) p.SetState(cmd[k].tile, cmd[k].op == StreamOp.Load ? TileState.Ready : TileState.Unloaded);
+                }
+            };
+            GcAllocCounter.AssertZero(frames, warmup: frames, message: "StreamingPolicy.Decide must not allocate (ADR 0235, CLAUDE.md)");
         }
 
         // ------------------------------------------------------------------ placement / floating origin
@@ -595,87 +598,6 @@ namespace Game.Tests
                 Assert.LessOrEqual(f.MaxMemory, p.Settings.memoryBudgetMB, $"[PC {tier}]");
                 TestContext.WriteLine($"[PC {tier}] budget {p.Settings.memoryBudgetMB} MB: loads {f.Loads}, unloads {f.Unloads}, max {f.MaxResident} tiles / {f.MaxMemory:F1} MB (ESTIMATED)");
             }
-        }
-
-        sealed class FakePacks : IRegionPackProvider
-        {
-            public readonly HashSet<string> Installed = new HashSet<string>();
-            public bool WithTileScene = true, FailLoad;
-            public int Acquired, Released;
-            public RegionPackInfo GetInfo(string region, string tier, bool sceneInBuild) =>
-                sceneInBuild ? new RegionPackInfo(RegionPackState.InBase, "", 0)
-                : Installed.Contains(region + "|" + tier) ? new RegionPackInfo(RegionPackState.Installed, "", 0)
-                : new RegionPackInfo(RegionPackState.NotInstalled, "", 0);
-            public bool DownloadEnabled => false;
-            public System.Collections.IEnumerator Prepare(string region, string tier, Action<RegionPackLoadResult> done) => Acquire(region, tier, done);
-            public System.Collections.IEnumerator Acquire(string region, string tier, Action<RegionPackLoadResult> done)
-            {
-                yield return null;
-                if (FailLoad) { done(new RegionPackLoadResult(null, "load failed")); yield break; }
-                Acquired++;
-                done(new RegionPackLoadResult(RegionScenes.SceneNameFor(region, tier), null,
-                    WithTileScene ? RegionScenes.TileSceneNameFor(region, tier) : null));
-            }
-            public void Release(string region, string tier) => Released++;
-            public System.Collections.IEnumerator Download(string region, string tier, Action<string> done) { yield break; }
-            public RegionPackInstallResult InstallIncoming() => new RegionPackInstallResult();
-            public event Action Changed { add { } remove { } }
-        }
-
-        /// <summary>Runs a coroutine to the end without Unity (nested IEnumerators are entered).</summary>
-        static void Drain(System.Collections.IEnumerator e)
-        {
-            var stack = new Stack<System.Collections.IEnumerator>();
-            stack.Push(e);
-            int guard = 0;
-            while (stack.Count > 0 && guard++ < 10000)
-            {
-                var top = stack.Peek();
-                if (!top.MoveNext()) { stack.Pop(); continue; }
-                if (top.Current is System.Collections.IEnumerator inner) stack.Push(inner);
-            }
-        }
-
-        [Test]
-        public void TileSource_BuildFirst_ThenPack_WithOneLeasePerAcquire()
-        {
-            var packs = new FakePacks();
-            packs.Installed.Add("dk65-07|Low");
-            string inBuildPath = RegionScenes.TileScenePathFor("dk65-06", "Low");
-            var src = new BuildOrPackTileSource(packs, path => path == inBuildPath);
-            Assert.IsTrue(src.IsAvailable("dk65-06", "Low"));
-            Assert.IsFalse(src.FromPack("dk65-06", "Low"), "a region in the player build never takes a pack lease");
-            Assert.IsTrue(src.IsAvailable("dk65-07", "Low"));
-            Assert.IsTrue(src.FromPack("dk65-07", "Low"));
-            Assert.IsFalse(src.IsAvailable("dk65-08", "Low"), "neither in the build nor installed: seam stays closed");
-
-            bool ok = false;
-            Drain(src.Acquire("dk65-06", "Low", r => ok = r));
-            Assert.IsTrue(ok);
-            Assert.AreEqual(0, packs.Acquired);
-            Drain(src.Acquire("dk65-07", "Low", r => ok = r));
-            Assert.IsTrue(ok);
-            Assert.AreEqual(1, packs.Acquired);
-            src.Release("dk65-07", "Low");
-            src.Release("dk65-06", "Low");
-            Assert.AreEqual(1, packs.Released, "release only what was acquired from a pack");
-        }
-
-        [Test]
-        public void TileSource_PackWithoutTileScene_OrFailedLoad_IsRefusedAndReleased()
-        {
-            var packs = new FakePacks { WithTileScene = false };
-            packs.Installed.Add("knyszyn|High");
-            var src = new BuildOrPackTileSource(packs, path => false);
-            bool ok = true;
-            Drain(src.Acquire("knyszyn", "High", r => ok = r));
-            Assert.IsFalse(ok, "old pack (before ADR 0273) has no tile scene");
-            Assert.AreEqual(1, packs.Released, "its lease is given back at once");
-            packs.FailLoad = true;
-            ok = true;
-            Drain(src.Acquire("knyszyn", "High", r => ok = r));
-            Assert.IsFalse(ok);
-            Assert.IsFalse(new BuildOrPackTileSource(null, path => false).IsAvailable("knyszyn", "High"), "packs off");
         }
     }
 }

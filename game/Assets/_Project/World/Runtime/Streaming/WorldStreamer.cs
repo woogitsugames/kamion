@@ -62,9 +62,9 @@ namespace Game.World.Streaming
         /// the scene spawn of the start tile would be used.</summary>
         public delegate bool RecoveryPointProvider(out Vector3 worldPosition);
 
-        /// <summary>Set by the installer (DrivingLabBootstrap: newest safe pose of WorldSafetyNet). The tile containing the
-        /// point - or the start tile while there is none - is pinned: never unloaded, so a reset never lands over a void.
-        /// Called every decision (0.25 s); must not allocate.</summary>
+        /// <summary>Set by <see cref="TryInstallFromLaunch"/> (newest safe pose of the safety net's <see cref="SafePoseBuffer"/>
+        /// older than its safeMinAge) or by a test. The tile containing the point - or the start tile while there is none - is
+        /// pinned: never unloaded, so a reset never lands over a void. Called every decision (0.25 s); must not allocate.</summary>
         public RecoveryPointProvider recoveryPoint;
 
         /// <summary>Source of tile scenes: player build or region pack (ADR 0273 §3). Set before <see cref="Init"/>.</summary>
@@ -133,8 +133,8 @@ namespace Game.World.Streaming
         public static WorldStreamer TryInstall(GameObject host, WorldRegionRoot start, Transform vehicle, Rigidbody body, string contentTier) =>
             TryInstall(host, start, vehicle, body, contentTier, StreamingSettings.BudgetForTier(Game.Rendering.QualityTiers.Current, !Application.isMobilePlatform), null);
 
-        /// <summary>As above with the world memory budget [MB] and the tile source (null = player build, then the region
-        /// pack service if the menu created it).</summary>
+        /// <summary>As above with the world memory budget [MB] and the tile source (null = player build,
+        /// <see cref="BuildTileSource"/>; a region-pack source is a future implementation of <see cref="ITileSceneSource"/>).</summary>
         public static WorldStreamer TryInstall(GameObject host, WorldRegionRoot start, Transform vehicle, Rigidbody body, string contentTier,
                                                float memoryBudgetMB, ITileSceneSource tileSource)
         {
@@ -143,7 +143,7 @@ namespace Game.World.Streaming
             if (graph == null) { Debug.LogWarning("[STREAM] off: Resources/" + TileGraph.ResourcePath + " missing"); return null; }
             int idx = graph.IndexOf(start.regionId);
             if (idx < 0) { Debug.Log($"[STREAM] off: region {start.regionId} not in the tile graph"); return null; }
-            var src = tileSource ?? new BuildOrPackTileSource(Game.World.Packs.RegionPackService.Existing);
+            var src = tileSource ?? new BuildTileSource();
             int available = 0, fromPacks = 0;
             foreach (int j in graph.Neighbors[idx])
             {
@@ -171,11 +171,118 @@ namespace Game.World.Streaming
             return s;
         }
 
+        /// <summary>
+        /// The single hook of the driving scene (ADR 0273 §9, <c>DrivingLabBootstrap.Start</c>, one statement): installs the
+        /// streamer only when it is switched on - <see cref="EnabledOverride"/> or the launch argument <c>stream=1</c> - and
+        /// the start region has an available neighbour tile scene; otherwise returns null and the scene is exactly as before
+        /// (closed region edge). Everything the bootstrap used to wire by hand is done here, so Game.Gameplay keeps one line:
+        /// <list type="bullet">
+        /// <item>content tier from the start scene name (<c>_High</c>), memory budget from the quality tier and platform;</item>
+        /// <item>pinned recovery tile from the safety net's <paramref name="safePoses"/> (ADR 0273 §8), and the same buffer
+        /// moved on every origin rebase (the safety net itself does not listen to <see cref="FloatingOrigin.Moved"/>);</item>
+        /// <item><paramref name="onOriginMoved"/> (route autopilot path) subscribed to <see cref="FloatingOrigin.Moved"/> for the
+        /// streamer's lifetime;</item>
+        /// <item>the start region's <see cref="WorldBoundary"/> rectangle widened to the union of the available tiles
+        /// (<see cref="TileGraph.LocalUnionBounds"/>) BEFORE the safety net reads it in its Start, so an open seam is not
+        /// "out of bounds" (see ADR 0273 §9 for the exact edge semantics and the follow-up for WorldSafetyNet).</item>
+        /// </list>
+        /// Allocates once (component, delegates, graph); nothing per frame.
+        /// </summary>
+        public static WorldStreamer TryInstallFromLaunch(GameObject host, WorldRegionRoot start, Transform vehicle, Rigidbody body,
+            string streamArgument, SafePoseBuffer safePoses, float safeMinAge, System.Action<Vector3> onOriginMoved)
+        {
+            if (!IsRequested(streamArgument)) return null;
+            if (host == null || start == null || vehicle == null) return null;
+            string tier = start.gameObject.scene.name.EndsWith("_High", System.StringComparison.Ordinal) ? RegionScenes.HighTier : RegionScenes.LowTier;
+            float budget = StreamingSettings.BudgetForTier(Game.Rendering.QualityTiers.Current, !Application.isMobilePlatform);
+            var s = TryInstall(host, start, vehicle, body, tier, budget, null);
+            if (s == null) return null;
+            s.UseSafePoses(safePoses, safeMinAge);
+            s.AddOriginListener(onOriginMoved);
+            s.WidenStartBoundary(start);
+            return s;
+        }
+
+        /// <summary>Streaming switch: <see cref="EnabledOverride"/> when set, else launch argument <c>stream</c> == "1".</summary>
+        public static bool IsRequested(string streamArgument) => EnabledOverride ?? streamArgument == "1";
+
+        SafePoseBuffer m_SafePoses;
+        float m_SafeMinAge;
+        RecoveryPointProvider m_SafePoseProvider;   // cached: no allocation per decision
+        System.Action<Vector3> m_OriginListener;
+
+        /// <summary>Pins the tile of the newest safe pose older than <paramref name="minAge"/> and moves the buffer on rebase.</summary>
+        public void UseSafePoses(SafePoseBuffer poses, float minAge)
+        {
+            m_SafePoses = poses;
+            m_SafeMinAge = minAge;
+            if (poses == null) return;
+            if (m_SafePoseProvider == null) m_SafePoseProvider = NewestSafePose;
+            recoveryPoint = m_SafePoseProvider;
+        }
+
+        bool NewestSafePose(out Vector3 worldPosition)
+        {
+            if (m_SafePoses != null && m_SafePoses.TryGet(Time.time, m_SafeMinAge, out var pose)) { worldPosition = pose.position; return true; }
+            worldPosition = default;
+            return false;
+        }
+
+        /// <summary>Subscribes <paramref name="listener"/> to <see cref="FloatingOrigin.Moved"/> until this streamer is destroyed.</summary>
+        public void AddOriginListener(System.Action<Vector3> listener)
+        {
+            if (listener == null) return;
+            if (m_OriginListener != null) FloatingOrigin.Moved -= m_OriginListener;
+            m_OriginListener = listener;
+            FloatingOrigin.Moved += m_OriginListener;
+        }
+
+        /// <summary>Unsubscribes the listener of <see cref="AddOriginListener"/> (OnDestroy; tests).</summary>
+        public void RemoveOriginListener()
+        {
+            if (m_OriginListener != null) FloatingOrigin.Moved -= m_OriginListener;
+            m_OriginListener = null;
+        }
+
+        /// <summary>
+        /// Widens the start region's drivable rectangle (<see cref="WorldBoundary.minEN"/>/<see cref="WorldBoundary.maxEN"/>,
+        /// region-local) to the union of the start tile and every available tile (ADR 0273 §9). The streamer's own tile
+        /// rectangles were taken in <see cref="Init"/> and are not affected.
+        /// </summary>
+        public bool WidenStartBoundary(WorldRegionRoot start)
+        {
+            if (start == null || Graph == null || StartTile < 0) return false;
+            var b = start.GetComponent<WorldBoundary>();
+            if (b == null) b = start.gameObject.AddComponent<WorldBoundary>();
+            var include = new bool[Graph.Count];
+            int n = 0;
+            for (int i = 0; i < include.Length; i++)
+            {
+                include[i] = i == StartTile || !Policy.IsUnavailable(i);   // unavailable = not in the build: never loads
+                if (include[i]) n++;   // diagnostics: available tiles (the union takes those connected to the start)
+            }
+            if (!Graph.LocalUnionBounds(StartTile, include, out double minE, out double minN, out double maxE, out double maxN, withOrigin: false)) return false;
+            // The other tiles' rectangles shrunk by the start tile's own inset (tile rectangle -> drivable rectangle, per
+            // side), so a side without a neighbour keeps exactly the drivable edge of the import.
+            var st = m_Tiles[StartTile];
+            var td = Graph.Tiles[StartTile];
+            float inW = Mathf.Max(0f, st.min.x - (float)(td.xmin - td.anchorX)), inS = Mathf.Max(0f, st.min.y - (float)(td.ymin - td.anchorY));
+            float inE = Mathf.Max(0f, (float)(td.xmax - td.anchorX) - st.max.x), inN = Mathf.Max(0f, (float)(td.ymax - td.anchorY) - st.max.y);
+            var min = new Vector2(Mathf.Min(st.min.x, (float)minE + inW), Mathf.Min(st.min.y, (float)minN + inS));
+            var max = new Vector2(Mathf.Max(st.max.x, (float)maxE - inE), Mathf.Max(st.max.y, (float)maxN - inN));
+            b.minEN = min;
+            b.maxEN = max;
+            Debug.Log(string.Format(CultureInfo.InvariantCulture,
+                "[STREAM] safety-net rectangle of {0} widened to the union of {1} tiles: E {2:F0}..{3:F0} N {4:F0}..{5:F0} m (region-local; ADR 0273 §9)",
+                Graph.Tiles[StartTile].id, n, min.x, max.x, min.y, max.y));
+            return true;
+        }
+
         /// <summary>Initialises with the graph and the start tile (public for tests that build a streamer by hand).</summary>
         public void Init(TileGraph graph, int startTile, WorldRegionRoot start)
         {
             Graph = graph;
-            if (source == null) source = new BuildOrPackTileSource(null);
+            if (source == null) source = new BuildTileSource();
             Policy = new StreamingPolicy(graph, settings);
             StartTile = startTile;
             m_Tiles = new Tile[graph.Count];
@@ -531,6 +638,7 @@ namespace Game.World.Streaming
             }
             for (int i = 0; i < m_Tiles.Length; i++) if (m_Tiles[i].root != null) Place(m_Tiles[i]);
             Physics.SyncTransforms();
+            m_SafePoses?.Offset(offset);   // the safety net's buffer (TryInstallFromLaunch); the net does not listen itself
             FloatingOrigin.Notify(offset);
             RebaseCount++;
             LastRebaseMs = (float)m_Clock.Elapsed.TotalMilliseconds;
@@ -749,6 +857,7 @@ namespace Game.World.Streaming
         void OnDestroy()
         {
             if (Active == this) Active = null;
+            RemoveOriginListener();
             // Scene change (menu, other region): the tile scenes go with it; give back every pack lease still held.
             if (m_Tiles != null) for (int i = 0; i < m_Tiles.Length; i++) ReleaseLease(m_Tiles[i]);
         }

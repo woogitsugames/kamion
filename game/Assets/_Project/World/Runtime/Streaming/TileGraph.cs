@@ -184,6 +184,42 @@ namespace Game.World.Streaming
             return true;
         }
 
+        /// <summary>
+        /// Bounding rectangle of the tiles reachable from <paramref name="origin"/> through neighbours with
+        /// <paramref name="include"/>[i] == true, in the region-local frame of the origin tile: east = x − origin.anchorX,
+        /// north = y − origin.anchorY [m]. The origin's own rectangle counts only with <paramref name="withOrigin"/> (the
+        /// streamer uses the origin's drivable WorldBoundary rectangle instead). ADR 0273 §9: the safety-net rectangle of the
+        /// start region while streaming. Allocates two small arrays (install time only). False when nothing was added.
+        /// </summary>
+        public bool LocalUnionBounds(int origin, bool[] include, out double minE, out double minN, out double maxE, out double maxN, bool withOrigin = true)
+        {
+            minE = minN = double.MaxValue; maxE = maxN = double.MinValue;
+            if (origin < 0 || origin >= Tiles.Length) return false;
+            var seen = new bool[Tiles.Length];
+            var queue = new int[Tiles.Length];
+            int head = 0, tail = 0;
+            seen[origin] = true; queue[tail++] = origin;
+            double ax = Tiles[origin].anchorX, ay = Tiles[origin].anchorY;
+            while (head < tail)
+            {
+                int i = queue[head++];
+                var t = Tiles[i];
+                if (i != origin || withOrigin)
+                {
+                    minE = Math.Min(minE, t.xmin - ax); maxE = Math.Max(maxE, t.xmax - ax);
+                    minN = Math.Min(minN, t.ymin - ay); maxN = Math.Max(maxN, t.ymax - ay);
+                }
+                var nb = Neighbors[i];
+                for (int k = 0; k < nb.Length; k++)
+                {
+                    int j = nb[k];
+                    if (seen[j] || include == null || j >= include.Length || !include[j]) continue;
+                    seen[j] = true; queue[tail++] = j;
+                }
+            }
+            return maxE > minE && maxN > minN;
+        }
+
         /// <summary>Side of tile i on which tile j touches it (None when not neighbours).</summary>
         public TileSide SideOf(int i, int j)
         {

@@ -50,7 +50,7 @@ namespace Game.Tests
             var boot = Object.FindAnyObjectByType<DrivingLabBootstrap>();
             var body = Object.FindAnyObjectByType<VehicleBody>();
             Assert.IsNotNull(boot); Assert.IsNotNull(body);
-            var streamer = boot.Streamer;
+            var streamer = WorldStreamer.Active;   // installed by the one hook in DrivingLabBootstrap (ADR 0273 §9)
             Assert.IsNotNull(streamer, "world scene with a neighbour tile scene in the build installs the streamer");
             Assert.AreEqual(TileState.Ready, streamer.StateOf("dk65-03"));
             int rebases0 = FloatingOrigin.ShiftCount;
