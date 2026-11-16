@@ -36,6 +36,7 @@ from . import plantings as PT
 from . import plots as PLT
 from . import runway_paint as RWP
 from . import sources as SRC
+from . import tree_rows as TRW
 from . import vegetation as VG
 from . import yard_wear as YW
 
@@ -326,7 +327,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         blocked |= w.rail.blocked(hf)
     blocked |= site_mask                          # ADR 0214: no trees on a construction site
     vrep = {}
-    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides, hard=mask | bmask)
+    tree_rows = TRW.region_plan(rid, overrides, src, graph, origin)     # ADR 0222: None unless the region opts in
+    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides, hard=mask | bmask, tree_rows=tree_rows)
     forest_mix = vrep.pop("_forest_mix")
     forest_cleared = vrep.pop("_forest_cleared", [])
     rep["vegetation"] = vrep
