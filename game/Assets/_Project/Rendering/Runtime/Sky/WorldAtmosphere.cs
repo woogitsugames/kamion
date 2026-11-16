@@ -60,6 +60,7 @@ namespace Game.Rendering
         /// </summary>
         public const float LeafSheen = 0.02f;
 
+        static readonly int k_DimColourDesat = Shader.PropertyToID("_KamionDimColourDesaturation");
         static readonly int k_Haze = Shader.PropertyToID("_KamionHaze"), k_HazeColor = Shader.PropertyToID("_KamionHazeColor"),
             k_Tone = Shader.PropertyToID("_KamionTone"), k_Wet = Shader.PropertyToID("_KamionWet"),
             k_Cloud = Shader.PropertyToID("_KamionCloud"), k_CloudWind = Shader.PropertyToID("_KamionCloudWind"),
@@ -102,7 +103,7 @@ namespace Game.Rendering
         {
             var p = env.Active;
             if (p == null) { KamionHeadlamps.Reset(); return; }
-            Shader.SetGlobalFloat("_KamionDimColourDesaturation",Mathf.Clamp01(p.dimColourDesaturation));
+            Shader.SetGlobalFloat(k_DimColourDesat,Mathf.Clamp01(p.dimColourDesaturation));   // ADR 0244: cached id
             bool hasTier = QualityProfileApplier.HasCurrent;
             var t = hasTier ? QualityProfileApplier.Current : default;
             KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd, env.gameObject.scene);
