@@ -1,0 +1,275 @@
+{
+ "region": "knyszyn-w",
+ "source_osm": "podlaskie-261108.osm.pbf",
+ "license": "OSM: ODbL 1.0 (c) OpenStreetMap contributors; footprints: GUGiK BDOT10k / LoD1 (see region.yaml)",
+ "objects": [
+  {
+   "osm": "node/11362922354",
+   "xy": [
+    760529.6,
+    612060.1
+   ],
+   "tags": {
+    "tourism": "information",
+    "wikimedia_commons": "File:Information boards in Knyszyn (Cemetery St. Mark's ).JPG"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/11362922359",
+   "xy": [
+    760557.7,
+    612054.8
+   ],
+   "tags": {
+    "historic": "memorial",
+    "name": "Kapitan Stanisław Malesiński"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/11362922360",
+   "xy": [
+    760557.6,
+    612053.8
+   ],
+   "tags": {
+    "historic": "memorial",
+    "name": "Pomnik nagrobny braci Bronisława i Józefa Chodorowskich"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/11362922361",
+   "xy": [
+    760557.4,
+    612052.5
+   ],
+   "tags": {
+    "historic": "memorial",
+    "name": "Porucznik Kazimierz Mierczyński"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/3047683004",
+   "xy": [
+    760583.3,
+    612027.0
+   ],
+   "tags": {
+    "historic": "wayside_cross",
+    "material": "metal",
+    "start_date": "2001-07-16",
+    "wikimedia_commons": "File:Podlaskie - Knyszyn - Knyszy - krzyz PT.JPG",
+    "name": "Krzyż Przełomu Tysiącleci"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/1106354487",
+   "xy": [
+    760094.6,
+    611705.0
+   ],
+   "area_m2": 40.6,
+   "tags": {
+    "building": "bungalow",
+    "building:levels": "1"
+   },
+   "game": {
+    "id": "osm:way/1106354487",
+    "function": "bungalow",
+    "storeys": 1,
+    "height_m": 4.0,
+    "height_source": "osm_levels",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 40.6,
+    "footprint_source": "osm"
+   }
+  },
+  {
+   "osm": "way/1106354503",
+   "xy": [
+    760422.8,
+    612585.0
+   ],
+   "area_m2": 294.3,
+   "tags": {
+    "amenity": "vehicle_inspection",
+    "building": "garage",
+    "building:levels": "1"
+   },
+   "game": {
+    "id": "bdot:377e8f8e-1af5-478c-acbf-3d50ef53f911",
+    "function": "stacja obsługi pojazdów",
+    "storeys": 1,
+    "height_m": 2.09,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 502.1,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/220401987",
+   "xy": [
+    759813.8,
+    613115.6
+   ],
+   "area_m2": 492.7,
+   "tags": {
+    "building": "power"
+   },
+   "game": {
+    "id": "bdot:2002917F-8E4C-5C99-E053-CC2BA8C01CFC",
+    "function": "stacja transformatorowa",
+    "storeys": 1,
+    "height_m": 4.92,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1030",
+    "height_lod2_2017_m": 5.2,
+    "lod2_eave_rel_m": 4.8,
+    "area_m2": 411.8,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300665704",
+   "xy": [
+    760524.3,
+    611958.8
+   ],
+   "area_m2": 71.8,
+   "tags": {
+    "amenity": "fuel",
+    "building": "yes",
+    "fuel:lpg": "yes"
+   },
+   "game": {
+    "id": "bdot:2002917F-8DC7-5C99-E053-CC2BA8C01CFC",
+    "function": "obiekt handlowo-usługowy",
+    "storeys": 1,
+    "height_m": 3.09,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1000",
+    "height_lod2_2017_m": 3.21,
+    "lod2_eave_rel_m": 3.04,
+    "area_m2": 64.7,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300665710",
+   "xy": [
+    760532.0,
+    611949.3
+   ],
+   "area_m2": 35.9,
+   "tags": {
+    "building": "roof"
+   },
+   "game": {
+    "id": "osm:way/300665710",
+    "function": "roof",
+    "storeys": null,
+    "height_m": 6.0,
+    "height_source": "default",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 35.9,
+    "footprint_source": "osm"
+   }
+  },
+  {
+   "osm": "way/300670105",
+   "xy": [
+    760384.1,
+    612596.8
+   ],
+   "area_m2": 482.4,
+   "tags": {
+    "amenity": "vehicle_inspection",
+    "building": "yes"
+   },
+   "game": {
+    "id": "bdot:2002917F-9131-5C99-E053-CC2BA8C01CFC",
+    "function": "stacja obsługi pojazdów",
+    "storeys": 1,
+    "height_m": 5.78,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 7.08,
+    "lod2_eave_rel_m": 3.22,
+    "area_m2": 446.1,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/495260809",
+   "xy": [
+    760538.4,
+    612073.5
+   ],
+   "area_m2": 951.9,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  }
+ ],
+ "game_functions": {
+  "budynek gospodarczy": 165,
+  "budynek jednorodzinny": 134,
+  "yes": 45,
+  "garaż": 13,
+  "stacja obsługi pojazdów": 3,
+  "siedziba firmy lub firm": 2,
+  "budynek wielorodzinny": 2,
+  "obiekt handlowo-usługowy": 2,
+  "warsztat remontowo-naprawczy": 1,
+  "budynek produkcyjny zwierząt hodowlanych": 1,
+  "stacja transformatorowa": 1,
+  "bungalow": 1,
+  "roof": 1
+ },
+ "game_key_buildings": [
+  {
+   "id": "bdot:2002917F-46D7-5C99-E053-CC2BA8C01CFC",
+   "function": "budynek wielorodzinny",
+   "storeys": 2,
+   "height_m": 7.32,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": "1030",
+   "height_lod2_2017_m": 7.52,
+   "lod2_eave_rel_m": 7.12,
+   "area_m2": 151.9,
+   "footprint_source": "bdot10k",
+   "xy": [
+    760580.4,
+    613294.2
+   ]
+  },
+  {
+   "id": "bdot:2002917F-9390-5C99-E053-CC2BA8C01CFC",
+   "function": "budynek wielorodzinny",
+   "storeys": 2,
+   "height_m": 8.06,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": "1130",
+   "height_lod2_2017_m": 9.9,
+   "lod2_eave_rel_m": 7.0,
+   "area_m2": 142.6,
+   "footprint_source": "bdot10k",
+   "xy": [
+    760271.5,
+    612981.7
+   ]
+  }
+ ]
+}
