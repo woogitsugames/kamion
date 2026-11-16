@@ -83,3 +83,9 @@ Eksperyment obwodowych koron wycofano po nieudanej ocenie; rendery r16 pokazują
 High **PASS** limitu 2 mln tris na kamerę: maksimum 1 250 401 z instancjami (`cab-mirror-front`). Low **FAIL** względem pierwotnego before: maksymalny wzrost sumy szacowanych draw calls 240 → 303 (+63, `dk65-inlet-south`); wzrost na 34 z 50 kamer o tych samych nazwach. Maksymalny wzrost tris 272 290 → 310 078 (+37 788, `truck-side`).
 
 R15 → r16: dla 70 wspólnych kamer draws i szacowane shadow draws bez zmian, a największy wzrost to 1 tris w Low i High; przyczyny różnic nie zmierzono. Clear i dusk mają identyczne dane geometryczne. To szacunki CPU edytora, nie pomiary GPU; ograniczenia porównania z before opisane dla r14 nadal obowiązują.
+
+## Iteracja r17 — budżet edytora
+
+R17 obejmuje 70 kamer w każdym wariancie. High **PASS** limitu 2 mln tris na kamerę: maksimum 1 250 401 z instancjami (`cab-mirror-front`), maksimum 848 draws (`tykocka-into-town`). Low **FAIL** względem pierwotnego before: 34 z 50 kamer o tych samych nazwach ma wzrost sumy szacowanych draws, maksimum 240 → 303 (+63, `dk65-inlet-south`); największy wzrost tris 272 290 → 310 078 (+37 788, `truck-side`).
+
+R16 → r17: na 70 wspólnych kamerach draws i shadow draws bez zmian, wzrost tris maksymalnie o 1; R14 → r17 również bez wzrostu draws, maksymalny wzrost tris +22. Przyczyn różnic tris nie zmierzono. Dwie dodatkowe kamery diagnostyczne planowane do r18 nie mają baseline before ani r17 i wymagają osobnego raportowania. Ograniczenia porównania z before i zmian main opisane dla r14 pozostają aktualne; są to szacunki CPU edytora, nie pomiary GPU.
