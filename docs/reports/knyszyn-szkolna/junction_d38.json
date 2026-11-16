@@ -1,0 +1,204 @@
+{
+ "before_d38": {
+  "junctions": [
+   {
+    "id": "j:n1134846746",
+    "nodes": [
+     "n1134846746",
+     "n7015352011"
+    ],
+    "arms": [
+     {
+      "chain": "c:w98071199:3047815744-1134846746",
+      "end": "a",
+      "highway": "residential",
+      "trim_m": 13.77
+     },
+     {
+      "chain": "c:w300806059:1134846746-1134809304",
+      "end": "b",
+      "highway": "residential",
+      "trim_m": 11.61
+     },
+     {
+      "chain": "c:w1111506747:1134846746-1134838267",
+      "end": "b",
+      "highway": "residential",
+      "trim_m": 25.76
+     },
+     {
+      "chain": "c:w750267067:7015352011-7015352009",
+      "end": "b",
+      "highway": "service",
+      "trim_m": 28.32
+     },
+     {
+      "chain": "c:w98071222:1134842169-7015352011",
+      "end": "b",
+      "highway": "residential",
+      "trim_m": 8.03
+     }
+    ],
+    "corners": [
+     {
+      "k": 0,
+      "k1": 1,
+      "kind": "fillet",
+      "R_m": 8.0
+     },
+     {
+      "k": 1,
+      "k1": 2,
+      "kind": "fillet",
+      "R_m": 8.0
+     },
+     {
+      "k": 2,
+      "k1": 3,
+      "kind": "nose",
+      "R_m": 21.78
+     },
+     {
+      "k": 3,
+      "k1": 4,
+      "kind": "fillet",
+      "R_m": 5.6
+     },
+     {
+      "k": 4,
+      "k1": 0,
+      "kind": "fillet",
+      "R_m": 8.0
+     }
+    ],
+    "notes": []
+   }
+  ],
+  "p10_nearest_to_osm_crossing_m": {
+   "11514832006": 0.6,
+   "11514832007": 14.62,
+   "11514832008": 0.15,
+   "11514832009": 18.07
+  },
+  "crossings_skipped": [
+   11514832007
+  ]
+ },
+ "after_d38": {
+  "junctions": [
+   {
+    "id": "j:n1134846746",
+    "nodes": [
+     "n1134846746"
+    ],
+    "arms": [
+     {
+      "chain": "c:w300806059:1134846746-1134809304",
+      "end": "b",
+      "highway": "residential",
+      "trim_m": 11.61
+     },
+     {
+      "chain": "c:w1111506747:1134846746-1134838267",
+      "end": "b",
+      "highway": "residential",
+      "trim_m": 12.35
+     },
+     {
+      "chain": "c:w98071222:7015352011-1134846746",
+      "end": "a",
+      "highway": "residential",
+      "trim_m": 9.05
+     },
+     {
+      "chain": "c:w98071199:3047815744-1134846746",
+      "end": "a",
+      "highway": "residential",
+      "trim_m": 9.86
+     }
+    ],
+    "corners": [
+     {
+      "k": 0,
+      "k1": 1,
+      "kind": "fillet",
+      "R_m": 8.0
+     },
+     {
+      "k": 1,
+      "k1": 2,
+      "kind": "fillet",
+      "R_m": 8.0
+     },
+     {
+      "k": 2,
+      "k1": 3,
+      "kind": "fillet",
+      "R_m": 3.92
+     },
+     {
+      "k": 3,
+      "k1": 0,
+      "kind": "fillet",
+      "R_m": 8.0
+     }
+    ],
+    "notes": []
+   },
+   {
+    "id": "j:n7015352011",
+    "nodes": [
+     "n7015352011"
+    ],
+    "arms": [
+     {
+      "chain": "c:w98071222:7015352011-1134846746",
+      "end": "b",
+      "highway": "residential",
+      "trim_m": 11.12
+     },
+     {
+      "chain": "c:w750267067:7015352011-7015352009",
+      "end": "b",
+      "highway": "service",
+      "trim_m": 9.69
+     },
+     {
+      "chain": "c:w98071222:1134842169-7015352011",
+      "end": "b",
+      "highway": "residential",
+      "trim_m": 8.03
+     }
+    ],
+    "corners": [
+     {
+      "k": 0,
+      "k1": 1,
+      "kind": "fillet",
+      "R_m": 8.0
+     },
+     {
+      "k": 1,
+      "k1": 2,
+      "kind": "fillet",
+      "R_m": 5.6
+     },
+     {
+      "k": 2,
+      "k1": 0,
+      "kind": "straight",
+      "R_m": 0.0
+     }
+    ],
+    "notes": []
+   }
+  ],
+  "p10_nearest_to_osm_crossing_m": {
+   "11514832006": 0.6,
+   "11514832007": 0.4,
+   "11514832008": 0.15,
+   "11514832009": 0.18
+  },
+  "crossings_skipped": []
+ }
+}
