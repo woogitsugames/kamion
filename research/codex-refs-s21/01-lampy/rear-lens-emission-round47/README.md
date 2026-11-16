@@ -1,6 +1,6 @@
 # Zbliżenie tylnej lampy ze światłem własnym — Transbud
 
-Data oglądu: 2026-11-16. Zachowano **1 nowy kadr kontekstowy emisji**, link-only, all rights reserved. Trop przekazał agent brud; obraz następnie obejrzałem samodzielnie, osobno przez dokładny URL i w natywnej skali. Nie jest to ślepy peer, ponieważ znałem sugestię świecenia.
+Data oglądu: 2026-11-16. Zachowano **1 wpis AUX emisji dla M59**, link-only, all rights reserved. Trop przekazał agent brud; obraz następnie obejrzałem samodzielnie, osobno przez dokładny URL i w natywnej skali. Nie jest to ślepy peer, ponieważ znałem sugestię świecenia.
 
 [Dokładny obraz](https://www.transbud.com.pl/wp-content/uploads/oferta-myjni-naczep-1.webp) jest rzeczywiście odsyłany przez [pełną stronę Transbud](https://www.transbud.com.pl/myjnia-tir/myjnia-naczep/), link 13 w odczycie web. **SOURCED [DOM]: 2134 × 1423 px**, także potwierdzone wyświetlenie 1:1. Nie pobrano obrazu ani screenshotów ARR.
 
@@ -15,3 +15,6 @@ Na belce literalnie **MATEC-Trailer Oy**. [Pierwotna strona firmy Konnegroup](ht
 Osobny trop samego klosza Vignal 059000 odrzucono po jednym małym podglądzie **281 × 140 px — SOURCED [DOM APWorks]**. Nie oglądano kolejnych całych lamp tej galerii ani nie konstruowano większych wariantów URL. Katalogowe E2 04075 nie zostało przepisane do fizycznego odczytu.
 
 **Bilans: 1 zachowany kadr emisji w zbliżeniu, 0 nowych zaliczeń ścisłych progów 15 / 4 / 3, 0 czytelnych E.** Fotograf, ekspozycja, współrzędne i azymut UNVERIFIED. Brak metadanych i dokumentacji obróbki; kadr nie jest pomiarem fotometrycznym. Zero nowych żądań Commons/Flickr, pobrań ARR, zmian parenta i Git.
+
+
+Dedup projektu: to dokładnie ten sam obraz Transbud opisany wcześniej jako kadr myjni w M61R56, bez pary drzwi. Nowy jest zakres zastosowania i osobny ogląd lampy, **nie kolejna unikalna ekspozycja projektu**.0nowych unikalnych zdjęć wobecR56; manifest R47 zachowuje odsyłacz zamiast kopiowania obrazu.
