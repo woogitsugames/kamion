@@ -1,0 +1,50 @@
+{
+  "review_date": "2026-11-16",
+  "reviewer": "root",
+  "individually_viewed": [
+    "01-HP37-A02",
+    "01-HP37-B01",
+    "01-HP37-B02"
+  ],
+  "not_root_viewed": [
+    "01-HP37-A01"
+  ],
+  "method": "Każdy wskazany obraz osobno wIAB;B01także natywnie1:1; brak pobrań/obrotów/cropów/screenshotów na dysku",
+  "physical_reads": {
+    "A02": [
+      "7700353021 T",
+      "196001 <202>"
+    ],
+    "B01": [
+      "L",
+      "00",
+      "E2 w okręgu",
+      "7001"
+    ],
+    "B02": [
+      "265100848R",
+      "196169 RENAULT"
+    ]
+  },
+  "primary_text_checks": [
+    {
+      "url": "https://www.vignal-group.com/en/epp96-plate-light-with-cable-gland-412.html",
+      "confirmed": "Ref196020 podaje ten samOE7700353021 oraz wApplicationsMIDLUM1999–2003. Bez utożsamienia196001 z196020."
+    },
+    {
+      "url": "https://www.vignal-group.com/en/epp98-plate-light-with-jpt-2v-connector-411.html",
+      "confirmed": "Ref196010 wymienia265100848R i5010293829, aApplicationsMasterdla265100848R iRenaultD/DAFLFdla innychOE tej samejreferencji; techniczna kartaECEE27001. Bez utożsamienia196169 z196010."
+    }
+  ],
+  "application_assessment": {
+    "A": "SOURCED_DIRECT_SHARED_OE_TO_HEAVY_MODEL",
+    "B": "SOURCED_SHARED_SERVICE_REFERENCE_TO_HEAVY_FAMILY; actual photographed variant fitting/mount UNVERIFIED"
+  },
+  "integration": "Obie fizyczne referencje wyglądu przyjęte z odrębną flagą dowodu zastosowania; nie5dowodów rzeczywistego montażu/demontażuHGV. Nie przeniesiono napięcia/żarówki/rozstawu śrub z wariantu serwisowego na fizyczne egzemplarze.",
+  "current_plate_reference_photos": 10,
+  "current_physical_plate_devices_represented": 5,
+  "current_support_details": 5,
+  "rear15_delta": 0,
+  "ON_delta": 0,
+  "dusk_night_delta": 0
+}

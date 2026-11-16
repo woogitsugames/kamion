@@ -1,6 +1,6 @@
 # 01 — Lampy i fotometria — WIP
 
-Stan ewidencji głównej na 16.11.2026: **54 rekordy** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **58 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Cel: uzupełnić lukę M59-FIX zdjęciami lamp ciągników i naczep z czytelną homologacją oraz przepisami. Stan: **NIESPEŁNIONE**.
 
@@ -213,3 +213,7 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Kolejna fizyczna lampka tablicy — runda36
 
 [heavy-plate-round36](heavy-plate-round36/README.md):3nowe fotografie1używanejHella źródłowoActros/Axor, po dwóch osobnych oglądach.2samodzielne widoki lampki+1etykietaSUPPORT. Dolna granica tablicowa6jasnychkadrów/3urządzenia,5detalipomocniczych; bez nowegoE/ON i bez twierdzenia o5urządzeniach. Główny54. Tylny15M59 nadal4PASS+1warunkowy.
+
+## Dwie dalsze lampki tablicy — runda37
+
+[heavy-plate-round37](heavy-plate-round37/README.md):4nowe kadry2fizycznych części; root dodatkowoobejrzał3/4 i pełne stronyVignal. Nowy fizycznyL/00/E2/7001. Jedna ciężka aplikacja przez dokładnyOE→Midlum, druga przez wspólną referencję serwisowąEPP98zciężkimi modelami — ograniczenia wariantu/montażu jawne. Reprezentacja tablicowa10samodzielnychkadrów5urządzeń+5detalipomocniczych, nie5czytelnychECE/certyfikatów. Główny58, tylny15nadal4PASS+1warunkowy,ON/zmierzch bez przyrostu.
