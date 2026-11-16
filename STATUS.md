@@ -1,5 +1,4 @@
-# STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
-- Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
-- Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
-- Krok 3: pytest `tests/gis/test_summer_cd_0216b.py` + `test_lamp_led_0216.py` 19 passed; EditMode zaktualizowany (nieuruchomiony); ADR 0216 §0216b.
-- NASTĘPNY KROK (lider, po 0221): komendy w `docs/adr/0216-lato-i-biale-led-dk65-knyszyn.md` §0216b „Komendy dla lidera” (build_region → build_world → import-region → visual-qa → EditMode → APK A16).
+# STATUS — D31 nav-golden-s23 (chmura D r8)
+- Przyczyna: c-regen3 (#93, ADR 0226 `putry-ring-s-placement`) przesunęła oś krawędzi 157 (pierścień S Putry); skok węzeł→oś 2,900→1,196 m i rzut celu −0,283 m → Δ −1,987 m (zmierzone −1,986) na G04/G05/G24/G29; G26 −1,631; G36 +0,355. Koszt i manewry bez zmian.
+- Wzorce `tools/nav-runner/Golden/golden_routes.json` odświeżone (6 × lengthM), dopisek ADR 0168. nav-runner 94/94; pytest navgraph 51 passed / 1 failed (inna przyczyna — dryf FP na końcach łańcuchów, nie Putry).
+- NASTĘPNY KROK (lider): `dotnet test tools/nav-runner/Tests -c Release`; po kolejnej przebudowie C: `dotnet run -c Release --project tools/nav-runner/Runner -- --write-golden` i przegląd diffu.
