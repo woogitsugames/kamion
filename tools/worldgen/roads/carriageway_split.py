@@ -26,6 +26,7 @@ import math
 import numpy as np
 
 KIND = "carriageway_split"
+TAG = "carriageway_splits_applied"      # ids of the overrides already applied to a graph dict
 LIMITS = {"length_m": (5.0, 120.0), "taper_m": (5.0, 60.0), "lane_offset_m": (1.5, 6.0)}
 MIN_LEFT_M = 5.0            # of the two-way edge beyond the new split node
 STEP_M = 1.0
@@ -118,14 +119,20 @@ def apply(graph: dict, overrides, applied: list, stale: list) -> dict:
     ovs = [o for o in overrides or [] if isinstance(o, dict) and o.get("kind") == KIND]
     if not ovs:
         return graph
+    done = list(graph.get(TAG, []))
     graph = dict(graph, nodes=[dict(n) for n in graph["nodes"]], edges=[dict(e) for e in graph["edges"]])
     for o in ovs:
+        if o.get("id") in done:                               # a graph from pipeline.effective_graph: applied once
+            applied.append({"id": o["id"], "targets": [f"n{o.get('node')}"]})
+            continue
         try:
             ok = _one(graph, o)
         except (KeyError, TypeError, ValueError, StopIteration):
             ok = False
         if ok:
             applied.append({"id": o["id"], "targets": [f"n{o['node']}"]})
+            done.append(o["id"])
         else:
             stale.append(o.get("id", "?"))
+    graph[TAG] = done
     return graph

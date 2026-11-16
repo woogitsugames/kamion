@@ -382,7 +382,7 @@ def route_polyline(region_id, w):
     """Start route (D4 candidate) as local polyline with per-vertex edge id (cameras, QA)."""
     import networkx as nx
     import roadgraph
-    graph = json.loads((pipeline.REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8"))
+    graph = pipeline.effective_graph(region_id)                   # ADR 0274: with the authored carriageway splits
     re_f = pipeline.REGIONS / region_id / "route_endpoints.json"   # ADR 0166: per-region authored route ends
     if re_f.exists():
         route = json.loads(re_f.read_text(encoding="utf-8"))
