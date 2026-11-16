@@ -326,3 +326,7 @@
 - 2026-11-16 07:51 +01:00 — Właściwa targowica odnaleziona na GUGiK 2025 na południe od dawnego błędnego placu. Wiaty 3+1, PV, płot z wjazdem, wyspy/pasy, dwa budynki BDOT i świerk; 69 testów kierunkowych passed. R24 build/import/visual QA trwa; pozycje odczytane z orto, wysokości i detale WORKING_VALUE.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r24.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r24.done` 
 
+
+- 2026-11-16 08:09 +01:00 — R24 build/import/4 warianty OK: 4 wiaty, 2 budynki i świerk obecne; kamera 14 zasłonięta ścianą, poprawiona. Północny płot przycięty poza korytarz service, test 2 passed; dodane kamery porównawcze 12/13 ESTIMATED. R25 build trwa; budżet i ostateczne testy OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r25.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r25.done` 
+
