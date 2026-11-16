@@ -237,3 +237,6 @@ R52: dwa kadry jednego przedniego reflektora MAN/ZKW. Root niezależnie obejrza�
 
 
 R50: autentyczny tekst2022/92, tabela8s23, również drukuje120cd single11a-c; §142raportu1166 nie zmienia tych komórek. Dwa niezależne oglądy bitmap zgodne. Przyczyna późniejszego1200cd i pełna aktualność2026 pozostają nieustalone; nie ustawiamy120 w generatorze.2dokumenty,0zdjęć,bez zmiany głównego64.
+
+
+R54: jeden nowy rzeczywisty tył ciągnika MAN/HELLA z widoczną emisją i odbiciami o zmierzchu, root obejrzał. Pokazowa konfiguracja z zastrzeżeniem producenta, E nieczytelne. Kontekst ON/zmierzch zachowany, strict15 i podzbiór kwalifikowanych4ON bez przyrostu. Nie nazwano zmierzchu nocą ani refleksów fotometrią. Główny65.
