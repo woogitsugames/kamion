@@ -120,6 +120,8 @@ namespace HudRunner.Tests
             Assert.Equal(ra.MirrorLeft.ToString(), rb.MirrorLeft.ToString());
             Assert.Equal(ra.MirrorLeft.ToString(), rc.MirrorLeft.ToString());
             Assert.True(ra.ShowMirrorLeft && ra.ShowMirrorRight);
+            Assert.True(ra.ShowNav);
+            m_Out.WriteLine($"nav {ra.Nav}");
             m_Out.WriteLine($"1080p: mirror {ra.MirrorLeft} (units), x0.75 = {ra.MirrorLeft.width * 0.75f:F0} x {ra.MirrorLeft.height * 0.75f:F0} px; strip {ra.Strip}; telltales {ra.Telltales}; clear {ra.ClearView}");
         }
 

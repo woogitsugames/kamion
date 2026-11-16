@@ -33,13 +33,17 @@ namespace Game.Controls
     public struct DesktopHudResult
     {
         public Rect Strip, Telltales, ReverseView, MirrorLeft, MirrorRight, DevToggle, DevPanel, Telemetry, DevText;
+        /// <summary>GPS widget (guidance banner + minimap, ADR 0150): bottom-left column, under or beside the left mirror.</summary>
+        public Rect Nav;
         /// <summary>Kept free of HUD furniture except the reversing view (which replaces the road view while reversing) and
         /// the developer overlays: the road ahead between the mirrors.</summary>
         public Rect ClearView;
         public bool ShowStrip, ShowMirrorLeft, ShowMirrorRight, ShowReverseView, ShowDevToggle, ShowDevPanel, ShowTelemetry, ShowDevText;
+        /// <summary>The GPS widget fits (and the developer telemetry does not use that corner).</summary>
+        public bool ShowNav;
 
-        public const int ZoneCount = 9;
-        static readonly string[] k_Names = { "Strip", "Telltales", "ReverseView", "MirrorLeft", "MirrorRight", "DevToggle", "DevPanel", "Telemetry", "DevText" };
+        public const int ZoneCount = 10;
+        static readonly string[] k_Names = { "Strip", "Telltales", "ReverseView", "MirrorLeft", "MirrorRight", "DevToggle", "DevPanel", "Telemetry", "DevText", "Nav" };
         public static string ZoneName(int i) => k_Names[i];
 
         /// <summary>Zone <paramref name="i"/>; returns whether it is on screen.</summary>
@@ -55,7 +59,8 @@ namespace Game.Controls
                 case 5: r = DevToggle; return ShowDevToggle;
                 case 6: r = DevPanel; return ShowDevPanel;
                 case 7: r = Telemetry; return ShowTelemetry;
-                default: r = DevText; return ShowDevText;
+                case 8: r = DevText; return ShowDevText;
+                default: r = Nav; return ShowNav;
             }
         }
     }
@@ -140,6 +145,30 @@ namespace Game.Controls
                 float th = Mathf.Min(TelemetryMaxHeight, top - tbottom);
                 r.Telemetry = new Rect(x0, top - th, tw, th);
             }
+            SolveNav(s, ref r);
+        }
+
+        /// <summary>GPS widget size (ADR 0150 NavHudLayout: preferred 340 x 440, minimum 220 x 250 units).</summary>
+        public static readonly Vector2 NavPreferred = new Vector2(340f, 440f), NavMinimum = new Vector2(220f, 250f);
+
+        /// <summary>GPS widget: bottom-left, left of the strip and the clear view; under the left mirror window when the
+        /// column below it is tall enough, otherwise beside it. Hidden while the developer telemetry is on.</summary>
+        static void SolveNav(in DesktopHudInput s, ref DesktopHudResult r)
+        {
+            r.ShowNav = false;
+            if (s.Telemetry) return;
+            float top = s.Height - Margin;
+            float x1 = Mathf.Min(r.ClearView.xMin, r.Telltales.xMin) - Gap;
+            if (r.ShowStrip) x1 = Mathf.Min(x1, r.Strip.xMin - Gap);
+            // under the mirror (full column)
+            float yTop = r.ShowMirrorLeft ? r.MirrorLeft.yMin - Gap : top;
+            float w = Mathf.Min(NavPreferred.x, x1 - Margin), h = Mathf.Min(NavPreferred.y, yTop - Margin);
+            if (w >= NavMinimum.x && h >= NavMinimum.y) { r.Nav = new Rect(Margin, Margin, w, h); r.ShowNav = true; return; }
+            if (!r.ShowMirrorLeft) return;
+            // beside the mirror (between it and the clear view)
+            float x0 = r.MirrorLeft.xMax + Gap;
+            w = Mathf.Min(NavPreferred.x, x1 - x0); h = Mathf.Min(NavPreferred.y, top - Margin);
+            if (w >= NavMinimum.x && h >= NavMinimum.y) { r.Nav = new Rect(x0, Margin, w, h); r.ShowNav = true; }
         }
 
         /// <summary>Mirror window size and place (both windows the same size, mirrored about the centre).</summary>

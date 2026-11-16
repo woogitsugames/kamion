@@ -209,6 +209,7 @@ namespace Game.UI.Driving
             m_L.Telemetry = m_D.Telemetry; m_L.ShowTelemetry = m_D.ShowTelemetry;
             m_L.DevText = m_D.DevText; m_L.ShowDevText = m_D.ShowDevText;
             m_L.ShowTouchControls = false;
+            m_L.Desktop = true; m_L.Nav = m_D.Nav; m_L.ShowNav = m_D.ShowNav;
 
             bool grid = m_DevOpen && !m_LabOpen, lab = m_DevOpen && m_LabOpen;
             if (m_DevPanelRt.gameObject.activeSelf != grid) m_DevPanelRt.gameObject.SetActive(grid);

@@ -55,6 +55,8 @@ Makiety (rysunki układu, liczone z tych samych liczb co kod; generator `python 
   ostrzeżenie. Graybox placu (bez ekranów) → pasek.
 - Ostrzeżenia (maks. 3, od najcięższego): ZWOLNIJ POSTOJOWY · NISKIE CIŚNIENIE · HAMOWANIE NACZEPY · POSTOJOWY ·
   USTERKA ABS · ABS NACZEPY · ABS.
+- Widżet GPS (ADR 0150): lewy dolny róg pod lewym lusterkiem (gdy lusterko zjedzie w dół — obok niego), nigdy w wolnym
+  widoku drogi; znika przy telemetrii deweloperskiej.
 - 1080p: pasek 540×84 px, prędkość 51 px, okienko lusterka 249×454 px (było 178×324).
 
 ## 3. Lusterka

@@ -68,6 +68,12 @@ def solve(strip=True, extended=False, size=0.42, drop=0.0, inset=0.0, dev_toggle
     r["ml"] = (xl, yt - mh, mw, mh)
     r["mr"] = (width - xl - mw, yt - mh, mw, mh)
     r["reverse"] = (cx - REVERSE_W / 2, top - REVERSE_H, REVERSE_W, REVERSE_H)
+    # GPS widget (DesktopHudLayout.SolveNav, first choice: under the left mirror)
+    x1 = min(r["clear"][0], r["tell"][0]) - GAP
+    if r["strip"]:
+        x1 = min(x1, r["strip"][0] - GAP)
+    nw, nh = min(340.0, x1 - MARGIN), min(440.0, r["ml"][1] - GAP - MARGIN)
+    r["nav"] = (MARGIN, MARGIN, nw, nh) if nw >= 220 and nh >= 250 else None
     return r
 
 
@@ -184,12 +190,22 @@ def clear_view(svg, r, x0=0.0):
     svg.text(x + x0 + w / 2, y + h - 40, "wolny widok drogi (ClearView)", 28, ACCENT, "middle")
 
 
+def nav(svg, r, x0=0.0):
+    if not r.get("nav"):
+        return
+    x, y, w, h = r["nav"]
+    svg.rect(x + x0, y, w, h, "#E2E2DC")
+    svg.rect(x + x0, y + h - 70, w, 70, "#24467A")
+    svg.text(x + x0 + w / 2, y + h - 44, "GPS (ADR 0150)", 24, INK, "middle")
+
+
 def mock_minimal():
     r = solve(strip=True)
     s = Svg(W, H, "ADR 0283 - HUD monitora, minimalny (widok zza / kabina bez zegarów)")
     scene(s)
     clear_view(s, r)
     mirrors(s, r)
+    nav(s, r)
     hud(s, r, warnings=[("POSTOJOWY", True)], turn=-1)
     s.save("hud-0283-minimal-16x9.svg")
 

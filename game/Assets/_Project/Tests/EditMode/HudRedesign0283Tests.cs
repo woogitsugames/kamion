@@ -149,6 +149,8 @@ namespace Game.Tests
             Assert.AreEqual(ra.MirrorLeft, rc.MirrorLeft, "32:9 = 16:9");
             Assert.AreEqual(ra.Strip, rc.Strip);
             Assert.IsTrue(ra.ShowMirrorLeft && ra.ShowMirrorRight);
+            Assert.IsTrue(ra.ShowNav, "GPS widget fits bottom left (under the left mirror)");
+            Assert.AreEqual(DesktopHudLayout.NavPreferred.x, ra.Nav.width, 0.01f);
         }
 
         [Test]

@@ -38,7 +38,8 @@ naczepy (oś kamery tylko 1,7° na zewnątrz przy polu 13,3°).
    **Widok z kabiny** (`HudVisibility`): gdy ciężarówka ma żywe ekrany kabiny (`CabScreens.LiveClusters > 0`, TRAKT), na
    ekranie zostaje tylko rząd kontrolek (strzałki dopiero gdy migają) — prędkościomierzem są zegary w desce; graybox placu
    bez ekranów → pasek. Ustawienie „HUD w widoku z kabiny”: auto / pasek / tylko ostrzeżenia. Pasek kończy się poniżej 25 %
-   wysokości (deska, nie droga). HUD dotykowy telefonu (ADR 0079) **bez zmian**.
+   wysokości (deska, nie droga). Widżet GPS (ADR 0150) w lewym dolnym rogu pod lewym lusterkiem albo obok niego
+   (`DesktopHudResult.Nav`, `NavHudLayout` czyta go na monitorze). HUD dotykowy telefonu (ADR 0079) **bez zmian**.
 4. **Okienka lusterek** (`DesktopHudLayout`): na zewnętrznych krawędziach treści (pole widzenia lusterek kl. II), nie przy
    klastrze; domyślnie **42 %** wysokości (1080p: 454×249 px, +40 % względem 30 % ADR 0265), regulowane w ustawieniach:
    rozmiar 30–60 %, położenie w pionie, odsunięcie od krawędzi; nigdy nie wchodzą w **wolny widok drogi** (środkowe 40 %
@@ -109,13 +110,13 @@ renderów (regulacja to obrót istniejącej kamery). Większe okienka powiększa
 - `Vehicle/Runtime/RenderTextureMirror.cs`: statyczne `AdjustYawOutDeg/AdjustPitchDownDeg`, czysta `AdjustEuler`, obrót
   kamery lusterek głównych tylko przy zmianie wartości.
 - `Vehicle/Runtime/GrayboxTractorBuilder.cs`: celowanie lusterek 3 % → 7,5 % na zewnątrz.
-- `UI/CabDisplays/CabScreens.cs`: licznik `LiveClusters`.
+- `UI/CabDisplays/CabScreens.cs`: licznik `LiveClusters`; `UI/Navigation/NavHudLayout.cs`: na monitorze strefa GPS z `DesktopHudLayout`.
 - `Input/` (własność gameplay-ui): akcja `HudDetail` (I), `ViewCommands.ToggleHudDetail`, nowe czyste klasy w `Input/Display/`.
 
 ## Walidacja
 - `tools/hud-runner` (dotnet 8 + xUnit, źródła z gry): **11/11** — kontrast (24 pary), układ HUD na 9 monitorach
   (1920×1080, 2560×1080, 3440×1440, 5120×1440, 3840×1080, 4K, 720p, 1920×1200, pionowy 1080×1920) × 3 rozmiary × 3 piony ×
-  2 odsunięcia × 128 stanów = **20 736 układów** (w treści, bez nakładania, wolny widok drogi, aspekt szkła, symetria),
+  2 odsunięcia × 128 stanów = **20 736 układów** (10 stref z GPS; w treści, bez nakładania, wolny widok drogi, aspekt szkła, symetria),
   ten sam układ 16:9/21:9/32:9, ostrzeżenia, widoczność, teksty, preferencje, mapa wejść menu.
 - `tools/licenses` pytest 27/27, audyt 3827/3827 (font pokryty).
 - EditMode `HudRedesign0283Tests` (18) i PlayMode `PcHudGc0244Tests` (+1) — **NIEuruchomione** (brak Unity).
