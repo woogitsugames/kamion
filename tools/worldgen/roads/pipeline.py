@@ -48,13 +48,20 @@ def load_overrides(region_id: str) -> list:
 
 
 def generated_overrides(region_id: str) -> list[dict]:
-    """Override entries written by a tool from data (knyszyn-look-s23: overrides.ortho_roofs.json = roof tones read off
-    the orthophoto by qa/roof_tones_ortho.py). They come BEFORE the hand-authored entries of overrides.yaml, so for
-    the same target the authored `set` wins (buildings_mesh.target_sets merges in order). No file = no entries."""
-    p = REGIONS / region_id / "overrides.ortho_roofs.json"
-    if not p.exists():
-        return []
-    return json.loads(p.read_text(encoding="utf-8")).get("overrides", []) or []
+    """Override entries written by a tool from data (knyszyn-look-s23), in the order of GENERATED_OVERRIDES:
+    overrides.class_fixes.json (qa/class_fixes_data.py: class of OSM-only footprints, pitched roofs with a measured
+    LoD2 rise), overrides.ortho_roofs.json (qa/roof_tones_ortho.py: roof tones read off the orthophoto). They come
+    BEFORE the hand-authored entries of overrides.yaml, so for the same target the authored `set` wins
+    (buildings_mesh.target_sets merges in order). No file = no entries."""
+    out = []
+    for name in GENERATED_OVERRIDES:
+        p = REGIONS / region_id / name
+        if p.exists():
+            out += json.loads(p.read_text(encoding="utf-8")).get("overrides", []) or []
+    return out
+
+
+GENERATED_OVERRIDES = ("overrides.class_fixes.json", "overrides.ortho_roofs.json")
 
 
 def effective_graph(region_id: str, graph: dict | None = None) -> dict:

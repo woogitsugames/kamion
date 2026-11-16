@@ -1,5 +1,8 @@
-# STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
-- Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
-- Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
-- Krok 3: pytest `tests/gis/test_summer_cd_0216b.py` + `test_lamp_led_0216.py` 19 passed; EditMode zaktualizowany (nieuruchomiony); ADR 0216 §0216b.
-- NASTĘPNY KROK (lider, po 0221): komendy w `docs/adr/0216-lato-i-biale-led-dk65-knyszyn.md` §0216b „Komendy dla lidera” (build_region → build_world → import-region → visual-qa → EditMode → APK A16).
+# STATUS — knyszyn-look-s23 (podobieństwo Knyszyna: zabudowa i punkty orientacyjne, D51)
+Gałąź `knyszyn-look-s23` (z origin/main 64e54592e), worktree `.claude/worktrees/knyszyn-look-s23`. Raport: `docs/reports/knyszyn-look/README.md`.
+- Krok 1: inwentarz OSM vs buildings.geojson (`tools/worldgen/qa/landmark_inventory.py`; knyszyn 87 obiektów, -w 12, -s 0). Mapillary 400 klatek (brak Szkolnej). Commons: tylko linki.
+- Krok 2: generator — `roof_material` także dla dachów spadzistych nie-domów, nowy `roof_sheet_grey` (tylko z nadpisań), `wall_material` / `typology: dom_drewniany` dla domów; `pipeline.generated_overrides` (pliki generowane przed overrides.yaml).
+- Krok 3: dane — `overrides.ortho_roofs.json` (1577 dachów z ortofoto 2025; 4/4 zgodne z ręcznymi z ADR 0227), `overrides.class_fixes.json` (99 OSM-only < 60 m² → gospodarczy 3 m, 49 → dom, 20 usługowych z wzniosem LoD2 ≥ 1,5 m → dach spadzisty), ręczne: poczta, dom narożny 2E17, Dom Klattów, parking dyskontu (3 poligony), 6 kamer `look_*`.
+- Krok 4: „przed” = build origin/main + nowe kamery: `artifacts/knyszyn-look-s23/vqa-before/High-clear` (75 PNG). „Po”: `chain.ps1 -Tag after`.
+- UWAGA: `Data/raw/derived/knyszyn/world` (junction do main) zawiera build TEJ gałęzi po kroku „po”; main po scaleniu innych PR-ów musi przebudować kafel.
+- NASTĘPNY KROK: `pwsh -NoProfile -File artifacts/knyszyn-look-s23/chain.ps1 -Tag after` (jeśli `chain-after.status` nie kończy się CHAIN DONE), potem `uv run --project tools/worldgen python -m pytest tests/gis -q -p no:cacheprovider -k "knyszyn or typology or buildings"`.

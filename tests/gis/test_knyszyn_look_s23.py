@@ -52,7 +52,9 @@ def test_generated_file_is_consistent_and_authored_wins():
     assert {o["set"]["roof_material"] for o in ovs} <= BM.ROOF_OVERRIDES
     assert all(set(o["set"]) <= BM.OVR_ROOF_ONLY and o["reason"] and o["confidence"] for o in ovs)
     allo = pipeline.load_overrides("knyszyn")
-    assert allo[:len(ovs)] == ovs                      # generated first, hand-authored after = authored wins
+    fixes = json.loads((R / "overrides.class_fixes.json").read_text(encoding="utf8"))["overrides"]
+    assert allo[:len(fixes) + len(ovs)] == fixes + ovs       # generated first, hand-authored after = authored wins
+    assert not any(str(o.get("id", "")).startswith(("roof-ortho:", "class-fix:")) for o in allo[len(fixes) + len(ovs):])
     sets = BM.target_sets(allo)
     by = {o["target"]["building"]: o["set"]["roof_material"] for o in ovs}
     for bid, cls in RT.CHECK.items():                  # the classifier agrees with the hand-read roofs
@@ -91,6 +93,29 @@ def test_landmark_overrides(blds):
     assert "plaster_peach" in _mats(blds[POST])
     assert {"roof_tiles_red", "roof_tiles_brown", "roof_metal_graphite", "roof_sheet_grey"} & _mats(blds[POST])   # hipped roof
     assert set(blds[STORE]["ovr"]) <= BM.OVR_ROOF_ONLY          # the rule shopfront of the pavilion survives
+
+
+def test_class_fixes_from_data(blds):
+    gen = json.loads((R / "overrides.class_fixes.json").read_text(encoding="utf8"))
+    n = gen["summary"]
+    assert (n["osm_only_shed"], n["osm_only_house"], n["pitched_service"]) == (99, 49, 20)
+    fc = json.loads((R / "buildings.geojson").read_text(encoding="utf8"))
+    plain = {b["id"]: b for b in BM.load(fc, ORIGIN, [])}
+    for o in gen["overrides"]:
+        bid, s = o["target"]["building"], o["set"]
+        assert plain[bid]["typ"] in ("office", "block")
+        if "typology" in s:                   # OSM-only footprint with the default height: never an office box
+            assert plain[bid]["props"]["height_source"] == "default" and plain[bid]["props"]["footprint_source"] == "osm"
+            assert blds[bid]["typ"] == {"gospodarczy": "shed", "dom": "house"}[s["typology"]]
+            if s["typology"] == "gospodarczy":
+                assert blds[bid]["props"]["height_m"] == 3.0 and plain[bid]["poly"].area < 60
+        else:                                 # measured LoD2 rise -> pitched
+            assert s["roof_shape"] in ("gable", "mono") and blds[bid]["typ"] == plain[bid]["typ"]
+    left = [b for b in blds.values() if b["typ"] == "office" and b["props"].get("height_source") == "default"
+            and b["props"].get("function") == "yes" and b["poly"].area < 250]
+    assert left == []
+    funeral = blds["bdot:2002917F-465F-5C99-E053-CC2BA8C01CFC"]         # LoD2 1130, rise 1.8 m
+    assert funeral["ovr"].get("roof_shape") == "gable" and BM.ROOF_OVERRIDES & _mats(funeral)
 
 
 def test_house_wall_override_is_validated():
