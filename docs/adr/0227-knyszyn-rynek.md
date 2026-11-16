@@ -244,3 +244,18 @@ Wszystkie nowe wpisy są na końcu `Data/Regions/knyszyn/overrides.yaml`. Wcześ
 **Budżet (szacunek).** Wiaty: ta sama liczba słupów (2 × 9 na wiatę) i połaci, więc 0 trójkątów. Pawilon: dach namiotowy ma ≤ trójkątów niż kopertowy.
 Lipy: bez zmian. Rondo: −176 trójkątów dróg w promieniu 90 m, trawa scalona z terenem, więc 0 draw calls. Kamery Rynku i ronda: budżet neutralny albo ujemny.
 Pomiar edytora po przebudowie wykona lider. **Wizualnie OPEN:** brak renderów w chmurze (pętla visual-qa u lidera).
+
+### D41 w integracji world3 (int-world3-s23, 17.11; recenzja `docs/reports/REVIEW-2026-11-16-pr169.md`)
+Przebudowa knyszyn na kodzie #147 #154 #158 #153 #150 #164 #165 #169 + main; VQA High
+`artifacts/int-world3-s23/vqa/knyszyn/r1/High-clear/`.
+- (a) wiaty: w `market-owner-12` (widok z góry) cztery dachy rozdzielone prześwitami — zgodne z pomiarem.
+- (b) pawilon `bdot:de62e5a9`: w r1 ściany żółte, dach namiotowy (kadr `market-owner-13`, kadrowanie lotnicze). Kolor
+  P1-1 widoczny — „szary budynek” z r2 to nie ten pawilon albo inne światło; zostaje OTWARTY parking z płyt oraz
+  jasny trójkąt nawierzchni obok pawilonu (wygląda na osobny wielokąt `paved`, do sprawdzenia).
+- (c) lipy: proporcja 1,75 działa, ale płaskie karty i ciemny pionowy szew koron (`rynek-owner-05`) bez zmian —
+  **P1-2 ZNANE / OTWARTE** (osobne zadanie: bryła korony / normalne kart).
+- (e) uskok DK65 płd.: sonda na GLB `tools/worldgen/qa/knyszyn_s_kerb_step.py` (stacje 2–24 m od węzła rozdziału,
+  spadek krawędź twarda → grunt 1,5 m dalej): przed #169 W 0,506 / E 0,652 m, po integracji W 0,499 / E 0,654 m;
+  w kadrze `rondo-dk65-from-south` betonowa ściana po prawej nadal widoczna. Poprawka (e) w integracji nie działa
+  (próg 0,15 m niespełniony) — OTWARTE; podejrzenie: po #165 narożnik S→E nie jest już „mieszany” (recenzja §uwagi).
+- P2-7 / #153: luka KRTG 1,73 m na pierścieniu — ADR 0274, test `test_knyszyn_route_graph_…` czerwony.
