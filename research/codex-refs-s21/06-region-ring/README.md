@@ -106,3 +106,5 @@ R15: dwa nowe uliczne kadry Ełckiej w Mońkach, szurek forHere10.08.2017. Root 
 16.11.2026 R16: dwa nowe link-only kadry zamku w Tykocinie z oficjalnej strony obiektu; oba root obejrzał osobno. Jeden obiekt, sylweta od gruntu i układ obwodu z góry. Niskie bliższe mury nie tworzą czterech równych wysokich skrzydeł. Daty ekspozycji, stan2026 i metryka UNVERIFIED. Bez kopii zdjęć i bez identyfikacji DW671.
 
 16.11.2026 R17: jeden nowy Mapillary2017 wlot Tykockiej/DW671 przy Obozowej/DK65, root celowany ogląd. Szeroki boczny wlot, czerwone poręcze, niebieski nakaz omijania, trawiasty narożnik. Nie potwierdzono ronda, materiałów ani metryki. Mała mapa zasłania część lewego dołu. 1link-only,0pobrań; główny46.
+
+16.11.2026 R18:2nowe NIDlink-only ekspozycje alumnatu (stan2016), root obaobejrzał. PierwszyAUX placu z częściowo zasłoniętym niskim budynkiem obokkościoła; drugi długa elewacja/zaokrąglona partia/gzyms/ubytekpowłoki/bruk. Nie przypisywać wieżkościoła alumnatowi.1nazwanyobiekt, nieodkrycie nigdy niewidzianejbryły; pierwszykredytautora niejednoznaczny. NCND3PL,0kopii, metryka/dataEXIF/2026UNVERIFIED. Główny48.
