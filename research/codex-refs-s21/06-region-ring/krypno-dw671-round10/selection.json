@@ -1,0 +1,14 @@
+{
+  "record_created_date": "2026-11-16",
+  "scope_review": {
+    "brief": "docs/owner/S20-REGION-RING-BRIEF.md — przeczytany; aktualizacje skupiają się na DK65 i regionie Knyszyna, nie zawierają jawnego wyłączenia Krypna z później zleconego DW671.",
+    "R9": "docs/reports/REVIEW-2026-11-14-s20-cloud2-r9.md — raport dostępności danych obrzeży Białegostoku. Nie twierdzimy, że Krypno jest w historycznym bbox R9; obecny zakres wynika z osobnego zlecenia DW671.",
+    "existing_local_source": "06-D01 / komunikat UM Knyszyn03.07.2026 opisuje dokumentację DW671 Knyszyn–Krypno. Nie jest dowodem wykonania drogi pieszo-rowerowej."
+  },
+  "selection_source": "Istniejący research/codex-refs-s21/06-region-ring/data/osm-selected-roads.json; lokalny OSM, bez nowych żądań API.",
+  "selection_point": {"lat":53.2771463,"lon":22.870327,"way_ids":[1111506762,1362040263],"literal_ref":"671"},
+  "selection_limit": "Punkt na drodze służy wybraniu widoku UI, nie jest GPS kamery ani dowodem adresu budynku.",
+  "source_OSM_licence": "© OpenStreetMap contributors, ODbL1.0; baza źródłowa osobno od zdjęć Mapillary",
+  "method": "Mapillary publiczny browser z jawnym OSM; max2 faktyczne widoki. Bez API/tokenów/pobierania/zapisanych screenshotów. Commons STOP.",
+  "visual_status":"DONE — dwa nowe kadry osobno załadowane i obejrzane w maksymalizacji; autora i daty odczytano z UI."
+}

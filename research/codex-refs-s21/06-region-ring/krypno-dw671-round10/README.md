@@ -1,0 +1,14 @@
+# Krypno przy DW671 — dwa historyczne widoki
+
+**2 nowe kadry, 0 pobrań**, obejrzane indywidualnie także w maksymalizacji Mapillary w Chrome 16.11.2026 (SOURCED: własny ogląd i UI). Autor obu: **grobin**. Licencja CC BY-SA 4.0 według wcześniejszego oficjalnego audytu w `04-dk65/mapillary-browser-round2/licence-check.json`; wyłącznie linki, bez kopii lub zapisanych screenshotów.
+
+Zakres sprawdzono w S20-REGION-RING-BRIEF i recenzji R9: dotyczą wcześniejszego etapu danych obrzeży/DK65, bez jawnego wyłączenia Krypna z później zleconego DW671. **Nie twierdzimy, że Krypno leży w dawnym bbox R9.** Obecna runda pogłębia osobno zlecony korytarz DW671; wcześniejszy 06-D01 już opisuje dokumentację Knyszyn–Krypno. Lokalny zapis OSM zawiera ref671 w wybranym punkcie. Nie wykonano nowych żądań OSM/Overpass/Commons.
+
+Podkład **OpenStreetMap** potwierdzono w rozwiniętym przełączniku jako obramowany wybór. Widoczne nazwy Krypno Kościelne/Krypno Wielkie oraz etykieta kolegiaty wyznaczyły kontekst, bez Google. Współrzędne viewportu nie są GPS kamery. Formalnych adresów budynków i kilometrażu nie nadano.
+
+- [06-KRY10-01](https://www.mapillary.com/app/?pKey=199742715311778&focus=photo&mapStyle=OpenStreetMap), **20.09.2020**: przy prawym chodniku żółta poręcz z szarymi poziomymi wypełnieniami. Za nią szerokie ciemne schody, kamiennopodobna blokowa podmurówka, słupy ogrodzenia z daszkami i czarne ażurowe przęsła. Duże drzewa o zaokrąglonych koronach. Widoczny fragment wejścia przy terenie kościoła, lecz pełna bryła kościoła ucięta. Silne światło od przodu i zabrudzenie szyby ograniczają kolorystykę.
+- [06-KRY10-02](https://www.mapillary.com/app/?pKey=2942442542678596&focus=photo&mapStyle=OpenStreetMap), **03.07.2019**: po lewej niska jasnokremowa bryła sklepu z żółtym pasem i prawie poziomym górnym obrysem, dalej dom z ciemnym dwuspadowym dachem, brązowym szczytem/balkonem i kremowymi polami. Po prawej jasna żółtokremowa fasada z balkonem, ciemnym pochyłym dachem i częściowo widocznymi dwoma poziomami otworów; wąskie wysokie iglaste sylwety przy ażurowym ogrodzeniu. Szary chodnik z czerwonym pasem przy krawędzi i szeroki boczny wlot z wyokrąglonym narożnikiem krawężnika po lewej. Nie opisano ronda.
+
+SOURCED: barwy i widoczne bryły z obrazów; formalne kondygnacje, pełna liczba okien, gatunki roślin, dokładne materiały, RAL/RGB, metryka i stan 2026 pozostają **UNVERIFIED**. Nie kopiować reklam i marek do fikcyjnej zabudowy; są tylko identyfikacją referencji. Źródłowa etykieta kościoła z mapy nie czyni z uciętego zdjęcia pełnej inwentaryzacji świątyni.
+
+`selection.json` dokumentuje zakres i istniejące dane, `observations.json` rozdziela ogląd od mapowego kontekstu, a manifest zawiera dwa bezpieczne permalinki. Dokładnych godzin oględzin nie mierzono; zapisano tylko datę. Bez commit/push i zmian katalogów nadrzędnych.

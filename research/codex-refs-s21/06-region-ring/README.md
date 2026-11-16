@@ -77,3 +77,8 @@ Główny manifest29rekordów. [Kościół](monki-landmark-round7/README.md):2now
 ## DworzecMońki — runda9
 
 [monki-civic-round9](monki-civic-round9/README.md):1nowa fotografia18.04.2014HenrykBorawskiCCBYSA3, każdyagent/rootosobnoobejrzeli. Ochrowożółtafasada, łukowowygiętyszczyt, centrum2głównepoziomyotworów, boczneoknawdachu, schody/utwardzenie/trawa. Formalne kondygnacje/materiałdachu/metryka/stan2026UNVERIFIED.2pobrane podglądy/1zachowanykadr, drugi odrzucony powtarzaGartychaskwer;0oryginałów/0link-only,1Gitmini800×600. APIdeklarowało800aleJPEG960×720, jawnyzapis. Główny06ma32rekordy.
+
+
+## Krypno przy DW671 — runda10
+
+[krypno-dw671-round10](krypno-dw671-round10/README.md):2 nowe historyczne kadry Mapillary/grobin z20.09.2020 i03.07.2019, każdy osobno obejrzany po powiększeniu. OSM wybrano jawnie. Otoczenie kościoła: żółto-szare poręcze, schody, blokowy mur i ażurowe ogrodzenie, pełna bryła świątyni ucięta. Drugi: kremowy sklep, dom ze skośnym dachem i szczytem, żółtokremowa fasada z balkonem, chodnik z czerwonym pasem i zwykły boczny wlot. Nie opisano ronda. GPS kamery, materiały, metryka, formalne kondygnacje i stan2026UNVERIFIED. Zakres aktualnej kolejki DW671 oddzielono od historycznego bboxR9.2link-only/0pobrań/API/Commons. Główny06ma34 rekordy; root sprawdził artefakty, nie deklaruje drugiego oglądu źródeł.
