@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-16",
+  "method": "Indywidualny ogląd każdego dokładnego URL odczytanego z publicznego DOM galerii, potem ponowne otwarcie obu. Bez zapisów ARR, cropów, obrotów i wyostrzania.",
+  "old_scania_recheck": {
+    "source": "../rear-approval-round38/README.md",
+    "frame": "1/4",
+    "url": "https://a.allegroimg.com/original/11597f/094e3e614b4089bfa550c89caf96/Scania-R-S-Lampa-Tyl-Tylna-LED-Prawy-Prawa-Strona-2860827-OE-Uszk-klosz",
+    "natural_px": [
+      2560,
+      830
+    ],
+    "display_confirmed_native_px": [
+      2560,
+      830
+    ],
+    "observation": "Cała długa czerwona lampa z bezbarwnym centralnym pasem, SCANIA po prawej i uszkodzonym dolnym brzegiem. Wyraźnie większa część w kadrze niż w detalu 2/4, inna perspektywa. Drobne ślady oznaczeń w czerwonym dole, ale E/kod kraju/numer bez niezależnego pewnego odczytu.",
+    "status": "E_UNVERIFIED_NO_QUOTA_INCREMENT",
+    "counts": "0 nowego urządzenia, 0 dodatkowego PASS, brak transferu E2 z makra 2/4."
+  },
+  "new_source": {
+    "url": "https://autoline.info/-/sale/tail-lights/truck/Scania--24060812275774920500",
+    "seller": "BURG-POL",
+    "id": "EW40495",
+    "source_condition": "used; opis demontaż z nowego pojazdu",
+    "source_application": "Para lewa+prawa Scania R/S NGS; tytuł 2908053, opis 2908053/2908051; pole partnumber zawiera także 2860829/2129985/2129988/2129987.",
+    "physical_PN": "UNVERIFIED: nie oglądano etykiety numerowej; nie przypisano listy jednemu wybranemu kloszowi",
+    "tractor_cross_reference": {
+      "url": "https://autoline.info/-/sale/tail-lights/truck-tractor--25111809265539634400",
+      "source": "EUROGRAVIS NEDERLAND YP48319",
+      "full_text_read": true,
+      "evidence": "Pełny tytuł i kategoria: 2860829 tail light for Scania truck tractor; partnumber 2860829.",
+      "status": "CONDITIONAL_LINK_THROUGH_MULTI_PN_LIST",
+      "limits": "Źródłowa lista BURG-POL obejmuje 2860829, lecz brak etykiety identyfikującej konkretnie widoczny klosz. Nie dopasowano podtypu wyłącznie z R/S, nie przeniesiono cech innego egzemplarza."
+    }
+  },
+  "selected": [
+    {
+      "id": "01-RC39-01",
+      "url": "https://img.linemedia.com/img/s/spare-part-tail-light-Scania---1717839008397982926_big--24060812275774920500.jpg",
+      "observation": "Podłużna czerwona lampa zespolona z ostrzej załamanymi strefami na końcach, odizolowana na białym tle. Centralny dwupoziomowy bezbarwny/srebrzysty pas z SCANIA po lewej; dolny pas ma duże jasne elementy optyczne. Niżej czerwona drobna struktura, po prawej wydzielone gęste skośne pole. W dolnym lewym czerwonym polu E2 w okręgu; przyległe drobne ciągi bez pewnego odczytu. Na górnej i dolnej krawędzi jasne wydłużone refleksy. Jasne punkty i odbicia nie dowodzą ON.",
+      "natural_size": "1280 × 419 px — SOURCED DOM",
+      "status": "PRIMARY_REAR_E_CANDIDATE; SUBTYPE_REFERENCE_CONDITIONAL"
+    },
+    {
+      "id": "01-RC39-02",
+      "url": "https://img.linemedia.com/img/s/spare-part-tail-light-Scania---1717839003745775441_big--24060812275774920500.jpg",
+      "observation": "Zbliżony widok tej samej wizualnie lampy: czerwony obrys, długie górne żebra, centralny bezbarwny dwupoziomowy pas z SCANIA po lewej, drobne czerwone struktury poniżej i skośne pole z prawej. Dolny bezbarwny pas wygląda ciemniej niż w 8/8; inne jasne refleksy na obrzeżach. E2 w okręgu w dolnym lewym czerwonym polu, bez pewnego numeru/funkcji. Różnica jasności nie jest potwierdzonym stanem OFF/ON.",
+      "natural_size": "1279 × 426 px — SOURCED DOM",
+      "status": "COMPARISON_ONLY; DISTINCT_EXPOSURE_UNVERIFIED; NO_AUTOMATIC_SECOND_QUOTA"
+    }
+  ],
+  "E_reading": {
+    "own_observation": "E2 w okręgu w dolnym lewym czerwonym polu obu plików",
+    "number": "UNVERIFIED",
+    "functions": "UNVERIFIED",
+    "scope": "Nie odtworzono szczegółowego regulaminu ani kodów funkcji. Rootpeer oczekiwany."
+  },
+  "exposure_dedup": {
+    "observation": "8/8 i 5/8 pokazują wizualnie tę samą lampę. Różnią się pasem optyki, rozkładem refleksów i minimalnie proporcjami pliku.",
+    "status": "DISTINCT_EXPOSURE_UNVERIFIED",
+    "decision": "8/8 główny kandydat; 5/8 porównawczy, bez automatycznego drugiego zaliczenia. Nie rozstrzygnięto fotografii w różnych ustawieniach vs obróbki/montażu obrazu. 1/8 jest białym zestawieniem pary i nie jest dodatkowym kadrem do progu."
+  },
+  "geometry": {
+    "status": "ESTIMATED",
+    "housing_width_percent": [
+      95,
+      100
+    ],
+    "basis": "Obie podłużne lampy wypełniają prawie całą szerokość obrazu; naturalne 1280×419 i 1279×426. Bez pomiarów metrycznych."
+  },
+  "screening": {
+    "volvo_source": "https://autoline.info/-/sale/tail-light-glass/truck-tractor--25071711565463676400",
+    "id": "MZ46596 /21414",
+    "preview_seen": "Na pojedynczym wspólnym podglądzie galerii widoczne 1/3 i 2/3: dwa czerwone podłużne klosze z bursztynowym i bezbarwnym polem na porysowanym podłożu, jeden z jasnymi długimi zarysowaniami.",
+    "natural_px": "Każdy 500×500 według DOM; nie otwierano wariantów/większych rozmiarów.",
+    "approval": "E_UNVERIFIED; nie zaliczono tych podglądów jako indywidualnie zweryfikowanych makr ani nie dodano do kolekcji."
+  },
+  "counts": {
+    "selected_source_image_files": 2,
+    "primary_new_photo_candidate": 1,
+    "comparison_only_files": 1,
+    "new_selected_physical_parts_lower_bound": 1,
+    "new_parts_in_old_scania_recheck": 0,
+    "confirmed_new_PASS_before_root": 0,
+    "ON": 0,
+    "night": 0,
+    "ARR_downloads": 0,
+    "saved_screenshots": 0,
+    "parent_changed": false
+  },
+  "dedup": "Przed nowym oglądem rg całego 01 po 20565107/LAS COLINAS oraz 2908053/EW40495 w poprzednim obiegu. Brak wcześniejszych opisów tych galerii. Odrębny czysty zestaw BURG-POL od pękniętej części DamianGollab."
+}
