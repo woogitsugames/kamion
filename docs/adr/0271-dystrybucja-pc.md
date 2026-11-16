@@ -36,6 +36,11 @@ jak testerzy oddają logi, gdzie wydawać przy budżecie 0 zł. Szczegóły i ź
 9. **Backend**: zostaje Mono (stan ADR 0261); IL2CPP dopiero po pomiarze A/B przed pierwszym wydaniem publicznym.
 10. CI: job `dist-tests` (`uv run --no-project --with pytest pytest tests/dist -q`).
 
+**Zmiana (ADR 0276):** nazwa zipu ma `-regions` i skrót zawartości `Kamion_Data` (`…-<dane>-win64.zip`); `build-id.json`
+jedzie w paczce; wykluczone są wszystkie `Kamion-<region>.cmd` (wysyłany tylko `Kamion-okno.cmd`); `Zbierz-logi.cmd` i
+README ostrzegają, że zrzuty awarii nie są anonimizowane (`-NoCrashes`). `build-windows.ps1 -Package` i przenoszenie symboli
+Burst do `artifacts/win/symbols/` — zrobione w ADR 0276.
+
 ## Propozycje dla lidera (nie zmieniane w tym ADR — pliki poza zakresem)
 - `build-windows.ps1`: zamiast kasować `*_DoNotShip`, przenosić je do `artifacts/win/symbols/<name>/` (symbole Burst
   do analizy zrzutów awarii danej wersji); `package-windows.py` i tak ich nie spakuje.
