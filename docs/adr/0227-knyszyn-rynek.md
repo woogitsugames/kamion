@@ -56,3 +56,6 @@ Po scaleniu ADR 0219 poprawne dane far-field pokrywają Knyszyn; w kadrach Rynku
 
 ## Iteracja r12
 Dwie lokalne lipy 3D mają pełniejsze sylwetki bez centralnego szwu, lecz ciemne grube kępy pozostają FAIL. W porównaniu z tym samym stanem r11 draws bez zmian, ale na wspólnej kamerze +2044 tris Low i High; High max 1 252 449. R13 przywraca poprzednie Low, zachowuje trial High i dodaje przybliżenia pomników; przejście LOD wymaga oceny.
+
+## Iteracja r13
+Wskazówka zegara widoczna, ale rzeźba króla i ptak na obelisku nadal nieczytelne; FAIL wizualny, PROXY_NOT_APPROVED. R13 vs r11 przy tym samym stanie sceny: draws bez zmian, max +14 tris Low i High na nowym kadrze; High max 1 250 419 tris. Low względem pierwotnego baseline nie jest potwierdzony z powodu zmiany pozycji pojazdu. GIS trwa; wykryto brak lokalnych instancji regionu C i cache starej wersji, planowane odtworzenie danych.
