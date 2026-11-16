@@ -2154,6 +2154,32 @@ def _approach_transition_mask(br, transition_m):
     return mask
 
 
+def rural_barrier_line(mats, hw, zg):
+    """Post line of a W-beam on a kerbless (RURAL) edge: lateral offset from the chain axis and base height, per
+    station, from the shoulder the station carries in its side `mat` (ADR 0272, roads.xsec.decode).
+
+    Legacy profile (mat 0: 1.00 m paved + 0.75 m ground): GUARDRAIL_OFFSET behind the paved shoulder, base at the
+    height of the paved edge - exactly as before ADR 0272, so regions without a shoulder code keep their barriers.
+    Coded shoulders: GUARDRAIL_OFFSET behind the paved part but never closer than GUARDRAIL_GROUND_EDGE_M to the
+    outer edge of the ground part (the post stands on the shoulder, not in the ditch slope), base on the shoulder
+    surface there (paved crossfall, then SHOULDER_CROSSFALL)."""
+    from roads import xsec as XS
+    mats = np.asarray(mats)
+    hw = np.asarray(hw, float)
+    zg = np.asarray(zg, float)
+    dims = np.array([XS.decode(int(v)) for v in mats], float).reshape(-1, 2)
+    paved, ground = dims[:, 0], dims[:, 1]
+    coded = mats >= XS.SHOULDER_CODE
+    into = np.where(coded, np.clip(np.minimum(S.GUARDRAIL_OFFSET, ground - GUARDRAIL_GROUND_EDGE_M), 0.0, None),
+                    S.GUARDRAIL_OFFSET)
+    off = hw + paved + into
+    zb = zg - S.CROSSFALL * paved - np.where(coded, S.SHOULDER_CROSSFALL * into, 0.0)
+    return off, zb
+
+
+GUARDRAIL_GROUND_EDGE_M = 0.25      # WORKING_VALUE (ADR 0272): post line at least this far inside the ground shoulder edge
+
+
 def guardrails(lin, net, zground, report):
     from scipy import ndimage
     m = {"bridge": 0.0, "median": 0.0, "embankment": 0.0, "structure": 0.0, "approach": 0.0}
@@ -2276,6 +2302,7 @@ def guardrails(lin, net, zground, report):
             off[med] = hw[med] + S.PAVED_SHOULDER_MEDIAN + S.GUARDRAIL_OFFSET
             zb[med] = zg[med] - 0.02
             rur = (kinds == RURAL) & ~br
+            r_off, r_zb = rural_barrier_line(kmat, hw, zg)     # ADR 0272: on the shoulder the station really has
             drop = np.full(len(ss), -1e9)
             if rur.any():
                 # embankment height = road edge minus the ground at the toe of the fill slope: berm 1 m +
@@ -2289,8 +2316,7 @@ def guardrails(lin, net, zground, report):
                 # extend 12 m each way (approach), close small gaps
                 emb = ndimage.binary_dilation(emb, iterations=12) & rur
                 want[emb] = 3
-                off[emb] = hw[emb] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET
-                zb[emb] = zg[emb] - S.CROSSFALL * S.PAVED_SHOULDER
+                off[emb], zb[emb] = r_off[emb], r_zb[emb]
             # ADR 0110 (gate-3 side-by-side #4b): W-beam along a ground carriageway that runs beside a viaduct or a
             # walled ramp, on the side facing it (Mapillary 500263111404933, 1259231227807789, 751431972202262: the
             # links at Rondo Biezenstwa). Rural edge: behind the paved shoulder; kerbed edge without a sidewalk:
@@ -2300,9 +2326,8 @@ def guardrails(lin, net, zground, report):
                 bs = _beside_structure(c, ss, sgn, hw, zg, structs) & (want == 0) & ~br & (rur | kerbed)
                 bs = ndimage.binary_closing(bs, iterations=6) & (want == 0) & ~br & (rur | kerbed)
                 want[bs] = 4
-                off[bs] = np.where(rur[bs], hw[bs] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET,
-                                   hw[bs] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
-                zb[bs] = np.where(rur[bs], zg[bs] - S.CROSSFALL * S.PAVED_SHOULDER, zg[bs] + kh[bs])
+                off[bs] = np.where(rur[bs], r_off[bs], hw[bs] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
+                zb[bs] = np.where(rur[bs], r_zb[bs], zg[bs] + kh[bs])
             # M29 / ADR 0144 pkt 3: a deck barrier end where the chain continues on the ground is not a real
             # end - the barrier is carried past the structure onto the approach (§ 80 rozporządzenia o drogowych
             # obiektach inżynierskich; DECK_APPROACH_TRANSITION_M is WORKING_VALUE). The approach stations join
@@ -2327,9 +2352,8 @@ def guardrails(lin, net, zground, report):
                         gnd[idx] = True
             tr = _approach_transition_mask(br, S.DECK_APPROACH_TRANSITION_M) & (want == 0)
             want[tr] = 5
-            off[tr] = np.where(rur[tr], hw[tr] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET,
-                               hw[tr] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
-            zb[tr] = np.where(rur[tr], zg[tr] - S.CROSSFALL * S.PAVED_SHOULDER, zg[tr] + kh[tr])
+            off[tr] = np.where(rur[tr], r_off[tr], hw[tr] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
+            zb[tr] = np.where(rur[tr], r_zb[tr], zg[tr] + kh[tr])
             if nozones and want.any():
                 Pw = c.line.offset_point(ss, sgn * off)
                 for _zid, zpoly, zcnt in nozones:
