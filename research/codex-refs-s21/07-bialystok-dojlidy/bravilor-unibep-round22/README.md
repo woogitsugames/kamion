@@ -11,3 +11,7 @@ Kontakt z terenem: jasny plac przed frontem, niska ciemna budka z czerwonym obrz
 Daty ekspozycji i publikacji zdjęć **UNVERIFIED**. Strona realizacji nie jest dowodem stanu 2026 r.; podany tekstowo czas realizacji nie wskazuje dnia fotografowania. Ogląd 16.11.2026, date-only. Po obu obrazach Chrome zwolniony lampy. Deduplikacja dokładnych assetów przed oglądem: brak wcześniejszych przyjętych kopii w s21/K1/research-mistral, tylko tekstowy lead z R21. Poprzedniego logu R21 nie zmieniano.
 
 Prawa: wyłącznie **link-only, all rights reserved**. Nie pobrano fotografii, nie wykonano lokalnych screenshotów, cropów ani miniaturek. Zapisano jedynie własne opisy i publiczne adresy. Bez Commons/Flickr, API, zmian parentów i Git. Pełne opisy każdego obrazu w manifest.csv i observations.json; kontekst adresowy w source.json.
+
+## Doprecyzowanie root16.11.2026 — konflikt adresów
+
+Niezależny odczyt pełnych głównych akapitów Unibep wykazał Myśliwską18 i dojazdKuronia przy obu realizacjach, Bravilor iRosti. [Oficjalny kontaktBravilor](https://www.bravilor.com/en/contact/), sekcjaBravilorBialystok, podaje JackaKuronia2; [oficjalny operatorRosti](https://www.rosti.com/locations/europe/poland/), sekcjaBiałystok, Myśliwską18. To jawna rozbieżność, nie rozwiązane powiązanie jednej działki. Przyczyna i historiaadresu UNVERIFIED; nie orzekamy błędu kopiowania ani przeprowadzki. Zdjęcia mają czytelny szyldBravilor i pozostają źródłem wyglądu, lecz tekstUnibep nie geolokalizuje ich jednoznacznie. Szczegóły source-conflict.json.

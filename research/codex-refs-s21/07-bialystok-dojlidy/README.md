@@ -91,3 +91,5 @@ R18: dwa nowe kadry dolnej jezdni ronda Pamięci Bieżeństwa, dzienny2020 i noc
 R19: dwa nowe MapillaryKuronia, richlv15.07.2017, root oba obejrzał i skierował widok ku przyziemiu. Siatka/cokół/trawa/chodnik/krawężnik oraz dojazd; funkcje małych urządzeń i metryka nieustalone.0nowych mostków/rowów i0dowodów stanu2026. Główny26.
 
 16.11.2026 R22: dwa nowe link-only obrazy Bravilor z galeriiUnibep, root osobno obejrzał. Wysoka ciemna hala ZTYŁU, niski ciemny front z jasnąopaską/czerwonympasem i wyższy prawysegment z2poziomamiokien. Nie upraszczać do całej białej hali ani całego wysokiego frontu. Myśliwska18/dojazdKuronia z tekstu wykonawcy, bez utożsamiania zRosti/Kuronia2.1kompleks/2ekspozycje,0pobrań; daty/metraż/materiały/2026UNVERIFIED. Główny28.
+
+DoprecyzowanieR22: Unibep podaje ten sam adresMyśliwska18 przyBravilor iRosti, podczasgdy oficjalnykontaktBravilor wskazujeKuronia2. Zapisano jawnykonflikt wR22/source-conflict.json i obu wierszach; bezwniosku o wspólnejdziałce lubprzyczynie. Czytelne szyldy potwierdzają fotograficznąreferencjęBravilor, nieGPS.

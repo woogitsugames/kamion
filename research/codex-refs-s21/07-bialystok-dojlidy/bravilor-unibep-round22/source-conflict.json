@@ -1,0 +1,30 @@
+{
+  "review_date": "2026-11-16",
+  "reviewer": "root",
+  "method": "Independent full primary webtext reads, no downloads",
+  "sources": {
+    "Bravilor_operator": {
+      "url": "https://www.bravilor.com/en/contact/",
+      "locator": "Bravilor Locations→Bravilor Bialystok",
+      "literal_address": "ul. Jacka Kuronia2,15-569Białystok"
+    },
+    "Rosti_operator": {
+      "url": "https://www.rosti.com/locations/europe/poland/",
+      "locator": "Rosti Poland–Białystok",
+      "literal_address": "ul.Myśliwska18,15-569Białystok"
+    },
+    "Unibep_Bravilor": {
+      "url": "https://unibep.pl/realizacje/11-obiekty-energetyczno-przemyslowe/2625-zaklad-produkcyjny-bravilor-bonamat-w-bialymstoku.html",
+      "locator": "Main paragraph below investor/time",
+      "literal_address_claim": "Myśliwska18 andaccessfromKuronia"
+    },
+    "Unibep_Rosti": {
+      "url": "https://unibep.pl/realizacje/11-obiekty-energetyczno-przemyslowe/2129-budynku-hali-magazynowej-z-czescia-produkcyjna-i-biurowo-socjalna-dla-rosti-poland-sp-z-o-o.html",
+      "locator": "Main project paragraph",
+      "literal_address_claim": "Myśliwska18 andaccessfromKuronia"
+    }
+  },
+  "finding": "Unibep repeats same address/access in both main project descriptions; conflicts with currentBravilor operator contact. Cause/date/address-history UNVERIFIED, no assertion of copied error or shared parcel.",
+  "photo_identity": "Readable BRAVILOR BONAMAT signage and dedicated gallery confirm visual reference; no change in photo qualification",
+  "geolocation": "Current operator address sourced as contact, exact photo location/GPS/parcel not established by ambiguous contractor paragraph"
+}
