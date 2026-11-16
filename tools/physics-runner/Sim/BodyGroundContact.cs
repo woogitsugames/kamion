@@ -196,11 +196,34 @@ namespace PhysicsRunner.Sim
         // ---------------- collider sets (mirror of the Unity graybox builders) ----------------
 
         /// <summary>
+        /// Tractor chassis-ground colliders: the definition's <c>bodyBoxes</c> with <c>ground = true</c> (ADR 0228: one geometry
+        /// source, the same boxes feed the tractor-trailer contact). A definition without body boxes falls back to
+        /// <see cref="DerivedTractorColliders"/>.
+        /// </summary>
+        public static ColliderBox[] TractorColliders(VehicleDefinition def) =>
+            def.bodyBoxes != null && def.bodyBoxes.Length > 0 ? FromBoxes(def.bodyBoxes) : DerivedTractorColliders(def);
+
+        /// <summary>Trailer chassis-ground colliders from the definition's ground-flagged <c>bodyBoxes</c> (fallback <see cref="DerivedTrailerColliders"/>).</summary>
+        public static ColliderBox[] TrailerColliders(TrailerDefinition def) =>
+            def.bodyBoxes != null && def.bodyBoxes.Length > 0 ? FromBoxes(def.bodyBoxes) : DerivedTrailerColliders(def);
+
+        static ColliderBox[] FromBoxes(BodyBoxDefinition[] boxes)
+        {
+            int n = 0;
+            foreach (var b in boxes) if (b.ground) n++;
+            var r = new ColliderBox[n];
+            int k = 0;
+            foreach (var b in boxes) if (b.ground) r[k++] = new ColliderBox(b.name, b.center, b.size);
+            return r;
+        }
+
+        /// <summary>
         /// Tractor colliders as built by GrayboxTractorBuilder.Build (game/Assets/_Project/Vehicle/Runtime, "colliders"
         /// block) with TractorDimensions defaults; the wheelbase is taken from the definition (front axle positionZ).
-        /// Values are DERIVED from those files — keep in sync (ADR 0158, Open: single data source).
+        /// Values are DERIVED from those files (ADR 0158). Since ADR 0228 only the fallback and the test oracle for the
+        /// definition's body boxes.
         /// </summary>
-        public static ColliderBox[] TractorColliders(VehicleDefinition def)
+        public static ColliderBox[] DerivedTractorColliders(VehicleDefinition def)
         {
             double wheelbase = 0;
             foreach (var a in def.axles) wheelbase = Math.Max(wheelbase, a.positionZ);
@@ -221,7 +244,7 @@ namespace PhysicsRunner.Sim
         /// Trailer colliders as built by GrayboxTrailerBuilder.Build with TrailerDimensions defaults (13.6 x 2.55 x 4.0 m)
         /// and the definition's cargo bay / landing gear positions. DERIVED — keep in sync (ADR 0158).
         /// </summary>
-        public static ColliderBox[] TrailerColliders(TrailerDefinition def)
+        public static ColliderBox[] DerivedTrailerColliders(TrailerDefinition def)
         {
             const double length = 13.6, width = 2.55, height = 4.0, frontWall = 0.05, plateBottom = 1.15, beamBottom = 0.92;
             const double rupdBottom = 0.40, rupdTop = 0.55;

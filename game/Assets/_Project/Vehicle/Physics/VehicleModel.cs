@@ -90,7 +90,24 @@ namespace Game.Vehicle.Physics
         public bool ParkingBrakeWarning { get; private set; }
         /// <summary>Increments on every rising edge of <see cref="ParkingBrakeWarning"/> (chime event; poll and compare, zero GC).</summary>
         public int ParkingBrakeWarningCount { get; private set; }
+        /// <summary>Steered-axle aligning torque for the steering feedback [N m] (wheel force feedback, touch-wheel return):
+        /// the raw sum, smoothed while the tractor-trailer bodies touch (ADR 0228, see <see cref="NotifyBodyContact"/>).</summary>
         public double AligningTorqueTotal { get; private set; }
+        /// <summary>Unfiltered sum of the steered wheels' aligning torque of this step [N m] (telemetry, tests).</summary>
+        public double AligningTorqueRaw { get; private set; }
+        double _contactFeedbackTimer;
+        bool _feedbackSmoothing;
+
+        /// <summary>
+        /// Called by <see cref="CombinationModel"/> after a step with tractor-trailer body contact: the steering-feedback estimate
+        /// is smoothed with <see cref="SteeringDefinition.contactFeedbackLagS"/> from the next step on (allocation-free).
+        /// </summary>
+        public void NotifyBodyContact()
+        {
+            if (Steering.Def.contactFeedbackLagS <= 0) return;
+            _contactFeedbackTimer = Steering.Def.contactFeedbackHoldS;
+            _feedbackSmoothing = true;
+        }
         public double ClutchSlipPower { get; private set; }
 
         readonly int[] _driven;
@@ -309,7 +326,17 @@ namespace Game.Vehicle.Physics
             Group.AssembleForces(ns, chassis, Forces, ref count, ref totalF, ref totalT);
             double mz = 0;
             foreach (var w in Wheels) if (w.Steered && w.Contact) mz += w.AligningTorque;
-            AligningTorqueTotal = mz;
+            AligningTorqueRaw = mz;
+            if (_feedbackSmoothing)
+            {
+                // Contact (or its hold) active: lag the feedback; afterwards keep lagging until it has caught up, then hand back
+                // the raw value (the last hand-over step is < 1 N m at the road wheels, ~0.01 N m at the rim).
+                double lag = Steering.Def.contactFeedbackLagS;
+                AligningTorqueTotal += (mz - AligningTorqueTotal) * (dt / (lag + dt));
+                if (_contactFeedbackTimer > 0) _contactFeedbackTimer -= dt;
+                else if (Math.Abs(mz - AligningTorqueTotal) < 1.0) { _feedbackSmoothing = false; AligningTorqueTotal = mz; }
+            }
+            else AligningTorqueTotal = mz;
 
             // Aerodynamic drag (still air).
             Vec3 v = chassis.LinearVelocity;
