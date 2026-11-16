@@ -208,23 +208,49 @@ namespace Game.Vehicle.Physics
         /// moving from the legs to the plate, the tractor's air suspension re-levelling) is a ~1 cm geometry mismatch
         /// that the stick springs store as ~50-110 kN of longitudinal preload; it acts at the plate height and shifts
         /// the kingpin load by Fx h / wheelbase. Real tire carcass hysteresis and trailing-arm bushes bleed that off.
-        /// Only the trailer wheels relax (the tractor wheels and brakes keep holding the combination), so on a slope the
-        /// trailer settles by about F / k_tractor and then stops: no creep. Set to 0 to disable.
+        /// Only the trailer wheels relax (the tractor wheels and brakes keep holding the combination); the braked ones relax to
+        /// the tractor's common-mode deflection (ADR 0280 section 10), so only the preload between the bodies goes and the
+        /// grade force stays shared by stiffness: no load moves onto the tractor, no settling, no creep. Set to 0 to disable.
         /// </summary>
         public double StandstillRelaxTau = 2.0;
         public const double RelaxMaxSpeed = 0.05;
         /// <summary>Set by <see cref="CombinationModel"/>: the kingpin is in the jaw, so the tractor can take the load the relaxed trailer wheels give up.</summary>
         public bool Coupled;
+        /// <summary>
+        /// Set by <see cref="CombinationModel"/> while coupled: the towing vehicle's wheels. Their contact-patch deflection is the
+        /// reference the braked trailer wheels relax to (ADR 0280 section 10). Null = no towing vehicle (own-share fallback).
+        /// </summary>
+        public WheelState[] TowingWheels;
 
         void RelaxStickAtStandstill(double dt, in ChassisState chassis)
         {
             if (StandstillRelaxTau <= 0 || !Coupled || Math.Abs(SpeedForward) > RelaxMaxSpeed) return;
             double k = Math.Exp(-dt / StandstillRelaxTau);
-            // A braked wheel keeps holding its own share of the grade force (Fz tan(theta), capped by the brake):
-            // the relaxation bleeds only the geometry-mismatch preload above that. Unbraked wheels relax to 0 as
-            // before. Without this, a trailer braked through the tractor's hand control valve (park position,
-            // ADR 0004 addendum 2026-11-10) handed its whole grade force to the kingpin and the combination crept
-            // ~6-9 mm on 12 % before the tractor took it.
+            // What relaxes is the internal preload between the two bodies, not the grade load. With the kingpin in the jaw both
+            // bodies stand still together, so a combination without internal preload has the same longitudinal contact-patch
+            // deflection on every braked wheel (tractor and trailer alike: each holds k_x u of the grade force, the elastic
+            // split of a load shared by parallel springs that move together). A slow pitch change (nose load moving from the legs
+            // to the plate, air suspension re-levelling) shows up as a deflection *difference* between the trailer and the
+            // tractor; carcass hysteresis and trailing-arm bushes bleed that difference off, so the braked trailer wheels relax to
+            // the common-mode deflection of the tractor's braked wheels (capped by their brake). Unbraked trailer wheels relax to 0.
+            // ADR 0280 section 10 (2026-11-16): the former target, each braked trailer wheel keeping only its "own share"
+            // Fz tan(theta), also bled off the trailer's elastic share of the grade force above that, i.e. moved ~5 kN of the
+            // empty trailer's grade force onto the kingpin over ~60 s on 12 % (trailer settling 5.0 mm through the tractor's
+            // tire and bellows compliance after the combination had already come to rest). It stays the fallback when the
+            // towing vehicle has no braked wheel in contact (then the tractor rolls and only the trailer brakes hold).
+            // The reference is the stiffness-weighted mean (net braked-wheel force of the tractor / their stiffness): a preload
+            // between the tractor's own axles (front pushing, rear pulling after a reverse-and-brake) cancels out of it.
+            double sumKu = 0, sumK = 0; int nRef = 0;
+            if (TowingWheels != null)
+                for (int i = 0; i < TowingWheels.Length; i++)
+                {
+                    var tw = TowingWheels[i];
+                    if (!tw.Contact || tw.BrakeTorque <= 0 || tw.Fz <= 0) continue;
+                    double kt = tw.Tire.LongitudinalDeflectionStiffness(tw.Fz, tw.TireCount);
+                    sumKu += kt * tw.Ux; sumK += kt; nRef++;
+                }
+            double uRef = nRef > 0 && sumK > 0 ? sumKu / sumK : 0;
+            if (sumK <= 0) nRef = 0;
             double gs = MathUtil.Clamp((chassis.Rotation * Vec3.Forward).y, -0.5, 0.5);
             double tanTheta = gs / Math.Sqrt(1 - gs * gs);
             for (int i = 0; i < Wheels.Length; i++)
@@ -234,9 +260,12 @@ namespace Game.Vehicle.Physics
                 if (w.Contact && w.BrakeTorque > 0 && w.Fz > 0)
                 {
                     double cap = w.BrakeTorque / w.RollingRadius;
-                    double f = MathUtil.Clamp(w.Fz * tanTheta, -cap, cap);
                     double kx = w.Tire.LongitudinalDeflectionStiffness(w.Fz, w.TireCount);
-                    if (kx > 0) target = f / kx;
+                    if (kx > 0)
+                    {
+                        double f = nRef > 0 ? kx * uRef : w.Fz * tanTheta;
+                        target = MathUtil.Clamp(f, -cap, cap) / kx;
+                    }
                 }
                 w.Ux = target + (w.Ux - target) * k;
             }
