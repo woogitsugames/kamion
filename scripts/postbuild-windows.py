@@ -22,10 +22,12 @@ Resources/build_info.json); after the build this script hashes Kamion_Data and w
 Two builds of one commit normally get different hashes (build_info.json carries the build time) - the hash names one
 build, it is not a reproducibility proof.
 
-Launchers: Kamion-okno.cmd (menu in a 1600x900 window) and Kamion-<region>.cmd for every region whose Low scene is in
-the build (read from the "[BUILD] Windows x64 -> ... scenes=[...]" line of the build log, i.e. after the expansion of
-sets / aliases / ranges by RegionBuildList and after -RegionsAllowMissing). Each starts the player windowed with
--scene <region id> (GameBootstrap: region id or alias -> the region scene of the active tier).
+Launchers: Kamion-okno.cmd (menu in a resizable 1600x900 window) and Kamion-<region>.cmd for every region whose Low
+scene is in the build (read from the "[BUILD] Windows x64 -> ... scenes=[...]" line of the build log, i.e. after the
+expansion of sets / aliases / ranges by RegionBuildList and after -RegionsAllowMissing). A region launcher passes only
+-scene <region id> (GameBootstrap: region id or alias -> the region scene of the active tier) and no -screen-* argument:
+the screen mode comes from the PC settings file, else from PlayerSettings (borderless full screen at the native
+resolution, resizable window, Alt+Enter switches; ProjectSetup.ApplyStandaloneWindowSettings).
 Standard library only (Python >= 3.10).
 """
 from __future__ import annotations
@@ -44,14 +46,17 @@ EXE_NAME = "Kamion.exe"
 BUILD_ID = "build-id.json"          # Game.Core.BuildInfo.BuildIdFileName - ships with the player
 MANIFEST = "Kamion_Data.sha256"     # full manifest, build metadata (not shipped: the zip has SHA256SUMS.txt)
 SHORT = 12                          # Game.Core.BuildInfo.ContentHashLength
-WINDOW_ARGS = "-screen-fullscreen 0 -screen-width 1600 -screen-height 900"   # ProjectSettings default is fullscreen (ADR 0261)
+# Only Kamion-okno.cmd forces a mode: a 1600x900 window, resizable (PlayerSettings.resizableWindow), Alt+Enter switches
+# to full screen. Any -screen-* / -window-mode argument makes the game skip the screen mode of the settings file
+# (StartupDisplayPolicy), so the region and corridor launchers pass none.
+WINDOW_ARGS = "-screen-fullscreen 0 -screen-width 1600 -screen-height 900"
 WINDOW_LAUNCHER = "Kamion-okno.cmd"
-# Continuous drive on the streamed corridor (ADR 0273 §7, int-stream-s23): borderless full screen, start in knyszyn, the
-# neighbour tiles stream in (-stream 1). A -screen-* argument makes the game skip the screen mode of the settings file.
+# Continuous drive on the streamed corridor (ADR 0273 §7, int-stream-s23): start in knyszyn, the neighbour tiles stream
+# in (-stream 1); screen mode as for the region launchers (settings file, else borderless full screen).
 # Written only when knyszyn and its corridor neighbour knyszyn-s are in the build.
 CORRIDOR_LAUNCHER = "Kamion-korytarz.cmd"
 CORRIDOR_NEEDS = ("knyszyn", "knyszyn-s")
-CORRIDOR_TEXT = '@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 1 -window-mode borderless -scene knyszyn -stream 1 %*\r\n'
+CORRIDOR_TEXT = '@echo off\r\nstart "" "%~dp0Kamion.exe" -scene knyszyn -stream 1 %*\r\n'
 EXCLUDED_DIR_GLOBS = ("*_DoNotShip", "*_ButDontShipItWithYourGame")
 EXCLUDED_FILE_GLOBS = ("*.pdb",)
 REGION_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")   # catalog ids; anything else never reaches a .cmd line
@@ -157,9 +162,10 @@ def regions_from_log(log_text: str) -> list[str]:
     return ids
 
 
-def launcher_text(extra_args: str = "") -> str:
-    tail = f" {extra_args}" if extra_args else ""
-    return f'@echo off\r\nstart "" "%~dp0{EXE_NAME}" {WINDOW_ARGS}{tail} %*\r\n'
+def launcher_text(extra_args: str = "", windowed: bool = False) -> str:
+    args = " ".join(a for a in (WINDOW_ARGS if windowed else "", extra_args) if a)
+    lead = f" {args}" if args else ""
+    return f'@echo off\r\nstart "" "%~dp0{EXE_NAME}"{lead} %*\r\n'
 
 
 def launcher_name(region_id: str) -> str:
@@ -169,7 +175,7 @@ def launcher_name(region_id: str) -> str:
 def write_launchers(build_dir: Path, regions: list[str]) -> tuple[list[str], list[str]]:
     """Kamion-okno.cmd + Kamion-<id>.cmd per region. Returns (written names, skipped ids)."""
     written, skipped = [], []
-    (build_dir / WINDOW_LAUNCHER).write_bytes(launcher_text().encode("ascii"))
+    (build_dir / WINDOW_LAUNCHER).write_bytes(launcher_text(windowed=True).encode("ascii"))
     written.append(WINDOW_LAUNCHER)
     for rid in regions:
         if not REGION_ID_RE.match(rid) or launcher_name(rid) == WINDOW_LAUNCHER:
