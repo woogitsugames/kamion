@@ -1,0 +1,58 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE — dwa indywidualnie obejrzane pełne widoki bryły",
+  "object": "Dom Klattów/Piaseckich przy Kościelnej6 w Knyszynie — inna bryła niż urząd/poczta/Rynek1",
+  "source_page": "https://zabytek.pl/pl/obiekty/knyszyn-dom-ob-izba-regionalna",
+  "municipal_identification": "https://www.knyszyn.pl/asp/zabytkowy-dom-mieszkalny,74,artykul,1,1383",
+  "candidates": [
+    {
+      "url": "https://zabytek.pl/public/upload/objects_media/desktop_x2/58764fdf23360.jpg?v=1512472329",
+      "caption": "Knyszyn, dom, widok od zach., stan na2015r., fot.J.Kotyńska-Stetkiewicz."
+    },
+    {
+      "url": "https://zabytek.pl/public/upload/objects_media/desktop_x2/58764fdfb5ffa.jpg?v=1512471436",
+      "caption": "Knyszyn, dom, widok od pd.-wsch., stan obiektu w2015r., fot.JoannaKotyńska-Stetkiewicz"
+    }
+  ],
+  "metadata_license": "http://creativecommons.org/licenses/by-nc-nd/3.0/pl/legalcode — przy każdym z dwóch kadrów",
+  "handling": "Tylko ogląd publicznych dokładnych URL i zapis własnego tekstu. Licencja poza dopuszczonym zestawem do pobierania. Żadnych kopii, miniaturek, wycinków ani screenshotów.",
+  "dedup": "Dokładnych URL i obiektu brak w głównych40 oraz K1 manifest. Stary commons-search.json zawiera wyłącznie tytuły innych kadrów jako screening, nie ogląd ani zebrane fotografie.",
+  "text_only_note": "Opis NID mówi o dachu dwuspadowym; nie traktować tej informacji jako własnego oglądu obrazu przed przeglądem.",
+  "rejected_leads": [
+    "GaleriaUM194 prowadzi do znanegoimg4715 — nie przyjęto jako nowy kadr ani nie odświeżano w Chrome.",
+    "WystawaUM5441 tekstowo dotyczy wystawy we wnętrzu, bez pozyskanego nowego zewnętrznego kadru.",
+    "Kościelna6 projekt270 dotyczy placu zabaw, nie dokumentuje samym tekstem geometrii domu."
+  ],
+  "prohibited_links_not_opened": [
+    "Panorama Google na stronie NID",
+    "Wyznaczanie trasy Google",
+    "Mapa obiektu NID"
+  ],
+  "review_method": "Dokładne dwa publiczne data-big URL otwarte kolejno w natywnym Chrome i osobno obejrzane. Żadnej kopii, miniatury, wycinka ani zapisanego screenshota. CUA zakończone completion_summary.",
+  "counts": {
+    "new_exposures": 2,
+    "named_object": 1,
+    "downloaded_media": 0,
+    "complete_main_roof_outlines_visible": 2
+  },
+  "dedup_result": "Przed zapisem w manifestach nie było domu Klattów/Piaseckich. Dokładne oba URL i NID page w całym lokalnym s21/K1 wystąpiły wyłącznie we własnym selection.json tej rundy. Nie utożsamiono z Kościelną4.",
+  "actual_bitmap_dimensions": {
+    "source": "Tytuł każdej indywidualnej strony obrazu w Chrome",
+    "width": 1280,
+    "height": 960
+  },
+  "caption_normalization": "Autor Joanna Kotyńska-Stetkiewicz; pierwszy podpis ma inicjał J., drugi pełne imię. Oba podpisy mówią o stanie w2015r.; nie ustalają dnia wykonania ani EXIF/strefy.",
+  "visual_findings": {
+    "roof": "Cały obrys głównego dachu bez uciętej kalenicy lub końców w obu obrazach. Długa czerwonobrązowa połać o drobnym powtarzalnym wzorze i nieregularnych ciemniejszych/zielonkawych plamach; dwa kominy widoczne w pierwszym obrazie.",
+    "gable": "W każdym przeciwległym trójkątnym jasnym szczycie pojedyncze brązowe prostokątne okno, niżej dwa widoczne otwory okienne; dolna część zasłonięta płotem.",
+    "porch": "Mniejszy ganek z własnym dwuspadowym daszkiem, brązowymi podporami i ukośną kratą.",
+    "ground_contact": "Czerwonobrązowe pionowe sztachety na niskiej podmurówce, wąski chodnik z wielokątnych płyt, niski krawężnik i asfalt z kałużami.",
+    "limits": [
+      "Nie zmierzono długości, wysokości, kąta połaci ani rozstawu otworów.",
+      "Nie określono chemii zielonkawych plam.",
+      "Pełny obrys widocznego dachu nie ujawnia ukrytej północnej połaci i konstrukcji więźby.",
+      "Materiał dachu i konstrukcja ścian pochodzą z osobnego opisu źródła, nie z rozpoznania koloru.",
+      "Stan2026 UNVERIFIED."
+    ]
+  }
+}

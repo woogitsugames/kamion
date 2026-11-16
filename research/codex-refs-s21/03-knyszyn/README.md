@@ -1,6 +1,6 @@
 # 03 — Knyszyn: bryły i detale fasad — WIP
 
-Stan ewidencji głównej na 16.11.2026: **42 rekordy** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **44 rekordy** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Wcześniejszy etap:SOURCED [manifest]36rekordy, w tym4nowe kadry pracującej fontanny(3dzień+1noc), wszystkie link-onlyARR. Nocna fotografia pokazuje tony niebieskie/cyjanowe/różowofioletowe w wodzie i osobne odbicia. Liczba dysz, obiegów, metryka, typ lamp/program oraz aktualność2026UNVERIFIED; projekt2019 nie jest dokumentacją wykonawczą. Szczegóły fountain-active-round7 i fountain-night-round8.
 
@@ -147,3 +147,8 @@ Główny manifest36rekordów. [Cztery nowe kadry2024](church-surfaces-round10/RE
 ### Pierzeja Rynku — nowe kadry detali, EM17
 
 Dwie ekspozycje picturehoover27.06.2020, agent i root osobno w publicznym MapillaryOSM: brązowe poziome poszycie, jasny cokół, białe okna i spust oraz szara ziarnista fasada, wyniesione wejście ze schodami i prześwitem, cienkie balustrady, balkon i małe niskie okno. To2AUX nowych ekspozycji,0potwierdzonych nowych budynków lub pełnych dachów. Górny obrys bliskiej bryły ucięty; formalne kondygnacje/metraż/RALUNVERIFIED. Znany urząd w tle nie liczy się ponownie. [EM17](east-market-facades-round17/README.md).
+
+
+### Dom Klattów/Piaseckich — KR18
+
+Dwa nowe NID kadry stanu2015, Joanna Kotyńska-Stetkiewicz, agent i root obejrzeli osobno. Jeden nowy nazwany obiekt,0kopii: cały widoczny długi dach dwuspadowy, oba szczyty, jasne ściany, ganek, sztachety i chodnik. Część detali zasłonięta płotem/drzewem. Osobne tekstowe źródła NID/UM potwierdzają parterowy dom z pierwotnie częściowo zamieszkałym poddaszem, konstrukcję,4słupy ganku i rytm okien; nie wnioskowano tego wyłącznie z obrazu. Datowane dane w [source-facts.csv](klatt-roof-round18/source-facts.csv), bez deklaracji stanu2026 lub metrażu. CC BY-NC-ND3.0PL, tylko link-only.
