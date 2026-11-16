@@ -207,3 +207,8 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Pozostałe stareID — runda27
 
 [baseline-remaining-round27](baseline-remaining-round27/README.md):6nowych rozłącznychID115/128/129/130/161/170 po indywidualnym oglądzie agenta, root osobno3z6.5fotografii i1render,6podglądów pozaGit,0nowychGitminiatur/przyrostuA/B. Pokrycie59/88rekordówP18,29NOT_REVIEWED.130render odrzucony;129Jedinstvo w tle, głównyTomislavSajko;161tył naprawdę widoczny, brud drzwi niepotwierdzony;170tył kabinyVolvo nie naczepa. Rozmiar obrazu nie zastąpił pomiaru drzwi; staryA bez dodatkowego progu1000px.
+
+
+## Pozostałe stareID — runda28
+
+[baseline-remaining-round28](baseline-remaining-round28/README.md):6nowychID101/102/103/106/113/117 indywidualnie obejrzanych, root osobno2/6.6fotografii,0nowychA/B; pokrycie65/88rekordów,23NOT_REVIEWED.113odbicie drogi/złotych wzgórz na polerowanej dennicy, nie potwierdzony brązowyosad;117samciągnik bez naczepy i bez widocznego śniegu;103/106przednio-boczne widoki, nie tyły. Metadane1132019vs kategoriaAugust2013 pozostawione konfliktem, nie arbitralną datą.0nowychminiaturGit, rawpozaGit.
