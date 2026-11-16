@@ -1,5 +1,8 @@
-# STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
-- Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
-- Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
-- Krok 3: pytest `tests/gis/test_summer_cd_0216b.py` + `test_lamp_led_0216.py` 19 passed; EditMode zaktualizowany (nieuruchomiony); ADR 0216 §0216b.
-- NASTĘPNY KROK (lider, po 0221): komendy w `docs/adr/0216-lato-i-biale-led-dk65-knyszyn.md` §0216b „Komendy dla lidera” (build_region → build_world → import-region → visual-qa → EditMode → APK A16).
+# STATUS — D14 roundabout2-0274 (rondo Knyszyn, ADR 0274)
+
+- [1] Narzędzie `tools/worldgen/qa/roundabout_ortho.py` + `docs/reports/roundabout-0274/knyszyn_ortho_probe.json`.
+  WYNIK: ortofoto GUGiK w punkcie ronda = arkusz N-34-106-B-b-1-4 z 2025-05-27 (0,1 m), brak arkusza 2026; na zdjęciu jest
+  jeszcze zwykłe skrzyżowanie (`roundabout_visible: false`, środek = asfalt 100 %). Promieni krawężnika ani długości wysepek
+  ronda nie da się zmierzyć z ortofoto — wartości zostają ESTIMATED / WORKING_VALUE (zdjęcia 9–11 ma tylko lider).
+- NASTĘPNY KROK: obrys z jawnymi promieniami krawężnika + override rozdziału DK65 + poprawki z recenzji D18:
+  `uv run --project tools/worldgen python -m pytest tests/gis -k "roundabout or 0218 or 0274 or compact" -q`
