@@ -10,3 +10,5 @@
 - W toku: pc-metrics D3D12 vs D3D11 (High 1080p 60, knyszyn-w, 90 s) -> artifacts/crash-diag-s23/pcm-*.
 - Krok 4: pc-metrics D3D12 nieważny (player bez fokusu nie załadował świata, inne 3× Unity + 1× Kamion na końcu), D3D11 nieuruchomiony; sloty zwolnione, settings_pc.json właściciela bez zmian (hash). EditMode PcSettingsTests 28/28 (Win64, Library z win-build-0261).
 - NASTĘPNY KROK (lider/właściciel, wolna maszyna z fokusem): komendy w docs/reports/CRASH-2026-11-16-d3d12.md §8; build z tej gałęzi: `pwsh scripts/build-windows.ps1 -Slot -RegionsFile Data/build_regions.json`.
+- Krok 5 (po recenzji doradcy): stos B potwierdzony we wszystkich 5 crash.dmp (D3D12+D3D11); A opisany jako mitygacja (UUM-148214 dotyczy też trybu bez ramki); osobny commit 7970b425f: ProjectSetup Win64 {D3D11, D3D12} (setup-project NIEuruchomiony); merge origin/main; log efektywnego trybu.
+- NASTĘPNY KROK (lider): przegląd + decyzja o 7970b425f; sesja z fokusem wg raportu §8.
