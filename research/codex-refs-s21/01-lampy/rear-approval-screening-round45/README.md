@@ -1,0 +1,11 @@
+# Starsza Hella i zamiennik: bez czytelnego E
+
+Data: 2026-11-16. Celem był fizyczny znak homologacji tylnej lampy innej marki. **Wynik: 0 nowego E, 0 potwierdzonego ON/nocy, 0 nowych fotografii lub urządzeń w kolekcji.** Zachowano dokumentacyjny manifest i krótki log, bez rozbudowania AUX.
+
+1. [Plenty.Parts, Hella 2VP008204-241](https://plenty.parts/parts/hella/electrics/hella-2vp008204241-tail-light-assembly-t2509023): po web timeout jedno zwykłe otwarcie Chrome zadziałało. To katalog, **nie potwierdzony używany egzemplarz**. Rzeczywiście obejrzany główny obraz ma **600 × 400 px — SOURCED [DOM]**, podłużną czerwono-bursztynowo-bezbarwną lampę i liczne watermarki, ale brak czytelnego E. Technika fotografia/render UNVERIFIED.
+2. [Allegro 12434891601](https://allegro.pl/produkt/klosz-lampy-tyl-man-daf-volvo-lewy-prawy-9el152-889-001-429c4b01-d68e-4a41-8f6f-5a713ce1443e?offerId=12434891601): nowy **SERTPLAS / CAR 42/1**, z porównawczym numerem Hella w tytule. Pierwszy klosz osobno obejrzano przez dokładny URL i natywnie **2560 × 1920 px — SOURCED [DOM oraz rozmiar wyświetlania]**. Widać bezbarwny lewy pas, czerwone pola i bursztynowe pole blisko prawej, z regularną strukturą i czterema okrągłymi punktami mocowania. **E/numer/funkcje UNVERIFIED**, liczba komór UNKNOWN. Nie utożsamiono zamiennika z Hella.
+3. [eBay 172950178153](https://www.ebay.com/itm/172950178153): jedno otwarcie dało komunikat błędu strony. **NOT_REVIEWED** docelowego obrazu, bez ponowienia lub hostów wariantowych.
+
+Dedup nie wykazał wcześniejszego konkretnego URL Plenty lub oferty CAR 42/1. Rodzina 9EL152889 miała jednak już negatywny ogląd innej oferty gtstore_pl 17531401367 (`link-only-candidates/hella-9el-screening.json`); nie doliczono nowej rodziny za porównawczy numer. Brak pewnego E w kolejnych źródłach nie jest dowodem braku homologacji części.
+
+Każdy opis w JSON odnosi się do indywidualnie obejrzanego obrazu. Deklaracje E4 z kart tekstowych nie zostały przeniesione na klosz. Dokładne URL wybranych obrazów zachowano w JSON, wszystkie **link-only, all rights reserved**. Fotograf, ekspozycja, GPS i azymut UNVERIFIED. Zero plików ARR, zapisanych screenshotów, żądań Commons/Flickr i zmian parenta/Git.

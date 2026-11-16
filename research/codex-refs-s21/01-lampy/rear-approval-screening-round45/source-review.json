@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-16",
+  "scope": "Celowane sprawdzenie starszej lampy/klosza Hella i zamiennika: fizyczne czytelne E, bez przenoszenia danych katalogowych.",
+  "views": [
+    {
+      "source_initial": "https://plenty.parts/parts/hella/body/hella-2vp008204241-tail-light-assembly-t2509023",
+      "observed_final_url": "https://plenty.parts/parts/hella/electrics/hella-2vp008204241-tail-light-assembly-t2509023",
+      "access": "Web timeout; jedno zwykłe otwarcie w Chrome zadziałało. Automatyczna nawigacja strony z body do electrics, nie skonstruowano hosta wariantowego ani obejścia.",
+      "source_claim": "OEM Hella 2VP008204-241 Tail Light Assembly. Strona katalogowa, nie udokumentowana używana sztuka; nie nazywać jej demontażem.",
+      "image_url": "https://i.plenty.parts/IMAGE/2/729da903007274214c5100ee04b380c76cac036b.webp",
+      "natural_px": [
+        600,
+        400
+      ],
+      "view_method": "Rzeczywisty główny obraz katalogowy obejrzany na publicznej stronie; naturalny rozmiar odczytany z DOM.",
+      "observation": "Podłużna prostokątna lampa pod kątem na jasnym tle. Wąskie bezbarwne pole z lewej, szerokie czerwone pola pośrodku i bursztynowe pole blisko prawej, wąski czerwony koniec. Widoczne ciemne punkty/wkręty i powtarzany watermark Plenty.Parts. Brak czytelnego fizycznego E ani dowodu ON.",
+      "technique": "UNVERIFIED: katalogowe opracowanie obrazu, nie potwierdzono techniki fotografia/render.",
+      "E": "UNVERIFIED",
+      "ON": "UNVERIFIED",
+      "chambers": "UNKNOWN"
+    },
+    {
+      "source": "https://allegro.pl/produkt/klosz-lampy-tyl-man-daf-volvo-lewy-prawy-9el152-889-001-429c4b01-d68e-4a41-8f6f-5a713ce1443e?offerId=12434891601",
+      "seller": "czesciTIRchlebek",
+      "source_claim": "Nowy klosz CAR 42/1, producent SERTPLAS; tytuł porównawczy 9EL152889-001, zastosowanie MAN/DAF/Volvo i pole Samochody ciężarowe. Nie uznano go za fizyczną część Hella.",
+      "image_url": "https://a.allegroimg.com/original/111a36/2196a37f47288388c6fed632e530/KLOSZ-LAMPY-TYL-MAN-DAF-VOLVO-LEWY-PRAWY-9EL152-889-001",
+      "natural_px": [
+        2560,
+        1920
+      ],
+      "display_confirmed_native_px": [
+        2560,
+        1920
+      ],
+      "view_method": "Pierwszy obraz galerii oraz osobne dokładne publiczne URL; natywna skala po kliknięciu obrazu.",
+      "observation": "Sam prostokątny klosz na białym tle. Wąskie bezbarwne prążkowane pole z lewej, kilka czerwonych obszarów z regularnymi wypukłymi strukturami, gładki czerwony pionowy pas pośrodku, bursztynowe prostokątne pole blisko prawej i czerwony koniec. Cztery okrągłe punkty mocowania w czerwonym i bursztynowym polu. Nie odczytano pewnego E, numeru ani symboli funkcji; brak dowodu załączenia.",
+      "technique": "Wygląd fotografii komponentu na opracowanym białym tle; metoda i pochodzenie pliku UNVERIFIED.",
+      "E": "UNVERIFIED",
+      "ON": "UNVERIFIED",
+      "chambers": "UNKNOWN"
+    }
+  ],
+  "failed_source": {
+    "url": "https://www.ebay.com/itm/172950178153",
+    "status": "NOT_REVIEWED",
+    "observed_outcome": "Jedno zwykłe otwarcie wyświetliło SORRY /Something went wrong on our end. Nie ponowiono, nie zmieniono hosta i nie opisano docelowego obrazu."
+  },
+  "dedup": {
+    "initial": "Przed wyborem Plenty: rg 2VP008204 /T2509023 /plenty.parts po całym 01 bez trafień.",
+    "later_related_family": "Sprawdzenie konkretnej oferty 12434891601/CAR 42/1/assetu bez trafień; równoległa rodzina 9EL152889 miała już starszy negatywny ogląd gtstore_pl 17531401367 w link-only-candidates/hella-9el-screening.json. To nie nowe urządzenie potwierdzone z numeru katalogowego; nie doliczono fotografii ani rodziny."
+  },
+  "catalogue_limits": "Deklarowane E4/numery z wyszukanych kart nie zostały przepisane do odczytu fizycznego klosza. Plenty nie jest źródłem potwierdzonego używanego egzemplarza.",
+  "counts": {
+    "individually_viewed_large_source_images": 2,
+    "new_collection_photos": 0,
+    "new_devices_confirmed": 0,
+    "new_readable_E_PASS": 0,
+    "confirmed_ON": 0,
+    "night": 0,
+    "ARR_downloads": 0,
+    "saved_screenshots": 0,
+    "Commons_requests": 0,
+    "Flickr_downloads": 0,
+    "parent_edits": 0
+  },
+  "decision": "Krótki dziennik 2 oglądów i 1 niedostępnego źródła, bez powiększania AUX i bez awansu liczników."
+}
