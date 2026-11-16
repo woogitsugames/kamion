@@ -1,6 +1,6 @@
 # 07 — Białystok trasa C / Dojlidy: referencje i luki — WIP
 
-Stan ewidencji głównej na 16.11.2026: **18 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **20 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Wcześniejszy etap:15rekordów głównego manifestu. Są dokumenty, znany kadr ronda,2historyczneMapillary i3nowe link-only fotografieUM. Liczba rekordów nie jest liczbą zdjęć ani kwalifikacji. Poniższe starsze sekcje zachowują historię poprzednich przeglądów; bieżące dodatki wostatnichsekcjach.
 
@@ -74,3 +74,7 @@ Główny manifest12rekordów. [DokumentBIP](route-c-public-plans-round6/README.m
 ## Art20 i zakresB33 — runda13
 
 [speed-law-round13](speed-law-round13/README.md): osobno obejrzane s32–33 urzędowego snapshotuPoRD04.11.2026; limity50/20 oraz80/70 dla zestawu poza zabudowanym z warunkami rodzaju drogi. Rolnicze40 nie jest limitem ciągnika samochodowego. Pełne4 nowelizacje rozporządzenia znakowego sprawdzone dla§27: podwyższającyB33>50 w zabudowanym nie dotyczy ciężkiego zestawu. Bez nadawania limitu konkretnemu kaflowi i bez kompletnego algorytmu znaków. Główny18 bez zmian.
+
+## Batorego — pierwsze nowe historyczne kadry, runda14
+
+[batorego-street-round14](batorego-street-round14/README.md):2nowe link-onlyMapillary grobin18/20.10.2019. Dzień główny: asfalt, krawężniki, lewa zabudowana strona z ogrodzeniami/balkonami i prawa zielona; root dodatkowo obejrzał ten kadr. NocAUX: krawędzie/żywopłot/latarnie, bez identyfikacji technologii i znaków. KomunikatUM05.11.2026 zapowiada roboty wylotu naAndersa do18.12, więc obraz2019 nie potwierdza układu2026. Główny20,0pobrań.

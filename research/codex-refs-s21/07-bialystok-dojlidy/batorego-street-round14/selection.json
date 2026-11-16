@@ -1,0 +1,45 @@
+{
+  "review_date": "2026-11-16",
+  "backlog": "B-123 — Batorego, brak zdjęć referencyjnych",
+  "scope": "Jedna ulica, maksymalnie dwa faktycznie obejrzane kadry; źródła miejskie sprawdzono przed opcją Mapillary",
+  "offline_selection": {
+    "source": "Data/raw/osm/podlaskie-261108.osm.pbf, istniejący lokalny plik; brak nowego żądania OSM/Overpass",
+    "licence": "ODbL 1.0; © OpenStreetMap contributors",
+    "way_id": 231796720,
+    "name": "Stefana Batorego",
+    "middle_stored_vertex_lon_lat": [
+      23.1764408,
+      53.1519503
+    ],
+    "meaning": "Współrzędne wierzchołka osi OSM wyłącznie do wyboru punktu przeglądu. Nie GPS przyszłego zdjęcia ani pomiar wyposażenia."
+  },
+  "municipal_source": {
+    "url": "https://www.bialystok.pl/pl/dla_mieszkancow/drogi_i_inwestycje/utrudnienia-drogowe/utrudnienia-w-ruchu-ul-stefana-batorego.html",
+    "publication": "2026-11-05 13:13 — literalna data publikacji ze źródła, strefa niepodana",
+    "content": "Zapowiedziane roboty przy skrzyżowaniu z Andersa w okresie 05.11–18.12.2026, wyłączenie wylotu i drogi równoległej. Brak indywidualnie obejrzanej fotografii ulicy w tym komunikacie.",
+    "status": "SOURCED tekst; nie dowodzi wykonania każdego zapowiedzianego etapu"
+  },
+  "excluded": [
+    {
+      "source": "EchoBialystok, artykuł 20261105724669",
+      "reason": "Źródło jawnie deklaruje ilustrację AI; obrazu nie użyto"
+    },
+    {
+      "source": "Poranny asfalt-zamiast-kostki-brukowej",
+      "reason": "Brak potwierdzenia właściwego miasta i odcinka; odrzucone przed oglądem fotografii"
+    },
+    {
+      "source": "Biała Podlaska, przebudowa-ulicy-stefana-batorego",
+      "reason": "Inne miasto; odrzucone przed obrazami"
+    },
+    {
+      "source": "Poranny 5488442, znak przy Andersa, publikacja 2012-10-20",
+      "reason": "Trop historycznego detalu znaku; nie jest jeszcze obejrzaną referencją obustronnej ulicy"
+    },
+    {
+      "source": "Poranny 14866927, zdarzenie nocne, publikacja 2020-03-18",
+      "reason": "Trop zdarzenia nocnego; brak potwierdzonej przydatności dla całego układu ulicy; nie obejrzano fotografii"
+    }
+  ],
+  "visual_status": "COMPLETE — dwa kadry grobin indywidualnie obejrzane w Chrome; 18.10.2019 noc i 20.10.2019 dzień; completion_summary wykonane"
+}
