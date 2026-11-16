@@ -459,6 +459,9 @@ REGIONS: dict[str, Region] = {
         bbox=(750347.0, 599295.0, 752395.0, 601343.0),
         origin=(751371.0, 600319.0),
         teryt_powiat="2002",
+        # PRG: 3.95 % of the tile bbox lies in powiat 2008 (west bank of the Narew; powiaty.powiat_shares, world2-finish
+        # 2026-11-17) - its BDOT10k / LoD1/LoD2 are read too (ADR 0208), as for dw671-tykocin-08/-09
+        teryt_powiat_extra=('2008',),
         status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,2) of the ADR 0203 plan)",
     ),
     "dw671-jasionowka-01": Region(

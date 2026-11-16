@@ -107,6 +107,18 @@ Budowa (`highway=construction|proposed`) w kaflach pierścienia: 0 m.
    uproszczonego profilu treści i ten ADR go nie wprowadza. Budować profilem ogólnym, **zmierzyć** `WORLD_MEMORY` Low
    i wpisać do tabel z p. 4. Jeśli suma dwóch sąsiednich kafli przekroczy budżet streamingu Low (200 MB, #114),
    uproszczenie (np. bez far-field poza korytarzem) wymaga osobnej decyzji — otwarte, UNVERIFIED do pomiaru.
+5a. **Kafle narożne bez startu (s23, world2-finish, 2026-11-17).** `dk65-monki-05` (korytarz 163,23 m) i
+   `dw671-tykocin-02` (107,78 m) mają trasę od krawędzi do krawędzi. Start za zamknięciem wjazdowym wymaga
+   ≥ 60 + 0,75 + 11,30 + 0,5 = 72,55 m plus 100 m przed ciężarówką (`RegionStart.MinAheadM`) = 172,55 m (reguła eksportera:
+   90 + 100 = 190 m), więc startu nie da się ustawić danymi; końce trasy (`route_endpoints.json`) to portale korytarza
+   w `tile_graph` (ADR 0235) i nie mogą się zmienić. Decyzja: jawny znacznik authored `no_standalone_start: true`
+   (+ `no_standalone_start_note`) w `route_endpoints.json` → `export-region-catalog.py` zapisuje `noStart: true`
+   (odrzuca znacznik, gdy trasa mogłaby mieć start) → menu startowe pokazuje kafel jako „tylko przejazd” bez wyboru
+   (`GameBootstrap.BuildRegionChoices`), importer loguje informację zamiast błędu braku strefy startu
+   (`WorldSceneBuilder`), testy `test_start_clear_0262.py` i `StartClearanceTests` sprawdzają, że trasa naprawdę jest za
+   krótka; strażnik `test_no_start_marker_only_on_corner_tiles_and_matches_route_endpoints` dopuszcza znacznik tylko
+   na kaflach narożnych z p. 5. `dk65-monki-03` i `monki-e` mają start (414 / 293 m) — bez znacznika.
+   Także: `tykocin` ma 3,95 % bboxa w powiecie 2008 (PRG) → `teryt_powiat_extra=('2008',)` w `regions.py`.
 6. **Kolej:** od ADR 0217 generator ma etap kolei opt-in (`rail=True` we wpisie regionu). Wpisy pierścienia mają
    `rail=False`; przejazd w `monki` i tory w `dk65-monki-04/-06/-07`, `dw671-tykocin-02` — włączyć po scaleniu
    prac kolejowych DK65 (#102), decyzja lidera (zastępuje „Otwarte 3” w części „generator nie ma torów”).

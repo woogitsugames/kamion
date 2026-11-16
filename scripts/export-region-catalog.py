@@ -93,7 +93,18 @@ def derived(region_id: str) -> dict:
         raise SystemExit(f"{region_id}: {route.relative_to(REPO)} missing (scripts/export-route.py)")
     data = json.loads(route.read_text(encoding="utf-8"))
     length = float(data["length_m"])
-    wanted = EDGE_START_S_M if starts_on_region_edge(region_id, data) else SPAWN_S_M
+    on_edge = starts_on_region_edge(region_id, data)
+    wanted = EDGE_START_S_M if on_edge else SPAWN_S_M
+    # ADR 0231 §5a: a corner tile whose corridor stretch is too short for any start behind the entry closure carries the
+    # authored marker no_standalone_start (route_endpoints.json); the catalog gets noStart = true and the start menu does
+    # not offer the tile. The marker is accepted only when it is true: edge route shorter than rule start + MIN_AHEAD_M.
+    endpoints_f = REGIONS / region_id / "route_endpoints.json"
+    if endpoints_f.exists() and json.loads(endpoints_f.read_text(encoding="utf-8")).get("no_standalone_start"):
+        if not on_edge or length >= EDGE_START_S_M + MIN_AHEAD_M:
+            raise SystemExit(f"{region_id}: no_standalone_start on a route of {length} m that has a valid start "
+                             f"(edge route: {on_edge}, needs < {EDGE_START_S_M + MIN_AHEAD_M} m) - remove the marker")
+        return {"routeLengthM": round(length, 2), "startS": round(max(0.0, min(wanted, length - MIN_AHEAD_M)), 2),
+                "noStart": True}
     # authored start (owner decision, survives regeneration): Data/Regions/<id>/route_endpoints.json "start_s_m" moves
     # the start further along the route (e.g. dk65-06: past the roundabout the rule start fell on); never closer to
     # the route start than the rule, so the start stays behind the region-edge closure
@@ -127,6 +138,9 @@ def main() -> int:
             if r.get(k) != v:
                 problems.append(f"{r['id']}.{k}: {r.get(k)} -> {v}")
                 r[k] = v
+        if "noStart" in r and "noStart" not in d:          # marker removed from route_endpoints.json
+            problems.append(f"{r['id']}.noStart: {r['noStart']} -> (none)")
+            del r["noStart"]
     apply_derived_sets(cat, problems)
     for s in cat.get("sets", []):
         for t in s["regions"]:

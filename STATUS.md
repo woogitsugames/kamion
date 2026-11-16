@@ -32,3 +32,4 @@
 - Otwarte: artefakt obręczy kół (atlas Metal, sprzed zmiany) — osobne zadanie; visual-critic renderów.
 - NASTĘPNY KROK (lider): przegląd `git diff origin/main...trailer-763-s23`, visual-critic na `artifacts/trailer-763-s23/`, scalenie;
   po scaleniu w main: `TrailerAssetBuilder.BuildBatch` + `WorldTruckInstaller.InstallBatch` (artefakty _Generated poza gitem).
+- r3 krok 1: noStart dla kafli narożnych dk65-monki-05/dw671-tykocin-02 (route_endpoints no_standalone_start -> katalog noStart -> menu/importer/testy, ADR 0231 §5a); tykocin teryt_powiat_extra 2008. pytest start_clear+qa_tools_0219: 231 passed. NASTĘPNY KROK: łańcuch przebudowy 26 kafli (25 + bialystok-industrial-c; tykocin z build_region).
