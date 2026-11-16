@@ -675,7 +675,7 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                                        ("collision", "collision_fence")):
                         vis = layer == "bridge"
                         _strip(buf, layer, mat, (vbot if vis else bot) + off, (vtop if vis else top) + off,
-                               c.id + ":ramp_wall", both=False, v_abs=vis)
+                               c.id + ":ramp_wall", both=False, v_abs=vis and mat == "ramp_wall_blocks")
                         if sgn > 0:
                             buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
         # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =
