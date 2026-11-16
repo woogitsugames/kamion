@@ -227,3 +227,8 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Rozłączna rezerwacja bez pobrań — runda31
 
 [baseline-remaining-round31](baseline-remaining-round31/README.md):112/114/116/123/124/125 mają wcześniej odczytane licencje/metadane, ale0oglądów. Po wspólnym429zatrzymano przed pierwszym obrazem, bez nowych żądań metadanych/hostów/mirrorów. Brak pasujących lokalnychkopii w ograniczonym przeglądzie nie dowodzi globalnego braku.0przyrostupokrycia/A/B; root osobno zintegrował r30do70/88,18NOT_REVIEWED. Sześćwciążnieobejrzanych.
+
+
+## Dwie używane naczepy — runda32
+
+[europe-used-doors-round32](europe-used-doors-round32/README.md):2pojazdy/5osobnoobejrzanychkadrów, wtym2tyły;0pobrań/screenshotów, tylkoARRlink-only. SchmitzJR48024zamknięte2skrzydła, aleczystość/nakładkaSprzedanePENDING_SURFACE;Krone1099970394jednoskrzydłootwarte, odpada paraZAMKNIĘTA. Szare dolneślady osobno odrdzy, drzwiEST470–520pxw525×700.0A/B/zimy/Europydrogi. WygasłyOLXNOT_REVIEWEDniezwiększaoglądów. Główny23bez zmian.
