@@ -92,3 +92,6 @@ Typu sieci nie przeliczano z kodu na wysokość/rozstaw słupów. Parametr pręd
 ### Nowy przejazd — KE14, 16.11.2026
 
 Jedna nowa scena KPP Mońki z rejonu Knyszyna, niezależnie obejrzana przez agenta i root: dwa toki jednego toru, prostokątne podziały paneli, jasne płyty obok, linie jezdni, bariery, belka zapory i tylne tarcze sygnalizatora. Nadruk22-08-2025 12:58:12 to niezweryfikowany zegar kamery; publikacja10.10.2025 osobno. Dokładne ID/GPS/DW671/29+522, materiał paneli i kategoria A–D UNVERIFIED. Film i kadr tej samej sceny nie zwiększają liczby ekspozycji. Osobny tekst SITK o projekcie z2004 nie jest dowodem wykonania ani wyposażenia tej sceny. Dwa nowe rekordy:1scena+1dokument, wyłącznie link-only ARR, bez pobrań. Szczegóły w [pakiecie KE14](knyszyn-equipment-round14/README.md).
+
+
+R15 budżet: agent i root obejrzeli urzędowe bitmapy stron1/113. Tabela36 lp1 potwierdza historyczne wykonanie przejazdu kat.B z sygnalizacją świetlną i dźwiękową Knyszyn–Krypno, stan31.12.2011. Nie dowodzi LK38/ID/km ani stanu2026. Główny22; zero nowych zdjęć.

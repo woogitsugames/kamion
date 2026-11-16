@@ -1,0 +1,79 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE — nowy historyczny dowód wykonania, bez kilometrażu i ID",
+  "document": {
+    "title": "Uchwała88/1159/2012 Zarządu Województwa Podlaskiego w sprawie przedstawienia rocznego sprawozdania z wykonania budżetu województwa za 2011 rok",
+    "date": "2012-03-27",
+    "url": "https://edziennik.bialystok.uw.gov.pl/WDU_B/2012/2376/Oryginal/akt.pdf",
+    "raw_pdf": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\05-kolej38\\rail-crossing-budget-round15\\uw-2012-2376.pdf",
+    "bytes": 2830021,
+    "sha256": "6d6f48bb68a353cc839cd4ace505e318ec924b7e0fe5d350bad80fea2c6fcaa9",
+    "pages": 282
+  },
+  "locator": {
+    "pdf_page_one_based": 113,
+    "printed_page": 112,
+    "table": 36,
+    "row": 1,
+    "columns": [
+      "Nazwa zadania",
+      "Uwagi"
+    ],
+    "table_reference_date": "2011-12-31"
+  },
+  "claims": [
+    {
+      "id": "05-RB15-C01",
+      "status": "SOURCED",
+      "claim": "Zadanie DW671 Krypno–Tykocin etap I obejmuje przejazd kolejowy na odcinku Knyszyn–Krypno."
+    },
+    {
+      "id": "05-RB15-C02",
+      "status": "SOURCED",
+      "claim": "W wierszu1 zadanie oznaczono jako zakończone, a wykonane wyposażenie obejmuje nowy przejazd kat. B z sygnalizacją świetlną i dźwiękową."
+    },
+    {
+      "id": "05-RB15-C03",
+      "status": "UNVERIFIED",
+      "claim": "Tożsamość z LK38 km 29+522, ID 038029522, konkretnymi kadrami2019/2025 i aktualny stan 2026 nie wynikają z tego dokumentu."
+    }
+  ],
+  "visual_review": {
+    "method": "Ekstrakcja tekstu do lokalizacji; następnie osobny ogląd strony 1 oraz całej stronyPDF 113, w tym większy render dla czytelności wiersza.",
+    "viewed_renders": [
+      "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\05-kolej38\\rail-crossing-budget-round15\\page-1.png",
+      "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\05-kolej38\\rail-crossing-budget-round15\\page-113-large.png"
+    ],
+    "no_figure_claims": "Dokument nie ma w omawianym miejscu rysunku przejazdu ani fotografii nawierzchni.",
+    "time_precision": "Data własnych oględzin bez niezmierzonej godziny."
+  },
+  "limits": [
+    "Dokument nie podaje numeru linii kolejowej przy tym wierszu. KontekstLK38 jest roboczy, a bezpośrednie mapowanie nadal wymaga źródła.",
+    "Brak modelu sygnalizacji, nawierzchni, liczby i napędu rogatek, znakówG3/G4, GPS oraz kilometrażu.",
+    "Długość 9,01 km i szerokość 7,0 m w tym wierszu dotyczą przebudowy drogi w zadaniu; NIE są parametrami szerokości przejazdu i nie zostały wpisane jako jego metryka.",
+    "To sprawozdanie wykonania za 2011 rok przyjęte w 2012, nie aktualna inwentaryzacja2026.",
+    "Nagłówek tabeli wyraźnie wskazuje31.12.2011. W akapicie ogólnym wyżej pada też2012; nie użyto go do ustalenia konkretnego dnia otwarcia przejazdu."
+  ],
+  "http_log": [
+    {
+      "method": "HEAD",
+      "status": 405,
+      "meaning": "Metoda niewspierana; brak challenge/certyfikatowego obejścia."
+    },
+    {
+      "method": "GET",
+      "status": 200,
+      "bytes": 2830021,
+      "max_bytes_guard": 25000000
+    }
+  ],
+  "dedup": "Dokładnego URL, numeru uchwały i tego dowodu nie znaleziono wcześniej w s21/K1. Nie ponawiano niedostępnego gov załącznika z round11 ani mirroru files.girlc.at.",
+  "counts": {
+    "new_public_documents": 1,
+    "new_photographs": 0,
+    "confirmed_crossing_IDs": 0,
+    "confirmed_surface_types": 0,
+    "downloaded_public_document": 1,
+    "media_downloads": 0
+  }
+}
