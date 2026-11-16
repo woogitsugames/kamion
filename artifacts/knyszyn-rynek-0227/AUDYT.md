@@ -238,3 +238,12 @@ Pełny GIS R28 trwa; końcowy wynik pozostaje **OPEN**.
 Lokalne zestawienie `compare/r28/High-clear/14-owner-render.jpg` pokazuje czytelny rząd wiat; w modelu odtworzono cztery wiaty w układzie 3+1. Dach najbliższej wiaty sprawia wrażenie bardziej płaskiego niż na zdjęciu, a wyspa przy pierwszym planie jest zbyt zielona względem widocznej na fotografii ziemi. To ocena przy szacunkowej pozycji kamery i innym oświetleniu, nie pomiar nachylenia ani potwierdzenie akceptacji właściciela.
 
 Pełny GIS R28 trwa; wynik końcowy pozostaje **OPEN**.
+
+
+## R28 — przegląd Rynku z wysokości oczu, kadry 03 i 08
+
+Lokalne porównania `compare/r28/High-clear/03-owner-render.jpg` i `08-owner-render.jpg` zestawiono ze zdjęciami właściciela. Pozycje kamer i oświetlenie są szacunkowe; obserwacje nie stanowią pomiaru ani akceptacji właściciela.
+
+**Kadr 03:** zdjęcie pokazuje aleję na pierwszym planie i czytelny portyk urzędu między drzewami. Na renderze wejście oraz znaczna część budynku są zasłonięte bryłą i koronami, a położenie ścieżki oraz perspektywa nie odpowiadają zdjęciu: ścieżka jest widoczna głównie po prawej i dalej od kamery. Korony drzew wyglądają zbyt regularnie i sztucznie, z ciemnymi pionowymi powierzchniami; wymagają dalszej pracy i porównania przy lepiej dopasowanej kamerze.
+
+**Kadr 08:** mimo podobnego ustawienia postumentu i bloku przed nim figura jest ciemnym, gładkim i uproszczonym proxy, które nie odwzorowuje sylwetki ani detali rzeczywistej rzeźby. Korony w tle są powtarzalne i sztuczne, a układ widocznych alejek i pierzei różni się od fotografii. Pozycja kamery, widoczność masztu i warunki oświetlenia nie są dokładnie dopasowane. Rozpoznawalność pomnika i odbiór całego miejsca pozostają **OPEN**; model zachowuje status `PROXY_NOT_APPROVED`.
