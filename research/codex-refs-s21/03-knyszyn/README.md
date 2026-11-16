@@ -152,3 +152,6 @@ Dwie ekspozycje picturehoover27.06.2020, agent i root osobno w publicznym Mapill
 ### Dom Klattów/Piaseckich — KR18
 
 Dwa nowe NID kadry stanu2015, Joanna Kotyńska-Stetkiewicz, agent i root obejrzeli osobno. Jeden nowy nazwany obiekt,0kopii: cały widoczny długi dach dwuspadowy, oba szczyty, jasne ściany, ganek, sztachety i chodnik. Część detali zasłonięta płotem/drzewem. Osobne tekstowe źródła NID/UM potwierdzają parterowy dom z pierwotnie częściowo zamieszkałym poddaszem, konstrukcję,4słupy ganku i rytm okien; nie wnioskowano tego wyłącznie z obrazu. Datowane dane w [source-facts.csv](klatt-roof-round18/source-facts.csv), bez deklaracji stanu2026 lub metrażu. CC BY-NC-ND3.0PL, tylko link-only.
+
+
+R19 lamus: dwa nowe pełne widoki dachu/podcienia/przyziemia, lipiec i marzec2020 według podpisów NID. Root oba obejrzał:6podpór, ukośne miecze, centralne drzwi, łukowy otwór dachu, podest i drobna kostka. Drugi to front+bok, nie tył. Jeden nazwany lamus. NID osobno opisuje dach czterospadowy, gont i lukarnę powiekową; nie wywiedziono materiału z koloru. NCND tylko linki. Główny46.
