@@ -5,7 +5,7 @@ Gałąź `c-regen3-s23` z `origin/main` `8900a203a`. Pakiet: #123 (typologia, AD
 `bialystok-dojlidy`. Narzędzia: `artifacts/c-regen3-s23/tools/` (kopie c-regen2 z poprawkami), statusy `exit=` per krok.
 
 ## Werdykt: gotowe do scalenia — TAK
-Budżet C High poniżej 2 M, determinizm potwierdzony, EditMode bez nowych błędów, pytest — patrz tabela.
+Budżet C High poniżej 2 M, determinizm potwierdzony, EditMode bez nowych błędów. Pytest na drzewie końcowym: 1 test czerwony z powodu wpisu OD-005 dodanego po przebudowie (`test_export_is_deterministic`, C) — zniknie po przebudowie C; poza tym 0 regresji.
 Zastrzeżenia do decyzji lidera są w sekcji „Otwarte”; najważniejsze: brak `visual-critic` i jedno przejście dla
 pieszych mniej w C (węzeł OSM 2882674807).
 
@@ -49,7 +49,7 @@ pieszych mniej w C (węzeł OSM 2882674807).
 | import C / Dojlidy | exit 0 / exit 0 (`IMPORT_RESULT: OK`, 64 chunki każdy) | 10 min / 9 min 44 s |
 | VQA after (5 komórek) | exit 0 ×5; 0 linii błędów shadera w logach | 2 min 23 s |
 | pełny pytest (1. przebieg) | `tests/gis`: 1878 passed, **1 failed**, 3 skipped, 2 xfailed; `tools/perf/tests` 61 passed | 20 min 2 s |
-| pełny pytest (2. przebieg, drzewo końcowe z OD-005) | PYTEST2_PLACEHOLDER | |
+| pełny pytest (2. przebieg, drzewo końcowe z OD-005) | `tests/gis`: 1877 passed, **2 failed**, 3 skipped, 2 xfailed — oba błędy to skutek wpisu OD-005 bez przebudowy (sekcja OD-005): jeden test poprawiony, jeden zostaje czerwony do przebudowy C | 22 min 53 s |
 
 Before = Reuse jest uzasadnione tym, że `generated/` C i Dojlid w main różniło się od scalenia c-regen2 (`e4fad6868`)
 tylko `fidelity_qa.json`, a sceny `_Generated` w main są z 15.11 16:59 (sprzed c-regen2) — świeże before wymagałoby
@@ -68,6 +68,24 @@ rendery i determinizm w tym raporcie opisują C bez tego wpisu. Odczyt ortofoto 
 Po dopisaniu przeliczone tylko fidelity C (hash wejść obejmuje `overrides.yaml`) i powtórzony pełny pytest.
 Do zrobienia przy następnej przebudowie C: `build_world` + budżet + `qa/seams.py` dla szwu industrial-c | maczka
 (strona maczka dostaje wpis od world2).
+
+**Skutki wpisu w testach (2. przebieg pytest, 2 failed — żaden nie jest regresją #123 / #119 / #93 ani błędem wspólnego `Data/raw`):**
+- `test_rural_xsec_0272.py::test_city_regions_keep_their_side_profiles[bialystok-industrial-c]` — test zakładał, że
+  C nie ma żadnego autorskiego pobocza. **Poprawiony**: dopuszcza wyłącznie wpis `dk8-seam-kerb-od005-c` z
+  `kind: kerb`; Dojlidy nadal bez żadnego. Po poprawce plik przechodzi (razem z `test_road_fidelity.py` i
+  `test_dojbld_0185.py`: 58 passed, 1 xfailed).
+- `test_world_roads.py::test_export_is_deterministic` — **zostaje czerwony do przebudowy C**. Test buduje C w procesie
+  z bieżącymi overrides i porównuje z zacommitowanym manifestem; chunk `0_0` ma inny SHA, bo manifest jest sprzed
+  wpisu. To nie jest niedeterminizm (dwa przebiegi `build_world` przed wpisem były identyczne).
+- Ten sam test nadpisał w worktree `generated/*.json` C wynikiem budowy z wpisem. Pliki przywróciłem do stanu
+  zacommitowanego (zgodnego z GLB i sceną), a kopię zostawiłem jako dowód w `artifacts/c-regen3-s23/od005-inprocess/`.
+  Z tej budowy (pomiar generatora, bez importu i renderów): wpis zastosowany, 0 nieaktualnych, **`stretch_04` High
+  1 984 006 (−1 454), Low 936 363 (−1 401)**, max High w C = 1 984 006; największy spadek `route_onramp_andersa_above` −5 425.
+  Przebudowa z OD-005 budżetu więc nie pogorszy.
+- `fidelity_qa.json` C jest przeliczony po wpisie (liczy sieć dróg z bieżących overrides, nie z GLB), więc
+  `test_report_not_stale` jest zielony, ale raport fidelity opisuje już drogi z OD-005.
+- Komenda domknięcia: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c`
+  → `30-budget.py` → `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` → commit `generated/`.
 
 ## Budżet (zmierzone, `artifacts/c-regen3-s23/regen/budget.log`)
 | | przed (main) | po | zapas / limit |
@@ -148,8 +166,19 @@ baseline 0238 (2 pliki). Cofnięte jako efekty uboczne: `materials_spec.json` (`
 hash `region.yaml` w `build_manifest.json` Dojlid (CRLF), `region.yaml` Dojlid (`manifest_sha256`). Po Unity brak
 diffu w `Rendering/` i `ProjectSettings/`.
 
-## Otwarte
-1. `visual-critic` i porównanie ze zdjęciami właściciela — niewykonane (agent nie tworzy subagentów).
+## Synchronizacja `Data/raw/derived` do main (polecenie lidera)
+W worktree `Data/raw/derived` jest zwykłym katalogiem (kopia, nie junction — sprawdzone atrybuty 4 poziomów i celu).
+`robocopy /MIR` worktree → main, log `artifacts/c-regen3-s23/derived-sync/sync.log`:
+| region | najnowszy plik w main przed | po | skopiowane / pominięte |
+|---|---|---|---|
+| `bialystok-industrial-c` | 2026-11-15 16:54:23 | 2026-11-16 10:29:36 | 197 / 7 z 204, 0 usuniętych |
+| `bialystok-dojlidy` | 2026-11-15 16:34:01 | 2026-11-16 10:48:58 | 203 / 50 z 253, 0 usuniętych |
+
+To jest świat **bez** OD-005 (zgodny z zacommitowanym `generated/`). Nie skopiowane: nowy pickle warstw OSM
+`Data/raw/derived/bialystok_layers_0ff26cd42f175a57_854db555_da2774ff.pkl` (main odtworzy go przy pierwszym
+`build_region`, ok. 20 s) oraz `game/Assets/_Generated` (sceny w main nadal z 15.11 — import w main jest osobnym krokiem).
+
+## Otwarte1. `visual-critic` i porównanie ze zdjęciami właściciela — niewykonane (agent nie tworzy subagentów).
 2. Przejście P-10 przy węźle 2882674807 pominięte po #93 — sprawdzić, czy zgodne z terenem.
 3. Wyspa Putry bez pasa żwiru z ortofoto (cała trawa).
 4. Test budżetu 0238 po przebudowie liczy #123 podwójnie w szacunku per kamera (patrz analiza) — baseline trzeba

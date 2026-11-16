@@ -1230,7 +1230,7 @@
   "osm_drivable_ways_in_tile": 553
  },
  "inputs_sha256": {
-  "overrides.yaml": "2752d7c5002ddfc680555c8406a67f2e6425a2cb8cb0b61dc5d6bea276934664",
+  "overrides.yaml": "74c3c520ebf00712a22c6334dda0c28e0d4b54c2564deb631e7bd7fa7d4e52ed",
   "roads.graph.json": "0d37d43aefef84c2301309e746a40951cb000bccab0aaac9367bfcaa36ddad1f",
   "route_start.json": "b705b4dcc30e73795642d399e8b6fd5cbe792a3585676c6781408da24d3332e1",
   "tools/worldgen/roads/__init__.py": "0c26fa3038394a956286b47576ce1d6a0725f8dc0a2e7682901a055d264a6e40",
@@ -9171,22 +9171,6 @@
   },
   {
    "center_en": [
-    -996.5,
-    58.7
-   ],
-   "gen_islands_absent_on_ortho": 0,
-   "iou": {
-    "gen_m2": 1786.6,
-    "iou": 0.614,
-    "ortho_m2": 1178.4
-   },
-   "junction": "j:n1847317049",
-   "ortho_islands_missing": 0,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
     793.6,
     -805.7
    ],
@@ -9198,6 +9182,22 @@
    },
    "junction": "j:n1883469500",
    "ortho_islands_missing": 2,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
+    -996.5,
+    58.7
+   ],
+   "gen_islands_absent_on_ortho": 0,
+   "iou": {
+    "gen_m2": 1773.4,
+    "iou": 0.617,
+    "ortho_m2": 1176.9
+   },
+   "junction": "j:n1847317049",
+   "ortho_islands_missing": 0,
    "roundabout": false,
    "signalized": false
   },
@@ -9299,6 +9299,22 @@
   },
   {
    "center_en": [
+    -983.5,
+    47.8
+   ],
+   "gen_islands_absent_on_ortho": 0,
+   "iou": {
+    "gen_m2": 1972.9,
+    "iou": 0.637,
+    "ortho_m2": 1511.8
+   },
+   "junction": "j:n1847317043",
+   "ortho_islands_missing": 0,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
     410.5,
     -985.1
    ],
@@ -9325,22 +9341,6 @@
     "ortho_m2": 1049.8
    },
    "junction": "j:n7149112343",
-   "ortho_islands_missing": 0,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
-    -983.5,
-    47.8
-   ],
-   "gen_islands_absent_on_ortho": 0,
-   "iou": {
-    "gen_m2": 1986.1,
-    "iou": 0.638,
-    "ortho_m2": 1513.5
-   },
-   "junction": "j:n1847317043",
    "ortho_islands_missing": 0,
    "roundabout": false,
    "signalized": false

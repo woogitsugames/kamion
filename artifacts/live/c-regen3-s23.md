@@ -11,3 +11,6 @@
 - OD-005: wpis dk8-seam-kerb-od005-c dodany PO przebudowie (C wymaga przebudowy przy okazji). Raport: docs/reports/INTEGRATION-2026-11-16-c-regen3-s23.md.
 - [11:42] W TOKU odlaczone: tools/55-final.ps1 (fidelity C + pelny pytest na drzewie koncowym, ~25 min). Status: artifacts/c-regen3-s23/regen/final.status.
 - NASTEPNY KROK: po 'DONE' w final.status: wpisac wynik pytest-gis2 do raportu (PYTEST2_PLACEHOLDER), git add Data/Regions/bialystok-industrial-c/generated/fidelity_qa.json (tylko inputs_sha256?), commit + push, live KONIEC.
+- [16.11 12:3x] final: fidelity2 exit=0; pytest-gis2 1877 passed / 2 failed - oba skutek OD-005 bez przebudowy: test 0272 poprawiony (dopuszcza tylko dk8-seam-kerb-od005-c), test_world_roads::test_export_is_deterministic (C) CZERWONY do przebudowy C. Budowa w procesie z OD-005: stretch_04 High 1 984 006 (dowod artifacts/c-regen3-s23/od005-inprocess/).
+- Data/raw/derived C i Dojlidy skopiowane do main (/MIR, 0 usunietych; najnowsze pliki 10:29:36 / 10:48:58). Swiat bez OD-005.
+- KONIEC. Werdykt TAK (raport docs/reports/INTEGRATION-2026-11-16-c-regen3-s23.md). NASTEPNY KROK (lider): git merge --no-ff origin/c-regen3-s23 ; przy okazji: uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c (OD-005) -> budzet -> import -> commit generated.
