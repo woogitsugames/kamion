@@ -124,3 +124,5 @@ R25: dwa nowe kadry rzeczywistej żółtej farby na asfalcie DK65, podpisy27/26.
 16.11.2026 R26: nowy szerszy widok orto dk65-09 (280×280m w żądaniu, raster800×800px), root obejrzał. Jasny pas przy SW krawędzi i szerokie otwarte pokrycie; po NE nieregularne korony przed polami. Bez potwierdzenia rowu/przepustu/zjazdu/gatunku/pni; 0,35m/px nie jest dokładnością ani GSD. Data nalotu UNVERIFIED.
 
 R29 pogłębia znany04-TI9-D01:4 wiersze parametrów projektowanych zatokDK65/DZ1 i ramp chodnikowych, osobny oglądPDF44/druk45. Bez nowego dokumentu/zdjęcia i bez join do istniejących przystanków; główny manifest40.
+
+KontraktR29: nowy tekstGDDKiA04.07.2025,6faktów,0fotografii; główny manifest41. Nowa jezdnia7–12,2m to zakres szerokości, nie stare7→nowe12,2. Oddzielono od komunikatu27.02.2026 w06R19 bez tezy o sprzeczności lub odbiorze.

@@ -1,0 +1,41 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE_DOCUMENT_ONLY_PHOTO_TIMEOUT_STOP",
+  "source_url": "https://www.gov.pl/web/gddkia-bialystok/knyszyn--krajowka-jak-nowa",
+  "title": "Knyszyn — krajówka jak nowa",
+  "publisher": "GDDKiA Oddział Białystok",
+  "publication_date": "2025-07-04",
+  "access": "Pełny korpus artykułu odczytany przez web open; cached ref turn1260view0, linie49–63. Ref narzędzia pomocniczy; trwałym źródłem jest URL.",
+  "counts": {"new_text_documents": 1, "photographs_viewed": 0, "downloads": 0, "saved_screenshots": 0},
+  "full_substantive_reading_own_paraphrase": {
+    "intro": "Zawarto umowę rozbudowy DK65 w Knyszynie. Plan obejmuje rondo na skrzyżowaniu DW671 oraz przebudowę infrastruktury technicznej. Komunikat zapowiada ukończenie w styczniu kolejnego roku.",
+    "section_road_scope": "Celem wskazanym w źródle jest poprawa bezpieczeństwa i ruchu. Roboty przewidziano na ponad 400 m. Stara jezdnia ma być zastąpiona nową o szerokości w zakresie 7–12,2 m; po obu stronach przewidziano pobocza bitumiczne 0,75 m. Zapowiedziano wyspy dzielące wloty DK65 i DW671 oraz zamianę ich skrzyżowania na rondo.",
+    "section_other_scope": "Do wybudowania lub przebudowania wskazano chodniki, zjazdy do sąsiednich nieruchomości, odwodnienie w pasie DK65 i DW671 i oświetlenie uliczne. Zakres obejmuje również istniejące sieci elektroenergetyczne oraz telekomunikacyjne. Wskazany wykonawca: Unibep SA."
+  },
+  "numeric_semantics": {
+    "length_m": {"value": ">400", "status": "SOURCED_SCOPE", "section": "Zakres prac drogowych"},
+    "new_carriageway_width_m": {"min": 7, "max": 12.2, "status": "SOURCED_RANGE_NEW_ROADWAY", "warning": "Zakres nowej szerokości, nie przejście ze starej7 do nowej12.2. Starej szerokości źródło nie podaje."},
+    "bituminous_shoulders_each_width_m": {"value": 0.75, "sides": "obustronne", "status": "SOURCED_SCOPE", "warning": "Nie żwir ani szerokość z fotografii."},
+    "deadline": {"source_meaning": "styczeń przyszłego roku", "calendar_normalization": "2026-01", "normalization_status": "ESTIMATED_CALENDAR_INFERENCE_FROM_PUBLICATION_DATE", "completion": "UNVERIFIED"}
+  },
+  "comparison_reference_only": {
+    "existing_package": "06-region-ring/knyszyn-dw671-project-round19",
+    "source_url": "https://www.gov.pl/web/gddkia-bialystok/realizujemy-kolejne-inwestycje-na-dk65",
+    "publication_date": "2026-02-27",
+    "existing_summary": "Trwające prace; opis poszerzenia7→12m; zapowiedź lata.",
+    "independent_reopen_this_round": false,
+    "conclusion": "Osobne datowane źródła. Brak rozstrzygnięcia przyczyny różnic zakresu/sformułowania/terminu; nie uznano automatycznie za sprzeczność lub różne inwestycje."
+  },
+  "photo": {
+    "exact_unviewed_url": "https://www.gov.pl/photo/format/f2657fb2-ac9e-450e-b7d7-7a60653a9d05/resolution/1920x810",
+    "result": "Jedno kliknięcie w web zakończone TimeoutError; STOP bez ponowienia i wariantów",
+    "viewed": false,
+    "browser_attempt": false,
+    "visual_description": null,
+    "photographer": "UNVERIFIED",
+    "licence_footer": "CC BY-NC-ND4.0, o ile nie wskazano inaczej; wyłącznie link, brak kopii"
+  },
+  "text_licence": {"type": "CC BY-SA4.0", "basis": "Stopka tej strony, pełny odczyt w web linia111", "attribution": "GDDKiA Oddział Białystok; opracowanie własne lampy"},
+  "dedup": "ExactURL i slug komunikatu2025 bez trafień w całym s21 i K1 przed zapisem; istniejącego komunikatu2026 nie liczono jako nowego dokumentu.",
+  "limits": ["Brak źródłowego kilometrażu i GPS robót.", "Brak liczby lub wymiarów konkretnych zjazdów.", "Bez nowego kadru żwirowego pobocza.", "Wszystkie parametry zapowiedzianego zakresu; nie pomiar ani dowód odbioru.", "Nie zmieniono parentów lub poprzednich interpretacji2026."]
+}
