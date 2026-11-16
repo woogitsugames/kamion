@@ -85,6 +85,10 @@ Maszyna deweloperska (Ultra 7 270K Plus, 64 GB, RTX 5070, D3D12) — **NIE refer
 - Ścieżka Androida po wydzieleniu `ComposeBuildScenes` jest skompilowana i objęta testami `RegionSelectTests`; build
   APK po tej zmianie nie był wykonywany (UNVERIFIED).
 
+**Zmiana (ADR 0276):** skróty `Kamion-<region>.cmd` powstają dla każdego regionu w buildzie (z logu buildu, po rozwinięciu
+zestawów), obok `Kamion-okno.cmd`; build dostaje `build-id.json` ze skrótem zawartości `Kamion_Data` (suma `Kamion.exe` jest
+w każdym buildzie taka sama — to launcher Unity).
+
 ## Otwarte
 - **Jazda po Knyszynie tym exe nie jest możliwa dalej niż do zapory** — po `spawn-fix-0262` potrzebny reimport regionów
   i ponowny build (regiony w worktree to kopia `_Generated` z main z 15.11 ~20:50).

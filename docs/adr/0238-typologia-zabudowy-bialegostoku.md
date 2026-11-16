@@ -71,3 +71,56 @@ zmianą; bloki z płaskim dachem — identyczną liczbę trójkątów (test na C
    `BLOCK_ETICS_SHARE = 0.7` (WORKING_VALUE) w `buildings_mesh.py`; zmiana wartości wymaga renderu i `visual-critic`.
 4. Budynki gospodarcze mają zawsze płaski dach; słownik kodów dachu LoD2 nadal bez cytatu (R4 „Luki”).
 5. `far_field.py` ma własny przelicznik kondygnacji (WORKING_VALUE) — nie ruszany.
+
+## Dopisek D32 (16.11, s23 r8): test bit-identyczności czerwony na main — szum zmiennoprzecinkowy w dachach domów
+**Objaw.** `test_authored_and_untouched_buildings_are_bit_identical` padał na main `8401944b6` (lokalnie i w CI `gis`,
+ubuntu): Dojlidy 18 rozbieżności, C 43 — wszystkie `house`/`dom`, różnice ±1…17 trójkątów w `roof_*`, `soffit_boards`,
+ścianach. **Hipotezy odrzucone (liczby):** (a) baseline sprzed c-regen3 / (b) `BASE_M` — wysokości tych 61 domów są z
+`gugik_lod1_2024` i ich właściwości w `buildings.geojson` nie zmieniły się w c-regen3 (poza `osm_building` w 3); (c) konflikt
+`storey_plan` — rozwiązany zgodnie z recenzją #123 (`storeys_fixed` + bez linii `lo, hi`), test regresji przechodzi; domy
+nie przechodzą przez gałąź `office/block`. **Przyczyna (d):** ten sam kod sprzed #123 (`ade885234`) na tych samych danych
+daje inne liczby na Linuksie (CI, chmura) niż baseline zacommitowany przez lidera (Windows) i przez FIX #123 — dokładnie dla
+tych 61 domów. Generator dachu był chaotyczny: przesunięcie obrysu o 1e-9 m zmieniało trójkąty 51 z 415 budynków Dojlid
+i 74 z 644 w C. Źródła: (1) kawałki pokrycia `exp ∩ face` i podbitki z operacji boolowskich zostawiały wierzchołki leżące
+NA prostej krawędzi (węzły styku innej połaci) albo kilka µm od innego wierzchołka — które przetrwały, zależało od
+ostatnich bitów; (2) `MultiRoof.profile` dzieliła ścianę biegnącą WZDŁUŻ krawędzi domeny / zmiany płaszczyzny w losowych
+punktach (znak `fa·fb` przy |fa|,|fb| ~ 1e-12).
+**Naprawa u źródła** (`streetscape/roofs.py`, `PLAN_TOL_M = 1 mm`): regiony połaci w `faces`, kawałki pokrycia i podbitki
+w `build` przechodzą `_clean` (simplify 1 mm + siatka 1 mm); w `profile` przecięcie liczy się tylko przy |fa − fb| > 1 mm.
+Po zmianie przesunięcie 1e-9 m zmienia 3 / 415 (Dojlidy) i 1 / 644 (C) budynków; z 61 rozbieżnych domów niestabilne
+zostają 2 (obydwa w C, wyłącznie test w izolacji) — patrz „Otwarte 6”.
+**Baseline przeliczony** wg procedury FIX-2026-11-16 (kod `ade885234` = bez #123, z łatką `roofs.py`; dane `origin/main`),
+bo zmiana dotyczy generatora „przed” i „po” tak samo. Suma harnessu kodem sprzed #123: Dojlidy LOD0 500 659 → 499 592
+(−1 067), LOD1 68 391 → 67 636 (−755); C 963 831 → 962 030 (−1 801), 101 067 → 99 981 (−1 086) — usunięte drzazgi.
+Kamery (harness, Δ samej łatki): C wszystkie 23 ≤ 0, `stretch_04` High −1 070 / Low −1 070 (szacunek 1 984 390 ≤ 2 M),
+Dojlidy 17 ≤ 0 (max `route_s0761` −717). Test nie był luzowany; nowy test regresji
+`test_house_triangles_do_not_depend_on_float_noise` (8 domów, 1e-9 / 1e-7 m) pada na kodzie sprzed łatki.
+Zmiana `generated/` (C, Dojlidy i każdy region z domami spadzistymi) dopiero przy przebudowie lidera.
+
+### D32 r2 (CI na #159: C `bdot:2BE4B431-B14F` 510 vs 524)
+CI (Linux, CPython 3.12.16 standalone, uv 0.13.8) i chmura (Linux, CPython 3.12.3 systemowy oraz 3.12.13 standalone)
+mają te same pakiety z `uv.lock` (numpy 2.5.4, shapely 2.2.0, scipy 1.18.1), a oba Pythony w chmurze dają 524. Różnica
+nie wynika więc z wersji, tylko z szumu na poziomie ULP (CPU / libm), który trafiał w progi:
+- **B14F:** okap szczytu wychodził jako `zt = 130.65000000000003` albo `130.64999999999998`, a od niego zależy próg okna
+  poddasza (`attic_window`): jedno okno więcej lub mniej (−14 trójkątów = 510). Naprawa: profil górnej krawędzi ściany
+  (`Roof.profile`, `MultiRoof.profile`) zaokrąglany do 1 µm (`PROFILE_DECIMALS = 6`).
+- **B45E:** pas szerokości < 1 mm między płaszczyznami obwiedni, którego nie przejmowała żadna połać, pojawiał się albo
+  znikał (±1 trójkąt). Naprawa: pas węższy niż `SLIVER_M = 5 mm` (2 × pole / obwód) przechodzi do połaci o najdłuższej
+  wspólnej krawędzi (`MultiRoof.faces`).
+
+Wynik: wszystkie 61 domów rozbieżnych na main jest stabilnych przy przesunięciach od 1e-12 do 1e-6 m. W C żaden budynek
+nie zmienia się przy przesunięciach 1e-12, 1e-9, 1e-7 i 1e-6 m. W Dojlidach zostają `…A8BC` (orientacja `_frame`), hala `…BC59` (doki), `rosti-west-wing`
+(wywietrzaki). Test regresji obejmuje teraz także B14F i B45E (10 domów; 1e-12 / 1e-9 / 1e-7 m).
+Baseline przeliczony tą samą procedurą (kod `ade885234` z łatką `roofs.py`, dane `origin/main`). Suma harnessu względem
+kodu sprzed łatki: Dojlidy LOD0 500 659 → 499 578 (−1 081), LOD1 68 391 → 67 636 (−755); C 963 831 → 962 027 (−1 804),
+101 067 → 99 980 (−1 087). Wszystkie 23 kamery C i 17 kamer Dojlid mają Δ ≤ 0: `stretch_04` High −1 071 (szacunek
+1 984 389), Dojlidy `photo_P11-063` −518.
+Sprawdzone i odrzucone: kąt `_angle` hal liczony modulo π naprawia siatkę świetlików (Dojlidy `…BAD2` 600 / 660 przy
+przesunięciu 1e-12 m), ale przestawia świetliki w innych halach: 4 kamery dostają +22…+77 High (C `fire_station_abeam`
++46). Zmiana byłaby więc niezerowa dla budżetu i nie weszła do tego PR.
+
+## Otwarte (dopisek D32)
+6. Pozostałe progi „na ostrzu” (nie systemowe): orientacja `_frame` przy prawie kwadratowym prostokącie (Dojlidy
+   `…A8BC`); hale: siatka świetlików zależna od `_angle` ±π (`…BAD2`, C `…C4AC`, poprawka gotowa, ale +≤77 High na
+   4 kamerach — decyzja lidera), doki `…BC59`, wywietrzaki `rosti-west-wing`. Lider: po scaleniu uruchomić
+   `test_typology_0238.py` na Windows — oba środowiska muszą dać 24/24.
