@@ -56,10 +56,11 @@ odróżnia dwóch buildów; (c) skróty `Kamion-knyszyn.cmd` / `Kamion-knyszyn-w
    rozwinięciu zestawów / aliasów / zakresów przez `RegionBuildList` i po `-RegionsAllowMissing` (nie z katalogu: katalog nie
    wie, czego zabrakło). `GameBootstrap` przyjmuje `-scene <id|alias>` (→ scena regionu dla aktywnego tieru), co potwierdził
    przebieg int-pc-s23 (`-scene knyszyn`, `-scene knyszyn-w`). Id spoza `[a-z0-9-]` nie dostaje skrótu (ochrona linii cmd).
-9. **Do paczki testera: tylko `Kamion-okno.cmd`** (README go opisuje). `Kamion-<region>.cmd` są wykluczane wzorcem
-   (`Kamion-*.cmd` poza `Kamion-okno.cmd`): tester wybiera region w menu startowym; 21 plików w korzeniu paczki to szum;
-   skróty mają sztywne okno 1600×900 i służą deweloperowi (ADR 0271 wykluczał już `Kamion-knyszyn.cmd`, ale nie
-   `Kamion-knyszyn-w.cmd` — teraz reguła jest jedna).
+9. **Do paczki testera: `Kamion-okno.cmd` zawsze, a `Kamion-<region>.cmd` regionów, które są w buildzie** (zmienione przy
+   integracji int-h3-s23, decyzja lidera). Pierwotnie #142 wykluczał wszystkie `Kamion-*.cmd` poza `Kamion-okno.cmd`; to przeczyło
+   celowi skrótów per region dla testerów. Obowiązuje reguła ADR 0271 (uzupełnienie s23): launcher z `-scene <x>` trafia do zipa,
+   gdy scena/region `<x>` jest w buildzie (log buildu, inaczej `build.json` + katalog regionów). Wyjątek deweloperski
+   `DEV_LAUNCHERS` (`Kamion-knyszyn.cmd`) usunięty: skrót startuje region knyszyn i testerzy dostają go, gdy knyszyn jest w buildzie.
 10. `build-windows.ps1`: krok po buildzie przez Python (uv, w razie braku `python`/`python3`/`py -3`); błąd kroku = exit 5
     (player zbudowany, ale bez identyfikacji). Nowe `-Package [-PackageArgs …]` (propozycja ADR 0271) i przenoszenie
     `*_DoNotShip` do `artifacts/win/symbols/<build>/` zamiast kasowania (propozycja ADR 0271).

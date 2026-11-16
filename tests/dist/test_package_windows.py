@@ -52,8 +52,9 @@ def make_build(root: Path, name: str = f"kamion-0.1.0-{SHA}-regions", dev: bool 
         "Kamion.content.json": b"{}",
         "Kamion.top.txt": b"top",
         "Kamion.variants.txt": b"v",
-        "Kamion-knyszyn.cmd": b"@echo off\r\n",
-        "Kamion-knyszyn-w.cmd": b"@echo off\r\n",          # ADR 0276: every region launcher stays out
+        # region launchers (build-windows.ps1); the default build.json has no regions -> both stay out (int-h3-s23 rule)
+        "Kamion-knyszyn.cmd": b'@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 0 -scene knyszyn %*\r\n',
+        "Kamion-knyszyn-w.cmd": b'@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 0 -scene knyszyn-w %*\r\n',
         "Kamion_Data.sha256": b"manifest\n",
     }
     if dev:
@@ -260,16 +261,16 @@ def test_region_launcher_set_d67_has_no_knyszyn_w(tmp_path):
     b = _with_launchers(make_build(tmp_path, build_json={"version": "0.1.0", "sha": SHA, "regions": "d67", "regionsFile": ""}))
     shipped, excluded = _plan_names(b)
     assert "Kamion-knyszyn-w.cmd" in excluded
-    assert "Kamion-knyszyn.cmd" in excluded          # developer shortcut (ADR 0271 §2) even with knyszyn in the build
+    # int-h3-s23 (leader): was a developer shortcut (ADR 0271 §2); now the knyszyn start for testers when knyszyn is built
+    assert "Kamion-knyszyn.cmd" in shipped
 
 
-def test_region_launcher_kamion_prefix_never_ships(tmp_path):
-    # ADR 0276 (int-h3-s23): every Kamion-<region>.cmd is a developer shortcut, even with its region in the build;
-    # the tester picks the region in the start menu, only Kamion-okno.cmd ships.
+def test_region_launcher_ships_when_region_in_build(tmp_path):
+    # int-h3-s23 (leader): no developer-only exception any more - Kamion-knyszyn.cmd ships when knyszyn is in the build.
     b = _with_launchers(make_build(tmp_path, build_json={"version": "0.1.0", "sha": SHA, "regions": "d67,knyszyn-w"}))
     shipped, excluded = _plan_names(b)
-    assert "Kamion-okno.cmd" in shipped
-    assert "Kamion-knyszyn-w.cmd" in excluded and "Kamion-knyszyn.cmd" in excluded
+    assert "Kamion-knyszyn-w.cmd" in shipped and "Kamion-okno.cmd" in shipped
+    assert "Kamion-knyszyn.cmd" in shipped
 
 
 def test_other_scene_launcher_ships_only_when_region_in_build(tmp_path):
