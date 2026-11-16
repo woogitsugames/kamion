@@ -15,6 +15,7 @@ class Buffer:
 
     def add(self, layer, mat, V, UV, T, src="", **kwargs):
         self.vertices.append(np.asarray(V))
+        self.parts.append((layer, mat, np.asarray(V), np.asarray(UV), np.asarray(T), np.asarray(kwargs.get("COL"))))
 
 
 def group(**kwargs):
@@ -54,6 +55,21 @@ def test_invalid_model_or_species_fails():
     bad["points_en"][0][4] = "shrub"
     with pytest.raises(ValueError, match="does not support species"):
         build(bad)
+    for value in (-.1, 1.1, float("nan"), True, "0.8"):
+        with pytest.raises(ValueError, match="invalid low_center_occlusion"):
+            build(group(crown_model="garden_trial", low_center_occlusion=value))
+
+
+def test_low_occlusion_trial_only_changes_low_vertex_colours():
+    before, rep_before = build(group(crown_model="garden_trial"))
+    after, rep_after = build(group(crown_model="garden_trial", low_center_occlusion=.8))
+    assert rep_before == rep_after and len(before.parts) == len(after.parts)
+    changed=[]
+    for a,b in zip(before.parts,after.parts):
+        assert a[:2] == b[:2]
+        assert all(np.array_equal(a[i],b[i]) for i in (2,3,4))
+        if not np.array_equal(a[5],b[5]): changed.append(a[0])
+    assert changed and set(changed)=={"plots_low"}
 
 
 def test_r8_replaces_only_r7_accepted_stems_with_preserved_heights():

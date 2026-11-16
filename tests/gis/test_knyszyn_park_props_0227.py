@@ -70,7 +70,7 @@ def test_terrain_nan_drops_objects_without_writing_invalid_mesh():
     assert not buf.parts and len(r["refused"])==3+len(props.BENCHES)+len(props.LAMPS)
 
 
-def test_king_proxy_has_crowned_head_and_cheaper_low_geometry():
+def test_king_proxy_has_crowned_head_and_valid_geometry():
     outputs = {}
     for layer in props.LAYERS:
         acc = Acc()
@@ -86,14 +86,9 @@ def test_king_proxy_has_crowned_head_and_cheaper_low_geometry():
         # Head and three separated crown tips make this a figure rather than a pillar.
         assert np.isclose(vertices[:,2].max(), 3.39)
         tips = vertices[np.isclose(vertices[:,2], 3.39), :2] @ props.KING_TANGENT
-        assert np.any(tips < -.1) and np.any(np.abs(tips) < .05) and np.any(tips > .1)
-        # Arms extend forward and to both sides above the pedestal.
-        arms = vertices[(vertices[:,2] > 1.7) & (vertices[:,2] < 2.7) &
-                        ((vertices[:,:2] @ props.KING_FORWARD) > .3)]
-        sides = arms[:,:2] @ props.KING_TANGENT
-        assert sides.min() < -.4 and sides.max() > .4
-    assert outputs["buildings"] > outputs["buildings_low"]
-    assert outputs["buildings"] <= 200 and outputs["buildings_low"] <= 160
+        assert np.any(tips < -.07) and np.any(np.abs(tips) < .05) and np.any(tips > .07)
+    assert outputs["buildings"] == outputs["buildings_low"]
+    assert outputs["buildings"] <= 200
 
 
 def test_memorial_forecourt_and_sundial_face_town_hall():
@@ -142,18 +137,19 @@ def test_proxy_bird_and_sundial_are_on_monuments_and_double_sided():
         assert len(gt)==2 and np.allclose(gv[:2,2],.762) and np.isclose(gv[2,2],.96)
 
 
-def test_king_arms_and_crown_are_separate_and_low_has_beard():
+def test_king_cloak_has_continuous_profile_and_crowned_head():
     acc=Acc(); props._king(acc,"buildings_low",[0.,0.],0.)
     pieces=acc.d[("buildings_low","steel_painted")]
     crowns=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].max(),3.39)]
     assert len(crowns)==3
     assert all(np.isclose(v[:,2].min(),3.25) for v in crowns)
-    beard=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].min(),2.75)
-           and np.isclose(v[:,2].max(),3.02)]
-    assert beard
-    arms=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].min(),1.73)
-          and np.isclose(v[:,2].max(),2.57)]
-    assert arms
+    body=[(v,t) for v,t,*_ in pieces if len(v)==48 and len(t)==88]
+    assert len(body)==1
+    vertices,faces=body[0]
+    assert np.allclose(np.unique(vertices[:,2]),[1.05,1.70,2.35,2.55,2.70,2.80,3.05,3.16])
+    assert np.ptp(vertices[:6,:2]@props.KING_TANGENT) > np.ptp(vertices[-6:,:2]@props.KING_TANGENT)
+    assert all(np.cross(vertices[t[1]]-vertices[t[0]],vertices[t[2]]-vertices[t[0]])[2]>0
+               for t in faces[-4:])
 
 
 def test_flagpole_low_preserves_spiral_and_high_geometry():

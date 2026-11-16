@@ -948,7 +948,8 @@ def tree_dims(r, species, key, in_plot=True):
     return round(H, 2), round(min(cb, 0.45 * H), 2), sprite
 
 
-def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False):
+def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False,
+                low_center_occlusion=None):
     """A broadleaf garden tree in the plot kit (ADR 0163), habit by species: the stem to the crown base, crossed whole-
     crown cards (the habit's silhouette with its limbs), and - full variant of the dense habits - the crown's dark
     core and leaf sprays lying on its skin, so it is a volume from every side and from above, not a paper cross.
@@ -978,6 +979,8 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         hj = 0.97 + 0.10 * PLT.hfloat(key, "ch", i)
         off = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.24 * r
         shade = 0.50 + 0.10 * PLT.hfloat(key, "co", i) if lite and core and DENSE[species] > 0.0 else None
+        if shade is not None and low_center_occlusion is not None:
+            shade = low_center_occlusion
         PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards, occ_mid=shade)
     dense = DENSE[species]
     occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
@@ -1230,6 +1233,10 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
         crown_model = o.get("crown_model", "kit")
         if crown_model not in ("kit", "garden_trial", "linden_study_r3"):
             raise ValueError(f"tree_groups {o['id']}: unknown crown_model {crown_model!r}")
+        low_center_occlusion = o.get("low_center_occlusion")
+        if low_center_occlusion is not None:
+            if crown_model not in ("garden_trial", "linden_study_r3") or not isinstance(low_center_occlusion, (int,float)) or isinstance(low_center_occlusion, bool) or not math.isfinite(low_center_occlusion) or not 0.0 <= low_center_occlusion <= 1.0:
+                raise ValueError(f"tree_groups {o['id']}: invalid low_center_occlusion")
         spw = o.get("species") or {"maple": 1.0}
         if any(s not in KIT_SPECIES for s in spw):
             raise ValueError(f"tree_groups {o['id']}: form kit knows {sorted(KIT_SPECIES)}")
@@ -1260,7 +1267,8 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
             if crown_model in ("linden_study_r3", "garden_trial"):
                 # Study keeps the previous Low mesh exactly; its High/Low crown
                 # silhouettes differ and the switch still needs visual QA.
-                garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=2, core=True)
+                garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=2, core=True,
+                            low_center_occlusion=low_center_occlusion)
             else:
                 _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=True)
             if groups is None:

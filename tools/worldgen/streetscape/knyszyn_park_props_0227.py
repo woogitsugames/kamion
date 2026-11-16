@@ -94,29 +94,34 @@ def _king(acc, layer, at, z):
     body = np.asarray(at, float)
     def pos(x, forward): return body + KING_TANGENT*x + KING_FORWARD*forward
     bronze = "steel_painted"
-    # The open silhouette is intentionally human: wide tapered cloak, a
-    # narrower neck and head, and arms visible at either side of the torso.
-    _frustum(acc,layer,bronze,body,z+1.05,z+2.64,1.00,.58)
-    _box(acc,layer,bronze,body,z+2.49,z+2.73,.34,.21,KING_TANGENT)  # shoulders
-    for side in (-1, 1):
-        c = pos(side*.49,.24)
-        acc.box(layer,bronze,_p(c,z+2.15),np.r_[KING_TANGENT*.10,0],
-                np.r_[KING_FORWARD*.10,0],np.r_[-side*KING_TANGENT*.035,.42],skip=(0,))
-    _box(acc,layer,bronze,body,z+2.72,z+2.84,.10,.10,KING_TANGENT)  # neck
-    _box(acc,layer,bronze,body,z+2.82,z+3.18,.19,.17,KING_TANGENT)  # head
-    _box(acc,layer,bronze,body,z+3.16,z+3.25,.22,.19,KING_TANGENT)  # crown band
+    # WORKING_VALUE: one continuous six-sided cloak, sloping shoulders, neck
+    # and small head. Photo 8 supplies the overall shape, not facial details.
+    rings=((1.05,.50,.30),(1.70,.48,.30),(2.35,.40,.27),(2.55,.35,.23),
+           (2.70,.18,.15),(2.80,.12,.12),(3.05,.14,.12),(3.16,.11,.10))
+    vertices=[]
+    for height,rx,ry in rings:
+        for i in range(6):
+            angle=2*math.pi*i/6
+            vertices.append(_p(pos(rx*math.cos(angle),ry*math.sin(angle)),z+height))
+    faces=[]
+    for j in range(len(rings)-1):
+        for i in range(6):
+            a=j*6+i; b=j*6+(i+1)%6; c=b+6; d=a+6
+            faces.extend(((a,b,c),(a,c,d)))
+    faces.extend((42,42+i,42+i+1) for i in range(1,5))
+    acc.add(layer,bronze,vertices,faces)
+    _box(acc,layer,bronze,body,z+3.16,z+3.25,.14,.12,KING_TANGENT)  # crown band
     # The narrow raised points make the crown readable even on the cheap LOD.
     # Keep the top at the earlier proxy's height; no emblem or lettering.
-    for x in (-.15, 0., .15):
-        triangle=[_p(pos(x-.04,.19),z+3.25),_p(pos(x+.04,.19),z+3.25),
-                  _p(pos(x,.19),z+3.39)]
+    for x in (-.09, 0., .09):
+        triangle=[_p(pos(x-.025,.12),z+3.25),_p(pos(x+.025,.12),z+3.25),
+                  _p(pos(x,.12),z+3.39)]
         acc.add(layer,bronze,triangle,[[0,1,2],[2,1,0]])
-    # A small projecting beard also survives Low; the statue remains a proxy.
-    _box(acc,layer,bronze,pos(0,.18),z+2.75,z+3.02,.12,.045,KING_TANGENT)
-    if layer == "buildings":
-        # Small projecting hands add depth in the close High view.
-        for side in (-1, 1):
-            _box(acc,layer,bronze,pos(side*.49,.24),z+1.72,z+1.88,.09,.10,KING_TANGENT)
+    # WORKING_VALUE: raised V suggests the photographed chain; no insignia/text.
+    for side in (-1,1):
+        a=pos(side*.22,.205); b=pos(0,.289)
+        c=pos(side*.205,.215); d=pos(0,.299)
+        acc.quad(layer,bronze,_p(a,z+2.54),_p(b,z+2.20),_p(d,z+2.20),_p(c,z+2.54))
     # Separate sundial/plaque block on paving in front of figure, blank.
     p=body+KING_FORWARD*KING_BLOCK_DISTANCE_M
     _box(acc,layer,"plinth_grey",p,z,z+.75,.65,.40,KING_TANGENT)
