@@ -55,7 +55,8 @@ DEFAULT_SPEED_KMH = 50.0     # road without maxspeed: as roads.markings (`sec.ma
 U1_FIRST_M = 4.0             # § 79 pkt 5 lit. a: nearest posts 4 m from the outer rails
 U1_STEP_M = 3.0              # § 79 pkt 5 lit. a: every 3 m
 U1_LAST_M = 19.0             # § 79 pkt 5 lit. a: over 15-20 m of road from the outer rails -> 4, 7, ... 19 m (span 15 m)
-U1_BARRIER_GAP_M = 1.0       # WORKING_VALUE: first post this far outside the devices (§ 79 pkt 5 lit. b: no numbers)
+U1_BARRIER_GAP_M = 1.5       # WORKING_VALUE: first post this far outside the devices (§ 79 pkt 5 lit. b: no numbers);
+                             # 1.0 m put the post of a skew crossing within 1 m of the left-hand signal mast (dropped)
 U1_LATERAL_M = 0.75          # WORKING_VALUE: post axis behind the carriageway edge (Dz.U. 2019 poz. 2311 zał. 4 not read)
 U1_BEHIND_SHOULDER_M = 0.25  # WORKING_VALUE: post axis behind the outer edge of a ground shoulder (ADR 0272 edges)
 G1_BOTTOM_Z_M = 1.00         # WORKING_VALUE: lower edge of a G-1 plate above the ground (UNVERIFIED)
