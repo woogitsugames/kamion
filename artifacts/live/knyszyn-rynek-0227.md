@@ -250,3 +250,7 @@
 - 2026-11-16 02:53 +01:00 — R15 cztery warianty i 22 porównania lokalne OK. Król: kontur poprawiony, nadal PROXY_NOT_APPROVED; szwy lip bez poprawy, próba koloru wycofana. High max 1 250 401 tris PASS, Low +63 draws vs before FAIL; R15 vs R14 max +22 tris i draws bez zmian. Kolejna przebudowa potrzebna po wycofaniu próby.
 - NASTĘPNY KROK: `git status -sb; Get-Content artifacts/knyszyn-rynek-0227/r15.done` 
 
+
+- 2026-11-16 03:01 +01:00 — R16 uruchomione: eksperyment czterech obwodowych kart koron Low bez wzrostu tris oraz korekta korony/łańcucha figury PROXY_NOT_APPROVED. 21 testów kierunkowych passed; pełne GIS i EditMode po zmianie OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r16.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r16.done` 
+
