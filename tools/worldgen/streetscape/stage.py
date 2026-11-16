@@ -24,6 +24,12 @@ from . import signs_route as SR
 from . import gate as GT
 from . import depot_yard as DY
 from . import hero_building as HBD
+from . import knyszyn_church_0227 as KC
+from . import knyszyn_townhall_0227 as KT
+from . import knyszyn_park_props_0227 as KP
+from . import knyszyn_market_0227 as KM
+from . import knyszyn_market_buildings_0227 as KMB
+from . import knyszyn_fountain_0227 as KF
 from . import hero_depot as HD
 from . import landmarks as LM
 from . import chain_bollards as CB
@@ -46,7 +52,9 @@ def _yard_src(src, origin, overrides):
            if f["props"].get("materialnawierzchni") != "grunt naturalny"]
     out += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
             if a["tags"].get("amenity") == "parking"]
-    out += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - np.asarray(origin)) for o in overrides
+    out += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - np.asarray(origin),
+                                     [np.asarray(h, float) - np.asarray(origin) for h in o.get("holes_epsg2180", [])])
+            for o in overrides
             if o.get("kind") == "paved_area"]
     return out
 
@@ -99,18 +107,18 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     fc = json.loads((pipeline.REGIONS / rid / "buildings.geojson").read_text(encoding="utf-8"))
     # hero buildings (override kind: hero_building, ADR 0070): authored asset instead of the rule facade
     heroes = HBD.plan(rid, overrides, fc, w.origin, lambda e, n: float(np.asarray(zsmooth(e, n)).ravel()[0]), rep, log)
-    blds = BM.load(fc, w.origin, overrides, hero=HBD.targets(heroes))
-    yard_src = [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_PTPL_A"]
-                if f["props"].get("materialnawierzchni") != "grunt naturalny"]
-    yard_src += [PV._poly_local(a["geometry"]["coordinates"], w.origin) for a in src["osm"]["areas"]
-                 if a["tags"].get("amenity") == "parking"]
-    yard_src += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - origin) for o in overrides
-                 if o.get("kind") == "paved_area"]
+    blds = BM.load(fc, w.origin, overrides,
+                   hero={**HBD.targets(heroes), **KC.hero_targets(rid, fc), **KT.hero_targets(rid, fc),
+                         **KMB.hero_targets(rid, fc)})
+    yard_src = _yard_src(src, w.origin, overrides)
     yard_union = shapely.union_all([shapely.make_valid(p) for p in yard_src] + [roads_poly])
     brep = {}
     facade_signs = []
     depots = HD.plan(w, rid, overrides, blds, zsmooth, log)      # hero depot halls (override kind: hero_depot, ADR 0071)
     docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs, heroes=depots)
+    KC.build(w.buf, rid, blds, zsmooth, rep)
+    KT.build(w.buf, rid, blds, zsmooth, rep)
+    KMB.build(w.buf, rid, blds, zsmooth, rep)
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])
@@ -165,6 +173,14 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     rep["terrain_soft_nodes"] = int(soft.sum())
     zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask)
     zc = CF.tidy(zc, zjoin, mask, dist)
+    # Explicit park surfaces use lawn-level paving instead of deep yard skirts.
+    # Keep all other ground and surfaces on the existing conformance path.
+    flush_items = [p for p in paved if p.get("park_flush") is True]
+    if flush_items:
+        flush_mask = PV.rasterize_polys([p["poly"] for p in flush_items], hf)
+        other_mask = PV.rasterize_polys([p["poly"] for p in paved if p.get("park_flush") is not True] +
+                                        [p["poly"] for p in plot_paved], hf)
+        zc = PV.conform_park_flush(zc, pz, flush_mask, rmask | other_mask | deck_mask)
     bmask = PV.rasterize_polys([b["poly"] for b in blds], hf)
     zc = np.where(bmask & ~mask, np.minimum(zc, sm), zc)        # ground under buildings never above the floor
     wkeep = np.zeros(mask.shape, bool)
@@ -193,6 +209,10 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
 
     def zsurf(e, n):
         return PV.bilinear(zsurf_g, hf, np.asarray(e, float), np.asarray(n, float))
+
+    KP.build(w.buf, rid, w.origin, overrides, zsurf, rep)
+    KM.build(w.buf, rid, w.origin, overrides, zsurf, rep)
+    KF.build(w.buf, rid, w.origin, overrides, zsurf, rep)
 
     def zground(e, n):
         return PV.bilinear(zc, hf, np.asarray(e, float), np.asarray(n, float))
@@ -347,6 +367,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     col = VG.ground_masks(src, origin, hf, dist, forests, forest_cleared)
     col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # no grit strip around the lawns (ADR 0114)
     col = CS.ground_colour(col, site_mask, hf, sites, PV.rasterize_polys)   # ADR 0214: sand on construction sites
+    col = VG.authored_bare_ground(col, hf, origin, overrides, mask | bmask)
     # ADR 0132: grown garden trees of the house plots (orthophoto crowns) join the tree instances - same prototypes,
     # LODs and impostors as every street tree; none closer than 2.5 m to a tree the region already has there
     ptrees = plots.get("trees") or []

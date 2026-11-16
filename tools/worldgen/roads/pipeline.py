@@ -47,12 +47,29 @@ def load_overrides(region_id: str) -> list:
     return data.get("overrides", []) or []
 
 
+def effective_graph(region_id: str, graph: dict | None = None) -> dict:
+    """roads.graph.json with the graph-level authored overrides applied (ADR 0274 `carriageway_split`): the graph the
+    network is built from. Route search and anything else that walks graph edges next to the generated network uses
+    this one, so its nodes and edge geometry match the chains."""
+    from . import carriageway_split as CS
+    graph = graph or json.loads((REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8"))
+    return CS.apply(graph, load_overrides(region_id), [], [])
+
+
 def ctx_local(ctx, origin):
     ox, oy = origin
     pts = [dict(p, e=p["x"] - ox, n=p["y"] - oy) for p in ctx["points"]]
     from shapely.geometry import LineString
     foot = [LineString(np.array(f["geometry"]) - np.array([ox, oy])) for f in ctx["footways"]]
     return pts, foot
+
+
+def _authored_paved_polygon(override, origin):
+    """Place an authored paved footprint in local coordinates, including voids."""
+    from shapely.geometry import Polygon
+    offset = np.asarray(origin, float)
+    return Polygon(np.asarray(override["polygon_epsg2180"], float) - offset,
+                   [np.asarray(h, float) - offset for h in override.get("holes_epsg2180", [])])
 
 
 def build_network(region_id: str, graph: dict | None = None):
@@ -111,7 +128,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
                  if f["props"].get("materialnawierzchni") != "grunt naturalny"]
         polys += [Polygon(np.array(a["geometry"]["coordinates"][0]) - np.array(origin)) for a in src["osm"]["areas"]
                   if a["tags"].get("amenity") == "parking"]
-        polys += [Polygon(np.array(o["polygon_epsg2180"]) - np.array(origin)) for o in overrides if o.get("kind") == "paved_area"]
+        polys += [_authored_paved_polygon(o, origin) for o in overrides if o.get("kind") == "paved_area"]
         yards = shapely.union_all([shapely.make_valid(p) for p in polys])
         shapely.prepare(yards)
     # ADR 0188: cycle tracks (OSM) planned once on the network; markings (P-11 + red crossing), the kerb drops of
