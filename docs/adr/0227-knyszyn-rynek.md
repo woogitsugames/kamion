@@ -135,4 +135,13 @@ SOURCED: ortofoto GUGiK 2025, arkusz `83186_1484206_N-34-106-B-b-1-2.tif`, EPSG:
 
 ESTIMATED: ręcznie odczytane naroża czterech dachów i fragmenty nawierzchni z georeferencyjnego ortofoto; szczegółowe cztery obrysy EPSG:2180 i szacowana tolerancja w `TYPOLOGIA.md`. Identyfikacja długiego obiektu `bdot:2002917F-465A-5C99-E053-CC2BA8C01CFC` i pawilonu `bdot:de62e5a9-3c83-4023-9e77-03b8844df001` względem zdjęć jest ESTIMATED; obrysy BDOT są SOURCED. Środek korony świerka jest ESTIMATED, a pień zasłonięty.
 
-WORKING_VALUE: wysokości i przekroje słupów wiat, sposób ich posadowienia, wysokość pawilonu, detale elewacji i stołów, proporcje modelu drzewa oraz pozycja kamery względem zdjęcia 14. Pomiar dachu nie jest geodezyjną pozycją słupów; należy uwzględnić nieznane przesunięcie rzutu. R24: wykonanie kodu, obraz po imporcie, zgodność zdjęcie–render, maski kolizji i budżet kamer **OPEN** — nie są zatwierdzeniem wizualnym. Zdjęcia wyłącznie lokalna referencja, bez tekstur i bez Git.
+WORKING_VALUE: wysokości i przekroje słupów wiat, sposób ich posadowienia, wysokość pawilonu, detale elewacji i stołów, proporcje modelu drzewa oraz pozycja kamery względem zdjęcia 14. Pomiar dachu nie jest geodezyjną pozycją słupów; należy uwzględnić nieznane przesunięcie rzutu. Historyczny stan R24 wymagał sprawdzenia obrazu, kolizji i budżetu; nowszą ocenę R26 podano poniżej. Zdjęcia wyłącznie lokalna referencja, bez tekstur i bez Git.
+
+
+## R26–R27 — targowica po korekcie
+
+R26: lokalne zestawienia `compare/r26/Low-clear/12-owner-render.jpg`, `13-owner-render.jpg` i `14-owner-render.jpg` pokazują targowicę we właściwym położeniu: cztery wiaty w układzie 3+1, długi budynek, pawilon i pasy. W porównaniu z R25 wyspa ma ziemistą powierzchnię, a baza placu jest czystsza. Dopasowanie zdjęć pozostaje **OPEN**: nawierzchnia nadal różni się jasnością, a czarna łata wlotu między wiatami jest widoczna. Ujęcia 12–13 z drona są pomocnicze; kryterium rozpoznawalności dotyczy poziomu oczu, zdjęcie 14.
+
+W R26 High spełnia limit 2 mln tris: maksimum **1 250 321** na kamerę, z instancjami. Low względem pierwotnego before nadal **FAIL**: `dk65-inlet-south` 240 → 304 draw calls. W porównaniu R25 → R26 na 9 kamerach draw calls spadły maksymalnie o 1; żadna z 75 kamer nie pogorszyła się. To szacunki edytora, nie pomiary GPU.
+
+R27: przygotowywany jest ograniczony do placu, opt-in wizualny podział łaty wlotu, bez zmiany kolizji; **render, budżet, testy i ocena wizualna R27 OPEN** do potwierdzenia po przebudowie. Nie traktować tego opisu jako akceptacji właściciela.

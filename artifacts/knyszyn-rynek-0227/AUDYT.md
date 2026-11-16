@@ -200,4 +200,13 @@ Pełny GIS: **1769 passed, 22 skipped, 2 xfailed** po lokalnej regeneracji danyc
 
 Wcześniej błędnie utożsamiono targowicę z sąsiednim placem `OSM way/704368699`; `market-ortho-crop.jpg` ucinał właściwy obszar przy północnej wiacie. Poszerzony lokalny wycinek `market-south-ortho-check.jpg` z arkusza GUGiK 2025 `83186_1484206_N-34-106-B-b-1-2.tif` (EPSG:2180, 0,1 m/piksel) ujawnia cztery dachy w układzie 3+1, pasy, pawilon i długi budynek, wizualnie zgodne ze zdjęciami właściciela. Arkusz i zdjęcia są referencjami, nie teksturami.
 
-SOURCED: ortofoto 2025 i obrysy BDOT dwóch budynków. ESTIMATED: ręczny odczyt okapów (tolerancja odczytu około 0,5–1 m plus nieustalone przesunięcie rzutu dachu), obrysy nawierzchni, identyfikacja obiektów i kamera. WORKING_VALUE: szczegóły, wysokości wiat i pawilonu, słupy oraz elementy wyposażenia. Cztery obrysy i ID BDOT są zapisane w `TYPOLOGIA.md`. Ocena obrazu R24, kolizji i budżetu **OPEN** do ukończenia przebudowy i sprawdzenia kadrów.
+SOURCED: ortofoto 2025 i obrysy BDOT dwóch budynków. ESTIMATED: ręczny odczyt okapów (tolerancja odczytu około 0,5–1 m plus nieustalone przesunięcie rzutu dachu), obrysy nawierzchni, identyfikacja obiektów i kamera. WORKING_VALUE: szczegóły, wysokości wiat i pawilonu, słupy oraz elementy wyposażenia. Cztery obrysy i ID BDOT są zapisane w `TYPOLOGIA.md`. Historyczny stan R24 wymagał sprawdzenia obrazu, kolizji i budżetu; nowszą ocenę R26 podano poniżej.
+
+
+## R26–R27 — porównanie targowicy i łata wlotu
+
+Porównania R26 Low-clear zdjęć 12–14: `compare/r26/Low-clear/12-owner-render.jpg`, `13-owner-render.jpg`, `14-owner-render.jpg` (lokalnie; zdjęcia nie są teksturami ani zawartością Git). Targowica jest już we właściwym miejscu, z wiatami 3+1, długim budynkiem i pawilonem. Względem R25 wyspa jest ziemista, a baza placu czystsza. Nadal widoczne są różnice jasności względem zdjęć oraz czarna łata wlotu między wiatami. Dopasowanie, w tym kadr 14 z poziomu oczu i ocena właściciela, pozostaje **OPEN**.
+
+R26 High: maksimum **1 250 321 tris** z instancjami, poniżej limitu 2 mln na kamerę. Low vs before: **FAIL**, `dk65-inlet-south` 240 → 304 draw calls. R25 → R26: na 9 kamerach liczba draw calls spadła maksymalnie o 1, żadna z 75 kamer nie pogorszyła się. Wartości są szacunkami edytora, nie pomiarem GPU/telefonu.
+
+R27: przygotowywany opt-in wizualny podział łaty wlotu, bez zmiany kolizji. **OPEN:** wykonanie przebudowy i renderów R27, pomiar budżetu, testy oraz ocena zdjęcie–render; nie uznawać planu za wynik.
