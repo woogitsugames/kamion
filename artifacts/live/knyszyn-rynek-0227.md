@@ -274,3 +274,7 @@
 - 2026-11-16 04:16 +01:00 — EditMode R18 677 passed, 0 failed, 2 skipped; pełny GIS R18 trwa, dotychczas bez błędów. Pomiary Low i niewystarczające pozy kamer opisane; następna korekta tylko po zakończeniu testów.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r18.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/gis-r18.done` 
 
+
+- 2026-11-16 04:20 +01:00 — Pełny GIS R18: 1647 passed, 21 skipped, 3 xfailed; EditMode R18: 677 passed, 2 skipped. Przygotowywana korekta dwóch dodatkowych kamer, następnie R19 i ponowna kontrola po zmianie danych kamer.
+- NASTĘPNY KROK: `git status -sb; Get-Content artifacts/knyszyn-rynek-0227/gis-r18.done` 
+
