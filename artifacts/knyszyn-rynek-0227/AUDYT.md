@@ -153,3 +153,11 @@ Dodatkowy pomiar jednej kamery `dk65-inlet-south`, Low-clear, w tej samej scenie
 | Bez pojazdu i far-field | 236 | 130 519 | 2 |
 
 W tej scenie i tym kadrze pojazd odpowiada za 63 szacowane draws i 26 333 tris, far-field za 4 draws i 5 174 tris. Ukrycie rendererów służyło wyłącznie diagnozie; formalnym wynikiem pozostaje pełna scena: Low względem before **FAIL**. Zbieżność 240 draws bez pojazdu z 240 w historycznym before nie dowodzi przyczyny całej różnicy: brakuje analogicznego rozbicia i jednakowego stanu dawnej sceny. Runner QA przywrócono bajtowo po pomiarze; diagnostyki nie włączono do produktu ani do testu akceptacyjnego.
+
+## Iteracja r18 — pełny budżet
+
+Dane `r18/{Low,High}-{clear,dusk}/stats.txt` obejmują po 72 kamery we wszystkich czterech wariantach; clear i dusk mają identyczne wyniki geometryczne. Dla 70 wspólnych kamer r17 → r18 nie zmieniły się draws, tris, shadow draws ani liczba rendererów. High **PASS**: maksimum 1 250 401 tris z instancjami (`cab-mirror-front`), maksimum 848 draws (`tykocka-into-town`). Maksima Low: 369 575 tris (`grodzienska-podlaska`) i 489 draws (`goniadzka-jagiellonska`).
+
+Dwie nowe kamery bez baseline before ani r17: `rynek-king-back-0227` Low 364 draws / 340 477 tris, High 594 / 847 374; `rynek-king-profile-0227` Low 273 / 270 450, High 372 / 473 360. Suma obejmuje siatki i instancje.
+
+Low względem before nadal **FAIL**: na 34 z 50 kamer o tych samych nazwach wzrosły draws, maksymalnie 240 → 303 (+63, `dk65-inlet-south`); tris wzrosły na 42, maksymalnie 272 290 → 310 078 (+37 788, `truck-side`). Before zawiera 51 nazw, r18 72; dawna `rynek-fountain` nie ma potwierdzonego odpowiednika do porównania. Szacunki CPU edytora przed SRP batchingiem nie są pomiarem GPU ani telefonu; ograniczenia porównania i diagnostykę jednej kamery opisano powyżej.
