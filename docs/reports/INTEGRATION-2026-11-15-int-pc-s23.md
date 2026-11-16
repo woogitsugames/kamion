@@ -16,6 +16,7 @@ Dowody: `artifacts/int-pc-s23/` (main), testy `artifacts/tests/`, logi `artifact
 | 7 | origin/main `5f51007ee` (spawn-fix-0262) | `cc3e1ee90` | konflikt tylko w docstringu `export-region-catalog.py`; katalog wygenerowany skryptem |
 | 8 | origin/main `c6160684a` (chain_bollard.png, docs) | `8701306fd` | — |
 | 9 | pc-fix-s23 `c2ba3d5bb` (#131 + #136 z poprawkami P1) | `a73ffe6f3` | czysto |
+| 10 | origin/main `6e6fe972f` (spawn-fix r2, rail_bed.png w gicie) | `d8ec3751c` | czysto; `--check` katalogu 0 |
 
 Żaden PR nie zmienia `ProjectSettings/`, `Packages/`, asmdef. Bez konfliktów poza pozycją 7.
 Commity własne (skrypty): `ced70db9d` + `5db51c343` (`import-region.ps1 -BuildTarget Android|Win64`), `e28533ca3`
@@ -30,7 +31,7 @@ Commity własne (skrypty): `ced70db9d` + `5db51c343` (`import-region.ps1 -BuildT
 | #135 | EditMode `PcGraphicsTierAssetTests` 6/6, `PcGraphicsTierTableTests` 8/8; build + zrzuty 4 tierów + autodetekcja (§4) | **do main**, z P2 o cieniach Low/Medium (§4) |
 | #133 | EditMode `PadKeyboardInputTests` 21/21, `WindowsBuildTests` 5/5; pad fizyczny UNVERIFIED | **do main** |
 | #132 | EditMode `ForceFeedbackModelTests` 12/12, `PcWheelDataTests` 7/7, `PcWheelInputTests` 30/30; `dotnet test tools/physics-runner` 277/277; kierownica fizyczna UNVERIFIED | **do main** |
-| #131 + #136 (pc-fix-s23) | EditMode `MenuInputGateTests` + `PcAutoTierTests` 19/19; PlayMode `PcHudSolverTests` 3/3 | patrz §6 (build końcowy) |
+| #131 + #136 (pc-fix-s23) | EditMode `MenuInputGateTests` + `PcAutoTierTests` 19/19; PlayMode `PcHudSolverTests` 3/3 | **do main** (build i zrzuty: §6) |
 | spawn-fix-0262 (z main) | EditMode `StartClearanceTests` + `RegionSelectTests` 65/65 po reimporcie 21 regionów; PlayMode `RouteSpawnTests` 4/4; zrzuty startu 7 regionów (§3) | zweryfikowane w playerze |
 
 Przebiegi pełne EditMode:
@@ -41,7 +42,8 @@ Przebiegi pełne EditMode:
   Niezaliczony: `StreetLampOpticsTests.SodiumTint_HasTheLedLuminance` (oczekiwane 0,93694, jest 0,94206). **Nie pochodzi
   z PR-ów H ani pc-fix** (nie dotykają lamp ani `lighting_profiles.json`); przed scaleniem main test przechodził, a main
   wniósł `346654291` (lighting-0216b: `lighting_profiles.json`, `RegionLightingProfiles.cs`). Do naprawy u autora
-  lighting-0216b; nie naprawiane tutaj. Wynik testu uruchomionego osobno: §6.
+  lighting-0216b; nie naprawiane tutaj. Klasa uruchomiona osobno przechodzi 10/10 (`editmode-20261116-035729.xml`) — błąd zależy od kolejności testów
+  (stan statyczny). **Otwarte, nie z PR-ów H.**
 - PlayMode: PR-y H nie dodają testów PlayMode; pc-fix dodaje `PcHudSolverTests` (3/3).
 
 `dotnet` z PATH nie ma SDK — potrzebne `DOTNET_ROOT=%LOCALAPPDATA%\Microsoft\dotnet` (jak w `docs/PHYSICS_VALIDATION.md`).
@@ -82,13 +84,49 @@ coś, czego obraz nie pokazuje. Przyczyna niezbadana (UNVERIFIED: ustawienie tie
 warianty shaderów assetów ładowanych z Resources). Dowody: `artifacts/int-pc-s23/tiers-shadow/`.
 
 ## 5. Wejście w playerze
-- Klawiatura / pad / kierownica fizycznie: **UNVERIFIED** (bez urządzeń i bez fokusu okna z procesu w tle; próba
-  wstrzyknięcia klawisza — §6).
-- Ścieżka kodu: log `[CONTROLS] pc-input installed schema=…` (PcInputBridge, #133) — §6; testy EditMode z tabeli §2.
+- **Klawiatura: ZWERYFIKOWANA w playerze** (exe `e28533ca31`, `scripts/win-key-drive.ps1 -Scene knyszyn -Keys W -TapFirst Space
+  -HoldSeconds 12`, okno z fokusem): `[CONTROLS] cmd t=16.48 parking=toggle`, `thr=1.00`, po 12 s `v=35.3` km/h; zrzut
+  z 34 km/h na biegu D7. Dowód: `artifacts/int-pc-s23/keys/` (`player.log`, `shot.jpg`). Sprawdzone tylko W i spacja;
+  pozostałe klawisze — testy EditMode.
+- **Pad i kierownica fizycznie: UNVERIFIED** (brak urządzeń). Ścieżka kodu: log `[CONTROLS] pc-input installed schema=1
+  overrides=no` (PcInputBridge, #133) w każdym przebiegu jazdy + testy EditMode z §2.
 
-## 6. Build końcowy z pc-fix (HEAD `e28533ca3`)
-W TOKU w chwili zapisu tej wersji raportu — uzupełnienie w następnym commicie (`artifacts/int-pc-s23/chain4.status`).
+## 6. Build końcowy (z pc-fix: #131 + #136)
+- **Exe: `C:\Users\matma\Documents\Claude\kamion\artifacts\win\kamion-0.1.0-e28533ca31-regions\Kamion.exe`**
+  (kod `e28533ca3`; `BUILD_RESULT: Succeeded errors=0 warnings=7`, 507 s, folder 4 941 MB, 189 plików, 21 regionów
+  `d67-full`, treść High). Log `artifacts/logs/build-win-20261116-035803.log`. Etykieta w playerze `e28533ca31-dirty`.
+- **Start w Knyszynie dla właściciela: `…\kamion-0.1.0-e28533ca31-regions\Kamion-knyszyn.cmd`** (okno 1600×900,
+  `-scene knyszyn`). Obok: `Kamion-okno.cmd` (menu w oknie), `Kamion-knyszyn-w.cmd` (region knyszyn-w).
+  Jazda: spacja zwalnia hamulec postojowy, W/S gaz/hamulec, A/D kierownica (reszta: ADR 0261/0264).
+- Zrzuty obejrzane (`artifacts/int-pc-s23/final2/`):
+  - `knyszyn.jpg` — start: jezdnia wolna, zapora w lusterkach; **HUD PC (#131): tylko lusterka, pasek prędkości/biegu
+    i przycisk „Panel”; dotykowa kierownica, pedały i selektor zniknęły, nic nie zasłania widoku z kabiny.**
+  - `knyszyn-drive.jpg` — autopilot 46 km/h, D9, obraz poprawny.
+  - `menu.jpg` — menu startowe z nowymi przyciskami („Ustawienia sterowania”, „Informacje”, „Ekran, grafika, dźwięk”),
+    lista regionów 1/21. **Usterka wizualna (P2): nakładka diagnostyczna (KAMION / Device / GPU / FPS…) nachodzi na tytuł
+    i pierwszy przycisk menu** — tekst na tekście.
+- Logi: `[SETTINGS] pc load source=Defaults … pc apply startup … tier=auto` oraz `[BOOT] desktop default tier High: VRAM
+  11943 MB` — „auto” z #136 nie nadpisuje autodetekcji #135 (poprawka P1 działa); `-tier Low` → `URP_PC_Low`. Brak wyjątków.
+- Menu klikane myszą/padem w playerze: nie sprawdzane ręcznie (UNVERIFIED); bramka wejścia — test `MenuInputGateTests`.
+- **Ten exe nie zawiera spawn-fix r2** (main `6e6fe972f`, scalony do gałęzi po buildzie jako `d8ec3751c`; zmienia
+  `SpawnSafety`, `DrivingLabBootstrap`, `RouteSpawnTests`). Testy po tym merge: §6a.
 
+## 6a. Po merge spawn-fix r2 (`d8ec3751c`)
+- EditMode dotknięte klasy (`StartClearanceTests`, `RegionSelectTests`, `MenuInputGateTests`, `PcAutoTierTests`,
+  `PadKeyboardInputTests`, `PcWheelInputTests`): **135/135** — `artifacts/tests/editmode-20261116-041031.xml`.
+- PlayMode `RouteSpawnTests` + `PcHudSolverTests`: **8/8** — `artifacts/tests/playmode-20261116-041142.xml`.
+- Pełny EditMode: **847 / 845 / 1 niezaliczony / 1 pominięty** — ten sam `StreetLampOpticsTests.SodiumTint_HasTheLedLuminance`
+  (kolejnościowy, z main) — `artifacts/tests/editmode-20261116-041223.xml`.
+- Buildu Windows z `d8ec3751c` nie było (UNVERIFIED w playerze dla r2); komenda:
+  `pwsh scripts/build-windows.ps1 -Slot -Regions d67-full` (ok. 9 min w tym worktree).
+
+## 6b. Werdykt
+**Gałąź `int-pc-s23` gotowa do scalenia do main: TAK, z jednym zastrzeżeniem** — pełny EditMode ma 1 niezaliczony test
+(`StreetLampOpticsTests.SodiumTint_HasTheLedLuminance`), który nie pochodzi z integrowanych PR-ów (kolejnościowy, pojawił się
+po scaleniu main z lighting-0216b; na samym main nie był tu uruchamiany — UNVERIFIED). Zawiera: #129, #130, #132, #133,
+#134, #135, #131 + #136 (pc-fix-s23), main do `6e6fe972f`, poprawki skryptów (`import-region.ps1 -BuildTarget`,
+`build-windows.ps1` launchery). Bez zmian `ProjectSettings/`, `Packages/`, asmdef.
+Scalenie: `git merge --no-ff origin/int-pc-s23`. Po scaleniu PR-y #129–#136 można zamknąć jako scalone przez tę gałąź.
 ## 7. P2 z recenzji, które warto zrobić (kolejność wg wpływu)
 1. **#135** cienie Low/Medium na PC (wyżej) + P2-2 `globalTextureMipmapLimit = 1` na Low rozmywa też znaki i tablice.
 2. **#133 P2-1** `PcInputBridge` instaluje się także na Androidzie — sprawdzić na telefonie przed następnym APK.
@@ -106,9 +144,8 @@ W TOKU w chwili zapisu tej wersji raportu — uzupełnienie w następnym commici
   treść jest w `Kamion_Data` / `GameAssembly`/`Managed`. Suma nie identyfikuje buildu — potrzebna suma zawartości
   (np. manifest sum plików folderu) w `build.json`.
 - **Pliki generowane poza gitem blokują import na świeżym checkoucie**: `art-source/world/textures/chain_bollard.png`
-  (już w main, `6db16ef5f`) i **`rail_bed.png`** (dw671-tykocin-01; zapisuje go `build_world.py`, nie ma go w main ani
-  w żadnym worktree). Tu wygenerowany: `uv run --project tools/worldgen python tools/worldgen/streetscape/rail_textures.py
-  art-source/world/textures/rail_bed.png` (nie commitowany). Do decyzji: git albo generowanie w `import-region.ps1`.
+  i `rail_bed.png` (dw671-tykocin-01) — oba dodane do main w trakcie tej integracji. Warto dodać do `doctor.ps1`/importu
+  kontrolę, że każda tekstura z `world_manifest.json` istnieje.
 - **`import-region.ps1` uruchamia `build_all.py` po każdej kopii worktree**: robocopy zachowuje daty PNG, a `_src/*.py`
   dostają datę checkoutu → „171 older than _src”. Przy obciążonej maszynie proces (BelowNormal) stał 6 min z 14 s CPU,
   trzymając slot Unity. Obejście: przywrócić daty `_src` z main. Trwale: porównywać sumy, nie daty.
