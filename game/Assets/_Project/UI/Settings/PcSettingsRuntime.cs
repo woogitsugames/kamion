@@ -150,7 +150,12 @@ namespace Game.UI.Settings
 
         public static void ApplyDisplay(PcDisplaySettings d)
         {
-            var mode = ToUnity(d.mode);
+            bool d3d12 = SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Direct3D12;
+            string effective = ExclusiveFullscreenPolicy.Effective(d.mode, d3d12, System.Environment.GetCommandLineArgs());
+            if (effective != d.mode)
+                Debug.Log("[SETTINGS] display mode " + d.mode + " -> " + effective + " on Direct3D 12 (crash-diag-s23: Present 887a0001 in exclusive full screen; " +
+                          ExclusiveFullscreenPolicy.AllowArgument + " to test)");
+            var mode = ToUnity(effective);
             int w = d.width, h = d.height;
             if (d.UsesNativeResolution)
             {
