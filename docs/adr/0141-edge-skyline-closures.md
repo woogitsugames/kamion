@@ -1,6 +1,6 @@
 # ADR 0141 — Map edge and background: far skyline beyond the Low far plane, road closures in render groups
 
-Status: implemented on branch `edge-r6c` (base main `76c88d4fd`, main `611f116c9` merged in, 2026-11-12, s13); not merged.
+Status: Accepted (merged to main 2026-11-12, `ca0bc16e0`; status updated 2026-11-16); originally: implemented on branch `edge-r6c` (base main `76c88d4fd`, main `611f116c9` merged in, 2026-11-12, s13); not merged.
 A visual-critic review is still required; the D51 notes below are the author's. Phone: NOT measured (see Risks).
 Source: ADR 0129 open point "kominy EC poza far clip Low (1187 m > 900 m)", ADR 0126 open point "kominy EC za
 pierzeją", GPT handover `edge-r6` (B9 skyline, closures), ADR 0082 / 0085 / 0121 (map edge, far-field), ADR 0116 (EC stacks).

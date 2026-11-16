@@ -1,6 +1,6 @@
 # ADR 0079 - Adaptive HUD layout for 1:1 … 21:9 screens and foldables
 
-Status: proposed (gameplay-ui), 2026-11-10. Phone verification UNVERIFIED (no adb used by this agent; the owner's
+Status: Accepted (merged to main 2026-11-10, `ba74b1e47`; status updated 2026-11-16); originally: proposed (gameplay-ui), 2026-11-10. Phone verification UNVERIFIED (no adb used by this agent; the owner's
 Galaxy Z Fold inner screen and the A16 are the lead's check). Supersedes the fixed 1920×1080 height-matched layout of
 the driving HUD, the control-settings panel, the start menu and the diagnostics overlay. D39 (developer panel stays in
 the APK) is kept.

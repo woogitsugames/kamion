@@ -1,5 +1,5 @@
 # ADR 0176 — Synteza warstw bez nagrań: retarder, zdarzenia hamulca silnikowego, fazy AMT, osuszacz v2
-Status: Proposed (agent audio, s17), 2026-11-13. Ocena brzmienia: właściciel (głośnik telefonu i słuchawki).
+Status: przyjęty (scalony do main 2026-11-13, `27f4127f8`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent audio, s17), 2026-11-13. Ocena brzmienia: właściciel (głośnik telefonu i słuchawki).
 Kontynuacja ADR 0007 (warstwy sterowane fizyką), 0012 (perspektywa kabiny), 0134 (synchronizacja AMT hamulcem silnikowym),
 0142 (zestaw ElevenLabs), 0145 (opony).
 

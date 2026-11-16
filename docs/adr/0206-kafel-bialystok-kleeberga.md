@@ -1,5 +1,5 @@
 # ADR 0206 — drugi kafel Białegostoku na trasie D64: `bialystok-kleeberga` (DK8/DK65 Maczka zachód + Kleeberga)
-Status: Proposed (agent world-builder, s20, gałąź `bialystok-dk65-t2-0206`, baza `origin/bialystok-dk65-0203` @ 42d3c47f6),
+Status: przyjęty (scalony do main 2026-11-15, `4320d3b6a`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `bialystok-dk65-t2-0206`, baza `origin/bialystok-dk65-0203` @ 42d3c47f6),
 2026-11-15. Scalać **po** 0203 (plan trasy, `junction_topview.py`, region `bialystok-maczka`).
 Powiązane: D63, D64 (`docs/11`), ADR 0203 (plan 17 kafli), ADR 0166/0174 (potok regionu ≠ C).
 

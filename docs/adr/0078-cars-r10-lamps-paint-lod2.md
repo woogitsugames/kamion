@@ -1,6 +1,6 @@
 # ADR 0078: Zaparkowane auta r10 — lampy pod kloszem, lakier dwuwarstwowy, sylwetka LOD2, brud
 
-- Status: proposed (truck-artist, 2026-11-10); ocena wizualna należy do `visual-critic`
+- Status: przyjęty (scalony do main 2026-11-11, `2ab23b251`; status zaktualizowany 2026-11-16); pierwotnie: proposed (truck-artist, 2026-11-10); ocena wizualna należy do `visual-critic`
 - Kontekst: po r9 (ADR 0073) auta miały sylwetkę, ale z 4–8 m nadal czytały się jak gra mobilna: lampy i grill jako
   płaskie naklejki 6–10 mm nad blachą, opony bez bieżnika, lakier jednowarstwowy (brak głębi clear coatu i płatka),
   LOD2 jako pudełko ≤ 60 trójkątów, film drogowy na tyle jako prostokąty o twardych krawędziach.

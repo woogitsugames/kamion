@@ -1,6 +1,6 @@
 # 0182 — Zmierzch = koniec zmierzchu cywilnego (stała ekspozycja od latarni) + model brudu tyłu naczepy
 
-Status: kandydat (gałąź `dusk-0182`), nie scalone. Data: 2026-11-13. Dotyczy: ADR 0010 (kamery kontrolne), 0016 (look/D23), 0062 (zmierzch), 0108 (noc).
+Status: przyjęty (scalony do main 2026-11-13, `1be00a4f0`; status zaktualizowany 2026-11-16); pierwotnie: kandydat (gałąź `dusk-0182`), nie scalone. Data: 2026-11-13. Dotyczy: ADR 0010 (kamery kontrolne), 0016 (look/D23), 0062 (zmierzch), 0108 (noc).
 
 ## Problem (recenzja s18 0178, P2)
 1. **Zmierzch za jasny** — czytał się jak „ciemniejszy pochmurny dzień”: tabela ekspozycji podążała za zmierzchem (jak tryb nocny telefonu),

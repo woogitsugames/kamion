@@ -1,6 +1,6 @@
 # ADR 0264 — Pad i klawiatura „pełne”: krzywe, limit skrętu od prędkości, rebinding, zapis
 
-Status: Proposed (agent H2 w chmurze, s22, gałąź `gamepad-0264`), 2026-11-15. Do scalenia przez lidera po EditMode + jeździe na buildzie Windows.
+Status: przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent H2 w chmurze, s22, gałąź `gamepad-0264`), 2026-11-15. Do scalenia przez lidera po EditMode + jeździe na buildzie Windows.
 
 ## Kontekst
 D73/ADR 0260: Windows jest platformą główną. Dotychczas sterowanie PC = `KeyboardDriverInput` (stałe klawisze, rampa, edytor). Agent win-build-0261 robi lokalnie minimalne mapowanie klawiatura/pad; jego gałęzi nie ma w `origin`. Zadanie H2: pełny pad (Xbox/PS przez generyczny `<Gamepad>` Unity Input System), klawiatura z narastaniem osi, rebinding w ustawieniach, zapis nadpisań, konfiguracja krzywych jako dane, logika w czystych klasach testowalnych bez runtime Unity, zero GC w pętli jazdy.

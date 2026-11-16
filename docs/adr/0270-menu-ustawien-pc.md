@@ -1,5 +1,5 @@
 # ADR 0270 — menu ustawień PC (ekran, grafika, interfejs, dźwięk)
-Status: Proposed (chmura H r2, zadanie H8, gałąź `pc-settings-0270`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (chmura H r2, zadanie H8, gałąź `pc-settings-0270`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
 Powiązane: ADR 0260 (D73: Windows platformą główną), ADR 0261 (build Windows: desktop High / 60 fps), ADR 0265 (#131 HUD PC:
 `UiPreferences`, `ui.hudScale`, `UiFocus`), ADR 0264 (#133 pad/klawiatura), ADR 0269 (H7 tiery PC, `PcGraphicsTiers`), D74.
 

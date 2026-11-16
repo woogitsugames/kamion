@@ -1,5 +1,5 @@
 # ADR 0158 — F2: „275 km/h w powietrzu” to spadek przez drogę; kolidery nadwozia w runnerze
-Status: Proposed (agent fizyki, s16, gałąź `physics-f2`), 2026-11-13. Decyzje otwarte: lider (kerb 27 cm, F1), właściciel (feel test).
+Status: przyjęty (scalony do main 2026-11-13, `ff5c62a6a`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent fizyki, s16, gałąź `physics-f2`), 2026-11-13. Decyzje otwarte: lider (kerb 27 cm, F1), właściciel (feel test).
 
 ## Kontekst
 Fuzz M34 (PR #37, raport `docs/reports/PHYSICS-ROBUSTNESS-2026-11-13-mistral.md` §5, recenzja

@@ -1,5 +1,5 @@
 # ADR 0160 — G3-A: P0 układu kadrów i kotwice pierwszego planu (pozy, tablice, znaki)
-Status: Proposed (agent g3a-0160, s16, gałąź `g3a-0160`), 2026-11-13. Gałąź zawiera main + `barriers-0159` @ 43d879f4b
+Status: przyjęty (scalony do main 2026-11-13, `227c2b6f7`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent g3a-0160, s16, gałąź `g3a-0160`), 2026-11-13. Gałąź zawiera main + `barriers-0159` @ 43d879f4b
 (ADR 0159) i świat przebudowany z obu zmian (regen2); do scalenia przez lidera po 0159 albo razem z nią.
 
 ## Kontekst

@@ -1,5 +1,5 @@
 # ADR 0215 — D65: Ełcka/Studzienna 6,9 m i nowa jezdnia DK65 w `dk65-05` jako plac budowy (`construction: true`)
-Status: Proposed (agent geo-worldgen, s20, gałąź `dk65-d65-data`, sesja w chmurze: bez Unity i bez `Data/raw`),
+Status: przyjęty (scalony do main 2026-11-15, `f64364ba4`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent geo-worldgen, s20, gałąź `dk65-d65-data`, sesja w chmurze: bez Unity i bez `Data/raw`),
 2026-11-15. Do scalenia przez lidera. **Numer 0215 do potwierdzenia przez lidera** (HANDOVER: „Ostatni przydzielony
 ADR: 0214”; w `docs/adr` najwyższy plik to 0212).
 Powiązane: D64, D65 p. 5 i 6 (`docs/11`), ADR 0205 (linie krawędziowe poniżej klasy GP), 0207 (kafle `dk65-02…05`,

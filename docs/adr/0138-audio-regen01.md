@@ -1,5 +1,5 @@
 # ADR 0138 — Partia ElevenLabs REGEN-01: wybór wariantów i wiersz silnika z jednego przejazdu przez obroty
-Status: Proposed (agent audio, s13), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
+Status: przyjęty (scalony do main 2026-11-12, `b142dd8f5`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent audio, s13), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
 Kontynuacja ADR 0137 (siatka z pomiaru, przełącznik synteza/ElevenLabs).
 
 ## Kontekst

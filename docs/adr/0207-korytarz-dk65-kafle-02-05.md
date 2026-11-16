@@ -1,5 +1,5 @@
 # ADR 0207 — korytarz DK65: kafle `dk65-02` … `dk65-05` z grubsza (Fasty, Dobrzyniewo Duże)
-Status: Proposed (agent world-builder, s20, gałąź `dk65-tiles-0207`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `8205aa15d`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `dk65-tiles-0207`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: D63, D64 (`docs/11`), ADR 0203 (plan trasy A, siatka 2048 m), ADR 0205 (wzorzec kafla `dk65-01`, linie
 krawędziowe przez override), brief `docs/owner/S20-REGION-RING-BRIEF.md` (DROGI NAJPIERW).
 

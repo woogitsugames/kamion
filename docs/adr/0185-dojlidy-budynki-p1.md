@@ -1,5 +1,5 @@
 # ADR 0185 — Dojlidy: budynki po recenzji 0179 (hala zakładu przy Kuronia, blok Kuronia 3, ogrodzenie, poziom LoD1)
-Status: Proposed (agent world-builder, s20, gałąź `dojbld-0185`), 2026-11-13. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-14, `a1f1615ee`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `dojbld-0185`), 2026-11-13. Do scalenia przez lidera.
 Poprzednik: ADR 0179, recenzja `docs/reports/REVIEW-2026-11-13-s19-0179.md` (P1 P11-094, P1 P11-001, P2 tło).
 
 ## Kontekst

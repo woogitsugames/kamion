@@ -1,6 +1,6 @@
 # 0191 — Plamy latarni: rozsył oprawy drogowej (asymetryczny, wzdłuż jezdni) per oprawa, sód/LED, odblask GGX na High
 
-Status: kandydat (gałąź `lamppool-0191`), nie scalone. Data: 2026-11-13 (s20). Dotyczy: ADR 0062 (analityczne pule), 0108 (noc),
+Status: przyjęty (scalony do main 2026-11-14, `1d72f829c`; status zaktualizowany 2026-11-16); pierwotnie: kandydat (gałąź `lamppool-0191`), nie scalone. Data: 2026-11-13 (s20). Dotyczy: ADR 0062 (analityczne pule), 0108 (noc),
 0182 (zmierzch, „Otwarte P1-4”), recenzja `REVIEW-2026-11-13-s19-0182` P1-4.
 
 ## Kontekst

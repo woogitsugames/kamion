@@ -1,6 +1,6 @@
 # ADR 0132: Zabudowa r9 — posesje jednorodzinne bliżej zdjęć (drzewa z koron ortofoto, krzewy przy płotach, żywopłot o zaokrąglonym przekroju, drzewka i krzewy jako bryły, artefakty płotu / skrzynki, wiek działek, ramki LOD1)
 
-Status: propozycja (world-builder, gałąź `buildings-r9`, z main `f8b85fa2`), 2026-11-12. Kontynuacja ADR 0124; odpowiedź na
+Status: przyjęty (scalony do main 2026-11-12, `4e76cb328`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (world-builder, gałąź `buildings-r9`, z main `f8b85fa2`), 2026-11-12. Kontynuacja ADR 0124; odpowiedź na
 `docs/reports/visual/REVIEW-2026-11-12-s12-0124.md` (P1-a…e, P2-c/d/e). Referencje: `docs/refs/posesje-bialystok.md`
 (Mapillary CC BY-SA, Commons — oglądane, żaden piksel nie wchodzi do tekstur). Nic z telefonu. LICZBY: sekcja „Liczby” —
 wszystko, czego nie zmierzono w silniku, jest oznaczone.

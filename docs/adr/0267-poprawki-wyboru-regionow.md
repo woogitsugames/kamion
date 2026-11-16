@@ -1,5 +1,5 @@
 # ADR 0267 — poprawki wyboru regionów po recenzji #104 (`d67-full`, pusta lista, spacje, odporny katalog)
-Status: Proposed (chmura H, zadanie H5, gałąź `region-select-fix-0267`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (chmura H, zadanie H5, gałąź `region-select-fix-0267`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
 Powiązane: ADR 0229 (wybór regionów), D67, D71 (zestaw `d67-full`), D72 (limit APK 10 GB), D73 (Windows główną platformą),
 `docs/reports/REVIEW-2026-11-15-s21-code-104.md` (lista FIX 1–7), ADR 0261 (build Windows).
 

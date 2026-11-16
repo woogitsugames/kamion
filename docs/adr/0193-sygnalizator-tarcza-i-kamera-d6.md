@@ -1,6 +1,6 @@
 # ADR 0193 — Sygnalizator S-1: tarcza kontrastowa (M66 / Dz.U. rys. 10.28), warianty głowic, kamera P11-094 (D-6)
 
-Status: PROPOSED (agent world-builder, s20, gałąź `sigplate-0193`, runda 3 po M66), 2026-11-14. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `fa857b11b`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED (agent world-builder, s20, gałąź `sigplate-0193`, runda 3 po M66), 2026-11-14. Do scalenia przez lidera.
 
 ## Kontekst
 Review 0179 (P2): sygnalizator ma dużą białą prostokątną tarczę za komorą, większą od komory; D-6 dominuje pierwszy plan P11-094.

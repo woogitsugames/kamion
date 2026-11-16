@@ -1,5 +1,5 @@
 # ADR 0268 — oznakowanie dojazdu do przejazdów kolejowych (D71 pkt 3) + poprawki po krytyce wizualnej 0217
-Status: Proposed (agent `rail-dk65-s22`, s22, gałąź `rail-dk65-s22`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `feb542757`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent `rail-dk65-s22`, s22, gałąź `rail-dk65-s22`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: D71 pkt 3 (docs/11), ADR 0217 (torowisko, przejazd DW671), ADR 0223 (linia 38 w kaflach dk65-01..04),
 `docs/reports/REVIEW-2026-11-15-s21-code-102.md` (P1-3), `docs/reports/REVIEW-2026-11-15-s22-0217-visual.md` (FAIL: P0-1, P1-3, P1-5, P2-11, P2-12).
 

@@ -1,5 +1,5 @@
 # ADR 0217 — torowisko i przejazdy kolejowe w generatorze świata (opt-in `Region.rail`)
-Status: Proposed (chmura C, s20/s21, gałąź `rail-0217`), 2026-11-15; poprawki po weryfikacji
+Status: przyjęty (scalony do main 2026-11-15, `f92d0ab6a`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (chmura C, s20/s21, gałąź `rail-0217`), 2026-11-15; poprawki po weryfikacji
 (`docs/reports/VERIFY-2026-11-15-rail-0217.md`, FIX 1-5) na gałęzi `rail-fix-s21` - sekcja „Poprawki rail-fix-s21”
 na końcu, punkty niżej zaktualizowane. Do scalenia przez lidera.
 Powiązane: ADR 0210 (wzorzec etapu opt-in: woda), ADR 0212 „Otwarte 4” (brak przejazdu na DW671), ADR 0205 p. 1

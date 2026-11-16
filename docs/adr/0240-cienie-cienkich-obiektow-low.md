@@ -1,5 +1,5 @@
 # ADR 0240 — cienie cienkich obiektów na Low: bias 0,4 / 0,3 i wyłączenie cienkich casterów
-Status: Proposed (agent rendering-perf, s21 runda 2, gałąź `shadows-0240`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `e4fad6868`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent rendering-perf, s21 runda 2, gałąź `shadows-0240`), 2026-11-15. Do scalenia przez lidera.
 **Kod nieskompilowany w chmurze** (brak Unity); obraz i koszt na telefonie UNVERIFIED do przebiegu lidera.
 Powiązane: B-088 (`docs/owner/BACKLOG-S21.md`), `docs/reports/REVIEW-2026-11-14-s20-gate3-phone.md` P1-3, ADR 0010
 (tiery), 0046 (High), 0098 (bias Medium/High 0,4 / 0,3), 0106 (rozkład GPU klatki A16 Low), 0123 (`_LowNoShadow`),

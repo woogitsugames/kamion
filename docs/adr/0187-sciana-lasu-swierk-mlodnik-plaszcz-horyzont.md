@@ -1,6 +1,6 @@
 # ADR 0187 — ściana lasu: świerk, młodnik, płaszcz skraju, runo, linia horyzontu (dojlidy, industrial-c)
 
-Status: PROPOSED na gałęzi `forest-0187` (2026-11-15, s20); nie scalone. Baza: `origin/main` (`857de20df`). Telefon: NIE mierzony (lider). Recenzja `visual-critic`: do wykonania przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `33ee4f985`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED na gałęzi `forest-0187` (2026-11-15, s20); nie scalone. Baza: `origin/main` (`857de20df`). Telefon: NIE mierzony (lider). Recenzja `visual-critic`: do wykonania przez lidera.
 Źródła: `docs/reports/REVIEW-2026-11-13-s19-0179.md` (route-2 kadry 2–5, P11-056 horyzont), `docs/reports/REVIEW-2026-11-13-s20-0170.md` (P1-1 palisada, P2-3 „kępy liści na gołym pniu”), `docs/reports/REVIEW-2026-11-14-s20-cloud-m68.md` (M68: opisy taksacyjne BDL Nadl. Dojlidy i lasy gminne + NMPT 2023 − NMT dla kafelka Krywlany/Dojlidy i ROD), ADR 0170, docs/06 §2.
 
 ## Problem

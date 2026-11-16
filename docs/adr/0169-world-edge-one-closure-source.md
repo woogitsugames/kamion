@@ -1,6 +1,6 @@
 # ADR 0169 — World edge: one source of road closures, no doubled rows, sign sheeting colours, dead ends of the route graph
 
-Status: implemented on branch `edge-0169` (base main `47ee3f123`, 2026-11-13, s17); not merged. Editor renders only
+Status: Accepted (merged to main 2026-11-13, `8c73d2a8f`; status updated 2026-11-16); originally: implemented on branch `edge-0169` (base main `47ee3f123`, 2026-11-13, s17); not merged. Editor renders only
 (Low); phone NOT measured. A `visual-critic` review is still required: the notes below are the author's.
 Source: review `docs/reports/REVIEW-2026-11-13-s16-mistral-r5.md` (#31: "zdublowane zapory edge-west buduje C#
 `WorldEdgeBuilder`", #29 / M27: 115 off-reach edges), ADR 0141 r6d, ADR 0082.

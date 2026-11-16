@@ -1,6 +1,6 @@
 # ADR 0241: A/B GPU na A16 Low — przełączniki uruchomieniowe, katalog wariantów i skrypt sesji pomiarowej
 
-Status: propozycja (rendering-perf, chmura D runda 2 / F8, gałąź `gpu-ab-0241` z main `25924f60b`), 2026-11-15.
+Status: przyjęty (scalony do main 2026-11-16, `e4fad6868`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (rendering-perf, chmura D runda 2 / F8, gałąź `gpu-ab-0241` z main `25924f60b`), 2026-11-15.
 **Kod C# nieskompilowany i skrypt PowerShell nieuruchomiony w chmurze** (brak Unity, pwsh i telefonu) — weryfikuje lider.
 Powiązane: B-113 (`docs/owner/BACKLOG-S21.md`), ADR 0106 (rozkład GPU A16, `rq_ab`), 0113, 0136, 0013, 0046 (adaptacyjna skala),
 R8 `research/cloud2/mobile-gpu-a16/` (+ errata `docs/reports/REVIEW-2026-11-14-s20-cloud2-r8.md`), F6 = ADR 0239 (płoty Low),

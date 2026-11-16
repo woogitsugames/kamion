@@ -1,5 +1,5 @@
 # ADR 0220 — DK65 kafle `dk65-01…05`: elementy przekroju z K1 (rozstaw linii krawędziowych, linie przerywane, zatoki)
-Status: Proposed (chmura C, zadanie C4, gałąź `dk65-k1-0220`; bez Unity i bez `Data/raw`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `5824464bd`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (chmura C, zadanie C4, gałąź `dk65-k1-0220`; bez Unity i bez `Data/raw`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: K1 `research/dk65-knyszyn-refs/README.md` (+ `manifest.csv` K1-001…014), ADR 0203 (plan trasy, pikietaż), 0205
 (linie krawędziowe klasy < GP przez override), 0207 (kafle 02–05, sprzeczność 7,6 m), 0212 (7,1 vs 6,8 m), 0215 (PR #80 i
 jego poprawka fix-pr80-s21 / `verify-cloud-c`: Ełcka **6,6 m** — nie na main), D65 i **D66** (`docs/11` na main).
