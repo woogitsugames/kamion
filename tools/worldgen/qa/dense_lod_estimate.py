@@ -4,6 +4,7 @@ Usage (repo root, read-only on Data/Regions/*/generated):
     uv run --project tools/worldgen python tools/worldgen/qa/dense_lod_estimate.py               # table, 4 dense tiles
     uv run --project tools/worldgen python tools/worldgen/qa/dense_lod_estimate.py --buildings   # + generator probe
     uv run --project tools/worldgen python tools/worldgen/qa/dense_lod_estimate.py --json docs/reports/map/dense_lod_0282.json
+    ... --stats bialystok-maczka=artifacts/dense-lod-0282/maczka-High/stats.txt@2340x1080   # calibrate on a new VQA run
 
 Two camera models, both on the chunk triangle counts of `generated/world_manifest.json`:
   legacy   = build_world.mesh_budget (the `mesh_budget.frame_estimate` gate): every chunk/instance within 200 m in any
@@ -63,6 +64,8 @@ NODE_CATEGORY = {"terrain_band": "terrain", "terrain_lod1": "terrain", "terrain_
 CHUNK_CATEGORIES = ("terrain", "roads", "furniture", "buildings", "water", "forest_hlod")
 QA_ASPECT = 2340 / 1080            # VisualQaRunner default -qaWidth/-qaHeight
 TREE_ENDS = (20.0, 60.0, 1000.0)   # InstanceImporter.Policy tree_ (m, x lodScale)
+CHUNK_M = 256.0
+MARGIN = 0.7 * CHUNK_M             # WorldSceneBuilder: switch distance + 0.7 chunk = distance to the chunk reference point
 
 
 @dataclass(frozen=True)
@@ -78,9 +81,11 @@ class Runtime:
 
 @dataclass(frozen=True)
 class Proposal:
-    """Per-layer distance rules on top of the chunk LOD (m from the camera to the chunk reference point).
+    """Per-layer distance rules on top of the chunk LOD. Distances are NEAR distances (camera to the nearest geometry
+    of the cell, like terrain_lods.suggested_switch_m): the model compares the distance to the cell reference point
+    with near + 0.7 cell (MARGIN for 256 m chunks), so no rule can reach geometry closer than `near`.
     None = unchanged. Ratios multiply the triangles of the layer in that distance band (ESTIMATED / measured
-    by building_probe)."""
+    by building_probe). bld_cell_m: buildings in their own LODGroups per sub-cell (uniform split of the chunk)."""
     name: str
     note: str = ""
     bld_lod0_m: float | None = None           # LOD0 buildings -> LOD1 prism beyond this
@@ -93,31 +98,46 @@ class Proposal:
     tree_scale: float = 1.0
     terrain_band_fine: float | None = None    # runtime only: narrower band on dense tiles
     terrain_lod0_m: float | None = None       # 1 m terrain (legacy grid / runtime band) -> 2 m grid beyond this
+    bld_cell_m: float | None = None           # building LOD cells (64 m -> margin 45 m instead of 179 m)
     extra: dict = field(default_factory=dict)
 
 
 BASE = Proposal("base", "stan obecny")
 # Ratios measured by building_probe() on the 4 dense tiles (2026-11-16): LOD0b = LOD0 without reveals / sills / frames /
 # downpipes 0.56-0.60 (max 0.60 used); flat block HLOD / LOD1 0.11-0.14 -> 0.30 WORKING_VALUE (keeps pitched roofs).
+# Today on High (lodBias 1.5, fov 60): chunk LOD0 to 449 m from the chunk centre = near ~270 m; LOD1 to 719 (near ~540).
+# Pixel footprint at 1080 px / 60 deg: 0.107 m at 100 m, 0.21 m at 200 m, 0.32 m at 300 m, 0.75 m at 700 m.
 PROPOSALS = (
     BASE,
-    Proposal("P1_bld_lod0_250", "LOD0 budynków do 250 m (LOD1 dalej)", bld_lod0_m=250),
-    Proposal("P2_bld_lod0b_120", "LOD0b (otwory płaskie, bez rur/parapetów) od 120 m", bld_lod0b=(120, 0.60)),
-    Proposal("P3_block_hlod_900", "HLOD kwartałów zamiast LOD1 od 900 m", bld_hlod=(900, 0.30)),
-    Proposal("P4_plots_300", "działki (płoty, ogrody) do 300 m", plots_cull_m=300),
-    Proposal("P5_furn_450_mark_450", "meble drogowe i oznakowanie poziome do 450 m", furn_cull_m=450,
-             markings_cull_m=450),
+    Proposal("P1_bld_lod1_near200", "LOD1 budynków od 200 m (dziś ~270 m)", bld_lod0_m=200),
+    Proposal("P2_bld_lod0b_near100", "LOD0b (otwory płaskie, bez rur/parapetów/ościeży) od 100 m",
+             bld_lod0b=(100, 0.60)),
+    Proposal("P2c_bld_cells64", "budynki w komórkach LOD 64 m: LOD0 do 60 m, LOD0b do 250 m, LOD1 dalej",
+             bld_cell_m=64, bld_lod0b=(60, 0.60), bld_lod0_m=250),
+    Proposal("P3_block_hlod_near700", "HLOD kwartałów zamiast LOD1 od 700 m", bld_hlod=(700, 0.30)),
+    Proposal("P4_plots_near200", "działki (płoty, ogrody, nawierzchnie) do 200 m", plots_cull_m=200),
+    Proposal("P5_furn_mark_near300", "meble drogowe i oznakowanie poziome do 300 m", furn_cull_m=300,
+             markings_cull_m=300),
     Proposal("P6_props_trees_far", "propsy -15 %, drzewa -10 % (dalekie pierścienie)", props_scale=0.85,
              tree_scale=0.9),
-    Proposal("P7_terrain_lod0_250", "teren 1 m (pas) do 250 m, dalej siatka 2 m", terrain_lod0_m=250),
+    Proposal("P7_terrain_band_near150", "pas terenu 1 m do 150 m, dalej siatka 2 m", terrain_lod0_m=150),
 )
+ALL_CHUNK = ("P1_bld_lod1_near200", "P2_bld_lod0b_near100", "P3_block_hlod_near700", "P4_plots_near200",
+             "P5_furn_mark_near300", "P6_props_trees_far", "P7_terrain_band_near150")
+ALL_CELLS = ("P2c_bld_cells64", "P3_block_hlod_near700", "P4_plots_near200", "P5_furn_mark_near300",
+             "P6_props_trees_far", "P7_terrain_band_near150")
+
+
+def by_name(names, props=PROPOSALS):
+    d = {p.name: p for p in props}
+    return [d[n] for n in names]
 
 
 def combined(*ps: Proposal, name: str = "ALL") -> Proposal:
     out = replace(BASE, name=name, note="+".join(p.name for p in ps))
     for p in ps:
         for k in ("bld_lod0_m", "bld_lod0b", "bld_hlod", "plots_cull_m", "furn_cull_m", "markings_cull_m",
-                  "terrain_band_fine", "terrain_lod0_m"):
+                  "terrain_band_fine", "terrain_lod0_m", "bld_cell_m"):
             if getattr(p, k) is not None:
                 out = replace(out, **{k: getattr(p, k)})
         out = replace(out, props_scale=out.props_scale * p.props_scale, tree_scale=out.tree_scale * p.tree_scale)
@@ -165,21 +185,22 @@ def legacy_chunk_categories(manifest: dict, cam: dict, prop: Proposal = BASE) ->
         if d > pol["far"] or (d > pol["omni"] and ((cx - px) * lx + (cy - py) * ly) / d < pol["wedge_cos"]):
             continue
         t = ch["triangles"]
-        lod = next(l for lim, l in pol["terrain"] if d < lim)
-        if lod == 0 and prop.terrain_lod0_m is not None and d >= prop.terrain_lod0_m:
+        lod = next(lv for lim, lv in pol["terrain"] if d < lim)
+        if lod == 0 and _past(d, prop.terrain_lod0_m):
             lod = 1
         cat["terrain"] += t.get(f"terrain_lod{lod}", 0)
-        mk = t.get("markings", 0) if prop.markings_cull_m is None or d < prop.markings_cull_m else 0
+        mk = 0 if _past(d, prop.markings_cull_m) else t.get("markings", 0)
         cat["roads"] += t.get("road", 0) + t.get("bridge", 0) + t.get("paved", 0) + mk
         if t.get("water"):
             cat["water"] += t["water"]
         if t.get("banks"):
             cat["water"] += t["banks"] if d < 500 else 0
         if d < pol["furn"]:
-            fu = t.get("furniture", 0) if prop.furn_cull_m is None or d < prop.furn_cull_m else 0
-            pl = t.get("plots", 0) if prop.plots_cull_m is None or d < prop.plots_cull_m else 0
+            fu = 0 if _past(d, prop.furn_cull_m) else t.get("furniture", 0)
+            pl = 0 if _past(d, prop.plots_cull_m) else t.get("plots", 0)
             cat["furniture"] += fu + pl + t.get("wires", 0)
-        cat["buildings"] += _buildings({**t, "_id": ch["id"]}, d, pol["bld"], prop, fallback=False)
+        cat["buildings"] += _buildings_chunk({**t, "_id": ch["id"]}, ch["bounds_local_m"], (px, py, None), d,
+                                             pol["bld"], prop, fallback=False)
         for fc in ch.get("forest_cells", []):
             dfc = _bbox_dist(fc["bbox_local_m"], (px, py))
             if pol["forest_hlod_m"] < dfc < pol["forest_hlod_cull_m"]:
@@ -187,18 +208,47 @@ def legacy_chunk_categories(manifest: dict, cam: dict, prop: Proposal = BASE) ->
     return cat
 
 
-def _buildings(t: dict, d: float, lod0_end: float, prop: Proposal, fallback: bool = True) -> float:
-    """Building triangles of one chunk at distance d: LOD0 / LOD0b / LOD1 / block HLOD. fallback: a chunk without LOD0
-    buildings shows the LOD1 prisms on LOD0 (WorldSceneBuilder); the legacy estimate counts 0 there."""
-    end = lod0_end if prop.bld_lod0_m is None else min(lod0_end, prop.bld_lod0_m)
+def _past(d: float, near: float | None, margin: float = MARGIN) -> bool:
+    """d (to the cell reference point) is beyond the near-distance rule `near` (None = no rule)."""
+    return near is not None and d >= near + margin
+
+
+def _buildings(t: dict, d: float, lod0_end: float, prop: Proposal, fallback: bool = True,
+               margin: float = MARGIN) -> float:
+    """Building triangles of one cell at distance d (to its reference point): LOD0 / LOD0b / LOD1 / block HLOD.
+    lod0_end: today's LOD0 end for this cell (reference-point distance). fallback: a chunk without LOD0 buildings shows
+    the LOD1 prisms on LOD0 (WorldSceneBuilder); the legacy estimate counts 0 there."""
+    end = lod0_end if prop.bld_lod0_m is None else min(lod0_end, prop.bld_lod0_m + margin)
     if d < end:
         n = t.get("buildings", 0) or (t.get("buildings_lod1", 0) if fallback else 0)
-        if prop.bld_lod0b and d >= prop.bld_lod0b[0] and t.get("buildings"):
+        if prop.bld_lod0b and _past(d, prop.bld_lod0b[0], margin) and t.get("buildings"):
             n *= prop.bld_lod0b[1]
         return n
     n = t.get("buildings_lod1", 0)
-    if prop.bld_hlod and d >= prop.bld_hlod[0]:
+    if prop.bld_hlod and _past(d, prop.bld_hlod[0], margin):
         n *= _hlod_ratio(prop, t)
+    return n
+
+
+def _buildings_chunk(t: dict, bounds: dict, cam_xyz, d: float, lod0_end: float, prop: Proposal,
+                     fallback: bool = True) -> float:
+    """Chunk granularity (one LODGroup) or, with prop.bld_cell_m, k x k building cells with their own LODGroups
+    (triangles split uniformly over the cells - ESTIMATED). lod0_end: today's chunk LOD0 end; a cell keeps today's
+    near distance (lod0_end - MARGIN) and gets the cell margin 0.7 cell."""
+    if not prop.bld_cell_m:
+        return _buildings(t, d, lod0_end, prop, fallback)
+    k = max(1, round(CHUNK_M / prop.bld_cell_m))
+    mc = 0.7 * CHUNK_M / k
+    near0 = lod0_end - MARGIN
+    px, py = cam_xyz[0], cam_xyz[1]
+    sub = {**t, "buildings": t.get("buildings", 0) / k ** 2, "buildings_lod1": t.get("buildings_lod1", 0) / k ** 2}
+    n = 0.0
+    w = (bounds["e_max"] - bounds["e_min"]) / k
+    h = (bounds["n_max"] - bounds["n_min"]) / k
+    for i in range(k):
+        for j in range(k):
+            cx, cy = bounds["e_min"] + (i + 0.5) * w, bounds["n_min"] + (j + 0.5) * h
+            n += _buildings(sub, math.hypot(cx - px, cy - py), near0 + mc, prop, fallback, mc)
     return n
 
 
@@ -262,7 +312,7 @@ def runtime_chunk_categories(manifest: dict, cam: dict, rt: Runtime = Runtime(),
     vfov = cam.get("fov_deg", 60.0)
     hf = hfov_deg(vfov, rt.aspect)
     size = manifest["chunk_size_m"]
-    ends = lod_ends([l["suggested_switch_m"] for l in manifest["terrain_lods"]], size, rt.lod_bias, vfov)
+    ends = lod_ends([t["suggested_switch_m"] for t in manifest["terrain_lods"]], size, rt.lod_bias, vfov)
     fine = rt.band_fine if prop.terrain_band_fine is None else prop.terrain_band_fine
     px, py, ph = cam["pos"]
     cat = dict.fromkeys(CHUNK_CATEGORIES, 0)
@@ -277,23 +327,25 @@ def runtime_chunk_categories(manifest: dict, cam: dict, rt: Runtime = Runtime(),
         lod, layers = runtime_layers(d, ends)
         for node in layers:
             c = NODE_CATEGORY[node]
-            if node == "terrain_band" and prop.terrain_lod0_m is not None and d >= prop.terrain_lod0_m:
+            if node == "terrain_band" and _past(d, prop.terrain_lod0_m):
                 n = t.get("terrain_lod1", 0)
             elif node == "terrain_band":
                 n = t.get("terrain_lod0", 0) * (fine + (1 - fine) / 4)    # coarse blocks: 2 m step = 1/4
             elif node in ("buildings", "buildings_lod1"):
                 continue
-            elif node == "markings" and prop.markings_cull_m is not None and d >= prop.markings_cull_m:
+            elif node == "markings" and _past(d, prop.markings_cull_m):
                 n = 0
-            elif node == "furniture" and prop.furn_cull_m is not None and d >= prop.furn_cull_m:
+            elif node == "furniture" and _past(d, prop.furn_cull_m):
                 n = 0
-            elif node in ("plots", "plot_ground") and prop.plots_cull_m is not None and d >= prop.plots_cull_m:
+            elif node in ("plots", "plot_ground") and _past(d, prop.plots_cull_m):
                 n = 0
             else:
                 n = t.get(node, 0)
             cat[c] += n
-        lod0_end = ends[0] if "buildings" in layers else 0.0
-        cat["buildings"] += _buildings(t, d, lod0_end, prop)
+        if prop.bld_cell_m:
+            cat["buildings"] += _buildings_chunk(t, b, (px, py, ph), d, ends[0], prop)
+        else:
+            cat["buildings"] += _buildings(t, d, ends[0] if "buildings" in layers else 0.0, prop)
         for fc in ch.get("forest_cells", []):
             if _bbox_dist(fc["bbox_local_m"], (px, py)) > rt.hlod_m:
                 cat["forest_hlod"] += fc["tris"]
@@ -384,28 +436,30 @@ def layer_ends(ends: list[float], prop: Proposal) -> dict:
         hi = ends[lod] if lod < len(ends) else INF
         for node in layers:
             out.setdefault(node, []).append((lo, hi))
-    cuts = {"markings": prop.markings_cull_m, "furniture": prop.furn_cull_m, "plots": prop.plots_cull_m,
-            "plot_ground": prop.plots_cull_m}
+    def ref(x):
+        return None if x is None else x + MARGIN
+    cuts = {"markings": ref(prop.markings_cull_m), "furniture": ref(prop.furn_cull_m),
+            "plots": ref(prop.plots_cull_m), "plot_ground": ref(prop.plots_cull_m)}
     res = {}
     for node, spans in out.items():
         lo, hi = min(s[0] for s in spans), max(s[1] for s in spans)
         c = cuts.get(node)
         res[node] = (lo, min(hi, c) if c is not None else hi)
-    if prop.terrain_lod0_m is not None and prop.terrain_lod0_m < res["terrain_band"][1]:
-        t0 = prop.terrain_lod0_m
+    if prop.terrain_lod0_m is not None and ref(prop.terrain_lod0_m) < res["terrain_band"][1]:
+        t0 = ref(prop.terrain_lod0_m)
         res["terrain_lod1"] = (t0, res["terrain_lod1"][1])
         res["terrain_band"] = (0.0, t0)
     b0 = res.pop("buildings")[1]
     if prop.bld_lod0_m is not None:
-        b0 = min(b0, prop.bld_lod0_m)
+        b0 = min(b0, ref(prop.bld_lod0_m))
     bands = []
-    if prop.bld_lod0b and prop.bld_lod0b[0] < b0:
-        bands += [(0.0, prop.bld_lod0b[0], "buildings"), (prop.bld_lod0b[0], b0, "buildings_lod0b")]
+    if prop.bld_lod0b and ref(prop.bld_lod0b[0]) < b0:
+        bands += [(0.0, ref(prop.bld_lod0b[0]), "buildings"), (ref(prop.bld_lod0b[0]), b0, "buildings_lod0b")]
     else:
         bands.append((0.0, b0, "buildings"))
     res.pop("buildings_lod1")
-    if prop.bld_hlod and prop.bld_hlod[0] > b0:
-        bands += [(b0, prop.bld_hlod[0], "buildings_lod1"), (prop.bld_hlod[0], INF, "buildings_hlod")]
+    if prop.bld_hlod and ref(prop.bld_hlod[0]) > b0:
+        bands += [(b0, ref(prop.bld_hlod[0]), "buildings_lod1"), (ref(prop.bld_hlod[0]), INF, "buildings_hlod")]
     else:
         bands.append((b0, INF, "buildings_lod1"))
     for lo, hi, node in bands:
@@ -414,8 +468,9 @@ def layer_ends(ends: list[float], prop: Proposal) -> dict:
 
 
 def merged_lod_table(ends: list[float], prop: Proposal) -> list[tuple[float, tuple[str, ...]]]:
-    """One LODGroup per chunk: every distinct layer end becomes a LOD level. Returns [(end m, layers)], last end INF.
-    This is the table WorldSceneBuilder would need (switch distance -> screen height as today)."""
+    """One LODGroup per chunk: every distinct layer end becomes a LOD level. Returns [(end m, layers)], last end INF;
+    ends are reference-point distances (as lod_ends); WorldSceneBuilder would store end - 0.7 chunk as switch distance.
+    Chunk granularity only (bld_cell_m = separate building LODGroups, not in this table)."""
     spans = layer_ends(ends, prop)
     cuts = sorted({hi for _, hi in spans.values() if hi < INF} | {lo for lo, _ in spans.values() if lo > 0})
     bounds = [0.0] + cuts + [INF]
@@ -487,7 +542,7 @@ def building_probe(region: str, limit: int | None = None) -> dict:
             self.parts.append((layer, mat, int(np.asarray(T).size // 3)))
     hf = SimpleNamespace(sample=lambda x, y: np.full(np.shape(x), 100.0))
     far = box(-1e5, -1e5, -1e5 + 10, -1e5 + 10)
-    by_typ, errors = {}, 0
+    by_typ, errors, lod1_mats = {}, 0, {}
     for b in blds:
         buf = Buf()
         try:
@@ -504,13 +559,14 @@ def building_probe(region: str, limit: int | None = None) -> dict:
                 d["pipes"] += n if mat in PIPE_MATS else 0
             elif layer == "buildings_low":
                 d["lod1"] += n
+                lod1_mats.setdefault(b["id"], set()).add(mat)
     lod0 = sum(d["lod0"] for d in by_typ.values())
     det = sum(d["opening_detail"] for d in by_typ.values())
     pipes = sum(d["pipes"] for d in by_typ.values())
     lod1 = sum(d["lod1"] for d in by_typ.values())
     # block HLOD per chunk (chunk = manifest bounds containing the footprint centroid)
     man = json.loads((rdir / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
-    per = {}
+    per, mats_by_chunk = {}, {}
     for b in blds:
         if b["typ"] == "roof" or b["ovr"].get("hero_asset"):
             continue
@@ -519,6 +575,7 @@ def building_probe(region: str, limit: int | None = None) -> dict:
             bb = ch["bounds_local_m"]
             if bb["e_min"] <= c.x < bb["e_max"] and bb["n_min"] <= c.y < bb["n_max"]:
                 per.setdefault(ch["id"], []).append((b["poly"], float(b["props"].get("height_m") or 6.0)))
+                mats_by_chunk.setdefault(ch["id"], set()).update(lod1_mats.get(b["id"], ()))
                 break
     hlod = {}
     for ch in man["chunks"]:
@@ -533,7 +590,12 @@ def building_probe(region: str, limit: int | None = None) -> dict:
             "lod0b_ratio_min": round(1 - det / max(lod0, 1), 3),
             "lod0b_ratio": round(1 - (det + pipes) / max(lod0, 1), 3),
             "hlod_tris": hl_tris, "lod1_manifest_tris": l1_man, "hlod_ratio": round(hl_tris / max(l1_man, 1), 3),
-            "hlod_ratio_by_chunk": hlod}
+            "hlod_ratio_by_chunk": hlod,
+            # draws: a block HLOD in the far-field material (ADR 0085 far_field_buildings, 1 submesh) replaces the LOD1
+            # submeshes of the chunk (one per material) -> saved draws per far chunk = materials - 1
+            "lod1_materials_per_chunk_median": statistics.median(len(v) for v in mats_by_chunk.values())
+            if mats_by_chunk else 0,
+            "lod1_materials_per_chunk_max": max((len(v) for v in mats_by_chunk.values()), default=0)}
 
 
 # ---------------------------------------------------------------------------------------------------- calibration
@@ -582,11 +644,20 @@ def main(argv=None):
     ap.add_argument("--regions", nargs="*", default=list(DENSE))
     ap.add_argument("--buildings", action="store_true", help="run the building generator probe (slow, ~1 min/tile)")
     ap.add_argument("--json", type=Path, help="write the full result (deterministic, sorted keys)")
+    ap.add_argument("--stats", action="append", default=[], metavar="REGION=PATH[@WxH]",
+                    help="extra visual-QA stats.txt (High) to calibrate against, e.g. "
+                         "bialystok-maczka=artifacts/dense-lod-0282/maczka-High/stats.txt@2340x1080")
     a = ap.parse_args(argv)
+    stats = dict(STATS)
+    for spec in a.stats:
+        reg_, rest = spec.split("=", 1)
+        path, _, size = rest.partition("@")
+        w, h = (int(x) for x in size.split("x")) if size else (2340, 1080)
+        stats[reg_] = (path, w / h)
     result = {"adr": "0282", "status": "ESTIMATED (CPU-side triangle counts, not GPU / phone measurements)",
               "budget_high_tris": BUDGET_HIGH_TRIS, "fuse_high_tris": FUSE_HIGH_TRIS, "runtime": Runtime().__dict__,
               "calibration": {}, "probe": {}, "regions": {}}
-    for r, (p, asp) in STATS.items():
+    for r, (p, asp) in stats.items():
         rows = calibration(r, p, asp)
         result["calibration"][r] = {"stats": p, "aspect": round(asp, 4), "rows": rows,
                                     "unity_over_legacy_median": round(statistics.median(x["unity"] / x["legacy"] for x in rows), 3),
@@ -600,13 +671,15 @@ def main(argv=None):
             result["probe"][r] = {k: v for k, v in pr.items() if k != "hlod_ratio_by_chunk"}
             print(f"probe {r}: LOD0 {pr['lod0']} LOD1 {pr['lod1']} opening detail {pr['opening_detail_share']} "
                   f"pipes {pr['pipes_share']} -> LOD0b {pr['lod0b_ratio']} (min {pr['lod0b_ratio_min']}), "
-                  f"HLOD/LOD1 {pr['hlod_ratio']}")
+                  f"HLOD/LOD1 {pr['hlod_ratio']}, LOD1 materials/chunk median {pr['lod1_materials_per_chunk_median']} "
+                  f"max {pr['lod1_materials_per_chunk_max']}")
         ratios = [result["probe"][r]["lod0b_ratio"] for r in a.regions]
         hl = [result["probe"][r]["hlod_ratio"] for r in a.regions]
-        props = [replace(p, bld_lod0b=(120, round(max(ratios), 2))) if p.bld_lod0b else p for p in props]
+        props = [replace(p, bld_lod0b=(p.bld_lod0b[0], round(max(ratios), 2))) if p.bld_lod0b else p for p in props]
         print(f"LOD0b ratio from the probe: {max(ratios):.3f}; flat block HLOD / LOD1 {min(hl):.3f}-{max(hl):.3f} "
-              f"(P3 keeps {PROPOSALS[3].bld_hlod[1]} WORKING_VALUE for pitched roofs)")
-    props.append(combined(*props[1:], name="ALL"))
+              f"(P3 keeps {by_name(["P3_block_hlod_near700"])[0].bld_hlod[1]} WORKING_VALUE for pitched roofs)")
+    props.append(combined(*by_name(ALL_CHUNK, props), name="ALL"))
+    props.append(combined(*by_name(ALL_CELLS, props), name="ALL_cells64"))
     for r in a.regions:
         t = region_table(r, props)
         result["regions"][r] = t

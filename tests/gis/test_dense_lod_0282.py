@@ -64,7 +64,7 @@ def test_base_merged_table_is_the_unity_high_table():
 
 def test_merged_table_selects_the_per_layer_rules():
     ends = D.lod_ends([0, 120, 300, 700], 256, 1.5, 60.0)
-    prop = D.combined(*D.PROPOSALS[1:])
+    prop = D.combined(*D.by_name(D.ALL_CHUNK))
     spans = D.layer_ends(ends, prop)
     table = D.merged_lod_table(ends, prop)
     assert len(table) > len(D.HIGH_LODS)                                  # extra levels for the per-layer distances
@@ -80,10 +80,11 @@ def test_merged_table_selects_the_per_layer_rules():
 
 def test_proposals_never_add_triangles(reg):
     means = D.tree_means()
-    allp = D.combined(*D.PROPOSALS[1:])
+    allp = D.combined(*D.by_name(D.ALL_CHUNK))
+    cells = D.combined(*D.by_name(D.ALL_CELLS))
     for cam in reg["cameras"]:
         base = D.camera_estimate(reg, cam, D.BASE, means=means)
-        for p in (*D.PROPOSALS[1:], allp):
+        for p in (*D.PROPOSALS[1:], allp, cells):
             e = D.camera_estimate(reg, cam, p, means=means)
             for m in ("legacy", "runtime"):
                 assert e[m]["total"] <= base[m]["total"], (reg["id"], cam["id"], p.name, m)
@@ -98,6 +99,19 @@ def test_runtime_trees_follow_the_tier_policy():
     rho = 100 / (math.pi * 35 ** 2)
     assert got["trees"] == pytest.approx(f * rho * math.pi * (10 ** 2 * 2000 + (30 ** 2 - 10 ** 2) * 500))
     assert got["trees"] < 0.25 * 100 * 2000
+
+
+def test_near_distance_rules_never_reach_closer_geometry():
+    # a rule at near x applies only when the reference point is >= x + 0.7 cell away, i.e. no geometry nearer than x
+    t = {"buildings": 1000, "buildings_lod1": 100}
+    p = D.Proposal("t", bld_lod0_m=200)
+    assert D._buildings(t, 200 + D.MARGIN - 1, 449, p) == 1000
+    assert D._buildings(t, 200 + D.MARGIN, 449, p) == 100
+    # building cells of 64 m: the cell under the camera stays LOD0 while the far cells of the same chunk drop
+    b = {"e_min": 0, "e_max": 256, "n_min": 0, "n_max": 256}
+    cells = D.Proposal("c", bld_cell_m=64, bld_lod0_m=60)
+    n = D._buildings_chunk(t, b, (8, 8, None), 120, 449, cells)
+    assert 100 < n < 1000 and n >= 1000 / 16
 
 
 def test_block_hlod_rule_merges_equal_heights_only():
