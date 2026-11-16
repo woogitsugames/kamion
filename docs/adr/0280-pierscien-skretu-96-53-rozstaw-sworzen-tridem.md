@@ -348,6 +348,28 @@ scaleniu. `tests/gis/test_swept_path_0218.py::test_combination_matches_dims_json
 `tests/gis/test_swept_path_0218.py::test_knyszyn_ring_sectors_clear_the_u_turn` pada też na `origin/main` (niezależnie od
 osi; nie badane).
 
+### 9.4 Wykonanie §9.1–9.2 (agent trailer-763-s23, gałąź `trailer-763-s23`, 2026-11-16)
+
+Blender 4.2.9 (Windows): generator już czytał osie z `dims.json`, więc zmiana kodu to tylko komentarz w
+`trailer_build.py:37`, kamera `zbl_kolo` liczona z `T.AXLES[1]` i nowa kamera kontrolna `gora` (ortho z góry, przekrój na
+1,20 m przez bliską płaszczyznę odcięcia, przód w prawo). Pełny eksport (`trailer_export.py`, ok. 6 min; pierwsza próba padła
+na braku pamięci w bake'u AO przy obciążonej maszynie, kolejne OK):
+- manifest: piwoty `WHEEL_1x..3x` i puste `AXLE_1..3` na **−6,32 / −7,63 / −8,94**, chlapacze −9,692 → **−9,622**,
+  `physics_crosscheck` osi 3/3 zgodne; `check_export.py` **PASS** (LOD 89 000 / 24 499 / 7 847 tr., budżety 90k/25k/8k);
+- `regs_audit.py` + `regs_check.py`: **158/158 OK**; lampa obrysowa boczna 3: środek −7,045 → **−6,975 m** (odstępy
+  2,925 / 2,605 m ≤ 3 m, R48 6.18.4.3); `pytest tests/physics/test_dims_sync.py` 9/9, `test_truck_regs.py` 5/5;
+- atlasy przebake'owane (AO przy przesuniętych częściach), układ UV atlasów lekko inny (pakowanie zależy od geometrii).
+- Znalezisko **sprzed tej zmiany** (nie naprawiane tu): obręcze kół próbkują w atlasie Metal czerwone / tekstowe fragmenty
+  (czerwone plamy na beczce obręczy w `zbl_kolo`). Pomiar: 639 z 10 651 tekseli UV kół ma R − G > 0,2 — **identycznie** w FBX
+  i atlasie z `origin/main` i z tej gałęzi; UV kół nakładają się na 7 506 tekseli `CHASSIS` (koło zapasowe dzieli UV koła 1L).
+  Do osobnego zadania (truck-artist).
+
+Unity: `TruckExterior.shader` domyślne `_CurtainAxles` → (−6,32, −7,63, −8,94); nowe wejście
+`DrivingLabSceneBuilder.RebuildTrailerPrefabBatch` (sam prefab graybox z definicji, bez przebudowy sceny DrivingLab);
+test `Tests/EditMode/TrailerAxleSyncTests.cs` (osie fizyki vs `dims.json`, piwoty manifestu we wszystkich LOD, `AXLE_n` i
+środki kół w FBX z art-source i w kopii `_Generated` użytej przez prefab, spinnery prefabu graybox i art, domyślna wartość
+shadera; tolerancja 1 cm).
+
 ## 10. Korekta D79: 7,63 m i przyczyna pełzania (P16, gałąź `trailer-763-d79`, 2026-11-16)
 
 Gałąź z `origin/trailer-760-d79` @ `5fe05662c` + `git merge origin/main` (@ `8133dfd7f`). Runner: `dotnet run -c Release
