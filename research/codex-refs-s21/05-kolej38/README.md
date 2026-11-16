@@ -98,3 +98,5 @@ R15 budżet: agent i root obejrzeli urzędowe bitmapy stron1/113. Tabela36 lp1 p
 
 
 R16: osiem uzupełnień przepisów w regulations.csv: §7–10kwalifikacjaA–D, §13wyższa kategoria, metodaGPR i przepisyprzejściowe. Root obejrzał bitmapy3/4/21. GałąźD20km/h nie znosi wspólnego limitu torów. Opublikowany tekst2025, bez pełnego audytu późniejszych zmian i bez przypisania kategorii Knyszynowi. Główny22 bez przyrostu,0nowych zdjęć.
+
+16.11.2026: R18 — sześć norm nawierzchni i niwelety w `crossing-surface-round18/`; root osobno obejrzał strony 8, 9 i 47. 35 mm to sumaryczny przyrost szerokości żłobków, nie ich szerokość podstawowa. Brak nowych zdjęć i lokalnego przypisania parametrów.
