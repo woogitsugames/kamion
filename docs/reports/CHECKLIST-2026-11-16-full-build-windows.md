@@ -15,8 +15,14 @@ Dla lidera, przed buildem dla właściciela. Liczby: zmierzone (źródło w nawi
 - **Pierścień (ADR 0231, 18 kafli) nie jest w main.** Jest na `origin/world2-s23`: tam katalog ma 39 regionów,
   `d67-full` = 39, a `check-build-scenes.py` na tym katalogu i scenach z worktree world2 daje OK (39/39 Low i High).
   Warunek: scalić world2-s23 przed buildem.
-- **Brakuje kafli `_Tile`:** main 0/21, `win-build-0261` 19/21 (brak tam całych regionów `bialystok-dojlidy` i
-  `dk65-monki-01`), world2 0/39. Żaden dotychczasowy build nie ma sceny `_Tile`. Bez nich `-stream 1` nie otworzy
+- **D86 (właściciel, docs/11): dk65-03 i dk65-04 wchodzą do buildu dopiero z treścią High.** Powód (#168,
+  `StreamingContentChoice.HighCoversLow`): jeden region z kaflem Low bez kafla High przełącza streaming PC (tier
+  High/Ultra) na treść Low w całym grafie (zmierzone w int-ui-s23: dk65-04 z samym `_Tile` → `FALLBACK Low`).
+  `check-build-scenes.py` ma tę regułę zawsze przy `-worldHigh`: FAIL „D86 Low tile without High tile”. Do
+  EditorBuildSettings tych scen nie dodawać (trafiłyby do każdego buildu, też APK) — wchodzą przez `-Regions d67-full`,
+  gdy check jest zielony. Import zawsze `-Tiers Low,High` (domyślne `import-region.ps1`).
+- **Brakuje kafli `_Tile`:** main 0/21 (stan 17.11 ~00:00), world2 0/39; checkout `win-build-0261` (był 19/21 o
+  20:00) już nie istnieje. Żaden dotychczasowy build nie ma sceny `_Tile`. Bez nich `-stream 1` nie otworzy
   szwu (`WorldStreamer`: „not in the build: seam stays closed”), a `Kamion-korytarz.cmd` nie powstanie
   (postbuild wypisze WARNING).
 - Narzędzie: `python scripts/check-build-scenes.py` (pytest `tests/dist/test_build_hygiene.py`; test na prawdziwym
@@ -46,8 +52,8 @@ Dla lidera, przed buildem dla właściciela. Liczby: zmierzone (źródło w nawi
 
 ## Kroki (zadanie 5)
 
-Checkout buildu: `.claude/worktrees/win-build-0261` (Library już pod Win64). Najpierw scal do niego main po
-world2-s23 i tej gałęzi. Każdy krok uruchamiaj z katalogu checkoutu w PowerShell 7.
+Checkout buildu: nowy worktree z main z Library pod Win64 (`win-build-0261` usunięty; pierwszy build w checkoucie z
+Library pod Androida = pełny reimport Win64, ADR 0261). Najpierw scal world2-s23 i tę gałąź do main. Każdy krok uruchamiaj z katalogu checkoutu w PowerShell 7.
 
 0. Warunki: `world2-s23` (pierścień) i `build-hygiene-s23` scalone; `git status` czysty (inaczej nazwa `-dirty` i
    `package-windows.py` odmówi bez `--allow-dirty`); brak `artifacts/locks/PHONE_RUN`; wolne miejsce na C: ≥ 60 GB
@@ -57,7 +63,8 @@ world2-s23 i tej gałęzi. Każdy krok uruchamiaj z katalogu checkoutu w PowerSh
    (exit < 8 = OK). Pomiń, jeśli world2 ma junction (`(Get-Item Data\raw\derived).LinkType` = `Junction`).
 2. Stan scen:
    `python scripts/check-build-scenes.py --regions d67-full --require-tiles --require-high`
-   Oczekiwane po scaleniu: 39 regionów, dziś wiele FAIL `tile scene missing`.
+   Oczekiwane po scaleniu: 39 regionów, dziś wiele FAIL `tile scene missing`. Każdy FAIL „D86” = import tego regionu
+   z `-Tiers Low,High` albo usunięcie go z listy (`-Regions` bez niego); dk65-03/04 szczególnie (D86).
 3. Import brakujących (sekwencyjnie, z Win64):
    ```
    pwsh scripts/unity-slot.ps1 -Acquire -Owner lead-build -Priority
@@ -66,7 +73,7 @@ world2-s23 i tej gałęzi. Każdy krok uruchamiaj z katalogu checkoutu w PowerSh
    ```
    Czas: do ok. 10 min na region (Win64). 39 regionów to ok. 6,5 h, **ESTIMATED** (21 zmierzonych × 10 min
    ekstrapolowane na 39). Z samym brakiem `_Tile` krótszy import (Unity ok. 1,5 min) **UNVERIFIED** dla Win64.
-4. Ponownie krok 2 → exit 0.
+4. Ponownie krok 2 → exit 0 (w tym 0 × D86).
 5. Build:
    `pwsh scripts/build-windows.ps1 -Slot -Regions d67-full`
    - Czas: 507–628 s dla 21 regionów (`build.json` e28533ca31 / 4ee3e02626).

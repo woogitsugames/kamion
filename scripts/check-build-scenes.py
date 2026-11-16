@@ -20,6 +20,9 @@ Checks (exit 1 when one fails):
   - --require-tiles: every Low tile scene exists (streaming / Kamion-korytarz.cmd need them; WorldStreamer keeps a seam
     closed when the neighbour's tile scene is not in the build);
   - --require-high: every High scene exists (build-windows.ps1 only warns);
+  - D86 (always with -worldHigh): no region whose Low tile scene exists without its High tile scene (one such tile
+    makes PC streaming fall back to Low content, StreamingContentChoice.HighCoversLow; owner: dk65-03/04 enter the
+    build only with their High content);
   - catalog coverage: every Data/Regions/<id> with route_start.json is in the catalog, and every catalog region is in
     the spec when the spec is d67-full (owner decision: the full build carries every region; ring tiles ADR 0231
     included once they are in the catalog);
@@ -126,6 +129,12 @@ def check(spec: str, project: Path, catalog: Path, regions_dir: Path, require_ti
     if require_high:
         failures += [f"{r['region']}: High scene missing {r['high']['path']} (import-region.ps1 -Tiers Low,High)"
                      for r in rows if r["low"]["exists"] and not r["high"]["exists"]]
+    if with_high:
+        # D86 / StreamingContentChoice.HighCoversLow: one tile with a Low tile scene but no High one switches PC streaming
+        # (tiers High / Ultra) to Low content for the whole graph - such a region must not go into the build.
+        failures += [f"{r['region']}: D86 Low tile without High tile {r['highTile']['path']} - PC streaming would fall back "
+                     "to Low; import -Tiers Low,High or leave the region out" for r in rows
+                     if r["low"]["exists"] and r["lowTile"]["exists"] and not r["highTile"]["exists"]]
     failures += catalog_problems(cat, regions_dir, regions, spec)
     expected = compose(rows, with_high)
     result = {"spec": spec, "regions": regions, "rows": rows, "expectedRegionScenes": expected,

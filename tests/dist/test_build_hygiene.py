@@ -178,6 +178,17 @@ def test_scene_check_missing_low_tile_high(tmp_path):
     assert sum(f.startswith("b-2: High") for f in strict["failures"]) == 1
 
 
+def test_scene_check_d86_low_tile_needs_high_tile(tmp_path):
+    """D86: dk65-04 imported with only a Low tile forced FALLBACK Low in every PC build (INTEGRATION int-ui-s23)."""
+    only_low_tile = [f"{W}dk65-04/World_dk65-04.unity", f"{W}dk65-04/World_dk65-04_Tile.unity"]
+    proj = fake_project(tmp_path / "game", region_scenes("a-1", True) + only_low_tile)
+    cat = fake_catalog(tmp_path, ["a-1", "dk65-04"], ["a-1", "dk65-04"])
+    rd = fake_regions_dir(tmp_path, ["a-1", "dk65-04"])
+    fails = cbs.check("d67-full", proj, cat, rd, False, False)["failures"]
+    assert len(fails) == 1 and fails[0].startswith("dk65-04: D86")
+    assert cbs.check("d67-full", proj, cat, rd, False, False, with_high=False)["failures"] == []   # -WorldLow build
+
+
 def test_scene_check_catalog_coverage(tmp_path):
     proj = fake_project(tmp_path / "game", region_scenes("a-1", False) + region_scenes("b-2", False))
     cat = fake_catalog(tmp_path, ["a-1", "b-2"], ["a-1"])                 # b-2 in the catalog, not in d67-full
