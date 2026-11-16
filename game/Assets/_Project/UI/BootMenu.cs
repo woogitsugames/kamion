@@ -316,7 +316,7 @@ namespace Game.UI
                 xMin = Mathf.Min(xMin, p.x); yMin = Mathf.Min(yMin, p.y);
                 xMax = Mathf.Max(xMax, p.x + s.x); yMax = Mathf.Max(yMax, p.y + s.y);
             }
-            return xMin > xMax ? default : Rect.MinMaxRect(xMin, yMin, xMax, yMax);
+            return xMin > xMax ? default(UnityEngine.Rect) : UnityEngine.Rect.MinMaxRect(xMin, yMin, xMax, yMax);
         }
 
         /// <summary>Re-reads tier / fps / lighting (the options can also change from outside, e.g. a launch argument).</summary>
