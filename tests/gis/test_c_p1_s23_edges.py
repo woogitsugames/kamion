@@ -104,6 +104,11 @@ def test_walled_mask_spares_ground_from_deck_clamp():
     jb = j0 - 6                                          # first row beside the deck edge
     assert out[jb, int(round(-10 - hf.x0))] == 100.8     # walled: untouched
     assert out[jb, int(round(10 - hf.x0))] < 100.2       # span: cleared below the soffit
+    # stage's second pass: ground under a walled ramp never reaches its surface (ramp toe, -0.003 m before)
+    hi = np.full(hf.z.shape, 101.2)
+    out2 = CF.clamp_under_decks(hi, deck, deck_mask & m, CF.TERRAIN_UNDER_WALLED - 0.3, np.zeros_like(m))
+    assert np.isclose(out2[j0, int(round(-10 - hf.x0))], 101.0 - CF.TERRAIN_UNDER_WALLED)
+    assert out2[j0, int(round(10 - hf.x0))] == 101.2     # span part untouched by this pass
 
 
 def test_ramp_wall_courses_level():
