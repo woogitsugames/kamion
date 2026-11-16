@@ -52,7 +52,10 @@ def make_build(root: Path, name: str = f"kamion-0.1.0-{SHA}-regions", dev: bool 
         "Kamion.content.json": b"{}",
         "Kamion.top.txt": b"top",
         "Kamion.variants.txt": b"v",
-        "Kamion-knyszyn.cmd": b"@echo off\r\n",
+        # region launchers (build-windows.ps1); the default build.json has no regions -> both stay out (int-h3-s23 rule)
+        "Kamion-knyszyn.cmd": b'@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 0 -scene knyszyn %*\r\n',
+        "Kamion-knyszyn-w.cmd": b'@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 0 -scene knyszyn-w %*\r\n',
+        "Kamion_Data.sha256": b"manifest\n",
     }
     if dev:
         files["WinPixEventRuntime.dll"] = b"MZ pix"
@@ -61,6 +64,15 @@ def make_build(root: Path, name: str = f"kamion-0.1.0-{SHA}-regions", dev: bool 
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_bytes(data)
     return b
+
+
+def content(b: Path) -> str:
+    """Content hash (ADR 0276) of a synthetic build, as package-windows.py computes it."""
+    return pw.postbuild.build_id(pw.postbuild.data_manifest(b), SHA)["contentHash"]
+
+
+def zname(b: Path, flags: str = "-regions") -> str:
+    return f"kamion-0.1.0-{SHA}{flags}-{content(b)}-win64"
 
 
 def names(zip_path: Path) -> set[str]:
@@ -72,12 +84,12 @@ def test_package_excludes_debug_and_metadata(tmp_path):
     b = make_build(tmp_path)
     out = tmp_path / "dist"
     assert pw.main([str(b), "--out-dir", str(out)]) == 0
-    zp = out / f"kamion-0.1.0-{SHA}-win64.zip"
+    zp = out / f"{zname(b)}.zip"
     assert zp.is_file()
-    root = f"kamion-0.1.0-{SHA}-win64/"
+    root = f"{zname(b)}/"
     got = names(zp)
     for must in ("Kamion.exe", "UnityPlayer.dll", "UnityCrashHandler64.exe", "Kamion_Data/data.unity3d",
-                 "MonoBleedingEdge/EmbedRuntime/mono-2.0-bdwgc.dll", "Kamion-okno.cmd",
+                 "MonoBleedingEdge/EmbedRuntime/mono-2.0-bdwgc.dll", "Kamion-okno.cmd", "build-id.json",
                  "THIRD_PARTY_NOTICES.txt", "README.txt", "SHA256SUMS.txt", "collect-logs.ps1", "Zbierz-logi.cmd"):
         assert root + must in got, must
     for n in got:
@@ -85,7 +97,7 @@ def test_package_excludes_debug_and_metadata(tmp_path):
         low = n.lower()
         assert "donotship" not in low and "dontship" not in low and not low.endswith(".pdb"), n
     for meta in ("build.json", "Kamion.exe.sha256", "Kamion.content.json", "Kamion.top.txt", "Kamion.variants.txt",
-                 "Kamion-knyszyn.cmd"):
+                 "Kamion-knyszyn.cmd", "Kamion-knyszyn-w.cmd", "Kamion_Data.sha256"):
         assert root + meta not in got
 
 
@@ -93,16 +105,17 @@ def test_sha256_sidecar_and_sums(tmp_path):
     b = make_build(tmp_path)
     out = tmp_path / "dist"
     assert pw.main([str(b), "--out-dir", str(out)]) == 0
-    zp = out / f"kamion-0.1.0-{SHA}-win64.zip"
+    zp = out / f"{zname(b)}.zip"
     side = (out / (zp.name + ".sha256")).read_text(encoding="ascii")
     assert side == f"{hashlib.sha256(zp.read_bytes()).hexdigest()}  {zp.name}\n"
     with zipfile.ZipFile(zp) as z:
-        root = f"kamion-0.1.0-{SHA}-win64/"
+        root = f"{zname(b)}/"
         sums = z.read(root + "SHA256SUMS.txt").decode()
         lines = dict(reversed(l.split("  ", 1)) for l in sums.splitlines())
         assert hashlib.sha256(z.read(root + "Kamion.exe")).hexdigest() == lines["Kamion.exe"]
         assert z.testzip() is None
-    manifest = json.loads((out / f"kamion-0.1.0-{SHA}-win64.json").read_text(encoding="utf-8"))
+    manifest = json.loads((out / f"{zname(b)}.json").read_text(encoding="utf-8"))
+    assert manifest["contentHash"] == content(b) and manifest["regions"] is True
     assert manifest["zipSha256"] in side
     assert "Kamion_BurstDebugInformation_DoNotShip/" in manifest["excluded"]
     assert "Kamion_BackUpThisFolder_ButDontShipItWithYourGame/" in manifest["excluded"]
@@ -114,8 +127,8 @@ def test_reproducible(tmp_path):
     a, c = tmp_path / "a", tmp_path / "c"
     assert pw.main([str(b), "--out-dir", str(a)]) == 0
     assert pw.main([str(b), "--out-dir", str(c)]) == 0
-    za = (a / f"kamion-0.1.0-{SHA}-win64.zip").read_bytes()
-    zc = (c / f"kamion-0.1.0-{SHA}-win64.zip").read_bytes()
+    za = (a / f"{zname(b)}.zip").read_bytes()
+    zc = (c / f"{zname(b)}.zip").read_bytes()
     assert za == zc  # README carries today's date only; same day = identical bytes
 
 
@@ -123,7 +136,7 @@ def test_dev_build_refused_unless_allowed(tmp_path):
     b = make_build(tmp_path, name=f"kamion-0.1.0-{SHA}-regions-dev", dev=True)
     assert pw.main([str(b), "--out-dir", str(tmp_path / "d")]) == 2
     assert pw.main([str(b), "--out-dir", str(tmp_path / "d"), "--allow-dev"]) == 0
-    assert (tmp_path / "d" / f"kamion-0.1.0-{SHA}-dev-win64.zip").is_file()
+    assert (tmp_path / "d" / f"{zname(b, '-regions-dev')}.zip").is_file()
 
 
 def test_pix_dll_marks_dev_even_without_flag(tmp_path):
@@ -137,13 +150,13 @@ def test_dirty_refused_unless_allowed(tmp_path):
     b = make_build(tmp_path, name=f"kamion-0.1.0-{SHA}-dirty-regions", build_json={})
     assert pw.main([str(b), "--out-dir", str(tmp_path / "d")]) == 2
     assert pw.main([str(b), "--out-dir", str(tmp_path / "d"), "--allow-dirty"]) == 0
-    assert (tmp_path / "d" / f"kamion-0.1.0-{SHA}-dirty-win64.zip").is_file()
+    assert (tmp_path / "d" / f"{zname(b, '-regions-dirty')}.zip").is_file()
 
 
 def test_low_variant_name(tmp_path):
     b = make_build(tmp_path, name=f"kamion-0.1.0-{SHA}-low",
                    build_json={"version": "0.1.0", "sha": SHA, "worldHigh": False, "development": False})
-    assert pw.plan_package(b).name == f"kamion-0.1.0-{SHA}-low-win64"
+    assert pw.plan_package(b).name == zname(b, "-low")
 
 
 def test_missing_exe_or_data(tmp_path):
@@ -160,7 +173,7 @@ def test_bad_sha_rejected(tmp_path):
     b = make_build(tmp_path, name="player", build_json={})
     with pytest.raises(pw.PackageError):
         pw.plan_package(b)  # no build.json data, folder name not kamion-<ver>-<sha>
-    assert pw.plan_package(b, version="0.2.0", sha="abcdef1").name == "kamion-0.2.0-abcdef1-win64"
+    assert pw.plan_package(b, version="0.2.0", sha="abcdef1").name == f"kamion-0.2.0-abcdef1-{content(b)}-win64"
     with pytest.raises(pw.PackageError):
         pw.plan_package(b, version="0.2.0", sha="not-a-sha")
 
@@ -206,7 +219,149 @@ def test_readme_has_requirements_and_no_placeholders(tmp_path):
     text = pw.render_readme(plan)
     assert "{" not in text
     for must in ("i5-6400", "Ryzen 3 1200", "GTX 660", "RX 460", "HD 630", "8 GB", "i5-9600", "Ryzen 5 3600",
-                 "GTX 1660", "RX 590", "12 GB", "25 GB", "WORKING_VALUE", f"kamion-0.1.0-{SHA}-win64",
+                 "GTX 1660", "RX 590", "12 GB", "25 GB", "WORKING_VALUE", zname(make_build(tmp_path / "n")),
+                 f"dane {content(make_build(tmp_path / 'n2'))}", "-NoCrashes",
                  r"AppData\LocalLow\woogitsugames\Kamion\Player.log"):
         assert must in text, must
     assert "\r\n" in text
+
+
+# ---------------------------------------------------------------- region launchers (Kamion-<region>.cmd)
+
+def _launcher(scene: str) -> bytes:
+    """Same text as build-windows.ps1 writes."""
+    return (f'@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 '
+            f'-scene {scene} %*\r\n').encode("ascii")
+
+
+def _with_launchers(b: Path) -> Path:
+    (b / "Kamion-okno.cmd").write_bytes(b'@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 0 %*\r\n')
+    (b / "Kamion-knyszyn.cmd").write_bytes(_launcher("knyszyn"))
+    (b / "Kamion-knyszyn-w.cmd").write_bytes(_launcher("knyszyn-w"))
+    return b
+
+
+def _plan_names(b: Path) -> tuple[set[str], list[str]]:
+    plan = pw.plan_package(b)
+    return {f.as_posix() for f in plan.files}, plan.excluded
+
+
+def test_region_launcher_left_out_when_region_not_in_build(tmp_path):
+    # default build (no -Regions): Boot + DrivingLab + WorldC only -> no knyszyn-w scene
+    b = _with_launchers(make_build(tmp_path, name=f"kamion-0.1.0-{SHA}",
+                                   build_json={"version": "0.1.0", "sha": SHA, "regions": "", "regionsFile": ""}))
+    shipped, excluded = _plan_names(b)
+    assert "Kamion-okno.cmd" in shipped
+    assert "Kamion-knyszyn-w.cmd" in excluded and "Kamion-knyszyn-w.cmd" not in shipped
+    assert "Kamion-knyszyn.cmd" in excluded
+
+
+def test_region_launcher_set_d67_has_no_knyszyn_w(tmp_path):
+    # Data/build_regions.json style: set d67 (region_catalog.json) holds knyszyn but not knyszyn-w
+    b = _with_launchers(make_build(tmp_path, build_json={"version": "0.1.0", "sha": SHA, "regions": "d67", "regionsFile": ""}))
+    shipped, excluded = _plan_names(b)
+    assert "Kamion-knyszyn-w.cmd" in excluded
+    # int-h3-s23 (leader): was a developer shortcut (ADR 0271 §2); now the knyszyn start for testers when knyszyn is built
+    assert "Kamion-knyszyn.cmd" in shipped
+
+
+def test_region_launcher_ships_when_region_in_build(tmp_path):
+    # int-h3-s23 (leader): no developer-only exception any more - Kamion-knyszyn.cmd ships when knyszyn is in the build.
+    b = _with_launchers(make_build(tmp_path, build_json={"version": "0.1.0", "sha": SHA, "regions": "d67,knyszyn-w"}))
+    shipped, excluded = _plan_names(b)
+    assert "Kamion-knyszyn-w.cmd" in shipped and "Kamion-okno.cmd" in shipped
+    assert "Kamion-knyszyn.cmd" in shipped
+
+
+def test_other_scene_launcher_ships_only_when_region_in_build(tmp_path):
+    # ADR 0271 s23 rule still guards any other root *.cmd with -scene <x>.
+    b = make_build(tmp_path / "in", build_json={"version": "0.1.0", "sha": SHA, "regions": "d67,knyszyn-w"})
+    (b / "Start-knyszyn-w.cmd").write_bytes(_launcher("knyszyn-w"))
+    shipped, _ = _plan_names(b)
+    assert "Start-knyszyn-w.cmd" in shipped
+    c = make_build(tmp_path / "out", build_json={"version": "0.1.0", "sha": SHA, "regions": "d67"})
+    (c / "Start-knyszyn-w.cmd").write_bytes(_launcher("knyszyn-w"))
+    shipped, excluded = _plan_names(c)
+    assert "Start-knyszyn-w.cmd" in excluded and "Start-knyszyn-w.cmd" not in shipped
+
+
+def test_region_launcher_build_log_wins(tmp_path):
+    # -RegionsAllowMissing: knyszyn-w asked for but not imported -> the build log's scene list is the truth
+    log = tmp_path / "build-win.log"
+    log.write_text("[BUILD] Windows x64 → C:/a/Kamion.exe (development=False, worldHigh=True) scenes=["
+                   "Assets/_Project/Core/Scenes/Boot.unity, Assets/_Generated/World/knyszyn/World_knyszyn.unity]\n",
+                   encoding="utf-8")
+    b = _with_launchers(make_build(tmp_path, build_json={"version": "0.1.0", "sha": SHA, "regions": "knyszyn,knyszyn-w",
+                                                         "log": str(log)}))
+    shipped, excluded = _plan_names(b)
+    assert "Kamion-knyszyn-w.cmd" in excluded
+
+
+def test_region_launcher_unknown_build_content(tmp_path):
+    b = _with_launchers(make_build(tmp_path, build_json={"version": "0.1.0", "sha": SHA}))
+    (b / "build.json").unlink()
+    plan = pw.plan_package(b)
+    shipped = {f.as_posix() for f in plan.files}
+    assert "Kamion-okno.cmd" in shipped and "Kamion-knyszyn-w.cmd" not in shipped
+    assert any("scene launchers" in w for w in plan.warnings)
+
+
+def test_resolve_regions_matches_catalog_rules():
+    cat = pw._catalog()
+    errs: list[str] = []
+    assert pw.resolve_regions(cat, "c, dojlidy", errs) == ["bialystok-industrial-c", "bialystok-dojlidy"]
+    assert pw.resolve_regions(cat, "dk65-01..dk65-03", errs) == ["dk65-01", "dk65-02", "dk65-03"]
+    assert pw.resolve_regions(cat, "dk65-03 ... dk65-01", errs) == ["dk65-03", "dk65-02", "dk65-01"]
+    assert "knyszyn-w" not in pw.resolve_regions(cat, "d67", errs)
+    assert errs == []
+    pw.resolve_regions(cat, "nie-ma-takiego", errs)
+    assert errs
+
+
+# ---------------------------------------------------------------- ADR 0276: build identity, -regions in the name
+
+
+def test_regions_flag_from_build_json_and_folder(tmp_path):
+    """Review #134 P2-1: the regions build and the default build of one commit must not share a zip name."""
+    plain = make_build(tmp_path / "a", name=f"kamion-0.1.0-{SHA}", build_json={"version": "0.1.0", "sha": SHA, "regions": ""})
+    reg = make_build(tmp_path / "b", name=f"kamion-0.1.0-{SHA}", build_json={"version": "0.1.0", "sha": SHA, "regions": "d67-full"})
+    assert pw.plan_package(plain).name == zname(plain, "")
+    assert pw.plan_package(reg).name == zname(reg, "-regions")
+    assert pw.plan_package(plain).name != pw.plan_package(reg).name
+
+
+def test_two_builds_of_one_commit_get_different_names(tmp_path):
+    """INTEGRATION s23 §8: Kamion.exe (the Unity stub) is identical, Kamion_Data is not."""
+    a = make_build(tmp_path / "a")
+    b = make_build(tmp_path / "b")
+    (b / "Kamion_Data/data.unity3d").write_bytes(b"y" * 4096)
+    assert (a / "Kamion.exe").read_bytes() == (b / "Kamion.exe").read_bytes()
+    na, nb = pw.plan_package(a).name, pw.plan_package(b).name
+    assert na != nb and na.endswith("-win64") and na[:-6].rsplit("-", 1)[1] == content(a)
+
+
+def test_recorded_build_id_must_match_data(tmp_path):
+    b = make_build(tmp_path)
+    pb = pw.postbuild
+    doc = pb.write_build_id(b, pb.data_manifest(b), SHA)
+    plan = pw.plan_package(b)
+    assert plan.content == doc["contentHash"] and plan.build_id is None   # shipped as built, not regenerated
+    assert not any("build-id.json missing" in w for w in plan.warnings)
+    (b / "Kamion_Data/globalgamemanagers").write_bytes(b"changed after the build")
+    with pytest.raises(pw.PackageError, match="changed after the build"):
+        pw.plan_package(b)
+
+
+def test_missing_build_id_generated_and_shipped(tmp_path):
+    b = make_build(tmp_path)
+    out = tmp_path / "dist"
+    assert pw.main([str(b), "--out-dir", str(out)]) == 0
+    with zipfile.ZipFile(out / f"{zname(b)}.zip") as z:
+        doc = json.loads(z.read(f"{zname(b)}/build-id.json"))
+    assert doc["contentHash"] == content(b) and doc["gitSha"] == SHA and doc["schema"] == "kamion/build-id/1"
+
+
+def test_zbierz_logi_warns_about_crash_dumps(tmp_path):
+    plan = pw.plan_package(make_build(tmp_path))
+    cmd = pw.extras(plan)["Zbierz-logi.cmd"].decode("ascii")
+    assert "*.dmp" in cmd and "-NoCrashes" in cmd and "%*" in cmd

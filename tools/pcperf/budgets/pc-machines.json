@@ -1,0 +1,38 @@
+{
+  "format": "kamion/pc-machines/1",
+  "adr": "0266",
+  "decision": "D76",
+  "note": "Maszyny pomiarowe dla klas z pc-budgets.json (ADR 0266, uzupełnienie s23). 'reference' = prawdziwy sprzęt klasy (zalicza bramkę przy PASS); 'emulation' = maszyna deweloperska z ograniczoną rozdzielczością / tierem / limitem FPS (D76: zalicza bramkę przy PASS i zgodnej konfiguracji, z adnotacją 'emulacja'); każdy inny pomiar = 'informational'. Dopasowanie po polach run.json 'system' (SystemInfo): podciągi bez rozróżniania wielkości liter. Zmiana = ten plik + ADR 0266.",
+  "reference": [],
+  "emulation": [
+    {
+      "id": "dev-rtx5070",
+      "label": "Maszyna deweloperska: Intel Core Ultra 7 270K Plus, 64 GB RAM, NVIDIA GeForce RTX 5070, D3D12 (ADR 0261)",
+      "decision": "D76",
+      "match": {
+        "gpuContains": ["RTX 5070"],
+        "gpuExcludes": ["Ti"],
+        "gpuVendorContains": ["NVIDIA"]
+      },
+      "classes": {
+        "min": {
+          "resolution": [1920, 1080],
+          "tier": "Low",
+          "targetFps": 30,
+          "vSyncCount": 0,
+          "fullScreenModes": ["FullScreenWindow", "ExclusiveFullScreen"],
+          "realHardware": "Intel HD 630 / NVIDIA GTX 660 / AMD RX 460 (2 GB VRAM), i5-6400 / Ryzen 3 1200, 8 GB RAM (D74)"
+        },
+        "zalecany": {
+          "resolution": [1920, 1080],
+          "tier": "High",
+          "targetFps": 60,
+          "vSyncCount": 0,
+          "fullScreenModes": ["FullScreenWindow", "ExclusiveFullScreen"],
+          "realHardware": "NVIDIA GTX 1660 / AMD RX 590 (6 GB VRAM), i5-9600 / Ryzen 5 3600, 12 GB RAM (D74)"
+        }
+      },
+      "method": "Player Windows (nie edytor) na RTX 5070 z ograniczeniem do warunków klasy: 1920x1080 pełny ekran (domyślnie borderless = FullScreenWindow, scripts/pc-metrics.ps1 -WindowMode borderless|exclusive; okno = niezgodne), tier Low/High, limit FPS 30/60 (-fps), VSync wyłączony (-VSync 0 -> -metricsVsync 0). Ogranicza obciążenie i rozdzielczość, ale nie odtwarza przepustowości GPU/CPU/RAM słabszego sprzętu: wynik pokazuje, że gra mieści się w limicie klatki przy warunkach klasy na tej maszynie, nie że zmieści się na sprzęcie klasy."
+    }
+  ]
+}

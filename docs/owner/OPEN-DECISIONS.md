@@ -1,9 +1,14 @@
-# Otwarte decyzje właściciela i lidera (stan 2026-11-16, s23)
+# Otwarte decyzje właściciela i lidera (stan 2026-11-16, s23 — runda 2, ok. 13:00)
+
+> **Runda 2 (sesja P r5, 16.11):** rozstrzygnięte OD-001…OD-003 (D76–D78) i OD-004…OD-006 (lider, `HANDOVER.md` wpis
+> „[16.11 11:1x]”), dopisane OD-044 (D80, rozstrzygnięte), OD-045 (D79, rozstrzygnięte) i nowe otwarte OD-046…OD-050 z s23
+> (rondo Knyszyn Ø, P-10 w C, wyspa Putry, DK19 Piastowska, kierunek Podlasia — research D29 na gałęzi `origin/map-decisions-s23`,
+> `docs/owner/MAP-DECISIONS-2026-11-16.md`). Otwarte P1: **brak**. Sekcje rozstrzygniętych zostają w tekście z adnotacją.
 
 Zebrane z: `docs/adr/*.md` (sekcje „Otwarte”, „Pytania do właściciela”, „do decyzji”), ADR w otwartych PR (#112 0273,
 #113 0228, #115 0231, #117 0243, #123 0238, #139 0227, #143 0275, #144 0274), raportów `docs/reports/*s22*`, `*s23*`,
 `REVIEW-2026-11-1[56]-*`, `INTEGRATION-*`, `VERIFY-*`, `HANDOVER.md` (SESJA 22–23), `docs/owner/BACKLOG-S21.md`.
-Każdą pozycję sprawdzono z `docs/11_DECYZJE_WLASCICIELA.md` (D1–D75). Rozstrzygnięte są na dole, a nie w indeksie.
+Każdą pozycję sprawdzono z `docs/11_DECYZJE_WLASCICIELA.md` (D1–D75; runda 2: D76–D80). Rozstrzygnięte są na dole, a nie w indeksie.
 Stan PR z `gh api repos/woogitsugames/kamion/pulls?state=all` (16.11): #112 #113 #115 #117 #123 #139 #141 #142 #143 #144
 otwarte. #114 zamknięty bez scalenia. #138 zamknięty, a jego zawartość weszła przez rail-dk65-s22.
 
@@ -16,12 +21,6 @@ opcja jest zawsze pierwsza na liście w pytaniu (opcja A).
 
 | ID | P | Kategoria | Pytanie (skrót) | Rekom. | Kto | Zdjęcia / pomiar W |
 |---|---|---|---|---|---|---|
-| OD-001 | P1 | PC / wydajność | Sprzęt referencyjny klas min / zalecany | A | W | tak (sprzęt) |
-| OD-002 | P1 | fizyka / bramka 2 | Feel test bramki 2: kiedy i na czym | A | W | tak (jazda) |
-| OD-003 | P1 | integracja / Knyszyn | #139 Rynek: przejęcie gałęzi Codexa i +64 draws Low | A | W | nie |
-| OD-004 | P1 | integracja / świat | Streaming kafli (#114) przed paczkami (#112)? | A | L | nie |
-| OD-005 | P1 | świat / szwy | Rodzina profilu na szwach DK8 i Kleeberga (FAIL 1,0 m) | A | L | nie |
-| OD-006 | P1 | świat / szwy | Szew dk65-11 i knyszyn-s (czerwony test 0,26 m na stronę) | A | L | nie |
 | OD-007 | P2 | świat / Knyszyn | Wymiary ronda DK65 × Tykocka (0274) | A | L / W | opcjonalnie (pomiar) |
 | OD-008 | P2 | świat / kolej | `approach_speed_kmh` 90 na DW671 przed przejazdem | A | W | tak (zdjęcie / wizja) |
 | OD-009 | P2 | świat / kolej | Wyposażenie 4–5 przejazdów kolejowych dk65 | A | L / W | opcjonalnie |
@@ -37,6 +36,9 @@ opcja jest zawsze pierwsza na liście w pytaniu (opcja A).
 | OD-019 | P2 | świat / Knyszyn | Wiaty targowicy: wymiary (WORKING_VALUE) | A | W | opcjonalnie |
 | OD-020 | P2 | świat / woda | Woda w pierścieniu (Narew, Nareśl), w C i Dojlidach | A | L / W | nie |
 | OD-021 | P2 | PC / grafika | Cienie drzew za kartami LOD1 na PC | A | L | pomiar GTX 660 |
+| OD-046 | P2 | świat / Knyszyn | Rondo DK65 × Tykocka: Ø zewn. ~26 m (zdjęcie) czy 22,6 m (OSM, generator) | A | L / W | opcjonalnie (pomiar) |
+| OD-049 | P2 | świat / mapa | DK19 przez Piastowską–Branickiego dla 40 t (D29 a) | A | W | opcjonalnie (zdjęcia znaków) |
+| OD-050 | P2 | świat / mapa | Kierunek Podlasia: pętla S8–Tykocin czy Mońki → Grajewo (D29 b) | A | W | nie |
 | OD-022 | P2 | prawo | Adres publikacji bazy pochodnej ODbL (R-P0-2) | A | W | nie |
 | OD-023 | P3 | świat / C | Maszty wieżowca Andersa 38 | A | L | nie |
 | OD-024 | P3 | świat / pierścień | Latarnie w Mońkach: LED czy reguła | A | W | opcjonalnie |
@@ -58,15 +60,31 @@ opcja jest zawsze pierwsza na liście w pytaniu (opcja A).
 | OD-040 | P3 | marka | Nazwa gry i znak TRAKT (D17) | A | W | nie |
 | OD-041 | P3 | proces | Zamknięcie zastąpionych PR (#93, #106, #100, #92) | A | L / W | nie |
 | OD-042 | P3 | proces / dysk | Sprzątanie poza projektem i limit worktree z `Library` | A | W | nie |
+| OD-047 | P3 | świat / C | P-10 63 → 62 w C po #93 (węzeł 2882674807) | A | L | nie |
+| OD-048 | P3 | świat / C | Wyspa ronda Putry cała trawiasta, na ortofoto pas żwiru | A | L / W | opcjonalnie |
 | OD-043 | P3 | audio | Odsłuch A/B dźwięku silnika 0232 / ElevenLabs REGEN-04 | A | W | odsłuch |
 
-Razem: **P1 = 6, P2 = 16, P3 = 21** (43 pozycje).
+Razem otwarte: **P1 = 0, P2 = 19, P3 = 23** (42 pozycje). Rozstrzygnięte w s23 (tabela niżej): 8.
+
+### Rozstrzygnięte w s23 (runda 2)
+
+| ID | P | Kategoria | Pytanie (skrót) | Rozstrzygnięcie | Kto | Stan wdrożenia |
+|---|---|---|---|---|---|---|
+| OD-001 | P1 | PC / wydajność | Sprzęt referencyjny klas min / zalecany | **D76** — A (emulacja RTX 5070) | W | docs/11 D76; ADR 0266 — raporty PC z adnotacją „emulacja”; prawdziwy sprzęt przed obietnicą wymagań |
+| OD-002 | P1 | fizyka / bramka 2 | Feel test bramki 2: kiedy i na czym | **D77** — feel test na exe PC | W | docs/11 D77; `docs/owner/FEEL-TEST.md` (PC); czeka na exe z build-s23 |
+| OD-003 | P1 | integracja / Knyszyn | #139 Rynek: przejęcie gałęzi Codexa i +64 draws Low | **D78** — przejęcie lokalne, +64 draws przyjęte | W | docs/11 D78; agent rynek-s23 (lokalnie) + #144 w jednej przebudowie knyszyn |
+| OD-004 | P1 | integracja / świat | Streaming kafli (#114) przed paczkami (#112)? | lider — A (streaming-0235 przed #112) | L | `HANDOVER.md` [16.11 11:1x]; nowy PR streaming-0235 po bieżących przebudowach; analiza `docs/reports/ANALYSIS-2026-11-16-regionpacks-pc.md` |
+| OD-005 | P1 | świat / szwy | Rodzina profilu na szwach DK8 i Kleeberga (FAIL 1,0 m) | lider — A (ortho_xsec + override per way) | L | w261104557 zrobione (world2); w257367422 w `overrides.pending-od005.yaml` C → najbliższa przebudowa C (`HANDOVER.md` [16.11 12:4x]) |
+| OD-006 | P1 | świat / szwy | Szew dk65-11 i knyszyn-s (czerwony test 0,26 m na stronę) | lider — A (klin #143 w world2) | L | #143 (ADR 0275) w world2-s23 |
+| OD-044 | P2 | wejście / PC | 6 akcji bez przycisku pada | **D80** — warstwa „przytrzymaj Back + przycisk”; R przechodzi na inny przycisk (ustalany w implementacji, ADR 0264) | W | chmura H r4 po integracji H3; ocena w feel teście (D77) |
+| OD-045 | P2 | fizyka / pojazd | Pierścień skrętu 96/53/WE: FAIL 7,253 m > 7,20 m | **D79** — sworzeń–środek tridemu 7,70 → 7,60 m (WORKING_VALUE do potwierdzenia kartą) | W | sesja P r5 gałąź `trailer-760-d79` (dane + fizyka); model Blendera i reimport — agent lokalny (ADR 0280 §5) |
 
 ---
 
 ## P1 — blokuje bramkę albo integrację
 
 ### OD-001 · P1 · PC / wydajność — sprzęt referencyjny PC
+> **ROZSTRZYGNIĘTE (s23):** D76 — opcja A (emulacja na RTX 5070); prawdziwy sprzęt (B) przed publiczną obietnicą wymagań.
 - **Pytanie:** Na jakim sprzęcie mierzymy klasy „min” i „zalecany” z D74, żeby raporty PC mogły zaliczać bramki?
 - **Opcje:**
   - **A — Emulacja na RTX 5070:** pomiar na maszynie deweloperskiej z ograniczeniem rozdzielczości, tieru i limitu FPS
@@ -82,6 +100,7 @@ Razem: **P1 = 6, P2 = 16, P3 = 21** (43 pozycje).
 - **Zdjęcia / pomiar właściciela:** tak, przy B (sprzęt). Przy A potrzebna tylko zgoda.
 
 ### OD-002 · P1 · fizyka / bramka 2 — feel test właściciela
+> **ROZSTRZYGNIĘTE (s23):** D77 — feel test na najnowszym exe PC z padem/klawiaturą, instrukcja `docs/owner/FEEL-TEST.md`.
 - **Pytanie:** Kiedy i na czym właściciel robi feel test bramki 2 (ruszanie pod górę z 40 t, hamowanie, rondo R50,
   cofanie pod rampę)?
 - **Opcje:**
@@ -97,6 +116,7 @@ Razem: **P1 = 6, P2 = 16, P3 = 21** (43 pozycje).
 - **Zdjęcia / pomiar właściciela:** tak (jazda + lista uwag; instrukcja `docs/owner/FEEL-TEST.md`).
 
 ### OD-003 · P1 · integracja / Knyszyn — #139 Rynek (Codex)
+> **ROZSTRZYGNIĘTE (s23):** D78 — lider przejmuje `knyszyn-rynek-0227` lokalnie (agent rynek-s23), +64 draw calls Low przyjęte.
 - **Pytanie:** Czy lider przejmuje gałąź `knyszyn-rynek-0227` lokalnie i przyjmuje wzrost Low na kamerze
   `dk65-inlet-south` 240 → 304 draw calls?
 - **Opcje:**
@@ -111,6 +131,7 @@ Razem: **P1 = 6, P2 = 16, P3 = 21** (43 pozycje).
 - **Zdjęcia / pomiar właściciela:** nie (zgoda na przejęcie worktree Codexa wymagana wg `HANDOVER.md:259`).
 
 ### OD-004 · P1 · integracja / świat — streaming kafli przed paczkami regionów
+> **ROZSTRZYGNIĘTE (s23):** lider, `HANDOVER.md` [16.11 11:1x] — A: nowy PR `streaming-0235` przed #112, po bieżących przebudowach.
 - **Pytanie:** Czy streaming kafli `streaming-0235` (#114 zamknięty bez scalenia) wraca jako nowy PR przed #112
   (paczki regionów, ADR 0273)?
 - **Opcje:**
@@ -125,6 +146,7 @@ Razem: **P1 = 6, P2 = 16, P3 = 21** (43 pozycje).
 - **Zdjęcia / pomiar właściciela:** nie.
 
 ### OD-005 · P1 · świat / szwy — rodzina profilu jezdni na szwach DK8 i Kleeberga
+> **ROZSTRZYGNIĘTE (s23):** lider, `HANDOVER.md` [16.11 11:1x] — A: pomiar `ortho_xsec.py` + override per way (w261104557 zrobione w world2; w257367422 czeka na przebudowę C).
 - **Pytanie:** Która strona szwu ma rację, gdy jeden kafel daje pobocze wiejskie, a drugi krawężnik płaski: DK8
   `w257367422` (industrial-c | maczka) i `w261104557` (kleeberga | knyszynska)? Krawędź asfaltu różni się o 1,0 m
   (FAIL w raporcie szwów).
@@ -139,6 +161,7 @@ Razem: **P1 = 6, P2 = 16, P3 = 21** (43 pozycje).
 - **Zdjęcia / pomiar właściciela:** nie.
 
 ### OD-006 · P1 · świat / szwy — szew dk65-11 i knyszyn-s
+> **ROZSTRZYGNIĘTE (s23):** lider, `HANDOVER.md` [16.11 11:1x] — A: klin z #143 (ADR 0275) w world2-s23.
 - **Pytanie:** Jak zamknąć czerwony test `test_dk65_seam_knyszyn_0233` (asfalt 7,3 m w dk65-11 wobec 6,78 m
   w knyszyn-s, skok 0,26 m na stronę)?
 - **Opcje:**
@@ -352,6 +375,39 @@ Razem: **P1 = 6, P2 = 16, P3 = 21** (43 pozycje).
 
 ---
 
+### OD-046 · P2 · świat / Knyszyn — średnica ronda DK65 × Tykocka
+- **Pytanie:** Rondo w Knyszynie na zdjęciu właściciela wygląda na Ø zewn. ok. 26 m, a generator buduje je z OSM (Ø 22,6 m)
+  i nie ma klucza nadpisania promienia ronda. Czy dodajemy nadpisanie promienia, czy zostajemy przy OSM?
+- **Opcje:**
+  - **A — Pomiar na ortofoto/zdjęciach 9–11, potem nadpisanie promienia:** nowy klucz override (np. `ring_radius_m` w module
+    `compact_roundabout`) z wartością z pomiaru; wymaga zmiany generatora (roads/*) i przebudowy knyszyn.
+  - **B — Zostaje Ø 22,6 m z OSM:** przejezdność zapewnia D75 (pierścień 5,0 + opaska 3,2 m), różnica tylko wizualna.
+  - **C — Pomiar właściciela na miejscu:** taśma/kroki — najdokładniej, wymaga wyjścia.
+- **Rekomendacja:** A, łącznie z OD-007 (te same zdjęcia, jedna przebudowa knyszyn z #139 i #144).
+- **Źródło:** Ø 22,6 m: `artifacts/live/int-dk65-s22.md:6` (skala zdjęcia 9 z Ø zewn. OSM); „~26 m wg zdjęcia” — obserwacja lidera s23
+  (UNVERIFIED, bez pomiaru w repo); ADR 0218 §5c, ADR 0274 (#144: „ronda brak na ortofoto, przeskalować wg zdjęć 9–11”, `HANDOVER.md` [16.11 12:2x]); D75.
+- **Zdjęcia / pomiar właściciela:** opcjonalnie (C).
+
+### OD-049 · P2 · świat / mapa — DK19 przez Piastowską i Branickiego dla 40 t (D29 a)
+- **Pytanie:** Czy trasa ciężarówki C ↔ Dojlidy idzie DK19 przez Piastowską i Branickiego (40 t wg planu UM 2018 i OSM, bez zdjęcia znaków)?
+- **Opcje:**
+  - **A — Piastowska–Branickiego, skręt w Ciołkowskiego:** kafle 5–7 wg ADR 0278; za rondem Meyera zakaz > 3,5 t (OSM `hgv=no`), nocne 40 km/h na Piastowskiej jako WORKING_VALUE.
+  - **B — Objazd Sulika–Ciołkowskiego:** kafle 8–9 zamiast 5–7; dłużej, ale bez zależności od Piastowskiej.
+  - **C — Najpierw zdjęcia znaków:** właściciel robi zdjęcia (Piastowska, pl. Antonowicza, rondo Meyera) albo daje token Mapillary; kafle 5–7 czekają.
+- **Rekomendacja:** A (plan UM 2018 „40 t dla wszystkich”, brak tagów tonażowych w OSM, zmiany 2025 tylko za rondem Meyera).
+- **Źródło:** `origin/map-decisions-s23:docs/owner/MAP-DECISIONS-2026-11-16.md` §(a) A1–A12 (nie w main w chwili pisania); ADR 0278 (#150).
+- **Zdjęcia / pomiar właściciela:** opcjonalnie (C).
+
+### OD-050 · P2 · świat / mapa — kierunek Podlasia (D29 b)
+- **Pytanie:** Który kierunek Podlasia budujemy jako pierwszy po kaflach Białegostoku z planu ADR 0278?
+- **Opcje:**
+  - **A — Pętla S8 ↔ DW671 ↔ Tykocin:** 15 kafli, ekspresówka S8 z węzłami i MOP, powrót przez Tykocin–Knyszyn; ≈ 5,6 GB GLB, ≤ 1,56 M tris High (ESTIMATED). **Wymaga zgody na S8 mimo D64** („na razie zwykłą drogą”).
+  - **B — Mońki → Grajewo (DK65):** 20 kafli krajówką do nowego miasta z elewatorami; kafel Grajewa ≈ 3,19 M tris High (ESTIMATED) > 2 M — wymaga redukcji.
+  - **C — Odłożyć Podlasie:** najpierw 14 kafli Białegostoku i gęste kafle (decyzja budżetowa), kierunek po pomiarze.
+- **Rekomendacja:** A (wynik ważony 425 vs 325; wrażliwy na wagę „nowe miejsce docelowe” — przy wadze 30 wygrywa Grajewo, więc to decyzja o kierunku gry).
+- **Źródło:** `origin/map-decisions-s23:docs/owner/MAP-DECISIONS-2026-11-16.md` §(b); ADR 0278 (#150), D64; obie opcje zależą od pierścienia #115 (world2-s23).
+- **Zdjęcia / pomiar właściciela:** nie.
+
 ## P3 — kosmetyka lub odległy etap
 
 ### OD-023 · P3 · świat / C — maszty wieżowca Andersa 38
@@ -527,6 +583,20 @@ Razem: **P1 = 6, P2 = 16, P3 = 21** (43 pozycje).
 - **Rekomendacja:** A. To decyzja ucha właściciela (D21).
 - **Źródło:** `docs/owner/BACKLOG-S21.md:145` (B-097); PR #107 (scalony, ADR 0232).
 - **Zdjęcia / pomiar właściciela:** odsłuch.
+
+### OD-047 · P3 · świat / C — P-10 63 → 62 po #93
+- **Pytanie:** Po przebudowie C z #93 (wyspa Putry) liczba znaków poziomych P-10 spadła z 63 do 62 (węzeł 2882674807, prawdopodobnie wlot ronda Putry). Błąd czy poprawny skutek nowej geometrii?
+- **Opcje:** **A — Lider sprawdza węzeł na ortofoto i renderze; jeśli przejście istnieje — override.** · **B — Przyjąć 62.**
+- **Rekomendacja:** A (koszt mały, przejście dla pieszych na wlocie ronda to element rozpoznawalności, D51).
+- **Źródło:** `HANDOVER.md` [16.11 12:0x] i [16.11 12:4x] (c-regen3-s23, `5fe8a3a7f`).
+- **Zdjęcia / pomiar właściciela:** nie.
+
+### OD-048 · P3 · świat / C — wyspa ronda Putry bez pasa żwiru
+- **Pytanie:** Wyspa ronda Putry po #93 jest cała trawiasta, a ortofoto pokazuje pas żwiru (opaskę) przy krawędzi. Dodać pas?
+- **Opcje:** **A — Dodać pas żwiru/kostki jako dane (mechanizm `truck_apron`, ADR 0218/0226) przy następnej przebudowie C.** · **B — Zostawić trawę.**
+- **Rekomendacja:** A (ten sam mechanizm co rondo Knyszyn; materiał wg ortofoto, WORKING_VALUE).
+- **Źródło:** `HANDOVER.md` [16.11 12:0x], [16.11 12:4x]; ADR 0226 (#93, scalony w c-regen3).
+- **Zdjęcia / pomiar właściciela:** opcjonalnie (zdjęcie wyspy).
 
 ---
 

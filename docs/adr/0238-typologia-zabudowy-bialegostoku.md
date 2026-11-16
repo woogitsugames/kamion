@@ -1,0 +1,126 @@
+# ADR 0238 — typologia zabudowy Białegostoku: podtypy, proporcje, paleta, dachy, front pawilonu
+Status: Proposed (agent world-builder, chmura D runda 2, gałąź `typology-0238`), 2026-11-15. Do scalenia przez lidera.
+Powiązane: R4 `research/cloud2/bialystok-building-typology` (PR #64) + recenzja
+`docs/reports/REVIEW-2026-11-15-s21-cloudD-64-bialystok-building-typology.md` (gałąź `reviews-0225`, werdykt „SCAL z erratą”),
+M53 `research/mistral/p3-buildings-2`, ADR 0081/0091/0094/0097 (fasady, dachy domów), 0126/0129 (frontage), 0184/0185/0190/0196.
+
+## Kontekst
+- Generator miał pięć klas (`hall`, `office`, `block`, `house`, `shed`). Każdy „budynek wielorodzinny” był blokiem z
+  płaskim dachem, każdy obiekt handlowo-usługowy < 1500 m² biurowcem z siatką okien. Paleta bloków: 7 równych pasteli
+  (WORKING_VALUE). Kształt dachu nie mógł przyjść ani z OSM `roof:shape`, ani z override.
+- R4: OSM nie nadaje się na źródło typologii (`building=yes` 2224 z 2734; `roof:shape` 2 i 4 budynki), liczby brać z
+  BDOT10k + LoD1. Recenzja: R4-075 („280 cm brutto”) ma w Wikipedii „[potrzebny przypis]” — nie SOURCED; brak kolorów
+  bloków; propozycja `BASE_M = 2,0`.
+
+## Decyzja
+1. **Dwa poziomy** (`tools/worldgen/streetscape/typology.py`): klasa renderu `typ` bez zmian (klucz dla działek,
+   życia, far field, kamer QA) + **podtyp** `b["sub"]`: `wielka_plyta`, `kamienica` (klasa block), `biurowiec`,
+   `pawilon` (office), `dom`, `dom_drewniany` (house), `hala`, `gospodarczy`, `wiata`. Kolejność źródeł: override
+   `typology` (klasa albo podtyp) > tagi OSM dołączone do obrysu (`osm_building`) > funkcja BDOT10k + kondygnacje +
+   wysokość LoD1 + zmierzone wzniesienie dachu LoD2. Nieznana nazwa w override = błąd (dotąd: cicho przyjęta).
+2. **Dach** (`typology.roof_shape`): override `roof_shape` (flat / gable / hip / mono) > OSM `roof:shape`
+   (`roof_shape_osm`) > dla bloków i biur: kod LoD2 1030 / 1040 / 1070 **ze zmierzonym wzniesieniem** kalenica − okap
+   ≥ 1,5 m i okapem ≥ 50 % wysokości LoD1. Sam kod nie wystarcza: z 10 budynków wielorodzinnych C + Dojlid o kodzie 1030
+   dziewięć ma wzniesienie 0,3–0,8 m (dach niskospadowy za attyką), jeden 1,8 m (pomiar, test). Domy: bez zmian
+   (`roofs.plan`), plus `shape` z override / OSM.
+3. **Kamienica** = wielorodzinny ≤ 4 kondygnacje, ≤ 900 m², dach spadzisty wg p. 2: dach z `roofs.plan`, bez galerii
+   balkonów, maszynowni i kominów regułowych, rzędy okien także na LOD1; kondygnacja 3,2 m, cokół 0,6 m (WORKING_VALUE —
+   R4 nie ma kamienic na kaflach C / Dojlidy). W danych: C 1, Dojlidy 0.
+4. **Pawilon** = funkcja handlowo-usługowa (BDOT10k / OSM), 1 kondygnacja, LoD1 ≤ 7,5 m (pomiar: n = 71, p10/p50/p90 =
+   3,0 / 4,2 / 6,8 m). Ściana najbliższa drogi (≥ 6 m, budynek ≥ 3,2 m) dostaje regułowy front: przeszklenie 0,35–2,75 m
+   ze szprosami co 2,4 m i ciemny pas attyki 0,6 m (`streetscape.frontage`, bez napisów i marek), LOD1 = jeden quad szyby
+   w materiale `hall_flashing` (`frontage.wall_lod1_flat`, 10 trójkątów). Pozostałe ściany: fasada biurowa. Wymiary frontu
+   WORKING_VALUE. Budynek z jakimkolwiek autorskim `set` nie dostaje frontu regułowego. C 43 pawilony / 24 fronty,
+   Dojlidy 21 / 15.
+5. **Paleta bloków** = obserwacja, nie zgadywanie: 9 bloków M53 ze statusem OK / OK-POŚREDNIE i opisaną elewacją (zdjęcia
+   Commons CC0 / CC BY / CC BY-SA, piksele nieużyte): biała 3, szara / jasnoszara 3, beżowa 2, pomarańczowa 1 →
+   `plaster_white` ×3, `plaster_grey` ×3, `plaster_cream` ×2, `plaster_peach` ×1 (ESTIMATED, n = 9). Rama SOURCED: MPZP
+   części os. Białostoczek, uchwała XXVII/451/26 § 7 ust. 1 pkt 1 lit. a („odcienie bieli, beżu, brązu i szarości”).
+   Błękit, żółć, szałwia znikają z reguły (zostają jako `wall_material`). Pawilony: jasne neutralne tynki (barwy firmowe ze
+   zdjęć nie są odtwarzane). Hale, biura, domy: bez zmian — zgodne z R4 (hale Dojlid białe / jasnoszare, 1 czerwona z 6).
+6. **Proporcje ze statusem** (`typology.PROPORTIONS`): kondygnacja bloku 2,8 m SOURCED (R4-074 / R4-077; R4-075 nieużyte),
+   oś okienna 3,0 m WORKING_VALUE (związana z atlasem `facade_far`; siatka OW-T 540 cm = 2 × 2,7 m to ESTIMATED — atlas
+   2,7 m jest pracą otwartą), cokoły WORKING_VALUE.
+7. **`buildings.py`**: `BASE_M` 1,0 → **1,5** (nie 2,0). Pomiar na 8821 budynkach BDOT10k z LoD1 i liczbą kondygnacji
+   (wszystkie regiony w gicie): mediana `h − 3,0·n` = 1,50 m (bloki 1,54, domy 1,77, inne 1,33); MAE 1,29 m przy 1,5
+   wobec 1,36 (1,0) i 1,35 (2,0). Do obrysu BDOT10k dołączane są `osm_building` i `roof_shape_osm` budynku OSM
+   pokrywającego ≥ 50 % obrysu; `osm_extract` czyta `roof:shape` (nowy klucz cache). Działa przy następnym
+   `build_region` (wymaga `Data/raw`); `buildings.geojson` w gicie nie były przepisywane.
+
+## Budżet (kafel C: neutralny lub ujemny)
+Narzędzie `tools/worldgen/qa/typology_budget.py`: generator budynków na danych z gita (zastępcze pole wysokości = poziom
+bazy LoD1 najbliższego budynku, drogi z grafu), trójkąty per chunk i per kamera regułą `mesh_budget`. Zgodność z
+manifestem w gicie: C LOD0 +2,1 %, LOD1 +4,7 %; Dojlidy +7 % / +17 % — to SZACUNEK, wiążący jest pomiar lidera.
+- C: LOD0 964 087 → 959 580 (−4 507), LOD1 101 067 → 100 602 (−465). Wszystkie 23 kamery ≤ 0; `stretch_04` High
+  2 022 535 → 2 021 842 (−693), Low 974 570 → 974 271 (−299); `route_onramp_andersa_above` High −885, Low −227.
+- Dojlidy: LOD0 −4 654, LOD1 −528; 17 kamer ≤ 0.
+- Materiały budynków w regionie: C 65 → 62 (LOD0), 66 → 61 (LOD1). Submeshe (suma materiałów per chunk): C LOD0
+  1120 → 1126 (**+6**: `showroom_glass` w 9 chunkach), LOD1 758 → 752; Dojlidy LOD0 +7, LOD1 +2. Tier Low rysuje tylko LOD1.
+- Kompensacja dachów spadzistych: rynny i rury spustowe bloku / biura z dachem spadzistym tylko na LOD0 (`_L0Only`),
+  bez kominów; front pawilonu zastępuje okna z parapetami.
+
+## Czego nie zmienia
+Budynki z override, hale, domy, budynki gospodarcze i wiaty mają identyczne trójkąty per (warstwa, materiał) jak przed
+zmianą; bloki z płaskim dachem — identyczną liczbę trójkątów (test na C i Dojlidach). ADR 0184 / 0185 / 0190 / 0196 nietknięte.
+
+## Otwarte
+1. Ocena wizualna (lider + `visual-critic`): front pawilonu na Low (płaski ciemny prostokąt bez szprosów), nowe barwy
+   bloków przy Andersa / Białostoczku, jedyna kamienica w C. W chmurze nie ma renderu.
+2. +6 submeshy LOD0 w C od `showroom_glass`; alternatywa (szyba z atlasu fasad) czytała się czarno (ADR 0129).
+3. Udział bloków nieocieplonych (`panel_concrete`, 30 %) bez źródła — w próbie M53 0 z 9. Oznaczony jako
+   `BLOCK_ETICS_SHARE = 0.7` (WORKING_VALUE) w `buildings_mesh.py`; zmiana wartości wymaga renderu i `visual-critic`.
+4. Budynki gospodarcze mają zawsze płaski dach; słownik kodów dachu LoD2 nadal bez cytatu (R4 „Luki”).
+5. `far_field.py` ma własny przelicznik kondygnacji (WORKING_VALUE) — nie ruszany.
+
+## Dopisek D32 (16.11, s23 r8): test bit-identyczności czerwony na main — szum zmiennoprzecinkowy w dachach domów
+**Objaw.** `test_authored_and_untouched_buildings_are_bit_identical` padał na main `8401944b6` (lokalnie i w CI `gis`,
+ubuntu): Dojlidy 18 rozbieżności, C 43 — wszystkie `house`/`dom`, różnice ±1…17 trójkątów w `roof_*`, `soffit_boards`,
+ścianach. **Hipotezy odrzucone (liczby):** (a) baseline sprzed c-regen3 / (b) `BASE_M` — wysokości tych 61 domów są z
+`gugik_lod1_2024` i ich właściwości w `buildings.geojson` nie zmieniły się w c-regen3 (poza `osm_building` w 3); (c) konflikt
+`storey_plan` — rozwiązany zgodnie z recenzją #123 (`storeys_fixed` + bez linii `lo, hi`), test regresji przechodzi; domy
+nie przechodzą przez gałąź `office/block`. **Przyczyna (d):** ten sam kod sprzed #123 (`ade885234`) na tych samych danych
+daje inne liczby na Linuksie (CI, chmura) niż baseline zacommitowany przez lidera (Windows) i przez FIX #123 — dokładnie dla
+tych 61 domów. Generator dachu był chaotyczny: przesunięcie obrysu o 1e-9 m zmieniało trójkąty 51 z 415 budynków Dojlid
+i 74 z 644 w C. Źródła: (1) kawałki pokrycia `exp ∩ face` i podbitki z operacji boolowskich zostawiały wierzchołki leżące
+NA prostej krawędzi (węzły styku innej połaci) albo kilka µm od innego wierzchołka — które przetrwały, zależało od
+ostatnich bitów; (2) `MultiRoof.profile` dzieliła ścianę biegnącą WZDŁUŻ krawędzi domeny / zmiany płaszczyzny w losowych
+punktach (znak `fa·fb` przy |fa|,|fb| ~ 1e-12).
+**Naprawa u źródła** (`streetscape/roofs.py`, `PLAN_TOL_M = 1 mm`): regiony połaci w `faces`, kawałki pokrycia i podbitki
+w `build` przechodzą `_clean` (simplify 1 mm + siatka 1 mm); w `profile` przecięcie liczy się tylko przy |fa − fb| > 1 mm.
+Po zmianie przesunięcie 1e-9 m zmienia 3 / 415 (Dojlidy) i 1 / 644 (C) budynków; z 61 rozbieżnych domów niestabilne
+zostają 2 (obydwa w C, wyłącznie test w izolacji) — patrz „Otwarte 6”.
+**Baseline przeliczony** wg procedury FIX-2026-11-16 (kod `ade885234` = bez #123, z łatką `roofs.py`; dane `origin/main`),
+bo zmiana dotyczy generatora „przed” i „po” tak samo. Suma harnessu kodem sprzed #123: Dojlidy LOD0 500 659 → 499 592
+(−1 067), LOD1 68 391 → 67 636 (−755); C 963 831 → 962 030 (−1 801), 101 067 → 99 981 (−1 086) — usunięte drzazgi.
+Kamery (harness, Δ samej łatki): C wszystkie 23 ≤ 0, `stretch_04` High −1 070 / Low −1 070 (szacunek 1 984 390 ≤ 2 M),
+Dojlidy 17 ≤ 0 (max `route_s0761` −717). Test nie był luzowany; nowy test regresji
+`test_house_triangles_do_not_depend_on_float_noise` (8 domów, 1e-9 / 1e-7 m) pada na kodzie sprzed łatki.
+Zmiana `generated/` (C, Dojlidy i każdy region z domami spadzistymi) dopiero przy przebudowie lidera.
+
+### D32 r2 (CI na #159: C `bdot:2BE4B431-B14F` 510 vs 524)
+CI (Linux, CPython 3.12.16 standalone, uv 0.13.8) i chmura (Linux, CPython 3.12.3 systemowy oraz 3.12.13 standalone)
+mają te same pakiety z `uv.lock` (numpy 2.5.4, shapely 2.2.0, scipy 1.18.1), a oba Pythony w chmurze dają 524. Różnica
+nie wynika więc z wersji, tylko z szumu na poziomie ULP (CPU / libm), który trafiał w progi:
+- **B14F:** okap szczytu wychodził jako `zt = 130.65000000000003` albo `130.64999999999998`, a od niego zależy próg okna
+  poddasza (`attic_window`): jedno okno więcej lub mniej (−14 trójkątów = 510). Naprawa: profil górnej krawędzi ściany
+  (`Roof.profile`, `MultiRoof.profile`) zaokrąglany do 1 µm (`PROFILE_DECIMALS = 6`).
+- **B45E:** pas szerokości < 1 mm między płaszczyznami obwiedni, którego nie przejmowała żadna połać, pojawiał się albo
+  znikał (±1 trójkąt). Naprawa: pas węższy niż `SLIVER_M = 5 mm` (2 × pole / obwód) przechodzi do połaci o najdłuższej
+  wspólnej krawędzi (`MultiRoof.faces`).
+
+Wynik: wszystkie 61 domów rozbieżnych na main jest stabilnych przy przesunięciach od 1e-12 do 1e-6 m. W C żaden budynek
+nie zmienia się przy przesunięciach 1e-12, 1e-9, 1e-7 i 1e-6 m. W Dojlidach zostają `…A8BC` (orientacja `_frame`), hala `…BC59` (doki), `rosti-west-wing`
+(wywietrzaki). Test regresji obejmuje teraz także B14F i B45E (10 domów; 1e-12 / 1e-9 / 1e-7 m).
+Baseline przeliczony tą samą procedurą (kod `ade885234` z łatką `roofs.py`, dane `origin/main`). Suma harnessu względem
+kodu sprzed łatki: Dojlidy LOD0 500 659 → 499 578 (−1 081), LOD1 68 391 → 67 636 (−755); C 963 831 → 962 027 (−1 804),
+101 067 → 99 980 (−1 087). Wszystkie 23 kamery C i 17 kamer Dojlid mają Δ ≤ 0: `stretch_04` High −1 071 (szacunek
+1 984 389), Dojlidy `photo_P11-063` −518.
+Sprawdzone i odrzucone: kąt `_angle` hal liczony modulo π naprawia siatkę świetlików (Dojlidy `…BAD2` 600 / 660 przy
+przesunięciu 1e-12 m), ale przestawia świetliki w innych halach: 4 kamery dostają +22…+77 High (C `fire_station_abeam`
++46). Zmiana byłaby więc niezerowa dla budżetu i nie weszła do tego PR.
+
+## Otwarte (dopisek D32)
+6. Pozostałe progi „na ostrzu” (nie systemowe): orientacja `_frame` przy prawie kwadratowym prostokącie (Dojlidy
+   `…A8BC`); hale: siatka świetlików zależna od `_angle` ±π (`…BAD2`, C `…C4AC`, poprawka gotowa, ale +≤77 High na
+   4 kamerach — decyzja lidera), doki `…BC59`, wywietrzaki `rosti-west-wing`. Lider: po scaleniu uruchomić
+   `test_typology_0238.py` na Windows — oba środowiska muszą dać 24/24.

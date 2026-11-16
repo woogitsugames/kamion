@@ -10,6 +10,7 @@ standardowa Pythona.
 | uruchomienie playera + liczniki Windows | `scripts/pc-metrics.ps1` |
 | parser / raport / budżet | `tools/pcperf/pc_metrics.py` |
 | budżety klas (wszystko `WORKING_VALUE`) | `tools/pcperf/budgets/pc-budgets.json` (= tabela w `docs/03`) |
+| maszyny referencyjne / emulujące klasy (D76) | `tools/pcperf/budgets/pc-machines.json` (`kamion/pc-machines/1`, parser czyta domyślnie; `--machines <plik>`) |
 
 ```powershell
 # pełny pomiar (lider, Windows): build -> run -> raport
@@ -41,4 +42,8 @@ Nieznane kolumny → błąd (exit 2), bez cichego pomijania. Kody wyjścia parse
 
 Pomiar jest **nieważny** (INVALID): edytor, < `minFramesAfterWarmup` klatek, utrata fokusu, przepełniony bufor, koniec
 inny niż `duration`, warunki inne niż w klasie (rozdzielczość / tier / limit FPS; `--allow-context-mismatch` = tylko informacyjnie).
-Maszyna spoza `referenceMachines` (dziś lista pusta) → `gate_eligible: false` — wynik informacyjny, nie zalicza bramki.
+Rodzaj pomiaru (`measurement_kind`, ADR 0266 „Uzupełnienie s23 (D76)”): `reference` (prawdziwy sprzęt klasy — `reference`
+w `pc-machines.json` albo stare `referenceMachines` w budżecie; dziś obie listy puste), `emulation` (maszyna deweloperska
+RTX 5070 dla klas min/zalecany przy zgodnej konfiguracji: 1920×1080 pełny ekran, tier Low/High, limit 30/60 FPS, VSync 0),
+`informational` (wszystko inne; powód w `measurement.reasons`). `gate_eligible` = PASS i (`reference` albo `emulation`).
+Raport emulacji ma adnotację „EMULACJA (D76) — nie zastępuje pomiaru na sprzęcie klasy X przed obietnicą wymagań”.

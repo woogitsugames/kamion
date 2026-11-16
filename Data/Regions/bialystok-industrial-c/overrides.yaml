@@ -277,13 +277,16 @@ overrides:
       # apart along the gap), none on the outer caps
       lamps: {side: median, spacing_m: 32.0, anchor_en: [554.5, -715.5]}
     reason: >-
-      Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r.: red-painted deck edge, plain grey cylindrical
-      concrete piers, steel railing, no noise screen (CC0 photo 20201102_152339, Rakoon, docs/REFERENCES.md).
+      Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r.: red-painted deck edge, plain grey concrete piers of
+      rounded-rectangle (stadium) section with the narrower face painted red (ADR 0144 `col_shape: stadium` in the
+      hero override below; research P13-076 / P13-065), steel railing, no noise screen on either deck (CC0 photos
+      20201102_152339 and 20210320_092717 / 092737, Rakoon, docs/REFERENCES.md; research P13-073 / P13-080).
       cap_w (ADR 0117): cap behind the kerb 1.0 m instead of the generic 1.5 m - orthophoto: kerb + cap with the
       barrier ~1.3 m; Mapillary 454716650857984: edge line -> barrier face ~1.25 m (was ~1.8 m, the cap read as a
       sidewalk). WORKING_VALUE (+-0.2 m). The deck gets 0.5 m narrower on each outer side; the carriageway, the
       box girder and the piers stay.
-      Pier diameter and spacing are not measured (WORKING_VALUE 1.2 m, rule spacing).
+      The generic pier of this style (pier_r, cylinder) is a fallback only: the hero override below replaces it with
+      measured pier rows (ADR 0123) and 0.70 x 1.40 m stadium columns (ADR 0144, WORKING_VALUE).
     confidence: medium
     verify: pier count / spacing and fascia height from a site photo
   - id: andersa-viaduct-biezenstwa-hero
@@ -355,19 +358,25 @@ overrides:
           # of the galvanised W-beam with an open view under it. Rail count / heights WORKING_VALUE.
           barrier: dark_rails}
     reason: >-
-      Andersa viaduct at Rondo Putry (DK8/DK19/DK65): green deck edge, yellow-painted round piers in pairs,
+      Andersa viaduct at Rondo Putry (DK8/DK19/DK65): green deck edge, ochre-painted piers in pairs - rectangular
+      with chamfered corners and a widened head (cap) under the deck, NOT round (ADR 0198; research P13-034, CC0
+      7204_May_2021 + Panoramax 6fc62548 as reference; built by viaduct_underdeck.json: 1.0 x 1.2 m, chamfer 0.25 m,
+      WORKING_VALUE; `pier_mat` here only names the paint) -
       transparent noise screens on posts along the deck (CC0 photo 7204_May_2021, Rakoon; consistent with the
       CC BY-SA photos of Rondo Putry and Andersa/Maczka used as reference only). Screen height WORKING_VALUE.
       ADR 0125: the screen stands on the outer (right-hand) edge only - Mapillary 494288258686575 (szurek 2017,
       northbound deck) has the screen on the right and a guard rail with an open view of the other carriageway
-      on the left. The southbound deck is assumed symmetric (UNVERIFIED).
+      on the left. ADR 0198: the other (south-west, traffic to SE) deck is confirmed, not assumed - CC0 photo
+      20221203_111814 (Rakoon; research P13-018 / P13-040) shows the transparent screen on its outer (south-west)
+      edge; the edges facing the median carry a light galvanised railing with handrails and no screen (Panoramax
+      6fc62548, reference only; research P13-079).
       ADR 0146: Mapillary 494288258686575 measured from the road vanishing point with eye height 1.0 m (lane 3.5 m):
       edge line centre -> kerb face 0.4 m, kerb -> barrier posts ~0.75 m on a red-brown coated cap, screen ~0.5 m
       behind the posts (kerb face -> screen ~1.3 m; was 1.65 m on a light concrete cap). Orthophoto 0.08 m: 1.1 m from
       the edge line to the barrier; the caps on the median side are red. Mapillary 810525063224609 /
       209622370971977: the fascia is green on the spans and red on top of the block-faced ramp walls. WORKING_VALUE.
     confidence: medium
-    verify: screen height and post spacing, which deck sides carry screens
+    verify: screen height and post spacing
   - id: andersa-putry-approach-gantry
     kind: sign_gantry
     osm_way: 266084693
@@ -1188,13 +1197,53 @@ overrides:
   - id: putry-ring-s-placement
     target: {edge: "w180144451:2629251364-4075461271"}
     reason: >-
-      MA-010 (artifacts/map-audit-r9/BUGS.md): the OSM way of this 46 m ring segment of Rondo Putry runs along the
-      real SOUTH kerb, so the symmetric 7 m carriageway put its right lane on the real grass triangle and left the
-      real left lane out. Orthophoto 0.08 m (artifacts/islands-r10/after3/ma010_chains.jpg): south kerb ~0.6 m right
-      of the way, two lanes to the left of it -> centre 2.9 m left.
+      MA-010 (artifacts/map-audit-r9/BUGS.md) moved this 46 m ring segment of Rondo Putry 2.9 m to the left over its
+      whole length; that is right only at its east end (the kerb of the right-turn splitter is ~0.6 m right of the
+      way there). ADR 0226, owner decision 2026-11-15 (correct the ring so the SW deck of estakada A can get its two
+      island pier rows): GUGiK orthophoto WMS HighResolution, 0.05 m/px window E -640..-480 N -80..+80 fetched
+      2026-11-15 (reference only, not stored; not Google). Kerb points read by eye on a 1 m grid, +-0.3 m, in metres
+      LEFT of the OSM way: kerb of the centre island +6.3 (s 3 m), +5.0 (6), +4.0 (9), +3.7 (11.5), +3.57 (15),
+      +3.47 (19), then the nose flares away: +4.4 (23), +6.3 (26.7), +7.2 (27.2); kerb of the pavement on the right
+      -3.8 (s 8), -3.3 (12.5), -2.6 (19), -2.5 (23.5). So between s 10 and 20 m the real carriageway is 6.1-7.0 m
+      wide and lies ON the OSM way (two lanes, arrow in the left one), not 2.9 m left of it: the generated left lane
+      and the rule's apron stood on the real island (generated island kerb 3.6 m inside the real one on average,
+      4.9 m at most). Profile [t, value], t = 0..1 along the edge (ADR 0095): centre 1.2 m left / 7.2 m wide at the
+      west end (the kerb return under the deck edge), 0.25 -> 0.15 m / 6.0 m between t 0.25 and 0.42, back to the
+      MA-010 values 2.9 m / 7.0 m from t 0.62 on (east of the island nose nothing changes). All WORKING_VALUE.
     confidence: medium
-    verify: Mapillary 987194858750300 / owner drive
-    set: {center_offset: 2.9}
+    verify: Mapillary 987194858750300 / owner drive; fit of the generated island kerb in tests/gis/test_putry_ring_0226.py
+    set:
+      center_offset: [[0.0, 1.2], [0.1, 1.2], [0.25, 0.25], [0.42, 0.15], [0.62, 2.9], [1.0, 2.9]]
+      width: [[0.0, 7.2], [0.1, 7.2], [0.25, 6.0], [0.42, 6.0], [0.62, 7.0], [1.0, 7.0]]
+  - id: putry-ring-island-kerb
+    target: {osm_way: [180144451, 257367424, 257367425, 257367428]}
+    reason: >-
+      ADR 0226. Rondo Putry has no mountable sett apron: on the GUGiK orthophoto (WMS HighResolution, 0.05 m/px,
+      fetched 2026-11-15, reference only) the asphalt of the ring runs to a light kerb band, behind it gravel and
+      grass (north half) or gravel with a W-beam (south-west side, beside the SW deck). Position of that kerb
+      relative to the generated carriageway edge of each ring way (38 points read by eye on a 1 m grid, +-0.3 m):
+      west way 257367425 +0.0..+0.45 m, north way 257367424 +0.15..+0.7 m, east way 257367428 +0.25..+0.6 m (one
+      point between the decks -0.45 m, +-0.5 m). The rule's 2.0 m sett apron (standards.ROUNDABOUT_APRON_W) put
+      the island kerb 1.3-2.5 m inside the real one along the three straight sides. `truck_apron: {width_m: 0.4}` (mean of the three ranges, WORKING_VALUE; the one island-strip mechanism of ADR 0218 + 0226, width only) =
+      distance carriageway edge -> island kerb; `apron: asphalt` = that strip is plain carriageway (ADR 0123). The
+      lane layout of the four ways is not touched here. Whether the light band is the kerb alone or a kerb with a
+      narrow paved strip behind it cannot be told from above (UNVERIFIED).
+    confidence: medium
+    verify: owner drive / street-level photo of the island kerb (open sources only)
+    set: {apron: asphalt, truck_apron: {width_m: 0.4}}
+  - id: putry-ring-island-nw-corner
+    target: {node: n3890183128}
+    reason: >-
+      ADR 0226. North-west corner of the centre island of Rondo Putry (kerb return between ring ways 257367425 and
+      257367424). Orthophoto (as above): the kerb arc from E -572.9 N 45 to E -557.5 N 53.3 is a circle of radius
+      12.0 m (least squares over 12 points, centre E -561.3 N 41.8, residuals <= 0.13 m). The rule asks for 12 m on
+      a ring too, but only 8.4 m fitted the 38.7 m north way (retry factor 0.7), which left the corner 2.4 m
+      outside the real kerb once the apron was gone. 10.0 m is the largest value tried that fits (WORKING_VALUE);
+      remaining error at the corner 1.4 m. Only the island corner: `island_curb_radius` does not touch the outer
+      corners of the junction.
+    confidence: medium
+    verify: owner drive
+    set: {island_curb_radius: 10.0}
   - id: lacznica-biezenstwa-placement
     target: {edge: "w177861600:1882953899-4391371827"}
     reason: >-
@@ -2868,3 +2917,8 @@ overrides:
       at 1600 px.
     confidence: medium
     verify: lead - visual-qa WorldC, cameras with footways / crossings (see ADR 0237)
+  # c-regen3-s23, OD-005 (leader s23): DK8 way 257367422 crosses the seam bialystok-industrial-c | bialystok-maczka. Same
+  # decision as `dk8-seam-kerb-od005` in bialystok-kleeberga (world2-s23, way 261104557): GUGiK orthophoto read with
+  # tools/worldgen/qa/ortho_xsec.py + by eye by world2 - guard rail at the carriageway edge and a hard strip, no ground
+  # shoulder, no ditch. The bialystok-maczka side gets its entry from world2. NOT IN THE BUILD YET: added after the
+  # c-regen3 rebuild of C; acts at the next rebuild of this tile.

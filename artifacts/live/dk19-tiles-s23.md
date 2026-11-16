@@ -1,0 +1,5 @@
+# STATUS — dk19-tiles-s23 (D81: kafle 5–7 ADR 0278, trasa C ↔ Dojlidy przez DK19)
+- Krok 0 (16.11): worktree `.claude/worktrees/dk19-tiles-s23`, gałąź `dk19-tiles-s23` z `origin/map-plan-0278` + merge `origin/main` (konflikt tylko `docs/adr/README.md`, rozwiązany `tools/docs/adr_index.py`); `Data/raw/derived` = Junction do main.
+- Ustalenia: kafle bialystok-mickiewicza (1,−2), -bojary (1,−1), -wygoda (1,0) NIE mają wpisów w `regions.py` ani plików authored (ADR 0278 definiuje tylko 3 pierwsze) — do dodania; NMT 2025 jak C i Dojlidy; `qa/seams.py` jest tylko na `origin/seam-taper-0275`; 1206 m trasy (Dywizjonu 303) leży w kaflu 4 `bialystok-krywlany` (poza zakresem) — do zgłoszenia.
+- NASTĘPNY KROK: dodać 3 wpisy `tools/worldgen/regions.py` + `Data/Regions/<id>/{overrides.yaml,sources.authored.json,route_endpoints.json}`, potem `uv run --project tools/worldgen python -m pytest -q tests/gis/test_map_plan_0278.py` i `uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-wygoda` (odłączone, Start-Process).
+

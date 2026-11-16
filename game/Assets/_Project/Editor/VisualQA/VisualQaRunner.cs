@@ -352,8 +352,11 @@ namespace Game.Editor.VisualQA
                 var prevTarget = cam.targetTexture;
                 cam.enabled = true;
                 var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
+                string detailCamera = EditorTools.Arg("-qaStatsDetailCamera", null);
+                string detailPath = EditorTools.Arg("-qaStatsDetailPath", null);
                 stats.AppendLine(SceneStats.Estimate(cam, hasTier ? tierSettings.shadowDistance : QualitySettings.shadowDistance,
-                    hasTier ? tierSettings.shadowCascades : 1, qa.id));
+                    hasTier ? tierSettings.shadowCascades : 1, qa.id,
+                    !string.IsNullOrEmpty(detailCamera) && qa.id == detailCamera ? detailPath : null));
                 // -qaTimeFrames N: N more renders of this camera at the tier's size / MSAA, wall time with a 1-pixel readback
                 // at the end (GPU-synchronised): an editor-GPU estimate of the frame cost for A/B comparisons (ADR 0023).
                 int timeN = int.Parse(EditorTools.Arg("-qaTimeFrames", "0"));

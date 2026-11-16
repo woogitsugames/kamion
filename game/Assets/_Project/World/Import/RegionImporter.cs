@@ -461,8 +461,9 @@ namespace Game.World.Import
                 // ADR 0239 (B-082): welded fence mesh -> Kamion/World FenceMesh (distance coverage instead of a cutoff).
                 if (clip && tex != null && Game.Rendering.FenceMeshCoverage.IsFenceMeshTexture(tex + ".png"))
                 {
-                    if (Game.Rendering.FenceMeshCoverage.Apply(lit, Shader.Find(Game.Rendering.FenceMeshCoverage.ShaderName))) EditorUtility.SetDirty(lit);
-                    else Debug.LogWarning($"[IMPORT] material '{id}': shader '{Game.Rendering.FenceMeshCoverage.ShaderName}' not found, URP Lit kept");
+                    // the shader must also COMPILE: a found shader with an error is the magenta fence of c-regen2 (review s23 P1)
+                    if (Game.Rendering.FenceMeshCoverage.Apply(lit, InstanceImporter.FenceShaderOrNull())) EditorUtility.SetDirty(lit);
+                    else Debug.LogWarning($"[IMPORT] material '{id}': shader '{Game.Rendering.FenceMeshCoverage.ShaderName}' missing or has errors, URP Lit kept");
                 }
                 return lit;
             }

@@ -1,0 +1,88 @@
+{
+ "plots": [
+  99,
+  99
+ ],
+ "only_a": [],
+ "only_b": [],
+ "order_same": true,
+ "poly_bytes_same": 98,
+ "poly_bytes_diff": 1,
+ "poly_vertex_count_diff": 0,
+ "hausdorff_m": {
+  "p50": 1.1368683772161603e-13,
+  "p90": 1.1368683772161603e-13,
+  "p99": 1.1368683772161603e-13,
+  "p100": 1.1368683772161603e-13
+ },
+ "hausdorff_over": {
+  "1mm": 0,
+  "10cm": 0,
+  "1m": 0
+ },
+ "worst": [
+  [
+   1.1368683772161603e-13,
+   "bdot:2BE4B431-47EC-1BF0-E053-CC2BA8C0D140",
+   238.886,
+   238.886
+  ]
+ ],
+ "layout_same": 97,
+ "layout_diff": 2,
+ "run_endpoint_max_diff_m": 1.1368683772161603e-13,
+ "gate_changed": [],
+ "wicket_count_changed": [],
+ "access_changed": [],
+ "run_count_changed": [],
+ "fence_len_changed": [],
+ "fence_len_total_m": [
+  9642.321,
+  9642.321
+ ],
+ "gates": [
+  43,
+  43
+ ],
+ "runs": [
+  583,
+  583
+ ],
+ "drops_same": true,
+ "drops": [
+  43,
+  43
+ ],
+ "access_stats": [
+  {
+   "moved": 11,
+   "removed": 5,
+   "removed_no_carriageway": 3,
+   "removed_junction": 2
+  },
+  {
+   "moved": 11,
+   "removed": 5,
+   "removed_no_carriageway": 3,
+   "removed_junction": 2
+  }
+ ],
+ "timers_s": [
+  {
+   "plan": 70.42,
+   "door_zones": 1.5,
+   "layout": 33.46,
+   "gate_access": 2.54,
+   "plan_access": 18.31,
+   "region_plan": 108.55
+  },
+  {
+   "plan": 2.06,
+   "door_zones": 2.2,
+   "layout": 2.04,
+   "gate_access": 1.87,
+   "plan_access": 2.26,
+   "region_plan": 9.07
+  }
+ ]
+}

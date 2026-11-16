@@ -76,7 +76,14 @@ namespace Game.World
                     result.Add(new Crossing { s = Mathf.Lerp(distances[i - 1], distances[i], t), entry = db < da, closure = k });
                 }
             }
-            result.Sort((x, y) => x.s.CompareTo(y.s));
+            // Insertion sort by s (a handful of rows): no comparer allocation, once per start (ADR 0277: zero GC).
+            for (int i = 1; i < result.Count; i++)
+            {
+                var c = result[i];
+                int j = i - 1;
+                while (j >= 0 && result[j].s > c.s) { result[j + 1] = result[j]; j--; }
+                result[j + 1] = c;
+            }
         }
 
         /// <summary>

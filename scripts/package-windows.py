@@ -6,9 +6,13 @@
     uv run --no-project python scripts/package-windows.py <build dir> --release          # also fail on licence blockers
 
 Output (default artifacts/dist/):
-    kamion-<ver>-<sha>[-low][-dev][-dirty]-win64.zip      top folder of the same name inside
+    kamion-<ver>-<sha>[-low][-regions][-dev][-dirty]-<content>-win64.zip   top folder of the same name inside
     kamion-<ver>-<sha>...-win64.zip.sha256                "<sha256>  <zip name>" (sha256sum format)
     kamion-<ver>-<sha>...-win64.json                      file list, sizes, excluded paths, warnings
+<content> = 12 hex digits of the content hash of Kamion_Data (ADR 0276, scripts/postbuild-windows.py): Kamion.exe is the
+same Unity stub in every build, so the git sha alone (or Kamion.exe.sha256) does not tell two builds apart. The hash is
+recomputed here and must match build-id.json from the build (else exit 2: Kamion_Data changed after the build); a build
+without build-id.json (before ADR 0276) gets one generated here.
 
 The zip is reproducible for identical input: sorted entries, fixed timestamp, fixed permissions.
 Stdlib only (Python >= 3.10). Exit codes: 0 ok, 2 bad input (missing exe/data, dev or dirty build without the
@@ -17,7 +21,10 @@ allow flag), 3 --release and a licence blocker is still open.
 What does NOT ship (Unity names its debug output so that it says so itself; see docs/12_DYSTRYBUCJA_PC.md §2):
   *_BurstDebugInformation_DoNotShip/, *_BackUpThisFolder_ButDontShipItWithYourGame/, *.pdb, plus the build
   metadata written by build-windows.ps1 / BuildCommands (build.json, Kamion.exe.sha256, Kamion.content.json,
-  Kamion.top.txt, Kamion.variants.txt) and the developer launcher Kamion-knyszyn.cmd.
+  Kamion.top.txt, Kamion.variants.txt, Kamion_Data.sha256) and every root launcher (*.cmd with "-scene <x>",
+  e.g. Kamion-<region>.cmd from build-windows.ps1) whose scene / region is not in this build (see build_scenes()).
+What ships from the build root besides the player: build-id.json (content hash read by the game), Kamion-okno.cmd and
+the Kamion-<region>.cmd launchers of the regions in this build (int-h3-s23 leader decision, ADR 0276 / 0271).
 What is added: THIRD_PARTY_NOTICES.txt (generated from the in-game "Informacje" text, so both stay one source),
 README.txt (requirements D74, how to start, where logs are), SHA256SUMS.txt, collect-logs.ps1 + Zbierz-logi.cmd.
 """
@@ -26,6 +33,7 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import hashlib
+import importlib.util
 import json
 import re
 import shutil
@@ -36,6 +44,17 @@ from datetime import date
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
+
+
+def _load_postbuild():
+    spec = importlib.util.spec_from_file_location("postbuild_windows", Path(__file__).resolve().parent / "postbuild-windows.py")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+postbuild = _load_postbuild()   # ADR 0276: one implementation of the content hash (build step and packaging)
 EXE_NAME = "Kamion.exe"            # BuildCommands.WindowsExeName
 DATA_DIR = "Kamion_Data"           # Unity: <ProjectName>_Data next to the exe
 ABOUT_RESOURCES = REPO / "game/Assets/_Project/UI/Resources"
@@ -43,6 +62,10 @@ ATTRIBUTIONS = ABOUT_RESOURCES / "About/attributions.txt"
 README_TEMPLATE = REPO / "dist/windows/README.txt.in"
 COLLECT_LOGS = REPO / "scripts/collect-logs.ps1"
 PROJECT_SETTINGS = REPO / "game/ProjectSettings/ProjectSettings.asset"
+EDITOR_BUILD_SETTINGS = REPO / "game/ProjectSettings/EditorBuildSettings.asset"
+REGION_CATALOG = REPO / "game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json"   # RegionBuildList.CatalogAssetPath
+WORLD_ROOT = "Assets/_Generated/World/"     # RegionScenes.GeneratedRoot: scenes of region <id> live in WORLD_ROOT + <id>/
+CITY_PREFIX = "bialystok-"                  # RegionCatalog.CityPrefix
 
 # Directory names (any depth) that never ship.
 EXCLUDED_DIR_GLOBS = ("*_BurstDebugInformation_DoNotShip", "*_BackUpThisFolder_ButDontShipItWithYourGame", "*_DoNotShip")
@@ -50,7 +73,12 @@ EXCLUDED_DIR_GLOBS = ("*_BurstDebugInformation_DoNotShip", "*_BackUpThisFolder_B
 EXCLUDED_FILE_GLOBS = ("*.pdb",)
 # Build metadata in the player root (build-windows.ps1 / BuildCommands.WriteContentReport): useful for us, not players.
 EXCLUDED_ROOT_FILES = ("build.json", "Kamion.exe.sha256", "Kamion.content.json", "Kamion.top.txt",
-                       "Kamion.variants.txt", "Kamion-knyszyn.cmd")
+                       "Kamion.variants.txt", "Kamion_Data.sha256")
+# Root launchers that jump into a scene ("... -scene <x> %*", Kamion-<region>.cmd) ship only when that scene is in the build
+# (int-h3-s23: no developer-only exception any more; Kamion-knyszyn.cmd starts the knyszyn region for testers).
+LAUNCHER_SCENE_RE = re.compile(r"(?:^|\s)-scene\s+\"?([^\s\"%]+)", re.I)
+# BuildCommands.BuildWindows logs the final scene list: "[BUILD] Windows x64 → <exe> (...) scenes=[a, b, c]".
+BUILD_LOG_SCENES_RE = re.compile(r"\[BUILD\] Windows x64 .*? scenes=\[([^\]]*)\]")
 # Present only in Development builds (Unity manual, Windows standalone binaries: WinPixEventRuntime.dll).
 DEV_MARKERS = ("WinPixEventRuntime.dll",)
 
@@ -67,14 +95,19 @@ class Plan:
     dirty: bool
     low: bool
     dev: bool
+    regions: bool = False
+    content: str = ""                                      # 12 hex digits (ADR 0276)
+    build_id: dict | None = None                           # build-id.json to ship when the build had none
     files: list[Path] = field(default_factory=list)       # relative to build_dir, shipped
     excluded: list[str] = field(default_factory=list)     # relative posix paths (dirs end with '/')
     warnings: list[str] = field(default_factory=list)
 
     @property
     def name(self) -> str:
-        flags = "".join(s for s, on in (("-low", self.low), ("-dev", self.dev), ("-dirty", self.dirty)) if on)
-        return f"kamion-{self.version}-{self.sha}{flags}-win64"
+        flags = "".join(s for s, on in (("-low", self.low), ("-regions", self.regions), ("-dev", self.dev),
+                                         ("-dirty", self.dirty)) if on)
+        content = f"-{self.content}" if self.content else ""
+        return f"kamion-{self.version}-{self.sha}{flags}{content}-win64"
 
 
 class PackageError(Exception):
@@ -93,6 +126,162 @@ def is_excluded_file(rel: Path) -> bool:
     return len(rel.parts) == 1 and rel.name in EXCLUDED_ROOT_FILES
 
 
+# ---------------------------------------------------------------- scenes in the build (region launchers)
+
+def _catalog(path: Path = REGION_CATALOG) -> dict:
+    return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def resolve_region_id(cat: dict, token: str) -> str | None:
+    """RegionCatalog.ResolveId: exact id, alias, or id without "bialystok-"; None when unknown."""
+    t = (token or "").strip().lower()
+    ids = [r["id"] for r in cat.get("regions", [])]
+    if not t:
+        return None
+    if t in ids:
+        return t
+    for a in cat.get("aliases", []):
+        if a.get("alias", "").lower() == t:
+            return a.get("region")
+    return CITY_PREFIX + t if CITY_PREFIX + t in ids else None
+
+
+def resolve_regions(cat: dict, spec: str, errors: list[str]) -> list[str]:
+    """RegionCatalog.Resolve (ids, aliases, sets, "all", ranges "a..b" and "a ... b"), in order, no duplicates."""
+    ids = [r["id"] for r in cat.get("regions", [])]
+    out: list[str] = []
+
+    def add(i):
+        if i not in out:
+            out.append(i)
+
+    def add_range(a, b, tok):
+        if a not in ids or b not in ids:
+            errors.append(f"range {tok!r}: unknown end")
+            return
+        x, y = ids.index(a), ids.index(b)
+        for k in (range(x, y + 1) if x <= y else range(x, y - 1, -1)):
+            add(ids[k])
+
+    pending = None
+    for t in (x for x in re.split(r"[,;\s\u00a0]+", spec or "") if x):
+        if t in ("...", "…"):
+            pending = out[-1] if out else None
+            if pending is None:
+                errors.append(f"{t!r} without a region before it")
+            continue
+        d = t.find("..")
+        if 0 < d and d + 2 < len(t):
+            add_range(resolve_region_id(cat, t[:d]), resolve_region_id(cat, t[d + 2:].lstrip(".")), t)
+            pending = None
+            continue
+        if t.lower() == "all":
+            for i in ids:
+                add(i)
+            pending = None
+            continue
+        st = next((x for x in cat.get("sets", []) if x.get("name", "").lower() == t.lower()), None)
+        if st is not None:
+            for r in st.get("regions", []):
+                i = resolve_region_id(cat, r)
+                add(i) if i else errors.append(f"set {st['name']}: unknown region {r!r}")
+            pending = None
+            continue
+        one = resolve_region_id(cat, t)
+        if one is None:
+            errors.append(f"unknown region {t!r}")
+        elif pending is not None:
+            add_range(pending, one, f"{pending}...{one}")
+        else:
+            add(one)
+        pending = None
+    if pending is not None:
+        errors.append("'...' without a region after it")
+    return out
+
+
+def _base_scenes(path: Path = EDITOR_BUILD_SETTINGS) -> list[str]:
+    """Enabled scenes of EditorBuildSettings.asset (the list every build starts from, BuildCommands.ComposeBuildScenes)."""
+    scenes, enabled = [], None
+    for line in path.read_text(encoding="utf-8").splitlines():
+        m = re.match(r"\s*-?\s*enabled:\s*(\d)", line)
+        if m:
+            enabled = m.group(1) == "1"
+            continue
+        m = re.match(r"\s*path:\s*(\S+\.unity)\s*$", line)
+        if m and enabled:
+            scenes.append(m.group(1))
+    return scenes
+
+
+def build_scenes(build_dir: Path, info: dict, warnings: list[str]) -> list[str] | None:
+    """Scene paths in this player build, None when they cannot be told (then every scene launcher stays out).
+
+    1. the "[BUILD] Windows x64 ... scenes=[...]" line of the build log named in build.json "log" (the real list, also
+       with -RegionsAllowMissing); 2. else build.json "regions" / "regionsFile" resolved with the region catalog on top of
+       EditorBuildSettings (as RegionBuildList does; a region skipped by -RegionsAllowMissing is not visible here).
+    """
+    log = info.get("log")
+    if log:
+        try:
+            hits = BUILD_LOG_SCENES_RE.findall(Path(log).read_text(encoding="utf-8-sig", errors="replace"))
+            if hits:
+                return [x.strip() for x in hits[-1].split(",") if x.strip()]
+        except OSError:
+            pass
+    if not info:
+        warnings.append("no build.json: scenes of the build unknown, scene launchers (-scene) left out")
+        return None
+    try:
+        spec = info.get("regions") or ""
+        rf = info.get("regionsFile") or ""
+        if rf:
+            p = Path(rf) if Path(rf).is_absolute() else REPO / rf
+            doc = json.loads(p.read_text(encoding="utf-8-sig"))
+            spec = ",".join(x for x in (spec, ",".join(doc.get("regions", []))) if x)
+        errors: list[str] = []
+        regions = resolve_regions(_catalog(), spec, errors) if spec.strip() else []
+        if errors:
+            warnings.append("regions of build.json not resolvable (" + "; ".join(errors) + "): scene launchers left out")
+            return None
+        scenes = _base_scenes()
+    except (OSError, ValueError, KeyError) as e:
+        warnings.append(f"scenes of the build unknown ({e}): scene launchers (-scene) left out")
+        return None
+    high = info.get("worldHigh") is not False
+    for r in regions:
+        name = "WorldC" if r == "bialystok-industrial-c" else "World_" + r      # RegionScenes.SceneNameFor
+        for n in (name, name + "_High") if high else (name,):
+            path = f"{WORLD_ROOT}{r}/{n}.unity"
+            if path not in scenes:
+                scenes.append(path)
+    if regions:
+        warnings.append("region scenes taken from build.json regions/regionsFile (build log not found): "
+                        "a region skipped by -RegionsAllowMissing would not be noticed")
+    return scenes
+
+
+def launcher_ships(rel: Path, build_dir: Path, scenes: list[str] | None) -> bool:
+    """A root *.cmd with "-scene <x>" ships only if <x> (region id / alias / scene name, as GameBootstrap.LaunchSceneFor)
+    is in the build; Kamion-okno.cmd and other launchers without -scene always ship."""
+    try:
+        m = LAUNCHER_SCENE_RE.search((build_dir / rel).read_text(encoding="ascii", errors="replace"))
+    except OSError:
+        return False
+    if not m:
+        return True
+    if scenes is None:
+        return False
+    token = m.group(1)
+    try:
+        rid = resolve_region_id(_catalog(), token)
+    except (OSError, ValueError):
+        rid = None
+    if rid is not None:
+        return any(s.startswith(f"{WORLD_ROOT}{rid}/") for s in scenes)
+    return any(Path(s).stem.lower() == token.lower() for s in scenes)
+
+
 def read_project_version() -> str | None:
     try:
         m = re.search(r"^\s*bundleVersion:\s*(\S+)\s*$", PROJECT_SETTINGS.read_text(encoding="utf-8"), re.M)
@@ -101,15 +290,19 @@ def read_project_version() -> str | None:
         return None
 
 
-def identify(build_dir: Path, version: str | None, sha: str | None) -> tuple[str, str, bool, bool, bool]:
-    """Version / sha / flags from build.json (build-windows.ps1), else the folder name, else arguments."""
-    info: dict = {}
+def read_build_json(build_dir: Path) -> dict:
     bj = build_dir / "build.json"
-    if bj.is_file():
-        try:
-            info = json.loads(bj.read_text(encoding="utf-8-sig"))
-        except (OSError, ValueError) as e:
-            raise PackageError(f"build.json unreadable: {e}")
+    if not bj.is_file():
+        return {}
+    try:
+        return json.loads(bj.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError) as e:
+        raise PackageError(f"build.json unreadable: {e}")
+
+
+def identify(build_dir: Path, version: str | None, sha: str | None) -> tuple[str, str, bool, bool, bool, bool]:
+    """Version / sha / flags from build.json (build-windows.ps1), else the folder name, else arguments."""
+    info = read_build_json(build_dir)
     m = FOLDER_RE.match(build_dir.name)
     flags = m.group("flags").split("-") if m else []
     ver = version or info.get("version") or (m.group("ver") if m else None) or read_project_version()
@@ -124,7 +317,9 @@ def identify(build_dir: Path, version: str | None, sha: str | None) -> tuple[str
         raise PackageError(f"version is not semver-like: {ver!r}")
     low = bool(info.get("worldHigh") is False) or "low" in flags
     dev = bool(info.get("development")) or "dev" in flags
-    return ver, clean_sha, dirty, low, dev
+    # Review #134 P2-1: a build with region scenes must not get the name of the default build of the same commit.
+    regions = bool(info.get("regions") or info.get("regionsFile") or info.get("regionIds")) or "regions" in flags
+    return ver, clean_sha, dirty, low, dev, regions
 
 
 def plan_package(build_dir: Path, version: str | None = None, sha: str | None = None,
@@ -138,8 +333,22 @@ def plan_package(build_dir: Path, version: str | None = None, sha: str | None = 
         raise PackageError(f"{DATA_DIR}/ missing in {build_dir}")
     if not (build_dir / "UnityPlayer.dll").is_file():
         raise PackageError(f"UnityPlayer.dll missing in {build_dir}")
-    ver, s, dirty, low, dev = identify(build_dir, version, sha)
-    plan = Plan(build_dir, ver, s, dirty, low, dev)
+    ver, s, dirty, low, dev, regions = identify(build_dir, version, sha)
+    plan = Plan(build_dir, ver, s, dirty, low, dev, regions)
+    try:
+        entries = postbuild.data_manifest(build_dir)
+        recorded = postbuild.read_build_id(build_dir)
+    except postbuild.PostBuildError as e:
+        raise PackageError(str(e))
+    current = postbuild.build_id(entries, (recorded or {}).get("gitSha") or s)
+    if recorded is None:
+        plan.build_id = current
+        plan.warnings.append(f"{postbuild.BUILD_ID} missing (build before ADR 0276): generated now from {postbuild.DATA_DIR}/")
+    elif recorded.get("contentSha256") != current["contentSha256"]:
+        raise PackageError(f"{postbuild.DATA_DIR}/ changed after the build: {postbuild.BUILD_ID} says "
+                           f"{recorded.get('contentHash')}, the folder hashes to {current['contentHash']} - rebuild")
+    plan.content = current["contentHash"]
+    scenes = build_scenes(build_dir, read_build_json(build_dir), plan.warnings)
 
     for p in sorted(build_dir.rglob("*")):
         rel = p.relative_to(build_dir)
@@ -154,6 +363,10 @@ def plan_package(build_dir: Path, version: str | None = None, sha: str | None = 
         if p.is_dir():
             continue
         if is_excluded_file(rel):
+            plan.excluded.append(rel.as_posix())
+            continue
+        if len(rel.parts) == 1 and rel.suffix.lower() == ".cmd" and (
+                not launcher_ships(rel, build_dir, scenes)):
             plan.excluded.append(rel.as_posix())
             continue
         if len(rel.parts) == 1 and rel.name in DEV_MARKERS:
@@ -211,8 +424,9 @@ def licence_blockers(attributions: Path = ATTRIBUTIONS) -> list[str]:
 def render_readme(plan: Plan, template: Path = README_TEMPLATE, today: date | None = None) -> str:
     text = template.read_text(encoding="utf-8-sig")
     values = {"name": plan.name, "version": plan.version, "sha": plan.sha,
-              "date": (today or date.today()).isoformat(),
-              "flags": ", ".join(f for f, on in (("Low", plan.low), ("Development", plan.dev), ("dirty", plan.dirty)) if on) or "—"}
+              "date": (today or date.today()).isoformat(), "content": plan.content or "—",
+              "flags": ", ".join(f for f, on in (("Low", plan.low), ("regiony", plan.regions), ("Development", plan.dev),
+                                                 ("dirty", plan.dirty)) if on) or "—"}
     for k, v in values.items():
         text = text.replace("{" + k + "}", v)
     if re.search(r"\{[a-z]+\}", text):
@@ -271,8 +485,8 @@ def write_package(plan: Plan, out_dir: Path, extra: dict[str, bytes], compressle
     zip_sha = _sha256_file(zip_path)
     (out_dir / f"{zip_path.name}.sha256").write_text(f"{zip_sha}  {zip_path.name}\n", encoding="ascii", newline="\n")
     manifest = {
-        "name": plan.name, "version": plan.version, "sha": plan.sha, "dirty": plan.dirty, "low": plan.low,
-        "development": plan.dev, "zip": zip_path.name, "zipSha256": zip_sha, "zipBytes": zip_path.stat().st_size,
+        "name": plan.name, "version": plan.version, "sha": plan.sha, "contentHash": plan.content, "dirty": plan.dirty,
+        "low": plan.low, "regions": plan.regions, "development": plan.dev, "zip": zip_path.name, "zipSha256": zip_sha, "zipBytes": zip_path.stat().st_size,
         "files": len(entries), "payloadBytes": sum(e["bytes"] for e in entries),
         "excluded": plan.excluded, "warnings": plan.warnings, "entries": entries,
     }
@@ -285,9 +499,15 @@ def extras(plan: Plan) -> dict[str, bytes]:
         "THIRD_PARTY_NOTICES.txt": render_notices().replace("\n", "\r\n").encode("utf-8-sig"),
         "README.txt": render_readme(plan).encode("utf-8-sig"),
     }
+    if plan.build_id is not None:
+        out[postbuild.BUILD_ID] = (json.dumps(plan.build_id, indent=1) + "\n").encode("utf-8")
     if COLLECT_LOGS.is_file():
         out["collect-logs.ps1"] = COLLECT_LOGS.read_bytes()
-        out["Zbierz-logi.cmd"] = ('@echo off\r\npowershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0collect-logs.ps1" %*\r\n'
+        # Review #134 P2-2: crash dumps are binary - the user name in them is not replaced; say so before the tester sends them.
+        out["Zbierz-logi.cmd"] = ('@echo off\r\n'
+                                  'echo Uwaga: zrzuty awarii (*.dmp) moga zawierac nazwe uzytkownika Windows - nie sa anonimizowane.\r\n'
+                                  'echo Bez zrzutow: Zbierz-logi.cmd -NoCrashes\r\n'
+                                  'powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0collect-logs.ps1" %*\r\n'
                                   'pause\r\n').encode("ascii")
     else:
         plan.warnings.append("scripts/collect-logs.ps1 missing - tester log collector not packed")

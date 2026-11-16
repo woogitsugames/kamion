@@ -4,10 +4,13 @@ Footprints : BDOT10k OT_BUBD_A (GUGiK, 2024-09 version for powiat 2061; geometry
 Heights    : joined by BDOT10k LOKALNYID == CityGML `buildingId`:
                1. GUGiK LoD1 2024 `measuredHeight`            -> height_source "gugik_lod1_2024"
                2. GUGiK LoD2 2017 (max roof z - ground z)     -> "gugik_lod2_2017"
-               3. BDOT10k LICZBAKONDYGNACJI * 3.0 m (+1.0)    -> "bdot10k_storeys"   (WORKING_VALUE factor)
+               3. BDOT10k LICZBAKONDYGNACJI * 3.0 m (+1.5)    -> "bdot10k_storeys"   (allowance MEASURED, ADR 0238)
                4. default 6.0 m                               -> "default"
 Extra      : OSM buildings with < 30 % overlap with any BDOT10k footprint are added (newer than BDOT
-             or missing there) with height from OSM `height` / `building:levels` * 3.0 + 1.0 / default.
+             or missing there) with height from OSM `height` / `building:levels` * 3.0 + 1.5 / default.
+OSM tags   : ADR 0238 - a BDOT10k footprint takes `osm_building` / `roof_shape_osm` (OSM `building`, `roof:shape`) of
+             the OSM building that covers most of it (>= 50 % of the BDOT10k area), for streetscape.typology; OSM-only
+             features carry `roof_shape_osm` as well. Keys are written only when the tag exists.
 LoD2 heights are relative (roof z - ground z), so the KRON86 vs EVRF2007 datum difference of the
 2017 models cancels out; absolute LoD2 z is NOT used anywhere.
 """
@@ -28,7 +31,11 @@ BLDG = "{http://www.opengis.net/citygml/building/2.0}"
 GML = "{http://www.opengis.net/gml}"
 GEN = "{http://www.opengis.net/citygml/generics/2.0}"
 STOREY_M = 3.0          # WORKING_VALUE: typical storey height
-BASE_M = 1.0            # WORKING_VALUE: plinth + roof allowance
+# plinth + roof allowance. MEASURED (ADR 0238): over the 8821 BDOT10k buildings of the regions in git that have both a
+# LoD1 2024 height and a storey count, the median of height - 3.0 * storeys is 1.50 m (blocks 1.54, houses 1.77, other
+# 1.33); mean absolute error 1.29 m at 1.5 against 1.36 m at 1.0 (the value before) and 1.35 m at 2.0 (proposed by review
+# s21-cloudD-64 from the R4 medians of two tiles) - tests/gis/test_typology_0238.py::test_base_m_is_the_measured_median
+BASE_M = 1.5
 DEFAULT_H = 6.0         # WORKING_VALUE: unknown building
 
 
@@ -182,6 +189,20 @@ def merge(bdot, lod1: dict, lod2: dict, osm, bbox) -> list[dict]:
     bgeoms = [f["geometry"] for f in feats]
     tree = shapely.STRtree(bgeoms)
     osm = osm[osm.geometry.intersects(tile)].sort_values(["osm_type", "osm_id"])
+    best = {}                                  # ADR 0238: OSM tags of the building covering most of a BDOT10k footprint
+    for r in osm.itertuples():
+        g = r.geometry if r.geometry.is_valid else r.geometry.buffer(0)
+        tags = {"osm_building": _s(r.building) if r.building not in (None, "yes") else None,
+                "roof_shape_osm": _s(getattr(r, "roof_shape", None))}
+        if not any(tags.values()):
+            continue
+        for j in tree.query(g):
+            a = bgeoms[int(j)].area
+            share = g.intersection(bgeoms[int(j)]).area / a if a > 0 else 0.0
+            if share >= 0.5 and share > best.get(int(j), (0.0,))[0]:
+                best[int(j)] = (share, tags)
+    for j, (_, tags) in best.items():
+        feats[j].update({k: v for k, v in tags.items() if v})
     for r in osm.itertuples():
         g = r.geometry
         if not g.is_valid:
@@ -208,4 +229,6 @@ def merge(bdot, lod1: dict, lod2: dict, osm, bbox) -> list[dict]:
             # building=roof is a canopy (fuel station, carport): no walls; importer must not extrude a block
             "is_roof_only": r.building == "roof",
         })
+        if _s(getattr(r, "roof_shape", None)):
+            feats[-1]["roof_shape_osm"] = _s(r.roof_shape)
     return feats
