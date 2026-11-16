@@ -70,6 +70,24 @@ namespace Game.UI
             m_View.Refresh();
         }
 
+        /// <summary>Tests / captures: lay out for a screen of the given form factor (ADR 0265 / 0276), like <c>BootMenu.OverrideScreen</c>.</summary>
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi, bool desktop)
+        {
+            m_View.OverrideScreen(pixelSize, safeAreaPx, dpi, desktop);
+            m_View.Refresh();
+            m_LayoutApplied = false;
+            ApplyLayout();
+        }
+
+        /// <summary>The text panel (null before Build; tests).</summary>
+        public RectTransform PanelRect => m_PanelRt;
+
+        /// <summary>The three buttons (tests).</summary>
+        public RectTransform ButtonRect(int index) => m_ButtonRts[index];
+
+        /// <summary>Layout last applied (ADR 0276; tests).</summary>
+        public MenuOverlayResult AppliedLayout => m_AppliedLayout;
+
         void Build(Camera camera)
         {
             m_Canvas = gameObject.AddComponent<Canvas>();
@@ -145,11 +163,14 @@ namespace Game.UI
                 MenuOverlayBoard.PanelSize = MenuOverlayLayout.ReservePanel(MenuOverlayBoard.PanelSize, m_PanelRt.rect.size);
             MenuOverlayBoard.Solve(m_View.SizeUnits, out var r);
             if (m_LayoutApplied && r.SameAs(m_AppliedLayout)) return;
+            bool first = !m_LayoutApplied;
+            bool wasShown = m_AppliedLayout.Panel != OverlayPanelPlace.Collapsed;
             m_LayoutApplied = true;
             m_AppliedLayout = r;
 
             bool show = r.Panel != OverlayPanelPlace.Collapsed;
-            if (m_Panel.activeSelf != show) m_Panel.SetActive(show);
+            // Only a change of the show state toggles the panel (a re-layout after a resize keeps whatever else set it).
+            if ((first || show != wasShown) && m_Panel.activeSelf != show) m_Panel.SetActive(show);
             if (show)
             {
                 bool top = r.Panel == OverlayPanelPlace.TopLeft;
