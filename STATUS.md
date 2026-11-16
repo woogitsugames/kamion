@@ -1,4 +1,3 @@
-# STATUS signs-audit-0279 (D21, chmura D r6)
-- 2026-11-16 krok 1: przeczytane Dz.U. 2019/2311 cz.1 (sha f94925ec) + zał. 2 (plik ELI typ I, sha 8abcce24), 2310, 1105, nowelizacje; katalog: sign_norms (tabele A-D/G, montaż, odległości), signs.RECT G-2 0,44x0,60, rail.py G-3 1,40x0,15, standards P-6/P-14 8 m. Testy: -k "sign or marking or 0236 or 0279 or rail_approach" 172 passed; -k "rail or v34 or furniture" 198 passed.
-- NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis -k "sign or marking or 0236 or 0279" -q` + ADR 0279 + raport docs/reports/SIGNS-AUDIT-2026-11-16.md
-- krok 2: ADR 0279 + raport docs/reports/SIGNS-AUDIT-2026-11-16.md. NASTĘPNY KROK: PR do main
+# STATUS signs-p1-s23 (D25, chmura D r7) — ADR 0279 „P1 — wdrożenie” (baza: PR #147 signs-audit-0279 scalony do gałęzi)
+- krok 1: (1) urządzenia przejazdu: `rail.device_stations` — sygnalizator/G-3/G-4 ≥ 5 m od skrajnej szyny (1105 § 77 ust. 2 pkt 1; 2311 zał. 1 pkt 2.2.11), rogatka ≥ 5 m od osi toru po osi drogi (§ 54 ust. 1); było ≈ 3,55 m. Testy -k "rail or p1_0279": 139 passed.
+- NASTĘPNY KROK: (2)+(3) markings.py P-14 przy sygnalizatorze / P-12 przy B-20 — `uv run --project tools/worldgen python -m pytest tests/gis -k "sign or marking or rail or 0279" -q`

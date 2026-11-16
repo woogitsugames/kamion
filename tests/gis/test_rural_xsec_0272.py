@@ -338,7 +338,10 @@ def test_dw671_no_gullies_and_rail_zone_on_the_paved_road(dw671):
     xc = [x for x in plan.crossings if x["src"] == "osm:node/1778182481"][0]
     assert xc["road_w"] * xc["sin"] == pytest.approx(2 * hw + 0.16, abs=0.15) or         xc["road_w"] == pytest.approx(2 * hw + 0.16, abs=0.15)
     posts = [m for m in RA.plan(plan, wd.net)["markers"] if m["kind"] == "guide_post"]
-    assert len(posts) == 24
+    # ADR 0279 P1 (D25): barriers >= 5 m from the track axis and signals >= 5 m from the outer rail moved the first
+    # guide post out by ~2.9 m; the last left post of approach +1 (23 m) now falls in the mouth of the side road and
+    # is skipped (never on a carriageway) -> 23 of 24
+    assert len(posts) == 23
     for m in posts:
         s2, lat2 = c.line.project(np.array([m["e"], m["n"]]))
         sh = Nw.side_shoulder(c, "L" if lat2 > 0 else "R", float(s2))
