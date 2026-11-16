@@ -210,3 +210,81 @@ def test_readme_has_requirements_and_no_placeholders(tmp_path):
                  r"AppData\LocalLow\woogitsugames\Kamion\Player.log"):
         assert must in text, must
     assert "\r\n" in text
+
+
+# ---------------------------------------------------------------- region launchers (Kamion-<region>.cmd)
+
+def _launcher(scene: str) -> bytes:
+    """Same text as build-windows.ps1 writes."""
+    return (f'@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 '
+            f'-scene {scene} %*\r\n').encode("ascii")
+
+
+def _with_launchers(b: Path) -> Path:
+    (b / "Kamion-okno.cmd").write_bytes(b'@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 0 %*\r\n')
+    (b / "Kamion-knyszyn.cmd").write_bytes(_launcher("knyszyn"))
+    (b / "Kamion-knyszyn-w.cmd").write_bytes(_launcher("knyszyn-w"))
+    return b
+
+
+def _plan_names(b: Path) -> tuple[set[str], list[str]]:
+    plan = pw.plan_package(b)
+    return {f.as_posix() for f in plan.files}, plan.excluded
+
+
+def test_region_launcher_left_out_when_region_not_in_build(tmp_path):
+    # default build (no -Regions): Boot + DrivingLab + WorldC only -> no knyszyn-w scene
+    b = _with_launchers(make_build(tmp_path, name=f"kamion-0.1.0-{SHA}",
+                                   build_json={"version": "0.1.0", "sha": SHA, "regions": "", "regionsFile": ""}))
+    shipped, excluded = _plan_names(b)
+    assert "Kamion-okno.cmd" in shipped
+    assert "Kamion-knyszyn-w.cmd" in excluded and "Kamion-knyszyn-w.cmd" not in shipped
+    assert "Kamion-knyszyn.cmd" in excluded
+
+
+def test_region_launcher_set_d67_has_no_knyszyn_w(tmp_path):
+    # Data/build_regions.json style: set d67 (region_catalog.json) holds knyszyn but not knyszyn-w
+    b = _with_launchers(make_build(tmp_path, build_json={"version": "0.1.0", "sha": SHA, "regions": "d67", "regionsFile": ""}))
+    shipped, excluded = _plan_names(b)
+    assert "Kamion-knyszyn-w.cmd" in excluded
+    assert "Kamion-knyszyn.cmd" in excluded          # developer shortcut (ADR 0271 §2) even with knyszyn in the build
+
+
+def test_region_launcher_ships_when_region_in_build(tmp_path):
+    b = _with_launchers(make_build(tmp_path, build_json={"version": "0.1.0", "sha": SHA, "regions": "d67,knyszyn-w"}))
+    shipped, excluded = _plan_names(b)
+    assert "Kamion-knyszyn-w.cmd" in shipped and "Kamion-okno.cmd" in shipped
+    assert "Kamion-knyszyn.cmd" in excluded
+
+
+def test_region_launcher_build_log_wins(tmp_path):
+    # -RegionsAllowMissing: knyszyn-w asked for but not imported -> the build log's scene list is the truth
+    log = tmp_path / "build-win.log"
+    log.write_text("[BUILD] Windows x64 → C:/a/Kamion.exe (development=False, worldHigh=True) scenes=["
+                   "Assets/_Project/Core/Scenes/Boot.unity, Assets/_Generated/World/knyszyn/World_knyszyn.unity]\n",
+                   encoding="utf-8")
+    b = _with_launchers(make_build(tmp_path, build_json={"version": "0.1.0", "sha": SHA, "regions": "knyszyn,knyszyn-w",
+                                                         "log": str(log)}))
+    shipped, excluded = _plan_names(b)
+    assert "Kamion-knyszyn-w.cmd" in excluded
+
+
+def test_region_launcher_unknown_build_content(tmp_path):
+    b = _with_launchers(make_build(tmp_path, build_json={"version": "0.1.0", "sha": SHA}))
+    (b / "build.json").unlink()
+    plan = pw.plan_package(b)
+    shipped = {f.as_posix() for f in plan.files}
+    assert "Kamion-okno.cmd" in shipped and "Kamion-knyszyn-w.cmd" not in shipped
+    assert any("scene launchers" in w for w in plan.warnings)
+
+
+def test_resolve_regions_matches_catalog_rules():
+    cat = pw._catalog()
+    errs: list[str] = []
+    assert pw.resolve_regions(cat, "c, dojlidy", errs) == ["bialystok-industrial-c", "bialystok-dojlidy"]
+    assert pw.resolve_regions(cat, "dk65-01..dk65-03", errs) == ["dk65-01", "dk65-02", "dk65-03"]
+    assert pw.resolve_regions(cat, "dk65-03 ... dk65-01", errs) == ["dk65-03", "dk65-02", "dk65-01"]
+    assert "knyszyn-w" not in pw.resolve_regions(cat, "d67", errs)
+    assert errs == []
+    pw.resolve_regions(cat, "nie-ma-takiego", errs)
+    assert errs
