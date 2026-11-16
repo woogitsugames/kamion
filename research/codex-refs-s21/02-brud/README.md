@@ -232,3 +232,8 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Dwie używane naczepy — runda32
 
 [europe-used-doors-round32](europe-used-doors-round32/README.md):2pojazdy/5osobnoobejrzanychkadrów, wtym2tyły;0pobrań/screenshotów, tylkoARRlink-only. SchmitzJR48024zamknięte2skrzydła, aleczystość/nakładkaSprzedanePENDING_SURFACE;Krone1099970394jednoskrzydłootwarte, odpada paraZAMKNIĘTA. Szare dolneślady osobno odrdzy, drzwiEST470–520pxw525×700.0A/B/zimy/Europydrogi. WygasłyOLXNOT_REVIEWEDniezwiększaoglądów. Główny23bez zmian.
+
+
+## ZimowaA3 — runda33
+
+[europe-winter-road-round33](europe-winter-road-round33/README.md):2odrębne fotografieagentosobnoobejrzał,0pobrań/screenshotów, ARRlink-only. WNOZ913684 źródłowoA3/Medenbach: odległenocnetyłyEST120–190px, film/typkonkretnejskrzyniUNVERIFIED. Verkehrsrundschau2955582kadr4:śniegtak,przód/bokzestawu,nietylnedrzwi;natywne400×290pomimo945x532URL. Datypublikacji04.02.2026/20.12.2010nieEXIF.0A/B,zima brudnychdrzwi/EUbrudnychdrógbezprzyrostu. Główny23bez zmian, nieglobalnybrakmateriału.
