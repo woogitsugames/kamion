@@ -190,3 +190,8 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Scania — fizyczna geometria bez pewnego znaku, runda26
 
 [rear-combination-approval-round26](rear-combination-approval-round26/README.md):1 odrębna fotografia jednej deklarowanej części Scania2860829, naturalne2048×1536, tylko link-onlyARR. Agent obejrzał ją w galerii i osobno pod dokładnym URL. Obudowa/klosz i odbicie fotografa są widoczne; tło opracowano na biało. Małych tłoczeń E/numer/funkcje nie odczytano pewnie.0 nowych potwierdzonych homologacji/ON/noc,0pobrań i zapisanych screenshotów. Źródłowe ciężarowe zastosowanie to deklaracja sprzedawcy. AUX poza głównym49, bez wymuszania numeru z małych znaków.
+
+
+## Świeży losowy audyt49 — runda27
+
+[qualification-audit-round27](qualification-audit-round27/README.md):prawdziwa permutacja bez zwracania z seed2026111601, snapshot/hash i pełna kolejka zamrożone przed oglądem.10/49=20,41% rzeczywiście ponownie obejrzanych wierszy,10 ekspozycji/13 plików lubURL,0 zastępstw/NOT_REVIEWED/Commons. Dziewięć PASS_WITH_LIMITS, jedna korekta kształtu01-003; dodatkowo wycofano pewność materiału punktów HP9-04. Root osobno potwierdził te2 uwagi i zastosował je we wszystkich aktywnych właściwych polach. Snapshot przed zmianą zachowany jako historia, nie dane generatora.0 nowych fotografii/E/ON/noc. Audyt obejmuje49 głównych, nie cały korpus norm/AUX.
