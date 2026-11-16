@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-16",
+  "existing_id": "01-EUP3-003",
+  "url": "https://a.allegroimg.com/original/11feb6/d82af1d844beb04732b559c7adbc",
+  "method": "Indywidualny rzeczywisty ogląd publicznego obrazu w Chrome; dopasowany widok i natywne 1:1 po zwykłym kliknięciu. Bez pobierania, zapisu zrzutów, obrotu i cropu.",
+  "natural_dimensions": {"width":2560,"height":1920,"status":"SOURCED: loaded image naturalWidth/naturalHeight and browser title"},
+  "rendered_dimensions": {"fitted_width":1287,"fitted_height":965,"native_display_width":2560,"native_display_height":1920,"status":"SOURCED: read-only DOM of visible image"},
+  "observation": "Biała duża etykieta na fizycznej ciemnej obudowie; górna podłużna krawędź, mały pas brązowego otoczenia ponad nią, okrągły otwór po prawej. Rysy i plamki na tworzywie. Widoczna obudowa dochodzi do obu bocznych krawędzi fotografii i wychodzi poza kadr; dolne poziome przekroje mają obudowę przez całą szerokość. Nie jest samą kartką na pustym tle.",
+  "geometry": {
+    "rule_source": "docs/owner/MISTRAL-FIXES-12.md M59-FIX pkt2",
+    "rule": "lamp at least 10% image width OR original crop with lamp at least 300 px wide",
+    "denominator": "2560px source photograph width, excluding browser black margins",
+    "visible_housing_span_percent": [95,100],
+    "span_status": "ESTIMATED from actual image; conservative visual interval, not pixel segmentation or complete-lamp bounding box",
+    "derived_visible_span_native_px": [2432,2560],
+    "derived_10_percent_threshold_px":256,
+    "uncertainty": "The entire lamp outline is clipped. The visible housing span is much larger than 10%; the 95–100% interval is approximate and not a metrological error bar.",
+    "label_width_used_as_lamp_width":false,
+    "new_crop_created":false,
+    "crop300_claimed":false,
+    "verdict":"PASS_GEOMETRY_10_PERCENT",
+    "no_extra_requirements":["whole lamp not required","lens E not required","full approval number not required for rear15","mounted or powered lamp not required for unlit reference"]
+  },
+  "existing_component_link": {
+    "source_record": "../link-only-candidates/europoint3-observations.json",
+    "prior_peer": "../data/europoint3-peer-review.json",
+    "source_page": "https://allegro.pl/produkt/schmitz-krone-lampa-lewa-aspock-europoint-iii-25-7000-507-ace47bbf-68f0-4127-b004-fe7342bbdbe2",
+    "existing_gallery": "10/10 label linked to full lamp EUP3-001 and lens EUP3-002",
+    "physical_label_part_number_seen_again":"25-7000-507",
+    "limit":"No new full-object or offer-page inspection in this round; application comes from existing documented source, not this closeup alone."
+  },
+  "mark_limits": {
+    "first_E9_rear_group":"visible; IIIA/2a/AR/S1/F1 nearby",
+    "first_full_number":"UNVERIFIED; worn digits not reconstructed",
+    "second_group":"E9/6985 with SM1/IA, not attributed to complete rear combination approval",
+    "chambers_function_mapping_emission":"UNVERIFIED",
+    "photo_date":"UNVERIFIED; printed 17-10-2017 is not exposure date"
+  },
+  "recommendation": "Geometry condition from census30 is resolved. Coordinator may move existing EUP3-003 to rear-closeup PASS using prior type/E evidence; no automatic parent edits.",
+  "counts": {"new_photographs":0,"existing_photo_reinspections":1,"new_parts":0,"new_families":0,"proposed_reclassification_delta":1,"automatic_parent_changes":0,"new_ON":0,"new_dusk_night":0,"downloads":0,"saved_screenshots":0,"commons_flickr_requests":0},
+  "licence":"link-only, all rights reserved"
+}

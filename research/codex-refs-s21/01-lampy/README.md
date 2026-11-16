@@ -197,3 +197,7 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Świeży losowy audyt49 — runda27
 
 [qualification-audit-round27](qualification-audit-round27/README.md):prawdziwa permutacja bez zwracania z seed2026111601, snapshot/hash i pełna kolejka zamrożone przed oglądem.10/49=20,41% rzeczywiście ponownie obejrzanych wierszy,10 ekspozycji/13 plików lubURL,0 zastępstw/NOT_REVIEWED/Commons. Dziewięć PASS_WITH_LIMITS, jedna korekta kształtu01-003; dodatkowo wycofano pewność materiału punktów HP9-04. Root osobno potwierdził te2 uwagi i zastosował je we wszystkich aktywnych właściwych polach. Snapshot przed zmianą zachowany jako historia, nie dane generatora.0 nowych fotografii/E/ON/noc. Audyt obejmuje49 głównych, nie cały korpus norm/AUX.
+
+## Bieżąca korekta kwalifikacji — runda32
+
+[eup3-label-geometry-round32](eup3-label-geometry-round32/README.md): powtórny ogląd istniejącegoEUP3-003 przez agenta i root potwierdza geometrię obudowy ponad10% szerokości kadru2560×1920. Usunięto ostatni warunek tej kandydatury: dolna granica4 tylnychPASS,1 warunkowyUP4-03; ON0 i zmierzch/noc0 wewnątrzPASS. Zero nowych zdjęć/części/rodzin. Historyczny census30 pozostaje snapshotem3PASS+2warunkowe, nie bieżącym bilansem. Pełny numer pierwszej aprobaty nadalUNVERIFIED i nie jest dopisanym kryterium15.
