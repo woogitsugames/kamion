@@ -176,6 +176,7 @@ namespace Game.Tests
             // No neighbour scene in the build: every decision runs (decideIntervalS = 0) and finds nothing to load - the
             // steady state of a long drive inside one tile. Tile events (load, activation, rebase) allocate by design.
             var s = HandBuilt(g, root, _ => false, out var vehicle);
+            s.routePath = new FakeRoute { pts = new[] { new Vector3(5000f, 0f, 0f), new Vector3(5100f, 0f, 0f) } };   // ends nowhere near a tile route
             var poses = new SafePoseBuffer(32);
             poses.Record(Time.time - 10f, new Vector3(10f, 0f, 0f), 0f);
             s.UseSafePoses(poses, 2.5f);
@@ -195,6 +196,73 @@ namespace Game.Tests
             };
             GcAllocCounter.AssertZero(frames, warmup: frames, message: "WorldStreamer.Update + TryInsideDistance + recovery point must not allocate per frame");
             Assert.Greater(sink, 0f);
+        }
+
+        // ------------------------------------------------------------------ route continuation across seams (int-stream-s23)
+
+        sealed class FakeRoute : IStreamedRoute
+        {
+            public Vector3[] pts;
+            public int appends;
+            public bool TryGetPathEnd(out Vector3 worldEnd)
+            {
+                if (pts == null || pts.Length < 2) { worldEnd = default; return false; }
+                worldEnd = pts[pts.Length - 1];
+                return true;
+            }
+            public void AppendPath(Vector3[] worldPoints, float[] speedLimitsKmh)
+            {
+                var n = new Vector3[pts.Length + worldPoints.Length];
+                pts.CopyTo(n, 0); worldPoints.CopyTo(n, pts.Length);
+                pts = n; appends++;
+            }
+        }
+
+        static void CallUpdate(WorldStreamer s) =>
+            typeof(WorldStreamer).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(s, null);
+
+        [Test]
+        public void RouteContinuation_AppendsTheReadyTileRouteStartingAtThePathEnd_Once()
+        {
+            var g = Row3();
+            var root = StartRoot(g);
+            var wr = Make("Route_t0").AddComponent<WorldRoute>();
+            wr.points = new[] { new Vector3(0f, 0f, 0f), new Vector3(100f, 0f, 0f), new Vector3(200f, 0f, 0f) };
+            wr.distances = new[] { 0f, 100f, 200f };
+            wr.speedLimitsKmh = new[] { 50f, 50f, 50f };
+            var s = HandBuilt(g, root, _ => false, out _);
+            Vector3 first = wr.transform.TransformPoint(wr.points[0]);   // after Init placed the route (world anchor + height)
+
+            var far = new FakeRoute { pts = new[] { first + new Vector3(-80f, 0f, 0f), first + new Vector3(-10f, 0f, 0f) } };
+            s.routePath = far;
+            CallUpdate(s);
+            Assert.AreEqual(0, far.appends, "10 m gap > routeJoinM: not the same road, never chained");
+
+            var near = new FakeRoute { pts = new[] { first + new Vector3(-80f, 0f, 0f), first + new Vector3(-1f, 3f, 0.5f) } };
+            s.routePath = near;
+            CallUpdate(s);
+            Assert.AreEqual(1, near.appends, "the Ready tile's route begins at the path end (height ignored): appended");
+            Assert.AreEqual(5, near.pts.Length);
+            Assert.AreEqual(wr.transform.TransformPoint(wr.points[2]), near.pts[4], "world-space points of the tile route");
+            CallUpdate(s);
+            Assert.AreEqual(1, near.appends, "a tile route is appended once");
+        }
+
+        [Test]
+        public void PathFollower_PathEnd_OnlyWhileDrivingWithoutAnExplicitEnd()
+        {
+            var d = new Game.Controls.PathFollowerDriverInput();
+            Assert.IsFalse(d.TryGetPathEnd(out _), "no path");
+            d.SetPath(new[] { Vector3.zero, new Vector3(0f, 0f, 100f) });
+            Assert.IsFalse(d.TryGetPathEnd(out _), "disabled (not the active autopilot)");
+            d.Enabled = true;
+            Assert.IsTrue(d.TryGetPathEnd(out Vector3 e));
+            Assert.AreEqual(100f, e.z, 1e-4f);
+            d.AppendPath(new[] { new Vector3(0f, 0f, 100.2f), new Vector3(0f, 0f, 300f) }, null);
+            Assert.AreEqual(300f, d.Length, 0.01f, "the repeated seam point is merged");
+            Assert.IsTrue(d.TryGetPathEnd(out e)); Assert.AreEqual(300f, e.z, 1e-4f);
+            d.EndS = 150f;
+            Assert.IsFalse(d.TryGetPathEnd(out _), "route_end: a measured segment stops where asked, never continued");
         }
     }
 }

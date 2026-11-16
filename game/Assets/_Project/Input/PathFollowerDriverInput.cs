@@ -7,7 +7,7 @@ namespace Game.Controls
     /// route test. Speed: min(target, per-point limit, curvature limit v = sqrt(a_lat · R)), brakes to a stop at the end.
     /// Allocation-free; the path is set once.
     /// </summary>
-    public sealed class PathFollowerDriverInput : IDriverInput
+    public sealed class PathFollowerDriverInput : IDriverInput, Game.Core.IStreamedRoute
     {
         public string Name => "route";
         public bool Enabled { get; set; }
@@ -64,6 +64,17 @@ namespace Game.Controls
         public void Offset(Vector3 offset)
         {
             for (int i = 0; i < m_Points.Length; i++) m_Points[i] += offset;
+        }
+
+        /// <summary>
+        /// Last path point for the world streamer's route continuation (ADR 0235, int-stream-s23). false while disabled,
+        /// without a path, or with an explicit end (route_end: a measured segment must stop where it was asked to).
+        /// </summary>
+        public bool TryGetPathEnd(out Vector3 worldEnd)
+        {
+            if (!Enabled || m_Points.Length < 2 || EndS > 1f) { worldEnd = default; return false; }
+            worldEnd = m_Points[m_Points.Length - 1];
+            return true;
         }
 
         /// <summary>

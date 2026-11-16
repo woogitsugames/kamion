@@ -70,6 +70,16 @@ namespace Game.World.Streaming
         /// <summary>Source of tile scenes: player build or region pack (ADR 0273 §3). Set before <see cref="Init"/>.</summary>
         public ITileSceneSource source;
 
+        /// <summary>
+        /// Route autopilot path continued across seams (int-stream-s23): when a Ready tile's start route begins within
+        /// <see cref="routeJoinM"/> of the path end, that route is appended (the D67 corridor routes chain end to start,
+        /// Data/Regions/*/route_start.json). Set by <see cref="TryInstallFromLaunch"/> from the hook's origin listener
+        /// (the route driver's Offset); null = no continuation.
+        /// </summary>
+        public IStreamedRoute routePath;
+        [Tooltip("Max horizontal gap between the autopilot path end and a tile route start to chain them [m]")]
+        public float routeJoinM = 3f;
+
         public TileGraph Graph { get; private set; }
         public StreamingPolicy Policy { get; private set; }
         /// <summary>World anchor: EPSG:2180 x / y and EVRF2007 height of Unity (0, 0, 0).</summary>
@@ -98,6 +108,8 @@ namespace Game.World.Streaming
             public WorldCollisionCooker cooker;
             public WorldInstances instances;
             public Transform route;
+            public WorldRoute routeComp;
+            public bool routeChained;   // its route was appended to the autopilot path (sticky: never appended twice)
             public GameObject[] chunks;
             public int nextChunk;
             public float loadStart, activateStart;
@@ -199,6 +211,8 @@ namespace Game.World.Streaming
             if (s == null) return null;
             s.UseSafePoses(safePoses, safeMinAge);
             s.AddOriginListener(onOriginMoved);
+            s.routePath = onOriginMoved?.Target as IStreamedRoute;   // the hook passes RouteDriver.Offset
+            s.m_Tiles[s.StartTile].routeChained = true;               // the start route already is the autopilot path
             s.WidenStartBoundary(start);
             return s;
         }
@@ -367,6 +381,37 @@ namespace Game.World.Streaming
             {
                 m_RebasePending = true;
                 m_RebaseTile = cur;
+            }
+            ContinueRoute();
+        }
+
+        /// <summary>
+        /// Appends the start route of every Ready tile that begins at the autopilot path end (chained, so a tile that became
+        /// Ready earlier is picked up after the one before it). No allocation unless a route is appended (a tile event).
+        /// </summary>
+        void ContinueRoute()
+        {
+            if (routePath == null || !routePath.TryGetPathEnd(out Vector3 end)) return;
+            float join2 = routeJoinM * routeJoinM;
+            for (int guard = 0; guard < m_Tiles.Length; guard++)
+            {
+                int hit = -1;
+                for (int i = 0; i < m_Tiles.Length; i++)
+                {
+                    var t = m_Tiles[i];
+                    if (t.routeChained || t.routeComp == null || t.route == null || Policy.StateOf(i) != TileState.Ready) continue;
+                    var pts = t.routeComp.points;
+                    if (pts == null || pts.Length < 2) continue;
+                    Vector3 a = t.route.TransformPoint(pts[0]);
+                    float dx = a.x - end.x, dz = a.z - end.z;
+                    if (dx * dx + dz * dz <= join2) { hit = i; break; }
+                }
+                if (hit < 0) return;
+                var h = m_Tiles[hit];
+                h.routeChained = true;
+                routePath.AppendPath(h.routeComp.WorldPoints(), h.routeComp.speedLimitsKmh);
+                Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] route continued into {0}: +{1:F0} m", Graph.Tiles[hit].id, h.routeComp.Length));
+                if (!routePath.TryGetPathEnd(out end)) return;
             }
         }
 
@@ -663,6 +708,7 @@ namespace Game.World.Streaming
         {
             t.root = root;
             t.route = route;
+            t.routeComp = route != null ? route.GetComponent<WorldRoute>() : null;
             t.boundary = root.GetComponent<WorldBoundary>();
             t.cooker = root.GetComponent<WorldCollisionCooker>();
             t.instances = root.GetComponent<WorldInstances>();
@@ -736,7 +782,7 @@ namespace Game.World.Streaming
 
         static void Clear(Tile t)
         {
-            t.root = null; t.route = null; t.boundary = null; t.cooker = null; t.instances = null;
+            t.root = null; t.route = null; t.routeComp = null; t.boundary = null; t.cooker = null; t.instances = null;
             t.chunks = System.Array.Empty<GameObject>(); t.nextChunk = 0;
             t.closures = System.Array.Empty<GameObject>(); t.groups = System.Array.Empty<GameObject>();
             t.farSectors = System.Array.Empty<GameObject>(); t.apronPieces = System.Array.Empty<GameObject>(); t.apronWhole = null;
