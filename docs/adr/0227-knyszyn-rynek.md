@@ -123,3 +123,7 @@ R23 obejmuje 74 kamery w każdym z czterech wariantów; clear i dusk mają ident
 R23 względem r22: 73 wspólne kamery; Low maksymalnie +6 draws i +5 034 tris (`route-s0145`), High maksymalnie +11 draws (`plate-trailer`) i +11 164 tris (`cab-right`). Nowa kamera `rondo-dk65-top` bez baseline r22: Low 75 draws / 87 197 tris, High 85 / 87 429. To szacunki CPU edytora z instancjami przed SRP batchingiem, nie pomiary GPU; po integracji zmienione dane main i scena ograniczają przypisanie przyczyn różnic.
 
 Lokalne porównania 09–11 pokazują czterowlotowe rondo z jasną opaską i wysepkami, ale nadal odbiegają od zdjęć: środek wyspy jest pusty, wysepki zbyt ostre wizualnie, a otoczenie uboższe w zieleń i detale. Perspektywa i orientacja kamer nie odpowiadają dokładnie fotografiom; wymiary pozostają niepotwierdzone. Szczegóły w `artifacts/knyszyn-rynek-0227/AUDYT.md`.
+
+## Testy końcowe po scaleniu main
+
+Pełny GIS: **1769 passed, 22 skipped, 2 xfailed** po lokalnej regeneracji danych regionu C i potwierdzeniu zgodności SHA 64/64 plików instancji. EditMode: **955 passed, 2 skipped**. Regeneracja była lokalna dla worktree.
