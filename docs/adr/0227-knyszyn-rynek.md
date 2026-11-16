@@ -149,7 +149,7 @@ R27: wykonano opt-in wizualny podział łaty wlotu bez zmiany kolizji i wyrender
 
 ## R28 — wycofanie próby R27
 
-Wizualna łata wlotu z R27 została wycofana w commicie `96df3b6cf` po ocenie zbyt jasnego, sztucznego pasa; nie oznacza to usunięcia przyczyny ciemnego wlotu. Po tej decyzji uruchomiono R28; wynik renderów i budżetu podano w kolejnej sekcji, a końcowy GIS pozostaje **OPEN**. Pełny GIS R27 zakończył się wynikiem **1801 passed, 22 skipped, 2 xfailed, 1 failed**: `test_road_fidelity.py::test_report_not_stale` wskazał nieaktualny raport fidelity względem `meshing.py`, `pipeline.py` i `standards.py`. Po wycofaniu R27 test kierunkowy nadal zgłaszał niezgodność dla `pipeline.py` i `standards.py`; wymagane przeliczenie raportu na ostatecznym stanie oraz ponowienie testów. Wynik GIS R28 pozostaje **OPEN**. Szerszy wielokąt z ortofoto nadal pozostaje wyłącznie propozycją bez renderu.
+Wizualna łata wlotu z R27 została wycofana w commicie `96df3b6cf` po ocenie zbyt jasnego, sztucznego pasa; nie oznacza to usunięcia przyczyny ciemnego wlotu. Po tej decyzji uruchomiono R28; wynik renderów, budżetu i testów podano w kolejnych sekcjach. Pełny GIS R27 zakończył się wynikiem **1801 passed, 22 skipped, 2 xfailed, 1 failed**: `test_road_fidelity.py::test_report_not_stale` wskazał nieaktualny raport fidelity względem `meshing.py`, `pipeline.py` i `standards.py`. Po wycofaniu R27 test kierunkowy nadal zgłaszał niezgodność dla `pipeline.py` i `standards.py`; następnie przeliczono raport, a GIS R28 zakończył się zielono, jak opisano poniżej. Szerszy wielokąt z ortofoto nadal pozostaje wyłącznie propozycją bez renderu.
 
 
 ## R28 — wynik po wycofaniu łaty
@@ -158,18 +158,25 @@ Build świata, import i rendery Low/High × clear/dusk zakończone OK. Lokalne `
 
 Szacunek CPU edytora z instancjami: High maksimum **1 250 321 tris** i **848 draw calls**, poniżej limitu 2 mln tris; Low maksimum **485 draw calls** i **372 304 tris**. Dla `dk65-inlet-south` Low 240 → 304 draw calls względem before, co oznacza formalny **FAIL** wymogu braku pogorszenia. Porównanie obejmuje 50 kamer o wspólnych nazwach; zmiany sceny po integracji main ograniczają przypisanie przyczyn. To nie jest pomiar GPU.
 
-Fidelity regionu C rzeczywiście przeliczono po wycofaniu R27; wyniki lokalne w `artifacts/knyszyn-rynek-0227/fidelity-after-r27-revert/`, testy kierunkowe **9 passed, 1 xfailed**. Pełny GIS R28 uruchomiony; jego wynik pozostaje **OPEN** do zakończenia.
+Fidelity regionu C rzeczywiście przeliczono po wycofaniu R27; wyniki lokalne w `artifacts/knyszyn-rynek-0227/fidelity-after-r27-revert/`, testy kierunkowe **9 passed, 1 xfailed**. Pełny GIS R28 zakończył się zielono, jak opisano poniżej.
 
 
 ## R28 — rozbicie kosztu `dk65-inlet-south` Low
 
 Dla wspólnej kamery `dk65-inlet-south` porównanie before → R28 daje **199 → 266** szacowanych draw calls MeshRenderer (+67) oraz **41 → 38** dla instancji (−3), razem **240 → 304** (+64). Są to estymaty CPU edytora przed SRP batchingiem, nie pomiary GPU. Skok obserwowany między R10 a R11 zbiega się w czasie z integracją dalekiego planu i zmianą położenia ciężarówki, lecz brakuje porównywalnego rozbicia według rendererów dla historycznego baseline; nie można przypisać przyczyny wzrostu wyłącznie jednej zmianie. Wymóg Low bez pogorszenia względem before pozostaje formalnie **FAIL**.
 
-Pełny GIS R28 trwa; końcowy wynik pozostaje **OPEN**.
+Pełny GIS R28 zakończył się zielono, jak opisano poniżej.
 
 
 ## R28 — przegląd targowicy z wysokości oczu
 
 Lokalne zestawienie `compare/r28/High-clear/14-owner-render.jpg` pokazuje czytelny rząd wiat; w modelu odtworzono cztery wiaty w układzie 3+1. Dach najbliższej wiaty sprawia wrażenie bardziej płaskiego niż na zdjęciu, a wyspa przy pierwszym planie jest zbyt zielona względem widocznej na fotografii ziemi. To ocena przy szacunkowej pozycji kamery i innym oświetleniu, nie pomiar nachylenia ani potwierdzenie akceptacji właściciela.
 
-Pełny GIS R28 trwa; wynik końcowy pozostaje **OPEN**.
+Pełny GIS R28 zakończył się zielono, jak opisano poniżej.
+
+
+## R28 — wynik GIS
+
+Pełny GIS R28 zakończył się wynikiem **1797 passed, 22 skipped, 2 xfailed** w **1098,52 s** (`artifacts/knyszyn-rynek-0227/gis-r28.log`, `.done`: OK). Własne zmiany wygenerowanych danych regionu C pozostawione przez testy zostały przywrócone. Ostatni wykonany EditMode R27, po zmianach targowicy, ale przed wycofaniem wyłącznie łaty Python R27, miał **955 passed, 2 skipped** (`editmode-r27.done`, `artifacts/tests/editmode-20261116-093254.xml`). Świeży EditMode na stanie R28 uruchomiono; wynik OPEN.
+
+Low względem before nadal formalnie **FAIL** (`dk65-inlet-south` 240 → 304 draw calls), a odbiór wizualny, poprawa ciemnego wlotu i weryfikacja właściciela pozostają **OPEN**. Gotowe do scalenia po weryfikacji lidera: **NIE**.
