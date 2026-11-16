@@ -1,0 +1,38 @@
+{
+  "audit_date": "2026-11-16",
+  "status": "STABLE_PENDING_ROOT_VISUAL_REVIEW",
+  "method": "Indywidualny ogląd wyrenderowanej fotostrony w Chrome; odczyt naturalWidth/naturalHeight/currentSrc widocznego img; bez zapisów obrazów lub screenshotów.",
+  "candidate": {
+    "id": "02-WE71-001",
+    "photo_id": 472995,
+    "page": "https://fototruck.ru/photo/472995/",
+    "exact_image": "https://fototruck.ru/photo/04/72/99/472995.jpg",
+    "natural_pixels_sourced_dom": [1200, 761],
+    "author": "Maksimus",
+    "license": "link-only, all rights reserved; fotostrona Copyright ©",
+    "photo_date_sourced": "2026-02-28",
+    "photo_location_caption": "Омская область",
+    "vehicle_registration_region": "Московская область",
+    "location_warning": "Region ewidencji naczepy nie jest lokalizacją ekspozycji. Nie zaliczono Europy.",
+    "vehicle_source": "Schmitz Cargobull S.KO (SCB*S3B) общ.мод; ЕР 2752 50; SKO 24/L 13 4 FР СООL V7; przeznaczenie Полуприцепы фургоны; fabryczny numer podwozia 5244087.",
+    "vehicle_page": "https://fototruck.ru/vehicle/328755/#n335831",
+    "visual_observation": "Pełna para wysokich drzwi z czterema prętami, ciemnym filmem i licznymi jasnymi pionowymi smugami. Ciemniejsza górna strefa; nieregularne jasne piony niżej, również wokół okuć. Duży kontrast względem jaśniejszej ściany bocznej. Widoczny śnieg na ziemi i poboczach.",
+    "unverified": ["chemia osadu i obecność soli", "lód na drzwiach", "dokładna droga i GPS kamery", "mechanizm i kolejność narastania zabrudzenia"],
+    "door_height_pixels_estimated": [450, 500],
+    "qualification": {
+      "A": "PENDING_ROOT_REVIEW",
+      "winter": "PENDING_ROOT_REVIEW; śnieg rzeczywiście widoczny, nie tylko zimowa data",
+      "Europe": "NOT_COUNTED_OMSK",
+      "B": "FAIL_GE1000; cała wysokość zdjęcia wynosi 761 px"
+    }
+  },
+  "screening": [
+    {"photo":383487,"view":"FULL_IMAGE_VIEWED","result":"Front Actrosa z bokiem chłodni na zaśnieżonej drodze; brak tylnej pary drzwi."},
+    {"photo":365175,"view":"FULL_IMAGE_VIEWED","result":"Boczno-tylny S.KO, miejskie otoczenie; śnieg/lód niepotwierdzone. Bez awansu i AUX."},
+    {"photo":302803,"view":"METADATA_ONLY_PLUS_CATALOG_THUMBNAIL","result":"Podpis miejsca obwód omski. Brak indywidualnego pełnego oglądu; nie opisano powierzchni."},
+    {"photo":391521,"view":"METADATA_ONLY_PLUS_CATALOG_THUMBNAIL","result":"Podpis miejsca obwód ałmacki, mimo litewskiej ewidencji naczepy. Brak indywidualnego pełnego oglądu."},
+    {"photo":319978,"view":"METADATA_ONLY_PLUS_CATALOG_THUMBNAIL","result":"Data 24.09.2022 i podpis obwód twerski. Nie zaliczono zimy ani pełnego oglądu."}
+  ],
+  "counts": {"accepted_new_photos":0,"pending_new_photos":1,"pending_devices":1,"confirmed_Europe_road":0,"downloads":0,"saved_screenshots":0,"parent_edits":0},
+  "dedup": "rg identyfikatorów zdjęcia 472995, pojazdu 328755 i numeru 5244087 w 02 oraz K1: brak wcześniejszych trafień przed utworzeniem tego folderu."
+}

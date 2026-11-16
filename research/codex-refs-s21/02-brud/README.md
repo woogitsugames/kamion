@@ -291,3 +291,5 @@ R65 Facchini: nowy drobny szary pionowy film pól środkowych/dolnych centralnej
 
 
 Aktualizacja R70, 16.11.2026: FR60-003 zaliczony do geograficznej Europy po połączeniu podpisu miejsca fotografii z oficjalną charakterystyką obwodu twerskiego w dokumencie miasta. Bieżąco Europa-drogaA2; A13/B1 i zimaA2 bez zmiany. To geografia kontynentu, nie członkostwo wUE. Łańcuch i granice w geographic-europe-chain-round70.
+
+R71, 16.11.2026: root potwierdził nowy silnie zabrudzony zimowy S.KO472995. A14/B1, zimaA3, Europa-drogaA2. Podpis miejsca obwód omski; moskiewska rejestracja nie jest miejscem zdjęcia. Główny32:30kadrów (14lokalnych/16link-only)+2dokumenty. Nie potwierdzono chemicznie soli; B odpada przez wysokość całej fotografii761px.
