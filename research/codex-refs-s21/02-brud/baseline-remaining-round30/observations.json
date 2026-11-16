@@ -1,0 +1,131 @@
+{
+  "record_created_date": "2026-11-16",
+  "visual_review_date": "2026-11-16",
+  "exact_visual_time": "UNVERIFIED — brak pomiaru momentu poszczególnych oględzin",
+  "selected_ids": [
+    "P18-110",
+    "P18-135",
+    "P18-141",
+    "P18-152",
+    "P18-163",
+    "P18-168"
+  ],
+  "individually_reviewed_ids": [
+    "P18-110",
+    "P18-135",
+    "P18-141",
+    "P18-152",
+    "P18-163"
+  ],
+  "not_reviewed_ids": [
+    "P18-168"
+  ],
+  "requests": {
+    "official_Commons_metadata_batches": 1,
+    "image_requests": 6,
+    "successful_previews": 5,
+    "HTTP429": 1,
+    "extra_originals": 0,
+    "spacing": "≥12s pomiędzy żądaniami obrazów; zakończono natychmiast po429; brak retry/hostwariantów"
+  },
+  "coverage": {
+    "previous_reviewed_records": 65,
+    "new_reviewed_disjoint_records": 5,
+    "reviewed_records_after": 70,
+    "baseline_records": 88,
+    "remaining_NOT_REVIEWED_records": 18,
+    "basis": "Poprzednia lista coverage.all_reviewed_record_ids zbaseline-remaining-round28/observations.json; żaden z6wybranych ID nie był w65.168nie dodano do obejrzanych.",
+    "warning": "Pokrycie rekordów nie jest liczbą przyjętych A ani unikalnych fotografii.110i152to różne ekspozycje tego samego pojazdu wystawowego."
+  },
+  "qualification_delta": {
+    "A20_total": 0,
+    "B12_new_ge1000": 0,
+    "winter_qualified_doors": 0,
+    "Europe_road_qualified_doors": 0
+  },
+  "rows": [
+    {
+      "id": "P18-110",
+      "visual_status": "INDIVIDUALLY_REVIEWED",
+      "medium": "PHOTOGRAPH",
+      "observation": "Niebieski opływowy tył zestawu pod zadaszeniem wystawy. Duża szara roleta z poziomymi lamelami, czerwone obwódki lamp i żółte pola u góry; na połyskującym boku jasne pasy i odbicia otoczenia. Brak pary skrzydeł oraz czytelnego drogowego filmu brudu.",
+      "double_leaf": "FAIL — jedna roleta",
+      "type": "Źródło opisuje MAN Concept/Krone AeroLiner; model wystawowy, nie wnioskowanie naczepy z samego małego kadru.",
+      "dirt": "Nie potwierdzono. Jasne pasy i odbicia na boku nie są warstwą brudu.",
+      "A": "FAIL_NO_DOUBLE_DOORS",
+      "B": "FAIL_NOT_NEW_BASELINE_AND_WRONG_TARGET",
+      "winter": "Brak widocznego śniegu",
+      "Europe_road": "Źródło: IAA2012 Hannover Niemcy; wystawa, nie europejska droga."
+    },
+    {
+      "id": "P18-135",
+      "visual_status": "INDIVIDUALLY_REVIEWED",
+      "medium": "PHOTOGRAPH",
+      "observation": "Biały zestaw od boku na szerokim jasnym utwardzonym placu. Prostokątna biała naczepa z niebieskim napisem i żółtym pasem, z prawej biały ciągnik; otwarte podwozie pod skrzynią i widoczne grupy kół. Tył skrzyni widoczny wyłącznie jako wąska krawędź, bez oceny pary drzwi.",
+      "double_leaf": "UNVERIFIED — bok",
+      "type": "PASS_VISUAL_TRACTOR_SEMITRAILER",
+      "dirt": "Tylnych powierzchni drzwi nie da się ocenić. Nie wywodzimy filmu z przyciemnienia boku.",
+      "A": "FAIL_REAR_DOORS_NOT_VISIBLE",
+      "B": "FAIL_NOT_NEW_BASELINE_AND_WRONG_TARGET",
+      "winter": "Brak widocznego śniegu/lodu",
+      "Europe_road": "Źródłowy opis JamesBayServiceCentre nie jest dowodem europejskiej drogi; kraj i dokładne GPS nieustalone wtej rundzie.",
+      "date_limit": "DateTimeOriginal opisane jako20October2007 originalupload date — nie potwierdzona data ekspozycji."
+    },
+    {
+      "id": "P18-141",
+      "visual_status": "INDIVIDUALLY_REVIEWED",
+      "medium": "PHOTOGRAPH",
+      "observation": "Czarno-niebieski zestaw pokazany od przodu i lewego boku. Duży metaliczny przedni pałąk i lampy dodatkowe, na naczepie malowany motyw oraz szeroki biały pas. Na gruncie białe nieregularne płaty śniegu przy kołach i ogrodzeniu, pomiędzy nimi ciemna nawierzchnia. Tylne drzwi niewidoczne.",
+      "double_leaf": "UNVERIFIED — przód/bok",
+      "type": "PASS_SOURCE_AND_VISUAL_SEMITRAILER",
+      "dirt": "Nie oceniamy drzwi. Motyw malarski, odblaskowy pas i metaliczne refleksy zderzaka nie stanowią filmu brudu.",
+      "A": "FAIL_REAR_DOORS_NOT_VISIBLE",
+      "B": "FAIL_NOT_NEW_BASELINE_AND_WRONG_TARGET",
+      "winter": "PASS_VISUAL_SNOW_CONTEXT_ONLY — poza podzbiorem zimowych zabrudzonych drzwi",
+      "Europe_road": "Źródło: muzeumSinsheim Niemcy; teren ekspozycji, nie dowód europejskiej drogi."
+    },
+    {
+      "id": "P18-152",
+      "visual_status": "INDIVIDUALLY_REVIEWED",
+      "medium": "PHOTOGRAPH",
+      "observation": "Druga ekspozycja tego samego niebieskiego pojazdu Krone/MAN z przeciwnego skośnego tyłu. Jedna duża szara roleta, połyskujący szeroki bok z białymi pasami, czerwone oprawy tylnych lamp i żółte pola. Brak dwóch skrzydeł; powierzchnie wyglądają na czyste, pasy i faliste jasne obszary na boku są odbiciami/wykończeniem.",
+      "double_leaf": "FAIL — jedna roleta",
+      "type": "Źródłowy MANConcept/KroneAeroLiner; ten sam pojazd co110, inne zdjęcie.",
+      "dirt": "Nie potwierdzono filmu na roletach/drzwiach",
+      "A": "FAIL_NO_DOUBLE_DOORS",
+      "B": "FAIL_NOT_NEW_BASELINE_AND_WRONG_TARGET",
+      "winter": "Brak śniegu",
+      "Europe_road": "Źródło: IAA2012Hannover; wystawa, nie droga."
+    },
+    {
+      "id": "P18-163",
+      "visual_status": "INDIVIDUALLY_REVIEWED",
+      "medium": "PHOTOGRAPH",
+      "observation": "Mały zabytkowy ciemnozielony/czarny pojazd z otwartą drewnianą skrzynią na wspólnym podwoziu, pokazany od tyłu i boku. Jasne deski, czarne zawiasy i łańcuszki zamknięcia szerokiej tylnej burty, błotniki i koło zapasowe przy kabinie. Stoi na płytach placu, w tle elewacja kościoła i stoiska. Brak zamkniętej skrzyni i pary drzwi.",
+      "double_leaf": "FAIL — otwarta skrzynia z burtą",
+      "type": "FAIL_RIGID_PICKUP — źródłoMercedesBenzW136Type170Vpickup, obraz zgodny",
+      "dirt": "Na deskach widoczny rysunek drewna, miejscowe przetarcia powłoki nie są brudem drzwi naczepy.",
+      "A": "FAIL_NO_SEMITRAILER_AND_NO_DOUBLE_DOORS",
+      "B": "FAIL_NOT_NEW_BASELINE_AND_WRONG_TARGET",
+      "winter": "Brak śniegu",
+      "Europe_road": "Dokładnej lokalizacji nie wnioskowano z architektury ani marki."
+    },
+    {
+      "id": "P18-168",
+      "visual_status": "NOT_REVIEWED_HTTP429",
+      "medium": "UNVERIFIED",
+      "observation": "Nie obejrzano. Oficjalne metadane licencji odczytano, żądanie podglądu zwróciło429. Odpowiedzi nie zapisano jako obraz i nie ponawiano.",
+      "double_leaf": "NOT_REVIEWED",
+      "type": "NOT_REVIEWED",
+      "dirt": "NOT_REVIEWED",
+      "A": "NOT_REVIEWED",
+      "B": "FAIL_NOT_NEW_BASELINE; treść NOT_REVIEWED",
+      "winter": "NOT_REVIEWED",
+      "Europe_road": "NOT_REVIEWED",
+      "date_limit": "Metadana0002nie daje poprawnego datowania ekspozycji."
+    }
+  ],
+  "media_policy": "Surowe5podglądów tylko wautoryzowanym Data/raw/refs/codex-s21/02-brud/baseline-remaining-round30.0obrazów wGit,0nowych oryginałów. Licencje aktualnego Commons sprawdzone przed pobraniem. Żadnych FlickrARR/PDM.",
+  "notification": "Root i brud powiadomieni natychmiast o429 i zatrzymaniu.",
+  "retry_after": "UNVERIFIED_NOT_CAPTURED — nagłówka nie utrwalono przy odpowiedzi429; nie wykonano nowego żądania."
+}

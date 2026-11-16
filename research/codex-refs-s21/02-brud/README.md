@@ -217,3 +217,8 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## FirmowePDF — runda29
 
 [winter-company-pdf-round29](winter-company-pdf-round29/README.md):natywnyChrome, bez żadnych kopii/screenshotów/ekstrakcji. BroszuraKässbohrer czystytył wśnieżnej scenerii, technikaUNVERIFIED;0A. KnapenK100DEKRA07.02.2024 Fot4/s6 iFot5/s7:2kadry1pojazdu, ślady w dolnychpolach i przyśrodku mogą być zarysowaniami/powłoką (tekstekspertyzy), AUX/PENDING_SURFACE, nie potwierdzonyfilm.0śniegu/0dowodupo trasie/0potwierdzonychA/B/zimy/Europy. Natywnepiksele drzwiUNVERIFIED, PDF150%niepomiarźródła. Główny23bez zmian; własneopisy+link-onlyARRwchildmanifest.
+
+
+## Ogląd5 i zatrzymanie429 — runda30
+
+[baseline-remaining-round30](baseline-remaining-round30/README.md):110/135/141/152/163 indywidualnie obejrzane przez agenta,0A/B.168nieobejrzaneHTTP429,STOPbezretry/hostów. Pokrycie70/88rekordów,18NOT_REVIEWED, po sprawdzeniu rozłączności z65. Metadane6nieznaczą6oglądów.110/152różne kadrytej samejroletywystawowej,141śnieg beztylnychdrzwi,163otwarta skrzynia.0miniaturGit, podglądyrawpozaGit. NieutrwalonyRetry-AfterUNVERIFIED, bez zgadywania czasu oczekiwania.
