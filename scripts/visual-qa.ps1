@@ -48,7 +48,9 @@ param(
     # ADR 0056: also write <id>_envcube.png (the vehicle reflection cube of that frame, 6 faces).
     [switch]$EnvDump,
     # ADR 0269 (pc-visual-s23): render the PC tier (URP_PC_<Tier>, PcGraphicsTiers values) instead of the mobile tier.
-    [switch]$Pc
+    [switch]$Pc,
+    # Diagnostic A/B: QualitySettings.anisotropicFiltering for this render (0 Disable, 1 Enable, 2 ForceEnable).
+    [ValidateSet('', '0', '1', '2')] [string]$Aniso = ''
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -77,6 +79,7 @@ if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 if ($EnvDump) { $qaArgs += @('-qaEnvDump', '1') }
 if ($Pc) { $qaArgs += @('-qaPcTiers', '1') }
+if ($Aniso) { $qaArgs += @('-qaAniso', $Aniso) }
 $runStart = Get-Date
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 

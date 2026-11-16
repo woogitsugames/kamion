@@ -103,6 +103,11 @@ namespace Game.Editor.VisualQA
                 tierSettings = PcGraphicsTiers.Overlay(tierSettings);   // ADR 0269: PC values (-qaPcTiers 1)
                 Debug.Log($"[VISUALQA] PC tier {tier}: urp={(QualitySettings.renderPipeline != null ? QualitySettings.renderPipeline.name : "none")} msaa={tierSettings.msaa} shadows={tierSettings.shadowDistance}m/{tierSettings.shadowCascades}c/{tierSettings.shadowResolution} lodBias={QualitySettings.lodBias} aniso={QualitySettings.anisotropicFiltering}");
             }
+            // Diagnostic A/B (pc-visual-s23): -qaAniso 0|1|2 overrides QualitySettings.anisotropicFiltering for this render
+            // (restored by PcGraphicsTiers.RestoreEditorState with -qaPcTiers 1; without it the editor value is put back below).
+            string anisoArg = EditorTools.Arg("-qaAniso", null);
+            AnisotropicFiltering anisoPrev = QualitySettings.anisotropicFiltering;
+            if (!string.IsNullOrEmpty(anisoArg)) QualitySettings.anisotropicFiltering = (AnisotropicFiltering)int.Parse(anisoArg);
             // Ablation renders in the editor (same keys as the phone launch overrides): -qaRq "rq_hlod=0,rq_trees=0".
             string rq = EditorTools.Arg("-qaRq", null);
 
@@ -451,6 +456,7 @@ namespace Game.Editor.VisualQA
             }
             string lightName = lighting ?? "scene";
             if (stats.Length > 0) File.WriteAllText(Path.Combine(outDir, "stats.txt"), $"tier={tier} lighting={lightName} msaa={msaa} renderScale={scale.ToString(System.Globalization.CultureInfo.InvariantCulture)}" + System.Environment.NewLine + stats);
+            if (!string.IsNullOrEmpty(anisoArg)) QualitySettings.anisotropicFiltering = anisoPrev;
             return rendered;
         }
 
