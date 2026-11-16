@@ -173,12 +173,19 @@ DASH = {                            # (dash, gap)
     "P-1b": (2.0, 4.0),             # rys. 2.2.1.2, roads <= 70 km/h
     "P-1d": (1.0, 1.0),             # rys. 2.2.1.4, guiding through junctions
     "P-7a": (1.0, 1.0),             # rys. 2.2.2.2
+    "P-6": (4.0, 2.0),              # ADR 0279: rys. 2.2.1.12 (zał. 2 PDF s. 16 = Dz.U. s. 541) linia ostrzegawcza
 }
+# ADR 0279 (pkt 2.2.1.12, s. 541): P-6 before P-2a / P-3a / P-4 at least 50 m (v <= 70) / 100 m (v > 70); in a
+# built-up area P-6 may be omitted (P-4 straight after P-1b). Not painted by markings.py yet (leader task, ADR 0279).
+P6_MIN_LEN = {"le70": 50.0, "gt70": 100.0}
+P1A_MIN_LEN, P1B_MIN_LEN = 120.0, 50.0   # pkt 2.2.1.1 / 2.2.1.2 (s. 533)
+P4_LINE_GAP = 0.12                  # rys. 2.2.1.10 (s. 540): 0.12 line + 0.12 gap + 0.12 line
 P2A_MIN_LEN = 20.0                  # pkt 2.2.1.6: P-2a at least 20 m
 P10_STRIPE = 0.50                   # rys. 4.2.1.1: stripes 0.5 m, gaps 0.5 m, <= 0.5 m from the edge
 P10_GAP = 0.50
 P10_EDGE_MAX = 0.50
 P10_WIDTH = 4.0                     # pkt 4.2.1: crossing width s = 4.0 m (>= 2.5 m in built-up areas)
+P10_WIDTH_MIN_BUILT_UP, P10_WIDTH_MAX = 2.5, 16.0   # pkt 4.2.1 (zał. 2 s. 567), ADR 0279
 P12_W = 0.50                        # rys. 4.2.3.1: STOP line 0.5 m
 # P-11 cycle crossing: two rows of squares. [ZNAKI-Z2] rys. 4.2.2.1 (Dz.U. 2019 poz. 2311, str. 569, PDF
 # D2019000231102.pdf on isap.sejm.gov.pl): 0.5 m squares with 0.5 m gaps; pkt 4.2.2 (str. 569): crossing
@@ -192,6 +199,8 @@ P13_BASE, P13_GAP, P13_H = 0.50, 0.25, 0.70   # rys. 4.2.4.1: triangles
 P14_LEN, P14_GAP, P14_DEPTH = 0.75, 0.25, 0.50  # rys. 4.2.5.1: rectangles 0.5 deep (0.375 m2/mb)
 P14_BEFORE_SIGNAL = 2.0             # pkt 4.2.5: >= 2.0 m before signals beside the carriageway
 P14_BEFORE_CROSSING = 2.0           # pkt 4.2.5: >= 2.0 m before a pedestrian crossing
+P14_BEFORE_OVERHEAD_SIGNAL = 8.0    # ADR 0279, pkt 4.2.5 (s. 573): >= 8.0 m before a signal head OVER the carriageway
+                                    # (cantilever masts); measured from the outer edge of the line to the head face
 ARROW_SHORT = {"len": 5.00, "head_len": 2.05, "head_w": 0.75, "shaft_w": 0.15}   # rys. 3.2.1.2 a)
 ARROW_LONG = {"len": 7.50, "head_len": 2.05, "head_w": 0.75, "shaft_w": 0.15}    # rys. 3.2.1.2 b)
 ARROW_SPACING = {"short": 15.0, "long": 30.0}   # pkt 3.2.1: 15 m (<= 70 km/h), 30 m (others)
@@ -219,8 +228,9 @@ SURFACE_OF = {"yard_paving": "paving", "yard_behaton": "paving", "sidewalk_pavin
               "path_asphalt": "asphalt", "yard_gravel": "grass",
               "plot_lawn": "grass"}   # -> collision_<x> materials
 
-# Vertical signs [ZNAKI-Z1]. Table 1.11: lower edge >= 2.00 m in built-up areas, 2.20 m when the sign
-# stands on a sidewalk; signs over the carriageway >= 5.00 m.
+# Vertical signs [ZNAKI-Z1]. Table 1.11 (wording of Dz.U. 2022 poz. 2377, re-read ADR 0279): lower edge >= 2.00 m,
+# 2.20 m when the sign stands on OR OVER a sidewalk; signs over the carriageway >= 5.00 m; exceptions (E-1 / E-2
+# rural 1.00 m, G-1 1.00 / 0.50 m, several signs on one post 1.50 m) in streetscape.sign_norms.MOUNT_MIN_M.
 SIGN_H_MIN = 2.00
 SIGN_H_SIDEWALK = 2.20
 SIGN_H_OVERHEAD = 5.00
