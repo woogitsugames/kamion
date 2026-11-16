@@ -31,6 +31,10 @@ trafia do buildu, a menu startowe zna tylko trasy G3-A/G3-B regionu C. Właścic
    Pola `routeLengthM` i `startS` odświeża `python scripts/export-region-catalog.py` z `Data/Regions/<id>/route_start.json`
    (`--check` = exit 1 przy nieaktualnym katalogu lub regionie bez wpisu). Ten sam plik czyta build i menu, więc nazwy
    się nie rozjadą.
+   **Odstępstwo od listy D67 (dopisane w ADR 0267, recenzja #104 FIX 1):** `d67` to trasa główna wariantu A (ADR 0203,
+   „w razie potrzeby sama trasa główna” z D67): Dojlidy leżą poza trasą, a Maczka i Kleeberga są na trasie głównej, więc
+   weszły do `d67` mimo „w miarę rozmiaru” w D67. Pełna lista D67/D71 to zestaw **`d67-full`** = `d67` + Dojlidy,
+   Knyszyn-W, Mońki, Tykocin (21 regionów), generowany przez `export-region-catalog.py`; `d67` zostaje lżejszym wariantem.
 4. **Nazwa sceny** w jednym miejscu: `Game.World.RegionScenes` (`WorldC` dla C, `World_<id>` dla reszty, `_High` dla
    tieru High); `WorldSceneBuilder.SceneNameFor` deleguje do niej.
 5. **Menu (kod, bez YAML sceny Boot).** `GameBootstrap` buduje listę `BootRegionChoice` z katalogu, `BootMenu` rysuje pod

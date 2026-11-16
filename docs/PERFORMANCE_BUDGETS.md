@@ -1,5 +1,17 @@
 # Performance budgets (initial, Stage 0)
 
+## PC (Windows) — platforma główna od D73 (ADR 0260, ADR 0266) — wszystko `WORKING_VALUE`
+Klasy **min / zalecany / wysoki** (FPS, rozdzielczość, tier, p50/p95/p99, klatki > progi, RAM/VRAM procesu, czas ładowania
+regionu, draw calls, trójkąty, GC): tabela w `docs/03` § „Klasy sprzętu PC i budżety”, dane dla parsera w
+`tools/pcperf/budgets/pc-budgets.json` (jedno źródło — test `test_docs03_table_matches_budget_file` pilnuje zgodności).
+Narzędzie: `PcFrameMetricsRecorder` (player, `-metrics <dir>`) + `scripts/pc-metrics.ps1` + `tools/pcperf/pc_metrics.py`.
+Klasy min / zalecany = wymagania sprzętowe z **D74** (min: i5-6400 / GTX 660 / 8 GB → Low 1080p 30 fps; zalecany:
+i5-9600 / GTX 1660 / 12 GB → High 1080p 60 fps; dysk ≤ 25 GB — wszystko `WORKING_VALUE`).
+**Zmierzone na PC dla klas: nic** (stan 15.11.2026). Jedyny pomiar to informacyjny przebieg ADR 0261 na maszynie deweloperskiej
+(RTX 5070, High, 1600×900, bez limitu, głównie na postoju) — nie jest referencją i nie zalicza żadnej klasy.
+
+Wszystko poniżej to budżety **mobilne** — od D73 🔒 zabezpieczenie dla przyszłej wersji telefonowej (odroczone, nie usunięte).
+
 Status: **initial**. Targets are `WORKING_VALUE`s until measured scenes exist; rendering-perf owns refinement.
 Measurement tool: Boot diagnostics (`DiagnosticsSampler`, rolling 600-frame window, nearest-rank percentiles) +
 `scripts/device-metrics.ps1` (full-session CSV, percentiles after a 5 s warm-up, `dumpsys meminfo` PSS, battery temperature).
@@ -189,3 +201,17 @@ Not done: the world goal <= 60 MB is still not met (133.5 MB packed uncompressed
 ProjectSettings patch for the lead (not committed): (1) `managedStrippingLevel: Android: 1 -> 3` (High), test with a device run (reflection users: glTFast, Json); -2.6 MB. (2) `m_ShowUnitySplashLogo: 1 -> 0`, -1.2 MB, only if the licence allows; (3) `il2cppCompilerConfiguration` stays Release; consider `il2cppCodeGeneration: OptimizeSize` (not measured). (4) mipmap limit groups per quality (Unity 6 `mipmapLimitGroupName`) would let one APK drop top mips on Low at load time - saves RAM, not APK size.
 
 High tier as a separate package (options, nothing deployed): (a) status quo: two APKs, `-WorldHigh` ships WorldC_High + High sets (sideload/test; Play needs one artifact). (b) AAB + Play Asset Delivery install-time/fast-follow packs: High world + High truck/trailer textures as an asset pack, loaded via Addressables (Unity 6 supports Android asset packs through Addressables Play Asset Delivery); needs `buildAppBundle`, an Addressables group per tier, and the High sets taken out of Resources; Play delivers only to devices matching a texture-compression/device-tier targeting rule (device tier targeting can send the pack only to flagships). (c) Addressables remote groups on a CDN: no Play dependency, adds hosting and a download UI. Recommended: (b) once streaming chunks (ADR 0003) lands; until then the build flag (this change) is the cheap equivalent.
+
+## PC tiers (D74, ADR 0269) — all WORKING_VALUE, UNMEASURED
+Source of the values: `game/Assets/_Project/Rendering/Runtime/PcTierTable.cs` (+ `Resources/PcTiers/URP_PC_*.asset`), table with
+sources in `docs/adr/0269-tiery-grafiki-pc.md`. Content (draws / triangles) = the same Low / `_High` scenes as the phone, so the
+mobile content budgets above stay. Measurement: `scripts/build-windows.ps1 -Run … -Width 1920 -Height 1080` (or
+`scripts/pc-metrics.ps1` once PR #130 is merged); the dev RTX 5070 is NOT a reference (ADR 0260).
+
+| Tier | Reference class (D74) | Target | Frame-time p95 | Frame-time p99 | VRAM | Status |
+|---|---|---|---|---|---|---|
+| Low | GTX 660 2 GB / RX 460 / Intel HD 630, i5-6400, 8 GB | 1080p 30 fps | ≤ 34 ms | ≤ 40 ms | ≤ 1.8 GB | WORKING_VALUE, UNMEASURED |
+| Medium | 4 GB class (GTX 1050 Ti / RX 570 4 GB) | 1080p 60 fps | ≤ 17 ms | ≤ 20 ms | ≤ 3.5 GB | WORKING_VALUE, UNMEASURED |
+| High | GTX 1660 / RX 590, i5-9600, 12 GB | 1080p 60 fps | ≤ 17 ms | ≤ 20 ms | ≤ 5 GB | WORKING_VALUE, UNMEASURED |
+| Ultra | above recommended (opt-in, never auto) | 1080p 60 fps | ≤ 17 ms | ≤ 20 ms | — | WORKING_VALUE, UNMEASURED |
+VRAM column = budget ≈ 85–90 % of the class card memory (headroom for the driver / OS), not a measurement.

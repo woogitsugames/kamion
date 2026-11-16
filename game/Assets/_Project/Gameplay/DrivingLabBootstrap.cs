@@ -52,14 +52,14 @@ namespace Game.Gameplay
         readonly DriverInputMixer m_Mixer = new DriverInputMixer();
         public readonly AutopilotDriverInput Autopilot = new AutopilotDriverInput();
         public readonly KeyboardDriverInput Keyboard = new KeyboardDriverInput();
-        /// <summary>Gamepad (ADR 0261): stick + triggers; inactive without a connected pad.</summary>
-        public readonly GamepadDriverInput Pad = new GamepadDriverInput();
         public readonly TouchSteeringWheel Wheel = new TouchSteeringWheel();
         public readonly GyroSteering Gyro = new GyroSteering();
+        /// <summary>PC wheel + pedals + shifter and its force feedback (ADR 0263); null FFB backend until a native plugin exists.</summary>
+        public readonly PcWheel PcWheel = new PcWheel();
         /// <summary>The simulated cab steering wheel (ADR 0058): driver target → hand-rate-limited wheel → Steering command, in the fixed step.</summary>
         public readonly SteeringColumn Column = new SteeringColumn();   // tuning loaded in Awake (Resources)
         float m_SteerTarget;
-        bool m_SteerHandsOn, m_SteerBypass, m_SteerHasTarget;
+        bool m_SteerHandsOn, m_SteerBypass, m_SteerHasTarget, m_SteerDirect;
         public readonly TouchControls Touch = new TouchControls();
         /// <summary>Turn-signal stalk + flasher (self-cancelling, 1.5 Hz); drives the lamps, the cluster arrows and the relay click.</summary>
         public readonly TurnSignal Signals = new TurnSignal();
@@ -129,8 +129,8 @@ namespace Game.Gameplay
 
             m_Mixer.Add(Autopilot);
             m_Mixer.Add(RouteDriver);
-            m_Mixer.Add(Keyboard);
-            m_Mixer.Add(Pad);
+            m_Mixer.Add(Keyboard);   // the gamepad and rebindable keyboard (ADR 0264) are inserted before it by PcInputBridge
+            m_Mixer.Add(PcWheel.Input);   // absolute wheel (ADR 0263): after the pad / keys (they override while used), before the always-active touch wheel
             m_Mixer.Add(Wheel);
             m_Mixer.Add(Gyro);
             m_Mixer.Add(Touch);
@@ -140,6 +140,7 @@ namespace Game.Gameplay
             Column.LockDeg = HandwheelLockDeg();
             GyroSteering.EnableSensors();
             Controls = ControlSettings.Load();
+            PcWheel.Load();
             ApplyControls();
             Controls.Log("loaded");
             m_InputLog = new ControlInputLogger();
@@ -161,6 +162,7 @@ namespace Game.Gameplay
                 if (!mir.main) continue;
                 else if (mir.phase == 0) m_MirrorL = mir; else m_MirrorR = mir;
             m_MirrorInsets = PlayerPrefs.GetInt(PrefMirrorInsets, 1) != 0;
+            PcInputBridge.ToggleMirrorInsets = () => { m_MirrorInsets = !m_MirrorInsets; PlayerPrefs.SetInt(PrefMirrorInsets, m_MirrorInsets ? 1 : 0); };   // L key (ADR 0264)
 
             // engine_audio=el|synth: engine sound set for the owner's A/B (ADR 0137); saved like the settings-panel choice.
             Game.Core.AudioPreferences.ApplyArgument(platform.GetLaunchArgument("engine_audio"));
@@ -646,21 +648,36 @@ namespace Game.Gameplay
         /// target and writes its angle / lock as the steering command. Autopilots bypass the hand model (their own
         /// controllers are tuned on the raw command) and the column is kept at their angle for a seamless hand-over.
         /// </summary>
-        /// <summary>Right-stick look-around: full deflection = this many pixels of look drag per second (WORKING_VALUE), dead zone.</summary>
-        const float PadLookPxPerSecond = 900f, PadLookDeadZone = 0.15f;
-
         void FixedUpdate()
         {
             if (!vehicle.Initialized || UnityEngine.Physics.simulationMode != SimulationMode.FixedUpdate) return;   // scripted stepping (tests) drives Input itself
             var m = vehicle.Model;
             Column.LockDeg = HandwheelLockDeg();
+            StepPcWheelForceFeedback(m);   // before any early return: autopilots get an inactive (zero) force
             if (StraightRunActive) { StepStraightRun(Time.fixedDeltaTime); return; }
             if (m_SteerBypass) { if (m_SteerHasTarget) Column.SnapTo(m_SteerTarget * Column.LockDeg); }
+            else if (m_SteerDirect) Column.SnapTo(m_SteerTarget * Column.LockDeg);   // PC wheel: the player's hands are the hand model (ADR 0263)
             else Column.Step(Time.fixedDeltaTime, m_SteerTarget * Column.LockDeg, m_SteerHandsOn, (float)m.SpeedForward * 3.6f, (float)m.AligningTorqueTotal);
             var input = vehicle.Input;
             input.Steer = Column.Normalized;
             vehicle.Input = input;
             Wheel.FollowColumn(Column.Normalized);
+        }
+
+        /// <summary>Force feedback from the physics of the last step (ADR 0263): steered-axle aligning torque and loads.</summary>
+        void StepPcWheelForceFeedback(VehicleModel m)
+        {
+            float loadL = 0f, loadR = 0f;
+            var wheels = m.Wheels;
+            for (int i = 0; i < wheels.Length; i++)
+            {
+                var w = wheels[i];
+                if (!w.Steered || !w.Contact) continue;
+                if (w.Side < 0) loadL += (float)w.Fz; else loadR += (float)w.Fz;
+            }
+            bool driving = !m_SteerBypass && Time.timeScale > 0f && m_SettingsPanel == null;
+            PcWheel.StepForceFeedback(Time.fixedDeltaTime, driving, (float)m.SpeedForward, (float)m.AligningTorqueTotal,
+                (float)m.Steering.Def.steeringRatio, loadL, loadR);
         }
 
         void Update()
@@ -682,28 +699,30 @@ namespace Game.Gameplay
                 Position = vehicle.transform.position,
                 Forward = vehicle.transform.forward,
             };
+            // Review #131 P1-1: a settings panel / modal owns the pad, keyboard and wheel buttons (they navigate it), so
+            // those sources give an empty intent - also in the frame the panel closes (the mixer holds one more sample).
+            m_Mixer.MenuOpen = m_SettingsPanel != null || Game.UI.Layout.UiFocus.HasModal;
             var intent = m_Mixer.Sample(Time.deltaTime, fb);
+            bool menuGate = m_Mixer.MenuGateActive;
             m_SteerBypass = Autopilot.Enabled || RouteDriver.Enabled || StraightRunActive;
             m_SteerHasTarget = intent.SteerActive;
             m_SteerTarget = intent.SteerActive ? Mathf.Clamp(intent.Steer, -1f, 1f) : 0f;
             m_SteerHandsOn = intent.SteerActive && intent.HandsOn;
+            m_SteerDirect = intent.SteerActive && intent.DirectSteer;
             if (!m_SteerBypass) m_InputLog.Observe(Time.unscaledTime, intent, vehicle.SpeedKmh, Column.AngleDeg);
             if (m_Rig.mode != m_LoggedCamMode) { m_LoggedCamMode = m_Rig.mode; m_InputLog.Event(Time.unscaledTime, k_CamModeEvents[(int)m_LoggedCamMode]); }
             m_InputLog.TryFlush(Time.unscaledTime, intent.Throttle < 0.01f && intent.Brake < 0.01f && !intent.SteerActive);   // batched; allocates only on that frame
             var kb = UnityEngine.InputSystem.Keyboard.current;   // Android back key arrives as Escape
-            var pad = UnityEngine.InputSystem.Gamepad.current;   // ADR 0261: Start = menu / back, Y = next camera, right stick = look
+            var pad = UnityEngine.InputSystem.Gamepad.current;   // ADR 0261: Start = menu / back (not a rebindable driving action)
             if ((kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.startButton.wasPressedThisFrame))
             {
                 if (Game.UI.Navigation.FullMapView.HandleBack()) { }   // back closes the map first (ADR 0150)
                 else if (m_SettingsPanel != null) m_SettingsPanel.Close(); else ReturnToMenu();
             }
-            if ((kb != null && kb.cKey.wasPressedThisFrame) || (pad != null && pad.buttonNorth.wasPressedThisFrame)) m_Rig.NextMode();   // C / Y: cab → chase → orbit
-            if (pad != null)
-            {
-                Vector2 look = pad.rightStick.ReadValue();
-                if (look.sqrMagnitude > PadLookDeadZone * PadLookDeadZone) m_Rig.AddLookDelta(look * (PadLookPxPerSecond * Time.unscaledDeltaTime));
-            }
-            Game.Core.AudioCues.HornHeld = (kb != null && kb.kKey.isPressed) || (pad != null && pad.rightStickButton.isPressed);   // horn (ADR 0142; touch button: gameplay-ui TODO)
+            // Camera (C / top face button), pad look-around and pad horn come from the rebindable actions of PcInputBridge
+            // (ADR 0264, one source). It disables the fixed-key Keyboard source; until it is installed C still works here.
+            if (!menuGate && Keyboard.Enabled && kb != null && kb.cKey.wasPressedThisFrame) m_Rig.NextMode();   // C: cab → chase → orbit
+            Game.Core.AudioCues.HornHeld = !menuGate && kb != null && kb.kKey.isPressed;   // horn (ADR 0142); PcInputBridge ORs the Horn action in after this
             ApplyCommands(intent);
             UpdateTurnSignals(intent, fb.RoadWheelAngleNormalized);
 
@@ -839,9 +858,10 @@ namespace Game.Gameplay
             Touch.ThrottleRaw = 0f;
             Touch.BrakeRaw = 0f;
             Wheel.PointerUp();
+            PcWheel.Stop();   // no force left on the rim while the game is not running (ADR 0263)
         }
 
-        void OnDestroy() { m_InputLog?.Flush(Time.unscaledTime); }
+        void OnDestroy() { m_InputLog?.Flush(Time.unscaledTime); PcWheel.Dispose(); }
 
         void OnApplicationFocus(bool focus) { if (!focus) OnApplicationPause(true); }
     }

@@ -1,3 +1,4 @@
+using Game.Cameras;
 using UnityEngine;
 
 namespace Game.UI.Driving
@@ -16,10 +17,17 @@ namespace Game.UI.Driving
         public bool ReverseView;
         /// <summary>Developer status / coupling lines.</summary>
         public bool DevText;
+        /// <summary>ADR 0265: monitor without a touch screen - wheel, pedals, gear selector, stalk and turn-signal
+        /// buttons are not on screen; the mirror windows are sized by <see cref="MirrorWindowLayout"/>. Default false =
+        /// touch layout (ADR 0079) unchanged.</summary>
+        public bool HideTouchControls;
+        /// <summary>Glass aspect (width / height) of the mirror texture; &lt;= 0 = default. Used with <see cref="HideTouchControls"/>.</summary>
+        public float MirrorAspect;
 
         public bool SameAs(in HudLayoutInput o) =>
             Width == o.Width && Height == o.Height && Gyro == o.Gyro && DevPanelOpen == o.DevPanelOpen && Telemetry == o.Telemetry &&
-            MirrorLeft == o.MirrorLeft && MirrorRight == o.MirrorRight && ReverseView == o.ReverseView && DevText == o.DevText;
+            MirrorLeft == o.MirrorLeft && MirrorRight == o.MirrorRight && ReverseView == o.ReverseView && DevText == o.DevText &&
+            HideTouchControls == o.HideTouchControls && MirrorAspect == o.MirrorAspect;
     }
 
     /// <summary>HUD zones, in safe-area canvas units, origin bottom-left, y up.</summary>
@@ -30,6 +38,8 @@ namespace Game.UI.Driving
         /// <summary>False while a developer overlay (telemetry left, panel right) needs the inset's place.</summary>
         public bool ShowMirrorLeft, ShowMirrorRight;
         public bool ShowDevPanel, ShowTelemetry, ShowReverseView, ShowDevText;
+        /// <summary>Touch controls (zones 8-13) on screen (ADR 0265: false on a monitor without a touch screen).</summary>
+        public bool ShowTouchControls;
 
         public const int ZoneCount = 15;
         static readonly string[] k_Names =
@@ -53,12 +63,12 @@ namespace Game.UI.Driving
                 case 5: r = DevToggle; return true;
                 case 6: r = DevPanel; return ShowDevPanel;
                 case 7: r = Telemetry; return ShowTelemetry;
-                case 8: r = Steering; return true;
-                case 9: r = TurnSignals; return true;
-                case 10: r = Stalk; return true;
-                case 11: r = Brake; return true;
-                case 12: r = Throttle; return true;
-                case 13: r = Gears; return true;
+                case 8: r = Steering; return ShowTouchControls;
+                case 9: r = TurnSignals; return ShowTouchControls;
+                case 10: r = Stalk; return ShowTouchControls;
+                case 11: r = Brake; return ShowTouchControls;
+                case 12: r = Throttle; return ShowTouchControls;
+                case 13: r = Gears; return ShowTouchControls;
                 default: r = DevText; return ShowDevText;
             }
         }
@@ -75,6 +85,8 @@ namespace Game.UI.Driving
     /// signals above it, retarder stalk beside it; bottom right = pedals with the gear selector beside them (not
     /// above: low zones cover the dashboard, not the road); bottom centre = developer text.
     /// All sizes are WORKING_VALUES in canvas units (one unit = one pixel on a 1080-px-high phone).
+    /// ADR 0265 (monitor, <see cref="HudLayoutInput.HideTouchControls"/>): the touch zones are off, the mirror windows
+    /// follow <see cref="MirrorWindowLayout"/> (sized by height, aspect kept), the developer text sits bottom centre.
     /// </summary>
     public static class HudLayout
     {
@@ -145,17 +157,30 @@ namespace Game.UI.Driving
             r.ParkWarn = new Rect(r.Cluster.x, r.Cluster.y - 8f - ParkWarnSize.y, ParkWarnSize.x, ParkWarnSize.y);
             r.ReverseView = new Rect(cx - ReverseSize.x * 0.5f, r.ParkWarn.y - 8f - ReverseSize.y, ReverseSize.x, ReverseSize.y);
             r.ShowReverseView = s.ReverseView;
-            r.MirrorLeft = new Rect(r.Cluster.x - Gap - MirrorSize.x, top - MirrorSize.y, MirrorSize.x, MirrorSize.y);
-            r.MirrorRight = new Rect(r.Cluster.xMax + Gap, top - MirrorSize.y, MirrorSize.x, MirrorSize.y);
             r.ShowMirrorLeft = s.MirrorLeft;
             r.ShowMirrorRight = s.MirrorRight;
+            r.ShowTouchControls = !s.HideTouchControls;
+            if (s.HideTouchControls)
+            {
+                // Monitor (ADR 0265, D70): windows sized by the content height, glass aspect kept, beside the cluster.
+                var mi = new MirrorWindowInput { Width = w, Height = h, Centre = r.Cluster, Aspect = s.MirrorAspect, SideReserve = DevToggleSize.x + Gap };
+                MirrorWindowLayout.Solve(mi, out var mw);
+                r.MirrorLeft = mw.Left; r.MirrorRight = mw.Right;
+                if (!mw.Fits) { r.ShowMirrorLeft = false; r.ShowMirrorRight = false; }
+            }
+            else
+            {
+                r.MirrorLeft = new Rect(r.Cluster.x - Gap - MirrorSize.x, top - MirrorSize.y, MirrorSize.x, MirrorSize.y);
+                r.MirrorRight = new Rect(r.Cluster.xMax + Gap, top - MirrorSize.y, MirrorSize.x, MirrorSize.y);
+            }
 
             // ---- bottom left: steering, turn signals, retarder stalk
             float steerH = s.Gyro ? GyroSize.y : WheelSize;
             r.Steering = new Rect(WheelLeft, ControlsBottom, WheelSize, steerH);
             r.TurnSignals = new Rect(WheelLeft, ControlsBottom + WheelSize + 8f, TurnSignalsSize.x, TurnSignalsSize.y);
             r.Stalk = new Rect(r.Steering.xMax + 10f, ControlsBottom, StalkSize.x, StalkSize.y);
-            float leftTop = Mathf.Max(r.TurnSignals.yMax, r.Stalk.yMax);
+            // Monitor: nothing at the bottom left but the developer text row (bottom centre).
+            float leftTop = r.ShowTouchControls ? Mathf.Max(r.TurnSignals.yMax, r.Stalk.yMax) : Margin + DevTextHeight;
 
             // ---- bottom right: throttle at the edge, brake, gear selector
             r.Throttle = new Rect(w - Margin - ThrottleSize.x, ControlsBottom, ThrottleSize.x, ThrottleSize.y);
@@ -172,7 +197,8 @@ namespace Game.UI.Driving
                 // Narrow canvas: the panel moves under the inset when the screen is tall enough for that (near-square
                 // foldables), otherwise the inset gives way.
                 float below = r.MirrorRight.y - 8f - DevPanelSize.y;
-                if (below >= r.Throttle.yMax + Gap) r.DevPanel.y = below;
+                float floor = r.ShowTouchControls ? r.Throttle.yMax : Margin + DevTextHeight;
+                if (below >= floor + Gap) r.DevPanel.y = below;
                 else r.ShowMirrorRight = false;
             }
 
@@ -194,7 +220,8 @@ namespace Game.UI.Driving
 
             // ---- bottom centre: developer text between the two control groups
             r.ShowDevText = s.DevText;
-            float dx0 = r.Stalk.xMax + Gap, dx1 = r.Gears.x - Gap;
+            float dx0 = r.ShowTouchControls ? r.Stalk.xMax + Gap : cx - TelemetryMaxWidth * 0.5f;
+            float dx1 = r.ShowTouchControls ? r.Gears.x - Gap : cx + TelemetryMaxWidth * 0.5f;
             r.DevText = new Rect(dx0, Margin, Mathf.Max(0f, dx1 - dx0), DevTextHeight);
         }
     }
