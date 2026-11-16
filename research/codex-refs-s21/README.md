@@ -8,7 +8,7 @@ Ciągły zbiór dla generatorów świata i ciężarówki. Izolowany worktree, ga
 | 2 Brud M61-FIX | [02-brud](02-brud/README.md) | 25 |
 | 3 Knyszyn | [03-knyszyn](03-knyszyn/README.md) | 40 |
 | 4 Korytarz DK65 | [04-dk65](04-dk65/README.md) | 27 |
-| 5 Linia kolejowa38 | [05-kolej38](05-kolej38/README.md) | 19 |
+| 5 Linia kolejowa38 | [05-kolej38](05-kolej38/README.md) | 21 |
 | 6 Pierścień regionów | [06-region-ring](06-region-ring/README.md) | 36 |
 | 7 Białystok/Dojlidy | [07-bialystok-dojlidy](07-bialystok-dojlidy/README.md) | 20 |
 
