@@ -111,3 +111,7 @@ R18 → r19: 70 z 72 kamer bez zmian liczby rendererów, draws, shadow draws i t
 ## R19 — próba georeferencji targowicy
 
 Automatyczna próba rejestracji zdjęcia względem ortofoto: **FAIL**, mediana błędu sześciu odłożonych kandydatów 79,92 m. Pary są automatyczne i niezweryfikowane; ta liczba nie jest metrologiczną dokładnością ani podstawą wyznaczenia położenia wiat. Metodę i ograniczenia opisuje lokalny `artifacts/knyszyn-rynek-0227/market-georef-attempt.md`. Zdjęć właściciela nie publikować ani nie dodawać do Git.
+
+## R23 — kontrola szpalerów i parku
+
+Wygenerowane `instances_*.json` zawierają 10 instancji `src=treerow:*`; zero jest wewnątrz lub na granicy poligonu BDOT parku. Najbliższy pień szpaleru jest 582,20 m od obrysu i 618,03 m od najbliższej z 15 lip kit w overrides (13+2). To odległości pozycji pni, nie koron; w R23 szpalery nie dublują tych lip. Metoda w `artifacts/knyszyn-rynek-0227/AUDYT.md`.

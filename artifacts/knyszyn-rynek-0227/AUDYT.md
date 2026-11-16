@@ -178,3 +178,7 @@ Shadow draws nie zmieniły się na żadnej z 72 kamer. Różnice w przestawionyc
 ## R19 — próba georeferencji targowicy
 
 Automatyczna próba rejestracji zdjęcia względem ortofoto zakończyła się **FAIL**: mediana błędu sześciu odłożonych kandydatów wyniosła 79,92 m. Pary są automatyczne i niezweryfikowane terenowo; wartość nie jest metrologiczną dokładnością ani podstawą wyznaczenia położenia wiat. Lokalny raport `artifacts/knyszyn-rynek-0227/market-georef-attempt.md` opisuje metodę i ograniczenia. Zdjęć właściciela nie publikować ani nie dodawać do Git.
+
+## R23 — kontrola szpalerów względem parku
+
+Po ukończonym build_world odczytano wszystkie wygenerowane `instances_*.json`: 10 instancji `src=treerow:*`, zero wewnątrz lub na granicy poligonu BDOT parku `20029180-A4BE-5C99-E053-CC2BA8C01CFC` (Shapely `covers`, po przeliczeniu lokalnego E/N na EPSG:2180). Najbliższy pień szpaleru leży 582,20 m od obrysu parku i 618,03 m od najbliższej z 15 lip kit (13+2 pozycji w overrides). Doliczenie trzech punktów lip wcześniej odrzuconych przez maskę nie zmienia minimum. To odległości pozycji pni, nie koron; w R23 szpalery nie dublują tych lip.
