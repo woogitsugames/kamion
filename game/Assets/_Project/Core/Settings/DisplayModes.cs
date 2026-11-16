@@ -160,8 +160,10 @@ namespace Game.Core.Settings
     /// Exclusive full screen is not used on Direct3D 12 (crash-diag-s23, 16.11.2026): the owner's player crashed in
     /// <c>D3D12SwapChain::Present</c> → <c>CheckDeviceStatus</c> with <c>swapchain present failed (887a0001)</c> while in the
     /// menu-chosen exclusive mode (3440×1440, RTX 5070, Unity 6000.3.28f1); public reports: UUM-134743 (exclusive + DX12 +
-    /// focus switch) and UUM-148214 (same HRESULT from Present, DX12 only). Borderless ("okno bez ramki") is what Unity itself
-    /// recommends instead. D3D11 keeps the exclusive choice. <c>-allow-exclusive-d3d12</c> restores it for a test run.
+    /// focus switch, marked fixed in 6000.3.14f1) and UUM-148214 (same HRESULT from Present, DX12 only, reported in
+    /// "Fullscreen window" = borderless too). Mitigation, not a proven fix (one occurrence, not reproduced): Unity's 6000.3.14
+    /// notes recommend borderless over exclusive on DX12. D3D11 keeps the exclusive choice. <c>-allow-exclusive-d3d12</c>
+    /// restores it for a test run.
     /// Pure (tests feed the API flag and the command line).
     /// </summary>
     public static class ExclusiveFullscreenPolicy

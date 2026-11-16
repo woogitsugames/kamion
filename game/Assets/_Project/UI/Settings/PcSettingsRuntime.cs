@@ -169,7 +169,7 @@ namespace Game.UI.Settings
                 Screen.SetResolution(w, h, mode, new RefreshRate { numerator = (uint)d.refreshNumerator, denominator = (uint)d.refreshDenominator });
             else
                 Screen.SetResolution(w, h, mode);
-            Debug.Log("[SETTINGS] display " + w + "x" + h + " " + d.mode + " refresh=" + d.RefreshHz.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture));
+            Debug.Log("[SETTINGS] display " + w + "x" + h + " " + effective + " refresh=" + d.RefreshHz.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture));
         }
 
         public static void ApplyFramePacing(PcSettingsData s)
