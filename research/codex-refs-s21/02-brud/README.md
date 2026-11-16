@@ -1,10 +1,10 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Stan ewidencji głównej na 16.11.2026: **23 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **24 rekordy** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
-Aktualny manifest:23rekordy=21kadrów(14lokalnych/7link-only)+2dokumenty, w tym odrzucenia/AUX. Nie23kwalifikacje. [RejestrA/B/C](qualification-ledger-round18/README.md) rozdziela wymagania bez ich obniżania.
+Aktualny manifest:24 rekordy =22 kadry (14 lokalnych/8 link-only)+2 dokumenty, w tym odrzucenia/AUX. Nie24 kwalifikacje. [RejestrA/B/C](qualification-ledger-round18/README.md) rozdziela wymagania bez ich obniżania.
 
-A:≥20łącznie — rozpoznana dolna granica5treściowych źródeł (3rdzeniowe158/182/183 +1Krone zlekkim miejscowymfilmem +1RoadTour source-dependent). B:≥12NOWYCH z≥1000pxdrzwi i ruchem/zarazpotrasie — potwierdzone1źródłoWesternExpress, liczone raz zP18-182/CR6. C-zima-A:1source-dependent, C-Europa-A / zima-B / Europa-B:0potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. 70/88 rekordów P18 obejrzanych, 18 NOT_REVIEWED. Całe20/12/6/6niepotwierdzone; nie przyjmujemy statusówbezoglądu.
+A:≥20łącznie — rozpoznana dolna granica6 treściowych źródeł (3 rdzeniowe158/182/183 +1 Krone z lekkim miejscowym filmem +1 RoadTour source-dependent +1 AutoReview39-A01). B:≥12NOWYCH z≥1000pxdrzwi i ruchem/zarazpotrasie — potwierdzone1źródłoWesternExpress, liczone raz zP18-182/CR6. C-zima-A:1source-dependent, C-Europa-A / zima-B / Europa-B:0potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. 70/88 rekordów P18 obejrzanych, 18 NOT_REVIEWED. Całe20/12/6/6niepotwierdzone; nie przyjmujemy statusówbezoglądu.
 
 Źródłowy typnaczepy, brud zamiast powłoki/rdzy, zimowy kontekst i europejska droga mają osobne dowody. Stare kadry nie stają się nowymiB; mniejszy nowy kadrA nie spełniaB. Wycinki/aliasy jednego zdjęcia nie zwiększają wyniku. Szczegółowe historyczne poszukiwania i erraty poniżej.
 
@@ -249,3 +249,7 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Atlas stref — runda35
 
 [qualified-zone-atlas-round35](qualified-zone-atlas-round35/README.md):17 stref z5 istniejących fotografii, każda ponownie osobno obejrzana przez agenta:3 lokalne oryginały CC oraz2 obrazy ARR w przeglądarce. h0 oznacza dół panelu, h1 górę; zakresy są ESTIMATED, bez metrów. Film/smugi/wytarcia oddzielono od cieni, napisów, rdzy i globalnego zafarbu. Niepoliczalne smugi mają UNVERIFIED. Zachowane A5 z ograniczeniami/B1 dla rozpoznanego podzbioru,0 nowych fotografii/A/B/pobrań/Commons. Główny manifest23 bez duplikowania źródeł.
+
+## Nowe brudne drzwi — runda39
+
+[company-doors-round39](company-doors-round39/README.md):5 nowych osobno obejrzanych kadrów ARR,1 przyjętyA i4 odrzucenia. AutoReview39-A01 niezależnie potwierdzony przez root: mocny film, jasne pionowe przerwy i pismo, bez awansu B/zimy/Europy. Główny24; dolna granicaA6 z ograniczeniami/B1. Zero pobrań. Starsze bilanseA5 zachowano jako historię, nie aktualną kwalifikację.
