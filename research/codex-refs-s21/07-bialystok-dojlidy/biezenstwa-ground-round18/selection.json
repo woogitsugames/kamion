@@ -1,0 +1,80 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE — jeden dzienny PRIMARY i jeden nocny AUX z jezdni, jeden odrzucony kadr na estakadzie",
+  "backlog_id": "B-123",
+  "goal": "Uzupełnienie B-123: naziemny widok jezdni ronda, podpór i wyposażenia, odrębny od znanego bocznego G3-028.",
+  "selection_viewport_only": {
+    "lat": 53.151944,
+    "lon": 23.168056
+  },
+  "source_of_choice": "Istniejący G3-028 i mapa UI służyły wyborowi. W dziennym kadrze nowym dodatkowo czytelna tablica z nazwą ronda.",
+  "dedup_read": [
+    "docs/owner/BACKLOG-S21.md — B-123",
+    "07-bialystok-dojlidy/manifest.csv —22rekordy",
+    "G3-028/07-P01 i opis ronda w G3README"
+  ],
+  "excluded_existing_ids": [
+    "G3-028",
+    "07-P01"
+  ],
+  "limits": [
+    "Bez API Mapillary, tokenów, pobierania i zapisanych screenshotów.",
+    "Podkład OSM potwierdzony dopiero po UI.",
+    "Brak nowych żądań OSM/Overpass/Commons/Flickr.",
+    "Wysokość kamery i azymut UNVERIFIED, nawet gdy widać maskę samochodu.",
+    "Stan historyczny według daty UI, nie aktualność 2026.",
+    "Dokładne nowe ID sprawdzić przed zapisem."
+  ],
+  "counts": {
+    "individually_viewed_exposures": 3,
+    "accepted_new_frames": 2,
+    "primary_day_ground": 1,
+    "aux_night_ground": 1,
+    "rejected_on_bridge": 1,
+    "downloads": 0
+  },
+  "viewer": {
+    "basemap": "OpenStreetMap potwierdzony obramowaniem wybranego podkładu w otwartym menu",
+    "captures": "All captures potwierdzone w tym samym menu",
+    "steps": "Jeden węzeł ronda, powiększenie mapy i wybór dwóch łuków. Porównanie dat ujawniło kadr na innym poziomie drogowym. Żadnych dalszych miejsc po trzech rzeczywistych ekspozycjach.",
+    "height": "UNVERIFIED — maska/przednia szyba dowodzą ujęcia z pojazdu, nie wysokości kamery ani oka kierowcy ciężarówki."
+  },
+  "accepted": [
+    {
+      "id": "07-BG18-01",
+      "pKey": "201270605169291",
+      "author": "richlv",
+      "date_ui": "2020-08-15",
+      "status": "PRIMARY_DAY_GROUND",
+      "localization": "Czytelna nazwa Rondo pamięci Bieżeństwa 1915 roku na tablicy w obrazie oraz położenie na łuku w UI."
+    },
+    {
+      "id": "07-BG18-02",
+      "pKey": "2793393204246827",
+      "author": "grobin",
+      "date_ui": "2019-10-18",
+      "status": "AUX_NIGHT_GROUND",
+      "localization": "Położenie na obwodzie ronda w UI i widoczne podpory/spód estakady; tablicy nazwy w tym kadrze nie odczytano."
+    }
+  ],
+  "rejected": [
+    {
+      "pKey": "2939164866339798",
+      "author": "picturehoover",
+      "date_ui": "2020-06-27",
+      "actually_viewed": true,
+      "reason": "Kadr na górnej estakadzie: jezdnia pomiędzy barierami, po prawej duży biało-niebieski walec i słupy kratowe. Nie przedstawia naziemnej jezdni ronda. Nie przyjęto jako referencji naziemnej ani jako kolejnego AUX.",
+      "how_found": "Publiczny Time travel zasugerował go do porównania z punktem dolnego ronda; faktyczny obraz wykazał różny poziom drogi. Sama zgodność położenia na mapie nie wystarcza."
+    }
+  ],
+  "dedup_result": "Dokładnych trzech ID nie znaleziono we wcześniejszych lokalnych plikach research CSV/JSON/MD. Znany G3-028 to inna ekspozycja z boku estakady; nie skopiowano go.",
+  "unverified": [
+    "GPS aparatu — żadnego viewportu nie użyto jako GPS",
+    "Azymut oraz odniesienie północy",
+    "Wysokość kamery i odległości",
+    "Technologia lamp, np. sód/LED, moce, barwa w kelwinach",
+    "Prawna aktualność znaków oraz wyposażenie w2026",
+    "Gatunki, frakcja kamienia i pełny przekrój podpór"
+  ],
+  "review_time": "Tylko data 2026-11-16; dokładnej godziny nie deklarowano."
+}

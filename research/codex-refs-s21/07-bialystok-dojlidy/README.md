@@ -83,3 +83,6 @@ Główny manifest12rekordów. [DokumentBIP](route-c-public-plans-round6/README.m
 ### Putry B-023 — odsyłacze do istniejących G3
 
 Dwa nowe rekordy odsyłaczowe,0nowych fotografii i0kopii. Agent i root ponownie obejrzeli legalne G3-001/003: widoczny styk obrzeża, utwardzonej nawierzchni, trawy i podstawy ekranu z terenem, bez odsłoniętego spodu. Nie dowodzi to braku ukrytej płyty konstrukcyjnej. Nie przeniesiono niezmierzonych wymiarów i azymutów z wcześniejszego raportu. Właściwego przekroju miejskiego tego miejsca nadal brak. [PG16](putry-ground-contact-round16/README.md).
+
+
+R18: dwa nowe kadry dolnej jezdni ronda Pamięci Bieżeństwa, dzienny2020 i nocny2019; root oba obejrzał. Podpory, spód estakady, wyspa, bariera i jezdnia; technologia opraw i wysokość kamery UNVERIFIED. Trzecia ekspozycja odrzucona jako górna estakada, nie dolne rondo. Główny24.
