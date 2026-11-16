@@ -1,4 +1,4 @@
 # STATUS — D28 dense-lod-0282 (chmura D r7, ADR 0282)
-- Krok 1: prototyp `tools/worldgen/qa/dense_lod_estimate.py` (model legacy = frame_estimate odtworzony 624/624 kategorii; model runtime = tabela LOD Unity + frustum + pas terenu; sonda generatora budynków) + `tests/gis/test_dense_lod_0282.py` 18 passed.
-- Kalibracja SceneStats w gicie: Unity/legacy 0,47 (kleeberga, 14 kamer), 0,56 (C, 3); Unity/runtime 0,66 / 0,56.
-- NASTĘPNY KROK: `uv run --project tools/worldgen python tools/worldgen/qa/dense_lod_estimate.py --buildings --json docs/reports/map/dense_lod_0282.json` → ADR 0282 + raport DENSE-LOD-2026-11-16 → PR.
+- Prototyp `tools/worldgen/qa/dense_lod_estimate.py` (legacy = frame_estimate 624/624; runtime = tabela LOD Unity + frustum + pas terenu; sonda generatora budynków; reguła HLOD kwartału; tabela LODGroup z propozycji) + `tests/gis/test_dense_lod_0282.py` 19 passed.
+- Wynik: SceneStats Unity = 0,35–0,65 frame_estimate; budynki 9–16 % klatki; Σ propozycji −397…−761 k legacy / −152…−347 k runtime; ADR 0282 + `docs/reports/DENSE-LOD-2026-11-16.md` + `docs/reports/map/dense_lod_0282.json`.
+- NASTĘPNY KROK (lider, Windows): `pwsh scripts/visual-qa.ps1 -Scene World_bialystok-maczka -Tier High -Lighting overcast -OutputDir artifacts/dense-lod-0282/maczka-High` (+ knyszynska, WorldC) → `uv run --project tools/worldgen python tools/worldgen/qa/dense_lod_estimate.py --stats bialystok-maczka=artifacts/dense-lod-0282/maczka-High/stats.txt@2340x1080 --json artifacts/dense-lod-0282/calib.json`.

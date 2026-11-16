@@ -3,7 +3,7 @@
 Automatycznie generowany przez `tools/docs/adr_index.py` — nie edytuj ręcznie.
 Ponowne wygenerowanie: `python3 tools/docs/adr_index.py` (z katalogu głównego repo).
 
-Liczba ADR: **229** (numery 0001–0272, z lukami — patrz raport audytu).
+Liczba ADR: **230** (numery 0001–0282, z lukami — patrz raport audytu).
 
 | Numer | Tytuł | Status | Data | Link |
 |---|---|---|---|---|
@@ -236,3 +236,4 @@ Liczba ADR: **229** (numery 0001–0272, z lukami — patrz raport audytu).
 | 0270 | menu ustawień PC (ekran, grafika, interfejs, dźwięk) | przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (c… | 2026-11-16 | [0270-menu-ustawien-pc.md](0270-menu-ustawien-pc.md) |
 | 0271 | dystrybucja PC: paczka zip, itch.io najpierw, Steam później, bez podpisu kodu na start | przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (c… | 2026-11-16 | [0271-dystrybucja-pc.md](0271-dystrybucja-pc.md) |
 | 0272 | Pobocze dróg bez krawężnika jako dane: reguła wg klasy, tagi OSM `shoulder`, nadpisanie per odcinek | Proposed (agent world-builder, chmura D r4, gałąź `rural-xsec-0272`), 2026-11-15. Do scalenia przez lidera. | 2026-11-15 | [0272-pobocze-drog-zamiejskich-jako-dane.md](0272-pobocze-drog-zamiejskich-jako-dane.md) |
+| 0282 | Budżet trójkątów gęstych kafli miejskich: estymator zgodny z Unity + reguły LOD w odległościach bliskich | Proposed (agent rendering-perf, chmura D r7, zadanie D28, gałąź `dense-lod-0282`), 2026-11-16. Analiza + prot… | 2026-11-16 | [0282-lod-gestych-kafli-miejskich.md](0282-lod-gestych-kafli-miejskich.md) |

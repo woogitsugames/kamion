@@ -91,7 +91,8 @@ class Proposal:
     bld_lod0_m: float | None = None           # LOD0 buildings -> LOD1 prism beyond this
     bld_lod0b: tuple[float, float] | None = None   # (from m, ratio): LOD0 without opening detail ("LOD0b")
     bld_hlod: tuple[float, float] | None = None    # (from m, ratio): LOD1 -> block HLOD
-    plots_cull_m: float | None = None         # plots + plot_ground
+    plots_cull_m: float | None = None         # plot kit (fences, gates, hedges, plants); plot_ground (lawn /
+    #                                           driveway surface) stays to the chunk LOD1 end (a colour jump otherwise)
     furn_cull_m: float | None = None          # furniture (fences, posts, guard rails)
     markings_cull_m: float | None = None
     props_scale: float = 1.0                  # instanced props (lamps, signs, cars ...) - far-ring thinning
@@ -115,7 +116,7 @@ PROPOSALS = (
     Proposal("P2c_bld_cells64", "budynki w komórkach LOD 64 m: LOD0 do 60 m, LOD0b do 250 m, LOD1 dalej",
              bld_cell_m=64, bld_lod0b=(60, 0.60), bld_lod0_m=250),
     Proposal("P3_block_hlod_near700", "HLOD kwartałów zamiast LOD1 od 700 m", bld_hlod=(700, 0.30)),
-    Proposal("P4_plots_near200", "działki (płoty, ogrody, nawierzchnie) do 200 m", plots_cull_m=200),
+    Proposal("P4_plots_near200", "zestaw działek (płoty, bramy, żywopłoty, rośliny) do 200 m", plots_cull_m=200),
     Proposal("P5_furn_mark_near300", "meble drogowe i oznakowanie poziome do 300 m", furn_cull_m=300,
              markings_cull_m=300),
     Proposal("P6_props_trees_far", "propsy -15 %, drzewa -10 % (dalekie pierścienie)", props_scale=0.85,
@@ -337,7 +338,7 @@ def runtime_chunk_categories(manifest: dict, cam: dict, rt: Runtime = Runtime(),
                 n = 0
             elif node == "furniture" and _past(d, prop.furn_cull_m):
                 n = 0
-            elif node in ("plots", "plot_ground") and _past(d, prop.plots_cull_m):
+            elif node == "plots" and _past(d, prop.plots_cull_m):
                 n = 0
             else:
                 n = t.get(node, 0)
@@ -438,8 +439,7 @@ def layer_ends(ends: list[float], prop: Proposal) -> dict:
             out.setdefault(node, []).append((lo, hi))
     def ref(x):
         return None if x is None else x + MARGIN
-    cuts = {"markings": ref(prop.markings_cull_m), "furniture": ref(prop.furn_cull_m),
-            "plots": ref(prop.plots_cull_m), "plot_ground": ref(prop.plots_cull_m)}
+    cuts = {"markings": ref(prop.markings_cull_m), "furniture": ref(prop.furn_cull_m), "plots": ref(prop.plots_cull_m)}
     res = {}
     for node, spans in out.items():
         lo, hi = min(s[0] for s in spans), max(s[1] for s in spans)
