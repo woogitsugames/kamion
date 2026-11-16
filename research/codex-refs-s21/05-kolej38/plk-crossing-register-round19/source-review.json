@@ -1,0 +1,47 @@
+{
+  "review_date": "2026-11-16",
+  "source": "https://mapa.plk-sa.pl/StaticFiles/Documents/Help.pdf",
+  "title": "Mapa Interaktywna Linii Kolejowych – portal publiczny. Instrukcja obsługi",
+  "pages": 9,
+  "document_date": "UNVERIFIED",
+  "read_method": "Tekst pełnego oficjalnego PDF odczytany przez web; nie omawiano bitmap ani figur.",
+  "findings": [
+    {
+      "page": 6,
+      "status": "SOURCED",
+      "finding": "Instrukcja opisuje wyszukiwanie przejazdów po numerze lub dodatkowych parametrach."
+    },
+    {
+      "page": 5,
+      "status": "SOURCED",
+      "finding": "Informacje o obiekcie to osobne dane opisowe; współrzędne klikniętego punktu są pokazywane w PUWG 1992."
+    },
+    {
+      "page": 9,
+      "status": "SOURCED",
+      "finding": "Współrzędne w dolnym pasku odnoszą się do położenia kursora; nie są automatycznie współrzędnymi obiektu."
+    },
+    {
+      "page": 9,
+      "status": "SOURCED",
+      "finding": "Przycisk praw autorskich pokazuje właścicieli aktualnie widocznych warstw."
+    }
+  ],
+  "local_download": {
+    "status": "INCOMPLETE_NO_FILE_SAVED",
+    "exception": "IncompleteRead: 622592 bytes read, 10408 more expected",
+    "retry": false
+  },
+  "crossing_038029522": "UNVERIFIED — ciąg hipotezy, nie numer odczytany z rejestru",
+  "DW671_relation": "UNVERIFIED",
+  "crossing_29_522_vs_viaduct_29_394": "Dwa odrębne obiekty w znanym obwieszczeniu; niniejsza instrukcja nie identyfikuje żadnego z nich.",
+  "ui_status": "NOT_OPENED_UNKNOWN_BASEMAP",
+  "new_photos": 0,
+  "landing_page_check": {
+    "url": "https://mapa.plk-sa.pl/",
+    "method": "Odczyt publicznego HTML bez wykonywania JavaScript i bez ładowania mapy.",
+    "result": "HTML zawiera pusty element root aplikacji, odsyłacze JS/CSS i Google Fonts; brak nazwy podkładu/atrybucji. Google Fonts nie są dowodem użycia map Google.",
+    "decision": "Nie uruchomiono widoku geograficznego; nie odczytywano ukrytego stanu, tokenów ani nieudokumentowanych API."
+  },
+  "result": "Nowy oficjalny dokument funkcji wyszukiwania, ale 0 nowych rekordów lokalnego przejazdu. Numer/ID, powiązanie DW671 i stan kategorii w 2026 pozostają UNVERIFIED."
+}
