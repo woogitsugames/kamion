@@ -265,6 +265,246 @@
    "type": "persp"
   },
   {
+   "fov_deg": 60.0,
+   "id": "rail_xing_from_ne",
+   "look_at": [
+    -745.42,
+    -560.893,
+    119.781
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): driver eye ~70 m before the DW671 level crossing, outbound SW",
+   "pos": [
+    -700.8,
+    -471.4,
+    123.273
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_xing_close_ne",
+   "look_at": [
+    -769.92,
+    -610.093,
+    107.758
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): driver eye ~15 m before the crossing, outbound SW",
+   "pos": [
+    -725.3,
+    -520.6,
+    121.812
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_xing_from_sw",
+   "look_at": [
+    -707.48,
+    -484.807,
+    118.446
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): driver eye ~45 m before the crossing, inbound NE",
+   "pos": [
+    -752.1,
+    -574.3,
+    121.938
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_xing_above",
+   "look_at": [
+    -732.0,
+    -504.0,
+    89.91
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): plan-like view of the crossing, pair with orthophoto",
+   "pos": [
+    -732.0,
+    -604.0,
+    189.91
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_track_along",
+   "look_at": [
+    -701.829,
+    -560.206,
+    115.556
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): on the track 60 m NW of the crossing, looking SE along the track",
+   "pos": [
+    -777.3,
+    -494.6,
+    122.548
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_track_side",
+   "look_at": [
+    -713.397,
+    -510.0,
+    114.89
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): field SW of the track, oblique view of track bed and crossing",
+   "pos": [
+    -800.0,
+    -560.0,
+    125.4
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "rail_xing_top",
+   "look_at": [
+    -732.15,
+    -435.4,
+    -2682.328
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21): top view of the DW671 level crossing (~60 m window), pair with artifacts/rail-fix-s21/ref/ortho_0p10_crossing_60m.jpg",
+   "pos": [
+    -732.15,
+    -535.4,
+    181.297
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_bed_close",
+   "look_at": [
+    -692.529,
+    -573.606,
+    95.787
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21): standing beside the track 45 m NW of the crossing: ballast, sleepers, rails at eye height",
+   "pos": [
+    -768.0,
+    -508.0,
+    120.72
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_xing_devices_sw",
+   "look_at": [
+    -697.98,
+    -465.507,
+    121.782
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21): driver eye ~22 m before the crossing, inbound NE - pose of Mapillary 828893548045009 (barriers, signals)",
+   "pos": [
+    -742.6,
+    -555.0,
+    121.782
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_far_a",
+   "look_at": [
+    -704.851,
+    -474.426,
+    123.13
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 165 m before level crossing osm:node/1778182481, approach a - approach signs / posts",
+   "pos": [
+    -660.7,
+    -384.7,
+    125.749
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_near_a",
+   "look_at": [
+    -764.451,
+    -595.526,
+    115.033
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 30 m before level crossing osm:node/1778182481, approach a - approach signs / posts",
+   "pos": [
+    -720.3,
+    -505.8,
+    122.026
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_far_b",
+   "look_at": [
+    -759.449,
+    -592.374,
+    118.333
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 165 m before level crossing osm:node/1778182481, approach b - approach signs / posts",
+   "pos": [
+    -803.6,
+    -682.1,
+    120.951
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_near_b",
+   "look_at": [
+    -699.849,
+    -471.274,
+    114.787
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 30 m before level crossing osm:node/1778182481, approach b - approach signs / posts",
+   "pos": [
+    -744.0,
+    -561.0,
+    121.78
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rail_x0_side_eye",
+   "look_at": [
+    -682.63,
+    -602.812,
+    116.641
+   ],
+   "note": "place camera: rail-dk65-s22 (REVIEW s22 0217 visual P2-12): pedestrian eye 1.6 m, 13 m beside the road, looking at level crossing osm:node/1778182481 - scale of devices, kerb cut",
+   "pos": [
+    -740.7,
+    -521.4,
+    120.133
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_top",
+   "look_at": [
+    -732.1,
+    -433.9,
+    -5571.686
+   ],
+   "note": "place camera: rail-dk65-s22: top view of level crossing osm:node/1778182481 (panels, kerb cut, P-4, P-14)",
+   "pos": [
+    -732.1,
+    -533.9,
+    157.31
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

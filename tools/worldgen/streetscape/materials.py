@@ -712,6 +712,25 @@ M["sidewalk_paving"] = {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface":
 for _asphalt_ground_id in ("curb_concrete", "sidewalk_paving"):
     M[_asphalt_ground_id]["ground_wear_exclude_local_en"] = [400.0, -700.0, 850.0, -250.0]
 
+# ADR 0237 (research R6 pavements-kerbs): surface types of footways beside `sidewalk_paving` (grey 20 x 10 blocks).
+# streetscape.pavements chooses the type per piece of footway; the wear parameters are those of sidewalk_paving.
+# - `sidewalk_slabs`: 35 x 35 cm concrete slabs (R6-025; set sidewalk_slab_35, CC0 scan scaled to 35 cm, ADR 0063).
+#   Colour = the set's calibrated mean (tint 1).
+# - `sidewalk_paving_red`: red-brown 20 x 10 concrete blocks. Set paving_20x10_tint = the grey block scan as a neutral
+#   modulation map (engine albedo = 2 x colour x map), so joints, relief and per-block tone are those of the grey
+#   blocks. Colour: WORKING_VALUE from frame F38 (owner photo P11-063, Mickiewicza, overcast): reddest pixels of the
+#   strip sRGB 97/76/75 against the grey concrete edging 84/82/82 beside it (R/G 1.28 vs 1.02); one frame, 20 m away,
+#   JPEG - to be judged in the render of camera photo_P11-063.
+# - `cycle_red` (cycle paths BDOT10k says are laid in blocks): was a flat colour (0.20, 0.06, 0.05) because its set
+#   `paving_red` never existed in materials_spec.json; now the same red blocks.
+_FOOTWAY_GRIME = M["sidewalk_paving"]["ground_grime"]
+M["sidewalk_slabs"] = {"color": [0.27, 0.267, 0.258], "rough": 0.85, "surface": "paving_stones",
+                       "texture_set": "sidewalk_slab_35", "ground_grime": dict(_FOOTWAY_GRIME)}
+M["sidewalk_paving_red"] = {"color": [0.26, 0.125, 0.11], "rough": 0.85, "surface": "paving_stones",
+                            "texture_set": "paving_20x10_tint", "uv": "planar", "ground_grime": dict(_FOOTWAY_GRIME)}
+M["cycle_red"] = {"color": [0.26, 0.125, 0.11], "rough": 0.85, "surface": "asphalt",
+                  "texture_set": "paving_20x10_tint", "uv": "planar", "ground_grime": dict(_FOOTWAY_GRIME)}
+
 
 # ADR 0129 (G3-B frontage round 2, review 0126 P2; additive block, parameters of the existing Kamion/World PBR
 # material - no shader change, no new pass):
@@ -749,6 +768,9 @@ M["shelter_glass_clear"] = {"color": [0.030, 0.040, 0.040], "rough": 0.04, "alph
                             "shader": "car_glass", "dust": 0.5, "screen": {"horizon_sky": 0.85, "haze": 0.03}}
 M["paint_ral1012"] = {"color": [0.52, 0.42, 0.06], "rough": 0.5}
 M["paint_ral3020"] = {"color": [0.55, 0.012, 0.009], "rough": 0.5}
+# ADR 0268 (REVIEW s22 0217 visual P2-11): drive cabinet of a level-crossing barrier - sun-faded orange instead of the
+# saturated cone_orange (WORKING_VALUE read off Mapillary 1832769196903759 / 1569863873404925, reference only)
+M["drive_cabinet_faded"] = {"color": [0.50, 0.21, 0.07], "rough": 0.75}
 for _k in ("shelter_paint", "paint_ral1012", "paint_ral3020"):
     M[_k].setdefault("sky_occ", SKY_OCC_STRUCT)
 M["shelter_glass_clear"].setdefault("sky_occ", SKY_OCC_GLASS)
@@ -777,4 +799,21 @@ M["cladding_vertical_grey"] = {"color": [0.33, 0.335, 0.34], "rough": 0.45, "met
 for _k in ("office", "ribbon"):
     M[f"cladding_vertical_grey__far_{_k}"] = {
         "color": M["cladding_vertical_grey"]["color"], "rough": 0.45, "base": "cladding_vertical_grey",
+        "texture_set": "facade_far", "set_tile": True, "tint_linear": True, "sky_occ": [SKY_OCC_STRUCT_X, 0.9]}
+# ADR 0242 (Dojlidy, review s20-0185 P1-1 / P1-4; additive, no existing entry changed except the new key below):
+# - cladding_cassette_grey: cassette panels with dominant HORIZONTAL joints (review: joints every ~1 m, vertical
+#   butt joints every 3-4 m) for the office block at Kuronia 3 - the existing set sandwich_smooth (courses of
+#   1.15 m) with `panel_m` 3.5 m, colour of cladding_vertical_grey (measured in ADR 0185). No new texture set.
+#   Module 3.5 x 1.15 m = WORKING_VALUE (the review reads the photo as "ok. 1 m" / "ok. 3-4 m").
+# - `runoff_strength` (new optional key, WorldPbrMaterials): multiplier of the run-off layer strength of ONE
+#   material. hall_wall_smooth 0.25 (WORKING_VALUE of review s20-0185 P1-4: the plant hall is new and clean on the
+#   photo; the hashed halls keep 1). hall_wall_smooth is used by region bialystok-dojlidy only (test_dojbld_0185).
+M["hall_wall_smooth"]["runoff_strength"] = 0.25
+M["cladding_cassette_grey"] = {"color": [0.33, 0.335, 0.34], "rough": 0.45, "metal": 0.2,
+                               "texture_set": "sandwich_smooth", "set_tile": True, "tint_linear": True,
+                               "panel_m": [3.5, 1.15], "runoff": True, "runoff_strength": 0.5, "splash_h": 0.6,
+                               "sky_occ": SKY_OCC_STRUCT}
+for _k in ("office", "ribbon"):
+    M[f"cladding_cassette_grey__far_{_k}"] = {
+        "color": M["cladding_cassette_grey"]["color"], "rough": 0.45, "base": "cladding_cassette_grey",
         "texture_set": "facade_far", "set_tile": True, "tint_linear": True, "sky_occ": [SKY_OCC_STRUCT_X, 0.9]}

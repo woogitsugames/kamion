@@ -1,7 +1,9 @@
 # 09 — Agenci i workflow
 
+> **D73 / ADR 0260:** platformą główną jest Windows — „build na urządzeniu” znaczy **player Windows x64** (`scripts/build-windows.ps1`, ADR 0261) i pomiar `scripts/pc-metrics.ps1` (ADR 0266). Praca na telefonie (APK, adb, logcat) jest 🔒 odroczona, ale ścieżka Androida musi się dalej kompilować.
+
 ## 1. Model pracy
-- **Ty (sesja główna)** = lider, architekt, jedyny integrator. Planujesz etap, dzielisz na zadania atomowe, delegujesz, robisz review, scalasz, uruchamiasz buildy na urządzeniu, piszesz raporty.
+- **Ty (sesja główna)** = lider, architekt, jedyny integrator. Planujesz etap, dzielisz na zadania atomowe, delegujesz, robisz review, scalasz, uruchamiasz buildy Windows i pomiary PC (D73; 🔒 telefon odroczony), piszesz raporty.
 - **Maks. 10 agentów łącznie** (Ty + do 9 subagentów naraz). Limit to sufit, nie cel. Typowo 2–4 aktywnych; więcej tylko przy naprawdę rozłącznych zadaniach (np. równoległy tor F i tor A + worldgen).
 - Subagenci: definicje w `.claude/agents/` (model `opus`). **Subagenci nie tworzą subagentów.**
 - Agent teams (eksperymentalne w Claude Code) tylko gdy zadanie wymaga dyskusji agent–agent; domyślnie zwykli subagenci.
@@ -14,10 +16,10 @@
 | `truck-artist` | `art-source/truck/**` (Blender), `game/Assets/_Project/Art/Truck/**`, `tools/blender/**` |
 | `geo-worldgen` | `tools/worldgen/**`, `Data/**`, `game/Assets/_Project/World/Import/**` |
 | `world-builder` | `game/Assets/_Project/World/Roads|Terrain|Streaming/**`, generatory zabudowy i otoczenia, `art-source/world/**` |
-| `rendering-perf` | `game/Assets/_Project/Rendering/**`, profile jakości, shadery, `docs/PERFORMANCE_BUDGETS.md`, `docs/DEVICE_MATRIX.md` |
-| `gameplay-ui` | `game/Assets/_Project/Gameplay|UI|Input|Camera/**` (sterowanie dotykowe i gyro, HUD, GPS, zlecenia, zapis) |
+| `rendering-perf` | `game/Assets/_Project/Rendering/**`, profile jakości (tiery PC, ADR 0269), shadery, budżety PC (`docs/03`, `tools/pcperf/budgets/pc-budgets.json` — zmiana tylko po decyzji właściciela, ADR 0266), 🔒 `docs/PERFORMANCE_BUDGETS.md`, `docs/DEVICE_MATRIX.md` (zabezpieczenie mobilne, D73) |
+| `gameplay-ui` | `game/Assets/_Project/Gameplay|UI|Input|Camera/**` (sterowanie PC: klawiatura, pad, kierownica FFB — ADR 0261/0263/0264; HUD pod monitor i menu ustawień PC — ADR 0265/0270; 🔒 dotyk i gyro; GPS, zlecenia, zapis) |
 | `audio` | `game/Assets/_Project/Audio/**`, `tools/audio/**` |
-| `build-qa` | `scripts/**`, `tests/**` (poza physics), raporty z urządzenia, CI |
+| `build-qa` | `scripts/**`, `tests/**` (poza physics), build i uruchomienie playera Windows (ADR 0261), pomiar `pc-metrics` (ADR 0266), paczka dystrybucyjna (ADR 0271), CI; 🔒 APK, adb, raporty z telefonu (D73) |
 | `visual-critic` | **tylko odczyt kodu + raporty** w `docs/reports/visual/**`; ocenia obrazy wg `docs/06`; nigdy nie ocenia własnej pracy, bo nie tworzy treści |
 
 Pliki wspólne (`ProjectSettings/`, `Packages/`, sceny `Boot`/`Main`, wspólne prefaby, asmdef, `CLAUDE.md`) zmienia **wyłącznie lider**.
@@ -59,4 +61,4 @@ RAPORT: format z §4
 ## 7. Hooki (zalecane, w `.claude/settings.json` projektu)
 - Przed commitem: szybka kompilacja C#/testy EditMode zmienionych modułów.
 - Blokada zapisu do `ProjectSettings/`, `Packages/` przez subagentów (jeśli mechanizm uprawnień na to pozwala) — inaczej reguła w kontrakcie.
-- Allow-lista narzędzi: git, gh, unity batchmode, adb, scrcpy, blender, python/uv, ffmpeg, astcenc.
+- Allow-lista narzędzi: git, gh, unity batchmode, pwsh (`build-windows.ps1`, `pc-metrics.ps1`), blender, python/uv, ffmpeg, astcenc; 🔒 adb, scrcpy (telefon odroczony, D73).

@@ -5,8 +5,8 @@
 overrides:
   # Old DK65 km 16.7-24.45 (ways 208187096, 27718745, link 1151531610): research K1 (research/dk65-knyszyn-refs/README.md,
   # table (a)): edge line to edge line 6.0-6.4 m at 8 stations of these tiles (km 17.0 6.1, 18.0 6.0, 19.0 6.4, 20.0 6.0,
-  # 21.0 6.25, 24.6 6.0; corridor median 6.2 m, n = 25), 6.8 m only from km 26 (knyszyn-s). Same entry verbatim in 06..10.
-  # dk65-11 keeps the knyszyn-s set (seam x = 762635 identical) until 11 + knyszyn-s get this correction together.
+  # 21.0 6.25, 24.6 6.0; corridor median 6.2 m, n = 25), 6.8 m only from km 26 (knyszyn-s). Same entry verbatim in 06..11.
+  # ADR 0233: dk65-11 carries this entry too; the knyszyn-s section starts at the repaving joint km 25.32 in knyszyn-s.
   - id: dk65-xsec-k1
     target: {osm_way: [208187096, 27718745, 1151531610]}
     reason: >-
@@ -19,6 +19,19 @@ overrides:
     confidence: medium
     verify: owner drive / 0.1 m orthophoto when published for these sheets
     set: {lanes: 2, lane_width: 3.1, edge_strip: 0.2, edge_lines: both}
+  # ADR 0272 wariant A (decyzja lidera s23): old DK65 keeps an asphalt strip outside the edge line. Same entry verbatim
+  # in dk65-06..11 (every tile that carries one of the ways).
+  - id: dk65-opaska-k1
+    target: {osm_way: [208187096, 27718745]}
+    source: "ADR 0214 r3 / research K1 (research/dk65-knyszyn-refs/README.md): asfalt 7,1-7,5 m, linie krawędziowe 6,0-6,4 m"
+    reason: >-
+      Stara DK65 ma za linią krawędziową pas asfaltu ok. 0,45-0,65 m (asfalt 7,1-7,5 m przy liniach 6,2 m) - opaska
+      zewnętrzna klasy G, Dz.U. 2022 poz. 1518 § 23 ust. 7 pkt 3 (0,50 m). Przy width 6,6 m (linie 0,20 m od krawędzi)
+      daje to 0,35 m asfaltu poza szerokością: 6,6 + 2 x 0,35 = 7,3 m (środek pomiaru). Część gruntowa 0,75 m
+      (§ 23 ust. 10 pkt 2; K1: żwir ok. 1 m - WORKING_VALUE).
+    confidence: medium
+    verify: przekroje ortofoto tools/worldgen/qa/ortho_xsec.py measure dk65-08 27718745 200 <prefiks>
+    set: {shoulder: {kind: ground, paved_m: 0.35, ground_m: 0.75}}
   - id: rural-roads-unlit
     target: {osm_way: [27718745, 98071886, 286990127, 286990128, 305910042, 1111506750, 1111506754]}
     reason: >-

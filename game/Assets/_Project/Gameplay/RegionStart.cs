@@ -13,7 +13,7 @@ namespace Game.Gameplay
     public static class RegionStart
     {
         /// <summary>Spawn distance the importer uses for every region scene (WorldSceneBuilder spawnS).</summary>
-        public const float DefaultStartS = 12f;
+        public const float DefaultStartS = Game.World.StartClearance.DefaultStartS;
         /// <summary>Route left ahead of the spawn at least: the tile-end closure stands 60 m before the edge (ADR 0169). WORKING_VALUE.</summary>
         public const float MinAheadM = 100f;
         /// <summary>Largest distance between the start point (right-lane centre) and the road axis of the graph [m].

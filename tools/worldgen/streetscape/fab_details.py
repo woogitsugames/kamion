@@ -17,7 +17,8 @@ from shapely.geometry import Point, LineString
 
 from roads.decals import _surf, hf, LIFT_PATCH, GULLY_SIZE
 from roads.markings import lane_layout
-from roads.network import side_params, side_extent
+from roads.network import side_params, side_extent, side_shoulder
+from roads import xsec as XS
 
 ROOT = Path(__file__).resolve().parents[3]
 MANIFEST = ROOT / "art-source/world/megascans/_generated/manifest.json"
@@ -232,6 +233,11 @@ def drainage(buf, net, assets, report):
                     continue
                 sec = c.section(s, net.sec_list)
                 if sec.surface_mat not in ("road_asphalt", "road_asphalt_new", "road_concrete"):
+                    continue
+                # ADR 0272: a cover in the carriageway belongs to a sewer; a road with ground shoulders on both
+                # edges drains to the verge / ditch and has none (roads/xsec_rules.yaml `drainage`)
+                if not XS.manholes_allowed([side_shoulder(c, sd, s) for sd in ("L", "R")]):
+                    count["manholes_skipped_ground_shoulder"] = count.get("manholes_skipped_ground_shoulder", 0) + 1
                     continue
                 hw = float(c.hw_at(s))
                 lanes = lane_layout(sec, hw, float(c.interp(c.dirn, s)))[2]

@@ -13,40 +13,46 @@
     "panel_ribbon_alpha": 0.65,
     "schema": "far-field-appearance/1",
     "source_hall_counts": {
-      "energy": 2,
-      "industrial": 71,
-      "other": 173
+      "energy": 3,
+      "industrial": 235,
+      "other": 492
     },
-    "source_panel_hall_count": 8,
+    "source_panel_hall_count": 9,
     "status": "WORKING_VALUE"
   },
   "building_height_sources": {
-    "WORKING_VALUE-bdot-storeys-typology": 7,
-    "WORKING_VALUE-osm-storeys-typology": 254,
-    "gugik-lod1-measuredHeight": 308
+    "WORKING_VALUE-bdot-storeys-typology": 295,
+    "WORKING_VALUE-osm-storeys-typology": 1573,
+    "gugik-lod1-measuredHeight": 1574
   },
   "feature_counts": {
-    "buildings": 569,
+    "buildings": 3442,
     "buildings_by_typology": {
-      "block": 135,
-      "hall": 246,
-      "house": 0,
-      "office": 188
+      "block": 316,
+      "hall": 730,
+      "house": 592,
+      "office": 1804
     },
-    "chimneys": 1,
-    "forest_polygons": 98,
-    "power_lines": 27,
-    "pylons": 89
+    "chimneys": 6,
+    "forest_polygons": 529,
+    "power_lines": 207,
+    "pylons": 446
   },
   "id": "dk65-02-far-field",
   "lod1_height_audit": {
-    "buildings": 36971,
+    "buildings": 133679,
     "conflicting_ids": 0,
     "duplicate_records": 0,
     "invalid_or_missing": 0,
-    "members": 31,
-    "usable_ids": 36971
+    "members": 620,
+    "usable_ids": 133679
   },
+  "osm_lonlat_window": [
+    22.8932,
+    53.0913,
+    23.1857,
+    53.2709
+  ],
   "region": "dk65-02",
   "region_inputs_sha256": {
     "region/buildings.geojson": "f8f7ca260c136979c6b0eab49f0ae04d0f1431ac1cdfe34925618c4933545cad"
@@ -55,31 +61,41 @@
     "inner_half_m": 1024.0,
     "outer_half_m": 4200.0
   },
+  "ring_powiaty": [
+    "2002",
+    "2061"
+  ],
+  "ring_powiaty_missing": [],
   "schema": "truck-sim-pl/source-manifest/1",
   "sources": [
     {
-      "dataset": "BDOT10k powiat 2061 (m. Białystok): OT_PTLZ_A, OT_BUBD_A, OT_BUWT_P, OT_SULN_L",
+      "dataset": "BDOT10k powiaty 2002, 2061: OT_PTLZ_A, OT_BUBD_A, OT_BUWT_P, OT_SULN_L",
       "files": {
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_BUBD_A.gpkg": "19da71661a8ca20b7ac1aa6b55f5e821ff50504899d6889c75eb01797fe73225",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_BUWT_P.gpkg": "5646dcd6360cb1da020ca83b946d974d5cbabdd151d533d5fe9c2cfb6b184f10",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_PTLZ_A.gpkg": "24cf9f283d4b346be6e361452d3a25a1ccd0bedeada64dcdf35cfd1bcc4dfc6b",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_SULN_L.gpkg": "2b2578512c0cc784525a562b5d643becab1be007e4000e9ffbfcc68b770ae8df",
         "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_BUBD_A.gpkg": "2ac7d2004c025ed1854f1077b4e6f51b2ff8c0e056a4e2b5820c371ebe7119b8",
         "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_BUWT_P.gpkg": "c758f8489cab8b8935f832407362a3d20b90733224e5f08780113f4b2896e029",
         "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_PTLZ_A.gpkg": "bb4cbe19c388401ea1dbc48d3ac54fbcf6e21c48e2cfd73a3f8d9f8e5f9d9e7e",
         "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_SULN_L.gpkg": "96a8661f6372627120a6f90d0dbc4d794e4be5997e7a9b859adbc8c20694648e"
       },
-      "id": "gugik-bdot10k-2061",
+      "id": "gugik-bdot10k-2002+2061",
       "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. a Prawa geodezyjnego i kartograficznego (Dz.U. 2020 poz. 276)",
       "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
     },
     {
-      "dataset": "Modele 3D budynków LoD1 (2024) powiat 2061 (m. Białystok)",
+      "dataset": "Modele 3D budynków LoD1 (2024) powiaty 2002, 2061",
       "files": {
+        "lod1/2002_lod1_2024.zip": "337f8abdc4e8e94cda1d45d07afa7f6faf684f6ac2b7f0c6e85321b4522305e9",
         "lod1/2061_lod1_2024.zip": "57d3e14d4620c17232eaabd85a8aa5579ed1539772945e23a3971d867901d380"
       },
-      "id": "gugik-lod1-2024-2061",
+      "id": "gugik-lod1-2024-2002+2061",
       "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. i Prawa geodezyjnego i kartograficznego",
       "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
     },
     {
-      "dataset": "podlaskie-261108.osm.pbf (ring outside tile incl. powiat 2002)",
+      "dataset": "podlaskie-261108.osm.pbf (ring outside the tile, lon/lat window osm_lonlat_window)",
       "files": {
         "osm/podlaskie-261108.osm.pbf": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d"
       },

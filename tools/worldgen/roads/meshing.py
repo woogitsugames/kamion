@@ -13,7 +13,7 @@ import numpy as np
 
 from . import standards as S
 from .geom import ear_clip, polygon_area
-from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, side_params, side_profile
+from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, lane_w_of, side_params, side_profile
 
 
 @dataclass
@@ -112,6 +112,8 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
         lw = max(sec_mid.lane_w, 2.0)
         latv = lat.ravel()
         hwv = np.repeat(hw, len(q))
+        if getattr(sec_mid, "lane_follow", False):
+            lw = np.maximum(lane_w_of(sec_mid, hwv), 2.0)      # ADR 0233: wheel paths follow the local lane width
         if secmat == "road_concrete":
             # concrete pavement (ADR 0019): UV1 = (metres along the chain, lane-scaled metres across) so the 5 m
             # sawn joints of concrete_cast_5m_joints run across the road and longitudinal joints sit on the lane
@@ -198,6 +200,11 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
             kr, fl = kl[a]
             prm = [(kr, p[1], p[2], p[3], MAT_FLUSH_ROAD if fl else (0 if p[4] == MAT_FLUSH_ROAD else p[4]))
                    for p in params[lo:hi]]
+            if r and kr == RURAL and len(prm) > 1 and prm[0][4] != prm[1][4]:
+                # ADR 0272 (REVIEW #138 P2-1): the borrowed station carries the `mat` of the previous family (kerb /
+                # bridge = legacy 1.00 m paved shoulder); with a coded shoulder that was a 0.92 m asphalt wedge over
+                # one station. The run starts with its own shoulder widths.
+                prm[0] = (*prm[0][:4], prm[1][4])
             if r and c.meta.get("gore_flush") and len(prm) > 1:
                 # the station borrowed from the previous run carries the height of ANOTHER profile family. Next to
                 # a paved gore (ADR 0077) that is the dropped kerb (-0.06, which side_profile reads as "default
@@ -327,7 +334,7 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
         rw = max(abs(pr[k][2] - pr[k][0]) for pr in profs)   # row width over ALL stations (ADR 0100)
         if rw < 1e-6:     # vertical segment (a walk row 0 m wide at the first station only is NOT one: strip N 82)
             UV = np.column_stack([np.repeat(along, 2), np.tile([0.0, 1.0], n) * abs(profs[0][k][3] - profs[0][k][1])])
-            if mat in ("sidewalk_paving", "apron_sett", "verge_grass", "shoulder_gravel"):
+            if mat in ("sidewalk_paving", "apron_sett", "apron_paving_light", "verge_grass", "shoulder_gravel"):
                 mat = "curb_concrete" if mat != "verge_grass" else "verge_grass"
         elif mat == "curb_concrete" and rw <= KERB_TOP_UV_MAX_W:
             # kerb top: u along (1 m segment joints)
@@ -377,7 +384,7 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
             groups = [(cap_mat, T[on]), (mat, T[~on])]
         for mat, T in groups:
             cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
-                                    "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
+                                    "paving" if mat in ("sidewalk_paving", "apron_sett", "apron_paving_light", "bridge_concrete") else
                                     "grass")) if coarse else mat
             # ADR 0123 (REVIEW s10-0117 P1-3): the top of a bridge cap (kapa: the concrete strip behind the kerb of a
             # deck or a walled ramp) carries road film in COLOR_0.r (Kamion/World PBR _VERTEX_GRIME, manifest
@@ -1174,8 +1181,8 @@ def _patch_uv1(net, j, V, poly=None):
         if getattr(sec, "lane_edges", None):
             return np.asarray(sec.lane_coord(lat_arr, hw_val, dir_val), float)
         if sec.oneway or sec.roundabout:
-            return (lat_arr + hw_val - sec.edge_strip) / max(float(sec.lane_w), 2.0)
-        return np.abs(lat_arr) / max(float(sec.lane_w), 2.0)
+            return (lat_arr + hw_val - sec.edge_strip) / np.maximum(lane_w_of(sec, hw_val), 2.0)
+        return np.abs(lat_arr) / np.maximum(lane_w_of(sec, hw_val), 2.0)
 
     for i in ref:
         a = j.arms[i]
@@ -1247,6 +1254,8 @@ def _outward(j, p, tag, nxt_tag=None):
         n = np.array([-dirv[1], dirv[0]])
         return n * side
     corner = j.corners[tag[1]]
+    if getattr(corner, "out", None) is not None:      # explicit outline (compact roundabout, ADR 0218 5c)
+        return corner.out[int(round(tag[2] * (len(corner.arc) - 1)))]
     if corner.kind in ("fillet", "nose") and corner.center is not None:
         v = corner.center - p
         nv = np.hypot(*v)

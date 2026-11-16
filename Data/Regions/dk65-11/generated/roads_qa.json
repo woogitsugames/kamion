@@ -58,17 +58,17 @@
     2
    ],
    "length_m": 377.8,
-   "max_grade": 0.0539,
+   "max_grade": 0.0538,
    "overrides": [
     "rural-roads-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-xsec-k1"
    ]
   }
  ],
@@ -104,7 +104,7 @@
    "patches": 26
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 48487,
+  "footprint_nodes": 47655,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -143,7 +143,13 @@
   "nmt_nodes_replaced_under_decks": 0,
   "overrides_applied": [
    {
-    "id": "dk65-carriageway-width",
+    "id": "dk65-xsec-k1",
+    "targets": [
+     "w27718745:897574813-1134817563"
+    ]
+   },
+   {
+    "id": "dk65-opaska-k1",
     "targets": [
      "w27718745:897574813-1134817563"
     ]

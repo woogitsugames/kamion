@@ -15,6 +15,8 @@ import shapely
 from shapely.geometry import LineString, Point
 
 from . import standards as S
+from . import xsec as X
+from .closures import CONSTRUCTION_SURFACE_MAT
 from .geom import Polyline, cumlen, smooth_1d, smooth_open
 
 DENSE = 0.5          # m, dense polyline spacing used for evaluation
@@ -29,6 +31,27 @@ URBAN, ISLAND, RURAL, MEDIAN_RURAL = 0, 1, 2, 3
 WALK_MATS = ["curb_concrete", "sidewalk_paving", "bridge_concrete", "verge_grass", "road_asphalt"]
 FLUSH_FILL_MAX_M = 1.5  # a flush edge strip is at most this wide (the flush mask is dilated 4 m past gap < NOSE_MIN_GAP_M)
 MAT_FLUSH_ROAD = 4      # side `mat` code: flush edge shared with another carriageway -> asphalt, no kerb (ADR 0076)
+# ADR 0218 + ADR 0226: ONE authored mechanism for the strip between the ring carriageway and the kerb of the centre
+# island - the `truck_apron` override on a roundabout ring way: {width_m, height_m?, material?}.
+#   width_m only        -> the island kerb stands width_m from the carriageway edge; surface and lip stay with the
+#                          rule (sett apron, 4 cm lip) or with `apron: asphalt` (ADR 0123). Rondo Putry: 0.4 m.
+#   + material/height_m -> mountable truck apron with its own surface and lip. Knyszyn: 3.2 m light block paving.
+# Side `mat` codes of the ISLAND family only; with one of them the side `h` is the apron lip height (not used by the
+# ISLAND family otherwise).
+# Code 8 `kostka_jasna` = light concrete block paving, owner decision D75: its own material `apron_paving_light`
+# (build_world.MATERIALS: block texture of the set paving_20x10_grey, light albedo; same collision / QA class as
+# `apron_sett`), not `sidewalk_paving` (too dark, a walk surface) and not a `road_*` material - a carriageway-class
+# apron would have its lip culled as "kerb on a carriageway" (meshing.cull_sides_on_carriageway).
+APRON_LIGHT = "apron_paving_light"
+APRON_MATS = ("apron_sett", APRON_LIGHT)     # mountable apron surfaces (drivable, not a carriageway, not a walk)
+TRUCK_APRON_MATS = {5: "apron_sett", 6: "road_concrete", 7: "road_asphalt", 8: APRON_LIGHT}
+WALK_MATS = WALK_MATS + [TRUCK_APRON_MATS[k] for k in sorted(TRUCK_APRON_MATS)]   # codes 5-8 resolve everywhere
+TRUCK_APRON_CODE = {"kostka": 5, "sett": 5, "beton": 6, "concrete": 6, "asfalt": 7, "asphalt": 7,
+                    "kostka_jasna": 8, "paving": 8}
+# WORKING_VALUE: accepted width_m range. Below 0.2 m (the kerb-side gutter strip) the strip would be meshed as
+# degenerate triangles; above 6.0 m it is not a ring any more.
+TRUCK_APRON_W = (0.2, 6.0)
+TRUCK_APRON_H = (0.0, 0.08)       # WORKING_VALUE: accepted lip height_m (above 0.08 m it is no longer mountable)
 
 
 @dataclass
@@ -61,10 +84,36 @@ class EdgeSection:
     center_offset_end: float | None = None   # authored: offset at the END of the edge (linear from center_offset)
     center_offset_profile: list | None = None  # authored: [[t, offset], ...], t = 0..1 along the edge (ADR 0095)
     width_profile: list | None = None          # authored: [[t, width], ...] along the edge (ADR 0095); `width` = max
+    maxspeed_src: str | None = None  # ADR 0268: `src` of the graph attribute (osm | default | ...); 'default' = no tag
+    # ADR 0233: with a width profile the lanes share the LOCAL width (2 x hw - 2 x edge strip) / lanes instead of keeping
+    # the lane width of the widest station - a road whose whole cross-section changes along one graph edge (repaving
+    # joint), not a lane that widens beside a gore (ADR 0095, the default)
+    lane_follow: bool = False
     edge_lines: str | None = None   # painted edge lines in the direction of travel: none | left | right | both
+    edge_line_spacing: float | None = None  # authored (ADR 0220): override edge lines (class < GP) this far apart,
+                                            # axis to axis, symmetric about the carriageway centre (measured)
     apron: str | None = None        # authored (ADR 0123): roundabout apron "asphalt" = no mountable sett apron, the ring
                                     # carriageway runs flush to the island kerb (orthophoto / photos); default sett apron
+    ref: str | None = None          # OSM ref (road number), for the shoulder rules (ADR 0272)
+    # ADR 0272: authored shoulder per OSM side {"left" / "right" / "both": {kind, paved_m, ground_m, ditch_m, id}} and
+    # the OSM shoulder=* / shoulder:width / shoulder:surface tags of the edge (roads.xsec.resolve)
+    shoulder: dict | None = None
+    osm_shoulder: dict | None = None
+    construction: bool = False      # authored (ADR 0215, owner D65 p.6): carriageway not open to traffic - no markings,
+                                    # no lamps, no route-graph edge (roads.closures)
+    truck_apron: dict | None = None  # authored (ADR 0218 + 0226): {width_m, height_m, material, code} - strip between
+                                     # the ring carriageway and the island kerb; code None = width only (surface and
+                                     # lip from the rule / `apron`); field None = generator default (ROUNDABOUT_APRON_W)
+    compact: dict | None = None      # authored (ADR 0218 5c): ring of a compact roundabout built as one junction
+                                     # (roads.compact_roundabout); options dict, {} = defaults
     provenance: dict = field(default_factory=dict)
+
+    def lane_w_at(self, hw):
+        """Lane width at half-width hw (scalar or array): `lane_w`, or the local share of the carriageway where the
+        section is authored with `lanes_follow_width` (ADR 0233)."""
+        if not self.lane_follow or self.lanes < 1 or self.lane_edges:
+            return self.lane_w
+        return np.maximum((2.0 * np.asarray(hw, float) - 2.0 * self.edge_strip) / self.lanes, 2.0)
 
     def lane_coord(self, lat, hw, dirn=1):
         """Lane coordinate across the carriageway (0 = first lane boundary, +1 per lane) for wheel-path weathering
@@ -74,7 +123,13 @@ class EdgeSection:
             x = np.asarray(hw, float) - (float(dirn) or 1.0) * lat
             le = np.asarray(self.lane_edges, float)
             return np.interp(x, le, np.arange(len(le), dtype=float))
-        return (lat + np.asarray(hw, float) - self.edge_strip) / max(float(self.lane_w), 2.0)
+        return (lat + np.asarray(hw, float) - self.edge_strip) / np.maximum(self.lane_w_at(hw), 2.0)
+
+
+def lane_w_of(sec, hw):
+    """`sec.lane_w_at(hw)` (ADR 0233) for EdgeSection; plain `lane_w` for duck-typed sections of unit tests."""
+    f = getattr(sec, "lane_w_at", None)
+    return f(hw) if f is not None else sec.lane_w
 
 
 def _v(a, k, default=None):
@@ -130,7 +185,10 @@ def edge_section(e: dict) -> EdgeSection:
         lane_w=round(lw, 3), edge_strip=edge, width=round(width, 3), width_src=wsrc,
         surface_mat=SURFACE_MAT.get(surf, "road_asphalt"), bridge=bool(_v(a, "bridge")),
         layer=int(_v(a, "layer", 0) or 0), roundabout=roundabout, maxspeed=float(ms) if ms else None,
-        turn_fwd=split(tl if oneway else tf), turn_bwd=split(None if oneway else tb), provenance=prov)
+        turn_fwd=split(tl if oneway else tf), turn_bwd=split(None if oneway else tb), provenance=prov,
+        maxspeed_src=(a.get("maxspeed") or {}).get("src"),
+        ref=_v(a, "ref"),
+        osm_shoulder={k: _v(a, k) for k in ("shoulder", "shoulder:width", "shoulder:surface") if _v(a, k) is not None} or None)
 
 
 @dataclass
@@ -233,6 +291,28 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     return net
 
 
+def _truck_apron(v) -> dict | None:
+    """Validated `truck_apron` override (ADR 0218 + 0226) or None when it is malformed / out of range.
+
+    `width_m` is required. With neither `material` nor `height_m` the entry only moves the island kerb (code None);
+    with either of them it is a mountable apron (material default kostka, lip default standards.KERB_HEIGHT_APRON)."""
+    if not isinstance(v, dict) or set(v) - {"width_m", "height_m", "material"}:
+        return None
+    try:
+        w = float(v["width_m"])
+        h = float(v.get("height_m", S.KERB_HEIGHT_APRON))
+    except (KeyError, TypeError, ValueError):
+        return None
+    if not TRUCK_APRON_W[0] <= w <= TRUCK_APRON_W[1] or not TRUCK_APRON_H[0] <= h <= TRUCK_APRON_H[1]:   # NaN fails too
+        return None
+    if "material" not in v and "height_m" not in v:
+        return {"width_m": w, "height_m": None, "material": None, "code": None}
+    code = TRUCK_APRON_CODE.get(str(v.get("material", "kostka")).lower())
+    if code is None:
+        return None
+    return {"width_m": w, "height_m": h, "material": TRUCK_APRON_MATS[code], "code": code}
+
+
 def apply_edge_overrides(net: Network, edges, overrides):
     for ov in overrides:
         tgt = ov.get("target", {})
@@ -286,6 +366,8 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 sec.width = float(st["width"])
                 sec.lane_w = round((sec.width - 2 * sec.edge_strip) / max(sec.lanes, 1), 3)
                 sec.width_src = f"authored_override:{ov['id']}"
+            if "lanes_follow_width" in st:
+                sec.lane_follow = bool(st["lanes_follow_width"])      # ADR 0233
             if "lane_edges" in st:
                 # ADR 0095: lanes as measured on the orthophoto (count, widths and edge strip in one list)
                 le = [float(v) for v in st["lane_edges"]]
@@ -317,8 +399,35 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 sec.provenance["bridge"] = f"authored_override:{ov['id']}"
             if "edge_lines" in st:
                 sec.edge_lines = str(st["edge_lines"])
+            if "edge_line_spacing" in st:
+                # ADR 0220: measured line-to-line distance (research K1, orthophoto 0.1 m); markings.edge_lines keeps
+                # the lines markings.EDGE_LINE_MIN_INSET inside the carriageway edge where the carriageway is narrower
+                sec.edge_line_spacing = float(st["edge_line_spacing"])
+                sec.provenance["edge_line_spacing"] = f"authored_override:{ov['id']}"
             if "apron" in st:
                 sec.apron = str(st["apron"])
+            if "truck_apron" in st:
+                ta = _truck_apron(st["truck_apron"])
+                if ta is None or not sec.roundabout:
+                    if ov["id"] not in net.overrides_stale:
+                        net.overrides_stale.append(ov["id"])
+                    sec.provenance["truck_apron_rejected"] = st["truck_apron"]
+                else:
+                    sec.truck_apron = ta
+                    sec.provenance["truck_apron"] = f"authored_override:{ov['id']}"
+            if "compact_roundabout" in st:
+                # ADR 0218 5c: the whole roundabout (ring + one-way feeders) is one junction; ring ways only
+                co_ = st["compact_roundabout"]
+                co_ = {} if co_ in (None, True) else co_
+                ok_ = isinstance(co_, dict) and set(co_) <= {"closing_r_m", "splitter_w_m", "splitter_gap_m",
+                                                              "island_fill", "lane_w_m", "lane_clear_m"}
+                if not ok_ or not sec.roundabout:
+                    if ov["id"] not in net.overrides_stale:
+                        net.overrides_stale.append(ov["id"])
+                    sec.provenance["compact_roundabout_rejected"] = st["compact_roundabout"]
+                else:
+                    sec.compact = dict(co_)
+                    sec.provenance["compact_roundabout"] = f"authored_override:{ov['id']}"
             if "turn_lanes" in st:
                 sec.turn_fwd = [t for t in str(st["turn_lanes"]).split("|")] if st["turn_lanes"] else None
             if "center_offset" in st:
@@ -336,6 +445,30 @@ def apply_edge_overrides(net: Network, edges, overrides):
             for side in ("left", "right"):
                 if f"side_{side}" in st:
                     sec.side_override[side] = st[f"side_{side}"]
+            if any(k in st for k in ("shoulder", "shoulder_left", "shoulder_right")):
+                # ADR 0272: shoulder instead of a kerb (or the reverse) on this edge, read off the orthophoto / photos.
+                # `shoulder: ground | paved | kerb` (both sides) or a mapping {kind, paved_m, ground_m, ditch_m};
+                # `shoulder_left` / `shoulder_right` in the OSM edge direction
+                sec.shoulder = dict(sec.shoulder or {})
+                for key, side in (("shoulder", "both"), ("shoulder_left", "left"), ("shoulder_right", "right")):
+                    if key in st:
+                        v = st[key]
+                        v = dict(v) if isinstance(v, dict) else {"kind": str(v)}
+                        if v.get("kind", "ground") not in ("ground", "paved", "kerb"):
+                            raise ValueError(f"override {ov['id']}: shoulder kind {v.get('kind')!r}")
+                        sec.shoulder[side] = {**v, "id": ov["id"]}
+                sec.provenance["shoulder"] = f"authored_override:{ov['id']}"
+            if st.get("construction"):
+                # ADR 0215 (owner D65 p.6): a carriageway that is not open to traffic. Markings / decals / navgraph
+                # read sec.construction; the rule lamps are dropped like `lamps: false`
+                sec.construction = True
+                sec.provenance["construction"] = f"authored_override:{ov['id']}"
+                sec.provenance["no_lamps"] = ov["id"]
+                sec.edge_lines = "none"
+                sec.turn_fwd = sec.turn_bwd = None
+                if "surface" not in st:
+                    sec.surface_mat = CONSTRUCTION_SURFACE_MAT      # WORKING_VALUE (roads.closures)
+                    sec.provenance["surface_override"] = "construction (WORKING_VALUE)"
             if "surface" in st:
                 sec.surface_mat = SURFACE_MAT.get(st["surface"], "road_asphalt")
                 sec.provenance["surface_override"] = st["surface"]
@@ -917,7 +1050,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
         # rural cross-section (no kerbs: paved shoulder + verge/ditch, PTB2022 § 23 ust. 10) on fast GP/G roads
         # with no footway within RURAL_FOOT_M on either side (urban kerbed streets keep URBAN). WORKING_VALUE rule.
         sec_mid = net.sec_list[int(c.sec_idx[len(c.sec_idx) // 2])]
-        fast = (built_up and sec_mid.cls in ("GP", "G", "S", "A") and (sec_mid.maxspeed or 50) >= S.RURAL_MIN_SPEED
+        fast = (built_up and X.open_road(sec_mid)        # ADR 0272: classes / speed in roads/xsec_rules.yaml
                 and not c.roundabout and not c.bridge.all())      # ADR 0204: also in a tile with no footway at all
         # A footway / cycle path set back from the carriageway (within RURAL_FOOT_M, e.g. the cycle path
         # along DK8) no longer turns the edge into an urban kerb: at >= 70 km/h the edge stays without a
@@ -936,6 +1069,30 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 hs = np.array([hits[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) >= 0.2
                 path_d[side_] = np.interp(np.arange(n), idx, hs.astype(float)) > 0.5
                 rural_d[side_] = np.ones(n, bool)
+        # ADR 0272: shoulder per section and side (authored override > OSM shoulder=* > class rule). `force` opens a
+        # kerbed edge (ground / paved shoulder read off the orthophoto) or keeps a kerb on a fast road.
+        sh_code = {"L": np.zeros(n, np.int64), "R": np.zeros(n, np.int64)}
+        sh_ditch = {"L": np.full(n, np.nan), "R": np.full(n, np.nan)}
+        sh_src = {}
+        if not c.roundabout:
+            for i_sec in np.unique(c.sec_idx):
+                sec = net.sec_list[int(i_sec)]
+                m = c.sec_idx == i_sec
+                rev = bool(c.meta["rev"][m][0])
+                for side_ in ("L", "R"):
+                    osm_side = {"L": "left", "R": "right"}[side_]
+                    if rev:
+                        osm_side = {"left": "right", "right": "left"}[osm_side]
+                    sh = X.resolve(sec, osm_side)
+                    sh_code[side_][m] = sh.code
+                    sh_src[sh.src] = sh_src.get(sh.src, 0.0) + round(float(m.sum() * DENSE), 1)
+                    if sh.force == "open":
+                        rural_d[side_][m] = True
+                    elif sh.force == "kerb":
+                        rural_d[side_][m] = False
+                    if sh.ditch_m is not None:
+                        sh_ditch[side_][m] = sh.ditch_m
+        c.meta["shoulder_src"] = sh_src
         c.meta["rural"] = {k: round(float(v.mean()), 2) for k, v in rural_d.items()}
         c.meta["rural_path"] = {k: round(float(v.mean()), 2) for k, v in path_d.items()}
         for side, sgn in (("L", 1.0), ("R", -1.0)):
@@ -979,6 +1136,8 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             kind = np.where(rural_here | (not built_up), RURAL, URBAN)
             h = np.full(n, S.KERB_HEIGHT)
             h[rural_here] = np.where(path_d[side][rural_here], S.SWALE_DEPTH, S.DITCH_DEPTH)    # RURAL: h = ditch depth
+            dsel = rural_here & ~np.isnan(sh_ditch[side])
+            h[dsel] = sh_ditch[side][dsel]                 # ADR 0272: authored ditch depth (0 -> flat verge)
             w = np.where(walk_d & ~med_d, S.SIDEWALK_W, 0.0)
             mat = np.where(walk_d & ~med_d, 1, 0)
             depth = np.full(n, S.FLANGE_DEPTH)
@@ -1023,6 +1182,17 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 # ADR 0123 (REVIEW s11 D51 blocker 7): `apron: asphalt` on the ring edges = the 2 m strip is carriageway
                 # (asphalt, no 4 cm lip); the island kerb, the footprint and the lane layout stay
                 mat[:] = MAT_FLUSH_ROAD if sec_mid.apron == "asphalt" else 0
+                # ADR 0218 + 0226: authored `truck_apron` per ring way. The island kerb stands width_m from the
+                # carriageway edge (wider apron = smaller island); with a material the strip also gets its own lip
+                # height and surface, otherwise it keeps the rule's sett / the `apron: asphalt` strip set above.
+                # No override = unchanged.
+                for i_sec in np.unique(c.sec_idx):
+                    ta = net.sec_list[int(i_sec)].truck_apron
+                    if ta:
+                        m = c.sec_idx == i_sec
+                        w[m] = ta["width_m"]
+                        if ta["code"] is not None:
+                            h[m], mat[m] = ta["height_m"], ta["code"]
             # a parallel carriageway right next to this edge (on-ramp beside the Andersa ramp at Rondo Bieżeństwa):
             # the verge / ditch / sidewalk would lie on the other road, so the edge is a plain kerb
             if not (c.roundabout and kind[0] == ISLAND):
@@ -1050,6 +1220,10 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 verge[i] = min(verge[i], verge[i - 1] + dv[i - 1])
             for i in range(n - 2, -1, -1):
                 verge[i] = min(verge[i], verge[i + 1] + dv[i])
+            # ADR 0272: shoulder widths of the kerbless stations travel in `mat` (0 = the legacy 1.00 + 0.75 m profile)
+            ssel = (kind == RURAL) & (mat == 0)
+            mat = mat.astype(np.int64)
+            mat[ssel] = sh_code[side][ssel]
             c.side[side] = {"kind": kind, "walk": walk_d, "median": med_d, "raw": {"h": h, "w": w, "depth": depth},
                             "mat": mat, "verge": verge}
         structure_sides(c, c.bridge)
@@ -1156,18 +1330,25 @@ def structure_sides(c: Chain, mask: np.ndarray):
         d["h"], d["w"], d["depth"] = smooth_1d(raw["h"], sig), smooth_1d(raw["w"], sig), smooth_1d(raw["depth"], sig)
 
 
+def walk_mat(mat: int) -> str:
+    """Material name of a side `mat` code (shoulder codes of ADR 0272 have no walk material)."""
+    return WALK_MATS[mat] if 0 <= mat < len(WALK_MATS) else WALK_MATS[0]
+
+
 def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
     """Profile as list of (u0, dz0, u1, dz1, material) from the gutter outward (u >= 0).
 
     The topology (number of segments) depends only on `kind`, so stations of one family can be
     connected into strips and interpolated.
     """
-    m = WALK_MATS[mat]
     if kind == ISLAND:
         ha = S.KERB_HEIGHT_APRON
         ap = w
         top = ha + 0.02 * ap
         am = "apron_sett"
+        if mat in TRUCK_APRON_MATS:         # authored truck apron (ADR 0218): lip height h, own surface
+            ha, am = h, TRUCK_APRON_MATS[mat]
+            top = ha + 0.02 * ap
         if mat == MAT_FLUSH_ROAD:           # authored asphalt apron (ADR 0123): flush, same topology
             ha, am = 0.0, "road_asphalt"
             top = 0.02 * ap
@@ -1185,9 +1366,10 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
                 (ps + 0.5, z0 - 0.03, ps + 2.0, z0 - 0.12, "verge_grass"),
                 (ps + 2.0, z0 - 0.12, ps + 2.0, z0 - 0.12 - depth, "verge_grass")]
     if kind == RURAL:
-        ps = S.PAVED_SHOULDER
+        # ADR 0272: paved + ground widths from roads/xsec_rules.yaml, carried in `mat`; mat 0 = the legacy profile
+        # (PAVED_SHOULDER 1.00 m + the 0.75 m ground part of PTB2022 § 23 ust. 10 pkt 2)
+        ps, sw = X.decode(mat)
         zp = -S.CROSSFALL * ps
-        sw = S.SHOULDER_W["GP"]      # gravel part next to the opaska zewnętrzna (PTB2022 § 23 ust. 10 pkt 2), 0.75 m
         z1 = zp - S.SHOULDER_CROSSFALL * sw
         d = h if 0.05 < h < 1.5 else S.DITCH_DEPTH       # ditch depth per station (swale next to a path)
         u0 = ps + sw
@@ -1200,6 +1382,7 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
                 (u2, z1 - d, u3, z1 - d, "verge_grass"),
                 (u3, z1 - d, u4, 0.0, "verge_grass"),
                 (u4, 0.0, u4, -depth, "verge_grass")]
+    m = walk_mat(mat)
     tw = S.KERB_TOP_W
     zw = h + S.SIDEWALK_CROSSFALL * w
     if mat == MAT_FLUSH_ROAD:
@@ -1216,6 +1399,13 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
             (0.0, h, tw, h, "curb_concrete"),
             (tw, h, tw + w, zw, m if w > 0.05 else "curb_concrete"),
             (tw + w, zw, tw + w, zw - depth, m if w > 0.05 else "curb_concrete")]
+
+
+def side_shoulder(c: Chain, side: str, s: float):
+    """(paved_m, ground_m) of the shoulder at a station, None beside a kerb / island / median (ADR 0272)."""
+    d = c.side[side]
+    i = int(c.idx(s))
+    return X.decode(int(d["mat"][i])) if int(d["kind"][i]) == RURAL else None
 
 
 def side_params(c: Chain, side: str, s: float) -> tuple:

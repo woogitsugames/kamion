@@ -12,14 +12,14 @@
     2
    ],
    "length_m": 484.4,
-   "max_grade": 0.0135,
+   "max_grade": 0.0138,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.6
+    6.6
    ],
    "width_src": [
     "authored_override:dk65-elcka-xsec"
@@ -1120,7 +1120,7 @@
    "patches": 108
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 163384,
+  "footprint_nodes": 162292,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -1155,6 +1155,7 @@
   ],
   "markings": {
    "P-1 centre line": 14,
+   "P-7a edge line span (authored)": 2,
    "P-7b edge line": 2
   },
   "markings_overlap_removed_tris": 0,
@@ -1165,6 +1166,24 @@
     "id": "dk65-elcka-xsec",
     "targets": [
      "w1024956365:2295268357-839431354"
+    ]
+   },
+   {
+    "id": "dk65-k1-edge-line-spacing",
+    "targets": [
+     "w1024956365:2295268357-839431354"
+    ]
+   },
+   {
+    "id": "dk65-03-k1-dashed-elcka-l",
+    "targets": [
+     "c:w1024956365:2295268357-839431354"
+    ]
+   },
+   {
+    "id": "dk65-03-k1-dashed-elcka-p",
+    "targets": [
+     "c:w1024956365:2295268357-839431354"
     ]
    }
   ],

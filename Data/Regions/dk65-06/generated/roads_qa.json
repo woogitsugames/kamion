@@ -419,7 +419,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.34,
+   "axis_smoothing_dev_max_m": 0.33,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -430,14 +430,14 @@
     2
    ],
    "length_m": 68.9,
-   "max_grade": 0.0454,
+   "max_grade": 0.0466,
    "overrides": [
     "dk65-elcka-xsec"
    ],
-   "profile_rms_vs_nmt_m": 0.05,
+   "profile_rms_vs_nmt_m": 0.051,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.9
+    6.6
    ],
    "width_src": [
     "authored_override:dk65-elcka-xsec"
@@ -1163,7 +1163,7 @@
    "patches": 91
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 107622,
+  "footprint_nodes": 105545,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1276,6 +1276,12 @@
     ]
    },
    {
+    "id": "dk65-opaska-k1",
+    "targets": [
+     "w208187096:10712325634-897574830"
+    ]
+   },
+   {
     "id": "kozince-1392b-unlit",
     "targets": [
      "w76085945:12529420150-897574830",
@@ -1316,7 +1322,7 @@
   },
   "verge_strips": {
    "chunks": 28,
-   "tris": 9159
+   "tris": 9163
   },
   "walled_ramps": []
  }

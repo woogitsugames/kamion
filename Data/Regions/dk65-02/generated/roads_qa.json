@@ -14,16 +14,15 @@
    "length_m": 1105.5,
    "max_grade": 0.0236,
    "overrides": [
-    "dk65-02-fasty-edge-lines",
     "dk65-02-supraslbridge",
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.027,
    "sidewalk_frac": 0.0,
    "width_m": [
     6.5,
-    7.5,
-    7.6
+    6.6,
+    7.5
    ],
    "width_src": [
     "authored_override:dk65-02-supraslbridge",
@@ -321,7 +320,7 @@
    "length_m": 120.5,
    "max_grade": 0.0399,
    "overrides": [
-    "dk65-02-fasty-edge-lines"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 1.466,
    "sidewalk_frac": 0.5,
@@ -346,7 +345,7 @@
    "length_m": 43.1,
    "max_grade": 0.0046,
    "overrides": [
-    "dk65-02-fasty-edge-lines"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.5,
@@ -371,7 +370,7 @@
    "length_m": 94.9,
    "max_grade": 0.0103,
    "overrides": [
-    "dk65-02-fasty-edge-lines"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.5,
@@ -396,7 +395,7 @@
    "length_m": 43.9,
    "max_grade": 0.018,
    "overrides": [
-    "dk65-02-fasty-edge-lines"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.028,
    "sidewalk_frac": 0.5,
@@ -421,7 +420,7 @@
    "length_m": 33.9,
    "max_grade": 0.0048,
    "overrides": [
-    "dk65-02-fasty-edge-lines"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.5,
@@ -446,8 +445,7 @@
    "length_m": 137.7,
    "max_grade": 0.0181,
    "overrides": [
-    "dk65-02-fasty-edge-lines",
-    "dk65-02-knyszynska-396566354"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.013,
    "sidewalk_frac": 0.5,
@@ -702,7 +700,7 @@
    "length_m": 71.5,
    "max_grade": 0.0045,
    "overrides": [
-    "dk65-02-fasty-edge-lines"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
@@ -727,7 +725,7 @@
    "length_m": 209.7,
    "max_grade": 0.0058,
    "overrides": [
-    "dk65-02-fasty-edge-lines"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.5,
@@ -1007,7 +1005,7 @@
    "length_m": 498.1,
    "max_grade": 0.0323,
    "overrides": [
-    "dk65-02-knyszynska-396566354"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
@@ -1386,7 +1384,7 @@
    "patches": 151
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 191532,
+  "footprint_nodes": 188837,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1471,11 +1469,13 @@
    "P-10 crossing": 3,
    "P-10 crossing in junction": 3,
    "P-13": 3,
+   "P-14 level crossing": 2,
+   "P-7a edge line span (authored)": 7,
    "P-7b edge line": 74
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 1167,
+  "nmt_nodes_replaced_under_decks": 1159,
   "overrides_applied": [
    {
     "id": "dk65-02-knyszynska-396566354",
@@ -1513,6 +1513,64 @@
     "targets": [
      "w1024956365:2295268357-839431354",
      "w716806121:508881726-2295268357"
+    ]
+   },
+   {
+    "id": "dk65-k1-edge-line-spacing",
+    "targets": [
+     "w1024956365:2295268357-839431354",
+     "w1321811065:10712325525-13239544653",
+     "w1321811066:3020060352-3020063156",
+     "w1321811066:3020060360-3020060369",
+     "w1321811066:3020060369-10712325525",
+     "w1321811066:3020063156-3020060360",
+     "w1321811066:841774187-3020060352",
+     "w1442886949:13239544652-14315720110",
+     "w1442886949:14315720110-3147719960",
+     "w1442886950:13239544653-13239544652",
+     "w234919340:3147719960-8197807803",
+     "w234919340:7283285517-1197260556",
+     "w234919340:8197807803-7283285517",
+     "w396566354:1782932318-841774187",
+     "w396566354:2559254743-1782932318",
+     "w716806121:508881726-2295268357",
+     "w716806122:1197260556-131613582"
+    ]
+   },
+   {
+    "id": "dk65-02-k1-dashed-km9.95",
+    "targets": [
+     "c:w1321811066:841774187-3020060352"
+    ]
+   },
+   {
+    "id": "dk65-02-k1-dashed-km9.95",
+    "targets": [
+     "c:w1321811066:3020060352-3020063156"
+    ]
+   },
+   {
+    "id": "dk65-02-k1-dashed-km9.95",
+    "targets": [
+     "c:w1321811066:3020063156-3020060360"
+    ]
+   },
+   {
+    "id": "dk65-02-k1-dashed-km9.95",
+    "targets": [
+     "c:w1321811066:3020060360-3020060369"
+    ]
+   },
+   {
+    "id": "dk65-02-k1-dashed-elcka-l",
+    "targets": [
+     "c:w1024956365:2295268357-839431354"
+    ]
+   },
+   {
+    "id": "dk65-02-k1-dashed-elcka-p",
+    "targets": [
+     "c:w1024956365:2295268357-839431354"
     ]
    }
   ],

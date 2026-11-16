@@ -160,13 +160,18 @@
  },
  "region": "dw671-tykocin-01",
  "route_band_m": 30.0,
- "route_segments_s_m": null,
+ "route_segments_s_m": [
+  [
+   0.0,
+   2608.0
+  ]
+ ],
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 84,
-  "kerb_tris": 22411,
+  "kerb_tris": 18841,
   "lane_samples": 26646,
-  "marking_tris": 871,
-  "props_checked": 418
+  "marking_tris": 4439,
+  "props_checked": 424
  }
 }

@@ -136,7 +136,23 @@ namespace Game.Editor.Setup
                 for (int i = 0; i < qp.tiers.Length; i++)
                     foreach (var d in defs)
                         if (string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) qp.tiers[i].lampPoolSpecular = d.lampPoolSpecular;
-                qp.revision = QualityProfile.CurrentRevision;
+                qp.revision = 191;
+                dirty = true;
+            }
+            if (qp.revision < 240)
+            {
+                // ADR 0240 (B-088): Low takes the reviewed Medium / High shadow bias (0.4 / 0.3) and stops casting from thin
+                // world casters. A Low bias that someone tuned away from the old 1.0 / 1.0 default is kept.
+                for (int i = 0; i < qp.tiers.Length; i++)
+                    foreach (var d in defs)
+                    {
+                        if (!string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) continue;
+                        qp.tiers[i].thinCasterShadowsOff = d.thinCasterShadowsOff;
+                        if (d.name != "Low") continue;
+                        if (Mathf.Abs(qp.tiers[i].shadowDepthBias - 1f) < 1e-4f) qp.tiers[i].shadowDepthBias = d.shadowDepthBias;
+                        if (Mathf.Abs(qp.tiers[i].shadowNormalBias - 1f) < 1e-4f) qp.tiers[i].shadowNormalBias = d.shadowNormalBias;
+                    }
+                qp.revision = 240;
                 dirty = true;
             }
             if (qp.canopyMaterial == null)

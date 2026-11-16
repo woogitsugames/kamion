@@ -115,7 +115,16 @@ namespace Game.World.Import
             var trailerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TrailerAssetBuilder.PrefabPath) ??
                                 AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.TrailerPrefabPath);
             if (prefab == null || trailerPrefab == null) throw new FileNotFoundException("DrivingLab prefabs missing: run Kamion/Setup/Rebuild DrivingLab first");
-            const float spawnS = 12f;
+            // ADR 0262: the start of the region catalog (scripts/export-region-catalog.py: 12 m, or behind the region-edge
+            // closure when the route starts ON the tile edge - the closure stands up to 60 m inside, ADR 0169), and in
+            // any case behind every closure the route enters the tile through (the closures just built above).
+            var startBoundary = rootGo.GetComponent<WorldBoundary>();
+            var catalogEntry = RegionCatalog.Load()?.Find(r.Region);
+            float wantedS = catalogEntry != null ? RegionStart.ClampStartS(catalogEntry.startS, route.Length) : StartClearance.DefaultStartS;
+            float spawnS = StartClearance.SafeStartS(route.points, route.distances,
+                startBoundary != null ? startBoundary.closures : System.Array.Empty<WorldBoundary.Closure>(), wantedS);
+            if (spawnS > wantedS + 0.01f)
+                Debug.LogWarning($"[IMPORT] spawn moved from route_s {wantedS:F1} to {spawnS:F1} m: the catalog start is not behind the entry closure (python scripts/export-region-catalog.py, ADR 0262)");
             Vector3 spawnPos = route.points.Length > 1 ? route.PointAt(spawnS) : Vector3.zero;
             Vector3 spawnFwd = route.points.Length > 1 ? route.TangentAt(spawnS) : Vector3.forward;
             var spawn = new GameObject("Spawn_DepotGate").transform;
@@ -283,19 +292,21 @@ namespace Game.World.Import
         // Layers per LOD (ADR 0012). Distances: manifest switch distances (camera to near chunk edge) + 0.7 chunk.
         // water (ADR 0210): the sheet stays on every LOD (one cheap opaque mesh; a river is visible from far)
         // banks (ADR 0213): reed belt ribbons of the water stage - LOD0 / LOD1 like the plots, no shadows
+        // rail_* (ADR 0217): opt-in rail stage - LOD0 full track on High (rail_lod0) / LoD1 on Low, flat ballast strip (rail_lod2)
+        // from LOD2 on, crossing panels up to LOD2; no shadows. Regions without the stage have no such nodes (skipped).
         static readonly string[][] k_LowLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water", "banks" },
-            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water", "banks" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water" },
-            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod1", "rail_crossing" },
+            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod1", "rail_crossing" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water", "rail_lod2", "rail_crossing" },
+            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water", "rail_lod2" },
         };
         static readonly string[][] k_HighLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water", "banks" },
-            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water", "banks" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water" },
-            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod0", "rail_crossing" },
+            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod1", "rail_crossing" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water", "rail_lod2", "rail_crossing" },
+            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water", "rail_lod2" },
         };
         static readonly HashSet<string> k_ShadowCasters = new HashSet<string> { "bridge", "buildings", "buildings_lod1", "furniture", "plots" };
         // plots (ADR 0124): kit geometry of the house plots (fences, gates, plants) - LOD0 / LOD1, shadow caster; with

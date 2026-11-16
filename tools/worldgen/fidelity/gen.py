@@ -17,7 +17,7 @@ from roads import markings as MK  # noqa: E402
 from roads import pipeline  # noqa: E402
 
 CARRIAGEWAY_MATS = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel",
-                    "apron_sett"}
+                    "apron_sett", "apron_paving_light"}
 
 
 @dataclass

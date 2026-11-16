@@ -13,3 +13,61 @@ overrides:
     confidence: low
     verify: none
     set: {lamps: false}
+  # ADR 0272 (REVIEW s22-0217 P1-4): DW671 south-west of the village has no kerbs. GUGiK orthophoto WMS StandardResolution
+  # (sheet date / native resolution UNVERIFIED), 11 clean cross-sections of ways 145989268 / 286989055
+  # (docs/reports/ortho-xsec-0272/dw671-tykocin-01_dw671.json): asphalt 6.15-7.25 m (median 6.85; BDOT10k 6.5 / 7.0
+  # kept); read by eye on the strips: grass / ground right at the asphalt edge on both sides, no kerb, no gully, thin
+  # edge lines (both detected at 2 sections, 6.85-6.9 m apart at the crossing), no cut ditch -> shallow swale
+  # (WORKING_VALUE).
+  # The OSM maxspeed is missing (graph default 50 km/h), so the class / speed rule kept the kerbed street profile.
+  # Way 70329870 (north of the village, shared with knyszyn-w) is not measured and stays as it was.
+  - id: dw671-ground-shoulder
+    target: {osm_way: [145989268, 286989055]}
+    source: "GUGiK orthophoto WMS StandardResolution, measured 2026-11-15 (docs/reports/ortho-xsec-0272/)"
+    reason: >-
+      Ground shoulder instead of the rule kerb: every readable orthophoto section shows grass / ground at the
+      asphalt edge (3 of 14 sections are in tree shadow). Widths: the class G rule of roads/xsec_rules.yaml
+      (asphalt = BDOT width + 2 x 0.08 m, ground part 1.0 m). Edge lines both sides (narrow, 0.20 m inside the edge,
+      ADR 0205): seen at the crossing and south of it, worn or missing at 4 sections north of it.
+    confidence: medium
+    verify: owner photo of the DW671 cross-section (shoulder width, ditch) - ditch depth 0.2 m is WORKING_VALUE
+    set: {shoulder: {kind: ground, ditch_m: 0.2}, edge_lines: both}
+  # The 90 m edge that carries the level crossing: same shoulder, flat verge (no swale across the track bed). Listed
+  # after the way-level entry, so it wins on this edge.
+  - id: dw671-ground-shoulder-crossing
+    target: {edge: "w286989055:1845461231-839431484"}
+    source: "GUGiK orthophoto WMS StandardResolution, 60 m crop at the crossing (758830.85, 610025.61), read 2026-11-15"
+    reason: >-
+      At the crossing the orthophoto shows asphalt 7.1-7.15 m with edge lines, guard rails 0.5-1 m behind the edge on
+      both sides and flat mown ground up to the ballast: no kerb, no ditch. Only the road cross-section is authored
+      here; panels, booms, lights and barriers belong to the rail stage (override rail-crossing-dw671-line38).
+    confidence: medium
+    verify: owner photo of the crossing approach
+    set: {shoulder: {kind: ground, ditch_m: 0.0}, edge_lines: both}
+  # ADR 0217 (FIX 4): level crossing of DW671 with line 38. OSM node 1778182481 has no crossing:barrier / crossing:light,
+  # so the rule would build an unprotected crossing with G-3 crosses. Authored from open sources (no Google):
+  - id: rail-crossing-dw671-line38
+    kind: rail_crossing
+    target: {osm_node: 1778182481}
+    reason: >-
+      GUGiK orthophoto 2025 0.1 m (artifacts/rail-fix-s21/ref/ortho_0p10_crossing_60m.jpg): on the right of each
+      approach an orange drive cabinet and posts with long thin shadows, a second device on the left of each approach,
+      guard rails along both road edges, crossing panels running ~1.5-2 m past the edge lines. Mapillary
+      1569863873404925 (2020-06-23) and 828893548045009 (2019-07-03), CC BY-SA, both looking north-east from the
+      south-west approach: raised red-white booms on orange drives on the right AND on the left, a mast with two red
+      lamps on round black backboards on each side, no St Andrew's cross on the masts.
+    sources: [gugik-orto-2025-rgb-0p10-dw671-tykocin-01, "mapillary:1569863873404925", "mapillary:828893548045009"]
+    confidence: medium
+    verify: >-
+      photos are 2019-2020, the orthophoto 2025 shows the same four device positions; the north-east approach is
+      read from the orthophoto only. Open: guard rails and the red transverse strips before the crossing are not built.
+      ADR 0268: guide_post red_white = the white posts with red bands along both verges of the approach on Mapillary
+      1832769196903759 (reference only).
+      approach_speed_kmh 90 (rail-dk65-s22, confidence LOW, UNVERIFIED): the graph has no maxspeed tag on DW671 here
+      (attrs.maxspeed src=default 50). Mapillary map feature regulatory--maximum-speed-limit-50 (last seen 2019-07-03)
+      stands 57 m south-west of the crossing on the right of the north-east-bound approach, so the limit before it is
+      above 50; the photos show open fields (no built-up area) -> general limit outside built-up areas assumed
+      (90 km/h, quoted from memory, statute not read). Only the bracket matters: above 60 km/h the warning sign
+      stands 150-300 m before the crossing (Dz.U. 2019 poz. 2310 par. 3 ust. 2). The B-33 "50" itself is not built.
+    set: {barrier: double_half, light: true, light_left: true, panel_margin_m: 1.5, guide_post: red_white,
+          approach_speed_kmh: 90}
