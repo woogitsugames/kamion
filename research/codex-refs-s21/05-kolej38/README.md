@@ -66,3 +66,8 @@ Typu sieci nie przeliczano z kodu na wysokość/rozstaw słupów. Parametr pręd
 ## Galerie modernizacji — obieg8 bez nowej lokalnej fotografii
 
 [Modernisation-photos-round8](modernisation-photos-round8/README.md):sprawdzono znane komunikaty/projekt i jeden kandydat banku zdjęćPKP osobiście obejrzany. Fotografia pokazuje podpisywanie dokumentów przy stole; szerokie tagiFasty/Knyszyn nie są lokalizacją fotograficzną toru ani przejazdu. Odrzucono, nie opisano jej jako podsypki/słupów.0nowych kwalifikowanych kadrów/0pobrań,0zmiany głównego15. Podpisy konferencji/plansz i brak pewnego punktu nie dowodzą nieistnienia zdjęć wcałym archiwum. LicencjaBY-NC-ND odrzuconego źródła nie jest otwartą licencją gry; pozostały tylko własne uwagi i odsyłacze.
+
+
+## Historyczny budynek Fasty — runda9
+
+[fasty-ground-round9](fasty-ground-round9/README.md):2osobno obejrzane kadry1budynku, MaliniakCCBYSA2.5 iHenrykBorawskiCCBYSA3.0. Pierwsza data2006-06-04 to upload, ekspozycjaUNVERIFIED; druga26.07.2013. Podcień/ławka/schody/falisty dach/tablica informacyjna;0widocznych przejazdów/szyn/podsypki. Materiał dachu i stan2026nieustalone.1małyoryginał+1podgląd pozaGit,2miniatury≤800px. Główny05ma17rekordów.

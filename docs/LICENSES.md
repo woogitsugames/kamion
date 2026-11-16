@@ -628,3 +628,8 @@ Dwie miniatury w research/codex-refs-s21/06-region-ring/tykocin-facades-round8/f
 ### codex-refs-s21: Knyszyn, tablica i wejście (runda11)
 
 2miniatury w research/codex-refs-s21/03-knyszyn/street-furniture-round11/files: Henryk Borawski, CC BY-SA3.0 https://creativecommons.org/licenses/by-sa/3.0/ . Źródła City_map_Knyszyn_(Rynek_Street).jpg i Knyszyn_sklep_mięsny_Podlasie_2.JPG naCommons, pełneURLwmanifest.csv. Pomniejszono podglądy do≤800px, bez kadrowania/korektbarw.0pełnychoryginałów. Referencje fizycznej tablicy/stopni/balustrady/nawierzchni; mapa tablicy nie używana do geometrii.
+
+
+### codex-refs-s21: Fasty, budynek przystanku (runda9)
+
+05-kolej38/fasty-ground-round9/files:FG9-01 Maliniak (PolishWikipedia), CC BY-SA2.5 https://creativecommons.org/licenses/by-sa/2.5/ ; FG9-02 HenrykBorawski, CC BY-SA3.0 https://creativecommons.org/licenses/by-sa/3.0/ . Indywidualne źródłaCommons i opisy zmian wmanifest.csv, hashe źródła/miniatury wretrieval.json. RekompresjaJPEG i pomniejszenie drugiego podglądu do800px, bez kadrowania. Pierwsza data to upload, nie ekspozycja.
