@@ -1,0 +1,61 @@
+{
+  "review_date": "2026-11-16 DATE_ONLY",
+  "selected_backlog": "docs/owner/BACKLOG-S21.md B-123: Brzeska/Buska 0; tu wyłącznie Brzeska",
+  "backlog_read": "Odczytano bieżące wiersze research/ref oraz Dojlidy B-040–059, B123; główny07 i childy dedup przed UI. Batorego R14, Buska R15, rondo R18, Kuronia R19 już są albo mają własne ograniczone kontrole.",
+  "local_location_source": {
+    "file": "Data/Regions/bialystok-industrial-c/roads.graph.json",
+    "crs": "EPSG:2180",
+    "osm_way": 100927674,
+    "name": "Brzeska",
+    "use": "Wyłącznie identyfikacja celu. Nie przeniesiono default lanes/maxspeed/width do nowych obserwacji i nie zamieniono grafu na fotografię."
+  },
+  "ui_selection": {
+    "initial_viewport": "Znany viewport Batorego służył wyłącznie do otwarcia aplikacji; nie był lokalizacją Brzeskiej.",
+    "search": "Brzeska Białystok; zwykły SearchInput i Enter",
+    "returned_viewport": [
+      53.15089,
+      23.15034
+    ],
+    "mapStyle": "OpenStreetMap; etykieta Brzeska widoczna w mapie",
+    "scales": [
+      16,
+      17
+    ],
+    "final_url": "https://www.mapillary.com/app/?lat=53.15089000000029&lng=23.150340000000824&z=17&mapStyle=OpenStreetMap&focus=map",
+    "filters": {
+      "username": "pusty",
+      "start_date": "pusta",
+      "end_date": "pusta",
+      "travel_method": "Any",
+      "only_360": false,
+      "color_by_age": false
+    },
+    "observation": "W obu sprawdzonych skalach brak zielonych punktów/linii pokrycia wzdłuż nazwanej ulicy Brzeskiej. Pokrycie widoczne przy Al. Tysiąclecia dalej na wschód, nie potraktowane jako zdjęcie Brzeskiej. Żadnego obrazu nie wybrano ani nie wyrenderowano w viewerze.",
+    "limit": "Ograniczony probe jednej ulicy i jednego viewportu; nie twierdzenie o globalnym braku zdjęć w Mapillary."
+  },
+  "counts": {
+    "selected_street": 1,
+    "new_photographs_reviewed": 0,
+    "photographs_downloaded": 0,
+    "saved_screenshots": 0,
+    "Commons": 0,
+    "Flickr": 0,
+    "OSM_API": 0,
+    "Overpass": 0
+  },
+  "not_adopted_sources": [
+    {
+      "source": "Wyszukiwanie Brzeska Białystok",
+      "finding": "Wyniki wielu innych miast oraz dawnej nazwy Mickiewicza. Nie przeniesiono ich na obecną Brzeską Białostoczku."
+    },
+    {
+      "url": "https://www.bip.bialystok.pl/postepowania/zamowienia/budowa-kladki-dla-pieszych-przez-rzeke-biala-w-bialymstoku-wraz-z-ciagiem-pieszo-rowerowym-pomiedzy-ulicami-raclawicka-i-brzeska-oraz-niezbedna-infrastruktura.html",
+      "status": "LEAD_ONLY; wynik wyszukiwarki, pełnego dokumentu i fotografii w tym obiegu nie odczytano; nie dodano liczb ani stanu wykonania."
+    }
+  ],
+  "no_claims": [
+    "Nawierzchnia/fasady/zieleń/znaki Brzeskiej z fotografii UNVERIFIED.",
+    "Nie przypisano stanu 2026 do mapy ani nie odczytano materiałów/metryki z symboli.",
+    "Punkt viewportu nie GPS kamery, brak kadru i headingu."
+  ]
+}
