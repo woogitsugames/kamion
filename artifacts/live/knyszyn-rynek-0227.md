@@ -306,3 +306,7 @@
 - 2026-11-16 06:47 +01:00 — GIS R23: 1768 passed, 22 skipped, 2 xfailed, 1 failed (stara lokalna instancja C sign_gantry_16_66 po merge; 12 plików C niezgodnych z nowym manifestem). EditMode 955 passed, 2 skipped. Rozpoczęta prywatna regeneracja C bez zapisu do współdzielonego raw; SHA wymagane przed podmianą.
 - NASTĘPNY KROK: `git status -sb; Get-Content artifacts/knyszyn-rynek-0227/gis-r23.log -Tail 8` 
 
+
+- 2026-11-16 07:13 +01:00 — Po izolowanej regeneracji C 64/64 pliki instancji zgodne SHA z manifestem; podmieniono wyłącznie 12 lokalnych, zachowano kopie. Poprzednio błędny test i 3 powiązane: 4 passed. Pełny GIS R24 uruchomiony; EditMode po merge 955 passed, 2 skipped.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r24.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/gis-r24.done` 
+
