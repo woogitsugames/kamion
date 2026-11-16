@@ -59,3 +59,8 @@ Główny manifest12rekordów. [DokumentBIP](route-c-public-plans-round6/README.m
 ## Identyfikator organizacji ruchu — runda9
 
 [traffic-order-round9](traffic-order-round9/README.md):publiczny tropSOR200/25/S z rejestruumów pozycja2070,s84PDF, potwierdzony tekstowo także przezroot. Publiczne postępowanie176716 ma19nazw/rozmiarów załączników wedługUI; zawartość nieodczytana,0pobranychSOR/0rysunków/0zdjęć. Nie działało zwykłe pobranie, sessionURLsbezutrwalania i bezobejść. B5/B18/wyjątki/stan2026nadalUNVERIFIED. Cel umowy i jej terminy nie są treścią znaku/datą zatwierdzenia. Główny07ma16rekordów.
+
+
+## Maczka: śnieg historyczny i osobnyAUX — runda10
+
+[winter-streets-round10](winter-streets-round10/README.md):1nowy historyczny kadrDDRMaczka:luty2012wgporównania źródłowego, widocznyśniegprzykrawędzi/mokrepolazpopękanym asfaltem. Prawymarcowykadr kontrolny nie drugi zimowy. Drugi nowyrekordMaczka/Produkcyjna18.11.2022wgpublikacji:ścianaoporowa/bariera/latarnie, śnieg/błotośniegoweUNVERIFIEDprzezszybę, AUX.2link-onlyARR/0pobrań, obaagentosobnoobejrzał;rootodczytartefaktów bezdrugiegooglądu. Batorego/Brzeska/Buska otwarte; stan2012nie2026/chemiasoliUNVERIFIED. Główny07ma18rekordów. CzysteURLwplik_lub_url, lokatorosobnąkolumnąchildi wopisiemain.
