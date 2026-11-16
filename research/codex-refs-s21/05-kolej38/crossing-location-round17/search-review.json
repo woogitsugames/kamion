@@ -1,0 +1,65 @@
+{
+  "review_date": "2026-11-16",
+  "own_exact_time_recorded": false,
+  "status": "UNVERIFIED — brak nowego urzędowego mapowania DW671 do ID/km",
+  "counts": {
+    "new_documents_accepted": 0,
+    "new_documents_opened": 0,
+    "new_images": 0,
+    "downloads": 0,
+    "new_aux": 0
+  },
+  "dedup_scope": "Wszystkie istniejące README i manifesty 05 pod kątem 29+522/038029522/29+394/DW671; osobno przeczytane crossing-location-round7 i rail-crossing-budget-round15.",
+  "known_evidence_preserved": [
+    {
+      "package": "crossing-category-source-round6",
+      "scope": "Obwieszczenie 2025 określa kat. B przy km 29+522, osobno projektowany wiadukt 29+394; nie podaje jednoznacznego mapowania do DW671 w odczytanym zakresie."
+    },
+    {
+      "package": "rail-crossing-budget-round15",
+      "scope": "Sprawozdanie za 2011: wykonany przejazd kat. B na odcinku Knyszyn–Krypno w zadaniu DW671; bez kolejowego ID/km."
+    },
+    {
+      "package": "knyszyn-crossing-round4",
+      "scope": "Dwa historyczne kadry 2019 pokazują przejazd; numeracja PLK i powiązanie z 29+522 nieudowodnione."
+    },
+    {
+      "package": "crossing-location-round7",
+      "scope": "038029522 pozostaje hipotezą roboczą, nie potwierdzonym odczytem identyfikatora."
+    }
+  ],
+  "search_scope": {
+    "method": "Celowane publiczne wyszukiwanie; bez otwierania mirrorów, API OSM i ponowień wcześniej niedostępnych załączników.",
+    "terms": [
+      "29+522 oraz 671",
+      "038029522 Knyszyn PLK",
+      "Knyszyn 29,522 / 29.522",
+      "E75-PB-2.10.1-U-001-OPIS — wyłącznie nazwa do poszukiwania oficjalnego oryginału",
+      "Knyszyn/przejazd/DW671 w domenach PLK,gov, gmina",
+      "Białystok–Ełk PFU/przetarg w domenie PLK"
+    ],
+    "result": "Nie znaleziono nowego dozwolonego dokumentu wiążącego literalnie DW671, konkretny kolejowy kilometraż/ID i miejsce. Zwrócone oficjalne wyniki były znanym obwieszczeniem lub ogólnymi komunikatami; pozostałe trafienia nie dotyczyły zadania. Nie otwarto ich masowo."
+  },
+  "excluded_mirror": {
+    "host": "files.girlc.at",
+    "opened": false,
+    "downloaded": false,
+    "used_as_evidence": false,
+    "limit": "Nazwy dokumentów mogą służyć poszukiwaniu oryginału; treści indeksu mirroru nie awansowano do SOURCED."
+  },
+  "prohibited_inferences": [
+    "Nie tworzono ID 038029522 z numeru linii i km.",
+    "Nie utożsamiono istniejącego przejazdu 29+522 z projektowanym wiaduktem29+394.",
+    "Nie przypisano kategoriiB do fotografii 2019 ani stanu 2026.",
+    "Nie użyto środka viewportu jako GPS aparatu."
+  ],
+  "network_limits": {
+    "osm_api": 0,
+    "overpass": 0,
+    "commons": 0,
+    "flickr": 0,
+    "google": 0,
+    "browser": 0
+  },
+  "parent_files_changed": false
+}
