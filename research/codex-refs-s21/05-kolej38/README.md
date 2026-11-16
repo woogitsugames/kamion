@@ -102,3 +102,5 @@ R16: osiem uzupełnień przepisów w regulations.csv: §7–10kwalifikacjaA–D,
 16.11.2026: R18 — sześć norm nawierzchni i niwelety w `crossing-surface-round18/`; root osobno obejrzał strony 8, 9 i 47. 35 mm to sumaryczny przyrost szerokości żłobków, nie ich szerokość podstawowa. Brak nowych zdjęć i lokalnego przypisania parametrów.
 
 16.11.2026 R19: nowa oficjalna instrukcja MILK PLK, s6 funkcja wyszukania przejazdu po numerze/parametrach; root odczytał niezależnie tekst. To mechanizm dalszej kontroli, nie nowy ID ani relacja DW671. Dolne współrzędne kursora nie są automatycznie obiektem. Podkład nieustalony, aplikacji mapowej nie uruchomiono. 1 rekord dokumentacyjny,0zdjęć.
+
+16.11.2026 R20:5 technicznychregułG2/G3/G4, root osobno obejrzał72/73/510/511.1400 wzdłużramienia, nie szerokośćX; liniowejjednostki rysunku nie ustalono, bezSOURCEDmm. Metry5/3 ztekstu mająwarunki/wyjątki. Wersja2019, pełnaaktualność2026UNVERIFIED;0nowychfotografii/dużychPDF. Główny24 (nowydokument),normyosobno.
