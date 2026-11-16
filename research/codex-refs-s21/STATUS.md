@@ -9,7 +9,7 @@ Aktualizacja: 2026-11-16 01:01 Europe/Brussels. Cel ciągły aktywny. Gałąź `
 | 03 Knyszyn | 36 | Kościół, Rynek, fontanna, materiały i prywatne obserwacje tylko tekstowo. |
 | 04 DK65 | 22 | Oznakowanie, pobocza, BDL i historyczny opis dendrologiczny. |
 | 05 kolej 38 | 15 | Zasilanie/typ sieci, dokument kategorii i historyczne widoki; mapowanie punktu pozostaje otwarte. |
-| 06 pierścień | 29 | Mońki, Tykocin, most i rondo/ramię DW671-DK64. |
+| 06 pierścień | 31 | Mońki, Tykocin, most i rondo/ramię DW671-DK64. |
 | 07 Białystok/Dojlidy | 15 | Dokumenty i geometria, brak potwierdzonych B-5/B-18/wyjątków. |
 
 01: Actros KOITO ma po dwóch odczytach E13/13106 i `00DCR PL 01 1a 02 A 00 RL` oraz27.5 na tej samej etykiecie. Dwa kadry jednej części, bez przyrostu tylnych/emisji/nocy. EcopointII to dwa zdjęcia jednego klosza bez obudowy: E9 i S1/2a/IIIA/AR/F1/SM1 pewne, pełny numer1853/R1/serie UNVERIFIED. Katalog6611489 wskazuje całą lewą lampęHybrid, nie dowodzi numeru klosza. EuropointII E9/5497 pozostaje oddzielnym odczytem; E9/6985 EuropointIII dotyczy tylko grupySM1/IA. CE/MD/10R nie zastępują fotometrii. Historyczny audyt10/45 ma10zgodnych/0sprzecznych opisów, dobór celowy; to snapshot, nie przepisany audyt wszystkich49. Progi15tylnych/4włączone/3nocne/5ciężkich tablicowych otwarte.
@@ -24,10 +24,12 @@ Normy: datowane wersje, bez deklaracji aktualności2026. R48 dokument16.10.2014,
 
 05:3kVDC to wspólny wniosek załącznikaPKP2.12 wiersz351 (torN,km4.298–98.598,YzC120-2C) i regulaminuv45 z12.11.2026,2.3.9ust1,6,s24. Nie pole napięciaXLSX ani pomiar terenu/całej linii38. Obwieszczenie2025 wymienia29+522kat.B w rozbiórkach, projektowanywiadukt29+394 to odrębny zapis. MapowanieDW671/IDPLK/fotografii nadalUNVERIFIED. OSM406/429 bez retry nie daje dowodu nieistnienia punktu. Nowy przegląd bankuPKP odrzucił zdjęcie konferencji mimo tagówFasty/Knyszyn,0nowych lokalnychkadrów.
 
-06:29rekordów obejmuje synagogę, most, różne obiekty Mońk i dwa widoki ronda/ramieniaDW671-DK64. Jasny pierścień nie dowodzi materiału/przejezdności. Gruntowa droga przy moście nie została uznana za najazdDW671. KościółMońk2010/2018:2zdjęcia1świątyni, rozbieżny adres1/2 nieustalony. Dat historycznych nie połączono w jeden stan2026, formalnych kondygnacji i wymiarów nie zgadywano.
+06:31rekordów obejmuje synagogę, most, różne obiekty Mońk i dwa widoki ronda/ramieniaDW671-DK64. Jasny pierścień nie dowodzi materiału/przejezdności. Gruntowa droga przy moście nie została uznana za najazdDW671. KościółMońk2010/2018:2zdjęcia1świątyni, rozbieżny adres1/2 nieustalony. Dat historycznych nie połączono w jeden stan2026, formalnych kondygnacji i wymiarów nie zgadywano.
 
 07: raport miasta2025 odnotowuje wdrożenie ograniczeń, lecz B-5/B-18/wyjątki i stan2026 nieustalone. TekstUM rozróżnia tranzyt3.5t od Mickiewicza8t; zdjęcia pokazują geometrię, nie czytelne zakazyHGV. PABWileńska–Poleska ma projektowe2×2/pas3.5m/7zatok, nie as-built ani675Centrum. GIS nadal LEGAL_REVIEW_REQUIRED dla konkretnego zbioru. Maczka25.03.2015 suchy/zielony, nie zimowy; ograniczony brak wyników katalogu nie dowodzi globalnej nieobecności zdjęć.
 
-Kontrola śledzonych plików: 84 rastrów≤800px, 303 poprawnychJSON, unikalne główneID, lokalne ścieżki istnieją, bez plików>5MB i zapytań zparametrami dostępowymi. Zmiany tylko research/codex-refs-s21 i docs/LICENSES.md. Raw/duże dokumenty pozaGit, prywatne obrazy bez kopii. Metryki:10niezmierzonych godzin wycofano do potwierdzonej daty w jawnej erracie,2README poprawiono; EXIF/publikacje/HTTP i zmierzony zapisActrosa bez zmian. Bez kodu gry,Unity,adb.
+Kontrola śledzonych plików: 86 rastrów≤800px, 311 poprawnychJSON, unikalne główneID, lokalne ścieżki istnieją, bez plików>5MB i zapytań zparametrami dostępowymi. Zmiany tylko research/codex-refs-s21 i docs/LICENSES.md. Raw/duże dokumenty pozaGit, prywatne obrazy bez kopii. Metryki:10niezmierzonych godzin wycofano do potwierdzonej daty w jawnej erracie,2README poprawiono; EXIF/publikacje/HTTP i zmierzony zapisActrosa bez zmian. Bez kodu gry,Unity,adb.
 
 Gotowe do scalenia po recenzji lidera: NIE. Cel pozostaje aktywny; kolejne pakiety zbierane i recenzowane oddzielnie.
+
+Kolejny obieg: powered-rear19 obejrzana plansza bez pewnej emisji,0nowych ON. Panoramax26 jedno ograniczone zapytanie200/features[],0nowychA/B. Tykocin-facades8:2noweCCBY4.0 kadry2026-08-05, dwa budynki/2podglądy/0oryginałów/2miniatury; balkon i ubytki tynku oraz drewniany szczyt i podest. Materiał dachu/formalne kondygnacje/GPS/DW671 nieustalone.
