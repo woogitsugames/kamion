@@ -126,3 +126,5 @@ R25: dwa nowe kadry rzeczywistej żółtej farby na asfalcie DK65, podpisy27/26.
 R29 pogłębia znany04-TI9-D01:4 wiersze parametrów projektowanych zatokDK65/DZ1 i ramp chodnikowych, osobny oglądPDF44/druk45. Bez nowego dokumentu/zdjęcia i bez join do istniejących przystanków; główny manifest40.
 
 KontraktR29: nowy tekstGDDKiA04.07.2025,6faktów,0fotografii; główny manifest41. Nowa jezdnia7–12,2m to zakres szerokości, nie stare7→nowe12,2. Oddzielono od komunikatu27.02.2026 w06R19 bez tezy o sprzeczności lub odbiorze.
+
+R30: nowy kadr formowanego rowu z wodą/skarpami, krawężników i bocznego dojazduDK65, podpis24.08.2026/lokalnykmokoło0+400. Rootobejrzał, link-onlyARR,bezprzepustu/wymiarów/GPS. Główny manifest42.
