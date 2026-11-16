@@ -88,3 +88,7 @@ Główny manifest: 22 rekordy. [Dokument gminny](tree-inventory-round9/README.md
 ## Zakończenia barier — norma2026
 
 [barrier-endings-law-round15](barrier-endings-law-round15/README.md):7 ustaleń ze wskazaniem §1pkt3lit.c i §§2–4 Dz.U.2026/132, odcinki zagłębione/zakotwione albo terminaleEN1317, wyjątek dla tymczasowych barier niskiego poziomu i zalecane żółte odblaski. Obejrzana strona18 istniejącegoPDF pozaGit. Nie pomiar DK65 ani pełna specyfikacja terminala. Główny25 bez zmian.
+
+## Historyczny objazd w Fastach — runda16
+
+[s19-fasty-traffic-round16](s19-fasty-traffic-round16/README.md): pełny komunikat14.10.2025 wiąże planowane przywrócenie stałejDK65 od15.10 godz9 z objazdem budowy wiaduktuS19 w Fastach. Tymczasowe rondoS19/DK65 w Krynicach jest osobnym miejscem. Aktualny rekord inwestycji wskazuje użytkowanie/20.10.2026, a3,5m/2,5m/min0,75m to parametry opisuS19, nie pomiarDK65.2 teksty/0 obrazów. Główny25 bez zmian.

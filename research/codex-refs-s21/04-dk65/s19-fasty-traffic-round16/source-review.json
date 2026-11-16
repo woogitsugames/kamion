@@ -1,0 +1,11 @@
+{
+  "review_date": "2026-11-16",
+  "exact_review_time": "UNVERIFIED — nie zapisano odczytu zegara",
+  "method": "Pełne teksty oficjalnych stron odczytane narzędziem web; bez Chrome, odczytu altów jako obrazu i pobierania fotografii",
+  "sources": [
+    {"id": "R16-01", "url": "https://www.gov.pl/web/gddkia-bialystok/zmiana-organizacji-ruchu-na-drodze-krajowej-nr-65", "publication_date": "2025-10-14", "locators": {"historical_traffic": "Wstęp; Ruszą dalsze prace na S19, akapit 1–2", "temporary_junction": "Zakres robót na ekspresówce, akapit 1", "licence": "Stopka gov.pl, treści tekstowe"}, "status": "SOURCED — pełny tekst", "figure_review": "NOT_REVIEWED — żadnej figury nie opisano", "dedup": "URL wcześniej w temporary-works-round6/screening.json jako odrzucony trop zdjęciowy; nowy jest pełny odczyt tekstowy"},
+    {"id": "R16-02", "url": "https://www.gov.pl/web/gddkia/s19-krynice---dobrzyniewo---bialystok-zachod", "publication_or_last_update": "UNVERIFIED — brak jednoznacznej daty aktualizacji odczytanych parametrów", "locators": {"current_stage": "Aktualnie realizowany etap; Data udostępnienia ciągu głównego", "cross_section": "Parametry techniczne", "drainage_context": "Ochrona środowiska", "licence": "Stopka gov.pl, treści tekstowe"}, "status": "SOURCED — pełny tekst", "limitations": "Rekord miesza aktualny etap i opis projektowy. Nie jest pomiarem powykonawczym ani przekrojem DK65. Literalu obciążenie: ton/oś 115 kN/oś nie normalizowano z uwagi na niespójność opisu jednostek.", "dedup": "Otwarcie znane z 04-D01; nowe wykorzystanie sekcji parametrów i odwodnienia"}
+  ],
+  "counts": {"text_sources_read": 2, "figures_viewed": 0, "photos_viewed": 0, "downloaded_files": 0},
+  "unverified": ["dokładny przebieg objazdu w Fastach", "jego przekrój i wyposażenie", "aktualna organizacja ruchu DK65 w listopadzie 2026", "identyczność historycznego objazdu z kadrami TM7", "georeferencja aparatu i kilometraż"]
+}
