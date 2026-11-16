@@ -1,0 +1,26 @@
+{
+  "review_date": "2026-11-16",
+  "method": "Ręczny wybór przybliżonego środka jednej jasnej korony TC17-02 i punktu widocznej krawędzi asfaltu; piksele od lewego górnego narożnika nieobróconego rastra. Bez segmentacji i bez identyfikowania pnia.",
+  "crs": "EPSG:2180; GetMap WMS 1.1.1 SRS, bbox x/y",
+  "scale": "240 m / 800 px = 0.3 m/px w układzie mapy; nie dokładność samej ortofotomapy",
+  "crown_point_px": [
+    377,
+    310
+  ],
+  "asphalt_edge_point_px": [
+    348,
+    337
+  ],
+  "distance_m_ESTIMATED": 11.9,
+  "uncertainty_m_ESTIMATED": 4,
+  "uncertainty_meaning": "Orientacyjny zakres ręcznego wyboru rozmytego środka korony/krawędzi, bez kalibracji statystycznej i bez pełnego bilansu błędu ortorektyfikacji.",
+  "not_measured": [
+    "odległość pnia od jezdni",
+    "rozstaw kolejnych pni",
+    "średnica pnia",
+    "szerokość i głębokość rowu",
+    "gatunek",
+    "metryka całej alei"
+  ],
+  "warning": "Odcinek między wskazanymi punktami jest odległością obrazową punkt–punkt; nie formalnym minimalnym odsunięciem obiektu od pasa drogowego."
+}

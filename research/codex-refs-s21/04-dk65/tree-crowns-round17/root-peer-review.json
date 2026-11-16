@@ -1,0 +1,36 @@
+{
+  "review_date": "2026-11-16",
+  "reviewer": "root",
+  "views": [
+    "files/TC17-01.jpg",
+    "files/TC17-02.jpg"
+  ],
+  "method": "Każdy800×800raster osobnoobejrzany view_image. Brak ponownych żądańWMS.",
+  "observations": [
+    "TC01: ukośny asfalt, las obu stron; nierówna szerokość trawiastego pasa i jasna przerwa wdrzewostanie.",
+    "TC02: otwarta trawiasta przestrzeń i nieregularne korony poNE; pole/las poSW, jasny ślad dojazdu. Nie regularna aleja."
+  ],
+  "estimate_check": {
+    "selected_crown_px": [
+      377,
+      310
+    ],
+    "selected_asphalt_edge_px": [
+      348,
+      337
+    ],
+    "map_scale_m_px": 0.3,
+    "arithmetic_distance_m": 11.88696765369537,
+    "display": "około12m±4mESTIMATED",
+    "assessment": "Wybór punktu wewnątrz jasnej korony i krawędzi asfaltu wizualnie rozsądny. Korona sięga znacznie bliżej jezdni niż jej środek; nie traktować12m jako odsunięcia pnia/korony minimalnie. ±4m orientacyjne, nie dokładnośćGUGiK."
+  },
+  "unverified": [
+    "gatunki",
+    "pnie",
+    "rozstaw drzew",
+    "minimalna odległość od jezdni",
+    "data nalotu obecnej mozaiki",
+    "rowy/przepusty"
+  ],
+  "cleanup": "2identyczne małe kopieRAW usunięte poSHA, 2kanoniczne plikiGit800px zachowane."
+}
