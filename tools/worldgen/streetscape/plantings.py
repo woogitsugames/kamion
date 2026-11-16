@@ -1257,9 +1257,9 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
             else:
                 _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False)
             kit.low = "only"
-            if crown_model == "linden_study_r3":
-                _linden_study_r3(kit, p, z, H, 2*r, low=True)
-            elif crown_model == "garden_trial":
+            if crown_model in ("linden_study_r3", "garden_trial"):
+                # Study keeps the previous Low mesh exactly; its High/Low crown
+                # silhouettes differ and the switch still needs visual QA.
                 garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=2, core=True)
             else:
                 _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=True)
