@@ -95,3 +95,6 @@ Jedna nowa scena KPP Mońki z rejonu Knyszyna, niezależnie obejrzana przez agen
 
 
 R15 budżet: agent i root obejrzeli urzędowe bitmapy stron1/113. Tabela36 lp1 potwierdza historyczne wykonanie przejazdu kat.B z sygnalizacją świetlną i dźwiękową Knyszyn–Krypno, stan31.12.2011. Nie dowodzi LK38/ID/km ani stanu2026. Główny22; zero nowych zdjęć.
+
+
+R16: osiem uzupełnień przepisów w regulations.csv: §7–10kwalifikacjaA–D, §13wyższa kategoria, metodaGPR i przepisyprzejściowe. Root obejrzał bitmapy3/4/21. GałąźD20km/h nie znosi wspólnego limitu torów. Opublikowany tekst2025, bez pełnego audytu późniejszych zmian i bez przypisania kategorii Knyszynowi. Główny22 bez przyrostu,0nowych zdjęć.
