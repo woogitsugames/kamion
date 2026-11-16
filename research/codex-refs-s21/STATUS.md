@@ -5,18 +5,18 @@ Stan danych: 16.11.2026, po pakiecie tree-plan-round18 (80395743b). Cel ciągły
 | Pakiet | Rekordy głównego manifestu | Ograniczenia |
 |---|---:|---|
 | 01 lampy | 60 | Nie 60 homologowanych tylnych lamp. |
-| 02 brud | 25 | 23 kadry (14 lokalnych, 9 link-only) + 2 dokumenty, również odrzucenia/AUX. |
+| 02 brud | 26 | 24 kadry (14 lokalnych, 10 link-only) + 2 dokumenty, również odrzucenia/AUX. |
 | 03 Knyszyn | 40 | Historyczne kadry i dane; zdjęcia właściciela wyłącznie opis tekstowy. |
 | 04 DK65 | 27 | Projekt, ortofoto i przepisy mają oddzielne daty i zakresy. |
 | 05 kolej 38 | 21 | Mapowanie lokalnego przejazdu do ID/kilometrażu nadal otwarte. |
 | 06 pierścień | 38 | Różne miasta i daty, bez łączenia w stan 2026. |
-| 07 Białystok/Dojlidy | 20 | Geometria i dokumenty; lokalne B-5/B-18/wyjątki nadal niepotwierdzone. |
+| 07 Białystok/Dojlidy | 22 | Geometria i dokumenty; lokalne B-5/B-18/wyjątki nadal niepotwierdzone. |
 
 M59: rozpoznana dolna granica 5 tylnych PASS (EuropointII, EuropointIII dwa odrębne kadry, EcopointII klosz, RA38 ScaniaE2) + 1 warunkowy UP4-03. W grupie PASS ON i zmierzch/noc nadal 0. RC39 ma E2, ale niejednoznaczny łańcuch zastosowania i drugi plik SUPPORT; nie dodaje unconditional PASS. Nie wymagamy pełnego numeru, pięciu rodzin ani kompletnej obudowy jako dodatkowych warunków nieobecnych w FIX. EMC 10R nie zastępuje fotometrii.
 
 Tablicowe: 10 samodzielnych kadrów 5 reprezentowanych fizycznych urządzeń (SIM, Proplast, Hella HP36, Vignal EPP96 i EPP98 HP37), plus 5 detali SUPPORT. W HP37 dokładne OE i wspólna rodzina serwisowa mają różną siłę dowodu zastosowania; nie oznacza to 5 udowodnionych demontaży ciężarowych ani 5 czytelnych E. Regpoint pozostaje warunkowy. Progi 15 tylnych / 4 ON / 3 zmierzch-noc / 5 tablicowych wymagają dalszej recenzji zakresu.
 
-M61: A≥20 łącznie; B≥12 NOWYCH z drzwiami ≥1000px i ruchem/zaraz po trasie. Dolna granica A7 z ograniczeniami: Knight158, Western182, Premier183, Krone lekki film, RoadTour source-dependent, AutoReview39, RI49. B1 Western, raz z aliasem CR6. Zimowe A2: RoadTour source-dependent i RI49 z rzeczywiście widocznym śniegiem. Europejska droga A1: RI49, A1 Nowa Wieś w Polsce. Zimowe/Europa B0 potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. RI49: 1201×904px cały obraz, drzwi ESTIMATED 500–560px; B_FAIL_GEOMETRY. Skład chemiczny osadu UNVERIFIED. Wszystkie progi 20/12/6/6 nadal otwarte.
+M61: A≥20 łącznie; B≥12 NOWYCH z drzwiami ≥1000px i ruchem/zaraz po trasie. Dolna granica A8 z ograniczeniami: Knight158, Western182, Premier183, Krone lekki film, RoadTour source-dependent, AutoReview39, RI49, UR54. B1 Western, raz z aliasem CR6. Zimowe A2: RoadTour source-dependent i RI49 z rzeczywiście widocznym śniegiem. Europejska droga A1: RI49, A1 Nowa Wieś w Polsce. Zimowe/Europa B0 potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. RI49: 1201×904px cały obraz, drzwi ESTIMATED 500–560px; B_FAIL_GEOMETRY. Skład chemiczny osadu UNVERIFIED. Wszystkie progi 20/12/6/6 nadal otwarte.
 
 Audyt P18: indeks R47 ma 88/88 ID z istniejącymi odsyłaczami i zgodnymi ID; 87 znormalizowanych URL. Zawiera aliasy i render, więc nie 88 fotografii ani kwalifikacji. Walidacja odsyłaczy nie jest nowym oglądem wszystkich starych zdjęć. R41 zachowuje kwarantannę błędnie nazwanych lokalnych154/159, bez przypisywania im licencji bieżących źródeł.
 
@@ -37,3 +37,5 @@ Gotowe do scalenia po recenzji lidera: NIE. Następne: nowe zimowe kontrole drog
 Aktualizacja po e7112ae4e: R50 i R40 bez nowego A/B lub czytelnego E. KE14 dodaje1scenę przejazdu i1tekst, główny05=21. Root potwierdził nierozstrzygnięty materiał paneli i brak ID. Kontrola JSON po tych pakietach:461 poprawnych plików. Poprzedni licznik456 był datowanym snapshotem. Następne zadania agentów R51/R41/Mońki pozostają aktywne.
 
 Po22c52fdd3: MońkiMS12 dwa nowe historyczne widoki znanego dworca, tył/bok/otoczenie,0nowych budynków. Główny06=38. R53 nowy kadr Florida po pełnym i natywnym oglądzie pozostaje PENDING filmu na drzwiach,0A/B. R51 trzy leads bez obrazów, nie fotografie. Kontrola469poprawnychJSON/93rastry≤800px. Liczniki kwalifikacji M59/M61 bez zmian.
+
+Po93bcb400d: nowyUR54-001 po niezależnych oglądach zwiększa A do8; B1 i zimaA2/Europa-drogaA1 bez przyrostu. Dwa inne tyły R54 pozostają PENDING powierzchni. PG16 odsyła do2 istniejących kadrów Putry, bez nowej fotografii/kopii; ukryta konstrukcja UNVERIFIED. R43 ma6 komórek CIL potwierdzonych z bitmapy tekstu2019 przez root i agenta, bez podmiany statusu2020/aktualności2026. R42 poprawiono kolumny koloru/kształtu makra etykiety, które odziedziczyły opis całej lampy. Bieżąca walidacja:482 poprawneJSON,93rastry≤800px,0plików>5MB, główneID unikalne i lokalne ścieżki sprawdzone po rozdzieleniu wieloplikowych pól. Cel aktywny; agenci R55/lampy44/Fasty19.
