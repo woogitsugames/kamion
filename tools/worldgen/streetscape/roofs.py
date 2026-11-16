@@ -56,6 +56,26 @@ LEAN_SLOPE = (math.tan(math.radians(4.0)), math.tan(math.radians(20.0)))
 # instead of under the 1.2 m reach of the tall gable beside it (r1 of ADR 0107: the annexe's side wall and the roof
 # vertices on the shared line rose to the main roof - a roof-coloured sail on the gable).
 MONO_REACH = 0.8
+# ADR 0238 (dopisek D32): tolerance of the plan clean-up of the roof covering pieces, m. A covering face is the overhang
+# outline cut by the upper envelope of the parts; the boolean operations leave vertices that lie ON a straight edge
+# (nodes where another face touched it) or a few micrometres from another vertex. Which of them survive depends on the
+# last bits of the float input, so the triangle count of ~1 / 3 of the houses changed under a 1e-9 m translation and
+# differed between machines (Windows vs Linux CI: 18 houses in Dojlidy, 43 in C). Every piece is simplified with this
+# tolerance (drops vertices within 1 mm of the chord) and snapped to a grid of the same size before the
+# triangulation, the fascia and the soffit - far below anything visible, far above floating-point noise at km scale.
+PLAN_TOL_M = 1e-3
+# ADR 0238 (dopisek D32 r2): decimals of the wall-top profile (u, z), m. The profile feeds threshold decisions of the
+# walls (storeys under the eave, attic window `sill + hgt + 0.3 <= zband`), and the eave of a gable came out as
+# 130.65000000000003 on one machine and 130.64999999999998 on another (C `bdot:2BE4B431-B14F`: one attic window more or
+# less, CI vs cloud). Rounded to 1 um the same wall gives the same float everywhere.
+PROFILE_DECIMALS = 6
+# ADR 0238 (dopisek D32 r2): a strip of the plan no face claims and narrower than this (2 x area / perimeter) is
+# floating-point residue of the upper envelope, m (see MultiRoof.faces)
+SLIVER_M = 5e-3
+
+
+def _qprof(prof):
+    return [(round(float(u), PROFILE_DECIMALS), round(float(z), PROFILE_DECIMALS)) for u, z in prof]
 
 
 class Roof:
@@ -125,7 +145,7 @@ class Roof:
                 t = ga / (ga - gb)
                 if 0.02 / max(L, 1e-6) < t < 1 - 0.02 / max(L, 1e-6):
                     ts.add(float(t))
-        return [(t * L, float(self.z(a + (b - a) * t))) for t in sorted(ts)]
+        return _qprof([(t * L, float(self.z(a + (b - a) * t))) for t in sorted(ts)])
 
     def faces(self, ov):
         """Planar faces of the covering over R grown by ov: [(plan polygon, eave direction, d0)] with
@@ -283,7 +303,7 @@ class MultiRoof:
             for j in range(i + 1, len(pl)):
                 fa = float((pl[i][0] - pl[j][0]) @ a + pl[i][1] - pl[j][1])
                 fb = float((pl[i][0] - pl[j][0]) @ b + pl[i][1] - pl[j][1])
-                if fa * fb < 0:
+                if fa * fb < 0 and abs(fa - fb) > PLAN_TOL_M:     # ADR 0238 D32: not along a plane switch
                     ts.add(fa / (fa - fb))
         (ua, va), (ub, vb) = self._fuv(a), self._fuv(b)    # domain edges: a step in the field
         for r in self.rects + self.rects0:
@@ -291,7 +311,9 @@ class MultiRoof:
                 for xa, xb, lines in ((ua, ub, (r[0] - ov, r[1] + ov)), (va, vb, (r[2] - ov, r[3] + ov))):
                     for x0 in lines:
                         fa, fb = float(xa) - x0, float(xb) - x0
-                        if fa * fb < 0:
+                        # ADR 0238 D32: a wall ALONG a domain edge (|fa - fb| < 1 mm) crosses it nowhere - its sign
+                        # flips were floating-point noise and split the wall at random points
+                        if fa * fb < 0 and abs(fa - fb) > PLAN_TOL_M:
                             ts.add(fa / (fa - fb))
         tt = sorted(ts)
         # intervals between the breakpoints; the field is linear inside one, so it is read 3 cm inside both ends
@@ -321,7 +343,7 @@ class MultiRoof:
             if abs(zi - zk) > 0.01:
                 keep.append(k)
         keep.append(len(out) - 1)
-        return [(float(out[k][0] * L), float(out[k][1])) for k in keep]
+        return _qprof([(float(out[k][0] * L), float(out[k][1])) for k in keep])
 
     def faces(self, ov):
         """Upper-envelope regions: [(plan polygon, eave direction, d0, z)] - each face of each part (inside the part's
@@ -351,7 +373,7 @@ class MultiRoof:
                 cut = _clip_half([np.asarray(q) for q in cs2], g2 - g, k2 - k + eps)
                 if len(cut) >= 3:
                     reg = reg.difference(Polygon(cut).buffer(0).intersection(doms[j]))
-            reg = shapely.unary_union(_polys(reg)) if not reg.is_empty else reg
+            reg = shapely.unary_union(_clean(reg)) if not reg.is_empty else reg   # PLAN_TOL_M (ADR 0238 D32)
             if reg.is_empty or reg.area < 1e-3 or reg.geom_type not in ("Polygon", "MultiPolygon"):
                 continue
             pt = self.parts[i]
@@ -363,6 +385,23 @@ class MultiRoof:
                 d0 = lambda p, pt=pt, hv=hv, k_sl=k_sl: (hv + pt.uv(p)[1]) * k_sl
             out.append((reg, pt.eu, d0, pt.z))            # pt.z: the face's own plane (not the envelope: on a step
             regions.append((i, reg))                      # line the envelope is the higher roof)
+        # ADR 0238 (dopisek D32 r2): a sliver of the domains that no face claims (two planes almost equal along a
+        # shared line, the +-1e-4 tie rule leaves a strip < 1 mm wide) exists on one machine and not on another (C
+        # `bdot:2BE4B431-B45E`). Such a strip goes to the face it shares the longest boundary with, so the face is the
+        # same with or without the floating-point strip.
+        if regions:
+            gap = shapely.unary_union(doms).difference(shapely.unary_union([r for _, r in regions]))
+            for gp in getattr(gap, "geoms", [gap]):
+                if gp.is_empty or gp.geom_type != "Polygon" or 2.0 * gp.area / max(gp.length, 1e-12) > SLIVER_M:
+                    continue
+                edge = gp.buffer(1e-6)
+                shared = [r.boundary.intersection(edge).length for _, r in regions]
+                n = int(np.argmax(shared))
+                if shared[n] <= 0.0:
+                    continue
+                reg = shapely.unary_union(_clean(shapely.unary_union([regions[n][1], gp])))
+                regions[n] = (regions[n][0], reg)
+                out[n] = (reg, *out[n][1:])
         self._faces[key] = out
         self._regions = regions
         return out
@@ -641,13 +680,19 @@ def _party_side(poly, c, eu, hu, hv, others):
     return best
 
 
-def plan(poly, props, h, zref, key_float, others=(), wooden=False):
+def plan(poly, props, h, zref, key_float, others=(), wooden=False, shape=None, max_area=400.0):
     """Roof of a house footprint, or None = flat roof (LoD2 type 1000, footprints with courtyards or far from
     their rectangle). props: buildings.geojson properties; h: LoD1 height; key_float(salt) -> [0, 1) per building;
-    others: neighbouring footprints (party-wall test of mono-pitch halves)."""
+    others: neighbouring footprints (party-wall test of mono-pitch halves).
+    shape (ADR 0238): flat / gable / hip / mono from an authored override or OSM roof:shape (streetscape.typology
+    .roof_shape) - it replaces the LoD2 roof TYPE; the LoD2 eave / ridge heights are still used when present."""
     rt = props.get("roof_type_lod2")
+    if shape is not None:
+        if shape == "flat":
+            return None
+        rt = {"gable": "1030", "hip": "1040", "mono": "1010"}[shape]
     rect = poly.minimum_rotated_rectangle
-    if rt == "1000" or poly.interiors or poly.area > 400:
+    if rt == "1000" or poly.interiors or poly.area > max_area:
         return None
     c, eu, hu, hv = _frame(poly)
     ev = np.array([-eu[1], eu[0]])
@@ -660,6 +705,8 @@ def plan(poly, props, h, zref, key_float, others=(), wooden=False):
     kind = "gable"
     if rt == "1010":
         ps = _party_side(poly, c, eu, hu, hv, others)
+        if ps is None and shape == "mono":       # ADR 0238: an authored / OSM skillion roof without a party wall
+            kind = "mono"                        # slopes across the short axis
         if ps is not None:                       # the half of a semi-detached pair: high side at the party wall
             kind = "mono"
             n = ps[0]
@@ -721,6 +768,13 @@ def _polys(g):
     return [x for x in getattr(g, "geoms", [g]) if x.geom_type == "Polygon" and x.area > 1e-4]
 
 
+def _clean(g):
+    """Polygons of g without collinear / near-duplicate vertices, on a PLAN_TOL_M grid (see PLAN_TOL_M)."""
+    if g.is_empty:
+        return []
+    return _polys(shapely.set_precision(g.simplify(PLAN_TOL_M, preserve_topology=True), PLAN_TOL_M))
+
+
 def covering(poly, roof, ov=OVERHANG):
     """Plan outline of the roof covering: the footprint grown by the overhang; along the walls that face up the
     roof (the height field rises away from the wall) only by OVERHANG_NOTCH. Eaves and verges - also those of a
@@ -754,7 +808,7 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
     eaves = []
     for face, e, d0, *zf in roof.faces(ov + 0.05):
         zfun = zf[0] if zf else roof.z                       # MultiRoof: the face's own plane (steps between parts)
-        for g in _polys(exp.intersection(face)):
+        for g in _clean(exp.intersection(face)):
             T = _tris(g)
             if not len(T):
                 continue
@@ -775,7 +829,7 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
                 if (abs(za - zb) < 0.01 and np.hypot(*(b - a)) > 1.5 and float(roof.eave_dist(0.5 * (a + b))) < 0.1 and
                         abs(float((b - a) @ e)) > 0.9 * np.hypot(*(b - a))):
                     eaves.append((a, b, za + T_TOP))
-            for sg in _polys(g.difference(poly)):                    # soffit under the overhang, facing down
+            for sg in _clean(g.difference(poly)):                    # soffit under the overhang, facing down
                 S = _tris(sg)
                 if len(S):
                     sxy = S[:, [0, 2, 1]].reshape(-1, 2)

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -12,7 +14,7 @@ namespace Game.Editor.VisualQA
     /// </summary>
     public static class SceneStats
     {
-        public static string Estimate(Camera cam, float shadowDistance, int cascades, string id)
+        public static string Estimate(Camera cam, float shadowDistance, int cascades, string id, string detailPath = null)
         {
             var planes = GeometryUtility.CalculateFrustumPlanes(cam);
             var selected = new HashSet<Renderer>();
@@ -33,6 +35,7 @@ namespace Game.Editor.VisualQA
                     break;
                 }
             }
+            var details = string.IsNullOrEmpty(detailPath) ? null : new StringBuilder("camera\trenderer_path\tmesh\tsubmesh\tmaterial\tshader\ttriangles\tdraws\n");
             int draws = 0, shadowDraws = 0, objects = 0;
             long tris = 0;
             foreach (var r in Object.FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))
@@ -52,11 +55,40 @@ namespace Game.Editor.VisualQA
                 {
                     objects++;
                     draws += m.subMeshCount;
-                    for (int s = 0; s < m.subMeshCount; s++) tris += (long)m.GetIndexCount(s) / 3;
+                    var materials = details != null ? r.sharedMaterials : null;
+                    for (int s = 0; s < m.subMeshCount; s++)
+                    {
+                        long count = (long)m.GetIndexCount(s) / 3;
+                        tris += count;
+                        if (details != null)
+                        {
+                            var material = s < materials.Length ? materials[s] : null;
+                            details.Append(Clean(id)).Append('\t').Append(Clean(PathOf(r.transform))).Append('\t')
+                                .Append(Clean(m.name)).Append('\t').Append(s).Append('\t')
+                                .Append(Clean(material != null ? material.name : "<missing>" )).Append('\t')
+                                .Append(Clean(material != null && material.shader != null ? material.shader.name : "<missing>"))
+                                .Append('\t').Append(count).Append("\t1\n");
+                        }
+                    }
                 }
                 if (r.shadowCastingMode != ShadowCastingMode.Off && dist < shadowDistance) shadowDraws += m.subMeshCount * Mathf.Max(1, cascades);
             }
+            if (details != null)
+            {
+                string path = Path.GetFullPath(detailPath);
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                File.WriteAllText(path, details.ToString());
+            }
             return $"{id}: objects={objects} drawsEst={draws} shadowDrawsEst={shadowDraws} trisK={tris / 1000} trisExact={tris} (estimate, before SRP batching)";
+        }
+
+        static string Clean(string value) => (value ?? "").Replace('\t', ' ').Replace('\r', ' ').Replace('\n', ' ');
+
+        static string PathOf(Transform tr)
+        {
+            string path = tr.name;
+            while (tr.parent != null) { tr = tr.parent; path = tr.name + "/" + path; }
+            return path;
         }
     }
 }

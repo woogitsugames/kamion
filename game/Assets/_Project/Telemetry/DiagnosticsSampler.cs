@@ -110,7 +110,9 @@ namespace Game.Telemetry
         bool m_SkipFirstFrame = true;
 
         StreamWriter m_Csv;
-        readonly StringBuilder m_Sb = new StringBuilder(64 * 1024);
+        // ADR 0244: one reused row buffer (written in chunks), replaces the 64 K-char StringBuilder.
+        readonly char[] m_CsvChars = new char[CsvChunkRows * FrameCsvFormat.MaxRowChars];
+        const int CsvChunkRows = 128;
         string m_SummaryPath;
         readonly DiagnosticsSummaryJson m_Json = new DiagnosticsSummaryJson();
 
@@ -183,7 +185,7 @@ namespace Game.Telemetry
                 OutputDirectory = Path.Combine(Application.persistentDataPath, "diag");
                 Directory.CreateDirectory(OutputDirectory);
                 m_Csv = new StreamWriter(Path.Combine(OutputDirectory, "frametimes.csv"), false, new UTF8Encoding(false));
-                m_Csv.WriteLine("frame,t_s,frame_ms,cpu_main_ms,gpu_ms,render_scale,mirror_n,ab");   // ADR 0068: mirror renders, A/B state
+                m_Csv.WriteLine(FrameCsvFormat.Header);   // ADR 0068: mirror renders, A/B state
                 m_SummaryPath = Path.Combine(OutputDirectory, "summary.json");
             }
             catch (Exception e)
@@ -267,19 +269,17 @@ namespace Game.Telemetry
         void FlushCsv()
         {
             if (m_Csv == null || m_PendingCount == 0) { m_PendingCount = 0; return; }
-            var ci = CultureInfo.InvariantCulture;
-            m_Sb.Clear();
+            // ADR 0244: char buffer instead of float.ToString / StringBuilder.Append(long) (~6 strings per frame before),
+            // and the mirror_n / ab columns the header announces (ADR 0068) are now written.
+            int pos = 0;
             for (int i = 0; i < m_PendingCount; i++)
             {
-                m_Sb.Append(m_PendingFrame[i]).Append(',')
-                    .Append(m_PendingTime[i].ToString("F4", ci)).Append(',')
-                    .Append(m_PendingMs[i].ToString("F3", ci)).Append(',')
-                    .Append(m_PendingCpu[i].ToString("F3", ci)).Append(',')
-                    .Append(m_PendingGpu[i].ToString("F3", ci)).Append(',')
-                    .Append(m_PendingScale[i].ToString("F2", ci)).Append('\n');
+                if (pos > m_CsvChars.Length - FrameCsvFormat.MaxRowChars) { m_Csv.Write(m_CsvChars, 0, pos); pos = 0; }
+                pos = FrameCsvFormat.AppendRow(m_CsvChars, pos, m_PendingFrame[i], m_PendingTime[i], m_PendingMs[i],
+                    m_PendingCpu[i], m_PendingGpu[i], m_PendingScale[i], m_PendingMirrors[i], m_PendingAb[i]);
             }
             m_PendingCount = 0;
-            m_Csv.Write(m_Sb);
+            if (pos > 0) m_Csv.Write(m_CsvChars, 0, pos);
             m_Csv.Flush();
         }
 

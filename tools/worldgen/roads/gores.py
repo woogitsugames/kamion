@@ -29,6 +29,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 import shapely
+import shapely.ops  # noqa: F401  (_MeshSurface.z: nearest_points; was imported only as a side effect of other modules)
 from shapely.geometry import Point, Polygon
 
 from . import standards as S

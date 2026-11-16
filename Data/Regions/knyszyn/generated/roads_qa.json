@@ -628,7 +628,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.05,
+   "axis_smoothing_dev_max_m": 0.0,
    "bridge_m": 0.0,
    "grade_limit": 0.08,
    "highway": [
@@ -638,12 +638,12 @@
    "lanes": [
     2
    ],
-   "length_m": 61.7,
+   "length_m": 29.7,
    "max_grade": 0.0159,
    "overrides": [
     "dk65-carriageway-width"
    ],
-   "profile_rms_vs_nmt_m": 0.005,
+   "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
     7.5
@@ -686,7 +686,7 @@
    "lanes": [
     2
    ],
-   "length_m": 386.2,
+   "length_m": 359.2,
    "max_grade": 0.0273,
    "overrides": [
     "dk65-obozowa-south-unlit-0216"
@@ -1155,7 +1155,9 @@
    ],
    "length_m": 98.6,
    "max_grade": 0.0357,
-   "overrides": [],
+   "overrides": [
+    "market-interior-service-paving-0227"
+   ],
    "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1201,7 +1203,9 @@
    ],
    "length_m": 41.7,
    "max_grade": 0.0199,
-   "overrides": [],
+   "overrides": [
+    "market-crossing-service-paving-0227"
+   ],
    "profile_rms_vs_nmt_m": 0.002,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -3042,6 +3046,69 @@
    "S": 5.0,
    "Z": 4.5
   },
+  "compact_roundabouts": [
+   {
+    "apron_lip_m": 0.04,
+    "apron_m": 3.2,
+    "built": true,
+    "center_en": [
+     -987.29,
+     -610.73
+    ],
+    "crossings": [
+     {
+      "arm": "c:w1478765548:13432353453-3047667183",
+      "near_edge_from_ring_m": 5.0,
+      "stripes": 8
+     },
+     {
+      "arm": "c:w286990127:1134813637-4898926854",
+      "near_edge_from_ring_m": 5.0,
+      "stripes": 6
+     },
+     {
+      "arm": "c:w1464342641:3047667218-13114267776",
+      "near_edge_from_ring_m": 5.0,
+      "stripes": 6
+     },
+     {
+      "arm": "c:w232511646:3047667219-1134814357",
+      "near_edge_from_ring_m": 5.0,
+      "stripes": 6
+     }
+    ],
+    "feeders": 8,
+    "id": "cr:n13115969575",
+    "island_r_m": 2.95,
+    "mode": "kerbs",
+    "notes": [],
+    "outline_m2": 1727.1,
+    "p13_entries": 4,
+    "r_axis_m": 8.65,
+    "r_outer_m": 11.15,
+    "ring_asphalt_m": 5.0,
+    "ring_chains": 8,
+    "splitter_len_m": [
+     4.5,
+     7.3,
+     4.6,
+     4.5,
+     26.2,
+     4.5,
+     20.2
+    ],
+    "splitter_m2": [
+     10.6,
+     11.9,
+     10.3,
+     10.2,
+     52.8,
+     10.6,
+     40.2
+    ],
+    "splitters": 7
+   }
+  ],
   "crossings_in_junction": [
    3047587472,
    3047596475,
@@ -3075,14 +3142,14 @@
   "crossings_skipped": [
    11514832007
   ],
-  "crossings_snapped": 36,
+  "crossings_snapped": 34,
   "decals": {
    "gullies": 740,
    "oil": 101,
-   "patches": 256
+   "patches": 255
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 431826,
+  "footprint_nodes": 432925,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3289,31 +3356,52 @@
    ],
    "islands": [
     {
-     "area_m2": 33.7,
+     "area_m2": 10.6,
      "built": true,
-     "id": "cr:n13115969575:splitter:n13432353453",
-     "note": "z 121.73",
+     "id": "cr:n13115969575:splitter:n13432353453:a",
+     "note": "z 121.86",
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 20.5,
+     "area_m2": 11.9,
      "built": true,
-     "id": "cr:n13115969575:splitter:n3047667218",
+     "id": "cr:n13115969575:splitter:n13432353453:b",
+     "note": "z 121.57",
+     "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 10.3,
+     "built": true,
+     "id": "cr:n13115969575:splitter:n3047667218:a",
      "note": "z 122.32",
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 8.6,
+     "area_m2": 10.2,
      "built": true,
-     "id": "cr:n13115969575:splitter:n3047667219",
-     "note": "z 122.35",
+     "id": "cr:n13115969575:splitter:n3047667219s:a",
+     "note": "z 122.30",
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 13.0,
+     "area_m2": 52.8,
      "built": true,
-     "id": "cr:n13115969575:splitter:n4898926854",
-     "note": "z 121.91",
+     "id": "cr:n13115969575:splitter:n3047667219s:b",
+     "note": "z 122.55",
+     "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 10.6,
+     "built": true,
+     "id": "cr:n13115969575:splitter:n4898926854s:a",
+     "note": "z 121.93",
+     "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 40.2,
+     "built": true,
+     "id": "cr:n13115969575:splitter:n4898926854s:b",
+     "note": "z 121.63",
      "surface": "sidewalk_paving"
     }
    ],
@@ -3357,15 +3445,29 @@
   "markings": {
    "P-1 centre line": 35,
    "P-1 lane line": 1,
-   "P-10 crossing": 35,
+   "P-10 at compact roundabout": 4,
+   "P-10 crossing": 33,
    "P-10 crossing in junction": 26,
-   "P-13": 17,
+   "P-13": 13,
+   "P-13 at compact roundabout": 4,
    "P-7b edge line": 6
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 119,
   "overrides_applied": [
+   {
+    "id": "knyszyn-roundabout-dk65-split-s",
+    "targets": [
+     "n4898926854"
+    ]
+   },
+   {
+    "id": "knyszyn-roundabout-dk65-split-n",
+    "targets": [
+     "n3047667219"
+    ]
+   },
    {
     "id": "knyszyn-roundabout-truck-apron",
     "targets": [
@@ -3423,6 +3525,18 @@
      "w286990127:1134813637-4898926854",
      "w286990127:2906549567-1134813637"
     ]
+   },
+   {
+    "id": "market-interior-service-paving-0227",
+    "targets": [
+     "w498482913:4898870294-4898870293"
+    ]
+   },
+   {
+    "id": "market-crossing-service-paving-0227",
+    "targets": [
+     "w498483028:4898906615-4898870293"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -3450,7 +3564,7 @@
   },
   "verge_strips": {
    "chunks": 39,
-   "tris": 28845
+   "tris": 28969
   },
   "walled_ramps": []
  }

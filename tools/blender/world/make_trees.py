@@ -31,11 +31,21 @@ sys.path.insert(0, str(REPO / "tools/worldgen"))
 from streetscape.foliage_policy import crown_opening, leaf_lod_indices
 VEG = REPO / "art-source" / "world" / "vegetation"
 ARGV = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+STUDY_OPTIONS = ("--park-linden-study", "--park-linden-study-r2", "--park-linden-study-r3")
+if any(option in ARGV for option in STUDY_OPTIONS):
+    if sum(option in ARGV for option in STUDY_OPTIONS) != 1:
+        raise ValueError("choose one park linden study")
+    if "--out" not in ARGV or ARGV.index("--out")+1 >= len(ARGV):
+        raise ValueError("--park-linden-study requires --out under this worktree's artifacts")
+    study_dir = Path(ARGV[ARGV.index("--out")+1]).resolve()
+    if not study_dir.is_relative_to((REPO / "artifacts").resolve()):
+        raise ValueError("--park-linden-study output must be under artifacts")
 if "--out" in ARGV:
     VEG = Path(ARGV[ARGV.index("--out") + 1]).resolve()
 VEG.mkdir(parents=True, exist_ok=True)
 HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "shrub": 2.8,
-        "spruce": 21.0, "pineyoung": 5.0, "birchyoung": 6.0, "floor": 0.7}
+        "spruce": 21.0, "pineyoung": 5.0, "birchyoung": 6.0, "floor": 0.7,
+        "willow": 13.5}  # 0227 prototype: all dimensions WORKING_VALUE, no measured willow height
 # ADR 0187 (forest wall): species of a Podlasie pine / spruce stand that the first six could not stand in for.
 #   spruce      Norway spruce (Picea abies): variants 0, 1 = stand form (live crown from ~0.36-0.46 H, dead stubs
 #               below), variant 2 = open-grown / young form with boughs to the ground (understorey, stand edge).
@@ -50,7 +60,7 @@ NEW_SPECIES = ("spruce", "pineyoung", "birchyoung", "floor")
 # Variants: one per young species (a thicket is uniform; yaw and height vary per instance) - every variant costs the
 # Low tier up to three instanced draws (LOD1 bark + foliage, impostor). Build 1 with 2 + 2 young variants raised the
 # instanced draws of the forest cameras by 8-30 (artifacts/forest-0187/compare1-dojlidy-Low.tsv).
-NVAR = {"spruce": 3, "pineyoung": 1, "birchyoung": 1, "floor": 2}       # others: 3
+NVAR = {"spruce": 3, "pineyoung": 1, "birchyoung": 1, "floor": 2, "willow": 1}  # others: 3
 IMP_SCALE = {"pineyoung": 0.5}    # impostor views of the pine thicket at half resolution (a filled cone; the airy
 # young birch at half resolution left the trim polygon of ImpostorTrim over 60 % of the frame)
 NO_IMPOSTOR = ("floor",)
@@ -133,12 +143,313 @@ def bend_path(p0, d, L, n, rng, wobble, gravity=0.0):
     return pts
 
 
+def willow_leaf_tile(size, seed):
+    """One original twig study. No photo input; proportions WORKING_VALUE."""
+    rng=np.random.default_rng(seed)
+    yy,xx=np.mgrid[0:size,0:size].astype(float)
+    x=(xx+.5)/size; y=(yy+.5)/size
+    alpha=np.zeros((size,size),float)
+    # Fine central twig; varying curvature changes the silhouette of each tile.
+    stem_x=.5+rng.uniform(.015,.040)*np.sin(y*math.pi*rng.uniform(1.2,2.0))
+    stem=np.clip((.004-np.abs(x-stem_x))*size+.5,0.,1.)
+    alpha=np.maximum(alpha,stem*((y>.08)&(y<.92)))
+    count=int(rng.integers(11,15))
+    for i in range(count):
+        cy=.13+i*(.74/(count-1))+rng.uniform(-.012,.012)
+        for sign in (-1.,1.):
+            if rng.random()<.08:  # natural gaps, not a solid row on every twig
+                continue
+            cx=.5+sign*rng.uniform(.065,.14)
+            slope=sign*rng.uniform(.25,.60)
+            dx=x-cx; dy=y-cy-slope*dx
+            radius=np.sqrt((dx/rng.uniform(.07,.13))**2+(dy/rng.uniform(.023,.035))**2)
+            alpha=np.maximum(alpha,np.clip((1.-radius)*size*.025+.5,0.,1.))
+    tint=np.clip(1.+rng.normal(0.,.025,(size,size,1)),.92,1.08)
+    rgb=np.clip(np.array([79.,101.,57.])[None,None,:]*tint,0,255).astype(np.uint8)
+    return np.dstack((rgb,np.rint(alpha*255).astype(np.uint8)))
+
+
+def willow_leaf_atlas(size=512, seed=22027):
+    """Original four-variant twig atlas, RGBA uint8 (one shared material).
+
+    Procedurally drawn from mathematical ellipses; no photo/scan input. The
+    shape and colour are WORKING_VALUE, not a botanical or albedo measurement.
+    Transparent margins reduce mip bleed and permit gaps between hanging twigs.
+    """
+    if int(size) < 128 or int(size)%2:
+        raise ValueError("willow atlas size must be even and at least 128")
+    size=int(size)
+    cell=size//2
+    rgba=np.empty((size,size,4),dtype=np.uint8)
+    for i in range(4):
+        row,col=divmod(i,2)
+        rgba[row*cell:(row+1)*cell,col*cell:(col+1)*cell]=willow_leaf_tile(cell,seed+7919*i)
+    return rgba
+
+
+def willow_card_uv(variant, mirror=False):
+    """One quarter of the shared atlas; transparent tile margins prevent bleed."""
+    row,col=divmod(int(variant)%4,2)
+    u0,u1=col*.5,(col+1)*.5
+    v0,v1=row*.5,(row+1)*.5
+    return ((u1,v1),(u0,v1),(u0,v0),(u1,v0)) if mirror else ((u0,v1),(u1,v1),(u1,v0),(u0,v0))
+
+
+def write_willow_leaf_atlas(path):
+    """Write only during an explicitly requested willow bake, never on import."""
+    pixels=willow_leaf_atlas()
+    h,w=pixels.shape[:2]
+    im=bpy.data.images.new("leaves_willow_generated",width=w,height=h,alpha=True)
+    try:
+        im.pixels.foreach_set((pixels.astype(np.float32)/255.).ravel())
+        im.filepath_raw=str(path)
+        im.file_format="PNG"
+        im.save()
+    finally:
+        bpy.data.images.remove(im)
+
+
+def park_linden_blueprint(height, variant=0):
+    """Experimental 0227 park linden; all dimensions WORKING_VALUE.
+
+    Deterministic original geometry; no reference-photo pixels. Returns one
+    candidate list shared verbatim by the High and Low foliage selections.
+    """
+    H=float(height)
+    if not math.isfinite(H) or H <= 0:
+        raise ValueError("linden height must be positive and finite")
+    rng=random.Random(227130+int(variant))
+    trunk=[np.array(x,float)*H for x in ((0,0,-.02),(.008,-.008,.28),(.014,.005,.60),(.008,.012,.91))]
+    limbs=[]; cards=[]
+    for i in range(12):
+        az=2*math.pi*(i/12)+rng.uniform(-.20,.20)
+        out=np.array([math.cos(az),math.sin(az),0.]); side=np.array([-out[1],out[0],0.])
+        level=.30+.48*((i+.5)/12)
+        root=np.array([.008*H,0.,level*H])
+        profile=max(.42,math.sin(math.pi*(.16+.76*(i+.5)/12))**.65)
+        tip=root+out*(H*.32*profile*rng.uniform(.90,1.12))+np.array([0.,0.,H*rng.uniform(.11,.20)])
+        mid=(root+tip)*.5+side*H*rng.uniform(-.025,.025)+np.array([0.,0.,.025*H])
+        limbs.append((root,mid,tip))
+        for j in range(32):
+            t=.12+.86*(j+rng.uniform(.1,.9))/32
+            point=root*(1-t)**2+2*mid*t*(1-t)+tip*t*t
+            point+=side*H*rng.uniform(-.09,.09)+np.array([0.,0.,H*rng.uniform(-.055,.07)])
+            normal=np.array([rng.uniform(-1,1),rng.uniform(-1,1),rng.uniform(-.7,1.0)])
+            if np.linalg.norm(normal)<.1: normal=np.array([1.,0.,.5])
+            size=H*rng.uniform(.065,.105)
+            cards.append((point,normal,size))
+    return trunk,limbs,cards
+
+
+def grow_park_linden(g, height, variant, lod):
+    """Separate opt-in study: LOD1 uses exact centres, orientations and sizes from LOD0."""
+    trunk,limbs,cards=park_linden_blueprint(height,variant)
+    V=lambda p: Vector(tuple(float(x) for x in p))
+    g.crown_height=0
+    g.tube("bark_linden",[V(p) for p in trunk],[.27,.21,.12,.025],seg=8 if lod==0 else 5)
+    for root,mid,tip in limbs:
+        g.tube("bark_linden",[V(root),V(mid),V(tip)],[.10,.06,.012],seg=5 if lod==0 else 3)
+    indices=range(len(cards)) if lod==0 else leaf_lod_indices(len(cards),227130+variant,share=.45)
+    crown=V((0.,0.,height*.64)); up=V((0.,0.,1.))
+    for i in indices:
+        point,normal,size=cards[int(i)]
+        g.card("leaves_linden",V(point),V(normal),up,size,crown)
+    return g
+
+
+def park_linden_blueprint_r2(height, variant=0):
+    """WORKING_VALUE: fuller ellipsoidal crown; regular coverage still needs visual QA."""
+    H=float(height)
+    if not math.isfinite(H) or H <= 0:
+        raise ValueError("linden height must be positive and finite")
+    rng=random.Random(227230+int(variant))
+    trunk=[np.array(x,float)*H for x in ((0,0,-.02),(.008,-.008,.22),(.014,.005,.55),(.008,.012,.91))]
+    limbs=[]; cards=[]
+    for sector in range(12):
+        az=2*math.pi*(sector+.5)/12+rng.uniform(-.08,.08)
+        out=np.array([math.cos(az),math.sin(az),0.])
+        root=np.array([0.,0.,H*(.24+.22*(sector%4)/3)])
+        tip=root+out*(H*rng.uniform(.26,.34))+np.array([0.,0.,H*rng.uniform(.30,.42)])
+        mid=(root+tip)*.5+np.array([0.,0.,.05*H])
+        limbs.append((root,mid,tip))
+        for band in range(6):
+            for i in range(8):
+                a=2*math.pi*(sector+rng.uniform(.08,.92))/12
+                f=(band+rng.uniform(.15,.85))/6
+                zf=.25+.69*f
+                profile=max(.35,math.sqrt(max(0.,1-((zf-.60)/.39)**2)))
+                radius=H*.35*profile*rng.uniform(.25,1.)
+                point=np.array([math.cos(a)*radius,math.sin(a)*radius,zf*H])
+                normal=np.array([rng.uniform(-1,1),rng.uniform(-1,1),rng.uniform(-.7,1.)])
+                if np.linalg.norm(normal)<.1: normal=np.array([1.,0.,.5])
+                cards.append((point,normal,H*rng.uniform(.085,.125)))
+    return trunk,limbs,cards
+
+
+def grow_park_linden_r2(g, height, variant, lod):
+    """LOD1 retains half the exact cards in every sector and height band."""
+    trunk,limbs,cards=park_linden_blueprint_r2(height,variant)
+    V=lambda p: Vector(tuple(float(x) for x in p))
+    g.crown_height=0
+    g.tube("bark_linden",[V(p) for p in trunk],[.27,.21,.12,.025],seg=8 if lod==0 else 5)
+    for root,mid,tip in limbs:
+        g.tube("bark_linden",[V(root),V(mid),V(tip)],[.10,.06,.012],seg=5 if lod==0 else 3)
+    crown=V((0.,0.,height*.60)); up=V((0.,0.,1.))
+    for i,(point,normal,size) in enumerate(cards):
+        if lod and i%2: continue
+        g.card("leaves_linden",V(point),V(normal),up,size,crown)
+    return g
+
+
+def park_linden_blueprint_r3(height, variant=0):
+    """WORKING_VALUE: vary contour of r2 while retaining shared LOD candidates."""
+    trunk,limbs,cards=park_linden_blueprint_r2(height,variant)
+    result=[]
+    for i,(point,normal,size) in enumerate(cards):
+        sector=i//48
+        az=2*math.pi*(sector+.5)/12
+        p=point.copy()
+        # Continuous azimuthal differences avoid the r2 flat crown skirt and top.
+        p[2]+=height*(.045*math.sin(az+.6)+.025*math.sin(3*az+.2))
+        zf=p[2]/height
+        taper=1.0-.38*max(0.,(zf-.73)/.30)
+        p[:2]*=max(.60,taper)*(1.+.08*math.sin(2*az+.5))
+        p[2]=min(height*.99,max(height*.18,p[2]))
+        result.append((p,normal,size))
+    return trunk,limbs,result
+
+
+def grow_park_linden_r3(g, height, variant, lod):
+    """LOD1 retains six of eight exact candidates in every sector and band."""
+    trunk,limbs,cards=park_linden_blueprint_r3(height,variant)
+    V=lambda p: Vector(tuple(float(x) for x in p))
+    g.crown_height=0
+    g.tube("bark_linden",[V(p) for p in trunk],[.27,.21,.12,.025],seg=8 if lod==0 else 5)
+    for root,mid,tip in limbs:
+        g.tube("bark_linden",[V(root),V(mid),V(tip)],[.10,.06,.012],seg=5 if lod==0 else 3)
+    crown=V((0.,0.,height*.60)); up=V((0.,0.,1.))
+    for i,(point,normal,size) in enumerate(cards):
+        if lod and i%8 in (2,6): continue
+        g.card("leaves_linden",V(point),V(normal),up,size,crown)
+    return g
+
+
+def willow_blueprint(height, variant=0):
+    """Deterministic 0227 weeping-willow study; all proportions WORKING_VALUE.
+
+    This is procedural original geometry, not a scan. The orchard silhouette,
+    branch count and heights are not species survey data. Both LODs use these
+    exact positions; this helper deliberately has no Blender dependencies.
+    """
+    H = float(height)
+    if not math.isfinite(H) or H <= 0:
+        raise ValueError("willow height must be positive and finite")
+    rng = random.Random(220270 + int(variant))
+    trunk = [np.array(p, float)*H for p in
+             ((0., 0., -.02), (.006, -.004, .24), (.015, .006, .68), (.004, .010, .82))]
+    limbs, strands = [], []
+    for i in range(12):
+        angle = 2*math.pi*(i/12.) + rng.uniform(-.17, .17)
+        radial = np.array([math.cos(angle), math.sin(angle), 0.])
+        side = np.array([-math.sin(angle), math.cos(angle), 0.])
+        root = trunk[1]*(1.-i/12.) + trunk[2]*(i/12.)
+        root = root + np.array([0., 0., H*rng.uniform(-.035,.045)])
+        span = H*rng.uniform(.35,.48)
+        tip = root + radial*span + np.array([0.,0.,H*rng.uniform(.24,.36)])
+        bend = (root+tip)*.5 + side*(H*rng.uniform(-.025,.025)) + np.array([0.,0.,H*.08])
+        limbs.append((root,bend,tip))
+        for j in range(10):
+            # Cover the whole arch of the limb; clustered endpoints alone make
+            # disconnected upright columns rather than a broad drooping crown.
+            f = .06 + .92*(j+rng.uniform(.15,.85))/10.
+            p = root*(1.-f)**2+2.*bend*f*(1.-f)+tip*f*f
+            p = p + side*(H*rng.uniform(-.025,.025))
+            drop = H*rng.uniform(.25,.52)
+            end = p + radial*(H*rng.uniform(.01,.16)) + side*(H*rng.uniform(-.10,.10))
+            # A shared hard clamp created a flat hem (30/120 identical ends).
+            end[2] = max(H*rng.uniform(.09,.20),p[2]-drop)
+            middle = (p+end)*.5 + radial*(H*rng.uniform(.01,.045)) + side*(H*rng.uniform(-.035,.035))
+            width = H*rng.uniform(.035,.105)
+            strands.append((p,middle,end,side,radial,width))
+    return trunk, limbs, strands
+
+
+def grow_willow(g, height, variant, lod):
+    """Experimental weeping silhouette using only existing, licensed project assets.
+
+    Uses existing project linden bark as a temporary stand-in and an original
+    procedural twig atlas. No owner photo pixels are used. Proportions, leaf
+    shape and total cost are WORKING_VALUE and need visual / budget QA.
+    """
+    trunk, limbs, strands = willow_blueprint(height, variant)
+    V = lambda p: Vector(tuple(float(x) for x in p))
+    g.tube("bark_linden", [V(p) for p in trunk], [.25,.21,.12,.035], seg=7 if lod == 0 else 5)
+    for root, bend, tip in limbs:
+        g.tube("bark_linden", [V(root),V(bend),V(tip)], [.105,.065,.018], seg=5 if lod == 0 else 3)
+    for index,(root,bend,tip) in enumerate(limbs):
+        if lod > 0 and index % 2 != 0:
+            continue
+        # Leafy, inclined branch groups join the upper crown. They follow real
+        # structural limbs rather than filling the silhouette with a solid ball.
+        horizontal=tip-root; horizontal[2]=0.
+        hnorm=float(np.linalg.norm(horizontal))
+        if hnorm < 1e-8:
+            continue
+        radial=horizontal/hnorm
+        side=np.array([-radial[1],radial[0],0.])
+        for band,(a,b) in enumerate(((root,bend),(bend,tip))):
+            for plane,across in enumerate((side,(side+np.array([0.,0.,.5]))/(1.25**.5))):
+                delta=across*(height*.055)
+                normal=np.cross(across,b-a)
+                norm=float(np.linalg.norm(normal))
+                if norm < 1e-8:
+                    continue
+                normal=normal/norm
+                g.quad("leaves_willow",V(a-delta),V(a+delta),V(b+delta),V(b-delta),
+                       willow_card_uv(index*7+band*3+plane,mirror=(index+plane)%2==1),V(normal))
+    for index,(top,middle,end,side,radial,width) in enumerate(strands):
+        # LOD1 selects the same strand positions; no unrelated random redraw.
+        if lod > 0 and index % 2 != 0:
+            continue
+        angle=(((index*37)%101)/100.-.5)*.9
+        h1=side*math.cos(angle)+radial*math.sin(angle)
+        h2=side*math.cos(angle+1.05)+radial*math.sin(angle+1.05)
+        for band,(a,b) in enumerate(((top,middle),(middle,end))):
+            # Two crossed, vertically hanging cards; gaps between strands remain.
+            for plane,horizontal in enumerate((h1,h2)):
+                # Taper segments asymmetrically rather than repeating rectangles.
+                a_width=width*(.48 if band==0 else .39)
+                b_width=width*(.39 if band==0 else .25)
+                da,db=horizontal*a_width,horizontal*b_width
+                normal=np.cross(horizontal,b-a)
+                norm=float(np.linalg.norm(normal))
+                if norm < 1e-8:
+                    continue
+                normal=normal/norm
+                g.quad("leaves_willow", V(a-da),V(a+da),V(b+db),V(b-db),
+                       willow_card_uv(index*5+band*3+plane,mirror=(index+band+plane)%2==1),V(normal))
+    return g
+
+
+def willow_open_radius(argv):
+    """Opt-in A/B for willow only; leave existing trees' pack policy unchanged."""
+    if "--willow-open-radius" not in argv:
+        return 1
+    i=argv.index("--willow-open-radius")
+    if i+1>=len(argv) or argv[i+1] not in ("0","1"):
+        raise ValueError("--willow-open-radius requires 0 or 1")
+    return int(argv[i+1])
+
+
 def grow(species, variant, lod):
     rng = random.Random(hash((species, variant)) & 0xFFFF if False else (sum(map(ord, species)) * 31 + variant))
     H = HREF[species] * rng.uniform(0.92, 1.08)
     g = Geo()
     g.crown_height = H
     g.crown_phase = variant * 1.73 + sum(map(ord, species)) * .013
+    if species == "willow":
+        # Only requested explicitly by --include-willow or --quick tree_willow_0.
+        return grow_willow(g, H, variant, lod), H
     leaf = f"leaves_{species}"
     cards_keep = 1.0 if lod == 0 else (0.6 if species == "birch" else 0.33)
     csize_k = 1.0 if lod == 0 else (1.5 if species == "birch" else 1.6)
@@ -1074,6 +1385,29 @@ def bake_forest(mix, src, href, seed):
 
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
+    if any(option in ARGV for option in STUDY_OPTIONS):
+        # Isolated geometry-only prototype: no shared tree library or forest bake.
+        import shutil
+        source_dir = REPO / "art-source/world/vegetation"
+        for name in ("bark_linden.png", "leaves_linden.png"):
+            shutil.copyfile(source_dir / name, VEG / name)
+        version = 2 if "--park-linden-study-r3" in ARGV else 1 if "--park-linden-study-r2" in ARGV else 0
+        study_name = f"tree_linden_park_{version}"
+        study_file = ("tree_linden_park_study", "tree_linden_park_study_r2", "tree_linden_park_study_r3")[version]
+        study_grow = (grow_park_linden, grow_park_linden_r2, grow_park_linden_r3)[version]
+        models=[]; info={}
+        for lod in (0,1):
+            obj=to_object(study_name + (".lod1" if lod else ""), study_grow(Geo(),13.5,0,lod))
+            models.append(obj)
+            info[f"tris_lod{lod}"]=sum(len(p.vertices)-2 for p in obj.data.polygons)
+        for obj in bpy.context.scene.objects:
+            obj.select_set(obj in models)
+        bpy.ops.export_scene.gltf(filepath=str(VEG / (study_file + ".glb")),
+                                  export_format="GLB", use_selection=True, export_apply=False, export_yup=True)
+        (VEG / (study_file + ".json")).write_text(json.dumps(
+            {"status":"WORKING_VALUE; visual and budget QA OPEN", "href_m":13.5, **info},
+            indent=2)+"\n",encoding="utf-8")
+        return
     meta = {}
     objs = []
     src = {}
@@ -1084,7 +1418,16 @@ def main():
     if "--reuse-bakes" in argv and (VEG / "trees_meta.json").exists():
         cached = json.loads((VEG / "trees_meta.json").read_text(encoding="utf-8"))
     rebake = set(argv[argv.index("--rebake") + 1].split(",")) if "--rebake" in argv else set()   # species
-    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES:
+    # 0227: opt-in only so a routine rebuild of established vegetation is unchanged.
+    # The full opt-in export includes all existing species plus tree_willow_0 in
+    # trees.glb / trees_lod2.glb / trees_meta.json, with the normal impostor bake.
+    experimental = ("willow",) if "--include-willow" in argv or quick == "tree_willow_0" else ()
+    willow_open = willow_open_radius(argv) if experimental else 1
+    if experimental:
+        # This writes only the requested output directory and must not run during
+        # module import, on normal species-only exports, or while r2 is active.
+        write_willow_leaf_atlas(VEG / "leaves_willow.png")
+    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES + experimental:
         for v in range(NVAR.get(sp, 3)):
             name = f"tree_{sp}_{v}"
             if quick and name != quick:
@@ -1092,7 +1435,7 @@ def main():
             g0, H = grow(sp, v, 0)
             o0 = to_object(name, g0)
             g1, _ = grow(sp, v, 1)
-            if sp not in NEW_SPECIES:
+            if sp not in NEW_SPECIES and sp != "willow":
                 g1 = reuse_leaf_lod(g0, g1, sum(map(ord, sp)) * 31 + v)
             o1 = to_object(name + ".lod1", g1)
             o1.hide_render = True
@@ -1106,7 +1449,7 @@ def main():
             png = VEG / f"impostor_{name}.png"
             prior = cached.get("trees", {}).get(name)
             res = tuple(int(r * IMP_SCALE.get(sp, 1.0)) for r in IMP_RES)
-            if prior and png.exists() and (VEG / f"impostor_{name}_n.png").exists() and sp not in rebake:
+            if prior and png.exists() and (VEG / f"impostor_{name}_n.png").exists() and sp not in rebake and sp != "willow":
                 half_w = max(math.hypot(v[0], v[1]) for v in o0.bound_box)
                 S = max(H * 1.05, 2.0 * half_w * 1.04 * IMP_RES[1] / IMP_RES[0])
             else:
@@ -1115,8 +1458,9 @@ def main():
                 # leaving detached broad green islands. Keep connected pine twigs;
                 # still reject isolated specks. Non-pine and forest HLOD retain
                 # their established opening / component rules (far shimmer guard).
+                open_r = willow_open if sp == "willow" else (0 if sp in ("pine", "spruce", "pineyoung") else 1)
                 pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png",
-                     open_r=0 if sp in ("pine", "spruce", "pineyoung") else 1,
+                     open_r=open_r,
                      min_island=16 if sp in ("pine", "spruce", "pineyoung") else 0)
             o2 = impostor_object(name, H, png, S)
             o2.hide_render = True
@@ -1126,6 +1470,8 @@ def main():
                           "impostor_views": IMP_NF, "impostor_aspect": round(IMP_RES[0] / IMP_RES[1], 4),
                           "tris_lod0": sum(len(p.vertices) - 2 for p in o0.data.polygons),
                           "tris_lod1": sum(len(p.vertices) - 2 for p in o1.data.polygons), "tris_lod2": 2}
+            if sp == "willow":
+                meta[name]["experimental_open_radius"] = willow_open
     if quick:
         return
     href = {k: v["href_m"] for k, v in meta.items()}

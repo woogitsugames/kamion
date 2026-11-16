@@ -231,7 +231,7 @@ namespace Game.UI
 
             // ---- fixed footer: version on the left, close on the right
             float closeW = Mathf.Min(320f, (panelW - 2f * Pad) * 0.42f);
-            var ver = Label(panel, "Version", "Wersja: " + BuildInfo.Current.ShortLabel, 22, TextAnchor.MiddleLeft, k_Muted);
+            var ver = Label(panel, "Version", "Wersja: " + BuildInfo.Current.IdentityLabel, 22, TextAnchor.MiddleLeft, k_Muted);
             var vr = ver.rectTransform;
             vr.anchorMin = vr.anchorMax = vr.pivot = Vector2.zero;
             vr.anchoredPosition = new Vector2(Pad, 20f); vr.sizeDelta = new Vector2(panelW - 3f * Pad - closeW, 72f);

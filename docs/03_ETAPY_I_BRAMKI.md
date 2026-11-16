@@ -22,9 +22,12 @@ Zasady:
 
 ## Klasy sprzętu PC i budżety — **wszystko `WORKING_VALUE`** (D74, ADR 0266)
 
-Referencyjny PC **nie jest ustalony** (pytanie do właściciela). Maszyna dewelopera (RTX 5070) **nie jest referencją**:
-służy wyłącznie jako **maszyna pomiarowa** — wynik z niej jest informacyjny („jest zapas / nie ma zapasu”) i nie zalicza
-klasy „min” ani „zalecany”, dopóki właściciel nie wskaże sprzętu referencyjnego albo nie zaakceptuje zastępczej metody.
+Referencyjny PC **nie jest ustalony** (pytanie do właściciela). Maszyna dewelopera (RTX 5070) **nie jest referencją**,
+ale wg **D76** mierzy klasy „min” i „zalecany” **emulacją** (metoda zastępcza): 1920×1080 pełny ekran, tier Low / High,
+limit 30 / 60 FPS, VSync wyłączony (`tools/pcperf/budgets/pc-machines.json`, ADR 0266 „Uzupełnienie s23 (D76)”). Taki
+pomiar **zalicza bramkę z adnotacją „EMULACJA (D76)”**; inna konfiguracja na tej maszynie i klasa „wysoki” = wynik
+informacyjny. **Przed publiczną obietnicą wymagań sprzętowych** obowiązuje pomiar na prawdziwym słabszym sprzęcie
+(iGPU HD 630 / GTX 660 dla „min”, GTX 1660 dla „zalecany”) — emulacja nie odtwarza przepustowości słabszego GPU/CPU/RAM.
 
 Klasy **min** i **zalecany** = wymagania sprzętowe właściciela z **D74** (wzorowane na kartach Steam ETS2/ATS; Windows 10
 64-bit). Modele sprzętu to klasa wymagań, nie wyniki benchmarków. Klasa **wysoki** = propozycja ADR 0266 spoza D74.
@@ -55,7 +58,7 @@ Te same liczby jako dane (jedno źródło prawdy dla parsera): `tools/pcperf/bud
 Zmiana budżetu = zmiana tego pliku + wiersza w tabeli + wpis w ADR 0266 (lub nowy ADR), po decyzji właściciela.
 **Ryzyko (D74):** Intel HD 630 przy obecnym świecie — pomiar tieru Low na iGPU konieczny, zanim klasa „min” zostanie
 obiecana. Liczby z maszyny deweloperskiej (ADR 0261: RTX 5070, High, 1600×900, 360–445 fps głównie na postoju) są
-informacyjne i nie zastępują pomiaru klas min/zalecany.
+informacyjne i nie zastępują pomiaru klas min/zalecany (ani emulacji D76 w warunkach klasy, ani prawdziwego sprzętu).
 
 **🔒 Zabezpieczenie mobilne (odroczone, D73, zostaje):** budżety z `docs/PERFORMANCE_BUDGETS.md` (A16 Low/Medium 30 FPS,
 p95 ≤ 34 ms, p99 ≤ 40 ms, PSS ≤ 1,0–1,2 GB; S24+ High 60 FPS; świat: draw calls 250/350/800/1000, **trójkąty
@@ -78,6 +81,14 @@ przez puchnięcie danych bazowych.
   (`run.json: focusLost > 0`), VSync włączony przy pomiarze „bez limitu”, albo inna gra/renderowanie na tej samej maszynie.
 - Raport zawsze podaje: maszynę pomiarową (CPU/GPU/RAM z `run.json`), czy jest referencyjna, klasę budżetu, tier,
   rozdzielczość, limit FPS, VSync, długość okna i rozgrzewkę.
+- **Rodzaj pomiaru (D76):** parser porównuje `run.json` (GPU z `SystemInfo`, ekran, tier, limit FPS, VSync) z
+  `tools/pcperf/budgets/pc-machines.json` i wpisuje `measurement_kind`: `reference` (prawdziwy sprzęt klasy — lista
+  dziś pusta), `emulation` (RTX 5070 w warunkach klasy min/zalecany: 1920×1080 pełny ekran, Low/High, 30/60 FPS, VSync 0)
+  albo `informational` (z powodem). Bramkę zalicza `gate_eligible: true` = werdykt PASS i `reference` albo `emulation`;
+  raport emulacji ma adnotację „EMULACJA (D76) — nie zastępuje pomiaru na sprzęcie klasy X przed obietnicą wymagań”.
+  Komendy: `pwsh scripts/pc-metrics.ps1 -Exe <exe> -Scene knyszyn-w -Tier Low -Fps 30 -VSync 0 -Width 1920 -Height 1080 -Class min`
+  oraz to samo z `-Tier High -Fps 60 -Class zalecany`. Przed publiczną obietnicą wymagań — pomiar na prawdziwym sprzęcie
+  klasy (wpis `reference` w `pc-machines.json`).
 
 ---
 
@@ -105,7 +116,7 @@ A1 brief + referencje + wymiary → A2 **3 koncepcje sylwetki** (rendery kontrol
 Stan: **zaliczona 13.11.2026 na telefonie (D57, A16 Low)**. Na PC: pomiar kontrolny klasy „zalecany” + pakiet par zdjęcie|render z playera Windows (tier High), żeby sprawdzić, że wyższy tier nie wprowadza slopu (`docs/06`).
 
 ## Etap 4 — Pipeline świata na 2×2 km
-**Zakres:** `tools/worldgen` (Python) + importer Unity (`docs/05`): ingest z manifestem → graf dróg → przekroje i skrzyżowania → teren z NMT → budynki LoD1/LoD2 + fasady → roślinność (BDOT10k + modele drzew GUGiK) → oznakowanie z tagów → kolizje osobno → chunki → Addressables. Raport QA danych.
+**Zakres:** `tools/worldgen` (Python) + importer Unity (`docs/05`): ingest z manifestem → graf dróg → przekroje i skrzyżowania → teren z NMT → budynki LoD1/LoD2 + fasady → roślinność (BDOT10k + modele drzew GUGiK) → oznakowanie z tagów → kolizje osobno → chunki → sceny regionu (import glTFast, ADR 0011) → build z `-Regions` (`docs/10` §3; Addressables wycofane w s23). Raport QA danych.
 **Bramka:** regeneracja 2×2 km jedną komendą, ręczne poprawki przeżywają reimport, zestaw przejeżdża całość bez wpadnięcia pod teren, zero dziur w kolizjach, odchyłka osi drogi od źródła w zadanej tolerancji, raport `low_confidence`; **czas ładowania regionu w playerze Windows zmierzony** (`run.json: regionLoad`) i w budżecie klasy.
 
 ## Etap 5 — Vertical slice: strefa przemysłowa + wylot (2–3 km)
@@ -118,7 +129,7 @@ Stan: **zaliczona 13.11.2026 na telefonie (D57, A16 Low)**. Na PC: pomiar kontro
 
 ## Etap 7 — Obrzeża + pierwsza trasa skrócona + test DLC
 **Zakres:** miejscowości wokół Białegostoku 1:1, pierwszy odcinek trasy między miastami w skali skróconej (ADR skali po teście 2–3 wariantów współczynnika), strefy przejściowe miasto↔trasa, drugi region pack technicznie odrębny (dowód systemu DLC na PC: instalacja/usunięcie bez reinstalacji gry, granica regionów, zapis w usuniętym regionie → bezpieczny fallback).
-**Bramka:** przejazd Białystok → miejscowość obok przez granicę paczek bez przycięcia (0 klatek > 100 ms na granicy w `pc-metrics`); testy DLC z `docs/10` zielone. Kanał dystrybucji paczek na PC — decyzja właściciela (pytania w `docs/10` §3a).
+**Bramka:** przejazd Białystok → miejscowość obok przez granicę paczek bez przycięcia (0 klatek > 100 ms na granicy w `pc-metrics`); testy DLC z `docs/10` zielone. Kanał dystrybucji paczek na PC — decyzja właściciela (pytania w `docs/10` §3a). Uwaga s23: na PC paczki są odroczone (`docs/10` §3.5–3.6); dopóki właściciel nie wybierze wariantu C, „drugi region pack” = drugi zestaw regionów w buildzie + przejazd przez szew ze streamingiem (§3.3), a test instalacji/usunięcia paczki czeka na tę decyzję.
 
 ## Etap 8 — Polerowanie i testy zamknięte
 Profile jakości per klasa PC (strojenie High/Ultra, rozdzielczości, skalowanie rozdzielczości), test 30 min na każdej dostępnej klasie, pełne wsparcie kierownic (FFB, pedały, skrzynia H — D56), crash reporting, lokalizacja PL/EN, onboarding sterowania, instalator/paczka dystrybucyjna Windows (zip `scripts/package-windows.py`, itch.io najpierw, Steam po decyzji właściciela — ADR 0271, `docs/12`; `--release` zablokowany do zamknięcia R-P0-2; bez publikacji bez zgody). 🔒 Android: AAB + Play Asset Delivery, testy wewnętrzne w Play Console — dopiero w wersji mobilnej.

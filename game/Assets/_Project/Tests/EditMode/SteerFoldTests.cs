@@ -147,9 +147,9 @@ namespace Game.Tests
         [Test]
         public void Settings_Schema4_MigratesV3ToDrag_KeepsExplicitRotate_AppliesGesture()
         {
-            Assert.AreEqual(4, ControlSettings.CurrentSchema);
+            Assert.GreaterOrEqual(ControlSettings.CurrentSchema, 4);   // schema 5: ADR 0243 (Controls0243Tests)
             var v3 = ControlSettings.FromJson("{\"schema\":3,\"wheelRangeDeg\":450,\"speedSensitiveSteering\":false}");
-            Assert.AreEqual(4, v3.schema);
+            Assert.AreEqual(ControlSettings.CurrentSchema, v3.schema);
             Assert.IsTrue(v3.wheelDragGrab, "v3 save gets the drag gesture");
             Assert.AreEqual(450f, v3.wheelRangeDeg); Assert.IsFalse(v3.speedSensitiveSteering, "other choices kept");
             var v4 = ControlSettings.FromJson("{\"schema\":4,\"wheelDragGrab\":false}");

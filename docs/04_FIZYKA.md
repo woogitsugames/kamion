@@ -52,9 +52,9 @@ Każdy test: warunki (masa, nawierzchnia, nachylenie, prędkość), oczekiwana w
 2. Ruszanie z miejsca: pusty zestaw i 40 t, płasko i pod górę 6% — bez cofania się, realne obroty/sprzęgło.
 3. 0–60 i 0–80 km/h: pusty i 40 t — porównanie z danymi referencyjnymi.
 4. Prędkość maksymalna na płaskim (ogranicznik) i ustalona prędkość na podjeździe 5% z 40 t.
-5. Droga hamowania 80→0: sucho/mokro, pusty/40 t, z ABS i bez.
+5. Droga hamowania 80→0 (oraz 60→0 = punkt próby UN R13 typ-0 N3, i 50→0): sucho/mokro, pusty/40 t, z ABS i bez.
 6. Zjazd 6–8% z retarderem i hamulcem silnikowym — stabilizacja prędkości; długie hamowanie roboczym → spadek ciśnienia.
-7. Łuk o stałym promieniu przy kilku prędkościach — przechył, poślizg, granica przyczepności; wrażliwość na środek masy ładunku.
+7. Łuk o stałym promieniu przy kilku prędkościach — przechył, poślizg, granica przyczepności; wrażliwość na środek masy ładunku; pierścień skrętu 12,50/5,30 m (96/53/WE zał. I pkt 1.5, ADR 0280).
 8. Zmiana pasa / manewr ISO-like przy 60–80 km/h — stabilność naczepy.
 9. Jackknife: gwałtowne hamowanie w łuku na mokrym.
 10. Cofanie z naczepą pod rampę, ciasne manewry w strefie przemysłowej.
@@ -63,5 +63,46 @@ Każdy test: warunki (masa, nawierzchnia, nachylenie, prędkość), oczekiwana w
 13. Floating origin i streaming w trakcie jazdy — brak skoków sił i prędkości.
 14. Soak 30 min — brak dryfu energii, drgań, wzrostu błędu.
 15. Spójność kierunku sterowania we wszystkich trybach wejścia.
+
+### 6a. Liczby walidacji (runner .NET, gałąź `trailer-763-d79`, 2026-11-16; ADR 0280 §10)
+
+Wyniki z `dotnet run -c Release --project tools/physics-runner/Runner -- --out <katalog>`: **141 przebiegów, 833 kontrole,
+wszystkie PASS** (naczepa: sworzeń → środek tridemu 7,63 m, D79 z korektą; poprawiona relaksacja postoju, ADR 0280 §10.3). Do tego `dotnet test` 287/287. Solver to rdzeń gry w czystym .NET (dt 0,01 s, 4 podkroki), **bez Unity/PhysX i
+bez Windows playera**. Wartości oczekiwane i źródła są w JSON-ach `tests/physics/scenarios/*.json`; tu jest skrót.
+Status: S = SOURCED (punkt przepisu sprawdzony w tekście), D = DERIVED (wzór/ekstrapolacja), W = WORKING_VALUE.
+Masy: pusty zestaw 14,5 t / 40 t. Tam, gdzie są dwie liczby, pierwsza dotyczy pustego zestawu, druga 40 t.
+
+| §6 | Scenariusz | Wynik | Limit | Źródło / status |
+|---|---|---|---|---|
+| 1 | `park_12pct_down/up_comb` (300 s, hamulec postojowy ciągnika + naczepa przez zawór ręczny) | pełzanie 0,26 / 0,20 mm w dół, 0,21 / 0,06 mm w górę; naczepa 0,69 / 0,65 mm w dół, **0,69 / 0,29 mm** w górę (było 4,97 mm przed ADR 0280 §10.3) | ≤ 5 mm; ≤ 1 mm/s | S: UN R13 zał. 4 pkt 2.3.2 (12 %); „bez pełzania” W |
+| 1 | `park_flat_5min_comb`, `soak_30min_parked` | dryf 0,20 mm; KE ≤ 1,8e-5 J przez 30 min; dryf energii 0,62 J | ≤ 5 mm; ≤ 1e-3 J; ≤ 5 J | W |
+| 2 | `launch_6pct_uphill_comb` | cofnięcie 2,2 / 2,4 mm; 0–15 km/h 3,13 / 4,96 s; sprzęgło 29 / 37 °C | ≤ 5 cm; ≤ 250 °C | W |
+| 3 | `launch_0_80_flat` (solo), `launch_flat_comb` | 0–60: 9,69 / 13,77 / 28,04 s; 0–80: **14,06** / 21,19 / 47,59 s | 40 t: 25–60 / 40–95 s; pusty 0–80 ≥ 20 s | D (moc/masa + zmiany biegów); solo W |
+| 4 | `top_speed_flat_comb` | 89,38 / 89,17 km/h | ≤ 90,5; ustala 88–90 | S: ogranicznik 90 km/h (S3) |
+| 4 | `grade_5pct_steady` (40 t) | 49,76 km/h, zakres 0,05 km/h, ≥ 1464 rpm | 44–60 km/h | D ≈ 54 km/h |
+| 5 | **`brake_60_0_dry_abs_comb`** (silnik odłączony, N) | **23,13 / 24,08 m**; MFDD 7,23 / 6,86 m/s² | **s ≤ 36,7 m; dm ≥ 5,0 m/s²** | **S: UN R13 zał. 4 pkt 2.1.1, N3 typ-0 z odłączonym silnikiem: v = 60 km/h, s ≤ 0,15 v + v²/130, dm ≥ 5,0** (ADR 0280) |
+| 5 | `brake_80_0_dry_abs_comb` | 39,03 / 41,31 m; MFDD 7,48 / 6,88 | ≤ 61,2 m; 5,0–8,0 | D: ten sam wzór przy 80 km/h = **ekstrapolacja** |
+| 5 | `brake_50_0_dry_abs_comb` | 16,65 / 17,52 m; MFDD 6,71 / 6,59 | ≤ 26,7 m; 5,0–8,0 | D: ekstrapolacja przy 50 km/h |
+| 5 | `brake_80_0_dry` (solo) | 34,26 m; MFDD 7,72 | 32–55 m; MFDD ≥ 5,0 (D) | W |
+| 5 | `brake_80_0_wet_abs_comb` / bez ABS sucho i mokro (40 t) | 55,18 / 56,90 m; bez ABS 49,18 / 82,00 m | 45–95 m; 33–150 m | W (μ mokre ≈ 0,5) |
+| 5 | `brake_response_static` | przód 0,25 s, tył 0,31 s, naczepa 0,54 / 0,53 s | ≤ 0,6 s | S: R13 zał. 4 pkt 4.1.1 (metoda zał. 6 nieczytana) |
+| 6 | `downhill_7pct_typeIIA` (40 t, 6 km) | średnio 30,0 km/h, hamulec roboczy 0 | 25–35 km/h, bez roboczego | S: R13 zał. 4 pkt 1.8.2 |
+| 6 | `downhill_8pct_retarder_comb` (40 t) | 40,0 km/h, retarder 2192 N m | 35–45 km/h; ≤ 4000 N m | W / S2 |
+| 6 | `air_leak_rear_circuit` (pęknięcie przy 60 km/h, 40 t) | zatrzymanie 32,54 m | ≤ 52,4 m (z 40 km/h) | S: R13 zał. 4 pkt 2.4.1 (test gry trudniejszy) |
+| 7 | **`ring_96_53_comb`** (naczepa gry: sworzeń → środek tridemu **7,63 m**, D79 z korektą) | zewn. 12,486 / 12,482 m, **wewn. 5,309 / 5,312 m**, szerokość 7,177 / 7,170 m (przy 7,70 m: wewn. 5,228 / 5,230 FAIL) | zewn. ≤ 12,50; wewn. ≥ 5,30; zapas szerokości ≤ 7,18 (2 cm, W; było 7,15 przy 7,60) | **S: dyr. 96/53/WE zał. I pkt 1.5** (CELEX 01996L0053-20190814) + W — PASS (ADR 0280 §10.2) |
+| 7 | `circle_r50_10kmh_comb` | offtracking 0,598 / 0,593 m | 0,4–0,8 m | D: √(R²+e²) − √(R²+e²−L²) = 0,59 m (L = 7,63 m) |
+| 7 | `rollover_r50_cog_low/high` (40 t) | pierwsze oderwanie koła przy 0,459 g / 0,339 g | 0,25–0,55 g | W (literatura 0,3–0,45 g UNVERIFIED) |
+| 8 | `lane_change_80` | przegub 0,84 / 0,81°, RA 0,992 / 0,997, bez oderwania kół | RA 0,8–1,6; ≤ 6° | W |
+| 9 | `jackknife_wet_curve_noabs` / `_retarder_noabs` (pusty) | przegub **87,44°** / 92,65° | ≥ 30° (musi być możliwy) | W; stan przed ADR 0228 / PR #113 |
+| 9 | `jackknife_wet_curve_abs_50/_100` | 7,67 / 4,55° (pusty), 5,16 / 5,16° (40 t) | ≤ 10° | W |
+| 11 | `curb_15cm_left_comb` | Fz maks. 3,25 / 2,95 × statyczne, przechył naczepy 2,79 / 3,39° | ≤ 4×; ≤ 8° | W (kontakt analityczny) |
+| 11 | `kerb_step_27cm_42kmh_comb` (40 t, z koliderami, D58) | Fz 6,03×, oderwanie osi 0,39 s, zgniot zderzaka 0,036 m | 5,2–7,5×; ≤ 0,5 s; ≤ 0,05 m | W (ADR 0165) |
+| 12 | dt 50/60/100/120 Hz; podkroki 2/4/8 | maks. odchyłka 0,63 % (0–60 40 t); podkroki 0,56 % | ≤ 5 % | W |
+| 3/14 | powtarzalność (3 przebiegi, kurs 0/37/113°) | 0–60 9,688 s ×3, 0–80 14,055 s ×3 — 0,00 % | ≤ 3 % | §6.3 |
+| 14 | `soak_30min_cycle` (40 t, 20 cykli) | prędkość przelotowa 73,01 → 72,44 km/h; dryf energii +0,32 J; powietrze ≥ 11,34 bar | 60–82 km/h; ≤ 5 J | W |
+| 15 | `steer_sign_*` | np. 40 t w prawo +17,16 °/s, cofanie −3,16 °/s | znak | D |
+
+Niesprawdzone bez Unity: integracja PhysX, kolizje ze światem, §6.10 na prawdziwej rampie, §6.12 FPS/CPU w buildzie, §6.13,
+feel test właściciela (`docs/reports/PHYSICS-VALIDATION-2026-11-16.md` §5).
 
 **Odbiór fizyki**: testy zielone **i** feel test właściciela na telefonie z listą uwag.

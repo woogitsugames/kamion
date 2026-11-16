@@ -192,7 +192,26 @@ namespace Game.Cameras
             m_LogN = 0;
         }
 
-        void OnDisable() => FlushPoseLog();
+        void OnDisable()
+        {
+            FlushPoseLog();
+            if (m_OnOriginMoved != null) Game.Core.FloatingOrigin.Moved -= m_OnOriginMoved;
+        }
+
+        System.Action<Vector3> m_OnOriginMoved;
+
+        void OnEnable()
+        {
+            if (m_OnOriginMoved == null) m_OnOriginMoved = OnOriginMoved;
+            Game.Core.FloatingOrigin.Moved += m_OnOriginMoved;
+        }
+
+        /// <summary>Floating-origin rebase (ADR 0235): the smoothed chase position and the pose-log reference move with the world.</summary>
+        void OnOriginMoved(Vector3 offset)
+        {
+            m_ChasePos += offset;
+            m_LastTargetPos += offset;
+        }
         void OnApplicationPause(bool paused) { if (paused) FlushPoseLog(); }
 
         /// <summary>Public for tests; called from LateUpdate in Cab mode.</summary>

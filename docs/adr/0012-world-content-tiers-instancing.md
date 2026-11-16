@@ -25,6 +25,8 @@ Targets for the 4 km² tile on the Galaxy A16 (4 GB): Low/Medium world content i
   device, the High tier has no flagship to tune it on, and Play Asset Delivery needs an AAB pipeline we do not have.
   Revisit when streaming chunks (floating origin, ADR 0003) is implemented — the per-chunk mesh assets are already the
   unit an Addressables group would hold.
+- **Wycofane w s23, patrz `docs/10` §3:** Addressables nie wracają; streaming kafli (ADR 0235/0273) bierze sceny z buildu,
+  a treść doinstalowywana — jeśli właściciel ją wybierze — to AssetBundles wg ADR 0234.
 
 ### 2. Bake instead of shipping glTF assets
 The importer reads the GLBs directly (`GlbReader`, same axis convention as glTFast: x negated, winding flipped) and writes
