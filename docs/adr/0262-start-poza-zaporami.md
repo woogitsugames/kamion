@@ -15,7 +15,7 @@ Przyczyna jest jedna dla wszystkich regionów (sprawdzone na danych 21 regionów
   (`WorldEdgeBuilder.ClosureSetbackM` = 60 m, na krótkiej krawędzi grafu 80 % jej długości, ADR 0169). Deski stoją od
   strony wnętrza kafla — zamknięcie jest pomyślane dla kierowcy nadjeżdżającego od środka;
 - start był stały: 12 m od początku trasy (`RegionStart.DefaultStartS`, `WorldSceneBuilder spawnS`, katalog ADR 0229),
-  czyli **po zewnętrznej stronie zamknięcia**. Zmierzone stacje zamknięcia na trasie: 60 m w 16 regionach, 54 m
+  czyli **po zewnętrznej stronie zamknięcia**. Zmierzone stacje zamknięcia na trasie (dokładnie w „Wyniki”): 60,0 m w 14 regionach, 60,3 i 61,2 m w dwóch, 54 m
   (dk65-06, knyszyn-w), 20 m (bialystok-knyszynska), **14 m (dk65-05 — ciągnik w rzędzie zapór, zrzut właściciela)**.
 
 Odrzucone hipotezy: odwrócony kierunek trasy (drugie zamknięcie stoi przy `length − 60`, trasy biegną od krawędzi do
@@ -81,7 +81,7 @@ Wszystkie 20 par obejrzane.
 | dk65-03 | 60,0 | — | 90 | 484,43 | 394,4 (koniec trasy) | OK |
 | dk65-04 | 60,0 | 2074,5 | 90 | 2079,43 | 1984,5 | OK; przed kabiną z lewej wlot drogi bocznej z wysepką |
 | dk65-05 | 14,5 | 2141,9 | 90 | 2201,88 | 2051,9 | OK; rząd zapór 75,5 m (stacje 14,5 → 90) za punktem startu, start za skrzyżowaniem z wysepką, wiata po prawej |
-| dk65-06 | 54,6 | 1641,8 | 90 | 1701,95 | 1551,8 | OK z uwagą: start na wlocie ronda (węzeł ~9 m przed zderzakiem wg recenzji), przed kabiną wyspa ronda; przejazd wolny, ale to nie prosta |
+| dk65-06 | 54,6 | 1641,8 | 90 | 1701,95 | 1551,8 | OK z uwagą: start na wlocie ronda (węzeł ~9 m przed zderzakiem wg recenzji), przed kabiną wyspa ronda; przejazd wolny, ale to nie prosta. Powiększenie kół (`renders/_sheets/dk65-06-wheels.jpg`): koła widocznej strony ciągnika i naczepy na asfalcie, wewnątrz linii krawędziowej; strona przeciwna zasłonięta |
 | dk65-07 | 60,0 | 862,4 | 90 | 865,60 | 772,4 | OK; przed kabiną z lewej wlot drogi bocznej |
 | dk65-08 | 60,0 | 2295,1 | 90 | 2355,15 | 2205,1 | OK |
 | dk65-09 | 60,0 | — | 90 | 352,36 | 262,4 (koniec trasy) | OK; < 300 m, bo trasa się kończy |
@@ -92,7 +92,7 @@ Wszystkie 20 par obejrzane.
 | knyszyn-w | 53,9 | 1928,7 | 90 | 1988,70 | 1838,7 | OK; w dolnej krawędzi kadru kamery zewnętrznej obiekt tuż przy kamerze (kosmetyka kamery kontrolnej) |
 | dk65-monki-01 | 60,0 | 1125,0 | 90 | 1185,04 | 1035,0 | OK |
 | dw671-tykocin-01 | 60,0 | 2567,3 | 90 | 2608,56 | 2477,3 | OK; wąska jezdnia, zestaw na prawej połowie |
-| bialystok-dojlidy | 60,3 | 2129,9 | 90 | 2133,17 | 2039,9 | OK; trasa kończy się 3,3 m za rzędem wyjazdowym (nie na krawędzi kafla) |
+| bialystok-dojlidy | 60,3 | 2129,9 | 90 | 2133,17 | 2039,9 | OK; rząd wyjazdowy 3,3 m przed końcem trasy (podobnie dk65-04: 4,9 m, dk65-07: 3,2 m; przyczyna UNVERIFIED) |
 
 W każdym z 20 renderów: zestaw stoi na jezdni w osi pasa, rząd zapór z deskami jest za naczepą (albo zasłonięty —
 maczka), przed kabiną nie ma zapór ani przeszkód na pasie do granicy widoczności. Wymóg „≥ 300 m wolnej trasy”
@@ -136,5 +136,8 @@ Sceny dk65-11 i knyszyn-s w worktree były importowane przed scaleniem (trasa sp
 6. Uwagi z oględzin, poza zakresem tego ADR (dane tras): dk65-06 start na wlocie ronda; bialystok-kleeberga i
    -knyszynska trasa nie biegnie skrajnym prawym pasem; knyszyn-w obiekt w kadrze kamery `truck-at-gate`.
 7. Z recenzji, nie zrobione: P2-2 (brak wolnego miejsca = start w kolizji z `LogError`, brak szukania wstecz), P2-3
-   (`SafeStartS` bierze maksimum po wszystkich wjazdach), P2-4 (trasy < 190 m), P2-5 (test ścieżki starej sceny bez
+   (`SafeStartS` bierze maksimum po wszystkich wjazdach; lustrzanie po poprawce P2-1: fałszywy rząd wyjazdowy w środku trasy
+   cofnąłby start przed niego — na danych 20 regionów jest najwyżej jeden rząd wyjazdowy, przy końcu trasy), P2-4 (trasy < 190 m), P2-5 (test ścieżki starej sceny bez
    menu), P2-6 (test zapieczonego spawnu importera), P2-8 (pudło proste na łuku), P2-9 (bufor 128).
+8. Commit `8778bbe5a` (P2-1 + log) nie miał recenzji ani builda playera; poprawka logu bez dowodu w zaimportowanej scenie.
+   Zrzuty exe obejmują 7 z 21 regionów.
