@@ -160,3 +160,5 @@ R19 lamus: dwa nowe pełne widoki dachu/podcienia/przyziemia, lipiec i marzec202
 R21: dwa nowe ujęcia z gminnego Gońca nr11(203), listopad2021, s7, Anna Aneta Molska. Root obejrzał oba w Chrome200%: czarna pompa na podwyższonym kwadratowym cokole z kratką i biały/bordowy słup bez takiego cokołu. To nowa ekspozycja znanego słupa, nie drugi egzemplarz. Publikacja nie jest datą zdjęć; metryka/GPS/pikseleUNVERIFIED.0kopiiPDF/zdjęć. Główny48.
 
 16.11.2026: R22 — porównanie jednego ID CityGML LoD1/LoD2, dwa rekordy dokumentacyjne i jeden własny wykres (nie fotografia). Wysokość LoD1 7,5 m jest atrybutem modelu, nie kalenicą; źródło obu dachów 2016. Rynek 1 pozostaje kandydatem adresowym. Patrz `gugik-lod-source-round22/`.
+
+16.11.2026 R23: dokładny klucz CityGML→BDOT i publiczny punkt PRG Rynek1 wspierają identyfikację. Root niezależnie odczytał jeden rekord SQLite oraz GML/XSD. Adres→model nadal ESTIMATED przestrzennie, nie urzędowy join; IDEGIB to literalne pole, bez weryfikacji EGiB/właścicieli. 2 rekordy dokumentacyjne, 0 zdjęć.

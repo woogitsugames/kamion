@@ -1,0 +1,15 @@
+{
+  "review_date": "2026-11-16",
+  "reviewer": "root",
+  "method": "Independent read-only SQLite exact identifier SELECT and local original PRG GML/XSD parse; no new web query",
+  "confirmed": [
+    "CityGML exact identifier and namespace match BDOT; IDEGIB literal200804_4.0054.2323_BUD",
+    "PRG Knyszyn Rynek1 pos612352.56 760870.95 and Rynek2 pos612347.75 760878.4",
+    "XSD has address IIP and geometry, no building join field"
+  ],
+  "limits": [
+    "Spatial containment computation is agent analysis; root did not independently recompute IoU",
+    "Address-to-model remains ESTIMATED, formal join UNVERIFIED",
+    "Not EGiB verification or ownership lookup; zero photos"
+  ]
+}

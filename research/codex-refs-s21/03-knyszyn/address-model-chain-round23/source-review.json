@@ -1,0 +1,122 @@
+{
+  "review_date": "2026-11-16",
+  "own_exact_time_recorded": false,
+  "status": "Dokładny klucz CityGML–BDOT; adres–model wyłącznie wniosek przestrzenny ESTIMATED",
+  "prior_packet_read_only": "../gugik-lod-source-round22/geometry-summary.json",
+  "local_dedup": "K1-061/P02 bez GPS, wcześniejsze dopasowanie OSM nie było urzędowym kluczem. Nie pobierano ponownie archiwów.",
+  "bdot_source": {
+    "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\gugik\\bdot10k-2008\\gpkg\\PL.PZGiK.335.BDOT10k.2008__OT_BUBD_A.gpkg",
+    "sha256": "129ad2e4a48c0e3b783fa2765c9e1da84f4b8d9db161000e05a1a40b090cdfd3",
+    "table": "OT_BUBD_A",
+    "access": "SQLite mode=ro, jeden rekord po dokładnym LOKALNYID",
+    "source_fields": {
+      "LOKALNYID": "2002917F-3002-5C99-E053-CC2BA8C01CFC",
+      "PRZESTRZENNAZW": "PL.PZGiK.335.BDOT10k",
+      "WERSJA": "2025-10-16T00:00:00.000",
+      "IDEGIB": "200804_4.0054.2323_BUD"
+    },
+    "geometry_crs": 2180,
+    "ground_match_lod1_iou": 1.0,
+    "egib_limit": "Odczytano literalny identyfikator z pola IDEGIB; nie sprawdzano rekordu EGiB, aktualności ewidencji ani właścicieli."
+  },
+  "address_source": {
+    "endpoint": "https://mapy.geoportal.gov.pl/wss/ext/wfs/KrajowaIntegracjaNumeracjiAdresowej",
+    "type_name": "adresyUlice:A07_Punkty_adresowe",
+    "title_from_capabilities": "Krajowa Integracja Numeracji Adresowej",
+    "abstract_from_capabilities": "Usługa pobierania WFS Krajowa Integracja Numeracji Adresowej umożliwiająca pobieranie danych przestrzennych z Państwowego Rejestru Granic w zakresie ewidencji ulic i adresów",
+    "metadata_calls": [
+      "GetCapabilities",
+      "DescribeFeatureType"
+    ],
+    "data_query_count": 1,
+    "request": {
+      "url": "https://mapy.geoportal.gov.pl/wss/ext/wfs/KrajowaIntegracjaNumeracjiAdresowej?service=WFS&version=2.0.0&request=GetFeature&typenames=adresyUlice%3AA07_Punkty_adresowe&bbox=612329.0950950328%2C760849.9455844907%2C612369.0950950328%2C760889.9455844907%2Curn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A2180&srsName=urn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A2180&count=10",
+      "http": 200,
+      "bytes": 3421,
+      "sha256": "8d5881646e5bbbf475b35a8d68fafc6dffb52ff06358bec20ccfd358193bbcdb",
+      "bbox_axis_order": "northing,easting, explicit EPSG2180 URN; extent40×40m",
+      "fields": "XSD checked first: only public address+point+IIP, no persons/owners"
+    },
+    "response_number_matched": 2,
+    "response_number_returned": 2,
+    "main_point": {
+      "attributes": {
+        "NAZWA_GMINY": "Knyszyn",
+        "ID_GMINY": "2008043",
+        "NAZWA_MIEJSCOWOSCI": "Knyszyn",
+        "ID_MIEJSCOWOSCI": "0923213",
+        "NAZWA_ULICY": "Rynek",
+        "ID_ULICY": "19253",
+        "NUMER_PORZADKOWY": "1",
+        "KOD_POCZTOWY": "19-120",
+        "ID_IIP": "PL.PZGIK.200.PRG_0d6d3d35-8d36-44d4-bd36-fa6fb91bf437_2025-10-01T14:00:58+02:00"
+      },
+      "point_srs": {
+        "srsName": "urn:ogc:def:crs:EPSG::2180",
+        "srsDimension": "2",
+        "{http://www.opengis.net/gml/3.2}id": "A07_Punkty_adresowe.5688106.GEOMETRIA"
+      },
+      "literal_pos_ne": "612352.56 760870.95",
+      "point_en": [
+        760870.95,
+        612352.56
+      ],
+      "within_bdot": true,
+      "bdot_distance_m": 0.0,
+      "within_lod": {
+        "LoD2 2017": true,
+        "LoD1 2024": true
+      },
+      "distance_to_lod_m": {
+        "LoD2 2017": 0.0,
+        "LoD1 2024": 0.0
+      }
+    },
+    "control_point_number2": {
+      "within_bdot": false,
+      "within_both_models": false
+    },
+    "schema_fields": [
+      "NAZWA_GMINY",
+      "ID_GMINY",
+      "NAZWA_MIEJSCOWOSCI",
+      "ID_MIEJSCOWOSCI",
+      "NAZWA_ULICY",
+      "ID_ULICY",
+      "NUMER_PORZADKOWY",
+      "KOD_POCZTOWY",
+      "ID_IIP",
+      "GEOMETRIA"
+    ],
+    "building_join_field_present": false,
+    "licence": "Publiczne dane GUGiK; jawnej CC nie ustalono, nie przypisano jej automatycznie.",
+    "fees_from_capabilities": "no conditions apply",
+    "access_constraints_from_capabilities": "otherRestrictions"
+  },
+  "documentation_chain": {
+    "official_description_read": "https://www.geoportal.gov.pl/aktualnosci/nowe-uslugi-ogc-api-features-dla-danych-prg-i-prng/",
+    "ogc_collection_metadata_read": "https://ogcapi.geoportal.gov.pl/res/ims/maps/prg_ad/apiFeatures/collections/PunktAdresowy?f=html",
+    "ogc_test_host_data_queried": false,
+    "production_wfs_url_discovery": "Oficjalny wynik wyszukiwania GUGiK: Nowy adres usługi WFS Krajowa Integracja Numeracji Adresowej; następnie własne GetCapabilities potwierdziło usługę PRG.",
+    "notice_url": "https://www.gov.pl/web/gugik/nowy-adres-uslugi-wfs-krajowa-integracja-numeracji-adresowej",
+    "full_notice_status": "Timeout przez web; bez ponawiania."
+  },
+  "decisions": {
+    "citygml_to_bdot": "SOURCED zgodność buildingId/LOKALNYID i przestrzeni nazw",
+    "bdot_idegib_pointer": "SOURCED literalny ciąg w polu IDEGIB, bez niezależnej kontroli ewidencji",
+    "rynek1_point_exists": "SOURCED oficjalny rekord adresowy KINA/PRG",
+    "point_inside_model_footprint": "ESTIMATED wynik własnego testu punkt-w-poligonie; obie geometrie źródłowe znane",
+    "address_to_model_formal_join": "UNVERIFIED — brak wspólnego klucza adresu i modelu",
+    "practical_candidate_support": "Wniosek przestrzenny Rynek 1 silniejszy niż sam OSM, nadal nie urzędowe połączenie identyfikatorów."
+  },
+  "restrictions": {
+    "new_archives": 0,
+    "new_photos": 0,
+    "chrome": false,
+    "google_or_3dtiles": false,
+    "osm_api_overpass_commons_flickr": 0,
+    "owner_personal_data_requested": false,
+    "parent_or_r22_changed": false
+  },
+  "raw_outputs": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\03-knyszyn\\address-model-chain-round23"
+}
