@@ -285,3 +285,6 @@ R63: samokontrola3/11przyjętychA, seed20261115, snapshot/hash sprzed losowania.
 
 
 R64 Wabash: root potwierdził miejscowy dolny szary film obu pól po oglądzie1:1 i osobny typ naczepy. A12 z ograniczeniami/B1; zimaA2, Europa-drogaA1 bez zmian. Duże drzwi1320–1450pxEST nie zastępują dowodu trasy. Knapen nadalPENDING. Główny30:28kadrów(14lokalnych/14link-only)+2dokumenty.
+
+
+R65 Facchini: nowy drobny szary pionowy film pól środkowych/dolnych centralnej pary. Root obejrzał, sourceSEMIRREBOQUE. A13 z ograniczeniami/B1; zimaA2,Europa-drogaA1 bez przyrostu. Obraz627×470, drzwi320–370pxEST. Główny31:29kadrów(14lokalnych/15link-only)+2dokumenty. AudytR63 dotyczy wcześniejszego snapshotu11, nie losowej próby obecnych13.
