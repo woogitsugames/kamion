@@ -252,9 +252,19 @@ def edge_dashed_spans(net, authored, report=None):
     for o in authored or []:
         if o.get("kind") != EDGE_DASHED_KIND:
             continue
-        pts = np.asarray(o.get("line_en") or [], float).reshape(-1, 2)
+        # review s23 D18 P2-6: a malformed entry (no id, unknown line, bad dash_m / line_en) is stale, never an exception
+        oid = o.get("id", "?")
+        try:
+            pts = np.asarray(o.get("line_en") or [], float).reshape(-1, 2)
+            dm = o.get("dash_m") or S.DASH.get(o.get("line", "P-7a"))
+            dash, gap = (float(v) for v in dm)
+            ok = bool(np.isfinite(pts).all()) and math.isfinite(dash) and math.isfinite(gap) and dash > 0 and gap > 0
+        except (TypeError, ValueError):
+            ok = False
+        if not ok or "id" not in o:
+            stale.append(oid)
+            continue
         side = o.get("side")
-        dash, gap = o.get("dash_m") or S.DASH[o.get("line", "P-7a")]
         runs = []
         if len(pts) >= 2 and side in ("left", "right"):
             seg = np.hypot(*np.diff(pts, axis=0).T)
@@ -452,6 +462,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
             from streetscape.furniture import SurfaceTop
             _top.append(SurfaceTop([p for p in buf.parts if p.layer == "road"]))
         return _top[0].top(e, n)
+    from . import compact_roundabout as CR
+    cr_juncs = {id(j) for j in juncs if getattr(j, "compact", None) is not None and CR.kerb_mode(j.compact.opts)}
+    cr_zones = [j.compact.outline.buffer(2.0) for j in juncs if id(j) in cr_juncs and j.compact.outline is not None]
     for p in ctx_points:
         if p["kind"] != "highway=crossing" or p.get("crossing") in ("unmarked", "no", "informal"):
             continue
@@ -461,6 +474,8 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         except (TypeError, ValueError):
             pass
         q = np.array([p["e"], p["n"]])
+        if any(pg.contains(shapely.Point(*q)) for pg in cr_zones):
+            continue        # ADR 0274: crossings of a kerb-mode compact roundabout are authored at the ring
         best = None
         for c in net.chains:
             if c.meta.get("absorbed"):
@@ -769,6 +784,8 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 kind = "P-13"
             if kind is None or inb == -1:
                 continue
+            if id(j) in cr_juncs:
+                continue        # ADR 0274: P-13 lies along the ring edge (CR.build_markings), not at the split node
             t = j.trims[i]
             if t >= a.L - 2:
                 continue
@@ -806,6 +823,10 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                     polygon_mark(buf, c, tri, s_base, x + S.P13_BASE / 2, fwd, 1.0, "P-13")
                     x += S.P13_BASE + S.P13_GAP
             cnt(kind)
+    cr_rep = CR.build_markings(buf, net, juncs, report)
+    for k in ("P-10", "P-13"):
+        if cr_rep[k]:
+            cnt(f"{k} at compact roundabout", cr_rep[k])
     report["markings"] = counts
 
 

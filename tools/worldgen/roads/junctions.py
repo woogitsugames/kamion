@@ -331,6 +331,10 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
             arms.sort(key=lambda a: (_ang(a.gutter(min(6.0, a.L * 0.5), 0) - ctr), a.key))
         j = Junction(id="j:" + nodes[0], nodes=nodes, arms=arms, center=ctr)
         j.compact = sp if (sp is not None and len(arms) >= 3) else None
+        if sp is not None and j.compact is None:
+            # review s23 D18 P2-5: ring and feeders are absorbed but the compact outline is not built - say so
+            j.notes.append(f"compact_roundabout {sp.id}: {len(arms)} arms (< 3), built by the generic machinery")
+            net.overrides_stale += [i for i in CR.override_ids(net, sp.ring) if i not in net.overrides_stale]
         return j
 
     def max_trims(j, assume_half=True):

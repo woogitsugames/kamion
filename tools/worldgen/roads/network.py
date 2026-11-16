@@ -45,6 +45,11 @@ APRON_LIGHT = "apron_paving_light"
 APRON_MATS = ("apron_sett", APRON_LIGHT)     # mountable apron surfaces (drivable, not a carriageway, not a walk)
 TRUCK_APRON_MATS = {5: "apron_sett", 6: "road_concrete", 7: "road_asphalt", 8: APRON_LIGHT}
 WALK_MATS = WALK_MATS + [TRUCK_APRON_MATS[k] for k in sorted(TRUCK_APRON_MATS)]   # codes 5-8 resolve everywhere
+assert all(WALK_MATS[k] == v for k, v in TRUCK_APRON_MATS.items()), "truck apron codes must index WALK_MATS"
+# Carriageway-class apron surfaces (review s23 D18 P2-7): meshing.cull_sides_on_carriageway treats road_* as a
+# carriageway and removes kerbs / lips standing on it, so these aprons are flush (lip 0) - a raised lip is rejected.
+TRUCK_APRON_FLUSH_CODES = (6, 7)
+EDGE_LINE_SPACING_M = (2.0, 30.0)   # WORKING_VALUE: accepted authored edge_line_spacing (narrowest lane .. widest carriageway)
 TRUCK_APRON_CODE = {"kostka": 5, "sett": 5, "beton": 6, "concrete": 6, "asfalt": 7, "asphalt": 7,
                     "kostka_jasna": 8, "paving": 8}
 # WORKING_VALUE: accepted width_m range. Below 0.2 m (the kerb-side gutter strip) the strip would be meshed as
@@ -251,6 +256,9 @@ class Network:
 
 def load(graph: dict, origin, overrides: list | None = None) -> Network:
     ox, oy = origin
+    from . import carriageway_split as CS            # ADR 0274: authored split of a two-way road before a node
+    cs_applied, cs_stale = [], []
+    graph = CS.apply(graph, overrides, cs_applied, cs_stale)
     nodes = {}
     for n in graph["nodes"]:
         nodes[n["id"]] = {"id": n["id"], "xy": np.array([n["x"] - ox, n["y"] - oy]), "deg": 0,
@@ -272,6 +280,8 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
         nodes[b]["deg"] += 1
     sections = {eid: edge_section(e) for eid, (e, _, _, _) in edges.items()}
     net = Network(nodes=nodes, sections=sections, sec_list=[], chains=[], origin=(ox, oy))
+    net.overrides_applied += cs_applied
+    net.overrides_stale += cs_stale
     apply_edge_overrides(net, edges, overrides or [])
     net.sec_list = [sections[k] for k in sorted(sections)]
     sec_index = {s.edge_id: i for i, s in enumerate(net.sec_list)}
@@ -300,6 +310,10 @@ def _truck_apron(v) -> dict | None:
     code = TRUCK_APRON_CODE.get(str(v.get("material", "kostka")).lower())
     if code is None:
         return None
+    if code in TRUCK_APRON_FLUSH_CODES:
+        if "height_m" in v and h > 0.0:
+            return None
+        h = 0.0
     return {"width_m": w, "height_m": h, "material": TRUCK_APRON_MATS[code], "code": code}
 
 
@@ -392,8 +406,15 @@ def apply_edge_overrides(net: Network, edges, overrides):
             if "edge_line_spacing" in st:
                 # ADR 0220: measured line-to-line distance (research K1, orthophoto 0.1 m); markings.edge_lines keeps
                 # the lines markings.EDGE_LINE_MIN_INSET inside the carriageway edge where the carriageway is narrower
-                sec.edge_line_spacing = float(st["edge_line_spacing"])
-                sec.provenance["edge_line_spacing"] = f"authored_override:{ov['id']}"
+                els = st["edge_line_spacing"]
+                if (isinstance(els, bool) or not isinstance(els, (int, float))
+                        or not EDGE_LINE_SPACING_M[0] <= float(els) <= EDGE_LINE_SPACING_M[1]):      # NaN fails too
+                    if ov["id"] not in net.overrides_stale:
+                        net.overrides_stale.append(ov["id"])
+                    sec.provenance["edge_line_spacing_rejected"] = repr(els)
+                else:
+                    sec.edge_line_spacing = float(els)
+                    sec.provenance["edge_line_spacing"] = f"authored_override:{ov['id']}"
             if "apron" in st:
                 sec.apron = str(st["apron"])
             if "truck_apron" in st:
@@ -408,10 +429,9 @@ def apply_edge_overrides(net: Network, edges, overrides):
             if "compact_roundabout" in st:
                 # ADR 0218 5c: the whole roundabout (ring + one-way feeders) is one junction; ring ways only
                 co_ = st["compact_roundabout"]
-                co_ = {} if co_ in (None, True) else co_
-                ok_ = isinstance(co_, dict) and set(co_) <= {"closing_r_m", "splitter_w_m", "splitter_gap_m",
-                                                              "island_fill", "lane_w_m", "lane_clear_m"}
-                if not ok_ or not sec.roundabout:
+                from . import compact_roundabout as CR_
+                co_ = CR_.validate({} if co_ is None or co_ is True else co_)
+                if co_ is None or not sec.roundabout:
                     if ov["id"] not in net.overrides_stale:
                         net.overrides_stale.append(ov["id"])
                     sec.provenance["compact_roundabout_rejected"] = st["compact_roundabout"]

@@ -25,19 +25,50 @@ overrides:
       width: 5.0
       truck_apron: {width_m: 3.2, height_m: 0.04, material: kostka_jasna}
   # ADR 0218 5c (int-dk65-s22, owner D75): the roundabout is built as ONE junction (roads/compact_roundabout.py).
+  # ADR 0274: kerb mode (entry_r_m / exit_r_m), crossings and P-13 at the ring, DK65 split before the ring.
   - id: knyszyn-roundabout-compact
     target: {osm_way: [1426801304]}
     reason: >-
       The ring (axis r 8.65 m, 8 ring nodes on 54 m, ring edges 1.6-11.6 m) with four arms split into one-way entry /
       exit carriageways cannot be built node by node: the generic junction patches self-intersect and the apron
-      breaks into 8 wedges (render int-dk65-s22 knyszyn r1). Compact mode: paved outline = outer ring disc + the 8
-      one-way carriageways + arm ends, closed with 8 m kerb returns; truck apron as a full annulus, gravel island
-      inside, 4 narrow kerbed splitter islands (owner drone photo 9). closing_r_m / splitter_w_m WORKING_VALUE
-      (photo 9, ESTIMATED 6-10 m returns, splitters 2-3 m wide at the ring).
-    confidence: medium
-    verify: compare render rondo_dk65_top with owner photo 9 (Data/raw/refs/owner-knyszyn-2026-11-15)
+      breaks into 8 wedges (render int-dk65-s22 knyszyn r1). Compact mode: one junction, truck apron as a full
+      annulus, sand island inside (island_sand, the default), kerbed splitter islands (owner drone photo 9).
+      ADR 0274: the mapped one-way carriageways are GPS traces (OSM changeset 176857414, source Yanosik) that run
+      nearly tangent to the ring, so their outer edges made funnels and fat asphalt patches between the arms (owner
+      photo 9: tighter). Kerb mode: mouth = lane_w_m either side of a splitter up to splitter_w_m wide, kerb returns
+      entry_r_m / exit_r_m. NOT MEASURED: the GUGiK orthophoto here is of 2025-05-27 and still shows the plain
+      crossroads (docs/reports/roundabout-0274/knyszyn_ortho_probe.json: roundabout_visible false, no 2026 sheet), the
+      owner's photos 9-11 are not in git. All values WORKING_VALUE: lane 4.0 m, splitter <= 2.4 m (refuge >= 2 m),
+      returns 6 / 8 m (the largest that still leave a piece of ring kerb between two mouths of this 22.3 m ring),
+      crossing 5.0 m off the ring edge (one car length) on all four arms (OSM crossing nodes 3047667219 N,
+      3047667218 E, 1134812606 W; S: owner photo 9, refuge in the long island).
+    confidence: low
+    verify: scale kerb returns, lane and splitter widths and the crossing offsets on owner photo 9 (Data/raw/refs/owner-knyszyn-2026-11-15) or on the first orthophoto taken after 2025; compare render rondo_dk65_top
     set:
-      compact_roundabout: {closing_r_m: 6.0, splitter_w_m: 3.6, lane_w_m: 4.0}
+      compact_roundabout: {entry_r_m: 6.0, exit_r_m: 8.0, splitter_w_m: 2.4, lane_w_m: 4.0, crossing_offset_m: 5.0,
+                           crossings: [232511646, 286990127, 1464342641, 1478765548]}
+  # ADR 0274 (b): OSM splits DK65 into its entry / exit carriageways 17 m before the ring; the kerbed islands are
+  # longer (owner photo 9: the southern one "several tens of metres", with a pedestrian refuge).
+  - id: knyszyn-roundabout-dk65-split-s
+    kind: carriageway_split
+    node: 4898926854
+    reason: >-
+      DK65 south arm: the split node moves 27 m out along way 286990127, lanes 3.0 m either side of the old centre
+      line after a 14 m taper -> splitter island about 30 m long from the ring edge (owner photo 9: several tens of
+      metres; ESTIMATED at the low end, not measured: orthophoto 2025-05-27 predates the roundabout).
+    confidence: low
+    verify: island length and width on owner photo 9 or on an orthophoto taken after 2025
+    set: {length_m: 27.0, taper_m: 14.0, lane_offset_m: 3.0}
+  - id: knyszyn-roundabout-dk65-split-n
+    kind: carriageway_split
+    node: 3047667219
+    reason: >-
+      DK65 north arm: as the south arm, 17 m -> island about 20 m long from the ring edge. WORKING_VALUE: the owner
+      describes only the southern island as long and the western / eastern ones as shorter; the northern one is
+      not described (2025 orthophoto: the old carriageway is 9.3 m wide 10-15 m north of the old node, 7.8 m beyond).
+    confidence: low
+    verify: island length and width on owner photo 9 or on an orthophoto taken after 2025
+    set: {length_m: 17.0, taper_m: 14.0, lane_offset_m: 3.0}
   - id: knyszyn-roundabout-dk65-feeders-width
     target: {osm_way: [1464342634, 1464342635, 1464342638, 1464342640]}
     reason: >-

@@ -1448,6 +1448,9 @@ def qa_report(w, mk_report, mask):
             "fork_tapers": w.stats.get("fork_tapers", []),
             "fork_abreast": w.stats.get("fork_abreast", []),
             "sides_on_carriageway_culled": w.stats.get("sides_on_carriageway_culled", {}),
+            # review s23 D18 P1: `built` / `notes` of every compact roundabout (ADR 0218 5c, 0274) - a silent failure of
+            # the centre island or of the outline must show in the QA file, not only in a render
+            "compact_roundabouts": w.stats.get("compact_roundabouts", []),
             "verge_strips": w.stats.get("verge_strips", {}),
             "fork_shifts": w.stats.get("fork_shifts", []),
             "gores": w.stats.get("gores", {}),
