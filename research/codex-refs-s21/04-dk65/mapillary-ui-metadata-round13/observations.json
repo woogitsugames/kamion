@@ -1,0 +1,75 @@
+{
+  "review_date": "2026-11-16",
+  "exact_review_time": "UNVERIFIED — nie zmierzono dokładnego momentu oględzin",
+  "scope": "Wyłącznie publiczny UI dwóch istniejących kadrów RV12",
+  "method": {
+    "browser": "Natywny Chrome, Mapillary",
+    "basemap": "OpenStreetMap — wybór potwierdzony w otwartym przełączniku",
+    "panels": ["Image details", "Advanced — rozwinięty osobno dla obu obrazów"],
+    "map_info_button": "Pokazuje atrybucję mapy, nie metadane aparatu",
+    "no_external_editors_opened": true,
+    "no_hidden_state_or_network_inspection": true
+  },
+  "shared_visible_fields": {
+    "Captured by": "picturehoover",
+    "Captured on_literal": "27 cze 2020",
+    "Captured on_ISO": "2020-06-27",
+    "Captured with": "samsung SM-A520F",
+    "Image resolution_literal": "1 280 x 720",
+    "resolution_status": "SOURCED_UI — deklaracja panelu, bez pobrania bitmapy",
+    "licence": "CC BY-SA",
+    "licence_link": "https://creativecommons.org/licenses/by-sa/4.0",
+    "Advanced_fields": ["Image key", "Capture key", "Capture time"]
+  },
+  "frames": [
+    {
+      "existing_id": "04-RV12-01",
+      "image_key": "4230673467021610",
+      "url": "https://www.mapillary.com/app/?pKey=4230673467021610&focus=photo&mapStyle=OpenStreetMap",
+      "Capture time_literal": "19:41:38,011 CEST",
+      "camera_coordinates": "UNVERIFIED — brak takiego jawnego pola w obejrzanym panelu",
+      "heading_value": "UNVERIFIED — brak liczbowego pola",
+      "heading_north_reference": "UNVERIFIED — nie odczytano odniesienia magnetycznego/geograficznego",
+      "tile_and_chainage": "UNVERIFIED — bez nowego przypisania",
+      "image_identity_check": "Ponownie widoczna prosta asfaltowa droga i leśne pobocza odpowiadające istniejącemu RV12-01; nie dodano nowej ekspozycji"
+    },
+    {
+      "existing_id": "04-RV12-02",
+      "image_key": "2045554012268281",
+      "url": "https://www.mapillary.com/app/?pKey=2045554012268281&focus=photo&mapStyle=OpenStreetMap",
+      "Capture time_literal": "19:40:21,023 CEST",
+      "camera_coordinates": "UNVERIFIED — brak takiego jawnego pola w obejrzanym panelu",
+      "heading_value": "UNVERIFIED — brak liczbowego pola",
+      "heading_north_reference": "UNVERIFIED — nie odczytano odniesienia magnetycznego/geograficznego",
+      "tile_and_chainage": "UNVERIFIED — bez nowego przypisania",
+      "image_identity_check": "Ponownie widoczna prosta asfaltowa droga, jasny klin kruszywa i wjazd w prawo odpowiadające RV12-02; nie dodano nowej ekspozycji"
+    }
+  ],
+  "interpretation_limits": [
+    "Viewport URL nie jest niezależnym odczytem GPS aparatu",
+    "Adresy linków otwierających edytory OSM zawierają ustawienie widoku mapy; nie potwierdzają tu formalnie GPS aparatu",
+    "Graficzna ikona kierunku nie została przeliczona na wymyślony azymut",
+    "Brak pola w obejrzanym UI nie dowodzi braku takich danych w całym serwisie",
+    "Daty i czasy capture są wartościami UI źródła, nie czasem własnego audytu"
+  ],
+  "help_source": {
+    "url": "https://help.mapillary.com/hc/en-us/articles/115001662325-Viewing-imagery-on-the-Mapillary-web-app-the-complete-guide",
+    "title": "Viewing imagery on the Mapillary web app: the complete guide",
+    "update_date_displayed": "2025-03-18",
+    "read_sections": "Exploring the map and images; Additional image options; Changing the base map",
+    "conclusion": "Instrukcja opisuje ikonę kierunku aparatu i opcje obrazu, ale nie podaje tu liczbowych GPS/heading ani odniesienia północy"
+  },
+  "counts": {
+    "existing_exposures_individually_revisited": 2,
+    "new_photographs": 0,
+    "sourced_camera_coordinate_pairs": 0,
+    "sourced_numeric_headings": 0,
+    "downloads": 0,
+    "saved_screenshots": 0,
+    "API_GraphQL_calls": 0,
+    "Commons_requests": 0,
+    "OSM_Overpass_requests": 0
+  },
+  "cua_closeout": "Sprawdzono metadane dwóch istniejących kadrów",
+  "result": "NO_CAMERA_GPS_OR_NUMERIC_HEADING_IN_INSPECTED_PUBLIC_PANEL"
+}
