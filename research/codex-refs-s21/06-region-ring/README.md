@@ -112,3 +112,5 @@ R15: dwa nowe uliczne kadry Ełckiej w Mońkach, szurek forHere10.08.2017. Root 
 R19: nowy komunikatGDDKiA27.02.2026 o przebudowieDK65/DW671Knyszyn na rondo, jezdnia7→12m i pobocza0,75m. Zakres prac, nie dowód odbioru;12mnieśrednica.0obejrzanych zdjęć,1dokument, główny manifest49.
 
 SIMR19: nowy nazwany budynekMońkiKościelna41,1fotoARRlink-only, rootobejrzał. Tekstgminy3kondygnacje, wydarzenie23.10.2026/publikacja26.10.2026 odrębne od ekspozycjiUNVERIFIED. Typdachu zasłonięty; manifest50rekordów.
+
+R20:1 nowy link-only kadr ścieżki dydaktycznej nadNarwiąTykocin, MonikaKalicka/RadioBiałystok, publikacja30.07.2022. Bruk/obrzeża, ozdobnaoprawazpanelem i podporydrzew; root obejrzał. Bez funkcjipanelu/metryki/gatunków/mostu lub datowania kwitnieniem. Główny manifest51.
