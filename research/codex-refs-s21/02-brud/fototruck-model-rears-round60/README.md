@@ -13,3 +13,6 @@ Podpisy lokalizacji fotografii to odpowiednio **Gruzja, obwód leningradzki, obw
 Wszystko **link-only, all rights reserved**; konkretne strony wprost podają Copyright ©. **0 pobrań, 0 kopii fotografii i 0 zapisanych screenshotów**. Ogląd w normalnym publicznym UI, bez API, logowania, map Google i obchodzenia blokad. Katalog i małe podglądy służyły selekcji; każdy opis powstał po osobnym obejrzeniu pełnego kadru. Zakres ograniczono do trzech zdjęć, bez dalszego przeglądania katalogu.
 
 Dedup po photoID/vehicleID w P18 i całym 02-brud nie znalazł wcześniejszych rekordów; różne tablice, grafiki i sceny sprawdzono wzrokowo. Przegląd **2026-11-16, date-only**. Nie zmieniono głównego manifestu, ledgerów, globalnych liczników ani gita. A ≥ 20, B ≥ 12 nowych z wysokością drzwi ≥ 1000 px i ruchem/zaraz po trasie oraz podzbiory zimy/Europy pozostają otwarte.
+
+
+Aktualizacja R70, 16.11.2026: FR60-003 zaliczony do geograficznej Europy po połączeniu podpisu miejsca fotografii z oficjalną charakterystyką obwodu twerskiego w dokumencie miasta. Bieżąco Europa-drogaA2; A13/B1 i zimaA2 bez zmiany. To geografia kontynentu, nie członkostwo wUE. Łańcuch i granice w geographic-europe-chain-round70.

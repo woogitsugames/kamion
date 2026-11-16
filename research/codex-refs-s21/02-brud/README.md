@@ -288,3 +288,6 @@ R64 Wabash: root potwierdził miejscowy dolny szary film obu pól po oglądzie1:
 
 
 R65 Facchini: nowy drobny szary pionowy film pól środkowych/dolnych centralnej pary. Root obejrzał, sourceSEMIRREBOQUE. A13 z ograniczeniami/B1; zimaA2,Europa-drogaA1 bez przyrostu. Obraz627×470, drzwi320–370pxEST. Główny31:29kadrów(14lokalnych/15link-only)+2dokumenty. AudytR63 dotyczy wcześniejszego snapshotu11, nie losowej próby obecnych13.
+
+
+Aktualizacja R70, 16.11.2026: FR60-003 zaliczony do geograficznej Europy po połączeniu podpisu miejsca fotografii z oficjalną charakterystyką obwodu twerskiego w dokumencie miasta. Bieżąco Europa-drogaA2; A13/B1 i zimaA2 bez zmiany. To geografia kontynentu, nie członkostwo wUE. Łańcuch i granice w geographic-europe-chain-round70.
