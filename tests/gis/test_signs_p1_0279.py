@@ -295,8 +295,11 @@ def test_built_up_rule_boundaries_and_300m_gap():
     assert a3.is_empty
 
 
-def test_built_up_rule_signs_placed_and_osm_wins():
+def test_built_up_rule_signs_placed_and_osm_wins(monkeypatch):
     from streetscape import built_up as BU
+    # ADR 0279 D33: ORIGIN lies in Białystok (built_up_places.json = one built-up area, no rule pairs); this test
+    # exercises the BDOT10k rule itself, so the city polygon is switched off here
+    monkeypatch.setattr(BU, "PLACES_FILE", BU.PLACES_FILE.with_name("__none__.json"))
     from streetscape import furniture as FU
     net = _straight_net()
     o = np.array(ORIGIN)
@@ -319,13 +322,11 @@ def test_legal_speed_and_a8_rule():
     sec_osm = NS(maxspeed=70.0, maxspeed_src="osm")
     assert BU.legal_speed(sec_def, True) == 50.0 and BU.legal_speed(sec_def, False) == 90.0
     assert BU.legal_speed(sec_osm, True) == 70.0
-    import shapely
-    inside = shapely.box(-10, -10, 10, 10)
-    assert BU.needs_a8((0, 0), sec_def, inside, has_e1=True)[0] is False
-    assert BU.needs_a8((100, 0), sec_def, inside, has_e1=False)[0] is True       # outside the built-up area
-    assert BU.needs_a8((0, 0), sec_def, inside, has_e1=False)[0] is False        # built-up, 50 km/h
-    assert BU.needs_a8((0, 0), sec_osm, inside, has_e1=False)[0] is True         # built-up but 70 km/h
-    assert BU.needs_a8((100, 0), sec_def, inside, has_e1=False, kerbed=True)[0] is False   # kerbed street = built-up
+    # ADR 0279 D33: needs_a8 takes the built-up flag of Zone.at (D-42..D-43); the kerb is no longer an argument
+    assert BU.needs_a8(True, sec_def, has_e1=True)[0] is False
+    assert BU.needs_a8(False, sec_def, has_e1=False)[0] is True        # outside the built-up area
+    assert BU.needs_a8(True, sec_def, has_e1=False)[0] is False        # built-up, 50 km/h
+    assert BU.needs_a8(True, sec_osm, has_e1=False)[0] is True         # built-up but 70 km/h
     assert BU.a8_distance_m(90.0) == 250.0 and BU.a8_distance_m(70.0) == 150.0 and BU.a8_distance_m(50.0) == 50.0
 
 
