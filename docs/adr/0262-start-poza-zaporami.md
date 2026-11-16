@@ -79,10 +79,10 @@ Wszystkie 20 par obejrzane.
 | dk65-01 | 60,0 | 571,6 | 90 | 631,76 | 481,6 | OK |
 | dk65-02 | 60,0 | 2340,7 | 90 | 2400,68 | 2250,7 | OK |
 | dk65-03 | 60,0 | — | 90 | 484,43 | 394,4 (koniec trasy) | OK |
-| dk65-04 | 60,0 | 2074,5 | 90 | 2079,43 | 1984,5 | OK; ~40 m przed kabiną wlot drogi bocznej z lewej |
-| dk65-05 | 14,5 | 2141,9 | 90 | 2201,88 | 2051,9 | OK; zapory ~75 m z tyłu, start za skrzyżowaniem z wysepką, wiata po prawej |
+| dk65-04 | 60,0 | 2074,5 | 90 | 2079,43 | 1984,5 | OK; przed kabiną z lewej wlot drogi bocznej z wysepką |
+| dk65-05 | 14,5 | 2141,9 | 90 | 2201,88 | 2051,9 | OK; rząd zapór 75,5 m (stacje 14,5 → 90) za punktem startu, start za skrzyżowaniem z wysepką, wiata po prawej |
 | dk65-06 | 54,6 | 1641,8 | 90 | 1701,95 | 1551,8 | OK z uwagą: start na wlocie ronda (węzeł ~9 m przed zderzakiem wg recenzji), przed kabiną wyspa ronda; przejazd wolny, ale to nie prosta |
-| dk65-07 | 60,0 | 862,4 | 90 | 865,60 | 772,4 | OK; wlot drogi bocznej z lewej ~30 m przed kabiną |
+| dk65-07 | 60,0 | 862,4 | 90 | 865,60 | 772,4 | OK; przed kabiną z lewej wlot drogi bocznej |
 | dk65-08 | 60,0 | 2295,1 | 90 | 2355,15 | 2205,1 | OK |
 | dk65-09 | 60,0 | — | 90 | 352,36 | 262,4 (koniec trasy) | OK; < 300 m, bo trasa się kończy |
 | dk65-10 | 60,0 | 2555,4 | 90 | 2615,35 | 2465,4 | OK |
@@ -91,7 +91,7 @@ Wszystkie 20 par obejrzane.
 | knyszyn | 60,0 | — | 90 | 1159,85 | 1069,9 (koniec trasy) | OK |
 | knyszyn-w | 53,9 | 1928,7 | 90 | 1988,70 | 1838,7 | OK; w dolnej krawędzi kadru kamery zewnętrznej obiekt tuż przy kamerze (kosmetyka kamery kontrolnej) |
 | dk65-monki-01 | 60,0 | 1125,0 | 90 | 1185,04 | 1035,0 | OK |
-| dw671-tykocin-01 | 60,0 | 2567,3 | 90 | 2608,56 | 2477,3 | OK; wąska jezdnia bez linii krawędziowych, zestaw na prawej połowie |
+| dw671-tykocin-01 | 60,0 | 2567,3 | 90 | 2608,56 | 2477,3 | OK; wąska jezdnia, zestaw na prawej połowie |
 | bialystok-dojlidy | 60,3 | 2129,9 | 90 | 2133,17 | 2039,9 | OK; trasa kończy się 3,3 m za rzędem wyjazdowym (nie na krawędzi kafla) |
 
 W każdym z 20 renderów: zestaw stoi na jezdni w osi pasa, rząd zapór z deskami jest za naczepą (albo zasłonięty —
