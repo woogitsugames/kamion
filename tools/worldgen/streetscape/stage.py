@@ -171,7 +171,10 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     soft = vmask & ~hmask & ~pmask
     zc, dist = CF.conform(hf, zjoin, mask, soft=soft)
     rep["terrain_soft_nodes"] = int(soft.sum())
-    zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask)
+    # c-p1-s23 (REVIEW s20 gate3-phone P1-2): a walled ramp is a fill, not a span - the ground beside it is not
+    # pushed under a soffit (the clamp dug a 1.5 m pit beside the wall end at the ramp toe, g3b_ext34_s1482)
+    _wr = getattr(w, "walled_ramp_mask", None)
+    zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask if _wr is None else (mask | _wr))
     zc = CF.tidy(zc, zjoin, mask, dist)
     # Explicit park surfaces use lawn-level paving instead of deep yard skirts.
     # Keep all other ground and surfaces on the existing conformance path.
