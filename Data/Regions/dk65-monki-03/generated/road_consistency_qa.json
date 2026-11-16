@@ -15,7 +15,7 @@
    "lat": 53.3445712,
    "lon": 22.8573933,
    "n": -938.56,
-   "on_route": false,
+   "on_route": true,
    "osm_ways": [
     232415596,
     1473575592
@@ -36,7 +36,7 @@
    "lat": 53.344661,
    "lon": 22.8578262,
    "n": -927.03,
-   "on_route": false,
+   "on_route": true,
    "osm_ways": [
     70329867
    ],
@@ -47,7 +47,9 @@
  ],
  "count": 2,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
- "on_route": {},
+ "on_route": {
+  "lane_blind_end": 2
+ },
  "params": {
   "dz_m": 0.8,
   "kerb_ring_m": 0.3,
@@ -58,7 +60,12 @@
  },
  "region": "dk65-monki-03",
  "route_band_m": 30.0,
- "route_segments_s_m": null,
+ "route_segments_s_m": [
+  [
+   0.0,
+   412.0
+  ]
+ ],
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 7,
