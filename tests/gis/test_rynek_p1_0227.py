@@ -141,3 +141,117 @@ def test_knyszyn_override_sets_26_m_working_value():
     assert CR.validate(o["set"]["compact_roundabout"]) == {"outer_diameter_m": 26.0}
     ids = [x["id"] for x in ov]
     assert ids.index(o["id"]) > ids.index("knyszyn-roundabout-compact")     # merged after the kerb-mode entry
+
+
+# ------------------------------------------------------------------------------------------ (a) market canopy gaps
+sys.path.insert(0, str(ROOT / "tools" / "worldgen" / "qa"))
+import market_canopy_ortho as MO  # noqa: E402
+from streetscape import knyszyn_market_0227 as MK  # noqa: E402
+
+ORIGIN = [761611., 612607.]
+CONCRETE, PINK, SHADE_ROOF, SHADOW = (171, 172, 166), (170, 155, 148), (77, 93, 115), (34, 45, 62)
+
+
+def _raster(roofs, res=0.1, size=140.0, sun_shadow_m=1.6, pv=True):
+    """Synthetic north-up orthophoto: concrete with a pink stripe; hipped roofs as axis-aligned rectangles (x0, x1,
+    y0, y1): west half shade roof, east half striped sun roof (seams every 0.5 m across the slope), a cast shadow
+    north of each roof, PV modules on the last roof."""
+    n = int(size / res)
+    A = np.empty((n, n, 3)); A[:] = CONCRETE
+    xs = (np.arange(n) + 0.5) * res
+    ys = size - (np.arange(n) + 0.5) * res
+    X, Y = np.meshgrid(xs, ys)
+    A[(Y > 50) & (Y < 52)] = PINK
+    for k, (x0, x1, y0, y1) in enumerate(roofs):
+        sh = (X >= x0) & (X <= x1) & (Y > y1) & (Y <= y1 + sun_shadow_m)
+        A[sh] = SHADOW
+    for k, (x0, x1, y0, y1) in enumerate(roofs):
+        xm = (x0 + x1) / 2
+        west = (X >= x0) & (X < xm) & (Y >= y0) & (Y <= y1)
+        east = (X >= xm) & (X <= x1) & (Y >= y0) & (Y <= y1)
+        A[west] = SHADE_ROOF
+        stripe = (np.floor(Y / 0.5) % 2 == 0)
+        A[east & stripe] = (147, 172, 172)
+        A[east & ~stripe] = (163, 168, 150)
+        if pv and k == len(roofs) - 1:
+            m = west & (X < xm - 0.8) & (X > x0 + 0.6) & (Y > y0 + 4) & (Y < y1 - 4) & (np.floor(Y / 1.0) % 2 == 0)
+            A[m] = (30, 38, 60)
+    def sample(x, y):
+        c = np.clip((np.asarray(x) / res).astype(int), 0, n - 1)
+        r = np.clip(((size - np.asarray(y)) / res).astype(int), 0, n - 1)
+        return A[r, c]
+    return sample
+
+
+def test_ortho_ruler_reads_gaps_and_lengths_on_a_synthetic_raster():
+    # three close roofs 27.1 x 7.2 m with 1.15 m gaps + one 14 m away (the Knyszyn layout, axis-aligned)
+    y = 132.0
+    roofs = []
+    for gap in (14.0, 1.15, 1.15):
+        y_top = y
+        roofs.append((40.0, 47.2, y_top - 27.1, y_top))
+        y = y_top - 27.1 - gap
+    roofs.append((40.0, 47.2, y - 27.1, y))
+    sample = _raster(roofs)
+    rows = []
+    for k, (x0, x1, y0, y1) in enumerate(roofs):
+        trace = [[x0 + .3, y1 + .4], [x1 - .2, y1 + .5], [x1 + .2, y0 - .5], [x0 - .3, y0 - .4]]   # sloppy hand trace
+        r = MO.measure_canopy(sample, trace)
+        r["id"] = f"c{k}"
+        rows.append(r)
+        assert r["eave_length_m"] == pytest.approx(27.1, abs=0.15) and r["eave_width_m"] == pytest.approx(7.2, abs=0.25)
+    order, gaps = MO.gaps(rows)
+    assert order == ["c0", "c1", "c2", "c3"]
+    assert [g["clear_gap_m"] for g in gaps] == pytest.approx([14.0, 1.15, 1.15], abs=0.15)
+    rect = MO.rectangle(rows[1])
+    assert Polygon(rect).area == pytest.approx(27.1 * 7.2, rel=0.03)
+
+
+def _knyszyn_market_overrides():
+    import yaml
+    ov = yaml.safe_load((ROOT / "Data/Regions/knyszyn/overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+    return [o for o in ov if o.get("kind") in (MK.KIND, MK.GEOMETRY_KIND)]
+
+
+class _Buf:
+    def __init__(self):
+        self.parts = []
+
+    def add(self, layer, mat, vertices, uv, triangles, src, UV1=None):
+        self.parts.append((layer, mat, np.asarray(vertices), np.asarray(triangles), src))
+
+
+def _flat(e, n):
+    return np.zeros_like(np.asarray(e, float)) + 125.0
+
+
+def test_knyszyn_canopies_stand_apart_by_the_measured_gaps():
+    import json
+    meas = json.loads((ROOT / "docs/reports/rynek-p1/market_canopies_ortho.json").read_text(encoding="utf-8"))
+    rep = MK.build(_Buf(), "knyszyn", ORIGIN, _knyszyn_market_overrides(), _flat, {})
+    assert rep["status"] == "applied" and rep["geometry_override"] == "knyszyn-market-canopy-eaves-d41"
+    want = {tuple(g["between"]): g["clear_gap_m"] for g in meas["gaps"]}
+    got = {tuple(g["between"]): g for g in rep["eave_gaps_m"]}
+    assert set(got) == set(want)
+    for k, g in got.items():
+        assert g["overlap_m2"] == 0.0 and g["gap_m"] == pytest.approx(want[k], abs=0.1), (k, g, want[k])
+    assert min(g["gap_m"] for g in got.values()) >= 1.0          # owner photo 12: no shared eaves
+    by_id = {c["id"]: c for c in meas["canopies"]}
+    for c in rep["canopies"]:
+        assert c["eave_length_m"] == pytest.approx(by_id[c["id"]]["eave_length_m"], abs=0.05)
+        assert c["eave_width_m"] == pytest.approx(by_id[c["id"]]["eave_width_m"], abs=0.05)
+
+
+def test_traces_alone_touch_and_the_geometry_entry_is_validated():
+    ov = _knyszyn_market_overrides()
+    base = [o for o in ov if o["kind"] == MK.KIND]
+    rep = MK.build(_Buf(), "knyszyn", ORIGIN, base, _flat, {})
+    # the defect D41 fixes: traces + 0.25 m inset leave 0.3 m between eaves 3.2 m up - they read as touching
+    assert min(g["gap_m"] for g in rep["eave_gaps_m"]) <= 0.35
+    geo = next(o for o in ov if o["kind"] == MK.GEOMETRY_KIND)
+    for bad in ({"eave_inset_m": 2.0}, {"eave_inset_m": True}, {"canopies": geo["canopies"][:3]},
+                {"canopies": geo["canopies"] + [geo["canopies"][0]]}):
+        with pytest.raises(ValueError):
+            MK.build(_Buf(), "knyszyn", ORIGIN, base + [{**geo, **bad}], _flat, {})
+    with pytest.raises(ValueError):
+        MK.build(_Buf(), "knyszyn", ORIGIN, base + [geo, dict(geo, id="dup")], _flat, {})

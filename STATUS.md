@@ -4,4 +4,5 @@
   dostawała goły krawężnik bez pasa trawy, conform NMT 2022 (stary rów) spadał 0,5–0,74 m w 1,5 m. Poprawka `meshing.build_corner_strips`
   (tylko j.compact): trawa za całym krawężnikiem + soft footprint → spadek ≤ 0,28 m (repro: NMT z WCS GUGiK, tylko liczby).
 - (d) DONE: klucz `outer_diameter_m` (14–40 m, max(2 m, 40 %) od promienia OSM, inaczej stale), scalanie opcji compact_roundabout w network.load, override knyszyn 26,0 m WORKING_VALUE na końcu overrides.yaml; test_roundabout_0274: baseline 0218 bez D41, dolna granica wysepki S 28→27.
-- NASTĘPNY KROK: (a) pomiar wiat z ortofoto → `uv run --project tools/worldgen python tools/worldgen/qa/market_canopy_ortho.py measure`
+- (a) DONE: pomiar WMS (qa/market_canopy_ortho.py): okapy 27,1 × 7,2 m, prześwity 1,15 / 1,17 m, 14,2 m; override `knyszyn-market-canopy-eaves-d41` (market_canopy_geometry_d41) podmienia obrysy po id, inset 0; JSON+README w docs/reports/rynek-p1/.
+- NASTĘPNY KROK: (b) pawilon namiotowy (override knyszyn-market-pavilion-d41) → `uv run --project tools/worldgen python -m pytest tests/gis/test_rynek_p1_0227.py -q`
