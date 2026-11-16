@@ -93,3 +93,5 @@ R19: dwa nowe MapillaryKuronia, richlv15.07.2017, root oba obejrzał i skierowa�
 16.11.2026 R22: dwa nowe link-only obrazy Bravilor z galeriiUnibep, root osobno obejrzał. Wysoka ciemna hala ZTYŁU, niski ciemny front z jasnąopaską/czerwonympasem i wyższy prawysegment z2poziomamiokien. Nie upraszczać do całej białej hali ani całego wysokiego frontu. Myśliwska18/dojazdKuronia z tekstu wykonawcy, bez utożsamiania zRosti/Kuronia2.1kompleks/2ekspozycje,0pobrań; daty/metraż/materiały/2026UNVERIFIED. Główny28.
 
 DoprecyzowanieR22: Unibep podaje ten sam adresMyśliwska18 przyBravilor iRosti, podczasgdy oficjalnykontaktBravilor wskazujeKuronia2. Zapisano jawnykonflikt wR22/source-conflict.json i obu wierszach; bezwniosku o wspólnejdziałce lubprzyczynie. Czytelne szyldy potwierdzają fotograficznąreferencjęBravilor, nieGPS.
+
+R23: dwa nowe link-only kadry Rosti, fasada biurowa i widok hali z placem. Root obejrzał oba. Numer18 widoczny; adres operatora Myśliwska18 z niezależnej strony Rosti, lecz tekstowy konflikt Unibep i brak formalnego join P11 pozostają jawne. Główny manifest30 rekordów; bez metrów, datowania stopką2026 i przeniesienia żebrowania biura na halę.
