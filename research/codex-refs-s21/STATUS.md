@@ -1,15 +1,15 @@
 # Status referencji codex-refs-s21
 
-Stan po `9337c8251`, 16.11.2026. Cel ciągły pozostaje aktywny. Gałąź `research/codex-refs-s21`, [PR100](https://github.com/woogitsugames/kamion/pull/100), bez scalania.
+Stan po `f9dbf2b94`, 16.11.2026. Cel ciągły pozostaje aktywny. Gałąź `research/codex-refs-s21`, [PR100](https://github.com/woogitsugames/kamion/pull/100), bez scalania.
 
 | Pakiet | Rekordy głównego manifestu | Co oznacza liczba |
 |---|---:|---|
 | 01 lampy | 65 | Także przednie, pomocnicze i niekwalifikowane referencje. |
-| 02 brud | 35 | 33 kadry: 14 lokalnych i 19 link-only, oraz 2 dokumenty. |
-| 03 Knyszyn | 56 | Różne daty; zdjęcia właściciela wyłącznie jako obserwacje tekstowe. |
-| 04 DK65 | 41 | Zdjęcia, ortofoto, dokumenty i jeden rekord BDL. |
+| 02 brud | 36 | 34 kadry: 14 lokalnych i 20 link-only, oraz 2 dokumenty. |
+| 03 Knyszyn | 58 | Różne daty; zdjęcia właściciela wyłącznie jako obserwacje tekstowe. |
+| 04 DK65 | 42 | Zdjęcia, ortofoto, dokumenty i jeden rekord BDL. |
 | 05 kolej 38 | 25 | Dokumenty i kadry nie tworzą automatycznie mapowania lokalnego przejazdu. |
-| 06 pierścień | 50 | Różne miasta, daty i stopnie identyfikacji obiektów. |
+| 06 pierścień | 51 | Różne miasta, daty i stopnie identyfikacji obiektów. |
 | 07 Białystok/Dojlidy | 30 | Także historyczne odniesienia i powtórne oglądy. |
 
 SOURCED: lokalne główne manifesty. Liczby nie oznaczają spełnienia progów FIX. Wierszy podkatalogów nie sumujemy z głównymi jako nowych ekspozycji.
@@ -28,7 +28,7 @@ Losowy audyt lamp R46: snapshot60, próbka12/60=20%,13 obrazów,0 zastępstw i0 
 
 ## Brud tylnych drzwi
 
-**A16 z ograniczeniami/B1.** A: Knight158, Western182, Premier183, KroneEUR15 lekki film, RoadTourWW17 source-dependent, AutoReview39, RI49, UR54, UR55 miejscowe smugi, RG57 Tonar, FR60-003 dolny nalot S.KO, R64 Wabash miejscowe dolne smugi i R65 Facchini ograniczony film, R71 zimowy S.KO oraz dwa R69 z lokalnymi dolnymi smugami. B: Western, alias CR6 liczony raz. Wysokość≥1000px dotyczy B; nie jest dodatkową bramką A.
+**A17 z ograniczeniami/B1.** A: Knight158, Western182, Premier183, KroneEUR15 lekki film, RoadTourWW17 source-dependent, AutoReview39, RI49, UR54, UR55 miejscowe smugi, RG57 Tonar, FR60-003 dolny nalot S.KO, R64 Wabash miejscowe dolne smugi i R65 Facchini ograniczony film, R71 zimowy S.KO oraz dwa R69 z lokalnymi dolnymi smugami. B: Western, alias CR6 liczony raz. Wysokość≥1000px dotyczy B; nie jest dodatkową bramką A.
 
 Zimowe A3: RoadTour source-dependent, RI49 i R71 z widocznym śniegiem. R71 ma podpis miejsca obwód omski, nie moskiewski region rejestracji; Europy nie zwiększa. Europejska droga A2: RI49 w Polsce oraz FR60-003. R70 łączy podpis miejsca fotografii w obwodzie twerskim, widoczną scenę drogową i oficjalny opis geograficzny regionu. To jawny wniosek z dwóch źródeł o kontynencie, nie członkostwie wUE ani GPS. Zimowe/europejskie B0 w rozpoznanym podzbiorze, nie globalne twierdzenie o braku. Progi20/12/6/6 nadal otwarte.
 
@@ -91,3 +91,15 @@ Bieżące główne manifesty01–07:65/35/56/41/25/50/30 rekordów. R27Knyszyn:1
 Negatywne01R61/R62/LC7 i zimowe02media nie zwiększająPASS/ON/nocy/A/B/zimy/Europy. 05R22 nie łączy drogowego47+800–53+600 z kilometremLK38;29+522 i historycznaB2011 nadal osobno. Dodatkowy oglądPDF9 normznaków daje mm wyłącznie dla tabeliA–D, nie rozstrzyga rysunkówG. 07R24bramaszpitala:0nowychkadrów po ograniczonymUI,nieglobalnybrakpokrycia.03R28 PRG to mały ekstrakt2punktów1/2,niepełnyPRGmiasta. Nowy rozszerzony odczyt jest w toku,0modeli przed odbiorem.
 
 Kontrola przyrostowaJSON i głównychID/formatówCSV poprawna; pełny audyt plików0e408fbba pozostaje datowanym snapshotem. Live08:29:29, kolejny zwykły około09:30Bruksela. Cel aktywny, PR100 bez scalania; Gotowe do scalenia po recenzji lidera: NIE.
+
+## Odbiór po f9dbf2b94 — nowe bryły i A17
+
+Aktualne główne manifesty01–07:65/36/58/42/25/51/30. Kontrola snapshotf9dbf2b94:661poprawnychśledzonychJSON,99rastrów≤800px,100istniejących lokalnych ścieżek głównych manifestów,0duplikatówgłównychID/braków/plików>5MB/błędówzakresu. To kontrola plików, nie zastępstwo recenzji wizualnej.
+
+M61: **A17/B1, zimaA3, europejska drogaA2**. Nowy02-AFF-001 FruehaufZM53290 ma zamkniętą parę jasnych drzwi z drobnymi pionowymi smugami, root obejrzał exact1200×900. Rama/platforma i brunatne ślady na metalu osobno; nie skład soli. Całyobraz900pxwyklucza1000pxdrzwiB, trasa i ekspozycjaUNVERIFIED. Ablis to adres oferty, nie położenieaparatu. Główny02:34kadry14lokalnych/20link-only+2dokumenty. Inne nowe kontrole TrafiHCT i ClassTrucksUM52126 bez awansu.
+
+03R29/R30: dwie nowe analizy różnychbrył3066 i2D30 przy publicznych punktachPRGRynek3/4. Jedno małe GetFeature300×300m zwróciło51/51pkt,60127B,0nowychZIP; drugi model bezHTTP. Root obejrzał obiefigury800×480 oraz niezależnie odczytałkluczeCityGML/BDOT i rekordyPRG. Adres→bryła ESTIMATEDprzestrzennie, formalnyjoinUNVERIFIED. LoD1measuredHeight6,77m/7,79m SOURCED; zakresyZLoD2 8,10m/9,68m ESTIMATED. Nie rzeczywisteprzedziały tolerancji wysokości;obieźródłoALS2016, wersjeLoD2liter2018/LoD1 2023, różne pionoweCRS. Brak wnisków o przebudowie/materiałach/kondygnacjach/stanie2026. Własnefigury i atrybucje dodane, źródła sharedro.
+
+04R30:1nowy kadr rowu z wodą/skarpami/krawężnikami i dojazdem, podpis24.08.2026/kmokoło0+400lokalny. Rootobejrzał; brak widocznego przepustu, metrów lub GPS.06R20:1nowy kadr ścieżkiTykocin,MonikaKalicka, publikacja30.07.2022; bruk/obrzeża/oprawazpanelem/podporydrzew,bez funkcjipanelu/gatunków/metryki/mostu. Rootobejrzał. Oba ARRlink-only,0kopii.
+
+R4: wskazana uprzednio P4-001 to R48; brak potwierdzonej lokalnejbitmapyR4 wsprawdzonymzakresie. Nie dodano nowych norm bez oglądu. Ograniczony pojedynczy searchUNECE nie dał nowegopełnegoźródła, nie ponawiano blokowanychendpointów. Trzej agenci pracują dalej nad brudnymi tyłami, Dojlidami i relacją kościół–ogrodzenie–ulica. Live08:29:29, następny zwykły około09:30Bruksela. Gotowe do scalenia po recenzji lidera:NIE.
