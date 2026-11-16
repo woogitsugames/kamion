@@ -1,0 +1,45 @@
+{
+  "review_date": "2026-11-16",
+  "review_time": "date-only",
+  "distinct_images_personally_viewed": 3,
+  "accepted_A": 0,
+  "accepted_B": 0,
+  "winter_A_increment": 0,
+  "european_road_A_increment": 0,
+  "AUX_increment": 0,
+  "downloads": 0,
+  "saved_screenshots": 0,
+  "images": [
+    {
+      "id": "02-WEM-AUDIT01",
+      "exact_url": "https://oekastatic.orf.at/mims/2023/48/45/crops/w%3D1280%2Cq%3D90/2027598_bigpicture_764345_schnee2.jpg?s=775dea1d250c55298251e64c01b65de0c88587bb",
+      "natural_dimensions_from_chrome_title": "1280×853",
+      "observation": "W padającym śniegu po lewej biały furgon od tyłu i boku: dwa jasne skrzydła z pionowymi prętami/okuciami, dolna rama i dwa tylne koła; kabina z przodu częściowo zasłonięta. Szara dolna strefa i jasne grudki, lecz nie rozdzielono drogowego filmu od opadu i zacienienia. Obok sprzęt drogowy, radiowóz, pracownicy w jaskrawych kurtkach i pojazd ASFINAG. Jezdnia i drzewa pokryte śniegiem. Z samej skrzyni i pary drzwi nie wynika naczepa.",
+      "A": "PENDING_TYPE_AND_SURFACE; A_NOT_ACCEPTED",
+      "B": "FAIL_HEIGHT: cały obraz poniżej1000px",
+      "snow_visible": true
+    },
+    {
+      "id": "02-WEM-AUDIT02",
+      "exact_url": "https://liberecka.drbna.cz/files/drbna/uploads/files/liberecka-drbna/17682969773484-103-kamion-tomas-jiranek.jpg",
+      "natural_dimensions_from_chrome_title": "526×701",
+      "observation": "Ukośny widok rzeczywistego zestawu: jasny ciągnik przy barierze i czerwona kurtynowa naczepa ustawiona w poprzek drogi, z trzema tylnymi osiami. Z tyłu mała jasna płaszczyzna z pionowymi liniami i ciemną lewą strefą; pełne zamknięcie obu skrzydeł i mechanizm szarych smug pozostają niepewne. Na pierwszym planie radiowóz, mokra droga, śnieg przy krawędzi i na drzewach. Nie powiększano sztucznie fotografii.",
+      "A": "PENDING_CLOSED_PAIR_AND_SURFACE; A_NOT_ACCEPTED",
+      "B": "FAIL_HEIGHT: cały obraz poniżej1000px",
+      "snow_visible": true
+    },
+    {
+      "id": "02-WEM-AUDIT03",
+      "exact_url": "https://imgl.krone.at/scaled/4054806/v4593e2/schema_org_16_9.jpg",
+      "natural_dimensions_from_chrome_title": "1920×1080",
+      "observation": "Żółta naczepa przechylona przy drzewie i rozbitej konstrukcji przystanku. Widoczna czołowa ściana z drobnymi elementami przyłączeniowymi/uchwytami, nie zamknięta para tylnych drzwi. Ciemne ślady przy elementach i miejscowe uszkodzenia nie zostały uznane za film drogowy tylnych pól. Duże śnieżne odkłady, budynki z zaśnieżonymi dachami, policjanci i mokra jezdnia.",
+      "A": "FAIL_NO_REAR_PAIR; A_NOT_ACCEPTED",
+      "B": "FAIL_NO_PAIR",
+      "snow_visible": true
+    }
+  ],
+  "newness_limits": "Exact źródła i assety nieznane w02/P18 przed oglądem; znane prasowe kopie Neumarkt/Merkur/TAG24 zR50 odrzucono przed powtórnym oglądem. Nie deklaruje pełnego wizualnego audytu całego projektu.",
+  "type_limits": "ORF tylko Lkw i skrzynia: naczepa vs solówka/drawbar UNVERIFIED. Czechy konstrukcja zespołu: ciągnik i kurtynowa naczepa z3osiami. Krone tekst źródłowy Sattelauflieger; kadr czołowy.",
+  "geo_limits": "Nie utożsamiono domeny/autora zGPS; tylko relacja zdarzenia. ORF przypięcie konkretnego podpisu do assetu niezweryfikowane.",
+  "browser_end": "Jawne zakończenie native sky i zwolnienie Chrome knyszynowi, potem lampy. Brak API, Commons/Flickr i nowych żądań zablokowanych hostów."
+}
