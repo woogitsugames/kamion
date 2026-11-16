@@ -180,3 +180,8 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Chereau: rzeczywista emisja — runda23
 
 [lit-rear-closeup-round23](lit-rear-closeup-round23/README.md):2nowe link-onlyARR kadry604×453. FLEX-C zamontowanydużymoduł, emisjaUNVERIFIED. Citylight:rzeczywisty zestaw nazewnętrznymplacu, dolne czerwone lampy świecą i oświetlajągrunt; root+agent osobno obejrzeliCitylight. Białe robocze/odblaski drzwi wydzielone. Pojedyncza obudowaEST10–12%szerokości/60–70px, granica przy poświacieBORDERLINE;0nowychstrictzbliżeń/E,natywne300FAIL. Zmierzchowawyglądemscena, ścisłanocUNVERIFIED; M59dopuszczazmierzch.0pobrań/screenshotów. AUXpoza głównym49, nie liczyć2lamp w1kadrze jako2kadrów.
+
+
+## Lampka tablicy: znak L/E9 — runda25
+
+[heavy-plate-round25](heavy-plate-round25/README.md):3nowe rzeczywiste link-onlyARR kadry1obudowy/optyki. MakroL / E9wokręgu /00 4127 zgodnie odczytane przezautora i root woddzielnychprzeglądarkach (peer nieślepy). Wnętrzeniekompletne; producentowyPN/konkretne ciężkie zastosowanieUNVERIFIED, sellerL004127nieuznanyzaPN.0ON/noc,0pobrań/screenshotów. Liczba funkcjonalnychkomórUNKNOWN. AUXpoza głównym49,3kadry nie3części ani arbitralny nowywymóg5rodzin; kwalifikacjaheavyoddzielonaodczytelnegoznaku.
