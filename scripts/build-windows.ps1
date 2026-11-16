@@ -94,6 +94,10 @@ if (-not $SkipBuild) {
     "@echo off`r`nstart `"`" `"%~dp0Kamion.exe`" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 %*`r`n" | Set-Content (Join-Path $outDir 'Kamion-okno.cmd') -Encoding ascii -NoNewline
     "@echo off`r`nstart `"`" `"%~dp0Kamion.exe`" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 -scene knyszyn %*`r`n" | Set-Content (Join-Path $outDir 'Kamion-knyszyn.cmd') -Encoding ascii -NoNewline
     "@echo off`r`nstart `"`" `"%~dp0Kamion.exe`" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 -scene knyszyn-w %*`r`n" | Set-Content (Join-Path $outDir 'Kamion-knyszyn-w.cmd') -Encoding ascii -NoNewline
+    # Continuous drive along the streamed corridor (ADR 0273 §7, int-stream-s23): borderless full screen, start in knyszyn,
+    # neighbour tiles stream in (-stream 1). The -screen-* argument makes the game skip the screen mode of the settings file.
+    # package-windows.py ships it only when knyszyn is in the build (launcher with -scene).
+    "@echo off`r`nstart `"`" `"%~dp0Kamion.exe`" -screen-fullscreen 1 -window-mode borderless -scene knyszyn -stream 1 %*`r`n" | Set-Content (Join-Path $outDir 'Kamion-korytarz.cmd') -Encoding ascii -NoNewline
     $files = @(Get-ChildItem $outDir -Recurse -File)
     $bytes = ($files | Measure-Object Length -Sum).Sum
     [ordered]@{
