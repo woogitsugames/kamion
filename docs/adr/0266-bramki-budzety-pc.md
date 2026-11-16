@@ -78,3 +78,43 @@ premierę, kanał dystrybucji PC i model DLC (`docs/10` §3a), czy wersja telefo
   High/60 (0261), więc pomiar klasy min wymaga `-Tier Low -Fps 30`.
 - Propozycja (b) z „Konsekwencji” (`-Measure` w `build-windows.ps1`) nadal otwarta — `build-windows.ps1` nie zmieniany.
 - Weryfikacja po scaleniu: `uv run --with pytest pytest tools/pcperf -q` → 27 passed (Linux, chmura). C# i pwsh nieuruchomione.
+
+## Uzupełnienie s23 (D76) — emulacja klas min / zalecany na maszynie deweloperskiej
+**Decyzja właściciela D76** (`docs/11`): klasy „min” i „zalecany” z D74 mierzymy teraz emulacją na RTX 5070 (ograniczenie
+rozdzielczości, tieru i limitu FPS); raporty mogą zaliczać bramki z adnotacją „emulacja”; przed publiczną obietnicą wymagań
+— pomiar na prawdziwym słabszym sprzęcie (HD 630 / GTX 660, GTX 1660). Zmienia skutek pkt 2 („`referenceMachines: []` → każdy
+raport informacyjny”) i odpowiada na pierwsze pytanie z „Otwarte” (rozbieżność R1 w `docs/reports/GATES-STATUS-2026-11-16.md`).
+
+- **Osobny plik maszyn** `tools/pcperf/budgets/pc-machines.json` (format `kamion/pc-machines/1`) — nie w `pc-budgets.json`,
+  bo budżety per tier zmienia równolegle pomiar D83. Schemat:
+  `{format, adr, decision, note, reference: [wpis], emulation: [wpis]}`; wpis = `{id, label, decision, match, classes, method}`.
+  `match` dopasowuje pola `run.json → system` (to, co zapisuje `PcFrameMetricsRecorder` z `SystemInfo`): `gpuContains` /
+  `gpuExcludes` (`graphicsDeviceName`), `gpuVendorContains`, `cpuContains` / `cpuExcludes` (`processorType`),
+  `deviceModelContains` — podciągi bez wielkości liter; nieznany klucz = błąd formatu (exit 2). `classes` dla `reference` =
+  lista nazw klas; dla `emulation` = obiekt klasa → `{resolution, tier, targetFps, vSyncCount, fullScreenModes, realHardware}`.
+- **Wpis `dev-rtx5070`** (emulation, D76): `gpuContains ["RTX 5070"]`, `gpuExcludes ["Ti"]`, `gpuVendorContains ["NVIDIA"]`
+  (nazwa w logach Unity: „NVIDIA GeForce RTX 5070”; dokładny ciąg `SystemInfo.graphicsDeviceName` w playerze `UNVERIFIED` —
+  dlatego podciąg); klasy **min** = 1920×1080, Low, 30 FPS, VSync 0; **zalecany** = 1920×1080, High, 60 FPS, VSync 0; obie
+  w trybie `FullScreenWindow` (domyślne `-WindowMode borderless` skryptu) albo `ExclusiveFullScreen`; okno = niezgodne.
+  Klasa „wysoki” bez emulacji (poza D76) → informacyjna. `reference: []` — gotowe na prawdziwy sprzęt.
+- **Reguła parsera:** `measurement_kind` = `reference` (wpis `reference` z tą klasą pasuje do `system`, albo stary
+  `referenceMachines` z budżetu — zgodność wstecz) → `emulation` (wpis `emulation` pasuje i ma tę klasę, a `display` w
+  `run.json` spełnia jego konfigurację: rozdzielczość, `qualityName`, `targetFrameRate`, `vSyncCount`, `fullScreenMode`;
+  brak pola = niepotwierdzone = niezgodne) → w przeciwnym razie `informational` z powodami w `measurement.reasons`.
+  **`gate_eligible` = werdykt `PASS` i `measurement_kind` ∈ {reference, emulation}.** `--allow-context-mismatch` nadal
+  daje tylko wynik informacyjny. Raport JSON: `measurement_kind`, `measurement {kind, machine, decision, reasons, annotation}`;
+  MD i JSON emulacji: „EMULACJA (D76) — nie zastępuje pomiaru na sprzęcie klasy X (…) przed obietnicą wymagań sprzętowych”.
+  Werdykt i kody wyjścia 0/1/2 bez zmian (rodzaj pomiaru nie zmienia exit code); CLI: nowy opcjonalny `--machines <plik>`
+  (domyślnie `budgets/pc-machines.json`), linia stdout dopisuje na końcu `kind=… gate_eligible=…`. `scripts/pc-metrics.ps1`
+  bez zmian w parametrach (parser bierze plik domyślny); poprawiony tylko opis.
+- **Komendy (lider, Windows, RTX 5070):**
+  `pwsh scripts/pc-metrics.ps1 -Exe artifacts/win/kamion-<ver>-<sha>-regions/Kamion.exe -Scene knyszyn-w -Tier Low -Fps 30 -VSync 0 -Width 1920 -Height 1080 -DurationSeconds 90 -Class min`
+  i `… -Tier High -Fps 60 -VSync 0 -Width 1920 -Height 1080 -DurationSeconds 90 -Class zalecany`. `-VSync 0` jest wymagane
+  (domyślne `-1` zostawia ustawienie gry, które może mieć VSync włączony → `informational`).
+- **Ograniczenie metody:** emulacja ogranicza rozdzielczość, tier i limit FPS, ale RTX 5070 / Ultra 7 270K Plus / 64 GB nie
+  odtwarzają przepustowości GTX 660 / HD 630 / GTX 1660 ani 8–12 GB RAM; progi pamięci procesu i VRAM są mierzone, ale
+  słabsza karta może zachowywać się inaczej (sterownik, kompresja tekstur, streaming). Dlatego adnotacja w każdym raporcie.
+- Walidacja: `uv run --no-project --with pytest pytest tools/pcperf -q` → 51 passed (było 27; nowe: emulacja zgodna/niezgodna
+  — rozdzielczość, tier, FPS, VSync, tryb ekranu; GPU niepasujące, w tym „RTX 5070 Ti”; wpis `reference`; stary
+  `referenceMachines`; niepełny `run.json`; CLI z `--machines`; schemat i spójność `pc-machines.json` z `pc-budgets.json`).
+  `pc-budgets.json` niezmieniony. pwsh / player nieuruchomione (chmura, Linux).
