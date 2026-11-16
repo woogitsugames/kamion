@@ -221,12 +221,12 @@ def plan_pair(e: End, x: End, neighbour: str | None = None) -> Taper | None:
     if blend_hw and sh:
         # asphalt edge = half-width + paved part: the two steps add up (or cancel)
         step = max([step] + [abs(dhw + (v["other"][0] - v["own"][0]) / 100.0) for v in sh.values()])
-    if step < MIN_STEP_M:
-        return None
-    length = min(max(RATIO * step, MIN_LEN_M), MAX_LEN_M, 2.0 * e.length, 2.0 * x.length)
     skipped = None
     if not blend_hw and abs(dhw) >= MIN_STEP_M:
         skipped = "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)"
+    if step < MIN_STEP_M and not skipped:
+        return None
+    length = min(max(RATIO * step, MIN_LEN_M), MAX_LEN_M, 2.0 * e.length, 2.0 * x.length)
     return Taper(chain=e.chain, end=e.end, length=float(length), hw_own=e.hw, hw_other=x.hw,
                  hw_seam=0.5 * (e.hw + x.hw) if blend_hw else e.hw, shoulder=sh, neighbour=neighbour,
                  other_chain=x.chain, step_m=float(step), skipped=skipped)
