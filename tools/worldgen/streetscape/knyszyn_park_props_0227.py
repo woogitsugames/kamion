@@ -110,18 +110,22 @@ def _king(acc, layer, at, z):
             faces.extend(((a,b,c),(a,c,d)))
     faces.extend((42,42+i,42+i+1) for i in range(1,5))
     acc.add(layer,bronze,vertices,faces)
-    _box(acc,layer,bronze,body,z+3.16,z+3.25,.14,.12,KING_TANGENT)  # crown band
+    # The band overlaps the head rather than meeting its cap at one height.
+    _box(acc,layer,bronze,body,z+3.10,z+3.25,.14,.12,KING_TANGENT)  # crown band
     # The narrow raised points make the crown readable even on the cheap LOD.
     # Keep the top at the earlier proxy's height; no emblem or lettering.
     for x in (-.09, 0., .09):
         triangle=[_p(pos(x-.025,.12),z+3.25),_p(pos(x+.025,.12),z+3.25),
                   _p(pos(x,.12),z+3.39)]
         acc.add(layer,bronze,triangle,[[0,1,2],[2,1,0]])
-    # WORKING_VALUE: raised V suggests the photographed chain; no insignia/text.
+    # WORKING_VALUE: a modest raised V suggests the photographed chain; no text.
     for side in (-1,1):
-        a=pos(side*.22,.205); b=pos(0,.289)
-        c=pos(side*.205,.215); d=pos(0,.299)
-        acc.quad(layer,bronze,_p(a,z+2.54),_p(b,z+2.20),_p(d,z+2.20),_p(c,z+2.54))
+        a=pos(side*.22-.018,.25); b=pos(-.018,.30)
+        c=pos(.018,.30); d=pos(side*.22+.018,.25)
+        face=np.asarray([_p(a,z+2.54),_p(b,z+2.20),_p(c,z+2.20),_p(d,z+2.54)])
+        if np.dot(np.cross(face[1]-face[0],face[2]-face[0])[:2],KING_FORWARD)<0:
+            face=face[::-1]
+        acc.quad(layer,bronze,*face)
     # Separate sundial/plaque block on paving in front of figure, blank.
     p=body+KING_FORWARD*KING_BLOCK_DISTANCE_M
     _box(acc,layer,"plinth_grey",p,z,z+.75,.65,.40,KING_TANGENT)

@@ -152,6 +152,23 @@ def test_king_cloak_has_continuous_profile_and_crowned_head():
                for t in faces[-4:])
 
 
+def test_king_crown_overlaps_head_and_chain_faces_outward():
+    for layer in props.LAYERS:
+        acc=Acc(); props._king(acc,layer,[0.,0.],0.)
+        pieces=acc.d[(layer,"steel_painted")]
+        band=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].min(),3.10)
+              and np.isclose(v[:,2].max(),3.25)]
+        assert band and 3.10 < 3.16
+        strips=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].min(),2.20)
+                and np.isclose(v[:,2].max(),2.54)]
+        assert len(strips)==2
+        for v in strips:
+            n=np.cross(v[1]-v[0],v[2]-v[0])
+            assert n[:2]@props.KING_FORWARD>0
+            assert np.ptp(v[:2,:2]@props.KING_TANGENT)>.03
+            assert (v[:,:2]@props.KING_FORWARD).min()>=.249
+
+
 def test_flagpole_low_preserves_spiral_and_high_geometry():
     from math import cos, pi, sin
 
