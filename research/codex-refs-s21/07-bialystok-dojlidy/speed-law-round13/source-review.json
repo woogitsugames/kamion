@@ -16,5 +16,43 @@
   "photographs": 0,
   "official_figures_described": 0,
   "metadata_link": "https://eli.gov.pl/eli/DU/2024/1251/ogl",
-  "B33_source_status": "Historyczny pełny tekst odczytany; nie zweryfikowano kompletnego łańcucha nowelizacji paragrafu27 w tej rundzie"
+  "B33_source_status": "SOURCED_SCOPE_CHECKED: §27ust3 tekstu2019 oraz pełne teksty4 nowelizacji wskazanych w metryceELI nie zmieniają §27; nie pełna kontrola każdego innego paragrafu.",
+  "B33_followup": {
+    "review_date": "2026-11-16",
+    "base": "https://eli.gov.pl/api/acts/DU/2019/2310/text.html",
+    "metadata_amendment_count": 4,
+    "metadata": "https://eli.gov.pl/eli/DU/2019/2310/ogl",
+    "source_files": [
+      {
+        "url": "https://eli.gov.pl/eli/DU/2021/433/ogl",
+        "existing_raw_file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\01-lampy\\temporary-road-marking\\D2021433.html",
+        "sha256": "55060b9ee393913f7cc945387ce50d29e0944732f179eaec32ef126088aacadd",
+        "text_scope_read": "§20,§65 i załącznik",
+        "changes_paragraph27": false
+      },
+      {
+        "url": "https://eli.gov.pl/eli/DU/2021/2065/ogl",
+        "existing_raw_file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\01-lampy\\temporary-road-marking\\D20212065.html",
+        "sha256": "0bda945b59e06411add667b2fb48f4e475303016d659e13c4affbec8cfce568c",
+        "text_scope_read": "§47,52,54,56,58,60a,74,90,106 i załącznik",
+        "changes_paragraph27": false
+      },
+      {
+        "url": "https://eli.gov.pl/eli/DU/2022/2372/ogl",
+        "existing_raw_file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\01-lampy\\temporary-road-marking\\D20222372.html",
+        "sha256": "5637aa567e967f4aba3fb1eeca425347e66f608a8792ecda1a006097e7bc5643",
+        "text_scope_read": "§53,63,67 i załącznik",
+        "changes_paragraph27": false
+      },
+      {
+        "url": "https://eli.gov.pl/eli/DU/2026/133/ogl",
+        "existing_raw_file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\01-lampy\\temporary-road-marking\\D2026133.pdf.txt",
+        "sha256": "caa92e01925d525da7bb0e0ec47f5dd7f16edb797f9b3fc545658b443b5d8ac4",
+        "text_scope_read": "§54,62,63,64,66,nowy67a,77a/b,84,86 i załącznik",
+        "changes_paragraph27": false
+      }
+    ],
+    "no_new_downloads_for_followup": true,
+    "official_graphics_viewed_in_followup": 0
+  }
 }

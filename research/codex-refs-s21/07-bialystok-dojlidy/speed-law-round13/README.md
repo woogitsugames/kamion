@@ -17,3 +17,11 @@ SOURCED [art.19ust.1,tekst pełny]: prędkość ma zapewniać panowanie i uwzgl�
 Wniosek do świata jest warunkowy: numerDK65 sam nie rozstrzyga granic zabudowanego, klasy/układu jezdni ani znaków. Nie nadano nowego limitu konkretnemu odcinkowi/kaflowi. Limiter techniczny pojazdu, zakazy wyprzedzania, wyjątkiADR, faktyczne ustawienie znaków oraz zmiany po dacie opracowania tego snapshotu nie zostały w tej rundzie kompleksowo zbadane. B-120 zawiera też inne dokumenty i nie został uznany za zamknięty w całości.
 
 Źródła: [ujednoliconyPDF](https://eli.gov.pl/api/acts/DU/2024/1251/text/U/D20241251Lj.pdf), [metrykaELI](https://eli.gov.pl/eli/DU/2024/1251/ogl), pomocniczo [historycznyHTML2019/2310](https://eli.gov.pl/api/acts/DU/2019/2310/text.html). Akty urzędowe, nie licencja fotografii. WGit wyłącznie własne parafrazy, normy i manifest; hash/ścieżki wsource-review.json.
+
+## Dalsza kontrola §27 — rozstrzygnięty wskazany zakres
+
+Po początkowym zapisie wykonano osobny odczyt pełnych części normatywnych wszystkich4 nowelizacji wskazanych obecnie przez metrykęELI2019/2310:2021/433,2021/2065,2022/2372,2026/133. Wykorzystano już istniejące urzędoweHTML/PDFtekst zraw, bez nowych pobrań. Żadna z tych czterech zmian nie modyfikuje§27. Poprzednie zdanie o niewykonanym audycie tego łańcucha jest opisem wcześniejszego etapu; dla§27 zostało uzupełnione niniejszą kontrolą. Hash i zakres każdego pliku wsource-review.json. Rysunków nowelizacji nie oglądano ani nie opisano; do sprawdzenia§27 potrzebny był tekst zmian.
+
+SOURCED [§27ust.3,2019/2310 + kontrola wskazanych4 nowelizacji]: B-33 z wartością>50km/h na obszarze zabudowanym dotyczy samochodu osobowego, motocykla i ciężarowegoDMC≤3,5t, z wyłączeniami wymienionymi wpkt1–5. Nie jest podstawą podwyższenia limitu ciężkiego ciągnika samochodowego z naczepą do wartości na takiej tarczy. Nie utożsamiono podwyższenia z niższymB-33 ani nie zanegowano działania ograniczeń do30/40km/h. Nie wykonano pełnego algorytmu pierwszeństwa i odwoływania wszystkich znaków; dla ograniczeń niestandardowych trzeba czytać resztę przepisów i konkretne tabliczki.
+
+Odrębność źródeł: 50/20/80/70 i rolnicze40 pochodzą ze snapshotuPoRD04.11.2026, zaś zawężenie zakresu podwyższającegoB-33 z tekstu rozporządzenia i jawnego łańcucha4 zmian. Żaden z nich nie jest dowodem faktycznego znaku w Białymstoku/naDK65.
