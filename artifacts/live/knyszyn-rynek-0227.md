@@ -278,3 +278,7 @@
 - 2026-11-16 04:20 +01:00 — Pełny GIS R18: 1647 passed, 21 skipped, 3 xfailed; EditMode R18: 677 passed, 2 skipped. Przygotowywana korekta dwóch dodatkowych kamer, następnie R19 i ponowna kontrola po zmianie danych kamer.
 - NASTĘPNY KROK: `git status -sb; Get-Content artifacts/knyszyn-rynek-0227/gis-r18.done` 
 
+
+- 2026-11-16 04:23 +01:00 — GIS R18 1647 passed, 21 skipped, 3 xfailed; EditMode 677 passed, 2 skipped. Poprawione dwie diagnostyczne kamery pomnika; R19 build/import/render uruchomione. Budżet Low vs before FAIL, jakość pomnika i lip OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r19.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r19.done` 
+
