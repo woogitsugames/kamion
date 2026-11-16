@@ -9,7 +9,7 @@ Ciągły zbiór dla generatorów świata i ciężarówki. Izolowany worktree, ga
 | 3 Knyszyn | [03-knyszyn](03-knyszyn/README.md) | 40 |
 | 4 Korytarz DK65 | [04-dk65](04-dk65/README.md) | 27 |
 | 5 Linia kolejowa38 | [05-kolej38](05-kolej38/README.md) | 21 |
-| 6 Pierścień regionów | [06-region-ring](06-region-ring/README.md) | 36 |
+| 6 Pierścień regionów | [06-region-ring](06-region-ring/README.md) | 38 |
 | 7 Białystok/Dojlidy | [07-bialystok-dojlidy](07-bialystok-dojlidy/README.md) | 20 |
 
 Stan liczb po 80395743b, 16.11.2026; SOURCED lokalne manifesty. Podkatalogi kolejnych rund zawierają własne README, manifesty, dowody i odrzucenia. Nie sumować ich wierszy z manifestem głównym jako niezależnych zdjęć. Aliasy, porównania i powtórne oglądy nie zwiększają liczby ekspozycji.

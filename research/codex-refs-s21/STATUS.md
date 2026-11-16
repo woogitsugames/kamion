@@ -9,7 +9,7 @@ Stan danych: 16.11.2026, po pakiecie tree-plan-round18 (80395743b). Cel ciągły
 | 03 Knyszyn | 40 | Historyczne kadry i dane; zdjęcia właściciela wyłącznie opis tekstowy. |
 | 04 DK65 | 27 | Projekt, ortofoto i przepisy mają oddzielne daty i zakresy. |
 | 05 kolej 38 | 21 | Mapowanie lokalnego przejazdu do ID/kilometrażu nadal otwarte. |
-| 06 pierścień | 36 | Różne miasta i daty, bez łączenia w stan 2026. |
+| 06 pierścień | 38 | Różne miasta i daty, bez łączenia w stan 2026. |
 | 07 Białystok/Dojlidy | 20 | Geometria i dokumenty; lokalne B-5/B-18/wyjątki nadal niepotwierdzone. |
 
 M59: rozpoznana dolna granica 5 tylnych PASS (EuropointII, EuropointIII dwa odrębne kadry, EcopointII klosz, RA38 ScaniaE2) + 1 warunkowy UP4-03. W grupie PASS ON i zmierzch/noc nadal 0. RC39 ma E2, ale niejednoznaczny łańcuch zastosowania i drugi plik SUPPORT; nie dodaje unconditional PASS. Nie wymagamy pełnego numeru, pięciu rodzin ani kompletnej obudowy jako dodatkowych warunków nieobecnych w FIX. EMC 10R nie zastępuje fotometrii.
@@ -35,3 +35,5 @@ Kontrola po 80395743b: 456 poprawnych JSON, 93 rastry ≤800px, brak plików >5M
 Gotowe do scalenia po recenzji lidera: NIE. Następne: nowe zimowe kontrole drogowe R50, nowe tylne lampy R40, źródło przejazdu koło Knyszyna R14; każdy wynik recenzowany oddzielnie. Bez Unity/adb/kodu gry.
 
 Aktualizacja po e7112ae4e: R50 i R40 bez nowego A/B lub czytelnego E. KE14 dodaje1scenę przejazdu i1tekst, główny05=21. Root potwierdził nierozstrzygnięty materiał paneli i brak ID. Kontrola JSON po tych pakietach:461 poprawnych plików. Poprzedni licznik456 był datowanym snapshotem. Następne zadania agentów R51/R41/Mońki pozostają aktywne.
+
+Po22c52fdd3: MońkiMS12 dwa nowe historyczne widoki znanego dworca, tył/bok/otoczenie,0nowych budynków. Główny06=38. R53 nowy kadr Florida po pełnym i natywnym oglądzie pozostaje PENDING filmu na drzwiach,0A/B. R51 trzy leads bez obrazów, nie fotografie. Kontrola469poprawnychJSON/93rastry≤800px. Liczniki kwalifikacji M59/M61 bez zmian.
