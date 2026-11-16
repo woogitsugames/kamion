@@ -1,7 +1,8 @@
 """Cab navigation map data (KNAV v1) for the infotainment screen (game/Assets/_Project/UI/CabDisplays/NavMapData.cs).
 
 Reads the region products (all in git, no network):
-  Data/Regions/<id>/roads.graph.json  - road centrelines (OSM ODbL + BDOT10k), class, name, width, oneway
+  Data/Regions/<id>/roads.graph.json  - road centrelines (OSM ODbL + BDOT10k), class, name, width, oneway; read through
+                                        roads.pipeline.effective_graph (+ overrides.yaml carriageway_split, ADR 0274)
   Data/Regions/<id>/buildings.geojson - footprints (BDOT10k / OSM), outer rings only
   Data/Regions/<id>/route_start.json  - the start route (G3) in region-local metres, edge id per point
   Data/Regions/<id>/region.yaml       - origin (region-local frame: E = x - origin.x, N = y - origin.y, ADR 0003)
@@ -18,7 +19,8 @@ Classes: 0 service / living_street / track, 1 residential / unclassified / terti
 3 trunk / primary (+link). flags bit0 oneway, bit1 *_link. Polylines simplified (Douglas-Peucker 0.6 m roads,
 0.4 m buildings); buildings triangulated by ear clipping here, so the game never triangulates.
 
-Usage: python tools/ui/build_nav_map.py --region bialystok-industrial-c   (stdlib only)
+Usage: uv run --project tools/worldgen python tools/ui/build_nav_map.py --region bialystok-industrial-c [--out-dir <dir>]
+(the effective graph needs the worldgen project since ADR 0274; the rest is stdlib)
 """
 import argparse
 import json
@@ -151,13 +153,27 @@ def ear_clip(poly):
     return tris
 
 
-def main():
+def load_graph(region):
+    """roads.graph.json through roads.pipeline.effective_graph (ADR 0274: authored carriageway_split overrides applied),
+    so the map draws the separated carriageways the route (route_start.json) and the world use. Needs the worldgen
+    project (numpy, yaml): run through `uv run --project tools/worldgen`; no silent fallback to the raw graph."""
+    sys.path.insert(0, os.path.join(REPO, "tools", "worldgen"))
+    from roads import pipeline
+    stale = []
+    graph = pipeline.effective_graph(region, stale=stale)
+    if stale:
+        print(f"WARNING: stale carriageway_split overrides (ingested geometry kept there): {stale}")
+    return graph
+
+
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--region", required=True)
-    args = ap.parse_args()
+    ap.add_argument("--out-dir", default=OUT_DIR)
+    args = ap.parse_args(argv)
     rdir = os.path.join(REPO, "Data", "Regions", args.region)
     ox, oy = read_origin(rdir)
-    graph = json.load(open(os.path.join(rdir, "roads.graph.json"), encoding="utf-8"))
+    graph = load_graph(args.region)
     bld = json.load(open(os.path.join(rdir, "buildings.geojson"), encoding="utf-8"))
     route = json.load(open(os.path.join(rdir, "route_start.json"), encoding="utf-8"))
 
@@ -241,8 +257,8 @@ def main():
     for e, n, nm, lim in route_rows:
         out += struct.pack("<ffHH", e, n, nm, lim)
 
-    os.makedirs(OUT_DIR, exist_ok=True)
-    path = os.path.join(OUT_DIR, args.region + ".bytes")
+    os.makedirs(args.out_dir, exist_ok=True)
+    path = os.path.join(args.out_dir, args.region + ".bytes")
     with open(path, "wb") as f:
         f.write(out)
     npts = sum(len(r[4]) for r in roads)

@@ -3,7 +3,7 @@
     uv run --project tools/worldgen python scripts/map-audit-cameras.py --region bialystok-industrial-c \
         --out artifacts/map-audit-r9/cameras/audit_cameras.json [--step 20] [--left-step 40]
 
-Read-only inputs: Data/Regions/<id>/region.yaml, roads.graph.json, route_start.json (graph_nodes), heightmap_2049.r16.
+Read-only inputs: Data/Regions/<id>/region.yaml, roads.graph.json (+ overrides.yaml: effective graph, ADR 0274), route_start.json (graph_nodes), heightmap_2049.r16.
 Forward = route_start graph path (Kwadrat Park -> DK8/DK19); reverse = shortest drivable path end -> start on the same
 graph (roadgraph.to_digraph, same as export-route.py). Lane: right-most lane centre of the travel direction
 (two-way: lane_w * (lanes/2 - 0.5) right of the centreline; one-way: (lanes-1)/2 * lane_w right), lane_w = width/lanes
@@ -62,8 +62,14 @@ def main() -> int:
 
     rdir = REPO / "Data" / "Regions" / a.region
     region = yaml.safe_load((rdir / "region.yaml").read_text(encoding="utf-8"))
-    graph = json.loads((rdir / "roads.graph.json").read_text(encoding="utf-8"))
+    from roads import carriageway_split as CS
+    from roads import pipeline
+    # ADR 0274: the effective graph (authored carriageway splits) - cameras sit on the lanes the world is built with;
+    # route_start.json lists ingested node ids, a moved split node is translated to its effective id
+    graph = pipeline.effective_graph(a.region)
+    alias = CS.node_aliases(graph)
     route = json.loads((rdir / "route_start.json").read_text(encoding="utf-8"))
+    route["graph_nodes"] = [alias.get(n, n) for n in route["graph_nodes"]]
     ox, oy = region["origin"]["x"], region["origin"]["y"]
     H = load_height(region)
     tr = Transformer.from_crs("EPSG:2180", "EPSG:4326", always_xy=True)
