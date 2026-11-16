@@ -16,10 +16,10 @@ What is blended:
   * the carriageway half-width `Chain.hw` (apply_widths, right after the fork passes of pipeline.build_network);
     lanes of the touched sections share the local width (`lane_follow`, ADR 0233), otherwise the centre line would
     leave the axis inside the transition;
-  * with ADR 0272 (roads.xsec, kerbless shoulder as data) the paved and ground widths of the shoulder, carried per
-    station in the side `mat` code (apply_shoulders, after every network.assign_sides). The same function turns a
-    step of the shoulder widths between two sections of one chain (an override that ends inside the tile) into an
-    S-curve centred on the step. Without roads.xsec every kerbless edge has the same shoulder: nothing to blend.
+  * the paved and ground widths of the shoulder of a kerbless edge (ADR 0272, roads.xsec), carried per station in
+    the side `mat` code (apply_shoulders, after every network.assign_sides). The same function turns a step of the
+    shoulder widths between two sections of one chain (an override that ends inside the tile) into an S-curve
+    centred on the step.
 
 Length of the transition: PTB2022 (Dz.U. 2022 poz. 1518) § 17 ust. 6 only asks for a change of lane width "na krzywej
 przejściowej lub prostej przejściowej w sposób płynny, bez widocznych załamań krawędzi" - no number, and nothing on
@@ -38,10 +38,7 @@ import yaml
 
 from . import network as Nw
 
-try:                                  # ADR 0272 - not on main when this module was written
-    from . import xsec as X
-except ImportError:                   # pragma: no cover - exercised once 0272 is merged
-    X = None
+from . import xsec as X               # ADR 0272: shoulder of a kerbless edge as data
 
 REPO = Path(__file__).resolve().parents[3]
 REGIONS = REPO / "Data" / "Regions"
@@ -117,10 +114,10 @@ def _osm_way(edge_id: str) -> int:
 
 
 def nominal_shoulder(sec, rev: bool) -> dict:
-    """{"L" / "R": (paved_cm, ground_cm) | None} of a section in the chain frame; None = no data (roads.xsec absent)
-    or a kerb forced by an override."""
+    """{"L" / "R": (paved_cm, ground_cm) | None} of a section in the chain frame (roads.xsec.resolve: override >
+    OSM shoulder=* > class rule); None = a kerb forced by an override, or a roundabout."""
     out = {"L": None, "R": None}
-    if X is None or getattr(sec, "roundabout", False):
+    if getattr(sec, "roundabout", False):
         return out
     for side, osm in (("L", "left"), ("R", "right")):
         if rev:
@@ -369,10 +366,8 @@ def _ramp_steps(s: np.ndarray, pv: np.ndarray, gr: np.ndarray) -> int:
 
 def apply_shoulders(net: Nw.Network, tapers: list[Taper] | None = None) -> dict:
     """After network.assign_sides: S-curves of the shoulder widths (side `mat` codes of kerbless stations) at steps
-    inside a chain and towards the seam value of the planned ends. No-op without roads.xsec (ADR 0272)."""
+    inside a chain and towards the seam value of the planned ends."""
     rep = {"in_chain_ramps": 0, "seam_sides": 0}
-    if X is None:
-        return rep
     seam = {}
     for t in tapers or []:
         for side, v in t.shoulder.items():
@@ -408,9 +403,9 @@ def apply_shoulders(net: Nw.Network, tapers: list[Taper] | None = None) -> dict:
 
 
 def shoulder_at(c, side: str, i: int):
-    """(paved_m, ground_m) of a kerbless station, None beside a kerb or without roads.xsec."""
+    """(paved_m, ground_m) of a kerbless station, None beside a kerb."""
     d = (c.side or {}).get(side)
-    if X is None or not d or int(d["kind"][i]) != Nw.RURAL:
+    if not d or int(d["kind"][i]) != Nw.RURAL:
         return None
     p, g = _decode(np.asarray([int(d["mat"][i])], dtype=np.int64))
     return float(p[0]) / 100.0, float(g[0]) / 100.0

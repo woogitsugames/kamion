@@ -4,7 +4,7 @@ Synthetic tile pairs through the real generator network code (the QA tool's buil
 pipeline.build_network / build), then the region data in git: every road cut by a seam has the same carriageway
 half-width on both sides after the transitions.
 
-Shoulder tests (paved / ground widths of a kerbless edge) need roads.xsec of ADR 0272; they skip until it is merged.
+Shoulders: paved / ground widths of a kerbless edge from roads.xsec (ADR 0272), e.g. dk65-opaska-k1 against the class rule.
 """
 import sys
 from pathlib import Path
@@ -22,7 +22,6 @@ from roads import network as Nw  # noqa: E402
 from roads import pipeline  # noqa: E402
 from roads import seam_taper as ST  # noqa: E402
 
-needs_xsec = pytest.mark.skipif(ST.X is None, reason="roads.xsec (ADR 0272) not merged: every kerbless edge has one shoulder")
 
 A_SET = {"width": 7.3, "edge_strip": 0.2, "edge_lines": "both"}
 B_SET = {"width": 6.76, "edge_strip": 0.2, "edge_lines": "both"}
@@ -191,18 +190,6 @@ def _paved(net, side):
     return np.array([ST.shoulder_at(c, side, i)[0] for i in range(len(c.line.s))])
 
 
-def test_without_xsec_shoulders_are_a_noop():
-    if ST.X is not None:
-        pytest.skip("roads.xsec present")
-    ts = _pair()
-    net = SM.add_sides(ts[0], SM.build_plain(ts[0]))
-    before = {s: np.array(net.chains[0].side[s]["mat"]).copy() for s in ("L", "R")}
-    assert ST.apply_shoulders(net, []) == {"in_chain_ramps": 0, "seam_sides": 0}
-    assert all(np.array_equal(before[s], net.chains[0].side[s]["mat"]) for s in ("L", "R"))
-    assert ST.shoulder_at(net.chains[0], "L", 0) is None
-
-
-@needs_xsec
 @pytest.mark.parametrize("b_kw", [{}, {"flip_way": True}, {"seam_last": True}, {"flip_way": True, "seam_last": True}])
 def test_shoulder_730_676_asphalt_edge_meets_on_the_seam(b_kw):
     rule = ST.X.class_rule(SM.build_plain(_tile("b", 100.0, set_=SH_B)).sec_list[0])
@@ -225,7 +212,6 @@ def test_shoulder_730_676_asphalt_edge_meets_on_the_seam(b_kw):
     assert abs(p0a[ia] - p0b[ib]) == pytest.approx(abs(0.35 - rule.paved_m))
 
 
-@needs_xsec
 def test_shoulder_sides_are_matched_in_the_world_frame():
     """One-sided override in tile a (the way's left = one world side): the same world side of tile b blends, the
     other stays on the class rule - whichever way the neighbour's way and chain run."""
@@ -251,7 +237,6 @@ def test_shoulder_sides_are_matched_in_the_world_frame():
         assert out[("synthetic-a", other)] == out[("synthetic-b", other)] == rule, b_kw
 
 
-@needs_xsec
 def test_shoulder_override_ending_inside_a_tile_gets_a_ramp():
     """Way 7 carries the override, way 8 of the same chain the class rule: S-curve centred on the way boundary."""
     t = _tile("a", 0.0, set_=SH_A, ways=2, extra=[{"id": "w8", "target": {"osm_way": [8]}, "set": SH_B}])
