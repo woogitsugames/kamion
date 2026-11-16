@@ -270,3 +270,7 @@
 - 2026-11-16 04:00 +01:00 — R18 render 4 wariantów OK i 22 pary lokalne; kamera boczna zasłonięta masztem, tylna ucina cokół, poprawka póz OPEN. Diagnostyka Low: pełna 303 draws, bez pojazdu 240, bez far-field 299, bez obu 236; before 240, przyczyna różnicy nieudowodniona. Pełny GIS/EditMode R18 trwają.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r18.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/editmode-r18.done` 
 
+
+- 2026-11-16 04:16 +01:00 — EditMode R18 677 passed, 0 failed, 2 skipped; pełny GIS R18 trwa, dotychczas bez błędów. Pomiary Low i niewystarczające pozy kamer opisane; następna korekta tylko po zakończeniu testów.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r18.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/gis-r18.done` 
+
