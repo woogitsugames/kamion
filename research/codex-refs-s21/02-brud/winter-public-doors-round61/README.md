@@ -14,3 +14,6 @@ Artykuł Nofima omawia odpływ wody podczas transportu ryb; nie zamieniamy tego 
 Wszystko **link-only, all rights reserved**, bez pobierania fotografii, lokalnych PDF i zapisanych screenshotów. **0 kopii mediów**. Nie używano Commons ani Flickr. Meatrails wykryty jako znany R40 i pominięty; Fototruck.org po web403 odłożony bez obejścia/mirrorów. Każdy opis obrazu z tego pakietu opiera się na rzeczywistym osobnym oglądzie UI, nie na tytule lub opisie wyszukiwarki. Przegląd **2026-11-16, date-only**.
 
 Nie zmieniono parenta, globalnych ledgerów ani gita. A ≥ 20 łącznie i B ≥ 12 nowych z wysokością samych drzwi ≥ 1000 px oraz kontekstem trasy pozostają odrębne; podzbiory zimy i europejskich dróg nadal otwarte.
+
+
+AktualizacjaR62: primary Nofima zweryfikowane przez agenta. Właściwe ograniczenieA to wyłącznie niepotwierdzony typ konkretnego pojazdu; samo ucięcie góry nie dyskwalifikuje użytecznego detalu drzwi wA. Nie podniesiono kadru doB na podstawie wysokości całej bitmapy.
