@@ -318,3 +318,7 @@
 - 2026-11-16 07:35 +01:00 — PR niedraftowy #139 otwarty do main, MERGEABLE; werdykt NIE ze względu na Low FAIL i otwarte porównania wizualne/targowicę. GIS 1769 passed, 22 skipped, 2 xfailed; EditMode 955 passed, 2 skipped. Bez scalenia.
 - NASTĘPNY KROK: `gh pr view 139` 
 
+
+- 2026-11-16 07:38 +01:00 — Korekta targowicy po zdjęciach: szerszy arkusz GUGiK 2025 pokazuje rzeczywiste 4 dachy na południe od wcześniej błędnie wskazanego placu OSM 704368699. Trwa pomiar EPSG i implementacja nawierzchni/wiat; wysokości szacowane, render i testy OPEN.
+- NASTĘPNY KROK: `git status -sb; Get-PSDrive C` 
+
