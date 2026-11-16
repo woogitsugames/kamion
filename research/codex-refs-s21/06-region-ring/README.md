@@ -102,3 +102,5 @@ R14:1nowa panorama UMMonki, root obejrzał. AUX centralnej bryły z dachem/place
 
 
 R15: dwa nowe uliczne kadry Ełckiej w Mońkach, szurek forHere10.08.2017. Root oba obejrzał: kremowe domy, fragmenty dachów, balkony, ogrodzenia/chodnik/trawa/zjazdy. Zasłonięcia i ucięcia jawne; nie pełne bryły ani nowe nazwane obiekty. Główny43.
+
+16.11.2026 R16: dwa nowe link-only kadry zamku w Tykocinie z oficjalnej strony obiektu; oba root obejrzał osobno. Jeden obiekt, sylweta od gruntu i układ obwodu z góry. Niskie bliższe mury nie tworzą czterech równych wysokich skrzydeł. Daty ekspozycji, stan2026 i metryka UNVERIFIED. Bez kopii zdjęć i bez identyfikacji DW671.
