@@ -1,0 +1,38 @@
+{
+  "review_date": "2026-11-16",
+  "candidates": [
+    {
+      "url": "https://www.knyszyn.pl/asp/galeria/Rewitalizacja_rynku_w_Knyszynie/img_4715.jpg",
+      "source_page": "https://www.knyszyn.pl/asp/fotogaleria,194",
+      "source_caption": "Rynek przed rewitalizacją",
+      "status": "PENDING_VISUAL_TIMEOUT_NO_RETRY"
+    },
+    {
+      "url": "https://www.knyszyn.pl/asp/pliki/foto_2018/rr_2020-4.jpg",
+      "source_page": "https://www.knyszyn.pl/asp/knyszynski-rynek-po-rewitalizacji,239,artykul,3,4246",
+      "provenance": "Jawny img src odczytany z publicznego HTML, bez zgadywania nazwy",
+      "status": "VIEWED_AUX_NEW_EXPOSURE_EXISTING_BUILDINGS"
+    },
+    {
+      "url": "https://www.knyszyn.pl/asp/pliki/foto_2018/rr_2020-5.jpg",
+      "source_page": "https://www.knyszyn.pl/asp/knyszynski-rynek-po-rewitalizacji,239,artykul,3,4246",
+      "provenance": "Jawny img src odczytany z publicznego HTML, bez zgadywania nazwy",
+      "status": "VIEWED_AUX_NEW_EXPOSURE_EXISTING_BUILDINGS"
+    }
+  ],
+  "dedup": "Trzy dokładne nazwy/URL bez wcześniejszych trafień w 03 i K1. Ogląd potwierdził znane budynki w nowych ekspozycjach rr_2020-4/5; bez przyrostu potwierdzonych nowych fasad. Znane rr_2020-1/3 pominięte.",
+  "exclusions": [
+    {
+      "url": "https://atlas.knyszyn.pl/knyszyn/",
+      "reason": "Komunikat Please wait while your request is being verified; STOP bez obejścia"
+    },
+    {
+      "source": "KOK artykuł899",
+      "reason": "Nie ponawiano wcześniej znanego błędu certyfikatu"
+    },
+    {
+      "source": "Artykuł5441 wystawa fotograficzna",
+      "reason": "Pełny tekst opisuje wystawę, nie zawiera nowego odczytanego obrazu fasady"
+    }
+  ]
+}

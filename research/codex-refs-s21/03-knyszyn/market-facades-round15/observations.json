@@ -1,0 +1,15 @@
+{
+  "review_date": "2026-11-16",
+  "exact_review_time": "UNVERIFIED — nie zapisano odczytu zegara",
+  "method": "Każdy z dwóch obrazów indywidualnie wyrenderowany w natywnym Chrome; bez pobrań, zapisanych screenshotów i edycji obrazu",
+  "counts": {"new_exposures_viewed": 2, "confirmed_new_buildings": 0, "downloaded": 0, "link_only": 2},
+  "metadata_source": "Metryka serii UM 4246 wcześniej odczytana w fountain-active-round7; publikacja 2020-06-30 i podpis Urszula Citkowska. Nie są to dane EXIF tych plików.",
+  "frames": [
+    {"id": "MF15-01", "file": "rr_2020-4.jpg", "browser_title_dimensions": [960, 640], "visual": "Fontanna i trawniki na pierwszym planie. W prawym tle beżowo-łososiowa fasada pod ciemnym dachem kopertowym, poziomy gzyms, dwa widoczne poziomy otworów; po prawej ciemna wnęka lub balkon z jasnymi pionowymi podziałami. Niższe krzewy i wąskie korony drzew przy fasadzie. Po lewej rozpoznawalny znany kościół i dom z szeroką lukarną. Ławki oraz ciemne latarnie w przestrzeni placu.", "dedup": "Nowy dokładny URL/ekspozycja; kościół i dom z lukarną już znane. Beżowej fasady nie zaliczono jako potwierdzonego nowego budynku.", "unverified": ["adres beżowego budynku", "formalna liczba kondygnacji", "materiały", "metryka", "GPS kamery", "azymut i odniesienie północy", "stan 2026"]},
+    {"id": "MF15-02", "file": "rr_2020-5.jpg", "browser_title_dimensions": [960, 640], "visual": "Bliska ławka: ciemnobrązowe listwy oparcia i siedziska, czarne wygięte podłokietniki przechodzące w podpory, łukowe połączenie dolnych elementów. Smukła ciemna latarnia z szerokim okrągłym daszkiem i jasnym walcowym elementem. Szara drobna kostka układana w łukowe rzędy, ciemny zakrzywiony pas graniczny, widoczny ciemny przewód lub wąż na powierzchni. Jasny zwężający się pomnik na ciemnej schodkowej podstawie. Trawa, liściaste korony i znane fasady w tle.", "dedup": "Nowa ekspozycja; pogłębienie wyposażenia już znanego rynku. Nie sumować ławek między zdjęciami jako różnych egzemplarzy.", "unverified": ["materiał listew i stelaża", "liczba listew", "funkcja przewodu lub węża", "wymiary kostki i ławki", "adresy", "stan 2026"]}
+  ],
+  "stopped_candidates": [
+    {"url": "https://www.knyszyn.pl/asp/galeria/Rewitalizacja_rynku_w_Knyszynie/img_4715.jpg", "status": "PENDING_VISUAL", "reason": "Pierwsza nawigacja timeout; obrazu nie opisano i nie ponawiano"},
+    {"url": "https://biblioteka.teatrnn.pl/dlibra/publication/91668/edition/86388/?language=en", "status": "STOP_CHALLENGE", "reason": "Widoczna weryfikacja zabezpieczeń; bez interakcji i bez obejścia, obraz nieobejrzany"}
+  ]
+}

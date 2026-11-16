@@ -1,6 +1,6 @@
 # 03 — Knyszyn: bryły i detale fasad — WIP
 
-Stan ewidencji głównej na 16.11.2026: **38 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **40 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Wcześniejszy etap:SOURCED [manifest]36rekordy, w tym4nowe kadry pracującej fontanny(3dzień+1noc), wszystkie link-onlyARR. Nocna fotografia pokazuje tony niebieskie/cyjanowe/różowofioletowe w wodzie i osobne odbicia. Liczba dysz, obiegów, metryka, typ lamp/program oraz aktualność2026UNVERIFIED; projekt2019 nie jest dokumentacją wykonawczą. Szczegóły fountain-active-round7 i fountain-night-round8.
 
@@ -138,3 +138,7 @@ Główny manifest36rekordów. [Cztery nowe kadry2024](church-surfaces-round10/RE
 ## Detale istniejących zdjęć Rynku — runda12
 
 [public-furniture-details-round12](public-furniture-details-round12/README.md):ponowny osobny oglądFA7-001/003 przezagenta,0nowych ekspozycji/0pobrań/0kopiiowner. Ławki:brązowoczerwone listwy, cienkie ciemne podpory, łukowaty podłokietnik; niski ciemny prostokątny pojemnik z kwiatami; duże płytyfontanny/proste spoiny/ciemny pas drobnych elementów/wąski ruszt z falistymi otworami; dalej wachlarzowe rzędy kostki/jasne obrzeża trawnika. Materiały/liczba listew/metraż/stan2026UNVERIFIED, nie sumowanoławek z różnychzdjęć. Główny38bez duplikatów;2wierszechild to noweopisyjużistniejącychkadrów. Koordynator odczytałartefakty, nie deklaruje drugiego ogląduźródeł w tejrundzie.
+
+## Rynek — dodatkowe ekspozycje, runda15
+
+[market-facades-round15](market-facades-round15/README.md):2 nowe kadry seriiUM publikowanej30.06.2020, po oglądzie agenta i root. Ławka z łukowymi podłokietnikami/podporami i połączeniem, latarnia z okrągłym daszkiem i jasnym cylindrem, wachlarzowa kostka; fasada w prawym tle z ciemnym kopertowym dachem i dwoma poziomami otworów.0 potwierdzonych nowych budynków, adres/formalne kondygnacje/metryka/stan2026UNVERIFIED. Główny40;2 nowe link-onlyARR/0 pobrań.
