@@ -295,3 +295,5 @@ Aktualizacja R70, 16.11.2026: FR60-003 zaliczony do geograficznej Europy po poł
 R71, 16.11.2026: root potwierdził nowy silnie zabrudzony zimowy S.KO472995. A14/B1, zimaA3, Europa-drogaA2. Podpis miejsca obwód omski; moskiewska rejestracja nie jest miejscem zdjęcia. Główny32:30kadrów (14lokalnych/16link-only)+2dokumenty. Nie potwierdzono chemicznie soli; B odpada przez wysokość całej fotografii761px.
 
 R69, peer 16.11.2026 po R71: dwie nowe referencje ograniczonych lokalnych smug pod dolnymi okuciami, bez twierdzenia o gęstym filmie całych drzwi. A16/B1, zimaA3, Europa-drogaA2. Główny34:32kadry (14lokalnych/18link-only)+2dokumenty. Lokalizacja sprzedaży nie dowodzi europejskiej drogi; góra Talsona ucięta nie jest samodzielną przesłanką odrzutu A.
+
+R75: jeden nowy mocny wizualnie zimowy tył z HCT, str185, root peer100/150%. Typ sprzęgu pozostaje UNVERIFIED, więc A_PENDING_TYPE_ONLY, nie nowyA ani kwalifikowana zima. A16/B1,zimaA3,Europa-drogaA2 bez zmian. Główny35:33kadry14lokalnych/19link-only+2dokumenty. R72/73 negatywne oglądy, R74 Nofima bez rozstrzygnięcia typu.
