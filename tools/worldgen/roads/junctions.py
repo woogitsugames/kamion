@@ -109,11 +109,14 @@ class Junction:
     emergency_signals: bool = False     # traffic_signals=emergency only (fire-station exit, ADR 0074)
     roundabout: bool = False
     give_way: bool = False
+    stop: bool = False                  # ADR 0279: B-20 on the minor approaches (highway=stop near the centre)
     boundary: list = field(default_factory=list)    # [(xy, tag)] CCW
     notes: list = field(default_factory=list)
     internal: list = field(default_factory=list)    # absorbed chains inside the cluster (their surface shapes the patch)
     compact: object = None                          # compact_roundabout.Spec when the junction is a whole roundabout
 
+
+STOP_SIGN_NEAR_M = 25.0     # as streetscape.furniture.junction_signs: highway=stop this near the centre -> B-20
 
 def _ang(v):
     return math.atan2(v[1], v[0])
@@ -413,6 +416,12 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
             return any(math.hypot(p["e"] - nd["xy"][0], p["n"] - nd["xy"][1]) <= 16.0 for p in real)
         j.signalized = any(node_sig(n) for n in j.nodes)
         j.give_way = any(net.nodes[n]["feature"] in ("highway=give_way", "highway=stop") for n in j.nodes)
+        # ADR 0279 P1 (D25): B-20 on the minor approaches - the same test as streetscape.furniture.junction_signs (an
+        # OSM highway=stop within STOP_SIGN_NEAR_M of the junction centre) or a stop node of the junction itself;
+        # roads.markings paints P-12 (not P-13) on those approaches (zał. 2 pkt 4.2.3, zał. 1 pkt 3.2.21)
+        j.stop = any(net.nodes[n]["feature"] == "highway=stop" for n in j.nodes) or any(
+            math.hypot(p["e"] - j.center[0], p["n"] - j.center[1]) < STOP_SIGN_NEAR_M
+            for p in (ctx_points or []) if p["kind"] == "highway=stop")
         if ctx_points:
             r = 25.0 + max((float(np.hypot(*(net.nodes[n]["xy"] - j.center))) for n in j.nodes), default=0)
             for p in real:

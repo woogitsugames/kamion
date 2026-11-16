@@ -85,3 +85,100 @@ def test_rail_square_crossing_numbers():
     assert RA.device_line_m(c) == pytest.approx(rail + 5.0)
     r = RA.rule(c, 90.0, 500.0)
     assert r["dist_m"] == 150.0                                 # A-10 150 m (unchanged, 2310 § 3 ust. 2)
+
+
+# ------------------------------------------------------------------------------------------------ (2) + (3) markings
+ORIGIN = (777995.0, 596223.0)
+
+
+def _junction_net(main="secondary", main_lanes=2, minor="residential", four=False):
+    """Synthetic T (or X) junction at the local origin: east-west main road, minor road to the south (and north)."""
+    from roads import network
+    ox, oy = ORIGIN
+    nodes = [{"id": "n0", "x": ox, "y": oy}, {"id": "n1", "x": ox - 120.0, "y": oy},
+             {"id": "n2", "x": ox + 120.0, "y": oy}, {"id": "n3", "x": ox, "y": oy - 120.0}]
+
+    def edge(eid, a, b, pts, hw, lanes):
+        return {"id": eid, "from": a, "to": b, "geometry": [[ox + px, oy + py] for px, py in pts],
+                "attrs": {"highway": {"v": hw}, "oneway": {"v": "no"}, "lanes": {"v": lanes}}}
+    edges = [edge("e1", "n0", "n1", [(0, 0), (-120, 0)], main, main_lanes),
+             edge("e2", "n0", "n2", [(0, 0), (120, 0)], main, main_lanes),
+             edge("e3", "n0", "n3", [(0, 0), (0, -120)], minor, 2)]
+    if four:
+        nodes.append({"id": "n4", "x": ox, "y": oy + 120.0})
+        edges.append(edge("e4", "n0", "n4", [(0, 0), (0, 120)], minor, 2))
+    return network.load({"nodes": nodes, "edges": edges}, ORIGIN)
+
+
+def _mark(net, ctx):
+    from roads.junctions import build_junctions
+    from roads.markings import build_markings
+    from roads.meshing import MeshBuf
+    juncs = build_junctions(net, ctx)
+    for c in net.chains:                                   # flat road (the profile stage is not needed here)
+        n = len(c.line.s)
+        c.z, c.e = np.zeros(n), np.zeros(n)
+    buf = MeshBuf()
+    rep = {}
+    build_markings(buf, net, juncs, ctx, rep)
+    return juncs, buf, rep
+
+
+def _parts(buf, kind):
+    return [p for p in buf.parts if p.layer == "markings" and p.src.startswith(kind + "@")]
+
+
+def _arm_station(j, part):
+    """(arm, smallest station from the junction centre of the part's vertices) - the junction-side edge."""
+    best = None
+    for a in j.arms:
+        if part.src.split("@", 1)[1] != a.chain.id:
+            continue
+        s = np.array([a.chain.line.project(v)[0] for v in part.V[:, :2]])
+        d = s if a.end == "a" else a.chain.length - s
+        best = (a, float(d.min()))
+    return best
+
+
+def test_p12_with_b20_not_p13():
+    """(3) highway=stop near the junction: B-20 on the minor approach (furniture) -> P-12 (zał. 1 pkt 3.2.21,
+    zał. 2 pkt 4.2.3), one continuous 0.50 m line; without the stop node the same approach keeps P-13."""
+    from roads import standards as S
+    stop = [{"kind": "highway=stop", "e": 0.0, "n": -12.0, "osm_node": 7}]
+    juncs, buf, rep = _mark(_junction_net(), stop)
+    assert juncs[0].stop
+    p12 = _parts(buf, "P-12")
+    assert len(p12) == 1 and not _parts(buf, "P-13")
+    v = p12[0].V
+    depth = np.ptp(v[:, 1])                                 # minor road runs north-south: depth along n
+    assert depth == pytest.approx(S.P12_W, abs=1e-6)
+    assert np.ptp(v[:, 0]) > 2.0                            # across the inbound lane(s)
+    juncs, buf, _ = _mark(_junction_net(), [])
+    assert not juncs[0].stop and not _parts(buf, "P-12") and len(_parts(buf, "P-13")) >= 1
+
+
+@pytest.mark.parametrize("main_lanes,overhead", [(2, False), (4, True)])
+def test_p14_before_signal_2m_side_8m_overhead(main_lanes, overhead):
+    """(2) zał. 2 pkt 4.2.5: P-14 >= 2.0 m before a signal beside the carriageway, >= 8.0 m before a signal over the
+    carriageway (measured to the face of the head). Was trim + 0.6 m = at the foot of the mast (trim + 1.0)."""
+    from roads import standards as S
+    net = _junction_net(main="primary", main_lanes=main_lanes, four=True)
+    sig = [{"kind": "highway=traffic_signals", "e": 0.0, "n": 0.0, "osm_node": 9}]
+    juncs, buf, _ = _mark(net, sig)
+    j = juncs[0]
+    assert j.signalized
+    p14 = _parts(buf, "P-14")
+    assert p14
+    seen = set()
+    for p in p14:
+        a, d = _arm_station(j, p)
+        i = j.arms.index(a)
+        post = j.trims[i] + S.SIGNAL_AFTER_TRIM
+        sec = a.chain.section(float(a.s(post)), net.sec_list)
+        ov = S.signal_overhead(sec, a.end)
+        if a.cls(net.sec_list) == "GP" or a.cls(net.sec_list) == "G":
+            assert ov is overhead
+        need = post + (S.P14_BEFORE_OVERHEAD_SIGNAL if ov else S.SIGNAL_HEAD_FWD + S.P14_BEFORE_SIGNAL)
+        assert d >= need - 0.05, (a.chain.id, d, need)
+        seen.add((a.chain.id, ov))
+    assert any(ov is overhead for _, ov in seen)

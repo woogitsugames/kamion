@@ -893,7 +893,7 @@ def signals(pl, net, juncs, report):
             if emerg and a.cls(net.sec_list) in ("D",):
                 continue                    # emergency signals face the main road, not the fire-station exit
 
-            d = (a.chain.t_a if a.end == "a" else a.chain.t_b) + 1.0
+            d = (a.chain.t_a if a.end == "a" else a.chain.t_b) + S.SIGNAL_AFTER_TRIM
             if d > a.L - 1:
                 continue
             c = a.chain
@@ -908,21 +908,21 @@ def signals(pl, net, juncs, report):
             if emerg:
                 lit = "off"                 # traffic_signals=emergency: dark at rest (ADR 0074)
             sec = c.section(s, net.sec_list)
-            lanes_in = sec.lanes if sec.oneway else max(1, sec.lanes_fwd if a.end == "b" else sec.lanes_bwd)
+            lanes_in = S.signal_lanes_in(sec, a.end)
             right = np.array([face[1], -face[0]])                # from the right kerb toward the carriageway
-            if lanes_in >= S.SIGNAL_CANTILEVER_LANES and not emerg:
+            if S.signal_overhead(sec, a.end, emerg):
                 z = pl.add("signal_mast", p, yaw_of(right), src=f"rule:signal:{j.id}")
                 head = p + right * 5.0
                 pl.add(f"signal_head_{lit}", head, yaw_of(face), z=z + S.SIGNAL_MAST_H - 1.25, src=f"rule:signal:{j.id}")
             else:
                 z = pl.add("signal_pole", p, yaw_of(face), src=f"rule:signal:{j.id}")
-            pl.add(f"signal_head_side_{lit}", p + face * 0.15, yaw_of(face), z=z + 2.9, src=f"rule:signal:{j.id}")
+            pl.add(f"signal_head_side_{lit}", p + face * S.SIGNAL_HEAD_FWD, yaw_of(face), z=z + 2.9, src=f"rule:signal:{j.id}")
             # repeater on the left (median kerb) of one-way approaches with >= 2 lanes, as on the Andersa / Maczka
             # photos (S-1 repeated on the left side; Dz.U. 2019 poz. 2311 zał. 3 - paragraph UNVERIFIED, not re-read)
             if sec.oneway and lanes_in >= 2:
                 pL = a.gutter(d, -1, extra=S.KERB_TOP_W + 0.6)
                 zl = pl.add("signal_pole", pL, yaw_of(face), src=f"rule:signal:{j.id}:left")
-                pl.add(f"signal_head_side_{lit}", pL + face * 0.15, yaw_of(face), z=zl + 2.9, src=f"rule:signal:{j.id}:left")
+                pl.add(f"signal_head_side_{lit}", pL + face * S.SIGNAL_HEAD_FWD, yaw_of(face), z=zl + 2.9, src=f"rule:signal:{j.id}:left")
                 rep_left = report.setdefault("signal_repeaters_left", 0)
                 report["signal_repeaters_left"] = rep_left + 1
             n += 1

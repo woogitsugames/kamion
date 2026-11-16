@@ -1,3 +1,4 @@
 # STATUS signs-p1-s23 (D25, chmura D r7) — ADR 0279 „P1 — wdrożenie” (baza: PR #147 signs-audit-0279 scalony do gałęzi)
 - krok 1: (1) urządzenia przejazdu: `rail.device_stations` — sygnalizator/G-3/G-4 ≥ 5 m od skrajnej szyny (1105 § 77 ust. 2 pkt 1; 2311 zał. 1 pkt 2.2.11), rogatka ≥ 5 m od osi toru po osi drogi (§ 54 ust. 1); było ≈ 3,55 m. Testy -k "rail or p1_0279": 139 passed.
-- NASTĘPNY KROK: (2)+(3) markings.py P-14 przy sygnalizatorze / P-12 przy B-20 — `uv run --project tools/worldgen python -m pytest tests/gis -k "sign or marking or rail or 0279" -q`
+- krok 2: (2) P-14 na wlocie z sygnalizacją `S.p14_before_signal_d` — ≥ 2,0 m przed głowicą boczną / ≥ 8,0 m przed nad jezdnią (zał. 2 pkt 4.2.5; było trim+0,6 = przy maszcie); (3) `junctions.Junction.stop` + `markings.approach_line_kind` → P-12 przy B-20. Testy szerokie (sign/marking/rail/junction/furniture/streetscape/consistency): 424 passed, 4 skipped, 1 xfailed.
+- NASTĘPNY KROK: (4) signs_route: traffic_sign=maxspeed → B-33_n, B-5, B-18_n — `uv run --project tools/worldgen python -m pytest tests/gis -k "sign or 0279" -q`

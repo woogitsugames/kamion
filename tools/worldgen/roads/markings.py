@@ -36,7 +36,7 @@ RANK = {"A": 0, "S": 1, "GP": 2, "G": 3, "Z": 4, "L": 5, "D": 6}
 #   y = traffic exposure + age: [0, 1) longitudinal lines (lane, centre, edge: rarely run over), [2, 3) transverse
 #       marks and glyphs (P-8 arrows, P-10, P-13, P-14: every wheel crosses them); fractional part = age 0..1 of
 #       that mark (deterministic hash of the mark), which scales dirt and wear.
-TRANSVERSE = ("P-8", "P-10", "P-13", "P-14")
+TRANSVERSE = ("P-8", "P-10", "P-12", "P-13", "P-14")
 _SECS = []          # net.sec_list of the network being marked (set by _build_markings)
 
 
@@ -779,13 +779,7 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
             if sec.highway == "service" and not j.signalized:
                 continue
             rank = RANK[sec.cls]
-            kind = None
-            if j.signalized:
-                kind = "P-14"
-            elif j.roundabout:
-                kind = "P-13"
-            elif j.give_way or (rank > maxrank and maxrank <= RANK["G"]):
-                kind = "P-13"
+            kind = approach_line_kind(j, rank, maxrank, sec.cls)
             if kind is None or inb == -1:
                 continue
             t = j.trims[i]
@@ -803,6 +797,13 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                     lo, hi = -hw, lat_c
             lo, hi = lo + 0.15, hi - 0.15
             d0 = t + 0.6
+            if kind == "P-14" and j.signalized:
+                # ADR 0279 P1: >= 2.0 m before the side head / >= 8.0 m before a head over the carriageway (zał. 2
+                # pkt 4.2.5); the signal post stands at trim + S.SIGNAL_AFTER_TRIM (furniture.signals). Was t + 0.6 =
+                # at the foot of the mast.
+                ts = t + S.SIGNAL_AFTER_TRIM
+                if ts <= a.L - 1:
+                    d0 = max(d0, S.p14_before_signal_d(t, c.section(a.s(ts), secs), a.end))
             cr = [abs(sc - float(a.s(0))) for sc in c.meta.get("crossings", [])]
             near = [x for x in cr if x - S.P10_WIDTH / 2 < d0 + 6]
             if near:
@@ -816,6 +817,10 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 while x + S.P14_LEN <= hi + 1e-6:
                     strip_cross(buf, c, s_mid, S.P14_DEPTH, x, x + S.P14_LEN)
                     x += S.P14_LEN + S.P14_GAP
+            elif kind == "P-12":
+                # zał. 2 pkt 4.2.3 (Dz.U. s. 571-572): one continuous 0.50 m line over all inbound lanes, along the
+                # edge of the priority carriageway (= where P-13 stood)
+                strip_cross(buf, c, float(a.s(d0 + S.P12_W / 2)), S.P12_W, lo, hi, kind="P-12")
             else:
                 s_base = float(a.s(d0))
                 x = lo
@@ -1025,15 +1030,31 @@ def _turns_continue(c, sec, tl, trav, end_s, s0, s1, arm_info, secs):
     return bool(info) and _lanes_continue(c, "b" if trav > 0 else "a", info[0], secs)
 
 
-def strip_cross(buf, c, s_mid, depth, lat0, lat1):
+def strip_cross(buf, c, s_mid, depth, lat0, lat1, kind="P-14"):
     s = np.array([s_mid - depth / 2, s_mid + depth / 2])
     a = _surface_pts(c, s, np.full(2, lat0))
     b = _surface_pts(c, s, np.full(2, lat1))
     V = np.vstack([a, b])          # 0:(s0,lat0) 1:(s1,lat0) 2:(s0,lat1) 3:(s1,lat1)
     T = np.array([(0, 1, 3), (0, 3, 2)])
-    uv1 = _paint_uv1(c, np.concatenate([s, s]), np.array([lat0, lat0, lat1, lat1]), "P-14")
-    buf.add("markings", "marking_white", V, np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float), T, src=f"P-14@{c.id}",
+    uv1 = _paint_uv1(c, np.concatenate([s, s]), np.array([lat0, lat0, lat1, lat1]), kind)
+    buf.add("markings", "marking_white", V, np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float), T, src=f"{kind}@{c.id}",
             UV1=uv1)
+
+
+def approach_line_kind(j, rank, maxrank, cls):
+    """Transverse line of one inbound junction approach (None = no line):
+    P-14 signalised; P-13 roundabout entry; P-12 where streetscape.furniture.junction_signs puts B-20 (j.stop and the
+    approach ranks below the best arm - same test) - ADR 0279 P1, zał. 1 pkt 3.2.21 / zał. 2 pkt 4.2.3: P-12 with
+    B-20 (was P-13); P-13 at give-way junctions and on minor approaches to G / GP / S / A roads."""
+    if j.signalized:
+        return "P-14"
+    if j.roundabout:
+        return "P-13"
+    if getattr(j, "stop", False) and rank > maxrank and (cls in ("Z", "L", "G") or rank < RANK["D"]):
+        return "P-12"
+    if j.give_way or (rank > maxrank and maxrank <= RANK["G"]):
+        return "P-13"
+    return None
 
 
 def _segmented(buf, c, sa, sb, lat, w, dash, gap, cont, kind):
