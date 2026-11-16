@@ -70,3 +70,7 @@ Główny manifest12rekordów. [DokumentBIP](route-c-public-plans-round6/README.m
 ## SchematP10/P11 — runda12
 
 [p10-p11-diagram-round12](p10-p11-diagram-round12/README.md): rzeczywiście obejrzany urzędowy rys.4.2.2.3 na stronie16 Dz.U.2026/132. Dwa poziome wymiarowania0,5m i≥3,0m; liczba s i pionowe przerwy wzoru niewyznaczone. Nie zamknięto całegoP11_GAP ani backloguB129. Jeden schemat/zero nowych zdjęć/pobrań; główny18.
+
+## Art20 i zakresB33 — runda13
+
+[speed-law-round13](speed-law-round13/README.md): osobno obejrzane s32–33 urzędowego snapshotuPoRD04.11.2026; limity50/20 oraz80/70 dla zestawu poza zabudowanym z warunkami rodzaju drogi. Rolnicze40 nie jest limitem ciągnika samochodowego. Pełne4 nowelizacje rozporządzenia znakowego sprawdzone dla§27: podwyższającyB33>50 w zabudowanym nie dotyczy ciężkiego zestawu. Bez nadawania limitu konkretnemu kaflowi i bez kompletnego algorytmu znaków. Główny18 bez zmian.

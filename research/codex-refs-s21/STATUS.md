@@ -1,14 +1,14 @@
 # Status codex-refs-s21
 
-Aktualizacja: 2026-11-16T03:47:27.2340219+01:00 (Bruksela, zmierzony czas zapisu). Cel ciągły aktywny. Gałąź `research/codex-refs-s21`, zwykły PR #100, bez scalania. Trzej agenci pogłębiają makra ECE, lokalne materiały P18 oraz publiczne zdjęcia PKP PLK. Wyniki robocze bez automatycznej kwalifikacji.
+Aktualizacja: 2026-11-16T04:10:40.1268407+01:00 (Bruksela, zmierzony zapis). Cel ciągły aktywny. Gałąź research/codex-refs-s21, zwykłyPR100, bez scalania. Kolejne zadania agentów: tylne makraECE, zimowe drzwi i Batorego/B123. Robocze wyniki bez automatycznej kwalifikacji.
 
 | Pakiet | Rekordy głównego manifestu | Stan |
 |---|---:|---|
-| 01 lampy | 49 | 8 lokalnych / 41 link-only; nie 49 zatwierdzonych homologacji. |
+| 01 lampy | 51 | 8 lokalnych / 43 link-only; nie 51 zatwierdzonych homologacji. |
 | 02 brud | 24 | 22 kadry i 2 dokumenty, także odrzucenia/AUX; nowy przyjęty AutoReview. |
-| 03 Knyszyn | 38 | Kościół, Rynek, fontanna, materiały i prywatne obserwacje tylko tekstowo. |
+| 03 Knyszyn | 40 | Kościół, Rynek, fontanna, materiały i prywatne obserwacje tylko tekstowo. |
 | 04 DK65 | 25 | Oznakowanie, pobocza, BDL i historyczny opis dendrologiczny. |
-| 05 kolej 38 | 17 | Zasilanie/typ sieci, dokument kategorii i historyczne widoki; mapowanie punktu pozostaje otwarte. |
+| 05 kolej 38 | 19 | Zasilanie/typ sieci, dokument kategorii i historyczne widoki; mapowanie punktu pozostaje otwarte. |
 | 06 pierścień | 36 | Mońki, Tykocin, most i rondo/ramię DW671-DK64. |
 | 07 Białystok/Dojlidy | 18 | Dokumenty i geometria, brak potwierdzonych B-5/B-18/wyjątków. |
 
@@ -67,3 +67,17 @@ DK65/B120: BE15 źródłowo opracowuje zakończenia barier, wyjątek tymczasowy 
 Tykocin: dwa nowe kadry Sokołowskiej/DW671 grobin02.09.2019, bruk i odrębny asfaltowy zakręt; główny06=36. LK38r12 sprawdził3 nowe punkty z lokalnegoOSM;0fotografii, brak widocznego pokrycia w danymwidoku, nie globalnybrak. Zmieniono dalsze źródło na publiczne zdjęciaPKP zamiast powtarzać same punktybezobrazów.
 
 Kontrola po tych commitach:393 poprawneJSON i91 rastrów≤800px, główneID unikalne, CSV prostokątne, brak plików>5MB. Główne manifesty49/24/38/25/17/36/18; nie suma zaakceptowanychfotografii. Wszystkie ostatniefotografieARR/Mapillary wyłącznie link-only, zero kopii właściciela. Commons/Flickr pobraniaSTOP nadal. Gotowe do scalenia po recenzji lidera: NIE.
+
+## Uzupełnienie kolejnego obiegu — 16.11.2026
+
+M59: FA34 dwa nowe przednie kadry jednegoDAF1939778, fizyczneE1/3411,PL,30 i1a/A/RL/HR/HC po dwóch odczytachmakra. Konfliktlewa/prawa zachowany. Główny01=51; tylny bilans4PASS+1warunkowy iON0/zmierzch0 bez zmian. EI33 wybrana nowaetykieta znanejEuropointII potwierdza24V i25-6400-707, bez nowej części i bez transferuE międzykadrami.
+
+Knyszyn: MF15 dwa nowe link-onlykadry seriiUM publikowanej30.06.2020, autorUrszulaCitkowska; oba ponownieobejrzane przezroot. Ławka/latarnia/wachlarzowakostka i beżowo-łososiowa fasada z kopertowymdachem;0potwierdzonych nowychbudynków, adres/formalne kondygnacje/metrykaUNVERIFIED. Główny03=40. Wpis dla drugiej sesji w głównym live zapisany04:08 czasuBrukseli.
+
+LK38: PS13 dwa link-onlyPLK Starosielce marzec2020, MateuszOstrzyżek, BY-NC-ND bezkopii; tory/podsypka/peron/podpory sieci, nie przejazdDK65/Knyszyn. Główny05=19. S19R16 rozdziela objazdDK65 wFastach planowanydo15.10.2025 od osobnego rondaKrynice i późniejszego statusuS19. ParametryopisuS19 nie są pomiaremDK65.
+
+Prawo: SL13 urzędowysnapshotPoRD04.11.2026 ma osobnoobejrzane s32–33 i5 liczbzwarunkami; dodatkowo§27B33 sprawdzony z4nowelizacjami, bezpodwyższania ciężkiegozestawu przezB33>50wzabudowanym. Nie nadano limitu konkretnymkaflom i nie zamknięto całegoB120. RawPDF/renderypozaGit.
+
+M61: R41dwalokalnepliki o błędnymmapowaniuP18 w kwarantannie. Nieprzypisano aktualnychlicencji do starychbajtów;0nowychprzyjęć,70/88 i18NOT_REVIEWED bez zmian. A6zograniczeniami/B1 pozostają. Nie ma kopiowaniafotografiiARR ani ownerphotos. Commons/FlickrpobraniaSTOP.
+
+Kontrolaśledzonych:404poprawneJSON,91rastrów≤800px,CSVprostokątne iIDgłówneunikalne, brakplików>5MB. Główne51/24/40/25/19/36/18, nie liczba kwalifikowanychzdjęć. Gotowe do scalenia po recenzji lidera: NIE. BezUnity/adb/kodu gry.
