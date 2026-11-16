@@ -1,0 +1,19 @@
+# Europoint II — fizyczne 24 V i numer wariantu znanej części
+
+16.11.2026 pogłębiono jedną [istniejącą galerię SCS POLAND, oferta 18387487902](https://allegro.pl/produkt/lampa-tyl-naczepa-schmitz-aspock-europoint-lewa-oryginal-d1117ed8-cd4a-49f5-804c-aadba0d60eef?offerId=18387487902). Dotąd opisano z niej kadr 1/5 (EUP-001, całość z E9/5497) i 3/5 (EUP-002, logo). W tej rundzie osobno obejrzano pozostałe **2/5, 4/5 i 5/5**. Nie powielono EUP3, RM18 ani SIM. Nowy odczyt homologacji nie został osiągnięty; nie mnożymy samych obudów AUX.
+
+Zachowano **1 nowy odrębny kadr 5/5**, dokumentujący użyteczny szczegół tej samej znanej części: na fizycznej białej etykiecie czytelne **24V** oraz **25-6400-707** (SOURCED: bezpośredni ogląd). To rozstrzyga wcześniejsze UNVERIFIED napięcia i dokładnego numeru wariantu egzemplarza w `../link-only-candidates/europoint-observations.json`. Dawniej odczytany prawy wariant katalogu TRP nie był identyfikacją tej części; **obecny odczyt pochodzi z etykiety, a nie komparatora**. Nie zmieniono historycznych opisów.
+
+Etykieta leży na ciemnej porysowanej obudowie, z brązowymi plamami, zabrudzeniami i przetartą/zasłoniętą górą. Ponad nią widoczny jest fragment zabrudzonej okrągłej struktury z otworami. U dołu napis Made in EU. Nie odtwarzano częściowo zasłoniętej daty, górnych ciągów ani znaczenia innych numerów. Data ekspozycji, fotograf, współrzędne oraz azymut geograficzny/magnetyczny pozostają UNVERIFIED. Napięcie znamionowe nie jest pomiarem emisji ani dowodem sprawności. Numer części nie jest numerem homologacji.
+
+Naturalny obraz makra ma **2560 × 1195 px** (SOURCED: DOM załadowanego obrazu). Fragment obudowy zajmuje praktycznie całą szerokość kadru (ESTIMATED około 95–100%); to fotografia fizycznej części z tej samej galerii. **Na tym kadrze nie ma pewnego E ani symboli funkcji.** Nie przeniesiono tu E9/5497 z innego zdjęcia jako własnego odczytu. Światło własne, komory, kolejność funkcji i pora ekspozycji: UNVERIFIED, optyka poza kadrem. To nie makro homologacji.
+
+Dwa pozostałe oglądy zapisano tylko w `observations.json`, bez dodatkowych wierszy kolekcji: 2/5 to rzeczywisty skośny widok czerwono-bezbarwnego klosza z centralną trójkątną strefą, wypukłymi okrągłymi optykami i bursztynowym bokiem; sprawdzenie natywne nie dało pewnego E. Kadr 4/5 pokazuje tylną płytę, dwa mocowania i centralne okrągłe złącze; nie rozpoznano pewnego E. Nie dodajemy kolejnej samej obudowy do AUX bez wartości dla tego celu. Jasne odbicia w 2/5 nie są potwierdzeniem ON.
+
+Odczyt 25-6400-707 nie jest użyty do zgadywania strony zabudowy. Tytuł oferty mówi „lewa”, a wcześniejszy komparator TRP dotyczył innego wariantu. Nie zamieniamy deklaracji strony ani nie budujemy nowego przypisania z samej końcówki numeru. Ciężkie/naczepowe zastosowanie pozostaje źródłowym opisem tej samej oferty, nie nowym oglądem montażu.
+
+Bilans: **3 nowe indywidualne oglądy wcześniej nieopisanych zdjęć, 1 wybrany kadr identyfikacyjny / 0 nowych części / 0 nowych rodzin / 0 nowych czytelnych E / 0 ON / 0 zmierzch/noc / 0 przyrostu ścisłego M59**. Nie są to trzy nowe lampy. Jednego wybranego kadru nie dodano do głównego manifestu.
+
+Wyłącznie **link-only, all rights reserved**. Ogląd w zwykłym Chrome, dokładne URL z aktualnego `currentSrc`, następnie ponowne otwarcie wybranego makra bezpośrednio. Nie pobrano obrazów, nie zapisano screenshotów i nie wykonano cropu/obrotu. Publiczna galeria działała normalnie; próba webtool była niedostępna i nie była ponawiana. Commons i pobrania Flickr pozostają STOP. Bez edycji parenta i bez Git.
+
+Root osobno obejrzał wyłącznie wybrany kadr5/5, potwierdzając24V i25-6400-707. Zapis root-peer-review.json; nie przypisano root oglądu dwóch pozostałych zdjęć. Historyczny komparatorTRP zachowuje swój dawny zakres; bieżący fizyczny odczyt tej części jest źródłem nadrzędnym dla tych dwóch pól.

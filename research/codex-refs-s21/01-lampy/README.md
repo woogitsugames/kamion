@@ -201,3 +201,7 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Bieżąca korekta kwalifikacji — runda32
 
 [eup3-label-geometry-round32](eup3-label-geometry-round32/README.md): powtórny ogląd istniejącegoEUP3-003 przez agenta i root potwierdza geometrię obudowy ponad10% szerokości kadru2560×1920. Usunięto ostatni warunek tej kandydatury: dolna granica4 tylnychPASS,1 warunkowyUP4-03; ON0 i zmierzch/noc0 wewnątrzPASS. Zero nowych zdjęć/części/rodzin. Historyczny census30 pozostaje snapshotem3PASS+2warunkowe, nie bieżącym bilansem. Pełny numer pierwszej aprobaty nadalUNVERIFIED i nie jest dopisanym kryterium15.
+
+## EuropointII — fizyczne24V i wariant, runda33
+
+[europoint2-identity-round33](europoint2-identity-round33/README.md):1 wybrany nowy kadr etykiety tej samej znanej części, po dwóch odczytach24V i25-6400-707. Trzy nowe ekspozycje galerii obejrzane przez agenta, root wyłącznieetykietę. Nie nowyE, nowa część ani ON; dolna granica4PASS bez zmian. Nie przenoszono parametrów innego prawego wariantuTRP.
