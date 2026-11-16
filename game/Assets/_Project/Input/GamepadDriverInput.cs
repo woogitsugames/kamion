@@ -9,7 +9,7 @@ namespace Game.Controls
     /// mirrors on buttons, look-around on the right stick. Rebindable (settings screen); generic &lt;Gamepad&gt; layout
     /// (Xbox- and PlayStation-style pads). Allocation-free per frame.
     /// </summary>
-    public sealed class GamepadDriverInput : IDriverInput
+    public sealed class GamepadDriverInput : IDriverInput, IMenuGatedInput
     {
         public string Name => "pad";
         public bool Enabled { get; set; } = true;
@@ -29,6 +29,14 @@ namespace Game.Controls
             m_Actions = actions;
             Feel = feel ?? PadKeyboardFeel.Defaults();
             Tuning = tuning;
+        }
+
+        /// <summary>Menu open (review #131 P1-1): no view commands, stick filter and shaped values at rest.</summary>
+        public void SampleBlocked(float dt, in VehicleFeedback fb)
+        {
+            View.Clear();
+            m_Steer.Reset();
+            LastStick = 0f; LastThrottle = 0f; LastBrake = 0f;
         }
 
         public void Sample(float dt, in VehicleFeedback fb, ref DriverIntent intent)

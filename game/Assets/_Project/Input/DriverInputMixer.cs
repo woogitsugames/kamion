@@ -8,6 +8,9 @@ namespace Game.Controls
     ///   if none, the last active source's value is held by the sources themselves (each keeps its own state);
     /// - throttle / brake / clutch: maximum over sources (pedal on any device wins);
     /// - one-shot commands: merged (last non-None selector wins, shift deltas summed, toggles OR-ed).
+    /// Menu gate (review #131 P1-1): while a settings panel / modal is open (<see cref="MenuOpen"/>), and for one more
+    /// sample after it closed, every <see cref="IMenuGatedInput"/> source (pad, keyboards, PC wheel) contributes an
+    /// empty intent - the same buttons navigate the menu. Autopilots, touch and gyro are not gated.
     /// Allocation-free per frame.
     /// </summary>
     public sealed class DriverInputMixer
@@ -39,16 +42,41 @@ namespace Game.Controls
 
         public IReadOnlyList<IDriverInput> Sources => m_Sources;
 
+        /// <summary>
+        /// Set by the gameplay bridge every frame before <see cref="Sample"/>: a settings panel or another modal owns the
+        /// pad / keyboard (their buttons navigate it). The ONE place that keeps menu input out of the driving loop.
+        /// </summary>
+        public bool MenuOpen { get; set; }
+
+        /// <summary>
+        /// The gate state used by the last <see cref="Sample"/>: <see cref="MenuOpen"/> now or in the sample before it.
+        /// The extra sample covers the frame in which the panel closes, whatever the order of the UI event and this
+        /// sample is: the button edge that closed it (pad B / Esc / pad A on "Zamknij") never reaches the vehicle.
+        /// </summary>
+        public bool MenuGateActive { get; private set; }
+        bool m_MenuWasOpen;
+
         public DriverIntent Sample(float dt, in VehicleFeedback fb)
         {
             var result = new DriverIntent();
             bool steered = false;
+            bool gate = MenuOpen || m_MenuWasOpen;
+            m_MenuWasOpen = MenuOpen;
+            MenuGateActive = gate;
             for (int i = 0; i < m_Sources.Count; i++)
             {
                 var s = m_Sources[i];
                 ref var it = ref m_Scratch[i];
                 it.ClearCommands();
                 if (!s.Enabled) { it.SteerActive = false; it.Throttle = 0; it.Brake = 0; it.Clutch = 0; continue; }
+                if (gate && s is IMenuGatedInput gated)
+                {
+                    // Empty intent; the source drops its ramps / view commands and consumes its button edges.
+                    gated.SampleBlocked(dt, fb);
+                    it.Steer = 0; it.SteerActive = false; it.HandsOn = false; it.DirectSteer = false;
+                    it.Throttle = 0; it.Brake = 0; it.Clutch = 0;
+                    continue;
+                }
                 s.Sample(dt, fb, ref it);
                 if (!steered && it.SteerActive)
                 {

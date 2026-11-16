@@ -66,6 +66,21 @@ namespace Game.Rendering
         }
 
         public static string SavedTier => PlayerPrefs.GetString(PrefTier, null);
+
+        /// <summary>PlayerPrefs key of the saved tier (an explicit choice: start menu, settings, diagnostics button). Tests.</summary>
+        public const string SavedTierKey = PrefTier;
+
+        /// <summary>True when the player chose a tier explicitly (it wins over the device / hardware default at startup).</summary>
+        public static bool HasSavedTier => !string.IsNullOrEmpty(PlayerPrefs.GetString(PrefTier, ""));
+
+        /// <summary>Forgets the saved tier: the next start picks the device / hardware default again (PC settings "auto",
+        /// review #136 P1-1). The active quality level is not changed.</summary>
+        public static void ClearSavedTier()
+        {
+            if (!PlayerPrefs.HasKey(PrefTier)) return;
+            PlayerPrefs.DeleteKey(PrefTier);
+            PlayerPrefs.Save();
+        }
         public static int SavedFrameRate => PlayerPrefs.GetInt(PrefFps, 0);
     }
 }

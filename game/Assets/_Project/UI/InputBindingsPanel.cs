@@ -4,6 +4,7 @@ using System.Globalization;
 using Game.Controls;
 using Game.UI.Layout;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -15,6 +16,10 @@ namespace Game.UI
     /// Two pages (Klawiatura / Pad): feel steppers on top, then one row per action with its bindings; a binding button
     /// starts interactive rebinding (Backspace or the pad's middle-right button cancels, 10 s timeout). Every change is
     /// saved at once through the callbacks. Closes itself when its owner (the settings panel) is destroyed.
+    /// Focus (ADR 0265, review #131 P2-1): while open it is the top <see cref="UiFocus"/> owner, so the settings panel
+    /// below does not take the pad selection back; the screen itself is pointer-operated - its buttons never take the
+    /// pad / keyboard selection, because a key or pad press here is a new binding, not navigation (Enter / pad A must
+    /// not click the selected button again while it is being bound).
     /// Not in the driving loop: allocation is fine here.
     /// </summary>
     public sealed class InputBindingsPanel : MonoBehaviour
@@ -70,7 +75,17 @@ namespace Game.UI
             Destroy(gameObject);
         }
 
-        void OnDestroy() { m_Closing = true; CancelRebind(); }
+        void OnDestroy() { m_Closing = true; CancelRebind(); UiFocus.Pop(this, true); }   // the selection returns to the settings panel
+
+        /// <summary>Becomes the top focus owner with nothing selected (see the class summary).</summary>
+        void TakeFocus()
+        {
+            UiFocus.Push(this, null, false);
+            var es = EventSystem.current;
+            if (es == null) return;
+            es.firstSelectedGameObject = null;   // navigation with nothing selected must not pick an item of the panel below
+            es.SetSelectedGameObject(null);
+        }
 
         void CancelRebind()
         {
@@ -93,11 +108,13 @@ namespace Game.UI
             m_Safe = m_View.SafeArea;
             m_View.Refresh();
             BuildContent();
+            TakeFocus();
         }
 
         void Update()
         {
             if (m_Owner == null) { Close(); return; }   // settings panel closed (Escape / back)
+            if (!UiFocus.IsTop(this)) TakeFocus();      // the settings panel below was laid out again (window resized) and pushed itself
             if (m_View != null && m_View.Refresh()) BuildContent();
         }
 
@@ -362,6 +379,7 @@ namespace Game.UI
             var b = rt.gameObject.AddComponent<Button>();
             b.targetGraphic = img;
             b.onClick.AddListener(onClick);
+            UiFocus.PointerOnly(b);   // hover frame, no pad / keyboard selection (also not by a click)
             var l = Label(rt, "Label", text, 28, TextAnchor.MiddleCenter, k_Text);
             l.rectTransform.anchorMin = Vector2.zero; l.rectTransform.anchorMax = Vector2.one;
             l.rectTransform.offsetMin = l.rectTransform.offsetMax = Vector2.zero;

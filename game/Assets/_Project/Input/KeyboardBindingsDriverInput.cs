@@ -8,7 +8,7 @@ namespace Game.Controls
     /// with speed). Supersedes the fixed-key <see cref="KeyboardDriverInput"/> when installed (same default keys).
     /// Allocation-free per frame.
     /// </summary>
-    public sealed class KeyboardBindingsDriverInput : IDriverInput
+    public sealed class KeyboardBindingsDriverInput : IDriverInput, IMenuGatedInput
     {
         public string Name => "klawiatura";
         public bool Enabled { get; set; } = true;
@@ -24,6 +24,13 @@ namespace Game.Controls
             m_Actions = actions;
             Feel = feel ?? PadKeyboardFeel.Defaults();
             Tuning = tuning;
+        }
+
+        /// <summary>Menu open (review #131 P1-1): no view commands, key ramps at rest (the arrows navigate the menu).</summary>
+        public void SampleBlocked(float dt, in VehicleFeedback fb)
+        {
+            View.Clear();
+            m_Ramp.Reset();
         }
 
         public void Sample(float dt, in VehicleFeedback fb, ref DriverIntent intent)
