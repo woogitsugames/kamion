@@ -1447,6 +1447,8 @@ def qa_report(w, mk_report, mask):
             "clearance_by_class_m": S.CLEARANCE_BY_CLASS,
             "fork_tapers": w.stats.get("fork_tapers", []),
             "fork_abreast": w.stats.get("fork_abreast", []),
+            "seam_tapers": w.stats.get("seam_tapers", []),             # ADR 0275
+            "seam_shoulders": w.stats.get("seam_shoulders", {}),
             "sides_on_carriageway_culled": w.stats.get("sides_on_carriageway_culled", {}),
             "verge_strips": w.stats.get("verge_strips", {}),
             "fork_shifts": w.stats.get("fork_shifts", []),
