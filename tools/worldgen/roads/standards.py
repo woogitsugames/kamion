@@ -268,6 +268,32 @@ SIGNAL_MAST_H = 6.8         # WORKING_VALUE: cantilever mast, head >= 5.0 m over
 SIGNAL_CANTILEVER_LANES = 2 # WORKING_VALUE: approaches with >= 2 lanes get a cantilever head (ADR 0069: Mapillary
                             # p42 / p45 / p47 show curved mast arms over the 2-lane entries of Rondo Putry; was 3)
 SIGNAL_MAST_BEND_R = 1.5    # WORKING_VALUE: bend radius of the mast arm, read off p42 against the 0.36 m head
+# ADR 0279 P1 (D25): station of the signal post on its approach, shared by streetscape.furniture.signals (places it)
+# and roads.markings (P-14 >= 2.0 m before a head beside the carriageway, >= 8.0 m before a head over it, measured
+# from the outer edge of the line to the face plane of the head - zał. 2 pkt 4.2.5, Dz.U. s. 573).
+SIGNAL_AFTER_TRIM = 1.0     # WORKING_VALUE: signal post this far (along the arm, outward) from the junction trim
+SIGNAL_HEAD_FWD = 0.15      # WORKING_VALUE: side head face this far in front of the post (towards the driver)
+
+
+def signal_lanes_in(sec, end: str) -> int:
+    """Inbound lanes of an approach at its signal (furniture.signals: cantilever when >= SIGNAL_CANTILEVER_LANES)."""
+    return int(sec.lanes if sec.oneway else max(1, sec.lanes_fwd if end == "b" else sec.lanes_bwd))
+
+
+def signal_overhead(sec, end: str, emergency: bool = False) -> bool:
+    """True when furniture.signals puts a head over the carriageway (cantilever mast) on this approach."""
+    return (not emergency) and signal_lanes_in(sec, end) >= SIGNAL_CANTILEVER_LANES
+
+
+def p14_before_signal_d(trim: float, sec, end: str) -> float:
+    """Station (from the junction centre, along the arm) of the junction-side edge of P-14 before the signal of a
+    signalised approach: 2.0 m before the side head (zał. 2 pkt 4.2.5 tiret 1), 8.0 m before the overhead head
+    (tiret 3); the overhead head hangs at the post station (cantilever across the carriageway)."""
+    post = trim + SIGNAL_AFTER_TRIM
+    d = post + SIGNAL_HEAD_FWD + P14_BEFORE_SIGNAL
+    if signal_overhead(sec, end):
+        d = max(d, post + P14_BEFORE_OVERHEAD_SIGNAL)
+    return d
 # ADR 0172: mast prototypes by arm length (m). 6.0 = the rule mast (ADR 0069). 8.8 = the mast over the two northbound
 # lanes of the Rondo Putry ring under the Andersa viaduct, measured on the GUGiK 0.08 m orthophoto 2024 (pole foot
 # E -532.5 N 37.9, arm tip E -540.5 N 41.7, +-0.3 m; the top leans ~0.3 m from the nadir, not corrected).

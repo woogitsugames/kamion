@@ -740,14 +740,141 @@ def t_sa():
 
 
 
+# ------------------------------------------------------------------------------------------------ ADR 0279 P1 (D25)
+# Faces of the P1 rules / OSM tags (simplified pictograms from primitives, no traced artwork; patterns: Dz.U. 2019
+# poz. 2310 zał. 1 - colour patterns - and poz. 2311 zał. 1 rys. 2.2.9.1 A-8, 3.2.6.1 B-5, 3.2.19.1 B-18,
+# 5.2.48.1 D-42, 5.2.49.1 D-43, 9.7.1 tabliczka T-1).
+def a8():
+    """A-8 "skrzyżowanie o ruchu okrężnym": upright warning triangle, three black arrows in a circle."""
+    im, d = _tri_up()
+    cy = S * 0.62
+    for k in range(3):
+        a0 = math.radians(100 + 120 * k)
+        _arrow_arc(d, S / 2, cy, S * 0.135, a0, a0 + math.radians(62), S * 0.040, BLACK)
+    return im
+
+
+def b5():
+    """B-5 "zakaz wjazdu samochodów ciężarowych": black lorry in side view (cab left, box, two axles); no lettering."""
+    im, d = disc(WHITE, RED)
+    yb = S * 0.60
+    d.rectangle([S * 0.40, S * 0.37, S * 0.74, yb], fill=BLACK)                     # box body
+    d.polygon([(S * 0.24, yb), (S * 0.24, S * 0.47), (S * 0.29, S * 0.42), (S * 0.38, S * 0.42), (S * 0.38, yb)],
+              fill=BLACK)                                                            # cab, sloped front
+    d.polygon([(S * 0.265, S * 0.475), (S * 0.30, S * 0.44), (S * 0.36, S * 0.44), (S * 0.36, S * 0.50),
+               (S * 0.265, S * 0.50)], fill=WHITE)                                   # cab window
+    for x in (0.31, 0.64):
+        d.ellipse([S * x - 22, yb - 6, S * x + 22, yb + 38], fill=BLACK)
+        d.ellipse([S * x - 8, yb + 8, S * x + 8, yb + 24], fill=WHITE)
+    return im
+
+
+def b18(t):
+    """B-18 "zakaz wjazdu pojazdów o rzeczywistej masie całkowitej ponad ... t": the value + "t" in black (pkt 3.2.19:
+    the value is part of the sign - a B-18 without a number does not exist)."""
+    im, d = disc(WHITE, RED)
+    txt = f"{_fmt_t(t)}t"
+    f = _font(int(S * (0.36 if len(txt) <= 3 else 0.28)))
+    bb = d.textbbox((0, 0), txt, font=f)
+    d.text(((S - (bb[2] - bb[0])) / 2 - bb[0], (S - (bb[3] - bb[1])) / 2 - bb[1]), txt, font=f, fill=BLACK)
+    return im
+
+
+def _fmt_t(t):
+    v = float(t)
+    return str(int(v)) if v.is_integer() else f"{v:.1f}".replace(".", ",")
+
+
+def _houses(d, x0, x1, yb, h, col):
+    """Row of simplified buildings (gable houses, a block, a tower) between x0 and x1 standing on yb."""
+    w = x1 - x0
+    for fx, fw, fh, kind in ((0.00, 0.17, 0.55, "gable"), (0.19, 0.12, 1.00, "tower"), (0.33, 0.22, 0.70, "block"),
+                             (0.57, 0.18, 0.50, "gable"), (0.77, 0.23, 0.62, "gable")):
+        a, b = x0 + w * fx, x0 + w * (fx + fw)
+        top = yb - h * fh
+        if kind == "tower":
+            d.rectangle([a + (b - a) * 0.2, top + h * 0.18, b - (b - a) * 0.2, yb], fill=col)
+            d.polygon([(a + (b - a) * 0.2, top + h * 0.18), ((a + b) / 2, top), (b - (b - a) * 0.2, top + h * 0.18)],
+                      fill=col)
+        elif kind == "block":
+            d.rectangle([a, top, b, yb], fill=col)
+        else:
+            d.rectangle([a, top + h * 0.22, b, yb], fill=col)
+            d.polygon([(a - 4, top + h * 0.22), ((a + b) / 2, top), (b + 4, top + h * 0.22)], fill=col)
+
+
+def d42(end=False):
+    """D-42 "obszar zabudowany" / D-43 "koniec obszaru zabudowanego": white board 1200 x 700 mm (pkt 5.2.48.1) with a
+    black frame and a black row of buildings; D-43 crossed by a red diagonal band."""
+    w, h = S, int(round(S * 700 / 1200))
+    im = _img(w, h)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=12, fill=WHITE)
+    d.rounded_rectangle([10, 10, w - 11, h - 11], radius=8, outline=BLACK, width=7)
+    _houses(d, w * 0.12, w * 0.88, h * 0.80, h * 0.56, BLACK)
+    if end:
+        k = h * 0.075
+        d.polygon([(w * 0.10 - k, h * 0.88), (w * 0.10 + k, h * 0.88 + k * 0.3), (w * 0.90 + k, h * 0.12),
+                   (w * 0.90 - k, h * 0.12 - k * 0.3)], fill=RED)
+    return im
+
+
+def t1(dist_m, stop=False):
+    """Tabliczka T-1 (rys. 9.7.1): white plate, black frame, the distance in metres (to 10 m, pkt 2.1.3); with
+    stop=True the plate under the A-7 that precedes a B-20 ("Stop" + distance, pkt 3.2.21)."""
+    w, h = _t1_px(stop)
+    im = _img(w, h)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=14, fill=BLACK)
+    d.rounded_rectangle([7, 7, w - 8, h - 8], radius=10, fill=WHITE)
+    txt = f"{'Stop ' if stop else ''}{int(round(float(dist_m) / 10.0)) * 10} m"
+    f = _font(int(h * 0.62))
+    tw = d.textlength(txt, font=f)
+    if tw > w - 40:
+        f = _font(int(h * 0.62 * (w - 40) / tw))
+        tw = d.textlength(txt, font=f)
+    bb = d.textbbox((0, 0), txt, font=f)
+    d.text(((w - tw) / 2, (h - (bb[3] - bb[1])) / 2 - bb[1]), txt, font=f, fill=BLACK)
+    return im
+
+
+T1_MM = {False: (650, 250), True: (900, 250)}   # h 250 mm: Tabela 9.7.1 (średnie i małe), SOURCED; width follows the
+                                                # text of rys. 9.7.1 (g + digits + g) - WORKING_VALUE
+
+
+def _t1_px(stop):
+    w_mm, h_mm = T1_MM[bool(stop)]
+    return S, int(round(S * h_mm / w_mm))
+
+
+def rect_size(code):
+    """(width, height) m of a rectangular plate, also for parametric codes (T-1_<m>, T-1S_<m>)."""
+    if code.startswith("T-1S_") or code.startswith("T-1_"):
+        w_mm, h_mm = T1_MM[code.startswith("T-1S_")]
+        return w_mm / 1000.0, h_mm / 1000.0
+    return RECT[code]
+
+
+RECT.update({"D-42": (SN.D42_MM[0] / 1000.0, SN.D42_MM[1] / 1000.0),
+             "D-43": (SN.D42_MM[0] / 1000.0, SN.D42_MM[1] / 1000.0)})
+
+
 FACES = {"A-7": ("triangle", a7), "B-20": ("octagon", b20), "C-12": ("disc", c12), "D-1": ("diamond", d1),
          "D-6": ("square", lambda: square("D-6")), "D-15": ("square", lambda: square("D-15")),
          "B-1": ("disc", b1), "B-2": ("disc", b2), "B-36": ("disc", b36), "C-9": ("disc", c9),
          # ADR 0268: approach to a level crossing (plates of rail_approach.py only; furniture.sign_assembly never
          # stacks them - "triangle_up" / "rect" are handled by props.plate)
          "A-9": ("triangle_up", a9), "A-10": ("triangle_up", a10), "G-2": ("rect", g2), "T-SA": ("rect", t_sa),
-         **{f"G-1{k}": ("rect", (lambda k=k: g1(f"G-1{k}"))) for k in "abcdef"}}
+         **{f"G-1{k}": ("rect", (lambda k=k: g1(f"G-1{k}"))) for k in "abcdef"},
+         # ADR 0279 P1: OSM-mapped / rule signs that were reported as `unknown` or not generated
+         "A-8": ("triangle_up", a8), "B-5": ("disc", b5), "D-42": ("rect", d42), "D-43": ("rect", lambda: d42(True))}
 KNOWN = set(FACES)
+# parametric faces: B-33_<km/h>, B-18_<t>, T-1_<m>, T-1S_<m> ("Stop <m>")
+PARAMETRIC = ("B-33_", "B-18_", "T-1_", "T-1S_")
+
+
+def is_known(code) -> bool:
+    return code in KNOWN or any(code.startswith(p) and code[len(p):].replace(".", "", 1).isdigit() for p in PARAMETRIC)
 
 
 def roundabout_diagram(items, px_m=200, d_m=None):
@@ -867,6 +994,12 @@ def weather(im, key, strength=1.0):
 def face(code):
     if code.startswith("B-33_"):
         return "disc", b33(code.split("_")[1])
+    if code.startswith("B-18_"):
+        return "disc", b18(code.split("_")[1])
+    if code.startswith("T-1S_"):
+        return "rect", t1(code.split("_")[1], stop=True)
+    if code.startswith("T-1_"):
+        return "rect", t1(code.split("_")[1])
     shape, fn = FACES[code]
     return shape, fn()
 
