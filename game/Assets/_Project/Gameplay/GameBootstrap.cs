@@ -64,12 +64,16 @@ namespace Game.Gameplay
 
             string tierArg = Platform.GetLaunchArgument("tier");
             string desktopTier = DesktopDefaultTier(Application.platform);
-            if (QualityTiers.Apply(tierArg) || QualityTiers.Apply(QualityTiers.SavedTier)) { }
+            bool tierFromArg = QualityTiers.Apply(tierArg);
+            if (tierFromArg || QualityTiers.Apply(QualityTiers.SavedTier)) { }
             else if (desktopTier != null)
             {
-                // Desktop player (ADR 0261): the device rules are a phone GPU list; PC starts at High (not saved).
-                QualityTiers.Apply(desktopTier);
-                Debug.Log($"[BOOT] desktop default tier {desktopTier}");
+                // Desktop player (ADR 0261, ADR 0269): the device rules are a phone GPU list; the PC tier comes from the
+                // VRAM / RAM / GPU class (D74), at most High (desktopTier), not saved. QualityTiers.Apply adds the PC values.
+                var hw = PcGraphicsTiers.DetectHardware();
+                var pcTier = PcGraphicsTiers.DefaultFor(hw, out string why);
+                if (!PcGraphicsTiers.Apply(pcTier)) QualityTiers.Apply(desktopTier);
+                Debug.Log($"[BOOT] desktop default tier {QualityTiers.Current}: {why} (gpu='{hw.gpuName}' vram={hw.vramMb}MB ram={hw.systemRamMb}MB)");
             }
             else
             {
@@ -98,11 +102,15 @@ namespace Game.Gameplay
             if (rq != null) Debug.Log("[BOOT] render overrides (profiling): " + rq);
 
             int fps = DesktopDefaultFps(Application.platform, defaultTargetFps);
-            if (int.TryParse(Platform.GetLaunchArgument("fps"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int argFps) && argFps > 0)
+            bool fpsFromArg = int.TryParse(Platform.GetLaunchArgument("fps"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int argFps) && argFps > 0;
+            if (fpsFromArg)
                 fps = argFps;
             else if (QualityTiers.SavedFrameRate > 0)
                 fps = QualityTiers.SavedFrameRate;
             QualityTiers.SetTargetFrameRate(fps);
+            // ADR 0270: PC settings file (display, vsync / cap, tier, volumes, HUD scale). Desktop player only for display,
+            // tier and pacing; -tier / -fps still win for this run (measurements, ADR 0261).
+            Game.UI.Settings.PcSettingsRuntime.ApplyAtStartup(tierFromArg, fpsFromArg);
             AdaptiveFrameDriver.ThermalStatusProvider = Platform.GetThermalStatus;   // ADR 0046 thermal fallback
 
             var build = BuildInfo.Current;
@@ -147,7 +155,8 @@ namespace Game.Gameplay
             m_Catalog = RegionCatalog.Load();
             var regions = BuildRegionChoices(m_Catalog, options);
             ControlSettings.Load().Log("boot");
-            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings, OpenAbout, regions);
+            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings, OpenAbout, regions,
+                Application.isMobilePlatform ? null : (System.Action)OpenPcSettings);
             m_Menu.transform.SetParent(transform, false);
             Debug.Log("[CONTROLS] menu shown light=" + options.LightingId + " tier=" + options.Tier + " fps=" + options.Fps);
 
@@ -208,6 +217,16 @@ namespace Game.Gameplay
             if (m_Settings != null) return;
             m_Settings = ControlSettingsPanel.Create(null, ControlSettings.Load(), null, null);
             m_Settings.transform.SetParent(transform, false);
+        }
+
+        Game.UI.Settings.PcSettingsPanel m_PcSettings;
+
+        /// <summary>"Ekran, grafika, dźwięk" (ADR 0270): PC settings screen.</summary>
+        void OpenPcSettings()
+        {
+            if (m_PcSettings != null) return;
+            m_PcSettings = Game.UI.Settings.PcSettingsPanel.Create(null, () => m_Menu?.RefreshNow());
+            m_PcSettings.transform.SetParent(transform, false);
         }
 
         /// <summary>"Informacje": attributions and licence texts (Resources/About/attributions.txt; LICENSES-AUDIT-S20 R-P0-1).</summary>

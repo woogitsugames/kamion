@@ -32,7 +32,10 @@ def test_paving_sets_have_real_block_sizes():
     count; the importer (WorldPbrMaterials: `source.elements_per_tile` -> `_Tile` = tile_m) must sample them at that
     size. Real blocks: behaton ~0.033 m2 (200 x 165 mm), holland 20 x 10 = 0.02 m2."""
     sets = json.loads(SPEC.read_text(encoding="utf-8"))["sets"]
-    want = {"behaton_i_grey": (0.026, 0.040), "paving_20x10_grey": (0.017, 0.026)}
+    # ADR 0237: behaton scaled per axis to the Polish double-T pitch 201 x 144.5 mm = 0.029 m2 per block; the scan
+    # segmentation counts 106 elements where the lattice has 84 (measured pitch 274.7 x 159.9 mm on 1.92 m), so the
+    # area per counted element is 0.023 m2 - lower bound 0.022 (was 0.026 for the unscaled 0.0348)
+    want = {"behaton_i_grey": (0.022, 0.040), "paving_20x10_grey": (0.017, 0.026)}
     for name, (lo, hi) in want.items():
         s = sets[name]
         n = s.get("source", {}).get("elements_per_tile")

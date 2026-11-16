@@ -78,9 +78,18 @@ namespace Game.Gameplay
         {
             var ta = Resources.Load<TextAsset>(ResourcePath);
             if (ta == null) { Debug.LogWarning("[REGIONS] Resources/" + ResourcePath + ".json missing"); return null; }
-            try { return Parse(ta.text); }
-            catch (FormatException e) { Debug.LogError("[REGIONS] " + e.Message); return null; }
+            try { return ParseOrNull(ta.text); }
             finally { Resources.UnloadAsset(ta); }
+        }
+
+        /// <summary>
+        /// <see cref="Parse"/> that never throws: any exception (a wrong schema, but also the ArgumentException of
+        /// JsonUtility on broken JSON) is logged and gives null, so the menu is built without the region row (ADR 0267).
+        /// </summary>
+        public static RegionCatalog ParseOrNull(string json)
+        {
+            try { return Parse(json); }
+            catch (Exception e) { Debug.LogError("[REGIONS] region catalog unreadable, no region row: " + e.GetType().Name + ": " + e.Message); return null; }
         }
 
         public int IndexOf(string id)
@@ -112,7 +121,7 @@ namespace Game.Gameplay
             return null;
         }
 
-        static readonly char[] k_Separators = { ',', ';', ' ', '\t', '\n', '\r' };
+        static readonly char[] k_Separators = { ',', ';', ' ', '\t', '\n', '\r', '\u00A0' };   // ADR 0267: also a no-break space
 
         /// <summary>
         /// Region list of a build specification, in order, without duplicates. Tokens (separated by commas, semicolons or

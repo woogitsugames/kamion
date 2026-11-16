@@ -1,6 +1,6 @@
 # ADR 0129 — G3-B trade frontage, round 2 (review of ADR 0126)
 
-Status: implemented on branch `frontage-r2` (main `f30837474` merged in, 2026-11-12); not merged. Gate 3 is NOT re-judged
+Status: Accepted (merged to main 2026-11-12, `b596efe9a`; status updated 2026-11-16); originally: implemented on branch `frontage-r2` (main `f30837474` merged in, 2026-11-12); not merged. Gate 3 is NOT re-judged
 here (visual-critic's job).
 Source: `docs/reports/visual/REVIEW-2026-11-12-s12-0126.md` (P1 oval read as a disc, P1 gate sheets #21 / #22 compare
 the 2024 state with 2017 / 2020 photos, P2 black glazing / empty car lot / white mast / rigid flags / white fence),

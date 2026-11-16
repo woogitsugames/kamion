@@ -1,0 +1,1905 @@
+{
+ "adr": "0282",
+ "budget_high_tris": 1500000,
+ "calibration": {
+  "bialystok-industrial-c": {
+   "aspect": 2.1667,
+   "rows": [
+    {
+     "camera": "driver_andersa_to_putry",
+     "draws": 510,
+     "legacy": 1328631,
+     "runtime": 1495223,
+     "runtime_mesh": 1463373,
+     "unity": 829637,
+     "unity_mesh": 740676
+    },
+    {
+     "camera": "kwadrat_park_gate",
+     "draws": 281,
+     "legacy": 924246,
+     "runtime": 933683,
+     "runtime_mesh": 889731,
+     "unity": 476599,
+     "unity_mesh": 318117
+    },
+    {
+     "camera": "route_putry_approach",
+     "draws": 425,
+     "legacy": 1044059,
+     "runtime": 1033524,
+     "runtime_mesh": 1012328,
+     "unity": 588139,
+     "unity_mesh": 534903
+    }
+   ],
+   "stats": "artifacts/dusk-cal-0199/final/High-dusk/stats.txt",
+   "unity_over_legacy_median": 0.563,
+   "unity_over_runtime_median": 0.555
+  },
+  "bialystok-kleeberga": {
+   "aspect": 1.7778,
+   "rows": [
+    {
+     "camera": "route_s0159",
+     "draws": 990,
+     "legacy": 2511724,
+     "runtime": 1738684,
+     "runtime_mesh": 1719641,
+     "unity": 1101571,
+     "unity_mesh": 1036897
+    },
+    {
+     "camera": "route_s0476",
+     "draws": 872,
+     "legacy": 2247698,
+     "runtime": 1856013,
+     "runtime_mesh": 1838641,
+     "unity": 970114,
+     "unity_mesh": 917597
+    },
+    {
+     "camera": "route_s0793",
+     "draws": 835,
+     "legacy": 1963886,
+     "runtime": 1703029,
+     "runtime_mesh": 1674971,
+     "unity": 1270102,
+     "unity_mesh": 1124171
+    },
+    {
+     "camera": "route_s1110",
+     "draws": 604,
+     "legacy": 2094540,
+     "runtime": 1476359,
+     "runtime_mesh": 1401644,
+     "unity": 988363,
+     "unity_mesh": 937970
+    },
+    {
+     "camera": "route_s1427",
+     "draws": 422,
+     "legacy": 1808899,
+     "runtime": 1147225,
+     "runtime_mesh": 1114924,
+     "unity": 624886,
+     "unity_mesh": 592048
+    },
+    {
+     "camera": "route_s1745",
+     "draws": 274,
+     "legacy": 1364371,
+     "runtime": 913498,
+     "runtime_mesh": 903817,
+     "unity": 543130,
+     "unity_mesh": 515492
+    },
+    {
+     "camera": "route_s2062",
+     "draws": 71,
+     "legacy": 773347,
+     "runtime": 469501,
+     "runtime_mesh": 457258,
+     "unity": 363770,
+     "unity_mesh": 341042
+    },
+    {
+     "camera": "roundabout_01_above",
+     "draws": 204,
+     "legacy": 1038176,
+     "runtime": 942487,
+     "runtime_mesh": 935345,
+     "unity": 602778,
+     "unity_mesh": 584758
+    },
+    {
+     "camera": "roundabout_02_above",
+     "draws": 603,
+     "legacy": 2248542,
+     "runtime": 1551995,
+     "runtime_mesh": 1447128,
+     "unity": 1043067,
+     "unity_mesh": 1007124
+    },
+    {
+     "camera": "underpass_wb_szymanskiego",
+     "draws": 597,
+     "legacy": 1818613,
+     "runtime": 1425924,
+     "runtime_mesh": 1361286,
+     "unity": 998572,
+     "unity_mesh": 943144
+    },
+    {
+     "camera": "underpass_eb_szymanskiego",
+     "draws": 728,
+     "legacy": 1805399,
+     "runtime": 1586834,
+     "runtime_mesh": 1551488,
+     "unity": 1099400,
+     "unity_mesh": 997001
+    },
+    {
+     "camera": "produkcyjna_to_rondo_szymanskiego",
+     "draws": 650,
+     "legacy": 1619935,
+     "runtime": 1217490,
+     "runtime_mesh": 1192884,
+     "unity": 959160,
+     "unity_mesh": 873073
+    },
+    {
+     "camera": "tertiary_to_rondo_under_kleeberga",
+     "draws": 425,
+     "legacy": 1441504,
+     "runtime": 938634,
+     "runtime_mesh": 916974,
+     "unity": 576839,
+     "unity_mesh": 513594
+    },
+    {
+     "camera": "collector_wb_km52",
+     "draws": 387,
+     "legacy": 1482088,
+     "runtime": 1124842,
+     "runtime_mesh": 1114831,
+     "unity": 575320,
+     "unity_mesh": 551365
+    }
+   ],
+   "stats": "artifacts/bialystok-dk65-t2-0206/vqa-r4/High-overcast/stats.txt",
+   "unity_over_legacy_median": 0.467,
+   "unity_over_runtime_median": 0.655
+  }
+ },
+ "fuse_high_tris": 2000000,
+ "probe": {
+  "bialystok-industrial-c": {
+   "buildings": 644,
+   "by_typology": {
+    "block": {
+     "lod0": 447708,
+     "lod1": 14811,
+     "n": 51,
+     "opening_detail": 145064,
+     "pipes": 61388
+    },
+    "hall": {
+     "lod0": 133257,
+     "lod1": 14259,
+     "n": 78,
+     "opening_detail": 11032,
+     "pipes": 48048
+    },
+    "house": {
+     "lod0": 181762,
+     "lod1": 32982,
+     "n": 270,
+     "opening_detail": 48052,
+     "pipes": 17080
+    },
+    "office": {
+     "lod0": 145890,
+     "lod1": 20122,
+     "n": 110,
+     "opening_detail": 34230,
+     "pipes": 33332
+    },
+    "roof": {
+     "lod0": 983,
+     "lod1": 983,
+     "n": 14,
+     "opening_detail": 0,
+     "pipes": 0
+    },
+    "shed": {
+     "lod0": 10903,
+     "lod1": 1831,
+     "n": 121,
+     "opening_detail": 2864,
+     "pipes": 0
+    }
+   },
+   "errors": 0,
+   "hlod_ratio": 0.106,
+   "hlod_tris": 10196,
+   "lod0": 920503,
+   "lod0b_ratio": 0.564,
+   "lod0b_ratio_min": 0.738,
+   "lod1": 84988,
+   "lod1_manifest_tris": 96552,
+   "lod1_materials_per_chunk_max": 27,
+   "lod1_materials_per_chunk_median": 14,
+   "opening_detail_share": 0.262,
+   "pipes_share": 0.174,
+   "region": "bialystok-industrial-c"
+  },
+  "bialystok-kleeberga": {
+   "buildings": 1865,
+   "by_typology": {
+    "block": {
+     "lod0": 415598,
+     "lod1": 19368,
+     "n": 54,
+     "opening_detail": 118240,
+     "pipes": 63954
+    },
+    "hall": {
+     "lod0": 61728,
+     "lod1": 7752,
+     "n": 62,
+     "opening_detail": 5248,
+     "pipes": 22904
+    },
+    "house": {
+     "lod0": 874788,
+     "lod1": 154268,
+     "n": 1197,
+     "opening_detail": 239840,
+     "pipes": 77856
+    },
+    "office": {
+     "lod0": 228623,
+     "lod1": 24933,
+     "n": 223,
+     "opening_detail": 58872,
+     "pipes": 53568
+    },
+    "roof": {
+     "lod0": 522,
+     "lod1": 522,
+     "n": 8,
+     "opening_detail": 0,
+     "pipes": 0
+    },
+    "shed": {
+     "lod0": 27358,
+     "lod1": 4588,
+     "n": 321,
+     "opening_detail": 6912,
+     "pipes": 0
+    }
+   },
+   "errors": 0,
+   "hlod_ratio": 0.132,
+   "hlod_tris": 27785,
+   "lod0": 1608617,
+   "lod0b_ratio": 0.598,
+   "lod0b_ratio_min": 0.733,
+   "lod1": 211431,
+   "lod1_manifest_tris": 211100,
+   "lod1_materials_per_chunk_max": 31,
+   "lod1_materials_per_chunk_median": 15.0,
+   "opening_detail_share": 0.267,
+   "pipes_share": 0.136,
+   "region": "bialystok-kleeberga"
+  },
+  "bialystok-knyszynska": {
+   "buildings": 1061,
+   "by_typology": {
+    "block": {
+     "lod0": 164858,
+     "lod1": 9632,
+     "n": 43,
+     "opening_detail": 42992,
+     "pipes": 29008
+    },
+    "hall": {
+     "lod0": 117130,
+     "lod1": 14232,
+     "n": 97,
+     "opening_detail": 11928,
+     "pipes": 45680
+    },
+    "house": {
+     "lod0": 352903,
+     "lod1": 63811,
+     "n": 512,
+     "opening_detail": 89700,
+     "pipes": 32312
+    },
+    "office": {
+     "lod0": 176307,
+     "lod1": 15681,
+     "n": 128,
+     "opening_detail": 47964,
+     "pipes": 43128
+    },
+    "roof": {
+     "lod0": 58,
+     "lod1": 58,
+     "n": 1,
+     "opening_detail": 0,
+     "pipes": 0
+    },
+    "shed": {
+     "lod0": 23586,
+     "lod1": 3882,
+     "n": 280,
+     "opening_detail": 6128,
+     "pipes": 0
+    }
+   },
+   "errors": 0,
+   "hlod_ratio": 0.132,
+   "hlod_tris": 15749,
+   "lod0": 834842,
+   "lod0b_ratio": 0.582,
+   "lod0b_ratio_min": 0.762,
+   "lod1": 107296,
+   "lod1_manifest_tris": 119516,
+   "lod1_materials_per_chunk_max": 36,
+   "lod1_materials_per_chunk_median": 14,
+   "opening_detail_share": 0.238,
+   "pipes_share": 0.18,
+   "region": "bialystok-knyszynska"
+  },
+  "bialystok-maczka": {
+   "buildings": 1760,
+   "by_typology": {
+    "block": {
+     "lod0": 1599671,
+     "lod1": 42585,
+     "n": 142,
+     "opening_detail": 517452,
+     "pipes": 236816
+    },
+    "hall": {
+     "lod0": 29423,
+     "lod1": 4535,
+     "n": 51,
+     "opening_detail": 1720,
+     "pipes": 10336
+    },
+    "house": {
+     "lod0": 750632,
+     "lod1": 134141,
+     "n": 1039,
+     "opening_detail": 201192,
+     "pipes": 68244
+    },
+    "office": {
+     "lod0": 248019,
+     "lod1": 26963,
+     "n": 248,
+     "opening_detail": 60580,
+     "pipes": 59280
+    },
+    "roof": {
+     "lod0": 292,
+     "lod1": 292,
+     "n": 5,
+     "opening_detail": 0,
+     "pipes": 0
+    },
+    "shed": {
+     "lod0": 24413,
+     "lod1": 3755,
+     "n": 275,
+     "opening_detail": 6784,
+     "pipes": 0
+    }
+   },
+   "errors": 0,
+   "hlod_ratio": 0.139,
+   "hlod_tris": 29454,
+   "lod0": 2652450,
+   "lod0b_ratio": 0.562,
+   "lod0b_ratio_min": 0.703,
+   "lod1": 212271,
+   "lod1_manifest_tris": 211923,
+   "lod1_materials_per_chunk_max": 38,
+   "lod1_materials_per_chunk_median": 20,
+   "opening_detail_share": 0.297,
+   "pipes_share": 0.141,
+   "region": "bialystok-maczka"
+  }
+ },
+ "regions": {
+  "bialystok-industrial-c": {
+   "cameras": 23,
+   "proposals": {
+    "ALL": {
+     "legacy_max": 1553351,
+     "legacy_max_camera": "route_onramp_andersa_above",
+     "legacy_median": 1160891,
+     "legacy_trees_runtime_max": 1545541,
+     "legacy_worst_categories": {
+      "buildings": 60735,
+      "forest_hlod": 49163,
+      "furniture": 31294,
+      "props": 116895,
+      "roads": 421879,
+      "terrain": 860373,
+      "total": 1553351,
+      "total_trees_runtime": 1545541,
+      "trees": 13012,
+      "water": 0
+     },
+     "runtime_max": 1622054,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 1005517,
+     "runtime_worst_categories": {
+      "buildings": 121056,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 65020,
+      "props": 26510,
+      "roads": 539513,
+      "terrain": 769949,
+      "total": 1622054,
+      "trees": 6003,
+      "water": 0
+     }
+    },
+    "ALL_cells64": {
+     "legacy_max": 1542409,
+     "legacy_max_camera": "fire_station_above",
+     "legacy_median": 1128053,
+     "legacy_trees_runtime_max": 1524266,
+     "legacy_worst_categories": {
+      "buildings": 24608,
+      "forest_hlod": 46194,
+      "furniture": 43951,
+      "props": 58535,
+      "roads": 325106,
+      "terrain": 815921,
+      "total": 1542409,
+      "total_trees_runtime": 1322044,
+      "trees": 228094,
+      "water": 0
+     },
+     "runtime_max": 1575318,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 985417,
+     "runtime_worst_categories": {
+      "buildings": 74319,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 65020,
+      "props": 26510,
+      "roads": 539513,
+      "terrain": 769949,
+      "total": 1575318,
+      "trees": 6003,
+      "water": 0
+     }
+    },
+    "P1_bld_lod1_near200": {
+     "legacy_max": 1825891,
+     "legacy_max_camera": "route_onramp_andersa_above",
+     "legacy_median": 1292361,
+     "legacy_trees_runtime_max": 1823992,
+     "legacy_worst_categories": {
+      "buildings": 80359,
+      "forest_hlod": 49163,
+      "furniture": 220734,
+      "props": 137523,
+      "roads": 463281,
+      "terrain": 860373,
+      "total": 1825891,
+      "total_trees_runtime": 1817213,
+      "trees": 14458,
+      "water": 0
+     },
+     "runtime_max": 1794816,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 1192471,
+     "runtime_worst_categories": {
+      "buildings": 169057,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 83564,
+      "props": 31188,
+      "roads": 558518,
+      "terrain": 851815,
+      "total": 1794816,
+      "trees": 6670,
+      "water": 0
+     }
+    },
+    "P2_bld_lod0b_near100": {
+     "legacy_max": 1909135,
+     "legacy_max_camera": "stretch_04",
+     "legacy_median": 1320711,
+     "legacy_trees_runtime_max": 1908715,
+     "legacy_worst_categories": {
+      "buildings": 194828,
+      "forest_hlod": 30033,
+      "furniture": 263606,
+      "props": 109303,
+      "roads": 595883,
+      "terrain": 708392,
+      "total": 1909135,
+      "total_trees_runtime": 1908715,
+      "trees": 7090,
+      "water": 0
+     },
+     "runtime_max": 1784069,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 1218129,
+     "runtime_worst_categories": {
+      "buildings": 158310,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 83564,
+      "props": 31188,
+      "roads": 558518,
+      "terrain": 851815,
+      "total": 1784069,
+      "trees": 6670,
+      "water": 0
+     }
+    },
+    "P2c_bld_cells64": {
+     "legacy_max": 1806690,
+     "legacy_max_camera": "route_onramp_andersa_above",
+     "legacy_median": 1250713,
+     "legacy_trees_runtime_max": 1803856,
+     "legacy_worst_categories": {
+      "buildings": 61158,
+      "forest_hlod": 49163,
+      "furniture": 220734,
+      "props": 137523,
+      "roads": 463281,
+      "terrain": 860373,
+      "total": 1806690,
+      "total_trees_runtime": 1798012,
+      "trees": 14458,
+      "water": 0
+     },
+     "runtime_max": 1738931,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 1170951,
+     "runtime_worst_categories": {
+      "buildings": 113172,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 83564,
+      "props": 31188,
+      "roads": 558518,
+      "terrain": 851815,
+      "total": 1738931,
+      "trees": 6670,
+      "water": 0
+     }
+    },
+    "P3_block_hlod_near700": {
+     "legacy_max": 1951967,
+     "legacy_max_camera": "stretch_04",
+     "legacy_median": 1332886,
+     "legacy_trees_runtime_max": 1951547,
+     "legacy_worst_categories": {
+      "buildings": 237660,
+      "forest_hlod": 30033,
+      "furniture": 263606,
+      "props": 109303,
+      "roads": 595883,
+      "terrain": 708392,
+      "total": 1951967,
+      "total_trees_runtime": 1951547,
+      "trees": 7090,
+      "water": 0
+     },
+     "runtime_max": 1761610,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 1228713,
+     "runtime_worst_categories": {
+      "buildings": 135852,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 83564,
+      "props": 31188,
+      "roads": 558518,
+      "terrain": 851815,
+      "total": 1761610,
+      "trees": 6670,
+      "water": 0
+     }
+    },
+    "P4_plots_near200": {
+     "legacy_max": 1910456,
+     "legacy_max_camera": "route_onramp_andersa_above",
+     "legacy_median": 1321181,
+     "legacy_trees_runtime_max": 1908359,
+     "legacy_worst_categories": {
+      "buildings": 220879,
+      "forest_hlod": 49163,
+      "furniture": 164779,
+      "props": 137523,
+      "roads": 463281,
+      "terrain": 860373,
+      "total": 1910456,
+      "total_trees_runtime": 1901778,
+      "trees": 14458,
+      "water": 0
+     },
+     "runtime_max": 1797447,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 1239537,
+     "runtime_worst_categories": {
+      "buildings": 171688,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 83564,
+      "props": 31188,
+      "roads": 558518,
+      "terrain": 851815,
+      "total": 1797447,
+      "trees": 6670,
+      "water": 0
+     }
+    },
+    "P5_furn_mark_near300": {
+     "legacy_max": 1809079,
+     "legacy_max_camera": "stretch_04",
+     "legacy_median": 1290205,
+     "legacy_trees_runtime_max": 1808659,
+     "legacy_worst_categories": {
+      "buildings": 271500,
+      "forest_hlod": 30033,
+      "furniture": 137166,
+      "props": 109303,
+      "roads": 545595,
+      "terrain": 708392,
+      "total": 1809079,
+      "total_trees_runtime": 1808659,
+      "trees": 7090,
+      "water": 0
+     },
+     "runtime_max": 1759898,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 1212012,
+     "runtime_worst_categories": {
+      "buildings": 171688,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 65020,
+      "props": 31188,
+      "roads": 539513,
+      "terrain": 851815,
+      "total": 1759898,
+      "trees": 6670,
+      "water": 0
+     }
+    },
+    "P6_props_trees_far": {
+     "legacy_max": 1968703,
+     "legacy_max_camera": "stretch_04",
+     "legacy_median": 1314806,
+     "legacy_trees_runtime_max": 1968325,
+     "legacy_worst_categories": {
+      "buildings": 271500,
+      "forest_hlod": 30033,
+      "furniture": 263606,
+      "props": 92908,
+      "roads": 595883,
+      "terrain": 708392,
+      "total": 1968703,
+      "total_trees_runtime": 1968325,
+      "trees": 6381,
+      "water": 0
+     },
+     "runtime_max": 1792101,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 1236586,
+     "runtime_worst_categories": {
+      "buildings": 171688,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 83564,
+      "props": 26510,
+      "roads": 558518,
+      "terrain": 851815,
+      "total": 1792101,
+      "trees": 6003,
+      "water": 0
+     }
+    },
+    "P7_terrain_band_near150": {
+     "legacy_max": 1985807,
+     "legacy_max_camera": "stretch_04",
+     "legacy_median": 1334024,
+     "legacy_trees_runtime_max": 1985387,
+     "legacy_worst_categories": {
+      "buildings": 271500,
+      "forest_hlod": 30033,
+      "furniture": 263606,
+      "props": 109303,
+      "roads": 595883,
+      "terrain": 708392,
+      "total": 1985807,
+      "total_trees_runtime": 1985387,
+      "trees": 7090,
+      "water": 0
+     },
+     "runtime_max": 1715581,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 1072690,
+     "runtime_worst_categories": {
+      "buildings": 171688,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 83564,
+      "props": 31188,
+      "roads": 558518,
+      "terrain": 769949,
+      "total": 1715581,
+      "trees": 6670,
+      "water": 0
+     }
+    },
+    "base": {
+     "legacy_max": 1985807,
+     "legacy_max_camera": "stretch_04",
+     "legacy_median": 1334024,
+     "legacy_trees_runtime_max": 1985387,
+     "legacy_worst_categories": {
+      "buildings": 271500,
+      "forest_hlod": 30033,
+      "furniture": 263606,
+      "props": 109303,
+      "roads": 595883,
+      "terrain": 708392,
+      "total": 1985807,
+      "total_trees_runtime": 1985387,
+      "trees": 7090,
+      "water": 0
+     },
+     "runtime_max": 1797447,
+     "runtime_max_camera": "stretch_04",
+     "runtime_median": 1239537,
+     "runtime_worst_categories": {
+      "buildings": 171688,
+      "far_field": 44553,
+      "forest_hlod": 49450,
+      "furniture": 83564,
+      "props": 31188,
+      "roads": 558518,
+      "terrain": 851815,
+      "total": 1797447,
+      "trees": 6670,
+      "water": 0
+     }
+    }
+   },
+   "region": "bialystok-industrial-c"
+  },
+  "bialystok-kleeberga": {
+   "cameras": 18,
+   "proposals": {
+    "ALL": {
+     "legacy_max": 1891059,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1444409,
+     "legacy_trees_runtime_max": 1819216,
+     "legacy_worst_categories": {
+      "buildings": 114926,
+      "forest_hlod": 12786,
+      "furniture": 49520,
+      "props": 34298,
+      "roads": 564553,
+      "terrain": 953525,
+      "total": 1891059,
+      "total_trees_runtime": 1737617,
+      "trees": 161451,
+      "water": 0
+     },
+     "runtime_max": 1569090,
+     "runtime_max_camera": "route_s0159",
+     "runtime_median": 1388702,
+     "runtime_worst_categories": {
+      "buildings": 128736,
+      "far_field": 38836,
+      "forest_hlod": 17525,
+      "furniture": 101320,
+      "props": 9787,
+      "roads": 515313,
+      "terrain": 749565,
+      "total": 1569090,
+      "trees": 8008,
+      "water": 0
+     }
+    },
+    "ALL_cells64": {
+     "legacy_max": 1859429,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1411011,
+     "legacy_trees_runtime_max": 1769738,
+     "legacy_worst_categories": {
+      "buildings": 83296,
+      "forest_hlod": 12786,
+      "furniture": 49520,
+      "props": 34298,
+      "roads": 564553,
+      "terrain": 953525,
+      "total": 1859429,
+      "total_trees_runtime": 1705986,
+      "trees": 161451,
+      "water": 0
+     },
+     "runtime_max": 1537459,
+     "runtime_max_camera": "route_s0159",
+     "runtime_median": 1351140,
+     "runtime_worst_categories": {
+      "buildings": 97105,
+      "far_field": 38836,
+      "forest_hlod": 17525,
+      "furniture": 101320,
+      "props": 9787,
+      "roads": 515313,
+      "terrain": 749565,
+      "total": 1537459,
+      "trees": 8008,
+      "water": 0
+     }
+    },
+    "P1_bld_lod1_near200": {
+     "legacy_max": 2443510,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1690836,
+     "legacy_trees_runtime_max": 2273018,
+     "legacy_worst_categories": {
+      "buildings": 172513,
+      "forest_hlod": 12786,
+      "furniture": 476531,
+      "props": 40351,
+      "roads": 608414,
+      "terrain": 953525,
+      "total": 2443510,
+      "total_trees_runtime": 2273018,
+      "trees": 179390,
+      "water": 0
+     },
+     "runtime_max": 1869013,
+     "runtime_max_camera": "route_s0793",
+     "runtime_median": 1603200,
+     "runtime_worst_categories": {
+      "buildings": 159515,
+      "far_field": 28635,
+      "forest_hlod": 12634,
+      "furniture": 279731,
+      "props": 24262,
+      "roads": 582665,
+      "terrain": 775112,
+      "total": 1869013,
+      "trees": 6459,
+      "water": 0
+     }
+    },
+    "P2_bld_lod0b_near100": {
+     "legacy_max": 2478786,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1734428,
+     "legacy_trees_runtime_max": 2308294,
+     "legacy_worst_categories": {
+      "buildings": 207789,
+      "forest_hlod": 12786,
+      "furniture": 476531,
+      "props": 40351,
+      "roads": 608414,
+      "terrain": 953525,
+      "total": 2478786,
+      "total_trees_runtime": 2308294,
+      "trees": 179390,
+      "water": 0
+     },
+     "runtime_max": 1846844,
+     "runtime_max_camera": "route_s0793",
+     "runtime_median": 1593450,
+     "runtime_worst_categories": {
+      "buildings": 137346,
+      "far_field": 28635,
+      "forest_hlod": 12634,
+      "furniture": 279731,
+      "props": 24262,
+      "roads": 582665,
+      "terrain": 775112,
+      "total": 1846844,
+      "trees": 6459,
+      "water": 0
+     }
+    },
+    "P2c_bld_cells64": {
+     "legacy_max": 2426889,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1661192,
+     "legacy_trees_runtime_max": 2256397,
+     "legacy_worst_categories": {
+      "buildings": 155892,
+      "forest_hlod": 12786,
+      "furniture": 476531,
+      "props": 40351,
+      "roads": 608414,
+      "terrain": 953525,
+      "total": 2426889,
+      "total_trees_runtime": 2256397,
+      "trees": 179390,
+      "water": 0
+     },
+     "runtime_max": 1819487,
+     "runtime_max_camera": "route_s0793",
+     "runtime_median": 1557610,
+     "runtime_worst_categories": {
+      "buildings": 109989,
+      "far_field": 28635,
+      "forest_hlod": 12634,
+      "furniture": 279731,
+      "props": 24262,
+      "roads": 582665,
+      "terrain": 775112,
+      "total": 1819487,
+      "trees": 6459,
+      "water": 0
+     }
+    },
+    "P3_block_hlod_near700": {
+     "legacy_max": 2454137,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1785032,
+     "legacy_trees_runtime_max": 2283645,
+     "legacy_worst_categories": {
+      "buildings": 183140,
+      "forest_hlod": 12786,
+      "furniture": 476531,
+      "props": 40351,
+      "roads": 608414,
+      "terrain": 953525,
+      "total": 2454137,
+      "total_trees_runtime": 2283645,
+      "trees": 179390,
+      "water": 0
+     },
+     "runtime_max": 1842882,
+     "runtime_max_camera": "route_s0793",
+     "runtime_median": 1595179,
+     "runtime_worst_categories": {
+      "buildings": 133384,
+      "far_field": 28635,
+      "forest_hlod": 12634,
+      "furniture": 279731,
+      "props": 24262,
+      "roads": 582665,
+      "terrain": 775112,
+      "total": 1842882,
+      "trees": 6459,
+      "water": 0
+     }
+    },
+    "P4_plots_near200": {
+     "legacy_max": 2214845,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1688578,
+     "legacy_trees_runtime_max": 2121845,
+     "legacy_worst_categories": {
+      "buildings": 240727,
+      "forest_hlod": 12786,
+      "furniture": 179652,
+      "props": 40351,
+      "roads": 608414,
+      "terrain": 953525,
+      "total": 2214845,
+      "total_trees_runtime": 2044353,
+      "trees": 179390,
+      "water": 0
+     },
+     "runtime_max": 1799272,
+     "runtime_max_camera": "route_s0476",
+     "runtime_median": 1567333,
+     "runtime_worst_categories": {
+      "buildings": 177317,
+      "far_field": 38836,
+      "forest_hlod": 17525,
+      "furniture": 98292,
+      "props": 10147,
+      "roads": 501159,
+      "terrain": 947658,
+      "total": 1799272,
+      "trees": 8338,
+      "water": 0
+     }
+    },
+    "P5_furn_mark_near300": {
+     "legacy_max": 2337731,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1732549,
+     "legacy_trees_runtime_max": 2167239,
+     "legacy_worst_categories": {
+      "buildings": 240727,
+      "forest_hlod": 12786,
+      "furniture": 346399,
+      "props": 40351,
+      "roads": 564553,
+      "terrain": 953525,
+      "total": 2337731,
+      "total_trees_runtime": 2167239,
+      "trees": 179390,
+      "water": 0
+     },
+     "runtime_max": 1840691,
+     "runtime_max_camera": "route_s0793",
+     "runtime_median": 1581135,
+     "runtime_worst_categories": {
+      "buildings": 164074,
+      "far_field": 28635,
+      "forest_hlod": 12634,
+      "furniture": 258652,
+      "props": 24262,
+      "roads": 570863,
+      "terrain": 775112,
+      "total": 1840691,
+      "trees": 6459,
+      "water": 0
+     }
+    },
+    "P6_props_trees_far": {
+     "legacy_max": 2487732,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1775718,
+     "legacy_trees_runtime_max": 2334290,
+     "legacy_worst_categories": {
+      "buildings": 240727,
+      "forest_hlod": 12786,
+      "furniture": 476531,
+      "props": 34298,
+      "roads": 608414,
+      "terrain": 953525,
+      "total": 2487732,
+      "total_trees_runtime": 2334290,
+      "trees": 161451,
+      "water": 0
+     },
+     "runtime_max": 1869287,
+     "runtime_max_camera": "route_s0793",
+     "runtime_median": 1603208,
+     "runtime_worst_categories": {
+      "buildings": 164074,
+      "far_field": 28635,
+      "forest_hlod": 12634,
+      "furniture": 279731,
+      "props": 20622,
+      "roads": 582665,
+      "terrain": 775112,
+      "total": 1869287,
+      "trees": 5813,
+      "water": 0
+     }
+    },
+    "P7_terrain_band_near150": {
+     "legacy_max": 2511724,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1807149,
+     "legacy_trees_runtime_max": 2341232,
+     "legacy_worst_categories": {
+      "buildings": 240727,
+      "forest_hlod": 12786,
+      "furniture": 476531,
+      "props": 40351,
+      "roads": 608414,
+      "terrain": 953525,
+      "total": 2511724,
+      "total_trees_runtime": 2341232,
+      "trees": 179390,
+      "water": 0
+     },
+     "runtime_max": 1796184,
+     "runtime_max_camera": "roundabout_02_above",
+     "runtime_median": 1525018,
+     "runtime_worst_categories": {
+      "buildings": 151136,
+      "far_field": 28635,
+      "forest_hlod": 4157,
+      "furniture": 389705,
+      "props": 116032,
+      "roads": 501573,
+      "terrain": 602551,
+      "total": 1796184,
+      "trees": 2395,
+      "water": 0
+     }
+    },
+    "base": {
+     "legacy_max": 2511724,
+     "legacy_max_camera": "route_s0159",
+     "legacy_median": 1807149,
+     "legacy_trees_runtime_max": 2341232,
+     "legacy_worst_categories": {
+      "buildings": 240727,
+      "forest_hlod": 12786,
+      "furniture": 476531,
+      "props": 40351,
+      "roads": 608414,
+      "terrain": 953525,
+      "total": 2511724,
+      "total_trees_runtime": 2341232,
+      "trees": 179390,
+      "water": 0
+     },
+     "runtime_max": 1873572,
+     "runtime_max_camera": "route_s0793",
+     "runtime_median": 1611014,
+     "runtime_worst_categories": {
+      "buildings": 164074,
+      "far_field": 28635,
+      "forest_hlod": 12634,
+      "furniture": 279731,
+      "props": 24262,
+      "roads": 582665,
+      "terrain": 775112,
+      "total": 1873572,
+      "trees": 6459,
+      "water": 0
+     }
+    }
+   },
+   "region": "bialystok-kleeberga"
+  },
+  "bialystok-knyszynska": {
+   "cameras": 13,
+   "proposals": {
+    "ALL": {
+     "legacy_max": 1536950,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 871392,
+     "legacy_trees_runtime_max": 1298150,
+     "legacy_worst_categories": {
+      "buildings": 61750,
+      "forest_hlod": 4582,
+      "furniture": 23418,
+      "props": 33127,
+      "roads": 290015,
+      "terrain": 823214,
+      "total": 1536950,
+      "total_trees_runtime": 1257311,
+      "trees": 300845,
+      "water": 0
+     },
+     "runtime_max": 1135734,
+     "runtime_max_camera": "route_s1295",
+     "runtime_median": 811755,
+     "runtime_worst_categories": {
+      "buildings": 100044,
+      "far_field": 21057,
+      "forest_hlod": 3352,
+      "furniture": 61965,
+      "props": 11783,
+      "roads": 240541,
+      "terrain": 691213,
+      "total": 1135734,
+      "trees": 5779,
+      "water": 0
+     }
+    },
+    "ALL_cells64": {
+     "legacy_max": 1525983,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 843672,
+     "legacy_trees_runtime_max": 1283894,
+     "legacy_worst_categories": {
+      "buildings": 50782,
+      "forest_hlod": 4582,
+      "furniture": 23418,
+      "props": 33127,
+      "roads": 290015,
+      "terrain": 823214,
+      "total": 1525983,
+      "total_trees_runtime": 1246343,
+      "trees": 300845,
+      "water": 0
+     },
+     "runtime_max": 1100699,
+     "runtime_max_camera": "route_s1295",
+     "runtime_median": 781758,
+     "runtime_worst_categories": {
+      "buildings": 65009,
+      "far_field": 21057,
+      "forest_hlod": 3352,
+      "furniture": 61965,
+      "props": 11783,
+      "roads": 240541,
+      "terrain": 691213,
+      "total": 1100699,
+      "trees": 5779,
+      "water": 0
+     }
+    },
+    "P1_bld_lod1_near200": {
+     "legacy_max": 1870615,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 975205,
+     "legacy_trees_runtime_max": 1559904,
+     "legacy_worst_categories": {
+      "buildings": 109176,
+      "forest_hlod": 4582,
+      "furniture": 243536,
+      "props": 38973,
+      "roads": 316862,
+      "terrain": 823214,
+      "total": 1870615,
+      "total_trees_runtime": 1559904,
+      "trees": 334272,
+      "water": 0
+     },
+     "runtime_max": 1278685,
+     "runtime_max_camera": "route_s1295",
+     "runtime_median": 871682,
+     "runtime_worst_categories": {
+      "buildings": 134873,
+      "far_field": 21057,
+      "forest_hlod": 3352,
+      "furniture": 83268,
+      "props": 13862,
+      "roads": 242216,
+      "terrain": 773636,
+      "total": 1278685,
+      "trees": 6422,
+      "water": 0
+     }
+    },
+    "P2_bld_lod0b_near100": {
+     "legacy_max": 1894919,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 985295,
+     "legacy_trees_runtime_max": 1584209,
+     "legacy_worst_categories": {
+      "buildings": 133480,
+      "forest_hlod": 4582,
+      "furniture": 243536,
+      "props": 38973,
+      "roads": 316862,
+      "terrain": 823214,
+      "total": 1894919,
+      "total_trees_runtime": 1584209,
+      "trees": 334272,
+      "water": 0
+     },
+     "runtime_max": 1276876,
+     "runtime_max_camera": "route_s1295",
+     "runtime_median": 874046,
+     "runtime_worst_categories": {
+      "buildings": 133063,
+      "far_field": 21057,
+      "forest_hlod": 3352,
+      "furniture": 83268,
+      "props": 13862,
+      "roads": 242216,
+      "terrain": 773636,
+      "total": 1276876,
+      "trees": 6422,
+      "water": 0
+     }
+    },
+    "P2c_bld_cells64": {
+     "legacy_max": 1855421,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 945104,
+     "legacy_trees_runtime_max": 1544710,
+     "legacy_worst_categories": {
+      "buildings": 93982,
+      "forest_hlod": 4582,
+      "furniture": 243536,
+      "props": 38973,
+      "roads": 316862,
+      "terrain": 823214,
+      "total": 1855421,
+      "total_trees_runtime": 1544710,
+      "trees": 334272,
+      "water": 0
+     },
+     "runtime_max": 1246512,
+     "runtime_max_camera": "route_s1295",
+     "runtime_median": 841581,
+     "runtime_worst_categories": {
+      "buildings": 102700,
+      "far_field": 21057,
+      "forest_hlod": 3352,
+      "furniture": 83268,
+      "props": 13862,
+      "roads": 242216,
+      "terrain": 773636,
+      "total": 1246512,
+      "trees": 6422,
+      "water": 0
+     }
+    },
+    "P3_block_hlod_near700": {
+     "legacy_max": 1895406,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 987003,
+     "legacy_trees_runtime_max": 1584695,
+     "legacy_worst_categories": {
+      "buildings": 133967,
+      "forest_hlod": 4582,
+      "furniture": 243536,
+      "props": 38973,
+      "roads": 316862,
+      "terrain": 823214,
+      "total": 1895406,
+      "total_trees_runtime": 1584695,
+      "trees": 334272,
+      "water": 0
+     },
+     "runtime_max": 1246252,
+     "runtime_max_camera": "route_s1295",
+     "runtime_median": 861824,
+     "runtime_worst_categories": {
+      "buildings": 102440,
+      "far_field": 21057,
+      "forest_hlod": 3352,
+      "furniture": 83268,
+      "props": 13862,
+      "roads": 242216,
+      "terrain": 773636,
+      "total": 1246252,
+      "trees": 6422,
+      "water": 0
+     }
+    },
+    "P4_plots_near200": {
+     "legacy_max": 1762188,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 955549,
+     "legacy_trees_runtime_max": 1510102,
+     "legacy_worst_categories": {
+      "buildings": 172934,
+      "forest_hlod": 4582,
+      "furniture": 71351,
+      "props": 38973,
+      "roads": 316862,
+      "terrain": 823214,
+      "total": 1762188,
+      "total_trees_runtime": 1451477,
+      "trees": 334272,
+      "water": 0
+     },
+     "runtime_max": 1259330,
+     "runtime_max_camera": "route_s1295",
+     "runtime_median": 871516,
+     "runtime_worst_categories": {
+      "buildings": 135253,
+      "far_field": 21057,
+      "forest_hlod": 3352,
+      "furniture": 63533,
+      "props": 13862,
+      "roads": 242216,
+      "terrain": 773636,
+      "total": 1259330,
+      "trees": 6422,
+      "water": 0
+     }
+    },
+    "P5_furn_mark_near300": {
+     "legacy_max": 1859593,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 979593,
+     "legacy_trees_runtime_max": 1548882,
+     "legacy_worst_categories": {
+      "buildings": 172934,
+      "forest_hlod": 4582,
+      "furniture": 195603,
+      "props": 38973,
+      "roads": 290015,
+      "terrain": 823214,
+      "total": 1859593,
+      "total_trees_runtime": 1548882,
+      "trees": 334272,
+      "water": 0
+     },
+     "runtime_max": 1285325,
+     "runtime_max_camera": "seam_w_back_into_tile",
+     "runtime_median": 869100,
+     "runtime_worst_categories": {
+      "buildings": 203127,
+      "far_field": 48430,
+      "forest_hlod": 11051,
+      "furniture": 152896,
+      "props": 5645,
+      "roads": 172414,
+      "terrain": 685224,
+      "total": 1285325,
+      "trees": 6537,
+      "water": 0
+     }
+    },
+    "P6_props_trees_far": {
+     "legacy_max": 1895100,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 976576,
+     "legacy_trees_runtime_max": 1615460,
+     "legacy_worst_categories": {
+      "buildings": 172934,
+      "forest_hlod": 4582,
+      "furniture": 243536,
+      "props": 33127,
+      "roads": 316862,
+      "terrain": 823214,
+      "total": 1895100,
+      "total_trees_runtime": 1615460,
+      "trees": 300845,
+      "water": 0
+     },
+     "runtime_max": 1286884,
+     "runtime_max_camera": "seam_w_back_into_tile",
+     "runtime_median": 873384,
+     "runtime_worst_categories": {
+      "buildings": 203127,
+      "far_field": 48430,
+      "forest_hlod": 11051,
+      "furniture": 154426,
+      "props": 4799,
+      "roads": 173943,
+      "terrain": 685224,
+      "total": 1286884,
+      "trees": 5884,
+      "water": 0
+     }
+    },
+    "P7_terrain_band_near150": {
+     "legacy_max": 1934373,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 993353,
+     "legacy_trees_runtime_max": 1623662,
+     "legacy_worst_categories": {
+      "buildings": 172934,
+      "forest_hlod": 4582,
+      "furniture": 243536,
+      "props": 38973,
+      "roads": 316862,
+      "terrain": 823214,
+      "total": 1934373,
+      "total_trees_runtime": 1623662,
+      "trees": 334272,
+      "water": 0
+     },
+     "runtime_max": 1196643,
+     "runtime_max_camera": "route_s1295",
+     "runtime_median": 844643,
+     "runtime_worst_categories": {
+      "buildings": 135253,
+      "far_field": 21057,
+      "forest_hlod": 3352,
+      "furniture": 83268,
+      "props": 13862,
+      "roads": 242216,
+      "terrain": 691213,
+      "total": 1196643,
+      "trees": 6422,
+      "water": 0
+     }
+    },
+    "base": {
+     "legacy_max": 1934373,
+     "legacy_max_camera": "route_s0925",
+     "legacy_median": 993353,
+     "legacy_trees_runtime_max": 1623662,
+     "legacy_worst_categories": {
+      "buildings": 172934,
+      "forest_hlod": 4582,
+      "furniture": 243536,
+      "props": 38973,
+      "roads": 316862,
+      "terrain": 823214,
+      "total": 1934373,
+      "total_trees_runtime": 1623662,
+      "trees": 334272,
+      "water": 0
+     },
+     "runtime_max": 1288384,
+     "runtime_max_camera": "seam_w_back_into_tile",
+     "runtime_median": 875872,
+     "runtime_worst_categories": {
+      "buildings": 203127,
+      "far_field": 48430,
+      "forest_hlod": 11051,
+      "furniture": 154426,
+      "props": 5645,
+      "roads": 173943,
+      "terrain": 685224,
+      "total": 1288384,
+      "trees": 6537,
+      "water": 0
+     }
+    }
+   },
+   "region": "bialystok-knyszynska"
+  },
+  "bialystok-maczka": {
+   "cameras": 12,
+   "proposals": {
+    "ALL": {
+     "legacy_max": 2547715,
+     "legacy_max_camera": "route_s0440",
+     "legacy_median": 1778414,
+     "legacy_trees_runtime_max": 1934394,
+     "legacy_worst_categories": {
+      "buildings": 148267,
+      "forest_hlod": 19933,
+      "furniture": 54661,
+      "props": 33026,
+      "roads": 677255,
+      "terrain": 955710,
+      "total": 2547715,
+      "total_trees_runtime": 1909144,
+      "trees": 658863,
+      "water": 0
+     },
+     "runtime_max": 1792611,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1478082,
+     "runtime_worst_categories": {
+      "buildings": 181446,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 154864,
+      "props": 9344,
+      "roads": 614218,
+      "terrain": 758777,
+      "total": 1792611,
+      "trees": 10110,
+      "water": 0
+     }
+    },
+    "ALL_cells64": {
+     "legacy_max": 2525006,
+     "legacy_max_camera": "roundabout_01_above",
+     "legacy_median": 1753176,
+     "legacy_trees_runtime_max": 1886554,
+     "legacy_worst_categories": {
+      "buildings": 64644,
+      "forest_hlod": 10936,
+      "furniture": 35396,
+      "props": 38292,
+      "roads": 593431,
+      "terrain": 800455,
+      "total": 2525006,
+      "total_trees_runtime": 1588632,
+      "trees": 981851,
+      "water": 0
+     },
+     "runtime_max": 1744454,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1465196,
+     "runtime_worst_categories": {
+      "buildings": 133290,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 154864,
+      "props": 9344,
+      "roads": 614218,
+      "terrain": 758777,
+      "total": 1744454,
+      "trees": 10110,
+      "water": 0
+     }
+    },
+    "P1_bld_lod1_near200": {
+     "legacy_max": 3150352,
+     "legacy_max_camera": "roundabout_01_above",
+     "legacy_median": 2173330,
+     "legacy_trees_runtime_max": 2421507,
+     "legacy_worst_categories": {
+      "buildings": 150604,
+      "forest_hlod": 10936,
+      "furniture": 428060,
+      "props": 45050,
+      "roads": 624301,
+      "terrain": 800455,
+      "total": 3150352,
+      "total_trees_runtime": 2109936,
+      "trees": 1090946,
+      "water": 0
+     },
+     "runtime_max": 2049401,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1737314,
+     "runtime_worst_categories": {
+      "buildings": 252843,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 210964,
+      "props": 10993,
+      "roads": 618490,
+      "terrain": 881026,
+      "total": 2049401,
+      "trees": 11234,
+      "water": 0
+     }
+    },
+    "P2_bld_lod0b_near100": {
+     "legacy_max": 3214996,
+     "legacy_max_camera": "roundabout_01_above",
+     "legacy_median": 2285576,
+     "legacy_trees_runtime_max": 2479425,
+     "legacy_worst_categories": {
+      "buildings": 215248,
+      "forest_hlod": 10936,
+      "furniture": 428060,
+      "props": 45050,
+      "roads": 624301,
+      "terrain": 800455,
+      "total": 3214996,
+      "total_trees_runtime": 2174580,
+      "trees": 1090946,
+      "water": 0
+     },
+     "runtime_max": 2072780,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1731916,
+     "runtime_worst_categories": {
+      "buildings": 276223,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 210964,
+      "props": 10993,
+      "roads": 618490,
+      "terrain": 881026,
+      "total": 2072780,
+      "trees": 11234,
+      "water": 0
+     }
+    },
+    "P2c_bld_cells64": {
+     "legacy_max": 3140394,
+     "legacy_max_camera": "roundabout_01_above",
+     "legacy_median": 2140240,
+     "legacy_trees_runtime_max": 2382604,
+     "legacy_worst_categories": {
+      "buildings": 140646,
+      "forest_hlod": 10936,
+      "furniture": 428060,
+      "props": 45050,
+      "roads": 624301,
+      "terrain": 800455,
+      "total": 3140394,
+      "total_trees_runtime": 2099979,
+      "trees": 1090946,
+      "water": 0
+     },
+     "runtime_max": 2009414,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1727493,
+     "runtime_worst_categories": {
+      "buildings": 212856,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 210964,
+      "props": 10993,
+      "roads": 618490,
+      "terrain": 881026,
+      "total": 2009414,
+      "trees": 11234,
+      "water": 0
+     }
+    },
+    "P3_block_hlod_near700": {
+     "legacy_max": 3215684,
+     "legacy_max_camera": "roundabout_01_above",
+     "legacy_median": 2320054,
+     "legacy_trees_runtime_max": 2484326,
+     "legacy_worst_categories": {
+      "buildings": 215936,
+      "forest_hlod": 10936,
+      "furniture": 428060,
+      "props": 45050,
+      "roads": 624301,
+      "terrain": 800455,
+      "total": 3215684,
+      "total_trees_runtime": 2175269,
+      "trees": 1090946,
+      "water": 0
+     },
+     "runtime_max": 2020067,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1619276,
+     "runtime_worst_categories": {
+      "buildings": 223510,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 210964,
+      "props": 10993,
+      "roads": 618490,
+      "terrain": 881026,
+      "total": 2020067,
+      "trees": 11234,
+      "water": 0
+     }
+    },
+    "P4_plots_near200": {
+     "legacy_max": 3024446,
+     "legacy_max_camera": "roundabout_01_above",
+     "legacy_median": 2159014,
+     "legacy_trees_runtime_max": 2320416,
+     "legacy_worst_categories": {
+      "buildings": 286528,
+      "forest_hlod": 10936,
+      "furniture": 166230,
+      "props": 45050,
+      "roads": 624301,
+      "terrain": 800455,
+      "total": 3024446,
+      "total_trees_runtime": 1984030,
+      "trees": 1090946,
+      "water": 0
+     },
+     "runtime_max": 2058454,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1653234,
+     "runtime_worst_categories": {
+      "buildings": 294907,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 177953,
+      "props": 10993,
+      "roads": 618490,
+      "terrain": 881026,
+      "total": 2058454,
+      "trees": 11234,
+      "water": 0
+     }
+    },
+    "P5_furn_mark_near300": {
+     "legacy_max": 3124572,
+     "legacy_max_camera": "roundabout_01_above",
+     "legacy_median": 2259377,
+     "legacy_trees_runtime_max": 2429431,
+     "legacy_worst_categories": {
+      "buildings": 286528,
+      "forest_hlod": 10936,
+      "furniture": 297226,
+      "props": 45050,
+      "roads": 593431,
+      "terrain": 800455,
+      "total": 3124572,
+      "total_trees_runtime": 2084156,
+      "trees": 1090946,
+      "water": 0
+     },
+     "runtime_max": 2064104,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1729723,
+     "runtime_worst_categories": {
+      "buildings": 294907,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 187875,
+      "props": 10993,
+      "roads": 614218,
+      "terrain": 881026,
+      "total": 2064104,
+      "trees": 11234,
+      "water": 0
+     }
+    },
+    "P6_props_trees_far": {
+     "legacy_max": 3170424,
+     "legacy_max_camera": "roundabout_01_above",
+     "legacy_median": 2333854,
+     "legacy_trees_runtime_max": 2548821,
+     "legacy_worst_categories": {
+      "buildings": 286528,
+      "forest_hlod": 10936,
+      "furniture": 428060,
+      "props": 38292,
+      "roads": 624301,
+      "terrain": 800455,
+      "total": 3170424,
+      "total_trees_runtime": 2234050,
+      "trees": 981851,
+      "water": 0
+     },
+     "runtime_max": 2088692,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1734277,
+     "runtime_worst_categories": {
+      "buildings": 294907,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 210964,
+      "props": 9344,
+      "roads": 618490,
+      "terrain": 881026,
+      "total": 2088692,
+      "trees": 10110,
+      "water": 0
+     }
+    },
+    "P7_terrain_band_near150": {
+     "legacy_max": 3286276,
+     "legacy_max_camera": "roundabout_01_above",
+     "legacy_median": 2371197,
+     "legacy_trees_runtime_max": 2555723,
+     "legacy_worst_categories": {
+      "buildings": 286528,
+      "forest_hlod": 10936,
+      "furniture": 428060,
+      "props": 45050,
+      "roads": 624301,
+      "terrain": 800455,
+      "total": 3286276,
+      "total_trees_runtime": 2245860,
+      "trees": 1090946,
+      "water": 0
+     },
+     "runtime_max": 1969216,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1696226,
+     "runtime_worst_categories": {
+      "buildings": 294907,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 210964,
+      "props": 10993,
+      "roads": 618490,
+      "terrain": 758777,
+      "total": 1969216,
+      "trees": 11234,
+      "water": 0
+     }
+    },
+    "base": {
+     "legacy_max": 3286276,
+     "legacy_max_camera": "roundabout_01_above",
+     "legacy_median": 2371197,
+     "legacy_trees_runtime_max": 2555723,
+     "legacy_worst_categories": {
+      "buildings": 286528,
+      "forest_hlod": 10936,
+      "furniture": 428060,
+      "props": 45050,
+      "roads": 624301,
+      "terrain": 800455,
+      "total": 3286276,
+      "total_trees_runtime": 2245860,
+      "trees": 1090946,
+      "water": 0
+     },
+     "runtime_max": 2091465,
+     "runtime_max_camera": "route_s0733",
+     "runtime_median": 1737314,
+     "runtime_worst_categories": {
+      "buildings": 294907,
+      "far_field": 55640,
+      "forest_hlod": 8211,
+      "furniture": 210964,
+      "props": 10993,
+      "roads": 618490,
+      "terrain": 881026,
+      "total": 2091465,
+      "trees": 11234,
+      "water": 0
+     }
+    }
+   },
+   "region": "bialystok-maczka"
+  }
+ },
+ "runtime": {
+  "aspect": 2.1666666666666665,
+  "band_fine": 0.407,
+  "far_clip": 2500.0,
+  "hlod_m": 120.0,
+  "lod_bias": 1.5,
+  "tree_card_scale": 0.5
+ },
+ "status": "ESTIMATED (CPU-side triangle counts, not GPU / phone measurements)"
+}

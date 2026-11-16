@@ -352,8 +352,11 @@ namespace Game.Editor.VisualQA
                 var prevTarget = cam.targetTexture;
                 cam.enabled = true;
                 var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
+                string detailCamera = EditorTools.Arg("-qaStatsDetailCamera", null);
+                string detailPath = EditorTools.Arg("-qaStatsDetailPath", null);
                 stats.AppendLine(SceneStats.Estimate(cam, hasTier ? tierSettings.shadowDistance : QualitySettings.shadowDistance,
-                    hasTier ? tierSettings.shadowCascades : 1, qa.id));
+                    hasTier ? tierSettings.shadowCascades : 1, qa.id,
+                    !string.IsNullOrEmpty(detailCamera) && qa.id == detailCamera ? detailPath : null));
                 // -qaTimeFrames N: N more renders of this camera at the tier's size / MSAA, wall time with a 1-pixel readback
                 // at the end (GPU-synchronised): an editor-GPU estimate of the frame cost for A/B comparisons (ADR 0023).
                 int timeN = int.Parse(EditorTools.Arg("-qaTimeFrames", "0"));
@@ -376,7 +379,7 @@ namespace Game.Editor.VisualQA
                 }
                 var wi = Game.World.WorldInstances.Last;
                 if (wi.Draws > 0)
-                    stats.AppendLine($"  {qa.id} instanced (props+trees): draws {wi.Draws}, instances {wi.Instances}, triangles {wi.Triangles / 1000}k, cells {wi.VisibleCells}, forest HLOD cells {wi.HlodCells}, trianglesExact {wi.Triangles}");
+                    stats.AppendLine($"  {qa.id} instanced (props+trees): draws {wi.Draws}, instances {wi.Instances}, triangles {wi.Triangles / 1000}k, cells {wi.VisibleCells}, forest HLOD cells {wi.HlodCells}, trianglesExact {wi.Triangles}, shadowCasterDraws {wi.ShadowDraws}, shadowCasterTriangles {wi.ShadowTriangles}");
                 Color32[] pixels = world;
                 if (ui)
                 {

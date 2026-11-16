@@ -1,5 +1,5 @@
 # ADR 0186 — Dojlidy: zieleń i kadr P11-063 (Mickiewicza / Kuronia)
-Status: Proposed (agent world-builder, s20, gałąź `dojgreen-0186` = main + `origin/horizon-0170`), 2026-11-13/14.
+Status: przyjęty (scalony do main 2026-11-15, `dd4bdd42d`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `dojgreen-0186` = main + `origin/horizon-0170`), 2026-11-13/14.
 Poprzednik: ADR 0179, recenzja `docs/reports/REVIEW-2026-11-13-s19-0179.md` (P11-063: N/P — „inny kadr, brak
 zielonej ściany”). Zakres: tylko region `bialystok-dojlidy`; las przy lotnisku (ADR 0187) nietknięty.
 

@@ -1,5 +1,5 @@
 # ADR 0145 — Opony w ciasnym skręcie: szuranie (scrub) zamiast pisku, pisk dopiero przy poślizgu
-Status: Proposed (agent audio, s14), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
+Status: przyjęty (scalony do main 2026-11-12, `f39332740`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent audio, s14), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
 Kontynuacja ADR 0142 (efekty ElevenLabs). Nagrania: `docs/owner/ELEVENLABS-REGEN-03.md`.
 
 ## Kontekst

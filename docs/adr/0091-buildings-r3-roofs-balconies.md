@@ -1,6 +1,6 @@
 # ADR 0091: Zabudowa r3 — dachy domów nad prawdziwym obrysem, balkony przy trasie, jaśniejszy tynk, spokojniejsza cegła
 
-Status: propozycja (world-builder, gałąź `worktree-buildings-r11`, z main `d205d4a`), 2026-11-11. Kontynuacja ADR 0081;
+Status: przyjęty (scalony do main 2026-11-11, `9f9a34c50`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (world-builder, gałąź `worktree-buildings-r11`, z main `d205d4a`), 2026-11-11. Kontynuacja ADR 0081;
 odpowiedź na `docs/reports/visual/REVIEW-2026-11-11-s9.md` §3 (P1 / P2) i kolizje pkt 3–4.
 
 ## Kontekst

@@ -1,5 +1,5 @@
 # ADR 0148 — „Dziwny dźwięk na jałowym” (nagranie Fold): sprężarka powietrza głośniejsza od silnika
-Status: Proposed (agent audio, s15), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
+Status: przyjęty (scalony do main 2026-11-12, `63bf93dc6`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent audio, s15), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
 
 ## Kontekst
 Właściciel nagrał grę na Samsungu Fold (`artifacts/owner-feedback/2026-11-12-fold-video/`, 27 s, 48 kHz) i zgłosił:

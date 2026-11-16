@@ -51,13 +51,31 @@ jobs:
 
   gis:
     runs-on: ubuntu-latest
+    env:
+      # Only the LFS binaries the gis tests check for content (forest HLOD edges, tree impostors, hero-asset .glb),
+      # ~18 MB of ~2.4 GB in LFS. Cached by object ids, so LFS bandwidth is spent only when one of them changes.
+      # The same list goes to KAMION_LFS_REQUIRED: a pointer left in it fails the test (tests/gis/conftest.py).
+      LFS_GIS: >-
+        art-source/world/vegetation/forest_edge_*.png,art-source/world/vegetation/impostor_*.png,art-source/world/landmarks/viaduct_biezenstwa/*.glb,art-source/world/landmarks/kwadrat_park/*.glb,art-source/world/landmarks/fire_station_jrg2/*.glb
     steps:
       - uses: actions/checkout@v4
         with: { lfs: false }
+      - name: List LFS objects the gis tests need
+        run: |
+          git lfs ls-files --long --include "$LFS_GIS" | sort > lfs-gis.oids
+          n=$(wc -l < lfs-gis.oids); echo "$n LFS objects"; test "$n" -gt 0
+      - uses: actions/cache@v4
+        with:
+          path: .git/lfs/objects
+          key: lfs-gis-${{ hashFiles('lfs-gis.oids') }}
+      - name: Pull only those LFS objects
+        run: git lfs pull --include "$LFS_GIS" && rm lfs-gis.oids
       - uses: astral-sh/setup-uv@v6
       - name: GIS unit tests (pure functions, synthetic data, no Data/raw needed)
         run: uv run --project tools/worldgen pytest tests/gis -q -m unit
       - name: GIS tests (raw-data tests auto-skip)
+        env:
+          KAMION_LFS_REQUIRED: ${{ env.LFS_GIS }}
         run: uv run --project tools/worldgen pytest tests/gis -q
 
   audio-tests:
@@ -68,6 +86,16 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - name: Audio tools tests (synthetic signals only, no repo audio files)
         run: uv run --project tools/audio --with pytest pytest tools/audio/tests -q
+
+  dist-tests:
+    # ADR 0271: scripts/package-windows.py on a synthetic player folder (stdlib only, no Unity build needed).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { lfs: false }
+      - uses: astral-sh/setup-uv@v6
+      - name: Windows packaging tests
+        run: uv run --no-project --with pytest pytest tests/dist -q
 
   lint:
     # NIEBLOKUJĄCY: continue-on-error + --exit-zero — lint raportuje, nie blokuje merge'u.

@@ -12,148 +12,154 @@
     "panel_ribbon_alpha": 0.65,
     "schema": "far-field-appearance/1",
     "source_hall_counts": {
-      "energy": 2,
-      "industrial": 152,
-      "other": 251
+      "energy": 3,
+      "industrial": 346,
+      "other": 645
     },
-    "source_panel_hall_count": 18,
+    "source_panel_hall_count": 19,
     "status": "WORKING_VALUE"
   },
   "boundary_exclusions": {
     "bdot_rectangle": 0,
-    "bdot_source": 0,
+    "bdot_source": 403,
     "osm_rectangle": 0,
-    "osm_source": 0
+    "osm_source": 8
   },
   "building_height_sources": {
-    "WORKING_VALUE-bdot-storeys-typology": 23,
-    "WORKING_VALUE-osm-storeys-typology": 277,
-    "gugik-lod1-measuredHeight": 645,
-    "osm-height-tag-UNVERIFIED": 1
+    "WORKING_VALUE-bdot-storeys-typology": 260,
+    "WORKING_VALUE-osm-storeys-typology": 1841,
+    "gugik-lod1-measuredHeight": 2045,
+    "osm-height-tag-UNVERIFIED": 3
   },
   "feature_counts": {
-    "buildings": 946,
+    "buildings": 4149,
     "buildings_by_typology": {
-      "block": 306,
-      "hall": 405,
-      "house": 0,
-      "office": 235
+      "block": 507,
+      "hall": 994,
+      "house": 599,
+      "office": 2049
     },
-    "chimneys": 6,
-    "forest_polygons": 104,
-    "power_lines": 42,
-    "pylons": 99
+    "chimneys": 12,
+    "forest_polygons": 503,
+    "power_lines": 242,
+    "pylons": 438
   },
   "lod1_height_audit": {
-    "buildings": 36971,
+    "buildings": 133679,
     "conflicting_ids": 0,
     "duplicate_records": 0,
     "invalid_or_missing": 0,
-    "members": 31,
-    "usable_ids": 36971
+    "members": 620,
+    "usable_ids": 133679
   },
   "region": "dk65-01",
   "schema": "truck-sim-pl/far-field-qa/1",
   "tiers": {
     "High": {
-      "bytes": 1456272,
+      "bytes": 5347068,
       "file": "Data/raw/derived/dk65-01/world/far_field.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 11192,
-            "forest_edge_mixed": 2144
+            "far_field_buildings": 22167,
+            "forest_edge_mixed": 3578
           },
           "submeshes": 2,
-          "triangles": 13336,
-          "vertices": 25116
+          "triangles": 25745,
+          "vertices": 49391
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 463,
-            "forest_edge_mixed": 1966
+            "far_field_buildings": 5742,
+            "forest_edge_mixed": 3056
           },
           "submeshes": 2,
-          "triangles": 2429,
-          "vertices": 3131
+          "triangles": 8798,
+          "vertices": 15554
         },
         "far_south": {
-          "by_material": {},
-          "submeshes": 0,
-          "triangles": 0,
-          "vertices": 0
+          "by_material": {
+            "far_field_buildings": 9571,
+            "forest_edge_mixed": 7442
+          },
+          "submeshes": 2,
+          "triangles": 17013,
+          "vertices": 28129
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 20,
-            "forest_edge_mixed": 1092
+            "far_field_buildings": 3712,
+            "forest_edge_mixed": 8900
           },
           "submeshes": 2,
-          "triangles": 1112,
-          "vertices": 1192
+          "triangles": 12612,
+          "vertices": 17574
         }
       },
-      "sha256": "d8ddfed59dba04c40bfb35aae7fa7ee1790b0790e8f1a26336bdc4ea7ae8d4ad",
+      "sha256": "aad647d9bd822740115cdaf4efe3505f4ca47e4c5dc58b46122dc866ece57d51",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
         "min_chimney_h_m": 40.0,
         "node": "far_skyline",
         "submeshes": 1,
-        "triangles": 236
+        "triangles": 430
       },
-      "total_triangles": 17113,
-      "total_vertices": 29911
+      "total_triangles": 64598,
+      "total_vertices": 111508
     },
     "Low": {
-      "bytes": 258932,
+      "bytes": 950036,
       "file": "Data/raw/derived/dk65-01/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 2540,
-            "forest_edge_mixed": 350
+            "far_field_buildings": 4347,
+            "forest_edge_mixed": 712
           },
           "submeshes": 2,
-          "triangles": 2890,
-          "vertices": 5616
+          "triangles": 5059,
+          "vertices": 9953
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 59,
-            "forest_edge_mixed": 342
+            "far_field_buildings": 1563,
+            "forest_edge_mixed": 542
           },
           "submeshes": 2,
-          "triangles": 401,
-          "vertices": 547
+          "triangles": 2105,
+          "vertices": 4041
         },
         "far_south": {
-          "by_material": {},
-          "submeshes": 0,
-          "triangles": 0,
-          "vertices": 0
+          "by_material": {
+            "far_field_buildings": 2080,
+            "forest_edge_mixed": 1396
+          },
+          "submeshes": 2,
+          "triangles": 3476,
+          "vertices": 6166
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 20,
-            "forest_edge_mixed": 178
+            "far_field_buildings": 1173,
+            "forest_edge_mixed": 1804
           },
           "submeshes": 2,
-          "triangles": 198,
-          "vertices": 258
+          "triangles": 2977,
+          "vertices": 4885
         }
       },
-      "sha256": "23f2570e58a7f66f4eed6bcd2259a51d50e7f5bc418979fb536407a697233bcb",
+      "sha256": "c4e7fa23fe38d37326a557ea62e8c849a33d860961ffe2c79d125c92b4ef45c3",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
         "min_chimney_h_m": 40.0,
         "node": "far_skyline",
         "submeshes": 1,
-        "triangles": 138
+        "triangles": 270
       },
-      "total_triangles": 3627,
-      "total_vertices": 6697
+      "total_triangles": 13887,
+      "total_vertices": 25585
     }
   }
 }

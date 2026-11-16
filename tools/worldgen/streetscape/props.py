@@ -266,13 +266,26 @@ def plate(code):
     WORKING_VALUE): face (retroreflective foil, our weathered texture), rim, grey mill-finish back with a label
     (signs.plate_back) and two galvanised clamps (obejmy) around the Ø60 mm post."""
     shape, _ = SG.face(code)
-    size = S.SIGN_SIZE[shape]
+    size = S.SIGN_SIZE["triangle" if shape == "triangle_up" else "square" if shape == "rect" else shape]
     m, l1 = Mesh(), Mesh()
     rim = 0.025
     y = S.SIGN_POST_D / 2 + 0.012 + rim             # face; the back clears the post by 12 mm
-    n = {"disc": 32, "octagon": 8, "triangle": 3, "diamond": 4, "square": 4}[shape]
+    n = {"disc": 32, "octagon": 8, "triangle": 3, "diamond": 4, "square": 4, "triangle_up": 3, "rect": 4}[shape]
     r = size / 2
-    if shape == "triangle":         # inverted triangle (A-7), side = size
+    uvc = (0.5, 0.5)                # texture coordinate of the fan centre (plate origin)
+    rect_h = None
+    if shape == "triangle_up":      # ADR 0268: upright warning triangle (A-9 / A-10), origin at the centroid
+        h = size * math.sqrt(3) / 2
+        pts2 = [(-size / 2, -h / 3), (size / 2, -h / 3), (0, 2 * h / 3)]
+        top = SG.TRI_UP_TOP
+        hp = (SG.S - 16) * math.sqrt(3) / 2
+        uvs = [(8 / 512, 1 - (top + hp) / 512), (504 / 512, 1 - (top + hp) / 512), (0.5, 1 - top / 512)]
+        uvc = (0.5, 1 - (top + 2 * hp / 3) / 512)
+    elif shape == "rect":           # ADR 0268: rectangular plate (G-1, G-2, board), size per code (signs.RECT)
+        rw, rect_h = SG.RECT[code]
+        pts2 = [(-rw / 2, -rect_h / 2), (rw / 2, -rect_h / 2), (rw / 2, rect_h / 2), (-rw / 2, rect_h / 2)]
+        uvs = [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0)]
+    elif shape == "triangle":       # inverted triangle (A-7), side = size
         h = size * math.sqrt(3) / 2
         pts2 = [(-size / 2, h / 3), (size / 2, h / 3), (0, -2 * h / 3)]
         top = (512 - 496 * math.sqrt(3) / 2) / 2          # signs.a7(): side 496 px centred in 512
@@ -291,12 +304,12 @@ def plate(code):
     if area2 > 0:
         pts2, uvs = pts2[::-1], uvs[::-1]
     k_ = len(pts2)
-    hh = size * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
+    hh = rect_h if rect_h else size * (math.sqrt(3) / 2 if shape in ("triangle", "triangle_up") else 1.0)
     for mm, full in ((m, True), (l1, False)):
         V = [[0, y, 0]] + [[x, y, z] for x, z in pts2]
         # u runs against local +x: seen from the front (+y) in Unity, local +x is on the viewer's left (the C-12 arrows
         # turned clockwise and digits would read mirrored; checked on route-putry-entry-signs, ADR 0023)
-        UV = [(0.5, 0.5)] + [(1.0 - u, v) for u, v in uvs]
+        UV = [(1.0 - uvc[0], uvc[1])] + [(1.0 - u, v) for u, v in uvs]
         T = [(0, 1 + (k + 1) % k_, 1 + k) for k in range(k_)]
         T = [(a, c, b) for a, b, c in T]        # face +y
         mm.add(f"sign_{code}", V, T, UV)
@@ -313,7 +326,11 @@ def plate(code):
                 o = len(Vr)
                 Vr += [[x0, y, z0], [x1, y, z1], [x1, yb, z1], [x0, yb, z0]]
                 UVr += [(0.05, 0.05), (0.20, 0.05), (0.20, 0.20), (0.05, 0.20)]
-                Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2), (o, o + 1, o + 2), (o, o + 2, o + 3)]   # both sides
+                # ADR 0236 (budget): outward side only. The rim closes the volume between face and back, its inner
+                # side can never be seen (it was 64 of the 240 triangles of a disc).
+                nrm = np.cross(np.subtract(Vr[o + 2], Vr[o]), np.subtract(Vr[o + 1], Vr[o]))
+                out_ = nrm[0] * (x0 + x1) + nrm[2] * (z0 + z1) > 0
+                Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2)] if out_ else [(o, o + 1, o + 2), (o, o + 2, o + 3)]
             mm.add("plate_back", Vr, Tr, UVr)
     for zc in (-hh * 0.28, hh * 0.22):              # clamps around the post, behind the plate
         m.box("steel_galv", [0, 0.0, zc], S.SIGN_POST_D / 2 + 0.008, S.SIGN_POST_D / 2 + 0.008, 0.022)
@@ -338,32 +355,37 @@ BOARD_BACK_SRGB = (126, 128, 128)        # = materials "board_back" colour 0.21/
 
 
 def board(code, w, h):
-    m = Mesh()
+    m, l1 = Mesh(), Mesh()
     y = 0.06
     band = BOARD_BAND.get(code) if code.startswith("OB_") else None
     v0 = band or 0.0
     # face normal +y like the plates (the old winding showed every E-2 / gantry board's grey back to the driver)
-    m.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
-           uv=((1, v0), (1, 1), (0, 1), (0, v0)))   # u mirrored as on the plates
+    # ADR 0236 (budget): LOD1 = face + back sheet (4 triangles); the two rails behind the sheet (24 of the 28
+    # triangles) are not visible from the LOD1 distance (>= 50 m at lodBias 1).
+    for mm in (m, l1):
+        mm.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
+                uv=((1, v0), (1, 1), (0, 1), (0, v0)))   # u mirrored as on the plates
     if band:
         # overhead board with a back band: back sheet + rails sample the band centre (plain grey, ADR 0127)
         buv = (0.5, band / 2)
-        m.quad(f"sign_{code}", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
-               [-w / 2, y - 0.01, -h / 2], uv=(buv,) * 4)
+        for mm in (m, l1):
+            mm.quad(f"sign_{code}", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
+                    [-w / 2, y - 0.01, -h / 2], uv=(buv,) * 4)
         tmp = Mesh()
         for sx in (-1, 1):
             tmp.box("rail", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)
         for V, T, _ in zip(*tmp.prims["rail"]):
             m.add(f"sign_{code}", V, T - T.min(), np.tile(buv, (len(V), 1)))
-        return m, m, None
+        return m, l1, None
     # overhead boards (gantries, "OB_") without a band: plain grey sheet back (ADR 0127), other boards the plate back
-    m.quad("board_back" if code.startswith("OB_") else "plate_back",
-           [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
-           [-w / 2, y - 0.01, -h / 2],
-           uv=((0.05, 0.05), (0.05, 0.20), (0.20, 0.20), (0.20, 0.05)))
+    for mm in (m, l1):
+        mm.quad("board_back" if code.startswith("OB_") else "plate_back",
+                [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
+                [-w / 2, y - 0.01, -h / 2],
+                uv=((0.05, 0.05), (0.05, 0.20), (0.20, 0.20), (0.20, 0.05)))
     for sx in (-1, 1):
         m.box("steel_galv", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)   # rails (Z-profile)
-    return m, m, None
+    return m, l1, None
 
 
 # Signal head variants (ADR 0193, research M66 / Dz.U. 2019 poz. 2311 zał. 3 pkt 3.3.5.6 & rys. 10.28).

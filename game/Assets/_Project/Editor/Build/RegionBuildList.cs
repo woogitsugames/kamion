@@ -35,10 +35,52 @@ namespace Game.Editor.Build
         {
             FileDoc doc;
             try { doc = string.IsNullOrWhiteSpace(json) ? null : JsonUtility.FromJson<FileDoc>(json); }
-            catch (ArgumentException e) { errors?.Add("build regions file: " + e.Message); return null; }
+            catch (Exception e) { errors?.Add("build regions file: " + e.Message); return null; }
             if (doc == null) { errors?.Add("build regions file: empty"); return null; }
             if (doc.schema != FileSchema) { errors?.Add("build regions file: schema '" + doc.schema + "', expected " + FileSchema); return null; }
             return string.Join(",", doc.regions ?? Array.Empty<string>());
+        }
+
+        public const string RegionsFlag = "-regions";
+
+        /// <summary>
+        /// Value of <c>-regions</c> in <paramref name="args"/>: every argument after the flag up to the next one starting with
+        /// '-', joined with commas (ADR 0267). A launcher that splits a value at spaces (PowerShell <c>Start-Process</c> with
+        /// <c>-Regions 'c knyszyn'</c>) then still passes every region. null when the flag is absent, "" when it has no value.
+        /// </summary>
+        public static string RegionsArgFrom(IReadOnlyList<string> args)
+        {
+            if (args == null) return null;
+            for (int i = 0; i < args.Count; i++)
+            {
+                if (!string.Equals(args[i], RegionsFlag, StringComparison.OrdinalIgnoreCase)) continue;
+                var values = new List<string>();
+                for (int j = i + 1; j < args.Count && !(args[j] ?? "").StartsWith("-", StringComparison.Ordinal); j++)
+                    if (!string.IsNullOrWhiteSpace(args[j])) values.Add(args[j]);
+                return string.Join(",", values);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Regions of the command line resolved with <paramref name="catalog"/>: null when neither <c>-regions</c> nor
+        /// <c>-regionsFile</c> was given (default build). Given but unknown names, a missing / wrong file or a list that
+        /// resolves to no region at all (<c>-Regions ','</c>, a file with <c>"regions": []</c>) are errors (ADR 0267: an
+        /// APK named '-regions' without regions would mislead the size measurement).
+        /// </summary>
+        public static List<string> ResolveRegions(string regionsArg, string regionsFileArg, string repoRoot, RegionCatalog catalog,
+            List<string> errors)
+        {
+            if (regionsArg == null && string.IsNullOrWhiteSpace(regionsFileArg)) return null;
+            errors ??= new List<string>();
+            int before = errors.Count;
+            string spec = SpecFromArgs(regionsArg, regionsFileArg, repoRoot, errors);
+            if (errors.Count > before) return new List<string>();
+            var regions = catalog != null ? catalog.Resolve(spec, errors) : new List<string>();
+            if (catalog == null) errors.Add("region catalog missing");
+            else if (errors.Count == before && regions.Count == 0)
+                errors.Add("-regions/-regionsFile given but resolves to no region ('" + spec + "')");
+            return regions;
         }
 
         /// <summary>The region specification of the command line: <c>-regions</c> and / or the tokens of <c>-regionsFile</c>
@@ -92,23 +134,23 @@ namespace Game.Editor.Build
         /// <summary>
         /// BuildCommands entry: reads <c>-regions</c> / <c>-regionsFile</c>, resolves them with the catalog and appends the
         /// region scenes to <paramref name="scenes"/>. Returns false (with <paramref name="error"/>) on an unknown name, a
-        /// missing file or a region scene that was not imported (unless <c>-regionsAllowMissing</c>). No argument = true,
-        /// list unchanged.
+        /// missing file, a list that resolves to no region (ADR 0267) or a region scene that was not imported (unless
+        /// <c>-regionsAllowMissing</c>). No argument = true, list unchanged.
         /// </summary>
         public static bool AppendFromCommandLine(List<string> scenes, bool withHigh, out string error)
         {
             error = null;
             var errors = new List<string>();
-            string spec = SpecFromArgs(EditorTools.Arg("-regions", null), EditorTools.Arg("-regionsFile", null), EditorTools.RepoRoot, errors);
-            if (errors.Count > 0) { error = string.Join("; ", errors); return false; }
-            if (string.IsNullOrWhiteSpace(spec)) return true;
+            string regionsArg = RegionsArgFrom(Environment.GetCommandLineArgs());
+            string regionsFileArg = EditorTools.Arg("-regionsFile", null);
+            if (regionsArg == null && string.IsNullOrWhiteSpace(regionsFileArg)) return true;   // default build: list unchanged
 
             string catalogFile = Path.Combine(EditorTools.ProjectRoot, CatalogAssetPath);
             RegionCatalog catalog;
             try { catalog = RegionCatalog.Parse(File.ReadAllText(catalogFile)); }
             catch (Exception e) { error = "region catalog " + CatalogAssetPath + ": " + e.Message; return false; }
 
-            var regions = catalog.Resolve(spec, errors);
+            var regions = ResolveRegions(regionsArg, regionsFileArg, EditorTools.RepoRoot, catalog, errors);
             if (errors.Count > 0) { error = string.Join("; ", errors); return false; }
 
             var missing = new List<string>();

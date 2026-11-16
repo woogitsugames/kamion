@@ -2,7 +2,8 @@
 
 Sources (priority order; a higher source wins where polygons overlap):
   1. authored overrides `paved_areas` (Data/Regions/<id>/overrides.yaml) - polygons the data does not describe
-     (`kind: paved_area`, `polygon_epsg2180`). `kind: unpaved_area` (ADR 0161, region-local `polygon_en`) is the
+     (`kind: paved_area`, `polygon_epsg2180`, optional interior rings `holes_epsg2180`). Explicit holes remain ground
+     against lower-priority paving. `kind: unpaved_area` (ADR 0161, region-local `polygon_en`) is the
      opposite: ground that the data paves but the orthophoto shows as lawn - nothing of any source is laid inside
      it, the terrain (grass) stays. An unpaved_area that removes nothing is reported stale.
   2. loading-dock aprons generated in front of dock doors (streetscape.buildings)
@@ -19,6 +20,7 @@ cast concrete and asphalt yards end flush (no kerb, standards.PAVED_EDGING).
 
 from __future__ import annotations
 
+import hashlib
 import math
 
 import numpy as np
@@ -27,6 +29,7 @@ from scipy import ndimage
 from shapely.geometry import Polygon
 
 from roads import standards as S
+from streetscape import pavements as PVM
 
 # surface -> material (MATERIALS in build_world)
 BDOT_SURFACE = {"kostka prefabrykowana": "yard_paving", "beton": "yard_concrete", "masa bitumiczna": "yard_asphalt",
@@ -35,10 +38,13 @@ OSM_SURFACE = {"asphalt": "yard_asphalt", "paving_stones": "yard_paving", "concr
                "concrete:plates": "yard_slabs", "gravel": "yard_gravel", "compacted": "yard_gravel",
                "fine_gravel": "yard_gravel", "unpaved": "yard_gravel", "ground": "yard_gravel", "dirt": "yard_gravel",
                "sett": "yard_paving", "grass_paver": "yard_gravel"}
+# ADR 0237: a footpath of "płyty betonowe" is laid in 35 x 35 cm sidewalk slabs (`sidewalk_slabs`), not in the
+# 3.0 x 1.5 m road plates of `yard_slabs`
 PATH_SURFACE = {"kostka prefabrykowana": "sidewalk_paving", "masa bitumiczna": "path_asphalt", "beton": "yard_concrete",
-                "płyty betonowe": "yard_slabs"}
+                "płyty betonowe": "sidewalk_slabs"}
 # paving blocks need an edging restraint; asphalt paths and cycle tracks are laid between concrete edgings too (ADR 0188)
-EDGED = {"yard_paving", "yard_behaton", "sidewalk_paving", "cycle_red", "cycle_asphalt", "cycle_asphalt_red"}
+EDGED = {"yard_paving", "yard_behaton", "sidewalk_paving", "cycle_red", "cycle_asphalt", "cycle_asphalt_red",
+         "sidewalk_paving_red", "sidewalk_slabs"}
 CELL = 4.0
 
 
@@ -64,11 +70,30 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
     come right after the dock aprons (a mapped track is a precise line, a yard is a blob) and the BDOT10k path lines
     that describe the same paths are not laid a second time."""
     cand = []
+    # An explicit authored opt-in: park paths and plazas meet lawn without
+    # the concrete restraint and deep yard flange. Existing surfaces are unchanged.
+    flush_ids = {o["id"] for o in overrides if o.get("kind") == "paved_area" and o.get("park_flush") is True}
+    authored_hole_footprints = {}
     for o in overrides:
         if o.get("kind") != "paved_area":
             continue
         ring = np.asarray(o["polygon_epsg2180"], float) - origin
-        cand.append((o["id"], Polygon(ring), o["material"], "authored_override", bool(o.get("parking"))))
+        holes = [np.asarray(h, float) - origin for h in o.get("holes_epsg2180", [])]
+        poly = Polygon(ring, holes)
+        if holes:
+            outer = Polygon(ring)
+            # Explicit voids must be unambiguous: silently repairing an invalid
+            # inner ring could turn a planting island into solid paving.
+            inner = [Polygon(h) for h in holes]
+            if (not outer.is_valid or not poly.is_valid
+                    or any(not h.is_valid or h.is_empty or h.area <= 0 or not outer.contains(h)
+                           or not outer.boundary.disjoint(h.boundary) for h in inner)
+                    or any(a.intersects(b) for i, a in enumerate(inner) for b in inner[i + 1:])):
+                raise ValueError(f"paved_area {o['id']}: invalid or overlapping holes")
+            # Reserve the full outside footprint against later, lower-priority
+            # OSM/BDOT surfaces so an explicit planting island remains ground.
+            authored_hole_footprints[o["id"]] = outer
+        cand.append((o["id"], poly, o["material"], "authored_override", bool(o.get("parking"))))
     for d in docks:
         # the hero depot's apron (ADR 0071 r11): decades of trailers on the bumpers - darker, cracked, soiled concrete
         cand.append((d["id"], d["apron"], "yard_concrete_worn" if d.get("hero") else "yard_concrete", "dock_apron", False))
@@ -102,7 +127,9 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
         pr = f["props"]
         mat = PATH_SURFACE.get(pr.get("materialnawierzchni"))
         if pr.get("rodzaj") == "droga dla rowerów":
-            mat = "cycle_red" if pr.get("materialnawierzchni") != "grunt naturalny" else None
+            # ADR 0237: with the region's pavement_rules a block-paved one gets `cycle_paver_material` and a
+            # bituminous one the grey DDR asphalt of ADR 0188; without them `cycle_red` as before
+            mat = PVM.bdot_cycle_material(overrides, pr.get("materialnawierzchni"))
         if not mat:
             continue
         w = float(pr.get("szerokosc") or S.SETBACK_PATH_W)
@@ -133,10 +160,13 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
             p = p.simplify(0.05)
             if p.is_empty or p.area <= 3.0 or p.geom_type != "Polygon":
                 continue
-            out.append({"id": f"{cid}#{k}", "poly": p, "mat": mat, "source": srcname, "parking": is_parking})
+            item = {"id": f"{cid}#{k}", "poly": p, "mat": mat, "source": srcname, "parking": is_parking}
+            if srcname == "authored_override" and cid in flush_ids:
+                item["park_flush"] = True
+            out.append(item)
             kept += p.area
         if kept:
-            taken = shapely.union(taken, poly)
+            taken = shapely.union(taken, authored_hole_footprints.get(cid, poly))
         report.setdefault(srcname, [0, 0.0])
         report[srcname][0] += 1 if kept else 0
         report[srcname][1] = round(report[srcname][1] + kept, 1)
@@ -175,6 +205,13 @@ def _trim_spikes(g):
     return g
 
 
+# ADR 0281 (K2): the footprint was unioned 5x per build_world (pass 1 plots, pass 2 stage, cycleway paint, gate 3
+# signs) - the same triangles gave the same polygon at ~38 s a call. Memo keyed by the SHA-256 of the triangle array
+# (shape + bytes) actually unioned: a hit returns the polygon of byte-identical input, a miss computes as before.
+_FOOTPRINT_MEMO: dict = {}
+_FOOTPRINT_MEMO_MAX = 4
+
+
 def road_footprint_polygon(parts, bounds=None):
     """Union of ground road surface triangles (carriageways, kerbs, sidewalks, junction patches)."""
     tris = [p.V[p.T][:, :, :2] for p in parts if p.footprint]
@@ -185,6 +222,18 @@ def road_footprint_polygon(parts, bounds=None):
         x0, y0, x1, y1 = bounds
         mn, mx = T.min(1), T.max(1)
         T = T[(mx[:, 0] >= x0) & (mn[:, 0] <= x1) & (mx[:, 1] >= y0) & (mn[:, 1] <= y1)]
+    T = np.ascontiguousarray(T, dtype=np.float64)
+    key = (T.shape, hashlib.sha256(T.tobytes()).hexdigest())
+    hit = _FOOTPRINT_MEMO.get(key)
+    if hit is None:
+        hit = _road_footprint_union(T)
+        if len(_FOOTPRINT_MEMO) >= _FOOTPRINT_MEMO_MAX:
+            _FOOTPRINT_MEMO.pop(next(iter(_FOOTPRINT_MEMO)))
+        _FOOTPRINT_MEMO[key] = hit
+    return hit
+
+
+def _road_footprint_union(T):
     polys = shapely.polygons(np.concatenate([T, T[:, :1]], axis=1))
     polys = polys[shapely.area(polys) > 1e-4]
     return shapely.make_valid(shapely.union_all(polys, grid_size=0.01))
@@ -210,6 +259,24 @@ def paved_heights(hf, road_z, road_mask, pmask):
     w = np.clip(1.0 - d / S.PAVED_BLEND_M, 0.0, 1.0)
     z = sm + delta[jj, ii] * w
     return np.where(pmask, z, np.nan)
+
+
+def conform_park_flush(zc, pz, flush_mask, hard_mask, blend_m=3.0, under_m=0.03):
+    """Bring the terrain close under opt-in park paving and blend its grassy margin.
+
+    `hard_mask` protects roads and non-park paving; outside the park's influence
+    the result is exactly the original terrain. Both arrays use the NMT 1 m grid.
+    """
+    if not flush_mask.any():
+        return zc
+    selected = flush_mask & ~hard_mask & np.isfinite(pz)
+    if not selected.any():
+        return zc
+    distance, (jj, ii) = ndimage.distance_transform_edt(~selected, return_indices=True)
+    target = pz[jj, ii] - under_m
+    weight = np.clip(1.0 - distance / blend_m, 0.0, 1.0)
+    weight[hard_mask] = 0.0
+    return np.where(weight > 0, zc + weight * (target - zc), zc)
 
 
 def bilinear(grid, hf, e, n):
@@ -266,6 +333,9 @@ def dominant_angle(poly):
 
 def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
     """Paved surface parts (layer 'paved', footprint) + edging / flange strips + collision."""
+    # ADR 0281 (K4a): the NaN-filled grids are the same for every item / ring - built once per call (lazily, so an
+    # empty `paved` costs nothing), not 748 + 818 times over the full 2049^2 grid
+    zfill = zf0 = None
     for item in paved:
         poly, mat = item["poly"], item["mat"]
         T2 = triangulate(poly)
@@ -275,8 +345,9 @@ def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
         q = np.round(P * 1000).astype(np.int64)
         u, first, inv = np.unique(q, axis=0, return_index=True, return_inverse=True)
         P = P[first]
-        Z = bilinear(np.nan_to_num(zgrid, nan=np.nanmean(zgrid[np.isfinite(zgrid)]) if np.isfinite(zgrid).any() else 0),
-                     hf, P[:, 0], P[:, 1])
+        if zfill is None:
+            zfill = np.nan_to_num(zgrid, nan=np.nanmean(zgrid[np.isfinite(zgrid)]) if np.isfinite(zgrid).any() else 0)
+        Z = bilinear(zfill, hf, P[:, 0], P[:, 1])
         V = np.column_stack([P, Z + S.PAVED_LIFT])
         T = inv.ravel().reshape(-1, 3)
         a = dominant_angle(poly)
@@ -288,7 +359,9 @@ def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
         UV1 = np.column_stack([np.minimum(dedge, 50.0), np.minimum(dwall, 50.0)])
         buf.add(item.get("layer", "paved"), mat, V, UV, T, footprint=True, src=item["id"], UV1=UV1)      # layer: ADR 0114
         buf.add("collision", "collision_" + S.SURFACE_OF.get(mat, "asphalt"), V, UV, T, src=item["id"])
-        _edges(buf, item, zgrid, hf, roads_poly)
+        if zf0 is None:
+            zf0 = np.nan_to_num(zgrid, nan=0.0)
+        _edges(buf, item, zgrid, hf, roads_poly, zf=zf0)
 
 
 EDGE_TOL_XY_M = 0.002       # ADR 0221: an edge vertex may be dropped when it lies this close to the chord in plan
@@ -338,8 +411,34 @@ def _edge_keep(P, Z, skip, nout=None):
     return np.flatnonzero(keep)
 
 
-def _edges(buf, item, zgrid, hf, roads_poly=None):
+NEAR_CLIP_PAD_M = 1.0       # ADR 0281 K4b: window margin around the query points (> any distance tested)
+NEAR_RECHECK_M = 1e-6       # ... and the band around the threshold re-tested against the whole polygon
+
+
+def near_road(pts_xy, roads_poly, dist):
+    """shapely.distance(points, roads_poly) < dist, without measuring every point against the footprint of the whole
+    tile (71 k vertices on C: 12.6 s -> 0.4 s per build_meshes, ADR 0281 K4b). The polygon is clipped to the points'
+    box + NEAR_CLIP_PAD_M: every nearest point closer than `dist` lies inside that window, so the distances below `dist`
+    are the same. Only the clipped edges carry new end points (round-off ~1e-13 m), so a distance within
+    NEAR_RECHECK_M of the threshold is measured again on the whole polygon - the boolean equals the original call."""
+    pts_xy = np.asarray(pts_xy, float)
+    pts = shapely.points(pts_xy)
+    if not len(pts_xy) or dist >= NEAR_CLIP_PAD_M:
+        return shapely.distance(pts, roads_poly) < dist
+    x0, y0 = pts_xy.min(0) - NEAR_CLIP_PAD_M
+    x1, y1 = pts_xy.max(0) + NEAR_CLIP_PAD_M
+    d = shapely.distance(pts, shapely.clip_by_rect(roads_poly, x0, y0, x1, y1))
+    out = d < dist                       # NaN (nothing of the polygon in the window): the true distance is > pad
+    amb = np.abs(d - dist) < NEAR_RECHECK_M
+    if amb.any():
+        out[amb] = shapely.distance(pts[amb], roads_poly) < dist
+    return out
+
+
+def _edges(buf, item, zgrid, hf, roads_poly=None, zf=None):
     """Outer edge: concrete edging strip (paving blocks) or flush flange (concrete / asphalt)."""
+    if item.get("park_flush") is True:
+        return
     poly, mat = item["poly"], item["mat"]
     edged = mat in EDGED and item.get("edging", True)      # ADR 0114: plot driveways end flush (no extra material)
     for ring in [poly.exterior, *poly.interiors]:
@@ -362,7 +461,8 @@ def _edges(buf, item, zgrid, hf, roads_poly=None):
         d = np.gradient(P, axis=0)
         d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
         nout = np.column_stack([d[:, 1], -d[:, 0]])        # right of travel = outside for CCW ring
-        zf = np.nan_to_num(zgrid, nan=0.0)
+        if zf is None:
+            zf = np.nan_to_num(zgrid, nan=0.0)
         Z = bilinear(zf, hf, P[:, 0], P[:, 1]) + S.PAVED_LIFT
         n = len(P)
         s = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
@@ -378,7 +478,7 @@ def _edges(buf, item, zgrid, hf, roads_poly=None):
         # no edging / flange where the area meets a road surface (the road owns that edge)
         if roads_poly is not None and not roads_poly.is_empty:
             mid = 0.5 * (P[1:] + P[:-1])
-            skip = shapely.distance(shapely.points(mid), roads_poly) < 0.6
+            skip = near_road(mid, roads_poly, 0.6)
         else:
             skip = np.zeros(n - 1, bool)
         # ADR 0188: no edging / flange either where the area abuts its sibling strip (cycle track | footway of one

@@ -1,6 +1,6 @@
 # ADR 0094: Zabudowa r4 — balkony jako płyta z balustradą, jednolity tynk, jasna podbitka, daszek pod okapem
 
-Status: propozycja (world-builder, gałąź `worktree-buildings-r12`, z main `fa83f577`), 2026-11-11. Kontynuacja ADR 0091;
+Status: przyjęty (scalony do main 2026-11-11, `aac557492`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (world-builder, gałąź `worktree-buildings-r12`, z main `fa83f577`), 2026-11-11. Kontynuacja ADR 0091;
 odpowiedź na `docs/reports/visual/REVIEW-2026-11-11-s9-0091.md` (P1-1…P1-5, część P2).
 
 ## Kontekst

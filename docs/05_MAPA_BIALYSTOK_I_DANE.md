@@ -46,7 +46,7 @@ Nie używaj publicznych serwerów kafli/Overpass jako masowego źródła — pob
 4. **Geometria drogi**: oś jako krzywe (klotoidy/łuki), przekrój wg klasy i liczby pasów (szerokości pasów, pobocza, krawężniki, chodniki, ścieżki rowerowe, zatoki autobusowe, rowy), niweleta z NMT wygładzona z limitami pochyleń, przechyłki z uzasadnieniem, **skrzyżowania i ronda generowane jako osobne „junction meshes”** z poprawnymi łukami wyokrąglającymi dla ciężarówki.
 5. **Oznakowanie**: poziome (linie, strzałki, przejścia, linie zatrzymania — zgodnie z polskim rozporządzeniem w sprawie znaków i sygnałów drogowych; zweryfikuj aktualny akt) jako decale bez z-fightingu; pionowe z tagów i reguł (pierwszeństwo, limity, kierunkowe z prawdziwymi nazwami), sygnalizacja z fazami.
 6. **Teren**: heightfield z NMT, wysoka rozdzielczość tylko przy drodze, wcięcia/nasypy, skarpy, dopasowanie do krawędzi drogi (zero szczelin).
-7. **Budynki**: LoD2/LoD1 → bryły + **generator fasad wg typologii** (wielka płyta, kamienica, dom jednorodzinny, drewniany dom podlaski, hala, biurowiec, galeria) z prawdziwą liczbą kondygnacji, rytmem okien, materiałami z referencji. Obiekty charakterystyczne — modelowane osobno (tor A/ŚRODOWISKO).
+7. **Budynki**: LoD2/LoD1 → bryły + **generator fasad wg typologii** (wielka płyta, kamienica, dom jednorodzinny, drewniany dom podlaski, hala, biurowiec, galeria) z prawdziwą liczbą kondygnacji, rytmem okien, materiałami z referencji. Obiekty charakterystyczne — modelowane osobno (tor A/ŚRODOWISKO). Reguła wyboru typu, proporcje ze statusem liczb, palety i kształt dachu (override `typology` / `roof_shape` > OSM > BDOT10k + LoD1/LoD2): `tools/worldgen/streetscape/typology.py`, ADR 0238.
 8. **Otoczenie**: drzewa (gatunki: sosna, brzoza, lipa, klon, kasztanowiec w mieście; olsza i świerk poza nim), trawniki, żywopłoty, ogrodzenia, latarnie (typy białostockie z referencji), wiaty przystankowe, słupy, hydranty, kosze, reklamy (fikcyjne marki).
 9. **Kolizje**: osobny, gładki mesh kolizyjny jezdni i krawężników (nie wizualny LOD0), proste collidery budynków.
 10. **Metadane nawigacji/AI**: graf pasów (środek pasa, nie oś drogi), połączenia na skrzyżowaniach, sygnalizacja, ograniczenia dla ciężarówek.
@@ -54,6 +54,7 @@ Nie używaj publicznych serwerów kafli/Overpass jako masowego źródła — pob
 12. **Raport QA**: brakujące tagi, ostre kąty, zerowe długości, mosty bez `layer`, rozłączone ważne drogi, odchyłki geometrii, szczeliny teren/droga, dziury kolizji — z listą punktów do ręcznej weryfikacji.
 
 Ręczne poprawki: osobne pliki `authored_overrides` (np. GeoJSON/YAML z ID), aplikowane po generacji. **Jeśli generator kłamie — popraw generator**, nie łataj wyniku ręcznie po cichu.
+Pobocze dróg bez krawężnika (rodzaj, szerokości, kiedy krawężnik) — dane w `tools/worldgen/roads/xsec_rules.yaml`: reguła klasy, tagi OSM `shoulder*`, nadpisanie `set: {shoulder: …}` per odcinek (ADR 0272).
 
 ## 5. Kontrola jakości mapy (każdy fragment)
 - % sieci zgodnej ze źródłem, rozłączenia, błędy topologii.

@@ -10,3 +10,7 @@ pozostałe checki przechodzą. Wypisuje też niezdanie checki i opis z pola `exp
 Gdy fizyka zostanie poprawiona (oczekiwana metryka zacznie przechodzić), test pada z komunikatem
 „naprawione? zdejmij expectedFail”: przenieś plik do `tests/physics/scenarios/` i usuń
 `expectedFailReason` oraz `expectedFailMetrics` — test wtedy zacznie wymagać przejścia przez zwykły `ScenarioTests`.
+
+`ring_96_53_comb.json` jest generowany (`generate_stage2_scenarios.py <scenarios> <scenarios_expected_fail>`, ADR 0280):
+pierścień 12,50/5,30 m z 96/53/WE zał. I pkt 1.5 przy obecnej geometrii naczepy. Po przyjęciu nowych osi w danych gry
+zmień w generatorze `out=OUT_XFAIL` na domyślne wyjście i usuń `expectedFailReason`/`expectedFailMetrics`.

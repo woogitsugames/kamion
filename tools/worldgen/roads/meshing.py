@@ -200,6 +200,11 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
             kr, fl = kl[a]
             prm = [(kr, p[1], p[2], p[3], MAT_FLUSH_ROAD if fl else (0 if p[4] == MAT_FLUSH_ROAD else p[4]))
                    for p in params[lo:hi]]
+            if r and kr == RURAL and len(prm) > 1 and prm[0][4] != prm[1][4]:
+                # ADR 0272 (REVIEW #138 P2-1): the borrowed station carries the `mat` of the previous family (kerb /
+                # bridge = legacy 1.00 m paved shoulder); with a coded shoulder that was a 0.92 m asphalt wedge over
+                # one station. The run starts with its own shoulder widths.
+                prm[0] = (*prm[0][:4], prm[1][4])
             if r and c.meta.get("gore_flush") and len(prm) > 1:
                 # the station borrowed from the previous run carries the height of ANOTHER profile family. Next to
                 # a paved gore (ADR 0077) that is the dropped kerb (-0.06, which side_profile reads as "default
@@ -329,7 +334,7 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
         rw = max(abs(pr[k][2] - pr[k][0]) for pr in profs)   # row width over ALL stations (ADR 0100)
         if rw < 1e-6:     # vertical segment (a walk row 0 m wide at the first station only is NOT one: strip N 82)
             UV = np.column_stack([np.repeat(along, 2), np.tile([0.0, 1.0], n) * abs(profs[0][k][3] - profs[0][k][1])])
-            if mat in ("sidewalk_paving", "apron_sett", "verge_grass", "shoulder_gravel"):
+            if mat in ("sidewalk_paving", "apron_sett", "apron_paving_light", "verge_grass", "shoulder_gravel"):
                 mat = "curb_concrete" if mat != "verge_grass" else "verge_grass"
         elif mat == "curb_concrete" and rw <= KERB_TOP_UV_MAX_W:
             # kerb top: u along (1 m segment joints)
@@ -379,7 +384,7 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
             groups = [(cap_mat, T[on]), (mat, T[~on])]
         for mat, T in groups:
             cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
-                                    "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
+                                    "paving" if mat in ("sidewalk_paving", "apron_sett", "apron_paving_light", "bridge_concrete") else
                                     "grass")) if coarse else mat
             # ADR 0123 (REVIEW s10-0117 P1-3): the top of a bridge cap (kapa: the concrete strip behind the kerb of a
             # deck or a walled ramp) carries road film in COLOR_0.r (Kamion/World PBR _VERTEX_GRIME, manifest
@@ -953,10 +958,14 @@ def build_patch(buf, net, j, coarse=False, stats=None):
     mat = "collision_asphalt" if coarse else _patch_mat(net, j)
     layer = "collision" if coarse else ("bridge" if _patch_on_bridge(j) else "road")
     c = _star_center(poly)
-    if c is not None and coarse and float(np.max(np.hypot(*(poly - c).T))) > 15.0:
+    if c is not None and (coarse or getattr(j, "compact", None) is not None) \
+            and float(np.max(np.hypot(*(poly - c).T))) > 15.0:
         # long collision patches (fork trims of 65-68 m): the polar fan from one centre gave long slivers whose
         # linear facets cut 5-8 cm under the blended surface (route_start s = 1422 m); boundary-conforming
-        # Delaunay with interior points instead
+        # Delaunay with interior points instead.
+        # ADR 0274: the same for the render patch of a compact roundabout - its kerb-mode outline is star-shaped
+        # about the ring centre (straight mouths) and 50 m long: one polar ring of all ~650 outline vertices every
+        # 2.5 m was 25 194 triangles, the Delaunay fill 1 840
         c = None
     if c is not None:
         rmax = float(np.max(np.hypot(*(poly - c).T)))
@@ -1249,6 +1258,8 @@ def _outward(j, p, tag, nxt_tag=None):
         n = np.array([-dirv[1], dirv[0]])
         return n * side
     corner = j.corners[tag[1]]
+    if getattr(corner, "out", None) is not None:      # explicit outline (compact roundabout, ADR 0218 5c)
+        return corner.out[int(round(tag[2] * (len(corner.arc) - 1)))]
     if corner.kind in ("fillet", "nose") and corner.center is not None:
         v = corner.center - p
         nv = np.hypot(*v)

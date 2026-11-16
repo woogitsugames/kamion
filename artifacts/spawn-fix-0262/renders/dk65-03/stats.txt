@@ -1,0 +1,5 @@
+tier=Low lighting=clear msaa=2 renderScale=0.75
+cab-gate: objects=19 drawsEst=46 shadowDrawsEst=75 trisK=158 trisExact=158439 (estimate, before SRP batching)
+  cab-gate instanced (props+trees): draws 34, instances 56, triangles 6k, cells 36, forest HLOD cells 1, trianglesExact 6860
+truck-at-gate: objects=65 drawsEst=106 shadowDrawsEst=74 trisK=190 trisExact=190702 (estimate, before SRP batching)
+  truck-at-gate instanced (props+trees): draws 50, instances 48, triangles 20k, cells 121, forest HLOD cells 14, trianglesExact 20764

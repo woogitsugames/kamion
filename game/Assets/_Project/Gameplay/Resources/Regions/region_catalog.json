@@ -14,140 +14,140 @@
       "label": "Białystok — Gen. Maczka (DK8/DK65)",
       "group": "Białystok",
       "routeLengthM": 2054.08,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "bialystok-kleeberga",
       "label": "Białystok — Gen. Kleeberga (DK8/DK65)",
       "group": "Białystok",
       "routeLengthM": 2221.2,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "bialystok-knyszynska",
       "label": "Białystok — Szosa Ełcka → Szosa Knyszyńska",
       "group": "Białystok",
       "routeLengthM": 2961.35,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-01",
       "label": "DK65 01 — Szosa Knyszyńska za miastem",
       "group": "DK65",
       "routeLengthM": 631.76,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-02",
       "label": "DK65 02 — Fasty (południe), most",
       "group": "DK65",
       "routeLengthM": 2400.68,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-03",
       "label": "DK65 03 — Ełcka za Fastami",
       "group": "DK65",
       "routeLengthM": 484.43,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-04",
       "label": "DK65 04 — Fasty (północ)",
       "group": "DK65",
       "routeLengthM": 2079.43,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-05",
       "label": "DK65 05 — Dobrzyniewo Duże",
       "group": "DK65",
       "routeLengthM": 2201.88,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-06",
       "label": "DK65 06 — stara DK65, km 16,6–18,3",
       "group": "DK65",
       "routeLengthM": 1701.95,
-      "startS": 12.0
+      "startS": 340.0
     },
     {
       "id": "dk65-07",
       "label": "DK65 07 — stara DK65, km 18,3–19,1",
       "group": "DK65",
       "routeLengthM": 865.6,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-08",
       "label": "DK65 08 — stara DK65, km 19,1–21,5",
       "group": "DK65",
       "routeLengthM": 2355.15,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-09",
       "label": "DK65 09 — stara DK65, km 21,5–21,8",
       "group": "DK65",
       "routeLengthM": 352.36,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-10",
       "label": "DK65 10 — stara DK65, km 21,8–24,4",
       "group": "DK65",
       "routeLengthM": 2615.35,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-11",
       "label": "DK65 11 — stara DK65, km 24,4–24,8",
       "group": "DK65",
       "routeLengthM": 377.82,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "knyszyn-s",
       "label": "Knyszyn — wlot DK65, strefa budowy",
       "group": "Knyszyn",
       "routeLengthM": 2420.72,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "knyszyn",
       "label": "Knyszyn — rondo DK65/DW671, Rynek",
       "group": "Knyszyn",
-      "routeLengthM": 1159.85,
-      "startS": 12.0
+      "routeLengthM": 1159.8,
+      "startS": 90.0
     },
     {
       "id": "knyszyn-w",
       "label": "Knyszyn — wylot na Mońki i Tykocin",
       "group": "Knyszyn",
       "routeLengthM": 1988.7,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dk65-monki-01",
       "label": "DK65 w stronę Moniek",
       "group": "Knyszyn",
       "routeLengthM": 1185.04,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "dw671-tykocin-01",
       "label": "DW671 w stronę Tykocina",
       "group": "Knyszyn",
       "routeLengthM": 2608.56,
-      "startS": 12.0
+      "startS": 90.0
     },
     {
       "id": "bialystok-dojlidy",
       "label": "Białystok — Dojlidy, Dywizjonu 303 / Kuronia",
       "group": "Białystok",
       "routeLengthM": 2133.17,
-      "startS": 12.0
+      "startS": 90.0
     }
   ],
   "aliases": [
@@ -177,6 +177,33 @@
         "dk65-11",
         "knyszyn-s",
         "knyszyn"
+      ]
+    },
+    {
+      "name": "d67-full",
+      "note": "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin. APK size ESTIMATED 1407-1948 MB (REVIEW-2026-11-15-s21-code-104, like 'all'); measure on the build (ADR 0267).",
+      "regions": [
+        "bialystok-industrial-c",
+        "bialystok-maczka",
+        "bialystok-kleeberga",
+        "bialystok-knyszynska",
+        "dk65-01",
+        "dk65-02",
+        "dk65-03",
+        "dk65-04",
+        "dk65-05",
+        "dk65-06",
+        "dk65-07",
+        "dk65-08",
+        "dk65-09",
+        "dk65-10",
+        "dk65-11",
+        "knyszyn-s",
+        "knyszyn",
+        "bialystok-dojlidy",
+        "knyszyn-w",
+        "dk65-monki-01",
+        "dw671-tykocin-01"
       ]
     }
   ]

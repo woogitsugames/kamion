@@ -138,7 +138,8 @@ def test_rural_tile_has_no_rule_lamps():
 
 
 @pytest.mark.parametrize("region_id,place_ids", [
-    ("knyszyn", ["rynek_fountain", "rondo_dk65_from_south", "dk65_inlet_south", "dk65_outlet_nw"]),
+    ("knyszyn", ["plac_wschodni_from_east", "rynek_owner_04", "rynek_owner_05",
+                 "rondo_dk65_from_south", "dk65_inlet_south", "dk65_outlet_nw"]),
     ("knyszyn-s", ["construction_from_dk65", "dk65_seam_east", "dk65_seam_north"]),
 ])
 def test_control_cameras(region_id, place_ids):
@@ -150,3 +151,26 @@ def test_control_cameras(region_id, place_ids):
     for i in place_ids:
         assert i in ids, i
     assert sum(1 for i in ids if i.startswith("route_s")) >= 3
+
+
+def test_market_fountain_cameras_are_distinct_from_eastern_square():
+    """The old 'rynek_fountain' viewpoint depicts the eastern square, not the fountain."""
+    import yaml
+
+    region = REGIONS / "knyszyn"
+    cameras = {c["id"]: c for c in json.loads((region / "generated" / "control_cameras.json").read_text(encoding="utf-8"))["cameras"]}
+    overrides = yaml.safe_load((region / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+    plate = next(o for o in overrides if o.get("id") == "rynek-fountain-plate-0227")
+    points = plate["polygon_epsg2180"]
+    fountain = (sum(p[0] for p in points) / len(points) - 761611,
+                sum(p[1] for p in points) / len(points) - 612607)
+    east = cameras["plac_wschodni_from_east"]["pos"]
+    assert math.dist(east[:2], fountain) > 50
+    for name in ("rynek_owner_04", "rynek_owner_05"):
+        camera = cameras[name]
+        pos, look = camera["pos"], camera["look_at"]
+        to_fountain = (fountain[0] - pos[0], fountain[1] - pos[1])
+        forward = (look[0] - pos[0], look[1] - pos[1])
+        distance = math.hypot(*to_fountain)
+        assert 1 < distance < 30, (name, distance)
+        assert (to_fountain[0] * forward[0] + to_fountain[1] * forward[1]) / (distance * math.hypot(*forward)) > 0.85, name

@@ -292,7 +292,7 @@
    "patches": 36
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 63960,
+  "footprint_nodes": 60771,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -335,6 +335,14 @@
   "overrides_applied": [
    {
     "id": "dk65-xsec-k1",
+    "targets": [
+     "w27718745:17795488-5548637893",
+     "w27718745:5548637893-1134817563",
+     "w27718745:897574813-17795488"
+    ]
+   },
+   {
+    "id": "dk65-opaska-k1",
     "targets": [
      "w27718745:17795488-5548637893",
      "w27718745:5548637893-1134817563",

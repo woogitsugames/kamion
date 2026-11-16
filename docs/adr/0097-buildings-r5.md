@@ -1,6 +1,6 @@
 # ADR 0097: Zabudowa r5 — dachy wielopołaciowe z koszami, jeden typ balustrady na budynek, zacieki pod parapetami, balkony na obu stronach, paleta domów wg sąsiadów
 
-Status: propozycja (world-builder, gałąź `buildings-r5`, z main `0e73211a`), 2026-11-11. Kontynuacja ADR 0094; odpowiedź
+Status: przyjęty (scalony do main 2026-11-11, `7c094c3f6`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (world-builder, gałąź `buildings-r5`, z main `0e73211a`), 2026-11-11. Kontynuacja ADR 0094; odpowiedź
 na `docs/reports/visual/REVIEW-2026-11-11-s9-0094.md` („Następna runda (ADR 0097)” pkt 1–7; pkt 8 — zrzut z A16 —
 robi lider).
 

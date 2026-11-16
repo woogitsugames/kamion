@@ -258,9 +258,21 @@ def forest_stands(overrides):
     return out
 
 
-def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
+def park_replacements(overrides):
+    """BDOT wooded polygons explicitly represented as maintained parks, not forests.
+
+    An opted-in feature contributes neither forest trees, mantle nor HLOD/forest-floor
+    masks. Individually sourced park trees are supplied via tree_groups points.
+    """
+    return {str(o["target"]["bdot"]): o["id"] for o in overrides or []
+            if o.get("kind") == "park_replacement"}
+
+
+def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_rows=None):
     """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list.
-    hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems."""
+    hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems.
+    tree_rows (ADR 0222, opt-in): streetscape.tree_rows.region_plan() - the rows it took over are laid out by it
+    (rhythm, set-back, sight cuts) instead of the 8 m BDOT row rule below; None = the rule unchanged."""
     out = []
     H, W = zc.shape
 
@@ -269,10 +281,13 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
         j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
         return ~blocked[j, i], zc[j, i]
 
-    def emit(P, species, rng, src_id, hscale=1.0, fk=None, hrange=None, spruce_v=None, tier=None):
+    def emit(P, species, rng, src_id, hscale=1.0, fk=None, hrange=None, spruce_v=None, tier=None, keep=None):
         if not len(P):
             return
         good, z = ok(P)
+        if keep is not None:                    # ADR 0222 / 0245: candidates outside the part left to this rule (tree
+            good = good & keep                  # rows; forest floor near a road); like the clearance test they are
+                                                # dropped after their draws, so the stream does not depend on it (0173)
         # ADR 0173: the attributes are drawn for EVERY candidate point (same calls, same order as before), and the
         # clearance test only drops the tree afterwards. Before, a tree dropped by a new kerb / paved area / building
         # skipped its draws and shifted the random stream of every later tree of the same BDOT feature or group
@@ -308,6 +323,8 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
 
     from scipy import ndimage as _ndi
     road_dist = _ndi.distance_transform_edt(~blocked)       # metres to the nearest road / yard / building (1 m nodes)
+    if not blocked.any():                   # ADR 0245: with no blocked node scipy measures to a phantom point off the
+        road_dist = np.full(blocked.shape, np.inf)          # grid corner (floor plants appeared in one corner)
 
     def near_road(P, lim):
         i = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, W - 1)
@@ -321,10 +338,16 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
     crep = {"applied": [], "stale": []}
     hit = set()
     stands = forest_stands(overrides)
+    parks = park_replacements(overrides)
+    park_hits = set()
     srep = {"applied": [], "stale": []}
     shit = set()
     cleared = []                            # cleared parts of the forest: sand on the orthophoto -> bare ground mask
     for f in src["bdot10k"]["OT_PTLZ_A"]:
+        park_id = str(f["id"]).split(":")[0]
+        if park_id in parks:
+            park_hits.add(park_id)
+            continue
         poly = PV._poly_local(f["geometry"]["coordinates"], origin)
         if not poly.is_valid:
             poly = shapely.make_valid(poly)
@@ -394,11 +417,13 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
             emit(P, sp, rng, f"bdot:{f['id']}:under", 1.0, fk=fk, spruce_v="open")
             ranged(n0, {k: v[:2] for k, v in UNDERSTOREY.items()})
             # forest floor plants where the floor is seen from a road (High tier only)
+            # ADR 0245: every candidate draws its attributes and the near-road test only drops it afterwards. Before,
+            # the candidates were filtered first, so a new kerb / paved area changed the number of draws and shifted
+            # the stream of the stand mantle (:edge) drawn next - trees moved far outside the edited spot (ADR 0173).
             P = _scatter(full.buffer(-1.0), FLOOR_SPACING, rng)
-            if len(P):
-                P = P[near_road(P, FLOOR_ROAD_M)]
             n0 = len(out)
-            emit(P, ["floor"] * len(P), rng, f"bdot:{f['id']}:floor", 1.0, tier="high")
+            emit(P, ["floor"] * len(P), rng, f"bdot:{f['id']}:floor", 1.0, tier="high",
+                 keep=near_road(P, FLOOR_ROAD_M) if len(P) else None)
             n_floor += len(out) - n0
         # edge (ADR 0187): mantle of three bands with rising height along the outline (partial by segment hash, M68)
         for bi, (d_in, d_out, step, table) in enumerate(MANTLE[fk]):
@@ -447,6 +472,9 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
     report["forest_clearings"] = crep
     srep["stale"] = [{"id": st["id"], "bdot": bid} for bid, st in stands.items() if bid not in shit]
     report["forest_stands"] = srep
+    if parks:  # ADR 0227: key only where `kind: park_replacement` is authored (no QA diff in other regions)
+        report["park_replacements"] = {"applied": sorted(parks[k] for k in park_hits),
+                                       "stale": sorted(v for k, v in parks.items() if k not in park_hits)}
     # ADR 0187: authored `kind: tree_stand` - wooded land that is no BDOT10k forest (allotment gardens, a park
     # wood) but closes the horizon on the photos. `polygons_en` (region-local E/N rings, like open_ground),
     # `height_m` [lo, hi] of its trees, `mix` {species: weight}, `spacing_m`, `category` (HLOD texture mix, default
@@ -500,8 +528,28 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
     report["_forest_cleared"] = cleared
     groups = _tree_group_overrides(overrides, np.asarray(origin, float))
     grep = {"lines": len(groups), "trees": 0, "groups": 0, "rows_grouped": 0}
+    tr_handled = tree_rows["handled"] if tree_rows else set()
+    tr_fallback = tree_rows.get("fallback", {}) if tree_rows else {}
+    tr_cuts = shapely.union_all(tree_rows["cuts"]) if tr_fallback and tree_rows.get("cuts") else None
+    n_fb = 0
+
+    def tr_keep(f, line, P0, P):
+        """ADR 0222: a BDOT row the tree_rows plan took over only in part keeps the trees of this rule on the rest of
+        it (`fallback` geometry): candidates P0 (on the line) nearer to the taken / out-of-tile part are dropped, so
+        are trunks P in the sight fields of the plan. None = the line is all this rule's (unchanged path)."""
+        fb = tr_fallback.get(f"bdot:{f['id']}")
+        if fb is None or not len(P0):
+            return None
+        rest = line.difference(fb.buffer(0.01))
+        pts = shapely.points(np.asarray(P0, float))
+        keep = np.ones(len(P0), bool) if rest.is_empty else shapely.distance(fb, pts) <= shapely.distance(rest, pts)
+        if tr_cuts is not None:
+            keep &= ~shapely.contains_xy(tr_cuts, P[:, 0], P[:, 1])
+        return keep
     for f in src["bdot10k"]["OT_OIPR_L"]:
         if f["props"].get("rodzaj") != "rząd drzew":
+            continue
+        if f"bdot:{f['id']}" in tr_handled:     # ADR 0222: laid out by streetscape.tree_rows below
             continue
         line = shapely.LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         rng = np.random.default_rng(_seed(f["id"]))
@@ -510,12 +558,18 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
             P, _ = group_positions(line, rng, near)
             names = list(near["species"])
             w = np.array([near["species"][k] for k in names], float)
-            emit(P, rng.choice(names, size=len(P), p=w / w.sum()), rng, f"bdot:{f['id']}:groups")
+            n0 = len(out)
+            emit(P, rng.choice(names, size=len(P), p=w / w.sum()), rng, f"bdot:{f['id']}:groups",
+                 keep=tr_keep(f, line, P, P))
+            n_fb += (len(out) - n0) if f"bdot:{f['id']}" in tr_fallback else 0
             grep["rows_grouped"] += 1
             continue
         P = np.array([line.interpolate(s).coords[0] for s in np.arange(2.0, line.length, 8.0)]).reshape(-1, 2)
         sp = [["linden", "maple"][_seed(f["id"]) % 2]] * len(P)
-        emit(P + rng.normal(0, 0.3, P.shape), sp, rng, f"bdot:{f['id']}")
+        Pj = P + rng.normal(0, 0.3, P.shape)
+        n0 = len(out)
+        emit(Pj, sp, rng, f"bdot:{f['id']}", keep=tr_keep(f, line, P, Pj))
+        n_fb += (len(out) - n0) if f"bdot:{f['id']}" in tr_fallback else 0
     for gl, prm, key in groups:
         rng = np.random.default_rng(_seed(key))
         P, G = group_positions(gl, rng, prm)
@@ -527,6 +581,19 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
         emit(P, [gsp[g] for g in G], rng, key)
         grep["trees"] += len(out) - n0
         grep["groups"] += int(G.max()) + 1 if len(G) else 0
+    if tree_rows:                               # ADR 0222: roadside rows (positions + species from the plan)
+        n_tr = len(out)
+        for row in tree_rows["rows"]:
+            if len(row["P"]):
+                rng = np.random.default_rng(_seed(row["key"]) + 1)
+                emit(row["P"], row["species"], rng, row["key"], hrange=tree_rows["height_m"].get(row["key"]))
+        planned = sum(len(r["P"]) for r in tree_rows["rows"])
+        # blocked_dropped: planned trunks the clearance grid (roads / yards / buildings, dilated) refused - a trunk
+        # the plan moved to the minimum set-back usually ends here (review of PR #101, FIX 3)
+        report["tree_rows"] = {"planned": planned, "placed": len(out) - n_tr,
+                               "blocked_dropped": planned - (len(out) - n_tr),
+                               "lines_handled": len(tr_handled), "lines_partly_handled": len(tr_fallback),
+                               "fallback_trees": n_fb, "plan": tree_rows["report"]}
     tpts = _tree_point_overrides(overrides)
     if tpts:
         grep["points"], grep["points_refused"] = 0, []
@@ -646,6 +713,38 @@ def ground_masks(src, origin, hf, dist_road, forests, cleared=()):
     C = ndimage.gaussian_filter(C, sigma=(1.5, 1.5, 0))
     C[..., 0] = np.where(dist_road <= 0.0, 0.0, C[..., 0])      # exactly 0 under roads / yards (no grass there)
     return C.astype(np.float32)
+
+
+def authored_bare_ground(col, hf, origin, overrides, hard_mask):
+    """Colour opted-in planting islands as bare soil without adding hard geometry.
+
+    The alpha channel is the existing terrain bare-soil mask. The painted area
+    is limited to the authored rings and never modifies hard surfaces, the hard
+    mask, collision, or vegetation placement. No opt-in means an exact no-op.
+    """
+    from shapely.geometry import Polygon
+
+    origin = np.asarray(origin, float)
+    polys = []
+    for o in overrides or []:
+        if o.get("kind") == "paved_area" and o.get("bare_soil_holes") is True:
+            polys.extend(Polygon(np.asarray(h, float) - origin) for h in o.get("holes_epsg2180", []))
+        elif o.get("kind") == "unpaved_area" and o.get("bare_soil") is True:
+            ring = np.asarray(o["polygon_en"], float) if "polygon_en" in o else np.asarray(o["polygon_epsg2180"], float) - origin
+            polys.append(Polygon(ring))
+    if not polys:
+        return col
+    if any(not p.is_valid or p.is_empty or p.area <= 0 for p in polys):
+        raise ValueError("authored bare-soil polygon is invalid")
+    soil = PV.rasterize_polys(polys, hf) & ~np.asarray(hard_mask, dtype=bool)
+    if not soil.any():
+        return col
+    # WORKING_VALUE: strong soil coverage on opted-in cells. Terrain vertex
+    # interpolation softens the boundary; never paint across the hard mask.
+    out = col.copy()
+    out[..., 3][soil] = np.maximum(out[..., 3][soil], .94)
+    out[..., 1][soil] = 0.0
+    return out
 
 
 # ADR 0163 (corrects ADR 0154): ceilings of mature city trees, G7 # 12 (Ebben S01-S07, measurement G7-T03). ADR 0154

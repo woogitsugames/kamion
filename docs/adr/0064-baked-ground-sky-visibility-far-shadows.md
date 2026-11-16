@@ -1,6 +1,6 @@
 # ADR 0064 - Baked ground sky visibility + far ground sun shadows (instead of lightmaps / APV)
 
-Status: proposed (rendering-perf), 2026-11-10. Phone verification **UNVERIFIED** (no phone used: PHONE_RUN lock / lead).
+Status: Accepted (merged to main 2026-11-10, `0e45111f3`; status updated 2026-11-16); originally: proposed (rendering-perf), 2026-11-10. Phone verification **UNVERIFIED** (no phone used: PHONE_RUN lock / lead).
 Answers: "the world looks flat / gamey" (no indirect occlusion, no contact darkening; `ShaderVariantStripper` strips all
 lightmap keywords) and the S24+ resolution-independent GPU cost (review r8 §0.3, ADR 0062: ≈ 13 ms of fixed passes).
 Related: ADR 0010 (sky / exposure, D23), 0012 (content tiers), 0050 (parked-vehicle contact AO), 0062 (High scale floor).

@@ -277,13 +277,16 @@ overrides:
       # apart along the gap), none on the outer caps
       lamps: {side: median, spacing_m: 32.0, anchor_en: [554.5, -715.5]}
     reason: >-
-      Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r.: red-painted deck edge, plain grey cylindrical
-      concrete piers, steel railing, no noise screen (CC0 photo 20201102_152339, Rakoon, docs/REFERENCES.md).
+      Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r.: red-painted deck edge, plain grey concrete piers of
+      rounded-rectangle (stadium) section with the narrower face painted red (ADR 0144 `col_shape: stadium` in the
+      hero override below; research P13-076 / P13-065), steel railing, no noise screen on either deck (CC0 photos
+      20201102_152339 and 20210320_092717 / 092737, Rakoon, docs/REFERENCES.md; research P13-073 / P13-080).
       cap_w (ADR 0117): cap behind the kerb 1.0 m instead of the generic 1.5 m - orthophoto: kerb + cap with the
       barrier ~1.3 m; Mapillary 454716650857984: edge line -> barrier face ~1.25 m (was ~1.8 m, the cap read as a
       sidewalk). WORKING_VALUE (+-0.2 m). The deck gets 0.5 m narrower on each outer side; the carriageway, the
       box girder and the piers stay.
-      Pier diameter and spacing are not measured (WORKING_VALUE 1.2 m, rule spacing).
+      The generic pier of this style (pier_r, cylinder) is a fallback only: the hero override below replaces it with
+      measured pier rows (ADR 0123) and 0.70 x 1.40 m stadium columns (ADR 0144, WORKING_VALUE).
     confidence: medium
     verify: pier count / spacing and fascia height from a site photo
   - id: andersa-viaduct-biezenstwa-hero
@@ -355,19 +358,25 @@ overrides:
           # of the galvanised W-beam with an open view under it. Rail count / heights WORKING_VALUE.
           barrier: dark_rails}
     reason: >-
-      Andersa viaduct at Rondo Putry (DK8/DK19/DK65): green deck edge, yellow-painted round piers in pairs,
+      Andersa viaduct at Rondo Putry (DK8/DK19/DK65): green deck edge, ochre-painted piers in pairs - rectangular
+      with chamfered corners and a widened head (cap) under the deck, NOT round (ADR 0198; research P13-034, CC0
+      7204_May_2021 + Panoramax 6fc62548 as reference; built by viaduct_underdeck.json: 1.0 x 1.2 m, chamfer 0.25 m,
+      WORKING_VALUE; `pier_mat` here only names the paint) -
       transparent noise screens on posts along the deck (CC0 photo 7204_May_2021, Rakoon; consistent with the
       CC BY-SA photos of Rondo Putry and Andersa/Maczka used as reference only). Screen height WORKING_VALUE.
       ADR 0125: the screen stands on the outer (right-hand) edge only - Mapillary 494288258686575 (szurek 2017,
       northbound deck) has the screen on the right and a guard rail with an open view of the other carriageway
-      on the left. The southbound deck is assumed symmetric (UNVERIFIED).
+      on the left. ADR 0198: the other (south-west, traffic to SE) deck is confirmed, not assumed - CC0 photo
+      20221203_111814 (Rakoon; research P13-018 / P13-040) shows the transparent screen on its outer (south-west)
+      edge; the edges facing the median carry a light galvanised railing with handrails and no screen (Panoramax
+      6fc62548, reference only; research P13-079).
       ADR 0146: Mapillary 494288258686575 measured from the road vanishing point with eye height 1.0 m (lane 3.5 m):
       edge line centre -> kerb face 0.4 m, kerb -> barrier posts ~0.75 m on a red-brown coated cap, screen ~0.5 m
       behind the posts (kerb face -> screen ~1.3 m; was 1.65 m on a light concrete cap). Orthophoto 0.08 m: 1.1 m from
       the edge line to the barrier; the caps on the median side are red. Mapillary 810525063224609 /
       209622370971977: the fascia is green on the spans and red on top of the block-faced ramp walls. WORKING_VALUE.
     confidence: medium
-    verify: screen height and post spacing, which deck sides carry screens
+    verify: screen height and post spacing
   - id: andersa-putry-approach-gantry
     kind: sign_gantry
     osm_way: 266084693
@@ -697,13 +706,21 @@ overrides:
     osm_way: 173956083
     before_node: n1852129066
     distance_m: 100.0
+    # ADR 0236 (research R2-081, KartaView 3686129 / 313, 2021-06-23, CC BY-SA 4.0: content only, our own face): the
+    # board on this arm is an E-1 with a crossroads diagram - 8 E67 Warszawa / 65 Ełk above the vertical road, 675
+    # Centrum on the left arm (crossed out with tape in 2021, signed again on the 2024 portal p40: kept), 8 E67
+    # Augustów / 19 Kuźnica PL BY on the right arm. Until now a 5-row list board from the OSM destination tags at the
+    # WORKING_VALUE 0.62 m row (4.6 x 3.3 m). size_m WORKING_VALUE: width as before (2020 frame), height from the
+    # 2.5 : 1 proportion of the R2-068 frame (seen ~35 deg off axis); letters then 173 mm (group V-VI, Tabela 1.9).
     boards:
       - lanes: [0, 1]
-        from_osm:
-          - {way: 1101181473, refs_extra: ["8", E67]}
-          - {way: 606396463, refs_extra: ["8", E67]}
-          - {way: 284541843}
+        size_m: [4.6, 1.85]
+        style: e1_cross
+        top: [[["8", E67], Warszawa], [["65"], Ełk]]
+        left: [[["675"], Centrum]]
+        right: [[["8", E67], Augustów], [["19"], Kuźnica PL BY]]
     mapillary: ["995780104564541", "1240467703063612"]
+    r2: [R2-081, R2-068]
     reason: >-
       Mapillary 995780104564541 (richlv, 2020-08-15) shows one lattice column in the gore left of the link to Rondo
       Putry (after the ramp to the viaduct splits off) and a lattice arm over both lanes carrying one direction board
@@ -825,6 +842,87 @@ overrides:
       orthophoto 15.6 m apart (N 117.6-121.2).
     confidence: medium
     verify: lane assignment of the boards on site
+  # ---------------------------------------------------------------- ADR 0236: direction signs of route C (research R2)
+  # Research R2 (research/cloud2/direction-signs-route-c, PR #62; review REVIEW-2026-11-15-s21-cloudD-62): KartaView
+  # sequence 3686129 (2021-06-23) and Panoramax (2019-08-15), both CC BY-SA 4.0 - content and positions read off the
+  # frames, no pixels; faces are our own drawings laid out by Dz.U. 2019 poz. 2311 zał. 1 (streetscape.sign_norms).
+  - id: andersa-putry-e1-advance-gantry
+    kind: sign_gantry
+    osm_way: 1093579590
+    before_node: n2359253621
+    distance_m: 32.2
+    # Column feet on the GUGiK WMS ORTO HighResolution orthophoto (EPSG:2180 bbox 777780,595945,777828,595981 at
+    # 0.03 m/px, read 2026-11-15): the lattice beam crosses the north-west bound carriageway from the median foot at
+    # E 777799.6 N 595953.2 to the verge foot at E 777807.9 N 595963.7 (+-1 m: the beam top leans on the orthophoto),
+    # 13.4 m apart; the board's shadow lies on the two left lanes. The R2-066 frame (E -157.4 N -288.7) is 42 m before it.
+    columns_en: [[-195.4, -269.8], [-187.1, -259.3]]
+    beam_depth_m: 0.6
+    boards:
+      - lanes: [0, 1]
+        # R2-066 frame: board 103 x 57 px between column axes 422 px apart (= the 13.4 m beam) -> 3.3 x 1.8 m (+-10 %),
+        # centre 5.2 m from the median column. Five rows in two groups: letters come to 184 mm (between groups V
+        # and VI of Tabela 1.8; one group of five rows at d = 210 mm would be 1.90 m by Tabela 9.5.4). WORKING_VALUE.
+        size_m: [3.3, 1.8]
+        lat_shift_m: -0.8
+        frame: single
+        panels:
+          - {arrow: none, rows: [[["8", E67], Warszawa], [["65"], Ełk]]}
+          - {arrow: fork_right, rows: [[["8", E67], Augustów], [["19"], Kuźnica PL BY], [["675"], Centrum]]}
+    r2: [R2-079, R2-066]
+    kartaview: ["3686129/303"]
+    orthophoto: "GUGiK WMS ORTO HighResolution, bbox 777780,595945,777828,595981 (EPSG:2180), 2026-11-15"
+    reason: >-
+      Review of PR #62 (P2): the E-1 advance board ~500 m before Rondo Putry hangs on a lattice portal across the
+      north-west bound carriageway of Andersa, 91 m before the E-2 portal `andersa-putry-approach-gantry`; nothing
+      stood there. Content R2-079 (2021): 8 E67 Warszawa / 65 Ełk straight on; 8 E67 Augustów / 19 Kuźnica PL BY /
+      675 Centrum on the branch to the right (the 675 number and the white field are small on the frame: read with
+      the next portal, which repeats them). State 2026 UNVERIFIED (newest frame 2021).
+    confidence: medium
+    verify: board on site (2026), column feet
+  - id: tysiaclecia-n-putry-e15-right
+    kind: gate3_sign
+    along: {osm_way: 237183783, before_node: n2466608891, distance_m: 38.0, side: R}
+    parts: [{face: E-15, text: "8|19"}, {face: E-16, text: "E67"}]
+    r2: [R2-017, R2-008]
+    photo: ["panoramax:6ded8ec0"]
+    reason: >-
+      ADR 0236, research R2-017 (Panoramax 6ded8ec0, 2019-08-15): route numbers "8" and "19" (red) side by side over
+      "E 67" (green) on one post on both sides of the northbound exit of Rondo Putry. Station: the "E 67" plate
+      (0.60 m by rys. 9.5.47) is 26-28 px wide on the 1280 px frame -> ~24 m ahead of the frame at an assumed 62 deg
+      lens (ESTIMATED, +-20 %), i.e. ~40 m after the ring node 2629251371 - within the 50 m of pkt 6.3.7.8.
+    confidence: low
+    verify: station on site / orthophoto
+  - id: tysiaclecia-n-putry-e15-left
+    kind: gate3_sign
+    along: {osm_way: 237183783, before_node: n2466608891, distance_m: 38.0, side: L}
+    parts: [{face: E-15, text: "8|19"}, {face: E-16, text: "E67"}]
+    r2: [R2-017, R2-008]
+    photo: ["panoramax:6ded8ec0"]
+    reason: Same assembly on the left (median) side, R2-017.
+    confidence: low
+    verify: station on site / orthophoto
+  - id: andersa-biezenstwa-e15-right
+    kind: gate3_sign
+    along: {osm_way: 552161976, before_node: n2367445386, distance_m: 170.0, side: R}
+    parts: [{face: E-15, text: "19"}, {face: E-15, text: "65"}]
+    r2: [R2-077, R2-064]
+    photo: ["kartaview:3686129/281"]
+    reason: >-
+      ADR 0236, research R2-077 (KartaView 3686129 / 281, 2021-06-23): "19" over "65" (red) on single posts on both
+      sides of the north-west bound carriageway just after the slip from Rondo Bieżeństwa joins. Station: the "19"
+      plate (0.41 m) is 37 px wide on the 1280 px frame -> ~11 m ahead of the frame (E 295.4 N -567.3) at an assumed
+      68 deg lens (ESTIMATED), i.e. ~26 m after the merge node 3341716402 (<= 50 m, pkt 6.3.7.8).
+    confidence: low
+    verify: station on site / orthophoto
+  - id: andersa-biezenstwa-e15-left
+    kind: gate3_sign
+    along: {osm_way: 552161976, before_node: n2367445386, distance_m: 170.0, side: L}
+    parts: [{face: E-15, text: "19"}, {face: E-15, text: "65"}]
+    r2: [R2-077, R2-064]
+    photo: ["kartaview:3686129/281"]
+    reason: Same assembly on the median side (behind the guardrail), R2-077.
+    confidence: low
+    verify: station on site / orthophoto
   - id: andersa-ne-noise-barrier-glazed
     kind: noise_barrier_style
     zones:
@@ -1099,13 +1197,53 @@ overrides:
   - id: putry-ring-s-placement
     target: {edge: "w180144451:2629251364-4075461271"}
     reason: >-
-      MA-010 (artifacts/map-audit-r9/BUGS.md): the OSM way of this 46 m ring segment of Rondo Putry runs along the
-      real SOUTH kerb, so the symmetric 7 m carriageway put its right lane on the real grass triangle and left the
-      real left lane out. Orthophoto 0.08 m (artifacts/islands-r10/after3/ma010_chains.jpg): south kerb ~0.6 m right
-      of the way, two lanes to the left of it -> centre 2.9 m left.
+      MA-010 (artifacts/map-audit-r9/BUGS.md) moved this 46 m ring segment of Rondo Putry 2.9 m to the left over its
+      whole length; that is right only at its east end (the kerb of the right-turn splitter is ~0.6 m right of the
+      way there). ADR 0226, owner decision 2026-11-15 (correct the ring so the SW deck of estakada A can get its two
+      island pier rows): GUGiK orthophoto WMS HighResolution, 0.05 m/px window E -640..-480 N -80..+80 fetched
+      2026-11-15 (reference only, not stored; not Google). Kerb points read by eye on a 1 m grid, +-0.3 m, in metres
+      LEFT of the OSM way: kerb of the centre island +6.3 (s 3 m), +5.0 (6), +4.0 (9), +3.7 (11.5), +3.57 (15),
+      +3.47 (19), then the nose flares away: +4.4 (23), +6.3 (26.7), +7.2 (27.2); kerb of the pavement on the right
+      -3.8 (s 8), -3.3 (12.5), -2.6 (19), -2.5 (23.5). So between s 10 and 20 m the real carriageway is 6.1-7.0 m
+      wide and lies ON the OSM way (two lanes, arrow in the left one), not 2.9 m left of it: the generated left lane
+      and the rule's apron stood on the real island (generated island kerb 3.6 m inside the real one on average,
+      4.9 m at most). Profile [t, value], t = 0..1 along the edge (ADR 0095): centre 1.2 m left / 7.2 m wide at the
+      west end (the kerb return under the deck edge), 0.25 -> 0.15 m / 6.0 m between t 0.25 and 0.42, back to the
+      MA-010 values 2.9 m / 7.0 m from t 0.62 on (east of the island nose nothing changes). All WORKING_VALUE.
     confidence: medium
-    verify: Mapillary 987194858750300 / owner drive
-    set: {center_offset: 2.9}
+    verify: Mapillary 987194858750300 / owner drive; fit of the generated island kerb in tests/gis/test_putry_ring_0226.py
+    set:
+      center_offset: [[0.0, 1.2], [0.1, 1.2], [0.25, 0.25], [0.42, 0.15], [0.62, 2.9], [1.0, 2.9]]
+      width: [[0.0, 7.2], [0.1, 7.2], [0.25, 6.0], [0.42, 6.0], [0.62, 7.0], [1.0, 7.0]]
+  - id: putry-ring-island-kerb
+    target: {osm_way: [180144451, 257367424, 257367425, 257367428]}
+    reason: >-
+      ADR 0226. Rondo Putry has no mountable sett apron: on the GUGiK orthophoto (WMS HighResolution, 0.05 m/px,
+      fetched 2026-11-15, reference only) the asphalt of the ring runs to a light kerb band, behind it gravel and
+      grass (north half) or gravel with a W-beam (south-west side, beside the SW deck). Position of that kerb
+      relative to the generated carriageway edge of each ring way (38 points read by eye on a 1 m grid, +-0.3 m):
+      west way 257367425 +0.0..+0.45 m, north way 257367424 +0.15..+0.7 m, east way 257367428 +0.25..+0.6 m (one
+      point between the decks -0.45 m, +-0.5 m). The rule's 2.0 m sett apron (standards.ROUNDABOUT_APRON_W) put
+      the island kerb 1.3-2.5 m inside the real one along the three straight sides. `truck_apron: {width_m: 0.4}` (mean of the three ranges, WORKING_VALUE; the one island-strip mechanism of ADR 0218 + 0226, width only) =
+      distance carriageway edge -> island kerb; `apron: asphalt` = that strip is plain carriageway (ADR 0123). The
+      lane layout of the four ways is not touched here. Whether the light band is the kerb alone or a kerb with a
+      narrow paved strip behind it cannot be told from above (UNVERIFIED).
+    confidence: medium
+    verify: owner drive / street-level photo of the island kerb (open sources only)
+    set: {apron: asphalt, truck_apron: {width_m: 0.4}}
+  - id: putry-ring-island-nw-corner
+    target: {node: n3890183128}
+    reason: >-
+      ADR 0226. North-west corner of the centre island of Rondo Putry (kerb return between ring ways 257367425 and
+      257367424). Orthophoto (as above): the kerb arc from E -572.9 N 45 to E -557.5 N 53.3 is a circle of radius
+      12.0 m (least squares over 12 points, centre E -561.3 N 41.8, residuals <= 0.13 m). The rule asks for 12 m on
+      a ring too, but only 8.4 m fitted the 38.7 m north way (retry factor 0.7), which left the corner 2.4 m
+      outside the real kerb once the apron was gone. 10.0 m is the largest value tried that fits (WORKING_VALUE);
+      remaining error at the corner 1.4 m. Only the island corner: `island_curb_radius` does not touch the outer
+      corners of the junction.
+    confidence: medium
+    verify: owner drive
+    set: {island_curb_radius: 10.0}
   - id: lacznica-biezenstwa-placement
     target: {edge: "w177861600:1882953899-4391371827"}
     reason: >-
@@ -2746,3 +2884,41 @@ overrides:
       away from the road.
     confidence: high
     verify: none
+  # ---------------------------------------------------------------- ADR 0216b: lamp heads (no source for LED side streets)
+  - id: lamp-policy-unverified-0216b
+    kind: lamp_policy
+    family: unchanged
+    unverified_streets: [Michała Motoszko, Skidelska, Buska, Sokólska, Łańcucka, Olsztyńska, Świsłocka, Władysława Bełzy,
+                         Białostoczek, Grodzieńska, Kombatantów, "(unnamed living_street / service)"]
+    sources: ["research/led-tenders-0216b/ted_notices.json", "research/night-lamps-s21/README.md sections 1 and 4",
+              "research/night-lamps-s21/osm-street-lamps.json"]
+    reason: >-
+      No change (record only). The older side-street poles of tile C (sodium head) stand on the streets listed in
+      `unverified_streets`; none of them is named in a City of Bialystok LED notice (TED search 2022-2026,
+      research/led-tenders-0216b) and the 11 OSM street_lamp nodes of the tile carry no light:method / LED lamp_type
+      (6 x lamp_type=electric). The LED tender of 2023 (ZDM-VII.7021.1.14.2023, 4000 K) covers Andersa,
+      al. 1000-lecia and Maczka, whose rule poles are already the LED family. Sodium head kept, type UNVERIFIED.
+    confidence: low
+    verify: owner - night photo of Sokolska or Kombatantow (LED or sodium)
+  # ================================================================ ADR 0237 (kerbs-0237, research R6): footways, kerbs
+  - id: pavements-0237
+    kind: pavement_rules
+    sidewalk_bdot: true
+    estate_slabs: false
+    crossing_kerb_drops: true
+    cycle_paver_material: cycle_red
+    reason: >-
+      Research R6 pavements-kerbs (PR #65, review REVIEW-2026-11-15-s21-cloudD-65-pavements-kerbs.md). Footway
+      surface per piece from BDOT10k OT_SKRP_L materialnawierzchni (kostka prefabrykowana -> grey 20 x 10 blocks,
+      masa bitumiczna -> asphalt footway, płyty betonowe -> 35 x 35 slabs); kerbs lowered to 2 cm at marked
+      pedestrian crossings (Dz.U. 2016 poz. 124 § 127 ust. 10, R6-004; the act of 2022 names no number, R6-005).
+      estate_slabs stays off: R6 has no frame of a slab footway beside blocks of flats (R6-109: 3 of 31 frames, all on
+      Andersa). No sidewalk_surface override: frame F16 (bus stop on Andersa, "płyty") does not resolve the surface
+      at 1600 px.
+    confidence: medium
+    verify: lead - visual-qa WorldC, cameras with footways / crossings (see ADR 0237)
+  # c-regen3-s23, OD-005 (leader s23): DK8 way 257367422 crosses the seam bialystok-industrial-c | bialystok-maczka. Same
+  # decision as `dk8-seam-kerb-od005` in bialystok-kleeberga (world2-s23, way 261104557): GUGiK orthophoto read with
+  # tools/worldgen/qa/ortho_xsec.py + by eye by world2 - guard rail at the carriageway edge and a hard strip, no ground
+  # shoulder, no ditch. The bialystok-maczka side gets its entry from world2. NOT IN THE BUILD YET: added after the
+  # c-regen3 rebuild of C; acts at the next rebuild of this tile.

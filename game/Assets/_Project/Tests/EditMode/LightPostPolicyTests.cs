@@ -126,8 +126,8 @@ namespace Game.Tests
                 Assert.AreEqual(35f, pipeline.shadowDistance);
                 Assert.AreEqual(1024, pipeline.mainLightShadowmapResolution);
                 Assert.AreEqual(1, pipeline.shadowCascadeCount);
-                Assert.AreEqual(1f, pipeline.shadowDepthBias);
-                Assert.AreEqual(1f, pipeline.shadowNormalBias);
+                Assert.AreEqual(0.4f, pipeline.shadowDepthBias);   // ADR 0240 (was 1.0 / 1.0)
+                Assert.AreEqual(0.3f, pipeline.shadowNormalBias);
                 Assert.IsFalse(tier.postProcessing);
             }
         }

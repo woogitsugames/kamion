@@ -1,5 +1,5 @@
 # ADR 0212 — linie krawędziowe DK65 w Knyszynie (knyszyn, knyszyn-w, knyszyn-s) i kafle dalej: Mońki (−9,9), Tykocin (−9,7)
-Status: Proposed (agent world-builder, s20, gałąź `knyszyn-edges-0212`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `8fbe0b972`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `knyszyn-edges-0212`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: D63, D64 (`docs/11`), ADR 0203 (siatka kafli), 0204 (`knyszyn`, `knyszyn-s`), 0205 (mechanizm
 `edge_lines` dla klasy < GP), 0209 (`knyszyn-w`, otwarte p. 1–2), brief `docs/owner/S20-REGION-RING-BRIEF.md`.
 
