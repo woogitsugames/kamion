@@ -9,7 +9,7 @@ Stan po `f9dbf2b94`, 16.11.2026. Cel ciągły pozostaje aktywny. Gałąź `resea
 | 03 Knyszyn | 59 | Różne daty; zdjęcia właściciela wyłącznie jako obserwacje tekstowe. |
 | 04 DK65 | 42 | Zdjęcia, ortofoto, dokumenty i jeden rekord BDL. |
 | 05 kolej 38 | 25 | Dokumenty i kadry nie tworzą automatycznie mapowania lokalnego przejazdu. |
-| 06 pierścień | 51 | Różne miasta, daty i stopnie identyfikacji obiektów. |
+| 06 pierścień | 52 | Różne miasta, daty i stopnie identyfikacji obiektów. |
 | 07 Białystok/Dojlidy | 30 | Także historyczne odniesienia i powtórne oglądy. |
 
 SOURCED: lokalne główne manifesty. Liczby nie oznaczają spełnienia progów FIX. Wierszy podkatalogów nie sumujemy z głównymi jako nowych ekspozycji.
@@ -105,3 +105,5 @@ M61: **A17/B1, zimaA3, europejska drogaA2**. Nowy02-AFF-001 FruehaufZM53290 ma z
 R4: wskazana uprzednio P4-001 to R48; brak potwierdzonej lokalnejbitmapyR4 wsprawdzonymzakresie. Nie dodano nowych norm bez oglądu. Ograniczony pojedynczy searchUNECE nie dał nowegopełnegoźródła, nie ponawiano blokowanychendpointów. Trzej agenci pracują dalej nad brudnymi tyłami, Dojlidami i relacją kościół–ogrodzenie–ulica. Live08:29:29, następny zwykły około09:30Bruksela. Gotowe do scalenia po recenzji lidera:NIE.
 
 R31odebrany16.11.2026: główny03=59. Nowa ekspozycja znanegokościoła, NIDstan2015, NCNDwyłącznielink, relacja mur–brama–chodnik–krawężnik–jezdnia, rootpeer. Cokółsamychścian zasłonięty.0nowychbudynków/metryki/headinguznazwyelewacji. WciążA17/B1i pozostałemanifestybezprzyrostu.
+
+Ostatni odbiór16.11.2026 przed wyhamowaniem:06R21MEDIATEKA1nowaekspozycjaPARTIAL,pobrane0/link-only1. MEDIATEKA/4czytelne;dół/bokiucięte,auta zasłaniajągrunt.0nowychodrębnychbudynków i beznawierzchni. Rootobejrzał. Główny06=52;pozostałelicznikibezzmiany. Szczegóływznowienia wWZNOWIENIE.md.

@@ -114,3 +114,5 @@ R19: nowy komunikatGDDKiA27.02.2026 o przebudowieDK65/DW671Knyszyn na rondo, jez
 SIMR19: nowy nazwany budynekMońkiKościelna41,1fotoARRlink-only, rootobejrzał. Tekstgminy3kondygnacje, wydarzenie23.10.2026/publikacja26.10.2026 odrębne od ekspozycjiUNVERIFIED. Typdachu zasłonięty; manifest50rekordów.
 
 R20:1 nowy link-only kadr ścieżki dydaktycznej nadNarwiąTykocin, MonikaKalicka/RadioBiałystok, publikacja30.07.2022. Bruk/obrzeża, ozdobnaoprawazpanelem i podporydrzew; root obejrzał. Bez funkcjipanelu/metryki/gatunków/mostu lub datowania kwitnieniem. Główny manifest51.
+
+R21:1nowy naziemny kadr nazwanejMEDIATEKI/numer4, adresUMJ.Słowackiego4, rootobejrzał. PARTIALfasada z przyciętym dołem/bokami i zasłoniętym przyziemiem;0pełnychbryłzgruntem/0nowychodrębnychbudynków. Folder2024/11 nie datujeekspozycji. ARRlink-only,manifest52. Ostatni odbiór przed wyhamowaniem na prośbę użytkownika.
