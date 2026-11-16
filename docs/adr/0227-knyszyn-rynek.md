@@ -59,3 +59,11 @@ Dwie lokalne lipy 3D mają pełniejsze sylwetki bez centralnego szwu, lecz ciemn
 
 ## Iteracja r13
 Wskazówka zegara widoczna, ale rzeźba króla i ptak na obelisku nadal nieczytelne; FAIL wizualny, PROXY_NOT_APPROVED. R13 vs r11 przy tym samym stanie sceny: draws bez zmian, max +14 tris Low i High na nowym kadrze; High max 1 250 419 tris. Low względem pierwotnego baseline nie jest potwierdzony z powodu zmiany pozycji pojazdu. GIS trwa; wykryto brak lokalnych instancji regionu C i cache starej wersji, planowane odtworzenie danych.
+
+## Iteracja r14 — budżet edytora
+
+Low względem pierwotnego before: **FAIL** warunku bez pogorszenia. Dla 50 kamer o tych samych nazwach największy wzrost sumy szacowanych draw calls siatek i instancji to 240 → 303 (+63) na `dk65-inlet-south`; 34 kamery mają wzrost. Największy wzrost sumy tris to 272 290 → 310 078 (+37 788) na `truck-side`. Względem r11 wszystkie 70 wspólnych kamer Low ma draws i tris bez wzrostu; `rynek-owner-08`: 351 → 351 draws, 295 908 → 295 902 tris.
+
+High: **PASS** limitu 2 mln tris na kamerę, maksimum 1 250 399 z instancjami na `cab-mirror-front`; maksymalna suma szacowanych draws to 848 na `tykocka-into-town`. Clear i dusk dają identyczne wartości geometryczne. Są to szacunki CPU edytora przed SRP batchingiem, nie pomiary GPU ani telefonu; shadow draws są osobnym wskaźnikiem.
+
+Before zawiera 51 kamer, r14 70; 50 ma te same nazwy. Dawna błędnie nazwana `rynek-fountain` nie występuje już pod tą nazwą; zgodność pozycji `plac-wschodni-from-east` nie została tu zweryfikowana. Porównanie ograniczają także zmiany main: ADR 0219 uzupełnił właściwe dane far-field, a ADR 0262 zmienił pozycję startu ciężarówki. Nie zmierzono osobnego wkładu tych zmian, więc nie przypisujemy im całości wzrostu ani nie uznajemy Low za spełnione. Szczegóły i ścieżki statystyk są w `artifacts/knyszyn-rynek-0227/AUDYT.md`.

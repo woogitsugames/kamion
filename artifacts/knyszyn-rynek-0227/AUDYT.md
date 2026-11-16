@@ -97,3 +97,18 @@ Cztery warianty i lokalne pary 01–11 ukończone. Dwie lokalne lipy 3D mają ba
 
 ## Iteracja r13 — ocena 16.11, editor
 Cztery warianty i lokalne pary 01–11 ukończone. W kadrze 08 pojawiła się wskazówka zegara, lecz tarcza ginie w cieniu; figura króla nadal geometryczna i nierozpoznawalna, ptak na obelisku nieczytelny w 04/07. Ocena całości FAIL, proxy niezatwierdzone. W porównaniu z tym samym stanem sceny r11 draws bez zmian, max +14 tris Low/High w nowym kadrze `rynek-owner-08`; proponowana optymalizacja masztu Low wymaga weryfikacji. Wobec pierwotnego baseline Low max +63 draws i +37788 tris na wspólnych kamerach przy zmienionej pozycji pojazdu (nieporównywalność patrz r11); High max 1 250 419 tris z instancjami. Pełny GIS trwa, lokalny snapshot C wymaga uzupełnienia brakujących instancji oraz ponownej ekstrakcji cache schema 12.
+## Iteracja r14 — budżet, editor
+
+Źródło: `before/{Low,High}-{clear,dusk}/stats.txt`, `r11/{Low,High}-{clear,dusk}/stats.txt` i `r14/{Low,High}-{clear,dusk}/stats.txt`. Poniżej suma szacunków siatek i instancji (`drawsEst` + draws instancji, `trisExact` + trianglesExact instancji); cienie raportowane są osobno i nie są dodawane do draw calls. To szacunki CPU edytora przed SRP batchingiem, nie liczniki GPU ani pomiar telefonu. Wyniki geometryczne clear i dusk są takie same.
+
+| Porównanie | Wynik |
+|---|---|
+| Low, r11 → r14 | Wszystkie 70 kamer o tych samych nazwach: brak wzrostu sumy draws i tris. `rynek-owner-08`: 351 → 351 draws, 295 908 → 295 902 tris. `dk65-inlet-south`: 303 → 303 draws, 162 224 → 162 004 tris. |
+| Low, before → r14 | **FAIL** wymagania bez pogorszenia: 34 z 50 kamer o tych samych nazwach ma większą sumę draws; maksimum wzrostu `dk65-inlet-south` 240 → 303 (+63). Największy wzrost tris: `truck-side` 272 290 → 310 078 (+37 788); 42 z 50 kamer ma więcej tris. |
+| High, r14 | **PASS** limitu 2 mln tris na kamerę: maksimum 1 250 399 z instancjami (`cab-mirror-front`). Maksimum sumy szacowanych draws: 848 (`tykocka-into-town`). |
+| High, r11 → r14 | Wszystkie 70 kamer o tych samych nazwach: brak wzrostu sumy draws i tris. |
+| Low, maksimum r14 | 369 573 tris (`grodzienska-podlaska`) i 489 draws (`goniadzka-jagiellonska`). |
+
+Porównanie before ma 51 kamer, r14 ma 70; literalnie wspólnych jest 50. Dawna `rynek-fountain` nie występuje już pod tą nazwą: była błędnie nazwana i wskazywała plac wschodni. Kamera `plac-wschodni-from-east` została dodana, lecz zgodność pozycji z baseline nie została tu zweryfikowana, więc nie jest uwzględniona jako para. Pozostałe nowe kamery również nie mają baseline; r11 i r14 mają komplet 70 wspólnych nazw.
+
+Stan sceny przed i po nie jest w pełni porównywalny: po scaleniu main ADR 0219 uzupełniono dane far-field właściwych powiatów, a ADR 0262 zmienił start ciężarówki Knyszyna z 12 na 90 m. Na `dk65-inlet-south` r14 widać naczepę, której nie widać tak samo na baseline. Nie zmierzono wkładu poszczególnych przyczyn i nie należy przypisywać im całego wzrostu ani traktować ograniczenia porównania jako spełnienia wymogu Low. High również zmienia się w niektórych kadrach względem r11, choć optymalizacja masztu dotyczy Low; sam wynik statystyk nie dowodzi przyczyny tej różnicy.
