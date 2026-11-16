@@ -12,3 +12,4 @@
 - krok 5: EditMode Win64 filtr streamingu 46/46 PASS (w tym 5 nowych RouteLinks). Kopia _Generated + Library z int-stream-s23 (sceny _Tile 19 regionów) w toku: artifacts/stream-gaps-s23/copy.status
 - krok 6: kopia OK (robocopy 3). chain.ps1 (build 19 regionów → przejazd knyszyn-s -stream 1 route_s 1900, 70 km/h, zrzut 60 s) w tle: artifacts/stream-gaps-s23/chain.status
 - krok 7: build Win64 19 regionów exit=0 (artifacts/win/kamion-0.1.0-14243bcc83-regions). Przejazd run-60 w toku.
+- krok 8: run A (zrzut 60 s): linki doklejone (knyszyn→DW671 +618 m, knyszyn-w +596 m, tykocin +2608 m), 2 rebase OK, 0 zamkniętych szwów; ZAWIESZENIE ok. t=145 s (klatka 1849 ms, potem brak logu, kill 290 s) — tuż przed spodziewanym rebase #3 do dw671-tykocin-01. ADR przemianowany na DRAFT (0283 zajęty przez HUD #166). Run B (zrzut 95 s, szew knyszyn|knyszyn-w) w toku.
