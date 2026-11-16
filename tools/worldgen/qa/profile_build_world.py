@@ -11,9 +11,11 @@ attributes, restored on exit) and optionally runs the whole build under cProfile
         --nmt flat --skip-far-field --out-root <scratch>/world --prof <scratch>/bw.prof
 
 CAUTION: build_world.build writes the QA JSONs to Data/Regions/<id>/generated/ (world_manifest.json, roads_qa.json,
-streetscape_qa.json, ...) - with a synthetic NMT those files are WRONG. Run it in a throwaway worktree (or
-`git checkout -- Data/Regions/<id>/generated` afterwards); the script refuses to run in a checkout whose
-generated/ would be touched unless --i-know-generated-is-dirtied is given.
+streetscape_qa.json, landmarks/*.spec.json, ...) and the hero landmark assets to art-source/world/landmarks/ (git) -
+with a synthetic NMT those files are WRONG. Run it in a throwaway worktree (or afterwards
+`git checkout -- Data/Regions/<id>/generated art-source/world/landmarks`); the script refuses to run unless
+--i-know-generated-is-dirtied is given. Measured in the cloud (C, no Data/raw / LFS): the hero assets are STALE there,
+the far field is skipped, so the numbers are a lower bound of the lead build.
 
 Output: a table of the wrapped stages (calls, total s, share of the build), sorted by total; nested stages are
 counted in their parent too (pipeline.build contains assign_sides, build_ribbon, ...), so the shares do not add up.
@@ -38,8 +40,7 @@ from pathlib import Path
 import numpy as np
 
 WG = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(WG))
-sys.path.insert(0, str(WG / "roads"))
+sys.path.insert(0, str(WG))          # never tools/worldgen/roads: roads/profile.py would shadow the stdlib `profile`
 
 # (module, attribute) - attribute may be "Class.method". Calls go through module attributes in the generator
 # (pipeline.build, SS.run, CF.rasterise, M.build_ribbon ...), so patching the module attribute times every call.
@@ -113,13 +114,13 @@ STAGES = [
     ("terrain_mesh.chunks", "build_chunks"),
     ("terrain_mesh.gltf", "GLB.add_mesh"),
     ("terrain_mesh.gltf", "GLB.bytes"),
-    ("build_world", "merge_verge_into_terrain"),
-    ("build_world", "assemble"),
-    ("build_world", "mesh_budget"),
-    ("build_world", "qa_report"),
-    ("build_world", "cameras"),
-    ("build_world", "write_json"),
-    ("build_world", "_src_tally"),
+    ("roads.build_world", "merge_verge_into_terrain"),
+    ("roads.build_world", "assemble"),
+    ("roads.build_world", "mesh_budget"),
+    ("roads.build_world", "qa_report"),
+    ("roads.build_world", "cameras"),
+    ("roads.build_world", "write_json"),
+    ("roads.build_world", "_src_tally"),
 ]
 
 TIMES: dict[str, list] = {}
@@ -202,8 +203,7 @@ def main():
 
     if a.nmt != "raw":
         synthetic_nmt(a.nmt)
-    import build_world as BW                     # same module object build_world.py uses as __main__ would
-    sys.modules.setdefault("roads.build_world", BW)
+    from roads import build_world as BW
     if a.skip_far_field:
         from streetscape import far_field as FF
         FF.build_far_field = lambda region_id, out_root=None: {"tiers": {}}
