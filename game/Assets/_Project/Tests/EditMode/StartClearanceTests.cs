@@ -163,6 +163,86 @@ namespace Game.Tests
         }
 
         /// <summary>
+        /// ADR 0277 on the committed data of every region (no scene needed, never skipped): (a) the importer's baked spawn
+        /// (<see cref="StartSearch.BakedSpawnS"/> = the runtime zone rule) is the catalog start itself; (b) a scene baked
+        /// before ADR 0262 (spawn at the old fixed 12 m, started without the menu and without route_s - review 0262 P2-5)
+        /// is repaired by the zone rule to the same place the ADR 0262 rule gave (behind the entry closure, inside the
+        /// zone, at least 300 m or the rest of the route ahead free of closure rows).
+        /// </summary>
+        [TestCaseSource(nameof(RegionIds))]
+        public void ZoneRule_KeepsTheCatalogStart_AndRepairsTheOld12mSpawn(string region)
+        {
+            var r = RegionCatalog.Load().Find(region);
+            ReadRoute(region, out var pts, out var dist);
+            float length = dist[dist.Length - 1];
+            float s = RegionStart.ClampStartS(r.startS, r.routeLengthM);
+            var closures = RegionClosures(region);
+            var crossings = new List<StartClearance.Crossing>();
+            StartClearance.Crossings(pts, dist, closures, crossings);
+            string where = region + ": closures on the route at " + string.Join(", ", crossings.Select(c => F(c.s) + (c.entry ? " (entry)" : " (exit)"))) + " m";
+
+            Assert.IsTrue(StartSearch.BakedSpawnS(pts, dist, closures, s, out float baked), where + " - no drivable zone");
+            Assert.AreEqual(s, baked, 0.01f, where + " - the importer would bake another spawn than the catalog start " + F(s));
+
+            Assert.IsTrue(StartSearch.SnapToZone(crossings, length, StartClearance.DefaultStartS, out float repaired, out float lo, out float hi, out _), where);
+            Assert.AreEqual(StartClearance.SafeStartS(crossings, StartClearance.DefaultStartS, length), repaired, 0.01f,
+                where + " - old 12 m spawn: zone rule " + F(repaired) + " m vs ADR 0262 rule");
+            Assert.GreaterOrEqual(repaired, lo - 0.01f); Assert.LessOrEqual(repaired, hi + 0.01f);
+            StartClearance.FreeAround(crossings, repaired, out float behind, out float ahead);
+            Assert.GreaterOrEqual(behind, StartClearance.MarginM, where + " - repaired start: trailer rear end to the row behind");
+            Assert.GreaterOrEqual(ahead, Mathf.Min(StartClearance.AheadFreeM, length - repaired - StartClearance.FrontM) - 0.01f,
+                where + " - repaired start: closure row " + F(ahead) + " m ahead of the bumper");
+            Assert.LessOrEqual(StartSearch.MaxLateralOffset(pts, dist, s, StartClearance.RearM, StartClearance.FrontM), StartSearch.MaxCurveOffsetM,
+                where + " - the catalog start stands across a bend (review 0262 P2-8)");
+        }
+
+        /// <summary>
+        /// Review 0262 P2-6: the spawn point baked into the imported scene (Spawn_DepotGate) is the importer's start from the
+        /// import data (catalog start snapped into the zone of the closures of THAT scene), the truck and the trailer of
+        /// the scene stand there, and the runtime safety net leaves it as it is. Scenes are generated (not in git): a
+        /// region that is not imported is skipped (the committed-data test above is never skipped).
+        /// </summary>
+        [TestCaseSource(nameof(RegionIds)), Category("WorldScenes")]
+        public void ImportedScene_BakedSpawnIsTheImportersStart(string region)
+        {
+            string scenePath = RegionScenes.ScenePathFor(region);
+            if (!File.Exists(Path.Combine(EditorTools.RepoRoot, "game", scenePath))) Assert.Ignore(region + ": scene not imported (" + scenePath + ")");
+            var r = RegionCatalog.Load().Find(region);
+            EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            try
+            {
+                var route = Object.FindAnyObjectByType<WorldRoute>();
+                var boundary = Object.FindAnyObjectByType<WorldBoundary>();
+                var spawn = GameObject.Find("Spawn_DepotGate");
+                Assert.IsNotNull(route, region + ": WorldRoute");
+                Assert.IsNotNull(boundary, region + ": WorldBoundary");
+                Assert.IsNotNull(spawn, region + ": Spawn_DepotGate");
+                float wanted = RegionStart.ClampStartS(r.startS, route.Length);
+                Assert.IsTrue(StartSearch.BakedSpawnS(route.points, route.distances, boundary.closures, wanted, out float expect), region + ": no zone");
+                float bakedS = DrivingLabBootstrap.NearestRouteS(route, spawn.transform.position);
+                Assert.AreEqual(expect, bakedS, 0.5f, region + ": baked spawn at route_s " + F(bakedS) + " m, importer start " + F(expect) +
+                                " m (reimport: scripts/import-region.ps1 -Region " + region + ")");
+                Vector3 fwd = spawn.transform.forward; fwd.y = 0f;
+                Assert.Less(Vector3.Angle(fwd, route.TangentAt(expect)), 3f, region + ": spawn heading along the route");
+                var truck = Object.FindAnyObjectByType<VehicleBody>();
+                Assert.IsNotNull(truck, region + ": VehicleBody");
+                Vector3 d = truck.transform.position - spawn.transform.position; d.y = 0f;
+                Assert.Less(d.magnitude, 0.5f, region + ": the scene's truck stands on the spawn point");
+
+                var ignore = new List<Transform> { truck.transform };
+                foreach (var t in Object.FindObjectsByType<TrailerBody>(FindObjectsSortMode.None)) ignore.Add(t.transform);
+                Physics.SyncTransforms();
+                var res = SpawnSafety.Resolve(route, boundary, bakedS, ignore, out string blocker);
+                Assert.AreEqual(StartOutcome.Unchanged, res.outcome, region + ": the safety net moves the baked spawn " + F(bakedS) + " -> " + F(res.s) +
+                                " (" + StartSearch.Describe(res.reasons, res.firstBlock, blocker) + ")");
+            }
+            finally
+            {
+                EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            }
+        }
+
+        /// <summary>
         /// Colliders of the imported scene (barriers, bollards, signs, buildings, fences - whatever the importer built):
         /// the combination box at the catalog start touches nothing (<see cref="StartClearance.MarginM"/> around) and the
         /// tractor swept along the route for <see cref="StartClearance.AheadFreeM"/> (or to the route end) meets nothing

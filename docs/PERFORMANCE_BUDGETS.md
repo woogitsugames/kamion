@@ -45,7 +45,7 @@ Physics fixed step, vehicle, world streaming, rendering CPU, GPU — not budgete
 | Same core, .NET runner (Release, no Unity) | p50 6.4–6.7 µs | `docs/PHYSICS_VALIDATION.md` §4 | desktop |
 | Ground raycasts per step, combination | 152 (10 wheel ends × 15 + 2 landing-gear legs) → 15 200/s | by construction | measure on A16; `RaycastCommand` batching is the fallback |
 | GC allocations per combination step | 0 | PlayMode, 2000 steps | ✅ |
-| Extra cameras in the cab view | 6 mirrors (R46 II x2, IV x2, V, VI) with render textures sharing a hard cap of 1/2/2/6 mirror renders per frame (Low/Medium/High/Ultra; High 3 -> 2, ADR 0046 addendum), weighted round-robin (main 1, convex 0.5); High reserves 1 slot for class II (steady every 2nd frame) and rotates the convex mirrors in the other, only glass on screen; main RT 224/288/384/512 px high (Low × `mirrorResolutionScale` 0.75 = 168 px, ADR 0136 r2), convex 0.43-0.6 of that; far clip 150/250/400 m (convex half); no shadows/post/MSAA (ADR 0042) | `VehicleCameraBudget`, `RenderTextureMirror`, `MirrorRefreshSchedule` | WORKING_VALUE - measure GPU/CPU ms on A16 Low and S24+ High in the cab view |
+| Extra cameras in the cab view | 6 mirrors (R46 II x2, IV x2, V, VI) with render textures sharing a hard cap of 1/2/2/6 mirror renders per frame (Low/Medium/High/Ultra; High 3 -> 2, ADR 0046 addendum), weighted round-robin (main 1, convex 0.5); High reserves 1 slot for class II (steady every 2nd frame) and rotates the convex mirrors in the other, only glass on screen; main RT 224/288/384/512 px high (Low × `mirrorResolutionScale` 0.75 = 168 px, ADR 0136 r2), convex 0.43-0.6 of that; far clip 150/250/400 m (convex half); no shadows/post/MSAA (ADR 0042). ADR 0243 (D70, mirror windows on screen = default): Low uses the due-based step without spare fill, class II every 3rd frame (10 Hz at 30 FPS), classes IV-VI every 16th (32nd standing) = 0.67-0.92 renders/frame instead of 1.00 (ESTIMATED -0.06..-0.42 ms GPU p50 on A16 Low from the 0.75-1.25 ms/render of ADR 0106); Medium/High/Ultra unchanged | `VehicleCameraBudget`, `RenderTextureMirror`, `MirrorRefreshSchedule` | WORKING_VALUE - measure GPU/CPU ms on A16 Low and S24+ High in the cab view |
 | Parked vehicles (instanced `car_/van_/tractor_/trailer_/contact_`) | cull 300 m on every tier, Low 150 m (`QualityProfile.Tier.vehicleCullM`, ADR 0136 r2: A16 G3-A ~370 cars within 300 m, 7-12 submeshes each) | `WorldInstances` | measured: A16 G3-A capped GPU p95 -1.3 ms (r2b) |
 | Reversing camera | only in R (or forced), 320×180 … 640×360, every 2nd frame on Low/Medium | `VehicleCameraBudget` | WORKING_VALUE |
 | Vehicle audio memory | ADPCM Compressed In Memory, build report "Sounds" 13.1 MB | `artifacts/logs/build-*.log` | matches AUDIO_DESIGN §6 estimate (≈ 13 MB) |
@@ -214,8 +214,10 @@ High tier as a separate package (options, nothing deployed): (a) status quo: two
 ## PC tiers (D74, ADR 0269) — all WORKING_VALUE, UNMEASURED
 Source of the values: `game/Assets/_Project/Rendering/Runtime/PcTierTable.cs` (+ `Resources/PcTiers/URP_PC_*.asset`), table with
 sources in `docs/adr/0269-tiery-grafiki-pc.md`. Content (draws / triangles) = the same Low / `_High` scenes as the phone, so the
-mobile content budgets above stay. Measurement: `scripts/build-windows.ps1 -Run … -Width 1920 -Height 1080` (or
-`scripts/pc-metrics.ps1` once PR #130 is merged); the dev RTX 5070 is NOT a reference (ADR 0260).
+mobile content budgets above stay. Measurement: `scripts/pc-metrics.ps1` (ADR 0266) or `scripts/build-windows.ps1 -Run …
+-Width 1920 -Height 1080`; the dev RTX 5070 is NOT a reference (ADR 0260). **Gate budgets (pass/fail) have one source:
+`tools/pcperf/budgets/pc-budgets.json`** (table in `docs/03`, section "PC (Windows)" at the top of this file); the table below
+is the per-tier design target of ADR 0269 — where they differ, the JSON wins (review #135 P2-6, ADR 0276).
 
 | Tier | Reference class (D74) | Target | Frame-time p95 | Frame-time p99 | VRAM | Status |
 |---|---|---|---|---|---|---|
