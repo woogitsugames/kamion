@@ -126,7 +126,7 @@ skrzyżowaniu). Zrzutów Street View właściciela NIE użyto (zasada 8). Dane: 
 Knyszyn: wpis `knyszyn-pavement-rules-d38` (`implied_sidewalks: true`, `sidewalk_bdot: false` — właściciel mówi
 „kostka”, `crossing_kerb_drops: true`). Wynik (płaski teren, sama geometria): +21,8 km chodnika (residential 14,4;
 tertiary 3,5; secondary 3,5; unclassified 0,4), drogi regionu 225 427 → 264 161 trójkątów (+17 %).
-**Szew z `knyszyn-w`:** 7 ulic przechodzi przez zachodnią krawędź kafla; z tym samym wpisem w `knyszyn-w` wszystkie 7
+**Szew z `knyszyn-w`:** 6 ulic przechodzi przez zachodnią krawędź kafla; z tym samym wpisem w `knyszyn-w` wszystkie 6
 mają chodniki po obu stronach szwu (sprawdzone wstrzyknięciem reguły), bez wpisu — urwą się na szwie. Wpis do
 `Data/Regions/knyszyn-w/overrides.yaml` dodaje lider (plik poza zakresem D38). `knyszyn-s`: reguła nic nie dodaje.
 C i Dojlidy nie mają `implied_sidewalks` — test potwierdza identyczne tablice `walk` z regułą i bez.
