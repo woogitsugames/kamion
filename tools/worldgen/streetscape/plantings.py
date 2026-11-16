@@ -554,9 +554,74 @@ def build(buf, overrides, origin, roads_poly, road_parts, zground, deck_mask_at,
                                    "kerb_z": [round(float(zk.min()), 2), round(float(zk.max()), 2)], "shrubs": n_sh})
             if fill != "paving":
                 blocked.append(hole)
+        # ADR 0274: single low shrubs and stones at authored points (centre island of the Knyszyn roundabout: the
+        # island top is part of the road layer, not a hole of the road footprint, so `islands` does not apply)
+        for ci, cl in enumerate(o.get("clumps", [])):
+            ok, p, r, h = _point_item(cl, ox, oy, CLUMP_R, CLUMP_H, "r_m", "height_m")
+            z0 = kerb.top(float(p[0]), float(p[1])) if ok else float("nan")
+            if not ok or not np.isfinite(z0):
+                rep["stale"].append(f"{o['id']}:clump{ci}")
+                continue
+            k = (o["id"], "clump", ci)
+            blob = affinity.scale(Point(*p).buffer(r, quad_segs=3), 1.0 + 0.3 * _h(*k, "sx"), 1.0, origin=tuple(p))
+            blob = affinity.rotate(blob, 180.0 * _h(*k, "rot"), origin=tuple(p))
+            hedge_mass(buf, blob, lambda e, n, _z=z0: np.full(len(np.atleast_1d(e)), _z), k, h=h,
+                       src=f"override:{o['id']}:clump{ci}", plant=cl.get("plant", "berberis_red"), stats=rep)
+            rep["clumps"] = rep.get("clumps", 0) + 1
+        for si, st in enumerate(o.get("stones", [])):
+            ok, p, r, h = _point_item(st, ox, oy, STONE_R, STONE_H, "r_m", "height_m")
+            z0 = kerb.top(float(p[0]), float(p[1])) if ok else float("nan")
+            if not ok or not np.isfinite(z0):
+                rep["stale"].append(f"{o['id']}:stone{si}")
+                continue
+            V, T = stone_mesh(p, z0, r, h, (o["id"], "stone", si))
+            buf.add("paved", "bed_stones", V, V[:, :2].copy() + V[:, 2:3] * 0.7, T, src=f"override:{o['id']}:stone{si}")
+            rep["stones"] = rep.get("stones", 0) + 1
+            rep["tris"] += len(T)
     rep["hedge_m2"] = round(rep["hedge_m2"], 1)
     report["plantings"] = rep
     return blocked
+
+
+CLUMP_R, CLUMP_H = (0.2, 1.2), (0.2, 0.9)      # accepted radius / height of an authored shrub clump (m)
+STONE_R, STONE_H = (0.15, 0.8), (0.1, 0.7)     # accepted half-length / height above ground of an authored stone (m)
+STONE_SEG, STONE_ROWS = 7, 3                   # 7 x 3 quads + cap: 49 triangles a stone
+
+
+def _point_item(it, ox, oy, r_lim, h_lim, rk, hk):
+    """(ok, local point, radius, height) of an authored point item; ok False when a value is missing or out of range."""
+    try:
+        p = np.array([float(it["at"][0]) - ox, float(it["at"][1]) - oy])
+        r, h = float(it[rk]), float(it[hk])
+    except (KeyError, IndexError, TypeError, ValueError):
+        return False, np.zeros(2), 0.0, 0.0
+    ok = bool(np.isfinite(p).all()) and r_lim[0] <= r <= r_lim[1] and h_lim[0] <= h <= h_lim[1]
+    return ok, p, r, h
+
+
+def stone_mesh(p, z0, r, h, key):
+    """A field stone half sunk in the bed: a flattened dome on an irregular oval, STONE_SEG x STONE_ROWS quads and a
+    top fan (49 triangles), deterministic per key. Returns (V, T), faces outward / up."""
+    rot = 6.283 * _h(*key, "rot")
+    ax = (1.0, 0.62 + 0.3 * _h(*key, "ax"))
+    V, T = [], []
+    prof = [(1.0, -0.15), (0.97, 0.30), (0.78, 0.70), (0.42, 0.93)]          # (radius share, height share), foot first
+    for j, (rs, hs) in enumerate(prof):
+        for i in range(STONE_SEG):
+            a = 6.283 * i / STONE_SEG
+            lump = 1.0 + 0.22 * (_h(*key, "l", i, min(j, 2)) - 0.5)
+            x, y = r * rs * lump * ax[0] * math.cos(a), r * rs * lump * ax[1] * math.sin(a)
+            V.append((p[0] + x * math.cos(rot) - y * math.sin(rot), p[1] + x * math.sin(rot) + y * math.cos(rot),
+                      z0 + h * hs * (1.0 + 0.12 * (_h(*key, "z", i, j) - 0.5))))
+    top = len(V)
+    V.append((p[0], p[1], z0 + h))
+    for j in range(len(prof) - 1):
+        for i in range(STONE_SEG):
+            a, b = j * STONE_SEG + i, j * STONE_SEG + (i + 1) % STONE_SEG
+            T += [(a, b, b + STONE_SEG), (a, b + STONE_SEG, a + STONE_SEG)]
+    b0 = (len(prof) - 1) * STONE_SEG
+    T += [(b0 + i, b0 + (i + 1) % STONE_SEG, top) for i in range(STONE_SEG)]
+    return np.array(V, float), np.array(T)
 
 
 # ADR 0154: additive house-front planting using the existing read-only plot kit.
