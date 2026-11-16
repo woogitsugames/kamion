@@ -1,0 +1,78 @@
+{
+  "date": "2026-11-16",
+  "retained": [
+    {
+      "id": "04-BS11-01",
+      "plik_lub_url": "https://www.mapillary.com/app/?pKey=1452388251821206&focus=photo&mapStyle=OpenStreetMap",
+      "źródło": "Mapillary publiczny viewer; punkt wybrany z widocznego OSM",
+      "autor": "picturehoover",
+      "licencja": "CC BY-SA4.0 wg oficjalnego odczytu Mapillary w mapillary-browser-round2/licence-check.json; link-only bez kopii",
+      "data zdjęcia": "2020-06-27 wg UI",
+      "współrzędne": "GPS kamery UNVERIFIED.53.208827899998,23.020133799998007 to viewport URL; node selekcyjny14067837807:53.2085389,23.0200442 nie jest kamerą.",
+      "kierunek patrzenia": "ESTIMATED ku Białemustokowi po osi korytarza z położenia naOSM; azymut geograficzny/magnetyczny UNVERIFIED; nie ustalono kierunków obsługiwanych kursów.",
+      "CO WIDAĆ": "Po prawej asfaltowa zatoka oddzielona szerokimi krótkimi białymi kreskami. Jasny krawężnik i jasnoszary peron z prostokątnymi podziałami; roślinność przy zewnętrznym brzegu. Pełne jasne ściany wiaty z czarnym graffiti, otwarty front i ciemny wysunięty dach z żebrowaniem od spodu. Niski ciemny poziomy element wewnątrz; kompletna ławka UNVERIFIED. Osobny słupek z niebieskim znakiem, białym polem i czarnym autobusem oraz małe nieczytelne tabliczki. Przy końcu zatoki trawa i stalowa bariera; bariera również po drugiej stronie. Nazwa, rozkład, kosz i nawierzchnia dotykowa niepotwierdzone.",
+      "do czego w grze": "Historyczny układ zatoka–krawężnik–peron–wiata oraz kontakt z barierą/poboczem przy Ełckiej na południe od Szkolnej/Świerkowej. Brak skali metrycznej i stanu2026.",
+      "status": "SOURCED [osobny ogląd dużego kadru/UI]; wymiary i aktualność2026 UNVERIFIED"
+    }
+  ],
+  "basemap_check": "Widoczny przełącznik: zaznaczona pozycja OpenStreetMap; nie wnioskowano tylko z parametruURL.",
+  "source_route": "K1 README, data/osm_corridor.json z15.11.2026; wariantA Białystok→Knyszyn przez Fasty/DobrzyniewoDuże. Stopnode14067837807 kmtrasy14.261 stronaL; nie pikietażDK65 ani kilometraż kamery.",
+  "scope_limits": [
+    "Jedno nowe użyteczne ujęcie; nie dowód stanu2026.",
+    "Nazwa przystanku i tabliczki UNVERIFIED.",
+    "Tag tactile_paving=yes z2026 nie przeniesiony na fotografię2020.",
+    "Barier nie nazwano konkretnym systemem ochronnym.",
+    "Ciemny poziomy element wewnątrz nie jest pewnym odczytem kompletnej ławki."
+  ],
+  "screened_not_retained": [
+    {
+      "pKey": "683548135706430",
+      "author": "malenki",
+      "date": "2010-07-10",
+      "view": "duży",
+      "note": "Drogowskaz65/Białystok, pobocze i dojazd; brak wystarczającego widoku przystanku."
+    },
+    {
+      "pKey": "342881253842344",
+      "author": "szurek for Here",
+      "date": "2017-08-10",
+      "view": "duży",
+      "note": "Drzewa i budynek z reklamą przy Ełckiej; brak czytelnego wyposażenia przystanku w wybranym kadrze."
+    },
+    {
+      "pKey": "1111794355969540",
+      "author": "szurek for Here",
+      "date": "2017-08-10",
+      "view": "tylko mały podgląd; nie pełny ogląd",
+      "note": "Droga/pobocze przy Kozińcach; nie kwalifikowano przystanku ani szczegółów z miniatury."
+    },
+    {
+      "pKey": "971696173660989",
+      "author": "picturehoover",
+      "date": "2020-06-27",
+      "view": "duży",
+      "note": "Droga, trawa i niebieska tablica; bez użytecznego przystanku w tym kadrze. Nie przeniesiono oznaczeń tablicy do nowej kolekcji."
+    },
+    {
+      "pKey": "2893770534276617",
+      "author": "picturehoover",
+      "date": "2020-06-27",
+      "view": "mały podgląd; nie pełny ogląd",
+      "note": "Odcinek przy barierach; wybrano dopiero sąsiedni1452388251821206, obejrzany potem w dużym widoku."
+    }
+  ],
+  "rejected_existing_ids": [
+    "214528376891610",
+    "944123099745305"
+  ],
+  "dedup": "Przed zapisem rg po wszystkich tekstowych CSV/JSON/MD K1 i codex-s21: brak wszystkich6nowo wybranychpKey; zachowany tylko1kadr.",
+  "counts": {
+    "retained_photos": 1,
+    "downloaded": 0,
+    "link_only": 1,
+    "saved_screenshots": 0,
+    "new_api_queries": 0
+  },
+  "license_reference": "../mapillary-browser-round2/licence-check.json",
+  "browser_complete": true
+}

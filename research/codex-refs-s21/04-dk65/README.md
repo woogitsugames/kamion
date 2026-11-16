@@ -72,3 +72,8 @@ Główny manifest21rekordów. [TM7](temporary-marking-round7/README.md):3nowe fo
 Główny manifest: 22 rekordy. [Dokument gminny](tree-inventory-round9/README.md) opisuje w pkt3.14.1 inwentaryzację z sierpnia2021 w liniach rozgraniczających S19 Krynice–Dobrzyniewo–Białystok Zachód. Agent i koordynator obejrzeli pełne strony PDF57/58 (druk58/59). CSV zawiera sześć wybranych gatunków z szerszej listy: sosna pospolita, brzoza brodawkowata, klon pospolity, jesion wyniosły, wierzba iwa, wierzba krucha. To kontekst gatunkowy, nie sześć rekordów drzew i nie dowód konkretnych gatunków szpaleru DK65. Obwody, położenia, rozstaw i stan2026 pozostają UNVERIFIED. Projekt nasadzeń z3.14.2 jest oddzielony od opisu stanu inwentaryzowanego.
 
 [Spis załączników](tree-table-search-round10/README.md): 19 nazwanych PDF rodzica, bez osobno wskazanej tabeli dendrologicznej. Zbadano spis, nie treść19map; nie otwierano map ani nie pobierano ZIP. Publikacja22.03.2022 i odbiór dokumentacji18.03.2022 nie datują wykonania projektu. Brak tabeli w sprawdzonym spisie nie dowodzi jej nieistnienia gdzie indziej. 0 nowych pomiarów/zdjęć.
+
+
+## Przystanek Ełcka — runda11
+
+[bus-stop-round11](bus-stop-round11/README.md):1nowy Mapillary picturehoover27.06.2020,pKey1452388251821206,0pobrań. Indywidualnie obejrzana pełna jasna wiata/graffiti/ciemny dach, znakautobusu, peron/krawężnik/asfaltowazatoka i bariera. Ławka kompletna/nazwa/kosz/nawierzchniadotykowa niepotwierdzone. SelekcjaK1km14.261/L to lokalna miara korytarza, nie państwowy pikietaż; viewport nie GPS, kierunek kuBiałemustokowiESTIMATED, stan2026UNVERIFIED. Główny04ma23rekordy. Koordynator odczytał artefakty; indywidualny ogląd źródłowego kadru tylkoagent, nie drugi nowy oglądroot.

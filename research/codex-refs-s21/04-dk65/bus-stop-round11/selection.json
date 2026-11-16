@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-16",
+  "source": "research/dk65-knyszyn-refs/data/osm_corridor.json",
+  "source_query_date": "2026-11-15T10:17:47Z",
+  "route_definition": "K1 README: wariant A Białystok→Knyszyn, stara droga przez Fasty i DobrzyniewoDuże; km oznacza odległość od startu wariantuA, nie pikietażDK65.",
+  "points": [
+    {
+      "osm_node": "14067837806",
+      "lat": 53.1996961,
+      "lon": 23.0220777,
+      "x": 768533.2,
+      "y": 600268.9,
+      "tags": {
+        "bench": "yes",
+        "bin": "yes",
+        "bus": "yes",
+        "departures_board": "timetable",
+        "highway": "bus_stop",
+        "name": "Dobrzyniewo Duże",
+        "public_transport": "platform",
+        "shelter": "yes"
+      },
+      "ts": "2026-08-05T13:59:26Z",
+      "dist": 9.7,
+      "km": 13.267,
+      "side": "R"
+    },
+    {
+      "osm_node": "14067837823",
+      "lat": 53.2464953,
+      "lon": 22.9930513,
+      "x": 766305.3,
+      "y": 605361.3,
+      "tags": {
+        "public_transport": "platform"
+      },
+      "ts": "2026-08-02T09:06:40Z",
+      "dist": 8.4,
+      "km": 19.033,
+      "side": "R"
+    },
+    {
+      "osm_node": "14067837807",
+      "lat": 53.2085389,
+      "lon": 23.0200442,
+      "x": 768342.2,
+      "y": 601244.0,
+      "tags": {
+        "bus": "yes",
+        "highway": "bus_stop",
+        "public_transport": "platform",
+        "shelter": "yes",
+        "tactile_paving": "yes"
+      },
+      "ts": "2026-08-05T13:59:26Z",
+      "dist": 9.4,
+      "km": 14.261,
+      "side": "L"
+    }
+  ],
+  "guard": "Selekcja miejsc, nie ogląd fotografii ani potwierdzenie obecnego wyposażenia. side R według osi trasyA; nie kierunek kamery."
+}
