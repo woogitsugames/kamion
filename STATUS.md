@@ -8,4 +8,4 @@
 - (b) DONE: pawilon bdot:de62e5a9 dach namiotowy (jeden wierzchołek) + żółte ściany jako dane `kind: market_pavilion_d41` (walidacja, stale→domyślny dach), stage przekazuje overrides do KMB.build.
 - (c) DONE: `kind: tree_crown_shape` (height_to_spread 1,0–3,0) w plantings.authored_trees; lipy Rynku 1,75 ESTIMATED (VCE 2901-1055, 70 ft × 40 ft): korony 8,8–11,4 m zamiast 9,3–12,9 m.
 - Testy: 362 passed, 2 skipped (zestaw -k z zadania).
-- NASTĘPNY KROK: dopisek ADR 0227 D41 + PR → `gh api repos/woogitsugames/kamion/pulls`
+- PR #169 otwarty. NASTĘPNY KROK (lider): build_world knyszyn + import + visual-qa (komendy w PR #169).
