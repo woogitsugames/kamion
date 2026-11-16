@@ -84,3 +84,7 @@ Główny manifest: 22 rekordy. [Dokument gminny](tree-inventory-round9/README.md
 ## Leśne pobocza i wjazd — runda12
 
 [rural-verges-round12](rural-verges-round12/README.md):2 nowe kadry Mapillary picturehoover z27.06.2020, każdy osobno obejrzany przez agenta po powiększeniu i jawnym wyborze OSM. Wąski pas pobocza/trawa/obniżenie/ściana lasu oraz jasny kruszywowy klin i rzeczywisty wjazd.0 widocznych otworów rur/czół przepustów. Gatunki, odstępy, odsunięcie pni, metryka, przejezdność i stan2026 UNVERIFIED. K1km20/22 to punkty selekcji, nie kamera; dokładnego kafla/km nie przypisano.2 link-only/0pobrań/API/Commons. Główny04ma25 rekordów; koordynator sprawdził artefakty, nie deklaruje dodatkowego oglądu kadrów.
+
+## Zakończenia barier — norma2026
+
+[barrier-endings-law-round15](barrier-endings-law-round15/README.md):7 ustaleń ze wskazaniem §1pkt3lit.c i §§2–4 Dz.U.2026/132, odcinki zagłębione/zakotwione albo terminaleEN1317, wyjątek dla tymczasowych barier niskiego poziomu i zalecane żółte odblaski. Obejrzana strona18 istniejącegoPDF pozaGit. Nie pomiar DK65 ani pełna specyfikacja terminala. Główny25 bez zmian.

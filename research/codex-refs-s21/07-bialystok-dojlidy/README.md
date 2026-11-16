@@ -66,3 +66,7 @@ Główny manifest12rekordów. [DokumentBIP](route-c-public-plans-round6/README.m
 ## Maczka: śnieg historyczny i osobnyAUX — runda10
 
 [winter-streets-round10](winter-streets-round10/README.md):1nowy historyczny kadrDDRMaczka:luty2012wgporównania źródłowego, widocznyśniegprzykrawędzi/mokrepolazpopękanym asfaltem. Prawymarcowykadr kontrolny nie drugi zimowy. Drugi nowyrekordMaczka/Produkcyjna18.11.2022wgpublikacji:ścianaoporowa/bariera/latarnie, śnieg/błotośniegoweUNVERIFIEDprzezszybę, AUX.2link-onlyARR/0pobrań, obaagentosobnoobejrzał;rootodczytartefaktów bezdrugiegooglądu. Batorego/Brzeska/Buska otwarte; stan2012nie2026/chemiasoliUNVERIFIED. Główny07ma18rekordów. CzysteURLwplik_lub_url, lokatorosobnąkolumnąchildi wopisiemain.
+
+## SchematP10/P11 — runda12
+
+[p10-p11-diagram-round12](p10-p11-diagram-round12/README.md): rzeczywiście obejrzany urzędowy rys.4.2.2.3 na stronie16 Dz.U.2026/132. Dwa poziome wymiarowania0,5m i≥3,0m; liczba s i pionowe przerwy wzoru niewyznaczone. Nie zamknięto całegoP11_GAP ani backloguB129. Jeden schemat/zero nowych zdjęć/pobrań; główny18.

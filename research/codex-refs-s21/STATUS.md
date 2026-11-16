@@ -1,15 +1,15 @@
 # Status codex-refs-s21
 
-Aktualizacja: 2026-11-16 02:04 Europe/Brussels. Cel ciągły aktywny. Gałąź `research/codex-refs-s21`, zwykły PR #100, bez scalania. Kolejne zadania: dalszy audytP18, zatoki/przystankiDK65 i nowa rodzina fizycznej tylnej lampy zE. Roboczych wyników nie zalicza się automatycznie.
+Aktualizacja: 2026-11-16T03:47:27.2340219+01:00 (Bruksela, zmierzony czas zapisu). Cel ciągły aktywny. Gałąź `research/codex-refs-s21`, zwykły PR #100, bez scalania. Trzej agenci pogłębiają makra ECE, lokalne materiały P18 oraz publiczne zdjęcia PKP PLK. Wyniki robocze bez automatycznej kwalifikacji.
 
 | Pakiet | Rekordy głównego manifestu | Stan |
 |---|---:|---|
 | 01 lampy | 49 | 8 lokalnych / 41 link-only; nie 49 zatwierdzonych homologacji. |
-| 02 brud | 23 | 21 kadrów i 2 dokumenty, także odrzucenia/AUX. |
+| 02 brud | 24 | 22 kadry i 2 dokumenty, także odrzucenia/AUX; nowy przyjęty AutoReview. |
 | 03 Knyszyn | 38 | Kościół, Rynek, fontanna, materiały i prywatne obserwacje tylko tekstowo. |
-| 04 DK65 | 23 | Oznakowanie, pobocza, BDL i historyczny opis dendrologiczny. |
+| 04 DK65 | 25 | Oznakowanie, pobocza, BDL i historyczny opis dendrologiczny. |
 | 05 kolej 38 | 17 | Zasilanie/typ sieci, dokument kategorii i historyczne widoki; mapowanie punktu pozostaje otwarte. |
-| 06 pierścień | 32 | Mońki, Tykocin, most i rondo/ramię DW671-DK64. |
+| 06 pierścień | 36 | Mońki, Tykocin, most i rondo/ramię DW671-DK64. |
 | 07 Białystok/Dojlidy | 18 | Dokumenty i geometria, brak potwierdzonych B-5/B-18/wyjątków. |
 
 01: Actros KOITO ma po dwóch odczytach E13/13106 i `00DCR PL 01 1a 02 A 00 RL` oraz27.5 na tej samej etykiecie. Dwa kadry jednej części, bez przyrostu tylnych/emisji/nocy. EcopointII to dwa zdjęcia jednego klosza bez obudowy: E9 i S1/2a/IIIA/AR/F1/SM1 pewne, pełny numer1853/R1/serie UNVERIFIED. Katalog6611489 wskazuje całą lewą lampęHybrid, nie dowodzi numeru klosza. EuropointII E9/5497 pozostaje oddzielnym odczytem; E9/6985 EuropointIII dotyczy tylko grupySM1/IA. CE/MD/10R nie zastępują fotometrii. Historyczny audyt10/45 ma10zgodnych/0sprzecznych opisów, dobór celowy; to snapshot, nie przepisany audyt wszystkich49. Progi15tylnych/4włączone/3nocne/5ciężkich tablicowych otwarte.
@@ -55,3 +55,15 @@ Knyszyn: dokumenty fontanny wskazują przetarg GK.271.1.2019 oraz umowę22.11.20
 Kontrola po integracji: 380 poprawnych JSON, 91 obrazów do800px, prostokątne manifestyCSV, brak plików ponad5MB; zakres zmian wyłącznie research/codex-refs-s21 i docs/LICENSES.md. Gotowe do scalenia po recenzji lidera: NIE. Cel ciągły aktywny; trzej agenci pogłębiają lampy, brud i dokumentację infrastruktury.
 
 S16 round14: dwa pełne komunikaty GDDKiA odczytane przez agenta, daty2024/2026 rozdzielone. Projekt bitumiczny/KR6/11,5t/oś/2×2 pasy3,5m w2026; różnica12/14 obiektów nie jest wyjaśnioną formalną zmianą. Brak wykonania/as-built. Odrębne root webopen timeout, bez deklaracji ponownego odczytu. Główny04 pozostaje25; 381 poprawnychJSON po walidacji nowego pliku.
+
+## Bieżące uzupełnienie — 16.11.2026
+
+M59: po osobnym oglądzie geometrii EUP3-003 przez agenta i root bieżąca dolna granica wynosi4 tylne kadry PASS i1 warunkowyUP4-03. Zero nowych fotografii/części/rodzin za to rozstrzygnięcie. ON0 i zmierzch/noc0 w kwalifikowanej grupie, tablicowe4 kadry2części nadal. Census30 pozostaje historycznym snapshotem3+2. Nowe RL31 to2 fotografie1lampyVolvo/Trucklite z barwami/fakturami/mocowaniami, bez czytelnegoE — AUX, nie dodatkowePASS.
+
+M61: nowy AutoReview39-A01 po dwóch indywidualnych oglądach potwierdza mocny film i pionowe jasne ślady na parze drzwi naczepy. Rozpoznana dolna granica A6 z ograniczeniami starszych Krone/RoadTour; B1 bez przyrostu, zima/Europa bez nowego awansu. R39 obejrzała5 ekspozycji(1A), R40 sześć(0A/B), wszystkieARRlink-only bez plików. Główny02=24. Nie zsumowano oglądów agent/root jako nowych zdjęć.
+
+DK65/B120: BE15 źródłowo opracowuje zakończenia barier, wyjątek tymczasowy i przepisy przejściowe Dz.U.2026/132. Stronę18 istniejącegoPDF obejrzano osobno; zero pobrań. P10/P11: osobno obejrzany rys4.2.2.3, dwa wymiarowania0,5m i≥3,0m; niewskazanych przerw nie wymyślono. Główny04=25 i07=18 bez zwiększania za pomocnicze normy.
+
+Tykocin: dwa nowe kadry Sokołowskiej/DW671 grobin02.09.2019, bruk i odrębny asfaltowy zakręt; główny06=36. LK38r12 sprawdził3 nowe punkty z lokalnegoOSM;0fotografii, brak widocznego pokrycia w danymwidoku, nie globalnybrak. Zmieniono dalsze źródło na publiczne zdjęciaPKP zamiast powtarzać same punktybezobrazów.
+
+Kontrola po tych commitach:393 poprawneJSON i91 rastrów≤800px, główneID unikalne, CSV prostokątne, brak plików>5MB. Główne manifesty49/24/38/25/17/36/18; nie suma zaakceptowanychfotografii. Wszystkie ostatniefotografieARR/Mapillary wyłącznie link-only, zero kopii właściciela. Commons/Flickr pobraniaSTOP nadal. Gotowe do scalenia po recenzji lidera: NIE.
