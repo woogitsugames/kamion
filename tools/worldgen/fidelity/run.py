@@ -22,6 +22,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from fidelity import gen as G  # noqa: E402
+from fidelity import inputs as FI  # noqa: E402
 from fidelity import imaging as I  # noqa: E402
 from fidelity import metrics as Mx  # noqa: E402
 from fidelity import ortho as O  # noqa: E402
@@ -47,9 +48,7 @@ ROUTE_SITES = [
 ]
 
 
-def sha_file(p: Path):
-    # CRLF-normalised: Windows checkouts and Linux CI must agree (Mistral M1 review)
-    return hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+sha_file = FI.sha_file                      # CRLF-normalised (Mistral M1 review); one definition, ADR 0245
 
 
 def route_edges(rdir):
@@ -503,9 +502,7 @@ def main(argv=None):
     from collections import Counter
     cnt = Counter(i["kind"] for v in lanes_all.values() for i in v["issues"])
     summary["tile"]["lane_issue_counts"] = dict(sorted(cnt.items()))
-    inputs = {p: sha_file(rdir / p) for p in ("roads.graph.json", "overrides.yaml", "route_start.json")}
-    for p in sorted((REPO / "tools/worldgen/roads").glob("*.py")):
-        inputs["tools/worldgen/roads/" + p.name] = sha_file(p)
+    inputs = FI.compute(rdir, REPO)         # ADR 0245: tracked generator modules only, CRLF-normalised
     qa = {"schema": "kamion/fidelity/1", "region": a.region, "adr": "0075", "inputs_sha256": inputs,
           "ortho_hr_cells": len(ortho.man), "summary": summary,
           "route_edges": [{"edge": e, "axis": axis.get(e), "edges": edge_summary(edge_rows.get(e, [])),

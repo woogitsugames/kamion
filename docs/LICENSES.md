@@ -496,6 +496,7 @@ Inne pliki osób trzecich w katalogu research (nie są „zasobami” wg reguły
 - Sekcja „Fonts” zawiera głównie wiersze zasobów ciężarówki, naczepy i nawigacji (nie tylko fonty) — nazwa sekcji historyczna; wiersze obowiązują.
 - `research/gptpro/p7-s8-signs-2/LICENSE-DATA.md:7` podaje „ODbL 1.1” — OSM i pakiet G3 używają ODbL 1.0 (`Data/SourceManifests/osm-geofabrik-podlaskie.json`, `research/gptpro/3-s8-signs/LICENSE-DATA.md:5`); wersja 1.1 nie występuje w żadnym innym dokumencie repo — traktować jako błąd zapisu.
 - Licencja KartaView w narzędziu jest stałą w kodzie (`tools/refs/open_sources.py:65`, :89), a nie wartością odczytaną z API — przy następnym pobraniu warto ją potwierdzić u źródła.
+- ADR 0238 (typologia zabudowy): paleta bloków i reguły w `tools/worldgen/streetscape/typology.py` pochodzą z OPISÓW i liczb pakietów `research/mistral/p3-buildings-2` (zdjęcia Wikimedia Commons CC0 / CC BY 3.0 / CC BY-SA 3.0 — atrybucja w `manifest_v2.csv`) i `research/cloud2/bialystok-building-typology` (PR #64; Commons CC0 / CC BY-SA, Panoramax / KartaView CC BY-SA, Wikipedia CC BY-SA — cytaty liczb, MPZP Białostoczek — akt prawa miejscowego). Żaden piksel zdjęć nie trafił do tekstur ani do repo w tej gałęzi; tagi OSM (`building`, `roof:shape`) — ODbL 1.0, jak dotychczasowe dane OSM.
 
 ## Dane Miasta Białystok — status licencyjny (ADR 0230, E3, s21)
 

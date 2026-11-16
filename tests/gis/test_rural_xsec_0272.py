@@ -351,10 +351,21 @@ def test_city_regions_keep_their_side_profiles(region_id):
     """C and Dojlidy: no edge is authored / tagged with a shoulder, no single-carriageway class G open road exists, so
     every kerbless station keeps mat 0 = the legacy profile and the kerb decision is the old class / speed rule."""
     net = _region_sides(region_id)
-    assert all(sec.shoulder is None and sec.osm_shoulder is None for sec in net.sec_list)
+    # the one authored exception (leader decision OD-005, s23): DK8 way 257367422 at the seam to bialystok-maczka keeps
+    # a hard edge (kind: kerb) so both tiles share one cross-section family
+    od005 = "dk8-seam-kerb-od005-c"
+
+    def authored_ids(sec):
+        return {v.get("id") for v in (sec.shoulder or {}).values() if isinstance(v, dict)}
+
+    assert all(sec.osm_shoulder is None and authored_ids(sec) <= {od005} for sec in net.sec_list)
+    assert all(v.get("kind") == "kerb" for sec in net.sec_list for v in (sec.shoulder or {}).values())
+    if region_id != "bialystok-industrial-c":
+        assert all(sec.shoulder is None for sec in net.sec_list)
     rural = 0
     for c in net.chains:
-        assert not any(k.startswith(("authored_override", "osm:")) for k in c.meta.get("shoulder_src", {}))
+        assert not any(k.startswith(("authored_override", "osm:")) and od005 not in str(k) + str(v)
+                       for k, v in c.meta.get("shoulder_src", {}).items())
         for sd in "LR":
             d = c.side[sd]
             m = d["kind"] == Nw.RURAL
