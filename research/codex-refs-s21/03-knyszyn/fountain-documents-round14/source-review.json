@@ -1,0 +1,74 @@
+{
+  "review_date": "2026-11-16",
+  "exact_review_time": "UNVERIFIED — nie zmierzono dokładnego momentu",
+  "purpose": "Dokumentacja wykonania fontanny/Rynku około 2020: wymiary, odbiór lub as-built",
+  "sources": [
+    {
+      "id": "03-FD14-D01",
+      "url": "https://www.knyszyn.pl/asp/www.bialystok.stat.gov.pl/aktualnosci/rewitalizacja-rynku-w-knyszynie,179",
+      "title": "Rewitalizacja Rynku w Knyszynie",
+      "read_status": "FULL_MAIN_TEXT_READ",
+      "locator": "Treść główna, pozycje 2 i 3, następnie pozycje 4–7",
+      "sourced": "Projekt WND-RPPD.08.06.00-20-0160/17, odnośniki do przetargu 26.07.2019 i II przetargu 03.09.2019; umowa 22.11.2019, komunikaty postępu 2020",
+      "limits": "Indeks dokumentów i komunikatów, nie rysunek powykonawczy"
+    },
+    {
+      "id": "03-FD14-D02",
+      "url": "https://www.knyszyn.pl/asp/rewitalizacja-rynku-w-knyszynie---podpisanie-umowy-z-wykonawca-robot-budowlanych,70,artykul,1,3956",
+      "publication_date": "2019-11-22",
+      "read_status": "FULL_MAIN_TEXT_READ",
+      "sourced": "UM informuje o podpisaniu umowy z GREEN SERWIS GROUP; budowa fontanny jest jednym z elementów zakresu",
+      "status": "CONTRACT_ANNOUNCEMENT_NOT_ACCEPTANCE",
+      "dimensions": "UNVERIFIED"
+    },
+    {
+      "id": "03-FD14-C01",
+      "url": "https://bip.um.knyszyn.wrotapodlasia.pl/zamowienia_i_przetargi_s/zamowienie-nr-gk-271-1-2019-z-dnia-2019-07-26-przetarg-nieograniczony-rewitalizacja-rynku-w-knyszynie.html",
+      "provenance": "Dosłowny link pozycji 2 w oficjalnym dziale 179",
+      "case_reference_from_link": "GK.271.1.2019",
+      "read_status": "UNREAD_HTTP_502",
+      "attachments": "UNVERIFIED — brak odczytu wykazu lub treści"
+    },
+    {
+      "id": "03-FD14-C02",
+      "url": "https://bip.um.knyszyn.wrotapodlasia.pl/zamowien_i_przetarg.html?p=2019%5Ewrzesie%C5%84",
+      "provenance": "Dosłowny link pozycji 3, podpis II przetarg 03.09.2019, dział 179",
+      "read_status": "UNREAD_HTTP_502"
+    },
+    {
+      "id": "03-FD14-C03",
+      "url": "https://www.archiwum.knyszyn.pl/asp/pliki/download/specyfikacja_techniczna.pdf",
+      "discovery": "Wynik publicznego wyszukiwania: specyfikacja zadania rewitalizacji Rynku; fragment okładki podaje marzec 2016",
+      "date_status": "SEARCH_INDEX_ONLY — nie pełny odczyt PDF",
+      "web_access": "Timeout",
+      "single_direct_request": "TLS CERTIFICATE_VERIFY_FAILED — hostname mismatch",
+      "action": "STOP, bez wyłączenia TLS i bez wariantów hosta/protokołu",
+      "full_document_or_drawing_read": false,
+      "download_saved": false,
+      "classification": "PENDING_PROJECT_SPECIFICATION_NOT_AS_BUILT",
+      "numbers_from_snippet_adopted": false
+    },
+    {
+      "id": "03-FD14-D03",
+      "url": "https://www.knyszyn.pl/asp/www.bialystok.stat.gov.pl/aktualnosci/rewitalizacja-przestrzeni-rynkowej-w-knyszynie,253",
+      "read_status": "FULL_MAIN_TEXT_READ",
+      "locator": "Treść główna, pozycje 1–4",
+      "sourced": "Osobny etap z umową dofinansowania 29.01.2021, umową wykonawczą 18.02.2021 i linkiem projektu zagospodarowania działki",
+      "classification": "DISTINCT_2021_STAGE_NOT_FOUNTAIN_AS_BUILT",
+      "linked_plan_opened": false
+    }
+  ],
+  "additional_access_limits": [
+    {"url":"https://bip-umknyszyn.wrotapodlasia.pl/","result":"HTTP 502"},
+    {"url":"https://bip-umknyszyn.podlaskie.eu/","provenance":"BIP z oficjalnego menu gminy","result":"HTTP 403"},
+    {"url":"https://knyszyn.pl/asp/core/rewitalizacja-przestrzeni-rynkowej-w-knyszynie%2C253","result":"HTTP 404; właściwą stronę następnie odczytano po linku oficjalnego menu"}
+  ],
+  "counts": {"downloaded_documents":0,"read_dimensioned_drawings":0,"read_acceptance_protocols":0,"read_as_built_documents":0,"new_fountain_dimensions":0,"new_photographs":0,"Commons_requests":0,"browser_interactions":0},
+  "retained_uncertainty": [
+    "Wcześniejszy obrys orto około 5,5 × 5,6 m pozostaje ESTIMATED; nie przeliczano go tutaj",
+    "Opis 3 typów dysz i 4 obiegów z 2019 pozostaje projektem, nie potwierdzonym wykonaniem",
+    "Brak pozyskanej dokumentacji nie dowodzi, że dokumentacja nie istnieje",
+    "Nie potwierdzono nowej dokładnej daty odbioru ani parametrów urządzenia"
+  ],
+  "result": "CONCRETE_2019_PROCUREMENT_LEAD_NO_DIMENSIONED_OR_AS_BUILT_DOCUMENT_READ"
+}
