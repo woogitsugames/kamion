@@ -1,6 +1,6 @@
 # 01 — Lampy i fotometria — WIP
 
-Stan ewidencji głównej na 16.11.2026: **49 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **51 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Cel: uzupełnić lukę M59-FIX zdjęciami lamp ciągników i naczep z czytelną homologacją oraz przepisami. Stan: **NIESPEŁNIONE**.
 
@@ -205,3 +205,7 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## EuropointII — fizyczne24V i wariant, runda33
 
 [europoint2-identity-round33](europoint2-identity-round33/README.md):1 wybrany nowy kadr etykiety tej samej znanej części, po dwóch odczytach24V i25-6400-707. Trzy nowe ekspozycje galerii obejrzane przez agenta, root wyłącznieetykietę. Nie nowyE, nowa część ani ON; dolna granica4PASS bez zmian. Nie przenoszono parametrów innego prawego wariantuTRP.
+
+## Nowy przedniDAF — runda34
+
+[front-approval-round34](front-approval-round34/README.md):2 nowe fotografie1przedniej części, makroE1/3411 zPL,30 i symbolami po dwóch odczytach. Napięcia/mocyMD nie połączono w arbitralny pobór całej lampy, konflikt lewa/prawa w ofercie jawny. Główny51 rekordów. Tylny prógM59 nadal4PASS,1warunkowy,ON0/zmierzch0 wPASS. Historyczne snapshoty49 pozostają datowanymi dowodami wcześniejszego stanu.
