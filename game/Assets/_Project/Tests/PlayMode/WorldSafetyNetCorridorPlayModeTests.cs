@@ -97,10 +97,7 @@ namespace Game.Tests
         {
             var tr = m_Body.transform;
             Vector3 p = Ground(tr.position + tr.forward * (SlideSpeedMs * Time.fixedDeltaTime));
-            m_Body.SetPose(p, tr.rotation);   // zeroes the rigid body velocity (no fall)
-            // Keep the solver at the slide speed: the "Koniec mapy" warning needs |SpeedKmh| > 15 and the model alone
-            // brakes to 0 within the 400 m approach (first Win64 run: reset at the edge with speed 0, no warning; int-ui-s23).
-            m_Body.SetMoving(SlideSpeedMs, 8);
+            m_Body.SetPose(p, tr.rotation);   // zeroes the rigid body velocity (no fall); the model keeps its speed
             Physics.SyncTransforms();
         }
 
