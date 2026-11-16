@@ -1014,8 +1014,9 @@ CAMS = {
     "zbl_lampy": dict(loc=(-2.5, -14.9, 1.3), target=(-0.75, -12.0, 0.95), lens=40),
     # framed on the axles from dims.json (moves with the tridem, D79 / ADR 0280)
     "zbl_kolo": dict(loc=(-3.9, T.AXLES[1] + 2.3, 0.85), target=(-1.1, T.AXLES[1], 0.62), lens=32),
-    # top view (ortho, front to the right): axle / mudguard / side-guard / marker spacing along the frame
-    "gora": dict(loc=(0.0, -6.0, 30.0), rot=(0.0, 0.0, math.radians(90)), ortho=15.6),
+    # top view (ortho, rear to the right) cut at 1.20 m above ground (near clip): the roof tarp and the deck are removed,
+    # so the tridem, mudguards, side guards and landing gear are visible against the frame
+    "gora": dict(loc=(0.0, -6.0, 30.0), rot=(0.0, 0.0, math.radians(90)), ortho=15.6, clip=30.0 - 1.20),
     "zbl_noga": dict(loc=(3.4, -0.4, 1.05), target=(0.9, -2.3, 0.85), lens=36),
     "zbl_firanka": dict(loc=(-4.6, -1.6, 2.2), target=(-1.27, -5.4, 2.1), lens=40),
 }
@@ -1054,6 +1055,8 @@ def qa_renders(a, tex, roots, objs0, manifest):
     def cam(view, res=(1600, 900)):
         c = CAMS[view]
         cm = S.add_camera("cam_" + view, c["loc"], c.get("target"), c.get("lens", 40), c.get("ortho"), c.get("rot"))
+        if "clip" in c:
+            cm.data.clip_start = c["clip"]
         sc.camera = cm
         sc.render.resolution_x, sc.render.resolution_y = res
 
@@ -1082,7 +1085,7 @@ def qa_renders(a, tex, roots, objs0, manifest):
     cam("bok")
     render("bok_szary_overcast_lod0.jpg", "Naczepa | LOD0 | bok (ortho) | pochmurno | podpory opuszczone")
     cam("gora")
-    render("gora_szary_overcast_lod0.jpg", "Naczepa | LOD0 | z góry (ortho) | osie od sworznia "
+    render("gora_szary_overcast_lod0.jpg", "Naczepa | LOD0 | z góry, przekrój 1,20 m (ortho, tył w prawo) | osie od sworznia "
                                            + " / ".join(f"{-y:.2f}" for y in T.AXLES) + " m | pochmurno")
     cam("zbl_kolo")
     render("zbl_kolo_overcast_lod0.jpg", "Naczepa | LOD0 | tridem 385/65 R22.5, felgi stalowe, natrysk z kół | pochmurno")
