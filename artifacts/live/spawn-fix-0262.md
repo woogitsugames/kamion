@@ -42,3 +42,8 @@ NASTĘPNY KROK: `Get-ChildItem artifacts/spawn-fix-0262/renders/*.status | % { $
 - ZNALEZISKO: log `[START] region=… route_s=12.0` przy starcie z zapieczonego spawnu wypisuje domyślne 12 m, nie pozycję (LogRegionStart) — poprawka 1 linii.
 - W TOKU (odłączone, pid 68352): `run-post-merge.ps1` = EditMode StartClearance+RegionSelect, PlayMode RouteSpawnTests po scaleniu, z NIEZACOMMITOWANYMI zmianami: P2-1 (SpawnSafety: start nie za rzędem wyjazdowym) + test + poprawka logu.
 NASTĘPNY KROK: `Get-Content artifacts/spawn-fix-0262/editmode-post-merge.done, artifacts/spawn-fix-0262/editmode-playmode-post-merge.done`; zielone -> `git add game/Assets/_Project/Gameplay/SpawnSafety.cs game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs game/Assets/_Project/Tests/PlayMode/RouteSpawnTests.cs; git commit`; czerwone -> `git checkout -- game/Assets/_Project` i wpisać P2-1 + log jako otwarte.
+## 16.11 ~04:2x krok 8 — KONIEC
+- Po scaleniu main: EditMode StartClearance+RegionSelect 61/61 (skipped 0), PlayMode RouteSpawnTests 5/5, pytest 44 passed.
+- Commit `8778bbe5a` (push): P2-1 wąsko w `SpawnSafety.ResolveStartS` + test, log `[START]` ze stacją zapieczonego spawnu, ADR 0262 „Wyniki” (21 regionów) i „Otwarte”.
+- Efekty uboczne Unity: brak zmian w ProjectSettings/Packages/M_Sky/Resources (git status czysty).
+NASTĘPNY KROK (lider): `git merge spawn-fix-0262` (4 pliki poza artifacts: ADR, SpawnSafety.cs, DrivingLabBootstrap.cs, RouteSpawnTests.cs); nowy build exe, żeby poprawki weszły.
