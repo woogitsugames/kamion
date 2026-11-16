@@ -1,0 +1,281 @@
+{
+ "adr": "0220",
+ "generator": "tools/worldgen/qa/dk65_k1_elements.py",
+ "chainage": "km trasy = distance along variants.A_old_road.polyline of docs/reports/map/dk65_route_plan.json from OSM node 3341716402 (Andersa), growing towards Knyszyn (roads/route_km.py); side L/P = left/right in the direction of growing km",
+ "evidence": "research/dk65-knyszyn-refs (K1) manifest rows K1-001..K1-014 (GUGiK ortofoto 0.1 m, sheets 2025-05-25) + ADR 0220 straightened strips of the same WMS (artifacts/dk65-k1-0220: strip.py, lines.py, view.py; lines_*.json), extents read on the strips +-0.005 km",
+ "tiles": [
+  "dk65-01",
+  "dk65-02",
+  "dk65-03",
+  "dk65-04",
+  "dk65-05"
+ ],
+ "edge_line_spacing": {
+  "value": 6.2,
+  "reason": "K1: edge lines 6.0-6.4 m apart axis to axis (median 6.2 m, n = 14 in dk65-01..05, 25 on the corridor); ADR 0220 strips: per-10 m medians 6.3 (01), 6.2 (02), 6.1 (03), 6.2 (04), 6.2 (05). The generator put them EDGE_LINE_INSET_MINOR (0.20 m) inside the carriageway edge: 7.2 m on Ełcka (7.6 m), 6.1 m on BDOT 6.5 m.",
+  "source": "research K1 + GUGiK orthophoto 0.1 m 2025 (ADR 0220)",
+  "confidence": "medium",
+  "verify": "owner drive / owner photo with a tape across the road",
+  "ways": {
+   "dk65-01": [
+    1281925347,
+    623133896,
+    396566354
+   ],
+   "dk65-02": [
+    396566354,
+    1321811066,
+    1321811065,
+    1442886950,
+    1442886949,
+    234919340,
+    716806122,
+    716806121,
+    1024956365
+   ],
+   "dk65-03": [
+    1024956365
+   ],
+   "dk65-04": [
+    1024956365,
+    41533343,
+    1243220441,
+    1024956364
+   ],
+   "dk65-05": [
+    1024956364,
+    1399803717,
+    1560819273
+   ]
+  }
+ },
+ "dashed": [
+  {
+   "id": "dk65-01-k1-dashed-km8.81-l",
+   "tile": "dk65-01",
+   "km": [
+    8.808,
+    8.93
+   ],
+   "side": "L",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-001",
+   "reason": "Szosa Knyszyńska: both edge lines broken over 122 m (K1 km 8.80: 'przerywane na odcinku zjazdu P'; strip: L and P broken 8.808-8.930, solid before and after). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-001 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-01-k1-dashed-km8.81-p",
+   "tile": "dk65-01",
+   "km": [
+    8.808,
+    8.93
+   ],
+   "side": "P",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-001",
+   "reason": "Szosa Knyszyńska: both edge lines broken over 122 m (K1 km 8.80: 'przerywane na odcinku zjazdu P'; strip: L and P broken 8.808-8.930, solid before and after). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-001 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-02-k1-dashed-km9.95",
+   "tile": "dk65-02",
+   "km": [
+    9.945,
+    10.16
+   ],
+   "side": "P",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-003",
+   "reason": "Fasty S: right edge line broken (K1 km 10.00: 'P przerywana (krótkie kreski)'; strip: P broken 9.945-10.160 past three side roads, L solid). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-003 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-02-k1-dashed-elcka-l",
+   "tile": "dk65-02",
+   "km": [
+    11.085,
+    11.798
+   ],
+   "side": "L",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-005",
+   "reason": "Ełcka: both edge lines broken from the side road at km 11.085 (way 716806121/1024956365 node) to the tile seam and on (K1 km 11.50: 'przerywane obie'; strip: solid up to 11.083, then broken both sides). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-005 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-02-k1-dashed-elcka-p",
+   "tile": "dk65-02",
+   "km": [
+    11.085,
+    11.798
+   ],
+   "side": "P",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-005",
+   "reason": "Ełcka: both edge lines broken from the side road at km 11.085 (way 716806121/1024956365 node) to the tile seam and on (K1 km 11.50: 'przerywane obie'; strip: solid up to 11.083, then broken both sides). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-005 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-03-k1-dashed-elcka-l",
+   "tile": "dk65-03",
+   "km": [
+    11.792,
+    12.284
+   ],
+   "side": "L",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-006",
+   "reason": "Ełcka: both edge lines broken over the whole tile (K1 km 12.00: 'P przerywana', L unreadable; strip: L and P broken, tree shadow 12.0-12.07 and 12.14-12.2). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-006 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-03-k1-dashed-elcka-p",
+   "tile": "dk65-03",
+   "km": [
+    11.792,
+    12.284
+   ],
+   "side": "P",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-006",
+   "reason": "Ełcka: both edge lines broken over the whole tile (K1 km 12.00: 'P przerywana', L unreadable; strip: L and P broken, tree shadow 12.0-12.07 and 12.14-12.2). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-006 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-04-k1-dashed-elcka-l",
+   "tile": "dk65-04",
+   "km": [
+    12.277,
+    13.02
+   ],
+   "side": "L",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-007/K1-008",
+   "reason": "Ełcka: left edge line broken from the seam to the end of the bus bay (K1 km 12.50 'przerywane obie', km 13.00 'L przerywana wzdłuż zatoki'; strip: broken to 13.020, solid after). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-007/K1-008 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-04-k1-dashed-elcka-p",
+   "tile": "dk65-04",
+   "km": [
+    12.277,
+    13.005
+   ],
+   "side": "P",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-007/K1-008",
+   "reason": "Ełcka: right edge line broken from the seam to km 13.005 (K1 km 12.50 'przerywane obie', km 13.00 'P ciągła'; strip: broken to 13.005, solid from 13.012). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-007/K1-008 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-05-k1-dashed-bay-km14.44",
+   "tile": "dk65-05",
+   "km": [
+    14.44,
+    14.506
+   ],
+   "side": "P",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-011",
+   "reason": "Ełcka: right edge line broken along the bus bay (K1 km 14.50 'P przerywana wzdłuż poszerzenia'; strip: 1 m / 1 m from 14.440 to 14.506). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-011 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-05-k1-dashed-inlet-km15.51",
+   "tile": "dk65-05",
+   "km": [
+    15.506,
+    15.518
+   ],
+   "side": "P",
+   "dash_m": [
+    1.0,
+    1.0
+   ],
+   "k1": "K1-013",
+   "reason": "Studzienna: right edge line broken across a field-road mouth that the OSM graph does not have (K1 km 15.50 'P przerywana przy wlocie'; strip: mouth 15.509-15.515). Dash 1.0 m / gap 1.0 m measured (= P-7a, rys. 2.2.2.2; symbol P-7a vs P-7c UNVERIFIED, width 0.12 m as the solid line).",
+   "source": "K1 K1-013 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "low"
+  }
+ ],
+ "bays": [
+  {
+   "id": "dk65-04-k1-bus-bay-km12.95-l",
+   "tile": "dk65-04",
+   "km": [
+    12.948,
+    13.01
+   ],
+   "side": "L",
+   "inner_m": 3.45,
+   "depth_m": 4.5,
+   "taper_m": [
+    20.0,
+    13.0
+   ],
+   "k1": "K1-008",
+   "reason": "Bus bay Dobrzyniewo Duże (OSM platform 14067837805, km 12.985 L, shelter): K1 km 13.00 'zatoka autobusowa L z wiatą, poszerzenie ~4 m'; strip: asphalt widens from 12.948, full to ~8.0 m left of the OSM axis 12.968-12.997, back at 13.010. Outer edge ESTIMATED +-0.5 m; inner = 6.9 m carriageway edge (D65) - 0.3 m, the road footprint cuts the overlap.",
+   "source": "K1 K1-008 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  },
+  {
+   "id": "dk65-05-k1-bus-bay-km14.44-p",
+   "tile": "dk65-05",
+   "km": [
+    14.44,
+    14.506
+   ],
+   "side": "P",
+   "inner_m": 3.45,
+   "depth_m": 3.0,
+   "taper_m": [
+    15.0,
+    11.0
+   ],
+   "k1": "K1-011",
+   "reason": "Bus bay (OSM platform 11243685568, km 14.478 P, shelter): K1 km 14.50 'poszerzenie/zatoka P ~3 m'; strip: asphalt widens from 14.440, full to ~6.4 m right of the OSM axis 14.455-14.495, back at 14.506. Outer edge ESTIMATED +-0.5 m.",
+   "source": "K1 K1-011 + GUGiK orthophoto 0.1 m 2025 strip (ADR 0220)",
+   "confidence": "medium"
+  }
+ ]
+}

@@ -21,9 +21,27 @@ namespace Game.Gameplay
         /// <see cref="ConsumeLighting"/>; an explicit launch argument lighting=... still wins.</summary>
         public static string Lighting { get; private set; } = "";
 
+        /// <summary>Region id of a region start from the menu (ADR 0229); "" = the scene's own start. Read once by
+        /// <see cref="ConsumeRegion"/> in the region scene (start log: road of the start point).</summary>
+        public static string Region { get; private set; } = "";
+
+        /// <summary>Region start (ADR 0229): spawn at <paramref name="routeS"/> on the region's start route, free driving (no end).</summary>
+        public static void SetRegion(string label, string region, float routeS, string lighting = "")
+        {
+            Set(label, routeS, -1f, lighting);
+            Region = region ?? "";
+        }
+
+        /// <summary>Returns the menu's region choice once and clears it.</summary>
+        public static string ConsumeRegion()
+        {
+            string r = Region; Region = "";
+            return r;
+        }
+
         public static void Set(string label, float routeS, float routeEndS, string lighting = "")
         {
-            Pending = true; Label = label; RouteS = routeS; RouteEndS = routeEndS; Lighting = lighting ?? "";
+            Pending = true; Label = label; RouteS = routeS; RouteEndS = routeEndS; Lighting = lighting ?? ""; Region = "";
             Debug.Log($"[START] menu choice '{label}' route_s={routeS} route_end={routeEndS} lighting={Lighting}");
         }
 

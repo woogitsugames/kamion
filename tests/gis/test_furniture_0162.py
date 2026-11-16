@@ -204,7 +204,9 @@ def test_overhead_board_is_one_material_with_plain_back_band():
         m, l1, _ = PP.board("OB_band_test", 4.0, 2.0)
     finally:
         PP.BOARD_BAND.pop("OB_band_test")
-    assert set(m.prims) == {"sign_OB_band_test"} and l1 is m
+    # ADR 0236: LOD1 is the same single material without the two rails (face + back sheet = 4 triangles)
+    assert set(m.prims) == {"sign_OB_band_test"} == set(l1.prims)
+    assert sum(len(t) for t in l1.prims["sign_OB_band_test"][1]) == 4
     V, T, UV = (np.concatenate(x) for x in m.prims["sign_OB_band_test"])
     face = V[:, 1] > 0.055
     assert UV[face][:, 1].min() == pytest.approx(0.05)             # the face never samples the band

@@ -34,8 +34,9 @@ def test_gantry_lod1_is_a_lattice_not_a_box():
     l0, l1, col = LP.sign_gantry(16.0, 7.6)
     assert col is None
     t0, t1 = _tris(l0), _tris(l1)
-    # two boxes were 24 triangles; a lattice of 3-sided members is a few hundred, and stays under LOD0
-    assert 300 <= t1 <= 900 and t1 < t0 <= 3000, (t0, t1)
+    # two boxes were 24 triangles; a lattice is a few hundred, and stays under LOD0. ADR 0236: the LOD1 lacing is
+    # flat outward strips (2 triangles a member instead of 6), the chords stay 3-sided tubes
+    assert 200 <= t1 <= 900 and t1 < t0 <= 3000, (t0, t1)
     # no LOD1 member is thicker than 2 x the chord radius: nothing spans the 0.8 m beam depth as a solid face
     v = _verts(l1)
     assert abs(v[:, 0]).max() <= 8.0 + 0.3 + LP.GANTRY_CHORD_R[1] + 1e-6
@@ -45,7 +46,7 @@ def test_gantry_lod1_is_a_lattice_not_a_box():
 
 def test_cantilever_lod1_is_a_lattice():
     l0, l1, _ = LP.sign_cantilever(9.0, 7.6)
-    assert 150 <= _tris(l1) < _tris(l0)
+    assert 100 <= _tris(l1) < _tris(l0)          # ADR 0236: strip lacing
 
 
 def test_gantry_and_overhead_boards_stay_visible_on_low():

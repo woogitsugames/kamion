@@ -18,6 +18,26 @@ overrides:
     confidence: high
     verify: none
     set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  # ADR 0233 (dk65-r4-s21): the east 484 m of DK65 in this tile (seam with dk65-11, x = 762635, route km 24.83, up to the
+  # repaving joint at km 25.32) still has the corridor section of research K1 - edge lines 6.2 m apart - and only then
+  # widens to the section of `dk65-carriageway-width` above. Must stay AFTER that entry (it refines the same edge);
+  # the first two stops of `width` are the `dk65-xsec-k1` section of dk65-06..11 (2 x 3.1 + 2 x 0.2 = 6.6 m), so both
+  # sides of the seam build the same road (tests/gis/test_dk65_seam_knyszyn_0233.py).
+  - id: dk65-k1-section-to-km25.32
+    target: {edge: "w27718745:897574813-1134817563"}
+    reason: >-
+      GUGiK orthophoto WMS HighResolution 0.1 m (sheets 2025-05-25/27), straightened strip along the OSM axis from
+      km 24.05 to 26.15, edge-line pair per 10 m block (artifacts/dk65-r4-s21/tools/seam_strip.py, 100 m medians):
+      6.0 m (km 24.05-24.65), 6.2 m (km 24.65-25.31, this tile from km 24.83), then at a repaving joint 862-874 m
+      past the dk65-10/11 seam (484-496 m into this edge, km 25.31-25.32) the carriageway widens: broken edge lines
+      7.1-7.5 m apart to km 25.49, solid lines 6.7-6.8 m apart beyond (the section measured by ADR 0204 / 0212).
+      K1 (research/dk65-knyszyn-refs) reads 6.1 m at km 25.0 and 6.8 m at km 26.0. The entry keeps 7.5 m as the widest
+      value and narrows the first 484 m to 6.6 m (generator: line 0.20 m inside the edge -> 6.2 m line to line);
+      `lanes_follow_width` lets the two lanes share the local width, so the centre line stays on the axis and the
+      lane centres sit at +-1.55 m like in dk65-11. Transition over 12 m (+ the 15 m width smoothing).
+    confidence: medium
+    verify: owner drive - where the road widens south of the S16 site; broken edge lines km 25.32-25.49 painted solid here
+    set: {edge_strip: 0.2, lanes_follow_width: true, width: [[0.0, 6.6], [0.586, 6.6], [0.601, 7.5], [1.0, 7.5]]}
   # ---------------------------------------------------------------- expressway construction zone (D64, WORKING_VALUE)
   - id: s-construction-earthworks
     kind: paved_area
@@ -55,3 +75,16 @@ overrides:
     confidence: high
     verify: none
     set: {lamps: false}
+  - id: lamp-policy-led-0216
+    kind: lamp_policy
+    family: led
+    cct_k: 4000
+    sources: ["docs/11_DECYZJE_WLASCICIELA.md D65 p.8", "research/dk65-knyszyn-refs/README.md (e)",
+              "research/night-lamps-s21/README.md section 4"]
+    reason: >-
+      Owner D65 p.8: street lighting on the DK65 / Knyszyn route is white LED. The older side-street poles
+      (spun concrete with an arc arm, thin grey steel) keep their shape and positions and carry a flat LED head
+      instead of the sodium one (ADR 0216). Nominal 4000 K: ZDM Bialystok tenders 2023-2024 (K69, SOURCED for
+      Bialystok streets); type, height and spacing in Knyszyn UNVERIFIED (K1) - the generator's WORKING_VALUE.
+    confidence: medium
+    verify: owner - a night photo of a Knyszyn street lamp (pole type, light colour)

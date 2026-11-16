@@ -36,6 +36,7 @@ from . import plantings as PT
 from . import plots as PLT
 from . import runway_paint as RWP
 from . import sources as SRC
+from . import tree_rows as TRW
 from . import vegetation as VG
 from . import yard_wear as YW
 
@@ -71,6 +72,11 @@ def plan_plots(w, rid, blds=None):
     rp = PLT.region_plan(blds, roads_poly, carriage, yards, src, origin, bpoly, net=w.net)
     from . import plot_canopy as PCN                 # ADR 0132: crowns read off the orthophoto (None when not built)
     rp["canopy"] = PCN.load(rid)
+    # ADR 0237: kerbs lowered at the marked pedestrian crossings ride with the driveway drops into pass 2
+    # (build_world applies plot_plan["drops"]); a region without `pavement_rules` gets none
+    from . import pavements as PVM
+    rp["crossing_drops"] = {}
+    rp["drops"] = list(rp["drops"]) + PVM.crossing_drops(w.net, w.ctx["points"], overrides, rp["crossing_drops"])
     return rp
 
 
@@ -163,6 +169,13 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     zc = np.where(bmask & ~mask, np.minimum(zc, sm), zc)        # ground under buildings never above the floor
     if getattr(w, "water", None) is not None:      # ADR 0210 (opt-in): river / pond bed, shallow banks, shore lip
         zc = w.water.carve(zc, mask, log)
+    from . import rail as RL
+    from . import rail_props as RP
+    RP.PROTOS.clear()                              # crossing devices are registered only by the rail stage below
+    rail_road_z = None
+    if getattr(w, "rail", None) is not None:       # ADR 0217 (opt-in): ground levelled under the track bed
+        rail_road_z = RL.grid_sampler(road_z, hf, fallback=RL.grid_sampler(zc, hf))
+        zc = w.rail.conform(zc, mask | bmask, hf, rail_road_z, log)
     # ADR 0214: expressway construction sites (override kind: construction_site) - sand platform + spoil heaps
     bbx = w.region["bbox"]
     sites = CS.plan(overrides, origin, roads_poly, rep, tile=shapely.box(bbx["xmin"] - origin[0], bbx["ymin"] - origin[1],
@@ -223,8 +236,11 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     SR.osm_signs(pl, w.net, src, origin, w.junctions, frep, codes)
     SR.roundabout_signs(pl, w.net, w.junctions, attrs, frep, codes, boards, src=src, origin=origin)
     LM.build(pl, w.net, graph, overrides, origin, boards, frep)
+    SR.drop_rule_diagrams_near_gantries(pl, boards, frep)       # ADR 0236: the authored portal replaces the rule E-1
     FU.misc_points(pl, w.net, src, origin, frep, codes)
-    FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep)
+    if getattr(w, "rail", None) is not None:       # ADR 0217: G-3 / G-4 crosses, barriers, signals of level crossings
+        RP.place(pl, w.rail, rail_road_z, frep)
+    FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep, overrides)
     FU.bridge_median_lamps(pl, w.net, frep)          # ADR 0123: twin-arm lamps between the decks (bridge_style `lamps`)
     lin = FU.Lin(w.buf, zsurf)
     # authored fences of hero buildings replace the generic panel fence of the same OSM way (ADR 0070 r3)
@@ -307,9 +323,12 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         blocked |= PV.rasterize_polys(hero_keepout, hf)
     if getattr(w, "water", None) is not None:      # ADR 0210: no trees in the water
         blocked |= w.water.blocked()
+    if getattr(w, "rail", None) is not None:       # ADR 0217: no trees on the track bed / in the clearance
+        blocked |= w.rail.blocked(hf)
     blocked |= site_mask                          # ADR 0214: no trees on a construction site
     vrep = {}
-    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides, hard=mask | bmask)
+    tree_rows = TRW.region_plan(rid, overrides, src, graph, origin)     # ADR 0222: None unless the region opts in
+    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides, hard=mask | bmask, tree_rows=tree_rows)
     forest_mix = vrep.pop("_forest_mix")
     forest_cleared = vrep.pop("_forest_cleared", [])
     rep["vegetation"] = vrep
@@ -321,7 +340,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests, forest_cleared)
     col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # no grit strip around the lawns (ADR 0114)
-    col = CS.ground_colour(col, site_mask, hf)                           # ADR 0214: sand on construction sites
+    col = CS.ground_colour(col, site_mask, hf, sites, PV.rasterize_polys)   # ADR 0214: sand on construction sites
     # ADR 0132: grown garden trees of the house plots (orthophoto crowns) join the tree instances - same prototypes,
     # LODs and impostors as every street tree; none closer than 2.5 m to a tree the region already has there
     ptrees = plots.get("trees") or []

@@ -465,6 +465,33 @@ namespace Game.Tests
                 Assert.IsTrue(Contains(bounds, RectIn(g.rectTransform, safe), 1f), $"{d.Name}: menu item {g.transform.parent.name}/{g.name} {RectIn(g.rectTransform, safe)} outside the safe area {bounds.size}");
         }
 
+        /// <summary>ADR 0229: the region picker below the three starts (longest catalog label) still fits every screen.</summary>
+        [UnityTest]
+        public IEnumerator StartMenu_WithRegionPicker_FitsSafeArea([ValueSource(nameof(Devices))] Device d)
+        {
+            MakeCamera(d);
+            var starts = new List<(string, Action)>
+            {
+                ("DrivingLab — plac testowy", () => { }),
+                ("Trasa G3-A — baza, brama, Bieżeństwa", () => { }),
+                ("Trasa G3-B — Andersa, Rondo Putry", () => { }),
+            };
+            var regions = new List<BootRegionChoice>
+            {
+                new BootRegionChoice("bialystok-dojlidy", "Białystok — Dojlidy, Dywizjonu 303 / Kuronia", "Białystok · trasa 2,1 km · start na początku trasy", true, () => { }),
+                new BootRegionChoice("knyszyn", "Knyszyn — rondo DK65/DW671, Rynek", "Knyszyn · brak w tym APK", false, () => { }),
+            };
+            var menu = BootMenu.Create(m_Cam, StartMenuOptions.Load(), starts, null, null, regions);
+            menu.OverrideScreen(new Vector2(d.W, d.H), d.SafePx, d.Dpi);
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            var safe = menu.SafeAreaRect;
+            var bounds = new Rect(Vector2.zero, safe.rect.size);
+            foreach (var g in safe.GetComponentsInChildren<Graphic>(false))
+                Assert.IsTrue(Contains(bounds, RectIn(g.rectTransform, safe), 1f), $"{d.Name}: menu item {g.transform.parent.name}/{g.name} {RectIn(g.rectTransform, safe)} outside the safe area {bounds.size}");
+            UnityEngine.Object.Destroy(menu.gameObject);
+        }
+
         // ------------------------------------------------------------------ captures (explicit)
 
         static string OutDir => Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "artifacts", "hud-r10"));

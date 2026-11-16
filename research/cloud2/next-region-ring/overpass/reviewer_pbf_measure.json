@@ -1,0 +1,16 @@
+{
+ "zrodlo": "docs/reports/REVIEW-2026-11-14-s20-cloud2-r9.md §4 (pomiar recenzenta lidera, przepisany 1:1; status ESTIMATED)",
+ "metoda": "PBF Geofabrik podlaskie-261108.osm.pbf (2026-11-08), pyosmium + shapely, przycięcie geometrii do bboxu R9 w EPSG:2180, długość po obu jezdniach; budynki = way z building=*, środek wierzchołków w bboxie, relacji nie liczono",
+ "kolumny_klasy": ["highway", "km", "pokrycie tagów % długości"],
+ "klasy": [
+  ["secondary", 148.0, "lanes 97,1 / maxspeed 72,0 / surface 87,7 / name 84,5 / lit 34,9 / sidewalk 4,1 / width 0,2 %"],
+  ["tertiary", 252.1, "lanes 43,5 / maxspeed 36,6 / surface 89,6 / name 76,6 / lit 18,4 / sidewalk 6,2 / width 0,1 %"],
+  ["unclassified", 189.5, "lanes 9,6 / maxspeed 12,3 / surface 89,2 / name 43,0 / lit 4,0 / sidewalk 1,8 / width 0,0 %"],
+  ["residential", 948.3, "lanes 4,8 / maxspeed 15,0 / surface 84,3 / name 84,1 / lit 11,8 / sidewalk 5,2 / width 0,3 %"],
+  ["living_street", 133.8, "lanes 0,8 / maxspeed 52,8 / surface 71,2 / name 27,6 / lit 12,8 / sidewalk 1,1 / width 1,0 %"],
+  ["service", 912.8, "lanes 1,5 / maxspeed 8,1 / surface 48,4 / name 2,8 / lit 1,9 / sidewalk 0,5 / width 0,1 %"],
+  ["track", 864.1, "lanes — / maxspeed 0,1 / surface 42,1 / name 11,9 / lit 0,1 / sidewalk — / width 0,5 %"]
+ ],
+ "budynki": {"liczba": 83505, "levels_proc": 22.9, "height_proc": 0.3, "relacji_building_w_calym_pliku": 129,
+   "building_top": {"yes": 55426, "house": 8454, "outbuilding": 7393, "detached": 2021, "apartments": 1755, "residential": 1410, "semidetached_house": 925, "allotment_house": 663, "retail": 525, "terrace": 489, "service": 463, "industrial": 419}}
+}

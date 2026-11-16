@@ -56,5 +56,25 @@ namespace Game.Tests
             }
             finally { UnityEngine.Object.DestroyImmediate(material); }
         }
+
+        // ADR 0242: manifest "runoff_strength" scales the run-off layer of one material; absent = 1 (other regions unchanged).
+        [Test]
+        public void RunoffStrengthScale_DefaultsToOneAndClamps()
+        {
+            var type = Type.GetType("Game.World.Import.WorldPbrMaterials, Game.World.Import.Editor", true);
+            var method = type.GetMethod("RunoffStrengthScale", BindingFlags.Static | BindingFlags.Public);
+            Assert.NotNull(method);
+            Func<object, float> scale = v =>
+            {
+                var def = new System.Collections.Generic.Dictionary<string, object>();
+                if (v != null) def["runoff_strength"] = v;
+                return (float)method.Invoke(null, new object[] { def });
+            };
+            Assert.That(scale(null), Is.EqualTo(1f));
+            Assert.That(scale(0.25), Is.EqualTo(0.25f).Within(1e-6));
+            Assert.That(scale(0L), Is.EqualTo(0f));
+            Assert.That(scale(7.0), Is.EqualTo(2f));
+            Assert.That(scale(-1.0), Is.EqualTo(0f));
+        }
     }
 }

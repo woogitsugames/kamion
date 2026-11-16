@@ -38,5 +38,5 @@ def test_class_gp_rule_unchanged():
 def test_dk65_01_route_edges_carry_the_override():
     import yaml
     ov = yaml.safe_load((Path(__file__).resolve().parents[2] / "Data/Regions/dk65-01/overrides.yaml").read_text(encoding="utf-8"))
-    route = [o for o in ov["overrides"] if o["set"].get("edge_lines") == "both"]
+    route = [o for o in ov["overrides"] if o.get("set", {}).get("edge_lines") == "both"]   # ADR 0220: kind entries have no set
     assert len(route) == 5 and route[0]["set"]["width"] == 6.0

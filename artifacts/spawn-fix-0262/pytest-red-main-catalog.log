@@ -1,0 +1,30 @@
+>           assert start >= need, (
+                f"{region}: the start route begins on the region edge; the closure stands up to {CLOSURE_SETBACK_M:.0f} m inside, "
+                f"startS {start} m leaves the combination outside / in the barrier row (need >= {need:.2f} m)")
+E           AssertionError: bialystok-dojlidy: the start route begins on the region edge; the closure stands up to 60 m inside, startS 12.0 m leaves the combination outside / in the barrier row (need >= 72.55 m)
+E           assert 12.0 >= 72.55
+
+tests\gis\test_start_clear_0262.py:86: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_start_clear_0262.py::test_catalog_is_what_the_exporter_derives
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[bialystok-maczka]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[bialystok-kleeberga]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[bialystok-knyszynska]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-01]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-02]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-03]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-04]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-05]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-06]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-07]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-08]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-09]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-10]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-11]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[knyszyn-s]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[knyszyn]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[knyszyn-w]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dk65-monki-01]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[dw671-tykocin-01]
+FAILED tests/gis/test_start_clear_0262.py::test_start_is_inside_the_edge_closure[bialystok-dojlidy]
+21 failed, 23 passed in 0.35s

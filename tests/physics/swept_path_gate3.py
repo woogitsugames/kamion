@@ -217,7 +217,7 @@ def surface_raster(lo, hi):
             for mat, T in RC.node_triangles(doc, data, binoff, node).items():
                 if mat in CARRIAGEWAY:
                     c = CAT["carriageway"]
-                elif mat == "apron_sett":
+                elif mat in ("apron_sett", "apron_paving_light"):
                     c = CAT["apron"]
                 elif mat == "curb_concrete":
                     c = CAT["kerb"]

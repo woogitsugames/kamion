@@ -164,8 +164,10 @@ def lamp_y(h=10.3, reach=1.3, rise=1.0, console=False, sink=0.0):
     return m, l1, col
 
 
-def lamp_old(h, kind):
-    """Second lamp family for side streets (critic R2 #10): older installations still common on Polish residential
+def lamp_old(h, kind, led=False):
+    """led=True (ADR 0216, owner D65 p.8 "white LED"): the same pole and arm with the sodium head replaced by a flat LED
+    housing and clear glass (materials of lamp(): luminaire_housing, lamp_glass) - a retrofit, triangle count unchanged.
+    Second lamp family for side streets (critic R2 #10): older installations still common on Polish residential
     and industrial access roads (shapes typical, no product copied; dimensions WORKING_VALUE).
       kind "concrete": spun-concrete pole (żerdź wirowana, 0.30 -> 0.14 m) with a steel arm rising in an arc and an
         elongated "cobra" sodium luminaire (orange-tinted bowl);
@@ -194,9 +196,13 @@ def lamp_old(h, kind):
                                     [-.17,-.05,.10], [.17,-.05,.10], [-.16,.78,.06], [.16,.78,.06]])
             faces = [(0,2,3,1), (4,5,7,6), (0,1,5,4), (2,6,7,3), (0,4,6,2), (1,3,7,5)]
             triangles = [t for a,b,c,d in faces for t in ((a,b,c),(a,c,d))]
-            mm.add("luminaire_old", housing, triangles)
-            mm.quad("lamp_glass_sodium", e + [-.10,.09,-.102], e + [-.11,.63,-.102],
-                    e + [.11,.63,-.102], e + [.10,.09,-.102])
+            if led:                                    # flat LED box on the arm end (12 triangles, as the old housing)
+                mm.box("luminaire_housing", e + [0, 0.36, -0.03], 0.16, 0.34, 0.05)
+                mm.quad("lamp_glass", e + [-.13,.08,-.081], e + [.13,.08,-.081], e + [.13,.64,-.081], e + [-.13,.64,-.081])
+            else:
+                mm.add("luminaire_old", housing, triangles)
+                mm.quad("lamp_glass_sodium", e + [-.10,.09,-.102], e + [-.11,.63,-.102],
+                        e + [.11,.63,-.102], e + [.10,.09,-.102])
         else:
             mm.box("concrete_base", [0, 0, -0.01], 0.2, 0.2, 0.09)
             mm.tube("steel_painted_grey", [0, 0, 0.06], [0, 0, h - 0.2], 0.075, 0.05, seg)
@@ -205,8 +211,8 @@ def lamp_old(h, kind):
             top = np.array([0, 0, h - 0.35])
             end = top + np.array([0, 1.4 * math.cos(math.radians(15)), 1.4 * math.sin(math.radians(15))])
             mm.tube("steel_painted_grey", top, end, 0.03, 0.03, max(4, seg // 2))
-            mm.box("luminaire_old", end + [0, 0.28, 0.0], 0.14, 0.3, 0.07)
-            mm.quad("lamp_glass_sodium", end + [-0.11, 0.04, -0.072], end + [0.11, 0.04, -0.072],
+            mm.box("luminaire_housing" if led else "luminaire_old", end + [0, 0.28, 0.0], 0.14, 0.3, 0.07 if not led else 0.05)
+            mm.quad("lamp_glass" if led else "lamp_glass_sodium", end + [-0.11, 0.04, -0.072], end + [0.11, 0.04, -0.072],
                     end + [0.11, 0.52, -0.072], end + [-0.11, 0.52, -0.072])
     col.tube("collision_steel", [0, 0, 0], [0, 0, h],
              0.16 if kind == "concrete" else 0.13, 0.08 if kind == "concrete" else 0.13, 6)
@@ -307,7 +313,11 @@ def plate(code):
                 o = len(Vr)
                 Vr += [[x0, y, z0], [x1, y, z1], [x1, yb, z1], [x0, yb, z0]]
                 UVr += [(0.05, 0.05), (0.20, 0.05), (0.20, 0.20), (0.05, 0.20)]
-                Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2), (o, o + 1, o + 2), (o, o + 2, o + 3)]   # both sides
+                # ADR 0236 (budget): outward side only. The rim closes the volume between face and back, its inner
+                # side can never be seen (it was 64 of the 240 triangles of a disc).
+                nrm = np.cross(np.subtract(Vr[o + 2], Vr[o]), np.subtract(Vr[o + 1], Vr[o]))
+                out_ = nrm[0] * (x0 + x1) + nrm[2] * (z0 + z1) > 0
+                Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2)] if out_ else [(o, o + 1, o + 2), (o, o + 2, o + 3)]
             mm.add("plate_back", Vr, Tr, UVr)
     for zc in (-hh * 0.28, hh * 0.22):              # clamps around the post, behind the plate
         m.box("steel_galv", [0, 0.0, zc], S.SIGN_POST_D / 2 + 0.008, S.SIGN_POST_D / 2 + 0.008, 0.022)
@@ -332,32 +342,37 @@ BOARD_BACK_SRGB = (126, 128, 128)        # = materials "board_back" colour 0.21/
 
 
 def board(code, w, h):
-    m = Mesh()
+    m, l1 = Mesh(), Mesh()
     y = 0.06
     band = BOARD_BAND.get(code) if code.startswith("OB_") else None
     v0 = band or 0.0
     # face normal +y like the plates (the old winding showed every E-2 / gantry board's grey back to the driver)
-    m.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
-           uv=((1, v0), (1, 1), (0, 1), (0, v0)))   # u mirrored as on the plates
+    # ADR 0236 (budget): LOD1 = face + back sheet (4 triangles); the two rails behind the sheet (24 of the 28
+    # triangles) are not visible from the LOD1 distance (>= 50 m at lodBias 1).
+    for mm in (m, l1):
+        mm.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
+                uv=((1, v0), (1, 1), (0, 1), (0, v0)))   # u mirrored as on the plates
     if band:
         # overhead board with a back band: back sheet + rails sample the band centre (plain grey, ADR 0127)
         buv = (0.5, band / 2)
-        m.quad(f"sign_{code}", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
-               [-w / 2, y - 0.01, -h / 2], uv=(buv,) * 4)
+        for mm in (m, l1):
+            mm.quad(f"sign_{code}", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
+                    [-w / 2, y - 0.01, -h / 2], uv=(buv,) * 4)
         tmp = Mesh()
         for sx in (-1, 1):
             tmp.box("rail", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)
         for V, T, _ in zip(*tmp.prims["rail"]):
             m.add(f"sign_{code}", V, T - T.min(), np.tile(buv, (len(V), 1)))
-        return m, m, None
+        return m, l1, None
     # overhead boards (gantries, "OB_") without a band: plain grey sheet back (ADR 0127), other boards the plate back
-    m.quad("board_back" if code.startswith("OB_") else "plate_back",
-           [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
-           [-w / 2, y - 0.01, -h / 2],
-           uv=((0.05, 0.05), (0.05, 0.20), (0.20, 0.20), (0.20, 0.05)))
+    for mm in (m, l1):
+        mm.quad("board_back" if code.startswith("OB_") else "plate_back",
+                [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
+                [-w / 2, y - 0.01, -h / 2],
+                uv=((0.05, 0.05), (0.05, 0.20), (0.20, 0.20), (0.20, 0.05)))
     for sx in (-1, 1):
         m.box("steel_galv", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)   # rails (Z-profile)
-    return m, m, None
+    return m, l1, None
 
 
 # Signal head variants (ADR 0193, research M66 / Dz.U. 2019 poz. 2311 zał. 3 pkt 3.3.5.6 & rys. 10.28).
@@ -914,6 +929,7 @@ def build_all(sign_codes, boards):
         P[f"lamp_{int(d['h'])}m"] = lamp(d["h"], d["bracket"])
     for kind, hh in LAMP_OLD:
         P[f"lamp_old_{kind}_{hh}m"] = lamp_old(float(hh), kind)
+        P[f"lamp_old_{kind}_led_{hh}m"] = lamp_old(float(hh), kind, led=True)     # ADR 0216: LED retrofit of the family
     P["lamp_arc_9m"] = lamp_arc(9.0)
     P["lamp_arc_9m_double"] = lamp_arc(9.0, double=True)
     # ADR 0133 / 0146: DK8 median row (authored lamp_rows.json). Luminaires LAMP_Y_H_M above the road; in the gap
@@ -956,4 +972,6 @@ def build_all(sign_codes, boards):
     P.update(G3.prototypes())
     from . import masonry_gate as MG            # ADR 0189: brick gate kits registered by masonry_gate.build
     P.update(MG.prototypes())
+    from . import rail_props as RP              # ADR 0217: level-crossing devices, only in regions with the rail stage
+    P.update(RP.prototypes())
     return P

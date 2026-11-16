@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "id": "a0232_downhill",
+  "description": "40 t, 7 % downhill from 75 km/h: coast, endurance lever stage 2, maximum, release, throttle",
+  "spec": "docs/adr/0232 (audio scenario, no physics checks)",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": -7,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 75
+  },
+  "duration": 26,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.0,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 3,
+        "throttle": 0.0,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 2
+      },
+      {
+        "t": 9,
+        "throttle": 0.0,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 5
+      },
+      {
+        "t": 19,
+        "throttle": 0.0,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 21.5,
+        "throttle": 0.6,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      }
+    ]
+  },
+  "checks": []
+}

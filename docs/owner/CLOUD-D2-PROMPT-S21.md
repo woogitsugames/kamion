@@ -1,0 +1,33 @@
+# Zlecenie dla sesji w CHMURZE „D”, runda 2 (do 10 agentów Fable/Opus), s21, 15.11 wieczór
+
+Wklej:
+```
+Runda 2 dla tej sesji. Repo GitHub woogitsugames/kamion. Zasady środowiska jak w rundzie 1: chmura, bez Unity, telefonów i Data/raw; każdy agent jedno zadanie na swojej gałęzi od origin/main (`git fetch` przed startem); subagenci nie tworzą subagentów; Ty NIE scalasz. Możesz mieć do 10 agentów (Fable do kodu i danych, Opus do recenzji i projektów).
+
+NAJPIERW (każdy agent): `git pull`, przeczytaj CLAUDE.md, docs/owner/AGENT-RULES.md, HANDOVER.md (blok „SESJA 21” na dole), docs/11_DECYZJE_WLASCICIELA.md (D63–D68), docs/owner/BACKLOG-S21.md, docs/03, docs/PERFORMANCE_BUDGETS.md oraz dokumenty dziedzinowe swojego zadania.
+
+Uruchamiasz tylko to, co działa bez Unity: pytest (`uv run --project tools/worldgen python -m pytest tests/gis -k <wybrane>`), `dotnet test` dla tools/physics-runner, skrypty Python. Kod C# pisz ostrożnie i z testami EditMode; w raporcie DOKŁADNE komendy dla lidera (build_world, import, visual-qa, EditMode, build APK, pomiar na A16).
+
+NIE dotykaj (inni pracują): Knyszyn i Rynek (region knyszyn — Codex, ADR 0227); generator dróg regionu C i budżet stretch_04 (lokalny budget-fix-s21, 0221); tunel kleeberga (0211); dk65-06…11 i szew 10/11 (lokalny dk65-r4-s21); dk65-02…05 Ełcka/plac budowy (#80 lokalnie); tory w dw671-tykocin-01 (lokalny rail-fix-s21); zadania chmury E (jackknife 0228, wybór regionu 0229 = PR #104, legal 0230 = #103, pierścień regionów 0231, audio 0232); research/codex-refs-s21. ProjectSettings/, Packages/, asmdef, wspólne sceny i prefaby — tylko lider. UWAGA budżet: kamery regionu C są na granicy 2 mln tris High (stretch_04) — każda zmiana w C musi być budżetowo neutralna albo ujemna (podaj szacunek per kamera z generated/streetscape_qa.json).
+Nowe ADR: F1=0234, F2=0235, F3=0236, F4=0237, F5=0238, F6=0239, F7=0240, F8=0241, F9=0242 (F10 bez ADR).
+
+F1 osobne paczki regionów (gałąź regionpacks-0234; D67: „potem ogarniemy z podziałem na oddzielne”). Zaprojektuj i przygotuj dostarczanie regionów jako osobnych paczek do pobrania/doinstalowania (APK bazowy z C + paczki regionów), bez dodawania pakietów do Packages/ (jeśli Addressables/PAD są niezbędne — tylko propozycja w ADR z uzasadnieniem dla lidera). Wariant bez nowych pakietów: AssetBundles budowane przez Game.Editor.Build (osobna komenda), ładowanie z pamięci urządzenia, wersjonowanie i sumy kontrolne, UI pobierania/stanu w menu wyboru regionu z #104. Oszacuj rozmiary paczek z plików _Generated (ESTIMATED). Testy EditMode.
+F2 płynne przejście między kaflami (gałąź streaming-0235, od origin/region-select-0229). Korytarz C → dojlidy/knyszynska → dk65-01…11 → knyszyn-s → knyszyn to osobne sceny. Zaprojektuj i zaimplementuj ładowanie sąsiednich kafli addytywnie w trakcie jazdy (wyzwalacze na granicy, wyładowywanie, floating origin zgodny z istniejącym kodem, zero alokacji GC w pętli jazdy, brak przycięcia przy wczytywaniu — asynchronicznie, z budżetem ms/klatkę). Testy EditMode + scenariusz PlayMode dla lidera. Szwy kafli są w ±0,1 m (ADR 0224, PR #106).
+F3 drogowskazy trasy C (gałąź signs-c-0236): zastosuj research R2 (PR #62 i recenzja w docs/reports/REVIEW-2026-11-15-s21-cloudD-*, gałąź reviews-0225) w generatorze oznakowania (tools/worldgen/streetscape/signs_route.py i powiązane): tablice kierunkowe E-1…E-17 na trasie C wg zdjęć i rozporządzenia (cytuj), treści miejscowości bez marek, położenia z danych. Budżet neutralny.
+F4 chodniki i krawężniki Białegostoku (gałąź kerbs-0237): zastosuj R6 (PR #65): typologia nawierzchni chodników (kostka szara/czerwona, płyty), krawężniki (wysokość, obniżenia przy przejściach i zjazdach), ścieżki rowerowe czerwone — w regionach C i bialystok-dojlidy jako dane/override i reguły generatora. Budżet neutralny; komendy przebudowy C i D dla lidera.
+F5 typologia zabudowy Białegostoku (gałąź typology-0238): zastosuj R4 (PR #64) w tools/worldgen/streetscape/buildings_mesh.py i frontage.py: typy (bloki z wielkiej płyty, kamienice, domy jednorodzinne, pawilony), proporcje, kolory elewacji, dachy, rytm okien — wybór typu z danych BDOT10k/OSM (building, levels, roof). Budżet neutralny lub ujemny w C.
+F6 płoty panelowe na Low (gałąź fences-0239; BACKLOG B-082): mory albo zanik siatki od ~10 m na A16 Low. Popraw shader/materiał płotu (alpha-to-coverage albo ditheredowe zanikanie z dystansem, poprawne mipy alfy z zachowaniem pokrycia), bez zmiany ProjectSettings. Testy materiału EditMode; komendy visual-qa (kamery płotów w C i Dojlidach) i pomiaru A16.
+F7 postrzępione cienie cienkich obiektów na Low (gałąź shadows-0240; B-088): przeanalizuj kod ustawień tierów URP (Game.Editor.Setup.ProjectSetup — konfiguracja jako kod) i shadow casterów; zaproponuj i zaimplementuj w kodzie konfiguracji: wyłączenie cieni dla cienkich elementów na Low (słupki, siatki, przewody), bias/normal bias, rozdzielczość kaskady, ewentualnie contact shadows — z szacunkiem kosztu GPU. Lider zastosuje przez `pwsh scripts/setup-project.ps1` i zmierzy.
+F8 eksperymenty GPU A16 (gałąź gpu-ab-0241; B-113: GPU A16 Low p50 32,1 ms, p95 34,3–34,5 > 33,3 ms). Przygotuj zestaw wariantów A/B jako kod/konfigurację przełączaną parametrem uruchomienia (render scale, MSAA, kopia koloru/głębi, post-processing, odległość cieni, gęstość lasu/impostorów, LOD bias) + skrypt dla lidera, który na A16 robi serię pomiarów (scripts/device-metrics.ps1) przy stałych kamerach i zbiera tabelę. Przeczytaj research cloud2 R8 (mobile GPU A16) i ADR 0106. Nie zmieniaj domyślnych ustawień — tylko przełączniki.
+F9 Dojlidy — rozpoznawalność (gałąź dojlidy-0242): przejdź BACKLOG-S21 i recenzje Dojlid (docs/reports/REVIEW-*dojl*, ARGON-S20-*) i domknij otwarte punkty danych/generatora dla regionu bialystok-dojlidy (bez lasu Krywlany 0187, bez bramy szpitala 0189, bez DDR 0188 — scalone; tylko otwarte resztki). Budżet neutralny.
+F10 stan bramek s21 (gałąź docs/gates-status-s21, Opus): zaktualizuj docs/reports/GATES-STATUS-S20.md → GATES-STATUS-S21.md o wszystko z s20/s21 (GATE-3 A16 af2570fccd G3-A/G3-B, scalenia, D63–D68, korytarz w APK) i docs/owner/BACKLOG-S21.md (statusy: zamknięte/w toku z gałęziami/otwarte). Bez zmian kodu.
+
+ZASADY: commit i push po każdym kroku; nie zmyślaj liczb (źródło, ESTIMATED albo WORKING_VALUE); bez Google Maps, Street View, Earth i 3D Tiles; bez marek i logo; nagłówki HTTP bez nazwy projektu; stopka commitów zgodna z modelem. Na koniec każdego zadania PR (nie draft) z raportem do 20 linii po polsku:
+- co zmienione;
+- testy uruchomione i ich wynik;
+- testy NIEuruchomione;
+- DOKŁADNE komendy dla lidera;
+- co otwarte;
+- „Gotowe do scalenia po weryfikacji lidera: TAK/NIE”.
+NIE scalaj. Na końcu podsumowanie z numerami PR.
+```

@@ -44,6 +44,17 @@ namespace Game.Tests
         }
 
         [Test]
+        public void Problems_FlagHeadingsWithoutText()
+        {
+            // ADR 0230: no empty attribution entries on screen.
+            var p = AttributionDocument.Parse("= A\n== Empty\n== Full\ntext\n= B\n= C\n== Last\n").Problems(null);
+            CollectionAssert.Contains(p, "heading without text: Entry: Empty");
+            CollectionAssert.Contains(p, "heading without text: Section: B");
+            CollectionAssert.Contains(p, "heading without text: Entry: Last");
+            Assert.IsFalse(p.Any(x => x.EndsWith(": Full") || x.EndsWith(": A") || x.EndsWith(": C")));
+        }
+
+        [Test]
         public void Chunk_KeepsTextAndLimit()
         {
             string text = string.Join("\n", Enumerable.Range(0, 400).Select(i => i % 9 == 0 ? "" : new string((char)('a' + i % 26), 1 + i % 5)));
@@ -69,6 +80,11 @@ namespace Game.Tests
         [TestCase("SIL OPEN FONT LICENSE Version 1.1")]
         [TestCase("Unity glTFast copyright © 2023 Unity Technologies and the Unity glTFast authors")]
         [TestCase("TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION")]
+        [TestCase("Bank Danych o Lasach")]
+        [TestCase("pozyskano 14.11.2026")]
+        [TestCase("Open Database License 1.0: opendatacommons.org/licenses/odbl/1-0/")]
+        [TestCase("CC BY-SA 4.0: creativecommons.org/licenses/by-sa/4.0/legalcode.pl")]
+        [TestCase("Mapillary contributors, CC BY-SA 4.0")]
         public void RealText_ShowsRequiredNotice(string needle)
         {
             StringAssert.Contains(needle, Real().VisibleText(Resolve));

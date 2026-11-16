@@ -1,0 +1,24 @@
+{
+  "_comment": "ADR 0230. What the in-game 'Informacje' screen (game/Assets/_Project/UI/Resources/About/attributions.txt) must show. rows: number in the docs/LICENSES.md summary table ('Tabela zbiorcza źródeł') -> exact substrings that must be VISIBLE (not in '#' comments). Every row whose 'Wymagana atrybucja' starts with 'tak'/'j.w.' or names a licence text, and whose 'W buildzie' is not 'nie', must be listed here. always_visible: licence names and URLs required by ODbL 4.3 and CC BY / CC BY-SA 3(a)(1)(c). Read by tools/licenses/tests/test_attributions.py and tools/about-runner/Tests/LicensesCompletenessTests.cs.",
+  "rows": {
+    "1": ["© OpenStreetMap contributors", "Open Database License (ODbL) 1.0", "www.openstreetmap.org/copyright"],
+    "2": ["Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)"],
+    "3": ["Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)", "ortofotomapa"],
+    "5": ["BDOT10k"],
+    "6": ["LoD2", "CC BY 4.0"],
+    "7": ["LoD1", "CC BY 4.0"],
+    "8": ["© OpenStreetMap contributors", "Główny Urząd Geodezji i Kartografii"],
+    "18": ["research G3 s8-signs", "OpenStreetMap contributors", "Mapillary contributors", "ODbL 1.0"],
+    "28": ["The Inter Project Authors", "SIL OPEN FONT LICENSE Version 1.1", "Reserved Font Name"],
+    "32": ["Unity glTFast copyright © 2023 Unity Technologies and the Unity glTFast authors",
+           "TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION"],
+    "40": ["Bank Danych o Lasach", "www.bdl.lasy.gov.pl", "plan urządzenia lasu 2017–2026", "stan 2023", "pozyskano 14.11.2026"]
+  },
+  "always_visible": [
+    "Open Database License 1.0: opendatacommons.org/licenses/odbl/1-0/",
+    "CC BY 4.0: creativecommons.org/licenses/by/4.0/legalcode.pl",
+    "CC BY-SA 4.0: creativecommons.org/licenses/by-sa/4.0/legalcode.pl",
+    "Mapillary contributors, CC BY-SA 4.0"
+  ],
+  "forbidden_visible": ["UNVERIFIED", "WARUNKOWO", "TODO", "[ADRES", "LEGAL_REVIEW", "WORKING_VALUE"]
+}
