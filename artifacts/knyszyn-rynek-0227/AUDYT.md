@@ -273,4 +273,6 @@ Szacunki CPU edytora z instancjami przed SRP: High maksimum **1 250 321 tris** i
 
 W diagnostycznym TSV dla bieżącej sceny `dk65-inlet-south` suma jest zgodna z `stats`: **266 draw calls / 158 591 tris** MeshRenderer oraz **38 draw calls / 6 418 tris** instancji. Rozbicie MeshRenderer: `Region` **203** draws, ciągnik **37**, naczepa **26**. W `Region` warstwy `buildings_lod1` i `buildings` mają odpowiednio **135** i **20** draws. To cel dalszej analizy optymalizacji, a nie gwarancja oszczędności lub pomiar GPU; wynik nie zastępuje oceny całej sceny względem before.
 
-Pełny GIS i EditMode R29 trwają; ich końcowe wyniki **OPEN**.
+EditMode R29 zakończył się wynikiem **955 passed, 0 failed, 2 skipped** (`artifacts/tests/editmode-20261116-105141.xml`; `editmode-r29.done`: OK). Własną zmianę materiału `M_Sky` po teście przywrócono. Pełny GIS R29 trwa; jego końcowy wynik **OPEN**.
+
+Analiza materiałów wskazuje na potencjał zmniejszenia liczby szacowanych draw calls o **12**: pięć unikalnych par materiałów Unity `far_office` / `ribbon` ma identyczną zawartość poza nazwą. To hipoteza diagnostyczna, nie potwierdzona oszczędność; konieczny pomiar A/B bez pogorszenia obrazu i funkcji, a wynik nie jest gwarantowany.
