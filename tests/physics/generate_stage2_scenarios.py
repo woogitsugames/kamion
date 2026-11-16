@@ -192,7 +192,23 @@ for surf, mu in [("dry", "dry_asphalt"), ("wet", "wet_asphalt")]:
            ground={"gradePercent": 0, "surface": mu}, initial={"speedKmh": 80, "gear": 11},
            overrides={"absEnabled": abs_on})
 
-sc("brake_response_static", "Stationary vehicle, full service brake application (response time as in R13, vehicle at rest)", "docs/04 s6.5 / s2.8", 3,
+# 50 -> 0 km/h (urban speed limit for HGVs in Poland), dry, ABS on: same R13 type-0 N3 formula as the 80 km/h case,
+# evaluated at 50 km/h (an extrapolation below the 60 km/h test speed, like the 61.2 m bound at 80 km/h).
+# Gear 10 = ~1120 rpm at 50 km/h (ratio 1.30 x final 3.40, rolling radius 0.524 m), inside the S1 economy band.
+sc("brake_50_0_dry_abs_comb", "50->0 km/h full service brake, dry asphalt, ABS on", "docs/04 s6.5", 12,
+   {"type": "timeline", "keys": [key(0), key(0.5, brake=1)]},
+   list(stable) + [
+       chk("stop_distance_m", mn=15, mx=26.7, status=S,
+           source="upper bound = 0.15 v + v^2/130 at 50 km/h = 26.7 m: UN R13 Annex 4 type-0 N3 formula (GRRF-56-3; test speed 60 km/h, 50 km/h is an extrapolation); lower bound ~ v^2/(2 x 0.8 g) = 12.3 m + build-up (WORKING)"),
+       chk("mfdd_ms2", mn=5.0, mx=8.0, status=S, source="MFDD (R13 Annex 4 definition); 5.0 m/s^2 = N3 type-0 minimum dm (GRRF-56-3); <= mu g"),
+       chk("max_lateral_deviation_m", mx=0.5, source="straight-line stability under ABS"),
+       chk("max_articulation_deg", mx=2.0, source="no trailer swing under ABS braking on a straight"),
+       chk("rear_lock_time_s", mx=0.03, source="no tractor drive-axle lock at brake onset (EBS load sensing + decel-threshold ABS)"),
+       chk("trailer_lock_time_s", mx=0.05, source="trailer ABS 2S/2M prevents lock")],
+   variants=COMB, ground={"gradePercent": 0, "surface": "dry_asphalt"}, initial={"speedKmh": 50, "gear": 10},
+   overrides={"absEnabled": True})
+
+sc("brake_response_static","Stationary vehicle, full service brake application (response time as in R13, vehicle at rest)", "docs/04 s6.5 / s2.8", 3,
    {"type": "timeline", "keys": [key(0, sel="N"), key(0.5, brake=1, sel="N")]},
    [chk("brake_response_s", arg=0, mx=0.6, status=S, source=f"{R13} 4.1.1: braking force on the least favourable axle within 0.6 s (criterion here: 75 % of the final chamber pressure; Annex 6 method not verified)"),
     chk("brake_response_s", arg=1, mx=0.6, status=S, source=f"{R13} 4.1.1"),
@@ -442,14 +458,13 @@ sc("kerb_step_27cm_42kmh_comb",
     chk("max_pos_jump_m", mx=1e-6, source="no teleport"),
     chk("max_fz_ratio", mn=5.2, mx=7.5, source="regression guard on measured 6.50 (phone 6.8x); a 27 cm step is above the tyre envelope a vertical-ray contact can climb smoothly"),
     chk("max_wheel_airtime_s", mx=0.5, arg=1, source="regression guard on measured 0.42 s (phone: both front wheels unloaded ~0.4 s)"),
-    chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds")],
+    chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds"),
+    chk("max_body_penetration_m", mx=0.05, source="ADR 0165: bumper strike on the 27 cm kerb crushes the bumper cover <= 5 cm (4 Hz contact, impact ~3.5 m/s limited by the jerk ceiling); measured 0.038 m (tractor Bumper corner, t 2.88 s)")],
    variants=["laden40"], initial={"speedKmh": 42},
-   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [kerb_box(0.27, 30, 33)]},
-   # ADR 0158 Open: with the chassis colliders the right bumper corner (0.35 m above the road) strikes the road at
-   # t ~2.83 s (11.5 cm geometric overlap without contact) -> max_dv_step_ms 0.755 m/s, kingpin error 7.9 mm (Unity
-   # PlayMode on the same event: 0.968 m/s, 28 body contacts). These guards were authored without colliders; the
-   # strike vs. ceiling decision belongs to the leader/owner, so this scenario keeps running without them for now.
-   overrides={"bodyContact": False})
+   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [kerb_box(0.27, 30, 33)]})
+# ADR 0158 Open (bumper strikes the road with the chassis colliders, scenario ran with bodyContact off) was closed by
+# ADR 0165 (compliant body contact): the committed scenario runs WITH body contact and guards the bumper penetration.
+# ADR 0245: the generator now emits exactly that committed scenario (before, it still wrote the 0158 override).
 
 sc("speed_bump_comb","Speed bump 7 cm x 0.5 m across the lane at 15 km/h", "docs/04 s6.11", 12,
    {"type": "speedhold", "targetKmh": 15},

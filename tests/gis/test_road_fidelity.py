@@ -10,7 +10,6 @@ move the target into the hard asserts. BASELINE is the current state; it may onl
 """
 from __future__ import annotations
 
-import hashlib
 import json
 
 import pytest
@@ -37,19 +36,65 @@ def qa():
     return json.loads(QA.read_text(encoding="utf-8"))
 
 
-def _sha(p):
-    # CRLF-normalised, same as tools/worldgen/fidelity/run.py sha_file
-    return hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
-
-
 def test_report_not_stale(qa):
-    """The report must describe the current graph, overrides, route and road generator."""
-    stale = []
-    for k, v in qa["inputs_sha256"].items():
-        p = (REGION_DIR / k) if "/" not in k else (REPO / k)
-        if not p.exists() or _sha(p) != v:
-            stale.append(k)
+    """The report must describe the current graph, overrides, route and road generator (ADR 0245: tracked modules
+    only, CRLF-normalised, an empty module equals a missing one; a tracked module the report does not list = stale).
+    Rebuilding the report needs Data/raw (orthophoto), so a cloud session cannot refresh it - the hashes do not
+    depend on Data/raw, only on files in git."""
+    from fidelity import inputs as FI
+    stale = FI.stale(qa["inputs_sha256"], REGION_DIR, REPO)
     assert not stale, f"fidelity_qa.json is stale for {stale}: rerun tools/worldgen/fidelity/run.py"
+
+
+def test_stale_check_rules(tmp_path):
+    """The staleness rules themselves, on a throw-away tree (no Data/raw needed)."""
+    import hashlib
+
+    from fidelity import inputs as FI
+    (tmp_path / "a.json").write_bytes(b'{"x":\r\n1}')
+    rec = {"a.json": FI.sha_file(tmp_path / "a.json"), "tools/worldgen/roads/gone.py": FI.EMPTY_SHA256}
+    assert rec["a.json"] == hashlib.sha256(b'{"x":\n1}').hexdigest()                   # CRLF == LF
+    assert FI.stale(rec, tmp_path, tmp_path) == []                       # empty module missing = no change
+    bad = {**rec, "tools/worldgen/roads/x.py": "0" * 64}
+    assert FI.stale(bad, tmp_path, tmp_path) == ["tools/worldgen/roads/x.py"]     # a real module missing = stale
+    (tmp_path / "a.json").write_bytes(b'{"x":2}')
+    assert FI.stale(rec, tmp_path, tmp_path) == ["a.json"]
+
+
+def test_stale_check_ignores_untracked_modules(tmp_path):
+    """s21: an untracked WIP module of an unmerged branch (roads/tunnels.py) must not make a committed report stale
+    nor leak into a new one; a tracked module missing from the report is stale."""
+    import shutil
+    import subprocess
+
+    from fidelity import inputs as FI
+    if shutil.which("git") is None:
+        pytest.skip("git not available")
+    roads = tmp_path / FI.ROADS_DIR
+    roads.mkdir(parents=True)
+    (roads / "a.py").write_text("A = 1\n")
+    git = ["git", "-C", str(tmp_path), "-c", "user.name=t", "-c", "user.email=t@t"]
+    subprocess.run(git + ["init", "-q"], check=True)
+    subprocess.run(git + ["add", "."], check=True)
+    for f in FI.REGION_FILES:
+        (tmp_path / f).write_text("{}\n")
+    rec = FI.compute(tmp_path, tmp_path)
+    assert set(rec) == set(FI.REGION_FILES) | {f"{FI.ROADS_DIR}/a.py"}
+    (roads / "wip.py").write_text("X = 2\n")                              # untracked: not part of the generator
+    assert FI.stale({**rec, f"{FI.ROADS_DIR}/wip.py": FI.EMPTY_SHA256}, tmp_path, tmp_path) == []
+    assert FI.compute(tmp_path, tmp_path) == rec
+    subprocess.run(git + ["add", "."], check=True)                        # now tracked: report must list it
+    assert FI.stale(rec, tmp_path, tmp_path) == [f"{FI.ROADS_DIR}/wip.py"]
+
+
+def test_report_lists_every_tracked_generator_module():
+    """run.py and the test agree on the module set: the writer hashes exactly the tracked modules."""
+    from fidelity import inputs as FI
+    mods = FI.generator_modules(REPO)
+    if mods is None:
+        pytest.skip("git not available: tracked generator modules unknown")
+    assert "tools/worldgen/roads/build_world.py" in mods and all(m.endswith(".py") for m in mods)
+    assert set(FI.compute(REGION_DIR, REPO)) == set(FI.REGION_FILES) | set(mods)
 
 
 def test_osm_snapshot_recorded(qa):
