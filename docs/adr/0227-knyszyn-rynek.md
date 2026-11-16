@@ -53,3 +53,6 @@ Objętościowa próba małych kart nie zniknęła w badanych kierunkach, ale daw
 
 ## Iteracja r11 i porównywalność budżetu
 Po scaleniu ADR 0219 poprawne dane far-field pokrywają Knyszyn; w kadrach Rynku 03–08 nie widać istotnej zmiany poza małym fragmentem tła. Cztery warianty i pary wykonane. High max 1 250 405 tris; Low max wzrost wspólnej kamery +63 draws i +37788 tris z instancjami względem pierwotnego baseline. Jednak ADR 0262 zmienił start ciężarówki 12→90 m: w problematycznym kadrze pojawiła się pełna naczepa zamiast szarej atrapy. Części kosztu nie rozdzielono pomiarem; nie przypisywać całej różnicy far-field ani uznać budżetu Low za spełniony.
+
+## Iteracja r12
+Dwie lokalne lipy 3D mają pełniejsze sylwetki bez centralnego szwu, lecz ciemne grube kępy pozostają FAIL. W porównaniu z tym samym stanem r11 draws bez zmian, ale na wspólnej kamerze +2044 tris Low i High; High max 1 252 449. R13 przywraca poprzednie Low, zachowuje trial High i dodaje przybliżenia pomników; przejście LOD wymaga oceny.
