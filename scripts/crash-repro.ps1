@@ -31,13 +31,13 @@ param(
     [double]$FocusPeriod = 2,
     [string]$OutDir = '',
     [string]$Label = '',
+    [double]$WaitMinutes = 15,
     [switch]$NoSlot
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $mainRoot = (git -C $root worktree list --porcelain | Select-Object -First 1) -replace '^worktree ', ''
 if (-not (Test-Path $Exe)) { throw "no exe: $Exe" }
-if (Get-Process Kamion -ErrorAction SilentlyContinue) { Write-Host 'Kamion.exe already running (owner?) - not starting'; exit 3 }
 $ts = Get-Date -Format 'yyyyMMdd-HHmmss'
 if (-not $Label) { $Label = "$Api-$Mode-$Exit" + ($(if ($FocusSeconds -gt 0) { '-focus' } else { '' })) }
 if (-not $OutDir) { $OutDir = Join-Path $root "artifacts/crash-diag-s23/repro/$ts-$Label" }
@@ -53,7 +53,7 @@ Add-Type -Namespace CrashRepro -Name W -MemberDefinition @'
 '@
 
 $owner = "crash-diag-s23"
-if (-not $NoSlot) { pwsh -NoProfile -File (Join-Path $mainRoot 'scripts/unity-slot.ps1') -Acquire -Owner $owner | Out-Null }
+if (-not $NoSlot) { pwsh -NoProfile -File (Join-Path $mainRoot 'scripts/unity-slot.ps1') -Acquire -Pool heavy -Owner $owner | Out-Null }
 $rows = @()
 try {
     for ($i = 1; $i -le $Runs; $i++) {
@@ -68,6 +68,10 @@ try {
         if ($Width -and $Mode -ne 'windowed') { $a += @('-screen-width', "$Width", '-screen-height', "$Height") }
         $total = $LiveSeconds + $FocusSeconds
         if ($Exit -eq 'quit') { $a += @('-shot', (Join-Path $OutDir ("run{0:D2}.png" -f $i)), '-shot_t', "$([math]::Max(1, $total - 3))", '-quit_t', "$total") }
+        # a clean run: no other player on the GPU (other agents / the owner); never close them - wait up to -WaitMinutes
+        $waitEnd = (Get-Date).AddMinutes($WaitMinutes)
+        while ((Get-Process Kamion -ErrorAction SilentlyContinue) -and (Get-Date) -lt $waitEnd) { Start-Sleep -Seconds 10 }
+        $otherKamionStart = @(Get-Process Kamion -ErrorAction SilentlyContinue).Count
         $unityCount = @(Get-Process Unity -ErrorAction SilentlyContinue).Count
         $vram = (& nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader 2>$null) -join ' '
         $t0 = Get-Date
@@ -80,6 +84,8 @@ try {
             Start-Sleep -Milliseconds 500
         }
         $loaded = (Get-Date)
+        $loadedOk = (Test-Path $log) -and (Select-String -Path $log -Pattern '^\[START\] region=' -Quiet)
+        $otherKamionMid = @(Get-Process Kamion -ErrorAction SilentlyContinue | Where-Object Id -ne $p.Id).Count
         $p.Refresh(); $focusedAtLoad = ($p.MainWindowHandle -ne [IntPtr]::Zero) -and ([CrashRepro.W]::GetForegroundWindow() -eq $p.MainWindowHandle)
         if ($FocusSeconds -gt 0 -and -not $p.HasExited) {
             $end = $loaded.AddSeconds($FocusSeconds); $n = 0
@@ -100,6 +106,7 @@ try {
             if ($stay.TotalSeconds -gt 0 -and -not $p.HasExited) { Start-Sleep -Seconds $stay.TotalSeconds }
             if (-not $p.HasExited) { $p.Refresh(); $p.CloseMainWindow() | Out-Null }
         }
+        if (-not $loadedOk -and -not $p.HasExited) { Write-Host "run $i : world not loaded (unfocused player pauses: runInBackground 0) - killing our own player"; $p.Kill() }
         if (-not $p.WaitForExit(90000)) { Write-Host "run $i hung - killing our own player $($p.Id)"; $p.Kill(); $p.WaitForExit() }
         $code = $p.ExitCode
         $txt = if (Test-Path $log) { Get-Content $log -Raw } else { '' }
@@ -109,18 +116,20 @@ try {
         $apiSeen = if ($txt -match "api='([^']+)'") { $Matches[1] } else { '?' }
         $row = [pscustomobject]@{
             run = $i; label = $Label; api = $apiSeen; focusedAtLoad = $focusedAtLoad; mode = $Mode; exit = $Exit; exitCode = $code; crash = $crash; crashAtExit = $atExit
-            kind = $where; seconds = [int]((Get-Date) - $t0).TotalSeconds; otherUnity = $unityCount; gpuBefore = $vram
+            kind = $where; seconds = [int]((Get-Date) - $t0).TotalSeconds; otherUnity = $unityCount; otherKamionStart = $otherKamionStart; otherKamionMid = $otherKamionMid; gpuBefore = $vram
+            valid = ($loadedOk -and $focusedAtLoad -and $otherKamionStart -eq 0 -and $otherKamionMid -eq 0)
         }
         $rows += $row
         $row | Format-List | Out-String | Write-Host
-        $rows | Export-Csv (Join-Path $OutDir 'runs.csv') -NoTypeInformation
+        $rows | Export-Csv (Join-Path $OutDir 'runs.csv')
         Start-Sleep -Seconds 3
     }
 }
 finally {
     if (Test-Path $backup) { Copy-Item $backup $settings -Force }
-    if (-not $NoSlot) { pwsh -NoProfile -File (Join-Path $mainRoot 'scripts/unity-slot.ps1') -Release -Owner $owner | Out-Null }
+    if (-not $NoSlot) { pwsh -NoProfile -File (Join-Path $mainRoot 'scripts/unity-slot.ps1') -Release -Pool heavy -Owner $owner | Out-Null }
 }
-$k = @($rows | Where-Object crash).Count
-"RESULT label=$Label crashes=$k/$($rows.Count) atExit=$(@($rows | Where-Object crashAtExit).Count) out=$OutDir"
+$v = @($rows | Where-Object valid); $k = @($v | Where-Object crash).Count
+"RESULT label=$Label valid=$($v.Count)/$($rows.Count) crashes(valid)=$k atExit(valid)=$(@($v | Where-Object crashAtExit).Count) crashes(all)=$(@($rows | Where-Object crash).Count) out=$OutDir"
+
 
