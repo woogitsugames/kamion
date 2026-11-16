@@ -12,9 +12,9 @@ ustalić z kodu, oznaczono **UNVERIFIED**. Liczby wydajności i wymagań to **WO
 
 | Plik | Co robi |
 |---|---|
-| `Kamion.exe` | Gra. Bez argumentów startuje w **pełnym ekranie** (projekt: `fullscreenMode: 1` = okno bez ramki na cały ekran), chyba że plik ustawień mówi inaczej (sekcja 3). |
-| `Kamion-okno.cmd` | Start w oknie 1600 × 900, do menu startowego. |
-| `Kamion-<region>.cmd` | Jeden plik na **każdy region, którego scena jest w buildzie** (lista z logu buildu), np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`, `Kamion-dk65-05.cmd`. Okno 1600 × 900 i od razu `-scene <region>`. Bez strumieniowania. |
+| `Kamion.exe` | Gra. Bez argumentów startuje w **pełnym ekranie bez ramki** w natywnej rozdzielczości monitora (ProjectSetup.ApplyStandaloneWindowSettings), chyba że plik ustawień mówi inaczej (sekcja 3). Alt+Enter przełącza pełny ekran / okno; okno można powiększać myszą. Uwaga: Unity pamięta ostatni tryb okna — jeśli po starszym buildzie gra otwiera się w oknie, naciśnij raz Alt+Enter. |
+| `Kamion-okno.cmd` | Start w oknie 1600 × 900 (jedyny launcher wymuszający okno), do menu startowego. |
+| `Kamion-<region>.cmd` | Jeden plik na **każdy region, którego scena jest w buildzie** (lista z logu buildu), np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`, `Kamion-dk65-05.cmd`. Tryb ekranu jak `Kamion.exe` (pełny ekran bez ramki) i od razu `-scene <region>`. Bez strumieniowania. |
 | `Kamion-korytarz.cmd` | **Ciągła jazda** (sekcja 1.4): pełny ekran bez ramki, start w regionie knyszyn, `-stream 1`. Powstaje tylko, gdy w buildzie są regiony `knyszyn` **i** `knyszyn-s`. |
 | `build-id.json` | Skrót zawartości `Kamion_Data` — gra pokazuje go w menu, w „Informacjach” i w logu `[BOOT]`; po nim rozpoznaje się build. |
 | `Kamion.exe.sha256`, `build.json` | Metadane buildu (suma exe, liczba plików, rozmiar). Suma exe nie identyfikuje buildu (exe to ten sam launcher Unity w każdym buildzie). |
