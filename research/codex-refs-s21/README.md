@@ -6,13 +6,13 @@ Ciągły zbiór dla generatorów świata i ciężarówki. Izolowany worktree, ga
 |---|---|---:|
 | 1 Lampy M59-FIX | [01-lampy](01-lampy/README.md) | 65 |
 | 2 Brud M61-FIX | [02-brud](02-brud/README.md) | 35 |
-| 3 Knyszyn | [03-knyszyn](03-knyszyn/README.md) | 53 |
+| 3 Knyszyn | [03-knyszyn](03-knyszyn/README.md) | 55 |
 | 4 Korytarz DK65 | [04-dk65](04-dk65/README.md) | 40 |
-| 5 Linia kolejowa38 | [05-kolej38](05-kolej38/README.md) | 23 |
-| 6 Pierścień regionów | [06-region-ring](06-region-ring/README.md) | 46 |
-| 7 Białystok/Dojlidy | [07-bialystok-dojlidy](07-bialystok-dojlidy/README.md) | 26 |
+| 5 Linia kolejowa38 | [05-kolej38](05-kolej38/README.md) | 25 |
+| 6 Pierścień regionów | [06-region-ring](06-region-ring/README.md) | 48 |
+| 7 Białystok/Dojlidy | [07-bialystok-dojlidy](07-bialystok-dojlidy/README.md) | 30 |
 
-Stan liczb po f415174f8, 16.11.2026; SOURCED lokalne manifesty. Podkatalogi kolejnych rund zawierają własne README, manifesty, dowody i odrzucenia. Nie sumować ich wierszy z manifestem głównym jako niezależnych zdjęć. Aliasy, porównania i powtórne oglądy nie zwiększają liczby ekspozycji.
+Stan liczb po 0e408fbba, 16.11.2026; SOURCED lokalne manifesty. Podkatalogi kolejnych rund zawierają własne README, manifesty, dowody i odrzucenia. Nie sumować ich wierszy z manifestem głównym jako niezależnych zdjęć. Aliasy, porównania i powtórne oglądy nie zwiększają liczby ekspozycji.
 
 SOURCED wymaga konkretnego źródła; ESTIMATED oznacza oszacowanie, UNVERIFIED brak potwierdzenia. Każdy opis wizualny wynika z oglądu, data publikacji nie zastępuje ekspozycji. Fotometria, geometria, stan świecenia, pora dnia i zastosowanie części mają oddzielne dowody.
 

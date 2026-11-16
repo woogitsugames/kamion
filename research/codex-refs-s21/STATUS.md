@@ -1,16 +1,16 @@
 # Status referencji codex-refs-s21
 
-Stan po `f415174f8`, 16.11.2026. Cel ciągły pozostaje aktywny. Gałąź `research/codex-refs-s21`, [PR100](https://github.com/woogitsugames/kamion/pull/100), bez scalania.
+Stan po `0e408fbba`, 16.11.2026. Cel ciągły pozostaje aktywny. Gałąź `research/codex-refs-s21`, [PR100](https://github.com/woogitsugames/kamion/pull/100), bez scalania.
 
 | Pakiet | Rekordy głównego manifestu | Co oznacza liczba |
 |---|---:|---|
 | 01 lampy | 65 | Także przednie, pomocnicze i niekwalifikowane referencje. |
 | 02 brud | 35 | 33 kadry: 14 lokalnych i 19 link-only, oraz 2 dokumenty. |
-| 03 Knyszyn | 53 | Różne daty; zdjęcia właściciela wyłącznie jako obserwacje tekstowe. |
+| 03 Knyszyn | 55 | Różne daty; zdjęcia właściciela wyłącznie jako obserwacje tekstowe. |
 | 04 DK65 | 40 | Zdjęcia, ortofoto, dokumenty i jeden rekord BDL. |
-| 05 kolej 38 | 23 | Dokumenty i kadry nie tworzą automatycznie mapowania lokalnego przejazdu. |
-| 06 pierścień | 46 | Różne miasta, daty i stopnie identyfikacji obiektów. |
-| 07 Białystok/Dojlidy | 26 | Także historyczne odniesienia i powtórne oglądy. |
+| 05 kolej 38 | 25 | Dokumenty i kadry nie tworzą automatycznie mapowania lokalnego przejazdu. |
+| 06 pierścień | 48 | Różne miasta, daty i stopnie identyfikacji obiektów. |
+| 07 Białystok/Dojlidy | 30 | Także historyczne odniesienia i powtórne oglądy. |
 
 SOURCED: lokalne główne manifesty. Liczby nie oznaczają spełnienia progów FIX. Wierszy podkatalogów nie sumujemy z głównymi jako nowych ekspozycji.
 
@@ -58,8 +58,22 @@ Region: Bernardyni w Tykocinie to jeden kompleks w dwóch kadrach2025, NCND tylk
 
 Kontrola po f415174f8: **600 poprawnych śledzonych JSON,95 rastrów≤800px,96 istniejących lokalnych ścieżek głównych manifestów,0plików>5MB**. Główne ID unikalne. Zakres diff wobec7f830369c wyłącznie research/codex-refs-s21 i docs/LICENSES.md. Legalne raw pozaGit; media/firmy wyłącznie link-onlyARR; NCND tylko linki; zdjęcia właściciela bez kopii. Bez Unity/adb/kodu gry.
 
-Commons: dwa ograniczone pojedyncze API200, bez nowych obrazów; Flickr nowe pobraniaSTOP. Jedno zawieszone własne git-HTTPS przerwano po weryfikacji procesu; ponowny push zakończył się poprawnie, bez dotykania innych sesji. Live zapisano07:04:54Bruksela, następny około08:05.
+Commons: dwa ograniczone pojedyncze API200, bez nowych obrazów; Flickr nowe pobraniaSTOP. Jedno zawieszone własne git-HTTPS przerwano po weryfikacji procesu; ponowny push zakończył się poprawnie, bez dotykania innych sesji. Ostatni live zapisano07:57:13Bruksela, następny około08:57.
 
 Gotowe do scalenia po recenzji lidera: **NIE**. R69/R71 brudu, R18 nawierzchni, R22/23 modeli i R16 zamku odebrane. R59 klosz Krone to negatywny odczyt, bez nowej referencji. Następne: nowe fizyczne E na tylnych lampach, sąsiednia bryła Rynku i elewacje przemysłowe Białegostoku. Wyniki robocze nie zwiększają liczników przed odbiorem.
 
 Aktualizacja16.11.2026 po f415174f8: R6 dodaje pięć warunków testu z publikacji2010 (root s1/8/9/23), nie rytm drogowy. R75 HCT: nowy mocny brud+śnieg, lecz A_PENDING_TYPE_ONLY (sprzęg/wózek niepewny), więc A16/B1/zimaA3/EuropaA2 bez wzrostu. R72/73 negatywne oglądy, R74 Nofima nadal tylko typ UNVERIFIED. R26 orto dk65-09 pokazuje pasy i korony, nie potwierdza rowu/przepustu/zjazdu; data nalotu nieznana. PLK R19 opisuje mechanizm wyszukania, bez nowego lokalnego ID. Region R17 to zwykły wlot2017 z czerwonymi poręczami, nie udowodnione rondo. Brzeska R20 pozostaje luką po ograniczonym UI. Goniec3/2020 R24 ma1 AUX robót fontanny, bez finalnych dysz/krat i bez awansu głównego manifestu.
+
+## Odbiór 16.11.2026, 08:19 Bruksela
+
+SOURCED [główne manifesty i kontrola snapshot0e408fbba]: 65/35/55/40/25/48/30 rekordów kolejno01–07. 628 poprawnych śledzonych JSON,97 rastrów≤800px,98 istniejących lokalnych ścieżek w głównych manifestach,0 braków/duplikatów głównychID/plików>5MB. Zakres diff wyłącznie katalog referencji i docs/LICENSES.md. Ta kontrola plików nie zastępuje recenzji wizualnej.
+
+03 R25: drugi ID Rynek2, LoD1 measuredHeight5,98m SOURCED i zakresLoD2 7,62m ESTIMATED to różne metryki; źródłoALS2016, nie porównanie kolejnych przebudów. Formalny join adresowy UNVERIFIED. R26: nowa ekspozycja znanego domu Kościelna6, HenrykBorawski11.06.2012, CC BY-SA3.0. Root obejrzał oryginał i miniaturę800×600; oryginał4000×3000 pozaGit,0 nowych obiektów.
+
+05 R20: pięć norm i jeden dokumentG2/G3/G4, root s72/73/510/511. 440/600 to cały znakG2;360 nie jest pełną szerokością. 1400 biegnie wzdłuż ramieniaG3, nie poziomej szerokościX. Jednostki rysunku UNVERIFIED, bez domyślnego mm. R21: jeden historyczny obraz PLK Ełk, SzymonGrochowski, publikacja10.12.2021; tory/podsypka/kratownice, root obejrzał. Bez dowodu zasilenia, napięcia, lokalnego przejazdu lub stanu2026.
+
+06 R18: dwa nowe ujęcia jednego alumnatuTykocin, stan2016 według podpisów NID, NCND3.0PL wyłącznie linki. Pierwszy AUX obejmuje odległy niski budynek po lewej kościoła, drugi pokazuje długą elewację i zaokrągloną część. Root oba obejrzał; bez metrów/GPS/stanu2026.
+
+07 R22/R23: po dwa indywidualnie obejrzane kadry Bravilor i Rosti, ARR wyłącznie linki, root4/4. **Konflikt źródłowy:** główne teksty obu realizacji Unibep powtarzają Myśliwską18 i dostęp odKuronia. Nie określono przyczyny powtórzenia ani wspólnej parceli. Niezależne strony operatorów wskazują BravilorJackaKuronia2 oraz RostiMyśliwska18; cytowane dokładne sekcje w source-conflict.json. CzytelneBRAVILOR i numer18 to odrębne dowody wizualne; formalny join doP11/B-044 pozostaje UNVERIFIED. Żebrowania biuraRosti nie przenosić na główną halę.
+
+Negatywne kontrole: Pegas nie daje czytelnego fizycznegoE; DEKRA ma śnieg, ale brak zamkniętej pary drzwi i pewnego filmu; EłckaR28 nie daje pewnej wiaty/D-15/zatoki. 0 nowegoPASS/A/B/AUX z tych kontroli. A16/B1/zimaA3/Europa-roadA2 oraz lampy5PASS+1warunkowy/ON0/noc0 bez zmian. Cel aktywny, trzej agenci pracują nad kolejnymi lukami. Gotowe do scalenia po recenzji lidera: NIE.
