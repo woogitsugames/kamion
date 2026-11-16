@@ -237,6 +237,8 @@ namespace Game.Gameplay
                 SafetyNet.bootstrap = this;
                 SafetyNet.vehicle = vehicle;
                 SafetyNet.region = regionRoot;
+                // ADR 0235/0273 §10: the ONLY streaming hook here - additive tile streaming, opt-in with launch argument stream=1.
+                Game.World.Streaming.WorldStreamer.TryInstallFromLaunch(gameObject, regionRoot, vehicle.transform, vehicle.Body, platform.GetLaunchArgument("stream"), SafetyNet.SafePoses, SafetyNet.safeMinAge, RouteDriver.Offset);
             }
             // Region start (menu or adb scene=...): one log line with region, route distance, local point and road (ADR 0229).
             string menuRegion = StartRequest.ConsumeRegion();

@@ -141,3 +141,15 @@ def test_csharp_reader_agrees_with_the_writer():
     assert f'BuildIdFileName = "{pb.BUILD_ID}"' in cs
     assert f"ContentHashLength = {pb.SHORT}" in cs
     assert '\\"contentHash\\"' in cs
+
+
+def test_corridor_launcher_only_with_knyszyn_and_knyszyn_s(tmp_path):
+    """int-stream-s23: Kamion-korytarz.cmd = knyszyn + streaming, borderless full screen."""
+    b = tmp_path / "a"; b.mkdir()
+    written, _ = pb.write_launchers(b, ["knyszyn", "dk65-11"])
+    assert "Kamion-korytarz.cmd" not in written
+    b2 = tmp_path / "b"; b2.mkdir()
+    written, _ = pb.write_launchers(b2, ["knyszyn-s", "knyszyn"])
+    assert written[-1] == "Kamion-korytarz.cmd"
+    k = (b2 / "Kamion-korytarz.cmd").read_bytes().decode("ascii")
+    assert k.startswith("@echo off\r\n") and "-scene knyszyn -stream 1 %*" in k and "-window-mode borderless" in k

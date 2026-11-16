@@ -51,5 +51,15 @@ namespace Game.World
             originShift += newOrigin;
             transform.position -= newOrigin;
         }
+
+        /// <summary>
+        /// Places the root for the streamer's world anchor (ADR 0235, <c>Game.World.Streaming.TilePlacement</c>): position and
+        /// accumulated shift set together from values computed in double, so repeated shifts do not drift.
+        /// </summary>
+        public void PlaceAt(Vector3 position, Vector3 shift)
+        {
+            originShift = shift;
+            transform.position = position;
+        }
     }
 }

@@ -46,6 +46,12 @@ MANIFEST = "Kamion_Data.sha256"     # full manifest, build metadata (not shipped
 SHORT = 12                          # Game.Core.BuildInfo.ContentHashLength
 WINDOW_ARGS = "-screen-fullscreen 0 -screen-width 1600 -screen-height 900"   # ProjectSettings default is fullscreen (ADR 0261)
 WINDOW_LAUNCHER = "Kamion-okno.cmd"
+# Continuous drive on the streamed corridor (ADR 0273 §7, int-stream-s23): borderless full screen, start in knyszyn, the
+# neighbour tiles stream in (-stream 1). A -screen-* argument makes the game skip the screen mode of the settings file.
+# Written only when knyszyn and its corridor neighbour knyszyn-s are in the build.
+CORRIDOR_LAUNCHER = "Kamion-korytarz.cmd"
+CORRIDOR_NEEDS = ("knyszyn", "knyszyn-s")
+CORRIDOR_TEXT = '@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 1 -window-mode borderless -scene knyszyn -stream 1 %*\r\n'
 EXCLUDED_DIR_GLOBS = ("*_DoNotShip", "*_ButDontShipItWithYourGame")
 EXCLUDED_FILE_GLOBS = ("*.pdb",)
 REGION_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")   # catalog ids; anything else never reaches a .cmd line
@@ -171,6 +177,9 @@ def write_launchers(build_dir: Path, regions: list[str]) -> tuple[list[str], lis
             continue
         (build_dir / launcher_name(rid)).write_bytes(launcher_text(f"-scene {rid}").encode("ascii"))
         written.append(launcher_name(rid))
+    if all(r in regions for r in CORRIDOR_NEEDS):
+        (build_dir / CORRIDOR_LAUNCHER).write_bytes(CORRIDOR_TEXT.encode("ascii"))
+        written.append(CORRIDOR_LAUNCHER)
     return written, skipped
 
 

@@ -197,6 +197,29 @@ namespace Game.World.Import
             EditorSceneManager.SaveScene(scene, scenePath);
             AssetDatabase.SaveAssets();
             Debug.Log($"[IMPORT] scene {scenePath} (tier {tier}): {r.Chunks.Count} chunks, {colliders} colliders, route {route.Length:F0} m, spawn {spawnPos}");
+            BuildTileScene(scene, r.Region, tier, rootGo, routeGo);
+        }
+
+        /// <summary>
+        /// Streamed tile scene (ADR 0235): the scene just saved, reduced to the region root and the start route, saved as
+        /// World_&lt;id&gt;[_High]_Tile next to it. Chunks are saved inactive and WorldInstances disabled (the streamer enables
+        /// them within a per-frame budget), collision cooking is deferred to worker threads (WorldCollisionCooker.deferCook).
+        /// No lights, volume, camera, truck or bootstrap: the running world scene owns those. Leaves the editor in the tile
+        /// scene (the full scene file is already written).
+        /// </summary>
+        static void BuildTileScene(UnityEngine.SceneManagement.Scene scene, string region, string tier, GameObject rootGo, GameObject routeGo)
+        {
+            foreach (var go in scene.GetRootGameObjects())
+                if (go != rootGo && go != routeGo) UnityEngine.Object.DestroyImmediate(go);
+            int chunks = 0;
+            foreach (Transform c in rootGo.transform)
+                if (c.name.StartsWith("Chunk_")) { c.gameObject.SetActive(false); chunks++; }
+            if (rootGo.TryGetComponent(out WorldInstances wi)) wi.enabled = false;
+            if (rootGo.TryGetComponent(out WorldCollisionCooker cooker)) cooker.deferCook = true;
+            string tilePath = RegionScenes.TileScenePathFor(region, tier);
+            EditorSceneManager.SaveScene(scene, tilePath);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[IMPORT] tile scene {tilePath} (tier {tier}, ADR 0235): region root + route, {chunks} chunks inactive, collision cook deferred");
         }
 
         /// <summary>Automatic boom barriers of depot gates (MA-003): one kinematic boom with <see cref="DepotBarrier"/> each.</summary>
