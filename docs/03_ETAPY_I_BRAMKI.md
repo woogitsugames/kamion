@@ -82,7 +82,7 @@ przez puchnięcie danych bazowych.
 ---
 
 ## Etap 0 — Fundament
-**Zakres:** audyt, manifest i instalacja (`docs/02`), repo + LFS + `.gitignore`, struktura z `docs/10`, projekt Unity 6.3 URP, asmdef-y, **build Windows Standalone x64** (`BuildCommands.BuildWindows`, `scripts/build-windows.ps1` — ADR 0261: batchmode `-executeMethod`, poprawny exit code, log, SHA256 artefaktu), `scripts/doctor.ps1`, scena `Boot` z ekranem diagnostycznym (wersja, API grafiki, GPU, RAM, FPS), **harness visual QA** (render kamer do PNG w edytorze + zrzut z playera), `scripts/pc-metrics.ps1`, konfiguracja MCP i Superpowers, ADR 0001–0005, `CLAUDE.md` uzupełniony o komendy.
+**Zakres:** audyt, manifest i instalacja (`docs/02`), repo + LFS + `.gitignore`, struktura z `docs/10`, projekt Unity 6.3 URP, asmdef-y, **build Windows Standalone x64** (`Game.Editor.Build.BuildCommands.BuildWindowsPlayer`, `scripts/build-windows.ps1` — ADR 0261: batchmode `-executeMethod`, poprawny exit code, log, SHA256 artefaktu), `scripts/doctor.ps1`, scena `Boot` z ekranem diagnostycznym (wersja, API grafiki, GPU, RAM, FPS), **harness visual QA** (render kamer do PNG w edytorze + zrzut z playera), `scripts/pc-metrics.ps1`, konfiguracja MCP i Superpowers, ADR 0001–0005, `CLAUDE.md` uzupełniony o komendy.
 🔒 Zabezpieczenie mobilne (odroczone, D73): ustawienia Android (ARM64, IL2CPP, Vulkan, target API zgodny z wymogiem Google Play), `scripts/build-android.ps1` + `-Install` (adb), zrzut z telefonu `adb exec-out screencap` — zrobione i utrzymywane, nie blokują bramki.
 **Bramka:** player Windows uruchomiony z czystego klonu jedną komendą, `Player.log` bez wyjątków, pusta scena Boot: zmierzone FPS/czas klatki narzędziem `pc-metrics`; PNG z harnessu obejrzany; `doctor` zielony. Build Android nadal się kompiluje (nie mierzony).
 
@@ -121,7 +121,7 @@ Stan: **zaliczona 13.11.2026 na telefonie (D57, A16 Low)**. Na PC: pomiar kontro
 **Bramka:** przejazd Białystok → miejscowość obok przez granicę paczek bez przycięcia (0 klatek > 100 ms na granicy w `pc-metrics`); testy DLC z `docs/10` zielone. Kanał dystrybucji paczek na PC — decyzja właściciela (pytania w `docs/10` §3a).
 
 ## Etap 8 — Polerowanie i testy zamknięte
-Profile jakości per klasa PC (strojenie High/Ultra, rozdzielczości, skalowanie rozdzielczości), test 30 min na każdej dostępnej klasie, pełne wsparcie kierownic (FFB, pedały, skrzynia H — D56), crash reporting, lokalizacja PL/EN, onboarding sterowania, instalator/paczka dystrybucyjna Windows (kanał — decyzja właściciela; bez publikacji bez zgody). 🔒 Android: AAB + Play Asset Delivery, testy wewnętrzne w Play Console — dopiero w wersji mobilnej.
+Profile jakości per klasa PC (strojenie High/Ultra, rozdzielczości, skalowanie rozdzielczości), test 30 min na każdej dostępnej klasie, pełne wsparcie kierownic (FFB, pedały, skrzynia H — D56), crash reporting, lokalizacja PL/EN, onboarding sterowania, instalator/paczka dystrybucyjna Windows (zip `scripts/package-windows.py`, itch.io najpierw, Steam po decyzji właściciela — ADR 0271, `docs/12`; `--release` zablokowany do zamknięcia R-P0-2; bez publikacji bez zgody). 🔒 Android: AAB + Play Asset Delivery, testy wewnętrzne w Play Console — dopiero w wersji mobilnej.
 
 ## Etap 9+ — Podlasie → Polska → kraje DLC; wersja telefonowa; iOS
 Rozszerzanie regionami tą samą procedurą. **Wersja telefonowa (Android) — lżejsza** (D73): osobne tiery/treść, bramki mobilne 🔒 z tego dokumentu i `docs/PERFORMANCE_BUDGETS.md` wracają jako obowiązujące. iOS: po wersji Android, jeśli pojawi się Mac (ewentualnie chmurowy).
