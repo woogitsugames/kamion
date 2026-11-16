@@ -79,7 +79,11 @@ BALCONY_SUN = np.array([-0.5, -0.866])       # towards SSW (E, N)
 # review asked for): blocks = the raised ground floor over the basement, offices 0.6, houses 0.45-0.6, sheds 0.3
 PLINTH_H = {"block": None, "office": 0.6, "house": 0.45, "shed": 0.3}
 PLINTHS = ["plinth_dark"]
-BAL_EXCEPT_PCT = 12            # ADR 0097: share of balconies with another balustrade than the building's (WORKING_VALUE)
+# Share of blocks with ETICS (insulated, rendered); the rest (30 %) show bare `panel_concrete`. WORKING_VALUE without
+# a source: the block sample of research/mistral/p3-buildings-2 (M53, n = 9) has 0 unclad blocks (ADR 0238 Otwarte 3,
+# review s22 #123 P2). Kept at the pre-0238 value - a change re-colours blocks and needs a render + visual-critic.
+BLOCK_ETICS_SHARE = 0.7
+BAL_EXCEPT_PCT = 12           # ADR 0097: share of balconies with another balustrade than the building's (WORKING_VALUE)
 BAL_EXCEPT = (4, 7, 0)         # balf variants of the exceptions: bars + flowers, faded grey-green plastic, perforated
                                # (r1 also brown: read orange on r10_block_3; ADR 0107, review 0097 P2-i: the reed
                                # mat (5) read yellow / ochre from 60 m - exceptions stay near-neutral)
@@ -1430,7 +1434,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         scheme = FK.hall_scheme(key, wall) if typ == "hall" else None
         if scheme and b["ovr"].get("hall_bands") is False:      # ADR 0179: authored - the photographed hall is
             scheme = {**scheme, "low": None, "top": None}       # one cladding colour (no hashed plinth / top band)
-        insulated = typ == "block" and (FK.hfloat(key, "etics") < 0.7 or bool(b["ovr"].get("wall_material")))
+        insulated = typ == "block" and (FK.hfloat(key, "etics") < BLOCK_ETICS_SHARE or bool(b["ovr"].get("wall_material")))
         # v3.1 horizontal bands: insulated blocks (35 %) get the window rows in the accent colour from the 1st
         # floor up; punched-window offices with >= 2 storeys (40 %) get darker spandrel bands between the rows
         # ribbon-window offices of >= 3 storeys (60 %): dark spandrel panels between the ribbons (1970s office

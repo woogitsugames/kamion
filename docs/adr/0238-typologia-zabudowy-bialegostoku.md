@@ -67,6 +67,7 @@ zmianą; bloki z płaskim dachem — identyczną liczbę trójkątów (test na C
 1. Ocena wizualna (lider + `visual-critic`): front pawilonu na Low (płaski ciemny prostokąt bez szprosów), nowe barwy
    bloków przy Andersa / Białostoczku, jedyna kamienica w C. W chmurze nie ma renderu.
 2. +6 submeshy LOD0 w C od `showroom_glass`; alternatywa (szyba z atlasu fasad) czytała się czarno (ADR 0129).
-3. Udział bloków nieocieplonych (`panel_concrete`, 30 %) bez źródła — w próbie M53 0 z 9.
+3. Udział bloków nieocieplonych (`panel_concrete`, 30 %) bez źródła — w próbie M53 0 z 9. Oznaczony jako
+   `BLOCK_ETICS_SHARE = 0.7` (WORKING_VALUE) w `buildings_mesh.py`; zmiana wartości wymaga renderu i `visual-critic`.
 4. Budynki gospodarcze mają zawsze płaski dach; słownik kodów dachu LoD2 nadal bez cytatu (R4 „Luki”).
 5. `far_field.py` ma własny przelicznik kondygnacji (WORKING_VALUE) — nie ruszany.
