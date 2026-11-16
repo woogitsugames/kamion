@@ -67,13 +67,15 @@ pasie 3 m za krawężnikiem pierścienia 165,5 → 141,3 m²; P-13 4 × (3,3–3
 pasach ruchu, azyl 2,3–2,4 m); 7 wysepek (4 noski + ogony W / S / N). Trasa startowa wyeksportowana ponownie:
 1159,80 m (było 1159,85), przesunięcie do 3,0 m (na projektowany pas DK65 S), ≥ 1,5 m od wysepek.
 
-## Budżet (szacunek; kafel knyszyn, nie region C — kamery C bez zmian)
-Render: wyspa 325 → 329 tris; nasadzenia +945 tris i 4 materiały (`hedge_privet` ×3, `bed_stones`; draw calle +4
-najwyżej, jeśli chunk ich nie ma); P-13 ok. 4 × 5 trójkątów-znaków, P-10 ok. 28 pasów → rząd +0,6–0,9 tys. tris
-drapowanych decali (ESTIMATED: zależy od podziału płyty; poprzednio 4 × P-13 + 3 zebry przy węzłach, więc przyrost
-netto mniejszy); płyta skrzyżowania 1106 → 1570 m² w miejsce ok. 2 × 44 m wstęg DK65 (trójkąty w przybliżeniu bez
-zmian), +3 wysepki z krawężnikiem. Razem rząd **+2–3 tys. tris, +4 draw** w kadrach ronda (ESTIMATED, do zmierzenia
-w `streetscape_qa.json` po przebudowie). Poza knyszyn bajtowo bez zmian (klucz tylko tam).
+## Budżet (kafel knyszyn, nie region C — kamery C bez zmian)
+Zmierzone `pipeline.build` + `markings` na danych z gita z syntetycznym polem wysokości (NMT jest w `Data/raw`),
+trójkąty warstw `road` + `markings` w promieniu 60 m od środka ronda, main `639da4e54` → ta gałąź: **7 937 → 8 998
+(+1 061)**: asfalt 2 417 → 2 315, krawężniki 3 813 → 4 805 (dłuższe wysepki i narożniki), oznakowanie 277 → 768
+(P-13 / P-10 jako drapowane decale: 672), wyspa 325 → 329. Do tego nasadzenia wyspy **+945 tris, 4 materiały**
+(`hedge_privet` ×3, `bed_stones`; najwyżej +4 draw calle, jeśli chunk ich nie ma). Razem ok. **+2,0 tys. tris** w
+kadrach ronda; do potwierdzenia w `streetscape_qa.json` po przebudowie. Płyta ronda w trybie krawężnikowym jest
+gwiaździsta względem środka — bez poprawki w `meshing.build_patch` (Delaunay zamiast siatki biegunowej dla ronda
+kompaktowego > 15 m) miałaby 25 194 trójkąty zamiast 1 840; pilnuje tego test. Poza knyszyn bajtowo bez zmian.
 
 ## Testy
 `tests/gis/test_roundabout_0274.py` (62): syntetyczne — obrys prosty, pasy w obrysie, szerokość wlotu ≤ pas +

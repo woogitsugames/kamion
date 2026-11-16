@@ -471,6 +471,9 @@ def test_knyszyn_roundabout_is_built_without_notes(knyszyn):
     assert mrep["P-13"] == 4 and mrep["P-10"] == 4 and mrep["tris_off_carriageway"] == 0
     poly = Polygon([p for p, _ in j.boundary])
     assert poly.is_valid and poly.is_simple and len(j.arms) == 4
+    # budget: the star-shaped kerb-mode outline must not be meshed as polar rings (25 194 triangles); ADR 0218: 732
+    patch = sum(len(p.T) for p in buf.parts if p.layer == "road" and p.src == j.id and p.mat.startswith("road_"))
+    assert patch <= 2500, patch                                 # 1 840 on flat heights
 
 
 def test_knyszyn_islands_have_the_authored_lengths(knyszyn):
