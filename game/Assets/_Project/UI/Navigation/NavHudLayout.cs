@@ -19,6 +19,8 @@ namespace Game.UI.Navigation
         {
             zone = default;
             if (telemetry) return false;
+            // ADR 0283: the monitor HUD solves the GPS zone itself (bottom left, under / beside the left mirror window).
+            if (r.Desktop) { zone = r.Nav; return r.ShowNav; }
             float top = height - HudLayout.Margin, x0 = HudLayout.Margin;
             float x1 = (r.ShowMirrorLeft ? r.MirrorLeft.x : r.Cluster.x) - HudLayout.Gap;
             if (r.ShowReverseView) x1 = Mathf.Min(x1, r.ReverseView.x - HudLayout.Gap);
