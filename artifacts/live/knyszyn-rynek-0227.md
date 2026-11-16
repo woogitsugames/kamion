@@ -238,3 +238,7 @@
 - 2026-11-16 02:15 +01:00 — R14 High max 1 250 399 tris/kamera PASS; Low vs before FAIL, max +63 draws, przy zmianach main; vs R11 brak wzrostu na 70 kamerach. EditMode 677 passed, 0 failed, 2 skipped. Król/ptak nadal nieczytelne; pełny GIS trwa.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r14.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/gis-r14.done` 
 
+
+- 2026-11-16 02:30 +01:00 — Pełny GIS R14: 1646 passed, 21 skipped, 3 xfailed; EditMode 677 passed, 2 skipped. origin/main ff1cacc scalony (tylko HANDOVER). High PASS, Low vs before FAIL; przygotowywana następna próba koron i sylwetki króla.
+- NASTĘPNY KROK: `git status -sb; uv run --project tools/worldgen python -m pytest tests/gis/test_knyszyn_park_props_0227.py -q` 
+
