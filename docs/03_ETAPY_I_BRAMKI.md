@@ -42,7 +42,7 @@ Progi FPS, RAM/VRAM procesu i dysk to propozycja lidera (SCS nie publikuje FPS) 
 | Rozdzielczość pomiaru | 1920×1080 | 1920×1080 | 2560×1440 |
 | FPS docelowy (limit) | 30 | 60 | 60 (bez limitu jako informacja) |
 | Tier URP (`QualityProfile`) | Low | High | Ultra |
-| Czas klatki p50 | ≤ 33,3 ms | ≤ 16,7 ms | ≤ 16,7 ms |
+| Czas klatki p50 | ≤ 33,38 ms | ≤ 16,7 ms | ≤ 16,7 ms |
 | Czas klatki p95 | ≤ 36,0 ms | ≤ 18,5 ms | ≤ 18,5 ms |
 | Czas klatki p99 | ≤ 50,0 ms | ≤ 25,0 ms | ≤ 25,0 ms |
 | Klatki > 2× budżetu (66,7 / 33,3 / 33,3 ms) | ≤ 0,5 % | ≤ 0,5 % | ≤ 0,5 % |
