@@ -236,8 +236,10 @@ namespace Game.Gameplay
                 bool inBuild = Application.CanStreamedLevelBeLoaded(RegionScenes.SceneNameFor(id));
                 float s = RegionStart.ClampStartS(r.startS, r.routeLengthM);
                 string km = (r.routeLengthM / 1000f).ToString("0.0", ci).Replace('.', ',');
-                string detail = inBuild ? $"{r.group} · trasa {km} km · start na początku trasy" : $"{r.group} · brak w tym APK";
-                list.Add(new BootRegionChoice(id, label, detail, inBuild, () =>
+                string detail = r.noStart ? $"{r.group} · kafel narożny ({km} km korytarza) · tylko przejazd, bez startu"
+                              : inBuild ? $"{r.group} · trasa {km} km · start na początku trasy" : $"{r.group} · brak w tym APK";
+                // ADR 0231 §5a: a corner tile has no start behind its entry closure - listed, but not selectable
+                list.Add(new BootRegionChoice(id, label, detail, inBuild && !r.noStart, () =>
                 {
                     StartRequest.SetRegion("region " + id, id, s, options.LightingId);
                     SceneManager.LoadScene(RegionSceneForTier(id));
