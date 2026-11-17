@@ -54,6 +54,17 @@ links:
     end_epsg2180: [768779.0, 595332.7]    # boundary node of way 305447699 (west edge) = s8-01 route entry
     tail_to: route:s8-01
     note: "S8 westbound across the south-west corner of dk65-01 to the seam with s8-01"
+  # ADR 0288: the cross-section of way 536205568 is the same on both sides of the s8-03 | s8-04 seam (3 x 3.50 m,
+  # qa.seams), but the two control routes sit one lane apart there (3.5 m: s8-03 ends in the rightmost of 3 lanes after
+  # the junction Tykocin, s8-04 starts one lane to the left). The link replaces the s8-03 route with the same path and
+  # shifts its last BLEND_M m onto the s8-04 route start, so the autopilot path has no lateral step on the seam.
+  - id: s8-03-to-s8-04
+    tile: s8-03
+    destination: s8
+    replaces_route: s8-03
+    end_epsg2180: [762635.0, 596015.9]    # S8 westbound on the s8-03 | s8-04 seam = s8-04 route entry
+    tail_to: route:s8-04
+    note: "S8 westbound through the junction Tykocin, lane shift before the seam with s8-04"
 # Driving corridors as ordered tile lists (Bialystok -> Knyszyn -> Tykocin, owner request s23). The generator keeps the
 # prefix of tiles present in Data/Regions (main: up to dw671-tykocin-01; the ring branch world2-s23 adds
 # dw671-tykocin-02..09 and tykocin) and checks every consecutive pair: edge neighbours (N/E/S/W) and a route join
