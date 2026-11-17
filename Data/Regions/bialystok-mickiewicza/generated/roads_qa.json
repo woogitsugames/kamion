@@ -8823,6 +8823,7 @@
    "length_m": 429.0,
    "max_grade": 0.0073,
    "overrides": [
+    "dk19-ciolkowskiego-seam-dojlidy-left-kerb",
     "dw678-ciolkowskiego-carriageway-width"
    ],
    "profile_rms_vs_nmt_m": 0.01,
@@ -10759,7 +10760,9 @@
    ],
    "length_m": 43.1,
    "max_grade": 0.0074,
-   "overrides": [],
+   "overrides": [
+    "dk19-ciolkowskiego-seam-dojlidy-left-kerb"
+   ],
    "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -20188,12 +20191,12 @@
   ],
   "crossings_snapped": 236,
   "decals": {
-   "gullies": 2020,
+   "gullies": 2019,
    "oil": 667,
    "patches": 943
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 1494032,
+  "footprint_nodes": 1494228,
   "fork_abreast": [
    {
     "beside": "c:w540735092:5337608240-5337608245",
@@ -22163,6 +22166,13 @@
      "w665619504:2504934470-6230278698",
      "w665619505:277319976-6230278699"
     ]
+   },
+   {
+    "id": "dk19-ciolkowskiego-seam-dojlidy-left-kerb",
+    "targets": [
+     "w279881972:2134212210-2840599112",
+     "w279881972:2840599112-2984420403"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -22213,8 +22223,8 @@
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 6459,
-   "parts": 961,
+   "kerb_tris": 6457,
+   "parts": 959,
    "side_tris": 1301
   },
   "signalised_junctions": 21,
@@ -22231,7 +22241,7 @@
   },
   "verge_strips": {
    "chunks": 64,
-   "tris": 130601
+   "tris": 130609
   },
   "walled_ramps": []
  }
