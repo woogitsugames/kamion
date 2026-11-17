@@ -15443,7 +15443,7 @@
     2
    ],
    "length_m": 2.8,
-   "max_grade": 0.0146,
+   "max_grade": 0.0145,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.001,
    "sidewalk_frac": 0.0,
@@ -22094,8 +22094,9 @@
    "P-10 crossing in junction": 96,
    "P-11 cycle crossing": 64,
    "P-11 cycle crossing in junction": 45,
-   "P-13": 23,
-   "P-14": 54,
+   "P-12": 3,
+   "P-13": 21,
+   "P-14": 52,
    "P-7b edge line": 100,
    "P-8 arrow": 90,
    "P-8 skipped (lane too narrow)": 8,
@@ -22170,6 +22171,47 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 17,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 0
+  },
+  "seam_tapers": [
+   {
+    "chain": "c:w1329465432:2214900139-4380504040",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-bojary",
+    "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
+    "step_m": 0.0,
+    "width_other": 13.959,
+    "width_own": 14.0,
+    "width_seam": 14.0
+   },
+   {
+    "chain": "c:w249690269:1757846728-2294481959",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-bojary",
+    "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
+    "step_m": 0.0,
+    "width_other": 9.062,
+    "width_own": 9.037,
+    "width_seam": 9.037
+   },
+   {
+    "chain": "c:w552379027:1237908750-874174756",
+    "end": "a",
+    "in_tile_m": 2.77,
+    "length_m": 5.55,
+    "neighbour": "bialystok-dojlidy",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 6.0,
+    "width_seam": 5.75
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 6459,
    "parts": 961,
@@ -22189,7 +22231,7 @@
   },
   "verge_strips": {
    "chunks": 64,
-   "tris": 107781
+   "tris": 130601
   },
   "walled_ramps": []
  }

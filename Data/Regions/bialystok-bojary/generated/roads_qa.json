@@ -5601,7 +5601,7 @@
     1
    ],
    "length_m": 4.3,
-   "max_grade": 0.0517,
+   "max_grade": 0.0518,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
@@ -24657,7 +24657,7 @@
    "patches": 1100
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 1376804,
+  "footprint_nodes": 1376809,
   "fork_abreast": [
    {
     "alongside_run_m": 21.0,
@@ -26938,9 +26938,9 @@
      ]
     },
     {
-     "area_m2": 5.5,
+     "area_m2": 4.5,
      "reason": "carriageways at different heights",
-     "step_m": 0.18,
+     "step_m": 0.19,
      "why": "sliver",
      "xy": [
       -263.4,
@@ -27061,8 +27061,9 @@
    "P-10 crossing in junction": 146,
    "P-11 cycle crossing": 41,
    "P-11 cycle crossing in junction": 31,
-   "P-13": 21,
-   "P-14": 45,
+   "P-12": 6,
+   "P-13": 16,
+   "P-14": 44,
    "P-4 double centre line": 14,
    "P-7b edge line": 106,
    "P-8 arrow": 139,
@@ -27070,7 +27071,7 @@
    "P-8 skipped (lanes continue)": 15,
    "P-8 skipped (off carriageway)": 111
   },
-  "markings_overlap_removed_tris": 38,
+  "markings_overlap_removed_tris": 44,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 3911,
   "overrides_applied": [
@@ -27106,10 +27107,73 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 17,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 0
+  },
+  "seam_tapers": [
+   {
+    "chain": "c:w1329465432:2214900139-4380504040",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-mickiewicza",
+    "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
+    "step_m": 0.0,
+    "width_other": 14.0,
+    "width_own": 13.959,
+    "width_seam": 13.959
+   },
+   {
+    "chain": "c:w177912090:1883101797-2676895268",
+    "end": "a",
+    "in_tile_m": 4.25,
+    "length_m": 8.5,
+    "neighbour": "bialystok-wygoda",
+    "step_m": 0.25,
+    "width_other": 4.5,
+    "width_own": 5.0,
+    "width_seam": 4.75
+   },
+   {
+    "chain": "c:w188440103:1990070446-1990673911",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-wygoda",
+    "step_m": 0.2,
+    "width_other": 6.4,
+    "width_own": 6.0,
+    "width_seam": 6.2
+   },
+   {
+    "chain": "c:w264219602:2185359279-257899854",
+    "end": "a",
+    "in_tile_m": 14.8,
+    "length_m": 29.6,
+    "neighbour": "bialystok-wygoda",
+    "step_m": 0.375,
+    "width_other": 9.75,
+    "width_own": 9.0,
+    "width_seam": 9.375
+   },
+   {
+    "chain": "c:w440321721:2294481959-1850821444",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-mickiewicza",
+    "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
+    "step_m": 0.0,
+    "width_other": 9.037,
+    "width_own": 9.062,
+    "width_seam": 9.062
+   }
+  ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 7239,
-   "parts": 1070,
-   "side_tris": 1717
+   "kerb_tris": 7245,
+   "parts": 1069,
+   "side_tris": 1715
   },
   "signalised_junctions": 19,
   "through_lines": {
@@ -27126,7 +27190,7 @@
   },
   "verge_strips": {
    "chunks": 64,
-   "tris": 124808
+   "tris": 144368
   },
   "walled_ramps": [
    {

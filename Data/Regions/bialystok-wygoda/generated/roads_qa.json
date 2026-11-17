@@ -14907,7 +14907,7 @@
    "patches": 780
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 1406454,
+  "footprint_nodes": 1406435,
   "fork_abreast": [],
   "fork_shifts": [
    {
@@ -16279,14 +16279,14 @@
      ]
     },
     {
-     "area_m2": 50.5,
+     "area_m2": 51.7,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "sliver",
      "xy": [
       -259.8,
-      -1000.9
+      -1001.3
      ]
     },
     {
@@ -16510,23 +16510,23 @@
      ]
     },
     {
-     "area_m2": 1.5,
+     "area_m2": 1.6,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "sliver",
      "xy": [
-      -989.2,
+      -989.1,
       -1022.2
      ]
     }
    ],
    "islands": [],
-   "kerb_dropped_m": 770.0,
+   "kerb_dropped_m": 770.5,
    "kerb_tris_in_fill": 0,
    "paved": {
     "sliver": {
-     "area_m2": 557.7,
+     "area_m2": 559.0,
      "count": 25
     }
    },
@@ -16598,7 +16598,8 @@
    "P-10 crossing in junction": 122,
    "P-11 cycle crossing": 35,
    "P-11 cycle crossing in junction": 25,
-   "P-13": 10,
+   "P-12": 7,
+   "P-13": 7,
    "P-14": 43,
    "P-4 double centre line": 11,
    "P-7b edge line": 10,
@@ -16617,8 +16618,47 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 7,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 0
+  },
+  "seam_tapers": [
+   {
+    "chain": "c:w177912090:1883101797-2676895268",
+    "end": "a",
+    "in_tile_m": 4.25,
+    "length_m": 8.5,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.25,
+    "width_other": 5.0,
+    "width_own": 4.5,
+    "width_seam": 4.75
+   },
+   {
+    "chain": "c:w188440103:1990070446-1990673911",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.2,
+    "width_other": 6.0,
+    "width_own": 6.4,
+    "width_seam": 6.2
+   },
+   {
+    "chain": "c:w264219602:2185359279-257899854",
+    "end": "a",
+    "in_tile_m": 14.8,
+    "length_m": 29.6,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.375,
+    "width_other": 9.0,
+    "width_own": 9.75,
+    "width_seam": 9.375
+   }
+  ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 4106,
+   "kerb_tris": 4107,
    "parts": 421,
    "side_tris": 629
   },
@@ -16637,7 +16677,7 @@
   },
   "verge_strips": {
    "chunks": 57,
-   "tris": 96947
+   "tris": 106724
   },
   "walled_ramps": []
  }
