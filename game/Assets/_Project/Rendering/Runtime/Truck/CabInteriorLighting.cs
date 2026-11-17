@@ -118,6 +118,15 @@ namespace Game.Rendering
             return Mathf.Clamp(cabMeterStrength * Mathf.Log(s_RefKey / key, 2f), 0f, Mathf.Max(0f, cabMeterMaxEv));
         }
 
+        /// <summary>D84: 0 by day (sun at or above <paramref name="startDeg"/>, e.g. LP_LowSun 9 deg), 1 at night (at or
+        /// below <paramref name="fullDeg"/>, e.g. LP_Dusk -6 deg), smooth in between. Mirror: CabTwilightTests.</summary>
+        public static float NightFactor(float sunElevationDeg, float startDeg, float fullDeg) =>
+            1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(fullDeg, startDeg, sunElevationDeg));
+
+        /// <summary>D84: cab-view lift in stops: the day lift fades to min(nightStops, cabViewStops) with the night factor.</summary>
+        public static float CabViewStops(float dayStops, float cabViewStops, float nightStops, float night) =>
+            Mathf.Lerp(dayStops, Mathf.Min(nightStops, cabViewStops), Mathf.Clamp01(night));
+
         public float LastMeterEv { get; private set; }
         public Vector3 LastFill { get; private set; }
         public float LastGain { get; private set; } = 1f;
@@ -231,7 +240,7 @@ namespace Game.Rendering
                 // footwell courtesy light on the surrounding trim. Display-referred like the legend cap of ADR 0112
                 // (exposure-independent, so it does not blow up with the night exposure), added to the bounce fill:
                 // the shader multiplies it by the albedo and the baked AO. WORKING_VALUE, no photometry.
-                night = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(twilightFullSunDeg, twilightStartSunDeg, m.TrueSunElevationDeg));
+                night = NightFactor(m.TrueSunElevationDeg, twilightStartSunDeg, twilightFullSunDeg);
                 c += panelGlowColor * (Mathf.Max(0f, panelGlow) * night);
                 fill = new Vector3(c.r, c.g, c.b);
             }
@@ -248,7 +257,7 @@ namespace Game.Rendering
                 // D84 polish (review P1-3): after sunset the day-time phone lift (up to cabViewEv + cabMeterMaxEv =
                 // 2.5 stops) made the rim and hub brighter than the road outside. A driver's eye is adapted to the
                 // dark world; the lift fades to nightViewEv through twilight.
-                gain = Mathf.Pow(2f, Mathf.Lerp(cabViewEv + CabMeterEv(m, fill), Mathf.Min(nightViewEv, cabViewEv), night));
+                gain = Mathf.Pow(2f, CabViewStops(cabViewEv + CabMeterEv(m, fill), cabViewEv, nightViewEv, night));
                 outside = 0f;
                 float comp = Mathf.Clamp01(RenderOverrides.CabToe ?? toeCompensation);
                 if (env != null && env.Active != null && comp > 0f)

@@ -2511,9 +2511,9 @@ def build_curtains():
         strip(f"sun_visor_seam_{k}", loop + [loop[0]], nrm, 0.004, "stitch_dark", offset=0.0005, u_len=0.017)
     box("visor_centre_bracket", tuple(V(0.0, glass_y(0.0, zc) - 0.040, zc + 0.02)), (0.10, 0.03, 0.07), "dash_dark",
         bev=0.008)
-    # D84 polish (review P1-4): driver blind drawn 0.20 m (was 0.10): its bar enters the top of the 62 deg driver view
-    # as a thin band above the forward field (0.30 m took 10 % of the frame as a black slab; Unity cab-driver r1).
-    for x0, x1, drop in ((-XI + 0.10, -0.03, 0.20), (0.03, XI - 0.10, 0.20)):
+    # (D84 polish tried the driver blind at 0.30 m: a black slab over 10 % of cab-driver; at 0.20 m out of frame. Kept
+    # at the authored 0.10 / 0.20 m; the header in frame is a camera pitch / FOV decision, see the ADR draft.)
+    for x0, x1, drop in ((-XI + 0.10, -0.03, 0.10), (0.03, XI - 0.10, 0.20)):
         z1 = WS_Z1 - 0.005
         z0 = z1 - drop
         corners = [V(x0, ws_y(z0) - 0.02, z0), V(x1, ws_y(z0) - 0.02, z0), V(x1, ws_y(z1) - 0.02, z1), V(x0, ws_y(z1) - 0.02, z1)]
