@@ -78,6 +78,8 @@ WORLD_MEMORY_LOW_MB = {
     "dw671-tykocin-09": (53.4, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
     "tykocin": (79.4, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
     "dw671-jasionowka-01": (48.7, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
+    "bialystok-bojary": (251.6, "D81 DK19 tile, import dk19-tiles-s24 2026-11-17 (Win64)"),
+    "bialystok-mickiewicza": (232.1, "D81 DK19 tile, import dk19-tiles-s24 2026-11-17 (Win64)"),
 }
 # WORLD_MEMORY High [MB] per region, ADR 0234 §7 table (ESTIMATED; same imports as the Low values above).
 WORLD_MEMORY_HIGH_MB = {
@@ -120,9 +122,11 @@ WORLD_MEMORY_HIGH_MB = {
     "dw671-tykocin-09": (123.9, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
     "tykocin": (171.7, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
     "dw671-jasionowka-01": (121.3, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
+    "bialystok-bojary": (620.7, "D81 DK19 tile, import dk19-tiles-s24 2026-11-17 (Win64)"),
+    "bialystok-mickiewicza": (557.6, "D81 DK19 tile, import dk19-tiles-s24 2026-11-17 (Win64)"),
 }
-UNKNOWN_MEMORY_MB = 160.0   # a region without a measurement counts as the heaviest measured one (conservative)
-UNKNOWN_MEMORY_HIGH_MB = 420.4   # same rule for High: the heaviest measured High import (Maczka)
+UNKNOWN_MEMORY_MB = 251.6   # a region without a measurement counts as the heaviest measured one (conservative; bojary since D81)
+UNKNOWN_MEMORY_HIGH_MB = 620.7   # same rule for High: the heaviest measured High import (bojary since D81; was Maczka 420.4)
 
 
 def load_tiles(regions_dir: Path = REGIONS) -> list[dict]:
