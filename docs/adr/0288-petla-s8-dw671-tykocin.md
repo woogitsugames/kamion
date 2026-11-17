@@ -24,6 +24,14 @@ research `research/mistral-s8-loop-s23/` + kontrola `docs/reports/QA-2026-11-16-
    dzielącego generator dokłada 0,50 m asfaltu (`PAVED_SHOULDER_MEDIAN`), więc asfalt 2-pasowej jezdni = 10,45 m.
    Oś dwóch pasów głównych 0,25 m w lewo od way OSM; trzeci pas (włączania / wyłączania) dochodzi z zewnątrz.
    Pas dzielący: trawa + żwirowa opaska, bez krawężnika; bariera stalowa jak dotąd z reguły generatora.
+   **s24 (17.11, nowy PC): przesunięcie per way do pasa dzielącego.** Rozstaw osi jezdni z grafu (p50 odległości do
+   najbliższej jezdni S8 przeciwnego kierunku, próbki co 10 m po wszystkich kaflach — jedna wartość na way, więc way
+   przez szew ma to samo przesunięcie po obu stronach). Gdy odstęp linii wewn. bez korekty (rozstaw − 7,5 m) > 4,8 m
+   i rozstaw ≤ 12,8 m, jezdnia przesuwa się dodatkowo o (rozstaw − 12,0)/2, krok 0,05 m, max 0,5 m → cel 4,5 m (QA
+   wiersz 78). Rozstaw > 12,8 m (jezdnie na osobnych obiektach / rozchodzące się w węźle) bez zmian. Dotyczy 8 way
+   (s8-04: 100133887 +0,25, 251431118 +0,15). Odrzucone warianty: próg 13,0 m (way 536222216-218 w s8-02 dostały
+   +0,45/+0,50 między way z 0 → P-7b na trawie, r8) i korekta także w zakresie (+0,1 m na way 183625710/305447698 →
+   5 próbek P-7b na trawie w s8-02, r9); oba usunięte (r10: 0).
 4. **Brak włazów kanalizacyjnych w jezdni klas A/S**: `roads/xsec_rules.yaml` → `drainage.no_manhole_classes: [A, S]`
    (czytane w `streetscape/fab_details.py`; moduły `roads/*.py` bez zmian, więc raporty fidelity innych kafli nie tracą ważności). To jedyna zmiana kodu generatora; dotyczy też
    innych kafli z `highway=motorway` przy ich następnej przebudowie.
@@ -55,6 +63,29 @@ rozstaw osi − 2 × 4,45 m = 3,2–3,6 m. Wartości z przebudowy i renderów: s
 Pamięć importu Win64 (WORLD_MEMORY, 17.11, przed zmianą przekroju): Low 88,1 / 62,4 / 60,3 / 55,8 / 50,8 MB, High
 185,2 / 154,0 / 144,3 / 132,5 / 130,8 MB (`s8-01` … `s8-05`). Trasy kontrolne: 2102 / 2084 / 2050 / 2133 / 843 m.
 
+### s24 — przebudowa wszystkich 6 kafli (r8/r10, nowy PC, worktree LF) — zmierzone
+Pas dzielący z sieci, którą budują meshe (`tools/worldgen/qa/s8_median_gap.py`, próbki co 10 m, p50 [p10–p90]):
+| kafel | linie wewn. przed (s23) | linie wewn. po (s24) | krawędzie asfaltu po | udział 4,0–4,8 m (linie) |
+|---|---|---|---|---|
+| s8-01 | 4,84 | 4,72 [3,88–6,27] | 3,32 | 39 % |
+| s8-02 | 4,87 | 4,84 [4,47–6,58] | 3,44 | 44 % |
+| s8-03 | 5,52 | 5,16 [2,92–7,20] | 3,76 | 14 % |
+| s8-04 | 5,00 | **4,61** [4,26–5,25] | 3,21 | 68 % |
+| s8-05 | 4,62 | 4,34 [4,25–4,68] | 2,94 | 93 % |
+| dk65-01 | 6,56 | 6,56 (bez zmian, rozstaw 13,86 m) | 5,16 | 0 % |
+p90 > 5,5 m w s8-01..03 = odcinki przy wiaduktach i węzłach (rozstaw osi OSM 13–14,8 m), bez pomiaru → Otwarte 8.
+Krawędzie asfaltu 2,9–3,4 m < zmierzone 3,45–4,0 m: generator kładzie 0,20 m opaski + 0,50 m asfaltu
+(`PAVED_SHOULDER_MEDIAN`) od osi linii do krawędzi, ortofoto ~0,45 m → Otwarte 9.
+road_consistency_qa (r10): s8-04 0 (było obstacle_in_lane 85 przy dziurze przejazdu), s8-05 0, s8-02 10, s8-03 8,
+s8-01 22 (wszystko `lane_blind_end` / `arrow_no_exit` przy łącznicach — jak w s23), dk65-01 12 (jak przed).
+qa.seams r10 (s8-01..05, dk65-01, dk65-03; 6 szwów): **0 FAIL, 0 UWAGA**. Fidelity r10 exit=0 dla 6 kafli.
+WORLD_MEMORY import Win64 (s24) Low / High MB: s8-01 88,6 / 185,6; s8-02 62,9 / 154,5; s8-03 60,7 / 144,6;
+s8-04 53,5 / 130,1; s8-05 50,9 / 130,9; dk65-01 69,6 / 169,5 (było 68,2 / 165,9). Trasy: 2102 / 2084 / 2050 /
+2133 / 843 m. Rendery: `artifacts/s8-loop-s24/vqa-r8/*`, `vqa-r10/{s8-02,s8-05,dk65-01}` (nowe kamery
+`s8_corner_eye`, `s8_corner_top` w `dk65-01/control_cameras_place.authored.json`).
+Manifesty: region.yaml s23 miały `manifest_sha256` liczone z checkoutu CRLF (stary PC, autocrlf=true); s24 buduje z
+checkoutu LF (= kanon, jak dk65-01 na main) → build_region przepisał je dla s8-01..05.
+
 ## Odrzucone
 - **Reguła klasy w `xsec_rules.yaml` zamiast nadpisań** (`match: {class: [A], ref: S8}`): zmieniłaby też `dk65-01`
   i każdy przyszły kafel bez pomiaru położenia osi; przesunięcia osi (`center_offset`) i tak nie da się wyrazić regułą.
@@ -80,6 +111,15 @@ Pamięć importu Win64 (WORLD_MEMORY, 17.11, przed zmianą przekroju): Low 88,1 
 4. Łącznice (`motorway_link`): reguła klasy A bez zmian; pomiar QA: 7,85–7,95 m asfaltu, 1 pas ~5,75 m między liniami.
 5. MOP-y, ekrany, bramownice e-TOLL, oznakowanie węzłów — po etapie „przejezdne” (D63).
 6. Styki z `dw671-tykocin-*`, `tykocin`, `monki-*` powstają dopiero przy `s8-12` / `dw671-jezewo-*`.
+8. (s24) Pas dzielący przy wiaduktach / węzłach (rozstaw osi > 12,8 m: s8-02/03 way 98599908, 183625709, 251431131,
+   672979683; dk65-01 183639794, 305447699 — odstęp linii 5,6–7,3 m) bez pomiaru ortofoto: zmierzyć `ortho_xsec.py`
+   i ewentualnie przesunąć tak samo.
+9. (s24) Krawędzie asfaltu przy pasie dzielącym 0,25 m za blisko (model 0,70 m od osi linii, ortofoto ~0,45 m):
+   wymaga parametru szerokości utwardzenia od strony pasa dzielącego per sekcja (dziś stała `PAVED_SHOULDER_MEDIAN`).
+10. (s24) `dk65-01` render `s8_corner_eye`: między jezdnią S8 a równoległą łącznicą stoi podniesiony separator
+    (krawężnik) zamiast malowanego klina — do sprawdzenia z ortofoto przy kaflu `dk8-s8-jeroniki`.
+11. (s24) Przejazd pod S8 w `s8-04` nadal poza grafem (pkt 7) — S8 bez dziury i bez pomostu (render vqa-r8 route-*,
+    road_consistency 0).
 
 ## Odtworzenie
 ```
@@ -87,6 +127,8 @@ uv run --project tools/worldgen python tools/worldgen/qa/s8_loop_plan.py
 uv run --project tools/worldgen tools/worldgen/ingest.py --region s8-0x
 uv run tools/worldgen/build_region.py --region s8-0x
 uv run --project tools/worldgen python tools/worldgen/qa/s8_xsec_overrides.py [--check]
+uv run --project tools/worldgen python tools/worldgen/qa/s8_median_gap.py [--ref <rev>] [--json out.json]
+pwsh tools/worldgen/qa/s8_loop_s24.ps1 -Phase world|unity|post|pytest -Tiles <ids> -Tag <tag>   # s24, kolejność kroków
 uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region s8-0x --context
 uv run --project tools/worldgen python scripts/export-route.py --region s8-0x
 uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region s8-0x --fetch
