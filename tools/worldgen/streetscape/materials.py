@@ -111,7 +111,8 @@ M = {
     # house roofs at sRGB 121-137 next to white walls at ~210 (ratio ~0.6 -> ~145 next to the 239 plaster of the game).
     # WORKING_VALUE. P2-1: the corrugated set (CC0 corrugated_iron_03, 2 m) instead of the painted roof-tile courses;
     # mesh V runs up the slope, so the ribs run down it as on a real sheet roof.
-    "roof_sheet_grey": {"color": [0.15, 0.155, 0.16], "rough": 0.55, "metal": 0.2, "texture_set": "trapezoid_sheet",
+    # Owner 2026-11-17 (s23b, after the 0.15 renders: sRGB 135-152 in sun): "za jasne" -> 0.105, WORKING_VALUE.
+    "roof_sheet_grey": {"color": [0.105, 0.108, 0.112], "rough": 0.55, "metal": 0.2, "texture_set": "trapezoid_sheet",
                         "set_tile": True},
 
     "glass": {"color": [0.03, 0.035, 0.04], "rough": 0.05},

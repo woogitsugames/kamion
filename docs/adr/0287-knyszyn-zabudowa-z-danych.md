@@ -76,3 +76,11 @@ Testy: `tests/gis/test_knyszyn_look_s23.py`.
 - Ściany pierzei Rynku i Tykockiej z Mapillary / zdjęć właściciela (dotąd 2 budynki).
 - Materiał cegły licowej w kolorze poczty; dach dyskontu.
 - Ogólna poprawka klas obrysów OSM (wszystkie regiony).
+- Zestaw tekstur desek `wood_siding` (materiały `wood_planks*`) nie istnieje w repo ani w `docs/LICENSES.md`: domy
+  drewniane, w tym Dom Klattów, renderują się gładkim kolorem. Kandydat CC0 z Poly Haven czeka na zgodę na pobranie.
+
+## Aktualizacja 2026-11-17 (knyszyn-look-s23b)
+
+Właściciel po renderach 0,15: szare dachy z blachy „za jasne” → `roof_sheet_grey` kolor liniowy 0,105
+(WORKING_VALUE). Zmierzone sRGB w słońcu (High clear, edytor): tykocka-into-town 135 → 119, rynek-above 152 → 133
+(grafit ~100, biały tynk ~239).
