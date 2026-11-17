@@ -76,11 +76,39 @@ Testy: `tests/gis/test_knyszyn_look_s23.py`.
 - Ściany pierzei Rynku i Tykockiej z Mapillary / zdjęć właściciela (dotąd 2 budynki).
 - Materiał cegły licowej w kolorze poczty; dach dyskontu.
 - Ogólna poprawka klas obrysów OSM (wszystkie regiony).
-- Zestaw tekstur desek `wood_siding` (materiały `wood_planks*`) nie istnieje w repo ani w `docs/LICENSES.md`: domy
-  drewniane, w tym Dom Klattów, renderują się gładkim kolorem. Kandydat CC0 z Poly Haven czeka na zgodę na pobranie.
+- ~~Zestaw tekstur desek `wood_siding`~~ — zrobione, patrz „Aktualizacja 2026-11-17 (alt-wood-s24)”.
 
 ## Aktualizacja 2026-11-17 (knyszyn-look-s23b)
 
 Właściciel po renderach 0,15: szare dachy z blachy „za jasne” → `roof_sheet_grey` kolor liniowy 0,105
 (WORKING_VALUE). Zmierzone sRGB w słońcu (High clear, edytor): tykocka-into-town 135 → 119, rynek-above 152 → 133
 (grafit ~100, biały tynk ~239).
+
+## Aktualizacja 2026-11-17 (alt-wood-s24): deski `wood_siding` ze skanu CC0 (decyzja D-17.11)
+
+Domy drewniane (`dom_drewniany`, materiały `wood_planks` / `wood_planks_green`, w tym Dom Klattów) wskazywały zestaw
+`wood_siding`, którego nie było, więc renderowały się gładkim kolorem.
+
+1. **Skan:** Poly Haven `raw_plank_wall` (Dimitrios Savva, CC0 1.0, 1,87 × 1,87 m, 2k JPG, 5 map) w
+   `art-source/world/cc0/cc0_manifest.json` (URL, md5 z API zgodne, SHA256) i `docs/LICENSES.md`; licencja sprawdzona
+   na https://polyhaven.com/license 2026-11-17. `cc0_fetch.py --resolve --only <id>` dodaje zasób bez przepisywania
+   zapisanych wpisów pozostałych skanów.
+2. **Zestaw** (`sets_scan.py`, `SCAN_SETS` + `SCAN_ONLY_META`): modulation_set (średnia 0,5 na kanał, kolor z tabeli
+   materiałów), UV0 w metrach (u wzdłuż ściany, v w górę), deski poziome, kafel 1,87 m w skali skanu. Rozstaw desek
+   zmierzony z fug mapy displacement: mediana 0,093 m (0,043–0,106 m, 23 fugi). Źródła szerokości deski domów
+   podlaskich w repo nie ma — bez przeskalowania (WORKING_VALUE). Skan to mozaika szarych / miodowych / ciemnych desek
+   (najciemniejsza 0,33 × sąsiednia), która pod jednym kolorem farby wyglądała jak ściana z palet: nowa funkcja
+   `flatten_boards` wyrównuje ton wzdłuż desek (filtr anizotropowy 0,015 × 0,08 m, 100 %; fugi 1–3 mm i słoje
+   zostają), plamy farby > 1,3 × tonu deski ściśnięte 5:1, odcień lokalny w 12 %. Zmierzone na zestawie High:
+   CV tonu desek 0,124 → 0,016 (`source.board_tone_cv_before_after` w `materials_spec.json`), najciemniejsza deska
+   0,89 × sąsiednia, 0 % tekseli przyciętych. Albedo w silniku (2 × kolor × mapa, liniowo, luminancja):
+   `wood_planks` p01 / p50 / p99 / max = 0,078 / 0,163 / 0,209 / 0,252 (średnio sRGB 128 / 108 / 85),
+   `wood_planks_green` 0,060 / 0,127 / 0,162 / 0,196 — kolory materiałów bez zmian. Parametry obróbki WORKING_VALUE
+   (ocenione na podglądach z odcieniem, bez renderu w grze).
+3. **Generator:** `wood_planks*` dostały `set_tile` (bez niego shader użyłby kafla 4 m — deski 0,20 m zamiast 0,093 m).
+   Reguły wyboru domu drewnianego bez zmian.
+4. **Testy:** `tests/gis/test_wood_siding_cc0.py` (wyrównanie desek na danych syntetycznych, kolano jasnych plam,
+   podpięcie materiałów, wpis w spec, `--resolve --only` z atrapą API).
+
+Otwarte: render kontrolny `look_dom_klattow` po przebudowie Knyszyna i imporcie (lider) + ocena `visual-critic` /
+właściciela; pozostała mała jasna plama farby na jednej desce powtarza się co 1,87 m (do oceny z wysokości oczu).
