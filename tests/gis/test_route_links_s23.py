@@ -64,8 +64,21 @@ def test_corridor_connected_in_tile_graph_bfs():
                 seen.add(n)
                 q.append(n)
     assert "dw671-tykocin-01" in seen and "knyszyn-w" in seen
-    # known gap (report, plan in docs): Dojlidy has no edge neighbour - 1 column east, 2 rows (4096 m) south of C
-    assert "bialystok-dojlidy" not in seen
+    # D81 / ADR 0278 tiles 5-7 (wygoda, bojary, mickiewicza) close the former gap: C -> wygoda (E) -> bojary (S) ->
+    # mickiewicza (S) -> Dojlidy (S) are edge neighbours
+    assert {"bialystok-wygoda", "bialystok-bojary", "bialystok-mickiewicza", "bialystok-dojlidy"} <= seen
+
+
+def test_dojlidy_corridor_joins_closed_up_to_the_missing_tile():
+    """D81: C -> wygoda -> bojary -> mickiewicza joined by routes / links; Ciolkowskiego continues through the 129 m
+    stub of Dojlidy into bialystok-krywlany (ADR 0278 tile 4, not defined) - listed as missing, never skipped."""
+    g = {t["id"]: t for t in _graph()["tiles"]}
+    c = next(c for c in _links()["corridors"] if c["id"] == "bialystok-dojlidy-dk19")
+    assert c["tiles"][:4] == ["bialystok-industrial-c", "bialystok-wygoda", "bialystok-bojary", "bialystok-mickiewicza"]
+    assert c["missing"][:1] == ["bialystok-krywlany"]
+    for j in c["joins"]:
+        assert len(j["side"]) == 1 and j["gapM"] <= TG.PORTAL_TOL_M, j
+        assert TG.on_seam([j["x"], j["y"]], g[j["from"]], j["side"]), j
 
 
 def test_corridor_tiles_are_in_the_d67_full_build_set():
@@ -83,7 +96,8 @@ def test_links_stay_in_their_tile_and_replace_only_knyszyn():
             x, y = e + t["anchorX"], n + t["anchorY"]
             assert t["xmin"] - 3 <= x <= t["xmax"] + 3 and t["ymin"] - 3 <= y <= t["ymax"] + 3, (L["id"], x, y)
         assert len(L["e"]) == len(L["n"]) == len(L["maxspeedKmh"]) >= 2
-        assert L["replacesRoute"] in ("", "knyszyn"), L["id"]
+        # knyszyn (Rynek dead end); C for the D81 trip to Dojlidy (C route runs west to Maczka)
+        assert L["replacesRoute"] in ("", "knyszyn", "bialystok-industrial-c"), L["id"]
         steps = [((L["e"][i + 1] - L["e"][i]) ** 2 + (L["n"][i + 1] - L["n"][i]) ** 2) ** 0.5 for i in range(len(L["e"]) - 1)]
         assert max(steps) < 2.6, L["id"]                   # no jump (blend never breaks the 2 m sampling)
 

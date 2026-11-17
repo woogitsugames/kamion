@@ -41,6 +41,17 @@ links:
                                               # tapered by the roundabout 37 m before the seam; knyszyn-w lanes are not)
     tail_to: route:dw671-tykocin-01
     note: "DW671 Tykocka across the south-east corner of knyszyn-w to the seam with dw671-tykocin-01"
+  # D81 (owner, s23): truck route C <-> Dojlidy over DK19 (Andersa -> Sosabowskiego -> Piastowska -> pl. Antonowicza ->
+  # Branickiego -> rondo Meyera -> Ciolkowskiego). The C control route runs west to Maczka; for the trip to Dojlidy the
+  # link REPLACES it: same first node (identical first lane points), rondo Pamieci Biezenstwa, Andersa south to the seam
+  # with bialystok-wygoda (ADR 0278 tile 5). Launch: -route_to dojlidy.
+  - id: c-andersa-to-wygoda
+    tile: bialystok-industrial-c
+    destination: dojlidy
+    replaces_route: bialystok-industrial-c
+    end_epsg2180: [779019.0, 595242.45]   # Andersa southbound boundary node on the C | wygoda seam (wygoda route entry)
+    tail_to: route:bialystok-wygoda
+    note: "C route start -> rondo Pamieci Biezenstwa 1915 -> Andersa (DK19/DK65) south-east to the seam with bialystok-wygoda"
 # Driving corridors as ordered tile lists (Bialystok -> Knyszyn -> Tykocin, owner request s23). The generator keeps the
 # prefix of tiles present in Data/Regions (main: up to dw671-tykocin-01; the ring branch world2-s23 adds
 # dw671-tykocin-02..09 and tykocin) and checks every consecutive pair: edge neighbours (N/E/S/W) and a route join
@@ -52,3 +63,11 @@ corridors:
             dk65-01, dk65-02, dk65-03, dk65-04, dk65-05, dk65-06, dk65-07, dk65-08, dk65-09, dk65-10, dk65-11,
             knyszyn-s, knyszyn, knyszyn-w, dw671-tykocin-01, dw671-tykocin-02, dw671-tykocin-03, dw671-tykocin-04,
             dw671-tykocin-05, dw671-tykocin-06, dw671-tykocin-07, dw671-tykocin-08, dw671-tykocin-09, tykocin]
+  # D81: C -> wygoda -> bojary -> mickiewicza (ADR 0278 tiles 5-7). Ciolkowskiego leaves mickiewicza on the north seam
+  # of bialystok-dojlidy, runs ~129 m inside Dojlidy and turns west into bialystok-krywlany (ADR 0278 tile 4, not
+  # defined yet: 1206 m of Dywizjonu 303), then re-enters Dojlidy at the Dojlidy route entry (west edge). Until tile 4
+  # exists the corridor stops at mickiewicza (krywlany and dojlidy listed as missing).
+  - id: bialystok-dojlidy-dk19
+    destination: dojlidy
+    tiles: [bialystok-industrial-c, bialystok-wygoda, bialystok-bojary, bialystok-mickiewicza, bialystok-krywlany,
+            bialystok-dojlidy]
