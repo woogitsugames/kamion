@@ -1,0 +1,154 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0170",
+   "look_at": [
+    897.553,
+    -577.188,
+    172.909
+   ],
+   "note": "driver eye 2.5 m, control route s = 170 m of 2727 m (Białostocka)",
+   "pos": [
+    948.157,
+    -608.016,
+    173.882
+   ],
+   "route_s_m": 170.46,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0511",
+   "look_at": [
+    599.479,
+    -581.647,
+    177.913
+   ],
+   "note": "driver eye 2.5 m, control route s = 511 m of 2727 m (Ełcka)",
+   "pos": [
+    646.142,
+    -619.435,
+    177.827
+   ],
+   "route_s_m": 511.381,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0852",
+   "look_at": [
+    342.996,
+    -357.056,
+    179.513
+   ],
+   "note": "driver eye 2.5 m, control route s = 852 m of 2727 m (Ełcka)",
+   "pos": [
+    389.308,
+    -395.238,
+    181.657
+   ],
+   "route_s_m": 852.301,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1193",
+   "look_at": [
+    86.077,
+    -132.972,
+    178.356
+   ],
+   "note": "driver eye 2.5 m, control route s = 1193 m of 2727 m (Ełcka)",
+   "pos": [
+    132.574,
+    -170.942,
+    179.813
+   ],
+   "route_s_m": 1193.222,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1534",
+   "look_at": [
+    -170.778,
+    91.185,
+    179.462
+   ],
+   "note": "driver eye 2.5 m, control route s = 1534 m of 2727 m (Ełcka)",
+   "pos": [
+    -124.41,
+    53.068,
+    179.78
+   ],
+   "route_s_m": 1534.142,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1875",
+   "look_at": [
+    -427.38,
+    315.628,
+    182.304
+   ],
+   "note": "driver eye 2.5 m, control route s = 1875 m of 2727 m (Ełcka)",
+   "pos": [
+    -381.34,
+    277.107,
+    183.304
+   ],
+   "route_s_m": 1875.063,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2216",
+   "look_at": [
+    -684.301,
+    539.718,
+    174.626
+   ],
+   "note": "driver eye 2.5 m, control route s = 2216 m of 2727 m (unnamed)",
+   "pos": [
+    -637.895,
+    501.652,
+    176.065
+   ],
+   "route_s_m": 2215.983,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2557",
+   "look_at": [
+    -941.167,
+    763.875,
+    177.048
+   ],
+   "note": "driver eye 2.5 m, control route s = 2557 m of 2727 m (unnamed)",
+   "pos": [
+    -894.843,
+    725.706,
+    177.809
+   ],
+   "route_s_m": 2556.904,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 325.926,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "monki",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

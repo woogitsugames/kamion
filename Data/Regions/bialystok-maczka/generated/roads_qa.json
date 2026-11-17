@@ -12725,10 +12725,12 @@
    "S": 5.0,
    "Z": 4.5
   },
+  "compact_roundabouts": [],
   "crossings_in_junction": [
    8280988663,
    3145373876,
    282520089,
+   2274001638,
    13942707572,
    12628402841,
    5312552655,
@@ -12742,12 +12744,15 @@
    3273715477,
    4034543305,
    614666585,
+   2882674828,
    3642112042,
+   2274001351,
    2274001351,
    4034543251,
    4034543280,
    4034543321,
    5948372158,
+   2274001566,
    2274001566,
    3273715279,
    2357603789,
@@ -12759,6 +12764,7 @@
    1844395452,
    3253382828,
    1892330904,
+   1892330904,
    934954994,
    3859287956,
    3859289257,
@@ -12768,6 +12774,8 @@
    3243500444,
    670377013,
    3242994749,
+   3139351576,
+   3139351574,
    3139351574,
    3145392305,
    3145387509,
@@ -12780,6 +12788,8 @@
    3145392306,
    3145381046,
    3041604534,
+   2881482207,
+   1892330905,
    1892330905,
    3243043330,
    5708354402,
@@ -12789,7 +12799,7 @@
    614666588,
    3145443254,
    935174476,
-   3041604533,
+   614666591,
    614666591,
    3041604538,
    3243499962,
@@ -12801,12 +12811,13 @@
    3145381056,
    3145392307,
    3145381041,
+   3867825910,
    3253382928,
    1844395355,
-   4034543362,
    2274001553,
    5948372137,
    13942707571,
+   2274001303,
    2274001303,
    3243500417,
    5708354410,
@@ -12821,21 +12832,21 @@
    3145373839
   ],
   "crossings_merged": 0,
-  "crossings_p11": 20,
+  "crossings_p11": 28,
   "crossings_skipped": [
    3139351576,
    3276720797,
-   6644270082,
+   4034543362,
    3273715338
   ],
-  "crossings_snapped": 158,
+  "crossings_snapped": 166,
   "decals": {
-   "gullies": 1420,
+   "gullies": 1416,
    "oil": 472,
-   "patches": 470
+   "patches": 713
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 895039,
+  "footprint_nodes": 896569,
   "fork_abreast": [
    {
     "alongside_run_m": 92.5,
@@ -14001,10 +14012,10 @@
   "markings": {
    "P-1 centre line": 53,
    "P-1 lane line": 121,
-   "P-10 crossing": 137,
+   "P-10 crossing": 135,
    "P-10 crossing in junction": 86,
-   "P-11 cycle crossing": 17,
-   "P-11 cycle crossing in junction": 7,
+   "P-11 cycle crossing": 27,
+   "P-11 cycle crossing in junction": 17,
    "P-13": 21,
    "P-14": 18,
    "P-4 double centre line": 1,
@@ -14043,10 +14054,27 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 8,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 0
+  },
+  "seam_tapers": [
+   {
+    "chain": "c:w272531949:2774680406-2774680411",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.0,
+    "width_seam": 5.25
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 3700,
-   "parts": 509,
-   "side_tris": 730
+   "parts": 506,
+   "side_tris": 726
   },
   "signalised_junctions": 6,
   "through_lines": {
@@ -14063,7 +14091,7 @@
   },
   "verge_strips": {
    "chunks": 49,
-   "tris": 66024
+   "tris": 66116
   },
   "walled_ramps": [
    {

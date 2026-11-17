@@ -1,0 +1,411 @@
+"""ADR 0275: width transitions across tile seams and at the end of a shoulder override.
+
+Tiles are built one at a time from their own graph + overrides, so a road whose authored cross-section differs between
+two tiles (an override that stops at the seam) met its other half with a step in the carriageway / asphalt edge. Here
+every tile reads the *data in git* of its neighbours (region.yaml, roads.graph.json, overrides.yaml - never their
+geometry or `generated/`), builds the neighbour's network with the same code and takes the cross-section the neighbour
+would build at the seam BEFORE any seam transition ("nominal"). Both tiles then lay the two halves of one S-curve:
+
+    value(x) = A + (B - A) * smoothstep(0.5 + x / L),   x = signed distance from the seam (A side: x < 0)
+
+so on the seam both give the mean of the two nominal values (computed with a symmetric expression; shoulder widths in
+whole centimetres) and the slope is continuous. L = RATIO x the largest step of an edge (carriageway edge, asphalt edge,
+outer edge of the ground shoulder), clamped to MIN_LEN_M ... MAX_LEN_M and to twice the shorter of the two chains.
+
+What is blended:
+  * the carriageway half-width `Chain.hw` (apply_widths, right after the fork passes of pipeline.build_network);
+    lanes of the touched sections share the local width (`lane_follow`, ADR 0233), otherwise the centre line would
+    leave the axis inside the transition;
+  * the paved and ground widths of the shoulder of a kerbless edge (ADR 0272, roads.xsec), carried per station in
+    the side `mat` code (apply_shoulders, after every network.assign_sides). The same function turns a step of the
+    shoulder widths between two sections of one chain (an override that ends inside the tile) into an S-curve
+    centred on the step.
+
+Length of the transition: PTB2022 (Dz.U. 2022 poz. 1518) § 17 ust. 6 only asks for a change of lane width "na krzywej
+przejściowej lub prostej przejściowej w sposób płynny, bez widocznych załamań krawędzi" - no number, and nothing on
+shoulders. RATIO / MIN_LEN_M / MAX_LEN_M are ESTIMATED.
+"""
+
+from __future__ import annotations
+
+import json
+import math
+from dataclasses import dataclass, field
+from pathlib import Path
+
+import numpy as np
+import yaml
+
+from . import network as Nw
+
+from . import xsec as X               # ADR 0272: shoulder of a kerbless edge as data
+
+REPO = Path(__file__).resolve().parents[3]
+REGIONS = REPO / "Data" / "Regions"
+
+RATIO = 100.0          # ESTIMATED: transition length per metre of edge step (edge skew 1:100 on average, 1:67 at most)
+MIN_LEN_M = 20.0       # ESTIMATED
+MAX_LEN_M = 80.0       # ESTIMATED
+MIN_STEP_M = 0.005     # steps below this are left alone (float noise of two builds of the same data)
+SEAM_EPS_M = 0.05      # a chain end lies on the seam line within this distance
+MATCH_M = 0.5          # the two halves of a road cut at the seam: same OSM way, ends within this distance
+MIN_RAMP_HALF_M = 0.5  # an in-chain shoulder step with less room than this on a side stays a step
+
+
+def _smoothstep(x):
+    x = np.clip(x, 0.0, 1.0)
+    return x * x * (3.0 - 2.0 * x)
+
+
+def weight(d, length):
+    """Share of the way from the tile's own value to the seam value at distance d from the seam: 1 on the seam,
+    0 from length / 2 on (half of one smoothstep laid across the seam)."""
+    return 2.0 * _smoothstep(0.5 - np.asarray(d, float) / float(length))
+
+
+# --------------------------------------------------------------------------------------------- seam geometry
+def shared_edge(ba, bb):
+    """Shared edge of two axis-aligned bboxes (xmin, ymin, xmax, ymax): dict(axis 'x'|'y', at, lo, hi, normal_ab)
+    or None (corner / no contact). normal_ab: unit vector pointing from a into b."""
+    ax0, ay0, ax1, ay1 = ba
+    bx0, by0, bx1, by1 = bb
+    for at, nab in ((ax1, (1.0, 0.0)) if abs(ax1 - bx0) < 1e-6 else (None, None),
+                    (ax0, (-1.0, 0.0)) if abs(ax0 - bx1) < 1e-6 else (None, None)):
+        if at is not None:
+            lo, hi = max(ay0, by0), min(ay1, by1)
+            if hi - lo > 1.0:
+                return {"axis": "x", "at": at, "lo": lo, "hi": hi, "normal_ab": nab}
+    for at, nab in ((ay1, (0.0, 1.0)) if abs(ay1 - by0) < 1e-6 else (None, None),
+                    (ay0, (0.0, -1.0)) if abs(ay0 - by1) < 1e-6 else (None, None)):
+        if at is not None:
+            lo, hi = max(ax0, bx0), min(ax1, bx1)
+            if hi - lo > 1.0:
+                return {"axis": "y", "at": at, "lo": lo, "hi": hi, "normal_ab": nab}
+    return None
+
+
+def on_seam(xy, se) -> bool:
+    k = 0 if se["axis"] == "x" else 1
+    return abs(xy[k] - se["at"]) <= SEAM_EPS_M and se["lo"] - SEAM_EPS_M <= xy[1 - k] <= se["hi"] + SEAM_EPS_M
+
+
+def _bbox(region: dict):
+    b = region["bbox"]
+    return (float(b["xmin"]), float(b["ymin"]), float(b["xmax"]), float(b["ymax"]))
+
+
+# --------------------------------------------------------------------------------------------- chain ends
+@dataclass(frozen=True)
+class End:
+    """Nominal cross-section of a chain end on the tile boundary (before any seam transition)."""
+    chain: str
+    end: int                  # 0 | -1
+    osm_way: int
+    xy: tuple                 # EPSG:2180
+    left: tuple               # unit normal of the chain's left side at the end (world frame)
+    hw: float                 # carriageway half-width
+    length: float             # chain length
+    shoulder: dict            # {"L" / "R": (paved_cm, ground_cm) | None}: ADR 0272 rule / override of the end section
+    blendable: bool = True    # False: the lanes of the end section cannot follow a changing width (ADR 0095 data)
+
+
+def _osm_way(edge_id: str) -> int:
+    return int(edge_id.split(":")[0].lstrip("w"))
+
+
+def nominal_shoulder(sec, rev: bool) -> dict:
+    """{"L" / "R": (paved_cm, ground_cm) | None} of a section in the chain frame (roads.xsec.resolve: override >
+    OSM shoulder=* > class rule); None = a kerb forced by an override, or a roundabout."""
+    out = {"L": None, "R": None}
+    if getattr(sec, "roundabout", False):
+        return out
+    for side, osm in (("L", "left"), ("R", "right")):
+        if rev:
+            osm = "right" if osm == "left" else "left"
+        sh = X.resolve(sec, osm)
+        if sh.force != "kerb":
+            out[side] = (int(round(sh.paved_m * 100)), int(round(sh.ground_m * 100)))
+    return out
+
+
+def ends(net: Nw.Network) -> list[End]:
+    """Chain ends on the tile boundary (graph node flag `boundary`, degree 1), in a stable order."""
+    o = np.asarray(net.origin, float)
+    out = []
+    for c in net.chains:
+        if c.closed or c.roundabout or c.meta.get("absorbed") or len(c.line.s) < 2:
+            continue
+        for e, node in ((0, c.node_a), (-1, c.node_b)):
+            nd = net.nodes.get(node) or {}
+            if not nd.get("boundary") or nd.get("deg") != 1:
+                continue
+            sec = net.sec_list[int(c.sec_idx[e])]
+            rev = bool(c.meta["rev"][e]) if "rev" in c.meta else False
+            pg = c.line.p[e] + o
+            n = c.line.n[e]
+            out.append(End(chain=c.id, end=e, osm_way=_osm_way(sec.edge_id), xy=(float(pg[0]), float(pg[1])),
+                           left=(float(n[0]), float(n[1])), hw=float(c.hw[e]), length=float(c.line.s[-1]),
+                           shoulder=nominal_shoulder(sec, rev),
+                           blendable=not (sec.lane_edges or (sec.width_profile and not sec.lane_follow))))
+    return out
+
+
+# --------------------------------------------------------------------------------------------- plan
+@dataclass
+class Taper:
+    chain: str
+    end: int
+    length: float                     # full length L of the S-curve; this tile lays L / 2 from the seam
+    hw_own: float
+    hw_other: float
+    hw_seam: float
+    shoulder: dict = field(default_factory=dict)   # own side "L"/"R" -> {"own": (p, g), "other": (p, g), "seam": (p, g)} cm
+    neighbour: str | None = None
+    other_chain: str | None = None
+    step_m: float = 0.0               # the largest edge step that set the length
+    skipped: str | None = None        # reason the carriageway width is not blended
+
+    def report(self) -> dict:
+        r = {"chain": self.chain, "end": "a" if self.end == 0 else "b", "neighbour": self.neighbour,
+             "length_m": round(self.length, 2), "in_tile_m": round(self.length / 2, 2), "step_m": round(self.step_m, 3),
+             "width_own": round(2 * self.hw_own, 3), "width_other": round(2 * self.hw_other, 3),
+             "width_seam": round(2 * self.hw_seam, 3)}
+        if self.shoulder:
+            r["shoulder_cm"] = {k: {a: list(b) for a, b in v.items()} for k, v in sorted(self.shoulder.items())}
+        if self.skipped:
+            r["skipped"] = self.skipped
+        return r
+
+
+def _mean_cm(a: int, b: int) -> int:
+    return (a + b + 1) // 2           # symmetric in (a, b): both tiles get the same centimetre
+
+
+def match(own: list[End], other: list[End]) -> list[tuple[End, End]]:
+    """Mutually nearest ends of the same OSM way within MATCH_M (the same pairs whichever tile asks)."""
+    def near(e, cands):
+        best = None
+        for x in cands:
+            if x.osm_way != e.osm_way:
+                continue
+            d = math.hypot(e.xy[0] - x.xy[0], e.xy[1] - x.xy[1])
+            if d <= MATCH_M and (best is None or (d, x.xy) < best[:2]):
+                best = (d, x.xy, x)
+        return best[2] if best else None
+    out = []
+    for e in own:
+        x = near(e, other)
+        if x is not None and near(x, own) is e:
+            out.append((e, x))
+    return out
+
+
+def plan_pair(e: End, x: End, neighbour: str | None = None) -> Taper | None:
+    """Transition of own end `e` towards the nominal section `x` of the neighbour; None when they already agree."""
+    same = (e.left[0] * x.left[0] + e.left[1] * x.left[1]) > 0      # the neighbour's chain runs the same way
+    dhw = x.hw - e.hw
+    steps = [abs(dhw)] if (e.blendable and x.blendable) else []
+    sh = {}
+    for side in ("L", "R"):
+        a, b = e.shoulder.get(side), x.shoulder.get(side if same else ("R" if side == "L" else "L"))
+        if a is None or b is None or a == b:
+            continue
+        sh[side] = {"own": a, "other": b, "seam": (_mean_cm(a[0], b[0]), _mean_cm(a[1], b[1]))}
+        steps.append(abs(b[0] - a[0]) / 100.0)                                   # asphalt edge beside the carriageway
+        steps.append(abs((b[0] + b[1]) - (a[0] + a[1])) / 100.0)                 # outer edge of the ground part
+    blend_hw = e.blendable and x.blendable
+    step = max(steps, default=0.0)
+    if blend_hw and sh:
+        # asphalt edge = half-width + paved part: the two steps add up (or cancel)
+        step = max([step] + [abs(dhw + (v["other"][0] - v["own"][0]) / 100.0) for v in sh.values()])
+    skipped = None
+    if not blend_hw and abs(dhw) >= MIN_STEP_M:
+        skipped = "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)"
+    if step < MIN_STEP_M and not skipped:
+        return None
+    length = min(max(RATIO * step, MIN_LEN_M), MAX_LEN_M, 2.0 * e.length, 2.0 * x.length)
+    return Taper(chain=e.chain, end=e.end, length=float(length), hw_own=e.hw, hw_other=x.hw,
+                 hw_seam=0.5 * (e.hw + x.hw) if blend_hw else e.hw, shoulder=sh, neighbour=neighbour,
+                 other_chain=x.chain, step_m=float(step), skipped=skipped)
+
+
+def plan(own: list[End], others: dict) -> list[Taper]:
+    """others: {neighbour id: [End, ...]} (ends of the neighbour on the shared edge)."""
+    out = []
+    for nb in sorted(others):
+        for e, x in match(own, others[nb]):
+            t = plan_pair(e, x, nb)
+            if t is not None:
+                out.append(t)
+    out.sort(key=lambda t: (t.chain, t.end))
+    return out
+
+
+# --------------------------------------------------------------------------------------------- neighbours (data in git)
+def plain_network(graph: dict, origin, overrides: list) -> Nw.Network:
+    """The network of pipeline.build_network WITHOUT seam transitions: what a tile builds on its own."""
+    net = Nw.load(graph, origin, overrides)
+    Nw.taper_forks(net, [])
+    Nw.align_forks(net, [])
+    Nw.abreast_forks(net, [])
+    return net
+
+
+def neighbours(region_id: str, regions: Path | None = None) -> list[tuple[str, dict]]:
+    """[(neighbour id, shared edge)] of the tiles in Data/Regions that share an edge with this one."""
+    regions = regions or REGIONS
+    own = yaml.safe_load((regions / region_id / "region.yaml").read_text(encoding="utf-8"))
+    out = []
+    for d in sorted(p for p in regions.iterdir() if p.is_dir() and p.name != region_id):
+        if not ((d / "region.yaml").exists() and (d / "roads.graph.json").exists()):
+            continue
+        reg = yaml.safe_load((d / "region.yaml").read_text(encoding="utf-8"))
+        if not reg or "bbox" not in reg:
+            continue
+        se = shared_edge(_bbox(own), _bbox(reg))
+        if se:
+            out.append((d.name, se))
+    return out
+
+
+def _load_overrides(d: Path) -> list:
+    p = d / "overrides.yaml"
+    if not p.exists():
+        return []
+    return (yaml.safe_load(p.read_text(encoding="utf-8")) or {}).get("overrides", []) or []
+
+
+def neighbour_ends(region_id: str, own: list[End], regions: Path | None = None) -> dict:
+    """{neighbour id: [End, ...]} on the shared edges. A neighbour is loaded only when this tile has a chain end on
+    the shared edge."""
+    regions = regions or REGIONS
+    out = {}
+    for nb, se in neighbours(region_id, regions):
+        if not any(on_seam(e.xy, se) for e in own):
+            continue
+        d = regions / nb
+        reg = yaml.safe_load((d / "region.yaml").read_text(encoding="utf-8"))
+        graph = json.loads((d / "roads.graph.json").read_text(encoding="utf-8"))
+        net = plain_network(graph, (reg["origin"]["x"], reg["origin"]["y"]), _load_overrides(d))
+        out[nb] = [e for e in ends(net) if on_seam(e.xy, se)]
+    return out
+
+
+def plan_region(net: Nw.Network, region_id: str, regions: Path | None = None) -> list[Taper]:
+    """Transitions of a tile against the neighbours' data. Call on the network BEFORE apply_widths."""
+    own = ends(net)
+    if not own:
+        return []
+    return plan(own, neighbour_ends(region_id, own, regions))
+
+
+# --------------------------------------------------------------------------------------------- apply
+def _chains(net):
+    return {c.id: c for c in net.chains}
+
+
+def apply_widths(net: Nw.Network, tapers: list[Taper]) -> list[dict]:
+    """Blend the carriageway half-width of the planned chain ends; returns the report rows."""
+    by = _chains(net)
+    for t in tapers:
+        c = by[t.chain]
+        dhw = t.hw_seam - t.hw_own
+        if t.skipped or abs(dhw) < MIN_STEP_M / 2:
+            continue
+        d = c.line.s if t.end == 0 else c.line.s[-1] - c.line.s
+        k = weight(d, t.length)
+        c.hw = c.hw + dhw * k
+        for i in np.unique(c.sec_idx[k > 0]):
+            sec = net.sec_list[int(i)]
+            if not sec.lane_follow and not sec.lane_edges:
+                sec.lane_follow = True                    # lanes share the local width inside the transition
+                sec.provenance["lanes_follow_width"] = "derived:seam_taper (ADR 0275)"
+        m = max(2, int(math.ceil(2 * float(c.hw.max()) / 1.75)))
+        c.m_lat = m + (m % 2)
+    return [t.report() for t in tapers]
+
+
+def _decode(mat: np.ndarray):
+    code = X.SHOULDER_CODE
+    v = np.where(mat >= code, mat - code, 0)
+    lp, lg = int(round(X.LEGACY[0] * 100)), int(round(X.LEGACY[1] * 100))
+    return (np.where(mat >= code, v // 1000, lp).astype(float), np.where(mat >= code, v % 1000, lg).astype(float))
+
+
+def _encode(paved_cm: np.ndarray, ground_cm: np.ndarray) -> np.ndarray:
+    p, g = np.rint(paved_cm).astype(np.int64), np.rint(ground_cm).astype(np.int64)
+    lp, lg = int(round(X.LEGACY[0] * 100)), int(round(X.LEGACY[1] * 100))
+    return np.where((p == lp) & (g == lg), 0, X.SHOULDER_CODE + p * 1000 + g)
+
+
+def _ramp_steps(s: np.ndarray, pv: np.ndarray, gr: np.ndarray) -> int:
+    """One run of kerbless stations: every step of (paved, ground) between neighbours becomes an S-curve centred on
+    the step. In place; returns the number of ramps."""
+    cut = np.where((np.diff(pv) != 0) | (np.diff(gr) != 0))[0]
+    if not len(cut):
+        return 0
+    p0, g0 = pv.copy(), gr.copy()
+    pos = [0.5 * (s[j] + s[j + 1]) for j in cut]
+    bounds = [s[0]] + pos + [s[-1]]
+    n = 0
+    for q, j in enumerate(cut):
+        a, b = (p0[j], g0[j]), (p0[j + 1], g0[j + 1])
+        step = max(abs(b[0] - a[0]), abs((b[0] + b[1]) - (a[0] + a[1]))) / 100.0
+        room_l = (bounds[q + 1] - bounds[q]) * (1.0 if q == 0 else 0.5)
+        room_r = (bounds[q + 2] - bounds[q + 1]) * (1.0 if q == len(cut) - 1 else 0.5)
+        h = min(0.5 * min(max(RATIO * step, MIN_LEN_M), MAX_LEN_M), room_l, room_r)
+        if h < MIN_RAMP_HALF_M:
+            continue
+        m = np.abs(s - pos[q]) <= h
+        f = _smoothstep((s[m] - (pos[q] - h)) / (2.0 * h))
+        pv[m] = a[0] + (b[0] - a[0]) * f
+        gr[m] = a[1] + (b[1] - a[1]) * f
+        n += 1
+    return n
+
+
+def apply_shoulders(net: Nw.Network, tapers: list[Taper] | None = None) -> dict:
+    """After network.assign_sides: S-curves of the shoulder widths (side `mat` codes of kerbless stations) at steps
+    inside a chain and towards the seam value of the planned ends."""
+    rep = {"in_chain_ramps": 0, "seam_sides": 0}
+    seam = {}
+    for t in tapers or []:
+        for side, v in t.shoulder.items():
+            seam[(t.chain, side)] = seam.get((t.chain, side), []) + [(t, v)]
+    for c in net.chains:
+        if c.roundabout or not c.side:
+            continue
+        for side in ("L", "R"):
+            d = c.side.get(side)
+            if not d:
+                continue
+            mat = np.asarray(d["mat"]).astype(np.int64)
+            rural = (np.asarray(d["kind"]) == Nw.RURAL) & ((mat == 0) | (mat >= X.SHOULDER_CODE))
+            if not rural.any():
+                continue
+            pv, gr = _decode(mat)
+            idx = np.arange(len(mat))
+            for run in np.split(idx, np.where(np.diff(rural.astype(int)) != 0)[0] + 1):
+                if len(run) >= 2 and rural[run[0]]:
+                    p, g = pv[run], gr[run]
+                    rep["in_chain_ramps"] += _ramp_steps(c.line.s[run], p, g)
+                    pv[run], gr[run] = p, g
+            for t, v in seam.get((c.id, side), []):
+                dist = c.line.s if t.end == 0 else c.line.s[-1] - c.line.s
+                k = weight(dist, t.length)
+                pv = v["seam"][0] + (pv - v["seam"][0]) * (1.0 - k)
+                gr = v["seam"][1] + (gr - v["seam"][1]) * (1.0 - k)
+                rep["seam_sides"] += 1
+            new = np.where(rural, _encode(pv, gr), mat)
+            if (new != mat).any():
+                d["mat"] = new
+    return rep
+
+
+def shoulder_at(c, side: str, i: int):
+    """(paved_m, ground_m) of a kerbless station, None beside a kerb."""
+    d = (c.side or {}).get(side)
+    if not d or int(d["kind"][i]) != Nw.RURAL:
+        return None
+    p, g = _decode(np.asarray([int(d["mat"][i])], dtype=np.int64))
+    return float(p[0]) / 100.0, float(g[0]) / 100.0

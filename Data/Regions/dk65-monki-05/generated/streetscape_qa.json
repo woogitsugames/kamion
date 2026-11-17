@@ -1,0 +1,5969 @@
+{
+ "buildings": {
+  "balconies": 0,
+  "dock_facades": [],
+  "docks": 0,
+  "facade_signs": 13,
+  "frontage_props": [],
+  "frontages": 0,
+  "hall_wall_runoff_tris": {
+   "with_uv1": 1652,
+   "without_uv1": 0
+  },
+  "house_canopies_under_eave_skipped": 18,
+  "house_roofs": {
+   "flat": 3,
+   "gable:lod1": 5,
+   "gable:lod1+multi": 4,
+   "gable:lod2": 26,
+   "gable:lod2+multi": 24,
+   "hip:lod1": 2,
+   "hip:lod2": 19
+  },
+  "lod1_house_openings": 957,
+  "lod1_house_openings_fallback_mat": 54,
+  "lod1_house_openings_framed": 0,
+  "pavilion_fronts": 1,
+  "roof_masts": [],
+  "roofs_other": {},
+  "subtypes": {
+   "biurowiec": 13,
+   "dom": 81,
+   "dom_drewniany": 2,
+   "gospodarczy": 270,
+   "pawilon": 1
+  },
+  "typologies": {
+   "house": 83,
+   "office": 14,
+   "shed": 270
+  }
+ },
+ "cycleways": {
+  "bdot_replaced": [],
+  "built": 0,
+  "by_kind": {
+   "ddr": 0,
+   "segregated": 0
+  },
+  "length_m": 0,
+  "overrides_applied": [],
+  "overrides_stale": [],
+  "planned_m2": 0,
+  "skipped": {
+   "override": 0,
+   "shared": 0,
+   "unpaved": 0
+  },
+  "ways": 0
+ },
+ "furniture": {
+  "bridge_median_lamps": {
+   "placed": 0,
+   "removed": 0
+  },
+  "bus_stop_wear_candidates": [],
+  "crossing_signs": 0,
+  "depot_yards": {
+   "applied": [],
+   "stale": []
+  },
+  "direction_boards": 0,
+  "embankment_check": {
+   "ground": "NMT (decks removed) at the profile end + 5 / 7 / 9 m",
+   "max_drop_m": 1.53,
+   "p95_drop_m": 1.5,
+   "runs": [],
+   "rural_sides": 2,
+   "threshold_m": 2.0
+  },
+  "fences": {
+   "concrete_m": 0,
+   "panel_m": 0,
+   "retaining_m": 168,
+   "retaining_on_ramp_wall_m": 0
+  },
+  "frontage_cars": {
+   "placed": 0,
+   "skipped": 0
+  },
+  "gate3_landmarks": {
+   "signs": [],
+   "stale": []
+  },
+  "gates": {
+   "applied": [],
+   "closure_lines": [],
+   "replaced_osm": 0,
+   "stale": []
+  },
+  "guardrail_runs": [
+   {
+    "key": "c:w179127764:839429356-5026926438:L:approach",
+    "pts": [
+     [
+      787.56,
+      875.9,
+      136.15,
+      0
+     ],
+     [
+      788.56,
+      876.0,
+      136.13,
+      0
+     ],
+     [
+      789.55,
+      876.1,
+      136.11,
+      0
+     ],
+     [
+      790.55,
+      876.2,
+      136.09,
+      0
+     ],
+     [
+      791.54,
+      876.3,
+      136.06,
+      0
+     ],
+     [
+      792.54,
+      876.4,
+      136.03,
+      0
+     ],
+     [
+      793.53,
+      876.49,
+      136.0,
+      0
+     ],
+     [
+      794.53,
+      876.59,
+      135.97,
+      0
+     ],
+     [
+      795.53,
+      876.71,
+      135.95,
+      0
+     ],
+     [
+      796.52,
+      876.84,
+      135.93,
+      0
+     ],
+     [
+      797.52,
+      876.9,
+      135.92,
+      0
+     ],
+     [
+      798.53,
+      876.96,
+      135.9,
+      0
+     ],
+     [
+      799.53,
+      877.01,
+      135.89,
+      1
+     ],
+     [
+      800.54,
+      877.06,
+      135.87,
+      1
+     ],
+     [
+      801.54,
+      877.12,
+      135.86,
+      1
+     ],
+     [
+      802.55,
+      877.17,
+      135.85,
+      1
+     ],
+     [
+      803.55,
+      877.23,
+      135.84,
+      1
+     ],
+     [
+      804.55,
+      877.27,
+      135.82,
+      1
+     ],
+     [
+      805.55,
+      877.38,
+      135.81,
+      1
+     ],
+     [
+      806.53,
+      877.55,
+      135.8,
+      1
+     ],
+     [
+      807.52,
+      877.7,
+      135.79,
+      1
+     ],
+     [
+      808.51,
+      877.86,
+      135.77,
+      1
+     ],
+     [
+      809.49,
+      878.02,
+      135.76,
+      1
+     ],
+     [
+      810.48,
+      878.19,
+      135.74,
+      1
+     ],
+     [
+      811.46,
+      878.34,
+      135.73,
+      0
+     ],
+     [
+      812.45,
+      878.5,
+      135.72,
+      0
+     ],
+     [
+      813.43,
+      878.64,
+      135.7,
+      0
+     ],
+     [
+      814.43,
+      878.72,
+      135.69,
+      0
+     ],
+     [
+      815.42,
+      878.8,
+      135.68,
+      0
+     ],
+     [
+      816.42,
+      878.9,
+      135.67,
+      0
+     ],
+     [
+      817.41,
+      879.01,
+      135.67,
+      0
+     ],
+     [
+      818.41,
+      879.11,
+      135.66,
+      0
+     ],
+     [
+      819.4,
+      879.21,
+      135.66,
+      0
+     ],
+     [
+      820.39,
+      879.31,
+      135.66,
+      0
+     ],
+     [
+      821.39,
+      879.41,
+      135.65,
+      0
+     ],
+     [
+      822.38,
+      879.51,
+      135.65,
+      0
+     ]
+    ],
+    "term": [
+     true,
+     true
+    ],
+    "term_tall": [
+     false,
+     false
+    ]
+   },
+   {
+    "key": "c:w179127764:839429356-5026926438:R:approach",
+    "pts": [
+     [
+      821.68,
+      886.47,
+      135.65,
+      0
+     ],
+     [
+      820.68,
+      886.37,
+      135.65,
+      0
+     ],
+     [
+      819.69,
+      886.27,
+      135.66,
+      0
+     ],
+     [
+      818.69,
+      886.17,
+      135.66,
+      0
+     ],
+     [
+      817.7,
+      886.07,
+      135.66,
+      0
+     ],
+     [
+      816.7,
+      885.97,
+      135.67,
+      0
+     ],
+     [
+      815.71,
+      885.87,
+      135.67,
+      0
+     ],
+     [
+      814.71,
+      885.77,
+      135.68,
+      0
+     ],
+     [
+      813.72,
+      885.64,
+      135.69,
+      0
+     ],
+     [
+      812.72,
+      885.52,
+      135.7,
+      0
+     ],
+     [
+      811.72,
+      885.46,
+      135.72,
+      0
+     ],
+     [
+      810.72,
+      885.4,
+      135.73,
+      0
+     ],
+     [
+      809.71,
+      885.35,
+      135.74,
+      1
+     ],
+     [
+      808.71,
+      885.3,
+      135.76,
+      1
+     ],
+     [
+      807.71,
+      885.24,
+      135.77,
+      1
+     ],
+     [
+      806.7,
+      885.19,
+      135.79,
+      1
+     ],
+     [
+      805.7,
+      885.13,
+      135.8,
+      1
+     ],
+     [
+      804.7,
+      885.07,
+      135.81,
+      1
+     ],
+     [
+      803.71,
+      884.96,
+      135.82,
+      1
+     ],
+     [
+      802.72,
+      884.79,
+      135.84,
+      1
+     ],
+     [
+      801.74,
+      884.63,
+      135.85,
+      1
+     ],
+     [
+      800.75,
+      884.47,
+      135.86,
+      1
+     ],
+     [
+      799.77,
+      884.31,
+      135.87,
+      1
+     ],
+     [
+      798.78,
+      884.15,
+      135.89,
+      1
+     ],
+     [
+      797.8,
+      884.0,
+      135.9,
+      0
+     ],
+     [
+      796.82,
+      883.85,
+      135.92,
+      0
+     ],
+     [
+      795.83,
+      883.71,
+      135.93,
+      0
+     ],
+     [
+      794.83,
+      883.64,
+      135.95,
+      0
+     ],
+     [
+      793.84,
+      883.56,
+      135.97,
+      0
+     ],
+     [
+      792.84,
+      883.46,
+      136.0,
+      0
+     ],
+     [
+      791.85,
+      883.36,
+      136.03,
+      0
+     ],
+     [
+      790.86,
+      883.26,
+      136.06,
+      0
+     ],
+     [
+      789.86,
+      883.17,
+      136.09,
+      0
+     ],
+     [
+      788.86,
+      883.07,
+      136.11,
+      0
+     ],
+     [
+      787.87,
+      882.97,
+      136.13,
+      0
+     ],
+     [
+      786.87,
+      882.87,
+      136.15,
+      0
+     ]
+    ],
+    "term": [
+     true,
+     true
+    ],
+    "term_tall": [
+     false,
+     false
+    ]
+   }
+  ],
+  "guardrails_m": {
+   "approach": 48,
+   "authored": 0,
+   "bridge": 24,
+   "deck_free_ends": 0,
+   "dedup_skipped_pts": 0,
+   "embankment": 0,
+   "median": 0,
+   "no_guardrail": 0,
+   "parapet_tris_dropped": 333,
+   "pier": 0,
+   "structure": 0
+  },
+  "guardrails_pier": {
+   "built_m": 0.0,
+   "gap_m": 4.5,
+   "piers": 0,
+   "runs": []
+  },
+  "junction_signs": {
+   "A-7": 3,
+   "D-1": 4
+  },
+  "lamps": {
+   "by_family": {
+    "lamp_8m": 188,
+    "lamp_9m": 29,
+    "lamp_old_concrete_9m": 24,
+    "lamp_old_steel_8m": 14
+   },
+   "osm": 0,
+   "rule": 255,
+   "support_adjustments": [
+    {
+     "after_m": 0.142,
+     "before_m": 0.152,
+     "from": [
+      776.9033775305049,
+      882.0877842647475
+     ],
+     "p": "lamp_9m",
+     "to": [
+      777.3983522773356,
+      882.5827590115781
+     ]
+    },
+    {
+     "after_m": 0.031,
+     "before_m": 0.476,
+     "from": [
+      713.7522845251839,
+      171.3745689014521
+     ],
+     "p": "lamp_8m",
+     "to": [
+      713.5047971517686,
+      171.12708152803683
+     ]
+    },
+    {
+     "after_m": 0.114,
+     "before_m": 0.194,
+     "from": [
+      -760.8482026064136,
+      -516.3752205286515
+     ],
+     "p": "lamp_8m",
+     "to": [
+      -760.8482026064136,
+      -516.0252205286515
+     ]
+    }
+   ]
+  },
+  "lamps_on_narrow_islands": {
+   "items": [],
+   "moved": 0,
+   "radius_m": 1.0,
+   "removed": 0
+  },
+  "landmarks": {
+   "gantries": [],
+   "landmarks": [],
+   "stale": []
+  },
+  "life": {
+   "bins": 0,
+   "bus_stop_oil": {
+    "applied": [],
+    "rejected": []
+   },
+   "cones": 0,
+   "containers": 0,
+   "coupled": 0,
+   "dock_trailers": 0,
+   "pallets": 0,
+   "parking": {
+    "bays": 0,
+    "body_share": {},
+    "cars": 0,
+    "oil_stains": 0,
+    "reversed_share": 0.0,
+    "vans": 0
+   },
+   "skips": 0,
+   "solo_tractors": 0,
+   "stall_lines": 0,
+   "start_view_vehicles_skipped": 0,
+   "tyre_scrub_shapes": {},
+   "tyre_scrub_tracks": 0,
+   "yard_drains": 0,
+   "yard_trailers": 0
+  },
+  "megascans": {
+   "added_drainage_triangles": 106,
+   "added_props": 226,
+   "available": [
+    "birch-tree-trunk",
+    "boxwood",
+    "elderberry",
+    "granite-rock",
+    "grass-clumps",
+    "linden-branch",
+    "metal-manhole-cover",
+    "modular-curb",
+    "round-drain-cover",
+    "silver-birch-bark",
+    "small-granite-rock",
+    "square-rusty-drain",
+    "street-curbs",
+    "trash-bag-pack",
+    "wild-grass"
+   ],
+   "drainage_atlas": true,
+   "drainage_replacements": 420,
+   "drainage_source_counts": {
+    "metal-manhole-cover": 53,
+    "round-drain-cover": 202,
+    "square-rusty-drain": 218
+   },
+   "gully_replacements": 420,
+   "manholes": 53,
+   "manholes_skipped_ground_shoulder": 2,
+   "placed_source_count": 8,
+   "placed_source_counts": {
+    "elderberry": 29,
+    "granite-rock": 20,
+    "grass-clumps": 118,
+    "metal-manhole-cover": 53,
+    "round-drain-cover": 202,
+    "small-granite-rock": 14,
+    "square-rusty-drain": 218,
+    "wild-grass": 45
+   },
+   "placed_sources": [
+    "elderberry",
+    "granite-rock",
+    "grass-clumps",
+    "metal-manhole-cover",
+    "round-drain-cover",
+    "small-granite-rock",
+    "square-rusty-drain",
+    "wild-grass"
+   ],
+   "placement_status": "WORKING_VALUE",
+   "props": {
+    "elderberry": 29,
+    "granite-rock": 20,
+    "grass-clumps": 118,
+    "small-granite-rock": 14,
+    "wild-grass": 45
+   },
+   "region_prop_cap_WORKING_VALUE": 320,
+   "yard_drain_replacements": 0
+  },
+  "noise_barriers": {
+   "m_by_source": {
+    "bdot": 0,
+    "osm": 0,
+    "override": 0
+   },
+   "m_by_style": {},
+   "on_screened_deck_m": 0.0,
+   "signs_moved_off_wall": [],
+   "zones_stale": []
+  },
+  "noise_barriers_m": 0,
+  "osm_signs": {
+   "give_way_stop": 0,
+   "placed": {},
+   "skipped_far": 0,
+   "unknown": {}
+  },
+  "points": {
+   "bus_shelter": 1,
+   "bus_shelter_5m": 4,
+   "bus_stop": 5,
+   "power_pole": 2,
+   "pylon": 8
+  },
+  "pole_footing_steps": {
+   "count": 46,
+   "max_m": 0.142,
+   "worst": [
+    {
+     "e": 777.4,
+     "n": 882.6,
+     "p": "lamp_9m",
+     "step_m": 0.142
+    },
+    {
+     "e": -785.8,
+     "n": -533.0,
+     "p": "lamp_8m",
+     "step_m": 0.141
+    },
+    {
+     "e": -1024.0,
+     "n": -105.6,
+     "p": "power_pole",
+     "step_m": 0.123
+    },
+    {
+     "e": -810.7,
+     "n": -549.7,
+     "p": "lamp_8m",
+     "step_m": 0.12
+    },
+    {
+     "e": -127.2,
+     "n": -447.1,
+     "p": "lamp_8m",
+     "step_m": 0.117
+    },
+    {
+     "e": 547.2,
+     "n": 697.3,
+     "p": "lamp_8m",
+     "step_m": 0.117
+    },
+    {
+     "e": -760.8,
+     "n": -516.0,
+     "p": "lamp_8m",
+     "step_m": 0.114
+    },
+    {
+     "e": -97.5,
+     "n": -451.0,
+     "p": "lamp_8m",
+     "step_m": 0.107
+    },
+    {
+     "e": 747.0,
+     "n": 879.1,
+     "p": "lamp_9m",
+     "step_m": 0.1
+    },
+    {
+     "e": -67.7,
+     "n": -454.9,
+     "p": "lamp_8m",
+     "step_m": 0.097
+    },
+    {
+     "e": 170.3,
+     "n": -482.7,
+     "p": "lamp_8m",
+     "step_m": 0.096
+    },
+    {
+     "e": 604.8,
+     "n": 275.3,
+     "p": "lamp_8m",
+     "step_m": 0.095
+    },
+    {
+     "e": 543.9,
+     "n": 727.1,
+     "p": "lamp_8m",
+     "step_m": 0.087
+    },
+    {
+     "e": 683.9,
+     "n": 168.9,
+     "p": "lamp_8m",
+     "step_m": 0.086
+    },
+    {
+     "e": -157.0,
+     "n": -443.3,
+     "p": "lamp_8m",
+     "step_m": 0.083
+    },
+    {
+     "e": -8.2,
+     "n": -462.6,
+     "p": "lamp_8m",
+     "step_m": 0.081
+    },
+    {
+     "e": -186.7,
+     "n": -439.4,
+     "p": "lamp_8m",
+     "step_m": 0.081
+    },
+    {
+     "e": -276.0,
+     "n": -427.8,
+     "p": "lamp_8m",
+     "step_m": 0.08
+    },
+    {
+     "e": -536.9,
+     "n": 287.9,
+     "p": "power_pole",
+     "step_m": 0.08
+    },
+    {
+     "e": 956.4,
+     "n": -599.0,
+     "p": "lamp_old_steel_8m",
+     "step_m": 0.076
+    }
+   ]
+  },
+  "poles_reseated": 0,
+  "poles_under_decks": {
+   "items": [],
+   "removed": 0
+  },
+  "power_lines": 12,
+  "power_supports_added": 83,
+  "props_off_carriageway": {
+   "moved": 0,
+   "removed": [],
+   "still_on_road": 0
+  },
+  "props_on_level_carriageway": {
+   "items": [],
+   "removed": 0
+  },
+  "roundabout_signs": {
+   "c9_islands": 0,
+   "diagram_at": [],
+   "diagrams": 0,
+   "diagrams_replaced": [],
+   "exit_boards": 0,
+   "moved_before_barrier": 0
+  },
+  "route_checks": [],
+  "route_signs": [
+   {
+    "code": "B-33_90",
+    "e": -959.23,
+    "faces_route_driver": true,
+    "n": -993.669,
+    "offset_m": 7.6,
+    "s_m": 30.0,
+    "src": "rule:maxspeed:c:w286989049:2407684431-1134833995"
+   },
+   {
+    "code": "B-33_90",
+    "e": -1017.826,
+    "faces_route_driver": false,
+    "n": -907.32,
+    "offset_m": 7.6,
+    "s_m": 133.2,
+    "src": "rule:maxspeed:c:w286989049:2407684431-1134833995"
+   }
+  ],
+  "signal_approaches": 0,
+  "speed_signs": 2,
+  "wire_max_seg_m": 4.999,
+  "wire_max_turn_deg": 0.574,
+  "yard_wear": {
+   "applied": [],
+   "asphalt_patch_uv": {
+    "invalid_uv": 0,
+    "normalised": 81
+   },
+   "paint_surface": {
+    "fresh_parts": 0,
+    "fresh_vertices": 0,
+    "old_or_unknown_parts": 16
+   },
+   "stale": [],
+   "traffic_oil_parts": 5
+  }
+ },
+ "garden_canopies": {
+  "added_instances": 0,
+  "capped": 0,
+  "instances": 25,
+  "list": [],
+  "source": "G7 # 12 ceilings (research/g7-street-greenery/README.md)",
+  "widened": 0
+ },
+ "garden_fronts": {
+  "front_m": 663.6,
+  "heights_m": [
+   2.69,
+   2.63,
+   2.83,
+   1.3,
+   2.59,
+   2.93,
+   2.87,
+   3.24,
+   3.14,
+   3.02,
+   2.44,
+   3.55,
+   3.13,
+   1.31,
+   3.37,
+   2.71,
+   2.77,
+   1.45,
+   3.2,
+   2.87,
+   1.2,
+   1.38,
+   2.92,
+   3.59,
+   1.42,
+   1.24,
+   1.28,
+   1.35,
+   2.84
+  ],
+  "list": [
+   {
+    "front_m": 21.6,
+    "h_m": 2.69,
+    "kind": "thuja",
+    "m": 20.7,
+    "plot": "bdot:74d15241-89cf-4aa5-a939-b8d2061a7ca8",
+    "w_m": 1.02
+   },
+   {
+    "front_m": 20.1,
+    "h_m": 2.63,
+    "kind": "thuja",
+    "m": 19.2,
+    "plot": "bdot:2002917F-33F2-5C99-E053-CC2BA8C01CFC",
+    "w_m": 1.19
+   },
+   {
+    "front_m": 12.9,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 8.7,
+    "plot": "bdot:2002917F-341C-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 10.3,
+    "h_m": 2.83,
+    "kind": "thuja",
+    "m": 3.4,
+    "plot": "bdot:2002917F-341E-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.94
+   },
+   {
+    "front_m": 17.2,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 16.3,
+    "plot": "bdot:2002917F-3457-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 13.5,
+    "h_m": 1.3,
+    "kind": "broadleaf",
+    "m": 12.6,
+    "plot": "bdot:2002917F-34C3-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.57
+   },
+   {
+    "front_m": 9.4,
+    "h_m": 2.59,
+    "kind": "thuja",
+    "m": 8.5,
+    "plot": "bdot:2002917F-34FC-5C99-E053-CC2BA8C01CFC",
+    "w_m": 1.0
+   },
+   {
+    "front_m": 18.6,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 17.7,
+    "plot": "bdot:2002917F-3719-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 15.3,
+    "h_m": 2.93,
+    "kind": "thuja",
+    "m": 8.5,
+    "plot": "bdot:2002917F-371D-5C99-E053-CC2BA8C01CFC",
+    "w_m": 1.08
+   },
+   {
+    "front_m": 13.7,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 12.8,
+    "plot": "bdot:2002917F-3720-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 14.7,
+    "h_m": 2.87,
+    "kind": "thuja",
+    "m": 13.8,
+    "plot": "bdot:2002917F-374D-5C99-E053-CC2BA8C01CFC",
+    "w_m": 1.06
+   },
+   {
+    "front_m": 13.7,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 7.6,
+    "plot": "bdot:2002917F-374E-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 13.8,
+    "h_m": 3.24,
+    "kind": "thuja",
+    "m": 12.9,
+    "plot": "bdot:2002917F-3751-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.98
+   },
+   {
+    "front_m": 16.8,
+    "h_m": 3.14,
+    "kind": "thuja",
+    "m": 15.9,
+    "plot": "bdot:2002917F-3754-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.93
+   },
+   {
+    "front_m": 15.2,
+    "h_m": 3.02,
+    "kind": "thuja",
+    "m": 10.3,
+    "plot": "bdot:2002917F-3755-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.92
+   },
+   {
+    "front_m": 3.8,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 3.1,
+    "plot": "bdot:2002917F-3758-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 9.1,
+    "h_m": 2.44,
+    "kind": "thuja",
+    "m": 6.1,
+    "plot": "bdot:2002917F-9B80-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.83
+   },
+   {
+    "front_m": 16.3,
+    "h_m": 3.55,
+    "kind": "thuja",
+    "m": 15.4,
+    "plot": "bdot:2002917F-9B82-5C99-E053-CC2BA8C01CFC",
+    "w_m": 1.16
+   },
+   {
+    "front_m": 16.4,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 15.7,
+    "plot": "bdot:2002917F-9C14-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 15.3,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 14.4,
+    "plot": "bdot:2002917F-9C17-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 11.5,
+    "h_m": 3.13,
+    "kind": "thuja",
+    "m": 4.8,
+    "plot": "bdot:2002917F-9D68-5C99-E053-CC2BA8C01CFC",
+    "w_m": 1.13
+   },
+   {
+    "front_m": 7.6,
+    "h_m": 1.31,
+    "kind": "broadleaf",
+    "m": 6.7,
+    "plot": "bdot:2002917F-9D6B-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.72
+   },
+   {
+    "front_m": 16.9,
+    "h_m": 3.37,
+    "kind": "thuja",
+    "m": 16.0,
+    "plot": "bdot:2002917F-9D97-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.97
+   },
+   {
+    "front_m": 15.7,
+    "h_m": 2.71,
+    "kind": "thuja",
+    "m": 14.8,
+    "plot": "bdot:2002917F-9D99-5C99-E053-CC2BA8C01CFC",
+    "w_m": 1.09
+   },
+   {
+    "front_m": 6.8,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 5.3,
+    "plot": "bdot:2002917F-9D9A-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 10.0,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 9.1,
+    "plot": "bdot:2002917F-9D9B-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 18.2,
+    "h_m": 2.77,
+    "kind": "thuja",
+    "m": 17.3,
+    "plot": "bdot:2002917F-9D9C-5C99-E053-CC2BA8C01CFC",
+    "w_m": 1.0
+   },
+   {
+    "front_m": 14.5,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 8.4,
+    "plot": "bdot:2002917F-9D9D-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 3.1,
+    "h_m": 1.45,
+    "kind": "broadleaf",
+    "m": 2.4,
+    "plot": "bdot:2002917F-9D9F-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.62
+   },
+   {
+    "front_m": 13.8,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 12.9,
+    "plot": "bdot:2002917F-9DA0-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 15.4,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 14.7,
+    "plot": "bdot:2002917F-9DA1-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 14.9,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 14.0,
+    "plot": "bdot:2002917F-9DA2-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 14.9,
+    "h_m": 3.2,
+    "kind": "thuja",
+    "m": 14.2,
+    "plot": "bdot:2002917F-9DA3-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.93
+   },
+   {
+    "front_m": 15.3,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 12.8,
+    "plot": "bdot:2002917F-9DCF-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 12.3,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 11.4,
+    "plot": "bdot:2002917F-9DD1-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 14.0,
+    "h_m": 2.87,
+    "kind": "thuja",
+    "m": 13.3,
+    "plot": "bdot:2002917F-9DD4-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.81
+   },
+   {
+    "front_m": 14.1,
+    "h_m": 1.2,
+    "kind": "broadleaf",
+    "m": 13.4,
+    "plot": "bdot:2002917F-9DD5-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.65
+   },
+   {
+    "front_m": 12.2,
+    "h_m": 1.38,
+    "kind": "broadleaf",
+    "m": 10.3,
+    "plot": "bdot:2002917F-9DD6-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.51
+   },
+   {
+    "front_m": 13.2,
+    "h_m": 2.92,
+    "kind": "thuja",
+    "m": 11.8,
+    "plot": "bdot:2002917F-9DD8-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.86
+   },
+   {
+    "front_m": 12.2,
+    "h_m": 3.59,
+    "kind": "thuja",
+    "m": 8.0,
+    "plot": "bdot:2002917F-9DD9-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.97
+   },
+   {
+    "front_m": 23.8,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 17.8,
+    "plot": "bdot:2002917F-9DDA-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 9.7,
+    "h_m": 1.42,
+    "kind": "broadleaf",
+    "m": 8.8,
+    "plot": "bdot:2002917F-9DDB-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.62
+   },
+   {
+    "front_m": 12.0,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 6.3,
+    "plot": "bdot:2002917F-9DDC-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 10.6,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 6.3,
+    "plot": "bdot:2002917F-9E0E-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 13.1,
+    "h_m": 1.24,
+    "kind": "broadleaf",
+    "m": 12.2,
+    "plot": "bdot:2002917F-9E10-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.7
+   },
+   {
+    "front_m": 18.6,
+    "h_m": 1.28,
+    "kind": "broadleaf",
+    "m": 17.7,
+    "plot": "bdot:22902bae-a446-4c26-a2c2-b06c312c3d76",
+    "w_m": 0.62
+   },
+   {
+    "front_m": 10.5,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 9.6,
+    "plot": "bdot:25b89c18-cf08-4235-a890-b50d562fc4b6",
+    "w_m": 0.9
+   },
+   {
+    "front_m": 10.7,
+    "h_m": 1.35,
+    "kind": "broadleaf",
+    "m": 10.0,
+    "plot": "bdot:5e21d0c8-0b61-4a37-8358-b6456f9bc991",
+    "w_m": 0.57
+   },
+   {
+    "front_m": 10.0,
+    "h_m": 2.84,
+    "kind": "thuja",
+    "m": 9.1,
+    "plot": "bdot:8daf09d1-9b8a-4ec0-90e2-926db113b46d",
+    "w_m": 0.81
+   }
+  ],
+  "m": {
+   "broadleaf": 94.1,
+   "thuja": 244.0
+  },
+  "plots": {
+   "broadleaf": 9,
+   "low": 20,
+   "thuja": 20
+  },
+  "segments": 54,
+  "shrubs": 88,
+  "skipped": {},
+  "source": "research/g7-street-greenery/README.md (G7 # 15-21); positions are rule, not survey",
+  "tris_high": 6710,
+  "tris_low": 3610,
+  "widths_m": [
+   1.02,
+   1.19,
+   0.94,
+   0.57,
+   1.0,
+   1.08,
+   1.06,
+   0.98,
+   0.93,
+   0.92,
+   0.83,
+   1.16,
+   1.13,
+   0.72,
+   0.97,
+   1.09,
+   1.0,
+   0.62,
+   0.93,
+   0.81,
+   0.65,
+   0.51,
+   0.86,
+   0.97,
+   0.62,
+   0.7,
+   0.62,
+   0.57,
+   0.81
+  ]
+ },
+ "garden_plan": {
+  "broadleaf": 9,
+  "by_plot": {
+   "bdot:163c52f1-6d93-46fa-9278-07a50c7220cd": "none",
+   "bdot:2002917F-33F2-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-341A-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-341C-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-341E-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-3452-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-3457-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-34C3-5C99-E053-CC2BA8C01CFC": "broadleaf",
+   "bdot:2002917F-34FC-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-3719-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-371D-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-3720-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-3721-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-374D-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-374E-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-3750-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-3751-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-3754-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-3755-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-3758-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9B7D-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9B7E-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9B80-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9B81-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9B82-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9B83-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9C14-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9C15-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9C16-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9C17-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9C8E-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9D68-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9D69-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9D6A-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9D6B-5C99-E053-CC2BA8C01CFC": "broadleaf",
+   "bdot:2002917F-9D6C-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9D97-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9D98-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9D99-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9D9A-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9D9B-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9D9C-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9D9D-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9D9E-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9D9F-5C99-E053-CC2BA8C01CFC": "broadleaf",
+   "bdot:2002917F-9DA0-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9DA1-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9DA2-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9DA3-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9DA4-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9DCF-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9DD0-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9DD1-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9DD3-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9DD4-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9DD5-5C99-E053-CC2BA8C01CFC": "broadleaf",
+   "bdot:2002917F-9DD6-5C99-E053-CC2BA8C01CFC": "broadleaf",
+   "bdot:2002917F-9DD7-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9DD8-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9DD9-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-9DDA-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9DDB-5C99-E053-CC2BA8C01CFC": "broadleaf",
+   "bdot:2002917F-9DDC-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9E08-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9E09-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9E0A-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9E0D-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9E0E-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-9E0F-5C99-E053-CC2BA8C01CFC": "none",
+   "bdot:2002917F-9E10-5C99-E053-CC2BA8C01CFC": "broadleaf",
+   "bdot:22902bae-a446-4c26-a2c2-b06c312c3d76": "broadleaf",
+   "bdot:25b89c18-cf08-4235-a890-b50d562fc4b6": "low",
+   "bdot:593a54ee-7553-4cdc-b2dd-6746d70fbe6b": "none",
+   "bdot:5cbd839e-9c94-4838-a70e-8733bb31f315": "none",
+   "bdot:5e21d0c8-0b61-4a37-8358-b6456f9bc991": "broadleaf",
+   "bdot:6aaa23a5-1883-42fa-91d5-0d6414d76851": "none",
+   "bdot:74d15241-89cf-4aa5-a939-b8d2061a7ca8": "thuja",
+   "bdot:8daf09d1-9b8a-4ec0-90e2-926db113b46d": "thuja"
+  },
+  "low": 20,
+  "none": 27,
+  "plots": 78,
+  "plots_with_front": 78,
+  "source": "research/g7-street-greenery/README.md (G7 # 15-18)",
+  "thuja": 22
+ },
+ "garden_trees": {
+  "claimed_crowns": 0,
+  "conifers": [],
+  "conifers_converted": 0,
+  "list": [],
+  "moved_behind_fence": 0,
+  "skipped": {},
+  "source": "crowns: GUGiK orthophoto 2024 (plot_canopy.json); habit / height: G7 # 6-7, 11-14",
+  "species": {},
+  "street_strip": 0,
+  "trees": 0,
+  "tris_high": 0,
+  "tris_low": 0
+ },
+ "hero_bridges": {
+  "applied": [],
+  "stale": []
+ },
+ "hero_buildings": {
+  "applied": [],
+  "stale": []
+ },
+ "hero_depots": {
+  "applied": [],
+  "stale": []
+ },
+ "mesh_budget": {
+  "frame_estimate": [
+   {
+    "by_category_high": {
+     "buildings": 6766,
+     "forest_hlod": 4793,
+     "furniture": 7418,
+     "props": 3407,
+     "roads": 12490,
+     "terrain": 256116,
+     "trees_lod0": 144958,
+     "trees_lod1": 318520,
+     "trees_lod2": 5336
+    },
+    "by_category_low": {
+     "buildings": 1760,
+     "forest_hlod": 2897,
+     "furniture": 98,
+     "props": 306,
+     "roads": 12490,
+     "terrain": 65536,
+     "trees_lod1": 64928,
+     "trees_lod2": 2122
+    },
+    "camera": "route_s0027",
+    "materials_high": 42,
+    "materials_low": 42,
+    "tris_high": 759804,
+    "tris_low": 150137
+   },
+   {
+    "by_category_high": {
+     "buildings": 6766,
+     "forest_hlod": 4912,
+     "furniture": 7418,
+     "props": 3519,
+     "roads": 15217,
+     "terrain": 391284,
+     "trees_lod0": 219424,
+     "trees_lod1": 312008,
+     "trees_lod2": 5514
+    },
+    "by_category_low": {
+     "buildings": 1760,
+     "forest_hlod": 2995,
+     "furniture": 98,
+     "props": 200,
+     "roads": 15217,
+     "terrain": 99444,
+     "trees_lod1": 95624,
+     "trees_lod2": 1930
+    },
+    "camera": "route_s0082",
+    "materials_high": 42,
+    "materials_low": 42,
+    "tris_high": 966062,
+    "tris_low": 217268
+   },
+   {
+    "by_category_high": {
+     "buildings": 750,
+     "forest_hlod": 4021,
+     "furniture": 4522,
+     "props": 6783,
+     "roads": 12077,
+     "terrain": 382580,
+     "trees_lod0": 84738,
+     "trees_lod1": 214330,
+     "trees_lod2": 4920
+    },
+    "by_category_low": {
+     "buildings": 750,
+     "forest_hlod": 2879,
+     "furniture": 98,
+     "props": 322,
+     "roads": 12077,
+     "terrain": 97140,
+     "trees_lod1": 36794,
+     "trees_lod2": 1692
+    },
+    "camera": "route_s0136",
+    "materials_high": 37,
+    "materials_low": 37,
+    "tris_high": 714721,
+    "tris_low": 151752
+   }
+  ],
+  "lod_policy": {
+   "High": {
+    "bld": 700,
+    "forest_hlod_cull_m": 1000000000.0,
+    "forest_hlod_m": 120,
+    "furn": 1000000000.0,
+    "lod_bias": 1.5,
+    "terrain": [
+     [
+      330,
+      0
+     ],
+     [
+      600,
+      1
+     ],
+     [
+      1000000000.0,
+      2
+     ]
+    ],
+    "tree": [
+     [
+      35,
+      "tris_lod0"
+     ],
+     [
+      80,
+      "tris_lod1"
+     ],
+     [
+      1500,
+      "tris_lod2"
+     ]
+    ]
+   },
+   "Low": {
+    "bld": 0,
+    "forest_hlod_cull_m": 1000,
+    "forest_hlod_m": 70,
+    "furn": 400,
+    "lod_bias": 0.5,
+    "terrain": [
+     [
+      330,
+      1
+     ],
+     [
+      600,
+      2
+     ],
+     [
+      1000000000.0,
+      3
+     ]
+    ],
+    "tree": [
+     [
+      35,
+      "tris_lod1"
+     ],
+     [
+      400,
+      "tris_lod2"
+     ]
+    ]
+   }
+  },
+  "note": "frame estimate = chunks/instances within 1.6 km in a 120 deg wedge (everything within 200 m), no occlusion culling; forest HLOD cells beyond forest_hlod_m replace their trees; docs/06 par. 6 hypotheses: Low <= 400-600 k tris, High <= 1.5-2 M",
+  "per_chunk": [
+   {
+    "chunk": "0_0",
+    "instances": 168,
+    "materials": 8,
+    "trees": 156,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 136593,
+    "tris_low_static": 35217
+   },
+   {
+    "chunk": "0_1",
+    "instances": 607,
+    "materials": 7,
+    "trees": 589,
+    "tris_forest_hlod": 225,
+    "tris_high_static": 138144,
+    "tris_low_static": 36768
+   },
+   {
+    "chunk": "0_2",
+    "instances": 480,
+    "materials": 22,
+    "trees": 472,
+    "tris_forest_hlod": 124,
+    "tris_high_static": 137015,
+    "tris_low_static": 34707
+   },
+   {
+    "chunk": "0_3",
+    "instances": 344,
+    "materials": 26,
+    "trees": 341,
+    "tris_forest_hlod": 198,
+    "tris_high_static": 138809,
+    "tris_low_static": 35594
+   },
+   {
+    "chunk": "0_4",
+    "instances": 146,
+    "materials": 21,
+    "trees": 143,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 137264,
+    "tris_low_static": 34687
+   },
+   {
+    "chunk": "0_5",
+    "instances": 681,
+    "materials": 1,
+    "trees": 681,
+    "tris_forest_hlod": 344,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "0_6",
+    "instances": 1136,
+    "materials": 7,
+    "trees": 1118,
+    "tris_forest_hlod": 414,
+    "tris_high_static": 137824,
+    "tris_low_static": 36448
+   },
+   {
+    "chunk": "0_7",
+    "instances": 2829,
+    "materials": 7,
+    "trees": 2824,
+    "tris_forest_hlod": 1470,
+    "tris_high_static": 138504,
+    "tris_low_static": 37128
+   },
+   {
+    "chunk": "1_0",
+    "instances": 146,
+    "materials": 2,
+    "trees": 145,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 135991,
+    "tris_low_static": 34615
+   },
+   {
+    "chunk": "1_1",
+    "instances": 339,
+    "materials": 2,
+    "trees": 339,
+    "tris_forest_hlod": 161,
+    "tris_high_static": 135468,
+    "tris_low_static": 34092
+   },
+   {
+    "chunk": "1_2",
+    "instances": 1266,
+    "materials": 8,
+    "trees": 1243,
+    "tris_forest_hlod": 544,
+    "tris_high_static": 138631,
+    "tris_low_static": 37255
+   },
+   {
+    "chunk": "1_3",
+    "instances": 445,
+    "materials": 5,
+    "trees": 440,
+    "tris_forest_hlod": 132,
+    "tris_high_static": 135589,
+    "tris_low_static": 34213
+   },
+   {
+    "chunk": "1_4",
+    "instances": 1477,
+    "materials": 1,
+    "trees": 1477,
+    "tris_forest_hlod": 936,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "1_5",
+    "instances": 514,
+    "materials": 37,
+    "trees": 493,
+    "tris_forest_hlod": 372,
+    "tris_high_static": 149103,
+    "tris_low_static": 41909
+   },
+   {
+    "chunk": "1_6",
+    "instances": 2903,
+    "materials": 5,
+    "trees": 2902,
+    "tris_forest_hlod": 1777,
+    "tris_high_static": 135246,
+    "tris_low_static": 33870
+   },
+   {
+    "chunk": "1_7",
+    "instances": 985,
+    "materials": 8,
+    "trees": 985,
+    "tris_forest_hlod": 508,
+    "tris_high_static": 135286,
+    "tris_low_static": 33802
+   },
+   {
+    "chunk": "2_0",
+    "instances": 138,
+    "materials": 1,
+    "trees": 138,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "2_1",
+    "instances": 146,
+    "materials": 2,
+    "trees": 144,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 135778,
+    "tris_low_static": 34402
+   },
+   {
+    "chunk": "2_2",
+    "instances": 866,
+    "materials": 22,
+    "trees": 861,
+    "tris_forest_hlod": 383,
+    "tris_high_static": 136977,
+    "tris_low_static": 35071
+   },
+   {
+    "chunk": "2_3",
+    "instances": 1659,
+    "materials": 22,
+    "trees": 1655,
+    "tris_forest_hlod": 853,
+    "tris_high_static": 136505,
+    "tris_low_static": 34881
+   },
+   {
+    "chunk": "2_4",
+    "instances": 1434,
+    "materials": 1,
+    "trees": 1434,
+    "tris_forest_hlod": 997,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "2_5",
+    "instances": 333,
+    "materials": 41,
+    "trees": 312,
+    "tris_forest_hlod": 263,
+    "tris_high_static": 159903,
+    "tris_low_static": 49010
+   },
+   {
+    "chunk": "2_6",
+    "instances": 808,
+    "materials": 11,
+    "trees": 808,
+    "tris_forest_hlod": 405,
+    "tris_high_static": 135428,
+    "tris_low_static": 33828
+   },
+   {
+    "chunk": "2_7",
+    "instances": 299,
+    "materials": 20,
+    "trees": 298,
+    "tris_forest_hlod": 137,
+    "tris_high_static": 137048,
+    "tris_low_static": 34590
+   },
+   {
+    "chunk": "3_0",
+    "instances": 148,
+    "materials": 1,
+    "trees": 148,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "3_1",
+    "instances": 144,
+    "materials": 2,
+    "trees": 143,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 135245,
+    "tris_low_static": 33869
+   },
+   {
+    "chunk": "3_2",
+    "instances": 156,
+    "materials": 20,
+    "trees": 151,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 137314,
+    "tris_low_static": 35214
+   },
+   {
+    "chunk": "3_3",
+    "instances": 395,
+    "materials": 19,
+    "trees": 389,
+    "tris_forest_hlod": 211,
+    "tris_high_static": 137268,
+    "tris_low_static": 35318
+   },
+   {
+    "chunk": "3_4",
+    "instances": 155,
+    "materials": 8,
+    "trees": 137,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 137235,
+    "tris_low_static": 35859
+   },
+   {
+    "chunk": "3_5",
+    "instances": 160,
+    "materials": 9,
+    "trees": 131,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 139178,
+    "tris_low_static": 37802
+   },
+   {
+    "chunk": "3_6",
+    "instances": 1494,
+    "materials": 1,
+    "trees": 1494,
+    "tris_forest_hlod": 954,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "3_7",
+    "instances": 143,
+    "materials": 1,
+    "trees": 143,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "4_0",
+    "instances": 165,
+    "materials": 7,
+    "trees": 155,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 136266,
+    "tris_low_static": 34890
+   },
+   {
+    "chunk": "4_1",
+    "instances": 405,
+    "materials": 2,
+    "trees": 399,
+    "tris_forest_hlod": 229,
+    "tris_high_static": 135698,
+    "tris_low_static": 34322
+   },
+   {
+    "chunk": "4_2",
+    "instances": 141,
+    "materials": 1,
+    "trees": 141,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "4_3",
+    "instances": 143,
+    "materials": 8,
+    "trees": 132,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 136607,
+    "tris_low_static": 35231
+   },
+   {
+    "chunk": "4_4",
+    "instances": 165,
+    "materials": 8,
+    "trees": 149,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 137581,
+    "tris_low_static": 36205
+   },
+   {
+    "chunk": "4_5",
+    "instances": 139,
+    "materials": 33,
+    "trees": 116,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 142270,
+    "tris_low_static": 38577
+   },
+   {
+    "chunk": "4_6",
+    "instances": 1949,
+    "materials": 1,
+    "trees": 1949,
+    "tris_forest_hlod": 1321,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "4_7",
+    "instances": 165,
+    "materials": 1,
+    "trees": 165,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "5_0",
+    "instances": 157,
+    "materials": 18,
+    "trees": 134,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 138704,
+    "tris_low_static": 36742
+   },
+   {
+    "chunk": "5_1",
+    "instances": 233,
+    "materials": 2,
+    "trees": 229,
+    "tris_forest_hlod": 90,
+    "tris_high_static": 135518,
+    "tris_low_static": 34142
+   },
+   {
+    "chunk": "5_2",
+    "instances": 150,
+    "materials": 8,
+    "trees": 137,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 137503,
+    "tris_low_static": 36127
+   },
+   {
+    "chunk": "5_3",
+    "instances": 183,
+    "materials": 7,
+    "trees": 166,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 137078,
+    "tris_low_static": 35702
+   },
+   {
+    "chunk": "5_4",
+    "instances": 152,
+    "materials": 1,
+    "trees": 152,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "5_5",
+    "instances": 160,
+    "materials": 29,
+    "trees": 148,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 138576,
+    "tris_low_static": 36180
+   },
+   {
+    "chunk": "5_6",
+    "instances": 977,
+    "materials": 14,
+    "trees": 966,
+    "tris_forest_hlod": 704,
+    "tris_high_static": 137783,
+    "tris_low_static": 36239
+   },
+   {
+    "chunk": "5_7",
+    "instances": 1750,
+    "materials": 18,
+    "trees": 1750,
+    "tris_forest_hlod": 1246,
+    "tris_high_static": 136650,
+    "tris_low_static": 34562
+   },
+   {
+    "chunk": "6_0",
+    "instances": 206,
+    "materials": 42,
+    "trees": 166,
+    "tris_forest_hlod": 75,
+    "tris_high_static": 171962,
+    "tris_low_static": 56305
+   },
+   {
+    "chunk": "6_1",
+    "instances": 123,
+    "materials": 37,
+    "trees": 88,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 165301,
+    "tris_low_static": 51642
+   },
+   {
+    "chunk": "6_2",
+    "instances": 139,
+    "materials": 39,
+    "trees": 101,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 164487,
+    "tris_low_static": 52803
+   },
+   {
+    "chunk": "6_3",
+    "instances": 147,
+    "materials": 35,
+    "trees": 118,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 153957,
+    "tris_low_static": 46666
+   },
+   {
+    "chunk": "6_4",
+    "instances": 1060,
+    "materials": 6,
+    "trees": 1060,
+    "tris_forest_hlod": 541,
+    "tris_high_static": 135387,
+    "tris_low_static": 34011
+   },
+   {
+    "chunk": "6_5",
+    "instances": 171,
+    "materials": 2,
+    "trees": 168,
+    "tris_forest_hlod": 60,
+    "tris_high_static": 135511,
+    "tris_low_static": 34135
+   },
+   {
+    "chunk": "6_6",
+    "instances": 162,
+    "materials": 8,
+    "trees": 143,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 137818,
+    "tris_low_static": 36442
+   },
+   {
+    "chunk": "6_7",
+    "instances": 1099,
+    "materials": 2,
+    "trees": 1097,
+    "tris_forest_hlod": 774,
+    "tris_high_static": 136022,
+    "tris_low_static": 34646
+   },
+   {
+    "chunk": "7_0",
+    "instances": 457,
+    "materials": 34,
+    "trees": 441,
+    "tris_forest_hlod": 109,
+    "tris_high_static": 140000,
+    "tris_low_static": 37870
+   },
+   {
+    "chunk": "7_1",
+    "instances": 167,
+    "materials": 1,
+    "trees": 167,
+    "tris_forest_hlod": 0,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   },
+   {
+    "chunk": "7_2",
+    "instances": 1340,
+    "materials": 37,
+    "trees": 1327,
+    "tris_forest_hlod": 522,
+    "tris_high_static": 148029,
+    "tris_low_static": 42446
+   },
+   {
+    "chunk": "7_3",
+    "instances": 1640,
+    "materials": 29,
+    "trees": 1638,
+    "tris_forest_hlod": 998,
+    "tris_high_static": 136732,
+    "tris_low_static": 34667
+   },
+   {
+    "chunk": "7_4",
+    "instances": 2494,
+    "materials": 7,
+    "trees": 2479,
+    "tris_forest_hlod": 1726,
+    "tris_high_static": 137180,
+    "tris_low_static": 35804
+   },
+   {
+    "chunk": "7_5",
+    "instances": 284,
+    "materials": 8,
+    "trees": 260,
+    "tris_forest_hlod": 163,
+    "tris_high_static": 137923,
+    "tris_low_static": 36547
+   },
+   {
+    "chunk": "7_6",
+    "instances": 1121,
+    "materials": 27,
+    "trees": 1098,
+    "tris_forest_hlod": 590,
+    "tris_high_static": 140765,
+    "tris_low_static": 38419
+   },
+   {
+    "chunk": "7_7",
+    "instances": 338,
+    "materials": 1,
+    "trees": 338,
+    "tris_forest_hlod": 197,
+    "tris_high_static": 135168,
+    "tris_low_static": 33792
+   }
+  ]
+ },
+ "osm_hedges": {
+  "gaps": 0,
+  "hedges": 0,
+  "m": 0.0,
+  "ways": 0
+ },
+ "paved_m2_by_material": {},
+ "paved_m2_by_source": {},
+ "pavements": {
+  "enabled": false
+ },
+ "plantings": {
+  "hedge_m2": 0.0,
+  "hedges": 0,
+  "islands": [],
+  "shrubs": 0,
+  "stale": [],
+  "tris": 0
+ },
+ "plots": {
+  "access": {
+   "moved": 4,
+   "removed": 1,
+   "removed_junction": 1,
+   "removed_no_carriageway": 0
+  },
+  "age": {
+   "new": 7,
+   "old": 25,
+   "prl": 46
+  },
+  "big_trees": 0,
+  "bins": 24,
+  "bushes": 0,
+  "canopy": false,
+  "crossing_kerb": {
+   "crossings": 0,
+   "dropped": 0,
+   "shortened": 0,
+   "skipped_bridge": 0,
+   "skipped_near_junction": 0,
+   "skipped_off_chain": 0
+  },
+  "crossing_kerb_drops": 0,
+  "drives": 64,
+  "fence_m": {
+   "bars": 464,
+   "boards_brown": 433,
+   "boards_grey": 190,
+   "boards_rust": 160,
+   "brick_bars": 26,
+   "brick_boards": 69,
+   "brick_picket": 100,
+   "chainlink": 2964,
+   "concrete": 936,
+   "lamella": 37,
+   "picket": 590,
+   "wall": 47
+  },
+  "fence_step_zone_hits": 0,
+  "fence_stubs_dropped": 20,
+  "flower_cards": 456,
+  "fruit_trees": 81,
+  "gates": 64,
+  "hedge_m": 0,
+  "inst_trees": 25,
+  "inst_trees_kept": 25,
+  "inst_trees_street": 0,
+  "instances": 0,
+  "kerb_drops": 64,
+  "list": [
+   {
+    "access": {
+     "chain": "c:w514573297:1134837115-1134833889",
+     "d_cw": 2.41,
+     "kerbed": true,
+     "q": [
+      642.35,
+      981.75
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     652.3,
+     990.0
+    ],
+    "door": [
+     [
+      647.1,
+      990.05,
+      -0.993,
+      -0.116
+     ]
+    ],
+    "front": "boards_brown",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      644.74,
+      982.03
+     ],
+     "n": [
+      -0.993,
+      -0.116
+     ]
+    },
+    "id": "bdot:163c52f1-6d93-46fa-9278-07a50c7220cd",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      644.47,
+      984.37
+     ],
+     "n": [
+      -0.993,
+      -0.116
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "prl",
+    "c": [
+     -929.6,
+     226.8
+    ],
+    "door": [
+     [
+      -919.81,
+      227.76,
+      0.83,
+      0.558
+     ]
+    ],
+    "front": "boards_brown",
+    "gate": null,
+    "id": "bdot:74d15241-89cf-4aa5-a939-b8d2061a7ca8",
+    "side": "boards_brown",
+    "wicket": {
+     "m": [
+      -934.53,
+      211.4
+     ],
+     "n": [
+      -0.83,
+      -0.558
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "prl",
+    "c": [
+     -922.8,
+     -2.6
+    ],
+    "door": [
+     [
+      -916.51,
+      2.05,
+      0.78,
+      0.626
+     ]
+    ],
+    "front": "bars",
+    "gate": null,
+    "id": "bdot:2002917F-33F2-5C99-E053-CC2BA8C01CFC",
+    "side": "bars",
+    "wicket": {
+     "m": [
+      -921.69,
+      -18.74
+     ],
+     "n": [
+      0.626,
+      -0.779
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 1.7,
+     "kerbed": true,
+     "q": [
+      -412.29,
+      -436.36
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     -423.8,
+     -420.5
+    ],
+    "door": [
+     [
+      -419.38,
+      -422.57,
+      0.139,
+      -0.99
+     ],
+     [
+      -425.87,
+      -435.19,
+      0.156,
+      -0.988
+     ]
+    ],
+    "front": "concrete",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -412.56,
+      -434.68
+     ],
+     "n": [
+      0.156,
+      -0.988
+     ]
+    },
+    "id": "bdot:2002917F-341A-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      -414.88,
+      -435.05
+     ],
+     "n": [
+      0.156,
+      -0.988
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 2.32,
+     "kerbed": true,
+     "q": [
+      -419.75,
+      -442.77
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     -411.3,
+     -456.6
+    ],
+    "door": [
+     [
+      -413.41,
+      -446.79,
+      -0.129,
+      0.992
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -419.45,
+      -445.07
+     ],
+     "n": [
+      -0.129,
+      0.992
+     ]
+    },
+    "id": "bdot:2002917F-341C-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      -417.12,
+      -444.77
+     ],
+     "n": [
+      -0.129,
+      0.992
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 10.68,
+     "kerbed": true,
+     "q": [
+      -391.02,
+      -432.56
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "new",
+    "c": [
+     -387.9,
+     -410.0
+    ],
+    "door": [
+     [
+      -387.58,
+      -419.31,
+      0.181,
+      -0.983
+     ]
+    ],
+    "front": "lamella",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -392.95,
+      -422.05
+     ],
+     "n": [
+      0.181,
+      -0.983
+     ]
+    },
+    "id": "bdot:2002917F-341E-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      -390.64,
+      -421.63
+     ],
+     "n": [
+      0.181,
+      -0.983
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "prl",
+    "c": [
+     -291.4,
+     -1014.0
+    ],
+    "door": [
+     [
+      -285.7,
+      -1009.0,
+      0.722,
+      0.692
+     ]
+    ],
+    "front": "brick_boards",
+    "gate": null,
+    "id": "bdot:2002917F-3452-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      -288.5,
+      -1000.07
+     ],
+     "n": [
+      0.722,
+      0.692
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "old",
+    "c": [
+     -255.2,
+     301.5
+    ],
+    "door": [
+     [
+      -260.38,
+      296.34,
+      -0.993,
+      -0.117
+     ]
+    ],
+    "front": "chainlink",
+    "gate": null,
+    "id": "bdot:2002917F-3457-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      -245.87,
+      291.52
+     ],
+     "n": [
+      0.117,
+      -0.993
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "old",
+    "c": [
+     349.2,
+     -936.5
+    ],
+    "door": [
+     [
+      349.39,
+      -933.96,
+      -0.096,
+      0.995
+     ]
+    ],
+    "front": "chainlink",
+    "gate": null,
+    "id": "bdot:2002917F-34C3-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      364.09,
+      -941.06
+     ],
+     "n": [
+      0.995,
+      0.097
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w179127764:839429356-5026926438",
+     "d_cw": 1.67,
+     "kerbed": true,
+     "q": [
+      908.66,
+      889.0
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     905.2,
+     870.3
+    ],
+    "door": [
+     [
+      902.39,
+      880.48,
+      -0.097,
+      0.995
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      908.82,
+      887.33
+     ],
+     "n": [
+      -0.097,
+      0.995
+     ]
+    },
+    "id": "bdot:2002917F-34FC-5C99-E053-CC2BA8C01CFC",
+    "side": "picket",
+    "wicket": {
+     "m": [
+      906.48,
+      887.11
+     ],
+     "n": [
+      -0.097,
+      0.995
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 4.05,
+     "kerbed": true,
+     "q": [
+      -635.58,
+      -433.96
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     -628.2,
+     -416.9
+    ],
+    "door": [
+     [
+      -627.64,
+      -422.01,
+      0.146,
+      -0.989
+     ]
+    ],
+    "front": "bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -636.19,
+      -429.96
+     ],
+     "n": [
+      0.15,
+      -0.989
+     ]
+    },
+    "id": "bdot:2002917F-3719-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      -633.87,
+      -429.6
+     ],
+     "n": [
+      0.15,
+      -0.989
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 2.2,
+     "kerbed": true,
+     "q": [
+      -599.41,
+      -426.59
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     -592.1,
+     -410.9
+    ],
+    "door": [
+     [
+      -591.43,
+      -420.4,
+      0.053,
+      -0.999
+     ]
+    ],
+    "front": "concrete",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -599.54,
+      -424.39
+     ],
+     "n": [
+      0.056,
+      -0.998
+     ]
+    },
+    "id": "bdot:2002917F-371D-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      -597.19,
+      -424.25
+     ],
+     "n": [
+      0.056,
+      -0.998
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 5.49,
+     "kerbed": true,
+     "q": [
+      -568.91,
+      -433.54
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     -558.6,
+     -454.8
+    ],
+    "door": [
+     [
+      -559.12,
+      -448.28,
+      -0.13,
+      0.991
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -568.19,
+      -438.99
+     ],
+     "n": [
+      -0.131,
+      0.991
+     ]
+    },
+    "id": "bdot:2002917F-3720-5C99-E053-CC2BA8C01CFC",
+    "side": "picket",
+    "wicket": {
+     "m": [
+      -565.86,
+      -438.68
+     ],
+     "n": [
+      -0.131,
+      0.991
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "old",
+    "c": [
+     -544.6,
+     -421.1
+    ],
+    "door": [
+     [
+      -543.27,
+      -428.5,
+      0.14,
+      -0.99
+     ]
+    ],
+    "front": "boards_brown",
+    "gate": null,
+    "id": "bdot:2002917F-3721-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": null
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 1.95,
+     "kerbed": true,
+     "q": [
+      -516.92,
+      -439.07
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     -523.0,
+     -455.7
+    ],
+    "door": [
+     [
+      -523.79,
+      -446.8,
+      -0.109,
+      0.994
+     ]
+    ],
+    "front": "boards_brown",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -516.7,
+      -441.0
+     ],
+     "n": [
+      -0.112,
+      0.994
+     ]
+    },
+    "id": "bdot:2002917F-374D-5C99-E053-CC2BA8C01CFC",
+    "side": "boards_brown",
+    "wicket": {
+     "m": [
+      -519.03,
+      -441.26
+     ],
+     "n": [
+      -0.112,
+      0.994
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 5.28,
+     "kerbed": true,
+     "q": [
+      -498.08,
+      -436.06
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     -507.2,
+     -418.3
+    ],
+    "door": [
+     [
+      -506.73,
+      -428.55,
+      0.087,
+      -0.996
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "slide",
+     "m": [
+      -498.58,
+      -430.81
+     ],
+     "n": [
+      0.095,
+      -0.996
+     ]
+    },
+    "id": "bdot:2002917F-374E-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      -501.17,
+      -431.05
+     ],
+     "n": [
+      0.095,
+      -0.996
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 2.39,
+     "kerbed": true,
+     "q": [
+      -492.19,
+      -436.69
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     -489.1,
+     -420.1
+    ],
+    "door": [
+     [
+      -488.88,
+      -427.58,
+      0.155,
+      -0.988
+     ]
+    ],
+    "front": "boards_grey",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -492.56,
+      -434.33
+     ],
+     "n": [
+      0.155,
+      -0.988
+     ]
+    },
+    "id": "bdot:2002917F-3750-5C99-E053-CC2BA8C01CFC",
+    "side": "boards_grey",
+    "wicket": {
+     "m": [
+      -490.24,
+      -433.97
+     ],
+     "n": [
+      0.155,
+      -0.988
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 3.43,
+     "kerbed": true,
+     "q": [
+      -490.17,
+      -441.94
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     -482.8,
+     -455.8
+    ],
+    "door": [],
+    "front": "bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -490.18,
+      -445.37
+     ],
+     "n": [
+      0.002,
+      1.0
+     ]
+    },
+    "id": "bdot:2002917F-3751-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      -487.83,
+      -445.38
+     ],
+     "n": [
+      0.002,
+      1.0
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 4.43,
+     "kerbed": true,
+     "q": [
+      -450.31,
+      -440.57
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     -460.1,
+     -419.5
+    ],
+    "door": [
+     [
+      -460.04,
+      -431.18,
+      0.042,
+      -0.999
+     ]
+    ],
+    "front": "boards_brown",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -450.49,
+      -436.15
+     ],
+     "n": [
+      0.039,
+      -0.999
+     ]
+    },
+    "id": "bdot:2002917F-3754-5C99-E053-CC2BA8C01CFC",
+    "side": "boards_brown",
+    "wicket": {
+     "m": [
+      -452.83,
+      -436.24
+     ],
+     "n": [
+      0.039,
+      -0.999
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 2.71,
+     "kerbed": true,
+     "q": [
+      -463.26,
+      -444.83
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     -455.3,
+     -457.6
+    ],
+    "door": [],
+    "front": "bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -463.3,
+      -447.54
+     ],
+     "n": [
+      0.016,
+      1.0
+     ]
+    },
+    "id": "bdot:2002917F-3755-5C99-E053-CC2BA8C01CFC",
+    "side": "bars",
+    "wicket": {
+     "m": [
+      -460.95,
+      -447.58
+     ],
+     "n": [
+      0.016,
+      1.0
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 10.38,
+     "kerbed": true,
+     "q": [
+      -442.37,
+      -440.42
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     -441.6,
+     -416.7
+    ],
+    "door": [
+     [
+      -438.8,
+      -427.28,
+      0.148,
+      -0.989
+     ]
+    ],
+    "front": "bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -443.9,
+      -430.15
+     ],
+     "n": [
+      0.148,
+      -0.989
+     ]
+    },
+    "id": "bdot:2002917F-3758-5C99-E053-CC2BA8C01CFC",
+    "side": "bars",
+    "wicket": {
+     "m": [
+      -441.58,
+      -429.8
+     ],
+     "n": [
+      0.148,
+      -0.989
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "new",
+    "c": [
+     752.8,
+     166.4
+    ],
+    "door": [
+     [
+      740.24,
+      165.23,
+      -0.995,
+      0.101
+     ]
+    ],
+    "front": "lamella",
+    "gate": null,
+    "id": "bdot:2002917F-9B7D-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": null
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:2407383904-2407383867",
+     "d_cw": 1.64,
+     "kerbed": true,
+     "q": [
+      738.06,
+      185.3
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     751.9,
+     190.2
+    ],
+    "door": [
+     [
+      745.24,
+      191.82,
+      -0.989,
+      0.146
+     ]
+    ],
+    "front": "bars",
+    "gate": {
+     "kind": "slide",
+     "m": [
+      739.68,
+      185.07
+     ],
+     "n": [
+      -0.99,
+      0.142
+     ]
+    },
+    "id": "bdot:2002917F-9B7E-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      740.05,
+      187.64
+     ],
+     "n": [
+      -0.99,
+      0.142
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 2.72,
+     "kerbed": true,
+     "q": [
+      764.97,
+      325.62
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     749.7,
+     329.7
+    ],
+    "door": [
+     [
+      759.31,
+      329.95,
+      0.999,
+      0.054
+     ]
+    ],
+    "front": "boards_rust",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      762.25,
+      325.53
+     ],
+     "n": [
+      0.999,
+      0.032
+     ]
+    },
+    "id": "bdot:2002917F-9B80-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      762.18,
+      327.88
+     ],
+     "n": [
+      0.999,
+      0.032
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 10.73,
+     "kerbed": true,
+     "q": [
+      743.26,
+      390.3
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     763.4,
+     384.2
+    ],
+    "door": [
+     [
+      756.78,
+      383.68,
+      -0.995,
+      -0.1
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      753.94,
+      391.42
+     ],
+     "n": [
+      -0.995,
+      -0.104
+     ]
+    },
+    "id": "bdot:2002917F-9B81-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      754.18,
+      389.08
+     ],
+     "n": [
+      -0.995,
+      -0.104
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:2407383904-2407383867",
+     "d_cw": 3.04,
+     "kerbed": true,
+     "q": [
+      755.29,
+      279.18
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     772.7,
+     270.1
+    ],
+    "door": [
+     [
+      764.39,
+      269.99,
+      -0.999,
+      0.053
+     ]
+    ],
+    "front": "bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      758.32,
+      279.02
+     ],
+     "n": [
+      -0.999,
+      0.053
+     ]
+    },
+    "id": "bdot:2002917F-9B82-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      758.19,
+      276.67
+     ],
+     "n": [
+      -0.999,
+      0.053
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:2407383904-2407383867",
+     "d_cw": 4.12,
+     "kerbed": true,
+     "q": [
+      758.36,
+      286.93
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     772.9,
+     291.6
+    ],
+    "door": [
+     [
+      765.32,
+      293.6,
+      -0.985,
+      0.172
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      762.42,
+      286.23
+     ],
+     "n": [
+      -0.985,
+      0.172
+     ]
+    },
+    "id": "bdot:2002917F-9B83-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      762.82,
+      288.54
+     ],
+     "n": [
+      -0.985,
+      0.172
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "prl",
+    "c": [
+     1031.1,
+     -624.6
+    ],
+    "door": [
+     [
+      1030.78,
+      -624.51,
+      0.268,
+      0.963
+     ]
+    ],
+    "front": "brick_picket",
+    "gate": null,
+    "id": "bdot:2002917F-9C14-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      1034.71,
+      -640.0
+     ],
+     "n": [
+      -0.268,
+      -0.964
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w286988889:2906547488-2407383802",
+     "d_cw": 2.55,
+     "kerbed": true,
+     "q": [
+      221.91,
+      -488.41
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     216.7,
+     -472.3
+    ],
+    "door": [
+     [
+      214.18,
+      -479.74,
+      -0.238,
+      -0.971
+     ]
+    ],
+    "front": "concrete",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      222.51,
+      -485.92
+     ],
+     "n": [
+      -0.238,
+      -0.971
+     ]
+    },
+    "id": "bdot:2002917F-9C15-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      220.23,
+      -485.37
+     ],
+     "n": [
+      -0.238,
+      -0.971
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w286988889:2906547488-2407383802",
+     "d_cw": 1.82,
+     "kerbed": true,
+     "q": [
+      242.35,
+      -491.32
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     238.0,
+     -477.9
+    ],
+    "door": [
+     [
+      235.77,
+      -483.42,
+      -0.256,
+      -0.967
+     ]
+    ],
+    "front": "boards_rust",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      242.82,
+      -489.56
+     ],
+     "n": [
+      -0.256,
+      -0.967
+     ]
+    },
+    "id": "bdot:2002917F-9C16-5C99-E053-CC2BA8C01CFC",
+    "side": "boards_rust",
+    "wicket": {
+     "m": [
+      240.55,
+      -488.96
+     ],
+     "n": [
+      -0.256,
+      -0.967
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w286988889:2906547488-2407383802",
+     "d_cw": 2.14,
+     "kerbed": true,
+     "q": [
+      484.97,
+      -532.22
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     495.7,
+     -509.5
+    ],
+    "door": [
+     [
+      496.0,
+      -506.33,
+      -0.106,
+      -0.994
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "slide",
+     "m": [
+      485.2,
+      -530.1
+     ],
+     "n": [
+      -0.107,
+      -0.994
+     ]
+    },
+    "id": "bdot:2002917F-9C17-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      487.79,
+      -530.37
+     ],
+     "n": [
+      -0.107,
+      -0.994
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 2.69,
+     "kerbed": true,
+     "q": [
+      653.93,
+      755.99
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     629.0,
+     752.0
+    ],
+    "door": [
+     [
+      627.63,
+      752.27,
+      1.0,
+      0.01
+     ]
+    ],
+    "front": "brick_boards",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      651.24,
+      755.95
+     ],
+     "n": [
+      1.0,
+      0.014
+     ]
+    },
+    "id": "bdot:2002917F-9C8E-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      651.28,
+      753.32
+     ],
+     "n": [
+      1.0,
+      0.014
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w514573297:1134837115-1134833889",
+     "d_cw": 3.27,
+     "kerbed": true,
+     "q": [
+      654.3,
+      901.25
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     667.9,
+     895.5
+    ],
+    "door": [],
+    "front": "brick_boards",
+    "gate": {
+     "kind": "slide",
+     "m": [
+      657.56,
+      901.43
+     ],
+     "n": [
+      -0.999,
+      -0.054
+     ]
+    },
+    "id": "bdot:2002917F-9D68-5C99-E053-CC2BA8C01CFC",
+    "side": "boards_rust",
+    "wicket": {
+     "m": [
+      657.71,
+      898.55
+     ],
+     "n": [
+      -0.999,
+      -0.054
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "prl",
+    "c": [
+     661.8,
+     566.3
+    ],
+    "door": [
+     [
+      673.2,
+      567.68,
+      0.998,
+      0.058
+     ]
+    ],
+    "front": "chainlink",
+    "gate": null,
+    "id": "bdot:2002917F-9D69-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      674.92,
+      565.55
+     ],
+     "n": [
+      0.998,
+      0.058
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 1.78,
+     "kerbed": true,
+     "q": [
+      660.21,
+      720.85
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     671.6,
+     715.2
+    ],
+    "door": [
+     [
+      663.96,
+      713.56,
+      -0.999,
+      -0.054
+     ]
+    ],
+    "front": "boards_rust",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      661.99,
+      720.97
+     ],
+     "n": [
+      -0.998,
+      -0.066
+     ]
+    },
+    "id": "bdot:2002917F-9D6A-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      662.14,
+      718.63
+     ],
+     "n": [
+      -0.998,
+      -0.066
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w514573297:1134837115-1134833889",
+     "d_cw": 2.92,
+     "kerbed": true,
+     "q": [
+      638.15,
+      1010.87
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     662.7,
+     1007.5
+    ],
+    "door": [
+     [
+      664.43,
+      1006.91,
+      -0.999,
+      -0.047
+     ]
+    ],
+    "front": "chainlink",
+    "gate": {
+     "kind": "slide",
+     "m": [
+      641.07,
+      1011.01
+     ],
+     "n": [
+      -0.999,
+      -0.048
+     ]
+    },
+    "id": "bdot:2002917F-9D6B-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      641.2,
+      1008.41
+     ],
+     "n": [
+      -0.999,
+      -0.048
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 2.4,
+     "kerbed": true,
+     "q": [
+      681.81,
+      537.98
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     670.6,
+     529.6
+    ],
+    "door": [
+     [
+      677.92,
+      529.33,
+      0.999,
+      0.043
+     ]
+    ],
+    "front": "boards_rust",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      679.41,
+      537.88
+     ],
+     "n": [
+      0.999,
+      0.043
+     ]
+    },
+    "id": "bdot:2002917F-9D6C-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      679.52,
+      535.53
+     ],
+     "n": [
+      0.999,
+      0.043
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 1.83,
+     "kerbed": true,
+     "q": [
+      679.86,
+      583.82
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     697.3,
+     593.6
+    ],
+    "door": [
+     [
+      685.53,
+      592.54,
+      -0.997,
+      -0.076
+     ]
+    ],
+    "front": "boards_brown",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      681.69,
+      583.95
+     ],
+     "n": [
+      -0.998,
+      -0.069
+     ]
+    },
+    "id": "bdot:2002917F-9D97-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      681.53,
+      586.29
+     ],
+     "n": [
+      -0.998,
+      -0.069
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 2.35,
+     "kerbed": true,
+     "q": [
+      704.33,
+      439.07
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     691.9,
+     430.0
+    ],
+    "door": [
+     [
+      700.78,
+      432.33,
+      0.988,
+      0.155
+     ]
+    ],
+    "front": "boards_grey",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      702.01,
+      438.71
+     ],
+     "n": [
+      0.988,
+      0.155
+     ]
+    },
+    "id": "bdot:2002917F-9D98-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      702.38,
+      436.39
+     ],
+     "n": [
+      0.988,
+      0.155
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 4.75,
+     "kerbed": true,
+     "q": [
+      691.27,
+      519.61
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     710.0,
+     512.4
+    ],
+    "door": [
+     [
+      702.65,
+      511.73,
+      -0.998,
+      -0.064
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      696.01,
+      519.92
+     ],
+     "n": [
+      -0.998,
+      -0.064
+     ]
+    },
+    "id": "bdot:2002917F-9D99-5C99-E053-CC2BA8C01CFC",
+    "side": "picket",
+    "wicket": {
+     "m": [
+      696.16,
+      517.57
+     ],
+     "n": [
+      -0.998,
+      -0.064
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 6.06,
+     "kerbed": true,
+     "q": [
+      695.16,
+      499.52
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     720.3,
+     496.5
+    ],
+    "door": [
+     [
+      711.6,
+      497.47,
+      -1.0,
+      -0.023
+     ],
+     [
+      703.64,
+      496.79,
+      -0.998,
+      -0.059
+     ]
+    ],
+    "front": "bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      701.22,
+      499.69
+     ],
+     "n": [
+      -1.0,
+      -0.027
+     ]
+    },
+    "id": "bdot:2002917F-9D9A-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      701.28,
+      497.34
+     ],
+     "n": [
+      -1.0,
+      -0.027
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 2.0,
+     "kerbed": true,
+     "q": [
+      690.26,
+      524.81
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     708.9,
+     531.7
+    ],
+    "door": [],
+    "front": "chainlink",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      692.26,
+      524.95
+     ],
+     "n": [
+      -0.998,
+      -0.07
+     ]
+    },
+    "id": "bdot:2002917F-9D9B-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      692.09,
+      527.3
+     ],
+     "n": [
+      -0.998,
+      -0.07
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 10.2,
+     "kerbed": true,
+     "q": [
+      733.06,
+      394.93
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     709.1,
+     399.0
+    ],
+    "door": [
+     [
+      717.73,
+      400.86,
+      0.971,
+      0.238
+     ]
+    ],
+    "front": "boards_brown",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      723.15,
+      392.5
+     ],
+     "n": [
+      0.971,
+      0.238
+     ]
+    },
+    "id": "bdot:2002917F-9D9C-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      722.59,
+      394.78
+     ],
+     "n": [
+      0.971,
+      0.238
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 4.82,
+     "kerbed": true,
+     "q": [
+      698.91,
+      480.14
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     715.8,
+     472.3
+    ],
+    "door": [
+     [
+      706.05,
+      471.16,
+      -0.999,
+      -0.041
+     ]
+    ],
+    "front": "chainlink",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      703.72,
+      480.42
+     ],
+     "n": [
+      -0.998,
+      -0.057
+     ]
+    },
+    "id": "bdot:2002917F-9D9D-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      703.85,
+      478.07
+     ],
+     "n": [
+      -0.998,
+      -0.057
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w232388917:2407383922-2407383867",
+     "d_cw": 1.66,
+     "kerbed": true,
+     "q": [
+      711.76,
+      170.25
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     715.6,
+     178.1
+    ],
+    "door": [
+     [
+      715.52,
+      172.82,
+      0.048,
+      -0.999
+     ]
+    ],
+    "front": "chainlink",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      711.62,
+      171.9
+     ],
+     "n": [
+      0.084,
+      -0.996
+     ]
+    },
+    "id": "bdot:2002917F-9D9E-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      709.28,
+      171.71
+     ],
+     "n": [
+      0.084,
+      -0.996
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 3.97,
+     "kerbed": true,
+     "q": [
+      705.22,
+      451.26
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     719.3,
+     455.8
+    ],
+    "door": [
+     [
+      711.21,
+      457.23,
+      -1.0,
+      -0.014
+     ]
+    ],
+    "front": "chainlink",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      709.19,
+      451.33
+     ],
+     "n": [
+      -1.0,
+      -0.019
+     ]
+    },
+    "id": "bdot:2002917F-9D9F-5C99-E053-CC2BA8C01CFC",
+    "side": "boards_grey",
+    "wicket": {
+     "m": [
+      709.15,
+      453.68
+     ],
+     "n": [
+      -1.0,
+      -0.019
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:2407383904-2407383867",
+     "d_cw": 2.58,
+     "kerbed": true,
+     "q": [
+      732.25,
+      185.59
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     716.9,
+     192.9
+    ],
+    "door": [
+     [
+      724.66,
+      191.96,
+      1.0,
+      0.023
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      729.67,
+      185.53
+     ],
+     "n": [
+      1.0,
+      0.023
+     ]
+    },
+    "id": "bdot:2002917F-9DA0-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      729.62,
+      187.88
+     ],
+     "n": [
+      1.0,
+      0.023
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:2407383904-2407383867",
+     "d_cw": 2.07,
+     "kerbed": true,
+     "q": [
+      735.31,
+      207.27
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     718.8,
+     215.2
+    ],
+    "door": [
+     [
+      724.57,
+      216.29,
+      1.0,
+      0.03
+     ]
+    ],
+    "front": "brick_picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      733.24,
+      207.21
+     ],
+     "n": [
+      1.0,
+      0.027
+     ]
+    },
+    "id": "bdot:2002917F-9DA1-5C99-E053-CC2BA8C01CFC",
+    "side": "boards_grey",
+    "wicket": {
+     "m": [
+      733.17,
+      209.84
+     ],
+     "n": [
+      1.0,
+      0.027
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:2407383904-2407383867",
+     "d_cw": 1.99,
+     "kerbed": true,
+     "q": [
+      738.86,
+      232.38
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     722.1,
+     239.6
+    ],
+    "door": [
+     [
+      731.68,
+      240.89,
+      0.999,
+      0.047
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      736.87,
+      232.29
+     ],
+     "n": [
+      0.999,
+      0.046
+     ]
+    },
+    "id": "bdot:2002917F-9DA2-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      736.76,
+      234.64
+     ],
+     "n": [
+      0.999,
+      0.046
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 11.47,
+     "kerbed": true,
+     "q": [
+      749.29,
+      369.29
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     725.5,
+     375.8
+    ],
+    "door": [
+     [
+      732.19,
+      378.74,
+      0.998,
+      0.069
+     ]
+    ],
+    "front": "brick_picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      737.84,
+      368.49
+     ],
+     "n": [
+      0.998,
+      0.069
+     ]
+    },
+    "id": "bdot:2002917F-9DA3-5C99-E053-CC2BA8C01CFC",
+    "side": "picket",
+    "wicket": {
+     "m": [
+      737.66,
+      371.12
+     ],
+     "n": [
+      0.998,
+      0.069
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:2407383904-2407383867",
+     "d_cw": 1.95,
+     "kerbed": true,
+     "q": [
+      743.41,
+      261.39
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     724.7,
+     270.3
+    ],
+    "door": [
+     [
+      732.78,
+      269.86,
+      1.0,
+      0.025
+     ]
+    ],
+    "front": "boards_brown",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      741.46,
+      261.34
+     ],
+     "n": [
+      1.0,
+      0.025
+     ]
+    },
+    "id": "bdot:2002917F-9DA4-5C99-E053-CC2BA8C01CFC",
+    "side": "boards_brown",
+    "wicket": {
+     "m": [
+      741.4,
+      263.69
+     ],
+     "n": [
+      1.0,
+      0.025
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 11.99,
+     "kerbed": true,
+     "q": [
+      709.24,
+      442.19
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     728.8,
+     435.1
+    ],
+    "door": [
+     [
+      724.3,
+      432.55,
+      -0.999,
+      -0.034
+     ]
+    ],
+    "front": "chainlink",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      721.23,
+      442.6
+     ],
+     "n": [
+      -0.999,
+      -0.034
+     ]
+    },
+    "id": "bdot:2002917F-9DCF-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      721.3,
+      440.25
+     ],
+     "n": [
+      -0.999,
+      -0.034
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 2.28,
+     "kerbed": true,
+     "q": [
+      752.9,
+      362.93
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     740.4,
+     350.9
+    ],
+    "door": [
+     [
+      747.99,
+      352.42,
+      0.986,
+      0.169
+     ]
+    ],
+    "front": "brick_boards",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      750.66,
+      362.55
+     ],
+     "n": [
+      0.986,
+      0.168
+     ]
+    },
+    "id": "bdot:2002917F-9DD0-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      751.1,
+      359.95
+     ],
+     "n": [
+      0.986,
+      0.168
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w514573303:1134833889-1134845525",
+     "d_cw": 3.09,
+     "kerbed": true,
+     "q": [
+      567.41,
+      868.79
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     573.8,
+     881.6
+    ],
+    "door": [],
+    "front": "bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      567.34,
+      871.87
+     ],
+     "n": [
+      0.021,
+      -1.0
+     ]
+    },
+    "id": "bdot:2002917F-9DD1-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      569.69,
+      871.92
+     ],
+     "n": [
+      0.021,
+      -1.0
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w514573297:1134837115-1134833889",
+     "d_cw": 3.29,
+     "kerbed": true,
+     "q": [
+      639.96,
+      960.42
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "new",
+    "c": [
+     625.4,
+     967.8
+    ],
+    "door": [
+     [
+      631.36,
+      968.29,
+      0.997,
+      0.075
+     ]
+    ],
+    "front": "wall",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      636.68,
+      960.19
+     ],
+     "n": [
+      0.997,
+      0.072
+     ]
+    },
+    "id": "bdot:2002917F-9DD3-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      636.51,
+      962.53
+     ],
+     "n": [
+      0.997,
+      0.072
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w514573297:1134837115-1134833889",
+     "d_cw": 1.96,
+     "kerbed": true,
+     "q": [
+      640.59,
+      956.13
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     630.3,
+     947.8
+    ],
+    "door": [
+     [
+      635.27,
+      946.69,
+      0.997,
+      0.071
+     ]
+    ],
+    "front": "brick_picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      638.64,
+      955.99
+     ],
+     "n": [
+      0.997,
+      0.071
+     ]
+    },
+    "id": "bdot:2002917F-9DD4-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      638.83,
+      953.36
+     ],
+     "n": [
+      0.997,
+      0.071
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w514573297:1134837115-1134833889",
+     "d_cw": 2.15,
+     "kerbed": true,
+     "q": [
+      648.44,
+      903.26
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     630.1,
+     896.2
+    ],
+    "door": [
+     [
+      635.76,
+      895.82,
+      1.0,
+      -0.03
+     ]
+    ],
+    "front": "brick_picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      646.3,
+      903.34
+     ],
+     "n": [
+      0.999,
+      -0.039
+     ]
+    },
+    "id": "bdot:2002917F-9DD5-5C99-E053-CC2BA8C01CFC",
+    "side": "picket",
+    "wicket": {
+     "m": [
+      646.2,
+      900.71
+     ],
+     "n": [
+      0.999,
+      -0.039
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "prl",
+    "c": [
+     630.2,
+     916.4
+    ],
+    "door": [
+     [
+      643.15,
+      917.65,
+      0.999,
+      0.047
+     ]
+    ],
+    "front": "chainlink",
+    "gate": null,
+    "id": "bdot:2002917F-9DD6-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      644.13,
+      921.02
+     ],
+     "n": [
+      0.989,
+      0.147
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 3.16,
+     "kerbed": true,
+     "q": [
+      655.61,
+      704.52
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     635.8,
+     712.6
+    ],
+    "door": [
+     [
+      643.77,
+      713.1,
+      1.0,
+      0.023
+     ]
+    ],
+    "front": "chainlink",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      652.45,
+      704.46
+     ],
+     "n": [
+      1.0,
+      0.02
+     ]
+    },
+    "id": "bdot:2002917F-9DD7-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      652.41,
+      706.81
+     ],
+     "n": [
+      1.0,
+      0.02
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w514573303:1134833889-1134845525",
+     "d_cw": 2.58,
+     "kerbed": true,
+     "q": [
+      639.86,
+      866.66
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     639.6,
+     851.1
+    ],
+    "door": [
+     [
+      637.42,
+      857.05,
+      -0.023,
+      1.0
+     ]
+    ],
+    "front": "brick_picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      639.92,
+      864.08
+     ],
+     "n": [
+      -0.024,
+      1.0
+     ]
+    },
+    "id": "bdot:2002917F-9DD8-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      637.29,
+      864.02
+     ],
+     "n": [
+      -0.024,
+      1.0
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "old",
+    "c": [
+     640.6,
+     764.0
+    ],
+    "door": [
+     [
+      647.47,
+      762.1,
+      1.0,
+      0.004
+     ]
+    ],
+    "front": "boards_rust",
+    "gate": null,
+    "id": "bdot:2002917F-9DD9-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": null
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 1.63,
+     "kerbed": true,
+     "q": [
+      654.42,
+      790.9
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     637.4,
+     803.6
+    ],
+    "door": [
+     [
+      645.97,
+      807.89,
+      1.0,
+      -0.003
+     ],
+     [
+      649.43,
+      798.57,
+      1.0,
+      -0.005
+     ]
+    ],
+    "front": "bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      652.79,
+      790.92
+     ],
+     "n": [
+      1.0,
+      -0.013
+     ]
+    },
+    "id": "bdot:2002917F-9DDA-5C99-E053-CC2BA8C01CFC",
+    "side": "bars",
+    "wicket": {
+     "m": [
+      652.82,
+      793.27
+     ],
+     "n": [
+      1.0,
+      -0.013
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 2.75,
+     "kerbed": true,
+     "q": [
+      655.04,
+      833.11
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     637.7,
+     826.5
+    ],
+    "door": [
+     [
+      645.71,
+      825.2,
+      1.0,
+      -0.019
+     ]
+    ],
+    "front": "bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      652.29,
+      833.12
+     ],
+     "n": [
+      1.0,
+      -0.002
+     ]
+    },
+    "id": "bdot:2002917F-9DDB-5C99-E053-CC2BA8C01CFC",
+    "side": "bars",
+    "wicket": {
+     "m": [
+      652.28,
+      830.77
+     ],
+     "n": [
+      1.0,
+      -0.002
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 6.73,
+     "kerbed": true,
+     "q": [
+      654.16,
+      730.12
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     638.4,
+     737.0
+    ],
+    "door": [
+     [
+      645.56,
+      738.22,
+      1.0,
+      -0.006
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      647.44,
+      730.11
+     ],
+     "n": [
+      1.0,
+      0.002
+     ]
+    },
+    "id": "bdot:2002917F-9DDC-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      647.43,
+      732.46
+     ],
+     "n": [
+      1.0,
+      0.002
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "new",
+    "c": [
+     648.4,
+     1019.7
+    ],
+    "door": [
+     [
+      641.67,
+      1017.43,
+      -1.0,
+      -0.011
+     ]
+    ],
+    "front": "brick_boards",
+    "gate": null,
+    "id": "bdot:2002917F-9E08-5C99-E053-CC2BA8C01CFC",
+    "side": "wall",
+    "wicket": null
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 4.79,
+     "kerbed": true,
+     "q": [
+      663.85,
+      643.8
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     646.4,
+     652.0
+    ],
+    "door": [
+     [
+      655.67,
+      652.62,
+      0.999,
+      0.048
+     ]
+    ],
+    "front": "concrete",
+    "gate": {
+     "kind": "slide",
+     "m": [
+      659.07,
+      643.58
+     ],
+     "n": [
+      0.999,
+      0.044
+     ]
+    },
+    "id": "bdot:2002917F-9E09-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      658.96,
+      646.18
+     ],
+     "n": [
+      0.999,
+      0.044
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 1.97,
+     "kerbed": true,
+     "q": [
+      657.26,
+      687.35
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     642.7,
+     678.8
+    ],
+    "door": [
+     [
+      653.58,
+      679.02,
+      1.0,
+      0.029
+     ]
+    ],
+    "front": "concrete",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      655.3,
+      687.3
+     ],
+     "n": [
+      1.0,
+      0.029
+     ]
+    },
+    "id": "bdot:2002917F-9E0A-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      655.36,
+      684.95
+     ],
+     "n": [
+      1.0,
+      0.029
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 4.69,
+     "kerbed": true,
+     "q": [
+      670.23,
+      606.03
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     650.0,
+     613.0
+    ],
+    "door": [
+     [
+      655.92,
+      612.83,
+      1.0,
+      0.022
+     ]
+    ],
+    "front": "boards_grey",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      665.54,
+      605.92
+     ],
+     "n": [
+      1.0,
+      0.022
+     ]
+    },
+    "id": "bdot:2002917F-9E0D-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      665.49,
+      608.27
+     ],
+     "n": [
+      1.0,
+      0.022
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 3.68,
+     "kerbed": true,
+     "q": [
+      664.66,
+      639.03
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     653.8,
+     631.6
+    ],
+    "door": [
+     [
+      659.34,
+      630.51,
+      1.0,
+      0.021
+     ]
+    ],
+    "front": "brick_picket",
+    "gate": {
+     "kind": "slide",
+     "m": [
+      660.99,
+      638.84
+     ],
+     "n": [
+      0.999,
+      0.049
+     ]
+    },
+    "id": "bdot:2002917F-9E0E-5C99-E053-CC2BA8C01CFC",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      661.13,
+      635.97
+     ],
+     "n": [
+      0.999,
+      0.049
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w514573297:1134837115-1134833889",
+     "d_cw": 2.96,
+     "kerbed": true,
+     "q": [
+      642.98,
+      977.48
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     656.0,
+     970.9
+    ],
+    "door": [
+     [
+      650.1,
+      971.07,
+      -0.994,
+      -0.105
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      645.93,
+      977.79
+     ],
+     "n": [
+      -0.994,
+      -0.105
+     ]
+    },
+    "id": "bdot:2002917F-9E0F-5C99-E053-CC2BA8C01CFC",
+    "side": "picket",
+    "wicket": {
+     "m": [
+      646.17,
+      975.45
+     ],
+     "n": [
+      -0.994,
+      -0.105
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w514573297:1134837115-1134833889",
+     "d_cw": 2.28,
+     "kerbed": true,
+     "q": [
+      651.98,
+      916.93
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     665.5,
+     925.5
+    ],
+    "door": [
+     [
+      657.28,
+      925.92,
+      -0.996,
+      -0.089
+     ]
+    ],
+    "front": "picket",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      654.24,
+      917.17
+     ],
+     "n": [
+      -0.995,
+      -0.103
+     ]
+    },
+    "id": "bdot:2002917F-9E10-5C99-E053-CC2BA8C01CFC",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      654.0,
+      919.51
+     ],
+     "n": [
+      -0.995,
+      -0.103
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w232388904:2407383867-2407383802",
+     "d_cw": 2.4,
+     "kerbed": true,
+     "q": [
+      743.5,
+      99.46
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "new",
+    "c": [
+     763.6,
+     111.1
+    ],
+    "door": [
+     [
+      757.35,
+      112.76,
+      -0.996,
+      -0.086
+     ]
+    ],
+    "front": "bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      745.89,
+      99.67
+     ],
+     "n": [
+      -0.996,
+      -0.086
+     ]
+    },
+    "id": "bdot:22902bae-a446-4c26-a2c2-b06c312c3d76",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      745.69,
+      102.01
+     ],
+     "n": [
+      -0.996,
+      -0.086
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 2.29,
+     "kerbed": true,
+     "q": [
+      660.27,
+      794.57
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "old",
+    "c": [
+     680.0,
+     789.7
+    ],
+    "door": [
+     [
+      682.67,
+      788.28,
+      -0.999,
+      -0.046
+     ]
+    ],
+    "front": "chainlink",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      662.56,
+      794.68
+     ],
+     "n": [
+      -0.999,
+      -0.046
+     ]
+    },
+    "id": "bdot:25b89c18-cf08-4235-a890-b50d562fc4b6",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      662.67,
+      792.33
+     ],
+     "n": [
+      -0.999,
+      -0.046
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "prl",
+    "c": [
+     -255.3,
+     248.4
+    ],
+    "door": [
+     [
+      -260.1,
+      242.42,
+      -1.0,
+      -0.026
+     ],
+     [
+      -251.17,
+      254.84,
+      -0.994,
+      -0.106
+     ]
+    ],
+    "front": "chainlink",
+    "gate": null,
+    "id": "bdot:6aaa23a5-1883-42fa-91d5-0d6414d76851",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      -236.7,
+      237.87
+     ],
+     "n": [
+      1.0,
+      0.027
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:2407383904-2407383867",
+     "d_cw": 2.32,
+     "kerbed": true,
+     "q": [
+      743.15,
+      221.3
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "new",
+    "c": [
+     762.3,
+     213.2
+    ],
+    "door": [
+     [
+      757.59,
+      208.96,
+      -1.0,
+      -0.013
+     ]
+    ],
+    "front": "brick_bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      745.48,
+      221.33
+     ],
+     "n": [
+      -1.0,
+      -0.012
+     ]
+    },
+    "id": "bdot:593a54ee-7553-4cdc-b2dd-6746d70fbe6b",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      745.51,
+      218.7
+     ],
+     "n": [
+      -1.0,
+      -0.012
+     ]
+    }
+   },
+   {
+    "access": null,
+    "age": "prl",
+    "c": [
+     803.2,
+     454.6
+    ],
+    "door": [
+     [
+      801.04,
+      451.09,
+      -1.0,
+      -0.024
+     ]
+    ],
+    "front": "concrete",
+    "gate": null,
+    "id": "bdot:5cbd839e-9c94-4838-a70e-8733bb31f315",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      814.19,
+      462.24
+     ],
+     "n": [
+      1.0,
+      0.031
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w987170735:2906547488-1134833995",
+     "d_cw": 1.94,
+     "kerbed": true,
+     "q": [
+      -495.47,
+      -441.37
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "new",
+    "c": [
+     -501.2,
+     -458.1
+    ],
+    "door": [
+     [
+      -500.94,
+      -452.52,
+      -0.018,
+      1.0
+     ]
+    ],
+    "front": "brick_bars",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      -495.43,
+      -443.31
+     ],
+     "n": [
+      -0.018,
+      1.0
+     ]
+    },
+    "id": "bdot:5e21d0c8-0b61-4a37-8358-b6456f9bc991",
+    "side": "concrete",
+    "wicket": {
+     "m": [
+      -498.06,
+      -443.36
+     ],
+     "n": [
+      -0.018,
+      1.0
+     ]
+    }
+   },
+   {
+    "access": {
+     "chain": "c:w98071733:1134833889-2407383904",
+     "d_cw": 4.8,
+     "kerbed": true,
+     "q": [
+      680.93,
+      542.77
+     ],
+     "walk": "curb_concrete"
+    },
+    "age": "prl",
+    "c": [
+     651.9,
+     548.7
+    ],
+    "door": [
+     [
+      654.18,
+      550.09,
+      1.0,
+      0.027
+     ]
+    ],
+    "front": "concrete",
+    "gate": {
+     "kind": "swing",
+     "m": [
+      676.13,
+      542.64
+     ],
+     "n": [
+      1.0,
+      0.027
+     ]
+    },
+    "id": "bdot:8daf09d1-9b8a-4ec0-90e2-926db113b46d",
+    "side": "chainlink",
+    "wicket": {
+     "m": [
+      676.06,
+      544.99
+     ],
+     "n": [
+      1.0,
+      0.027
+     ]
+    }
+   }
+  ],
+  "overgrowth": 101,
+  "plot_m2_median": 490.5,
+  "plots": 78,
+  "shrubs": 458,
+  "sliding_gates": 7,
+  "spruces": 24,
+  "street_wires": {
+   "chains": 6,
+   "chains_without_lamps": 0,
+   "drops": 48,
+   "span_m": 1563,
+   "spans": 52,
+   "tris": 1074
+  },
+  "styles_front": {
+   "bars": 12,
+   "boards_brown": 8,
+   "boards_grey": 3,
+   "boards_rust": 5,
+   "brick_bars": 2,
+   "brick_boards": 5,
+   "brick_picket": 7,
+   "chainlink": 13,
+   "concrete": 7,
+   "lamella": 2,
+   "picket": 13,
+   "wall": 1
+  },
+  "styles_side": {
+   "bars": 5,
+   "boards_brown": 4,
+   "boards_grey": 3,
+   "boards_rust": 2,
+   "chainlink": 44,
+   "concrete": 13,
+   "picket": 6,
+   "wall": 1
+  },
+  "thujas": 384,
+  "track_drives": 19,
+  "tris": 35168,
+  "tris_by": {
+   "bins": 432,
+   "fence": 11126,
+   "flowers": 1076,
+   "gate": 8846,
+   "overgrowth": 1364,
+   "shrub": 5272,
+   "small_tree": 882,
+   "spruce": 480,
+   "thuja_row": 5690
+  },
+  "tris_by_low": {
+   "bins": 432,
+   "fence": 11126,
+   "gate": 8846,
+   "small_tree": 810,
+   "spruce": 480,
+   "thuja_row": 5376
+  },
+  "tris_low": 27070,
+  "verge_overlays": 64,
+  "wickets": 74
+ },
+ "region": "dk65-monki-05",
+ "schema": "truck-sim-pl/streetscape-qa/1",
+ "terrain_soft_nodes": 715,
+ "vegetation": {
+  "forest_clearings": {
+   "applied": [],
+   "stale": []
+  },
+  "forest_floor": 5378,
+  "forest_hlod": {
+   "cell_m": 64.0,
+   "cells": 178,
+   "forest_trees": 26390,
+   "trees_replaced_far": 25388,
+   "triangles": 20753
+  },
+  "forest_mantle": 4004,
+  "forest_stands": {
+   "applied": [],
+   "stale": []
+  },
+  "tree_groups": {
+   "groups": 0,
+   "lines": 0,
+   "rows_grouped": 0,
+   "trees": 0
+  },
+  "tree_stands": [],
+  "trees": {
+   "tree_alder": 1990,
+   "tree_birch": 3913,
+   "tree_birchyoung": 5550,
+   "tree_floor": 5378,
+   "tree_linden": 1325,
+   "tree_maple": 2396,
+   "tree_pine": 6752,
+   "tree_pineyoung": 2085,
+   "tree_shrub": 7552,
+   "tree_spruce": 3370
+  },
+  "understorey": 5854
+ }
+}

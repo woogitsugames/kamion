@@ -61,8 +61,9 @@ def _stations(points):
     return s
 
 
-def test_catalog_has_all_21_regions():
-    assert len(REGION_IDS) == 21 and len(set(REGION_IDS)) == 21
+def test_catalog_has_all_regions():
+    # 21 regions before the ring of ADR 0231; the ring tiles join the catalog one by one as they are built (up to 39)
+    assert 21 <= len(REGION_IDS) <= 39 and len(set(REGION_IDS)) == len(REGION_IDS)
 
 
 def test_catalog_is_what_the_exporter_derives():
@@ -80,6 +81,13 @@ def test_start_is_inside_the_edge_closure(region):
     _, route, graph = _load(region)
     boundary = {n["id"] for n in graph["nodes"] if n.get("boundary")}
     start, length = float(entry["startS"]), float(route["length_m"])
+    if entry.get("noStart"):
+        # ADR 0231 §5a: corner tile without any standalone start; allowed only when no start can exist on the route: behind
+        # the entry closure there is no AHEAD_FREE_M of open route before the exit closure (60 m before the far edge)
+        need = CLOSURE_SETBACK_M + BOARDS_M + REAR_M + MARGIN_M
+        assert route["graph_nodes"][0] in boundary and length < need + AHEAD_FREE_M + CLOSURE_SETBACK_M, (
+            f"{region}: noStart on a route of {length} m - a start behind the closure exists, remove the marker")
+        return
     assert 0.0 <= start <= length - MIN_AHEAD_M, f"{region}: startS {start} on a route of {length} m"
     if route["graph_nodes"][0] in boundary:
         need = CLOSURE_SETBACK_M + BOARDS_M + REAR_M + MARGIN_M
@@ -111,3 +119,17 @@ def test_route_after_the_start_uses_open_roads_only(region):
         if closed:
             bad.append((round(station, 1), eid, hw))
     assert not bad, f"{region}: closed / building-site road within {AHEAD_FREE_M:.0f} m of the start: {bad[:5]}"
+
+
+# ADR 0231 §5a: only the corner tiles of the ring (< 0.5 km of corridor) may carry noStart; any other tile that cannot
+# host a start is a data error to fix, not to mark
+CORNER_TILES_0231 = {"dk65-monki-03", "dk65-monki-05", "monki-e", "dw671-tykocin-02"}
+
+
+def test_no_start_marker_only_on_corner_tiles_and_matches_route_endpoints():
+    marked = {r["id"] for r in _catalog() if r.get("noStart")}
+    assert marked <= CORNER_TILES_0231, f"noStart outside the ADR 0231 corner tiles: {sorted(marked - CORNER_TILES_0231)}"
+    for rid in REGION_IDS:
+        ep = REGIONS / rid / "route_endpoints.json"
+        authored = ep.exists() and bool(json.loads(ep.read_text(encoding="utf-8")).get("no_standalone_start"))
+        assert authored == (rid in marked), f"{rid}: route_endpoints.json no_standalone_start {authored} vs catalog noStart"

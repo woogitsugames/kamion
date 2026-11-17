@@ -5215,9 +5215,7 @@
     "knyszyn-s",
     "knyszyn",
     "knyszyn-w",
-    "dw671-tykocin-01"
-   ],
-   "missing": [
+    "dw671-tykocin-01",
     "dw671-tykocin-02",
     "dw671-tykocin-03",
     "dw671-tykocin-04",
@@ -5228,6 +5226,7 @@
     "dw671-tykocin-09",
     "tykocin"
    ],
+   "missing": [],
    "joins": [
     {
      "from": "bialystok-industrial-c",
@@ -5425,6 +5424,105 @@
      "entry": "route",
      "x": 760128.23,
      "y": 611584.149,
+     "gapM": 0.0
+    },
+    {
+     "from": "dw671-tykocin-01",
+     "to": "dw671-tykocin-02",
+     "side": "S",
+     "seamM": 2048.0,
+     "exit": "route",
+     "entry": "route",
+     "x": 758585.784,
+     "y": 609535.727,
+     "gapM": 0.0
+    },
+    {
+     "from": "dw671-tykocin-02",
+     "to": "dw671-tykocin-03",
+     "side": "W",
+     "seamM": 2048.0,
+     "exit": "route",
+     "entry": "route",
+     "x": 758537.548,
+     "y": 609439.348,
+     "gapM": 0.0
+    },
+    {
+     "from": "dw671-tykocin-03",
+     "to": "dw671-tykocin-04",
+     "side": "S",
+     "seamM": 2048.0,
+     "exit": "route",
+     "entry": "route",
+     "x": 757551.644,
+     "y": 607487.594,
+     "gapM": 0.0
+    },
+    {
+     "from": "dw671-tykocin-04",
+     "to": "dw671-tykocin-05",
+     "side": "W",
+     "seamM": 2048.0,
+     "exit": "route",
+     "entry": "route",
+     "x": 756489.772,
+     "y": 605937.776,
+     "gapM": 0.006
+    },
+    {
+     "from": "dw671-tykocin-05",
+     "to": "dw671-tykocin-06",
+     "side": "S",
+     "seamM": 2048.0,
+     "exit": "route",
+     "entry": "route",
+     "x": 756009.754,
+     "y": 605440.221,
+     "gapM": 0.0
+    },
+    {
+     "from": "dw671-tykocin-06",
+     "to": "dw671-tykocin-07",
+     "side": "W",
+     "seamM": 2048.0,
+     "exit": "route",
+     "entry": "route",
+     "x": 754442.142,
+     "y": 603968.647,
+     "gapM": 0.0
+    },
+    {
+     "from": "dw671-tykocin-07",
+     "to": "dw671-tykocin-08",
+     "side": "S",
+     "seamM": 2048.0,
+     "exit": "route",
+     "entry": "route",
+     "x": 753617.146,
+     "y": 603392.231,
+     "gapM": 0.0
+    },
+    {
+     "from": "dw671-tykocin-08",
+     "to": "dw671-tykocin-09",
+     "side": "W",
+     "seamM": 2048.0,
+     "exit": "route",
+     "entry": "route",
+     "x": 752393.895,
+     "y": 602260.411,
+     "gapM": 0.0
+    },
+    {
+     "from": "dw671-tykocin-09",
+     "to": "tykocin",
+     "side": "S",
+     "seamM": 2048.0,
+     "exit": "route",
+     "entry": "route",
+     "x": 751936.716,
+     "y": 601343.325,
      "gapM": 0.0
     }
    ]

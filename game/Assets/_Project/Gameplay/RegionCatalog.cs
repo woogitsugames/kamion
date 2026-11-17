@@ -32,6 +32,9 @@ namespace Game.Gameplay
             public float routeLengthM;
             /// <summary>Spawn distance along the start route [m]; &lt; 0 = <see cref="RegionStart.DefaultStartS"/>.</summary>
             public float startS = -1f;
+            /// <summary>ADR 0231 §5a: corner tile without any standalone start (corridor stretch too short for a start
+            /// behind the entry closure); streamed as part of the corridor only, the start menu does not offer it.</summary>
+            public bool noStart;
         }
 
         [Serializable]

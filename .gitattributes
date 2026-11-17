@@ -22,3 +22,5 @@ docs/**/*.png -filter -diff -merge binary
 Data/Admin/*.geojson -text
 # ADR 0278: the plan extract is hashed in its manifest (test_map_plan_0278) - same bytes on Windows checkouts
 Data/Plans/** text eol=lf
+# ADR 0231: the Overpass extract is hashed in its manifest (tests/gis/test_ring_0231.py); keep bytes identical on Windows
+Data/Plans/ring-0231/osm_ring_extract.json -text
