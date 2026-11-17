@@ -1065,6 +1065,57 @@ class PatchHeight:
         return self.blend(p)
 
 
+ARC_SPIKE_M = 0.05      # seams-fix-s23: an outline corner point this far off the running median is a spike (WORKING_VALUE)
+ARC_SPIKE_HALF = 3      # half window of that median [stations]
+
+
+ARC_GRADE_MAX = 0.15    # = the kerb-line limit of build_corner_strips above which a corner gets no grass
+
+
+def despike_arcs(zb, tags, pts=None, tol=ARC_SPIKE_M, half=ARC_SPIKE_HALF):
+    """Heights of the corner (`arc`) points of a junction outline with isolated spikes replaced by the running median
+    of the closed outline (window 2 * half + 1). seams-fix-s23: on the compact roundabout of Knyszyn the IDW blend of
+    PatchHeight put 1-3 corner points 0.13-0.17 m below their neighbours (a nearby arm surface taking over at
+    `on_arm` weight) - a notch in the kerb foot, and build_corner_strips then laid NO grass along the whole corner
+    (kerb line > 0.15 m/m), which left the 0.5 m drop behind the DK65 south-west kerb. A median keeps ramps and
+    steps wider than the window; mouth (`end`) and `gutter` points keep the arm's exact section."""
+    zb = np.asarray(zb, float)
+    n = len(zb)
+    if n < 2 * half + 1:
+        return zb
+    k = np.arange(-half, half + 1)
+    med = np.median(zb[(np.arange(n)[:, None] + k[None, :]) % n], axis=1)
+    arc = np.array([t[0] == "arc" for t in tags])
+    bad = arc & (np.abs(zb - med) > tol)
+    if bad.any() and not bad.all():
+        # flagged points: linear between the nearest good points on both sides (the median itself is one rank off on a
+        # sloping corner)
+        zb = zb.copy()
+        good = np.nonzero(~bad)[0]
+        for i in np.nonzero(bad)[0]:
+            lo = good[good < i][-1] if (good < i).any() else good[-1] - n
+            hi = good[good > i][0] if (good > i).any() else good[0] + n
+            zb[i] = zb[lo % n] + (zb[hi % n] - zb[lo % n]) * (i - lo) / (hi - lo)
+    if pts is None:
+        return zb
+    # a step left between two arc points (two surfaces of the blend meeting: 0.16 m in 0.54 m on the DK65 south-west
+    # corner) becomes a straight ramp over 2 * half + 1 outline segments of arc points (a corner only, never a mouth)
+    pts = np.asarray(pts, float)
+    ds = np.hypot(*(pts[(np.arange(n) + 1) % n] - pts).T)
+    for i in range(n):
+        i1 = (i + 1) % n
+        if abs(zb[i1] - zb[i]) / max(ds[i], 0.25) <= ARC_GRADE_MAX:
+            continue
+        idx = [(i + d) % n for d in range(-half, half + 2)]
+        if not all(arc[q] for q in idx):
+            continue
+        along = np.concatenate([[0.0], np.cumsum([ds[q] for q in idx[:-1]])])
+        za, zz = zb[idx[0]], zb[idx[-1]]
+        for q, a_ in zip(idx[1:-1], along[1:-1]):
+            zb[q] = za + (zz - za) * a_ / along[-1]
+    return zb
+
+
 def _kernel(poly):
     """Kernel of a CCW polygon (intersection of the inner half-planes of all edges), convex or empty."""
     lo, hi = poly.min(0) - 1, poly.max(0) + 1
@@ -1124,6 +1175,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
     ph = PatchHeight(j)
     poly = np.array([p for p, _ in bnd])
     zb = np.array([ph.boundary_z(j, p, tag) for p, tag in bnd])
+    if getattr(j, "compact", None) is not None:
+        zb = despike_arcs(zb, [tag for _, tag in bnd], np.array([p for p, _ in bnd]))
     mat = "collision_asphalt" if coarse else _patch_mat(net, j)
     layer = "collision" if coarse else ("bridge" if _patch_on_bridge(j) else "road")
     c = _star_center(poly)
