@@ -4,7 +4,8 @@ Gałąź `s8-loop-s24` (z `origin/s8-loop-s23` + merge `origin/main`), worktree 
 ## Log s24
 - 17.11 ~16:0x: merge origin/main (konflikty STATUS/ADR README). `s8_xsec_overrides.py`: przesunięcie jezdni do pasa dzielącego per way (rozstaw osi p50 z grafu wszystkich kafli; cel 4,5 m między liniami wewn., QA wiersz 78; max 0,5 m; rozstaw > 13 m bez zmian). s8-04: way 100133887 +0,25, 251431118 +0,15 → z modelu ~4,6 m (było 4,98).
 - Przebudowa wszystkich 6 kafli (main zmienił generator: seams-fix 0289, markings/meshing): `tools/worldgen/qa/s8_loop_s24.ps1 -Phase world` w 2 łańcuchach (s8-04,s8-01,dk65-01 | s8-02,s8-03,s8-05). Statusy `artifacts/s8-loop-s24/run/*-r8.exit`.
-- NASTĘPNY KROK: po `final-world-*-r8.exit` (oba): `Start-Process pwsh -ArgumentList '-NoProfile','-File','tools/worldgen/qa/s8_loop_s24.ps1','-Phase','post','-Tiles','s8-04,dk65-01'`, potem Library z win-build + `-Phase unity -Tiles s8-01,s8-02,s8-03,s8-04,s8-05,dk65-01`.
+- 16:3x: world r8 wszystkie exit=0 (4–8 min/kafel); s8-02/05 r10 po regule ‚przesuwaj tylko > 4,8 m’. Pas dzielący z sieci (`s8_median_gap.py`): s8-04 linie p50 5,00 → 4,61 m. s8-04 import Win64 + vqa r8 exit=0, WORLD_MEMORY Low 53,5 / High 130,1 MB; rendery route-* obejrzane: S8 w poziomie terenu, bariera stalowa, bez krawężników/pomostu, bez dziury.
+- (stare) NASTĘPNY KROK: po `final-world-*-r8.exit` (oba): `Start-Process pwsh -ArgumentList '-NoProfile','-File','tools/worldgen/qa/s8_loop_s24.ps1','-Phase','post','-Tiles','s8-04,dk65-01'`, potem Library z win-build + `-Phase unity -Tiles s8-01,s8-02,s8-03,s8-04,s8-05,dk65-01`.
 
 ---
 # (poprzednio) # STATUS — s8-loop-s23 (D82, ADR 0288: pętla S8 ↔ DW671 ↔ Tykocin) — ZATRZYMANE 17.11 ~13:1x (przenosiny na inny komputer)
