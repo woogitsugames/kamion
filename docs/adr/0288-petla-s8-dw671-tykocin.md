@@ -67,8 +67,14 @@ Pamięć importu Win64 (WORLD_MEMORY, 17.11, przed zmianą przekroju): Low 88,1 
    węzeł na szwie z `s8-01` (768779,0; 595332,7) jest osiągalny wyłącznie z węzła na szwie południowym (769340,8;
    595199,0) — łącznice węzła Białystok Zachód w tę stronę leżą w `dk8-s8-jeroniki`. Potrzebne: budowa tego kafla
    + dwa linki (`dk65-01` → szew południowy, przejazd przez `dk8-s8-jeroniki` do szwu z narożnikiem `dk65-01`).
-2. `dk65-01` (main) ma odcinek S8 ze starym przekrojem klasy A; na szwie z `s8-01` działa przejście ADR 0275.
-   Te same nadpisania dla way S8 w `dk65-01` — przy najbliższej przebudowie tego kafla.
+2. `dk65-01` (ADR 0205): dwa way S8 w narożniku kafla (183639794, 305447699) dostały te same nadpisania (skrypt,
+   `TILES`) i kafel jest przebudowywany — bez tego jezdnie przeskakiwały w bok o ok. 1,0 m na szwie z `s8-01`
+   (qa.seams: „droga urywa się na szwie”). Jezdnie `S19;65` w `dk65-01` zostają na regule klasy A (brak pomiaru).
+7. **Przejazd pod S8 w `s8-04`** (way 222577653, `tunnel=yes`, `layer=-1`): wycięcie generatora zostawiało ok. 12 m
+   dziury w obu jezdniach S8 (`obstacle_in_lane` 85, na trasie kontrolnej s 1548–1560 m). `bridge: true` (ADR 0206)
+   zamykał dziury, ale flaga obejmuje cały way — 2 km S8 stawało się pomostem z krawężnikami i balustradami
+   (render `vqa-r6/s8-04`). Przyjęto: way 222577653 poza grafem (`graph_filter.authored.json`), S8 w poziomie
+   terenu, droga lokalna kończy się przy nasypie. Do zrobienia: flaga pomostu na zakres stacji i model przejazdu.
 3. Położenie osi way OSM względem pasów (0,25 m, trzeci pas na zewnątrz) = WORKING_VALUE: zmierzyć
    `tools/worldgen/qa/ortho_xsec.py` na stacjach „czystych” każdego way, osobno odcinki 3-pasowe.
 4. Łącznice (`motorway_link`): reguła klasy A bez zmian; pomiar QA: 7,85–7,95 m asfaltu, 1 pas ~5,75 m między liniami.
