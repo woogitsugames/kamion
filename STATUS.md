@@ -22,3 +22,6 @@ Gałąź `c-p1-s23` z origin/main eebb9813c; worktree z KOPIĄ Data/raw/derived 
 - krok 7 [01:5x]: r4: fold-check nic nie zmienił (stations_battered 1761 = r3) i max_m 0,859 przy j:n2229796326:corner3:vg nadal -> podejrzenie, że to nie batter. 2 dodatkowe faile r4 (road_fidelity stale, roundabout_0274 inspect.getsource) = artefakt edycji build_world.py w trakcie biegu pytest. Dodany przełącznik WORLDGEN_NO_BACK_BATTER (debug A/B).
 - W TOKU odłączone r5: build A/B bez skarpy (-> artifacts/c-p1-s23/terrain_walls_qa_nobatter.json), budowa końcowa, fidelity, pytest celowany, import, rendery r5-*. Status r5.status.
 - NASTĘPNY KROK: porównać verge_strips nobatter vs końcowy; jeśli 0,859 bez skarpy też -> ratchet czerwony na origin/main niezależnie (zgłosić liderowi); potem commit generated, raport.
+- krok 8 [02:0x]: A/B (WORLDGEN_NO_BACK_BATTER): bez skarpy verge 220/17/0,627 (= HEAD), ze skarpą 229/19/0,859 -> to skarpa. Przyczyna: OUT narożnika skośny do krawędzi -> stok >1:1,33. Poprawka: stopa prostopadle do krawędzi, odrzucane pary skośne >60° i ściśnięte (stopa < 0,5 krawędzi). Test 8/8. r5 przerwany (moje procesy), slot heavy zwolniony.
+- W TOKU odłączone r6 (build -> fidelity -> pytest celowany -> import -> rendery r6-*). Status r6.status.
+- NASTĘPNY KROK: verge QA ≤ 230/20/0,65; po CHAIN END pary r6 vs before, commit generated, raport.
