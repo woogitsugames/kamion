@@ -850,6 +850,15 @@ def covering(poly, roof, ov=OVERHANG):
     return exp
 
 
+def _safe_intersection(a, b):
+    """a & b; on a GEOS topology error (a face exactly on the edge of the covering, world3 bialystok-maczka: \"side
+    location conflict\") retry on make_valid inputs snapped to a 1 mm grid instead of failing the whole tile."""
+    try:
+        return a.intersection(b)
+    except shapely.errors.GEOSException:
+        return shapely.make_valid(a).intersection(shapely.make_valid(b), grid_size=0.001)
+
+
 def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_layer="buildings_low", soffit_mat=None,
           step_mat=None):
     """Roof covering (LOD0, LOD1, collision), soffit and fascia (LOD0). Returns the horizontal eave edges
@@ -860,7 +869,7 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
     eaves = []
     for face, e, d0, *zf in roof.faces(ov + 0.05):
         zfun = zf[0] if zf else roof.z                       # MultiRoof: the face's own plane (steps between parts)
-        for g in _clean(exp.intersection(face)):
+        for g in _clean(_safe_intersection(exp, face)):
             T = _tris(g)
             if not len(T):
                 continue
