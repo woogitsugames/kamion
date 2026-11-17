@@ -1,4 +1,3 @@
 # STATUS pc-budget-s23
-- Plan + skrypty sweepu (tools/pcperf/sweep/run.ps1, watch.ps1); raport WIP docs/reports/PC-BUDGET-2026-11-16.md.
-- Strażnik odłączony (pid 48972) czeka na bezczynną maszynę, potem 66 przebiegów do C:\Users\matma\Documents\Claude\kamion\artifacts\pc-budget-s23\runs.
-- Następny krok: `Get-Content C:\Users\matma\Documents\Claude\kamion\artifacts\pc-budget-s23\watch.status` ; po 'run.ps1 DONE' — analiza (regresja per tier), budżety w pc-budgets.json, raport.
+- DONE 17.11: 66/66 przebiegów, analiza (tools/pcperf/sweep/analyze.py), raport docs/reports/PC-BUDGET-2026-11-16.md, tileBudgetsD83 w pc-budgets.json, sekcja w docs/PERFORMANCE_BUDGETS.md.
+- Następny krok: powtórka na nowym buildzie: `pwsh -File tools/pcperf/sweep/run.ps1 -Exe <nowy Kamion.exe>` (najpierw przenieś stare artifacts/pc-budget-s23/runs), potem `uv run --no-project --with numpy python tools/pcperf/sweep/analyze.py C:\Users\matma\Documents\Claude\kamion\artifacts\pc-budget-s23`.
