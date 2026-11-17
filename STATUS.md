@@ -19,3 +19,7 @@ NASTĘPNY KROK: po buildach: uv run --project tools/worldgen python scripts/expo
 - qa.seams: FAIL 16 (było 19 w ADR 0275; pozostałe = referencje rozstawu linii, pobocza DK8 kleeberga), PRZEJŚCIE 11.
 - pytest tests/gis 2405/3: reader seam_p2a (naprawione), fidelity C stale (run.py w toku), test_hero_bridge 0,003 m (C, nie z tej gałęzi).
 NASTĘPNY KROK: bash artifacts/seams-fix-s23/unity-chain.sh (import Win64 + vqa High) — w toku; potem obejrzeć PNG, commit fidelity C.
+## r4 KONIEC (13:1x)
+- import Win64 knyszyn 12:57:13 / knyszyn-w 12:59:29 exit 0; vqa High 13:02:58 / 13:03:22 (artifacts/seams-fix-s23/vqa, kopia w main/artifacts).
+- obejrzane: rondo-dk65-from-south / above — trawa przy krawężnikach obu narożników płd., bez widocznego uskoku; fidelity C odświeżone (tylko hashe).
+NASTĘPNY KROK (lider): git merge origin/seams-fix-s23; EditMode WorldStreamerRouteLinksTests (Win64); test jazdy exe -scene knyszyn -stream 1 -autopilot route.
