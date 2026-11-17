@@ -14,3 +14,5 @@
 
 - [1] raw_plank_wall (Poly Haven, Dimitrios Savva, CC0, 1,87 m, 2k) w cc0_manifest.json + cc0_fetch.py (nowy tryb `--resolve --only <id>`, reszta manifestu bez zmian); 5 plików pobrane, md5 = API, sha256 zapisane; LICENSES.md wiersz + licencja sprawdzona 2026-11-17.
   NASTĘPNY KROK: `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only wood_siding`
+- [2] Zestaw `wood_siding` (sets_scan.py: SCAN_SETS + SCAN_ONLY_META, modulation_set, uv mesh_uv0 u wzdłuż/v w górę, kafel 1,87 m, deski poziome; nowe flatten_boards/board_tone_cv). Zmierzone: rozstaw desek 0,093 m (mediana z fug displacement), CV tonu desek 0,124 → 0,016, najciemniejsza deska 0,33 → 0,89 × sąsiad, 0 % klipowania; albedo w silniku wood_planks p01/p50/p99 0,078/0,163/0,209 (max 0,252), zielone 0,060/0,127/0,162. materials_spec.json: wpis wood_siding.
+  NASTĘPNY KROK: podpiąć set_tile dla wood_planks* w tools/worldgen/streetscape/materials.py + test
