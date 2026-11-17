@@ -8,3 +8,5 @@ Bazowe liczby (c-p1 r7, świat 17.11 06:47): verge_strips 224/17/0,627 (ratchet 
 - NASTEPNY KROK: po 'CHAIN END' w artifacts/c-p2-s23/before.status obejrzec before-High, potem lancuch r1 (build_world C -> fidelity -> export-route -> catalog -> ratchet -> import -> VQA).
 - [08:5x] before: import Win64 = pelny reimport Library (kopiowana z main), trwa; r1 (artifacts/c-p2-s23/tools/round.ps1 -R r1) odlaczony, czeka na slot heavy (4/4 zajete, kolejka 4). Status: artifacts/c-p2-s23/r1.status.
 - NASTEPNY KROK: czekac na before.status 'CHAIN END' i r1.status; godziny buildow C zapisze r1.status (build_world start/exit).
+- [08:54] before KONIEC: import 08:20-08:51 (pelny reimport), VQA High 34 kamery + Low 2 -> artifacts/c-p2-s23/before-High, before-Low. we17a: pionowa sciana trawy (spodnica pobocza) na lewo od konca muru + odsloniety koniec bloczkow.
+- NASTEPNY KROK: r1.status (czeka na slot heavy); po CHAIN END porownac r1-High/we17a.png, we14-16, g3b_* z before.
