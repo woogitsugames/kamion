@@ -1,0 +1,61 @@
+{
+  "id": "gugik-nmt-2022-dw671-tykocin-04",
+  "name": "GUGiK NMT (DTM) 1 m grid, 2022, sheets covering dw671-tykocin-04",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "NMT",
+  "region": "dw671-tykocin-04",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NumerycznyModelTerenuEVRF2007/WFS/Skorowidze",
+  "format": "ARC/INFO ASCII GRID",
+  "crs": "EPSG:2180 (PL-1992)",
+  "vertical_crs": "PL-EVRF2007-NH (EPSG:9651 EVRF2007-PL height); compound EPSG:2180+9651",
+  "resolution_m": 1.0,
+  "accuracy": {
+    "blad_sr_wys_m": "0.60",
+    "blad_sr_syt_m": "0.60"
+  },
+  "source_survey": "airborne laser scanning (zrodlo_danych: Skaning laserowy)",
+  "extent": "sheets intersecting bbox [756491.0, 605439.0, 758539.0, 607487.0]",
+  "license": "GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)",
+  "license_status": "LEGAL_REVIEW_REQUIRED (statutory basis cited from secondary sources, not from ISAP text)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)",
+  "used_by": [
+    "tools/worldgen/build_region.py --region dw671-tykocin-04"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/76753/76753_1291476_N-34-106-B-a-4-4.asc",
+      "godlo": "N-34-106-B-a-4-4",
+      "akt_data": "2022-07-29",
+      "akt_rok": "2022",
+      "char_przestrz": "1.00 m",
+      "uklad_xy": "PL-1992",
+      "uklad_h": "PL-EVRF2007-NH",
+      "blad_sr_wys": "0.60",
+      "blad_sr_syt": "0.60",
+      "format": "ARC/INFO ASCII GRID",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-nmt-2022-dw671-tykocin-04/76753_1291476_N-34-106-B-a-4-4.asc",
+      "sha256": "0a71da7a4c82fcd270415b066afdd13173173acda5c6428d1f5cf3bd5c54c59d",
+      "size_bytes": 37007461,
+      "downloaded_utc": "2026-11-16T09:43:29+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/76753/76753_1291485_N-34-106-B-b-3-3.asc",
+      "godlo": "N-34-106-B-b-3-3",
+      "akt_data": "2022-07-29",
+      "akt_rok": "2022",
+      "char_przestrz": "1.00 m",
+      "uklad_xy": "PL-1992",
+      "uklad_h": "PL-EVRF2007-NH",
+      "blad_sr_wys": "0.60",
+      "blad_sr_syt": "0.60",
+      "format": "ARC/INFO ASCII GRID",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-nmt-2022-dw671-tykocin-04/76753_1291485_N-34-106-B-b-3-3.asc",
+      "sha256": "3c7863e8965c73964632223f6d4b6e2e979cd476d335b0ba8208a9d47b9bcacc",
+      "size_bytes": 37035417,
+      "downloaded_utc": "2026-11-16T09:43:44+00:00"
+    }
+  ]
+}

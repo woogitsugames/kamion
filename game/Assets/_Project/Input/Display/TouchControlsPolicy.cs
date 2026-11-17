@@ -121,6 +121,18 @@ namespace Game.Controls
             }
         }
 
+        /// <summary>
+        /// Evidence runs (launch argument <c>ui_touch</c>, int-ui-s23): use <paramref name="mode"/> for this process only,
+        /// without writing PlayerPrefs - the player's stored choice stays untouched. A later change in the settings screen
+        /// stores as usual.
+        /// </summary>
+        public static void OverrideForSession(TouchControlsMode mode)
+        {
+            Load();
+            s_Touch = ParseTouchControls((int)mode); Version++;
+            ControlInputLogger.WriteNoStack("[CONTROLS] ui touchControls=" + TouchControlsPolicy.Label(s_Touch) + " (session only, not stored)");
+        }
+
         /// <summary>Monitor HUD scale (0.8 .. 1.4).</summary>
         public static float HudScale
         {

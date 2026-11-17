@@ -1,0 +1,154 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0159",
+   "look_at": [
+    522.617,
+    809.222,
+    109.926
+   ],
+   "note": "driver eye 2.5 m, control route s = 159 m of 2550 m (unnamed)",
+   "pos": [
+    533.072,
+    868.339,
+    111.245
+   ],
+   "route_s_m": 159.383,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0478",
+   "look_at": [
+    424.674,
+    516.439,
+    109.453
+   ],
+   "note": "driver eye 2.5 m, control route s = 478 m of 2550 m (Włodzimierza Puchalskiego)",
+   "pos": [
+    465.702,
+    559.879,
+    110.948
+   ],
+   "route_s_m": 478.149,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0797",
+   "look_at": [
+    489.834,
+    282.246,
+    109.738
+   ],
+   "note": "driver eye 2.5 m, control route s = 797 m of 2550 m (Włodzimierza Puchalskiego)",
+   "pos": [
+    450.618,
+    325.207,
+    110.824
+   ],
+   "route_s_m": 796.914,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1116",
+   "look_at": [
+    515.138,
+    -35.165,
+    110.077
+   ],
+   "note": "driver eye 2.5 m, control route s = 1116 m of 2550 m (Włodzimierza Puchalskiego)",
+   "pos": [
+    508.564,
+    24.512,
+    111.158
+   ],
+   "route_s_m": 1115.68,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1434",
+   "look_at": [
+    255.306,
+    -130.118,
+    109.625
+   ],
+   "note": "driver eye 2.5 m, control route s = 1434 m of 2550 m (unnamed)",
+   "pos": [
+    314.61,
+    -120.837,
+    111.409
+   ],
+   "route_s_m": 1434.446,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1753",
+   "look_at": [
+    177.672,
+    -381.901,
+    109.464
+   ],
+   "note": "driver eye 2.5 m, control route s = 1753 m of 2550 m (Sokołowska)",
+   "pos": [
+    181.253,
+    -321.986,
+    110.45
+   ],
+   "route_s_m": 1753.212,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2072",
+   "look_at": [
+    38.304,
+    -610.568,
+    110.651
+   ],
+   "note": "driver eye 2.5 m, control route s = 2072 m of 2550 m (Sokołowska)",
+   "pos": [
+    45.768,
+    -551.012,
+    111.717
+   ],
+   "route_s_m": 2071.977,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2391",
+   "look_at": [
+    -9.428,
+    -925.739,
+    112.944
+   ],
+   "note": "driver eye 2.5 m, control route s = 2391 m of 2550 m (Sokołowska)",
+   "pos": [
+    -2.02,
+    -866.176,
+    113.218
+   ],
+   "route_s_m": 2390.743,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 258.93,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "tykocin",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

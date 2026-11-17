@@ -90,8 +90,14 @@ namespace Game.UI.CabDisplays
 
         void OnDestroy() => Release();
 
+        /// <summary>ADR 0283: live cluster screens in some cab right now (the monitor HUD then shows only warnings in the cab
+        /// view, the speedometer is the cluster in the dash). Counted in Init / Release; read once per frame, no allocation.</summary>
+        public static int LiveClusters { get; private set; }
+        bool m_Counted;
+
         void Release()
         {
+            if (m_Counted) { m_Counted = false; LiveClusters--; }
             Unbind();
             m_NavLayout.ReleaseStatic();
             m_Cluster?.Dispose(); m_Nav?.Dispose(); m_Din?.Dispose();
@@ -119,6 +125,7 @@ namespace Game.UI.CabDisplays
             RequestGlyphs();
             Bind();
             m_ClusterT = m_NavT = m_DinT = float.MaxValue;   // first LateUpdate draws everything
+            if (m_ClusterR != null && m_ClusterR.Length > 0 && !m_Counted) { m_Counted = true; LiveClusters++; }
         }
 
         static Renderer[] Find(Transform root, string prefix, string[] prefixes)

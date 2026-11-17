@@ -1,0 +1,4757 @@
+{
+ "schema": "kamion/research-osm-nodes/1",
+ "source": "OSM API 0.6 /map.json per ADR-0203 lattice cell (see manifest.json), ODbL 1.0, (c) OpenStreetMap contributors. Brand names deliberately dropped (keep only place names); functions only.",
+ "nodes": [
+  {
+   "id": 2349145048,
+   "lat": 53.1588545,
+   "lon": 22.8901401,
+   "x": 759975.4,
+   "y": 595242.2,
+   "cell": [
+    -9,
+    0
+   ],
+   "tags": {
+    "distance": "628",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 3009674163,
+   "lat": 53.1687142,
+   "lon": 22.8904274,
+   "x": 759934.9,
+   "y": 596339.0,
+   "cell": [
+    -9,
+    0
+   ],
+   "tags": {
+    "name": "Kolonia Babino",
+    "name:genitive": "Kolonii Babina",
+    "place": "hamlet",
+    "source": "PRNG"
+   }
+  },
+  {
+   "id": 3890215413,
+   "lat": 53.160809,
+   "lon": 22.9043125,
+   "x": 760910.2,
+   "y": 595511.0,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing:island": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3890215415,
+   "lat": 53.1630483,
+   "lon": 22.9485967,
+   "x": 763854.5,
+   "y": 595922.4,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:markings": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3890215419,
+   "lat": 53.1640922,
+   "lon": 22.9306137,
+   "x": 762647.0,
+   "y": 595972.2,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing:island": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3890219552,
+   "lat": 53.1555726,
+   "lon": 22.8703806,
+   "x": 758675.2,
+   "y": 594805.8,
+   "cell": [
+    -9,
+    -1
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4165915616,
+   "lat": 53.1586035,
+   "lon": 22.886049,
+   "x": 759703.6,
+   "y": 595199.4,
+   "cell": [
+    -9,
+    0
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 5183905301,
+   "lat": 53.1546195,
+   "lon": 22.8660069,
+   "x": 758388.7,
+   "y": 594684.0,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5183905308,
+   "lat": 53.153385,
+   "lon": 22.866374,
+   "x": 758420.7,
+   "y": 594548.1,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5183905309,
+   "lat": 53.1545919,
+   "lon": 22.8660076,
+   "x": 758388.9,
+   "y": 594681.0,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5183906338,
+   "lat": 53.153433,
+   "lon": 22.8660841,
+   "x": 758401.0,
+   "y": 594552.4,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5194994847,
+   "lat": 53.1608084,
+   "lon": 22.9041725,
+   "x": 760900.9,
+   "y": 595510.4,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5237751213,
+   "lat": 53.1609114,
+   "lon": 22.9040402,
+   "x": 760891.4,
+   "y": 595521.4,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173519,
+   "lat": 53.1552875,
+   "lon": 22.8682599,
+   "x": 758535.2,
+   "y": 594766.4,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173529,
+   "lat": 53.1577148,
+   "lon": 22.8646368,
+   "x": 758278.6,
+   "y": 595023.1,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173562,
+   "lat": 53.1545719,
+   "lon": 22.8658393,
+   "x": 758377.8,
+   "y": 594678.1,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173590,
+   "lat": 53.1540888,
+   "lon": 22.865933,
+   "x": 758387.0,
+   "y": 594624.8,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890267416,
+   "lat": 53.1641766,
+   "lon": 22.9284874,
+   "x": 762504.5,
+   "y": 595973.7,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890267477,
+   "lat": 53.1626738,
+   "lon": 22.9484438,
+   "x": 763846.6,
+   "y": 595880.2,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890268710,
+   "lat": 53.1641766,
+   "lon": 22.9290289,
+   "x": 762540.6,
+   "y": 595975.7,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890268748,
+   "lat": 53.1641674,
+   "lon": 22.9252794,
+   "x": 762290.2,
+   "y": 595960.9,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 8860869956,
+   "lat": 53.1604663,
+   "lon": 22.8992447,
+   "x": 760573.8,
+   "y": 595454.4,
+   "cell": [
+    -9,
+    0
+   ],
+   "tags": {
+    "highway": "toll_gantry"
+   }
+  },
+  {
+   "id": 8860869957,
+   "lat": 53.160362,
+   "lon": 22.899296,
+   "x": 760577.8,
+   "y": 595443.0,
+   "cell": [
+    -9,
+    0
+   ],
+   "tags": {
+    "highway": "toll_gantry"
+   }
+  },
+  {
+   "id": 10283091753,
+   "lat": 53.1580135,
+   "lon": 22.8823413,
+   "x": 759459.5,
+   "y": 595120.4,
+   "cell": [
+    -9,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10283091757,
+   "lat": 53.1573224,
+   "lon": 22.8779595,
+   "x": 759170.9,
+   "y": 595027.7,
+   "cell": [
+    -9,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 31578128,
+   "lat": 53.15997,
+   "lon": 22.90962,
+   "x": 761269.8,
+   "y": 595437.1,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "name": "Babino",
+    "place": "village",
+    "postal_code": "16-080",
+    "teryt:rm": "01",
+    "teryt:simc": "0025030",
+    "teryt:stan_na": "2009-01-01",
+    "wikidata": "Q4837925",
+    "wikipedia": "pl:Babino (województwo podlaskie)"
+   }
+  },
+  {
+   "id": 469876632,
+   "lat": 53.1642693,
+   "lon": 22.9486021,
+   "x": 763847.4,
+   "y": 596058.1,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "highway": "motorway_junction",
+    "milestone": "632",
+    "name": "Tykocin",
+    "unsigned_ref": "91"
+   }
+  },
+  {
+   "id": 2349145054,
+   "lat": 53.1611729,
+   "lon": 22.9045791,
+   "x": 760925.8,
+   "y": 595552.4,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "distance": "629",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2349145056,
+   "lat": 53.163512,
+   "lon": 22.9191138,
+   "x": 761882.4,
+   "y": 595865.5,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "distance": "630",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 3009672357,
+   "lat": 53.1649978,
+   "lon": 22.9258234,
+   "x": 762321.5,
+   "y": 596055.2,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "name": "Cegielnia-Złotoria",
+    "name:genitive": "Cegielni-Złotorii",
+    "place": "hamlet",
+    "source": "PRNG"
+   }
+  },
+  {
+   "id": 3688193095,
+   "lat": 53.1629469,
+   "lon": 22.929752,
+   "x": 762596.4,
+   "y": 595841.7,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "amenity": "parking"
+   }
+  },
+  {
+   "id": 5237751214,
+   "lat": 53.1592857,
+   "lon": 22.9049713,
+   "x": 760963.5,
+   "y": 595344.1,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890172254,
+   "lat": 53.1608401,
+   "lon": 22.9042967,
+   "x": 760909.0,
+   "y": 595514.4,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "crossing:island": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890268709,
+   "lat": 53.1642421,
+   "lon": 22.9284913,
+   "x": 762504.3,
+   "y": 595981.0,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 12707712683,
+   "lat": 53.1632307,
+   "lon": 22.9289795,
+   "x": 762543.1,
+   "y": 595870.4,
+   "cell": [
+    -8,
+    0
+   ],
+   "tags": {
+    "communication:gsm": "yes",
+    "communication:lte": "yes",
+    "communication:mobile_phone": "yes",
+    "man_made": "mast",
+    "ref": "Plus 11195",
+    "tower:construction": "freestanding",
+    "tower:type": "communication"
+   }
+  },
+  {
+   "id": 1937542643,
+   "lat": 53.164153,
+   "lon": 22.946457,
+   "x": 763704.8,
+   "y": 596037.2,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "highway": "motorway_junction",
+    "milestone": "632",
+    "name": "Tykocin",
+    "unsigned_ref": "91"
+   }
+  },
+  {
+   "id": 2349145058,
+   "lat": 53.1641174,
+   "lon": 22.9485031,
+   "x": 763841.7,
+   "y": 596040.8,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "distance": "632",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2349145059,
+   "lat": 53.1643174,
+   "lon": 22.9335954,
+   "x": 762844.8,
+   "y": 596008.2,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "distance": "631",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 3009678168,
+   "lat": 53.1575,
+   "lon": 22.9330556,
+   "x": 762850.4,
+   "y": 595248.5,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "name": "Pławuli",
+    "name:genitive": "Pławul",
+    "place": "hamlet",
+    "source": "PRNG"
+   }
+  },
+  {
+   "id": 5890267478,
+   "lat": 53.1627219,
+   "lon": 22.9482256,
+   "x": 763831.7,
+   "y": 595884.7,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:markings": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 6302208035,
+   "lat": 53.1665138,
+   "lon": 22.9457177,
+   "x": 763640.9,
+   "y": 596296.9,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:markings": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 6302208039,
+   "lat": 53.1664495,
+   "lon": 22.9457002,
+   "x": 763640.2,
+   "y": 596289.7,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:markings": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 6302208045,
+   "lat": 53.1629012,
+   "lon": 22.9478234,
+   "x": 763803.8,
+   "y": 595903.2,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:markings": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 6302208046,
+   "lat": 53.1629726,
+   "lon": 22.9478078,
+   "x": 763802.3,
+   "y": 595911.0,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:markings": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 6302208056,
+   "lat": 53.1627302,
+   "lon": 22.9480958,
+   "x": 763823.0,
+   "y": 595885.2,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:markings": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 6302208061,
+   "lat": 53.1631113,
+   "lon": 22.9485493,
+   "x": 763850.9,
+   "y": 595929.2,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:markings": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 8860869961,
+   "lat": 53.1642629,
+   "lon": 22.9541032,
+   "x": 764214.8,
+   "y": 596077.7,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "highway": "toll_gantry"
+   }
+  },
+  {
+   "id": 8860869962,
+   "lat": 53.1641334,
+   "lon": 22.9540874,
+   "x": 764214.6,
+   "y": 596063.2,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "highway": "toll_gantry"
+   }
+  },
+  {
+   "id": 10658881609,
+   "lat": 53.1627133,
+   "lon": 22.946665,
+   "x": 763727.5,
+   "y": 595878.0,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "amenity": "shelter",
+    "shelter_type": "public_transport"
+   }
+  },
+  {
+   "id": 10658881610,
+   "lat": 53.1626621,
+   "lon": 22.9467326,
+   "x": 763732.4,
+   "y": 595872.6,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "highway": "bus_stop"
+   }
+  },
+  {
+   "id": 11514693978,
+   "lat": 53.1949484,
+   "lon": 22.89252,
+   "x": 759915.9,
+   "y": 599262.3,
+   "cell": [
+    -9,
+    1
+   ],
+   "tags": {
+    "crossing:markings": "zebra",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 13574089261,
+   "lat": 53.1679605,
+   "lon": 22.9613282,
+   "x": 764674.6,
+   "y": 596515.3,
+   "cell": [
+    -7,
+    0
+   ],
+   "tags": {
+    "name": "Szulaki",
+    "place": "locality",
+    "source": "GUGiK (WTMS)"
+   }
+  },
+  {
+   "id": 31568969,
+   "lat": 53.16613,
+   "lon": 22.97374,
+   "x": 765514.8,
+   "y": 596357.9,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "name": "Żółtki",
+    "place": "village",
+    "postal_code": "16-070",
+    "teryt:rm": "01",
+    "teryt:simc": "0025359",
+    "teryt:stan_na": "2009-01-01",
+    "wikidata": "Q5621163",
+    "wikipedia": "pl:Żółtki"
+   }
+  },
+  {
+   "id": 985990246,
+   "lat": 53.1597732,
+   "lon": 22.9938058,
+   "x": 766894.4,
+   "y": 595726.1,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "turning_circle"
+   }
+  },
+  {
+   "id": 1940503816,
+   "lat": 53.1600462,
+   "lon": 22.9936379,
+   "x": 766881.5,
+   "y": 595755.9,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "motorway_junction",
+    "milestone": "635",
+    "name": "Choroszcz",
+    "unsigned_ref": "92"
+   }
+  },
+  {
+   "id": 2240228458,
+   "lat": 53.1592528,
+   "lon": 22.9814897,
+   "x": 766075.0,
+   "y": 595622.4,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "direction": "backward",
+    "maxspeed": "40",
+    "side": "right",
+    "traffic_sign": "maxspeed"
+   }
+  },
+  {
+   "id": 2349145055,
+   "lat": 53.1613607,
+   "lon": 22.9777024,
+   "x": 765809.0,
+   "y": 595842.6,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "distance": "634",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2349145057,
+   "lat": 53.1640227,
+   "lon": 22.9637903,
+   "x": 764863.3,
+   "y": 596086.8,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "distance": "633",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 3012144263,
+   "lat": 53.1529988,
+   "lon": 22.9864218,
+   "x": 766443.2,
+   "y": 594945.7,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3012179427,
+   "lat": 53.1573491,
+   "lon": 22.9828508,
+   "x": 766177.7,
+   "y": 595415.9,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3012179430,
+   "lat": 53.1588144,
+   "lon": 22.9808246,
+   "x": 766033.3,
+   "y": 595571.2,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "direction": "backward",
+    "maxweight": "10",
+    "side": "both",
+    "traffic_sign": "PL:B-18"
+   }
+  },
+  {
+   "id": 3012179733,
+   "lat": 53.1589544,
+   "lon": 22.980863,
+   "x": 766035.0,
+   "y": 595586.9,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3012179734,
+   "lat": 53.1589893,
+   "lon": 22.9806075,
+   "x": 766017.7,
+   "y": 595589.8,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "direction": "forward",
+    "maxspeed": "50",
+    "side": "right",
+    "traffic_sign": "maxspeed"
+   }
+  },
+  {
+   "id": 3012198422,
+   "lat": 53.1572539,
+   "lon": 22.9938105,
+   "x": 766910.4,
+   "y": 595446.2,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3890212527,
+   "lat": 53.1532715,
+   "lon": 22.9868171,
+   "x": 766467.9,
+   "y": 594977.5,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3890212529,
+   "lat": 53.1540362,
+   "lon": 22.9881479,
+   "x": 766552.1,
+   "y": 595067.5,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tags": {
+    "crossing:markings": "zebra",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3890212536,
+   "lat": 53.1584227,
+   "lon": 22.9953986,
+   "x": 767009.2,
+   "y": 595582.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3890212537,
+   "lat": 53.158496,
+   "lon": 22.9954199,
+   "x": 767010.2,
+   "y": 595590.2,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3890212538,
+   "lat": 53.1610164,
+   "lon": 23.0005483,
+   "x": 767337.1,
+   "y": 595889.5,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "foot": "no",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3890212540,
+   "lat": 53.1610641,
+   "lon": 23.0006158,
+   "x": 767341.3,
+   "y": 595895.1,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "foot": "no",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4709691981,
+   "lat": 53.1646039,
+   "lon": 22.9784632,
+   "x": 765839.7,
+   "y": 596205.9,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "addr:city:simc": "0025359",
+    "addr:housenumber": "14A",
+    "addr:place": "Żółtki",
+    "addr:postcode": "16-070",
+    "tourism": "motel"
+   }
+  },
+  {
+   "id": 5195111690,
+   "lat": 53.1637707,
+   "lon": 22.9760728,
+   "x": 765685.2,
+   "y": 596104.4,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "amenity": "parking"
+   }
+  },
+  {
+   "id": 7548683259,
+   "lat": 53.1660345,
+   "lon": 22.9756604,
+   "x": 765643.7,
+   "y": 596354.4,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 7967287229,
+   "lat": 53.1566983,
+   "lon": 22.9930188,
+   "x": 766861.0,
+   "y": 595381.5,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 9149526989,
+   "lat": 53.1531867,
+   "lon": 22.9867651,
+   "x": 766465.0,
+   "y": 594967.9,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tags": {
+    "crossing": "marked",
+    "crossing:island": "yes",
+    "highway": "crossing",
+    "traffic_calming": "table"
+   }
+  },
+  {
+   "id": 9193597293,
+   "lat": 53.1562768,
+   "lon": 22.9922571,
+   "x": 766812.7,
+   "y": 595331.8,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 10285932534,
+   "lat": 53.1622331,
+   "lon": 22.9826194,
+   "x": 766132.0,
+   "y": 595957.8,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 10285942061,
+   "lat": 53.1621132,
+   "lon": 22.9840988,
+   "x": 766231.6,
+   "y": 595950.0,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "highway": "bus_stop"
+   }
+  },
+  {
+   "id": 10285942062,
+   "lat": 53.1617656,
+   "lon": 22.9852712,
+   "x": 766312.0,
+   "y": 595915.8,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "highway": "bus_stop"
+   }
+  },
+  {
+   "id": 10285942063,
+   "lat": 53.1619283,
+   "lon": 22.9847329,
+   "x": 766275.1,
+   "y": 595931.8,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 12144996225,
+   "lat": 53.1576656,
+   "lon": 22.9743864,
+   "x": 765610.3,
+   "y": 595419.6,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "image": "https://i.imgur.com/uguafKh.jpeg",
+    "tourism": "viewpoint"
+   }
+  },
+  {
+   "id": 12966318764,
+   "lat": 53.1605346,
+   "lon": 22.9893814,
+   "x": 766594.2,
+   "y": 595794.3,
+   "cell": [
+    -6,
+    0
+   ],
+   "tags": {
+    "highway": "turning_circle"
+   }
+  },
+  {
+   "id": 692602597,
+   "lat": 53.1645488,
+   "lon": 23.0037529,
+   "x": 767529.1,
+   "y": 596294.1,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "name": "Żółtki-Kolonia",
+    "place": "village",
+    "postal_code": "16-070",
+    "teryt:simc": "0988891",
+    "wikidata": "Q5735422",
+    "wikipedia": "pl:Żółtki-Kolonia"
+   }
+  },
+  {
+   "id": 1908957192,
+   "lat": 53.1586688,
+   "lon": 23.0018789,
+   "x": 767440.6,
+   "y": 595633.6,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "motorway_junction",
+    "milestone": "636",
+    "name": "Choroszcz",
+    "unsigned_ref": "92"
+   }
+  },
+  {
+   "id": 2081020070,
+   "lat": 53.1536535,
+   "lon": 23.0307486,
+   "x": 769400.4,
+   "y": 595184.6,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tags": {
+    "highway": "motorway_junction",
+    "name": "Białystok Zachód",
+    "unsigned_ref": "93"
+   }
+  },
+  {
+   "id": 2248465406,
+   "lat": 53.1584476,
+   "lon": 23.0110366,
+   "x": 768053.7,
+   "y": 595643.3,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 2248465429,
+   "lat": 53.1608047,
+   "lon": 23.0010014,
+   "x": 767368.7,
+   "y": 595867.7,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 2248465430,
+   "lat": 53.1608225,
+   "lon": 23.0011457,
+   "x": 767378.2,
+   "y": 595870.2,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "give_way"
+   }
+  },
+  {
+   "id": 2248465435,
+   "lat": 53.1610491,
+   "lon": 23.000459,
+   "x": 767330.9,
+   "y": 595892.8,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "give_way"
+   }
+  },
+  {
+   "id": 2349145035,
+   "lat": 53.1551603,
+   "lon": 23.0215849,
+   "x": 768778.8,
+   "y": 595317.5,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "distance": "637",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2349145044,
+   "lat": 53.1576185,
+   "lon": 23.0073665,
+   "x": 767813.7,
+   "y": 595537.4,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "distance": "636",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2349145053,
+   "lat": 53.1602153,
+   "lon": 22.9926805,
+   "x": 766816.5,
+   "y": 595771.1,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "distance": "635",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 3009675761,
+   "lat": 53.1597222,
+   "lon": 23.005,
+   "x": 767642.5,
+   "y": 595762.3,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "is_in:city": "Choroszcz",
+    "name": "Nowosiółki",
+    "name:genitive": "Nowosiółek",
+    "name:lt": "Novosiulkai",
+    "name:pl": "Nowosiółki",
+    "place": "neighbourhood",
+    "source": "PRNG",
+    "teryt:simc": "0922828"
+   }
+  },
+  {
+   "id": 3012201871,
+   "lat": 53.1582325,
+   "lon": 22.9957265,
+   "x": 767032.3,
+   "y": 595562.1,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3012201872,
+   "lat": 53.1584075,
+   "lon": 22.9954755,
+   "x": 767014.5,
+   "y": 595580.6,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3012201873,
+   "lat": 53.1584625,
+   "lon": 22.9960376,
+   "x": 767051.7,
+   "y": 595588.8,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3012201874,
+   "lat": 53.1585854,
+   "lon": 22.9957832,
+   "x": 767033.9,
+   "y": 595601.5,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3012412413,
+   "lat": 53.1536661,
+   "lon": 23.0055262,
+   "x": 767715.4,
+   "y": 595091.2,
+   "cell": [
+    -5,
+    -1
+   ],
+   "tags": {
+    "direction": "forward",
+    "maxspeed": "50",
+    "side": "right",
+    "traffic_sign": "maxspeed"
+   }
+  },
+  {
+   "id": 3012439146,
+   "lat": 53.1561517,
+   "lon": 22.9936348,
+   "x": 766905.5,
+   "y": 595323.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "man_made": "works"
+   }
+  },
+  {
+   "id": 3012468372,
+   "lat": 53.156744,
+   "lon": 23.016171,
+   "x": 768407.3,
+   "y": 595473.2,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "amenity": "parking",
+    "parking": "surface"
+   }
+  },
+  {
+   "id": 3012480710,
+   "lat": 53.1572563,
+   "lon": 23.0113771,
+   "x": 768083.8,
+   "y": 595512.2,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3160890725,
+   "lat": 53.1560557,
+   "lon": 23.0166736,
+   "x": 768445.1,
+   "y": 595398.6,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "motorway_junction",
+    "name": "Białystok Zachód",
+    "unsigned_ref": "93"
+   }
+  },
+  {
+   "id": 3890212539,
+   "lat": 53.161029,
+   "lon": 23.0010178,
+   "x": 767368.4,
+   "y": 595892.7,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4709699428,
+   "lat": 53.1563134,
+   "lon": 23.0085312,
+   "x": 767899.6,
+   "y": 595396.7,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "man_made": "works",
+    "opening_hours": "Mo-Fr 08:00-16:00"
+   }
+  },
+  {
+   "id": 4709700808,
+   "lat": 53.158294,
+   "lon": 22.9941802,
+   "x": 766928.6,
+   "y": 595563.2,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "addr:city": "Choroszcz",
+    "addr:housenumber": "41",
+    "addr:postcode": "16-070",
+    "addr:street": "Aleja Niepodległości",
+    "opening_hours": "Mo-Fr 07:00-18:00; Sa 07:00-13:00",
+    "shop": "car_repair"
+   }
+  },
+  {
+   "id": 4709718737,
+   "lat": 53.1575894,
+   "lon": 23.0123673,
+   "x": 768147.9,
+   "y": 595552.9,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "addr:city": "Choroszcz",
+    "addr:housenumber": "44",
+    "addr:postcode": "16-070",
+    "addr:street": "Warszawska",
+    "description": "sklep z blachami dachowymi oraz oknami",
+    "opening_hours": "Mo-Fr 08:00-16:00",
+    "shop": "hardware"
+   }
+  },
+  {
+   "id": 4881627393,
+   "lat": 53.1572637,
+   "lon": 22.994156,
+   "x": 766933.4,
+   "y": 595448.6,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "crossing": "marked",
+    "crossing:island": "no",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4881628346,
+   "lat": 53.1581874,
+   "lon": 22.9956735,
+   "x": 767029.1,
+   "y": 595556.9,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "crossing": "marked",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4881628347,
+   "lat": 53.1582084,
+   "lon": 22.9955633,
+   "x": 767021.6,
+   "y": 595558.8,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "crossing": "marked",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4881628355,
+   "lat": 53.1584002,
+   "lon": 22.9961368,
+   "x": 767058.7,
+   "y": 595582.3,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4881628356,
+   "lat": 53.1584635,
+   "lon": 22.9961306,
+   "x": 767057.9,
+   "y": 595589.3,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4881628382,
+   "lat": 53.1612207,
+   "lon": 23.0001694,
+   "x": 767310.5,
+   "y": 595910.8,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "bus_stop"
+   }
+  },
+  {
+   "id": 4881628390,
+   "lat": 53.1608637,
+   "lon": 23.0010791,
+   "x": 767373.5,
+   "y": 595874.5,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4881628393,
+   "lat": 53.1575869,
+   "lon": 23.008481,
+   "x": 767888.3,
+   "y": 595538.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "bus_stop"
+   }
+  },
+  {
+   "id": 4881628396,
+   "lat": 53.1577658,
+   "lon": 23.007899,
+   "x": 767848.3,
+   "y": 595555.8,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4881628414,
+   "lat": 53.1565091,
+   "lon": 23.0224485,
+   "x": 768828.1,
+   "y": 595470.7,
+   "cell": [
+    -4,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5195111697,
+   "lat": 53.1600021,
+   "lon": 22.999679,
+   "x": 767285.3,
+   "y": 595773.5,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5195111701,
+   "lat": 53.1599407,
+   "lon": 22.9996122,
+   "x": 767281.3,
+   "y": 595766.5,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 8038246439,
+   "lat": 53.1576961,
+   "lon": 23.0113883,
+   "x": 768081.9,
+   "y": 595561.1,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "bench": "yes",
+    "bus": "yes",
+    "highway": "bus_stop",
+    "network": "BKM",
+    "network:wikidata": "Q9162501",
+    "public_transport": "platform",
+    "ref": "860",
+    "shelter": "yes"
+   }
+  },
+  {
+   "id": 8038246445,
+   "lat": 53.1570448,
+   "lon": 23.0126147,
+   "x": 768167.8,
+   "y": 595493.3,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "bench": "yes",
+    "bus": "yes",
+    "highway": "bus_stop",
+    "network": "BKM",
+    "network:wikidata": "Q9162501",
+    "public_transport": "platform",
+    "ref": "805",
+    "shelter": "yes"
+   }
+  },
+  {
+   "id": 8038246448,
+   "lat": 53.1564987,
+   "lon": 23.0226416,
+   "x": 768841.1,
+   "y": 595470.3,
+   "cell": [
+    -4,
+    0
+   ],
+   "tags": {
+    "bench": "no",
+    "bus": "yes",
+    "highway": "bus_stop",
+    "network": "BKM",
+    "network:wikidata": "Q9162501",
+    "public_transport": "platform",
+    "ref": "934",
+    "shelter": "no"
+   }
+  },
+  {
+   "id": 8038246449,
+   "lat": 53.1564462,
+   "lon": 23.0220886,
+   "x": 768804.4,
+   "y": 595462.3,
+   "cell": [
+    -4,
+    0
+   ],
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "network": "BKM",
+    "network:wikidata": "Q9162501",
+    "public_transport": "platform",
+    "ref": "933"
+   }
+  },
+  {
+   "id": 8860869965,
+   "lat": 53.1568322,
+   "lon": 23.0116512,
+   "x": 768104.8,
+   "y": 595466.1,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "toll_gantry"
+   }
+  },
+  {
+   "id": 8860869966,
+   "lat": 53.1569401,
+   "lon": 23.0116968,
+   "x": 768107.2,
+   "y": 595478.2,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "toll_gantry"
+   }
+  },
+  {
+   "id": 8980081711,
+   "lat": 53.1572112,
+   "lon": 23.0117486,
+   "x": 768108.9,
+   "y": 595508.5,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 10284650077,
+   "lat": 53.1585101,
+   "lon": 23.0111383,
+   "x": 768060.1,
+   "y": 595650.6,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "street_lamp"
+   }
+  },
+  {
+   "id": 10284650078,
+   "lat": 53.1584891,
+   "lon": 23.0114992,
+   "x": 768084.3,
+   "y": 595649.6,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "highway": "street_lamp"
+   }
+  },
+  {
+   "id": 11976654365,
+   "lat": 53.1575229,
+   "lon": 22.9947849,
+   "x": 766973.8,
+   "y": 595479.7,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "network": "BKM",
+    "network:wikidata": "Q9162501",
+    "public_transport": "platform",
+    "ref": "1136"
+   }
+  },
+  {
+   "id": 11976654367,
+   "lat": 53.1568949,
+   "lon": 22.9933198,
+   "x": 766879.9,
+   "y": 595404.5,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "network": "BKM",
+    "network:wikidata": "Q9162501",
+    "public_transport": "platform",
+    "ref": "1137"
+   }
+  },
+  {
+   "id": 12837492206,
+   "lat": 53.1653944,
+   "lon": 22.9968592,
+   "x": 767063.5,
+   "y": 596362.3,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "addr:housenumber": "38A",
+    "addr:place": "Żółtki-Kolonia",
+    "addr:postcode": "16-070",
+    "man_made": "works",
+    "product": "packaging"
+   }
+  },
+  {
+   "id": 13463238910,
+   "lat": 53.16388,
+   "lon": 22.99372,
+   "x": 766863.2,
+   "y": 596182.2,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "amenity": "parcel_locker",
+    "app_operated": "only",
+    "description": "przy oddziale Białystok",
+    "opening_hours": "24/7",
+    "operator:wikidata": "Q3182097",
+    "parcel_mail_in": "yes",
+    "parcel_pickup": "yes",
+    "ref": "ZTKA01BAPP"
+   }
+  },
+  {
+   "id": 13765678320,
+   "lat": 53.1580764,
+   "lon": 22.9984456,
+   "x": 767214.9,
+   "y": 595554.9,
+   "cell": [
+    -5,
+    0
+   ],
+   "tags": {
+    "addr:city": "Choroszcz",
+    "addr:housenumber": "21A",
+    "addr:street": "Warszawska",
+    "shop": "wholesale"
+   }
+  },
+  {
+   "id": 2349145006,
+   "lat": 53.1449256,
+   "lon": 22.8033447,
+   "x": 754259.7,
+   "y": 593382.1,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tags": {
+    "distance": "622",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 4165907372,
+   "lat": 53.1489742,
+   "lon": 22.8304963,
+   "x": 756049.9,
+   "y": 593928.9,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4165915079,
+   "lat": 53.1439221,
+   "lon": 22.7986726,
+   "x": 753953.4,
+   "y": 593253.9,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5196420122,
+   "lat": 53.146158,
+   "lon": 22.8137778,
+   "x": 754949.5,
+   "y": 593556.2,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173664,
+   "lat": 53.1490489,
+   "lon": 22.8301119,
+   "x": 756023.8,
+   "y": 593935.8,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173734,
+   "lat": 53.1442542,
+   "lon": 22.8011356,
+   "x": 754116.0,
+   "y": 593299.6,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173735,
+   "lat": 53.1441467,
+   "lon": 22.8001263,
+   "x": 754049.2,
+   "y": 593284.1,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173758,
+   "lat": 53.1438892,
+   "lon": 22.7986869,
+   "x": 753954.5,
+   "y": 593250.3,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173767,
+   "lat": 53.1438319,
+   "lon": 22.7978734,
+   "x": 753900.5,
+   "y": 593241.1,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173782,
+   "lat": 53.143863,
+   "lon": 22.7977405,
+   "x": 753891.4,
+   "y": 593244.1,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 8860869952,
+   "lat": 53.145392,
+   "lon": 22.8054432,
+   "x": 754397.1,
+   "y": 593441.4,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tags": {
+    "highway": "toll_gantry"
+   }
+  },
+  {
+   "id": 8860869953,
+   "lat": 53.1452895,
+   "lon": 22.8054957,
+   "x": 754401.3,
+   "y": 593430.2,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tags": {
+    "highway": "toll_gantry"
+   }
+  },
+  {
+   "id": 10278290144,
+   "lat": 53.142849,
+   "lon": 22.7882168,
+   "x": 753261.0,
+   "y": 593097.6,
+   "cell": [
+    -12,
+    -2
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10278926126,
+   "lat": 53.1475223,
+   "lon": 22.8173866,
+   "x": 755182.6,
+   "y": 593720.7,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10278926127,
+   "lat": 53.1463269,
+   "lon": 22.8098418,
+   "x": 754685.5,
+   "y": 593560.9,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10278926175,
+   "lat": 53.1457647,
+   "lon": 22.8064216,
+   "x": 754460.3,
+   "y": 593486.3,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10278926176,
+   "lat": 53.1452203,
+   "lon": 22.802855,
+   "x": 754225.2,
+   "y": 593413.1,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 2349145009,
+   "lat": 53.147246,
+   "lon": 22.8178285,
+   "x": 755213.8,
+   "y": 593691.5,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "distance": "623",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2349145012,
+   "lat": 53.1495887,
+   "lon": 22.8323194,
+   "x": 756168.1,
+   "y": 594003.7,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "distance": "624",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 3009674363,
+   "lat": 53.1513889,
+   "lon": 22.8119445,
+   "x": 754796.0,
+   "y": 594131.0,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "name": "Kolonia Radule",
+    "name:genitive": "Kolonii Raduli",
+    "place": "hamlet",
+    "source": "PRNG"
+   }
+  },
+  {
+   "id": 5890173633,
+   "lat": 53.1515199,
+   "lon": 22.8454749,
+   "x": 757035.5,
+   "y": 594265.5,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173665,
+   "lat": 53.1490072,
+   "lon": 22.8304816,
+   "x": 756048.8,
+   "y": 593932.5,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 10274383359,
+   "lat": 53.1516739,
+   "lon": 22.8430866,
+   "x": 756875.0,
+   "y": 594274.1,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10274383360,
+   "lat": 53.1522479,
+   "lon": 22.8466989,
+   "x": 757113.0,
+   "y": 594350.9,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10274383361,
+   "lat": 53.1540428,
+   "lon": 22.8575881,
+   "x": 757829.7,
+   "y": 594589.5,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10274383362,
+   "lat": 53.1528071,
+   "lon": 22.8502763,
+   "x": 757348.6,
+   "y": 594425.9,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10274383363,
+   "lat": 53.1534591,
+   "lon": 22.8542849,
+   "x": 757612.5,
+   "y": 594512.8,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10278926123,
+   "lat": 53.1492687,
+   "lon": 22.8278594,
+   "x": 755872.0,
+   "y": 593952.2,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10278926124,
+   "lat": 53.1486751,
+   "lon": 22.8242965,
+   "x": 755637.5,
+   "y": 593873.5,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10278926125,
+   "lat": 53.1480742,
+   "lon": 22.8206905,
+   "x": 755400.1,
+   "y": 593793.8,
+   "cell": [
+    -11,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10283091773,
+   "lat": 53.1550081,
+   "lon": 22.862877,
+   "x": 758177.3,
+   "y": 594715.9,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10283091780,
+   "lat": 53.1561988,
+   "lon": 22.8633091,
+   "x": 758199.0,
+   "y": 594849.8,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 31571997,
+   "lat": 53.1530252,
+   "lon": 22.8655424,
+   "x": 758367.3,
+   "y": 594505.2,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "name": "Rzędziany",
+    "place": "village",
+    "postal_code": "16-080",
+    "teryt:rm": "01",
+    "teryt:simc": "0043297",
+    "teryt:stan_na": "2009-01-01",
+    "wikidata": "Q5618012",
+    "wikipedia": "pl:Rzędziany"
+   }
+  },
+  {
+   "id": 692602603,
+   "lat": 53.15785,
+   "lon": 22.84078,
+   "x": 756684.1,
+   "y": 594952.2,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "is_in:village": "Rzędziany",
+    "name": "Kolonia Rzędziany",
+    "name:prefix": "kolonia",
+    "place": "hamlet"
+   }
+  },
+  {
+   "id": 1856618918,
+   "lat": 53.1552049,
+   "lon": 22.8654444,
+   "x": 758347.6,
+   "y": 594747.0,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "motorway_junction",
+    "milestone": "626",
+    "name": "Rzędziany",
+    "unsigned_ref": "90"
+   }
+  },
+  {
+   "id": 1937517092,
+   "lat": 53.1537496,
+   "lon": 22.8575937,
+   "x": 757831.9,
+   "y": 594557.0,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "motorway_junction",
+    "milestone": "626",
+    "name": "Rzędziany",
+    "unsigned_ref": "90"
+   }
+  },
+  {
+   "id": 2240630918,
+   "lat": 53.1529476,
+   "lon": 22.8659506,
+   "x": 758395.0,
+   "y": 594498.0,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 2349145021,
+   "lat": 53.1519259,
+   "lon": 22.8468092,
+   "x": 757122.3,
+   "y": 594315.5,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "distance": "625",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2349145030,
+   "lat": 53.1543858,
+   "lon": 22.8611117,
+   "x": 758063.1,
+   "y": 594640.4,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "distance": "626",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 7482601638,
+   "lat": 53.1548186,
+   "lon": 22.8664025,
+   "x": 758413.9,
+   "y": 594707.6,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "man_made": "street_cabinet",
+    "street_cabinet": "telecom"
+   }
+  },
+  {
+   "id": 7497135141,
+   "lat": 53.152755,
+   "lon": 22.8667247,
+   "x": 758447.9,
+   "y": 594479.4,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "addr:city:simc": "0043297",
+    "addr:housenumber": "1A",
+    "addr:place": "Rzędziany",
+    "addr:postcode": "16-080",
+    "opening_hours": "Mo-Sa 06:00-20:00; Su 09:00-20:00",
+    "shop": "supermarket"
+   }
+  },
+  {
+   "id": 12153195097,
+   "lat": 53.1577936,
+   "lon": 22.8652142,
+   "x": 758316.7,
+   "y": 595033.9,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "amenity": "parking"
+   }
+  },
+  {
+   "id": 12359891655,
+   "lat": 53.1514088,
+   "lon": 22.8443339,
+   "x": 756960.0,
+   "y": 594249.1,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "bus_stop",
+    "shelter": "yes"
+   }
+  },
+  {
+   "id": 12359891656,
+   "lat": 53.1517852,
+   "lon": 22.84757,
+   "x": 757173.9,
+   "y": 594302.6,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "highway": "bus_stop",
+    "shelter": "yes"
+   }
+  },
+  {
+   "id": 13619666258,
+   "lat": 53.1525544,
+   "lon": 22.8558289,
+   "x": 757721.1,
+   "y": 594417.8,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tags": {
+    "communication:mobile_phone": "yes",
+    "man_made": "mast",
+    "tower:type": "communication"
+   }
+  },
+  {
+   "id": 14078157530,
+   "lat": 53.1499333,
+   "lon": 22.8679492,
+   "x": 758546.6,
+   "y": 594170.2,
+   "cell": [
+    -9,
+    -1
+   ],
+   "tags": {
+    "amenity": "parking"
+   }
+  },
+  {
+   "id": 2349145040,
+   "lat": 53.1566566,
+   "lon": 22.8755905,
+   "x": 759016.7,
+   "y": 594945.1,
+   "cell": [
+    -9,
+    -1
+   ],
+   "tags": {
+    "distance": "627",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2940657083,
+   "lat": 53.1536619,
+   "lon": 22.8699333,
+   "x": 758656.8,
+   "y": 594591.8,
+   "cell": [
+    -9,
+    -1
+   ],
+   "tags": {
+    "birds_nest": "stork",
+    "highway": "street_lamp",
+    "natural": "birds_nest",
+    "nest_mount": "pole",
+    "nest_platform": "yes",
+    "power": "pole"
+   }
+  },
+  {
+   "id": 2940657084,
+   "lat": 53.1543539,
+   "lon": 22.8708281,
+   "x": 758712.4,
+   "y": 594671.9,
+   "cell": [
+    -9,
+    -1
+   ],
+   "tags": {
+    "birds_nest": "stork",
+    "highway": "street_lamp",
+    "natural": "birds_nest",
+    "nest_mount": "pole",
+    "nest_platform": "yes",
+    "power": "pole"
+   }
+  },
+  {
+   "id": 4165907390,
+   "lat": 53.1497934,
+   "lon": 22.8696547,
+   "x": 758661.4,
+   "y": 594160.8,
+   "cell": [
+    -9,
+    -1
+   ],
+   "tags": {
+    "amenity": "parking"
+   }
+  },
+  {
+   "id": 5908100689,
+   "lat": 53.1501591,
+   "lon": 22.8696521,
+   "x": 758659.1,
+   "y": 594201.5,
+   "cell": [
+    -9,
+    -1
+   ],
+   "tags": {
+    "tourism": "guest_house"
+   }
+  },
+  {
+   "id": 31571573,
+   "lat": 53.1358639,
+   "lon": 22.7318508,
+   "x": 749534.7,
+   "y": 592123.2,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "name": "Jeżewo Stare",
+    "note": "UMP: Jeżewo Stare",
+    "place": "village",
+    "population": "250",
+    "postal_code": "16-080",
+    "source:population": "wikipedia",
+    "teryt:simc": "0043370",
+    "wikidata": "Q5101918",
+    "wikipedia": "pl:Jeżewo Stare"
+   }
+  },
+  {
+   "id": 31576543,
+   "lat": 53.1377711,
+   "lon": 22.7137054,
+   "x": 748310.8,
+   "y": 592272.0,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "name": "Jeżewo Nowe",
+    "place": "village",
+    "population": "100",
+    "postal_code": "16-080",
+    "source:population": "wikipedia",
+    "teryt:rm": "01",
+    "teryt:simc": "0043239",
+    "teryt:stan_na": "2009-01-01",
+    "teryt:updated_by": "teryt2osm combine.py v. 43",
+    "wikidata": "Q5736769",
+    "wikipedia": "pl:Jeżewo Nowe"
+   }
+  },
+  {
+   "id": 1937467573,
+   "lat": 53.1294008,
+   "lon": 22.7086456,
+   "x": 748020.9,
+   "y": 591324.1,
+   "cell": [
+    -15,
+    -2
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 1937517090,
+   "lat": 53.1340091,
+   "lon": 22.7358363,
+   "x": 749811.8,
+   "y": 591930.9,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "motorway_junction",
+    "milestone": "617",
+    "name": "Jeżewo",
+    "unsigned_ref": "89"
+   }
+  },
+  {
+   "id": 1937517091,
+   "lat": 53.1364179,
+   "lon": 22.7500733,
+   "x": 750749.4,
+   "y": 592248.5,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "highway": "motorway_junction",
+    "milestone": "618",
+    "name": "Jeżewo",
+    "unsigned_ref": "89"
+   }
+  },
+  {
+   "id": 2329859397,
+   "lat": 53.1377077,
+   "lon": 22.7403479,
+   "x": 750091.9,
+   "y": 592357.8,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "maxspeed": "60",
+    "side": "right",
+    "traffic_sign": "maxspeed"
+   }
+  },
+  {
+   "id": 2349145000,
+   "lat": 53.1308954,
+   "lon": 22.7168431,
+   "x": 748560.3,
+   "y": 591518.7,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "distance": "30",
+    "FIXME": "Kilometric points revert to distance from Wrocław somewhere between kmp 29.4(=615.2) and kmp (29.6=)615.4, does this milestone still exist?",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2349145001,
+   "lat": 53.1332197,
+   "lon": 22.7313706,
+   "x": 749517.9,
+   "y": 591827.6,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "distance": "617",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2916657548,
+   "lat": 53.14528,
+   "lon": 22.73922,
+   "x": 749972.5,
+   "y": 593195.4,
+   "cell": [
+    -14,
+    -1
+   ],
+   "tags": {
+    "name": "Stelmachowo-Kolonia",
+    "place": "village",
+    "postal_code": "16-080",
+    "teryt:simc": "0991640",
+    "wikidata": "Q5616619",
+    "wikipedia": "pl:Stelmachowo-Kolonia"
+   }
+  },
+  {
+   "id": 3009674315,
+   "lat": 53.1335872,
+   "lon": 22.7205481,
+   "x": 748792.4,
+   "y": 591830.8,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "name": "Kolonia Nowe Jeżewo",
+    "name:genitive": "Kolonii Nowego Jeżewa",
+    "place": "hamlet",
+    "source": "PRNG"
+   }
+  },
+  {
+   "id": 3054451610,
+   "lat": 53.1387579,
+   "lon": 22.7269465,
+   "x": 749190.1,
+   "y": 592427.7,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "backward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3054457313,
+   "lat": 53.1360886,
+   "lon": 22.7323529,
+   "x": 749566.9,
+   "y": 592149.9,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "amenity": "parking"
+   }
+  },
+  {
+   "id": 3054457317,
+   "lat": 53.1361627,
+   "lon": 22.7327053,
+   "x": 749590.0,
+   "y": 592159.4,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "camera:mount": "wall",
+    "camera:type": "panning",
+    "man_made": "surveillance",
+    "surveillance": "outdoor",
+    "surveillance:type": "camera",
+    "surveillance:zone": "parking"
+   }
+  },
+  {
+   "id": 3054457322,
+   "lat": 53.1362165,
+   "lon": 22.7323245,
+   "x": 749564.3,
+   "y": 592164.0,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "camera:mount": "wall",
+    "camera:type": "panning",
+    "man_made": "surveillance",
+    "surveillance": "outdoor",
+    "surveillance:type": "camera",
+    "surveillance:zone": "parking"
+   }
+  },
+  {
+   "id": 3054457324,
+   "lat": 53.1362303,
+   "lon": 22.7323116,
+   "x": 749563.3,
+   "y": 592165.5,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "camera:mount": "wall",
+    "camera:type": "panning",
+    "man_made": "surveillance",
+    "surveillance": "outdoor",
+    "surveillance:type": "camera",
+    "surveillance:zone": "parking"
+   }
+  },
+  {
+   "id": 3054457328,
+   "lat": 53.1362735,
+   "lon": 22.7322851,
+   "x": 749561.3,
+   "y": 592170.2,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "camera:mount": "wall",
+    "camera:type": "panning",
+    "man_made": "surveillance",
+    "surveillance": "outdoor",
+    "surveillance:type": "camera",
+    "surveillance:zone": "parking"
+   }
+  },
+  {
+   "id": 3054457635,
+   "lat": 53.1363202,
+   "lon": 22.7323514,
+   "x": 749565.5,
+   "y": 592175.6,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "camera:mount": "wall",
+    "camera:type": "panning",
+    "man_made": "surveillance",
+    "surveillance": "outdoor",
+    "surveillance:type": "camera",
+    "surveillance:zone": "parking"
+   }
+  },
+  {
+   "id": 3054458198,
+   "lat": 53.1358781,
+   "lon": 22.7322439,
+   "x": 749560.9,
+   "y": 592126.1,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "public_transport": "stop_position"
+   }
+  },
+  {
+   "id": 3054458201,
+   "lat": 53.1359336,
+   "lon": 22.7318628,
+   "x": 749535.1,
+   "y": 592131.0,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "backward",
+    "highway": "stop",
+    "side": "both"
+   }
+  },
+  {
+   "id": 3054458207,
+   "lat": 53.1361334,
+   "lon": 22.7328046,
+   "x": 749596.9,
+   "y": 592156.4,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "camera:mount": "wall",
+    "camera:type": "panning",
+    "man_made": "surveillance",
+    "surveillance": "outdoor",
+    "surveillance:type": "camera",
+    "surveillance:zone": "parking"
+   }
+  },
+  {
+   "id": 3054458208,
+   "lat": 53.136265,
+   "lon": 22.7328686,
+   "x": 749600.4,
+   "y": 592171.3,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "camera:mount": "wall",
+    "camera:type": "panning",
+    "man_made": "surveillance",
+    "surveillance": "outdoor",
+    "surveillance:type": "camera",
+    "surveillance:zone": "parking"
+   }
+  },
+  {
+   "id": 3054458212,
+   "lat": 53.1373237,
+   "lon": 22.7328365,
+   "x": 749592.1,
+   "y": 592288.8,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3054458213,
+   "lat": 53.1373902,
+   "lon": 22.7328747,
+   "x": 749594.2,
+   "y": 592296.4,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "backward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3054465066,
+   "lat": 53.1384013,
+   "lon": 22.7267936,
+   "x": 749181.9,
+   "y": 592387.6,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3054465072,
+   "lat": 53.1386401,
+   "lon": 22.7268635,
+   "x": 749185.2,
+   "y": 592414.3,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "stop",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3054467143,
+   "lat": 53.1344567,
+   "lon": 22.7411273,
+   "x": 750162.9,
+   "y": 591999.2,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "side": "right",
+    "traffic_sign": "PL:A-2"
+   }
+  },
+  {
+   "id": 3054470348,
+   "lat": 53.1352005,
+   "lon": 22.7394134,
+   "x": 750044.0,
+   "y": 592075.8,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "addr:city:simc": "0043370",
+    "addr:housenumber": "5",
+    "addr:place": "Jeżewo Stare",
+    "addr:postcode": "16-080",
+    "shop": "car_repair"
+   }
+  },
+  {
+   "id": 3054480168,
+   "lat": 53.1366626,
+   "lon": 22.736081,
+   "x": 749812.8,
+   "y": 592226.7,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3054498127,
+   "lat": 53.1359572,
+   "lon": 22.7316821,
+   "x": 749522.9,
+   "y": 592132.9,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "stop",
+    "side": "both"
+   }
+  },
+  {
+   "id": 3054505443,
+   "lat": 53.1373556,
+   "lon": 22.7412407,
+   "x": 750153.6,
+   "y": 592321.7,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3054505444,
+   "lat": 53.1376628,
+   "lon": 22.7406577,
+   "x": 750112.9,
+   "y": 592353.9,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3054505445,
+   "lat": 53.1376584,
+   "lon": 22.7418021,
+   "x": 750189.4,
+   "y": 592357.4,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 3054505447,
+   "lat": 53.1377117,
+   "lon": 22.7402698,
+   "x": 750086.6,
+   "y": 592357.9,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "overtaking": "no",
+    "side": "both",
+    "traffic_sign": "overtaking"
+   }
+  },
+  {
+   "id": 3058946451,
+   "lat": 53.1362472,
+   "lon": 22.7326022,
+   "x": 749582.7,
+   "y": 592168.4,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "addr:housename": "Urząd Pocztowy",
+    "addr:housenumber": "37",
+    "addr:place": "Jeżewo Stare",
+    "addr:postcode": "16-080",
+    "amenity": "post_office"
+   }
+  },
+  {
+   "id": 3327008456,
+   "lat": 53.1381037,
+   "lon": 22.7299568,
+   "x": 749395.1,
+   "y": 592365.5,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "distance": "46",
+    "highway": "milestone",
+    "ref": "64",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 3327008457,
+   "lat": 53.1409579,
+   "lon": 22.7158528,
+   "x": 748435.9,
+   "y": 592633.7,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "distance": "45",
+    "highway": "milestone",
+    "ref": "64",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 4166015529,
+   "lat": 53.1282305,
+   "lon": 22.7014048,
+   "x": 747543.6,
+   "y": 591169.0,
+   "cell": [
+    -15,
+    -2
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 4166015568,
+   "lat": 53.1322732,
+   "lon": 22.7264237,
+   "x": 749192.7,
+   "y": 591705.2,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 4213992471,
+   "lat": 53.1396454,
+   "lon": 22.742603,
+   "x": 750231.3,
+   "y": 592581.0,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing:island": "yes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4637451584,
+   "lat": 53.1277802,
+   "lon": 22.7378683,
+   "x": 749983.8,
+   "y": 591245.7,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "distance": "73",
+    "highway": "milestone",
+    "ref": "671",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 4637451585,
+   "lat": 53.1361276,
+   "lon": 22.7415481,
+   "x": 750181.3,
+   "y": 592186.3,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "distance": "72",
+    "highway": "milestone",
+    "ref": "671",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 5196536166,
+   "lat": 53.13474,
+   "lon": 22.7416641,
+   "x": 750197.1,
+   "y": 592032.5,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5196536240,
+   "lat": 53.1391114,
+   "lon": 22.7649007,
+   "x": 751724.7,
+   "y": 592599.9,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5196568871,
+   "lat": 53.1305441,
+   "lon": 22.7150666,
+   "x": 748443.5,
+   "y": 591473.5,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "amenity": "parking_space"
+   }
+  },
+  {
+   "id": 5196568938,
+   "lat": 53.1360963,
+   "lon": 22.7391732,
+   "x": 750022.7,
+   "y": 592174.6,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5196568947,
+   "lat": 53.1376495,
+   "lon": 22.7407802,
+   "x": 750121.1,
+   "y": 592352.8,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5196568948,
+   "lat": 53.1377179,
+   "lon": 22.7407798,
+   "x": 750120.7,
+   "y": 592360.4,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5196568949,
+   "lat": 53.1379564,
+   "lon": 22.7413385,
+   "x": 750156.7,
+   "y": 592388.9,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5196568950,
+   "lat": 53.1379369,
+   "lon": 22.7414715,
+   "x": 750165.7,
+   "y": 592387.2,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5237769533,
+   "lat": 53.1352488,
+   "lon": 22.741404,
+   "x": 750176.8,
+   "y": 592088.2,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5237773371,
+   "lat": 53.1372916,
+   "lon": 22.7334729,
+   "x": 749634.8,
+   "y": 592287.5,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889873792,
+   "lat": 53.1376363,
+   "lon": 22.7446454,
+   "x": 750379.5,
+   "y": 592364.9,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889873834,
+   "lat": 53.1360779,
+   "lon": 22.739262,
+   "x": 750028.8,
+   "y": 592172.8,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889873857,
+   "lat": 53.1379873,
+   "lon": 22.7413525,
+   "x": 750157.4,
+   "y": 592392.4,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889873858,
+   "lat": 53.1379703,
+   "lon": 22.7414738,
+   "x": 750165.6,
+   "y": 592390.9,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889873859,
+   "lat": 53.1376557,
+   "lon": 22.7407227,
+   "x": 750117.2,
+   "y": 592353.3,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889873860,
+   "lat": 53.1377167,
+   "lon": 22.7407281,
+   "x": 750117.3,
+   "y": 592360.1,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889873861,
+   "lat": 53.1375467,
+   "lon": 22.7408458,
+   "x": 750126.1,
+   "y": 592341.6,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889873883,
+   "lat": 53.1380283,
+   "lon": 22.7413711,
+   "x": 750158.4,
+   "y": 592397.0,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "id": 5889874190,
+   "lat": 53.137932,
+   "lon": 22.7417158,
+   "x": 750182.0,
+   "y": 592387.5,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889874222,
+   "lat": 53.1460735,
+   "lon": 22.746705,
+   "x": 750468.1,
+   "y": 593309.8,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "highway": "crossing",
+    "tactile_paving": "yes"
+   }
+  },
+  {
+   "id": 5889874243,
+   "lat": 53.1534695,
+   "lon": 22.750256,
+   "x": 750662.2,
+   "y": 594144.3,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889874265,
+   "lat": 53.1621872,
+   "lon": 22.7555985,
+   "x": 750968.3,
+   "y": 595131.9,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173827,
+   "lat": 53.1410608,
+   "lon": 22.7769575,
+   "x": 752519.1,
+   "y": 592859.0,
+   "cell": [
+    -12,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5890173874,
+   "lat": 53.1405519,
+   "lon": 22.7650723,
+   "x": 751727.7,
+   "y": 592760.6,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 7580907523,
+   "lat": 53.1310199,
+   "lon": 22.7169612,
+   "x": 748567.4,
+   "y": 591532.9,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "distance": "616",
+    "highway": "milestone",
+    "ref": "S8"
+   }
+  },
+  {
+   "id": 8860843403,
+   "lat": 53.1330084,
+   "lon": 22.7289121,
+   "x": 749354.8,
+   "y": 591795.5,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "toll_gantry"
+   }
+  },
+  {
+   "id": 8860843404,
+   "lat": 53.1329047,
+   "lon": 22.7289601,
+   "x": 749358.6,
+   "y": 591784.2,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "toll_gantry"
+   }
+  },
+  {
+   "id": 9914760725,
+   "lat": 53.1276587,
+   "lon": 22.6986845,
+   "x": 747365.0,
+   "y": 591096.0,
+   "cell": [
+    -15,
+    -3
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 9914760800,
+   "lat": 53.1316737,
+   "lon": 22.7225285,
+   "x": 748935.8,
+   "y": 591625.0,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 11902893942,
+   "lat": 53.1372538,
+   "lon": 22.7443073,
+   "x": 750359.2,
+   "y": 592321.2,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "distance": "47",
+    "highway": "milestone",
+    "ref": "64",
+    "source": "GDDKiA via dane.gov.pl"
+   }
+  },
+  {
+   "id": 12146781345,
+   "lat": 53.1358217,
+   "lon": 22.7318869,
+   "x": 749537.3,
+   "y": 592118.6,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "board_type": "history",
+    "information": "board",
+    "tourism": "information"
+   }
+  },
+  {
+   "id": 13475892054,
+   "lat": 53.132891,
+   "lon": 22.730506,
+   "x": 749462.0,
+   "y": 591788.1,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 13475892055,
+   "lat": 53.131139,
+   "lon": 22.7194116,
+   "x": 748730.5,
+   "y": 591554.7,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 13475892056,
+   "lat": 53.130752,
+   "lon": 22.7169951,
+   "x": 748571.2,
+   "y": 591503.3,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 13586313381,
+   "lat": 53.1384101,
+   "lon": 22.7421036,
+   "x": 750205.2,
+   "y": 592442.0,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tags": {
+    "man_made": "tower",
+    "tower:construction": "lattice",
+    "tower:type": "communication"
+   }
+  },
+  {
+   "id": 31573492,
+   "lat": 53.12712,
+   "lon": 22.7723,
+   "x": 752289.5,
+   "y": 591293.2,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "name": "Pajewo",
+    "place": "village",
+    "postal_code": "16-080",
+    "teryt:rm": "01",
+    "teryt:simc": "0043245",
+    "teryt:stan_na": "2009-01-01",
+    "wikidata": "Q5736936",
+    "wikipedia": "pl:Pajewo"
+   }
+  },
+  {
+   "id": 2349145002,
+   "lat": 53.1354843,
+   "lon": 22.7459647,
+   "x": 750480.2,
+   "y": 592130.3,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "distance": "618",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2349145003,
+   "lat": 53.1379378,
+   "lon": 22.7601675,
+   "x": 751415.2,
+   "y": 592452.8,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "distance": "619",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 2349145004,
+   "lat": 53.1402758,
+   "lon": 22.7748155,
+   "x": 752380.5,
+   "y": 592764.2,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "distance": "620",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 4212914499,
+   "lat": 53.177513,
+   "lon": 22.7580311,
+   "x": 751041.2,
+   "y": 596843.8,
+   "cell": [
+    -13,
+    0
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:markings": "dashes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4213992633,
+   "lat": 53.1533423,
+   "lon": 22.7503324,
+   "x": 750668.1,
+   "y": 594130.4,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:markings": "dashes",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 4369887216,
+   "lat": 53.1300228,
+   "lon": 22.7650707,
+   "x": 751789.2,
+   "y": 591590.3,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "man_made": "beacon",
+    "tower:type": "communication"
+   }
+  },
+  {
+   "id": 5196536204,
+   "lat": 53.1370699,
+   "lon": 22.7482597,
+   "x": 750624.4,
+   "y": 592314.6,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "access": "private",
+    "amenity": "parking"
+   }
+  },
+  {
+   "id": 5890173872,
+   "lat": 53.1372587,
+   "lon": 22.7669988,
+   "x": 751875.8,
+   "y": 592401.4,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 9655817219,
+   "lat": 53.2009744,
+   "lon": 22.7651706,
+   "x": 751380.6,
+   "y": 599476.5,
+   "cell": [
+    -13,
+    2
+   ],
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 12450012526,
+   "lat": 53.1998276,
+   "lon": 22.7647823,
+   "x": 751361.4,
+   "y": 599347.7,
+   "cell": [
+    -13,
+    2
+   ],
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 14113610837,
+   "lat": 53.1275787,
+   "lon": 22.7724665,
+   "x": 752298.0,
+   "y": 591344.8,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tags": {
+    "amenity": "shelter",
+    "shelter_type": "public_transport"
+   }
+  },
+  {
+   "id": 2349145005,
+   "lat": 53.1426411,
+   "lon": 22.7891535,
+   "x": 753324.8,
+   "y": 593077.8,
+   "cell": [
+    -12,
+    -2
+   ],
+   "tags": {
+    "distance": "621",
+    "highway": "milestone",
+    "ref": "S8",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 5890173818,
+   "lat": 53.140276,
+   "lon": 22.7774626,
+   "x": 752557.4,
+   "y": 592773.6,
+   "cell": [
+    -12,
+    -2
+   ],
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 10278290142,
+   "lat": 53.1415597,
+   "lon": 22.7805924,
+   "x": 752759.0,
+   "y": 592927.3,
+   "cell": [
+    -12,
+    -2
+   ],
+   "tags": {
+    "highway": "passing_place"
+   }
+  },
+  {
+   "id": 10278290143,
+   "lat": 53.1421728,
+   "lon": 22.7841805,
+   "x": 752995.2,
+   "y": 593008.2,
+   "cell": [
+    -12,
+    -2
+   ],
+   "tags": {
+    "highway": "passing_place",
+    "service": "passing_place"
+   }
+  },
+  {
+   "id": 31577946,
+   "lat": 53.1538118,
+   "lon": 22.7538712,
+   "x": 750901.8,
+   "y": 594195.0,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "name": "Broniszewo",
+    "place": "village",
+    "population": "160",
+    "postal_code": "16-080",
+    "source:population": "wikipedia",
+    "teryt:rm": "01",
+    "teryt:simc": "0043104",
+    "teryt:stan_na": "2009-01-01",
+    "wikidata": "Q4973935",
+    "wikipedia": "pl:Broniszewo (województwo podlaskie)"
+   }
+  },
+  {
+   "id": 3009674177,
+   "lat": 53.1602778,
+   "lon": 22.7647222,
+   "x": 751588.9,
+   "y": 594951.8,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "name": "Kolonia Broniszewo",
+    "name:genitive": "Kolonii Broniszewa",
+    "place": "hamlet",
+    "source": "PRNG"
+   }
+  },
+  {
+   "id": 4637451586,
+   "lat": 53.1449992,
+   "lon": 22.7462733,
+   "x": 750445.5,
+   "y": 593188.9,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "distance": "71",
+    "highway": "milestone",
+    "ref": "671",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 4637451587,
+   "lat": 53.1536153,
+   "lon": 22.750405,
+   "x": 750671.3,
+   "y": 594161.0,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "distance": "70",
+    "highway": "milestone",
+    "ref": "671",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 4637451588,
+   "lat": 53.1620284,
+   "lon": 22.7555875,
+   "x": 750968.5,
+   "y": 595114.2,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "distance": "69",
+    "highway": "milestone",
+    "ref": "671",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 5889874223,
+   "lat": 53.1459937,
+   "lon": 22.7465463,
+   "x": 750457.9,
+   "y": 593300.4,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "highway": "crossing",
+    "tactile_paving": "no"
+   }
+  },
+  {
+   "id": 5889874266,
+   "lat": 53.1621105,
+   "lon": 22.755422,
+   "x": 750956.9,
+   "y": 595122.8,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 7592300497,
+   "lat": 53.1535696,
+   "lon": 22.7503922,
+   "x": 750670.7,
+   "y": 594155.9,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "bus": "yes",
+    "departures_board": "no",
+    "highway": "bus_stop",
+    "public_transport": "platform"
+   }
+  },
+  {
+   "id": 7592374209,
+   "lat": 53.1529583,
+   "lon": 22.7498699,
+   "x": 750639.4,
+   "y": 594086.1,
+   "cell": [
+    -13,
+    -1
+   ],
+   "tags": {
+    "highway": "bus_stop",
+    "local_ref": "Przystanek autobusowy"
+   }
+  },
+  {
+   "id": 692602606,
+   "lat": 53.1727,
+   "lon": 22.7744,
+   "x": 752162.5,
+   "y": 596366.5,
+   "cell": [
+    -13,
+    0
+   ],
+   "tags": {
+    "is_in:town": "Tykocin",
+    "name": "Tykocin-Kolonia",
+    "place": "neighbourhood"
+   }
+  },
+  {
+   "id": 4637451789,
+   "lat": 53.1706696,
+   "lon": 22.7586385,
+   "x": 751121.8,
+   "y": 596085.4,
+   "cell": [
+    -13,
+    0
+   ],
+   "tags": {
+    "distance": "68",
+    "highway": "milestone",
+    "ref": "671",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 4637451790,
+   "lat": 53.1796229,
+   "lon": 22.7577503,
+   "x": 751010.1,
+   "y": 597077.4,
+   "cell": [
+    -13,
+    0
+   ],
+   "tags": {
+    "distance": "67",
+    "highway": "milestone",
+    "ref": "671",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 5889874271,
+   "lat": 53.1654083,
+   "lon": 22.7576491,
+   "x": 751086.4,
+   "y": 595497.1,
+   "cell": [
+    -13,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889874284,
+   "lat": 53.1712595,
+   "lon": 22.7585239,
+   "x": 751110.7,
+   "y": 596150.5,
+   "cell": [
+    -13,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 5889874385,
+   "lat": 53.1711385,
+   "lon": 22.7584238,
+   "x": 751104.7,
+   "y": 596136.7,
+   "cell": [
+    -13,
+    0
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 3009680232,
+   "lat": 53.1875162,
+   "lon": 22.7518459,
+   "x": 750569.8,
+   "y": 597934.0,
+   "cell": [
+    -13,
+    1
+   ],
+   "tags": {
+    "is_in:city": "Tykocin",
+    "name": "Zimna Woda",
+    "name:genitive": "Zimnej Wody",
+    "place": "neighbourhood",
+    "source": "PRNG"
+   }
+  },
+  {
+   "id": 3052214545,
+   "lat": 53.1979121,
+   "lon": 22.7640234,
+   "x": 751321.9,
+   "y": 599132.1,
+   "cell": [
+    -13,
+    1
+   ],
+   "tags": {
+    "bus": "yes",
+    "highway": "bus_stop",
+    "public_transport": "stop_position"
+   }
+  },
+  {
+   "id": 3052214588,
+   "lat": 53.1991884,
+   "lon": 22.7647287,
+   "x": 751361.5,
+   "y": 599276.5,
+   "cell": [
+    -13,
+    1
+   ],
+   "tags": {
+    "access": "customers",
+    "amenity": "parking",
+    "surface": "paved"
+   }
+  },
+  {
+   "id": 4637451791,
+   "lat": 53.1885237,
+   "lon": 22.760263,
+   "x": 751125.9,
+   "y": 598075.5,
+   "cell": [
+    -13,
+    1
+   ],
+   "tags": {
+    "distance": "66",
+    "highway": "milestone",
+    "ref": "671",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 4637451793,
+   "lat": 53.19709,
+   "lon": 22.7637854,
+   "x": 751310.9,
+   "y": 599039.9,
+   "cell": [
+    -13,
+    1
+   ],
+   "tags": {
+    "distance": "65",
+    "highway": "milestone",
+    "ref": "671",
+    "source": "GPS"
+   }
+  },
+  {
+   "id": 5889874405,
+   "lat": 53.1861916,
+   "lon": 22.7592324,
+   "x": 751070.7,
+   "y": 597812.6,
+   "cell": [
+    -13,
+    1
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 11514603327,
+   "lat": 53.1989151,
+   "lon": 22.7646309,
+   "x": 751356.6,
+   "y": 599245.8,
+   "cell": [
+    -13,
+    1
+   ],
+   "tags": {
+    "crossing:markings": "zebra",
+    "highway": "crossing"
+   }
+  },
+  {
+   "id": 11514603328,
+   "lat": 53.2013842,
+   "lon": 22.7652164,
+   "x": 751381.2,
+   "y": 599522.2,
+   "cell": [
+    -13,
+    2
+   ],
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:markings": "zebra",
+    "highway": "crossing"
+   }
+  }
+ ]
+}

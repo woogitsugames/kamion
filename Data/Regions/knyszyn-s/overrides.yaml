@@ -88,3 +88,19 @@ overrides:
       Bialystok streets); type, height and spacing in Knyszyn UNVERIFIED (K1) - the generator's WORKING_VALUE.
     confidence: medium
     verify: owner - a night photo of a Knyszyn street lamp (pole type, light colour)
+  # ADR 0237 D38 (world3, leader s23): the sidewalk rule of tiles knyszyn / knyszyn-w, so sidewalks of the town keep one
+  # rule across the knyszyn | knyszyn-s seam. This tile holds only DK65 (highway=primary, outside the rule) and one
+  # unclassified road; 5 jednorodzinna BDOT10k zabudowa polygons - the rule acts only where they reach (+60 m).
+  - id: knyszyn-s-pavement-rules-d38
+    kind: pavement_rules
+    implied_sidewalks: true
+    sidewalk_bdot: false
+    estate_slabs: false
+    crossing_kerb_drops: true
+    reason: >-
+      Owner (s23, docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md): sidewalks on both sides of every street of Knyszyn,
+      concrete block paving. Same entry as knyszyn-pavement-rules-d38 (tile knyszyn) and knyszyn-w-pavement-rules-d38;
+      no OSM sidewalk=* on any of the 7 edges of this tile. DK65 (primary) stays outside the rule. Widths not
+      measured: WORKING_VALUE.
+    confidence: medium
+    verify: control camera dk65_inlet_south of tile knyszyn + seam knyszyn | knyszyn-s after the world2 rebuild

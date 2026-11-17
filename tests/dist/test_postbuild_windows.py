@@ -104,13 +104,23 @@ def test_regions_from_log_expanded_low_scenes_in_order(tmp_path):
 
 def test_launchers_window_and_one_per_region(tmp_path):
     b = make_build(tmp_path)
-    written, skipped = pb.write_launchers(b, ["knyszyn", "dk65-01", "bad id & del *", "okno"])
-    assert written == ["Kamion-okno.cmd", "Kamion-knyszyn.cmd", "Kamion-dk65-01.cmd"]
-    assert skipped == ["bad id & del *", "okno"]
+    written, skipped = pb.write_launchers(b, ["knyszyn", "dk65-01", "bad id & del *", "okno", "korytarz", "d3d11"])
+    assert written == ["Kamion-okno.cmd", "Kamion-d3d11.cmd", "Kamion-knyszyn.cmd", "Kamion-dk65-01.cmd"]
+    assert skipped == ["bad id & del *", "okno", "korytarz", "d3d11"]
     k = (b / "Kamion-knyszyn.cmd").read_bytes().decode("ascii")
-    assert k == '@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 -scene knyszyn %*\r\n'
+    # Region launchers force no screen mode (settings file / PlayerSettings: borderless full screen, Alt+Enter).
+    assert k == '@echo off\r\nstart "" "%~dp0Kamion.exe" -scene knyszyn %*\r\n'
     w = (b / "Kamion-okno.cmd").read_bytes().decode("ascii")
-    assert "-scene" not in w and w.endswith(" %*\r\n")
+    # The windowed launcher keeps a 1600x900 starting window (resizable via PlayerSettings.resizableWindow).
+    assert w == '@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 %*\r\n'
+
+
+def test_only_the_window_launcher_forces_a_screen_mode(tmp_path):
+    written, _ = pb.write_launchers(tmp_path, ["knyszyn", "knyszyn-s", "dk65-01"])
+    for name in written:
+        text = (tmp_path / name).read_bytes().decode("ascii")
+        forced = "-screen-" in text or "-window-mode" in text or "-popupwindow" in text
+        assert forced == (name == pb.WINDOW_LAUNCHER), name
 
 
 def test_cli_writes_build_id_and_check(tmp_path, capsys):
@@ -144,12 +154,12 @@ def test_csharp_reader_agrees_with_the_writer():
 
 
 def test_corridor_launcher_only_with_knyszyn_and_knyszyn_s(tmp_path):
-    """int-stream-s23: Kamion-korytarz.cmd = knyszyn + streaming, borderless full screen."""
+    """int-stream-s23: Kamion-korytarz.cmd = knyszyn + streaming; screen mode from settings (default borderless)."""
     b = tmp_path / "a"; b.mkdir()
     written, _ = pb.write_launchers(b, ["knyszyn", "dk65-11"])
     assert "Kamion-korytarz.cmd" not in written
     b2 = tmp_path / "b"; b2.mkdir()
     written, _ = pb.write_launchers(b2, ["knyszyn-s", "knyszyn"])
-    assert written[-1] == "Kamion-korytarz.cmd"
+    assert written[-2:] == ["Kamion-korytarz.cmd", "Kamion-korytarz-d3d11.cmd"]
     k = (b2 / "Kamion-korytarz.cmd").read_bytes().decode("ascii")
-    assert k.startswith("@echo off\r\n") and "-scene knyszyn -stream 1 %*" in k and "-window-mode borderless" in k
+    assert k.startswith("@echo off\r\n") and "-scene knyszyn -stream 1 %*" in k and "-screen-" not in k

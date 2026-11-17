@@ -124,7 +124,12 @@ namespace Game.World.Import
             // ADR 0277: the same zone rule as the runtime (StartSearch): behind the entry closure, in front of the exit closure.
             if (!StartSearch.BakedSpawnS(route.points, route.distances,
                     startBoundary != null ? startBoundary.closures : System.Array.Empty<WorldBoundary.Closure>(), wantedS, out float spawnS))
-                Debug.LogError($"[IMPORT] {r.Region}: the start route has no drivable stretch between the region-edge closures; spawn left at route_s {wantedS:F1} (the game refuses this start, ADR 0277)");
+            {
+                if (catalogEntry != null && catalogEntry.noStart)   // ADR 0231 §5a: corner tile, no start expected; the menu does not offer it
+                    Debug.Log($"[IMPORT] {r.Region}: corner tile without a standalone start (catalog noStart); spawn left at route_s {wantedS:F1}");
+                else
+                    Debug.LogError($"[IMPORT] {r.Region}: the start route has no drivable stretch between the region-edge closures; spawn left at route_s {wantedS:F1} (the game refuses this start, ADR 0277)");
+            }
             else if (Mathf.Abs(spawnS - wantedS) > 0.01f)
                 Debug.LogWarning($"[IMPORT] spawn moved from route_s {wantedS:F1} to {spawnS:F1} m: the catalog start is not between the region-edge closures (python scripts/export-region-catalog.py, ADR 0262/0277)");
             Vector3 spawnPos = route.points.Length > 1 ? route.PointAt(spawnS) : Vector3.zero;

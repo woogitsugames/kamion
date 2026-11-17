@@ -1,0 +1,15 @@
+{
+  "provenance": "authored_override (ADR 0231): control route for cameras/QA = DK65 inside this tile, continuing the route of dk65-monki-02",
+  "description": "DK65 from the S tile edge (seam with dk65-monki-02, OSM way 286989049) to the W tile edge (OSM way 286989049; seam with dk65-monki-04). Points from the Overpass extract of 2026-11-15; build_world snaps them to the nearest graph node.",
+  "start_epsg2180": [
+    756850.8,
+    615679.0
+  ],
+  "end_epsg2180": [
+    756491.0,
+    615882.7
+  ],
+  "confidence": "medium (OSM 2026-11-15 vs the pinned pbf 2026-11-08: re-check after build_region that both are graph boundary nodes)",
+  "no_standalone_start": true,
+  "no_standalone_start_note": "authored_override (ADR 0231 §5a, s23 world2-finish): corner tile, the corridor crosses ~413 m of it, both ends on the tile edge. A start behind the entry closure (>= 72,55 m) with 300 m of open route ahead (StartClearance.AheadFreeM) before the exit closure (60 m before the far edge) needs >= 432,55 m (exporter rule 90 + 300 + 60 = 450 m); EditMode StartClearanceTests 17.11: exit closure row 152-260 m ahead of the start. Start/end stay the corridor portals of tile_graph (ADR 0235); the start menu does not offer the tile."
+}

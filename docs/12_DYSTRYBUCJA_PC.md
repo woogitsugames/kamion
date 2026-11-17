@@ -80,8 +80,10 @@ Backend skryptów: **Mono** (`scriptingBackend` w ProjectSettings ma tylko wpis 
 | `Kamion_BackUpThisFolder_ButDontShipItWithYourGame/` | **nie** | powstaje przy IL2CPP (kod C++ i symbole); oficjalnej strony brak — tylko nazwa i forum Unity (https://discussions.unity.com/t/why-this-folder-generated-backupthisfolder-butdontshipitwithyourgame/901854). Zachować w `artifacts/` do symbolizacji awarii |
 | `build.json`, `Kamion.exe.sha256`, `Kamion.content.json`, `Kamion.top.txt`, `Kamion.variants.txt`, `Kamion_Data.sha256` | **nie** | nasze metadane buildu (ADR 0261, 0276) — zostają w `artifacts/` |
 | `build-id.json` | tak | git sha + skrót zawartości `Kamion_Data` (ADR 0276); gra czyta go przy starcie i pokazuje w menu / „Informacje” / logu |
-| `Kamion-okno.cmd` | tak | start w oknie 1600×900 (ProjectSettings domyślnie pełny ekran) |
-| `Kamion-<region>.cmd` i każdy inny `*.cmd` z `-scene <x>` (np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`) | tylko gdy scena/region `<x>` jest w buildzie | `build-windows.ps1` pisze po jednym na region buildu (ADR 0276). Reguła ADR 0271 (uzupełnienie s23): lista scen z logu buildu (`build.json` → `log`, linia `[BUILD] Windows x64 … scenes=[…]`), inaczej `build.json` `regions`/`regionsFile` rozwinięte katalogiem regionów na liście `EditorBuildSettings`; nieznana treść buildu = launcher poza paczką. Od int-h3-s23 (decyzja lidera) bez wyjątku deweloperskiego: `Kamion-knyszyn.cmd` startuje region knyszyn i trafia do testera, gdy knyszyn jest w buildzie |
+| `Kamion-okno.cmd` | tak | start w oknie 1600×900, okno zmienialne rozmiarem, Alt+Enter = pełny ekran. `Kamion.exe` i pozostałe `*.cmd` nie wymuszają trybu ekranu: plik ustawień PC, a bez niego pełny ekran bez ramki w natywnej rozdzielczości (`ProjectSetup.ApplyStandaloneWindowSettings`, 2026-11-16) |
+| `Kamion-d3d11.cmd` | tak | awaryjnie `-force-d3d11` (crash D3D12 16.11), bez `-screen-*`; `postbuild-windows.py` (build-hygiene-s23) |
+| `Kamion-korytarz.cmd`, `Kamion-korytarz-d3d11.cmd` | gdy knyszyn w buildzie (`-scene knyszyn`) | `-scene knyszyn -stream 1` (+ `-force-d3d11`); `postbuild-windows.py` pisze je tylko, gdy w logu buildu są knyszyn, knyszyn-s i scena kafla `World_knyszyn-s_Tile` |
+| `Kamion-<region>.cmd` i każdy inny `*.cmd` z `-scene <x>` (np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`) | tylko gdy scena/region `<x>` jest w buildzie | `build-windows.ps1` pisze po jednym na region buildu (ADR 0276); tylko `-scene <x>`, bez `-screen-*`. Reguła ADR 0271 (uzupełnienie s23): lista scen z logu buildu (`build.json` → `log`, linia `[BUILD] Windows x64 … scenes=[…]`), inaczej `build.json` `regions`/`regionsFile` rozwinięte katalogiem regionów na liście `EditorBuildSettings`; nieznana treść buildu = launcher poza paczką. Od int-h3-s23 (decyzja lidera) bez wyjątku deweloperskiego: `Kamion-knyszyn.cmd` startuje region knyszyn i trafia do testera, gdy knyszyn jest w buildzie |
 
 Paczka dokłada: `THIRD_PARTY_NOTICES.txt` (generowany z `game/Assets/_Project/UI/Resources/About/attributions.txt`, czyli
 **ten sam tekst co ekran „Informacje”** — jedno źródło prawdy), `README.txt` (z `dist/windows/README.txt.in`: wymagania D74,
@@ -193,7 +195,7 @@ DejaVu tylko jako raster w teksturach; `LegacyRuntime.ttf` = zasób Unity. Brak 
   **archiwizować je per wersja w `artifacts/win/<build>/`** (nie kasować przed wydaniem następnej wersji; dziś
   `build-windows.ps1` kasuje `*_DoNotShip` — propozycja zmiany w ADR 0271 §Propozycje).
 - **Zbieranie**: `scripts/collect-logs.ps1` (w paczce + `Zbierz-logi.cmd`): Player.log, Player-prev.log, diag\,
-  5 najnowszych folderów Crashes, `system.txt` (Windows, CPU, RAM, GPU + sterownik, dyski, SHA256 exe, nazwa paczki),
+  5 najnowszych folderów Crashes, 2 najnowsze `%LOCALAPPDATA%\CrashDumps\Kamion*.dmp` (≤ 1 GB każdy; build-hygiene-s23), `system.txt` (Windows, CPU, RAM, GPU + sterownik, dyski, SHA256 exe, nazwa paczki),
   opcjonalnie `-DxDiag`. Nazwa użytkownika i komputera zastępowane `<user>`/`<pc>`. Wynik: `kamion-logi-<ts>.zip`
   na Pulpicie. Nic nie jest wysyłane automatycznie — tester wysyła plik ręcznie (bez zewnętrznych serwisów).
   Działa w Windows PowerShell 5.1 (nie wymaga PS 7). **Nieuruchomiony** (chmura bez Windows) — do sprawdzenia przez lidera.

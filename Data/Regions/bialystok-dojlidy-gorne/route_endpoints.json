@@ -1,0 +1,13 @@
+{
+ "provenance": "authored_override (ADR 0278): control route for cameras/QA = the through road of this tile",
+ "description": "From the W tile edge (seam with bialystok-dojlidy, OSM way 236885860) to the E tile edge (OSM way 210488456, ref 19; seam with the next lattice tile (not defined)); 2774 m over the OSM ways 236885860, 275238286, 236886850, 275244657, 275244661, 253839996, 279864417, 1363058823, 279864420, 279864414, 279864412, 279864416, 210488456. Points from the OSM API 0.6 extract of 2026-11-16 (Data/Plans/map-plan-0278/); build_world snaps them to the nearest graph node.",
+ "start_epsg2180": [
+  781067.0,
+  590359.7
+ ],
+ "end_epsg2180": [
+  783115.0,
+  589778.5
+ ],
+ "confidence": "medium (OSM 2026-11-16 vs the pinned pbf 2026-11-08: re-check after build_region that both are graph boundary nodes)"
+}

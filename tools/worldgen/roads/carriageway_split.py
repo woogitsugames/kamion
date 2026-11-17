@@ -110,8 +110,15 @@ def _one(graph, o) -> bool:
     src = next(n for n in graph["nodes"] if n["id"] == nid)
     graph["nodes"] = [n for n in graph["nodes"] if n["id"] != nid]
     graph["nodes"].append({"id": new_id, "x": round(float(new_pt[0]), 3), "y": round(float(new_pt[1]), 3), "degree": 3,
-                           "z_terrain": src.get("z_terrain"), "authored": o["id"]})
+                           "z_terrain": src.get("z_terrain"), "authored": o["id"], "split_of": nid})
     return True
+
+
+def node_aliases(graph: dict) -> dict:
+    """{id of a split node in roads.graph.json -> id of the node that replaces it in this (effective) graph}. Empty for
+    a graph without applied splits. Readers that hold node ids of the ingested graph (route_start.json graph_nodes,
+    OSM via nodes of turn restrictions) translate them with this; the inverse maps effective ids back."""
+    return {n["split_of"]: n["id"] for n in graph.get("nodes", []) if n.get("split_of")}
 
 
 def apply(graph: dict, overrides, applied: list, stale: list) -> dict:

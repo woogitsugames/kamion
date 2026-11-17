@@ -18,8 +18,9 @@
 
 float _KamionLampCount;
 float4 _KamionLampColor;
-float4 _KamionLampPos[8];
-float4 _KamionLampAxis[8];
+// night-pc-s23: 16 slots (PC High / Ultra send up to 16 pools; phones keep 4-8, the loop stops at _KamionLampCount).
+float4 _KamionLampPos[16];
+float4 _KamionLampAxis[16];
 float4 _KamionLampSodium;
 float _KamionLampSpec;
 // s20 night-int (review P1-2): night floor near lamps - light from the lamps not in the analytic set, their
@@ -43,23 +44,42 @@ float4 _KamionHeadlampLeft, _KamionHeadlampRight, _KamionHeadlampAxisRight, _Kam
 #define KAMION_LAMP_TAIL_S 0.25
 #define KAMION_LAMP_TAIL_R 1.5
 
-// ADR 0108 r2: approximate diffuse dipped-beam lobe, actual source anchors. Beam slope/cutoff/peak are
-// WORKING_VALUE rather than a calibrated optical distribution. Uniform opt-in branch: no new pass or light.
-float KamionHeadlampCone(float3 positionWS, half3 normal, float3 source)
+// night-pc-s23 (replaces the ADR 0108 r2 symmetric cone): dipped beam for right-hand traffic shaped to UN R112 class B
+// (Annex 3 table, mlit.go.jp/jidosha/un/UN_R112.pdf p. 23: 75R/50R >= 10 100 cd, 50V >= 5 100, 25L/25R >= 1 700,
+// zone IV >= 2 500, 50L <= 13 200, 75L <= 10 600, B50L <= 350, zone III <= 625). Mirrored in HeadlampBeam.cs (EditMode
+// test checks those points). Angles as slopes (tan) in the cab frame; the horizontal cut-off sits KAMION_BEAM_AIM below
+// the horizon (vehicle aim, WORKING_VALUE; UN R48 6.2.6.1.1 range UNVERIFIED), right of the elbow it rises at 15 deg up
+// to KAMION_BEAM_RISE. I/Ipk = H(h) * V(below cut-off) or a stray floor above it. Ipk = the preset's peak cd. No occlusion.
+#define KAMION_BEAM_AIM 0.015
+#define KAMION_BEAM_RISE 0.0274       // cut-off right of the elbow at most ~1.57 deg above the elbow
+#define KAMION_BEAM_HOT 0.02          // hot spot ~1.15 deg right of V (75R / 50R)
+#define KAMION_BEAM_RANGE2 22500.0    // fade to 0 at 150 m
+float KamionHeadlampRelI(float h, float v)
+{
+    float cut = -KAMION_BEAM_AIM + min(max(h, 0.0) * 0.267949, KAMION_BEAM_RISE);
+    float below = cut - v;                                      // > 0 under the cut-off
+    float hc = h - KAMION_BEAM_HOT;
+    float hs = 0.75 * exp(-hc * hc * 138.89) + 0.25 * exp(-h * h * 6.3776);   // sigma 0.06 core, 0.28 spread
+    float edge = smoothstep(-0.002, 0.003, below);
+    float core = 0.05 + 0.95 * exp(-max(below - 0.008, 0.0) * 25.0);
+    float stray = 0.012 * saturate(1.0 + below * 20.0) * (0.3 + 0.7 * hs);
+    float lower = saturate((v + 0.35) * 10.0);                  // the truck's own front below ~-19 deg
+    return max(hs * core * edge, stray) * lower * saturate(1.0 - abs(h) * 0.9);
+}
+
+// Relative intensity / d^2 towards positionWS and the unit vector to the source (for diffuse and GGX).
+float KamionHeadlampCone(float3 positionWS, float3 source, out float3 l)
 {
     float3 ray = positionWS-source;
     float forward = dot(ray, _KamionHeadlampForward.xyz);
-    if (forward <= 0.0 || forward >= 90.0) return 0.0;
-    float invForward = rcp(max(forward, 1.0));
-    float horizontalSlope = dot(ray, _KamionHeadlampAxisRight.xyz)*invForward;
-    float verticalSlope = dot(ray, _KamionHeadlampUp.xyz)*invForward;
-    float horizontal = saturate(1.0-abs(horizontalSlope)/0.35);
-    float cutoff = saturate((-0.002-verticalSlope)*250.0);
-    float lower = saturate((verticalSlope+0.14)/0.10);
     float d2 = max(dot(ray, ray), 1.0);
-    float rangeWindow = saturate(1.0-d2*d2/(8100.0*8100.0));
-    return horizontal*horizontal*cutoff*lower*rangeWindow*rangeWindow*
-        saturate(dot(normal, -ray*rsqrt(d2)))/d2;
+    l = -ray * rsqrt(d2);
+    if (forward <= 0.5) return 0.0;
+    float invForward = rcp(forward);
+    float h = dot(ray, _KamionHeadlampAxisRight.xyz)*invForward;
+    float v = dot(ray, _KamionHeadlampUp.xyz)*invForward;
+    float rangeWindow = saturate(1.0-d2*d2/(KAMION_BEAM_RANGE2*KAMION_BEAM_RANGE2));
+    return KamionHeadlampRelI(h, v)*rangeWindow/d2;
 }
 
 // s20 night-int: night floor irradiance at a point whose nearest chosen luminaire is sqrt(near2) m away (horizontal);
@@ -105,7 +125,7 @@ half3 KamionLampPools(float3 positionWS, half3 n)
     {
         int lampCount = (int)_KamionLampCount;
         float near2 = 1e8;
-        for (int li = 0; li < 8; li++)
+        for (int li = 0; li < 16; li++)
         {
             if (li >= lampCount) break;
             float4 ax = _KamionLampAxis[li];
@@ -120,9 +140,12 @@ half3 KamionLampPools(float3 positionWS, half3 n)
     }
     float3 lighting = _KamionLampColor.rgb * pool + floorLight;
     if (_KamionHeadlampOn > 0.5)
-        lighting += _KamionHeadlampColor.rgb *
-            (KamionHeadlampCone(positionWS, n, _KamionHeadlampLeft.xyz)+
-             KamionHeadlampCone(positionWS, n, _KamionHeadlampRight.xyz));
+    {
+        float3 hl, hr;
+        float il = KamionHeadlampCone(positionWS, _KamionHeadlampLeft.xyz, hl);
+        float ir = KamionHeadlampCone(positionWS, _KamionHeadlampRight.xyz, hr);
+        lighting += _KamionHeadlampColor.rgb * (il * saturate(dot(n, hl)) + ir * saturate(dot(n, hr)));
+    }
     return (half3)lighting;
 }
 
@@ -137,7 +160,7 @@ half3 KamionLampPoolsLit(float3 positionWS, half3 n, float3 V, half r, half r2, 
         int lampCount = (int)_KamionLampCount;
         bool useSpec = _KamionLampSpec > 0.5;
         float near2 = 1e8;
-        for (int li = 0; li < 8; li++)
+        for (int li = 0; li < 16; li++)
         {
             if (li >= lampCount) break;
             float4 ax = _KamionLampAxis[li];
@@ -161,9 +184,28 @@ half3 KamionLampPoolsLit(float3 positionWS, half3 n, float3 V, half r, half r2, 
     }
     float3 lighting = _KamionLampColor.rgb * (dif * diffColor + spc * specColor) + floorLight * diffColor;
     if (_KamionHeadlampOn > 0.5)
-        lighting += diffColor * _KamionHeadlampColor.rgb *
-            (KamionHeadlampCone(positionWS, n, _KamionHeadlampLeft.xyz)+
-             KamionHeadlampCone(positionWS, n, _KamionHeadlampRight.xyz));
+    {
+        // night-pc-s23: diffuse + (tier flag _KamionLampSpec) the GGX highlight of the two dipped beams, same
+        // normalisation as the pools - the sheen of the own beam on dry asphalt, the glare streak when wet.
+        float3 hl, hr;
+        float il = KamionHeadlampCone(positionWS, _KamionHeadlampLeft.xyz, hl);
+        float ir = KamionHeadlampCone(positionWS, _KamionHeadlampRight.xyz, hr);
+        float el = il * saturate(dot(n, hl)), er = ir * saturate(dot(n, hr));
+        float3 hlit = (el + er) * diffColor;
+        if (_KamionLampSpec > 0.5 && el + er > 0.0)
+        {
+            float3 H = SafeNormalize(hl + V);
+            float NoH = saturate(dot(n, H)), LoH = saturate(dot(hl, H));
+            float dd = NoH * NoH * (r2 - 1.0) + 1.00001;
+            float s = el * r2 / ((dd * dd) * max(0.1, LoH * LoH) * (r * 4.0 + 2.0));
+            H = SafeNormalize(hr + V);
+            NoH = saturate(dot(n, H)); LoH = saturate(dot(hr, H));
+            dd = NoH * NoH * (r2 - 1.0) + 1.00001;
+            s += er * r2 / ((dd * dd) * max(0.1, LoH * LoH) * (r * 4.0 + 2.0));
+            hlit += s * specColor;
+        }
+        lighting += _KamionHeadlampColor.rgb * hlit;
+    }
     return (half3)lighting;
 }
 

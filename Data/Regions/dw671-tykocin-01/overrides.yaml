@@ -71,3 +71,13 @@ overrides:
       stands 150-300 m before the crossing (Dz.U. 2019 poz. 2310 par. 3 ust. 2). The B-33 "50" itself is not built.
     set: {barrier: double_half, light: true, light_left: true, panel_margin_m: 1.5, guide_post: red_white,
           approach_speed_kmh: 90}
+  # world2-s23: field road 98071886 crosses the seam with knyszyn-s, where it is authored unlit; the class rule here
+  # would put lamp columns on the other half of the same road (qa/seams.py FAIL "oświetlenie"). Not checked on the
+  # orthophoto of this tile.
+  - id: seam-field-road-98071886-unlit
+    target: {osm_way: [98071886]}
+    reason: >-
+      Seam continuity with knyszyn-s (same OSM way, unclassified field road, lamps: false there).
+    confidence: low
+    verify: GUGiK orthophoto 0.1 m 2025 of this tile (lamp columns along the road)
+    set: {lamps: false}

@@ -118,7 +118,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs, heroes=depots)
     KC.build(w.buf, rid, blds, zsmooth, rep)
     KT.build(w.buf, rid, blds, zsmooth, rep)
-    KMB.build(w.buf, rid, blds, zsmooth, rep)
+    KMB.build(w.buf, rid, blds, zsmooth, rep, overrides)     # ADR 0227 D41: pavilion form from overrides
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])

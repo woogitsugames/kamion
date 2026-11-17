@@ -159,3 +159,12 @@ Właściciel: limit 2 mln trójkątów na kamerę High pochodzi z telefonu (A16)
 ## D84 — Feel test bramki 2: zaliczony 5/5 + uwagi do PC (2026-11-16, s23)
 Właściciel zrobił feel test (D77) na exe `kamion-0.1.0-e28533ca31-regions`, klawiatura, plac testowy (`-scene DrivingLab -trailer 40`): ruszanie pod górę 7 %/12 % — 5, hamowanie — 5, okrąg R50/rondo — 5, cofanie pod rampę — 5 („jak prawdziwe”). **Odczucie jazdy bramki 2 zaliczone** (pad i kierownica FFB nietestowane; geometria naczepy sprzed D79). Uwagi poza próbami: (1) **wnętrze kabiny na PC brzydkie, na telefonie było ładne** — właściciel przyśle zrzuty (do diagnozy: materiały/tekstury/oświetlenie kabiny w tierach PC); (2) **HUD i menu „zbyt AI slop”** — przeprojektować na poziom jakości gier symulacyjnych ciężarówek (styl własny, bez kopiowania cudzego wyglądu, marek i elementów), menu niewygodne w obsłudze; (3) **lusterka za małe / złe**.
 
+
+## D85 — Kontrolki dotykowe na PC: jednorazowa migracja „zawsze” → „auto” (2026-11-16, s23)
+Właściciel (klik): zapis `ui.touchControls = zawsze` na PC bez ekranu dotykowego zmienia się jednorazowo na `auto`, żeby nowy HUD monitora (ADR 0283) był widoczny. Telefon bez zmian. Źródło: raport integracji int-ui-s23 (§ ustawienia).
+
+## D86 — Sceny dk65-03/04 w buildzie dopiero z wersją High (2026-11-16, s23)
+Właściciel (klik): najpierw zbudować treść High dla dk65-03 i dk65-04, potem dodać je do EditorBuildSettings każdego buildu. Powód: po #168 jeden kafel tylko-Low przełącza streaming PC na treść Low.
+
+## D87 — Tło menu startowego: zdjęcie z gry (2026-11-16, s23)
+Właściciel (klik): menu startowe na tle statycznego zrzutu z gry (np. DK65 o świcie) z przyciemnieniem pod tekstem; bez marek. Zastępuje obecny brak tła (tekst na szachownicy placu — najgorszy element UI wg integracji int-ui-s23).

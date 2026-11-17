@@ -1,0 +1,65 @@
+{
+ "accuracy": "volunteered geographic information; tag completeness varies (truck categories are OSM-only, see ADR 0278)",
+ "attribution": "© OpenStreetMap contributors",
+ "client": {
+  "pacing_s": 1.5,
+  "split_rule": "4 quadrants when the API answers 'too many nodes'",
+  "user_agent": "osm-research-client/1.0"
+ },
+ "crs": "EPSG:4326 (OSM native); points of the extract reprojected to EPSG:2180 (pyproj, always_xy)",
+ "date": "2026-11-16",
+ "extent": "lattice tiles of ADR 0203 listed in the extract (Bialystok -5..3 x -4..5, towns Grajewo and Zambrow)",
+ "extract_in_git": {
+  "path": "Data/Plans/map-plan-0278/osm_plan_extract.json",
+  "sha256": "a1b5bdeeba1e70c274b105029179a9b39aac6364dbe033bee579a81399af36dd"
+ },
+ "id": "osm-api06-map-plan-0278",
+ "in_git": false,
+ "license": "ODbL 1.0",
+ "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+ "name": "OpenStreetMap: API 0.6 map calls per lattice tile + full route relations (ADR 0278)",
+ "not_used": "Overpass (no answer from the session), Geofabrik pbf download (connection reset), Google (forbidden, ADR 0002)",
+ "provider": "OpenStreetMap Foundation (api.openstreetmap.org)",
+ "raw_answers": {
+  "sha256": {
+   "relfull_122101.json": "8a509124b40981043355e19cdc679368071645adeed65cfc0652a1b07fec8874",
+   "relfull_2324549.json": "cdc984d921573f5f14b8b672d20330cc780fb5d5b6811b36f3fbed11b9c57ad1",
+   "relfull_2324829.json": "c70ecc469e57c78c8146ad27badd5a131b7843f0491ea4a12b0be8f3eec75430",
+   "relfull_336069.json": "27199e07c38c6f05c80640a0cf665b1858852548bd996309b68e9b4c88fe5050",
+   "relfull_7843418.json": "a629aacfb00eb6e0d90d348650263bda55111486b06eaddbb6947944544f278e",
+   "t_-1_-1.json": "3a9c2634895c3ba1053291f6fa332e5da51bfb7eb7fcb4fb23fdf18cac51631d",
+   "t_-1_0.json": "bb967d9b4b4ccdee3f9a2b90bec7401d5ede7f6bacbc14a24acca68cf66c1ac9",
+   "t_-24_25.json": "be2925be90e3ad53e3db1a6fc9955bc37ddcd05ec069e75a0bac974842f2da9e",
+   "t_-29_-11.json": "59fdcd4122b6c79463da9a22ad6e1f07d0bd5dff9c0a2f43437ce56a8abffe90",
+   "t_-2_-1.json": "46e7b0fadb9a310a3ee082b921d740fb558feccf565bc978fae51c541cf27d4d",
+   "t_-3_-1.json": "2811cdf4226a7ba6e6d88e319866360628ec030cd9910c748f06c9f91858e105",
+   "t_-4_-1.json": "d3da508caa0f1ea04dd5770133927bb3e4664f94550d29d4948d1010a549be44",
+   "t_-5_3.json": "b2e5d05b03d1d16265eb171716b1adf52ab062bfdbf22bd16fbc52f5a09a3fb4",
+   "t_0_-1a.json": "2f388bb27ff789d9d485b62c26eeb5ec02df6580fc0e9d4a85fbdc339950bd5a",
+   "t_0_-1b.json": "c10507e186dedc8bb9535d09dce221988dcebe12d7f0ce5ad8a2d901c574084c",
+   "t_0_-1c.json": "5ba13bfe018f3176b9886d69054f211d509cee7b51295a43343c4264fc1a0566",
+   "t_0_-1d.json": "7a424448949590445d5dee09b99dc86ad8e080527f18131596a4beabc85bf732",
+   "t_0_-2.json": "73b648c09a826aaf17f8effee556d22648f0c2005cb3096313739c24f97f1616",
+   "t_0_-3.json": "a91e279ce5235e5c601b363bf8f2d2cf7503edb37c5109eaff69e68b08131765",
+   "t_0_0.json": "22d6bc3aef6870676b0a6d6eed166e24174a630b717db6fa835ca1b3b3ff3296",
+   "t_0_1.json": "0cf5c320ade3138f1bb65f150784dd3829a98c45dd7fe7dfe698c671ca749e53",
+   "t_0_2.json": "a4b365b5b602de7c505e5aec375e020069a31abb80d51490ce68efa2c0ad34f3",
+   "t_0_3.json": "37d52b112b660cbfa8f7caed27879f6c216ebcfe361fb57e487578fb3753d66c",
+   "t_0_4.json": "9014c14213a74ea8ef77b0a1c64232c620d94672cec5449cc4d08b3a35798c69",
+   "t_1_-1.json": "09732ffd153fed39018fa521483bb1088c7fa7020b1be04750181d4f4e376b4b",
+   "t_1_-2.json": "a2b0cd8322caab89e7662615f7ae504dee9ce0ae80d0820f4b2b5013dd9642aa",
+   "t_1_0.json": "4a6e0ea9193b99247a23951f6391eed0b812ef5574dba0bac60997b2e2514f16",
+   "t_1_1.json": "25e5145f450e812a40749d485f86252c24701ca158e29de55b090530b15477f2",
+   "t_1_2.json": "34ec94b11491949895b12cc272a21fafe55815b43ce8fab4258b48ff2b6ce993",
+   "t_1_3.json": "a6b1a872e8823334355408f1f94627858a92377d6b85b21512d78d7160eccfb6",
+   "t_2_-1.json": "3f5b639ecceaae471a46afe5452eba8e2ac6117f5387325a080f7f40d3fee7a0",
+   "t_2_-2.json": "001806e16bbcf99efa6677cf38fff2cc12506552e7dffcf5cc778e6825a83710",
+   "t_2_-3.json": "1228400b2acabbdda5f44206f9e871d88be80f3e5031faa40a49780cc261a30b",
+   "t_2_0.json": "89da055f5ff13676bd1530d824cf28a3d0aa54aa120c58e70fb3dc4198739d99"
+  }
+ },
+ "raw_location": "outside git (session scratchpad, gzip); answers listed with the SHA256 of the uncompressed answer",
+ "used_by": [
+  "tools/worldgen/qa/map_plan_0278.py"
+ ]
+}

@@ -12,16 +12,17 @@ ustalić z kodu, oznaczono **UNVERIFIED**. Liczby wydajności i wymagań to **WO
 
 | Plik | Co robi |
 |---|---|
-| `Kamion.exe` | Gra. Bez argumentów startuje w **pełnym ekranie** (projekt: `fullscreenMode: 1` = okno bez ramki na cały ekran), chyba że plik ustawień mówi inaczej (sekcja 3). |
-| `Kamion-okno.cmd` | Start w oknie 1600 × 900, do menu startowego. |
-| `Kamion-<region>.cmd` | Jeden plik na **każdy region, którego scena jest w buildzie** (lista z logu buildu), np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`, `Kamion-dk65-05.cmd`. Okno 1600 × 900 i od razu `-scene <region>`. Bez strumieniowania. |
-| `Kamion-korytarz.cmd` | **Ciągła jazda** (sekcja 1.4): pełny ekran bez ramki, start w regionie knyszyn, `-stream 1`. Powstaje tylko, gdy w buildzie są regiony `knyszyn` **i** `knyszyn-s`. |
+| `Kamion.exe` | Gra. Bez argumentów startuje w **pełnym ekranie bez ramki** w natywnej rozdzielczości monitora (ProjectSetup.ApplyStandaloneWindowSettings), chyba że plik ustawień mówi inaczej (sekcja 3). Alt+Enter przełącza pełny ekran / okno; okno można powiększać myszą. Uwaga: Unity pamięta ostatni tryb okna — jeśli po starszym buildzie gra otwiera się w oknie, naciśnij raz Alt+Enter. |
+| `Kamion-okno.cmd` | Start w oknie 1600 × 900 (jedyny launcher wymuszający okno), do menu startowego. |
+| `Kamion-<region>.cmd` | Jeden plik na **każdy region, którego scena jest w buildzie** (lista z logu buildu), np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`, `Kamion-dk65-05.cmd`. Tryb ekranu jak `Kamion.exe` (pełny ekran bez ramki) i od razu `-scene <region>`. Bez strumieniowania. |
+| `Kamion-korytarz.cmd` | **Ciągła jazda** (sekcja 1.4): tryb ekranu jak `Kamion.exe`, start w regionie knyszyn, `-stream 1`. Powstaje tylko, gdy w buildzie są regiony `knyszyn` **i** `knyszyn-s` **oraz** scena kafla `World_knyszyn-s_Tile` (bez niej szew zostaje zamknięty; build-hygiene-s23). |
+| `Kamion-d3d11.cmd`, `Kamion-korytarz-d3d11.cmd` | Awaryjnie (sekcja 1.6): to samo co `Kamion.exe` / `Kamion-korytarz.cmd` z `-force-d3d11`. Korytarzowy tylko razem z `Kamion-korytarz.cmd`. |
 | `build-id.json` | Skrót zawartości `Kamion_Data` — gra pokazuje go w menu, w „Informacjach” i w logu `[BOOT]`; po nim rozpoznaje się build. |
 | `Kamion.exe.sha256`, `build.json` | Metadane buildu (suma exe, liczba plików, rozmiar). Suma exe nie identyfikuje buildu (exe to ten sam launcher Unity w każdym buildzie). |
 
 Launchery pisze `scripts/postbuild-windows.py` (wywoływany przez `scripts/build-windows.ps1` po udanym buildzie).
 Każdy `.cmd` przekazuje dalej własne argumenty (`%*`), np. `Kamion-okno.cmd -tier Low -fps 30` albo
-`Kamion-korytarz.cmd -force-d3d11`. **Osobnego launchera D3D11 nie ma** (sekcja 1.6).
+`Kamion-korytarz.cmd -force-d3d11`. Gotowe warianty D3D11: `Kamion-d3d11.cmd`, `Kamion-korytarz-d3d11.cmd` (sekcja 1.6).
 
 `-scene` działa **raz na uruchomienie**: po „Menu” w jeździe zostajesz w menu startowym (log
 `[BOOT] launch argument scene already used this run`), a nie wracasz do regionu z launchera. Region wybierzesz wtedy
@@ -70,7 +71,7 @@ Kolejność ważności: argument > zapisany wybór > wartość domyślna.
 | `-trailer` | `solo`, `empty`/`pusta`, `24`/`24t`, `40`/`40t` | plac: zapisany wybór (pierwszy raz 24 t); region: zestaw z naczepą | `solo` = sam ciągnik. |
 | `-lighting` | `clear`, `overcast`, `lowsun`, `dusk` | wybór „Pora dnia” z menu | Nieznana nazwa → ostrzeżenie w logu. |
 | `-screen-fullscreen`, `-screen-width`, `-screen-height` | Unity: `0`/`1`, piksele | — | Jeśli podasz dowolny `-screen-*`, `-window-mode` albo `-popupwindow`, gra **nie** nakłada trybu ekranu z pliku ustawień (sekcja 1.5). |
-| `-window-mode` | Unity (tylko Windows): `exclusive` / `borderless` | — | Rodzaj pełnego ekranu; używa go `Kamion-korytarz.cmd` (`borderless`). |
+| `-window-mode` | Unity (tylko Windows): `exclusive` / `borderless` | — | Rodzaj pełnego ekranu. Żaden launcher go nie podaje (od alt-window-s23 korytarz bierze tryb z ustawień). |
 | `-force-d3d11` / `-force-d3d12` | Unity (tylko Windows), **bez wartości** | API wybrane przez Unity (sekcja 1.6) | Wymusza Direct3D 11 / 12. Awaryjnie przy crashu D3D12 (sekcja 1.6). |
 
 **Pomiarowe (nie dla zwykłej gry)**
@@ -84,7 +85,7 @@ Kolejność ważności: argument > zapisany wybór > wartość domyślna.
 
 ### 1.4 Ciągła jazda między regionami (`-stream 1`, `Kamion-korytarz.cmd`)
 
-`Kamion-korytarz.cmd` = `Kamion.exe -screen-fullscreen 1 -window-mode borderless -scene knyszyn -stream 1 %*`.
+`Kamion-korytarz.cmd` = `Kamion.exe -scene knyszyn -stream 1 %*` (tryb ekranu z pliku ustawień, bez niego pełny ekran bez ramki).
 
 Co robi `-stream 1` (ADR 0235 / 0273, scalone 16.11 jako `int-stream-s23`):
 - Czytany przy każdym starcie sceny jazdy w regionie (także regionu wybranego potem z menu w tym samym uruchomieniu).
@@ -114,7 +115,7 @@ Co robi `-stream 1` (ADR 0235 / 0273, scalone 16.11 jako `int-stream-s23`):
 - **bialystok-dojlidy** nie ma w grafie żadnego sąsiada → nigdy się nie strumieniuje; tylko jako osobny region.
 - **knyszyn ↔ knyszyn-w**: kafle mają wspólną krawędź, ale trasa knyszyn kończy się na Rynku (nie na krawędzi
   kafla), więc nie ma portalu trasy — autopilot tam nie przejdzie. Jazda ręczna na zachód (DK65 Obozowa) otworzy szew
-  tylko wtedy, gdy scena kafla knyszyn-w jest w buildzie; `Kamion-korytarz.cmd` wymaga tylko knyszyn i knyszyn-s.
+  tylko wtedy, gdy scena kafla knyszyn-w jest w buildzie; `Kamion-korytarz.cmd` wymaga knyszyn, knyszyn-s i sceny kafla knyszyn-s.
   Przejazdu przez ten szew nikt nie sprawdził (**UNVERIFIED**).
 - **dw671-tykocin-01**: trasa zaczyna się na krawędzi z knyszyn-w, ale trasa knyszyn-w wychodzi na północ (do Moniek)
   → brak portalu; jazda ręczna przez szew — jak wyżej, **UNVERIFIED**.
@@ -135,8 +136,8 @@ Jedyny pomiar przejazdu (HANDOVER 16.11 16:5x): knyszynska → dk65-01 → 02 �
 | Start | Tryb |
 |---|---|
 | `Kamion.exe` bez argumentów | z pliku ustawień (sekcja 3), a bez pliku — projekt: `fullscreenMode: 1` (bez ramki, rozdzielczość natywna) |
-| `Kamion-okno.cmd`, `Kamion-<region>.cmd` | okno 1600 × 900 (`-screen-fullscreen 0 -screen-width 1600 -screen-height 900`) |
-| `Kamion-korytarz.cmd` | pełny ekran bez ramki (`-screen-fullscreen 1 -window-mode borderless`) |
+| `Kamion-okno.cmd` | okno 1600 × 900 (`-screen-fullscreen 0 -screen-width 1600 -screen-height 900`) |
+| `Kamion-<region>.cmd`, `Kamion-korytarz.cmd`, `Kamion-*-d3d11.cmd` | jak `Kamion.exe` (bez `-screen-*`; `-force-d3d11` nie zmienia trybu ekranu) |
 
 - Z dowolnym `-screen-*` / `-window-mode` / `-popupwindow` gra przy starcie **pomija** tryb ekranu z pliku ustawień.
 - Okna 1600 × 900 **nie da się powiększyć** przeciągnięciem: w projekcie `resizableWindow: 0` (zgłoszenie właściciela
@@ -155,8 +156,9 @@ Przyczyna nieustalona (hipoteza o równoległym obciążeniu GPU przez Unity —
 
 - Projekt nie ustawia listy API grafiki dla Windows (w ProjectSettings są wpisy tylko dla iOS i Androida) → Unity
   wybiera API sam; którego używa domyślnie — z repo nie wynika (crash pokazuje D3D12).
-- Launchery **nie mają** wariantu D3D11. Gdy gra pada (zwłaszcza z „d3d12” / „Device failed” w `Player.log`), dopisz
-  argument: `Kamion-korytarz.cmd -force-d3d11`, `Kamion-okno.cmd -force-d3d11` albo `Kamion.exe -force-d3d11`.
+- Gdy gra pada (zwłaszcza z „d3d12” / „Device failed” w `Player.log`), uruchom `Kamion-d3d11.cmd` (menu) albo
+  `Kamion-korytarz-d3d11.cmd` (jazda ciągła); inne starty: dopisz argument, np. `Kamion-okno.cmd -force-d3d11`,
+  `Kamion-knyszyn.cmd -force-d3d11`.
 - Czy D3D11 usuwa problem — jedna obserwacja, bez pomiaru (**UNVERIFIED**). W zgłoszeniu podaj, czy był `-force-d3d11`.
 
 ---
@@ -204,6 +206,7 @@ wstrzymane (klawisze i pad nawigują po menu).
 | Rozglądanie | — | prawa gałka | przeciągnij po ekranie (który przycisk myszy — UNVERIFIED) |
 | Przybliżenie | — | — | kółko myszy |
 | Lusterka w okienkach na ekranie (wł./wył.) | L | — (do przypisania) | — |
+| HUD: szczegóły minimalne / rozszerzone (ADR 0283) | I | — (do przypisania) | — |
 | Kamera cofania (wymuś) | V | — (do przypisania) | — |
 | Pełna mapa | — | — | klik minimapy (dokładny gest UNVERIFIED); kółko = zoom mapy |
 
@@ -216,7 +219,8 @@ Kamera cofania włącza się też sama na biegu R.
 | Menu / wstecz (w jeździe: zamyka mapę, potem ustawienia, potem wraca do menu startowego) | Esc | środkowy prawy (Start) | przycisk „Menu” w HUD |
 | Ruch po menu | strzałki, Tab | krzyżak, lewa gałka | najechanie |
 | Wybór | Enter | przycisk dolny (A) | klik |
-| Zamknij panel ustawień PC (= Anuluj) | Esc | przycisk prawy (B) | „Anuluj” |
+| Zamknij panel ustawień PC (= Anuluj) | Esc | przycisk prawy (B) | „Anuluj” albo prawy przycisk myszy |
+| Zakładki ustawień (Grafika, Sterowanie, Dźwięk, Rozgrywka, Lusterka; ADR 0283) | Q / E | LB / RB | klik zakładki |
 | Przewijanie ekranu „Informacje” | ↑ / ↓, PgUp / PgDn | prawa gałka, krzyżak góra/dół | kółko |
 
 Esc i Start pada są na stałe (nie da się ich przypisać). K działa jako klakson zawsze, nawet po zmianie przypisania
@@ -226,8 +230,9 @@ Przyciski HUD (np. Menu, Reset) obsługuje tylko mysz — nie łapią fokusu pad
 
 ### 2.5 Zmiana przypisań (rebinding)
 
-Menu startowe → **Ustawienia sterowania** → sekcja „KLAWIATURA I PAD” → **Przypisania i czułość…**
-(przycisk jest widoczny tylko w scenie jazdy, gdy działa wejście PC).
+Menu startowe → **Ustawienia** → zakładka **Sterowanie** → **Kierownica, pedały, kamera…** → sekcja „KLAWIATURA I PAD” →
+**Przypisania i czułość…** (przycisk jest widoczny tylko w scenie jazdy, gdy działa wejście PC). Na telefonie przycisk
+nazywa się dalej „Ustawienia sterowania”. (ADR 0283.)
 
 - Strony **Klawiatura** / **Pad**. Kliknij przypisanie i naciśnij nowy klawisz/przycisk.
 - Anulowanie: Backspace (klawiatura) albo Start pada; po 10 s bez wciśnięcia — anulowane samo. Esc nie da się przypisać.
@@ -255,10 +260,11 @@ Menu startowe → **Ustawienia sterowania** → sekcja „KLAWIATURA I PAD” �
 
 ---
 
-## 3. Ustawienia PC (ekran, grafika, dźwięk)
+## 3. Ustawienia PC (ADR 0270, zakładki ADR 0283)
 
-Menu startowe → **Ekran, grafika, dźwięk** (tylko na PC). Zmiany działają po **Zastosuj**; „Anuluj” / Esc /
-pad B odrzuca; „Przywróć domyślne” wczytuje domyślne. Po zmianie trybu ekranu gra pyta „Zachować nowy tryb
+Menu startowe → **Ustawienia** (tylko na PC; jeden ekran, zakładki **Grafika · Sterowanie · Dźwięk · Rozgrywka ·
+Lusterka**, przełączanie Q / E, LB / RB albo kliknięciem). Zmiany działają po **Zastosuj**; „Anuluj” / Esc / pad B /
+prawy przycisk myszy odrzuca; „Przywróć domyślne” wczytuje domyślne **otwartej zakładki**. Po zmianie trybu ekranu gra pyta „Zachować nowy tryb
 ekranu?” i po **15 s** bez odpowiedzi wraca do poprzedniego.
 
 | Ustawienie | Wybór | Domyślnie |
@@ -271,6 +277,13 @@ ekranu?” i po **15 s** bez odpowiedzi wraca do poprzedniego.
 | Skala HUD | 80–140 % co 10 % | 100 % |
 | Jednostki prędkości | tylko km/h | km/h |
 | Głośność ogólna / Silnik / Otoczenie / Sygnały kabiny | 0–100 % co 5 % | 100 % |
+| Rozgrywka: Szczegóły HUD | minimalne / rozszerzone (też klawisz I w jeździe) | minimalne |
+| Rozgrywka: HUD w widoku z kabiny | auto / pasek / tylko ostrzeżenia (auto: gdy w kabinie działają zegary, zostają ostrzeżenia i kierunkowskazy) | auto |
+| Rozgrywka: Kontrolki dotykowe | auto / zawsze / nigdy | auto |
+| Lusterka: Okienka lusterek | wyłączone / włączone (też klawisz L) | włączone |
+| Lusterka: Rozmiar | 30–60 % wysokości ekranu co 2 % | 42 % (WORKING_VALUE) |
+| Lusterka: Położenie w pionie / Odsunięcie od krawędzi | 0–100 % co 10 % (podgląd układu w zakładce) | 0 % / 0 % |
+| Lusterka: Na zewnątrz / do środka, W dół / w górę | ±6° / ±3° co 0,5° (obraca widok obu lusterek głównych) | 0° / 0° |
 
 Plik: `settings_pc.json` w folderze danych gry. Argumenty `-tier` / `-fps` wygrywają z plikiem tylko na dany przebieg.
 
@@ -343,8 +356,9 @@ wysyłane samo. Wolniejsza, pełniejsza wersja: `powershell -NoProfile -Executio
 Zrzuty awarii (`*.dmp`) **nie są anonimizowane** (mogą zawierać nazwę użytkownika Windows); bez nich:
 `Zbierz-logi.cmd -NoCrashes`.
 
-**`Zbierz-logi.cmd` nie zbiera `%LOCALAPPDATA%\CrashDumps`.** Po crashu sprawdź ten folder i dołącz ręcznie najnowszy
-`Kamion.exe.*.dmp` (też nieanonimizowany).
+`Zbierz-logi.cmd` dołącza też zrzuty Windows `%LOCALAPPDATA%\CrashDumps\Kamion*.dmp`: 2 najnowsze, każdy do 1 GB
+(większe i starsze tylko wypisuje w `system.txt` — wtedy dołącz plik ręcznie); `-NoCrashes` pomija także je.
+Parametry: `-MaxDumps`, `-MaxDumpMB`, `-DumpDir`. Też nieanonimizowane.
 
 ---
 
@@ -391,8 +405,8 @@ Przegląd P19 (16.11 wieczór, gałąź `player-guide-r2`, tylko ta instrukcja):
 |---|---|---|
 | 11 | ADR 0261, uzupełnienie s23 §3: „trzy launchery, `build-windows.ps1:94-96`” | **zostaje** w ADR (dopisek ADR 0276 w tym samym pliku mówi już o `Kamion-<region>.cmd`); stan kodu: launchery pisze `postbuild-windows.py` — `Kamion-okno.cmd`, `Kamion-<region>.cmd` dla każdego regionu w buildzie, `Kamion-korytarz.cmd` |
 | 12 | `build-windows.ps1` (nagłówek i komentarz przy postbuild): „launchers (windowed)” | **zostaje** — `Kamion-korytarz.cmd` jest pełnoekranowy; tylko komentarz |
-| 13 | `collect-logs.ps1` / `Zbierz-logi.cmd` nie zbiera `%LOCALAPPDATA%\CrashDumps` (tam był dump crasha D3D12 16.11) | **zostaje** — do poprawki w `scripts/collect-logs.ps1` (+ README); instrukcja każe dołączyć ręcznie |
-| 14 | `dist/windows/README.txt.in` (README w zip): brak `Kamion-korytarz.cmd`, `Kamion-<region>.cmd`, `-force-d3d11`, `CrashDumps` | **zostaje** — poza zakresem P19 |
+| 13 | `collect-logs.ps1` / `Zbierz-logi.cmd` nie zbiera `%LOCALAPPDATA%\CrashDumps` (tam był dump crasha D3D12 16.11) | **poprawione** (build-hygiene-s23): `collect-logs.ps1` zbiera `Kamion*.dmp` (2 najnowsze, ≤ 1 GB), README w zipie o tym mówi |
+| 14 | `dist/windows/README.txt.in` (README w zip): brak `Kamion-korytarz.cmd`, `Kamion-<region>.cmd`, `-force-d3d11`, `CrashDumps` | **poprawione** (build-hygiene-s23): README opisuje korytarz, skróty regionów, `Kamion-d3d11.cmd` / `Kamion-korytarz-d3d11.cmd`, CrashDumps |
 | 15 | HANDOVER 16.11 15:2x: skróty dla gracza pełny ekran bez ramki, `resizableWindow` + Alt+Enter | **częściowo** — pełny ekran ma tylko `Kamion-korytarz.cmd`; `Kamion-okno.cmd` / `Kamion-<region>.cmd` nadal 1600 × 900, `resizableWindow: 0` |
 | 16 | ADR 0261 „Otwarte”: „Dotykowy HUD jest widoczny także na PC” | **nieaktualne** w ADR — kod (ADR 0265) ukrywa go na PC przy „auto”; widoczny tylko przy zapisanym „zawsze” |
 | 17 | Wcześniejsza wersja tej instrukcji: „argumentu `-stream` w `origin/main` nie ma” | **naprawione** — streaming scalony 16.11 (`int-stream-s23`), opis w sekcji 1.4 |

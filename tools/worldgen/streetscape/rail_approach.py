@@ -77,8 +77,9 @@ def outer_rail_m(c) -> float:
 
 
 def device_line_m(c) -> float:
-    """Crossing centre -> the posts of the crossing devices (signal / G-3), along the road."""
-    return c["half_track"] / c["sin"] + RL.SIGN_SETBACK
+    """Crossing centre -> the posts of the crossing devices (signal / G-3), along the road: the farthest post of
+    rail.device_stations (ADR 0279 P1: >= 5 m from the outer rail, 1105 § 77 ust. 2 pkt 1 / 2311 zał. 1 pkt 2.2.11)."""
+    return RL.device_line_max(c)
 
 
 # ------------------------------------------------------------------------------------------------ rule (pure)
