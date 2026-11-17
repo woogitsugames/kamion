@@ -261,6 +261,29 @@ def metric_value(a: dict[str, Any], check: dict[str, Any]) -> float | None:
     return float(cur) if isinstance(cur, (int, float)) else None
 
 
+# Tolerancja progu czasu klatki równego okresowi limitu FPS (WORKING_VALUE). Przy `targetFrameRate` = 30 player trzyma
+# klatkę ~33,33–33,34 ms (zegar systemowy), a budżet zapisuje okres zaokrąglony (33,3 / 16,7); bez tolerancji gra, która
+# trzyma limit idealnie, dostaje FAIL p50. Tolerancja dotyczy tylko progów `frame_ms.*` leżących w ±1 % od okresu limitu.
+CAP_TOLERANCE = 0.01
+
+
+def effective_limit(check: dict[str, Any], lim: float, display: dict[str, Any] | None) -> float:
+    """Limit sprawdzenia po uwzględnieniu limitu FPS (próg = okres limitu → okres × (1 + CAP_TOLERANCE))."""
+    if not str(check.get("metric", "")).startswith("frame_ms."):
+        return lim
+    fps = (display or {}).get("targetFrameRate")
+    try:
+        fps = float(fps)
+    except (TypeError, ValueError):
+        return lim
+    if fps <= 0:
+        return lim
+    period = 1000.0 / fps
+    if abs(lim - period) > period * CAP_TOLERANCE:
+        return lim
+    return max(lim, round(period * (1.0 + CAP_TOLERANCE), 3))
+
+
 def validity(r: Run, a: dict[str, Any], budget: dict[str, Any] | None) -> list[str]:
     """Powody, dla których pomiar jest nieważny (pusta lista = ważny)."""
     reasons = []
@@ -436,9 +459,11 @@ def evaluate(r: Run, budget: dict[str, Any] | None, cls_name: str | None, warmup
         for c in cls.get("checks", []):
             v = metric_value(a, c)
             lim = float(c["max"])
-            st = "NO_DATA" if v is None else ("PASS" if v <= lim else "FAIL")
+            eff = effective_limit(c, lim, r.run.get("display"))
+            st = "NO_DATA" if v is None else ("PASS" if v <= eff else "FAIL")
             name = c["metric"] + (f">{c['threshold_ms']:g}ms" if "threshold_ms" in c else "")
             checks.append({"metric": name, "value": v, "max": lim, "status": st,
+                           **({"max_effective": eff} if eff != lim else {}),
                            "value_status": c.get("status", cls.get("status", budget.get("status", "WORKING_VALUE")))})
         if report["invalid_reasons"] or (mism and not allow_mismatch):
             verdict = "INVALID"
@@ -554,7 +579,8 @@ def render_md(rep: dict[str, Any]) -> str:
         L.append("| metryka | wartość | limit | wynik | status liczby |")
         L.append("|---|---|---|---|---|")
         for c in rep["checks"]:
-            L.append(f"| {c['metric']} | {_f(c['value'])} | {_f(c['max'])} | {c['status']} | {c['value_status']} |")
+            lim = _f(c['max']) + (f" (z tolerancją limitu FPS {_f(c['max_effective'], 3)})" if "max_effective" in c else "")
+            L.append(f"| {c['metric']} | {_f(c['value'])} | {lim} | {c['status']} | {c['value_status']} |")
     L.append("")
     return "\n".join(L)
 

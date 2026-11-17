@@ -121,6 +121,31 @@ def test_pass_recommended_class(tmp_path):
     assert pm.exit_code(rep) == 0
 
 
+def test_p50_at_fps_cap_is_not_fail(tmp_path):
+    # Klasa min: 1080p, Low, limit 30 FPS; player trzyma klatkę 33,334 ms (okres 33,333) — budżet p50 33,3 nie może dać FAIL.
+    d = make_run(tmp_path, steady(3000, 33.334), tier="Low", target_fps=30, private_peak=3000.0, vram_peak=1500.0)
+    rep = pm.evaluate(pm.load_run(d), pm.load_budget(BUDGET), "min")
+    p50 = next(c for c in rep["checks"] if c["metric"] == "frame_ms.p50")
+    assert p50["status"] == "PASS", rep["checks"]
+    assert p50["max"] == pytest.approx(33.3) and p50["max_effective"] == pytest.approx(33.667)
+    assert rep["verdict"] == "PASS", rep["checks"]
+    # Za tolerancją (1 %) nadal FAIL; próg p95 (36 ms, daleko od okresu) bez tolerancji.
+    d2 = make_run(tmp_path / "b", steady(3000, 33.8), tier="Low", target_fps=30, private_peak=3000.0, vram_peak=1500.0)
+    rep2 = pm.evaluate(pm.load_run(d2), pm.load_budget(BUDGET), "min")
+    assert next(c for c in rep2["checks"] if c["metric"] == "frame_ms.p50")["status"] == "FAIL"
+    assert "max_effective" not in next(c for c in rep2["checks"] if c["metric"] == "frame_ms.p95")
+
+
+def test_cap_tolerance_only_for_frame_time_at_period():
+    disp = {"targetFrameRate": 60}
+    assert pm.effective_limit({"metric": "frame_ms.p50"}, 16.7, disp) == pytest.approx(16.833)
+    assert pm.effective_limit({"metric": "frame_ms.p95"}, 18.5, disp) == 18.5
+    assert pm.effective_limit({"metric": "draw_calls.p95"}, 16.7, disp) == 16.7
+    assert pm.effective_limit({"metric": "frame_ms.p50"}, 16.7, {"targetFrameRate": -1}) == 16.7
+    assert pm.effective_limit({"metric": "frame_ms.p50"}, 16.7, {"targetFrameRate": 1000}) == 16.7
+    assert pm.effective_limit({"metric": "frame_ms.p50"}, 16.7, None) == 16.7
+
+
 def test_warmup_frames_excluded(tmp_path):
     # 5 s rozgrzewki po 100 ms (50 klatek), potem 15 ms — nie mogą wpłynąć na p99 ani na liczbę > 100 ms.
     frames = steady(50, 100.5) + steady(6000, 15.0)
