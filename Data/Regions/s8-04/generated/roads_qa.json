@@ -1,7 +1,7 @@
 {
  "chains": [
   {
-   "axis_smoothing_dev_max_m": 0.03,
+   "axis_smoothing_dev_max_m": 0.04,
    "bridge_m": 0.0,
    "grade_limit": 0.06,
    "highway": [
@@ -12,17 +12,21 @@
     2,
     3
    ],
-   "length_m": 2132.5,
-   "max_grade": 0.0337,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.017,
+   "length_m": 2133.0,
+   "max_grade": 0.0354,
+   "overrides": [
+    "s8-xsec-w100133887",
+    "s8-xsec-w536205568"
+   ],
+   "profile_rms_vs_nmt_m": 0.043,
    "sidewalk_frac": 0.0,
    "width_m": [
-    9.5,
-    12.0
+    9.95,
+    13.45
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:s8-xsec-w100133887 (lane_edges, orthophoto)",
+    "authored_override:s8-xsec-w536205568 (lane_edges, orthophoto)"
    ]
   },
   {
@@ -314,16 +318,18 @@
    "lanes": [
     2
    ],
-   "length_m": 2132.3,
-   "max_grade": 0.0306,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.01,
+   "length_m": 2132.0,
+   "max_grade": 0.0308,
+   "overrides": [
+    "s8-xsec-w251431118"
+   ],
+   "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
-    8.5
+    9.95
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:s8-xsec-w251431118 (lane_edges, orthophoto)"
    ]
   },
   {
@@ -784,7 +790,7 @@
    "patches": 114
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 160288,
+  "footprint_nodes": 161961,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -829,7 +835,26 @@
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 649,
-  "overrides_applied": [],
+  "overrides_applied": [
+   {
+    "id": "s8-xsec-w100133887",
+    "targets": [
+     "w100133887:5194994824-2104266222"
+    ]
+   },
+   {
+    "id": "s8-xsec-w251431118",
+    "targets": [
+     "w251431118:4165907524-7658870561"
+    ]
+   },
+   {
+    "id": "s8-xsec-w536205568",
+    "targets": [
+     "w536205568:1937542657-5194994824"
+    ]
+   }
+  ],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -843,8 +868,8 @@
   "seam_tapers": [],
   "sides_on_carriageway_culled": {
    "kerb_tris": 0,
-   "parts": 4,
-   "side_tris": 44
+   "parts": 0,
+   "side_tris": 0
   },
   "signalised_junctions": 0,
   "through_lines": {
@@ -858,7 +883,7 @@
   },
   "verge_strips": {
    "chunks": 34,
-   "tris": 9360
+   "tris": 9224
   },
   "walled_ramps": [
    {

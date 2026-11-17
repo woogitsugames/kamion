@@ -302,7 +302,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.09,
+   "axis_smoothing_dev_max_m": 0.1,
    "bridge_m": 21.5,
    "grade_limit": 0.06,
    "highway": [
@@ -313,17 +313,27 @@
     2,
     3
    ],
-   "length_m": 2083.6,
-   "max_grade": 0.0259,
-   "overrides": [],
+   "length_m": 2083.4,
+   "max_grade": 0.0257,
+   "overrides": [
+    "s8-xsec-w183625709",
+    "s8-xsec-w183625710",
+    "s8-xsec-w279914645",
+    "s8-xsec-w536222216",
+    "s8-xsec-w536222217"
+   ],
    "profile_rms_vs_nmt_m": 0.23,
    "sidewalk_frac": 0.0,
    "width_m": [
-    9.5,
-    12.0
+    9.95,
+    13.45
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:s8-xsec-w183625709 (lane_edges, orthophoto)",
+    "authored_override:s8-xsec-w183625710 (lane_edges, orthophoto)",
+    "authored_override:s8-xsec-w279914645 (lane_edges, orthophoto)",
+    "authored_override:s8-xsec-w536222216 (lane_edges, orthophoto)",
+    "authored_override:s8-xsec-w536222217 (lane_edges, orthophoto)"
    ]
   },
   {
@@ -406,16 +416,24 @@
    "lanes": [
     2
    ],
-   "length_m": 2084.0,
-   "max_grade": 0.023,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.206,
+   "length_m": 2084.3,
+   "max_grade": 0.0338,
+   "overrides": [
+    "s8-xsec-w183639790",
+    "s8-xsec-w305447698",
+    "s8-xsec-w536222218",
+    "s8-xsec-w98599908"
+   ],
+   "profile_rms_vs_nmt_m": 0.193,
    "sidewalk_frac": 0.0,
    "width_m": [
-    9.5
+    9.95
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:s8-xsec-w183639790 (lane_edges, orthophoto)",
+    "authored_override:s8-xsec-w305447698 (lane_edges, orthophoto)",
+    "authored_override:s8-xsec-w536222218 (lane_edges, orthophoto)",
+    "authored_override:s8-xsec-w98599908 (lane_edges, orthophoto)"
    ]
   },
   {
@@ -2002,7 +2020,7 @@
    "patches": 188
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 252465,
+  "footprint_nodes": 254538,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -2134,50 +2152,12 @@
    }
   ],
   "gores": {
-   "gores": [
-    {
-     "area_m2": 39.4,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "sliver",
-     "xy": [
-      1012.1,
-      -424.0
-     ]
-    }
-   ],
+   "gores": [],
    "islands": [],
-   "kerb_dropped_m": 45.5,
+   "kerb_dropped_m": 0.0,
    "kerb_tris_in_fill": 0,
-   "paved": {
-    "sliver": {
-     "area_m2": 39.4,
-     "count": 1
-    }
-   },
-   "rejected": [
-    {
-     "area_m2": 91.5,
-     "reason": "carriageways at different heights",
-     "step_m": 0.24,
-     "why": "sliver",
-     "xy": [
-      44.7,
-      -360.2
-     ]
-    },
-    {
-     "area_m2": 56.7,
-     "reason": "carriageways at different heights",
-     "step_m": 0.26,
-     "why": "sliver",
-     "xy": [
-      962.5,
-      -414.6
-     ]
-    }
-   ],
+   "paved": {},
+   "rejected": [],
    "rule": {
     "max_slope": 0.1,
     "min_island_m2": 5.0,
@@ -2215,7 +2195,62 @@
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 56,
-  "overrides_applied": [],
+  "overrides_applied": [
+   {
+    "id": "s8-xsec-w98599908",
+    "targets": [
+     "w98599908:1140726362-1140726363"
+    ]
+   },
+   {
+    "id": "s8-xsec-w183625709",
+    "targets": [
+     "w183625709:1937542642-1937517305"
+    ]
+   },
+   {
+    "id": "s8-xsec-w183625710",
+    "targets": [
+     "w183625710:1940314099-5195111965"
+    ]
+   },
+   {
+    "id": "s8-xsec-w183639790",
+    "targets": [
+     "w183639790:5195111694-5195111966"
+    ]
+   },
+   {
+    "id": "s8-xsec-w279914645",
+    "targets": [
+     "w279914645:2009183258-1940503816"
+    ]
+   },
+   {
+    "id": "s8-xsec-w305447698",
+    "targets": [
+     "w305447698:5195111966-1781321884"
+    ]
+   },
+   {
+    "id": "s8-xsec-w536222216",
+    "targets": [
+     "w536222216:5195111965-2009183258"
+    ]
+   },
+   {
+    "id": "s8-xsec-w536222217",
+    "targets": [
+     "w536222217:1937517305-1940314099"
+    ]
+   },
+   {
+    "id": "s8-xsec-w536222218",
+    "targets": [
+     "w536222218:1781321884-1140726362"
+    ]
+   }
+  ],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -2228,9 +2263,9 @@
   },
   "seam_tapers": [],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 170,
-   "parts": 47,
-   "side_tris": 446
+   "kerb_tris": 2,
+   "parts": 7,
+   "side_tris": 10
   },
   "signalised_junctions": 0,
   "through_lines": {
@@ -2244,7 +2279,7 @@
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 18925
+   "tris": 17986
   },
   "walled_ramps": []
  }

@@ -217,13 +217,18 @@
  },
  "region": "s8-02",
  "route_band_m": 30.0,
- "route_segments_s_m": null,
+ "route_segments_s_m": [
+  [
+   0.0,
+   2084.0
+  ]
+ ],
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 117,
-  "kerb_tris": 32950,
+  "kerb_tris": 30898,
   "lane_samples": 49029,
-  "marking_tris": 10630,
+  "marking_tris": 10628,
   "props_checked": 496
  }
 }
