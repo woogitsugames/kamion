@@ -234,6 +234,9 @@ def drainage(buf, net, assets, report):
                 sec = c.section(s, net.sec_list)
                 if sec.surface_mat not in ("road_asphalt", "road_asphalt_new", "road_concrete"):
                     continue
+                if not XS.manholes_class_allowed(sec):          # ADR 0288: none in a motorway / expressway lane
+                    count["manholes_skipped_class"] = count.get("manholes_skipped_class", 0) + 1
+                    continue
                 # ADR 0272: a cover in the carriageway belongs to a sewer; a road with ground shoulders on both
                 # edges drains to the verge / ditch and has none (roads/xsec_rules.yaml `drainage`)
                 if not XS.manholes_allowed([side_shoulder(c, sd, s) for sd in ("L", "R")]):
