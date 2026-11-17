@@ -1030,7 +1030,16 @@ def despike_arcs(zb, tags, pts=None, tol=ARC_SPIKE_M, half=ARC_SPIKE_HALF):
     k = np.arange(-half, half + 1)
     med = np.median(zb[(np.arange(n)[:, None] + k[None, :]) % n], axis=1)
     arc = np.array([t[0] == "arc" for t in tags])
-    zb = np.where(arc & (np.abs(zb - med) > tol), med, zb)
+    bad = arc & (np.abs(zb - med) > tol)
+    if bad.any() and not bad.all():
+        # flagged points: linear between the nearest good points on both sides (the median itself is one rank off on a
+        # sloping corner)
+        zb = zb.copy()
+        good = np.nonzero(~bad)[0]
+        for i in np.nonzero(bad)[0]:
+            lo = good[good < i][-1] if (good < i).any() else good[-1] - n
+            hi = good[good > i][0] if (good > i).any() else good[0] + n
+            zb[i] = zb[lo % n] + (zb[hi % n] - zb[lo % n]) * (i - lo) / (hi - lo)
     if pts is None:
         return zb
     # a step left between two arc points (two surfaces of the blend meeting: 0.16 m in 0.54 m on the DK65 south-west
