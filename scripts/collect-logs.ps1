@@ -9,6 +9,8 @@
     %USERPROFILE%\AppData\LocalLow\<Company>\<Product>\Player.log, Player-prev.log, diag\ (summary.json, frametimes.csv)
       (Unity manual 6000.3 "Log files reference": Windows player log location)
     %TMP%\<Company>\<Product>\Crashes\  (newest -MaxCrashes folders; Unity 6000.3 CrashReporting.crashReportFolder)
+    %LOCALAPPDATA%\CrashDumps\Kamion*.dmp (newest -MaxDumps files up to -MaxDumpMB each; Windows Error Reporting
+      LocalDumps, off by default; larger / older ones are only listed in system.txt)
     system.txt: Windows version, CPU, RAM, GPU name/driver/VRAM, displays, free disk space, game folder + exe SHA256
     dxdiag.txt only with -DxDiag (slow, ~30 s; contains more hardware detail)
   Privacy: the Windows user name and the computer name are replaced by <user> / <pc> in every text file;
@@ -26,6 +28,9 @@ param(
     [string]$Product = 'Kamion',          # ProjectSettings.asset productName
     [string]$OutDir = '',                 # default: Desktop
     [int]$MaxCrashes = 5,
+    [string]$DumpDir = '',                # default: %LOCALAPPDATA%\CrashDumps (Windows Error Reporting LocalDumps)
+    [int]$MaxDumps = 2,
+    [int]$MaxDumpMB = 1024,               # larger dumps (full dumps) are listed in system.txt, not copied
     [switch]$NoCrashes,                   # review #134 P2-2: crash dumps are not anonymized
     [switch]$DxDiag,
     [switch]$NoAnonymize
@@ -67,6 +72,27 @@ elseif (Test-Path -LiteralPath $crashDir) {
     Get-ChildItem -LiteralPath $crashDir -Directory | Sort-Object LastWriteTime -Descending | Select-Object -First $MaxCrashes |
         ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $crashOut $_.Name) -Recurse -Force; $notes.Add("crash   $($_.Name)") }
 } else { $notes.Add("missing $crashDir (no crash so far)") }
+
+# ---------------------------------------------------------------- Windows crash dumps (WER LocalDumps, newest first)
+# JAK-GRAC-PC: the D3D12 crash of 16.11 left only %LOCALAPPDATA%\CrashDumps\Kamion.exe.<pid>.dmp. WER writes there only
+# when LocalDumps is enabled (Microsoft: off by default). Same privacy rule as above: binary, not anonymized.
+if (-not $DumpDir) { $DumpDir = Join-Path $env:LOCALAPPDATA 'CrashDumps' }
+if ($NoCrashes) { $notes.Add("skipped $DumpDir (-NoCrashes)") }
+elseif (Test-Path -LiteralPath $DumpDir) {
+    $dumps = @(Get-ChildItem -LiteralPath $DumpDir -File -Filter 'Kamion*.dmp' | Sort-Object LastWriteTime -Descending)
+    if ($dumps.Count -eq 0) { $notes.Add("none    $DumpDir\Kamion*.dmp") }
+    $dumpOut = Join-Path $stage 'crashdumps'
+    $taken = 0
+    foreach ($d in $dumps) {
+        $mb = [math]::Round($d.Length / 1MB, 1)
+        if ($taken -ge $MaxDumps) { $notes.Add("dump    $($d.Name) $mb MB $($d.LastWriteTime.ToString('s')) not copied (-MaxDumps $MaxDumps)"); continue }
+        if ($d.Length -gt ($MaxDumpMB * 1MB)) { $notes.Add("dump    $($d.Name) $mb MB not copied (> -MaxDumpMB $MaxDumpMB; send it separately)"); continue }
+        if (-not (Test-Path -LiteralPath $dumpOut)) { New-Item -ItemType Directory -Force $dumpOut | Out-Null }
+        Copy-Item -LiteralPath $d.FullName -Destination (Join-Path $dumpOut $d.Name) -Force
+        $notes.Add("dump    $($d.Name) $mb MB $($d.LastWriteTime.ToString('s'))")
+        $taken++
+    }
+} else { $notes.Add("missing $DumpDir (Windows crash dumps off or none so far)") }
 
 # ---------------------------------------------------------------- system info
 $sys = New-Object System.Collections.Generic.List[string]
