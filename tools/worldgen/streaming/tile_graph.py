@@ -226,6 +226,11 @@ def build(regions_dir: Path = REGIONS) -> dict:
             a = by_id[n["id"]]
             if a["routeExit"] is not None or len(n["side"]) != 1:
                 continue
+            # C has two such neighbours since D81 (maczka W-bound, wygoda E-bound on Andersa): a portal chain has one
+            # exit per tile, so the first implicit portal (tile order) wins; the D81 branch C -> wygoda is joined by
+            # the route link c-andersa-to-wygoda (route_links.json, ADR 0285), not by this chain.
+            if any(p["from"] == a["id"] for p in portals):
+                continue
             if on_seam(b["routeEntry"], b, n["side"]):
                 opposite = {"N": "S", "S": "N", "E": "W", "W": "E"}[n["side"]]
                 portals.append({"from": a["id"], "to": b["id"], "side": opposite,

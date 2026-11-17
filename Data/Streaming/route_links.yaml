@@ -52,6 +52,15 @@ links:
     end_epsg2180: [779019.0, 595242.45]   # Andersa southbound boundary node on the C | wygoda seam (wygoda route entry)
     tail_to: route:bialystok-wygoda
     note: "C route start -> rondo Pamieci Biezenstwa 1915 -> Andersa (DK19/DK65) south-east to the seam with bialystok-wygoda"
+  # The 91 m wygoda route ends 2.72 m off the bojary route entry (lane centre of the 2-lane Andersa end vs the first lane
+  # of Sosabowskiego in bojary): the link shifts its last BLEND_M m onto the bojary entry instead of a sideways step.
+  - id: wygoda-andersa-to-bojary
+    tile: bialystok-wygoda
+    destination: dojlidy
+    replaces_route: bialystok-wygoda
+    end_epsg2180: [779098.27, 595199.0]   # graph boundary node on the wygoda | bojary seam (bojary route entry)
+    tail_to: route:bialystok-bojary
+    note: "Andersa / Sosabowskiego across the south-west corner of wygoda to the seam with bialystok-bojary"
 # Driving corridors as ordered tile lists (Bialystok -> Knyszyn -> Tykocin, owner request s23). The generator keeps the
 # prefix of tiles present in Data/Regions (main: up to dw671-tykocin-01; the ring branch world2-s23 adds
 # dw671-tykocin-02..09 and tykocin) and checks every consecutive pair: edge neighbours (N/E/S/W) and a route join

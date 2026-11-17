@@ -5,6 +5,36 @@
  "memoryNote": "worldMemoryMB / worldMemoryHighMB = WORLD_MEMORY Low / High of the region import as quoted in ADR 0229 / ADR 0234 §7; ESTIMATED",
  "tiles": [
   {
+   "id": "bialystok-bojary",
+   "xmin": 779019.0,
+   "ymin": 593151.0,
+   "xmax": 781067.0,
+   "ymax": 595199.0,
+   "anchorX": 780043.0,
+   "anchorY": 594175.0,
+   "anchorZ": 145.21,
+   "worldMemoryMB": 160.0,
+   "worldMemoryHighMB": 420.4,
+   "memorySource": "UNKNOWN: conservative default",
+   "neighbors": [
+    {
+     "id": "bialystok-wygoda",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-mickiewicza",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-industrial-c",
+     "side": "NW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
    "id": "bialystok-dojlidy",
    "xmin": 779019.0,
    "ymin": 589055.0,
@@ -16,7 +46,13 @@
    "worldMemoryMB": 99.6,
    "worldMemoryHighMB": 214.9,
    "memorySource": "ADR 0188 via ADR 0229",
-   "neighbors": []
+   "neighbors": [
+    {
+     "id": "bialystok-mickiewicza",
+     "side": "N",
+     "seamM": 2048.0
+    }
+   ]
   },
   {
    "id": "bialystok-industrial-c",
@@ -32,9 +68,19 @@
    "memorySource": "ADR 0188 via ADR 0229",
    "neighbors": [
     {
+     "id": "bialystok-wygoda",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
      "id": "bialystok-maczka",
      "side": "W",
      "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-bojary",
+     "side": "SE",
+     "seamM": 0.0
     }
    ]
   },
@@ -113,6 +159,56 @@
     },
     {
      "id": "bialystok-kleeberga",
+     "side": "W",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "bialystok-mickiewicza",
+   "xmin": 779019.0,
+   "ymin": 591103.0,
+   "xmax": 781067.0,
+   "ymax": 593151.0,
+   "anchorX": 780043.0,
+   "anchorY": 592127.0,
+   "anchorZ": 131.26,
+   "worldMemoryMB": 160.0,
+   "worldMemoryHighMB": 420.4,
+   "memorySource": "UNKNOWN: conservative default",
+   "neighbors": [
+    {
+     "id": "bialystok-bojary",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-dojlidy",
+     "side": "S",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "bialystok-wygoda",
+   "xmin": 779019.0,
+   "ymin": 595199.0,
+   "xmax": 781067.0,
+   "ymax": 597247.0,
+   "anchorX": 780043.0,
+   "anchorY": 596223.0,
+   "anchorZ": 153.05,
+   "worldMemoryMB": 160.0,
+   "worldMemoryHighMB": 420.4,
+   "memorySource": "UNKNOWN: conservative default",
+   "neighbors": [
+    {
+     "id": "bialystok-bojary",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-industrial-c",
      "side": "W",
      "seamM": 2048.0
     }
@@ -1271,6 +1367,14 @@
  ],
  "portals": [
   {
+   "from": "bialystok-bojary",
+   "to": "bialystok-mickiewicza",
+   "side": "S",
+   "x": 780205.63,
+   "y": 593151.0,
+   "gapM": 0.0
+  },
+  {
    "from": "bialystok-kleeberga",
    "to": "bialystok-knyszynska",
    "side": "W",
@@ -1292,6 +1396,14 @@
    "side": "W",
    "x": 774923.0,
    "y": 596185.7,
+   "gapM": 0.0
+  },
+  {
+   "from": "bialystok-wygoda",
+   "to": "bialystok-bojary",
+   "side": "S",
+   "x": 779098.27,
+   "y": 595199.0,
    "gapM": 0.0
   },
   {
@@ -1564,6 +1676,14 @@
     "dk65-11",
     "knyszyn-s",
     "knyszyn"
+   ]
+  },
+  {
+   "id": "bialystok-wygoda..bialystok-mickiewicza",
+   "tiles": [
+    "bialystok-wygoda",
+    "bialystok-bojary",
+    "bialystok-mickiewicza"
    ]
   },
   {
