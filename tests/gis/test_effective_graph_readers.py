@@ -226,6 +226,9 @@ EFFECTIVE = {   # walk graph geometry / topology next to the generated network -
     "tools/worldgen/roads/pipeline.py", "tools/worldgen/streetscape/water_banks.py", "tools/worldgen/validate/common.py",
 }
 RAW_OK = {      # ingested graph on purpose (reason in ADR 0274 "Czytniki grafu")
+    "tools/worldgen/roads/seam_taper.py": "neighbour ends at the shared tile edge (ADR 0275): a split never sits on a seam",
+    "tools/worldgen/qa/seams.py": "seam QA of neighbour tiles: boundary ends, ids unchanged",
+    "tools/worldgen/qa/ring_0231_plan.py": "plan of the ring tiles: boundary nodes of built neighbours (ADR 0231)",
     "tools/worldgen/streaming/link_seams.py": "boundary nodes / end edges at tile seams: ids and seam ends unchanged",
     "tools/worldgen/roads/build_world.py": "graph_name (names by edge id) and tunnels (edge ids): ids unchanged",
     "tools/worldgen/streetscape/stage.py": "edge attrs by id + sign_gantry before_node (authored ingested node ids)",
