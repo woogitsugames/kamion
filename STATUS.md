@@ -1,8 +1,10 @@
 # STATUS cabin-polish-s23 (D84: wnętrze kabiny PC — polish po recenzji REVIEW-2026-11-17-s23-cabin-pc)
 - Worktree z origin/main 14925a7cc. Skrypty odłączone: `artifacts/cabin-polish-s23/{run,chain,assets-win64,bl,a6}.ps1` (status `*.status`, `exit=`).
-- Baseline we własnym worktree (Win64 High -Pc): `artifacts/cabin-polish-s23/base-{clear,dusk}` (8 kamer), pomniejszone w `view/`.
-- Krok 1 plastik (P1-2): `plastic_grain.py` + `cab_material_scans.json` — ziarno 1,2–3 mm + plamy połysku; normalne mediana 8,9°, p95 18,2°.
-- Krok 2 zmierzch (P1-3): `CabInteriorLighting` — `nightViewEv` 0,25 (wygaszanie podbicia +3°…−5°), `panelGlow` 0,035 ciepły. ADR: `docs/adr/DRAFT-d84-kabina-polish-zmierzch-i-ziarno.md`.
-- Krok 3 geometria (`build_interior.py`): uszczelki + zaślepki słupka A, żebra tacek deski, daszek zegarów (fade 50 mm), roleta kierowcy 0,30 m, przeszycie ×3,2, wytarcie wieńca niesymetryczne. LOD0-only przez `LOD1_DROP` (pierwszy eksport: LOD1 45 625 / LOD2 22 304 ponad limit).
-- Surowe skany skóry (CC0, md5 zgodne z configiem) skopiowane lokalnie z `artifacts/cab-r1/cc0-prep` do `art-source/truck/interior/cc0/_raw/brown_leather` (gitignore).
-- NASTĘPNY KROK: po `a6.status exit=0`: `blender -b --factory-startup --python-exit-code 1 --python tools/blender/truck/interior/check_export.py`; potem `pwsh artifacts/cabin-polish-s23/chain.ps1 -Tag r1 -Assets -Tests`; obejrzeć `r1-{clear,dusk}`.
+- Plastik (P1-2): `plastic_grain.py` + `cab_material_scans.json` — ziarno 2–5 mm (waga 0,7) + plamy połysku 2,5–10 cm; normalne mediana 10,3°, p95 20,7° (było 6,9°/14,1°). Z fotela 1 px ≈ 0,9 mm (wyliczone).
+- Zmierzch (P1-3): `CabInteriorLighting` `nightViewEv` 0,45, `panelGlow` 0,07, wygaszanie +3°…−5°. Pomiar sRGB cab-dash dusk: piasta 20,21,28 → 12,12,13; droga 10,12,20; niebo 41,59,94.
+- Geometria (`build_interior.py`, eksport a6): uszczelki + zaślepki słupka A, żebra tacek 22 mm, daszek zegarów fade 50 mm, roleta kierowcy 0,20 m, przeszycie ×3,2, wytarcie wieńca niesymetryczne. LOD0 105 121 / LOD1 43 984 / LOD2 21 551 tris; `check_export.py` PASS.
+- Unity Win64: BuildBatch + InstallBatch `TRUCK_RESULT: OK`; EditMode 1247/22/37 — porażki = 20× `StartClearanceTests.ImportedScene_*` + 2× `CarPaintMaterialTests.DepositionChannel` (te same klasy co na main).
+- Rendery High -Pc 1920×1080 DrivingLab: `artifacts/cabin-polish-s23/{base,r3}-{clear,dusk}`; zestawienia przed/po `view/ab-*.jpg` (skopiowane do main `artifacts/cabin-polish-s23/`).
+- ADR: `docs/adr/DRAFT-d84-kabina-polish-zmierzch-i-ziarno.md`.
+- Otwarte: kamery QA `cab-apillar`/`cab-driver-ab10` są w prefabie, ale nie w scenie DrivingLab (wymaga `pwsh scripts/build-lab.ps1 -SkipAudio`); brak legalnych zdjęć referencyjnych kabiny (docs/06 §5 pkt 3); roleta przy 0,20 m ledwo wchodzi w kadr; pojedyncze jaśniejsze odcinki na żebrach tacek (szew atlasu AO).
+- NASTĘPNY KROK (lider): visual-critic na `view/ab-*.jpg` i `r3-*`; po scaleniu w main: `-executeMethod Game.Editor.Setup.TruckAssetBuilder.BuildBatch` + `Game.World.Import.WorldTruckInstaller.InstallBatch`.
