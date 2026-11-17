@@ -4,6 +4,26 @@
  },
  "cases": [
   {
+   "chain": "c:w145989268:5343377418-5343377411",
+   "dist_from_stop_m": 22.3,
+   "e": -973.5,
+   "junction": "j:n5343377418",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.2877433,
+   "lon": 22.8810462,
+   "n": 1022.87,
+   "on_route": true,
+   "osm_ways": [
+    145989268
+   ],
+   "to_chain": "c:w145989268:839431484-5343377418",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
    "chain": "c:w176912717:12337637781-12337637782",
    "dist_from_stop_m": 17.0,
    "e": -1022.97,
@@ -20,26 +40,6 @@
     176912717
    ],
    "to_chain": "c:w176912717:12337637782-11261246586",
-   "turn_lanes": null,
-   "what": "none"
-  },
-  {
-   "chain": "c:w145989268:5343377418-5343377411",
-   "dist_from_stop_m": 22.3,
-   "e": -973.5,
-   "junction": "j:n5343377418",
-   "kind": "lane_blind_end",
-   "lane": 0,
-   "lanes_in": 1,
-   "lanes_out": 1,
-   "lat": 53.2877433,
-   "lon": 22.8810462,
-   "n": 1022.87,
-   "on_route": false,
-   "osm_ways": [
-    145989268
-   ],
-   "to_chain": "c:w145989268:839431484-5343377418",
    "turn_lanes": null,
    "what": "none"
   },
@@ -89,7 +89,9 @@
  ],
  "count": 4,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
- "on_route": {},
+ "on_route": {
+  "lane_blind_end": 1
+ },
  "params": {
   "dz_m": 0.8,
   "kerb_ring_m": 0.3,
@@ -100,7 +102,12 @@
  },
  "region": "dw671-tykocin-02",
  "route_band_m": 30.0,
- "route_segments_s_m": null,
+ "route_segments_s_m": [
+  [
+   0.0,
+   106.0
+  ]
+ ],
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 83,
