@@ -83,3 +83,43 @@ uv run --project tools/worldgen python tools/worldgen/qa/knyszyn_s_kerb_step.py
 uv run --project tools/worldgen python tools/worldgen/qa/seam_marking_strip.py knyszyn knyszyn-w 760587.0 611964.502 -0.7577 -0.6526 30
 uv run --project tools/worldgen python tools/worldgen/streaming/route_links.py --check
 ```
+
+## Recenzja s24 (Codex, `artifacts/codex-review-0289-s24/out2.txt`; poprawki knyszyn-r24, 2026-11-17)
+Każde znalezisko sprawdzone w kodzie przed poprawką.
+
+1. **P1 — link `knyszyn-rynek-to-dk65-w` (Mońki): POTWIERDZONE.** Skręt w prawo Tykocka → DK65 W na rondzie
+   kompaktowym prowadził środkiem prawego pasa przez narożnik R ≈ 7 m; naczepa ścinała narożnik krawężnika między
+   ramionami (opony prawej strony naczepy w (−982…−985, −596…−598) lokalnie). **Poprawka:** nowy klucz linku `swing`
+   w `route_links.yaml` (`route_links._swing`: przesunięcie toru w lewo z wagą podniesionego kosinusa, potem
+   `_resample` do 2 m); dla Mońki 3,0 m w lewo w szczycie ronda, ±30 m. Przeszukane 680–692 m × 1,0–3,0 m × 15–35 m
+   (2,5 m / 35 m zostawia 7 punktów na krawężniku / fartuchu) — WORKING_VALUE. Zmierzone (`qa/link_swept_check.py`,
+   model kinematyczny, 1 punkt / m / oś): punkty opon poza twardą nawierzchnią **15 → 0** (16 po wyłączeniu wyspy
+   `island_sand` z „twardej”), poza jezdnią **77 → 0**; po przebudowie knyszyn bez zmian.
+   **Twardy próg:** `test_links_keep_tyres_on_hard_surface` — każdy link zbudowanego kafla: 0 punktów poza twardą
+   nawierzchnią (8/8 linków: c-dk8-to-maczka, knyszyn ×4, knyszyn-w-dw671, dk65-01-s8-corner, s8-03-to-s8-04), oraz
+   kontrola negatywna `test_swept_gate_catches_the_monki_corner_without_swing` (bez `swing` > 0). Narzędzie: wyspa
+   ronda nie jest twarda, pokład mostu (`bridge`) jest, linki bez ogona trasy liczone od 15,7 m (długość zestawu —
+   wcześniej poza modelem), punkty poza kaflem pomijane (należą do sąsiada), wyszukiwanie trójkątów w komórkach 25 m
+   (`--all` 14 s zamiast > 3 min).
+2. **P2 — `meshing.despike_arcs` interpolacja po indeksach: POTWIERDZONE.** Oflagowane wysokości są teraz
+   interpolowane po odległości wzdłuż zamkniętego obrysu (bez geometrii — po indeksach jak dotąd). Test
+   `test_despike_arcs_interpolates_by_distance_on_uneven_outline` (stary kod FAIL, nowy PASS). Druga część uwagi
+   (okno z `end`/`gutter` pomija rampę) — zamierzone: wyloty ramion zachowują przekrój ramienia; po poprawce
+   interpolacji spadek przy wylocie nie rośnie do 1 m/m.
+3. **P2 — `route_links.py:76` start `after_route` tylko przy krawędzi powrotnej: POTWIERDZONE** i dotyczyło realnego
+   linku: `c-dk8-to-maczka` (DK8 dwujezdniowa = dojazd jednokierunkowy) nie miał zaokrąglonego startu („bajt w bajt”
+   z ADR wyżej wynikało z tego błędu). Nowa funkcja `arrival_edge` zwraca krawędź przyjazdu niezależnie od krawędzi
+   powrotnej; głowa C → Maczka dociągnięta o 0,31 m (było 0,0). Test `test_after_route_start_rounded_on_one_way_arrival`.
+4. **P2 — `seam_p2a.py:52` P-2a tylko przez jeden szew: POTWIERDZONE** (w danych dziś nieistotne). Krótki łańcuch
+   sąsiada (< 20 m) od szwu do szwu przekazuje dalej resztę, którą sam dostaje (`plan(depth−1)`, `CARRY_DEPTH = 3`).
+   Test 3 kafli `test_p2a_rest_carried_through_two_seams`; mapa dla wszystkich kafli `Data/Regions` bez zmian
+   (tylko knyszyn-w, 8,354 m).
+5. **Przy okazji:** `fidelity/gen.py` padał (`strip_cross(..., kind="P-12")` z main, atrapa bez `kind`) — atrapa
+   przyjmuje `kind`, P-12 liczona jako linia zatrzymania w `overlays.STOP_KINDS` / `run.py`.
+
+### Deski `wood_siding` (render `look_dom_klattow`, High clear, edytor Win64)
+Ocena z wysokości oczu (18 m): ściana szczytowa Domu Klattów czytała się jako **podłoga / ściana z palet** — wąskie
+(0,093 m) krótkie deski 0,3–1,2 m ze stykami na przemian, ciasny wzór jak cegła; w słońcu jak jasna cegła.
+Poprawka: `set_tile_m [6,0, 2,6]` dla `wood_planks*` (wzdłuż ściany ×3,2 — styki 3,2 × rzadziej, deski ~1–4 m;
+w poprzek ×1,39 — rozstaw 0,129 m). WORKING_VALUE: w repo brak zmierzonej szerokości desek domów knyszyńskich i
+zdjęcia właściciela Domu Klattów. Test `test_wood_planks_long_boards_not_floor`.
