@@ -22,3 +22,20 @@ overrides:
     verify: orthophoto cross-section per way (tools/worldgen/qa/ortho_xsec.py) / owner drive
     set: {lane_edges: [0.2, 3.7, 7.2, 10.7], width: 13.45, center_offset: -2.775, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
   # ---- END generated: tools/worldgen/qa/s8_xsec_overrides.py ----
+  # ---------------------------------------------------------------- S8 over the local road (underpass), ADR 0206 rule
+  # OSM way 222577653 (unclassified, tunnel=yes, layer=-1) passes under both S8 carriageways at local E 447-465,
+  # N -299...-278; the generator does not model tunnels and left a ~12 m hole in each carriageway
+  # (road_consistency_qa: obstacle_in_lane "none" 85, on the control route s 1548-1560 m). Like the DK8 ring in
+  # bialystok-kleeberga the upper road is carried as a deck over the road below.
+  - id: s8-deck-over-underpass-w100133887
+    target: {osm_way: 100133887}
+    reason: "S8 westbound over the underpass of way 222577653 (OSM tunnel=yes layer=-1): deck instead of a hole in the carriageway."
+    confidence: "medium (OSM topology; deck length and clearance from the generator rule)"
+    verify: road_consistency_qa obstacle_in_lane = 0 after the rebuild; render route-s1493 / owner drive
+    set: {bridge: true}
+  - id: s8-deck-over-underpass-w251431118
+    target: {osm_way: 251431118}
+    reason: "S8 eastbound over the underpass of way 222577653 (OSM tunnel=yes layer=-1): deck instead of a hole in the carriageway."
+    confidence: "medium (OSM topology; deck length and clearance from the generator rule)"
+    verify: road_consistency_qa obstacle_in_lane = 0 after the rebuild
+    set: {bridge: true}

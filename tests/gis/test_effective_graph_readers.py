@@ -240,6 +240,7 @@ RAW_OK = {      # ingested graph on purpose (reason in ADR 0274 "Czytniki grafu"
     "tools/worldgen/qa_report.py": "source data QA against orthophoto / BDOT10k",
     "tools/worldgen/qa/roundabout_ortho.py": "orthophoto probe on the OSM axes (the evidence for the override)",
     "tools/worldgen/qa/ortho_xsec.py": "orthophoto cross-sections of the OSM axes",
+    "tools/worldgen/qa/s8_xsec_overrides.py": "lists the S8 ways (OSM id, lanes) to write their overrides, ADR 0288 (no geometry)",
     "tools/worldgen/qa/seam_section.py": "route edges at region seams: far ends, ids unchanged",
     "tools/worldgen/qa/map_plan_0278.py": "plan of new tiles: boundary nodes of built neighbours (ADR 0278), ids unchanged",
     "tools/worldgen/qa/knyszyn_s_kerb_step.py": "split node id of the authored override + its OSM way end: GLB probe only",

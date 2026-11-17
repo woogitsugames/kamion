@@ -144,8 +144,3 @@ def manholes_allowed(shoulders) -> bool:
     if cfg["manholes_beside_ground_shoulder"]:
         return True
     return not all(s is not None and s[0] <= float(cfg["ground_max_paved_m"]) for s in shoulders)
-
-
-def manholes_class_allowed(sec) -> bool:
-    """ADR 0288: False for the classes of `drainage.no_manhole_classes` (motorway / expressway carriageways)."""
-    return getattr(sec, "cls", None) not in (rules()["drainage"].get("no_manhole_classes") or [])

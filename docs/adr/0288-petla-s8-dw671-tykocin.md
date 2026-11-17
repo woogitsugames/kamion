@@ -25,7 +25,7 @@ research `research/mistral-s8-loop-s23/` + kontrola `docs/reports/QA-2026-11-16-
    Oś dwóch pasów głównych 0,25 m w lewo od way OSM; trzeci pas (włączania / wyłączania) dochodzi z zewnątrz.
    Pas dzielący: trawa + żwirowa opaska, bez krawężnika; bariera stalowa jak dotąd z reguły generatora.
 4. **Brak włazów kanalizacyjnych w jezdni klas A/S**: `roads/xsec_rules.yaml` → `drainage.no_manhole_classes: [A, S]`
-   (`xsec.manholes_class_allowed`, `streetscape/fab_details.py`). To jedyna zmiana kodu generatora; dotyczy też
+   (czytane w `streetscape/fab_details.py`; moduły `roads/*.py` bez zmian, więc raporty fidelity innych kafli nie tracą ważności). To jedyna zmiana kodu generatora; dotyczy też
    innych kafli z `highway=motorway` przy ich następnej przebudowie.
 5. **Streaming:** `tile_graph.py` — korytarz `s8-01..s8-05` (4 portale, przerwa 0,0 m), pamięć z importu Win64
    17.11; `Data/Streaming/route_links.yaml` — link `dk65-01-s8-corner` (S8 przez narożnik `dk65-01`, 578 m),
