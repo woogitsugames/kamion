@@ -1,0 +1,37 @@
+{
+  "status": "procedural; not a scan",
+  "profile": "plastic",
+  "mode": "procedural_stipple",
+  "seed": 20261116,
+  "tile_metres": 0.1,
+  "stipple_feature_mm": [
+    0.25,
+    0.6
+  ],
+  "working_values": {
+    "variation_gain": 0.1,
+    "roughness_gain": 0.12,
+    "ao_gain": 0.2,
+    "normal_strength": 0.35,
+    "mottle_gain": 0.03
+  },
+  "normal_slope_deg": {
+    "median": 6.869966819627788,
+    "p95": 14.070927926999815
+  },
+  "perforation_alpha_pixels_sha256": "f5fb04aa5b882706b9309e885f19477261336ef76a150c3b4d3489dfac3953ec",
+  "outputs": [
+    {
+      "tier": "High",
+      "pixels": 1024
+    },
+    {
+      "tier": "Medium",
+      "pixels": 512
+    },
+    {
+      "tier": "Low",
+      "pixels": 256
+    }
+  ]
+}

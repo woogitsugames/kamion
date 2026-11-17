@@ -64,7 +64,10 @@ namespace Game.UI.CabDisplays
             d.Begin();
             if (m_Map == null || !s.HasPosition)
             {
-                d.Text(T.NoMap, Width * 0.5f, MapH * 0.5f, 32f, pal.BarSub, DisplayCanvas.Align.Center);
+                // D84: no map (DrivingLab) = the dark screen with a legible message, day or night; the day map
+                // background alone read as a blank light-grey slab in the cab on PC.
+                pal = P.NavNight;
+                d.Text(T.NoMap, Width * 0.5f, MapH * 0.5f, 44f, pal.BarText, DisplayCanvas.Align.Center);
                 Bar(d, s, pal, float.NaN, -1);
                 d.End(pal.Bg);
                 return;

@@ -33,6 +33,7 @@ namespace Game.World.Import
         public static void Build(RegionImporter.Result r, string tier)
         {
             string scenePath = r.ScenePath(tier);
+            DrivingVehiclePrefabs.EnsureBuilt();   // D84: before the scene exists (the asset builders import and refresh)
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             // ---------------- lighting ----------------
@@ -108,13 +109,10 @@ namespace Game.World.Import
             route.speedLimitsKmh = r.RouteLimits.Length == pts.Length ? r.RouteLimits : new float[pts.Length];
 
             // ---------------- vehicle, camera, bootstrap ----------------
-            // Track A7: the TRAKT art truck when it has been built (TruckAssetBuilder), else the graybox.
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(TruckAssetBuilder.PrefabPath) ??
-                         AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.PrefabPath);
-            // The art curtainsider when it has been built (TrailerAssetBuilder), else the graybox trailer (same physics root).
-            var trailerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TrailerAssetBuilder.PrefabPath) ??
-                                AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.TrailerPrefabPath);
-            if (prefab == null || trailerPrefab == null) throw new FileNotFoundException("DrivingLab prefabs missing: run Kamion/Setup/Rebuild DrivingLab first");
+            // D84: one installation path for every driving scene - the art TRAKT tractor and curtainsider (built on demand),
+            // the graybox only as an announced emergency fallback (DrivingVehiclePrefabs).
+            var prefab = DrivingVehiclePrefabs.Tractor(out _, buildIfMissing: false);
+            var trailerPrefab = DrivingVehiclePrefabs.Trailer(out _, buildIfMissing: false);
             // ADR 0262: the start of the region catalog (scripts/export-region-catalog.py: 12 m, or behind the region-edge
             // closure when the route starts ON the tile edge - the closure stands up to 60 m inside, ADR 0169), and in
             // any case behind every closure the route enters the tile through (the closures just built above).

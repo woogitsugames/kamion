@@ -66,8 +66,8 @@ namespace Game.World.Import
         {
             LookDevAssets.EnsureAll();
             var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(TruckAssetBuilder.PrefabPath);
-            if (prefab == null) throw new FileNotFoundException("TRAKT prefab missing", TruckAssetBuilder.PrefabPath);
+            var prefab = DrivingVehiclePrefabs.Tractor(out bool graybox);
+            if (graybox) throw new FileNotFoundException("TRAKT prefab missing", TruckAssetBuilder.PrefabPath);
             var old = UnityEngine.Object.FindObjectsByType<VehicleBody>(FindObjectsSortMode.None).FirstOrDefault();
             if (old == null) throw new InvalidOperationException("no tractor in " + scenePath);
             var pos = old.transform.position;
@@ -77,7 +77,8 @@ namespace Game.World.Import
             var boot = UnityEngine.Object.FindAnyObjectByType<DrivingLabBootstrap>();
             if (boot != null) boot.vehicle = truck.GetComponent<VehicleBody>();
             UnityEngine.Object.DestroyImmediate(old.gameObject);
-            var trailerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TrailerAssetBuilder.PrefabPath);
+            var trailerPrefab = DrivingVehiclePrefabs.Trailer(out bool grayboxTrailer);
+            if (grayboxTrailer) trailerPrefab = null;   // keep the scene's trailer rather than swap it for the graybox
             var oldTrailer = UnityEngine.Object.FindObjectsByType<TrailerBody>(FindObjectsSortMode.None).FirstOrDefault();
             if (trailerPrefab != null && oldTrailer != null)
             {
