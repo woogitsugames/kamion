@@ -1,3 +1,7 @@
+# STATUS knyszyn-look-s23b (17.11): dach blaszany 0,105 lin. (właściciel: za jasne), zestaw wood_siding czeka na zgodę
+- Gałąź z origin/main 89c6d9384. Przebudowa `chain.ps1 -Tag s23b-roof` 12:46–13:03 CHAIN DONE; **derived/knyszyn = 1aa44953f**. sRGB dachu w słońcu: tykocka 135→119, rynek-above 152→133. pytest tests/gis -k knyszyn/typology/buildings/materials/roofs/overrides: 396 passed.
+- NASTĘPNY KROK: po zgodzie na pobranie dopisać zasób do SELECTION w art-source/world/materials/_src/cc0_fetch.py, potem --resolve, fetch, --record, zestaw w sets_scan.py, wpis LICENSES, przebudowa knyszyn.
+
 # STATUS cabin-pc-s23 (D84: wnętrze ciężarówki na PC)
 - Krok A (5d03d1b48): `DrivingVehiclePrefabs` = jedna ścieżka (DrivingLab, WorldSceneBuilder, WorldTruckInstaller), graybox tylko z ostrzeżeniem `[VEHICLE] FALLBACK`; DrivingLab.unity z TRAKT + naczepą art + rig nieba (EnvironmentLighting, WorldVolume, QualityProfileApplier); przypięte GUID-y prefabów; test `DrivingScenesFullTruckTests` 5/5.
 - Krok B/C: plastik kabiny = syntezowany stippling (`tools/blender/truck/interior/plastic_grain.py`, nachylenie normalnych mediana 6,9°, p95 14,1°) zamiast embossu ze skanu skóry; ekran nawigacji bez mapy ciemny. ADR: `docs/adr/DRAFT-d84-kabina-pc-jedna-sciezka-instalacji.md`.
