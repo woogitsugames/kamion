@@ -39,3 +39,9 @@ overrides:
     confidence: "medium (OSM topology; deck length and clearance from the generator rule)"
     verify: road_consistency_qa obstacle_in_lane = 0 after the rebuild
     set: {bridge: true}
+  - id: local-road-deck-over-underpass-w623772956
+    target: {osm_way: 623772956}
+    reason: "Tertiary road south of the S8 over the same underpass (way 222577653, tunnel=yes layer=-1): the r5 build left a ~14 m hole in it (obstacle_in_lane none 29 at E 458-473, N -319...-310)."
+    confidence: "medium (OSM topology; deck length and clearance from the generator rule)"
+    verify: road_consistency_qa obstacle_in_lane = 0 after the rebuild
+    set: {bridge: true}

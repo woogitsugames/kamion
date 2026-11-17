@@ -2,7 +2,7 @@
  "chains": [
   {
    "axis_smoothing_dev_max_m": 0.04,
-   "bridge_m": 0.0,
+   "bridge_m": 1866.1,
    "grade_limit": 0.06,
    "highway": [
     "motorway"
@@ -13,13 +13,13 @@
     3
    ],
    "length_m": 2133.0,
-   "max_grade": 0.0354,
+   "max_grade": 0.0229,
    "overrides": [
-    "s8-xsec-w100133887",
+    "s8-deck-over-underpass-w100133887",
     "s8-xsec-w536205568"
    ],
-   "profile_rms_vs_nmt_m": 0.043,
-   "sidewalk_frac": 0.0,
+   "profile_rms_vs_nmt_m": 0.024,
+   "sidewalk_frac": 1.0,
    "width_m": [
     9.95,
     13.45
@@ -202,9 +202,9 @@
     2
    ],
    "length_m": 178.1,
-   "max_grade": 0.0496,
+   "max_grade": 0.0544,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 1.518,
+   "profile_rms_vs_nmt_m": 1.555,
    "sidewalk_frac": 0.0,
    "width_m": [
     6.0
@@ -309,7 +309,7 @@
   },
   {
    "axis_smoothing_dev_max_m": 0.05,
-   "bridge_m": 0.0,
+   "bridge_m": 2132.0,
    "grade_limit": 0.06,
    "highway": [
     "motorway"
@@ -319,12 +319,12 @@
     2
    ],
    "length_m": 2132.0,
-   "max_grade": 0.0308,
+   "max_grade": 0.0531,
    "overrides": [
-    "s8-xsec-w251431118"
+    "s8-deck-over-underpass-w251431118"
    ],
-   "profile_rms_vs_nmt_m": 0.011,
-   "sidewalk_frac": 0.0,
+   "profile_rms_vs_nmt_m": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     9.95
    ],
@@ -759,11 +759,25 @@
   },
   "bridges": [
    {
+    "chain": "c:w100133887:5194994824-2104266222",
+    "confidence": "low",
+    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
+    "piers": 62,
+    "span_m": 1865.8
+   },
+   {
     "chain": "c:w183381862:1937517298-1937517295",
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
     "piers": 2,
     "span_m": 82.9
+   },
+   {
+    "chain": "c:w251431118:4165907524-7658870561",
+    "confidence": "low",
+    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
+    "piers": 71,
+    "span_m": 2132.0
    }
   ],
   "chains": 32,
@@ -787,10 +801,10 @@
   "decals": {
    "gullies": 532,
    "oil": 10,
-   "patches": 114
+   "patches": 95
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 161961,
+  "footprint_nodes": 106309,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -834,7 +848,7 @@
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 649,
+  "nmt_nodes_replaced_under_decks": 30327,
   "overrides_applied": [
    {
     "id": "s8-xsec-w100133887",
@@ -852,6 +866,18 @@
     "id": "s8-xsec-w536205568",
     "targets": [
      "w536205568:1937542657-5194994824"
+    ]
+   },
+   {
+    "id": "s8-deck-over-underpass-w100133887",
+    "targets": [
+     "w100133887:5194994824-2104266222"
+    ]
+   },
+   {
+    "id": "s8-deck-over-underpass-w251431118",
+    "targets": [
+     "w251431118:4165907524-7658870561"
     ]
    }
   ],
@@ -883,14 +909,14 @@
   },
   "verge_strips": {
    "chunks": 34,
-   "tris": 9224
+   "tris": 9216
   },
   "walled_ramps": [
    {
     "chain": "c:w1195261774:2315329419-2315329437",
     "confidence": "medium",
-    "max_wall_h_m": 2.58,
-    "nmt_fill_max_m": -0.07,
+    "max_wall_h_m": 2.87,
+    "nmt_fill_max_m": 0.31,
     "walled_m": 47.9
    }
   ]
