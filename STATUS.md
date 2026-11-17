@@ -6,3 +6,5 @@ Bazowe liczby (c-p1 r7, świat 17.11 06:47): verge_strips 224/17/0,627 (ratchet 
 - NASTĘPNY KROK: po 'CHAIN END' obejrzeć artifacts/c-p2-s23/before-High/*.png; potem poprawki roads/meshing.py + streetscape/furniture.py + testy tests/gis/test_c_p2_s23_wall_ends.py.
 - krok 1 [09:0x]: kod: end_post ekranu (furniture.noise_wall), CF.level_under_walled + build_world.walled_fill_mask (teren w obrysie rampy <= grunt obok), przyciecie profilu wiejskiego na pozyczonej stacji rampy (meshing uclip), stozek skarpy przy koncu muru (meshing.wall_end_cone). pytest tests/gis/test_c_p2_s23_wall_ends.py + test_c_p1_s23_edges.py 14/14.
 - NASTEPNY KROK: po 'CHAIN END' w artifacts/c-p2-s23/before.status obejrzec before-High, potem lancuch r1 (build_world C -> fidelity -> export-route -> catalog -> ratchet -> import -> VQA).
+- [08:5x] before: import Win64 = pelny reimport Library (kopiowana z main), trwa; r1 (artifacts/c-p2-s23/tools/round.ps1 -R r1) odlaczony, czeka na slot heavy (4/4 zajete, kolejka 4). Status: artifacts/c-p2-s23/r1.status.
+- NASTEPNY KROK: czekac na before.status 'CHAIN END' i r1.status; godziny buildow C zapisze r1.status (build_world start/exit).
