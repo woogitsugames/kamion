@@ -1,17 +1,17 @@
 {
  "by_kind": {
   "lane_blind_end": 10,
-  "marking_off_carriageway": 4
+  "marking_off_carriageway": 5
  },
  "cases": [
   {
    "chain": "c:w183625709:1937542642-1937517305",
-   "e": 30.29,
+   "e": 32.07,
    "junction": null,
    "kind": "marking_off_carriageway",
-   "lat": 53.1615881,
-   "lon": 22.9766503,
-   "n": -359.04,
+   "lat": 53.1615838,
+   "lon": 22.9766766,
+   "n": -359.42,
    "on_route": true,
    "osm_ways": [
     183625709,
@@ -25,12 +25,12 @@
   },
   {
    "chain": "c:w183625709:1937542642-1937517305",
-   "e": 34.2,
+   "e": 34.03,
    "junction": null,
    "kind": "marking_off_carriageway",
-   "lat": 53.1615787,
-   "lon": 22.9767079,
-   "n": -359.87,
+   "lat": 53.1615791,
+   "lon": 22.9767054,
+   "n": -359.84,
    "on_route": true,
    "osm_ways": [
     183625709,
@@ -44,12 +44,12 @@
   },
   {
    "chain": "c:w183625709:1937542642-1937517305",
-   "e": 36.15,
+   "e": 35.98,
    "junction": null,
    "kind": "marking_off_carriageway",
-   "lat": 53.161574,
-   "lon": 22.9767367,
-   "n": -360.29,
+   "lat": 53.1615744,
+   "lon": 22.9767342,
+   "n": -360.25,
    "on_route": true,
    "osm_ways": [
     183625709,
@@ -63,12 +63,31 @@
   },
   {
    "chain": "c:w183625709:1937542642-1937517305",
-   "e": 40.06,
+   "e": 37.93,
    "junction": null,
    "kind": "marking_off_carriageway",
-   "lat": 53.1615646,
-   "lon": 22.9767944,
-   "n": -361.12,
+   "lat": 53.1615697,
+   "lon": 22.976763,
+   "n": -360.67,
+   "on_route": true,
+   "osm_ways": [
+    183625709,
+    536222217,
+    183625710,
+    536222216,
+    279914645
+   ],
+   "surface": "verge_grass",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183625709:1937542642-1937517305",
+   "e": 39.88,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.161565,
+   "lon": 22.9767918,
+   "n": -361.08,
    "on_route": true,
    "osm_ways": [
     183625709,
@@ -281,10 +300,10 @@
    "what": "none"
   }
  ],
- "count": 14,
+ "count": 15,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
-  "marking_off_carriageway": 4
+  "marking_off_carriageway": 5
  },
  "params": {
   "dz_m": 0.8,
@@ -305,7 +324,7 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 117,
-  "kerb_tris": 30894,
+  "kerb_tris": 30898,
   "lane_samples": 49029,
   "marking_tris": 10628,
   "props_checked": 496

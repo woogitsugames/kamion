@@ -53,7 +53,8 @@ LANE_AXIS_LEFT_M = 0.25     # WORKING_VALUE: centre of the two through lanes lef
 # -> 4.98 m). The spacing is the p50 distance from the way to the nearest opposite-direction S8 carriageway, sampled
 # every ~10 m over ALL tiles of TILES (one value per way, so a way crossing a seam gets the same offset on both sides).
 MEDIAN_GAP_TARGET_M = 4.50  # QA 2026-11-16 row 78 (median of the gap between the inner edge lines)
-EXTRA_MAX_M = 0.50          # WORKING_VALUE: cap of the extra shift (OSM way position error ~0.5 m)
+GAP_MAX_M = 4.80            # shift only ways whose gap without it is above the measured range (QA row 78: <= 4.85 m)
+EXTRA_MAX_M = 0.50         # WORKING_VALUE: cap of the extra shift (OSM way position error ~0.5 m)
 JOINT_SPACING_MAX_M = 12.8  # wider p50 spacing = carriageways on separate structures / diverging at a junction
 #                             (s8-02 ways 536222216-218, p50 12.86-13.00, p90 13.5-14.9, next to the bridge pair at 14.77 m;
 #                             with 13.0 they got +0.45/+0.50 m between ways at 0 m and P-7b ended on grass, r8):
@@ -125,6 +126,8 @@ def median_extra(way: int) -> float:
     MEDIAN_GAP_TARGET_M apart: gap = spacing - 2 x (LANE_AXIS_LEFT_M + LANE_M + extra), both carriageways alike."""
     s = spacing().get(way)
     if s is None or s > JOINT_SPACING_MAX_M:
+        return 0.0
+    if s - 2.0 * (LANE_AXIS_LEFT_M + LANE_M) <= GAP_MAX_M:      # already inside the measured range: leave it
         return 0.0
     e = (s - 2.0 * (LANE_AXIS_LEFT_M + LANE_M) - MEDIAN_GAP_TARGET_M) / 2.0
     return round(min(EXTRA_MAX_M, max(0.0, round(e / 0.05) * 0.05)), 2)

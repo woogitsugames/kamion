@@ -1,11 +1,23 @@
 {
  "by_source": {
+  "skirt:cycle_asphalt": 1,
   "skirt:path_asphalt": 1
  },
- "count": 1,
- "max_m": 0.344,
- "p99_m": 0.344,
+ "count": 2,
+ "max_m": 0.35,
+ "p99_m": 0.35,
  "skirt_area": [
+  {
+   "e": -1000.0,
+   "exposed_m2": 0.239,
+   "mat": "cycle_asphalt",
+   "max_h": 0.35,
+   "n": -156.0,
+   "points": 1,
+   "run_m": 2.104,
+   "src": "osm:way/634210344:0:ddr#0",
+   "visible": true
+  },
   {
    "e": 108.7,
    "exposed_m2": 0.056,
@@ -33,6 +45,14 @@
   ]
  },
  "worst": [
+  {
+   "e": -1000.0,
+   "h": 0.35,
+   "kind": "skirt",
+   "mat": "cycle_asphalt",
+   "n": -156.0,
+   "src": "osm:way/634210344:0:ddr#0"
+  },
   {
    "e": 108.7,
    "h": 0.344,

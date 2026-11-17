@@ -17,10 +17,10 @@ overrides:
     set: {lane_edges: [0.2, 3.7, 7.2], width: 9.95, center_offset: -1.025, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
   - id: s8-xsec-w183625710
     target: {osm_way: 183625710}
-    reason: "S8 carriageway, 2 lanes (OSM): class S section instead of the class A rule centred on the OSM way - see tools/worldgen/qa/s8_xsec_overrides.py (QA 2026-11-16 rows 78, 81, 82; PTB2022 § 17, § 23). Axis spacing p50 12.16 m, extra shift to the median 0.10 m."
+    reason: "S8 carriageway, 2 lanes (OSM): class S section instead of the class A rule centred on the OSM way - see tools/worldgen/qa/s8_xsec_overrides.py (QA 2026-11-16 rows 78, 81, 82; PTB2022 § 17, § 23). Axis spacing p50 12.16 m, extra shift to the median 0.00 m."
     confidence: "medium (widths - orthophoto +-0.3 m at 3 stations; lateral position - WORKING_VALUE)"
     verify: orthophoto cross-section per way (tools/worldgen/qa/ortho_xsec.py) / owner drive
-    set: {lane_edges: [0.2, 3.7, 7.2], width: 9.95, center_offset: -0.925, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
+    set: {lane_edges: [0.2, 3.7, 7.2], width: 9.95, center_offset: -1.025, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
   - id: s8-xsec-w183639790
     target: {osm_way: 183639790}
     reason: "S8 carriageway, 2 lanes (OSM): class S section instead of the class A rule centred on the OSM way - see tools/worldgen/qa/s8_xsec_overrides.py (QA 2026-11-16 rows 78, 81, 82; PTB2022 § 17, § 23). Axis spacing p50 12.34 m, extra shift to the median 0.15 m."
@@ -35,10 +35,10 @@ overrides:
     set: {lane_edges: [0.2, 3.7, 7.2, 10.7], width: 13.45, center_offset: -2.775, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
   - id: s8-xsec-w305447698
     target: {osm_way: 305447698}
-    reason: "S8 carriageway, 2 lanes (OSM): class S section instead of the class A rule centred on the OSM way - see tools/worldgen/qa/s8_xsec_overrides.py (QA 2026-11-16 rows 78, 81, 82; PTB2022 § 17, § 23). Axis spacing p50 12.16 m, extra shift to the median 0.10 m."
+    reason: "S8 carriageway, 2 lanes (OSM): class S section instead of the class A rule centred on the OSM way - see tools/worldgen/qa/s8_xsec_overrides.py (QA 2026-11-16 rows 78, 81, 82; PTB2022 § 17, § 23). Axis spacing p50 12.16 m, extra shift to the median 0.00 m."
     confidence: "medium (widths - orthophoto +-0.3 m at 3 stations; lateral position - WORKING_VALUE)"
     verify: orthophoto cross-section per way (tools/worldgen/qa/ortho_xsec.py) / owner drive
-    set: {lane_edges: [0.2, 3.7, 7.2], width: 9.95, center_offset: -0.925, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
+    set: {lane_edges: [0.2, 3.7, 7.2], width: 9.95, center_offset: -1.025, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
   - id: s8-xsec-w536222216
     target: {osm_way: 536222216}
     reason: "S8 carriageway, 2 lanes (OSM): class S section instead of the class A rule centred on the OSM way - see tools/worldgen/qa/s8_xsec_overrides.py (QA 2026-11-16 rows 78, 81, 82; PTB2022 § 17, § 23). Axis spacing p50 12.86 m, extra shift to the median 0.00 m."
