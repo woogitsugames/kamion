@@ -51,7 +51,7 @@ if (-not $SkipGugik) { Pack 'B-gugik' @("$raw\gugik|Data\raw\gugik") }
 # 3) Zbudowany świat (GLB kafli) — da się odbudować generatorem (~kilkanaście godzin), więc pakujemy
 if (-not $SkipDerived) { Pack 'C-derived' @("$raw\derived|Data\raw\derived") }
 # 4) Ostatni exe — najnowszy build z main\artifacts\win i z worktree buildowych
-$exe = @(Get-ChildItem "$Repo\artifacts\win", "$Repo\.claude\worktrees\win-build*\artifacts\win" -Directory -EA SilentlyContinue | Where-Object Name -like 'kamion-*') | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+$exe = @(Get-ChildItem "$Repo\artifacts\win", "$Repo\.claude\worktrees\win-build*\artifacts\win" -Directory -EA SilentlyContinue | Where-Object Name -like 'kamion-*') | Sort-Object { (Get-Item (Join-Path $_.FullName 'build.json') -EA SilentlyContinue).LastWriteTime } -Descending | Select-Object -First 1
 if ($exe) { Pack 'D-ostatni-exe' @("$($exe.FullName)|artifacts\win\$($exe.Name)") }
 # 5) Dowody agentów z gałęzi w toku (rendery, logi) — artifacts\ każdego worktree, bez Library
 $e = @()
