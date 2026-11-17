@@ -1582,7 +1582,9 @@ def build_wheel(badge):
 
         def patch(a0, half, soft=0.10):
             return 1 - smooth(half, half + soft, abs(math.atan2(math.sin(a - a0), math.cos(a - a0))))
-        hands = max(patch(math.radians(148), 0.36), patch(math.radians(32), 0.36))
+        # D84 polish: not mirror-symmetric - the left hand stays on the rim (longer, stronger patch), the right one leaves
+        # for the stalks and the stack (shorter, lighter patch)
+        hands = max(patch(math.radians(150), 0.42), 0.72 * patch(math.radians(36), 0.28))
         sec = 0.30 + 0.70 * smooth(-0.6, 0.5, 0.75 * sb + 0.45 * cb)
         th = max(patch(t, 0.10, 0.08) for t in thumb) * smooth(-0.2, 0.5, sb) * smooth(0.0, 0.8, -cb)
         return max(0.95 * sec * max(hands, 0.45 * patch(math.radians(90), 0.20)), 0.8 * th)
