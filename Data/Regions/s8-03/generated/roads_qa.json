@@ -203,7 +203,7 @@
     "s8-xsec-w251431131",
     "s8-xsec-w98599908"
    ],
-   "profile_rms_vs_nmt_m": 0.207,
+   "profile_rms_vs_nmt_m": 0.208,
    "sidewalk_frac": 0.0,
    "width_m": [
     9.95,
@@ -1186,7 +1186,7 @@
     "s8-xsec-w251431133",
     "s8-xsec-w672979683"
    ],
-   "profile_rms_vs_nmt_m": 0.235,
+   "profile_rms_vs_nmt_m": 0.236,
    "sidewalk_frac": 0.0,
    "width_m": [
     9.95,
@@ -1377,7 +1377,7 @@
     "s8-xsec-w251431118",
     "s8-xsec-w251431120"
    ],
-   "profile_rms_vs_nmt_m": 0.027,
+   "profile_rms_vs_nmt_m": 0.028,
    "sidewalk_frac": 0.0,
    "width_m": [
     9.95,
@@ -3039,6 +3039,24 @@
     "targets": [
      "w1467119158:2248502864-469876632"
     ]
+   },
+   {
+    "id": "s8-seam-deck-z-w183625709",
+    "targets": [
+     "Bw183625709:1937542642-1937517305:0e"
+    ]
+   },
+   {
+    "id": "s8-seam-deck-z-w98599908",
+    "targets": [
+     "Bw98599908:1140726362-1140726363:0s"
+    ]
+   },
+   {
+    "id": "s8-seam-z-w251431118",
+    "targets": [
+     "Bw251431118:4165907524-7658870561:0s"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -3055,7 +3073,7 @@
   "sides_on_carriageway_culled": {
    "kerb_tris": 1586,
    "parts": 210,
-   "side_tris": 402
+   "side_tris": 400
   },
   "signalised_junctions": 0,
   "through_lines": {
