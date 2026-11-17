@@ -126,7 +126,7 @@ def test_sheet_roof_is_linear_mid_grey_and_corrugated():
     # review 2026-11-17 P1-1 / P2-1: tint written linear (it was not: sRGB 178-211 in sun), mid grey, corrugated set
     m = MT.M["roof_sheet_grey"]
     assert m.get("tint_linear") is True and m["texture_set"] == "trapezoid_sheet" and m["set_tile"] is True
-    assert 0.12 <= max(m["color"]) <= 0.18 and max(m["color"]) > MT.M["roof_metal_graphite"]["color"][0] * 2
+    assert 0.09 <= max(m["color"]) <= 0.13 and max(m["color"]) > MT.M["roof_metal_graphite"]["color"][0] * 2
 
 
 def test_east_square_kiosk_is_authored(blds):
