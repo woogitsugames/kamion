@@ -1100,10 +1100,12 @@ class Lin:
             self.ribbon(collision, P, zb, zt, 0.0, src, both=False, collision=None)
             self.buf.parts[-1].layer = "collision"
 
-    def posts(self, mat, P, spacing, w, d, h, zb=None, src="", ground_feet=False):
+    def posts(self, mat, P, spacing, w, d, h, zb=None, src="", ground_feet=False, end_post_min=None):
         line = LineString(P)
         L = line.length
         ss = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))]) if spacing is None else np.arange(0, L + 1e-6, spacing)
+        if spacing is not None and end_post_min is not None and len(ss) and L - ss[-1] > end_post_min:
+            ss = np.append(ss, L)       # c-p2-s23: the run ends on a post (see noise_wall)
         Q = np.asarray(P) if spacing is None else np.array([line.interpolate(s).coords[0] for s in ss])
         if len(Q) < 1:
             return
@@ -2605,8 +2607,15 @@ def _noise_runs(P, zones, default):
     return [(sl, st) for sl, st in runs if sl.stop - sl.start >= 2]
 
 
-def noise_wall(lin, P, Z, st, H, key):
-    """One noise-barrier run along P (densified, Z = ground). Collision: one wall ribbon to the top."""
+NOISE_END_POST_MIN_M = 0.3   # WORKING_VALUE: a panel end this far past the last post gets its own end post
+
+
+def noise_wall(lin, P, Z, st, H, key, end_post=True):
+    """One noise-barrier run along P (densified, Z = ground). Collision: one wall ribbon to the top.
+    c-p2-s23 (REVIEW s23 c-p1 P2, g3b_rondo_putry_approach): posts stand every NOISE_BARRIER_POST from the start of
+    the run, so the plinth and the panels ran up to that far past the last post (1.9 m at E -446.7 N -26.7: the
+    open plinth end read as a pale wedge). `end_post`: the run ends on a post (not at a style joint inside a part,
+    where the next run starts with its own post)."""
     zp = Z + st["plinth_m"]
     lin.slab("concrete_plinth", P, Z - 0.4, zp, 0.2, key)
     if st["band_m"] is None:                                   # solid absorbing cassettes to the top
@@ -2627,7 +2636,8 @@ def noise_wall(lin, P, Z, st, H, key):
     lin.ribbon("collision_fence", P, Z - 0.2, Z + H, 0.0, key, both=False)
     lin.buf.parts[-1].layer = "collision"
     # ADR 0127: posts NOISE_POST_W wide (HEB 200 class; 0.16 m read as fence wire at 80 m on Low), WORKING_VALUE
-    lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, NOISE_POST_W, NOISE_POST_W, H + 0.1, src=key)
+    lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, NOISE_POST_W, NOISE_POST_W, H + 0.1, src=key,
+              end_post_min=NOISE_END_POST_MIN_M if end_post else None)
 
 
 NOISE_ON_DECK_M = 2.5     # WORKING_VALUE: a mapped noise barrier this close to a screened deck edge IS that screen
@@ -2693,7 +2703,7 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
             P = lin.dens(part, 2.0)
             Z = lin.z(P)
             for sl, st in _noise_runs(P, zones, default):
-                noise_wall(lin, P[sl], Z[sl], st, st.get("height_m", H), key)
+                noise_wall(lin, P[sl], Z[sl], st, st.get("height_m", H), key, end_post=sl.stop >= len(P))
                 seg = float(np.sum(np.hypot(*np.diff(P[sl], axis=0).T)))
                 by_style[st["name"]] = by_style.get(st["name"], 0.0) + seg
             for c, r, s, oid in zones:
