@@ -418,6 +418,17 @@ overrides:
     confidence: low
     verify: owner photo of the eastern square (what the kiosk is, wall material, roof form)
     set: {typology: dom, wall_material: brick_red, height_m: 3.2, roof_shape: flat}
+  - id: look-east-square-press-kiosk
+    target: {building: "osm:way/300663247"}
+    sources: ["OSM way/300663247 (building=yes, 13 m2, a press kiosk by its OSM name - the name is not reproduced)"]
+    reason: >-
+      Review 2026-11-17 P1-2: the second small structure of the eastern square, 1.5 m south-west of the kiosk above
+      (4.9 x 2.7 m), also became a 3.0 m outbuilding box through the class rule. A press kiosk: one storey with
+      openings, flat roof. ESTIMATED: light render walls (no photo); WORKING_VALUE: 2.9 m. No sign, lettering or
+      chain colours.
+    confidence: low
+    verify: owner photo of the eastern square
+    set: {typology: dom, wall_material: plaster_light, height_m: 2.9, roof_shape: flat}
   - id: look-discount-forecourt-red-north
     kind: paved_area
     material: sidewalk_paving_red

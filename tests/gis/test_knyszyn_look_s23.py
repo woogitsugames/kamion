@@ -25,6 +25,7 @@ CORNER = "bdot:2002917F-2E17-5C99-E053-CC2BA8C01CFC"
 LIBRARY = "bdot:2002917F-46DA-5C99-E053-CC2BA8C01CFC"
 STORE = "bdot:2002917F-468D-5C99-E053-CC2BA8C01CFC"
 KIOSK = "osm:way/1427273958"
+PRESS = "osm:way/300663247"
 
 
 @pytest.fixture(scope="module")
@@ -105,7 +106,7 @@ def test_class_fixes_from_data(blds):
     for o in gen["overrides"]:
         bid, s = o["target"]["building"], o["set"]
         assert plain[bid]["typ"] in ("office", "block")
-        if bid == KIOSK:                      # an authored entry overrides the class fix (look-east-square-kiosk)
+        if bid in (KIOSK, PRESS):                    # an authored entry overrides the class fix (look-east-square-kiosk)
             continue
         if "typology" in s:                   # OSM-only footprint with the default height: never an office box
             assert plain[bid]["props"]["height_source"] == "default" and plain[bid]["props"]["footprint_source"] == "osm"
