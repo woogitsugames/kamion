@@ -54,7 +54,9 @@ LANE_AXIS_LEFT_M = 0.25     # WORKING_VALUE: centre of the two through lanes lef
 # every ~10 m over ALL tiles of TILES (one value per way, so a way crossing a seam gets the same offset on both sides).
 MEDIAN_GAP_TARGET_M = 4.50  # QA 2026-11-16 row 78 (median of the gap between the inner edge lines)
 EXTRA_MAX_M = 0.50          # WORKING_VALUE: cap of the extra shift (OSM way position error ~0.5 m)
-JOINT_SPACING_MAX_M = 13.0  # wider p50 spacing = carriageways on separate structures / diverging at a junction:
+JOINT_SPACING_MAX_M = 12.8  # wider p50 spacing = carriageways on separate structures / diverging at a junction
+#                             (s8-02 ways 536222216-218, p50 12.86-13.00, p90 13.5-14.9, next to the bridge pair at 14.77 m;
+#                             with 13.0 they got +0.45/+0.50 m between ways at 0 m and P-7b ended on grass, r8):
 #                             no measurement there, keep LANE_AXIS_LEFT_M (ADR 0288 Otwarte 3)
 SAMPLE_M = 10.0
 PAIR_SEARCH_M = 25.0
