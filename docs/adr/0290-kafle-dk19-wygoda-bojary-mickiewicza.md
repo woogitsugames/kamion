@@ -30,7 +30,7 @@ nowy PC 17.11 (przebudowa bojary/mickiewicza po poprawce szwu Piastowskiej zabit
    brakujące 2: krywlany + Dojlidy jako kafel korytarza; złącza bez rozjazdu). Link zastępujący trasę kafla startowego nie
    jest instalowany przy starcie C (jak knyszyn, ADR 0285) — jazda ręczna przez szwy działa.
 6. **WORLD_MEMORY** (import Win64 s24, `tile_graph.py`): bojary Low 251,6 / High 620,7 MB, mickiewicza Low 232,1 / High
-   557,6 MB, wygoda — patrz „Zmierzone”. Bojary jest najcięższym zmierzonym kaflem, więc `UNKNOWN_MEMORY_MB` /
+   557,6 MB, wygoda Low 188,3 / High 489,9 MB. Bojary jest najcięższym zmierzonym kaflem, więc `UNKNOWN_MEMORY_MB` /
    `UNKNOWN_MEMORY_HIGH_MB` (reguła „kafel bez pomiaru = najcięższy zmierzony”) rosną z 160,0 / 420,4 do 251,6 / 620,7 MB.
 
 ## Zmierzone (s24, nowy PC i5-10400F / GTX 1070)
@@ -46,8 +46,14 @@ nowy PC 17.11 (przebudowa bojary/mickiewicza po poprawce szwu Piastowskiej zabit
   bojary sosabowskiego 1 541 k / ~1203.
 
 ## Konsekwencje
-- Gęste kafle miejskie DK19 są ~3× cięższe od Dojlid w High (620,7 vs 214,9 MB) — budżet streamingu PC High (ADR 0273)
-  trzeba sprawdzić w buildzie z trzema kaflami naraz; budynki High (bojary 279,2 MB) i teren High (201,4 MB) to główne pozycje.
+- **Budżet streamingu PC przekroczony (otwarte, decyzja lidera):** `WorldStreamingPolicyTests.Budgets_DesktopTiers_…` —
+  najgorszy zestaw 3 sąsiadów to teraz łańcuch DK19: bojary 251,6 + mickiewicza 232,1 + wygoda 188,3 + przypięty C 124,2 =
+  **796,2 MB > 640 MB (PC Low)**; High 620,7 + 557,6 + 489,9 + 267,0 = 1935,2 MB > 1450 MB. Test zostaje czerwony — nie
+  poluzowano budżetu. Opcje: LOD gęstych kafli (ADR 0282: budynki High bojary 279,2 MB, teren High 201,4 MB to główne
+  pozycje) albo nowe budżety (ADR 0273). Kafle DK19 są ~3× cięższe od Dojlid w High (620,7 vs 214,9 MB).
+- EditMode Win64 s24: 1328 / 1219 passed / 9 failed / 95 skipped; `RegionSelectTests` poprawiony (kafel `noStart` nie oferuje
+  startu, ADR 0231 §5a); 7 błędów ciężarówki = brak zbudowanej ciężarówki w worktree. pytest tests/gis 2440 passed / 1 failed
+  (`test_ec_chimneys`: `read_text()` bez kodowania na locale cp1250 — poprawione, 18/18).
 - **Luka: kafel 4 `bialystok-krywlany` nie istnieje.** Ciołkowskiego wchodzi w Dojlidy od N tylko na ~129 m (3 z 379 węzłów
   Dojlid osiągalne) i wychodzi na zachód krawędzią do krywlany (1206 m Dywizjonu 303). Kafle 5–7 łączą C z NW narożnikiem
   Dojlid, ale pełna trasa do sieci Dojlid wymaga kafla 4 — do decyzji lidera / właściciela (ADR 0278).
