@@ -880,6 +880,9 @@ namespace Game.Editor.Setup
                           $"interior LOD0 {tris(interiorLods[0])} LOD1 {tris(interiorLods[1])} LOD2 {tris(interiorLods[2])}; eye {eyeLocal}; mount {mount}");
                 Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, Root));
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+                // Fresh checkout: the Refresh in CopySources drops the orphan .meta written before the save, so the first
+                // save gets a random GUID; re-pin it (and the generated scenes that already reference it).
+                DrivingVehiclePrefabs.PinGuid(PrefabPath, DrivingVehiclePrefabs.TractorGuid);
                 Debug.Log("[TRUCK] prefab " + PrefabPath);
             }
             finally

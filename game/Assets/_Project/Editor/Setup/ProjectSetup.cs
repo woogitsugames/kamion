@@ -275,6 +275,7 @@ namespace Game.Editor.Setup
             // GPU / CPU frame times in the diagnostics CSV (FrameTimingManager) for on-device profiling.
             PlayerSettings.enableFrameTimingStats = true;
             ApplyStandaloneWindowSettings();
+            ApplyBatchingSettings();
             Debug.Log($"[SETUP] player settings: {ApplicationId} min={MinSdk} target={TargetSdk} IL2CPP ARM64 Vulkan+GLES3 linear landscape");
         }
 
@@ -311,6 +312,39 @@ namespace Game.Editor.Setup
             Set(ps, "androidAutoRotationBehavior", 1);   // 1 = User
             Set(ps, "AndroidIsGame", true);
             ps.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>
+        /// build-fix-s24: per-platform batching entries (m_BuildTargetBatching) written explicitly, static on / dynamic off
+        /// (Unity's defaults). Unity adds the entry of the active target to ProjectSettings.asset during the first player
+        /// build of that target, which left the tree modified after every Windows build (version stamp "-dirty"). Entry
+        /// order = the order Unity appends them in (Android first in this project, then Standalone).
+        /// </summary>
+        public static void ApplyBatchingSettings()
+        {
+            var ps = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/ProjectSettings.asset")[0]);
+            var list = Find(ps, "m_BuildTargetBatching");
+            foreach (string target in new[] { "Android", "Standalone" })
+            {
+                SerializedProperty entry = null;
+                for (int i = 0; i < list.arraySize; i++)
+                    if (list.GetArrayElementAtIndex(i).FindPropertyRelative("m_BuildTarget").stringValue == target) entry = list.GetArrayElementAtIndex(i);
+                if (entry == null)
+                {
+                    list.InsertArrayElementAtIndex(list.arraySize);
+                    entry = list.GetArrayElementAtIndex(list.arraySize - 1);
+                    entry.FindPropertyRelative("m_BuildTarget").stringValue = target;
+                }
+                SetFlag(entry.FindPropertyRelative("m_StaticBatching"), true);
+                SetFlag(entry.FindPropertyRelative("m_DynamicBatching"), false);
+            }
+            ps.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        static void SetFlag(SerializedProperty p, bool on)
+        {
+            if (p.propertyType == SerializedPropertyType.Boolean) p.boolValue = on;
+            else p.intValue = on ? 1 : 0;
         }
 
         static UniversalRenderPipelineAsset[] CreateUrpTierAssets()

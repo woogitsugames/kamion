@@ -390,6 +390,7 @@ namespace Game.Editor.Setup
                           $"tyre flat radius {rig.tyreFlatRadius:F3} m; wheels {wheels.Length}");
                 Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, Root));
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+                DrivingVehiclePrefabs.PinGuid(PrefabPath, DrivingVehiclePrefabs.TrailerGuid);   // re-pin after the first save (see TruckAssetBuilder)
                 Debug.Log("[TRAILER] prefab " + PrefabPath);
             }
             finally

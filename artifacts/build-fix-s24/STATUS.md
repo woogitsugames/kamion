@@ -1,0 +1,3 @@
+# build-fix-s24 STATUS
+- 20:55 kod: PinGuid przepina GUID istniejącej .meta (+remap scen _Generated/World), wywołanie po SaveAsPrefabAsset; ProjectSetup.ApplyBatchingSettings (Standalone); URP_Ultra/GlobalSettings = wartości po buildzie Win64; display_cluster.png odświeżony (git miał stary napis "AdBlue" sprzed BRAND-SWEEP); scripts/cab-lod0.ps1 + preflight w setup-project/build-lab/import-region.
+- NASTĘPNY KROK: Unity (slot) TruckAssetBuilder.BuildBatch + TrailerAssetBuilder.BuildBatch w worktree (świeże _Generated bez prefabów) -> sprawdzić GUID w .meta; potem pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64
