@@ -1,4 +1,4 @@
-# ADR 0284 — Knyszyn: zabudowa z danych (dachy z ortofoto, klasy obrysów OSM, nadpisania domów)
+# ADR 0287 — Knyszyn: zabudowa z danych (dachy z ortofoto, klasy obrysów OSM, nadpisania domów)
 
 Status: WIP, 2026-11-16 (knyszyn-look-s23). Numer roboczy — lider potwierdza przy scaleniu. Wymaga oceny
 `visual-critic` i właściciela (rozpoznawalność z wysokości oczu, D51).
