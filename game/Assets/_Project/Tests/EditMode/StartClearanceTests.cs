@@ -52,11 +52,12 @@ namespace Game.Tests
         static string F(float v) => float.IsInfinity(v) ? "none" : v.ToString("F1", CultureInfo.InvariantCulture);
 
         /// <summary>ADR 0231 §5a: a corner tile marked noStart has no start behind its entry closure - checked here that it
-        /// really cannot have one (route shorter than the closure + combination + margin + RegionStart.MinAheadM).</summary>
+        /// really cannot have one (route shorter than the entry closure + combination + margin + AheadFreeM + exit closure).</summary>
         static bool SkipCornerTile(RegionCatalog.Region r)
         {
             if (r == null || !r.noStart) return false;
-            float need = WorldEdgeSetbackM + StartClearance.BoardsM + StartClearance.RearM + StartClearance.MarginM + RegionStart.MinAheadM;
+            // behind the entry closure and AheadFreeM of open route before the exit closure (60 m before the far edge)
+            float need = WorldEdgeSetbackM + StartClearance.BoardsM + StartClearance.RearM + StartClearance.MarginM + StartClearance.AheadFreeM + WorldEdgeSetbackM;
             Assert.Less(r.routeLengthM, need, r.id + ": noStart on a route that can host a start - remove no_standalone_start (route_endpoints.json)");
             Assert.Pass(r.id + ": corner tile without a standalone start (ADR 0231 §5a)");
             return true;

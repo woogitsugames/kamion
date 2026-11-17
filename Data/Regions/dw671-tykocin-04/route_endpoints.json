@@ -1,13 +1,15 @@
 {
- "provenance": "authored_override (ADR 0231): control route for cameras/QA = DW671 inside this tile, continuing the route of dw671-tykocin-03",
- "description": "DW671 from the N tile edge (seam with dw671-tykocin-03, OSM way 1111506762) to the W tile edge (OSM way 244403510; seam with dw671-tykocin-05). Points from the Overpass extract of 2026-11-15; build_world snaps them to the nearest graph node.",
- "start_epsg2180": [
-  757553.2,
-  607487.0
- ],
- "end_epsg2180": [
-  756491.0,
-  605936.9
- ],
- "confidence": "medium (OSM 2026-11-15 vs the pinned pbf 2026-11-08: re-check after build_region that both are graph boundary nodes)"
+  "provenance": "authored_override (ADR 0231): control route for cameras/QA = DW671 inside this tile, continuing the route of dw671-tykocin-03",
+  "description": "DW671 from the N tile edge (seam with dw671-tykocin-03, OSM way 1111506762) to the W tile edge (OSM way 244403510; seam with dw671-tykocin-05). Points from the Overpass extract of 2026-11-15; build_world snaps them to the nearest graph node.",
+  "start_epsg2180": [
+    757553.2,
+    607487.0
+  ],
+  "end_epsg2180": [
+    756491.0,
+    605936.9
+  ],
+  "confidence": "medium (OSM 2026-11-15 vs the pinned pbf 2026-11-08: re-check after build_region that both are graph boundary nodes)",
+  "start_s_m": 92.0,
+  "start_s_note": "authored_override (s23 world2-finish, 2026-11-17): the rule start 90 m stands across a bend (EditMode StartClearanceTests / SpawnSafety: route bends under the combination, first free place 92.0 m). WORKING_VALUE."
 }

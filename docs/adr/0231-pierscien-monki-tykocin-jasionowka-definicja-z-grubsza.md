@@ -117,7 +117,12 @@ Budowa (`highway=construction|proposed`) w kaflach pierścienia: 0 m.
    (`GameBootstrap.BuildRegionChoices`), importer loguje informację zamiast błędu braku strefy startu
    (`WorldSceneBuilder`), testy `test_start_clear_0262.py` i `StartClearanceTests` sprawdzają, że trasa naprawdę jest za
    krótka; strażnik `test_no_start_marker_only_on_corner_tiles_and_matches_route_endpoints` dopuszcza znacznik tylko
-   na kaflach narożnych z p. 5. `dk65-monki-03` i `monki-e` mają start (414 / 293 m) — bez znacznika.
+   na kaflach narożnych z p. 5. Po EditMode 17.11 (Win64) znacznik dostały też `dk65-monki-03` (413 m) i `monki-e`
+   (293 m): start za zamknięciem nie ma 300 m wolnej trasy (`StartClearance.AheadFreeM`) przed zamknięciem wyjazdowym
+   (rząd 152–260 m przed startem). Kryterium znacznika (eksporter, pytest, EditMode): trasa od krawędzi krótsza niż
+   start za zamknięciem + 300 m + 60 m zamknięcia wyjazdowego (eksporter 90 + 300 + 60 = 450 m). Wszystkie 4 kafle
+   narożne z p. 5 = `noStart`. `dw671-tykocin-04`: start reguły 90 m stał na łuku → `start_s_m` 92 m (WORKING_VALUE).
+   Zmierzone `WORLD_MEMORY` Low/High kafli pierścienia (import r3, Win64) wpisane do `tile_graph.py` (p. 4).
    Także: `tykocin` ma 3,95 % bboxa w powiecie 2008 (PRG) → `teryt_powiat_extra=('2008',)` w `regions.py`.
 6. **Kolej:** od ADR 0217 generator ma etap kolei opt-in (`rail=True` we wpisie regionu). Wpisy pierścienia mają
    `rail=False`; przejazd w `monki` i tory w `dk65-monki-04/-06/-07`, `dw671-tykocin-02` — włączyć po scaleniu

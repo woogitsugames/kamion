@@ -82,9 +82,10 @@ def test_start_is_inside_the_edge_closure(region):
     boundary = {n["id"] for n in graph["nodes"] if n.get("boundary")}
     start, length = float(entry["startS"]), float(route["length_m"])
     if entry.get("noStart"):
-        # ADR 0231 §5a: corner tile without any standalone start; allowed only when no start can exist on the route
+        # ADR 0231 §5a: corner tile without any standalone start; allowed only when no start can exist on the route: behind
+        # the entry closure there is no AHEAD_FREE_M of open route before the exit closure (60 m before the far edge)
         need = CLOSURE_SETBACK_M + BOARDS_M + REAR_M + MARGIN_M
-        assert route["graph_nodes"][0] in boundary and length < need + MIN_AHEAD_M, (
+        assert route["graph_nodes"][0] in boundary and length < need + AHEAD_FREE_M + CLOSURE_SETBACK_M, (
             f"{region}: noStart on a route of {length} m - a start behind the closure exists, remove the marker")
         return
     assert 0.0 <= start <= length - MIN_AHEAD_M, f"{region}: startS {start} on a route of {length} m"
