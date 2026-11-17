@@ -54,7 +54,7 @@ generatory, ale reszta miasta pochodziła z reguł pisanych dla Białegostoku (A
 ## Budżet i walidacja
 
 Szacunki edytora i wyniki renderów „przed / po”: `docs/reports/knyszyn-look/README.md` i raport końcowy agenta.
-High clear, 75 kamer, build origin/main 64e54592e + nowe kamery vs ta gałąź (szacunek edytora przed SRP batchingiem, nie pomiar GPU): maks. draws 773 → 709, średnio −15,0 na kamerę (51 kamer mniej, 11 więcej, najgorzej +3 	ruck-34); maks. tris 1 222 802 → 1 229 717 (limit 2 mln), najgorzej +15 589 (look-szkolna-block-south). Low nie renderowano. Pytest: 92 passed (-k "knyszyn_look or knyszyn_roofs or typology_0238 or buildings_0167 or overrides or knyszyn_qa_gate or church or townhall"); pełny GIS i EditMode — do lidera.
+High clear, 75 kamer, build origin/main 64e54592e + nowe kamery vs ta gałąź (szacunek edytora przed SRP batchingiem, nie pomiar GPU): maks. draws 773 → 709, średnio −15,0 na kamerę (51 kamer mniej, 11 więcej, najgorzej +3 `truck-34`); maks. tris 1 222 802 → 1 229 717 (limit 2 mln), najgorzej +15 589 (look-szkolna-block-south). Low nie renderowano. Pytest: 92 passed (-k "knyszyn_look or knyszyn_roofs or typology_0238 or buildings_0167 or overrides or knyszyn_qa_gate or church or townhall"); pełny GIS i EditMode — do lidera.
 Testy: `tests/gis/test_knyszyn_look_s23.py`.
 
 ## Otwarte
