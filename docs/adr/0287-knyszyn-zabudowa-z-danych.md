@@ -1,7 +1,8 @@
 # ADR 0287 — Knyszyn: zabudowa z danych (dachy z ortofoto, klasy obrysów OSM, nadpisania domów)
 
-Status: WIP, 2026-11-16 (knyszyn-look-s23). Numer roboczy — lider potwierdza przy scaleniu. Wymaga oceny
-`visual-critic` i właściciela (rozpoznawalność z wysokości oczu, D51).
+Status: Proposed, 2026-11-17 (knyszyn-look-s23). Numer potwierdzony przez lidera. Recenzja `visual-critic`
+2026-11-17 (`docs/reports/REVIEW-2026-11-17-s23-knyszyn-look.md`): SCAL warunkowo — P1-1, P1-2, P2-1, P2-3 wykonane
+w tej gałęzi; ocena właściciela (D51) otwarta.
 
 ## Kontekst
 
@@ -31,7 +32,12 @@ generatory, ale reszta miasta pochodziła z reguł pisanych dla Białegostoku (A
    1577 z 1903 budynków; zgodność z czterema dachami odczytanymi ręcznie w ADR 0227: 4/4 (`--check`).
    Ortofoto jest wyłącznie referencją pomiarową — żaden piksel nie trafia do tekstur (docs/05 §3).
 3. **Nowy materiał `roof_sheet_grey`** — tylko z nadpisań (`buildings_mesh.ROOF_OVERRIDES`); reguła losująca go nie
-   używa, więc pozostałe regiony zachowują bajty. Kolor WORKING_VALUE.
+   używa, więc w pozostałych regionach dochodzi tylko wpis w tabeli materiałów manifestu. Recenzja 2026-11-17 P1-1:
+   w pierwszej wersji nazwa nie miała prefiksu z `materials._TINT_LINEAR`, więc 0,30 trafiało do shadera jako tint
+   sRGB i dach w słońcu miał sRGB 178–211 („śnieg”). Teraz prefiks `roof_sheet_`, kolor liniowy 0,15 (cel ~145 sRGB:
+   na zdjęciu z drona właściciela nr 10, tylko lokalnie, szare dachy z blachy mają 121–137 przy białej ścianie ~210,
+   czyli ~0,6 jasności ściany; w grze tynk 239). P2-1: tekstura falista `trapezoid_sheet` (CC0, 2 m; żebra wzdłuż
+   spadku, bo V siatki dachu biegnie w górę połaci) zamiast przemalowanej dachówki. Kolor WORKING_VALUE.
 4. **Poprawki klas z danych** (`tools/worldgen/qa/class_fixes_data.py`, opt-in na region): obrys tylko z OSM
    z wysokością domyślną: < 60 m² → `gospodarczy`, 3,0 m; 60–250 m² → `dom`; budynek `office` / `block` z typem LoD2
    1130 / 1010 i ZMIERZONYM wzniosem ≥ 1,5 m → `roof_shape` gable / mono. Knyszyn: 99 + 49 + 20.
@@ -41,7 +47,14 @@ generatory, ale reszta miasta pochodziła z reguł pisanych dla Białegostoku (A
    ma tylko `roof_material`, zachowuje regułową witrynę pawilonu.
 6. **Ręczne nadpisania punktów orientacyjnych** (`overrides.yaml`, id `look-*`): poczta (ściany, dach czterospadowy),
    dom narożny Grodzieńska / Rynek, Dom Klattów (drewniany wg OSM), parking dyskontu przy Szkolnej (3 poligony
-   z ortofoto, ESTIMATED ±1 m). Bez nazw i marek.
+   z ortofoto, ESTIMATED ±1 m). Bez nazw i marek. Recenzja 2026-11-17 P1-2: dwa małe obiekty placu wschodniego
+   (OSM way 1427273958, 1,8 × 6,8 m, jasny prawie płaski dach na ortofoto, i kiosk prasowy way 300663247,
+   4,9 × 2,7 m) reguła < 60 m² zamieniła w ślepe szare klocki — wpisy `look-east-square-kiosk` / `-press-kiosk`
+   robią z nich parterowe korpusy z otworami (ceglany / jasny tynk, dach płaski — spadzistego dane nie pokazują,
+   a `roofs.plan` odrzuca rozpiętość < 3 m). Lista pozostałych 13 obrysów `gospodarczy` w pasie 15 m od osi jezdni:
+   `docs/reports/knyszyn-look/sheds_near_road_knyszyn.json` (do przeglądu na kamerach; reguła bez zmian).
+7. **Kamery z wysokości oczu** (P2-3): `look_post_office`, `look_dom_klattow`, `look_rynek_corner_2e17` (1,7 m,
+   18 m od obiektu, pozycje z osi najbliższej ulicy).
 
 ## Czego nie zmieniono (świadomie)
 
