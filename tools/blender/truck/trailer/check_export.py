@@ -21,11 +21,53 @@ import bpy
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.abspath(os.path.join(HERE, "..", "exterior")))
 from check_export import raw_fbx_globals  # noqa: E402  (raw FBX transform parser of the TRAKT validator)
+sys.path.insert(0, HERE)
+import uv_wheel_audit as U  # noqa: E402  (UV rasteriser + red threshold, review s23 P1)
 
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 TRI_LIMIT = {"LOD0": 90000, "LOD1": 25000, "LOD2": 8000}       # = trailer_export.TRI_LIMIT
 BAKED_MATS = ("MI_Trl_Paint", "MI_Trl_Curtain", "MI_Trl_Trim", "MI_Trl_Metal", "MI_Trl_Lights")
 ALLOWED_MISMATCH = ("tyre radius: mesh free", "cargo front z", "cargo height", "combination length")
+
+
+def wheel_uv_rules(lod, objs, m, errors, notes, res=1024):
+    """Review s23 P1 (red rims): (a) every LOD: the 'Atlas' islands of the WHEEL_* objects share no texel (strict
+    raster at 1024 px) with any other object in the Metal and Trim slots - the wheels are baked from their own proxy and
+    merged only where no static island is; (b) LOD0: no wheel Metal texel is red in T_Trl_Metal_C of any tier
+    (R - G > 0.2, docs/06 §5; sampled at the texel under every covered 1024 px cell)."""
+    import numpy as np
+    for mname in ("MI_Trl_Metal", "MI_Trl_Trim"):
+        wheel = np.zeros((res, res), dtype=bool)
+        other = np.zeros((res, res), dtype=bool)
+        for o in objs.values():
+            if o.type != "MESH" or "Atlas" not in o.data.uv_layers:
+                continue
+            names = [s.material.name.split(".")[0] if s.material else "" for s in o.material_slots]
+            if mname not in names:
+                continue
+            cov, _ = U.raster(o.data, names.index(mname), res)
+            if o.name.startswith("WHEEL_"):
+                wheel |= cov
+            else:
+                other |= cov
+        ov = int((wheel & other).sum())
+        if ov:
+            errors.append(f"{lod}: {mname} wheel UV islands share {ov} texels (@{res}) with other objects")
+        notes.append(f"{lod}: {mname} wheel texels {int(wheel.sum())} (@{res}), shared with other objects {ov}")
+        if lod != "LOD0" or mname != "MI_Trl_Metal":
+            continue
+        ys, xs = np.nonzero(wheel)
+        for tier, t in sorted(m["textures"]["Metal"]["C"].items()):
+            im = bpy.data.images.load(os.path.join(REPO, t["path"]))
+            w, h = im.size
+            a = np.empty(w * h * 4, dtype=np.float32)
+            im.pixels.foreach_get(a)
+            bpy.data.images.remove(im)
+            px = a.reshape(h, w, 4)[(ys * h) // res, (xs * w) // res]
+            red = int(((px[:, 0] - px[:, 1]) > U.RED_DELTA).sum())
+            if red:
+                errors.append(f"LOD0: {red} of {len(ys)} wheel Metal texels red in {t['path']} (R-G > {U.RED_DELTA})")
+            notes.append(f"LOD0: wheel Metal texels red in {tier} T_Trl_Metal_C: {red} / {len(ys)}")
 
 
 def main():
@@ -91,6 +133,7 @@ def main():
                 if abs(u[2] - lg["positionZ"]) > 1e-3 or abs(abs(u[0]) - lg["halfTrack"]) > 1e-3 or \
                         abs(u[1] - lg["raisedFootY"]) > 1e-3:
                     errors.append(f"{lod}: {name} pivot {u} not on the landing-gear line")
+        wheel_uv_rules(lod, objs, m, errors, notes)
         if total > TRI_LIMIT.get(lod, 1e9):
             errors.append(f"{lod}: {total} tris > budget {TRI_LIMIT[lod]}")
         if total != info["tris_total"]:
