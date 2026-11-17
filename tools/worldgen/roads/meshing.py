@@ -286,6 +286,7 @@ BACK_WALK_MATS = ("sidewalk_paving", "apron_sett", "apron_paving_light")
 BACK_EDGE_FACE_M = 0.06      # exposed edging (obrzeże) above the grass, WORKING_VALUE
 BACK_PROBE_M = 1.2           # plan distance beyond the edge probed for a hard footprint (another paving / road)
 BACK_FOLD_COS = 0.5          # batter foot segment must run within 60 deg of its edge segment (no fold at tight corners)
+BACK_MIN_FOOT_RATIO = 0.5    # ... and keep >= half its length (concave radius >= ~2 x run; squeezed fans read as walls)
 
 
 def back_flange_batter(buf, hard_mask, hf):
@@ -319,13 +320,24 @@ def back_flange_batter(buf, hard_mask, hf):
         # grass batter from the edging foot outward down to the old flange foot; every station of a converted pair
         # gets its full run (a 0-run station made a vertical grass face, test_junctions_r4 verge ratchet)
         run = np.maximum(depth - BACK_EDGE_FACE_M, 0.0) * S.VERGE_SKIRT_SLOPE
+        # the foot goes out square to the edge itself, on OUT's side: OUT of a junction corner / miter is oblique to
+        # the back edge, and along it the 1 : 2 batter came out steeper than 1 : 1.33 (j:n2229796326:corner3,
+        # verge ratchet). A pair where the edge and OUT disagree by more than ~60 deg keeps its flange (`ok` below).
+        tg = np.gradient(top[:, :2], axis=0)
+        en = np.column_stack([-tg[:, 1], tg[:, 0]])
+        en /= np.maximum(np.hypot(en[:, 0], en[:, 1]), 1e-9)[:, None]
+        cosq = (en * ou).sum(1)
+        en *= np.where(cosq < 0, -1.0, 1.0)[:, None]
+        square = np.abs(cosq) >= BACK_FOLD_COS
         g0 = np.column_stack([top[:, :2], top[:, 2] - BACK_EDGE_FACE_M])
-        g1 = np.column_stack([top[:, :2] + ou * run[:, None], bot[:, 2]])
+        g1 = np.column_stack([top[:, :2] + en * run[:, None], bot[:, 2]])
         # a pair whose batter foot folds back (inside of a tight junction corner: the outward vectors converge)
         # stays a concrete flange - folded grass stood 0.86 m steep over the ground (j:n2229796326:corner3)
         dt = top[1:, :2] - top[:-1, :2]
         dg = g1[1:, :2] - g1[:-1, :2]
-        ok = (dt * dg).sum(1) > BACK_FOLD_COS * np.hypot(*dt.T) * np.hypot(*dg.T)
+        lt, lg = np.hypot(*dt.T), np.hypot(*dg.T)
+        ok = (((dt * dg).sum(1) > BACK_FOLD_COS * lt * lg) & (lg >= BACK_MIN_FOOT_RATIO * lt)
+              & square[:-1] & square[1:])
         conv = (free[ts] | free[ts + 1]) & ok[ts]
         if not conv.any():
             continue

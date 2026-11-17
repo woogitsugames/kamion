@@ -95,6 +95,23 @@ def test_tight_inner_corner_keeps_flange():
     assert all(np.isclose(q.V[1::2, 2], 99.8).all() for q in conc)
 
 
+def test_oblique_out_still_gives_a_1_in_2_batter():
+    """OUT 45 deg off the edge normal (junction corner / miter): the batter is laid square to the edge"""
+    buf = M.MeshBuf()
+    _flange(buf, -5, 5, 0.0, 100.30, S.FLANGE_DEPTH, out=(0.7071, 0.7071))
+    M.back_flange_batter(buf, np.zeros((41, 41), bool), _hf())
+    g = [q for q in buf.parts if q.src.endswith(":vg")][0]
+    a, b, c = (g.V[g.T[:, k]] for k in range(3))
+    nrm = np.cross(b - a, c - a)
+    nz = np.abs(nrm[:, 2]) / np.linalg.norm(nrm, axis=1)
+    assert np.allclose(nz, 1 / np.hypot(1, 1 / S.VERGE_SKIRT_SLOPE), atol=1e-6)
+    # 80 deg off: kept as a flange
+    buf = M.MeshBuf()
+    _flange(buf, -5, 5, 0.0, 100.30, S.FLANGE_DEPTH, out=(0.985, 0.174))
+    M.back_flange_batter(buf, np.zeros((41, 41), bool), _hf())
+    assert not any(q.src.endswith(":vg") for q in buf.parts)
+
+
 def test_untagged_flange_untouched():
     buf = M.MeshBuf()
     xs = np.linspace(-5, 5, 4)
