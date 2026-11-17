@@ -9,15 +9,22 @@
     0.6
   ],
   "working_values": {
-    "variation_gain": 0.1,
-    "roughness_gain": 0.12,
-    "ao_gain": 0.2,
-    "normal_strength": 0.35,
-    "mottle_gain": 0.03
+    "variation_gain": 0.3,
+    "roughness_gain": 0.3,
+    "ao_gain": 0.6,
+    "normal_strength": 1.3,
+    "mottle_gain": 0.09,
+    "grain_feature_mm": [
+      2.0,
+      5.0
+    ],
+    "grain_weight": 0.7,
+    "gloss_patch_weight": 0.5,
+    "roughness_mottle_gain": 0.22
   },
   "normal_slope_deg": {
-    "median": 6.869966819627788,
-    "p95": 14.070927926999815
+    "median": 10.272956310543883,
+    "p95": 20.747419433363646
   },
   "perforation_alpha_pixels_sha256": "f5fb04aa5b882706b9309e885f19477261336ef76a150c3b4d3489dfac3953ec",
   "outputs": [

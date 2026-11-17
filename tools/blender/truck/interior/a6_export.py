@@ -49,7 +49,8 @@ LOD1_DROP = ("rocker_led_", "hatch_pleat_", "din_btn_", "bunk_btn_", "fridge_ven
              "start_ring", "stalk_boss_", "_lever_knob", "_lever_h", "_arm_pivot", "pocket_mat_", "spot_",
              "mirror_spine_", "bunk_strap_", "tweeter_grille_", "dash_spk_rim", "ws_frit_dots",
              "hvac_lcd_seg_", "hvac_knob_mark_", "sun_visor_clip_", "sun_visor_seam_", "socket_12v_cap", "usb_s_",
-             "_vvane", "door_arm_stitch_")
+             "_vvane", "door_arm_stitch_",
+             "apillar_seal_", "apillar_cap_", "dash_tray_ribs_")   # D84 polish details: LOD0 only (LOD1 45k / LOD2 22k)
 LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hvac_icon_", "low_icon_", "light_icon",
                          "defrost_", "reading_lamp_", "pillow", "blanket", "curtain_side_", "hatch_blind", "_hr_collar",
                          "_belt_latch_grip", "_belt_guide", "_buckle", "_pocket_edge", "door_spk_grille_", "vent_",
