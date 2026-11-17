@@ -72,7 +72,7 @@ def block(tile: str) -> str:
             f"    target: {{osm_way: {way}}}",
             f"    reason: \"S8 carriageway, {n} lanes (OSM): class S section instead of the class A rule centred on the "
             f"OSM way - see tools/worldgen/qa/s8_xsec_overrides.py (QA 2026-11-16 rows 78, 81, 82; PTB2022 § 17, § 23).\"",
-            "    confidence: medium (widths: orthophoto +-0.3 m at 3 stations; lateral position: WORKING_VALUE)",
+            "    confidence: \"medium (widths - orthophoto +-0.3 m at 3 stations; lateral position - WORKING_VALUE)\"",
             "    verify: orthophoto cross-section per way (tools/worldgen/qa/ortho_xsec.py) / owner drive",
             f"    set: {{lane_edges: {le}, width: {width}, center_offset: {off}, "
             f"shoulder_right: {{kind: ground, paved_m: 0.05, ground_m: {GROUND_SHOULDER_M}}}}}",
