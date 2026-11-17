@@ -430,7 +430,7 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
                 d0, d1 = d0 * vscale[i], (d0 * vscale[i] + (d1 - d0)) if vert else d1 * vscale[i]
             p0 = G[i] + OUT[i] * (u0 * scale[i])
             p1 = G[i] + OUT[i] * (u1 * scale[i])
-            if batter and (br is None or not br[i]):
+            if batter and (br is None or not br[i]) and not (uclip is not None and np.isfinite(uclip[i])):
                 p1 = p1 + OUT[i] * (abs(d1 - d0) * S.EMBANKMENT_SLOPE)
             rows.append([[p0[0], p0[1], zg[i] + d0], [p1[0], p1[1], zg[i] + d1]])
         V = np.array(rows).reshape(-1, 3)
