@@ -125,7 +125,7 @@
  "rules": {
   "note": "WORKING_VALUE threshold; ADR 0214 used BDOT10k land-cover shares, not available here",
   "teryt_powiat": "largest area share of the tile (OSM admin_level=6 polygons)",
-  "teryt_powiat_extra_min_area_share": 0.05
+  "teryt_powiat_extra_min_area_share": 0.0
  },
  "seams": [
   {
@@ -3681,7 +3681,9 @@
    },
    "prev": "dw671-tykocin-09",
    "teryt_powiat": "2002",
-   "teryt_powiat_extra": [],
+   "teryt_powiat_extra": [
+    "2008"
+   ],
    "through": {
     "chain": [
      [

@@ -42,7 +42,8 @@ ADR = "0231"
 C = regions.REGIONS["bialystok-industrial-c"]
 X0, Y0, T = C.bbox[0], C.bbox[1], regions.TILE_SIZE_M
 MARGIN_M = T                      # extract keeps OSM elements within one tile of the ring
-EXTRA_POWIAT_MIN_SHARE = 0.05     # WORKING_VALUE: second powiat listed in teryt_powiat_extra from 5 % of the tile area
+EXTRA_POWIAT_MIN_SHARE = 0.0      # every powiat the tile touches (was 5 %: tykocin 3.95 % in 2008 then missed its BDOT10k /
+                                  # LoD and broke the PRG registry check of ADR 0219; world2-finish 2026-11-17, ADR 0231 §5a)
 GENERIC_UA = "research-fetch/1.0"
 
 # corridor -> (road ref, already built region the corridor continues from, tiles in driving order: id, lattice i, j)
