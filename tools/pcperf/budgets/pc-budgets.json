@@ -17,7 +17,7 @@
       "targetFps": 30,
       "tier": "Low",
       "checks": [
-        {"metric": "frame_ms.p50", "max": 33.38},
+        {"metric": "frame_ms.p50", "max": 33.3},
         {"metric": "frame_ms.p95", "max": 36.0},
         {"metric": "frame_ms.p99", "max": 50.0},
         {"metric": "frames_over_pct", "threshold_ms": 66.7, "max": 0.5},
