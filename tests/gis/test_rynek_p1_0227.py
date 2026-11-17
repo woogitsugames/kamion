@@ -133,14 +133,16 @@ def test_outer_diameter_too_far_from_the_mapped_ring_is_stale(d):
     assert any("rejected" in n for n in j.compact.notes)
 
 
-def test_knyszyn_override_sets_26_m_working_value():
+def test_knyszyn_outer_diameter_entry_is_disabled_with_reason():
+    """Leader s23 (world3): the 26 m entry stays in the file commented out until the roundabout generator moves the ring
+    nodes with the diameter (KRTG gap 1.73 m, ADR 0274); the mechanism itself is covered by the synthetic tests."""
     import yaml
-    ov = yaml.safe_load((ROOT / "Data/Regions/knyszyn/overrides.yaml").read_text(encoding="utf-8"))["overrides"]
-    o = next(o for o in ov if o["id"] == "knyszyn-roundabout-outer-diameter-d41")
-    assert o["set"] == {"compact_roundabout": {"outer_diameter_m": 26.0}} and "WORKING_VALUE" in o["reason"]
-    assert CR.validate(o["set"]["compact_roundabout"]) == {"outer_diameter_m": 26.0}
-    ids = [x["id"] for x in ov]
-    assert ids.index(o["id"]) > ids.index("knyszyn-roundabout-compact")     # merged after the kerb-mode entry
+    txt = (ROOT / "Data/Regions/knyszyn/overrides.yaml").read_text(encoding="utf-8")
+    ov = yaml.safe_load(txt)["overrides"]
+    assert all(o["id"] != "knyszyn-roundabout-outer-diameter-d41" for o in ov)
+    assert "# - id: knyszyn-roundabout-outer-diameter-d41" in txt and "DISABLED" in txt
+    assert "#     compact_roundabout: {outer_diameter_m: 26.0}" in txt
+    assert CR.validate({"outer_diameter_m": 26.0}) == {"outer_diameter_m": 26.0}
 
 
 # ------------------------------------------------------------------------------------------ (a) market canopy gaps

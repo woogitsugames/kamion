@@ -804,20 +804,24 @@ overrides:
   # --- ADR 0227 dopisek D41 (rynek-p1-s23): own blocks, appended at the end; entries above are untouched ---
   # (d) outer diameter of the DK65 x DW671 compact roundabout. A separate entry so the value is a one-line change;
   # merged with knyszyn-roundabout-compact (roads/network.py: compact_roundabout options merge in file order).
-  - id: knyszyn-roundabout-outer-diameter-d41
-    target: {osm_way: [1426801304]}
-    reason: >-
-      WORKING_VALUE 26.0 m: outer kerb diameter of the ring carriageway. OSM ring axis r 8.65 m + authored ring width
-      5.0 m gives 22.3 m (22.6 m in docs), the lead's reading of owner drone photo 9 by car lengths is about 26 m
-      (docs/reports/INTEGRATION-2026-11-16-rynek-s23.md section 7, OPEN-DECISIONS OD-046). NOT MEASURED: the GUGiK
-      orthophoto 2025-05-27 predates the roundabout, the photo is not in git. Accepted range 14-40 m and at most
-      max(2 m, 40 %) from the fitted axis radius, else this entry is stale and the OSM radius stays. Change only this
-      number; the splitter lengths of knyszyn-roundabout-dk65-split-s / -n are measured from the split node, so the
-      islands get ~1.8 m shorter at the ring when the ring grows (re-check on photo 9).
-    confidence: low
-    verify: render rondo_dk65_top next to owner photo 9 (cars 4.5 m as the scale), adjust this value, rerun swept_path.py
-    set:
-      compact_roundabout: {outer_diameter_m: 26.0}
+  # DISABLED (leader s23, world3 17.11): with this entry the KRTG ring nodes stay on the OSM radius 8.65 m while the
+  # ring axis moves to r 10.5 m - node <-> geometry gap 1.73 m on 8 ring edges (ADR 0274, review #169 P2-7,
+  # test_effective_graph_readers::test_knyszyn_route_graph_...). Re-enable when the roundabout generator moves the
+  # ring nodes with the diameter (no gap). Value OD-046 still open.
+  # - id: knyszyn-roundabout-outer-diameter-d41
+  #   target: {osm_way: [1426801304]}
+  #   reason: >-
+  #     WORKING_VALUE 26.0 m: outer kerb diameter of the ring carriageway. OSM ring axis r 8.65 m + authored ring width
+  #     5.0 m gives 22.3 m (22.6 m in docs), the lead's reading of owner drone photo 9 by car lengths is about 26 m
+  #     (docs/reports/INTEGRATION-2026-11-16-rynek-s23.md section 7, OPEN-DECISIONS OD-046). NOT MEASURED: the GUGiK
+  #     orthophoto 2025-05-27 predates the roundabout, the photo is not in git. Accepted range 14-40 m and at most
+  #     max(2 m, 40 %) from the fitted axis radius, else this entry is stale and the OSM radius stays. Change only this
+  #     number; the splitter lengths of knyszyn-roundabout-dk65-split-s / -n are measured from the split node, so the
+  #     islands get ~1.8 m shorter at the ring when the ring grows (re-check on photo 9).
+  #   confidence: low
+  #   verify: render rondo_dk65_top next to owner photo 9 (cars 4.5 m as the scale), adjust this value, rerun swept_path.py
+  #   set:
+  #     compact_roundabout: {outer_diameter_m: 26.0}
   # (a) measured eave rectangles of the four market canopies; replaces the hand traces of
   # knyszyn-market-canopies-0227 by id (streetscape/knyszyn_market_0227.py GEOMETRY_KIND), that entry stays as authored.
   - id: knyszyn-market-canopy-eaves-d41
