@@ -13,7 +13,7 @@ import numpy as np
 
 from . import standards as S
 from .geom import ear_clip, polygon_area
-from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, lane_w_of, side_params, side_profile
+from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, lane_w_of, side_extent, side_params, side_profile
 
 
 @dataclass
@@ -212,9 +212,18 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
                 # E 786 N -831, E 321 N -603, E 48 N -460) or a ditch depth used as a kerb height (a concrete fin
                 # where the hidden kerb starts). The borrowed station continues this run's own height instead.
                 prm[0] = (kr, prm[1][1], *prm[0][2:])
+            uclip = None
+            if (r and not coarse and kr in (RURAL, MEDIAN_RURAL) and _wl is not None and params[lo][0] == URBAN
+                    and c.interp(_wl.astype(float), st[lo]) > 0.5):
+                # c-p2-s23 (REVIEW s23 c-p1 P2, g3b_ext34_s1482): the station borrowed from a walled ramp is a deck
+                # station - the rural shoulder + ditch must not reach beyond its cap edge = the wall line. It stood
+                # 1.3 m in front of the wall face at the height of the painted band (E -387.65 N -102.12, z 132.79:
+                # the green zigzag across the red band).
+                uclip = np.full(hi - lo, np.inf)
+                uclip[0] = side_extent(*params[lo])
             _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
                         br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}",
-                        noflange=None if nofl is None else nofl[sl], capm=capm[sl])
+                        noflange=None if nofl is None else nofl[sl], capm=capm[sl], uclip=uclip)
         return
     _emit_strip(buf, G, N * sgn, zg, params, kap, hw, side == "R",
                 br, coarse, c.id + ":" + side, noflange=nofl, capm=capm)
@@ -368,9 +377,11 @@ def back_flange_batter(buf, hard_mask, hf):
     return rep
 
 
-def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None, capm=None):
+def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None, capm=None, uclip=None):
     """G: gutter points (n,2), OUT: unit outward vectors (n,2) (may be miter-scaled), zg gutter z,
-    params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside)."""
+    params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside).
+    uclip: per-point maximum lateral reach of the profile (inf = free); the skirt of a span next to a clipped point
+    is not meshed (the retaining wall stands there, build_bridge_extras)."""
     n = len(G)
     if n < 2:
         return
@@ -391,6 +402,8 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
         R = 1.0 / np.maximum(kap_toward[inside], 1e-6)
         allow = np.maximum(0.3, 0.9 * R - hw[inside] if np.ndim(hw) else 0.9 * R - hw)
         scale[inside] = np.minimum(1.0, allow / np.maximum(umax[inside], 1e-6))
+    if uclip is not None:
+        scale = np.minimum(scale, np.asarray(uclip, float) / np.maximum(umax, 1e-6))
     # rural ditch profiles squeezed on the inside of a curve keep their 1:1.5 slopes: depths shrink with the
     # widths (a shallower ditch), otherwise a 0.6 m ditch compressed to 40 % reads as a 55-60 deg green wall
     # (REVIEW r4 W-H5, Andersa slip lane, ADR 0033). The bottom skirt keeps its full depth.
@@ -448,6 +461,10 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
                                    np.array([[profs[i][k][0] * scale[i], profs[i][k][2] * scale[i]] for i in range(n)]).ravel()])
         T = grid_tris(n, 2, flip=flip)
         vertical = rw < 1e-6
+        if uclip is not None and vertical and k == nseg - 1 and len(T):
+            ts = np.minimum(T.min(1) // 2, n - 2)
+            cl = np.isfinite(np.asarray(uclip, float))
+            T = T[~(cl[ts] | cl[ts + 1])]
         is_flange = vertical and k == nseg - 1 and not coarse
         if is_flange and noflange is not None and len(T):
             # ADR 0110: behind a verge strip (meshing._emit_verge) the buried flange is never seen - not meshed
