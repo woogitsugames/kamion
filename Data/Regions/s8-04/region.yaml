@@ -1,0 +1,68 @@
+id: s8-04
+title: S8 pętla 04 — od węzła Tykocin w stronę Rzędzian (Babino)
+status: WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-8,0) of the ADR 0203 plan, loop tile 4/15)
+candidate: L_s8_loop
+crs:
+  horizontal: EPSG:2180 (ETRF2000-PL / CS92)
+  vertical: PL-EVRF2007-NH (EPSG:9651)
+  axes_unity: X = east (EPSG:2180 x), Y = up, Z = north (EPSG:2180 y)  [ADR 0003]
+bbox:
+  xmin: 760587.0
+  ymin: 595199.0
+  xmax: 762635.0
+  ymax: 597247.0
+  width_m: 2048.0
+  height_m: 2048.0
+origin:
+  x: 761611.0
+  y: 596223.0
+  z: 114.94
+  note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
+teryt_powiat: '2002'
+products:
+  buildings.geojson: Data/Regions/s8-04/buildings.geojson
+  ortho.json: Data/Regions/s8-04/ortho.json
+  roads.graph.json: Data/Regions/s8-04/roads.graph.json
+  terrain.json: Data/Regions/s8-04/terrain.json
+big_products_not_in_git:
+- Data/raw/derived/s8-04/heightmap_2049.r16
+- Data/raw/derived/s8-04/ortho_0p25m.tif
+sources:
+- id: osm-geofabrik-podlaskie
+  license: ODbL 1.0
+  attribution: © OpenStreetMap contributors
+  manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
+  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
+- id: gugik-nmt-2025-s8-04
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-nmt-2025-s8-04.json
+  manifest_sha256: 98a6b4f350d54ccffaf1f0878bf1db8dfbb7b262e85454906c12d97474de57a8
+- id: gugik-orto-2024-rgb-0p25-s8-04
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-s8-04.json
+  manifest_sha256: 484d2b07481d130ed7c5a4d7a96c2b92a44a450e8a56b992bebd140c5c87a4eb
+- id: gugik-bdot10k-2002
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2002.json
+  manifest_sha256: 0530d930aa45984c5024b8c55911969caa517cfad911cbea6d2efa158bd48151
+- id: gugik-lod1-2024-2002
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2002.json
+  manifest_sha256: 208717117ca8ef4ee81ecfb500ad0f36b31ea36d02c8c8873f488d3a625d4133
+- id: gugik-lod2-2017-2002
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2002.json
+  manifest_sha256: 57606993ad174e3b804cd0353a8dd45cc5ef661f81f6d8d2cb3cfb52c2575d1c
+rebuild:
+- uv run --project tools/worldgen tools/worldgen/ingest.py --region s8-04
+- uv run --project tools/worldgen tools/worldgen/build_region.py --region s8-04

@@ -1,0 +1,27 @@
+{
+ "bounds": [
+  760587.0,
+  595199.0,
+  762635.0,
+  597247.0
+ ],
+ "file": "Data/raw/derived/s8-04/ortho_0p25m.tif",
+ "in_git": false,
+ "res_m": 0.25,
+ "sha256": "0b2ef34b8d8c0df3663b0f05e8df6ce7ed08d2579e05f64bc8c984ff48ec0561",
+ "size_px": [
+  8192,
+  8192
+ ],
+ "source_crs": [
+  "EPSG:2180"
+ ],
+ "source_manifest": "gugik-orto-2024-rgb-0p25-s8-04",
+ "source_res_m": [
+  [
+   0.25,
+   0.25
+  ]
+ ],
+ "use": "visual reference + alignment QA only (docs/05 §3); never a game texture"
+}
