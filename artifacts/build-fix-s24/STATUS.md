@@ -5,3 +5,6 @@
 - NASTĘPNY KROK: Unity (slot) Game.Editor.Setup.ProjectSetup.ApplyRenderingBatch -buildTarget Win64 -> git diff game/ProjectSettings > artifacts/build-fix-s24/projectsettings.diff; potem pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64
 - 20:56 ApplyRenderingBatch Win64 exit=0 23 s: jedyna zmiana ProjectSettings.asset = wpis Standalone batching, blob 4643dd70a IDENTYCZNY z efektem ubocznym buildu (artifacts/build-fix-s24/projectsettings.diff); NIE commitowane (lider). URP assets/QualitySettings bez zmian po setup.
 - NASTĘPNY KROK: czekam na EditMode (setup-tests.status 'editmode exit=')
+- 20:59 EditMode Win64: 1340 total / 1243 pass / 3 fail / 94 skip (artifacts/tests/editmode-20261117-205633.xml). Nowe PinGuidTests 3/3, BuildInfoDirtyTests 1/1, DrivingScenesFullTruckTests 5/5 pass. 3 faile środowiskowe (worktree bez _Generated/World i zbudowanych zestawów PBR): LightPostPolicy (czyta _Generated/World/bialystok-industrial-c), 2x CarPaint Channels (Has(texture_set)); w win-build run2 przeszły.
+- 21:00 build Win64 bez regionów (weryfikacja pkt 2: diff przed == po) w toku: build.status
+- NASTĘPNY KROK: Get-Content artifacts/build-fix-s24/build.status (czekać na diff-unchanged=)
