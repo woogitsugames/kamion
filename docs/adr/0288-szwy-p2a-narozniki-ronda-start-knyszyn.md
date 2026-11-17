@@ -48,20 +48,27 @@ HANDOVER 17.11 01:4x / 07:0x (uskok zach. 0,506 m otwarty), 07:4x (zlecenie seam
    `shift_max_m = 0`), a poprawka `drop_overlapping` dotknęłaby każdego rozwidlenia (ratchety fidelity C) w trakcie pracy
    c-p2-s23 nad C. Otwarte niżej.
 
-## Wynik
-Patrz raport agenta (liczby z sond po przebudowie: `knyszyn_s_kerb_step.py`, `link_seams.py`, `seam_marking_strip.py`,
-`qa.seams`). Narożniki ronda: max spadek linii krawężnika 0,514 / 0,102 / 0,125 / 0,462 → 0,116 / 0,102 / 0,125 / 0,132 m/m,
-trawa na 4/4 narożnikach (było 2/4).
+## Wynik (przebudowa po merge main e0a0ccc21; sondy w `artifacts/seams-fix-s23/`)
+- Narożniki ronda: max spadek linii krawężnika 0,514 / 0,102 / 0,125 / 0,462 → 0,116 / 0,102 / 0,125 / 0,132 m/m, trawa na
+  4/4 narożnikach (było 2/4). `knyszyn_s_kerb_step.py`: zachód max 0,506 → 0,218 m (mediana 0,152), wschód 0,191 m —
+  **poprawa do poziomu strony wschodniej, nie zamknięcie progu 0,15** (reszta = teren za pasem trawy 1 m).
+- DW671 knyszyn | knyszyn-w: linie ±1,75 m ciągłe przez szew, w knyszyn-w 0–8,35 m, potem P-1 (`dw671_seam_lines_after.txt`).
+- knyszyn-s | knyszyn: asfalt 7,66 | 7,66 m, linie ±3,55 | ±3,55 (`link_seams_after.json`).
+- `qa.seams`: FAIL 19 (ADR 0275) → 16 (pozostałe: referencje rozstawu linii K1, pobocza DK8 kleeberga | knyszynska), PRZEJŚCIE 11.
+- Start w knyszyn: model kinematyczny `swept_path` po ścieżce „60 m ogona trasy + cały link” (`qa/link_swept_check.py`):
+  0 punktów krawędzi opon poza twardą nawierzchnią; poza jezdnią tylko naczepa na rondzie (s 689–697 m, fartuch/krawężnik
+  wyspy — ten sam przejazd co link korytarza). Prędkość/poślizg poza modelem.
 
 ## Budżet
-Rondo: trawa na 2 dodatkowych narożnikach (pas `_emit_verge`, uproszczenie DP 2,5 cm) — kilkaset trójkątów (ESTIMATED, liczba
-z `roads_qa.verge_strips` po przebudowie w raporcie). P-2a: 8,4 m linii ciągłej zamiast 2 kresek — +0 draw calls (ta sama
+Rondo: trawa na 2 dodatkowych narożnikach (pas `_emit_verge`) — ESTIMATED ≤ ~1,5 tys. tris. `roads_qa.verge_strips` knyszyn
+7 101 → 28 083 tris po przebudowie, ale razem ze zmianami batter z main (c-p1/c-p2; knyszyn-w bez rond też +5,9 tys.) — podział UNVERIFIED. P-2a: 8,4 m linii ciągłej zamiast 2 kresek — +0 draw calls (ta sama
 siatka `markings`). Linki tras: dane, 0 kosztu renderu.
 
 ## Otwarte
-1. C | Maczka: łącznica `w606396469` leży ~4,25 m na pasie DK8 przez 27 m (`fork_abreast` shift 0) — decyzja, czy to włączenie
-   pasa (P-6/P-1 między łącznicą a DK8) czy zjazd z zakładką; potrzebny odczyt ortofoto GUGiK (776971, 596282) i właściciel
-   kafla C. Do tego czasu linia między pasami DK8 zaczyna się 0,7 m za szwem w Maczce.
+1. **C | Maczka NIE naprawione**: łącznica `w606396469` leży ~4,25 m na pasie DK8 przez 27 m (`fork_abreast` shift 0), więc
+   `drop_overlapping` usuwa linię między pasami DK8 na ostatnich ~7,5 m w C. Ortofoto GUGiK 2025 (`ortho_c_maczka.jpg`,
+   `ortho_maczka_c.jpg`) pokazuje linię przerywaną ciągłą przez szew i łącznicę obok DK8 oddzieloną szrafem — błąd jest
+   w ułożeniu łącznicy (abreast), do właściciela kafla C.
 2. Start w knyszyn: złącze trasa → link ma załamanie 70–73° i promień ~3,9 m (narożnik Rynku, trasa kończy się w węźle);
    na Rynku dalej R 4,9 m (trasa C ma 5,9 m). Przejazd ciężarówką autopilotem NIESPRAWDZONY (zakaz uruchamiania exe w tym
    zadaniu) — do sprawdzenia: `Kamion.exe -scene knyszyn -stream 1 -autopilot route -speed 30`.
