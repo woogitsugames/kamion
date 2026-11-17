@@ -13,3 +13,9 @@ NASTĘPNY KROK: uv run --project tools/worldgen python tools/worldgen/qa/seam_ma
 - (2) już OK (7,66|7,66). (4) otwarte: łącznica w606396469 na pasie DK8 (abreast shift 0); ortofoto: linia w terenie ciągła przez szew.
 - buildy: knyszyn-w start 09:37:36, knyszyn start 09:38:52 (artifacts/seams-fix-s23/build-times.txt)
 NASTĘPNY KROK: po buildach: uv run --project tools/worldgen python scripts/export-route.py --region knyszyn ; ... --region knyszyn-w ; potem sondy + qa.seams + route_links.py
+## r3 (12:4x)
+- knyszyn-w zbudowany 09:37:36–09:42:46, knyszyn 09:38:52–09:52:50 (derived/knyszyn w main = seams-fix-s23 od 09:52:50).
+- sondy: uskok zach. 0,506→0,218 m (mediana 0,152), wsch. 0,191 bez zmian; DW671 szew: ciągłe ±1,75 m 0–8,35 m w knyszyn-w; link_seams knyszyn-s|knyszyn 7,66|7,66.
+- qa.seams: FAIL 16 (było 19 w ADR 0275; pozostałe = referencje rozstawu linii, pobocza DK8 kleeberga), PRZEJŚCIE 11.
+- pytest tests/gis 2405/3: reader seam_p2a (naprawione), fidelity C stale (run.py w toku), test_hero_bridge 0,003 m (C, nie z tej gałęzi).
+NASTĘPNY KROK: bash artifacts/seams-fix-s23/unity-chain.sh (import Win64 + vqa High) — w toku; potem obejrzeć PNG, commit fidelity C.
