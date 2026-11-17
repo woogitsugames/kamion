@@ -1,4 +1,4 @@
-# STATUS full-build-s23 (worktree .claude/worktrees/win-build-s23, gałąź full-build-s23 z origin/main 0fd0e048a)
+# STATUS full-build-s23 (worktree .claude/worktrees/win-build-s23 na gałęzi `build/win-s23` — NIE scalać do main; main merguj DO niej. Poprawki skryptów/parsera: gałąź `full-build-s23` (cherry-pick + push). Baza origin/main 0fd0e048a)
 
 - [17.11 07:58] Worktree + kopia Library z pc-visual-s23 (8,1 GB, Win64 — setup 48 s, „Targeting platform: Win64”), _Generated/cc0/megascans z main, junctiony Data/raw/*. Brakujące nieśledzone art-source (wnętrze kabiny LOD0 itd., 1 GB) dokopiowane z main.
 - [08:01] Parser pc_metrics: tolerancja progu frame_ms przy limicie FPS (ee1c5ee69, 53/53 testów).
