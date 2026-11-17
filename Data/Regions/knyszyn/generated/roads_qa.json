@@ -3097,38 +3097,38 @@
      {
       "arm": "c:w232511646:3047667219-1134814357",
       "near_edge_from_ring_m": 5.0,
-      "stripes": 8
+      "stripes": 6
      }
     ],
     "feeders": 8,
     "id": "cr:n13115969575",
-    "island_r_m": 4.8,
+    "island_r_m": 2.95,
     "mode": "kerbs",
     "notes": [],
-    "outline_m2": 1786.5,
+    "outline_m2": 1727.1,
     "p13_entries": 4,
     "r_axis_fit_m": 8.65,
-    "r_axis_m": 10.5,
-    "r_outer_m": 13.0,
+    "r_axis_m": 8.65,
+    "r_outer_m": 11.15,
     "ring_asphalt_m": 5.0,
     "ring_chains": 8,
     "splitter_len_m": [
      4.5,
-     5.5,
+     7.3,
+     4.6,
      4.5,
+     26.2,
      4.5,
-     24.4,
-     4.5,
-     18.4
+     20.2
     ],
     "splitter_m2": [
-     10.3,
-     7.7,
-     9.4,
-     9.9,
-     48.9,
      10.6,
-     35.9
+     11.9,
+     10.3,
+     10.2,
+     52.8,
+     10.6,
+     40.2
     ],
     "splitters": 7
    }
@@ -3172,7 +3172,7 @@
    "patches": 257
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 450907,
+  "footprint_nodes": 450853,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3368,52 +3368,52 @@
    ],
    "islands": [
     {
-     "area_m2": 10.3,
+     "area_m2": 10.6,
      "built": true,
      "id": "cr:n13115969575:splitter:n13432353453:a",
-     "note": "z 121.78",
+     "note": "z 121.86",
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 7.7,
+     "area_m2": 11.9,
      "built": true,
      "id": "cr:n13115969575:splitter:n13432353453:b",
-     "note": "z 121.56",
+     "note": "z 121.57",
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 9.4,
+     "area_m2": 10.3,
      "built": true,
      "id": "cr:n13115969575:splitter:n3047667218:a",
-     "note": "z 122.34",
+     "note": "z 122.32",
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 9.9,
+     "area_m2": 10.2,
      "built": true,
      "id": "cr:n13115969575:splitter:n3047667219s:a",
-     "note": "z 122.26",
+     "note": "z 122.30",
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 48.9,
+     "area_m2": 52.8,
      "built": true,
      "id": "cr:n13115969575:splitter:n3047667219s:b",
-     "note": "z 122.57",
+     "note": "z 122.55",
      "surface": "sidewalk_paving"
     },
     {
      "area_m2": 10.6,
      "built": true,
      "id": "cr:n13115969575:splitter:n4898926854s:a",
-     "note": "z 121.91",
+     "note": "z 121.93",
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 35.9,
+     "area_m2": 40.2,
      "built": true,
      "id": "cr:n13115969575:splitter:n4898926854s:b",
-     "note": "z 121.61",
+     "note": "z 121.63",
      "surface": "sidewalk_paving"
     }
    ],
@@ -3557,16 +3557,10 @@
     ]
    },
    {
-    "id": "knyszyn-roundabout-outer-diameter-d41",
+    "id": "knyszyn-dk65-split-s-kerbed-edge-w3",
     "targets": [
-     "w1426801304:13115969575-13432353449",
-     "w1426801304:13115969578-13115969582",
-     "w1426801304:13115969582-13115969583",
-     "w1426801304:13115969583-13432353458",
-     "w1426801304:13115969587-13432353443",
-     "w1426801304:13432353443-13115969575",
-     "w1426801304:13432353449-13115969578",
-     "w1426801304:13432353458-13115969587"
+     "w1464342635:4898926854-13115969582",
+     "w1464342640:13115969578-4898926854"
     ]
    }
   ],
