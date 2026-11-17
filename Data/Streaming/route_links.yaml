@@ -41,6 +41,19 @@ links:
                                               # tapered by the roundabout 37 m before the seam; knyszyn-w lanes are not)
     tail_to: route:dw671-tykocin-01
     note: "DW671 Tykocka across the south-east corner of knyszyn-w to the seam with dw671-tykocin-01"
+  # ADR 0288 (owner D82): the loop S8 <-> DW671 <-> Tykocin. The S8 westbound carriageway (way 305447699) only cuts the
+  # south-west corner of dk65-01: it enters from the south seam (tile dk8-s8-jeroniki, ADR 0278 - defined, not built)
+  # and leaves on the west seam = the s8-01 route entry. In the directed graph of dk65-01 that seam node is reachable
+  # ONLY from the south seam node (the on-ramps of the junction Bialystok Zachod towards Warsaw lie in dk8-s8-jeroniki),
+  # so a link from the dk65-01 control route is not possible inside this tile; the dk65-01 route stays untouched.
+  # Missing for a continuous trip Bialystok -> S8: dk8-s8-jeroniki built + two links (dk65-01 -> south seam, jeroniki).
+  - id: dk65-01-s8-corner
+    tile: dk65-01
+    destination: s8
+    start_epsg2180: [769340.8, 595199.0]  # boundary node of way 305447699 (south edge, seam with dk8-s8-jeroniki)
+    end_epsg2180: [768779.0, 595332.7]    # boundary node of way 305447699 (west edge) = s8-01 route entry
+    tail_to: route:s8-01
+    note: "S8 westbound across the south-west corner of dk65-01 to the seam with s8-01"
 # Driving corridors as ordered tile lists (Bialystok -> Knyszyn -> Tykocin, owner request s23). The generator keeps the
 # prefix of tiles present in Data/Regions (main: up to dw671-tykocin-01; the ring branch world2-s23 adds
 # dw671-tykocin-02..09 and tykocin) and checks every consecutive pair: edge neighbours (N/E/S/W) and a route join
@@ -52,3 +65,6 @@ corridors:
             dk65-01, dk65-02, dk65-03, dk65-04, dk65-05, dk65-06, dk65-07, dk65-08, dk65-09, dk65-10, dk65-11,
             knyszyn-s, knyszyn, knyszyn-w, dw671-tykocin-01, dw671-tykocin-02, dw671-tykocin-03, dw671-tykocin-04,
             dw671-tykocin-05, dw671-tykocin-06, dw671-tykocin-07, dw671-tykocin-08, dw671-tykocin-09, tykocin]
+  - id: s8-loop
+    destination: s8
+    tiles: [dk65-01, s8-01, s8-02, s8-03, s8-04, s8-05, s8-06, s8-07, s8-08, s8-09, s8-10, s8-11, s8-12]
