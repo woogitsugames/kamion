@@ -261,3 +261,12 @@ Przebudowa knyszyn na kodzie #147 #154 #158 #153 #150 #164 #165 #169 + main; VQA
   chodników). Uwaga do sondy: oś stacji to cięciwa drogi OSM 286990127, stąd krawędź E na 0–4,4 m od osi.
   Test `test_knyszyn_route_graph_…` zielony po wyłączeniu `knyszyn-roundabout-outer-diameter-d41` (sprawdzone na danych z gita).
 - P2-7 / #153: luka KRTG 1,73 m na pierścieniu — ADR 0274, test `test_knyszyn_route_graph_…` czerwony.
+- **Aktualizacja world3 r3 (17.11, decyzja lidera):** wpis `knyszyn-roundabout-outer-diameter-d41` wyłączony
+  (zakomentowany z powodem w `overrides.yaml`; wraca, gdy generator ronda przeniesie węzły pierścienia) — test KRTG
+  zielony. Przyczyna uskoku od wschodu ustalona: narożnik S→E jest „mieszany” (ramię S wiejskie, ramię E po #165 ma
+  chodnik → jego pas trawy = 0), więc poprawka (e) dawała stacjom przekształconym `max(cv) = 0` m trawy. Poprawka
+  w `meshing.py`: przekształcona stacja (zwykły krawężnik bez chodnika) dostaje pas ADR 0110 `VERGE_W`. Dodatkowo
+  `knyszyn-dk65-split-s-kerbed-edge-w3` (krawężnik z trawą w strefie rozdziału). Sonda: wschód max 0,652 → 0,191 m
+  (mediana 0,505 → 0,058); zachód bez zmian 0,506 m — narożnik S→W ma skok wysokości linii krawężnika 0,51 m/m,
+  przy którym bezpiecznik `meshing` celowo nie kładzie trawy (OTWARTE). Kadr r1 vs r3 `rondo-dk65-from-south`:
+  ściana po prawej znikła.
