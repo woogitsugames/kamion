@@ -168,3 +168,46 @@ def test_after_route_start_rounded_on_one_way_arrival():
     assert RL.arrival_edge(two, "u", "c") == ("e_in", 40.0)
     assert not two.has_edge("u", "c")                       # no U-turn onto the arrival edge
     assert RL.arrival_edge(two, "u", None) is None
+
+
+# ---------------------------------------------------------------- swept path of the truck along every link (hard gate)
+def _swept():
+    sys.path.insert(0, str(ROOT / "tools" / "worldgen" / "qa"))
+    import link_swept_check as SW
+    return SW
+
+
+def test_links_keep_tyres_on_hard_surface():
+    """knyszyn-r24 (ADR 0289 'Recenzja s24', Codex P1): tractor + 13.6 m semitrailer following each link exactly
+    (kinematic swept path, qa/link_swept_check.py) has 0 tyre edge points off the built hard surface (asphalt, kerbs,
+    paving, apron; not grass / verge / roundabout island). Links of tiles not built on this machine are skipped."""
+    SW = _swept()
+    checked = 0
+    for L in _links()["links"]:
+        if not SW.built(L["tile"]):
+            continue
+        r = SW.check(L["id"])
+        assert r["tyre_points"] > 100, L["id"]
+        assert r["off_hard"] == 0, (L["id"], r["off_hard"], r["first_off"])
+        checked += 1
+    if not checked:
+        pytest.skip("no link tile built on this machine (build_world not run)")
+
+
+def test_swept_gate_catches_the_monki_corner_without_swing(tmp_path):
+    """Negative control: the Monki link without its authored swing cuts the kerb corner of the roundabout again."""
+    SW = _swept()
+    if not SW.built("knyszyn"):
+        pytest.skip("knyszyn not built on this machine")
+    import yaml
+    cfg = yaml.safe_load(RL.SRC.read_text(encoding="utf-8"))
+    L = next(x for x in cfg["links"] if x["id"] == "knyszyn-rynek-to-dk65-w")
+    assert L.get("swing"), "the swing is what keeps the semitrailer on the roundabout"
+    L.pop("swing")
+    cfg["links"] = [x for x in cfg["links"] if x["id"] == "knyszyn-rynek-to-dk65-w"]
+    cfg["corridors"] = []
+    src = tmp_path / "links.yaml"
+    src.write_text(yaml.safe_dump(cfg), encoding="utf-8")
+    links = RL.build(src)["links"]
+    r = SW.check("knyszyn-rynek-to-dk65-w", links=links)
+    assert r["off_hard"] > 0, r

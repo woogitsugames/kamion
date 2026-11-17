@@ -146,6 +146,38 @@ def _blend(pts: list[list[float]], target, head: bool) -> float:
     return math.hypot(dx, dy)
 
 
+def _swing(pts: list[list[float]], near, left_m: float, half_m: float) -> float:
+    """Shift the path sideways (left_m > 0 = to the left of the travel direction) around the path point nearest to near,
+    with a raised-cosine weight over +-half_m along the path (0 at both ends, left_m at the centre). knyszyn-r24 (ADR 0289
+    'Recenzja s24'): the right turn Tykocka -> DK65 W at the compact roundabout of Knyszyn follows the right-lane centre
+    through a ~7 m corner, and the semitrailer cut the kerb corner between the arms (15 tyre points off the hard surface,
+    qa/link_swept_check.py); a driver swings wide into the ring there. Returns the station [m] of the centre."""
+    P = np.asarray(pts, float)
+    s = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+    k = int(np.argmin(np.hypot(*(P - np.asarray(near, float)).T)))
+    d = np.gradient(P, axis=0)
+    d /= np.maximum(np.linalg.norm(d, axis=1), 1e-9)[:, None]
+    nrm = np.column_stack([-d[:, 1], d[:, 0]])
+    u = (s - s[k]) / half_m
+    w = np.where(np.abs(u) < 1.0, 0.5 * (1.0 + np.cos(np.pi * u)), 0.0)
+    for i in np.nonzero(w)[0]:
+        pts[i][0] += float(nrm[i, 0] * left_m * w[i])
+        pts[i][1] += float(nrm[i, 1] * left_m * w[i])
+    return float(s[k])
+
+
+def _resample(pts: list[list[float]], maxspeed: list[float]):
+    """Back to STEP_M spacing after a swing (the outside of the bend is stretched); speed limit of the nearest
+    original point. Returns (points, maxspeed, length)."""
+    P = np.asarray(pts, float)
+    s = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+    n = max(2, int(math.ceil(s[-1] / STEP_M)) + 1)
+    si = np.linspace(0.0, s[-1], n)
+    out = [[float(np.interp(x, s, P[:, 0])), float(np.interp(x, s, P[:, 1]))] for x in si]
+    k = np.clip(np.searchsorted(s, si), 0, len(s) - 1)
+    return out, [maxspeed[int(i)] for i in k], float(s[-1])
+
+
 def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
     cfg = yaml.safe_load(src.read_text(encoding="utf-8"))
     tiles = {t["id"]: t for t in TG.load_tiles(regions)}
@@ -180,14 +212,20 @@ def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
             reg2 = _region(L["tail_to"].split(":", 1)[1], regions)
             tgt = [r2["points_en"][0][0] + reg2["origin"]["x"], r2["points_en"][0][1] + reg2["origin"]["y"]]
             blend["tail"] = _blend(pts, tgt, head=False)
+        maxspeed, length = lp["maxspeed"], lp["length"]
+        if L.get("swing"):
+            for sw in L["swing"]:
+                _swing(pts, sw["near_epsg2180"], float(sw["left_m"]), float(sw["half_m"]))
+                blend["swing_left"] = float(sw["left_m"])
+            pts, maxspeed, length = _resample(pts, maxspeed)
         loc = [[round(x - ox, 3), round(y - oy, 3)] for x, y in pts]
         links.append({
             "id": L["id"], "tile": rid, "destination": L.get("destination", "any"),
             "afterRoute": L.get("after_route", ""), "replacesRoute": L.get("replaces_route", ""),
             "note": L.get("note", ""), "blendM": {k: round(v, 3) for k, v in blend.items()},
-            "lengthM": round(lp["length"], 2),
+            "lengthM": round(length, 2),
             "e": [p[0] for p in loc], "n": [p[1] for p in loc],
-            "maxspeedKmh": lp["maxspeed"],
+            "maxspeedKmh": maxspeed,
             "startX": round(pts[0][0], 3), "startY": round(pts[0][1], 3),
             "endX": round(pts[-1][0], 3), "endY": round(pts[-1][1], 3),
             "graphNodes": lp["nodes"],
