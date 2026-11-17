@@ -12,7 +12,10 @@ Numbers (docs/reports/QA-2026-11-16-mistral-s8.md, GUGiK orthophoto WMS, +-0.3 m
   asphalt of a 2-lane carriageway 10.35-10.65 m (rows 81, 82); inner strip ~0.5 m (row 82); gap between the inner edge
   lines 3.8-4.85 m, median ~4.5 m, gap between the asphalt edges 3.45-4.0 m (row 78); steel barrier in the median.
   PTB2022 (Dz.U. 2022 poz. 1518) § 17 ust. 1: lane 3.50 m on S; § 23 ust. 6: pas awaryjny S 2.50 m; § 23 ust. 10 pkt 1:
-  ground shoulder 1.25 m beside a pas awaryjny.
+  ground shoulder 1.25 m (>= 0.75 m) beside a pas awaryjny.
+Edge lines P-7b on both sides (`edge_lines: both`: a section with lane_edges paints only what the override names).
+No ditch in the rule profile (`ditch_m: 0`, WORKING_VALUE): the 0.60 m rule ditch reached 10 m from the way and cut
+half of the noise screens out (s8-01: 733 m -> 380 m).
 Section, from the median edge in the direction of travel (`lane_edges`): 0.20 m strip, n x 3.50 m lanes, 2.75 m paved
 (2.50 m pas awaryjny + 0.25 m to the line axis) -> carriageway 9.95 m (n = 2); the median side adds the generator's
 0.50 m paved strip (standards.PAVED_SHOULDER_MEDIAN) = 10.45 m of asphalt. The centre of the two through lanes lies
@@ -38,7 +41,8 @@ END = "  # ---- END generated: tools/worldgen/qa/s8_xsec_overrides.py ----"
 INNER_STRIP_M = 0.20        # WORKING_VALUE: median edge of the carriageway to the inner edge line axis
 LANE_M = 3.50               # PTB2022 § 17 ust. 1 (class S)
 OUTER_PAVED_M = 2.75        # PTB2022 § 23 ust. 6 (2.50 m) + 0.25 m to the line axis (WORKING_VALUE)
-GROUND_SHOULDER_M = 1.25    # PTB2022 § 23 ust. 10 pkt 1
+GROUND_SHOULDER_M = 1.00    # PTB2022 § 23 ust. 10 pkt 1: 1.25 m, >= 0.75 m; 1.00 m + a flat verge (ditch_m: 0) keeps the
+#                             noise screens, 7.5-9.0 m from the OSM way (BDOT10k OT_OIKM_L / OSM, s8-01 and s8-03), outside the profile
 LANE_AXIS_LEFT_M = 0.25     # WORKING_VALUE: centre of the two through lanes left of the OSM way (QA row 78)
 
 
@@ -74,8 +78,8 @@ def block(tile: str) -> str:
             f"OSM way - see tools/worldgen/qa/s8_xsec_overrides.py (QA 2026-11-16 rows 78, 81, 82; PTB2022 § 17, § 23).\"",
             "    confidence: \"medium (widths - orthophoto +-0.3 m at 3 stations; lateral position - WORKING_VALUE)\"",
             "    verify: orthophoto cross-section per way (tools/worldgen/qa/ortho_xsec.py) / owner drive",
-            f"    set: {{lane_edges: {le}, width: {width}, center_offset: {off}, "
-            f"shoulder_right: {{kind: ground, paved_m: 0.05, ground_m: {GROUND_SHOULDER_M}}}}}",
+            f"    set: {{lane_edges: {le}, width: {width}, center_offset: {off}, edge_lines: both, "
+            f"shoulder_right: {{kind: ground, paved_m: 0.05, ground_m: {GROUND_SHOULDER_M}, ditch_m: 0}}}}",
         ]
     rows.append(END)
     return "\n".join(rows) + "\n"
