@@ -594,6 +594,33 @@ def cylinder(buf, layer, mat, center_xy, r, z0, z1, src, seg=14):
     buf.add(layer, mat, V, UV, np.array(T), src=src)
 
 
+WALL_CONE_GAP_M = 0.03      # the cone lies this far in front of the wall face (the wall strip stands 0.02 m out)
+
+
+def wall_end_cone(rim, z_toe, wall_prev, out):
+    """Quarter cone of the grass batter around the end of a retaining wall. rim: wall top end = shoulder rim (x, y, z),
+    z_toe: foot of the batter, wall_prev: previous wall top point (direction of the wall line), out: unit outward
+    normal at the end. Returns (V, T) with both windings, or None for a degenerate end (no fall)."""
+    rim = np.asarray(rim, float)
+    out = np.asarray(out, float)
+    fall = float(rim[2] - z_toe)
+    d = np.asarray(wall_prev, float)[:2] - rim[:2]
+    seg = float(np.hypot(*d))
+    if fall < 0.05 or seg < 1e-3:
+        return None
+    d /= seg
+    run = fall * S.EMBANKMENT_SLOPE
+    back = min(run, 0.9 * seg)
+    a = np.array([rim[0] + out[0] * WALL_CONE_GAP_M, rim[1] + out[1] * WALL_CONE_GAP_M, rim[2]])
+    b_ = np.append(rim[:2] + out * run, z_toe)
+    m = out * run + d * back
+    m_ = np.append(rim[:2] + m / max(float(np.hypot(*m)), 1e-9) * min(run, float(np.hypot(*m))), z_toe)
+    c_ = np.append(rim[:2] + d * back + out * WALL_CONE_GAP_M, z_toe)
+    V = np.array([a, b_, m_, c_])
+    T = np.array([[0, 1, 2], [0, 2, 3], [0, 2, 1], [0, 3, 2]])
+    return V, T
+
+
 def build_bridge_extras(buf, c, st, P, N, hw, br):
     if not br.any():
         return
@@ -722,6 +749,18 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                                c.id + ":ramp_wall", both=False, v_abs=vis and mat == "ramp_wall_blocks")
                         if sgn > 0:
                             buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
+                    # c-p2-s23 (REVIEW s23 c-p1 P2, g3b_ext34_s1482): where the wall ends beside a rural shoulder the
+                    # grass batter of that shoulder started with an open end and the wall stood as a bare slab in
+                    # front of it. The batter now turns around the wall end as a quarter cone (two facets,
+                    # 1 : EMBANKMENT_SLOPE) lying against the wall face, so the exposed face runs out diagonally
+                    # into the ground like a wing wall.
+                    for r_, b_ in ((0, 1), (len(wr) - 1, len(wr) - 2)):
+                        if wsel[wr[r_]] or side_params(c, side, float(ss[wr[r_]]))[0] not in (RURAL, MEDIAN_RURAL):
+                            continue
+                        cone = wall_end_cone(top[r_], float(outer[side][0][wr[r_]][2]), top[b_], nn0[wr[r_]] * sgn)
+                        if cone is not None:
+                            buf.add("bridge", "verge_grass", cone[0], cone[0][:, :2].copy(), cone[1], footprint=False,
+                                    src=c.id + ":wall_cone")
         # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =
         # handrail band at 1.0-1.1 m + mid rail at 0.45-0.60 m + posts every 2 m, set 0.15 m in from the edge
         tt, nn = c.line.frame(ss)
