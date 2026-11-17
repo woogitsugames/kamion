@@ -1,4 +1,4 @@
-# ADR 0287 — P-2a przez szew kafli, wysokości narożników ronda kompaktowego, start autopilota w knyszyn (seams-fix-s23)
+# ADR 0288 — P-2a przez szew kafli, wysokości narożników ronda kompaktowego, start autopilota w knyszyn (seams-fix-s23)
 
 Status: Proposed (agent seams-fix-s23, 2026-11-17). Numer do potwierdzenia przez lidera przy scaleniu.
 Powiązane: ADR 0275 (przejścia na szwach, `seam_taper.py` — wzorzec reguły symetrycznej), 0285 (trasy łączące), 0227 D41 (e)

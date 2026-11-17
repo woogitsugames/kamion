@@ -227,7 +227,7 @@ EFFECTIVE = {   # walk graph geometry / topology next to the generated network -
 }
 RAW_OK = {      # ingested graph on purpose (reason in ADR 0274 "Czytniki grafu")
     "tools/worldgen/roads/seam_taper.py": "neighbour ends at the shared tile edge (ADR 0275): a split never sits on a seam",
-    "tools/worldgen/roads/seam_p2a.py": "neighbour P-2a approaches at the shared tile edge (seams-fix-s23, ADR 0287): the same plain network as seam_taper",
+    "tools/worldgen/roads/seam_p2a.py": "neighbour P-2a approaches at the shared tile edge (seams-fix-s23, ADR 0288): the same plain network as seam_taper",
     "tools/worldgen/qa/seams.py": "seam QA of neighbour tiles: boundary ends, ids unchanged",
     "tools/worldgen/qa/ring_0231_plan.py": "plan of the ring tiles: boundary nodes of built neighbours (ADR 0231)",
     "tools/worldgen/streaming/link_seams.py": "boundary nodes / end edges at tile seams: ids and seam ends unchanged",
