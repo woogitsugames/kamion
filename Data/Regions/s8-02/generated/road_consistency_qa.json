@@ -1,8 +1,85 @@
 {
  "by_kind": {
-  "lane_blind_end": 10
+  "lane_blind_end": 10,
+  "marking_off_carriageway": 4
  },
  "cases": [
+  {
+   "chain": "c:w183625709:1937542642-1937517305",
+   "e": 30.29,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1615881,
+   "lon": 22.9766503,
+   "n": -359.04,
+   "on_route": true,
+   "osm_ways": [
+    183625709,
+    536222217,
+    183625710,
+    536222216,
+    279914645
+   ],
+   "surface": "verge_grass",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183625709:1937542642-1937517305",
+   "e": 34.2,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1615787,
+   "lon": 22.9767079,
+   "n": -359.87,
+   "on_route": true,
+   "osm_ways": [
+    183625709,
+    536222217,
+    183625710,
+    536222216,
+    279914645
+   ],
+   "surface": "verge_grass",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183625709:1937542642-1937517305",
+   "e": 36.15,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.161574,
+   "lon": 22.9767367,
+   "n": -360.29,
+   "on_route": true,
+   "osm_ways": [
+    183625709,
+    536222217,
+    183625710,
+    536222216,
+    279914645
+   ],
+   "surface": "verge_grass",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183625709:1937542642-1937517305",
+   "e": 40.06,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1615646,
+   "lon": 22.9767944,
+   "n": -361.12,
+   "on_route": true,
+   "osm_ways": [
+    183625709,
+    536222217,
+    183625710,
+    536222216,
+    279914645
+   ],
+   "surface": "verge_grass",
+   "what": "P-7b"
+  },
   {
    "chain": "c:w196779629:1151878095-2070722408",
    "dist_from_stop_m": 3.0,
@@ -204,9 +281,11 @@
    "what": "none"
   }
  ],
- "count": 10,
+ "count": 14,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
- "on_route": {},
+ "on_route": {
+  "marking_off_carriageway": 4
+ },
  "params": {
   "dz_m": 0.8,
   "kerb_ring_m": 0.3,
@@ -226,7 +305,7 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 117,
-  "kerb_tris": 30898,
+  "kerb_tris": 30894,
   "lane_samples": 49029,
   "marking_tris": 10628,
   "props_checked": 496

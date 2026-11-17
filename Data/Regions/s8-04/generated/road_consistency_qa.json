@@ -1,50 +1,7 @@
 {
- "by_kind": {
-  "lane_blind_end": 2
- },
- "cases": [
-  {
-   "chain": "c:w623772956:2790268463-2315329434",
-   "dist_from_stop_m": 10.6,
-   "e": -269.28,
-   "junction": "j:n2790268463",
-   "kind": "lane_blind_end",
-   "lane": 0,
-   "lanes_in": 1,
-   "lanes_out": 1,
-   "lat": 53.1620364,
-   "lon": 22.9108841,
-   "n": -551.6,
-   "on_route": false,
-   "osm_ways": [
-    623772956
-   ],
-   "to_chain": "c:w623772956:3778812792-2790268463",
-   "turn_lanes": null,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w623772956:3778812792-2790268463",
-   "dist_from_stop_m": 11.6,
-   "e": -268.85,
-   "junction": "j:n2790268463",
-   "kind": "lane_blind_end",
-   "lane": 0,
-   "lanes_in": 1,
-   "lanes_out": 1,
-   "lat": 53.1619921,
-   "lon": 22.9108865,
-   "n": -556.51,
-   "on_route": false,
-   "osm_ways": [
-    623772956
-   ],
-   "to_chain": "c:w623772956:2790268463-2315329434",
-   "turn_lanes": null,
-   "what": "bridge_kerb"
-  }
- ],
- "count": 2,
+ "by_kind": {},
+ "cases": [],
+ "count": 0,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {},
  "params": {
@@ -66,9 +23,9 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 38,
-  "kerb_tris": 30787,
-  "lane_samples": 42579,
+  "kerb_tris": 22699,
+  "lane_samples": 42441,
   "marking_tris": 10816,
-  "props_checked": 402
+  "props_checked": 414
  }
 }

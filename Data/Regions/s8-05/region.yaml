@@ -32,7 +32,7 @@ sources:
   license: ODbL 1.0
   attribution: © OpenStreetMap contributors
   manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
-  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
+  manifest_sha256: 3a63ebb442f2e09904c18a62cbf1eec9bce2fccf8c8d0dfd6264bef37843b3c0
 - id: gugik-nmt-2025-s8-05
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
@@ -50,19 +50,19 @@ sources:
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-bdot10k-2002.json
-  manifest_sha256: 0530d930aa45984c5024b8c55911969caa517cfad911cbea6d2efa158bd48151
+  manifest_sha256: 550a4ca928a47b0cdd25282a46ee71f8973fcb1f3fedca850a48508253edf143
 - id: gugik-lod1-2024-2002
   license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
     bezpłatnie i możliwe do dowolnego wykorzystania'''
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod1-2024-2002.json
-  manifest_sha256: 208717117ca8ef4ee81ecfb500ad0f36b31ea36d02c8c8873f488d3a625d4133
+  manifest_sha256: f1e73b0d1556eba660c75c3fe6340b8674b78b7d9f22d7495a9f3d12d441098d
 - id: gugik-lod2-2017-2002
   license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
     bezpłatnie i możliwe do dowolnego wykorzystania'''
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod2-2017-2002.json
-  manifest_sha256: 57606993ad174e3b804cd0353a8dd45cc5ef661f81f6d8d2cb3cfb52c2575d1c
+  manifest_sha256: e6805b9986e80e66df4a55d0173e1cf65f002614bb49daece804d913421a9842
 rebuild:
 - uv run --project tools/worldgen tools/worldgen/ingest.py --region s8-05
 - uv run --project tools/worldgen tools/worldgen/build_region.py --region s8-05
