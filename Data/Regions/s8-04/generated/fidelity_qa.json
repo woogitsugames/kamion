@@ -4,6 +4,18 @@
   "missing_in_graph": [
    {
     "access": null,
+    "highway": "unclassified",
+    "length_in_tile_m": 46.7,
+    "name": null,
+    "service": null,
+    "way": 222577653,
+    "xy": [
+     459.4,
+     -297.8
+    ]
+   },
+   {
+    "access": null,
     "highway": "service",
     "length_in_tile_m": 44.2,
     "name": null,
@@ -18,14 +30,14 @@
   "osm_drivable_ways_in_tile": 31
  },
  "inputs_sha256": {
-  "overrides.yaml": "f4569ccf489f15c1a14d9d835d78f89a837759dee2940f52ca76b32ee544b4bd",
-  "roads.graph.json": "bef15238c36e124f1296b3065741b736c238e6db7ee3a91ccf10985cd296ea2f",
-  "route_start.json": "fa3b5c5b80c500b173f2016d53149c5cda94030f6c669e08ec22ac3418cb5566",
+  "overrides.yaml": "3676fb25e332a777118299727984c21be4bb1a8c929c6e60a6fb65149dc0686d",
+  "roads.graph.json": "6fb79fcf3b8478970483eca2e5962670d3f53f55140a0cccb168276b7ebe5cac",
+  "route_start.json": "9349d281879b233846bb355f4bd9cc1d8a364c88dc30f7743e1413cbbb0bb0a5",
   "tools/worldgen/roads/__init__.py": "0c26fa3038394a956286b47576ce1d6a0725f8dc0a2e7682901a055d264a6e40",
   "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
   "tools/worldgen/roads/authored_paint.py": "cfa394a6e9c34275a8e07176ac76336a035d50acd959c11a530b55ab1508451e",
   "tools/worldgen/roads/barrier_audit.py": "786d6dfd30de7dd51f60c793136839d43fcd9d214e103f392d613b68f1b18103",
-  "tools/worldgen/roads/build_world.py": "a7819aba00158441b68f12ad327dc558ec96bf74ff6e085a57ce63ba8a199e45",
+  "tools/worldgen/roads/build_world.py": "58c8d2175a4e8c9675218b51dee2d3f79d3906fd542bc4e4519ff068a04019c5",
   "tools/worldgen/roads/carriageway_split.py": "c79e82ddcf05d4363e231b4546f25dc37ada97e8d9cfe2f3974a91f2fe1b603d",
   "tools/worldgen/roads/closures.py": "608718189eb6680ca61538d47acb021d1be85e4dbbd001f315a0f2caffb45fa9",
   "tools/worldgen/roads/compact_roundabout.py": "ff0089a0fed14118214e58eb12e719595cd375f4709c61be7640be316df44625",
@@ -35,15 +47,16 @@
   "tools/worldgen/roads/geom.py": "8f9f732d90273b92cf23f00f65c6a2c7eed6d1f9a0b3cc211679a908f2788e21",
   "tools/worldgen/roads/gores.py": "1056a9b3e5b163b6804fe1a364318a5050464b5a5f6ae0adc64286a8f0265d32",
   "tools/worldgen/roads/junctions.py": "ccb0a1a97e98062b2cc7d254b1054dd73c9afc2131ea82db5e528b3d739b0fde",
-  "tools/worldgen/roads/markings.py": "2361a30500ceeda78812e51d3d2abd0d0030771ac35d32211f4b4f504a43808e",
-  "tools/worldgen/roads/meshing.py": "bd7368b1b4e667ee0f4d73912ef2045c9cf1a0bab3c59d9600c7b2b90d5e6a7e",
+  "tools/worldgen/roads/markings.py": "de74add8201e57d3274fbd2b4468a84bba1c4ca8a9936562c4089c304fe68255",
+  "tools/worldgen/roads/meshing.py": "8a50d3e4b98dd5cc67c6b386db6e2a5e0e8dd92c7bdcb704be68176862693970",
   "tools/worldgen/roads/network.py": "a7b6efd364d4befc321dc612d3e356f8396fd5c6f3c7ed8e0e259065ca41e952",
   "tools/worldgen/roads/p21_hatch.py": "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
-  "tools/worldgen/roads/pipeline.py": "b16aae0cd381f5b012c9110eeef284bb09900e7b77e5bfb5d77120895dd721cf",
+  "tools/worldgen/roads/pipeline.py": "17c4138dae865d73e5b99d9c87d80c62842cceb0be5619f3dfbdefb55f1f44de",
   "tools/worldgen/roads/profile.py": "667f2de75831484dd23a9f1506260d256802af1f974c0c003baf1137ec2b2a36",
   "tools/worldgen/roads/qa_ortho.py": "6e32d52950954922afceae3ee2f0aa379b8d42467c2d294b7e951750d39f3e6b",
   "tools/worldgen/roads/route.py": "e8bb7cd40bd2bf4dfef526aff16bafda35e2b8e68d64f2a8fb576818a453c5b4",
   "tools/worldgen/roads/route_km.py": "4e961cd1608d6265c3fd27edd2690830628bffec0ec8f65bec44659b06143086",
+  "tools/worldgen/roads/seam_p2a.py": "8b6d8169ee152c6dbf9329345246801df71eca88a3365f2bfb5fefaddd4f6f86",
   "tools/worldgen/roads/seam_taper.py": "534bfa9173f914844780309aa9ae5040734e080a3d838b985df2c1c2f0792244",
   "tools/worldgen/roads/standards.py": "872519994e97693c3dd2465e63f9ff944822a3e0984fb1781e9f3784929547b3",
   "tools/worldgen/roads/swept_path.py": "0112cbd81b02fd3c5930d385e6ba918b607011d4f6dd5f7a80809c0d62ae2d05",
@@ -108,18 +121,18 @@
    "edges": {
     "all_sides": {
      "max": 5.33,
-     "n": 266,
-     "p50": 1.323,
+     "n": 268,
+     "p50": 1.33,
      "p95": 2.77
     },
-    "detected_sides": 266,
+    "detected_sides": 268,
     "max": 3.25,
-    "n": 226,
-    "p50": 1.37,
+    "n": 231,
+    "p50": 1.33,
     "p95": 2.69,
-    "signed_p50": -1.37,
-    "stations": 133,
-    "valid_sides": 226
+    "signed_p50": -1.33,
+    "stations": 134,
+    "valid_sides": 231
    },
    "lanes": {
     "edge": "w536205568:1937542657-5194994824",
@@ -156,14 +169,14 @@
      "lanes": 3,
      "strips": [
       {
-       "frac_max": 0.812,
+       "frac_max": 0.764,
        "lines": [
         -6.16,
-        2.22
+        2.24
        ],
        "n_sep": 2,
        "s": 1881.9,
-       "width": 11.6
+       "width": 11.57
       },
       {
        "frac_max": 0.993,
@@ -180,16 +193,16 @@
        "lines": [
         -6.45,
         0.83,
-        3.72
+        3.71
        ],
        "n_sep": 3,
        "s": 1929.9,
-       "width": 12.6
+       "width": 12.64
       },
       {
-       "frac_max": 0.896,
+       "frac_max": 0.889,
        "lines": [
-        0.79,
+        0.75,
         4.19
        ],
        "n_sep": 2,
@@ -197,17 +210,17 @@
        "width": 12.48
       },
       {
-       "frac_max": 0.969,
+       "frac_max": 0.965,
        "lines": [
         0.59,
         3.99
        ],
        "n_sep": 2,
        "s": 1977.9,
-       "width": 12.36
+       "width": 12.4
       },
       {
-       "frac_max": 0.951,
+       "frac_max": 0.941,
        "lines": [
         0.39
        ],
@@ -216,11 +229,9 @@
        "width": 12.0
       },
       {
-       "frac_max": 0.951,
-       "lines": [
-        0.51
-       ],
-       "n_sep": 1,
+       "frac_max": 0.948,
+       "lines": [],
+       "n_sep": 0,
        "s": 2025.9,
        "width": 11.76
       },
@@ -231,14 +242,14 @@
        ],
        "n_sep": 1,
        "s": 2049.9,
-       "width": 12.08
+       "width": 12.12
       },
       {
        "frac_max": 0.965,
        "lines": [],
        "n_sep": 0,
        "s": 2073.9,
-       "width": 11.68
+       "width": 11.76
       },
       {
        "frac_max": 0.941,
@@ -265,8 +276,8 @@
   },
   {
    "axis": {
-    "authored_center_offset_m": 1.92,
-    "max": 0.202,
+    "authored_center_offset_m": 1.79,
+    "max": 0.211,
     "n": 1867,
     "p50": 0.0,
     "p95": 0.002
@@ -275,18 +286,18 @@
    "edges": {
     "all_sides": {
      "max": 5.0,
-     "n": 1785,
-     "p50": 0.55,
-     "p95": 1.4
+     "n": 1793,
+     "p50": 0.44,
+     "p95": 1.16
     },
-    "detected_sides": 1785,
-    "max": 3.77,
-    "n": 1248,
-    "p50": 0.57,
-    "p95": 1.24,
-    "signed_p50": 0.44,
-    "stations": 923,
-    "valid_sides": 1248
+    "detected_sides": 1793,
+    "max": 4.01,
+    "n": 1490,
+    "p50": 0.41,
+    "p95": 1.0,
+    "signed_p50": 0.41,
+    "stations": 920,
+    "valid_sides": 1490
    },
    "lanes": {
     "edge": "w100133887:5194994824-2104266222",
@@ -306,7 +317,678 @@
     "length_m": 1865.9,
     "match": true,
     "name": null,
-    "ortho": null,
+    "ortho": {
+     "agree": 0.71,
+     "lanes": 2,
+     "strips": [
+      {
+       "frac_max": 0.99,
+       "lines": [
+        2.58
+       ],
+       "n_sep": 1,
+       "s": 40.0,
+       "width": 10.32
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.58
+       ],
+       "n_sep": 1,
+       "s": 64.0,
+       "width": 10.32
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.54
+       ],
+       "n_sep": 1,
+       "s": 88.0,
+       "width": 10.28
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.54
+       ],
+       "n_sep": 1,
+       "s": 112.0,
+       "width": 10.24
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        2.54
+       ],
+       "n_sep": 1,
+       "s": 136.0,
+       "width": 10.16
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.58
+       ],
+       "n_sep": 1,
+       "s": 160.0,
+       "width": 10.4
+      },
+      {
+       "frac_max": 0.99,
+       "lines": [
+        -4.66,
+        2.54
+       ],
+       "n_sep": 2,
+       "s": 184.0,
+       "width": 10.6
+      },
+      {
+       "frac_max": 0.993,
+       "lines": [
+        2.54
+       ],
+       "n_sep": 1,
+       "s": 208.0,
+       "width": 10.36
+      },
+      {
+       "frac_max": 0.993,
+       "lines": [
+        2.5
+       ],
+       "n_sep": 1,
+       "s": 232.0,
+       "width": 10.52
+      },
+      {
+       "frac_max": 0.913,
+       "lines": [
+        -4.7,
+        2.54
+       ],
+       "n_sep": 2,
+       "s": 256.0,
+       "width": 11.44
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        2.46
+       ],
+       "n_sep": 1,
+       "s": 304.0,
+       "width": 10.4
+      },
+      {
+       "frac_max": 0.99,
+       "lines": [
+        2.46
+       ],
+       "n_sep": 1,
+       "s": 328.0,
+       "width": 10.48
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.42
+       ],
+       "n_sep": 1,
+       "s": 352.0,
+       "width": 10.92
+      },
+      {
+       "frac_max": 0.993,
+       "lines": [
+        2.46
+       ],
+       "n_sep": 1,
+       "s": 376.0,
+       "width": 11.0
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.42
+       ],
+       "n_sep": 1,
+       "s": 400.0,
+       "width": 10.84
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.42
+       ],
+       "n_sep": 1,
+       "s": 424.0,
+       "width": 10.88
+      },
+      {
+       "frac_max": 0.99,
+       "lines": [
+        2.42
+       ],
+       "n_sep": 1,
+       "s": 448.0,
+       "width": 10.92
+      },
+      {
+       "frac_max": 0.979,
+       "lines": [
+        2.46
+       ],
+       "n_sep": 1,
+       "s": 472.0,
+       "width": 10.76
+      },
+      {
+       "frac_max": 0.99,
+       "lines": [
+        2.42
+       ],
+       "n_sep": 1,
+       "s": 496.0,
+       "width": 10.92
+      },
+      {
+       "frac_max": 0.993,
+       "lines": [
+        2.42
+       ],
+       "n_sep": 1,
+       "s": 520.0,
+       "width": 10.96
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        2.42
+       ],
+       "n_sep": 1,
+       "s": 544.0,
+       "width": 10.88
+      },
+      {
+       "frac_max": 0.993,
+       "lines": [
+        2.42
+       ],
+       "n_sep": 1,
+       "s": 568.0,
+       "width": 10.92
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.42
+       ],
+       "n_sep": 1,
+       "s": 592.0,
+       "width": 10.88
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        2.38
+       ],
+       "n_sep": 1,
+       "s": 688.0,
+       "width": 10.56
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        2.38
+       ],
+       "n_sep": 1,
+       "s": 712.0,
+       "width": 10.72
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        2.38
+       ],
+       "n_sep": 1,
+       "s": 736.0,
+       "width": 10.8
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.34
+       ],
+       "n_sep": 1,
+       "s": 760.0,
+       "width": 10.92
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.34
+       ],
+       "n_sep": 1,
+       "s": 784.0,
+       "width": 10.88
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.34
+       ],
+       "n_sep": 1,
+       "s": 808.0,
+       "width": 10.88
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        -4.9,
+        2.34
+       ],
+       "n_sep": 2,
+       "s": 832.0,
+       "width": 11.08
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        -4.9,
+        2.34
+       ],
+       "n_sep": 2,
+       "s": 856.0,
+       "width": 11.12
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.34
+       ],
+       "n_sep": 1,
+       "s": 880.0,
+       "width": 10.76
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        -4.9,
+        2.34
+       ],
+       "n_sep": 2,
+       "s": 904.0,
+       "width": 11.16
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.3
+       ],
+       "n_sep": 1,
+       "s": 928.0,
+       "width": 11.0
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.3
+       ],
+       "n_sep": 1,
+       "s": 952.0,
+       "width": 10.92
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        -4.94,
+        2.3
+       ],
+       "n_sep": 2,
+       "s": 976.0,
+       "width": 11.12
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        2.3
+       ],
+       "n_sep": 1,
+       "s": 1000.0,
+       "width": 10.96
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.3
+       ],
+       "n_sep": 1,
+       "s": 1024.0,
+       "width": 10.8
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        2.26
+       ],
+       "n_sep": 1,
+       "s": 1048.0,
+       "width": 10.88
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        -4.98,
+        2.26
+       ],
+       "n_sep": 2,
+       "s": 1072.0,
+       "width": 11.12
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        -5.02,
+        2.22
+       ],
+       "n_sep": 2,
+       "s": 1096.0,
+       "width": 11.2
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        -4.98,
+        2.26
+       ],
+       "n_sep": 2,
+       "s": 1120.0,
+       "width": 10.88
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.26
+       ],
+       "n_sep": 1,
+       "s": 1144.0,
+       "width": 10.48
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.22
+       ],
+       "n_sep": 1,
+       "s": 1168.0,
+       "width": 11.12
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.22
+       ],
+       "n_sep": 1,
+       "s": 1192.0,
+       "width": 10.48
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.22
+       ],
+       "n_sep": 1,
+       "s": 1216.0,
+       "width": 10.4
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        -1.42,
+        2.22
+       ],
+       "n_sep": 2,
+       "s": 1240.0,
+       "width": 10.48
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.18
+       ],
+       "n_sep": 1,
+       "s": 1264.0,
+       "width": 11.08
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.18
+       ],
+       "n_sep": 1,
+       "s": 1288.0,
+       "width": 10.52
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.18
+       ],
+       "n_sep": 1,
+       "s": 1312.0,
+       "width": 10.32
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        -1.46,
+        2.18
+       ],
+       "n_sep": 2,
+       "s": 1336.0,
+       "width": 10.68
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.18
+       ],
+       "n_sep": 1,
+       "s": 1360.0,
+       "width": 10.28
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.14
+       ],
+       "n_sep": 1,
+       "s": 1384.0,
+       "width": 11.0
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.14
+       ],
+       "n_sep": 1,
+       "s": 1408.0,
+       "width": 10.32
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.14
+       ],
+       "n_sep": 1,
+       "s": 1432.0,
+       "width": 10.44
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        -1.54,
+        2.1
+       ],
+       "n_sep": 2,
+       "s": 1456.0,
+       "width": 10.6
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        -1.54,
+        0.7
+       ],
+       "n_sep": 2,
+       "s": 1480.0,
+       "width": 10.32
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.1
+       ],
+       "n_sep": 1,
+       "s": 1504.0,
+       "width": 10.24
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.1
+       ],
+       "n_sep": 1,
+       "s": 1528.0,
+       "width": 10.28
+      },
+      {
+       "frac_max": 0.993,
+       "lines": [
+        -0.04,
+        2.1
+       ],
+       "n_sep": 2,
+       "s": 1552.0,
+       "width": 11.6
+      },
+      {
+       "frac_max": 0.74,
+       "lines": [
+        2.02
+       ],
+       "n_sep": 1,
+       "s": 1576.0,
+       "width": 11.16
+      },
+      {
+       "frac_max": 0.92,
+       "lines": [],
+       "n_sep": 0,
+       "s": 1600.0,
+       "width": 11.28
+      },
+      {
+       "frac_max": 0.965,
+       "lines": [
+        2.58
+       ],
+       "n_sep": 1,
+       "s": 1624.0,
+       "width": 10.8
+      },
+      {
+       "frac_max": 0.83,
+       "lines": [
+        -4.62,
+        2.66
+       ],
+       "n_sep": 2,
+       "s": 1648.0,
+       "width": 11.84
+      },
+      {
+       "frac_max": 0.903,
+       "lines": [
+        -4.7,
+        2.54
+       ],
+       "n_sep": 2,
+       "s": 1672.0,
+       "width": 11.2
+      },
+      {
+       "frac_max": 0.753,
+       "lines": [
+        -4.7,
+        2.54
+       ],
+       "n_sep": 2,
+       "s": 1696.0,
+       "width": 11.76
+      },
+      {
+       "frac_max": 0.736,
+       "lines": [
+        -4.94,
+        2.34
+       ],
+       "n_sep": 2,
+       "s": 1720.0,
+       "width": 11.68
+      },
+      {
+       "frac_max": 0.875,
+       "lines": [
+        2.5
+       ],
+       "n_sep": 1,
+       "s": 1744.0,
+       "width": 10.72
+      },
+      {
+       "frac_max": 0.736,
+       "lines": [
+        2.34
+       ],
+       "n_sep": 1,
+       "s": 1768.0,
+       "width": 10.12
+      },
+      {
+       "frac_max": 0.476,
+       "lines": [
+        0.61,
+        2.7
+       ],
+       "n_sep": 2,
+       "s": 1792.0,
+       "width": 10.8
+      },
+      {
+       "frac_max": 0.882,
+       "lines": [
+        2.82
+       ],
+       "n_sep": 1,
+       "s": 1816.0,
+       "width": 10.72
+      },
+      {
+       "frac_max": 0.826,
+       "lines": [
+        -4.27,
+        2.97
+       ],
+       "n_sep": 2,
+       "s": 1840.0,
+       "width": 11.7
+      }
+     ]
+    },
     "ortho_vs_osm": null,
     "osm": {
      "extra": {},
@@ -314,7 +996,7 @@
      "oneway": "yes"
     },
     "truth": 2,
-    "truth_src": "orthophoto:s8-deck-over-underpass-w100133887",
+    "truth_src": "orthophoto:s8-xsec-w100133887",
     "way": 100133887
    }
   }
@@ -439,48 +1121,32 @@
      "area_m2": 175.2,
      "kind": "gen_only",
      "xy": [
-      76.703,
-      -385.545
+      76.699,
+      -385.546
      ]
     },
     {
-     "area_m2": 27.5,
+     "area_m2": 28.7,
      "kind": "gen_only",
      "xy": [
-      3.093,
-      -412.005
+      3.03,
+      -411.997
      ]
     },
     {
-     "area_m2": 13.6,
+     "area_m2": 13.1,
      "kind": "ortho_only",
      "xy": [
-      22.735,
-      -427.847
+      45.275,
+      -455.51
      ]
     },
     {
-     "area_m2": 12.9,
+     "area_m2": 12.0,
      "kind": "ortho_only",
      "xy": [
-      45.252,
-      -455.517
-     ]
-    },
-    {
-     "area_m2": 12.8,
-     "kind": "ortho_only",
-     "xy": [
-      35.866,
-      -423.554
-     ]
-    },
-    {
-     "area_m2": 12.1,
-     "kind": "ortho_only",
-     "xy": [
-      16.284,
-      -465.013
+      16.295,
+      -465.009
      ]
     }
    ],
@@ -491,48 +1157,48 @@
    ],
    "gen_islands": [
     {
-     "area_m2": 1474.9,
-     "half_width_m": 6.28,
-     "ortho_green_frac": 0.909,
+     "area_m2": 1496.5,
+     "half_width_m": 6.38,
+     "ortho_green_frac": 0.902,
      "ortho_road_frac": 0.003,
-     "route_dist_m": 10.1,
+     "route_dist_m": 10.2,
      "verdict": "present",
      "xy": [
-      59.072,
-      -398.93
+      58.894,
+      -399.094
      ]
     },
     {
-     "area_m2": 692.7,
-     "half_width_m": 2.4,
-     "ortho_green_frac": 0.587,
-     "ortho_road_frac": 0.169,
-     "route_dist_m": 7.8,
+     "area_m2": 488.5,
+     "half_width_m": 1.71,
+     "ortho_green_frac": 0.739,
+     "ortho_road_frac": 0.012,
+     "route_dist_m": 7.6,
      "verdict": "present",
      "xy": [
-      62.166,
-      -416.75
+      62.235,
+      -416.78
      ]
     },
     {
-     "area_m2": 1759.6,
-     "half_width_m": 6.32,
-     "ortho_green_frac": 0.767,
-     "ortho_road_frac": 0.05,
-     "route_dist_m": 26.4,
+     "area_m2": 1769.4,
+     "half_width_m": 6.36,
+     "ortho_green_frac": 0.761,
+     "ortho_road_frac": 0.051,
+     "route_dist_m": 26.1,
      "verdict": "present",
      "xy": [
-      62.029,
-      -436.356
+      61.95,
+      -436.332
      ]
     }
    ],
    "half_m": 70,
    "id": "05_s900",
    "iou": {
-    "gen_m2": 4502.9,
-    "iou": 0.847,
-    "ortho_m2": 4592.9
+    "gen_m2": 4664.9,
+    "iou": 0.852,
+    "ortho_m2": 4629.8
    },
    "lane_into_island": [],
    "name": "Andersa s 900 (n1881569071)",
@@ -681,7 +1347,7 @@
    "arrows_checked": 0,
    "arrows_not_on_ortho": 0,
    "axis_vs_osm_m": {
-    "max": 0.098,
+    "max": 0.097,
     "n": 2134,
     "p50": 0.0,
     "p95": 0.005
@@ -689,18 +1355,18 @@
    "edge_vs_ortho_m": {
     "all_sides": {
      "max": 5.33,
-     "n": 2051,
-     "p50": 0.6,
-     "p95": 2.273
+     "n": 2061,
+     "p50": 0.52,
+     "p95": 2.21
     },
-    "detected_sides": 2051,
-    "max": 3.77,
-    "n": 1474,
-    "p50": 0.6,
-    "p95": 2.13,
-    "signed_p50": 0.44,
-    "stations": 1056,
-    "valid_sides": 1474
+    "detected_sides": 2061,
+    "max": 4.01,
+    "n": 1721,
+    "p50": 0.44,
+    "p95": 2.029,
+    "signed_p50": 0.41,
+    "stations": 1054,
+    "valid_sides": 1721
    },
    "edges": 2,
    "gen_islands_absent_on_ortho": 0,
@@ -720,7 +1386,7 @@
     "02_s230_approach": 0.0,
     "03_rondo_biezenstwa": 0.0,
     "04_s610_ramps": 0.0,
-    "05_s900": 0.847,
+    "05_s900": 0.852,
     "06_s1060_merge": 0.0,
     "07_s1270": 0.0,
     "08_signals": 0.0,
@@ -733,10 +1399,10 @@
   },
   "tile": {
    "axis_vs_osm_m": {
-    "max": 0.551,
-    "n": 40,
-    "p50": 0.034,
-    "p95": 0.477
+    "max": 0.558,
+    "n": 39,
+    "p50": 0.041,
+    "p95": 0.478
    },
    "edge_vs_ortho_m": {
     "all_sides": {
@@ -747,16 +1413,16 @@
     },
     "detected_sides": 5231,
     "max": 5.24,
-    "n": 2781,
+    "n": 2802,
     "p50": 0.625,
-    "p95": 1.72,
-    "signed_p50": 0.2,
-    "stations": 2717,
-    "valid_sides": 2781
+    "p95": 1.64,
+    "signed_p50": 0.125,
+    "stations": 2711,
+    "valid_sides": 2802
    },
    "graph_vs_fresh_osm_max_m": {
     "max": 0.001,
-    "n": 40,
+    "n": 39,
     "p50": 0.0,
     "p95": 0.001
    },
@@ -770,9 +1436,9 @@
    "lane_into_island": 0,
    "lane_issue_counts": {
     "lane_tags_ignored_by_generator": 1,
-    "lanes_default": 37
+    "lanes_default": 36
    },
-   "osm_drivable_ways_missing_in_graph": 1
+   "osm_drivable_ways_missing_in_graph": 2
   }
  },
  "tile_sites": [
