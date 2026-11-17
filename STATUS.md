@@ -4,6 +4,8 @@
 - Rendery High 1920x1080: `artifacts/cabin-pc-s23/{lab1,lab2-clear,lab2-dusk,p2-clear,p2-dusk,p3-clear,w1-clear,w1-dusk}`, przed/po `ab-grain-crop.jpg`.
 - t1 (przed merge, Android): PlayMode 191/0/9; EditMode exit=10 — porażki tylko `StartClearanceTests.ImportedScene_*` (nieaktualny import regionów w worktree: spawn 12 m vs 90 m, brak Spawn_DepotGate).
 - s23b (cabin-pc-s23b): merge origin/main 68d55c46a (ff080a821): STATUS = nasz, `Trailer_Curtainsider_Graybox.prefab` = main (generowany, osie 7,63 m).
-- W toku: łańcuch Win64 `artifacts/cabin-pc-s23/chain-b.ps1` → kroki b-assets (Truck+TrailerAssetBuilder), b-edit, b-play, b-vqa (WorldC -Pc High clear/dusk → `b-w1-clear`, `b-w1-dusk`).
-- NASTĘPNY KROK: `Get-ChildItem artifacts/cabin-pc-s23/b-*.status | % { $_.Name; Get-Content $_ }`; po zielonych testach i obejrzeniu zrzutów `git push -u origin cabin-pc-s23`.
+- Drugi merge origin/main (int-alt-ui, 4aa6d1ec6), bez konfliktów. Assety Truck+Trailer przebudowane Win64 (OK).
+- EditMode Win64 na końcowym HEAD: 1246/23/37, exit=1 — 21× `StartClearanceTests.ImportedScene_*` (sceny _Generated z 15.11 nieaktualne; w tym `bialystok-industrial-c`: ciężarówka 830 m od spawnu — nie padało przed merge, scena nietknięta, do potwierdzenia reimportem C) + 2× `CarPaintMaterialTests.DepositionChannel` (pada też na main, notatka lidera b049f896e). PlayMode Win64 (po 1. merge): 192/0/11.
+- Zrzuty Win64: WorldC -Pc High `b-w1-{clear,dusk}` (ciężarówka na łące „Poza trasą” — nieaktualna scena C w worktree), DrivingLab `c-lab-pc-{clear,dusk}`, `c-lab-mob-clear`. Schodkowe czarne krawędzie cieni w kabinie w dzień (Win64, oba tiery) — widać je też w `artifacts/pc-visual-s23/after/knyszynw-High-pc` z main → problem istniejący (rendering), nie regresja gałęzi; na Androidzie (`lab2-clear`, 16.11) ich nie było.
+- NASTĘPNY KROK: `Get-Content artifacts/cabin-pc-s23/c-play.status`; push; raport do lidera.
 - Dla lidera po scaleniu: `pwsh scripts/build-lab.ps1 -SkipAudio` nie jest konieczne (scena w gicie); w main wymagane `-executeMethod Game.Editor.Setup.TruckAssetBuilder.BuildBatch` (nowe tekstury plastiku do _Generated) przed buildem Windows.
