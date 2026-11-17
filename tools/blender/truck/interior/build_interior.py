@@ -459,8 +459,9 @@ def build_materials(a):
     M.decal("stitch", "stitch_rgba.png", (0.34, 0.31, 0.27), rough=0.7)
     M.decal("stitch_dark", "stitch_rgba.png", (0.27, 0.265, 0.25), rough=0.7)   # B2.2: thread reads on the rim
     # r8: contrasting rim thread in the trim colour (koniak: tan), not a white dotted line
-    M.decal("stitch_wheel", "stitch_rgba.png", tuple(min(0.9, c * 6.0 + 0.02) for c in trim), rough=0.7)
-    M.simple("thread_wheel", tuple(min(0.9, c * 4.5 + 0.03) for c in trim), rough=0.8, spec=0.3)   # LOD0 stitches
+    # D84 polish (review P2): x6.0 read as an orange dotted line against the dark rim; x3.2 = tone-on-tone thread
+    M.decal("stitch_wheel", "stitch_rgba.png", tuple(min(0.9, c * 3.2 + 0.02) for c in trim), rough=0.7)
+    M.simple("thread_wheel", tuple(min(0.9, c * 2.6 + 0.03) for c in trim), rough=0.8, spec=0.3)   # LOD0 stitches
     M.decal("icons", "icons_atlas.png", (0.80, 0.80, 0.76), rough=0.4, alpha_from="mask")
     M.decal("grille", "grille_mask.png", (0.02, 0.02, 0.02), rough=0.6, alpha_from="mask")
     M.decal("grille_dash", "grille_mask.png", (0.040, 0.041, 0.043), rough=0.65, alpha_from="mask")
@@ -728,6 +729,22 @@ def build_glass():
             ap = loft(f"apillar_trim_{s}", loops, "trim_light", closed=True, cap0=True, cap1=True)
             bevel(ap, 0.008, 2, angle=30)
             loft(f"apillar_skin_{s}", skin, "paint", closed=True, cap0=True, cap1=True)
+            # D84 polish (review P1-4 "flat grey plate without seal, trim or gaps"): rubber seal beads where the trim
+            # meets the windscreen frit and the door aperture, and two screw covers on the pad (above / below the
+            # grab handle), so the pillar reads as trim clipped over a sealed body pillar.
+            for key, sgn in (("ws", -1.0), ("door", 1.0)):
+                pts = []
+                for zi in range(13):
+                    z = WS_Z0 - 0.05 + (WS_Z1 + 0.07 - WS_Z0 + 0.05) * zi / 12
+                    a, b, t, n = apillar_frame(s, z)
+                    q = (a if sgn < 0 else b) + t * (sgn * 0.0125) + n * 0.0035
+                    pts.append(V(q.x, q.y, z))
+                tube(f"apillar_seal_{key}_{s}", pts, 0.0058 if sgn < 0 else 0.0072, "rubber", seg=6, cap=False)
+            for zc_ in (2.15, 2.885):
+                a, b, t, n = apillar_frame(s, zc_)
+                mid = (a + b) / 2 + n * 0.0605
+                cyl(f"apillar_cap_{zc_:.2f}_{s}", V(mid.x, mid.y, zc_), 0.0085, 0.004, "dash_dark", seg=14, bev=0.001,
+                    rot=n.to_track_quat("Z", "Y").to_matrix())
             z0, z1 = 2.22, 2.80
 
             def on_pillar(z, depth):
@@ -1024,8 +1041,22 @@ def build_dash():
         lip = []
         for (x, y) in ([(tx0 + (tx1 - tx0) * i / 10, ty0) for i in range(11)] + [(tx1, ty0 + (ty1 - ty0) * j / 4) for j in range(1, 5)] +
                        [(tx1 - (tx1 - tx0) * i / 10, ty1) for i in range(1, 11)] + [(tx0, ty1 - (ty1 - ty0) * j / 4) for j in range(1, 5)]):
-            lip.append(drape(x, y, 0.004))
-        tube(f"dash_tray_lip_{ti}", lip, 0.0055, "dash_mid", seg=8)
+            lip.append(drape(x, y, 0.0055))
+        tube(f"dash_tray_lip_{ti}", lip, 0.0075, "dash_mid", seg=8)
+        # D84 polish (review P2 "flat stripes without depth"): the mat ribs were only a normal map, which the ambient-lit
+        # cab view flattens. Real moulded ribs (6 mm wide, 3.2 mm proud, 12.5 mm pitch) take the baked AO and the sun.
+        if G.STATE["q"] > 0.5:
+            nr_ = int((ty1 - ty0 - 0.03) / 0.0125)
+            bm = bmesh.new()
+            for j in range(nr_ + 1):
+                yr = ty0 + 0.015 + j * 0.0125
+                rows = [[drape(tx0 + 0.014 + (tx1 - tx0 - 0.028) * i / nmx, yr + dy, lz) for i in range(nmx + 1)]
+                        for dy, lz in ((-0.003, 0.0012), (-0.0012, 0.0047), (0.0012, 0.0047), (0.003, 0.0012))]
+                vr = [[bm.verts.new(p_) for p_ in row] for row in rows]
+                for k_ in range(3):
+                    for i in range(nmx):
+                        bm.faces.new((vr[k_][i], vr[k_][i + 1], vr[k_ + 1][i + 1], vr[k_ + 1][i]))
+            G.finish(f"dash_tray_ribs_{ti}", bm, "floor_mat", smooth=True, sharp=30)
     # speaker grille in the passenger corner of the dash top
     sx0, sx1, sy0, sy1 = 0.93, 1.07, dash_face_y(1.0) + 0.09, dash_face_y(1.0) + 0.20
     bm = bmesh.new()
@@ -1107,7 +1138,9 @@ def build_binnacle():
     y_l = c.y - 0.112
     z_l = EYE.z + (top.z - EYE.z) * (y_l - EYE.y) / (top.y - EYE.y) + 0.008
     yb = c.y + 0.064                                              # back wall of the screen recess
-    full, fade = 0.178, 0.285                                     # hood cheeks: full height -> blended into the dash
+    # D84 polish (review P2): the 107 mm cheek fade read as a melting blob at the dash junction; 50 mm = a moulded
+    # shoulder with a readable break line above the parting seam
+    full, fade = 0.178, 0.228                                     # hood cheeks: full height -> blended into the dash
     prof = [(y_l, z_l), (y_l + 0.002, z_l + 0.012), (y_l + 0.020, z_l + 0.022), (y_l + 0.070, z_l + 0.028),
             (y_l + 0.140, z_l + 0.020), (yb + 0.040, z_l - 0.012), (yb + 0.072, z_l - 0.060)]
     prof = G.polyline_smooth(prof, 3)
@@ -2475,7 +2508,9 @@ def build_curtains():
         strip(f"sun_visor_seam_{k}", loop + [loop[0]], nrm, 0.004, "stitch_dark", offset=0.0005, u_len=0.017)
     box("visor_centre_bracket", tuple(V(0.0, glass_y(0.0, zc) - 0.040, zc + 0.02)), (0.10, 0.03, 0.07), "dash_dark",
         bev=0.008)
-    for x0, x1, drop in ((-XI + 0.10, -0.03, 0.10), (0.03, XI - 0.10, 0.20)):
+    # D84 polish (review P1-4): driver blind drawn 0.30 m (was 0.10): its bar sits ~23 deg above the eye line, in the
+    # top of the 62 deg driver view and above the forward field; the windscreen header is no longer out of frame.
+    for x0, x1, drop in ((-XI + 0.10, -0.03, 0.30), (0.03, XI - 0.10, 0.20)):
         z1 = WS_Z1 - 0.005
         z0 = z1 - drop
         corners = [V(x0, ws_y(z0) - 0.02, z0), V(x1, ws_y(z0) - 0.02, z0), V(x1, ws_y(z1) - 0.02, z1), V(x0, ws_y(z1) - 0.02, z1)]
