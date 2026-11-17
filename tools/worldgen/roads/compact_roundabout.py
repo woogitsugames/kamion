@@ -32,6 +32,9 @@ ADR 0274 (kerb mode, on when the key carries `entry_r_m` / `exit_r_m`):
     4.2.3 and 8.4), not at the split node;
   * centre island fill: concentric rings with fewer segments towards the centre and a smooth height field.
 
+ADR 0227 D41: `outer_diameter_m` (optional) replaces the fitted ring axis radius by outer_diameter_m / 2 - ring width
+/ 2 (range and plausibility checked, else stale); report: r_axis_m vs r_axis_fit_m.
+
 Nothing here runs for a ring without the key: every other region is byte-identical.
 """
 
@@ -60,7 +63,16 @@ KERB_DEFAULTS = {"entry_r_m": 6.0,          # WORKING_VALUE: kerb radius on the 
                  "crossings": []}           # osm ways of the two-way arms that carry a pedestrian crossing
 # accepted ranges (review s23 D18 P2-6: values are validated, a bad entry is stale and never raises)
 LIMITS = {"closing_r_m": (1.0, 30.0), "splitter_w_m": (0.6, 8.0), "splitter_gap_m": (0.0, 3.0), "lane_w_m": (2.5, 7.0),
-          "lane_clear_m": (1.0, 4.0), "entry_r_m": (2.0, 30.0), "exit_r_m": (2.0, 40.0), "crossing_offset_m": (0.0, 15.0)}
+          "lane_clear_m": (1.0, 4.0), "entry_r_m": (2.0, 30.0), "exit_r_m": (2.0, 40.0), "crossing_offset_m": (0.0, 15.0),
+          "outer_diameter_m": (14.0, 40.0)}
+# ADR 0227 D41 (d): `outer_diameter_m` = outer kerb diameter of the ring carriageway, authored when the mapped ring axis
+# (least-squares circle through the OSM ring) is known to be off (Knyszyn: OSM 22.3 m outer vs ~26 m on owner photo 9).
+# The ring axis radius becomes outer_diameter_m / 2 - ring width / 2 about the fitted centre; the designed lanes
+# (kerb mode) meet the ring on that circle. The ring may move at most OUTER_D_MAX_SHIFT of the fitted axis radius
+# (at least OUTER_D_MIN_SHIFT_M): a value further off is a different roundabout (wrong target, typo) - stale, fitted
+# radius kept.
+OUTER_D_MAX_SHIFT = 0.4
+OUTER_D_MIN_SHIFT_M = 2.0
 FILLS = ("island_sand", "island_gravel", "verge_grass")
 RING_INNER_MIN_M = 1.5       # a ring whose inner carriageway edge is closer to the centre has no room for an island
 FEEDER_MAX_M = 80.0          # one-way carriageway between the ring and its split node (Knyszyn: 16.7-29.9 m as
@@ -89,6 +101,8 @@ class Spec:
     mouths: dict = field(default_factory=dict)      # kerb mode: split node -> {"mid": axis ring <- split, "half_w"}
     crossings: list = field(default_factory=list)   # kerb mode: planned P-10 (stripes as polygons)
     p13: list = field(default_factory=list)         # kerb mode: (arm chain id, polyline along the ring edge)
+    r_axis_fit: float | None = None                 # fitted (OSM) ring axis radius; differs from r_axis only with the
+                                                    # authored `outer_diameter_m` (ADR 0227 D41)
 
     @property
     def r_out(self):
@@ -189,6 +203,15 @@ def specs(net, junction_nodes=None) -> list:
             nodes.add(c.node_b if c.node_a in ring_nodes else c.node_a)
         ctr, r = _fit_circle(np.vstack([c.line.p for c in grp]))
         w = float(np.mean([2 * float(np.mean(c.hw)) for c in grp]))
+        r_fit, notes = r, []
+        if "outer_diameter_m" in opts:
+            r_new = float(opts["outer_diameter_m"]) / 2 - w / 2
+            if abs(r_new - r) <= max(OUTER_D_MIN_SHIFT_M, OUTER_D_MAX_SHIFT * r) and r_new - w / 2 >= RING_INNER_MIN_M + 0.2:
+                r = r_new                       # reported as r_axis_m / r_axis_fit_m (report_one), not a note
+            else:
+                net.overrides_stale += [i for i in override_ids(net, grp) if i not in net.overrides_stale]
+                notes.append(f"outer diameter {float(opts['outer_diameter_m']):.2f} m rejected (fitted axis r {r:.2f} m)")
+                opts = {k: v for k, v in opts.items() if k != "outer_diameter_m"}
         ta = next((_sec(net, c).truck_apron for c in grp if _sec(net, c).truck_apron), None)
         if ta and ta.get("code"):
             ap = (ISLAND, float(ta["height_m"]), float(ta["width_m"]), ISLAND_SKIRT_M, int(ta["code"]))
@@ -203,7 +226,7 @@ def specs(net, junction_nodes=None) -> list:
         if kerb_mode(opts):
             opts = {**KERB_DEFAULTS, **opts}
         out.append(Spec(id="cr:" + sorted(ring_nodes)[0], ring=grp, feeders=feeders, nodes=sorted(nodes), center=ctr,
-                        r_axis=r, w_ring=w, apron=ap, opts=opts))
+                        r_axis=r, w_ring=w, apron=ap, opts=opts, notes=notes, r_axis_fit=r_fit))
     return out
 
 
@@ -289,6 +312,11 @@ def lay_lanes(net) -> list:
                 hw = float(np.mean(c.hw))
                 rk = float(o["entry_r_m"] if entry else o["exit_r_m"])
                 node = P[-1]
+                if spec.r_axis_fit is not None and abs(spec.r_axis - spec.r_axis_fit) > 1e-6:
+                    # authored outer diameter: the lane meets the ring axis on the authored circle, at the bearing of
+                    # its mapped ring node (the ring chains themselves are absorbed, no ribbon is built from them)
+                    rv = node - spec.center
+                    node = spec.center + rv * (spec.r_axis / max(float(np.hypot(*rv)), 1e-9))
                 xn, yn = float((node - S0) @ d), float((node - S0) @ nl)
                 a_node = math.atan2(*(node - spec.center)[::-1])
                 i0 = int(np.argmax(x >= 0.0))                  # mapped / authored line up to the local axis origin
@@ -888,7 +916,8 @@ def _sink_under_island(buf, j, spec: Spec):
 def report_one(spec: Spec, built=True) -> dict:
     return {"id": spec.id, "built": built, "center_en": [round(float(v), 2) for v in spec.center],
             "r_axis_m": round(spec.r_axis, 2), "ring_asphalt_m": round(spec.w_ring, 2),
-            "r_outer_m": round(spec.r_out, 2), "apron_m": round(spec.apron[2], 2), "apron_lip_m": round(spec.apron[1], 3),
+            "r_outer_m": round(spec.r_out, 2),
+            "r_axis_fit_m": round(spec.r_axis_fit if spec.r_axis_fit is not None else spec.r_axis, 2), "apron_m": round(spec.apron[2], 2), "apron_lip_m": round(spec.apron[1], 3),
             "island_r_m": round(spec.r_in - spec.apron[2], 2), "splitters": len(spec.splitters),
             "splitter_m2": [round(pg.area, 1) for _, pg in spec.splitters],
             "outline_m2": round(spec.outline.area, 1) if spec.outline is not None else None,

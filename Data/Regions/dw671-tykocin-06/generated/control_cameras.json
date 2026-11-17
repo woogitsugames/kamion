@@ -1,0 +1,137 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0154",
+   "look_at": [
+    392.552,
+    872.928,
+    114.545
+   ],
+   "note": "driver eye 2.5 m, control route s = 154 m of 2155 m (unnamed)",
+   "pos": [
+    433.809,
+    916.527,
+    115.885
+   ],
+   "route_s_m": 153.894,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0462",
+   "look_at": [
+    175.102,
+    655.103,
+    114.178
+   ],
+   "note": "driver eye 2.5 m, control route s = 462 m of 2155 m (unnamed)",
+   "pos": [
+    216.378,
+    698.684,
+    115.501
+   ],
+   "route_s_m": 461.683,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0769",
+   "look_at": [
+    -42.726,
+    437.653,
+    113.94
+   ],
+   "note": "driver eye 2.5 m, control route s = 769 m of 2155 m (unnamed)",
+   "pos": [
+    -1.503,
+    481.283,
+    115.267
+   ],
+   "route_s_m": 769.472,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1077",
+   "look_at": [
+    -260.274,
+    219.922,
+    113.589
+   ],
+   "note": "driver eye 2.5 m, control route s = 1077 m of 2155 m (unnamed)",
+   "pos": [
+    -219.093,
+    263.592,
+    114.942
+   ],
+   "route_s_m": 1077.26,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1385",
+   "look_at": [
+    -478.131,
+    2.502,
+    113.059
+   ],
+   "note": "driver eye 2.5 m, control route s = 1385 m of 2155 m (unnamed)",
+   "pos": [
+    -436.908,
+    46.127,
+    114.417
+   ],
+   "route_s_m": 1385.049,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1693",
+   "look_at": [
+    -699.167,
+    -211.583,
+    112.474
+   ],
+   "note": "driver eye 2.5 m, control route s = 1693 m of 2155 m (unnamed)",
+   "pos": [
+    -655.663,
+    -170.304,
+    113.825
+   ],
+   "route_s_m": 1692.838,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2001",
+   "look_at": [
+    -946.99,
+    -393.865,
+    112.781
+   ],
+   "note": "driver eye 2.5 m, control route s = 2001 m of 2155 m (unnamed)",
+   "pos": [
+    -898.637,
+    -358.309,
+    114.012
+   ],
+   "route_s_m": 2000.626,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 262.477,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dw671-tykocin-06",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

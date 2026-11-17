@@ -206,3 +206,67 @@ Po merge main `a2f62a442` pliki `generated/knyszyn*` pochodzą z main i czekają
 - **Ślad w QA innych regionów usunięty.** Sześć generatorów `knyszyn_{church,townhall,market_buildings,park_props,market,fountain}_0227` zapisuje wpis do `streetscape_qa.json` dopiero *po* bramce `region == "knyszyn"`; `vegetation.place` dodaje klucz `park_replacements` tylko wtedy, gdy region ma wpis `kind: park_replacement`. Dla pozostałych kafli raport QA jest bajtowo taki jak przed PR (test `tests/gis/test_knyszyn_qa_gate_0227.py`). Dług (recenzja P2-2): wywołania na sztywno w `stage.py` → docelowo rejestr generatorów sterowany z `overrides.yaml`.
 - **`far_field.BorderElevation.from_region` — zmiana zostaje (poprawka błędu).** Ścieżka awaryjna (brak `terrain_conformed.npy`) czytała `heightmap_2049.r16` przez klucze `z_min_m`/`z_max_m`, których nie ma w żadnym z 21 `Data/Regions/*/terrain.json` (format `encoding.offset_m` + `scale_m_per_unit`) — każde jej użycie kończyło się `KeyError`. Teraz dekoduje przez wspólne `roads.profile.load_heightfield` (ten sam dekoder co droga i teren). Dodatkowo `build_far_field` przekazuje swój `out_root`, więc krawędź dalekiego planu czyta teren *bieżącego* buildu zamiast nieaktualnego pliku z domyślnego katalogu. Ścieżka normalna (npy w domyślnym katalogu) bez zmian. Testy: `tests/gis/test_far_field_terrain_source_0227.py`.
 - **Kamery diagnostyczne koron** `rynek_crown_side_{0..315}` (8) usunięte z kamer kontrolnych — były tylko do badania lip r9/r10.
+
+## Dopisek D41 (rynek-p1-s23) — poprawki P1 z recenzji wizualnej 2026-11-16
+
+Recenzja: `docs/reports/REVIEW-2026-11-16-s23-visual-rynek.md`. Fakty właściciela: `KNYSZYN-OWNER-FEEDBACK-S21.md`. Google nieużyty. Dane: `docs/reports/rynek-p1/`.
+Wszystkie nowe wpisy są na końcu `Data/Regions/knyszyn/overrides.yaml`. Wcześniejszych wpisów nie zmieniano.
+
+- **(a) Wiaty targowicy (SOURCED, pomiar).** Narzędzie `tools/worldgen/qa/market_canopy_ortho.py` mierzy wiaty na GUGiK ORTO WMS 0,1 m:
+  profil wzdłuż kalenicy i dwa profile w poprzek.
+  - Okapy mają 27,10–27,15 × 7,20–7,28 m. Prześwity: **1,15 m** i **1,17 m** między trzema bliskimi wiatami, 14,2 m do wiaty północnej.
+  - Dokładność ±0,2 m na prześwit. Linijkę sprawdza test na syntetycznym rastrze.
+  - Przyczyna styku w grze: ręczne obrysy R24 nachodziły na siebie o ok. 1 m, a generator dawał wcięcie 0,25 m. Okapy stały więc 0,3 m od siebie.
+  - Wpis `market_canopy_geometry_d41` podmienia obrysy po `id`, bez wcięcia. Generator raportuje `eave_gaps_m`.
+- **(b) Pawilon (dane).** `kind: market_pavilion_d41` dla `bdot:de62e5a9` (narożnik płd.-wsch., zdjęcie 13).
+  - Dach namiotowy (ortofoto: cztery połacie do jednego wierzchołka) i żółty tynk, bez szyldu i marki.
+  - Okap 2,8 m i wierzchołek 4,2 m to WORKING_VALUE. Zły wpis jest stale i zostaje wtedy dotychczasowy dach kopertowy.
+  - Mały kiosk z dachem namiotowym przy bramie płn.-zach. nie ma obrysu BDOT i nie jest modelowany.
+- **(c) Korony lip (ESTIMATED).** `kind: tree_crown_shape`, `height_to_spread` 1,75.
+  - Źródło: Niemiera, *Littleleaf Linden (Tilia cordata)*, VCE 2901-1055 (2018): wysokość 70 ft, rozpiętość 40 ft, „upright oval”.
+  - Zastępuje średnice WORKING_VALUE (zakresy AABB z GLB) w obu grupach kit lip Rynku: korony 8,8–11,4 m zamiast 9,3–12,9 m.
+  - Liczba kart i trójkątów bez zmian. Wygląd z poziomu oczu OPEN.
+- **(d) Średnica ronda DK65 × Tykocka (WORKING_VALUE).** Nowy klucz `compact_roundabout.outer_diameter_m`.
+  - Walidacja: zakres 14–40 m i najwyżej max(2 m, 40 %) od promienia osi dopasowanego do OSM. Inaczej wpis jest stale i promień z OSM zostaje.
+  - Raport: `r_axis_fit_m`. Wpis `knyszyn-roundabout-outer-diameter-d41` ustawia 26,0 m. Opcje `compact_roundabout` kilku wpisów są scalane w kolejności pliku.
+  - Pierścień rośnie, a węzły rozdziału DK65 stoją w miejscu, więc wysepki S i N są ok. 1,85 m krótsze od krawędzi pierścienia.
+    Po decyzji OD-046 proponuję przeskalować długości z tego samego zdjęcia (× 26/22,6): `split-s` length_m 27 → ok. 33, `split-n` 32 → ok. 38 (ESTIMATED).
+  - Do czasu przeskalowania `test_roundabout_0274` ma dolną granicę wysepki S 27 m.
+- **(e) Uskok krawędzi jezdni od południa: przyczyna i poprawka u źródła.**
+  - Odtworzenie: moduł dróg (`pipeline.build`, conform, `terrain_walls`) uruchomiony na NMT GUGiK z WCS 1 m, poza gitem.
+  - Narożnik S→E łączy wiejskie ramię DK65 z ramieniem z krawężnikiem. `_emit_strip` ujednolica go w krawężnik bez chodnika.
+    Pas trawy liczono jednak przed ujednoliceniem, więc wiejska połowa narożnika była gołym krawężnikiem, a teren za nim był dopasowany do NMT z 2022 r. (stary rów DK65).
+  - Efekt: spadek 0,51–0,74 m w odległości 1,5 m za krawężnikiem, na odcinku 2–24 m od węzła rozdziału.
+  - Poprawka w `meshing.build_corner_strips`, tylko dla narożników mieszanych ronda kompaktowego: ujednolicenie przed pasem trawy, trawa o szerokości jak na ramieniu z krawężnikiem, wierzch trawy jako soft footprint conformu.
+  - Wynik odtworzenia: spadek ≤ 0,28 m (tyle co profil wiejski ramienia). Trójkąty dróg w promieniu 90 m: 19 237 → 19 061. Inne skrzyżowania bez zmian.
+  - OTWARTE: ten sam wzorzec, czyli goły krawężnik w narożniku mieszanym, występuje w zwykłych skrzyżowaniach. Rozszerzenie wymaga przebudowy i QA wszystkich regionów.
+
+**Budżet (szacunek).** Wiaty: ta sama liczba słupów (2 × 9 na wiatę) i połaci, więc 0 trójkątów. Pawilon: dach namiotowy ma ≤ trójkątów niż kopertowy.
+Lipy: bez zmian. Rondo: −176 trójkątów dróg w promieniu 90 m, trawa scalona z terenem, więc 0 draw calls. Kamery Rynku i ronda: budżet neutralny albo ujemny.
+Pomiar edytora po przebudowie wykona lider. **Wizualnie OPEN:** brak renderów w chmurze (pętla visual-qa u lidera).
+
+### D41 w integracji world3 (int-world3-s23, 17.11; recenzja `docs/reports/REVIEW-2026-11-16-pr169.md`)
+Przebudowa knyszyn na kodzie #147 #154 #158 #153 #150 #164 #165 #169 + main; VQA High
+`artifacts/int-world3-s23/vqa/knyszyn/r1/High-clear/`.
+- (a) wiaty: w `market-owner-12` (widok z góry) cztery dachy rozdzielone prześwitami — zgodne z pomiarem.
+- (b) pawilon `bdot:de62e5a9`: w r1 ściany żółte, dach namiotowy (kadr `market-owner-13`, kadrowanie lotnicze). Kolor
+  P1-1 widoczny — „szary budynek” z r2 to nie ten pawilon albo inne światło; zostaje OTWARTY parking z płyt oraz
+  jasny trójkąt nawierzchni obok pawilonu (wygląda na osobny wielokąt `paved`, do sprawdzenia).
+- (c) lipy: proporcja 1,75 działa, ale płaskie karty i ciemny pionowy szew koron (`rynek-owner-05`) bez zmian —
+  **P1-2 ZNANE / OTWARTE** (osobne zadanie: bryła korony / normalne kart).
+- (e) uskok DK65 płd.: sonda na GLB `tools/worldgen/qa/knyszyn_s_kerb_step.py` (stacje 2–24 m od węzła rozdziału,
+  spadek krawędź twarda → grunt 1,5 m dalej): przed #169 W 0,506 / E 0,652 m, po integracji W 0,499 / E 0,654 m;
+  w kadrze `rondo-dk65-from-south` betonowa ściana po prawej nadal widoczna. Poprawka (e) w integracji nie działa
+  (próg 0,15 m niespełniony) — OTWARTE, przyczyna UNVERIFIED (DK65 to `primary`, więc #165 nie daje ramieniu S
+  chodników). Uwaga do sondy: oś stacji to cięciwa drogi OSM 286990127, stąd krawędź E na 0–4,4 m od osi.
+  Test `test_knyszyn_route_graph_…` zielony po wyłączeniu `knyszyn-roundabout-outer-diameter-d41` (sprawdzone na danych z gita).
+- P2-7 / #153: luka KRTG 1,73 m na pierścieniu — ADR 0274, test `test_knyszyn_route_graph_…` czerwony.
+- **Aktualizacja world3 r3 (17.11, decyzja lidera):** wpis `knyszyn-roundabout-outer-diameter-d41` wyłączony
+  (zakomentowany z powodem w `overrides.yaml`; wraca, gdy generator ronda przeniesie węzły pierścienia) — test KRTG
+  zielony. Przyczyna uskoku od wschodu ustalona: narożnik S→E jest „mieszany” (ramię S wiejskie, ramię E po #165 ma
+  chodnik → jego pas trawy = 0), więc poprawka (e) dawała stacjom przekształconym `max(cv) = 0` m trawy. Poprawka
+  w `meshing.py`: przekształcona stacja (zwykły krawężnik bez chodnika) dostaje pas ADR 0110 `VERGE_W`. Dodatkowo
+  `knyszyn-dk65-split-s-kerbed-edge-w3` (krawężnik z trawą w strefie rozdziału). Sonda: wschód max 0,652 → 0,191 m
+  (mediana 0,505 → 0,058); zachód bez zmian 0,506 m — narożnik S→W ma skok wysokości linii krawężnika 0,51 m/m,
+  przy którym bezpiecznik `meshing` celowo nie kładzie trawy (OTWARTE). Kadr r1 vs r3 `rondo-dk65-from-south`:
+  ściana po prawej znikła.

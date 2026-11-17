@@ -1,0 +1,68 @@
+id: dw671-tykocin-02
+title: DW671 w stronę Tykocina 02 — narożnik kafla (0,1 km), linia kolejowa
+status: WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-9,6) of the ADR 0203 plan)
+candidate: T_dw671_tykocin
+crs:
+  horizontal: EPSG:2180 (ETRF2000-PL / CS92)
+  vertical: PL-EVRF2007-NH (EPSG:9651)
+  axes_unity: X = east (EPSG:2180 x), Y = up, Z = north (EPSG:2180 y)  [ADR 0003]
+bbox:
+  xmin: 758539.0
+  ymin: 607487.0
+  xmax: 760587.0
+  ymax: 609535.0
+  width_m: 2048.0
+  height_m: 2048.0
+origin:
+  x: 759563.0
+  y: 608511.0
+  z: 112.62
+  note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
+teryt_powiat: '2008'
+products:
+  buildings.geojson: Data/Regions/dw671-tykocin-02/buildings.geojson
+  ortho.json: Data/Regions/dw671-tykocin-02/ortho.json
+  roads.graph.json: Data/Regions/dw671-tykocin-02/roads.graph.json
+  terrain.json: Data/Regions/dw671-tykocin-02/terrain.json
+big_products_not_in_git:
+- Data/raw/derived/dw671-tykocin-02/heightmap_2049.r16
+- Data/raw/derived/dw671-tykocin-02/ortho_0p25m.tif
+sources:
+- id: osm-geofabrik-podlaskie
+  license: ODbL 1.0
+  attribution: © OpenStreetMap contributors
+  manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
+  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
+- id: gugik-nmt-2022-dw671-tykocin-02
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-nmt-2022-dw671-tykocin-02.json
+  manifest_sha256: afbb77352e7e4752acc9046abc016f9f86a3d37ed476a248f141e5599366c7d9
+- id: gugik-orto-2024-rgb-0p25-dw671-tykocin-02
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-dw671-tykocin-02.json
+  manifest_sha256: 18115085aa678339fe04f8d49f86b487fa8b5de3f9ec4b7f1c8af71d05944391
+- id: gugik-bdot10k-2008
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2008.json
+  manifest_sha256: 01acef7cb475ce9d1e17b10219528ba38a238d239b19ed0c1f421a58fb2c3342
+- id: gugik-lod1-2024-2008
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2008.json
+  manifest_sha256: 9de6f83074f3c1dd0bbf0bf17bf6586627a5cb6f5d1c69c2e7fbd51281f8f50a
+- id: gugik-lod2-2017-2008
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2008.json
+  manifest_sha256: 59067604e5b413363678e77bdde143aa1a871b088fc9dcaee792aec53295d7ef
+rebuild:
+- uv run --project tools/worldgen tools/worldgen/ingest.py --region dw671-tykocin-02
+- uv run --project tools/worldgen tools/worldgen/build_region.py --region dw671-tykocin-02

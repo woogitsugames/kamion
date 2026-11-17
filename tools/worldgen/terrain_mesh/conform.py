@@ -107,6 +107,9 @@ def clean_under_bridges(nmt, deck, deck_mask, thickness, iters=400):
     return out, bad
 
 
+TERRAIN_UNDER_WALLED = 0.15   # m: ground kept under the surface of a walled ramp (fill, no soffit), c-p1-s23, WORKING_VALUE
+
+
 def clamp_under_decks(z, deck, deck_mask, thickness, ground_mask):
     """Terrain under a deck stays >= 0.3 m below the soffit (except where a ground road runs)."""
     top = ndimage.maximum_filter(np.where(deck_mask, deck, -np.inf), size=3)

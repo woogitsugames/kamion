@@ -34,7 +34,7 @@ HW = D("max_width_m") / 2                    # 1.275
 ROOF = D("trailer_overall_height_m")         # 4.00
 FLOOR = D("trailer_floor_height_m")          # 1.30
 KP_H = D("fifth_wheel_height_m")             # 1.15 = kingpin height (ADR 0014)
-AXLES = D("trailer_axle_z_m")                # [-6.39, -7.70, -9.01]
+AXLES = D("trailer_axle_z_m")                # [-6.32, -7.63, -8.94] (D79 / ADR 0280: kingpin -> centre axle 7.63 m)
 TRACK = D("trailer_track_m")                 # 2.04
 WC = D("trailer_wheel_centre_m")             # 0.515
 TYRE_R = D("trailer_tyre_diameter_m") / 2    # 0.536

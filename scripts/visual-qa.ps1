@@ -5,6 +5,7 @@
   pwsh scripts/visual-qa.ps1 -Scene Boot
   pwsh scripts/visual-qa.ps1 -Scene Boot -Width 1920 -Height 1080 -Tier High
   pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -OutputDir artifacts/visual-qa/WorldC/Low-overcast
+  pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Ultra -Pc -Width 1920 -Height 1080   # PC tier (ADR 0269)
 .NOTES
   Output: artifacts/visual-qa/<Scene>/<camera-id>.png. Rendering does not work with -nographics,
   so Unity runs batchmode with the GPU. Look at every PNG yourself (skill visual-qa).
@@ -46,8 +47,13 @@ param(
     [string]$Mask = '',
     # ADR 0056: also write <id>_envcube.png (the vehicle reflection cube of that frame, 6 faces).
     [switch]$EnvDump,
-    # ADR 0269 propozycja 2: render the PC tier (URP_PC_<tier> + PcGraphicsTiers.Overlay) instead of the phone tier.
-    [switch]$Pc
+    # Unity -buildTarget of the batch run (Windows primary, ADR 0261): Win64 avoids a platform switch after
+    # import-region.ps1 -BuildTarget Win64 in the same checkout.
+    [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android',
+    # ADR 0269 (pc-visual-s23): render the PC tier (URP_PC_<Tier>, PcGraphicsTiers values) instead of the mobile tier.
+    [switch]$Pc,
+    # Diagnostic A/B: QualitySettings.anisotropicFiltering for this render (0 Disable, 1 Enable, 2 ForceEnable).
+    [ValidateSet('', '0', '1', '2')] [string]$Aniso = ''
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -76,8 +82,9 @@ if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 if ($EnvDump) { $qaArgs += @('-qaEnvDump', '1') }
 if ($Pc) { $qaArgs += @('-qaPcTiers', '1') }
+if ($Aniso) { $qaArgs += @('-qaAniso', $Aniso) }
 $runStart = Get-Date
-$code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
+$code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs -BuildTarget $BuildTarget
 
 $result = Select-String -Path $log -Pattern 'VISUALQA_RESULT:.*' | Select-Object -Last 1
 

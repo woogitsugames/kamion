@@ -54,6 +54,29 @@ namespace Game.Editor.Setup
             if (Application.isBatchMode) EditorApplication.Exit(exit);
         }
 
+        /// <summary>
+        /// Regenerates only the graybox trailer prefab from the trailer definition (wheel pivots = physics axles), without
+        /// rebuilding the DrivingLab scene (ADR 0280 §9.2: axle move to 7.63 m). Batch: -executeMethod
+        /// Game.Editor.Setup.DrivingLabSceneBuilder.RebuildTrailerPrefabBatch
+        /// </summary>
+        public static void RebuildTrailerPrefabBatch()
+        {
+            int exit = 0;
+            try { RebuildTrailerPrefab(); Debug.Log("TRAILER_PREFAB_RESULT: OK"); }
+            catch (Exception e) { Debug.LogException(e); Debug.Log("TRAILER_PREFAB_RESULT: FAILED"); exit = 1; }
+            if (Application.isBatchMode) EditorApplication.Exit(exit);
+        }
+
+        [MenuItem("Kamion/Setup/Rebuild graybox trailer prefab")]
+        public static void RebuildTrailerPrefab()
+        {
+            var data = CreateVehicleData();
+            ReadAndCheckDims();
+            var prefab = CreateTrailerPrefab(data, CreateGrayboxMaterials());
+            AssetDatabase.SaveAssets();
+            Debug.Log("[TRAILER] graybox prefab " + AssetDatabase.GetAssetPath(prefab));
+        }
+
         [MenuItem("Kamion/Setup/Rebuild DrivingLab")]
         public static void Build()
         {

@@ -113,6 +113,59 @@ namespace Game.Tests
         }
 
         [Test]
+        public void SsaoFlagOff_SelectsThePlainRendererOnAnSsaoAsset()
+        {
+            // pc-visual-s23: Tier.ssao used to be read nowhere (rq_ssao=0 was a no-op). On an asset whose default renderer has
+            // SSAO, ssao=false must render the camera through renderer 1 (plain); ssao=true keeps the asset default.
+            var profile = QualityProfile.Load();
+            Assert.IsNotNull(profile);
+            Assert.IsTrue(profile.TryGet("Ultra", out var ultra));
+            int level = QualitySettings.GetQualityLevel();
+            var go = new GameObject("SsaoSwitchTestCam");
+            try
+            {
+                Assert.IsTrue(QualityTiers.Apply("Ultra"));
+                var asset = QualitySettings.renderPipeline as UniversalRenderPipelineAsset;
+                Assume.That(asset != null && asset.rendererDataList.Length > 1, "mobile Ultra asset = [SSAO, plain]");
+                var cam = go.AddComponent<Camera>();
+                var data = cam.GetUniversalAdditionalCameraData();
+                UnityEngine.Rendering.Universal.Tonemapping tm = null;
+                ultra.ssao = false;
+                QualityProfileApplier.Apply(ultra, cam, null, null, ref tm);
+                Assert.AreEqual(1, RendererIndexOf(data), "ssao off -> plain renderer (index 1)");
+                ultra.ssao = true;
+                QualityProfileApplier.Apply(ultra, cam, null, null, ref tm);
+                Assert.AreEqual(-1, RendererIndexOf(data), "ssao on -> asset default (SSAO renderer)");
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+                QualitySettings.SetQualityLevel(level, false);
+            }
+        }
+
+        [Test]
+        public void MobileTiers_SsaoFlagMatchesTheirAssetSoPhonesAreUnchanged()
+        {
+            // The renderer switch above follows Tier.ssao; on phones the flag must equal what the quality level's asset
+            // already renders (renderer 0 with SSAO), or a phone tier would silently lose / not gain SSAO.
+            var profile = QualityProfile.Load();
+            Assert.IsNotNull(profile);
+            for (int i = 0; i < QualitySettings.names.Length; i++)
+            {
+                if (!(QualitySettings.GetRenderPipelineAssetAt(i) is UniversalRenderPipelineAsset a)) continue;
+                if (!profile.TryGet(QualitySettings.names[i], out var t)) continue;
+                bool assetSsao = false;
+                var r0 = a.rendererDataList.Length > 0 ? a.rendererDataList[0] : null;
+                if (r0 != null) foreach (var f in r0.rendererFeatures) if (f is ScreenSpaceAmbientOcclusion && f.isActive) assetSsao = true;
+                Assert.AreEqual(assetSsao, t.ssao, $"{QualitySettings.names[i]}: QualityProfile.ssao vs {a.name} renderer 0");
+            }
+        }
+
+        static int RendererIndexOf(UniversalAdditionalCameraData d) =>
+            (int)typeof(UniversalAdditionalCameraData).GetField("m_RendererIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(d);
+
+        [Test]
         public void EditorAndPhones_AreNotSwitchedToPcTiers()
         {
             Assert.IsFalse(PcGraphicsTiers.Enabled, "editor: PC tiers only with ForceEnabled");

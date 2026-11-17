@@ -148,6 +148,136 @@
       "group": "Białystok",
       "routeLengthM": 2133.17,
       "startS": 90.0
+    },
+    {
+      "id": "dk65-monki-02",
+      "label": "DK65 w stronę Moniek 02",
+      "group": "Mońki",
+      "routeLengthM": 2111.75,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-monki-03",
+      "label": "DK65 w stronę Moniek 03",
+      "group": "Mońki",
+      "routeLengthM": 413.45,
+      "startS": 90.0,
+      "noStart": true
+    },
+    {
+      "id": "dk65-monki-04",
+      "label": "DK65 w stronę Moniek 04",
+      "group": "Mońki",
+      "routeLengthM": 2821.13,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-monki-05",
+      "label": "DK65 w stronę Moniek 05",
+      "group": "Mońki",
+      "routeLengthM": 163.23,
+      "startS": 63.23,
+      "noStart": true
+    },
+    {
+      "id": "dk65-monki-06",
+      "label": "DK65 w stronę Moniek 06",
+      "group": "Mońki",
+      "routeLengthM": 2112.62,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-monki-07",
+      "label": "DK65 w stronę Moniek 07",
+      "group": "Mońki",
+      "routeLengthM": 2278.23,
+      "startS": 90.0
+    },
+    {
+      "id": "monki-e",
+      "label": "Mońki wschód",
+      "group": "Mońki",
+      "routeLengthM": 292.88,
+      "startS": 90.0,
+      "noStart": true
+    },
+    {
+      "id": "monki",
+      "label": "Mońki",
+      "group": "Mońki",
+      "routeLengthM": 2727.9,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-02",
+      "label": "DW671 w stronę Tykocina 02",
+      "group": "Tykocin",
+      "routeLengthM": 107.78,
+      "startS": 7.78,
+      "noStart": true
+    },
+    {
+      "id": "dw671-tykocin-03",
+      "label": "DW671 w stronę Tykocina 03",
+      "group": "Tykocin",
+      "routeLengthM": 2265.41,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-04",
+      "label": "DW671 w stronę Tykocina 04",
+      "group": "Tykocin",
+      "routeLengthM": 1880.58,
+      "startS": 92.0
+    },
+    {
+      "id": "dw671-tykocin-05",
+      "label": "DW671 w stronę Tykocina 05",
+      "group": "Tykocin",
+      "routeLengthM": 691.99,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-06",
+      "label": "DW671 w stronę Tykocina 06",
+      "group": "Tykocin",
+      "routeLengthM": 2154.23,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-07",
+      "label": "DW671 w stronę Tykocina 07",
+      "group": "Tykocin",
+      "routeLengthM": 1006.44,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-08",
+      "label": "DW671 w stronę Tykocina 08",
+      "group": "Tykocin",
+      "routeLengthM": 1675.91,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-09",
+      "label": "DW671 w stronę Tykocina 09",
+      "group": "Tykocin",
+      "routeLengthM": 1063.0,
+      "startS": 90.0
+    },
+    {
+      "id": "tykocin",
+      "label": "Tykocin",
+      "group": "Tykocin",
+      "routeLengthM": 2542.0,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-jasionowka-01",
+      "label": "DW671 w stronę Jasionówki 01",
+      "group": "Knyszyn",
+      "routeLengthM": 2354.77,
+      "startS": 90.0
     }
   ],
   "aliases": [
@@ -181,7 +311,7 @@
     },
     {
       "name": "d67-full",
-      "note": "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin. APK size ESTIMATED 1407-1948 MB (REVIEW-2026-11-15-s21-code-104, like 'all'); measure on the build (ADR 0267).",
+      "note": "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin; owner decision 2026-11-16: + the 18 ring tiles of ADR 0231 (DK65 to Monki, DW671 to Tykocin, DW671 towards Jasionowka). Build size not measured with the ring (ADR 0267).",
       "regions": [
         "bialystok-industrial-c",
         "bialystok-maczka",
@@ -203,7 +333,25 @@
         "bialystok-dojlidy",
         "knyszyn-w",
         "dk65-monki-01",
-        "dw671-tykocin-01"
+        "dw671-tykocin-01",
+        "dk65-monki-02",
+        "dk65-monki-03",
+        "dk65-monki-04",
+        "dk65-monki-05",
+        "dk65-monki-06",
+        "dk65-monki-07",
+        "monki-e",
+        "monki",
+        "dw671-tykocin-02",
+        "dw671-tykocin-03",
+        "dw671-tykocin-04",
+        "dw671-tykocin-05",
+        "dw671-tykocin-06",
+        "dw671-tykocin-07",
+        "dw671-tykocin-08",
+        "dw671-tykocin-09",
+        "tykocin",
+        "dw671-jasionowka-01"
       ]
     }
   ]

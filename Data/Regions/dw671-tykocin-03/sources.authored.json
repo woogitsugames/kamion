@@ -1,0 +1,8 @@
+{
+ "provenance": "authored_override (ADR 0231, mechanism of ADR 0209/0212): source pins of region dw671-tykocin-03, read by ingest.py and build_region.py",
+ "pins": {
+  "nmt_year": "2022"
+ },
+ "reason": "Every tile of the ring and its built neighbours (knyszyn, knyszyn-w, dk65-monki-01, dw671-tykocin-01, dk65-11) use the NMT 2022 series, so shared edges get the same samples. GUGiK sheet index (SkorowidzNMT, queried 2026-11-15): the 2022 series (flight days 2022-07-29, 2022-08-27) fully covers this tile; without the pin ingest.py would take 2025-05-27 here and the survey year would change from tile to tile. See docs/reports/map/ring_0231_nmt_coverage.json.",
+ "verify": "none (move together with the pins of the neighbours)"
+}
