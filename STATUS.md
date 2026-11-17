@@ -26,6 +26,7 @@
 - ADR 0274 „Czytniki grafu”: dopisane qa/dk19_*.py (graf z pliku = efektywny, brak carriageway_split w kaflach D81).
 - W TOKU (od 15:45): `artifacts/dk19-tiles-s24/jobs/rebuild.ps1` (status `rebuild.status`, logi `artifacts/logs/dk19-s24-*.log`): bojary, mickiewicza build_world --context → fidelity → export-route, potem route_links, tile_graph, katalog --check.
 - 18:18 world bojary exit=0 (9062 s; GLB 64 chunków High 1046 MiB / Low 420 MiB; far_field High 132 326 / Low 30 748 tris; ściany terenu > 0,15 m: 20, max 0,665 m; road consistency 220 (on route: obstacle_in_lane 47 what=none, marking_off_carriageway 13, arrow_no_exit 8, lane_blind_end 4) vs 221 w s23).
+- 18:58 bojary: fidelity/export-route exit 0 (3267 m); import Win64 OK 64 chunki, WORLD_MEMORY Low 251,6 / High 620,7 MB (jak s23); VQA High overcast exit 0 → `artifacts/dk19-tiles-s24/vqa/bojary/view` (obejrzane: piastowska-n/seam-s, sosabowskiego, route-s2245 — las HLOD jako płaskie ciemne ściany, jasna kwadratowa łata w pasie).
 - NASTĘPNY KROK po `DONE` w `rebuild.status`: `pwsh scripts/unity-slot.ps1 -Acquire -MaxSlots 2 -Owner dk19-s24; foreach($t in "wygoda","bojary","mickiewicza"){ pwsh scripts/import-region.ps1 -Region bialystok-$t -BuildTarget Win64 }; pwsh scripts/visual-qa.ps1 -Scene World_bialystok-mickiewicza -Tier High -Lighting overcast -BuildTarget Win64 -OutputDir artifacts/dk19-tiles-s24/vqa/mickiewicza; pwsh scripts/unity-slot.ps1 -Release -Owner dk19-s24`
 
 # STATUS cabin-polish-s23 (D84: wnętrze kabiny PC — polish po recenzji REVIEW-2026-11-17-s23-cabin-pc)
