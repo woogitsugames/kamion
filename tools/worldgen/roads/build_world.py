@@ -372,6 +372,44 @@ def walled_ramp_mask(net, hf):
     return m
 
 
+WALLED_FILL_MARGIN_M = 0.3   # REVIEW s23 c-p1 P2: terrain kept down inside the wall outline + this margin
+
+
+def walled_fill_mask(net, hf):
+    """c-p2-s23: terrain nodes inside the outline of the walled ramps - between the two retaining-wall lines (deck
+    edge = half carriageway + side profile of the station) + WALLED_FILL_MARGIN_M. CF.level_under_walled keeps the
+    ground there at the level of the ground outside, so it cannot pierce the wall face."""
+    from shapely.geometry import Polygon
+    from streetscape import paved as PV_
+    from roads.network import side_extent, side_params
+    polys = []
+    for c in net.chains:
+        wl = c.meta.get("walled")
+        if wl is None or not c.side:
+            continue
+        wl = np.asarray(wl, bool)
+        s = c.line.s
+        if len(wl) != len(s):
+            continue
+        _, nrm = c.line.frame(s)
+        hw = np.broadcast_to(np.asarray(c.hw, float), s.shape)
+        idx = np.where(wl)[0]
+        for r in (np.split(idx, np.where(np.diff(idx) > 1)[0] + 1) if len(idx) else []):
+            if len(r) < 2:
+                continue
+            ext = {sd: np.array([side_extent(*side_params(c, sd, float(s[i]))) for i in r]) for sd in ("L", "R")}
+            L = c.line.p[r] + nrm[r] * (hw[r] + ext["L"] + WALLED_FILL_MARGIN_M)[:, None]
+            R = c.line.p[r] - nrm[r] * (hw[r] + ext["R"] + WALLED_FILL_MARGIN_M)[:, None]
+            poly = Polygon(np.vstack([L, R[::-1]]))
+            if not poly.is_valid:
+                poly = poly.buffer(0)
+            if poly.area > 0:
+                polys.append(poly)
+    if not polys:
+        return np.zeros(hf.z.shape, bool)
+    return PV_.rasterize_polys(polys, hf)
+
+
 def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
     """ADR 0110: the grass strips behind kerbs (roads.meshing._emit_verge, src "...:vg") become part of the terrain
     primitives of their chunk (LOD0: the 128 m sub-grid they lie in, and LOD1) instead of a `verge_grass` primitive
@@ -924,6 +962,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         p.footprint = False
     w.walled_ramp_mask = walled_ramp_mask(w.net, w.hf)
     w.stats["walled_ramp_mask_nodes"] = int(w.walled_ramp_mask.sum())
+    w.walled_fill_mask = walled_fill_mask(w.net, w.hf)
+    w.stats["walled_fill_mask_nodes"] = int(w.walled_fill_mask.sum())
     from streetscape import stage as SS
     from streetscape import water as WT
     w.water = None
