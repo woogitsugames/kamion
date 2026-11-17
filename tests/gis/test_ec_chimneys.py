@@ -148,7 +148,7 @@ def test_landmark_registration_and_hero_application_never_duplicate_a_chimney(mo
 
 def test_generated_world_has_exactly_one_authored_instance_per_chimney():
     folder=REPO/'Data/Regions'/REGION_ID/'generated'
-    qa=json.loads((folder/'streetscape_qa.json').read_text())
+    qa=json.loads((folder/'streetscape_qa.json').read_text(encoding='utf-8'))
     applied={x['id']:x for x in qa['hero_buildings']['applied']}
     for o in overrides():
         assert o['id'] in applied
@@ -158,7 +158,7 @@ def test_generated_world_has_exactly_one_authored_instance_per_chimney():
         pytest.skip("world chunks not generated here (Data/raw is gitignored)")
     instances=[]
     for p in world.glob('instances_*.json'):
-        value=json.loads(p.read_text())
+        value=json.loads(p.read_text(encoding='utf-8'))
         instances.extend(value['instances'] if isinstance(value,dict) else value)
     for o in overrides():
         matches=[it for it in instances if it.get('src')=='override:'+o['id']]
