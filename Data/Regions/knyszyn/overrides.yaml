@@ -403,6 +403,21 @@ overrides:
     confidence: medium
     verify: owner photo or a Commons photo of the house (plank colour, porch)
     set: {typology: dom_drewniany, wall_material: wood_planks}
+  - id: look-east-square-kiosk
+    target: {building: "osm:way/1427273958"}
+    sources: ["OSM way/1427273958 (building=yes, 12 m2, no other tag)", "GUGiK orthophoto 2025 0.25 m (reference only)"]
+    reason: >-
+      Review 2026-11-17 P1-2: the class rule of overrides.class_fixes.json (OSM-only < 60 m2 -> outbuilding 3.0 m)
+      turned the kiosk on the eastern paved square into a doorless flat grey box - a landmark of the square lost. The
+      orthophoto (0.25 m, measured: light roof 1.8 x 6.8 m = the OSM ring, median sRGB 177/188/193; the dark strip on
+      its north-west side is its cast shadow, as for the trees) shows a narrow kiosk with a light, near-flat roof
+      standing alone on the paving. Built as a one-storey house-type body (door and windows from the facade kit, flat
+      roof - a pitched roof has no basis in the data and roofs.plan refuses spans under 3 m). ESTIMATED: brick walls
+      (what the square showed before this branch); WORKING_VALUE: 3.2 m. Wins over the class fix (authored entries
+      come after the generated files). No sign or lettering.
+    confidence: low
+    verify: owner photo of the eastern square (what the kiosk is, wall material, roof form)
+    set: {typology: dom, wall_material: brick_red, height_m: 3.2, roof_shape: flat}
   - id: look-discount-forecourt-red-north
     kind: paved_area
     material: sidewalk_paving_red

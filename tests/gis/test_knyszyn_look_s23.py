@@ -24,6 +24,7 @@ KLATT = "bdot:2002917F-2F22-5C99-E053-CC2BA8C01CFC"
 CORNER = "bdot:2002917F-2E17-5C99-E053-CC2BA8C01CFC"
 LIBRARY = "bdot:2002917F-46DA-5C99-E053-CC2BA8C01CFC"
 STORE = "bdot:2002917F-468D-5C99-E053-CC2BA8C01CFC"
+KIOSK = "osm:way/1427273958"
 
 
 @pytest.fixture(scope="module")
@@ -104,6 +105,8 @@ def test_class_fixes_from_data(blds):
     for o in gen["overrides"]:
         bid, s = o["target"]["building"], o["set"]
         assert plain[bid]["typ"] in ("office", "block")
+        if bid == KIOSK:                      # an authored entry overrides the class fix (look-east-square-kiosk)
+            continue
         if "typology" in s:                   # OSM-only footprint with the default height: never an office box
             assert plain[bid]["props"]["height_source"] == "default" and plain[bid]["props"]["footprint_source"] == "osm"
             assert blds[bid]["typ"] == {"gospodarczy": "shed", "dom": "house"}[s["typology"]]
@@ -116,6 +119,21 @@ def test_class_fixes_from_data(blds):
     assert left == []
     funeral = blds["bdot:2002917F-465F-5C99-E053-CC2BA8C01CFC"]         # LoD2 1130, rise 1.8 m
     assert funeral["ovr"].get("roof_shape") == "gable" and BM.ROOF_OVERRIDES & _mats(funeral)
+
+
+def test_sheet_roof_is_linear_mid_grey_and_corrugated():
+    # review 2026-11-17 P1-1 / P2-1: tint written linear (it was not: sRGB 178-211 in sun), mid grey, corrugated set
+    m = MT.M["roof_sheet_grey"]
+    assert m.get("tint_linear") is True and m["texture_set"] == "trapezoid_sheet" and m["set_tile"] is True
+    assert 0.12 <= max(m["color"]) <= 0.18 and max(m["color"]) > MT.M["roof_metal_graphite"]["color"][0] * 2
+
+
+def test_east_square_kiosk_is_authored(blds):
+    # review 2026-11-17 P1-2: the kiosk on the eastern square is a brick body with openings, not a blank grey box
+    k = blds[KIOSK]
+    assert k["typ"] == "house" and k["props"]["height_m"] == 3.2
+    mats = _mats(k)
+    assert "brick_red" in mats and "facade_atlas" in mats and not {"plaster_grey", "plaster_light"} & mats
 
 
 def test_house_wall_override_is_validated():
