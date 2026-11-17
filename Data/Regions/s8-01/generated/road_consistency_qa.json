@@ -7,6 +7,1500 @@
  },
  "cases": [
   {
+   "chain": "c:w251431128:1908957192-1940503838",
+   "dist_from_stop_m": 16.9,
+   "e": -515.42,
+   "junction": "j:n1940503838",
+   "kind": "lane_blind_end",
+   "lane": 1,
+   "lanes_in": 2,
+   "lanes_out": 3,
+   "lat": 53.1592536,
+   "lon": 22.9989243,
+   "n": -535.48,
+   "on_route": true,
+   "osm_ways": [
+    251431128
+   ],
+   "to_chain": "c:w183639790:5195111694-5195111966",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w305447699:2009183209-14310371316",
+   "dist_from_stop_m": 1.0,
+   "e": 429.73,
+   "junction": "j:n14310371316",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 2,
+   "lanes_out": 2,
+   "lat": 53.1567434,
+   "lon": 23.0128395,
+   "n": -762.36,
+   "on_route": true,
+   "osm_ways": [
+    305447699
+   ],
+   "to_chain": "c:w1379858309:2009183219-12778308644",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w305447699:3160890732-2009183209",
+   "dist_from_stop_m": 12.9,
+   "e": 506.99,
+   "junction": "j:n2009183209",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 2,
+   "lanes_out": 2,
+   "lat": 53.1565781,
+   "lon": 23.0139806,
+   "n": -776.44,
+   "on_route": true,
+   "osm_ways": [
+    305447699
+   ],
+   "to_chain": "c:w305447699:2009183209-14310371316",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -705.46,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596468,
+   "lon": 22.9961159,
+   "n": -502.27,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -703.0,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596409,
+   "lon": 22.9961521,
+   "n": -502.8,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -700.86,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596442,
+   "lon": 22.9961846,
+   "n": -502.3,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -699.05,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.159631,
+   "lon": 22.9962104,
+   "n": -503.68,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -698.92,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596391,
+   "lon": 22.9962132,
+   "n": -502.77,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -698.41,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596286,
+   "lon": 22.9962197,
+   "n": -503.91,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -697.09,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596259,
+   "lon": 22.9962393,
+   "n": -504.13,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -695.03,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596287,
+   "lon": 22.9962704,
+   "n": -503.71,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -693.18,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596158,
+   "lon": 22.9962969,
+   "n": -505.04,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -693.09,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596235,
+   "lon": 22.996299,
+   "n": -504.18,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -691.23,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596108,
+   "lon": 22.9963256,
+   "n": -505.49,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -691.14,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596183,
+   "lon": 22.9963276,
+   "n": -504.65,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -689.2,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596132,
+   "lon": 22.9963562,
+   "n": -505.12,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -687.34,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596007,
+   "lon": 22.9963829,
+   "n": -506.4,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -685.39,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595956,
+   "lon": 22.9964116,
+   "n": -506.86,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -685.31,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596028,
+   "lon": 22.9964134,
+   "n": -506.05,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -684.76,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595932,
+   "lon": 22.9964208,
+   "n": -507.09,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -683.37,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595976,
+   "lon": 22.9964421,
+   "n": -506.52,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -681.5,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595855,
+   "lon": 22.996469,
+   "n": -507.77,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -679.55,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595804,
+   "lon": 22.9964977,
+   "n": -508.22,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -679.48,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595872,
+   "lon": 22.9964993,
+   "n": -507.46,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -677.54,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.159582,
+   "lon": 22.9965279,
+   "n": -507.93,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -675.02,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.159568,
+   "lon": 22.9965642,
+   "n": -509.36,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -674.28,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595741,
+   "lon": 22.9965759,
+   "n": -508.64,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -673.08,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595629,
+   "lon": 22.9965929,
+   "n": -509.82,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -670.39,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595637,
+   "lon": 22.9966332,
+   "n": -509.58,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -669.18,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595528,
+   "lon": 22.9966503,
+   "n": -510.73,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -668.45,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595585,
+   "lon": 22.9966618,
+   "n": -510.04,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -667.23,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1595477,
+   "lon": 22.996679,
+   "n": -511.18,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "surface": "bridge_kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -703.56,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596367,
+   "lon": 22.9961434,
+   "n": -503.3,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1160.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -701.58,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596318,
+   "lon": 22.9961726,
+   "n": -503.73,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1158.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -701.46,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596515,
+   "lon": 22.9961762,
+   "n": -501.53,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 332.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -699.61,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596268,
+   "lon": 22.9962017,
+   "n": -504.18,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1156.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -699.52,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596463,
+   "lon": 22.9962048,
+   "n": -502.0,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 334.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -697.64,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596218,
+   "lon": 22.9962306,
+   "n": -504.63,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1154.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -697.58,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596411,
+   "lon": 22.9962334,
+   "n": -502.47,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 336.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -695.69,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596167,
+   "lon": 22.9962594,
+   "n": -505.08,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1152.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -695.64,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.159636,
+   "lon": 22.996262,
+   "n": -502.93,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 338.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -693.74,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596117,
+   "lon": 22.9962881,
+   "n": -505.54,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1150.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -693.69,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596308,
+   "lon": 22.9962906,
+   "n": -503.4,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 340.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -691.79,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596066,
+   "lon": 22.9963168,
+   "n": -505.99,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1148.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -691.75,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596256,
+   "lon": 22.9963192,
+   "n": -503.87,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 342.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -689.84,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596016,
+   "lon": 22.9963455,
+   "n": -506.45,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1146.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -689.8,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596204,
+   "lon": 22.9963478,
+   "n": -504.34,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 344.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -687.89,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595965,
+   "lon": 22.9963742,
+   "n": -506.9,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1144.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -687.86,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596152,
+   "lon": 22.9963765,
+   "n": -504.81,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 346.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -685.95,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595914,
+   "lon": 22.9964029,
+   "n": -507.36,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1142.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -685.92,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.15961,
+   "lon": 22.9964051,
+   "n": -505.28,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 348.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -684.0,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595864,
+   "lon": 22.9964316,
+   "n": -507.81,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1140.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -683.97,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1596048,
+   "lon": 22.9964337,
+   "n": -505.75,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 350.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -682.05,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595813,
+   "lon": 22.9964603,
+   "n": -508.26,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1138.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -682.03,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595997,
+   "lon": 22.9964623,
+   "n": -506.22,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 352.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -680.1,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595763,
+   "lon": 22.996489,
+   "n": -508.72,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1136.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -680.08,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595945,
+   "lon": 22.996491,
+   "n": -506.69,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 354.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -678.16,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595712,
+   "lon": 22.9965177,
+   "n": -509.17,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1134.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -678.14,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595893,
+   "lon": 22.9965196,
+   "n": -507.16,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 356.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -676.21,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595662,
+   "lon": 22.9965463,
+   "n": -509.63,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1132.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -676.19,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595841,
+   "lon": 22.9965482,
+   "n": -507.63,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 358.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -674.26,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595611,
+   "lon": 22.996575,
+   "n": -510.08,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1130.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -674.25,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595789,
+   "lon": 22.9965768,
+   "n": -508.1,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 360.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -672.31,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.159556,
+   "lon": 22.9966037,
+   "n": -510.54,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1128.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -672.31,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595737,
+   "lon": 22.9966054,
+   "n": -508.57,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 362.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -670.36,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.159551,
+   "lon": 22.9966324,
+   "n": -510.99,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1126.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -670.36,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595685,
+   "lon": 22.9966341,
+   "n": -509.04,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 364.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -668.42,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595459,
+   "lon": 22.9966611,
+   "n": -511.45,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1124.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -668.42,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595633,
+   "lon": 22.9966627,
+   "n": -509.51,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 366.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -666.47,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595409,
+   "lon": 22.9966898,
+   "n": -511.91,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1122.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -666.47,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595582,
+   "lon": 22.9966913,
+   "n": -509.98,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 368.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -664.53,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.159553,
+   "lon": 22.99672,
+   "n": -510.44,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 370.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -664.52,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595358,
+   "lon": 22.9967185,
+   "n": -512.36,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1120.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -662.58,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595478,
+   "lon": 22.9967487,
+   "n": -510.91,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 372.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w1379858310:2009183227-12775606645",
+   "e": -662.56,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595307,
+   "lon": 22.9967473,
+   "n": -512.82,
+   "on_route": true,
+   "osm_ways": [
+    183639794,
+    957612926,
+    1379858310,
+    536222209,
+    183639791,
+    536222208
+   ],
+   "s": 1118.5,
+   "what": "bridge_kerb"
+  },
+  {
+   "chain": "c:w183639790:5195111694-5195111966",
+   "e": -660.63,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1595426,
+   "lon": 22.9967774,
+   "n": -511.38,
+   "on_route": true,
+   "osm_ways": [
+    183639790,
+    536222206,
+    183639792,
+    536222207
+   ],
+   "s": 374.5,
+   "what": "bridge_kerb"
+  },
+  {
    "chain": "c:w550896617:5320426935-2248465431",
    "e": -444.65,
    "junction": "j:n5320426935",
@@ -179,26 +1673,6 @@
    "what": "kerb"
   },
   {
-   "chain": "c:w251431128:1908957192-1940503838",
-   "dist_from_stop_m": 16.9,
-   "e": -515.42,
-   "junction": "j:n1940503838",
-   "kind": "lane_blind_end",
-   "lane": 1,
-   "lanes_in": 2,
-   "lanes_out": 3,
-   "lat": 53.1592536,
-   "lon": 22.9989243,
-   "n": -535.48,
-   "on_route": false,
-   "osm_ways": [
-    251431128
-   ],
-   "to_chain": "c:w183639790:5195111694-5195111966",
-   "turn_lanes": null,
-   "what": "kerb"
-  },
-  {
    "chain": "c:w550896617:5320426935-2248465431",
    "dist_from_stop_m": 1.5,
    "e": -446.38,
@@ -339,46 +1813,6 @@
    "what": "kerb"
   },
   {
-   "chain": "c:w305447699:2009183209-14310371316",
-   "dist_from_stop_m": 1.0,
-   "e": 429.73,
-   "junction": "j:n14310371316",
-   "kind": "lane_blind_end",
-   "lane": 0,
-   "lanes_in": 2,
-   "lanes_out": 2,
-   "lat": 53.1567434,
-   "lon": 23.0128395,
-   "n": -762.36,
-   "on_route": false,
-   "osm_ways": [
-    305447699
-   ],
-   "to_chain": "c:w1379858309:2009183219-12778308644",
-   "turn_lanes": null,
-   "what": "kerb"
-  },
-  {
-   "chain": "c:w305447699:3160890732-2009183209",
-   "dist_from_stop_m": 12.9,
-   "e": 506.99,
-   "junction": "j:n2009183209",
-   "kind": "lane_blind_end",
-   "lane": 0,
-   "lanes_in": 2,
-   "lanes_out": 2,
-   "lat": 53.1565781,
-   "lon": 23.0139806,
-   "n": -776.44,
-   "on_route": false,
-   "osm_ways": [
-    305447699
-   ],
-   "to_chain": "c:w305447699:2009183209-14310371316",
-   "turn_lanes": null,
-   "what": "kerb"
-  },
-  {
    "chain": "c:w1385343896:12825813565-12825813566",
    "dist_from_stop_m": 21.6,
    "e": 510.18,
@@ -418,1445 +1852,15 @@
    "to_chain": "c:w816196397:14315732346-7283285854",
    "turn_lanes": null,
    "what": "none"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -705.46,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596468,
-   "lon": 22.9961159,
-   "n": -502.27,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -703.0,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596409,
-   "lon": 22.9961521,
-   "n": -502.8,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -700.86,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596442,
-   "lon": 22.9961846,
-   "n": -502.3,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -699.05,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.159631,
-   "lon": 22.9962104,
-   "n": -503.68,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -698.92,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596391,
-   "lon": 22.9962132,
-   "n": -502.77,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -698.41,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596286,
-   "lon": 22.9962197,
-   "n": -503.91,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -697.09,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596259,
-   "lon": 22.9962393,
-   "n": -504.13,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -695.03,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596287,
-   "lon": 22.9962704,
-   "n": -503.71,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -693.18,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596158,
-   "lon": 22.9962969,
-   "n": -505.04,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -693.09,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596235,
-   "lon": 22.996299,
-   "n": -504.18,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -691.23,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596108,
-   "lon": 22.9963256,
-   "n": -505.49,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -691.14,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596183,
-   "lon": 22.9963276,
-   "n": -504.65,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -689.2,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596132,
-   "lon": 22.9963562,
-   "n": -505.12,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -687.34,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596007,
-   "lon": 22.9963829,
-   "n": -506.4,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -685.39,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595956,
-   "lon": 22.9964116,
-   "n": -506.86,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -685.31,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596028,
-   "lon": 22.9964134,
-   "n": -506.05,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -684.76,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595932,
-   "lon": 22.9964208,
-   "n": -507.09,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -683.37,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595976,
-   "lon": 22.9964421,
-   "n": -506.52,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -681.5,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595855,
-   "lon": 22.996469,
-   "n": -507.77,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -679.55,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595804,
-   "lon": 22.9964977,
-   "n": -508.22,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -679.48,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595872,
-   "lon": 22.9964993,
-   "n": -507.46,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -677.54,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.159582,
-   "lon": 22.9965279,
-   "n": -507.93,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -675.02,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.159568,
-   "lon": 22.9965642,
-   "n": -509.36,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -674.28,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595741,
-   "lon": 22.9965759,
-   "n": -508.64,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -673.08,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595629,
-   "lon": 22.9965929,
-   "n": -509.82,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -670.39,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595637,
-   "lon": 22.9966332,
-   "n": -509.58,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -669.18,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595528,
-   "lon": 22.9966503,
-   "n": -510.73,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -668.45,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595585,
-   "lon": 22.9966618,
-   "n": -510.04,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -667.23,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1595477,
-   "lon": 22.996679,
-   "n": -511.18,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "surface": "bridge_kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -703.56,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596367,
-   "lon": 22.9961434,
-   "n": -503.3,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1160.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -701.58,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596318,
-   "lon": 22.9961726,
-   "n": -503.73,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1158.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -701.46,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596515,
-   "lon": 22.9961762,
-   "n": -501.53,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 332.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -699.61,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596268,
-   "lon": 22.9962017,
-   "n": -504.18,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1156.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -699.52,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596463,
-   "lon": 22.9962048,
-   "n": -502.0,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 334.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -697.64,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596218,
-   "lon": 22.9962306,
-   "n": -504.63,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1154.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -697.58,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596411,
-   "lon": 22.9962334,
-   "n": -502.47,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 336.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -695.69,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596167,
-   "lon": 22.9962594,
-   "n": -505.08,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1152.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -695.64,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.159636,
-   "lon": 22.996262,
-   "n": -502.93,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 338.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -693.74,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596117,
-   "lon": 22.9962881,
-   "n": -505.54,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1150.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -693.69,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596308,
-   "lon": 22.9962906,
-   "n": -503.4,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 340.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -691.79,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596066,
-   "lon": 22.9963168,
-   "n": -505.99,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1148.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -691.75,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596256,
-   "lon": 22.9963192,
-   "n": -503.87,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 342.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -689.84,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596016,
-   "lon": 22.9963455,
-   "n": -506.45,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1146.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -689.8,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596204,
-   "lon": 22.9963478,
-   "n": -504.34,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 344.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -687.89,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595965,
-   "lon": 22.9963742,
-   "n": -506.9,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1144.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -687.86,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596152,
-   "lon": 22.9963765,
-   "n": -504.81,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 346.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -685.95,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595914,
-   "lon": 22.9964029,
-   "n": -507.36,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1142.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -685.92,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.15961,
-   "lon": 22.9964051,
-   "n": -505.28,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 348.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -684.0,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595864,
-   "lon": 22.9964316,
-   "n": -507.81,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1140.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -683.97,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1596048,
-   "lon": 22.9964337,
-   "n": -505.75,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 350.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -682.05,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595813,
-   "lon": 22.9964603,
-   "n": -508.26,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1138.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -682.03,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595997,
-   "lon": 22.9964623,
-   "n": -506.22,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 352.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -680.1,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595763,
-   "lon": 22.996489,
-   "n": -508.72,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1136.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -680.08,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595945,
-   "lon": 22.996491,
-   "n": -506.69,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 354.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -678.16,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595712,
-   "lon": 22.9965177,
-   "n": -509.17,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1134.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -678.14,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595893,
-   "lon": 22.9965196,
-   "n": -507.16,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 356.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -676.21,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595662,
-   "lon": 22.9965463,
-   "n": -509.63,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1132.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -676.19,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595841,
-   "lon": 22.9965482,
-   "n": -507.63,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 358.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -674.26,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595611,
-   "lon": 22.996575,
-   "n": -510.08,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1130.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -674.25,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595789,
-   "lon": 22.9965768,
-   "n": -508.1,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 360.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -672.31,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.159556,
-   "lon": 22.9966037,
-   "n": -510.54,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1128.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -672.31,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595737,
-   "lon": 22.9966054,
-   "n": -508.57,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 362.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -670.36,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.159551,
-   "lon": 22.9966324,
-   "n": -510.99,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1126.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -670.36,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595685,
-   "lon": 22.9966341,
-   "n": -509.04,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 364.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -668.42,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595459,
-   "lon": 22.9966611,
-   "n": -511.45,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1124.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -668.42,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595633,
-   "lon": 22.9966627,
-   "n": -509.51,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 366.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -666.47,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595409,
-   "lon": 22.9966898,
-   "n": -511.91,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1122.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -666.47,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595582,
-   "lon": 22.9966913,
-   "n": -509.98,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 368.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -664.53,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.159553,
-   "lon": 22.99672,
-   "n": -510.44,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 370.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -664.52,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595358,
-   "lon": 22.9967185,
-   "n": -512.36,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1120.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -662.58,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595478,
-   "lon": 22.9967487,
-   "n": -510.91,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 372.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w1379858310:2009183227-12775606645",
-   "e": -662.56,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595307,
-   "lon": 22.9967473,
-   "n": -512.82,
-   "on_route": false,
-   "osm_ways": [
-    183639794,
-    957612926,
-    1379858310,
-    536222209,
-    183639791,
-    536222208
-   ],
-   "s": 1118.5,
-   "what": "bridge_kerb"
-  },
-  {
-   "chain": "c:w183639790:5195111694-5195111966",
-   "e": -660.63,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1595426,
-   "lon": 22.9967774,
-   "n": -511.38,
-   "on_route": false,
-   "osm_ways": [
-    183639790,
-    536222206,
-    183639792,
-    536222207
-   ],
-   "s": 374.5,
-   "what": "bridge_kerb"
   }
  ],
  "count": 94,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
- "on_route": {},
+ "on_route": {
+  "lane_blind_end": 3,
+  "marking_off_carriageway": 29,
+  "obstacle_in_lane": 44
+ },
  "params": {
   "dz_m": 0.8,
   "kerb_ring_m": 0.3,
@@ -1867,7 +1871,12 @@
  },
  "region": "s8-01",
  "route_band_m": 30.0,
- "route_segments_s_m": null,
+ "route_segments_s_m": [
+  [
+   0.0,
+   2102.0
+  ]
+ ],
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 293,
@@ -1875,6 +1884,6 @@
   "lane_samples": 67698,
   "lane_samples_in_taper": 24,
   "marking_tris": 12237,
-  "props_checked": 814
+  "props_checked": 815
  }
 }
