@@ -25,6 +25,7 @@
 ## s24 (17.11, nowy PC, worktree `.claude/worktrees/dk19-tiles-s24`, gałąź `dk19-tiles-s24` z `origin/dk19-tiles-s23` + merge `origin/main` bez konfliktów)
 - ADR 0274 „Czytniki grafu”: dopisane qa/dk19_*.py (graf z pliku = efektywny, brak carriageway_split w kaflach D81).
 - W TOKU (od 15:45): `artifacts/dk19-tiles-s24/jobs/rebuild.ps1` (status `rebuild.status`, logi `artifacts/logs/dk19-s24-*.log`): bojary, mickiewicza build_world --context → fidelity → export-route, potem route_links, tile_graph, katalog --check.
+- 18:18 world bojary exit=0 (9062 s; GLB 64 chunków High 1046 MiB / Low 420 MiB; far_field High 132 326 / Low 30 748 tris; ściany terenu > 0,15 m: 20, max 0,665 m; road consistency 220 (on route: obstacle_in_lane 47 what=none, marking_off_carriageway 13, arrow_no_exit 8, lane_blind_end 4) vs 221 w s23).
 - NASTĘPNY KROK po `DONE` w `rebuild.status`: `pwsh scripts/unity-slot.ps1 -Acquire -MaxSlots 2 -Owner dk19-s24; foreach($t in "wygoda","bojary","mickiewicza"){ pwsh scripts/import-region.ps1 -Region bialystok-$t -BuildTarget Win64 }; pwsh scripts/visual-qa.ps1 -Scene World_bialystok-mickiewicza -Tier High -Lighting overcast -BuildTarget Win64 -OutputDir artifacts/dk19-tiles-s24/vqa/mickiewicza; pwsh scripts/unity-slot.ps1 -Release -Owner dk19-s24`
 
 # STATUS cabin-polish-s23 (D84: wnętrze kabiny PC — polish po recenzji REVIEW-2026-11-17-s23-cabin-pc)
@@ -38,3 +39,4 @@
 - Roleta wróciła do autorskiego 0,10 m. ADR: `docs/adr/DRAFT-d84-kabina-polish-zmierzch-i-ziarno.md`.
 - Otwarte: lusterka/daszek poza kadrem 62° (decyzja pitch/FOV — A/B `cab-driver-ab10`), ciepła poświata niemierzalna na piaście, brak zdjęć referencyjnych (docs/06 §5 pkt 3), kurz bez zmian, pojedyncze jaśniejsze odcinki żeber tacek (atlas AO), kamery QA nie w scenie DrivingLab (`pwsh scripts/build-lab.ps1 -SkipAudio`).
 - NASTĘPNY KROK (lider): visual-critic na `view/ab-*.jpg`, `f-*`; po scaleniu w main: `-executeMethod Game.Editor.Setup.TruckAssetBuilder.BuildBatch`, potem `Game.World.Import.WorldTruckInstaller.InstallBatch`.
+

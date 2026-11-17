@@ -1,7 +1,7 @@
 {
  "by_kind": {
   "arrow_no_exit": 20,
-  "lane_blind_end": 124,
+  "lane_blind_end": 123,
   "marking_off_carriageway": 13,
   "obstacle_in_lane": 64
  },
@@ -222,26 +222,6 @@
    "to_chain": "c:w415116444:2728430070-4161873963",
    "turn_lanes": null,
    "what": "kerb"
-  },
-  {
-   "chain": "c:w440321721:2294481959-1850821444",
-   "dist_from_stop_m": 0.0,
-   "e": 231.93,
-   "junction": "j:n1850821444",
-   "kind": "lane_blind_end",
-   "lane": 2,
-   "lanes_in": 3,
-   "lanes_out": 2,
-   "lat": 53.1302363,
-   "lon": 23.191248,
-   "n": -976.04,
-   "on_route": true,
-   "osm_ways": [
-    440321721
-   ],
-   "to_chain": "c:w581608908:1850821444-2206214223",
-   "turn_lanes": "",
-   "what": "verge_grass"
   },
   {
    "chain": "c:w188180420:1857964288-2388464991",
@@ -4108,11 +4088,11 @@
    "what": "kerb"
   }
  ],
- "count": 221,
+ "count": 220,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "arrow_no_exit": 8,
-  "lane_blind_end": 5,
+  "lane_blind_end": 4,
   "marking_off_carriageway": 13,
   "obstacle_in_lane": 47
  },
@@ -4136,9 +4116,9 @@
  "stats": {
   "approach_lanes": 1636,
   "kerb_tris": 192645,
-  "lane_samples": 175852,
-  "lane_samples_in_taper": 218,
-  "marking_tris": 21239,
+  "lane_samples": 175855,
+  "lane_samples_in_taper": 215,
+  "marking_tris": 21267,
   "props_checked": 2843
  }
 }
