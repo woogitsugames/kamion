@@ -86,3 +86,11 @@ overrides:
     confidence: "medium (continuity across the seam; absolute height = mean of two NMT-based solutions, +-0.4 m)"
     verify: link_seams z_seam delta <= 0.1 m (tests/gis/test_route_links_s23.py) / orthophoto + NMT of the abutments
     set: {z: 113.67}
+  # s8-loop-s24 (ADR 0288 Otwarte 12): ground S8 carriageway at the s8-03 | s8-04 seam, height step 0.12 m on the r10
+  # GLBs (s8-03 135.63 / s8-04 135.52 m; node heights from each tile's own NMT median) -> pinned to the mean in both
+  - id: s8-seam-z-w251431118
+    target: {node: "Bw251431118:4165907524-7658870561:0s"}
+    reason: "S8 at the s8-03 | s8-04 seam: s8-03 135.63 m, s8-04 135.52 m (r10 GLB, tools/worldgen/qa/s8_seam_z.py) -> mean in both tiles"
+    confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
+    verify: tools/worldgen/qa/s8_seam_z.py dz <= 0.1 m
+    set: {z: 135.57}

@@ -22,3 +22,11 @@ overrides:
     verify: orthophoto cross-section per way (tools/worldgen/qa/ortho_xsec.py) / owner drive
     set: {lane_edges: [0.2, 3.7, 7.2, 10.7], width: 13.45, center_offset: -2.775, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
   # ---- END generated: tools/worldgen/qa/s8_xsec_overrides.py ----
+  # s8-loop-s24 (ADR 0288 Otwarte 12): ground S8 carriageway at the s8-03 | s8-04 seam, height step 0.12 m on the r10
+  # GLBs (s8-03 135.63 / s8-04 135.52 m; node heights from each tile's own NMT median) -> pinned to the mean in both
+  - id: s8-seam-z-w251431118
+    target: {node: "Bw251431118:4165907524-7658870561:0e"}
+    reason: "S8 at the s8-03 | s8-04 seam: s8-03 135.63 m, s8-04 135.52 m (r10 GLB, tools/worldgen/qa/s8_seam_z.py) -> mean in both tiles"
+    confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
+    verify: tools/worldgen/qa/s8_seam_z.py dz <= 0.1 m
+    set: {z: 135.57}
