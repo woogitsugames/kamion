@@ -16,3 +16,6 @@ Gałąź `c-p1-s23` z origin/main eebb9813c; worktree z KOPIĄ Data/raw/derived 
 - krok 5 [00:4x]: r2: pytest gis 2073 pass / 1 fail (test_junctions_r4 verge_strips steep_grass 238 > ratchet 230; HEAD 220) - przyczyna: stacje bez skarpy (run 0) w trójkątach mieszanych -> pionowa trawa. Poprawione (wszystkie stacje przekształconej pary dostają skarpę), test 6/6. r2 rendery: zaślepka retaining z poręczą zniknęła (crop r2-High/s/crop_s1482_3.jpg). Zostaje (P2): trawa pobocza pomostu przy stopie rampy przewieszona nad czerwoną fascią.
 - W TOKU odłączone r3: artifacts/c-p1-s23/tools/r3.ps1 (jak r2). Status: artifacts/c-p1-s23/r3.status.
 - NASTĘPNY KROK: po 'CHAIN END': sprawdzić r3-pytest_gis.log (ratchet), deck_clear, pary, commit generated osobno, kopia dowodów do main, raport.
+- krok 6 [01:1x]: r3: steep_grass 229 (≤230), skirt 19 (≤20), ale max_m 0,859 > 0,65 przy j:n2229796326:corner3:vg (E -96 N -760; teren identyczny jak main -> to batter). Poprawka: para, której stopa skarpy zawija się (ciasny narożnik), zostaje pełnym kołnierzem (BACK_FOLD_COS 0,5). Test 7/7.
+- W TOKU odłączone r4 (jak r2). Status: artifacts/c-p1-s23/r4.status.
+- NASTĘPNY KROK: po 'fidelity exit' sprawdzić verge_strips w terrain_walls_qa.json; po 'CHAIN END' pytest gis log, pary, commit generated, raport.
