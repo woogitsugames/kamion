@@ -77,7 +77,7 @@ def prepare(output, entry, alpha_source):
     height = stipple
     # Packing as cc0_leather.prepare: shader albedo = tint * (0.7 + 0.6 * R), roughness = authored + (B - 0.5) * 0.6.
     ratio = 1 + (stipple - stipple.mean()) * entry['variation_gain'] + (mottle - .5) * entry['mottle_gain']
-    variation = (np.clip(ratio, .8, 1.2) - .7) / .6
+    variation = (np.clip(ratio, .72, 1.28) - .7) / .6
     micro_ao = np.clip(1 - (1 - stipple) * entry['ao_gain'] * .5, 0, 1)
     roughness = np.clip(.5 + ((stipple - stipple.mean()) * entry['roughness_gain'] + (mottle - .5) * entry.get('roughness_mottle_gain', entry['mottle_gain'])) / .6, 0, 1)
     detail = np.stack((variation, micro_ao, roughness), -1)

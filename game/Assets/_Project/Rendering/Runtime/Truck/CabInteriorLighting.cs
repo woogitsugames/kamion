@@ -62,11 +62,11 @@ namespace Game.Rendering
         [Range(0f, 1f)] public float cabMeterStrength = 0.6f;
         [Tooltip("Maximum extra cab-view lift from the cab metering (stops); dusk must still read darker than day")] public float cabMeterMaxEv = 1.5f;
         [Tooltip("D84: cab-view lift (stops) left at night; the day lift fades to it between twilightStartSunDeg and " +
-            "twilightFullSunDeg so the wheel is not brighter than the world outside. WORKING_VALUE")] public float nightViewEv = 0.25f;
+            "twilightFullSunDeg so the wheel is not brighter than the world outside. WORKING_VALUE")] public float nightViewEv = 0.6f;
         [Tooltip("True sun elevation where the twilight fade starts / is complete [deg]")] public float twilightStartSunDeg = 3f;
         public float twilightFullSunDeg = -5f;
         [Tooltip("D84: warm spill of backlit legends / cluster / courtesy light on the trim at night (display-referred " +
-            "radiance per unit albedo; 0 = off). WORKING_VALUE")] public float panelGlow = 0.035f;
+            "radiance per unit albedo; 0 = off). WORKING_VALUE")] public float panelGlow = 0.12f;
         public Color panelGlowColor = new Color(1f, 0.80f, 0.58f);
 
         // Interior ambient key of the overcast reference preset (computed once; no per-frame allocation).

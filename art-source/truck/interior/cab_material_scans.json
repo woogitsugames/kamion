@@ -51,17 +51,17 @@
             0.6
         ],
         "grain_feature_mm": [
-            1.2,
-            3.0
+            2.0,
+            5.0
         ],
         "grain_weight": 0.7,
         "gloss_patch_weight": 0.5,
-        "roughness_mottle_gain": 0.14,
-        "variation_gain": 0.16,
+        "roughness_mottle_gain": 0.22,
+        "variation_gain": 0.3,
         "roughness_gain": 0.3,
-        "ao_gain": 0.35,
-        "normal_strength": 0.8,
-        "mottle_gain": 0.05,
+        "ao_gain": 0.6,
+        "normal_strength": 1.3,
+        "mottle_gain": 0.09,
         "description": "D84: synthesised injection-moulding stipple, not a scan. 'enabled' false = no scan conversion (cc0_leather); apply_runtime_maps runs plastic_grain.py instead. Replaces the brown_leather-derived emboss that read as creased leather on PC High. All gains WORKING_VALUE."
     }
 }

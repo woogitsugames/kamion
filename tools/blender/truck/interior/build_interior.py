@@ -1044,14 +1044,15 @@ def build_dash():
             lip.append(drape(x, y, 0.0055))
         tube(f"dash_tray_lip_{ti}", lip, 0.0075, "dash_mid", seg=8)
         # D84 polish (review P2 "flat stripes without depth"): the mat ribs were only a normal map, which the ambient-lit
-        # cab view flattens. Real moulded ribs (6 mm wide, 3.2 mm proud, 12.5 mm pitch) take the baked AO and the sun.
+        # cab view flattens. Real moulded ribs (11 mm wide, 5 mm proud, 22 mm pitch: the 4096 AO atlas resolves them; a
+        # 12.5 mm pitch baked as blotches) take the baked AO and the sun.
         if G.STATE["q"] > 0.5:
-            nr_ = int((ty1 - ty0 - 0.03) / 0.0125)
+            nr_ = int((ty1 - ty0 - 0.034) / 0.022)
             bm = bmesh.new()
             for j in range(nr_ + 1):
-                yr = ty0 + 0.015 + j * 0.0125
+                yr = ty0 + 0.017 + j * 0.022
                 rows = [[drape(tx0 + 0.014 + (tx1 - tx0 - 0.028) * i / nmx, yr + dy, lz) for i in range(nmx + 1)]
-                        for dy, lz in ((-0.003, 0.0012), (-0.0012, 0.0047), (0.0012, 0.0047), (0.003, 0.0012))]
+                        for dy, lz in ((-0.0055, 0.0012), (-0.003, 0.0065), (0.003, 0.0065), (0.0055, 0.0012))]
                 vr = [[bm.verts.new(p_) for p_ in row] for row in rows]
                 for k_ in range(3):
                     for i in range(nmx):
@@ -2510,9 +2511,9 @@ def build_curtains():
         strip(f"sun_visor_seam_{k}", loop + [loop[0]], nrm, 0.004, "stitch_dark", offset=0.0005, u_len=0.017)
     box("visor_centre_bracket", tuple(V(0.0, glass_y(0.0, zc) - 0.040, zc + 0.02)), (0.10, 0.03, 0.07), "dash_dark",
         bev=0.008)
-    # D84 polish (review P1-4): driver blind drawn 0.30 m (was 0.10): its bar sits ~23 deg above the eye line, in the
-    # top of the 62 deg driver view and above the forward field; the windscreen header is no longer out of frame.
-    for x0, x1, drop in ((-XI + 0.10, -0.03, 0.30), (0.03, XI - 0.10, 0.20)):
+    # D84 polish (review P1-4): driver blind drawn 0.20 m (was 0.10): its bar enters the top of the 62 deg driver view
+    # as a thin band above the forward field (0.30 m took 10 % of the frame as a black slab; Unity cab-driver r1).
+    for x0, x1, drop in ((-XI + 0.10, -0.03, 0.20), (0.03, XI - 0.10, 0.20)):
         z1 = WS_Z1 - 0.005
         z0 = z1 - drop
         corners = [V(x0, ws_y(z0) - 0.02, z0), V(x1, ws_y(z0) - 0.02, z0), V(x1, ws_y(z1) - 0.02, z1), V(x0, ws_y(z1) - 0.02, z1)]
