@@ -19,3 +19,6 @@ Gałąź `c-p1-s23` z origin/main eebb9813c; worktree z KOPIĄ Data/raw/derived 
 - krok 6 [01:1x]: r3: steep_grass 229 (≤230), skirt 19 (≤20), ale max_m 0,859 > 0,65 przy j:n2229796326:corner3:vg (E -96 N -760; teren identyczny jak main -> to batter). Poprawka: para, której stopa skarpy zawija się (ciasny narożnik), zostaje pełnym kołnierzem (BACK_FOLD_COS 0,5). Test 7/7.
 - W TOKU odłączone r4 (jak r2). Status: artifacts/c-p1-s23/r4.status.
 - NASTĘPNY KROK: po 'fidelity exit' sprawdzić verge_strips w terrain_walls_qa.json; po 'CHAIN END' pytest gis log, pary, commit generated, raport.
+- krok 7 [01:5x]: r4: fold-check nic nie zmienił (stations_battered 1761 = r3) i max_m 0,859 przy j:n2229796326:corner3:vg nadal -> podejrzenie, że to nie batter. 2 dodatkowe faile r4 (road_fidelity stale, roundabout_0274 inspect.getsource) = artefakt edycji build_world.py w trakcie biegu pytest. Dodany przełącznik WORLDGEN_NO_BACK_BATTER (debug A/B).
+- W TOKU odłączone r5: build A/B bez skarpy (-> artifacts/c-p1-s23/terrain_walls_qa_nobatter.json), budowa końcowa, fidelity, pytest celowany, import, rendery r5-*. Status r5.status.
+- NASTĘPNY KROK: porównać verge_strips nobatter vs końcowy; jeśli 0,859 bez skarpy też -> ratchet czerwony na origin/main niezależnie (zgłosić liderowi); potem commit generated, raport.
