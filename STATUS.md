@@ -7,3 +7,5 @@
 - NASTEPNY KROK: P1 rondo Monki - uv run --project tools/worldgen python tools/worldgen/qa/link_swept_check.py
 - [4] P1 Monki: swing 3,0 m w lewo na rondzie (+-30 m, yaml swing) -> opony poza nawierzchnia 15 (16 bez wyspy) -> 0, poza jezdnia 77 -> 0; link_swept_check --all (8 linkow) 0; twardy test + kontrola negatywna (bez swing >0). pytest route_links+seams 17/17.
 - NASTEPNY KROK: przebudowa knyszyn/knyszyn-w (slot heavy) build_world --context
+- [5] knyszyn przebudowany (14 min), swept --all 0/8 po przebudowie; import Unity knyszyn + VQA High clear w toku (artifacts/knyszyn-r24/unity1.ps1).
+- NASTEPNY KROK: obejrzec artifacts/knyszyn-r24/vqa-knyszyn/look_dom_klattow.png; potem pwsh artifacts/knyszyn-r24/unity1.ps1 -Region knyszyn-w
