@@ -149,3 +149,22 @@ def test_link_seams_route_and_height_continuous(seams):
         assert abs(r["delta_route_lat"]) <= 0.1, r          # autopilot polyline does not step sideways
         assert abs(r["delta"]["z_seam"]) <= 0.1, r          # asphalt axis height across the seam
         assert r["axis_kink_deg"] < 1.0, r
+
+
+def test_after_route_start_rounded_on_one_way_arrival():
+    """Codex review s24 (ADR 0289 'Recenzja s24'): the start corner of an `after_route` link is rounded with the arrival
+    edge whether or not a way back exists. One-way arrival c -> u (no u -> c): the arrival edge is still returned;
+    two-way: it is returned and the back edge removed; no came_from: nothing."""
+    import networkx as nx
+    one = nx.DiGraph()
+    one.add_edge("c", "u", id="e_in", length=40.0)
+    one.add_edge("u", "v", id="e_out", length=30.0)
+    assert RL.arrival_edge(one, "u", "c") == ("e_in", 40.0)
+    assert one.has_edge("c", "u") and not one.has_edge("u", "c")
+    two = nx.DiGraph()
+    two.add_edge("c", "u", id="e_in", length=40.0)
+    two.add_edge("u", "c", id="e_back", length=40.0)
+    two.add_edge("u", "v", id="e_out", length=30.0)
+    assert RL.arrival_edge(two, "u", "c") == ("e_in", 40.0)
+    assert not two.has_edge("u", "c")                       # no U-turn onto the arrival edge
+    assert RL.arrival_edge(two, "u", None) is None

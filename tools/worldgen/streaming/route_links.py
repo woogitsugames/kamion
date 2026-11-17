@@ -73,10 +73,7 @@ def lane_path(rid: str, start_node: str | None, start_xy, end_xy, regions: Path 
     u = start_node if start_node in ids else (start_node + "s" if start_node and start_node + "s" in ids else nearest(start_xy))
     v = nearest(end_xy)
     g = roadgraph.to_digraph(graph)
-    graph_back = None
-    if came_from is not None and g.has_edge(u, came_from):
-        graph_back = g.copy()
-        g.remove_edge(u, came_from)
+    pre = arrival_edge(g, u, came_from)
     stops = [u, *[nearest(p) for p in vias], v]
     path = [u]
     for a_, b_ in zip(stops, stops[1:]):
@@ -85,14 +82,14 @@ def lane_path(rid: str, start_node: str | None, start_xy, end_xy, regions: Path 
     net, _, _, _ = pipeline.build_network(rid, graph)
     node_xy = {n["id"]: (n["x"] - ox, n["y"] - oy) for n in graph["nodes"]}
     path_edges = [(g[a][b]["id"], a, b) for a, b in zip(path, path[1:])]
-    if came_from is not None and graph_back is not None:
+    if pre is not None:
         # the edge the route arrived on goes first, so lane_route rounds the corner at start_node like any other joint
         # of a route (JOINT_ROUND_M); the link then starts where that rounded lane passes closest to the route end
         # (start_xy) and its head is blended onto that point by build()
-        pre = (graph_back[came_from][u]["id"], came_from, u)
-        pts, eid_pt, _, _ = lane_route(net, [pre] + path_edges, node_xy, STEP_M)
+        pre_id, pre_len = pre
+        pts, eid_pt, _, _ = lane_route(net, [(pre_id, came_from, u)] + path_edges, node_xy, STEP_M)
         q = np.asarray(start_xy, float) - np.array([ox, oy])
-        n_pre = int(math.ceil((graph_back[came_from][u]["length"] + 2.0 * JOIN_TOL_M) / STEP_M)) + 1
+        n_pre = int(math.ceil((pre_len + 2.0 * JOIN_TOL_M) / STEP_M)) + 1
         k = int(np.argmin(np.hypot(*(pts[:n_pre] - q).T)))
         pts, eid_pt = pts[k:], eid_pt[k:]
         length = float(np.sum(np.hypot(*np.diff(pts, axis=0).T)))
@@ -109,6 +106,22 @@ def lane_path(rid: str, start_node: str | None, start_xy, end_xy, regions: Path 
     return {"points": [[round(float(x), 3), round(float(y), 3)] for x, y in pts],
             "maxspeed": [ms(e) for e in eid_pt], "length": float(length), "nodes": path,
             "end_node_xy": [end_node["x"], end_node["y"]], "origin": (ox, oy)}
+
+
+def arrival_edge(g, u, came_from):
+    """(id, length) of the edge came_from -> u the route arrived on, or None (no after_route / no such edge). Removes
+    the edge back u -> came_from from g (in place) when it exists, so the link does not turn the articulated vehicle
+    round on the spot. Codex review s24 (ADR 0289): the arrival edge used to be looked up only when the back edge
+    existed, so a link continuing a route that came in along a ONE-WAY street got no rounded start corner."""
+    if came_from is None or not g.has_edge(came_from, u):
+        if came_from is not None and g.has_edge(u, came_from):
+            g.remove_edge(u, came_from)
+        return None
+    d = g[came_from][u]
+    pre = (d["id"], float(d["length"]))
+    if g.has_edge(u, came_from):
+        g.remove_edge(u, came_from)
+    return pre
 
 
 def _blend(pts: list[list[float]], target, head: bool) -> float:

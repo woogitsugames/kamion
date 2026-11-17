@@ -147,3 +147,48 @@ def test_despike_arcs_interpolates_by_distance_on_uneven_outline():
     assert abs(out[1] - expect) < 0.01, out[1]
     assert abs(out[1] - out[0]) / 0.1 <= M.ARC_GRADE_MAX  # grade to the near neighbour stays a kerb-able slope
     # by index the old code gave point 1 a third of (z[2]-z[0]) ~ 0.033 m, i.e. 0.33 m/m over 0.1 m
+
+
+def _write_w(root: Path, rid: str, x0: float, x1: float, nodes, edges):
+    d = root / rid
+    d.mkdir(parents=True)
+    reg = {"bbox": {"xmin": x0, "ymin": 0.0, "xmax": x1, "ymax": 200.0},
+           "origin": {"x": 0.5 * (x0 + x1), "y": 100.0, "z": 120.0}}
+    (d / "region.yaml").write_text(yaml.safe_dump(reg), encoding="utf-8")
+    (d / "roads.graph.json").write_text(json.dumps({"nodes": nodes, "edges": edges,
+                                                   "sources": {"z_terrain": "gugik-nmt-2025-x"}}), encoding="utf-8")
+    (d / "overrides.yaml").write_text("overrides: []\n", encoding="utf-8")
+
+
+def test_p2a_rest_carried_through_two_seams(tmp_path):
+    """Codex review s24: junction in A 5 m before seam A|B, B only 8 m wide, then C. B paints its 8 m solid and C the
+    remaining 20 - 5 - 8 = 7 m (the old rule stopped at B, which has no junction)."""
+    SP._neighbour_approaches.cache_clear()
+    seam_a = _node("A:s", 200.0, 100.0, boundary=True)
+    j = _node("A:j", 195.0, 100.0, feature="highway=traffic_signals")
+    w = _node("A:w", 0.0, 100.0, boundary=True)
+    n = _node("A:n", 195.0, 200.0, boundary=True)
+    _write_w(tmp_path, "ta", 0.0, 200.0, [seam_a, j, w, n], [_edge(7, seam_a, j), _edge(8, j, w), _edge(9, j, n)])
+    b0, b1 = _node("B:s", 200.0, 100.0, boundary=True), _node("B:e", 208.0, 100.0, boundary=True)
+    _write_w(tmp_path, "tb", 200.0, 208.0, [b0, b1], [_edge(7, b0, b1)])
+    c0, c1 = _node("C:s", 208.0, 100.0, boundary=True), _node("C:e", 408.0, 100.0, boundary=True)
+    _write_w(tmp_path, "tc", 208.0, 408.0, [c0, c1], [_edge(7, c0, c1)])
+    net_a = _net(tmp_path, "ta")
+    from roads import junctions as J
+    info = MK.arm_infos(J.build_junctions(net_a, None), net_a.sec_list)
+    c7 = next(c for c in net_a.chains if "w7:" in c.id)
+    appr = MK.approach_ends(c7, info, net_a.sec_list)
+    end = next(iter(appr))
+    painted_in_a = abs(appr[end] - (0.0 if end == "b" else c7.length))
+    carry_b = SP.plan(_net(tmp_path, "tb"), "tb", tmp_path)
+    (_, Lb), = carry_b.items()
+    assert abs(Lb - (S.P2A_MIN_LEN - painted_in_a)) < 1e-6
+    assert Lb > 8.0                                           # more than B's whole road
+    carry_c = SP.plan(_net(tmp_path, "tc"), "tc", tmp_path)
+    assert len(carry_c) == 1, carry_c
+    (cid, _), Lc = next(iter(carry_c.items()))
+    assert "w7:" in cid
+    assert abs(Lc - (Lb - 8.0)) < 0.05, (Lb, Lc)
+    # no carry at all from a depth-0 rule (the old one-seam behaviour)
+    SP._neighbour_approaches.cache_clear()
+    assert SP.plan(_net(tmp_path, "tc"), "tc", tmp_path, depth=0) == {}
