@@ -147,6 +147,58 @@ namespace Game.Tests
         }
 
         [Test]
+        public void TouchMigration_D85_Pure()
+        {
+            int v = UiPreferences.TouchMigrationVersion;
+            // PC without touch screen: "zawsze" -> "auto" once.
+            Assert.AreEqual(0, UiPreferences.MigrateTouchControls(1, 0, true, out bool m)); Assert.IsTrue(m);
+            // Already migrated: an explicit "zawsze" chosen later stays.
+            Assert.AreEqual(1, UiPreferences.MigrateTouchControls(1, v, true, out m)); Assert.IsFalse(m);
+            // Phone / touch PC: unchanged.
+            Assert.AreEqual(1, UiPreferences.MigrateTouchControls(1, 0, false, out m)); Assert.IsFalse(m);
+            // "auto" and "nigdy" never touched.
+            Assert.AreEqual(0, UiPreferences.MigrateTouchControls(0, 0, true, out m)); Assert.IsFalse(m);
+            Assert.AreEqual(2, UiPreferences.MigrateTouchControls(2, 0, true, out m)); Assert.IsFalse(m);
+        }
+
+        [Test]
+        public void TouchMigration_D85_RunsOnceThroughPlayerPrefs()
+        {
+            string kT = UiPreferences.PrefTouchControls, kM = UiPreferences.PrefTouchMigration;
+            bool hadT = PlayerPrefs.HasKey(kT), hadM = PlayerPrefs.HasKey(kM);
+            int oldT = PlayerPrefs.GetInt(kT, 0), oldM = PlayerPrefs.GetInt(kM, 0);
+            try
+            {
+                // Touchless PC with an old "zawsze" save: migrated to auto, flag written.
+                UiPreferences.TouchlessPcOverride = true;
+                PlayerPrefs.SetInt(kT, 1); PlayerPrefs.DeleteKey(kM);
+                UiPreferences.Reload();
+                Assert.AreEqual(TouchControlsMode.Auto, UiPreferences.TouchControls);
+                Assert.AreEqual(0, PlayerPrefs.GetInt(kT, -1));
+                Assert.AreEqual(UiPreferences.TouchMigrationVersion, PlayerPrefs.GetInt(kM, 0));
+
+                // The player picks "zawsze" again: the migration does not undo it on the next start.
+                UiPreferences.TouchControls = TouchControlsMode.Always;
+                UiPreferences.Reload();
+                Assert.AreEqual(TouchControlsMode.Always, UiPreferences.TouchControls);
+
+                // Phone (or touch PC): "zawsze" kept, flag still written.
+                UiPreferences.TouchlessPcOverride = false;
+                PlayerPrefs.SetInt(kT, 1); PlayerPrefs.DeleteKey(kM);
+                UiPreferences.Reload();
+                Assert.AreEqual(TouchControlsMode.Always, UiPreferences.TouchControls);
+                Assert.AreEqual(UiPreferences.TouchMigrationVersion, PlayerPrefs.GetInt(kM, 0));
+            }
+            finally
+            {
+                UiPreferences.TouchlessPcOverride = null;
+                if (hadT) PlayerPrefs.SetInt(kT, oldT); else PlayerPrefs.DeleteKey(kT);
+                if (hadM) PlayerPrefs.SetInt(kM, oldM); else PlayerPrefs.DeleteKey(kM);
+                UiPreferences.Reload();
+            }
+        }
+
+        [Test]
         public void UiPreferences_SaveAndReload()
         {
             bool hadTouch = PlayerPrefs.HasKey(UiPreferences.PrefTouchControls), hadScale = PlayerPrefs.HasKey(UiPreferences.PrefHudScale);

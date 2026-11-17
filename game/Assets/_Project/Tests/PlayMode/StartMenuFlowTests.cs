@@ -85,6 +85,38 @@ namespace Game.Tests
             UnityEngine.Object.Destroy(menu.gameObject);
         }
 
+        /// <summary>D87: the menu always has a background under the block (photo + scrim, or the dark fallback), drawn first,
+        /// outside the safe area (not a menu item); the panel covers every menu item. §7 p.2: the footer follows the form factor.</summary>
+        [UnityTest]
+        public IEnumerator Menu_Backdrop_UnderBlock_AndFooterFollowsFormFactor()
+        {
+            var menu = BootMenu.Create(null, StartMenuOptions.Load(), new List<(string, Action)> { ("A", () => { }) }, null);
+            menu.OverrideScreen(new Vector2(1920f, 1080f), new Rect(0f, 0f, 1920f, 1080f), 96f, true);
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            var backdrop = menu.transform.Find(BootMenu.BackdropName);
+            Assert.IsNotNull(backdrop, "backdrop present");
+            Assert.AreEqual(0, backdrop.GetSiblingIndex(), "backdrop drawn first, under the safe area");
+            Assert.IsFalse(backdrop.IsChildOf(menu.SafeAreaRect), "backdrop is not a menu item");
+            Assert.AreEqual(menu.HasBackgroundPhoto, backdrop.Find(BootMenu.BackdropPhotoName) != null, "photo only when the texture ships");
+            RectTransform panel = null;
+            foreach (var rt in backdrop.GetComponentsInChildren<RectTransform>(false)) if (rt.name == BootMenu.BackdropPanelName) panel = rt;
+            Assert.IsNotNull(panel, "block panel active");
+            var pc = new Vector3[4]; panel.GetWorldCorners(pc);
+            var pr = Rect.MinMaxRect(pc[0].x, pc[0].y, pc[2].x, pc[2].y);
+            foreach (var t in menu.SafeAreaRect.GetComponentsInChildren<Text>(false))
+            {
+                if (string.IsNullOrEmpty(t.text)) continue;
+                var c = new Vector3[4]; t.rectTransform.GetWorldCorners(c);
+                Assert.IsTrue(pr.Contains(c[0]) && pr.Contains(c[2]), "panel covers " + t.transform.parent.name + "/" + t.name);
+            }
+            StringAssert.Contains("Esc", menu.FooterText);
+            StringAssert.DoesNotContain("przycisk Menu", menu.FooterText);
+            menu.OverrideScreen(new Vector2(2400f, 1080f), new Rect(0f, 0f, 2400f, 1080f), 400f, false);
+            StringAssert.Contains("przycisk Menu", menu.FooterText);
+            UnityEngine.Object.Destroy(menu.gameObject);
+        }
+
         [UnityTest]
         public IEnumerator Menu_InformacjeOpensAbout_CloseReturns()
         {

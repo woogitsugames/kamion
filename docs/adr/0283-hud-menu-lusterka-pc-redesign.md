@@ -131,3 +131,21 @@ renderów (regulacja to obrót istniejącej kamery). Większe okienka powiększa
 - `ControlSettingsPanel` nadal pokazuje sekcje dotyk/gyro na PC (ADR 0265 Otwarte) — poza zakresem.
 - Brak modelu „usterka ABS naczepy” (kafel gotowy, wejście `false`).
 - `PcFocusOutline.cs` nieużywany po przejściu na `UiFocus.Decorate` — do usunięcia przez lidera (z `.meta`).
+
+## Uzupełnienie 2026-11-16 — alt-ui-polish-s23 (D85, D87, int-ui-s23 §7 p.2–6)
+Gałąź `alt-ui-polish-s23`, kod nieuruchomiony w Unity (lider: testy + zrzuty).
+- **D85**: `UiPreferences` migruje raz (`ui.touchControls.migration` = 1) zapis „zawsze” → „auto” na PC bez ekranu dotykowego
+  (`!HandheldBuild && Touchscreen.current == null`; `Input.touchSupported` niedostępne — `activeInputHandler: 1`). Telefon, „nigdy”,
+  „auto” i późniejszy wybór „zawsze” bez zmian.
+- **D87**: tło menu = `Resources/UI/MenuBackground/menu_bg` (`_Project/UI/Resources/...png`, zrzut z gry od lidera), cover bez
+  rozciągania, jednolity scrim 50 %, matowy panel 92 % za blokiem menu (poza SafeArea — testy pozycji przycisków bez zmian);
+  brak pliku = `UiPalette.MenuFallback`. Kontrast najgorszego przypadku (biały kadr): tekst 8,79, drugorzędny 5,20, akcent 4,94 : 1
+  (pary w `UiPalette.Pairs`). Bez gradientu (pkt 1 decyzji).
+- **Stopka menu** idzie za `UiViewport.Desktop` po każdej zmianie (było: wartość z chwili budowy).
+- **Nakładka diagnostyczna**: na monitorze domyślnie ukryta (F3, `-diag on|off`), kolory z `UiPalette`.
+- **HUD**: rząd kontrolek bezpośrednio na pasku (jeden panel, strzałki bez własnych kwadratów, kreska między wierszami), „Panel”
+  przyklejony do prawej krawędzi bloku; kabina z żywym zegarem + tryb rozszerzony (`HudVisibility.Compact`) = sam wiersz
+  rozszerzony, blok na prawo od kierownicy, bez drugiej prędkości; wolny widok drogi 40 → **45 %**; ultrawide: okna lusterek w
+  pasach bocznych okna (≤ 25 % szerokości treści), ten sam rozmiar; ramka 6 → **3 j.**, kolor plastiku obudowy `(40,42,45)`.
+  Wszystko WORKING_VALUE. Sprawdzenie logiki: port Pythona `Solve` — stary układ 20 736/20 736 (zgodność portu), nowy z trybem
+  kompaktowym i pasami bocznymi 41 472/41 472 bez kolizji/wejścia w wolny widok; testy EditMode `HudRedesign0283Tests` (+3).

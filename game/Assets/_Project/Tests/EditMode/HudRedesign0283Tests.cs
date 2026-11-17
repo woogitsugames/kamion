@@ -201,6 +201,105 @@ namespace Game.Tests
             Assert.Less(ext.Telltales.yMax / u.y, 0.25f);
         }
 
+        // ================================================================== alt-ui-polish-s23 (int-ui-s23 §7 p.4-6)
+
+        /// <summary>Window width in content units (the content is narrowed to 16:9 on ultrawide; the height scale is shared).</summary>
+        static float ScreenUnits(int w, int h) => w * ContentUnits(w, h).y / h;
+
+        [Test]
+        public void Layout_CompactCabBlock_AndUltrawideMirrors_AllStates_NoOverlap_ClearViewFree()
+        {
+            float[] sizes = { HudPreferences.MirrorSizeMin, HudPreferences.MirrorSizeDefault, HudPreferences.MirrorSizeMax };
+            float[] drops = { 0f, 0.5f, 1f };
+            float[] insets = { 0f, 1f };
+            int cases = 0;
+            foreach (var m in k_Monitors)
+            {
+                var size = ContentUnits(m.W, m.H);
+                float sw = ScreenUnits(m.W, m.H);
+                var content = new Rect(0f, 0f, size.x, size.y);
+                foreach (float ms in sizes)
+                foreach (float d in drops)
+                foreach (float ins in insets)
+                for (int flags = 0; flags < 256; flags++)
+                {
+                    var input = Input(size, flags & 127, ms, d, ins);
+                    input.Compact = (flags & 128) != 0;
+                    input.ScreenWidth = sw;
+                    DesktopHudLayout.Solve(input, out var r);
+                    string what = $"{m.Name} size {ms} drop {d} inset {ins} flags {flags}";
+                    var screen = new Rect(-r.MirrorOutboard, 0f, size.x + 2f * r.MirrorOutboard, size.y);
+                    Assert.LessOrEqual(r.MirrorOutboard, (sw - size.x) * 0.5f + 0.01f, what + ": side band only");
+                    for (int i = 0; i < DesktopHudResult.ZoneCount; i++)
+                    {
+                        if (!r.Zone(i, out Rect a)) continue;
+                        bool mirror = i == 3 || i == 4;
+                        Assert.IsTrue(DesktopHudLayout.Inside(a, mirror ? screen : content), $"{what}: {DesktopHudResult.ZoneName(i)} {a} outside");
+                        for (int j = i + 1; j < DesktopHudResult.ZoneCount; j++)
+                            if (r.Zone(j, out Rect b))
+                                Assert.IsFalse(DesktopHudLayout.Intersects(a, b), $"{what}: {DesktopHudResult.ZoneName(i)} {a} overlaps {DesktopHudResult.ZoneName(j)} {b}");
+                        if (i != 2 && i != 7)
+                            Assert.IsFalse(DesktopHudLayout.Intersects(a, r.ClearView), $"{what}: {DesktopHudResult.ZoneName(i)} {a} in the clear view {r.ClearView}");
+                    }
+                    if ((flags & (16 | 32)) == 0) Assert.IsTrue(r.ShowMirrorLeft && r.ShowMirrorRight, what + ": mirrors give way only to developer overlays");
+                    if (r.ShowMirrorLeft && r.ShowMirrorRight)
+                        Assert.AreEqual(size.x * 0.5f - r.MirrorLeft.center.x, r.MirrorRight.center.x - size.x * 0.5f, 0.01f, what + ": symmetric");
+                    // One block: the telltale row sits on the strip, the "Panel" button on its right edge.
+                    if (r.ShowStrip) Assert.AreEqual(r.Strip.yMax, r.Telltales.yMin, 0.01f, what + ": telltales on the strip");
+                    if (r.ShowDevToggle) Assert.AreEqual(r.Telltales.xMax + DesktopHudLayout.ToggleGap, r.DevToggle.xMin, 0.01f, what + ": Panel attached");
+                    if (r.Compact) Assert.Less(r.Telltales.yMax / size.y, 0.25f, what + ": compact block on the dash");
+                    cases++;
+                }
+            }
+            Assert.AreEqual(k_Monitors.Length * 3 * 3 * 2 * 256, cases);
+        }
+
+        [Test]
+        public void Layout_CompactCabBlock_ExtendedRowOnly_RightOfTheWheel()
+        {
+            var u = ContentUnits(1920, 1080);
+            var input = Input(u, 1 | 2 | 8, 0f, 0f, 0f);
+            DesktopHudLayout.Solve(input, out var full);
+            input.Compact = true;
+            DesktopHudLayout.Solve(input, out var cab);
+            Assert.IsTrue(cab.Compact && cab.ShowStrip);
+            Assert.AreEqual(DesktopHudLayout.ExtendedRowHeight, cab.Strip.height, 0.01f, "no speed / gear / air row over the live cluster");
+            Assert.Less(cab.Telltales.yMax, full.Telltales.yMax, "lower than the full extended block");
+            Assert.GreaterOrEqual(cab.Strip.xMin, u.x * 0.5f, "right of the centre (steering wheel and cluster)");
+            Assert.AreEqual(u.x - DesktopHudLayout.Margin, cab.DevToggle.xMax, 0.01f, "block + Panel end at the right margin");
+            Assert.AreEqual(u.x * 0.5f, full.Telltales.center.x, 0.01f, "outside the cab the block stays centred");
+
+            var vis = HudVisibility.Resolve(HudDetail.Extended, CabHudMode.Auto, cabCamera: true, cabInstrumentsLive: true, devDiagnostics: false);
+            Assert.IsTrue(vis.Compact && vis.Strip && vis.Extended);
+            Assert.IsFalse(HudVisibility.Resolve(HudDetail.Extended, CabHudMode.Auto, false, true, false).Compact, "chase camera: full strip");
+            Assert.IsFalse(HudVisibility.Resolve(HudDetail.Extended, CabHudMode.Auto, true, false, false).Compact, "graybox without a live cluster: full strip");
+        }
+
+        [Test]
+        public void Layout_Ultrawide_MirrorsAtTheWindowEdges_SameSize_NeverInTheRoad()
+        {
+            var a = ContentUnits(1920, 1080);
+            var b = ContentUnits(2560, 1080);
+            var ia = Input(a, 1, 0f, 0f, 0f); ia.ScreenWidth = ScreenUnits(1920, 1080);
+            var ib = Input(b, 1, 0f, 0f, 0f); ib.ScreenWidth = ScreenUnits(2560, 1080);
+            DesktopHudLayout.Solve(ia, out var ra);
+            DesktopHudLayout.Solve(ib, out var rb);
+            Assert.AreEqual(0f, ra.MirrorOutboard, 0.01f, "16:9: no side band");
+            Assert.Greater(rb.MirrorOutboard, 0f, "21:9: side band used");
+            Assert.AreEqual(ra.MirrorLeft.size, rb.MirrorLeft.size, "same window size");
+            Assert.Less(rb.MirrorLeft.xMin, ra.MirrorLeft.xMin, "21:9: further out than on 16:9");
+            Assert.AreEqual(DesktopHudLayout.Margin - rb.MirrorOutboard, rb.MirrorLeft.xMin, 0.01f, "at the window edge");
+            // Inset all the way: next to the free road view, never in it (the right lane, §7 p.6).
+            for (float inset = 0f; inset <= 1.001f; inset += 0.1f)
+            {
+                ib.MirrorInset = inset;
+                DesktopHudLayout.Solve(ib, out var r);
+                Assert.IsFalse(DesktopHudLayout.Intersects(r.MirrorRight, r.ClearView), "inset " + inset);
+                Assert.GreaterOrEqual(r.ClearView.width, DesktopHudLayout.ClearViewFraction * b.x - 0.01f);
+            }
+            Assert.AreEqual(3f, DesktopHudLayout.MirrorBezel, "thin housing edge, not a picture-in-picture frame");
+        }
+
         // ================================================================== visibility / warnings / texts
 
         [Test]
