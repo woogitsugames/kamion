@@ -9,3 +9,8 @@
 - Roleta wróciła do autorskiego 0,10 m. ADR: `docs/adr/DRAFT-d84-kabina-polish-zmierzch-i-ziarno.md`.
 - Otwarte: lusterka/daszek poza kadrem 62° (decyzja pitch/FOV — A/B `cab-driver-ab10`), ciepła poświata niemierzalna na piaście, brak zdjęć referencyjnych (docs/06 §5 pkt 3), kurz bez zmian, pojedyncze jaśniejsze odcinki żeber tacek (atlas AO), kamery QA nie w scenie DrivingLab (`pwsh scripts/build-lab.ps1 -SkipAudio`).
 - NASTĘPNY KROK (lider): visual-critic na `view/ab-*.jpg`, `f-*`; po scaleniu w main: `-executeMethod Game.Editor.Setup.TruckAssetBuilder.BuildBatch`, potem `Game.World.Import.WorldTruckInstaller.InstallBatch`.
+
+# STATUS alt-wood-s24 (tekstura desek CC0 wood_siding, D-17.11)
+
+- [1] raw_plank_wall (Poly Haven, Dimitrios Savva, CC0, 1,87 m, 2k) w cc0_manifest.json + cc0_fetch.py (nowy tryb `--resolve --only <id>`, reszta manifestu bez zmian); 5 plików pobrane, md5 = API, sha256 zapisane; LICENSES.md wiersz + licencja sprawdzona 2026-11-17.
+  NASTĘPNY KROK: `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only wood_siding`
