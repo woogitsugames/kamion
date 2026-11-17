@@ -47,6 +47,7 @@ SLOT_MAT = {"Paint": "MI_Trl_Paint", "Curtain": "MI_Trl_Curtain", "Trim": "MI_Tr
             "Lights": "MI_Trl_Lights"}
 BAKED = tuple(SLOT_MAT)
 TINTED = ("Paint", "Curtain")
+PACK_MARGIN_PX = 4      # s23 trailer-rims: island margin in texels of the High atlas (Low: 1 px)
 ATLAS_RES = {"Paint": 2048, "Curtain": 4096, "Trim": 4096, "Metal": 2048, "Lights": 1024}   # High tier
 TIERS = {"High": 1, "Medium": 2, "Low": 4}
 TRI_LIMIT = {0: 90000, 1: 25000, 2: 8000}
@@ -58,7 +59,8 @@ MAT_SLOT = {"trl_paint": "Paint",
             "lens_red_o": "Lights", "lens_amber_o": "Lights", "lens_white_o": "Lights", "lamp_body": "Lights",
             "plate": "Lights"}     # ADR 0181: the number plate is lit by the plate lamp (emission = Lights slot)
 PRIORITY = {"roof_tarp": 0.30, "gap": 0.5, "trl_chassis": 0.7, "grease": 0.6, "flap_rubber": 0.8, "interior": 0.12,
-            "plywood": 0.25}
+            "plywood": 0.25,
+            "plate": 2.0}    # s23: number plate text (Lights atlas, packed with margins now) - 1.41x linear
 # same ids as the TRAKT tractor (one light controller for the combination; 13 = PLATE, 14 = FOG_REAR, ADR 0175)
 LIGHT_GROUPS = list(A.LIGHT_GROUPS)
 LIGHT_COLOUR = dict(A.LIGHT_COLOUR)
@@ -287,15 +289,8 @@ def unwrap_atlases(pieces):
             for o in objs:
                 bm = bmesh.from_edit_mesh(o.data)
                 mi = [m.name for m in o.data.materials].index(mname)
-                ul = bm.loops.layers.uv["Atlas"]
                 for f in bm.faces:
                     f.select = f.material_index == mi and (not project or not o.get("cylindrical_atlas",False))
-                    # s23 trailer-rims: pack_islands (UV sync selection off) moves only UV-selected loops. smart_project
-                    # selects the loops it unwraps, the kept lathe UVs (wheel rim / tyre, cylindrical_atlas) were never
-                    # UV-selected, so they stayed at the atlas origin under chassis islands (red rims, review s23 P1).
-                    for lp in (f.loops if os.environ.get("KAMION_UVSEL", "1") == "1" else ()):
-                        lp[ul].select = f.select
-                        lp[ul].select_edge = f.select
                 bmesh.update_edit_mesh(o.data)
         if any(not o.get("cylindrical_atlas",False) for o in objs):
             sel_faces(project=True)
@@ -322,7 +317,13 @@ def unwrap_atlases(pieces):
                     u, v = uvl[li].uv
                     uvl[li].uv = (cu + (u - cu) * sc, cv + (v - cv) * sc)
         sel_faces()
-        margin = 0.004 if ATLAS_RES[slot] >= 2048 else 0.007
+        # s23 trailer-rims (= ADR 0061 for the tractor): without a UV selection Blender 4.2 pack_islands leaves every
+        # island where smart_project put it (no margin, priority scaling about the centre) and never moves the kept
+        # lathe UVs of the wheel rim / tyre (cylindrical_atlas): they lay at the atlas origin under chassis islands
+        # (red rims, review s23 P1). Margin: 4 px of the High atlas (the old 0.004 / 0.007 was never applied; at
+        # 0.004 the thin islands - straps, nuts, rails - are mostly margin: Metal 308 -> 151 px/m).
+        margin = PACK_MARGIN_PX / ATLAS_RES[slot]
+        bpy.ops.uv.select_all(action="SELECT")
         bpy.ops.uv.pack_islands(rotate=True, margin_method="FRACTION", margin=margin, shape_method="CONCAVE")
         bpy.ops.object.mode_set(mode="OBJECT")
         print(f"atlas {slot}: {len(objs)} pieces, {time.time() - t0:.0f} s")
@@ -334,7 +335,7 @@ def unwrap_atlases(pieces):
                       uv_coverage([o for o in objs if not o.name.startswith("wheel_")], mname, ATLAS_RES[slot],
                                   cons=0.0)).sum())
             print(f"  atlas {slot}: wheel / static UV overlap {ov} texels")
-            if ov and os.environ.get("KAMION_UVSEL", "1") == "1":
+            if ov:
                 raise RuntimeError(f"atlas {slot}: wheel islands overlap static islands on {ov} texels")
     by_name = {o.name: o for o in pieces}
     for o in pieces:
@@ -1046,6 +1047,16 @@ def preview_materials(tex, livery, dirt=0.5, lights=None):
                 for i in range(3):
                     nt.links.new(k, cc.inputs[i])
                 nt.links.new(cc.outputs[0], cr.inputs[7])
+                if gname == "PLATE":
+                    # s23 review P2: the plate face is LIT by the plate lamp (KamionLampLens.hlsl: emission = albedo x
+                    # lamp x falloff); a flat emission washed out the letters and the EU band in the control render
+                    pa = nt.nodes.new("ShaderNodeMix")
+                    pa.data_type = "RGBA"
+                    pa.blend_type = "MULTIPLY"
+                    pa.inputs[0].default_value = 1.0
+                    nt.links.new(cr.outputs[2], pa.inputs[6])
+                    nt.links.new(tc.outputs["Color"], pa.inputs[7])
+                    cr = pa
                 if acc is None:
                     acc = cr.outputs[2]
                 else:
@@ -1140,8 +1151,19 @@ def qa_renders(a, tex, roots, objs0, manifest):
     cam("bok")
     render("bok_szary_overcast_lod0.jpg", "Naczepa | LOD0 | bok (ortho) | pochmurno | podpory opuszczone")
     cam("gora")
+    # s23 review P2: under the cut the deck and roof still shade the sky, the view came out nearly black. A soft
+    # area light just under the cut (invisible to the camera) stands in for the removed deck's daylight.
+    ld = bpy.data.lights.new("gora_fill", "AREA")
+    ld.shape, ld.size, ld.size_y, ld.energy = "RECTANGLE", 2.8, 15.0, 140.0
+    lo = bpy.data.objects.new("gora_fill", ld)
+    lo.location = (0.0, -6.6, 1.17)
+    lo.visible_camera = False
+    sc.collection.objects.link(lo)
     render("gora_szary_overcast_lod0.jpg", "Naczepa | LOD0 | z góry, przekrój 1,20 m (ortho, przód w prawo) | osie od sworznia "
-                                           + " / ".join(f"{-y:.2f}" for y in T.AXLES) + " m | pochmurno")
+                                           + " / ".join(f"{-y:.2f}" for y in T.AXLES) + " m | pochmurno + "
+                                           "światło pod przekrojem")
+    bpy.data.objects.remove(lo)
+    bpy.data.lights.remove(ld)
     cam("zbl_kolo")
     render("zbl_kolo_overcast_lod0.jpg", "Naczepa | LOD0 | tridem 385/65 R22.5, felgi stalowe, natrysk z kół | pochmurno")
     cam("zbl_noga")
