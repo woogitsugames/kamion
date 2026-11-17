@@ -287,8 +287,15 @@ def unwrap_atlases(pieces):
             for o in objs:
                 bm = bmesh.from_edit_mesh(o.data)
                 mi = [m.name for m in o.data.materials].index(mname)
+                ul = bm.loops.layers.uv["Atlas"]
                 for f in bm.faces:
                     f.select = f.material_index == mi and (not project or not o.get("cylindrical_atlas",False))
+                    # s23 trailer-rims: pack_islands (UV sync selection off) moves only UV-selected loops. smart_project
+                    # selects the loops it unwraps, the kept lathe UVs (wheel rim / tyre, cylindrical_atlas) were never
+                    # UV-selected, so they stayed at the atlas origin under chassis islands (red rims, review s23 P1).
+                    for lp in (f.loops if os.environ.get("KAMION_UVSEL", "1") == "1" else ()):
+                        lp[ul].select = f.select
+                        lp[ul].select_edge = f.select
                 bmesh.update_edit_mesh(o.data)
         if any(not o.get("cylindrical_atlas",False) for o in objs):
             sel_faces(project=True)
@@ -319,6 +326,16 @@ def unwrap_atlases(pieces):
         bpy.ops.uv.pack_islands(rotate=True, margin_method="FRACTION", margin=margin, shape_method="CONCAVE")
         bpy.ops.object.mode_set(mode="OBJECT")
         print(f"atlas {slot}: {len(objs)} pieces, {time.time() - t0:.0f} s")
+        # guard: the wheel islands are baked from their own proxy and merged only where no static island is
+        # (bake_atlases), so a wheel island under a static one silently gets the static texels (red rims, s23)
+        wheel = [o for o in objs if o.name.startswith("wheel_")]
+        if wheel:
+            ov = int((uv_coverage(wheel, mname, ATLAS_RES[slot], cons=0.0) &
+                      uv_coverage([o for o in objs if not o.name.startswith("wheel_")], mname, ATLAS_RES[slot],
+                                  cons=0.0)).sum())
+            print(f"  atlas {slot}: wheel / static UV overlap {ov} texels")
+            if ov and os.environ.get("KAMION_UVSEL", "1") == "1":
+                raise RuntimeError(f"atlas {slot}: wheel islands overlap static islands on {ov} texels")
     by_name = {o.name: o for o in pieces}
     for o in pieces:
         if uv_master(o):
@@ -328,6 +345,44 @@ def unwrap_atlases(pieces):
             raise RuntimeError(f"no UV source for {o.name}")
         mirror = o.name.startswith("wheel_") and o.name.split("_")[1].endswith("R") or o.get("part") == "CURTAIN_R"
         copy_uv(src, o, mirror=mirror, dy=o.get("axle_y", 0.0) - src.get("axle_y", 0.0))
+
+
+def uv_report(pieces):
+    """Debug (--uv-only): per wheel_1L / spare piece and baked slot, the 'Atlas' UV bbox and the texels shared with
+    the static (non-wheel) islands at 1024 px."""
+    for s, d in texel_density(pieces).items():
+        print(f"UVREPORT density {s}: {d}")
+        dbg = os.environ.get("KAMION_UVDBG")
+        if dbg:
+            mn = SLOT_MAT[s]
+            ms = [o for o in pieces if uv_master(o) and mn in [m.name for m in o.data.materials]]
+            cnt = np.zeros((1024, 1024), dtype=np.float32)
+            for o in ms:
+                cnt += uv_coverage([o], mn, 1024, cons=0.0)
+            im = bpy.data.images.new("uvdbg_" + s, 1024, 1024)
+            a = np.dstack([np.clip(cnt - 1, 0, 1), np.clip(cnt, 0, 1) * 0.6, np.zeros_like(cnt), np.ones_like(cnt)])
+            im.pixels.foreach_set(a.astype(np.float32).ravel())
+            im.filepath_raw = os.path.join(dbg, f"uv_{s}.png")
+            im.file_format = "PNG"
+            im.save()
+            print(f"UVREPORT {s}: texels covered {int((cnt > 0).sum())}, multiply-covered {int((cnt > 1).sum())}")
+    for s in BAKED:
+        mn = SLOT_MAT[s]
+        wheel = [o for o in pieces if o.name.startswith("wheel_1L_") and mn in [m.name for m in o.data.materials]]
+        if not wheel:
+            continue
+        static = [o for o in pieces if not o.name.startswith("wheel_") and uv_master(o)]
+        cov_s = uv_coverage(static, mn, 1024)
+        for o in wheel + [o for o in static if o.name.startswith("spare_") and mn in [m.name for m in o.data.materials]]:
+            me = o.data
+            mi = [m.name for m in me.materials].index(mn)
+            uv = np.array([me.uv_layers["Atlas"].data[li].uv[:] for p in me.polygons if p.material_index == mi
+                           for li in p.loop_indices])
+            cov = uv_coverage([o], mn, 1024)
+            ov = int((cov & cov_s).sum()) if o.name.startswith("wheel_") else int((cov & uv_coverage(
+                [w for w in pieces if w.name.startswith("wheel_1L_")], mn, 1024)).sum())
+            print(f"UVREPORT {s} {o.name}: cyl={bool(o.get('cylindrical_atlas', False))} bbox "
+                  f"{uv.min(0).round(4).tolist()}..{uv.max(0).round(4).tolist()} texels {int(cov.sum())} overlap {ov}")
 
 
 def copy_uv(src, dst, mirror, dy):
@@ -526,8 +581,8 @@ def bake_atlases(pieces, high, high_curtain, a):
     return out
 
 
-def uv_coverage(objs, mname, res):
-    """Rasterise the 'Atlas' UV triangles of the faces using material `mname` (conservative by ~0.7 px).
+def uv_coverage(objs, mname, res, cons=0.7):
+    """Rasterise the 'Atlas' UV triangles of the faces using material `mname` (conservative by `cons` px).
     Row 0 = v 0 (Blender pixel order, same as A.img_array)."""
     m = np.zeros((res, res), dtype=bool)
     for o in objs:
@@ -558,7 +613,7 @@ def uv_coverage(objs, mname, res):
                 ex, ey = b[0] - a[0], b[1] - a[1]
                 ln = math.hypot(ex, ey) or 1e-9
                 d = sgn * (ex * (Y - a[1]) - ey * (X - a[0])) / ln
-                inside &= d >= -0.7
+                inside &= d >= -cons
             m[y0:y1 + 1, x0:x1 + 1] |= inside
     return m
 
@@ -1169,6 +1224,7 @@ def main():
     p.add_argument("--samples", type=int, default=96)
     p.add_argument("--cage", type=float, default=0.02)
     p.add_argument("--blend", default="")
+    p.add_argument("--uv-only", action="store_true", help="stop after the atlas unwrap, print the wheel UV report")
     a = p.parse_args(argv)
     a.out = os.path.abspath(a.out)
     a.renders = "" if a.no_renders else os.path.abspath(a.renders)
@@ -1203,7 +1259,10 @@ def main():
     print(f"pieces: {len(srcs)}, tris {tri_pieces}")
     unwrap_atlases(srcs)
     A.fit_lens_atlas(srcs)
-    baked = bake_atlases(srcs, high, hi_curt, a)
+    if a.uv_only:
+        uv_report(srcs)
+        return
+    baked =bake_atlases(srcs, high, hi_curt, a)
     tex = compose_textures(baked, a.out)
     meas = measure(srcs)
     for o in high + hi_curt:
