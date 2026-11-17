@@ -127,9 +127,9 @@
    "anchorX": 769803.0,
    "anchorY": 596223.0,
    "anchorZ": 138.38,
-   "worldMemoryMB": 68.2,
-   "worldMemoryHighMB": 165.9,
-   "memorySource": "ADR 0205 via ADR 0229",
+   "worldMemoryMB": 69.6,
+   "worldMemoryHighMB": 169.5,
+   "memorySource": "ADR 0288 s24: import Win64 2026-11-17 after the S8 corner rebuild (was 68.2, ADR 0205 via ADR 0229)",
    "neighbors": [
     {
      "id": "bialystok-knyszynska",
@@ -139,6 +139,11 @@
     {
      "id": "dk65-02",
      "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-01",
+     "side": "W",
      "seamM": 2048.0
     },
     {
@@ -180,6 +185,11 @@
      "id": "bialystok-knyszynska",
      "side": "SE",
      "seamM": 0.0
+    },
+    {
+     "id": "s8-01",
+     "side": "SW",
+     "seamM": 0.0
     }
    ]
   },
@@ -207,8 +217,18 @@
      "seamM": 2048.0
     },
     {
+     "id": "s8-01",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
      "id": "dk65-01",
      "side": "SE",
+     "seamM": 0.0
+    },
+    {
+     "id": "s8-02",
+     "side": "SW",
      "seamM": 0.0
     }
    ]
@@ -1244,6 +1264,141 @@
    ]
   },
   {
+   "id": "s8-01",
+   "xmin": 766731.0,
+   "ymin": 595199.0,
+   "xmax": 768779.0,
+   "ymax": 597247.0,
+   "anchorX": 767755.0,
+   "anchorY": 596223.0,
+   "anchorZ": 147.02,
+   "worldMemoryMB": 88.6,
+   "worldMemoryHighMB": 185.6,
+   "memorySource": "ADR 0288: import Win64 2026-11-17 s24 r8/r10 (WORLD_MEMORY)",
+   "neighbors": [
+    {
+     "id": "dk65-01",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-03",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-02",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-02",
+     "side": "NE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "s8-02",
+   "xmin": 764683.0,
+   "ymin": 595199.0,
+   "xmax": 766731.0,
+   "ymax": 597247.0,
+   "anchorX": 765707.0,
+   "anchorY": 596223.0,
+   "anchorZ": 121.93,
+   "worldMemoryMB": 62.9,
+   "worldMemoryHighMB": 154.5,
+   "memorySource": "ADR 0288: import Win64 2026-11-17 s24 r8/r10 (WORLD_MEMORY)",
+   "neighbors": [
+    {
+     "id": "s8-01",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-03",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-03",
+     "side": "NE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "s8-03",
+   "xmin": 762635.0,
+   "ymin": 595199.0,
+   "xmax": 764683.0,
+   "ymax": 597247.0,
+   "anchorX": 763659.0,
+   "anchorY": 596223.0,
+   "anchorZ": 117.02,
+   "worldMemoryMB": 60.7,
+   "worldMemoryHighMB": 144.6,
+   "memorySource": "ADR 0288: import Win64 2026-11-17 s24 r8/r10 (WORLD_MEMORY)",
+   "neighbors": [
+    {
+     "id": "s8-02",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-04",
+     "side": "W",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "s8-04",
+   "xmin": 760587.0,
+   "ymin": 595199.0,
+   "xmax": 762635.0,
+   "ymax": 597247.0,
+   "anchorX": 761611.0,
+   "anchorY": 596223.0,
+   "anchorZ": 114.94,
+   "worldMemoryMB": 53.5,
+   "worldMemoryHighMB": 130.1,
+   "memorySource": "ADR 0288: import Win64 2026-11-17 s24 r8/r10 (WORLD_MEMORY)",
+   "neighbors": [
+    {
+     "id": "s8-03",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-05",
+     "side": "W",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "s8-05",
+   "xmin": 758539.0,
+   "ymin": 595199.0,
+   "xmax": 760587.0,
+   "ymax": 597247.0,
+   "anchorX": 759563.0,
+   "anchorY": 596223.0,
+   "anchorZ": 118.08,
+   "worldMemoryMB": 50.9,
+   "worldMemoryHighMB": 130.9,
+   "memorySource": "ADR 0288: import Win64 2026-11-17 s24 r8/r10 (WORLD_MEMORY)",
+   "neighbors": [
+    {
+     "id": "s8-04",
+     "side": "E",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
    "id": "tykocin",
    "xmin": 750347.0,
    "ymin": 599295.0,
@@ -1535,6 +1690,38 @@
    "gapM": 0.0
   },
   {
+   "from": "s8-01",
+   "to": "s8-02",
+   "side": "W",
+   "x": 766731.0,
+   "y": 595802.3,
+   "gapM": 0.0
+  },
+  {
+   "from": "s8-02",
+   "to": "s8-03",
+   "side": "W",
+   "x": 764683.0,
+   "y": 596090.7,
+   "gapM": 0.0
+  },
+  {
+   "from": "s8-03",
+   "to": "s8-04",
+   "side": "W",
+   "x": 762635.0,
+   "y": 596015.9,
+   "gapM": 0.0
+  },
+  {
+   "from": "s8-04",
+   "to": "s8-05",
+   "side": "W",
+   "x": 760587.0,
+   "y": 595458.7,
+   "gapM": 0.0
+  },
+  {
    "from": "bialystok-industrial-c",
    "to": "bialystok-maczka",
    "side": "W",
@@ -1594,6 +1781,16 @@
     "dk65-monki-07",
     "monki-e",
     "monki"
+   ]
+  },
+  {
+   "id": "s8-01..s8-05",
+   "tiles": [
+    "s8-01",
+    "s8-02",
+    "s8-03",
+    "s8-04",
+    "s8-05"
    ]
   }
  ]

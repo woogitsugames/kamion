@@ -85,3 +85,6 @@ osm_shoulder:
 drainage:
   manholes_beside_ground_shoulder: false
   ground_max_paved_m: 0.25
+  # ADR 0288: no carriageway manhole covers on these classes (motorway / expressway carriageways drain to the verge,
+  # the median or gullies outside the lanes; a cover in an S8 lane was visible in the s8-01 render). WORKING_VALUE.
+  no_manhole_classes: [A, S]

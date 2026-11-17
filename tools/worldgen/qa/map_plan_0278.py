@@ -179,7 +179,9 @@ def built_regions() -> dict[str, tuple[int, int]]:
     out = {}
     for r in regions.REGIONS.values():
         i, j = (r.bbox[0] - X0) / T, (r.bbox[1] - Y0) / T
-        if i == int(i) and j == int(j) and r.id not in CANDIDATES and r.id not in RING_0231:
+        # ADR 0288 (D82) registered the loop tiles after this plan: they stay the plan's "podlasie" corridor, not "built"
+        if (i == int(i) and j == int(j) and r.id not in CANDIDATES and r.id not in RING_0231
+                and "ADR 0288" not in r.status):
             out[r.id] = (int(i), int(j))
     return out
 
