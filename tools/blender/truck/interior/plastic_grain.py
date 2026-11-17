@@ -62,12 +62,24 @@ def prepare(output, entry, alpha_source):
     lo, hi = entry['stipple_feature_mm']
     stipple = fnoise(rng, n, tile_mm / hi, tile_mm / lo)          # cycles per tile for the feature-size band
     mottle = fnoise(rng, n, 3, 9)                                 # mould-flow mottle, centimetres
+    # D84 polish: from the driver's eye one 1080p pixel covers ~0.9 mm of dash (0.8 m, 62 deg vertical FOV), so the
+    # 0.25-0.6 mm stipple alone is sub-pixel and the mip chain averages it to a flat sheet (review P1-2). The moulded
+    # grain that reads from the seat is the coarser pebble (grain_feature_mm) and the cm-scale gloss patches; the fine
+    # stipple stays as the close-up layer.
+    g_lo, g_hi = entry.get('grain_feature_mm', [lo, hi])
+    gw = entry.get('grain_weight', 0.0)
+    grain = fnoise(rng, n, tile_mm / g_hi, tile_mm / g_lo)
+    grain = np.clip((grain - .5) * 1.6 + .5, 0, 1) ** 1.25        # flattened pebble tops, narrower valleys
+    gloss = fnoise(rng, n, 1, 4)                                  # 2.5-10 cm handling / cleaning gloss patches
+    stipple = (1 - gw) * stipple + gw * grain
+    pw = entry.get('gloss_patch_weight', 0.0)
+    mottle = (1 - pw) * mottle + pw * gloss
     height = stipple
     # Packing as cc0_leather.prepare: shader albedo = tint * (0.7 + 0.6 * R), roughness = authored + (B - 0.5) * 0.6.
     ratio = 1 + (stipple - stipple.mean()) * entry['variation_gain'] + (mottle - .5) * entry['mottle_gain']
     variation = (np.clip(ratio, .8, 1.2) - .7) / .6
     micro_ao = np.clip(1 - (1 - stipple) * entry['ao_gain'] * .5, 0, 1)
-    roughness = np.clip(.5 + ((stipple - stipple.mean()) * entry['roughness_gain'] + (mottle - .5) * entry['mottle_gain']) / .6, 0, 1)
+    roughness = np.clip(.5 + ((stipple - stipple.mean()) * entry['roughness_gain'] + (mottle - .5) * entry.get('roughness_mottle_gain', entry['mottle_gain'])) / .6, 0, 1)
     detail = np.stack((variation, micro_ao, roughness), -1)
     normal = normal_from_height(height, entry['normal_strength'] * 4.0)
     old_alpha = Image.open(alpha_source).convert('RGBA').getchannel('A')
@@ -87,7 +99,8 @@ def prepare(output, entry, alpha_source):
         'status': 'procedural; not a scan',
         'profile': 'plastic', 'mode': 'procedural_stipple', 'seed': SEED,
         'tile_metres': entry['tile_metres'], 'stipple_feature_mm': [lo, hi],
-        'working_values': {k: entry[k] for k in ('variation_gain', 'roughness_gain', 'ao_gain', 'normal_strength', 'mottle_gain')},
+        'working_values': {k: entry[k] for k in ('variation_gain', 'roughness_gain', 'ao_gain', 'normal_strength', 'mottle_gain', 'grain_feature_mm', 'grain_weight',
+                                                    'gloss_patch_weight', 'roughness_mottle_gain') if k in entry},
         'normal_slope_deg': {'median': float(np.median(slope)), 'p95': float(np.percentile(slope, 95))},
         'perforation_alpha_pixels_sha256': alpha_sha,
         'outputs': outputs,
