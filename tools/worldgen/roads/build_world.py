@@ -1014,7 +1014,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
             "walls", [(x["side"], x["len_m"], x["h_max_m"]) for x in tstats["walls"]])
 
     # c-p1-s23 (REVIEW s20 gate3-phone P1-1): back-of-sidewalk flanges over open ground -> edging + grass batter
-    w.stats["back_flange_batter"] = M.back_flange_batter(w.buf, mask, w.hf)
+    w.stats["back_flange_batter"] = ({} if os.environ.get("WORLDGEN_NO_BACK_BATTER")       # debug A/B only
+                                     else M.back_flange_batter(w.buf, mask, w.hf))
     log("back-of-sidewalk batters", w.stats["back_flange_batter"])
 
     half = w.region["bbox"]["width_m"] / 2
