@@ -1352,7 +1352,10 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
             # the verge of the kerbed arm (the rural arm has none: 0 m). Other junctions: unchanged (byte-identical).
             conv = np.array([p[0] != URBAN for p in params])
             params = [p if p[0] == URBAN else (URBAN, S.KERB_HEIGHT, 0.0, p[3], 0) for p in params]
-            cv = np.where(conv, max(float(np.max(cv)), 0.0), cv)
+            # world3 (int-world3-s23): a converted station is a plain kerb with no footway, so it gets the ADR 0110
+            # verge of such a kerb (VERGE_W). The kerbed arm's own verge is 0 where it has a sidewalk (#165 implied
+            # sidewalks on the E arm of Knyszyn), which left the converted half with no grass at all.
+            cv = np.where(conv, max(float(np.max(cv)), S.VERGE_W), cv)
         fl = [p[0] == URBAN and p[4] == MAT_FLUSH_ROAD for p in params]
         nofl = None
         if cv is not None and not _patch_on_bridge(j):
