@@ -204,7 +204,7 @@ namespace Game.Tests
         // ================================================================== alt-ui-polish-s23 (int-ui-s23 §7 p.4-6)
 
         /// <summary>Window width in content units (the content is narrowed to 16:9 on ultrawide; the height scale is shared).</summary>
-        static float ScreenUnits(int w, int h) => w * ContentUnits(w, h).y / h;
+        static float ScreenUnits(float w, float h) => w * ContentUnits(w, h).y / h;
 
         [Test]
         public void Layout_CompactCabBlock_AndUltrawideMirrors_AllStates_NoOverlap_ClearViewFree()
