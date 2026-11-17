@@ -55,10 +55,11 @@ def build(region_id: str) -> Generated:
         else:
             trans.append(dict(rec, kind=kind))
 
-    def cross(buf, c, s_mid, depth, lat0, lat1):
-        orig_cross(buf, c, s_mid, depth, lat0, lat1)
+    def cross(buf, c, s_mid, depth, lat0, lat1, kind="P-14"):
+        # knyszyn-r24: markings.strip_cross gained kind= (P-12 stop line); the recording stub must pass it on
+        orig_cross(buf, c, s_mid, depth, lat0, lat1, kind=kind)
         xy = c.line.offset_point(float(s_mid), 0.5 * (float(lat0) + float(lat1)))
-        trans.append({"kind": "P-14", "chain": c.id, "s": float(s_mid), "lat0": float(lat0), "lat1": float(lat1),
+        trans.append({"kind": kind, "chain": c.id, "s": float(s_mid), "lat0": float(lat0), "lat1": float(lat1),
                       "xy": xy.tolist()})
 
     MK.arrow_glyph, MK.polygon_mark, MK.strip_cross = glyph, poly, cross

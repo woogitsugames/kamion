@@ -381,7 +381,7 @@ def main(argv=None):
         site_arrows = [ar for ar in g.arrows if ar["emitted"] and inwin(ar["xy"])]
         for ar in site_arrows:
             ar["ortho"] = arrow_on_ortho(ctx, ar)
-        site_stops = [tr for tr in g.transverse if inwin(tr["xy"]) and tr.get("kind") in ("P-14", "P-13")]
+        site_stops = [tr for tr in g.transverse if inwin(tr["xy"]) and tr.get("kind") in ("P-14", "P-13", "P-12")]
         seen_stop = set()
         stops = []
         for tr in site_stops:
