@@ -133,6 +133,14 @@
    "placed": 0,
    "removed": 0
   },
+  "built_up": {
+   "advance": [],
+   "advance_dropped": [],
+   "boundaries": [],
+   "classification": "ADR 0279 D33: D-42..D-43 (OSM, else BDOT10k rule); kerb not used",
+   "osm_boundary_nodes": 0,
+   "placed": {}
+  },
   "bus_stop_wear_candidates": [
    {
     "bus": "yes",
@@ -18044,7 +18052,8 @@
   "osm_signs": {
    "give_way_stop": 1,
    "placed": {
-    "A-7": 1
+    "A-7": 1,
+    "B-33_40": 2
    },
    "skipped_far": 0,
    "unknown": {
@@ -18210,7 +18219,7 @@
   "power_lines": 14,
   "power_supports_added": 38,
   "props_off_carriageway": {
-   "moved": 52,
+   "moved": 53,
    "removed": [
     {
      "at": [
@@ -18389,6 +18398,56 @@
    "removed": 1
   },
   "roundabout_signs": {
+   "a8": [
+    {
+     "entry": "c:w301702372:3057952399-2504239802",
+     "junction": "j:n2504239802",
+     "placed": false,
+     "why": "built-up, <= 50 km/h: assumed visible (UNVERIFIED, no sight-distance data)"
+    },
+    {
+     "entry": "c:w242987884:2329921428-2504239830",
+     "junction": "j:n2504239830",
+     "placed": false,
+     "why": "built-up, <= 50 km/h: assumed visible (UNVERIFIED, no sight-distance data)"
+    },
+    {
+     "entry": "c:w606396507:3057952393-2504239831",
+     "junction": "j:n2504239831",
+     "placed": false,
+     "why": "built-up, <= 50 km/h: assumed visible (UNVERIFIED, no sight-distance data)"
+    },
+    {
+     "entry": "c:w23982180:2235605451-2629122136",
+     "junction": "j:n2629122135",
+     "placed": false,
+     "why": "built-up, <= 50 km/h: assumed visible (UNVERIFIED, no sight-distance data)"
+    },
+    {
+     "entry": "c:w263791494:2188410211-2629122142",
+     "junction": "j:n2629122142",
+     "placed": false,
+     "why": "built-up, <= 50 km/h: assumed visible (UNVERIFIED, no sight-distance data)"
+    },
+    {
+     "entry": "c:w257353770:2472491771-2629122147",
+     "junction": "j:n2629122147",
+     "placed": false,
+     "why": "built-up, <= 50 km/h: assumed visible (UNVERIFIED, no sight-distance data)"
+    },
+    {
+     "entry": "c:w249816185:897482239-2629122161",
+     "junction": "j:n2629122161",
+     "placed": false,
+     "why": "built-up, <= 50 km/h: assumed visible (UNVERIFIED, no sight-distance data)"
+    },
+    {
+     "entry": "c:w242987882:2504239796-2504239798",
+     "junction": "j:n2927425556",
+     "placed": false,
+     "why": "E-1 before the roundabout"
+    }
+   ],
    "c9_islands": 8,
    "diagram_at": [
     [
@@ -23761,7 +23820,7 @@
    },
    {
     "by_category_high": {
-     "buildings": 160973,
+     "buildings": 160801,
      "forest_hlod": 17132,
      "furniture": 373662,
      "props": 35539,
@@ -23772,7 +23831,7 @@
      "trees_lod2": 8276
     },
     "by_category_low": {
-     "buildings": 89857,
+     "buildings": 89853,
      "forest_hlod": 5595,
      "furniture": 19248,
      "props": 13664,
@@ -23784,12 +23843,12 @@
     "camera": "route_s0476",
     "materials_high": 117,
     "materials_low": 117,
-    "tris_high": 2211834,
-    "tris_low": 1023198
+    "tris_high": 2211662,
+    "tris_low": 1023194
    },
    {
     "by_category_high": {
-     "buildings": 273190,
+     "buildings": 273072,
      "forest_hlod": 11997,
      "furniture": 288797,
      "props": 84980,
@@ -23800,7 +23859,7 @@
      "trees_lod2": 6372
     },
     "by_category_low": {
-     "buildings": 84236,
+     "buildings": 84240,
      "forest_hlod": 8347,
      "furniture": 42234,
      "props": 34137,
@@ -23812,12 +23871,12 @@
     "camera": "route_s0793",
     "materials_high": 116,
     "materials_low": 116,
-    "tris_high": 1924420,
-    "tris_low": 965973
+    "tris_high": 1924302,
+    "tris_low": 965977
    },
    {
     "by_category_high": {
-     "buildings": 257441,
+     "buildings": 257452,
      "forest_hlod": 4904,
      "furniture": 204984,
      "props": 283012,
@@ -23828,7 +23887,7 @@
      "trees_lod2": 2764
     },
     "by_category_low": {
-     "buildings": 67622,
+     "buildings": 67626,
      "forest_hlod": 4904,
      "furniture": 47538,
      "props": 84420,
@@ -23840,12 +23899,12 @@
     "camera": "route_s1110",
     "materials_high": 115,
     "materials_low": 115,
-    "tris_high": 2059934,
-    "tris_low": 926111
+    "tris_high": 2059945,
+    "tris_low": 926115
    },
    {
     "by_category_high": {
-     "buildings": 327947,
+     "buildings": 327911,
      "forest_hlod": 3235,
      "furniture": 77005,
      "props": 115387,
@@ -23866,12 +23925,12 @@
     "camera": "route_s1427",
     "materials_high": 115,
     "materials_low": 115,
-    "tris_high": 1775643,
+    "tris_high": 1775607,
     "tris_low": 616597
    },
    {
     "by_category_high": {
-     "buildings": 335019,
+     "buildings": 335012,
      "forest_hlod": 1074,
      "furniture": 30888,
      "props": 25061,
@@ -23892,7 +23951,7 @@
     "camera": "route_s1745",
     "materials_high": 101,
     "materials_low": 101,
-    "tris_high": 1335898,
+    "tris_high": 1335891,
     "tris_low": 432622
    },
    {
@@ -23952,7 +24011,7 @@
    },
    {
     "by_category_high": {
-     "buildings": 268056,
+     "buildings": 268069,
      "forest_hlod": 4411,
      "furniture": 237099,
      "props": 431162,
@@ -23963,7 +24022,7 @@
      "trees_lod2": 2322
     },
     "by_category_low": {
-     "buildings": 81999,
+     "buildings": 82005,
      "forest_hlod": 4194,
      "furniture": 42405,
      "props": 93433,
@@ -23975,12 +24034,12 @@
     "camera": "roundabout_02_above",
     "materials_high": 115,
     "materials_low": 115,
-    "tris_high": 2214488,
-    "tris_low": 934294
+    "tris_high": 2214501,
+    "tris_low": 934300
    },
    {
     "by_category_high": {
-     "buildings": 240840,
+     "buildings": 240851,
      "forest_hlod": 4650,
      "furniture": 173155,
      "props": 242841,
@@ -23991,7 +24050,7 @@
      "trees_lod2": 2854
     },
     "by_category_low": {
-     "buildings": 55835,
+     "buildings": 55839,
      "forest_hlod": 4650,
      "furniture": 37317,
      "props": 77937,
@@ -24003,12 +24062,12 @@
     "camera": "underpass_wb_szymanskiego",
     "materials_high": 115,
     "materials_low": 115,
-    "tris_high": 1784157,
-    "tris_low": 811950
+    "tris_high": 1784168,
+    "tris_low": 811954
    },
    {
     "by_category_high": {
-     "buildings": 242419,
+     "buildings": 242271,
      "forest_hlod": 4188,
      "furniture": 306447,
      "props": 110384,
@@ -24019,7 +24078,7 @@
      "trees_lod2": 7016
     },
     "by_category_low": {
-     "buildings": 92299,
+     "buildings": 92319,
      "forest_hlod": 3594,
      "furniture": 56787,
      "props": 69599,
@@ -24031,12 +24090,12 @@
     "camera": "underpass_eb_szymanskiego",
     "materials_high": 102,
     "materials_low": 102,
-    "tris_high": 1789531,
-    "tris_low": 818844
+    "tris_high": 1789383,
+    "tris_low": 818864
    },
    {
     "by_category_high": {
-     "buildings": 188297,
+     "buildings": 188160,
      "forest_hlod": 13205,
      "furniture": 219086,
      "props": 73939,
@@ -24046,7 +24105,7 @@
      "trees_lod2": 5832
     },
     "by_category_low": {
-     "buildings": 35399,
+     "buildings": 35391,
      "forest_hlod": 8020,
      "furniture": 48994,
      "props": 50962,
@@ -24057,12 +24116,12 @@
     "camera": "produkcyjna_to_rondo_szymanskiego",
     "materials_high": 116,
     "materials_low": 116,
-    "tris_high": 1600303,
-    "tris_low": 698958
+    "tris_high": 1600166,
+    "tris_low": 698950
    },
    {
     "by_category_high": {
-     "buildings": 223147,
+     "buildings": 223103,
      "forest_hlod": 10237,
      "furniture": 140445,
      "props": 58124,
@@ -24073,7 +24132,7 @@
      "trees_lod2": 5440
     },
     "by_category_low": {
-     "buildings": 21066,
+     "buildings": 21058,
      "forest_hlod": 3998,
      "furniture": 30888,
      "props": 12985,
@@ -24085,12 +24144,12 @@
     "camera": "tertiary_to_rondo_under_kleeberga",
     "materials_high": 115,
     "materials_low": 115,
-    "tris_high": 1413782,
-    "tris_low": 522040
+    "tris_high": 1413738,
+    "tris_low": 522032
    },
    {
     "by_category_high": {
-     "buildings": 183488,
+     "buildings": 183340,
      "forest_hlod": 4236,
      "furniture": 278210,
      "props": 114529,
@@ -24100,7 +24159,7 @@
      "trees_lod2": 6262
     },
     "by_category_low": {
-     "buildings": 82660,
+     "buildings": 82680,
      "forest_hlod": 3698,
      "furniture": 36418,
      "props": 72654,
@@ -24111,12 +24170,12 @@
     "camera": "tunnel_eb_inside",
     "materials_high": 101,
     "materials_low": 101,
-    "tris_high": 1735186,
-    "tris_low": 791507
+    "tris_high": 1735038,
+    "tris_low": 791527
    },
    {
     "by_category_high": {
-     "buildings": 235715,
+     "buildings": 235726,
      "forest_hlod": 4319,
      "furniture": 158492,
      "props": 196773,
@@ -24126,7 +24185,7 @@
      "trees_lod2": 2470
     },
     "by_category_low": {
-     "buildings": 54356,
+     "buildings": 54360,
      "forest_hlod": 4319,
      "furniture": 37317,
      "props": 83276,
@@ -24137,12 +24196,12 @@
     "camera": "tunnel_wb_inside",
     "materials_high": 115,
     "materials_low": 115,
-    "tris_high": 1800284,
-    "tris_low": 818497
+    "tris_high": 1800295,
+    "tris_low": 818501
    },
    {
     "by_category_high": {
-     "buildings": 449929,
+     "buildings": 449932,
      "forest_hlod": 2051,
      "furniture": 339351,
      "props": 210597,
@@ -24152,7 +24211,7 @@
      "trees_lod2": 3904
     },
     "by_category_low": {
-     "buildings": 111964,
+     "buildings": 111984,
      "forest_hlod": 1991,
      "furniture": 54082,
      "props": 58782,
@@ -24163,12 +24222,12 @@
     "camera": "rondo_szymanskiego_island_nw",
     "materials_high": 109,
     "materials_low": 109,
-    "tris_high": 2079306,
-    "tris_low": 784808
+    "tris_high": 2079309,
+    "tris_low": 784828
    },
    {
     "by_category_high": {
-     "buildings": 170607,
+     "buildings": 170446,
      "forest_hlod": 6706,
      "furniture": 277617,
      "props": 97561,
@@ -24179,7 +24238,7 @@
      "trees_lod2": 6864
     },
     "by_category_low": {
-     "buildings": 71039,
+     "buildings": 71046,
      "forest_hlod": 3669,
      "furniture": 33713,
      "props": 66165,
@@ -24191,12 +24250,12 @@
     "camera": "cut_wall_oblique_sw",
     "materials_high": 102,
     "materials_low": 102,
-    "tris_high": 1593904,
-    "tris_low": 720939
+    "tris_high": 1593743,
+    "tris_low": 720946
    },
    {
     "by_category_high": {
-     "buildings": 316413,
+     "buildings": 316377,
      "forest_hlod": 3142,
      "furniture": 68313,
      "props": 28772,
@@ -24217,7 +24276,7 @@
     "camera": "collector_wb_km52",
     "materials_high": 113,
     "materials_low": 113,
-    "tris_high": 1453507,
+    "tris_high": 1453471,
     "tris_low": 525089
    }
   ],
@@ -24333,7 +24392,7 @@
     "materials": 45,
     "trees": 513,
     "tris_forest_hlod": 334,
-    "tris_high_static": 167711,
+    "tris_high_static": 167682,
     "tris_low_static": 51749
    },
    {
@@ -24342,7 +24401,7 @@
     "materials": 71,
     "trees": 101,
     "tris_forest_hlod": 71,
-    "tris_high_static": 207630,
+    "tris_high_static": 207623,
     "tris_low_static": 64871
    },
    {
@@ -24356,7 +24415,7 @@
    },
    {
     "chunk": "0_7",
-    "instances": 327,
+    "instances": 329,
     "materials": 48,
     "trees": 1,
     "tris_forest_hlod": 0,
@@ -24428,7 +24487,7 @@
    },
    {
     "chunk": "1_7",
-    "instances": 171,
+    "instances": 173,
     "materials": 51,
     "trees": 33,
     "tris_forest_hlod": 0,
@@ -24540,7 +24599,7 @@
     "materials": 35,
     "trees": 173,
     "tris_forest_hlod": 186,
-    "tris_high_static": 165218,
+    "tris_high_static": 165089,
     "tris_low_static": 59283
    },
    {
@@ -24567,8 +24626,8 @@
     "materials": 36,
     "trees": 23,
     "tris_forest_hlod": 0,
-    "tris_high_static": 303496,
-    "tris_low_static": 121081
+    "tris_high_static": 303507,
+    "tris_low_static": 121085
    },
    {
     "chunk": "3_7",
@@ -24594,8 +24653,8 @@
     "materials": 28,
     "trees": 132,
     "tris_forest_hlod": 0,
-    "tris_high_static": 138081,
-    "tris_low_static": 36073
+    "tris_high_static": 138079,
+    "tris_low_static": 36065
    },
    {
     "chunk": "4_2",
@@ -24612,7 +24671,7 @@
     "materials": 37,
     "trees": 80,
     "tris_forest_hlod": 0,
-    "tris_high_static": 156781,
+    "tris_high_static": 156742,
     "tris_low_static": 51901
    },
    {
@@ -24639,7 +24698,7 @@
     "materials": 59,
     "trees": 36,
     "tris_forest_hlod": 0,
-    "tris_high_static": 295201,
+    "tris_high_static": 295177,
     "tris_low_static": 114811
    },
    {
@@ -24648,8 +24707,8 @@
     "materials": 56,
     "trees": 25,
     "tris_forest_hlod": 0,
-    "tris_high_static": 316437,
-    "tris_low_static": 128788
+    "tris_high_static": 316439,
+    "tris_low_static": 128790
    },
    {
     "chunk": "5_0",
@@ -24666,8 +24725,8 @@
     "materials": 41,
     "trees": 84,
     "tris_forest_hlod": 0,
-    "tris_high_static": 206713,
-    "tris_low_static": 77361
+    "tris_high_static": 206732,
+    "tris_low_static": 77362
    },
    {
     "chunk": "5_2",
@@ -24711,8 +24770,8 @@
     "materials": 53,
     "trees": 22,
     "tris_forest_hlod": 0,
-    "tris_high_static": 279457,
-    "tris_low_static": 114709
+    "tris_high_static": 279458,
+    "tris_low_static": 114710
    },
    {
     "chunk": "5_7",
@@ -24738,7 +24797,7 @@
     "materials": 48,
     "trees": 43,
     "tris_forest_hlod": 0,
-    "tris_high_static": 225297,
+    "tris_high_static": 225295,
     "tris_low_static": 86320
    },
    {
@@ -24783,8 +24842,8 @@
     "materials": 43,
     "trees": 77,
     "tris_forest_hlod": 0,
-    "tris_high_static": 234496,
-    "tris_low_static": 92542
+    "tris_high_static": 234533,
+    "tris_low_static": 92555
    },
    {
     "chunk": "6_7",
@@ -24810,8 +24869,8 @@
     "materials": 51,
     "trees": 36,
     "tris_forest_hlod": 0,
-    "tris_high_static": 238061,
-    "tris_low_static": 88113
+    "tris_high_static": 238062,
+    "tris_low_static": 88114
    },
    {
     "chunk": "7_2",
@@ -24819,8 +24878,8 @@
     "materials": 50,
     "trees": 37,
     "tris_forest_hlod": 0,
-    "tris_high_static": 232043,
-    "tris_low_static": 87010
+    "tris_high_static": 232086,
+    "tris_low_static": 87023
    },
    {
     "chunk": "7_3",
