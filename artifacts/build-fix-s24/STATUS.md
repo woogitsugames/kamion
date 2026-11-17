@@ -3,3 +3,5 @@
 - NASTĘPNY KROK: Unity (slot) TruckAssetBuilder.BuildBatch + TrailerAssetBuilder.BuildBatch w worktree (świeże _Generated bez prefabów) -> sprawdzić GUID w .meta; potem pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64
 - 20:52 dowód pkt 1 (świeże _Generated bez prefabów): Truck exit=0 182 s, Trailer exit=0 19 s; naczepa dostała losowy GUID cac16030... i została przepięta na ab5e5ba6... ("[VEHICLE] GUID re-pinned"), ciągnik 4cd4c98f... OK. BuildInfoWriter: stempel -dirty z env KAMION_BUILD_GIT_DIRTY (stan sprzed Unity, build-windows/android.ps1).
 - NASTĘPNY KROK: Unity (slot) Game.Editor.Setup.ProjectSetup.ApplyRenderingBatch -buildTarget Win64 -> git diff game/ProjectSettings > artifacts/build-fix-s24/projectsettings.diff; potem pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64
+- 20:56 ApplyRenderingBatch Win64 exit=0 23 s: jedyna zmiana ProjectSettings.asset = wpis Standalone batching, blob 4643dd70a IDENTYCZNY z efektem ubocznym buildu (artifacts/build-fix-s24/projectsettings.diff); NIE commitowane (lider). URP assets/QualitySettings bez zmian po setup.
+- NASTĘPNY KROK: czekam na EditMode (setup-tests.status 'editmode exit=')
