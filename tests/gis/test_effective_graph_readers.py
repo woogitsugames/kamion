@@ -242,6 +242,13 @@ RAW_OK = {      # ingested graph on purpose (reason in ADR 0274 "Czytniki grafu"
     "tools/worldgen/qa/ortho_xsec.py": "orthophoto cross-sections of the OSM axes",
     "tools/worldgen/qa/seam_section.py": "route edges at region seams: far ends, ids unchanged",
     "tools/worldgen/qa/map_plan_0278.py": "plan of new tiles: boundary nodes of built neighbours (ADR 0278), ids unchanged",
+    # D81 tiles wygoda / bojary / mickiewicza have no carriageway_split override: file graph == effective graph
+    "tools/worldgen/qa/dk19_place_cameras.py": "D81 tiles (no split): street names of route edges",
+    "tools/worldgen/qa/dk19_route_check.py": "D81 tiles (no split): hgv / maxweight attrs + truck route on the graphs",
+    "tools/worldgen/qa/dk19_route_vias.py": "D81 tiles (no split): graph nodes of the truck route as vias",
+    "tools/worldgen/qa/dk19_seam_nodes.py": "boundary nodes of the D81 tiles and neighbours: ids unchanged",
+    "tools/worldgen/qa/dk19_xsec_overrides.py": "D81 tiles (no split): OSM ways + graph widths for the ortho overrides",
+    "tools/worldgen/qa/dk19_xsec_summary.py": "orthophoto stations grouped by OSM street / lanes",
     "tools/worldgen/qa/knyszyn_s_kerb_step.py": "split node id of the authored override + its OSM way end: GLB probe only",
     "tools/worldgen/qa/median_lamp_row.py": "OSM axes of the opposite carriageway by name",
     "tools/worldgen/qa/junction_lane_widths.py": "research on the OSM source",

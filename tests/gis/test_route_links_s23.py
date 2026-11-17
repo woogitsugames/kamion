@@ -78,7 +78,8 @@ def test_dojlidy_corridor_joins_closed_up_to_the_missing_tile():
     assert c["missing"][:1] == ["bialystok-krywlany"]
     for j in c["joins"]:
         assert len(j["side"]) == 1 and j["gapM"] <= TG.PORTAL_TOL_M, j
-        assert TG.on_seam([j["x"], j["y"]], g[j["from"]], j["side"]), j
+        # lane point of the oblique Piastowska crossing lies ~2.2 m off the seam line; joined within JOIN_TOL_M
+        assert TG.on_seam([j["x"], j["y"]], g[j["from"]], j["side"], eps=RL.JOIN_TOL_M), j
 
 
 def test_corridor_tiles_are_in_the_d67_full_build_set():
@@ -97,7 +98,7 @@ def test_links_stay_in_their_tile_and_replace_only_knyszyn():
             assert t["xmin"] - 3 <= x <= t["xmax"] + 3 and t["ymin"] - 3 <= y <= t["ymax"] + 3, (L["id"], x, y)
         assert len(L["e"]) == len(L["n"]) == len(L["maxspeedKmh"]) >= 2
         # knyszyn (Rynek dead end); C for the D81 trip to Dojlidy (C route runs west to Maczka)
-        assert L["replacesRoute"] in ("", "knyszyn", "bialystok-industrial-c"), L["id"]
+        assert L["replacesRoute"] in ("", "knyszyn", "bialystok-industrial-c", "bialystok-wygoda"), L["id"]
         steps = [((L["e"][i + 1] - L["e"][i]) ** 2 + (L["n"][i + 1] - L["n"][i]) ** 2) ** 0.5 for i in range(len(L["e"]) - 1)]
         assert max(steps) < 2.6, L["id"]                   # no jump (blend never breaks the 2 m sampling)
 
