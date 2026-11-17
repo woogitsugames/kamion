@@ -58,6 +58,9 @@ $exeArg = $Exe
 $version = (Select-String -Path "$ProjectPath/ProjectSettings/ProjectSettings.asset" -Pattern '^\s*bundleVersion:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
 $sha = Get-GitShortSha
 if (& git -C $RepoRoot status --porcelain --untracked-files=no) { $sha = "$sha-dirty" }
+# The player's build_info stamp uses this pre-build state (BuildInfoWriter): files Unity itself rewrites during the
+# build must not turn a clean tree into "-dirty" (build-fix-s24).
+$env:KAMION_BUILD_GIT_DIRTY = if ($sha.EndsWith('-dirty')) { '1' } else { '0' }
 # "-Regions a,b" binds as an array. Spaces, NBSP and semicolons are separators too (ADR 0229 par. 2, review #129 P2-1: the
 # same normalisation as build-android.ps1); -Regions given but empty is an error before Unity starts.
 $regionSpec = ((((@($Regions) | Where-Object { $_ }) -join ',') -replace '[\s\u00A0;]+', ',') -replace ',{2,}', ',').Trim(',')
