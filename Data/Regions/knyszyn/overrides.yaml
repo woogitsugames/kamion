@@ -370,6 +370,97 @@ overrides:
     confidence: medium
     verify: none
     set: {lamps: false}
+  # ------------------------------------------------------------ knyszyn-look-s23: landmarks outside the Rynek park
+  # Inventory: docs/reports/knyszyn-look/README.md. Roof tones of ~1580 buildings come from the generated file
+  # overrides.ortho_roofs.json (tools/worldgen/qa/roof_tones_ortho.py); entries here win over it.
+  - id: look-post-office-walls
+    target: {building: "bdot:2002917F-AB81-5C99-E053-CC2BA8C01CFC"}
+    sources: ["OSM way/300660473 (amenity=post_office)", "Mapillary 257286536083680 (2020-06-27, CC BY-SA 4.0, reference only)"]
+    reason: >-
+      Post office at the east corner of the Rynek (BDOT function 'placowka operatora pocztowego', 2 storeys,
+      LoD2 ridge 10.19 m / eave 7.65 m). The Mapillary frame shows orange-tan facing brick and a dark hipped roof.
+      ESTIMATED: plaster_peach is the closest tone the wall set has (no facing-brick material in that colour);
+      roof_shape hip from the frame, roof tone from the orthophoto file. No lettering, no logo.
+    confidence: medium
+    verify: owner photo of the post office front; a facing-brick material is later polish
+    set: {wall_material: plaster_peach, roof_shape: hip}
+  - id: look-rynek-corner-house-2e17
+    target: {building: "bdot:2002917F-2E17-5C99-E053-CC2BA8C01CFC"}
+    sources: ["Mapillary 591181635195842 (2020-06-27, CC BY-SA 4.0, reference only)"]
+    reason: >-
+      Two-storey house at the Grodzienska / Rynek corner opposite the town hall wing: white render under a red
+      hipped roof (Mapillary frame looking north along Grodzienska; roof red on the 2025 orthophoto as well).
+      ESTIMATED wall tone; the shop signs of the frame are not reproduced.
+    confidence: medium
+    verify: owner photo of the north-east corner of the Rynek
+    set: {wall_material: plaster_white}
+  - id: look-dom-klattow-wooden
+    target: {building: "bdot:2002917F-2F22-5C99-E053-CC2BA8C01CFC"}
+    sources: ["OSM way/294345657 (material=wood, tourism=attraction, wikidata Q16540625)"]
+    reason: >-
+      Listed wooden house at Koscielna (OSM material=wood). 171 m2, so the footprint rule (wooden only under
+      120 m2, 12 % by hash) never boards it. SOURCED: wooden; ESTIMATED: plank colour (dark brown).
+    confidence: medium
+    verify: owner photo or a Commons photo of the house (plank colour, porch)
+    set: {typology: dom_drewniany, wall_material: wood_planks}
+  - id: look-east-square-kiosk
+    target: {building: "osm:way/1427273958"}
+    sources: ["OSM way/1427273958 (building=yes, 12 m2, no other tag)", "GUGiK orthophoto 2025 0.25 m (reference only)"]
+    reason: >-
+      Review 2026-11-17 P1-2: the class rule of overrides.class_fixes.json (OSM-only < 60 m2 -> outbuilding 3.0 m)
+      turned the kiosk on the eastern paved square into a doorless flat grey box - a landmark of the square lost. The
+      orthophoto (0.25 m, measured: light roof 1.8 x 6.8 m = the OSM ring, median sRGB 177/188/193; the dark strip on
+      its north-west side is its cast shadow, as for the trees) shows a narrow kiosk with a light, near-flat roof
+      standing alone on the paving. Built as a one-storey house-type body (door and windows from the facade kit, flat
+      roof - a pitched roof has no basis in the data and roofs.plan refuses spans under 3 m). ESTIMATED: brick walls
+      (what the square showed before this branch); WORKING_VALUE: 3.2 m. Wins over the class fix (authored entries
+      come after the generated files). No sign or lettering.
+    confidence: low
+    verify: owner photo of the eastern square (what the kiosk is, wall material, roof form)
+    set: {typology: dom, wall_material: brick_red, height_m: 3.2, roof_shape: flat}
+  - id: look-east-square-press-kiosk
+    target: {building: "osm:way/300663247"}
+    sources: ["OSM way/300663247 (building=yes, 13 m2, a press kiosk by its OSM name - the name is not reproduced)"]
+    reason: >-
+      Review 2026-11-17 P1-2: the second small structure of the eastern square, 1.5 m south-west of the kiosk above
+      (4.9 x 2.7 m), also became a 3.0 m outbuilding box through the class rule. A press kiosk: one storey with
+      openings, flat roof. ESTIMATED: light render walls (no photo); WORKING_VALUE: 2.9 m. No sign, lettering or
+      chain colours.
+    confidence: low
+    verify: owner photo of the eastern square
+    set: {typology: dom, wall_material: plaster_light, height_m: 2.9, roof_shape: flat}
+  - id: look-discount-forecourt-red-north
+    kind: paved_area
+    material: sidewalk_paving_red
+    polygon_epsg2180: [[761045.4, 612226.3], [761053.3, 612223.3], [761064.6, 612208.3], [761061.3, 612205.8],
+                       [761054.2, 612213.8], [761046.7, 612220.8]]
+    reason: >-
+      Discount store at Szkolna (BDOT 468D, 'dom towarowy lub handlowy', one storey): row of parking bays on red
+      block paving along the access road north-east of the building. Owner fact (feedback S21, 'ul. Szkolna'):
+      car park of red block paving. ESTIMATED: outline traced on the GUGiK 2025 orthophoto 0.1 m, +-1 m.
+    confidence: medium
+    verify: owner photo of the store from Szkolna
+  - id: look-discount-forecourt-red-walk
+    kind: paved_area
+    material: sidewalk_paving_red
+    polygon_epsg2180: [[761073.3, 612190.8], [761075.4, 612188.3], [761070.0, 612180.8], [761061.3, 612175.4],
+                       [761055.4, 612165.8], [761053.3, 612167.1], [761058.3, 612177.5], [761067.9, 612183.3]]
+    reason: >-
+      Same car park: band of red block paving (walkway and bay edging) across the main lot south-east of the
+      store. ESTIMATED: traced on the GUGiK 2025 orthophoto 0.1 m, +-1 m; the red bay lines are not drawn.
+    confidence: medium
+    verify: owner photo of the store from Szkolna
+  - id: look-discount-forecourt-lot
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180: [[761057.5, 612197.5], [761063.3, 612198.3], [761075.4, 612191.7], [761087.5, 612175.0],
+                       [761078.3, 612161.0], [761066.0, 612152.5], [761053.3, 612157.5], [761040.0, 612161.7],
+                       [761035.8, 612171.7]]
+    reason: >-
+      Same car park: the main lot between the store, Szkolna and the two-storey service building to the south,
+      light grey block paving on the 2025 orthophoto (was grass in the game). ESTIMATED outline, +-1 m.
+    confidence: medium
+    verify: owner photo of the store from Szkolna
   - id: lamp-policy-led-0216
     kind: lamp_policy
     family: led
