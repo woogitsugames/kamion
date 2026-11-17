@@ -6,3 +6,6 @@
 - Kanarek: import knyszyn-s (tile/High) → potem 38 pozostałych (check-build-scenes: 39/39 bez kafli, 18 pierścienia bez scen).
 - Dodatkowo (lider): menu_bg.png (D87), StartClearanceTests bialystok-industrial-c, schodkowe cienie w kabinie Win64.
 - NASTĘPNY KROK: `pwsh -File artifacts/full-build-s23/chain.ps1 -StartAt 2 -Skip knyszyn-s` (stan: artifacts/full-build-s23/chain.status → CHAIN_DONE)
+
+- [09:50] P1-1 schodkowe czarne bloki w kabinie Win64: PRZYCZYNA = atlas AO kabiny w automatycznym formacie Standalone BC1 (Android ma ASTC), shader mapuje AO przez smoothstep(0.04,0.28) → bloki 4x4. Poprawka: TruckAssetBuilder override Standalone BC4 dla *_AO* + PC High/Ultra pierwsza kaskada 3 m (krawędź twardego cienia słońca). EditMode 20/20 (filtr TruckTextureStandaloneFormat|PcTier). Dowód: artifacts/full-build-s23/shadow/cab-dash-crops-base-bc4-bc4casc.jpg (edytor DrivingLab -Pc High clear). Commit 89505bd00.
+- NASTĘPNY KROK: build w win-build-s23 (post.ps1 → POST_DONE), potem zrzut kabiny z playera przed (exe e28533ca31) / po.
