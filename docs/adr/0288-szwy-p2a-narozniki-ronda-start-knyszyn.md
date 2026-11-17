@@ -57,7 +57,9 @@ HANDOVER 17.11 01:4x / 07:0x (uskok zach. 0,506 m otwarty), 07:4x (zlecenie seam
 - `qa.seams`: FAIL 19 (ADR 0275) → 16 (pozostałe: referencje rozstawu linii K1, pobocza DK8 kleeberga | knyszynska), PRZEJŚCIE 11.
 - Start w knyszyn: model kinematyczny `swept_path` po ścieżce „60 m ogona trasy + cały link” (`qa/link_swept_check.py`):
   0 punktów krawędzi opon poza twardą nawierzchnią; poza jezdnią tylko naczepa na rondzie (s 689–697 m, fartuch/krawężnik
-  wyspy — ten sam przejazd co link korytarza). Prędkość/poślizg poza modelem.
+  wyspy). Link `knyszyn-rynek-to-dk65-w` (Mońki): 15 punktów opon naczepy poza twardą nawierzchnią i 77 poza jezdnią
+  na rondzie (s 689–702 m, skręt z Tykockiej W w DK65 W) — do sprawdzenia przy rondzie (ADR 0274), złącze na Rynku czyste.
+  Prędkość/poślizg poza modelem.
 
 ## Budżet
 Rondo: trawa na 2 dodatkowych narożnikach (pas `_emit_verge`) — ESTIMATED ≤ ~1,5 tys. tris. `roads_qa.verge_strips` knyszyn
