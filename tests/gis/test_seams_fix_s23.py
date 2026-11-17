@@ -122,3 +122,28 @@ def test_despike_arcs_spike_step_and_smooth():
     grad = np.abs(np.roll(out, -1) - out) / np.maximum(ds, 0.25)
     assert grad[20:30].max() <= M.ARC_GRADE_MAX
     assert np.allclose(out[8:18], zt[8:18])     # away from the steps (24|25 and the wrap 39|0): unchanged
+
+
+def test_despike_arcs_interpolates_by_distance_on_uneven_outline():
+    """Codex review s24 (ADR 0289 'Recenzja s24'): flagged heights are interpolated by distance along the outline, not
+    by station index. Good points 10.1 m apart differing by 0.2 m, a spike 0.1 m after the first good point and two more
+    stations evenly spread in between: the repaired point must sit on the 0.02 m/m line, not half way (1 m/m)."""
+    # straight-ish outline: dense cluster near a mouth, then long gap (a corner arc sampled unevenly)
+    xs = [0.0, 0.1, 5.0, 10.1]
+    tail = list(np.linspace(11.0, 60.0, 30))
+    x = np.array(xs + tail + list(np.linspace(59.0, 1.0, 30)))
+    y = np.concatenate([np.zeros(4 + 30), np.full(30, 3.0)])
+    pts = np.column_stack([x, y])
+    n = len(pts)
+    z = np.full(n, 100.0)
+    # good line 0.2 m over 10.1 m on the first span, flat elsewhere
+    z[0], z[2], z[3] = 100.0, 100.0 + 0.2 * 5.0 / 10.1, 100.2
+    z[4:34] = 100.2
+    zs = z.copy()
+    zs[1] = 100.0 - 0.3                                   # spike 0.1 m from point 0
+    tags = [("arc", 0, 0.0)] * n
+    out = M.despike_arcs(zs, tags, pts)
+    expect = 100.0 + 0.2 * 0.1 / 10.1
+    assert abs(out[1] - expect) < 0.01, out[1]
+    assert abs(out[1] - out[0]) / 0.1 <= M.ARC_GRADE_MAX  # grade to the near neighbour stays a kerb-able slope
+    # by index the old code gave point 1 a third of (z[2]-z[0]) ~ 0.033 m, i.e. 0.33 m/m over 0.1 m
