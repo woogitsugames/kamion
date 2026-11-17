@@ -35,6 +35,9 @@ namespace Game.Controls
         public bool Extended;
         /// <summary>"Panel" button (developer / lab page): extended detail or developer diagnostics only.</summary>
         public bool DevToggle;
+        /// <summary>Extended detail in the cab with live instruments: extended row only, off the wheel and the dash cluster
+        /// (no second speedometer over the live one; int-ui-s23 §7 p.4, <see cref="DesktopHudInput.Compact"/>).</summary>
+        public bool Compact;
 
         /// <param name="cabCamera">Camera in the cab (driver's eye).</param>
         /// <param name="cabInstrumentsLive">The truck has live cab screens (the TRAKT cluster; the graybox lab truck has none).</param>
@@ -47,6 +50,7 @@ namespace Game.Controls
                 Strip = extended || !cabOnly,   // asking for the extended detail always shows it
                 Extended = extended,
                 DevToggle = extended || devDiagnostics,
+                Compact = extended && cabOnly,
             };
         }
     }

@@ -18,10 +18,17 @@ namespace Game.UI.Driving
     /// <see cref="HudPreferences"/>). Colours from <see cref="UiPalette"/> (WCAG AA, ADR table), type Inter Regular / SemiBold.
     /// Per frame: compares and looks up prebuilt strings only - no allocation (PcHudGc0244Tests, HudRedesign0283Tests).
     /// The touch HUD (phones, ADR 0079) is unchanged.
+    /// alt-ui-polish-s23 (int-ui-s23 §7 p.4-6): the telltale row is the top row of the same panel (arrows inside it, a
+    /// hairline between the rows), the "Panel" button hangs on the block's right edge in the same matte colour; in the
+    /// cab with live instruments the extended detail shows only its own row, right of the wheel (no second speed);
+    /// mirror frames are a thin housing edge (<see cref="DesktopHudLayout.MirrorBezel"/>, <see cref="UiPalette.MirrorBezel"/>).
     /// </summary>
     public sealed partial class DrivingHud
     {
-        RectTransform m_DStrip, m_DTell, m_DExtRow;
+        RectTransform m_DStrip, m_DTell, m_DExtRow, m_DMain;
+        Image m_DTellBg, m_DSlotBgL, m_DSlotBgR;
+        GameObject m_DTellRule;
+        bool m_DBlockKnown, m_DBlockStrip, m_DBlockCompact;
         Text m_DSpeed, m_DGear, m_DAir1, m_DAir2, m_DRpm, m_DRet, m_DCruise;
         Image m_DAir1Bar, m_DAir2Bar, m_DRpmBar, m_DTurnL, m_DTurnR;
         GameObject m_DSlotL, m_DSlotR;
@@ -57,11 +64,14 @@ namespace Game.UI.Driving
             var bg = m_DStrip.gameObject.AddComponent<Image>();
             bg.color = P.HudPanel; bg.raycastTarget = false;
 
-            m_DSpeed = DLabel(m_DStrip, "Speed", "0", strong, 68, TextAnchor.MiddleRight, P.Ink, new Vector2(12f, 12f), new Vector2(184f, 88f));
-            DLabel(m_DStrip, "SpeedUnit", HudTexts.KmH, m_Font, 22, TextAnchor.LowerLeft, P.InkMuted, new Vector2(202f, 26f), new Vector2(66f, 30f));
-            DRule(m_DStrip, "Rule1", new Vector2(276f, 16f), new Vector2(1f, 80f));
-            m_DGear = DLabel(m_DStrip, "Gear", "N", strong, 52, TextAnchor.MiddleCenter, P.Ink, new Vector2(278f, 14f), new Vector2(114f, 84f));
-            DRule(m_DStrip, "Rule2", new Vector2(394f, 16f), new Vector2(1f, 80f));
+            // Main row in its own container: the compact cab block hides it (the dash cluster shows speed / gear / air).
+            m_DMain = Rect("MainRow", m_DStrip);
+            Place(m_DMain, Vector2.zero, Vector2.zero, new Vector2(StripW, RowH));
+            m_DSpeed = DLabel(m_DMain, "Speed", "0", strong, 68, TextAnchor.MiddleRight, P.Ink, new Vector2(12f, 12f), new Vector2(184f, 88f));
+            DLabel(m_DMain, "SpeedUnit", HudTexts.KmH, m_Font, 22, TextAnchor.LowerLeft, P.InkMuted, new Vector2(202f, 26f), new Vector2(66f, 30f));
+            DRule(m_DMain, "Rule1", new Vector2(276f, 16f), new Vector2(1f, 80f));
+            m_DGear = DLabel(m_DMain, "Gear", "N", strong, 52, TextAnchor.MiddleCenter, P.Ink, new Vector2(278f, 14f), new Vector2(114f, 84f));
+            DRule(m_DMain, "Rule2", new Vector2(394f, 16f), new Vector2(1f, 80f));
             m_DAir1 = AirRow(1, 62f, out m_DAir1Bar);
             m_DAir2 = AirRow(2, 20f, out m_DAir2Bar);
 
@@ -78,12 +88,22 @@ namespace Game.UI.Driving
             m_DCruise = DLabel(m_DExtRow, "Cruise", HudTexts.Off, strong, 28, TextAnchor.MiddleLeft, P.Ink, new Vector2(460f, 12f), new Vector2(248f, 38f));
             m_DExtRow.gameObject.SetActive(false);
 
-            // ---- telltale row: arrow slots at the ends, warning tiles between (no background of its own)
+            // ---- telltale row: arrow slots at the ends, warning tiles between. On the strip it is the top row of the same
+            // panel (background on, hairline under it); alone (cab view) it has no background and the arrows keep a small one.
             m_DTell = Zone("DesktopTelltales", DesktopHudLayout.TelltaleSize);
+            m_DTellBg = m_DTell.gameObject.AddComponent<Image>();
+            m_DTellBg.color = P.HudPanel; m_DTellBg.raycastTarget = false; m_DTellBg.enabled = false;
+            var rule = Rect("RowRule", m_DTell);
+            Place(rule, Vector2.zero, new Vector2(12f, 0f), new Vector2(DesktopHudLayout.TelltaleSize.x - 24f, 1f));
+            var ri = rule.gameObject.AddComponent<Image>(); ri.color = P.GaugeTrack; ri.raycastTarget = false;
+            m_DTellRule = rule.gameObject;
+            m_DTellRule.SetActive(false);
             m_DTurnL = ArrowSlot("TurnLeft", 0f, false);
             m_DTurnR = ArrowSlot("TurnRight", DesktopHudLayout.TelltaleSize.x - 64f, true);
             m_DSlotL = m_DTurnL.transform.parent.gameObject;
             m_DSlotR = m_DTurnR.transform.parent.gameObject;
+            m_DSlotBgL = m_DSlotL.GetComponent<Image>();
+            m_DSlotBgR = m_DSlotR.GetComponent<Image>();
             for (int i = 0; i < m_DTile.Length; i++)
             {
                 var t = Rect("Warning" + i, m_DTell);
@@ -102,10 +122,10 @@ namespace Game.UI.Driving
 
         Text AirRow(int circuit, float y, out Image bar)
         {
-            DLabel(m_DStrip, "AirLabel" + circuit, circuit == 1 ? "1" : "2", m_Font, 20, TextAnchor.MiddleCenter, P.InkMuted, new Vector2(408f, y), new Vector2(26f, 30f));
-            bar = DBar(m_DStrip, "AirBar" + circuit, new Vector2(438f, y + 12f), new Vector2(140f, 6f));
-            var v = DLabel(m_DStrip, "Air" + circuit, "0,0", UiFonts.Strong, 28, TextAnchor.MiddleRight, P.Ink, new Vector2(584f, y), new Vector2(68f, 32f));
-            DLabel(m_DStrip, "AirUnit" + circuit, HudTexts.Bar, m_Font, 20, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(656f, y), new Vector2(56f, 32f));
+            DLabel(m_DMain, "AirLabel" + circuit, circuit == 1 ? "1" : "2", m_Font, 20, TextAnchor.MiddleCenter, P.InkMuted, new Vector2(408f, y), new Vector2(26f, 30f));
+            bar = DBar(m_DMain, "AirBar" + circuit, new Vector2(438f, y + 12f), new Vector2(140f, 6f));
+            var v = DLabel(m_DMain, "Air" + circuit, "0,0", UiFonts.Strong, 28, TextAnchor.MiddleRight, P.Ink, new Vector2(584f, y), new Vector2(68f, 32f));
+            DLabel(m_DMain, "AirUnit" + circuit, HudTexts.Bar, m_Font, 20, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(656f, y), new Vector2(56f, 32f));
             return v;
         }
 
@@ -179,6 +199,8 @@ namespace Game.UI.Driving
             d.DevPanelOpen = m_DevOpen;
             d.Telemetry = TelemetryVisible;
             d.DevText = DevDiagnostics;
+            d.Compact = m_Vis.Compact;
+            d.ScreenWidth = m_View.PixelsPerUnit > 0f ? m_View.PixelSize.x / m_View.PixelsPerUnit : 0f;
             if (!screenChanged && m_DValid && m_DesktopApplied && d.SameAs(m_DIn) && m_DPrefsVersion == HudPreferences.Version) return;
             m_DIn = d; m_DValid = true; m_DPrefsVersion = HudPreferences.Version;
             DesktopHudLayout.Solve(d, out m_D);
@@ -188,6 +210,7 @@ namespace Game.UI.Driving
             SetRect(m_DTell, m_D.Telltales);
             if (m_DStrip.gameObject.activeSelf != m_D.ShowStrip) m_DStrip.gameObject.SetActive(m_D.ShowStrip);
             if (m_DExtRow.gameObject.activeSelf != m_Vis.Extended) m_DExtRow.gameObject.SetActive(m_Vis.Extended);
+            ApplyBlockStyle(m_D.ShowStrip, m_D.Compact);
             SetRect((RectTransform)m_MirrorLGo.transform, m_D.MirrorLeft);
             SetRect((RectTransform)m_MirrorRGo.transform, m_D.MirrorRight);
             SetRect(m_ReverseRt, m_D.ReverseView);
@@ -214,10 +237,24 @@ namespace Game.UI.Driving
             bool grid = m_DevOpen && !m_LabOpen, lab = m_DevOpen && m_LabOpen;
             if (m_DevPanelRt.gameObject.activeSelf != grid) m_DevPanelRt.gameObject.SetActive(grid);
             if (m_LabPanel.activeSelf != lab) m_LabPanel.SetActive(lab);
-            m_DevToggleImage.color = m_DevOpen ? k_ButtonOn : k_Button;
+            m_DevToggleImage.color = m_DevOpen ? P.ButtonPressed : P.HudPanel;   // same matte block as the strip
             string tl = m_DevOpen ? HudTexts.DevToggleOpen : HudTexts.DevToggle;
             if (!ReferenceEquals(m_DevToggleLabel.text, tl)) m_DevToggleLabel.text = tl;
             m_LayoutValid = false;   // the touch branch lays out again when the form factor flips back
+        }
+
+        /// <summary>Strip + telltale row as one panel, or the row alone; compact cab block = extended row only (on change only).</summary>
+        void ApplyBlockStyle(bool strip, bool compact)
+        {
+            if (m_DBlockKnown && m_DBlockStrip == strip && m_DBlockCompact == compact) return;
+            m_DBlockKnown = true; m_DBlockStrip = strip; m_DBlockCompact = compact;
+            m_DTellBg.enabled = strip;
+            m_DTellRule.SetActive(strip);
+            m_DSlotBgL.enabled = !strip;   // inside the panel the arrows need no box of their own
+            m_DSlotBgR.enabled = !strip;
+            m_DMain.gameObject.SetActive(!compact);
+            m_DExtRow.anchoredPosition = new Vector2(0f, compact ? 0f : RowH);
+            m_DLastTurn = int.MinValue;   // slot visibility depends on the block
         }
 
         /// <summary>Shows the monitor or the touch furniture (once per form-factor change).</summary>
