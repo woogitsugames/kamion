@@ -78,7 +78,13 @@ Krawędzie asfaltu 2,9–3,4 m < zmierzone 3,45–4,0 m: generator kładzie 0,20
 (`PAVED_SHOULDER_MEDIAN`) od osi linii do krawędzi, ortofoto ~0,45 m → Otwarte 9.
 road_consistency_qa (r10): s8-04 0 (było obstacle_in_lane 85 przy dziurze przejazdu), s8-05 0, s8-02 10, s8-03 8,
 s8-01 22 (wszystko `lane_blind_end` / `arrow_no_exit` przy łącznicach — jak w s23), dk65-01 12 (jak przed).
-qa.seams r10 (s8-01..05, dk65-01, dk65-03; 6 szwów): **0 FAIL, 0 UWAGA**. Fidelity r10 exit=0 dla 6 kafli.
+qa.seams r10 i r11 (s8-01..05, dk65-01, dk65-03; 6 szwów): **0 FAIL, 0 UWAGA**.
+**Wysokość S8 na szwach** (`tools/worldgen/qa/s8_seam_z.py`, asfalt 0,3 m po obu stronach węzła brzegowego, GLB):
+r10 s8-02 | s8-03 (pomost, way 183625709 / 98599908) skok **1,35 / 0,79 m**, s8-03 | s8-04 (way 251431118) 0,12 m —
+każdy kafel liczy profil sam, a węzeł na pomoście nie ma wysokości z NMT (`roads/profile.node_heights`). Poprawka:
+`authored_overrides` `target: {node}`, `set: {z}` = średnia obu stron, w obu kaflach (s8-seam-deck-z-*, s8-seam-z-*).
+r11: wszystkie 10 przejść S8 przez 5 szwów |dz| ≤ 0,051 m (wcześniej niewidoczne dla qa.seams, które nie mierzy z;
+wykrył je `tests/gis/test_route_links_s23.py` po dodaniu asfaltu pomostu do `qa/seam_section.measure_side`). Fidelity r10 exit=0 dla 6 kafli.
 WORLD_MEMORY import Win64 (s24) Low / High MB: s8-01 88,6 / 185,6; s8-02 62,9 / 154,5; s8-03 60,7 / 144,6;
 s8-04 53,5 / 130,1; s8-05 50,9 / 130,9; dk65-01 69,6 / 169,5 (było 68,2 / 165,9). Trasy: 2102 / 2084 / 2050 /
 2133 / 843 m. Rendery: `artifacts/s8-loop-s24/vqa-r8/*`, `vqa-r10/{s8-02,s8-05,dk65-01}` (nowe kamery
