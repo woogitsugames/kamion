@@ -340,6 +340,38 @@
    "type": "persp"
   },
   {
+   "fov_deg": 60.0,
+   "id": "s8_corner_eye",
+   "look_at": [
+    -699.937,
+    -968.005,
+    126.273
+   ],
+   "note": "place camera: s8-loop-s24 (ADR 0288): driver eye on the S8 carriageway towards Warsaw (way 305447699) in the SW corner of the tile, looking WNW at the seam with s8-01 (local -1024 -890); position interpolated on the OSM way between the seam nodes, +-5 m",
+   "pos": [
+    -602.5,
+    -990.5,
+    129.765
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "s8_corner_top",
+   "look_at": [
+    -740.0,
+    -860.0,
+    -57007.262
+   ],
+   "note": "place camera: QA only (s8-loop-s24, ADR 0288): top view, north up, of the S8 corner of dk65-01 - both carriageways, median, seams with s8-01 (west) and the south edge",
+   "pos": [
+    -740.0,
+    -960.0,
+    288.46
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0
