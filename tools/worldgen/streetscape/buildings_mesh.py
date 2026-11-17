@@ -1420,13 +1420,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             storeys, sh, zbase = storey_plan(typ, roof.zeave - zref + 0.5, p, sub)
         # ADR 0238: rule shopfront of a pavilion on the wall nearest to a road - only for buildings with no authored
         # set (an override keeps the facade its review approved)
-<<<<<<< HEAD
         pav = sub == "pawilon" and not front and not facades and not (set(b["ovr"]) - OVR_ROOF_ONLY) and not pitched
-        rect = poly.minimum_rotated_rectangle
-=======
-        pav = sub == "pawilon" and not front and not facades and not b["ovr"] and not pitched
         rect = RF.stable_rect(poly)
->>>>>>> origin/main
         rc_ = np.asarray(rect.exterior.coords)[:4]
         re_ = [float(np.linalg.norm(rc_[(i + 1) % 4] - rc_[i])) for i in range(4)]
         rk_ = 0 if re_[0] >= re_[1] else 1
