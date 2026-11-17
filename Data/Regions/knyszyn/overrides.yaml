@@ -878,3 +878,19 @@ overrides:
       be broader than this open-grown nursery figure; the owner's photos 3-6 decide (local only).
     confidence: low
     verify: render rynek owner frames 03 and 05 (Low, High) next to photos 3-6; change only height_to_spread
+  # world3 (int-world3-s23, leader s23): the "high carriageway edge" of DK65 south of the compact roundabout
+  # (rondo_dk65_from_south; review #169 P0, D41 (e) did not reach it). Cause, read off the network of this tile: the two
+  # split carriageways of knyszyn-roundabout-dk65-split-s (ways 1464342635 / 1464342640, the 27 m splitter zone) kept the
+  # rural open-road profile on their outer edge (ADR 0272: kind rural, ditch 0.6 m, verge 0) while the kerb-mode
+  # roundabout lays a kerb there; a kerb with no verge behind it stood 0.45-0.65 m above the conformed NMT 2022
+  # (GLB probe tools/worldgen/qa/knyszyn_s_kerb_step.py). A kerbed edge gets the ADR 0110 grass verge at kerb crown.
+  - id: knyszyn-dk65-split-s-kerbed-edge-w3
+    target: {osm_way: [1464342635, 1464342640]}
+    reason: >-
+      Splitter zone of DK65 south at the compact roundabout (27 m, carriageway_split): the kerb laid by the roundabout
+      needs the kerbed cross-section (kerb + grass verge at its crown), not the rural ditch profile of the open road
+      south of it. Measured drop behind the kerb before this entry: 0.45-0.65 m within 1.5 m (threshold 0.15 m).
+      The edge itself is not measured (orthophoto 2025-05-27 predates the roundabout): WORKING_VALUE.
+    confidence: medium
+    verify: control camera rondo_dk65_from_south + knyszyn_s_kerb_step.py (drop <= 0.15 m); owner photo 9-11
+    set: {shoulder: {kind: kerb}}
