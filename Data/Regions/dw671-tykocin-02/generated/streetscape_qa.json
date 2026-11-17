@@ -70,6 +70,54 @@
    "placed": 0,
    "removed": 0
   },
+  "built_up": {
+   "advance": [
+    {
+     "chain": "c:w1111506760:5343479224-3239704308",
+     "code": "A-7",
+     "d_m": 173.5,
+     "e": -268.1,
+     "junction": "j:n3239704308",
+     "kerbed": true,
+     "n": -728.0,
+     "plate": "T-1_150",
+     "v_kmh": 90.0
+    },
+    {
+     "chain": "c:w98071591:3239704308-5343512347",
+     "code": "A-7",
+     "d_m": 169.4,
+     "e": -295.2,
+     "junction": "j:n3239704308",
+     "kerbed": true,
+     "n": -387.2,
+     "plate": "T-1_150",
+     "v_kmh": 90.0
+    }
+   ],
+   "advance_dropped": [],
+   "boundaries": [
+    {
+     "basis": "ESTIMATED BDOT10k OT_PTZB_A",
+     "chain": "c:w1111506761:3239704308-839428356",
+     "e": -63.1,
+     "n": -685.6,
+     "s": 62.5,
+     "signs": [
+      "D-42",
+      "D-43"
+     ]
+    }
+   ],
+   "classification": "ADR 0279 D33: D-42..D-43 (OSM, else BDOT10k rule); kerb not used",
+   "osm_boundary_nodes": 0,
+   "placed": {
+    "A-7": 2,
+    "D-42": 1,
+    "D-43": 1,
+    "T-1_150": 2
+   }
+  },
   "bus_stop_wear_candidates": [
    {
     "bus": "yes",
@@ -2606,7 +2654,7 @@
    },
    {
     "chunk": "2_5",
-    "instances": 151,
+    "instances": 154,
     "materials": 8,
     "trees": 136,
     "tris_forest_hlod": 0,
@@ -2615,7 +2663,7 @@
    },
    {
     "chunk": "2_6",
-    "instances": 145,
+    "instances": 148,
     "materials": 33,
     "trees": 113,
     "tris_forest_hlod": 0,
@@ -2646,8 +2694,8 @@
     "materials": 35,
     "trees": 868,
     "tris_forest_hlod": 459,
-    "tris_high_static": 160660,
-    "tris_low_static": 49688
+    "tris_high_static": 160661,
+    "tris_low_static": 49689
    },
    {
     "chunk": "3_2",
@@ -2687,7 +2735,7 @@
    },
    {
     "chunk": "3_6",
-    "instances": 500,
+    "instances": 504,
     "materials": 30,
     "trees": 478,
     "tris_forest_hlod": 162,
@@ -2781,8 +2829,8 @@
     "materials": 23,
     "trees": 1549,
     "tris_forest_hlod": 738,
-    "tris_high_static": 139580,
-    "tris_low_static": 36394
+    "tris_high_static": 139545,
+    "tris_low_static": 36383
    },
    {
     "chunk": "5_1",
@@ -2808,8 +2856,8 @@
     "materials": 36,
     "trees": 222,
     "tris_forest_hlod": 79,
-    "tris_high_static": 151574,
-    "tris_low_static": 39540
+    "tris_high_static": 151517,
+    "tris_low_static": 39517
    },
    {
     "chunk": "5_4",

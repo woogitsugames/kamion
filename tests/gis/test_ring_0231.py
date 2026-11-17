@@ -110,7 +110,7 @@ def test_existing_entries_unchanged():
         assert r.bbox == (y["bbox"]["xmin"], y["bbox"]["ymin"], y["bbox"]["xmax"], y["bbox"]["ymax"]), rid
         assert r.origin == (y["origin"]["x"], y["origin"]["y"]) and r.teryt_powiat == str(y["teryt_powiat"]), rid
         n += 1
-    assert n >= 20 and len(OLD) == 21
+    assert n >= 20 and len(OLD) >= 21      # ADR 0278 (#150) adds 3 defined-only tiles to regions.REGIONS
 
 
 def test_crs_and_location():

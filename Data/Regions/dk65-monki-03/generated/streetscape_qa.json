@@ -64,6 +64,37 @@
    "placed": 0,
    "removed": 0
   },
+  "built_up": {
+   "advance": [
+    {
+     "chain": "c:w1473575592:13519137482-13519137489",
+     "code": "A-7",
+     "d_m": 178.6,
+     "e": -1005.3,
+     "junction": "j:n1134846333",
+     "kerbed": true,
+     "n": -972.0,
+     "plate": "T-1_150",
+     "v_kmh": 90.0
+    }
+   ],
+   "advance_dropped": [
+    {
+     "arm_m": 291.9,
+     "code": "A-7",
+     "junction": "j:n1134846333",
+     "v_kmh": 90.0,
+     "why": "50 km/h at 150 m (built-up)"
+    }
+   ],
+   "boundaries": [],
+   "classification": "ADR 0279 D33: D-42..D-43 (OSM, else BDOT10k rule); kerb not used",
+   "osm_boundary_nodes": 0,
+   "placed": {
+    "A-7": 1,
+    "T-1_150": 1
+   }
+  },
   "bus_stop_wear_candidates": [],
   "crossing_signs": 0,
   "depot_yards": {
@@ -1098,7 +1129,7 @@
      "buildings": 11230,
      "forest_hlod": 2726,
      "furniture": 3790,
-     "props": 6616,
+     "props": 6690,
      "roads": 13402,
      "terrain": 339566,
      "trees_lod0": 39940,
@@ -1118,7 +1149,7 @@
     "camera": "route_s0069",
     "materials_high": 44,
     "materials_low": 44,
-    "tris_high": 434980,
+    "tris_high": 435054,
     "tris_low": 116548
    },
    {
@@ -1126,7 +1157,7 @@
      "buildings": 10308,
      "forest_hlod": 1386,
      "furniture": 2881,
-     "props": 1758,
+     "props": 1832,
      "roads": 7487,
      "terrain": 330588,
      "trees_lod0": 165596,
@@ -1146,7 +1177,7 @@
     "camera": "route_s0207",
     "materials_high": 44,
     "materials_low": 44,
-    "tris_high": 822800,
+    "tris_high": 822874,
     "tris_low": 166802
    },
    {
@@ -1154,7 +1185,7 @@
      "buildings": 0,
      "forest_hlod": 664,
      "furniture": 0,
-     "props": 12292,
+     "props": 12366,
      "roads": 7487,
      "terrain": 135516,
      "trees_lod0": 6350,
@@ -1174,7 +1205,7 @@
     "camera": "route_s0345",
     "materials_high": 13,
     "materials_low": 13,
-    "tris_high": 169089,
+    "tris_high": 169163,
     "tris_low": 46053
    }
   ],
@@ -1313,7 +1344,7 @@
    },
    {
     "chunk": "0_7",
-    "instances": 2655,
+    "instances": 2658,
     "materials": 13,
     "trees": 2618,
     "tris_forest_hlod": 1103,

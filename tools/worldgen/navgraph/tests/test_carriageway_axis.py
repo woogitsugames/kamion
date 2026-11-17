@@ -17,7 +17,7 @@ AXIS_MAX_OFFSET_M = 0.5   # WORKING_VALUE: max lateral offset of the route line 
 
 
 def _region():
-    graph = json.load(open(os.path.join(RDIR, "roads.graph.json"), encoding="utf-8"))
+    graph = brg.load_graph(REGION)            # as main(): effective graph (ADR 0274)
     rows = json.load(open(os.path.join(RDIR, "turn_restrictions.json"), encoding="utf-8"))["restrictions"]
     return graph, rows, brg.read_origin(RDIR)
 

@@ -42,6 +42,8 @@ import re
 
 import numpy as np
 import shapely
+import shapely.affinity
+import shapely.geometry
 from shapely.geometry import LineString, Polygon
 
 # ------------------------------------------------------------------------------------------------ kerbs: sources
@@ -157,6 +159,137 @@ def classify(*, override=None, osm_surface=None, bdot_material=None, highway=Non
     if estate_slabs and near_blocks and highway in ESTATE_CLASSES:
         return "slabs", "typology(WORKING_VALUE)"
     return DEFAULT, "default"
+
+
+# ------------------------------------------------------------------------------------------------ implied sidewalks
+# ADR 0237, addendum D38 (owner, Knyszyn s23: "chodniki wszędzie, obustronne, kostka"; docs/owner/
+# KNYSZYN-OWNER-FEEDBACK-S21.md). OSM maps few town sidewalks (no footway, no sidewalk=* on Szkolna / Południowa,
+# API 0.6 read 2026-11-16, docs/reports/knyszyn-szkolna/osm_api_extract.json), so a kerbed street of a small town got
+# grass behind both kerbs. Rule, opt-in per region (`pavement_rules: implied_sidewalks: true`; a mapping overrides
+# the lists below), per carriageway side and station, in roads.network.assign_sides:
+#   1. OSM `sidewalk:left|right` > `sidewalk:both` > `sidewalk` of the way: no / none / separate -> no implied
+#      sidewalk on that side (separate: the mapped footway is the sidewalk); left / right / both / yes -> yes;
+#   2. untagged: a sidewalk where the section is a street (IMPLIED_HIGHWAYS), paved (not IMPLIED_UNPAVED), inside the
+#      built-up area (`built_up_area`), not a fast open road (rural edge, ADR 0272), not a median and no mapped
+#      footway / paved path within IMPLIED_CLEAR_M of the kerb (a set-back path is the sidewalk there).
+# living_street is left out: a strefa zamieszkania (Prawo o ruchu drogowym art. 2 pkt 16) is one shared surface,
+# usually without a raised sidewalk (WORKING_VALUE). track / service / path are never in the list.
+IMPLIED_HIGHWAYS = ("residential", "tertiary", "secondary", "unclassified")
+IMPLIED_UNPAVED = ("unpaved", "ground", "gravel", "dirt", "compacted", "fine_gravel", "sand", "grass", "mud")
+IMPLIED_CLEAR_M = 6.0        # WORKING_VALUE: a mapped footway this near the kerb is the sidewalk of that side
+IMPLIED_WIN_M = 20.0         # majority window along the chain (= the footway rule of assign_sides)
+# Built-up area: TODO(#158) replace with the built-up zone of streetscape/built_up.py once it is on main (ADR 0279,
+# branch signs-a7-s23). Until then this thin adapter reads the same BDOT10k source: OT_PTZB_A "tereny zabudowy" of a
+# residential RODZAJ, buffered by BUILT_UP_ROADSIDE_M (the values ADR 0279 uses, Z1 pkt 5.2.48.2).
+BUILT_UP_RODZAJ = ("jednorodzinna", "wielorodzinna", "zagrodowa")
+BUILT_UP_ROADSIDE_M = 60.0   # WORKING_VALUE (ADR 0279)
+SIDEWALK_YES = ("yes", "both", "left", "right")
+SIDEWALK_NO = ("no", "none", "separate")
+
+
+def implied_rules(overrides) -> dict | None:
+    """The implied-sidewalk rule of a region (`pavement_rules: implied_sidewalks`), or None when it is off."""
+    r = rules_of(overrides)
+    v = (r or {}).get("implied_sidewalks")
+    if not v:
+        return None
+    v = v if isinstance(v, dict) else {}
+    return {"highways": tuple(v.get("highways", IMPLIED_HIGHWAYS)), "unpaved": tuple(v.get("unpaved", IMPLIED_UNPAVED)),
+            "clear_m": float(v.get("clear_m", IMPLIED_CLEAR_M))}
+
+
+def osm_sidewalk(tags: dict | None, side: str):
+    """True / False from the OSM sidewalk tags of a way for its `side` ('left' / 'right', OSM way direction), None
+    when the way says nothing about that side."""
+    t = tags or {}
+    for k in (f"sidewalk:{side}", "sidewalk:both"):
+        v = t.get(k)
+        if v in ("yes",) + SIDEWALK_NO:
+            return v == "yes"
+    v = t.get("sidewalk")
+    if v in SIDEWALK_NO:
+        return False
+    if v in ("yes", "both"):
+        return True
+    if v in ("left", "right"):
+        return v == side
+    return None
+
+
+def eligible(highway: str, surface: str | None, rules: dict) -> bool:
+    """A street that gets implied sidewalks where OSM is silent (class and surface part of the rule)."""
+    return highway in rules["highways"] and (surface or "asphalt") not in rules["unpaved"]
+
+
+def built_up_area(src, origin):
+    """Built-up land (region-local metres, prepared) or an empty polygon; see BUILT_UP_* (adapter until #158)."""
+    polys = []
+    for f in ((src or {}).get("bdot10k") or {}).get("OT_PTZB_A", []) or []:
+        if str((f.get("props") or {}).get("rodzaj", "")).strip() not in BUILT_UP_RODZAJ:
+            continue
+        try:
+            g = shapely.geometry.shape(f["geometry"])
+        except Exception:                 # malformed geometry: skipped, never fatal
+            continue
+        if not g.is_empty:
+            polys.append(shapely.affinity.translate(shapely.make_valid(g), -float(origin[0]), -float(origin[1])))
+    if not polys:
+        return Polygon()
+    a = shapely.union_all(polys).buffer(BUILT_UP_ROADSIDE_M)
+    shapely.prepare(a)
+    return a
+
+
+def implied_plan(net):
+    """(rules, built-up area) of the network's region, or None when the rule is off. Reads net.authored (the
+    overrides) and Data/Regions/<net.region_id>/generated/streetscape_sources.json, both set by roads.pipeline.build
+    before assign_sides; a network without them (unit tests, other callers) gets no implied sidewalk."""
+    rules = implied_rules(getattr(net, "authored", None))
+    if rules is None:
+        return None
+    area = getattr(net, "built_up_area", None)
+    if area is None:
+        import json
+        from pathlib import Path
+        rid = getattr(net, "region_id", None)
+        f = Path(__file__).resolve().parents[3] / "Data" / "Regions" / str(rid) / "generated" / "streetscape_sources.json"
+        src = json.loads(f.read_text(encoding="utf-8")) if rid and f.exists() else None
+        area = built_up_area(src, net.origin)
+        net.built_up_area = area
+    return rules, area
+
+
+def implied_mask(c, sgn, idx, sec_of, rules, area, walk_tree, blocked):
+    """Per dense station of chain `c`, side sign `sgn` (+1 left, -1 right of the chain): implied sidewalk.
+    sec_of(i) -> (EdgeSection, OSM side 'left' / 'right' of that station); blocked: stations that must stay
+    without one (median, rural open-road edge, roundabout). Returns (mask, forced_yes, forced_no) bool arrays."""
+    n = len(c.line.s)
+    yes, no, cand = np.zeros(n, bool), np.zeros(n, bool), np.zeros(n, bool)
+    for i in range(n):
+        sec, osm_side = sec_of(i)
+        tag = osm_sidewalk(getattr(sec, "osm_sidewalk", None), osm_side)
+        if tag is True:
+            yes[i] = True
+        elif tag is False:
+            no[i] = True
+        elif eligible(sec.highway, getattr(sec, "surface_osm", None), rules):
+            cand[i] = True
+    hit = np.zeros(len(idx))
+    for j, i in enumerate(idx):
+        if not cand[i]:
+            continue
+        p = c.line.p[i] + c.line.n[i] * sgn * (c.hw[i] + 0.15)
+        if not area.contains(shapely.Point(*p)):
+            continue
+        if walk_tree is not None:
+            q = shapely.Point(*(p + c.line.n[i] * sgn * rules["clear_m"] / 2))
+            if len(walk_tree.query(q.buffer(rules["clear_m"] / 2 + 0.5))):
+                continue
+        hit[j] = 1.0
+    win = max(1, int(round(IMPLIED_WIN_M / 4.0)))
+    sm = np.array([hit[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) > 0.45
+    m = (np.interp(np.arange(n), idx, sm.astype(float)) > 0.5) & cand
+    return (m | yes) & ~no & ~blocked, yes & ~blocked, no
 
 
 # ------------------------------------------------------------------------------------------------ kerb drops

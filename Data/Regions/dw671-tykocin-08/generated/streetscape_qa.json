@@ -59,6 +59,29 @@
    "placed": 0,
    "removed": 0
   },
+  "built_up": {
+   "advance": [
+    {
+     "chain": "c:w407016985:1134847100-1123402409",
+     "code": "A-7",
+     "d_m": 167.7,
+     "e": -65.0,
+     "junction": "j:n1123402409",
+     "kerbed": true,
+     "n": 654.1,
+     "plate": "T-1_150",
+     "v_kmh": 90.0
+    }
+   ],
+   "advance_dropped": [],
+   "boundaries": [],
+   "classification": "ADR 0279 D33: D-42..D-43 (OSM, else BDOT10k rule); kerb not used",
+   "osm_boundary_nodes": 0,
+   "placed": {
+    "A-7": 1,
+    "T-1_150": 1
+   }
+  },
   "bus_stop_wear_candidates": [],
   "crossing_signs": 0,
   "depot_yards": {
@@ -635,7 +658,7 @@
      "buildings": 194,
      "forest_hlod": 25483,
      "furniture": 5588,
-     "props": 9808,
+     "props": 9882,
      "roads": 28189,
      "terrain": 615090,
      "trees_lod0": 324830,
@@ -655,7 +678,7 @@
     "camera": "route_s0140",
     "materials_high": 39,
     "materials_low": 39,
-    "tris_high": 1374822,
+    "tris_high": 1374896,
     "tris_low": 287124
    },
    {
@@ -663,7 +686,7 @@
      "buildings": 1277,
      "forest_hlod": 20683,
      "furniture": 5380,
-     "props": 11209,
+     "props": 11283,
      "roads": 25488,
      "terrain": 706704,
      "trees_lod0": 463912,
@@ -683,7 +706,7 @@
     "camera": "route_s0419",
     "materials_high": 39,
     "materials_low": 39,
-    "tris_high": 1820219,
+    "tris_high": 1820293,
     "tris_low": 375734
    },
    {
@@ -1096,7 +1119,7 @@
    },
    {
     "chunk": "3_1",
-    "instances": 2231,
+    "instances": 2234,
     "materials": 12,
     "trees": 2205,
     "tris_forest_hlod": 853,

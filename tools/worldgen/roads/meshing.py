@@ -220,7 +220,7 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
                 br, coarse, c.id + ":" + side, noflange=nofl, capm=capm)
 
 
-def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
+def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src, footprint=False):
     """ADR 0110: grass strip behind a kerb without a sidewalk, from the back of the kerb top at the kerb crown
     (rising SIDEWALK_CROSSFALL outward), VW m wide per station, ending in a battered grass skirt
     (1 : VERGE_SKIRT_SLOPE, FLANGE_DEPTH deep) instead of the kerb's vertical concrete flange. Visual only (the
@@ -267,8 +267,10 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
         V = np.concatenate([A[:, None, :], B[:, None, :]], axis=1).reshape(-1, 3)
         UV1 = np.column_stack([np.repeat(along, 2), np.column_stack([ua, ub]).ravel()])
         # not footprint: the conformed terrain under the strip stays as it was (road edge - 0.03 m, below the crown), so
-        # the footprint mask the streetscape stage reads (plantings in island holes, yards, trees) is unchanged
-        buf.add("road", "verge_grass", V, V[:, :2].copy(), T, footprint=False, src=src, UV1=UV1)
+        # the footprint mask the streetscape stage reads (plantings in island holes, yards, trees) is unchanged.
+        # ADR 0227 D41 (e): `footprint=True` (compact-roundabout corners only) puts the top of the strip into the
+        # conform as a soft footprint, so the terrain rises to the grass where the road stands on a fill
+        buf.add("road", "verge_grass", V, V[:, :2].copy(), T, footprint=bool(footprint and fp), src=src, UV1=UV1)
 
 
 # ADR 0100 (REVIEW s10-0095 P1-8): a concrete strip wider than a kerb top (walk material code 0 = curb_concrete, e.g.
@@ -1340,6 +1342,20 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
         params = [(URBAN, float(r), float(g), p[3], MAT_FLUSH_ROAD) if (p[0] == URBAN and np.isfinite(g)) else
                   ((p[0], 0.0, p[2], p[3], p[4]) if (p[0] == URBAN and p[4] == MAT_FLUSH_ROAD) else p)
                   for p, g, r in zip(params, gaps, rise)]
+        cr_mixed = getattr(j, "compact", None) is not None and cv is not None and len({p[0] for p in params}) > 1
+        if cr_mixed:
+            # ADR 0227 D41 (e): a corner of a compact roundabout between a rural and a kerbed arm becomes one kerbed
+            # strip (_emit_strip unifies the family: a rural station gets a plain kerb, no footway). Its grass verge
+            # used to be computed before that, so the rural half was a bare kerb with nothing behind it: on the DK65
+            # south entry (2-24 m from the split node) the conformed NMT fell 0.5-0.74 m within 1.5 m of the kerb
+            # top - the "high carriageway edge" of rondo-dk65-from-south. Unify here and give the converted stations
+            # the verge of the kerbed arm (the rural arm has none: 0 m). Other junctions: unchanged (byte-identical).
+            conv = np.array([p[0] != URBAN for p in params])
+            params = [p if p[0] == URBAN else (URBAN, S.KERB_HEIGHT, 0.0, p[3], 0) for p in params]
+            # world3 (int-world3-s23): a converted station is a plain kerb with no footway, so it gets the ADR 0110
+            # verge of such a kerb (VERGE_W). The kerbed arm's own verge is 0 where it has a sidewalk (#165 implied
+            # sidewalks on the E arm of Knyszyn), which left the converted half with no grass at all.
+            cv = np.where(conv, max(float(np.max(cv)), S.VERGE_W), cv)
         fl = [p[0] == URBAN and p[4] == MAT_FLUSH_ROAD for p in params]
         nofl = None
         if cv is not None and not _patch_on_bridge(j):
@@ -1351,7 +1367,8 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
             dsz = np.maximum(np.hypot(*np.diff(G, axis=0).T), 0.25)
             if len(Z) > 1 and float(np.max(np.abs(np.diff(Z)) / dsz)) > 0.15:
                 vw[:] = 0.0
-            _emit_verge(buf, G, OUT, Z, np.array([q[1] for q in params]), vw, kap, hwz, True, j.id + f":corner{i}:vg")
+            _emit_verge(buf, G, OUT, Z, np.array([q[1] for q in params]), vw, kap, hwz, True, j.id + f":corner{i}:vg",
+                        footprint=cr_mixed)
             nofl = vw > 0.05
         # the corner polyline runs CCW around the patch, outward = right of travel -> mirrored strip
         if len(set(fl)) > 1:

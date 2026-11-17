@@ -124,3 +124,50 @@ przesunięciu 1e-12 m), ale przestawia świetliki w innych halach: 4 kamery dost
    `…A8BC`); hale: siatka świetlików zależna od `_angle` ±π (`…BAD2`, C `…C4AC`, poprawka gotowa, ale +≤77 High na
    4 kamerach — decyzja lidera), doki `…BC59`, wywietrzaki `rosti-west-wing`. Lider: po scaleniu uruchomić
    `test_typology_0238.py` na Windows — oba środowiska muszą dać 24/24.
+
+## Dopisek D39 (16.11, s23 r9): ostatnie progi „na ostrzu” — prostokąt, świetliki, bramy, wywietrzaki
+**Pomiar przed zmianą** (skan każdego budynku osobno, obrys przesunięty o (dx, 0,7 dx), dx = 1e-12 / 1e-9 / 1e-7 /
+1e-6 m, liczby trójkątów per (warstwa, materiał); obrysy z repo, bez `Data/raw`): Dojlidy 6 / 415 niestabilnych, C 1 / 644.
+Przyczyny (każda zmierzona na danym budynku):
+- **`…A8BC` (dom):** dwa prostokąty minimalne o polu 67,6097 m² (4,58° i 4,20°) równe z dokładnością do szumu —
+  `minimum_rotated_rectangle` wybierał raz jeden, raz drugi (inna oś `_frame`, rynny i rury spustowe).
+- **`…BAD2`, `ed098300` (Dojlidy), `…C4AC` (C) — świetliki:** `_angle` dawał kąt dłuższego boku z kierunkiem zależnym
+  od narożnika, od którego shapely zaczyna pierścień (±π), a siatka świetlików startuje od narożnika obróconego rdzenia.
+- **`…BC59` (hala z dokami):** nie szum — `gate_openings` oznaczał bramę `done` w danych wejściowych, więc drugie
+  wywołanie `build` na tym samym budynku (harness, test) rysowało halę bez 2 bram (−32 trójkąty `reveal_hall` itd.);
+  przy okazji kontrola „brama nie pasuje do ściany” przechodziła tylko za pierwszym razem.
+- **`rosti-west-wing` (wywietrzaki):** prostokąt z remisem krawędzi równoległych — start pierścienia i znak osi `along`
+  w `facade_kit.roof_vents` zależały od szumu (168 / 192).
+- **`…A92F` (blok, ujawnione po zmianie prostokąta):** pierwszy komin wentylacyjny leży dokładnie 2,0 m od końca
+  prostokąta = NA linii `poly.buffer(-2.0)`, gdy ściana szczytowa jest krawędzią otoczki.
+
+**Naprawa:** `streetscape/roofs.py` `stable_rect` — gdy inna krawędź otoczki daje prostokąt o polu w granicy
+`RECT_TIE_M2 = 1e-6 m²` (szum pola przy współrzędnych km ~1e-10 m²), wybierany jest prostokąt o najmniejszym kącie
+mod π/2, z narożnikami od (min, min) przeciwnie do ruchu wskazówek; bez remisu — prostokąt shapely bez zmian.
+Używają go `_frame` (przy bokach równych w granicy `PLAN_TOL_M` dłuższa oś = bliższa W–E), `plan`, `buildings_mesh`
+(`_angle`, wiaty, prostokąt pawilonu) i `facade_kit` (`roof_vents`, `machine_rooms`). `_angle` mod π w [0, π)
+(krawędź w granicy 1e-6 rad od W–E = W–E). **Świetliki:** budowane są obie siatki (`ang`, `ang − π`), wybierana ta
+z mniejszą liczbą świetlików (remis: `ang`) — wybór niezależny od narożnika startowego i nigdy większy niż dawny
+(dawny kąt był jednym z tych dwóch). To ta sama poprawka „mod π” przyjęta przez lidera, z wyborem reprezentanta, który
+zamienia +22…+363 High na kamerach C (wariant „mod π w [0, π)”, zmierzony) w Δ ≤ 0. Bramy: kopia listy bram na
+budynek w `build` (wejście nietknięte). `roof_vents`: linia wewnętrzna `buffer(−2,0 − PLAN_TOL_M)` (komin na linii
+zawsze poza).
+**Po zmianie:** C 0 / 644 niestabilnych, Dojlidy 1 / 415 — `bdot:daa0c871` (dom) tylko przy 1e-6 m (`soffit_boards`
+42 / 41): wierzchołek przechodzi przez linię pół milimetra siatki `PLAN_TOL_M` w układzie świata. Siatka względna
+(kotwica w środku ramy dachu) to naprawia, ale przestawia inny dom C (`…B5E4`) już przy 1e-12 m — odrzucona; 1e-6 m to
+~10⁷ razy więcej niż różnica między maszynami. Test regresji `test_frames_skylights_docks_and_vents_do_not_depend_on_float_noise`
+(7 budynków, 1e-12…1e-6 m + powtórny build) pada na kodzie sprzed zmiany; `test_stable_rect_breaks_ties_the_same_way_under_noise`.
+
+**Baseline przeliczony** procedurą FIX-2026-11-16 (kod `ade885234` + `roofs.py` gałęzi + łatka `buildings_mesh.py` /
+`facade_kit.py`, dane `origin/main`); procedura odtwarza obecny baseline bit w bit przed łatką. Harness, kod sprzed
+#123: Dojlidy LOD0 499 578 → 499 472 (−106), LOD1 67 636 → 67 615 (−21); C 962 027 → 961 562 (−465), 99 980 → 99 981 (+1).
+Δ per kategoria (LOD0 / LOD1): świetliki hal Dojlidy −36 / 0 (3 hale −12; `…BAD2` bez zmian), C −420 / 0 (3 hale);
+wywietrzaki `rosti-west-wing` +24 / 0 (remis rozstrzygnięty na stan 192); kominy bloków −12 (Dojlidy), −36 (C, 2 bloki);
+domy z remisem prostokąta (rury spustowe na innej parze okapów): Dojlidy 2 domy −82 / −21, C 5 domów −9 / +1.
+Kamery (Δ High / Δ Low, szacunek = `frame_estimate` + Δ): C `stretch_04` −123 / +1 (1 985 337 / 937 765),
+`route_onramp_andersa_above` −94 (1 962 293), `fire_station_abeam` −94, `biezenstwa_above` −332; C dodatnie tylko
+`putry_above` +1 / +1 i Low +1 na 9 kamerach (w tym `putry_above`; dom `…AF10` +1 / +1 i bilans domów z remisem).
+Dojlidy dodatnie: `route_s0152` +67, `kuronia2_front` +28, `route_s1675` +12 — wywietrzaki `rosti-west-wing` (+24,
+chunk 6_2) i świetliki przesunięte między chunkami (np. 0_2 −76 / 1_2 +80) przy sumie regionu −106;
+`photo_P11-063` −20 (1 767 766). Wszystkie szacunki C < 2 M High. Przyjęte świetliki lidera (+22…+77) nie są już
+potrzebne: wybór siatki daje Δ ≤ 0 na każdej hali.

@@ -40,7 +40,7 @@ def measure(region: str, after: bool):
     """-> (rows, n_axes): rows = [(max_m, mean_m, edge_id, osm_way)] sorted by max desc, over edges with an axis."""
 
     rdir = os.path.join(brg.REPO, "Data", "Regions", region)
-    graph = json.load(open(os.path.join(rdir, "roads.graph.json"), encoding="utf-8"))
+    graph = brg.load_graph(region)                  # the same (effective, ADR 0274) graph as build_route_graph.main
     rows = json.load(open(os.path.join(rdir, "turn_restrictions.json"), encoding="utf-8"))["restrictions"]
     origin = brg.read_origin(rdir)
     axes = brg.load_carriageway_axes(region, graph)

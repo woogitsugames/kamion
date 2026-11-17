@@ -48,6 +48,17 @@
    "approach": 1,
    "crossing": 0,
    "dist_m": 4.0,
+   "e": 541.02,
+   "heading_deg": 211.58,
+   "kind": "guide_post",
+   "n": 901.0,
+   "side": "right",
+   "style": "u1a"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 4.0,
    "e": 535.05,
    "heading_deg": 211.58,
    "kind": "guide_post",
@@ -138,6 +149,17 @@
     "G-1c"
    ],
    "side": "right"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 4.0,
+   "e": 540.64,
+   "heading_deg": 37.87,
+   "kind": "guide_post",
+   "n": 912.73,
+   "side": "right",
+   "style": "u1a"
   },
   {
    "approach": -1,
@@ -370,7 +392,7 @@
  },
  "clearance": {
   "frame": "(lateral from track axis, height above top of rail)",
-  "min_marker_distance_m": 4.22,
+  "min_marker_distance_m": 5.79,
   "profile_m": [
    [
     -1.6,
@@ -449,52 +471,52 @@
   {
    "approach": 1,
    "arm_angle_deg": 50.0,
-   "arm_l_m": 1.2,
-   "arm_w_m": 0.2,
+   "arm_l_m": 1.4,
+   "arm_w_m": 0.15,
    "bottom_z_m": 1.5,
    "code": "G-3",
    "crossing": 0,
-   "e": 541.23,
+   "e": 540.33,
    "heading_deg": 214.73,
    "kind": "sign",
-   "n": 901.12,
-   "z": 125.435
+   "n": 899.83,
+   "z": 125.499
   },
   {
    "approach": 1,
    "code": "G-2",
    "crossing": 0,
-   "e": 541.23,
+   "e": 540.33,
    "heading_deg": 214.73,
    "kind": "sign",
    "mount": "below_cross",
-   "n": 901.12,
-   "z": 125.435
+   "n": 899.83,
+   "z": 125.499
   },
   {
    "approach": -1,
    "arm_angle_deg": 50.0,
-   "arm_l_m": 1.2,
-   "arm_w_m": 0.2,
+   "arm_l_m": 1.4,
+   "arm_w_m": 0.15,
    "bottom_z_m": 1.5,
    "code": "G-3",
    "crossing": 0,
-   "e": 539.71,
+   "e": 540.61,
    "heading_deg": 34.73,
    "kind": "sign",
-   "n": 912.64,
-   "z": 125.073
+   "n": 913.93,
+   "z": 124.946
   },
   {
    "approach": -1,
    "code": "G-2",
    "crossing": 0,
-   "e": 539.71,
+   "e": 540.61,
    "heading_deg": 34.73,
    "kind": "sign",
    "mount": "below_cross",
-   "n": 912.64,
-   "z": 125.073
+   "n": 913.93,
+   "z": 124.946
   }
  ],
  "markers_outside_tile": [],

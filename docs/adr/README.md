@@ -3,7 +3,7 @@
 Automatycznie generowany przez `tools/docs/adr_index.py` — nie edytuj ręcznie.
 Ponowne wygenerowanie: `python3 tools/docs/adr_index.py` (z katalogu głównego repo).
 
-Liczba ADR: **254** (numery 0001–None, z lukami — patrz raport audytu).
+Liczba ADR: **256** (numery 0001–None, z lukami — patrz raport audytu).
 
 | Numer | Tytuł | Status | Data | Link |
 |---|---|---|---|---|
@@ -253,6 +253,8 @@ Liczba ADR: **254** (numery 0001–None, z lukami — patrz raport audytu).
 | 0275 | Przejścia szerokości jezdni i pobocza na szwach kafli i na końcu override (`roads/seam_taper.py`) | Proposed (chmura D, runda 5, zadanie D15, gałąź `seam-taper-0275`; bez Unity i bez `Data/raw`), 2026-11-16. D… | 2026-11-16 | [0275-przejscia-szerokosci-na-szwach-kafli.md](0275-przejscia-szerokosci-na-szwach-kafli.md) |
 | 0276 | PC: menu bez kolizji z nakładką diagnostyczną, identyfikacja buildu, skróty regionów, P2 z recenzji | Proposed (chmura H r3, zadanie H10, gałąź `pc-polish-0276`), 2026-11-16. Do weryfikacji i scalenia przez lide… | 2026-11-16 | [0276-pc-polish.md](0276-pc-polish.md) |
 | 0277 | bezpiecznik startu: strefy między zamknięciami, szukanie wstecz, brak miejsca = brak startu | Proposed — gałąź `spawn-safety-0277` (chmura H r3, zadanie H13); czeka na weryfikację lidera (Unity, build Wi… | 2026-11-15 | [0277-bezpiecznik-startu.md](0277-bezpiecznik-startu.md) |
+| 0278 | plan rozbudowy mapy po d67-full i pierścieniu 0231 („najpierw przejezdne”) + definicje 3 pierwszych kafli | Proposed (chmura D r6, zadanie D19, gałąź `map-plan-0278`), 2026-11-16. Do scalenia przez lidera. | 2026-11-16 | [0278-plan-rozbudowy-mapy-po-d67-full.md](0278-plan-rozbudowy-mapy-po-d67-full.md) |
+| 0279 | audyt oznakowania generatora wg Dz.U. 2019 poz. 2311 (zał. 1 i 2), 2310 i 2025/1105 | Proposed (agent D21, chmura D r6, gałąź `signs-audit-0279`), 2026-11-16. Do scalenia przez lidera. | 2026-11-16 | [0279-audyt-oznakowania-wg-2311.md](0279-audyt-oznakowania-wg-2311.md) |
 | 0280 | Pierścień skrętu 12,50/5,30 m (96/53/WE): metryka obwiedni w runnerze, rozstaw sworzeń–tridem 7,63 m (D79, ko… | **Accepted (D79, korekta 7,63 m)** — 2026-11-16. Rozstaw sworzeń → środek tridemu **7,63 m** (wartość z 7 kart | 2026-11-16 | [0280-pierscien-skretu-96-53-rozstaw-sworzen-tridem.md](0280-pierscien-skretu-96-53-rozstaw-sworzen-tridem.md) |
 | 0281 | Przyspieszenie `build_world` bez zmiany bajtów wyjścia (K1a, K1b, K1c, K2, K3a, K4a, K4b, K5) | Proposed (agent geo-worldgen, chmura D r7, zadanie D26, gałąź `worldgen-perf2-0281`), 2026-11-16. Do scalenia | 2026-11-16 | [0281-build-world-perf-bez-zmiany-bajtow.md](0281-build-world-perf-bez-zmiany-bajtow.md) |
 | 0282 | Budżet trójkątów gęstych kafli miejskich: estymator zgodny z Unity + reguły LOD w odległościach bliskich | Proposed (agent rendering-perf, chmura D r7, zadanie D28, gałąź `dense-lod-0282`), 2026-11-16. Analiza + prot… | 2026-11-16 | [0282-lod-gestych-kafli-miejskich.md](0282-lod-gestych-kafli-miejskich.md) |
