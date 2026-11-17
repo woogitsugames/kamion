@@ -80,6 +80,21 @@ def test_partly_free_flange_has_no_vertical_grass():
     assert nz.min() > CF.GRASS_STEEP_NZ                  # no face steeper than the verge-strip QA limit
 
 
+def test_tight_inner_corner_keeps_flange():
+    """outward vectors converging on a 0.6 m radius: the batter foot would fold back -> concrete flange kept"""
+    buf = M.MeshBuf()
+    a = np.linspace(0, np.pi / 2, 7)
+    C = np.column_stack([0.6 * np.cos(a), 0.6 * np.sin(a)])
+    V = np.array([[[x, y, 100.3], [x, y, 99.8]] for x, y in C]).reshape(-1, 3)
+    buf.add("road", "curb_concrete", V, V[:, :2].copy(), M.grid_tris(7, 2), src="j:x:corner0")
+    buf.parts[-1].back_out = -C / 0.6                     # toward the centre
+    M.back_flange_batter(buf, np.zeros((41, 41), bool), _hf())
+    assert not any(q.src.endswith(":vg") for q in buf.parts)
+    conc = [q for q in buf.parts if q.mat == "curb_concrete"]
+    assert sum(len(q.T) for q in conc) == 12
+    assert all(np.isclose(q.V[1::2, 2], 99.8).all() for q in conc)
+
+
 def test_untagged_flange_untouched():
     buf = M.MeshBuf()
     xs = np.linspace(-5, 5, 4)

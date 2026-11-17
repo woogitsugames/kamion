@@ -285,6 +285,7 @@ KERB_TOP_UV_MAX_W = 0.4
 BACK_WALK_MATS = ("sidewalk_paving", "apron_sett", "apron_paving_light")
 BACK_EDGE_FACE_M = 0.06      # exposed edging (obrzeże) above the grass, WORKING_VALUE
 BACK_PROBE_M = 1.2           # plan distance beyond the edge probed for a hard footprint (another paving / road)
+BACK_FOLD_COS = 0.5          # batter foot segment must run within 60 deg of its edge segment (no fold at tight corners)
 
 
 def back_flange_batter(buf, hard_mask, hf):
@@ -315,30 +316,37 @@ def back_flange_batter(buf, hard_mask, hf):
         if not free.any():
             continue
         ts = np.minimum(p.T.min(1) // 2, n - 2)
-        conv = free[ts] | free[ts + 1]
+        # grass batter from the edging foot outward down to the old flange foot; every station of a converted pair
+        # gets its full run (a 0-run station made a vertical grass face, test_junctions_r4 verge ratchet)
+        run = np.maximum(depth - BACK_EDGE_FACE_M, 0.0) * S.VERGE_SKIRT_SLOPE
+        g0 = np.column_stack([top[:, :2], top[:, 2] - BACK_EDGE_FACE_M])
+        g1 = np.column_stack([top[:, :2] + ou * run[:, None], bot[:, 2]])
+        # a pair whose batter foot folds back (inside of a tight junction corner: the outward vectors converge)
+        # stays a concrete flange - folded grass stood 0.86 m steep over the ground (j:n2229796326:corner3)
+        dt = top[1:, :2] - top[:-1, :2]
+        dg = g1[1:, :2] - g1[:-1, :2]
+        ok = (dt * dg).sum(1) > BACK_FOLD_COS * np.hypot(*dt.T) * np.hypot(*dg.T)
+        conv = (free[ts] | free[ts + 1]) & ok[ts]
         if not conv.any():
             continue
-        # every station of a converted pair gets the batter (a 0-run station made a vertical grass face: the
-        # verge-strip QA counted it as a wall, test_junctions_r4 ratchet)
-        free = np.zeros(n, bool)
-        free[ts[conv]] = True
-        free[ts[conv] + 1] = True
-        rep["stations_battered"] += int(free.sum())
-        # concrete: only the edging remains at the free stations
+        cut = np.zeros(n, bool)
+        cut[ts[conv]] = True
+        cut[ts[conv] + 1] = True
+        rep["stations_battered"] += int(cut.sum())
+        # concrete: only the edging remains on the converted pairs; the other pairs keep the full flange
         Vc = p.V.copy()
         lo = np.where(A[:, 2] >= B[:, 2], 1, 0) + 2 * np.arange(n)       # index of the lower vertex per station
-        Vc[lo[free], 2] = top[free, 2] - BACK_EDGE_FACE_M
-        p.V = Vc
-        # grass batter from the edging foot outward down to the old flange foot
-        g0 = np.column_stack([top[:, :2], top[:, 2] - BACK_EDGE_FACE_M])
-        run = np.where(free, np.maximum(depth - BACK_EDGE_FACE_M, 0.0) * S.VERGE_SKIRT_SLOPE, 0.0)
-        g1 = np.column_stack([top[:, :2] + ou * run[:, None], bot[:, 2]])
+        Vc[lo[cut], 2] = top[cut, 2] - BACK_EDGE_FACE_M
+        V0, T_keep = p.V, p.T[~conv]
+        p.V, p.T = Vc, p.T[conv]
+        if len(T_keep):
+            buf.add(p.layer, p.mat, V0, p.UV, T_keep, footprint=p.footprint, src=p.src, UV1=p.UV1, COL=p.COL)
         Vg = np.empty((2 * n, 3))
         Vg[0::2], Vg[1::2] = g0, g1
         # same winding as the flange (it faces outward): rows keep the flange's top/bottom order
         swap = A[:, 2] < B[:, 2]
         Vg[0::2][swap], Vg[1::2][swap] = g1[swap], g0[swap]
-        Tg = p.T[conv]
+        Tg = p.T                     # = the converted pairs (set above)
         before = len(buf.parts)
         buf.add("road", "verge_grass", Vg, Vg[:, :2].copy(), Tg, footprint=False, src=p.src + ":vg")
         if len(buf.parts) > before:
