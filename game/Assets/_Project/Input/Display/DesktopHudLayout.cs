@@ -21,12 +21,19 @@ namespace Game.Controls
         /// <summary>The "Panel" button (developer / lab page) is on screen (extended detail or developer diagnostics).</summary>
         public bool DevToggle;
         public bool DevPanelOpen, Telemetry, DevText;
+        /// <summary>Cab view with live cab instruments and the extended detail on (<see cref="HudVisibility.Compact"/>): the
+        /// strip carries only the extended row (the dash cluster shows speed / gear / air) and the whole block moves to the
+        /// right, over the centre of the dash - off the steering wheel and the cluster (int-ui-s23 §7 p.4).</summary>
+        public bool Compact;
+        /// <summary>Full window width in the same units (&gt; <see cref="Width"/> on ultrawide monitors, where the content is
+        /// narrowed to 16:9); 0 = same as <see cref="Width"/>. The mirror windows may use the side bands (§7 p.6).</summary>
+        public float ScreenWidth;
 
         public bool SameAs(in DesktopHudInput o) =>
             Width == o.Width && Height == o.Height && Strip == o.Strip && Extended == o.Extended && MirrorLeft == o.MirrorLeft
             && MirrorRight == o.MirrorRight && MirrorAspect == o.MirrorAspect && MirrorSize == o.MirrorSize && MirrorDrop == o.MirrorDrop
             && MirrorInset == o.MirrorInset && ReverseView == o.ReverseView && DevToggle == o.DevToggle && DevPanelOpen == o.DevPanelOpen
-            && Telemetry == o.Telemetry && DevText == o.DevText;
+            && Telemetry == o.Telemetry && DevText == o.DevText && Compact == o.Compact && ScreenWidth == o.ScreenWidth;
     }
 
     /// <summary>Monitor HUD zones, content canvas units, origin bottom-left, y up.</summary>
@@ -41,6 +48,10 @@ namespace Game.Controls
         public bool ShowStrip, ShowMirrorLeft, ShowMirrorRight, ShowReverseView, ShowDevToggle, ShowDevPanel, ShowTelemetry, ShowDevText;
         /// <summary>The GPS widget fits (and the developer telemetry does not use that corner).</summary>
         public bool ShowNav;
+        /// <summary>Compact cab block (extended row only, right of the wheel) is laid out.</summary>
+        public bool Compact;
+        /// <summary>How far the mirror windows may reach outside the content on each side (ultrawide side band; units).</summary>
+        public float MirrorOutboard;
 
         public const int ZoneCount = 10;
         static readonly string[] k_Names = { "Strip", "Telltales", "ReverseView", "MirrorLeft", "MirrorRight", "DevToggle", "DevPanel", "Telemetry", "DevText", "Nav" };
@@ -72,6 +83,11 @@ namespace Game.Controls
     /// sit at the outer edges at the height of real class II mirrors in the field of view, larger than before and
     /// adjustable (size, height, inset); the road between them (<see cref="DesktopHudResult.ClearView"/>) stays free;
     /// reversing camera top centre (where the inside mirror would be); developer button bottom right, its panel above.
+    /// alt-ui-polish-s23 (int-ui-s23 §7 p.4-6): the telltale row sits directly on the strip (one block, one panel, arrows
+    /// inside it), the "Panel" button is attached to the block's right edge; in the cab with live instruments the extended
+    /// detail is a compact block right of the wheel without the speed (no double speed over the dash cluster); on
+    /// ultrawide monitors the mirror windows go out to the window edges (side bands, capped) instead of covering the right
+    /// lane; the free road view is 45 % of the content width.
     /// Pure, no allocation, unit-tested on 16:9, 21:9 and 32:9 (EditMode). All sizes WORKING_VALUE (owner's monitor).
     /// </summary>
     public static class DesktopHudLayout
@@ -86,13 +102,20 @@ namespace Game.Controls
         public static readonly Vector2 DevPanelSize = new Vector2(424f, 378f);
         public const float TelemetryMaxWidth = 760f, TelemetryWideEnough = 640f, TelemetryMaxHeight = 600f;
         public const float DevTextHeight = 112f, DevTextWidth = 760f;
-        /// <summary>Width of the free road view between the mirror windows, as a fraction of the content width. WORKING_VALUE.</summary>
-        public const float ClearViewFraction = 0.40f;
+        /// <summary>Width of the free road view between the mirror windows, as a fraction of the content width. WORKING_VALUE
+        /// (0.40 in ADR 0283; 0.45 since §7 p.6 - an inset window covered the right lane; more would push the developer panel
+        /// into it on a portrait window).</summary>
+        public const float ClearViewFraction = 0.45f;
+        /// <summary>Gap between the HUD block and the "Panel" button attached to it.</summary>
+        public const float ToggleGap = 8f;
+        /// <summary>Ultrawide: the mirror windows reach into the side band by at most this fraction of the content width. WORKING_VALUE.</summary>
+        public const float MirrorOutboardMaxFraction = 0.25f;
         public const float DefaultMirrorAspect = 0.55f;
         /// <summary>Smallest useful mirror window height; below it the windows are hidden (never drawn squashed). WORKING_VALUE.</summary>
         public const float MirrorMinHeight = 200f;
-        /// <summary>Frame around the mirror image [units] (the image is inset by this much).</summary>
-        public const float MirrorBezel = 6f;
+        /// <summary>Frame around the mirror image [units] (the image is inset by this much). 3 (was 6): a thin housing edge,
+        /// not a picture-in-picture window (§7 p.6).</summary>
+        public const float MirrorBezel = 3f;
 
         public static float StripHeight(bool extended) => StripSize.y + (extended ? ExtendedRowHeight : 0f);
 
@@ -101,20 +124,28 @@ namespace Game.Controls
             r = default;
             float w = s.Width, h = s.Height, cx = w * 0.5f, top = h - Margin;
 
-            // ---- bottom centre: strip, telltale row on top of it (or alone at the bottom)
+            // ---- one block at the bottom: strip with the telltale row directly on it (or the row alone), "Panel" button
+            // attached to the right. Centred; the compact cab block sits right of the wheel (never left of the centre).
             r.ShowStrip = s.Strip || s.Extended;
-            float stripH = r.ShowStrip ? StripHeight(s.Extended) : 0f;
-            r.Strip = new Rect(cx - StripSize.x * 0.5f, Margin, StripSize.x, stripH);
-            float ty = r.ShowStrip ? r.Strip.yMax + 8f : Margin;
-            r.Telltales = new Rect(cx - TelltaleSize.x * 0.5f, ty, TelltaleSize.x, TelltaleSize.y);
+            r.Compact = s.Compact && r.ShowStrip;
+            float stripH = r.ShowStrip ? (r.Compact ? ExtendedRowHeight : StripHeight(s.Extended)) : 0f;
+            r.ShowDevToggle = s.DevToggle || s.DevPanelOpen;
+            float toggleRoom = r.ShowDevToggle ? DevToggleSize.x + ToggleGap : 0f;
+            float gx = cx - StripSize.x * 0.5f;
+            if (r.Compact) gx = Mathf.Max(gx, w - Margin - toggleRoom - StripSize.x);
+            r.Strip = new Rect(gx, Margin, StripSize.x, stripH);
+            float ty = r.ShowStrip ? r.Strip.yMax : Margin;
+            r.Telltales = new Rect(gx, ty, TelltaleSize.x, TelltaleSize.y);
+            r.DevToggle = new Rect(gx + StripSize.x + ToggleGap, Margin, DevToggleSize.x, DevToggleSize.y);
 
-            // ---- developer text above the telltales, developer button bottom right
+            // ---- developer text above the telltales; developer panel at the right edge above the button (and above the
+            // block when the compact block reaches under it)
             r.ShowDevText = s.DevText;
             r.DevText = new Rect(cx - DevTextWidth * 0.5f, r.Telltales.yMax + Gap, DevTextWidth, DevTextHeight);
-            r.ShowDevToggle = s.DevToggle || s.DevPanelOpen;
-            r.DevToggle = new Rect(w - Margin - DevToggleSize.x, Margin, DevToggleSize.x, DevToggleSize.y);
             r.ShowDevPanel = s.DevPanelOpen;
-            r.DevPanel = new Rect(w - Margin - DevPanelSize.x, r.DevToggle.yMax + 8f, DevPanelSize.x, DevPanelSize.y);
+            float dpx = w - Margin - DevPanelSize.x, dpy = r.DevToggle.yMax;
+            if (r.Telltales.xMax > dpx) dpy = Mathf.Max(dpy, r.Telltales.yMax);
+            r.DevPanel = new Rect(dpx, dpy + 8f, DevPanelSize.x, DevPanelSize.y);
 
             // ---- top centre: reversing view
             r.ShowReverseView = s.ReverseView;
@@ -133,7 +164,7 @@ namespace Game.Controls
             r.ShowTelemetry = s.Telemetry;
             if (s.Telemetry)
             {
-                float x0 = r.ShowMirrorLeft ? r.MirrorLeft.xMax + Gap : Margin;
+                float x0 = r.ShowMirrorLeft ? Mathf.Max(Margin, r.MirrorLeft.xMax + Gap) : Margin;
                 float limit = cx - ReverseSize.x * 0.5f - Gap;
                 if (r.ShowMirrorLeft && limit - x0 < TelemetryWideEnough)
                 {
@@ -160,13 +191,14 @@ namespace Game.Controls
             float top = s.Height - Margin;
             float x1 = Mathf.Min(r.ClearView.xMin, r.Telltales.xMin) - Gap;
             if (r.ShowStrip) x1 = Mathf.Min(x1, r.Strip.xMin - Gap);
+            if (r.ShowDevToggle) x1 = Mathf.Min(x1, r.DevToggle.xMin - Gap);
             // under the mirror (full column)
             float yTop = r.ShowMirrorLeft ? r.MirrorLeft.yMin - Gap : top;
             float w = Mathf.Min(NavPreferred.x, x1 - Margin), h = Mathf.Min(NavPreferred.y, yTop - Margin);
             if (w >= NavMinimum.x && h >= NavMinimum.y) { r.Nav = new Rect(Margin, Margin, w, h); r.ShowNav = true; return; }
             if (!r.ShowMirrorLeft) return;
             // beside the mirror (between it and the clear view)
-            float x0 = r.MirrorLeft.xMax + Gap;
+            float x0 = Mathf.Max(Margin, r.MirrorLeft.xMax + Gap);
             w = Mathf.Min(NavPreferred.x, x1 - x0); h = Mathf.Min(NavPreferred.y, top - Margin);
             if (w >= NavMinimum.x && h >= NavMinimum.y) { r.Nav = new Rect(x0, Margin, w, h); r.ShowNav = true; }
         }
@@ -179,22 +211,40 @@ namespace Game.Controls
             float size = s.MirrorSize > 0f ? Mathf.Clamp(s.MirrorSize, HudPreferences.MirrorSizeMin, HudPreferences.MirrorSizeMax) : HudPreferences.MirrorSizeDefault;
             float drop = Mathf.Clamp01(s.MirrorDrop), inset = Mathf.Clamp01(s.MirrorInset);
 
-            // Bottom limit: the content edge, or above the developer button when it is on screen under the right window.
+            // Ultrawide: the content is 16:9 in the middle; the windows may go out into the side band (capped), so they sit
+            // at the window edges like real mirrors instead of over the right lane (§7 p.6).
+            float band = s.ScreenWidth > w ? Mathf.Min((s.ScreenWidth - w) * 0.5f, MirrorOutboardMaxFraction * w) : 0f;
+            r.MirrorOutboard = band;
+            float outer = Margin - band;
+            float room = r.ClearView.xMin - Gap - outer;   // outer edge .. clear view, per side
+
+            // Bottom limit: the content edge, or above any part of the HUD block that reaches under a mirror column.
             float bottom = Margin;
-            if (r.ShowDevToggle) bottom = Mathf.Max(bottom, r.DevToggle.yMax + Gap);
+            bottom = AboveIfUnderColumn(bottom, r.ShowStrip, r.Strip, outer, room, w);
+            bottom = AboveIfUnderColumn(bottom, true, r.Telltales, outer, room, w);
+            bottom = AboveIfUnderColumn(bottom, r.ShowDevToggle, r.DevToggle, outer, room, w);
 
             float mh = Mathf.Min(size * h, top - bottom);
             float mw = mh * aspect;
-            float room = r.ClearView.xMin - Gap - Margin;   // outer edge .. clear view, per side
             if (mw > room) { mw = Mathf.Max(0f, room); mh = mw / aspect; }
             bool fits = mh >= MirrorMinHeight - 1e-3f;
 
-            float xLeft = Margin + inset * Mathf.Max(0f, room - mw);
+            float xLeft = outer + inset * Mathf.Max(0f, room - mw);
             float yTop = top - drop * Mathf.Max(0f, top - bottom - mh);
             r.MirrorLeft = new Rect(xLeft, yTop - mh, mw, mh);
             r.MirrorRight = new Rect(w - xLeft - mw, yTop - mh, mw, mh);
             r.ShowMirrorLeft = s.MirrorLeft && fits;
             r.ShowMirrorRight = s.MirrorRight && fits;
+        }
+
+        /// <summary>Raises <paramref name="bottom"/> above <paramref name="z"/> when it lies under the left or the right mirror
+        /// column (outer edge .. clear view).</summary>
+        static float AboveIfUnderColumn(float bottom, bool shown, Rect z, float outer, float room, float w)
+        {
+            if (!shown) return bottom;
+            float lx0 = outer, lx1 = outer + room, rx0 = w - outer - room, rx1 = w - outer;
+            bool under = (z.xMin < lx1 && z.xMax > lx0) || (z.xMin < rx1 && z.xMax > rx0);
+            return under ? Mathf.Max(bottom, z.yMax + Gap) : bottom;
         }
 
         /// <summary>True when <paramref name="inner"/> lies inside <paramref name="outer"/> (tolerance <paramref name="eps"/>).</summary>

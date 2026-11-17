@@ -20,14 +20,44 @@ namespace Game.UI
     /// ADR 0276: the panel and the buttons are placed by <see cref="MenuOverlayLayout"/> together with the start menu
     /// (<see cref="MenuOverlayBoard"/>) - nothing covers the menu title or its buttons; without a menu the historic
     /// place (panel top-left, buttons top-right) is kept.
+    /// int-ui-s23 §7 p.3: on a monitor the overlay is hidden by default (a developer tool, not part of the game's look);
+    /// F3 shows / hides it, launch argument <c>-diag on|off</c> forces it. Phones keep it shown. Colours from
+    /// <see cref="UiPalette"/> like the settings screen (matte panel, warm white text, flat buttons).
     /// </summary>
     public sealed class DiagnosticsOverlay : MonoBehaviour
     {
         const float RefreshInterval = 0.5f;
         const int FontSize = 30;
-        static readonly Color k_PanelColor = new Color(0f, 0f, 0f, 0.62f);
-        static readonly Color k_TextColor = new Color(0.96f, 0.96f, 0.92f, 1f);
-        static readonly Color k_ButtonColor = new Color(0.16f, 0.17f, 0.18f, 0.85f);
+        const int ButtonFontSize = 24;
+        static readonly Color k_PanelColor = UiPalette.HudPanel;
+        static readonly Color k_TextColor = UiPalette.Ink;
+        static readonly Color k_ButtonColor = UiPalette.Button;
+
+        /// <summary>Launch argument: <c>-diag on</c> / <c>-diag off</c> (any form factor).</summary>
+        public const string LaunchArg = "diag";
+
+        /// <summary>Pure (tests): is the overlay shown? <paramref name="forced"/> = launch argument or F3 toggle (null = none).
+        /// Default: hidden on a monitor, shown on a touch device.</summary>
+        public static bool ResolveVisible(bool desktop, bool? forced) => forced ?? !desktop;
+
+        bool? m_Forced;
+        bool m_Visible = true;
+
+        /// <summary>The overlay is drawn and takes part in the shared menu layout (tests).</summary>
+        public bool Visible => m_Visible;
+
+        /// <summary>Shows / hides the whole overlay; overrides the form-factor default for this session (F3, tests).</summary>
+        public void SetVisible(bool visible) { m_Forced = visible; ApplyVisibility(); }
+
+        void ApplyVisibility()
+        {
+            bool v = ResolveVisible(m_View != null && m_View.Desktop, m_Forced);
+            if (v == m_Visible && m_Canvas != null && m_Canvas.enabled == v) return;
+            m_Visible = v;
+            if (m_Canvas != null) m_Canvas.enabled = v;   // also stops the button raycasts
+            m_LayoutApplied = false;
+            ApplyLayout();
+        }
 
         IPlatformServices m_Platform;
         DiagnosticsSampler m_Sampler;
@@ -58,6 +88,8 @@ namespace Game.UI
             var overlay = go.AddComponent<DiagnosticsOverlay>();
             overlay.m_Platform = platform;
             overlay.m_Sampler = sampler;
+            string arg = platform?.GetLaunchArgument(LaunchArg);
+            if (arg != null) overlay.m_Forced = !(arg == "off" || arg == "0" || arg == "false");
             overlay.Build(camera);
             overlay.RefreshNow();
             return overlay;
@@ -77,6 +109,7 @@ namespace Game.UI
             m_View.Refresh();
             m_LayoutApplied = false;
             ApplyLayout();
+            ApplyVisibility();
         }
 
         /// <summary>The text panel (null before Build; tests).</summary>
@@ -146,6 +179,7 @@ namespace Game.UI
             m_Header = BuildHeader();
             m_View.Refresh();
             ApplyLayout();
+            ApplyVisibility();
         }
 
         void OnEnable() { MenuOverlayBoard.OverlayActive = true; m_LayoutApplied = false; }
@@ -157,7 +191,7 @@ namespace Game.UI
         void ApplyLayout()
         {
             if (m_PanelRt == null) return;
-            MenuOverlayBoard.OverlayActive = isActiveAndEnabled;
+            MenuOverlayBoard.OverlayActive = isActiveAndEnabled && m_Visible;   // hidden: the menu keeps its centred place
             MenuOverlayBoard.PanelShown = m_UserShowPanel;
             if (m_Panel.activeSelf)
                 MenuOverlayBoard.PanelSize = MenuOverlayLayout.ReservePanel(MenuOverlayBoard.PanelSize, m_PanelRt.rect.size);
@@ -213,7 +247,7 @@ namespace Game.UI
             labelRt.offsetMin = labelRt.offsetMax = Vector2.zero;
             var label = labelRt.gameObject.AddComponent<Text>();
             label.font = font;
-            label.fontSize = FontSize;
+            label.fontSize = ButtonFontSize;
             label.color = k_TextColor;
             label.alignment = TextAnchor.MiddleCenter;
             label.raycastTarget = false;
@@ -246,8 +280,11 @@ namespace Game.UI
 
         void Update()
         {
-            m_View.Refresh();
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb != null && kb.f3Key.wasPressedThisFrame) SetVisible(!m_Visible);
+            if (m_View.Refresh()) ApplyVisibility();   // form factor settles after Build (ui_touch, D85): follow it
             ApplyLayout();
+            if (!m_Visible) return;   // nothing to sample for a hidden panel
             if (Time.unscaledTime >= m_NextRefresh) RefreshNow();
         }
 
