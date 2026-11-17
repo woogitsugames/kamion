@@ -34,7 +34,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 REGIONS = REPO / "Data" / "Regions"
-TILES = ("s8-01", "s8-02", "s8-03", "s8-04", "s8-05")
+# dk65-01 (ADR 0205, main): the S8 cuts its south-west corner; same section, or the carriageways step sideways by
+# 1.0-2.8 m on the seam with s8-01 (qa.seams: "droga urywa sie na szwie")
+TILES = ("s8-01", "s8-02", "s8-03", "s8-04", "s8-05", "dk65-01")
 BEGIN = "  # ---- BEGIN generated: tools/worldgen/qa/s8_xsec_overrides.py (ADR 0288) - do not edit between the markers ----"
 END = "  # ---- END generated: tools/worldgen/qa/s8_xsec_overrides.py ----"
 
