@@ -42,6 +42,9 @@ foreach ($w in $wts) {
     if ($p -eq $mainPath -or $p -notmatch '\\\.claude\\worktrees\\') { continue }
     $name = Split-Path $p -Leaf
     if ($busy[$name]) { Log "keep   $name (process running)"; continue }
+    # Worktree buildowy (Library Win64, kilka godzin importu) - nigdy automatycznie, nawet gdy jego gałąź jest
+    # przodkiem main (świeże `git worktree add -b build/win origin/main`). Nauczka 16.11 22:05 + przenosiny 17.11.
+    if ($name -like 'win-build*' -or $w.branch -like 'build/*') { Log "keep   $name (build worktree)"; continue }
     $merged = $false
     if ($w.branch) { git merge-base --is-ancestor $w.branch main 2>$null; $merged = ($LASTEXITCODE -eq 0) }
     if ($merged) {
