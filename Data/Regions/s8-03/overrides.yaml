@@ -70,3 +70,19 @@ overrides:
     verify: orthophoto cross-section per way (tools/worldgen/qa/ortho_xsec.py) / owner drive
     set: {lane_edges: [0.2, 3.7, 7.2, 10.7], width: 13.45, center_offset: -2.575, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
   # ---- END generated: tools/worldgen/qa/s8_xsec_overrides.py ----
+  # s8-loop-s24 (ADR 0288 Otwarte 12): deck height pinned at the s8-02 | s8-03 seam. Both S8 carriageways cross the
+  # seam on a structure (OSM bridge=yes); each tile solved its deck from its own side only (roads/profile.py: a node
+  # where only elevated chains meet has no NMT height) -> steps 1.35 m (way 183625709) and 0.79 m (way 98599908)
+  # measured on the r10 GLBs (asphalt at the seam node, 0.3 m inside each tile). Pin = mean of both sides.
+  - id: s8-seam-deck-z-w183625709
+    target: {node: "Bw183625709:1937542642-1937517305:0e"}
+    reason: "S8 deck at the s8-02 | s8-03 seam: s8-02 114.35 m, s8-03 113.00 m (r10 GLB) -> mean, same value in both tiles"
+    confidence: "medium (continuity across the seam; absolute height = mean of two NMT-based solutions, +-0.7 m)"
+    verify: link_seams z_seam delta <= 0.1 m (tests/gis/test_route_links_s23.py) / orthophoto + NMT of the abutments
+    set: {z: 113.68}
+  - id: s8-seam-deck-z-w98599908
+    target: {node: "Bw98599908:1140726362-1140726363:0s"}
+    reason: "S8 deck at the s8-02 | s8-03 seam: s8-02 114.06 m, s8-03 113.28 m (r10 GLB) -> mean, same value in both tiles"
+    confidence: "medium (continuity across the seam; absolute height = mean of two NMT-based solutions, +-0.4 m)"
+    verify: link_seams z_seam delta <= 0.1 m (tests/gis/test_route_links_s23.py) / orthophoto + NMT of the abutments
+    set: {z: 113.67}
