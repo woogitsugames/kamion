@@ -145,6 +145,10 @@
    "fov_deg": 60,
    "pitch_deg": -89.0,
    "note": "rail-dk65-s22: top view of level crossing osm:node/2559254736 (panels, kerb cut, P-4, P-14)"
-  }
- ]
+  },
+    {"id": "s8_corner_eye", "pos_en": [-602.5, -990.5], "heading_deg": 283, "eye_m": 2.5, "fov_deg": 60, "pitch_deg": -2,
+     "note": "s8-loop-s24 (ADR 0288): driver eye on the S8 carriageway towards Warsaw (way 305447699) in the SW corner of the tile, looking WNW at the seam with s8-01 (local -1024 -890); position interpolated on the OSM way between the seam nodes, +-5 m"},
+    {"id": "s8_corner_top", "pos_en": [-740.0, -960.0], "heading_deg": 0, "eye_m": 160.0, "fov_deg": 55, "pitch_deg": -89.9,
+     "note": "QA only (s8-loop-s24, ADR 0288): top view, north up, of the S8 corner of dk65-01 - both carriageways, median, seams with s8-01 (west) and the south edge"}
+  ]
 }
