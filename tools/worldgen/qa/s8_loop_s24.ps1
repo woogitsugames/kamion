@@ -50,7 +50,9 @@ $phaseTag = "$Phase-$($Tiles -join '_')"
 if ($Phase -eq 'world') {
     foreach ($r in $Tiles) {
         $ok = $true
-        if ($r -eq 's8-04') { $ok = (Step "region-$r" 'heavy' { uv run tools/worldgen/build_region.py --region s8-04 }) -eq 0 }
+        # every s8 tile: region.yaml of s8-loop-s23 carried manifest_sha256 of CRLF checkouts (old PC, autocrlf=true);
+        # this worktree is checked out LF (canonical, = main's dk65-01), so build_region rewrites them
+        if ($r -like 's8-*') { $ok = (Step "region-$r" '' { uv run tools/worldgen/build_region.py --region $r }) -eq 0 }
         if ($ok) {
             $wa = @('run', '--project', 'tools/worldgen', 'tools/worldgen/roads/build_world.py', '--region', $r)
             if ($r -eq 's8-04') { $wa += '--context' }
