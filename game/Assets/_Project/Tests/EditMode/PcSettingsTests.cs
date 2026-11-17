@@ -418,6 +418,19 @@ namespace Game.Tests
             Assert.IsTrue(StartupDisplayPolicy.ShouldApply(true, null));
         }
 
+        [Test]
+        public void ExclusiveFullscreen_NotOnD3D12_UnlessAllowed()
+        {
+            var none = new[] { "Kamion.exe" };
+            Assert.AreEqual(WindowModes.Borderless, ExclusiveFullscreenPolicy.Effective(WindowModes.Exclusive, true, none), "crash-diag-s23");
+            Assert.AreEqual(WindowModes.Exclusive, ExclusiveFullscreenPolicy.Effective(WindowModes.Exclusive, false, none), "D3D11 keeps exclusive");
+            Assert.AreEqual(WindowModes.Exclusive, ExclusiveFullscreenPolicy.Effective(WindowModes.Exclusive, true,
+                new[] { "Kamion.exe", "-ALLOW-exclusive-d3d12" }), "test switch");
+            Assert.AreEqual(WindowModes.Windowed, ExclusiveFullscreenPolicy.Effective(WindowModes.Windowed, true, none));
+            Assert.AreEqual(WindowModes.Borderless, ExclusiveFullscreenPolicy.Effective(WindowModes.Borderless, true, null));
+            Assert.AreEqual(WindowModes.Borderless, ExclusiveFullscreenPolicy.Effective(WindowModes.Exclusive, true, null));
+        }
+
         // ------------------------------------------------------------------ audio levels
 
         [Test]

@@ -10,6 +10,23 @@ i5-9600 / GTX 1660 / 12 GB → High 1080p 60 fps; dysk ≤ 25 GB — wszystko `W
 **Zmierzone na PC dla klas: nic** (stan 15.11.2026). Jedyny pomiar to informacyjny przebieg ADR 0261 na maszynie deweloperskiej
 (RTX 5070, High, 1600×900, bez limitu, głównie na postoju) — nie jest referencją i nie zalicza żadnej klasy.
 
+### Budżety kafli per tier z pomiaru (D83, 17.11.2026) — `WORKING_VALUE`, emulacja RTX 5070
+Pomiar to 66 przebiegów (11 punktów × 6 konfiguracji, 1080p) na starym buildzie e28533ca31. Część przebiegów szła na
+obciążonej maszynie. Pełny raport: `docs/reports/PC-BUDGET-2026-11-16.md`.
+Proponowane budżety p95 na kamerę (`pc-budgets.json` → `tileBudgetsD83`, parser ich jeszcze nie sprawdza):
+
+| tier | tris | draws |
+|---|---|---|
+| Low | 1,5 M | 1 600 |
+| Medium | 2,5 M | 2 200 |
+| High | 4,0 M | 2 500 |
+| Ultra | 10 M | 5 000 |
+
+Koszt na RTX 5070 to ~0,6–0,7 ms na 1 000 draw calls i ~0,4–0,7 ms na 1 M trójkątów; obie wielkości są skorelowane.
+Klatka jest ograniczona przez CPU. Skalowanie na sprzęt klas D74 nie jest zrobione (brak cytowanego źródła).
+Gęste kafle 2,6–3,75 M (ADR 0278) bez LOD z ADR 0282 nie mieszczą się w Low ani Medium, a na High tylko przy jednym gęstym
+kaflu w kadrze.
+
 Wszystko poniżej to budżety **mobilne** — od D73 🔒 zabezpieczenie dla przyszłej wersji telefonowej (odroczone, nie usunięte).
 
 Status: **initial**. Targets are `WORKING_VALUE`s until measured scenes exist; rendering-perf owns refinement.

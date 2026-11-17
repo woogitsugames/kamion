@@ -332,7 +332,8 @@ def test_attach_cuts_kerbs_over_the_panels_only():
     assert RL.PANEL_LIFT > 0.0                                                   # panels above the flush kerb
     x = ch.meta["rail_xings"][0]
     assert math.isclose(x["s"], 100.0, abs_tol=0.01) and x["category"] == "B"
-    assert math.isclose(x["device_d"], panel_half + RL.SIGN_SETBACK)
+    # ADR 0279 P1: the device line is the farthest signal / G-3 post, >= 5 m from the outer rail (1105 § 77 ust. 2)
+    assert math.isclose(x["device_d"], RL.device_line_max(c)) and x["device_d"] > panel_half + RL.SIGN_SETBACK
     # a rural profile keeps (fills) its ditch like a driveway, a skewed crossing cuts a longer kerb
     rur = _Chain([(500.0, y) for y in np.arange(400.0, 600.01, 0.5)], NW.RURAL, h=0.6)
     RA.attach(_Net([rur]), p)

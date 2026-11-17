@@ -60,7 +60,7 @@ Shader "Kamion/Truck Exterior"
         _GrimeHeight ("Road grime height above the wheel contact (m)", Range(0, 2)) = 0.8
         _GrimeChassis ("Grime multiplier on non-paint slots", Range(0, 3)) = 1.3
         _CurtainGrime ("Curtain soiling model: on, bottom y, top y, rear z (object space m; 0 = off)", Vector) = (0, 1.31, 3.88, -12)
-        _CurtainAxles ("Curtain soiling: axle z (object space m) x3", Vector) = (-6.39, -7.7, -9.01, 0)
+        _CurtainAxles ("Curtain soiling: axle z (object space m) x3", Vector) = (-6.32, -7.63, -8.94, 0)
         _CurtainPosts ("Curtain soiling: post pitch, first post from rear, streak strength, overall scale", Vector) = (3.4, 0, 0.22, 0.7)
         _RearGrime ("Rear-face soiling (ADR 0182): on, rear z, door bottom y, door top y (trailer object frame m; 0 = off)", Vector) = (0, -12, 1.335, 3.865)
         _RearGrime2 ("Rear-face soiling: door half width, amount, non-paint scale, -", Vector) = (1.135, 0.85, 0.6, 0)

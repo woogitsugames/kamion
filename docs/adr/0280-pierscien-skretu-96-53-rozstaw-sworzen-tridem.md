@@ -348,6 +348,38 @@ scaleniu. `tests/gis/test_swept_path_0218.py::test_combination_matches_dims_json
 `tests/gis/test_swept_path_0218.py::test_knyszyn_ring_sectors_clear_the_u_turn` pada też na `origin/main` (niezależnie od
 osi; nie badane).
 
+### 9.4 Wykonanie §9.1–9.2 (agent trailer-763-s23, gałąź `trailer-763-s23`, 2026-11-16)
+
+Blender 4.2.9 (Windows): generator już czytał osie z `dims.json`, więc zmiana kodu to tylko komentarz w
+`trailer_build.py:37`, kamera `zbl_kolo` liczona z `T.AXLES[1]` i nowa kamera kontrolna `gora` (ortho z góry, przekrój na
+1,20 m przez bliską płaszczyznę odcięcia, przód w prawo). Pełny eksport (`trailer_export.py`, ok. 6 min; pierwsza próba padła
+na braku pamięci w bake'u AO przy obciążonej maszynie, kolejne OK):
+- manifest: piwoty `WHEEL_1x..3x` i puste `AXLE_1..3` na **−6,32 / −7,63 / −8,94**, chlapacze −9,692 → **−9,622**,
+  `physics_crosscheck` osi 3/3 zgodne; `check_export.py` **PASS** (LOD 89 000 / 24 499 / 7 847 tr., budżety 90k/25k/8k);
+- `regs_audit.py` + `regs_check.py`: **158/158 OK**; lampa obrysowa boczna 3: środek −7,045 → **−6,975 m** (odstępy
+  2,925 / 2,605 m ≤ 3 m, R48 6.18.4.3); `pytest tests/physics/test_dims_sync.py` 9/9, `test_truck_regs.py` 5/5;
+- atlasy przebake'owane (AO przy przesuniętych częściach), układ UV atlasów lekko inny (pakowanie zależy od geometrii).
+- Znalezisko **sprzed tej zmiany** (nie naprawiane tu): obręcze kół próbkują w atlasie Metal czerwone / tekstowe fragmenty
+  (czerwone plamy na beczce obręczy w `zbl_kolo`). Pomiar: 639 z 10 651 tekseli UV kół ma R − G > 0,2 — **identycznie** w FBX
+  i atlasie z `origin/main` i z tej gałęzi; UV kół nakładają się na 7 506 tekseli `CHASSIS` (koło zapasowe dzieli UV koła 1L).
+  Do osobnego zadania (truck-artist).
+
+Unity: `TruckExterior.shader` domyślne `_CurtainAxles` → (−6,32, −7,63, −8,94); nowe wejście
+`DrivingLabSceneBuilder.RebuildTrailerPrefabBatch` (sam prefab graybox z definicji, bez przebudowy sceny DrivingLab);
+test `Tests/EditMode/TrailerAxleSyncTests.cs` (osie fizyki vs `dims.json`, piwoty manifestu we wszystkich LOD, `AXLE_n` i
+środki kół w FBX z art-source i w kopii `_Generated` użytej przez prefab, spinnery prefabu graybox i art, domyślna wartość
+shadera; tolerancja 1 cm).
+
+Wyniki Unity 6000.3.28f1 (batch, Win64): `RebuildTrailerPrefabBatch` OK — prefab graybox z kołami na −6,32 / −7,63 / −8,94
+(fileID komponentów zregenerowane, cele nadpisań w `DrivingLab.unity` zachowane: 3/3 istnieją); `TrailerAssetBuilder.BuildBatch`
+OK (LOD 88 848 / 24 347 / 7 823 tr., bez ostrzeżeń „m from the nearest physics wheel” i `KINGPIN`); visual-qa `WorldC` High
+pochmurno, kamery `trailer-34`, `trailer-side` przed/po (`artifacts/trailer-763-s23/unity-{before,after}/`): tridem z
+błotnikami i chlapaczem przesunięty razem w stronę sworznia. EditMode (`test.ps1 -Platform EditMode -BuildTarget Win64`,
+po `git merge origin/main` z #171 `TrailerModel.cs` — kompiluje się): **1126 testów, 1103 passed, 22 failed, 1 skipped**;
+`TrailerAxleSyncTests` 8/8 PASS. 22 porażki to `StartClearanceTests.ImportedScene_BakedSpawnIsTheImportersStart` (20 regionów,
+kopie `_Generated` w worktree) i `CarPaintMaterialTests.DepositionChannel_*` (2) — ten sam zestaw 2 + 20 padł w worktree
+`cabin-pc-s23` (19:58, bez zmian naczepy), więc to środowisko worktree, nie ta zmiana. Rendery czekają na `visual-critic`.
+
 ## 10. Korekta D79: 7,63 m i przyczyna pełzania (P16, gałąź `trailer-763-d79`, 2026-11-16)
 
 Gałąź z `origin/trailer-760-d79` @ `5fe05662c` + `git merge origin/main` (@ `8133dfd7f`). Runner: `dotnet run -c Release
@@ -469,6 +501,40 @@ Skutki uboczne poprawki (wszystkie w limitach; pełna lista różnic main → PO
 (relaksuje do ugięcia kół ciągnika, które ciągnie silnik) — fizycznie spójne z §10.3, ale zapas spadł z 82 % do 63 %.
 `soak_30min_cycle` dryf energii −2,84 → +0,32 J (≤ 5 J), sprzęganie z przesunięciem 40 t maks. siła wzdłużna sworznia
 100 → 77 kN (≤ 150 kN).
+
+### 10.5a Dopisek D42 (2026-11-16): `park_brake_hold_no_interlock` 26,8 → 55,2 mm to artefakt relaksacji, nie 7,63 m
+
+Źródło przyrostu: commit `b0a59d936` (relaksacja postoju naczepy do odniesienia ciągnika), nie dane 7,63 m (`bec798465`).
+Pomiar sondą (przemieszczenie ciągnika 0–12 s) na drzewach z gita: 7,60 m (`0b817f51c`) 26,68 mm, 7,63 m bez poprawki
+(`bec798465`) 26,70 mm, main 7,70 m: `creep_m` 26,8 mm (§10.5). Rozstaw zmienia wynik o mniej niż 0,1 mm. Sonda (pętla kroków jak w §10.3,
+40 t, płasko, P włączone, blokada wyłączona, pełny gaz od 1 s): oś napędowa ciągnika jest jednocześnie hamowana
+(sprężynowe 16,0 kN m) i napędzana (22,4 kN m). Jej opony popychają zestaw z siłą 2 × 12,0 kN (ux +5,53 mm), a zahamowane koła naczepy trzymają
+−23,6 kN (ux −2,61 mm). Odniesienie §10.3 („wspólne ugięcie zahamowanych kół ciągnika”) bierze właśnie te koła, więc koła
+naczepy relaksowały do +5,53 mm, czyli w stronę *przeciwną* do siły, którą niosą. Szybkość pełzania wynosi
+(−2,61 − 5,53) mm / τ 2 s = 4,07 mm/s. Zmierzone 3,9–4,1 mm/s, liniowo i bez końca: 55,2 mm po 12 s, **128 mm po 30 s,
+251 mm po 60 s** (limit 150 mm przekroczony po ~36 s). Stary cel („własny udział” F_z·tanθ = 0 na płaskim) dawał
+2,61 / 2 = 1,3 mm/s, więc 26,8 mm też było przeciekiem, a nie podatnością. Oba wyniki nie zależą od kroku całkowania
+(szybkość ustala τ), więc nie jest to błąd całkowania ani tarcia statycznego, tylko relaksacja obciążenia zewnętrznego,
+które model traktuje jak naprężenie wewnętrzne. Dłuższy rozstaw 7,63 m nie ma tu udziału.
+
+Poprawka (`TrailerModel.RelaxStickAtStandstill`): koło ciągnika z momentem napędowym (|DriveTorque| > 1 N m) nie wchodzi do
+odniesienia. Dopóki jakiekolwiek takie koło ma kontakt, zahamowane koła naczepy zachowują ugięcie, bo siła napędu idzie
+przez sworzeń do ich hamulców jako obciążenie zewnętrzne. Niezahamowane koła relaksują do 0 jak dotąd. Gdy sprzęgło jest
+otwarte (każdy postój z blokadą, §10.3 na 12 %), nic się nie zmienia.
+
+| `park_brake_hold_no_interlock_comb@laden40` | przed | po |
+|---|---|---|
+| `creep_m` 0–12 s [mm] | 55,15 | **14,36** (limit 150) |
+| pełzanie po 30 / 60 s [mm] (sonda) | 128,2 / 251,0 | **14,02 / 13,95** (ustala się) |
+| prędkość pod koniec [km/h] | 0,0148 stała | → 0,001 i maleje |
+| `creep_m` przy dt 1/50, 1/60, 1/100, 1/120 s (substepy 8/7/4/3) | — | 14,37 / 14,37 / 14,36 / 14,36 |
+| τ = 0 (relaksacja wyłączona), kontrola | — | 14,29 |
+
+14,4 mm to sprężyste ugięcie opon napędu (5,5 mm), opon naczepy (2,6–3,2 mm) i zawieszenia/siodła. Wartość nie zależy od
+kroku i jest równa przypadkowi bez relaksacji. Zapas do limitu: 90 %. Pozostałe scenariusze runnera: 141 / 141, 833 / 833.
+65 metryk zmieniło się o mniej niż 1 % (ruszanie zestawem, sprzęganie na postoju: `couple_standstill_locked@empty`
+sworzeń/statyczny 1,010 → 1,001). Golden telemetry bez zmian (287 + 2 testy zielone). Wykresy przed i po:
+`tools/telemetry/plot.py` na CSV `park_brake_hold_no_interlock_comb@laden40` (przed: prędkość stała 0,015 km/h; po: zanika).
 
 ### 10.6 Ryzyka
 

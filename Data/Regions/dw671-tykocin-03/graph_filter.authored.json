@@ -1,0 +1,9 @@
+{
+ "provenance": "authored_override (ADR 0204, reused by ADR 0209/0212 and ADR 0231): ways left out of the drivable road graph of this region",
+ "drop_service": [
+  "driveway"
+ ],
+ "drop_osm_ways": [],
+ "reason": "Same rule as every built tile of powiat moniecki (knyszyn, knyszyn-w, knyszyn-s, dk65-monki-01, dw671-tykocin-01): OSM maps house driveways as highway=service + service=driveway; as graph junctions closer than ~15 m they left holes in the carriageway (ADR 0204). Not re-checked for this tile.",
+ "verify": "none (generator limitation; revisit when junctions closer than ~15 m are supported)"
+}

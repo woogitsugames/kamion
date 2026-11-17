@@ -22,6 +22,11 @@ from . import buildings_mesh as BM
 
 REGION = "knyszyn"
 KIND = "market_canopies_0227"
+# ADR 0227 D41: measured eave rectangles (tools/worldgen/qa/market_canopy_ortho.py, GUGiK ORTO WMS) replace the hand
+# traces by id; the traces overlapped by ~1 m, so the three close canopies touched at the eaves although the
+# orthophoto and owner photo 12 show 1.15-1.17 m clear gaps. A separate entry: the traced entry stays as authored.
+GEOMETRY_KIND = "market_canopy_geometry_d41"
+INSET_LIMITS = (0.0, 0.5)
 ASSET_ID = "knyszyn_market_canopies_0227"
 LAYERS = ("buildings", "buildings_low")
 EAVE_M = 3.20             # WORKING_VALUE, photo-estimated
@@ -40,7 +45,7 @@ def _point(xy, z):
     return np.array([float(xy[0]), float(xy[1]), float(z)], dtype=float)
 
 
-def _rect_frame(raw, origin):
+def _rect_frame(raw, origin, inset=EAVE_INSET_M):
     """Long/short axes and envelope derived from four measured eave corners."""
     points = np.asarray(raw, dtype=float)
     if points.shape != (4, 2) or not np.isfinite(points).all():
@@ -56,8 +61,8 @@ def _rect_frame(raw, origin):
     # The measured quadrilaterals are slightly non-rectangular; their minimum
     # rectangles can overlap even though the measured outlines do not.  The
     # modest symmetric inset avoids inventing a larger roof than the trace.
-    length = float(lengths[idx]) - 2*EAVE_INSET_M
-    width = float(lengths[(idx + 1) % 4]) - 2*EAVE_INSET_M
+    length = float(lengths[idx]) - 2*inset
+    width = float(lengths[(idx + 1) % 4]) - 2*inset
     if length < 2.0 or width < 1.0 or length <= width:
         raise ValueError("market canopy requires an elongated footprint")
     axis = edges[idx] / lengths[idx]
@@ -234,12 +239,14 @@ def build(buf, region, origin, overrides, zsurf, report):
     ids = [o.get("id") for o in objects if isinstance(o, dict)]
     if len(ids) != 4 or any(not isinstance(i, str) or not i for i in ids) or len(set(ids)) != 4:
         raise ValueError("market canopy ids must be distinct non-empty strings")
+    polygons, inset = _measured_geometry(overrides, ids, result)
     parsed = []
     for obj in objects:
         solar = obj.get("solar_panels", False)
         if not isinstance(solar, bool):
             raise ValueError("solar_panels must be boolean")
-        center, axis, across, length, width = _rect_frame(obj.get("polygon_epsg2180"), origin)
+        center, axis, across, length, width = _rect_frame(polygons.get(obj["id"], obj.get("polygon_epsg2180")),
+                                                          origin, inset)
         ground = float(np.asarray(zsurf(np.array([center[0]]), np.array([center[1]]))).ravel()[0])
         if not math.isfinite(ground):
             raise ValueError("market canopy terrain sample is not finite")
@@ -279,5 +286,41 @@ def build(buf, region, origin, overrides, zsurf, report):
         _fence(acc, points, heights, bays)
         acc.flush(buf, f"{ASSET_ID}:fence:{oid}")
         result["fences"].append({"id": oid, "posts": len(points), "bays": len(bays)})
+    result["eave_gaps_m"] = _eave_gaps(parsed)
     result["status"] = "applied"
     return result
+
+
+def _measured_geometry(overrides, ids, result):
+    """({id: polygon} from the one D41 geometry entry, eave inset); ({}, EAVE_INSET_M) without it. The entry must
+    name exactly the canopy ids of the traced entry; malformed input raises like the traced entry does."""
+    geo = [o for o in overrides if o.get("kind") == GEOMETRY_KIND]
+    if not geo:
+        return {}, EAVE_INSET_M
+    if len(geo) != 1:
+        raise ValueError("at most one market canopy geometry override is allowed")
+    rows = geo[0].get("canopies")
+    if not isinstance(rows, list) or any(not isinstance(r, dict) for r in rows):
+        raise ValueError("market canopy geometry requires a list of canopies")
+    gids = [r.get("id") for r in rows]
+    if sorted(map(str, gids)) != sorted(ids) or len(set(gids)) != len(gids):
+        raise ValueError("market canopy geometry must name exactly the four canopy ids")
+    inset = geo[0].get("eave_inset_m", 0.0)
+    if isinstance(inset, bool) or not isinstance(inset, (int, float)) or not (
+            INSET_LIMITS[0] <= float(inset) <= INSET_LIMITS[1]):
+        raise ValueError("eave_inset_m out of range")
+    result["footprints"] = "GUGiK ORTO WMS eaves measured (ADR 0227 D41, market_canopy_ortho.py): SOURCED"
+    result["geometry_override"] = geo[0].get("id")
+    return {r["id"]: r.get("polygon_epsg2180") for r in rows}, float(inset)
+
+
+def _eave_gaps(parsed):
+    """Clear distance between the generated eave rectangles of consecutive canopies (north to south), m."""
+    rects = []
+    for oid, center, axis, across, length, width, *_ in parsed:
+        hl, hw = length / 2, width / 2
+        rects.append((float(center @ np.array([0., 1.])), oid, Polygon(
+            [center + axis*a + across*b for a, b in ((-hl, -hw), (hl, -hw), (hl, hw), (-hl, hw))])))
+    rects.sort(key=lambda r: -r[0])
+    return [{"between": [a[1], b[1]], "gap_m": round(float(a[2].distance(b[2])), 2),
+             "overlap_m2": round(float(a[2].intersection(b[2]).area), 2)} for a, b in zip(rects, rects[1:])]

@@ -1,0 +1,69 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0049",
+   "look_at": [
+    -943.289,
+    -926.384,
+    171.481
+   ],
+   "note": "driver eye 2.5 m, control route s = 49 m of 293 m (Białostocka)",
+   "pos": [
+    -914.994,
+    -979.331,
+    172.742
+   ],
+   "route_s_m": 48.814,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0146",
+   "look_at": [
+    -985.985,
+    -838.588,
+    171.481
+   ],
+   "note": "driver eye 2.5 m, control route s = 146 m of 293 m (Białostocka)",
+   "pos": [
+    -958.059,
+    -891.726,
+    172.916
+   ],
+   "route_s_m": 146.442,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0244",
+   "look_at": [
+    -1024.0,
+    -760.954,
+    171.48
+   ],
+   "note": "driver eye 2.5 m, control route s = 244 m of 293 m (Białostocka)",
+   "pos": [
+    -1000.793,
+    -803.939,
+    172.561
+   ],
+   "route_s_m": 244.069,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 320.453,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "monki-e",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

@@ -617,23 +617,39 @@ def roof_flat(acc, layer, poly, z, mat="roof_membrane", attic=0.3, skylights=Fal
         core = poly.buffer(-8.0)
         if core.is_empty:
             return
+        # ADR 0238 D39: the grid starts 3 m in from one corner of the rotated core; the two directions of the long
+        # axis (ang, ang - pi) start it from opposite corners. Both are built and the one with fewer skylights is used
+        # (equal: ang) - the same pick whatever corner shapely starts its rectangle at, never more than before.
         ang = _angle(poly)
-        ca, sa = math.cos(ang), math.sin(ang)
-        x0, y0, x1, y1 = shapely.affinity.rotate(core, -ang, origin=(0, 0), use_radians=True).bounds
-        for gx in np.arange(x0 + 3, x1 - 3, 12.0):
-            for gy in np.arange(y0 + 3, y1 - 3, 9.0):
-                cx, cy = gx * ca - gy * sa, gx * sa + gy * ca
-                if not core.contains(shapely.Point(cx, cy)):
-                    continue
-                acc.box(layer, "skylight", [cx, cy, z - attic + 0.25], [ca * 1.5, sa * 1.5, 0], [-sa * 1.0, ca * 1.0, 0],
-                        [0, 0, 0.25])
+        grids = [_skylight_grid(core, a) for a in (ang, ang - math.pi)]
+        for cx, cy, ca, sa in min(grids, key=len):
+            acc.box(layer, "skylight", [cx, cy, z - attic + 0.25], [ca * 1.5, sa * 1.5, 0], [-sa * 1.0, ca * 1.0, 0],
+                    [0, 0, 0.25])
+
+
+def _skylight_grid(core, ang):
+    """Skylight centres (x, y, cos, sin): a 12 x 9 m grid along ang from the corner of the rotated core, inside it."""
+    ca, sa = math.cos(ang), math.sin(ang)
+    x0, y0, x1, y1 = shapely.affinity.rotate(core, -ang, origin=(0, 0), use_radians=True).bounds
+    out = []
+    for gx in np.arange(x0 + 3, x1 - 3, 12.0):
+        for gy in np.arange(y0 + 3, y1 - 3, 9.0):
+            cx, cy = gx * ca - gy * sa, gx * sa + gy * ca
+            if core.contains(shapely.Point(cx, cy)):
+                out.append((cx, cy, ca, sa))
+    return out
 
 
 def _angle(poly):
-    r = np.asarray(poly.minimum_rotated_rectangle.exterior.coords)
+    """Direction of the long side of the minimum rotated rectangle (roofs.stable_rect), modulo pi, in [0, pi) (ADR 0238
+    D39: the same side walked the other way round - which one shapely starts the ring at moves with float noise - gave
+    the skylight grid another origin: Dojlidy `…BAD2` 600 / 660 triangles under a 1e-12 m translation). An edge within
+    RF.RECT_TIE_RAD of east-west counts as east (not 0 on one machine and pi - 1e-16 on another)."""
+    r = np.asarray(RF.stable_rect(poly).exterior.coords)
     d = np.diff(r, axis=0)
     k = int(np.argmax(np.hypot(d[:, 0], d[:, 1])))
-    return math.atan2(d[k, 1], d[k, 0])
+    a = math.atan2(d[k, 1], d[k, 0]) % math.pi
+    return a - math.pi if a > math.pi - RF.RECT_TIE_RAD else a
 
 
 def gable(acc, layer, rect, zeave, zridge, wall_mat, roof_mat):
@@ -1324,7 +1340,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # Both layers (W-H4): the LOD1 tier draws the same deck, fascia and columns, so
             # a tier switch never removes a roof structure from the street.
             zc = zref + min(max(h, 4.8), 6.0)
-            cc = np.asarray(poly.minimum_rotated_rectangle.exterior.coords)[:4]
+            cc = np.asarray(RF.stable_rect(poly).exterior.coords)[:4]
             cen = np.asarray(poly.centroid.coords[0])
             for layer in ("buildings", "buildings_low"):
                 roof_flat(acc, layer, poly, zc + 0.6, mat="hall_flashing", attic=0.0)
@@ -1389,7 +1405,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         # ADR 0238: rule shopfront of a pavilion on the wall nearest to a road - only for buildings with no authored
         # set (an override keeps the facade its review approved)
         pav = sub == "pawilon" and not front and not facades and not b["ovr"] and not pitched
-        rect = poly.minimum_rotated_rectangle
+        rect = RF.stable_rect(poly)
         rc_ = np.asarray(rect.exterior.coords)[:4]
         re_ = [float(np.linalg.norm(rc_[(i + 1) % 4] - rc_[i])) for i in range(4)]
         rk_ = 0 if re_[0] >= re_[1] else 1
@@ -1464,6 +1480,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         ro_blocks = (runoff_blocks(key, float(sum(lens)) + 1.0)
                      if b.get("runoff_shuffle") and typ == "hall" and not front else None)
         dock_edges = {tuple(np.round(dk["edge"][0], 2)): dk for dk in docks}
+        # ADR 0238 D39: gate_openings marks a placed gate `done`; on a copy, so build() leaves the input as it was (a
+        # second build of the same building - QA harness, regression tests - drew hall `…BC59` without its 2 gates)
+        gates_b = [dict(g) for g in b.get("gates") or ()]
         nouts = []
         signed = laddered = False
         for ei, (a, c_) in enumerate(edges):
@@ -1506,8 +1525,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 ops = facade_openings(typ, L, zref, zt, storeys, f"{key}:{ei}", is_main, dk is not None,
                                       dict(variant, balcony=bal_group if ei in bal_edges else False, main=ei == main,
                                            door_z=door_z), sh=sh, zbase=zbase)
-            if typ == "hall" and not front and b.get("gates"):       # ADR 0196: authored sectional gates
-                gate_openings(b["gates"], a, d, L, zref, zt, ops)
+            if typ == "hall" and not front and gates_b:              # ADR 0196: authored sectional gates
+                gate_openings(gates_b, a, d, L, zref, zt, ops)
             if typ == "hall" and not front and b.get("hall_openings_ground"):     # ADR 0242: sills on the ground
                 ops = openings_to_ground(
                     ops, lambda u, a=a, d=d: hf.sample(np.array([a[0] + d[0] * u]), np.array([a[1] + d[1] * u]))[0], zt)
@@ -1782,7 +1801,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if front:
             frontage_props += [dict(q_, building=key) for q_ in FR.props(
                 acc, front, edges, lambda e_, n_: float(hf.sample(np.array([e_]), np.array([n_]))[0]))]
-        for g_ in b.get("gates") or ():
+        for g_ in gates_b:
             if not g_.get("done"):
                 raise ValueError(f"wall gate {g_['id']}: does not fit the wall it snaps to (building {key})")
         if typ == "hall" and not front and len(edges) >= 3:         # corner flashings

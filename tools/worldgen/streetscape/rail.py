@@ -76,12 +76,24 @@ FLANGEWAY = 0.07            # WORKING_VALUE: groove next to the rail head inside
 CROSS_SNAP_M = 8.0          # an OSM level_crossing node within this distance of a rail axis belongs to that track
 CROSS_DEDUP_M = 10.0        # a geometric road x rail intersection this close to an OSM node is that node
 ROAD_SNAP_M = 15.0          # the road centre line of a crossing must pass within this distance
-SIGN_SETBACK = 3.0          # WORKING_VALUE: sign / signal post this far (along the road) before the panel edge
+SIGN_SETBACK = 3.0          # WORKING_VALUE: sign / signal post at least this far (along the road) before the panel edge
 SIGN_LATERAL = 1.0          # WORKING_VALUE: post this far outside the road footprint edge
-BARRIER_SETBACK = 2.0       # WORKING_VALUE: barrier post this far before the panel edge
-SIGN_ARM_L = 1.20           # WORKING_VALUE: G-3 arm length (regulation drawing not checked)
-SIGN_ARM_W = 0.20           # WORKING_VALUE: G-3 arm width
-SIGN_ARM_ANGLE = 50.0       # WORKING_VALUE: angle between the arms (deg)
+BARRIER_SETBACK = 2.0       # WORKING_VALUE: barrier post at least this far before the panel edge
+# ADR 0279 P1 (D25): minimum distances of the crossing devices from the track. Before: panel edge + 3.0 m = about 3.6 m
+# from the outer rail on a square crossing - too near.
+#  * road signal: >= 5 m from the outer rail of the track, Dz.U. 2025 poz. 1105 § 77 ust. 2 pkt 1 ("Odległość
+#    sygnalizatora drogowego od skrajnej szyny toru kolejowego nie może wynosić mniej niż: 1) 5 m - dla przejazdu
+#    kolejowo-drogowego"); measured here as the shortest (perpendicular) distance post -> outer rail head edge;
+#  * G-3 / G-4: "nie bliżej niż 5 m od skrajnej szyny" - Dz.U. 2019 poz. 2311 zał. 1 pkt 2.2.11 (Dz.U. s. 73; nearer
+#    only with the consent of the railway manager), same measure;
+#  * barrier: § 54 ust. 1 of 1105 - distance measured along the road axis from the point of the boom nearest the outer
+#    rail to the track axis >= 5 m; the signal stands "bezpośrednio przed rogatką" (§ 77 ust. 1), i.e. upstream of it.
+DEVICE_MIN_FROM_OUTER_RAIL_M = 5.0   # § 77 ust. 2 pkt 1 (1105) / zał. 1 pkt 2.2.11 (2311)
+BARRIER_MIN_FROM_TRACK_AXIS_M = 5.0  # § 54 ust. 1 (1105), along the road axis
+SIGNAL_BEHIND_BARRIER_M = 1.0        # WORKING_VALUE: signal mast this far upstream of the barrier post ("bezpośrednio")
+SIGN_ARM_L = 1.40           # ADR 0279: G-3 arm length 1400 mm, Dz.U. 2019 poz. 2311 zał. 1 rys. 9.8.8 (PDF s. 510)
+SIGN_ARM_W = 0.15           # ADR 0279: arm width 150 mm (rys. 9.8.8); was WORKING_VALUE 1.20 x 0.20
+SIGN_ARM_ANGLE = 50.0       # rys. 9.8.8: 50 deg between the arms (was WORKING_VALUE, now SOURCED)
 SIGN_BOTTOM_Z = 1.50        # WORKING_VALUE: lower edge of the cross above the road
 BARRIERS = ("no", "half", "double_half", "full", "gate", "chain", "yes")
 OVERRIDE_KIND = "rail_crossing"      # overrides.yaml: authored facts of one level crossing (Plan._apply_override)
@@ -452,6 +464,62 @@ def _keep_segments(T, k, seg_ok):
     return T[seg_ok[seg]]
 
 
+# ------------------------------------------------------------------------------------------------ device stations
+def _along_for_perp(c, a, lateral, q_min) -> float:
+    """Smallest along-road distance d (crossing centre -> upstream, approach a) at which a point at `lateral` metres to
+    the right of the driving direction lies q_min metres (perpendicular) from the track axis on its own side.
+    Point = p - drive * d + right * lateral; its signed distance from the axis q = -d * k + lateral * m with
+    k = cross(tdir, drive), m = cross(tdir, right) -> d >= (q_min + sign(k) * lateral * m) / |k|."""
+    tdir = np.asarray(c.get("tdir", (1.0, 0.0)), float)
+    drive = a * np.asarray(c["rdir"], float)
+    right = np.array([drive[1], -drive[0]])
+    k = float(tdir[0] * drive[1] - tdir[1] * drive[0])
+    m = float(tdir[0] * right[1] - tdir[1] * right[0])
+    kk = max(abs(k), 0.2)                       # very skew crossings clamped exactly like Plan.crossings (sin >= 0.2)
+    return (q_min + math.copysign(1.0, k) * lateral * m) / kk
+
+
+def device_stations(c) -> dict:
+    """ADR 0279 P1: along-road distance (crossing centre -> post) of every crossing device, per approach a = +1 / -1:
+    (a, "R") right-verge post (G-3 / G-4, signal, G-2, bell), (a, "L") left-verge signal, (a, "barrier") boom posts.
+    The old WORKING_VALUE setbacks stay as lower bounds; the regulations push the posts out:
+      signal / G-3: perpendicular distance post -> outer rail head >= DEVICE_MIN_FROM_OUTER_RAIL_M (1105 § 77 ust. 2
+        pkt 1; 2311 zał. 1 pkt 2.2.11);
+      barrier: every point of the boom >= BARRIER_MIN_FROM_TRACK_AXIS_M from the outer track axis along the road
+        (1105 § 54 ust. 1); the signal stands upstream of the barrier (§ 77 ust. 1)."""
+    half_road = c["road_w"] / 2
+    sin_t = c["sin"]
+    dtrack = c["half_track"] / sin_t
+    outer_axis = c["half_track"] - PANEL_HALF
+    rail = c.get("outer_rail_lat", outer_axis + GAUGE_DEFAULT_MM / 2000.0 + RAIL_HEAD_W)
+    full = c.get("barrier") in ("full", "gate")
+    boom_len = (c["road_w"] if full else half_road) + 0.5
+    has_bar = c.get("barrier") in ("half", "double_half", "full", "gate", "yes")
+    out = {}
+    for a in (1, -1):
+        q_bar = outer_axis + BARRIER_MIN_FROM_TRACK_AXIS_M * sin_t   # along-road 5 m -> perpendicular 5 * sin
+        lat_b = half_road + 0.5
+        bar = max(dtrack + BARRIER_SETBACK,
+                  _along_for_perp(c, a, lat_b, q_bar), _along_for_perp(c, a, lat_b - boom_len, q_bar))
+        if c.get("barrier") == "double_half":     # exit half-barrier on the left verge, boom towards the centre
+            bar = max(bar, _along_for_perp(c, a, -lat_b, q_bar), _along_for_perp(c, a, -lat_b + half_road + 0.5, q_bar))
+        q_dev = rail + DEVICE_MIN_FROM_OUTER_RAIL_M
+        for side, lat in (("R", half_road + SIGN_LATERAL), ("L", -(half_road + SIGN_LATERAL))):
+            d = max(dtrack + SIGN_SETBACK, _along_for_perp(c, a, lat, q_dev))
+            if has_bar:
+                d = max(d, bar + SIGNAL_BEHIND_BARRIER_M)
+            out[(a, side)] = float(d)
+        out[(a, "barrier")] = float(bar)
+    return out
+
+
+def device_line_max(c) -> float:
+    """Largest along-road station of the signal / sign posts (both approaches, both verges) - the 'device line' that
+    P-14 (2.0 m before it) and the U-1a posts / approach signs keep clear of."""
+    st = device_stations(c)
+    return max(v for (a, kind), v in st.items() if kind in ("R", "L"))
+
+
 # ------------------------------------------------------------------------------------------------ plan
 class Track:
     def __init__(self, src: dict, origin, attrs: dict):
@@ -638,7 +706,9 @@ class Plan:
             t.zones.append((zone[0], zone[1], ci))
             res.append({**c, "p": pc, "s": s_c, "tdir": tdir, "rdir": rdir, "sin": sin_t, "zone": zone,
                         "road_w": road_w, "n_tracks": int(max(n_tracks, t.a["tracks"])), "electrified": electrified,
-                        "half_track": max(abs(o) for o in t.offsets) + PANEL_HALF})
+                        "half_track": max(abs(o) for o in t.offsets) + PANEL_HALF,
+                        # ADR 0279: track axis -> outer edge of the outer rail head (perpendicular to the track)
+                        "outer_rail_lat": max(abs(r) for r in t.rail_lats()) + RAIL_HEAD_W / 2})
         return res
 
     def sign_code(self, c) -> str | None:
@@ -862,8 +932,8 @@ class Plan:
     def _markers_all(self, ci, c, road_z_at):
         out = []
         pc, r = c["p"], c["rdir"]
-        dtrack = c["half_track"] / c["sin"]                  # crossing centre -> outer panel edge, along the road
         half_road = c["road_w"] / 2
+        dev = device_stations(c)                              # ADR 0279: along-road stations >= 5 m from the rail
         code = self.sign_code(c)
 
         def z_at(p):
@@ -876,14 +946,14 @@ class Plan:
             drive = a * r                                     # travel direction of this approach (towards the rails)
             right = np.array([drive[1], -drive[0]])
             face = _heading(-drive)                           # signs face the oncoming driver
-            post = pc - drive * (dtrack + SIGN_SETBACK) + right * (half_road + SIGN_LATERAL)
+            post = pc - drive * dev[(a, "R")] + right * (half_road + SIGN_LATERAL)
             if code:
                 out.append(mk("sign", post, face, a, code=code, arm_l_m=SIGN_ARM_L, arm_w_m=SIGN_ARM_W,
                               arm_angle_deg=SIGN_ARM_ANGLE, bottom_z_m=SIGN_BOTTOM_Z))
             if c["light"]:
                 out.append(mk("light", post, face, a, side="right"))
             if c.get("light_left"):          # repeater on the left verge (authored: seen on photos of the crossing)
-                out.append(mk("light", pc - drive * (dtrack + SIGN_SETBACK) - right * (half_road + SIGN_LATERAL),
+                out.append(mk("light", pc - drive * dev[(a, "L")] - right * (half_road + SIGN_LATERAL),
                               face, a, side="left"))
             if c.get("electrified") and (code or c["light"]):
                 # ADR 0223: G-2 "sieć pod napięciem" (Dz.U. 2025 poz. 1105 § 81 ust. 1): kat. D below the G-3 / G-4
@@ -892,7 +962,7 @@ class Plan:
             bar = c["barrier"]
             if bar in ("half", "double_half", "full", "gate", "yes"):
                 boom_head = _heading(-right)                  # boom extends from the right verge to the left
-                entry = pc - drive * (dtrack + BARRIER_SETBACK) + right * (half_road + 0.5)
+                entry = pc - drive * dev[(a, "barrier")] + right * (half_road + 0.5)
                 full = bar in ("full", "gate")
                 out.append(mk("barrier", entry, boom_head, a, role="entry", type=bar,
                               boom_len_m=round((c["road_w"] if full else half_road) + 0.5, 2)))
@@ -901,12 +971,12 @@ class Plan:
                     # (the exit lane of the other approach), as on Mapillary 1832769196903759 (booms on both verges
                     # before the rails). s22: it stood on the far side at the left verge = exactly on the other
                     # approach's entry barrier, so 4 markers gave 2 visible booms (render r1).
-                    ex = pc - drive * (dtrack + BARRIER_SETBACK) - right * (half_road + 0.5)
+                    ex = pc - drive * dev[(a, "barrier")] - right * (half_road + 0.5)
                     out.append(mk("barrier", ex, _heading(right), a, role="exit", type=bar,
                                   boom_len_m=round(half_road + 0.5, 2)))
         if c["bell"]:
             right = np.array([r[1], -r[0]])
-            out.append(mk("bell", pc - r * (dtrack + SIGN_SETBACK) + right * (half_road + SIGN_LATERAL),
+            out.append(mk("bell", pc - r * dev[(1, "R")] + right * (half_road + SIGN_LATERAL),
                           _heading(-r), 1))
         return out
 
