@@ -112,3 +112,13 @@ def test_resolve_only_keeps_recorded_assets(monkeypatch):
     assert all("raw_plank_wall" in c for c in calls)
     assert man["assets"][0] is old["assets"][0]
     assert man["assets"][1]["id"] == "raw_plank_wall" and man["assets"][1]["dimensions_mm"] == [1870.0, 1870.0]
+
+
+def test_wood_planks_long_boards_not_floor():
+    """knyszyn-r24 (ADR 0289 'Recenzja s24'): the scan's short staggered boards read as a floor from the street; the
+    material samples the 1.87 m scan stretched along the wall (boards >= 3x longer) and with a ~0.13 m board pitch."""
+    pitch_scan, tile_scan = 0.093, 1.87
+    for k in ("wood_planks", "wood_planks_green"):
+        tu, tv = MT.M[k]["set_tile_m"]
+        assert tu / tile_scan >= 3.0, k                          # boards (and butt-joint spacing) >= 3x the scan's
+        assert 0.12 <= pitch_scan * tv / tile_scan <= 0.18, k    # board pitch in the usual siding range (WORKING_VALUE)
