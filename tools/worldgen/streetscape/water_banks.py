@@ -154,7 +154,8 @@ def build(region_id):
         return j, i
 
     # roads / bridges (graph edges, width + ROAD_CLEAR_M each side): no belt on or under them
-    graph = json.loads((rdir / "roads.graph.json").read_text(encoding="utf-8"))
+    from roads import pipeline                      # ADR 0274: effective graph = the carriageways the world is built with
+    graph = pipeline.effective_graph(region_id)
     rp = []
     for e_ in graph["edges"]:
         wv = (e_["attrs"].get("width") or {}).get("v") or 6.0

@@ -42,7 +42,7 @@ Pomiar dev (RTX 5070, ADR 0261: High mobilny ~425 fps na postoju) nie jest refer
 
 | Pole | Low | Medium | High | Ultra | Źródło / uzasadnienie |
 |---|---|---|---|---|---|
-| Rozdzielczość / render scale | 1,0 | 1,0 | 1,0 | 1,0 | D74: 1080p natywnie; brak adaptacji (`adaptiveScaleMin` 0) — przewidywalny obraz; adaptacja na Low dopiero po pomiarze GTX 660 |
+| Rozdzielczość / render scale | 1,0 | 1,0 | 1,0 | **1,5** (pc-visual-s23) | Ultra: supersampling (tier opt-in, nigdy z autodetekcji); D74: 1080p natywnie; brak adaptacji (`adaptiveScaleMin` 0) — przewidywalny obraz; adaptacja na Low dopiero po pomiarze GTX 660 |
 | Upscaler | brak | brak | brak | brak | skala 1,0 → FSR zbędny ([URP asset: Upscaling Filter](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@17.0/manual/universalrp-asset.html)) |
 | MSAA | 2× | 4× | 4× | 8× | liście/impostory używają alpha-to-coverage (ADR 0013, wymaga MSAA); 8× = więcej poziomów pokrycia krawędzi liści; ESTIMATED koszt |
 | Post AA | brak | brak | brak | brak | FXAA/SMAA rozmywa teksturę drogi; pole i jakość SMAA są w danych (przełącznik). **TAA/STP wykluczone**: URP TAA nie działa z MSAA ([URP anti-aliasing](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@17.0/manual/anti-aliasing.html)), duchy na liniach i drutach przy prędkości (docs/06) |
@@ -51,7 +51,7 @@ Pomiar dev (RTX 5070, ADR 0261: High mobilny ~425 fps na postoju) nie jest refer
 | Kaskady | 2 | 3 | 4 | 4 | [URP shadows](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@17.0/manual/universalrp-asset.html#shadows) |
 | Podział 2/3/4 | 0,25 / 0,1–0,3 / 0,067–0,2–0,467 | jw. | jw. | 0,04–0,12–0,35 | domyślne URP (0,25; 0,067/0,2/0,467) jak w mobilnych Low/Medium; Ultra ciaśniej, by zachować gęstość bliskiej kaskady przy 250 m |
 | Atlas cieni | 2048 | 2048 | 4096 | 8192 | 4 kaskady w 4096 → 2048/kaskadę; 8192 (max URP) tylko Ultra (VRAM ≥ ~10 GB) |
-| Soft shadows | off | Low | Low | High | tylko jakości używane przez assety mobilne (Low w High, High w Ultra) — wariant Medium byłby wycięty (patrz Ryzyka) |
+| Soft shadows | off | Low | **High** (pc-visual-s23) | High | tylko jakości używane przez assety mobilne (Low w High, High w Ultra) — wariant Medium byłby wycięty (patrz Ryzyka) |
 | Bias głęb./norm. | 0,4/0,3 | 0,4/0,3 | 0,6/0,6 | 0,6/0,6 | jak mobilne o tej samej liczbie kaskad (Medium/High: 0,4/0,3; Ultra 4 kask.: 0,6/0,6) |
 | LOD bias | 1,0 | 1,25 | 1,5 | 2,0 | mobilne 0,5/0,8/1,5/2,0 ([QualitySettings.lodBias](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/QualitySettings-lodBias.html)) |
 | maximumLODLevel | 0 | 0 | 0 | 0 | wymuszanie LOD1 = popping blisko; zostawione jako przełącznik ([QualitySettings.maximumLODLevel](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/QualitySettings-maximumLODLevel.html)) |
@@ -59,14 +59,14 @@ Pomiar dev (RTX 5070, ADR 0261: High mobilny ~425 fps na postoju) nie jest refer
 | Anizotropia (global / świat) | Enable / 4 | Enable / 8 | ForceEnable / 16 | ForceEnable / 16 | [QualitySettings.anisotropicFiltering](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/QualitySettings-anisotropicFiltering.html); linie drogi pod kątem |
 | Far clip | 1 500 m | 2 000 m | 3 000 m | 4 000 m | mobilne 900/1400/2500/3500 m; reversed-Z na D3D |
 | Światła dodatkowe / obiekt | 4 | 4 | 8 | 8 | max URP Forward = 8 |
-| SSAO | off | off | tak | tak | renderer z ADR 0080 (po opaque, połowa rozdz., słabe 1,0 / 0,6 m) |
+| SSAO | off | off | **off** (pc-visual-s23) | **off** (pc-visual-s23) | było: tak/tak — renderer ADR 0080 rysował fakturę „tkaniny” i przyciemniał kabinę (D84), patrz „Rewizja pc-visual-s23” |
 | Drzewa: start przerzedzania / cull | 90 / 600 m | 120 / 800 m | 150 / 1 000 m | 200 / 1 500 m | mobilne 90/600 m wszędzie; `WorldInstances` (× LOD bias) |
-| Karty liści (treeCardLodScale) | 0,5 | 0,5 | 0,75 | 1,0 | mobilne 0,5 |
+| Karty liści (treeCardLodScale) | 0,5 | 0,5 | **1,0** | **1,5** | mobilne 0,5; pc-visual-s23: pełniejsze korony przy drodze, cień drzew dalej |
 | Cienie drzew (LOD mask) | LOD0+1 | LOD0+1 | LOD0+1 | LOD0+1 | pc-shadows-s23 (2026-11-16): sam LOD0 przy karcie 0,5 i końcach LOD drzew 20/60 m = cień tylko do 10 m od kamery → brak cieni drzew na jezdni z kabiny (player knyszyn-s). LOD0+1 = zasięg 30 m (Low/Medium), 45 m (High), 60 m (Ultra). Mobilne Low/Medium zostają przy LOD0 (koszt A16). Koszt na GTX 660-klasie ESTIMATED |
 | Las HLOD przełącz. / cull | 70 / 1 500 m | 90 / ∞ | 150 / ∞ | 200 / ∞ | ADR 0015; mobilne 70–120 m |
 | Pojazdy parkujące cull | 200 m | 300 m | 400 m | 600 m | ADR 0136 r2 (mobilny Low 150 m, reszta 300 m) |
 | Szybkie ścieżki (foliage / forest / glass) | tak/tak/tak | tak/nie/nie | tak/nie/nie | tak/nie/nie | `simpleFoliage` wszędzie (wygląd zatwierdzony ADR 0013; Lit liście = zmiana wyglądu bez visual QA); forest/glass fast tylko Low |
-| Capture odbić (px / co N klatek) | 64 / 6 | 128 / 4 | 256 / 2 | 256 / 1 | mobilne 64/10 … 256/2 |
+| Capture odbić (px / co N klatek) | 64 / 6 | 128 / 4 | 256 / **1** | 256 / 1 | mobilne 64/10 … 256/2 |
 | Latarnie (światła / pule) | 0 / 6 | 2 / 8 | 6 / 8 | 8 / 8 | ADR 0062 / 0191 |
 | Chmury (cloudQuality) | 1 | 1 | 2 | 2 | ADR 0080 |
 | Lusterka (mnożnik RT) | 1,0 | 1,0 | 1,0 | 1,0 | docs/06: zawsze użyteczne; walidacja ≥ 1 |
@@ -75,6 +75,30 @@ Pomiar dev (RTX 5070, ADR 0261: High mobilny ~425 fps na postoju) nie jest refer
 
 Pola niewymienione (lakier, brud, cab lift, okna nocą, sky vis itd.) = tier mobilny o tej samej nazwie.
 Budżety mobilne (PERFORMANCE_BUDGETS: High < 1,5–2 M tris) — bez zmian; treść PC = te same sceny `_High`/Low co telefon.
+
+## Rewizja pc-visual-s23 (2026-11-17)
+Zadanie: PC High/Ultra mają wyglądać wyraźnie lepiej niż telefon. Visual QA tierów PC (`visual-qa.ps1 -Pc`), WorldC_High
+i World_knyszyn-w_High, 1920×1080, przed/po: `artifacts/pc-visual-s23/{before,after,ablate,cmp}`.
+- **Znalezisko (D84 „kabina na PC brzydka”):** na PC High/Ultra (i na mobilnym Ultra) słupki A, deska i fotel mają grubą
+  fakturę „tkaniny” i są ciemniejsze niż na mobilnym High. Ablacje: `rq_ssao=0` → czysto jak mobilny High; anizotropia
+  (`-Aniso 1` vs ForceEnable) — bez wpływu; SSAO w pełnej rozdzielczości + rozmycie bilateralne (bez zmiany wariantów
+  shadera) — faktura słabnie, ale płaskie słupki dalej przyciemnione (normalne z głębi przy kamerze 0,5 m od powierzchni).
+  Zysk SSAO na zewnątrz mały (RMSE obrazu 0,006–0,016 na 6 kamerach; trochę „przyziemienia” pod naczepą, które już dają
+  contact shadows). Zrzut z playera (exe e28533ca31, `-qacam cab-driver`) potwierdza fakturę w buildzie.
+  → **SSAO off na PC High i Ultra** (pole `ssao` zostaje przełącznikiem; `PC_Renderer_SSAO` bez zmian, nieużywany).
+  Lusterka (renderer 0) przestają płacić za SSAO.
+- **Błąd:** `QualityProfile.Tier.ssao` nie był czytany nigdzie (SSAO = renderer 0 assetu), więc `rq_ssao=0` był no-opem.
+  `QualityProfileApplier.Apply`: `ssao=false` na assecie z SSAO w rendererze 0 → kamera na renderer 1 (plain); test
+  `SsaoFlagOff_SelectsThePlainRendererOnAnSsaoAsset`. Tiery mobilne bez zmiany zachowania (flaga = asset).
+- **Inne zmiany High/Ultra:** High soft shadows High (wariant trzymany przez mobilny Ultra), karty drzew 1,0 (Ultra 1,5),
+  capture co klatkę; Ultra render scale 1,5. Low/Medium bez zmian (assety bez różnic).
+- **Sprawdzone i bez zmian:** dystans/kaskady cieni (ablacja 250 m / 8192 na High: RMSE ≤ 0,008, różnica niewidoczna
+  z kabiny — zostaje 150 m / 4096), LOD bias (ablacja `rq_lod` w visual-qa NIEWAŻNA: override działa tylko w Play, `QualityProfileApplier` l. 116 — do sprawdzenia w playerze), przerzedzanie/cull/HLOD
+  lasu (ablacja 400 m: las HLOD dalej = rzadsza ściana drzew, gorzej), anizotropia (już 16× ForceEnable), tekstury (mip 0),
+  TAA/STP (wykluczone: MSAA + alpha-to-coverage liści, ADR 0269), tonemapping Neutral (VP_World), bloom — brak
+  w VP_World (docs/06: zero przesadnego bloomu), mgła/atmosfera = `WorldAtmosphere` wspólna dla tierów; jeden skalibrowany
+  wygląd na wszystkich tierach (docs/06 §4), zmiana = decyzja kierunku artystycznego, nie tieru.
+- Koszt (orientacyjny, maszyna dewelopera ≠ referencja, D76): w raporcie agenta i `artifacts/pc-visual-s23/player`.
 
 ## Ryzyka
 - **Stripping wariantów shaderów:** URP wycina warianty wg assetów URP przypisanych w Quality/Graphics settings, nie wg

@@ -1,0 +1,154 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0147",
+   "look_at": [
+    -700.716,
+    -821.019,
+    123.849
+   ],
+   "note": "driver eye 2.5 m, control route s = 147 m of 2357 m (Grodzieńska)",
+   "pos": [
+    -698.801,
+    -881.016,
+    125.102
+   ],
+   "route_s_m": 147.282,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0442",
+   "look_at": [
+    -704.636,
+    -526.483,
+    124.447
+   ],
+   "note": "driver eye 2.5 m, control route s = 442 m of 2357 m (Grodzieńska)",
+   "pos": [
+    -702.088,
+    -586.448,
+    125.625
+   ],
+   "route_s_m": 441.846,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0736",
+   "look_at": [
+    -621.839,
+    -254.64,
+    128.588
+   ],
+   "note": "driver eye 2.5 m, control route s = 736 m of 2357 m (Grodzieńska)",
+   "pos": [
+    -654.794,
+    -304.801,
+    128.288
+   ],
+   "route_s_m": 736.41,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1031",
+   "look_at": [
+    -453.771,
+    -12.728,
+    133.956
+   ],
+   "note": "driver eye 2.5 m, control route s = 1031 m of 2357 m (Grodzieńska)",
+   "pos": [
+    -486.8,
+    -62.842,
+    132.758
+   ],
+   "route_s_m": 1030.974,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1326",
+   "look_at": [
+    -285.303,
+    228.904,
+    140.129
+   ],
+   "note": "driver eye 2.5 m, control route s = 1326 m of 2357 m (Grodzieńska)",
+   "pos": [
+    -318.518,
+    178.914,
+    142.182
+   ],
+   "route_s_m": 1325.538,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1620",
+   "look_at": [
+    -116.283,
+    470.151,
+    134.917
+   ],
+   "note": "driver eye 2.5 m, control route s = 1620 m of 2357 m (Grodzieńska)",
+   "pos": [
+    -149.45,
+    420.129,
+    137.305
+   ],
+   "route_s_m": 1620.102,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1915",
+   "look_at": [
+    52.776,
+    711.37,
+    133.933
+   ],
+   "note": "driver eye 2.5 m, control route s = 1915 m of 2357 m (Grodzieńska)",
+   "pos": [
+    19.546,
+    661.391,
+    134.929
+   ],
+   "route_s_m": 1914.666,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2209",
+   "look_at": [
+    221.916,
+    952.534,
+    133.949
+   ],
+   "note": "driver eye 2.5 m, control route s = 2209 m of 2357 m (Grodzieńska)",
+   "pos": [
+    188.7,
+    902.544,
+    135.358
+   ],
+   "route_s_m": 2209.23,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 286.441,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dw671-jasionowka-01",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

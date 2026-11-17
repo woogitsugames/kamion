@@ -1,0 +1,8 @@
+# Authored overrides of region dw671-tykocin-07 (ADR 0231, rough definition: the tile is NOT ingested or built yet).
+# Every entry survives a re-import; coordinates are region-local E/N (origin EPSG:2180 753419, 604415)
+# or EPSG:2180 where the key says so. Source of the targets: OSM via Overpass 2026-11-15
+# (Data/Plans/ring-0231/osm_ring_extract.json); the pipeline builds from the pbf of 2026-11-08, so a way id
+# that is missing there shows up as overrides_stale in build_world. No lettering, no brands.
+# DW671 keeps the BDOT10k width and gets no edge lines, as in dw671-tykocin-01 (ADR 0212, measured there).
+# Nothing was checked on the orthophoto of this tile: add overrides after the ingest.
+overrides: []

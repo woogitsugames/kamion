@@ -361,6 +361,30 @@
       "fov_deg": 60,
       "pitch_deg": 0,
       "note": "QA only, ESTIMATED closer eye-level pose for owner photo 14; verify against image and obstacles."
+    },
+    {
+      "id": "knyszyn_szkolna_junction",
+      "pos_en": [
+        -385.1,
+        -588.1
+      ],
+      "heading_deg": 31,
+      "eye_m": 2.5,
+      "fov_deg": 60,
+      "pitch_deg": -3,
+      "note": "ADR 0237 D38: driver eye on Poludniowa 40 m SW of the Poludniowa x Szkolna crossroads (OSM node 1134846746, local -364.5 -553.8), looking NE: four zebras, school parking mouth on the right 23 m past the crossroads (was a teardrop of asphalt), sidewalks"
+    },
+    {
+      "id": "knyszyn_szkolna_top",
+      "pos_en": [
+        -355.0,
+        -540.0
+      ],
+      "heading_deg": 0,
+      "eye_m": 70.0,
+      "fov_deg": 50,
+      "pitch_deg": -89.9,
+      "note": "QA only (ADR 0237 D38): top view, north up, of the Poludniowa x Szkolna crossroads and the school parking tee - pair = GUGiK orthophoto crop of docs/reports/knyszyn-szkolna/ortho_readings.json"
     }
   ]
 }

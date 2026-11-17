@@ -1280,6 +1280,37 @@ def _linden_study_r3(kit, p, z, height, diameter, low):
                 kit.quad(verts, uv, [PLT._fol(shade)]*4)
 
 
+CROWN_SHAPE_KIND = "tree_crown_shape"
+CROWN_SHAPE_LIMITS = (1.0, 3.0)      # total tree height : crown spread; < 1 = wider than tall, > 3 = columnar
+
+
+def crown_shapes(overrides, rep=None):
+    """ADR 0227 D41 (c): {(tree_groups id, species): height : spread} from `kind: tree_crown_shape` entries
+    (`targets: [tree_groups ids]`, `species`, `height_to_spread`). The crown shape is data of its own entry, so the
+    tree groups it applies to stay as authored. A malformed entry or a target that is no kit tree group is stale
+    (reported, never raises); two entries for one (group, species) - the second is stale."""
+    kit_ids = {o.get("id") for o in overrides or [] if o.get("kind") == "tree_groups" and o.get("form") == "kit"}
+    out, stale = {}, []
+    for o in overrides or []:
+        if o.get("kind") != CROWN_SHAPE_KIND:
+            continue
+        v, sp, tg = o.get("height_to_spread"), o.get("species"), o.get("targets")
+        ok = (not isinstance(v, bool) and isinstance(v, (int, float)) and math.isfinite(float(v))
+              and CROWN_SHAPE_LIMITS[0] <= float(v) <= CROWN_SHAPE_LIMITS[1] and sp in KIT_SPECIES
+              and isinstance(tg, list) and tg and all(t in kit_ids for t in tg)
+              and not any((t, sp) in out for t in tg))
+        if not ok:
+            stale.append(o.get("id", "?"))
+            continue
+        for t in tg:
+            out[(t, sp)] = float(v)
+    if rep is not None and out:                 # no key without entries: other regions' QA stays byte-identical
+        rep["crown_shapes"] = {f"{t}:{sp}": v for (t, sp), v in sorted(out.items())}
+    if rep is not None and stale:
+        rep["crown_shapes_stale"] = stale
+    return out
+
+
 def authored_trees(buf, overrides, zf, report, half=1024.0):
     """ADR 0186: grown broadleaf trees and corner shrubs of an authored `kind: tree_groups` with `form: kit` -
     `points_en` rows `[E, N, height m, crown diameter m[, species]]` traced from the orthophoto / a photo, meshed as
@@ -1289,6 +1320,7 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
     plot-kit group in a chunk that has none (one draw call): the trees are authored, they are never left out."""
     rep = {"trees": 0, "tris_high": 0, "tris_low": 0, "skipped": {}, "list": []}
     groups = None
+    shapes = crown_shapes(overrides, rep)
     for o in overrides or []:
         if o.get("kind") != "tree_groups" or o.get("form") != "kit":
             continue
@@ -1304,6 +1336,11 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
             p, H, r = np.asarray(q[:2], float), float(q[2]), float(q[3]) / 2.0
             key = ("authored-tree", o["id"], k)
             sp = str(q[4]) if len(q) >= 5 and q[4] else PLT._pick_w(sorted(spw.items()), key, "sp")
+            shape = shapes.get((o["id"], sp))
+            if shape is not None:
+                # ADR 0227 D41 (c): crown spread from the authored height : spread ratio of the species, not from the
+                # per-point WORKING_VALUE diameter (GLB AABB spans, review: crowns read flat / too wide)
+                r = H / shape / 2.0
             if sp not in KIT_SPECIES:
                 raise ValueError(f"tree_groups {o['id']}: unknown species {sp!r}, knows {sorted(KIT_SPECIES)}")
             if crown_model == "garden_trial" and sp not in HABIT:
@@ -1334,6 +1371,7 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
             rep["trees"] += 1
             rep["list"].append({"id": o["id"], "e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "h_m": H,
                                 "crown_m": round(2 * r, 2), "crown_base_m": round(cb, 2), "species": sp,
+                                **({"crown_shape_h_to_spread": shape} if shape is not None else {}),
                                 **({"crown_model": crown_model} if crown_model != "kit" else {})})
     report["authored_trees"] = rep
     return rep

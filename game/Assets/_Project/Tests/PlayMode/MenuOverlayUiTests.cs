@@ -36,7 +36,7 @@ namespace Game.Tests
         static IEnumerable<ScreenCase> Screens => k_Screens;
 
         /// <summary>Same value as <c>MenuOverlayLayoutTests.MenuBlock3Starts</c> (EditMode; kept in sync by this test).</summary>
-        static readonly Rect k_Block3StartsPc = Rect.MinMaxRect(-800f, -302f, 800f, 496f);
+        static readonly Rect k_Block3StartsPc = Rect.MinMaxRect(-800f, -272f, 800f, 496f);
 
         Camera m_Cam;
         RenderTexture m_Rt;
@@ -99,9 +99,44 @@ namespace Game.Tests
             Rect b = menu.BlockBounds;
             Assert.AreEqual(k_Block3StartsPc.xMin, b.xMin, 0.5f);
             Assert.AreEqual(k_Block3StartsPc.xMax, b.xMax, 0.5f);
-            Assert.AreEqual(k_Block3StartsPc.yMin, b.yMin, 0.5f, "lowest item (footer of the right column)");
+            Assert.AreEqual(k_Block3StartsPc.yMin, b.yMin, 0.5f, "lowest item (ADR 0283: no separate PC settings row)");
             Assert.AreEqual(k_Block3StartsPc.yMax, b.yMax, 0.5f, "title top");
             Assert.AreEqual(0f, menu.BlockShift, "no overlay: the menu keeps its place");
+        }
+
+        /// <summary>int-ui-s23 §7 p.3: monitor = overlay hidden by default (canvas off, menu not shifted); phone = shown;
+        /// SetVisible (F3) overrides the default.</summary>
+        [UnityTest]
+        public IEnumerator Overlay_HiddenByDefaultOnMonitor_ShownOnPhone()
+        {
+            Assert.IsFalse(DiagnosticsOverlay.ResolveVisible(true, null));
+            Assert.IsTrue(DiagnosticsOverlay.ResolveVisible(false, null));
+            Assert.IsTrue(DiagnosticsOverlay.ResolveVisible(true, true));
+            Assert.IsFalse(DiagnosticsOverlay.ResolveVisible(false, false));
+
+            var s = k_Screens[0];
+            MakeCamera(s);
+            var safe = new Rect(0f, 0f, s.W, s.H);
+            var overlay = DiagnosticsOverlay.Create(m_Cam, null, null);
+            overlay.OverrideScreen(new Vector2(s.W, s.H), safe, s.Dpi, true);
+            var menu = BootMenu.Create(m_Cam, StartMenuOptions.Load(), Starts(), null, null, Regions(), () => { });
+            menu.OverrideScreen(new Vector2(s.W, s.H), safe, s.Dpi, true);
+            for (int i = 0; i < 3; i++) yield return null;
+            Assert.IsFalse(overlay.Visible, "monitor: hidden by default");
+            Assert.IsFalse(overlay.GetComponent<Canvas>().enabled, "monitor: nothing drawn, no raycasts");
+            Assert.AreEqual(0f, menu.BlockShift, "hidden overlay does not push the menu");
+
+            overlay.SetVisible(true);
+            for (int i = 0; i < 3; i++) yield return null;
+            Assert.IsTrue(overlay.Visible);
+            Assert.IsTrue(overlay.GetComponent<Canvas>().enabled);
+
+            var p = k_Screens[3];
+            overlay.OverrideScreen(new Vector2(p.W, p.H), new Rect(0f, 0f, p.W, p.H), p.Dpi, false);
+            Assert.IsTrue(overlay.Visible, "explicit choice kept");
+            var phone = DiagnosticsOverlay.Create(m_Cam, null, null);
+            phone.OverrideScreen(new Vector2(p.W, p.H), new Rect(0f, 0f, p.W, p.H), p.Dpi, false);
+            Assert.IsTrue(phone.Visible, "phone: shown by default");
         }
 
         [UnityTest]
@@ -111,6 +146,7 @@ namespace Game.Tests
             var safe = new Rect(0f, 0f, s.W, s.H);
             var overlay = DiagnosticsOverlay.Create(m_Cam, null, null);
             overlay.OverrideScreen(new Vector2(s.W, s.H), safe, s.Dpi, s.Desktop);
+            overlay.SetVisible(true);   // §7 p.3: hidden by default on a monitor; opened (F3) it must still not cover the menu
             var menu = BootMenu.Create(m_Cam, StartMenuOptions.Load(), Starts(), null, null, Regions(), s.Desktop ? (Action)(() => { }) : null);
             menu.OverrideScreen(new Vector2(s.W, s.H), safe, s.Dpi, s.Desktop);
             for (int i = 0; i < 3; i++) yield return null;   // measure the panel, publish, both sides apply

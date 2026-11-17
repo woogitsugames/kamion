@@ -118,7 +118,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs, heroes=depots)
     KC.build(w.buf, rid, blds, zsmooth, rep)
     KT.build(w.buf, rid, blds, zsmooth, rep)
-    KMB.build(w.buf, rid, blds, zsmooth, rep)
+    KMB.build(w.buf, rid, blds, zsmooth, rep, overrides)     # ADR 0227 D41: pavilion form from overrides
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])
@@ -171,7 +171,14 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     soft = vmask & ~hmask & ~pmask
     zc, dist = CF.conform(hf, zjoin, mask, soft=soft)
     rep["terrain_soft_nodes"] = int(soft.sum())
-    zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask)
+    # c-p1-s23 (REVIEW s20 gate3-phone P1-2): a walled ramp is a fill, not a span - the ground beside it is not
+    # pushed under a soffit (the clamp dug a 1.5 m pit beside the wall end at the ramp toe, g3b_ext34_s1482)
+    _wr = getattr(w, "walled_ramp_mask", None)
+    zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask if _wr is None else (mask | _wr))
+    if _wr is not None and _wr.any():
+        # ... but never through the ramp surface itself: at the toe the fill meets the ground road and the cone of the
+        # conform reached the deck shoulder (-0.003 m at E -386.8 N -104.2); kept CF.TERRAIN_UNDER_WALLED below it
+        zc = CF.clamp_under_decks(zc, deck, deck_mask & _wr, CF.TERRAIN_UNDER_WALLED - 0.3, mask)
     zc = CF.tidy(zc, zjoin, mask, dist)
     # Explicit park surfaces use lawn-level paving instead of deep yard skirts.
     # Keep all other ground and surfaces on the existing conformance path.

@@ -1,0 +1,15 @@
+{
+  "provenance": "authored_override (ADR 0231): control route for cameras/QA = DW671 inside this tile, continuing the route of dw671-tykocin-01",
+  "description": "DW671 from the N tile edge (seam with dw671-tykocin-01, OSM way 145989268) to the W tile edge (OSM way 145989268; seam with dw671-tykocin-03). Points from the Overpass extract of 2026-11-15; build_world snaps them to the nearest graph node.",
+  "start_epsg2180": [
+    758587.2,
+    609535.0
+  ],
+  "end_epsg2180": [
+    758539.0,
+    609438.6
+  ],
+  "confidence": "medium (OSM 2026-11-15 vs the pinned pbf 2026-11-08: re-check after build_region that both are graph boundary nodes)",
+  "no_standalone_start": true,
+  "no_standalone_start_note": "authored_override (ADR 0231 §5a, s23 world2-finish): corner tile, the corridor crosses only 107,78 m of it, both ends on the tile edge. A start behind the entry closure needs >= 72,55 m (60 m setback + 0,75 m boards + 11,30 m trailer + 0,5 m margin) plus 100 m ahead (RegionStart.MinAheadM) = 172,55 m, so no standalone start exists; start/end stay the corridor portals of tile_graph (ADR 0235). The tile is streamed as part of the corridor only; the start menu does not offer it."
+}

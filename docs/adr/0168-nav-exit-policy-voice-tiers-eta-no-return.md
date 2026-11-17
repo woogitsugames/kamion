@@ -88,3 +88,27 @@ Wzorce przepisane `--write-golden` (wynik identyczny z ręczną zmianą 6 pól `
 G24 791,1→789,1, G26 3001,3→2999,7, G29 1221,9→1219,9, G36 2436,8→2437,2. Tolerancja 2,0 m bez zmian.
 Otwarte (bez zmian tutaj): skok węzeł OSM → oś przesuniętej jezdni wlicza się w długość trasy (artefakt ADR 0144 —
 oś generowana vs węzły OSM); osobny problem `test_region_file_is_reproducible` — patrz raport PR D31.
+
+## Dopisek s23 (D35): wycinanie osi jezdni z tolerancją 1e-6 m (reprodukowalność `.bytes` między platformami)
+
+Problem (D31): świeży build `bialystok-industrial-c_route.bytes` na Linuksie ≠ plik zatwierdzony z Windows na 8 krawędziach,
+różnica = jeden krok próbkowania osi (~0,5 m) na jednym końcu. Przyczyna potwierdzona analizą danych (skrypt diagnostyczny,
+nie w repo): `load_carriageway_axes` wycinał zakres krawędzi z gęstej osi łańcucha przez `searchsorted(s, s1*k)`; granica
+zakresu jest wierzchołkiem łańcucha, czyli próbką, a `s1*k` trafia w nią z błędem kilku ulp. W regionie C 32 granice leżą
+0,9e-15…5,7e-14 m od próbki — WSZYSTKIE to koniec łańcucha (`raw_end * (length / raw_end)` vs `s[-1]`). 8 z nich wypadało
+na Linuksie PONIŻEJ ostatniej próbki → próbka (prawdziwy koniec osi) odcięta; dokładnie te 8 krawędzi różniło się od pliku.
+Znak błędu zależy od kolejności sumowania długości (platforma/numpy) — na Windows wypadł inaczej (mechanizm potwierdzony,
+konkretna przyczyna różnicy sumowania na Windows UNVERIFIED).
+
+Decyzja: `axis_span_slice(s, a, b, eps=AXIS_SPAN_EPS_M=1e-6)` (WORKING_VALUE) — reguła jawna: oba końce WŁĄCZNIE,
+bierzemy każdą próbkę z `a − eps ≤ s[i] ≤ b + eps`. Wierzchołek wspólny dwóch krawędzi należy do obu (jak dotąd przy trafieniu
+dokładnym). 1e-6 m ≫ szum (1e-14) i ≪ krok 0,5 m. Pozostałe miejsca w `navgraph`: brak innych `searchsorted`/porównań float
+na granicach; jedyny próg to Douglas-Peucker `best > 0,05 m` na współrzędnych zaokrąglonych do 1 mm (ryzyko teoretyczne, nie ruszane).
+
+Wynik (Linux, nowy kod vs zatwierdzone pliki): różnią się wyłącznie `pts` krawędzi (węzły, długości OSM, flagi, zakazy, pasy
+bez zmian); region C 10 krawędzi, ≤ 0,500 m; pozostałe regiony 0–8 krawędzi, ≤ 0,500 m (dk65-06/08/09/10/11, dk65-monki-01,
+knyszyn-s/-w: 0). Podgląd złotych tras (runner w izolowanym katalogu, nowy `.bytes` C): 8/36 par — `lengthM` +0,4…+0,5 m,
+`costS` +0,1…+0,2 s (G03 G14 G19 G20 G21 G28 G31 G35); manewry, kąty, numery zjazdów bez zmian.
+Testy regresji: `test_axis_span_slice_is_stable_on_float_noise` (syntetyczna oś, zaburzenia ±1e-14…±1e-9),
+`test_region_axis_slices_stable_under_perturbation` (wszystkie zakresy regionu C). `test_region_file_is_reproducible` zielony
+dopiero po regeneracji `.bytes` u lidera (Windows) nowym kodem.

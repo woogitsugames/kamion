@@ -23,12 +23,14 @@ namespace Game.UI
     /// </summary>
     public sealed class BootMenu : MonoBehaviour
     {
-        static readonly Color k_Panel = new Color(0.06f, 0.065f, 0.07f, 0.97f);
-        static readonly Color k_Button = new Color(0.16f, 0.17f, 0.18f, 0.95f);
-        static readonly Color k_ButtonOn = new Color(0.30f, 0.36f, 0.30f, 0.95f);
-        static readonly Color k_Text = new Color(0.95f, 0.95f, 0.91f, 1f);
-        static readonly Color k_Muted = new Color(0.70f, 0.70f, 0.67f, 1f);
-        static readonly Color k_Amber = new Color(0.95f, 0.66f, 0.18f, 1f);
+        // ADR 0283: one palette for every menu (Game.Controls.UiPalette, WCAG AA pairs in the ADR).
+        static readonly Color k_Panel = Game.Controls.UiPalette.Row;
+        static readonly Color k_Button = Game.Controls.UiPalette.Button;
+        static readonly Color k_ButtonOn = Game.Controls.UiPalette.SegmentOn;
+        static readonly Color k_Text = Game.Controls.UiPalette.Ink;
+        static readonly Color k_TextOn = Game.Controls.UiPalette.InkOnLight;
+        static readonly Color k_Muted = Game.Controls.UiPalette.InkMuted;
+        static readonly Color k_Amber = Game.Controls.UiPalette.Accent;
 
         const float ColW = 760f, BtnH = 104f, Gap = 16f;
 
@@ -55,10 +57,10 @@ namespace Game.UI
         public RectTransform SafeAreaRect => m_Safe;
 
         /// <summary>Tests / captures: lay out for a device screen (pixels, safe area in pixels, DPI; 0 = unknown).</summary>
-        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi); m_View.Refresh(); }
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi); m_View.Refresh(); SyncBackdropPanel(); RefreshFooter(); }
 
         /// <summary>Tests / captures: lay out for a screen of the given form factor (ADR 0265: monitors 16:9 .. 32:9).</summary>
-        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi, bool desktop) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi, desktop); m_View.Refresh(); }
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi, bool desktop) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi, desktop); m_View.Refresh(); SyncBackdropPanel(); RefreshFooter(); }
 
         /// <summary>Vertical shift of the menu block applied to make room for the diagnostics overlay (ADR 0276; tests).</summary>
         public float BlockShift => float.IsNaN(m_AppliedShift) ? 0f : m_AppliedShift;
@@ -83,11 +85,16 @@ namespace Game.UI
             if (r.MenuShiftY == m_AppliedShift) return;
             m_AppliedShift = r.MenuShiftY;
             m_Block.anchoredPosition = new Vector2(0f, r.MenuShiftY);
+            SyncBackdropPanel();
         }
 
         void Update()
         {
-            m_View?.Refresh();   // rotation, fold / unfold: scale + safe area follow, the block stays centred
+            if (m_View != null && m_View.Refresh())   // rotation, fold / unfold: scale + safe area follow, the block stays centred
+            {
+                SyncBackdropPanel();
+                RefreshFooter();
+            }
             ApplyOverlayLayout();
             UiFocus.RestoreIfLost(this, m_FirstItem);   // ADR 0265: the pad never gets stuck without a selection
         }
@@ -118,7 +125,7 @@ namespace Game.UI
         /// <summary>PlayerPrefs key of the last picked region id.</summary>
         public const string PrefRegion = "menu.region";
         public const string RegionPrevName = "RegionPrev", RegionNextName = "RegionNext", RegionStartName = "RegionStart";
-        public const string RegionStartLabel = "Jedź w wybranym regionie", RegionMissingLabel = "Region niedostępny w tym APK";
+        public const string RegionStartLabel = "Jedź w wybranym regionie", RegionMissingLabel = "Region niedostępny w tej wersji gry";
         IReadOnlyList<BootRegionChoice> m_Regions;
         int m_RegionIndex = -1;
         Text m_RegionLabel, m_RegionDetail, m_RegionStartText;
@@ -181,7 +188,7 @@ namespace Game.UI
             if (m_RegionIndex < 0) return y;   // no region of the catalog in this APK: no picker
             const float arrowW = 96f, rowH = 88f;
             y -= 8f;
-            Label(m_Block, "HeaderRegion", "REGION — START NA POCZĄTKU TRASY", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(left, y - 36f), new Vector2(ColW, 36f));
+            Head("HeaderRegion", "REGION — START NA POCZĄTKU TRASY", new Vector2(left, y - 36f));
             y -= 44f;
             var prev = Button(m_Block, "<", new Vector2(left, y - rowH), new Vector2(arrowW, rowH), 40, TextAnchor.MiddleCenter, () => StepRegion(-1));
             prev.name = RegionPrevName;
@@ -213,6 +220,68 @@ namespace Game.UI
             return y;
         }
 
+        // ---- background (D87): a still from the game, darkened evenly, with a matte panel behind the menu block
+        /// <summary>Resources path of the menu photo (file: <c>_Project/UI/Resources/UI/MenuBackground/menu_bg.png</c>, supplied
+        /// by the lead from a game capture; no brands). Missing file = plain dark background.</summary>
+        public const string BackgroundResource = "UI/MenuBackground/menu_bg";
+        public const string BackdropName = "MenuBackdrop", BackdropPhotoName = "Photo", BackdropPanelName = "BlockPanel";
+        /// <summary>Panel margin around the menu items (canvas units).</summary>
+        public const float PanelPad = 48f;
+
+        Texture2D m_BackgroundTex;
+        RectTransform m_BackdropSafe, m_BackdropPanel;
+
+        /// <summary>True when the menu photo was found and is shown (tests, captures).</summary>
+        public bool HasBackgroundPhoto => m_BackgroundTex != null;
+
+        /// <summary>
+        /// Full-screen layer under the safe area (first sibling of the canvas root, never part of the menu block, so the
+        /// safe-area / overlay checks of the menu items stay as they were). Photo: cover the screen without stretching
+        /// (AspectRatioFitter, envelope), even scrim. Panel: tracks the block (safe-area anchors + diagnostics shift).
+        /// </summary>
+        void BuildBackdrop(Transform canvasRoot)
+        {
+            var root = Rect(BackdropName, canvasRoot);
+            root.anchorMin = Vector2.zero; root.anchorMax = Vector2.one; root.offsetMin = root.offsetMax = Vector2.zero;
+            root.SetAsFirstSibling();
+
+            m_BackgroundTex = Resources.Load<Texture2D>(BackgroundResource);
+            var baseImg = root.gameObject.AddComponent<Image>();
+            baseImg.color = m_BackgroundTex != null ? Color.black : Game.Controls.UiPalette.MenuFallback;
+            baseImg.raycastTarget = false;
+            if (m_BackgroundTex != null)
+            {
+                var photo = Rect(BackdropPhotoName, root);
+                photo.anchorMin = Vector2.zero; photo.anchorMax = Vector2.one; photo.offsetMin = photo.offsetMax = Vector2.zero;
+                var raw = photo.gameObject.AddComponent<RawImage>();
+                raw.texture = m_BackgroundTex; raw.raycastTarget = false;
+                var fit = photo.gameObject.AddComponent<AspectRatioFitter>();
+                fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+                fit.aspectRatio = m_BackgroundTex.width / (float)Mathf.Max(1, m_BackgroundTex.height);
+                var scrim = Rect("Scrim", root);
+                scrim.anchorMin = Vector2.zero; scrim.anchorMax = Vector2.one; scrim.offsetMin = scrim.offsetMax = Vector2.zero;
+                var si = scrim.gameObject.AddComponent<Image>(); si.color = Game.Controls.UiPalette.MenuPhotoScrim; si.raycastTarget = false;
+            }
+            else Debug.Log("[UI] menu background " + BackgroundResource + " missing - plain dark background");
+
+            m_BackdropSafe = Rect("SafeMirror", root);
+            m_BackdropPanel = Rect(BackdropPanelName, m_BackdropSafe);
+            var pi = m_BackdropPanel.gameObject.AddComponent<Image>(); pi.color = Game.Controls.UiPalette.MenuPanel; pi.raycastTarget = false;
+            m_BackdropPanel.gameObject.SetActive(false);   // placed once the block is measured
+        }
+
+        /// <summary>Keeps the panel behind the block: same anchors as the safe area, same shift as the block.</summary>
+        void SyncBackdropPanel()
+        {
+            if (m_BackdropSafe == null || m_Safe == null || m_Block == null) return;
+            m_BackdropSafe.anchorMin = m_Safe.anchorMin; m_BackdropSafe.anchorMax = m_Safe.anchorMax;
+            m_BackdropSafe.offsetMin = m_Safe.offsetMin; m_BackdropSafe.offsetMax = m_Safe.offsetMax;
+            if (m_BlockBounds.width <= 0f) return;
+            Place(m_BackdropPanel, m_BlockBounds.min - new Vector2(PanelPad, PanelPad) + m_Block.anchoredPosition,
+                m_BlockBounds.size + new Vector2(2f * PanelPad, 2f * PanelPad));
+            m_BackdropPanel.gameObject.SetActive(true);
+        }
+
         void Build(Camera cam, IReadOnlyList<(string label, Action action)> starts, Action openSettings, Action openAbout,
                    IReadOnlyList<BootRegionChoice> regions)
         {
@@ -230,12 +299,14 @@ namespace Game.UI
             m_Block = Rect("Block", m_Safe);
             m_Block.anchorMin = Vector2.zero; m_Block.anchorMax = Vector2.one;
             m_Block.offsetMin = m_Block.offsetMax = Vector2.zero;
+            BuildBackdrop(canvas.transform);
 
             // Centred block: left column starts, gap 80, right column options.
             float total = 2 * ColW + 80f, left = -total * 0.5f, right = left + ColW + 80f;
             float top = 400f;   // block top (centre-anchored, y up)
 
-            Label(m_Block, "Title", "TRUCK SIM PL — TEST WRAŻEŃ", 28, TextAnchor.LowerLeft, k_Amber, new Vector2(left, top + 52f), new Vector2(total, 44f));
+            var titleText = Label(m_Block, "Title", "TRUCK SIM PL — TEST WRAŻEŃ", 34, TextAnchor.LowerLeft, k_Text, new Vector2(left, top + 52f), new Vector2(total, 44f));
+            titleText.font = UiFonts.Strong;
             // ADR 0277 notice (hidden until ShowNotice): one line between the title (top + 52) and the column headers (top + 28),
             // shrinks to fit the block width instead of running into them. Child of m_Block (int-h3-s23), so it moves with the
             // block when the diagnostics overlay shifts the menu (ADR 0276) and stays inside MeasureBlock's frame.
@@ -245,7 +316,7 @@ namespace Game.UI
             m_Notice.gameObject.SetActive(false);
 
             // ---- left: starts
-            Label(m_Block, "HeaderStart", "WYBIERZ START", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(left, top - 8f), new Vector2(ColW, 36f));
+            Head("HeaderStart", "WYBIERZ START", new Vector2(left, top - 8f));
             float y = top - 52f;
             for (int i = 0; i < starts.Count; i++)
             {
@@ -265,7 +336,7 @@ namespace Game.UI
             if (regions != null && regions.Count > 0) y = BuildRegionPicker(regions, left, y);
 
             // ---- right: options
-            Label(m_Block, "HeaderOptions", "OPCJE", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(right, top - 8f), new Vector2(ColW, 36f));
+            Head("HeaderOptions", "OPCJE", new Vector2(right, top - 8f));
             float oy = top - 52f;
             Segments("Pora dnia (trasy)", StartMenuOptions.LightingLabels, right, ref oy,
                 () => Options.Lighting, i => Options.SetLighting(i));
@@ -277,27 +348,27 @@ namespace Game.UI
                 () => Array.IndexOf(QualityTiers.SupportedFrameRates, Options.Fps),
                 i => Options.SetFps(QualityTiers.SupportedFrameRates[i]));
             oy -= 8f;
-            // Settings and "Informacje" (attributions + licences, LICENSES-AUDIT-S20 R-P0-1) share one row: the block height is unchanged.
+            // Settings and "Informacje" (attributions + licences, LICENSES-AUDIT-S20 R-P0-1) share one row. ADR 0283: on a PC one
+            // "Ustawienia" button opens the tabbed screen (Grafika / Sterowanie / Dźwięk / Rozgrywka / Lusterka); its
+            // "Sterowanie" tab leads to the wheel / pedal / camera panel. Phones keep the control settings button.
             const float aboutW = 250f;
-            var settingsBtn = Button(m_Block, "Ustawienia sterowania", new Vector2(right, oy - 80f), new Vector2(ColW - aboutW - Gap, 80f), 32, TextAnchor.MiddleCenter, () => openSettings?.Invoke());
+            bool tabbed = m_OpenPcSettings != null;
+            UnityEngine.Events.UnityAction openSettingsAction = tabbed
+                ? (UnityEngine.Events.UnityAction)(() => { Game.UI.Settings.PcSettingsPanel.OpenControlSettings = openSettings; m_OpenPcSettings?.Invoke(); })
+                : () => openSettings?.Invoke();
+            var settingsBtn = Button(m_Block, tabbed ? Game.UI.Settings.PcSettingsTexts.MenuButton : "Ustawienia sterowania", new Vector2(right, oy - 80f),
+                new Vector2(ColW - aboutW - Gap, 80f), 32, TextAnchor.MiddleCenter, openSettingsAction);
+            if (tabbed) settingsBtn.name = PcSettingsName;
             var aboutBtn = Button(m_Block, AboutLabel, new Vector2(right + ColW - aboutW, oy - 80f), new Vector2(aboutW, 80f), 32, TextAnchor.MiddleCenter, () => openAbout?.Invoke());
             m_Nav[1].Add(new[] { settingsBtn.GetComponent<Selectable>(), aboutBtn.GetComponent<Selectable>() });
-            if (m_OpenPcSettings != null)
-            {
-                // ADR 0270: display / graphics / audio screen, one full-width row under the settings row; part of the
-                // pad / keyboard grid of ADR 0265 (review #136 P2-2).
-                oy -= 80f + Gap;
-                var pcBtn = Button(m_Block, Game.UI.Settings.PcSettingsTexts.MenuButton, new Vector2(right, oy - 80f), new Vector2(ColW, 80f), 32, TextAnchor.MiddleCenter,
-                    () => m_OpenPcSettings?.Invoke());
-                pcBtn.name = PcSettingsName;
-                m_Nav[1].Add(new[] { pcBtn.GetComponent<Selectable>() });
-            }
-            Label(m_Block, "Footer", "DrivingLab ma stałe światło. W jeździe: przycisk Menu wraca tutaj bez restartu aplikacji.\nWersja: " + BuildInfo.Current.IdentityLabel,
-                22, TextAnchor.UpperLeft, k_Muted, new Vector2(right, oy - 80f - 12f - 70f), new Vector2(ColW, 70f)).horizontalOverflow = HorizontalWrapMode.Wrap;
+            m_Footer = Label(m_Block, "Footer", "", 22, TextAnchor.UpperLeft, k_Muted, new Vector2(right, oy - 80f - 12f - 70f), new Vector2(ColW, 70f));
+            m_Footer.horizontalOverflow = HorizontalWrapMode.Wrap;
+            RefreshFooter();
 
             m_BlockBounds = MeasureBlock(m_Block);
             PublishBlock();
             ApplyOverlayLayout();
+            SyncBackdropPanel();
 
             UiFocus.EnsureEventSystem();
             UiFocus.ApplyGrid(m_Nav);
@@ -310,6 +381,7 @@ namespace Game.UI
         {
             UiFocus.Pop(this, false);
             MenuOverlayBoard.MenuActive = false;
+            if (m_BackgroundTex != null) { Resources.UnloadAsset(m_BackgroundTex); m_BackgroundTex = null; }   // not kept while driving
         }
 
         /// <summary>Bounding box of the direct children (all centre-anchored with a bottom-left pivot, see <see cref="Place"/>).</summary>
@@ -324,6 +396,28 @@ namespace Game.UI
                 xMax = Mathf.Max(xMax, p.x + s.x); yMax = Mathf.Max(yMax, p.y + s.y);
             }
             return xMin > xMax ? default(UnityEngine.Rect) : UnityEngine.Rect.MinMaxRect(xMin, yMin, xMax, yMax);
+        }
+
+        Text m_Footer;
+        bool? m_FooterDesktop;
+
+        /// <summary>Footer hint (int-ui-s23 §7 p.2): a monitor names the key, a phone the on-screen button. Pure (tests).</summary>
+        public static string FooterHint(bool desktop) => desktop
+            ? "Plac testowy ma stałe światło. W jeździe Esc (pad: Start) wraca tutaj."
+            : "Plac testowy ma stałe światło. W jeździe przycisk Menu wraca tutaj.";
+
+        /// <summary>Footer text shown now (tests).</summary>
+        public string FooterText => m_Footer != null ? m_Footer.text : "";
+
+        /// <summary>The form factor is known only after the viewport settles (the launch argument <c>ui_touch</c> and the
+        /// D85 migration can change it after Build): the footer follows every change instead of the value at Build.</summary>
+        void RefreshFooter()
+        {
+            if (m_Footer == null || m_View == null) return;
+            bool d = m_View.Desktop;
+            if (m_FooterDesktop == d) return;
+            m_FooterDesktop = d;
+            m_Footer.text = FooterHint(d) + "\nWersja: " + BuildInfo.Current.IdentityLabel;
         }
 
         /// <summary>Name of the notice line (tests).</summary>
@@ -349,21 +443,43 @@ namespace Game.UI
 
         void Segments(string title, string[] names, float x, ref float y, Func<int> current, Action<int> set)
         {
-            Label(m_Block, "Label " + title, title, 26, TextAnchor.LowerLeft, k_Text, new Vector2(x, y - 34f), new Vector2(ColW, 34f));
+            Label(m_Block, "Label " + title, title, 26, TextAnchor.LowerLeft, k_Muted, new Vector2(x, y - 34f), new Vector2(ColW, 34f));
             y -= 40f;
             float gap = 8f, w = (ColW - gap * (names.Length - 1)) / names.Length, h = 66f;
             var images = new Image[names.Length];
+            var labels = new Text[names.Length];
             var row = new Selectable[names.Length];
             for (int i = 0; i < names.Length; i++)
             {
                 int idx = i;
                 var b = Button(m_Block, names[i], new Vector2(x + i * (w + gap), y - h), new Vector2(w, h), 28, TextAnchor.MiddleCenter, () => { set(idx); RefreshNow(); });
                 images[i] = b.GetComponent<Image>();
+                labels[i] = b.GetComponentInChildren<Text>();
                 row[i] = b.GetComponent<Selectable>();
             }
             m_Nav[1].Add(row);
-            m_Refresh.Add(() => { int c = current(); for (int i = 0; i < images.Length; i++) images[i].color = i == c ? k_ButtonOn : k_Button; });
+            m_Refresh.Add(() =>
+            {
+                int c = current();
+                for (int i = 0; i < images.Length; i++)
+                {
+                    bool on = i == c;   // ADR 0283: chosen segment inverted (light fill, dark SemiBold text)
+                    images[i].color = on ? k_ButtonOn : k_Button;
+                    labels[i].color = on ? k_TextOn : k_Text;
+                    labels[i].font = on ? UiFonts.Strong : m_Font;
+                }
+            });
             y -= h + 22f;
+        }
+
+        /// <summary>Section head (ADR 0283): SemiBold warm white with a short amber mark - not a pale caption (D84).</summary>
+        void Head(string name, string text, Vector2 bottomLeft)
+        {
+            var mark = Rect(name + "Mark", m_Block);
+            Place(mark, bottomLeft + new Vector2(0f, 6f), new Vector2(6f, 24f));
+            var mi = mark.gameObject.AddComponent<Image>(); mi.color = k_Amber; mi.raycastTarget = false;
+            var l = Label(m_Block, name, text, 24, TextAnchor.LowerLeft, k_Text, bottomLeft + new Vector2(18f, 0f), new Vector2(ColW - 18f, 36f));
+            l.font = UiFonts.Strong;
         }
 
         static RectTransform Rect(string name, Transform parent)

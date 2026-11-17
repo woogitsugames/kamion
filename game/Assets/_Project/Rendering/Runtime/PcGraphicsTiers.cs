@@ -217,7 +217,7 @@ namespace Game.Rendering
             t.cloudQuality = s.cloudQuality;
             t.mirrorResolutionScale = s.mirrorResolutionScale;
             t.budgetStatus = s.status;
-            return t;
+            return PcNightLighting.Overlay(tier, t);   // night-pc-s23: dusk / night fields (pools, highlight, headlamps)
         }
     }
 }

@@ -51,6 +51,20 @@ namespace Game.Tests
 
         static string F(float v) => float.IsInfinity(v) ? "none" : v.ToString("F1", CultureInfo.InvariantCulture);
 
+        /// <summary>ADR 0231 §5a: a corner tile marked noStart has no start behind its entry closure - checked here that it
+        /// really cannot have one (route shorter than the entry closure + combination + margin + AheadFreeM + exit closure).</summary>
+        static bool SkipCornerTile(RegionCatalog.Region r)
+        {
+            if (r == null || !r.noStart) return false;
+            // behind the entry closure and AheadFreeM of open route before the exit closure (60 m before the far edge)
+            float need = WorldEdgeSetbackM + StartClearance.BoardsM + StartClearance.RearM + StartClearance.MarginM + StartClearance.AheadFreeM + WorldEdgeSetbackM;
+            Assert.Less(r.routeLengthM, need, r.id + ": noStart on a route that can host a start - remove no_standalone_start (route_endpoints.json)");
+            Assert.Pass(r.id + ": corner tile without a standalone start (ADR 0231 §5a)");
+            return true;
+        }
+
+        static float WorldEdgeSetbackM => (float)EdgeBuilder.GetField("ClosureSetbackM", BindingFlags.Public | BindingFlags.Static).GetRawConstantValue();   // ADR 0169
+
         // ------------------------------------------------------------------ dimensions
 
         /// <summary>The footprint constants follow the vehicle definitions (tractor dims, fifth wheel, trailer body).</summary>
@@ -145,6 +159,7 @@ namespace Game.Tests
         public void CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(string region)
         {
             var r = RegionCatalog.Load().Find(region);
+            if (SkipCornerTile(r)) return;
             ReadRoute(region, out var pts, out var dist);
             float length = dist[dist.Length - 1];
             float s = RegionStart.ClampStartS(r.startS, r.routeLengthM);
@@ -173,6 +188,7 @@ namespace Game.Tests
         public void ZoneRule_KeepsTheCatalogStart_AndRepairsTheOld12mSpawn(string region)
         {
             var r = RegionCatalog.Load().Find(region);
+            if (SkipCornerTile(r)) return;
             ReadRoute(region, out var pts, out var dist);
             float length = dist[dist.Length - 1];
             float s = RegionStart.ClampStartS(r.startS, r.routeLengthM);
@@ -208,6 +224,7 @@ namespace Game.Tests
             string scenePath = RegionScenes.ScenePathFor(region);
             if (!File.Exists(Path.Combine(EditorTools.RepoRoot, "game", scenePath))) Assert.Ignore(region + ": scene not imported (" + scenePath + ")");
             var r = RegionCatalog.Load().Find(region);
+            if (SkipCornerTile(r)) return;
             EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
             try
             {
@@ -254,6 +271,7 @@ namespace Game.Tests
             string scenePath = RegionScenes.ScenePathFor(region);
             if (!File.Exists(Path.Combine(EditorTools.RepoRoot, "game", scenePath))) Assert.Ignore(region + ": scene not imported (" + scenePath + ")");
             var r = RegionCatalog.Load().Find(region);
+            if (SkipCornerTile(r)) return;
             EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
             try
             {
