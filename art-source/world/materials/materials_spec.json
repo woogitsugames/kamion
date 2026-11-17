@@ -4889,6 +4889,128 @@
         0.3586,
         0.3062
       ]
+    },
+    "wood_siding": {
+      "tile_m": [
+        1.87,
+        1.87
+      ],
+      "slots": [
+        "wood_planks",
+        "wood_planks_green"
+      ],
+      "note": "D-17.11 / ADR 0287: horizontal plank siding of wooden houses from the CC0 scan raw_plank_wall (Poly Haven, 1.87 m), neutral modulation map (mean 0.5 per channel), board-to-board tone damped; colour from the manifest (painted brown / green boards).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "raw_plank_wall",
+        "source_dimensions_m": [
+          1.87,
+          1.87
+        ],
+        "board_tone_cv_before_after": [
+          0.124,
+          0.0157
+        ],
+        "assets": [
+          {
+            "id": "raw_plank_wall",
+            "page": "https://polyhaven.com/a/raw_plank_wall",
+            "authors": {
+              "Dimitrios Savva": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.83,
+          "dir": "wood_siding/High",
+          "png_bytes": 4480851,
+          "files": [
+            "T_wood_siding_BaseColor.png",
+            "T_wood_siding_MaskMap.png",
+            "T_wood_siding_Normal.png",
+            "T_wood_siding_Var.png"
+          ],
+          "smoothness_mean": 0.283,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.65,
+          "dir": "wood_siding/Medium",
+          "png_bytes": 1252340,
+          "files": [
+            "T_wood_siding_BaseColor.png",
+            "T_wood_siding_MaskMap.png",
+            "T_wood_siding_Normal.png",
+            "T_wood_siding_Var.png"
+          ],
+          "smoothness_mean": 0.279,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.3,
+          "dir": "wood_siding/Low",
+          "png_bytes": 336909,
+          "files": [
+            "T_wood_siding_BaseColor.png",
+            "T_wood_siding_MaskMap.png",
+            "T_wood_siding_Normal.png",
+            "T_wood_siding_Var.png"
+          ],
+          "smoothness_mean": 0.273,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.01054,
+        0.0058
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3457,
+        "p95": 0.6159,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.0671,
+      "ao_mean": 0.954
     }
   }
 }

@@ -126,6 +126,30 @@ def flatten(alb: np.ndarray, px: float, wl_m: float, k: float) -> np.ndarray:
     return alb * ((g / lo) ** k)[..., None]
 
 
+def flatten_boards(alb: np.ndarray, px: float, sy_m: float, sx_m: float, k: float,
+                   hi_knee: float = 0.0) -> np.ndarray:
+    """Equalise the tone of horizontal boards: divide by an anisotropic low-pass of log luminance (sy_m across the
+    board, sx_m along it; wrap), strength k. A 1-3 mm joint line is far below sy_m, so the joints stay dark; the
+    board-to-board tone of a patchwork scan goes. Keeps the geometric mean. hi_knee > 0: texels brighter than
+    hi_knee x their board tone are compressed 5:1 above the knee (paint splashes that would repeat at the tile)."""
+    if k <= 0:
+        return alb
+    ll = np.log(np.maximum(alb @ LUM, 1e-4))
+    lo = ndimage.gaussian_filter(ll, (sy_m / px, sx_m / px), mode="wrap")
+    out = alb * np.exp(k * (ll.mean() - lo))[..., None]
+    if hi_knee > 0:
+        r = np.exp(ll - lo)
+        rc = np.where(r > hi_knee, hi_knee + (r - hi_knee) * 0.2, r)
+        out = out * (rc / r)[..., None]
+    return out
+
+
+def board_tone_cv(lum: np.ndarray, px: float, sy_m: float = 0.02, sx_m: float = 0.25) -> float:
+    """Board-to-board tone variation: coefficient of variation of the board-shaped low-pass luminance."""
+    lo = ndimage.gaussian_filter(lum, (sy_m / px, sx_m / px), mode="wrap")
+    return float(lo.std() / lo.mean())
+
+
 def rebalance_hue(alb: np.ndarray, target_rgb, keep: float = 1.0) -> np.ndarray:
     """Global white balance to target_rgb's chromaticity; local chroma deviations kept with factor `keep`."""
     lum = np.maximum(alb @ LUM, 1e-5)[..., None]
@@ -285,16 +309,26 @@ def _cavity(h: np.ndarray, px: float) -> np.ndarray:
 def tiling_from_scan(name: str, aid: str, *, target: float, hue, out_L: float, out_n: int, seed: int,
                      bomb_cells: int = 0, ao_k=0.5, flat_m=1.0, flat_k=0.8, nrm_gain=1.0, hue_keep=0.6,
                      rough_scale=1.0, rough_add=0.0, ao_gamma=0.4, segment: dict | None = None, period_fix: dict | None = None,
-                     modulation=False, hf_keep=1.0, hf_sigma_m=0.004, joint_dark=0.0):
+                     modulation=False, hf_keep=1.0, hf_sigma_m=0.004, joint_dark=0.0, boards: dict | None = None):
     """A tiling (calibrated) or modulation set from one scan. out_L = tile size (m); bomb_cells > 0 re-assembles the
     scan (resampled to the output texel) into the out_L tile.
     ADR 0091: hf_keep < 1 scales the albedo and height detail finer than hf_sigma_m (the grain 'pepper' of a render
-    seen from the street); joint_dark darkens the mortar joints of a brick scan."""
+    seen from the street); joint_dark darkens the mortar joints of a brick scan.
+    boards = {"sy_m", "sx_m", "k"}: flatten_boards (horizontal plank scans); the board tone CV before / after goes to
+    scan_info."""
     sc = Scan(aid)
     alb, h = prepare(sc, ao_k=ao_k, flat_m=flat_m, flat_k=flat_k, nrm_gain=nrm_gain)
+    board_cv = None
+    if boards:
+        cv0 = board_tone_cv(alb @ LUM, sc.px)          # fixed 0.02 x 0.25 m metric, comparable between parameter sets
+        alb = np.clip(flatten_boards(alb, sc.px, boards["sy_m"], boards["sx_m"], boards["k"],
+                                     boards.get("hi_knee", 0.0)), 0, 1).astype(np.float32)
+        board_cv = [round(cv0, 4), round(board_tone_cv(alb @ LUM, sc.px), 4)]
     rough = np.clip(sc.rough * rough_scale + rough_add, 0.05, 1).astype(np.float32)
     ao = sc.ao
     info = {"source": aid, "source_dimensions_m": [round(x, 3) for x in sc.L]}
+    if board_cv:
+        info["board_tone_cv_before_after"] = board_cv
     Lx = Ly = out_L
     if period_fix:
         # scale the scan so its element period matches the Polish standard size (NF brick course 75 mm, holland row
@@ -528,6 +562,20 @@ SCAN_SETS = {
     "bark_pine": (["pine_bark"], lambda: tiling_from_scan(
         "bark_pine", "pine_bark", target=0.5, hue=NEUTRAL, out_L=2.0, out_n=1024, seed=6320,
         flat_m=0.8, flat_k=0.5, hue_keep=1.0, modulation=True)),
+    # D-17.11 / ADR 0287: horizontal plank siding of the wooden houses (wood_planks, wood_planks_green). The scan is a
+    # wall of weathered raw pine boards laid horizontally (rows = boards), kept at its own scale: board pitch measured
+    # from the displacement joints 0.093 m median (0.043-0.106 m, 23 joints in 1.87 m); no source in the repo for the
+    # board width of Podlasie houses, so no rescale. The scan's patchwork of grey / honey / dark boards read as a
+    # pallet wall under one paint colour (first build: darkest board 0.33 x its neighbour in the raw scan, 0.74 after
+    # the isotropic flatten alone), so the board tone is equalised along the boards (flatten_boards 0.015 x 0.08 m,
+    # 100 %; darkest board now 0.89 x its neighbour; board tone CV 0.124 -> 0.016 in scan_info), paint-splash
+    # highlights > 1.3 x the board tone compressed 5:1, and the local hue mostly removed (hue_keep 0.12, the scan's
+    # grey-green weathering read cyan under the brown tint); grain, knots, nail holes and the dark butt / edge joints
+    # stay. Modulation set: colour from the manifest. Parameters WORKING_VALUE (judged on the tinted previews).
+    "wood_siding": (["raw_plank_wall"], lambda: tiling_from_scan(
+        "wood_siding", "raw_plank_wall", target=0.5, hue=NEUTRAL, out_L=1.87, out_n=1024, seed=6321,
+        flat_m=0.25, flat_k=0.6, hue_keep=0.12, modulation=True, ao_gamma=0.3,
+        boards={"sy_m": 0.015, "sx_m": 0.08, "k": 1.0, "hi_knee": 1.3})),
     # hybrids: procedural layout + scan micro-detail
     "concrete_slab_3x1.5": (["concrete_floor_worn_001"], _jomb),
     "concrete_cast_5m_joints": (["brushed_concrete"], _cast),
@@ -552,6 +600,11 @@ SCAN_ONLY_META = {
                               note="ADR 0237: the paving_20x10_grey scan (pavement_04) as a neutral modulation map (mean "
                                    "0.5 per channel); colour from the manifest (red-brown concrete blocks). Same joints, "
                                    "height, roughness and Var.G block ids as paving_20x10_grey."),
+    "wood_siding": dict(kind="modulation_set", target=0.5, uv="mesh_uv0_metres (u along, v up)",
+                        slots=["wood_planks", "wood_planks_green"],
+                        note="D-17.11 / ADR 0287: horizontal plank siding of wooden houses from the CC0 scan "
+                             "raw_plank_wall (Poly Haven, 1.87 m), neutral modulation map (mean 0.5 per channel), "
+                             "board-to-board tone damped; colour from the manifest (painted brown / green boards)."),
     "bark_pine": dict(kind="modulation_set", target=0.5, uv="mesh_uv0_metres (u around, v up)",
                       slots=["(not assigned) tree trunks - vegetation is the world-builder's scope (ADR 0060)"],
                       note="Plated pine bark, neutral modulation map (mean 0.5 per channel); colour from the manifest."),
