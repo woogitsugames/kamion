@@ -108,13 +108,43 @@ def test_knyszyn_links_pass_the_roundabout_not_rynek():
     the roundabout DK65/DW671 (ADR 0204: entry node of the seam knyszyn-s | knyszyn)."""
     rs = json.loads((ROOT / "Data/Regions/knyszyn/route_start.json").read_text(encoding="utf-8"))
     for L in _links()["links"]:
-        if L["tile"] != "knyszyn":
+        if L["tile"] != "knyszyn" or L["afterRoute"]:
             continue
         assert L["graphNodes"][0] == rs["graph_nodes"][0]
         assert rs["graph_nodes"][-1] not in L["graphNodes"], L["id"]     # never to Rynek
         g = json.loads((ROOT / "Data/Regions/knyszyn/roads.graph.json").read_text(encoding="utf-8"))
         ring = {e["from"] for e in g["edges"] if (e["attrs"].get("junction") or {}).get("v") == "roundabout"}
         assert any(n.rstrip("s") in ring or n in ring for n in L["graphNodes"]), L["id"]
+
+
+def test_knyszyn_start_drives_on_from_rynek():
+    """seams-fix-s23: a drive started in knyszyn (`-scene knyszyn`) has the control route to Rynek as its path; a link
+    `after_route: knyszyn` per destination continues it from the route end WITHOUT turning round (the first edge is not
+    the one the route came in on), through the roundabout, to the same seam point as the corridor link of that
+    destination (so knyszyn-w-dw671 / the knyszyn-w route join it), with the head blended exactly onto the route end."""
+    rs = json.loads((ROOT / "Data/Regions/knyszyn/route_start.json").read_text(encoding="utf-8"))
+    reg = {t["id"]: t for t in _graph()["tiles"]}["knyszyn"]
+    links = _links()["links"]
+    after = {L["destination"]: L for L in links if L["afterRoute"] == "knyszyn"}
+    assert set(after) == {"tykocin", "monki"}
+    g = json.loads((ROOT / "Data/Regions/knyszyn/roads.graph.json").read_text(encoding="utf-8"))
+    ring = {e["from"] for e in g["edges"] if (e["attrs"].get("junction") or {}).get("v") == "roundabout"}
+    ex, ey = rs["points_en"][-1]
+    for dest, L in after.items():
+        assert L["tile"] == "knyszyn" and L["replacesRoute"] == ""
+        assert L["graphNodes"][0] == rs["graph_nodes"][-1], L["id"]
+        assert L["graphNodes"][1] != rs["graph_nodes"][-2], L["id"]           # no U-turn onto the arrival edge
+        assert abs(L["e"][0] - ex) < 0.01 and abs(L["n"][0] - ey) < 0.01, L["id"]
+        assert any(n.rstrip("s") in ring or n in ring for n in L["graphNodes"]), L["id"]
+        twin = next(x for x in links if x["replacesRoute"] == "knyszyn" and x["destination"] == dest)
+        assert abs(L["endX"] - twin["endX"]) < 0.05 and abs(L["endY"] - twin["endY"]) < 0.05, L["id"]
+        # heading change at the join < 90 deg (it was 117 deg straight from the node before the corner was rounded)
+        import math
+        a = (ex - rs["points_en"][-2][0], ey - rs["points_en"][-2][1])
+        b = (L["e"][1] - L["e"][0], L["n"][1] - L["n"][0])
+        ang = math.degrees(math.acos((a[0] * b[0] + a[1] * b[1]) / math.hypot(*a) / math.hypot(*b)))
+        assert ang < 90.0, (L["id"], ang)
+    assert reg["anchorX"] and reg["anchorY"]
 
 
 # ---------------------------------------------------------------- built geometry across the link seams

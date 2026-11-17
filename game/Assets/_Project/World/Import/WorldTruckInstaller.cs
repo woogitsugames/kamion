@@ -32,7 +32,11 @@ namespace Game.World.Import
                 foreach (var guid in AssetDatabase.FindAssets("t:Scene WorldC"))
                 {
                     string p = AssetDatabase.GUIDToAssetPath(guid);
-                    if (!Path.GetFileNameWithoutExtension(p).StartsWith("WorldC", StringComparison.Ordinal)) continue;
+                    string sn = Path.GetFileNameWithoutExtension(p);
+                    if (!sn.StartsWith("WorldC", StringComparison.Ordinal)) continue;
+                    // Streamed tile scenes (ADR 0235: region root + route only, no truck) - full-build-s23: the installer
+                    // threw "no tractor in .../WorldC_High_Tile.unity" once C was reimported with tiles.
+                    if (sn.EndsWith(RegionScenes.TileSuffix, StringComparison.Ordinal)) continue;
                     InstallInScene(p);
                     n++;
                 }

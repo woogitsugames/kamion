@@ -428,11 +428,7 @@ def drop_overlapping(buf, net, first):
 def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     secs = net.sec_list
     _SECS[:] = secs
-    arm_info = {}
-    for j in juncs:
-        maxrank = min(RANK[a.cls(secs)] for a in j.arms)
-        for i, a in enumerate(j.arms):
-            arm_info[a.key] = (j, i, maxrank)
+    arm_info = arm_infos(juncs, secs)
     counts = {}
     dashed_spans = edge_dashed_spans(net, getattr(net, "authored", None), report)
 
@@ -591,17 +587,10 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         # piecewise by section
         sidx = c.sec_idx
         cuts = [0] + [k for k in range(1, len(sidx)) if sidx[k] != sidx[k - 1]] + [len(sidx)]
-        appr = {}   # stations of junction approaches for P-2a
-        for end, sj in (("a", s0), ("b", s1)):
-            info = arm_info.get((c.id, end))
-            # ADR 0095: a one-way carriageway approaches a junction only at its downstream end; the solid P-2a was
-            # also painted for 20 m behind the junction (Andersa after the side street at n10015785253)
-            d_end = int(c.dirn[0 if end == "a" else -1])
-            if (d_end > 0 and end == "a") or (d_end < 0 and end == "b"):
-                continue
-            if info and (info[0].signalized or (any(net.sec_list[i].turn_fwd for i in np.unique(sidx))
-                                                and not _lanes_continue(c, end, info[0], secs))):
-                appr[end] = sj
+        appr = approach_ends(c, arm_info, secs)   # stations of junction approaches for P-2a
+        # seams-fix-s23: the rest of a P-2a approach of the neighbouring tile that its seam cut (net.seam_p2a)
+        seam_cont = [(s0, s0 + L_) if end == "a" else (s1 - L_, s1)
+                     for (cid, end), L_ in getattr(net, "seam_p2a", {}).items() if cid == c.id]
         for a_, b_ in zip(cuts, cuts[1:]):
             sec = secs[int(sidx[a_])]
             sa = max(s0, c.line.s[a_])
@@ -620,7 +609,7 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
             fast = (sec.maxspeed or 50) > 70
             dash, gap = S.DASH["P-1a" if fast else "P-1b"]
             if marked:
-                cont = []
+                cont = list(seam_cont)
                 for end, sj in appr.items():
                     cont.append((sj, sj + S.P2A_MIN_LEN) if end == "a" else (sj - S.P2A_MIN_LEN, sj))
                 for lat in bounds:
@@ -1025,6 +1014,36 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CL
 
 def _way(sec):
     return str(sec.edge_id).split(":")[0]
+
+
+def arm_infos(juncs, secs) -> dict:
+    """{arm key (chain id, "a" | "b"): (junction, arm index, best arm rank)} - what the marking stage knows of the ends."""
+    out = {}
+    for j in juncs:
+        maxrank = min(RANK[a.cls(secs)] for a in j.arms)
+        for i, a in enumerate(j.arms):
+            out[a.key] = (j, i, maxrank)
+    return out
+
+
+def approach_ends(c, arm_info, secs) -> dict:
+    """{"a" | "b": station of the junction end} of the chain ends that are junction approaches with the solid P-2a
+    (pkt 2.2.1.6: signalised, or turn lanes that do not continue through the junction). Also read for the chains of a
+    neighbouring tile (roads.seam_p2a, seams-fix-s23), so both tiles decide with this one rule."""
+    s0, s1 = c.t_a, c.length - c.t_b
+    sidx = c.sec_idx
+    appr = {}
+    for end, sj in (("a", s0), ("b", s1)):
+        info = arm_info.get((c.id, end))
+        # ADR 0095: a one-way carriageway approaches a junction only at its downstream end; the solid P-2a was
+        # also painted for 20 m behind the junction (Andersa after the side street at n10015785253)
+        d_end = int(c.dirn[0 if end == "a" else -1])
+        if (d_end > 0 and end == "a") or (d_end < 0 and end == "b"):
+            continue
+        if info and (info[0].signalized or (any(secs[i].turn_fwd for i in np.unique(sidx))
+                                            and not _lanes_continue(c, end, info[0], secs))):
+            appr[end] = sj
+    return appr
 
 
 def _lanes_continue(c, end, j, secs):

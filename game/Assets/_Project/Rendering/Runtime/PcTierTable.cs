@@ -185,6 +185,9 @@ namespace Game.Rendering
         /// interior (owner D84 "cab ugly on PC"; mobile Ultra shows the same); full resolution + bilateral blur still
         /// darkened flat pillars, while the exterior gain was RMSE 0.006-0.016. High: soft shadows High (variant kept by mobile
         /// Ultra), tree cards 1.0, capture every frame. Ultra: render scale 1.5 (supersampling, opt-in tier), tree cards 1.5.
+        /// full-build-s23 (2026-11-17, review cabin-pc P1-1): first of 4 cascades 3 m on High and Ultra (was 10 m) - the cab
+        /// interior is lit by the hard (no soft variants) sun shadow of the glazing frame, whose texel steps read at 0.5-1 m
+        /// from the driver's eye; cascade 1 still ends at 30 m. WORKING_VALUE, visual QA DrivingLab cab-dash, cost not measured.
         /// </summary>
         public static PcTierSettings[] Defaults() => new[]
         {
@@ -221,7 +224,7 @@ namespace Game.Rendering
                 tier = PcTier.High, urpAsset = "PcTiers/URP_PC_High",
                 renderScale = 1f, msaa = 4, postAntialiasing = PcPostAntialiasing.None, smaaQuality = 0, hdr = true, postProcessing = true,
                 shadowDistance = 150f, shadowResolution = 4096, shadowCascades = 4, cascade2Split = 0.25f,
-                cascade3SplitX = 0.1f, cascade3SplitY = 0.3f, cascade4SplitX = 0.067f, cascade4SplitY = 0.2f, cascade4SplitZ = 0.467f,
+                cascade3SplitX = 0.1f, cascade3SplitY = 0.3f, cascade4SplitX = 0.02f, cascade4SplitY = 0.2f, cascade4SplitZ = 0.467f,
                 softShadows = true, softShadowQuality = 3, shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
                 lodBias = 1.5f, maximumLodLevel = 0, textureMipmapLimit = 0, anisotropicFiltering = 2, worldTextureAniso = 16,
                 cameraFarClip = 3000f, additionalLightsPerObject = 8, ssao = false,
@@ -235,7 +238,7 @@ namespace Game.Rendering
                 tier = PcTier.Ultra, urpAsset = "PcTiers/URP_PC_Ultra",
                 renderScale = 1.5f, msaa = 8, postAntialiasing = PcPostAntialiasing.None, smaaQuality = 0, hdr = true, postProcessing = true,
                 shadowDistance = 250f, shadowResolution = 8192, shadowCascades = 4, cascade2Split = 0.25f,
-                cascade3SplitX = 0.1f, cascade3SplitY = 0.3f, cascade4SplitX = 0.04f, cascade4SplitY = 0.12f, cascade4SplitZ = 0.35f,
+                cascade3SplitX = 0.1f, cascade3SplitY = 0.3f, cascade4SplitX = 0.012f, cascade4SplitY = 0.12f, cascade4SplitZ = 0.35f,
                 softShadows = true, softShadowQuality = 3, shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
                 lodBias = 2.0f, maximumLodLevel = 0, textureMipmapLimit = 0, anisotropicFiltering = 2, worldTextureAniso = 16,
                 cameraFarClip = 4000f, additionalLightsPerObject = 8, ssao = false,
