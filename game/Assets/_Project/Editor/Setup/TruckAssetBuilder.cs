@@ -250,9 +250,26 @@ namespace Game.Editor.Setup
                     ti.SetPlatformTextureSettings(a);
                     dirty = true;
                 }
+                // Windows (ADR 0261): the automatic Standalone format of an opaque RGB map is BC1 (5:6:5 endpoints, 4x4
+                // blocks). The cab AO atlas is mostly 0..0.3 and the cab shader maps it through smoothstep(0.04, 0.28) into
+                // the albedo, so BC1's few dark levels per block showed as stair-stepped black 4x4 blocks in the driver's
+                // view on Win64 (review 2026-11-17 cabin-pc P1-1; Android's ASTC override was clean). Single-channel BC4.
+                TextureImporterFormat? pc = StandaloneFormatFor(n);
+                var s = ti.GetPlatformTextureSettings("Standalone");
+                if (pc.HasValue && (!s.overridden || s.format != pc.Value || s.maxTextureSize != maxSize))
+                {
+                    s.overridden = true; s.format = pc.Value; s.maxTextureSize = maxSize; s.compressionQuality = 50;
+                    ti.SetPlatformTextureSettings(s);
+                    dirty = true;
+                }
                 if (dirty) ti.SaveAndReimport();
             }
         }
+
+        /// <summary>Standalone (Windows) format override for a truck/cab texture, null = Unity's automatic format.
+        /// Ambient-occlusion atlases (<c>*_AO*</c>, linear, single channel) get BC4 (8-bit endpoints per 4x4 block).</summary>
+        public static TextureImporterFormat? StandaloneFormatFor(string textureName) =>
+            textureName.Contains("_AO", StringComparison.Ordinal) ? TextureImporterFormat.BC4 : (TextureImporterFormat?)null;
 
         // ------------------------------------------------------------------ 3. materials
 
