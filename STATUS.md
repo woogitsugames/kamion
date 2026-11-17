@@ -1,4 +1,13 @@
-# STATUS — s8-loop-s23 (D82, ADR 0288: pętla S8 ↔ DW671 ↔ Tykocin) — ZATRZYMANE 17.11 ~13:1x (przenosiny na inny komputer)
+# STATUS — s8-loop-s24 (kontynuacja s8-loop-s23 na nowym PC; ADR 0288)
+Gałąź `s8-loop-s24` (z `origin/s8-loop-s23` + merge `origin/main`), worktree `.claude/worktrees/s8-loop-s24` z PRYWATNĄ kopią `Data/raw/derived` (-CopyDerived) — na końcu lider kopiuje kafle s8-01..05 + dk65-01 do derived main.
+
+## Log s24
+- 17.11 ~16:0x: merge origin/main (konflikty STATUS/ADR README). `s8_xsec_overrides.py`: przesunięcie jezdni do pasa dzielącego per way (rozstaw osi p50 z grafu wszystkich kafli; cel 4,5 m między liniami wewn., QA wiersz 78; max 0,5 m; rozstaw > 13 m bez zmian). s8-04: way 100133887 +0,25, 251431118 +0,15 → z modelu ~4,6 m (było 4,98).
+- Przebudowa wszystkich 6 kafli (main zmienił generator: seams-fix 0289, markings/meshing): `tools/worldgen/qa/s8_loop_s24.ps1 -Phase world` w 2 łańcuchach (s8-04,s8-01,dk65-01 | s8-02,s8-03,s8-05). Statusy `artifacts/s8-loop-s24/run/*-r8.exit`.
+- NASTĘPNY KROK: po `final-world-*-r8.exit` (oba): `Start-Process pwsh -ArgumentList '-NoProfile','-File','tools/worldgen/qa/s8_loop_s24.ps1','-Phase','post','-Tiles','s8-04,dk65-01'`, potem Library z win-build + `-Phase unity -Tiles s8-01,s8-02,s8-03,s8-04,s8-05,dk65-01`.
+
+---
+# (poprzednio) # STATUS — s8-loop-s23 (D82, ADR 0288: pętla S8 ↔ DW671 ↔ Tykocin) — ZATRZYMANE 17.11 ~13:1x (przenosiny na inny komputer)
 Gotowe do scalenia: NIE. Wszystkie własne procesy zatrzymane, sloty zwolnione, nic nie biegnie w tle.
 
 ## Stan w gicie (gałąź s8-loop-s23)
@@ -22,3 +31,4 @@ Gotowe do scalenia: NIE. Wszystkie własne procesy zatrzymane, sloty zwolnione, 
 - Przejazd pod S8 w s8-04 pominięty w grafie (Otwarte 7); pas dzielący w s8-04 z modelu ok. 5,0 m (zadane 4–4,8 m).
 - Przesunięcie osi pasów 0,25 m i trzeci pas na zewnątrz = WORKING_VALUE (Otwarte 3).
 - Dowody: `artifacts/s8-loop-s23/` w worktree starego komputera + kopia w `C:\Users\matma\Documents\Claude\kamion\artifacts\s8-loop-s23\` (bez pełnych PNG) — poza gitem, przenieść razem z projektem.
+
