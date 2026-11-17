@@ -29,7 +29,17 @@ winget install Microsoft.VisualStudio.2022.BuildTools --override "--quiet --wait
 - **Unity:** w Unity Hub zaloguj (właściciel), zainstaluj edytor **6000.3.28f1** z modułami: *Windows Build Support (IL2CPP)*, *Android Build Support* (+ OpenJDK, Android SDK & NDK — telefon odroczony D73, ale projekt nadal kompiluje się pod Androida). Licencja Personal aktywowana w Hub.
 - VS Build Tools z C++ są potrzebne do IL2CPP Windows.
 - `git lfs install`; `gh auth login` (właściciel, przeglądarka).
-- Claude Code CLI nie jest wymagane (lider pracuje w aplikacji). Codex/Mistral/claude-alt — opcjonalnie, tylko jeśli właściciel zaloguje.
+- **Pomocnicze CLI do zlecania pracy (właściciel chce ich używać — zainstaluj wszystkie, loguje właściciel):**
+  1. **Claude Code CLI (drugie konto):** `irm https://claude.ai/install.ps1 | iex` (zwykły PowerShell, nie admin). Skrót `C:\Users\matma\.local\bin\claude-alt.cmd`:
+     ```
+     @echo off
+     set CLAUDE_CONFIG_DIR=%USERPROFILE%\.claude-alt
+     "%USERPROFILE%\.local\bin\claude.exe" %*
+     ```
+     Logowanie: `claude-alt.cmd` → `/login` (właściciel, drugie konto Team). Zlecanie: osobny worktree, `Get-Content prompt.txt -Raw | claude-alt.cmd -p --model claude-opus-5-5 --max-turns 120 --output-format json --permission-mode acceptEdits --allowedTools "Read,Edit,Write,Grep,Glob,Bash(git *),Bash(uv *),Bash(python *),PowerShell" > out.json` uruchomione odłączone (Start-Process). Nie kompiluje Unity — lider robi EditMode przed scaleniem.
+  2. **Codex CLI:** `winget install OpenJS.NodeJS` (już), `npm install -g @openai/codex`, logowanie `codex login` (właściciel). Zawsze **`-m gpt-6.1-sol`** (polecenie właściciela) i `--sandbox read-only` do recenzji; do zmian kodu worktree + `--sandbox workspace-write` — **sandbox nie zapisze do wspólnego `.git`**, commit/merge robi lider. Limity: ostatnie `rate_limits` w najnowszym `%USERPROFILE%\.codex\sessions\YYYY\MM\DD\rollout-*.jsonl` (5 h i tydzień). Uwagi Codexa weryfikuj (raz fałszywy alarm o API Unity).
+  3. **Mistral Vibe CLI:** `uv tool install --python cpython-3.14+gil mistral-vibe` (install.sh nie działa na Windows); klucz API: właściciel `vibe --setup` (keyring), model `mistral-large-4-0-3`. Headless 2/2 razy się zawiesił (`--worktree` i zapis pliku) → do zleceń używaj tylko z **własnym worktree** (`--workdir`, bez `--worktree`), `--max-price`, `--time-limit`, i pilnuj postępu; duże pakiety badawcze lepiej zlecać właścicielowi do interaktywnego Vibe (pętla S8 wyszła dobrze).
+  - Zasady: kluczy i haseł nie wpisujesz ani nie czytasz; wszystko z tych CLI przechodzi przegląd lidera przed scaleniem. Szczegóły w pamięci: `reference-extra-clis.md`, `reference-mistral-vibe-cli.md`.
 
 ## 3. Repo i dane
 ```
@@ -76,4 +86,7 @@ Decyzje właściciela czekające na wykonanie:
 - `Data/raw/derived` w worktree = junction do main (nie kopia).
 
 ## 7. Start nowej sesji (po instalacji)
-> Jesteś liderem projektu Kamion. Przeczytaj CLAUDE.md, górę HANDOVER.md (SESJA 23) i docs/owner/NOWY-PC-KAMION.md §5–§6. Ustaw crony :07/:17/:47 jak w HANDOVER, zadanie zaplanowane maintenance-daily 03:30, potem kontynuuj gałęzie z §5 (maks. 8 agentów, Opus/Fable wg limitów), po każdym scaleniu sprzątaj worktree.
+> Jesteś liderem projektu Kamion. Przeczytaj CLAUDE.md, górę HANDOVER.md (SESJA 23) i docs/owner/NOWY-PC-KAMION.md §2 i §5–§6. Ustaw crony :07/:17/:47 jak w HANDOVER, zadanie zaplanowane maintenance-daily 03:30, potem kontynuuj gałęzie z §5 (maks. 8 agentów, Opus/Fable wg limitów), część pracy zlecaj przez claude-alt / Codex (Sol) / Mistral Vibe wg §2, po każdym scaleniu sprzątaj worktree.
+
+## 8. Stary komputer
+Właściciel go sformatuje — **dopiero gdy nowa sesja potwierdzi**: sumy SHA-256 z MANIFEST.txt zgodne, `doctor.ps1` zielony, EditMode przeszedł, pierwszy build zrobiony, Kamion.exe uruchomiony. Do tego czasu stary komputer = jedyna kopia zapasowa (zdjęcia właściciela w paczce A są niezastąpione).
