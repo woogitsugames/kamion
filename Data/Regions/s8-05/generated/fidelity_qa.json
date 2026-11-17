@@ -5,9 +5,9 @@
   "osm_drivable_ways_in_tile": 38
  },
  "inputs_sha256": {
-  "overrides.yaml": "e9daa31cf604b27587c2d6ab86ae01affc5d9e526a5c6f971c67f59b963208ee",
+  "overrides.yaml": "99f022a6a408c9481698c571dfc016806c0f59a240a5a9d270513f1e1e34c394",
   "roads.graph.json": "395bff20cfa204d09bbecbfac5843a8da79fc5cc11b9f1082096a84e53b790cf",
-  "route_start.json": "445988414173bd3f6fe9679808e15f6a5506f7b51838a37e47301ccbcfc09329",
+  "route_start.json": "025661fb4b5db11897016a6a4eab50c1ca547ce88d0cb1ab2dfb0680f1a25ed5",
   "tools/worldgen/roads/__init__.py": "0c26fa3038394a956286b47576ce1d6a0725f8dc0a2e7682901a055d264a6e40",
   "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
   "tools/worldgen/roads/authored_paint.py": "cfa394a6e9c34275a8e07176ac76336a035d50acd959c11a530b55ab1508451e",
@@ -54,8 +54,8 @@
      "through",
      "slight_right"
     ],
-    "width": 12.0,
-    "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "width": 13.45,
+    "width_src": "authored_override:s8-xsec-w536211832 (lane_edges, orthophoto)"
    },
    "highway": "motorway",
    "issues": [
@@ -87,25 +87,26 @@
  "route_edges": [
   {
    "axis": {
+    "authored_center_offset_m": 1.88,
     "max": 0.004,
     "n": 186,
     "p50": 0.0,
-    "p95": 0.001
+    "p95": 0.002
    },
    "edge": "w100133887:5194994824-2104266222",
    "edges": {
     "all_sides": {
-     "max": 2.6,
-     "n": 185,
-     "p50": 0.76,
-     "p95": 1.704
+     "max": 1.675,
+     "n": 186,
+     "p50": 0.52,
+     "p95": 1.05
     },
-    "detected_sides": 185,
-    "max": 1.8,
+    "detected_sides": 186,
+    "max": 1.242,
     "n": 132,
-    "p50": 0.76,
-    "p95": 1.64,
-    "signed_p50": 0.76,
+    "p50": 0.44,
+    "p95": 0.97,
+    "signed_p50": 0.44,
     "stations": 93,
     "valid_sides": 132
    },
@@ -114,13 +115,13 @@
     "gen": {
      "bwd": 0,
      "fwd": 2,
-     "lane_w": 4.0,
+     "lane_w": 3.5,
      "lanes": 2,
      "oneway": true,
      "turn_bwd": null,
      "turn_fwd": null,
-     "width": 9.5,
-     "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+     "width": 9.95,
+     "width_src": "authored_override:s8-xsec-w100133887 (lane_edges, orthophoto)"
     },
     "highway": "motorway",
     "issues": [],
@@ -128,99 +129,99 @@
     "match": true,
     "name": null,
     "ortho": {
-     "agree": 0.67,
+     "agree": 0.83,
      "lanes": 2,
      "strips": [
       {
-       "frac_max": 1.0,
+       "frac_max": 0.993,
        "lines": [
-        -3.31,
-        3.89
+        -2.3,
+        4.9
        ],
        "n_sep": 2,
        "s": 40.0,
-       "width": 11.07
+       "width": 11.05
       },
       {
        "frac_max": 1.0,
        "lines": [
-        -3.23
+        -2.22
        ],
        "n_sep": 1,
        "s": 64.0,
-       "width": 10.4
-      },
-      {
-       "frac_max": 1.0,
-       "lines": [
-        -3.23
-       ],
-       "n_sep": 1,
-       "s": 88.0,
        "width": 10.44
       },
       {
        "frac_max": 1.0,
        "lines": [
-        -3.19,
-        4.05
-       ],
-       "n_sep": 2,
-       "s": 112.0,
-       "width": 10.84
-      },
-      {
-       "frac_max": 0.99,
-       "lines": [
-        -3.11
+        -2.22
        ],
        "n_sep": 1,
-       "s": 136.0,
-       "width": 10.6
+       "s": 88.0,
+       "width": 10.48
       },
       {
        "frac_max": 1.0,
        "lines": [
-        -3.12
+        -2.14
+       ],
+       "n_sep": 1,
+       "s": 112.0,
+       "width": 11.08
+      },
+      {
+       "frac_max": 0.997,
+       "lines": [
+        -2.1
+       ],
+       "n_sep": 1,
+       "s": 136.0,
+       "width": 10.8
+      },
+      {
+       "frac_max": 0.927,
+       "lines": [
+        -2.04
        ],
        "n_sep": 1,
        "s": 160.0,
-       "width": 11.2
+       "width": 11.21
       }
      ]
     },
-    "ortho_vs_osm": true,
+    "ortho_vs_osm": null,
     "osm": {
      "extra": {},
      "lanes": "2",
      "oneway": "yes"
     },
     "truth": 2,
-    "truth_src": "osm",
+    "truth_src": "orthophoto:s8-xsec-w100133887",
     "way": 100133887
    }
   },
   {
    "axis": {
-    "max": 0.005,
+    "authored_center_offset_m": 2.78,
+    "max": 0.003,
     "n": 244,
     "p50": 0.0,
-    "p95": 0.0
+    "p95": 0.001
    },
    "edge": "w536211832:2104266222-5195036898",
    "edges": {
     "all_sides": {
-     "max": 5.24,
+     "max": 6.76,
      "n": 238,
-     "p50": 1.32,
-     "p95": 1.88
+     "p50": 1.555,
+     "p95": 3.584
     },
     "detected_sides": 238,
-    "max": 3.32,
+    "max": 3.96,
     "n": 227,
     "p50": 1.32,
-    "p95": 1.8,
-    "signed_p50": -0.511,
+    "p95": 3.08,
+    "signed_p50": 0.43,
     "stations": 119,
     "valid_sides": 227
    },
@@ -238,8 +239,8 @@
       "through",
       "slight_right"
      ],
-     "width": 12.0,
-     "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+     "width": 13.45,
+     "width_src": "authored_override:s8-xsec-w536211832 (lane_edges, orthophoto)"
     },
     "highway": "motorway",
     "issues": [
@@ -256,60 +257,62 @@
     "match": true,
     "name": null,
     "ortho": {
-     "agree": 0.67,
+     "agree": 0.56,
      "lanes": 2,
      "strips": [
       {
-       "frac_max": 1.0,
+       "frac_max": 0.705,
        "lines": [
-        -3.04,
-        4.16
+        -1.4,
+        -0.32,
+        6.84
        ],
-       "n_sep": 2,
+       "n_sep": 3,
        "s": 201.3,
-       "width": 11.41
+       "width": 11.63
       },
       {
        "frac_max": 1.0,
        "lines": [
-        -3.08
+        -0.33
        ],
        "n_sep": 1,
        "s": 225.3,
-       "width": 11.12
+       "width": 11.04
       },
       {
        "frac_max": 1.0,
        "lines": [
-        -3.16
+        -0.37
        ],
        "n_sep": 1,
        "s": 249.3,
-       "width": 11.68
+       "width": 12.08
       },
       {
        "frac_max": 1.0,
        "lines": [
-        -4.52,
-        -3.2
+        -1.77,
+        -0.45
        ],
        "n_sep": 2,
        "s": 273.3,
-       "width": 11.68
-      },
-      {
-       "frac_max": 1.0,
-       "lines": [
-        -3.28
-       ],
-       "n_sep": 1,
-       "s": 297.3,
        "width": 11.76
       },
       {
        "frac_max": 1.0,
        "lines": [
-        -3.32
+        -1.85,
+        -0.53
+       ],
+       "n_sep": 2,
+       "s": 297.3,
+       "width": 11.92
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        -0.53
        ],
        "n_sep": 1,
        "s": 321.3,
@@ -318,34 +321,34 @@
       {
        "frac_max": 1.0,
        "lines": [
-        -3.32
+        -0.57
        ],
        "n_sep": 1,
        "s": 345.3,
-       "width": 11.8
+       "width": 11.76
       },
       {
        "frac_max": 1.0,
        "lines": [
-        -3.42
+        -0.57
        ],
        "n_sep": 1,
        "s": 369.3,
-       "width": 11.76
+       "width": 11.84
       },
       {
-       "frac_max": 0.997,
+       "frac_max": 1.0,
        "lines": [
-        -3.4,
-        -1.87
+        -0.65,
+        1.02
        ],
        "n_sep": 2,
        "s": 393.3,
-       "width": 11.68
+       "width": 11.72
       }
      ]
     },
-    "ortho_vs_osm": false,
+    "ortho_vs_osm": null,
     "osm": {
      "extra": {
       "destination:lanes": "||Waga ITD",
@@ -356,46 +359,47 @@
      "turn:lanes": "through|through|slight_right"
     },
     "truth": 3,
-    "truth_src": "osm",
+    "truth_src": "orthophoto:s8-xsec-w536211832",
     "way": 536211832
    }
   },
   {
    "axis": {
-    "max": 0.5,
+    "authored_center_offset_m": 1.02,
+    "max": 0.006,
     "n": 415,
     "p50": 0.0,
-    "p95": 0.5
+    "p95": 0.001
    },
    "edge": "w536211834:5195036898-5195036894",
    "edges": {
     "all_sides": {
-     "max": 4.04,
-     "n": 322,
-     "p50": 0.45,
-     "p95": 1.125
+     "max": 5.0,
+     "n": 319,
+     "p50": 0.68,
+     "p95": 1.875
     },
-    "detected_sides": 322,
-    "max": 0.84,
-    "n": 124,
-    "p50": 0.2,
-    "p95": 0.828,
-    "signed_p50": -0.12,
-    "stations": 199,
-    "valid_sides": 124
+    "detected_sides": 319,
+    "max": 1.32,
+    "n": 122,
+    "p50": 0.68,
+    "p95": 1.076,
+    "signed_p50": 0.68,
+    "stations": 197,
+    "valid_sides": 122
    },
    "lanes": {
     "edge": "w536211834:5195036898-5195036894",
     "gen": {
      "bwd": 0,
      "fwd": 2,
-     "lane_w": 4.0,
+     "lane_w": 3.5,
      "lanes": 2,
      "oneway": true,
      "turn_bwd": null,
      "turn_fwd": null,
-     "width": 9.5,
-     "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+     "width": 9.95,
+     "width_src": "authored_override:s8-xsec-w536211834 (lane_edges, orthophoto)"
     },
     "highway": "motorway",
     "issues": [],
@@ -407,81 +411,90 @@
      "lanes": 2,
      "strips": [
       {
-       "frac_max": 1.0,
+       "frac_max": 0.997,
        "lines": [
-        2.77
+        1.7
        ],
        "n_sep": 1,
        "s": 88.0,
-       "width": 10.0
-      },
-      {
-       "frac_max": 0.976,
-       "lines": [
-        2.93
-       ],
-       "n_sep": 1,
-       "s": 112.0,
-       "width": 10.08
-      },
-      {
-       "frac_max": 0.99,
-       "lines": [
-        3.05
-       ],
-       "n_sep": 1,
-       "s": 136.0,
        "width": 10.16
       },
       {
-       "frac_max": 0.983,
+       "frac_max": 0.979,
        "lines": [
-        3.13
+        1.9
        ],
        "n_sep": 1,
-       "s": 160.0,
-       "width": 10.28
+       "s": 112.0,
+       "width": 10.12
       },
       {
        "frac_max": 0.99,
        "lines": [
-        3.21
+        2.02
+       ],
+       "n_sep": 1,
+       "s": 136.0,
+       "width": 10.2
+      },
+      {
+       "frac_max": 0.979,
+       "lines": [
+        2.1
+       ],
+       "n_sep": 1,
+       "s": 160.0,
+       "width": 10.24
+      },
+      {
+       "frac_max": 0.99,
+       "lines": [
+        2.18
        ],
        "n_sep": 1,
        "s": 184.0,
-       "width": 10.08
-      },
-      {
-       "frac_max": 1.0,
-       "lines": [
-        3.29
-       ],
-       "n_sep": 1,
-       "s": 208.0,
-       "width": 10.08
-      },
-      {
-       "frac_max": 1.0,
-       "lines": [
-        3.25
-       ],
-       "n_sep": 1,
-       "s": 232.0,
        "width": 10.2
       },
       {
        "frac_max": 1.0,
        "lines": [
-        3.33
+        2.26
        ],
        "n_sep": 1,
-       "s": 256.0,
-       "width": 10.32
+       "s": 208.0,
+       "width": 10.16
       },
       {
        "frac_max": 1.0,
        "lines": [
-        3.37
+        2.22
+       ],
+       "n_sep": 1,
+       "s": 232.0,
+       "width": 10.24
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.3
+       ],
+       "n_sep": 1,
+       "s": 256.0,
+       "width": 10.28
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.26
+       ],
+       "n_sep": 1,
+       "s": 280.0,
+       "width": 10.24
+      },
+      {
+       "frac_max": 1.0,
+       "lines": [
+        2.3
        ],
        "n_sep": 1,
        "s": 304.0,
@@ -490,40 +503,31 @@
       {
        "frac_max": 1.0,
        "lines": [
-        3.29
+        2.34
        ],
        "n_sep": 1,
        "s": 328.0,
        "width": 10.24
       },
       {
-       "frac_max": 0.573,
+       "frac_max": 1.0,
        "lines": [
-        3.89
+        2.63
        ],
        "n_sep": 1,
        "s": 352.0,
-       "width": 10.04
-      },
-      {
-       "frac_max": 0.99,
-       "lines": [
-        5.53
-       ],
-       "n_sep": 1,
-       "s": 376.0,
-       "width": 11.2
+       "width": 9.6
       }
      ]
     },
-    "ortho_vs_osm": true,
+    "ortho_vs_osm": null,
     "osm": {
      "extra": {},
      "lanes": "2",
      "oneway": "yes"
     },
     "truth": 2,
-    "truth_src": "osm",
+    "truth_src": "orthophoto:s8-xsec-w536211834",
     "way": 536211834
    }
   }
@@ -645,7 +649,7 @@
      "area_m2": 34.6,
      "green_frac": 0.707,
      "on_gen_carriageway": 0.958,
-     "route_dist_m": 303.3,
+     "route_dist_m": 301.8,
      "xy": [
       627.617,
       -574.2
@@ -655,7 +659,7 @@
      "area_m2": 31.3,
      "green_frac": 0.911,
      "on_gen_carriageway": 0.952,
-     "route_dist_m": 257.9,
+     "route_dist_m": 256.4,
      "xy": [
       635.526,
       -619.35
@@ -761,7 +765,7 @@
      "area_m2": 30.1,
      "green_frac": 0.859,
      "on_gen_carriageway": 0.982,
-     "route_dist_m": 257.7,
+     "route_dist_m": 256.2,
      "xy": [
       635.807,
       -619.46
@@ -922,7 +926,7 @@
      "area_m2": 6.2,
      "green_frac": 0.98,
      "on_gen_carriageway": 1.0,
-     "route_dist_m": 591.9,
+     "route_dist_m": 592.4,
      "xy": [
       43.47,
       -457.58
@@ -932,7 +936,7 @@
      "area_m2": 17.6,
      "green_frac": 0.908,
      "on_gen_carriageway": 0.652,
-     "route_dist_m": 533.8,
+     "route_dist_m": 534.3,
      "xy": [
       124.16,
       -492.728
@@ -1174,26 +1178,26 @@
    "arrows_checked": 0,
    "arrows_not_on_ortho": 0,
    "axis_vs_osm_m": {
-    "max": 0.5,
+    "max": 0.006,
     "n": 845,
     "p50": 0.0,
-    "p95": 0.494
+    "p95": 0.001
    },
    "edge_vs_ortho_m": {
     "all_sides": {
-     "max": 5.24,
-     "n": 745,
-     "p50": 0.78,
-     "p95": 1.72
+     "max": 6.76,
+     "n": 743,
+     "p50": 0.71,
+     "p95": 2.76
     },
-    "detected_sides": 745,
-    "max": 3.32,
-    "n": 483,
-    "p50": 0.919,
-    "p95": 1.712,
-    "signed_p50": -0.04,
-    "stations": 411,
-    "valid_sides": 483
+    "detected_sides": 743,
+    "max": 3.96,
+    "n": 481,
+    "p50": 0.68,
+    "p95": 2.76,
+    "signed_p50": 0.52,
+    "stations": 409,
+    "valid_sides": 481
    },
    "edges": 3,
    "gen_islands_absent_on_ortho": 0,
@@ -1226,26 +1230,26 @@
   },
   "tile": {
    "axis_vs_osm_m": {
-    "max": 4.75,
+    "max": 5.0,
     "n": 56,
-    "p50": 0.025,
+    "p50": 0.019,
     "p95": 0.574
    },
    "edge_vs_ortho_m": {
     "all_sides": {
      "max": 5.375,
-     "n": 4253,
+     "n": 4261,
      "p50": 0.625,
-     "p95": 2.609
+     "p95": 1.875
     },
-    "detected_sides": 4253,
+    "detected_sides": 4261,
     "max": 5.375,
-    "n": 1789,
+    "n": 1788,
     "p50": 0.76,
-    "p95": 2.74,
-    "signed_p50": -0.28,
-    "stations": 2209,
-    "valid_sides": 1789
+    "p95": 1.875,
+    "signed_p50": -0.12,
+    "stations": 2214,
+    "valid_sides": 1788
    },
    "graph_vs_fresh_osm_max_m": {
     "max": 0.001,
