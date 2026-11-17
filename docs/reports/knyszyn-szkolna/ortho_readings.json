@@ -1,0 +1,92 @@
+{
+ "wms": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/StandardResolution (layer Raster, EPSG:2180, VERSION 1.3.0)",
+ "request": {
+  "bbox_2180_EN": [
+   761196.0,
+   612000.0,
+   761316.0,
+   612120.0
+  ],
+  "px": 960,
+  "m_per_px": 0.125
+ },
+ "license": "GUGiK open data (Prawo geodezyjne i kartograficzne art. 40a ust. 2 pkt 1); numbers only, no pixel stored in git",
+ "method": "manual reading of feature centres on the 960 px crop (tools/worldgen/qa/ortho_xsec.py WMS pattern), accuracy ESTIMATED +-1 m; sheet date not reported by the service at this scale (UNVERIFIED)",
+ "zebras": [
+  {
+   "osm_crossing": 11514832006,
+   "zebra_centre_px": [
+    345,
+    610
+   ],
+   "zebra_centre_2180": [
+    761239.12,
+    612043.75
+   ],
+   "osm_node_2180": [
+    761240.64,
+    612043.44
+   ],
+   "offset_m": 1.55
+  },
+  {
+   "osm_crossing": 11514832007,
+   "zebra_centre_px": [
+    462,
+    580
+   ],
+   "zebra_centre_2180": [
+    761253.75,
+    612047.5
+   ],
+   "osm_node_2180": [
+    761254.14,
+    612047.43
+   ],
+   "offset_m": 0.4
+  },
+  {
+   "osm_crossing": 11514832008,
+   "zebra_centre_px": [
+    308,
+    458
+   ],
+   "zebra_centre_2180": [
+    761234.5,
+    612062.75
+   ],
+   "osm_node_2180": [
+    761234.98,
+    612062.48
+   ],
+   "offset_m": 0.55
+  },
+  {
+   "osm_crossing": 11514832009,
+   "zebra_centre_px": [
+    448,
+    425
+   ],
+   "zebra_centre_2180": [
+    761252.0,
+    612066.88
+   ],
+   "osm_node_2180": [
+    761252.4,
+    612066.93
+   ],
+   "offset_m": 0.4
+  }
+ ],
+ "layout": "plain 4-arm crossroads Poludniowa x Szkolna, zebra on every arm just outside the kerb returns; school parking (aisle + red block bays) east of Poludniowa N, mouth from Poludniowa ~20 m N of the crossroads; no paved area joining the crossroads corner (the generator's teardrop has no counterpart)",
+ "parking_aisle": {
+  "real_centre_2180_at_N_612082.5": [
+   761262.25,
+   612082.5
+  ],
+  "osm_way_750267067_at_same_N_E": 761274.75,
+  "offset_m": 12.5,
+  "note": "OSM way runs behind the bays (ESTIMATED ~12 m east of the aisle); not corrected (open item)"
+ },
+ "corner_yellow_lines": "yellow strips along the SW and NE kerb returns visible from above - consistent with the owner's yellow guard railings, UNVERIFIED (needs Mapillary / owner photo); not modelled"
+}

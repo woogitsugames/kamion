@@ -38,31 +38,31 @@ sources:
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-nmt-2022-knyszyn.json
-  manifest_sha256: 65f8127d0dfeaa41c90c21ec78d59c3f8cea5062bd6f4f42521b783e675ecf54
+  manifest_sha256: 490f223b3fad6e9d3c4e6e1b9285e77036ffe5b1226d069930bd5769d12238dd
 - id: gugik-orto-2025-rgb-0p10-knyszyn
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-orto-2025-rgb-0p10-knyszyn.json
-  manifest_sha256: bc0284abe5d43f9310515eaf0c87709c23b9f7380428856f04033a5a5f12460e
+  manifest_sha256: ba5648b3beca3a10c81e4106c2d56bd8240c2f251caa5ea10ad2bded669c7673
 - id: gugik-bdot10k-2008
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-bdot10k-2008.json
-  manifest_sha256: 613ecb72f3b468d59604b3f8252430d1d219785825c0456b605fcf2df52f0d9c
+  manifest_sha256: 01acef7cb475ce9d1e17b10219528ba38a238d239b19ed0c1f421a58fb2c3342
 - id: gugik-lod1-2024-2008
   license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
     bezpłatnie i możliwe do dowolnego wykorzystania'''
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod1-2024-2008.json
-  manifest_sha256: f1fe2da30b4f907b9e0ef1c0b4ec394ca22725aab4fa4cf93387711ce699de8f
+  manifest_sha256: 9de6f83074f3c1dd0bbf0bf17bf6586627a5cb6f5d1c69c2e7fbd51281f8f50a
 - id: gugik-lod2-2017-2008
   license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
     bezpłatnie i możliwe do dowolnego wykorzystania'''
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod2-2017-2008.json
-  manifest_sha256: 91ea1bc66967fc49eb8127efe46fcedb56d6d53c7fc7d3386f12d2ba17eae2b8
+  manifest_sha256: 59067604e5b413363678e77bdde143aa1a871b088fc9dcaee792aec53295d7ef
 rebuild:
 - uv run --project tools/worldgen tools/worldgen/ingest.py --region knyszyn
 - uv run --project tools/worldgen tools/worldgen/build_region.py --region knyszyn

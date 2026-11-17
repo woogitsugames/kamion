@@ -282,7 +282,7 @@ def plate(code):
         uvs = [(8 / 512, 1 - (top + hp) / 512), (504 / 512, 1 - (top + hp) / 512), (0.5, 1 - top / 512)]
         uvc = (0.5, 1 - (top + 2 * hp / 3) / 512)
     elif shape == "rect":           # ADR 0268: rectangular plate (G-1, G-2, board), size per code (signs.RECT)
-        rw, rect_h = SG.RECT[code]
+        rw, rect_h = SG.rect_size(code)
         pts2 = [(-rw / 2, -rect_h / 2), (rw / 2, -rect_h / 2), (rw / 2, rect_h / 2), (-rw / 2, rect_h / 2)]
         uvs = [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0)]
     elif shape == "triangle":       # inverted triangle (A-7), side = size

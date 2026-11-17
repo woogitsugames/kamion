@@ -36,7 +36,7 @@ namespace Game.Tests
         static IEnumerable<ScreenCase> Screens => k_Screens;
 
         /// <summary>Same value as <c>MenuOverlayLayoutTests.MenuBlock3Starts</c> (EditMode; kept in sync by this test).</summary>
-        static readonly Rect k_Block3StartsPc = Rect.MinMaxRect(-800f, -302f, 800f, 496f);
+        static readonly Rect k_Block3StartsPc = Rect.MinMaxRect(-800f, -272f, 800f, 496f);
 
         Camera m_Cam;
         RenderTexture m_Rt;
@@ -99,7 +99,7 @@ namespace Game.Tests
             Rect b = menu.BlockBounds;
             Assert.AreEqual(k_Block3StartsPc.xMin, b.xMin, 0.5f);
             Assert.AreEqual(k_Block3StartsPc.xMax, b.xMax, 0.5f);
-            Assert.AreEqual(k_Block3StartsPc.yMin, b.yMin, 0.5f, "lowest item (footer of the right column)");
+            Assert.AreEqual(k_Block3StartsPc.yMin, b.yMin, 0.5f, "lowest item (ADR 0283: no separate PC settings row)");
             Assert.AreEqual(k_Block3StartsPc.yMax, b.yMax, 0.5f, "title top");
             Assert.AreEqual(0f, menu.BlockShift, "no overlay: the menu keeps its place");
         }

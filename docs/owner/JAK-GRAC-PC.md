@@ -1,6 +1,6 @@
 # Jak grać w Kamion na PC (Windows) — instrukcja dla właściciela i testerów
 
-Stan kodu: `origin/main` z 16.11.2026 (sesja 23). Wszystko poniżej jest wyczytane z kodu i skryptów; źródło każdego
+Stan kodu: `origin/main` z 16.11.2026, wieczór (sesja 23, po scaleniu streamingu `int-stream-s23`). Wszystko poniżej jest wyczytane z kodu i skryptów; źródło każdego
 przypisania klawisza, przycisku, osi i argumentu (`ścieżka:linia`) jest w komentarzu na dole pliku. Czego nie dało się
 ustalić z kodu, oznaczono **UNVERIFIED**. Liczby wydajności i wymagań to **WORKING_VALUE** (niezmierzone na klasach D74).
 
@@ -12,23 +12,32 @@ ustalić z kodu, oznaczono **UNVERIFIED**. Liczby wydajności i wymagań to **WO
 
 | Plik | Co robi |
 |---|---|
-| `Kamion.exe` | Gra. Bez argumentów startuje w **pełnym ekranie** (projekt: `fullscreenMode: 1` = okno bez ramki na cały ekran), chyba że plik ustawień mówi inaczej (sekcja 3). |
-| `Kamion-okno.cmd` | Start w oknie 1600 × 900, do menu startowego. |
-| `Kamion-knyszyn.cmd` | Okno 1600 × 900 i od razu region **knyszyn** (`-scene knyszyn`). Dawny błąd (startował knyszyn-w) jest w skrypcie poprawiony. |
-| `Kamion-knyszyn-w.cmd` | Okno 1600 × 900 i od razu region **knyszyn-w** (zachodni kafel Knyszyna). |
-| `Kamion.exe.sha256`, `build.json` | Metadane buildu (suma exe, liczba plików, rozmiar). Uwaga z HANDOVER: suma exe nie identyfikuje treści buildu. |
+| `Kamion.exe` | Gra. Bez argumentów startuje w **pełnym ekranie bez ramki** w natywnej rozdzielczości monitora (ProjectSetup.ApplyStandaloneWindowSettings), chyba że plik ustawień mówi inaczej (sekcja 3). Alt+Enter przełącza pełny ekran / okno; okno można powiększać myszą. Uwaga: Unity pamięta ostatni tryb okna — jeśli po starszym buildzie gra otwiera się w oknie, naciśnij raz Alt+Enter. |
+| `Kamion-okno.cmd` | Start w oknie 1600 × 900 (jedyny launcher wymuszający okno), do menu startowego. |
+| `Kamion-<region>.cmd` | Jeden plik na **każdy region, którego scena jest w buildzie** (lista z logu buildu), np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`, `Kamion-dk65-05.cmd`. Tryb ekranu jak `Kamion.exe` (pełny ekran bez ramki) i od razu `-scene <region>`. Bez strumieniowania. |
+| `Kamion-korytarz.cmd` | **Ciągła jazda** (sekcja 1.4): tryb ekranu jak `Kamion.exe`, start w regionie knyszyn, `-stream 1`. Powstaje tylko, gdy w buildzie są regiony `knyszyn` **i** `knyszyn-s` **oraz** scena kafla `World_knyszyn-s_Tile` (bez niej szew zostaje zamknięty; build-hygiene-s23). |
+| `Kamion-d3d11.cmd`, `Kamion-korytarz-d3d11.cmd` | Awaryjnie (sekcja 1.6): to samo co `Kamion.exe` / `Kamion-korytarz.cmd` z `-force-d3d11`. Korytarzowy tylko razem z `Kamion-korytarz.cmd`. |
+| `build-id.json` | Skrót zawartości `Kamion_Data` — gra pokazuje go w menu, w „Informacjach” i w logu `[BOOT]`; po nim rozpoznaje się build. |
+| `Kamion.exe.sha256`, `build.json` | Metadane buildu (suma exe, liczba plików, rozmiar). Suma exe nie identyfikuje buildu (exe to ten sam launcher Unity w każdym buildzie). |
 
-Wszystkie trzy pliki `.cmd` przekazują dalej własne argumenty (`%*`), np. `Kamion-okno.cmd -tier Low -fps 30`.
+Launchery pisze `scripts/postbuild-windows.py` (wywoływany przez `scripts/build-windows.ps1` po udanym buildzie).
+Każdy `.cmd` przekazuje dalej własne argumenty (`%*`), np. `Kamion-okno.cmd -tier Low -fps 30` albo
+`Kamion-korytarz.cmd -force-d3d11`. Gotowe warianty D3D11: `Kamion-d3d11.cmd`, `Kamion-korytarz-d3d11.cmd` (sekcja 1.6).
+
+`-scene` działa **raz na uruchomienie**: po „Menu” w jeździe zostajesz w menu startowym (log
+`[BOOT] launch argument scene already used this run`), a nie wracasz do regionu z launchera. Region wybierzesz wtedy
+w menu („REGION — START NA POCZĄTKU TRASY” → „Jedź w wybranym regionie”).
 
 ### 1.2 Paczka zip dla testera (ADR 0271)
 
 Tworzy ją lider: `uv run --no-project python scripts/package-windows.py artifacts/win/<folder buildu>` →
-`artifacts/dist/kamion-<wersja>-<sha>[-low][-dev][-dirty]-win64.zip` (+ `.sha256`, `.json`).
+`artifacts/dist/kamion-<wersja>-<sha>[-low][-regions][-dev][-dirty]-<skrót zawartości>-win64.zip` (+ `.sha256`, `.json`).
 
 | W paczce | Nie ma w paczce |
 |---|---|
-| `Kamion.exe`, `Kamion_Data\`, `Kamion-okno.cmd` | `Kamion-knyszyn.cmd` (skrót deweloperski) |
-| `Kamion-knyszyn-w.cmd` — tylko gdy region knyszyn-w jest w buildzie | launchery `-scene` regionów spoza buildu (np. `Kamion-knyszyn-w.cmd` w buildzie domyślnym lub `d67`) |
+| `Kamion.exe`, `Kamion_Data\`, `build-id.json`, `Kamion-okno.cmd` | launchery `-scene` regionów spoza buildu (np. `Kamion-knyszyn-w.cmd`, gdy knyszyn-w nie ma w buildzie) |
+| `Kamion-<region>.cmd` — dla regionów w buildzie (bez wyjątku „deweloperskiego”; także `Kamion-knyszyn.cmd`) | |
+| `Kamion-korytarz.cmd` — gdy region knyszyn jest w buildzie (paczka sprawdza region z `-scene`) | |
 | `README.txt` (wymagania, start, SmartScreen, ścieżki logów) | `build.json`, `Kamion.exe.sha256`, `*.pdb`, foldery `*_DoNotShip` |
 | `THIRD_PARTY_NOTICES.txt`, `SHA256SUMS.txt` | |
 | `collect-logs.ps1` + `Zbierz-logi.cmd` (zbieranie logów) | |
@@ -39,27 +48,31 @@ Skąd skrypt wie, co jest w buildzie: lista scen z logu buildu (`build.json` →
 
 Tester:
 1. Rozpakuj **cały** zip do zwykłego folderu (nie uruchamiaj gry z wnętrza zip).
-2. Uruchom `Kamion.exe` (pełny ekran) albo `Kamion-okno.cmd` (okno).
+2. Uruchom `Kamion.exe` (pełny ekran), `Kamion-okno.cmd` (okno) albo — jeśli jest — `Kamion-korytarz.cmd` (ciągła jazda).
 3. Windows może pokazać „System Windows ochronił ten komputer” (SmartScreen) — gra nie ma podpisu cyfrowego.
    Sprawdź sumę SHA256 pliku zip z tą od autora, potem „Więcej informacji” → „Uruchom mimo to”.
 
 ### 1.3 Argumenty wiersza poleceń
 
-Zapis: `Kamion.exe -nazwa wartość` (zawsze para; flaga bez wartości na końcu linii jest ignorowana).
+Zapis: `Kamion.exe -nazwa wartość` (argumenty gry: zawsze para; flaga bez wartości na końcu linii jest ignorowana).
+Argumenty silnika Unity (`-screen-*`, `-window-mode`, `-force-d3d11`, `-logFile`) czyta sam Unity, nie kod gry.
 Kolejność ważności: argument > zapisany wybór > wartość domyślna.
 
 **Dla gracza / testera**
 
 | Argument | Wartości | Domyślnie (bez argumentu) | Uwagi |
 |---|---|---|---|
-| `-scene` | id regionu (np. `knyszyn`, `dk65-05`), skrót (`c` = bialystok-industrial-c, `dojlidy` = id bez `bialystok-`), albo nazwa sceny (`DrivingLab`, `WorldC`) | menu startowe | Region ładuje się w wersji High, jeśli bieżący tier to High/Ultra i scena High jest w buildzie. |
+| `-scene` | id regionu (np. `knyszyn`, `dk65-05`), skrót (`c` = bialystok-industrial-c, `dojlidy` = id bez `bialystok-`), albo nazwa sceny (`DrivingLab`, `WorldC`) | menu startowe | Region ładuje się w wersji High, jeśli bieżący tier to High/Ultra i scena High jest w buildzie. Raz na uruchomienie (sekcja 1.1). |
+| `-stream` | `1` | wyłączone (każda inna wartość też = wyłączone) | Strumieniowanie sąsiednich kafli — ciągła jazda między regionami (sekcja 1.4). |
 | `-tier` | `Low` / `Medium` / `High` / `Ultra` (wielkość liter dowolna) | zapisany wybór, a bez niego dobór sprzętowy (sekcja 4) | Tylko na ten przebieg — pliku ustawień nie zmienia. |
 | `-fps` | liczba > 0 (np. `30`, `60`, `1000` = praktycznie bez limitu) | 60 na PC (WORKING_VALUE) albo zapisany wybór | Tylko na ten przebieg. |
 | `-route_s` | metry od początku trasy regionu (≥ 0) | punkt startowy regionu | Gdy wskazane miejsce jest zablokowane, start przesuwa się wzdłuż trasy (log `[START]`). |
 | `-route_end` | metry (> 0) | koniec trasy | Gdzie autopilot trasy łagodnie się zatrzyma. |
 | `-trailer` | `solo`, `empty`/`pusta`, `24`/`24t`, `40`/`40t` | plac: zapisany wybór (pierwszy raz 24 t); region: zestaw z naczepą | `solo` = sam ciągnik. |
 | `-lighting` | `clear`, `overcast`, `lowsun`, `dusk` | wybór „Pora dnia” z menu | Nieznana nazwa → ostrzeżenie w logu. |
-| `-screen-fullscreen`, `-screen-width`, `-screen-height` | argumenty wbudowane w Unity | — | Jeśli podasz dowolny `-screen-*`, gra **nie** nakłada ustawień ekranu z pliku. |
+| `-screen-fullscreen`, `-screen-width`, `-screen-height` | Unity: `0`/`1`, piksele | — | Jeśli podasz dowolny `-screen-*`, `-window-mode` albo `-popupwindow`, gra **nie** nakłada trybu ekranu z pliku ustawień (sekcja 1.5). |
+| `-window-mode` | Unity (tylko Windows): `exclusive` / `borderless` | — | Rodzaj pełnego ekranu. Żaden launcher go nie podaje (od alt-window-s23 korytarz bierze tryb z ustawień). |
+| `-force-d3d11` / `-force-d3d12` | Unity (tylko Windows), **bez wartości** | API wybrane przez Unity (sekcja 1.6) | Wymusza Direct3D 11 / 12. Awaryjnie przy crashu D3D12 (sekcja 1.6). |
 
 **Pomiarowe (nie dla zwykłej gry)**
 
@@ -70,7 +83,83 @@ Kolejność ważności: argument > zapisany wybór > wartość domyślna.
 | `-shot` / `-shot_t` / `-quit_t` | plik PNG / sekundy / sekundy | brak / 20 s / brak | Zrzut ekranu po `shot_t` s i wyjście po `quit_t` s. |
 | `-telemetry 1`, `-devhud 1`, `-camlog 1`, `-pc_tiers 0`, `-engine_audio el\|synth` | | wyłączone | Telemetria CSV, HUD diagnostyczny, log pozycji kamery, tiery mobilne zamiast PC, zestaw dźwięku silnika. |
 
-Argumentu `-stream` w `origin/main` **nie ma** (żaden kod go nie czyta).
+### 1.4 Ciągła jazda między regionami (`-stream 1`, `Kamion-korytarz.cmd`)
+
+`Kamion-korytarz.cmd` = `Kamion.exe -scene knyszyn -stream 1 %*` (tryb ekranu z pliku ustawień, bez niego pełny ekran bez ramki).
+
+Co robi `-stream 1` (ADR 0235 / 0273, scalone 16.11 jako `int-stream-s23`):
+- Czytany przy każdym starcie sceny jazdy w regionie (także regionu wybranego potem z menu w tym samym uruchomieniu).
+  Bez niego region kończy się jak dotąd: zamknięcie drogi i komunikat „Koniec mapy za ok. 250 m: droga zamknięta,
+  zwolnij”.
+- Włącza się tylko, gdy region startowy jest w grafie kafli i co najmniej jedna **sąsiednia scena kafla**
+  (`World_<id>_Tile`, przy treści High `World_<id>_High_Tile`) jest w buildzie. Inaczej w logu `[STREAM] off: …`
+  i jazda jak bez argumentu. Po włączeniu w logu `[STREAM] on: start <region>, …`.
+- Sąsiednie kafle doładowują się w tle w promieniu ok. **400 m** (25 m/s × (8 + 1 + 1) s + 150 m; WORKING_VALUE),
+  najwyżej **4 kafle** naraz, w budżecie pamięci świata PC: Low 640 / Medium 800 / High 1450 / Ultra 2000 MB
+  (WORKING_VALUE). Gdy sąsiad jest gotowy, zamknięcie drogi na wspólnej krawędzi znika; sąsiada, którego nie ma
+  w buildzie, nie ładuje — tam szew zostaje zamknięty.
+- Treść High kafli tylko wtedy, gdy region startowy wystartował w scenie `_High` (tier High/Ultra i scena High
+  w buildzie); przy Low/Medium strumieniuje się treść Low.
+- Autopilot trasy (`-autopilot route`) przechodzi przez szwy: trasa kafla jest doklejana, gdy jej początek leży
+  ≤ 3 m od końca bieżącej.
+
+**Kafle w grafie** (`tile_graph.json`, 21 kafli = 21 regionów katalogu):
+
+| Łańcuch trasy | Kafle |
+|---|---|
+| główny (17 kafli, = zestaw `d67`) | bialystok-industrial-c → bialystok-maczka → bialystok-kleeberga → bialystok-knyszynska → dk65-01 … dk65-11 → knyszyn-s → knyszyn |
+| boczny (2 kafle) | knyszyn-w → dk65-monki-01 |
+| bez łańcucha | dw671-tykocin-01 (sąsiaduje z knyszyn-w, knyszyn-s, narożnikiem z knyszyn), bialystok-dojlidy (bez sąsiadów) |
+
+**Przerwy (z danych w `origin/main`):**
+- **bialystok-dojlidy** nie ma w grafie żadnego sąsiada → nigdy się nie strumieniuje; tylko jako osobny region.
+- **knyszyn ↔ knyszyn-w**: kafle mają wspólną krawędź, ale trasa knyszyn kończy się na Rynku (nie na krawędzi
+  kafla), więc nie ma portalu trasy — autopilot tam nie przejdzie. Jazda ręczna na zachód (DK65 Obozowa) otworzy szew
+  tylko wtedy, gdy scena kafla knyszyn-w jest w buildzie; `Kamion-korytarz.cmd` wymaga knyszyn, knyszyn-s i sceny kafla knyszyn-s.
+  Przejazdu przez ten szew nikt nie sprawdził (**UNVERIFIED**).
+- **dw671-tykocin-01**: trasa zaczyna się na krawędzi z knyszyn-w, ale trasa knyszyn-w wychodzi na północ (do Moniek)
+  → brak portalu; jazda ręczna przez szew — jak wyżej, **UNVERIFIED**.
+- **Końce mapy**: dk65-monki-01 (krawędź zachodnia, „next lattice tile (-10,9) not built”), dw671-tykocin-01
+  (krawędź południowa, „(-9,6) not built”) — tam „Koniec mapy”.
+- Region zaimportowany przed ADR 0235 nie ma sceny `_Tile` i build jej nie dołącza → szew z nim zostaje zamknięty.
+  Które sceny `_Tile` istnieją, zależy od lokalnego importu (`_Generated/`, poza gitem) — z repo nie da się tego ustalić.
+- Pierścienia Mońki / Tykocin (world2: dk65-monki-02…07, monki, dw671-tykocin-02…09, tykocin) **nie ma** w `origin/main`
+  (katalog regionów ma 21 regionów).
+
+Jedyny pomiar przejazdu (HANDOVER 16.11 16:5x): knyszynska → dk65-01 → 02 → 03, 0 zamkniętych szwów.
+
+**Ciągła jazda z innego regionu:** launcher regionu przekazuje argumenty, więc np. `Kamion-dk65-05.cmd -stream 1`
+(okno 1600 × 900) albo `Kamion.exe -scene dk65-05 -stream 1` (pełny ekran z projektu / pliku ustawień).
+
+### 1.5 Pełny ekran i okno
+
+| Start | Tryb |
+|---|---|
+| `Kamion.exe` bez argumentów | z pliku ustawień (sekcja 3), a bez pliku — projekt: `fullscreenMode: 1` (bez ramki, rozdzielczość natywna) |
+| `Kamion-okno.cmd` | okno 1600 × 900 (`-screen-fullscreen 0 -screen-width 1600 -screen-height 900`) |
+| `Kamion-<region>.cmd`, `Kamion-korytarz.cmd`, `Kamion-*-d3d11.cmd` | jak `Kamion.exe` (bez `-screen-*`; `-force-d3d11` nie zmienia trybu ekranu) |
+
+- Z dowolnym `-screen-*` / `-window-mode` / `-popupwindow` gra przy starcie **pomija** tryb ekranu z pliku ustawień.
+- Okna 1600 × 900 **nie da się powiększyć** przeciągnięciem: w projekcie `resizableWindow: 0` (zgłoszenie właściciela
+  16.11 15:2x; poprawka zaplanowana, w `origin/main` jej nie ma). Zmień tryb w menu (sekcja 3) albo uruchom `Kamion.exe`.
+- **Alt+Enter**: w projekcie `allowFullscreenSwitch: 1` — wg dokumentacji Unity to pozwala przełączać pełny ekran /
+  okno skrótem systemowym. Na buildzie Kamion nie sprawdzone (**UNVERIFIED**), podobnie jak to, czy zmiana trafia do
+  pliku ustawień.
+- Trwała zmiana: menu startowe → **Ekran, grafika, dźwięk** → „Tryb okna” (okno / bez ramki / pełny ekran),
+  „Rozdzielczość” → Zastosuj (sekcja 3).
+
+### 1.6 Awaryjnie: Direct3D 11 (`-force-d3d11`)
+
+16.11 gra padła u właściciela (exe 13104cf215, knyszyn, pełny ekran bez ramki, RTX 5070) z błędem
+`d3d12: Device failed error (887a0001)` (urządzenie D3D12 usunięte); lider uruchomił ją potem z `-force-d3d11`.
+Przyczyna nieustalona (hipoteza o równoległym obciążeniu GPU przez Unity — **UNVERIFIED**).
+
+- Projekt nie ustawia listy API grafiki dla Windows (w ProjectSettings są wpisy tylko dla iOS i Androida) → Unity
+  wybiera API sam; którego używa domyślnie — z repo nie wynika (crash pokazuje D3D12).
+- Gdy gra pada (zwłaszcza z „d3d12” / „Device failed” w `Player.log`), uruchom `Kamion-d3d11.cmd` (menu) albo
+  `Kamion-korytarz-d3d11.cmd` (jazda ciągła); inne starty: dopisz argument, np. `Kamion-okno.cmd -force-d3d11`,
+  `Kamion-knyszyn.cmd -force-d3d11`.
+- Czy D3D11 usuwa problem — jedna obserwacja, bez pomiaru (**UNVERIFIED**). W zgłoszeniu podaj, czy był `-force-d3d11`.
 
 ---
 
@@ -117,6 +206,7 @@ wstrzymane (klawisze i pad nawigują po menu).
 | Rozglądanie | — | prawa gałka | przeciągnij po ekranie (który przycisk myszy — UNVERIFIED) |
 | Przybliżenie | — | — | kółko myszy |
 | Lusterka w okienkach na ekranie (wł./wył.) | L | — (do przypisania) | — |
+| HUD: szczegóły minimalne / rozszerzone (ADR 0283) | I | — (do przypisania) | — |
 | Kamera cofania (wymuś) | V | — (do przypisania) | — |
 | Pełna mapa | — | — | klik minimapy (dokładny gest UNVERIFIED); kółko = zoom mapy |
 
@@ -129,7 +219,8 @@ Kamera cofania włącza się też sama na biegu R.
 | Menu / wstecz (w jeździe: zamyka mapę, potem ustawienia, potem wraca do menu startowego) | Esc | środkowy prawy (Start) | przycisk „Menu” w HUD |
 | Ruch po menu | strzałki, Tab | krzyżak, lewa gałka | najechanie |
 | Wybór | Enter | przycisk dolny (A) | klik |
-| Zamknij panel ustawień PC (= Anuluj) | Esc | przycisk prawy (B) | „Anuluj” |
+| Zamknij panel ustawień PC (= Anuluj) | Esc | przycisk prawy (B) | „Anuluj” albo prawy przycisk myszy |
+| Zakładki ustawień (Grafika, Sterowanie, Dźwięk, Rozgrywka, Lusterka; ADR 0283) | Q / E | LB / RB | klik zakładki |
 | Przewijanie ekranu „Informacje” | ↑ / ↓, PgUp / PgDn | prawa gałka, krzyżak góra/dół | kółko |
 
 Esc i Start pada są na stałe (nie da się ich przypisać). K działa jako klakson zawsze, nawet po zmianie przypisania
@@ -139,8 +230,9 @@ Przyciski HUD (np. Menu, Reset) obsługuje tylko mysz — nie łapią fokusu pad
 
 ### 2.5 Zmiana przypisań (rebinding)
 
-Menu startowe → **Ustawienia sterowania** → sekcja „KLAWIATURA I PAD” → **Przypisania i czułość…**
-(przycisk jest widoczny tylko w scenie jazdy, gdy działa wejście PC).
+Menu startowe → **Ustawienia** → zakładka **Sterowanie** → **Kierownica, pedały, kamera…** → sekcja „KLAWIATURA I PAD” →
+**Przypisania i czułość…** (przycisk jest widoczny tylko w scenie jazdy, gdy działa wejście PC). Na telefonie przycisk
+nazywa się dalej „Ustawienia sterowania”. (ADR 0283.)
 
 - Strony **Klawiatura** / **Pad**. Kliknij przypisanie i naciśnij nowy klawisz/przycisk.
 - Anulowanie: Backspace (klawiatura) albo Start pada; po 10 s bez wciśnięcia — anulowane samo. Esc nie da się przypisać.
@@ -168,10 +260,11 @@ Menu startowe → **Ustawienia sterowania** → sekcja „KLAWIATURA I PAD” �
 
 ---
 
-## 3. Ustawienia PC (ekran, grafika, dźwięk)
+## 3. Ustawienia PC (ADR 0270, zakładki ADR 0283)
 
-Menu startowe → **Ekran, grafika, dźwięk** (tylko na PC). Zmiany działają po **Zastosuj**; „Anuluj” / Esc /
-pad B odrzuca; „Przywróć domyślne” wczytuje domyślne. Po zmianie trybu ekranu gra pyta „Zachować nowy tryb
+Menu startowe → **Ustawienia** (tylko na PC; jeden ekran, zakładki **Grafika · Sterowanie · Dźwięk · Rozgrywka ·
+Lusterka**, przełączanie Q / E, LB / RB albo kliknięciem). Zmiany działają po **Zastosuj**; „Anuluj” / Esc / pad B /
+prawy przycisk myszy odrzuca; „Przywróć domyślne” wczytuje domyślne **otwartej zakładki**. Po zmianie trybu ekranu gra pyta „Zachować nowy tryb
 ekranu?” i po **15 s** bez odpowiedzi wraca do poprzedniego.
 
 | Ustawienie | Wybór | Domyślnie |
@@ -184,6 +277,13 @@ ekranu?” i po **15 s** bez odpowiedzi wraca do poprzedniego.
 | Skala HUD | 80–140 % co 10 % | 100 % |
 | Jednostki prędkości | tylko km/h | km/h |
 | Głośność ogólna / Silnik / Otoczenie / Sygnały kabiny | 0–100 % co 5 % | 100 % |
+| Rozgrywka: Szczegóły HUD | minimalne / rozszerzone (też klawisz I w jeździe) | minimalne |
+| Rozgrywka: HUD w widoku z kabiny | auto / pasek / tylko ostrzeżenia (auto: gdy w kabinie działają zegary, zostają ostrzeżenia i kierunkowskazy) | auto |
+| Rozgrywka: Kontrolki dotykowe | auto / zawsze / nigdy | auto |
+| Lusterka: Okienka lusterek | wyłączone / włączone (też klawisz L) | włączone |
+| Lusterka: Rozmiar | 30–60 % wysokości ekranu co 2 % | 42 % (WORKING_VALUE) |
+| Lusterka: Położenie w pionie / Odsunięcie od krawędzi | 0–100 % co 10 % (podgląd układu w zakładce) | 0 % / 0 % |
+| Lusterka: Na zewnątrz / do środka, W dół / w górę | ±6° / ±3° co 0,5° (obraca widok obu lusterek głównych) | 0° / 0° |
 
 Plik: `settings_pc.json` w folderze danych gry. Argumenty `-tier` / `-fps` wygrywają z plikiem tylko na dany przebieg.
 
@@ -191,8 +291,20 @@ Menu startowe ma też szybkie przyciski: **Pora dnia (trasy)** (Pochmurno / Nisk
 **Jakość grafiki** (Low / Medium / High / Ultra), **Limit klatek** (30 / 60 FPS) — zapisywane od razu.
 
 „Ustawienia sterowania” (sterowanie i kamera) zmieniają się od razu i zapisują same: kamera z kabiny
-(„Czułość rozglądania”, „Pole widzenia” 45–75°, „Ruch głowy”), dźwięk (zestaw synteza / ElevenLabs), oraz
-sekcje dotykowe/gyro (na PC bez znaczenia).
+(„Czułość rozglądania”, „Pole widzenia” 45–75°, „Ruch głowy”), dźwięk (zestaw synteza / ElevenLabs), sekcje
+„KIEROWNICA DOTYKOWA” i „GYRO” (na PC bez znaczenia) oraz:
+
+**Kontrolki dotykowe** — Menu startowe → **Ustawienia sterowania** → sekcja „KONTROLKI DOTYKOWE I EKRAN” → **Pokazuj**:
+
+| Wybór | Działanie |
+|---|---|
+| **auto** (domyślnie) | telefon: zawsze widoczne; PC: ukryte, pokazują się dopiero po pierwszym dotknięciu ekranu dotykowego w tej sesji |
+| zawsze | zawsze widoczne (kierownica, pedały, R/N/D, dźwignia, kierunkowskazy na ekranie; HUD w układzie dotykowym) |
+| nigdy | zawsze ukryte (HUD w układzie monitora) |
+
+Zapis od razu w rejestrze Unity (PlayerPrefs `ui.touchControls`), nie w `settings_pc.json`. Jeśli na PC bez ekranu
+dotykowego widzisz kierownicę i pedały na ekranie, masz zapisane „zawsze” (tak było u właściciela 16.11) — ustaw
+**auto** albo **nigdy**. Obok: „Skala HUD (monitor)”.
 
 ---
 
@@ -234,12 +346,19 @@ Medium 379 / High 334 / Ultra 194 fps (to **nie** jest referencja dla klas D74).
 | Log gry (bieżący i poprzedni) | `%USERPROFILE%\AppData\LocalLow\woogitsugames\Kamion\Player.log`, `Player-prev.log` |
 | Diagnostyka klatek | ten sam folder, podfolder `diag\` (`frametimes.csv`, `summary.json`; przy `-camlog 1` też `campose.csv`) |
 | Ustawienia | ten sam folder: `settings_pc.json`, `input_bindings.json` (że to ten sam folder co log — wg dokumentacji Unity, UNVERIFIED na buildzie) |
-| Raporty awarii | `%TMP%\woogitsugames\Kamion\Crashes\` |
+| Raporty awarii Unity | `%TMP%\woogitsugames\Kamion\Crashes\` (zwykle `%LOCALAPPDATA%\Temp\…`) |
+| Zrzut pamięci Windows (WER) | `%LOCALAPPDATA%\CrashDumps\Kamion.exe.<pid>.dmp` — tylko gdy w Windows włączone lokalne zrzuty (klucz rejestru `LocalDumps`; wg Microsoft domyślnie wyłączone, domyślny folder właśnie ten). U właściciela 16.11 taki plik powstał. |
 
 **Zbieranie logów:** uruchom `Zbierz-logi.cmd` z folderu gry. Powstaje zip na Pulpicie z: `Player.log`,
 `Player-prev.log`, `diag\`, 5 najnowszymi zrzutami awarii i `system.txt` (Windows, procesor, RAM, karta graficzna,
 monitory, wolne miejsce, suma exe). Nazwa użytkownika i komputera są zamieniane na `<user>` / `<pc>`. Nic nie jest
 wysyłane samo. Wolniejsza, pełniejsza wersja: `powershell -NoProfile -ExecutionPolicy Bypass -File collect-logs.ps1 -DxDiag`.
+Zrzuty awarii (`*.dmp`) **nie są anonimizowane** (mogą zawierać nazwę użytkownika Windows); bez nich:
+`Zbierz-logi.cmd -NoCrashes`.
+
+`Zbierz-logi.cmd` dołącza też zrzuty Windows `%LOCALAPPDATA%\CrashDumps\Kamion*.dmp`: 2 najnowsze, każdy do 1 GB
+(większe i starsze tylko wypisuje w `system.txt` — wtedy dołącz plik ręcznie); `-NoCrashes` pomija także je.
+Parametry: `-MaxDumps`, `-MaxDumpMB`, `-DumpDir`. Też nieanonimizowane.
 
 ---
 
@@ -252,7 +371,8 @@ Dołącz:
    poprzedni zostaje jako `Player-prev.log`).
 2. **Region** (nazwa z menu albo argument `-scene`) i mniej więcej **gdzie** (ulica, rondo, km trasy).
 3. **Godzinę** zdarzenia (żeby znaleźć miejsce w logu).
-4. **Tier** i limit klatek (z menu albo z argumentów), tryb okna.
+4. **Tier** i limit klatek (z menu albo z argumentów), tryb okna, którym launcherem (`Kamion-korytarz.cmd` /
+   `-stream 1`?) i czy z `-force-d3d11`.
 5. Czym sterowałeś: klawiatura / pad (jaki) / kierownica (jaka).
 6. Opis: co robiłeś → co się stało → czego się spodziewałeś. Czy powtarza się?
 7. Zrzut ekranu (klawisz Print Screen / Win+Shift+S) albo krótkie nagranie.
@@ -276,11 +396,20 @@ Przegląd s23 (2026-11-16, gałąź `docs-fixes-s23`): dokumenty, które kłama�
 | 6 | HANDOVER 16.11 00:0x: „`Kamion-knyszyn.cmd` startuje knyszyn-w” | **zostaje** — to wpis historyczny w dzienniku lidera, poprawiony już wpisem HANDOVER 16.11 04:0x; skrypt startuje `knyszyn` |
 | 7 | `dist/windows/README.txt.in`: niepełna lista klawiszy, pad 3 akcje | **naprawione**: pełna lista klawiszy i pada wg `DrivingActionCatalog` + gdzie zmienić przypisania |
 | 8 | ADR 0263: FFB bez wyjścia, brak kreatora kalibracji i panelu kierownicy | **naprawione** w ADR 0263 (uzupełnienie opisuje stan: `NullForceFeedbackSink`, brak UI, ustawienia tylko w PlayerPrefs `controls.wheel`); sama funkcja **zostaje do zrobienia** (natywny sink FFB, UI — `game/**`) |
-| 9 | Menu startowe: „brak w tym APK” / „Region niedostępny w tym APK” także na PC | **zostaje** — tekst w kodzie gry (`GameBootstrap.cs:199`, `BootMenu.cs:90`), poza zakresem zmian dokumentacji |
+| 9 | Menu startowe: „brak w tym APK” / „Region niedostępny w tym APK” także na PC | **zostaje** — tekst w kodzie gry (`GameBootstrap.cs:232`, `BootMenu.cs:121`), poza zakresem zmian dokumentacji |
 | 10 | D70 (270°/900°) a kod: dotykowa 180–900°, USB 270–900° (domyślnie 540°) | **naprawione** w ADR 0263 (uzupełnienie rozdziela oba zakresy); D70 (decyzja właściciela) bez zmian — nie podaje minimum, 180° to wartość z kodu |
 
-Dodatkowo: argumentu `-stream` (ADR 0235 / 0273, strumieniowanie regionów) **nie ma w `origin/main`** — kod i oba ADR są
-tylko na gałęzi `streaming-0235`. Ta instrukcja go nie opisuje, dopóki nie zostanie scalony.
+Przegląd P19 (16.11 wieczór, gałąź `player-guide-r2`, tylko ta instrukcja):
+
+| # | Rozbieżność | Stan |
+|---|---|---|
+| 11 | ADR 0261, uzupełnienie s23 §3: „trzy launchery, `build-windows.ps1:94-96`” | **zostaje** w ADR (dopisek ADR 0276 w tym samym pliku mówi już o `Kamion-<region>.cmd`); stan kodu: launchery pisze `postbuild-windows.py` — `Kamion-okno.cmd`, `Kamion-<region>.cmd` dla każdego regionu w buildzie, `Kamion-korytarz.cmd` |
+| 12 | `build-windows.ps1` (nagłówek i komentarz przy postbuild): „launchers (windowed)” | **zostaje** — `Kamion-korytarz.cmd` jest pełnoekranowy; tylko komentarz |
+| 13 | `collect-logs.ps1` / `Zbierz-logi.cmd` nie zbiera `%LOCALAPPDATA%\CrashDumps` (tam był dump crasha D3D12 16.11) | **poprawione** (build-hygiene-s23): `collect-logs.ps1` zbiera `Kamion*.dmp` (2 najnowsze, ≤ 1 GB), README w zipie o tym mówi |
+| 14 | `dist/windows/README.txt.in` (README w zip): brak `Kamion-korytarz.cmd`, `Kamion-<region>.cmd`, `-force-d3d11`, `CrashDumps` | **poprawione** (build-hygiene-s23): README opisuje korytarz, skróty regionów, `Kamion-d3d11.cmd` / `Kamion-korytarz-d3d11.cmd`, CrashDumps |
+| 15 | HANDOVER 16.11 15:2x: skróty dla gracza pełny ekran bez ramki, `resizableWindow` + Alt+Enter | **częściowo** — pełny ekran ma tylko `Kamion-korytarz.cmd`; `Kamion-okno.cmd` / `Kamion-<region>.cmd` nadal 1600 × 900, `resizableWindow: 0` |
+| 16 | ADR 0261 „Otwarte”: „Dotykowy HUD jest widoczny także na PC” | **nieaktualne** w ADR — kod (ADR 0265) ukrywa go na PC przy „auto”; widoczny tylko przy zapisanym „zawsze” |
+| 17 | Wcześniejsza wersja tej instrukcji: „argumentu `-stream` w `origin/main` nie ma” | **naprawione** — streaming scalony 16.11 (`int-stream-s23`), opis w sekcji 1.4 |
 
 ## UNVERIFIED (do sprawdzenia przez właściciela/testera)
 
@@ -291,34 +420,34 @@ tylko na gałęzi `streaming-0235`. Ta instrukcja go nie opisuje, dopóki nie zo
   dokumentacji Unity i ze skryptu `collect-logs.ps1`, nie z pomiaru).
 - Działanie pada w playerze (ADR 0261: „Pad: UNVERIFIED”).
 - `collect-logs.ps1` nie był uruchomiony na Windows (ADR 0271 „Nieuruchomione”).
+- Alt+Enter na buildzie (`allowFullscreenSwitch: 1`) i czy zmiana trybu skrótem zapisuje się w `settings_pc.json`.
+- Domyślne API grafiki Unity na Windows dla tego projektu (brak listy w ProjectSettings) i czy `-force-d3d11` usuwa
+  crash `887a0001` (jedna obserwacja).
+- Przejazd przez szwy knyszyn ↔ knyszyn-w i knyszyn-w ↔ dw671-tykocin-01 (brak portalu trasy; nikt nie jechał);
+  zmierzony tylko odcinek knyszynska → dk65-03.
+- Które regiony mają sceny `_Tile` w danym buildzie (zależy od lokalnego importu, poza gitem).
+- Czy na komputerach testerów powstają zrzuty w `%LOCALAPPDATA%\CrashDumps` (WER `LocalDumps` domyślnie wyłączone).
 
 <!-- źródła (ścieżka:linia | fragment, który musi być w tej linii; origin/main):
-scripts/build-windows.ps1:53 | $name = "kamion-$version-$sha
-scripts/build-windows.ps1:94 | Kamion-okno.cmd
-scripts/build-windows.ps1:94 | -screen-fullscreen 0 -screen-width 1600 -screen-height 900 %*
-scripts/build-windows.ps1:95 | -scene knyszyn %*
-scripts/build-windows.ps1:95 | Kamion-knyszyn.cmd
-scripts/build-windows.ps1:96 | -scene knyszyn-w %*
-scripts/build-windows.ps1:96 | Kamion-knyszyn-w.cmd
-scripts/build-windows.ps1:92 | $exePath.sha256
+scripts/build-windows.ps1:87 | $name = "kamion-$version-$sha
+scripts/build-windows.ps1:134 | $exePath.sha256
 game/ProjectSettings/ProjectSettings.asset:15 | companyName: woogitsugames
 game/ProjectSettings/ProjectSettings.asset:16 | productName: Kamion
 game/ProjectSettings/ProjectSettings.asset:114 | fullscreenMode: 1
 scripts/package-windows.py:9 | -win64.zip
-scripts/package-windows.py:476 | artifacts/dist
-scripts/package-windows.py:60 | "Kamion-knyszyn.cmd"
-scripts/package-windows.py:57 | "build.json", "Kamion.exe.sha256"
-scripts/package-windows.py:53 | *_DoNotShip
-scripts/package-windows.py:55 | *.pdb
-scripts/package-windows.py:466 | Zbierz-logi.cmd
-dist/windows/README.txt.in:7 | Rozpakuj cały folder
-dist/windows/README.txt.in:9 | SmartScreen
-dist/windows/README.txt.in:11 | Uruchom mimo to
+scripts/package-windows.py:520 | artifacts/dist
+scripts/package-windows.py:75 | "build.json", "Kamion.exe.sha256"
+scripts/package-windows.py:71 | *_DoNotShip
+scripts/package-windows.py:73 | *.pdb
+scripts/package-windows.py:507 | Zbierz-logi.cmd
+dist/windows/README.txt.in:9 | Rozpakuj cały folder
+dist/windows/README.txt.in:11 | SmartScreen
+dist/windows/README.txt.in:13 | Uruchom mimo to
 game/Assets/_Project/Platform/PlatformServices.cs:35 | string flag = "-" + key;
 game/Assets/_Project/Platform/PlatformServices.cs:36 | args.Length - 1
-game/Assets/_Project/Gameplay/GameBootstrap.cs:166 | GetLaunchArgument("scene")
-game/Assets/_Project/Gameplay/GameBootstrap.cs:167 | LaunchSceneFor(scene)
-game/Assets/_Project/Gameplay/GameBootstrap.cs:184 | RegionScenes.UsesHighContent(QualityTiers.Current)
+game/Assets/_Project/Gameplay/GameBootstrap.cs:178 | GetLaunchArgument("scene")
+game/Assets/_Project/Gameplay/GameBootstrap.cs:179 | LaunchSceneFor(scene)
+game/Assets/_Project/Gameplay/GameBootstrap.cs:217 | RegionScenes.UsesHighContent(QualityTiers.Current)
 game/Assets/_Project/Gameplay/RegionCatalog.cs:113 | a.alias
 game/Assets/_Project/Gameplay/RegionCatalog.cs:114 | CityPrefix + t
 game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json:155 | "alias": "c"
@@ -332,43 +461,43 @@ game/Assets/_Project/Gameplay/GameBootstrap.cs:39 | DesktopTargetFps = 60
 game/Assets/_Project/Gameplay/GameBootstrap.cs:108 | QualityTiers.SavedFrameRate
 game/Assets/_Project/UI/Settings/PcSettingsRuntime.cs:59 | !fpsFromArgument
 game/Assets/_Project/UI/Settings/PcSettingsRuntime.cs:61 | !tierFromArgument
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:372 | GetLaunchArgument("route_s")
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:373 | GetLaunchArgument("route_end")
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:391 | [START] start moved along the route
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:210 | GetLaunchArgument("trailer")
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:289 | case "solo"
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:290 | case "pusta"
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:291 | case "24t"
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:292 | case "40t"
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:379 | GetLaunchArgument("route_s")
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:380 | GetLaunchArgument("route_end")
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:408 | [START] start moved along the route
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:209 | GetLaunchArgument("trailer")
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:296 | case "solo"
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:297 | case "pusta"
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:298 | case "24t"
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:299 | case "40t"
 game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:38 | DefaultSpawn = LabSpawn.Cargo24t
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:217 | m_Spawn = LabSpawn.Empty
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:241 | GetLaunchArgument("lighting")
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:239 | clear | overcast | lowsun | dusk
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:242 | lighting = menuLighting
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:216 | m_Spawn = LabSpawn.Empty
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:248 | GetLaunchArgument("lighting")
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:246 | clear | overcast | lowsun | dusk
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:249 | lighting = menuLighting
 game/Assets/_Project/Core/Settings/DisplayModes.cs:153 | StartsWith("-screen-"
 game/Assets/_Project/UI/Settings/PcSettingsRuntime.cs:57 | StartupDisplayPolicy.ShouldApply
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:209 | GetLaunchArgument("autopilot")
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:208 | GetLaunchArgument("autopilot")
 game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:72 | StraightRunMode = "straight080"
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:496 | mode == "circle25"
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:186 | AUTOPILOT (pomiar)
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:223 | GetLaunchArgument("speed")
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:353 | s > 0 ? s : 50f
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:457 | s > 0 ? s : 80f
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:500 | (r25 ? 25f : 40f)
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:213 | LabSpawn.Gross40t
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:564 | mode == "circle25"
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:185 | AUTOPILOT (pomiar)
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:228 | GetLaunchArgument("speed")
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:360 | s > 0 ? s : 50f
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:525 | s > 0 ? s : 80f
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:568 | (r25 ? 25f : 40f)
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:212 | LabSpawn.Gross40t
 game/Assets/_Project/Gameplay/DesktopAutoShot.cs:29 | arg("shot")
 game/Assets/_Project/Gameplay/DesktopAutoShot.cs:30 | arg("quit_t")
 game/Assets/_Project/Gameplay/DesktopAutoShot.cs:36 | arg("shot_t"), 20f
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:251 | GetLaunchArgument("telemetry") == "1"
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:180 | GetLaunchArgument("devhud") == "1"
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:258 | GetLaunchArgument("telemetry") == "1"
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:179 | GetLaunchArgument("devhud") == "1"
 game/Assets/_Project/Gameplay/GameBootstrap.cs:93 | GetLaunchArgument("camlog") == "1"
 game/Assets/_Project/Rendering/Runtime/PcGraphicsTiers.cs:42 | "-pc_tiers"
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:168 | GetLaunchArgument("engine_audio")
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:167 | GetLaunchArgument("engine_audio")
 game/Assets/_Project/Gameplay/PcInputBridge.cs:60 | new GamepadDriverInput(Actions.Gamepad
 game/Assets/_Project/Gameplay/PcInputBridge.cs:61 | new KeyboardBindingsDriverInput(Actions.Keyboard
 game/Assets/_Project/Gameplay/PcInputBridge.cs:65 | Bootstrap.Keyboard.Enabled = false
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:133 | m_Mixer.Add(PcWheel.Input)
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:704 | m_Mixer.MenuOpen
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:131 | m_Mixer.Add(PcWheel.Input)
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:772 | m_Mixer.MenuOpen
 game/Assets/_Project/Input/DrivingActionCatalog.cs:68 | "<Keyboard>/w", "<Keyboard>/upArrow"
 game/Assets/_Project/Input/DrivingActionCatalog.cs:68 | <Gamepad>/rightTrigger
 game/Assets/_Project/Input/DrivingActionCatalog.cs:69 | "<Keyboard>/s", "<Keyboard>/downArrow"
@@ -418,14 +547,14 @@ game/Assets/_Project/UI/Driving/DrivingHud.cs:217 | AddZoom
 game/Assets/_Project/UI/Driving/TouchWidgets.cs:165 | drag = look around / orbit, scroll = zoom
 game/Assets/_Project/Gameplay/NavigationInstaller.cs:36 | mini.OnOpenMap = full.Open
 game/Assets/_Project/UI/Navigation/FullMapView.cs:697 | e.scrollDelta.y
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:753 | m_Selector == GearSelector.Reverse
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:717 | kb.escapeKey.wasPressedThisFrame
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:717 | pad.startButton.wasPressedThisFrame
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:719 | FullMapView.HandleBack()
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:720 | ReturnToMenu()
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:725 | kb.kKey.isPressed
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:724 | kb.cKey.wasPressedThisFrame
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:185 | OpenMenu = ReturnToMenu
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:821 | m_Selector == GearSelector.Reverse
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:785 | kb.escapeKey.wasPressedThisFrame
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:785 | pad.startButton.wasPressedThisFrame
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:787 | FullMapView.HandleBack()
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:788 | ReturnToMenu()
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:793 | kb.kKey.isPressed
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:792 | kb.cKey.wasPressedThisFrame
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:184 | OpenMenu = ReturnToMenu
 game/Assets/_Project/UI/Layout/UiFocus.cs:14 | arrows / Enter / Esc, pad stick / d-pad / A / B
 game/Assets/_Project/UI/Layout/UiFocus.cs:186 | k.tabKey.wasPressedThisFrame
 game/Assets/_Project/UI/Layout/UiFocus.cs:58 | HUD button: pointer only
@@ -436,7 +565,7 @@ game/Assets/_Project/UI/AboutPanel.cs:140 | k.upArrowKey.isPressed
 game/Assets/_Project/UI/AboutPanel.cs:141 | k.pageUpKey.isPressed
 game/Assets/_Project/UI/ControlSettingsPanel.cs:181 | KLAWIATURA I PAD
 game/Assets/_Project/UI/ControlSettingsPanel.cs:182 | Przypisania i czułość…
-game/Assets/_Project/UI/BootMenu.cs:241 | Ustawienia sterowania
+game/Assets/_Project/UI/BootMenu.cs:282 | Ustawienia sterowania
 game/Assets/_Project/Gameplay/PcInputBridge.cs:67 | ControlSettingsPanel.OpenInputBindings = OpenBindings
 game/Assets/_Project/UI/InputBindingsPanel.cs:190 | "Klawiatura"
 game/Assets/_Project/UI/InputBindingsPanel.cs:192 | "Pad"
@@ -482,11 +611,12 @@ game/Assets/_Project/Input/PcWheel.cs:15 | NullForceFeedbackSink.Instance
 game/Assets/_Project/Input/ForceFeedback.cs:24 | public bool Available => false;
 game/Assets/_Project/Input/HShifterMapper.cs:22 | GatesPerRange = 6
 game/Assets/_Project/Input/HShifterMapper.cs:26 | NeutralHoldS = 0.6f
-game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:738 | if (intent.ShiftDelta > 0) input.ShiftUp = true;
-game/Assets/_Project/Input/ControlSettings.cs:32 | wheelRangeDeg = 270f
-game/Assets/_Project/Input/ControlSettings.cs:21 | RangeMin = 180f, RangeMax = 900f
-game/Assets/_Project/UI/ControlSettingsPanel.cs:188 | Step(Settings.wheelRangeDeg, d, 90f
-game/Assets/_Project/UI/BootMenu.cs:249 | PcSettingsTexts.MenuButton
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:806 | if (intent.ShiftDelta > 0) input.ShiftUp = true;
+game/Assets/_Project/Input/ControlSettings.cs:43 | public float wheelRangeDeg = TouchHalfRangeComfortDeg;
+game/Assets/_Project/Input/ControlSettings.cs:29 | TouchHalfRangeComfortDeg = 270f
+game/Assets/_Project/Input/ControlSettings.cs:23 | RangeMin = 180f, RangeMax = 900f
+game/Assets/_Project/UI/ControlSettingsPanel.cs:190 | Step(Settings.wheelRangeDeg, d, 90f
+game/Assets/_Project/UI/BootMenu.cs:290 | PcSettingsTexts.MenuButton
 game/Assets/_Project/UI/Settings/PcSettingsTexts.cs:10 | Ekran, grafika, dźwięk
 game/Assets/_Project/UI/Settings/PcSettingsTexts.cs:38 | Zastosuj
 game/Assets/_Project/UI/Settings/PcSettingsTexts.cs:40 | Zachować nowy tryb ekranu?
@@ -510,18 +640,18 @@ game/Assets/_Project/Core/Settings/PcSettingsData.cs:78 | master = 1f
 game/Assets/_Project/UI/Settings/PcSettingsTexts.cs:31 | Głośność ogólna
 game/Assets/_Project/UI/Settings/PcSettingsTexts.cs:34 | Sygnały kabiny
 game/Assets/_Project/Core/Settings/PcSettingsStore.cs:132 | settings_pc.json
-game/Assets/_Project/UI/BootMenu.cs:229 | Pora dnia (trasy)
+game/Assets/_Project/UI/BootMenu.cs:270 | Pora dnia (trasy)
 game/Assets/_Project/UI/StartMenuOptions.cs:18 | "Pochmurno", "Niskie słońce", "Zmierzch"
-game/Assets/_Project/UI/BootMenu.cs:231 | Jakość grafiki
-game/Assets/_Project/UI/BootMenu.cs:235 | Limit klatek
+game/Assets/_Project/UI/BootMenu.cs:272 | Jakość grafiki
+game/Assets/_Project/UI/BootMenu.cs:276 | Limit klatek
 game/Assets/_Project/Rendering/Runtime/QualityTiers.cs:14 | SupportedFrameRates = { 30, 60 }
 game/Assets/_Project/UI/StartMenuOptions.cs:43 | persist: true
-game/Assets/_Project/UI/ControlSettingsPanel.cs:279 | Zmiany działają od razu i zapisują się same.
-game/Assets/_Project/UI/ControlSettingsPanel.cs:225 | Czułość rozglądania
-game/Assets/_Project/UI/ControlSettingsPanel.cs:226 | Pole widzenia
-game/Assets/_Project/Input/ControlSettings.cs:26 | FovMin = 45f, FovMax = 75f
-game/Assets/_Project/UI/ControlSettingsPanel.cs:227 | Ruch głowy
-game/Assets/_Project/UI/ControlSettingsPanel.cs:232 | "synteza", "ElevenLabs"
+game/Assets/_Project/UI/ControlSettingsPanel.cs:283 | Zmiany działają od razu i zapisują się same.
+game/Assets/_Project/UI/ControlSettingsPanel.cs:227 | Czułość rozglądania
+game/Assets/_Project/UI/ControlSettingsPanel.cs:228 | Pole widzenia
+game/Assets/_Project/Input/ControlSettings.cs:36 | FovMin = 45f, FovMax = 75f
+game/Assets/_Project/UI/ControlSettingsPanel.cs:231 | Ruch głowy
+game/Assets/_Project/UI/ControlSettingsPanel.cs:236 | "synteza", "ElevenLabs"
 docs/11_DECYZJE_WLASCICIELA.md:125 | Intel Core i5-6400 / AMD Ryzen 3 1200, NVIDIA GTX 660 / AMD RX 460 / Intel HD 630 (2 GB VRAM), 8 GB RAM
 docs/11_DECYZJE_WLASCICIELA.md:125 | Cel: tier Low, 1080p, **30 fps**
 docs/11_DECYZJE_WLASCICIELA.md:126 | Intel Core i5-9600 / AMD Ryzen 5 3600, NVIDIA GTX 1660 / AMD RX 590, 12 GB RAM
@@ -537,28 +667,134 @@ game/Assets/_Project/Rendering/Runtime/PcTierTable.cs:117 | MediumBelowVramMb = 
 game/Assets/_Project/Rendering/Runtime/PcTierTable.cs:119 | HighMinRamMb = 11000
 game/Assets/_Project/Rendering/Runtime/PcTierTable.cs:125 | AutoCeiling = PcTier.High
 HANDOVER.md:243 | Low 535 / Medium 379 / High 334 / Ultra 194 fps
-scripts/collect-logs.ps1:39 | AppData\LocalLow\$Company\$Product
-scripts/collect-logs.ps1:23 | $Company = 'woogitsugames'
-scripts/collect-logs.ps1:24 | $Product = 'Kamion'
-scripts/collect-logs.ps1:56 | 'Player.log', 'Player-prev.log'
-scripts/collect-logs.ps1:57 | 'diag'
-scripts/collect-logs.ps1:40 | $Company\$Product\Crashes
-scripts/collect-logs.ps1:26 | $MaxCrashes = 5
+scripts/collect-logs.ps1:42 | AppData\LocalLow\$Company\$Product
+scripts/collect-logs.ps1:25 | $Company = 'woogitsugames'
+scripts/collect-logs.ps1:26 | $Product = 'Kamion'
+scripts/collect-logs.ps1:59 | 'Player.log', 'Player-prev.log'
+scripts/collect-logs.ps1:60 | 'diag'
+scripts/collect-logs.ps1:43 | $Company\$Product\Crashes
+scripts/collect-logs.ps1:28 | $MaxCrashes = 5
 scripts/collect-logs.ps1:12 | system.txt
 scripts/collect-logs.ps1:14 | <user> / <pc>
 scripts/collect-logs.ps1:15 | nothing is uploaded anywhere
-scripts/collect-logs.ps1:27 | [switch]$DxDiag
-scripts/collect-logs.ps1:34 | GetFolderPath('Desktop')
-game/Assets/_Project/Telemetry/DiagnosticsSampler.cs:183 | Path.Combine(Application.persistentDataPath, "diag")
-game/Assets/_Project/Telemetry/DiagnosticsSampler.cs:185 | frametimes.csv
-game/Assets/_Project/Telemetry/DiagnosticsSampler.cs:187 | summary.json
+scripts/collect-logs.ps1:30 | [switch]$DxDiag
+scripts/collect-logs.ps1:37 | GetFolderPath('Desktop')
+game/Assets/_Project/Telemetry/DiagnosticsSampler.cs:185 | Path.Combine(Application.persistentDataPath, "diag")
+game/Assets/_Project/Telemetry/DiagnosticsSampler.cs:187 | frametimes.csv
+game/Assets/_Project/Telemetry/DiagnosticsSampler.cs:189 | summary.json
 game/Assets/_Project/Gameplay/GameBootstrap.cs:97 | campose.csv
-docs/adr/0261-build-windows.md:95 | nie jest konfigurowalne
+docs/adr/0261-build-windows.md:99 | nie jest konfigurowalne
 docs/adr/0261-build-windows.md:22 | Kamion-okno.cmd` i `Kamion-knyszyn.cmd`
 docs/adr/0271-dystrybucja-pc.md:16 | deweloperski `Kamion-knyszyn.cmd`
 docs/adr/0270-menu-ustawien-pc.md:27 | auto = High jak ADR 0261
 docs/adr/0261-build-windows.md:72 | Pad: UNVERIFIED
 HANDOVER.md:236 | `Kamion-knyszyn.cmd` startuje knyszyn-w
-game/Assets/_Project/UI/BootMenu.cs:90 | Region niedostępny w tym APK
-game/Assets/_Project/Gameplay/GameBootstrap.cs:199 | brak w tym APK
+game/Assets/_Project/UI/BootMenu.cs:121 | Region niedostępny w tym APK
+game/Assets/_Project/Gameplay/GameBootstrap.cs:232 | brak w tym APK
+scripts/postbuild-windows.py:47 | WINDOW_ARGS = "-screen-fullscreen 0 -screen-width 1600 -screen-height 900"
+scripts/postbuild-windows.py:48 | WINDOW_LAUNCHER = "Kamion-okno.cmd"
+scripts/postbuild-windows.py:166 | return f"Kamion-{region_id}.cmd"
+scripts/postbuild-windows.py:178 | launcher_text(f"-scene {rid}")
+scripts/postbuild-windows.py:162 | {WINDOW_ARGS}{tail} %*
+scripts/postbuild-windows.py:26 | the build (read from the "[BUILD] Windows x64 -> ... scenes=[...]" line of the build log
+scripts/postbuild-windows.py:52 | CORRIDOR_LAUNCHER = "Kamion-korytarz.cmd"
+scripts/postbuild-windows.py:53 | CORRIDOR_NEEDS = ("knyszyn", "knyszyn-s")
+scripts/postbuild-windows.py:180 | if all(r in regions for r in CORRIDOR_NEEDS):
+scripts/postbuild-windows.py:54 | -screen-fullscreen 1 -window-mode borderless -scene knyszyn -stream 1 %*
+scripts/postbuild-windows.py:44 | BUILD_ID = "build-id.json"
+scripts/postbuild-windows.py:21 | "<ver> (<sha>) · dane <contentHash>" in the menu, the "Informacje" screen
+scripts/build-windows.ps1:137 | $RepoRoot/scripts/postbuild-windows.py
+scripts/build-windows.ps1:13 | launchers (windowed; the project default is fullscreen)
+scripts/build-windows.ps1:136 | # (Kamion-okno.cmd + Kamion-<region>.cmd; ProjectSettings default is fullscreen, not changed here, ADR 0261).
+scripts/package-windows.py:78 | (int-h3-s23: no developer-only exception any more; Kamion-knyszyn.cmd starts the knyszyn region for testers)
+scripts/package-windows.py:266 | is in the build; Kamion-okno.cmd and other launchers without -scene always ship.
+scripts/package-windows.py:79 | LAUNCHER_SCENE_RE = re.compile(
+scripts/package-windows.py:509 | Bez zrzutow: Zbierz-logi.cmd -NoCrashes
+game/Assets/_Project/Gameplay/GameBootstrap.cs:172 | Both are one-shot per process (int-h3-s23
+game/Assets/_Project/Gameplay/GameBootstrap.cs:182 | [BOOT] launch argument scene already used this run: staying in the menu
+game/Assets/_Project/UI/BootMenu.cs:184 | REGION — START NA POCZĄTKU TRASY
+game/Assets/_Project/UI/BootMenu.cs:121 | RegionStartLabel = "Jedź w wybranym regionie"
+game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:241 | platform.GetLaunchArgument("stream")
+game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs:221 | public static bool IsRequested(string streamArgument) => EnabledOverride ?? streamArgument == "1";
+game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs:206 | if (!IsRequested(streamArgument)) return null;
+game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs:157 | [STREAM] off: region {start.regionId} not in the tile graph
+game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs:169 | [STREAM] off: no neighbour tile scene of
+game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs:180 | Debug.Log($"[STREAM] on: start {start.regionId}
+game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs:208 | EndsWith("_High", System.StringComparison.Ordinal) ? RegionScenes.HighTier : RegionScenes.LowTier
+game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs:209 | StreamingSettings.BudgetForTier(Game.Rendering.QualityTiers.Current, !Application.isMobilePlatform);
+game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs:481 | Not in this APK: stay Unloaded; the seam stays closed
+game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs:26 | then the tile is Ready and the seam with each Ready neighbour opens
+game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs:81 | public float routeJoinM = 3f;
+game/Assets/_Project/World/Runtime/Streaming/TileSceneSource.cs:48 | public bool IsAvailable(string region, string tier) => m_InBuild(RegionScenes.TileScenePathFor(region, tier));
+game/Assets/_Project/World/Runtime/RegionScenes.cs:26 | "World_dk65-04_Tile", "WorldC_Tile", "World_knyszyn_High_Tile"
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:40 | public float maxSpeedMs = 25f;
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:42 | public float loadTimeS = 8f;
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:44 | public float activationTimeS = 1f;
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:46 | public float cookTimeS = 1f;
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:48 | public float marginM = 150f;
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:55 | public int maxTiles = 4;
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:71 | BaseLoadRadiusM => maxSpeedMs * (loadTimeS + activationTimeS + cookTimeS) + marginM
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:99 | case "Low": return 640f;
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:100 | case "Medium": return 800f;
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:101 | case "High": return 1450f;
+game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs:102 | case "Ultra": return 2000f;
+game/Assets/_Project/Editor/Build/RegionBuildList.cs:121 | ADR 0235: the streamed tile scene goes with its region when it was imported (older imports: none).
+game/Assets/_Project/World/Import/WorldSceneBuilder.cs:222 | [IMPORT] tile scene {tilePath}
+game/Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming/tile_graph.json:782 | "id": "bialystok-industrial-c..knyszyn",
+game/Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming/tile_graph.json:804 | "id": "knyszyn-w..dk65-monki-01",
+game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json:161 | "name": "d67",
+game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json:183 | "name": "d67-full"
+tools/worldgen/streaming/tile_graph.py:14 | A portal is a route exit of tile A that is the route entry of tile B on their shared edge
+Data/Regions/knyszyn/route_endpoints.json:3 | -> roundabout DK65/DW671 -> DW671 Tykocka -> Rynek.
+Data/Regions/knyszyn-w/route_endpoints.json:3 | DK65 Obozowa north-westbound from the east tile edge (seam with knyszyn
+Data/Regions/dk65-monki-01/route_endpoints.json:3 | next lattice tile (-10,9) not built
+Data/Regions/dw671-tykocin-01/route_endpoints.json:3 | from the north tile edge (seam with knyszyn-w
+Data/Regions/dw671-tykocin-01/route_endpoints.json:3 | next lattice tile (-9,6) not built
+game/Assets/_Project/Gameplay/WorldSafetyNet.cs:35 | Koniec mapy za ok. 250 m: droga zamknięta, zwolnij
+HANDOVER.md:272 | 18 pierścienia: dk65-monki-02..07, monki, monki-e, dw671-tykocin-02..09, tykocin
+HANDOVER.md:311 | **int-stream-s23: GATE PASS** (run2: knyszynska→dk65-01→02→03, 4 kafle, 0 zamkniętych szwów
+HANDOVER.md:312 | **SCALONE int-stream-s23** (`b2fb6303c`)
+game/ProjectSettings/ProjectSettings.asset:87 | defaultIsNativeResolution: 1
+game/ProjectSettings/ProjectSettings.asset:102 | resizableWindow: 0
+game/ProjectSettings/ProjectSettings.asset:113 | allowFullscreenSwitch: 1
+game/ProjectSettings/ProjectSettings.asset:538 | m_BuildTargetGraphicsAPIs:
+game/ProjectSettings/ProjectSettings.asset:539 | m_BuildTarget: iOSSupport
+game/ProjectSettings/ProjectSettings.asset:542 | m_BuildTarget: AndroidPlayer
+game/Assets/_Project/Core/Settings/DisplayModes.cs:153 | a == "-window-mode" || a == "-popupwindow"
+HANDOVER.md:299 | Właściciel: okno gry nie da się powiększyć
+HANDOVER.md:300 | `d3d12: Device failed error (887a0001)`
+HANDOVER.md:300 | Doraźnie: lider uruchomił z `-force-d3d11`
+HANDOVER.md:300 | `%LOCALAPPDATA%\CrashDumps\Kamion.exe.73136.dmp`
+game/Assets/_Project/Input/Display/TouchControlsPolicy.cs:10 | Auto = 0,
+game/Assets/_Project/Input/Display/TouchControlsPolicy.cs:35 | default: return handheldBuild || (touchscreenPresent && touchSeen);
+game/Assets/_Project/Input/Display/TouchControlsPolicy.cs:33 | case TouchControlsMode.Always: return true;
+game/Assets/_Project/Input/Display/TouchControlsPolicy.cs:34 | case TouchControlsMode.Never: return false;
+game/Assets/_Project/Input/Display/TouchControlsPolicy.cs:76 | "zawsze" : m == TouchControlsMode.Never ? "nigdy" : "auto"
+game/Assets/_Project/Input/Display/TouchControlsPolicy.cs:86 | PrefTouchControls = "ui.touchControls"
+game/Assets/_Project/Input/Display/TouchControlsPolicy.cs:102 | PlayerPrefs.GetInt(PrefTouchControls, 0)
+game/Assets/_Project/Input/Display/TouchControlsPolicy.cs:118 | PlayerPrefs.SetInt(PrefTouchControls, (int)v);
+game/Assets/_Project/UI/Layout/UiViewport.cs:109 | bool desktop = m_DesktopOverride ?? !TouchControlsPolicy.Current;
+game/Assets/_Project/UI/ControlSettingsPanel.cs:201 | "KONTROLKI DOTYKOWE I EKRAN"
+game/Assets/_Project/UI/ControlSettingsPanel.cs:202 | Segment3(content, left, ref y, "Pokazuj"
+game/Assets/_Project/UI/ControlSettingsPanel.cs:204 | "Skala HUD (monitor)"
+game/Assets/_Project/UI/ControlSettingsPanel.cs:186 | "KIEROWNICA DOTYKOWA"
+game/Assets/_Project/UI/ControlSettingsPanel.cs:214 | "GYRO (PRZECHYŁ TELEFONU)"
+HANDOVER.md:302 | kontrolki dotykowe na PC = zapisane ustawienie właściciela `ui.touchControls=1` (nie bug)
+scripts/collect-logs.ps1:43 | $crashDir = Join-Path $env:TEMP "$Company\$Product\Crashes"
+scripts/collect-logs.ps1:29 | [switch]$NoCrashes,
+scripts/collect-logs.ps1:15 | Crash dumps (*.dmp) are binary and are NOT
+docs/adr/0261-build-windows.md:107 | `Kamion-knyszyn-w.cmd` (`-scene knyszyn-w`) — `scripts/build-windows.ps1:94-96`
+docs/adr/0261-build-windows.md:88 | skróty `Kamion-<region>.cmd` powstają dla każdego regionu w buildzie
+docs/adr/0261-build-windows.md:98 | Dotykowy HUD (kierownica, pedały ekranowe) jest widoczny także na PC
+dist/windows/README.txt.in:10 | Kamion.exe (pełny ekran) albo Kamion-okno.cmd (okno 1600 x 900)
+dist/windows/README.txt.in:43 | Raporty awarii: %TMP%\woogitsugames\Kamion\Crashes
+-->
+
+<!-- dokumentacja zewnętrzna (sprawdzona 16.11.2026):
+Unity 6000.0, Player command line arguments (-force-d3d11, -force-d3d12, -screen-fullscreen, -window-mode exclusive|borderless, -popupwindow, -logFile):
+  https://docs.unity.com/en-us/engine/6000.0/manual/unity-editor/command-line-arguments/player
+Unity 6000.0, PlayerSettings.allowFullscreenSwitch: "Enable to allow users to switch between full-screen and windowed mode using OS-specific keyboard shortcuts."
+  https://docs.unity.com/en-us/engine/6000.0/script-reference/unityeditor/playersettings/allowfullscreenswitch
+Microsoft Learn, Collecting User-Mode Dumps (WER LocalDumps): "This feature is not enabled by default."; DumpFolder default %LOCALAPPDATA%\CrashDumps
+  https://learn.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps
 -->

@@ -12,6 +12,10 @@ REPO = Path(__file__).resolve().parents[2]
 SCRIPT = REPO / "scripts/export-region-catalog.py"
 CATALOG = REPO / "game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json"
 D71_EXTRA = ["bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01"]
+# owner decision 2026-11-16: the 18 ring tiles of ADR 0231 are part of d67-full (driving order)
+RING_0231 = (["dk65-monki-%02d" % i for i in range(2, 8)] + ["monki-e", "monki"]
+             + ["dw671-tykocin-%02d" % i for i in range(2, 10)] + ["tykocin", "dw671-jasionowka-01"])
+FULL_EXTRA = D71_EXTRA + RING_0231
 
 
 def _module():
@@ -35,10 +39,11 @@ def test_d67_full_is_d67_plus_the_d71_regions():
     sets = _sets(cat)
     ids = [r["id"] for r in cat["regions"]]
     assert len(sets["d67"]) == 17
-    assert sets["d67-full"] == sets["d67"] + D71_EXTRA
-    assert len(sets["d67-full"]) == 21 == len(set(sets["d67-full"]))
+    assert sets["d67-full"] == sets["d67"] + FULL_EXTRA
+    assert len(RING_0231) == 18
+    assert len(sets["d67-full"]) == 39 == len(set(sets["d67-full"]))
     assert all(r in ids for r in sets["d67-full"])
-    assert all((REPO / "Data/Regions" / r / "route_start.json").exists() for r in D71_EXTRA)
+    assert all((REPO / "Data/Regions" / r / "route_start.json").exists() for r in FULL_EXTRA)
 
 
 def test_derived_set_is_regenerated_when_missing_or_stale():
@@ -58,7 +63,7 @@ def test_derived_set_is_regenerated_when_missing_or_stale():
     mod.apply_derived_sets(stale, problems)
     assert any("d67-full: stale" in p for p in problems)
     full = _sets(stale)["d67-full"]
-    assert full.count("dk65-monki-01") == 1 and len(full) == 21, "no duplicates when the base set already holds an extra"
+    assert full.count("dk65-monki-01") == 1 and len(full) == 39, "no duplicates when the base set already holds an extra"
 
     unchanged = copy.deepcopy(cat)
     problems = []

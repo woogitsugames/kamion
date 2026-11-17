@@ -120,6 +120,40 @@ overrides:
     confidence: high
     verify: none
     set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  # ADR 0237 D38: sidewalks of the town streets (owner s23: "w Knyszynie chodniki wszędzie, obustronne, kostka").
+  - id: knyszyn-pavement-rules-d38
+    kind: pavement_rules
+    implied_sidewalks: true
+    sidewalk_bdot: false
+    estate_slabs: false
+    crossing_kerb_drops: true
+    reason: >-
+      Owner (s23, docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md, ul. Szkolna): sidewalks on both sides of every street,
+      concrete block paving. OSM maps almost none of them (no footway and no sidewalk=* on Szkolna / Poludniowa, OSM
+      API 0.6 2026-11-16), so implied_sidewalks lays a 2.0 m sidewalk (roads.standards.SIDEWALK_W) behind both kerbs
+      of residential / tertiary / secondary / unclassified paved streets in the built-up area (BDOT10k residential
+      zabudowa + 60 m) unless OSM says sidewalk=no / separate or a mapped path runs within 6 m of the kerb. Surface:
+      grey 20 x 10 blocks (the default; sidewalk_bdot off - the owner says kostka, BDOT10k 2008 materials are older).
+      Kerbs lowered at the marked crossings (crossing_kerb_drops, R6-004). Widths not measured: WORKING_VALUE.
+    confidence: medium
+    verify: control camera knyszyn_szkolna_junction + owner check of Szkolna / Poludniowa; widths on the orthophoto
+  # ADR 0237 D38: Poludniowa x Szkolna - the parking aisle of the school (OSM way 750267067, highway=service) leaves
+  # Poludniowa 23 m north of the crossroads and must not be merged into the crossroads junction.
+  - id: knyszyn-szkolna-parking-tee-d38
+    target: {node: n7015352011}
+    reason: >-
+      OSM node 7015352011 (Poludniowa, 23.1 m from the crossroads node 1134846746) where the untagged service way
+      750267067 leaves to the school parking (amenity=school 750267069). Merged into the crossroads cluster, the first
+      13 m leg of the service way ran almost parallel to the Szkolna E arm: median "nose" R 21.8 m across its mouth,
+      service arm trimmed 28.3 m (past its bend) = a teardrop of asphalt joining nothing (owner, s23), and the 23 m
+      stub absorbed, so OSM crossing 11514832009 (crossing:markings=zebra) got no P-10; 11514832007 was skipped too.
+      GUGiK orthophoto (WMS StandardResolution, 120 x 120 m at 0.125 m/px): a plain 4-arm crossroads with four
+      zebras within 0.4-1.6 m of the OSM crossing nodes and a separate parking mouth ~20 m north on the east side
+      (docs/reports/knyszyn-szkolna/). Kept apart, the crossroads has 4 fillets (R 8 / 8 / 8 / 3.9 m) and 4 P-10,
+      the aisle a T of its own (trims 11.1 / 9.7 / 8.0 m).
+    confidence: high
+    verify: plan view + control camera knyszyn_szkolna_junction after build_world
+    set: {cluster: separate}
   # ---------------------------------------------------------------- Rynek (orthophoto 0.1 m 2025-05-27, owner frames)
   - id: rynek-king-plaza-0227
     kind: paved_area
@@ -831,3 +865,97 @@ overrides:
     confidence: medium
     verify: compare the crossing with the 2025 orthophoto and owner photos
     set: {surface: paving_stones}
+
+  # --- ADR 0227 dopisek D41 (rynek-p1-s23): own blocks, appended at the end; entries above are untouched ---
+  # (d) outer diameter of the DK65 x DW671 compact roundabout. A separate entry so the value is a one-line change;
+  # merged with knyszyn-roundabout-compact (roads/network.py: compact_roundabout options merge in file order).
+  # DISABLED (leader s23, world3 17.11): with this entry the KRTG ring nodes stay on the OSM radius 8.65 m while the
+  # ring axis moves to r 10.5 m - node <-> geometry gap 1.73 m on 8 ring edges (ADR 0274, review #169 P2-7,
+  # test_effective_graph_readers::test_knyszyn_route_graph_...). Re-enable when the roundabout generator moves the
+  # ring nodes with the diameter (no gap). Value OD-046 still open.
+  # - id: knyszyn-roundabout-outer-diameter-d41
+  #   target: {osm_way: [1426801304]}
+  #   reason: >-
+  #     WORKING_VALUE 26.0 m: outer kerb diameter of the ring carriageway. OSM ring axis r 8.65 m + authored ring width
+  #     5.0 m gives 22.3 m (22.6 m in docs), the lead's reading of owner drone photo 9 by car lengths is about 26 m
+  #     (docs/reports/INTEGRATION-2026-11-16-rynek-s23.md section 7, OPEN-DECISIONS OD-046). NOT MEASURED: the GUGiK
+  #     orthophoto 2025-05-27 predates the roundabout, the photo is not in git. Accepted range 14-40 m and at most
+  #     max(2 m, 40 %) from the fitted axis radius, else this entry is stale and the OSM radius stays. Change only this
+  #     number; the splitter lengths of knyszyn-roundabout-dk65-split-s / -n are measured from the split node, so the
+  #     islands get ~1.8 m shorter at the ring when the ring grows (re-check on photo 9).
+  #   confidence: low
+  #   verify: render rondo_dk65_top next to owner photo 9 (cars 4.5 m as the scale), adjust this value, rerun swept_path.py
+  #   set:
+  #     compact_roundabout: {outer_diameter_m: 26.0}
+  # (a) measured eave rectangles of the four market canopies; replaces the hand traces of
+  # knyszyn-market-canopies-0227 by id (streetscape/knyszyn_market_0227.py GEOMETRY_KIND), that entry stays as authored.
+  - id: knyszyn-market-canopy-eaves-d41
+    kind: market_canopy_geometry_d41
+    eave_inset_m: 0.0
+    canopies:
+      - id: north-separated
+        polygon_epsg2180: [[760787.07, 613340.74], [760794.09, 613342.58], [760800.95, 613316.36], [760793.93, 613314.52]]
+      - id: north-group
+        polygon_epsg2180: [[760797.2, 613300.76], [760804.22, 613302.5], [760810.76, 613276.14], [760803.74, 613274.4]]
+      - id: middle-group
+        polygon_epsg2180: [[760803.97, 613273.25], [760811.03, 613275.04], [760817.69, 613248.77], [760810.63, 613246.98]]
+      - id: south-solar
+        polygon_epsg2180: [[760810.68, 613245.77], [760817.65, 613247.57], [760824.44, 613221.33], [760817.47, 613219.53]]
+    reason: >-
+      SOURCED (measured, not traced): GUGiK ORTO WMS StandardResolution 0.1 m, ridge-axis and cross profiles of each
+      roof (tools/worldgen/qa/market_canopy_ortho.py; numbers in docs/reports/rynek-p1/market_canopies_ortho.json).
+      Eave length 27.10-27.15 m, width 7.20-7.28 m, clear gaps north-group/middle-group 1.15 m and
+      middle-group/south-solar 1.17 m (shadowed ground between the hips), north-separated 14.2 m apart; owner photo 12
+      (local only): three close canopies standing apart + one separate. The hand traces overlapped by ~1 m and with the
+      0.25 m inset the eaves touched. Accuracy +-0.1 m per edge, +-0.2 m per gap; absolute position +-0.5 m
+      (relief displacement of 4 m high roofs, UNVERIFIED projection centre). Inset 0: the rectangles are the eaves.
+    confidence: medium
+    verify: render market_owner_12 / market_owner_14_close and check three gaps of about one metre, posts and counters under each roof
+  # (b) the small market pavilion in the south-east corner (by the entrance and its own slab parking): tent roof over
+  # yellow walls (owner photo 13, local only; GUGiK 2025 orthophoto: four hip planes meeting at one apex, no ridge).
+  - id: knyszyn-market-pavilion-d41
+    kind: market_pavilion_d41
+    target: {building: "bdot:de62e5a9-3c83-4023-9e77-03b8844df001"}
+    set: {roof: tent, eave_m: 2.8, apex_m: 4.2, wall_material: plaster_yellow, roof_material: roof_metal_graphite}
+    reason: >-
+      SOURCED: BDOT10k footprint (79 m2, "budynek gospodarczy", 1 storey); tent roof read on the GUGiK ORTO WMS
+      (2025 sheet, 0.1 m: four triangular planes to one apex; numbers only). Owner description: small pavilion,
+      yellow facade, tent roof, in the market corner (docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md, photos 12-13).
+      ESTIMATED: matching this footprint to the photo (the oblique photo 13 looks from the south-east at this corner).
+      WORKING_VALUE: eave 2.8 m and apex 4.2 m (no LoD1/LoD2 here), yellow plaster tone, openings. No sign, lettering,
+      logo or brand. A second, smaller pyramid-roofed kiosk without a BDOT footprint stands by the north-west gate
+      (orthophoto, about 3.5 x 4 m) - not modelled (no footprint, colour unknown).
+    confidence: medium
+    verify: render market_owner_13 next to owner photo 13 (yellow walls readable, tent roof, no ridge)
+  # (c) linden crown shape as data: crown spread = height / height_to_spread for the Rynek park lindens (both kit
+  # groups above stay as authored; streetscape/plantings.py crown_shapes).
+  - id: rynek-linden-crown-shape-d41
+    kind: tree_crown_shape
+    targets: [rynek-lindens-r8-trial-0227, rynek-near-lindens-kit-0227]
+    species: linden
+    height_to_spread: 1.75
+    reason: >-
+      ESTIMATED from literature: Tilia cordata, height 70 ft, spread 40 ft, shape "upright oval" (A. X. Niemiera,
+      Littleleaf Linden (Tilia cordata), Virginia Cooperative Extension publication 2901-1055, 2018, Summary) ->
+      height : spread 1.75. Replaces the per-point crown diameters of the two kit groups, which were WORKING_VALUE
+      (GLB AABB spans scaled by height, not measured): crowns 8.8-11.4 m instead of 9.3-12.9 m at 15.4-19.9 m height,
+      i.e. narrower, more upright ovoid crowns (review 2026-11-16 P1: crowns read flat). Park trees in Knyszyn may
+      be broader than this open-grown nursery figure; the owner's photos 3-6 decide (local only).
+    confidence: low
+    verify: render rynek owner frames 03 and 05 (Low, High) next to photos 3-6; change only height_to_spread
+  # world3 (int-world3-s23, leader s23): the "high carriageway edge" of DK65 south of the compact roundabout
+  # (rondo_dk65_from_south; review #169 P0, D41 (e) did not reach it). Cause, read off the network of this tile: the two
+  # split carriageways of knyszyn-roundabout-dk65-split-s (ways 1464342635 / 1464342640, the 27 m splitter zone) kept the
+  # rural open-road profile on their outer edge (ADR 0272: kind rural, ditch 0.6 m, verge 0) while the kerb-mode
+  # roundabout lays a kerb there; a kerb with no verge behind it stood 0.45-0.65 m above the conformed NMT 2022
+  # (GLB probe tools/worldgen/qa/knyszyn_s_kerb_step.py). A kerbed edge gets the ADR 0110 grass verge at kerb crown.
+  - id: knyszyn-dk65-split-s-kerbed-edge-w3
+    target: {osm_way: [1464342635, 1464342640]}
+    reason: >-
+      Splitter zone of DK65 south at the compact roundabout (27 m, carriageway_split): the kerb laid by the roundabout
+      needs the kerbed cross-section (kerb + grass verge at its crown), not the rural ditch profile of the open road
+      south of it. Measured drop behind the kerb before this entry: 0.45-0.65 m within 1.5 m (threshold 0.15 m).
+      The edge itself is not measured (orthophoto 2025-05-27 predates the roundabout): WORKING_VALUE.
+    confidence: medium
+    verify: control camera rondo_dk65_from_south + knyszyn_s_kerb_step.py (drop <= 0.15 m); owner photo 9-11
+    set: {shoulder: {kind: kerb}}

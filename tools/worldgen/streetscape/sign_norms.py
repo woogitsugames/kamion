@@ -193,3 +193,110 @@ E_OVERHEAD_ROW_M = E_OVERHEAD_D_M * E2_ROW_PITCH_PER_D       # 0.35 m (was WORKI
 E_RULE_BOARD_D_M = 0.132
 # E-1 before a roundabout by rule: names in group IV = 132 mm (allowed for E-1 in 'średnie' and 'duże', Tabela 1.9)
 E1_RULE_D_M = 0.132
+
+
+# ============================================================================================ ADR 0279 (audit)
+# Numbers of [ZNAKI-Z1] for the signs A, B, C, D, G (not only E) and their placement, re-read 2026-11-16 from the PDF
+# D20192311-c1.pdf (sha256 f94925ec...b550543 = the file cited above; ELI API 2026-11-16: still no newer consolidated
+# text, amendments after it: 2021 poz. 438, 2021 poz. 2066, 2022 poz. 2377, 2026 poz. 132). Horizontal markings:
+# [ZNAKI-Z2] = zał. 2, ELI file D20192311-c2.pdf of type "I" (sha256 8abcce24...dfc5d5c4, PDF page k = Dz.U. page
+# 525 + k). Level crossings: Dz.U. 2025 poz. 1105 (sha256 c3caeb070b48...). Page numbers = page of the PDF file.
+
+# --- Tabela 1.1 (s. 9), 2.1 (s. 49), 3.1 (s. 97), 4.1 (s. 157), 5.1 (s. 178) via research R1 (`sizes.csv`, SOURCED,
+# spot-checked 2026-11-16): A side / B, C diameter / D base [mm] by size group
+SIGN_DIM_MM = {
+    "wielkie": {"A": 1200, "B": 1000, "C": 1000, "D": 1200},
+    "duze": {"A": 1050, "B": 900, "C": 900, "D": 900},
+    "srednie": {"A": 900, "B": 800, "C": 800, "D": 600},
+    "male": {"A": 750, "B": 600, "C": 600, "D": 600},
+    "mini": {"A": 600, "B": 400, "C": 400, "D": 400},
+}
+D1_REPEAT_SIDE_MM = 400        # pkt 5.2.1.1 (s. 185): D-1 repeated along the priority road, side 400 mm
+D42_MM = (1200, 700)           # pkt 5.2.48.1 (s. 244): D-42 / D-43 1200 x 700 (530 high on powiat / gmina roads;
+                               # Dz.U. 2022 poz. 2377 later fixed the reduced height at 600 - R1 sec. 3.1)
+T27_SIDE_MM = 450              # pkt 5.2.6 (s. 199)
+
+# --- pkt 1.2.1 (s. 7-8): size group of A-D by road; A-7 and B-20 never below 'średnie'
+def size_group_ad(dual: bool, built_up: bool, v_kmh: float, cls: str = "") -> str:
+    """Grupa wielkości of signs A-D (pkt 1.2.1): A -> wielkie, S / dual rural / dual built-up > 60 -> duże, link /
+    single-carriageway national + voivodeship / dual built-up <= 60 -> średnie, gminna -> małe."""
+    if cls == "A":
+        return "wielkie"
+    if cls == "S" or (dual and (not built_up or v_kmh > 60.0)):
+        return "duze"
+    if cls == "gminna":
+        return "male"
+    return "srednie"
+
+
+# --- Tabela 1.11 in the wording of Dz.U. 2022 poz. 2377 (s. 2 of that act): lower edge of the sign [m]
+MOUNT_MIN_M = {
+    "ABCDFG": {"rural": 2.00, "built_up": 2.00, "on_sidewalk": 2.20, "several_no_pedestrians": 1.50},
+    "E1_E2_E14": {"rural": 1.00, "built_up": 2.00, "on_sidewalk": 2.20, "green_strip": 1.00},
+    "E15_E16_E13_E17a": {"rural": 2.00, "built_up": 2.00, "on_sidewalk": 2.20, "max_built_up": 2.50},
+    "E_arrow_large": {"rural": 0.70, "built_up": 0.70},
+    "overhead": {"rural": 5.00, "built_up": 5.00},
+    "on_safety_device": {"min": 0.90, "max": 1.20},
+}
+G1_BOTTOM_STREET_M = 1.00      # Tabela 1.11 przypis 3: G-1 1,00 m on streets ...
+G1_BOTTOM_ROAD_M = 0.50        # ... 0,50 m on the other roads (rural DW671 / DK65)
+
+
+def g1_bottom_m(street: bool) -> float:
+    """Lower edge of a G-1 post plate (Tabela 1.11 przypis 3). Note pkt 2.2.10 (s. 67): G-1a hangs directly under the
+    warning sign / its board and G-1b, G-1c stand at the height of G-1a - the generator must satisfy both."""
+    return G1_BOTTOM_STREET_M if street else G1_BOTTOM_ROAD_M
+
+
+# --- pkt 1.5.3 (s. 25-27, via R1 R1-254..269, SOURCED): lateral distance and spacing
+LATERAL_MAX_STREET_M = 2.00    # 0,50 - 2,00 m from the carriageway edge on streets (LATERAL_MIN_M above)
+SIGN_SPACING_MIN_M = ((90.0, 50.0), (60.0, 20.0), (0.0, 10.0))   # (v_dop above, min distance between signs)
+PLATE_TILT_DEG = 5.0           # plate turned ~5 deg from the normal to the road axis, towards the road
+
+
+def sign_spacing_min_m(v_kmh: float) -> float:
+    for v, d in SIGN_SPACING_MIN_M:
+        if v_kmh > v:
+            return d
+    return SIGN_SPACING_MIN_M[-1][1]
+
+
+# --- pkt 2.1.2 (s. 50) + Dz.U. 2019 poz. 2310 § 3 ust. 2: warning sign -> dangerous place [m]
+WARN_FAST_RANGE_M = (150.0, 300.0)       # v_dop > 60 km/h
+WARN_SLOW_MAX_M = 100.0                  # other roads ("do 100 m")
+WARN_RECOMMENDED_M = ((100.0, (300.0, 300.0)), (90.0, (250.0, 300.0)), (80.0, (200.0, 250.0)),
+                      (70.0, (150.0, 200.0)), (0.0, (50.0, 100.0)))   # (v >=, recommended range) - zalecenie s. 50
+WARN_EXCEPTIONAL_BELOW_M = 50.0          # below 50 m only exceptionally (old town streets)
+
+
+def warning_distance_m(v_kmh: float) -> tuple[float, float]:
+    """Allowed (min, max) distance of an A sign (not A-7) from the dangerous place (pkt 2.1.2)."""
+    return WARN_FAST_RANGE_M if v_kmh > 60.0 else (0.0, WARN_SLOW_MAX_M)
+
+
+def warning_recommended_m(v_kmh: float) -> tuple[float, float]:
+    for v, rng in WARN_RECOMMENDED_M:
+        if v_kmh >= v:
+            return rng
+    return WARN_RECOMMENDED_M[-1][1]
+
+
+# --- pkt 2.2.8 (s. 64), 3.2.21 (s. 126), 4.2.12 (s. 170): A-7 / B-20 / C-12 at junctions
+A7_MAX_FROM_JUNCTION_M = {"fast": 50.0, "slow": 25.0}    # v_dop > 60 / other roads
+A7_ADVANCE_T1_RANGE_M = (150.0, 300.0)                   # v_dop > 60: A-7 + T-1 before it (also "Stop" board before B-20)
+B20_MAX_FROM_JUNCTION_BUILT_UP_M = 25.0
+C12_MAX_FROM_JUNCTION_M = 25.0
+D6_MAX_FROM_CROSSING_EDGE_M = 0.5        # pkt 5.2.6 (s. 198); repeated on the left of one-way carriageways
+
+# --- pkt 2.2.10 Tabela 2.2 (s. 67): G-1 posts -> outer rail, by v_dop [m]
+G1_TABLE_2_2_M = {"fast": {"G-1a": (150.0, 300.0), "G-1b": (100.0, 200.0), "G-1c": (50.0, 100.0)},
+                  "slow": {"G-1a": (50.0, 100.0), "G-1b": (35.0, 70.0), "G-1c": (20.0, 35.0)}}
+# --- rys. 9.8.1-9.8.9 (s. 507-511): G plates [mm]
+G1_MM = (300, 1000)                      # w x h, red frame 20, bars in 150 mm steps
+G2_MM = (440, 600)                       # w x h, R30, triangle field 360 + legend panel 180
+G3_ARM_MM = {"l": 1400, "w": 150, "angle_deg": 50.0, "band": 175, "tip_chamfer": 40}
+G4_SECOND_V_PITCH_MM = 150 + 150         # rys. 9.8.9: lower V one arm width + 150 mm gap below the cross
+# --- pkt 2.2.11 (s. 73) + Dz.U. 2025 poz. 1105 § 77 ust. 2, § 81 ust. 1: devices -> outer rail
+G3_MIN_FROM_OUTER_RAIL_M = 5.0           # G-3 / G-4 not nearer than 5 m (3 m before pedestrian crossings)
+ROAD_SIGNAL_MIN_FROM_OUTER_RAIL_M = 5.0  # 1105 § 77 ust. 2 pkt 1 (level crossing; 3 m at a pedestrian crossing)
+G2_OWN_POST_H_M = 2.5                    # 1105 § 81 ust. 1 pkt 1: G-2 on its own post 2.5 m high, 5 m from the rail

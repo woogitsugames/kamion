@@ -18,8 +18,9 @@ namespace Game.UI.Layout
     /// </summary>
     public static class UiFocus
     {
-        public static readonly Color FocusColor = new Color(0.95f, 0.66f, 0.18f, 1f);
-        public static readonly Color HoverColor = new Color(0.95f, 0.95f, 0.91f, 0.45f);
+        /// <summary>ADR 0283: the palette accent (8.2:1 on the panel, WCAG 1.4.11 needs 3:1).</summary>
+        public static readonly Color FocusColor = UiPalette.Accent;
+        public static readonly Color HoverColor = UiPalette.Hover;
         /// <summary>Frame thickness [canvas units]. WORKING_VALUE.</summary>
         public const float FrameWidth = 3f;
 

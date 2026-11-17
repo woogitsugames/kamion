@@ -15,6 +15,7 @@ from . import junctions as J
 from . import meshing as M
 from . import network as Nw
 from . import profile as P
+from . import seam_taper as ST
 
 REPO = Path(__file__).resolve().parents[3]
 REGIONS = REPO / "Data" / "Regions"
@@ -64,13 +65,15 @@ def generated_overrides(region_id: str) -> list[dict]:
 GENERATED_OVERRIDES = ("overrides.class_fixes.json", "overrides.ortho_roofs.json")
 
 
-def effective_graph(region_id: str, graph: dict | None = None) -> dict:
+def effective_graph(region_id: str, graph: dict | None = None, applied: list | None = None,
+                    stale: list | None = None) -> dict:
     """roads.graph.json with the graph-level authored overrides applied (ADR 0274 `carriageway_split`): the graph the
     network is built from. Route search and anything else that walks graph edges next to the generated network uses
-    this one, so its nodes and edge geometry match the chains."""
+    this one, so its nodes and edge geometry match the chains. The one loader for every such reader (ADR 0274
+    "Czytniki grafu"); `applied` / `stale` (optional lists) receive the override ids, so a reader can report them."""
     from . import carriageway_split as CS
     graph = graph or json.loads((REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8"))
-    return CS.apply(graph, load_overrides(region_id), [], [])
+    return CS.apply(graph, load_overrides(region_id), [] if applied is None else applied, [] if stale is None else stale)
 
 
 def ctx_local(ctx, origin):
@@ -89,9 +92,9 @@ def _authored_paved_polygon(override, origin):
                    [np.asarray(h, float) - offset for h in override.get("holes_epsg2180", [])])
 
 
-def build_network(region_id: str, graph: dict | None = None):
+def build_network(region_id: str, graph: dict | None = None, seam_taper: bool = True):
     """The road network with its final centre lines and widths (before sides, junctions and heights): graph +
-    overrides + width tapers + fork alignment. Shared by build() and scripts/export-route.py, so the start route
+    overrides + width tapers + fork alignment + width transitions towards the neighbouring tiles (ADR 0275). Shared by build() and scripts/export-route.py, so the start route
     is laid on the lanes the generator builds, not on the raw OSM axes (ADR 0076)."""
     region = load_region(region_id)
     origin = (region["origin"]["x"], region["origin"]["y"])
@@ -103,6 +106,10 @@ def build_network(region_id: str, graph: dict | None = None):
     Nw.taper_forks(net, stats["fork_tapers"])
     Nw.align_forks(net, stats["fork_shifts"])       # lane continuity at diverges / merges (ADR 0074)
     Nw.abreast_forks(net, stats["fork_abreast"])    # lane gain / drop merges laid side by side (ADR 0076)
+    # ADR 0275: a road whose authored width differs across a tile seam gets half of an S-curve on each side (the
+    # neighbours' graph + overrides are read from Data/Regions, their nominal section computed with this code)
+    net.seam_tapers = ST.plan_region(net, region_id) if seam_taper else []
+    stats["seam_tapers"] = ST.apply_widths(net, net.seam_tapers)
     return net, graph, overrides, stats
 
 
@@ -160,10 +167,12 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
                               [LineString(c.line.p) for c in net.chains], net.cycle_report)
     net.overrides_stale += net.cycle_report.get("overrides_stale", [])
     Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards)
+    ST.apply_shoulders(net, net.seam_tapers)         # ADR 0275: shoulder widths (ADR 0272 codes) follow the transitions
     juncs = J.build_junctions(net, pts)
     # second pass now that the junction trims are known: side profiles beside another carriageway are checked
     # right up to the junction patch (ADR 0076: verge / kerb of one branch on the lane of the other)
     Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards, trims=True)
+    net_stats["seam_shoulders"] = ST.apply_shoulders(net, net.seam_tapers)
     hf = hf or P.load_heightfield(terrain_meta, REPO, origin)
     ties_f = rdir / "profile_ties.json"            # ADR 0146: authored profile ties (authored_override, own file)
     net.profile_ties = json.loads(ties_f.read_text(encoding="utf-8")).get("ties", []) if ties_f.exists() else []

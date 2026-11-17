@@ -1,0 +1,13 @@
+{
+ "provenance": "authored_override (ADR 0231): control route for cameras/QA = DK65 inside this tile, continuing the route of monki-e",
+ "description": "DK65 from the E tile edge (seam with monki-e, OSM way 1375217649) to the W tile edge (OSM way 98072434; end of the ring (next lattice tile not defined)). Points from the Overpass extract of 2026-11-15; build_world snaps them to the nearest graph node.",
+ "start_epsg2180": [
+  752395.0,
+  622086.0
+ ],
+ "end_epsg2180": [
+  750347.0,
+  623684.0
+ ],
+ "confidence": "medium (OSM 2026-11-15 vs the pinned pbf 2026-11-08: re-check after build_region that both are graph boundary nodes)"
+}

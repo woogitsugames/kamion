@@ -1,0 +1,225 @@
+{
+ "source": "GUGiK ORTO WMS StandardResolution, layer Raster (GUGiK 2025 sheet per ADR 0227); numbers only",
+ "method": "tools/worldgen/qa/market_canopy_ortho.py (docstring)",
+ "crop_centre_epsg2180": [
+  760805.6,
+  613281.15
+ ],
+ "res_m": 0.1,
+ "band_m": 1.2,
+ "min_gap_m": 0.3,
+ "accuracy": "+-0.1 m per edge, +-0.2 m per gap",
+ "order_north_to_south": [
+  "north-separated",
+  "north-group",
+  "middle-group",
+  "south-solar"
+ ],
+ "canopies": [
+  {
+   "centre_epsg2180": [
+    760794.01,
+    613328.55
+   ],
+   "axis": [
+    0.253,
+    -0.9675
+   ],
+   "eave_north_epsg2180": [
+    760790.58,
+    613341.66
+   ],
+   "eave_south_epsg2180": [
+    760797.43,
+    613315.44
+   ],
+   "eave_length_m": 27.1,
+   "eave_width_m": 7.25,
+   "width_stations_m": [
+    7.25,
+    7.25
+   ],
+   "trace_length_m": 27.65,
+   "trace_width_m": 6.95,
+   "id": "north-separated"
+  },
+  {
+   "centre_epsg2180": [
+    760803.98,
+    613288.45
+   ],
+   "axis": [
+    0.2408,
+    -0.9706
+   ],
+   "eave_north_epsg2180": [
+    760800.71,
+    613301.62
+   ],
+   "eave_south_epsg2180": [
+    760807.25,
+    613275.27
+   ],
+   "eave_length_m": 27.15,
+   "eave_width_m": 7.23,
+   "width_stations_m": [
+    7.2,
+    7.25
+   ],
+   "trace_length_m": 28.39,
+   "trace_width_m": 6.87,
+   "id": "north-group"
+  },
+  {
+   "centre_epsg2180": [
+    760810.83,
+    613261.01
+   ],
+   "axis": [
+    0.2459,
+    -0.9693
+   ],
+   "eave_north_epsg2180": [
+    760807.5,
+    613274.15
+   ],
+   "eave_south_epsg2180": [
+    760814.16,
+    613247.88
+   ],
+   "eave_length_m": 27.1,
+   "eave_width_m": 7.28,
+   "width_stations_m": [
+    7.25,
+    7.3
+   ],
+   "trace_length_m": 28.52,
+   "trace_width_m": 6.69,
+   "id": "middle-group"
+  },
+  {
+   "centre_epsg2180": [
+    760817.56,
+    613233.55
+   ],
+   "axis": [
+    0.2503,
+    -0.9682
+   ],
+   "eave_north_epsg2180": [
+    760814.17,
+    613246.67
+   ],
+   "eave_south_epsg2180": [
+    760820.95,
+    613220.43
+   ],
+   "eave_length_m": 27.1,
+   "eave_width_m": 7.2,
+   "width_stations_m": [
+    7.2,
+    7.2
+   ],
+   "trace_length_m": 27.97,
+   "trace_width_m": 6.71,
+   "id": "south-solar"
+  }
+ ],
+ "gaps": [
+  {
+   "between": [
+    "north-separated",
+    "north-group"
+   ],
+   "clear_gap_m": 14.2
+  },
+  {
+   "between": [
+    "north-group",
+    "middle-group"
+   ],
+   "clear_gap_m": 1.15
+  },
+  {
+   "between": [
+    "middle-group",
+    "south-solar"
+   ],
+   "clear_gap_m": 1.17
+  }
+ ],
+ "rectangles_epsg2180": {
+  "north-separated": [
+   [
+    760787.07,
+    613340.74
+   ],
+   [
+    760794.09,
+    613342.58
+   ],
+   [
+    760800.95,
+    613316.36
+   ],
+   [
+    760793.93,
+    613314.52
+   ]
+  ],
+  "north-group": [
+   [
+    760797.2,
+    613300.76
+   ],
+   [
+    760804.22,
+    613302.5
+   ],
+   [
+    760810.76,
+    613276.14
+   ],
+   [
+    760803.74,
+    613274.4
+   ]
+  ],
+  "middle-group": [
+   [
+    760803.97,
+    613273.25
+   ],
+   [
+    760811.03,
+    613275.04
+   ],
+   [
+    760817.69,
+    613248.77
+   ],
+   [
+    760810.63,
+    613246.98
+   ]
+  ],
+  "south-solar": [
+   [
+    760810.68,
+    613245.77
+   ],
+   [
+    760817.65,
+    613247.57
+   ],
+   [
+    760824.44,
+    613221.33
+   ],
+   [
+    760817.47,
+    613219.53
+   ]
+  ]
+ }
+}

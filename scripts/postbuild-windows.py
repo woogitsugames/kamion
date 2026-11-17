@@ -22,10 +22,14 @@ Resources/build_info.json); after the build this script hashes Kamion_Data and w
 Two builds of one commit normally get different hashes (build_info.json carries the build time) - the hash names one
 build, it is not a reproducibility proof.
 
-Launchers: Kamion-okno.cmd (menu in a 1600x900 window) and Kamion-<region>.cmd for every region whose Low scene is in
-the build (read from the "[BUILD] Windows x64 -> ... scenes=[...]" line of the build log, i.e. after the expansion of
-sets / aliases / ranges by RegionBuildList and after -RegionsAllowMissing). Each starts the player windowed with
--scene <region id> (GameBootstrap: region id or alias -> the region scene of the active tier).
+Launchers: Kamion-okno.cmd (menu in a resizable 1600x900 window) and Kamion-<region>.cmd for every region whose Low
+scene is in the build (read from the "[BUILD] Windows x64 -> ... scenes=[...]" line of the build log, i.e. after the
+expansion of sets / aliases / ranges by RegionBuildList and after -RegionsAllowMissing). A region launcher passes only
+-scene <region id> (GameBootstrap: region id or alias -> the region scene of the active tier) and no -screen-* argument:
+the screen mode comes from the PC settings file, else from PlayerSettings (borderless full screen at the native
+resolution, resizable window, Alt+Enter switches; ProjectSetup.ApplyStandaloneWindowSettings).
+Kamion-korytarz.cmd (-scene knyszyn -stream 1) only when knyszyn, knyszyn-s and the tile scene World_knyszyn-s_Tile are
+in the build; Kamion-d3d11.cmd and Kamion-korytarz-d3d11.cmd are the -force-d3d11 fallbacks (JAK-GRAC-PC 1.6).
 Standard library only (Python >= 3.10).
 """
 from __future__ import annotations
@@ -44,19 +48,34 @@ EXE_NAME = "Kamion.exe"
 BUILD_ID = "build-id.json"          # Game.Core.BuildInfo.BuildIdFileName - ships with the player
 MANIFEST = "Kamion_Data.sha256"     # full manifest, build metadata (not shipped: the zip has SHA256SUMS.txt)
 SHORT = 12                          # Game.Core.BuildInfo.ContentHashLength
-WINDOW_ARGS = "-screen-fullscreen 0 -screen-width 1600 -screen-height 900"   # ProjectSettings default is fullscreen (ADR 0261)
+# Only Kamion-okno.cmd forces a mode: a 1600x900 window, resizable (PlayerSettings.resizableWindow), Alt+Enter switches
+# to full screen. Any -screen-* / -window-mode argument makes the game skip the screen mode of the settings file
+# (StartupDisplayPolicy), so the region and corridor launchers pass none.
+WINDOW_ARGS = "-screen-fullscreen 0 -screen-width 1600 -screen-height 900"
 WINDOW_LAUNCHER = "Kamion-okno.cmd"
-# Continuous drive on the streamed corridor (ADR 0273 §7, int-stream-s23): borderless full screen, start in knyszyn, the
-# neighbour tiles stream in (-stream 1). A -screen-* argument makes the game skip the screen mode of the settings file.
+# Continuous drive on the streamed corridor (ADR 0273 §7, int-stream-s23): start in knyszyn, the neighbour tiles stream
+# in (-stream 1); screen mode as for the region launchers (settings file, else borderless full screen).
 # Written only when knyszyn and its corridor neighbour knyszyn-s are in the build.
 CORRIDOR_LAUNCHER = "Kamion-korytarz.cmd"
 CORRIDOR_NEEDS = ("knyszyn", "knyszyn-s")
-CORRIDOR_TEXT = '@echo off\r\nstart "" "%~dp0Kamion.exe" -screen-fullscreen 1 -window-mode borderless -scene knyszyn -stream 1 %*\r\n'
+CORRIDOR_TEXT = '@echo off\r\nstart "" "%~dp0Kamion.exe" -scene knyszyn -stream 1 %*\r\n'
 EXCLUDED_DIR_GLOBS = ("*_DoNotShip", "*_ButDontShipItWithYourGame")
 EXCLUDED_FILE_GLOBS = ("*.pdb",)
 REGION_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")   # catalog ids; anything else never reaches a .cmd line
 SCENES_RE = re.compile(r"\[BUILD\] Windows x64 .*? scenes=\[(?P<scenes>[^\]]*)\]")
 REGION_SCENE_RE = re.compile(r"^Assets/_Generated/World/(?P<id>[^/]+)/(?P<scene>WorldC|World_[^/]+)\.unity$")
+# The corridor streams the neighbour's tile scene (World_<id>_Tile, ADR 0235; WorldStreamer keeps a seam closed when the
+# tile scene is not in the build), so with a build log the corridor launcher also needs these Low tile scenes.
+CORRIDOR_TILES = ("knyszyn-s",)
+TILE_SCENE_RE = re.compile(r"^Assets/_Generated/World/(?P<id>[^/]+)/(?P<scene>WorldC_Tile|World_[^/]+_Tile)\.unity$")
+# Fallback when Direct3D 12 fails (JAK-GRAC-PC 1.6: "d3d12: Device failed error (887a0001)" on 16.11): the same start
+# with Unity's -force-d3d11 (an engine argument, not a -screen-* one: the screen mode of the settings file still applies).
+# Whether D3D11 avoids the crash is one observation, not a measurement (UNVERIFIED).
+D3D11_ARG = "-force-d3d11"
+D3D11_LAUNCHER = "Kamion-d3d11.cmd"
+CORRIDOR_D3D11_LAUNCHER = "Kamion-korytarz-d3d11.cmd"
+# Launcher names that a region id must never overwrite (a region "okno" / "korytarz" / "d3d11" would clash).
+RESERVED_LAUNCHERS = (WINDOW_LAUNCHER, CORRIDOR_LAUNCHER, D3D11_LAUNCHER, CORRIDOR_D3D11_LAUNCHER)
 
 
 class PostBuildError(Exception):
@@ -157,29 +176,62 @@ def regions_from_log(log_text: str) -> list[str]:
     return ids
 
 
-def launcher_text(extra_args: str = "") -> str:
-    tail = f" {extra_args}" if extra_args else ""
-    return f'@echo off\r\nstart "" "%~dp0{EXE_NAME}" {WINDOW_ARGS}{tail} %*\r\n'
+def tile_regions_from_log(log_text: str) -> list[str]:
+    """Region ids whose Low streamed tile scene (World_<id>_Tile / WorldC_Tile, ADR 0235) is in the build."""
+    found = SCENES_RE.findall(log_text)
+    if not found:
+        raise PostBuildError("no '[BUILD] Windows x64 ... scenes=[...]' line in the build log")
+    ids: list[str] = []
+    for scene in (s.strip() for s in found[-1].split(",")):
+        m = TILE_SCENE_RE.match(scene)
+        if not m:
+            continue
+        rid, name = m.group("id"), m.group("scene")
+        if name in ("WorldC_Tile", f"World_{rid}_Tile") and rid not in ids:
+            ids.append(rid)
+    return ids
+
+
+def launcher_text(extra_args: str = "", windowed: bool = False) -> str:
+    args = " ".join(a for a in (WINDOW_ARGS if windowed else "", extra_args) if a)
+    lead = f" {args}" if args else ""
+    return f'@echo off\r\nstart "" "%~dp0{EXE_NAME}"{lead} %*\r\n'
 
 
 def launcher_name(region_id: str) -> str:
     return f"Kamion-{region_id}.cmd"
 
 
-def write_launchers(build_dir: Path, regions: list[str]) -> tuple[list[str], list[str]]:
-    """Kamion-okno.cmd + Kamion-<id>.cmd per region. Returns (written names, skipped ids)."""
+def corridor_d3d11_text() -> str:
+    return CORRIDOR_TEXT.replace(" %*", f" {D3D11_ARG} %*", 1)
+
+
+def corridor_ready(regions: list[str], tiles: list[str] | None) -> bool:
+    """knyszyn + knyszyn-s in the build and (when the tile list is known) the tile scene of knyszyn-s too."""
+    if not all(r in regions for r in CORRIDOR_NEEDS):
+        return False
+    return tiles is None or all(t in tiles for t in CORRIDOR_TILES)
+
+
+def write_launchers(build_dir: Path, regions: list[str], tiles: list[str] | None = None) -> tuple[list[str], list[str]]:
+    """Kamion-okno.cmd, Kamion-d3d11.cmd, Kamion-<id>.cmd per region and, when the corridor can stream
+    (corridor_ready), Kamion-korytarz.cmd + Kamion-korytarz-d3d11.cmd. tiles = regions with a Low tile scene in the
+    build (tile_regions_from_log); None = unknown (no gate on tiles). Returns (written names, skipped ids)."""
     written, skipped = [], []
-    (build_dir / WINDOW_LAUNCHER).write_bytes(launcher_text().encode("ascii"))
+    (build_dir / WINDOW_LAUNCHER).write_bytes(launcher_text(windowed=True).encode("ascii"))
     written.append(WINDOW_LAUNCHER)
+    (build_dir / D3D11_LAUNCHER).write_bytes(launcher_text(D3D11_ARG).encode("ascii"))
+    written.append(D3D11_LAUNCHER)
     for rid in regions:
-        if not REGION_ID_RE.match(rid) or launcher_name(rid) == WINDOW_LAUNCHER:
+        if not REGION_ID_RE.match(rid) or launcher_name(rid) in RESERVED_LAUNCHERS:
             skipped.append(rid)
             continue
         (build_dir / launcher_name(rid)).write_bytes(launcher_text(f"-scene {rid}").encode("ascii"))
         written.append(launcher_name(rid))
-    if all(r in regions for r in CORRIDOR_NEEDS):
+    if corridor_ready(regions, tiles):
         (build_dir / CORRIDOR_LAUNCHER).write_bytes(CORRIDOR_TEXT.encode("ascii"))
-        written.append(CORRIDOR_LAUNCHER)
+        (build_dir / CORRIDOR_D3D11_LAUNCHER).write_bytes(corridor_d3d11_text().encode("ascii"))
+        written += [CORRIDOR_LAUNCHER, CORRIDOR_D3D11_LAUNCHER]
     return written, skipped
 
 
@@ -202,9 +254,15 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"ok": ok, "contentHash": now["contentHash"], "recorded": doc.get("contentHash")}))
             return 0 if ok else 1
         doc = write_build_id(b, entries, a.git_sha)
-        regions = regions_from_log(a.log.read_text(encoding="utf-8", errors="replace")) if a.log else []
-        written, skipped = write_launchers(b, regions)
-        print(json.dumps({**doc, "regionIds": regions, "launchers": written, "skippedRegionIds": skipped}))
+        log_text = a.log.read_text(encoding="utf-8", errors="replace") if a.log else None
+        regions = regions_from_log(log_text) if log_text is not None else []
+        tiles = tile_regions_from_log(log_text) if log_text is not None else []
+        written, skipped = write_launchers(b, regions, tiles)
+        if all(r in regions for r in CORRIDOR_NEEDS) and CORRIDOR_LAUNCHER not in written:
+            print(f"WARNING: {CORRIDOR_LAUNCHER} not written - tile scene of {', '.join(CORRIDOR_TILES)} not in the build "
+                  "(reimport with scripts/import-region.ps1, ADR 0235)", file=sys.stderr)
+        print(json.dumps({**doc, "regionIds": regions, "tileRegionIds": tiles, "launchers": written,
+                          "skippedRegionIds": skipped}))
         return 0
     except (PostBuildError, OSError) as e:
         print(f"ERROR: {e}", file=sys.stderr)

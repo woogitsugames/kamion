@@ -1,0 +1,405 @@
+{
+ "adr": "0278",
+ "note": "snapshot of generated/* of the built tiles; static = all chunks of the tile (tris_*_static), frame = mesh_budget.frame_estimate cameras (1.6 km / 120 deg wedge, no occlusion); glb = chunk bytes of world_manifest.json; WORLD_MEMORY from the import logs cited in ADR 0229/0234 (High only where measured)",
+ "tiles": [
+  {
+   "buildings": 406,
+   "cameras": 17,
+   "frame_tris_high_max": 1768010,
+   "frame_tris_high_median": 1298093,
+   "frame_tris_low_max": 736946,
+   "frame_tris_low_median": 529910,
+   "glb_mb": 445.7,
+   "id": "bialystok-dojlidy",
+   "inputs_sha256": {
+    "bialystok-dojlidy/generated/streetscape_qa.json": "94f7785baea85ed1885de9169f03449eb279ae2973e11e5981458cd51694ff66",
+    "bialystok-dojlidy/generated/world_manifest.json": "45aced2f82226d880c08fc2f317fbba074c6aa7cb87be39c2538680ae370224f"
+   },
+   "static_tris_high": 10058486,
+   "static_tris_low": 3142836,
+   "teryt_powiat": "2061",
+   "world_memory_high_mb": 214.9,
+   "world_memory_low_mb": 99.6
+  },
+  {
+   "buildings": 643,
+   "cameras": 23,
+   "frame_tris_high_max": 1985807,
+   "frame_tris_high_median": 1334024,
+   "frame_tris_low_max": 938274,
+   "frame_tris_low_median": 528613,
+   "glb_mb": 526.7,
+   "id": "bialystok-industrial-c",
+   "inputs_sha256": {
+    "bialystok-industrial-c/generated/streetscape_qa.json": "6eabab4efc57d709cf4d97089b72dfbe521a68550e4fa5d844c8866242e1c647",
+    "bialystok-industrial-c/generated/world_manifest.json": "fa461c0a4b0aba42f1acee936484370c0c3ec76b387279bdaa37fda81271baaa"
+   },
+   "static_tris_high": 10802964,
+   "static_tris_low": 3443982,
+   "teryt_powiat": "2061",
+   "world_memory_high_mb": 267.0,
+   "world_memory_low_mb": 124.2
+  },
+  {
+   "buildings": 1865,
+   "cameras": 18,
+   "frame_tris_high_max": 2511724,
+   "frame_tris_high_median": 1807149.0,
+   "frame_tris_low_max": 1059150,
+   "frame_tris_low_median": 801685.0,
+   "glb_mb": 718.8,
+   "id": "bialystok-kleeberga",
+   "inputs_sha256": {
+    "bialystok-kleeberga/generated/streetscape_qa.json": "ba2aff964fbed38a6955f7d796b7c5ae0f1c28fe2452b343cf90bb2bcc0dfd47",
+    "bialystok-kleeberga/generated/world_manifest.json": "dbc976c648e7bd6b8eeab852d8d1a4738cad2844dadcf048af89dc427302a5a3"
+   },
+   "static_tris_high": 12415825,
+   "static_tris_low": 4413034,
+   "teryt_powiat": "2061",
+   "world_memory_high_mb": 356.8,
+   "world_memory_low_mb": 156.7
+  },
+  {
+   "buildings": 1061,
+   "cameras": 13,
+   "frame_tris_high_max": 1934373,
+   "frame_tris_high_median": 993353,
+   "frame_tris_low_max": 691279,
+   "frame_tris_low_median": 368210,
+   "glb_mb": 671.7,
+   "id": "bialystok-knyszynska",
+   "inputs_sha256": {
+    "bialystok-knyszynska/generated/streetscape_qa.json": "02536be7082fa3cbb48f98d2ebb76b421a64be16cb6d7224c2f7c841af51db11",
+    "bialystok-knyszynska/generated/world_manifest.json": "e47b825cafadd5ae546f7afe4ceeb41422464654d9eb33925b6cf46882d3462a"
+   },
+   "static_tris_high": 10724245,
+   "static_tris_low": 3431534,
+   "teryt_powiat": "2061",
+   "world_memory_high_mb": 260.2,
+   "world_memory_low_mb": 116.0
+  },
+  {
+   "buildings": 1760,
+   "cameras": 12,
+   "frame_tris_high_max": 3286276,
+   "frame_tris_high_median": 2371197.0,
+   "frame_tris_low_max": 1228284,
+   "frame_tris_low_median": 945697.0,
+   "glb_mb": 812.3,
+   "id": "bialystok-maczka",
+   "inputs_sha256": {
+    "bialystok-maczka/generated/streetscape_qa.json": "0fd1c8e721700ac7e61b7e70a0b738387446850b42e1dba387ff2f0a35592c3e",
+    "bialystok-maczka/generated/world_manifest.json": "df6895f3b37a91f4905539e413e230a44f2be417caa2e42082245be43de64183"
+   },
+   "static_tris_high": 13209658,
+   "static_tris_low": 4192470,
+   "teryt_powiat": "2061",
+   "world_memory_high_mb": 420.4,
+   "world_memory_low_mb": 153.2
+  },
+  {
+   "buildings": 460,
+   "cameras": 21,
+   "frame_tris_high_max": 1212078,
+   "frame_tris_high_median": 623399,
+   "frame_tris_low_max": 433762,
+   "frame_tris_low_median": 227174,
+   "glb_mb": 486.7,
+   "id": "dk65-01",
+   "inputs_sha256": {
+    "dk65-01/generated/streetscape_qa.json": "6256b2d9147ce963a752d308fab2b72d6ade2bc01d028ffdfb1c45c36daa1aa3",
+    "dk65-01/generated/world_manifest.json": "4f572f4c248a4d82ac98b4c2f736322d680fb43fa6c171c69d95dc2cc2a2e55d"
+   },
+   "static_tris_high": 9499026,
+   "static_tris_low": 2789137,
+   "teryt_powiat": "2002",
+   "world_memory_high_mb": 165.9,
+   "world_memory_low_mb": 68.2
+  },
+  {
+   "buildings": 293,
+   "cameras": 28,
+   "frame_tris_high_max": 1191730,
+   "frame_tris_high_median": 848601.5,
+   "frame_tris_low_max": 469518,
+   "frame_tris_low_median": 282548.5,
+   "glb_mb": 427.3,
+   "id": "dk65-02",
+   "inputs_sha256": {
+    "dk65-02/generated/streetscape_qa.json": "2a533007994847dd824713c9032d39c976b91f0e9e3c4f2f6682bb8d9b471a09",
+    "dk65-02/generated/world_manifest.json": "ccbd850e4e5de159f53af6589bc61208dcf156e9a6731b986e1d8d6588b72b18"
+   },
+   "static_tris_high": 9181083,
+   "static_tris_low": 2574471,
+   "teryt_powiat": "2002",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 60.2
+  },
+  {
+   "buildings": 280,
+   "cameras": 14,
+   "frame_tris_high_max": 1081933,
+   "frame_tris_high_median": 342578.0,
+   "frame_tris_low_max": 314732,
+   "frame_tris_low_median": 93539.0,
+   "glb_mb": 440.9,
+   "id": "dk65-03",
+   "inputs_sha256": {
+    "dk65-03/generated/streetscape_qa.json": "1514b4207c0fab88ca4c9e657450f6c9e1b10eff929b8ad19a9513dac08b2c7a",
+    "dk65-03/generated/world_manifest.json": "a8548672e07c911fa13d27a72cc0ff3f761d9f930681a636671bc8415debe4b6"
+   },
+   "static_tris_high": 9064663,
+   "static_tris_low": 2447865,
+   "teryt_powiat": "2002",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 50.5
+  },
+  {
+   "buildings": 788,
+   "cameras": 26,
+   "frame_tris_high_max": 1394182,
+   "frame_tris_high_median": 936511.0,
+   "frame_tris_low_max": 451831,
+   "frame_tris_low_median": 327454.0,
+   "glb_mb": 606.8,
+   "id": "dk65-04",
+   "inputs_sha256": {
+    "dk65-04/generated/streetscape_qa.json": "83137cb178b4973c7628a1e3d053b549ab24e392897c8fbcaa17a20e12ca649b",
+    "dk65-04/generated/world_manifest.json": "ebbcf2b0c1f549562c4e373dc47a58feb6c353c777256139084c35595a6326b4"
+   },
+   "static_tris_high": 9649334,
+   "static_tris_low": 2820556,
+   "teryt_powiat": "2002",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 76.1
+  },
+  {
+   "buildings": 473,
+   "cameras": 22,
+   "frame_tris_high_max": 1556437,
+   "frame_tris_high_median": 1038568.5,
+   "frame_tris_low_max": 466144,
+   "frame_tris_low_median": 272412.0,
+   "glb_mb": 542.4,
+   "id": "dk65-05",
+   "inputs_sha256": {
+    "dk65-05/generated/streetscape_qa.json": "ec277eb2f914b62696a8e3cf4e9c9bf47c3520aa2dd446ad08784a666409a70f",
+    "dk65-05/generated/world_manifest.json": "9dc0415f16f9aa0884c18eda603ce5634add59586b90d29f9a0ec9b9cda7b3d6"
+   },
+   "static_tris_high": 9406255,
+   "static_tris_low": 2703619,
+   "teryt_powiat": "2002",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 75.5
+  },
+  {
+   "buildings": 215,
+   "cameras": 23,
+   "frame_tris_high_max": 1629462,
+   "frame_tris_high_median": 1252125,
+   "frame_tris_low_max": 424641,
+   "frame_tris_low_median": 285765,
+   "glb_mb": 394.1,
+   "id": "dk65-06",
+   "inputs_sha256": {
+    "dk65-06/generated/streetscape_qa.json": "14d7809442983b5f39f5d567e80daa733a51137c730f2a9f0fc360148899e57c",
+    "dk65-06/generated/world_manifest.json": "20797b145fb8bca24a032b797655034c913a82afd0e362505dacc141be3f50d5"
+   },
+   "static_tris_high": 8953387,
+   "static_tris_low": 2384821,
+   "teryt_powiat": "2002",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 59.0
+  },
+  {
+   "buildings": 292,
+   "cameras": 9,
+   "frame_tris_high_max": 1037127,
+   "frame_tris_high_median": 794709,
+   "frame_tris_low_max": 248470,
+   "frame_tris_low_median": 230150,
+   "glb_mb": 436.1,
+   "id": "dk65-07",
+   "inputs_sha256": {
+    "dk65-07/generated/streetscape_qa.json": "96776e50a7b1bf05127b3d16ffb5a1526cac26253905de3259c6a97559636aec",
+    "dk65-07/generated/world_manifest.json": "fa0f77374d8b7a2c20f7be884593ffe0724f7c019772ad1a6141080b4976c1b7"
+   },
+   "static_tris_high": 8960896,
+   "static_tris_low": 2380130,
+   "teryt_powiat": "2002",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 59.1
+  },
+  {
+   "buildings": 71,
+   "cameras": 17,
+   "frame_tris_high_max": 1658204,
+   "frame_tris_high_median": 988725,
+   "frame_tris_low_max": 391507,
+   "frame_tris_low_median": 291942,
+   "glb_mb": 368.5,
+   "id": "dk65-08",
+   "inputs_sha256": {
+    "dk65-08/generated/streetscape_qa.json": "26a796a1fd7d47de26b6c78e10a17731c2436c77b6cda86256d7c890325b1372",
+    "dk65-08/generated/world_manifest.json": "5201584abc89692a5b54e7a85e30be9f67ea1983d8a5ccb31088f34d81213bb9"
+   },
+   "static_tris_high": 8781596,
+   "static_tris_low": 2267447,
+   "teryt_powiat": "2002",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 55.5
+  },
+  {
+   "buildings": 105,
+   "cameras": 7,
+   "frame_tris_high_max": 1068253,
+   "frame_tris_high_median": 969080,
+   "frame_tris_low_max": 198144,
+   "frame_tris_low_median": 188391,
+   "glb_mb": 415.4,
+   "id": "dk65-09",
+   "inputs_sha256": {
+    "dk65-09/generated/streetscape_qa.json": "13b129ffb4925f428f3d12202821d7101bff3fd6a9822beacb7912fd0f49a709",
+    "dk65-09/generated/world_manifest.json": "180da561b6d41057e9f930b13fd6d86cd621721cffb6d0e87ffa432f6254b658"
+   },
+   "static_tris_high": 8799998,
+   "static_tris_low": 2276244,
+   "teryt_powiat": "2002",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 51.4
+  },
+  {
+   "buildings": 49,
+   "cameras": 19,
+   "frame_tris_high_max": 2031893,
+   "frame_tris_high_median": 1019119,
+   "frame_tris_low_max": 499333,
+   "frame_tris_low_median": 247706,
+   "glb_mb": 347.2,
+   "id": "dk65-10",
+   "inputs_sha256": {
+    "dk65-10/generated/streetscape_qa.json": "02c2ed1f7734b27fb28bb62730fa4bf69573cb438a072f66d17c2e295edeff67",
+    "dk65-10/generated/world_manifest.json": "87c81a532b27c94d11a092ca1aa2e24eb388a52581c1eaeadefd932f7ee38132"
+   },
+   "static_tris_high": 8780361,
+   "static_tris_low": 2277958,
+   "teryt_powiat": "2002",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 49.0
+  },
+  {
+   "buildings": 18,
+   "cameras": 12,
+   "frame_tris_high_max": 619231,
+   "frame_tris_high_median": 430598.0,
+   "frame_tris_low_max": 182021,
+   "frame_tris_low_median": 125282.5,
+   "glb_mb": 320.6,
+   "id": "dk65-11",
+   "inputs_sha256": {
+    "dk65-11/generated/streetscape_qa.json": "3abb29127bc8dc9022437cad0975e434162c043723857cd443ce8182a1c38d88",
+    "dk65-11/generated/world_manifest.json": "c09129238a291907fb0d3f6150a275db26d8eb58d3177fa278a752d407a93a7c"
+   },
+   "static_tris_high": 8705263,
+   "static_tris_low": 2211275,
+   "teryt_powiat": "2008",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 48.2
+  },
+  {
+   "buildings": 42,
+   "cameras": 10,
+   "frame_tris_high_max": 1616108,
+   "frame_tris_high_median": 792358.0,
+   "frame_tris_low_max": 348187,
+   "frame_tris_low_median": 225257.0,
+   "glb_mb": 339.8,
+   "id": "dk65-monki-01",
+   "inputs_sha256": {
+    "dk65-monki-01/generated/streetscape_qa.json": "0aff81a6f47314c211f12cd7d8026f820fae98cdbb7fb78406d945c174af8214",
+    "dk65-monki-01/generated/world_manifest.json": "117b5c0da4fa3e413f94e1ee88127a6029eab014c18b1261319b605117ae93ef"
+   },
+   "static_tris_high": 8735720,
+   "static_tris_low": 2237927,
+   "teryt_powiat": "2008",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 46.6
+  },
+  {
+   "buildings": 144,
+   "cameras": 31,
+   "frame_tris_high_max": 1068259,
+   "frame_tris_high_median": 847251,
+   "frame_tris_low_max": 322273,
+   "frame_tris_low_median": 248970,
+   "glb_mb": 395.5,
+   "id": "dw671-tykocin-01",
+   "inputs_sha256": {
+    "dw671-tykocin-01/generated/streetscape_qa.json": "0013b1a982ce17fcc73bf0fe174db6c0603a198dc522a26fdcaf162443970c86",
+    "dw671-tykocin-01/generated/world_manifest.json": "b9be3d66902d9a092c7c88c4d35a0178574fcd3160bba6ca44db4fc697880fed"
+   },
+   "static_tris_high": 8915183,
+   "static_tris_low": 2362947,
+   "teryt_powiat": "2008",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 45.7
+  },
+  {
+   "buildings": 1903,
+   "cameras": 23,
+   "frame_tris_high_max": 1891391,
+   "frame_tris_high_median": 1123398,
+   "frame_tris_low_max": 596669,
+   "frame_tris_low_median": 373758,
+   "glb_mb": 570.1,
+   "id": "knyszyn",
+   "inputs_sha256": {
+    "knyszyn/generated/streetscape_qa.json": "7cd5e1a6c1978271d8eee830750a84228e41ae971f6997428ab8090871c09733",
+    "knyszyn/generated/world_manifest.json": "4df021eb028154b0d5d317eb9385db3727d1ce2e32243696b7d42b12f79ac6a9"
+   },
+   "static_tris_high": 10231650,
+   "static_tris_low": 3070081,
+   "teryt_powiat": "2008",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 95.5
+  },
+  {
+   "buildings": 12,
+   "cameras": 20,
+   "frame_tris_high_max": 1494429,
+   "frame_tris_high_median": 799473.5,
+   "frame_tris_low_max": 377661,
+   "frame_tris_low_median": 220284.0,
+   "glb_mb": 332.9,
+   "id": "knyszyn-s",
+   "inputs_sha256": {
+    "knyszyn-s/generated/streetscape_qa.json": "9ef9cd6db93145a1ae43d3559ce59aefb2cc7887fc8618a6c3195d64babfbe2f",
+    "knyszyn-s/generated/world_manifest.json": "8588d8db50ce982b71ddfa12d19caffb209b05937599b9d7bb81c4c60d5444ab"
+   },
+   "static_tris_high": 8738304,
+   "static_tris_low": 2245413,
+   "teryt_powiat": "2008",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 40.8
+  },
+  {
+   "buildings": 371,
+   "cameras": 17,
+   "frame_tris_high_max": 1075679,
+   "frame_tris_high_median": 802368,
+   "frame_tris_low_max": 332057,
+   "frame_tris_low_median": 251629,
+   "glb_mb": 392.4,
+   "id": "knyszyn-w",
+   "inputs_sha256": {
+    "knyszyn-w/generated/streetscape_qa.json": "ee2a577349f81170827cb22d81e07da3f58e1df295817aa139034b03870b3b1f",
+    "knyszyn-w/generated/world_manifest.json": "c91fdf69f0744318e6ecd641152d7a513899fd392036876d5b3c86735f026eaa"
+   },
+   "static_tris_high": 9061427,
+   "static_tris_low": 2449343,
+   "teryt_powiat": "2008",
+   "world_memory_high_mb": null,
+   "world_memory_low_mb": 54.0
+  }
+ ]
+}

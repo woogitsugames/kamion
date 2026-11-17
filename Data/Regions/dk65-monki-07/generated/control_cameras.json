@@ -1,0 +1,154 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0142",
+   "look_at": [
+    13.757,
+    -842.068,
+    165.393
+   ],
+   "note": "driver eye 2.5 m, control route s = 142 m of 2278 m (unnamed)",
+   "pos": [
+    41.567,
+    -895.261,
+    165.701
+   ],
+   "route_s_m": 142.38,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0427",
+   "look_at": [
+    -110.705,
+    -585.948,
+    166.051
+   ],
+   "note": "driver eye 2.5 m, control route s = 427 m of 2278 m (unnamed)",
+   "pos": [
+    -82.976,
+    -639.184,
+    167.961
+   ],
+   "route_s_m": 427.14,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0712",
+   "look_at": [
+    -235.406,
+    -329.945,
+    165.735
+   ],
+   "note": "driver eye 2.5 m, control route s = 712 m of 2278 m (unnamed)",
+   "pos": [
+    -207.496,
+    -383.086,
+    166.776
+   ],
+   "route_s_m": 711.9,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0997",
+   "look_at": [
+    -360.428,
+    -74.098,
+    169.243
+   ],
+   "note": "driver eye 2.5 m, control route s = 997 m of 2278 m (unnamed)",
+   "pos": [
+    -332.668,
+    -127.313,
+    169.907
+   ],
+   "route_s_m": 996.66,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1281",
+   "look_at": [
+    -484.949,
+    181.992,
+    168.016
+   ],
+   "note": "driver eye 2.5 m, control route s = 1281 m of 2278 m (unnamed)",
+   "pos": [
+    -457.149,
+    128.795,
+    169.317
+   ],
+   "route_s_m": 1281.42,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1566",
+   "look_at": [
+    -609.516,
+    438.059,
+    167.911
+   ],
+   "note": "driver eye 2.5 m, control route s = 1566 m of 2278 m (Białostocka)",
+   "pos": [
+    -581.241,
+    385.105,
+    168.507
+   ],
+   "route_s_m": 1566.179,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1851",
+   "look_at": [
+    -733.924,
+    694.19,
+    171.95
+   ],
+   "note": "driver eye 2.5 m, control route s = 1851 m of 2278 m (Białostocka)",
+   "pos": [
+    -705.927,
+    641.115,
+    173.071
+   ],
+   "route_s_m": 1850.939,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2136",
+   "look_at": [
+    -859.006,
+    950.007,
+    171.723
+   ],
+   "note": "driver eye 2.5 m, control route s = 2136 m of 2278 m (Białostocka)",
+   "pos": [
+    -830.944,
+    896.941,
+    172.969
+   ],
+   "route_s_m": 2135.699,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 317.516,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk65-monki-07",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

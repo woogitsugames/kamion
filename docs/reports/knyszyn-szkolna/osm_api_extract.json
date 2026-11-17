@@ -1,0 +1,289 @@
+{
+ "source": "https://api.openstreetmap.org/api/0.6/map?bbox=22.9215,53.3082,22.9246,53.3099",
+ "read": "2026-11-16",
+ "license": "ODbL 1.0, © OpenStreetMap contributors",
+ "note": "highway / amenity ways and crossing / give-way / sign nodes of the bbox around Poludniowa x Szkolna (Knyszyn); no way carries sidewalk=*; no footway is mapped along Szkolna / Poludniowa; the four crossings at the crossroads are crossing:markings=zebra; service way 750267067 (school parking aisle) has no service=* tag",
+ "ways": [
+  {
+   "osm_way": 98071199,
+   "version": 9,
+   "timestamp": "2024-01-13T21:36:05Z",
+   "tags": {
+    "highway": "residential",
+    "name": "Szkolna",
+    "source": "http://ump.waw.pl/ retrieved 00:11:16 02/04/11 (pc_PL/UMP-Bialystok/src/KNYSZYN.ulice.txt)",
+    "surface": "asphalt"
+   },
+   "sidewalk_tags": null,
+   "nodes": [
+    1842392533,
+    3047587476,
+    3047587473,
+    1134814483,
+    3047587443,
+    11514832010,
+    3047815744,
+    1134831641,
+    11514832008,
+    3048936907,
+    1134846746
+   ]
+  },
+  {
+   "osm_way": 98071222,
+   "version": 8,
+   "timestamp": "2024-01-13T21:36:05Z",
+   "tags": {
+    "highway": "residential",
+    "name": "Południowa",
+    "source": "http://ump.waw.pl/ retrieved 00:11:16 02/04/11 (pc_PL/UMP-Bialystok/src/KNYSZYN.ulice.txt)",
+    "surface": "asphalt"
+   },
+   "sidewalk_tags": null,
+   "nodes": [
+    1134842169,
+    3048730353,
+    3048936913,
+    3048936910,
+    7015352011,
+    11514832009,
+    1134846746
+   ]
+  },
+  {
+   "osm_way": 98071636,
+   "version": 1,
+   "timestamp": "2011-02-04T02:03:29Z",
+   "tags": {
+    "highway": "residential",
+    "name": "Szkolna",
+    "source": "http://ump.waw.pl/ retrieved 00:11:16 02/04/11 (pc_PL/UMP-Bialystok/src/KNYSZYN.ulice.txt)"
+   },
+   "sidewalk_tags": null,
+   "nodes": [
+    1134838267,
+    1134814128
+   ]
+  },
+  {
+   "osm_way": 300806059,
+   "version": 3,
+   "timestamp": "2024-01-13T21:36:05Z",
+   "tags": {
+    "highway": "residential",
+    "name": "Południowa",
+    "source": "http://ump.waw.pl/ retrieved 00:11:16 02/04/11 (pc_PL/UMP-Bialystok/src/KNYSZYN.ulice.txt)",
+    "surface": "asphalt"
+   },
+   "sidewalk_tags": null,
+   "nodes": [
+    1134846746,
+    11514832006,
+    3048936905,
+    1134845153,
+    1134809304,
+    3048919489,
+    1134813637
+   ]
+  },
+  {
+   "osm_way": 750267067,
+   "version": 1,
+   "timestamp": "2019-11-27T19:47:13Z",
+   "tags": {
+    "highway": "service"
+   },
+   "sidewalk_tags": null,
+   "nodes": [
+    7015352011,
+    7015352010,
+    7015352009
+   ]
+  },
+  {
+   "osm_way": 750267069,
+   "version": 1,
+   "timestamp": "2019-11-27T19:47:13Z",
+   "tags": {
+    "amenity": "school"
+   },
+   "sidewalk_tags": null,
+   "nodes": null
+  },
+  {
+   "osm_way": 874459219,
+   "version": 1,
+   "timestamp": "2020-11-19T00:39:29Z",
+   "tags": {
+    "highway": "service"
+   },
+   "sidewalk_tags": null,
+   "nodes": [
+    1134838267,
+    8140379472,
+    8140379471,
+    8140379470,
+    8140379469,
+    8140379468,
+    8140379467,
+    8140379466,
+    8140379465,
+    8140379464,
+    8140379463,
+    8140379462
+   ]
+  },
+  {
+   "osm_way": 1111506747,
+   "version": 3,
+   "timestamp": "2024-01-13T21:36:05Z",
+   "tags": {
+    "highway": "residential",
+    "name": "Szkolna",
+    "source": "http://ump.waw.pl/ retrieved 00:11:16 02/04/11 (pc_PL/UMP-Bialystok/src/KNYSZYN.ulice.txt)",
+    "surface": "asphalt"
+   },
+   "sidewalk_tags": null,
+   "nodes": [
+    1134846746,
+    3048936906,
+    11514832007,
+    1134838267
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "osm_node": 3047587473,
+   "x_2180": 760966.95,
+   "y_2180": 612302.83,
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "osm_node": 3047587476,
+   "x_2180": 760962.46,
+   "y_2180": 612306.49,
+   "tags": {
+    "direction": "backward",
+    "highway": "stop",
+    "side": "both"
+   }
+  },
+  {
+   "osm_node": 3048730353,
+   "x_2180": 761328.9,
+   "y_2180": 612228.76,
+   "tags": {
+    "highway": "crossing"
+   }
+  },
+  {
+   "osm_node": 3048919489,
+   "x_2180": 760893.83,
+   "y_2180": 611690.73,
+   "tags": {
+    "direction": "forward",
+    "highway": "stop",
+    "side": "both"
+   }
+  },
+  {
+   "osm_node": 3048936905,
+   "x_2180": 761180.64,
+   "y_2180": 611965.53,
+   "tags": {
+    "direction": "forward",
+    "side": "right",
+    "traffic_calming": "rumble_strip",
+    "traffic_sign": "PL:A-11"
+   }
+  },
+  {
+   "osm_node": 3048936906,
+   "x_2180": 761248.2,
+   "y_2180": 612052.05,
+   "tags": {
+    "direction": "backward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "osm_node": 3048936907,
+   "x_2180": 761240.77,
+   "y_2180": 612057.89,
+   "tags": {
+    "direction": "forward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "osm_node": 3048936910,
+   "x_2180": 761301.03,
+   "y_2180": 612172.74,
+   "tags": {
+    "direction": "backward",
+    "side": "both",
+    "traffic_sign": "PL:A-17"
+   }
+  },
+  {
+   "osm_node": 3048936913,
+   "x_2180": 761327.83,
+   "y_2180": 612226.53,
+   "tags": {
+    "direction": "backward",
+    "highway": "give_way",
+    "side": "right"
+   }
+  },
+  {
+   "osm_node": 11514832006,
+   "x_2180": 761240.64,
+   "y_2180": 612043.44,
+   "tags": {
+    "crossing:markings": "zebra",
+    "highway": "crossing"
+   }
+  },
+  {
+   "osm_node": 11514832007,
+   "x_2180": 761254.14,
+   "y_2180": 612047.43,
+   "tags": {
+    "crossing:markings": "zebra",
+    "highway": "crossing"
+   }
+  },
+  {
+   "osm_node": 11514832008,
+   "x_2180": 761234.98,
+   "y_2180": 612062.48,
+   "tags": {
+    "crossing:markings": "zebra",
+    "highway": "crossing"
+   }
+  },
+  {
+   "osm_node": 11514832009,
+   "x_2180": 761252.4,
+   "y_2180": 612066.93,
+   "tags": {
+    "crossing:markings": "zebra",
+    "highway": "crossing"
+   }
+  },
+  {
+   "osm_node": 11514832010,
+   "x_2180": 761082.67,
+   "y_2180": 612190.21,
+   "tags": {
+    "crossing:markings": "zebra",
+    "highway": "crossing"
+   }
+  }
+ ]
+}

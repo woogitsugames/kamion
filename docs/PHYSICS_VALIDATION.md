@@ -282,6 +282,15 @@ phone and 16.9 km/h in the runner. Each up-shift then fell at -1.55 m/s². New s
 
 Evidence: `artifacts/physics/shift-brake/` (before/, after/ CSV + PNG, suite-before/, suite-after/ summaries).
 
+Note (D42, 2026-11-16, ADR 0280 §10.5a): `park_brake_hold_no_interlock_comb@laden40` `creep_m` was 26.8 mm (main) and
+55.2 mm (after the ADR 0280 §10.3 relaxation fix). Both values came from a leak, not from wind-up. The standstill
+relaxation bled the trailer brakes' reaction to the engine push at 1.3 and then 4.1 mm/s with no end (55 mm at 12 s, 251 mm
+at 60 s). While a towing wheel carries driveline torque, the braked trailer wheels now keep their deflection. The creep is
+now 14.4 mm and stops there (13.95 mm at 60 s). It is the same at dt 1/50 to 1/120 (14.36-14.37 mm) and equal to the run
+with relaxation off (14.29 mm).
+Runner determinism (ADR 0004 addendum 2026-11-16): each scenario run loads its own definitions, so a test cannot change
+the physics of a run on another xUnit thread.
+
 ### 6d. Truck feel after the Fold test, ADR 0134 (2026-11-12)
 
 Owner: rocking "like a sports car" when accelerating, gears change "very quickly". Diagnosis: the free-drive default is the

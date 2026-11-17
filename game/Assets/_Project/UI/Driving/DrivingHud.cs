@@ -70,7 +70,7 @@ namespace Game.UI.Driving
     /// gear) drops down and collapses again; top left = telemetry panel (developer).
     /// Calm palette (dark translucent panels, off-white text, muted accent) — no neon, no glass effects.
     /// </summary>
-    public sealed class DrivingHud : MonoBehaviour
+    public sealed partial class DrivingHud : MonoBehaviour
     {
         const int Font = 30, SmallFont = 22;
         static readonly Color k_PedalPanel = new Color(0.06f, 0.065f, 0.07f, 0.97f);
@@ -228,6 +228,7 @@ namespace Game.UI.Driving
             BuildPedalsAndGears();
             BuildDevPanel();
             BuildDevText();
+            BuildDesktop();   // ADR 0283: monitor strip + telltale row (DrivingHud.Desktop.cs)
             EnsureEventSystem();
             RefreshLabels();
             RefreshNow();
@@ -528,6 +529,7 @@ namespace Game.UI.Driving
             m_DevOpen = open;
             if (!open) m_LabOpen = false;
             m_LayoutValid = false;
+            m_DValid = false;
             UpdateLayout();
         }
 
@@ -537,6 +539,7 @@ namespace Game.UI.Driving
         {
             m_LabOpen = open && m_DevOpen;
             m_LayoutValid = false;
+            m_DValid = false;
             UpdateLayout();
         }
 
@@ -551,8 +554,8 @@ namespace Game.UI.Driving
         {
             switch (i)
             {
-                case 0: return m_ClusterRt;
-                case 1: return m_ParkWarnRt;
+                case 0: return m_DesktopApplied ? (m_D.ShowStrip ? m_DStrip : m_DTell) : m_ClusterRt;
+                case 1: return m_DesktopApplied ? m_DTell : m_ParkWarnRt;
                 case 2: return m_ReverseRt;
                 case 3: return (RectTransform)m_MirrorLGo.transform;
                 case 4: return (RectTransform)m_MirrorRGo.transform;
@@ -576,6 +579,8 @@ namespace Game.UI.Driving
         void UpdateLayout()
         {
             bool changed = m_View.Refresh();
+            if (m_View.Desktop) { UpdateDesktopLayout(changed); return; }   // ADR 0283 (DrivingHud.Desktop.cs)
+            if (m_DesktopApplied || !m_DesktopKnown) { ApplyFormFactor(false); changed = true; }
             HudLayoutInput s;
             s.Width = m_View.SizeUnits.x; s.Height = m_View.SizeUnits.y;
             s.HideTouchControls = m_View.Desktop;   // ADR 0265: one source of truth with the canvas scale
@@ -786,6 +791,8 @@ namespace Game.UI.Driving
             m_ParkWarnTracker.Poll(warn, warnCount, Time.unscaledTime);
             float wa = m_ParkWarnTracker.Alpha;
             if (!Mathf.Approximately(wa, m_LastParkWarnAlpha)) { m_LastParkWarnAlpha = wa; m_ParkWarnGroup.alpha = wa; }
+            ApplyMirrorAdjust();
+            if (m_DesktopApplied) RefreshDesktop(v, speed, gear, rpm, rpmMax, park);
             m_DriveBtn.color = sel == GearSelector.Drive && !manual ? k_ButtonOn : k_Button;
             m_ManualBtn.color = sel == GearSelector.Drive && manual ? k_ButtonOn : k_Button;
             m_NeutralBtn.color = sel == GearSelector.Neutral ? k_ButtonOn : k_Button;

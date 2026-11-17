@@ -1,0 +1,292 @@
+{
+ "schema": "kamion/research-s8-loop-junctions/1",
+ "source": "OSM API 0.6 /map.json, komórki siatki ADR 0203 pętli + pierścień (raw/osm/manifest.json), ODbL 1.0, (c) OpenStreetMap contributors",
+ "loop": "S8 odcinek Białystok Zachód — Jeżewo (D82)",
+ "junctions": [
+  {
+   "name": "Białystok Zachód",
+   "osm_junction_nodes": [
+    2081020070,
+    3160890725,
+    4236127140
+   ],
+   "wgs84": [
+    23.024321,
+    53.156312
+   ],
+   "epsg2180": [
+    768954.4,
+    595455.9
+   ],
+   "cells": [
+    [
+     -5,
+     0
+    ],
+    [
+     -4,
+     -1
+    ],
+    [
+     -4,
+     0
+    ]
+   ],
+   "type": "półwęzeł/trąbka (2 łącznice — jedna para) — ESTIMATED z liczby łącznic w OSM",
+   "crossroad": {
+    "name": "Warszawska",
+    "class": "tertiary",
+    "dist_m": 85.1,
+    "way": 1151531618
+   },
+   "ramps": [
+    {
+     "link_way": 424138211,
+     "junction_node": 4236127140,
+     "length_m": 126.7,
+     "lanes": "1",
+     "maxspeed": "60",
+     "oneway": "yes"
+    },
+    {
+     "link_way": 1151440414,
+     "junction_node": 3160890725,
+     "length_m": 120.1,
+     "lanes": "1",
+     "maxspeed": "60",
+     "oneway": "yes"
+    },
+    {
+     "link_way": 1151531629,
+     "junction_node": 2081020070,
+     "length_m": 127.0,
+     "lanes": "1",
+     "maxspeed": "60",
+     "oneway": "yes"
+    }
+   ],
+   "s8_limits": {
+    "maxspeed": 120,
+    "maxspeed_hgv": 80,
+    "toll_hgv": "yes (e-TOLL)",
+    "source": "OSM tags na way S8 w pętli: maxspeed=120, maxspeed:hgv=80 (71/71 way), toll:hgv=yes (67/71; 4 way bez tagu = luka OSM)"
+   },
+   "link_maxspeed_osm": [
+    "60"
+   ],
+   "note_lengths": "długości łącznic = długość geometrii OSM w EPSG:2180 (pasy włączania/wyłączania wraz z odcinkami zwalniania/przyspieszania; rozbicie na części wg Dz.U. do weryfikacji — patrz SIGNS.md)"
+  },
+  {
+   "name": "Choroszcz",
+   "osm_junction_nodes": [
+    1908957192,
+    1940503816
+   ],
+   "wgs84": [
+    22.997758,
+    53.159358
+   ],
+   "epsg2180": [
+    767161.1,
+    595694.7
+   ],
+   "cells": [
+    [
+     -5,
+     0
+    ]
+   ],
+   "type": "półwęzeł/trąbka (2 łącznice — jedna para) — ESTIMATED z liczby łącznic w OSM",
+   "crossroad": {
+    "class": "tertiary",
+    "dist_m": 90.4,
+    "way": 297345998
+   },
+   "ramps": [
+    {
+     "link_way": 183639800,
+     "junction_node": 1940503816,
+     "length_m": 116.8,
+     "lanes": "1",
+     "oneway": "yes"
+    },
+    {
+     "link_way": 183639802,
+     "junction_node": 1908957192,
+     "length_m": 230.9,
+     "lanes": "1",
+     "maxspeed": "40",
+     "oneway": "yes"
+    }
+   ],
+   "s8_limits": {
+    "maxspeed": 120,
+    "maxspeed_hgv": 80,
+    "toll_hgv": "yes (e-TOLL)",
+    "source": "OSM tags na way S8 w pętli: maxspeed=120, maxspeed:hgv=80 (71/71 way), toll:hgv=yes (67/71; 4 way bez tagu = luka OSM)"
+   },
+   "link_maxspeed_osm": [
+    "40"
+   ],
+   "note_lengths": "długości łącznic = długość geometrii OSM w EPSG:2180 (pasy włączania/wyłączania wraz z odcinkami zwalniania/przyspieszania; rozbicie na części wg Dz.U. do weryfikacji — patrz SIGNS.md)"
+  },
+  {
+   "name": "Jeżewo",
+   "osm_junction_nodes": [
+    1937517090,
+    1937517091
+   ],
+   "wgs84": [
+    22.742955,
+    53.135214
+   ],
+   "epsg2180": [
+    750280.6,
+    592089.7
+   ],
+   "cells": [
+    [
+     -14,
+     -2
+    ],
+    [
+     -13,
+     -2
+    ]
+   ],
+   "type": "półwęzeł/trąbka (2 łącznice — jedna para) — ESTIMATED z liczby łącznic w OSM",
+   "crossroad": {
+    "ref": "671",
+    "class": "secondary",
+    "dist_m": 93.5,
+    "way": 183373473
+   },
+   "ramps": [
+    {
+     "link_way": 183381873,
+     "junction_node": 1937517090,
+     "length_m": 119.1,
+     "lanes": "1",
+     "oneway": "yes"
+    },
+    {
+     "link_way": 183381877,
+     "junction_node": 1937517091,
+     "length_m": 80.7,
+     "lanes": "1",
+     "oneway": "yes"
+    }
+   ],
+   "s8_limits": {
+    "maxspeed": 120,
+    "maxspeed_hgv": 80,
+    "toll_hgv": "yes (e-TOLL)",
+    "source": "OSM tags na way S8 w pętli: maxspeed=120, maxspeed:hgv=80 (71/71 way), toll:hgv=yes (67/71; 4 way bez tagu = luka OSM)"
+   },
+   "link_maxspeed_osm": [],
+   "note_lengths": "długości łącznic = długość geometrii OSM w EPSG:2180 (pasy włączania/wyłączania wraz z odcinkami zwalniania/przyspieszania; rozbicie na części wg Dz.U. do weryfikacji — patrz SIGNS.md)"
+  },
+  {
+   "name": "Rzędziany",
+   "osm_junction_nodes": [
+    1856618918,
+    1937517092
+   ],
+   "wgs84": [
+    22.861519,
+    53.154477
+   ],
+   "epsg2180": [
+    758089.7,
+    594652.0
+   ],
+   "cells": [
+    [
+     -10,
+     -1
+    ]
+   ],
+   "type": "półwęzeł/trąbka (2 łącznice — jedna para) — ESTIMATED z liczby łącznic w OSM",
+   "crossroad": {
+    "class": "tertiary",
+    "dist_m": 162.5,
+    "way": 183381854
+   },
+   "ramps": [
+    {
+     "link_way": 183381867,
+     "junction_node": 1856618918,
+     "length_m": 136.0,
+     "lanes": "1",
+     "oneway": "yes"
+    },
+    {
+     "link_way": 183381879,
+     "junction_node": 1937517092,
+     "length_m": 126.8,
+     "lanes": "1",
+     "oneway": "yes"
+    }
+   ],
+   "s8_limits": {
+    "maxspeed": 120,
+    "maxspeed_hgv": 80,
+    "toll_hgv": "yes (e-TOLL)",
+    "source": "OSM tags na way S8 w pętli: maxspeed=120, maxspeed:hgv=80 (71/71 way), toll:hgv=yes (67/71; 4 way bez tagu = luka OSM)"
+   },
+   "link_maxspeed_osm": [],
+   "note_lengths": "długości łącznic = długość geometrii OSM w EPSG:2180 (pasy włączania/wyłączania wraz z odcinkami zwalniania/przyspieszania; rozbicie na części wg Dz.U. do weryfikacji — patrz SIGNS.md)"
+  },
+  {
+   "name": "Tykocin",
+   "osm_junction_nodes": [
+    469876632,
+    1937542643
+   ],
+   "wgs84": [
+    22.94753,
+    53.164211
+   ],
+   "epsg2180": [
+    763776.1,
+    596047.7
+   ],
+   "cells": [
+    [
+     -7,
+     0
+    ]
+   ],
+   "type": "półwęzeł/trąbka (2 łącznice — jedna para) — ESTIMATED z liczby łącznic w OSM",
+   "crossroad": {
+    "class": "tertiary",
+    "dist_m": 129.7,
+    "way": 183382922
+   },
+   "ramps": [
+    {
+     "link_way": 183382930,
+     "junction_node": 1937542643,
+     "length_m": 181.4,
+     "lanes": "1",
+     "oneway": "yes"
+    },
+    {
+     "link_way": 536211867,
+     "junction_node": 469876632,
+     "length_m": 145.0,
+     "lanes": "1",
+     "oneway": "yes"
+    }
+   ],
+   "s8_limits": {
+    "maxspeed": 120,
+    "maxspeed_hgv": 80,
+    "toll_hgv": "yes (e-TOLL)",
+    "source": "OSM tags na way S8 w pętli: maxspeed=120, maxspeed:hgv=80 (71/71 way), toll:hgv=yes (67/71; 4 way bez tagu = luka OSM)"
+   },
+   "link_maxspeed_osm": [],
+   "note_lengths": "długości łącznic = długość geometrii OSM w EPSG:2180 (pasy włączania/wyłączania wraz z odcinkami zwalniania/przyspieszania; rozbicie na części wg Dz.U. do weryfikacji — patrz SIGNS.md)"
+  }
+ ]
+}

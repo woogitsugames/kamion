@@ -28,6 +28,7 @@ import numpy as np
 import shapely
 
 from . import facade_atlas as FA
+from . import roofs as RF
 
 ACCENT_HALL = ["hall_wall_accent_blue", "hall_wall_accent_red", "hall_wall_accent_green", "hall_wall_graphite"]
 ACCENT_PLASTER = ["plaster_accent_terracotta", "plaster_accent_green", "plaster_accent_ochre", "plaster_accent_grey"]
@@ -284,7 +285,7 @@ def downpipe_positions(L, ops, key, spacing, margin=1.2):
 def roof_vents(acc, poly, z, key, kind):
     """kind 'hall': smoke vents (klapy dymowe) + small fan boxes; 'block': ventilation stacks along the
     long axis and lift machine rooms; returns triangles added (approx)."""
-    r = poly.minimum_rotated_rectangle
+    r = RF.stable_rect(poly)       # ADR 0238 D39
     c = np.asarray(r.exterior.coords)[:4]
     e = [np.hypot(*(c[(i + 1) % 4] - c[i])) for i in range(4)]
     k = 0 if e[0] >= e[1] else 1
@@ -292,7 +293,9 @@ def roof_vents(acc, poly, z, key, kind):
     across = np.array([-along[1], along[0]])
     ctr = np.asarray(r.centroid.coords[0])
     Lr, Wr = max(e), min(e)
-    inner = poly.buffer(-2.0)
+    # ADR 0238 D39: the first block stack sits 2.0 m from the rectangle end = ON the 2.0 m inner line when the end
+    # wall is a hull edge (Dojlidy `…A92F`: 360 / 372 triangles under a 1e-12 m translation); 1 mm more keeps it out
+    inner = poly.buffer(-2.0 - RF.PLAN_TOL_M)
     if inner.is_empty:
         return
     shapely.prepare(inner)
@@ -555,7 +558,7 @@ def sign_instance(code, a, d, nout, u, z, src):
 def machine_rooms(acc, poly, z, layer):
     """Lift machine rooms (one per ~30 m of a block's long axis) as plain boxes: the LOD1 roof silhouette of a
     wielka płyta block (v3.1; LOD0 gets them from roof_vents)."""
-    r = poly.minimum_rotated_rectangle
+    r = RF.stable_rect(poly)       # ADR 0238 D39
     c = np.asarray(r.exterior.coords)[:4]
     e = [np.hypot(*(c[(i + 1) % 4] - c[i])) for i in range(4)]
     k = 0 if e[0] >= e[1] else 1
