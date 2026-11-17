@@ -65,6 +65,7 @@ MonoBehaviour:
     nightWindowsOff: 0
     lampGlareOff: 0
     lampFloorOff: 0
+    projectedHeadlamps: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 0
@@ -132,6 +133,7 @@ MonoBehaviour:
     nightWindowsOff: 0
     lampGlareOff: 0
     lampFloorOff: 0
+    projectedHeadlamps: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 1
@@ -199,6 +201,7 @@ MonoBehaviour:
     nightWindowsOff: 0
     lampGlareOff: 0
     lampFloorOff: 0
+    projectedHeadlamps: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 1
@@ -266,6 +269,7 @@ MonoBehaviour:
     nightWindowsOff: 0
     lampGlareOff: 0
     lampFloorOff: 0
+    projectedHeadlamps: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 2
@@ -322,7 +326,8 @@ MonoBehaviour:
     modelContains: 
     maxRamMb: 0
     tier: High
-    note: "Galaxy Z Fold (Adreno 840, 5.65 Mpx inner): measured, High/30 GPU p95 29 ms; Ultra/60 ~25 FPS (ADR 0152)"
+    note: 'Galaxy Z Fold (Adreno 840, 5.65 Mpx inner): measured, High/30 GPU p95
+      29 ms; Ultra/60 ~25 FPS (ADR 0152)'
   - gpuContains: Immortalis
     modelContains: 
     maxRamMb: 0
