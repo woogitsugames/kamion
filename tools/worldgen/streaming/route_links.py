@@ -24,6 +24,7 @@ import math
 import sys
 from pathlib import Path
 
+import numpy as np
 import yaml
 
 HERE = Path(__file__).resolve().parent
@@ -50,8 +51,11 @@ def _route(rid: str, regions: Path) -> dict | None:
     return json.loads(f.read_text(encoding="utf-8")) if f.exists() else None
 
 
-def lane_path(rid: str, start_node: str | None, start_xy, end_xy, regions: Path = REGIONS, vias=()):
-    """Lane polyline (tile-local E/N every STEP_M), speed limits, length, graph nodes - export-route.py rules."""
+def lane_path(rid: str, start_node: str | None, start_xy, end_xy, regions: Path = REGIONS, vias=(), came_from=None):
+    """Lane polyline (tile-local E/N every STEP_M), speed limits, length, graph nodes - export-route.py rules.
+    came_from = graph node the path arrived from at start_node (an `after_route` link continues a route): the edge back
+    to it is not used, so the link drives on instead of turning the articulated truck round on the spot (seams-fix-s23:
+    the knyszyn route ends at Rynek and the shortest way to DW671 was straight back)."""
     import networkx as nx
     import roadgraph
     from roads import pipeline
@@ -69,6 +73,10 @@ def lane_path(rid: str, start_node: str | None, start_xy, end_xy, regions: Path 
     u = start_node if start_node in ids else (start_node + "s" if start_node and start_node + "s" in ids else nearest(start_xy))
     v = nearest(end_xy)
     g = roadgraph.to_digraph(graph)
+    graph_back = None
+    if came_from is not None and g.has_edge(u, came_from):
+        graph_back = g.copy()
+        g.remove_edge(u, came_from)
     stops = [u, *[nearest(p) for p in vias], v]
     path = [u]
     for a_, b_ in zip(stops, stops[1:]):
@@ -77,7 +85,19 @@ def lane_path(rid: str, start_node: str | None, start_xy, end_xy, regions: Path 
     net, _, _, _ = pipeline.build_network(rid, graph)
     node_xy = {n["id"]: (n["x"] - ox, n["y"] - oy) for n in graph["nodes"]}
     path_edges = [(g[a][b]["id"], a, b) for a, b in zip(path, path[1:])]
-    pts, eid_pt, _, length = lane_route(net, path_edges, node_xy, STEP_M)
+    if came_from is not None and graph_back is not None:
+        # the edge the route arrived on goes first, so lane_route rounds the corner at start_node like any other joint
+        # of a route (JOINT_ROUND_M); the link then starts where that rounded lane passes closest to the route end
+        # (start_xy) and its head is blended onto that point by build()
+        pre = (graph_back[came_from][u]["id"], came_from, u)
+        pts, eid_pt, _, _ = lane_route(net, [pre] + path_edges, node_xy, STEP_M)
+        q = np.asarray(start_xy, float) - np.array([ox, oy])
+        n_pre = int(math.ceil((graph_back[came_from][u]["length"] + 2.0 * JOIN_TOL_M) / STEP_M)) + 1
+        k = int(np.argmin(np.hypot(*(pts[:n_pre] - q).T)))
+        pts, eid_pt = pts[k:], eid_pt[k:]
+        length = float(np.sum(np.hypot(*np.diff(pts, axis=0).T)))
+    else:
+        pts, eid_pt, _, length = lane_route(net, path_edges, node_xy, STEP_M)
 
     def ms(ei):
         try:
@@ -122,19 +142,23 @@ def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
         if rid not in tiles:
             continue
         t = tiles[rid]
-        start_node, start_xy = None, L.get("start_epsg2180")
+        start_node, start_xy, came_from = None, L.get("start_epsg2180"), None
         for key, idx in (("after_route", -1), ("replaces_route", 0)):
             if L.get(key):
                 r = _route(L[key], regions)
                 reg = _region(L[key], regions)
                 start_node = r["graph_nodes"][idx]
+                if key == "after_route" and len(r["graph_nodes"]) >= 2:
+                    came_from = r["graph_nodes"][-2]
                 e, n = r["points_en"][idx]
                 start_xy = [e + reg["origin"]["x"], n + reg["origin"]["y"]]
-        lp = lane_path(rid, start_node, start_xy, L["end_epsg2180"], regions, L.get("via_epsg2180", []))
+        lp = lane_path(rid, start_node, start_xy, L["end_epsg2180"], regions, L.get("via_epsg2180", []), came_from)
         ox, oy = lp["origin"]
         assert abs(ox - t["anchorX"]) < 1e-6 and abs(oy - t["anchorY"]) < 1e-6, rid
         pts = [[p[0] + ox, p[1] + oy] for p in lp["points"]]   # EPSG:2180
         blend = {}
+        if came_from is not None:     # exact join on the route end (lane_path cut the rounded corner nearest to it)
+            blend["head"] = _blend(pts, start_xy, head=True)
         if L.get("head_from"):
             src = next(x for x in links if x["id"] == L["head_from"].split(":", 1)[1])
             blend["head"] = _blend(pts, [src["endX"], src["endY"]], head=True)

@@ -117,6 +117,20 @@ def clamp_under_decks(z, deck, deck_mask, thickness, ground_mask):
     return np.where(under, np.minimum(z, top - thickness - 0.3), z)
 
 
+def level_under_walled(z, fill, keep):
+    """c-p2-s23 (REVIEW s23 c-p1 P2, g3b_ext34_s1482): ground inside the outline of a walled ramp (`fill`: nodes
+    between the two wall lines + margin, build_world.walled_fill_mask) never stands above the nearest ground node
+    outside it. The fill is hidden under the deck, but a node kept just under the ramp surface made the terrain
+    triangles that cross the wall line climb through the wall face and its painted band (0.3-0.45 m above the
+    wall foot at E -387 N -104). Nodes of `keep` (ground roads / paved) are not moved. Returns (z, nodes lowered)."""
+    fill = np.asarray(fill, bool) & ~np.asarray(keep, bool)
+    if not fill.any() or fill.all():
+        return z, 0
+    _, (jj, ii) = ndimage.distance_transform_edt(fill, return_indices=True)
+    out = np.where(fill, np.minimum(z, z[jj, ii]), z)
+    return out, int((out < z - 1e-6).sum())
+
+
 def tidy(z, road, mask, dist, close_m=7, iters=150):
     """Visual cleanup after conform (visual review 2026-11-09, items 8):
     1. narrow enclosed strips (medians, splitter islands, gaps between a road and a yard, closed by

@@ -1,0 +1,2134 @@
+{
+"schema": "truck-sim-pl/overrides-generated/1",
+"generator": "tools/worldgen/qa/class_fixes_data.py (do not edit by hand; hand-authored entries go to overrides.yaml and win)",
+"status": "areas and LoD2 rise MEASURED; limits WORKING_VALUE",
+"params": {
+"shed_max_m2": 60.0,
+"house_max_m2": 250.0,
+"shed_h_m": 3.0,
+"roof_min_rise_m": 1.5,
+"max_roof_m2": 900.0
+},
+"summary": {
+"osm_only_shed": 99,
+"osm_only_house": 49,
+"pitched_service": 20
+},
+"overrides": [
+{
+"id": "class-fix:bdot:2002917F-2F57-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-2F57-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 6.0 m (dom parafialny): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-4564-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-4564-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 4.3 m (przedszkole): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-465C-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-465C-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 5.9 m (obiekt handlowo-usługowy): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-465D-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-465D-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 4.0 m (apteka): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-465F-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-465F-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 1.8 m (dom pogrzebowy): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-4663-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-4663-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 4.4 m (obiekt handlowo-usługowy): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-468F-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-468F-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 3.5 m (obiekt handlowo-usługowy): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-4690-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-4690-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 4.2 m (obiekt handlowo-usługowy): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-4691-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-4691-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 1.9 m (apteka): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-46DC-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-46DC-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 5.0 m (inny urząd administracji publicznej): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-4817-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-4817-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 6.5 m (dom kultury): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-5FDE-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-5FDE-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 2.8 m (budynek produkcyjny zwierząt hodowlanych): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-8E4F-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-8E4F-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 1.5 m (inny urząd administracji publicznej): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-9042-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-9042-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 2.6 m (budynek produkcyjny zwierząt hodowlanych): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:2002917F-AB81-5C99-E053-CC2BA8C01CFC",
+"target": {
+"building": "bdot:2002917F-AB81-5C99-E053-CC2BA8C01CFC"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 2.5 m (placówka operatora pocztowego): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:3438ca22-6972-456d-b211-15015aceb163",
+"target": {
+"building": "bdot:3438ca22-6972-456d-b211-15015aceb163"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1010 with a measured rise of 2.5 m (szpital): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "mono"
+}
+},
+{
+"id": "class-fix:bdot:3e33903c-7695-412a-b58b-24f4768f77b0",
+"target": {
+"building": "bdot:3e33903c-7695-412a-b58b-24f4768f77b0"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 3.2 m (szpital): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:72c9d46e-9956-46b7-b24f-f6b4de9c00b1",
+"target": {
+"building": "bdot:72c9d46e-9956-46b7-b24f-f6b4de9c00b1"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1010 with a measured rise of 3.1 m (szpital): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "mono"
+}
+},
+{
+"id": "class-fix:bdot:b760052c-e144-4894-80e9-0cfc0a3bdc3d",
+"target": {
+"building": "bdot:b760052c-e144-4894-80e9-0cfc0a3bdc3d"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 3.1 m (szpital): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:bdot:c23490de-4a48-4e64-9a36-6b14ca784a84",
+"target": {
+"building": "bdot:c23490de-4a48-4e64-9a36-6b14ca784a84"
+},
+"confidence": "medium",
+"reason": "LoD2 2017 type 1130 with a measured rise of 3.1 m (szpital): pitched roof, not flat",
+"verify": "street-level photo (gable or hip)",
+"set": {
+"roof_shape": "gable"
+}
+},
+{
+"id": "class-fix:osm:way/1427273958",
+"target": {
+"building": "osm:way/1427273958"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 12 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/1472686777",
+"target": {
+"building": "osm:way/1472686777"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 127 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/1472686778",
+"target": {
+"building": "osm:way/1472686778"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 51 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/1473555870",
+"target": {
+"building": "osm:way/1473555870"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 103 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/294345662",
+"target": {
+"building": "osm:way/294345662"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 93 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300652596",
+"target": {
+"building": "osm:way/300652596"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 134 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300652597",
+"target": {
+"building": "osm:way/300652597"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 33 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300652601",
+"target": {
+"building": "osm:way/300652601"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 33 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300654342",
+"target": {
+"building": "osm:way/300654342"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 32 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300655058",
+"target": {
+"building": "osm:way/300655058"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 172 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300655071",
+"target": {
+"building": "osm:way/300655071"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 124 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300656662",
+"target": {
+"building": "osm:way/300656662"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 55 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300657180",
+"target": {
+"building": "osm:way/300657180"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 45 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300657863",
+"target": {
+"building": "osm:way/300657863"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 23 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300657871",
+"target": {
+"building": "osm:way/300657871"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 23 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300660475",
+"target": {
+"building": "osm:way/300660475"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 28 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300660483",
+"target": {
+"building": "osm:way/300660483"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 35 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300660493",
+"target": {
+"building": "osm:way/300660493"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 20 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300663247",
+"target": {
+"building": "osm:way/300663247"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 13 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300664891",
+"target": {
+"building": "osm:way/300664891"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 96 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300664895",
+"target": {
+"building": "osm:way/300664895"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 47 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300665706",
+"target": {
+"building": "osm:way/300665706"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 12 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300666274",
+"target": {
+"building": "osm:way/300666274"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 22 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300666275",
+"target": {
+"building": "osm:way/300666275"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 27 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300666688",
+"target": {
+"building": "osm:way/300666688"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 46 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300667359",
+"target": {
+"building": "osm:way/300667359"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 72 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300667362",
+"target": {
+"building": "osm:way/300667362"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 53 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300667363",
+"target": {
+"building": "osm:way/300667363"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 51 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300667370",
+"target": {
+"building": "osm:way/300667370"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 39 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300668171",
+"target": {
+"building": "osm:way/300668171"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 25 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300670129",
+"target": {
+"building": "osm:way/300670129"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 138 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300671069",
+"target": {
+"building": "osm:way/300671069"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 67 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300671075",
+"target": {
+"building": "osm:way/300671075"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 48 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300671077",
+"target": {
+"building": "osm:way/300671077"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 62 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300671404",
+"target": {
+"building": "osm:way/300671404"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 36 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300671411",
+"target": {
+"building": "osm:way/300671411"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 67 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300672208",
+"target": {
+"building": "osm:way/300672208"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 37 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300672211",
+"target": {
+"building": "osm:way/300672211"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 47 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300673094",
+"target": {
+"building": "osm:way/300673094"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 44 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300673100",
+"target": {
+"building": "osm:way/300673100"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 31 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300673629",
+"target": {
+"building": "osm:way/300673629"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 65 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300674529",
+"target": {
+"building": "osm:way/300674529"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 38 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300674530",
+"target": {
+"building": "osm:way/300674530"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 113 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300674531",
+"target": {
+"building": "osm:way/300674531"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 39 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300674532",
+"target": {
+"building": "osm:way/300674532"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 53 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300675453",
+"target": {
+"building": "osm:way/300675453"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 34 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300675466",
+"target": {
+"building": "osm:way/300675466"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 40 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300675467",
+"target": {
+"building": "osm:way/300675467"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 46 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300675480",
+"target": {
+"building": "osm:way/300675480"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 34 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300675481",
+"target": {
+"building": "osm:way/300675481"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 57 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300676173",
+"target": {
+"building": "osm:way/300676173"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 73 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300676176",
+"target": {
+"building": "osm:way/300676176"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 59 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300676183",
+"target": {
+"building": "osm:way/300676183"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 87 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300676202",
+"target": {
+"building": "osm:way/300676202"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 92 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300676203",
+"target": {
+"building": "osm:way/300676203"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 197 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300676205",
+"target": {
+"building": "osm:way/300676205"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 84 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300676391",
+"target": {
+"building": "osm:way/300676391"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 68 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300676395",
+"target": {
+"building": "osm:way/300676395"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 80 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300677256",
+"target": {
+"building": "osm:way/300677256"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 113 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300677265",
+"target": {
+"building": "osm:way/300677265"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 46 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300677266",
+"target": {
+"building": "osm:way/300677266"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 104 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300677906",
+"target": {
+"building": "osm:way/300677906"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 58 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300678928",
+"target": {
+"building": "osm:way/300678928"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 39 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300679481",
+"target": {
+"building": "osm:way/300679481"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 18 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300679483",
+"target": {
+"building": "osm:way/300679483"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 32 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300679628",
+"target": {
+"building": "osm:way/300679628"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 23 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300681224",
+"target": {
+"building": "osm:way/300681224"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 37 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300681257",
+"target": {
+"building": "osm:way/300681257"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 37 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300682805",
+"target": {
+"building": "osm:way/300682805"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 217 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300682812",
+"target": {
+"building": "osm:way/300682812"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 82 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300682817",
+"target": {
+"building": "osm:way/300682817"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 114 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300771972",
+"target": {
+"building": "osm:way/300771972"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 39 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300771973",
+"target": {
+"building": "osm:way/300771973"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 32 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300771976",
+"target": {
+"building": "osm:way/300771976"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 55 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300771977",
+"target": {
+"building": "osm:way/300771977"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 55 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300771988",
+"target": {
+"building": "osm:way/300771988"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 102 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300772653",
+"target": {
+"building": "osm:way/300772653"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 92 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300772662",
+"target": {
+"building": "osm:way/300772662"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 33 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300775140",
+"target": {
+"building": "osm:way/300775140"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 57 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300775146",
+"target": {
+"building": "osm:way/300775146"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 28 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300775162",
+"target": {
+"building": "osm:way/300775162"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 38 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300776796",
+"target": {
+"building": "osm:way/300776796"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 44 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300777647",
+"target": {
+"building": "osm:way/300777647"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 81 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300777652",
+"target": {
+"building": "osm:way/300777652"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 46 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300778344",
+"target": {
+"building": "osm:way/300778344"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 37 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300780101",
+"target": {
+"building": "osm:way/300780101"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 54 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300780110",
+"target": {
+"building": "osm:way/300780110"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 69 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300780120",
+"target": {
+"building": "osm:way/300780120"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 58 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300781058",
+"target": {
+"building": "osm:way/300781058"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 33 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300781059",
+"target": {
+"building": "osm:way/300781059"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 38 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300781061",
+"target": {
+"building": "osm:way/300781061"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 53 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300782219",
+"target": {
+"building": "osm:way/300782219"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 86 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300782222",
+"target": {
+"building": "osm:way/300782222"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 75 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300782234",
+"target": {
+"building": "osm:way/300782234"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 94 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300782237",
+"target": {
+"building": "osm:way/300782237"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 32 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300782403",
+"target": {
+"building": "osm:way/300782403"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 54 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300782526",
+"target": {
+"building": "osm:way/300782526"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 34 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300782528",
+"target": {
+"building": "osm:way/300782528"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 47 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300782530",
+"target": {
+"building": "osm:way/300782530"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 20 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300782531",
+"target": {
+"building": "osm:way/300782531"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 27 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300782532",
+"target": {
+"building": "osm:way/300782532"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 39 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300782540",
+"target": {
+"building": "osm:way/300782540"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 73 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300782823",
+"target": {
+"building": "osm:way/300782823"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 63 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300782824",
+"target": {
+"building": "osm:way/300782824"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 98 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300782930",
+"target": {
+"building": "osm:way/300782930"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 27 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300783053",
+"target": {
+"building": "osm:way/300783053"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 54 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300783055",
+"target": {
+"building": "osm:way/300783055"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 50 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300783151",
+"target": {
+"building": "osm:way/300783151"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 20 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300783885",
+"target": {
+"building": "osm:way/300783885"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 58 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300783887",
+"target": {
+"building": "osm:way/300783887"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 52 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300783891",
+"target": {
+"building": "osm:way/300783891"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 30 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300785965",
+"target": {
+"building": "osm:way/300785965"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 41 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300785966",
+"target": {
+"building": "osm:way/300785966"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 48 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300785969",
+"target": {
+"building": "osm:way/300785969"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 34 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300785970",
+"target": {
+"building": "osm:way/300785970"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 36 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300785982",
+"target": {
+"building": "osm:way/300785982"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 156 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300786703",
+"target": {
+"building": "osm:way/300786703"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 63 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300786704",
+"target": {
+"building": "osm:way/300786704"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 75 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300786706",
+"target": {
+"building": "osm:way/300786706"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 53 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300786709",
+"target": {
+"building": "osm:way/300786709"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 24 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300786713",
+"target": {
+"building": "osm:way/300786713"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 37 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300786864",
+"target": {
+"building": "osm:way/300786864"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 41 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300787563",
+"target": {
+"building": "osm:way/300787563"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 82 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300787578",
+"target": {
+"building": "osm:way/300787578"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 36 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300787585",
+"target": {
+"building": "osm:way/300787585"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 19 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300787588",
+"target": {
+"building": "osm:way/300787588"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 36 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300787590",
+"target": {
+"building": "osm:way/300787590"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 40 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300787595",
+"target": {
+"building": "osm:way/300787595"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 55 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300787596",
+"target": {
+"building": "osm:way/300787596"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 50 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300787598",
+"target": {
+"building": "osm:way/300787598"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 37 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300788064",
+"target": {
+"building": "osm:way/300788064"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 120 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300788068",
+"target": {
+"building": "osm:way/300788068"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 81 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300798729",
+"target": {
+"building": "osm:way/300798729"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 39 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300799079",
+"target": {
+"building": "osm:way/300799079"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 102 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300799092",
+"target": {
+"building": "osm:way/300799092"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 112 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300799845",
+"target": {
+"building": "osm:way/300799845"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 41 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300801439",
+"target": {
+"building": "osm:way/300801439"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 45 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300801446",
+"target": {
+"building": "osm:way/300801446"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 29 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300801447",
+"target": {
+"building": "osm:way/300801447"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 24 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300801687",
+"target": {
+"building": "osm:way/300801687"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 77 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300801688",
+"target": {
+"building": "osm:way/300801688"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 92 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300801694",
+"target": {
+"building": "osm:way/300801694"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 53 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300801705",
+"target": {
+"building": "osm:way/300801705"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 209 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300802268",
+"target": {
+"building": "osm:way/300802268"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 36 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/300802269",
+"target": {
+"building": "osm:way/300802269"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 80 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/300802274",
+"target": {
+"building": "osm:way/300802274"
+},
+"confidence": "low",
+"reason": "OSM-only footprint 129 m2, no function, default height: house built after BDOT10k, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "dom"
+}
+},
+{
+"id": "class-fix:osm:way/495260818",
+"target": {
+"building": "osm:way/495260818"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 30 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+},
+{
+"id": "class-fix:osm:way/495260823",
+"target": {
+"building": "osm:way/495260823"
+},
+"confidence": "medium",
+"reason": "OSM-only footprint 27 m2, no function, default height: outbuilding, not an office",
+"verify": "orthophoto / street-level photo",
+"set": {
+"typology": "gospodarczy",
+"height_m": 3.0
+}
+}
+]
+}

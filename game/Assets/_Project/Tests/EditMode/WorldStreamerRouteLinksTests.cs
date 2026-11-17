@@ -87,6 +87,36 @@ namespace Game.Tests
             Assert.AreEqual(0, string.Compare(RouteLinks.DefaultDestination, "tykocin", StringComparison.Ordinal));
         }
 
+        /// <summary>seams-fix-s23: a drive started in knyszyn (-scene knyszyn) has the control route to Rynek as its path; per
+        /// destination one link `afterRoute: knyszyn` continues it (no replacement: the start route is already driven) and
+        /// ends where the corridor link of that destination ends, so the next link / route joins it.</summary>
+        [Test]
+        public void ShippedLinks_KnyszynStart_ContinuesFromRynek_ToTheSameSeam()
+        {
+            var g = TileGraph.LoadDefault();
+            var l = RouteLinks.LoadDefault(g);
+            foreach (var dest in new[] { "tykocin", "monki" })
+            {
+                RouteLinkData after = null, corridor = null;
+                int nAfter = 0;
+                foreach (var x in l.Links)
+                {
+                    if (!RouteLinks.Applies(x.destination, dest) || x.tile != "knyszyn") continue;
+                    if (x.afterRoute == "knyszyn") { after = x; nAfter++; }
+                    if (x.replacesRoute == "knyszyn") corridor = x;
+                }
+                Assert.AreEqual(1, nAfter, dest);
+                Assert.IsNotNull(corridor, dest);
+                Assert.IsTrue(string.IsNullOrEmpty(after.replacesRoute), after.id);
+                Assert.AreEqual(corridor.endX, after.endX, 0.05, after.id);
+                Assert.AreEqual(corridor.endY, after.endY, 0.05, after.id);
+            }
+            RouteLinkData rt = null, w = null;
+            foreach (var x in l.Links) { if (x.id == "knyszyn-rynek-to-dw671-w") rt = x; if (x.id == "knyszyn-w-dw671") w = x; }
+            Assert.IsNotNull(rt); Assert.IsNotNull(w);
+            Assert.AreEqual(rt.endX, w.startX, 0.05); Assert.AreEqual(rt.endY, w.startY, 0.05);
+        }
+
         [Test]
         public void DestinationFromArgs_DefaultTykocin_DashAndEqualsForms()
         {

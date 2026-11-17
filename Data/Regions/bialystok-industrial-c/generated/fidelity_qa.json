@@ -1237,7 +1237,7 @@
   "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
   "tools/worldgen/roads/authored_paint.py": "cfa394a6e9c34275a8e07176ac76336a035d50acd959c11a530b55ab1508451e",
   "tools/worldgen/roads/barrier_audit.py": "786d6dfd30de7dd51f60c793136839d43fcd9d214e103f392d613b68f1b18103",
-  "tools/worldgen/roads/build_world.py": "a7819aba00158441b68f12ad327dc558ec96bf74ff6e085a57ce63ba8a199e45",
+  "tools/worldgen/roads/build_world.py": "58c8d2175a4e8c9675218b51dee2d3f79d3906fd542bc4e4519ff068a04019c5",
   "tools/worldgen/roads/carriageway_split.py": "c79e82ddcf05d4363e231b4546f25dc37ada97e8d9cfe2f3974a91f2fe1b603d",
   "tools/worldgen/roads/closures.py": "608718189eb6680ca61538d47acb021d1be85e4dbbd001f315a0f2caffb45fa9",
   "tools/worldgen/roads/compact_roundabout.py": "ff0089a0fed14118214e58eb12e719595cd375f4709c61be7640be316df44625",
@@ -1247,15 +1247,16 @@
   "tools/worldgen/roads/geom.py": "8f9f732d90273b92cf23f00f65c6a2c7eed6d1f9a0b3cc211679a908f2788e21",
   "tools/worldgen/roads/gores.py": "1056a9b3e5b163b6804fe1a364318a5050464b5a5f6ae0adc64286a8f0265d32",
   "tools/worldgen/roads/junctions.py": "ccb0a1a97e98062b2cc7d254b1054dd73c9afc2131ea82db5e528b3d739b0fde",
-  "tools/worldgen/roads/markings.py": "2361a30500ceeda78812e51d3d2abd0d0030771ac35d32211f4b4f504a43808e",
-  "tools/worldgen/roads/meshing.py": "bd7368b1b4e667ee0f4d73912ef2045c9cf1a0bab3c59d9600c7b2b90d5e6a7e",
+  "tools/worldgen/roads/markings.py": "de74add8201e57d3274fbd2b4468a84bba1c4ca8a9936562c4089c304fe68255",
+  "tools/worldgen/roads/meshing.py": "8a50d3e4b98dd5cc67c6b386db6e2a5e0e8dd92c7bdcb704be68176862693970",
   "tools/worldgen/roads/network.py": "a7b6efd364d4befc321dc612d3e356f8396fd5c6f3c7ed8e0e259065ca41e952",
   "tools/worldgen/roads/p21_hatch.py": "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
-  "tools/worldgen/roads/pipeline.py": "b16aae0cd381f5b012c9110eeef284bb09900e7b77e5bfb5d77120895dd721cf",
+  "tools/worldgen/roads/pipeline.py": "17c4138dae865d73e5b99d9c87d80c62842cceb0be5619f3dfbdefb55f1f44de",
   "tools/worldgen/roads/profile.py": "667f2de75831484dd23a9f1506260d256802af1f974c0c003baf1137ec2b2a36",
   "tools/worldgen/roads/qa_ortho.py": "6e32d52950954922afceae3ee2f0aa379b8d42467c2d294b7e951750d39f3e6b",
   "tools/worldgen/roads/route.py": "e8bb7cd40bd2bf4dfef526aff16bafda35e2b8e68d64f2a8fb576818a453c5b4",
   "tools/worldgen/roads/route_km.py": "4e961cd1608d6265c3fd27edd2690830628bffec0ec8f65bec44659b06143086",
+  "tools/worldgen/roads/seam_p2a.py": "8b6d8169ee152c6dbf9329345246801df71eca88a3365f2bfb5fefaddd4f6f86",
   "tools/worldgen/roads/seam_taper.py": "534bfa9173f914844780309aa9ae5040734e080a3d838b985df2c1c2f0792244",
   "tools/worldgen/roads/standards.py": "872519994e97693c3dd2465e63f9ff944822a3e0984fb1781e9f3784929547b3",
   "tools/worldgen/roads/swept_path.py": "0112cbd81b02fd3c5930d385e6ba918b607011d4f6dd5f7a80809c0d62ae2d05",
@@ -7431,7 +7432,7 @@
   {
    "area_diffs_top": [
     {
-     "area_m2": 216.8,
+     "area_m2": 216.9,
      "kind": "ortho_only",
      "xy": [
       -303.126,
@@ -7487,19 +7488,19 @@
      ]
     },
     {
+     "area_m2": 31.8,
+     "kind": "ortho_only",
+     "xy": [
+      -326.692,
+      -193.178
+     ]
+    },
+    {
      "area_m2": 30.4,
      "kind": "ortho_only",
      "xy": [
       -362.783,
       -112.736
-     ]
-    },
-    {
-     "area_m2": 30.1,
-     "kind": "ortho_only",
-     "xy": [
-      -326.769,
-      -193.225
      ]
     },
     {
@@ -7519,11 +7520,11 @@
      ]
     },
     {
-     "area_m2": 23.6,
+     "area_m2": 23.9,
      "kind": "ortho_only",
      "xy": [
-      -372.952,
-      -112.832
+      -372.984,
+      -112.81
      ]
     }
    ],
@@ -7537,7 +7538,7 @@
      "area_m2": 131.1,
      "half_width_m": 2.47,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.366,
+     "ortho_road_frac": 0.367,
      "route_dist_m": 5.4,
      "verdict": "partial",
      "xy": [
@@ -7549,7 +7550,7 @@
      "area_m2": 412.9,
      "half_width_m": 3.89,
      "ortho_green_frac": 0.006,
-     "ortho_road_frac": 0.142,
+     "ortho_road_frac": 0.143,
      "route_dist_m": 5.0,
      "verdict": "present",
      "xy": [
@@ -7597,7 +7598,7 @@
      "area_m2": 247.2,
      "half_width_m": 3.05,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.009,
+     "ortho_road_frac": 0.01,
      "route_dist_m": 12.2,
      "verdict": "present",
      "xy": [
@@ -7609,9 +7610,9 @@
    "half_m": 70,
    "id": "08_signals",
    "iou": {
-    "gen_m2": 5707.2,
+    "gen_m2": 5707.1,
     "iou": 0.825,
-    "ortho_m2": 5893.4
+    "ortho_m2": 5897.2
    },
    "lane_into_island": [],
    "name": "Skrzyżowanie z sygnalizacją s 1355-1415",
@@ -7627,13 +7628,13 @@
      ]
     },
     {
-     "area_m2": 77.1,
+     "area_m2": 76.4,
      "green_frac": 0.0,
-     "on_gen_carriageway": 0.645,
+     "on_gen_carriageway": 0.642,
      "route_dist_m": 27.0,
      "xy": [
-      -330.468,
-      -183.165
+      -330.513,
+      -183.169
      ]
     }
    ],

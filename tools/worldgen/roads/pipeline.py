@@ -15,6 +15,7 @@ from . import junctions as J
 from . import meshing as M
 from . import network as Nw
 from . import profile as P
+from . import seam_p2a as SP
 from . import seam_taper as ST
 
 REPO = Path(__file__).resolve().parents[3]
@@ -45,7 +46,24 @@ def load_overrides(region_id: str) -> list:
     if not p.exists():
         return []
     data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
-    return data.get("overrides", []) or []
+    return generated_overrides(region_id) + (data.get("overrides", []) or [])
+
+
+def generated_overrides(region_id: str) -> list[dict]:
+    """Override entries written by a tool from data (knyszyn-look-s23), in the order of GENERATED_OVERRIDES:
+    overrides.class_fixes.json (qa/class_fixes_data.py: class of OSM-only footprints, pitched roofs with a measured
+    LoD2 rise), overrides.ortho_roofs.json (qa/roof_tones_ortho.py: roof tones read off the orthophoto). They come
+    BEFORE the hand-authored entries of overrides.yaml, so for the same target the authored `set` wins
+    (buildings_mesh.target_sets merges in order). No file = no entries."""
+    out = []
+    for name in GENERATED_OVERRIDES:
+        p = REGIONS / region_id / name
+        if p.exists():
+            out += json.loads(p.read_text(encoding="utf-8")).get("overrides", []) or []
+    return out
+
+
+GENERATED_OVERRIDES = ("overrides.class_fixes.json", "overrides.ortho_roofs.json")
 
 
 def effective_graph(region_id: str, graph: dict | None = None, applied: list | None = None,
@@ -152,6 +170,9 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards)
     ST.apply_shoulders(net, net.seam_tapers)         # ADR 0275: shoulder widths (ADR 0272 codes) follow the transitions
     juncs = J.build_junctions(net, pts)
+    # seams-fix-s23: the rest of a neighbour's P-2a junction approach that the seam cut (markings read net.seam_p2a)
+    net.seam_p2a = SP.plan(net, region_id)
+    net_stats["seam_p2a"] = [{"chain": k[0], "end": k[1], "solid_m": v} for k, v in sorted(net.seam_p2a.items())]
     # second pass now that the junction trims are known: side profiles beside another carriageway are checked
     # right up to the junction patch (ADR 0076: verge / kerb of one branch on the lane of the other)
     Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards, trims=True)

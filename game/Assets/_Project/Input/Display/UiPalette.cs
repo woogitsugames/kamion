@@ -42,6 +42,19 @@ namespace Game.Controls
             return 0.2126f * r + 0.7152f * g + 0.0722f * b;
         }
 
+        /// <summary>sRGB colour of <paramref name="fg"/> (with its alpha) drawn over an opaque <paramref name="bg"/>, blended in
+        /// linear light; opaque result (stacked translucent layers, e.g. the D87 menu panel over the darkened photo).</summary>
+        public static Color CompositeOver(Color fg, Color bg)
+        {
+            float a = Mathf.Clamp01(fg.a);
+            return new Color(ToSrgb(a * ToLinear(fg.r) + (1f - a) * ToLinear(bg.r)),
+                             ToSrgb(a * ToLinear(fg.g) + (1f - a) * ToLinear(bg.g)),
+                             ToSrgb(a * ToLinear(fg.b) + (1f - a) * ToLinear(bg.b)), 1f);
+        }
+
+        /// <summary>Linear light to sRGB channel (inverse of <see cref="ToLinear"/>).</summary>
+        public static float ToSrgb(float l) => l <= 0.0031308f ? l * 12.92f : 1.055f * Mathf.Pow(l, 1f / 2.4f) - 0.055f;
+
         /// <summary>Opaque text <paramref name="text"/> on a translucent <paramref name="panel"/> over <paramref name="scene"/>.</summary>
         public static float RatioOnTranslucent(Color text, Color panel, Color scene) =>
             Ratio(Luminance(text), CompositeLuminance(panel, scene));
@@ -90,7 +103,8 @@ namespace Game.Controls
         // ---- HUD (over the 3D view)
         /// <summary>HUD strip / mirror bezel. 96 % opaque: the text keeps AA over a white sky (linear-light blend).</summary>
         public static readonly Color HudPanel = C(17, 19, 21, 0.96f);
-        public static readonly Color MirrorBezel = C(11, 12, 13, 1f);
+        /// <summary>Mirror window edge: matte dark-grey housing plastic, not a black picture-in-picture frame (§7 p.6).</summary>
+        public static readonly Color MirrorBezel = C(40, 42, 45, 1f);
         public static readonly Color GaugeTrack = C(58, 61, 66);
         public static readonly Color GaugeFill = C(184, 181, 172);
 
@@ -104,6 +118,17 @@ namespace Game.Controls
 
         /// <summary>Worst-case scene behind a translucent HUD panel (overexposed sky / snow).</summary>
         public static readonly Color WorstSceneWhite = Color.white;
+
+        // ---- start menu over a still from the game (D87)
+        /// <summary>Uniform darkening of the whole menu photo (no gradient, no vignette).</summary>
+        public static readonly Color MenuPhotoScrim = C(8, 9, 10, 0.50f);
+        /// <summary>Matte panel behind the menu block, over the darkened photo. 92 %: accent text keeps AA over a white photo
+        /// (worst case 4,94:1; 90 % would give 4,49:1).</summary>
+        public static readonly Color MenuPanel = C(22, 24, 27, 0.92f);
+        /// <summary>Menu background when no photo ships (opaque, darker than <see cref="Panel"/>).</summary>
+        public static readonly Color MenuFallback = C(13, 14, 16);
+        /// <summary>Worst case behind menu text: panel over scrim over a white photo (linear-light blend, opaque result).</summary>
+        public static readonly Color MenuPanelWorst = UiContrast.CompositeOver(MenuPanel, UiContrast.CompositeOver(MenuPhotoScrim, WorstSceneWhite));
 
         /// <summary>How a pair is used: text needs 4.5:1, a graphic part (icon, frame, bar) 3:1.</summary>
         public enum Use { Text, Graphic }
@@ -147,6 +172,9 @@ namespace Game.Controls
             new Pair("ostrzeżenie czerwone: tekst / pole", Ink, TellRed, Use.Text),
             new Pair("ostrzeżenie bursztynowe: tekst / pole", InkOnLight, TellAmber, Use.Text),
             new Pair("ramka lusterka / biały obraz", MirrorBezel, Color.white, Use.Graphic),
+            new Pair("menu: tekst / panel nad zdjęciem", Ink, MenuPanelWorst, Use.Text),
+            new Pair("menu: tekst drugorzędny / panel nad zdjęciem", InkMuted, MenuPanelWorst, Use.Text),
+            new Pair("menu: akcent / panel nad zdjęciem", Accent, MenuPanelWorst, Use.Text),
         };
     }
 }

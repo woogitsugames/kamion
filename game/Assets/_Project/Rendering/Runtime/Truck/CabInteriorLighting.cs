@@ -61,6 +61,13 @@ namespace Game.Rendering
                  "overcast level (lower dash and footwell < 3 %). 0 = fixed cabViewEv only. WORKING_VALUE")]
         [Range(0f, 1f)] public float cabMeterStrength = 0.6f;
         [Tooltip("Maximum extra cab-view lift from the cab metering (stops); dusk must still read darker than day")] public float cabMeterMaxEv = 1.5f;
+        [Tooltip("D84: cab-view lift (stops) left at night; the day lift fades to it between twilightStartSunDeg and " +
+            "twilightFullSunDeg so the wheel is not brighter than the world outside. WORKING_VALUE")] public float nightViewEv = 0.45f;
+        [Tooltip("True sun elevation where the twilight fade starts / is complete [deg]")] public float twilightStartSunDeg = 3f;
+        public float twilightFullSunDeg = -5f;
+        [Tooltip("D84: warm spill of backlit legends / cluster / courtesy light on the trim at night (display-referred " +
+            "radiance per unit albedo; 0 = off). WORKING_VALUE")] public float panelGlow = 0.07f;
+        public Color panelGlowColor = new Color(1f, 0.80f, 0.58f);
 
         // Interior ambient key of the overcast reference preset (computed once; no per-frame allocation).
         static float s_RefKey = -1f;
@@ -110,6 +117,15 @@ namespace Game.Rendering
             if (key <= 1e-6f || s_RefKey <= 0f) return 0f;
             return Mathf.Clamp(cabMeterStrength * Mathf.Log(s_RefKey / key, 2f), 0f, Mathf.Max(0f, cabMeterMaxEv));
         }
+
+        /// <summary>D84: 0 by day (sun at or above <paramref name="startDeg"/>, e.g. LP_LowSun 9 deg), 1 at night (at or
+        /// below <paramref name="fullDeg"/>, e.g. LP_Dusk -6 deg), smooth in between. Mirror: CabTwilightTests.</summary>
+        public static float NightFactor(float sunElevationDeg, float startDeg, float fullDeg) =>
+            1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(fullDeg, startDeg, sunElevationDeg));
+
+        /// <summary>D84: cab-view lift in stops: the day lift fades to min(nightStops, cabViewStops) with the night factor.</summary>
+        public static float CabViewStops(float dayStops, float cabViewStops, float nightStops, float night) =>
+            Mathf.Lerp(dayStops, Mathf.Min(nightStops, cabViewStops), Mathf.Clamp01(night));
 
         public float LastMeterEv { get; private set; }
         public Vector3 LastFill { get; private set; }
@@ -202,6 +218,7 @@ namespace Game.Rendering
                 ? new Vector4(m.TrueSunElevationDeg, m.Exposure, 1f, 0f) : Vector4.zero);
             Transform t = cab != null ? cab : transform;
             Vector3 fill = Vector3.zero;
+            float night = 0f;
             if (m != null)
             {
                 Vector3 sLocal = t.InverseTransformDirection(m.SunDirection);
@@ -219,6 +236,12 @@ namespace Game.Rendering
                 // Neutral = the adapted white of the preset: with the phone-style WB of LP_LowSun (ADR 0043) the sun and
                 // the sky are adapted, plain white daylight was not (review r6 C-N5).
                 Color c = (m.SunColor * fluxSun + m.AdaptedWhite * fluxSky) * bounceTint * bounce;
+                // D84 polish (review P1-3 "no warm ambient at dusk"): spill of the backlit switch legends, cluster and
+                // footwell courtesy light on the surrounding trim. Display-referred like the legend cap of ADR 0112
+                // (exposure-independent, so it does not blow up with the night exposure), added to the bounce fill:
+                // the shader multiplies it by the albedo and the baked AO. WORKING_VALUE, no photometry.
+                night = NightFactor(m.TrueSunElevationDeg, twilightStartSunDeg, twilightFullSunDeg);
+                c += panelGlowColor * (Mathf.Max(0f, panelGlow) * night);
                 fill = new Vector3(c.r, c.g, c.b);
             }
             float gain = 1f, lift = 0f, enc = exteriorEnclosure, outside = 1f;
@@ -231,7 +254,10 @@ namespace Game.Rendering
                 // Tiers without the D23 LUT (Low): the cab surfaces write the D23 toe themselves (ADR 0044 addendum r7),
                 // so the cab view reads the same on Low and High (review r6: Low dusk black < 3 % 8.4 % vs High 1.8 %).
                 parity = !post && toeParity ? LookGrading.NoPostToeParity : Vector4.zero;
-                gain = Mathf.Pow(2f, cabViewEv + CabMeterEv(m, fill));
+                // D84 polish (review P1-3): after sunset the day-time phone lift (up to cabViewEv + cabMeterMaxEv =
+                // 2.5 stops) made the rim and hub brighter than the road outside. A driver's eye is adapted to the
+                // dark world; the lift fades to nightViewEv through twilight.
+                gain = Mathf.Pow(2f, CabViewStops(cabViewEv + CabMeterEv(m, fill), cabViewEv, nightViewEv, night));
                 outside = 0f;
                 float comp = Mathf.Clamp01(RenderOverrides.CabToe ?? toeCompensation);
                 if (env != null && env.Active != null && comp > 0f)

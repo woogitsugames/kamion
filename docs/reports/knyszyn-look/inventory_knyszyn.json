@@ -1,0 +1,1927 @@
+{
+ "region": "knyszyn",
+ "source_osm": "podlaskie-261108.osm.pbf",
+ "license": "OSM: ODbL 1.0 (c) OpenStreetMap contributors; footprints: GUGiK BDOT10k / LoD1 (see region.yaml)",
+ "objects": [
+  {
+   "osm": "node/13120861841",
+   "xy": [
+    760910.3,
+    612637.3
+   ],
+   "tags": {
+    "leisure": "fitness_centre"
+   },
+   "game": {
+    "id": "bdot:02d3438d-6fc2-4a9e-98d7-fa244907ad2d",
+    "function": "obiekt handlowo-usługowy",
+    "storeys": 1,
+    "height_m": 4.0,
+    "height_source": "bdot10k_storeys",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 522.6,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/13120861856",
+   "xy": [
+    761001.6,
+    612360.0
+   ],
+   "tags": {
+    "tourism": "attraction"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/13612937157",
+   "xy": [
+    760983.9,
+    612442.2
+   ],
+   "tags": {
+    "amenity": "police",
+    "name": "Komenda powiatowa policji w Mońkach posterunek w Knyszynie"
+   },
+   "game": {
+    "id": "bdot:2002917F-46DC-5C99-E053-CC2BA8C01CFC",
+    "function": "inny urząd administracji publicznej",
+    "storeys": 3,
+    "height_m": 12.35,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 14.4,
+    "lod2_eave_rel_m": 9.41,
+    "area_m2": 392.8,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/13613006703",
+   "xy": [
+    761039.0,
+    612442.9
+   ],
+   "tags": {
+    "amenity": "fast_food"
+   },
+   "game": {
+    "id": "bdot:2002917F-2EB9-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 2,
+    "height_m": 6.85,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 8.85,
+    "lod2_eave_rel_m": 1.74,
+    "area_m2": 95.7,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/13613006711",
+   "xy": [
+    760956.6,
+    612423.5
+   ],
+   "tags": {
+    "material": "metal",
+    "tourism": "artwork",
+    "name": "Pomnik Zygmunta Augusta w Knyszynie"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/1849116070",
+   "xy": [
+    761039.6,
+    612205.4
+   ],
+   "tags": {
+    "shop": "supermarket"
+   },
+   "game": {
+    "id": "bdot:2002917F-468D-5C99-E053-CC2BA8C01CFC",
+    "function": "dom towarowy lub handlowy",
+    "storeys": 1,
+    "height_m": 5.9,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 6.1,
+    "lod2_eave_rel_m": 4.27,
+    "area_m2": 1033.2,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/2788680399",
+   "xy": [
+    761762.2,
+    612059.8
+   ],
+   "tags": {
+    "tourism": "attraction"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/2788682479",
+   "xy": [
+    760712.7,
+    612401.7
+   ],
+   "tags": {
+    "tourism": "attraction"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/3047587676",
+   "xy": [
+    760936.7,
+    612395.4
+   ],
+   "tags": {
+    "historic": "monument"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/3047611676",
+   "xy": [
+    761025.0,
+    612451.1
+   ],
+   "tags": {
+    "shop": "convenience"
+   },
+   "game": {
+    "id": "bdot:2002917F-2E85-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 2,
+    "height_m": 8.2,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1040",
+    "height_lod2_2017_m": 9.92,
+    "lod2_eave_rel_m": 7.16,
+    "area_m2": 113.7,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3047617078",
+   "xy": [
+    760998.1,
+    612323.3
+   ],
+   "tags": {
+    "shop": "butcher"
+   },
+   "game": {
+    "id": "bdot:2002917F-2E16-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 2,
+    "height_m": 9.3,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1030",
+    "height_lod2_2017_m": 11.02,
+    "lod2_eave_rel_m": 7.88,
+    "area_m2": 129.5,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3047617079",
+   "xy": [
+    760980.9,
+    612309.8
+   ],
+   "tags": {
+    "shop": "clothes"
+   },
+   "game": {
+    "id": "bdot:2002917F-2DDD-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 1,
+    "height_m": 7.75,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 9.67,
+    "lod2_eave_rel_m": 6.31,
+    "area_m2": 128.6,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3047617080",
+   "xy": [
+    760985.9,
+    612314.5
+   ],
+   "tags": {
+    "shop": "hairdresser"
+   },
+   "game": {
+    "id": "bdot:2002917F-2DE1-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 2,
+    "height_m": 8.14,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1040",
+    "height_lod2_2017_m": 9.86,
+    "lod2_eave_rel_m": 7.05,
+    "area_m2": 136.1,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3047635472",
+   "xy": [
+    761082.3,
+    612418.5
+   ],
+   "tags": {
+    "shop": "convenience"
+   },
+   "game": {
+    "id": "bdot:2002917F-8DCC-5C99-E053-CC2BA8C01CFC",
+    "function": "obiekt handlowo-usługowy",
+    "storeys": 2,
+    "height_m": 8.2,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 10.33,
+    "lod2_eave_rel_m": 3.93,
+    "area_m2": 361.4,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3047635530",
+   "xy": [
+    761093.1,
+    612411.6
+   ],
+   "tags": {
+    "shop": "florist"
+   },
+   "game": {
+    "id": "bdot:2002917F-8DCB-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 2,
+    "height_m": 6.77,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 8.47,
+    "lod2_eave_rel_m": 2.9,
+    "area_m2": 101.1,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3047642676",
+   "xy": [
+    760899.5,
+    612262.0
+   ],
+   "tags": {
+    "shop": "convenience"
+   },
+   "game": {
+    "id": "bdot:2002917F-465C-5C99-E053-CC2BA8C01CFC",
+    "function": "obiekt handlowo-usługowy",
+    "storeys": 2,
+    "height_m": 7.41,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 9.65,
+    "lod2_eave_rel_m": 3.75,
+    "area_m2": 237.5,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3047647354",
+   "xy": [
+    760885.6,
+    612247.1
+   ],
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/3047648598",
+   "xy": [
+    760944.7,
+    612276.1
+   ],
+   "tags": {
+    "shop": "florist"
+   },
+   "game": {
+    "id": "bdot:2002917F-2D42-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 1,
+    "height_m": 7.86,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1040",
+    "height_lod2_2017_m": 10.27,
+    "lod2_eave_rel_m": 5.48,
+    "area_m2": 193.1,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3047648599",
+   "xy": [
+    760929.5,
+    612287.6
+   ],
+   "tags": {
+    "shop": "hardware"
+   },
+   "game": {
+    "id": "bdot:2002917F-465E-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 1,
+    "height_m": 7.44,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 8.86,
+    "lod2_eave_rel_m": 6.07,
+    "area_m2": 152.0,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3047699068",
+   "xy": [
+    760971.6,
+    612482.9
+   ],
+   "tags": {
+    "shop": "variety_store"
+   },
+   "game": {
+    "id": "bdot:2002917F-2DA9-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 1,
+    "height_m": 7.35,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1030",
+    "height_lod2_2017_m": 8.03,
+    "lod2_eave_rel_m": 6.64,
+    "area_m2": 99.1,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3048917815",
+   "xy": [
+    761097.8,
+    613063.1
+   ],
+   "tags": {
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy"
+   },
+   "game": {
+    "id": "bdot:2002917F-4691-5C99-E053-CC2BA8C01CFC",
+    "function": "apteka",
+    "storeys": 1,
+    "height_m": 4.85,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 6.01,
+    "lod2_eave_rel_m": 4.08,
+    "area_m2": 303.8,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3048917816",
+   "xy": [
+    761113.0,
+    613244.4
+   ],
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/3048936904",
+   "xy": [
+    761061.6,
+    611815.8
+   ],
+   "tags": {
+    "shop": "tyres"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/3048936908",
+   "xy": [
+    761499.1,
+    612128.7
+   ],
+   "tags": {
+    "shop": "trade"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/3048936918",
+   "xy": [
+    760906.7,
+    612538.7
+   ],
+   "tags": {
+    "amenity": "pharmacy",
+    "healthcare": "pharmacy"
+   },
+   "game": {
+    "id": "bdot:2002917F-465D-5C99-E053-CC2BA8C01CFC",
+    "function": "apteka",
+    "storeys": 1,
+    "height_m": 4.85,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 7.15,
+    "lod2_eave_rel_m": 3.14,
+    "area_m2": 197.1,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/3048953021",
+   "xy": [
+    760820.0,
+    613174.1
+   ],
+   "tags": {
+    "leisure": "playground"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/3048953023",
+   "xy": [
+    760872.2,
+    613179.9
+   ],
+   "tags": {
+    "historic": "wayside_shrine"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/3048954452",
+   "xy": [
+    760780.1,
+    613155.9
+   ],
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/3048977067",
+   "xy": [
+    761618.6,
+    611894.6
+   ],
+   "tags": {
+    "height": "45",
+    "man_made": "mast",
+    "tower:type": "communication"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/4870406414",
+   "xy": [
+    760785.8,
+    612378.7
+   ],
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "node/4870408057",
+   "xy": [
+    760761.6,
+    612339.8
+   ],
+   "tags": {
+    "office": "religion"
+   },
+   "game": {
+    "id": "bdot:2002917F-2F57-5C99-E053-CC2BA8C01CFC",
+    "function": "dom parafialny",
+    "storeys": 1,
+    "height_m": 8.38,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 10.38,
+    "lod2_eave_rel_m": 4.43,
+    "area_m2": 249.7,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/5978220384",
+   "xy": [
+    760943.2,
+    612450.0
+   ],
+   "tags": {
+    "tourism": "information",
+    "name": "Centrum Informacji Turystycznej"
+   },
+   "game": {
+    "id": "bdot:2002917F-4817-5C99-E053-CC2BA8C01CFC",
+    "function": "dom kultury",
+    "storeys": 3,
+    "height_m": 11.94,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 14.96,
+    "lod2_eave_rel_m": 8.48,
+    "area_m2": 476.3,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "node/9470741010",
+   "xy": [
+    760848.8,
+    612203.2
+   ],
+   "tags": {
+    "amenity": "place_of_worship",
+    "denomination": "roman_catholic",
+    "religion": "christian",
+    "name": "Kaplica domowa"
+   },
+   "game": {
+    "id": "osm:way/300787555",
+    "function": "convent",
+    "storeys": null,
+    "height_m": 6.0,
+    "height_source": "default",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 155.5,
+    "footprint_source": "osm"
+   }
+  },
+  {
+   "osm": "node/9470782767",
+   "xy": [
+    761129.8,
+    613236.4
+   ],
+   "tags": {
+    "amenity": "place_of_worship",
+    "denomination": "roman_catholic",
+    "religion": "christian",
+    "name": "Kaplica szpitalna"
+   },
+   "game": {
+    "id": "bdot:c8db4b26-1dba-4a78-be0b-a0b5292b4054",
+    "function": "szpital",
+    "storeys": 3,
+    "height_m": 11.74,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 12.38,
+    "lod2_eave_rel_m": 0.82,
+    "area_m2": 458.0,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/1037374387",
+   "xy": [
+    760915.0,
+    612627.0
+   ],
+   "area_m2": 517.0,
+   "tags": {
+    "building": "yes",
+    "shop": "supermarket"
+   },
+   "game": {
+    "id": "bdot:02d3438d-6fc2-4a9e-98d7-fa244907ad2d",
+    "function": "obiekt handlowo-usługowy",
+    "storeys": 1,
+    "height_m": 4.0,
+    "height_source": "bdot10k_storeys",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 522.6,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/1040185031",
+   "xy": [
+    761067.9,
+    612139.9
+   ],
+   "area_m2": 865.0,
+   "tags": {
+    "building": "yes",
+    "shop": "mall"
+   },
+   "game": {
+    "id": "bdot:e3f1f933-d35e-402b-8880-f5dd66ff45a7",
+    "function": "obiekt handlowo-usługowy",
+    "storeys": 2,
+    "height_m": 7.0,
+    "height_source": "bdot10k_storeys",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 551.0,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/1106354486",
+   "xy": [
+    761145.5,
+    612243.3
+   ],
+   "area_m2": 47.8,
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1"
+   },
+   "game": {
+    "id": "bdot:2002917F-475B-5C99-E053-CC2BA8C01CFC",
+    "function": "produkcyjny",
+    "storeys": 1,
+    "height_m": 2.99,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 47.8,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/1106354596",
+   "xy": [
+    761174.4,
+    613272.6
+   ],
+   "area_m2": 74.8,
+   "tags": {
+    "building": "hospital",
+    "building:levels": "3"
+   },
+   "game": {
+    "id": "bdot:cbfd5d80-f281-4cb9-a2bb-749945471b8d",
+    "function": "szpital",
+    "storeys": 3,
+    "height_m": 4.28,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1030",
+    "height_lod2_2017_m": 4.85,
+    "lod2_eave_rel_m": 3.5,
+    "area_m2": 74.8,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/1106354647",
+   "xy": [
+    760677.7,
+    613420.0
+   ],
+   "area_m2": 341.1,
+   "tags": {
+    "building": "government",
+    "building:levels": "1"
+   },
+   "game": {
+    "id": "bdot:2002917F-8E4F-5C99-E053-CC2BA8C01CFC",
+    "function": "inny urząd administracji publicznej",
+    "storeys": 1,
+    "height_m": 6.0,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 6.72,
+    "lod2_eave_rel_m": 5.21,
+    "area_m2": 341.1,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/1426780857",
+   "xy": [
+    761595.2,
+    611867.4
+   ],
+   "area_m2": 115.7,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/1426780858",
+   "xy": [
+    761662.6,
+    611969.5
+   ],
+   "area_m2": 739.0,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/1426780859",
+   "xy": [
+    761622.7,
+    612009.8
+   ],
+   "area_m2": 176.2,
+   "tags": {
+    "building": "stadium"
+   },
+   "game": {
+    "id": "bdot:956a91f7-ae33-4dbd-805b-84f2e42138c5",
+    "function": "klub sportowy",
+    "storeys": 1,
+    "height_m": 4.0,
+    "height_source": "bdot10k_storeys",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 178.8,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/1427273956",
+   "xy": [
+    760898.4,
+    612634.1
+   ],
+   "area_m2": 808.9,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/1427273958",
+   "xy": [
+    761009.0,
+    612383.0
+   ],
+   "area_m2": 12.4,
+   "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+   },
+   "game": {
+    "id": "osm:way/1427273958",
+    "function": "yes",
+    "storeys": null,
+    "height_m": 6.0,
+    "height_source": "default",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 12.4,
+    "footprint_source": "osm"
+   }
+  },
+  {
+   "osm": "way/1427273959",
+   "xy": [
+    761045.7,
+    612418.0
+   ],
+   "area_m2": 292.6,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/1472686780",
+   "xy": [
+    761423.0,
+    612029.1
+   ],
+   "area_m2": 5896.9,
+   "tags": {
+    "leisure": "pitch"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/1472686784",
+   "xy": [
+    761658.6,
+    612006.2
+   ],
+   "area_m2": 1242.7,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/1484732058",
+   "xy": [
+    760943.6,
+    612382.6
+   ],
+   "area_m2": 32.4,
+   "tags": {
+    "amenity": "fountain"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/294345008",
+   "xy": [
+    760958.3,
+    612454.9
+   ],
+   "area_m2": 929.7,
+   "tags": {
+    "amenity": "townhall",
+    "building": "yes",
+    "name": "Urząd miasta Knyszyn"
+   },
+   "game": {
+    "id": "bdot:2002917F-4817-5C99-E053-CC2BA8C01CFC",
+    "function": "dom kultury",
+    "storeys": 3,
+    "height_m": 11.94,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 14.96,
+    "lod2_eave_rel_m": 8.48,
+    "area_m2": 476.3,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/294345650",
+   "xy": [
+    760827.0,
+    612342.1
+   ],
+   "area_m2": 695.1,
+   "tags": {
+    "amenity": "place_of_worship",
+    "building": "church",
+    "denomination": "roman_catholic",
+    "heritage": "2",
+    "religion": "christian",
+    "start_date": "1579..1601",
+    "tourism": "attraction",
+    "wikidata": "Q16569028",
+    "wikimedia_commons": "File:Podlaskie_-_Knyszyn_-_Knyszyn_-_kosciol_pw._sw_Jana_Apostola_i_Ewangelisty_-_front.JPG",
+    "wikipedia": "pl:Kościół św. Jana Apostoła i Ewangelisty w Knyszynie",
+    "name": "Kościół pw. Świętego Jana Apostoła i Ewangelisty"
+   },
+   "game": {
+    "id": "bdot:2002917F-8DAE-5C99-E053-CC2BA8C01CFC",
+    "function": "kościół",
+    "storeys": null,
+    "height_m": 14.24,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 33.43,
+    "lod2_eave_rel_m": 5.85,
+    "area_m2": 661.3,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/294345657",
+   "xy": [
+    760727.8,
+    612425.3
+   ],
+   "area_m2": 197.8,
+   "tags": {
+    "building": "yes",
+    "material": "wood",
+    "tourism": "attraction",
+    "wikidata": "Q16540625",
+    "wikipedia": "pl:Dom_Klattów_w_Knyszynie",
+    "name": "Dom Klattów"
+   },
+   "game": {
+    "id": "bdot:2002917F-2F22-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 1,
+    "height_m": 4.47,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1030",
+    "height_lod2_2017_m": 6.06,
+    "lod2_eave_rel_m": 2.22,
+    "area_m2": 171.1,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300653251",
+   "xy": [
+    760965.1,
+    612432.3
+   ],
+   "area_m2": 281.2,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/300653253",
+   "xy": [
+    760969.5,
+    612546.4
+   ],
+   "area_m2": 376.9,
+   "tags": {
+    "amenity": "fire_station",
+    "building": "yes",
+    "name": "Ochotnicza Straż Pożarna w Knyszynie"
+   },
+   "game": {
+    "id": "bdot:b4c75c5f-8592-471f-896c-79297f75c4a5",
+    "function": "straż pożarna",
+    "storeys": 3,
+    "height_m": 6.23,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 14.84,
+    "lod2_eave_rel_m": 4.14,
+    "area_m2": 225.7,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300653941",
+   "xy": [
+    761339.0,
+    612194.7
+   ],
+   "area_m2": 839.7,
+   "tags": {
+    "building": "school"
+   },
+   "game": {
+    "id": "bdot:2002917F-4818-5C99-E053-CC2BA8C01CFC",
+    "function": "szkoła podstawowa",
+    "storeys": 3,
+    "height_m": 11.85,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 16.81,
+    "lod2_eave_rel_m": 4.06,
+    "area_m2": 632.7,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300653942",
+   "xy": [
+    761340.4,
+    612165.5
+   ],
+   "area_m2": 18.5,
+   "tags": {
+    "building": "school"
+   },
+   "game": {
+    "id": "osm:way/300653942",
+    "function": "school",
+    "storeys": null,
+    "height_m": 6.0,
+    "height_source": "default",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 18.5,
+    "footprint_source": "osm"
+   }
+  },
+  {
+   "osm": "way/300653943",
+   "xy": [
+    761352.5,
+    612167.2
+   ],
+   "area_m2": 434.7,
+   "tags": {
+    "building": "school"
+   },
+   "game": {
+    "id": "bdot:642a1760-969a-4220-98e1-4f0ee532472c",
+    "function": "szkoła podstawowa",
+    "storeys": 1,
+    "height_m": 11.57,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 411.6,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300653944",
+   "xy": [
+    761378.3,
+    612155.0
+   ],
+   "area_m2": 315.2,
+   "tags": {
+    "building": "school"
+   },
+   "game": {
+    "id": "bdot:11b66d98-6a03-4fcd-a6c3-ecafd4a77ec5",
+    "function": "szkoła podstawowa",
+    "storeys": 1,
+    "height_m": 6.13,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 292.8,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300653945",
+   "xy": [
+    761403.9,
+    612138.0
+   ],
+   "area_m2": 1443.8,
+   "tags": {
+    "building": "school"
+   },
+   "game": {
+    "id": "bdot:2002917F-4819-5C99-E053-CC2BA8C01CFC",
+    "function": "szkoła podstawowa",
+    "storeys": 1,
+    "height_m": 11.19,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 12.18,
+    "lod2_eave_rel_m": 8.32,
+    "area_m2": 1352.4,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300654341",
+   "xy": [
+    760868.2,
+    612581.1
+   ],
+   "area_m2": 167.2,
+   "tags": {
+    "amenity": "bank",
+    "building": "yes"
+   },
+   "game": {
+    "id": "bdot:2002917F-46D9-5C99-E053-CC2BA8C01CFC",
+    "function": "bank",
+    "storeys": 1,
+    "height_m": 9.59,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1040",
+    "height_lod2_2017_m": 11.03,
+    "lod2_eave_rel_m": 8.62,
+    "area_m2": 155.3,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300657900",
+   "xy": [
+    760780.8,
+    613107.6
+   ],
+   "area_m2": 141.3,
+   "tags": {
+    "building": "residential"
+   },
+   "game": {
+    "id": "bdot:2002917F-929A-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 2,
+    "height_m": 7.99,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 9.42,
+    "lod2_eave_rel_m": 7.1,
+    "area_m2": 116.6,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300660468",
+   "xy": [
+    760939.1,
+    612384.9
+   ],
+   "area_m2": 7441.2,
+   "tags": {
+    "leisure": "park"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/300660469",
+   "xy": [
+    761037.4,
+    612193.7
+   ],
+   "area_m2": 1136.3,
+   "tags": {
+    "building": "retail"
+   },
+   "game": {
+    "id": "bdot:2002917F-468D-5C99-E053-CC2BA8C01CFC",
+    "function": "dom towarowy lub handlowy",
+    "storeys": 1,
+    "height_m": 5.9,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 6.1,
+    "lod2_eave_rel_m": 4.27,
+    "area_m2": 1033.2,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300660473",
+   "xy": [
+    761092.5,
+    612384.6
+   ],
+   "area_m2": 163.9,
+   "tags": {
+    "amenity": "post_office",
+    "building": "commercial",
+    "name": "Poczta Polska"
+   },
+   "game": {
+    "id": "bdot:2002917F-AB81-5C99-E053-CC2BA8C01CFC",
+    "function": "placówka operatora pocztowego",
+    "storeys": 2,
+    "height_m": 8.85,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 10.19,
+    "lod2_eave_rel_m": 7.65,
+    "area_m2": 117.2,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300660485",
+   "xy": [
+    760962.6,
+    612286.1
+   ],
+   "area_m2": 316.4,
+   "tags": {
+    "amenity": "library",
+    "building": "yes",
+    "name": "Miejsko-Gminna Biblioteka Publiczna w Knyszynie"
+   },
+   "game": {
+    "id": "bdot:2002917F-46DA-5C99-E053-CC2BA8C01CFC",
+    "function": "policja",
+    "storeys": 3,
+    "height_m": 10.24,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1040",
+    "height_lod2_2017_m": 12.97,
+    "lod2_eave_rel_m": 7.85,
+    "area_m2": 217.0,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300663247",
+   "xy": [
+    761003.7,
+    612378.6
+   ],
+   "area_m2": 13.1,
+   "tags": {
+    "building": "yes",
+    "shop": "ticket"
+   },
+   "game": {
+    "id": "osm:way/300663247",
+    "function": "yes",
+    "storeys": null,
+    "height_m": 6.0,
+    "height_source": "default",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 13.1,
+    "footprint_source": "osm"
+   }
+  },
+  {
+   "osm": "way/300664488",
+   "xy": [
+    761063.2,
+    612432.2
+   ],
+   "area_m2": 68.2,
+   "tags": {
+    "building": "hut"
+   },
+   "game": {
+    "id": "bdot:1cce6b17-099b-49a7-a57d-182081cd6d92",
+    "function": "budynek wielorodzinny",
+    "storeys": 3,
+    "height_m": 10.0,
+    "height_source": "bdot10k_storeys",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 103.5,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300664494",
+   "xy": [
+    760869.6,
+    612255.6
+   ],
+   "area_m2": 523.9,
+   "tags": {
+    "building": "yes",
+    "shop": "supermarket"
+   },
+   "game": {
+    "id": "bdot:2002917F-465B-5C99-E053-CC2BA8C01CFC",
+    "function": "obiekt handlowo-usługowy",
+    "storeys": 1,
+    "height_m": 4.84,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 5.52,
+    "lod2_eave_rel_m": 4.2,
+    "area_m2": 456.8,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300664551",
+   "xy": [
+    760926.3,
+    612483.3
+   ],
+   "area_m2": 246.1,
+   "tags": {
+    "building": "commercial",
+    "shop": "funeral_directors"
+   },
+   "game": {
+    "id": "bdot:2002917F-465F-5C99-E053-CC2BA8C01CFC",
+    "function": "dom pogrzebowy",
+    "storeys": 1,
+    "height_m": 5.66,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 6.62,
+    "lod2_eave_rel_m": 4.84,
+    "area_m2": 200.2,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300664552",
+   "xy": [
+    760933.6,
+    612518.9
+   ],
+   "area_m2": 244.5,
+   "tags": {
+    "building": "yes",
+    "building:levels": "1"
+   },
+   "game": {
+    "id": "bdot:2002917F-307C-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek jednorodzinny",
+    "storeys": 1,
+    "height_m": 5.39,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 8.11,
+    "lod2_eave_rel_m": 3.3,
+    "area_m2": 244.5,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300665706",
+   "xy": [
+    760591.2,
+    611919.6
+   ],
+   "area_m2": 11.6,
+   "tags": {
+    "amenity": "fuel",
+    "building": "yes",
+    "fuel:lpg": "yes",
+    "man_made": "storage_tank"
+   },
+   "game": {
+    "id": "osm:way/300665706",
+    "function": "yes",
+    "storeys": null,
+    "height_m": 6.0,
+    "height_source": "default",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 11.6,
+    "footprint_source": "osm"
+   }
+  },
+  {
+   "osm": "way/300667349",
+   "xy": [
+    760824.3,
+    612386.1
+   ],
+   "area_m2": 297.6,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/300667358",
+   "xy": [
+    760909.2,
+    612541.8
+   ],
+   "area_m2": 197.1,
+   "tags": {
+    "building": "yes",
+    "building:levels": "1"
+   },
+   "game": {
+    "id": "bdot:2002917F-465D-5C99-E053-CC2BA8C01CFC",
+    "function": "apteka",
+    "storeys": 1,
+    "height_m": 4.85,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 7.15,
+    "lod2_eave_rel_m": 3.14,
+    "area_m2": 197.1,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300667853",
+   "xy": [
+    760905.8,
+    612410.2
+   ],
+   "area_m2": 360.1,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/300680687",
+   "xy": [
+    760779.3,
+    613162.4
+   ],
+   "area_m2": 83.8,
+   "tags": {
+    "building": "yes",
+    "shop": "convenience"
+   },
+   "game": {
+    "id": "bdot:2002917F-9150-5C99-E053-CC2BA8C01CFC",
+    "function": "obiekt handlowo-usługowy",
+    "storeys": 1,
+    "height_m": 4.53,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1030",
+    "height_lod2_2017_m": 5.48,
+    "lod2_eave_rel_m": 3.4,
+    "area_m2": 79.4,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300681831",
+   "xy": [
+    761085.7,
+    613066.3
+   ],
+   "area_m2": 303.8,
+   "tags": {
+    "building": "yes",
+    "building:levels": "1"
+   },
+   "game": {
+    "id": "bdot:2002917F-4691-5C99-E053-CC2BA8C01CFC",
+    "function": "apteka",
+    "storeys": 1,
+    "height_m": 4.85,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 6.01,
+    "lod2_eave_rel_m": 4.08,
+    "area_m2": 303.8,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300682802",
+   "xy": [
+    761113.7,
+    613225.2
+   ],
+   "area_m2": 204.4,
+   "tags": {
+    "amenity": "hospital",
+    "building": "hospital",
+    "name": "Samodzielny Publiczny Zakład Opieki Zdrowotnej im. dr. E.Jelskiego - Przychodnia Rejonowa w Knyszynie - Poradnia ogólna"
+   },
+   "game": {
+    "id": "bdot:2002917F-47DA-5C99-E053-CC2BA8C01CFC",
+    "function": "placówka ochrony zdrowia",
+    "storeys": 2,
+    "height_m": 8.92,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1040",
+    "height_lod2_2017_m": 10.42,
+    "lod2_eave_rel_m": 8.02,
+    "area_m2": 190.3,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300782240",
+   "xy": [
+    761149.0,
+    612903.0
+   ],
+   "area_m2": 65.4,
+   "tags": {
+    "building": "residential"
+   },
+   "game": {
+    "id": "bdot:2002917F-5F3C-5C99-E053-CC2BA8C01CFC",
+    "function": "budynek gospodarczy",
+    "storeys": 1,
+    "height_m": 4.68,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1010",
+    "height_lod2_2017_m": 5.26,
+    "lod2_eave_rel_m": 4.09,
+    "area_m2": 54.0,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300787555",
+   "xy": [
+    760845.8,
+    612201.8
+   ],
+   "area_m2": 155.5,
+   "tags": {
+    "building": "convent",
+    "denomination": "roman_catholic",
+    "religion": "christian"
+   },
+   "game": {
+    "id": "osm:way/300787555",
+    "function": "convent",
+    "storeys": null,
+    "height_m": 6.0,
+    "height_source": "default",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 155.5,
+    "footprint_source": "osm"
+   }
+  },
+  {
+   "osm": "way/300788053",
+   "xy": [
+    760931.8,
+    612118.4
+   ],
+   "area_m2": 1334.9,
+   "tags": {
+    "building": "greenhouse"
+   },
+   "game": {
+    "id": "bdot:2002917F-5BAC-5C99-E053-CC2BA8C01CFC",
+    "function": "szklarnia lub cieplarnia",
+    "storeys": 1,
+    "height_m": 4.0,
+    "height_source": "bdot10k_storeys",
+    "roof_type_lod2": null,
+    "height_lod2_2017_m": null,
+    "lod2_eave_rel_m": null,
+    "area_m2": 620.0,
+    "footprint_source": "bdot10k"
+   }
+  },
+  {
+   "osm": "way/300808073",
+   "xy": [
+    760822.3,
+    613153.0
+   ],
+   "area_m2": 197.2,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/300808074",
+   "xy": [
+    760818.1,
+    613173.3
+   ],
+   "area_m2": 1096.7,
+   "tags": {
+    "leisure": "playground"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/300808373",
+   "xy": [
+    760753.3,
+    613134.0
+   ],
+   "area_m2": 95.2,
+   "tags": {
+    "amenity": "parking"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/300811201",
+   "xy": [
+    761535.8,
+    611969.5
+   ],
+   "area_m2": 7712.6,
+   "tags": {
+    "leisure": "pitch"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/704368699",
+   "xy": [
+    760764.0,
+    613403.2
+   ],
+   "area_m2": 6433.1,
+   "tags": {
+    "amenity": "marketplace",
+    "name": "Targowisko \"Mój Rynek\""
+   },
+   "game": null
+  },
+  {
+   "osm": "way/750267065",
+   "xy": [
+    761321.0,
+    612085.4
+   ],
+   "area_m2": 599.8,
+   "tags": {
+    "leisure": "pitch"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/750267066",
+   "xy": [
+    761351.9,
+    612087.0
+   ],
+   "area_m2": 1774.9,
+   "tags": {
+    "leisure": "pitch"
+   },
+   "game": null
+  },
+  {
+   "osm": "way/750267069",
+   "xy": [
+    761349.1,
+    612117.9
+   ],
+   "area_m2": 21722.6,
+   "tags": {
+    "amenity": "school"
+   },
+   "game": {
+    "id": "bdot:2002917F-4819-5C99-E053-CC2BA8C01CFC",
+    "function": "szkoła podstawowa",
+    "storeys": 1,
+    "height_m": 11.19,
+    "height_source": "gugik_lod1_2024",
+    "roof_type_lod2": "1130",
+    "height_lod2_2017_m": 12.18,
+    "lod2_eave_rel_m": 8.32,
+    "area_m2": 1352.4,
+    "footprint_source": "bdot10k"
+   }
+  }
+ ],
+ "game_functions": {
+  "budynek gospodarczy": 870,
+  "budynek jednorodzinny": 716,
+  "yes": 149,
+  "garaż": 61,
+  "obiekt handlowo-usługowy": 21,
+  "produkcyjny": 17,
+  "magazyn": 11,
+  "szpital": 9,
+  "szkoła podstawowa": 7,
+  "siedziba firmy lub firm": 4,
+  "budynek produkcyjny zwierząt hodowlanych": 4,
+  "przedszkole": 3,
+  "budynek wielorodzinny": 3,
+  "straż pożarna": 3,
+  "internat lub bursa szkolna": 2,
+  "apteka": 2,
+  "inny urząd administracji publicznej": 2,
+  "placówka ochrony zdrowia": 2,
+  "szklarnia lub cieplarnia": 2,
+  "outbuilding": 2,
+  "warsztat remontowo-naprawczy": 1,
+  "dom parafialny": 1,
+  "dom pogrzebowy": 1,
+  "dom towarowy lub handlowy": 1,
+  "bank": 1,
+  "policja": 1,
+  "dom kultury": 1,
+  "kościół": 1,
+  "dom letniskowy": 1,
+  "placówka operatora pocztowego": 1,
+  "klub sportowy": 1,
+  "school": 1,
+  "convent": 1
+ },
+ "game_key_buildings": [
+  {
+   "id": "bdot:11b66d98-6a03-4fcd-a6c3-ecafd4a77ec5",
+   "function": "szkoła podstawowa",
+   "storeys": 1,
+   "height_m": 6.13,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": null,
+   "height_lod2_2017_m": null,
+   "lod2_eave_rel_m": null,
+   "area_m2": 292.8,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761377.2,
+    612154.9
+   ]
+  },
+  {
+   "id": "bdot:1cce6b17-099b-49a7-a57d-182081cd6d92",
+   "function": "budynek wielorodzinny",
+   "storeys": 3,
+   "height_m": 10.0,
+   "height_source": "bdot10k_storeys",
+   "roof_type_lod2": null,
+   "height_lod2_2017_m": null,
+   "lod2_eave_rel_m": null,
+   "area_m2": 103.5,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761064.7,
+    612437.3
+   ]
+  },
+  {
+   "id": "bdot:2002917F-2F9A-5C99-E053-CC2BA8C01CFC",
+   "function": "budynek wielorodzinny",
+   "storeys": 3,
+   "height_m": 10.21,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": "1000",
+   "height_lod2_2017_m": 10.28,
+   "lod2_eave_rel_m": 10.17,
+   "area_m2": 441.6,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761110.0,
+    612262.6
+   ]
+  },
+  {
+   "id": "bdot:2002917F-465F-5C99-E053-CC2BA8C01CFC",
+   "function": "dom pogrzebowy",
+   "storeys": 1,
+   "height_m": 5.66,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": "1130",
+   "height_lod2_2017_m": 6.62,
+   "lod2_eave_rel_m": 4.84,
+   "area_m2": 200.2,
+   "footprint_source": "bdot10k",
+   "xy": [
+    760925.0,
+    612483.6
+   ]
+  },
+  {
+   "id": "bdot:2002917F-468D-5C99-E053-CC2BA8C01CFC",
+   "function": "dom towarowy lub handlowy",
+   "storeys": 1,
+   "height_m": 5.9,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": "1130",
+   "height_lod2_2017_m": 6.1,
+   "lod2_eave_rel_m": 4.27,
+   "area_m2": 1033.2,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761035.2,
+    612194.8
+   ]
+  },
+  {
+   "id": "bdot:2002917F-46DE-5C99-E053-CC2BA8C01CFC",
+   "function": "budynek wielorodzinny",
+   "storeys": 3,
+   "height_m": 11.7,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": "1030",
+   "height_lod2_2017_m": 12.04,
+   "lod2_eave_rel_m": 11.4,
+   "area_m2": 275.8,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761113.1,
+    612125.3
+   ]
+  },
+  {
+   "id": "bdot:2002917F-4818-5C99-E053-CC2BA8C01CFC",
+   "function": "szkoła podstawowa",
+   "storeys": 3,
+   "height_m": 11.85,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": "1130",
+   "height_lod2_2017_m": 16.81,
+   "lod2_eave_rel_m": 4.06,
+   "area_m2": 632.7,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761334.5,
+    612190.6
+   ]
+  },
+  {
+   "id": "bdot:2002917F-4819-5C99-E053-CC2BA8C01CFC",
+   "function": "szkoła podstawowa",
+   "storeys": 1,
+   "height_m": 11.19,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": "1130",
+   "height_lod2_2017_m": 12.18,
+   "lod2_eave_rel_m": 8.32,
+   "area_m2": 1352.4,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761402.5,
+    612137.7
+   ]
+  },
+  {
+   "id": "bdot:2002917F-8DAE-5C99-E053-CC2BA8C01CFC",
+   "function": "kościół",
+   "storeys": null,
+   "height_m": 14.24,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": "1130",
+   "height_lod2_2017_m": 33.43,
+   "lod2_eave_rel_m": 5.85,
+   "area_m2": 661.3,
+   "footprint_source": "bdot10k",
+   "xy": [
+    760824.4,
+    612342.5
+   ]
+  },
+  {
+   "id": "bdot:642a1760-969a-4220-98e1-4f0ee532472c",
+   "function": "szkoła podstawowa",
+   "storeys": 1,
+   "height_m": 11.57,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": null,
+   "height_lod2_2017_m": null,
+   "lod2_eave_rel_m": null,
+   "area_m2": 411.6,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761348.3,
+    612168.7
+   ]
+  },
+  {
+   "id": "bdot:657b1e91-5ae4-48d4-b875-fb94d449ce8f",
+   "function": "szkoła podstawowa",
+   "storeys": 1,
+   "height_m": 4.0,
+   "height_source": "bdot10k_storeys",
+   "roof_type_lod2": null,
+   "height_lod2_2017_m": null,
+   "lod2_eave_rel_m": null,
+   "area_m2": 5.8,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761329.5,
+    612170.8
+   ]
+  },
+  {
+   "id": "bdot:78ca2f85-644c-4e3b-9400-d02eb0907595",
+   "function": "szkoła podstawowa",
+   "storeys": 1,
+   "height_m": 8.44,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": null,
+   "height_lod2_2017_m": null,
+   "lod2_eave_rel_m": null,
+   "area_m2": 165.2,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761346.2,
+    612211.2
+   ]
+  },
+  {
+   "id": "bdot:f1fce145-2816-40e6-adef-5add56f0187d",
+   "function": "szkoła podstawowa",
+   "storeys": 1,
+   "height_m": 3.9,
+   "height_source": "gugik_lod1_2024",
+   "roof_type_lod2": null,
+   "height_lod2_2017_m": null,
+   "lod2_eave_rel_m": null,
+   "area_m2": 32.6,
+   "footprint_source": "bdot10k",
+   "xy": [
+    761366.5,
+    612158.7
+   ]
+  }
+ ]
+}

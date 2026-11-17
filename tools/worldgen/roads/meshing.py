@@ -13,7 +13,7 @@ import numpy as np
 
 from . import standards as S
 from .geom import ear_clip, polygon_area
-from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, lane_w_of, side_params, side_profile
+from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, lane_w_of, side_extent, side_params, side_profile
 
 
 @dataclass
@@ -212,9 +212,18 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
                 # E 786 N -831, E 321 N -603, E 48 N -460) or a ditch depth used as a kerb height (a concrete fin
                 # where the hidden kerb starts). The borrowed station continues this run's own height instead.
                 prm[0] = (kr, prm[1][1], *prm[0][2:])
+            uclip = None
+            if (r and not coarse and kr in (RURAL, MEDIAN_RURAL) and _wl is not None and params[lo][0] == URBAN
+                    and c.interp(_wl.astype(float), st[lo]) > 0.5):
+                # c-p2-s23 (REVIEW s23 c-p1 P2, g3b_ext34_s1482): the station borrowed from a walled ramp is a deck
+                # station - the rural shoulder + ditch must not reach beyond its cap edge = the wall line. It stood
+                # 1.3 m in front of the wall face at the height of the painted band (E -387.65 N -102.12, z 132.79:
+                # the green zigzag across the red band).
+                uclip = np.full(hi - lo, np.inf)
+                uclip[0] = side_extent(*params[lo])
             _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
                         br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}",
-                        noflange=None if nofl is None else nofl[sl], capm=capm[sl])
+                        noflange=None if nofl is None else nofl[sl], capm=capm[sl], uclip=uclip)
         return
     _emit_strip(buf, G, N * sgn, zg, params, kap, hw, side == "R",
                 br, coarse, c.id + ":" + side, noflange=nofl, capm=capm)
@@ -368,9 +377,11 @@ def back_flange_batter(buf, hard_mask, hf):
     return rep
 
 
-def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None, capm=None):
+def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None, capm=None, uclip=None):
     """G: gutter points (n,2), OUT: unit outward vectors (n,2) (may be miter-scaled), zg gutter z,
-    params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside)."""
+    params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside).
+    uclip: per-point maximum lateral reach of the profile (inf = free); the skirt of a span next to a clipped point
+    is not meshed (the retaining wall stands there, build_bridge_extras)."""
     n = len(G)
     if n < 2:
         return
@@ -391,6 +402,8 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
         R = 1.0 / np.maximum(kap_toward[inside], 1e-6)
         allow = np.maximum(0.3, 0.9 * R - hw[inside] if np.ndim(hw) else 0.9 * R - hw)
         scale[inside] = np.minimum(1.0, allow / np.maximum(umax[inside], 1e-6))
+    if uclip is not None:
+        scale = np.minimum(scale, np.asarray(uclip, float) / np.maximum(umax, 1e-6))
     # rural ditch profiles squeezed on the inside of a curve keep their 1:1.5 slopes: depths shrink with the
     # widths (a shallower ditch), otherwise a 0.6 m ditch compressed to 40 % reads as a 55-60 deg green wall
     # (REVIEW r4 W-H5, Andersa slip lane, ADR 0033). The bottom skirt keeps its full depth.
@@ -417,7 +430,7 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
                 d0, d1 = d0 * vscale[i], (d0 * vscale[i] + (d1 - d0)) if vert else d1 * vscale[i]
             p0 = G[i] + OUT[i] * (u0 * scale[i])
             p1 = G[i] + OUT[i] * (u1 * scale[i])
-            if batter and (br is None or not br[i]):
+            if batter and (br is None or not br[i]) and not (uclip is not None and np.isfinite(uclip[i])):
                 p1 = p1 + OUT[i] * (abs(d1 - d0) * S.EMBANKMENT_SLOPE)
             rows.append([[p0[0], p0[1], zg[i] + d0], [p1[0], p1[1], zg[i] + d1]])
         V = np.array(rows).reshape(-1, 3)
@@ -448,6 +461,10 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
                                    np.array([[profs[i][k][0] * scale[i], profs[i][k][2] * scale[i]] for i in range(n)]).ravel()])
         T = grid_tris(n, 2, flip=flip)
         vertical = rw < 1e-6
+        if uclip is not None and vertical and k == nseg - 1 and len(T):
+            ts = np.minimum(T.min(1) // 2, n - 2)
+            cl = np.isfinite(np.asarray(uclip, float))
+            T = T[~(cl[ts] | cl[ts + 1])]
         is_flange = vertical and k == nseg - 1 and not coarse
         if is_flange and noflange is not None and len(T):
             # ADR 0110: behind a verge strip (meshing._emit_verge) the buried flange is never seen - not meshed
@@ -575,6 +592,33 @@ def cylinder(buf, layer, mat, center_xy, r, z0, z1, src, seg=14):
     T = [(i, i + 1, n + i + 1) for i in range(seg)] + [(i, n + i + 1, n + i) for i in range(seg)]
     UV = np.column_stack([np.tile(a * r, 2), np.repeat([0.0, z1 - z0], n)])
     buf.add(layer, mat, V, UV, np.array(T), src=src)
+
+
+WALL_CONE_GAP_M = 0.03      # the cone lies this far in front of the wall face (the wall strip stands 0.02 m out)
+
+
+def wall_end_cone(rim, z_toe, wall_prev, out):
+    """Quarter cone of the grass batter around the end of a retaining wall. rim: wall top end = shoulder rim (x, y, z),
+    z_toe: foot of the batter, wall_prev: previous wall top point (direction of the wall line), out: unit outward
+    normal at the end. Returns (V, T) with both windings, or None for a degenerate end (no fall)."""
+    rim = np.asarray(rim, float)
+    out = np.asarray(out, float)
+    fall = float(rim[2] - z_toe)
+    d = np.asarray(wall_prev, float)[:2] - rim[:2]
+    seg = float(np.hypot(*d))
+    if fall < 0.05 or seg < 1e-3:
+        return None
+    d /= seg
+    run = fall * S.EMBANKMENT_SLOPE
+    back = min(run, 0.9 * seg)
+    a = np.array([rim[0] + out[0] * WALL_CONE_GAP_M, rim[1] + out[1] * WALL_CONE_GAP_M, rim[2]])
+    b_ = np.append(rim[:2] + out * run, z_toe)
+    m = out * run + d * back
+    m_ = np.append(rim[:2] + m / max(float(np.hypot(*m)), 1e-9) * min(run, float(np.hypot(*m))), z_toe)
+    c_ = np.append(rim[:2] + d * back + out * WALL_CONE_GAP_M, z_toe)
+    V = np.array([a, b_, m_, c_])
+    T = np.array([[0, 1, 2], [0, 2, 3], [0, 2, 1], [0, 3, 2]])
+    return V, T
 
 
 def build_bridge_extras(buf, c, st, P, N, hw, br):
@@ -705,6 +749,18 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                                c.id + ":ramp_wall", both=False, v_abs=vis and mat == "ramp_wall_blocks")
                         if sgn > 0:
                             buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
+                    # c-p2-s23 (REVIEW s23 c-p1 P2, g3b_ext34_s1482): where the wall ends beside a rural shoulder the
+                    # grass batter of that shoulder started with an open end and the wall stood as a bare slab in
+                    # front of it. The batter now turns around the wall end as a quarter cone (two facets,
+                    # 1 : EMBANKMENT_SLOPE) lying against the wall face, so the exposed face runs out diagonally
+                    # into the ground like a wing wall.
+                    for r_, b_ in ((0, 1), (len(wr) - 1, len(wr) - 2)):
+                        if wsel[wr[r_]] or side_params(c, side, float(ss[wr[r_]]))[0] not in (RURAL, MEDIAN_RURAL):
+                            continue
+                        cone = wall_end_cone(top[r_], float(outer[side][0][wr[r_]][2]), top[b_], nn0[wr[r_]] * sgn)
+                        if cone is not None:
+                            buf.add("bridge", "verge_grass", cone[0], cone[0][:, :2].copy(), cone[1], footprint=False,
+                                    src=c.id + ":wall_cone")
         # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =
         # handrail band at 1.0-1.1 m + mid rail at 0.45-0.60 m + posts every 2 m, set 0.15 m in from the edge
         tt, nn = c.line.frame(ss)
@@ -1009,6 +1065,57 @@ class PatchHeight:
         return self.blend(p)
 
 
+ARC_SPIKE_M = 0.05      # seams-fix-s23: an outline corner point this far off the running median is a spike (WORKING_VALUE)
+ARC_SPIKE_HALF = 3      # half window of that median [stations]
+
+
+ARC_GRADE_MAX = 0.15    # = the kerb-line limit of build_corner_strips above which a corner gets no grass
+
+
+def despike_arcs(zb, tags, pts=None, tol=ARC_SPIKE_M, half=ARC_SPIKE_HALF):
+    """Heights of the corner (`arc`) points of a junction outline with isolated spikes replaced by the running median
+    of the closed outline (window 2 * half + 1). seams-fix-s23: on the compact roundabout of Knyszyn the IDW blend of
+    PatchHeight put 1-3 corner points 0.13-0.17 m below their neighbours (a nearby arm surface taking over at
+    `on_arm` weight) - a notch in the kerb foot, and build_corner_strips then laid NO grass along the whole corner
+    (kerb line > 0.15 m/m), which left the 0.5 m drop behind the DK65 south-west kerb. A median keeps ramps and
+    steps wider than the window; mouth (`end`) and `gutter` points keep the arm's exact section."""
+    zb = np.asarray(zb, float)
+    n = len(zb)
+    if n < 2 * half + 1:
+        return zb
+    k = np.arange(-half, half + 1)
+    med = np.median(zb[(np.arange(n)[:, None] + k[None, :]) % n], axis=1)
+    arc = np.array([t[0] == "arc" for t in tags])
+    bad = arc & (np.abs(zb - med) > tol)
+    if bad.any() and not bad.all():
+        # flagged points: linear between the nearest good points on both sides (the median itself is one rank off on a
+        # sloping corner)
+        zb = zb.copy()
+        good = np.nonzero(~bad)[0]
+        for i in np.nonzero(bad)[0]:
+            lo = good[good < i][-1] if (good < i).any() else good[-1] - n
+            hi = good[good > i][0] if (good > i).any() else good[0] + n
+            zb[i] = zb[lo % n] + (zb[hi % n] - zb[lo % n]) * (i - lo) / (hi - lo)
+    if pts is None:
+        return zb
+    # a step left between two arc points (two surfaces of the blend meeting: 0.16 m in 0.54 m on the DK65 south-west
+    # corner) becomes a straight ramp over 2 * half + 1 outline segments of arc points (a corner only, never a mouth)
+    pts = np.asarray(pts, float)
+    ds = np.hypot(*(pts[(np.arange(n) + 1) % n] - pts).T)
+    for i in range(n):
+        i1 = (i + 1) % n
+        if abs(zb[i1] - zb[i]) / max(ds[i], 0.25) <= ARC_GRADE_MAX:
+            continue
+        idx = [(i + d) % n for d in range(-half, half + 2)]
+        if not all(arc[q] for q in idx):
+            continue
+        along = np.concatenate([[0.0], np.cumsum([ds[q] for q in idx[:-1]])])
+        za, zz = zb[idx[0]], zb[idx[-1]]
+        for q, a_ in zip(idx[1:-1], along[1:-1]):
+            zb[q] = za + (zz - za) * a_ / along[-1]
+    return zb
+
+
 def _kernel(poly):
     """Kernel of a CCW polygon (intersection of the inner half-planes of all edges), convex or empty."""
     lo, hi = poly.min(0) - 1, poly.max(0) + 1
@@ -1068,6 +1175,8 @@ def build_patch(buf, net, j, coarse=False, stats=None):
     ph = PatchHeight(j)
     poly = np.array([p for p, _ in bnd])
     zb = np.array([ph.boundary_z(j, p, tag) for p, tag in bnd])
+    if getattr(j, "compact", None) is not None:
+        zb = despike_arcs(zb, [tag for _, tag in bnd], np.array([p for p, _ in bnd]))
     mat = "collision_asphalt" if coarse else _patch_mat(net, j)
     layer = "collision" if coarse else ("bridge" if _patch_on_bridge(j) else "road")
     c = _star_center(poly)

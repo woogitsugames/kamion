@@ -104,6 +104,16 @@ M = {
     "roof_tiles_red": {"color": [0.20, 0.075, 0.05], "rough": 0.75, "texture_set": "roof_tiles", "set_tile": True},
     "roof_tiles_brown": {"color": [0.11, 0.065, 0.045], "rough": 0.75, "texture_set": "roof_tiles", "set_tile": True},
     "roof_metal_graphite": {"color": [0.055, 0.057, 0.06], "rough": 0.5, "texture_set": "roof_tiles", "set_tile": True},
+    # knyszyn-look-s23: grey roof sheet (corrugated / standing-seam steel, fibre cement), by override only
+    # (orthophoto-read roofs, buildings_mesh.ROOF_OVERRIDES). Review 2026-11-17 P1-1: at 0.30 WITHOUT tint_linear (the
+    # name missed the _TINT_LINEAR prefixes, so 0.30 was written as an sRGB tint) it rendered sRGB 178-211 in sun and
+    # read as snow. Now tint_linear (prefix "roof_sheet_") and 0.15: owner drone photo 10 (local only) has grey sheet
+    # house roofs at sRGB 121-137 next to white walls at ~210 (ratio ~0.6 -> ~145 next to the 239 plaster of the game).
+    # WORKING_VALUE. P2-1: the corrugated set (CC0 corrugated_iron_03, 2 m) instead of the painted roof-tile courses;
+    # mesh V runs up the slope, so the ribs run down it as on a real sheet roof.
+    # Owner 2026-11-17 (s23b, after the 0.15 renders: sRGB 135-152 in sun): "za jasne" -> 0.105, WORKING_VALUE.
+    "roof_sheet_grey": {"color": [0.105, 0.108, 0.112], "rough": 0.55, "metal": 0.2, "texture_set": "trapezoid_sheet",
+                        "set_tile": True},
 
     "glass": {"color": [0.03, 0.035, 0.04], "rough": 0.05},
     "window_frame": {"color": [0.6, 0.6, 0.58], "rough": 0.5},
@@ -480,7 +490,7 @@ M = {
 # roofs, doors) - the materials this task renders and reviews; the other modulation materials keep the look they
 # were reviewed with until the lead switches the flag on globally (open point in the ADR).
 _TINT_LINEAR = ("plaster_", "plinth_", "panel_concrete", "brick_red", "chimney_brick", "hall_wall_", "hall_plinth",
-                "roof_tiles_", "roof_metal_", "wood_planks", "garage_door", "dock_door", "balcony_panel")
+                "roof_tiles_", "roof_metal_", "roof_sheet_", "wood_planks", "garage_door", "dock_door", "balcony_panel")
 for _k, _v in M.items():
     if _k.startswith(_TINT_LINEAR) and "texture_set" in _v:
         _v["tint_linear"] = True

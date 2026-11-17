@@ -32,6 +32,23 @@ links:
     end_epsg2180: [760587.0, 612073.7]    # DK65 Obozowa on the knyszyn | knyszyn-w seam = knyszyn-w route entry (ADR 0209)
     tail_to: route:knyszyn-w
     note: "DK65 Obozowa from knyszyn-s -> roundabout DK65/DW671 -> DK65 west to the seam with knyszyn-w (towards Monki)"
+  # seams-fix-s23: a drive STARTED in knyszyn (`-scene knyszyn`) has the control route as its path, which ends at Rynek;
+  # nothing joined there, so the autopilot stopped. These links continue from the route end without turning round
+  # (route_links.py drops the edge back to the node the route came from): round Rynek -> Grodzienska -> Tykocka west ->
+  # roundabout split -> the exit arm of the destination, ending on the same seam points as the links above.
+  - id: knyszyn-rynek-to-dw671-w
+    tile: knyszyn
+    destination: tykocin
+    after_route: knyszyn                  # starts at the end of the knyszyn control route (Rynek, graph node n2979322319)
+    end_epsg2180: [760587.0, 611964.5]    # = end of knyszyn-dk65-to-dw671-w (DW671 Tykocka, knyszyn | knyszyn-w seam)
+    note: "Rynek (end of the knyszyn control route) -> Grodzienska -> DW671 Tykocka west -> seam with knyszyn-w"
+  - id: knyszyn-rynek-to-dk65-w
+    tile: knyszyn
+    destination: monki
+    after_route: knyszyn
+    end_epsg2180: [760587.0, 612073.7]    # = end of knyszyn-dk65-to-dk65-w = knyszyn-w route entry (ADR 0209)
+    tail_to: route:knyszyn-w
+    note: "Rynek (end of the knyszyn control route) -> Grodzienska -> Tykocka -> roundabout split -> DK65 west to the seam"
   - id: knyszyn-w-dw671
     tile: knyszyn-w
     destination: tykocin

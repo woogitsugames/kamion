@@ -51,6 +51,12 @@ def apply_runtime_maps(output):
     document = json.loads(CONFIG.read_text(encoding='utf-8-sig'))
     for profile in ('leather', 'plastic'):
         entry = document.get(profile)
+        if entry and profile == 'plastic' and entry.get('mode') == 'procedural_stipple':
+            # D84: moulded plastic is a synthesised stipple, not a derivative of the leather scan (plastic_grain.py).
+            subprocess.run(['uv', 'run', '--project', str(ROOT / 'tools/worldgen'), 'python', str(Path(__file__).with_name('plastic_grain.py')),
+                            '--output', str(output)], cwd=ROOT, check=True)
+            print('CAB_PLASTIC profile=plastic source=procedural_stipple scan=False')
+            continue
         if not entry or not entry['enabled']:
             continue
         alpha = Path(output) / f'High/T_Cab_{profile.title()}_Detail.png'
