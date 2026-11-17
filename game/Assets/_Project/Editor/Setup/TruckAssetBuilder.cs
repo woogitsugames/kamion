@@ -1303,6 +1303,9 @@ namespace Game.Editor.Setup
             QL("truck-side", new Vector3(-9.5f, 1.7f, 1.9f), new Vector3(0f, 1.6f, 1.9f), 42f, "r10: tractor driver side, square on (door, steps, arch, tank, skirt, rear wheels, gap to the trailer).");
             QL("truck-rear34", new Vector3(-5.2f, 2.0f, -3.6f), new Vector3(-0.4f, 1.3f, 2.2f), 45f, "r10: tractor from behind the cab, driver side (tank, rear mudguard, cab back, coiled lines, trailer front).");
             QL("trailer-side", new Vector3(-11.5f, 1.8f, -6.2f), new Vector3(0f, 1.7f, -6.2f), 55f, "r10: curtainsider driver side (curtain, straps, rail, side guards, pallet box, tridem).");
+            // s23 trailer-rims (review s23 P1): tridem close-up framed on axle 2 (kingpin z 0.67 - 7.63 m), same view as the
+            // Blender control render zbl_kolo - steel rims must show no red / text from other atlas islands (docs/06 §2).
+            QL("trailer-wheels", new Vector3(-3.9f, 0.85f, -4.66f), new Vector3(-1.1f, 0.62f, -6.96f), 32f, "s23: trailer tridem close-up, driver side (steel rims, hubs, tyres, mudguards).");
             // ADR 0181: lamp close-ups (lens structure, plate illumination). Trailer rear lamps sit 12.0 m behind the kingpin
             // (truck frame z -11.33), the tractor combination lamp at the frame end under the trailer front.
             QL("lamp-trailer", new Vector3(-1.75f, 1.20f, -13.2f), new Vector3(-0.50f, 0.90f, -11.33f), 30f, "0181: trailer left combination lamp + number plate, 2 m (lens structure, plate lamp).");
