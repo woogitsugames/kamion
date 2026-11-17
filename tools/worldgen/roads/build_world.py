@@ -331,6 +331,47 @@ def _is_verge(p):
     return p.layer == "road" and p.src.endswith(":vg")
 
 
+WALLED_RING_NODES = 2        # clamp_under_decks reaches 1 node beyond a deck (size-3 max filter) + 1 for the edge cap
+WALLED_EDGE_M = 2.0          # deck edge beyond the half carriageway (kerb + cap), WORKING_VALUE
+
+
+def walled_ramp_mask(net, hf):
+    """c-p1-s23 (REVIEW s20 gate3-phone P1-2): terrain nodes under and beside the walled stations of ramps
+    (profile.mark_walled_ramps: fill between retaining walls, c.meta["walled"]), minus a ring around the true spans.
+    Passed to CF.clamp_under_decks as ground: a fill has no soffit to clear."""
+    from scipy import ndimage
+    from shapely.geometry import Polygon
+    from streetscape import paved as PV_
+    walled, spans = [], []
+    for c in net.chains:
+        wl = c.meta.get("walled")
+        if wl is None or c.bridge is None:
+            continue
+        wl = np.asarray(wl, bool)
+        s = c.line.s
+        if len(wl) != len(s):
+            continue
+        _, nrm = c.line.frame(s)
+        hw = np.broadcast_to(np.asarray(c.hw, float), s.shape) + WALLED_EDGE_M
+        L, R = c.line.p + nrm * hw[:, None], c.line.p - nrm * hw[:, None]
+        span = np.asarray(c.bridge, bool) & ~wl
+        for sel, out in ((wl, walled), (span, spans)):
+            idx = np.where(sel)[0]
+            for r in (np.split(idx, np.where(np.diff(idx) > 1)[0] + 1) if len(idx) else []):
+                if len(r) < 2:
+                    continue
+                poly = Polygon(np.vstack([L[r], R[r][::-1]]))
+                if poly.is_valid and poly.area > 0:
+                    out.append(poly)
+    m = np.zeros(hf.z.shape, bool)
+    if not walled:
+        return m
+    m = ndimage.binary_dilation(PV_.rasterize_polys(walled, hf), iterations=WALLED_RING_NODES)
+    if spans:
+        m &= ~ndimage.binary_dilation(PV_.rasterize_polys(spans, hf), iterations=WALLED_RING_NODES + 1)
+    return m
+
+
 def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
     """ADR 0110: the grass strips behind kerbs (roads.meshing._emit_verge, src "...:vg") become part of the terrain
     primitives of their chunk (LOD0: the 128 m sub-grid they lie in, and LOD1) instead of a `verge_grass` primitive
@@ -881,6 +922,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     deck, deck_mask = CF.rasterise(deck_parts, w.hf)
     for p in deck_parts:
         p.footprint = False
+    w.walled_ramp_mask = walled_ramp_mask(w.net, w.hf)
+    w.stats["walled_ramp_mask_nodes"] = int(w.walled_ramp_mask.sum())
     from streetscape import stage as SS
     from streetscape import water as WT
     w.water = None
@@ -969,6 +1012,11 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         w.stats["tunnel"] = tstats
         log("tunnels (ADR 0211):", {k: v for k, v in tstats.items() if k != "walls"},
             "walls", [(x["side"], x["len_m"], x["h_max_m"]) for x in tstats["walls"]])
+
+    # c-p1-s23 (REVIEW s20 gate3-phone P1-1): back-of-sidewalk flanges over open ground -> edging + grass batter
+    w.stats["back_flange_batter"] = ({} if os.environ.get("WORLDGEN_NO_BACK_BATTER")       # debug A/B only
+                                     else M.back_flange_batter(w.buf, mask, w.hf))
+    log("back-of-sidewalk batters", w.stats["back_flange_batter"])
 
     half = w.region["bbox"]["width_m"] / 2
     e0 = w.region["bbox"]["xmin"] - w.origin[0]

@@ -278,6 +278,95 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src, footprint=Fal
 # across the strip; rows wider than this are mapped in plan metres like every other horizontal surface.
 KERB_TOP_UV_MAX_W = 0.4
 
+# c-p1-s23 (REVIEW-2026-11-14-s20-gate3-phone P1-1, g3b_rondo_putry_approach): the back edge of a sidewalk ended in
+# the strip's vertical FLANGE_DEPTH concrete flange; the conform keeps the ground TERRAIN_UNDER_ROAD (0.35 m) under the
+# footprint, so on the grass side ~0.3-0.45 m of grey face stood bare: the sidewalk read as a slab hanging over the
+# lawn (CC BY-SA Mapillary 1214202199936829 / 1911352299378570, 2024: paving meets the grass behind it at one level).
+# Where nothing hard lies beyond that edge the face is cut to a concrete edging BACK_EDGE_FACE_M high and the rest of
+# the depth becomes a grass batter 1 : VERGE_SKIRT_SLOPE (merged into the terrain like the verge strips, src ":vg").
+BACK_WALK_MATS = ("sidewalk_paving", "apron_sett", "apron_paving_light")
+BACK_EDGE_FACE_M = 0.06      # exposed edging (obrzeże) above the grass, WORKING_VALUE
+BACK_PROBE_M = 1.2           # plan distance beyond the edge probed for a hard footprint (another paving / road)
+BACK_FOLD_COS = 0.5          # batter foot segment must run within 60 deg of its edge segment (no fold at tight corners)
+BACK_MIN_FOOT_RATIO = 0.5    # ... and keep >= half its length (concave radius >= ~2 x run; squeezed fans read as walls)
+
+
+def back_flange_batter(buf, hard_mask, hf):
+    """Turn tagged back-of-sidewalk flanges (Part.back_out, set in _emit_strip) into edging + grass batter where the
+    terrain node BACK_PROBE_M beyond the edge is not in `hard_mask` (rasterised road + paved footprint) at both
+    stations of a triangle pair. Returns counts. Visual only: the collision strip is built separately (coarse)."""
+    H, W = hard_mask.shape
+    rep = {"parts": 0, "stations": 0, "stations_battered": 0, "batter_tris": 0}
+    for p in list(buf.parts):
+        out = getattr(p, "back_out", None)
+        if out is None or p.layer != "road":
+            continue
+        n = len(p.V) // 2
+        if n < 2 or len(out) != n:
+            continue
+        rep["parts"] += 1
+        rep["stations"] += n
+        A, B = p.V[0::2], p.V[1::2]
+        top = np.where((A[:, 2] >= B[:, 2])[:, None], A, B)
+        bot = np.where((A[:, 2] >= B[:, 2])[:, None], B, A)
+        ou = out / np.maximum(np.hypot(out[:, 0], out[:, 1]), 1e-9)[:, None]
+        q = top[:, :2] + ou * BACK_PROBE_M
+        ii = np.clip(np.round(q[:, 0] - hf.x0).astype(int), 0, W - 1)
+        jj = np.clip(np.round(hf.y1 - q[:, 1]).astype(int), 0, H - 1)
+        free = ~hard_mask[jj, ii]
+        depth = top[:, 2] - bot[:, 2]
+        free &= depth > BACK_EDGE_FACE_M + 0.02
+        if not free.any():
+            continue
+        ts = np.minimum(p.T.min(1) // 2, n - 2)
+        # grass batter from the edging foot outward down to the old flange foot; every station of a converted pair
+        # gets its full run (a 0-run station made a vertical grass face, test_junctions_r4 verge ratchet)
+        run = np.maximum(depth - BACK_EDGE_FACE_M, 0.0) * S.VERGE_SKIRT_SLOPE
+        # the foot goes out square to the edge itself, on OUT's side: OUT of a junction corner / miter is oblique to
+        # the back edge, and along it the 1 : 2 batter came out steeper than 1 : 1.33 (j:n2229796326:corner3,
+        # verge ratchet). A pair where the edge and OUT disagree by more than ~60 deg keeps its flange (`ok` below).
+        tg = np.gradient(top[:, :2], axis=0)
+        en = np.column_stack([-tg[:, 1], tg[:, 0]])
+        en /= np.maximum(np.hypot(en[:, 0], en[:, 1]), 1e-9)[:, None]
+        cosq = (en * ou).sum(1)
+        en *= np.where(cosq < 0, -1.0, 1.0)[:, None]
+        square = np.abs(cosq) >= BACK_FOLD_COS
+        g0 = np.column_stack([top[:, :2], top[:, 2] - BACK_EDGE_FACE_M])
+        g1 = np.column_stack([top[:, :2] + en * run[:, None], bot[:, 2]])
+        # a pair whose batter foot folds back (inside of a tight junction corner: the outward vectors converge)
+        # stays a concrete flange - folded grass stood 0.86 m steep over the ground (j:n2229796326:corner3)
+        dt = top[1:, :2] - top[:-1, :2]
+        dg = g1[1:, :2] - g1[:-1, :2]
+        lt, lg = np.hypot(*dt.T), np.hypot(*dg.T)
+        ok = (((dt * dg).sum(1) > BACK_FOLD_COS * lt * lg) & (lg >= BACK_MIN_FOOT_RATIO * lt)
+              & square[:-1] & square[1:])
+        conv = (free[ts] | free[ts + 1]) & ok[ts]
+        if not conv.any():
+            continue
+        cut = np.zeros(n, bool)
+        cut[ts[conv]] = True
+        cut[ts[conv] + 1] = True
+        rep["stations_battered"] += int(cut.sum())
+        # concrete: only the edging remains on the converted pairs; the other pairs keep the full flange
+        Vc = p.V.copy()
+        lo = np.where(A[:, 2] >= B[:, 2], 1, 0) + 2 * np.arange(n)       # index of the lower vertex per station
+        Vc[lo[cut], 2] = top[cut, 2] - BACK_EDGE_FACE_M
+        V0, T_keep = p.V, p.T[~conv]
+        p.V, p.T = Vc, p.T[conv]
+        if len(T_keep):
+            buf.add(p.layer, p.mat, V0, p.UV, T_keep, footprint=p.footprint, src=p.src, UV1=p.UV1, COL=p.COL)
+        Vg = np.empty((2 * n, 3))
+        Vg[0::2], Vg[1::2] = g0, g1
+        # same winding as the flange (it faces outward): rows keep the flange's top/bottom order
+        swap = A[:, 2] < B[:, 2]
+        Vg[0::2][swap], Vg[1::2][swap] = g1[swap], g0[swap]
+        Tg = p.T                     # = the converted pairs (set above)
+        before = len(buf.parts)
+        buf.add("road", "verge_grass", Vg, Vg[:, :2].copy(), Tg, footprint=False, src=p.src + ":vg")
+        if len(buf.parts) > before:
+            rep["batter_tris"] += len(buf.parts[-1].T)
+    return rep
+
 
 def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None, capm=None):
     """G: gutter points (n,2), OUT: unit outward vectors (n,2) (may be miter-scaled), zg gutter z,
@@ -309,6 +398,7 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
     layer = "collision" if coarse else "road"
     _w = re.search(r"w(\d+)", str(src))
     cap_mat = BRIDGE_STYLES.get(_w.group(1), {}).get("cap_mat") if _w else None
+    prev_mat = None
     for k in range(nseg):
         mats = [pr[k][4] for pr in profs]
         # majority material; a tie goes to the one met first along the strip. `max(set(mats), ...)` broke ties by
@@ -405,8 +495,15 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
                 buf.add("collision" if coarse else "bridge", cmat, V, UV, T[onb], footprint=False, src=src, UV1=UV1,
                         COL=COL)
             else:
+                n_before = len(buf.parts)
                 buf.add(layer, cmat, V, UV, T, footprint=(not coarse and not vertical and not is_flange), src=src,
                         UV1=UV1, COL=COL)
+                # c-p1-s23 (REVIEW s20 gate3-phone P1-1): the flange at the BACK of a sidewalk (outer edge of a walk
+                # row) is tagged with its outward vectors; back_flange_batter() turns it into an edging + grass batter
+                # where nothing hard lies beyond it (the 0.35 m concrete face stood bare over the grass)
+                if is_flange and prev_mat in BACK_WALK_MATS and len(buf.parts) > n_before:
+                    buf.parts[-1].back_out = np.asarray(OUT, float).copy()
+        prev_mat = mat
 
 
 # Per-bridge look from authored overrides `kind: bridge_style` (keyed by OSM way id, set by roads.pipeline):
@@ -424,6 +521,7 @@ DEFAULT_BRIDGE_STYLE = {"fascia": None, "pier_mat": "bridge_concrete", "noise_sc
 
 SCREEN_POST_M = 2.0       # post spacing of deck noise screens (m), WORKING_VALUE read off Mapillary 494288258686575
 SCREEN_POST_W = 0.22      # post width along the road (m), WORKING_VALUE (HEB 200-220 class)
+SCREEN_END_POST_MIN_M = 0.3   # an end post is added when the screen runs this far past the last regular post
 
 
 def screen_sides(c, style):
@@ -450,14 +548,20 @@ def bridge_cap_w(c):
     return float(bridge_style(c).get("cap_w") or S.BRIDGE_CAP_W)
 
 
-def _strip(buf, layer, mat, A, B, src, both=True):
-    """Vertical strip between polylines A (bottom) and B (top), both windings (thin decorative parts)."""
+def _strip(buf, layer, mat, A, B, src, both=True, v_abs=False):
+    """Vertical strip between polylines A (bottom) and B (top), both windings (thin decorative parts).
+    v_abs: v = absolute height (courses of a block wall stay level, c-p1-s23 / REVIEW s20 gate3-phone P2-10:
+    measured from the ground-following foot they tilted with the NMT; CC BY-SA Mapillary 209622370971977)."""
     n = len(A)
     V = np.concatenate([A, B])
     T = [(k, k + 1, n + k + 1) for k in range(n - 1)] + [(k, n + k + 1, n + k) for k in range(n - 1)]
     T = np.array(T)
     s_ = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(A[:, :2], axis=0).T))])
-    UV = np.column_stack([np.tile(s_, 2), np.concatenate([np.zeros(n), B[:, 2] - A[:, 2]])])
+    if v_abs:
+        z0 = math.floor(float(np.min(A[:, 2])))
+        UV = np.column_stack([np.tile(s_, 2), np.concatenate([A[:, 2] - z0, B[:, 2] - z0])])
+    else:
+        UV = np.column_stack([np.tile(s_, 2), np.concatenate([np.zeros(n), B[:, 2] - A[:, 2]])])
     buf.add(layer, mat, V, UV, T, src=src)
     if both:
         buf.add(layer, mat, V, UV, T[:, [0, 2, 1]], src=src)
@@ -528,6 +632,9 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                 if style.get("ramp_fascia") and wl_ is not None:
                     prt = buf.parts[-1]
                     wk = c.interp(wl_.astype(float), 0.5 * (ss[:-1] + ss[1:])) > 0.5
+                    # c-p1-s23 (REVIEW s20 gate3-phone P1-2): the wall below runs one station past each walled run
+                    # (wr below); the band follows it, else the last wall segment wore a green cap (g3b_ext34_s1482)
+                    wk = wk | np.r_[wk[1:], False] | np.r_[False, wk[:-1]]
                     wt = np.tile(wk, 2)
                     if wt.any() and len(prt.T) == len(wt):
                         buf.add("bridge", f"bridge_fascia_{style['ramp_fascia']}", prt.V, prt.UV, prt.T[wt],
@@ -548,8 +655,12 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                 run_len = float(ss[-1] - ss[0])
                 # ADR 0127: H-section posts every SCREEN_POST_M, SCREEN_POST_W wide along the road (Mapillary
                 # 494288258686575: ~12 posts per 25 m, flange about a quarter of the bay). Were 0.14 m every 3 m.
-                for k in range(int(run_len // SCREEN_POST_M) + 1):
-                    s_p = float(ss[0]) + SCREEN_POST_M * k
+                s_posts = [float(ss[0]) + SCREEN_POST_M * k for k in range(int(run_len // SCREEN_POST_M) + 1)]
+                # c-p1-s23 (REVIEW s20 gate3-phone P1-2): the last panel ended in the air up to SCREEN_POST_M past
+                # the last post (g3b_ext34_s1482); a screen ends on a post
+                if float(ss[-1]) - s_posts[-1] > SCREEN_END_POST_MIN_M:
+                    s_posts.append(float(ss[-1]))
+                for s_p in s_posts:
                     pi = np.interp(s_p, ss, np.arange(len(ss)))
                     p3 = np.array([np.interp(pi, np.arange(len(ss)), e[:, d]) for d in range(3)])
                     # ADR 0146 (REVIEW s14-0139 P2-2): H-section, not a deep square box - road-side flange
@@ -591,7 +702,7 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                                        ("collision", "collision_fence")):
                         vis = layer == "bridge"
                         _strip(buf, layer, mat, (vbot if vis else bot) + off, (vtop if vis else top) + off,
-                               c.id + ":ramp_wall", both=False)
+                               c.id + ":ramp_wall", both=False, v_abs=vis and mat == "ramp_wall_blocks")
                         if sgn > 0:
                             buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
         # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =

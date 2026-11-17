@@ -1366,12 +1366,16 @@ def ramp_wall_keepout(net, r=2.5):
         for run in np.split(idx, np.where(np.diff(idx) > 1)[0] + 1):
             if len(run) < 2:
                 continue
+            # c-p1-s23 (REVIEW s20 gate3-phone P1-2): the block wall runs one station past each walled run
+            # (meshing: wr +-1) and a 1.6 m BDOT/OSM retaining stub with a railing stood at its free end
+            # (E -388.6..-387 N -104, g3b_ext34_s1482): the corridor follows the wall and ends round
+            run = np.arange(max(0, run[0] - 1), min(len(wl) - 1, run[-1] + 1) + 1)
             ss = np.asarray(c.line.s)[run]
             P = c.line.point(ss)
             _, N = c.line.frame(ss)
             off = c.hw_at(ss) + S.KERB_TOP_W + bridge_cap_w(c)
             for sgn in (1.0, -1.0):
-                polys.append(LineString(P + N * (sgn * off)[:, None]).buffer(r, cap_style="flat"))
+                polys.append(LineString(P + N * (sgn * off)[:, None]).buffer(r, cap_style="round"))
     return shapely.union_all(polys) if polys else None
 
 
