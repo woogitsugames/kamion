@@ -23,3 +23,7 @@ NASTĘPNY KROK: bash artifacts/seams-fix-s23/unity-chain.sh (import Win64 + vqa 
 - import Win64 knyszyn 12:57:13 / knyszyn-w 12:59:29 exit 0; vqa High 13:02:58 / 13:03:22 (artifacts/seams-fix-s23/vqa, kopia w main/artifacts).
 - obejrzane: rondo-dk65-from-south / above — trawa przy krawężnikach obu narożników płd., bez widocznego uskoku; fidelity C odświeżone (tylko hashe).
 NASTĘPNY KROK (lider): git merge origin/seams-fix-s23; EditMode WorldStreamerRouteLinksTests (Win64); test jazdy exe -scene knyszyn -stream 1 -autopilot route.
+## r5 STOP (13:3x, właściciel przenosi maszynę)
+- po merge main e0a0ccc21: knyszyn 13:12–13:20, knyszyn-w 13:27–13:29 (kamera dw671_seam_east_lines), fidelity C; import Win64 13:31/13:32, vqa High 13:33 (artifacts/seams-fix-s23/vqa2, NIEOBEJRZANE), EditMode WorldStreamerRouteLinksTests exit 0 (13:34).
+- ADR 0287 zajęty w main -> moje to 0288.
+NASTĘPNY KROK: obejrzeć artifacts/seams-fix-s23/vqa2/knyszyn-w-High/dw671-seam-east-lines.png i vqa2/knyszyn-High/rondo-dk65-from-south.png; potem lider: git merge origin/seams-fix-s23 && uv run --project tools/worldgen python tools/worldgen/streaming/route_links.py --check
