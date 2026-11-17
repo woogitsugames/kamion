@@ -102,6 +102,7 @@ namespace Game.Editor.Setup
         {
             var ext = Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot, ExtManifest))));
             var inn = Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot, IntManifest))));
+            DrivingVehiclePrefabs.PinGuid(PrefabPath, DrivingVehiclePrefabs.TractorGuid);   // D84: DrivingLab.unity (git) references this prefab
             CopySources(ext, inn);
             ConfigureImporters();
             var sets = BuildMaterials(inn);
