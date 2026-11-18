@@ -10,3 +10,4 @@
 - porosly r2: build_world exit=0, trasa 1590 m (road_consistency 96, poza DK8 głównymi: łącznice/wiadukty). jeroniki r3 w toku (graph_filter). NASTĘPNY KROK: `pwsh -File tools/worldgen/qa/dk8_s8_s24.ps1 -Phase unity -Tiles bialystok-porosly -Tag r2`
 - porosly import r2b: FAIL (nakładające się zapory krawędzi: service 222465086 x residential 40329438, 2,7 m, szew N) -> graph_filter porosly. NASTĘPNY KROK: `pwsh -File tools/worldgen/qa/dk8_s8_s24.ps1 -Phase world -Context -Tiles bialystok-porosly -Tag r3`, potem unity.
 - jeroniki r4: road_consistency na trasie 0; import Win64 exit=0, WORLD_MEMORY Low 94,2 / High 217,4 MB; VQA High 43 PNG obejrzane (vqa-r4). Porosly r3 world w toku. NASTĘPNY KROK: po route-bialystok-porosly-r3.exit -> `-Phase unity -Tiles bialystok-porosly -Tag r3`, potem `-Phase post`.
+- qa.seams jeroniki|dk65-01: 0 FAIL (2 UWAGA/PRZEJŚCIE poza trasą: łącznica 1151531629, Warszawska); s8_seam_z +jeroniki: dz -0,023 / 0,039 m.
