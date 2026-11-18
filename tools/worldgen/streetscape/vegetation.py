@@ -704,6 +704,11 @@ FIELD_LEVELS = {"roślinność trawiasta": (0.06, 0.10, 0.16, 0.22, 0.30, 0.42, 
 FIELD_DRIFT = 0.06              # peak-to-peak drift of the level inside one field
 FIELD_STRIP_DEV = 0.05          # a strip differs from its block by up to this
 FIELD_OWN_SHARE = 0.2           # share of strips with a use of their own
+# Residential land (BDOT10k OT_PTZB_A of a housing RODZAJ) away from the roads = gardens and yards between houses:
+# on the orthophoto mostly kept sward. Dryness GARDEN_B[0] + GARDEN_B[1] x (18 m patches with a little 2.5 m detail)
+# instead of 0.25 + 0.75 x (8 m patches): the straw patches of unmanaged ground do not belong there. WORKING_VALUE.
+GARDEN_RODZAJ = ("jednorodzinna", "wielorodzinna", "zagrodowa")
+GARDEN_B = (0.12, 0.30)
 
 
 def _h32(a, b, salt):
@@ -812,7 +817,18 @@ def ground_masks(src, origin, hf, dist_road, forests, cleared=(), report=None):
                               "b_mean_before": round(float(B[fields].mean()), 4) if fields.any() else None,
                               "b_mean_after": round(float(flevel[fields].mean()), 4) if fields.any() else None,
                               "layout": "ESTIMATED strips (no cadastral parcels in the repo)"}
-    B = np.where(fields, flevel, B)
+    gardens = PV.rasterize_polys([PV._poly_local(f["geometry"]["coordinates"], origin)
+                                  for f in (src.get("bdot10k") or {}).get("OT_PTZB_A") or []
+                                  if str((f.get("props") or {}).get("rodzaj", "")).strip() in GARDEN_RODZAJ], hf)
+    gardens &= ~fields & ~mapped_lawn & (dist_road >= FIELD_ROAD_M) & ~G.astype(bool)
+    calm = GARDEN_B[0] + GARDEN_B[1] * (.75 * metric_patch_field(east, north, 18.0, 947) + .25 * small)
+    if report is not None:
+        report["farmland"].update({"garden_cells_m2": int(gardens.sum()),
+                                   "garden_b_mean_before": round(float(B[gardens].mean()), 4) if gardens.any() else None,
+                                   "garden_b_mean_after": round(float(calm[gardens].mean()), 4) if gardens.any() else None,
+                                   "garden_b_std_before": round(float(B[gardens].std()), 4) if gardens.any() else None,
+                                   "garden_b_std_after": round(float(calm[gardens].std()), 4) if gardens.any() else None})
+    B = np.where(fields, flevel, np.where(gardens, calm, B))
     bare_polys = [PV._poly_local(f["geometry"]["coordinates"], origin) for f in src["bdot10k"]["OT_PTNZ_A"]]
     bare_polys += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
                    if a["tags"].get("landuse") in ("construction", "brownfield")]

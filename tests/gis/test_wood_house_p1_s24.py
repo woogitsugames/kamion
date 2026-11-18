@@ -146,3 +146,21 @@ def test_farmland_mask_is_a_mosaic_not_patch_noise():
     near = np.full(hf.z.shape, 2.0)                                  # beside a road the verge rule stays
     assert np.array_equal(VG.ground_masks(src, (0.0, 0.0), hf, near, [])[..., 2],
                           VG.ground_masks(NO_SRC, (0.0, 0.0), hf, near, [])[..., 2])
+
+
+def test_gardens_of_residential_land_are_calmer_than_open_ground():
+    hf = _Hf()
+    sq = [[[-250.0, -250.0], [250.0, -250.0], [250.0, 250.0], [-250.0, 250.0], [-250.0, -250.0]]]
+    src = {"bdot10k": {"OT_PTTR_A": [], "OT_PTNZ_A": [],
+                       "OT_PTZB_A": [{"geometry": {"type": "Polygon", "coordinates": sq}, "props": {"rodzaj": "jednorodzinna"}}]},
+           "osm": {"areas": []}}
+    ind = {"bdot10k": {"OT_PTTR_A": [], "OT_PTNZ_A": [],
+                       "OT_PTZB_A": [{"geometry": {"type": "Polygon", "coordinates": sq}, "props": {"rodzaj": "przemysłowo-składowa"}}]},
+           "osm": {"areas": []}}
+    far = np.full(hf.z.shape, 100.0)
+    rep = {}
+    b = VG.ground_masks(src, (0.0, 0.0), hf, far, [], report=rep)[100:500, 100:500, 2]
+    b0 = VG.ground_masks(NO_SRC, (0.0, 0.0), hf, far, [])[100:500, 100:500, 2]
+    assert b.max() <= VG.GARDEN_B[0] + VG.GARDEN_B[1] + 1e-6 and b.std() < 0.4 * b0.std() and b.mean() < 0.6 * b0.mean()
+    assert rep["farmland"]["garden_cells_m2"] > 200000
+    assert np.array_equal(VG.ground_masks(ind, (0.0, 0.0), hf, far, []), VG.ground_masks(NO_SRC, (0.0, 0.0), hf, far, []))

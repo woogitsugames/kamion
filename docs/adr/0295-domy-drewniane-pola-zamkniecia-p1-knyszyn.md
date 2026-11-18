@@ -10,7 +10,7 @@ Recenzja: `docs/reports/REVIEW-2026-11-18-s24-knyszyn.md` (FAIL anti-slop, P1-1�
 1. **P1-1** Dom drewniany był „teksturą drewna na pudełku”: te same poziome deski na ścianie i w szczycie, żadnych desek
    narożnych, opasek, listwy cokołowej.
 2. **P1-2** Deski (`wood_planks*`, kafel UV 6,0 × 2,6 m) powtarzały się co kafel: najdłuższa ściana Domu Klattów
-   TBD_KLATT_WALL m = TBD_KLATT_REP kafla wzdłuż, UV ciągłe dookoła budynku (ta sama faza na każdym domu).
+   21,10 m = 3,52 kafla wzdłuż, UV ciągłe dookoła budynku (ta sama faza na każdym domu).
 3. **P1-3** Biało-czerwona zapora w poprzek DK65 za rondem to **zamknięcie krawędzi świata** (`WorldEdgeBuilder`, ADR 0082 /
    0169): rząd barier z tablicą U-20 i koliderem 60 m przed krawędzią kafla, na każdej drodze przeciętej przez bbox. Rondo
    DK65 / DW671 leży ~85–100 m od zachodniej krawędzi kafla `knyszyn`, więc zamknięcia DK65 (wylot W przy n = −533,3) i DW671
@@ -44,7 +44,7 @@ obrysu). OSM `building:material` nie trafia do `buildings.geojson` — otwarte (
   (`wood_phase`: dowolne przesunięcie wzdłuż desek, całe rzędy desek w poprzek — rzędy sąsiednich przebiegów zostają na
   jednym poziomie), więc ani dwa przebiegi, ani dwa domy nie pokazują tych samych desek.
 - Zestaw `wood_siding`: wyrównanie tonu desek `k` 1,0 → 0,7 (wraca 30 % zróżnicowania desek skanu; przy deskach 1–4 m
-  po ADR 0289 ściana nie czyta się już jak palety). CV tonu desek TBD_CV.
+  po ADR 0289 ściana nie czyta się już jak palety). CV tonu desek (`materials_spec.json`): 0,0157 → 0,0502 (skan 0,124).
 
 ### 3. Zamknięcia krawędzi (P1-3): autorskie cofnięcie na kafel
 `Data/Regions/<id>/world_edge.authored.json` (`closures: [{id, near_en, radius_m, setback_m, reason}]`), czytane przez
