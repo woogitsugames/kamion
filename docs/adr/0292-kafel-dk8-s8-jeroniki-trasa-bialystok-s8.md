@@ -1,6 +1,9 @@
 # ADR 0292 — kafel `dk8-s8-jeroniki` (+ `bialystok-porosly`): ciągła trasa Białystok → S8
 
 Status: Proposed (agent dk8-s8-s24, 2026-11-18). Numer nadany przez lidera.
+
+## Dowody
+`artifacts/dk8-s8-s24/` (main): `run/*.exit|log`, `vqa-r5/dk8-s8-jeroniki`, `vqa-r6/bialystok-porosly` (+ `small/`), `seams/seams-r6.md`, `ortho/` (wycinki ortofoto GUGiK 2024, tylko referencja).
 Powiązane: ADR 0278 (plan mapy: definicje obu kafli, siatka (−4,−1) i (−3,−1)), 0288 (pętla S8, Otwarte 1), 0285 (trasy
 łączące), 0275 (szwy), 0204/0288 pkt 7 (`graph_filter` tunelu), D63 (najpierw przejezdne), D82.
 
@@ -37,9 +40,38 @@ osiągalny z wejścia trasy kontrolnej knyszynska — sprawdzone na grafie).
    Korytarz `bialystok-s8`: C → Maczka → Kleeberga → Knyszyńska → Porosły → Jeroniki → dk65-01 → s8-01 … s8-12.
    Test `test_links_stay_in_their_tile_and_replace_only_knyszyn` dopuszcza `replacesRoute = bialystok-knyszynska`.
 5. **Katalog:** 2 wpisy w grupie „S8” przed `s8-01`.
+6. **Pas dzielący DK8 w jeroniki** — nowe nadpisanie `side_left` / `side_right: median_rural` (`roads/network.py`, tylko
+   stacje pasa dzielącego, opt-in; żaden istniejący kafel go nie używa): reguła dawała krawężnikowy pas dzielący URBAN
+   (ścieżka po stronie zewnętrznej), `porosly` — wiejski; ortofoto = trawa + bariera bez krawężnika. Nadpisanie
+   `dk8-median-rural` na 12 way DK8 w `Data/Regions/dk8-s8-jeroniki/overrides.yaml` (qa.seams jeroniki | porosly
+   2 FAIL → 0).
+7. **Porosly — zapory krawędzi świata:** import przerywał `WorldEdgeBuilder` („closure rows overlap”). Przyczyna:
+   pętla `service` 248109972 przecina szew S dwa razy (6,8 m, przeciwne kierunki → równoległe rzędy, których
+   `ResolveClosures` nie tnie). `graph_filter.authored.json` porosly: 248109972 + 4 wcześniejsze trafienia „na oko”
+   (222465086, 1155215350, 461379037, 1302282015 — dojazdy przy krawędzi, poza trasami; 1302282015 daje teraz FAIL
+   „droga urywa się na szwie” z knyszynska → do cofnięcia). Narzędzie `tools/worldgen/qa/edge_closures_check.py`
+   (port `ReadExits`/`PlanClosures`) wskazuje podejrzane pary przed 20-minutowym importem.
+8. `tools/worldgen/streaming/route_links.py`: `head_from: route:<kafel>` (wygładzenie początku linku na koniec trasy
+   sąsiada) — potrzebne dla `knyszynska-kleeberga-s` (0,86 m) i `porosly-dk8-w` (`head_from: link:`, 0,65 m).
 
-## Liczby i źródła
-WYNIKI — uzupełniane po krokach (sekcja „Dowody”).
+## Liczby i źródła (zmierzone 18.11)
+| wielkość | wartość | źródło |
+|---|---|---|
+| trasa kontrolna jeroniki (S8 z N → DK8 E) | 1586,32 m | `route_start.json` |
+| trasa kontrolna porosly (DK8 W → Kleeberga N) | 1590,44 m | `route_start.json` |
+| linki: knyszynska-kleeberga-s / porosly-dk8-w / jeroniki-dk8-to-s8 / dk65-01-s8-corner | 667 / 1560 / 1528 / 578 m | `route_links.json` |
+| nowy odcinek koniec trasy kleeberga → szew s8-01 | 4333 m | suma linków |
+| złącza korytarza bialystok-s8 (11 par) | 0,0–0,001 m | `route_links.json` corridors |
+| ślad zestawu (ciągnik + naczepa 13,6 m) poza nawierzchnią, 4 linki | 0 / 15085, 6510, 15439, 5620 pkt | `qa/link_swept_check.py` |
+| WORLD_MEMORY jeroniki Low / High (total) | 94,3 / 217,6 MB | import Win64 r5 |
+| WORLD_MEMORY porosly Low / High (total) | 118,5 / 285,7 MB | import Win64 r6 |
+| najcięższe 3 kafle korytarza (bez zmian: C+Maczka+Kleeberga) | 434,1 / 1044,2 MB | `tile_graph.json` |
+| nowe okna: Kleeberga+Knyszyńska+Porosły / narożnik 2×2 (Knysz., Poros., Jeron., dk65-01) | 391,2 / 902,7; 398,4 / 933,0 MB | `tile_graph.json` |
+| narożnik 2×2 + przypięty C | 522,6 / 1200,0 MB (< 850 / 2000 i < 640 / 1450 w `StreamingPolicy`) | j.w. |
+| DK8 jezdnia (trunk, 2 pasy): asfalt / rozstaw linii krawędziowych | p50 8,55 m / p50 8,4 m (26 stacji co 50 m, 5 way) | `qa/ortho_xsec.py` (WMS GUGiK); generator 8,0 m |
+| wysokość S8 na szwie jeroniki / dk65-01 | dz −0,023 / +0,039 m | `qa/s8_seam_z.py` |
+| road_consistency na trasie: jeroniki r5 / porosly r6 | 0 / 25 (11 marking_off_carriageway, 5 obstacle_in_lane przy łącznicach wiaduktu 1266830099/100, 3 furniture, 4 arrow_no_exit, 2 lane_blind_end) | `generated/road_consistency_qa.json` |
+| qa.seams r6 (5 kafli, 72 drogi) | 0 FAIL na drogach tras; 4 FAIL poza: 2 service porosly/knyszynska, 2 research K1 dk65-01/knyszynska (istniejące) | `artifacts/dk8-s8-s24/seams/seams-r6.md` |
 
 ## Odrzucone
 - Trasa przez Warszawską (`dk65-01` → jeroniki): brak wjazdu na DK8 W w grafie OSM; jedyna ścieżka = przejazd
@@ -47,7 +79,20 @@ WYNIKI — uzupełniane po krokach (sekcja „Dowody”).
 - Model przejazdu pod DK8 (tunel 221522232) teraz: wymaga flagi pomostu na zakres stacji (ADR 0288 Otwarte 7/11).
 
 ## Otwarte
-(uzupełniane)
+1. **Ekrany akustyczne i klin P-21 (screens-s24, ADR 0293)**: po scaleniu na main przebudować `dk8-s8-jeroniki`
+   (render r4 `chase`: podniesiony separator zamiast malowanego klina przy włączeniu łącznicy w S8; ortofoto =
+   malowany klin — ADR 0288 Otwarte 10). Na polecenie lidera.
+2. porosly: cofnąć zbędny drop `service` 1302282015 (FAIL szwu z knyszynska, poza trasą) i sprawdzić
+   `edge_closures_check.py` + import; 309106711 (service) pobocze krawężnik / krawężnik płaski — poza trasą.
+3. porosly road_consistency na trasie 25 (łącznice wiaduktu 1266830099/100, przewężenie przy włączeniu DK8) — do
+   przejrzenia na renderach; kafel zbudowany w trybie „przejezdne” (D63).
+4. Włazy kanalizacyjne w pasie ruchu DK8 (trunk; `no_manhole_classes` = A, S) — render route-s0159 obu kafli.
+5. Tunel 221522232 (jeroniki) i przejazd awaryjny 1571341511/12 poza grafem — model przejazdu przy fladze pomostu na
+   zakres stacji (ADR 0288 Otwarte 7/11).
+6. Pin NMT porosly 2022 vs jeroniki 2025 (ADR 0278 Otwarte 3): qa.seams nie zgłasza, z na szwie DK8 niezmierzone.
+7. EditMode 2 FAIL poza zakresem (bez zmian C# w tej gałęzi): `DrivingScenesFullTruckTests.ArtPrefabs_HavePinnedGuids`,
+   `LightPostPolicyTests.ImportedGlassSemanticIsRestrictedAndStillReceivesShadows` — stan wygenerowanych assetów
+   w świeżym worktree; do porównania z main.
 
 ## Odtworzenie
 ```
