@@ -9,3 +9,5 @@
 - NASTEPNY KROK: przebudowa knyszyn/knyszyn-w (slot heavy) build_world --context
 - [5] knyszyn przebudowany (14 min), swept --all 0/8 po przebudowie; import Unity knyszyn + VQA High clear w toku (artifacts/knyszyn-r24/unity1.ps1).
 - NASTEPNY KROK: obejrzec artifacts/knyszyn-r24/vqa-knyszyn/look_dom_klattow.png; potem pwsh artifacts/knyszyn-r24/unity1.ps1 -Region knyszyn-w
+- [6] deski: look_dom_klattow czytal sie jak podloga -> set_tile_m [6.0,2.6] (materials.py), knyszyn+knyszyn-w przebudowane 21:56. Czeka na MEASURE DONE lidera.
+- NASTEPNY KROK: artifacts/knyszyn-r24/after_measure.ps1 (uruchomiony; import+VQA knyszyn, import knyszyn-w, EditMode Win64, pytest tests/gis) -> sprawdzic after_measure.log
