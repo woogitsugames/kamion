@@ -168,3 +168,6 @@ Właściciel (klik): najpierw zbudować treść High dla dk65-03 i dk65-04, pote
 
 ## D87 — Tło menu startowego: zdjęcie z gry (2026-11-16, s23)
 Właściciel (klik): menu startowe na tle statycznego zrzutu z gry (np. DK65 o świcie) z przyciemnieniem pod tekstem; bez marek. Zastępuje obecny brak tła (tekst na szachownicy placu — najgorszy element UI wg integracji int-ui-s23).
+
+## D88 — Direct3D 11 domyślnym API grafiki na Windows, D3D12 jako opcja (2026-11-18, s24, ADR 0291)
+Właściciel (klik) po pomiarze A/B na GTX 1070 (`artifacts/d3d-ab/`, knyszyn High, autopilot, 2 powtórzenia): bez limitu D3D11 171–190 kl./s vs D3D12 153–157; High 60 obie trzymają 60 (D3D12 r1: 4 klatki > 100 ms); pamięć prywatna D3D11 2,64–2,89 GB vs 3,04–3,27 GB; VRAM 1,76 vs 1,87 GB; 0 crashy przy wyjściu na obu (3 + 3 cykle). Lista API Windows = [Direct3D11, Direct3D12] jako kod (`ProjectSetup`); `-force-d3d12` (launchery `Kamion-d3d12.cmd`, `Kamion-korytarz-d3d12.cmd`) zostaje do porównań; mitygacja D3D12 (pełny ekran wyłączny → bez ramki) bez zmian. Numer D88 nadany przez agenta — do potwierdzenia przez lidera.

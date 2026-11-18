@@ -136,7 +136,7 @@ if (-not $SkipBuild) {
     $hash = (Get-FileHash -Algorithm SHA256 $exePath).Hash.ToLower()
     "$hash  Kamion.exe" | Set-Content "$exePath.sha256" -Encoding ascii
     # ADR 0276: content hash of Kamion_Data -> build-id.json (read by the player) + launchers: Kamion-okno.cmd (window),
-    # Kamion-d3d11.cmd, Kamion-<region>.cmd per region, Kamion-korytarz(-d3d11).cmd only with the knyszyn-s tile scene
+    # Kamion-d3d12.cmd (-force-d3d12, D3D11 default: ADR 0291), Kamion-<region>.cmd per region, Kamion-korytarz(-d3d12).cmd only with the knyszyn-s tile scene
     # (postbuild prints a WARNING on stderr when the corridor is left out).
     $post = Invoke-RepoPython @("$RepoRoot/scripts/postbuild-windows.py", $outDir, '--log', $log, '--git-sha', $sha)
     $pbLine = @($post.Out) | Where-Object { "$_" -match '^\{' } | Select-Object -Last 1

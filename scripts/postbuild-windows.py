@@ -29,7 +29,8 @@ expansion of sets / aliases / ranges by RegionBuildList and after -RegionsAllowM
 the screen mode comes from the PC settings file, else from PlayerSettings (borderless full screen at the native
 resolution, resizable window, Alt+Enter switches; ProjectSetup.ApplyStandaloneWindowSettings).
 Kamion-korytarz.cmd (-scene knyszyn -stream 1) only when knyszyn, knyszyn-s and the tile scene World_knyszyn-s_Tile are
-in the build; Kamion-d3d11.cmd and Kamion-korytarz-d3d11.cmd are the -force-d3d11 fallbacks (JAK-GRAC-PC 1.6).
+in the build; Direct3D 11 is the default API (ADR 0291), Kamion-d3d12.cmd and Kamion-korytarz-d3d12.cmd are the opt-in
+-force-d3d12 starts (comparisons, testers asked to try D3D12; JAK-GRAC-PC 1.6).
 Standard library only (Python >= 3.10).
 """
 from __future__ import annotations
@@ -68,14 +69,16 @@ REGION_SCENE_RE = re.compile(r"^Assets/_Generated/World/(?P<id>[^/]+)/(?P<scene>
 # tile scene is not in the build), so with a build log the corridor launcher also needs these Low tile scenes.
 CORRIDOR_TILES = ("knyszyn-s",)
 TILE_SCENE_RE = re.compile(r"^Assets/_Generated/World/(?P<id>[^/]+)/(?P<scene>WorldC_Tile|World_[^/]+_Tile)\.unity$")
-# Fallback when Direct3D 12 fails (JAK-GRAC-PC 1.6: "d3d12: Device failed error (887a0001)" on 16.11): the same start
-# with Unity's -force-d3d11 (an engine argument, not a -screen-* one: the screen mode of the settings file still applies).
-# Whether D3D11 avoids the crash is one observation, not a measurement (UNVERIFIED).
-D3D11_ARG = "-force-d3d11"
-D3D11_LAUNCHER = "Kamion-d3d11.cmd"
-CORRIDOR_D3D11_LAUNCHER = "Kamion-korytarz-d3d11.cmd"
-# Launcher names that a region id must never overwrite (a region "okno" / "korytarz" / "d3d11" would clash).
-RESERVED_LAUNCHERS = (WINDOW_LAUNCHER, CORRIDOR_LAUNCHER, D3D11_LAUNCHER, CORRIDOR_D3D11_LAUNCHER)
+# Direct3D 11 is the default Windows API since ADR 0291 (owner decision 18.11.2026, GTX 1070 A/B in artifacts/d3d-ab/:
+# D3D11 171-190 fps uncapped vs D3D12 153-157, less memory, 0 exit crashes on both). Direct3D 12 stays in the build as the
+# second API; these launchers start it with Unity's -force-d3d12 (an engine argument, not a -screen-* one: the screen mode
+# of the settings file still applies, and on D3D12 exclusive full screen still falls back to borderless -
+# ExclusiveFullscreenPolicy, crash-diag-s23).
+D3D12_ARG = "-force-d3d12"
+D3D12_LAUNCHER = "Kamion-d3d12.cmd"
+CORRIDOR_D3D12_LAUNCHER = "Kamion-korytarz-d3d12.cmd"
+# Launcher names that a region id must never overwrite (a region "okno" / "korytarz" / "d3d12" would clash).
+RESERVED_LAUNCHERS = (WINDOW_LAUNCHER, CORRIDOR_LAUNCHER, D3D12_LAUNCHER, CORRIDOR_D3D12_LAUNCHER)
 
 
 class PostBuildError(Exception):
@@ -202,8 +205,8 @@ def launcher_name(region_id: str) -> str:
     return f"Kamion-{region_id}.cmd"
 
 
-def corridor_d3d11_text() -> str:
-    return CORRIDOR_TEXT.replace(" %*", f" {D3D11_ARG} %*", 1)
+def corridor_d3d12_text() -> str:
+    return CORRIDOR_TEXT.replace(" %*", f" {D3D12_ARG} %*", 1)
 
 
 def corridor_ready(regions: list[str], tiles: list[str] | None) -> bool:
@@ -214,14 +217,14 @@ def corridor_ready(regions: list[str], tiles: list[str] | None) -> bool:
 
 
 def write_launchers(build_dir: Path, regions: list[str], tiles: list[str] | None = None) -> tuple[list[str], list[str]]:
-    """Kamion-okno.cmd, Kamion-d3d11.cmd, Kamion-<id>.cmd per region and, when the corridor can stream
-    (corridor_ready), Kamion-korytarz.cmd + Kamion-korytarz-d3d11.cmd. tiles = regions with a Low tile scene in the
+    """Kamion-okno.cmd, Kamion-d3d12.cmd, Kamion-<id>.cmd per region and, when the corridor can stream
+    (corridor_ready), Kamion-korytarz.cmd + Kamion-korytarz-d3d12.cmd. tiles = regions with a Low tile scene in the
     build (tile_regions_from_log); None = unknown (no gate on tiles). Returns (written names, skipped ids)."""
     written, skipped = [], []
     (build_dir / WINDOW_LAUNCHER).write_bytes(launcher_text(windowed=True).encode("ascii"))
     written.append(WINDOW_LAUNCHER)
-    (build_dir / D3D11_LAUNCHER).write_bytes(launcher_text(D3D11_ARG).encode("ascii"))
-    written.append(D3D11_LAUNCHER)
+    (build_dir / D3D12_LAUNCHER).write_bytes(launcher_text(D3D12_ARG).encode("ascii"))
+    written.append(D3D12_LAUNCHER)
     for rid in regions:
         if not REGION_ID_RE.match(rid) or launcher_name(rid) in RESERVED_LAUNCHERS:
             skipped.append(rid)
@@ -230,8 +233,8 @@ def write_launchers(build_dir: Path, regions: list[str], tiles: list[str] | None
         written.append(launcher_name(rid))
     if corridor_ready(regions, tiles):
         (build_dir / CORRIDOR_LAUNCHER).write_bytes(CORRIDOR_TEXT.encode("ascii"))
-        (build_dir / CORRIDOR_D3D11_LAUNCHER).write_bytes(corridor_d3d11_text().encode("ascii"))
-        written += [CORRIDOR_LAUNCHER, CORRIDOR_D3D11_LAUNCHER]
+        (build_dir / CORRIDOR_D3D12_LAUNCHER).write_bytes(corridor_d3d12_text().encode("ascii"))
+        written += [CORRIDOR_LAUNCHER, CORRIDOR_D3D12_LAUNCHER]
     return written, skipped
 
 
