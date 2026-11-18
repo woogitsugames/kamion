@@ -1,9 +1,13 @@
 # Kamera z fotela kierowcy — warianty do wyboru (D84 / P1-4, agent cab-view-s24, 2026-11-18)
 
+> **Decyzja właściciela (D90, ADR 0294): wariant B — 70° / 6°; pasek HUD ukryty w kabinie.** Rendery sprzed decyzji (pasek HUD
+> widoczny w kabinie, `cab-driver` 62°) przeniesione do `przed-d90/`. Po wdrożeniu: `start/`, `rondo/`, `small/` — kamery
+> `*-hud` w kabinie bez paska, `chase-hud` (zewnętrzna) z paskiem; `cab-driver` = 70°.
+
 Render: edytor, `visual-qa.ps1 -Scene WorldC_High -Tier High -Pc -Lighting clear`, 1920×1080, region bialystok-industrial-c,
 TRAKT zbudowany z main (cab LOD0 przebudowany Blenderem w tym worktree). Edytor ≠ build (FPS nie mierzone, nie dotyczy).
-- `start/` — pozycja startowa WorldC (E 729.6, N −395.8 w Unity, kurs 209,4°), wszystkie warianty z tego samego miejsca.
-- `rondo/` — Rondo Bieżeństwa: **poza statyczna** na pierścieniu (środek E 554.676 N −716.554, r 23.362 m z `gate3_cameras.json`;
+- `przed-d90/start/` — pozycja startowa WorldC (E 729.6, N −395.8 w Unity, kurs 209,4°), wszystkie warianty z tego samego miejsca.
+- `przed-d90/rondo/` — Rondo Bieżeństwa: **poza statyczna** na pierścieniu (środek E 554.676 N −716.554, r 23.362 m z `gate3_cameras.json`;
   θ = 100°, kurs styczny 260°, przeciwnie do wskazówek zegara), naczepa sztywno na wprost (bez przegubu) — to nie klatka z jazdy fizyką.
 - `*-hud.png` — ta sama kamera z HUD i okienkami lusterek klasy II (D70, `ControlSettings.mirrorInsets`, domyślnie WŁĄCZONE) = tak widzi gracz.
 - `small/` — podglądy 960 px; `start/audit.tsv`, `rondo/audit.tsv` — geometria lusterek i górnej krawędzi szyby względem kadru.

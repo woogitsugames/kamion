@@ -26,7 +26,7 @@ try {
     St 'render-rondo' $LASTEXITCODE
   }
   if ($Steps -match 'tests') {
-    pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 *> "$logs	ests.out"
+    pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 *> (Join-Path $logs 'tests.out')
     St 'tests' $LASTEXITCODE
   }
 } finally {

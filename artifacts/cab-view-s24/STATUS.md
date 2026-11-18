@@ -10,3 +10,8 @@
 - TRAKT + naczepa zbudowane i zainstalowane w WorldC/WorldC_High (TRUCK_RESULT: OK); 11 kamer × 2 miejsca (start, rondo) wyrenderowane 1920×1080 High -Pc clear (VISUALQA_RESULT OK rendered=11 ×2); audit.tsv z kątami lusterek.
 - Wynik: lusterka boczne leżą 54–76° od osi — żaden FOV ≤ 75° ich nie pokaże; okienka D70 tak. Rekomendacja: 70°/6° (wariant B). Nowe P2: panel HUD zasłania fizyczne zegary.
 - NASTĘPNY KROK (lider/właściciel): decyzja wariantu → zmiana `ControlSettings.cabFov` (55) i kamery QA `cab-driver` (62) na wybraną wartość; ADR.
+
+## 2026-11-18 krok 4: wdrożenie D90 / ADR 0294 (po decyzji właściciela)
+- ControlSettings.DefaultCabFovDeg = 70, schemat 6 (55→70 jednorazowo, inne wartości zostają), cab-driver QA = 70; HudVisibility.IsCabView + DrivingHudContext.CameraModeOverride (render QA zna tryb kamery), CabViewQa.IsCabCameraId, kamera QA chase-hud; testy CabView0294Tests + poprawione ControlSettingsTests/Controls0243Tests; ADR 0294, D90, indeks ADR.
+- Rendery po zmianie: start/ i rondo/ (pasek w kabinie znika, w chase-hud jest). Stare w przed-d90/.
+- NASTĘPNY KROK: wynik EditMode `artifacts/cab-view-s24/logs/tests.status`, potem `git merge origin/main`, commit, push.
