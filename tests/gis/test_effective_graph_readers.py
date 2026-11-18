@@ -243,6 +243,7 @@ RAW_OK = {      # ingested graph on purpose (reason in ADR 0274 "Czytniki grafu"
     "tools/worldgen/qa/ortho_xsec.py": "orthophoto cross-sections of the OSM axes",
     "tools/worldgen/qa/s8_xsec_overrides.py": "lists the S8 ways (OSM id, lanes) and their OSM axis spacing to write their overrides, ADR 0288 (S8 never split)",
     "tools/worldgen/qa/edge_closures_check.py": "port of WorldEdgeBuilder.ReadExits, which reads the ingested roads.graph.json (boundary nodes + edges as imported), ADR 0292",
+    "tools/worldgen/qa/seam_z.py": "boundary nodes (position, id) shared by two tiles; heights from the GLBs, ADR 0292",
     "tools/worldgen/qa/s8_seam_z.py":"S8 boundary nodes (position, way) shared by two tiles; heights from the GLBs, ADR 0288 s24",
     "tools/worldgen/qa/s8_median_gap.py": "S8 median gap on the plain network of seam_taper (same as qa/seams.py), ADR 0288 s24",
     "tools/worldgen/qa/seam_section.py": "route edges at region seams: far ends, ids unchanged",
