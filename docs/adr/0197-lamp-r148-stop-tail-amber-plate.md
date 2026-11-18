@@ -1,6 +1,6 @@
 # 0197 — Światła tylne ciągnika i naczepy wobec R148 / R48: stop : pozycyjne po limiterze, komory naczepy, bursztyn, tablica
 
-Status: PROPOSED (gałąź `lights-0197`, nie scalone). Data: 2026-11-15. Autor: agent lights-0197 (chmura, bez Unity, bez Blendera).
+Status: **Accepted** 2026-11-18 (weryfikacja Unity/Blender: agent lights-79-s24, sekcja „Weryfikacja w Unity”). Data: 2026-11-15. Autor: agent lights-0197 (chmura), integracja lights-79-s24.
 
 ## Źródła
 - R148 (Dz.U. UE L 347 z 30.9.2021, s. 123) i R48 seria 07 (tamże, s. 1); cytaty w paczce
@@ -91,3 +91,36 @@ Status: PROPOSED (gałąź `lights-0197`, nie scalone). Data: 2026-11-15. Autor:
 
 ## Recenzja drugim modelem (2026-11-15)
 Darmowe modele OpenRouter (`cohere/north-mini-code:free`, `nvidia/nemotron-3-ultra-550b-a55b:free`, `baidu/ernie-5.5-flash-preview:free`; zasady: `docs/owner/OPENROUTER-FREE-MODELS.md`). Każde zgłoszenie zweryfikowane w kodzie: brak błędów matematyki (macierz sRGB D65, granice R48, stosunek 15,385, tablica 2,91 cd/m² potwierdzone niezależnym przeliczeniem). Poprawione: O1 — `HueLimitScale`/`TruckLampHueLimitRef` dla r ≤ kolano zwraca tożsamość (wcześniej r/1e-6 dla r < 1e-6; niewidoczne w 8 bitach) + test `HueLimitScale_IsIdentityBelowKnee_EvenForTinyRadiance`; definicja B₀ w ADR.
+
+## Weryfikacja w Unity (lights-79-s24, 2026-11-18)
+- Scalenie `origin/main` (60ca658e8) bez konfliktów tekstowych; nazwy komór naczepy (`rear_lens_*_tail_*` / `_stop_*`
+  z `trailer_build`) bez marek. Eksport `trailer_export.py -- --no-renders` (856 s), `check_export.py` PASS, manifest
+  16 = TAIL, 17 = STOP. Ciągnik bez ponownego eksportu (grupa 6 bez zmian). `dotnet test tools/lamp-check` 186/186.
+- Unity 6000.3.28f1 Win64: `TruckAssetBuilder.BuildBatch` (TRUCK_RESULT: OK), `TrailerAssetBuilder.BuildBatch`
+  (TRAILER_RESULT: OK). EditMode 1383: 1286 passed, 3 failed, 94 skipped; `LampRegulationTests` 19/19,
+  `TruckLampEncodingTests` 21/21, `TruckRegulationLampTests` 9/9 (w tym `Trailer_TailAndStopChambers_HaveSeparateLightGroups`),
+  `TruckLampLensTests` 18/18. Trzy porażki niezwiązane (dane `_Generated`, tak jak na main): 2× `CarPaintMaterialTests.DepositionChannel_*`,
+  `LightPostPolicyTests.ImportedGlassSemanticIsRestrictedAndStillReceivesShadows`.
+- Poprawka testu: `TruckLampLensTests.LensFrame_IsWellFormed_OnEveryLod` wymaga dla naczepy komór TAIL i STOP (pillow,
+  obie strony) zamiast TAIL_BRAKE.
+- **Znaleziony błąd nocy (poprawiony):** `KamionTone` (ADR 0108 r4, `dimColourDesaturation` 0,65 w presecie Night) liczy
+  desaturację „ciemnych kolorów” z luminancji Y; nasycona czerwień ma Y = 0,2126 R, więc stop wychodził różowy
+  (sRGB 148, 67, 67), a pozycyjne prawie szare. Lampy (≥ 1 300 cd/m²) widziane są fotopowo, więc w `TruckExterior`
+  desaturacja jest skalowana przez 1 − (udział emisji w pikselu) (`KamionToneScaled` / `KamionMixFogScaled`;
+  `KamionTone` = skala 1, reszta shaderów bez zmian). Koszt: 2× max, 1 dzielenie, 1 mnożenie w przebiegu ciężarówki.
+- Rendery `scripts/visual-qa.ps1 -Scene DrivingLab -Pc -BuildTarget Win64 1920×1080`, kamery `lamp-trailer`, `lamp-truck`,
+  `plate-trailer`, `plate-truck-bobtail`, `-TruckLamps low | low,brake | low,hazard`; pomiar ROI (maska: piksele z ΔR > 40
+  między stop i pozycyjnymi; luminancja liniowa Rec.709 z sRGB po tonemappingu, więc stosunek jest **ekranowy**, nie fotometryczny):
+  | tier / światło | ciągnik stop : pozycyjne (ta sama komora) | naczepa komora STOP : komora TAIL | stop sRGB | pozycyjne sRGB |
+  |---|---|---|---|---|
+  | High noc (po poprawce) | 12,0 | 12,0 / 11,7 (plate) | 188–193, 17–18, 17–18 | 53–55, 8, 7–8 |
+  | Low noc (po poprawce) | 13,6 | 13,7 / 13,6 | 188–192, 13–14, 13–14 | 53–54, 3–4, 3–4 |
+  | High zmierzch | 12,5–12,8 | 13,4–13,9 | 193–199, 14–16, 15–18 | 50–54, 7–9, 8–11 |
+  | High noc (przed poprawką) | 12,0 | — (pozycyjne szare) | 148–153, 67–68, 67–68 | 38–39, 19, 19 |
+  Kierunkowskazy noc: sRGB 188–192, 98–100, 19–24 (liniowo G/R ≈ 0,24 ≈ cel 0,22), bursztyn, nie czerwono-pomarańczowy.
+  Tablica czytelna nocą (naczepa i ciągnik bez naczepy), bez przepaleń i magenty. Porównanie z P16-219 (Commons, noc,
+  tylko referencja): tablica równomiernie biała, lampy nasycone — zgodny charakter. Dowody: `artifacts/lights-79-s24/`
+  (`view/cmp2-*`, `view/cmp-plates.jpg`, `qa*/stats.txt`).
+- Otwarte: luminancja tablicy w cd/m² tylko z modelu CPU (render daje sRGB po tonemappingu); pozycyjne nocą ~54/255 —
+  ocena „czy nie za ciemne” do visual-critic / właściciela (zapas: `TailNits` do 4 000 cd/m², test pilnuje ≥ 5:1);
+  koszt GPU zmiany shadera niezmierzony (pomijalny wg liczby instrukcji; UNVERIFIED); render overcast/dzień nie powtórzony.

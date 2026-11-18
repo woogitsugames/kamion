@@ -7,3 +7,6 @@
 - NASTĘPNY KROK: `pwsh artifacts/lights-79-s24/unity.ps1` (BuildBatch ciągnik+naczepa, EditMode Win64)
 - Unity Win64: TruckAssetBuilder/TrailerAssetBuilder BuildBatch OK; EditMode 1383/1283 pass/6 fail: 2x CarPaint DepositionChannel + LightPostPolicy glass (środowiskowe, dane _Generated), 3x TruckLampLensTests trailer (oczekiwał TAIL_BRAKE) -> test poprawiony na TAIL+STOP.
 - NASTĘPNY KROK: `pwsh artifacts/lights-79-s24/chain2.ps1` (testy lamp + rendery night/dusk High/Low)
+- Noc: stop był różowy (148,67,67) przez ADR 0108 dim-colour desaturację w `KamionTone`; poprawka `KamionToneScaled` (TruckExterior skaluje przez 1 − udział emisji). Po poprawce noc High/Low: stop 188–193,13–18 sRGB, pozycyjne 53–55; stosunek ekranowy ciągnik 12,0/13,6, naczepa STOP:TAIL 11,7–13,7. Kierunkowskazy 188,98,22. EditMode Win64 1286/1383 (3 środowiskowe).
+- ADR 0197 Accepted + wiersz w indeksie. Dowody: `artifacts/lights-79-s24/` (kopia w main). Wypchnięte na `lights-0197` (PR #79).
+- NASTĘPNY KROK (lider): visual-critic na `artifacts/lights-79-s24/view/cmp2-*.jpg`; scal PR #79; po scaleniu w main `TruckAssetBuilder.BuildBatch` + `TrailerAssetBuilder.BuildBatch`.
