@@ -73,6 +73,13 @@ osiągalny z wejścia trasy kontrolnej knyszynska — sprawdzone na grafie).
 | road_consistency na trasie: jeroniki r5 / porosly r6 | 0 / 25 (11 marking_off_carriageway, 5 obstacle_in_lane przy łącznicach wiaduktu 1266830099/100, 3 furniture, 4 arrow_no_exit, 2 lane_blind_end) | `generated/road_consistency_qa.json` |
 | qa.seams r6 (5 kafli, 72 drogi) | 0 FAIL na drogach tras; 4 FAIL poza: 2 service porosly/knyszynska, 2 research K1 dk65-01/knyszynska (istniejące) | `artifacts/dk8-s8-s24/seams/seams-r6.md` |
 
+## Testy (18.11)
+- pytest tests/gis r6: 2482 passed, 5 failed, 1 skipped, 2 xfailed (53 min). Po poprawkach / ponownym uruchomieniu:
+  `test_committed_graph_is_fresh` i `test_export_is_deterministic` — pass (wyścig z plikami przebudowywanymi w trakcie
+  przebiegu); `test_every_graph_reader_is_classified` — naprawione (klasyfikacja); zostają 2: skok z 0,437 m (Otwarte 8)
+  i fidelity industrial-c (Otwarte 9).
+- EditMode Win64 r6: 1348, 1252 passed, 2 failed (Otwarte 7), 94 skipped.
+
 ## Odrzucone
 - Trasa przez Warszawską (`dk65-01` → jeroniki): brak wjazdu na DK8 W w grafie OSM; jedyna ścieżka = przejazd
   w pasie dzielącym `access=no`.
@@ -90,6 +97,16 @@ osiągalny z wejścia trasy kontrolnej knyszynska — sprawdzone na grafie).
 5. Tunel 221522232 (jeroniki) i przejazd awaryjny 1571341511/12 poza grafem — model przejazdu przy fladze pomostu na
    zakres stacji (ADR 0288 Otwarte 7/11).
 6. Pin NMT porosly 2022 vs jeroniki 2025 (ADR 0278 Otwarte 3): qa.seams nie zgłasza, z na szwie DK8 niezmierzone.
+8. **BLOKER scalenia: skok wysokości 0,437 m na szwie porosly | jeroniki** (DK8 W, link porosly-dk8-w → jeroniki-dk8-to-s8;
+   `tests/gis/test_route_links_s23.py::test_link_seams_route_and_height_continuous`, próg 0,10 m). Piny NMT 2022 / 2025
+   (ADR 0278 Otwarte 3); qa.seams nie mierzy z. Poprawka jak ADR 0288 s24 (`s8-seam-z-*`): nadpisanie `target: {node}`,
+   `set: {z}` = średnia obu stron na węzłach brzegowych DK8 (223394828, 889307875, 615607622) w obu kaflach + przebudowa
+   obu + import; alternatywnie wspólny pin NMT.
+9. `network.py` (pkt 6) unieważnia `fidelity_qa.json` kafla testowego `bialystok-industrial-c`
+   (`test_road_fidelity.py::test_report_not_stale`; na main zielony): po scaleniu `fidelity/run.py --region
+   bialystok-industrial-c` (kafel agenta regen-c) — albo odrzucić pkt 6 i przyjąć 2 FAIL szwu jeroniki | porosly.
+10. ADR 0274 „Czytniki grafu”: dopisać `qa/edge_closures_check.py` (RAW, jak `WorldEdgeBuilder.ReadExits`); test już
+   go klasyfikuje.
 7. EditMode 2 FAIL poza zakresem (bez zmian C# w tej gałęzi): `DrivingScenesFullTruckTests.ArtPrefabs_HavePinnedGuids`,
    `LightPostPolicyTests.ImportedGlassSemanticIsRestrictedAndStillReceivesShadows` — stan wygenerowanych assetów
    w świeżym worktree; do porównania z main.
