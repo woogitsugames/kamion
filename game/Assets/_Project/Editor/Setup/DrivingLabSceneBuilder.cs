@@ -54,6 +54,29 @@ namespace Game.Editor.Setup
             if (Application.isBatchMode) EditorApplication.Exit(exit);
         }
 
+        /// <summary>
+        /// Regenerates only the graybox trailer prefab from the trailer definition (wheel pivots = physics axles), without
+        /// rebuilding the DrivingLab scene (ADR 0280 §9.2: axle move to 7.63 m). Batch: -executeMethod
+        /// Game.Editor.Setup.DrivingLabSceneBuilder.RebuildTrailerPrefabBatch
+        /// </summary>
+        public static void RebuildTrailerPrefabBatch()
+        {
+            int exit = 0;
+            try { RebuildTrailerPrefab(); Debug.Log("TRAILER_PREFAB_RESULT: OK"); }
+            catch (Exception e) { Debug.LogException(e); Debug.Log("TRAILER_PREFAB_RESULT: FAILED"); exit = 1; }
+            if (Application.isBatchMode) EditorApplication.Exit(exit);
+        }
+
+        [MenuItem("Kamion/Setup/Rebuild graybox trailer prefab")]
+        public static void RebuildTrailerPrefab()
+        {
+            var data = CreateVehicleData();
+            ReadAndCheckDims();
+            var prefab = CreateTrailerPrefab(data, CreateGrayboxMaterials());
+            AssetDatabase.SaveAssets();
+            Debug.Log("[TRAILER] graybox prefab " + AssetDatabase.GetAssetPath(prefab));
+        }
+
         [MenuItem("Kamion/Setup/Rebuild DrivingLab")]
         public static void Build()
         {
@@ -64,8 +87,12 @@ namespace Game.Editor.Setup
             var data = CreateVehicleData();
             var dims = ReadAndCheckDims();
             var gbMats = CreateGrayboxMaterials();
-            var prefab = CreateTractorPrefab(data, dims, gbMats);
-            var trailerPrefab = CreateTrailerPrefab(data, gbMats);
+            // The graybox prefabs stay as the emergency fallback (and the physics-only rig of the PlayMode tests); the scene
+            // itself drives the art TRAKT tractor with the full cab and the art curtainsider, like every region scene (D84).
+            CreateTractorPrefab(data, dims, gbMats);
+            CreateTrailerPrefab(data, gbMats);
+            var prefab = DrivingVehiclePrefabs.Tractor(out bool grayboxTractor);
+            var trailerPrefab = DrivingVehiclePrefabs.Trailer(out _);
 
             // ---- materials ----
             var asphaltTex = Tex("T_Asphalt", 512, AsphaltPixel);
@@ -93,6 +120,7 @@ namespace Game.Editor.Setup
             s_Meshes.Clear();
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             SetupLighting(sky);
+            var worldVolume = InstallSkyRig();
 
             var world = new GameObject("DrivingLab").transform;
             var ground = Group(world, "Ground");
@@ -225,6 +253,13 @@ namespace Game.Editor.Setup
             camGo.AddComponent<UniversalAdditionalCameraData>();
             camGo.AddComponent<AudioListener>();
             camGo.transform.SetPositionAndRotation(eye, Quaternion.identity);
+            if (worldVolume != null)
+            {
+                // Same tier binding as the region scenes (exposure, post, cab-view lift of the art cab).
+                var applier = camGo.AddComponent<QualityProfileApplier>();
+                applier.targetCamera = cam;
+                applier.volume = worldVolume;
+            }
 
             var boot = new GameObject("DrivingLabBootstrap").AddComponent<DrivingLabBootstrap>();
             boot.vehicle = truck.GetComponent<VehicleBody>();
@@ -235,7 +270,7 @@ namespace Game.Editor.Setup
             var qa = new GameObject("ControlCameras").transform;
             Vector3 s0 = L.Spawn;
             Qa(qa, "lab-overview", new Vector3(-215f, 120f, -275f), new Vector3(0f, 0f, -10f), 45f, "Whole pad from the south-west: layout legibility, markings, zones.");
-            Qa(qa, "lab-truck-34", s0 + new Vector3(6.5f, 2.8f, 11.5f), s0 + new Vector3(0f, 1.7f, 2.2f), 50f, "Graybox tractor 3/4 front: proportions, wheels on the ground, cab, mirrors.");
+            Qa(qa, "lab-truck-34", s0 + new Vector3(6.5f, 2.8f, 11.5f), s0 + new Vector3(0f, 1.7f, 2.2f), 50f, "Tractor 3/4 front: proportions, wheels on the ground, cab, mirrors.");
             Qa(qa, "lab-truck-side", s0 + new Vector3(13f, 1.6f, 2.2f), s0 + new Vector3(0f, 1.6f, 2.2f), 40f, "Side elevation: wheelbase 3.70 m, overhangs, cab height 3.75 m against the 1 m cones.");
             Qa(qa, "lab-cab-eye", eye, eye + Quaternion.Euler(7f, 0f, 0f) * Vector3.forward * 10f, 55f, "Driver eye point with the driving HUD: windscreen view, mirror insets, steering wheel, safe area.", hud: true, mirrorInsets: true);
             Qa(qa, "lab-chase-hud", s0 + new Vector3(0f, 7.5f, -26f), s0 + new Vector3(0f, 2f, 3f), 50f, "Chase camera (combination framing) with HUD and telemetry panel.", hud: true, telemetry: true);
@@ -253,6 +288,9 @@ namespace Game.Editor.Setup
             Qa(qa, "lab-ramps", new Vector3(20f, 6f, L.RampStartZ - 18f), new Vector3((L.Ramp6X + L.Ramp12X) * 0.5f, 1f, L.RampStartZ + 30f), 50f, "6 % and 12 % ramps with plateau.");
             Qa(qa, "lab-surfaces", new Vector3(L.PatchX0 + 60f, 14f, L.PatchZ0 - 26f), new Vector3(L.PatchX0 + 60f, 0f, L.PatchZ0 + 20f), 55f, "Surface patches: dry/wet asphalt, concrete, cobbles, gravel, grass + labels.");
             Qa(qa, "lab-circles", new Vector3(-110f, 70f, -215f), new Vector3(-110f, 0f, -40f), 50f, "R50 / R25 circles and figure-eight markings.");
+
+            // The cab / exterior control cameras of the art truck (cab-driver, cab-dash, truck-34 ...), as in the region scenes.
+            if (!grayboxTractor) TruckAssetBuilder.AddControlCameras(truck.transform);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             BuildScenes.Apply();
@@ -658,6 +696,45 @@ namespace Game.Editor.Setup
             sunGo.transform.rotation = Quaternion.Euler(45f, -35f, 0f);
             sunGo.AddComponent<UniversalAdditionalLightData>();
             RenderSettings.sun = sun;
+        }
+
+        // Paths of LookDevAssets (Game.Rendering.Editor is not referenced by Game.Editor; asmdefs are the leader's to change).
+        const string LightingDir = "Assets/_Project/Rendering/Settings/Lighting";
+        static readonly string[] k_Presets = { "LP_Clear", "LP_Overcast", "LP_LowSun", "LP_Dusk", "LP_Night" };
+
+        /// <summary>
+        /// D84: the sky / lighting rig of the region scenes (EnvironmentLighting with the lighting presets, the world
+        /// volume) on the lab too. The art cab is lit by CabInteriorLighting from the EnvironmentLighting sky model; with
+        /// the bare trilight ambient of the old lab the interior rendered near black. Returns the world volume, or null
+        /// (legacy lab lighting kept, with a warning) when the look-dev assets are missing.
+        /// </summary>
+        static Volume InstallSkyRig()
+        {
+            var presets = new List<LightingPreset>();
+            foreach (var n in k_Presets)
+            {
+                var lp = AssetDatabase.LoadAssetAtPath<LightingPreset>($"{LightingDir}/{n}.asset");
+                if (lp != null) presets.Add(lp);
+            }
+            var skyMat = AssetDatabase.LoadAssetAtPath<Material>(LightingDir + "/M_Sky.mat");
+            var profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>("Assets/_Project/Rendering/Settings/VP_World.asset");
+            if (presets.Count != k_Presets.Length || skyMat == null || profile == null)
+            {
+                Debug.LogWarning("[SETUP] DrivingLab: look-dev lighting assets missing (run scripts/setup-project.ps1) - legacy lab lighting, the cab interior will be dark");
+                return null;
+            }
+            var sun = RenderSettings.sun;
+            sun.shadows = LightShadows.Soft;
+            sun.shadowBias = 0.05f; sun.shadowNormalBias = 0.4f;
+            var env = new GameObject("EnvironmentLighting").AddComponent<EnvironmentLighting>();
+            env.presets = presets.ToArray();
+            env.sun = sun;
+            env.skyMaterial = skyMat;
+            env.Apply();
+            var vol = new GameObject("WorldVolume").AddComponent<Volume>();
+            vol.isGlobal = true;
+            vol.sharedProfile = profile;
+            return vol;
         }
 
         // ------------------------------------------------------------------ materials / textures

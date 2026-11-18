@@ -31,15 +31,24 @@ CLOSURE_SETBACK_M = 60.0   # WorldEdgeBuilder.ClosureSetbackM (ADR 0169): the cl
 BEHIND_CLOSURE_M = 25.0    # StartClearance.BehindClosureM: tractor origin behind the row (trailer rear end 13.7 m clear) - WORKING_VALUE
 SKEW_ALLOWANCE_M = 5.0     # the lane centre meets a skewed row later than the road axis (measured: up to 1.2 m, bialystok-maczka) - WORKING_VALUE
 EDGE_START_S_M = CLOSURE_SETBACK_M + BEHIND_CLOSURE_M + SKEW_ALLOWANCE_M
+AHEAD_FREE_M = 300.0   # StartClearance.AheadFreeM: open route ahead of the start (ADR 0262 task) - WORKING_VALUE
 MIN_AHEAD_M = 100.0    # keep >= 100 m before the tile-end closure (closure 60 m before the edge, ADR 0169) - WORKING_VALUE
+
+# Ring tiles of ADR 0231 in driving order (owner decision 2026-11-16: the ring is part of d67-full).
+RING_0231 = [
+    "dk65-monki-02", "dk65-monki-03", "dk65-monki-04", "dk65-monki-05", "dk65-monki-06", "dk65-monki-07", "monki-e", "monki",
+    "dw671-tykocin-02", "dw671-tykocin-03", "dw671-tykocin-04", "dw671-tykocin-05", "dw671-tykocin-06",
+    "dw671-tykocin-07", "dw671-tykocin-08", "dw671-tykocin-09", "tykocin",
+    "dw671-jasionowka-01",
+]
 
 # Derived sets (ADR 0267, owner decision D71): name -> (base set, extra region ids, note). Written after the base set.
 DERIVED_SETS: dict[str, tuple[str, list[str], str]] = {
     "d67-full": (
         "d67",
-        ["bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01"],
-        "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin. APK size ESTIMATED 1407-1948 MB "
-        "(REVIEW-2026-11-15-s21-code-104, like 'all'); measure on the build (ADR 0267).",
+        ["bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01", *RING_0231],
+        "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin; owner decision 2026-11-16: + the 18 ring tiles of ADR 0231 "
+        "(DK65 to Monki, DW671 to Tykocin, DW671 towards Jasionowka). Build size not measured with the ring (ADR 0267).",
     ),
 }
 
@@ -66,6 +75,9 @@ def apply_derived_sets(cat: dict, problems: list[str]) -> None:
             sets[cur] = want
 
 
+NO_START_BELOW_M = EDGE_START_S_M + AHEAD_FREE_M + CLOSURE_SETBACK_M   # ADR 0231 §5a: 450 m
+
+
 def starts_on_region_edge(region_id: str, route: dict) -> bool:
     """True when the first graph node of the start route is a boundary node (the road is cut by the region edge)."""
     nodes = route.get("graph_nodes") or []
@@ -85,7 +97,29 @@ def derived(region_id: str) -> dict:
         raise SystemExit(f"{region_id}: {route.relative_to(REPO)} missing (scripts/export-route.py)")
     data = json.loads(route.read_text(encoding="utf-8"))
     length = float(data["length_m"])
-    wanted = EDGE_START_S_M if starts_on_region_edge(region_id, data) else SPAWN_S_M
+    on_edge = starts_on_region_edge(region_id, data)
+    wanted = EDGE_START_S_M if on_edge else SPAWN_S_M
+    # ADR 0231 §5a: a corner tile whose corridor stretch is too short for any start behind the entry closure carries the
+    # authored marker no_standalone_start (route_endpoints.json); the catalog gets noStart = true and the start menu does
+    # not offer the tile. The marker is accepted only when it is true: an edge route shorter than the rule start + the open
+    # route the start needs ahead (AHEAD_FREE_M, StartClearance.AheadFreeM) + the exit closure (CLOSURE_SETBACK_M).
+    endpoints_f = REGIONS / region_id / "route_endpoints.json"
+    if endpoints_f.exists() and json.loads(endpoints_f.read_text(encoding="utf-8")).get("no_standalone_start"):
+        if not on_edge or length >= NO_START_BELOW_M:
+            raise SystemExit(f"{region_id}: no_standalone_start on a route of {length} m that has a valid start "
+                             f"(edge route: {on_edge}, needs < {NO_START_BELOW_M} m) - remove the marker")
+        return {"routeLengthM": round(length, 2), "startS": round(max(0.0, min(wanted, length - MIN_AHEAD_M)), 2),
+                "noStart": True}
+    # authored start (owner decision, survives regeneration): Data/Regions/<id>/route_endpoints.json "start_s_m" moves
+    # the start further along the route (e.g. dk65-06: past the roundabout the rule start fell on); never closer to
+    # the route start than the rule, so the start stays behind the region-edge closure
+    endpoints = REGIONS / region_id / "route_endpoints.json"
+    if endpoints.exists():
+        authored = json.loads(endpoints.read_text(encoding="utf-8")).get("start_s_m")
+        if authored is not None:
+            if float(authored) < wanted:
+                raise SystemExit(f"{region_id}: route_endpoints.json start_s_m {authored} < rule start {wanted} m")
+            wanted = float(authored)
     start = max(0.0, min(wanted, length - MIN_AHEAD_M))
     return {"routeLengthM": round(length, 2), "startS": round(start, 2)}
 
@@ -109,6 +143,9 @@ def main() -> int:
             if r.get(k) != v:
                 problems.append(f"{r['id']}.{k}: {r.get(k)} -> {v}")
                 r[k] = v
+        if "noStart" in r and "noStart" not in d:          # marker removed from route_endpoints.json
+            problems.append(f"{r['id']}.noStart: {r['noStart']} -> (none)")
+            del r["noStart"]
     apply_derived_sets(cat, problems)
     for s in cat.get("sets", []):
         for t in s["regions"]:

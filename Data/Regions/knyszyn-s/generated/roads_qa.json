@@ -105,6 +105,7 @@
    "S": 5.0,
    "Z": 4.5
   },
+  "compact_roundabouts": [],
   "crossings_in_junction": [],
   "crossings_merged": 0,
   "crossings_p11": 0,
@@ -116,7 +117,7 @@
    "patches": 29
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 67369,
+  "footprint_nodes": 64167,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -155,7 +156,7 @@
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 192,
+  "nmt_nodes_replaced_under_decks": 175,
   "overrides_applied": [
    {
     "id": "dk65-carriageway-width",
@@ -193,6 +194,64 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 0,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 2
+  },
+  "seam_tapers": [
+   {
+    "chain": "c:w27718745:897574813-1134817563",
+    "end": "a",
+    "in_tile_m": 13.5,
+    "length_m": 27.0,
+    "neighbour": "dk65-11",
+    "shoulder_cm": {
+     "L": {
+      "other": [
+       35,
+       75
+      ],
+      "own": [
+       8,
+       100
+      ],
+      "seam": [
+       22,
+       88
+      ]
+     },
+     "R": {
+      "other": [
+       35,
+       75
+      ],
+      "own": [
+       8,
+       100
+      ],
+      "seam": [
+       22,
+       88
+      ]
+     }
+    },
+    "step_m": 0.27,
+    "width_other": 6.6,
+    "width_own": 6.6,
+    "width_seam": 6.6
+   },
+   {
+    "chain": "c:w98071886:1134817563-839431340",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "dw671-tykocin-01",
+    "step_m": 0.1,
+    "width_other": 5.5,
+    "width_own": 5.7,
+    "width_seam": 5.6
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 0,
    "parts": 0,
@@ -212,7 +271,7 @@
   },
   "verge_strips": {
    "chunks": 8,
-   "tris": 528
+   "tris": 536
   },
   "walled_ramps": []
  }

@@ -3,7 +3,7 @@
     uv run --project tools/worldgen python scripts/map-audit-cameras.py --region bialystok-industrial-c \
         --out artifacts/map-audit-r9/cameras/audit_cameras.json [--step 20] [--left-step 40]
 
-Read-only inputs: Data/Regions/<id>/region.yaml, roads.graph.json, route_start.json (graph_nodes), heightmap_2049.r16.
+Read-only inputs: Data/Regions/<id>/region.yaml, roads.graph.json (+ overrides.yaml: effective graph, ADR 0274), route_start.json (graph_nodes), heightmap_2049.r16.
 Forward = route_start graph path (Kwadrat Park -> DK8/DK19); reverse = shortest drivable path end -> start on the same
 graph (roadgraph.to_digraph, same as export-route.py). Lane: right-most lane centre of the travel direction
 (two-way: lane_w * (lanes/2 - 0.5) right of the centreline; one-way: (lanes-1)/2 * lane_w right), lane_w = width/lanes
@@ -36,6 +36,22 @@ LOOK_AHEAD = 30.0
 FOV_CAB = 55.0
 
 
+def graph_and_route(region_id, rdir):
+    """(effective graph, route_start.json) - ADR 0274: the graph with the authored carriageway splits, so the cameras
+    sit on the lanes the world is built with; route_start.json lists ingested node ids (scripts/export-route.py), a
+    split node moved by an override is translated to its effective id."""
+    from roads import carriageway_split as CS
+    from roads import pipeline
+    stale = []
+    graph = pipeline.effective_graph(region_id, stale=stale)
+    if stale:
+        print(f"WARNING: stale carriageway_split overrides (ingested geometry kept there): {stale}")
+    alias = CS.node_aliases(graph)
+    route = json.loads((Path(rdir) / "route_start.json").read_text(encoding="utf-8"))
+    route["graph_nodes"] = [alias.get(n, n) for n in route["graph_nodes"]]
+    return graph, route
+
+
 def load_height(region):
     import importlib.util
     spec = importlib.util.spec_from_file_location("g3s", REPO / "scripts" / "gate3-segment.py")
@@ -62,8 +78,7 @@ def main() -> int:
 
     rdir = REPO / "Data" / "Regions" / a.region
     region = yaml.safe_load((rdir / "region.yaml").read_text(encoding="utf-8"))
-    graph = json.loads((rdir / "roads.graph.json").read_text(encoding="utf-8"))
-    route = json.loads((rdir / "route_start.json").read_text(encoding="utf-8"))
+    graph, route = graph_and_route(a.region, rdir)
     ox, oy = region["origin"]["x"], region["origin"]["y"]
     H = load_height(region)
     tr = Transformer.from_crs("EPSG:2180", "EPSG:4326", always_xy=True)

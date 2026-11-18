@@ -701,7 +701,11 @@ def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
     centres = []
     for code in reversed(plates):              # plates listed top first
         shape, _ = SG.face(code)
-        size = S.SIGN_SIZE[shape] * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
+        if shape == "rect":                    # ADR 0279: D-42 / D-43 boards, T-1 plates under a warning sign
+            size = SG.rect_size(code)[1]
+        else:
+            size = S.SIGN_SIZE["triangle" if shape == "triangle_up" else shape] * (
+                math.sqrt(3) / 2 if shape in ("triangle", "triangle_up") else 1.0)
         centres.append((code, zc + size / 2, shape))
         zc += size + 0.05
     pl.items[-1]["sz"] = round(zc - zb + 0.05, 3)
@@ -709,6 +713,9 @@ def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
         if shape == "triangle":                  # inverted triangle: centroid 1/3 from the top edge
             h = S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2
             zcen = zcen - h / 2 + 2 * h / 3
+        elif shape == "triangle_up":             # upright triangle (A-8): centroid 1/3 from the bottom edge
+            h = S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2
+            zcen = zcen - h / 2 + h / 3
         pl.add(f"plate_{code}", p, yaw, z=zcen, src=src)
     return [c for c, _, _ in centres]
 
@@ -737,6 +744,7 @@ def junction_signs(pl, net, juncs, ctx_points, report, codes):
             codes.add(cd)
             cnt[cd] = cnt.get(cd, 0) + 1
         pl.pts.setdefault("sign", []).append((p[0], p[1]))
+        return True
 
     pts = {}
     for q in ctx_points:
@@ -757,7 +765,10 @@ def junction_signs(pl, net, juncs, ctx_points, report, codes):
         for a in inb:
             r = RANK[a.cls(net.sec_list)]
             if r > best and a.cls(net.sec_list) in ("Z", "L", "G") or (r > best and (stop or give) and r < 6):
-                put(a, ["B-20" if stop else "A-7"], f"rule:minor:{j.id}")
+                code = "B-20" if stop else "A-7"
+                if put(a, [code], f"rule:minor:{j.id}"):
+                    # ADR 0279 P1: built_up.advance_signs adds A-7 + T-1 / "Stop" 150-300 m before (v > 60 km/h)
+                    j.minor_signs = list(getattr(j, "minor_signs", None) or []) + [(j.arms.index(a), code)]
             elif r == best and best <= RANK["Z"] and max(ranks) > best and max(ranks) < 6:
                 put(a, ["D-1"], f"rule:major:{j.id}")
     report["junction_signs"] = cnt
@@ -893,7 +904,7 @@ def signals(pl, net, juncs, report):
             if emerg and a.cls(net.sec_list) in ("D",):
                 continue                    # emergency signals face the main road, not the fire-station exit
 
-            d = (a.chain.t_a if a.end == "a" else a.chain.t_b) + 1.0
+            d = (a.chain.t_a if a.end == "a" else a.chain.t_b) + S.SIGNAL_AFTER_TRIM
             if d > a.L - 1:
                 continue
             c = a.chain
@@ -908,21 +919,21 @@ def signals(pl, net, juncs, report):
             if emerg:
                 lit = "off"                 # traffic_signals=emergency: dark at rest (ADR 0074)
             sec = c.section(s, net.sec_list)
-            lanes_in = sec.lanes if sec.oneway else max(1, sec.lanes_fwd if a.end == "b" else sec.lanes_bwd)
+            lanes_in = S.signal_lanes_in(sec, a.end)
             right = np.array([face[1], -face[0]])                # from the right kerb toward the carriageway
-            if lanes_in >= S.SIGNAL_CANTILEVER_LANES and not emerg:
+            if S.signal_overhead(sec, a.end, emerg):
                 z = pl.add("signal_mast", p, yaw_of(right), src=f"rule:signal:{j.id}")
                 head = p + right * 5.0
                 pl.add(f"signal_head_{lit}", head, yaw_of(face), z=z + S.SIGNAL_MAST_H - 1.25, src=f"rule:signal:{j.id}")
             else:
                 z = pl.add("signal_pole", p, yaw_of(face), src=f"rule:signal:{j.id}")
-            pl.add(f"signal_head_side_{lit}", p + face * 0.15, yaw_of(face), z=z + 2.9, src=f"rule:signal:{j.id}")
+            pl.add(f"signal_head_side_{lit}", p + face * S.SIGNAL_HEAD_FWD, yaw_of(face), z=z + 2.9, src=f"rule:signal:{j.id}")
             # repeater on the left (median kerb) of one-way approaches with >= 2 lanes, as on the Andersa / Maczka
             # photos (S-1 repeated on the left side; Dz.U. 2019 poz. 2311 zał. 3 - paragraph UNVERIFIED, not re-read)
             if sec.oneway and lanes_in >= 2:
                 pL = a.gutter(d, -1, extra=S.KERB_TOP_W + 0.6)
                 zl = pl.add("signal_pole", pL, yaw_of(face), src=f"rule:signal:{j.id}:left")
-                pl.add(f"signal_head_side_{lit}", pL + face * 0.15, yaw_of(face), z=zl + 2.9, src=f"rule:signal:{j.id}:left")
+                pl.add(f"signal_head_side_{lit}", pL + face * S.SIGNAL_HEAD_FWD, yaw_of(face), z=zl + 2.9, src=f"rule:signal:{j.id}:left")
                 rep_left = report.setdefault("signal_repeaters_left", 0)
                 report["signal_repeaters_left"] = rep_left + 1
             n += 1
@@ -1089,10 +1100,12 @@ class Lin:
             self.ribbon(collision, P, zb, zt, 0.0, src, both=False, collision=None)
             self.buf.parts[-1].layer = "collision"
 
-    def posts(self, mat, P, spacing, w, d, h, zb=None, src="", ground_feet=False):
+    def posts(self, mat, P, spacing, w, d, h, zb=None, src="", ground_feet=False, end_post_min=None):
         line = LineString(P)
         L = line.length
         ss = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))]) if spacing is None else np.arange(0, L + 1e-6, spacing)
+        if spacing is not None and end_post_min is not None and len(ss) and L - ss[-1] > end_post_min:
+            ss = np.append(ss, L)       # c-p2-s23: the run ends on a post (see noise_wall)
         Q = np.asarray(P) if spacing is None else np.array([line.interpolate(s).coords[0] for s in ss])
         if len(Q) < 1:
             return
@@ -1355,12 +1368,16 @@ def ramp_wall_keepout(net, r=2.5):
         for run in np.split(idx, np.where(np.diff(idx) > 1)[0] + 1):
             if len(run) < 2:
                 continue
+            # c-p1-s23 (REVIEW s20 gate3-phone P1-2): the block wall runs one station past each walled run
+            # (meshing: wr +-1) and a 1.6 m BDOT/OSM retaining stub with a railing stood at its free end
+            # (E -388.6..-387 N -104, g3b_ext34_s1482): the corridor follows the wall and ends round
+            run = np.arange(max(0, run[0] - 1), min(len(wl) - 1, run[-1] + 1) + 1)
             ss = np.asarray(c.line.s)[run]
             P = c.line.point(ss)
             _, N = c.line.frame(ss)
             off = c.hw_at(ss) + S.KERB_TOP_W + bridge_cap_w(c)
             for sgn in (1.0, -1.0):
-                polys.append(LineString(P + N * (sgn * off)[:, None]).buffer(r, cap_style="flat"))
+                polys.append(LineString(P + N * (sgn * off)[:, None]).buffer(r, cap_style="round"))
     return shapely.union_all(polys) if polys else None
 
 
@@ -2161,6 +2178,32 @@ def _approach_transition_mask(br, transition_m):
     return mask
 
 
+def rural_barrier_line(mats, hw, zg):
+    """Post line of a W-beam on a kerbless (RURAL) edge: lateral offset from the chain axis and base height, per
+    station, from the shoulder the station carries in its side `mat` (ADR 0272, roads.xsec.decode).
+
+    Legacy profile (mat 0: 1.00 m paved + 0.75 m ground): GUARDRAIL_OFFSET behind the paved shoulder, base at the
+    height of the paved edge - exactly as before ADR 0272, so regions without a shoulder code keep their barriers.
+    Coded shoulders: GUARDRAIL_OFFSET behind the paved part but never closer than GUARDRAIL_GROUND_EDGE_M to the
+    outer edge of the ground part (the post stands on the shoulder, not in the ditch slope), base on the shoulder
+    surface there (paved crossfall, then SHOULDER_CROSSFALL)."""
+    from roads import xsec as XS
+    mats = np.asarray(mats)
+    hw = np.asarray(hw, float)
+    zg = np.asarray(zg, float)
+    dims = np.array([XS.decode(int(v)) for v in mats], float).reshape(-1, 2)
+    paved, ground = dims[:, 0], dims[:, 1]
+    coded = mats >= XS.SHOULDER_CODE
+    into = np.where(coded, np.clip(np.minimum(S.GUARDRAIL_OFFSET, ground - GUARDRAIL_GROUND_EDGE_M), 0.0, None),
+                    S.GUARDRAIL_OFFSET)
+    off = hw + paved + into
+    zb = zg - S.CROSSFALL * paved - np.where(coded, S.SHOULDER_CROSSFALL * into, 0.0)
+    return off, zb
+
+
+GUARDRAIL_GROUND_EDGE_M = 0.25      # WORKING_VALUE (ADR 0272): post line at least this far inside the ground shoulder edge
+
+
 def guardrails(lin, net, zground, report):
     from scipy import ndimage
     m = {"bridge": 0.0, "median": 0.0, "embankment": 0.0, "structure": 0.0, "approach": 0.0}
@@ -2283,6 +2326,7 @@ def guardrails(lin, net, zground, report):
             off[med] = hw[med] + S.PAVED_SHOULDER_MEDIAN + S.GUARDRAIL_OFFSET
             zb[med] = zg[med] - 0.02
             rur = (kinds == RURAL) & ~br
+            r_off, r_zb = rural_barrier_line(kmat, hw, zg)     # ADR 0272: on the shoulder the station really has
             drop = np.full(len(ss), -1e9)
             if rur.any():
                 # embankment height = road edge minus the ground at the toe of the fill slope: berm 1 m +
@@ -2296,8 +2340,7 @@ def guardrails(lin, net, zground, report):
                 # extend 12 m each way (approach), close small gaps
                 emb = ndimage.binary_dilation(emb, iterations=12) & rur
                 want[emb] = 3
-                off[emb] = hw[emb] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET
-                zb[emb] = zg[emb] - S.CROSSFALL * S.PAVED_SHOULDER
+                off[emb], zb[emb] = r_off[emb], r_zb[emb]
             # ADR 0110 (gate-3 side-by-side #4b): W-beam along a ground carriageway that runs beside a viaduct or a
             # walled ramp, on the side facing it (Mapillary 500263111404933, 1259231227807789, 751431972202262: the
             # links at Rondo Biezenstwa). Rural edge: behind the paved shoulder; kerbed edge without a sidewalk:
@@ -2307,9 +2350,8 @@ def guardrails(lin, net, zground, report):
                 bs = _beside_structure(c, ss, sgn, hw, zg, structs) & (want == 0) & ~br & (rur | kerbed)
                 bs = ndimage.binary_closing(bs, iterations=6) & (want == 0) & ~br & (rur | kerbed)
                 want[bs] = 4
-                off[bs] = np.where(rur[bs], hw[bs] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET,
-                                   hw[bs] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
-                zb[bs] = np.where(rur[bs], zg[bs] - S.CROSSFALL * S.PAVED_SHOULDER, zg[bs] + kh[bs])
+                off[bs] = np.where(rur[bs], r_off[bs], hw[bs] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
+                zb[bs] = np.where(rur[bs], r_zb[bs], zg[bs] + kh[bs])
             # M29 / ADR 0144 pkt 3: a deck barrier end where the chain continues on the ground is not a real
             # end - the barrier is carried past the structure onto the approach (§ 80 rozporządzenia o drogowych
             # obiektach inżynierskich; DECK_APPROACH_TRANSITION_M is WORKING_VALUE). The approach stations join
@@ -2334,9 +2376,8 @@ def guardrails(lin, net, zground, report):
                         gnd[idx] = True
             tr = _approach_transition_mask(br, S.DECK_APPROACH_TRANSITION_M) & (want == 0)
             want[tr] = 5
-            off[tr] = np.where(rur[tr], hw[tr] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET,
-                               hw[tr] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
-            zb[tr] = np.where(rur[tr], zg[tr] - S.CROSSFALL * S.PAVED_SHOULDER, zg[tr] + kh[tr])
+            off[tr] = np.where(rur[tr], r_off[tr], hw[tr] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
+            zb[tr] = np.where(rur[tr], r_zb[tr], zg[tr] + kh[tr])
             if nozones and want.any():
                 Pw = c.line.offset_point(ss, sgn * off)
                 for _zid, zpoly, zcnt in nozones:
@@ -2566,8 +2607,15 @@ def _noise_runs(P, zones, default):
     return [(sl, st) for sl, st in runs if sl.stop - sl.start >= 2]
 
 
-def noise_wall(lin, P, Z, st, H, key):
-    """One noise-barrier run along P (densified, Z = ground). Collision: one wall ribbon to the top."""
+NOISE_END_POST_MIN_M = 0.3   # WORKING_VALUE: a panel end this far past the last post gets its own end post
+
+
+def noise_wall(lin, P, Z, st, H, key, end_post=True):
+    """One noise-barrier run along P (densified, Z = ground). Collision: one wall ribbon to the top.
+    c-p2-s23 (REVIEW s23 c-p1 P2, g3b_rondo_putry_approach): posts stand every NOISE_BARRIER_POST from the start of
+    the run, so the plinth and the panels ran up to that far past the last post (1.9 m at E -446.7 N -26.7: the
+    open plinth end read as a pale wedge). `end_post`: the run ends on a post (not at a style joint inside a part,
+    where the next run starts with its own post)."""
     zp = Z + st["plinth_m"]
     lin.slab("concrete_plinth", P, Z - 0.4, zp, 0.2, key)
     if st["band_m"] is None:                                   # solid absorbing cassettes to the top
@@ -2588,7 +2636,8 @@ def noise_wall(lin, P, Z, st, H, key):
     lin.ribbon("collision_fence", P, Z - 0.2, Z + H, 0.0, key, both=False)
     lin.buf.parts[-1].layer = "collision"
     # ADR 0127: posts NOISE_POST_W wide (HEB 200 class; 0.16 m read as fence wire at 80 m on Low), WORKING_VALUE
-    lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, NOISE_POST_W, NOISE_POST_W, H + 0.1, src=key)
+    lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, NOISE_POST_W, NOISE_POST_W, H + 0.1, src=key,
+              end_post_min=NOISE_END_POST_MIN_M if end_post else None)
 
 
 NOISE_ON_DECK_M = 2.5     # WORKING_VALUE: a mapped noise barrier this close to a screened deck edge IS that screen
@@ -2654,7 +2703,7 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
             P = lin.dens(part, 2.0)
             Z = lin.z(P)
             for sl, st in _noise_runs(P, zones, default):
-                noise_wall(lin, P[sl], Z[sl], st, st.get("height_m", H), key)
+                noise_wall(lin, P[sl], Z[sl], st, st.get("height_m", H), key, end_post=sl.stop >= len(P))
                 seg = float(np.sum(np.hypot(*np.diff(P[sl], axis=0).T)))
                 by_style[st["name"]] = by_style.get(st["name"], 0.0) + seg
             for c, r, s, oid in zones:

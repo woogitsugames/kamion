@@ -38,13 +38,13 @@ sources:
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-nmt-2025-dk65-04.json
-  manifest_sha256: 0acea13967e1c550efb08abcd616336a3f5afd0b52051c9521e33581317bb347
+  manifest_sha256: 5bdd1d5bf0d6abc95696d9677830ccf2e996c1bdba51f9d2390de73c9760e8bc
 - id: gugik-orto-2024-rgb-0p25-dk65-04
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-dk65-04.json
-  manifest_sha256: ce5a0204274b1233127a25d1f5a6cc0306233bb416bd17bb09f1f467e267ad12
+  manifest_sha256: 9269c2783ef99dd016677facbde5cea0e5de4f060a2c0652355efff4c389aa6b
 - id: gugik-bdot10k-2002
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
@@ -66,3 +66,7 @@ sources:
 rebuild:
 - uv run --project tools/worldgen tools/worldgen/ingest.py --region dk65-04
 - uv run --project tools/worldgen tools/worldgen/build_region.py --region dk65-04
+rail:
+  enabled: true
+  sources: Data/Regions/dk65-04/generated/rail_sources.json
+  note: OSM railway=rail + railway=level_crossing (ADR 0217)

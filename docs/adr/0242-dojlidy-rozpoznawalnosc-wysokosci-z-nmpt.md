@@ -1,6 +1,6 @@
 # ADR 0242 — Dojlidy: rozpoznawalność — wysokości brył z NMPT, okładzina kasetowa K3, otwory hal na gruncie
 
-Status: Proposed (agent world-builder, s21, chmura D runda 2, gałąź `dojlidy-0242`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `e4fad6868`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s21, chmura D runda 2, gałąź `dojlidy-0242`), 2026-11-15. Do scalenia przez lidera.
 Poprzednicy: ADR 0179, 0185, 0196, 0202. Podstawa: `docs/reports/REVIEW-2026-11-14-s20-0185.md`, `…-0196.md`, `…-0183.md`,
 `docs/owner/BACKLOG-S21.md` (B-040…B-061). Zakres: tylko region `bialystok-dojlidy` (dane + reguły opt-in).
 Nie ruszane: las Krywlany (0187), brama szpitala (0189), DDR (0188), chodniki/krawężniki (0237), typologia ogólna (0238),

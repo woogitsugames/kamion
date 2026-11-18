@@ -1,0 +1,90 @@
+# Cross-section of a carriageway edge WITHOUT a raised kerb (roads.network kind RURAL): which edges get it and how wide
+# the paved / ground parts of the shoulder are. Data, not code (ADR 0272). Read by roads/xsec.py.
+#
+# Sources (texts read 2026-11-15):
+#   [PTB2022]  Rozporządzenie Ministra Infrastruktury z 24.06.2022 w sprawie przepisów techniczno-budowlanych
+#              dotyczących dróg publicznych, Dz.U. 2022 poz. 1518 - in force since 2022-09-21, no consolidated text
+#              (tekst jednolity) published; one amendment: Dz.U. 2025 poz. 1352 (in force 2025-10-22), which in § 23
+#              rewords ust. 4 zd. 2 and deletes the "if no paved part" clause of ust. 10 pkt 5 - widths unchanged.
+#              https://api.sejm.gov.pl/eli/acts/DU/2022/1518/text.html
+#     § 23 ust. 1   single carriageway outside built-up areas: shoulders on both sides
+#     § 23 ust. 3   pkt 1 A/S: paved part (pas awaryjny) + ground part; pkt 2 GP: paved part (opaska zewnętrzna) + ground
+#                   part; pkt 3 G/Z: opaska + ground part OR ground only; pkt 4 L/D: ground only
+#     § 23 ust. 4   street: shoulders as outside built-up areas; other solutions allowed when the carriageway has a
+#                   raised kerb and pedestrians have a footway
+#     § 23 ust. 6   pas awaryjny: A 3.00 m (>= 2.50), S 2.50 m (<= 3.00)
+#     § 23 ust. 7   opaska zewnętrzna: GP single 0.75 m (>= 0.50), GP dual 0.75 m (1.50 allowed), G/Z 0.50 m
+#     § 23 ust. 10  ground shoulder not narrower than: pkt 1 1.25 m (>= 0.75) beside a pas awaryjny; pkt 2 0.75 m
+#                   (>= 0.50) beside an opaska; pkt 3 G without a paved part 1.25 m (>= 0.50); pkt 4 Z 1.00 m (>= 0.50);
+#                   pkt 5 L/D 0.75 m (>= 0.50)
+#   [ZNAKI-Z2] zał. 2 to the 2003 regulation on signs (t.j. Dz.U. 2019 poz. 2311), pkt 2.2.2 "Linie krawędziowe":
+#              edge lines mark the carriageway edge where there is no street kerb; P-7a/P-7b 0.24 m on A/S, roads with a
+#              paved shoulder or opaska, roads with an international number and dual carriageways; elsewhere P-7c/P-7d
+#              0.12 m are allowed. The position of the line is given only on rys. 2.2.2.1 (figure, no number in the
+#              text) -> standards.EDGE_LINE_INSET_MINOR stays WORKING_VALUE.
+#   [ORTO]     GUGiK orthophoto WMS (open data), measured 2026-11-15: tools/worldgen/qa/ortho_xsec.py, rows and
+#              summary in docs/reports/ortho-xsec-0272/.
+#   [K1]       research/dk65-knyszyn-refs/README.md (orthophoto cross-sections of the corridor, +-0.4 m at the edge).
+schema: truck-sim-pl/xsec-rules/1
+
+# Rule edge without a kerb: class + speed, as before ADR 0272 (ADR 0204; WORKING_VALUE). An attached footway keeps the
+# kerb. Authored `shoulder:` and OSM `shoulder=*` decide per edge, before this rule.
+open_road:
+  classes: [A, S, GP, G]
+  min_speed_kmh: 70
+
+# Asphalt that runs past the nominal carriageway edge when the shoulder has no paved part (the generator `width` is the
+# BDOT10k SZEROKOSCNAWIERZCHNI / the orthophoto asphalt width, so there is nothing to add). 0.05 m keeps the strip
+# non-degenerate. WORKING_VALUE.
+min_paved_m: 0.05
+
+# First match wins. match keys: class (list), carriageway (single = two-way, dual = one-way carriageway),
+# highway (list of OSM values), ref (regex on the OSM ref). set: kind paved | ground, paved_m = asphalt beyond the
+# carriageway width, ground_m = gravel / ground part.
+shoulder_rules:
+  - id: g-single-ground
+    match: {class: [G], carriageway: single}
+    set: {kind: ground, paved_m: 0.08, ground_m: 1.00}
+    status: WORKING_VALUE (pomiar Ełcka)
+    source: >-
+      [PTB2022] § 23 ust. 3 pkt 3 allows a ground-only shoulder on G; ust. 10 pkt 3: 1.25 m standard, >= 0.50 m.
+      [ORTO] Ełcka / Studzienna (dk65-04, dk65-05), 17 clean sections: asphalt 6.2-7.45 m (median 6.75), edge lines
+      6.0-6.35 m apart (median 6.2, 10 sections), sand / gravel strip 0.7-1.2 m (read by eye, ESTIMATED) -> 6.6 m +
+      2 x 0.08 m asphalt, 1.0 m ground. 0.08 m is below the reading accuracy (+-0.3 m) and comes from one road.
+      [K1] DK65 km 16.5-25: asphalt 7.1-7.5 m, lines 6.0-6.4 m, gravel ~1 m; Knyszyn DK65: asphalt 7.3-7.6 m.
+  - id: z-single-ground
+    match: {class: [Z], carriageway: single}
+    set: {kind: ground, paved_m: 0.05, ground_m: 1.00}
+    status: SOURCED
+    source: "[PTB2022] § 23 ust. 3 pkt 3, ust. 10 pkt 4 (1.00 m standard, >= 0.50 m). Not measured."
+  - id: l-d-ground
+    match: {class: [L, D]}
+    set: {kind: ground, paved_m: 0.05, ground_m: 0.75}
+    status: SOURCED
+    source: "[PTB2022] § 23 ust. 3 pkt 4, ust. 10 pkt 5 (0.75 m standard, >= 0.50 m). Not measured."
+  - id: legacy-paved
+    match: {}
+    set: {kind: paved, paved_m: 1.00, ground_m: 0.75}
+    status: WORKING_VALUE
+    source: >-
+      Profile of every kerbless edge before ADR 0272 (standards.PAVED_SHOULDER 1.00 m + SHOULDER_W[GP] 0.75 m), kept
+      for A, S, GP and dual carriageways: no measurement to change it. [PTB2022] § 23 ust. 7 gives the opaska of GP
+      0.75 m (dual: up to 1.50 m) and ust. 6 a 2.50-3.00 m pas awaryjny on A/S - the A/S value is known to be too
+      narrow (open item of ADR 0272). Ground part: ust. 10 pkt 2.
+
+# OSM shoulder=* (https://wiki.openstreetmap.org/wiki/Key:shoulder) on an edge: yes / both / left / right = a shoulder
+# usable by vehicles on that side -> no kerb there; width from shoulder:width, else default_width_m (WORKING_VALUE);
+# shoulder:surface in ground_surfaces -> ground part, otherwise paved. shoulder=no decides nothing (rules above).
+osm_shoulder:
+  default_width_m: 1.00
+  ground_surfaces: [unpaved, gravel, fine_gravel, compacted, ground, dirt, grass, sand, earth]
+
+# Details that belong to a storm sewer (street gullies, carriageway manhole covers): only beside a raised kerb, never on
+# a station whose edges are both ground shoulders (paved part not wider than ground_max_paved_m, WORKING_VALUE).
+# Gullies were already kerb-only (roads.decals.gullies: kind URBAN / ISLAND with a kerb >= 0.08 m).
+drainage:
+  manholes_beside_ground_shoulder: false
+  ground_max_paved_m: 0.25
+  # ADR 0288: no carriageway manhole covers on these classes (motorway / expressway carriageways drain to the verge,
+  # the median or gullies outside the lanes; a cover in an S8 lane was visible in the s8-01 render). WORKING_VALUE.
+  no_manhole_classes: [A, S]

@@ -32,6 +32,54 @@ namespace PhysicsRunner.Tests
             Assert.True(r.Identical, r.ToString());
         }
 
+        /// <summary>
+        /// D42: a scenario run owns its definitions. Tweaking one run's model definitions (as diagnostics do through
+        /// s.Combo.FifthWheel.Def) must not reach another run or the shared cache.
+        /// </summary>
+        [Fact]
+        public void Setup_DefinitionsArePrivateToTheRun()
+        {
+            var sc = Suites.Find("lane_change_80@laden40");
+            var a = ScenarioRunner.Setup(sc, new RunOptions());
+            var b = ScenarioRunner.Setup(sc, new RunOptions());
+            Assert.NotSame(a.Combo.FifthWheel.Def, b.Combo.FifthWheel.Def);
+            Assert.NotSame(ScenarioRunner.Defs.Vehicles[sc.vehicle].fifthWheel, a.Combo.FifthWheel.Def);
+            Assert.NotSame(ScenarioRunner.Defs.Trailers[sc.trailer], a.Trailer.Def);
+            double shipped = b.Combo.FifthWheel.Def.plateFrictionCreepRateDegS;
+            a.Combo.FifthWheel.Def.plateFrictionCreepRateDegS = shipped + 7;
+            Assert.Equal(shipped, b.Combo.FifthWheel.Def.plateFrictionCreepRateDegS);
+            Assert.Equal(shipped, ScenarioRunner.Defs.Vehicles[sc.vehicle].fifthWheel.plateFrictionCreepRateDegS);
+        }
+
+        /// <summary>
+        /// D42 regression (CI flake on PR #165 / #167): bit-determinism must hold while another thread in the same process builds
+        /// combination runs and tweaks their definitions, as xUnit does with test classes in parallel. Before the fix the
+        /// tweak landed in the shared definitions and the two runs differed (lane_change_80@laden40 from t = 0.22 s).
+        /// </summary>
+        [Fact]
+        public void SameScenario_Twice_IsBitIdentical_WhileAnotherThreadTweaksDefinitions()
+        {
+            var sc = Suites.Find("park_brake_hold_no_interlock_comb@laden40");
+            using var stop = new System.Threading.CancellationTokenSource();
+            var noise = System.Threading.Tasks.Task.Run(() =>
+            {
+                for (int i = 0; !stop.IsCancellationRequested; i++)
+                {
+                    var s = ScenarioRunner.Setup(sc, new RunOptions());
+                    s.Combo.FifthWheel.Def.plateFrictionCreepRateDegS = i % 5;
+                    s.Combo.FifthWheel.Def.yawLimitDeg = 40 + i % 50;
+                    s.Tractor.Def.fifthWheel.stopRecoveryRateDegS = 1 + i % 7;
+                }
+            });
+            try
+            {
+                var r = Suites.BitIdentical("lane_change_80@laden40");
+                _out.WriteLine(r.ToString());
+                Assert.True(r.Identical, r.ToString());
+            }
+            finally { stop.Cancel(); noise.Wait(); }
+        }
+
         /// <summary>s6.12: fixedDeltaTime 1/50, 1/60, 1/100, 1/120 - metric spread within 5% (WORKING_VALUE, was 5% for 50/100/120).</summary>
         [Theory]
         [InlineData("launch_0_80_flat", "time_to_kmh", 80)]

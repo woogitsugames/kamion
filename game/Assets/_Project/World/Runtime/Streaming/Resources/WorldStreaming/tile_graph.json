@@ -1,0 +1,1797 @@
+{
+ "schema": "truck-sim-pl/tile-graph/1",
+ "generator": "tools/worldgen/streaming/tile_graph.py (ADR 0235)",
+ "crs": "EPSG:2180 (x east, y north) + PL-EVRF2007-NH heights; Unity X = east, Z = north (ADR 0003)",
+ "memoryNote": "worldMemoryMB / worldMemoryHighMB = WORLD_MEMORY Low / High of the region import as quoted in ADR 0229 / ADR 0234 §7; ESTIMATED",
+ "tiles": [
+  {
+   "id": "bialystok-dojlidy",
+   "xmin": 779019.0,
+   "ymin": 589055.0,
+   "xmax": 781067.0,
+   "ymax": 591103.0,
+   "anchorX": 780043.0,
+   "anchorY": 590079.0,
+   "anchorZ": 156.96,
+   "worldMemoryMB": 99.6,
+   "worldMemoryHighMB": 214.9,
+   "memorySource": "ADR 0188 via ADR 0229",
+   "neighbors": []
+  },
+  {
+   "id": "bialystok-industrial-c",
+   "xmin": 776971.0,
+   "ymin": 595199.0,
+   "xmax": 779019.0,
+   "ymax": 597247.0,
+   "anchorX": 777995.0,
+   "anchorY": 596223.0,
+   "anchorZ": 131.14,
+   "worldMemoryMB": 124.2,
+   "worldMemoryHighMB": 267.0,
+   "memorySource": "ADR 0188 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "bialystok-maczka",
+     "side": "W",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "bialystok-kleeberga",
+   "xmin": 772875.0,
+   "ymin": 595199.0,
+   "xmax": 774923.0,
+   "ymax": 597247.0,
+   "anchorX": 773899.0,
+   "anchorY": 596223.0,
+   "anchorZ": 118.16,
+   "worldMemoryMB": 156.7,
+   "worldMemoryHighMB": 356.8,
+   "memorySource": "ADR 0206 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "bialystok-maczka",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-knyszynska",
+     "side": "W",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "bialystok-knyszynska",
+   "xmin": 770827.0,
+   "ymin": 595199.0,
+   "xmax": 772875.0,
+   "ymax": 597247.0,
+   "anchorX": 771851.0,
+   "anchorY": 596223.0,
+   "anchorZ": 138.0,
+   "worldMemoryMB": 116.0,
+   "worldMemoryHighMB": 260.2,
+   "memorySource": "ADR 0208 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "bialystok-kleeberga",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-01",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-02",
+     "side": "NW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "bialystok-maczka",
+   "xmin": 774923.0,
+   "ymin": 595199.0,
+   "xmax": 776971.0,
+   "ymax": 597247.0,
+   "anchorX": 775947.0,
+   "anchorY": 596223.0,
+   "anchorZ": 130.0,
+   "worldMemoryMB": 153.2,
+   "worldMemoryHighMB": 420.4,
+   "memorySource": "ADR 0203/0208 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "bialystok-industrial-c",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-kleeberga",
+     "side": "W",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-01",
+   "xmin": 768779.0,
+   "ymin": 595199.0,
+   "xmax": 770827.0,
+   "ymax": 597247.0,
+   "anchorX": 769803.0,
+   "anchorY": 596223.0,
+   "anchorZ": 138.38,
+   "worldMemoryMB": 69.6,
+   "worldMemoryHighMB": 169.5,
+   "memorySource": "ADR 0288 s24: import Win64 2026-11-17 after the S8 corner rebuild (was 68.2, ADR 0205 via ADR 0229)",
+   "neighbors": [
+    {
+     "id": "bialystok-knyszynska",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-02",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-01",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-03",
+     "side": "NW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-02",
+   "xmin": 768779.0,
+   "ymin": 597247.0,
+   "xmax": 770827.0,
+   "ymax": 599295.0,
+   "anchorX": 769803.0,
+   "anchorY": 598271.0,
+   "anchorZ": 111.24,
+   "worldMemoryMB": 60.2,
+   "worldMemoryHighMB": 139.3,
+   "memorySource": "ADR 0210 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-01",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-03",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-04",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "bialystok-knyszynska",
+     "side": "SE",
+     "seamM": 0.0
+    },
+    {
+     "id": "s8-01",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-03",
+   "xmin": 766731.0,
+   "ymin": 597247.0,
+   "xmax": 768779.0,
+   "ymax": 599295.0,
+   "anchorX": 767755.0,
+   "anchorY": 598271.0,
+   "anchorZ": 111.63,
+   "worldMemoryMB": 50.5,
+   "worldMemoryHighMB": 131.7,
+   "memorySource": "ADR 0207 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-02",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-04",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-01",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-01",
+     "side": "SE",
+     "seamM": 0.0
+    },
+    {
+     "id": "s8-02",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-04",
+   "xmin": 766731.0,
+   "ymin": 599295.0,
+   "xmax": 768779.0,
+   "ymax": 601343.0,
+   "anchorX": 767755.0,
+   "anchorY": 600319.0,
+   "anchorZ": 126.63,
+   "worldMemoryMB": 76.1,
+   "worldMemoryHighMB": 181.5,
+   "memorySource": "ADR 0207 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-05",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-03",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-02",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-05",
+   "xmin": 766731.0,
+   "ymin": 601343.0,
+   "xmax": 768779.0,
+   "ymax": 603391.0,
+   "anchorX": 767755.0,
+   "anchorY": 602367.0,
+   "anchorZ": 141.44,
+   "worldMemoryMB": 75.5,
+   "worldMemoryHighMB": 176.5,
+   "memorySource": "ADR 0207 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-06",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-04",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-07",
+     "side": "NW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-06",
+   "xmin": 766731.0,
+   "ymin": 603391.0,
+   "xmax": 768779.0,
+   "ymax": 605439.0,
+   "anchorX": 767755.0,
+   "anchorY": 604415.0,
+   "anchorZ": 168.11,
+   "worldMemoryMB": 59.0,
+   "worldMemoryHighMB": 136.1,
+   "memorySource": "ADR 0214 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-05",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-07",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-08",
+     "side": "NW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-07",
+   "xmin": 764683.0,
+   "ymin": 603391.0,
+   "xmax": 766731.0,
+   "ymax": 605439.0,
+   "anchorX": 765707.0,
+   "anchorY": 604415.0,
+   "anchorZ": 138.79,
+   "worldMemoryMB": 59.1,
+   "worldMemoryHighMB": 136.5,
+   "memorySource": "ADR 0214 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-06",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-08",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-09",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-05",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-08",
+   "xmin": 764683.0,
+   "ymin": 605439.0,
+   "xmax": 766731.0,
+   "ymax": 607487.0,
+   "anchorX": 765707.0,
+   "anchorY": 606463.0,
+   "anchorZ": 137.86,
+   "worldMemoryMB": 55.5,
+   "worldMemoryHighMB": 122.7,
+   "memorySource": "ADR 0214 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-07",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-09",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-10",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-06",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-09",
+   "xmin": 762635.0,
+   "ymin": 605439.0,
+   "xmax": 764683.0,
+   "ymax": 607487.0,
+   "anchorX": 763659.0,
+   "anchorY": 606463.0,
+   "anchorZ": 127.16,
+   "worldMemoryMB": 51.4,
+   "worldMemoryHighMB": 122.4,
+   "memorySource": "ADR 0214 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-08",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-10",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-07",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-10",
+   "xmin": 762635.0,
+   "ymin": 607487.0,
+   "xmax": 764683.0,
+   "ymax": 609535.0,
+   "anchorX": 763659.0,
+   "anchorY": 608511.0,
+   "anchorZ": 121.8,
+   "worldMemoryMB": 49.0,
+   "worldMemoryHighMB": 117.3,
+   "memorySource": "ADR 0214 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-11",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-09",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn-s",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-08",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-11",
+   "xmin": 762635.0,
+   "ymin": 609535.0,
+   "xmax": 764683.0,
+   "ymax": 611583.0,
+   "anchorX": 763659.0,
+   "anchorY": 610559.0,
+   "anchorZ": 141.16,
+   "worldMemoryMB": 48.2,
+   "worldMemoryHighMB": 113.0,
+   "memorySource": "ADR 0214 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-10",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn-s",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn",
+     "side": "NW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-monki-01",
+   "xmin": 758539.0,
+   "ymin": 613631.0,
+   "xmax": 760587.0,
+   "ymax": 615679.0,
+   "anchorX": 759563.0,
+   "anchorY": 614655.0,
+   "anchorZ": 134.64,
+   "worldMemoryMB": 46.6,
+   "worldMemoryHighMB": 113.6,
+   "memorySource": "ADR 0212 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dw671-jasionowka-01",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn-w",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-02",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-03",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "knyszyn",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-monki-02",
+   "xmin": 756491.0,
+   "ymin": 613631.0,
+   "xmax": 758539.0,
+   "ymax": 615679.0,
+   "anchorX": 757515.0,
+   "anchorY": 614655.0,
+   "anchorZ": 120.7,
+   "worldMemoryMB": 55.1,
+   "worldMemoryHighMB": 123.3,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dk65-monki-01",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-03",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-04",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "knyszyn-w",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-monki-03",
+   "xmin": 756491.0,
+   "ymin": 615679.0,
+   "xmax": 758539.0,
+   "ymax": 617727.0,
+   "anchorX": 757515.0,
+   "anchorY": 616703.0,
+   "anchorZ": 124.28,
+   "worldMemoryMB": 40.3,
+   "worldMemoryHighMB": 107.7,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dk65-monki-02",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-04",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-05",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-monki-01",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-monki-04",
+   "xmin": 754443.0,
+   "ymin": 615679.0,
+   "xmax": 756491.0,
+   "ymax": 617727.0,
+   "anchorX": 755467.0,
+   "anchorY": 616703.0,
+   "anchorZ": 126.38,
+   "worldMemoryMB": 47.6,
+   "worldMemoryHighMB": 117.2,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dk65-monki-03",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-05",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-06",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-monki-02",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-monki-05",
+   "xmin": 754443.0,
+   "ymin": 617727.0,
+   "xmax": 756491.0,
+   "ymax": 619775.0,
+   "anchorX": 755467.0,
+   "anchorY": 618751.0,
+   "anchorZ": 138.2,
+   "worldMemoryMB": 46.4,
+   "worldMemoryHighMB": 123.5,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dk65-monki-04",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-06",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-07",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-monki-03",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-monki-06",
+   "xmin": 752395.0,
+   "ymin": 617727.0,
+   "xmax": 754443.0,
+   "ymax": 619775.0,
+   "anchorX": 753419.0,
+   "anchorY": 618751.0,
+   "anchorZ": 156.74,
+   "worldMemoryMB": 47.8,
+   "worldMemoryHighMB": 123.7,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dk65-monki-05",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-07",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-04",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk65-monki-07",
+   "xmin": 752395.0,
+   "ymin": 619775.0,
+   "xmax": 754443.0,
+   "ymax": 621823.0,
+   "anchorX": 753419.0,
+   "anchorY": 620799.0,
+   "anchorZ": 165.62,
+   "worldMemoryMB": 71.8,
+   "worldMemoryHighMB": 168.1,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "monki-e",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-06",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "monki",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-monki-05",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dw671-jasionowka-01",
+   "xmin": 760587.0,
+   "ymin": 613631.0,
+   "xmax": 762635.0,
+   "ymax": 615679.0,
+   "anchorX": 761611.0,
+   "anchorY": 614655.0,
+   "anchorZ": 133.8,
+   "worldMemoryMB": 48.7,
+   "worldMemoryHighMB": 121.3,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "knyszyn",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-01",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn-w",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dw671-tykocin-01",
+   "xmin": 758539.0,
+   "ymin": 609535.0,
+   "xmax": 760587.0,
+   "ymax": 611583.0,
+   "anchorX": 759563.0,
+   "anchorY": 610559.0,
+   "anchorZ": 125.02,
+   "worldMemoryMB": 45.7,
+   "worldMemoryHighMB": 119.4,
+   "memorySource": "ADR 0212 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "knyszyn-s",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn-w",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-02",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dw671-tykocin-03",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dw671-tykocin-02",
+   "xmin": 758539.0,
+   "ymin": 607487.0,
+   "xmax": 760587.0,
+   "ymax": 609535.0,
+   "anchorX": 759563.0,
+   "anchorY": 608511.0,
+   "anchorZ": 112.62,
+   "worldMemoryMB": 55.1,
+   "worldMemoryHighMB": 151.2,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dw671-tykocin-01",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-03",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn-s",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dw671-tykocin-04",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dw671-tykocin-03",
+   "xmin": 756491.0,
+   "ymin": 607487.0,
+   "xmax": 758539.0,
+   "ymax": 609535.0,
+   "anchorX": 757515.0,
+   "anchorY": 608511.0,
+   "anchorZ": 120.37,
+   "worldMemoryMB": 69.0,
+   "worldMemoryHighMB": 153.9,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dw671-tykocin-02",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-04",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-01",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dw671-tykocin-05",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dw671-tykocin-04",
+   "xmin": 756491.0,
+   "ymin": 605439.0,
+   "xmax": 758539.0,
+   "ymax": 607487.0,
+   "anchorX": 757515.0,
+   "anchorY": 606463.0,
+   "anchorZ": 115.56,
+   "worldMemoryMB": 50.0,
+   "worldMemoryHighMB": 126.4,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dw671-tykocin-03",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-05",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-02",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dw671-tykocin-06",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dw671-tykocin-05",
+   "xmin": 754443.0,
+   "ymin": 605439.0,
+   "xmax": 756491.0,
+   "ymax": 607487.0,
+   "anchorX": 755467.0,
+   "anchorY": 606463.0,
+   "anchorZ": 120.66,
+   "worldMemoryMB": 40.1,
+   "worldMemoryHighMB": 108.6,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dw671-tykocin-04",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-06",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-03",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dw671-tykocin-07",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dw671-tykocin-06",
+   "xmin": 754443.0,
+   "ymin": 603391.0,
+   "xmax": 756491.0,
+   "ymax": 605439.0,
+   "anchorX": 755467.0,
+   "anchorY": 604415.0,
+   "anchorZ": 111.2,
+   "worldMemoryMB": 47.5,
+   "worldMemoryHighMB": 118.7,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dw671-tykocin-05",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-07",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-04",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dw671-tykocin-08",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dw671-tykocin-07",
+   "xmin": 752395.0,
+   "ymin": 603391.0,
+   "xmax": 754443.0,
+   "ymax": 605439.0,
+   "anchorX": 753419.0,
+   "anchorY": 604415.0,
+   "anchorZ": 111.86,
+   "worldMemoryMB": 52.5,
+   "worldMemoryHighMB": 121.5,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dw671-tykocin-06",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-08",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-05",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dw671-tykocin-09",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dw671-tykocin-08",
+   "xmin": 752395.0,
+   "ymin": 601343.0,
+   "xmax": 754443.0,
+   "ymax": 603391.0,
+   "anchorX": 753419.0,
+   "anchorY": 602367.0,
+   "anchorZ": 105.83,
+   "worldMemoryMB": 43.1,
+   "worldMemoryHighMB": 108.9,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dw671-tykocin-07",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-09",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-06",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "tykocin",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dw671-tykocin-09",
+   "xmin": 750347.0,
+   "ymin": 601343.0,
+   "xmax": 752395.0,
+   "ymax": 603391.0,
+   "anchorX": 751371.0,
+   "anchorY": 602367.0,
+   "anchorZ": 106.36,
+   "worldMemoryMB": 53.4,
+   "worldMemoryHighMB": 123.9,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dw671-tykocin-08",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "tykocin",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-07",
+     "side": "NE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "knyszyn",
+   "xmin": 760587.0,
+   "ymin": 611583.0,
+   "xmax": 762635.0,
+   "ymax": 613631.0,
+   "anchorX": 761611.0,
+   "anchorY": 612607.0,
+   "anchorZ": 119.22,
+   "worldMemoryMB": 95.5,
+   "worldMemoryHighMB": 216.7,
+   "memorySource": "ADR 0212 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dw671-jasionowka-01",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn-s",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn-w",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-01",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-11",
+     "side": "SE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dw671-tykocin-01",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "knyszyn-s",
+   "xmin": 760587.0,
+   "ymin": 609535.0,
+   "xmax": 762635.0,
+   "ymax": 611583.0,
+   "anchorX": 761611.0,
+   "anchorY": 610559.0,
+   "anchorZ": 125.08,
+   "worldMemoryMB": 40.8,
+   "worldMemoryHighMB": 106.8,
+   "memorySource": "ADR 0212 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "dk65-11",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-01",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "knyszyn-w",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-10",
+     "side": "SE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dw671-tykocin-02",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "knyszyn-w",
+   "xmin": 758539.0,
+   "ymin": 611583.0,
+   "xmax": 760587.0,
+   "ymax": 613631.0,
+   "anchorX": 759563.0,
+   "anchorY": 612607.0,
+   "anchorZ": 120.21,
+   "worldMemoryMB": 54.0,
+   "worldMemoryHighMB": 129.2,
+   "memorySource": "ADR 0212 via ADR 0229",
+   "neighbors": [
+    {
+     "id": "knyszyn",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-01",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-01",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-jasionowka-01",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-monki-02",
+     "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "knyszyn-s",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "monki",
+   "xmin": 750347.0,
+   "ymin": 621823.0,
+   "xmax": 752395.0,
+   "ymax": 623871.0,
+   "anchorX": 751371.0,
+   "anchorY": 622847.0,
+   "anchorZ": 176.35,
+   "worldMemoryMB": 104.7,
+   "worldMemoryHighMB": 225.0,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "monki-e",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-monki-07",
+     "side": "SE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "monki-e",
+   "xmin": 752395.0,
+   "ymin": 621823.0,
+   "xmax": 754443.0,
+   "ymax": 623871.0,
+   "anchorX": 753419.0,
+   "anchorY": 622847.0,
+   "anchorZ": 169.6,
+   "worldMemoryMB": 109.9,
+   "worldMemoryHighMB": 278.8,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dk65-monki-07",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "monki",
+     "side": "W",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "s8-01",
+   "xmin": 766731.0,
+   "ymin": 595199.0,
+   "xmax": 768779.0,
+   "ymax": 597247.0,
+   "anchorX": 767755.0,
+   "anchorY": 596223.0,
+   "anchorZ": 147.02,
+   "worldMemoryMB": 88.6,
+   "worldMemoryHighMB": 185.6,
+   "memorySource": "ADR 0288: import Win64 2026-11-17 s24 r8/r10 (WORLD_MEMORY)",
+   "neighbors": [
+    {
+     "id": "dk65-01",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-03",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-02",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-02",
+     "side": "NE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "s8-02",
+   "xmin": 764683.0,
+   "ymin": 595199.0,
+   "xmax": 766731.0,
+   "ymax": 597247.0,
+   "anchorX": 765707.0,
+   "anchorY": 596223.0,
+   "anchorZ": 121.93,
+   "worldMemoryMB": 62.9,
+   "worldMemoryHighMB": 154.5,
+   "memorySource": "ADR 0288: import Win64 2026-11-17 s24 r8/r10 (WORLD_MEMORY)",
+   "neighbors": [
+    {
+     "id": "s8-01",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-03",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-03",
+     "side": "NE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "s8-03",
+   "xmin": 762635.0,
+   "ymin": 595199.0,
+   "xmax": 764683.0,
+   "ymax": 597247.0,
+   "anchorX": 763659.0,
+   "anchorY": 596223.0,
+   "anchorZ": 117.02,
+   "worldMemoryMB": 60.7,
+   "worldMemoryHighMB": 144.6,
+   "memorySource": "ADR 0288: import Win64 2026-11-17 s24 r8/r10 (WORLD_MEMORY)",
+   "neighbors": [
+    {
+     "id": "s8-02",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-04",
+     "side": "W",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "s8-04",
+   "xmin": 760587.0,
+   "ymin": 595199.0,
+   "xmax": 762635.0,
+   "ymax": 597247.0,
+   "anchorX": 761611.0,
+   "anchorY": 596223.0,
+   "anchorZ": 114.94,
+   "worldMemoryMB": 53.5,
+   "worldMemoryHighMB": 130.1,
+   "memorySource": "ADR 0288: import Win64 2026-11-17 s24 r8/r10 (WORLD_MEMORY)",
+   "neighbors": [
+    {
+     "id": "s8-03",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "s8-05",
+     "side": "W",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "s8-05",
+   "xmin": 758539.0,
+   "ymin": 595199.0,
+   "xmax": 760587.0,
+   "ymax": 597247.0,
+   "anchorX": 759563.0,
+   "anchorY": 596223.0,
+   "anchorZ": 118.08,
+   "worldMemoryMB": 50.9,
+   "worldMemoryHighMB": 130.9,
+   "memorySource": "ADR 0288: import Win64 2026-11-17 s24 r8/r10 (WORLD_MEMORY)",
+   "neighbors": [
+    {
+     "id": "s8-04",
+     "side": "E",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "tykocin",
+   "xmin": 750347.0,
+   "ymin": 599295.0,
+   "xmax": 752395.0,
+   "ymax": 601343.0,
+   "anchorX": 751371.0,
+   "anchorY": 600319.0,
+   "anchorZ": 104.47,
+   "worldMemoryMB": 79.4,
+   "worldMemoryHighMB": 171.7,
+   "memorySource": "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)",
+   "neighbors": [
+    {
+     "id": "dw671-tykocin-09",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dw671-tykocin-08",
+     "side": "NE",
+     "seamM": 0.0
+    }
+   ]
+  }
+ ],
+ "portals": [
+  {
+   "from": "bialystok-kleeberga",
+   "to": "bialystok-knyszynska",
+   "side": "W",
+   "x": 772875.0,
+   "y": 595511.6,
+   "gapM": 0.0
+  },
+  {
+   "from": "bialystok-knyszynska",
+   "to": "dk65-01",
+   "side": "W",
+   "x": 770827.0,
+   "y": 597006.8,
+   "gapM": 0.0
+  },
+  {
+   "from": "bialystok-maczka",
+   "to": "bialystok-kleeberga",
+   "side": "W",
+   "x": 774923.0,
+   "y": 596185.7,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-01",
+   "to": "dk65-02",
+   "side": "N",
+   "x": 770244.6,
+   "y": 597247.0,
+   "gapM": 0.4
+  },
+  {
+   "from": "dk65-02",
+   "to": "dk65-03",
+   "side": "W",
+   "x": 768779.0,
+   "y": 598817.2,
+   "gapM": 1.0
+  },
+  {
+   "from": "dk65-03",
+   "to": "dk65-04",
+   "side": "N",
+   "x": 768695.0,
+   "y": 599295.0,
+   "gapM": 0.2
+  },
+  {
+   "from": "dk65-04",
+   "to": "dk65-05",
+   "side": "N",
+   "x": 768335.0,
+   "y": 601343.0,
+   "gapM": 0.2
+  },
+  {
+   "from": "dk65-05",
+   "to": "dk65-06",
+   "side": "N",
+   "x": 767660.9,
+   "y": 603391.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-06",
+   "to": "dk65-07",
+   "side": "W",
+   "x": 766731.0,
+   "y": 604721.5,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-07",
+   "to": "dk65-08",
+   "side": "N",
+   "x": 766246.5,
+   "y": 605439.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-08",
+   "to": "dk65-09",
+   "side": "W",
+   "x": 764683.0,
+   "y": 607186.1,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-09",
+   "to": "dk65-10",
+   "side": "N",
+   "x": 764498.6,
+   "y": 607487.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-10",
+   "to": "dk65-11",
+   "side": "N",
+   "x": 762893.0,
+   "y": 609535.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-11",
+   "to": "knyszyn-s",
+   "side": "W",
+   "x": 762635.0,
+   "y": 609811.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-monki-01",
+   "to": "dk65-monki-02",
+   "side": "W",
+   "x": 758539.0,
+   "y": 614412.8,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-monki-02",
+   "to": "dk65-monki-03",
+   "side": "N",
+   "x": 756850.8,
+   "y": 615679.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-monki-03",
+   "to": "dk65-monki-04",
+   "side": "W",
+   "x": 756491.0,
+   "y": 615882.7,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-monki-04",
+   "to": "dk65-monki-05",
+   "side": "N",
+   "x": 754513.9,
+   "y": 617727.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-monki-05",
+   "to": "dk65-monki-06",
+   "side": "W",
+   "x": 754443.0,
+   "y": 617874.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-monki-06",
+   "to": "dk65-monki-07",
+   "side": "N",
+   "x": 753521.4,
+   "y": 619775.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk65-monki-07",
+   "to": "monki-e",
+   "side": "N",
+   "x": 752523.8,
+   "y": 621823.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dw671-tykocin-01",
+   "to": "dw671-tykocin-02",
+   "side": "S",
+   "x": 758587.24,
+   "y": 609535.0,
+   "gapM": 0.04
+  },
+  {
+   "from": "dw671-tykocin-02",
+   "to": "dw671-tykocin-03",
+   "side": "W",
+   "x": 758539.0,
+   "y": 609438.6,
+   "gapM": 0.0
+  },
+  {
+   "from": "dw671-tykocin-03",
+   "to": "dw671-tykocin-04",
+   "side": "S",
+   "x": 757553.2,
+   "y": 607487.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dw671-tykocin-04",
+   "to": "dw671-tykocin-05",
+   "side": "W",
+   "x": 756491.0,
+   "y": 605936.9,
+   "gapM": 0.0
+  },
+  {
+   "from": "dw671-tykocin-05",
+   "to": "dw671-tykocin-06",
+   "side": "S",
+   "x": 756011.0,
+   "y": 605439.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dw671-tykocin-06",
+   "to": "dw671-tykocin-07",
+   "side": "W",
+   "x": 754443.0,
+   "y": 603967.4,
+   "gapM": 0.0
+  },
+  {
+   "from": "dw671-tykocin-07",
+   "to": "dw671-tykocin-08",
+   "side": "S",
+   "x": 753618.0,
+   "y": 603391.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dw671-tykocin-08",
+   "to": "dw671-tykocin-09",
+   "side": "W",
+   "x": 752395.0,
+   "y": 602259.4,
+   "gapM": 0.0
+  },
+  {
+   "from": "dw671-tykocin-09",
+   "to": "tykocin",
+   "side": "S",
+   "x": 751938.3,
+   "y": 601343.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "knyszyn-s",
+   "to": "knyszyn",
+   "side": "N",
+   "x": 760985.8,
+   "y": 611583.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "knyszyn-w",
+   "to": "dk65-monki-01",
+   "side": "N",
+   "x": 759428.06,
+   "y": 613631.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "monki-e",
+   "to": "monki",
+   "side": "W",
+   "x": 752395.0,
+   "y": 622086.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "s8-01",
+   "to": "s8-02",
+   "side": "W",
+   "x": 766731.0,
+   "y": 595802.3,
+   "gapM": 0.0
+  },
+  {
+   "from": "s8-02",
+   "to": "s8-03",
+   "side": "W",
+   "x": 764683.0,
+   "y": 596090.7,
+   "gapM": 0.0
+  },
+  {
+   "from": "s8-03",
+   "to": "s8-04",
+   "side": "W",
+   "x": 762635.0,
+   "y": 596015.9,
+   "gapM": 0.0
+  },
+  {
+   "from": "s8-04",
+   "to": "s8-05",
+   "side": "W",
+   "x": 760587.0,
+   "y": 595458.7,
+   "gapM": 0.0
+  },
+  {
+   "from": "bialystok-industrial-c",
+   "to": "bialystok-maczka",
+   "side": "W",
+   "x": 776971.0,
+   "y": 596279.2,
+   "gapM": 0.0
+  }
+ ],
+ "corridors": [
+  {
+   "id": "bialystok-industrial-c..knyszyn",
+   "tiles": [
+    "bialystok-industrial-c",
+    "bialystok-maczka",
+    "bialystok-kleeberga",
+    "bialystok-knyszynska",
+    "dk65-01",
+    "dk65-02",
+    "dk65-03",
+    "dk65-04",
+    "dk65-05",
+    "dk65-06",
+    "dk65-07",
+    "dk65-08",
+    "dk65-09",
+    "dk65-10",
+    "dk65-11",
+    "knyszyn-s",
+    "knyszyn"
+   ]
+  },
+  {
+   "id": "dw671-tykocin-01..tykocin",
+   "tiles": [
+    "dw671-tykocin-01",
+    "dw671-tykocin-02",
+    "dw671-tykocin-03",
+    "dw671-tykocin-04",
+    "dw671-tykocin-05",
+    "dw671-tykocin-06",
+    "dw671-tykocin-07",
+    "dw671-tykocin-08",
+    "dw671-tykocin-09",
+    "tykocin"
+   ]
+  },
+  {
+   "id": "knyszyn-w..monki",
+   "tiles": [
+    "knyszyn-w",
+    "dk65-monki-01",
+    "dk65-monki-02",
+    "dk65-monki-03",
+    "dk65-monki-04",
+    "dk65-monki-05",
+    "dk65-monki-06",
+    "dk65-monki-07",
+    "monki-e",
+    "monki"
+   ]
+  },
+  {
+   "id": "s8-01..s8-05",
+   "tiles": [
+    "s8-01",
+    "s8-02",
+    "s8-03",
+    "s8-04",
+    "s8-05"
+   ]
+  }
+ ]
+}

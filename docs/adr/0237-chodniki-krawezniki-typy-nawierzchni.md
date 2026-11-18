@@ -1,5 +1,5 @@
 # ADR 0237 — chodniki i krawężniki Białegostoku: typy nawierzchni, obniżenia na przejściach, czerwona kostka, skala behatonu
-Status: Proposed (agent world-builder, chmura D runda 2, s21, gałąź `kerbs-0237`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `e4fad6868`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, chmura D runda 2, s21, gałąź `kerbs-0237`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: research R6 (PR #65, `origin/research/cloud2-pavements-kerbs`), recenzja
 `docs/reports/REVIEW-2026-11-15-s21-cloudD-65-pavements-kerbs.md` (`origin/reviews-0225`), ADR 0063 (skany CC0), 0114
 (obniżenia przy zjazdach), 0123 (`bridge_kerb` jako zmiana nazwy przy eksporcie), 0188 (DDR), 0221 (budżet dróg C).
@@ -99,3 +99,59 @@ Bez łatki działają: obniżenia na przejściach, materiały, ścieżki z BDOT,
 - Obniżenia w płytach skrzyżowań (narożniki) i wysp; krawężnik 0,12 m; wieniec z kostki wokół włazów (R6-027);
   kolor kapy na estakadzie; `surface` chodników w `osm_extract.py`; płyty przy przystanku Andersa (brak dowodu).
 - Kratka wpustu ma teksturę rysowaną dla proporcji 0,50 × 0,60, do oceny na renderze.
+
+## Dopisek D38 (s23, 2026-11-16) — chodniki domniemane w zabudowie (Knyszyn) i skrzyżowanie Południowa × Szkolna
+Gałąź `knyszyn-sidewalks-s23` (chmura D, runda 9). Fakty właściciela: `docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md`
+„ul. Szkolna i skrzyżowanie Południowa × Szkolna” (chodniki wszędzie, obustronne, kostka; przejścia z pasami przy
+skrzyżowaniu). Zrzutów Street View właściciela NIE użyto (zasada 8). Dane: `docs/reports/knyszyn-szkolna/`.
+
+**(a) Reguła chodników domniemanych** (`streetscape/pavements.py`: `implied_rules`, `osm_sidewalk`, `eligible`,
+`built_up_area`, `implied_plan`, `implied_mask`; wywołanie w `roads/network.assign_sides`). Włączana per region:
+`pavement_rules: implied_sidewalks: true` (mapowanie nadpisuje listy). Na każdej stacji i stronie jezdni:
+1. tagi OSM drogi wygrywają: `sidewalk:left|right` > `sidewalk:both` > `sidewalk`; `no|none|separate` = bez chodnika
+   domniemanego (separate: chodnikiem jest zmapowany footway), `yes|both|left|right` = chodnik;
+2. bez tagu: chodnik 2,00 m (`SIDEWALK_W`, WORKING_VALUE) za krawężnikiem, jeśli `highway` ∈ residential / tertiary /
+   secondary / unclassified, nawierzchnia utwardzona (nie unpaved / ground / gravel / dirt / compacted / fine_gravel /
+   sand / grass / mud), stacja w obszarze zabudowanym, krawędź nie jest „otwartą drogą” (ADR 0272) ani pasem
+   dzielącym i w 6 m od krawężnika nie ma zmapowanej ścieżki (OSM footway/cycleway, BDOT10k OT_SKRP_L utwardzona) —
+   okno większościowe 40 m jak przy regule footway. `living_street` wyłączone (strefa zamieszkania = wspólna
+   nawierzchnia, WORKING_VALUE); `service`, `track`, `path` nigdy.
+3. Obszar zabudowany: **cienki adapter** `built_up_area` — BDOT10k OT_PTZB_A o rodzaju jednorodzinna / wielorodzinna /
+   zagrodowa + 60 m (te same wartości co ADR 0279). `streetscape/built_up.py` (#158) jest tylko na gałęzi
+   `signs-a7-s23`; nie skopiowano z niej kodu. TODO(#158): po scaleniu podmienić adapter na strefę z `built_up.py`.
+4. `roads.graph.json` nie niesie dziś tagów `sidewalk*` (stała lista tagów w `roadgraph.py`, poza zakresem rundy):
+   `EdgeSection.osm_sidewalk` jest gotowe, ale puste do czasu dodania kluczy `sidewalk`, `sidewalk:left`,
+   `sidewalk:right`, `sidewalk:both` w roadgraph i przebudowy grafów (lider). Knyszyn: w bbox skrzyżowania żadna droga
+   nie ma `sidewalk=*` (OSM API 0.6, 16.11), więc brak tagów nic tu nie zmienia.
+Knyszyn: wpis `knyszyn-pavement-rules-d38` (`implied_sidewalks: true`, `sidewalk_bdot: false` — właściciel mówi
+„kostka”, `crossing_kerb_drops: true`). Wynik (płaski teren, sama geometria): +21,8 km chodnika (residential 14,4;
+tertiary 3,5; secondary 3,5; unclassified 0,4), drogi regionu 225 427 → 264 161 trójkątów (+17 %).
+**Szew z `knyszyn-w`:** 6 ulic przechodzi przez zachodnią krawędź kafla; z tym samym wpisem w `knyszyn-w` wszystkie 6
+mają chodniki po obu stronach szwu (sprawdzone wstrzyknięciem reguły), bez wpisu — urwą się na szwie. Wpis do
+`Data/Regions/knyszyn-w/overrides.yaml` dodaje lider (plik poza zakresem D38). `knyszyn-s`: reguła nic nie dodaje.
+C i Dojlidy nie mają `implied_sidewalks` — test potwierdza identyczne tablice `walk` z regułą i bez.
+
+**(b) Południowa × Szkolna (OSM 1134846746).** Przyczyna z grafu: 23,1 m dalej na Południowej jest węzeł 7015352011,
+z którego wychodzi nieotagowana `highway=service` 750267067 (alejka parkingu szkoły). Klastrowanie złączyło oba węzły
+w jedno skrzyżowanie 5 ramion; pierwszy odcinek alejki (13 m na ESE) biegnie prawie równolegle do ramienia Szkolnej E,
+więc narożnik między nimi stał się „nosem” pasa dzielącego (półkole R 21,8 m przez wylot alejki), a ramię alejki
+przycięto 28,3 m — za jej zakrętem: łezka asfaltu donikąd. Odcinek 23 m został „wchłonięty”, więc przejście
+11514832009 nie miało jezdni do przyczepienia P-10, a 11514832007 wypadło z płata (skipped): 2 z 4 zebr.
+Ortofoto GUGiK: zwykłe skrzyżowanie 4-wlotowe, zebra na każdym wlocie 0,4–1,6 m od węzłów OSM
+(`crossing:markings=zebra`), wjazd na parking ~20 m na N. Poprawka: `roads/junctions.py` — override węzła
+`cluster: separate` (wpis `knyszyn-szkolna-parking-tee-d38`): węzeł, w którym z drogi publicznej odchodzą tylko drogi
+podrzędne (`service/track/path/footway/cycleway`), nie jest scalany z sąsiednim skrzyżowaniem, jeśli odcinek między
+nimi ma ≥ 15 m (WORKING_VALUE); odcinek dzielą `max_trims`. Użyty na innym węźle — ignorowany z notatką. Po zmianie:
+4 łuki (R 8/8/8/3,9 m), osobne T parkingu, 4 × P-10 (0,15–0,6 m od węzłów OSM). **`markings.py` bez zmian** (brak
+P-10 wynikał z wchłoniętego odcinka). Jako reguła globalna ten sam test rozdzieliłby 12 klastrów w C, 1 w Dojlidach
+i ~45 w innych regionach — nieobejrzane, więc tylko opt-in per węzeł.
+
+**Budżet (ESTIMATED, `tools/worldgen/qa/knyszyn_szkolna_d38.py budget`, centroidy trójkątów, reguła widoczności
+frame_estimate):** najwyższe High: `route_s0725` 1 893 995 → ~1 930 014 (+36 019), `tykocka_into_town` → ~1 833 719
+(+38 055); Low `route_s0725` 603 399 → ~639 418 (Low było już ponad hipotezą 600 k). C/Dojlidy: 0.
+Kamery kontrolne (authored): `knyszyn_szkolna_junction` (oko kierowcy na Południowej 40 m przed skrzyżowaniem),
+`knyszyn_szkolna_top` (widok z góry, para do ortofoto).
+**Otwarte D38:** szerokości chodników niezmierzone (2,0 m WORKING_VALUE); alejka parkingu w OSM ~12 m na E od
+rzeczywistej (`ortho_readings.json`, niepoprawiona); żółte barierki na narożnikach SW i NE widoczne z góry —
+UNVERIFIED, niemodelowane; sklep / zakład pogrzebowy / blok z muralem (bez marek, nazw i herbu) — poza zakresem;
+`roadgraph.py` bez tagów `sidewalk*`; wpis w `knyszyn-w`; pętla wizualna (render, `visual-critic`) po stronie lidera.

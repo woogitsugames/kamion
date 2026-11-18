@@ -17,7 +17,6 @@ MonoBehaviour:
   m_RendererType: 1
   m_RendererData: {fileID: 0}
   m_RendererDataList:
-  - {fileID: 11400000, guid: 1d4ad72fa1ee4c85a027ee8929c284a7, type: 2}
   - {fileID: 11400000, guid: f55af42989684225b09fffb9a1b16aad, type: 2}
   m_DefaultRendererIndex: 0
   m_RequireDepthTexture: 0
@@ -27,7 +26,7 @@ MonoBehaviour:
   m_SupportsHDR: 1
   m_HDRColorBufferPrecision: 0
   m_MSAA: 8
-  m_RenderScale: 1
+  m_RenderScale: 1.5
   m_UpscalingFilter: 0
   m_FsrOverrideSharpness: 0
   m_FsrSharpness: 0.92
@@ -59,7 +58,7 @@ MonoBehaviour:
   m_ShadowCascadeCount: 4
   m_Cascade2Split: 0.25
   m_Cascade3Split: {x: 0.1, y: 0.3}
-  m_Cascade4Split: {x: 0.04, y: 0.12, z: 0.35}
+  m_Cascade4Split: {x: 0.012, y: 0.12, z: 0.35}
   m_CascadeBorder: 0.2
   m_ShadowDepthBias: 0.6
   m_ShadowNormalBias: 0.6

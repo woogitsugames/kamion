@@ -1369,6 +1369,7 @@
    "S": 5.0,
    "Z": 4.5
   },
+  "compact_roundabouts": [],
   "crossings_in_junction": [
    14201423311,
    13607659604,
@@ -1384,7 +1385,7 @@
    "patches": 151
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 190703,
+  "footprint_nodes": 188837,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1469,12 +1470,13 @@
    "P-10 crossing": 3,
    "P-10 crossing in junction": 3,
    "P-13": 3,
+   "P-14 level crossing": 2,
    "P-7a edge line span (authored)": 7,
    "P-7b edge line": 74
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 1164,
+  "nmt_nodes_replaced_under_decks": 1159,
   "overrides_applied": [
    {
     "id": "dk65-02-knyszynska-396566354",
@@ -1579,6 +1581,11 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 0,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 0
+  },
+  "seam_tapers": [],
   "sides_on_carriageway_culled": {
    "kerb_tris": 30,
    "parts": 27,

@@ -1,5 +1,5 @@
 # ADR 0214 — korytarz DK65: kafle `dk65-06` … `dk65-11` z grubsza (stara DK65, place budowy S19 obok)
-Status: Proposed (agent world-builder, s20, gałąź `dk65-tiles2-0214`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `8a99d4302`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `dk65-tiles2-0214`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: D63, D64, **D65** (`docs/11`), ADR 0203 (plan trasy A, siatka 2048 m), 0204 (knyszyn-s: przekrój DK65,
 plac budowy), 0205/0207 (wzorzec kafla korytarza, linie krawędziowe przez override), 0209 (pin roku NMT), 0212
 (linie krawędziowe DK65 w Knyszynie, w main), research K1 `research/dk65-knyszyn-refs/README.md`, brief `docs/owner/S20-REGION-RING-BRIEF.md` (DROGI NAJPIERW).

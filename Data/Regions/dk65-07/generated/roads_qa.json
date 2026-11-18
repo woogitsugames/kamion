@@ -850,6 +850,7 @@
    "S": 5.0,
    "Z": 4.5
   },
+  "compact_roundabouts": [],
   "crossings_in_junction": [],
   "crossings_merged": 0,
   "crossings_p11": 0,
@@ -861,7 +862,7 @@
    "patches": 90
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 113437,
+  "footprint_nodes": 112419,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -938,6 +939,17 @@
     ]
    },
    {
+    "id": "dk65-opaska-k1",
+    "targets": [
+     "w208187096:10712325634-4090471697",
+     "w208187096:4090471697-4090471704",
+     "w208187096:4090471704-897574830",
+     "w208187096:897574830-897574813",
+     "w27718745:897574813-897574857",
+     "w27718745:897574857-1134817563"
+    ]
+   },
+   {
     "id": "kozince-1392b-unlit",
     "targets": [
      "w76085945:897574797-897574830"
@@ -966,6 +978,11 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 0,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 0
+  },
+  "seam_tapers": [],
   "sides_on_carriageway_culled": {
    "kerb_tris": 0,
    "parts": 0,

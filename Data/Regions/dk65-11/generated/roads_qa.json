@@ -93,6 +93,7 @@
    "S": 5.0,
    "Z": 4.5
   },
+  "compact_roundabouts": [],
   "crossings_in_junction": [],
   "crossings_merged": 0,
   "crossings_p11": 0,
@@ -104,7 +105,7 @@
    "patches": 26
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 48148,
+  "footprint_nodes": 47655,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -149,6 +150,12 @@
     ]
    },
    {
+    "id": "dk65-opaska-k1",
+    "targets": [
+     "w27718745:897574813-1134817563"
+    ]
+   },
+   {
     "id": "rural-roads-unlit",
     "targets": [
      "w27718745:897574813-1134817563"
@@ -161,6 +168,53 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 0,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 2
+  },
+  "seam_tapers": [
+   {
+    "chain": "c:w27718745:897574813-1134817563",
+    "end": "a",
+    "in_tile_m": 13.5,
+    "length_m": 27.0,
+    "neighbour": "knyszyn-s",
+    "shoulder_cm": {
+     "L": {
+      "other": [
+       8,
+       100
+      ],
+      "own": [
+       35,
+       75
+      ],
+      "seam": [
+       22,
+       88
+      ]
+     },
+     "R": {
+      "other": [
+       8,
+       100
+      ],
+      "own": [
+       35,
+       75
+      ],
+      "seam": [
+       22,
+       88
+      ]
+     }
+    },
+    "step_m": 0.27,
+    "width_other": 6.6,
+    "width_own": 6.6,
+    "width_seam": 6.6
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 0,
    "parts": 0,

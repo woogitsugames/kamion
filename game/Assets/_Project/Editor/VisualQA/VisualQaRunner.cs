@@ -73,7 +73,27 @@ namespace Game.Editor.VisualQA
             if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
                 throw new InvalidOperationException("No graphics device (-nographics?) — visual QA needs a GPU.");
 
+            // ADR 0269 propozycja 2 (night-pc-s23): -qaPcTiers 1 renders the PC tier (URP_PC_<tier> asset + PcGraphicsTiers.Overlay
+            // of the quality tier) instead of the phone tier; editor state is restored at the end.
+            bool pc = EditorTools.Arg("-qaPcTiers", "0") == "1";
+            if (pc) PcGraphicsTiers.ForceEnabled = true;
+            try
+            {
+                return RenderTier(sceneName, width, height, tier, outDir, lighting, onlyCameras, pc);
+            }
+            finally
+            {
+                if (pc) { PcGraphicsTiers.RestoreEditorState(); PcGraphicsTiers.ForceEnabled = null; }
+            }
+        }
+
+        static int RenderTier(string sceneName, int width, int height, string tier, string outDir, string lighting, string onlyCameras, bool pc)
+        {
+            string scenePath = AssetDatabase.FindAssets("t:Scene " + sceneName)
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == sceneName);
             QualityTiers.Apply(tier);
+            if (pc) Debug.Log($"[VISUALQA] PC tier {tier}: pipeline {QualitySettings.renderPipeline?.name}");
             ShaderUtil.allowAsyncCompilation = false; // avoid cyan placeholder shaders in captures
             EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
             Directory.CreateDirectory(outDir);
@@ -88,6 +108,12 @@ namespace Game.Editor.VisualQA
             var profile = QualityProfile.Load();
             QualityProfile.Tier tierSettings = default;
             bool hasTier = profile != null && profile.TryGet(tier, out tierSettings);
+            if (hasTier && pc) tierSettings = PcGraphicsTiers.Overlay(tierSettings);
+            // Diagnostic A/B (pc-visual-s23): -qaAniso 0|1|2 overrides QualitySettings.anisotropicFiltering for this render
+            // (restored by PcGraphicsTiers.RestoreEditorState with -qaPcTiers 1; without it the editor value is put back below).
+            string anisoArg = EditorTools.Arg("-qaAniso", null);
+            AnisotropicFiltering anisoPrev = QualitySettings.anisotropicFiltering;
+            if (!string.IsNullOrEmpty(anisoArg)) QualitySettings.anisotropicFiltering = (AnisotropicFiltering)int.Parse(anisoArg);
             // Ablation renders in the editor (same keys as the phone launch overrides): -qaRq "rq_hlod=0,rq_trees=0".
             string rq = EditorTools.Arg("-qaRq", null);
 
@@ -352,8 +378,11 @@ namespace Game.Editor.VisualQA
                 var prevTarget = cam.targetTexture;
                 cam.enabled = true;
                 var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
+                string detailCamera = EditorTools.Arg("-qaStatsDetailCamera", null);
+                string detailPath = EditorTools.Arg("-qaStatsDetailPath", null);
                 stats.AppendLine(SceneStats.Estimate(cam, hasTier ? tierSettings.shadowDistance : QualitySettings.shadowDistance,
-                    hasTier ? tierSettings.shadowCascades : 1, qa.id));
+                    hasTier ? tierSettings.shadowCascades : 1, qa.id,
+                    !string.IsNullOrEmpty(detailCamera) && qa.id == detailCamera ? detailPath : null));
                 // -qaTimeFrames N: N more renders of this camera at the tier's size / MSAA, wall time with a 1-pixel readback
                 // at the end (GPU-synchronised): an editor-GPU estimate of the frame cost for A/B comparisons (ADR 0023).
                 int timeN = int.Parse(EditorTools.Arg("-qaTimeFrames", "0"));
@@ -433,6 +462,7 @@ namespace Game.Editor.VisualQA
             }
             string lightName = lighting ?? "scene";
             if (stats.Length > 0) File.WriteAllText(Path.Combine(outDir, "stats.txt"), $"tier={tier} lighting={lightName} msaa={msaa} renderScale={scale.ToString(System.Globalization.CultureInfo.InvariantCulture)}" + System.Environment.NewLine + stats);
+            if (!string.IsNullOrEmpty(anisoArg)) QualitySettings.anisotropicFiltering = anisoPrev;
             return rendered;
         }
 

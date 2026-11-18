@@ -1,0 +1,120 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0157",
+   "look_at": [
+    -68.635,
+    836.583,
+    124.628
+   ],
+   "note": "driver eye 2.5 m, control route s = 157 m of 1881 m (unnamed)",
+   "pos": [
+    -35.221,
+    886.44,
+    126.173
+   ],
+   "route_s_m": 156.747,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0470",
+   "look_at": [
+    -248.948,
+    580.138,
+    119.912
+   ],
+   "note": "driver eye 2.5 m, control route s = 470 m of 1881 m (unnamed)",
+   "pos": [
+    -215.924,
+    630.255,
+    121.266
+   ],
+   "route_s_m": 470.241,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0784",
+   "look_at": [
+    -428.762,
+    323.342,
+    122.603
+   ],
+   "note": "driver eye 2.5 m, control route s = 784 m of 1881 m (unnamed)",
+   "pos": [
+    -395.596,
+    373.367,
+    123.54
+   ],
+   "route_s_m": 783.734,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1097",
+   "look_at": [
+    -608.288,
+    66.343,
+    123.65
+   ],
+   "note": "driver eye 2.5 m, control route s = 1097 m of 1881 m (unnamed)",
+   "pos": [
+    -575.164,
+    116.393,
+    125.333
+   ],
+   "route_s_m": 1097.228,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1411",
+   "look_at": [
+    -788.514,
+    -190.163,
+    120.195
+   ],
+   "note": "driver eye 2.5 m, control route s = 1411 m of 1881 m (unnamed)",
+   "pos": [
+    -755.301,
+    -140.172,
+    122.274
+   ],
+   "route_s_m": 1410.722,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1724",
+   "look_at": [
+    -968.465,
+    -446.865,
+    116.434
+   ],
+   "note": "driver eye 2.5 m, control route s = 1724 m of 1881 m (unnamed)",
+   "pos": [
+    -935.252,
+    -396.873,
+    118.033
+   ],
+   "route_s_m": 1724.215,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 271.935,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dw671-tykocin-04",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

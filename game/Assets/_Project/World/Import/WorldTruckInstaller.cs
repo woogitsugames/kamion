@@ -32,7 +32,11 @@ namespace Game.World.Import
                 foreach (var guid in AssetDatabase.FindAssets("t:Scene WorldC"))
                 {
                     string p = AssetDatabase.GUIDToAssetPath(guid);
-                    if (!Path.GetFileNameWithoutExtension(p).StartsWith("WorldC", StringComparison.Ordinal)) continue;
+                    string sn = Path.GetFileNameWithoutExtension(p);
+                    if (!sn.StartsWith("WorldC", StringComparison.Ordinal)) continue;
+                    // Streamed tile scenes (ADR 0235: region root + route only, no truck) - full-build-s23: the installer
+                    // threw "no tractor in .../WorldC_High_Tile.unity" once C was reimported with tiles.
+                    if (sn.EndsWith(RegionScenes.TileSuffix, StringComparison.Ordinal)) continue;
                     InstallInScene(p);
                     n++;
                 }
@@ -66,8 +70,8 @@ namespace Game.World.Import
         {
             LookDevAssets.EnsureAll();
             var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(TruckAssetBuilder.PrefabPath);
-            if (prefab == null) throw new FileNotFoundException("TRAKT prefab missing", TruckAssetBuilder.PrefabPath);
+            var prefab = DrivingVehiclePrefabs.Tractor(out bool graybox);
+            if (graybox) throw new FileNotFoundException("TRAKT prefab missing", TruckAssetBuilder.PrefabPath);
             var old = UnityEngine.Object.FindObjectsByType<VehicleBody>(FindObjectsSortMode.None).FirstOrDefault();
             if (old == null) throw new InvalidOperationException("no tractor in " + scenePath);
             var pos = old.transform.position;
@@ -77,7 +81,8 @@ namespace Game.World.Import
             var boot = UnityEngine.Object.FindAnyObjectByType<DrivingLabBootstrap>();
             if (boot != null) boot.vehicle = truck.GetComponent<VehicleBody>();
             UnityEngine.Object.DestroyImmediate(old.gameObject);
-            var trailerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TrailerAssetBuilder.PrefabPath);
+            var trailerPrefab = DrivingVehiclePrefabs.Trailer(out bool grayboxTrailer);
+            if (grayboxTrailer) trailerPrefab = null;   // keep the scene's trailer rather than swap it for the graybox
             var oldTrailer = UnityEngine.Object.FindObjectsByType<TrailerBody>(FindObjectsSortMode.None).FirstOrDefault();
             if (trailerPrefab != null && oldTrailer != null)
             {

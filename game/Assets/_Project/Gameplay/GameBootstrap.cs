@@ -114,7 +114,7 @@ namespace Game.Gameplay
             AdaptiveFrameDriver.ThermalStatusProvider = Platform.GetThermalStatus;   // ADR 0046 thermal fallback
 
             var build = BuildInfo.Current;
-            Debug.Log($"[BOOT] Kamion {build.ShortLabel} unity={build.unityVersion} platform={Platform.Name} " +
+            Debug.Log($"[BOOT] Kamion {build.ShortLabel} content={(build.ContentHash.Length > 0 ? build.ContentHash : "none")} unity={build.unityVersion} platform={Platform.Name} " +
                       $"device='{SystemInfo.deviceModel}' gpu='{SystemInfo.graphicsDeviceName}' api='{SystemInfo.graphicsDeviceVersion}' " +
                       $"ram={SystemInfo.systemMemorySize}MB screen={Screen.width}x{Screen.height} tier={QualityTiers.Current} targetFps={fps}");
 
@@ -155,17 +155,57 @@ namespace Game.Gameplay
             m_Catalog = RegionCatalog.Load();
             var regions = BuildRegionChoices(m_Catalog, options);
             ControlSettings.Load().Log("boot");
+            // Evidence runs (int-ui-s23): -ui_touch / -ui_hud / -ui_mirror / -ui_settings_tab, session only, never stored.
+            Game.UI.UiCaptureArgs.Apply(Platform.GetLaunchArgument);
             m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings, OpenAbout, regions,
                 Application.isMobilePlatform ? null : (System.Action)OpenPcSettings);
             m_Menu.transform.SetParent(transform, false);
+            // ADR 0277: a region start that found no free place for the combination came back here; say why, once.
+            string failure = StartRequest.ConsumeStartFailure();
+            if (!string.IsNullOrEmpty(failure))
+            {
+                m_Menu.ShowNotice(failure);
+                Debug.LogWarning("[START] start menu notice: start failed, no free place (ADR 0277)");
+            }
             Debug.Log("[CONTROLS] menu shown light=" + options.LightingId + " tier=" + options.Tier + " fps=" + options.Fps);
 
             // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
             // arguments (autopilot, speed) are read by that scene's bootstrap.
-            DesktopAutoShot.StartFromArguments(Platform.GetLaunchArgument);   // shot=<png> shot_t=<s> quit_t=<s> (ADR 0261 evidence run)
-            string scene = Platform.GetLaunchArgument("scene");
-            if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : LaunchSceneFor(scene);
+            // Both are one-shot per process (int-h3-s23, review H3 P1-141-1): the platform reads the arguments again on every
+            // Boot load, so without the guard a failed -scene start (ADR 0277 → Boot) reloads the region forever and "Menu"
+            // after a Kamion-<region>.cmd start jumps straight back; DesktopAutoShot (DontDestroyOnLoad) would be duplicated.
+            if (TakeLaunchArguments())
+            {
+                DesktopAutoShot.StartFromArguments(Platform.GetLaunchArgument);   // shot=<png> shot_t=<s> quit_t=<s> (ADR 0261 evidence run)
+                if (Game.UI.UiCaptureArgs.SettingsTab >= 0 && !Application.isMobilePlatform)
+                {
+                    OpenPcSettings();
+                    m_PcSettings.ShowTab(Game.UI.UiCaptureArgs.SettingsTab);
+                }
+                string scene = Platform.GetLaunchArgument("scene");
+                if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : LaunchSceneFor(scene);
+            }
+            else if (!string.IsNullOrEmpty(Platform.GetLaunchArgument("scene")))
+                Debug.Log("[BOOT] launch argument scene already used this run: staying in the menu");
         }
+
+        static bool s_LaunchArgumentsUsed;
+
+        /// <summary>
+        /// True only for the first Boot of the process: the one-shot launch actions (scene=, shot=/quit_t=) run once, later
+        /// returns to Boot (menu button, failed start, ADR 0277) show the menu. Reset only at process start
+        /// (<see cref="ResetLaunchArguments"/>, also with domain reload off in the editor).
+        /// </summary>
+        public static bool TakeLaunchArguments()
+        {
+            if (s_LaunchArgumentsUsed) return false;
+            s_LaunchArgumentsUsed = true;
+            return true;
+        }
+
+        /// <summary>Process start (and tests): the launch arguments are unused again.</summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void ResetLaunchArguments() => s_LaunchArgumentsUsed = false;
 
         RegionCatalog m_Catalog;
 
@@ -196,8 +236,10 @@ namespace Game.Gameplay
                 bool inBuild = Application.CanStreamedLevelBeLoaded(RegionScenes.SceneNameFor(id));
                 float s = RegionStart.ClampStartS(r.startS, r.routeLengthM);
                 string km = (r.routeLengthM / 1000f).ToString("0.0", ci).Replace('.', ',');
-                string detail = inBuild ? $"{r.group} · trasa {km} km · start na początku trasy" : $"{r.group} · brak w tym APK";
-                list.Add(new BootRegionChoice(id, label, detail, inBuild, () =>
+                string detail = r.noStart ? $"{r.group} · kafel narożny ({km} km korytarza) · tylko przejazd, bez startu"
+                              : inBuild ? $"{r.group} · trasa {km} km · start na początku trasy" : $"{r.group} · brak w tym APK";
+                // ADR 0231 §5a: a corner tile has no start behind its entry closure - listed, but not selectable
+                list.Add(new BootRegionChoice(id, label, detail, inBuild && !r.noStart, () =>
                 {
                     StartRequest.SetRegion("region " + id, id, s, options.LightingId);
                     SceneManager.LoadScene(RegionSceneForTier(id));

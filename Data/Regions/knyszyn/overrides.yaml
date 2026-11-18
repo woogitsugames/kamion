@@ -25,19 +25,75 @@ overrides:
       width: 5.0
       truck_apron: {width_m: 3.2, height_m: 0.04, material: kostka_jasna}
   # ADR 0218 5c (int-dk65-s22, owner D75): the roundabout is built as ONE junction (roads/compact_roundabout.py).
+  # ADR 0274: kerb mode (entry_r_m / exit_r_m), crossings and P-13 at the ring, DK65 split before the ring.
   - id: knyszyn-roundabout-compact
     target: {osm_way: [1426801304]}
     reason: >-
       The ring (axis r 8.65 m, 8 ring nodes on 54 m, ring edges 1.6-11.6 m) with four arms split into one-way entry /
       exit carriageways cannot be built node by node: the generic junction patches self-intersect and the apron
-      breaks into 8 wedges (render int-dk65-s22 knyszyn r1). Compact mode: paved outline = outer ring disc + the 8
-      one-way carriageways + arm ends, closed with 8 m kerb returns; truck apron as a full annulus, gravel island
-      inside, 4 narrow kerbed splitter islands (owner drone photo 9). closing_r_m / splitter_w_m WORKING_VALUE
-      (photo 9, ESTIMATED 6-10 m returns, splitters 2-3 m wide at the ring).
-    confidence: medium
-    verify: compare render rondo_dk65_top with owner photo 9 (Data/raw/refs/owner-knyszyn-2026-11-15)
+      breaks into 8 wedges (render int-dk65-s22 knyszyn r1). Compact mode: one junction, truck apron as a full
+      annulus, sand island inside (island_sand, the default), kerbed splitter islands (owner drone photo 9).
+      ADR 0274: the mapped one-way carriageways are GPS traces (OSM changeset 176857414, source Yanosik) that run
+      nearly tangent to the ring, so their outer edges made funnels and fat asphalt patches between the arms (owner
+      photo 9: tighter). Kerb mode: mouth = lane_w_m either side of a splitter up to splitter_w_m wide, kerb returns
+      entry_r_m / exit_r_m. NOT MEASURED: the GUGiK orthophoto here is of 2025-05-27 and still shows the plain
+      crossroads (docs/reports/roundabout-0274/knyszyn_ortho_probe.json: roundabout_visible false, no 2026 sheet), the
+      owner's photos 9-11 are not in git. All values WORKING_VALUE: lane 4.0 m, splitter <= 2.4 m (refuge >= 2 m),
+      returns 6 / 8 m (the largest that still leave a piece of ring kerb between two mouths of this 22.3 m ring),
+      crossing 5.0 m off the ring edge (one car length) on all four arms (OSM crossing nodes 3047667219 N,
+      3047667218 E, 1134812606 W; S: owner photo 9, refuge in the long island).
+    confidence: low
+    verify: scale kerb returns, lane and splitter widths and the crossing offsets on owner photo 9 (Data/raw/refs/owner-knyszyn-2026-11-15) or on the first orthophoto taken after 2025; compare render rondo_dk65_top
     set:
-      compact_roundabout: {closing_r_m: 6.0, splitter_w_m: 3.6, lane_w_m: 4.0}
+      compact_roundabout: {entry_r_m: 6.0, exit_r_m: 8.0, splitter_w_m: 2.4, lane_w_m: 4.0, crossing_offset_m: 5.0,
+                           crossings: [232511646, 286990127, 1464342641, 1478765548]}
+  # ADR 0274 (b): OSM splits DK65 into its entry / exit carriageways 17 m before the ring; the kerbed islands are
+  # longer (owner photo 9: the southern one "several tens of metres", with a pedestrian refuge).
+  - id: knyszyn-roundabout-dk65-split-s
+    kind: carriageway_split
+    node: 4898926854
+    reason: >-
+      DK65 south arm: the split node moves 27 m out along way 286990127, lanes 3.0 m either side of the old centre
+      line after a 14 m taper -> splitter island about 30 m long from the ring edge (owner photo 9: several tens of
+      metres; ESTIMATED at the low end, not measured: orthophoto 2025-05-27 predates the roundabout).
+    confidence: low
+    verify: island length and width on owner photo 9 or on an orthophoto taken after 2025
+    set: {length_m: 27.0, taper_m: 14.0, lane_offset_m: 3.0}
+  - id: knyszyn-roundabout-dk65-split-n
+    kind: carriageway_split
+    node: 3047667219
+    reason: >-
+      DK65 north arm: as the south arm. rynek-s23 (lead, D78): owner drone photo 9 scaled by the outer ring
+      diameter (22.6 m = ~137 px): the northern kerbed island starts ~2.7 m from the ring edge and runs past the top
+      of the frame, i.e. >= 34 m from the ring edge (lower bound, ESTIMATED); photo 10 shows it long as well. Same
+      ratio check for the south island: ~29 m from the ring edge on photo 9 = the authored 29.2 m. Set 32 m ->
+      island about 35 m. (2025 orthophoto: the old carriageway is 9.3 m wide 10-15 m north of the old node.)
+    confidence: low
+    verify: island length and width on an orthophoto taken after 2025 (photo 9 crops the northern end)
+    set: {length_m: 32.0, taper_m: 14.0, lane_offset_m: 3.0}
+  # ADR 0274 (c): low plants and stones on the centre island (owner photos 9-11, described in
+  # docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md: "piasek / zwir i male nasadzenia (krzewy, kamienie), bez drzew").
+  - id: knyszyn-roundabout-island-plantings
+    kind: plantings
+    reason: >-
+      Centre island of the DK65 x DW671 roundabout: sand with a few low shrubs and field stones, no trees, nothing
+      tall (owner photos 9-11; the photos are not in git and were not measured). Number, positions, sizes and the
+      species are ESTIMATED from that description only: 3 shrubs 0.35-0.45 m high (generic green leaf set
+      `privet`), 5 stones 0.15-0.30 m above the sand. Every item is at least 0.5 m + its own radius inside the
+      island kerb face (r 2.95 m about EPSG:2180 760623.71, 611996.27): the body of a semitrailer sweeps over the
+      kerb (ADR 0218 section 6). Budget: about 950 triangles, 4 materials (tests/gis/test_roundabout_0274.py).
+    confidence: low
+    verify: count and place shrubs / stones on owner photos 9-11 (Data/raw/refs/owner-knyszyn-2026-11-15)
+    clumps: [
+      {at: [760624.57, 611996.67], r_m: 0.35, height_m: 0.40, plant: privet},
+      {at: [760622.54, 611996.95], r_m: 0.40, height_m: 0.45, plant: privet},
+      {at: [760623.55, 611995.13], r_m: 0.30, height_m: 0.35, plant: privet}]
+    stones: [
+      {at: [760623.87, 611998.06], r_m: 0.32, height_m: 0.26},
+      {at: [760622.03, 611995.49], r_m: 0.26, height_m: 0.20},
+      {at: [760623.94, 611996.08], r_m: 0.38, height_m: 0.30},
+      {at: [760625.27, 611995.18], r_m: 0.22, height_m: 0.16},
+      {at: [760625.64, 611996.79], r_m: 0.20, height_m: 0.15}]
   - id: knyszyn-roundabout-dk65-feeders-width
     target: {osm_way: [1464342634, 1464342635, 1464342638, 1464342640]}
     reason: >-
@@ -64,7 +120,233 @@ overrides:
     confidence: high
     verify: none
     set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  # ADR 0237 D38: sidewalks of the town streets (owner s23: "w Knyszynie chodniki wszędzie, obustronne, kostka").
+  - id: knyszyn-pavement-rules-d38
+    kind: pavement_rules
+    implied_sidewalks: true
+    sidewalk_bdot: false
+    estate_slabs: false
+    crossing_kerb_drops: true
+    reason: >-
+      Owner (s23, docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md, ul. Szkolna): sidewalks on both sides of every street,
+      concrete block paving. OSM maps almost none of them (no footway and no sidewalk=* on Szkolna / Poludniowa, OSM
+      API 0.6 2026-11-16), so implied_sidewalks lays a 2.0 m sidewalk (roads.standards.SIDEWALK_W) behind both kerbs
+      of residential / tertiary / secondary / unclassified paved streets in the built-up area (BDOT10k residential
+      zabudowa + 60 m) unless OSM says sidewalk=no / separate or a mapped path runs within 6 m of the kerb. Surface:
+      grey 20 x 10 blocks (the default; sidewalk_bdot off - the owner says kostka, BDOT10k 2008 materials are older).
+      Kerbs lowered at the marked crossings (crossing_kerb_drops, R6-004). Widths not measured: WORKING_VALUE.
+    confidence: medium
+    verify: control camera knyszyn_szkolna_junction + owner check of Szkolna / Poludniowa; widths on the orthophoto
+  # ADR 0237 D38: Poludniowa x Szkolna - the parking aisle of the school (OSM way 750267067, highway=service) leaves
+  # Poludniowa 23 m north of the crossroads and must not be merged into the crossroads junction.
+  - id: knyszyn-szkolna-parking-tee-d38
+    target: {node: n7015352011}
+    reason: >-
+      OSM node 7015352011 (Poludniowa, 23.1 m from the crossroads node 1134846746) where the untagged service way
+      750267067 leaves to the school parking (amenity=school 750267069). Merged into the crossroads cluster, the first
+      13 m leg of the service way ran almost parallel to the Szkolna E arm: median "nose" R 21.8 m across its mouth,
+      service arm trimmed 28.3 m (past its bend) = a teardrop of asphalt joining nothing (owner, s23), and the 23 m
+      stub absorbed, so OSM crossing 11514832009 (crossing:markings=zebra) got no P-10; 11514832007 was skipped too.
+      GUGiK orthophoto (WMS StandardResolution, 120 x 120 m at 0.125 m/px): a plain 4-arm crossroads with four
+      zebras within 0.4-1.6 m of the OSM crossing nodes and a separate parking mouth ~20 m north on the east side
+      (docs/reports/knyszyn-szkolna/). Kept apart, the crossroads has 4 fillets (R 8 / 8 / 8 / 3.9 m) and 4 P-10,
+      the aisle a T of its own (trims 11.1 / 9.7 / 8.0 m).
+    confidence: high
+    verify: plan view + control camera knyszyn_szkolna_junction after build_world
+    set: {cluster: separate}
   # ---------------------------------------------------------------- Rynek (orthophoto 0.1 m 2025-05-27, owner frames)
+  - id: rynek-king-plaza-0227
+    kind: paved_area
+    park_flush: true
+    material: yard_paving
+    polygon_epsg2180:
+    - [760955.5, 612433.2]
+    - [760964.8, 612428.25]
+    - [760959.0, 612417.65]
+    - [760951.75, 612423.8]
+    reason: 'ESTIMATED: memorial forecourt traced from GUGiK 2025 and owner photos; outline requires visual verification.'
+    confidence: medium
+    verify: compare with owner photos and ground-level render
+  - id: rynek-fountain-plate-0227
+    kind: paved_area
+    park_flush: true
+    material: yard_concrete
+    polygon_epsg2180:
+    - - 760946.98
+      - 612379.81
+    - - 760946.27
+      - 612385.56
+    - - 760940.02
+      - 612384.79
+    - - 760940.73
+      - 612379.04
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto K1-124, ~6.3 x 5.8 m; flush plate, no basin. Jet layout and material
+      pending visual QA.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-central-plaza-0227
+    kind: paved_area
+    park_flush: true
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760941
+      - 612400
+    - - 760949.5
+      - 612396.5
+    - - 760953
+      - 612388
+    - - 760949.5
+      - 612379.5
+    - - 760941
+      - 612376
+    - - 760932.5
+      - 612379.5
+    - - 760929
+      - 612388
+    - - 760932.5
+      - 612396.5
+    reason: 'ESTIMATED: central park paving traced from GUGiK 2025 orthophoto; granite setts approximated with existing
+      paving material.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-path-main-sw-0227
+    kind: paved_area
+    park_flush: true
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760882.62
+      - 612377.22
+    - - 760934.62
+      - 612386.22
+    - - 760935.38
+      - 612381.78
+    - - 760883.38
+      - 612372.78
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-path-main-ne-0227
+    kind: paved_area
+    park_flush: true
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760946.41
+      - 612386.17
+    - - 760979.41
+      - 612395.17
+    - - 760980.59
+      - 612390.83
+    - - 760947.59
+      - 612381.83
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-path-north-0227
+    kind: paved_area
+    park_flush: true
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760941.5
+      - 612419.95
+    - - 760940.5
+      - 612391.95
+    - - 760937.5
+      - 612392.05
+    - - 760938.5
+      - 612420.05
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-path-west-0227
+    kind: paved_area
+    park_flush: true
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760905.81
+      - 612412.26
+    - - 760939.81
+      - 612390.26
+    - - 760938.19
+      - 612387.74
+    - - 760904.19
+      - 612409.74
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-path-south-0227
+    kind: paved_area
+    park_flush: true
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760934.35
+      - 612362.34
+    - - 760926.37
+      - 612344.39
+    - - 760923.63
+      - 612345.61
+    - - 760931.63
+      - 612363.61
+    - - 760931.68
+      - 612363.72
+    - - 760942.18
+      - 612383.02
+    - - 760944.82
+      - 612381.58
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-park-not-forest-0227
+    kind: park_replacement
+    target:
+      bdot: 20029180-A4BE-5C99-E053-CC2BA8C01CFC
+    reason: 'SOURCED: OSM leisure=park and owner photos 3-7; BDOT wooded polygon is maintained lawn with separate
+      broadleaf trees, not forest.'
+    confidence: high
+    verify: owner visual review
+  - id: rynek-park-broadleaf-0227
+    kind: tree_groups
+    points_en:
+    - - -687.0
+      - -167.2
+    - - -702.0
+      - -180.2
+    - - -689.0
+      - -205.2
+    species:
+      linden: 1.0
+    height_m:
+    - 15.0
+    - 20.0
+    reason: ESTIMATED crown locations from GUGiK 2025 orthophoto; these three points were refused by the hard mask in R7.
+      Keep them in the instance path for the same safety check; do not move them into the kit trial without verification.
+    confidence: medium
+    verify: owner photos and individual stem positions
+  - id: rynek-lindens-r8-trial-0227
+    kind: tree_groups
+    form: kit
+    crown_model: garden_trial
+    points_en:
+    - [-674.0, -171.2, 19.6, 11.8, linden]
+    - [-662.0, -182.2, 16.1, 10.7, linden]
+    - [-648.5, -185.7, 18.0, 10.8, linden]
+    - [-639.5, -192.2, 19.7, 11.8, linden]
+    - [-696.0, -192.2, 19.3, 12.9, linden]
+    - [-706.5, -209.2, 17.6, 11.7, linden]
+    - [-697.0, -222.2, 15.8, 9.5, linden]
+    - [-702.0, -243.2, 16.9, 10.2, linden]
+    - [-685.5, -248.2, 16.0, 10.7, linden]
+    - [-676.0, -254.2, 17.8, 10.7, linden]
+    - [-661.0, -247.2, 15.4, 9.3, linden]
+    - [-646.0, -240.2, 19.9, 12.0, linden]
+    - [-638.0, -227.2, 17.0, 11.3, linden]
+    species: {linden: 1.0}
+    reason: >-
+      Reversible R8 trial replacing the 13 R7 accepted points 1:1. Positions ESTIMATED from GUGiK 2025; heights
+      WORKING_VALUE copied from R7 instance records. Crown diameters WORKING_VALUE computed as mean horizontal
+      leaves_linden GLB AABB spans for each R7 prototype variant, scaled by h / 13.5 m and rounded to 0.1 m;
+      not measured crown diameters. Hard-mask-refused points remain in the non-kit group. Review both LODs.
+    confidence: medium
+    verify: R8 owner comparison and per-camera budget; revert trial if landmark visibility or budget regresses
   - id: rynek-plaza-east
     kind: paved_area
     material: yard_paving
@@ -79,17 +361,6 @@ overrides:
       paving); granite sett in arcs is not in the library (open, later polish).
     confidence: medium
     verify: owner photo of the whole plaza from a corner
-  - id: rynek-fountain-plate
-    kind: paved_area
-    material: yard_slabs
-    polygon_epsg2180: [[761031.2, 612400.4], [761040.2, 612400.4], [761040.2, 612393.4], [761031.2, 612393.4]]
-    reason: >-
-      Ground-level fountain of Rynek (owner frames: jets from a flush rectangular plate ~9 x 7 m in the sett
-      paving). Position ESTIMATED from the ring pattern of the paving on the 2025 orthophoto (centre 761035.7
-      612396.9, +-5 m); size WORKING_VALUE read off the owner frame (a child ~1 m tall beside a plate ~8-9 m wide).
-      Only the plate is laid; water jets and night lighting are not modelled (open).
-    confidence: low
-    verify: owner - where on the plaza the fountain is (which corner / distance from Grodzienska)
   - id: field-roads-unlit
     target: {osm_way: [305910057, 1111506743, 1111506749]}
     reason: >-
@@ -99,21 +370,97 @@ overrides:
     confidence: medium
     verify: none
     set: {lamps: false}
-  - id: rynek-park-trees
-    kind: forest_stand
-    target: {bdot: "20029180-A4BE-5C99-E053-CC2BA8C01CFC"}
+  # ------------------------------------------------------------ knyszyn-look-s23: landmarks outside the Rynek park
+  # Inventory: docs/reports/knyszyn-look/README.md. Roof tones of ~1580 buildings come from the generated file
+  # overrides.ortho_roofs.json (tools/worldgen/qa/roof_tones_ortho.py); entries here win over it.
+  - id: look-post-office-walls
+    target: {building: "bdot:2002917F-AB81-5C99-E053-CC2BA8C01CFC"}
+    sources: ["OSM way/300660473 (amenity=post_office)", "Mapillary 257286536083680 (2020-06-27, CC BY-SA 4.0, reference only)"]
     reason: >-
-      West half of Rynek is a town park (OSM way 300660468 leisure=park, 0.74 ha): mown lawn, paths to a monument
-      and large single broadleaf trees. BDOT10k has it as OT_PTLZ_A "zadrzewienie, lisciaste", which the class
-      default plants as a closed wood (render r2 rynek-above: a dark block of trunks). GUGiK orthophoto 0.1 m
-      2025-05-27: ~60 separate crowns of 8-14 m diameter on 0.9 ha -> one tree per ~12 m; owner frames
-      20240730_190331 / 20250729_1825xx: old trees ~2.5-3x the height of the two-storey houses behind. Heights
-      14-22 m and the linden/maple shares are WORKING_VALUE (species read from crown shape only).
+      Post office at the east corner of the Rynek (BDOT function 'placowka operatora pocztowego', 2 storeys,
+      LoD2 ridge 10.19 m / eave 7.65 m). The Mapillary frame shows orange-tan facing brick and a dark hipped roof.
+      ESTIMATED: plaster_peach is the closest tone the wall set has (no facing-brick material in that colour);
+      roof_shape hip from the frame, roof tone from the orthophoto file. No lettering, no logo.
     confidence: medium
-    verify: owner - species of the Rynek trees (lindens?)
-    height_m: [14.0, 22.0]
-    spacing_m: 12.0
-    mix: {linden: 0.7, maple: 0.3}
+    verify: owner photo of the post office front; a facing-brick material is later polish
+    set: {wall_material: plaster_peach, roof_shape: hip}
+  - id: look-rynek-corner-house-2e17
+    target: {building: "bdot:2002917F-2E17-5C99-E053-CC2BA8C01CFC"}
+    sources: ["Mapillary 591181635195842 (2020-06-27, CC BY-SA 4.0, reference only)"]
+    reason: >-
+      Two-storey house at the Grodzienska / Rynek corner opposite the town hall wing: white render under a red
+      hipped roof (Mapillary frame looking north along Grodzienska; roof red on the 2025 orthophoto as well).
+      ESTIMATED wall tone; the shop signs of the frame are not reproduced.
+    confidence: medium
+    verify: owner photo of the north-east corner of the Rynek
+    set: {wall_material: plaster_white}
+  - id: look-dom-klattow-wooden
+    target: {building: "bdot:2002917F-2F22-5C99-E053-CC2BA8C01CFC"}
+    sources: ["OSM way/294345657 (material=wood, tourism=attraction, wikidata Q16540625)"]
+    reason: >-
+      Listed wooden house at Koscielna (OSM material=wood). 171 m2, so the footprint rule (wooden only under
+      120 m2, 12 % by hash) never boards it. SOURCED: wooden; ESTIMATED: plank colour (dark brown).
+    confidence: medium
+    verify: owner photo or a Commons photo of the house (plank colour, porch)
+    set: {typology: dom_drewniany, wall_material: wood_planks}
+  - id: look-east-square-kiosk
+    target: {building: "osm:way/1427273958"}
+    sources: ["OSM way/1427273958 (building=yes, 12 m2, no other tag)", "GUGiK orthophoto 2025 0.25 m (reference only)"]
+    reason: >-
+      Review 2026-11-17 P1-2: the class rule of overrides.class_fixes.json (OSM-only < 60 m2 -> outbuilding 3.0 m)
+      turned the kiosk on the eastern paved square into a doorless flat grey box - a landmark of the square lost. The
+      orthophoto (0.25 m, measured: light roof 1.8 x 6.8 m = the OSM ring, median sRGB 177/188/193; the dark strip on
+      its north-west side is its cast shadow, as for the trees) shows a narrow kiosk with a light, near-flat roof
+      standing alone on the paving. Built as a one-storey house-type body (door and windows from the facade kit, flat
+      roof - a pitched roof has no basis in the data and roofs.plan refuses spans under 3 m). ESTIMATED: brick walls
+      (what the square showed before this branch); WORKING_VALUE: 3.2 m. Wins over the class fix (authored entries
+      come after the generated files). No sign or lettering.
+    confidence: low
+    verify: owner photo of the eastern square (what the kiosk is, wall material, roof form)
+    set: {typology: dom, wall_material: brick_red, height_m: 3.2, roof_shape: flat}
+  - id: look-east-square-press-kiosk
+    target: {building: "osm:way/300663247"}
+    sources: ["OSM way/300663247 (building=yes, 13 m2, a press kiosk by its OSM name - the name is not reproduced)"]
+    reason: >-
+      Review 2026-11-17 P1-2: the second small structure of the eastern square, 1.5 m south-west of the kiosk above
+      (4.9 x 2.7 m), also became a 3.0 m outbuilding box through the class rule. A press kiosk: one storey with
+      openings, flat roof. ESTIMATED: light render walls (no photo); WORKING_VALUE: 2.9 m. No sign, lettering or
+      chain colours.
+    confidence: low
+    verify: owner photo of the eastern square
+    set: {typology: dom, wall_material: plaster_light, height_m: 2.9, roof_shape: flat}
+  - id: look-discount-forecourt-red-north
+    kind: paved_area
+    material: sidewalk_paving_red
+    polygon_epsg2180: [[761045.4, 612226.3], [761053.3, 612223.3], [761064.6, 612208.3], [761061.3, 612205.8],
+                       [761054.2, 612213.8], [761046.7, 612220.8]]
+    reason: >-
+      Discount store at Szkolna (BDOT 468D, 'dom towarowy lub handlowy', one storey): row of parking bays on red
+      block paving along the access road north-east of the building. Owner fact (feedback S21, 'ul. Szkolna'):
+      car park of red block paving. ESTIMATED: outline traced on the GUGiK 2025 orthophoto 0.1 m, +-1 m.
+    confidence: medium
+    verify: owner photo of the store from Szkolna
+  - id: look-discount-forecourt-red-walk
+    kind: paved_area
+    material: sidewalk_paving_red
+    polygon_epsg2180: [[761073.3, 612190.8], [761075.4, 612188.3], [761070.0, 612180.8], [761061.3, 612175.4],
+                       [761055.4, 612165.8], [761053.3, 612167.1], [761058.3, 612177.5], [761067.9, 612183.3]]
+    reason: >-
+      Same car park: band of red block paving (walkway and bay edging) across the main lot south-east of the
+      store. ESTIMATED: traced on the GUGiK 2025 orthophoto 0.1 m, +-1 m; the red bay lines are not drawn.
+    confidence: medium
+    verify: owner photo of the store from Szkolna
+  - id: look-discount-forecourt-lot
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180: [[761057.5, 612197.5], [761063.3, 612198.3], [761075.4, 612191.7], [761087.5, 612175.0],
+                       [761078.3, 612161.0], [761066.0, 612152.5], [761053.3, 612157.5], [761040.0, 612161.7],
+                       [761035.8, 612171.7]]
+    reason: >-
+      Same car park: the main lot between the store, Szkolna and the two-storey service building to the south,
+      light grey block paving on the 2025 orthophoto (was grass in the game). ESTIMATED outline, +-1 m.
+    confidence: medium
+    verify: owner photo of the store from Szkolna
   - id: lamp-policy-led-0216
     kind: lamp_policy
     family: led
@@ -139,3 +486,502 @@ overrides:
     confidence: high
     verify: none
     set: {lamps: false}
+
+  - id: rynek-mown-open-ground-0227
+    kind: open_ground
+    polygons_en:
+    - - - -743.54
+        - -244.06
+      - - -723.43
+        - -213.1
+      - - -696.52
+        - -172.13
+      - - -692.92
+        - -166.14
+      - - -686.64
+        - -156.47
+      - - -680.64
+        - -160.58
+      - - -668.49
+        - -168.06
+      - - -655.23
+        - -174.99
+      - - -637.45
+        - -186.05
+      - - -625.55
+        - -192.59
+      - - -624.33
+        - -194.72
+      - - -622.71
+        - -205.04
+      - - -626.99
+        - -218.78
+      - - -637.69
+        - -248.95
+      - - -649.22
+        - -275.48
+      - - -658.62
+        - -290.45
+      - - -698.05
+        - -266.13
+      - - -720.21
+        - -254.26
+      - - -730.85
+        - -249.33
+      - - -743.54
+        - -244.06
+    reason: 'SOURCED: owner photos 3–7 and GUGiK orthophoto show mown park lawn; exclude
+      incidental self-seeded rule trees; preserve authored points.'
+    confidence: high
+    verify: visual comparison
+
+  - id: rynek-1-roof-0227
+    target: {building: "bdot:2002917F-3002-5C99-E053-CC2BA8C01CFC"}
+    reason: "ESTIMATED: dark grey roof in GUGiK orthophoto 2025-05-27; covering unverified."
+    confidence: medium
+    verify: "Owner reference and same-pose render; material unverified."
+    set: {roof_material: roof_metal_graphite}
+  - id: rynek-3-roof-0227
+    target: {building: "bdot:2002917F-3066-5C99-E053-CC2BA8C01CFC"}
+    reason: "ESTIMATED: warm reddish-brown roof in GUGiK orthophoto 2025-05-27; covering unverified."
+    confidence: medium
+    verify: "Compare red and brown on render."
+    set: {roof_material: roof_tiles_red}
+  - id: rynek-5-roof-0227
+    target: {building: "bdot:2002917F-3078-5C99-E053-CC2BA8C01CFC"}
+    reason: "ESTIMATED: blue-grey roof in GUGiK orthophoto 2025-05-27; covering unverified."
+    confidence: medium
+    verify: "Owner reference and same-pose render; material unverified."
+    set: {roof_material: roof_metal_graphite}
+  - id: rynek-9-roof-0227
+    target: {building: "bdot:2002917F-2E16-5C99-E053-CC2BA8C01CFC"}
+    reason: "ESTIMATED: brick-red roof in GUGiK orthophoto 2025-05-27; covering unverified."
+    confidence: medium
+    verify: "Owner reference and same-pose render; material unverified."
+    set: {roof_material: roof_tiles_red}
+
+
+  - id: rynek-near-lindens-kit-0227
+    kind: tree_groups
+    form: kit
+    crown_model: linden_study_r3
+    points_en: [[-677.0, -195.2, 17.0, 10.0, linden], [-651.0, -210.2, 17.0, 10.0, linden]]
+    species: {linden: 1.0}
+    reason: >-
+      ESTIMATED: two nearby crown centres from GUGiK 2025 orthophoto, owner photos 3-6. Heights and crown
+      diameters are WORKING_VALUE. Local experimental study R3 using existing plot_kit atlas, not a measured tree;
+      each point replaces, rather than duplicates, one instance. Visual and Low/High budget comparison required.
+    confidence: medium
+    verify: "Same-pose owner comparison and per-camera budget."
+
+
+  # Market at Jagiellonska (GUGiK 2025, manual tracing; do not use photos as textures).
+  - id: market-paving-red-1-0-0227
+    kind: paved_area
+    park_flush: true
+    material: sidewalk_paving_red
+    polygon_epsg2180:
+    - - 760798.0
+      - 613304.6
+    - - 760804.0
+      - 613305.2
+    - - 760802.2
+      - 613311.8
+    - - 760797.0
+      - 613312.0
+    reason: 'SOURCED: GUGiK 2025 EPSG:2180, 0.1 m orthophoto; owner photos 12-14. ESTIMATED: hand-traced boundary, tolerance
+      at least 0.5-1 m; no photo used as texture.'
+    confidence: medium
+    verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
+  - id: market-paving-red-2-0-0227
+    kind: paved_area
+    park_flush: true
+    material: sidewalk_paving_red
+    polygon_epsg2180:
+    - - 760790.0
+      - 613275.4
+    - - 760791.2
+      - 613270.0
+    - - 760826.35
+      - 613278.35
+    - - 760825.3
+      - 613283.74
+    reason: 'SOURCED: GUGiK 2025 EPSG:2180, 0.1 m orthophoto; owner photos 12-14. ESTIMATED: hand-traced boundary, tolerance
+      at least 0.5-1 m; no photo used as texture.'
+    confidence: medium
+    verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
+  - id: market-paving-red-3-0-0227
+    kind: paved_area
+    park_flush: true
+    material: sidewalk_paving_red
+    polygon_epsg2180:
+    - - 760796.4
+      - 613248.2
+    - - 760797.6
+      - 613242.6
+    - - 760831.78
+      - 613250.45
+    - - 760830.65
+      - 613256.25
+    reason: 'SOURCED: GUGiK 2025 EPSG:2180, 0.1 m orthophoto; owner photos 12-14. ESTIMATED: hand-traced boundary, tolerance
+      at least 0.5-1 m; no photo used as texture.'
+    confidence: medium
+    verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
+  - id: market-paving-red-4-0-0227
+    kind: paved_area
+    park_flush: true
+    material: sidewalk_paving_red
+    polygon_epsg2180:
+    - - 760800.8
+      - 613226.0
+    - - 760802.0
+      - 613221.0
+    - - 760836.0
+      - 613226.2
+    - - 760835.0
+      - 613230.6
+    - - 760830.17
+      - 613229.95
+    - - 760830.4
+      - 613228.6
+    - - 760828.0
+      - 613226.2
+    - - 760825.6
+      - 613228.8
+    - - 760825.47
+      - 613229.32
+    reason: 'SOURCED: GUGiK 2025 EPSG:2180, 0.1 m orthophoto; owner photos 12-14. ESTIMATED: hand-traced boundary, tolerance
+      at least 0.5-1 m; no photo used as texture.'
+    confidence: medium
+    verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
+  - id: market-paving-base-0227
+    kind: paved_area
+    park_flush: true
+    material: apron_paving_light
+    bare_soil_holes: true  # ESTIMATED: soil colour from owner photos, not a paved/hard mask
+    polygon_epsg2180:
+    - - 760803.0
+      - 613208.0
+    - - 760813.0
+      - 613200.0
+    - - 760842.0
+      - 613198.0
+    - - 760812.0
+      - 613352.0
+    - - 760772.0
+      - 613349.0
+    - - 760778.0
+      - 613342.0
+    - - 760778.16
+      - 613341.14
+    - - 760780.6
+      - 613341.4
+    - - 760782.8
+      - 613339.4
+    - - 760783.6
+      - 613335.8
+    - - 760779.35
+      - 613334.69
+    - - 760782.66
+      - 613316.79
+    - - 760785.4
+      - 613317.2
+    - - 760787.2
+      - 613312.4
+    - - 760786.2
+      - 613308.4
+    - - 760784.46
+      - 613307.06
+    - - 760785.4
+      - 613302.0
+    - - 760790.6
+      - 613264.0
+    - - 760801.32
+      - 613215.57
+    - - 760801.0
+      - 613220.6
+    - - 760809.2
+      - 613221.2
+    - - 760810.6
+      - 613219.2
+    - - 760811.0
+      - 613214.4
+    - - 760809.2
+      - 613211.4
+    - - 760806.2
+      - 613210.4
+    - - 760802.8
+      - 613211.8
+    - - 760801.71
+      - 613213.82
+    holes_epsg2180:
+    - - - 760809.8
+        - 613341.6
+      - - 760804.0
+        - 613340.2
+      - - 760802.2
+        - 613346.0
+      - - 760806.0
+        - 613348.8
+      - - 760808.4
+        - 613349.0
+    - - - 760811.4
+        - 613310.8
+      - - 760809.4
+        - 613313.2
+      - - 760807.2
+        - 613325.4
+      - - 760811.0
+        - 613326.8
+      - - 760813.0
+        - 613322.0
+      - - 760814.8
+        - 613312.4
+      - - 760813.8
+        - 613310.0
+    - - - 760822.0
+        - 613297.8
+      - - 760818.4
+        - 613296.0
+      - - 760814.8
+        - 613301.0
+      - - 760817.2
+        - 613304.2
+      - - 760819.8
+        - 613305.6
+    - - - 760828.0
+        - 613226.2
+      - - 760825.6
+        - 613228.8
+      - - 760822.2
+        - 613242.0
+      - - 760825.8
+        - 613244.2
+      - - 760828.0
+        - 613242.8
+      - - 760830.4
+        - 613228.6
+    - - - 760823.6
+        - 613209.4
+      - - 760821.8
+        - 613207.8
+      - - 760820.0
+        - 613213.0
+      - - 760822.4
+        - 613213.8
+    reason: 'SOURCED: GUGiK 2025 EPSG:2180, 0.1 m orthophoto; owner photos 12-14. ESTIMATED: hand-traced boundary, tolerance
+      at least 0.5-1 m; no photo used as texture.'
+    confidence: medium
+    verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
+  - id: market-landscaping-island-1-0227
+    kind: unpaved_area
+    bare_soil: true
+    polygon_epsg2180:
+    - - 760775.0
+      - 613340.8
+    - - 760780.6
+      - 613341.4
+    - - 760782.8
+      - 613339.4
+    - - 760783.6
+      - 613335.8
+    - - 760779.0
+      - 613334.6
+    - - 760778.4
+      - 613332.2
+    - - 760776.2
+      - 613332.6
+    reason: 'SOURCED: GUGiK 2025 and owner photos; ESTIMATED: manually traced planted island, boundary at least 0.5-1 m uncertainty.'
+    confidence: medium
+    verify: inspect render and compare against 2025 orthophoto
+  - id: market-landscaping-island-2-0227
+    kind: unpaved_area
+    bare_soil: true
+    polygon_epsg2180:
+    - - 760780.0
+      - 613316.4
+    - - 760785.4
+      - 613317.2
+    - - 760787.2
+      - 613312.4
+    - - 760786.2
+      - 613308.4
+    - - 760783.6
+      - 613306.4
+    - - 760780.2
+      - 613306.6
+    reason: 'SOURCED: GUGiK 2025 and owner photos; ESTIMATED: manually traced planted island, boundary at least 0.5-1 m uncertainty.'
+    confidence: medium
+    verify: inspect render and compare against 2025 orthophoto
+  - id: market-landscaping-island-8-0227
+    kind: unpaved_area
+    bare_soil: true
+    polygon_epsg2180:
+    - - 760801.0
+      - 613220.6
+    - - 760809.2
+      - 613221.2
+    - - 760810.6
+      - 613219.2
+    - - 760811.0
+      - 613214.4
+    - - 760809.2
+      - 613211.4
+    - - 760806.2
+      - 613210.4
+    - - 760802.8
+      - 613211.8
+    - - 760801.4
+      - 613214.4
+    reason: 'SOURCED: GUGiK 2025 and owner photos; ESTIMATED: manually traced planted island, boundary at least 0.5-1 m uncertainty.'
+    confidence: medium
+    verify: inspect render and compare against 2025 orthophoto
+  - id: market-canopies-0227
+    kind: market_canopies_0227
+    canopies:
+      - id: north-separated
+        polygon_epsg2180: [[760787.0, 613341.7], [760794.0, 613342.4], [760800.7, 613316.7], [760794.2, 613315.0]]
+        solar_panels: false
+      - id: north-group
+        polygon_epsg2180: [[760796.9, 613301.9], [760803.8, 613302.6], [760810.4, 613276.0], [760803.9, 613274.7]]
+        solar_panels: false
+      - id: middle-group
+        polygon_epsg2180: [[760803.8, 613274.3], [760810.5, 613275.1], [760817.3, 613248.3], [760810.8, 613247.0]]
+        solar_panels: false
+      - id: south-solar
+        polygon_epsg2180: [[760810.7, 613246.8], [760817.4, 613247.7], [760824.2, 613221.4], [760817.7, 613219.9]]
+        solar_panels: true
+    fences:
+      - id: north-fence
+        points_epsg2180: [[760810.0, 613348.0], [760815.85, 613316.17]]
+      - id: south-fence
+        points_epsg2180: [[760820.4, 613304.0], [760835.2, 613222.0]]
+    reason: >-
+      SOURCED: eave outlines and entrance gap hand-traced from GUGiK 2025 orthophoto; canopy construction,
+      relative appearance and southern PV from owner reference photos. ESTIMATED: traced roof and fence
+      coordinates, approximately 0.5–1 m uncertainty, no survey of post bases. WORKING_VALUE: heights,
+      roof slope, post spacing, 0.25 m eave inset, counter and fence details. The northern fence end is
+      clipped to at least 3.5 m from a service axis of default 5 m width; truck swept-path remains OPEN.
+      Images are reference only.
+    confidence: medium
+    verify: eye-level owner photo 14, ground contact, crossings, canopy dimensions and draw budget
+  - id: market-spruce-0227
+    kind: tree_groups
+    points_en: [[-807.5, 610.0, 9.0]]
+    species: {spruce: 1.0}
+    reason: >-
+      SOURCED: conifer visible beside the market building in GUGiK 2025 and owner photo. ESTIMATED:
+      crown centre as stem position, approximately 2 m uncertainty. WORKING_VALUE: 9 m height.
+    confidence: medium
+    verify: confirm it is not refused by hard mask and compare the eye-level render
+
+  - id: market-interior-service-paving-0227
+    target: {osm_way: [498482913]}
+    reason: >-
+      SOURCED: 2025 GUGiK orthophoto and owner photos show light block paving along this service way inside the market.
+      ESTIMATED: surface classification as paving_stones; existing path geometry and width are unchanged.
+    confidence: medium
+    verify: compare the passage and its collision surface to owner photos and street-level render
+    set: {surface: paving_stones}
+  - id: market-crossing-service-paving-0227
+    target: {edge: "w498483028:4898906615-4898870293"}
+    reason: >-
+      SOURCED: GUGiK 2025 and owner photos show the market crossing paved in light blocks.
+      ESTIMATED: surface classification; only this edge within the market is changed, other way segments remain intact.
+    confidence: medium
+    verify: compare the crossing with the 2025 orthophoto and owner photos
+    set: {surface: paving_stones}
+
+  # --- ADR 0227 dopisek D41 (rynek-p1-s23): own blocks, appended at the end; entries above are untouched ---
+  # (d) outer diameter of the DK65 x DW671 compact roundabout. A separate entry so the value is a one-line change;
+  # merged with knyszyn-roundabout-compact (roads/network.py: compact_roundabout options merge in file order).
+  # DISABLED (leader s23, world3 17.11): with this entry the KRTG ring nodes stay on the OSM radius 8.65 m while the
+  # ring axis moves to r 10.5 m - node <-> geometry gap 1.73 m on 8 ring edges (ADR 0274, review #169 P2-7,
+  # test_effective_graph_readers::test_knyszyn_route_graph_...). Re-enable when the roundabout generator moves the
+  # ring nodes with the diameter (no gap). Value OD-046 still open.
+  # - id: knyszyn-roundabout-outer-diameter-d41
+  #   target: {osm_way: [1426801304]}
+  #   reason: >-
+  #     WORKING_VALUE 26.0 m: outer kerb diameter of the ring carriageway. OSM ring axis r 8.65 m + authored ring width
+  #     5.0 m gives 22.3 m (22.6 m in docs), the lead's reading of owner drone photo 9 by car lengths is about 26 m
+  #     (docs/reports/INTEGRATION-2026-11-16-rynek-s23.md section 7, OPEN-DECISIONS OD-046). NOT MEASURED: the GUGiK
+  #     orthophoto 2025-05-27 predates the roundabout, the photo is not in git. Accepted range 14-40 m and at most
+  #     max(2 m, 40 %) from the fitted axis radius, else this entry is stale and the OSM radius stays. Change only this
+  #     number; the splitter lengths of knyszyn-roundabout-dk65-split-s / -n are measured from the split node, so the
+  #     islands get ~1.8 m shorter at the ring when the ring grows (re-check on photo 9).
+  #   confidence: low
+  #   verify: render rondo_dk65_top next to owner photo 9 (cars 4.5 m as the scale), adjust this value, rerun swept_path.py
+  #   set:
+  #     compact_roundabout: {outer_diameter_m: 26.0}
+  # (a) measured eave rectangles of the four market canopies; replaces the hand traces of
+  # knyszyn-market-canopies-0227 by id (streetscape/knyszyn_market_0227.py GEOMETRY_KIND), that entry stays as authored.
+  - id: knyszyn-market-canopy-eaves-d41
+    kind: market_canopy_geometry_d41
+    eave_inset_m: 0.0
+    canopies:
+      - id: north-separated
+        polygon_epsg2180: [[760787.07, 613340.74], [760794.09, 613342.58], [760800.95, 613316.36], [760793.93, 613314.52]]
+      - id: north-group
+        polygon_epsg2180: [[760797.2, 613300.76], [760804.22, 613302.5], [760810.76, 613276.14], [760803.74, 613274.4]]
+      - id: middle-group
+        polygon_epsg2180: [[760803.97, 613273.25], [760811.03, 613275.04], [760817.69, 613248.77], [760810.63, 613246.98]]
+      - id: south-solar
+        polygon_epsg2180: [[760810.68, 613245.77], [760817.65, 613247.57], [760824.44, 613221.33], [760817.47, 613219.53]]
+    reason: >-
+      SOURCED (measured, not traced): GUGiK ORTO WMS StandardResolution 0.1 m, ridge-axis and cross profiles of each
+      roof (tools/worldgen/qa/market_canopy_ortho.py; numbers in docs/reports/rynek-p1/market_canopies_ortho.json).
+      Eave length 27.10-27.15 m, width 7.20-7.28 m, clear gaps north-group/middle-group 1.15 m and
+      middle-group/south-solar 1.17 m (shadowed ground between the hips), north-separated 14.2 m apart; owner photo 12
+      (local only): three close canopies standing apart + one separate. The hand traces overlapped by ~1 m and with the
+      0.25 m inset the eaves touched. Accuracy +-0.1 m per edge, +-0.2 m per gap; absolute position +-0.5 m
+      (relief displacement of 4 m high roofs, UNVERIFIED projection centre). Inset 0: the rectangles are the eaves.
+    confidence: medium
+    verify: render market_owner_12 / market_owner_14_close and check three gaps of about one metre, posts and counters under each roof
+  # (b) the small market pavilion in the south-east corner (by the entrance and its own slab parking): tent roof over
+  # yellow walls (owner photo 13, local only; GUGiK 2025 orthophoto: four hip planes meeting at one apex, no ridge).
+  - id: knyszyn-market-pavilion-d41
+    kind: market_pavilion_d41
+    target: {building: "bdot:de62e5a9-3c83-4023-9e77-03b8844df001"}
+    set: {roof: tent, eave_m: 2.8, apex_m: 4.2, wall_material: plaster_yellow, roof_material: roof_metal_graphite}
+    reason: >-
+      SOURCED: BDOT10k footprint (79 m2, "budynek gospodarczy", 1 storey); tent roof read on the GUGiK ORTO WMS
+      (2025 sheet, 0.1 m: four triangular planes to one apex; numbers only). Owner description: small pavilion,
+      yellow facade, tent roof, in the market corner (docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md, photos 12-13).
+      ESTIMATED: matching this footprint to the photo (the oblique photo 13 looks from the south-east at this corner).
+      WORKING_VALUE: eave 2.8 m and apex 4.2 m (no LoD1/LoD2 here), yellow plaster tone, openings. No sign, lettering,
+      logo or brand. A second, smaller pyramid-roofed kiosk without a BDOT footprint stands by the north-west gate
+      (orthophoto, about 3.5 x 4 m) - not modelled (no footprint, colour unknown).
+    confidence: medium
+    verify: render market_owner_13 next to owner photo 13 (yellow walls readable, tent roof, no ridge)
+  # (c) linden crown shape as data: crown spread = height / height_to_spread for the Rynek park lindens (both kit
+  # groups above stay as authored; streetscape/plantings.py crown_shapes).
+  - id: rynek-linden-crown-shape-d41
+    kind: tree_crown_shape
+    targets: [rynek-lindens-r8-trial-0227, rynek-near-lindens-kit-0227]
+    species: linden
+    height_to_spread: 1.75
+    reason: >-
+      ESTIMATED from literature: Tilia cordata, height 70 ft, spread 40 ft, shape "upright oval" (A. X. Niemiera,
+      Littleleaf Linden (Tilia cordata), Virginia Cooperative Extension publication 2901-1055, 2018, Summary) ->
+      height : spread 1.75. Replaces the per-point crown diameters of the two kit groups, which were WORKING_VALUE
+      (GLB AABB spans scaled by height, not measured): crowns 8.8-11.4 m instead of 9.3-12.9 m at 15.4-19.9 m height,
+      i.e. narrower, more upright ovoid crowns (review 2026-11-16 P1: crowns read flat). Park trees in Knyszyn may
+      be broader than this open-grown nursery figure; the owner's photos 3-6 decide (local only).
+    confidence: low
+    verify: render rynek owner frames 03 and 05 (Low, High) next to photos 3-6; change only height_to_spread
+  # world3 (int-world3-s23, leader s23): the "high carriageway edge" of DK65 south of the compact roundabout
+  # (rondo_dk65_from_south; review #169 P0, D41 (e) did not reach it). Cause, read off the network of this tile: the two
+  # split carriageways of knyszyn-roundabout-dk65-split-s (ways 1464342635 / 1464342640, the 27 m splitter zone) kept the
+  # rural open-road profile on their outer edge (ADR 0272: kind rural, ditch 0.6 m, verge 0) while the kerb-mode
+  # roundabout lays a kerb there; a kerb with no verge behind it stood 0.45-0.65 m above the conformed NMT 2022
+  # (GLB probe tools/worldgen/qa/knyszyn_s_kerb_step.py). A kerbed edge gets the ADR 0110 grass verge at kerb crown.
+  - id: knyszyn-dk65-split-s-kerbed-edge-w3
+    target: {osm_way: [1464342635, 1464342640]}
+    reason: >-
+      Splitter zone of DK65 south at the compact roundabout (27 m, carriageway_split): the kerb laid by the roundabout
+      needs the kerbed cross-section (kerb + grass verge at its crown), not the rural ditch profile of the open road
+      south of it. Measured drop behind the kerb before this entry: 0.45-0.65 m within 1.5 m (threshold 0.15 m).
+      The edge itself is not measured (orthophoto 2025-05-27 predates the roundabout): WORKING_VALUE.
+    confidence: medium
+    verify: control camera rondo_dk65_from_south + knyszyn_s_kerb_step.py (drop <= 0.15 m); owner photo 9-11
+    set: {shoulder: {kind: kerb}}

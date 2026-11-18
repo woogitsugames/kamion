@@ -5,7 +5,7 @@
   "polyhaven": {
    "license": "CC0 1.0 Universal",
    "page": "https://polyhaven.com/license",
-   "checked_utc": "2026-11-10T18:13Z"
+   "checked_utc": "2026-11-17T16:28Z"
   }
  },
  "assets": [
@@ -845,6 +845,70 @@
      "bytes": 1259109,
      "sha256": "066b021e6192eb49019bde474bf55323d7f0f13706f32c308d96ac1dbcba7c3c",
      "fetched_utc": "2026-11-10T18:13:59Z"
+    }
+   ]
+  },
+  {
+   "id": "raw_plank_wall",
+   "source": "polyhaven",
+   "name": "Raw Plank Wall",
+   "page": "https://polyhaven.com/a/raw_plank_wall",
+   "authors": {
+    "Dimitrios Savva": "All"
+   },
+   "dimensions_mm": [
+    1870.0,
+    1870.0
+   ],
+   "date_published_unix": 1682985600,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "wood_siding"
+   ],
+   "why": "weathered raw pine planks, horizontal boards (wooden houses, Dom Klattow)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/raw_plank_wall/raw_plank_wall_diff_2k.jpg",
+     "md5_api": "b56bcf1c5c2c4c984468598afcc62be6",
+     "bytes": 2522671,
+     "sha256": "dd9099dfffc98d897739d03714f863d5e55ac3ea95b5185914d03d789307c354",
+     "fetched_utc": "2026-11-17T16:28:24Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/raw_plank_wall/raw_plank_wall_nor_gl_2k.jpg",
+     "md5_api": "2752697ed683a35ccbb080c1c4e5408b",
+     "bytes": 3223836,
+     "sha256": "554a8c1cc95d86f0aa8844c4897a7dc5e269e40eac2f3254c22efb1b84599347",
+     "fetched_utc": "2026-11-17T16:28:25Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/raw_plank_wall/raw_plank_wall_rough_2k.jpg",
+     "md5_api": "ff518ba0bd6b61a0f34fa2456976ec13",
+     "bytes": 1637646,
+     "sha256": "145b98ae61d992dc9cc76a5348c49f9180611a96cb5384d99ab1839626838ccc",
+     "fetched_utc": "2026-11-17T16:28:27Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/raw_plank_wall/raw_plank_wall_ao_2k.jpg",
+     "md5_api": "5baa5d3e55815d82fc8441a3b71ccb56",
+     "bytes": 2527943,
+     "sha256": "abfc71efe016afa2ee9abb026b537c3a710f83b143af16596f9ae2041ddc337b",
+     "fetched_utc": "2026-11-17T16:28:29Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/raw_plank_wall/raw_plank_wall_disp_2k.jpg",
+     "md5_api": "d1ab084efce8c76e744db83f964145fa",
+     "bytes": 813999,
+     "sha256": "e41abc9107f920fb0fb7000d40592963a3e84b92c67bff4411882275c13c10a9",
+     "fetched_utc": "2026-11-17T16:28:30Z"
     }
    ]
   }

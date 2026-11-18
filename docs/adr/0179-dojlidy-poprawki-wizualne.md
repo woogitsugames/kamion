@@ -1,5 +1,5 @@
 # ADR 0179 — Dojlidy/Krywlany: poprawki wizualne po pierwszym imporcie (landmarki, lotnisko, kamery foto)
-Status: Proposed (agent world-builder, s18 + s19, gałąź `dojlidy-vis-0179`), 2026-11-13. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-13, `b546b4df2`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s18 + s19, gałąź `dojlidy-vis-0179`), 2026-11-13. Do scalenia przez lidera.
 Poprzednik: ADR 0174 (import regionu `bialystok-dojlidy`, kamery foto), ADR 0166 (dane regionu), recenzja
 `REVIEW-2026-11-13-s17-0174` (1R/4P/2N).
 

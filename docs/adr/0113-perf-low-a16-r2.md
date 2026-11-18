@@ -1,6 +1,6 @@
 # ADR 0113: Wydajność Low na A16 r2 — szybka ścieżka lasu, prewarm PSO (GraphicsStateCollection)
 
-Status: propozycja (rendering-perf, gałąź `perf-low-r2`, z main `1791a0ed` po 0106), 2026-11-11.
+Status: przyjęty (scalony do main 2026-11-11, `33e800737`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (rendering-perf, gałąź `perf-low-r2`, z main `1791a0ed` po 0106), 2026-11-11.
 Powiązane: ADR 0106 (rozkład GPU A16, przełączniki rq_ab), 0015/0023 (HLOD lasu, impostory), 0088 (korony), D49 (A16 = Low),
 D50 (bez obniżania skali renderu przed tą rundą).
 

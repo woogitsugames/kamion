@@ -1,0 +1,6 @@
+# Authored overrides of region bialystok-porosly (ADR 0278, rough definition: the tile is NOT ingested or built yet).
+# Every entry survives a re-import; coordinates are region-local E/N (origin EPSG:2180 771851, 594175)
+# or EPSG:2180 where the key says so. Nothing was checked on the orthophoto of this tile, and the built
+# neighbours carry no cross-section override on the ways crossing the shared edges, so the generator rules
+# apply (D63: drivable first). Open (ADR 0278): lamp policy (LED like bialystok-knyszynska?) - lead / owner.
+overrides: []

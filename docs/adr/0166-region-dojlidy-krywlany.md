@@ -1,5 +1,5 @@
 # ADR 0166 — drugi region: Dojlidy/Krywlany (`bialystok-dojlidy`) i potok świata dla regionu innego niż C
-Status: Proposed (agent geo-worldgen, s17, gałąź `region-0166`), 2026-11-13. Do scalenia przez lidera. Bez importu do Unity
+Status: przyjęty (scalony do main 2026-11-13, `78bb6d563`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent geo-worldgen, s17, gałąź `region-0166`), 2026-11-13. Do scalenia przez lidera. Bez importu do Unity
 w main (decyzja lidera; import i kamery wizualne = osobny krok).
 
 ## Kontekst

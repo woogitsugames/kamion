@@ -1,0 +1,22 @@
+# Authored overrides of region dw671-tykocin-02 (ADR 0231, rough definition: the tile is NOT ingested or built yet).
+# Every entry survives a re-import; coordinates are region-local E/N (origin EPSG:2180 759563, 608511)
+# or EPSG:2180 where the key says so. Source of the targets: OSM via Overpass 2026-11-15
+# (Data/Plans/ring-0231/osm_ring_extract.json); the pipeline builds from the pbf of 2026-11-08, so a way id
+# that is missing there shows up as overrides_stale in build_world. No lettering, no brands.
+# DW671 keeps the BDOT10k width; way 145989268 continues the ground shoulder + edge lines of dw671-tykocin-01 (ADR 0272).
+# Nothing was checked on the orthophoto of this tile: add overrides after the ingest.
+overrides:
+  # world2-s23 (integration of #115 after ADR 0272 landed on main): OSM way 145989268 enters this tile across the seam
+  # with dw671-tykocin-01, where it carries the measured ground shoulder + edge lines (override dw671-ground-shoulder,
+  # docs/reports/ortho-xsec-0272/dw671-tykocin-01_dw671.json). Same `set` here, so the cross-section does not change
+  # family (kerb <-> ground shoulder) on the seam. NOT measured on the orthophoto of this tile.
+  - id: dw671-ground-shoulder
+    target: {osm_way: [145989268]}
+    source: "continuation of dw671-tykocin-01 dw671-ground-shoulder along the same OSM way (ADR 0272); not measured here"
+    reason: >-
+      Seam continuity (tests/gis/test_ring_0231.py: same cross-section set on both sides of every seam): the way is
+      one road through dw671-tykocin-01 / -02 / -03; the rule profile (kerbed street, OSM maxspeed missing) would
+      switch the shoulder family on the tile edge.
+    confidence: low
+    verify: GUGiK orthophoto 0.25 m of this tile (after the ingest) or an owner photo of the DW671 cross-section
+    set: {shoulder: {kind: ground, ditch_m: 0.2}, edge_lines: both}

@@ -30,6 +30,8 @@ namespace PhysicsRunner.Sim
         // combination
         public bool HasTrailer, Coupled;
         public Vec3 TrailerPos, TrailerComPos, TrailerVel, TrailerAxlePos;
+        /// <summary>Trailer body axes in the world (swept-path metrics, ADR 0280).</summary>
+        public Vec3 TrailerFwd, TrailerRight;
         public double Articulation, KingpinFz, KingpinFx, KingpinFy, FifthWheelError;
         public double TrailerYawRate, TrailerLatAccel, TrailerRoll;
         // brakes / air / endurance

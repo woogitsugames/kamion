@@ -1150,6 +1150,7 @@
    "S": 5.0,
    "Z": 4.5
   },
+  "compact_roundabouts": [],
   "crossings_in_junction": [
    13371361362
   ],
@@ -1163,7 +1164,7 @@
    "patches": 91
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 107601,
+  "footprint_nodes": 105545,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1254,6 +1255,7 @@
    "P-1 centre line": 4,
    "P-10 crossing": 2,
    "P-10 crossing in junction": 1,
+   "P-12": 1,
    "P-13": 3,
    "P-7b edge line": 8
   },
@@ -1272,6 +1274,12 @@
     "id": "dk65-xsec-k1",
     "targets": [
      "w1151531610:10712325637-10712325634",
+     "w208187096:10712325634-897574830"
+    ]
+   },
+   {
+    "id": "dk65-opaska-k1",
+    "targets": [
      "w208187096:10712325634-897574830"
     ]
    },
@@ -1301,6 +1309,11 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 6,
+  "seam_shoulders": {
+   "in_chain_ramps": 2,
+   "seam_sides": 0
+  },
+  "seam_tapers": [],
   "sides_on_carriageway_culled": {
    "kerb_tris": 155,
    "parts": 54,

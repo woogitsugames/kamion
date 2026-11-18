@@ -1,5 +1,5 @@
 # ADR 0205 — korytarz Białystok → Knyszyn: pierwszy kafel poza miastem `dk65-01` i kolejność następnych
-Status: Proposed (agent world-builder, s20, gałąź `dk65-corridor-0205`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `f6ba266e4`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `dk65-corridor-0205`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: D63, D64 (`docs/11`), ADR 0203 (plan trasy i 17 kafli, gałąź `bialystok-dk65-0203`), ADR 0204 (Knyszyn),
 ADR 0166/0174 (potok i import regionu ≠ C), brief `docs/owner/S20-REGION-RING-BRIEF.md`.
 

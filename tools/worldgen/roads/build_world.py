@@ -226,6 +226,7 @@ def glb_materials():
 
 
 
+RAIL_ZONE_EXCLUDE_MATS = {"shoulder_gravel", "verge_grass"}    # ADR 0272: not part of the road a level crossing spans
 WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
         "sidewalk_paving", "apron_sett", "apron_paving_light", "sidewalk_paving_red", "sidewalk_slabs"}      # + ADR 0237 footway types
 
@@ -330,6 +331,85 @@ def _is_verge(p):
     return p.layer == "road" and p.src.endswith(":vg")
 
 
+WALLED_RING_NODES = 2        # clamp_under_decks reaches 1 node beyond a deck (size-3 max filter) + 1 for the edge cap
+WALLED_EDGE_M = 2.0          # deck edge beyond the half carriageway (kerb + cap), WORKING_VALUE
+
+
+def walled_ramp_mask(net, hf):
+    """c-p1-s23 (REVIEW s20 gate3-phone P1-2): terrain nodes under and beside the walled stations of ramps
+    (profile.mark_walled_ramps: fill between retaining walls, c.meta["walled"]), minus a ring around the true spans.
+    Passed to CF.clamp_under_decks as ground: a fill has no soffit to clear."""
+    from scipy import ndimage
+    from shapely.geometry import Polygon
+    from streetscape import paved as PV_
+    walled, spans = [], []
+    for c in net.chains:
+        wl = c.meta.get("walled")
+        if wl is None or c.bridge is None:
+            continue
+        wl = np.asarray(wl, bool)
+        s = c.line.s
+        if len(wl) != len(s):
+            continue
+        _, nrm = c.line.frame(s)
+        hw = np.broadcast_to(np.asarray(c.hw, float), s.shape) + WALLED_EDGE_M
+        L, R = c.line.p + nrm * hw[:, None], c.line.p - nrm * hw[:, None]
+        span = np.asarray(c.bridge, bool) & ~wl
+        for sel, out in ((wl, walled), (span, spans)):
+            idx = np.where(sel)[0]
+            for r in (np.split(idx, np.where(np.diff(idx) > 1)[0] + 1) if len(idx) else []):
+                if len(r) < 2:
+                    continue
+                poly = Polygon(np.vstack([L[r], R[r][::-1]]))
+                if poly.is_valid and poly.area > 0:
+                    out.append(poly)
+    m = np.zeros(hf.z.shape, bool)
+    if not walled:
+        return m
+    m = ndimage.binary_dilation(PV_.rasterize_polys(walled, hf), iterations=WALLED_RING_NODES)
+    if spans:
+        m &= ~ndimage.binary_dilation(PV_.rasterize_polys(spans, hf), iterations=WALLED_RING_NODES + 1)
+    return m
+
+
+WALLED_FILL_MARGIN_M = 0.3   # REVIEW s23 c-p1 P2: terrain kept down inside the wall outline + this margin
+
+
+def walled_fill_mask(net, hf):
+    """c-p2-s23: terrain nodes inside the outline of the walled ramps - between the two retaining-wall lines (deck
+    edge = half carriageway + side profile of the station) + WALLED_FILL_MARGIN_M. CF.level_under_walled keeps the
+    ground there at the level of the ground outside, so it cannot pierce the wall face."""
+    from shapely.geometry import Polygon
+    from streetscape import paved as PV_
+    from roads.network import side_extent, side_params
+    polys = []
+    for c in net.chains:
+        wl = c.meta.get("walled")
+        if wl is None or not c.side:
+            continue
+        wl = np.asarray(wl, bool)
+        s = c.line.s
+        if len(wl) != len(s):
+            continue
+        _, nrm = c.line.frame(s)
+        hw = np.broadcast_to(np.asarray(c.hw, float), s.shape)
+        idx = np.where(wl)[0]
+        for r in (np.split(idx, np.where(np.diff(idx) > 1)[0] + 1) if len(idx) else []):
+            if len(r) < 2:
+                continue
+            ext = {sd: np.array([side_extent(*side_params(c, sd, float(s[i]))) for i in r]) for sd in ("L", "R")}
+            L = c.line.p[r] + nrm[r] * (hw[r] + ext["L"] + WALLED_FILL_MARGIN_M)[:, None]
+            R = c.line.p[r] - nrm[r] * (hw[r] + ext["R"] + WALLED_FILL_MARGIN_M)[:, None]
+            poly = Polygon(np.vstack([L, R[::-1]]))
+            if not poly.is_valid:
+                poly = poly.buffer(0)
+            if poly.area > 0:
+                polys.append(poly)
+    if not polys:
+        return np.zeros(hf.z.shape, bool)
+    return PV_.rasterize_polys(polys, hf)
+
+
 def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
     """ADR 0110: the grass strips behind kerbs (roads.meshing._emit_verge, src "...:vg") become part of the terrain
     primitives of their chunk (LOD0: the 128 m sub-grid they lie in, and LOD1) instead of a `verge_grass` primitive
@@ -382,7 +462,7 @@ def route_polyline(region_id, w):
     """Start route (D4 candidate) as local polyline with per-vertex edge id (cameras, QA)."""
     import networkx as nx
     import roadgraph
-    graph = json.loads((pipeline.REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8"))
+    graph = pipeline.effective_graph(region_id)                   # ADR 0274: with the authored carriageway splits
     re_f = pipeline.REGIONS / region_id / "route_endpoints.json"   # ADR 0166: per-region authored route ends
     if re_f.exists():
         route = json.loads(re_f.read_text(encoding="utf-8"))
@@ -791,11 +871,44 @@ def _route_graph_step(region_id: str, enabled: bool, log) -> None:
     log("route graph: rebuilt (KRTG, reachability flags) -> game/Assets/_Project/UI/Resources/CabDisplay/Nav/")
 
 
+def rail_zone_parts(parts):
+    """Road parts a level crossing spans: the `road` layer without the shoulder / verge strips of a kerbless edge."""
+    return [p for p in parts if p.layer == "road" and p.mat not in RAIL_ZONE_EXCLUDE_MATS]
+
+
+def _rail_plan(w, region_id):
+    """streetscape.rail.Plan of a built road world (ADR 0217): tracks clipped to the tile, level crossings with the
+    ground carriageways, authored `rail_crossing` overrides."""
+    import shapely
+    from shapely.geometry import LineString as _LS
+    from streetscape import paved as PV_
+    from streetscape import rail as RL
+    rsrc = RL.load(region_id)
+    if rsrc is None:
+        raise RuntimeError(f"{region_id}: rail stage enabled but generated/rail_sources.json missing "
+                           f"(run build_region.py --region {region_id})")
+    bb = w.region["bbox"]
+    tile_local = shapely.box(bb["xmin"] - w.origin[0], bb["ymin"] - w.origin[1], bb["xmax"] - w.origin[0],
+                             bb["ymax"] - w.origin[1])
+    ground_lines = []
+    for c in w.net.chains:        # ground road centre lines (bridge stations dropped: no level crossing there)
+        on = ~c.bridge if c.bridge is not None else np.ones(len(c.line.p), bool)
+        for run in np.split(np.arange(len(on)), np.where(np.diff(on.astype(int)) != 0)[0] + 1):
+            if len(run) >= 2 and on[run[0]]:
+                ground_lines.append(_LS(c.line.p[run]))
+    # ADR 0272 (REVIEW #138 P1-4): the crossing zone (panels, boom length, device offsets) follows the paved road, not
+    # the ground shoulder / verge / ditch of a kerbless edge - those strips are footprint too and would widen the
+    # crossing by the whole side profile. Kerbed roads have neither material in the footprint: their zone is unchanged.
+    # Filtered HERE, so pass 1 (kerb cut, markings) and pass 2 (devices) plan the same crossing.
+    return RL.Plan(rsrc, w.origin, tile_local, PV_.road_footprint_polygon(rail_zone_parts(w.buf.parts)), ground_lines,
+                   overrides=pipeline.load_overrides(region_id))
+
+
 def build(region_id: str, out_root: Path | None = None, verbose=True, route_graph: bool = True):
     t0 = time.time()
     log = (lambda *a: print(f"[world {time.time() - t0:6.1f}s]", *a)) if verbose else (lambda *a: None)
     # pass 1: geometry with the raw NMT -> bridge decks -> remove deck-contaminated NMT under them
-    w0 = pipeline.build(region_id)
+    w0 = pipeline.build(region_id, collision=False)     # ADR 0281 K1a: pass 1 never reads the collision layer
     deck_parts = [p for p in w0.buf.parts if p.layer == "bridge" and not p.src.endswith(":parapet")]
     for p in deck_parts:
         p.footprint = True
@@ -809,6 +922,12 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     from streetscape import plots as PLT
     plot_plan = SS0.plan_plots(w0, region_id)
     log(f"plots planned: {len(plot_plan['plots'])}, kerb drops {len(plot_plan['drops'])}")
+    # ADR 0268: level crossings are planned on the pass-1 geometry too, so pass 2 can cut the kerbs over the crossing
+    # panels and the markings know the crossing stations (streetscape.rail_approach.attach)
+    from streetscape import rail as RL
+    from streetscape import rail_approach as RA
+    rail0 = _rail_plan(w0, region_id) if RL.enabled(w0.region) else None
+    rail_attach = {}
     # pass 2: final geometry on the cleaned ground model
     # ADR 0124: the kerbs of the house streets are 10 cm (apply_house_kerbs), then lowered at the driveways
     def _plot_side_edit(net):
@@ -817,7 +936,11 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         from streetscape import cycleways as CY          # ADR 0188: kerbs lowered where a cycle track crosses
         cyd = CY.crossing_drops(net, getattr(net, "cycle_items", []))
         log(f"cycle track kerb drops: {len(cyd)}")
-        return PLT.apply_drops(net, plot_plan["drops"] + cyd)
+        n_drops = PLT.apply_drops(net, plot_plan["drops"] + cyd)
+        if rail0 is not None:
+            rail_attach.update(RA.attach(net, rail0))
+            log("rail crossings attached:", rail_attach)
+        return n_drops
     w = pipeline.build(region_id, hf=hf, side_edit=_plot_side_edit)
     w.plot_plan = plot_plan
     log(f"kerb drops applied: {w.stats.get('side_edit')}")
@@ -837,6 +960,10 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     deck, deck_mask = CF.rasterise(deck_parts, w.hf)
     for p in deck_parts:
         p.footprint = False
+    w.walled_ramp_mask = walled_ramp_mask(w.net, w.hf)
+    w.stats["walled_ramp_mask_nodes"] = int(w.walled_ramp_mask.sum())
+    w.walled_fill_mask = walled_fill_mask(w.net, w.hf)
+    w.stats["walled_fill_mask_nodes"] = int(w.walled_fill_mask.sum())
     from streetscape import stage as SS
     from streetscape import water as WT
     w.water = None
@@ -856,29 +983,16 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         w.water.banks_doc = WB.load(region_id)          # ADR 0213 (None: banks as in ADR 0210)
         log("water plan:", len(w.water.report["bodies"]), "bodies,", w.water.report["water_nodes"], "nodes,",
             len(w.water.report["profiles"]), "centre lines")
-    from streetscape import rail as RL
     w.rail = None
     if RL.enabled(w.region):          # ADR 0217: opt-in per region (region.yaml `rail: {enabled: true}`)
-        rsrc = RL.load(region_id)
-        if rsrc is None:
-            raise RuntimeError(f"{region_id}: rail stage enabled but generated/rail_sources.json missing "
-                               f"(run build_region.py --region {region_id})")
-        import shapely
-        from shapely.geometry import LineString as _LS
-        from streetscape import paved as PV_
-        bb = w.region["bbox"]
-        tile_local = shapely.box(bb["xmin"] - w.origin[0], bb["ymin"] - w.origin[1], bb["xmax"] - w.origin[0],
-                                 bb["ymax"] - w.origin[1])
-        ground_lines = []
-        for c in w.net.chains:        # ground road centre lines (bridge stations dropped: no level crossing there)
-            on = ~c.bridge if c.bridge is not None else np.ones(len(c.line.p), bool)
-            for run in np.split(np.arange(len(on)), np.where(np.diff(on.astype(int)) != 0)[0] + 1):
-                if len(run) >= 2 and on[run[0]]:
-                    ground_lines.append(_LS(c.line.p[run]))
-        w.rail = RL.Plan(rsrc, w.origin, tile_local,
-                         PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines,
-                         overrides=pipeline.load_overrides(region_id))
+        w.rail = _rail_plan(w, region_id)
         log("rail plan:", len(w.rail.tracks), "tracks,", len(w.rail.crossings), "level crossings")
+        # ADR 0268: kerb cuts and markings were laid out on the pass-1 plan - both passes must see the same crossings
+        if len(rail0.crossings) != len(w.rail.crossings) or any(
+                float(np.hypot(*(np.asarray(a_["p"]) - np.asarray(b_["p"])))) > 0.5
+                for a_, b_ in zip(rail0.crossings, w.rail.crossings)):
+            raise RuntimeError(f"{region_id}: level crossings of pass 1 and pass 2 differ (rail_approach.attach)")
+        w.rail.report["approach_attach"] = rail_attach
     st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
     if w.water is not None:
         st["col"] = w.water.bank_colours(st["col"])
@@ -894,14 +1008,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         mid = p + d * (0.5 * (u0 + u1))
         w.stats["hero_docks"].append({"mid": mid, "d": d, "nout": nout, "z": dk["yard_z"], "n": len(dk["docks"])})
     log(f"terrain conformed: footprint {int(rmask.sum())} road + {int(mask.sum() - rmask.sum())} paved nodes")
-    def on_ground_road(q):
-        i = int(round(q[0] - w.hf.x0))
-        j = int(round(w.hf.y1 - q[1]))
-        if 0 <= j < mask.shape[0] and 0 <= i < mask.shape[1]:
-            return bool(mask[max(0, j - 2):j + 3, max(0, i - 2):i + 3].any())
-        return False
     # hero viaducts (override kind: hero_bridge, ADR 0067): authored asset instead of the generic dressing / supports
     from streetscape import hero_bridge as HB
+    on_ground_road = HB.keepout(w.hf, mask)      # ADR 0198: one definition, shared with qa/check_piers_vs_roads.py
 
     def zc_at(e, n):
         i = min(max(int(round(e - w.hf.x0)), 0), zc.shape[1] - 1)
@@ -943,6 +1052,11 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         w.stats["tunnel"] = tstats
         log("tunnels (ADR 0211):", {k: v for k, v in tstats.items() if k != "walls"},
             "walls", [(x["side"], x["len_m"], x["h_max_m"]) for x in tstats["walls"]])
+
+    # c-p1-s23 (REVIEW s20 gate3-phone P1-1): back-of-sidewalk flanges over open ground -> edging + grass batter
+    w.stats["back_flange_batter"] = ({} if os.environ.get("WORLDGEN_NO_BACK_BATTER")       # debug A/B only
+                                     else M.back_flange_batter(w.buf, mask, w.hf))
+    log("back-of-sidewalk batters", w.stats["back_flange_batter"])
 
     half = w.region["bbox"]["width_m"] / 2
     e0 = w.region["bbox"]["xmin"] - w.origin[0]
@@ -1447,7 +1561,12 @@ def qa_report(w, mk_report, mask):
             "clearance_by_class_m": S.CLEARANCE_BY_CLASS,
             "fork_tapers": w.stats.get("fork_tapers", []),
             "fork_abreast": w.stats.get("fork_abreast", []),
+            "seam_tapers": w.stats.get("seam_tapers", []),             # ADR 0275
+            "seam_shoulders": w.stats.get("seam_shoulders", {}),
             "sides_on_carriageway_culled": w.stats.get("sides_on_carriageway_culled", {}),
+            # review s23 D18 P1: `built` / `notes` of every compact roundabout (ADR 0218 5c, 0274) - a silent failure of
+            # the centre island or of the outline must show in the QA file, not only in a render
+            "compact_roundabouts": w.stats.get("compact_roundabouts", []),
             "verge_strips": w.stats.get("verge_strips", {}),
             "fork_shifts": w.stats.get("fork_shifts", []),
             "gores": w.stats.get("gores", {}),

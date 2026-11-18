@@ -1,0 +1,8 @@
+{
+ "provenance": "authored_override (ADR 0278, mechanism of ADR 0209/0212): source pins of region bialystok-porosly, read by ingest.py and build_region.py",
+ "pins": {
+  "nmt_year": "2022"
+ },
+ "reason": "The DK8 Kleeberga seam is shared with bialystok-knyszynska, built from NMT 2022 (gugik-nmt-2022-bialystok-knyszynska); the seam with dk8-s8-jeroniki (2025) then joins two series - seam taper of ADR 0275 or a common re-pin when the lead re-ingests knyszynska. GUGiK sheet index (SkorowidzNMT, queried 2026-11-16): the 2022 series fully covers this tile (sheets N-34-107-C-a-1-2, N-34-107-C-a-1-4, N-34-107-C-a-2-1, N-34-107-C-a-2-3); without the pin ingest.py would take the flight day 2022-07-29. See docs/reports/map/map_plan_0278_gugik.json.",
+ "verify": "none (move together with the pin of the neighbour named in the reason)"
+}

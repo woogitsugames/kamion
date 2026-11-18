@@ -36,7 +36,7 @@ RANK = {"A": 0, "S": 1, "GP": 2, "G": 3, "Z": 4, "L": 5, "D": 6}
 #   y = traffic exposure + age: [0, 1) longitudinal lines (lane, centre, edge: rarely run over), [2, 3) transverse
 #       marks and glyphs (P-8 arrows, P-10, P-13, P-14: every wheel crosses them); fractional part = age 0..1 of
 #       that mark (deterministic hash of the mark), which scales dirt and wear.
-TRANSVERSE = ("P-8", "P-10", "P-13", "P-14")
+TRANSVERSE = ("P-8", "P-10", "P-12", "P-13", "P-14")
 _SECS = []          # net.sec_list of the network being marked (set by _build_markings)
 
 
@@ -214,6 +214,9 @@ def edge_lines(sec, hw, dirn):
     return out
 
 
+RAIL_P4_LEN_M = 50.0       # ADR 0268 WORKING_VALUE: P-4 on each approach of a level crossing, from the outer rail
+
+
 def unmarked(sec) -> bool:
     """ADR 0215 (owner D65 p.6): a carriageway under construction / not open to traffic carries no horizontal
     markings at all (authored `set: {construction: true}`, roads.closures)."""
@@ -252,9 +255,19 @@ def edge_dashed_spans(net, authored, report=None):
     for o in authored or []:
         if o.get("kind") != EDGE_DASHED_KIND:
             continue
-        pts = np.asarray(o.get("line_en") or [], float).reshape(-1, 2)
+        # review s23 D18 P2-6: a malformed entry (no id, unknown line, bad dash_m / line_en) is stale, never an exception
+        oid = o.get("id", "?")
+        try:
+            pts = np.asarray(o.get("line_en") or [], float).reshape(-1, 2)
+            dm = o.get("dash_m") or S.DASH.get(o.get("line", "P-7a"))
+            dash, gap = (float(v) for v in dm)
+            ok = bool(np.isfinite(pts).all()) and math.isfinite(dash) and math.isfinite(gap) and dash > 0 and gap > 0
+        except (TypeError, ValueError):
+            ok = False
+        if not ok or "id" not in o:
+            stale.append(oid)
+            continue
         side = o.get("side")
-        dash, gap = o.get("dash_m") or S.DASH[o.get("line", "P-7a")]
         runs = []
         if len(pts) >= 2 and side in ("left", "right"):
             seg = np.hypot(*np.diff(pts, axis=0).T)
@@ -415,11 +428,7 @@ def drop_overlapping(buf, net, first):
 def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     secs = net.sec_list
     _SECS[:] = secs
-    arm_info = {}
-    for j in juncs:
-        maxrank = min(RANK[a.cls(secs)] for a in j.arms)
-        for i, a in enumerate(j.arms):
-            arm_info[a.key] = (j, i, maxrank)
+    arm_info = arm_infos(juncs, secs)
     counts = {}
     dashed_spans = edge_dashed_spans(net, getattr(net, "authored", None), report)
 
@@ -452,6 +461,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
             from streetscape.furniture import SurfaceTop
             _top.append(SurfaceTop([p for p in buf.parts if p.layer == "road"]))
         return _top[0].top(e, n)
+    from . import compact_roundabout as CR
+    cr_juncs = {id(j) for j in juncs if getattr(j, "compact", None) is not None and CR.kerb_mode(j.compact.opts)}
+    cr_zones = [j.compact.outline.buffer(2.0) for j in juncs if id(j) in cr_juncs and j.compact.outline is not None]
     for p in ctx_points:
         if p["kind"] != "highway=crossing" or p.get("crossing") in ("unmarked", "no", "informal"):
             continue
@@ -461,6 +473,8 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         except (TypeError, ValueError):
             pass
         q = np.array([p["e"], p["n"]])
+        if any(pg.contains(shapely.Point(*q)) for pg in cr_zones):
+            continue        # ADR 0274: crossings of a kerb-mode compact roundabout are authored at the ring
         best = None
         for c in net.chains:
             if c.meta.get("absorbed"):
@@ -573,17 +587,10 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         # piecewise by section
         sidx = c.sec_idx
         cuts = [0] + [k for k in range(1, len(sidx)) if sidx[k] != sidx[k - 1]] + [len(sidx)]
-        appr = {}   # stations of junction approaches for P-2a
-        for end, sj in (("a", s0), ("b", s1)):
-            info = arm_info.get((c.id, end))
-            # ADR 0095: a one-way carriageway approaches a junction only at its downstream end; the solid P-2a was
-            # also painted for 20 m behind the junction (Andersa after the side street at n10015785253)
-            d_end = int(c.dirn[0 if end == "a" else -1])
-            if (d_end > 0 and end == "a") or (d_end < 0 and end == "b"):
-                continue
-            if info and (info[0].signalized or (any(net.sec_list[i].turn_fwd for i in np.unique(sidx))
-                                                and not _lanes_continue(c, end, info[0], secs))):
-                appr[end] = sj
+        appr = approach_ends(c, arm_info, secs)   # stations of junction approaches for P-2a
+        # seams-fix-s23: the rest of a P-2a approach of the neighbouring tile that its seam cut (net.seam_p2a)
+        seam_cont = [(s0, s0 + L_) if end == "a" else (s1 - L_, s1)
+                     for (cid, end), L_ in getattr(net, "seam_p2a", {}).items() if cid == c.id]
         for a_, b_ in zip(cuts, cuts[1:]):
             sec = secs[int(sidx[a_])]
             sa = max(s0, c.line.s[a_])
@@ -602,7 +609,7 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
             fast = (sec.maxspeed or 50) > 70
             dash, gap = S.DASH["P-1a" if fast else "P-1b"]
             if marked:
-                cont = []
+                cont = list(seam_cont)
                 for end, sj in appr.items():
                     cont.append((sj, sj + S.P2A_MIN_LEN) if end == "a" else (sj - S.P2A_MIN_LEN, sj))
                 for lat in bounds:
@@ -617,7 +624,23 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                             strip(buf, c, sa, sb, lat_c + off, S.LINE_W_NARROW, "P-4")
                         cnt("P-4 double centre line")
                     else:
-                        _segmented(buf, c, sa, sb, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
+                        # ADR 0268: P-4 double continuous line on the approaches to a level crossing and across it
+                        # (Dz.U. 2025 poz. 1105 § 79 pkt 4 lit. b); length RAIL_P4_LEN_M is a WORKING_VALUE
+                        rx = sorted((max(sa, x["s"] - x["rail_d"] - RAIL_P4_LEN_M), min(sb, x["s"] + x["rail_d"] + RAIL_P4_LEN_M))
+                                    for x in c.meta.get("rail_xings", []))
+                        cur = sa
+                        for xa, xb in rx:
+                            if xb - xa < 0.5:
+                                continue
+                            xa = max(xa, cur)
+                            if xa > cur:
+                                _segmented(buf, c, cur, xa, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
+                            for off in (-0.12, 0.12):
+                                strip(buf, c, xa, xb, lat_c + off, S.LINE_W_NARROW, "P-4")
+                            cnt("P-4 level crossing approach")
+                            cur = max(cur, xb)
+                        if sb > cur:
+                            _segmented(buf, c, cur, sb, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
                         cnt("P-1 centre line")
                 for k_e, (lat_e, _) in enumerate(edge_lines(sec, hw, dirn)):
                     lat_fn = (lambda ss_, k_e=k_e, sec=sec, dirn=dirn: edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0])
@@ -760,15 +783,11 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
             if sec.highway == "service" and not j.signalized:
                 continue
             rank = RANK[sec.cls]
-            kind = None
-            if j.signalized:
-                kind = "P-14"
-            elif j.roundabout:
-                kind = "P-13"
-            elif j.give_way or (rank > maxrank and maxrank <= RANK["G"]):
-                kind = "P-13"
+            kind = approach_line_kind(j, rank, maxrank, sec.cls)
             if kind is None or inb == -1:
                 continue
+            if id(j) in cr_juncs:
+                continue        # ADR 0274: P-13 lies along the ring edge (CR.build_markings), not at the split node
             t = j.trims[i]
             if t >= a.L - 2:
                 continue
@@ -784,6 +803,13 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                     lo, hi = -hw, lat_c
             lo, hi = lo + 0.15, hi - 0.15
             d0 = t + 0.6
+            if kind == "P-14" and j.signalized:
+                # ADR 0279 P1: >= 2.0 m before the side head / >= 8.0 m before a head over the carriageway (zał. 2
+                # pkt 4.2.5); the signal post stands at trim + S.SIGNAL_AFTER_TRIM (furniture.signals). Was t + 0.6 =
+                # at the foot of the mast.
+                ts = t + S.SIGNAL_AFTER_TRIM
+                if ts <= a.L - 1:
+                    d0 = max(d0, S.p14_before_signal_d(t, c.section(a.s(ts), secs), a.end))
             cr = [abs(sc - float(a.s(0))) for sc in c.meta.get("crossings", [])]
             near = [x for x in cr if x - S.P10_WIDTH / 2 < d0 + 6]
             if near:
@@ -797,6 +823,10 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 while x + S.P14_LEN <= hi + 1e-6:
                     strip_cross(buf, c, s_mid, S.P14_DEPTH, x, x + S.P14_LEN)
                     x += S.P14_LEN + S.P14_GAP
+            elif kind == "P-12":
+                # zał. 2 pkt 4.2.3 (Dz.U. s. 571-572): one continuous 0.50 m line over all inbound lanes, along the
+                # edge of the priority carriageway (= where P-13 stood)
+                strip_cross(buf, c, float(a.s(d0 + S.P12_W / 2)), S.P12_W, lo, hi, kind="P-12")
             else:
                 s_base = float(a.s(d0))
                 x = lo
@@ -806,6 +836,42 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                     polygon_mark(buf, c, tri, s_base, x + S.P13_BASE / 2, fwd, 1.0, "P-13")
                     x += S.P13_BASE + S.P13_GAP
             cnt(kind)
+    cr_rep = CR.build_markings(buf, net, juncs, report)
+    for k in ("P-10", "P-13"):
+        if cr_rep[k]:
+            cnt(f"{k} at compact roundabout", cr_rep[k])
+    # ADR 0268: P-14 before a level crossing of category A-D (Dz.U. 2025 poz. 1105 § 79 pkt 4 lit. e), 2.0 m before the
+    # crossing devices beside the carriageway (S.P14_BEFORE_SIGNAL, zał. 2 pkt 4.2.5). Only on carriageways that carry
+    # markings at all (highway in MARKED): the local roads of the other crossings are unmarked - reported, not painted.
+    for c in net.chains:
+        for x in c.meta.get("rail_xings", []):
+            for trav in (1.0, -1.0):                      # travel direction along the chain, towards the crossing
+                d0 = x["device_d"] + S.P14_BEFORE_SIGNAL
+                s_mid = x["s"] - trav * (d0 + S.P14_DEPTH / 2)
+                if not (c.t_a + 1.0 < s_mid < c.length - c.t_b - 1.0):
+                    cnt("P-14 level crossing skipped (road end)")
+                    continue
+                sec = c.section(s_mid, secs)
+                dn = int(c.dirn[c.idx(s_mid)])
+                if dn * trav < 0:
+                    continue                              # one-way against this approach
+                if unmarked(sec) or sec.highway not in MARKED:
+                    cnt("P-14 level crossing skipped (unmarked road)")
+                    continue
+                hw = float(c.hw_at(s_mid))
+                lat_c, _, _ = lane_layout(sec, hw, dn or 1)
+                if dn != 0 or lat_c is None:
+                    lo, hi = -hw, hw
+                elif trav > 0:
+                    lo, hi = -hw, lat_c
+                else:
+                    lo, hi = lat_c, hw
+                lo, hi = lo + 0.15, hi - 0.15
+                xl = lo
+                while xl + S.P14_LEN <= hi + 1e-6:
+                    strip_cross(buf, c, s_mid, S.P14_DEPTH, xl, xl + S.P14_LEN)
+                    xl += S.P14_LEN + S.P14_GAP
+                cnt("P-14 level crossing")
     report["markings"] = counts
 
 
@@ -950,6 +1016,36 @@ def _way(sec):
     return str(sec.edge_id).split(":")[0]
 
 
+def arm_infos(juncs, secs) -> dict:
+    """{arm key (chain id, "a" | "b"): (junction, arm index, best arm rank)} - what the marking stage knows of the ends."""
+    out = {}
+    for j in juncs:
+        maxrank = min(RANK[a.cls(secs)] for a in j.arms)
+        for i, a in enumerate(j.arms):
+            out[a.key] = (j, i, maxrank)
+    return out
+
+
+def approach_ends(c, arm_info, secs) -> dict:
+    """{"a" | "b": station of the junction end} of the chain ends that are junction approaches with the solid P-2a
+    (pkt 2.2.1.6: signalised, or turn lanes that do not continue through the junction). Also read for the chains of a
+    neighbouring tile (roads.seam_p2a, seams-fix-s23), so both tiles decide with this one rule."""
+    s0, s1 = c.t_a, c.length - c.t_b
+    sidx = c.sec_idx
+    appr = {}
+    for end, sj in (("a", s0), ("b", s1)):
+        info = arm_info.get((c.id, end))
+        # ADR 0095: a one-way carriageway approaches a junction only at its downstream end; the solid P-2a was
+        # also painted for 20 m behind the junction (Andersa after the side street at n10015785253)
+        d_end = int(c.dirn[0 if end == "a" else -1])
+        if (d_end > 0 and end == "a") or (d_end < 0 and end == "b"):
+            continue
+        if info and (info[0].signalized or (any(secs[i].turn_fwd for i in np.unique(sidx))
+                                            and not _lanes_continue(c, end, info[0], secs))):
+            appr[end] = sj
+    return appr
+
+
 def _lanes_continue(c, end, j, secs):
     """True if an outbound arm of junction j continues this chain end's OSM way with the same turn:lanes."""
     s_in = 1.0 if end == "a" else c.length - 1.0
@@ -974,15 +1070,31 @@ def _turns_continue(c, sec, tl, trav, end_s, s0, s1, arm_info, secs):
     return bool(info) and _lanes_continue(c, "b" if trav > 0 else "a", info[0], secs)
 
 
-def strip_cross(buf, c, s_mid, depth, lat0, lat1):
+def strip_cross(buf, c, s_mid, depth, lat0, lat1, kind="P-14"):
     s = np.array([s_mid - depth / 2, s_mid + depth / 2])
     a = _surface_pts(c, s, np.full(2, lat0))
     b = _surface_pts(c, s, np.full(2, lat1))
     V = np.vstack([a, b])          # 0:(s0,lat0) 1:(s1,lat0) 2:(s0,lat1) 3:(s1,lat1)
     T = np.array([(0, 1, 3), (0, 3, 2)])
-    uv1 = _paint_uv1(c, np.concatenate([s, s]), np.array([lat0, lat0, lat1, lat1]), "P-14")
-    buf.add("markings", "marking_white", V, np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float), T, src=f"P-14@{c.id}",
+    uv1 = _paint_uv1(c, np.concatenate([s, s]), np.array([lat0, lat0, lat1, lat1]), kind)
+    buf.add("markings", "marking_white", V, np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float), T, src=f"{kind}@{c.id}",
             UV1=uv1)
+
+
+def approach_line_kind(j, rank, maxrank, cls):
+    """Transverse line of one inbound junction approach (None = no line):
+    P-14 signalised; P-13 roundabout entry; P-12 where streetscape.furniture.junction_signs puts B-20 (j.stop and the
+    approach ranks below the best arm - same test) - ADR 0279 P1, zał. 1 pkt 3.2.21 / zał. 2 pkt 4.2.3: P-12 with
+    B-20 (was P-13); P-13 at give-way junctions and on minor approaches to G / GP / S / A roads."""
+    if j.signalized:
+        return "P-14"
+    if j.roundabout:
+        return "P-13"
+    if getattr(j, "stop", False) and rank > maxrank and (cls in ("Z", "L", "G") or rank < RANK["D"]):
+        return "P-12"
+    if j.give_way or (rank > maxrank and maxrank <= RANK["G"]):
+        return "P-13"
+    return None
 
 
 def _segmented(buf, c, sa, sb, lat, w, dash, gap, cont, kind):

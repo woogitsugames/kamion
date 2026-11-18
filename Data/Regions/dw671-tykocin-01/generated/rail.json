@@ -1,16 +1,450 @@
 {
+ "approach": [
+  {
+   "approach": 1,
+   "bottom_z_m": 1.0,
+   "crossing": 0,
+   "dist_m": 150.0,
+   "e": -669.95,
+   "heading_deg": 26.65,
+   "kind": "approach",
+   "n": -395.94,
+   "plates": [
+    "A-9",
+    "T-SA",
+    "G-1a"
+   ],
+   "side": "right"
+  },
+  {
+   "approach": 1,
+   "bottom_z_m": 1.0,
+   "crossing": 0,
+   "dist_m": 100.0,
+   "e": -692.38,
+   "heading_deg": 26.65,
+   "kind": "approach",
+   "n": -440.63,
+   "plates": [
+    "G-1b"
+   ],
+   "side": "right"
+  },
+  {
+   "approach": 1,
+   "bottom_z_m": 1.0,
+   "crossing": 0,
+   "dist_m": 50.0,
+   "e": -714.81,
+   "heading_deg": 26.65,
+   "kind": "approach",
+   "n": -485.32,
+   "plates": [
+    "G-1c"
+   ],
+   "side": "right"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 7.97,
+   "e": -732.53,
+   "heading_deg": 26.81,
+   "kind": "guide_post",
+   "n": -523.43,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 7.97,
+   "e": -723.91,
+   "heading_deg": 26.81,
+   "kind": "guide_post",
+   "n": -527.79,
+   "side": "left",
+   "style": "red_white"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 10.97,
+   "e": -731.18,
+   "heading_deg": 26.82,
+   "kind": "guide_post",
+   "n": -520.76,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 10.97,
+   "e": -722.56,
+   "heading_deg": 26.82,
+   "kind": "guide_post",
+   "n": -525.12,
+   "side": "left",
+   "style": "red_white"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 13.97,
+   "e": -729.83,
+   "heading_deg": 26.82,
+   "kind": "guide_post",
+   "n": -518.08,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 13.97,
+   "e": -721.2,
+   "heading_deg": 26.82,
+   "kind": "guide_post",
+   "n": -522.44,
+   "side": "left",
+   "style": "red_white"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 16.97,
+   "e": -728.47,
+   "heading_deg": 26.82,
+   "kind": "guide_post",
+   "n": -515.4,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 16.97,
+   "e": -719.85,
+   "heading_deg": 26.82,
+   "kind": "guide_post",
+   "n": -519.76,
+   "side": "left",
+   "style": "red_white"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 19.97,
+   "e": -727.12,
+   "heading_deg": 26.82,
+   "kind": "guide_post",
+   "n": -512.73,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 19.97,
+   "e": -718.5,
+   "heading_deg": 26.82,
+   "kind": "guide_post",
+   "n": -517.08,
+   "side": "left",
+   "style": "red_white"
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "dist_m": 22.97,
+   "e": -725.76,
+   "heading_deg": 26.82,
+   "kind": "guide_post",
+   "n": -510.05,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "bottom_z_m": 1.0,
+   "crossing": 0,
+   "dist_m": 150.0,
+   "e": -792.77,
+   "heading_deg": 206.24,
+   "kind": "approach",
+   "n": -671.57,
+   "plates": [
+    "A-9",
+    "T-SA",
+    "G-1a"
+   ],
+   "side": "right"
+  },
+  {
+   "approach": -1,
+   "bottom_z_m": 1.0,
+   "crossing": 0,
+   "dist_m": 100.0,
+   "e": -770.66,
+   "heading_deg": 206.24,
+   "kind": "approach",
+   "n": -626.72,
+   "plates": [
+    "G-1b"
+   ],
+   "side": "right"
+  },
+  {
+   "approach": -1,
+   "bottom_z_m": 1.0,
+   "crossing": 0,
+   "dist_m": 47.0,
+   "e": -747.62,
+   "heading_deg": 205.63,
+   "kind": "approach",
+   "n": -578.92,
+   "plates": [
+    "G-1c"
+   ],
+   "shifted_m": -3.0,
+   "side": "right"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 7.97,
+   "e": -731.57,
+   "heading_deg": 205.64,
+   "kind": "guide_post",
+   "n": -543.33,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 7.97,
+   "e": -740.28,
+   "heading_deg": 205.64,
+   "kind": "guide_post",
+   "n": -539.15,
+   "side": "left",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 10.97,
+   "e": -732.87,
+   "heading_deg": 205.63,
+   "kind": "guide_post",
+   "n": -546.04,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 10.97,
+   "e": -741.57,
+   "heading_deg": 205.63,
+   "kind": "guide_post",
+   "n": -541.86,
+   "side": "left",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 13.97,
+   "e": -734.16,
+   "heading_deg": 205.63,
+   "kind": "guide_post",
+   "n": -548.74,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 13.97,
+   "e": -742.87,
+   "heading_deg": 205.63,
+   "kind": "guide_post",
+   "n": -544.56,
+   "side": "left",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 16.97,
+   "e": -735.46,
+   "heading_deg": 205.63,
+   "kind": "guide_post",
+   "n": -551.45,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 16.97,
+   "e": -744.17,
+   "heading_deg": 205.63,
+   "kind": "guide_post",
+   "n": -547.27,
+   "side": "left",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 19.97,
+   "e": -736.76,
+   "heading_deg": 205.63,
+   "kind": "guide_post",
+   "n": -554.15,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 19.97,
+   "e": -745.47,
+   "heading_deg": 205.63,
+   "kind": "guide_post",
+   "n": -549.97,
+   "side": "left",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 22.97,
+   "e": -738.06,
+   "heading_deg": 205.63,
+   "kind": "guide_post",
+   "n": -556.86,
+   "side": "right",
+   "style": "red_white"
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "dist_m": 22.97,
+   "e": -746.77,
+   "heading_deg": 205.63,
+   "kind": "guide_post",
+   "n": -552.68,
+   "side": "left",
+   "style": "red_white"
+  }
+ ],
+ "approach_attach": {
+  "crossings": 1,
+  "kerb_cut_m": 0.0,
+  "missed": []
+ },
+ "approach_outside_tile": [],
+ "approach_rules": [
+  {
+   "approach": 1,
+   "avail_m": 170.0,
+   "basis": "Dz.U. 2019 poz. 2310 § 3 ust. 2 + § 78 ust. 2; Dz.U. 2025 poz. 1105 § 79 pkt 1, 3, 6",
+   "board": true,
+   "case": "§ 78 ust. 2",
+   "crossing": 0,
+   "dist_m": 150.0,
+   "dropped": [],
+   "guide_basis": "Dz.U. 2025 poz. 1105 § 79 pkt 5 lit. b (outside the barriers; spacing WORKING_VALUE)",
+   "left_posts": false,
+   "left_posts_basis": "G-1d-f only on one-way carriageways: WORKING_VALUE, the condition in Dz.U. 2019 poz. 2311 zał. 1 was not read (UNVERIFIED)",
+   "marked": true,
+   "nominal_m": 150.0,
+   "posts": [
+    {
+     "dist_m": 150.0,
+     "plates": [
+      "A-9",
+      "T-SA",
+      "G-1a"
+     ]
+    },
+    {
+     "dist_m": 100.0,
+     "plates": [
+      "G-1b"
+     ]
+    },
+    {
+     "dist_m": 50.0,
+     "plates": [
+      "G-1c"
+     ]
+    }
+   ],
+   "sign": "A-9",
+   "speed_kmh": 90.0,
+   "speed_src": "authored_override",
+   "t7_required": false
+  },
+  {
+   "approach": -1,
+   "avail_m": 170.0,
+   "basis": "Dz.U. 2019 poz. 2310 § 3 ust. 2 + § 78 ust. 2; Dz.U. 2025 poz. 1105 § 79 pkt 1, 3, 6",
+   "board": true,
+   "case": "§ 78 ust. 2",
+   "crossing": 0,
+   "dist_m": 150.0,
+   "dropped": [],
+   "guide_basis": "Dz.U. 2025 poz. 1105 § 79 pkt 5 lit. b (outside the barriers; spacing WORKING_VALUE)",
+   "left_posts": false,
+   "left_posts_basis": "G-1d-f only on one-way carriageways: WORKING_VALUE, the condition in Dz.U. 2019 poz. 2311 zał. 1 was not read (UNVERIFIED)",
+   "marked": true,
+   "nominal_m": 150.0,
+   "posts": [
+    {
+     "dist_m": 150.0,
+     "plates": [
+      "A-9",
+      "T-SA",
+      "G-1a"
+     ]
+    },
+    {
+     "dist_m": 100.0,
+     "plates": [
+      "G-1b"
+     ]
+    },
+    {
+     "dist_m": 50.0,
+     "plates": [
+      "G-1c"
+     ]
+    }
+   ],
+   "sign": "A-9",
+   "speed_kmh": 90.0,
+   "speed_src": "authored_override",
+   "t7_required": false
+  }
+ ],
  "bed_qa": {
   "buried_crown_stations": 0,
   "crown_edge_above_terrain_m": {
    "max": 0.121,
-   "min": 0.114,
+   "min": 0.054,
    "p50": 0.12
   },
   "open_toe_stations": 0,
   "stations": 543,
   "step_m": 2.0,
   "toe_buried_m": {
-   "max": 0.2,
+   "max": 0.281,
    "min": 0.171,
    "p50": 0.185
   },
@@ -26,7 +460,7 @@
  },
  "clearance": {
   "frame": "(lateral from track axis, height above top of rail)",
-  "min_marker_distance_m": 2.16,
+  "min_marker_distance_m": 4.83,
   "profile_m": [
    [
     -1.6,
@@ -66,25 +500,31 @@
  "conform": {
   "abs_p95_m": 1.728,
   "cut_max_m": 2.171,
-  "fill_max_m": 0.689,
-  "nodes": 11963
+  "fill_max_m": 0.686,
+  "nodes": 11930
  },
  "crossings": [
   {
    "barrier": "double_half",
    "bell": false,
+   "category": "B",
+   "category_basis": "§ 6 ust. 1 pkt 2 lit. b (entry + exit barriers)",
    "e": -732.15,
+   "electrified": true,
+   "equipment": "polrogatki_wjazd_wyjazd",
+   "equipment_confidence": "medium",
+   "equipment_src": "authored_override",
    "id": 0,
    "light": true,
    "n": -533.39,
    "override": "rail-crossing-dw671-line38",
    "panel_triangles": 132,
    "panel_zone_m": [
-    705.15,
-    715.81
+    705.23,
+    715.74
    ],
    "road_heading_deg": 206.23,
-   "road_width_m": 7.4,
+   "road_width_m": 7.26,
    "sign": null,
    "source": "osm",
    "src": "osm:node/1778182481",
@@ -99,90 +539,119 @@
   {
    "approach": 1,
    "crossing": 0,
-   "e": -734.45,
+   "e": -733.12,
    "heading_deg": 26.23,
    "kind": "light",
-   "n": -527.42,
+   "n": -524.88,
    "side": "right",
-   "z": 119.354
+   "z": 119.147
   },
   {
    "approach": 1,
    "crossing": 0,
-   "e": -726.01,
+   "e": -724.86,
    "heading_deg": 26.23,
    "kind": "light",
-   "n": -531.57,
+   "n": -529.08,
    "side": "left",
-   "z": 119.353
+   "z": 119.164
   },
   {
    "approach": 1,
-   "boom_len_m": 4.2,
+   "code": "G-2",
    "crossing": 0,
-   "e": -734.44,
+   "e": -733.12,
+   "heading_deg": 26.23,
+   "kind": "sign",
+   "mount": "signal_mast",
+   "n": -524.88,
+   "z": 119.147
+  },
+  {
+   "approach": 1,
+   "boom_len_m": 4.13,
+   "crossing": 0,
+   "e": -733.17,
    "heading_deg": 116.23,
    "kind": "barrier",
-   "n": -528.53,
+   "n": -526.1,
    "role": "entry",
    "type": "double_half",
-   "z": 119.356
+   "z": 119.178
   },
   {
    "approach": 1,
-   "boom_len_m": 4.2,
+   "boom_len_m": 4.13,
    "crossing": 0,
-   "e": -726.9,
+   "e": -725.75,
    "heading_deg": 296.23,
    "kind": "barrier",
-   "n": -532.25,
+   "n": -529.75,
    "role": "exit",
    "type": "double_half",
-   "z": 119.273
+   "z": 119.182
   },
   {
    "approach": -1,
    "crossing": 0,
-   "e": -729.85,
+   "e": -731.18,
    "heading_deg": 206.23,
    "kind": "light",
-   "n": -539.36,
+   "n": -541.9,
    "side": "right",
-   "z": 119.216
+   "z": 119.108
   },
   {
    "approach": -1,
    "crossing": 0,
-   "e": -738.29,
+   "e": -739.44,
    "heading_deg": 206.23,
    "kind": "light",
-   "n": -535.21,
+   "n": -537.7,
    "side": "left",
-   "z": 119.221
+   "z": 119.126
   },
   {
    "approach": -1,
-   "boom_len_m": 4.2,
+   "code": "G-2",
    "crossing": 0,
-   "e": -729.86,
+   "e": -731.18,
+   "heading_deg": 206.23,
+   "kind": "sign",
+   "mount": "signal_mast",
+   "n": -541.9,
+   "z": 119.108
+  },
+  {
+   "approach": -1,
+   "boom_len_m": 4.13,
+   "crossing": 0,
+   "e": -731.13,
    "heading_deg": 296.23,
    "kind": "barrier",
-   "n": -538.25,
+   "n": -540.68,
    "role": "entry",
    "type": "double_half",
-   "z": 119.225
+   "z": 119.177
   },
   {
    "approach": -1,
-   "boom_len_m": 4.2,
+   "boom_len_m": 4.13,
    "crossing": 0,
-   "e": -737.4,
+   "e": -738.55,
    "heading_deg": 116.23,
    "kind": "barrier",
-   "n": -534.53,
+   "n": -537.03,
    "role": "exit",
    "type": "double_half",
-   "z": 119.225
+   "z": 119.161
+  }
+ ],
+ "markers_outside_tile": [],
+ "overrides_applied": [
+  {
+   "id": "rail-crossing-dw671-line38",
+   "target": "osm:node/1778182481"
   }
  ],
  "region": "dw671-tykocin-01",
@@ -205,17 +674,19 @@
    "gauge_mm": 1435.0,
    "gauge_src": "osm",
    "length_m": 1096.9,
+   "maxspeed_kmh": 100.0,
    "name": "Rail Baltica",
    "ref": "38",
    "service": null,
    "src": "osm:way/166369632:0",
    "tracks": 1,
+   "tracks_src": "default",
    "usage": "main"
   }
  ],
  "triangles": {
   "rail_crossing": 132,
-  "rail_lod0": 15084,
+  "rail_lod0": 15090,
   "rail_lod1": 2256,
   "rail_lod2": 112
  },

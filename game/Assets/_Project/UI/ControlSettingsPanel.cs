@@ -23,14 +23,14 @@ namespace Game.UI
     /// </summary>
     public sealed class ControlSettingsPanel : MonoBehaviour
     {
-        static readonly Color k_Dim = new Color(0.02f, 0.025f, 0.03f, 0.72f);
-        static readonly Color k_Panel = new Color(0.06f, 0.065f, 0.07f, 0.97f);
-        static readonly Color k_Row = new Color(1f, 1f, 1f, 0.045f);
-        static readonly Color k_Button = new Color(0.16f, 0.17f, 0.18f, 0.95f);
-        static readonly Color k_ButtonOn = new Color(0.30f, 0.36f, 0.30f, 0.95f);
-        static readonly Color k_Text = new Color(0.95f, 0.95f, 0.91f, 1f);
-        static readonly Color k_Muted = new Color(0.70f, 0.70f, 0.67f, 1f);
-        static readonly Color k_Amber = new Color(0.95f, 0.66f, 0.18f, 1f);
+        static readonly Color k_Dim = Game.Controls.UiPalette.Scrim;   // ADR 0283 palette
+        static readonly Color k_Panel = Game.Controls.UiPalette.Panel;   // ADR 0283 palette
+        static readonly Color k_Row = Game.Controls.UiPalette.Row;   // ADR 0283 palette
+        static readonly Color k_Button = Game.Controls.UiPalette.Button;   // ADR 0283 palette
+        static readonly Color k_ButtonOn = Game.Controls.UiPalette.ButtonActive;   // ADR 0283 palette
+        static readonly Color k_Text = Game.Controls.UiPalette.Ink;   // ADR 0283 palette
+        static readonly Color k_Muted = Game.Controls.UiPalette.InkMuted;   // ADR 0283 palette
+        static readonly Color k_Amber = Game.Controls.UiPalette.Accent;   // ADR 0283 palette
 
         const float RowH = 66f, ColW = 700f, Pad = 40f, Edge = 20f, HeaderH = 86f, FooterH = 108f;
 
@@ -185,6 +185,8 @@ namespace Game.UI
             }
             Header(content, "KIEROWNICA DOTYKOWA", left, ref y);
             Segment(content, left, ref y, "Chwyt", "obrót", "przesuw", () => Settings.wheelDragGrab, v => Settings.wheelDragGrab = v);
+            // D70 / ADR 0243: 270 deg comfort is the default, 900 deg simulator one tap away; the stepper keeps the grid between.
+            Segment(content, left, ref y, "Zakres: komfort/sym.", "270°", "900°", () => Settings.TouchWheelSimRange, v => Settings.SetTouchWheelPreset(v));
             Stepper(content, left, ref y, "Zakres kierownicy", () => F0(Settings.wheelRangeDeg) + "°", d => Settings.wheelRangeDeg = Step(Settings.wheelRangeDeg, d, 90f, ControlSettings.RangeMin, ControlSettings.RangeMax));
             Stepper(content, left, ref y, "Czułość", () => Pct(Settings.wheelSensitivity), d => Settings.wheelSensitivity = Step(Settings.wheelSensitivity, d, 0.1f, ControlSettings.GainMin, ControlSettings.GainMax));
             Stepper(content, left, ref y, "Samocentrowanie", () => Settings.centreStrength <= 0.001f ? "wyłączone" : Pct(Settings.centreStrength), d => Settings.centreStrength = Step(Settings.centreStrength, d, 0.1f, ControlSettings.CentreMin, ControlSettings.CentreMax));
@@ -224,6 +226,8 @@ namespace Game.UI
             Header(content, "KAMERA (WIDOK Z KABINY)", right, ref y);
             Stepper(content, right, ref y, "Czułość rozglądania", () => Pct(Settings.lookSensitivity), d => Settings.lookSensitivity = Step(Settings.lookSensitivity, d, 0.1f, ControlSettings.LookMin, ControlSettings.LookMax));
             Stepper(content, right, ref y, "Pole widzenia", () => F0(Settings.cabFov) + "°", d => Settings.cabFov = Step(Settings.cabFov, d, 5f, ControlSettings.FovMin, ControlSettings.FovMax));
+            // D70 / ADR 0243: class II mirrors as fixed on-screen windows (default) or seen by looking around the cab.
+            Segment(content, right, ref y, "Lusterka", "okienka", "rozglądanie", () => !Settings.mirrorInsets, v => Settings.mirrorInsets = !v);
             Segment(content, right, ref y, "Ruch głowy", "włączony", "wyłączony", () => !Settings.headMotion, v => Settings.headMotion = !v);
             y += 18f;
             Header(content, "DŹWIĘK", right, ref y);

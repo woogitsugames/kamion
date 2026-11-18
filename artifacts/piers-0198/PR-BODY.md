@@ -1,0 +1,20 @@
+# piers-0198 — ADR 0198: podpory estakady A ronda Putry (`pier_lines_en` per pomost)
+
+**Wynik: PARTIAL.** Gałąź `piers-0198` (od `5724a161b`). Sesja w chmurze: bez Unity, `Data/raw`, `build_world`.
+1. **Zmienione:** `viaduct_underdeck.json` — `pier_lines_en` jako słownik per pomost (klucz = OSM way łańcucha) + `pier_lines_en_held` + nota źródeł; `hero_bridge.py` — `underdeck_rows`, `column_points`, `keepout` (używa go `build_world.py`), `pier_cols_on_carriageway` obejmuje też underdeck; nowy `tools/worldgen/qa/check_piers_vs_roads.py`; test `tests/gis/test_piers_vs_roads_0198.py`; opisy w `overrides.yaml`, `scripts/gate3-segment.py`, `gate3_segment.json`; ADR `docs/adr/0198-podpory-estakady-a-putry-pier-lines-en.md` (PROPOSED).
+2. **Stacje (m od końca NW zakresu otwartego, wszystkie WORKING_VALUE):** NE (`c:w1101181473`) 8 rzędów: 24,39 / 48,78 / 82,5 / 106,0 / 133,5 / 155,0 / 176,5 / 198,0 — max przęsło 33,7 m (było 48,8 i para 16,4). SW (`c:w173956078`) 6 rzędów: 19,5 / 40,0 / 56,5 / 135,5 / 161,5 / 187,5 — max przęsło **79,0 m** (było 94,8).
+3. **KONFLIKT (nie rozwiązany, jezdni nie ruszałem):** na pomoście SW między 62 a 133 m każda możliwa para kolumn ma jedną kolumnę na asfalcie pierścienia albo na pierścieniu najazdowym — krawędź wyspy z generatora leży pod osią pomostu SW, a na ortofoto GUGiK prawdziwa wyspa sięga ok. 1,5–2,5 m poza jego południową krawędź (odczyt „na oko”). Rzędy wyspowe 86,0 i 111,0 m czekają w `pier_lines_en_held` (generator ich nie czyta). P1 zamknięte dla NE, dla SW tylko częściowo.
+4. **Kontrola kolizji:** `BLOCKED_COLS` pusty; każda kolumna ≥ 2,53 m od powierzchni jezdnej (`artifacts/piers-0198/piers_vs_roads.txt/.json`). Emulacja na płaskim terenie odtwarza scommitowany spec reguły przęseł (te same rzędy i pominięcia).
+5. **Testy uruchomione:** `uv run --project tools/worldgen python -m pytest tests/gis/test_piers_vs_roads_0198.py tests/gis/test_viaduct_underdeck.py tests/gis/test_hero_bridge.py -q` → 26 passed, 4 skipped (LFS: glb estakady B); `-k "gate3 or override or viaduct or underdeck or hero_bridge or barriers_0159 or p1_0161"` → 118 passed, 6 skipped; całe `tests/gis` (10 min): 1185 passed, 48 skipped, 3 xfailed, **1 failed** — `test_road_fidelity.py::test_report_not_stale` (strażnik sha: zmieniły się `overrides.yaml` i `build_world.py`; naprawa = komenda fidelity niżej, wymaga `Data/raw`).
+6. **NIEuruchomione:** build_world, import, rendery kamer, SBS, budżet draws/tris, EditMode, testy z `needs_raw`. Wycinków c027/c022 nie ma w repo (`research/_incoming` poza gitem) — użyłem opisów P13-022/027/030/031.
+7. **Komendy dla lidera:**
+   - `uv run tools/worldgen/build_region.py --region bialystok-industrial-c`
+   - `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` (slot heavy) → sprawdź `generated/streetscape_qa.json`: `hero_bridges.pier_cols_on_carriageway == []` oraz w spec `pier_lines` 8 (NE) i 6 (SW), `pier_lines_skipped` 0
+   - `uv run --project tools/worldgen python tools/worldgen/qa/check_piers_vs_roads.py --region bialystok-industrial-c`
+   - `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c` (odświeża `generated/fidelity_qa.json`)
+   - `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`
+   - `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -OutputDir artifacts/piers-0198/low` i to samo z `-Tier High` — kamery putry-above, g3b_eye_s1582, g3b_eye_s1632, route-putry-approach, driver-andersa-to-putry; SBS ze zdjęciami (`sbs_references.json`), obejrzeć
+   - `uv run --project tools/worldgen python -m pytest tests/gis -q` oraz `pwsh scripts/test.ps1 -Platform EditMode`
+8. **Otwarte:** korekta wyspy / pierścienia ronda Putry (potem przenieść 2 rzędy z `held`); pętla wizualna i budżet A/B; ścieżki pod pomostami za wschodnią jezdnią pierścienia nie istnieją w śladzie generatora.
+
+**Gotowe do scalenia po weryfikacji lidera: TAK** — po regeneracji (spec, fidelity_qa) i obejrzeniu renderów; przęsło 79 m na SW zostaje do czasu korekty ronda. Stopka commitów: „Claude Fable 5.2” (zgodna z modelem sesji), nie „Opus 5.5”.

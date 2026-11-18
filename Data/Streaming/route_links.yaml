@@ -1,0 +1,98 @@
+# Route links of the streamed world (stream-gaps-s23): authored driving paths that continue the route autopilot across
+# tiles whose own control route (route_start.json, ADR 0203-0214) does not end on the seam towards the next tile.
+# Each link lies inside ONE tile; its lane polyline is computed by tools/worldgen/streaming/route_links.py with the same
+# code as scripts/export-route.py (effective graph -> networkx shortest path -> roads.route.lane_route).
+# Runtime: WorldStreamer.ContinueRoute appends a link when its first point meets the autopilot path end (<= routeJoinM)
+# and its tile is Ready; links of destination != the chosen one (launch argument `-route_to`, default tykocin) are skipped;
+# a link with replaces_route is appended INSTEAD of that tile's start route (same first point).
+# These are NOT authored_overrides of the region (route_endpoints.json / overrides.yaml stay untouched): spawn, cameras and
+# the region catalog keep using each tile's own start route.
+schema: truck-sim-pl/route-links/1
+links:
+  - id: c-dk8-to-maczka
+    tile: bialystok-industrial-c
+    destination: any            # every trip out of C: the C start route ends on DK8/DK19 ~700 m before the Maczka seam
+    after_route: bialystok-industrial-c   # starts at the end of this tile's start route
+    end_epsg2180: [776971.0, 596279.2]    # Maczka route entry on the C | Maczka seam (Data/Regions/bialystok-maczka/route_endpoints.json)
+    tail_to: route:bialystok-maczka       # last BLEND_M m shifted onto the Maczka route start (lane offset of the next tile)
+    note: "C start route end (DK8/DK19) -> DK8 Maczka westbound to the seam with bialystok-maczka"
+  # The knyszyn control route ends at Rynek, a dead end for the corridor (the next road out is behind the truck: a U-turn
+  # of the articulated vehicle). For a trip through Knyszyn the link REPLACES that route: same entry (seam with
+  # knyszyn-s), same DK65 approach, then the roundabout DK65/DW671 and the exit arm of the destination.
+  - id: knyszyn-dk65-to-dw671-w
+    tile: knyszyn
+    destination: tykocin
+    replaces_route: knyszyn               # starts at the knyszyn route start (seam knyszyn-s | knyszyn, 760985.8, 611583)
+    end_epsg2180: [760587.0, 611964.5]    # DW671 Tykocka on the knyszyn | knyszyn-w seam (graph boundary node of way 1478765548, both tiles)
+    note: "DK65 Obozowa from knyszyn-s -> roundabout DK65/DW671 -> DW671 Tykocka west to the seam with knyszyn-w"
+  - id: knyszyn-dk65-to-dk65-w
+    tile: knyszyn
+    destination: monki
+    replaces_route: knyszyn
+    end_epsg2180: [760587.0, 612073.7]    # DK65 Obozowa on the knyszyn | knyszyn-w seam = knyszyn-w route entry (ADR 0209)
+    tail_to: route:knyszyn-w
+    note: "DK65 Obozowa from knyszyn-s -> roundabout DK65/DW671 -> DK65 west to the seam with knyszyn-w (towards Monki)"
+  # seams-fix-s23: a drive STARTED in knyszyn (`-scene knyszyn`) has the control route as its path, which ends at Rynek;
+  # nothing joined there, so the autopilot stopped. These links continue from the route end without turning round
+  # (route_links.py drops the edge back to the node the route came from): round Rynek -> Grodzienska -> Tykocka west ->
+  # roundabout split -> the exit arm of the destination, ending on the same seam points as the links above.
+  - id: knyszyn-rynek-to-dw671-w
+    tile: knyszyn
+    destination: tykocin
+    after_route: knyszyn                  # starts at the end of the knyszyn control route (Rynek, graph node n2979322319)
+    end_epsg2180: [760587.0, 611964.5]    # = end of knyszyn-dk65-to-dw671-w (DW671 Tykocka, knyszyn | knyszyn-w seam)
+    note: "Rynek (end of the knyszyn control route) -> Grodzienska -> DW671 Tykocka west -> seam with knyszyn-w"
+  - id: knyszyn-rynek-to-dk65-w
+    tile: knyszyn
+    destination: monki
+    after_route: knyszyn
+    end_epsg2180: [760587.0, 612073.7]    # = end of knyszyn-dk65-to-dk65-w = knyszyn-w route entry (ADR 0209)
+    tail_to: route:knyszyn-w
+    note: "Rynek (end of the knyszyn control route) -> Grodzienska -> Tykocka -> roundabout split -> DK65 west to the seam"
+  - id: knyszyn-w-dw671
+    tile: knyszyn-w
+    destination: tykocin
+    start_epsg2180: [760587.0, 611964.5]  # boundary node of way 1478765548 (east edge)
+    end_epsg2180: [760129.2, 611583.0]    # boundary node of way 70329870 (south edge) = dw671-tykocin-01 route entry (ADR 0212)
+    head_from: link:knyszyn-dk65-to-dw671-w   # first BLEND_M m shifted from the end of that link (knyszyn lanes still
+                                              # tapered by the roundabout 37 m before the seam; knyszyn-w lanes are not)
+    tail_to: route:dw671-tykocin-01
+    note: "DW671 Tykocka across the south-east corner of knyszyn-w to the seam with dw671-tykocin-01"
+  # ADR 0288 (owner D82): the loop S8 <-> DW671 <-> Tykocin. The S8 westbound carriageway (way 305447699) only cuts the
+  # south-west corner of dk65-01: it enters from the south seam (tile dk8-s8-jeroniki, ADR 0278 - defined, not built)
+  # and leaves on the west seam = the s8-01 route entry. In the directed graph of dk65-01 that seam node is reachable
+  # ONLY from the south seam node (the on-ramps of the junction Bialystok Zachod towards Warsaw lie in dk8-s8-jeroniki),
+  # so a link from the dk65-01 control route is not possible inside this tile; the dk65-01 route stays untouched.
+  # Missing for a continuous trip Bialystok -> S8: dk8-s8-jeroniki built + two links (dk65-01 -> south seam, jeroniki).
+  - id: dk65-01-s8-corner
+    tile: dk65-01
+    destination: s8
+    start_epsg2180: [769340.8, 595199.0]  # boundary node of way 305447699 (south edge, seam with dk8-s8-jeroniki)
+    end_epsg2180: [768779.0, 595332.7]    # boundary node of way 305447699 (west edge) = s8-01 route entry
+    tail_to: route:s8-01
+    note: "S8 westbound across the south-west corner of dk65-01 to the seam with s8-01"
+  # ADR 0288: the cross-section of way 536205568 is the same on both sides of the s8-03 | s8-04 seam (3 x 3.50 m,
+  # qa.seams), but the two control routes sit one lane apart there (3.5 m: s8-03 ends in the rightmost of 3 lanes after
+  # the junction Tykocin, s8-04 starts one lane to the left). The link replaces the s8-03 route with the same path and
+  # shifts its last BLEND_M m onto the s8-04 route start, so the autopilot path has no lateral step on the seam.
+  - id: s8-03-to-s8-04
+    tile: s8-03
+    destination: s8
+    replaces_route: s8-03
+    end_epsg2180: [762635.0, 596015.9]    # S8 westbound on the s8-03 | s8-04 seam = s8-04 route entry
+    tail_to: route:s8-04
+    note: "S8 westbound through the junction Tykocin, lane shift before the seam with s8-04"
+# Driving corridors as ordered tile lists (Bialystok -> Knyszyn -> Tykocin, owner request s23). The generator keeps the
+# prefix of tiles present in Data/Regions (main: up to dw671-tykocin-01; the ring branch world2-s23 adds
+# dw671-tykocin-02..09 and tykocin) and checks every consecutive pair: edge neighbours (N/E/S/W) and a route join
+# (route exit / link end of A == route entry / link start of B within PORTAL_TOL_M).
+corridors:
+  - id: bialystok-tykocin
+    destination: tykocin
+    tiles: [bialystok-industrial-c, bialystok-maczka, bialystok-kleeberga, bialystok-knyszynska,
+            dk65-01, dk65-02, dk65-03, dk65-04, dk65-05, dk65-06, dk65-07, dk65-08, dk65-09, dk65-10, dk65-11,
+            knyszyn-s, knyszyn, knyszyn-w, dw671-tykocin-01, dw671-tykocin-02, dw671-tykocin-03, dw671-tykocin-04,
+            dw671-tykocin-05, dw671-tykocin-06, dw671-tykocin-07, dw671-tykocin-08, dw671-tykocin-09, tykocin]
+  - id: s8-loop
+    destination: s8
+    tiles: [dk65-01, s8-01, s8-02, s8-03, s8-04, s8-05, s8-06, s8-07, s8-08, s8-09, s8-10, s8-11, s8-12]

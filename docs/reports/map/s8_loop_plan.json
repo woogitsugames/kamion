@@ -1,0 +1,2593 @@
+{
+ "adr": "0288",
+ "crs": "EPSG:2180",
+ "lattice": {
+  "rule": "x = x0 + 2048*i, y = y0 + 2048*j (ADR 0203)",
+  "x0": 776971.0,
+  "y0": 595199.0
+ },
+ "loop_km_through": 26.07,
+ "osm": {
+  "source": "Data/SourceManifests/osm-geofabrik-podlaskie.json (pinned pbf of the pipeline)",
+  "window_wgs84": [
+   22.6,
+   53.05,
+   23.32,
+   53.5
+  ]
+ },
+ "tile_size_m": 2048.0,
+ "tiles": [
+  {
+   "bbox": [
+    766731.0,
+    595199.0,
+    768779.0,
+    597247.0
+   ],
+   "bridges": [
+    183639791,
+    183639792,
+    183641838
+   ],
+   "build_now": true,
+   "id": "s8-01",
+   "ij": [
+    -5,
+    0
+   ],
+   "in_pipeline_osm_window": true,
+   "km_major": {
+    "motorway": 4.2,
+    "motorway_link": 1.53,
+    "tertiary": 5.8
+   },
+   "motorway_junctions": [
+    {
+     "name": "Choroszcz",
+     "osm_node": 1908957192,
+     "ref": null,
+     "x": 767440.6,
+     "y": 595633.6
+    },
+    {
+     "name": "Choroszcz",
+     "osm_node": 1940503816,
+     "ref": null,
+     "x": 766881.5,
+     "y": 595755.9
+    },
+    {
+     "name": "Białystok Zachód",
+     "osm_node": 3160890725,
+     "ref": null,
+     "x": 768445.1,
+     "y": 595398.6
+    }
+   ],
+   "n": 1,
+   "origin": [
+    767755.0,
+    596223.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "built_graph_crossings": [
+      {
+       "highway": "motorway",
+       "osm_way": 183639794,
+       "ref": "S8",
+       "x": 768779.0,
+       "y": 595318.3
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 305447699,
+       "ref": "S8",
+       "x": 768779.0,
+       "y": 595332.7
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 816196397,
+       "ref": null,
+       "x": 768779.0,
+       "y": 595441.4
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 1151440429,
+       "ref": null,
+       "x": 768779.0,
+       "y": 595306.1
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 1557429213,
+       "ref": null,
+       "x": 768779.0,
+       "y": 595382.4
+      }
+     ],
+     "crossings": [
+      {
+       "highway": "motorway_link",
+       "osm_way": 1151440429,
+       "ref": null,
+       "x": 768779.0,
+       "y": 595306.1
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 183639794,
+       "ref": "S8",
+       "x": 768779.0,
+       "y": 595318.3
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 305447699,
+       "ref": "S8",
+       "x": 768779.0,
+       "y": 595332.7
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 1557429213,
+       "ref": null,
+       "x": 768779.0,
+       "y": 595382.4
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 816196397,
+       "ref": null,
+       "x": 768779.0,
+       "y": 595441.4
+      }
+     ],
+     "max_offset_m": 0.0,
+     "neighbour": "dk65-01",
+     "neighbour_status": "built",
+     "ways_missing_in_built_graph": []
+    },
+    "N": {
+     "built_graph_crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 305330775,
+       "ref": null,
+       "x": 767580.6,
+       "y": 597247.0
+      }
+     ],
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 305330775,
+       "ref": null,
+       "x": 767580.6,
+       "y": 597247.0
+      }
+     ],
+     "max_offset_m": 0.0,
+     "neighbour": "dk65-03",
+     "neighbour_status": "built",
+     "ways_missing_in_built_graph": []
+    },
+    "S": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 183641839,
+       "ref": null,
+       "x": 767910.0,
+       "y": 595199.0
+      }
+     ],
+     "neighbour": null,
+     "neighbour_status": "none (open edge)"
+    },
+    "W": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 888490257,
+       "ref": null,
+       "x": 766731.0,
+       "y": 595240.5
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 279914645,
+       "ref": "S8",
+       "x": 766731.0,
+       "y": 595789.5
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 183639790,
+       "ref": "S8",
+       "x": 766731.0,
+       "y": 595802.3
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 196784110,
+       "ref": null,
+       "x": 766731.0,
+       "y": 595821.9
+      }
+     ],
+     "neighbour": "s8-02",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "E",
+    "edge_out": "W",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 305447699,
+     "ref": "S8",
+     "x": 768779.0,
+     "y": 595332.7
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 183639790,
+     "ref": "S8",
+     "x": 766731.0,
+     "y": 595802.3
+    },
+    "from": "dk65-01",
+    "length_m": 2101.5,
+    "to": "s8-02",
+    "ways": [
+     305447699,
+     957612927,
+     1379858309,
+     1467119157,
+     251431128,
+     536222207,
+     183639792,
+     536222206,
+     183639790
+    ]
+   },
+   "through_tags": {
+    "1379858309": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "1467119157": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "183639790": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "183639792": {
+     "bridge": "yes",
+     "highway": "motorway",
+     "lanes": "3",
+     "layer": "1",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "251431128": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "305447699": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536222206": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536222207": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "957612927": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 01 — węzeł Choroszcz, od szwu z dk65-01 na zachód (strefa przemysłowa przy Białymstoku)"
+  },
+  {
+   "bbox": [
+    764683.0,
+    595199.0,
+    766731.0,
+    597247.0
+   ],
+   "bridges": [
+    98599908,
+    183625709,
+    183625711,
+    183639798
+   ],
+   "build_now": true,
+   "id": "s8-02",
+   "ij": [
+    -6,
+    0
+   ],
+   "in_pipeline_osm_window": true,
+   "km_major": {
+    "motorway": 4.17,
+    "tertiary": 3.05
+   },
+   "motorway_junctions": [],
+   "n": 2,
+   "origin": [
+    765707.0,
+    596223.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 888490257,
+       "ref": null,
+       "x": 766731.0,
+       "y": 595240.5
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 279914645,
+       "ref": "S8",
+       "x": 766731.0,
+       "y": 595789.5
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 183639790,
+       "ref": "S8",
+       "x": 766731.0,
+       "y": 595802.3
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 196784110,
+       "ref": null,
+       "x": 766731.0,
+       "y": 595821.9
+      }
+     ],
+     "neighbour": "s8-01",
+     "neighbour_status": "loop"
+    },
+    "S": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 297342246,
+       "ref": null,
+       "x": 766333.2,
+       "y": 595199.0
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 888490257,
+       "ref": null,
+       "x": 766691.1,
+       "y": 595199.0
+      }
+     ],
+     "neighbour": null,
+     "neighbour_status": "none (open edge)"
+    },
+    "W": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 183625711,
+       "ref": null,
+       "x": 764683.0,
+       "y": 596056.2
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 183625709,
+       "ref": "S8",
+       "x": 764683.0,
+       "y": 596075.5
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 98599908,
+       "ref": "S8",
+       "x": 764683.0,
+       "y": 596090.7
+      }
+     ],
+     "neighbour": "s8-03",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "E",
+    "edge_out": "W",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 183639790,
+     "ref": "S8",
+     "x": 766731.0,
+     "y": 595802.3
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 98599908,
+     "ref": "S8",
+     "x": 764683.0,
+     "y": 596090.7
+    },
+    "from": "s8-01",
+    "length_m": 2084.1,
+    "to": "s8-03",
+    "ways": [
+     183639790,
+     305447698,
+     536222218,
+     98599908
+    ]
+   },
+   "through_tags": {
+    "183639790": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "305447698": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536222218": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "98599908": {
+     "bridge": "yes",
+     "highway": "motorway",
+     "lanes": "2",
+     "layer": "1",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 02 — od węzła Choroszcz w stronę Złotorii"
+  },
+  {
+   "bbox": [
+    762635.0,
+    595199.0,
+    764683.0,
+    597247.0
+   ],
+   "bridges": [
+    98599908,
+    183382926,
+    183625709,
+    183625711
+   ],
+   "build_now": true,
+   "id": "s8-03",
+   "ij": [
+    -7,
+    0
+   ],
+   "in_pipeline_osm_window": true,
+   "km_major": {
+    "motorway": 4.1,
+    "motorway_link": 2.03,
+    "tertiary": 4.28
+   },
+   "motorway_junctions": [
+    {
+     "name": "Tykocin",
+     "osm_node": 469876632,
+     "ref": null,
+     "x": 763847.4,
+     "y": 596058.1
+    },
+    {
+     "name": "Tykocin",
+     "osm_node": 1937542643,
+     "ref": null,
+     "x": 763704.8,
+     "y": 596037.2
+    }
+   ],
+   "n": 3,
+   "origin": [
+    763659.0,
+    596223.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 183625711,
+       "ref": null,
+       "x": 764683.0,
+       "y": 596056.2
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 183625709,
+       "ref": "S8",
+       "x": 764683.0,
+       "y": 596075.5
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 98599908,
+       "ref": "S8",
+       "x": 764683.0,
+       "y": 596090.7
+      }
+     ],
+     "neighbour": "s8-02",
+     "neighbour_status": "loop"
+    },
+    "N": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 183382927,
+       "ref": null,
+       "x": 762962.8,
+       "y": 597247.0
+      }
+     ],
+     "neighbour": null,
+     "neighbour_status": "none (open edge)"
+    },
+    "W": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 623772956,
+       "ref": null,
+       "x": 762635.0,
+       "y": 595982.9
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431118,
+       "ref": "S8",
+       "x": 762635.0,
+       "y": 596004.7
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 536205568,
+       "ref": "S8",
+       "x": 762635.0,
+       "y": 596015.9
+      }
+     ],
+     "neighbour": "s8-04",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "E",
+    "edge_out": "W",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 98599908,
+     "ref": "S8",
+     "x": 764683.0,
+     "y": 596090.7
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 536205568,
+     "ref": "S8",
+     "x": 762635.0,
+     "y": 596015.9
+    },
+    "from": "s8-02",
+    "length_m": 2049.6,
+    "to": "s8-04",
+    "ways": [
+     98599908,
+     251431131,
+     1467119158,
+     536205569,
+     536205568
+    ]
+   },
+   "through_tags": {
+    "1467119158": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "251431131": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536205568": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536205569": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "98599908": {
+     "bridge": "yes",
+     "highway": "motorway",
+     "lanes": "2",
+     "layer": "1",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 03 — węzeł Tykocin (Złotoria) i MOP Złotoria"
+  },
+  {
+   "bbox": [
+    760587.0,
+    595199.0,
+    762635.0,
+    597247.0
+   ],
+   "bridges": [],
+   "build_now": true,
+   "id": "s8-04",
+   "ij": [
+    -8,
+    0
+   ],
+   "in_pipeline_osm_window": true,
+   "km_major": {
+    "motorway": 4.26,
+    "tertiary": 2.13
+   },
+   "motorway_junctions": [],
+   "n": 4,
+   "origin": [
+    761611.0,
+    596223.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 623772956,
+       "ref": null,
+       "x": 762635.0,
+       "y": 595982.9
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431118,
+       "ref": "S8",
+       "x": 762635.0,
+       "y": 596004.7
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 536205568,
+       "ref": "S8",
+       "x": 762635.0,
+       "y": 596015.9
+      }
+     ],
+     "neighbour": "s8-03",
+     "neighbour_status": "loop"
+    },
+    "W": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 345315199,
+       "ref": null,
+       "x": 760587.0,
+       "y": 595422.1
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431118,
+       "ref": "S8",
+       "x": 760587.0,
+       "y": 595446.0
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 100133887,
+       "ref": "S8",
+       "x": 760587.0,
+       "y": 595458.7
+      }
+     ],
+     "neighbour": "s8-05",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "E",
+    "edge_out": "W",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 536205568,
+     "ref": "S8",
+     "x": 762635.0,
+     "y": 596015.9
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 100133887,
+     "ref": "S8",
+     "x": 760587.0,
+     "y": 595458.7
+    },
+    "from": "s8-03",
+    "length_m": 2132.5,
+    "to": "s8-05",
+    "ways": [
+     536205568,
+     100133887
+    ]
+   },
+   "through_tags": {
+    "100133887": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536205568": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 04 — od węzła Tykocin w stronę Rzędzian (Babino)"
+  },
+  {
+   "bbox": [
+    758539.0,
+    595199.0,
+    760587.0,
+    597247.0
+   ],
+   "bridges": [],
+   "build_now": true,
+   "id": "s8-05",
+   "ij": [
+    -9,
+    0
+   ],
+   "in_pipeline_osm_window": true,
+   "km_major": {
+    "motorway": 1.64,
+    "tertiary": 0.72
+   },
+   "motorway_junctions": [],
+   "n": 5,
+   "origin": [
+    759563.0,
+    596223.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 345315199,
+       "ref": null,
+       "x": 760587.0,
+       "y": 595422.1
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431118,
+       "ref": "S8",
+       "x": 760587.0,
+       "y": 595446.0
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 100133887,
+       "ref": "S8",
+       "x": 760587.0,
+       "y": 595458.7
+      }
+     ],
+     "neighbour": "s8-04",
+     "neighbour_status": "loop"
+    },
+    "S": {
+     "crossings": [
+      {
+       "highway": "motorway",
+       "osm_way": 536211834,
+       "ref": "S8",
+       "x": 759784.9,
+       "y": 595199.0
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431118,
+       "ref": "S8",
+       "x": 759826.6,
+       "y": 595199.0
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 345315199,
+       "ref": null,
+       "x": 759904.3,
+       "y": 595199.0
+      }
+     ],
+     "neighbour": "s8-06",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "E",
+    "edge_out": "S",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 100133887,
+     "ref": "S8",
+     "x": 760587.0,
+     "y": 595458.7
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 536211834,
+     "ref": "S8",
+     "x": 759784.9,
+     "y": 595199.0
+    },
+    "from": "s8-04",
+    "length_m": 843.1,
+    "to": "s8-06",
+    "ways": [
+     100133887,
+     536211832,
+     536211834
+    ]
+   },
+   "through_tags": {
+    "100133887": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536211832": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536211834": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 05 — narożnik kafla, S8 skręca na południowy zachód"
+  },
+  {
+   "bbox": [
+    758539.0,
+    593151.0,
+    760587.0,
+    595199.0
+   ],
+   "bridges": [],
+   "build_now": false,
+   "id": "s8-06",
+   "ij": [
+    -9,
+    -1
+   ],
+   "in_pipeline_osm_window": true,
+   "km_major": {
+    "motorway": 2.66,
+    "motorway_link": 0.02,
+    "tertiary": 1.43
+   },
+   "motorway_junctions": [],
+   "n": 6,
+   "origin": [
+    759563.0,
+    594175.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "N": {
+     "crossings": [
+      {
+       "highway": "motorway",
+       "osm_way": 536211834,
+       "ref": "S8",
+       "x": 759784.9,
+       "y": 595199.0
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431118,
+       "ref": "S8",
+       "x": 759826.6,
+       "y": 595199.0
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 345315199,
+       "ref": null,
+       "x": 759904.3,
+       "y": 595199.0
+      }
+     ],
+     "neighbour": "s8-05",
+     "neighbour_status": "loop"
+    },
+    "W": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 345315199,
+       "ref": null,
+       "x": 758539.0,
+       "y": 594777.3
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 536211821,
+       "ref": null,
+       "x": 758539.0,
+       "y": 594792.4
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 536211828,
+       "ref": "S8",
+       "x": 758539.0,
+       "y": 594794.8
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431121,
+       "ref": "S8",
+       "x": 758539.0,
+       "y": 594808.7
+      }
+     ],
+     "neighbour": "s8-07",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "N",
+    "edge_out": "W",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 536211834,
+     "ref": "S8",
+     "x": 759784.9,
+     "y": 595199.0
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 251431121,
+     "ref": "S8",
+     "x": 758539.0,
+     "y": 594808.7
+    },
+    "from": "s8-05",
+    "length_m": 1305.9,
+    "to": "s8-07",
+    "ways": [
+     536211834,
+     536211830,
+     536211831,
+     251431121
+    ]
+   },
+   "through_tags": {
+    "251431121": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536211830": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536211831": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536211834": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 06 — S8 ku węzłowi Rzędziany"
+  },
+  {
+   "bbox": [
+    756491.0,
+    593151.0,
+    758539.0,
+    595199.0
+   ],
+   "bridges": [
+    183381859,
+    415534052
+   ],
+   "build_now": false,
+   "id": "s8-07",
+   "ij": [
+    -10,
+    -1
+   ],
+   "in_pipeline_osm_window": true,
+   "km_major": {
+    "motorway": 4.32,
+    "motorway_link": 1.72,
+    "tertiary": 3.55
+   },
+   "motorway_junctions": [
+    {
+     "name": "Rzędziany",
+     "osm_node": 1856618918,
+     "ref": null,
+     "x": 758347.6,
+     "y": 594747.0
+    },
+    {
+     "name": "Rzędziany",
+     "osm_node": 1937517092,
+     "ref": null,
+     "x": 757831.9,
+     "y": 594557.0
+    }
+   ],
+   "n": 7,
+   "origin": [
+    757515.0,
+    594175.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 345315199,
+       "ref": null,
+       "x": 758539.0,
+       "y": 594777.3
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 536211821,
+       "ref": null,
+       "x": 758539.0,
+       "y": 594792.4
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 536211828,
+       "ref": "S8",
+       "x": 758539.0,
+       "y": 594794.8
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431121,
+       "ref": "S8",
+       "x": 758539.0,
+       "y": 594808.7
+      }
+     ],
+     "neighbour": "s8-06",
+     "neighbour_status": "loop"
+    },
+    "N": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 820436949,
+       "ref": null,
+       "x": 758171.3,
+       "y": 595199.0
+      }
+     ],
+     "neighbour": null,
+     "neighbour_status": "none (open edge)"
+    },
+    "W": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 415534052,
+       "ref": null,
+       "x": 756491.0,
+       "y": 594088.0
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 415473452,
+       "ref": "S8",
+       "x": 756491.0,
+       "y": 594113.4
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431132,
+       "ref": "S8",
+       "x": 756491.0,
+       "y": 594126.3
+      }
+     ],
+     "neighbour": "s8-08",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "E",
+    "edge_out": "W",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 251431121,
+     "ref": "S8",
+     "x": 758539.0,
+     "y": 594808.7
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 251431132,
+     "ref": "S8",
+     "x": 756491.0,
+     "y": 594126.3
+    },
+    "from": "s8-06",
+    "length_m": 2158.9,
+    "to": "s8-08",
+    "ways": [
+     251431121,
+     536211817,
+     536211816,
+     251431132
+    ]
+   },
+   "through_tags": {
+    "251431121": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "251431132": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536211816": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536211817": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 07 — węzeł Rzędziany"
+  },
+  {
+   "bbox": [
+    754443.0,
+    593151.0,
+    756491.0,
+    595199.0
+   ],
+   "bridges": [
+    415473451,
+    415473455,
+    415534052
+   ],
+   "build_now": false,
+   "id": "s8-08",
+   "ij": [
+    -11,
+    -1
+   ],
+   "in_pipeline_osm_window": true,
+   "km_major": {
+    "motorway": 4.31,
+    "tertiary": 2.15
+   },
+   "motorway_junctions": [],
+   "n": 8,
+   "origin": [
+    755467.0,
+    594175.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 415534052,
+       "ref": null,
+       "x": 756491.0,
+       "y": 594088.0
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 415473452,
+       "ref": "S8",
+       "x": 756491.0,
+       "y": 594113.4
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431132,
+       "ref": "S8",
+       "x": 756491.0,
+       "y": 594126.3
+      }
+     ],
+     "neighbour": "s8-07",
+     "neighbour_status": "loop"
+    },
+    "W": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 536432128,
+       "ref": null,
+       "x": 754443.0,
+       "y": 593420.7
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431127,
+       "ref": "S8",
+       "x": 754443.0,
+       "y": 593443.8
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 415473462,
+       "ref": "S8",
+       "x": 754443.0,
+       "y": 593456.5
+      }
+     ],
+     "neighbour": "s8-09",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "E",
+    "edge_out": "W",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 251431132,
+     "ref": "S8",
+     "x": 756491.0,
+     "y": 594126.3
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 415473462,
+     "ref": "S8",
+     "x": 754443.0,
+     "y": 593456.5
+    },
+    "from": "s8-07",
+    "length_m": 2154.8,
+    "to": "s8-09",
+    "ways": [
+     251431132,
+     415473455,
+     415473462
+    ]
+   },
+   "through_tags": {
+    "251431132": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "415473455": {
+     "bridge": "yes",
+     "highway": "motorway",
+     "lanes": "2",
+     "layer": "1",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "415473462": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 08 — od Rzędzian ku Jeżewu"
+  },
+  {
+   "bbox": [
+    752395.0,
+    593151.0,
+    754443.0,
+    595199.0
+   ],
+   "bridges": [],
+   "build_now": false,
+   "id": "s8-09",
+   "ij": [
+    -12,
+    -1
+   ],
+   "in_pipeline_osm_window": false,
+   "km_major": {
+    "motorway": 1.92,
+    "motorway_link": 0.19,
+    "tertiary": 0.86
+   },
+   "motorway_junctions": [],
+   "n": 9,
+   "origin": [
+    753419.0,
+    594175.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 536432128,
+       "ref": null,
+       "x": 754443.0,
+       "y": 593420.7
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431127,
+       "ref": "S8",
+       "x": 754443.0,
+       "y": 593443.8
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 415473462,
+       "ref": "S8",
+       "x": 754443.0,
+       "y": 593456.5
+      }
+     ],
+     "neighbour": "s8-08",
+     "neighbour_status": "loop"
+    },
+    "S": {
+     "crossings": [
+      {
+       "highway": "motorway_link",
+       "osm_way": 222577658,
+       "ref": null,
+       "x": 753464.6,
+       "y": 593151.0
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431129,
+       "ref": "S8",
+       "x": 753509.5,
+       "y": 593151.0
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431127,
+       "ref": "S8",
+       "x": 753549.0,
+       "y": 593151.0
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 536432128,
+       "ref": null,
+       "x": 753621.9,
+       "y": 593151.0
+      }
+     ],
+     "neighbour": "s8-10",
+     "neighbour_status": "loop"
+    },
+    "W": {
+     "crossings": [],
+     "neighbour": "dw671-jezewo-01",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "E",
+    "edge_out": "S",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 415473462,
+     "ref": "S8",
+     "x": 754443.0,
+     "y": 593456.5
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 251431129,
+     "ref": "S8",
+     "x": 753509.5,
+     "y": 593151.0
+    },
+    "from": "s8-08",
+    "length_m": 982.2,
+    "to": "s8-10",
+    "ways": [
+     415473462,
+     251431119,
+     251431129
+    ]
+   },
+   "through_tags": {
+    "251431119": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "251431129": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "415473462": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 09 — MOP Radule"
+  },
+  {
+   "bbox": [
+    752395.0,
+    591103.0,
+    754443.0,
+    593151.0
+   ],
+   "bridges": [
+    536432127,
+    536432129,
+    536432131
+   ],
+   "build_now": false,
+   "id": "s8-10",
+   "ij": [
+    -12,
+    -2
+   ],
+   "in_pipeline_osm_window": false,
+   "km_major": {
+    "motorway": 2.39,
+    "motorway_link": 0.18,
+    "tertiary": 1.29
+   },
+   "motorway_junctions": [],
+   "n": 10,
+   "origin": [
+    753419.0,
+    592127.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "N": {
+     "crossings": [
+      {
+       "highway": "motorway_link",
+       "osm_way": 222577658,
+       "ref": null,
+       "x": 753464.6,
+       "y": 593151.0
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431129,
+       "ref": "S8",
+       "x": 753509.5,
+       "y": 593151.0
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431127,
+       "ref": "S8",
+       "x": 753549.0,
+       "y": 593151.0
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 536432128,
+       "ref": null,
+       "x": 753621.9,
+       "y": 593151.0
+      }
+     ],
+     "neighbour": "s8-09",
+     "neighbour_status": "loop"
+    },
+    "W": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 183381852,
+       "ref": null,
+       "x": 752395.0,
+       "y": 592749.7
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 536432121,
+       "ref": "S8",
+       "x": 752395.0,
+       "y": 592773.4
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 536417356,
+       "ref": "S8",
+       "x": 752395.0,
+       "y": 592786.0
+      }
+     ],
+     "neighbour": "s8-11",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "N",
+    "edge_out": "W",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 251431129,
+     "ref": "S8",
+     "x": 753509.5,
+     "y": 593151.0
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 536417356,
+     "ref": "S8",
+     "x": 752395.0,
+     "y": 592786.0
+    },
+    "from": "s8-09",
+    "length_m": 1172.8,
+    "to": "s8-11",
+    "ways": [
+     251431129,
+     536432131,
+     536417356
+    ]
+   },
+   "through_tags": {
+    "251431129": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536417356": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536432131": {
+     "bridge": "yes",
+     "highway": "motorway",
+     "lanes": "3",
+     "layer": "1",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 10 — S8 ku węzłowi Jeżewo"
+  },
+  {
+   "bbox": [
+    750347.0,
+    591103.0,
+    752395.0,
+    593151.0
+   ],
+   "bridges": [
+    183381860,
+    183381861
+   ],
+   "build_now": false,
+   "id": "s8-11",
+   "ij": [
+    -13,
+    -2
+   ],
+   "in_pipeline_osm_window": false,
+   "km_major": {
+    "motorway": 4.31,
+    "motorway_link": 3.27,
+    "secondary": 0.38,
+    "tertiary": 2.88
+   },
+   "motorway_junctions": [
+    {
+     "name": "Jeżewo",
+     "osm_node": 1937517091,
+     "ref": null,
+     "x": 750749.4,
+     "y": 592248.5
+    }
+   ],
+   "n": 11,
+   "origin": [
+    751371.0,
+    592127.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "crossings": [
+      {
+       "highway": "tertiary",
+       "osm_way": 183381852,
+       "ref": null,
+       "x": 752395.0,
+       "y": 592749.7
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 536432121,
+       "ref": "S8",
+       "x": 752395.0,
+       "y": 592773.4
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 536417356,
+       "ref": "S8",
+       "x": 752395.0,
+       "y": 592786.0
+      }
+     ],
+     "neighbour": "s8-10",
+     "neighbour_status": "loop"
+    },
+    "N": {
+     "crossings": [
+      {
+       "highway": "secondary",
+       "osm_way": 97647194,
+       "ref": "671",
+       "x": 750431.8,
+       "y": 593151.0
+      }
+     ],
+     "neighbour": "dw671-jezewo-01",
+     "neighbour_status": "loop"
+    },
+    "W": {
+     "crossings": [
+      {
+       "highway": "motorway_link",
+       "osm_way": 536432108,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592090.9
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 536432130,
+       "ref": "S8",
+       "x": 750347.0,
+       "y": 592105.2
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431130,
+       "ref": "S8",
+       "x": 750347.0,
+       "y": 592117.5
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 536432099,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592132.5
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 232473187,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592140.4
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 232473187,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592313.3
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 183381878,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592323.5
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 222577649,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592332.4
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 183381874,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592337.8
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 183373462,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592375.9
+      },
+      {
+       "highway": "secondary",
+       "osm_way": 97647194,
+       "ref": "671",
+       "x": 750347.0,
+       "y": 592778.8
+      }
+     ],
+     "neighbour": "s8-12",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "E",
+    "edge_out": "W",
+    "entry": {
+     "highway": "motorway",
+     "osm_way": 536417356,
+     "ref": "S8",
+     "x": 752395.0,
+     "y": 592786.0
+    },
+    "exit": {
+     "highway": "motorway",
+     "osm_way": 251431130,
+     "ref": "S8",
+     "x": 750347.0,
+     "y": 592117.5
+    },
+    "from": "s8-10",
+    "length_m": 2154.4,
+    "to": "s8-12",
+    "ways": [
+     536417356,
+     251431124,
+     1467119161,
+     251431130
+    ]
+   },
+   "through_tags": {
+    "1467119161": {
+     "highway": "motorway",
+     "lanes": "3",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "251431124": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "251431130": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    },
+    "536417356": {
+     "highway": "motorway",
+     "lanes": "2",
+     "maxspeed": "120",
+     "oneway": "yes",
+     "ref": "S8"
+    }
+   },
+   "title": "S8 pętla 11 — węzeł Jeżewo, strona wschodnia (S8 + DW671)"
+  },
+  {
+   "bbox": [
+    748299.0,
+    591103.0,
+    750347.0,
+    593151.0
+   ],
+   "bridges": [
+    183373472
+   ],
+   "build_now": false,
+   "id": "s8-12",
+   "ij": [
+    -14,
+    -2
+   ],
+   "in_pipeline_osm_window": false,
+   "km_major": {
+    "motorway": 4.31,
+    "motorway_link": 1.42,
+    "primary": 2.55,
+    "secondary": 1.81,
+    "tertiary": 2.09
+   },
+   "motorway_junctions": [
+    {
+     "name": "Jeżewo",
+     "osm_node": 1937517090,
+     "ref": null,
+     "x": 749811.8,
+     "y": 591930.9
+    }
+   ],
+   "n": 12,
+   "origin": [
+    749323.0,
+    592127.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "crossings": [
+      {
+       "highway": "motorway_link",
+       "osm_way": 536432108,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592090.9
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 536432130,
+       "ref": "S8",
+       "x": 750347.0,
+       "y": 592105.2
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 251431130,
+       "ref": "S8",
+       "x": 750347.0,
+       "y": 592117.5
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 536432099,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592132.5
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 232473187,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592140.4
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 232473187,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592313.3
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 183381878,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592323.5
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 222577649,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592332.4
+      },
+      {
+       "highway": "motorway_link",
+       "osm_way": 183381874,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592337.8
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 183373462,
+       "ref": null,
+       "x": 750347.0,
+       "y": 592375.9
+      },
+      {
+       "highway": "secondary",
+       "osm_way": 97647194,
+       "ref": "671",
+       "x": 750347.0,
+       "y": 592778.8
+      }
+     ],
+     "neighbour": "s8-11",
+     "neighbour_status": "loop"
+    },
+    "S": {
+     "crossings": [
+      {
+       "highway": "secondary",
+       "osm_way": 421645908,
+       "ref": "671",
+       "x": 749956.3,
+       "y": 591103.0
+      }
+     ],
+     "neighbour": null,
+     "neighbour_status": "none (open edge)"
+    },
+    "W": {
+     "crossings": [
+      {
+       "highway": "motorway",
+       "osm_way": 536436347,
+       "ref": "S8",
+       "x": 748299.0,
+       "y": 591439.7
+      },
+      {
+       "highway": "motorway",
+       "osm_way": 957612911,
+       "ref": "S8",
+       "x": 748299.0,
+       "y": 591452.1
+      },
+      {
+       "highway": "tertiary",
+       "osm_way": 543211023,
+       "ref": null,
+       "x": 748299.0,
+       "y": 591472.0
+      },
+      {
+       "highway": "primary",
+       "osm_way": 183373471,
+       "ref": "64",
+       "x": 748299.0,
+       "y": 592676.4
+      }
+     ],
+     "neighbour": null,
+     "neighbour_status": "none (open edge)"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "E",
+    "edge_out": "E",
+    "entry": {
+     "highway": "motorway_link",
+     "osm_way": 183381874,
+     "ref": null,
+     "x": 750347.0,
+     "y": 592337.8
+    },
+    "exit": {
+     "highway": "secondary",
+     "osm_way": 97647194,
+     "ref": "671",
+     "x": 750347.0,
+     "y": 592778.8
+    },
+    "from": "s8-11",
+    "length_m": 645.0,
+    "to": "s8-11",
+    "ways": [
+     183381874,
+     623717480,
+     385810829,
+     183373470,
+     634210361,
+     224155053,
+     388476897,
+     623717486,
+     97647194
+    ]
+   },
+   "through_tags": {
+    "183373470": {
+     "highway": "primary",
+     "junction": "roundabout",
+     "lanes": "1",
+     "ref": "64;671"
+    },
+    "183381874": {
+     "highway": "motorway_link",
+     "lanes": "1",
+     "oneway": "yes"
+    },
+    "224155053": {
+     "highway": "secondary",
+     "lanes": "1",
+     "oneway": "yes",
+     "ref": "671"
+    },
+    "385810829": {
+     "highway": "motorway_link",
+     "lanes": "1",
+     "oneway": "yes"
+    },
+    "388476897": {
+     "highway": "secondary",
+     "lanes": "2",
+     "ref": "671"
+    },
+    "623717480": {
+     "highway": "motorway_link",
+     "lanes": "2",
+     "oneway": "yes"
+    },
+    "623717486": {
+     "highway": "secondary",
+     "lanes": "3",
+     "ref": "671"
+    },
+    "634210361": {
+     "highway": "secondary",
+     "lanes": "1",
+     "oneway": "yes",
+     "ref": "671"
+    },
+    "97647194": {
+     "highway": "secondary",
+     "lanes": "2",
+     "ref": "671"
+    }
+   },
+   "title": "S8 pętla 12 — węzeł Jeżewo (S8 / DK64 / DW671), Jeżewo Stare — zawrotka pętli na DW671"
+  },
+  {
+   "bbox": [
+    750347.0,
+    593151.0,
+    752395.0,
+    595199.0
+   ],
+   "bridges": [],
+   "build_now": false,
+   "id": "dw671-jezewo-01",
+   "ij": [
+    -13,
+    -1
+   ],
+   "in_pipeline_osm_window": false,
+   "km_major": {
+    "secondary": 2.12
+   },
+   "motorway_junctions": [],
+   "n": 13,
+   "origin": [
+    751371.0,
+    594175.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "E": {
+     "crossings": [],
+     "neighbour": "s8-09",
+     "neighbour_status": "loop"
+    },
+    "N": {
+     "crossings": [
+      {
+       "highway": "secondary",
+       "osm_way": 97647194,
+       "ref": "671",
+       "x": 750990.1,
+       "y": 595199.0
+      }
+     ],
+     "neighbour": "dw671-jezewo-02",
+     "neighbour_status": "loop"
+    },
+    "S": {
+     "crossings": [
+      {
+       "highway": "secondary",
+       "osm_way": 97647194,
+       "ref": "671",
+       "x": 750431.8,
+       "y": 593151.0
+      }
+     ],
+     "neighbour": "s8-11",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "S",
+    "edge_out": "N",
+    "entry": {
+     "highway": "secondary",
+     "osm_way": 97647194,
+     "ref": "671",
+     "x": 750431.8,
+     "y": 593151.0
+    },
+    "exit": {
+     "highway": "secondary",
+     "osm_way": 97647194,
+     "ref": "671",
+     "x": 750990.1,
+     "y": 595199.0
+    },
+    "from": "s8-11",
+    "length_m": 2124.4,
+    "to": "dw671-jezewo-02",
+    "ways": [
+     97647194
+    ]
+   },
+   "through_tags": {
+    "97647194": {
+     "highway": "secondary",
+     "lanes": "2",
+     "ref": "671"
+    }
+   },
+   "title": "DW671 Jeżewo–Tykocin 01 — od węzła Jeżewo na północ"
+  },
+  {
+   "bbox": [
+    750347.0,
+    595199.0,
+    752395.0,
+    597247.0
+   ],
+   "bridges": [],
+   "build_now": false,
+   "id": "dw671-jezewo-02",
+   "ij": [
+    -13,
+    0
+   ],
+   "in_pipeline_osm_window": false,
+   "km_major": {
+    "secondary": 2.08
+   },
+   "motorway_junctions": [],
+   "n": 14,
+   "origin": [
+    751371.0,
+    596223.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "N": {
+     "crossings": [
+      {
+       "highway": "secondary",
+       "osm_way": 389669721,
+       "ref": "671",
+       "x": 750985.4,
+       "y": 597247.0
+      }
+     ],
+     "neighbour": "dw671-jezewo-03",
+     "neighbour_status": "loop"
+    },
+    "S": {
+     "crossings": [
+      {
+       "highway": "secondary",
+       "osm_way": 97647194,
+       "ref": "671",
+       "x": 750990.1,
+       "y": 595199.0
+      }
+     ],
+     "neighbour": "dw671-jezewo-01",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "S",
+    "edge_out": "N",
+    "entry": {
+     "highway": "secondary",
+     "osm_way": 97647194,
+     "ref": "671",
+     "x": 750990.1,
+     "y": 595199.0
+    },
+    "exit": {
+     "highway": "secondary",
+     "osm_way": 389669721,
+     "ref": "671",
+     "x": 750985.4,
+     "y": 597247.0
+    },
+    "from": "dw671-jezewo-01",
+    "length_m": 2080.6,
+    "to": "dw671-jezewo-03",
+    "ways": [
+     97647194,
+     1352199068,
+     1352199067,
+     1352199066,
+     1352199063,
+     1352199065,
+     1352199064,
+     389669721
+    ]
+   },
+   "through_tags": {
+    "1352199063": {
+     "highway": "secondary",
+     "lanes": "2",
+     "maxspeed": "90",
+     "name": "Sokołowska",
+     "ref": "671"
+    },
+    "1352199064": {
+     "highway": "secondary",
+     "lanes": "2",
+     "name": "Sokołowska",
+     "ref": "671"
+    },
+    "1352199065": {
+     "highway": "secondary",
+     "lanes": "2",
+     "name": "Sokołowska",
+     "ref": "671"
+    },
+    "1352199066": {
+     "highway": "secondary",
+     "lanes": "2",
+     "maxspeed": "90",
+     "ref": "671"
+    },
+    "1352199067": {
+     "highway": "secondary",
+     "lanes": "2",
+     "maxspeed": "70",
+     "ref": "671"
+    },
+    "1352199068": {
+     "highway": "secondary",
+     "lanes": "2",
+     "maxspeed": "90",
+     "ref": "671"
+    },
+    "389669721": {
+     "highway": "secondary",
+     "lanes": "2",
+     "maxspeed": "90",
+     "name": "Sokołowska",
+     "ref": "671"
+    },
+    "97647194": {
+     "highway": "secondary",
+     "lanes": "2",
+     "ref": "671"
+    }
+   },
+   "title": "DW671 Jeżewo–Tykocin 02 — odcinek środkowy"
+  },
+  {
+   "bbox": [
+    750347.0,
+    597247.0,
+    752395.0,
+    599295.0
+   ],
+   "bridges": [],
+   "build_now": false,
+   "id": "dw671-jezewo-03",
+   "ij": [
+    -13,
+    1
+   ],
+   "in_pipeline_osm_window": false,
+   "km_major": {
+    "secondary": 2.08
+   },
+   "motorway_junctions": [],
+   "n": 15,
+   "origin": [
+    751371.0,
+    598271.0
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "seams": {
+    "N": {
+     "crossings": [
+      {
+       "highway": "secondary",
+       "osm_way": 1352199060,
+       "ref": "671",
+       "x": 751346.7,
+       "y": 599295.0
+      }
+     ],
+     "neighbour": "tykocin",
+     "neighbour_status": "ring-0231 (PR #115)"
+    },
+    "S": {
+     "crossings": [
+      {
+       "highway": "secondary",
+       "osm_way": 389669721,
+       "ref": "671",
+       "x": 750985.4,
+       "y": 597247.0
+      }
+     ],
+     "neighbour": "dw671-jezewo-02",
+     "neighbour_status": "loop"
+    }
+   },
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [],
+   "through": {
+    "edge_in": "S",
+    "edge_out": "N",
+    "entry": {
+     "highway": "secondary",
+     "osm_way": 389669721,
+     "ref": "671",
+     "x": 750985.4,
+     "y": 597247.0
+    },
+    "exit": {
+     "highway": "secondary",
+     "osm_way": 1352199060,
+     "ref": "671",
+     "x": 751346.7,
+     "y": 599295.0
+    },
+    "from": "dw671-jezewo-02",
+    "length_m": 2084.1,
+    "to": "tykocin",
+    "ways": [
+     389669721,
+     1352199062,
+     1352199061,
+     100133876,
+     1352199060
+    ]
+   },
+   "through_tags": {
+    "100133876": {
+     "highway": "secondary",
+     "lanes": "2",
+     "maxspeed": "90",
+     "name": "Sokołowska",
+     "ref": "671"
+    },
+    "1352199060": {
+     "highway": "secondary",
+     "lanes": "2",
+     "maxspeed": "50",
+     "name": "Sokołowska",
+     "ref": "671"
+    },
+    "1352199061": {
+     "highway": "secondary",
+     "lanes": "2",
+     "maxspeed": "90",
+     "name": "Sokołowska",
+     "ref": "671"
+    },
+    "1352199062": {
+     "highway": "secondary",
+     "lanes": "2",
+     "maxspeed": "70",
+     "name": "Sokołowska",
+     "ref": "671"
+    },
+    "389669721": {
+     "highway": "secondary",
+     "lanes": "2",
+     "maxspeed": "90",
+     "name": "Sokołowska",
+     "ref": "671"
+    }
+   },
+   "title": "DW671 Jeżewo–Tykocin 03 — do szwu z kaflem tykocin (pierścień ADR 0231)"
+  }
+ ]
+}

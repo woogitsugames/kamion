@@ -61,3 +61,33 @@ overrides:
       Bialystok streets); type, height and spacing in Knyszyn UNVERIFIED (K1) - the generator's WORKING_VALUE.
     confidence: medium
     verify: owner - a night photo of a Knyszyn street lamp (pole type, light colour)
+  # ADR 0272: the class G rule (ground shoulder, asphalt = width + 2 x 0.08 m) would narrow Szosa Ełcka here from 8.5 to
+  # 6.66 m. GUGiK orthophoto WMS, 5 sections of way 303739903 (2026-11-15): asphalt about 9 m at the one section clear of
+  # lay-bys and junction mouths (s 175), 11-14 m at the others, no edge lines - the paved-shoulder profile is the closer
+  # one. Kept as it was until the cross-section is measured properly (width 6.5 m + 2 x 1.0 m, WORKING_VALUE).
+  - id: szosa-elcka-keep-paved-shoulder
+    target: {osm_way: [303739903]}
+    source: "GUGiK orthophoto WMS, measured 2026-11-15 (ADR 0272)"
+    reason: >-
+      Keeps the cross-section this tile had before ADR 0272: paved shoulder 1.0 m + ground part 0.75 m. The orthophoto
+      shows asphalt wider than the carriageway width (about 9 m), not a ground shoulder at the lane edge.
+    confidence: low
+    verify: orthophoto cross-sections of Szosa Ełcka between the lay-bys (width, edge strip)
+    set: {shoulder: {kind: paved, paved_m: 1.0, ground_m: 0.75}}
+  # world2-s23, OD-005 (leader s23): DK8 way 261104557 crosses the seam bialystok-kleeberga | bialystok-knyszynska; the
+  # "fast" rule of assign_sides (per chain) gave a flat kerb on one side of the seam and the rural shoulder + ditch on
+  # the other (asphalt edge 3.75 | 4.75 m from the axis, qa/seams.py FAIL). GUGiK orthophoto WMS StandardResolution,
+  # tools/worldgen/qa/ortho_xsec.py, 4 stations every 40 m in bialystok-kleeberga (2026-11-16; strips
+  # artifacts/world2-s23/od005/, outside git): read by eye - guard rail right at the carriageway edge and a hard
+  # (paved) strip behind it on both sides, no ground shoulder, no ditch. The automatic asphalt width is not usable
+  # here (12-25 m: both carriageways and the slip road merge in the profile). The same entry is in both tiles.
+  - id: dk8-seam-kerb-od005
+    target: {osm_way: [261104557]}
+    source: "GUGiK orthophoto WMS StandardResolution, read 2026-11-16 (sheet date / native resolution UNVERIFIED)"
+    reason: >-
+      One cross-section family on both sides of the tile seam: hard edge (kerb profile) instead of the rural ground
+      shoulder + ditch. Stations measured only on the bialystok-kleeberga side (the edges of this way in
+      bialystok-knyszynska are too short for a station 25 m from their ends).
+    confidence: low
+    verify: owner photo or Mapillary frame of the DK8 carriageway edge at the DK65 interchange (barrier, strip behind it)
+    set: {shoulder: {kind: kerb}}

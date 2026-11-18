@@ -326,8 +326,8 @@ def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
             mg[k] -= 1.0
             poly = rect(mg)
         if poly.intersection(obs).area >= 0.3:              # still on something: cut it off, keep the house's part
-            parts = [q for q in getattr(poly.difference(obs.buffer(0.01)), "geoms", [poly.difference(obs.buffer(0.01))])
-                     if q.geom_type == "Polygon" and q.area > 1.0]
+            cutp = poly.difference(obs.buffer(0.01))     # ADR 0281 K3a: once (the getattr default computed it again)
+            parts = [q for q in getattr(cutp, "geoms", [cutp]) if q.geom_type == "Polygon" and q.area > 1.0]
             parts = [q for q in parts if q.intersects(foot)]
             if not parts:
                 continue
@@ -506,7 +506,9 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
                 ivs = [x for i0, i1 in ivs for x in ((i0, min(i1, s0)), (max(i0, s1), i1)) if x[1] - x[0] > 0.3]
         for i0, i1 in ivs:
             line = LineString([a + t * i0, a + t * i1])
-            pieces = [line] if cut is None else [q for q in getattr(line.difference(cut), "geoms", [line.difference(cut)])
+            # ADR 0281 K3a: the difference once (the getattr default computed it a second time on the whole-tile cut)
+            dl = None if cut is None else line.difference(cut)
+            pieces = [line] if cut is None else [q for q in getattr(dl, "geoms", [dl])
                                                  if q.geom_type == "LineString" and q.length > 0.6]
             for q in pieces:
                 p0, p1 = (np.asarray(x) for x in q.coords[:2])
@@ -681,7 +683,7 @@ def gate_access(m, n, w, net, carriage, block=None):
         _, c, s, side, i = best
         d = c.side[side]
         kind, mat = int(d["kind"][i]), int(d["mat"][i])
-        acc.update(chain=c.id, side=side, s=float(s), kind=kind, walk=NW.WALK_MATS[mat], ok=True,
+        acc.update(chain=c.id, side=side, s=float(s), kind=kind, walk=NW.walk_mat(mat), ok=True,
                    kerbed=kind == NW.URBAN and mat != NW.MAT_FLUSH_ROAD)
         if kind in (NW.URBAN, NW.RURAL) and mat != NW.MAT_FLUSH_ROAD:
             drop = {"chain": c.id, "side": side, "s": float(s), "half": w / 2 + 0.4}

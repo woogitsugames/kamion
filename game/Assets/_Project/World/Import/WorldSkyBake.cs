@@ -261,7 +261,10 @@ namespace Game.World.Import
                 sunDirs[0].x, sunDirs[0].y, sunDirs[0].z, sunDirs[1].x, sunDirs[1].y, sunDirs[1].z, kindList, visRoad));
 
             // ---- attach to the scenes
-            foreach (var (scene, tex, texel) in new[] { (highScene, tex1, TexelM), (lowScene, tex2, TexelM * 2f) })
+            // ADR 0235: the streamed tile scenes (World_<id>[_High]_Tile) get the same maps as their full scenes.
+            string highTile = $"{dir}/{RegionScenes.TileSceneNameFor(region, "High")}.unity";
+            string lowTile = $"{dir}/{RegionScenes.TileSceneNameFor(region, "Low")}.unity";
+            foreach (var (scene, tex, texel) in new[] { (highScene, tex1, TexelM), (lowScene, tex2, TexelM * 2f), (highTile, tex1, TexelM), (lowTile, tex2, TexelM * 2f) })
             {
                 if (!File.Exists(scene)) continue;
                 var sc = EditorSceneManager.OpenScene(scene, OpenSceneMode.Single);

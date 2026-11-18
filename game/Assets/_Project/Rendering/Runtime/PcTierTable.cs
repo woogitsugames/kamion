@@ -180,6 +180,14 @@ namespace Game.Rendering
         /// The PC tiers (ADR 0269 table). All numbers WORKING_VALUE / ESTIMATED until measured on the D74 reference classes
         /// (GTX 660-class Low 1080p 30 fps, GTX 1660-class High 1080p 60 fps). Vegetation and vehicle-look values not listed
         /// here come from the mobile tier of the same name (QualityProfile) unchanged.
+        /// pc-visual-s23 (2026-11-17, visual QA WorldC_High + knyszyn-w): High/Ultra SSAO off - the shared SSAO renderer
+        /// (half resolution, 4 samples, Kawase blur, normals from depth) drew a coarse "fabric" pattern and darkened the cab
+        /// interior (owner D84 "cab ugly on PC"; mobile Ultra shows the same); full resolution + bilateral blur still
+        /// darkened flat pillars, while the exterior gain was RMSE 0.006-0.016. High: soft shadows High (variant kept by mobile
+        /// Ultra), tree cards 1.0, capture every frame. Ultra: render scale 1.5 (supersampling, opt-in tier), tree cards 1.5.
+        /// full-build-s23 (2026-11-17, review cabin-pc P1-1): first of 4 cascades 3 m on High and Ultra (was 10 m) - the cab
+        /// interior is lit by the hard (no soft variants) sun shadow of the glazing frame, whose texel steps read at 0.5-1 m
+        /// from the driver's eye; cascade 1 still ends at 30 m. WORKING_VALUE, visual QA DrivingLab cab-dash, cost not measured.
         /// </summary>
         public static PcTierSettings[] Defaults() => new[]
         {
@@ -216,25 +224,25 @@ namespace Game.Rendering
                 tier = PcTier.High, urpAsset = "PcTiers/URP_PC_High",
                 renderScale = 1f, msaa = 4, postAntialiasing = PcPostAntialiasing.None, smaaQuality = 0, hdr = true, postProcessing = true,
                 shadowDistance = 150f, shadowResolution = 4096, shadowCascades = 4, cascade2Split = 0.25f,
-                cascade3SplitX = 0.1f, cascade3SplitY = 0.3f, cascade4SplitX = 0.067f, cascade4SplitY = 0.2f, cascade4SplitZ = 0.467f,
-                softShadows = true, softShadowQuality = 1, shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
+                cascade3SplitX = 0.1f, cascade3SplitY = 0.3f, cascade4SplitX = 0.02f, cascade4SplitY = 0.2f, cascade4SplitZ = 0.467f,
+                softShadows = true, softShadowQuality = 3, shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
                 lodBias = 1.5f, maximumLodLevel = 0, textureMipmapLimit = 0, anisotropicFiltering = 2, worldTextureAniso = 16,
-                cameraFarClip = 3000f, additionalLightsPerObject = 8, ssao = true,
-                treeCardLodScale = 0.75f, treeThinStartM = 150f, treeCullM = 1000f, treeShadowLodMask = 3, forestHlodM = 150f, forestHlodCullM = 0f,
+                cameraFarClip = 3000f, additionalLightsPerObject = 8, ssao = false,
+                treeCardLodScale = 1.0f, treeThinStartM = 150f, treeCullM = 1000f, treeShadowLodMask = 3, forestHlodM = 150f, forestHlodCullM = 0f,
                 vehicleCullM = 400f, simpleFoliage = true, forestFast = false, glassFast = false,
-                envCaptureSize = 256, envCaptureInterval = 2, streetLights = 6, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f,
+                envCaptureSize = 256, envCaptureInterval = 1, streetLights = 6, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f,
                 targetFps = 60, status = "WORKING_VALUE (D74 recommended: GTX 1660 / i5-9600 / 12 GB, 1080p 60 fps) - UNMEASURED",
             },
             new PcTierSettings
             {
                 tier = PcTier.Ultra, urpAsset = "PcTiers/URP_PC_Ultra",
-                renderScale = 1f, msaa = 8, postAntialiasing = PcPostAntialiasing.None, smaaQuality = 0, hdr = true, postProcessing = true,
+                renderScale = 1.5f, msaa = 8, postAntialiasing = PcPostAntialiasing.None, smaaQuality = 0, hdr = true, postProcessing = true,
                 shadowDistance = 250f, shadowResolution = 8192, shadowCascades = 4, cascade2Split = 0.25f,
-                cascade3SplitX = 0.1f, cascade3SplitY = 0.3f, cascade4SplitX = 0.04f, cascade4SplitY = 0.12f, cascade4SplitZ = 0.35f,
+                cascade3SplitX = 0.1f, cascade3SplitY = 0.3f, cascade4SplitX = 0.012f, cascade4SplitY = 0.12f, cascade4SplitZ = 0.35f,
                 softShadows = true, softShadowQuality = 3, shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
                 lodBias = 2.0f, maximumLodLevel = 0, textureMipmapLimit = 0, anisotropicFiltering = 2, worldTextureAniso = 16,
-                cameraFarClip = 4000f, additionalLightsPerObject = 8, ssao = true,
-                treeCardLodScale = 1.0f, treeThinStartM = 200f, treeCullM = 1500f, treeShadowLodMask = 3, forestHlodM = 200f, forestHlodCullM = 0f,
+                cameraFarClip = 4000f, additionalLightsPerObject = 8, ssao = false,
+                treeCardLodScale = 1.5f, treeThinStartM = 200f, treeCullM = 1500f, treeShadowLodMask = 3, forestHlodM = 200f, forestHlodCullM = 0f,
                 vehicleCullM = 600f, simpleFoliage = true, forestFast = false, glassFast = false,
                 envCaptureSize = 256, envCaptureInterval = 1, streetLights = 8, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f,
                 targetFps = 60, status = "WORKING_VALUE (above D74 recommended; opt-in, never auto-selected) - UNMEASURED",

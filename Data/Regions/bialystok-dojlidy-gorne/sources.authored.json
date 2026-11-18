@@ -1,0 +1,8 @@
+{
+ "provenance": "authored_override (ADR 0278, mechanism of ADR 0209/0212): source pins of region bialystok-dojlidy-gorne, read by ingest.py and build_region.py",
+ "pins": {
+  "nmt_year": "2025"
+ },
+ "reason": "The Kuronia seam is shared with bialystok-dojlidy, built from NMT 2025 (gugik-nmt-2025-bialystok-dojlidy). GUGiK sheet index (SkorowidzNMT, queried 2026-11-16): the 2025 series fully covers this tile (sheets N-34-107-C-b-4-1, N-34-107-C-b-4-2, N-34-107-C-b-4-3, N-34-107-C-b-4-4); without the pin ingest.py would take the flight day 2025-04-18. See docs/reports/map/map_plan_0278_gugik.json.",
+ "verify": "none (move together with the pin of the neighbour named in the reason)"
+}

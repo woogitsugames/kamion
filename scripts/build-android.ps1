@@ -44,6 +44,9 @@ $apkArg = $Apk  # PowerShell names are case-insensitive: $apk below would overwr
 $version = (Select-String -Path "$ProjectPath/ProjectSettings/ProjectSettings.asset" -Pattern '^\s*bundleVersion:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
 $sha = Get-GitShortSha
 if (& git -C $RepoRoot status --porcelain --untracked-files=no) { $sha = "$sha-dirty" }
+# The player's build_info stamp uses this pre-build state (BuildInfoWriter): files Unity itself rewrites during the
+# build must not turn a clean tree into "-dirty" (build-fix-s24).
+$env:KAMION_BUILD_GIT_DIRTY = if ($sha.EndsWith('-dirty')) { '1' } else { '0' }
 # "-Regions a,b" binds as an array in PowerShell. Spaces and semicolons are separators too (ADR 0229 §2): normalise them
 # to commas here, because Start-Process passes an element with a space as two Unity arguments (ADR 0267, review #104 FIX 4).
 $regionSpec = ((((@($Regions) | Where-Object { $_ }) -join ',') -replace '[\s;]+', ',') -replace ',{2,}', ',').Trim(',')

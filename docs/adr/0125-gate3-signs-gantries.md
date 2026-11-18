@@ -1,6 +1,6 @@
 # ADR 0125 — gate 3 recognisability (G3-B): portal, signs, noise screens, HV line
 
-Status: implemented on branch `gate3-signs` (base main `ce3f1a77`, 2026-11-11); not merged. Gate 3 itself is NOT
+Status: Accepted (merged to main 2026-11-12, `efe75dc9d`; status updated 2026-11-16); originally: implemented on branch `gate3-signs` (base main `ce3f1a77`, 2026-11-11); not merged. Gate 3 itself is NOT
 re-judged here (that is the visual-critic's job).
 Source: `docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md` (gate FAIL, G3-B 1/10 recognisable), owner decision
 D51 (recognisability of the route before material polish).

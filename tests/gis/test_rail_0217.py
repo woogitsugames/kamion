@@ -13,9 +13,10 @@ from shapely.geometry import LineString
 from conftest import REPO
 
 REGIONS_DIR = REPO / "Data" / "Regions"
-ENABLED = ["dw671-tykocin-01"]          # rail-fix-s21: line 38 + the DW671 level crossing
+ENABLED = ["dk65-01", "dk65-02", "dk65-03", "dk65-04", "dw671-tykocin-01"]   # ADR 0217 + 0223: line 38 tiles
 FORBIDDEN = ("knyszyn", "knyszyn-s", "knyszyn-w", "bialystok-knyszynska", "dk65-06", "dk65-07", "dk65-08",
              "dk65-09", "dk65-10", "dk65-11")
+RAIL_ON_0223 = ("dk65-01", "dk65-02", "dk65-03", "dk65-04", "dw671-tykocin-01")
 
 
 # ------------------------------------------------------------------------------------------------ opt-in / regression
@@ -33,7 +34,7 @@ def test_stage_is_opt_in_and_off_everywhere():
         if rid in ENABLED:
             assert RL.enabled(ry) and (d / "generated" / "rail_sources.json").exists()
             man = json.loads((d / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
-            assert set(RL.RAIL_MATERIALS) <= set(man["materials"]) and man["rail"]["crossings"] >= 1
+            assert set(RL.RAIL_MATERIALS) <= set(man["materials"]) and man["rail"]["crossings"] >= (0 if rid == "dk65-03" else 1)
             assert all(k in man["nodes"] for k in RL.LAYERS)
             continue
         assert "rail" not in ry and not RL.enabled(ry)
@@ -489,8 +490,9 @@ def test_crossing_devices_are_instances():
     lod0, lod1, col = RP.prototypes()["signal_rail_saltire_g3"]
     mats = {q["mat"] for q in lod0.out()}
     assert {"paint_white_reflective", "paint_ral3020"} <= mats and mats <= set(M) and col is not None
-    V = np.concatenate([q["V"] for q in lod0.out() if q["mat"] == "paint_white_reflective"])
-    assert V[:, 2].min() > 1.50 and np.ptp(V[:, 0]) > 1.0 and np.ptp(V[:, 0]) > np.ptp(V[:, 2])   # wide cross, clear of 1.5 m
+    # rail-dk65-s22: white arms with red bands to the tips (pattern G-3, Dz.U. 2019 poz. 2310) - the face is both paints
+    V = np.concatenate([q["V"] for q in lod0.out() if q["mat"] in ("paint_white_reflective", "paint_ral3020")])
+    assert V[:, 2].min() >= 1.50 - 1e-9 and np.ptp(V[:, 0]) > 1.0 and np.ptp(V[:, 0]) > np.ptp(V[:, 2])   # wide cross, clear of 1.5 m
     g4 = RP.saltire("G-4")[0]
     g3 = RP.saltire("G-3")[0]
     assert sum(len(q["T"]) for q in g4.out()) > sum(len(q["T"]) for q in g3.out())

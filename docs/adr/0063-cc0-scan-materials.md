@@ -1,6 +1,6 @@
 # ADR 0063 — CC0 surface scans as the base of the world materials (D40)
 
-Status: Proposed (world-builder, 2026-11-10), for the lead to integrate. Changes ADR 0010 (no external textures) per owner
+Status: Accepted (merged to main 2026-11-10, `6382fc104`; status updated 2026-11-16); originally: Proposed (world-builder, 2026-11-10), for the lead to integrate. Changes ADR 0010 (no external textures) per owner
 decision D40; extends ADR 0022 (PBR sets contract) and keeps ADR 0025 (APK masks) and ADR 0049 / D37 (paint calibration).
 Evidence: `artifacts/cc0-r8/` (worktree of this task; STATUS.md, before/after control frames, montages, CSV).
 

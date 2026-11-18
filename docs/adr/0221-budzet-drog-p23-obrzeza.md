@@ -1,6 +1,6 @@
 # 0221 — Budżet trójkątów dróg: P-23 i obrzeża placów bez wierzchołków, które nie niosą kształtu
 
-Status: PROPOSED (gałąź `budget-fix-s21`, baza `main` `64ff11ee4`). Data: 2026-11-15. Dotyczy: ADR 0188 (DDR), 0033 (ściany terenu),
+Status: przyjęty (scalony do main 2026-11-15, `dedefc104`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED (gałąź `budget-fix-s21`, baza `main` `64ff11ee4`). Data: 2026-11-15. Dotyczy: ADR 0188 (DDR), 0033 (ściany terenu),
 docs/06 §6 (hipoteza High ≤ 1,5–2 mln trójkątów w kadrze).
 
 ## Kontekst

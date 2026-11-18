@@ -1,0 +1,38 @@
+# kleeberga: pełny build main (k3bbase) vs K3b, --nmt flat --skip-far-field; 219 plików, różne:
+gen/roads_qa.json
+gen/streetscape_qa.json
+gen/world_manifest.json
+world/chunk_3_4.glb
+world/chunk_3_4.low.glb
+world/chunk_3_5.glb
+world/chunk_3_5.low.glb
+world/chunk_3_7.glb
+world/chunk_3_7.low.glb
+world/chunk_4_5.glb
+world/chunk_4_5.low.glb
+world/chunk_5_0.glb
+world/chunk_5_6.glb
+world/chunk_5_6.low.glb
+world/chunk_6_5.glb
+world/chunk_6_5.low.glb
+world/chunk_6_6.glb
+world/chunk_6_6.low.glb
+world/terrain_conformed.npy
+
+# compare_world.py world/
+DIFF chunk_3_4.glb 12959208 -> 12959208 B
+DIFF chunk_3_4.low.glb 8032772 -> 8032772 B
+DIFF chunk_3_5.glb 16685564 -> 16686096 B
+DIFF chunk_3_5.low.glb 8253840 -> 8254292 B
+DIFF chunk_3_7.glb 20324740 -> 20324776 B
+DIFF chunk_3_7.low.glb 9180184 -> 9180220 B
+DIFF chunk_4_5.glb 18709216 -> 18709372 B
+DIFF chunk_4_5.low.glb 8654112 -> 8654244 B
+DIFF chunk_5_0.glb 12183416 -> 12183416 B
+DIFF chunk_5_6.glb 20129668 -> 20129668 B
+DIFF chunk_5_6.low.glb 9257048 -> 9257048 B
+DIFF chunk_6_5.glb 12696836 -> 12697384 B
+DIFF chunk_6_5.low.glb 6601936 -> 6602396 B
+DIFF chunk_6_6.glb 16738928 -> 16739080 B
+DIFF chunk_6_6.low.glb 8204824 -> 8204952 B
+DIFF terrain_conformed.npy 16793732 -> 16793732 B

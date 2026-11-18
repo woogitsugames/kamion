@@ -274,7 +274,27 @@ namespace Game.Editor.Setup
             PlayerSettings.bakeCollisionMeshes = false;
             // GPU / CPU frame times in the diagnostics CSV (FrameTimingManager) for on-device profiling.
             PlayerSettings.enableFrameTimingStats = true;
+            ApplyStandaloneWindowSettings();
+            ApplyBatchingSettings();
             Debug.Log($"[SETUP] player settings: {ApplicationId} min={MinSdk} target={TargetSdk} IL2CPP ARM64 Vulkan+GLES3 linear landscape");
+        }
+
+        /// <summary>
+        /// Windows player window (owner request 2026-11-16): first start in borderless full screen at the native
+        /// resolution of the monitor, the window is resizable when the player switches to windowed mode, and Alt+Enter
+        /// toggles full screen / window. 1600x900 is only the size of a non-native window. A saved PC settings file
+        /// (PcSettingsRuntime, ADR 0270) still wins at startup; scripts/postbuild-windows.py forces a window only in
+        /// Kamion-okno.cmd.
+        /// </summary>
+        static void ApplyStandaloneWindowSettings()
+        {
+            PlayerSettings.fullScreenMode = FullScreenMode.FullScreenWindow;
+            PlayerSettings.defaultIsNativeResolution = true;
+            PlayerSettings.defaultScreenWidth = 1600;
+            PlayerSettings.defaultScreenHeight = 900;
+            PlayerSettings.resizableWindow = true;
+            PlayerSettings.allowFullscreenSwitch = true;
+            Debug.Log("[SETUP] standalone window: FullScreenWindow native, resizable, Alt+Enter switch, window 1600x900");
         }
 
         /// <summary>
@@ -292,6 +312,39 @@ namespace Game.Editor.Setup
             Set(ps, "androidAutoRotationBehavior", 1);   // 1 = User
             Set(ps, "AndroidIsGame", true);
             ps.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>
+        /// build-fix-s24: per-platform batching entries (m_BuildTargetBatching) written explicitly, static on / dynamic off
+        /// (Unity's defaults). Unity adds the entry of the active target to ProjectSettings.asset during the first player
+        /// build of that target, which left the tree modified after every Windows build (version stamp "-dirty"). Entry
+        /// order = the order Unity appends them in (Android first in this project, then Standalone).
+        /// </summary>
+        public static void ApplyBatchingSettings()
+        {
+            var ps = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/ProjectSettings.asset")[0]);
+            var list = Find(ps, "m_BuildTargetBatching");
+            foreach (string target in new[] { "Android", "Standalone" })
+            {
+                SerializedProperty entry = null;
+                for (int i = 0; i < list.arraySize; i++)
+                    if (list.GetArrayElementAtIndex(i).FindPropertyRelative("m_BuildTarget").stringValue == target) entry = list.GetArrayElementAtIndex(i);
+                if (entry == null)
+                {
+                    list.InsertArrayElementAtIndex(list.arraySize);
+                    entry = list.GetArrayElementAtIndex(list.arraySize - 1);
+                    entry.FindPropertyRelative("m_BuildTarget").stringValue = target;
+                }
+                SetFlag(entry.FindPropertyRelative("m_StaticBatching"), true);
+                SetFlag(entry.FindPropertyRelative("m_DynamicBatching"), false);
+            }
+            ps.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        static void SetFlag(SerializedProperty p, bool on)
+        {
+            if (p.propertyType == SerializedPropertyType.Boolean) p.boolValue = on;
+            else p.intValue = on ? 1 : 0;
         }
 
         static UniversalRenderPipelineAsset[] CreateUrpTierAssets()

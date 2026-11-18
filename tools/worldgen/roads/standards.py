@@ -173,12 +173,19 @@ DASH = {                            # (dash, gap)
     "P-1b": (2.0, 4.0),             # rys. 2.2.1.2, roads <= 70 km/h
     "P-1d": (1.0, 1.0),             # rys. 2.2.1.4, guiding through junctions
     "P-7a": (1.0, 1.0),             # rys. 2.2.2.2
+    "P-6": (4.0, 2.0),              # ADR 0279: rys. 2.2.1.12 (zał. 2 PDF s. 16 = Dz.U. s. 541) linia ostrzegawcza
 }
+# ADR 0279 (pkt 2.2.1.12, s. 541): P-6 before P-2a / P-3a / P-4 at least 50 m (v <= 70) / 100 m (v > 70); in a
+# built-up area P-6 may be omitted (P-4 straight after P-1b). Not painted by markings.py yet (leader task, ADR 0279).
+P6_MIN_LEN = {"le70": 50.0, "gt70": 100.0}
+P1A_MIN_LEN, P1B_MIN_LEN = 120.0, 50.0   # pkt 2.2.1.1 / 2.2.1.2 (s. 533)
+P4_LINE_GAP = 0.12                  # rys. 2.2.1.10 (s. 540): 0.12 line + 0.12 gap + 0.12 line
 P2A_MIN_LEN = 20.0                  # pkt 2.2.1.6: P-2a at least 20 m
 P10_STRIPE = 0.50                   # rys. 4.2.1.1: stripes 0.5 m, gaps 0.5 m, <= 0.5 m from the edge
 P10_GAP = 0.50
 P10_EDGE_MAX = 0.50
 P10_WIDTH = 4.0                     # pkt 4.2.1: crossing width s = 4.0 m (>= 2.5 m in built-up areas)
+P10_WIDTH_MIN_BUILT_UP, P10_WIDTH_MAX = 2.5, 16.0   # pkt 4.2.1 (zał. 2 s. 567), ADR 0279
 P12_W = 0.50                        # rys. 4.2.3.1: STOP line 0.5 m
 # P-11 cycle crossing: two rows of squares. [ZNAKI-Z2] rys. 4.2.2.1 (Dz.U. 2019 poz. 2311, str. 569, PDF
 # D2019000231102.pdf on isap.sejm.gov.pl): 0.5 m squares with 0.5 m gaps; pkt 4.2.2 (str. 569): crossing
@@ -192,6 +199,8 @@ P13_BASE, P13_GAP, P13_H = 0.50, 0.25, 0.70   # rys. 4.2.4.1: triangles
 P14_LEN, P14_GAP, P14_DEPTH = 0.75, 0.25, 0.50  # rys. 4.2.5.1: rectangles 0.5 deep (0.375 m2/mb)
 P14_BEFORE_SIGNAL = 2.0             # pkt 4.2.5: >= 2.0 m before signals beside the carriageway
 P14_BEFORE_CROSSING = 2.0           # pkt 4.2.5: >= 2.0 m before a pedestrian crossing
+P14_BEFORE_OVERHEAD_SIGNAL = 8.0    # ADR 0279, pkt 4.2.5 (s. 573): >= 8.0 m before a signal head OVER the carriageway
+                                    # (cantilever masts); measured from the outer edge of the line to the head face
 ARROW_SHORT = {"len": 5.00, "head_len": 2.05, "head_w": 0.75, "shaft_w": 0.15}   # rys. 3.2.1.2 a)
 ARROW_LONG = {"len": 7.50, "head_len": 2.05, "head_w": 0.75, "shaft_w": 0.15}    # rys. 3.2.1.2 b)
 ARROW_SPACING = {"short": 15.0, "long": 30.0}   # pkt 3.2.1: 15 m (<= 70 km/h), 30 m (others)
@@ -212,14 +221,16 @@ PAVED_FLANGE = 0.30         # vertical skirt under yard edges (hides the terrain
 EDGING_W = 0.08             # concrete edging (obrzeże betonowe 8 x 30 cm), common Polish practice WORKING_VALUE
 EDGING_H = 0.03             # top of edging above the block paving WORKING_VALUE
 SETBACK_PATH_W = 2.0        # default width of a set-back footpath without BDOT SZEROKOSC (PTB2022 § 29: >= 1.80 m)
-SURFACE_OF = {"yard_paving": "paving", "yard_behaton": "paving", "sidewalk_paving": "paving", "cycle_red": "asphalt",
+SURFACE_OF = {"yard_paving": "paving", "yard_behaton": "paving", "sidewalk_paving": "paving",
+              "apron_paving_light": "paving", "cycle_red": "asphalt",
               "cycle_asphalt": "asphalt", "cycle_asphalt_red": "asphalt",
               "yard_concrete": "asphalt", "yard_concrete_worn": "asphalt", "yard_slabs": "asphalt", "yard_asphalt": "asphalt",
               "path_asphalt": "asphalt", "yard_gravel": "grass",
               "plot_lawn": "grass"}   # -> collision_<x> materials
 
-# Vertical signs [ZNAKI-Z1]. Table 1.11: lower edge >= 2.00 m in built-up areas, 2.20 m when the sign
-# stands on a sidewalk; signs over the carriageway >= 5.00 m.
+# Vertical signs [ZNAKI-Z1]. Table 1.11 (wording of Dz.U. 2022 poz. 2377, re-read ADR 0279): lower edge >= 2.00 m,
+# 2.20 m when the sign stands on OR OVER a sidewalk; signs over the carriageway >= 5.00 m; exceptions (E-1 / E-2
+# rural 1.00 m, G-1 1.00 / 0.50 m, several signs on one post 1.50 m) in streetscape.sign_norms.MOUNT_MIN_M.
 SIGN_H_MIN = 2.00
 SIGN_H_SIDEWALK = 2.20
 SIGN_H_OVERHEAD = 5.00
@@ -257,6 +268,32 @@ SIGNAL_MAST_H = 6.8         # WORKING_VALUE: cantilever mast, head >= 5.0 m over
 SIGNAL_CANTILEVER_LANES = 2 # WORKING_VALUE: approaches with >= 2 lanes get a cantilever head (ADR 0069: Mapillary
                             # p42 / p45 / p47 show curved mast arms over the 2-lane entries of Rondo Putry; was 3)
 SIGNAL_MAST_BEND_R = 1.5    # WORKING_VALUE: bend radius of the mast arm, read off p42 against the 0.36 m head
+# ADR 0279 P1 (D25): station of the signal post on its approach, shared by streetscape.furniture.signals (places it)
+# and roads.markings (P-14 >= 2.0 m before a head beside the carriageway, >= 8.0 m before a head over it, measured
+# from the outer edge of the line to the face plane of the head - zał. 2 pkt 4.2.5, Dz.U. s. 573).
+SIGNAL_AFTER_TRIM = 1.0     # WORKING_VALUE: signal post this far (along the arm, outward) from the junction trim
+SIGNAL_HEAD_FWD = 0.15      # WORKING_VALUE: side head face this far in front of the post (towards the driver)
+
+
+def signal_lanes_in(sec, end: str) -> int:
+    """Inbound lanes of an approach at its signal (furniture.signals: cantilever when >= SIGNAL_CANTILEVER_LANES)."""
+    return int(sec.lanes if sec.oneway else max(1, sec.lanes_fwd if end == "b" else sec.lanes_bwd))
+
+
+def signal_overhead(sec, end: str, emergency: bool = False) -> bool:
+    """True when furniture.signals puts a head over the carriageway (cantilever mast) on this approach."""
+    return (not emergency) and signal_lanes_in(sec, end) >= SIGNAL_CANTILEVER_LANES
+
+
+def p14_before_signal_d(trim: float, sec, end: str) -> float:
+    """Station (from the junction centre, along the arm) of the junction-side edge of P-14 before the signal of a
+    signalised approach: 2.0 m before the side head (zał. 2 pkt 4.2.5 tiret 1), 8.0 m before the overhead head
+    (tiret 3); the overhead head hangs at the post station (cantilever across the carriageway)."""
+    post = trim + SIGNAL_AFTER_TRIM
+    d = post + SIGNAL_HEAD_FWD + P14_BEFORE_SIGNAL
+    if signal_overhead(sec, end):
+        d = max(d, post + P14_BEFORE_OVERHEAD_SIGNAL)
+    return d
 # ADR 0172: mast prototypes by arm length (m). 6.0 = the rule mast (ADR 0069). 8.8 = the mast over the two northbound
 # lanes of the Rondo Putry ring under the Andersa viaduct, measured on the GUGiK 0.08 m orthophoto 2024 (pole foot
 # E -532.5 N 37.9, arm tip E -540.5 N 41.7, +-0.3 m; the top leans ~0.3 m from the nadir, not corrected).

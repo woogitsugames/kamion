@@ -82,6 +82,7 @@ namespace Game.Gameplay
                     m_Rig.AddLookDelta(look * (Time.unscaledDeltaTime / m_Rig.lookDegPerPixel));
             }
             if ((v.ToggleMirrorInsets || k.ToggleMirrorInsets) && ToggleMirrorInsets != null) ToggleMirrorInsets();
+            if (v.ToggleHudDetail || k.ToggleHudDetail) HudPreferences.ToggleDetail();   // ADR 0283: key I (rebindable), key press only
             if (v.Horn || k.Horn) Game.Core.AudioCues.HornHeld = true;   // the bootstrap writes the K key each frame; OR the bindings in
         }
 

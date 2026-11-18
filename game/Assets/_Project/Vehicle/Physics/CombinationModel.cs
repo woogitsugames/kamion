@@ -57,7 +57,7 @@ namespace Game.Vehicle.Physics
         /// </summary>
         public void SetTrailer(TrailerModel trailer, bool coupled)
         {
-            if (Trailer != null) Trailer.Coupled = false;
+            if (Trailer != null) { Trailer.Coupled = false; Trailer.TowingWheels = null; }
             FifthWheel.ResetState();
             CouplingArmed = false;
             Trailer = trailer;
@@ -108,7 +108,7 @@ namespace Game.Vehicle.Physics
         {
             bool c = Coupled;
             Tractor.TrailerConnected = c;
-            if (Trailer != null) Trailer.Coupled = c;
+            if (Trailer != null) { Trailer.Coupled = c; Trailer.TowingWheels = c ? Tractor.Wheels : null; }
             Tractor.TowedMass = c ? Trailer.Mass : 0;
         }
 

@@ -9,7 +9,8 @@ jej w tym dokumencie; czego nie dało się potwierdzić u źródła — `UNVERIF
    Dopóki jest otwarty, paczka = tylko testerzy zamknięci (`package-windows.py` bez `--release`).
 2. Build: `pwsh scripts/build-windows.ps1 -Slot -Regions '<lista>'` (z czystego commitu, bez `-Development`).
 3. Paczka: `uv run --no-project python scripts/package-windows.py artifacts/win/kamion-<ver>-<sha>-regions`
-   → `artifacts/dist/kamion-<ver>-<sha>-win64.zip` + `.sha256` + `.json` (lista plików).
+   → `artifacts/dist/kamion-<ver>-<sha>[-regions]-<dane>-win64.zip` + `.sha256` + `.json` (lista plików); `<dane>` = 12 hex
+   skrótu zawartości `Kamion_Data` (ADR 0276). Albo jednym poleceniem: `build-windows.ps1 … -Package`.
 4. Pierwszy kanał: **itch.io** (0 zł z góry, udział platformy wybierany przez twórcę, strona może być ukryta/z kluczami).
 5. Steam później (100 USD za aplikację, 21 dni od opłaty, strona „coming soon” ≥ 2 tygodnie, weryfikacja tożsamości i podatków).
 6. Bez podpisu kodu na start (SmartScreen ostrzeże — opisane w README paczki); podpis dopiero przy decyzji o kosztach.
@@ -75,11 +76,14 @@ Backend skryptów: **Mono** (`scriptingBackend` w ProjectSettings ma tylko wpis 
 | `GameAssembly.dll` | tak (tylko IL2CPP) | dziś nie powstaje (Mono) |
 | `WinPixEventRuntime.dll` | **nie wydajemy buildów dev** | „Unity only creates this file if you enable the Development Build” (j.w.) — skrypt traktuje go jak znacznik buildu dev |
 | `*.pdb` | **nie** | „Symbol files for debugging”, kopiowane tylko przy *Copy PDB files* (j.w.) |
-| `Kamion_BurstDebugInformation_DoNotShip/` | **nie** | symbole Burst; nazwa folderu jest instrukcją Unity. Oficjalny opis zawartości — brak (changelog Burst wspomina tylko nazwę: https://docs.unity3d.com/Packages/com.unity.burst@1.8/changelog/CHANGELOG.html). `build-windows.ps1` już usuwa `*_DoNotShip` |
+| `Kamion_BurstDebugInformation_DoNotShip/` | **nie** | symbole Burst; nazwa folderu jest instrukcją Unity. Oficjalny opis zawartości — brak (changelog Burst wspomina tylko nazwę: https://docs.unity3d.com/Packages/com.unity.burst@1.8/changelog/CHANGELOG.html). `build-windows.ps1` przenosi `*_DoNotShip` do `artifacts/win/symbols/<build>/` (ADR 0276) |
 | `Kamion_BackUpThisFolder_ButDontShipItWithYourGame/` | **nie** | powstaje przy IL2CPP (kod C++ i symbole); oficjalnej strony brak — tylko nazwa i forum Unity (https://discussions.unity.com/t/why-this-folder-generated-backupthisfolder-butdontshipitwithyourgame/901854). Zachować w `artifacts/` do symbolizacji awarii |
-| `build.json`, `Kamion.exe.sha256`, `Kamion.content.json`, `Kamion.top.txt`, `Kamion.variants.txt` | **nie** | nasze metadane buildu (ADR 0261) — zostają w `artifacts/` |
-| `Kamion-okno.cmd` | tak | start w oknie 1600×900 (ProjectSettings domyślnie pełny ekran) |
-| `Kamion-knyszyn.cmd` | **nie** | skrót deweloperski (`-scene knyszyn-w`) |
+| `build.json`, `Kamion.exe.sha256`, `Kamion.content.json`, `Kamion.top.txt`, `Kamion.variants.txt`, `Kamion_Data.sha256` | **nie** | nasze metadane buildu (ADR 0261, 0276) — zostają w `artifacts/` |
+| `build-id.json` | tak | git sha + skrót zawartości `Kamion_Data` (ADR 0276); gra czyta go przy starcie i pokazuje w menu / „Informacje” / logu |
+| `Kamion-okno.cmd` | tak | start w oknie 1600×900, okno zmienialne rozmiarem, Alt+Enter = pełny ekran. `Kamion.exe` i pozostałe `*.cmd` nie wymuszają trybu ekranu: plik ustawień PC, a bez niego pełny ekran bez ramki w natywnej rozdzielczości (`ProjectSetup.ApplyStandaloneWindowSettings`, 2026-11-16) |
+| `Kamion-d3d11.cmd` | tak | awaryjnie `-force-d3d11` (crash D3D12 16.11), bez `-screen-*`; `postbuild-windows.py` (build-hygiene-s23) |
+| `Kamion-korytarz.cmd`, `Kamion-korytarz-d3d11.cmd` | gdy knyszyn w buildzie (`-scene knyszyn`) | `-scene knyszyn -stream 1` (+ `-force-d3d11`); `postbuild-windows.py` pisze je tylko, gdy w logu buildu są knyszyn, knyszyn-s i scena kafla `World_knyszyn-s_Tile` |
+| `Kamion-<region>.cmd` i każdy inny `*.cmd` z `-scene <x>` (np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`) | tylko gdy scena/region `<x>` jest w buildzie | `build-windows.ps1` pisze po jednym na region buildu (ADR 0276); tylko `-scene <x>`, bez `-screen-*`. Reguła ADR 0271 (uzupełnienie s23): lista scen z logu buildu (`build.json` → `log`, linia `[BUILD] Windows x64 … scenes=[…]`), inaczej `build.json` `regions`/`regionsFile` rozwinięte katalogiem regionów na liście `EditorBuildSettings`; nieznana treść buildu = launcher poza paczką. Od int-h3-s23 (decyzja lidera) bez wyjątku deweloperskiego: `Kamion-knyszyn.cmd` startuje region knyszyn i trafia do testera, gdy knyszyn jest w buildzie |
 
 Paczka dokłada: `THIRD_PARTY_NOTICES.txt` (generowany z `game/Assets/_Project/UI/Resources/About/attributions.txt`, czyli
 **ten sam tekst co ekran „Informacje”** — jedno źródło prawdy), `README.txt` (z `dist/windows/README.txt.in`: wymagania D74,
@@ -121,7 +125,9 @@ Przy pierwszej sprzedaży poza Steamem: Artifact Signing (~10 USD/mies.) — dec
 
 ### 3.3 Wersjonowanie i changelog
 - Wersja = `bundleVersion` z ProjectSettings (dziś `0.1.0`, semver 2.0: https://semver.org/). Paczka:
-  `kamion-<ver>-<sha>-win64.zip` — ten sam wzór co APK `kamion-<ver>-<sha>.apk` i folder buildu (ADR 0261).
+  `kamion-<ver>-<sha>[-low][-regions][-dev][-dirty]-<dane>-win64.zip` — wzór APK `kamion-<ver>-<sha>.apk` i folderu buildu
+  (ADR 0261) + `-regions` (build ze scenami regionów, recenzja #134 P2-1) + `<dane>` = skrót zawartości `Kamion_Data`
+  (ADR 0276: `Kamion.exe` jest w każdym buildzie ten sam, więc sam sha commitu nie odróżnia dwóch buildów).
   Warianty w nazwie tylko gdy odbiegają od domyślnego: `-low` (świat Low), `-dev`, `-dirty` (obie tylko dla testerów).
 - Zasada semver dla nas: PATCH = poprawki bez zmiany zapisu i danych regionów; MINOR = nowy region/funkcja, zapis
   zgodny; MAJOR = niezgodny zapis lub paczki regionów (docs/10 §3 `compatibleGameVersions`). 0.x = przed wydaniem.
@@ -189,7 +195,7 @@ DejaVu tylko jako raster w teksturach; `LegacyRuntime.ttf` = zasób Unity. Brak 
   **archiwizować je per wersja w `artifacts/win/<build>/`** (nie kasować przed wydaniem następnej wersji; dziś
   `build-windows.ps1` kasuje `*_DoNotShip` — propozycja zmiany w ADR 0271 §Propozycje).
 - **Zbieranie**: `scripts/collect-logs.ps1` (w paczce + `Zbierz-logi.cmd`): Player.log, Player-prev.log, diag\,
-  5 najnowszych folderów Crashes, `system.txt` (Windows, CPU, RAM, GPU + sterownik, dyski, SHA256 exe, nazwa paczki),
+  5 najnowszych folderów Crashes, 2 najnowsze `%LOCALAPPDATA%\CrashDumps\Kamion*.dmp` (≤ 1 GB każdy; build-hygiene-s23), `system.txt` (Windows, CPU, RAM, GPU + sterownik, dyski, SHA256 exe, nazwa paczki),
   opcjonalnie `-DxDiag`. Nazwa użytkownika i komputera zastępowane `<user>`/`<pc>`. Wynik: `kamion-logi-<ts>.zip`
   na Pulpicie. Nic nie jest wysyłane automatycznie — tester wysyła plik ręcznie (bez zewnętrznych serwisów).
   Działa w Windows PowerShell 5.1 (nie wymaga PS 7). **Nieuruchomiony** (chmura bez Windows) — do sprawdzenia przez lidera.

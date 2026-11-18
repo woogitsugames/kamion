@@ -1,0 +1,88 @@
+id: tykocin
+title: Tykocin — DW671 przez miasto i most na Narwi, km 10,8–13,3
+status: WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,2) of the ADR 0203 plan)
+candidate: T_dw671_tykocin
+crs:
+  horizontal: EPSG:2180 (ETRF2000-PL / CS92)
+  vertical: PL-EVRF2007-NH (EPSG:9651)
+  axes_unity: X = east (EPSG:2180 x), Y = up, Z = north (EPSG:2180 y)  [ADR 0003]
+bbox:
+  xmin: 750347.0
+  ymin: 599295.0
+  xmax: 752395.0
+  ymax: 601343.0
+  width_m: 2048.0
+  height_m: 2048.0
+origin:
+  x: 751371.0
+  y: 600319.0
+  z: 104.47
+  note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
+teryt_powiat: '2002'
+teryt_powiat_extra:
+- '2008'
+products:
+  buildings.geojson: Data/Regions/tykocin/buildings.geojson
+  ortho.json: Data/Regions/tykocin/ortho.json
+  roads.graph.json: Data/Regions/tykocin/roads.graph.json
+  terrain.json: Data/Regions/tykocin/terrain.json
+big_products_not_in_git:
+- Data/raw/derived/tykocin/heightmap_2049.r16
+- Data/raw/derived/tykocin/ortho_0p25m.tif
+sources:
+- id: osm-geofabrik-podlaskie
+  license: ODbL 1.0
+  attribution: © OpenStreetMap contributors
+  manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
+  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
+- id: gugik-nmt-2022-tykocin
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-nmt-2022-tykocin.json
+  manifest_sha256: c8d668d7854f3757ddb048f84acb3cae112257a72e7cd4acb149187fd398e421
+- id: gugik-orto-2024-rgb-0p25-tykocin
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-tykocin.json
+  manifest_sha256: 764ecfa9e5eb6f88c8f371c72853675699aaa48c0ef74856de333c08a5a93f24
+- id: gugik-bdot10k-2002
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2002.json
+  manifest_sha256: 0530d930aa45984c5024b8c55911969caa517cfad911cbea6d2efa158bd48151
+- id: gugik-lod1-2024-2002
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2002.json
+  manifest_sha256: 208717117ca8ef4ee81ecfb500ad0f36b31ea36d02c8c8873f488d3a625d4133
+- id: gugik-lod2-2017-2002
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2002.json
+  manifest_sha256: 57606993ad174e3b804cd0353a8dd45cc5ef661f81f6d8d2cb3cfb52c2575d1c
+- id: gugik-bdot10k-2008
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2008.json
+  manifest_sha256: 01acef7cb475ce9d1e17b10219528ba38a238d239b19ed0c1f421a58fb2c3342
+- id: gugik-lod1-2024-2008
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2008.json
+  manifest_sha256: 9de6f83074f3c1dd0bbf0bf17bf6586627a5cb6f5d1c69c2e7fbd51281f8f50a
+- id: gugik-lod2-2017-2008
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2008.json
+  manifest_sha256: 59067604e5b413363678e77bdde143aa1a871b088fc9dcaee792aec53295d7ef
+rebuild:
+- uv run --project tools/worldgen tools/worldgen/ingest.py --region tykocin
+- uv run --project tools/worldgen tools/worldgen/build_region.py --region tykocin

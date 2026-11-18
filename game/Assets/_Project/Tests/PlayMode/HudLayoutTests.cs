@@ -360,6 +360,9 @@ namespace Game.Tests
         {
             MakeCamera(k_Devices[2]);
             var hud = DrivingHud.Create(m_Cam, new DrivingHudContext());
+            // Phone / fold form factor explicitly: with the editor on Win64 UiViewport would pick the monitor HUD, which
+            // (ADR 0283) shows the developer "Panel" button only in the extended mode (int-ui-s23).
+            hud.OverrideDesktop(false);
             yield return null;
             Assert.IsFalse(hud.DevPanelOpen);
             string[] dev = { "Camera", "SteerMode", "Menu", "Settings", "Telemetry", "Record", "Reset", "Lab", "Couple", "Legs" };

@@ -1,11 +1,18 @@
 KAMION — symulator ciężarówki (Windows 64-bit)
-Paczka: {name}   wersja {version}   commit {sha}   spakowano {date}   wariant: {flags}
+Paczka: {name}   wersja {version}   commit {sha}   dane {content}   spakowano {date}   wariant: {flags}
+(„dane” = skrót zawartości folderu Kamion_Data; ta sama wartość jest w menu „Informacje” i w Player.log —
+ po niej rozpoznajemy dokładny build, bo sam Kamion.exe jest w każdym buildzie taki sam.)
 
 To jest wersja testowa. Nie rozpowszechniaj jej dalej bez zgody autora.
 
 URUCHOMIENIE
 1. Rozpakuj cały folder (nie uruchamiaj gry z wnętrza pliku zip).
-2. Uruchom Kamion.exe (pełny ekran) albo Kamion-okno.cmd (okno 1600 x 900).
+2. Uruchom Kamion.exe (menu, pełny ekran) albo Kamion-okno.cmd (menu w oknie 1600 x 900; Alt+Enter przełącza).
+   Skróty (są tylko te, których mapy są w tej paczce):
+   Kamion-korytarz.cmd   — jazda ciągła od Knyszyna, sąsiednie odcinki doładowują się w trakcie jazdy;
+   Kamion-<region>.cmd   — start od razu w jednym regionie (np. Kamion-knyszyn.cmd).
+   Gdy gra się zamyka albo pokazuje błąd grafiki (w Player.log „d3d12” / „Device failed”): uruchom
+   Kamion-d3d11.cmd albo Kamion-korytarz-d3d11.cmd (to samo z Direct3D 11) i napisz o tym w zgłoszeniu.
 3. Windows może pokazać „System Windows ochronił ten komputer” (SmartScreen) — gra nie jest podpisana
    certyfikatem. Sprawdź, czy plik pochodzi od autora (suma SHA256 poniżej), wybierz „Więcej informacji”
    i „Uruchom mimo to”.
@@ -21,17 +28,25 @@ Grafika          NVIDIA GTX 660 / AMD RX 460 /             NVIDIA GTX 1660 / AMD
 Dysk             do 25 GB wolnego miejsca                  do 25 GB wolnego miejsca
 Cel              jakość Low, 1080p, 30 kl./s               jakość High, 1080p, 60 kl./s
 
-STEROWANIE (klawiatura)
-W/S lub strzałki góra/dół — gaz / hamulec; A/D lub strzałki lewo/prawo — kierownica; spacja — hamulec postojowy;
-1/2/3 — D/N/R; E/Q — biegi; M — automat/ręczny; X/Z — retarder; C — kamera; T — sprzęg naczepy;
-, . — kierunkowskazy; H — światła awaryjne; K — klakson; Esc — menu. Pad: lewa gałka kierownica, RT gaz, LT hamulec.
+STEROWANIE (domyślne; zmiana: menu → Ustawienia sterowania → KLAWIATURA I PAD)
+Klawiatura: W/S lub strzałki góra/dół — gaz / hamulec; A/D lub strzałki lewo/prawo — kierownica;
+spacja — hamulec postojowy; 1/2/3 — D/N/R; E/Q — bieg w górę / w dół; M — automat/ręczny; X/Z — retarder +/−;
+, . — kierunkowskazy; H — awaryjne; K — klakson; C lub Tab — kamera; L — lusterka w okienkach;
+V — kamera cofania; B — tempomat zjazdu; T — sprzęg naczepy; G — podpory naczepy; Esc — menu.
+Pad: lewa gałka — kierownica; RT/LT — gaz/hamulec; RB/LB — biegi; A — hamulec postojowy; X/B/Back — D/N/R;
+Y — kamera; krzyżak lewo/prawo — kierunkowskazy, góra — awaryjne, dół — retarder +; klik lewej gałki — retarder −;
+klik prawej gałki — klakson; prawa gałka — rozglądanie; Start — menu. Tryb ręczny, lusterka, kamera cofania,
+tempomat zjazdu, sprzęg i podpory nie mają domyślnego przycisku na padzie.
 
 GDY COŚ NIE DZIAŁA
 Uruchom Zbierz-logi.cmd z tego folderu. Skrypt spakuje logi gry i podstawowe dane o komputerze
 (system, procesor, karta graficzna, pamięć) do pliku zip na Pulpicie. Przed wysłaniem możesz go otworzyć
 i sprawdzić zawartość. Nazwa użytkownika Windows w logach jest zastępowana tekstem <user>.
+Zrzuty awarii (*.dmp) NIE są anonimizowane i mogą zawierać nazwę użytkownika Windows; bez nich:
+Zbierz-logi.cmd -NoCrashes
 Logi gry: %USERPROFILE%\AppData\LocalLow\woogitsugames\Kamion\Player.log (i Player-prev.log).
-Raporty awarii: %TMP%\woogitsugames\Kamion\Crashes
+Raporty awarii: %TMP%\woogitsugames\Kamion\Crashes oraz zrzuty Windows %LOCALAPPDATA%\CrashDumps\Kamion*.dmp
+(Zbierz-logi.cmd dołącza 2 najnowsze, każdy do 1 GB; powstają tylko, gdy w Windows włączone są lokalne zrzuty).
 
 LICENCJE
 Atrybucje danych map (© OpenStreetMap contributors, ODbL 1.0; GUGiK), czcionek i bibliotek:

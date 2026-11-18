@@ -20,6 +20,10 @@ uv run --project tools/worldgen python art-source/world/materials/_src/build_all
 - `--photo`: source of `asphalt_detail_photo`, default `Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg`
   (public domain, John Harvey, Wikimedia Commons; `docs/REFERENCES.md`). If the file is missing, that layer
   is skipped with a message and the other sets still build.
+- `--check --tier Medium` (no build): exit 0 = up to date, 3 = a file this generator writes is missing or older than
+  `_src/*.py`; `--list-outputs --tier Medium` prints those files. Files it does not write with the current inputs
+  (`asphalt_detail_photo` without the photo, scan-only sets without CC0 scans) are skipped. `scripts/import-region.ps1`
+  rebuilds only on exit 3 (D43; test `tests/gis/test_materials_freshness.py`).
 - Output: `art-source/world/materials/<set>/<High|Medium|Low>/T_<set>_*.png` and an updated
   `materials_spec.json` (slots, tile size in metres, albedo stats, ASTC block, PNG and GPU sizes).
 

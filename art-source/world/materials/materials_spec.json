@@ -867,7 +867,7 @@
           ],
           "texel_mm": 1.37,
           "dir": "behaton_i_grey/High",
-          "png_bytes": 7246154,
+          "png_bytes": 7164499,
           "files": [
             "T_behaton_i_grey_BaseColor.png",
             "T_behaton_i_grey_MaskMap.png",
@@ -890,7 +890,7 @@
           ],
           "texel_mm": 2.74,
           "dir": "behaton_i_grey/Medium",
-          "png_bytes": 1958964,
+          "png_bytes": 1942125,
           "files": [
             "T_behaton_i_grey_BaseColor.png",
             "T_behaton_i_grey_MaskMap.png",
@@ -913,7 +913,7 @@
           ],
           "texel_mm": 5.49,
           "dir": "behaton_i_grey/Low",
-          "png_bytes": 477701,
+          "png_bytes": 474570,
           "files": [
             "T_behaton_i_grey_BaseColor.png",
             "T_behaton_i_grey_MaskMap.png",
@@ -3838,7 +3838,7 @@
           ],
           "texel_mm": 2.23,
           "dir": "paving_20x10_tint/High",
-          "png_bytes": 4187741,
+          "png_bytes": 4093727,
           "files": [
             "T_paving_20x10_tint_BaseColor.png",
             "T_paving_20x10_tint_MaskMap.png",
@@ -3861,7 +3861,7 @@
           ],
           "texel_mm": 4.45,
           "dir": "paving_20x10_tint/Medium",
-          "png_bytes": 1070959,
+          "png_bytes": 1052362,
           "files": [
             "T_paving_20x10_tint_BaseColor.png",
             "T_paving_20x10_tint_MaskMap.png",
@@ -3884,7 +3884,7 @@
           ],
           "texel_mm": 8.9,
           "dir": "paving_20x10_tint/Low",
-          "png_bytes": 274133,
+          "png_bytes": 268890,
           "files": [
             "T_paving_20x10_tint_BaseColor.png",
             "T_paving_20x10_tint_MaskMap.png",
@@ -4486,7 +4486,7 @@
           ],
           "texel_mm": 2.11,
           "dir": "sidewalk_slab_35/High",
-          "png_bytes": 6608247,
+          "png_bytes": 6545019,
           "files": [
             "T_sidewalk_slab_35_BaseColor.png",
             "T_sidewalk_slab_35_MaskMap.png",
@@ -4509,7 +4509,7 @@
           ],
           "texel_mm": 4.21,
           "dir": "sidewalk_slab_35/Medium",
-          "png_bytes": 1708156,
+          "png_bytes": 1694811,
           "files": [
             "T_sidewalk_slab_35_BaseColor.png",
             "T_sidewalk_slab_35_MaskMap.png",
@@ -4532,7 +4532,7 @@
           ],
           "texel_mm": 8.43,
           "dir": "sidewalk_slab_35/Low",
-          "png_bytes": 399017,
+          "png_bytes": 396075,
           "files": [
             "T_sidewalk_slab_35_BaseColor.png",
             "T_sidewalk_slab_35_MaskMap.png",
@@ -4889,6 +4889,128 @@
         0.3586,
         0.3062
       ]
+    },
+    "wood_siding": {
+      "tile_m": [
+        1.87,
+        1.87
+      ],
+      "slots": [
+        "wood_planks",
+        "wood_planks_green"
+      ],
+      "note": "D-17.11 / ADR 0287: horizontal plank siding of wooden houses from the CC0 scan raw_plank_wall (Poly Haven, 1.87 m), neutral modulation map (mean 0.5 per channel), board-to-board tone damped; colour from the manifest (painted brown / green boards).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "raw_plank_wall",
+        "source_dimensions_m": [
+          1.87,
+          1.87
+        ],
+        "board_tone_cv_before_after": [
+          0.124,
+          0.0157
+        ],
+        "assets": [
+          {
+            "id": "raw_plank_wall",
+            "page": "https://polyhaven.com/a/raw_plank_wall",
+            "authors": {
+              "Dimitrios Savva": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.83,
+          "dir": "wood_siding/High",
+          "png_bytes": 4480851,
+          "files": [
+            "T_wood_siding_BaseColor.png",
+            "T_wood_siding_MaskMap.png",
+            "T_wood_siding_Normal.png",
+            "T_wood_siding_Var.png"
+          ],
+          "smoothness_mean": 0.283,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.65,
+          "dir": "wood_siding/Medium",
+          "png_bytes": 1252340,
+          "files": [
+            "T_wood_siding_BaseColor.png",
+            "T_wood_siding_MaskMap.png",
+            "T_wood_siding_Normal.png",
+            "T_wood_siding_Var.png"
+          ],
+          "smoothness_mean": 0.279,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.3,
+          "dir": "wood_siding/Low",
+          "png_bytes": 336909,
+          "files": [
+            "T_wood_siding_BaseColor.png",
+            "T_wood_siding_MaskMap.png",
+            "T_wood_siding_Normal.png",
+            "T_wood_siding_Var.png"
+          ],
+          "smoothness_mean": 0.273,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.01054,
+        0.0058
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3457,
+        "p95": 0.6159,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.0671,
+      "ao_mean": 0.954
     }
   }
 }

@@ -33,6 +33,7 @@ namespace Game.World.Import
         public static void Build(RegionImporter.Result r, string tier)
         {
             string scenePath = r.ScenePath(tier);
+            DrivingVehiclePrefabs.EnsureBuilt();   // D84: before the scene exists (the asset builders import and refresh)
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             // ---------------- lighting ----------------
@@ -108,23 +109,27 @@ namespace Game.World.Import
             route.speedLimitsKmh = r.RouteLimits.Length == pts.Length ? r.RouteLimits : new float[pts.Length];
 
             // ---------------- vehicle, camera, bootstrap ----------------
-            // Track A7: the TRAKT art truck when it has been built (TruckAssetBuilder), else the graybox.
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(TruckAssetBuilder.PrefabPath) ??
-                         AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.PrefabPath);
-            // The art curtainsider when it has been built (TrailerAssetBuilder), else the graybox trailer (same physics root).
-            var trailerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TrailerAssetBuilder.PrefabPath) ??
-                                AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.TrailerPrefabPath);
-            if (prefab == null || trailerPrefab == null) throw new FileNotFoundException("DrivingLab prefabs missing: run Kamion/Setup/Rebuild DrivingLab first");
+            // D84: one installation path for every driving scene - the art TRAKT tractor and curtainsider (built on demand),
+            // the graybox only as an announced emergency fallback (DrivingVehiclePrefabs).
+            var prefab = DrivingVehiclePrefabs.Tractor(out _, buildIfMissing: false);
+            var trailerPrefab = DrivingVehiclePrefabs.Trailer(out _, buildIfMissing: false);
             // ADR 0262: the start of the region catalog (scripts/export-region-catalog.py: 12 m, or behind the region-edge
             // closure when the route starts ON the tile edge - the closure stands up to 60 m inside, ADR 0169), and in
             // any case behind every closure the route enters the tile through (the closures just built above).
             var startBoundary = rootGo.GetComponent<WorldBoundary>();
             var catalogEntry = RegionCatalog.Load()?.Find(r.Region);
             float wantedS = catalogEntry != null ? RegionStart.ClampStartS(catalogEntry.startS, route.Length) : StartClearance.DefaultStartS;
-            float spawnS = StartClearance.SafeStartS(route.points, route.distances,
-                startBoundary != null ? startBoundary.closures : System.Array.Empty<WorldBoundary.Closure>(), wantedS);
-            if (spawnS > wantedS + 0.01f)
-                Debug.LogWarning($"[IMPORT] spawn moved from route_s {wantedS:F1} to {spawnS:F1} m: the catalog start is not behind the entry closure (python scripts/export-region-catalog.py, ADR 0262)");
+            // ADR 0277: the same zone rule as the runtime (StartSearch): behind the entry closure, in front of the exit closure.
+            if (!StartSearch.BakedSpawnS(route.points, route.distances,
+                    startBoundary != null ? startBoundary.closures : System.Array.Empty<WorldBoundary.Closure>(), wantedS, out float spawnS))
+            {
+                if (catalogEntry != null && catalogEntry.noStart)   // ADR 0231 §5a: corner tile, no start expected; the menu does not offer it
+                    Debug.Log($"[IMPORT] {r.Region}: corner tile without a standalone start (catalog noStart); spawn left at route_s {wantedS:F1}");
+                else
+                    Debug.LogError($"[IMPORT] {r.Region}: the start route has no drivable stretch between the region-edge closures; spawn left at route_s {wantedS:F1} (the game refuses this start, ADR 0277)");
+            }
+            else if (Mathf.Abs(spawnS - wantedS) > 0.01f)
+                Debug.LogWarning($"[IMPORT] spawn moved from route_s {wantedS:F1} to {spawnS:F1} m: the catalog start is not between the region-edge closures (python scripts/export-region-catalog.py, ADR 0262/0277)");
             Vector3 spawnPos = route.points.Length > 1 ? route.PointAt(spawnS) : Vector3.zero;
             Vector3 spawnFwd = route.points.Length > 1 ? route.TangentAt(spawnS) : Vector3.forward;
             var spawn = new GameObject("Spawn_DepotGate").transform;
@@ -195,6 +200,29 @@ namespace Game.World.Import
             EditorSceneManager.SaveScene(scene, scenePath);
             AssetDatabase.SaveAssets();
             Debug.Log($"[IMPORT] scene {scenePath} (tier {tier}): {r.Chunks.Count} chunks, {colliders} colliders, route {route.Length:F0} m, spawn {spawnPos}");
+            BuildTileScene(scene, r.Region, tier, rootGo, routeGo);
+        }
+
+        /// <summary>
+        /// Streamed tile scene (ADR 0235): the scene just saved, reduced to the region root and the start route, saved as
+        /// World_&lt;id&gt;[_High]_Tile next to it. Chunks are saved inactive and WorldInstances disabled (the streamer enables
+        /// them within a per-frame budget), collision cooking is deferred to worker threads (WorldCollisionCooker.deferCook).
+        /// No lights, volume, camera, truck or bootstrap: the running world scene owns those. Leaves the editor in the tile
+        /// scene (the full scene file is already written).
+        /// </summary>
+        static void BuildTileScene(UnityEngine.SceneManagement.Scene scene, string region, string tier, GameObject rootGo, GameObject routeGo)
+        {
+            foreach (var go in scene.GetRootGameObjects())
+                if (go != rootGo && go != routeGo) UnityEngine.Object.DestroyImmediate(go);
+            int chunks = 0;
+            foreach (Transform c in rootGo.transform)
+                if (c.name.StartsWith("Chunk_")) { c.gameObject.SetActive(false); chunks++; }
+            if (rootGo.TryGetComponent(out WorldInstances wi)) wi.enabled = false;
+            if (rootGo.TryGetComponent(out WorldCollisionCooker cooker)) cooker.deferCook = true;
+            string tilePath = RegionScenes.TileScenePathFor(region, tier);
+            EditorSceneManager.SaveScene(scene, tilePath);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[IMPORT] tile scene {tilePath} (tier {tier}, ADR 0235): region root + route, {chunks} chunks inactive, collision cook deferred");
         }
 
         /// <summary>Automatic boom barriers of depot gates (MA-003): one kinematic boom with <see cref="DepotBarrier"/> each.</summary>

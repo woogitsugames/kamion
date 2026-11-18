@@ -21,6 +21,15 @@ namespace Game.World
             return tier == HighTier ? b + "_High" : b;
         }
 
+        /// <summary>
+        /// Streamed tile scene of a region (ADR 0235): only the region root and the start route, loaded additively next to a
+        /// running world scene. "World_dk65-04_Tile", "WorldC_Tile", "World_knyszyn_High_Tile".
+        /// </summary>
+        public const string TileSuffix = "_Tile";
+        public static string TileSceneNameFor(string region, string tier = LowTier) => SceneNameFor(region, tier) + TileSuffix;
+        public static string TileScenePathFor(string region, string tier = LowTier) =>
+            GeneratedRoot + region + "/" + TileSceneNameFor(region, tier) + ".unity";
+
         /// <summary>Project-relative scene path, e.g. Assets/_Generated/World/knyszyn/World_knyszyn.unity.</summary>
         public static string ScenePathFor(string region, string tier = LowTier) =>
             GeneratedRoot + region + "/" + SceneNameFor(region, tier) + ".unity";

@@ -1,6 +1,6 @@
 # ADR 0083 — TRAKT exterior + curtainsider r10: side skirts, under-floor equipment, curtain livery band, roof sheet, rear lamps
 
-Status: proposed (truck-artist, 2026-11-10). `visual-critic`: **conditional PASS**
+Status: Accepted (merged to main 2026-11-10, `68e53354f`; status updated 2026-11-16); originally: proposed (truck-artist, 2026-11-10). `visual-critic`: **conditional PASS**
 (`docs/reports/visual/REVIEW-2026-11-10-0070-0083.md`, section 2). Owner decision **D47: no curtain band, skirts stay**. Editor frames only (WorldC, tiers High / Low, overcast / clear / lowsun): **UNVERIFIED on a phone**.
 Source: owner order for session 6 ("strong jump in look quality"), lead brief r10. Continues ADR 0061 / 0072 (front,
 low sun: not touched here).
