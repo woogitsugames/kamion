@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "id": "jackknife_tight_turn_forward_comb",
+  "description": "ADR 0228, review P1: forward at 5 km/h with a steady 0.57 lock (left) until the articulation settles at ~57-60 deg, then a full service-brake stop with the lock held (trailer pitches on the plate, tractor rocks back after the stop). Nothing may touch: no false cab contact braking the trailer in a yard turn.",
+  "spec": "docs/04 s6.9/s6.10, ADR 0228 (B-077, gate 2)",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "overrides": {
+    "articulationDeg": 0
+  },
+  "duration": 50,
+  "dt": 0.01,
+  "substeps": 4,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 5,
+    "steer": 0.57,
+    "selector": "D",
+    "brakeAt": 40,
+    "brakeLevel": 1
+  },
+  "checks": [
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "no NaN (solver explosion)",
+      "max": 0
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "no teleport |dx_com - v dt| <= 1e-4 m",
+      "max": 0.0001
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "per-step velocity change <= 0.35 m/s (kerb jerk ceiling, ADR 0165 / D58)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin stays in the jaw through the contact (driving limit 5 mm)",
+      "max": 5
+    },
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "steady tight turn: 55-60 deg articulation (review P1 range)",
+      "from": 30,
+      "to": 40,
+      "min": 55,
+      "max": 61
+    },
+    {
+      "metric": "max_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "steady 5 km/h before the stop",
+      "from": 30,
+      "to": 40,
+      "min": 4.5,
+      "max": 5.5
+    },
+    {
+      "metric": "coupling_contact_s",
+      "status": "WORKING_VALUE",
+      "source": "no tractor-trailer contact (trailer front swing radius 2.029 m (art model trailer_manifest.json measured.front_swing 2.0294; coupling boxes BodyCoupling + Nose) vs cab back 2.07 m ahead of the kingpin: 4.1 cm clearance when level)",
+      "max": 0
+    },
+    {
+      "metric": "max_coupling_penetration_m",
+      "status": "WORKING_VALUE",
+      "source": "no tractor-trailer penetration",
+      "max": 0
+    },
+    {
+      "metric": "max_coupling_contact_force_kn",
+      "status": "WORKING_VALUE",
+      "source": "no contact force",
+      "max": 0
+    }
+  ]
+}

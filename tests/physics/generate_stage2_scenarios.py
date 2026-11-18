@@ -1,6 +1,9 @@
 """Generates the Stage 2 validation scenarios (combination, air brakes, endurance brakes, AMT).
 
-Usage (from the repo root):  uv run python tests/physics/generate_stage2_scenarios.py tests/physics/scenarios
+Usage (from the repo root):
+  uv run python tests/physics/generate_stage2_scenarios.py tests/physics/scenarios [tests/physics/scenarios_expected_fail]
+The optional second folder receives generated known-failure scenarios (out=OUT_XFAIL); there are none at the moment
+(ring_96_53_comb moved to tests/physics/scenarios when the D79 trailer axles went into the game data, ADR 0280).
 
 The JSON files in tests/physics/scenarios are the authority that the runner and the tests read. This script
 is how the Stage 2 files were produced (keeps the solo / empty / 40 t variants and the check sources
@@ -11,8 +14,13 @@ Stage 1 solo scenarios are hand-written and not touched by this script. So are t
 import json, os, sys
 
 OUT = sys.argv[1]
+OUT_XFAIL = sys.argv[2] if len(sys.argv) > 2 else None
 W = "WORKING_VALUE"; D = "DERIVED"; S = "SOURCED"
 R13 = "UN R13 Annex 4"
+# UN R13 Annex 4 para 2.1.1 table, category N3, "Type-0 test with engine disconnected": v = 60 km/h,
+# s <= 0.15 v + v^2/130, dm >= 5.0 m/s^2 (MLIT parallel text UN_R013_02.pdf pp. 27-28, read on the page image 2026-11-16,
+# sha256 51a6c2e3...; same values as S5/S9 R3-139..142; ADR 0280). Only the 60 km/h case is the prescribed test.
+R13_T0 = "UN R13 Annex 4 para 2.1.1, N3 Type-0 engine disconnected (v = 60 km/h, s <= 0.15 v + v^2/130, dm >= 5.0 m/s^2)"
 
 
 def chk(metric, mn=None, mx=None, status=W, source="", arg=0, frm=0, to=0, variant=""):
@@ -35,7 +43,7 @@ def key(t, throttle=0, brake=0, steer=0, park=False, sel="D", lever=0, manual=Fa
     return k
 
 
-def sc(id, desc, spec, duration, driver, checks, variants=None, ground=None, initial=None, **kw):
+def sc(id, desc, spec, duration, driver, checks, variants=None, ground=None, initial=None, out=None, **kw):
     d = {"schemaVersion": 1, "id": id, "description": desc, "spec": spec}
     if variants: d["variants"] = variants
     d["ground"] = ground or {"gradePercent": 0, "surface": "dry_asphalt"}
@@ -44,7 +52,8 @@ def sc(id, desc, spec, duration, driver, checks, variants=None, ground=None, ini
     d["duration"] = duration
     d["driver"] = driver
     d["checks"] = checks
-    with open(os.path.join(OUT, id + ".json"), "w", encoding="utf-8") as f:
+    out = out or OUT
+    with open(os.path.join(out, id + ".json"), "w", encoding="utf-8") as f:
         json.dump(d, f, indent=2)
 
 
@@ -171,9 +180,9 @@ for surf, mu in [("dry", "dry_asphalt"), ("wet", "wet_asphalt")]:
         ch = list(stable) if abs_on else [stable[0]]
         if abs_on:
             if surf == "dry":
-                ch += [chk("stop_distance_m", mn=35, mx=61.2, status=S,
-                           source="upper bound = 0.15 v + v^2/130 at 80 km/h = 61.2 m: UN R13 Annex 4 type-0 N3 (table confirmed via GRRF-56-3, unece.org TRANS-WP29-GRRF-56-inf03e; cells did not extract from the MLIT PDF S5); lower bound ~ v^2/(2 x 0.8 g) + build-up"),
-                       chk("mfdd_ms2", mn=5.0, mx=8.0, status=S, source="MFDD (R13 Annex 4 definition); 5.0 m/s^2 = N3 type-0 minimum dm (same GRRF-56-3 table); <= mu g"),
+                ch += [chk("stop_distance_m", mn=35, mx=61.2, status=D,
+                           source=f"EXTRAPOLATION of {R13_T0}: 0.15 v + v^2/130 evaluated at 80 km/h = 61.2 m (the prescribed test speed is 60 km/h, see brake_60_0_dry_abs_comb); lower bound ~ v^2/(2 x 0.8 g) + build-up (WORKING)"),
+                       chk("mfdd_ms2", mn=5.0, mx=8.0, status=D, source=f"MFDD (R13 Annex 4 para 1.1.2 definition); 5.0 m/s^2 = N3 type-0 dm minimum of {R13_T0}, prescribed at 60 km/h, applied at 80 km/h (extrapolation); <= mu g"),
                        ]
             else:
                 ch += [chk("stop_distance_m", mn=45, mx=95, source="mu_wet ~0.5 (WORKING): v^2/(2 x 0.45 g) + build-up"),
@@ -192,7 +201,40 @@ for surf, mu in [("dry", "dry_asphalt"), ("wet", "wet_asphalt")]:
            ground={"gradePercent": 0, "surface": mu}, initial={"speedKmh": 80, "gear": 11},
            overrides={"absEnabled": abs_on})
 
-sc("brake_response_static", "Stationary vehicle, full service brake application (response time as in R13, vehicle at rest)", "docs/04 s6.5 / s2.8", 3,
+# 50 -> 0 km/h (urban speed limit for HGVs in Poland), dry, ABS on: same R13 type-0 N3 formula as the 80 km/h case,
+# evaluated at 50 km/h (an extrapolation below the 60 km/h test speed, like the 61.2 m bound at 80 km/h).
+# Gear 10 = ~1120 rpm at 50 km/h (ratio 1.30 x final 3.40, rolling radius 0.524 m), inside the S1 economy band.
+sc("brake_50_0_dry_abs_comb", "50->0 km/h full service brake, dry asphalt, ABS on", "docs/04 s6.5", 12,
+   {"type": "timeline", "keys": [key(0), key(0.5, brake=1)]},
+   list(stable) + [
+       chk("stop_distance_m", mn=15, mx=26.7, status=D,
+           source=f"EXTRAPOLATION of {R13_T0}: 0.15 v + v^2/130 evaluated at 50 km/h = 26.7 m (the prescribed test speed is 60 km/h, see brake_60_0_dry_abs_comb); lower bound ~ v^2/(2 x 0.8 g) = 12.3 m + build-up (WORKING)"),
+       chk("mfdd_ms2", mn=5.0, mx=8.0, status=D, source=f"MFDD (R13 Annex 4 para 1.1.2 definition); 5.0 m/s^2 = N3 type-0 dm minimum of {R13_T0}, prescribed at 60 km/h, applied at 50 km/h (extrapolation); <= mu g"),
+       chk("max_lateral_deviation_m", mx=0.5, source="straight-line stability under ABS"),
+       chk("max_articulation_deg", mx=2.0, source="no trailer swing under ABS braking on a straight"),
+       chk("rear_lock_time_s", mx=0.03, source="no tractor drive-axle lock at brake onset (EBS load sensing + decel-threshold ABS)"),
+       chk("trailer_lock_time_s", mx=0.05, source="trailer ABS 2S/2M prevents lock")],
+   variants=COMB, ground={"gradePercent": 0, "surface": "dry_asphalt"}, initial={"speedKmh": 50, "gear": 10},
+   overrides={"absEnabled": True})
+
+# 60 -> 0 km/h: the one stopping-distance point prescribed directly by UN R13 for N3 (Type-0, engine disconnected,
+# laden and unladen, para 1.4.1.2.3: both s and dm must be met). The engine is disconnected as in the test: the selector
+# goes to N together with the full service brake (the AMT opens the clutch at once on N). s <= 0.15 x 60 + 60^2/130 = 36.7 m.
+# Gear 11 (1.00 x 3.40, rolling radius 0.524 m) = ~1030 rpm at 60 km/h before the brake.
+sc("brake_60_0_dry_abs_comb", "60->0 km/h full service brake, dry asphalt, ABS on, engine disconnected (R13 Type-0 N3)", "docs/04 s6.5", 12,
+   {"type": "timeline", "keys": [key(0), key(0.5, brake=1, sel="N")]},
+   list(stable) + [
+       chk("stop_distance_m", mn=18, mx=36.7, status=S,
+           source=f"upper bound 0.15 x 60 + 60^2/130 = 36.7 m: {R13_T0}; lower bound ~ v^2/(2 x 0.8 g) = 17.7 m (WORKING)"),
+       chk("mfdd_ms2", mn=5.0, mx=8.0, status=S, source=f"MFDD (R13 Annex 4 para 1.1.2 definition) >= 5.0 m/s^2: {R13_T0}; upper bound <= mu g (WORKING)"),
+       chk("max_lateral_deviation_m", mx=0.5, source="straight-line stability under ABS"),
+       chk("max_articulation_deg", mx=2.0, source="no trailer swing under ABS braking on a straight"),
+       chk("rear_lock_time_s", mx=0.03, source="no tractor drive-axle lock at brake onset (EBS load sensing + decel-threshold ABS)"),
+       chk("trailer_lock_time_s", mx=0.05, source="trailer ABS 2S/2M prevents lock")],
+   variants=COMB, ground={"gradePercent": 0, "surface": "dry_asphalt"}, initial={"speedKmh": 60, "gear": 11},
+   overrides={"absEnabled": True})
+
+sc("brake_response_static","Stationary vehicle, full service brake application (response time as in R13, vehicle at rest)", "docs/04 s6.5 / s2.8", 3,
    {"type": "timeline", "keys": [key(0, sel="N"), key(0.5, brake=1, sel="N")]},
    [chk("brake_response_s", arg=0, mx=0.6, status=S, source=f"{R13} 4.1.1: braking force on the least favourable axle within 0.6 s (criterion here: 75 % of the final chamber pressure; Annex 6 method not verified)"),
     chk("brake_response_s", arg=1, mx=0.6, status=S, source=f"{R13} 4.1.1"),
@@ -220,7 +262,7 @@ sc("downhill_7pct_brake_cruise_60", "40 t, 7% down, brake cruise at 60 km/h with
    {"type": "speedhold", "targetKmh": 60, "enduranceOnly": True},
    [chk("mean_speed_kmh", mn=59, mx=61.5, frm=60, source="speed stabilised at the set speed"),
     chk("speed_range_kmh", mx=2, frm=60, source="no hunting / limit cycle of the downhill speed control"),
-    chk("max_retarder_torque_nm", mn=1000, mx=4000, status=S, source="S2: Intarder up to 4000 Nm / 600 kW (class reference)"),
+    chk("max_retarder_torque_nm", mn=1000, mx=4000, status=S, source="S2: secondary retarder up to 4000 Nm / 600 kW (class reference)"),
     chk("max_service_demand", mx=0, source="service brake not needed")] + stable,
    variants=["laden40"], ground={"gradePercent": -7, "surface": "dry_asphalt"}, initial={"speedKmh": 60})
 
@@ -228,7 +270,7 @@ sc("downhill_7pct_full_lever", "40 t, 7% down from 70 km/h, endurance lever at m
    {"type": "timeline", "keys": [key(0, lever=5)]},
    [chk("speed_range_kmh", mx=3, frm=80, source="speed stabilises (endurance brakes stronger than gravity at 70 km/h)"),
     chk("max_speed_kmh", mx=71, source="no runaway"),
-    chk("max_engine_brake_torque_nm", mn=500, source="engine brake active (VEB+ class; S1 375 kW at 2300 rpm)")] + stable,
+    chk("max_engine_brake_torque_nm", mn=500, source="engine brake active (S1 class: 375 kW at 2300 rpm)")] + stable,
    variants=["laden40"], ground={"gradePercent": -7, "surface": "dry_asphalt"}, initial={"speedKmh": 70})
 
 sc("downhill_7pct_service_pumping", "40 t, 7% down at 40 km/h with service brake only (endurance brakes off), driver pumps the pedal",
@@ -245,7 +287,7 @@ sc("air_leak_rear_circuit", "60 km/h, circuit 2 (rear) bursts at t=3 s, then eme
    {"type": "timeline", "keys": [key(0, throttle=0.4), key(15, brake=1)]},
    [chk("low_air_warning", mn=1, source="low-pressure warning must come on"),
     chk("min_air_service_bar", mx=1.0, source="rear circuit empties"),
-    chk("stop_distance_m", mx=64.4, status=S, source=f"{R13} 2.2: secondary braking N: s <= 0.15 v + 2 v^2/130 at 60 km/h"),
+    chk("stop_distance_m", mx=52.4, status=S, source=f"{R13} 2.4.1: residual braking N3 laden from 40 km/h: s <= 0.15 v + (100/30) v^2/115 = 52.4 m (test from 60 km/h is harder; ADR 0201 errata, was 2 v^2/130 at 60 km/h = M2/M3)"),
     chk("max_lateral_deviation_m", mx=1.0, source="stable straight-line stop on the remaining circuits")],
    variants=["laden40"], initial={"speedKmh": 60}, events=[{"t": 3, "type": "leak", "circuit": 2, "lpm": 3000}])
 
@@ -263,7 +305,7 @@ for kmh in [10, 35]:
        [chk("radius_error_m", mx=0.6, frm=30, source="path following"),
         chk("lat_accel_ms2", mn=(kmh / 3.6) ** 2 / 50 * 0.9, mx=(kmh / 3.6) ** 2 / 50 * 1.1, frm=30, status=D, source="v^2/R")] +
        ([chk("trailer_offtracking_m", mn=0.4, mx=0.8, frm=30, status=D,
-             source="steady low-speed offtracking: sqrt(R^2+e^2) vs sqrt(R^2+e^2-L^2) with e = 0.68 m, L = 7.7 m -> 0.59 m")] if kmh == 10 else
+             source="steady low-speed offtracking: sqrt(R^2+e^2) vs sqrt(R^2+e^2-L^2) with e = 0.68 m, L = 7.63 m (D79) -> 0.59 m")] if kmh == 10 else
         [chk("trailer_offtracking_m", mn=-0.5, mx=0.55, frm=30, source="offtracking shrinks / reverses with speed (tire slip angles)"),
          chk("max_trailer_roll_deg", mx=4, frm=30, source="moderate roll at 0.19 g")]) + stable,
        variants=COMB)
@@ -325,7 +367,9 @@ sc("reverse_dock_s_maneuver_comb",
        key(0, brake=1, sel="R"), key(1, throttle=0.3, sel="R"), key(6, throttle=0.3, steer=0.55, sel="R"),
        key(12, throttle=0.3, steer=-0.55, sel="R"), key(18, throttle=0.3, steer=0.35, sel="R"),
        key(24, throttle=0.3, sel="R")]},
-   [chk("max_articulation_deg", mn=20, mx=95, source="S-manoeuvre folds the trailer but the fifth-wheel stop bounds it: +/-90 deg soft deformable stop (3 Hz critically damped), 95 deg = stop + compliance margin; >=20 deg proves the manoeuvre actually articulated"),
+   [chk("max_articulation_deg", mn=20, source=">=20 deg proves the manoeuvre actually articulated (the 0.55 lock folds it into the cab, ADR 0228)"),
+    chk("articulation_limit_excess_deg", mx=1.5, source="ADR 0228: the fold is stopped by the tractor-trailer body contact (trailer side wall on the cab rear corner, 117.12 deg level); measured ~1 deg incl. crush and plate-pitch lean (was: angular 90 deg stop, max 95)"),
+    chk("max_coupling_penetration_m", mx=0.05, source="ADR 0228: cab / trailer crush while the drive axle pushes the trailer into the cab <= 5 cm"),
     chk("wheel_lift", mx=0, source="all wheels stay loaded while reversing"),
     chk("stalled", mx=0, source="engine must not stall"),
     chk("min_speed_kmh", mn=-15, mx=-2, source="dock reversing speed bounded: SpeedFwd < 0 in reverse, so |v| <= 15 km/h means min_speed_kmh >= -15; <= -2 km/h proves it actually reversed (integration r5: with selector D the S-steer path still ends at z -7.5 m, so final_z alone passed)"),
@@ -434,6 +478,10 @@ for h_cm, (ft, fzmax, fzsrc, off_e, off_l, ax_e, all_e, ax_l, all_l) in KERB.ite
 
 # Phone event reconstruction (DEVICE-RUN-2026-11-09 r3, s = 598 m): the per-step suspension + tyre travel on the phone
 # shows a ~27 cm effective step at 42 km/h with 40 t, not a 14 cm kerb (PHYSICS_VALIDATION s3a). Regression guards.
+# ADR 0158 had this scenario run without the chassis colliders (overrides.bodyContact = false) while the bumper strike
+# was open. Owner decision D58 (ADR 0165, 2026-11-13): compliant 4 Hz body contact, jerk limits unchanged -> the
+# scenario runs WITH the colliders and the bumper penetration is bounded instead (committed JSON since 04c2a68ef /
+# c87faf4b1; this generator was not updated then, ADR 0280 s(d)).
 sc("kerb_step_27cm_42kmh_comb",
    "Phone event reconstruction (DEVICE-RUN-2026-11-09 r3, s = 598 m): 40 t at 42 km/h, left wheels hit a 27 cm effective step (kerb on a higher carriageway edge)",
    "docs/04 s6.11; docs/PHYSICS_VALIDATION.md s3a", 6,
@@ -442,14 +490,13 @@ sc("kerb_step_27cm_42kmh_comb",
     chk("max_pos_jump_m", mx=1e-6, source="no teleport"),
     chk("max_fz_ratio", mn=5.2, mx=7.5, source="regression guard on measured 6.50 (phone 6.8x); a 27 cm step is above the tyre envelope a vertical-ray contact can climb smoothly"),
     chk("max_wheel_airtime_s", mx=0.5, arg=1, source="regression guard on measured 0.42 s (phone: both front wheels unloaded ~0.4 s)"),
-    chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds")],
+    chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds"),
+    chk("max_body_penetration_m", mx=0.05, source="ADR 0165: bumper strike on the 27 cm kerb crushes the bumper cover <= 5 cm (4 Hz contact, impact ~3.5 m/s limited by the jerk ceiling); measured 0.038 m (tractor Bumper corner, t 2.88 s)")],
    variants=["laden40"], initial={"speedKmh": 42},
-   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [kerb_box(0.27, 30, 33)]},
-   # ADR 0158 Open: with the chassis colliders the right bumper corner (0.35 m above the road) strikes the road at
-   # t ~2.83 s (11.5 cm geometric overlap without contact) -> max_dv_step_ms 0.755 m/s, kingpin error 7.9 mm (Unity
-   # PlayMode on the same event: 0.968 m/s, 28 body contacts). These guards were authored without colliders; the
-   # strike vs. ceiling decision belongs to the leader/owner, so this scenario keeps running without them for now.
-   overrides={"bodyContact": False})
+   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [kerb_box(0.27, 30, 33)]})
+# ADR 0158 Open (bumper strikes the road with the chassis colliders, scenario ran with bodyContact off) was closed by
+# ADR 0165 (compliant body contact): the committed scenario runs WITH body contact and guards the bumper penetration.
+# ADR 0245: the generator now emits exactly that committed scenario (before, it still wrote the 0158 override).
 
 sc("speed_bump_comb","Speed bump 7 cm x 0.5 m across the lane at 15 km/h", "docs/04 s6.11", 12,
    {"type": "speedhold", "targetKmh": 15},
@@ -522,6 +569,34 @@ sc("couple_uncouple", "Trailer on landing gear; tractor reverses under it, coupl
    variants=COMB, overrides={"coupled": False, "trailerGap": 2.0},
    events=[{"t": 0.5, "type": "couple_arm"}, {"t": 8, "type": "landing_gear_up"},
            {"t": 31, "type": "landing_gear_down"}, {"t": 48, "type": "uncouple"}])
+
+# ---------------- turning ring, Directive 96/53/EC Annex I 1.5 (ADR 0280) ----------------
+# CELEX 01996L0053-20190814, Annex I point 1.5: "Any motor vehicle or vehicle combination which is in motion must be able
+# to turn within a swept circle having an outer radius of 12,50 m and an inner radius of 5,30 m". Steady circle at 5 km/h,
+# driver radius 10.12 m at the tractor rear axle (outer footprint corner = front bumper corner just inside 12.50 m),
+# evaluated from t = 120 s (fit rms ~1e-4 m). Footprint from dims.json (mirrors excluded). Trailer geometry from the game
+# data: kingpin -> tridem centre 7.63 m (D79 correction, ADR 0280; 7.70 m failed by 4-7 cm and was a known failure until then).
+RING_ENV = {"tractorFrontZ": round(dv("wheelbase_m") + dv("front_overhang_m"), 4), "tractorRearZ": -dv("rear_overhang_m"),
+            "tractorHalfWidth": round(dv("cab_width_m") / 2, 4),
+            "trailerFrontZ": dv("trailer_kingpin_to_front_m"), "trailerRearZ": -dv("semitrailer_kingpin_to_rear_m"),
+            "trailerHalfWidth": round(dv("max_width_m") / 2, 4)}
+RING_SRC = "Directive 96/53/EC Annex I 1.5 (CELEX 01996L0053-20190814): swept circle outer radius 12,50 m, inner radius 5,30 m"
+
+
+def ring_checks(width_max, width_src, width_status):
+    return [chk("swept_outer_radius_m", mx=12.50, frm=120, status=S, source=RING_SRC + "; no footprint point beyond the outer circle"),
+            chk("swept_inner_radius_m", mn=5.30, frm=120, status=S, source=RING_SRC + "; no footprint point inside the inner circle"),
+            chk("swept_ring_width_m", mx=width_max, frm=120, status=width_status, source=width_src),
+            chk("swept_fit_rms_m", mx=0.01, frm=120, source="steady state: rear-axle path is a circle (Kasa fit residual)"),
+            chk("mean_speed_kmh", mn=4, mx=6, frm=120, source="crawl speed, kinematic regime"),
+            chk("max_dv_step_ms", mx=0.35, source="no solver spikes")]
+
+
+ring_drv = {"type": "circle", "targetKmh": 5, "radius": 10.12, "direction": 1}
+sc("ring_96_53_comb", "Turning ring 12.50 / 5.30 m (96/53/EC Annex I 1.5), game trailer geometry (kingpin -> tridem centre 7.63 m, D79 correction)",
+   "docs/04 s6.7; ADR 0280; D79", 240, ring_drv,
+   ring_checks(7.18, "margin guard, not the regulation: 12.50 - 5.30 = 7.20 m (DERIVED from the SOURCED radii) minus 0.02 m. History: 7.15 (5 cm) with the 7.60 m axles (D79); 7.18 (2 cm) since the owner's D79 correction to the datasheet value 7.63 m (measured 7.177 / 7.170 m, ADR 0280 section 10)", W),
+   variants=COMB, envelope=RING_ENV)
 
 # ---------------- AMT manual ----------------
 sc("manual_mode_shifts", "Manual mode: start in 2nd, shift up by hand, try an over-revving downshift at speed (must be rejected)",

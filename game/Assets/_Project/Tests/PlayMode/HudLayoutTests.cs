@@ -360,6 +360,9 @@ namespace Game.Tests
         {
             MakeCamera(k_Devices[2]);
             var hud = DrivingHud.Create(m_Cam, new DrivingHudContext());
+            // Phone / fold form factor explicitly: with the editor on Win64 UiViewport would pick the monitor HUD, which
+            // (ADR 0283) shows the developer "Panel" button only in the extended mode (int-ui-s23).
+            hud.OverrideDesktop(false);
             yield return null;
             Assert.IsFalse(hud.DevPanelOpen);
             string[] dev = { "Camera", "SteerMode", "Menu", "Settings", "Telemetry", "Record", "Reset", "Lab", "Couple", "Legs" };
@@ -416,13 +419,43 @@ namespace Game.Tests
         }
 
         [UnityTest]
+        public IEnumerator AboutPanel_FitsSafeArea([ValueSource(nameof(Devices))] Device d)
+        {
+            MakeCamera(d);
+            var p = AboutPanel.Create(m_Cam, null);
+            p.OverrideScreen(new Vector2(d.W, d.H), d.SafePx, d.Dpi);
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            CollectionAssert.IsEmpty(p.Problems, "attributions.txt loads without problems");
+            var safe = p.SafeAreaRect;
+            var bounds = new Rect(Vector2.zero, safe.rect.size);
+            Rect panel = RectIn(p.PanelRect, safe);
+            Assert.IsTrue(Contains(bounds, panel, 0.6f), $"{d.Name}: about panel {panel} outside the safe area {bounds.size}");
+            foreach (var g in p.PanelRect.GetComponentsInChildren<Graphic>(false))
+            {
+                Rect gr = RectIn(g.rectTransform, safe);
+                // Horizontally nothing may be cut; vertically the text scrolls under the mask.
+                Assert.IsTrue(gr.xMin >= panel.xMin - 1f && gr.xMax <= panel.xMax + 1f, $"{d.Name}: {g.transform.parent.name}/{g.name} {gr} cut by the panel {panel}");
+            }
+            Assert.Greater(p.ContentRect.rect.height, panel.height, $"{d.Name}: the licence texts are longer than one screen (body scrolls)");
+            foreach (string fixedName in new[] { "Title", AboutPanel.CloseLabel })
+            {
+                var t = p.PanelRect.Find(fixedName);
+                Assert.IsNotNull(t, fixedName);
+                Assert.IsTrue(Contains(panel, RectIn((RectTransform)t, safe), 1f), $"{d.Name}: {fixedName} cut");
+            }
+            Debug.Log($"[HUD-R10] about {d.Name}: panel {panel.width:F0}x{panel.height:F0}, content {p.ContentRect.rect.height:F0}");
+            UnityEngine.Object.Destroy(p.gameObject);
+        }
+
+        [UnityTest]
         public IEnumerator StartMenu_FitsSafeArea([ValueSource(nameof(Devices))] Device d)
         {
             MakeCamera(d);
             var starts = new List<(string, Action)>
             {
                 ("DrivingLab — plac testowy", () => { }),
-                ("Trasa G3-A — Kwadrat Park, brama, Bieżeństwa", () => { }),
+                ("Trasa G3-A — baza, brama, Bieżeństwa", () => { }),
                 ("Trasa G3-B — Andersa, Rondo Putry", () => { }),
             };
             var menu = BootMenu.Create(m_Cam, StartMenuOptions.Load(), starts, null);
@@ -433,6 +466,33 @@ namespace Game.Tests
             var bounds = new Rect(Vector2.zero, safe.rect.size);
             foreach (var g in safe.GetComponentsInChildren<Graphic>(false))
                 Assert.IsTrue(Contains(bounds, RectIn(g.rectTransform, safe), 1f), $"{d.Name}: menu item {g.transform.parent.name}/{g.name} {RectIn(g.rectTransform, safe)} outside the safe area {bounds.size}");
+        }
+
+        /// <summary>ADR 0229: the region picker below the three starts (longest catalog label) still fits every screen.</summary>
+        [UnityTest]
+        public IEnumerator StartMenu_WithRegionPicker_FitsSafeArea([ValueSource(nameof(Devices))] Device d)
+        {
+            MakeCamera(d);
+            var starts = new List<(string, Action)>
+            {
+                ("DrivingLab — plac testowy", () => { }),
+                ("Trasa G3-A — baza, brama, Bieżeństwa", () => { }),
+                ("Trasa G3-B — Andersa, Rondo Putry", () => { }),
+            };
+            var regions = new List<BootRegionChoice>
+            {
+                new BootRegionChoice("bialystok-dojlidy", "Białystok — Dojlidy, Dywizjonu 303 / Kuronia", "Białystok · trasa 2,1 km · start na początku trasy", true, () => { }),
+                new BootRegionChoice("knyszyn", "Knyszyn — rondo DK65/DW671, Rynek", "Knyszyn · brak w tym APK", false, () => { }),
+            };
+            var menu = BootMenu.Create(m_Cam, StartMenuOptions.Load(), starts, null, null, regions);
+            menu.OverrideScreen(new Vector2(d.W, d.H), d.SafePx, d.Dpi);
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            var safe = menu.SafeAreaRect;
+            var bounds = new Rect(Vector2.zero, safe.rect.size);
+            foreach (var g in safe.GetComponentsInChildren<Graphic>(false))
+                Assert.IsTrue(Contains(bounds, RectIn(g.rectTransform, safe), 1f), $"{d.Name}: menu item {g.transform.parent.name}/{g.name} {RectIn(g.rectTransform, safe)} outside the safe area {bounds.size}");
+            UnityEngine.Object.Destroy(menu.gameObject);
         }
 
         // ------------------------------------------------------------------ captures (explicit)
@@ -526,7 +586,7 @@ namespace Game.Tests
                 var starts = new List<(string, Action)>
                 {
                     ("DrivingLab — plac testowy", () => { }),
-                    ("Trasa G3-A — Kwadrat Park, brama, Bieżeństwa", () => { }),
+                    ("Trasa G3-A — baza, brama, Bieżeństwa", () => { }),
                     ("Trasa G3-B — Andersa, Rondo Putry", () => { }),
                 };
                 var menu = BootMenu.Create(cam, StartMenuOptions.Load(), starts, null);

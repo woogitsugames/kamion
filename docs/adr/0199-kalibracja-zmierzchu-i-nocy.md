@@ -1,6 +1,6 @@
 # 0199 — Kalibracja zmierzchu i nocy: tabela E(h), pastelowa łuna, włączanie latarni, okna, podłoga nocna
 
-Status: kandydat (gałąź `dusk-cal-0199`), nie scalone. Data: 2026-11-14 (s20). Dotyczy: ADR 0062 (zmierzch), 0182 (dusk), 0191/0192
+Status: przyjęty (scalony do main 2026-11-14, `f1dfef0af`; status zaktualizowany 2026-11-16); pierwotnie: kandydat (gałąź `dusk-cal-0199`), nie scalone. Data: 2026-11-14 (s20). Dotyczy: ADR 0062 (zmierzch), 0182 (dusk), 0191/0192
 (pule, okna, magenta). Źródła: `research/cloud/p17-dusk-lighting/` (README + errata), `docs/reports/REVIEW-2026-11-14-s20-cloud-m60-compare.md`
 (§4, §6), `REVIEW-2026-11-14-s20-mistral-m60.md`, `REVIEW-2026-11-14-s20-cloud2-r7.md` (§3).
 

@@ -19,10 +19,14 @@ namespace Game.UI.Navigation
         {
             zone = default;
             if (telemetry) return false;
+            // ADR 0283: the monitor HUD solves the GPS zone itself (bottom left, under / beside the left mirror window).
+            if (r.Desktop) { zone = r.Nav; return r.ShowNav; }
             float top = height - HudLayout.Margin, x0 = HudLayout.Margin;
             float x1 = (r.ShowMirrorLeft ? r.MirrorLeft.x : r.Cluster.x) - HudLayout.Gap;
             if (r.ShowReverseView) x1 = Mathf.Min(x1, r.ReverseView.x - HudLayout.Gap);
-            float bottom = Mathf.Max(r.TurnSignals.yMax, r.Stalk.yMax, r.Steering.yMax) + HudLayout.Gap;
+            // ADR 0265: on a monitor the steering group is not on screen - only the developer text row is below.
+            float bottom = r.ShowTouchControls ? Mathf.Max(r.TurnSignals.yMax, r.Stalk.yMax, r.Steering.yMax) + HudLayout.Gap
+                                               : HudLayout.Margin + HudLayout.DevTextHeight + HudLayout.Gap;
             float w = Mathf.Min(Preferred.x, x1 - x0), h = Mathf.Min(Preferred.y, top - bottom);
             if (w < Minimum.x || h < Minimum.y) return false;
             zone = new Rect(x0, top - h, w, h);

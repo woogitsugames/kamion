@@ -129,6 +129,23 @@ def _local(coords, origin) -> list[list[float]]:
     return [[float(x) - origin[0], float(y) - origin[1]] for x, y in coords]
 
 
+def graph_edges(region_id: str, origin) -> list[dict]:
+    """World.edges of a region: ADR 0274 - the effective graph (authored carriageway splits), i.e. the carriageways
+    the world is built with, so the ribbons do not cover a splitter island left between the separated lanes."""
+    from roads import pipeline
+    out = []
+    for e in pipeline.effective_graph(region_id)["edges"]:
+        a = e["attrs"]
+        out.append({
+            "id": e["id"], "osm_way": e.get("osm_way"),
+            "coords": _local(e["geometry"], origin),
+            "width_m": _edge_width_m(a, e.get("bdot10k", {}), a["highway"]["v"], a.get("lanes", {}).get("v")),
+            "highway": a["highway"]["v"], "lanes": a.get("lanes", {}).get("v"),
+            "bridge": "bridge" in a or "tunnel" in a, "name": a.get("name", {}).get("v"),
+        })
+    return out
+
+
 def load_world(region_id: str) -> World:
     """Build the World bundle from the committed, read-only files of Data/Regions/<region_id>/."""
     import yaml
@@ -141,16 +158,7 @@ def load_world(region_id: str) -> World:
 
     w = World(region_id=region_id, origin=(ox, oy))
 
-    graph = json.loads((d / "roads.graph.json").read_text(encoding="utf-8"))
-    for e in graph["edges"]:
-        a = e["attrs"]
-        w.edges.append({
-            "id": e["id"], "osm_way": e.get("osm_way"),
-            "coords": _local(e["geometry"], (ox, oy)),
-            "width_m": _edge_width_m(a, e.get("bdot10k", {}), a["highway"]["v"], a.get("lanes", {}).get("v")),
-            "highway": a["highway"]["v"], "lanes": a.get("lanes", {}).get("v"),
-            "bridge": "bridge" in a or "tunnel" in a, "name": a.get("name", {}).get("v"),
-        })
+    w.edges = graph_edges(region_id, (ox, oy))
 
     bld = json.loads((d / "buildings.geojson").read_text(encoding="utf-8"))
     for f in bld["features"]:

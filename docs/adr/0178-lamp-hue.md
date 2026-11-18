@@ -1,6 +1,6 @@
 # 0178 — Barwa lamp sygnałowych o zmierzchu (hue-preserving limit)
 
-Status: kandydat (gałąź `lamps-0178`), nie scalone. Data: 2026-11-13.
+Status: przyjęty (scalony do main 2026-11-13, `280e5cff1`; status zaktualizowany 2026-11-16); pierwotnie: kandydat (gałąź `lamps-0178`), nie scalone. Data: 2026-11-13.
 
 ## Problem
 Stop, kierunkowskazy i obrysówki ciężarówki/naczepy o zmierzchu renderowały się jako białe plamy z kolorową obwódką.

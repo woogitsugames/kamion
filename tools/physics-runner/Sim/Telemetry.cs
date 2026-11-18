@@ -30,6 +30,8 @@ namespace PhysicsRunner.Sim
         // combination
         public bool HasTrailer, Coupled;
         public Vec3 TrailerPos, TrailerComPos, TrailerVel, TrailerAxlePos;
+        /// <summary>Trailer body axes in the world (swept-path metrics, ADR 0280).</summary>
+        public Vec3 TrailerFwd, TrailerRight;
         public double Articulation, KingpinFz, KingpinFx, KingpinFy, FifthWheelError;
         public double TrailerYawRate, TrailerLatAccel, TrailerRoll;
         // brakes / air / endurance
@@ -59,6 +61,13 @@ namespace PhysicsRunner.Sim
         public double ComHeightAboveGround;
         /// <summary>Velocity of the combined centre of mass (momentum / total mass) [m/s].</summary>
         public Vec3 SystemVel;
+        // tractor-trailer body contact (ADR 0228)
+        /// <summary>Contact points with a non-zero normal impulse between tractor and trailer bodies.</summary>
+        public int CouplingContacts;
+        /// <summary>Deepest tractor-trailer body penetration at the start of the step [m] and contact force on the trailer [N].</summary>
+        public double CouplingPenetration, CouplingContactForce;
+        /// <summary>|angular velocity| of the tractor and the trailer body [rad/s].</summary>
+        public double TractorAngRate, TrailerAngRate;
     }
 
     /// <summary>CSV telemetry writer (docs/04 section 4).</summary>
@@ -79,14 +88,14 @@ namespace PhysicsRunner.Sim
             _sb.Append("rpm,gear,amt_state,clutch_cmd,engine_torque,clutch_torque,boost,asr_factor,clutch_temp_c,");
             _sb.Append("engine_brake_cmd,engine_brake_torque,retarder_cmd,retarder_torque,retarder_power_kw,");
             _sb.Append("air_supply_bar,air_front_bar,air_rear_bar,air_park_bar,air_red_bar,air_yellow_bar,air_trailer_res_bar,low_air_warning,compressor_on,trailer_emergency,");
-            _sb.Append("steer_angle_deg,handwheel_deg,aligning_torque,cab_pitch_deg,cab_roll_deg,cab_heave_mm,");
+            _sb.Append("steer_angle_deg,handwheel_deg,aligning_torque,aligning_torque_raw,cab_pitch_deg,cab_roll_deg,cab_heave_mm,");
             _sb.Append("articulation_deg,kingpin_fz,kingpin_fx,kingpin_fy,fifth_wheel_err_mm,coupled,trailer_yaw_rate_dps,trailer_a_lat,trailer_roll_deg,trailer_x,trailer_z,landing_gear_load,");
             foreach (var wh in s.AllWheels)
             {
                 string n = wh.Name;
                 _sb.Append($"{n}_fz,{n}_fx,{n}_fy,{n}_slip,{n}_alpha_deg,{n}_comp,{n}_omega,{n}_brake_t,{n}_abs,{n}_drive_t,{n}_tire_defl,{n}_contact,{n}_p_bar,");
             }
-            _sb.Append("axle0_load,axle1_load,trailer_axles_load,body_pen_tractor_m,body_pen_trailer_m,body_contacts,body_deep_corner_tractor,body_deep_corner_trailer,step_us,config_id,commit");
+            _sb.Append("axle0_load,axle1_load,trailer_axles_load,body_pen_tractor_m,body_pen_trailer_m,body_contacts,body_deep_corner_tractor,body_deep_corner_trailer,coupling_contacts,coupling_pen_m,coupling_force_kn,tractor_ang_rate_dps,trailer_ang_rate_dps,step_us,config_id,commit");
             _w.WriteLine(_sb.ToString());
         }
 
@@ -110,7 +119,7 @@ namespace PhysicsRunner.Sim
             var a = m.Air;
             F(a.Supply); F(a.Front); F(a.Rear); F(a.ParkTrailer); F(a.TrailerSupplyLine); F(a.TrailerControlLine); F(tr != null ? tr.Brakes.Reservoir : 0);
             F(a.LowPressureWarning ? 1 : 0); F(a.CompressorLoaded ? 1 : 0); F(tr != null && tr.Brakes.Emergency ? 1 : 0);
-            F(m.Steering.Angle * MathUtil.Rad2Deg); F(m.Steering.HandwheelDeg); F(m.AligningTorqueTotal); F(m.Cab.Pitch * MathUtil.Rad2Deg); F(m.Cab.Roll * MathUtil.Rad2Deg); F(m.Cab.Heave * 1000);
+            F(m.Steering.Angle * MathUtil.Rad2Deg); F(m.Steering.HandwheelDeg); F(m.AligningTorqueTotal); F(m.AligningTorqueRaw); F(m.Cab.Pitch * MathUtil.Rad2Deg); F(m.Cab.Roll * MathUtil.Rad2Deg); F(m.Cab.Heave * 1000);
             if (tr != null)
             {
                 var tb = s.TrailerBody;
@@ -127,7 +136,11 @@ namespace PhysicsRunner.Sim
             double bpt = 0, bpr = 0; int bc = 0;
             if (s.TractorContact != null) { bpt = s.TractorContact.MaxPenetration; bc += s.TractorContact.ActiveContacts; }
             if (s.TrailerContact != null) { bpr = s.TrailerContact.MaxPenetration; bc += s.TrailerContact.ActiveContacts; }
-            F(bpt); F(bpr); F(bc); F(s.TractorContact != null ? s.TractorContact.DeepestCorner : -1); F(s.TrailerContact != null ? s.TrailerContact.DeepestCorner : -1); F(stepMicros);
+            F(bpt); F(bpr); F(bc); F(s.TractorContact != null ? s.TractorContact.DeepestCorner : -1); F(s.TrailerContact != null ? s.TrailerContact.DeepestCorner : -1);
+            // ADR 0228: tractor-trailer body contact and body angular rates
+            F(fw.ContactPoints); F(fw.ContactPenetration); F(fw.ContactForceOnTrailer.Magnitude / 1000);
+            F(b.AngularVelocity.Magnitude * MathUtil.Rad2Deg); F(s.TrailerBody != null ? s.TrailerBody.AngularVelocity.Magnitude * MathUtil.Rad2Deg : 0);
+            F(stepMicros);
             _sb.Append(_configId); _sb.Append(','); _sb.Append(_commit);
             _w.WriteLine(_sb.ToString());
         }

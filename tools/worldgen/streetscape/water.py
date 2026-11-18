@@ -53,6 +53,7 @@ STATION_M = 5.0
 LEVEL_PCT = 30.0
 MIN_AREA_M2 = 30.0
 FLOW_SMOOTH_M = 6.0      # gaussian sigma of the flow direction field (m)
+SEAM_BLEND_M = 120.0     # ADR 0213: water crossing a tile edge is pulled to the shared edge level over this distance
 
 
 # ------------------------------------------------------------------------------------------------ extraction
@@ -179,13 +180,19 @@ def extract(region: dict) -> dict:
     from fetch_osm import download
     b = region["bbox"]
     bbox = (b["xmin"], b["ymin"], b["xmax"], b["ymax"])
-    t = region["teryt_powiat"]
-    z = manifest_files(f"gugik-bdot10k-{t}")[0]
-    gdir = REPO / "Data" / "raw" / "gugik" / f"bdot10k-{t}" / "gpkg"
+    # ADR 0219 (coordination point with 0213): every powiat the tile overlaps, not only region["teryt_powiat"];
+    # one powiat -> the same call and output as before.
+    from powiaty import merge_layers, powiaty_for_bbox
+    pw = powiaty_for_bbox(bbox)
+    bdot = None
+    for t in pw:
+        more = extract_bdot(bbox, manifest_files(f"gugik-bdot10k-{t}")[0],
+                            REPO / "Data" / "raw" / "gugik" / f"bdot10k-{t}" / "gpkg")
+        bdot = more if bdot is None else merge_layers(bdot, more)
     return {"schema": SCHEMA, "crs": "EPSG:2180", "bbox": list(bbox), "margin_m": 60.0,
             "license": {"osm": "ODbL 1.0, © OpenStreetMap contributors",
-                        "bdot10k": "GUGiK BDOT10k (powiat %s), free use, art. 40a ust. 2 pkt 1 Pgik" % t},
-            "osm": extract_osm(bbox, download()), "bdot10k": extract_bdot(bbox, z, gdir)}
+                        "bdot10k": "GUGiK BDOT10k (powiat %s), free use, art. 40a ust. 2 pkt 1 Pgik" % ", ".join(pw)},
+            "osm": extract_osm(bbox, download()), "bdot10k": bdot}
 
 
 def sources_path(region_id: str) -> Path:
@@ -377,6 +384,7 @@ class Plan:
                 m = lab == k_
                 level[m] = float(np.percentile(z[m], LEVEL_PCT))
                 depth[m] = DEPTH_M["river"]
+        self.report["seams"] = self._seam_levels(level, fmask | smask)
         self._stations = st_xy
         self._fmask = fmask
         self.mask = np.isfinite(level)
@@ -385,6 +393,39 @@ class Plan:
         self.report["still_levels"] = still_rep
         self.report["profiles"] = prof
         self.report["water_nodes"] = int(self.mask.sum())
+
+    def _seam_levels(self, level, wmask):
+        """ADR 0213: a river that crosses a tile edge gets the SAME level on both tiles. Each tile derives its levels
+        from its own stations (median window and the downstream running minimum start at its own end of the line), so
+        two neighbours differed by ~3 cm on the shared edge (dk65-02 | dk65-03). The edge column / row of the NMT is
+        shared by both tiles, so the 30th percentile of the NMT on the crossing nodes is a value both compute alike:
+        the level there is set to it exactly and the correction fades linearly over SEAM_BLEND_M inside the tile."""
+        from scipy.spatial import cKDTree
+        z = self.hf.z
+        H, W_ = z.shape
+        rep = []
+        jj, ii = np.nonzero(wmask)
+        if not len(jj):
+            return rep
+        corr = np.zeros(len(jj))
+        for name, j_, i_ in (("W", np.arange(H), np.zeros(H, int)), ("E", np.arange(H), np.full(H, W_ - 1)),
+                             ("N", np.zeros(W_, int), np.arange(W_)), ("S", np.full(W_, H - 1), np.arange(W_))):
+            m = wmask[j_, i_]
+            lab, n = ndimage.label(m)
+            for k in range(1, n + 1):
+                sel = lab == k
+                if sel.sum() < 3:
+                    continue
+                cj, ci = j_[sel], i_[sel]
+                target = float(np.percentile(z[cj, ci], LEVEL_PCT))
+                own = level[cj, ci]
+                d, q = cKDTree(np.column_stack([ci, cj])).query(np.column_stack([ii, jj]))
+                wgt = np.clip(1.0 - d / SEAM_BLEND_M, 0.0, 1.0)
+                corr += wgt * (target - own[q])
+                rep.append({"edge": name, "nodes": int(sel.sum()), "level_m": round(target, 3),
+                            "own_m": [round(float(np.nanmin(own)), 3), round(float(np.nanmax(own)), 3)]})
+        level[jj, ii] = level[jj, ii] + corr
+        return rep
 
     # -------------------------------------------------------------------------------------------- terrain
     def carve(self, zc, mask, log=print):
@@ -510,3 +551,46 @@ class Plan:
         fn = np.where(self._fmask, ndimage.gaussian_filter(fn, FLOW_SMOOTH_M) / den, 0.0)
         ln_ = np.maximum(np.hypot(fe, fn), 1e-6)
         return np.where(self._fmask, fe / ln_, 0.0), np.where(self._fmask, fn / ln_, 0.0)
+
+    # -------------------------------------------------------------------------------------------- banks (ADR 0213)
+    def bank_vegetation(self, buf, zground, keep_out, trees, blocked, rep, log=print):
+        """Reed / tall-herb belt ribbons (layers `banks` High, `banks_low` Low / Medium) and willow / alder shrub
+        instances from Data/Regions/<id>/water_banks.json (self.banks_doc; None = banks as in ADR 0210)."""
+        from streetscape import paved as PV
+        from streetscape import reeds as RD
+        doc = getattr(self, "banks_doc", None)
+        if doc is None or not self.mask.any():
+            return []
+        lv = np.where(self.mask, self.level, np.nan)
+
+        def zlevel(e, n):
+            i = np.clip(np.round(np.asarray(e, float) - self.hf.x0).astype(int), 0, lv.shape[1] - 1)
+            j = np.clip(np.round(self.hf.y1 - np.asarray(n, float)).astype(int), 0, lv.shape[0] - 1)
+            return lv[j, i]
+        brep = {}
+        RD.build(buf, doc, zground, zlevel, keep_out, brep, layer="banks", low=False)
+        RD.build(buf, doc, zground, zlevel, keep_out, brep, layer="banks_low", low=True)
+
+        def blocked_fn(e, n):
+            i, j = int(round(e - self.hf.x0)), int(round(self.hf.y1 - n))
+            if not (0 <= j < blocked.shape[0] and 0 <= i < blocked.shape[1]):
+                return True
+            return bool(blocked[j, i]) or bool(shapely.contains_xy(keep_out, e, n))
+        out = RD.shrubs(doc, zground, trees, blocked_fn, brep)
+        self.report["banks"] = brep
+        log("water banks", brep)
+        return out
+
+    def export_textures(self, tex_dir):
+        """water_reeds.png next to the region's other generated textures (only regions with the water stage)."""
+        import io
+        from streetscape import reeds as RD
+        tex_dir = Path(tex_dir)
+        tex_dir.mkdir(parents=True, exist_ok=True)
+        for k, im in RD.textures().items():
+            b = io.BytesIO()
+            im.save(b, format="PNG", optimize=False)
+            p = tex_dir / f"{k}.png"
+            if not p.exists() or p.read_bytes() != b.getvalue():
+                p.write_bytes(b.getvalue())
+

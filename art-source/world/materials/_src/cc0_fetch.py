@@ -8,6 +8,7 @@ missing and verifies every file against the manifest (a mismatch is an error: th
     uv run --project tools/worldgen python art-source/world/materials/_src/cc0_fetch.py --resolve  # (re)query the
         Poly Haven API for URLs / authors / dimensions of the assets listed in SELECTION and rewrite the manifest
     ... --record   # write sha256 / bytes of the downloaded files into the manifest (first fetch of a new asset)
+    ... --resolve --only <id>[,<id>]   # add a new SELECTION asset without re-querying the recorded ones
 
 Only Poly Haven (api.polyhaven.com, CC0 1.0, https://polyhaven.com/license) and ambientCG (CC0 1.0,
 https://docs.ambientcg.com/license/) are allowed sources (owner decision D40). No Google sources, no AI generators.
@@ -47,6 +48,8 @@ SELECTION = {
     "corrugated_iron_03": (["trapezoid_sheet"], "galvanised sheet weathering (scratches, rust spots); ribs notched out"),
     "gravel_floor_02": (["gravel_compacted"], "grey crushed-stone driveway gravel (shoulders, yards)"),
     "pine_bark": (["bark_pine"], "Scots-pine-like plated bark (processed only; trees are another agent's scope)"),
+    # owner decision D-17.11: weathered horizontal plank wall for the wooden houses of Knyszyn (ADR 0287)
+    "raw_plank_wall": (["wood_siding"], "weathered raw pine planks, horizontal boards (wooden houses, Dom Klattow)"),
 }
 MAPS = ["Diffuse", "nor_gl", "Rough", "AO", "Displacement"]
 RES = "2k"
@@ -61,10 +64,15 @@ def sha256(p: Path) -> str:
     return h.hexdigest()
 
 
-def resolve(old: dict) -> dict:
+def resolve(old: dict, only: set[str] | None = None) -> dict:
+    """Query the API for the SELECTION assets; with `only`, the other assets already in the manifest are kept verbatim
+    (adding one scan must not rewrite the recorded entries of the others)."""
     prev = {a["id"]: a for a in old.get("assets", [])}
     assets = []
     for aid, (sets, why) in SELECTION.items():
+        if only and aid not in only and aid in prev:
+            assets.append(prev[aid])
+            continue
         info = requests.get(f"https://api.polyhaven.com/info/{aid}", headers=UA, timeout=60).json()
         files = requests.get(f"https://api.polyhaven.com/files/{aid}", headers=UA, timeout=60).json()
         maps = []
@@ -122,9 +130,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--resolve", action="store_true")
     ap.add_argument("--record", action="store_true")
+    ap.add_argument("--only", default="", help="with --resolve: comma list of asset ids to (re)query; the other "
+                                               "manifest entries stay as recorded (adding a new scan)")
     a = ap.parse_args()
     old = json.loads(MANIFEST.read_text(encoding="utf-8")) if MANIFEST.exists() else {}
-    man = resolve(old) if a.resolve else old
+    only = set(filter(None, a.only.split(",")))
+    unknown = only - set(SELECTION)
+    if unknown:
+        sys.exit(f"--only: not in SELECTION: {', '.join(sorted(unknown))}")
+    man = resolve(old, only) if a.resolve else old
     if not man:
         sys.exit("no manifest: run with --resolve first")
     bad = fetch(man, a.record or a.resolve)

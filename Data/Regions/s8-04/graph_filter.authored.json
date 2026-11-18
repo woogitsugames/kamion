@@ -1,0 +1,7 @@
+{
+ "provenance": "authored_override (ADR 0204 rule, ADR 0288): ways left out of the drivable road graph of this region",
+ "drop_service": [],
+ "drop_osm_ways": [222577653],
+ "reason": "OSM way 222577653 (unclassified, tunnel=yes, layer=-1) is the underpass of a local road below both S8 carriageways (local E 447-465, N -299...-278) and the parallel road 623772956. The generator's cut for it left a ~12 m hole in each S8 carriageway (road_consistency_qa obstacle_in_lane 'none' 85, on the control route s 1548-1560 m). `bridge: true` on the S8 ways (ADR 0206) closed the holes but turned 2 km of the S8 into a kerbed deck with railings (render vqa-r6/s8-04), because the flag covers the whole OSM way. Drivable first (D63): the underpass is left out, the S8 stays at grade; the local road ends at the embankment on both sides.",
+ "verify": "road_consistency_qa obstacle_in_lane = 0 and no deck profile on the S8 after the rebuild; model the underpass when a bridge flag per station range exists (ADR 0288 Otwarte)"
+}

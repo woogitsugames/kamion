@@ -37,3 +37,36 @@ overrides:
     confidence: medium
     verify: none
     set: {lamps: false}
+  - id: lamp-policy-led-0216
+    kind: lamp_policy
+    family: led
+    cct_k: 4000
+    sources: ["docs/11_DECYZJE_WLASCICIELA.md D65 p.8", "research/dk65-knyszyn-refs/README.md (e)",
+              "research/night-lamps-s21/README.md section 4"]
+    reason: >-
+      Owner D65 p.8: street lighting on the DK65 / Knyszyn route is white LED. The older side-street poles
+      (spun concrete with an arc arm, thin grey steel) keep their shape and positions and carry a flat LED head
+      instead of the sodium one (ADR 0216). Nominal 4000 K: ZDM Bialystok tenders 2023-2024 (K69, SOURCED for
+      Bialystok streets); type, height and spacing in Knyszyn UNVERIFIED (K1) - the generator's WORKING_VALUE.
+    confidence: medium
+    verify: owner - a night photo of a Knyszyn street lamp (pole type, light colour)
+  # ADR 0237 D38 (world3, leader s23): the same sidewalk rule as tile knyszyn (`knyszyn-pavement-rules-d38`), so the
+  # western streets of the town (Jagiełły, Kościelna, Legionowa, Tykocka, Zamoyskiego, Junga, Chwalczewskiego, Polna)
+  # and the seam with knyszyn (x = 760587) keep one cross-section family.
+  - id: knyszyn-w-pavement-rules-d38
+    kind: pavement_rules
+    implied_sidewalks: true
+    sidewalk_bdot: false
+    estate_slabs: false
+    crossing_kerb_drops: true
+    reason: >-
+      Owner (s23, docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md): sidewalks on both sides of every street of Knyszyn,
+      concrete block paving. The graph of this tile carries no sidewalk=* tag on any of its 47 edges, so without the
+      rule the town streets west of the tile seam got grass behind both kerbs. implied_sidewalks lays a 2.0 m sidewalk
+      (roads.standards.SIDEWALK_W) behind both kerbs of residential / tertiary / secondary / unclassified paved streets
+      in the built-up area (BDOT10k residential zabudowa + 60 m: 25 jednorodzinna + 1 wielorodzinna polygons in this
+      tile) unless OSM says sidewalk=no / separate or a mapped path runs within 6 m of the kerb. DK65 Obozowa is
+      highway=primary and stays outside the rule (as in tile knyszyn). Surface: grey 20 x 10 blocks (default). Widths
+      not measured: WORKING_VALUE.
+    confidence: medium
+    verify: owner check of Jagiełły / Kościelna; widths on the GUGiK orthophoto 0.1 m 2025 of this tile

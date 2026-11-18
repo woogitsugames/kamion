@@ -304,7 +304,9 @@ namespace Game.World.Import
             // ADR 0123: manifest "shadow_low": false = no shadow casting on the Low tier (Kamion/World PBR _LowNoShadow)
             if (mat != null && mat.HasProperty("_LowNoShadow"))
             {
-                mat.SetFloat("_LowNoShadow", m.Get("shadow_low") is bool sl && !sl ? 1f : 0f);
+                // ADR 0240: + thin chunk furniture by material id (fence posts, W-beam posts; the fence mesh is ADR 0239).
+                bool lowOff = (m.Get("shadow_low") is bool sl && !sl) || Game.Rendering.ThinShadowCasterPolicy.IsThinMaterial(id);
+                mat.SetFloat("_LowNoShadow", lowOff ? 1f : 0f);
                 EditorUtility.SetDirty(mat);
             }
             // ADR 0123: manifest "vertex_grime": [r, g, b, roughness gain] = road film where the mesh carries COLOR_0.r
@@ -456,6 +458,13 @@ namespace Game.World.Import
                     if (custom != null) { lit.shader = custom; EditorUtility.SetDirty(lit); }
                     else Debug.LogWarning($"[IMPORT] material '{id}': shader '{shaderName}' not found, URP Lit kept");
                 }
+                // ADR 0239 (B-082): welded fence mesh -> Kamion/World FenceMesh (distance coverage instead of a cutoff).
+                if (clip && tex != null && Game.Rendering.FenceMeshCoverage.IsFenceMeshTexture(tex + ".png"))
+                {
+                    // the shader must also COMPILE: a found shader with an error is the magenta fence of c-regen2 (review s23 P1)
+                    if (Game.Rendering.FenceMeshCoverage.Apply(lit, InstanceImporter.FenceShaderOrNull())) EditorUtility.SetDirty(lit);
+                    else Debug.LogWarning($"[IMPORT] material '{id}': shader '{Game.Rendering.FenceMeshCoverage.ShaderName}' missing or has errors, URP Lit kept");
+                }
                 return lit;
             }
             bool decal = m.Get("decal") is bool dc && dc;
@@ -504,9 +513,23 @@ namespace Game.World.Import
             if (m.Get("reflect") != null) mat.SetFloat("_Reflect", (float)Num(m.Get("reflect")));
             if (m.Get("reflect_low") != null) mat.SetFloat("_ReflectLow", (float)Num(m.Get("reflect_low")));
             if (m.Get("flow_mps") != null) mat.SetFloat("_FlowSpeed", (float)Num(m.Get("flow_mps")));
+            // ADR 0213: every tunable is written from the manifest (a material created by an older shader kept its
+            // stale defaults, e.g. ripple 1.6 m / 0.10 instead of 2.4 m / 0.05) - shader default when the key is absent
+            foreach (var (key, prop) in k_WaterFloats)
+                mat.SetFloat(prop, m.Get(key) != null ? (float)Num(m.Get(key)) : shader.GetPropertyDefaultFloatValue(shader.FindPropertyIndex(prop)));
+            if (m.Get("bank_tint") is List<object> bt)
+                mat.SetVector("_BankTint", new Vector4((float)Num(bt[0]), (float)Num(bt[1]), (float)Num(bt[2]), 1f));
+            else
+                mat.SetVector("_BankTint", shader.GetPropertyDefaultVectorValue(shader.FindPropertyIndex("_BankTint")));
             EditorUtility.SetDirty(mat);
             return mat;
         }
+
+        static readonly (string key, string prop)[] k_WaterFloats =
+        {
+            ("flow_cycle_s", "_FlowCycle"), ("ripple_m", "_RippleScale"), ("ripple_slope", "_RippleStrength"),
+            ("smoothness", "_Smoothness"), ("bank_horizon", "_BankHorizon"),
+        };
 
         /// <summary>Power-line conductors (generator layer "wires"): camera-facing ribbons >= 1 px with coverage alpha,
         /// faded with the power-pole cull distance (Kamion/World Wire, ADR 0022).</summary>
@@ -636,8 +659,8 @@ namespace Game.World.Import
 
         // ------------------------------------------------------------------------------------------------- meshes
         // water (ADR 0210): only regions with the opt-in water stage have the node
-        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "plots", "wires", "water" };   // plot_ground: ADR 0114
-        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "plots", "wires", "water" };   // plots: ADR 0124
+        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "plots", "wires", "water", "banks", "rail_lod1", "rail_lod2", "rail_crossing" };   // plot_ground: ADR 0114; banks: ADR 0213; rail_*: ADR 0217 (Low GLB has no rail_lod0)
+        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "plots", "wires", "water", "banks", "rail_lod0", "rail_lod1", "rail_lod2", "rail_crossing" };   // plots: ADR 0124; rail_*: ADR 0217
 
         static void BakeVisual(Result r, Chunk ch, GlbReader g, string tier, GlbReader.MeshNode extraBuildingsLod0 = null)
         {

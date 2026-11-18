@@ -1,0 +1,275 @@
+{
+  "id": "osm-api-0.6-rail-l38",
+  "name": "OpenStreetMap API 0.6 cut-outs: railway line 38 Białystok - Ełk along the DK65 corridor tiles (ADR 0223)",
+  "provider": "OpenStreetMap Foundation API 0.6 (api.openstreetmap.org), small requests, generic User-Agent",
+  "license": "ODbL 1.0",
+  "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+  "attribution": "© OpenStreetMap contributors",
+  "crs": "EPSG:4326 (OSM native); reprojected to EPSG:2180 by streetscape/rail.py extract_osm_xml (pyproj, always_xy)",
+  "extent": "17 tiles of the DK65 / Knyszyn corridor (dk65-01..11, knyszyn, knyszyn-s, knyszyn-w, dk65-monki-01, dw671-tykocin-01, bialystok-knyszynska) + 200 m",
+  "accuracy": "Volunteered geographic information; positional accuracy not guaranteed; crossing equipment tags mostly absent (ADR 0223 table)",
+  "local_path": "Data/raw/osm_api/<file> (not in git)",
+  "in_git": false,
+  "used_by": [
+    "tools/worldgen/rail_sources_api.py",
+    "Data/Regions/{dk65-01,dk65-02,dk65-03,dk65-04,dw671-tykocin-01}/generated/rail_sources.json"
+  ],
+  "files": {
+    "bialystok-knyszynska.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=23.048893,53.150118,23.087506,53.173324",
+      "sha256": "fa5428f1df788b86fdf18193a5b05f787a7daa6aefda87b694dbad3fa7d9d59d",
+      "bytes": 6105560,
+      "retrieved_utc": "2026-11-15T17:07:09Z",
+      "bbox_wgs84": [
+        23.048893,
+        53.150118,
+        23.087506,
+        53.173324
+      ],
+      "what": "tile bialystok-knyszynska + 200 m, /map"
+    },
+    "dk65-01.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=23.018336,53.151164,23.056935,53.174362",
+      "sha256": "0ebf97b2e38c661ce5981dffa62b2de0e66aba4d0e64789ec4484e4e4bc8a9c9",
+      "bytes": 4849990,
+      "retrieved_utc": "2026-11-15T17:06:24Z",
+      "bbox_wgs84": [
+        23.018336,
+        53.151164,
+        23.056935,
+        53.174362
+      ],
+      "what": "tile dk65-01 + 200 m, /map"
+    },
+    "dk65-02.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=23.020055,53.169533,23.058671,53.192732",
+      "sha256": "840c8d143ed001c8ec8696fdd2d6b519bd55666651e12c41f77db83f8d45402d",
+      "bytes": 3007107,
+      "retrieved_utc": "2026-11-15T17:06:27Z",
+      "bbox_wgs84": [
+        23.020055,
+        53.169533,
+        23.058671,
+        53.192732
+      ],
+      "what": "tile dk65-02 + 200 m, /map"
+    },
+    "dk65-03.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.989482,53.170572,23.028086,53.193762",
+      "sha256": "40a63905cf12d875d016419e62f4ad98935acd2e262fbb0ea449abbedbc436e1",
+      "bytes": 2109577,
+      "retrieved_utc": "2026-11-15T17:06:29Z",
+      "bbox_wgs84": [
+        22.989482,
+        53.170572,
+        23.028086,
+        53.193762
+      ],
+      "what": "tile dk65-03 + 200 m, /map"
+    },
+    "dk65-04.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.991190,53.188942,23.029811,53.212133",
+      "sha256": "649be663dd4edab7f2f4b06ea363d61d4bc301858d3c7865aa16e45de847766d",
+      "bytes": 2604506,
+      "retrieved_utc": "2026-11-15T17:06:33Z",
+      "bbox_wgs84": [
+        22.99119,
+        53.188942,
+        23.029811,
+        53.212133
+      ],
+      "what": "tile dk65-04 + 200 m, /map"
+    },
+    "dk65-05.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.992899,53.207311,23.031538,53.230503",
+      "sha256": "185c7c8c6be31d6c7252d8f60f65c780a90e5397b785ebeaf7ae8589bd01aa97",
+      "bytes": 2192023,
+      "retrieved_utc": "2026-11-15T17:06:36Z",
+      "bbox_wgs84": [
+        22.992899,
+        53.207311,
+        23.031538,
+        53.230503
+      ],
+      "what": "tile dk65-05 + 200 m, /map"
+    },
+    "dk65-06.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.994611,53.225681,23.033268,53.248873",
+      "sha256": "ce1d94cfa1f52537fddb8c7a879495ca3c5f68630b42ed6dc4aae8f78092d006",
+      "bytes": 1222246,
+      "retrieved_utc": "2026-11-15T17:06:38Z",
+      "bbox_wgs84": [
+        22.994611,
+        53.225681,
+        23.033268,
+        53.248873
+      ],
+      "what": "tile dk65-06 + 200 m, /map"
+    },
+    "dk65-07.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.963997,53.226714,23.002641,53.249898",
+      "sha256": "ab47f47bdf3436c102bdcfe5d0d0777d7769d505c7a82fd37b721ece050fe2b8",
+      "bytes": 1228682,
+      "retrieved_utc": "2026-11-15T17:06:41Z",
+      "bbox_wgs84": [
+        22.963997,
+        53.226714,
+        23.002641,
+        53.249898
+      ],
+      "what": "tile dk65-07 + 200 m, /map"
+    },
+    "dk65-08.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.965697,53.245084,23.004359,53.268269",
+      "sha256": "1c4dad5300a2d6e802a3bd07c1c8d8f20b5f565c61343924fef3aa162c9cec02",
+      "bytes": 1314723,
+      "retrieved_utc": "2026-11-15T17:06:44Z",
+      "bbox_wgs84": [
+        22.965697,
+        53.245084,
+        23.004359,
+        53.268269
+      ],
+      "what": "tile dk65-08 + 200 m, /map"
+    },
+    "dk65-09.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.935069,53.246110,22.973717,53.269286",
+      "sha256": "807a7f81983246aa17c6b8e914ee8baac24c0c871be2b2b8a95398f33e470caa",
+      "bytes": 1522891,
+      "retrieved_utc": "2026-11-15T17:06:46Z",
+      "bbox_wgs84": [
+        22.935069,
+        53.24611,
+        22.973717,
+        53.269286
+      ],
+      "what": "tile dk65-09 + 200 m, /map"
+    },
+    "dk65-10.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.936758,53.264481,22.975424,53.287657",
+      "sha256": "a51fab15cfd52f7a1cedee1ddb87123ac7b87d54657c804d1f9a7c027e848708",
+      "bytes": 1190962,
+      "retrieved_utc": "2026-11-15T17:06:49Z",
+      "bbox_wgs84": [
+        22.936758,
+        53.264481,
+        22.975424,
+        53.287657
+      ],
+      "what": "tile dk65-10 + 200 m, /map"
+    },
+    "dk65-11.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.938449,53.282852,22.977133,53.306029",
+      "sha256": "03026cd6dd0b00dde27702793bcff6eb13e9aba0851e347489e970325646cb52",
+      "bytes": 1205810,
+      "retrieved_utc": "2026-11-15T17:06:52Z",
+      "bbox_wgs84": [
+        22.938449,
+        53.282852,
+        22.977133,
+        53.306029
+      ],
+      "what": "tile dk65-11 + 200 m, /map"
+    },
+    "dk65-monki-01.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.880469,53.321626,22.919162,53.344788",
+      "sha256": "c29ae84360352ded31aa9d393f5a21791ad7019d3c1bf8c9944fe3d4ce5c134b",
+      "bytes": 831455,
+      "retrieved_utc": "2026-11-15T17:07:03Z",
+      "bbox_wgs84": [
+        22.880469,
+        53.321626,
+        22.919162,
+        53.344788
+      ],
+      "what": "tile dk65-monki-01 + 200 m, /map"
+    },
+    "dw671-tykocin-01.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.877134,53.284883,22.915791,53.308043",
+      "sha256": "125cd4205cb3f832f4d6b58b23defdf6fdc68299f493039d200e22fbe2772cbd",
+      "bytes": 1712443,
+      "retrieved_utc": "2026-11-15T17:07:05Z",
+      "bbox_wgs84": [
+        22.877134,
+        53.284883,
+        22.915791,
+        53.308043
+      ],
+      "what": "tile dw671-tykocin-01 + 200 m, /map"
+    },
+    "knyszyn-s.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.907793,53.283871,22.946463,53.307040",
+      "sha256": "3fafdab3bd11f6b2e485f70ca3197e04ad6dbdb66319c9b2bea65fc9211f65d6",
+      "bytes": 1399244,
+      "retrieved_utc": "2026-11-15T17:06:57Z",
+      "bbox_wgs84": [
+        22.907793,
+        53.283871,
+        22.946463,
+        53.30704
+      ],
+      "what": "tile knyszyn-s + 200 m, /map"
+    },
+    "knyszyn-w.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.878801,53.303255,22.917476,53.326415",
+      "sha256": "cee81d005150d8d43aad4fbe3fc9809f8aaae6ecf2e468525fad820793c536fc",
+      "bytes": 1637635,
+      "retrieved_utc": "2026-11-15T17:07:00Z",
+      "bbox_wgs84": [
+        22.878801,
+        53.303255,
+        22.917476,
+        53.326415
+      ],
+      "what": "tile knyszyn-w + 200 m, /map"
+    },
+    "knyszyn.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=22.909472,53.302242,22.948161,53.325412",
+      "sha256": "bfbe5cdbdf0894c3d979db9719f5de336c6513cb3c57a9e53ac7251c4b601027",
+      "bytes": 3570065,
+      "retrieved_utc": "2026-11-15T17:06:55Z",
+      "bbox_wgs84": [
+        22.909472,
+        53.302242,
+        22.948161,
+        53.325412
+      ],
+      "what": "tile knyszyn + 200 m, /map"
+    },
+    "relation_2316318.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/relation/2316318",
+      "sha256": "3be5d4283ba0571d56cf40fabae24b15117415c32cc8c6a9ddb74a0d3a32db47",
+      "bytes": 8913,
+      "retrieved_utc": "2026-11-15T17:11:07Z",
+      "what": "route=railway ref=38 relation"
+    },
+    "way_166369632.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/way/166369632/full",
+      "sha256": "ea89cfc997437512e09b2f149112f839a8ee9d9e40a4c167f8cd901c07ef4e6b",
+      "bytes": 12894,
+      "retrieved_utc": "2026-11-15T17:11:05Z",
+      "what": "railway way, full geometry (line 38)"
+    },
+    "way_173466803.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/way/173466803/full",
+      "sha256": "9c779658e4150a1e6c3c48d8aa9088a59b7d8152ee2e437d50360200b578615e",
+      "bytes": 26185,
+      "retrieved_utc": "2026-11-15T17:11:00Z",
+      "what": "railway way, full geometry (line 38)"
+    },
+    "way_406675496.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/way/406675496/full",
+      "sha256": "3ae686811ace42f134dca04c7085abcda490fb78b93f963fe73d5f6a66e06db7",
+      "bytes": 6264,
+      "retrieved_utc": "2026-11-15T17:11:03Z",
+      "what": "railway way, full geometry (line 38)"
+    },
+    "way_41533341.osm": {
+      "url": "https://api.openstreetmap.org/api/0.6/way/41533341/full",
+      "sha256": "b7259d3ee51fab491e3467a3bba33774f31ee3d5eb44dbdba58597d557bacf83",
+      "bytes": 1448,
+      "retrieved_utc": "2026-11-15T17:11:02Z",
+      "what": "railway way, full geometry (line 38)"
+    }
+  }
+}

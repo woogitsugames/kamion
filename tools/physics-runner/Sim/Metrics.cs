@@ -117,6 +117,13 @@ namespace PhysicsRunner.Sim
                 case "trailer_offtracking_m":
                     // Rear-axle-group path radius of the trailer minus the tractor rear-axle radius (positive = inside).
                     return Mean(s, i0, i1, x => HorizDist(x.Pos, r.CircleCenter)) - Mean(s, i0, i1, x => HorizDist(x.TrailerAxlePos, r.CircleCenter));
+                // ---------------- swept path / turning ring (Directive 96/53/EC Annex I 1.5, ADR 0280) ----------------
+                // Circle centre = least-squares (Kasa) fit of the tractor rear-axle path over the window (steady state),
+                // body = scenario "envelope" rectangles of tractor and trailer in plan view.
+                case "swept_outer_radius_m": return Swept(r, i0, i1).outer;
+                case "swept_inner_radius_m": return Swept(r, i0, i1).inner;
+                case "swept_ring_width_m": { var w = Swept(r, i0, i1); return w.outer - w.inner; }
+                case "swept_fit_rms_m": return Swept(r, i0, i1).rms;
                 case "steer_angle_deg": return Mean(s, i0, i1, x => x.SteerAngle) * MathUtil.Rad2Deg;
                 case "steer_vs_ackermann":
                 {
@@ -164,6 +171,9 @@ namespace PhysicsRunner.Sim
                     return 0;
                 }
                 case "max_abs_roll_deg": return Max(s, i0, i1, x => Math.Abs(x.Roll)) * MathUtil.Rad2Deg;
+                // Signed peak of the tractor body pitch asin(fwd.y), nose up + (same definition as KerbStrikeParityTests
+                // PitchMaxDeg, the Unity-runner parity reference; ADR 0228 r4).
+                case "max_pitch_deg": return Max(s, i0, i1, x => x.Pitch) * MathUtil.Rad2Deg;
                 case "max_trailer_roll_deg": return Max(s, i0, i1, x => Math.Abs(x.TrailerRoll)) * MathUtil.Rad2Deg;
                 case "final_z_m": return s[i1].Pos.z;
                 case "final_gear": return s[i1].Gear;
@@ -376,6 +386,67 @@ namespace PhysicsRunner.Sim
                     for (int i = Math.Max(i0, 1); i <= i1; i++) if (s[i].BodyContacts > 0) tc += s[i].T - s[i - 1].T;
                     return tc;
                 }
+                // ---------------- tractor-trailer body contact, heavy landing (ADR 0228) ----------------
+                case "max_coupling_penetration_m": return Max(s, i0, i1, x => x.CouplingPenetration);
+                case "max_coupling_contact_force_kn": return Max(s, i0, i1, x => x.CouplingContactForce) / 1000;
+                case "coupling_contact_s":
+                {
+                    double tc = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (s[i].CouplingContacts > 0) tc += s[i].T - s[i - 1].T;
+                    return tc;
+                }
+                case "max_articulation_rate_dps":
+                {
+                    // Relative yaw rate tractor vs trailer from the sampled articulation [deg/s].
+                    double m = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) m = Math.Max(m, Math.Abs(s[i].Articulation - s[i - 1].Articulation) / (s[i].T - s[i - 1].T));
+                    return m * MathUtil.Rad2Deg;
+                }
+                case "max_body_rate_dps": return Max(s, i0, i1, x => Math.Max(x.TractorAngRate, x.TrailerAngRate)) * MathUtil.Rad2Deg;
+                case "coupling_contact_restitution":
+                {
+                    // Yaw "restitution" of the first tractor-trailer contact: largest articulation rate AWAY from the contact
+                    // within 1 s after the first contact sample, over the approach rate (largest |rate| towards it in the
+                    // 0.5 s before). 0 = the trailer stays at the cab (plastic), 1 = elastic rebound. NaN without contact.
+                    int ic = -1;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (s[i].CouplingContacts > 0) { ic = i; break; }
+                    if (ic < 0) return double.NaN;
+                    double sgn = Math.Sign(s[ic].Articulation);
+                    double approach = 0, away = 0;
+                    for (int i = Math.Max(1, ic - (int)Math.Round(0.5 / r.SampleDt)); i <= ic; i++)
+                        approach = Math.Max(approach, sgn * (s[i].Articulation - s[i - 1].Articulation) / (s[i].T - s[i - 1].T));
+                    int end = Math.Min(i1, ic + (int)Math.Round(1.0 / r.SampleDt));
+                    for (int i = ic + 1; i <= end; i++)
+                        away = Math.Max(away, -sgn * (s[i].Articulation - s[i - 1].Articulation) / (s[i].T - s[i - 1].T));
+                    return approach > 1e-9 ? away / approach : 0;
+                }
+                case "drop_rebound_ratio":
+                {
+                    // Heavy landing (ADR 0228): share of the drop energy that comes back as the first rebound.
+                    // PE of both bodies: drop E = PE(0) - PE(end, settled); rebound = highest PE after the deepest point of the
+                    // first landing (within 1.5 s) minus PE(end). Plastic landing 0, elastic bounce 1.
+                    int land = -1;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (!FreeFlight(s[i]) && FreeFlight(s[i - 1])) { land = i; break; }
+                    if (land < 0) return double.NaN;
+                    double peEnd = s[i1].PotentialEnergy, drop = s[i0].PotentialEnergy - peEnd;
+                    if (drop <= 0) return double.NaN;
+                    int win = (int)Math.Round(1.5 / r.SampleDt);
+                    int bottom = land;
+                    for (int i = land; i <= Math.Min(i1, land + win); i++) if (s[i].PotentialEnergy < s[bottom].PotentialEnergy) bottom = i;
+                    double apex = s[bottom].PotentialEnergy;
+                    for (int i = bottom; i <= Math.Min(i1, bottom + win); i++) apex = Math.Max(apex, s[i].PotentialEnergy);
+                    return Math.Max(0, apex - peEnd) / drop;
+                }
+                case "drop_relaunch_s":
+                {
+                    // Time all wheels / colliders are off the ground again after the first landing [s].
+                    int land = -1;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (!FreeFlight(s[i]) && FreeFlight(s[i - 1])) { land = i; break; }
+                    if (land < 0) return 0;
+                    double tf = 0;
+                    for (int i = land + 1; i <= i1; i++) if (FreeFlight(s[i - 1]) && FreeFlight(s[i])) tf += s[i].T - s[i - 1].T;
+                    return tf;
+                }
                 case "max_tire_friction_ratio": return Max(s, i0, i1, x => x.MaxFrictionRatio);
                 case "min_air_all_bar":
                     return Min(s, i0, i1, x => Math.Min(Math.Min(x.AirSupply, Math.Min(x.AirFront, x.AirRear)), Math.Min(x.AirPark, x.AirTrailer)));
@@ -416,6 +487,68 @@ namespace PhysicsRunner.Sim
                 default:
                     throw new ArgumentException($"Unknown metric '{name}'");
             }
+        }
+
+        /// <summary>Least-squares circle (Kasa) through the horizontal tractor-origin path, samples a..b.</summary>
+        public static (double cx, double cz, double radius, double rms) FitCircle(List<Sample> s, int a, int b)
+        {
+            // Solve [x z 1] [p q c]^T = x^2 + z^2 (normal equations, centred for conditioning).
+            double mx = 0, mz = 0; int n = 0;
+            for (int i = a; i <= b; i++) { mx += s[i].Pos.x; mz += s[i].Pos.z; n++; }
+            if (n < 3) return (double.NaN, double.NaN, double.NaN, double.NaN);
+            mx /= n; mz /= n;
+            double sxx = 0, sxz = 0, szz = 0, sxw = 0, szw = 0;
+            for (int i = a; i <= b; i++)
+            {
+                double x = s[i].Pos.x - mx, z = s[i].Pos.z - mz, w = x * x + z * z;
+                sxx += x * x; sxz += x * z; szz += z * z; sxw += x * w; szw += z * w;
+            }
+            double det = sxx * szz - sxz * sxz;
+            if (Math.Abs(det) < 1e-12) return (double.NaN, double.NaN, double.NaN, double.NaN);
+            double p = (sxw * szz - szw * sxz) / det, q = (szw * sxx - sxw * sxz) / det;
+            double cx = mx + p / 2, cz = mz + q / 2, rs = 0;
+            for (int i = a; i <= b; i++) rs += Math.Sqrt((s[i].Pos.x - cx) * (s[i].Pos.x - cx) + (s[i].Pos.z - cz) * (s[i].Pos.z - cz));
+            double radius = rs / n, e2 = 0;
+            for (int i = a; i <= b; i++)
+            {
+                double d = Math.Sqrt((s[i].Pos.x - cx) * (s[i].Pos.x - cx) + (s[i].Pos.z - cz) * (s[i].Pos.z - cz)) - radius;
+                e2 += d * d;
+            }
+            return (cx, cz, radius, Math.Sqrt(e2 / n));
+        }
+
+        /// <summary>
+        /// Swept annulus of the combination about the fitted centre: outer = farthest footprint corner, inner = nearest
+        /// footprint point (exact point-to-rectangle distance, 0 if the centre lies under the body), over samples a..b.
+        /// </summary>
+        public static (double outer, double inner, double rms) Swept(RunResult r, int a, int b)
+        {
+            var s = r.Samples;
+            var fit = FitCircle(s, a, b);
+            if (double.IsNaN(fit.cx)) return (double.NaN, double.NaN, double.NaN);
+            var e = r.Scenario.envelope;
+            double outer = 0, inner = double.MaxValue;
+            for (int i = a; i <= b; i++)
+            {
+                Rect(s[i].Pos, s[i].Fwd, e.tractorFrontZ, e.tractorRearZ, e.tractorHalfWidth, fit.cx, fit.cz, ref outer, ref inner);
+                if (s[i].HasTrailer && s[i].Coupled)
+                    Rect(s[i].TrailerPos, s[i].TrailerFwd, e.trailerFrontZ, e.trailerRearZ, e.trailerHalfWidth, fit.cx, fit.cz, ref outer, ref inner);
+            }
+            return (outer, inner, fit.rms);
+        }
+
+        static void Rect(Vec3 o, Vec3 fwd, double front, double rear, double hw, double cx, double cz, ref double outer, ref double inner)
+        {
+            double fx = fwd.x, fz = fwd.z, fl = Math.Sqrt(fx * fx + fz * fz);
+            if (fl < 1e-9) return;
+            fx /= fl; fz /= fl;
+            // right of forward in the plan view (X east, Z north, Y up): (fz, -fx)
+            double dx = cx - o.x, dz = cz - o.z;
+            double lz = dx * fx + dz * fz, lx = dx * fz - dz * fx;
+            double nz = lz - MathUtil.Clamp(lz, rear, front), nx = lx - MathUtil.Clamp(lx, -hw, hw);
+            inner = Math.Min(inner, Math.Sqrt(nz * nz + nx * nx));
+            double farZ = Math.Max(Math.Abs(front - lz), Math.Abs(lz - rear)), farX = Math.Abs(lx) + hw;
+            outer = Math.Max(outer, Math.Sqrt(farZ * farZ + farX * farX));
         }
 
         static double MaxCabRate(List<Sample> s, int a, int b, double dtS, Func<Sample, double> f)

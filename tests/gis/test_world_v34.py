@@ -44,20 +44,28 @@ def test_parse_traffic_sign(value, codes):
 
 
 def test_sign_faces_and_weathering():
-    """Every face we draw is a square RGBA texture with transparent corners; ageing keeps the alpha, darkens the
-    lower edge more than the top and is deterministic."""
+    """Every face we draw is a square RGBA texture with transparent corners (rectangular plates of ADR 0268 -
+    signs.RECT - keep the aspect of the plate, long side 512); ageing keeps the alpha, darkens the lower edge more
+    than the top and is deterministic."""
     for code in sorted(SG.KNOWN) + ["B-33_70"]:
         shape, im = SG.face(code)
         a = np.asarray(im)
-        assert a.shape == (512, 512, 4), code
-        assert a[0, 0, 3] == 0 and a[256, 256, 3] == 255, code
+        H, W = a.shape[:2]
+        if code in SG.RECT:
+            pw, ph = SG.RECT[code]
+            assert a.shape[2] == 4 and max(H, W) == 512 and abs(W / H - pw / ph) < 0.01, (code, a.shape)
+        else:
+            assert a.shape == (512, 512, 4), code
+            assert a[0, 0, 3] == 0, code
+        assert a[H // 2, W // 2, 3] == 255, code
         w1 = np.asarray(SG.weather(im, code)).astype(float)
         w2 = np.asarray(SG.weather(im, code)).astype(float)
         assert np.array_equal(w1, w2)
         assert np.array_equal(w1[..., 3], a[..., 3].astype(float))
         cov = a[..., 3] > 128
         ratio = (w1[..., :3] @ LUM + 1) / (a[..., :3].astype(float) @ LUM + 1)
-        top, bot = ratio[:170][cov[:170]].mean(), ratio[340:][cov[340:]].mean()
+        t3 = H // 3
+        top, bot = ratio[:t3][cov[:t3]].mean(), ratio[2 * t3:][cov[2 * t3:]].mean()
         assert 0.80 < bot < top <= 1.0, (code, top, bot)
 
 
@@ -73,6 +81,9 @@ def test_impostors_multi_view_and_lit(meta):
     """v3.4 impostors: IMP_NF views side by side + a normal / sky-visibility map; colour under the alpha is dilated
     (no dark or light fringe), so far coverage-preserving mips show leaf colour only."""
     for name, t in meta["trees"].items():
+        if "impostor_views" not in t:        # ADR 0187: forest floor plants have no impostor (culled after LOD1)
+            assert name.startswith("tree_floor_"), name
+            continue
         n = t["impostor_views"]
         assert n >= 4, name
         require_lfs(VEG / f"impostor_{name}.png", VEG / f"impostor_{name}_n.png")
@@ -101,7 +112,9 @@ def test_hlod_edge_textures(meta):
         cov = alb[..., 3] > 0.5
         # no floating specks above the stand silhouette: the top 12 % of the texture is (nearly) empty except the
         # crowns that continue below it
-        h = alb.shape[0]
+        # ADR 0187: the rows above v_main hold the mantle strip (image top = v 1); the wall picture starts below it
+        cov = cov[int(round(alb.shape[0] * (1 - e.get("v_main", 1.0)))):]
+        h = cov.shape[0]
         top = cov[: int(h * 0.12)]
         assert top.mean() < 0.12, (mix, top.mean())
 
@@ -131,7 +144,11 @@ def test_route_signs_listed(sqa):
     assert len(checks) >= 2
     for c in checks:
         assert c["A-7"] and c["C-12"], c
-    assert sum(1 for c in checks if c["E-1"]) >= 1, checks
+    # ADR 0236: the rule E-1 beside an authored gantry that carries the diagram is dropped (one E-1, on the portal);
+    # `roundabout_signs.diagrams_replaced` names the rule, the junction and the gantry that took it over
+    replaced = {d["rule"].rsplit(":", 2)[-2] + ":" + d["rule"].rsplit(":", 1)[-1]
+                for d in f["roundabout_signs"].get("diagrams_replaced", []) if d["by"].startswith("override:")}
+    assert sum(1 for c in checks if c["E-1"] or c["junction"] in replaced) >= 1, (checks, replaced)
     codes = {r["code"] for r in rs}
     assert any(c.startswith("B-33_") for c in codes), codes
     rb = f["roundabout_signs"]

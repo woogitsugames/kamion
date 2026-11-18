@@ -1,0 +1,13 @@
+{
+ "provenance": "authored_override (ADR 0231): control route for cameras/QA = DW671 inside this tile, continuing the route of dw671-tykocin-09",
+ "description": "DW671 from the N tile edge (seam with dw671-tykocin-09, OSM way 204027402) to the S tile edge (OSM way 1352199060; end of the ring (next lattice tile not defined)). Points from the Overpass extract of 2026-11-15; build_world snaps them to the nearest graph node.",
+ "start_epsg2180": [
+  751938.3,
+  601343.0
+ ],
+ "end_epsg2180": [
+  751346.7,
+  599295.0
+ ],
+ "confidence": "medium (OSM 2026-11-15 vs the pinned pbf 2026-11-08: re-check after build_region that both are graph boundary nodes)"
+}

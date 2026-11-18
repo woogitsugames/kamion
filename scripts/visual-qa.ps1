@@ -5,6 +5,7 @@
   pwsh scripts/visual-qa.ps1 -Scene Boot
   pwsh scripts/visual-qa.ps1 -Scene Boot -Width 1920 -Height 1080 -Tier High
   pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -OutputDir artifacts/visual-qa/WorldC/Low-overcast
+  pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Ultra -Pc -Width 1920 -Height 1080   # PC tier (ADR 0269)
 .NOTES
   Output: artifacts/visual-qa/<Scene>/<camera-id>.png. Rendering does not work with -nographics,
   so Unity runs batchmode with the GPU. Look at every PNG yourself (skill visual-qa).
@@ -17,6 +18,9 @@ param(
     [string]$OutputDir,
     [ValidateSet('', 'clear', 'overcast', 'lowsun', 'dusk', 'night')] [string]$Lighting = '',
     [string]$Cameras = '',
+    # Optional CPU-estimate detail for one camera; writes one TSV row per visible submesh.
+    [string]$StatsDetailCamera = '',
+    [string]$StatsDetailPath = '',
     # ADR 0175 evidence: force truck lamp groups on, e.g. 'rearfog,hazard,low'.
     [string]$TruckLamps = '',
     # A7 before/after: 'off' renders without the cab fill and the cab-view lift (CabInteriorLighting).
@@ -42,7 +46,18 @@ param(
     # Measurement mask: '<renderer>[:<slot>][;...]' also writes <id>_mask.png with those slots flat magenta.
     [string]$Mask = '',
     # ADR 0056: also write <id>_envcube.png (the vehicle reflection cube of that frame, 6 faces).
-    [switch]$EnvDump
+    [switch]$EnvDump,
+    # Unity -buildTarget of the batch run (Windows primary, ADR 0261): Win64 avoids a platform switch after
+    # import-region.ps1 -BuildTarget Win64 in the same checkout.
+    [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android',
+    # ADR 0269 (pc-visual-s23): render the PC tier (URP_PC_<Tier>, PcGraphicsTiers values) instead of the mobile tier.
+    [switch]$Pc,
+    # Diagnostic A/B: QualitySettings.anisotropicFiltering for this render (0 Disable, 1 Enable, 2 ForceEnable).
+    [ValidateSet('', '0', '1', '2')] [string]$Aniso = '',
+    # D84 cab-view-s24: move the truck + trailer to region-local E,N with a compass heading (e.g. a roundabout ring)
+    [string]$TruckPose = '',
+    # D84 cab-view-s24: TSV of mirror heads / windscreen top edge vs the cab-view frames (Editor/VisualQA/CabViewQa.cs)
+    [string]$CabViewAudit = ''
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -55,6 +70,8 @@ $qaArgs = @(
     '-qaScene', $Scene, '-qaWidth', $Width, '-qaHeight', $Height, '-qaTier', $Tier, '-qaOutput', $OutputDir)
 if ($Lighting) { $qaArgs += @('-qaLighting', $Lighting) }
 if ($Cameras) { $qaArgs += @('-qaCameras', $Cameras) }
+if ([bool]$StatsDetailCamera -ne [bool]$StatsDetailPath) { throw 'Specify both -StatsDetailCamera and -StatsDetailPath.' }
+if ($StatsDetailCamera) { $qaArgs += @('-qaStatsDetailCamera', $StatsDetailCamera, '-qaStatsDetailPath', [IO.Path]::GetFullPath($StatsDetailPath, (Get-Location).Path)) }
 if ($TruckLamps) { $qaArgs += @('-qaTruckLamps', $TruckLamps) }
 if ($WbAdapt) { $qaArgs += @('-qaWbAdapt', $WbAdapt) }
 if ($NoGlass) { $qaArgs += @('-qaNoGlass', '1') }
@@ -68,8 +85,12 @@ if ($Gate3) { $qaArgs += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, (Get-Locat
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 if ($EnvDump) { $qaArgs += @('-qaEnvDump', '1') }
+if ($Pc) { $qaArgs += @('-qaPcTiers', '1') }
+if ($Aniso) { $qaArgs += @('-qaAniso', $Aniso) }
+if ($TruckPose) { $qaArgs += @('-qaTruckPose', $TruckPose) }
+if ($CabViewAudit) { $qaArgs += @('-qaCabViewAudit', [IO.Path]::GetFullPath($CabViewAudit, (Get-Location).Path)) }
 $runStart = Get-Date
-$code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
+$code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs -BuildTarget $BuildTarget
 
 $result = Select-String -Path $log -Pattern 'VISUALQA_RESULT:.*' | Select-Object -Last 1
 

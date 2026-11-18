@@ -1,6 +1,6 @@
 # ADR 0136: Regresja GPU A16 Low s10 → s12 — rozkład kosztu, ciasne impostory drzew
 
-Status: propozycja (rendering-perf, gałąź `a16-perf`, z main `8b0d6ec7`), 2026-11-12; runda 1 scalona, runda 2 (s14) — sekcja „Runda 2”.
+Status: przyjęty (scalony do main 2026-11-12, `b596efe9a`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (rendering-perf, gałąź `a16-perf`, z main `8b0d6ec7`), 2026-11-12; runda 1 scalona, runda 2 (s14) — sekcja „Runda 2”.
 Powiązane: ADR 0106 (rozkład GPU A16, `rq_ab`), 0113 (las szybki, PSO), 0023 (impostory), D49 (A16 = Low), D50 (bez obniżania
 skali renderu), D51 (rozpoznawalność).
 

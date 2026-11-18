@@ -32,6 +32,17 @@ namespace Game.Rendering
             float policy = t.name == "Medium" || t.name == "High" ? MaxArchitecturalGlassReceiverBias : 0f;
             return Mathf.Clamp(requested ?? policy, 0f, MaxArchitecturalGlassReceiverBias);
         }
+        /// <summary>True when the active URP asset's default renderer runs SSAO and a second renderer exists (SSAO assets:
+        /// [SSAO, plain], ADR 0080 / 0269). Called on tier changes only.</summary>
+        static bool DefaultRendererHasSsao()
+        {
+            if (!(GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset a)) return false;
+            var list = a.rendererDataList;
+            if (list.Length < 2 || list[0] == null) return false;
+            foreach (var f in list[0].rendererFeatures)
+                if (f is ScreenSpaceAmbientOcclusion && f.isActive) return true;
+            return false;
+        }
         public const string GlassFastKeyword = "_KAMION_GLASS_FAST";   // ADR 0106
         static readonly int k_ClearCoatOff = Shader.PropertyToID("_KamionClearCoatOff");
         static readonly int k_GrimeDetailOff = Shader.PropertyToID("_KamionGrimeDetailOff");
@@ -68,6 +79,7 @@ namespace Game.Rendering
             m_AppliedLevel = QualitySettings.GetQualityLevel();
             var profile = QualityProfile.Load();
             if (profile == null || !profile.TryGet(QualityTiers.Current, out var t)) return;
+            if (PcGraphicsTiers.Enabled) t = PcGraphicsTiers.Overlay(t);   // ADR 0269: PC tier values (desktop player)
             if (RenderOverrides.Any)
             {
                 t = RenderOverrides.ApplyTo(t);
@@ -102,6 +114,7 @@ namespace Game.Rendering
             if (RenderOverrides.FsrSharpness.HasValue || (t.name == "High" && t.upscalingFilter == UpscalingFilterSelection.FSR))
             { urp.fsrOverrideSharpness = true; urp.fsrSharpness = t.fsrSharpness; }
             if (RenderOverrides.LodBias.HasValue && Application.isPlaying) QualitySettings.lodBias = t.lodBias;   // ADR 0106
+            GpuAbOverrides.ApplyPipeline(urp);   // ADR 0241: rq_depthtex / rq_opaquetex (no-op unless given)
         }
 
         /// <summary>Raised after a tier was applied (vegetation reads <see cref="Current"/>).</summary>
@@ -128,9 +141,15 @@ namespace Game.Rendering
                 var data = cam.GetUniversalAdditionalCameraData();
                 data.renderPostProcessing = t.postProcessing;
                 data.antialiasing = t.postProcessing ? t.postAntialiasing : AntialiasingMode.None;
+                if (PcGraphicsTiers.Enabled && PcTierTable.TryParse(t.name, out var pcTier))   // ADR 0269: SMAA quality of the PC tier
+                    data.antialiasingQuality = (AntialiasingQuality)PcTierTable.Get(pcTier).smaaQuality;
                 // ADR 0108: High RCAS uses a final pass whose dither raises clean-sky RMS above the review limit.
                 // Measured native PNG A/B: sky 0.64 -> 0.14, asphalt detail retained. Other tiers keep their policy.
                 data.dithering = RenderOverrides.Dither ?? (t.postProcessing && t.name != "High");
+                // pc-visual-s23: t.ssao was not read anywhere (SSAO = renderer 0 of the tier's URP asset), so rq_ssao=0 was a
+                // no-op. A tier / override with ssao off on an asset whose default renderer has SSAO uses the plain renderer
+                // (index 1, the same one VehicleReflectionCapture uses, ADR 0152); otherwise the asset default.
+                data.SetRenderer(!t.ssao && DefaultRendererHasSsao() ? 1 : -1);
             }
             if (volume != null)
             {

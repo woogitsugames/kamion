@@ -73,7 +73,27 @@ namespace Game.Editor.VisualQA
             if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
                 throw new InvalidOperationException("No graphics device (-nographics?) — visual QA needs a GPU.");
 
+            // ADR 0269 propozycja 2 (night-pc-s23): -qaPcTiers 1 renders the PC tier (URP_PC_<tier> asset + PcGraphicsTiers.Overlay
+            // of the quality tier) instead of the phone tier; editor state is restored at the end.
+            bool pc = EditorTools.Arg("-qaPcTiers", "0") == "1";
+            if (pc) PcGraphicsTiers.ForceEnabled = true;
+            try
+            {
+                return RenderTier(sceneName, width, height, tier, outDir, lighting, onlyCameras, pc);
+            }
+            finally
+            {
+                if (pc) { PcGraphicsTiers.RestoreEditorState(); PcGraphicsTiers.ForceEnabled = null; }
+            }
+        }
+
+        static int RenderTier(string sceneName, int width, int height, string tier, string outDir, string lighting, string onlyCameras, bool pc)
+        {
+            string scenePath = AssetDatabase.FindAssets("t:Scene " + sceneName)
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == sceneName);
             QualityTiers.Apply(tier);
+            if (pc) Debug.Log($"[VISUALQA] PC tier {tier}: pipeline {QualitySettings.renderPipeline?.name}");
             ShaderUtil.allowAsyncCompilation = false; // avoid cyan placeholder shaders in captures
             EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
             Directory.CreateDirectory(outDir);
@@ -88,6 +108,12 @@ namespace Game.Editor.VisualQA
             var profile = QualityProfile.Load();
             QualityProfile.Tier tierSettings = default;
             bool hasTier = profile != null && profile.TryGet(tier, out tierSettings);
+            if (hasTier && pc) tierSettings = PcGraphicsTiers.Overlay(tierSettings);
+            // Diagnostic A/B (pc-visual-s23): -qaAniso 0|1|2 overrides QualitySettings.anisotropicFiltering for this render
+            // (restored by PcGraphicsTiers.RestoreEditorState with -qaPcTiers 1; without it the editor value is put back below).
+            string anisoArg = EditorTools.Arg("-qaAniso", null);
+            AnisotropicFiltering anisoPrev = QualitySettings.anisotropicFiltering;
+            if (!string.IsNullOrEmpty(anisoArg)) QualitySettings.anisotropicFiltering = (AnisotropicFiltering)int.Parse(anisoArg);
             // Ablation renders in the editor (same keys as the phone launch overrides): -qaRq "rq_hlod=0,rq_trees=0".
             string rq = EditorTools.Arg("-qaRq", null);
 
@@ -112,6 +138,8 @@ namespace Game.Editor.VisualQA
             // trailer patch under the asphalt).
             foreach (var ck in UnityEngine.Object.FindObjectsByType<Game.World.WorldCollisionCooker>(FindObjectsInactive.Include, FindObjectsSortMode.None)) ck.Cook();
             Physics.SyncTransforms();
+            // D84 cab-view-s24: -qaTruckPose E,N,headingDeg moves the combination (e.g. onto a roundabout ring).
+            CabViewQa.ApplyTruckPose(EditorTools.Arg("-qaTruckPose", null));
             if (!string.IsNullOrEmpty(gate3Json))
             {
                 Game.Gameplay.Gate3Cameras.CreateAll(UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>(), null, File.ReadAllText(gate3Json));
@@ -145,6 +173,8 @@ namespace Game.Editor.VisualQA
                         System.Globalization.CultureInfo.InvariantCulture, out float rsArg) && rsArg > 0.1f && rsArg <= 2f)
                     scale = rsArg;
             }
+            // D84 cab-view-s24: -qaCabViewAudit <tsv> - mirror heads / windscreen top edge vs the cab-view frames.
+            CabViewQa.Audit(EditorTools.Arg("-qaCabViewAudit", null), cams, width, height);
             var stats = new System.Text.StringBuilder();
             // Warm-up: the very first Camera.Render after opening a scene in batchmode can draw with
             // stale per-material SRP-batcher data (every object showed the ground material). Render
@@ -343,6 +373,9 @@ namespace Game.Editor.VisualQA
                             if (mir.phase == 0) ctx.LeftMirrorTexture = () => mt; else ctx.RightMirrorTexture = () => mt;
                         }
                     }
+                    // D90 / ADR 0294: cab control cameras render the cab-view HUD (no speed strip over the live dash cluster).
+                    bool cabView = CabViewQa.IsCabCameraId(qa.id);
+                    ctx.CameraModeOverride = () => cabView ? Game.Cameras.CameraMode.Cab : Game.Cameras.CameraMode.Chase;
                     hud = DrivingHud.Create(uiCam, ctx);
                     hud.OverrideSafeAreaNormalized(new Rect(0.04f, 0f, 0.96f, 1f));
                     hud.SetTelemetryVisible(qa.drivingHudTelemetry);
@@ -352,8 +385,11 @@ namespace Game.Editor.VisualQA
                 var prevTarget = cam.targetTexture;
                 cam.enabled = true;
                 var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
+                string detailCamera = EditorTools.Arg("-qaStatsDetailCamera", null);
+                string detailPath = EditorTools.Arg("-qaStatsDetailPath", null);
                 stats.AppendLine(SceneStats.Estimate(cam, hasTier ? tierSettings.shadowDistance : QualitySettings.shadowDistance,
-                    hasTier ? tierSettings.shadowCascades : 1, qa.id));
+                    hasTier ? tierSettings.shadowCascades : 1, qa.id,
+                    !string.IsNullOrEmpty(detailCamera) && qa.id == detailCamera ? detailPath : null));
                 // -qaTimeFrames N: N more renders of this camera at the tier's size / MSAA, wall time with a 1-pixel readback
                 // at the end (GPU-synchronised): an editor-GPU estimate of the frame cost for A/B comparisons (ADR 0023).
                 int timeN = int.Parse(EditorTools.Arg("-qaTimeFrames", "0"));
@@ -376,7 +412,7 @@ namespace Game.Editor.VisualQA
                 }
                 var wi = Game.World.WorldInstances.Last;
                 if (wi.Draws > 0)
-                    stats.AppendLine($"  {qa.id} instanced (props+trees): draws {wi.Draws}, instances {wi.Instances}, triangles {wi.Triangles / 1000}k, cells {wi.VisibleCells}, forest HLOD cells {wi.HlodCells}, trianglesExact {wi.Triangles}");
+                    stats.AppendLine($"  {qa.id} instanced (props+trees): draws {wi.Draws}, instances {wi.Instances}, triangles {wi.Triangles / 1000}k, cells {wi.VisibleCells}, forest HLOD cells {wi.HlodCells}, trianglesExact {wi.Triangles}, shadowCasterDraws {wi.ShadowDraws}, shadowCasterTriangles {wi.ShadowTriangles}");
                 Color32[] pixels = world;
                 if (ui)
                 {
@@ -433,6 +469,7 @@ namespace Game.Editor.VisualQA
             }
             string lightName = lighting ?? "scene";
             if (stats.Length > 0) File.WriteAllText(Path.Combine(outDir, "stats.txt"), $"tier={tier} lighting={lightName} msaa={msaa} renderScale={scale.ToString(System.Globalization.CultureInfo.InvariantCulture)}" + System.Environment.NewLine + stats);
+            if (!string.IsNullOrEmpty(anisoArg)) QualitySettings.anisotropicFiltering = anisoPrev;
             return rendered;
         }
 

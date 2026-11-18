@@ -161,3 +161,12 @@ Procesy GPT pozostawione bez ubijania (odczyt 16:30; sprawdzać PID **razem z Cr
 ## s16 :07 (2026-11-13 06:4x)
 - **Codex:** wszystkie 3 rundy (0153, 0154, 0155) scalone do main po recenzji Claude. Worktree `gpt-s16` zostawiony (sesja Codexa zakończona) — usunąć rano po potwierdzeniu właściciela, że Codex go nie używa.
 - **GPT Pro → przejęte przez agentów Claude (Sonnet, research):** G10 gotowe (`research/g10-truck-restrictions/`), **G7** zieleń i **G5** meble uliczne w toku (`research/g7-street-greenery/`, `research/g5-street-furniture/`). Nowych gałęzi `gptpro/*` brak od 00:09.
+
+## s23 (2026-11-16 09:1x) — Codex codex-refs-s21 WSTRZYMANY (limit tygodniowy)
+- Gałąź `research/codex-refs-s21` @ `2ff91ed8b`, PR #100 otwarty, „Gotowe do scalenia: NIE” (materiał do recenzji, FIX-y nie zamknięte). Raport: `artifacts/live/codex-refs-s21.md`, wznowienie: `research/codex-refs-s21/WZNOWIENIE.md` (w worktree). Snapshot `043ec4128`: 670 JSON, 99 rastrów ≤ 800 px, 0 błędów; ARR/NCND tylko jako linki.
+- M59 lampy: 5 tylnych PASS + 1 warunkowy, kwalifikowane ON 0, zmierzch/noc 0 (progi otwarte); R148 korekta 120→1200 cd udokumentowana; warunki R6/R7/R150. Makra przednich lamp konkretnych producentów — TYLKO badawczo, bez marek w grze.
+- M61 brud: A17/B1, zimowe A3, droga europejska A2; Fruehauf: smugi pionowe na obu skrzydłach, nie spełnia B; HCT/Nofima warunkowe.
+- Knyszyn: donice, łukowy bruk, relacja kościół–mur–brama–chodnik–jezdnia; dom Kościelna 6 (licencjonowany); modele przy PRG Rynek 1–4 — przypisanie adresów UNVERIFIED; dachy ze źródła 2016 (bez wniosków o 2026).
+- DK65: żółte oznaczenia, rów z wodą, skarpy, krawężniki, dojazd; parametry zatok projektowane ≠ wykonane (osobno). Region: alumnat i ścieżka Tykocin, budynek SIM Mońki, częściowa fasada Mediateki. Kolej: normy + historyczny kadr toru/podsypki Ełk; DW671 ↔ km/przejazd LK38 NIEPOTWIERDZONE.
+- **OSTRZEŻENIA DLA GENERATORÓW (obowiązują):** (1) teksty Unibep dla Bravilor i Rosti powtarzają adres Myśliwska 18 — operatorzy: Bravilor = Kuronia 2, Rosti = Myśliwska 18; akapit Unibep NIE rozstrzyga geolokalizacji. (2) GDDKiA 2025: szerokość nowej jezdni 7–12,2 m; komunikat 2026: poszerzenie 7→12 m — oba zapisy datowane, to NIE średnica ronda ani dowód odbioru. (3) Kilometraż drogowy 47+800–53+600 ≠ kilometraż LK38; lokalny kilometraż galerii ≠ kilometraż państwowy DK65.
+

@@ -32,7 +32,26 @@ namespace Game.Rendering
     {
         public const float LensLuminance = 2.0e5f;
         public const float DownIntensityCd = 2500f;
-        static readonly Color k_Led = new Color(1f, 0.93f, 0.82f), k_Sodium = new Color(1f, 0.62f, 0.25f);
+        static readonly Color k_LedDefault = new Color(1f, 0.93f, 0.82f), k_Sodium = new Color(1f, 0.62f, 0.25f);
+        static Color k_Led = k_LedDefault;
+
+        /// <summary>LED luminaire colour in use (linear Rec.709, max channel 1): the default, or a region's (ADR 0216).</summary>
+        public static Color LedColour => k_Led;
+        public static Color DefaultLedColour => k_LedDefault;
+
+        /// <summary>
+        /// ADR 0216: LED colour of the loaded region (EnvironmentLighting.Apply; alpha 0 = the default). Sodium luminaires keep
+        /// their colour (SodiumLightColor = k_Led x SodiumTintRatio does not depend on k_Led). Re-tints the registered LED lenses.
+        /// </summary>
+        public static void SetLedColour(Color c)
+        {
+            Color led = c.a > 0f ? new Color(c.r, c.g, c.b, 1f) : k_LedDefault;
+            if (led == k_Led) return;
+            k_Led = led;
+            foreach (var m in s_Glass)
+                if (m != null && !m.name.Contains("sodium")) m.SetVector(k_Emission, new Vector4(led.r * LensLuminance, led.g * LensLuminance, led.b * LensLuminance, 0f));
+            LampGlare.Invalidate();   // halo vertex colours are baked per head
+        }
 
         static readonly List<Material> s_Glass = new List<Material>();
         static Vector3[] s_Heads = new Vector3[0];
@@ -75,10 +94,14 @@ namespace Game.Rendering
         /// along the road (pool ~67°, tail 74°). WORKING_VALUE.
         /// </summary>
         public const float SpotOuterDeg = 140f, SpotInnerDeg = 100f, SpotTiltDeg = 20f;
-        /// <summary>Upper limit of the analytic pools (size of the shader array).</summary>
-        public const int MaxPools = 8;
+        /// <summary>Upper limit of the analytic pools (size of the shader array). night-pc-s23: 16 (PC tiers send 8-16;
+        /// phones 4-8, the shader loop stops at the count).</summary>
+        public const int MaxPools = 16;
         /// <summary>The pool focus sits this far ahead of the camera (horizontal), where the visible road is.</summary>
         public const float PoolFocusAheadM = 30f;
+        /// <summary>night-pc-s23: with more than 8 pools the focus moves ahead in proportion (16 pools: 60 m), so the extra
+        /// luminaires extend the lit road ahead instead of lighting the road behind the camera. ≤ 8 pools: 30 m as before.</summary>
+        public static float PoolFocusAhead(int pools) => PoolFocusAheadM * Mathf.Max(1f, pools / 8f);
         static readonly Vector4[] s_PoolPos = new Vector4[MaxPools];
         static readonly Vector4[] s_PoolAxis = new Vector4[MaxPools];
         /// <summary>Number of analytic pools sent to the world shader in the last refresh (diagnostics / tests).</summary>
@@ -232,6 +255,9 @@ namespace Game.Rendering
         void RefreshPools(Camera cam, float exposure)
         {
             int want = QualityProfileApplier.HasCurrent ? Mathf.Min(QualityProfileApplier.Current.lampPools, MaxPools) : 0;
+            bool spec = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.lampPoolSpecular;
+            // night-pc-s23: the tier flag also gates the headlamp highlight, so it is sent on unlit roads too.
+            Shader.SetGlobalFloat(k_PoolSpec, spec ? 1f : 0f);
             if (s_On <= 0f || cam == null || s_HeadCount == 0 || want <= 0)
             {
                 PoolCount = 0;
@@ -240,8 +266,7 @@ namespace Game.Rendering
                 return;
             }
             Vector3 fwd = cam.transform.forward; fwd.y = 0f;
-            bool spec = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.lampPoolSpecular;
-            Vector3 focus = cam.transform.position + (fwd.sqrMagnitude > 1e-6f ? fwd.normalized * PoolFocusAheadM : Vector3.zero);
+            Vector3 focus = cam.transform.position + (fwd.sqrMagnitude > 1e-6f ? fwd.normalized * PoolFocusAhead(want) : Vector3.zero);
             // n + 1 nearest: the first lamp left out sets the fade-out distance of the chosen ones.
             int n = Mathf.Min(want + 1, s_HeadCount);
             EnsurePick(n);
@@ -261,7 +286,6 @@ namespace Game.Rendering
             Shader.SetGlobalVectorArray(k_PoolPos, s_PoolPos);
             Shader.SetGlobalVectorArray(k_PoolAxis, s_PoolAxis);
             Shader.SetGlobalVector(k_PoolSodium, SodiumTintRatio);
-            Shader.SetGlobalFloat(k_PoolSpec, spec ? 1f : 0f);
             Shader.SetGlobalFloat(k_PoolCount, used);
             // Same photometry as the point lights: E = I cos / d², Unity display units I·k/π (Lambert without 1/π).
             Color c = k_Led * (DownIntensityCd * exposure / Mathf.PI * s_On);

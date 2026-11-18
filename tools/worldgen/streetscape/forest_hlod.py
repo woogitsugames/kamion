@@ -29,6 +29,7 @@ Deterministic (pure geometry of the inputs). Constants: WORKING_VALUE.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 
@@ -47,6 +48,22 @@ MIN_TREES = 8
 CANOPY_GRID_M = 12.0
 WALL_SEG_M = 6.0
 CROWN_R = 4.5
+# ADR 0187 mantle skirt: a second, low wall SKIRT_OFF_M in front of every outer wall, textured with the mantle strip
+# of the edge texture (v above "v_main" of trees_meta.json, stored upside down: v = 1 at the ground). Same mesh
+# primitive and material as the wall (no extra draw). A stand seen from the side then steps down shrub - young
+# trees - canopy instead of ending in one vertical plane.
+SKIRT_OFF_M = 3.5
+SKIRT_KEEP = 0.18          # M68: outer shrub skirt on ~15-20% of outer edges, not 100%
+SKIRT_SEG_M = 18.0
+
+
+def _skirt_keep(a, b):
+    """Deterministic spatial-bucket hash (~18% of outer wall segments get the low shrub skirt)."""
+    mx, my = 0.5 * (float(a[0]) + float(b[0])), 0.5 * (float(a[1]) + float(b[1]))
+    key = f"skirt:{int(round(mx / SKIRT_SEG_M))}:{int(round(my / SKIRT_SEG_M))}"
+    return (int(hashlib.sha1(key.encode()).hexdigest()[:8], 16) % 1000) < int(round(SKIRT_KEEP * 1000))
+CORNER_COS = 0.72          # outer edge turning by more than ~44 degrees at a point = a stand corner
+CORNER_DROP = 0.80         # wall height factor at the corner (0.90 one point either side)
 EDGE_ROW_M = 9.5          # + the 2.5 m clearance in no_forest = trees within 12 m of a road / yard stay individual
 MIX_OF_CATEGORY = {"iglasty": "conifer", "liściasty": "broadleaf", "mieszany": "mixed", None: "mixed"}
 TEX_REF = "art-source/world/vegetation/{}.png"
@@ -70,6 +87,11 @@ def bake_info():
         fh = {m: {"edge": {"w_m": 48.0, "h_m": 24.0, "z0_m": -0.3, "h_median_m": 15.0}, "canopy": {"w_m": 48.0}}
               for m in ("conifer", "mixed", "broadleaf")}
     return fh
+
+
+def edge_v_main(edge_info):
+    """v of the top of the main wall picture in forest_edge_<mix>.png (1.0 before ADR 0187: no mantle strip)."""
+    return float(edge_info.get("v_main", 1.0))
 
 
 def cell_of(e, n, half):
@@ -108,7 +130,16 @@ def build(trees, forests, no_forest, zground, half, report):
     hlod = {c for c, lst in by_cell.items() if len(lst) >= MIN_TREES}
     # canopy / wall heights from the stand trees only: edge-band shrubs and saplings (< 8 m) pulled the canopy
     # down to 2-3 m at the stand edge and it showed as a sloping green sheet (v3.1 render r4)
-    tall = np.array([t["h"] >= 8.0 for t in ft])
+    # ADR 0187: "stand trees" by role, not by height (a low stand - young wood, allotment gardens - has canopy trees
+    # under 8 m; with the height test its cells fell back to ground + 10 m)
+    from .vegetation import CANOPY_SPECIES
+    tall = np.array([t["p"][5:] in CANOPY_SPECIES and not str(t.get("src", "")).endswith((":edge", ":under", ":floor"))
+                     and (t["h"] >= 8.0 or str(t.get("src", "")).startswith("override:")) for t in ft])
+    if not tall.any():
+        tall = np.array([t["h"] >= 8.0 for t in ft])
+    if not tall.any():
+        report["forest_hlod"] = {"cells": 0}
+        return {}
     Pc = P[tall]
     top = np.array([t["z"] + t["h"] for t in ft])[tall]
     H = np.array([t["h"] for t in ft])[tall]
@@ -205,6 +236,26 @@ def build(trees, forests, no_forest, zground, half, report):
                     nb = cell_of(q[0], q[1], half)
                     inner[i] = nb in hlod and nb != (ci, cj)          # tile border: outer wall
             hw = np.array([edge_info["h_m"] * h_local(p) / edge_info["h_median_m"] for p in pts])
+            # ADR 0187: where the outer stand edge turns sharply (end of a belt, corner of a block) the wall steps
+            # down, so a stand seen end-on does not finish in a full-height vertical cut ("theatre flat")
+            if nseg >= 2:
+                dv = np.diff(pts, axis=0)
+                dv /= np.maximum(np.hypot(dv[:, 0], dv[:, 1]), 1e-9)[:, None]
+                closed = float(np.hypot(*(pts[0] - pts[-1]))) < 1e-6
+                for p in range(len(pts)):
+                    a_, b_ = p - 1, p
+                    if p == 0 or p == len(pts) - 1:
+                        if not closed:
+                            continue
+                        a_, b_ = nseg - 1, 0
+                    if inner[a_] or inner[b_]:
+                        continue
+                    if float(dv[a_] @ dv[b_]) < CORNER_COS:
+                        for q, k_ in ((p, CORNER_DROP), (p - 1, 0.5 + 0.5 * CORNER_DROP), (p + 1, 0.5 + 0.5 * CORNER_DROP)):
+                            if 0 <= q < len(pts):
+                                hw[q] = min(hw[q], k_ * edge_info["h_m"] * h_local(pts[q]) / edge_info["h_median_m"])
+                if closed:
+                    hw[-1] = hw[0] = min(hw[0], hw[-1])
 
             # strips of consecutive segments of the same class and facing share their vertices
             i = 0
@@ -226,7 +277,8 @@ def build(trees, forests, no_forest, zground, half, report):
                 k = len(idx)
                 Vw += [[pts[p][0], pts[p][1], zg[p]] for p in idx] + [[pts[p][0], pts[p][1], t] for p, t in zip(idx, wtop)]
                 us = u0 + s[idx] / Wt
-                UVw += [[u, 0.0] for u in us] + [[u, (t - zg[p]) / hw[p]] for u, p, t in zip(us, idx, wtop)]
+                vm = edge_v_main(edge_info)
+                UVw += [[u, 0.0] for u in us] + [[u, vm * (t - zg[p]) / hw[p]] for u, p, t in zip(us, idx, wtop)]
                 Nw += list(n3) + list(n3)
                 for m_ in range(k - 1):
                     b0, b1, t0, t1 = base + m_, base + m_ + 1, base + k + m_, base + k + m_ + 1
@@ -234,6 +286,25 @@ def build(trees, forests, no_forest, zground, half, report):
                         Tw += [[b0, b1, t1], [b0, t1, t0]]
                     else:
                         Tw += [[b0, t1, b1], [b0, t0, t1]]
+                mantle = edge_info.get("mantle")
+                if mantle and not inner[i]:
+                    # skirt: the strip moved SKIRT_OFF_M out of the stand on ~18% of segments, mantle height scaled like the wall
+                    q = pts[idx] + nrm * SKIRT_OFF_M
+                    zq = zground(q[:, 0], q[:, 1]) + edge_info["z0_m"]
+                    hq = mantle["h_m"] * np.clip(hw[idx] / edge_info["h_m"], 0.5, 1.15)
+                    base = len(Vw)
+                    Vw += [[a[0], a[1], z_] for a, z_ in zip(q, zq)] + [[a[0], a[1], z_ + h_] for a, z_, h_ in zip(q, zq, hq)]
+                    us2 = us + 0.37
+                    UVw += [[u, 1.0] for u in us2] + [[u, vm] for u in us2]
+                    Nw += list(n3) + list(n3)
+                    for m_ in range(k - 1):
+                        if not _skirt_keep(pts[idx[m_]], pts[idx[m_ + 1]]):
+                            continue
+                        b0, b1, t0, t1 = base + m_, base + m_ + 1, base + k + m_, base + k + m_ + 1
+                        if face[i] > 0:
+                            Tw += [[b0, b1, t1], [b0, t1, t0]]
+                        else:
+                            Tw += [[b0, t1, b1], [b0, t0, t1]]
                 i = j + 1
         if Tw:
             prims.append({"V": np.array(Vw), "T": np.array(Tw), "UV": np.array(UVw), "N": np.array(Nw),

@@ -1,8 +1,11 @@
 <#
 .SYNOPSIS
   Create an agent worktree from main with the standard data layout (AGENT-RULES):
-  copies of Data/raw/derived, Data/raw/cc0, art-source/world/cc0/_raw, art-source/world/megascans,
-  game/Assets/_Generated, game/Library; junctions Data/raw/{gugik,osm,refs,mapillary,fab} -> main.
+  copies of Data/raw/cc0, art-source/world/cc0/_raw, art-source/world/megascans, game/Assets/_Generated,
+  game/Library; junctions Data/raw/{derived,gugik,osm,refs,mapillary,fab} -> main.
+  Data/raw/derived is a junction (D43, 16.11): a world built in the worktree lands in main and is not lost when the
+  worktree is removed; -CopyDerived restores the old private copy (then copy derived/<region> back to main before
+  removal: robocopy <wt>\Data\raw\derived\<region> <main>\Data\raw\derived\<region> /E /MT:16).
   Before removing such a worktree: unlink junctions (cmd /c rmdir), then git worktree remove --force --force.
 .EXAMPLE
   pwsh scripts/new-agent-worktree.ps1 -Name g3b-r2
@@ -10,7 +13,10 @@
 param(
     [Parameter(Mandatory)][string]$Name,
     [string]$Base = 'main',
-    [switch]$NoLibrary
+    [switch]$NoLibrary,
+    # Private copy of Data/raw/derived instead of the junction (parallel world builds of the same region in two
+    # worktrees would otherwise overwrite each other in main).
+    [switch]$CopyDerived
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
@@ -19,8 +25,11 @@ if (Test-Path $wt) { throw "worktree exists: $wt" }
 git -C $root worktree add -q $wt -b $Name $Base
 if ($LASTEXITCODE) { throw "git worktree add failed" }
 
-$copies = @('Data/raw/derived', 'Data/raw/cc0', 'art-source/world/cc0/_raw', 'art-source/world/megascans', 'game/Assets/_Generated')
+$copies = @('Data/raw/cc0', 'art-source/world/cc0/_raw', 'art-source/world/megascans', 'game/Assets/_Generated')
 if (-not $NoLibrary) { $copies += 'game/Library' }
+if ($CopyDerived) { $copies += 'Data/raw/derived' }
+$junctions = @('gugik', 'osm', 'refs', 'mapillary', 'fab')
+if (-not $CopyDerived) { $junctions = @('derived') + $junctions }
 foreach ($c in $copies) {
     $src = Join-Path $root $c
     if (-not (Test-Path $src)) { "skip (missing in main): $c"; continue }
@@ -29,11 +38,12 @@ foreach ($c in $copies) {
     if ($LASTEXITCODE -ge 8) { throw "robocopy failed ($LASTEXITCODE): $c" }
     "copied $c"
 }
-foreach ($j in 'gugik', 'osm', 'refs', 'mapillary', 'fab') {
+foreach ($j in $junctions) {
     $src = Join-Path $root "Data/raw/$j"
     if (-not (Test-Path $src)) { "skip junction (missing): $j"; continue }
     $dst = Join-Path $wt "Data/raw/$j"
     if (Test-Path $dst) { cmd /c rmdir /s /q "$dst" | Out-Null }
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $dst) | Out-Null
     New-Item -ItemType Junction -Path $dst -Target $src | Out-Null
     "junction Data/raw/$j"
 }

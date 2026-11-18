@@ -26,6 +26,8 @@ namespace PhysicsRunner.Sim
         public GroundSpec ground = new GroundSpec();
         public InitialSpec initial = new InitialSpec();
         public OverrideSpec overrides = new OverrideSpec();
+        /// <summary>Body footprint for the swept-path metrics (swept_*_radius_m, ADR 0280).</summary>
+        public EnvelopeSpec envelope = new EnvelopeSpec();
         public double duration = 10;
         public double dt = 0.01;
         public int substeps = 4;
@@ -113,6 +115,28 @@ namespace PhysicsRunner.Sim
         public double trailerOffset;
         /// <summary>Initial articulation (trailer yaw relative to tractor) [deg].</summary>
         public double articulationDeg;
+
+        // ---- geometry what-if (ADR 0280): applied to a fresh in-memory copy of the production definitions; no
+        // definition file is changed. Absolute values, so a scenario stays valid once the data adopts them.
+        /// <summary>Trailer axle positions in the kingpin frame [m, z &lt; 0], one per axle (null = definition).
+        /// The axle-group mass element ("tridem_axles_wheels_brakes") moves with the mean axle position.</summary>
+        public double[] trailerAxlePositionsZ;
+        /// <summary>Tractor fifth-wheel (kingpin lock point) z in the tractor frame [m, + = ahead of the rear axle] (null = definition).</summary>
+        public double? fifthWheelZ;
+
+        public bool HasGeometry => trailerAxlePositionsZ != null || fifthWheelZ.HasValue;
+    }
+
+    /// <summary>
+    /// Plan-view body footprint (rectangles) used by the swept-path metrics (ADR 0280). Tractor frame: origin = rear
+    /// axle, +z forward; trailer frame: origin = below the kingpin, +z forward. Defaults = art-source/truck/dims.json
+    /// (front_overhang 1.45 + wheelbase 3.70, rear_overhang 0.80, cab_width 2.49; trailer +1.60 / -12.00, 2.55 wide).
+    /// Mirrors are not part of the footprint (dims.json mirror_head_outer_m is outside the 2.55 m width rule too).
+    /// </summary>
+    public sealed class EnvelopeSpec
+    {
+        public double tractorFrontZ = 5.15, tractorRearZ = -0.80, tractorHalfWidth = 1.245;
+        public double trailerFrontZ = 1.60, trailerRearZ = -12.00, trailerHalfWidth = 1.275;
     }
 
     public sealed class GroundSpec
@@ -155,7 +179,7 @@ namespace PhysicsRunner.Sim
         /// <summary>circle: speed ramp [km/h per s] starting at rampStart [s] (rollover threshold search).</summary>
         public double rampKmhPerS;
         public double rampStart;
-        /// <summary>circle / lanechange: at brakeAt [s] the driver brakes with brakeLevel and (optionally) freezes the steering.</summary>
+        /// <summary>circle / lanechange / speedhold: at brakeAt [s] the driver brakes with brakeLevel and (optionally) freezes the steering.</summary>
         public double brakeAt = -1;
         public double brakeLevel = 1;
         public bool holdSteerOnBrake;

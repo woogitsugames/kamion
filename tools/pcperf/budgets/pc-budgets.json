@@ -1,0 +1,102 @@
+{
+  "format": "kamion/pc-budgets/1",
+  "adr": "0266",
+  "status": "WORKING_VALUE",
+  "note": "Wszystkie liczby to WORKING_VALUE do decyzji właściciela (D73, D74, ADR 0260/0266). Klasy min i zalecany = wymagania sprzętowe z D74 (wzorowane na kartach Steam ETS2/ATS); klasa wysoki = propozycja ADR 0266 spoza D74. Referencyjny PC nieustalony; maszyna deweloperska (RTX 5070) jest tylko maszyną pomiarową. Zmiana = ten plik + tabela w docs/03 + ADR.",
+  "warmupSeconds": 5,
+  "minFramesAfterWarmup": 600,
+  "referenceMachines": [],
+  "diskGB": {"max": 25, "status": "WORKING_VALUE", "source": "D74: ≤ 25 GB na grę bazową"},
+  "classes": {
+    "min": {
+      "label": "Min",
+      "status": "WORKING_VALUE",
+      "source": "D74",
+      "hardwareExample": "Intel Core i5-6400 / AMD Ryzen 3 1200; NVIDIA GTX 660 / AMD RX 460 / Intel HD 630 (2 GB VRAM); 8 GB RAM; Windows 10 64-bit",
+      "resolution": [1920, 1080],
+      "targetFps": 30,
+      "tier": "Low",
+      "checks": [
+        {"metric": "frame_ms.p50", "max": 33.3},
+        {"metric": "frame_ms.p95", "max": 36.0},
+        {"metric": "frame_ms.p99", "max": 50.0},
+        {"metric": "frames_over_pct", "threshold_ms": 66.7, "max": 0.5},
+        {"metric": "frames_over_count", "threshold_ms": 100.0, "max": 0},
+        {"metric": "process.private_mb.peak", "max": 4096},
+        {"metric": "process.gpu_dedicated_mb.peak", "max": 1792},
+        {"metric": "region_load_s.max", "max": 30.0},
+        {"metric": "draw_calls.p95", "max": 2000},
+        {"metric": "tris.p95", "max": 2000000},
+        {"metric": "gc.collections_in_window", "max": 2}
+      ]
+    },
+    "zalecany": {
+      "label": "Zalecany",
+      "status": "WORKING_VALUE",
+      "source": "D74",
+      "hardwareExample": "Intel Core i5-9600 / AMD Ryzen 5 3600; NVIDIA GTX 1660 / AMD RX 590 (6 GB VRAM); 12 GB RAM; Windows 10 64-bit",
+      "resolution": [1920, 1080],
+      "targetFps": 60,
+      "tier": "High",
+      "checks": [
+        {"metric": "frame_ms.p50", "max": 16.7},
+        {"metric": "frame_ms.p95", "max": 18.5},
+        {"metric": "frame_ms.p99", "max": 25.0},
+        {"metric": "frames_over_pct", "threshold_ms": 33.3, "max": 0.5},
+        {"metric": "frames_over_count", "threshold_ms": 100.0, "max": 0},
+        {"metric": "process.private_mb.peak", "max": 7168},
+        {"metric": "process.gpu_dedicated_mb.peak", "max": 5120},
+        {"metric": "region_load_s.max", "max": 20.0},
+        {"metric": "draw_calls.p95", "max": 4000},
+        {"metric": "tris.p95", "max": 6000000},
+        {"metric": "gc.collections_in_window", "max": 2}
+      ]
+    },
+    "wysoki": {
+      "label": "Wysoki",
+      "status": "WORKING_VALUE",
+      "source": "propozycja ADR 0266 (poza D74)",
+      "hardwareExample": "dyskretny GPU wyższej klasy bieżącej generacji, >= 12 GB VRAM; CPU >= 8 rdzeni (bieżąca generacja); 32 GB RAM; NVMe SSD",
+      "resolution": [2560, 1440],
+      "targetFps": 60,
+      "tier": "Ultra",
+      "checks": [
+        {"metric": "frame_ms.p50", "max": 16.7},
+        {"metric": "frame_ms.p95", "max": 18.5},
+        {"metric": "frame_ms.p99", "max": 25.0},
+        {"metric": "frames_over_pct", "threshold_ms": 33.3, "max": 0.5},
+        {"metric": "frames_over_count", "threshold_ms": 100.0, "max": 0},
+        {"metric": "process.private_mb.peak", "max": 10240},
+        {"metric": "process.gpu_dedicated_mb.peak", "max": 10240},
+        {"metric": "region_load_s.max", "max": 15.0},
+        {"metric": "draw_calls.p95", "max": 6000},
+        {"metric": "tris.p95", "max": 12000000},
+        {"metric": "gc.collections_in_window", "max": 2}
+      ]
+    }
+  },
+  "tileBudgetsD83": {
+    "status": "WORKING_VALUE",
+    "method": "D83/D76: pomiar per tier na RTX 5070 (emulacja klas D74, nie referencja), 11 punktów x 6 konfiguracji, 1080p, exe kamion-0.1.0-e28533ca31-regions (stary świat, sprzed scaleń 16.11 wieczór); raport docs/reports/PC-BUDGET-2026-11-16.md, dane artifacts/pc-budget-s23/ (summary.csv, fit.json). Budżety = obwiednia zmierzona (bez ekstrapolacji poza zakres pomiaru), p95 w kadrze kamery jazdy. Skalowanie na GTX 660/1660/HD 630 NIE zrobione (brak cytowanego porównania) - patrz raport.",
+    "note": "Nie jest jeszcze sprawdzane przez parser (checks klas bez zmian); propozycja do decyzji właściciela + powtórka na nowym buildzie.",
+    "perCameraP95": {
+      "Low":    {"tris": 1500000, "drawCalls": 1600, "measuredEnvelope": {"tris_p95_max": 2160415, "draws_p95_max": 2328, "frame_ms_p50_max_rtx5070": 1.845}},
+      "Medium": {"tris": 2500000, "drawCalls": 2200, "measuredEnvelope": {"tris_p95_max": 3610087, "draws_p95_max": 3302, "frame_ms_p50_max_rtx5070": 2.622}},
+      "High":   {"tris": 4000000, "drawCalls": 2500, "measuredEnvelope": {"tris_p95_max": 5043200, "draws_p95_max": 3161, "frame_ms_p50_max_rtx5070": 3.277}},
+      "Ultra":  {"tris": 10000000, "drawCalls": 5000, "measuredEnvelope": {"tris_p95_max": 12909716, "draws_p95_max": 5571, "frame_ms_p50_max_rtx5070": 5.374}}
+    },
+    "costModelRtx5070": {
+      "status": "MEASURED (emulacja, maszyna obciążona w części przebiegów Low/Medium/High)",
+      "frame_ms_per_1k_draws_draws_only_fit": {"Low": 0.61, "Medium": 0.57, "High": 0.68, "Ultra": 0.66},
+      "frame_ms_per_Mtris_tris_only_fit": {"Low": 0.73, "Medium": 0.69, "High": 0.58, "Ultra": 0.42},
+      "cpu_main_share_median": {"Low": 0.74, "Medium": 0.86, "High": 0.73, "Ultra": 0.92},
+      "caveat": "tris i draws silnie skorelowane (r 0,88-0,96) - nie da się rozdzielić ich wpływu; klatka ograniczona przez CPU (main), gpu_ms UNVERIFIED (połowa próbek, D3D12 FrameTimingManager)."
+    }
+  },
+  "mobileSafeguard": {
+    "status": "WORKING_VALUE",
+    "note": "Zabezpieczenie mobilne (odroczone, D73) — źródło: docs/PERFORMANCE_BUDGETS.md. Nie blokuje bramek PC; dane wspólne nie mogą go przekroczyć bez ADR.",
+    "trisInView": {"Low": 350000, "Medium": 550000, "High": 1500000, "Ultra": 2000000},
+    "drawCallsBeforeBatching": {"Low": 250, "Medium": 350, "High": 800, "Ultra": 1000}
+  }
+}

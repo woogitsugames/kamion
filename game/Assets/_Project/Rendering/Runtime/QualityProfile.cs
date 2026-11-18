@@ -37,6 +37,10 @@ namespace Game.Rendering
             public SoftShadowQuality softShadowQuality;
             public float shadowDepthBias;
             public float shadowNormalBias;
+            [Tooltip("ADR 0240: thin world casters (lamp columns, sign / signal posts, bollards, railings, mesh fences, lattice " +
+                     "gantries - ThinShadowCasterPolicy) cast no main-light shadow on this tier. Inverted flag: profiles saved " +
+                     "before ADR 0240 keep casting. Low: one 1024 px cascade over 35 m cannot resolve them (dashed smears)")]
+            public bool thinCasterShadowsOff;
             [Header("Textures / geometry")]
             [Tooltip("QualitySettings.anisotropicFiltering: 0 off, 1 per texture, 2 forced on")] public int anisotropic;
             [Tooltip("Aniso level written on world surface textures (asphalt, markings, grass)")] public int worldTextureAniso;
@@ -73,7 +77,7 @@ namespace Game.Rendering
             [Tooltip("Cab-view local shadow lift strength (CabInteriorLighting, review r4 L1; 0 = off)")] public float cabShadowLift;
             [Tooltip("Real point lights at the nearest street lamps at dusk (0 = emission only); they light vehicles and props")] public int streetLights;
             [Tooltip("ADR 0062: analytic light pools of the N lamps nearest the view on Kamion/World Surface at dusk (no lights, " +
-                     "a uniform-branch loop in the world shader; 0 = off, max 8)")] public int lampPools;
+                     "a uniform-branch loop in the world shader; 0 = off, max StreetLamps.MaxPools = 16)")] public int lampPools;
             [Tooltip("ADR 0191: GGX highlight of each lamp pool on the world surfaces (the long streak of a lamp on asphalt " +
                      "towards the viewer; ~12 ALU per pool on lit pixels at dusk / night only)")] public bool lampPoolSpecular;
             [Tooltip("ADR 0192: Off = no lit windows at dusk / night (facade atlas, LOD1 rows, far facades). Inverted so tiers saved " +
@@ -84,6 +88,10 @@ namespace Game.Rendering
             [Tooltip("s20 night-int (review 0191 P1-2): Off = no night floor near lamps (light of the lamps outside the analytic set, " +
                      "inter-reflections, urban sky glow; ~4 ALU per lit pixel, dusk / night only). Inverted so older tiers keep it")]
             public bool lampFloorOff;
+            [Tooltip("night-pc-s23: the player truck's dipped beam lights the world surfaces (analytic UN R112 class B-shaped " +
+                     "beam, KamionLampPools.hlsl) independent of the lighting preset's projectedHeadlamps opt-in. Default off " +
+                     "(phones); set by PcNightLighting on the PC tiers. Specular term follows lampPoolSpecular")]
+            public bool projectedHeadlamps;
             [Header("Baked world lighting (ADR 0064)")]
             [Tooltip("Off = no baked sky visibility (ambient / reflection occlusion) on the world surfaces. Inverted so tiers saved before ADR 0064 keep it on")]
             public bool worldSkyVisOff;
@@ -124,7 +132,7 @@ namespace Game.Rendering
         [Tooltip("Migration revision (ProjectSetup.LoadTiers applies the changes of later revisions to an existing asset)")]
         public int revision;
         /// <summary>ADR 0062: High floor 0.70, FSR upscaling, pacing fallback, lamp pools.</summary>
-        public const int CurrentRevision = 191;   // ADR 0080: cloudQuality, ssao; ADR0098: shadow receiver stability and post noise; ADR 0106: glassFast; ADR 0113: forestFast; ADR 0191: lampPoolSpecular (s20: + ADR 0192 nightWindowsOff / lampGlareOff, lampFloorOff - inverted, no migration step)
+        public const int CurrentRevision = 240;   // ADR 0240: Low shadow bias 0.4 / 0.3 + thinCasterShadowsOff; ADR 0080: cloudQuality, ssao; ADR0098: shadow receiver stability and post noise; ADR 0106: glassFast; ADR 0113: forestFast; ADR 0191: lampPoolSpecular (s20: + ADR 0192 nightWindowsOff / lampGlareOff, lampFloorOff - inverted, no migration step)
 
         /// <summary>
         /// First-launch tier by device (no launch argument, nothing saved by the player). Rules are checked in order; a rule
@@ -222,7 +230,9 @@ namespace Game.Rendering
                 postProcessing = false, tonemapping = TonemappingMode.None,
                 shadowDistance = 35f, shadowResolution = 1024, shadowCascades = 1, cascade2Split = 0.25f,
                 cascade4Split = new Vector3(0.067f, 0.2f, 0.467f), softShadows = false, softShadowQuality = SoftShadowQuality.Low,
-                shadowDepthBias = 1.0f, shadowNormalBias = 1.0f,
+                // ADR 0240: 1.0 / 1.0 -> the Medium / High values of ADR 0098. Normal bias 1.0 pulled every caster silhouette
+                // in by one texel per side (~16 cm of width at ~8 cm per texel): a 0.24 m signal arm kept a third of its shadow.
+                shadowDepthBias = 0.4f, shadowNormalBias = 0.3f, thinCasterShadowsOff = true,
                 anisotropic = 1, worldTextureAniso = 2, worldMipBias = 0f, lodBias = 0.5f, cameraFarClip = 900f,
                 worldDetail = false, additionalLightsPerObject = 2,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,

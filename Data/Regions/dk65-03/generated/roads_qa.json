@@ -12,14 +12,14 @@
     2
    ],
    "length_m": 484.4,
-   "max_grade": 0.0135,
+   "max_grade": 0.0138,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.6
+    6.6
    ],
    "width_src": [
     "authored_override:dk65-elcka-xsec"
@@ -1109,18 +1109,19 @@
    "S": 5.0,
    "Z": 4.5
   },
+  "compact_roundabouts": [],
   "crossings_in_junction": [],
   "crossings_merged": 0,
   "crossings_p11": 0,
   "crossings_skipped": [],
   "crossings_snapped": 0,
   "decals": {
-   "gullies": 379,
+   "gullies": 351,
    "oil": 43,
-   "patches": 86
+   "patches": 108
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 159728,
+  "footprint_nodes": 162292,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -1155,6 +1156,7 @@
   ],
   "markings": {
    "P-1 centre line": 14,
+   "P-7a edge line span (authored)": 2,
    "P-7b edge line": 2
   },
   "markings_overlap_removed_tris": 0,
@@ -1166,6 +1168,24 @@
     "targets": [
      "w1024956365:2295268357-839431354"
     ]
+   },
+   {
+    "id": "dk65-k1-edge-line-spacing",
+    "targets": [
+     "w1024956365:2295268357-839431354"
+    ]
+   },
+   {
+    "id": "dk65-03-k1-dashed-elcka-l",
+    "targets": [
+     "c:w1024956365:2295268357-839431354"
+    ]
+   },
+   {
+    "id": "dk65-03-k1-dashed-elcka-p",
+    "targets": [
+     "c:w1024956365:2295268357-839431354"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -1174,6 +1194,11 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 0,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 0
+  },
+  "seam_tapers": [],
   "sides_on_carriageway_culled": {
    "kerb_tris": 0,
    "parts": 0,
@@ -1190,8 +1215,8 @@
    "unmatched": 4
   },
   "verge_strips": {
-   "chunks": 23,
-   "tris": 12372
+   "chunks": 21,
+   "tris": 12252
   },
   "walled_ramps": []
  }

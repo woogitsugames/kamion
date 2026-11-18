@@ -24,16 +24,25 @@ from . import signs_route as SR
 from . import gate as GT
 from . import depot_yard as DY
 from . import hero_building as HBD
+from . import knyszyn_church_0227 as KC
+from . import knyszyn_townhall_0227 as KT
+from . import knyszyn_park_props_0227 as KP
+from . import knyszyn_market_0227 as KM
+from . import knyszyn_market_buildings_0227 as KMB
+from . import knyszyn_fountain_0227 as KF
 from . import hero_depot as HD
 from . import landmarks as LM
 from . import chain_bollards as CB
+from . import construction_site as CS
 from . import gate3_landmarks as G3
 from . import life as LF
+from . import masonry_gate as MG
 from . import paved as PV
 from . import plantings as PT
 from . import plots as PLT
 from . import runway_paint as RWP
 from . import sources as SRC
+from . import tree_rows as TRW
 from . import vegetation as VG
 from . import yard_wear as YW
 
@@ -43,7 +52,9 @@ def _yard_src(src, origin, overrides):
            if f["props"].get("materialnawierzchni") != "grunt naturalny"]
     out += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
             if a["tags"].get("amenity") == "parking"]
-    out += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - np.asarray(origin)) for o in overrides
+    out += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - np.asarray(origin),
+                                     [np.asarray(h, float) - np.asarray(origin) for h in o.get("holes_epsg2180", [])])
+            for o in overrides
             if o.get("kind") == "paved_area"]
     return out
 
@@ -69,6 +80,11 @@ def plan_plots(w, rid, blds=None):
     rp = PLT.region_plan(blds, roads_poly, carriage, yards, src, origin, bpoly, net=w.net)
     from . import plot_canopy as PCN                 # ADR 0132: crowns read off the orthophoto (None when not built)
     rp["canopy"] = PCN.load(rid)
+    # ADR 0237: kerbs lowered at the marked pedestrian crossings ride with the driveway drops into pass 2
+    # (build_world applies plot_plan["drops"]); a region without `pavement_rules` gets none
+    from . import pavements as PVM
+    rp["crossing_drops"] = {}
+    rp["drops"] = list(rp["drops"]) + PVM.crossing_drops(w.net, w.ctx["points"], overrides, rp["crossing_drops"])
     return rp
 
 
@@ -91,18 +107,18 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     fc = json.loads((pipeline.REGIONS / rid / "buildings.geojson").read_text(encoding="utf-8"))
     # hero buildings (override kind: hero_building, ADR 0070): authored asset instead of the rule facade
     heroes = HBD.plan(rid, overrides, fc, w.origin, lambda e, n: float(np.asarray(zsmooth(e, n)).ravel()[0]), rep, log)
-    blds = BM.load(fc, w.origin, overrides, hero=HBD.targets(heroes))
-    yard_src = [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_PTPL_A"]
-                if f["props"].get("materialnawierzchni") != "grunt naturalny"]
-    yard_src += [PV._poly_local(a["geometry"]["coordinates"], w.origin) for a in src["osm"]["areas"]
-                 if a["tags"].get("amenity") == "parking"]
-    yard_src += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - origin) for o in overrides
-                 if o.get("kind") == "paved_area"]
+    blds = BM.load(fc, w.origin, overrides,
+                   hero={**HBD.targets(heroes), **KC.hero_targets(rid, fc), **KT.hero_targets(rid, fc),
+                         **KMB.hero_targets(rid, fc)})
+    yard_src = _yard_src(src, w.origin, overrides)
     yard_union = shapely.union_all([shapely.make_valid(p) for p in yard_src] + [roads_poly])
     brep = {}
     facade_signs = []
     depots = HD.plan(w, rid, overrides, blds, zsmooth, log)      # hero depot halls (override kind: hero_depot, ADR 0071)
     docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs, heroes=depots)
+    KC.build(w.buf, rid, blds, zsmooth, rep)
+    KT.build(w.buf, rid, blds, zsmooth, rep)
+    KMB.build(w.buf, rid, blds, zsmooth, rep, overrides)     # ADR 0227 D41: pavilion form from overrides
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])
@@ -111,7 +127,17 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     prep = {}
     truck_zone = shapely.union_all([b["poly"].buffer(40.0) for b in blds if b["typ"] == "hall"] +
                                    [d["apron"].buffer(10.0) for d in docks])
-    paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep, truck_zone=truck_zone)
+    # ADR 0188: cycle tracks from OSM (planned on the network in roads.pipeline.build)
+    from . import cycleways as CY
+    cyc_items = getattr(w.net, "cycle_items", [])
+    cyc_rep = dict(getattr(w.net, "cycle_report", {}))
+    paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep, truck_zone=truck_zone,
+                       cycle={"cands": CY.candidates(cyc_items), "bdot_replaced": cyc_rep.get("bdot_replaced", [])})
+    _cyc = [p for p in paved if p["source"] == "osm_cycleway"]
+    for p in _cyc:          # the two strips of one way do not edge against each other (paved._edges)
+        sib = [q["poly"] for q in _cyc if q is not p and q["id"].rsplit(":", 1)[0] == p["id"].rsplit(":", 1)[0]]
+        if sib:
+            p["skip_edge"] = shapely.union_all(sib)
     rep["paved_m2_by_source"] = prep
     # house plots (ADR 0114): lawn / driveway / path are paved-area items of their own list (yard life, wear and
     # gate logic keep reading `paved` only)
@@ -121,6 +147,10 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     pz = PV.paved_heights(hf, road_z, rmask, pmask)
     shapely.prepare(roads_poly)
     PV.build_meshes(w.buf, paved, np.where(np.isfinite(pz), pz, sm), hf, walls=bpoly.boundary, roads_poly=roads_poly)
+    if cyc_items:
+        CY.paint(w.buf, cyc_items, PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")]), cyc_rep)
+    rep["cycleways"] = cyc_rep
+    log("cycleways", {k: v for k, v in cyc_rep.items() if k != "bdot_replaced"})
     # ADR 0124 r2: the ground of the house plots reads the ROAD height on the nodes of the road footprint (the yards
     # above read the smoothed terrain there). A driveway that comes down from a plot 0.3-0.5 m above the street ended
     # 15-20 cm over the lowered kerb, and the terrain showed under that lip as a wedge of grass (`r16_kerb_0`).
@@ -141,16 +171,59 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     soft = vmask & ~hmask & ~pmask
     zc, dist = CF.conform(hf, zjoin, mask, soft=soft)
     rep["terrain_soft_nodes"] = int(soft.sum())
-    zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask)
+    # c-p1-s23 (REVIEW s20 gate3-phone P1-2): a walled ramp is a fill, not a span - the ground beside it is not
+    # pushed under a soffit (the clamp dug a 1.5 m pit beside the wall end at the ramp toe, g3b_ext34_s1482)
+    _wr = getattr(w, "walled_ramp_mask", None)
+    zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask if _wr is None else (mask | _wr))
+    if _wr is not None and _wr.any():
+        # ... but never through the ramp surface itself: at the toe the fill meets the ground road and the cone of the
+        # conform reached the deck shoulder (-0.003 m at E -386.8 N -104.2); kept CF.TERRAIN_UNDER_WALLED below it
+        zc = CF.clamp_under_decks(zc, deck, deck_mask & _wr, CF.TERRAIN_UNDER_WALLED - 0.3, mask)
     zc = CF.tidy(zc, zjoin, mask, dist)
+    # c-p2-s23: ... and never through the face of the retaining walls (CF.level_under_walled)
+    _wf = getattr(w, "walled_fill_mask", None)
+    if _wf is not None and _wf.any():
+        zc, rep["terrain_walled_fill_lowered_nodes"] = CF.level_under_walled(zc, _wf, mask)
+    # Explicit park surfaces use lawn-level paving instead of deep yard skirts.
+    # Keep all other ground and surfaces on the existing conformance path.
+    flush_items = [p for p in paved if p.get("park_flush") is True]
+    if flush_items:
+        flush_mask = PV.rasterize_polys([p["poly"] for p in flush_items], hf)
+        other_mask = PV.rasterize_polys([p["poly"] for p in paved if p.get("park_flush") is not True] +
+                                        [p["poly"] for p in plot_paved], hf)
+        zc = PV.conform_park_flush(zc, pz, flush_mask, rmask | other_mask | deck_mask)
     bmask = PV.rasterize_polys([b["poly"] for b in blds], hf)
     zc = np.where(bmask & ~mask, np.minimum(zc, sm), zc)        # ground under buildings never above the floor
+    wkeep = np.zeros(mask.shape, bool)
     if getattr(w, "water", None) is not None:      # ADR 0210 (opt-in): river / pond bed, shallow banks, shore lip
+        zc0 = zc
         zc = w.water.carve(zc, mask, log)
+        wkeep = np.abs(np.asarray(zc, float) - np.asarray(zc0, float)) > 1e-3     # bed, banks and shore lip
+    from . import rail as RL
+    from . import rail_props as RP
+    RP.PROTOS.clear()                              # crossing devices are registered only by the rail stage below
+    rail_road_z = None
+    if getattr(w, "rail", None) is not None:       # ADR 0217 (opt-in): ground levelled under the track bed
+        rail_road_z = RL.grid_sampler(road_z, hf, fallback=RL.grid_sampler(zc, hf))
+        # ADR 0223 (REVIEW s21 #102 P1-4): every node the water stage carved is kept - the half-disc of the bed
+        # conform at a railway-bridge abutment (dk65-03, bridge over the Supraśl) must not refill the river
+        zc = w.rail.conform(zc, mask | bmask | wkeep, hf, rail_road_z, log)
+        rep["rail_conform_water_kept_nodes"] = int(wkeep.sum())
+    # ADR 0214: expressway construction sites (override kind: construction_site) - sand platform + spoil heaps
+    bbx = w.region["bbox"]
+    sites = CS.plan(overrides, origin, roads_poly, rep, tile=shapely.box(bbx["xmin"] - origin[0], bbx["ymin"] - origin[1],
+                                                                       bbx["xmax"] - origin[0], bbx["ymax"] - origin[1]))
+    zc, site_mask = CS.shape_terrain(zc, mask | bmask, hf, sites, PV.rasterize_polys, rep)
+    if sites:
+        log("construction sites", rep["construction_sites"])
     zsurf_g = np.where(mask, zjoin, zc)
 
     def zsurf(e, n):
         return PV.bilinear(zsurf_g, hf, np.asarray(e, float), np.asarray(n, float))
+
+    KP.build(w.buf, rid, w.origin, overrides, zsurf, rep)
+    KM.build(w.buf, rid, w.origin, overrides, zsurf, rep)
+    KF.build(w.buf, rid, w.origin, overrides, zsurf, rep)
 
     def zground(e, n):
         return PV.bilinear(zc, hf, np.asarray(e, float), np.asarray(n, float))
@@ -200,13 +273,19 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     SR.osm_signs(pl, w.net, src, origin, w.junctions, frep, codes)
     SR.roundabout_signs(pl, w.net, w.junctions, attrs, frep, codes, boards, src=src, origin=origin)
     LM.build(pl, w.net, graph, overrides, origin, boards, frep)
+    SR.drop_rule_diagrams_near_gantries(pl, boards, frep)       # ADR 0236: the authored portal replaces the rule E-1
     FU.misc_points(pl, w.net, src, origin, frep, codes)
-    FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep)
+    if getattr(w, "rail", None) is not None:       # ADR 0217: G-3 / G-4 crosses, barriers, signals of level crossings
+        RP.place(pl, w.rail, rail_road_z, frep, net=w.net, codes=codes)     # + ADR 0268 approach signs / posts
+    FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep, overrides)
     FU.bridge_median_lamps(pl, w.net, frep)          # ADR 0123: twin-arm lamps between the decks (bridge_style `lamps`)
     lin = FU.Lin(w.buf, zsurf)
     # authored fences of hero buildings replace the generic panel fence of the same OSM way (ADR 0070 r3)
-    FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes)), frep,
-              styles=FU.fence_styles(overrides), net=w.net)
+    mg_kits = MG.plan(overrides)                 # ADR 0189: brick gate kits; the rule fence is cut at their walls
+    FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes) + MG.fence_cut(mg_kits)), frep,
+              styles=FU.fence_styles(overrides), net=w.net,
+              decks=[p for p in w.buf.parts if p.layer == "bridge" and p.mat.startswith("road_")])
+    CS.fences(lin, sites, roads_poly, rep)          # ADR 0214: temporary site fence facing the road
     def znat(e, n):                              # natural ground (NMT, decks removed): embankment height
         return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
     FU.guardrails(lin, w.net, znat, frep)
@@ -238,6 +317,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     G3.build(pl, w.net, graph, overrides, origin, boards, frep, carriage=carriage,   # ADR 0125 gate 3 signs
              islands=[i for i in getattr(getattr(w, "gore_plan", None), "islands", []) if i.built])   # ADR 0128
+    if mg_kits:
+        MG.build(pl, mg_kits, boards, frep, carriage=carriage)
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     FU.clear_narrow_islands(pl, w.buf.parts, w.net, frep)        # ADR 0093: no lamp on a separation < ~2 m
     FU.clear_under_decks(pl, w.buf.parts, frep)
@@ -279,19 +360,25 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         blocked |= PV.rasterize_polys(hero_keepout, hf)
     if getattr(w, "water", None) is not None:      # ADR 0210: no trees in the water
         blocked |= w.water.blocked()
+    if getattr(w, "rail", None) is not None:       # ADR 0217: no trees on the track bed / in the clearance
+        blocked |= w.rail.blocked(hf)
+    blocked |= site_mask                          # ADR 0214: no trees on a construction site
     vrep = {}
-    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides)
+    tree_rows = TRW.region_plan(rid, overrides, src, graph, origin)     # ADR 0222: None unless the region opts in
+    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides, hard=mask | bmask, tree_rows=tree_rows)
     forest_mix = vrep.pop("_forest_mix")
     forest_cleared = vrep.pop("_forest_cleared", [])
     rep["vegetation"] = vrep
     log("trees", vrep["trees"])
     # forest HLOD cells (canopy + edge walls) replacing far stands
-    no_forest = shapely.union_all([roads_poly, bpoly] + [p["poly"] for p in paved]).buffer(2.5)
+    no_forest = shapely.union_all([roads_poly, bpoly] + [p["poly"] for p in paved] + [s_["poly"] for s_ in sites]).buffer(2.5)
     half = w.region["bbox"]["width_m"] / 2
     hlod = FH.build(trees, forest_mix, no_forest, zground, half, vrep)
     log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests, forest_cleared)
     col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # no grit strip around the lawns (ADR 0114)
+    col = CS.ground_colour(col, site_mask, hf, sites, PV.rasterize_polys)   # ADR 0214: sand on construction sites
+    col = VG.authored_bare_ground(col, hf, origin, overrides, mask | bmask)
     # ADR 0132: grown garden trees of the house plots (orthophoto crowns) join the tree instances - same prototypes,
     # LODs and impostors as every street tree; none closer than 2.5 m to a tree the region already has there
     ptrees = plots.get("trees") or []
@@ -301,13 +388,25 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         dd, _ = kd.query(np.array([[t_["e"], t_["n"]] for t_ in ptrees]))
         ptrees = [t_ for t_, d_ in zip(ptrees, dd) if d_ >= 2.5]
     if gardens_0163:
+        mg_conifers = MG.conifers(mg_kits)
+        if mg_conifers:
+            plot_plan.setdefault("garden_trees", []).extend(mg_conifers)
         PT.garden_trees(w.buf, plot_plan, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2, region_trees=trees)
         log("garden trees", {k: v for k, v in rep["garden_trees"].items() if k not in ("list", "conifers")})
         ptrees = VG.garden_canopies(ptrees, plot_plan, rep)
+    if any(o.get("kind") == "tree_groups" and o.get("form") == "kit" for o in overrides or []):     # ADR 0186
+        PT.authored_trees(w.buf, overrides, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2)
+        log("authored trees", {k: v for k, v in rep["authored_trees"].items() if k != "list"})
     rep["plots"]["inst_trees_kept"] = len(ptrees)
     for t_ in ptrees:
         vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
-    instances = pl.items + trees + ptrees
+    wtrees = []
+    if getattr(w, "water", None) is not None:      # ADR 0213: reed belt ribbons + willow / alder scrub on the banks
+        bank_keep = shapely.union_all([roads_poly, bpoly] + [p_["poly"] for p_ in paved]).buffer(1.0)
+        wtrees = w.water.bank_vegetation(w.buf, zground, bank_keep, trees + ptrees, blocked, rep, log)
+        for t_ in wtrees:
+            vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
+    instances = pl.items + trees + ptrees + wtrees
     hero_tris = {**hero_tris, **HBD.apply(w.buf, heroes, instances, rep, log)}      # depot halls + hero buildings
     if heroes or rep.get("hero_buildings", {}).get("stale"):
         log("hero buildings", {k: [x["id"] for x in v] for k, v in rep["hero_buildings"].items()})

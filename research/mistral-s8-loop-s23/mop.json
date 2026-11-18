@@ -1,0 +1,199 @@
+{
+ "schema": "kamion/research-s8-loop-mop/1",
+ "source": "OSM API 0.6 (raw/osm/manifest.json), ODbL 1.0; obszary MOP z geometrii OSM; miejsca TIR ESTIMATED z ortofoto GUGiK WMS (xsec/ i RAPORT.md)",
+ "mop_on_loop": [
+  {
+   "osm_way": 222577666,
+   "kind": "services",
+   "official_name": "Miejsce Obsługi Podróżnych Radule",
+   "wgs84": [
+    22.793714,
+    53.144747
+   ],
+   "epsg2180": [
+    753617.2,
+    593328.0
+   ],
+   "cell": [
+    -12,
+    -1
+   ],
+   "area_m2": 40582.0,
+   "dist_to_s8_axis_m": 134.9,
+   "tags": {
+    "area": "yes",
+    "highway": "services",
+    "toilets": "yes"
+   },
+   "parking_bays_est": {
+    "source": "zliczenie wzrokowe z ortofoto GUGiK WMS (0,1 m/px, wycinki 340 m i 220 m wokół centroidu), sesja 2026-11; ESTIMATED",
+    "truck_bays": 12,
+    "car_bays": 50,
+    "buildings": 3,
+    "fuel_on_site": false,
+    "side": "północna strona S8 (kierunek Białystok→Jeżewo po prawej)"
+   }
+  },
+  {
+   "osm_way": 916677534,
+   "kind": "rest_area",
+   "official_name": "MOP Złotoria",
+   "wgs84": [
+    22.935803,
+    53.165258
+   ],
+   "epsg2180": [
+    762986.4,
+    596120.8
+   ],
+   "cell": [
+    -7,
+    0
+   ],
+   "area_m2": 38752.0,
+   "dist_to_s8_axis_m": 95.8,
+   "tags": {
+    "area": "yes",
+    "highway": "rest_area"
+   },
+   "parking_bays_est": {
+    "source": "zliczenie wzrokowe z ortofoto GUGiK WMS (0,1 m/px, wycinki 340 m i 220 m), sesja 2026-11; ESTIMATED",
+    "truck_bays": 8,
+    "car_bays": 12,
+    "buildings": 4,
+    "fuel_on_site": false,
+    "side": "przy węźle Tykocin; OSM: highway=rest_area (nie services)"
+   }
+  }
+ ],
+ "fuel_within_2km_of_loop": [
+  {
+   "osm": "node/3052234985",
+   "function": "stacja paliw (marka celowo pominięta)",
+   "wgs84": [
+    22.765012,
+    53.202788
+   ],
+   "epsg2180": [
+    751359.3,
+    599677.6
+   ],
+   "cell": [
+    -13,
+    2
+   ],
+   "dist_to_loop_road_m": 44.8,
+   "hgv_related_tags": {}
+  },
+  {
+   "osm": "way/301402242",
+   "function": "stacja paliw (marka celowo pominięta)",
+   "wgs84": [
+    22.750293,
+    53.135815
+   ],
+   "epsg2180": [
+    750767.6,
+    592182.2
+   ],
+   "cell": [
+    -13,
+    -2
+   ],
+   "dist_to_loop_road_m": 56.8,
+   "hgv_related_tags": {}
+  },
+  {
+   "osm": "way/1131537015",
+   "function": "stacja paliw (marka celowo pominięta)",
+   "wgs84": [
+    23.00187,
+    53.159877
+   ],
+   "epsg2180": [
+    767432.4,
+    595767.8
+   ],
+   "cell": [
+    -5,
+    0
+   ],
+   "dist_to_loop_road_m": 128.6,
+   "hgv_related_tags": {}
+  },
+  {
+   "osm": "way/1385343897",
+   "function": "stacja paliw (marka celowo pominięta)",
+   "wgs84": [
+    23.014044,
+    53.157403
+   ],
+   "epsg2180": [
+    768261.1,
+    595538.5
+   ],
+   "cell": [
+    -5,
+    0
+   ],
+   "dist_to_loop_road_m": 87.4,
+   "hgv_related_tags": {}
+  },
+  {
+   "osm": "way/906614318",
+   "function": "stacja paliw (marka celowo pominięta)",
+   "wgs84": [
+    22.936374,
+    53.165136
+   ],
+   "epsg2180": [
+    763025.3,
+    596109.3
+   ],
+   "cell": [
+    -7,
+    0
+   ],
+   "dist_to_loop_road_m": 83.3,
+   "hgv_related_tags": {}
+  },
+  {
+   "osm": "way/1426176073",
+   "function": "stacja paliw (marka celowo pominięta)",
+   "wgs84": [
+    22.767564,
+    53.204513
+   ],
+   "epsg2180": [
+    751519.5,
+    599878.3
+   ],
+   "cell": [
+    -13,
+    2
+   ],
+   "dist_to_loop_road_m": 23.4,
+   "hgv_related_tags": {}
+  },
+  {
+   "osm": "way/214483747",
+   "function": "stacja paliw (marka celowo pominięta)",
+   "wgs84": [
+    23.057915,
+    53.148173
+   ],
+   "epsg2180": [
+    771249.9,
+    594678.2
+   ],
+   "cell": [
+    -3,
+    -1
+   ],
+   "dist_to_loop_road_m": 1903.4,
+   "hgv_related_tags": {}
+  }
+ ],
+ "outside_loop_note": "MOR-y (miejsca obsługi rowerzystów) poza pętlą: Tykocin, Barszczewo, Pańki — pominięte (poza 15 kaflami)",
+ "parkings_note": "Liczby miejsc = ESTIMATED (zliczenie z ortofoto, rozdzielczość usługi przy tej skali nie podana przez serwer — UNVERIFIED); do weryfikacji lidera na miejscu lub dokładniejszym arkuszem ORTO."
+}

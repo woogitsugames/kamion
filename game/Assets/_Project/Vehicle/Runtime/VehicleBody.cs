@@ -133,8 +133,9 @@ namespace Game.Vehicle.Runtime
             if (Model == null) Initialize(data);
             // ADR 0165: the solver couples the bodies (fifth wheel), so PhysX must not also push tractor and trailer
             // colliders apart (cab / frame vs trailer body near the kingpin at full articulation): restore the pair for
-            // the previous trailer, ignore it for the new one. Parity with the .NET runner, which has no
-            // tractor-trailer contact. Allocates (collider lists) only on connect, never per step.
+            // the previous trailer, ignore it for the new one. The tractor-trailer body contact is solved in the core
+            // (ADR 0228, CouplingContact in the fifth-wheel PGS, same as the .NET runner), so PhysX must not add a second
+            // one. Allocates (collider lists) only on connect, never per step.
             if (Trailer != null && Trailer != trailer) SetCollisionIgnored(Trailer, false);
             if (trailer != null) SetCollisionIgnored(trailer, true);
             Trailer = trailer;

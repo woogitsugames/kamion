@@ -79,7 +79,7 @@ def test_one_way_entry_from_outside_is_not_off_reach_target_but_start_ok():
 
 def test_region_reachability_readonly():
     """The region graph in the repo (read-only): SCC counts and the off-reach street list for the report."""
-    graph = json.load(open(os.path.join(RDIR, "roads.graph.json"), encoding="utf-8"))
+    graph = brg.load_graph(REGION)            # as main(): effective graph (ADR 0274)
     rows = json.load(open(os.path.join(RDIR, "turn_restrictions.json"), encoding="utf-8"))["restrictions"]
     t = brg.build(graph, brg.read_origin(RDIR), rows)
     r = t["reachability"]

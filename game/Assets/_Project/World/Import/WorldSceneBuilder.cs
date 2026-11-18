@@ -27,16 +27,13 @@ namespace Game.World.Import
     /// </summary>
     public static class WorldSceneBuilder
     {
-        public static string SceneNameFor(string region, string tier = "Low")
-        {
-            string b = region == "bialystok-industrial-c" ? "WorldC" : "World_" + region;
-            return tier == "High" ? b + "_High" : b;
-        }
+        public static string SceneNameFor(string region, string tier = "Low") => RegionScenes.SceneNameFor(region, tier);   // one rule (ADR 0229)
 
         /// <summary>Builds the scene of one content tier: "Low" (Low + Medium quality, WorldC) or "High" (WorldC_High).</summary>
         public static void Build(RegionImporter.Result r, string tier)
         {
             string scenePath = r.ScenePath(tier);
+            DrivingVehiclePrefabs.EnsureBuilt();   // D84: before the scene exists (the asset builders import and refresh)
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             // ---------------- lighting ----------------
@@ -51,6 +48,13 @@ namespace Game.World.Import
             env.presets = LookDevAssets.Presets();
             env.sun = sun;
             env.skyMaterial = AssetDatabase.LoadAssetAtPath<Material>(LookDevAssets.SkyMaterial);
+            // ADR 0216: per-region lighting data (season, dusk clock hour, LED colour). Regions not listed keep the defaults.
+            string profilesPath = System.IO.Path.Combine(Game.Editor.Build.EditorTools.RepoRoot, "Data/Regions/lighting_profiles.json");
+            if (System.IO.File.Exists(profilesPath))
+            {
+                string applied = RegionLightingProfiles.Parse(System.IO.File.ReadAllText(profilesPath)).ApplyTo(env, r.Region);
+                Debug.Log($"[IMPORT] lighting profiles for {r.Region}: {(applied.Length > 0 ? applied : "none")}");
+            }
             env.Apply();
             var volGo = new GameObject("WorldVolume");
             var vol = volGo.AddComponent<Volume>();
@@ -105,17 +109,30 @@ namespace Game.World.Import
             route.speedLimitsKmh = r.RouteLimits.Length == pts.Length ? r.RouteLimits : new float[pts.Length];
 
             // ---------------- vehicle, camera, bootstrap ----------------
-            // Track A7: the TRAKT art truck when it has been built (TruckAssetBuilder), else the graybox.
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(TruckAssetBuilder.PrefabPath) ??
-                         AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.PrefabPath);
-            // The art curtainsider when it has been built (TrailerAssetBuilder), else the graybox trailer (same physics root).
-            var trailerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TrailerAssetBuilder.PrefabPath) ??
-                                AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.TrailerPrefabPath);
-            if (prefab == null || trailerPrefab == null) throw new FileNotFoundException("DrivingLab prefabs missing: run Kamion/Setup/Rebuild DrivingLab first");
-            const float spawnS = 12f;
+            // D84: one installation path for every driving scene - the art TRAKT tractor and curtainsider (built on demand),
+            // the graybox only as an announced emergency fallback (DrivingVehiclePrefabs).
+            var prefab = DrivingVehiclePrefabs.Tractor(out _, buildIfMissing: false);
+            var trailerPrefab = DrivingVehiclePrefabs.Trailer(out _, buildIfMissing: false);
+            // ADR 0262: the start of the region catalog (scripts/export-region-catalog.py: 12 m, or behind the region-edge
+            // closure when the route starts ON the tile edge - the closure stands up to 60 m inside, ADR 0169), and in
+            // any case behind every closure the route enters the tile through (the closures just built above).
+            var startBoundary = rootGo.GetComponent<WorldBoundary>();
+            var catalogEntry = RegionCatalog.Load()?.Find(r.Region);
+            float wantedS = catalogEntry != null ? RegionStart.ClampStartS(catalogEntry.startS, route.Length) : StartClearance.DefaultStartS;
+            // ADR 0277: the same zone rule as the runtime (StartSearch): behind the entry closure, in front of the exit closure.
+            if (!StartSearch.BakedSpawnS(route.points, route.distances,
+                    startBoundary != null ? startBoundary.closures : System.Array.Empty<WorldBoundary.Closure>(), wantedS, out float spawnS))
+            {
+                if (catalogEntry != null && catalogEntry.noStart)   // ADR 0231 §5a: corner tile, no start expected; the menu does not offer it
+                    Debug.Log($"[IMPORT] {r.Region}: corner tile without a standalone start (catalog noStart); spawn left at route_s {wantedS:F1}");
+                else
+                    Debug.LogError($"[IMPORT] {r.Region}: the start route has no drivable stretch between the region-edge closures; spawn left at route_s {wantedS:F1} (the game refuses this start, ADR 0277)");
+            }
+            else if (Mathf.Abs(spawnS - wantedS) > 0.01f)
+                Debug.LogWarning($"[IMPORT] spawn moved from route_s {wantedS:F1} to {spawnS:F1} m: the catalog start is not between the region-edge closures (python scripts/export-region-catalog.py, ADR 0262/0277)");
             Vector3 spawnPos = route.points.Length > 1 ? route.PointAt(spawnS) : Vector3.zero;
             Vector3 spawnFwd = route.points.Length > 1 ? route.TangentAt(spawnS) : Vector3.forward;
-            var spawn = new GameObject("Spawn_KwadratParkGate").transform;
+            var spawn = new GameObject("Spawn_DepotGate").transform;
             spawn.SetPositionAndRotation(spawnPos, Quaternion.LookRotation(spawnFwd, Vector3.up));
 
             var truck = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
@@ -166,7 +183,7 @@ namespace Game.World.Import
             // The tractor at the gate (truck on the imported ground, contact shadows) and the cab view down the access road.
             Vector3 side = Vector3.Cross(Vector3.up, spawnFwd);
             Qa(qa, "truck-at-gate", spawnPos + spawnFwd * 11f + side * 7f + Vector3.up * 2.6f, spawnPos + Vector3.up * 1.6f - spawnFwd * 3f, 50f,
-                "Tractor + trailer at the Kwadrat Park spawn: wheels on the imported collision, shadows, scale against the road.");
+                "Tractor + trailer at the depot gate spawn: wheels on the imported collision, shadows, scale against the road.");
             Vector3 eye = spawnPos + spawn.rotation * dims.EyePointVehicle;
             Qa(qa, "cab-gate", eye, eye + spawnFwd * 30f - Vector3.up * 2.2f, 55f, "Driver eye at the spawn, looking along the depot access road.");
             AddEdgeCameras(qa);
@@ -183,6 +200,29 @@ namespace Game.World.Import
             EditorSceneManager.SaveScene(scene, scenePath);
             AssetDatabase.SaveAssets();
             Debug.Log($"[IMPORT] scene {scenePath} (tier {tier}): {r.Chunks.Count} chunks, {colliders} colliders, route {route.Length:F0} m, spawn {spawnPos}");
+            BuildTileScene(scene, r.Region, tier, rootGo, routeGo);
+        }
+
+        /// <summary>
+        /// Streamed tile scene (ADR 0235): the scene just saved, reduced to the region root and the start route, saved as
+        /// World_&lt;id&gt;[_High]_Tile next to it. Chunks are saved inactive and WorldInstances disabled (the streamer enables
+        /// them within a per-frame budget), collision cooking is deferred to worker threads (WorldCollisionCooker.deferCook).
+        /// No lights, volume, camera, truck or bootstrap: the running world scene owns those. Leaves the editor in the tile
+        /// scene (the full scene file is already written).
+        /// </summary>
+        static void BuildTileScene(UnityEngine.SceneManagement.Scene scene, string region, string tier, GameObject rootGo, GameObject routeGo)
+        {
+            foreach (var go in scene.GetRootGameObjects())
+                if (go != rootGo && go != routeGo) UnityEngine.Object.DestroyImmediate(go);
+            int chunks = 0;
+            foreach (Transform c in rootGo.transform)
+                if (c.name.StartsWith("Chunk_")) { c.gameObject.SetActive(false); chunks++; }
+            if (rootGo.TryGetComponent(out WorldInstances wi)) wi.enabled = false;
+            if (rootGo.TryGetComponent(out WorldCollisionCooker cooker)) cooker.deferCook = true;
+            string tilePath = RegionScenes.TileScenePathFor(region, tier);
+            EditorSceneManager.SaveScene(scene, tilePath);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[IMPORT] tile scene {tilePath} (tier {tier}, ADR 0235): region root + route, {chunks} chunks inactive, collision cook deferred");
         }
 
         /// <summary>Automatic boom barriers of depot gates (MA-003): one kinematic boom with <see cref="DepotBarrier"/> each.</summary>
@@ -279,19 +319,22 @@ namespace Game.World.Import
         // plot_ground (ADR 0114): lawn / driveway of house plots, LOD0 / LOD1 only, no shadows.
         // Layers per LOD (ADR 0012). Distances: manifest switch distances (camera to near chunk edge) + 0.7 chunk.
         // water (ADR 0210): the sheet stays on every LOD (one cheap opaque mesh; a river is visible from far)
+        // banks (ADR 0213): reed belt ribbons of the water stage - LOD0 / LOD1 like the plots, no shadows
+        // rail_* (ADR 0217): opt-in rail stage - LOD0 full track on High (rail_lod0) / LoD1 on Low, flat ballast strip (rail_lod2)
+        // from LOD2 on, crossing panels up to LOD2; no shadows. Regions without the stage have no such nodes (skipped).
         static readonly string[][] k_LowLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water" },
-            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water" },
-            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod1", "rail_crossing" },
+            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod1", "rail_crossing" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water", "rail_lod2", "rail_crossing" },
+            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water", "rail_lod2" },
         };
         static readonly string[][] k_HighLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water" },
-            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water" },
-            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod0", "rail_crossing" },
+            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod1", "rail_crossing" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water", "rail_lod2", "rail_crossing" },
+            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water", "rail_lod2" },
         };
         static readonly HashSet<string> k_ShadowCasters = new HashSet<string> { "bridge", "buildings", "buildings_lod1", "furniture", "plots" };
         // plots (ADR 0124): kit geometry of the house plots (fences, gates, plants) - LOD0 / LOD1, shadow caster; with

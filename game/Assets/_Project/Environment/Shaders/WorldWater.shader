@@ -2,13 +2,17 @@
 // Opaque sheet at the measured water level (no depth / opaque texture, no SSR, no planar reflection: mobile).
 // Vertex data from the generator: UV0 = local metres (E, N); COLOR_0 = (shore distance / 8 m, depth / 1.5 m,
 // flow E, flow N as 0.5 + 0.5 x unit vector; 0.5 / 0.5 = still water).
-//   body      : lerp(_ShallowColor, _BaseColor, shore) lit by the sky (SH) and a little sun (turbid water scatters)
+//   body      : lerp(_ShallowColor, _BaseColor, shore) lit by the sky (SH) and the sun like the ground (ADR 0213)
 //   reflection: Fresnel (water F0 0.02) x environment
 //       Low  (no _KAMION_WORLD_DETAIL): flat normal, blurred probe (one fetch) x _ReflectLow (dimmed gloss), dim sheen
 //       High (_KAMION_WORLD_DETAIL)   : two procedural ripple octaves advected along the flow, reflection probe,
 //                                       sun glint (Blinn-Phong) shadowed by the main-light shadow map
 //   sky visibility: the baked world GI (ADR 0064) dims the sky reflection under the bridge deck / along tree lines.
-// All constants WORKING_VALUE (ADR 0210), tuned on the dk65-02 control frames against the 2024 orthophoto.
+//   ADR 0213: reflected rays that leave the water close to the horizon hit the far bank (reed belt, willows, alders),
+//   not the sky: the environment is blended to _BankTint below _BankHorizon (one lerp, both tiers). Low: no broad
+//   sheen blob any more (a flat normal made it a fake light smear), a small sun disc only.
+// All constants WORKING_VALUE (ADR 0210 / 0213), tuned on the dk65-02 / dk65-03 control frames against the median
+// water colour of the 2024 orthophoto (artifacts/water2-0213/tools/water_rgb.py).
 Shader "Kamion/World Water"
 {
     Properties
@@ -22,6 +26,8 @@ Shader "Kamion/World Water"
         _RippleScale ("Ripple wavelength (m)", Float) = 2.4
         _RippleStrength ("Ripple slope", Range(0, 0.5)) = 0.05
         _Smoothness ("Smoothness of the sun glint", Range(0.5, 1)) = 0.93
+        _BankTint ("Far-bank reflection near the horizon (linear albedo)", Color) = (0.050, 0.065, 0.035, 1)
+        _BankHorizon ("Reflected-ray elevation (sin) below which the far bank is seen", Range(0.01, 0.5)) = 0.12
     }
     SubShader
     {
@@ -46,8 +52,8 @@ Shader "Kamion/World Water"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
-                float4 _BaseColor, _ShallowColor;
-                float _Reflect, _ReflectLow, _FlowSpeed, _FlowCycle, _RippleScale, _RippleStrength, _Smoothness;
+                float4 _BaseColor, _ShallowColor, _BankTint;
+                float _Reflect, _ReflectLow, _FlowSpeed, _FlowCycle, _RippleScale, _RippleStrength, _Smoothness, _BankHorizon;
             CBUFFER_END
 
             struct Attributes
@@ -107,6 +113,7 @@ Shader "Kamion/World Water"
                 float3 V = normalize(GetCameraPositionWS() - pw);
                 half giK, giSun;
                 KamionWorldGI(pw, half3(0, 1, 0), giK, giSun);
+                half3 amb0 = SampleSH(half3(0, 1, 0)) * giK;
             #if defined(_MAIN_LIGHT_SHADOWS) || defined(_MAIN_LIGHT_SHADOWS_CASCADE) || defined(_MAIN_LIGHT_SHADOWS_SCREEN)
                 float4 shadowCoord = TransformWorldToShadowCoord(pw);
             #else
@@ -142,11 +149,13 @@ Shader "Kamion/World Water"
                 half3 env = GlossyEnvironmentReflection(R, 0.30h, 1.0h) * _ReflectLow;   // one blurred probe fetch
             #endif
                 env *= lerp(0.25h, 1.0h, giK);                           // sky hidden by the deck / trees
+                env = lerp(_BankTint.rgb * (amb0 + L.color * 0.3h * sh), env, smoothstep(0.0h, (half)_BankHorizon, (half)R.y));
 
-                // turbid body: sky from above + a little sun scattered in the water column
+                // turbid body: the volume reflectance of the water column (+ the bed near the shore) under the same
+                // sky + sun irradiance as the ground (ADR 0213: the 0.55 sun factor of ADR 0210 made the body ~13x
+                // darker than the meadow next to it; orthophoto 2024: water / meadow luminance ~0.4)
                 half3 body = lerp(_ShallowColor.rgb, _BaseColor.rgb, saturate(shore));
-                half3 amb = SampleSH(half3(0, 1, 0)) * giK;
-                half3 col = body * (amb + L.color * (0.55h * saturate(L.direction.y) * sh));
+                half3 col = body * (amb0 + L.color * (saturate(L.direction.y) * sh));
                 col = lerp(col, env, fres);
 
                 // sun on the water
@@ -156,8 +165,8 @@ Shader "Kamion/World Water"
                 half spec = pow(saturate(dot(n, H)), sp) * (sp + 8.0h) / 25.0h;
                 col += L.color * spec * fres * sh * 4.0h;
             #else
-                half spec = pow(saturate(dot(n, H)), 96.0h);
-                col += L.color * spec * fres * sh * 1.5h;               // broad dimmed sheen (flat normal)
+                half spec = pow(saturate(dot(n, H)), 900.0h);
+                col += L.color * spec * fres * sh * 6.0h;               // small sun disc (flat normal)
             #endif
                 col = KamionMixFog(col, i.fogFactor);
                 return half4(col, 1.0h);

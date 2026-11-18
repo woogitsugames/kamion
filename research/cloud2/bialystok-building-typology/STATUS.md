@@ -1,0 +1,27 @@
+# STATUS — R4 bialystok-building-typology
+
+## Krok 1 (2026-11-14 17:10 UTC) — Overpass
+- Przeczytane: brief, mistral/p3-buildings-2, gptpro/p3, p11, p12 (README), ADR 0185, region.yaml obu kafli.
+- `tools/overpass.py` → `data/overpass_trasa_c.json` (2734 budynki), `data/overpass_dojlidy.json` (962); zapytania + data UTC w `data/*.query.txt`.
+- Wniosek wstępny: OSM ma `building=yes` w ~80 %, `building:levels` w ~10 %, `roof:shape` ~0 % → statystyka typów musi iść z BDOT10k/LoD (buildings.geojson w repo).
+- NASTĘPNY KROK: `python3 research/cloud2/bialystok-building-typology/tools/gugik_probe.py` (LoD2/WCS NMPT+NMT).
+
+## Krok 2 (2026-11-14 ~17:35 UTC) — GUGiK, KartaView, Panoramax, statystyki
+- GUGiK: LoD2 `…/Budynki3D/LOD2/2061_gml.zip` HTTP 200 (23,45 MB, Last-Modified 2018-11-14), LoD1 2024 HTTP 200, LOD2/2024 → 404. WCS NMPT/NMT GetCapabilities 200; GetCoverage `image/x-aaigrid` działa (`image/tiff` zwraca RGB 8-bit — nieużyteczne).
+- `tools/nmpt_heights.py` (próbka 56 budynków, seed 20261114) — w toku.
+- KartaView API 2.0: trasa C 39 zdjęć (9 pobranych, sekw. 3686129 z 2021; storage7 → 502), Dojlidy 0. Panoramax: trasa C 53, Dojlidy 0. Obejrzane dotąd: 4 Panoramax + 9 KartaView.
+- `tools/stats.py` → `data/stats.json` (OSM + buildings.geojson repo).
+- Dokumenty producentów w files/docs (płyta warstwowa, doki, bramy segmentowe).
+- NASTĘPNY KROK: `python3 research/cloud2/bialystok-building-typology/tools/commons_scan.py` → wybór i obejrzenie kadrów Commons.
+
+## Krok 5 (2026-11-15, sesja s21) — kadry Commons, dokończenie
+- 24 pliki Commons pobrane (≤1600 px, files/commons/, w repo) i obejrzane: 16 Dojlidy, 8 trasa C; opisy w data/commons_viewed.json; manifest 150 wierszy (R4-127…150).
+- Razem 40 obejrzanych kadrów (37 z elewacją, Dojlidy 15). Audyt uzupełniający seed 20261115: 4 PASS / 1 FIX. REVIEW.md: PASS z uwagami P2.
+- fetch.py: kadry Commons weryfikowane z pliku w repo; files/jpg1600/ = kopie 16 kadrów z 2026-11-14.
+- NASTĘPNY KROK (opcjonalny): przypisanie kadrów do way OSM: `python3 -I tools/build_manifest.py` po dopisaniu osm_way w data/commons_viewed.json.
+
+## Krok 3–4 (2026-11-14 ~17:50 UTC) — zamknięcie na polecenie lidera (limit sesji)
+- `data/nmpt_sample.csv` (56 budynków), `data/commons_{trasa_c,dojlidy}.json` (1170 / 351 plików), manifest 126 wierszy, fetch.py OK (16 plików, 17,8 MB), audyt 26 PASS / 0 FAIL, README z lukami.
+- Poprawka do kroku 2: godzina tamtego wpisu to ok. 17:22 UTC.
+- NIE zrobione: kadry Commons (0 obejrzanych), Dojlidy 0 kadrów, opisy elewacji, przypisanie do way OSM.
+- NASTĘPNY KROK: `python3 research/cloud2/bialystok-building-typology/tools/commons_pick.py` (pobiera 64 miniatury 1280 px i zapisuje `data/commons_picked.json`), potem obejrzeć `files/_view/c_*.jpg`, dopisać wiersze kadrów w `tools/build_manifest.py`, rozszerzyć `fetch.py` o Commons i powtórzyć audyt.

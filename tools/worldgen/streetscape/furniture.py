@@ -523,7 +523,56 @@ def clear_narrow_islands(pl, parts, net, report):
 
 
 # ------------------------------------------------------------------------------------------- lamps
-def lamps(pl, net, osm_nodes, origin, report):
+def lamp_policy(overrides):
+    """ADR 0216: the region's authored `kind: lamp_policy` override ({} when absent). `family: led` = every street
+    luminaire of the region is LED (owner D65 p.8): the older side-street poles keep their shape and stand where the
+    rule puts them, with the LED retrofit head (props.lamp_old(led=True)) instead of the sodium one.
+    ADR 0216b: with `target: {osm_way: [...]}` only the streets of those ways are LED (Bialystok: streets named in a
+    city LED tender); other families (`unchanged`) change nothing."""
+    for o in overrides or []:
+        if o.get("kind") == "lamp_policy":
+            return o
+    return {}
+
+
+def _edge_way(edge_id):
+    """OSM way id (str) of a roads.graph edge id `w<way>:<from>-<to>`."""
+    return str(edge_id).split(":")[0].lstrip("w")
+
+
+def lamp_led_scope(overrides):
+    """(led_all, led_ways) of the region's lamp policy: every older-family head LED, or only on these OSM ways."""
+    pol = lamp_policy(overrides)
+    led = pol.get("family") == "led"
+    return led and not pol.get("target"), {str(w) for w in (pol.get("target") or {}).get("osm_way", [])} if led else set()
+
+
+def chain_lamp_proto(c, net, led_all=False, led_ways=frozenset()):
+    """(street-lamp prototype, mid section) of chain c for the rule placement, or (None, sec) when the rule puts no
+    lamps on it. One family per street; shared by lamps() and qa/lamp_family_audit.py (ADR 0216b)."""
+    if c.meta.get("absorbed") or c.roundabout:
+        return None, None
+    sec = c.section(c.length / 2, net.sec_list)
+    if sec.cls not in S.LAMP or sec.highway in ("service",) and c.length < 60:
+        return None, sec
+    if sec.provenance.get("no_lamps"):           # ADR 0204: authored `set: {lamps: false}` - unlit rural road
+        return None, sec
+    spec = S.LAMP[sec.cls]
+    # older side-street family (critic R2 #10): one family per street (hash of the chain), never on G/GP;
+    # residential streets 65 % old (spun-concrete poles dominate), other L/D roads 30 % (grey steel)
+    proto = f"lamp_{int(spec['h'])}m"
+    if sec.cls in ("L", "D", "Z") and sec.highway not in ("primary", "secondary", "trunk"):
+        u = _h(c.id + ":lampfamily") % 100
+        res = sec.highway in ("residential", "living_street")
+        if u < (65 if res else 30):
+            proto = "lamp_old_concrete_9m" if (res and u < 50) or (not res and u < 8) else "lamp_old_steel_8m"
+            if led_all or _edge_way(sec.edge_id) in led_ways:   # ADR 0216 / 0216b: same pole, LED head
+                proto = proto.replace("lamp_old_concrete_", "lamp_old_concrete_led_").replace("lamp_old_steel_", "lamp_old_steel_led_")
+    return proto, sec
+
+
+def lamps(pl, net, osm_nodes, origin, report, overrides=None):
+    led_all, led_ways = lamp_led_scope(overrides)
     n0 = 0
     for nd in osm_nodes:
         if nd["tags"].get("highway") == "street_lamp":
@@ -532,22 +581,10 @@ def lamps(pl, net, osm_nodes, origin, report):
             n0 += 1
     n = 0
     for c in net.chains:
-        if c.meta.get("absorbed") or c.roundabout:
-            continue
-        sec = c.section(c.length / 2, net.sec_list)
-        if sec.cls not in S.LAMP or sec.highway in ("service",) and c.length < 60:
-            continue
-        if sec.provenance.get("no_lamps"):       # ADR 0204: authored `set: {lamps: false}` - unlit rural road
+        proto, sec = chain_lamp_proto(c, net, led_all, led_ways)
+        if proto is None:
             continue
         spec = S.LAMP[sec.cls]
-        # older side-street family (critic R2 #10): one family per street (hash of the chain), never on G/GP;
-        # residential streets 65 % old (spun-concrete poles dominate), other L/D roads 30 % (grey steel)
-        proto = f"lamp_{int(spec['h'])}m"
-        if sec.cls in ("L", "D", "Z") and sec.highway not in ("primary", "secondary", "trunk"):
-            u = _h(c.id + ":lampfamily") % 100
-            res = sec.highway in ("residential", "living_street")
-            if u < (65 if res else 30):
-                proto = "lamp_old_concrete_9m" if (res and u < 50) or (not res and u < 8) else "lamp_old_steel_8m"
         oneway = sec.oneway
         sides = ["R"] if (oneway and (c.dirn > 0).mean() >= 0.5) or not oneway else ["L"]
         s0, s1 = c.t_a + 4, c.length - c.t_b - 4
@@ -576,7 +613,12 @@ def lamps(pl, net, osm_nodes, origin, report):
                 pl.add(proto if z is None else f"lamp_{int(spec['h'])}m", p, yaw_of(face), z=z, src=f"rule:{c.id}",
                        group="lamp")
                 n += 1
-    report["lamps"] = {"osm": n0, "rule": n,
+    pol_rep = {"policy": "led"} if led_all else {}
+    if led_ways:                                 # ADR 0216b: LED heads on the tender streets only
+        known = {_edge_way(e) for e in net.sections}
+        pol_rep = {"policy": "led-target", "led_target_ways": len(led_ways),
+                   "led_target_stale": sorted(led_ways - known)}
+    report["lamps"] = {"osm": n0, "rule": n, **pol_rep,
                        "support_adjustments": pl.support_moves,
                        "by_family": {k: sum(1 for it in pl.items if it["p"] == k) for k in
                                      sorted({it["p"] for it in pl.items if it["p"].startswith("lamp_")})}}
@@ -659,7 +701,11 @@ def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
     centres = []
     for code in reversed(plates):              # plates listed top first
         shape, _ = SG.face(code)
-        size = S.SIGN_SIZE[shape] * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
+        if shape == "rect":                    # ADR 0279: D-42 / D-43 boards, T-1 plates under a warning sign
+            size = SG.rect_size(code)[1]
+        else:
+            size = S.SIGN_SIZE["triangle" if shape == "triangle_up" else shape] * (
+                math.sqrt(3) / 2 if shape in ("triangle", "triangle_up") else 1.0)
         centres.append((code, zc + size / 2, shape))
         zc += size + 0.05
     pl.items[-1]["sz"] = round(zc - zb + 0.05, 3)
@@ -667,6 +713,9 @@ def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
         if shape == "triangle":                  # inverted triangle: centroid 1/3 from the top edge
             h = S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2
             zcen = zcen - h / 2 + 2 * h / 3
+        elif shape == "triangle_up":             # upright triangle (A-8): centroid 1/3 from the bottom edge
+            h = S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2
+            zcen = zcen - h / 2 + h / 3
         pl.add(f"plate_{code}", p, yaw, z=zcen, src=src)
     return [c for c, _, _ in centres]
 
@@ -695,6 +744,7 @@ def junction_signs(pl, net, juncs, ctx_points, report, codes):
             codes.add(cd)
             cnt[cd] = cnt.get(cd, 0) + 1
         pl.pts.setdefault("sign", []).append((p[0], p[1]))
+        return True
 
     pts = {}
     for q in ctx_points:
@@ -715,7 +765,10 @@ def junction_signs(pl, net, juncs, ctx_points, report, codes):
         for a in inb:
             r = RANK[a.cls(net.sec_list)]
             if r > best and a.cls(net.sec_list) in ("Z", "L", "G") or (r > best and (stop or give) and r < 6):
-                put(a, ["B-20" if stop else "A-7"], f"rule:minor:{j.id}")
+                code = "B-20" if stop else "A-7"
+                if put(a, [code], f"rule:minor:{j.id}"):
+                    # ADR 0279 P1: built_up.advance_signs adds A-7 + T-1 / "Stop" 150-300 m before (v > 60 km/h)
+                    j.minor_signs = list(getattr(j, "minor_signs", None) or []) + [(j.arms.index(a), code)]
             elif r == best and best <= RANK["Z"] and max(ranks) > best and max(ranks) < 6:
                 put(a, ["D-1"], f"rule:major:{j.id}")
     report["junction_signs"] = cnt
@@ -816,14 +869,21 @@ def direction_boards(pl, net, graph_attrs, report, boards):
         hw = float(c.hw_at(s))
         side = "R" if fwd else "L"
         kind, h, w, ext = side_surface_offset(c, side, s)
-        p = c.line.offset_point(s, sgn * (hw + (S.KERB_TOP_W + 1.2 if kind != RURAL else ext + 1.0)))
         t, _ = c.line.frame(s)
         key = f"E-2_{_h(dest + ref) % 100000:05d}"
         refs = [r.strip() for r in ref.split(";") if r.strip()]
+        from . import brand_filter as BF
+        names, _dropped = BF.neutral_destinations([x.strip() for x in dest.split(";") if x.strip()])
+        if not names:                       # ADR 0236: no company / brand on a board (as signs_route._arm_label)
+            continue
         if key not in boards:
-            im, wm, hm = SG.direction_board(dest.split(";"), refs, green=bool(refs))
+            im, wm, hm = SG.direction_board(names, refs, green=bool(refs))
             boards[key] = (round(wm, 3), round(hm, 3), im)
         wm, hm, _ = boards[key]
+        # ADR 0236: the boards have the norm's letter size now (wider): the board edge keeps >= 0.50 m from the
+        # carriageway edge (pkt 1.5.3 of Dz.U. 2019 poz. 2311 zał. 1)
+        clear = max(1.2, wm / 2 + 0.5)
+        p = c.line.offset_point(s, sgn * (hw + (S.KERB_TOP_W + clear if kind != RURAL else ext + clear - 0.2)))
         z = pl.add("sign_post", p - t * dn * 0 + np.array([0, 0]), yaw_of(-t * dn), sz=S.SIGN_H_MIN + hm,
                    src=f"rule:destination:{c.id}")
         pl.add(f"board_{key}", p, yaw_of(-t * dn), z=z + S.SIGN_H_MIN + hm / 2, src=f"rule:destination:{c.id}")
@@ -844,7 +904,7 @@ def signals(pl, net, juncs, report):
             if emerg and a.cls(net.sec_list) in ("D",):
                 continue                    # emergency signals face the main road, not the fire-station exit
 
-            d = (a.chain.t_a if a.end == "a" else a.chain.t_b) + 1.0
+            d = (a.chain.t_a if a.end == "a" else a.chain.t_b) + S.SIGNAL_AFTER_TRIM
             if d > a.L - 1:
                 continue
             c = a.chain
@@ -859,21 +919,21 @@ def signals(pl, net, juncs, report):
             if emerg:
                 lit = "off"                 # traffic_signals=emergency: dark at rest (ADR 0074)
             sec = c.section(s, net.sec_list)
-            lanes_in = sec.lanes if sec.oneway else max(1, sec.lanes_fwd if a.end == "b" else sec.lanes_bwd)
+            lanes_in = S.signal_lanes_in(sec, a.end)
             right = np.array([face[1], -face[0]])                # from the right kerb toward the carriageway
-            if lanes_in >= S.SIGNAL_CANTILEVER_LANES and not emerg:
+            if S.signal_overhead(sec, a.end, emerg):
                 z = pl.add("signal_mast", p, yaw_of(right), src=f"rule:signal:{j.id}")
                 head = p + right * 5.0
                 pl.add(f"signal_head_{lit}", head, yaw_of(face), z=z + S.SIGNAL_MAST_H - 1.25, src=f"rule:signal:{j.id}")
             else:
                 z = pl.add("signal_pole", p, yaw_of(face), src=f"rule:signal:{j.id}")
-            pl.add(f"signal_head_{lit}", p + face * 0.15, yaw_of(face), z=z + 2.9, src=f"rule:signal:{j.id}")
+            pl.add(f"signal_head_side_{lit}", p + face * S.SIGNAL_HEAD_FWD, yaw_of(face), z=z + 2.9, src=f"rule:signal:{j.id}")
             # repeater on the left (median kerb) of one-way approaches with >= 2 lanes, as on the Andersa / Maczka
             # photos (S-1 repeated on the left side; Dz.U. 2019 poz. 2311 zał. 3 - paragraph UNVERIFIED, not re-read)
             if sec.oneway and lanes_in >= 2:
                 pL = a.gutter(d, -1, extra=S.KERB_TOP_W + 0.6)
                 zl = pl.add("signal_pole", pL, yaw_of(face), src=f"rule:signal:{j.id}:left")
-                pl.add(f"signal_head_{lit}", pL + face * 0.15, yaw_of(face), z=zl + 2.9, src=f"rule:signal:{j.id}:left")
+                pl.add(f"signal_head_side_{lit}", pL + face * S.SIGNAL_HEAD_FWD, yaw_of(face), z=zl + 2.9, src=f"rule:signal:{j.id}:left")
                 rep_left = report.setdefault("signal_repeaters_left", 0)
                 report["signal_repeaters_left"] = rep_left + 1
             n += 1
@@ -1040,10 +1100,12 @@ class Lin:
             self.ribbon(collision, P, zb, zt, 0.0, src, both=False, collision=None)
             self.buf.parts[-1].layer = "collision"
 
-    def posts(self, mat, P, spacing, w, d, h, zb=None, src="", ground_feet=False):
+    def posts(self, mat, P, spacing, w, d, h, zb=None, src="", ground_feet=False, end_post_min=None):
         line = LineString(P)
         L = line.length
         ss = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))]) if spacing is None else np.arange(0, L + 1e-6, spacing)
+        if spacing is not None and end_post_min is not None and len(ss) and L - ss[-1] > end_post_min:
+            ss = np.append(ss, L)       # c-p2-s23: the run ends on a post (see noise_wall)
         Q = np.asarray(P) if spacing is None else np.array([line.interpolate(s).coords[0] for s in ss])
         if len(Q) < 1:
             return
@@ -1070,6 +1132,9 @@ def cut_by(line, poly):
         return [line]
     g = line.difference(poly)
     return [p for p in getattr(g, "geoms", [g]) if p.geom_type == "LineString" and p.length > 1.0]
+
+
+_cut_by = cut_by
 
 
 def concrete_fence(lin, line, key, style_key):
@@ -1303,29 +1368,95 @@ def ramp_wall_keepout(net, r=2.5):
         for run in np.split(idx, np.where(np.diff(idx) > 1)[0] + 1):
             if len(run) < 2:
                 continue
+            # c-p1-s23 (REVIEW s20 gate3-phone P1-2): the block wall runs one station past each walled run
+            # (meshing: wr +-1) and a 1.6 m BDOT/OSM retaining stub with a railing stood at its free end
+            # (E -388.6..-387 N -104, g3b_ext34_s1482): the corridor follows the wall and ends round
+            run = np.arange(max(0, run[0] - 1), min(len(wl) - 1, run[-1] + 1) + 1)
             ss = np.asarray(c.line.s)[run]
             P = c.line.point(ss)
             _, N = c.line.frame(ss)
             off = c.hw_at(ss) + S.KERB_TOP_W + bridge_cap_w(c)
             for sgn in (1.0, -1.0):
-                polys.append(LineString(P + N * (sgn * off)[:, None]).buffer(r, cap_style="flat"))
+                polys.append(LineString(P + N * (sgn * off)[:, None]).buffer(r, cap_style="round"))
     return shapely.union_all(polys) if polys else None
 
 
-def fences(lin, src, origin, roads_poly, report, styles=None, net=None):
-    """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles)."""
+LANE_FLOOR_M = 0.3         # the QA furniture_in_lane window starts 0.3 m below the lane surface (roads/consistency.py)
+
+
+class DeckKeepout:
+    """ADR 0208: walls and fences must not stand on a deck carriageway. roads_poly (the road-layer cut of fences()) has
+    no bridge-layer triangles, so at a deck end where the width of the next way (lane gain) is already blended into
+    the deck, a BDOT10k retaining wall on the deck edge line stood ~1 m high in the added lane (bialystok-maczka,
+    E 919-926 N 30-31, ADR 0203 Otwarte 1). A wall point is blocked when it lies on a deck carriageway triangle and its
+    top - as retaining() / panel_fence() build it from the ground beside it - rises above that lane surface less
+    LANE_FLOOR_M (the same window as the QA). A wall under a deck that clears it stays. The cut polygon is the union of
+    the blocking triangles + 0.3 m (as the road cut)."""
+
+    def __init__(self, lin, decks):
+        tris = [p.V[p.T] for p in decks or [] if len(p.T)]
+        self.T = np.concatenate(tris) if tris else np.zeros((0, 3, 3))
+        if len(self.T):
+            a2 = np.abs((self.T[:, 1, 0] - self.T[:, 0, 0]) * (self.T[:, 2, 1] - self.T[:, 0, 1])
+                        - (self.T[:, 2, 0] - self.T[:, 0, 0]) * (self.T[:, 1, 1] - self.T[:, 0, 1]))
+            self.T = self.T[a2 > 2e-4]
+        self.lin = lin
+        self.poly = shapely.polygons(np.concatenate([self.T[:, :, :2], self.T[:, :1, :2]], axis=1))             if len(self.T) else None
+        self.tree = shapely.STRtree(self.poly) if self.poly is not None else None
+        self.cut_m = 0.0
+
+    def cut(self, line, top_above_ground):
+        """Parts of `line` off the blocking deck triangles. top_above_ground(za, zb) -> wall top z per point."""
+        if self.tree is None or not len(self.tree.query(line)):
+            return [line]
+        P = self.lin.dens(line, 0.5)
+        d = np.gradient(P, axis=0)
+        d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
+        nrm = np.column_stack([-d[:, 1], d[:, 0]])
+        top = top_above_ground(self.lin.z(P + nrm * 2.0), self.lin.z(P - nrm * 2.0))
+        pi, ti = self.tree.query(shapely.points(P), predicate="within")
+        hit = set()
+        for a, b in zip(pi.tolist(), ti.tolist()):
+            if top[a] > self.T[b, :, 2].min() - LANE_FLOOR_M:
+                hit.add(b)
+        if not hit:
+            return [line]
+        ko = shapely.union_all(self.poly[sorted(hit)], grid_size=0.01).buffer(0.3)
+        out = _cut_by(line, ko)
+        self.cut_m += line.length - sum(q.length for q in out)
+        return out
+
+
+def _retaining_top(za, zb):
+    """Highest point of what retaining() builds: wall top = max(ground) + 0.15, at least 1.0 m over min(ground) - 0.4,
+    plus the railing that stands on it. r1 of bialystok-maczka judged the wall alone: its top (130.54) stayed 0.8 m
+    under the deck lane (131.31) and only the railing (131.64) came up through the asphalt."""
+    return np.maximum(np.maximum(za, zb) + 0.15, np.minimum(za, zb) - 0.4 + 1.0) + S.RAILING_H
+
+
+def _fence_top(za, zb):                # panel / concrete fence: posts on the ground, ~2 m high
+    return np.maximum(za, zb) + S.FENCE_H
+
+
+def fences(lin, src, origin, roads_poly, report, styles=None, net=None, decks=None):
+    """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles).
+    decks: bridge-layer carriageway parts (low_deck_keepout, ADR 0208)."""
     n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0, "retaining_on_ramp_wall_m": 0.0}
     ramp_cut = ramp_wall_keepout(net) if net is not None else None
     styles = styles or {}
     seen = set()
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
+    dk = DeckKeepout(lin, decks)
+
+    def road_cut(line, top):           # the road cut, then the deck carriageways the wall would stand in (ADR 0208)
+        return [y for x in cut_by(line, cutter) for y in dk.cut(x, top)]
     for f in src["osm"]["ways"]:
         b = f["tags"].get("barrier")
         if b not in ("fence", "yes", "wall", "retaining_wall") or is_noise_wall(f["tags"]):
             continue                         # noise walls: noise_barriers() (ADR 0069)
         line = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         key = f"osm:way/{f['osm_way']}:{f['part']}"
-        for part in cut_by(line, cutter):
+        for part in road_cut(line, _retaining_top if b == "retaining_wall" else _fence_top):
             P = lin.dens(part, 2.0)              # 2 m: the Low terrain band is 2 m, posts sample the ground themselves
             if b in ("fence", "yes"):
                 col = FENCE_COLOURS[_h(key) % 3]
@@ -1348,11 +1479,13 @@ def fences(lin, src, origin, roads_poly, report, styles=None, net=None):
                 n["retaining_on_ramp_wall_m"] += part.length - sum(x.length for x in cut_by(part, ramp_cut))
     for f in src["bdot10k"]["OT_BUUO_L"]:
         line = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
-        for part in cut_by(line, cutter):
+        for part in road_cut(line, _retaining_top):
             for sub in cut_by(part, ramp_cut):
                 retaining(lin, lin.dens(sub, 1.0), f"bdot:{f['id']}")
                 n["retaining_m"] += sub.length
             n["retaining_on_ramp_wall_m"] += part.length - sum(x.length for x in cut_by(part, ramp_cut))
+    if dk.cut_m > 0:
+        n["cut_on_deck_carriageway_m"] = dk.cut_m
     report["fences"] = {k: round(v) for k, v in n.items()}
     if styles:      # a styled way that is no longer in the data is reported, never silently dropped
         report["fences"]["styled_ways"] = sorted(seen)
@@ -2045,6 +2178,32 @@ def _approach_transition_mask(br, transition_m):
     return mask
 
 
+def rural_barrier_line(mats, hw, zg):
+    """Post line of a W-beam on a kerbless (RURAL) edge: lateral offset from the chain axis and base height, per
+    station, from the shoulder the station carries in its side `mat` (ADR 0272, roads.xsec.decode).
+
+    Legacy profile (mat 0: 1.00 m paved + 0.75 m ground): GUARDRAIL_OFFSET behind the paved shoulder, base at the
+    height of the paved edge - exactly as before ADR 0272, so regions without a shoulder code keep their barriers.
+    Coded shoulders: GUARDRAIL_OFFSET behind the paved part but never closer than GUARDRAIL_GROUND_EDGE_M to the
+    outer edge of the ground part (the post stands on the shoulder, not in the ditch slope), base on the shoulder
+    surface there (paved crossfall, then SHOULDER_CROSSFALL)."""
+    from roads import xsec as XS
+    mats = np.asarray(mats)
+    hw = np.asarray(hw, float)
+    zg = np.asarray(zg, float)
+    dims = np.array([XS.decode(int(v)) for v in mats], float).reshape(-1, 2)
+    paved, ground = dims[:, 0], dims[:, 1]
+    coded = mats >= XS.SHOULDER_CODE
+    into = np.where(coded, np.clip(np.minimum(S.GUARDRAIL_OFFSET, ground - GUARDRAIL_GROUND_EDGE_M), 0.0, None),
+                    S.GUARDRAIL_OFFSET)
+    off = hw + paved + into
+    zb = zg - S.CROSSFALL * paved - np.where(coded, S.SHOULDER_CROSSFALL * into, 0.0)
+    return off, zb
+
+
+GUARDRAIL_GROUND_EDGE_M = 0.25      # WORKING_VALUE (ADR 0272): post line at least this far inside the ground shoulder edge
+
+
 def guardrails(lin, net, zground, report):
     from scipy import ndimage
     m = {"bridge": 0.0, "median": 0.0, "embankment": 0.0, "structure": 0.0, "approach": 0.0}
@@ -2167,6 +2326,7 @@ def guardrails(lin, net, zground, report):
             off[med] = hw[med] + S.PAVED_SHOULDER_MEDIAN + S.GUARDRAIL_OFFSET
             zb[med] = zg[med] - 0.02
             rur = (kinds == RURAL) & ~br
+            r_off, r_zb = rural_barrier_line(kmat, hw, zg)     # ADR 0272: on the shoulder the station really has
             drop = np.full(len(ss), -1e9)
             if rur.any():
                 # embankment height = road edge minus the ground at the toe of the fill slope: berm 1 m +
@@ -2180,8 +2340,7 @@ def guardrails(lin, net, zground, report):
                 # extend 12 m each way (approach), close small gaps
                 emb = ndimage.binary_dilation(emb, iterations=12) & rur
                 want[emb] = 3
-                off[emb] = hw[emb] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET
-                zb[emb] = zg[emb] - S.CROSSFALL * S.PAVED_SHOULDER
+                off[emb], zb[emb] = r_off[emb], r_zb[emb]
             # ADR 0110 (gate-3 side-by-side #4b): W-beam along a ground carriageway that runs beside a viaduct or a
             # walled ramp, on the side facing it (Mapillary 500263111404933, 1259231227807789, 751431972202262: the
             # links at Rondo Biezenstwa). Rural edge: behind the paved shoulder; kerbed edge without a sidewalk:
@@ -2191,9 +2350,8 @@ def guardrails(lin, net, zground, report):
                 bs = _beside_structure(c, ss, sgn, hw, zg, structs) & (want == 0) & ~br & (rur | kerbed)
                 bs = ndimage.binary_closing(bs, iterations=6) & (want == 0) & ~br & (rur | kerbed)
                 want[bs] = 4
-                off[bs] = np.where(rur[bs], hw[bs] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET,
-                                   hw[bs] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
-                zb[bs] = np.where(rur[bs], zg[bs] - S.CROSSFALL * S.PAVED_SHOULDER, zg[bs] + kh[bs])
+                off[bs] = np.where(rur[bs], r_off[bs], hw[bs] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
+                zb[bs] = np.where(rur[bs], r_zb[bs], zg[bs] + kh[bs])
             # M29 / ADR 0144 pkt 3: a deck barrier end where the chain continues on the ground is not a real
             # end - the barrier is carried past the structure onto the approach (§ 80 rozporządzenia o drogowych
             # obiektach inżynierskich; DECK_APPROACH_TRANSITION_M is WORKING_VALUE). The approach stations join
@@ -2218,9 +2376,8 @@ def guardrails(lin, net, zground, report):
                         gnd[idx] = True
             tr = _approach_transition_mask(br, S.DECK_APPROACH_TRANSITION_M) & (want == 0)
             want[tr] = 5
-            off[tr] = np.where(rur[tr], hw[tr] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET,
-                               hw[tr] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
-            zb[tr] = np.where(rur[tr], zg[tr] - S.CROSSFALL * S.PAVED_SHOULDER, zg[tr] + kh[tr])
+            off[tr] = np.where(rur[tr], r_off[tr], hw[tr] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
+            zb[tr] = np.where(rur[tr], r_zb[tr], zg[tr] + kh[tr])
             if nozones and want.any():
                 Pw = c.line.offset_point(ss, sgn * off)
                 for _zid, zpoly, zcnt in nozones:
@@ -2320,7 +2477,7 @@ def pier_guardrails(lin, net, piers, parts, report):
         # ADR 0123: the truck apron of a roundabout is driven on too - the edge beside a pier on the centre island is
         # the inner kerb of the apron (Mapillary 177786140912399: W-beam right behind the island kerb), not the
         # asphalt 2.5 m further out (the run stood on the apron or was not built at all)
-        if (p.mat.startswith("road_asphalt") or p.mat == "apron_sett") and not p.src.endswith(":vg"):
+        if (p.mat.startswith("road_asphalt") or p.mat in ("apron_sett", "apron_paving_light")) and not p.src.endswith(":vg"):
             tri.append(p.V[p.T])
         elif p.mat == "curb_concrete":
             kerb.append(p.V[:, :2])
@@ -2450,8 +2607,15 @@ def _noise_runs(P, zones, default):
     return [(sl, st) for sl, st in runs if sl.stop - sl.start >= 2]
 
 
-def noise_wall(lin, P, Z, st, H, key):
-    """One noise-barrier run along P (densified, Z = ground). Collision: one wall ribbon to the top."""
+NOISE_END_POST_MIN_M = 0.3   # WORKING_VALUE: a panel end this far past the last post gets its own end post
+
+
+def noise_wall(lin, P, Z, st, H, key, end_post=True):
+    """One noise-barrier run along P (densified, Z = ground). Collision: one wall ribbon to the top.
+    c-p2-s23 (REVIEW s23 c-p1 P2, g3b_rondo_putry_approach): posts stand every NOISE_BARRIER_POST from the start of
+    the run, so the plinth and the panels ran up to that far past the last post (1.9 m at E -446.7 N -26.7: the
+    open plinth end read as a pale wedge). `end_post`: the run ends on a post (not at a style joint inside a part,
+    where the next run starts with its own post)."""
     zp = Z + st["plinth_m"]
     lin.slab("concrete_plinth", P, Z - 0.4, zp, 0.2, key)
     if st["band_m"] is None:                                   # solid absorbing cassettes to the top
@@ -2472,7 +2636,8 @@ def noise_wall(lin, P, Z, st, H, key):
     lin.ribbon("collision_fence", P, Z - 0.2, Z + H, 0.0, key, both=False)
     lin.buf.parts[-1].layer = "collision"
     # ADR 0127: posts NOISE_POST_W wide (HEB 200 class; 0.16 m read as fence wire at 80 m on Low), WORKING_VALUE
-    lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, NOISE_POST_W, NOISE_POST_W, H + 0.1, src=key)
+    lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, NOISE_POST_W, NOISE_POST_W, H + 0.1, src=key,
+              end_post_min=NOISE_END_POST_MIN_M if end_post else None)
 
 
 NOISE_ON_DECK_M = 2.5     # WORKING_VALUE: a mapped noise barrier this close to a screened deck edge IS that screen
@@ -2538,7 +2703,7 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
             P = lin.dens(part, 2.0)
             Z = lin.z(P)
             for sl, st in _noise_runs(P, zones, default):
-                noise_wall(lin, P[sl], Z[sl], st, st.get("height_m", H), key)
+                noise_wall(lin, P[sl], Z[sl], st, st.get("height_m", H), key, end_post=sl.stop >= len(P))
                 seg = float(np.sum(np.hypot(*np.diff(P[sl], axis=0).T)))
                 by_style[st["name"]] = by_style.get(st["name"], 0.0) + seg
             for c, r, s, oid in zones:

@@ -5,6 +5,7 @@
   pwsh scripts/import-region.ps1 -Region bialystok-industrial-c
   pwsh scripts/import-region.ps1 -Region bialystok-industrial-c -Build      # also run the world generator first
   pwsh scripts/import-region.ps1 -Region bialystok-industrial-c -Tiers Low  # only the Low/Medium content (WorldC)
+  pwsh scripts/import-region.ps1 -Region knyszyn-w -BuildTarget Win64        # checkout whose Library is imported for Windows
 .NOTES
   Inputs : Data/Regions/<id>/generated/world_manifest.json (git), Data/raw/derived/<id>/world/chunk_*.glb, *.low.glb,
            instances_*.json (not in git), art-source/world/{props,vegetation,signs,textures} (git),
@@ -15,8 +16,9 @@
   Baked ground lighting (ADR 0064): WorldGI_1m.asset / WorldGI_2m.asset + WorldSkyVisibility on both scenes (WorldSkyBake,
            ~20 s); alone: -executeMethod Game.World.Import.WorldSkyBake.BakeBatch -region <id>. Maps: artifacts/bake-r8/maps/.
   PBR texture sets (ADR 0022): art-source/world/materials/<set>/<tier>/*.png are not versioned; when any file listed in
-  materials_spec.json is missing for -MaterialTier (default Medium) the generator _src/build_all.py runs first (all
-  tiers, deterministic, ~4 min), then Unity copies the tier into _Generated/.../Textures/PBR with ASTC per the spec.
+  materials_spec.json that build_all.py writes is missing or older than _src/*.py for -MaterialTier (default Medium;
+  decided by `build_all.py --check`, files it does not produce are ignored) the generator runs first (all
+  tiers, deterministic, ~4-8 min), then Unity copies the tier into _Generated/.../Textures/PBR with ASTC per the spec.
   Decision records: docs/adr/0011-world-import-gltfast.md, docs/adr/0012-world-content-tiers-instancing.md,
   docs/adr/0022-world-pbr-materials.md.
   One Unity per project: fails if game/ is open elsewhere.
@@ -25,7 +27,10 @@ param(
     [Parameter(Mandatory)] [string]$Region,
     [switch]$Build,
     [string]$Tiers = 'Low,High',
-    [ValidateSet('High', 'Medium', 'Low')] [string]$MaterialTier = 'Medium'
+    [ValidateSet('High', 'Medium', 'Low')] [string]$MaterialTier = 'Medium',
+    # Editor platform of the run. A checkout whose Library is imported for Win64 (scripts/build-windows.ps1) must import
+    # with Win64, otherwise Unity switches back to Android and re-imports every asset (ADR 0261).
+    [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android'
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -49,30 +54,30 @@ if (Test-Path $cc0Man) {
     if ($LASTEXITCODE -ne 0) { throw "cc0_fetch.py failed ($LASTEXITCODE): scan files missing or sha256 mismatch" }
 }
 
-# PBR texture sets (ADR 0022): build when any file of the spec is missing for the tier
+# PBR texture sets (ADR 0022): rebuild when a file build_all.py writes for the tier is missing or older than _src/*.py
+# (r7: asphalt_worn 0.13 -> 0.08 was committed in _src but the old PNGs stayed in use). The decision lives in
+# build_all.py --check (single list of outputs, pytest tests/gis/test_materials_freshness.py): files it does not
+# write with the current inputs (asphalt_detail_photo without the owner photo, scan-only sets without CC0 scans) are
+# skipped, so they no longer force the ~8 min rebuild before every region (D43). Exit 0 = fresh, 3 = rebuild.
 $matRoot = Join-Path $RepoRoot 'art-source/world/materials'
-$spec = Get-Content (Join-Path $matRoot 'materials_spec.json') -Raw | ConvertFrom-Json
-$missing = 0; $stale = 0
-# The PNGs are generated and outside git: a changed generator (_src/*.py) must rebuild them, not only missing files
-# (r7: asphalt_worn 0.13 -> 0.08 was committed in _src but the old PNGs stayed in use).
-$srcTime = (Get-ChildItem (Join-Path $matRoot '_src') -Filter *.py | Measure-Object LastWriteTimeUtc -Maximum).Maximum
-foreach ($p in $spec.sets.PSObject.Properties) {
-    $f = $p.Value.files.$MaterialTier
-    if (-not $f) { continue }
-    foreach ($n in $f.files) {
-        $png = Join-Path $matRoot "$($f.dir)/$n"
-        if (-not (Test-Path $png)) { $missing++ } elseif ((Get-Item $png).LastWriteTimeUtc -lt $srcTime) { $stale++ }
-    }
-}
-if ($missing -gt 0 -or $stale -gt 0) {
-    Write-Host "PBR sets: $missing missing, $stale older than _src for $MaterialTier - running art-source/world/materials/_src/build_all.py"
-    & uv run --project (Join-Path $RepoRoot 'tools/worldgen') python (Join-Path $matRoot '_src/build_all.py')
+$buildAll = Join-Path $matRoot '_src/build_all.py'
+& uv run --project (Join-Path $RepoRoot 'tools/worldgen') python $buildAll --check --tier $MaterialTier
+$check = $LASTEXITCODE
+if ($check -eq 3) {
+    Write-Host "PBR sets stale for $MaterialTier - running art-source/world/materials/_src/build_all.py"
+    & uv run --project (Join-Path $RepoRoot 'tools/worldgen') python $buildAll
     if ($LASTEXITCODE -ne 0) { throw "build_all.py failed ($LASTEXITCODE)" }
+} elseif ($check -ne 0) {
+    throw "build_all.py --check failed ($check)"
 }
 
+# Cab interior LOD0 FBX is outside git: without it (and without the generated TRAKT prefab) the vehicle builders fall back
+# to the graybox. Fail before Unity with the regeneration command (build-fix-s24).
+& "$PSScriptRoot/cab-lod0.ps1"
+if ($LASTEXITCODE -ne 0) { exit 2 }
 $log = Join-Path $LogsDir "import-region-$Region-$(Get-Timestamp).log"
 $unityArgs = @('-executeMethod', 'Game.World.Import.RegionImporter.ImportBatch', '-region', $Region, '-tiers', $Tiers, '-materialTier', $MaterialTier)
-$code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs
+$code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs -BuildTarget $BuildTarget
 $result = Select-String -Path $log -Pattern 'IMPORT_RESULT:.*' | Select-Object -Last 1
 if ($code -ne 0 -or -not $result -or $result.Line -notmatch 'IMPORT_RESULT: OK') {
     Write-Host "import FAILED (exit $code), log: $log" -ForegroundColor Red

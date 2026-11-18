@@ -31,7 +31,15 @@ class Region:
     teryt_powiat: str                       # GUGiK per-powiat datasets (BDOT10k, LoD1/2, trees)
     status: str
     min_route_margin_m: float = 280.0
+    # ADR 0208: a tile across a powiat boundary (bialystok-knyszynska: city 2061 + powiat 2002) reads the BDOT10k /
+    # LoD1 / LoD2 of every listed powiat; () = single-powiat region, outputs byte-identical to before the field.
+    teryt_powiat_extra: tuple[str, ...] = ()
     water: bool = False                     # ADR 0210: surface-water stage (rivers, ponds) opt-in per region
+    rail: bool = False                      # ADR 0217: railway track bed + level crossings, opt-in per region
+
+    @property
+    def powiaty(self) -> tuple[str, ...]:
+        return (self.teryt_powiat,) + tuple(self.teryt_powiat_extra)
 
     @property
     def width(self) -> float:
@@ -76,6 +84,7 @@ REGIONS: dict[str, Region] = {
         origin=(769803.0, 596223.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0205, owner D64; tile = lattice (-4,0) of the ADR 0203 plan)",
+        rail=True,       # ADR 0223: railway line 38 (OSM relation 2316318) + level crossings, sources OSM API 0.6
     ),
     # ADR 0203 (owner D64): first Białystok tile on the truck route to Knyszyn, lattice i = -1, j = 0 (shares its
     # east edge x = 776971 with tile C). DK8/DK65 Gen. Maczka ("Trasa Generalska"), 2.05 km of dual carriageway
@@ -89,6 +98,20 @@ REGIONS: dict[str, Region] = {
         origin=(775947.0, 596223.0),
         teryt_powiat="2061",
         status="WORKING_ASSUMPTION (ADR 0203, owner D64 chose the direction; tile = lattice neighbour of C)",
+    ),
+    # ADR 0208 (owner D64): third Białystok tile on the truck route to Knyszyn, lattice (-3,0) of the ADR 0203 plan
+    # (route variant A km 5.80-8.76: end of Kleeberga, slip road, rondo Pamięci Męczeństwa Kresowian, Szosa Ełcka,
+    # city limit at 772066, Szosa Knyszyńska). Shares x = 772875 with bialystok-kleeberga (ADR 0206) and
+    # x = 770827 with dk65-01 (ADR 0205). Two powiaty: Białystok 2061 + powiat białostocki 2002.
+    "bialystok-knyszynska": Region(
+        id="bialystok-knyszynska",
+        title="Białystok — Kleeberga / rondo Pamięci Męczeństwa Kresowian / Szosa Ełcka → Szosa Knyszyńska (granica miasta)",
+        candidate="F_dk65_corridor",
+        bbox=(770827.0, 595199.0, 772875.0, 597247.0),
+        origin=(771851.0, 596223.0),
+        teryt_powiat="2061",
+        teryt_powiat_extra=("2002",),
+        status="WORKING_ASSUMPTION (ADR 0208, owner D64; tile = lattice (-3,0) of the ADR 0203 plan)",
     ),
     # ADR 0204 (owner D64): Knyszyn. Two tiles of the 2048 m lattice reserved by ADR 0203 (x = 776971 + 2048*i,
     # y = 595199 + 2048*j). `knyszyn` (i = -8, j = 8): the town - Rynek, DW671 Tykocka/Bialostocka, the DK65/DW671
@@ -147,6 +170,7 @@ REGIONS: dict[str, Region] = {
         origin=(759563.0, 610559.0),
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,7) of the ADR 0203 plan)",
+        rail=True,          # ADR 0217: line 38 + the DW671 level crossing (first and only region with the stage)
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
     "dk65-02": Region(
@@ -158,6 +182,7 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-4,1) of the ADR 0203 plan)",
         water=True,      # ADR 0210: Supraśl + Biała under the DK65 bridge (km 10.85)
+        rail=True,       # ADR 0223: railway line 38 (OSM relation 2316318) + level crossings, sources OSM API 0.6
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,1) of the ADR 0203 plan, route variant A km 11.80-12.28. Powiat 2002.
     "dk65-03": Region(
@@ -168,6 +193,8 @@ REGIONS: dict[str, Region] = {
         origin=(767755.0, 598271.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,1) of the ADR 0203 plan)",
+        water=True,      # ADR 0213: the Supraśl continues west of the dk65-02 confluence (level continuous at the seam)
+        rail=True,       # ADR 0223: railway line 38 (OSM relation 2316318) + level crossings, sources OSM API 0.6
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,2) of the ADR 0203 plan, route variant A km 12.28-14.36. Powiat 2002.
     "dk65-04": Region(
@@ -178,6 +205,7 @@ REGIONS: dict[str, Region] = {
         origin=(767755.0, 600319.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,2) of the ADR 0203 plan)",
+        rail=True,       # ADR 0223: railway line 38 (OSM relation 2316318) + level crossings, sources OSM API 0.6
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,3) of the ADR 0203 plan, route variant A km 14.36-16.56. Powiat 2002.
     "dk65-05": Region(
@@ -188,6 +216,76 @@ REGIONS: dict[str, Region] = {
         origin=(767755.0, 602367.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,3) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-5,4) of the ADR 0203 plan, route variant A km 16.56-18.26
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2002.
+    "dk65-06": Region(
+        id="dk65-06",
+        title="DK65 korytarz 06 — stara DK65, km 16,6–18,3",
+        candidate="F_dk65_corridor",
+        bbox=(766731.0, 603391.0, 768779.0, 605439.0),
+        origin=(767755.0, 604415.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-5,4) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-6,4) of the ADR 0203 plan, route variant A km 18.26-19.13
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2002.
+    "dk65-07": Region(
+        id="dk65-07",
+        title="DK65 korytarz 07 — stara DK65, km 18,3–19,1",
+        candidate="F_dk65_corridor",
+        bbox=(764683.0, 603391.0, 766731.0, 605439.0),
+        origin=(765707.0, 604415.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-6,4) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-6,5) of the ADR 0203 plan, route variant A km 19.13-21.49
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2002.
+    "dk65-08": Region(
+        id="dk65-08",
+        title="DK65 korytarz 08 — stara DK65, km 19,1–21,5",
+        candidate="F_dk65_corridor",
+        bbox=(764683.0, 605439.0, 766731.0, 607487.0),
+        origin=(765707.0, 606463.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-6,5) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-7,5) of the ADR 0203 plan, route variant A km 21.49-21.84
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2002.
+    "dk65-09": Region(
+        id="dk65-09",
+        title="DK65 korytarz 09 — stara DK65, km 21,5–21,8",
+        candidate="F_dk65_corridor",
+        bbox=(762635.0, 605439.0, 764683.0, 607487.0),
+        origin=(763659.0, 606463.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-7,5) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-7,6) of the ADR 0203 plan, route variant A km 21.84-24.45
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2002: land cover 62 % 2002 / 32 % 2008;
+    # the route crosses into powiat 2008 at km 23.67 (one teryt per region - see ADR 0214).
+    "dk65-10": Region(
+        id="dk65-10",
+        title="DK65 korytarz 10 — stara DK65, km 21,8–24,4",
+        candidate="F_dk65_corridor",
+        bbox=(762635.0, 607487.0, 764683.0, 609535.0),
+        origin=(763659.0, 608511.0),
+        teryt_powiat="2002",
+        teryt_powiat_extra=("2008",),      # ADR 0208 mechanism: the route crosses into powiat moniecki at km 23.67
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-7,6) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-7,7) of the ADR 0203 plan, route variant A km 24.45-24.83
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2008: BDOT10k land cover 75 % 2008 / 25 % 2002,
+    # the route of the tile lies in powiat moniecki (admin crossings km 23.67 / 25.22 of the plan).
+    "dk65-11": Region(
+        id="dk65-11",
+        title="DK65 korytarz 11 — stara DK65, km 24,4–24,8",
+        candidate="F_dk65_corridor",
+        bbox=(762635.0, 609535.0, 764683.0, 611583.0),
+        origin=(763659.0, 610559.0),
+        teryt_powiat="2008",
+        teryt_powiat_extra=("2002",),      # ADR 0208 mechanism: 25 % of the tile is powiat białostocki
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-7,7) of the ADR 0203 plan)",
     ),
     # ADR 0206 (owner D64): second Białystok tile on the truck route to Knyszyn, lattice i = -2, j = 0 (shares its
     # east edge x = 774923 with bialystok-maczka). DK8/DK65: west end of Gen. Maczka, Gen. Kleeberga with the
@@ -201,6 +299,356 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2061",
         status="WORKING_ASSUMPTION (ADR 0206, tile id/bbox reserved by the ADR 0203 plan, lattice -2,0)",
     ),
+    # ADR 0231 (owner D63/D64): next ring past Knyszyn, ROUGH DEFINITION ONLY (not ingested, not built). Tiles of the
+    # 2048 m lattice of ADR 0203 that DK65 (towards Monki, from the west edge of dk65-monki-01), DW671 (towards Tykocin,
+    # from the south edge of dw671-tykocin-01) and DW671 north of Knyszyn (towards Jasionowka, from the north edge of
+    # knyszyn) pass through, in driving order. Generated by tools/worldgen/qa/ring_0231_plan.py --print-regions from the
+    # OSM extract in git (Data/Plans/ring-0231/); powiat = largest area share of the tile in OSM admin_level=6
+    # relations, a second powiat from 5 % (WORKING_VALUE). Corner tiles with < 0.5 km of road (dk65-monki-03/-05,
+    # monki-e, dw671-tykocin-02) exist only to keep the road continuous across lattice seams.
+    "dk65-monki-02": Region(
+        id="dk65-monki-02",
+        title="DK65 w stronę Moniek 02 — km 0,0–2,1 za dk65-monki-01, most na Nareśli",
+        candidate="M_dk65_monki",
+        bbox=(756491.0, 613631.0, 758539.0, 615679.0),
+        origin=(757515.0, 614655.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,9) of the ADR 0203 plan)",
+    ),
+    "dk65-monki-03": Region(
+        id="dk65-monki-03",
+        title="DK65 w stronę Moniek 03 — narożnik kafla, km 2,1–2,5 (w kaflu Czechowizna)",
+        candidate="M_dk65_monki",
+        bbox=(756491.0, 615679.0, 758539.0, 617727.0),
+        origin=(757515.0, 616703.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,10) of the ADR 0203 plan)",
+    ),
+    "dk65-monki-04": Region(
+        id="dk65-monki-04",
+        title="DK65 w stronę Moniek 04 — km 2,5–5,4 (w kaflu linia kolejowa)",
+        candidate="M_dk65_monki",
+        bbox=(754443.0, 615679.0, 756491.0, 617727.0),
+        origin=(755467.0, 616703.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,10) of the ADR 0203 plan)",
+    ),
+    "dk65-monki-05": Region(
+        id="dk65-monki-05",
+        title="DK65 w stronę Moniek 05 — narożnik kafla, km 5,4–5,5 (w kaflu Konopczyn, Przytulanka)",
+        candidate="M_dk65_monki",
+        bbox=(754443.0, 617727.0, 756491.0, 619775.0),
+        origin=(755467.0, 618751.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,11) of the ADR 0203 plan)",
+    ),
+    "dk65-monki-06": Region(
+        id="dk65-monki-06",
+        title="DK65 w stronę Moniek 06 — km 5,5–7,6 (w kaflu Magnusze)",
+        candidate="M_dk65_monki",
+        bbox=(752395.0, 617727.0, 754443.0, 619775.0),
+        origin=(753419.0, 618751.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,11) of the ADR 0203 plan)",
+    ),
+    "dk65-monki-07": Region(
+        id="dk65-monki-07",
+        title="DK65 w stronę Moniek 07 — km 7,6–9,9, wjazd do Moniek (Białostocka; w kaflu Ciesze)",
+        candidate="M_dk65_monki",
+        bbox=(752395.0, 619775.0, 754443.0, 621823.0),
+        origin=(753419.0, 620799.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,12) of the ADR 0203 plan)",
+    ),
+    "monki-e": Region(
+        id="monki-e",
+        title="Mońki wschód — DK65 Białostocka, narożnik kafla km 9,9–10,2 (w kaflu Świerzbienie)",
+        candidate="M_dk65_monki",
+        bbox=(752395.0, 621823.0, 754443.0, 623871.0),
+        origin=(753419.0, 622847.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,13) of the ADR 0203 plan)",
+    ),
+    "monki": Region(
+        id="monki",
+        title="Mońki — DK65 Białostocka/Ełcka przez miasto, przejazd kolejowy, km 10,2–12,9",
+        candidate="M_dk65_monki",
+        bbox=(750347.0, 621823.0, 752395.0, 623871.0),
+        origin=(751371.0, 622847.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,13) of the ADR 0203 plan)",
+    ),
+    "dw671-tykocin-02": Region(
+        id="dw671-tykocin-02",
+        title="DW671 w stronę Tykocina 02 — narożnik kafla (0,1 km), linia kolejowa",
+        candidate="T_dw671_tykocin",
+        bbox=(758539.0, 607487.0, 760587.0, 609535.0),
+        origin=(759563.0, 608511.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-9,6) of the ADR 0203 plan)",
+    ),
+    "dw671-tykocin-03": Region(
+        id="dw671-tykocin-03",
+        title="DW671 w stronę Tykocina 03 — km 0,1–2,3 (w kaflu Krypno Kościelne, Krypno Wielkie)",
+        candidate="T_dw671_tykocin",
+        bbox=(756491.0, 607487.0, 758539.0, 609535.0),
+        origin=(757515.0, 608511.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,6) of the ADR 0203 plan)",
+    ),
+    "dw671-tykocin-04": Region(
+        id="dw671-tykocin-04",
+        title="DW671 w stronę Tykocina 04 — km 2,3–4,2",
+        candidate="T_dw671_tykocin",
+        bbox=(756491.0, 605439.0, 758539.0, 607487.0),
+        origin=(757515.0, 606463.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,5) of the ADR 0203 plan)",
+    ),
+    "dw671-tykocin-05": Region(
+        id="dw671-tykocin-05",
+        title="DW671 w stronę Tykocina 05 — km 4,2–4,9",
+        candidate="T_dw671_tykocin",
+        bbox=(754443.0, 605439.0, 756491.0, 607487.0),
+        origin=(755467.0, 606463.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,5) of the ADR 0203 plan)",
+    ),
+    "dw671-tykocin-06": Region(
+        id="dw671-tykocin-06",
+        title="DW671 w stronę Tykocina 06 — km 4,9–7,0 (w kaflu Zygmunty)",
+        candidate="T_dw671_tykocin",
+        bbox=(754443.0, 603391.0, 756491.0, 605439.0),
+        origin=(755467.0, 604415.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,4) of the ADR 0203 plan)",
+    ),
+    "dw671-tykocin-07": Region(
+        id="dw671-tykocin-07",
+        title="DW671 w stronę Tykocina 07 — km 7,0–8,0 (w kaflu Morusy)",
+        candidate="T_dw671_tykocin",
+        bbox=(752395.0, 603391.0, 754443.0, 605439.0),
+        origin=(753419.0, 604415.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,4) of the ADR 0203 plan)",
+    ),
+    "dw671-tykocin-08": Region(
+        id="dw671-tykocin-08",
+        title="DW671 w stronę Tykocina 08 — km 8,0–9,7",
+        candidate="T_dw671_tykocin",
+        bbox=(752395.0, 601343.0, 754443.0, 603391.0),
+        origin=(753419.0, 602367.0),
+        teryt_powiat="2008",
+        teryt_powiat_extra=('2002',),
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,3) of the ADR 0203 plan)",
+    ),
+    "dw671-tykocin-09": Region(
+        id="dw671-tykocin-09",
+        title="DW671 w stronę Tykocina 09 — km 9,7–10,8 (w kaflu Tatary)",
+        candidate="T_dw671_tykocin",
+        bbox=(750347.0, 601343.0, 752395.0, 603391.0),
+        origin=(751371.0, 602367.0),
+        teryt_powiat="2002",
+        teryt_powiat_extra=('2008',),
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,3) of the ADR 0203 plan)",
+    ),
+    "tykocin": Region(
+        id="tykocin",
+        title="Tykocin — DW671 przez miasto i most na Narwi, km 10,8–13,3",
+        candidate="T_dw671_tykocin",
+        bbox=(750347.0, 599295.0, 752395.0, 601343.0),
+        origin=(751371.0, 600319.0),
+        teryt_powiat="2002",
+        # PRG: 3.95 % of the tile bbox lies in powiat 2008 (west bank of the Narew; powiaty.powiat_shares, world2-finish
+        # 2026-11-17) - its BDOT10k / LoD1/LoD2 are read too (ADR 0208), as for dw671-tykocin-08/-09
+        teryt_powiat_extra=('2008',),
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,2) of the ADR 0203 plan)",
+    ),
+    "dw671-jasionowka-01": Region(
+        id="dw671-jasionowka-01",
+        title="DW671 w stronę Jasionówki 01 — Grodzieńska na północ od Knyszyna, km 0,0–2,4",
+        candidate="J_dw671_jasionowka",
+        bbox=(760587.0, 613631.0, 762635.0, 615679.0),
+        origin=(761611.0, 614655.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-8,9) of the ADR 0203 plan)",
+    ),
+    # ADR 0278 (owner D63 "drivable first"): map plan after d67-full + the ring of ADR 0231, ROUGH DEFINITION ONLY (not
+    # ingested, not built) of its first 3 tiles on the 2048 m lattice of ADR 0203. Generated by
+    # tools/worldgen/qa/map_plan_0278.py --print-regions from the OSM API 0.6 extract in git (Data/Plans/map-plan-0278/);
+    # powiat = largest area share of the tile in the PRG powiaty (Data/Admin/powiaty_prg.geojson); every other powiat
+    # the tile overlaps goes to teryt_powiat_extra (ADR 0219, tools/worldgen/powiaty.py).
+    # bialystok-porosly + dk8-s8-jeroniki: DK8 Kleeberga from bialystok-knyszynska to the S8 junction at the S edge of
+    # dk65-01 (loop S8 - Kleeberga - Szosa Knyszynska); bialystok-dojlidy-gorne: Kuronia from Dojlidy to DK19 south.
+    "bialystok-porosly": Region(
+        id="bialystok-porosly",
+        title="Białystok — DK8 Kleeberga na południe od ronda Kresowian w stronę S8, strefa przemysłowa (Porosły)",
+        candidate="P_s8_zachod",
+        bbox=(770827.0, 593151.0, 772875.0, 595199.0),
+        origin=(771851.0, 594175.0),
+        teryt_powiat="2002",
+        teryt_powiat_extra=("2061",),
+        status="WORKING_ASSUMPTION (ADR 0278, owner D63; tile = lattice (-3,-1) of the ADR 0203 plan)",
+    ),
+    "dk8-s8-jeroniki": Region(
+        id="dk8-s8-jeroniki",
+        title="DK8 → S8 — węzeł na południe od dk65-01, łącznik ekspresówki z Kleeberga (Jeroniki, Sienkiewicze)",
+        candidate="P_s8_zachod",
+        bbox=(768779.0, 593151.0, 770827.0, 595199.0),
+        origin=(769803.0, 594175.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0278, owner D63; tile = lattice (-4,-1) of the ADR 0203 plan)",
+    ),
+    "bialystok-dojlidy-gorne": Region(
+        id="bialystok-dojlidy-gorne",
+        title="Białystok — Kuronia na wschód od Dojlid do DK19 (Dojlidy Górne, Zagórki)",
+        candidate="P_dk19_poludnie",
+        bbox=(781067.0, 589055.0, 783115.0, 591103.0),
+        origin=(782091.0, 590079.0),
+        teryt_powiat="2061",
+        teryt_powiat_extra=("2002",),
+        status="WORKING_ASSUMPTION (ADR 0278, owner D63; tile = lattice (2,-3) of the ADR 0203 plan)",
+    ),
+    # ---- BEGIN ADR 0288 (owner D82/D63): loop S8 <-> DW671 <-> Tykocin, 15 tiles in driving order from dk65-01. ----
+    # Generated by tools/worldgen/qa/s8_loop_plan.py --print-regions from the pinned pbf; ids = research pack
+    # research/mistral-s8-loop-s23 (tiles.json). Built: s8-01..05; s8-06..12 + dw671-jezewo-01..03 = definition only
+    # (s8-09..12, dw671-jezewo-* need osm_extract.BBOX_WGS84 west of 22.80 E - branch world2-s23 has it).
+    "s8-01": Region(
+        id="s8-01",
+        title="S8 pętla 01 — węzeł Choroszcz, od szwu z dk65-01 na zachód (strefa przemysłowa przy Białymstoku)",
+        candidate="L_s8_loop",
+        bbox=(766731.0, 595199.0, 768779.0, 597247.0),
+        origin=(767755.0, 596223.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-5,0) of the ADR 0203 plan, loop tile 1/15)",
+    ),
+    "s8-02": Region(
+        id="s8-02",
+        title="S8 pętla 02 — od węzła Choroszcz w stronę Złotorii",
+        candidate="L_s8_loop",
+        bbox=(764683.0, 595199.0, 766731.0, 597247.0),
+        origin=(765707.0, 596223.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-6,0) of the ADR 0203 plan, loop tile 2/15)",
+    ),
+    "s8-03": Region(
+        id="s8-03",
+        title="S8 pętla 03 — węzeł Tykocin (Złotoria) i MOP Złotoria",
+        candidate="L_s8_loop",
+        bbox=(762635.0, 595199.0, 764683.0, 597247.0),
+        origin=(763659.0, 596223.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-7,0) of the ADR 0203 plan, loop tile 3/15)",
+    ),
+    "s8-04": Region(
+        id="s8-04",
+        title="S8 pętla 04 — od węzła Tykocin w stronę Rzędzian (Babino)",
+        candidate="L_s8_loop",
+        bbox=(760587.0, 595199.0, 762635.0, 597247.0),
+        origin=(761611.0, 596223.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-8,0) of the ADR 0203 plan, loop tile 4/15)",
+    ),
+    "s8-05": Region(
+        id="s8-05",
+        title="S8 pętla 05 — narożnik kafla, S8 skręca na południowy zachód",
+        candidate="L_s8_loop",
+        bbox=(758539.0, 595199.0, 760587.0, 597247.0),
+        origin=(759563.0, 596223.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-9,0) of the ADR 0203 plan, loop tile 5/15)",
+    ),
+    "s8-06": Region(
+        id="s8-06",
+        title="S8 pętla 06 — S8 ku węzłowi Rzędziany",
+        candidate="L_s8_loop",
+        bbox=(758539.0, 593151.0, 760587.0, 595199.0),
+        origin=(759563.0, 594175.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-9,-1) of the ADR 0203 plan, loop tile 6/15)",
+    ),
+    "s8-07": Region(
+        id="s8-07",
+        title="S8 pętla 07 — węzeł Rzędziany",
+        candidate="L_s8_loop",
+        bbox=(756491.0, 593151.0, 758539.0, 595199.0),
+        origin=(757515.0, 594175.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-10,-1) of the ADR 0203 plan, loop tile 7/15)",
+    ),
+    "s8-08": Region(
+        id="s8-08",
+        title="S8 pętla 08 — od Rzędzian ku Jeżewu",
+        candidate="L_s8_loop",
+        bbox=(754443.0, 593151.0, 756491.0, 595199.0),
+        origin=(755467.0, 594175.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-11,-1) of the ADR 0203 plan, loop tile 8/15)",
+    ),
+    "s8-09": Region(
+        id="s8-09",
+        title="S8 pętla 09 — MOP Radule",
+        candidate="L_s8_loop",
+        bbox=(752395.0, 593151.0, 754443.0, 595199.0),
+        origin=(753419.0, 594175.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-12,-1) of the ADR 0203 plan, loop tile 9/15)",
+    ),
+    "s8-10": Region(
+        id="s8-10",
+        title="S8 pętla 10 — S8 ku węzłowi Jeżewo",
+        candidate="L_s8_loop",
+        bbox=(752395.0, 591103.0, 754443.0, 593151.0),
+        origin=(753419.0, 592127.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-12,-2) of the ADR 0203 plan, loop tile 10/15)",
+    ),
+    "s8-11": Region(
+        id="s8-11",
+        title="S8 pętla 11 — węzeł Jeżewo, strona wschodnia (S8 + DW671)",
+        candidate="L_s8_loop",
+        bbox=(750347.0, 591103.0, 752395.0, 593151.0),
+        origin=(751371.0, 592127.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-13,-2) of the ADR 0203 plan, loop tile 11/15)",
+    ),
+    "s8-12": Region(
+        id="s8-12",
+        title="S8 pętla 12 — węzeł Jeżewo (S8 / DK64 / DW671), Jeżewo Stare — zawrotka pętli na DW671",
+        candidate="L_s8_loop",
+        bbox=(748299.0, 591103.0, 750347.0, 593151.0),
+        origin=(749323.0, 592127.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-14,-2) of the ADR 0203 plan, loop tile 12/15)",
+    ),
+    "dw671-jezewo-01": Region(
+        id="dw671-jezewo-01",
+        title="DW671 Jeżewo–Tykocin 01 — od węzła Jeżewo na północ",
+        candidate="L_s8_loop",
+        bbox=(750347.0, 593151.0, 752395.0, 595199.0),
+        origin=(751371.0, 594175.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-13,-1) of the ADR 0203 plan, loop tile 13/15)",
+    ),
+    "dw671-jezewo-02": Region(
+        id="dw671-jezewo-02",
+        title="DW671 Jeżewo–Tykocin 02 — odcinek środkowy",
+        candidate="L_s8_loop",
+        bbox=(750347.0, 595199.0, 752395.0, 597247.0),
+        origin=(751371.0, 596223.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-13,0) of the ADR 0203 plan, loop tile 14/15)",
+    ),
+    "dw671-jezewo-03": Region(
+        id="dw671-jezewo-03",
+        title="DW671 Jeżewo–Tykocin 03 — do szwu z kaflem tykocin (pierścień ADR 0231)",
+        candidate="L_s8_loop",
+        bbox=(750347.0, 597247.0, 752395.0, 599295.0),
+        origin=(751371.0, 598271.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0288, owner D82/D63; tile = lattice (-13,1) of the ADR 0203 plan, loop tile 15/15)",
+    ),
+    # ---- END ADR 0288 ----
 }
 
 TILE_SIZE_M = 2048.0

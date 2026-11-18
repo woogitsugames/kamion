@@ -44,6 +44,7 @@ namespace Game.Vehicle.Physics
             Tractor = tractor;
             Trailer = trailer;
             FifthWheel = new FifthWheel(tractor.Def.fifthWheel);
+            FifthWheel.Contact.SetGeometry(tractor.Def.bodyBoxes, trailer?.Def.bodyBoxes);
             if (trailer != null) SetCoupledStatic(coupled);
         }
 
@@ -56,10 +57,11 @@ namespace Game.Vehicle.Physics
         /// </summary>
         public void SetTrailer(TrailerModel trailer, bool coupled)
         {
-            if (Trailer != null) Trailer.Coupled = false;
+            if (Trailer != null) { Trailer.Coupled = false; Trailer.TowingWheels = null; }
             FifthWheel.ResetState();
             CouplingArmed = false;
             Trailer = trailer;
+            FifthWheel.Contact.SetGeometry(Tractor.Def.bodyBoxes, trailer?.Def.bodyBoxes);
             TrailerForce = Vec3.Zero; TrailerTorque = Vec3.Zero;
             if (trailer != null) SetCoupledStatic(coupled && trailer != null);
             else
@@ -106,7 +108,7 @@ namespace Game.Vehicle.Physics
         {
             bool c = Coupled;
             Tractor.TrailerConnected = c;
-            if (Trailer != null) Trailer.Coupled = c;
+            if (Trailer != null) { Trailer.Coupled = c; Trailer.TowingWheels = c ? Tractor.Wheels : null; }
             Tractor.TowedMass = c ? Trailer.Mass : 0;
         }
 
@@ -159,6 +161,14 @@ namespace Game.Vehicle.Physics
                 Vec3 pA = tractorState.LocalToWorld(anchorA);
                 fB += fc; tB += Vec3.Cross(p - trailerState.CenterOfMassWorld, fc) + tc;
                 fA -= fc; tA += Vec3.Cross(pA - tractorState.CenterOfMassWorld, -fc) - tc;
+            }
+            // ADR 0228: tractor-trailer body contact (cab / mudguards / frame vs trailer body), coupled or not.
+            if (FifthWheel.ContactPoints > 0)
+            {
+                fB += FifthWheel.ContactForceOnTrailer; tB += FifthWheel.ContactTorqueOnTrailer;
+                fA -= FifthWheel.ContactForceOnTrailer; tA += FifthWheel.ContactTorqueOnTractor;
+                // ADR 0228 x ADR 0263: no steering-wheel kick from the contact (smoothed feedback estimate, tyre forces unchanged).
+                Tractor.NotifyBodyContact();
             }
             TractorForce = fA; TractorTorque = tA;
             TrailerForce = fB; TrailerTorque = tB;

@@ -1,6 +1,6 @@
 # ADR 0128 — kerbed nose with the crossing landing and D-3 / D-6 at the northern slip of Rondo Bieżeństwa; U-4a on the Andersa island nose
 
-Status: implemented on branch `biezenstwa-island` (base `junctions-r6`, merged with `junctions-r6` ac0f01d6 (b7) and `main` d395272d on 2026-11-12, build i3); not merged to main. Gate 3 is NOT
+Status: Accepted (merged to main 2026-11-12, `e79c5cc32`; status updated 2026-11-16); originally: implemented on branch `biezenstwa-island` (base `junctions-r6`, merged with `junctions-r6` ac0f01d6 (b7) and `main` d395272d on 2026-11-12, build i3); not merged to main. Gate 3 is NOT
 re-judged here (visual-critic).
 Source: `docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md` (#11: no D-3 / D-6, no crossing landing, "grass
 island"), `REVIEW-2026-11-12-s11-0125.md` (open blocker 2; P2: chevron board ~5 m off), owner decision D51.

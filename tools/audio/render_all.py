@@ -37,10 +37,37 @@ PERSPECTIVES = ("ext", "cab")
 ENGINE_PEAK_DBFS = -3.0   # common gain for the whole engine set (relative levels preserved)
 
 
+# ADR 0232: the 0232 bank keeps the loudness of the main bank at one reference cell (full load, cruise rpm), so the
+# runtime mix (engine against tyres, wind, pneumatics) is unchanged and an A/B compares character, not level.
+# Gains of the main bank [dB]: measured by rendering origin/main (peak of the whole bank at ENGINE_PEAK_DBFS).
+MAIN_BANK_GAIN_DB = {"ext": -3.8324, "cab": 2.6364}
+REFERENCE_CELL = (1300, 1.0)
+BANK_PEAK_CEILING_DBFS = -1.0
+
+
 def _job(args):
-    kind, rpm, layer, load = args
-    loops, geo = es.render_loop(rpm, load, engine_brake=(kind == "ebrake"))
+    kind, rpm, layer, load, model = args
+    loops, geo = es.render_loop(rpm, load, engine_brake=(kind == "ebrake"), model=model)
     return kind, rpm, layer, loops, geo
+
+
+def bank_gains(results, model: str) -> tuple[dict, dict]:
+    """Common gain per perspective (engine + engine brake share one gain) and how it was chosen."""
+    peaks = {p: max(np.max(np.abs(r[3][p])) for r in results) for p in PERSPECTIVES}
+    if model == "main":
+        return {p: 10 ** (ENGINE_PEAK_DBFS / 20) / peaks[p] for p in PERSPECTIVES}, {"rule": "bank peak"}
+    from el_analyze import lufs
+    rpm, load = REFERENCE_CELL
+    ref_main, _ = es.render_loop(rpm, load, model="main")
+    ref_new, _ = es.render_loop(rpm, load, model=model)
+    gains, info = {}, {"rule": "LUFS of the reference cell equal to the main bank", "reference_cell": list(REFERENCE_CELL)}
+    for p in PERSPECTIVES:
+        target = lufs(ref_main[p] * 10 ** (MAIN_BANK_GAIN_DB[p] / 20), FS)
+        g = 10 ** ((target - lufs(ref_new[p], FS)) / 20)
+        ceiling = 10 ** (BANK_PEAK_CEILING_DBFS / 20) / peaks[p]
+        info[p] = {"reference_lufs": target, "limited_by_peak_db": float(max(0.0, dsp.db(g / ceiling)))}
+        gains[p] = min(g, ceiling)
+    return gains, info
 
 
 def clip_name(kind: str, persp: str, rpm: int, layer: str | None) -> str:
@@ -59,12 +86,21 @@ def main() -> None:
     ap.add_argument("--workers", type=int, default=12)
     ap.add_argument("--no-previews", action="store_true",
                     help="do not rewrite the committed OGG previews (build scripts: keeps the git tree clean)")
+    ap.add_argument("--model", choices=es.MODELS, default=es.DEFAULT_MODEL,
+                    help="synthesis model: 0232 (default) or main = the bank before ADR 0232 (A/B renders)")
+    ap.add_argument("--out", type=Path, default=None,
+                    help="output folder inside the repository (default art-source/audio/generated); implies --no-previews")
     args = ap.parse_args()
+    global OUT
+    if args.out is not None:
+        OUT = args.out.resolve()
+        args.no_previews = True
+    new_model = args.model == "0232"
 
     rpm_grid = RPM_GRID[::3] if args.quick else RPM_GRID
     eb_grid = EBRAKE_GRID[::3] if args.quick else EBRAKE_GRID
-    jobs = [("engine", r, name, ld) for name, ld in LOAD_LAYERS.items() for r in rpm_grid]
-    jobs += [("ebrake", r, None, 0.0) for r in eb_grid]
+    jobs = [("engine", r, name, ld, args.model) for name, ld in LOAD_LAYERS.items() for r in rpm_grid]
+    jobs += [("ebrake", r, None, 0.0, args.model) for r in eb_grid]
 
     t0 = time.time()
     with ProcessPoolExecutor(max_workers=args.workers) as ex:
@@ -72,14 +108,13 @@ def main() -> None:
     print(f"rendered {len(results)} operating points in {time.time() - t0:.1f}s")
 
     # common normalisation per perspective (engine + ebrake share one gain)
-    gains = {}
-    for p in PERSPECTIVES:
-        pk = max(np.max(np.abs(r[3][p])) for r in results)
-        gains[p] = 10 ** (ENGINE_PEAK_DBFS / 20) / pk
+    gains, gain_info = bank_gains(results, args.model)
 
     manifest = {
         "sample_rate": FS,
         "generator": "tools/audio/render_all.py (procedural synthesis, no recordings)",
+        "synthesis_model": args.model,
+        "engine_gain_rule": gain_info,
         "rpm_grid": rpm_grid,
         "load_layers": LOAD_LAYERS,
         "ebrake_rpm_grid": eb_grid,
@@ -133,8 +168,19 @@ def main() -> None:
         c = 10 ** (ceiling_db / 20)
         return x * (c / pk) if pk > c else x
 
+    import synth0232 as s32
+    from el_analyze import lufs as _lufs0232
+    manifest["sfx_0232"] = {}
     for name, (x, is_loop) in sfx.items():
         x = norm_peak(x, is_loop)
+        if new_model and name in s32.LAYERS:
+            # ADR 0232: physically modelled replacement at the loudness of the layer it replaces (peak-limited)
+            y = norm_peak(s32.LAYERS[name][0](), is_loop)
+            main_lufs = _lufs0232(x, FS)
+            y = limit(y * 10 ** ((main_lufs - _lufs0232(y, FS)) / 20))
+            manifest["sfx_0232"][name] = {"main_lufs": main_lufs, "lufs": _lufs0232(y, FS)}
+            x = y
+            sfx[name] = (x, is_loop)
         write_sfx(name, x, is_loop)
         if not args.no_previews and name in ("turbo_whistle_loop", "air_brake_release", "parking_brake_set", "turbo_liftoff"):
             write_ogg(PREV / f"{name}.ogg", np.tile(x, 2) if is_loop else x)

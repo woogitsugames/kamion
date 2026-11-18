@@ -27,7 +27,10 @@ from fetch_osm import REPO_ROOT, download, load_manifest
 WORK_CRS = "EPSG:2180"
 # Białystok + ring road/S8/S19 surroundings + the DK65 corridor to Knyszyn (ADR 0203/0204), WGS84
 # (lon_min, lat_min, lon_max, lat_max). The bbox is part of the cache key.
-BBOX_WGS84 = (22.80, 53.05, 23.32, 53.38)
+# world2-s23 (ADR 0231 ring): west to 22.60 and north to 53.50 - the old box (22.80 / 53.38) cut the tiles `monki`,
+# `monki-e`, `dk65-monki-07`, `tykocin`, `dw671-tykocin-09` (their roads.graph.json came out empty or without DK65).
+# The ring tiles + 600 m span lon 22.740-23.211, lat 53.087-53.426 (EPSG:2180 -> WGS84, computed from regions.py).
+BBOX_WGS84 = (22.60, 53.05, 23.32, 53.50)
 
 ROAD_TAGS = (
     "highway", "name", "ref", "lanes", "lanes:forward", "lanes:backward", "maxspeed",
@@ -36,6 +39,8 @@ ROAD_TAGS = (
     "width", "sidewalk", "lit", "destination", "destination:ref", "int_ref", "service",
     # ADR 0164: truck limits (kept in sync with roadgraph.TRUCK_LIMIT_TAGS)
     "maxaxleload", "maxlength", "maxweight:hgv", "hgv:conditional", "maxgvweightrating:hgv",
+    # ADR 0272: shoulder of the carriageway (kept in sync with roadgraph.SHOULDER_TAGS)
+    "shoulder", "shoulder:width", "shoulder:surface",
 )
 AREA_KEYS_LANDUSE = {"industrial", "railway", "commercial", "retail", "farmyard", "construction"}
 POINT_KEYS = {
@@ -112,6 +117,7 @@ def _parse(pbf: Path) -> dict[str, list[dict]]:
             if b is not None:
                 buildings.append({**base, "building": b, "levels": t.get("building:levels"),
                                   "height": t.get("height"), "industrial": t.get("industrial"),
+                                  "roof_shape": t.get("roof:shape"),          # ADR 0238 (BUILDING_TAGS: cache key)
                                   "shop": t.get("shop"), "landuse": lu})
             if lu in AREA_KEYS_LANDUSE:
                 landuse.append({**base, "landuse": lu, "industrial": t.get("industrial"),
@@ -119,12 +125,15 @@ def _parse(pbf: Path) -> dict[str, list[dict]]:
     return {"roads": roads, "landuse": landuse, "buildings": buildings, "points": points}
 
 
+BUILDING_TAGS = ("roof:shape",)      # building tags added after the first cache format; part of the cache key
+
+
 def load_layers() -> dict[str, gpd.GeoDataFrame]:
     pbf = download()
     sha = load_manifest()["sha256"]
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     # the kept tag list is part of the key (ADR 0069 added destination:ref; a stale pickle silently dropped it)
-    tags_key = hashlib.sha1(repr(ROAD_TAGS).encode()).hexdigest()[:8]
+    tags_key = hashlib.sha1(repr((ROAD_TAGS, BUILDING_TAGS) if BUILDING_TAGS else ROAD_TAGS).encode()).hexdigest()[:8]
     bbox_key = hashlib.sha1(repr(BBOX_WGS84).encode()).hexdigest()[:8]
     cache = CACHE_DIR / f"bialystok_layers_{sha[:16]}_{tags_key}_{bbox_key}.pkl"
     if cache.exists():

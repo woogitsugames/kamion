@@ -1,6 +1,6 @@
 # ADR 0133 — DK8 over Rondo Putry: median double-arm lamp row (authored), deck geometry unchanged
 
-Status: implemented on branch `putry-deck` (base main `29f5cf85`, 2026-11-12, s12; main merged s13 `3feda88c8`); not merged. A visual-critic
+Status: Accepted (merged to main 2026-11-12, `09d0e355a`; status updated 2026-11-16); originally: implemented on branch `putry-deck` (base main `29f5cf85`, 2026-11-12, s12; main merged s13 `3feda88c8`); not merged. A visual-critic
 review is still required; the D51 grades below are the author's.
 Source: ADR 0130 (494288 "lamps: world, not pose"), `docs/reports/visual/REVIEW-2026-11-12-s12-0130-truck-r3.md`
 (world follow-up "łuk i latarnie pomostu Putry"), ADR 0125 (screen on the outer edge), ADR 0105/0119 (underdeck).

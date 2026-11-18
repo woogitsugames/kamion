@@ -44,6 +44,17 @@ namespace Game.Vehicle.Runtime
         public static bool DueSchedule => !Legacy && (MirrorOverrides.DueSchedule ?? DueScheduleFor(Level));
         public static bool DueScheduleFor(int level) => level == 2;
         /// <summary>
+        /// ADR 0243 (D70): with the class II mirrors shown as fixed on-screen windows (<see cref="RenderTextureMirror.ForceRender"/>)
+        /// Low also uses the due-based step, without spare fill (<see cref="MirrorInsetBudget"/>). rq_mirror_rate 0 = the old
+        /// round-robin (A/B), rq_mirror_legacy = the pre-0068 configuration.
+        /// </summary>
+        public static bool DueScheduleWith(bool insets) => !Legacy && (MirrorOverrides.DueSchedule ?? MirrorInsetBudget.DueFor(Level, insets));
+        /// <summary>Spare-slot fill of the due-based step (ADR 0068 High while driving; never under the ADR 0243 Low window policy).</summary>
+        public static bool FillSpare(int level, bool insets, bool standing) => MirrorInsetBudget.FillSpareFor(level, insets, standing);
+        /// <summary>ADR 0243: <see cref="MirrorIntervalFor(int,int,bool)"/>, or the Low window policy (<see cref="MirrorInsetBudget"/>).</summary>
+        public static float MirrorIntervalFor(int level, int r46Class, bool standing, bool insets) =>
+            MirrorInsetBudget.Applies(level, insets) ? MirrorInsetBudget.Interval(r46Class, standing) : MirrorIntervalFor(level, r46Class, standing);
+        /// <summary>
         /// Target refresh interval in frames per UN R46 class (2 = class II, 4 = IV, 5 = V, 6 = VI) for the due-based schedule.
         /// While driving: II 2, IV 4, V/VI 4 (= ADR 0046 High at 60 FPS: 30 / 15 / 15 Hz). Standing (speed &lt; 0.5 m/s and yaw
         /// rate &lt; 3 deg/s for 0.5 s): the mirror image does not move with the truck, IV x2, V/VI x4 (7.5 / 3.75 Hz); class
@@ -94,6 +105,34 @@ namespace Game.Vehicle.Runtime
         public static bool GlobalEnabled = true;
         /// <summary>Render even when the glass is not on screen (the HUD shows the textures as mirror insets).</summary>
         public static bool ForceRender;
+        /// <summary>
+        /// ADR 0283 (D84 "lusterka złe"): player adjustment of both main (class II) mirrors - the reflected view turned
+        /// outward / downward by these angles [deg] (set from the HUD preferences). Like turning the glass by half the
+        /// angle: less of the own cab / trailer side in the image. 0 / 0 = the built aim (TruckAssetBuilder, graybox).
+        /// The 3D glass in the cab shows the same texture (no extra render).
+        /// </summary>
+        public static float AdjustYawOutDeg, AdjustPitchDownDeg;
+
+        /// <summary>Local Euler offset (x = pitch down, y = yaw) of a main-mirror camera that looks back along the vehicle
+        /// side. <paramref name="phase"/> 0 = left mirror (outward = vehicle -X), otherwise right (+X). The camera faces -Z,
+        /// so its own +X is the vehicle -X: +yaw turns the view to the vehicle's left. Pure (EditMode test).</summary>
+        public static Vector3 AdjustEuler(int phase, float yawOutDeg, float pitchDownDeg) =>
+            new Vector3(pitchDownDeg, phase == 0 ? yawOutDeg : -yawOutDeg, 0f);
+
+        Quaternion m_BaseLocalRotation;
+        bool m_HasBaseRotation;
+        float m_AppliedYaw = float.NaN, m_AppliedPitch = float.NaN;
+
+        /// <summary>Applies <see cref="AdjustYawOutDeg"/> / <see cref="AdjustPitchDownDeg"/> to a main mirror (only on change).</summary>
+        void ApplyAdjustment()
+        {
+            if (!main) return;
+            if (!m_HasBaseRotation) { m_BaseLocalRotation = transform.localRotation; m_HasBaseRotation = true; }
+            if (AdjustYawOutDeg == m_AppliedYaw && AdjustPitchDownDeg == m_AppliedPitch) return;
+            m_AppliedYaw = AdjustYawOutDeg; m_AppliedPitch = AdjustPitchDownDeg;
+            transform.localRotation = m_BaseLocalRotation * Quaternion.Euler(AdjustEuler(phase, AdjustYawOutDeg, AdjustPitchDownDeg));
+        }
+
         /// <summary>Total mirror renders scheduled since start (telemetry: renders per frame).</summary>
         public static long RendersScheduled { get; private set; }
         /// <summary>The truck stands (ADR 0068 due-based intervals): speed &lt; 0.5 m/s and yaw rate &lt; 3 deg/s for 0.5 s.</summary>
@@ -233,6 +272,7 @@ namespace Game.Vehicle.Runtime
 
         void EnsureTarget()
         {
+            ApplyAdjustment();
             int h = Mathf.Max(16, Mathf.RoundToInt(VehicleCameraBudget.MirrorHeight * resolutionScale));
             var cam = Cam;
             // Also applies to existing generated prefabs, before their next TruckAssetBuilder rebuild.
@@ -299,7 +339,8 @@ namespace Game.Vehicle.Runtime
         {
             int count = s_All.Count;
             if (s_Entries.Length < count) System.Array.Resize(ref s_Entries, count * 2);   // safety; normally sized in OnEnable
-            bool due = VehicleCameraBudget.DueSchedule;
+            bool insets = ForceRender;   // ADR 0243: class II shown as HUD windows (D70)
+            bool due = VehicleCameraBudget.DueScheduleWith(insets);
             int level = VehicleCameraBudget.Level;
             for (int i = 0; i < count; i++)
             {
@@ -311,11 +352,11 @@ namespace Game.Vehicle.Runtime
                 s_Entries[i].phase = m.phase;
                 s_Entries[i].main = m.main;
                 s_Entries[i].candidate = m.m_Candidate;
-                s_Entries[i].interval = VehicleCameraBudget.MirrorIntervalFor(level, cls, Standing);
+                s_Entries[i].interval = VehicleCameraBudget.MirrorIntervalFor(level, cls, Standing, insets);
                 s_Entries[i].fill = cls <= 4;
             }
             int n = due
-                ? MirrorRefreshSchedule.StepDue(s_Entries, count, VehicleCameraBudget.MirrorsPerFrame, !Standing)
+                ? MirrorRefreshSchedule.StepDue(s_Entries, count, VehicleCameraBudget.MirrorsPerFrame, VehicleCameraBudget.FillSpare(level, insets, Standing))
                 : MirrorRefreshSchedule.Step(s_Entries, count, VehicleCameraBudget.MirrorsPerFrame, VehicleCameraBudget.MainMirrorSlots);
             RendersScheduled += n;
             int frame = Time.frameCount;

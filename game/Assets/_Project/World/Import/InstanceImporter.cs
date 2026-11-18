@@ -105,6 +105,8 @@ namespace Game.World.Import
             // Trees: the forest along DK8 is the worst view - with 30/100 m it drew 0.78 M instanced triangles on
             // Medium (budget 0.55 M for everything); 20/60 m keeps Medium at ~0.3 M there.
             if (proto.StartsWith("tree_shrub")) e = new[] { 12f, 40f, 300f };
+            // ADR 0187: forest floor plants (bilberry / fern mounds, High tier only, no impostor): gone beyond 90 m.
+            else if (proto.StartsWith("tree_floor")) e = new[] { 25f, 90f };
             else if (proto.StartsWith("tree_")) e = new[] { 20f, 60f, 1000f };
             else if (proto.StartsWith("fab_")) e = new[] { 12f, 30f, 65f };
             else if (proto.StartsWith("lamp_")) e = new[] { 60f, 400f };
@@ -652,6 +654,22 @@ namespace Game.World.Import
         }
 
         /// <summary>Copies an art-source PNG into the generated textures folder with mobile import settings.</summary>
+        /// <summary>
+        /// ADR 0239 fallback (review s23 P1): the shader, or null when it is missing OR has a compile error. Shader.Find
+        /// also returns a shader that failed to compile - the fence then rendered magenta and its texture lost the
+        /// coverage-preserving mips (c-regen2-s23). Null keeps URP Lit and the s20 mips.
+        /// </summary>
+        public static Shader UsableShaderOrNull(Shader shader)
+        {
+            if (shader == null) return null;
+            if (!ShaderUtil.ShaderHasError(shader)) return shader;
+            Debug.LogWarning($"[IMPORT] shader '{shader.name}' has compile errors - fallback path used (ADR 0239)");
+            return null;
+        }
+
+        /// <summary>Kamion/World FenceMesh when it exists and compiles; the one lookup both importers use.</summary>
+        public static Shader FenceShaderOrNull() => UsableShaderOrNull(Shader.Find(Game.Rendering.FenceMeshCoverage.ShaderName));
+
         public static Texture2D ImportTexture(RegionImporter.Result r, string png, bool clamp, bool linear = false)
         {
             string file = Path.GetFileName(png);
@@ -670,12 +688,13 @@ namespace Game.World.Import
             ti.mipmapEnabled = true;
             ti.alphaSource = TextureImporterAlphaSource.FromInput;
             ti.alphaIsTransparency = alpha;
-            // ADR 0185: not for the welded fence mesh. Coverage-preserving mips keep ~15 % of the texels opaque at every
-            // distance, so 5 mm wires 50 mm apart drew a white moire lattice at 40 m on Low (review 0179, P11-094);
-            // with plain box mips the wires thin out and are gone where a pixel is wider than the wire pitch - the
-            // posts and the plinth stay, as on the photo. (r2 tried a 0.25 cutoff to keep the horizontal wires
-            // longer: they broke into dots at 40 m - rejected.)
-            ti.mipMapsPreserveCoverage = alpha;   // s20 lead: ADR 0185 fence exclusion REVERTED - on route C (kwadrat-park-gate Low) the panel fence lost its mesh at ~10 m (posts only), worse than the moire; follow-up: alpha-to-coverage / distance-faded mesh card (REVIEW-2026-11-14-s20-0185.md P1-3)
+            // ADR 0239 (B-082): the welded fence mesh gets plain box mips - its shader (Kamion/World FenceMesh) spends the
+            // mean alpha as coverage (sharp wires near, a ~15 % veil far). History: coverage-preserving mips + cutoff drew
+            // a white moire lattice at 40 m on Low (review 0179, P11-094); plain mips + cutoff (ADR 0185) lost the mesh
+            // from ~10 m (s20 lead, kwadrat-park-gate Low). Without the shader the old moire variant stays.
+            bool fenceCoverage = Game.Rendering.FenceMeshCoverage.IsFenceMeshTexture(file) && FenceShaderOrNull() != null;
+            ti.mipMapsPreserveCoverage = Game.Rendering.FenceMeshCoverage.PreserveCoverageMips(file, alpha, fenceCoverage);
+            if (fenceCoverage) ti.mipmapFilter = TextureImporterMipFilter.BoxFilter;   // no Kaiser ringing in the alpha
             ti.alphaTestReferenceValue = 0.5f;
             ti.wrapMode = clamp ? TextureWrapMode.Clamp : TextureWrapMode.Repeat;
             // Forest HLOD edge walls tile along the edge (u) but not vertically: with v repeating, the filter / mips at the

@@ -1,0 +1,251 @@
+{
+ "wiersze": [
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "man_made=bridge (obrysy obiektów): liczba way",
+   "wartosc": 85,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "łączna długość 8.49 km (jezdnie osobno)"
+  },
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "tunnel pozostałe (przejścia, przepusty drogowe, service): liczba way",
+   "wartosc": 459,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "łączna długość 7.33 km (jezdnie osobno)"
+  },
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "bridge pieszo-rowerowe: liczba way",
+   "wartosc": 272,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "łączna długość 7.14 km (jezdnie osobno)"
+  },
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "bridge na primary/secondary/tertiary: liczba way",
+   "wartosc": 90,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "łączna długość 3.96 km (jezdnie osobno)"
+  },
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "bridge na trunk(+link): liczba way",
+   "wartosc": 51,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "łączna długość 3.71 km (jezdnie osobno)"
+  },
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "bridge na drogach niższych klas: liczba way",
+   "wartosc": 116,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "łączna długość 1.71 km (jezdnie osobno)"
+  },
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "tunnel na trunk/primary/secondary/tertiary: liczba way",
+   "wartosc": 16,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "łączna długość 1.31 km (jezdnie osobno)"
+  },
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "bridge w budowie/proponowane: liczba way",
+   "wartosc": 18,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "łączna długość 0.98 km (jezdnie osobno)"
+  },
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "bridge na motorway(+link): liczba way",
+   "wartosc": 18,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "łączna długość 0.76 km (jezdnie osobno)"
+  },
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "bridge kolejowe (rail + nieczynne): liczba way",
+   "wartosc": 26,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "łączna długość 0.61 km (jezdnie osobno)"
+  },
+  {
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "Mosty/wiadukty z nazwą (name lub bridge:name na way z bridge na motorway/trunk/primary)",
+   "wartosc": 0,
+   "jednostka": "szt.",
+   "zapytanie": "bridges_tunnels",
+   "uwagi": "name na tych way to nazwa ulicy, nie obiektu"
+  },
+  {
+   "kategoria": "OSM ekrany/bariery",
+   "przedmiot": "barrier=wall: długość",
+   "wartosc": 39.46,
+   "jednostka": "km",
+   "zapytanie": "barriers",
+   "uwagi": "530 way"
+  },
+  {
+   "kategoria": "OSM ekrany/bariery",
+   "przedmiot": "barrier=wall + wall=noise_barrier: długość",
+   "wartosc": 27.82,
+   "jednostka": "km",
+   "zapytanie": "barriers",
+   "uwagi": "176 way"
+  },
+  {
+   "kategoria": "OSM ekrany/bariery",
+   "przedmiot": "barrier=guard_rail: długość",
+   "wartosc": 23.85,
+   "jednostka": "km",
+   "zapytanie": "barriers",
+   "uwagi": "87 way"
+  },
+  {
+   "kategoria": "OSM ekrany/bariery",
+   "przedmiot": "barrier=wall (inne wall=*): długość",
+   "wartosc": 0.1,
+   "jednostka": "km",
+   "zapytanie": "barriers",
+   "uwagi": "11 way"
+  },
+  {
+   "kategoria": "OSM ekrany/bariery",
+   "przedmiot": "barrier=cable_barrier: długość",
+   "wartosc": 0.04,
+   "jednostka": "km",
+   "zapytanie": "barriers",
+   "uwagi": "2 way"
+  },
+  {
+   "kategoria": "OSM ekrany/bariery",
+   "przedmiot": "barrier=noise_barrier: długość",
+   "wartosc": 0.0,
+   "jednostka": "km",
+   "zapytanie": "barriers",
+   "uwagi": "0 way"
+  },
+  {
+   "kategoria": "OSM ekrany/bariery",
+   "przedmiot": "Ekrany (wall=noise_barrier) z tagiem height",
+   "wartosc": 0.0,
+   "jednostka": "%",
+   "zapytanie": "barriers",
+   "uwagi": "0/176 way"
+  },
+  {
+   "kategoria": "OSM ekrany/bariery",
+   "przedmiot": "Ekrany (wall=noise_barrier) z tagiem material",
+   "wartosc": 0.0,
+   "jednostka": "%",
+   "zapytanie": "barriers",
+   "uwagi": "0/176 way"
+  },
+  {
+   "kategoria": "OSM ekrany/bariery",
+   "przedmiot": "Ekrany (wall=noise_barrier) z tagiem colour",
+   "wartosc": 0.0,
+   "jednostka": "%",
+   "zapytanie": "barriers",
+   "uwagi": "0/176 way"
+  },
+  {
+   "kategoria": "OSM MOP/stacje",
+   "przedmiot": "highway=services (MOP z usługami)",
+   "wartosc": 0,
+   "jednostka": "szt.",
+   "zapytanie": "services"
+  },
+  {
+   "kategoria": "OSM MOP/stacje",
+   "przedmiot": "highway=rest_area",
+   "wartosc": 5,
+   "jednostka": "szt.",
+   "zapytanie": "services",
+   "cytat": "node 3256509923 (bez nazwy) operator=-; way 623784393 MOR Barszczewo operator=Green Velo; way 418949735 MOR Świerkowa operator=Green Velo; way 418922774 MOR Park Miejski operator=Green Velo; way 624350702 MOR Ogrodniczki operator=Green Velo",
+   "uwagi": "wszystkie nazwane to MOR-y rowerowe (operator=Green Velo), nie MOP-y drogowe"
+  },
+  {
+   "kategoria": "OSM MOP/stacje",
+   "przedmiot": "amenity=fuel",
+   "wartosc": 63,
+   "jednostka": "szt.",
+   "zapytanie": "services",
+   "uwagi": "w tym fuel:HGV_diesel=yes: 14"
+  },
+  {
+   "kategoria": "OSM MOP/stacje",
+   "przedmiot": "amenity=parking z hgv=yes/designated/only",
+   "wartosc": 1,
+   "jednostka": "szt.",
+   "zapytanie": "services"
+  },
+  {
+   "kategoria": "OSM MOP/stacje",
+   "przedmiot": "highway=toll_gantry",
+   "wartosc": 2,
+   "jednostka": "szt.",
+   "zapytanie": "services"
+  },
+  {
+   "kategoria": "OSM MOP/stacje",
+   "przedmiot": "amenity=weighbridge",
+   "wartosc": 0,
+   "jednostka": "szt.",
+   "zapytanie": "services"
+  },
+  {
+   "kategoria": "OSM wyposażenie",
+   "przedmiot": "highway=traffic_signals (węzły/way)",
+   "wartosc": 507,
+   "jednostka": "szt.",
+   "zapytanie": "signs_furniture"
+  },
+  {
+   "kategoria": "OSM wyposażenie",
+   "przedmiot": "highway=street_lamp (węzły/way)",
+   "wartosc": 1891,
+   "jednostka": "szt.",
+   "zapytanie": "signs_furniture"
+  },
+  {
+   "kategoria": "OSM wyposażenie",
+   "przedmiot": "traffic_sign=* (węzły/way)",
+   "wartosc": 346,
+   "jednostka": "szt.",
+   "zapytanie": "signs_furniture"
+  },
+  {
+   "kategoria": "OSM wyposażenie",
+   "przedmiot": "highway=milestone (węzły/way)",
+   "wartosc": 89,
+   "jednostka": "szt.",
+   "zapytanie": "signs_furniture"
+  },
+  {
+   "kategoria": "OSM wyposażenie",
+   "przedmiot": "highway=speed_camera (węzły/way)",
+   "wartosc": 3,
+   "jednostka": "szt.",
+   "zapytanie": "signs_furniture"
+  },
+  {
+   "kategoria": "OSM wyposażenie",
+   "przedmiot": "man_made=gantry (węzły/way)",
+   "wartosc": 3,
+   "jednostka": "szt.",
+   "zapytanie": "signs_furniture"
+  }
+ ]
+}

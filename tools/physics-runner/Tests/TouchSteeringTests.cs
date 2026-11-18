@@ -84,15 +84,12 @@ namespace PhysicsRunner.Tests
         {
             foreach (double mu in new[] { 0.0, 0.25, 0.5, 1.0, 2.0, 4.0 })
             {
-                double keep = 0; FifthWheelDefinition def = null;
                 var sc = TouchEvidence.Replay(35, -1, "laden40"); sc.duration = 20;
-                try
-                {
-                    var tr = TouchEvidence.Run(sc, s => { def = s.Combo.FifthWheel.Def; keep = def.plateFrictionCreepRateDegS; def.plateFrictionCreepRateDegS = mu; });
-                    int n = tr.T.Count;
-                    _out.WriteLine($"creep {mu} deg/s: t=5 artic {tr.Artic[n / 4]:F3} yaw {tr.YawRateDps[n / 4]:F3}; t=10 artic {tr.Artic[n / 2]:F3} yaw {tr.YawRateDps[n / 2]:F3}; t=20 artic {tr.Artic[n - 1]:F3} yaw {tr.YawRateDps[n - 1]:F3}");
-                }
-                finally { if (def != null) def.plateFrictionCreepRateDegS = keep; }
+                // The tweak changes this run's own definitions (ScenarioRunner.Setup loads a private copy, D42): it used to
+                // write into the shared cache while other test classes ran combination scenarios in parallel.
+                var tr = TouchEvidence.Run(sc, s => s.Combo.FifthWheel.Def.plateFrictionCreepRateDegS = mu);
+                int n = tr.T.Count;
+                _out.WriteLine($"creep {mu} deg/s: t=5 artic {tr.Artic[n / 4]:F3} yaw {tr.YawRateDps[n / 4]:F3}; t=10 artic {tr.Artic[n / 2]:F3} yaw {tr.YawRateDps[n / 2]:F3}; t=20 artic {tr.Artic[n - 1]:F3} yaw {tr.YawRateDps[n - 1]:F3}");
             }
         }
 

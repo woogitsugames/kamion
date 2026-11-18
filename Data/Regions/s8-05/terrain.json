@@ -1,0 +1,35 @@
+{
+ "bbox": [
+  758539.0,
+  595199.0,
+  760587.0,
+  597247.0
+ ],
+ "encoding": {
+  "decode": "z_m = offset_m + value * scale_m_per_unit",
+  "dtype": "uint16 little-endian",
+  "file": "Data/raw/derived/s8-05/heightmap_2049.r16",
+  "offset_m": 109.0,
+  "quantisation_step_mm": 0.5493,
+  "scale_m_per_unit": 0.0005493247882810712,
+  "span_m": 36.0
+ },
+ "height_datum": "PL-EVRF2007-NH (EPSG:9651)",
+ "missing_samples": 0,
+ "node_ij_to_xy": "x = bbox.xmin + i, y = bbox.ymax - j  (row 0 = north edge)",
+ "samples": [
+  2049,
+  2049
+ ],
+ "sampling": "exact: tile nodes coincide with NMT cell centres (xllcenter at integer metres); no interpolation",
+ "sha256_r16": "2e84a0145a758975f9fc49263fb156a202eb1467bc3c97d813b7d31be1488fc6",
+ "source_crs": "EPSG:2180",
+ "source_manifest": "gugik-nmt-2025-s8-05",
+ "spacing_m": 1.0,
+ "stats_m": {
+  "max": 143.87,
+  "mean": 123.357,
+  "min": 110.28
+ },
+ "unity_hint": "Unity Terrain RAW import: 16-bit, Windows byte order, flip vertically (Unity row 0 = south); terrain size x/z = bbox width/height, y = span_m, position y = offset_m - origin_z"
+}

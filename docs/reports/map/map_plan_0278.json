@@ -1,0 +1,5720 @@
+{
+ "adr": "0278",
+ "budget_classes": {
+  "miasto": {
+   "fit_range_buildings": [
+    406,
+    1903
+   ],
+   "fit_vs_buildings": {
+    "frame_tris_high_max": {
+     "intercept": 1595498.9,
+     "slope_per_building": 498.113
+    },
+    "frame_tris_low_max": {
+     "intercept": 743890.3,
+     "slope_per_building": 103.072
+    },
+    "glb_mb": {
+     "intercept": 437.4,
+     "slope_per_building": 0.147
+    },
+    "static_tris_high": {
+     "intercept": 9820753.0,
+     "slope_per_building": 1115.254
+    }
+   },
+   "median": {
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "tiles": [
+    "bialystok-dojlidy",
+    "bialystok-industrial-c",
+    "bialystok-kleeberga",
+    "bialystok-knyszynska",
+    "bialystok-maczka",
+    "knyszyn"
+   ]
+  },
+  "podmiejski": {
+   "median": {
+    "frame_tris_high_max": 1191730,
+    "frame_tris_high_median": 802368,
+    "frame_tris_low_max": 433762,
+    "frame_tris_low_median": 251629,
+    "glb_mb": 440.9,
+    "static_tris_high": 9181083,
+    "static_tris_low": 2574471,
+    "world_memory_high_mb": 165.9,
+    "world_memory_low_mb": 60.2
+   },
+   "tiles": [
+    "dk65-01",
+    "dk65-02",
+    "dk65-03",
+    "dk65-04",
+    "dk65-05",
+    "dk65-07",
+    "knyszyn-w"
+   ]
+  },
+  "zamiejski": {
+   "median": {
+    "frame_tris_high_max": 1555268.5,
+    "frame_tris_high_median": 908165.5,
+    "frame_tris_low_max": 362924.0,
+    "frame_tris_low_median": 236481.5,
+    "glb_mb": 357.9,
+    "static_tris_high": 8780978.5,
+    "static_tris_low": 2271845.5,
+    "world_memory_high_mb": null,
+    "world_memory_low_mb": 48.6
+   },
+   "tiles": [
+    "dk65-06",
+    "dk65-08",
+    "dk65-09",
+    "dk65-10",
+    "dk65-11",
+    "dk65-monki-01",
+    "dw671-tykocin-01",
+    "knyszyn-s"
+   ]
+  }
+ },
+ "built": {
+  "bialystok-dojlidy": [
+   1,
+   -3
+  ],
+  "bialystok-industrial-c": [
+   0,
+   0
+  ],
+  "bialystok-kleeberga": [
+   -2,
+   0
+  ],
+  "bialystok-knyszynska": [
+   -3,
+   0
+  ],
+  "bialystok-maczka": [
+   -1,
+   0
+  ],
+  "dk65-01": [
+   -4,
+   0
+  ],
+  "dk65-02": [
+   -4,
+   1
+  ],
+  "dk65-03": [
+   -5,
+   1
+  ],
+  "dk65-04": [
+   -5,
+   2
+  ],
+  "dk65-05": [
+   -5,
+   3
+  ],
+  "dk65-06": [
+   -5,
+   4
+  ],
+  "dk65-07": [
+   -6,
+   4
+  ],
+  "dk65-08": [
+   -6,
+   5
+  ],
+  "dk65-09": [
+   -7,
+   5
+  ],
+  "dk65-10": [
+   -7,
+   6
+  ],
+  "dk65-11": [
+   -7,
+   7
+  ],
+  "dk65-monki-01": [
+   -9,
+   9
+  ],
+  "dw671-tykocin-01": [
+   -9,
+   7
+  ],
+  "knyszyn": [
+   -8,
+   8
+  ],
+  "knyszyn-s": [
+   -8,
+   7
+  ],
+  "knyszyn-w": [
+   -9,
+   8
+  ]
+ },
+ "candidates": [
+  {
+   "bbox": [
+    774923.0,
+    593151.0,
+    776971.0,
+    595199.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 2745143.7,
+     "frame_tris_low_max": 981780.5,
+     "glb_mb": 776.7,
+     "static_tris_high": 12394759.2
+    },
+    "by_buildings_extrapolated": true,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 2308,
+    "commercial_ha": 17.06,
+    "fuel": 2,
+    "fuel_hgv": 1,
+    "hall_1000m2": 2,
+    "industrial_ha": 4.87,
+    "km_secondary": 18.38,
+    "km_tertiary": 6.07,
+    "retail_delivery": 20,
+    "warehouse": 6
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-a-2-2 2025-04-18",
+      "N-34-107-C-a-2-4 2025-04-18",
+      "N-34-107-C-b-1-1 2025-04-18",
+      "N-34-107-C-b-1-3 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-4",
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-3"
+     ],
+     "2021": [
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-4",
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-3"
+     ],
+     "2022": [
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-4",
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-3"
+     ],
+     "2023": [
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-4",
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-3"
+     ],
+     "2024": [
+      "8.193.13.03.2",
+      "8.193.13.03.4",
+      "8.193.13.04.1",
+      "8.193.13.04.2",
+      "8.193.13.04.3",
+      "8.193.13.04.4",
+      "8.193.13.05.1",
+      "8.193.13.05.3",
+      "8.194.13.18.4",
+      "8.194.13.19.3",
+      "8.194.13.19.4",
+      "8.194.13.20.3",
+      "8.194.13.23.2",
+      "8.194.13.23.4",
+      "8.194.13.24.1",
+      "8.194.13.24.2",
+      "8.194.13.24.3",
+      "8.194.13.24.4",
+      "8.194.13.25.1",
+      "8.194.13.25.3",
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-4",
+      "N-34-107-C-b-1-1"
+     ],
+     "2025": [
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-4",
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-3"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-a-2-2 2019-04-24",
+      "N-34-107-C-a-2-4 2019-04-24",
+      "N-34-107-C-b-1-1 2019-04-24",
+      "N-34-107-C-b-1-3 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1209.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-a-2-2 2024-05-27",
+      "N-34-107-C-a-2-4 2024-05-27",
+      "N-34-107-C-b-1-1 2024-05-27",
+      "N-34-107-C-b-1-3 2024-05-27"
+     ],
+     "to_download": 2,
+     "to_download_mb": 89.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "centrum",
+   "id": "bialystok-antoniuk",
+   "ij": [
+    -1,
+    -1
+   ],
+   "neighbours": [
+    {
+     "edge": "W",
+     "id": "bialystok-bacieczki",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "676"
+     ]
+    },
+    {
+     "edge": "E",
+     "id": "bialystok-centrum",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "676"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "bialystok-maczka",
+     "kind": "built",
+     "numbered_crossings": 0,
+     "refs": []
+    }
+   ],
+   "origin": [
+    775947.0,
+    594175.0
+   ],
+   "places": [
+    "Antoniuk (suburb)",
+    "Antoniuk Fabryczny (neighbourhood)",
+    "Marczuk (neighbourhood)",
+    "Młodych (suburb)",
+    "Osiedle Juliana Tuwima (neighbourhood)",
+    "Osiedle Przyjaźń (neighbourhood)",
+    "Osiedle Sady Antoniukowskie (neighbourhood)"
+   ],
+   "powiat_area_share": {
+    "2061": 1.0
+   },
+   "target_score": 10.5,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    772875.0,
+    593151.0,
+    774923.0,
+    595199.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 2109551.5,
+     "frame_tris_low_max": 850260.6,
+     "glb_mb": 589.1,
+     "static_tris_high": 10971695.1
+    },
+    "by_buildings_extrapolated": false,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 1032,
+    "commercial_ha": 3.37,
+    "fuel": 2,
+    "fuel_hgv": 1,
+    "hall_1000m2": 3,
+    "industrial_ha": 4.77,
+    "km_primary": 3.56,
+    "km_secondary": 8.31,
+    "km_tertiary": 4.4,
+    "retail_delivery": 9,
+    "works": 1
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-a-2-1 2025-04-18",
+      "N-34-107-C-a-2-2 2025-04-18",
+      "N-34-107-C-a-2-3 2025-04-18",
+      "N-34-107-C-a-2-4 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-a-2-1",
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-3",
+      "N-34-107-C-a-2-4"
+     ],
+     "2021": [
+      "N-34-107-C-a-2-1",
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-3",
+      "N-34-107-C-a-2-4"
+     ],
+     "2022": [
+      "N-34-107-C-a-2-1",
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-3",
+      "N-34-107-C-a-2-4"
+     ],
+     "2023": [
+      "N-34-107-C-a-2-1",
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-3",
+      "N-34-107-C-a-2-4"
+     ],
+     "2024": [
+      "8.193.13.02.2",
+      "8.193.13.02.4",
+      "8.193.13.03.1",
+      "8.193.13.03.2",
+      "8.193.13.03.3",
+      "8.193.13.03.4",
+      "8.194.13.17.4",
+      "8.194.13.18.3",
+      "8.194.13.18.4",
+      "8.194.13.22.2",
+      "8.194.13.22.4",
+      "8.194.13.23.1",
+      "8.194.13.23.2",
+      "8.194.13.23.3",
+      "8.194.13.23.4",
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-4"
+     ],
+     "2025": [
+      "N-34-107-C-a-2-1",
+      "N-34-107-C-a-2-2",
+      "N-34-107-C-a-2-3",
+      "N-34-107-C-a-2-4"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-a-2-1 2019-04-24",
+      "N-34-107-C-a-2-2 2019-04-24",
+      "N-34-107-C-a-2-3 2019-04-24",
+      "N-34-107-C-a-2-4 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1194.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2020-04-07"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-a-2-1 2020-04-07",
+      "N-34-107-C-a-2-2 2020-04-07",
+      "N-34-107-C-a-2-3 2020-04-07",
+      "N-34-107-C-a-2-4 2020-04-07"
+     ],
+     "to_download": 4,
+     "to_download_mb": 172.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "s8-zachod",
+   "id": "bialystok-bacieczki",
+   "ij": [
+    -2,
+    -1
+   ],
+   "neighbours": [
+    {
+     "edge": "E",
+     "id": "bialystok-antoniuk",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "676"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "bialystok-kleeberga",
+     "kind": "built",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "W",
+     "id": "bialystok-porosly",
+     "kind": "candidate",
+     "numbered_crossings": 4,
+     "refs": [
+      "669",
+      "676"
+     ]
+    }
+   ],
+   "origin": [
+    773899.0,
+    594175.0
+   ],
+   "places": [
+    "Bacieczki (suburb)",
+    "Wysoki Stoczek (suburb)"
+   ],
+   "powiat_area_share": {
+    "2061": 1.0
+   },
+   "target_score": 6.5,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    781067.0,
+    595199.0,
+    783115.0,
+    597247.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 2518004.2,
+     "frame_tris_low_max": 934779.6,
+     "glb_mb": 709.6,
+     "static_tris_high": 11886203.4
+    },
+    "by_buildings_extrapolated": false,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 1852,
+    "hall_1000m2": 2,
+    "km_secondary": 0.0,
+    "km_tertiary": 0.58,
+    "retail_delivery": 1,
+    "works": 1
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 2
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-2-1 2025-04-18",
+      "N-34-107-C-b-2-2 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2"
+     ],
+     "2021": [
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2"
+     ],
+     "2022": [
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2"
+     ],
+     "2023": [
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2"
+     ],
+     "2024": [
+      "8.194.14.12.2",
+      "8.194.14.12.4",
+      "8.194.14.13.1",
+      "8.194.14.13.2",
+      "8.194.14.13.3",
+      "8.194.14.13.4",
+      "8.194.14.14.1",
+      "8.194.14.14.3",
+      "8.194.14.17.2",
+      "8.194.14.17.4",
+      "8.194.14.18.1",
+      "8.194.14.18.2",
+      "8.194.14.18.3",
+      "8.194.14.18.4",
+      "8.194.14.19.1",
+      "8.194.14.19.3",
+      "8.194.14.22.2",
+      "8.194.14.23.1",
+      "8.194.14.23.2",
+      "8.194.14.24.1",
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2"
+     ],
+     "2025": [
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-2-1 2019-04-24",
+      "N-34-107-C-b-2-2 2019-04-24"
+     ],
+     "to_download": 2,
+     "to_download_mb": 630.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2022-08-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-2-1 2022-08-27",
+      "N-34-107-C-b-2-2 2022-08-27"
+     ],
+     "to_download": 2,
+     "to_download_mb": 102.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "dk65-wschod",
+   "id": "bialystok-bagnowka",
+   "ij": [
+    2,
+    0
+   ],
+   "neighbours": [
+    {
+     "edge": "S",
+     "id": "bialystok-pieczurki",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "W",
+     "id": "bialystok-wygoda",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    }
+   ],
+   "origin": [
+    782091.0,
+    596223.0
+   ],
+   "places": [
+    "Bagnówka (suburb)",
+    "Osiedle Wyżyny (neighbourhood)"
+   ],
+   "powiat_area_share": {
+    "2061": 1.0
+   },
+   "target_score": 3.0,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    779019.0,
+    593151.0,
+    781067.0,
+    595199.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 3233792.6,
+     "frame_tris_low_max": 1082894.1,
+     "glb_mb": 920.9,
+     "static_tris_high": 13488823.4
+    },
+    "by_buildings_extrapolated": true,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 3289,
+    "commercial_ha": 11.73,
+    "fuel": 1,
+    "hall_1000m2": 4,
+    "industrial_ha": 25.65,
+    "km_secondary": 9.38,
+    "km_tertiary": 3.47,
+    "km_trunk": 5.83,
+    "retail_delivery": 14,
+    "services": 1,
+    "works": 1
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 1,
+     "sheets": [
+      "N-34-107-C-b-1-2 2025-04-18",
+      "N-34-107-C-b-1-4 2025-04-18",
+      "N-34-107-C-b-2-1 2025-04-18",
+      "N-34-107-C-b-2-3 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 3,
+     "to_download_mb": 111.5
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-3"
+     ],
+     "2021": [
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-3"
+     ],
+     "2022": [
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-3"
+     ],
+     "2023": [
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-3"
+     ],
+     "2024": [
+      "8.193.14.01.1",
+      "8.193.14.01.2",
+      "8.193.14.01.3",
+      "8.193.14.01.4",
+      "8.193.14.02.1",
+      "8.193.14.02.2",
+      "8.193.14.02.3",
+      "8.193.14.02.4",
+      "8.193.14.06.1",
+      "8.193.14.06.2",
+      "8.193.14.07.1",
+      "8.193.14.07.2",
+      "8.194.14.16.3",
+      "8.194.14.16.4",
+      "8.194.14.21.1",
+      "8.194.14.21.2",
+      "8.194.14.21.3",
+      "8.194.14.21.4",
+      "8.194.14.22.1",
+      "8.194.14.22.2",
+      "8.194.14.22.3",
+      "8.194.14.22.4",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-3"
+     ],
+     "2025": [
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-3"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-1-2 2019-04-24",
+      "N-34-107-C-b-1-4 2019-04-24",
+      "N-34-107-C-b-2-1 2019-04-24",
+      "N-34-107-C-b-2-3 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1236.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 1,
+     "sheets": [
+      "N-34-107-C-b-1-2 2024-05-27",
+      "N-34-107-C-b-1-4 2024-05-27",
+      "N-34-107-C-b-2-1 2024-05-27",
+      "N-34-107-C-b-2-3 2024-05-27"
+     ],
+     "to_download": 3,
+     "to_download_mb": 135.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "g10-c-dojlidy",
+   "id": "bialystok-bojary",
+   "ij": [
+    1,
+    -1
+   ],
+   "neighbours": [
+    {
+     "edge": "W",
+     "id": "bialystok-centrum",
+     "kind": "candidate",
+     "numbered_crossings": 1,
+     "refs": [
+      "676"
+     ]
+    },
+    {
+     "edge": "S",
+     "id": "bialystok-mickiewicza",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "19"
+     ]
+    },
+    {
+     "edge": "E",
+     "id": "bialystok-pieczurki",
+     "kind": "candidate",
+     "numbered_crossings": 4,
+     "refs": [
+      "65",
+      "trunk_link"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "bialystok-wygoda",
+     "kind": "candidate",
+     "numbered_crossings": 6,
+     "refs": [
+      "19;65",
+      "676",
+      "trunk_link"
+     ]
+    }
+   ],
+   "origin": [
+    780043.0,
+    594175.0
+   ],
+   "places": [
+    "Bojary (suburb)",
+    "Osiedle Bojary-Chopina (neighbourhood)",
+    "Osiedle Kraszewskiego (neighbourhood)",
+    "Osiedle Traugutta (neighbourhood)",
+    "Piasta I (suburb)",
+    "Sybiraków (neighbourhood)"
+   ],
+   "powiat_area_share": {
+    "2061": 1.0
+   },
+   "target_score": 7.6,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    776971.0,
+    593151.0,
+    779019.0,
+    595199.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 2616630.5,
+     "frame_tris_low_max": 955187.9,
+     "glb_mb": 738.8,
+     "static_tris_high": 12107023.7
+    },
+    "by_buildings_extrapolated": true,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 2050,
+    "commercial_ha": 12.15,
+    "fuel": 3,
+    "fuel_hgv": 1,
+    "hall_1000m2": 10,
+    "industrial_ha": 37.87,
+    "km_major_hgv_restricted": 0.12,
+    "km_secondary": 12.24,
+    "km_tertiary": 12.12,
+    "retail_delivery": 20,
+    "warehouse": 14,
+    "works": 1
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-b-1-1 2025-04-18",
+      "N-34-107-C-b-1-2 2025-04-18",
+      "N-34-107-C-b-1-3 2025-04-18",
+      "N-34-107-C-b-1-4 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-3",
+      "N-34-107-C-b-1-4"
+     ],
+     "2021": [
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-3",
+      "N-34-107-C-b-1-4"
+     ],
+     "2022": [
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-3",
+      "N-34-107-C-b-1-4"
+     ],
+     "2023": [
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-3",
+      "N-34-107-C-b-1-4"
+     ],
+     "2024": [
+      "8.193.13.05.1",
+      "8.193.13.05.2",
+      "8.193.13.05.3",
+      "8.193.13.05.4",
+      "8.193.14.01.1",
+      "8.193.14.01.3",
+      "8.194.13.20.3",
+      "8.194.13.20.4",
+      "8.194.13.25.1",
+      "8.194.13.25.2",
+      "8.194.13.25.3",
+      "8.194.13.25.4",
+      "8.194.14.16.3",
+      "8.194.14.21.1",
+      "8.194.14.21.3",
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-4"
+     ],
+     "2025": [
+      "N-34-107-C-b-1-1",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-1-3",
+      "N-34-107-C-b-1-4"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-1-1 2019-04-24",
+      "N-34-107-C-b-1-2 2019-04-24",
+      "N-34-107-C-b-1-3 2019-04-24",
+      "N-34-107-C-b-1-4 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1226.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-b-1-1 2024-05-27",
+      "N-34-107-C-b-1-2 2024-05-27",
+      "N-34-107-C-b-1-3 2024-05-27",
+      "N-34-107-C-b-1-4 2024-05-27"
+     ],
+     "to_download": 2,
+     "to_download_mb": 92.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "centrum",
+   "id": "bialystok-centrum",
+   "ij": [
+    0,
+    -1
+   ],
+   "neighbours": [
+    {
+     "edge": "W",
+     "id": "bialystok-antoniuk",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "676"
+     ]
+    },
+    {
+     "edge": "E",
+     "id": "bialystok-bojary",
+     "kind": "candidate",
+     "numbered_crossings": 1,
+     "refs": [
+      "676"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "bialystok-industrial-c",
+     "kind": "built",
+     "numbered_crossings": 2,
+     "refs": [
+      "675"
+     ]
+    },
+    {
+     "edge": "S",
+     "id": "bialystok-piaski",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    }
+   ],
+   "origin": [
+    777995.0,
+    594175.0
+   ],
+   "places": [
+    "Białostoczek (suburb)",
+    "Białystok (city)",
+    "Centrum (suburb)",
+    "Osiedle Waryńskiego (neighbourhood)",
+    "Przydworcowe (suburb)",
+    "Sienkiewicza (suburb)"
+   ],
+   "powiat_area_share": {
+    "2061": 1.0
+   },
+   "target_score": 30.8,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    781067.0,
+    589055.0,
+    783115.0,
+    591103.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 2292857.1,
+     "frame_tris_low_max": 888191.1,
+     "glb_mb": 643.2,
+     "static_tris_high": 11382108.6
+    },
+    "by_buildings_extrapolated": false,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 1400,
+    "fuel": 3,
+    "fuel_hgv": 1,
+    "hall_1000m2": 10,
+    "industrial_ha": 24.61,
+    "km_major_hgv_restricted": 0.43,
+    "km_secondary": 0.43,
+    "km_tertiary": 4.23,
+    "km_trunk": 3.87,
+    "retail_delivery": 2,
+    "warehouse": 1,
+    "works": 5
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-b-4-1 2025-04-18",
+      "N-34-107-C-b-4-2 2025-04-18",
+      "N-34-107-C-b-4-3 2025-04-18",
+      "N-34-107-C-b-4-4 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-2",
+      "N-34-107-C-b-4-3",
+      "N-34-107-C-b-4-4"
+     ],
+     "2021": [
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-2",
+      "N-34-107-C-b-4-3",
+      "N-34-107-C-b-4-4"
+     ],
+     "2022": [
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-2",
+      "N-34-107-C-b-4-3",
+      "N-34-107-C-b-4-4"
+     ],
+     "2023": [
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-2",
+      "N-34-107-C-b-4-3",
+      "N-34-107-C-b-4-4"
+     ],
+     "2024": [
+      "8.192.14.02.1",
+      "8.192.14.02.2",
+      "8.192.14.03.1",
+      "8.192.14.03.2",
+      "8.193.14.17.2",
+      "8.193.14.17.4",
+      "8.193.14.18.1",
+      "8.193.14.18.2",
+      "8.193.14.18.3",
+      "8.193.14.18.4",
+      "8.193.14.22.2",
+      "8.193.14.22.3",
+      "8.193.14.22.4",
+      "8.193.14.23.1",
+      "8.193.14.23.2",
+      "8.193.14.23.3",
+      "8.193.14.23.4",
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-3",
+      "N-34-107-C-b-4-4"
+     ],
+     "2025": [
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-2",
+      "N-34-107-C-b-4-3",
+      "N-34-107-C-b-4-4"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-4-1 2019-04-24",
+      "N-34-107-C-b-4-2 2019-04-24",
+      "N-34-107-C-b-4-3 2019-04-24",
+      "N-34-107-C-b-4-4 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1248.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-b-4-1 2024-05-27",
+      "N-34-107-C-b-4-2 2024-05-27",
+      "N-34-107-C-b-4-3 2024-05-27",
+      "N-34-107-C-b-4-4 2024-05-27"
+     ],
+     "to_download": 2,
+     "to_download_mb": 79.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     },
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "dk19-poludnie",
+   "id": "bialystok-dojlidy-gorne",
+   "ij": [
+    2,
+    -3
+   ],
+   "neighbours": [
+    {
+     "edge": "W",
+     "id": "bialystok-dojlidy",
+     "kind": "built",
+     "numbered_crossings": 2,
+     "refs": [
+      "trunk"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "bialystok-skorupy",
+     "kind": "candidate",
+     "numbered_crossings": 1,
+     "refs": [
+      "19"
+     ]
+    }
+   ],
+   "origin": [
+    782091.0,
+    590079.0
+   ],
+   "places": [
+    "Dojlidy Dolne (neighbourhood)",
+    "Dojlidy Górne (suburb)",
+    "Dojlidy-Kolonia (neighbourhood)",
+    "Zagórki (neighbourhood)"
+   ],
+   "powiat_area_share": {
+    "2002": 0.0037,
+    "2061": 0.9963
+   },
+   "target_score": 20.5,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": [
+    "2002"
+   ]
+  },
+  {
+   "bbox": [
+    776971.0,
+    589055.0,
+    779019.0,
+    591103.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 1941189.3,
+     "frame_tris_low_max": 815422.3,
+     "glb_mb": 539.4,
+     "static_tris_high": 10594739.3
+    },
+    "by_buildings_extrapolated": false,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 694,
+    "commercial_ha": 0.63,
+    "fuel": 1,
+    "hall_1000m2": 2,
+    "industrial_ha": 7.38,
+    "km_major_hgv_restricted": 0.0,
+    "km_primary": 3.92,
+    "km_secondary": 1.94,
+    "km_tertiary": 2.9,
+    "km_trunk": 2.47,
+    "works": 1
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-b-3-1 2025-04-18",
+      "N-34-107-C-b-3-2 2025-04-18",
+      "N-34-107-C-b-3-3 2025-04-18",
+      "N-34-107-C-b-3-4 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-3-3",
+      "N-34-107-C-b-3-4"
+     ],
+     "2021": [
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-3-3",
+      "N-34-107-C-b-3-4"
+     ],
+     "2022": [
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-3-3",
+      "N-34-107-C-b-3-4"
+     ],
+     "2023": [
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-3-3",
+      "N-34-107-C-b-3-4"
+     ],
+     "2024": [
+      "8.192.13.05.2",
+      "8.192.14.01.1",
+      "8.193.13.15.3",
+      "8.193.13.15.4",
+      "8.193.13.19.2",
+      "8.193.13.19.4",
+      "8.193.13.20.1",
+      "8.193.13.20.2",
+      "8.193.13.20.3",
+      "8.193.13.20.4",
+      "8.193.13.24.2",
+      "8.193.13.24.4",
+      "8.193.13.25.1",
+      "8.193.13.25.2",
+      "8.193.13.25.3",
+      "8.193.13.25.4",
+      "8.193.14.16.1",
+      "8.193.14.16.3",
+      "8.193.14.21.1",
+      "8.193.14.21.3",
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-3-3",
+      "N-34-107-C-b-3-4"
+     ],
+     "2025": [
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-3-3",
+      "N-34-107-C-b-3-4"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-3-1 2019-04-24",
+      "N-34-107-C-b-3-2 2019-04-24",
+      "N-34-107-C-b-3-3 2019-04-24",
+      "N-34-107-C-b-3-4 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1229.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-b-3-1 2024-05-27",
+      "N-34-107-C-b-3-2 2024-05-27",
+      "N-34-107-C-b-3-3 2024-05-27",
+      "N-34-107-C-b-3-4 2024-05-27"
+     ],
+     "to_download": 2,
+     "to_download_mb": 88.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "g10-c-dojlidy",
+   "id": "bialystok-krywlany",
+   "ij": [
+    0,
+    -3
+   ],
+   "neighbours": [
+    {
+     "edge": "E",
+     "id": "bialystok-dojlidy",
+     "kind": "built",
+     "numbered_crossings": 4,
+     "refs": [
+      "678",
+      "trunk"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "bialystok-piaski",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    }
+   ],
+   "origin": [
+    777995.0,
+    590079.0
+   ],
+   "places": [
+    "Krywlany (neighbourhood)",
+    "Zwierzyniec (neighbourhood)"
+   ],
+   "powiat_area_share": {
+    "2061": 1.0
+   },
+   "target_score": 3.7,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    779019.0,
+    591103.0,
+    781067.0,
+    593151.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 3666154.6,
+     "frame_tris_low_max": 1172360.6,
+     "glb_mb": 1048.5,
+     "static_tris_high": 14456863.9
+    },
+    "by_buildings_extrapolated": true,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 4157,
+    "commercial_ha": 3.27,
+    "fuel": 4,
+    "fuel_hgv": 1,
+    "hall_1000m2": 6,
+    "industrial_ha": 12.54,
+    "km_major_hgv_restricted": 3.03,
+    "km_primary": 0.01,
+    "km_secondary": 8.32,
+    "km_tertiary": 4.18,
+    "km_trunk": 4.84,
+    "retail_delivery": 13,
+    "warehouse": 6,
+    "works": 3
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-b-1-4 2025-04-18",
+      "N-34-107-C-b-2-3 2025-04-18",
+      "N-34-107-C-b-3-2 2025-04-18",
+      "N-34-107-C-b-4-1 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-4-1"
+     ],
+     "2021": [
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-4-1"
+     ],
+     "2022": [
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-4-1"
+     ],
+     "2023": [
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-4-1"
+     ],
+     "2024": [
+      "8.193.14.01.3",
+      "8.193.14.06.1",
+      "8.193.14.06.2",
+      "8.193.14.06.3",
+      "8.193.14.06.4",
+      "8.193.14.07.1",
+      "8.193.14.07.2",
+      "8.193.14.07.3",
+      "8.193.14.07.4",
+      "8.193.14.11.1",
+      "8.193.14.11.2",
+      "8.193.14.11.3",
+      "8.193.14.11.4",
+      "8.193.14.12.1",
+      "8.193.14.12.2",
+      "8.193.14.12.3",
+      "8.193.14.12.4",
+      "8.193.14.16.1",
+      "8.193.14.16.2",
+      "8.193.14.17.1",
+      "8.193.14.17.2",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-4-1"
+     ],
+     "2025": [
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-3-2",
+      "N-34-107-C-b-4-1"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-1-4 2019-04-24",
+      "N-34-107-C-b-2-3 2019-04-24",
+      "N-34-107-C-b-3-2 2019-04-24",
+      "N-34-107-C-b-4-1 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1229.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-b-1-4 2024-05-27",
+      "N-34-107-C-b-2-3 2024-05-27",
+      "N-34-107-C-b-3-2 2024-05-27",
+      "N-34-107-C-b-4-1 2024-05-27"
+     ],
+     "to_download": 2,
+     "to_download_mb": 90.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "g10-c-dojlidy",
+   "id": "bialystok-mickiewicza",
+   "ij": [
+    1,
+    -2
+   ],
+   "neighbours": [
+    {
+     "edge": "N",
+     "id": "bialystok-bojary",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "19"
+     ]
+    },
+    {
+     "edge": "S",
+     "id": "bialystok-dojlidy",
+     "kind": "built",
+     "numbered_crossings": 2,
+     "refs": [
+      "678"
+     ]
+    },
+    {
+     "edge": "W",
+     "id": "bialystok-piaski",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "E",
+     "id": "bialystok-skorupy",
+     "kind": "candidate",
+     "numbered_crossings": 3,
+     "refs": [
+      "19",
+      "678"
+     ]
+    }
+   ],
+   "origin": [
+    780043.0,
+    592127.0
+   ],
+   "places": [
+    "Dojlidy (suburb)",
+    "Mickiewicza (suburb)",
+    "Piasta II (suburb)"
+   ],
+   "powiat_area_share": {
+    "2061": 1.0
+   },
+   "target_score": 18.3,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    776971.0,
+    591103.0,
+    779019.0,
+    593151.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 2298834.5,
+     "frame_tris_low_max": 889428.0,
+     "glb_mb": 645.0,
+     "static_tris_high": 11395491.6
+    },
+    "by_buildings_extrapolated": false,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 1412,
+    "commercial_ha": 0.33,
+    "hall_1000m2": 2,
+    "industrial_ha": 1.25,
+    "km_major_hgv_restricted": 0.52,
+    "km_secondary": 10.11,
+    "km_tertiary": 9.9,
+    "km_trunk": 0.0,
+    "retail_delivery": 16,
+    "services": 1
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 1,
+     "sheets": [
+      "N-34-107-C-b-1-3 2025-04-18",
+      "N-34-107-C-b-1-4 2025-04-18",
+      "N-34-107-C-b-3-1 2025-04-18",
+      "N-34-107-C-b-3-2 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 3,
+     "to_download_mb": 111.5
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-b-1-3",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2"
+     ],
+     "2021": [
+      "N-34-107-C-b-1-3",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2"
+     ],
+     "2022": [
+      "N-34-107-C-b-1-3",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2"
+     ],
+     "2023": [
+      "N-34-107-C-b-1-3",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2"
+     ],
+     "2024": [
+      "8.193.13.05.3",
+      "8.193.13.05.4",
+      "8.193.13.10.1",
+      "8.193.13.10.2",
+      "8.193.13.10.3",
+      "8.193.13.10.4",
+      "8.193.13.15.1",
+      "8.193.13.15.2",
+      "8.193.13.15.3",
+      "8.193.13.15.4",
+      "8.193.13.20.2",
+      "8.193.14.01.3",
+      "8.193.14.06.1",
+      "8.193.14.06.3",
+      "8.193.14.11.1",
+      "8.193.14.11.3",
+      "8.193.14.16.1",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2"
+     ],
+     "2025": [
+      "N-34-107-C-b-1-3",
+      "N-34-107-C-b-1-4",
+      "N-34-107-C-b-3-1",
+      "N-34-107-C-b-3-2"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-1-3 2019-04-24",
+      "N-34-107-C-b-1-4 2019-04-24",
+      "N-34-107-C-b-3-1 2019-04-24",
+      "N-34-107-C-b-3-2 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1221.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 1,
+     "sheets": [
+      "N-34-107-C-b-1-3 2024-05-27",
+      "N-34-107-C-b-1-4 2024-05-27",
+      "N-34-107-C-b-3-1 2024-05-27",
+      "N-34-107-C-b-3-2 2024-05-27"
+     ],
+     "to_download": 3,
+     "to_download_mb": 138.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "centrum",
+   "id": "bialystok-piaski",
+   "ij": [
+    0,
+    -2
+   ],
+   "neighbours": [
+    {
+     "edge": "N",
+     "id": "bialystok-centrum",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "S",
+     "id": "bialystok-krywlany",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "E",
+     "id": "bialystok-mickiewicza",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    }
+   ],
+   "origin": [
+    777995.0,
+    592127.0
+   ],
+   "places": [
+    "Osiedle Kopernika (neighbourhood)",
+    "Osiedle Skłodowskiej (neighbourhood)",
+    "Osiedle Tysiąclecia (neighbourhood)",
+    "Piaski (suburb)"
+   ],
+   "powiat_area_share": {
+    "2061": 1.0
+   },
+   "target_score": 2.1,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    781067.0,
+    593151.0,
+    783115.0,
+    595199.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 2650502.2,
+     "frame_tris_low_max": 962196.8,
+     "glb_mb": 748.7,
+     "static_tris_high": 12182861.0
+    },
+    "by_buildings_extrapolated": true,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 2118,
+    "hall_1000m2": 2,
+    "industrial_ha": 21.94,
+    "km_primary": 0.06,
+    "km_tertiary": 3.92,
+    "km_trunk": 4.53,
+    "retail_delivery": 1,
+    "warehouse": 3,
+    "works": 2
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-2-1 2025-04-18",
+      "N-34-107-C-b-2-2 2025-04-18",
+      "N-34-107-C-b-2-3 2025-04-18",
+      "N-34-107-C-b-2-4 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 4,
+     "to_download_mb": 148.7
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4"
+     ],
+     "2021": [
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4"
+     ],
+     "2022": [
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4"
+     ],
+     "2023": [
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4"
+     ],
+     "2024": [
+      "8.193.14.02.2",
+      "8.193.14.02.4",
+      "8.193.14.03.1",
+      "8.193.14.03.2",
+      "8.193.14.03.3",
+      "8.193.14.03.4",
+      "8.193.14.07.2",
+      "8.193.14.08.1",
+      "8.193.14.08.2",
+      "8.194.14.22.2",
+      "8.194.14.22.4",
+      "8.194.14.23.1",
+      "8.194.14.23.2",
+      "8.194.14.23.3",
+      "8.194.14.23.4",
+      "8.194.14.24.1",
+      "8.194.14.24.3",
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4"
+     ],
+     "2025": [
+      "N-34-107-C-b-2-1",
+      "N-34-107-C-b-2-2",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-2-1 2019-04-24",
+      "N-34-107-C-b-2-2 2019-04-24",
+      "N-34-107-C-b-2-3 2019-04-24",
+      "N-34-107-C-b-2-4 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1254.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2022-08-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-2-1 2022-08-27",
+      "N-34-107-C-b-2-2 2022-08-27",
+      "N-34-107-C-b-2-3 2022-08-27",
+      "N-34-107-C-b-2-4 2022-08-27"
+     ],
+     "to_download": 4,
+     "to_download_mb": 203.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     },
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "g10-c-dojlidy",
+   "id": "bialystok-pieczurki",
+   "ij": [
+    2,
+    -1
+   ],
+   "neighbours": [
+    {
+     "edge": "N",
+     "id": "bialystok-bagnowka",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "W",
+     "id": "bialystok-bojary",
+     "kind": "candidate",
+     "numbered_crossings": 4,
+     "refs": [
+      "65",
+      "trunk_link"
+     ]
+    },
+    {
+     "edge": "S",
+     "id": "bialystok-skorupy",
+     "kind": "candidate",
+     "numbered_crossings": 4,
+     "refs": [
+      "65",
+      "678"
+     ]
+    }
+   ],
+   "origin": [
+    782091.0,
+    594175.0
+   ],
+   "places": [
+    "Pieczurki (neighbourhood)"
+   ],
+   "powiat_area_share": {
+    "2002": 0.0312,
+    "2061": 0.9688
+   },
+   "target_score": 9.2,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": [
+    "2002"
+   ]
+  },
+  {
+   "bbox": [
+    779019.0,
+    597247.0,
+    781067.0,
+    599295.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 1872947.8,
+     "frame_tris_low_max": 801301.4,
+     "glb_mb": 519.3,
+     "static_tris_high": 10441949.5
+    },
+    "by_buildings_extrapolated": false,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 557,
+    "fuel": 1,
+    "industrial_ha": 18.69,
+    "km_secondary": 2.85,
+    "km_tertiary": 0.27,
+    "warehouse": 5
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 3
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 1,
+     "sheets": [
+      "N-34-107-A-d-3-4 2025-04-18",
+      "N-34-107-A-d-4-3 2025-04-18",
+      "N-34-107-C-b-2-1 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-2-1"
+     ],
+     "2021": [
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-2-1"
+     ],
+     "2022": [
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-2-1"
+     ],
+     "2023": [
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-2-1"
+     ],
+     "2024": [
+      "8.194.14.01.4",
+      "8.194.14.02.1",
+      "8.194.14.02.2",
+      "8.194.14.02.3",
+      "8.194.14.02.4",
+      "8.194.14.06.2",
+      "8.194.14.06.4",
+      "8.194.14.07.1",
+      "8.194.14.07.2",
+      "8.194.14.07.3",
+      "8.194.14.07.4",
+      "8.194.14.12.1",
+      "8.194.14.12.2",
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-2-1"
+     ],
+     "2025": [
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-2-1"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-3-4 2019-04-24",
+      "N-34-107-A-d-4-3 2019-04-24",
+      "N-34-107-C-b-2-1 2019-04-24"
+     ],
+     "to_download": 3,
+     "to_download_mb": 938.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2022-08-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-3-4 2022-08-27",
+      "N-34-107-A-d-4-3 2022-08-27",
+      "N-34-107-C-b-2-1 2022-08-27"
+     ],
+     "to_download": 3,
+     "to_download_mb": 153.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     },
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "dk8-dk19-polnoc",
+   "id": "bialystok-pietrasze",
+   "ij": [
+    1,
+    1
+   ],
+   "neighbours": [
+    {
+     "edge": "S",
+     "id": "bialystok-wygoda",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "676"
+     ]
+    },
+    {
+     "edge": "W",
+     "id": "dk8-dk19-pn-01",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "N",
+     "id": "wasilkow",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    }
+   ],
+   "origin": [
+    780043.0,
+    598271.0
+   ],
+   "places": [
+    "Kolonia Pietrasze (neighbourhood)"
+   ],
+   "powiat_area_share": {
+    "2002": 0.4472,
+    "2061": 0.5528
+   },
+   "target_score": 6.9,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": [
+    "2002"
+   ]
+  },
+  {
+   "bbox": [
+    770827.0,
+    593151.0,
+    772875.0,
+    595199.0
+   ],
+   "budget_estimate": {
+    "class": "podmiejski",
+    "frame_tris_high_max": 1191730,
+    "frame_tris_high_median": 802368,
+    "frame_tris_low_max": 433762,
+    "frame_tris_low_median": 251629,
+    "glb_mb": 440.9,
+    "static_tris_high": 9181083,
+    "static_tris_low": 2574471,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 165.9,
+    "world_memory_low_mb": 60.2
+   },
+   "counts": {
+    "buildings": 1051,
+    "commercial_ha": 12.52,
+    "fuel": 3,
+    "hall_1000m2": 4,
+    "industrial_ha": 71.9,
+    "km_primary": 4.33,
+    "km_secondary": 1.19,
+    "km_tertiary": 5.87,
+    "km_trunk": 5.0,
+    "retail_delivery": 9,
+    "warehouse": 8,
+    "works": 1
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [],
+     "sheets": 0
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2022-07-29"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-a-1-2 2022-07-29",
+      "N-34-107-C-a-1-4 2022-07-29",
+      "N-34-107-C-a-2-1 2022-07-29",
+      "N-34-107-C-a-2-3 2022-07-29"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2022": [
+      "N-34-107-C-a-1-2",
+      "N-34-107-C-a-1-4",
+      "N-34-107-C-a-2-1",
+      "N-34-107-C-a-2-3"
+     ],
+     "2025": [
+      "N-34-107-C-a-1-2",
+      "N-34-107-C-a-1-4",
+      "N-34-107-C-a-2-1",
+      "N-34-107-C-a-2-3"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": null,
+     "on_disk": 0,
+     "sheets": [],
+     "to_download": 0,
+     "to_download_mb": 0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2022-07-29"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-a-1-2 2022-07-29",
+      "N-34-107-C-a-1-4 2022-07-29",
+      "N-34-107-C-a-2-1 2022-07-29",
+      "N-34-107-C-a-2-3 2022-07-29"
+     ],
+     "to_download": 4,
+     "to_download_mb": 201.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     },
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "s8-zachod",
+   "id": "bialystok-porosly",
+   "ij": [
+    -3,
+    -1
+   ],
+   "neighbours": [
+    {
+     "edge": "E",
+     "id": "bialystok-bacieczki",
+     "kind": "candidate",
+     "numbered_crossings": 4,
+     "refs": [
+      "669",
+      "676"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "bialystok-knyszynska",
+     "kind": "built",
+     "numbered_crossings": 6,
+     "refs": [
+      "669",
+      "8;65",
+      "trunk_link"
+     ]
+    },
+    {
+     "edge": "W",
+     "id": "dk8-s8-jeroniki",
+     "kind": "candidate",
+     "numbered_crossings": 3,
+     "refs": [
+      "8;65",
+      "trunk_link"
+     ]
+    }
+   ],
+   "origin": [
+    771851.0,
+    594175.0
+   ],
+   "places": [
+    "Porosły (village)"
+   ],
+   "powiat_area_share": {
+    "2002": 0.5918,
+    "2061": 0.4082
+   },
+   "target_score": 20.2,
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [
+    "2061"
+   ]
+  },
+  {
+   "bbox": [
+    781067.0,
+    591103.0,
+    783115.0,
+    593151.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 3281113.3,
+     "frame_tris_low_max": 1092685.9,
+     "glb_mb": 934.8,
+     "static_tris_high": 13594772.5
+    },
+    "by_buildings_extrapolated": true,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 3384,
+    "commercial_ha": 1.99,
+    "fuel": 2,
+    "hall_1000m2": 6,
+    "industrial_ha": 49.25,
+    "km_major_hgv_restricted": 1.55,
+    "km_primary": 1.8,
+    "km_secondary": 0.87,
+    "km_tertiary": 4.4,
+    "km_trunk": 3.49,
+    "retail_delivery": 7,
+    "warehouse": 7
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 1,
+     "sheets": [
+      "N-34-107-C-b-2-3 2025-04-18",
+      "N-34-107-C-b-2-4 2025-04-18",
+      "N-34-107-C-b-4-1 2025-04-18",
+      "N-34-107-C-b-4-2 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 3,
+     "to_download_mb": 111.5
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4",
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-2"
+     ],
+     "2021": [
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4",
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-2"
+     ],
+     "2022": [
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4",
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-2"
+     ],
+     "2023": [
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4",
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-2"
+     ],
+     "2024": [
+      "8.193.14.07.2",
+      "8.193.14.07.4",
+      "8.193.14.08.1",
+      "8.193.14.08.2",
+      "8.193.14.08.3",
+      "8.193.14.08.4",
+      "8.193.14.12.2",
+      "8.193.14.12.4",
+      "8.193.14.13.1",
+      "8.193.14.13.2",
+      "8.193.14.13.3",
+      "8.193.14.13.4",
+      "8.193.14.17.2",
+      "8.193.14.18.1",
+      "8.193.14.18.2",
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4",
+      "N-34-107-C-b-4-1"
+     ],
+     "2025": [
+      "N-34-107-C-b-2-3",
+      "N-34-107-C-b-2-4",
+      "N-34-107-C-b-4-1",
+      "N-34-107-C-b-4-2"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-2-3 2019-04-24",
+      "N-34-107-C-b-2-4 2019-04-24",
+      "N-34-107-C-b-4-1 2019-04-24",
+      "N-34-107-C-b-4-2 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1240.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2022-08-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-b-2-3 2022-08-27",
+      "N-34-107-C-b-2-4 2022-08-27",
+      "N-34-107-C-b-4-1 2022-08-27",
+      "N-34-107-C-b-4-2 2022-08-27"
+     ],
+     "to_download": 4,
+     "to_download_mb": 197.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     },
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "g10-c-dojlidy",
+   "id": "bialystok-skorupy",
+   "ij": [
+    2,
+    -2
+   ],
+   "neighbours": [
+    {
+     "edge": "S",
+     "id": "bialystok-dojlidy-gorne",
+     "kind": "candidate",
+     "numbered_crossings": 1,
+     "refs": [
+      "19"
+     ]
+    },
+    {
+     "edge": "W",
+     "id": "bialystok-mickiewicza",
+     "kind": "candidate",
+     "numbered_crossings": 3,
+     "refs": [
+      "19",
+      "678"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "bialystok-pieczurki",
+     "kind": "candidate",
+     "numbered_crossings": 4,
+     "refs": [
+      "65",
+      "678"
+     ]
+    }
+   ],
+   "origin": [
+    782091.0,
+    592127.0
+   ],
+   "places": [
+    "Osiedle Przemysłowa (neighbourhood)",
+    "Skorupy (suburb)"
+   ],
+   "powiat_area_share": {
+    "2002": 0.2378,
+    "2061": 0.7622
+   },
+   "target_score": 17.9,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": [
+    "2002"
+   ]
+  },
+  {
+   "bbox": [
+    779019.0,
+    595199.0,
+    781067.0,
+    597247.0
+   ],
+   "budget_estimate": {
+    "by_buildings": {
+     "frame_tris_high_max": 3746350.8,
+     "frame_tris_low_max": 1188955.2,
+     "glb_mb": 1072.1,
+     "static_tris_high": 14636419.8
+    },
+    "by_buildings_extrapolated": true,
+    "class": "miasto",
+    "frame_tris_high_max": 1960090.0,
+    "frame_tris_high_median": 1316058.5,
+    "frame_tris_low_max": 837610.0,
+    "frame_tris_low_median": 529261.5,
+    "glb_mb": 620.9,
+    "static_tris_high": 10763604.5,
+    "static_tris_low": 3437758.0,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 267.0,
+    "world_memory_low_mb": 120.1
+   },
+   "counts": {
+    "buildings": 4318,
+    "fuel": 1,
+    "industrial_ha": 6.9,
+    "km_secondary": 6.61,
+    "km_tertiary": 5.09,
+    "km_trunk": 0.27,
+    "retail_delivery": 9,
+    "warehouse": 1,
+    "works": 4
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-A-d-3-4 2025-04-18",
+      "N-34-107-A-d-4-3 2025-04-18",
+      "N-34-107-C-b-1-2 2025-04-18",
+      "N-34-107-C-b-2-1 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-2-1"
+     ],
+     "2021": [
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-2-1"
+     ],
+     "2022": [
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-2-1"
+     ],
+     "2023": [
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-2-1"
+     ],
+     "2024": [
+      "8.194.14.06.4",
+      "8.194.14.07.3",
+      "8.194.14.11.2",
+      "8.194.14.11.4",
+      "8.194.14.12.1",
+      "8.194.14.12.2",
+      "8.194.14.12.3",
+      "8.194.14.12.4",
+      "8.194.14.16.1",
+      "8.194.14.16.2",
+      "8.194.14.16.3",
+      "8.194.14.16.4",
+      "8.194.14.17.1",
+      "8.194.14.17.2",
+      "8.194.14.17.3",
+      "8.194.14.17.4",
+      "8.194.14.21.2",
+      "8.194.14.22.1",
+      "8.194.14.22.2",
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-2-1"
+     ],
+     "2025": [
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-3",
+      "N-34-107-C-b-1-2",
+      "N-34-107-C-b-2-1"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-3-4 2019-04-24",
+      "N-34-107-A-d-4-3 2019-04-24",
+      "N-34-107-C-b-1-2 2019-04-24",
+      "N-34-107-C-b-2-1 2019-04-24"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1251.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2022-08-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-3-4 2022-08-27",
+      "N-34-107-A-d-4-3 2022-08-27",
+      "N-34-107-C-b-1-2 2022-08-27",
+      "N-34-107-C-b-2-1 2022-08-27"
+     ],
+     "to_download": 4,
+     "to_download_mb": 205.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "g10-c-dojlidy",
+   "id": "bialystok-wygoda",
+   "ij": [
+    1,
+    0
+   ],
+   "neighbours": [
+    {
+     "edge": "E",
+     "id": "bialystok-bagnowka",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "S",
+     "id": "bialystok-bojary",
+     "kind": "candidate",
+     "numbered_crossings": 6,
+     "refs": [
+      "19;65",
+      "676",
+      "trunk_link"
+     ]
+    },
+    {
+     "edge": "W",
+     "id": "bialystok-industrial-c",
+     "kind": "built",
+     "numbered_crossings": 2,
+     "refs": [
+      "19;65"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "bialystok-pietrasze",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "676"
+     ]
+    }
+   ],
+   "origin": [
+    780043.0,
+    596223.0
+   ],
+   "places": [
+    "Jaroszówka (suburb)",
+    "Osiedle Wysockiego (neighbourhood)",
+    "Osiedle Zgoda (neighbourhood)",
+    "Pietrasze (neighbourhood)",
+    "Wygoda (suburb)"
+   ],
+   "powiat_area_share": {
+    "2061": 1.0
+   },
+   "target_score": 5.7,
+   "teryt_powiat": "2061",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    779019.0,
+    601343.0,
+    781067.0,
+    603391.0
+   ],
+   "budget_estimate": {
+    "class": "podmiejski",
+    "frame_tris_high_max": 1191730,
+    "frame_tris_high_median": 802368,
+    "frame_tris_low_max": 433762,
+    "frame_tris_low_median": 251629,
+    "glb_mb": 440.9,
+    "static_tris_high": 9181083,
+    "static_tris_low": 2574471,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 165.9,
+    "world_memory_low_mb": 60.2
+   },
+   "counts": {
+    "buildings": 1291,
+    "industrial_ha": 6.14,
+    "km_secondary": 0.87,
+    "km_tertiary": 0.87,
+    "km_trunk": 2.44,
+    "retail_delivery": 1,
+    "warehouse": 3
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-05-12"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-05-12"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-1-4 2025-05-12",
+      "N-34-107-A-d-2-3 2025-05-12",
+      "N-34-107-A-d-3-2 2025-05-12",
+      "N-34-107-A-d-4-1 2025-05-12"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 4,
+     "to_download_mb": 148.7
+    },
+    "nmt_years_full_cover": {
+     "2022": [
+      "N-34-107-A-d-1-4",
+      "N-34-107-A-d-2-3",
+      "N-34-107-A-d-3-2",
+      "N-34-107-A-d-4-1"
+     ],
+     "2025": [
+      "N-34-107-A-d-1-4",
+      "N-34-107-A-d-2-3",
+      "N-34-107-A-d-3-2",
+      "N-34-107-A-d-4-1"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2025",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-1-4 2025-05-12",
+      "N-34-107-A-d-2-3 2025-05-12",
+      "N-34-107-A-d-3-2 2025-05-12",
+      "N-34-107-A-d-4-1 2025-05-12"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1131.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2022-08-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-1-4 2022-08-27",
+      "N-34-107-A-d-2-3 2022-08-27",
+      "N-34-107-A-d-3-2 2022-08-27",
+      "N-34-107-A-d-4-1 2022-08-27"
+     ],
+     "to_download": 4,
+     "to_download_mb": 191.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     }
+    }
+   },
+   "group": "dk8-dk19-polnoc",
+   "id": "dk19-jakimy",
+   "ij": [
+    1,
+    3
+   ],
+   "neighbours": [
+    {
+     "edge": "W",
+     "id": "dk8-sochonie",
+     "kind": "candidate",
+     "numbered_crossings": 1,
+     "refs": [
+      "19"
+     ]
+    },
+    {
+     "edge": "S",
+     "id": "wasilkow",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    }
+   ],
+   "origin": [
+    780043.0,
+    602367.0
+   ],
+   "places": [
+    "Jakimy (neighbourhood)"
+   ],
+   "powiat_area_share": {
+    "2002": 1.0
+   },
+   "target_score": 3.6,
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    776971.0,
+    599295.0,
+    779019.0,
+    601343.0
+   ],
+   "budget_estimate": {
+    "class": "podmiejski",
+    "frame_tris_high_max": 1191730,
+    "frame_tris_high_median": 802368,
+    "frame_tris_low_max": 433762,
+    "frame_tris_low_median": 251629,
+    "glb_mb": 440.9,
+    "static_tris_high": 9181083,
+    "static_tris_low": 2574471,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 165.9,
+    "world_memory_low_mb": 60.2
+   },
+   "counts": {
+    "buildings": 652,
+    "hall_1000m2": 2,
+    "industrial_ha": 16.0,
+    "km_tertiary": 1.64,
+    "km_trunk": 4.92,
+    "warehouse": 2
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [],
+     "sheets": 0
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2022-08-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-3-1 2022-08-27",
+      "N-34-107-A-d-3-2 2022-08-27",
+      "N-34-107-A-d-3-3 2022-08-27",
+      "N-34-107-A-d-3-4 2022-08-27"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 4,
+     "to_download_mb": 148.7
+    },
+    "nmt_years_full_cover": {
+     "2022": [
+      "N-34-107-A-d-3-1",
+      "N-34-107-A-d-3-2",
+      "N-34-107-A-d-3-3",
+      "N-34-107-A-d-3-4"
+     ],
+     "2025": [
+      "N-34-107-A-d-3-1",
+      "N-34-107-A-d-3-2",
+      "N-34-107-A-d-3-3",
+      "N-34-107-A-d-3-4"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": null,
+     "on_disk": 0,
+     "sheets": [],
+     "to_download": 0,
+     "to_download_mb": 0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-A-d-3-1 2024-05-27",
+      "N-34-107-A-d-3-2 2024-05-27",
+      "N-34-107-A-d-3-3 2024-05-27",
+      "N-34-107-A-d-3-4 2024-05-27"
+     ],
+     "to_download": 2,
+     "to_download_mb": 81.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     }
+    }
+   },
+   "group": "dk8-dk19-polnoc",
+   "id": "dk8-dk19-jurowce",
+   "ij": [
+    0,
+    2
+   ],
+   "neighbours": [
+    {
+     "edge": "S",
+     "id": "dk8-dk19-pn-01",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "8;19"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "dk8-sochonie",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "8;19"
+     ]
+    },
+    {
+     "edge": "E",
+     "id": "wasilkow",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    }
+   ],
+   "origin": [
+    777995.0,
+    600319.0
+   ],
+   "places": [
+    "Jurowce (village)"
+   ],
+   "powiat_area_share": {
+    "2002": 1.0
+   },
+   "target_score": 5.6,
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    776971.0,
+    597247.0,
+    779019.0,
+    599295.0
+   ],
+   "budget_estimate": {
+    "class": "zamiejski",
+    "frame_tris_high_max": 1555268.5,
+    "frame_tris_high_median": 908165.5,
+    "frame_tris_low_max": 362924.0,
+    "frame_tris_low_median": 236481.5,
+    "glb_mb": 357.9,
+    "static_tris_high": 8780978.5,
+    "static_tris_low": 2271845.5,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": null,
+    "world_memory_low_mb": 48.6
+   },
+   "counts": {
+    "buildings": 150,
+    "commercial_ha": 3.58,
+    "km_tertiary": 0.22,
+    "km_trunk": 4.7
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "sheets": 2
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-04-18"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-A-d-3-3 2025-04-18",
+      "N-34-107-A-d-3-4 2025-04-18"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 0,
+     "to_download_mb": 0
+    },
+    "nmt_years_full_cover": {
+     "2019": [
+      "N-34-107-A-d-3-3",
+      "N-34-107-A-d-3-4"
+     ],
+     "2021": [
+      "N-34-107-A-d-3-3",
+      "N-34-107-A-d-3-4"
+     ],
+     "2022": [
+      "N-34-107-A-d-3-3",
+      "N-34-107-A-d-3-4"
+     ],
+     "2023": [
+      "N-34-107-A-d-3-3",
+      "N-34-107-A-d-3-4"
+     ],
+     "2025": [
+      "N-34-107-A-d-3-3",
+      "N-34-107-A-d-3-4"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2019",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-3-3 2019-04-24",
+      "N-34-107-A-d-3-4 2019-04-24"
+     ],
+     "to_download": 2,
+     "to_download_mb": 611.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-A-d-3-3 2024-05-27",
+      "N-34-107-A-d-3-4 2024-05-27"
+     ],
+     "to_download": 0,
+     "to_download_mb": 0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     },
+     "2061": {
+      "gugik-bdot10k-2061": true,
+      "gugik-lod1-2024-2061": true,
+      "gugik-lod2-2017-2061": true
+     }
+    }
+   },
+   "group": "dk8-dk19-polnoc",
+   "id": "dk8-dk19-pn-01",
+   "ij": [
+    0,
+    1
+   ],
+   "neighbours": [
+    {
+     "edge": "S",
+     "id": "bialystok-industrial-c",
+     "kind": "built",
+     "numbered_crossings": 2,
+     "refs": [
+      "8;19"
+     ]
+    },
+    {
+     "edge": "E",
+     "id": "bialystok-pietrasze",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "N",
+     "id": "dk8-dk19-jurowce",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "8;19"
+     ]
+    }
+   ],
+   "origin": [
+    777995.0,
+    598271.0
+   ],
+   "places": [],
+   "powiat_area_share": {
+    "2002": 0.578,
+    "2061": 0.422
+   },
+   "target_score": 0.0,
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": [
+    "2061"
+   ]
+  },
+  {
+   "bbox": [
+    768779.0,
+    593151.0,
+    770827.0,
+    595199.0
+   ],
+   "budget_estimate": {
+    "class": "podmiejski",
+    "frame_tris_high_max": 1191730,
+    "frame_tris_high_median": 802368,
+    "frame_tris_low_max": 433762,
+    "frame_tris_low_median": 251629,
+    "glb_mb": 440.9,
+    "static_tris_high": 9181083,
+    "static_tris_low": 2574471,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 165.9,
+    "world_memory_low_mb": 60.2
+   },
+   "counts": {
+    "buildings": 907,
+    "hall_1000m2": 2,
+    "industrial_ha": 10.06,
+    "km_motorway": 0.56,
+    "km_tertiary": 1.86,
+    "km_trunk": 3.2,
+    "warehouse": 1,
+    "works": 1
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-05-25"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-05-25"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-a-1-1 2025-05-25",
+      "N-34-107-C-a-1-2 2025-05-25",
+      "N-34-107-C-a-1-3 2025-05-25",
+      "N-34-107-C-a-1-4 2025-05-25"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 2,
+     "to_download_mb": 74.4
+    },
+    "nmt_years_full_cover": {
+     "2022": [
+      "N-34-107-C-a-1-1",
+      "N-34-107-C-a-1-2",
+      "N-34-107-C-a-1-3",
+      "N-34-107-C-a-1-4"
+     ],
+     "2025": [
+      "N-34-107-C-a-1-1",
+      "N-34-107-C-a-1-2",
+      "N-34-107-C-a-1-3",
+      "N-34-107-C-a-1-4"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2025",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-C-a-1-1 2025-05-25",
+      "N-34-107-C-a-1-2 2025-05-25",
+      "N-34-107-C-a-1-3 2025-05-25",
+      "N-34-107-C-a-1-4 2025-05-25"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1082.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 2,
+     "sheets": [
+      "N-34-107-C-a-1-1 2024-05-27",
+      "N-34-107-C-a-1-2 2024-05-27",
+      "N-34-107-C-a-1-3 2024-05-27",
+      "N-34-107-C-a-1-4 2024-05-27"
+     ],
+     "to_download": 2,
+     "to_download_mb": 78.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     }
+    }
+   },
+   "group": "s8-zachod",
+   "id": "dk8-s8-jeroniki",
+   "ij": [
+    -4,
+    -1
+   ],
+   "neighbours": [
+    {
+     "edge": "E",
+     "id": "bialystok-porosly",
+     "kind": "candidate",
+     "numbered_crossings": 3,
+     "refs": [
+      "8;65",
+      "trunk_link"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "dk65-01",
+     "kind": "built",
+     "numbered_crossings": 8,
+     "refs": [
+      "S8",
+      "motorway_link"
+     ]
+    }
+   ],
+   "origin": [
+    769803.0,
+    594175.0
+   ],
+   "places": [
+    "Jeroniki (village)",
+    "Kolonia Sienkiewicze (hamlet)",
+    "Sienkiewicze (village)",
+    "Łyski (village)"
+   ],
+   "powiat_area_share": {
+    "2002": 1.0
+   },
+   "target_score": 5.0,
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    776971.0,
+    601343.0,
+    779019.0,
+    603391.0
+   ],
+   "budget_estimate": {
+    "class": "podmiejski",
+    "frame_tris_high_max": 1191730,
+    "frame_tris_high_median": 802368,
+    "frame_tris_low_max": 433762,
+    "frame_tris_low_median": 251629,
+    "glb_mb": 440.9,
+    "static_tris_high": 9181083,
+    "static_tris_low": 2574471,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 165.9,
+    "world_memory_low_mb": 60.2
+   },
+   "counts": {
+    "buildings": 583,
+    "industrial_ha": 13.84,
+    "km_trunk": 8.32
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-05-12"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-05-12"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-1-3 2025-05-12",
+      "N-34-107-A-d-1-4 2025-05-12",
+      "N-34-107-A-d-3-1 2025-05-12",
+      "N-34-107-A-d-3-2 2025-05-12"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 4,
+     "to_download_mb": 148.7
+    },
+    "nmt_years_full_cover": {
+     "2022": [
+      "N-34-107-A-d-1-3",
+      "N-34-107-A-d-1-4",
+      "N-34-107-A-d-3-1",
+      "N-34-107-A-d-3-2"
+     ],
+     "2025": [
+      "N-34-107-A-d-1-3",
+      "N-34-107-A-d-1-4",
+      "N-34-107-A-d-3-1",
+      "N-34-107-A-d-3-2"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2025",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-1-3 2025-05-12",
+      "N-34-107-A-d-1-4 2025-05-12",
+      "N-34-107-A-d-3-1 2025-05-12",
+      "N-34-107-A-d-3-2 2025-05-12"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1154.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-1-3 2024-05-27",
+      "N-34-107-A-d-1-4 2024-05-27",
+      "N-34-107-A-d-3-1 2024-05-27",
+      "N-34-107-A-d-3-2 2024-05-27"
+     ],
+     "to_download": 4,
+     "to_download_mb": 162.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     }
+    }
+   },
+   "group": "dk8-dk19-polnoc",
+   "id": "dk8-sochonie",
+   "ij": [
+    0,
+    3
+   ],
+   "neighbours": [
+    {
+     "edge": "E",
+     "id": "dk19-jakimy",
+     "kind": "candidate",
+     "numbered_crossings": 1,
+     "refs": [
+      "19"
+     ]
+    },
+    {
+     "edge": "S",
+     "id": "dk8-dk19-jurowce",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "8;19"
+     ]
+    },
+    {
+     "edge": "N",
+     "id": "dk8-woroszyly",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "8"
+     ]
+    }
+   ],
+   "origin": [
+    777995.0,
+    602367.0
+   ],
+   "places": [
+    "Osiedle Łan (neighbourhood)",
+    "Sochonie (village)"
+   ],
+   "powiat_area_share": {
+    "2002": 1.0
+   },
+   "target_score": 1.4,
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    776971.0,
+    603391.0,
+    779019.0,
+    605439.0
+   ],
+   "budget_estimate": {
+    "class": "podmiejski",
+    "frame_tris_high_max": 1191730,
+    "frame_tris_high_median": 802368,
+    "frame_tris_low_max": 433762,
+    "frame_tris_low_median": 251629,
+    "glb_mb": 440.9,
+    "static_tris_high": 9181083,
+    "static_tris_low": 2574471,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 165.9,
+    "world_memory_low_mb": 60.2
+   },
+   "counts": {
+    "buildings": 337,
+    "industrial_ha": 8.27,
+    "km_trunk": 1.77
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [
+      "2025-05-12"
+     ],
+     "sheets": 4
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2025-05-12"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-1-1 2025-05-12",
+      "N-34-107-A-d-1-2 2025-05-12",
+      "N-34-107-A-d-1-3 2025-05-12",
+      "N-34-107-A-d-1-4 2025-05-12"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 4,
+     "to_download_mb": 148.7
+    },
+    "nmt_years_full_cover": {
+     "2022": [
+      "N-34-107-A-d-1-1",
+      "N-34-107-A-d-1-2",
+      "N-34-107-A-d-1-3",
+      "N-34-107-A-d-1-4"
+     ],
+     "2024": [
+      "N-34-107-A-d-1-1",
+      "N-34-107-A-d-1-2",
+      "N-34-107-A-d-1-3",
+      "N-34-107-A-d-1-4"
+     ],
+     "2025": [
+      "N-34-107-A-d-1-1",
+      "N-34-107-A-d-1-2",
+      "N-34-107-A-d-1-3",
+      "N-34-107-A-d-1-4"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": "2025",
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-1-1 2025-05-12",
+      "N-34-107-A-d-1-2 2025-05-12",
+      "N-34-107-A-d-1-3 2025-05-12",
+      "N-34-107-A-d-1-4 2025-05-12"
+     ],
+     "to_download": 4,
+     "to_download_mb": 1143.0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2024-05-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-1-1 2024-05-27",
+      "N-34-107-A-d-1-2 2024-05-27",
+      "N-34-107-A-d-1-3 2024-05-27",
+      "N-34-107-A-d-1-4 2024-05-27"
+     ],
+     "to_download": 4,
+     "to_download_mb": 161.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     }
+    }
+   },
+   "group": "dk8-dk19-polnoc",
+   "id": "dk8-woroszyly",
+   "ij": [
+    0,
+    4
+   ],
+   "neighbours": [
+    {
+     "edge": "S",
+     "id": "dk8-sochonie",
+     "kind": "candidate",
+     "numbered_crossings": 2,
+     "refs": [
+      "8"
+     ]
+    }
+   ],
+   "origin": [
+    777995.0,
+    604415.0
+   ],
+   "places": [
+    "Woroszyły (village)",
+    "Wólka Poduchowna (village)",
+    "Wólka-Przedmieście (village)",
+    "Zalesie (hamlet)"
+   ],
+   "powiat_area_share": {
+    "2002": 1.0
+   },
+   "target_score": 0.8,
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": []
+  },
+  {
+   "bbox": [
+    779019.0,
+    599295.0,
+    781067.0,
+    601343.0
+   ],
+   "budget_estimate": {
+    "class": "podmiejski",
+    "frame_tris_high_max": 1191730,
+    "frame_tris_high_median": 802368,
+    "frame_tris_low_max": 433762,
+    "frame_tris_low_median": 251629,
+    "glb_mb": 440.9,
+    "static_tris_high": 9181083,
+    "static_tris_low": 2574471,
+    "status": "ESTIMATED (median of the built tiles of the class)",
+    "world_memory_high_mb": 165.9,
+    "world_memory_low_mb": 60.2
+   },
+   "counts": {
+    "buildings": 1598,
+    "commercial_ha": 3.06,
+    "fuel": 1,
+    "hall_1000m2": 1,
+    "industrial_ha": 9.21,
+    "km_secondary": 2.78,
+    "km_tertiary": 2.02,
+    "retail_delivery": 2
+   },
+   "data": {
+    "nmpt_optin": {
+     "akt_data": [],
+     "sheets": 0
+    },
+    "nmt_default": {
+     "akt_data": [
+      "2022-08-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-3-2 2022-08-27",
+      "N-34-107-A-d-3-4 2022-08-27",
+      "N-34-107-A-d-4-1 2022-08-27",
+      "N-34-107-A-d-4-3 2022-08-27"
+     ],
+     "size_status": "ESTIMATED 37.2 MB per sheet (median of 49 NMT sheets in the manifests)",
+     "to_download": 4,
+     "to_download_mb": 148.7
+    },
+    "nmt_years_full_cover": {
+     "2022": [
+      "N-34-107-A-d-3-2",
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-1",
+      "N-34-107-A-d-4-3"
+     ],
+     "2025": [
+      "N-34-107-A-d-3-2",
+      "N-34-107-A-d-3-4",
+      "N-34-107-A-d-4-1",
+      "N-34-107-A-d-4-3"
+     ]
+    },
+    "orto_0p10_optin": {
+     "akt_rok": null,
+     "on_disk": 0,
+     "sheets": [],
+     "to_download": 0,
+     "to_download_mb": 0
+    },
+    "orto_0p25": {
+     "akt_data": [
+      "2022-08-27"
+     ],
+     "on_disk": 0,
+     "sheets": [
+      "N-34-107-A-d-3-2 2022-08-27",
+      "N-34-107-A-d-3-4 2022-08-27",
+      "N-34-107-A-d-4-1 2022-08-27",
+      "N-34-107-A-d-4-3 2022-08-27"
+     ],
+     "to_download": 4,
+     "to_download_mb": 194.0
+    },
+    "powiat_datasets_in_manifests": {
+     "2002": {
+      "gugik-bdot10k-2002": true,
+      "gugik-lod1-2024-2002": true,
+      "gugik-lod2-2017-2002": true
+     }
+    }
+   },
+   "group": "dk8-dk19-polnoc",
+   "id": "wasilkow",
+   "ij": [
+    1,
+    2
+   ],
+   "neighbours": [
+    {
+     "edge": "S",
+     "id": "bialystok-pietrasze",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "N",
+     "id": "dk19-jakimy",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    },
+    {
+     "edge": "W",
+     "id": "dk8-dk19-jurowce",
+     "kind": "candidate",
+     "numbered_crossings": 0,
+     "refs": []
+    }
+   ],
+   "origin": [
+    780043.0,
+    600319.0
+   ],
+   "places": [
+    "Wasilków (town)",
+    "Zasokolcze (neighbourhood)"
+   ],
+   "powiat_area_share": {
+    "2002": 1.0
+   },
+   "target_score": 1.9,
+   "teryt_powiat": "2002",
+   "teryt_powiat_extra": []
+  }
+ ],
+ "corridor_routes": {
+  "c-to-dojlidy-g10": {
+   "end": [
+    779019.0,
+    590258.0
+   ],
+   "length_m": 8336.5,
+   "start": [
+    779019.0,
+    595250.0
+   ],
+   "tiles": [
+    {
+     "ij": [
+      1,
+      0
+     ],
+     "length_m": 66.4
+    },
+    {
+     "ij": [
+      1,
+      -1
+     ],
+     "length_m": 3259.0
+    },
+    {
+     "ij": [
+      1,
+      -2
+     ],
+     "length_m": 3675.6
+    },
+    {
+     "ij": [
+      1,
+      -3
+     ],
+     "length_m": 129.1
+    },
+    {
+     "ij": [
+      0,
+      -3
+     ],
+     "length_m": 1206.4
+    }
+   ]
+  },
+  "dojlidy-to-dk19-south": {
+   "end": [
+    783115.0,
+    589778.5
+   ],
+   "length_m": 2734.5,
+   "start": [
+    781067.0,
+    590366.0
+   ],
+   "tiles": [
+    {
+     "ij": [
+      2,
+      -3
+     ],
+     "length_m": 2734.5
+    }
+   ]
+  },
+  "s8-to-kleeberga": {
+   "end": [
+    772300.0,
+    595199.0
+   ],
+   "length_m": 3070.9,
+   "start": [
+    769312.0,
+    595199.0
+   ],
+   "tiles": [
+    {
+     "ij": [
+      -4,
+      -1
+     ],
+     "length_m": 1611.6
+    },
+    {
+     "ij": [
+      -3,
+      -1
+     ],
+     "length_m": 1459.3
+    }
+   ]
+  }
+ },
+ "crs": "EPSG:2180",
+ "defined": {
+  "bialystok-dojlidy-gorne": {
+   "chain": [
+    [
+     781067.0,
+     590359.7
+    ],
+    [
+     781100.4,
+     590357.2
+    ],
+    [
+     781198.9,
+     590350.8
+    ],
+    [
+     781224.9,
+     590349.1
+    ],
+    [
+     781321.5,
+     590343.4
+    ],
+    [
+     781341.9,
+     590342.2
+    ],
+    [
+     781358.8,
+     590341.4
+    ],
+    [
+     781374.2,
+     590341.2
+    ],
+    [
+     781400.3,
+     590342.9
+    ],
+    [
+     781418.9,
+     590346.1
+    ],
+    [
+     781439.9,
+     590351.9
+    ],
+    [
+     781460.1,
+     590359.8
+    ],
+    [
+     781483.5,
+     590371.9
+    ],
+    [
+     781501.0,
+     590383.0
+    ],
+    [
+     781517.8,
+     590395.7
+    ],
+    [
+     781530.4,
+     590407.5
+    ],
+    [
+     781540.2,
+     590419.6
+    ],
+    [
+     781554.0,
+     590437.7
+    ],
+    [
+     781567.5,
+     590459.8
+    ],
+    [
+     781573.8,
+     590473.2
+    ],
+    [
+     781577.8,
+     590481.7
+    ],
+    [
+     781584.3,
+     590499.2
+    ],
+    [
+     781590.5,
+     590527.4
+    ],
+    [
+     781593.6,
+     590553.3
+    ],
+    [
+     781595.5,
+     590580.8
+    ],
+    [
+     781602.0,
+     590636.1
+    ],
+    [
+     781604.3,
+     590654.6
+    ],
+    [
+     781607.7,
+     590677.0
+    ],
+    [
+     781614.6,
+     590706.0
+    ],
+    [
+     781619.8,
+     590722.8
+    ],
+    [
+     781621.2,
+     590727.2
+    ],
+    [
+     781630.0,
+     590746.1
+    ],
+    [
+     781639.9,
+     590763.2
+    ],
+    [
+     781658.3,
+     590788.6
+    ],
+    [
+     781696.9,
+     590839.8
+    ],
+    [
+     781712.3,
+     590860.2
+    ],
+    [
+     781717.3,
+     590865.5
+    ],
+    [
+     781725.7,
+     590875.9
+    ],
+    [
+     781739.1,
+     590866.5
+    ],
+    [
+     781771.1,
+     590844.4
+    ],
+    [
+     781789.0,
+     590835.7
+    ],
+    [
+     781804.0,
+     590824.9
+    ],
+    [
+     781819.6,
+     590813.3
+    ],
+    [
+     781833.8,
+     590801.8
+    ],
+    [
+     781883.8,
+     590760.9
+    ],
+    [
+     781917.0,
+     590734.2
+    ],
+    [
+     781974.8,
+     590687.4
+    ],
+    [
+     781978.2,
+     590684.7
+    ],
+    [
+     782009.4,
+     590660.1
+    ],
+    [
+     782014.7,
+     590656.0
+    ],
+    [
+     782039.7,
+     590636.4
+    ],
+    [
+     782046.5,
+     590630.9
+    ],
+    [
+     782199.4,
+     590508.9
+    ],
+    [
+     782208.6,
+     590501.6
+    ],
+    [
+     782298.7,
+     590429.3
+    ],
+    [
+     782322.7,
+     590410.1
+    ],
+    [
+     782348.3,
+     590389.8
+    ],
+    [
+     782364.9,
+     590376.6
+    ],
+    [
+     782388.0,
+     590358.2
+    ],
+    [
+     782405.9,
+     590344.0
+    ],
+    [
+     782438.0,
+     590318.7
+    ],
+    [
+     782465.7,
+     590296.2
+    ],
+    [
+     782479.9,
+     590284.9
+    ],
+    [
+     782504.9,
+     590265.0
+    ],
+    [
+     782689.7,
+     590117.8
+    ],
+    [
+     782739.3,
+     590078.2
+    ],
+    [
+     782755.9,
+     590065.0
+    ],
+    [
+     782777.2,
+     590046.9
+    ],
+    [
+     782787.1,
+     590039.1
+    ],
+    [
+     782829.7,
+     590005.2
+    ],
+    [
+     782875.1,
+     589969.1
+    ],
+    [
+     782907.3,
+     589943.6
+    ],
+    [
+     782981.3,
+     589884.6
+    ],
+    [
+     782984.4,
+     589882.1
+    ],
+    [
+     783031.5,
+     589844.8
+    ],
+    [
+     783110.5,
+     589782.0
+    ],
+    [
+     783115.0,
+     589778.5
+    ]
+   ],
+   "edge_in": "W",
+   "edge_out": "E",
+   "entry": {
+    "highway": "trunk",
+    "osm_way": 236885860,
+    "ref": null,
+    "x": 781067.0,
+    "y": 590359.7
+   },
+   "exit": {
+    "highway": "trunk",
+    "osm_way": 210488456,
+    "ref": "19",
+    "x": 783115.0,
+    "y": 589778.5
+   },
+   "found": true,
+   "from": "bialystok-dojlidy",
+   "length_m": 2773.7,
+   "to": null,
+   "ways": [
+    236885860,
+    275238286,
+    236886850,
+    275244657,
+    275244661,
+    253839996,
+    279864417,
+    1363058823,
+    279864420,
+    279864414,
+    279864412,
+    279864416,
+    210488456
+   ]
+  },
+  "bialystok-porosly": {
+   "chain": [
+    [
+     770827.0,
+     594833.4
+    ],
+    [
+     770910.5,
+     594813.6
+    ],
+    [
+     770964.3,
+     594800.9
+    ],
+    [
+     771027.3,
+     594786.5
+    ],
+    [
+     771089.3,
+     594774.8
+    ],
+    [
+     771147.2,
+     594766.7
+    ],
+    [
+     771187.6,
+     594763.8
+    ],
+    [
+     771222.7,
+     594762.9
+    ],
+    [
+     771265.8,
+     594763.0
+    ],
+    [
+     771298.9,
+     594764.5
+    ],
+    [
+     771334.0,
+     594768.4
+    ],
+    [
+     771370.8,
+     594774.1
+    ],
+    [
+     771430.0,
+     594787.1
+    ],
+    [
+     771464.6,
+     594796.5
+    ],
+    [
+     771490.7,
+     594805.0
+    ],
+    [
+     771513.7,
+     594813.1
+    ],
+    [
+     771542.2,
+     594824.2
+    ],
+    [
+     771558.3,
+     594830.8
+    ],
+    [
+     771572.9,
+     594837.4
+    ],
+    [
+     771578.8,
+     594840.1
+    ],
+    [
+     771617.1,
+     594858.7
+    ],
+    [
+     771763.2,
+     594934.5
+    ],
+    [
+     771814.7,
+     594958.9
+    ],
+    [
+     771861.6,
+     594976.8
+    ],
+    [
+     771953.5,
+     595011.9
+    ],
+    [
+     771998.1,
+     595032.2
+    ],
+    [
+     772043.4,
+     595055.4
+    ],
+    [
+     772087.7,
+     595078.6
+    ],
+    [
+     772156.2,
+     595115.6
+    ],
+    [
+     772261.7,
+     595170.5
+    ],
+    [
+     772304.5,
+     595194.0
+    ],
+    [
+     772313.9,
+     595199.0
+    ]
+   ],
+   "edge_in": "W",
+   "edge_out": "N",
+   "entry": {
+    "highway": "trunk",
+    "osm_way": 223394828,
+    "ref": "8;65",
+    "x": 770827.0,
+    "y": 594833.4
+   },
+   "exit": {
+    "highway": "trunk",
+    "osm_way": 606396502,
+    "ref": "8;65",
+    "x": 772313.9,
+    "y": 595199.0
+   },
+   "found": true,
+   "from": "dk8-s8-jeroniki",
+   "length_m": 1589.3,
+   "to": "bialystok-knyszynska",
+   "ways": [
+    223394828,
+    685401327,
+    615609920,
+    360598436,
+    825177454,
+    837858662,
+    615609909,
+    615609917,
+    242989865,
+    242989870,
+    303739901,
+    606396502
+   ]
+  },
+  "dk8-s8-jeroniki": {
+   "chain": [
+    [
+     769283.5,
+     595199.0
+    ],
+    [
+     769410.9,
+     595169.1
+    ],
+    [
+     769696.6,
+     595101.2
+    ],
+    [
+     769909.9,
+     595051.2
+    ],
+    [
+     769975.5,
+     595035.5
+    ],
+    [
+     770058.1,
+     595015.2
+    ],
+    [
+     770225.2,
+     594975.8
+    ],
+    [
+     770314.0,
+     594954.5
+    ],
+    [
+     770392.0,
+     594935.8
+    ],
+    [
+     770730.6,
+     594856.4
+    ],
+    [
+     770827.0,
+     594833.4
+    ]
+   ],
+   "edge_in": "N",
+   "edge_out": "E",
+   "entry": {
+    "highway": "motorway",
+    "osm_way": 183639794,
+    "ref": "S8",
+    "x": 769283.5,
+    "y": 595199.0
+   },
+   "exit": {
+    "highway": "trunk",
+    "osm_way": 223394828,
+    "ref": "8;65",
+    "x": 770827.0,
+    "y": 594833.4
+   },
+   "found": true,
+   "from": "dk65-01",
+   "length_m": 1586.2,
+   "to": "bialystok-porosly",
+   "ways": [
+    183639794,
+    197904075,
+    303988445,
+    303988444,
+    825177457,
+    223394828
+   ]
+  }
+ },
+ "lattice": {
+  "anchor_region": "bialystok-industrial-c",
+  "rule": "x = x0 + 2048*i, y = y0 + 2048*j (ADR 0203)",
+  "x0": 776971.0,
+  "y0": 595199.0
+ },
+ "order": [
+  {
+   "connected_via": [
+    "bialystok-knyszynska (N: 669, 8;65, trunk_link)"
+   ],
+   "define_now": true,
+   "id": "bialystok-porosly",
+   "n": 1,
+   "why": "DK8 Kleeberga (40 t in the 2018 city plan) from the S edge of bialystok-knyszynska towards the S8; largest industrial area of all candidates"
+  },
+  {
+   "connected_via": [
+    "bialystok-porosly (E: 8;65, trunk_link)",
+    "dk65-01 (N: S8, motorway_link)"
+   ],
+   "define_now": true,
+   "id": "dk8-s8-jeroniki",
+   "n": 2,
+   "why": "DK8 -> S8 junction, seam with dk65-01 (S8 + slip roads): closes the loop S8 - Kleeberga - Szosa Knyszynska and joins C (Maczka/Kleeberga) to the S8 towards Warsaw"
+  },
+  {
+   "connected_via": [
+    "bialystok-dojlidy (W: trunk)"
+   ],
+   "define_now": true,
+   "id": "bialystok-dojlidy-gorne",
+   "n": 3,
+   "why": "Kuronia (the >3.5 t transit since 2025-12, research G10) from the E edge of Dojlidy to DK19 south; second highest count of halls >= 1000 m2"
+  },
+  {
+   "connected_via": [
+    "bialystok-dojlidy (E: 678, trunk)"
+   ],
+   "define_now": false,
+   "id": "bialystok-krywlany",
+   "n": 4,
+   "why": "Ciolkowskiego DW678 + Dywizjonu 303 at the W edge of Dojlidy (the Dojlidy route starts there); first tile of the truck route C <-> Dojlidy"
+  },
+  {
+   "connected_via": [
+    "bialystok-dojlidy (S: 678)"
+   ],
+   "define_now": false,
+   "id": "bialystok-mickiewicza",
+   "n": 5,
+   "why": "DK19 Branickiego / rondo Meyera / Ciolkowskiego DW678; seams with Dojlidy (N edge) and krywlany"
+  },
+  {
+   "connected_via": [
+    "bialystok-mickiewicza (S: 19)"
+   ],
+   "define_now": false,
+   "id": "bialystok-bojary",
+   "n": 6,
+   "why": "DK19/DK65 Andersa - Sosabowskiego - DK19 Piastowska, 26 ha industrial; truck route C <-> Dojlidy"
+  },
+  {
+   "connected_via": [
+    "bialystok-bojary (S: 19;65, 676, trunk_link)",
+    "bialystok-industrial-c (W: 19;65)"
+   ],
+   "define_now": false,
+   "id": "bialystok-wygoda",
+   "n": 7,
+   "why": "corner tile: Andersa leaves C through it (66 m of the route) - closes C <-> Dojlidy; dense housing = highest budget risk"
+  },
+  {
+   "connected_via": [
+    "bialystok-dojlidy-gorne (S: 19)",
+    "bialystok-mickiewicza (W: 19, 678)"
+   ],
+   "define_now": false,
+   "id": "bialystok-skorupy",
+   "n": 8,
+   "why": "Ciolkowskiego / Sulika (DK65) / DK19 south, 49 ha industrial; second link to Dojlidy-Gorne"
+  },
+  {
+   "connected_via": [
+    "bialystok-bojary (W: 65, trunk_link)",
+    "bialystok-skorupy (S: 65, 678)"
+   ],
+   "define_now": false,
+   "id": "bialystok-pieczurki",
+   "n": 9,
+   "why": "DK65 Sulika, 22 ha industrial; start of the DK65 exit east (Bobrowniki)"
+  },
+  {
+   "connected_via": [
+    "bialystok-industrial-c (S: 8;19)"
+   ],
+   "define_now": false,
+   "id": "dk8-dk19-pn-01",
+   "n": 10,
+   "why": "DK8/DK19 north of C (N edge of C); few targets, cheap, start of the north exits"
+  },
+  {
+   "connected_via": [
+    "dk8-dk19-pn-01 (S: 8;19)"
+   ],
+   "define_now": false,
+   "id": "dk8-dk19-jurowce",
+   "n": 11,
+   "why": "DK8/DK19 north, 16 ha industrial (Jurowce)"
+  },
+  {
+   "connected_via": [
+    "dk8-dk19-jurowce (S: 8;19)"
+   ],
+   "define_now": false,
+   "id": "dk8-sochonie",
+   "n": 12,
+   "why": "DK8 north towards Augustow, 14 ha industrial; DK19 turns east here"
+  },
+  {
+   "connected_via": [
+    "bialystok-porosly (W: 669, 676)"
+   ],
+   "define_now": false,
+   "id": "bialystok-bacieczki",
+   "n": 13,
+   "why": "fills the hole S of bialystok-kleeberga between Kleeberga and the centre (DW669 / DW676)"
+  },
+  {
+   "connected_via": [
+    "bialystok-bojary (E: 676)",
+    "bialystok-industrial-c (N: 675)"
+   ],
+   "define_now": false,
+   "id": "bialystok-centrum",
+   "n": 14,
+   "why": "S edge of C: Al. Tysiaclecia DW675 to the station area; for trucks the centre is the 3.5 t zone of the 2018 city plan (G10)"
+  }
+ ],
+ "podlasie": {
+  "monki_grajewo_dk65": {
+   "cells": [
+    {
+     "ij": [
+      -14,
+      13
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 302.2
+    },
+    {
+     "ij": [
+      -14,
+      14
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 2563.4
+    },
+    {
+     "ij": [
+      -15,
+      14
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 698.8
+    },
+    {
+     "ij": [
+      -15,
+      15
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 1522.9
+    },
+    {
+     "ij": [
+      -16,
+      15
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 2469.4
+    },
+    {
+     "ij": [
+      -17,
+      16
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 2619.3
+    },
+    {
+     "ij": [
+      -18,
+      16
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 505.4
+    },
+    {
+     "ij": [
+      -18,
+      17
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 2148.1
+    },
+    {
+     "ij": [
+      -19,
+      17
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 2207.0
+    },
+    {
+     "ij": [
+      -19,
+      18
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 90.5
+    },
+    {
+     "ij": [
+      -20,
+      18
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 3159.8
+    },
+    {
+     "ij": [
+      -21,
+      19
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 1995.4
+    },
+    {
+     "ij": [
+      -21,
+      20
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 2141.4
+    },
+    {
+     "ij": [
+      -21,
+      21
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 1108.6
+    },
+    {
+     "ij": [
+      -22,
+      21
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 1367.3
+    },
+    {
+     "ij": [
+      -22,
+      22
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 1993.8
+    },
+    {
+     "ij": [
+      -22,
+      23
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 2009.1
+    },
+    {
+     "ij": [
+      -23,
+      23
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 392.6
+    },
+    {
+     "ij": [
+      -23,
+      24
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 2924.3
+    },
+    {
+     "ij": [
+      -24,
+      25
+     ],
+     "kinds": [
+      "primary|65"
+     ],
+     "length_m": 3716.4
+    }
+   ],
+   "estimate_glb_mb": 7158,
+   "estimate_world_memory_low_mb_per_tile": 48.6,
+   "road_km": 35.9,
+   "status": "ESTIMATED (rural median of the built tiles; town tiles cost more)",
+   "tiles": 20,
+   "town": "grajewo",
+   "town_counts": {
+    "buildings": 3210,
+    "commercial_ha": 3.66,
+    "fuel": 3,
+    "hall_1000m2": 2,
+    "industrial_ha": 29.39,
+    "km_primary": 3.81,
+    "km_secondary": 2.04,
+    "km_tertiary": 1.45,
+    "retail_delivery": 11,
+    "services": 1,
+    "warehouse": 5,
+    "works": 1
+   }
+  },
+  "s8_bialystok_to_tykocin_junction": {
+   "cells": [
+    {
+     "ij": [
+      -12,
+      -2
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1344.2
+    },
+    {
+     "ij": [
+      -13,
+      -2
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1860.3
+    },
+    {
+     "ij": [
+      -14,
+      -2
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2327.8
+    },
+    {
+     "ij": [
+      -9,
+      -1
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1547.9
+    },
+    {
+     "ij": [
+      -10,
+      -1
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2186.9
+    },
+    {
+     "ij": [
+      -11,
+      -1
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2202.6
+    },
+    {
+     "ij": [
+      -12,
+      -1
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 897.2
+    },
+    {
+     "ij": [
+      -5,
+      0
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1979.8
+    },
+    {
+     "ij": [
+      -6,
+      0
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2083.3
+    },
+    {
+     "ij": [
+      -7,
+      0
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2127.1
+    },
+    {
+     "ij": [
+      -8,
+      0
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2088.1
+    },
+    {
+     "ij": [
+      -9,
+      0
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 559.5
+    }
+   ],
+   "estimate_glb_mb": 4295,
+   "estimate_world_memory_low_mb_per_tile": 48.6,
+   "road_km": 21.2,
+   "status": "ESTIMATED (rural median of the built tiles; town tiles cost more)",
+   "tiles": 12
+  },
+  "s8_tykocin_junction_to_zambrow": {
+   "cells": [
+    {
+     "ij": [
+      -28,
+      -10
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1950.5
+    },
+    {
+     "ij": [
+      -29,
+      -10
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2218.9
+    },
+    {
+     "ij": [
+      -27,
+      -9
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2486.8
+    },
+    {
+     "ij": [
+      -28,
+      -9
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 378.4
+    },
+    {
+     "ij": [
+      -26,
+      -8
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2871.7
+    },
+    {
+     "ij": [
+      -27,
+      -8
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 215.9
+    },
+    {
+     "ij": [
+      -24,
+      -7
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 665.1
+    },
+    {
+     "ij": [
+      -25,
+      -7
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2569.9
+    },
+    {
+     "ij": [
+      -26,
+      -7
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 85.5
+    },
+    {
+     "ij": [
+      -23,
+      -6
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1011.2
+    },
+    {
+     "ij": [
+      -24,
+      -6
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2145.4
+    },
+    {
+     "ij": [
+      -21,
+      -5
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 907.0
+    },
+    {
+     "ij": [
+      -22,
+      -5
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2450.6
+    },
+    {
+     "ij": [
+      -23,
+      -5
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1302.4
+    },
+    {
+     "ij": [
+      -18,
+      -4
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 506.7
+    },
+    {
+     "ij": [
+      -19,
+      -4
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2157.3
+    },
+    {
+     "ij": [
+      -20,
+      -4
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2132.6
+    },
+    {
+     "ij": [
+      -21,
+      -4
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1415.8
+    },
+    {
+     "ij": [
+      -15,
+      -3
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1044.5
+    },
+    {
+     "ij": [
+      -16,
+      -3
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2190.2
+    },
+    {
+     "ij": [
+      -17,
+      -3
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 2097.3
+    },
+    {
+     "ij": [
+      -18,
+      -3
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1743.6
+    },
+    {
+     "ij": [
+      -15,
+      -2
+     ],
+     "kinds": [
+      "motorway|S8"
+     ],
+     "length_m": 1055.6
+    }
+   ],
+   "estimate_glb_mb": 8232,
+   "estimate_world_memory_low_mb_per_tile": 48.6,
+   "road_km": 35.6,
+   "status": "ESTIMATED (rural median of the built tiles; town tiles cost more)",
+   "tiles": 23,
+   "town": "zambrow",
+   "town_counts": {
+    "buildings": 1338,
+    "commercial_ha": 7.32,
+    "fuel": 4,
+    "industrial_ha": 11.23,
+    "km_primary": 4.02,
+    "km_secondary": 1.57,
+    "km_tertiary": 5.39,
+    "retail_delivery": 13,
+    "warehouse": 1
+   }
+  },
+  "tykocin_to_s8_dw671": {
+   "cells": [
+    {
+     "ij": [
+      -13,
+      -2
+     ],
+     "kinds": [
+      "secondary|671"
+     ],
+     "length_m": 361.5
+    },
+    {
+     "ij": [
+      -14,
+      -2
+     ],
+     "kinds": [
+      "primary|64;671",
+      "secondary|671"
+     ],
+     "length_m": 1927.0
+    },
+    {
+     "ij": [
+      -13,
+      -1
+     ],
+     "kinds": [
+      "secondary|671"
+     ],
+     "length_m": 2143.6
+    },
+    {
+     "ij": [
+      -13,
+      0
+     ],
+     "kinds": [
+      "secondary|671"
+     ],
+     "length_m": 2114.6
+    },
+    {
+     "ij": [
+      -13,
+      1
+     ],
+     "kinds": [
+      "secondary|671"
+     ],
+     "length_m": 2057.4
+    }
+   ],
+   "estimate_glb_mb": 1790,
+   "estimate_world_memory_low_mb_per_tile": 48.6,
+   "road_km": 8.6,
+   "status": "ESTIMATED (rural median of the built tiles; town tiles cost more)",
+   "tiles": 5
+  }
+ },
+ "ring_0231": {
+  "dk65-monki-02": [
+   -10,
+   9
+  ],
+  "dk65-monki-03": [
+   -10,
+   10
+  ],
+  "dk65-monki-04": [
+   -11,
+   10
+  ],
+  "dk65-monki-05": [
+   -11,
+   11
+  ],
+  "dk65-monki-06": [
+   -12,
+   11
+  ],
+  "dk65-monki-07": [
+   -12,
+   12
+  ],
+  "dw671-jasionowka-01": [
+   -8,
+   9
+  ],
+  "dw671-tykocin-02": [
+   -9,
+   6
+  ],
+  "dw671-tykocin-03": [
+   -10,
+   6
+  ],
+  "dw671-tykocin-04": [
+   -10,
+   5
+  ],
+  "dw671-tykocin-05": [
+   -11,
+   5
+  ],
+  "dw671-tykocin-06": [
+   -11,
+   4
+  ],
+  "dw671-tykocin-07": [
+   -12,
+   4
+  ],
+  "dw671-tykocin-08": [
+   -12,
+   3
+  ],
+  "dw671-tykocin-09": [
+   -13,
+   3
+  ],
+  "monki": [
+   -13,
+   13
+  ],
+  "monki-e": [
+   -12,
+   13
+  ],
+  "tykocin": [
+   -13,
+   2
+  ]
+ },
+ "rules": {
+  "budget_class": "city = largest powiat share 2061; else suburban >= 250 OSM buildings, rural fewer (built tiles: buildings.geojson)",
+  "target_score": "halls >= 1000 m2 + warehouses + works + 2 x fuel_hgv + 2 x truck_parking + industrial ha / 10 (WORKING_VALUE weights)",
+  "teryt_powiat": "largest area share of the tile in PRG powiaty (Data/Admin/powiaty_prg.geojson); every other overlapped powiat in teryt_powiat_extra (ADR 0219, tools/worldgen/powiaty.py)"
+ },
+ "seams_defined": [
+  {
+   "built": "bialystok-dojlidy",
+   "built_graph_major_ways": [
+    171563407,
+    236885860,
+    275244659
+   ],
+   "crossings": [
+    {
+     "graph_offset_m": 0.0,
+     "highway": "tertiary",
+     "osm_way": 171563407,
+     "ref": null,
+     "x": 781067.0,
+     "y": 589100.8
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "trunk",
+     "osm_way": 236885860,
+     "ref": null,
+     "x": 781067.0,
+     "y": 590359.7
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "trunk",
+     "osm_way": 275244659,
+     "ref": null,
+     "x": 781067.0,
+     "y": 590372.0
+    }
+   ],
+   "edge_of_new": "W",
+   "new": "bialystok-dojlidy-gorne"
+  },
+  {
+   "built": "bialystok-knyszynska",
+   "built_graph_major_ways": [
+    242989872,
+    261104156,
+    301702381,
+    606396500,
+    606396502,
+    623065491
+   ],
+   "crossings": [
+    {
+     "graph_offset_m": 0.0,
+     "highway": "trunk_link",
+     "osm_way": 242989872,
+     "ref": null,
+     "x": 772273.7,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "trunk",
+     "osm_way": 606396500,
+     "ref": "8;65",
+     "x": 772286.3,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "trunk",
+     "osm_way": 606396502,
+     "ref": "8;65",
+     "x": 772313.9,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "trunk_link",
+     "osm_way": 301702381,
+     "ref": null,
+     "x": 772334.8,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "secondary",
+     "osm_way": 261104156,
+     "ref": "669",
+     "x": 772590.3,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "secondary",
+     "osm_way": 623065491,
+     "ref": "669",
+     "x": 772604.7,
+     "y": 595199.0
+    }
+   ],
+   "edge_of_new": "N",
+   "new": "bialystok-porosly"
+  },
+  {
+   "built": "dk65-01",
+   "built_graph_major_ways": [
+    183639794,
+    305447699,
+    310634007,
+    310634008,
+    1151440428,
+    1151531629,
+    1516017271
+   ],
+   "crossings": [
+    {
+     "graph_offset_m": 0.0,
+     "highway": "motorway_link",
+     "osm_way": 310634008,
+     "ref": null,
+     "x": 768827.7,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "motorway_link",
+     "osm_way": 310634008,
+     "ref": null,
+     "x": 768854.5,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "motorway_link",
+     "osm_way": 310634007,
+     "ref": null,
+     "x": 768936.0,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "motorway_link",
+     "osm_way": 310634007,
+     "ref": null,
+     "x": 769021.7,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "motorway_link",
+     "osm_way": 1151440428,
+     "ref": null,
+     "x": 769228.1,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "motorway",
+     "osm_way": 183639794,
+     "ref": "S8",
+     "x": 769283.5,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "motorway",
+     "osm_way": 305447699,
+     "ref": "S8",
+     "x": 769340.8,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "motorway_link",
+     "osm_way": 1151531629,
+     "ref": null,
+     "x": 769369.0,
+     "y": 595199.0
+    },
+    {
+     "graph_offset_m": 0.0,
+     "highway": "tertiary",
+     "osm_way": 1516017271,
+     "ref": null,
+     "x": 769448.5,
+     "y": 595199.0
+    }
+   ],
+   "edge_of_new": "N",
+   "new": "dk8-s8-jeroniki"
+  }
+ ],
+ "source": {
+  "budget": "docs/reports/map/map_plan_0278_budget.json",
+  "extract": "Data/Plans/map-plan-0278/osm_plan_extract.json",
+  "gugik": "docs/reports/map/map_plan_0278_gugik.json",
+  "manifest": "Data/SourceManifests/osm-api06-map-plan-0278.json",
+  "powiaty": "Data/Admin/powiaty_prg.geojson"
+ },
+ "tile_size_m": 2048.0
+}

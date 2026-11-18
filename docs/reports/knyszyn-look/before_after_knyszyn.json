@@ -1,0 +1,398 @@
+{
+ "region": "knyszyn",
+ "house_roofs": {
+  "before": {
+   "roof_tiles_brown": 246,
+   "roof_tiles_red": 244,
+   "roof_metal_graphite": 227
+  },
+  "after": {
+   "roof_tiles_brown": 119,
+   "roof_sheet_grey": 163,
+   "roof_metal_graphite": 263,
+   "roof_tiles_red": 172
+  }
+ },
+ "landmarks": {
+  "kosciol (wlasny generator, ADR 0227)": {
+   "id": "bdot:2002917F-8DAE-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": null,
+    "height_m": 14.24,
+    "walls": [
+     "plaster_beige"
+    ],
+    "pitched_roof": null,
+    "overrides": []
+   },
+   "after": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": null,
+    "height_m": 14.24,
+    "walls": [
+     "plaster_beige"
+    ],
+    "pitched_roof": null,
+    "overrides": [
+     "roof_material"
+    ]
+   }
+  },
+  "poczta": {
+   "id": "bdot:2002917F-AB81-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 2,
+    "height_m": 8.85,
+    "walls": [
+     "plaster_beige"
+    ],
+    "pitched_roof": null,
+    "overrides": []
+   },
+   "after": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 2,
+    "height_m": 8.85,
+    "walls": [
+     "plaster_peach"
+    ],
+    "pitched_roof": [
+     "roof_metal_graphite"
+    ],
+    "overrides": [
+     "roof_material",
+     "roof_shape",
+     "wall_material"
+    ]
+   }
+  },
+  "dom narozny Grodzienska/Rynek": {
+   "id": "bdot:2002917F-2E17-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "house",
+    "subtype": "dom",
+    "storeys_data": 2,
+    "height_m": 8.17,
+    "walls": [
+     "plaster_grey"
+    ],
+    "pitched_roof": [
+     "roof_metal_graphite"
+    ],
+    "overrides": []
+   },
+   "after": {
+    "class": "house",
+    "subtype": "dom",
+    "storeys_data": 2,
+    "height_m": 8.17,
+    "walls": [
+     "plaster_white"
+    ],
+    "pitched_roof": [
+     "roof_metal_graphite",
+     "roof_tiles_red"
+    ],
+    "overrides": [
+     "roof_material",
+     "wall_material"
+    ]
+   }
+  },
+  "biblioteka (BDOT: policja)": {
+   "id": "bdot:2002917F-46DA-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 3,
+    "height_m": 10.24,
+    "walls": [
+     "plaster_light"
+    ],
+    "pitched_roof": [
+     "roof_tiles_red"
+    ],
+    "overrides": []
+   },
+   "after": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 3,
+    "height_m": 10.24,
+    "walls": [
+     "plaster_light"
+    ],
+    "pitched_roof": [
+     "roof_tiles_red"
+    ],
+    "overrides": [
+     "roof_material"
+    ]
+   }
+  },
+  "Dom Klattow (drewniany, zabytek)": {
+   "id": "bdot:2002917F-2F22-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "house",
+    "subtype": "dom",
+    "storeys_data": 1,
+    "height_m": 4.47,
+    "walls": [
+     "plaster_beige"
+    ],
+    "pitched_roof": [
+     "roof_metal_graphite",
+     "roof_tiles_brown"
+    ],
+    "overrides": []
+   },
+   "after": {
+    "class": "house",
+    "subtype": "dom_drewniany",
+    "storeys_data": 1,
+    "height_m": 4.47,
+    "walls": [
+     "wood_planks"
+    ],
+    "pitched_roof": [
+     "roof_tiles_red"
+    ],
+    "overrides": [
+     "roof_material",
+     "typology",
+     "wall_material"
+    ]
+   }
+  },
+  "dyskont, Szkolna": {
+   "id": "bdot:2002917F-468D-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "office",
+    "subtype": "pawilon",
+    "storeys_data": 1,
+    "height_m": 5.9,
+    "walls": [
+     "plaster_white"
+    ],
+    "pitched_roof": null,
+    "overrides": []
+   },
+   "after": {
+    "class": "office",
+    "subtype": "pawilon",
+    "storeys_data": 1,
+    "height_m": 5.9,
+    "walls": [
+     "plaster_white"
+    ],
+    "pitched_roof": null,
+    "overrides": [
+     "roof_material"
+    ]
+   }
+  },
+  "budynek uslugowy 2 kond., Szkolna": {
+   "id": "bdot:e3f1f933-d35e-402b-8880-f5dd66ff45a7",
+   "before": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 2,
+    "height_m": 7.0,
+    "walls": [
+     "plaster_light"
+    ],
+    "pitched_roof": null,
+    "overrides": []
+   },
+   "after": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 2,
+    "height_m": 7.0,
+    "walls": [
+     "plaster_light"
+    ],
+    "pitched_roof": null,
+    "overrides": [
+     "roof_material"
+    ]
+   }
+  },
+  "blok 3 kond. przy Szkolnej (pld.)": {
+   "id": "bdot:2002917F-46DE-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "block",
+    "subtype": "wielka_plyta",
+    "storeys_data": 3,
+    "height_m": 11.7,
+    "walls": [
+     "plaster_cream",
+     "plaster_accent_green"
+    ],
+    "pitched_roof": null,
+    "overrides": []
+   },
+   "after": {
+    "class": "block",
+    "subtype": "wielka_plyta",
+    "storeys_data": 3,
+    "height_m": 11.7,
+    "walls": [
+     "plaster_cream",
+     "plaster_accent_green"
+    ],
+    "pitched_roof": null,
+    "overrides": [
+     "roof_material"
+    ]
+   }
+  },
+  "blok 3 kond. za Szkolna (pln.)": {
+   "id": "bdot:2002917F-2F9A-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "block",
+    "subtype": "wielka_plyta",
+    "storeys_data": 3,
+    "height_m": 10.21,
+    "walls": [
+     "plaster_white",
+     "plaster_accent_grey"
+    ],
+    "pitched_roof": null,
+    "overrides": []
+   },
+   "after": {
+    "class": "block",
+    "subtype": "wielka_plyta",
+    "storeys_data": 3,
+    "height_m": 10.21,
+    "walls": [
+     "plaster_white",
+     "plaster_accent_grey"
+    ],
+    "pitched_roof": null,
+    "overrides": [
+     "roof_material"
+    ]
+   }
+  },
+  "dom pogrzebowy (Rynek pln.)": {
+   "id": "bdot:2002917F-465F-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 1,
+    "height_m": 5.66,
+    "walls": [
+     "brick_red"
+    ],
+    "pitched_roof": null,
+    "overrides": []
+   },
+   "after": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 1,
+    "height_m": 5.66,
+    "walls": [
+     "brick_red"
+    ],
+    "pitched_roof": null,
+    "overrides": [
+     "roof_material"
+    ]
+   }
+  },
+  "szkola, budynek glowny": {
+   "id": "bdot:2002917F-4818-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 3,
+    "height_m": 11.85,
+    "walls": [
+     "plaster_beige"
+    ],
+    "pitched_roof": null,
+    "overrides": []
+   },
+   "after": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 3,
+    "height_m": 11.85,
+    "walls": [
+     "plaster_beige"
+    ],
+    "pitched_roof": null,
+    "overrides": []
+   }
+  },
+  "szkola, sala": {
+   "id": "bdot:2002917F-4819-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 1,
+    "height_m": 11.19,
+    "walls": [
+     "plaster_beige"
+    ],
+    "pitched_roof": null,
+    "overrides": []
+   },
+   "after": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 1,
+    "height_m": 11.19,
+    "walls": [
+     "plaster_beige"
+    ],
+    "pitched_roof": null,
+    "overrides": [
+     "roof_material"
+    ]
+   }
+  },
+  "bank": {
+   "id": "bdot:2002917F-46D9-5C99-E053-CC2BA8C01CFC",
+   "before": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 1,
+    "height_m": 9.59,
+    "walls": [
+     "plaster_white",
+     "plaster_band_grey"
+    ],
+    "pitched_roof": [
+     "roof_metal_graphite"
+    ],
+    "overrides": []
+   },
+   "after": {
+    "class": "office",
+    "subtype": "biurowiec",
+    "storeys_data": 1,
+    "height_m": 9.59,
+    "walls": [
+     "plaster_white",
+     "plaster_band_grey"
+    ],
+    "pitched_roof": [
+     "roof_metal_graphite"
+    ],
+    "overrides": [
+     "roof_material"
+    ]
+   }
+  }
+ }
+}

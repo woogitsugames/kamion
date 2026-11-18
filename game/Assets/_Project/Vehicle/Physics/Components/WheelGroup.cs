@@ -15,6 +15,8 @@ namespace Game.Vehicle.Physics
         readonly int[] _left, _right;
         readonly double[] _rayCos, _raySin;
         readonly int _constraintIterations;
+        /// <summary>cos of the largest tilt of the suspension axis from the ground normal at which the tyre still makes contact (see <see cref="SolverSettings.maxContactTiltDeg"/>).</summary>
+        public double MinContactCos;
 
         /// <param name="referenceAxleLoads">Per-axle static load [N] of the vehicle's own definition (solo / empty); defines the design ride height.</param>
         public WheelGroup(AxleDefinition[] axles, IDictionary<string, TireDefinition> tires, SolverSettings settings,
@@ -22,6 +24,7 @@ namespace Game.Vehicle.Physics
         {
             Axles = axles;
             _constraintIterations = settings.constraintIterations;
+            MinContactCos = Math.Cos(settings.maxContactTiltDeg * MathUtil.Deg2Rad);
             var wheels = new List<WheelState>();
             var tireModels = new Dictionary<string, TireModel>();
             _left = new int[axles.Length];
@@ -48,6 +51,7 @@ namespace Game.Vehicle.Physics
                         Steered = a.steered,
                         Driven = a.driven,
                         Radius = tdef.radius,
+                        RollingRadius = tdef.EffectiveRollingRadius,
                         Inertia = tdef.wheelInertia * a.tiresPerSide,
                         StaticLoad = referenceAxleLoads[ai] * frac,
                         ReferenceLoad = refLoad,
@@ -147,7 +151,7 @@ namespace Game.Vehicle.Physics
                 }
             }
 
-            if (bestIdx < 0 || bestS > su.travel)
+            if (bestIdx < 0 || bestS > su.travel || Vec3.Dot(bestNormal, up) < MinContactCos)
             {
                 w.Contact = false;
                 w.S = su.travel;
@@ -190,7 +194,21 @@ namespace Game.Vehicle.Physics
             w.SPrev = sEff;
             w.HasPrev = true;
             w.Compression = w.SStatic - sEff;
-            w.SuspensionForce = SpringForce(su, w, sEff) + DamperForce(su, rate);
+            w.SuspensionForce = SpringForce(su, w, sEff) + DamperForce(su, rate) + BumpStopUnloading(su, sEff, rate);
+        }
+
+        /// <summary>
+        /// ADR 0228: unloading hysteresis of the elastomer bump stop. While the stop extends (b_dot &lt; 0) its force is
+        /// lowered to rate b^2 (1 + h b_dot) (Hunt-Crossley form, K. H. Hunt, F. R. E. Crossley, J. Appl. Mech. 42(2), 1975),
+        /// never below 0; on compression it stays elastic, so impact peaks (kerb Fz ceilings) are unchanged and only the
+        /// energy given back is reduced. Zero off the stop or with bumpStopHysteresis = 0.
+        /// </summary>
+        static double BumpStopUnloading(SuspensionDefinition su, double s, double rate)
+        {
+            if (su.bumpStopHysteresis <= 0 || s >= su.bumpStopClearance || rate >= 0) return 0;
+            double b = su.bumpStopClearance - s;
+            double elastic = su.bumpStopRate * b * b;
+            return Math.Max(-elastic, elastic * su.bumpStopHysteresis * rate);
         }
 
         static double RateScale(SuspensionDefinition su, WheelState w) =>
@@ -341,7 +359,7 @@ namespace Game.Vehicle.Physics
                 var w = Wheels[i];
                 TireSubstep(w, h, out double fx, out double fy);
                 w.Fx += fx; w.Fy += fy;
-                double torque = -fx * w.Radius;
+                double torque = -fx * w.RollingRadius;
                 double dOmega = h * torque / w.Inertia;
                 if (w.RetarderTorque > 0)
                 {
@@ -364,7 +382,7 @@ namespace Game.Vehicle.Physics
                 w.SlipRatio = 0; w.SlipAngle = 0; w.Mu = 0;
                 return;
             }
-            double wr = w.Omega * w.Radius;
+            double wr = w.Omega * w.RollingRadius;
             double vsx = w.Vx - wr;
             double vref = Math.Max(Math.Abs(w.Vx), Math.Abs(wr));
             double sx = td.relaxationLengthX, sy = td.relaxationLengthY;
@@ -425,7 +443,7 @@ namespace Game.Vehicle.Physics
             for (int i = 0; i < Wheels.Length; i++)
             {
                 var w = Wheels[i];
-                double rr = w.Contact ? w.Tire.Def.rollingResistanceCoeff * w.RollingResistanceScale * w.Fz * w.Radius : 0;
+                double rr = w.Contact ? w.Tire.Def.rollingResistanceCoeff * w.RollingResistanceScale * w.Fz * w.RollingRadius : 0;
                 double capB = (w.BrakeTorque + rr) * h;
                 if (capB <= 0) continue;
                 double dl = w.Omega * w.Inertia;
@@ -453,7 +471,7 @@ namespace Game.Vehicle.Physics
             for (int i = 0; i < Wheels.Length; i++)
             {
                 var w = Wheels[i];
-                double raw = (w.Omega - w.OmegaPrevStep) * w.Radius / h;
+                double raw = (w.Omega - w.OmegaPrevStep) * w.RollingRadius / h;
                 w.TreadAccel += (raw - w.TreadAccel) * a;
                 w.OmegaPrevStep = w.Omega;
             }

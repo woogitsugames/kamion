@@ -1,6 +1,6 @@
 # Physics validation — Stage 2, tractor 4x2 + semi-trailer
 
-Status: **93 scenario runs (445 checks) and 141 xUnit tests are green** in the plain .NET runner (2026-11-09; ADR 0009 requests R5–R7 resolved on branch `worktree-agent-a949c191e8892b0e8`, see section 2a). This covers the solo tractor, the empty combination (14.5 t) and the 40.0 t combination. Nothing has been run in Unity or on a device yet. Stage 1 history is in git (`ee235b4`).
+Status: **141 scenario runs (833 checks) and 287 xUnit tests are green** in the plain .NET runner (refreshed 2026-11-16, section 3; first Stage 2 sign-off 2026-11-09 with 93 runs / 141 tests, ADR 0009 requests R5–R7 in section 2a). The 96/53/EC turning ring is a regular scenario since D79 (trailer axles 7.63 m, ADR 0280 §10), no longer a known failure (remaining known failures: `tests/physics/scenarios_expected_fail/`). This covers the solo tractor, the empty combination (14.5 t) and the 40.0 t combination. Nothing has been run in Unity or on a device yet. Stage 1 history is in git (`ee235b4`).
 
 Parameter provenance: `docs/VEHICLE_REFERENCE_DATA.md`. Most numbers are still WORKING_VALUE, so the tolerances mostly check **plausibility and numerical quality**. The exceptions are the items backed by UN R13 Annex 4 text (S5), the 90 km/h limiter (S3) and the class-reference engine and gearbox data (S1, S2, opened in Stage 2).
 
@@ -8,14 +8,14 @@ Parameter provenance: `docs/VEHICLE_REFERENCE_DATA.md`. Most numbers are still W
 
 ```powershell
 $env:DOTNET_ROOT = "$env:LOCALAPPDATA\Microsoft\dotnet"; $env:PATH = "$env:DOTNET_ROOT;$env:PATH"
-dotnet test tools/physics-runner -c Release                                   # 141 tests, ~10 s
-dotnet run -c Release --project tools/physics-runner/Runner                   # 93 runs + multi-run checks + bench -> artifacts/physics/<ts>/
+dotnet test tools/physics-runner -c Release                                   # 287 tests, ~35 s
+dotnet run -c Release --project tools/physics-runner/Runner                   # 141 runs + multi-run checks + bench -> artifacts/physics/<ts>/
 dotnet run -c Release --project tools/physics-runner/Runner -- --only brake_80_0_dry_abs_comb          # all variants of one scenario
 dotnet run -c Release --project tools/physics-runner/Runner -- --only lane_change_80@laden40          # one variant
 dotnet run -c Release --project tools/physics-runner/Runner -- --update-golden   # rewrite tests/golden/*.csv (review the diff!)
 dotnet run -c Release --project tools/physics-runner/Runner -- --bench           # cost per step, 40 t combination
 uv run tools/telemetry/plot.py artifacts/physics/<ts>/                         # one PNG per CSV
-uv run python tests/physics/generate_stage2_scenarios.py tests/physics/scenarios   # regenerate the Stage 2 scenario JSONs
+uv run python tests/physics/generate_stage2_scenarios.py tests/physics/scenarios tests/physics/scenarios_expected_fail   # regenerate the Stage 2 scenario JSONs
 ```
 
 Scenario variants: a scenario with `"variants": ["solo", "empty", "laden40"]` expands to `<id>@solo`, `<id>@empty` and `<id>@laden40`. `laden40` is GCW = 40.0 t exactly (25.5 t cargo, CoG 2.3 m). A check can be limited to one variant.
@@ -76,6 +76,7 @@ void FixedUpdate() {
 **R6, kingpin load at standstill on locked brakes.**
 - Cause (found with `couple_standstill_locked`: couple, hold service + parking brake, raise the legs): the old 0.67–0.9× was not a vertical effect. With every trailer wheel locked, any slow pitch change of the combination (the nose load moving from the legs to the plate, the tractor's air suspension re-levelling for about a minute) is a ~1 cm horizontal geometry mismatch. The tire stick springs stored it as 60–110 kN of longitudinal preload. That force acts at the plate height (1.2 m), and shifts the kingpin load by Fx·h / wheelbase (about 10 kN, 10 % of the 97 kN static load for 40 t). Parking brake only (trailer wheels free) was never affected.
 - Fix (`TrailerModel.StandstillRelaxTau`, WORKING_VALUE 2 s): while the combination is coupled and stands still (|v| < 0.05 m/s) the longitudinal contact-patch deflection of the **trailer** wheels relaxes. That is the real carcass hysteresis and trailing-arm bush compliance that the rigid-axle model lacks. The tractor wheels and brakes keep holding, so on a slope the trailer settles by about F / k_tractor and stops: no creep (the 12 % parking scenarios, drift ≤ 5 mm, are unchanged). Lateral stick is untouched; jackknife and all golden telemetry still pass unchanged.
+- Target refined in ADR 0280 §10.3 (2026-11-16): a braked trailer wheel relaxes to the **common-mode deflection of the tractor's braked wheels** (Σk·u / Σk, so a preload between the tractor's own axles cancels), not to its "own share" Fz·tanθ. The own-share target also bled the trailer's elastic share of the grade force onto the kingpin, and the empty trailer settled 5.0 mm on 12 % over ~60 s through the tractor's tyre and bellows compliance (4.97 mm at 7.70 m, 5.02 mm at 7.63 m; 0.00 mm with the relaxation off). Now 0.69 / 0.29 mm. The own share stays as the fallback when the tractor has no braked wheel in contact.
 - Result: kingpin / static 1.005 (empty) and 1.014 (40 t) at 50–80 s after raising the legs on locked brakes (was 0.95 and 0.90 in the same scenario without the fix; 0.67 in the Unity case, which was not reproduced exactly).
 
 **R7, trailer / cargo swap without rebuilding.**
@@ -84,52 +85,57 @@ void FixedUpdate() {
 - Both are between-step calls. `TrailerModel.MassProps` and `.Cargo` are now properties that change on `SetCargo`: copy `MassProps` into the Rigidbody again. The step stays allocation-free (test `Step_DoesNotAllocate_AfterSetCargo`: 0 B over 500 steps after a cargo change).
 - Tests `SetCargo_InPlace_SettlesToNewStaticLoad` (22 t, then back to empty: kingpin / static 1.000, 0.998), `SetTrailer_SwapsWithoutRebuildingTheCombination` (18 t swap 1.000, then solo).
 
-## 3. Results (runner, dt = 0.01 s, 4 substeps; run `artifacts/physics/stage2-final`)
+## 3. Results (runner, dt = 0.01 s, 4 substeps; refreshed 2026-11-16, branch `trailer-763-d79` (ADR 0280 §10: trailer axles 7.63 m, standstill relaxation fix); earlier rows from `turning-circle-s23` @ `31c1383ca` where unchanged)
 
-Values are for solo / empty / 40 t where the item has variants. ✅ = all checks of the scenario passed.
+**141 scenario runs / 833 checks PASS, `dotnet test` 287/287** (Linux, .NET 8 SDK 8.0.428; same solver sources as Unity, ADR 0004;
+nothing here ran in Unity/PhysX or a Windows player). Values are solo / empty / 40 t where the item has variants. Status of the
+expectation as written in the scenario check: SOURCED = regulation point read in the text, DERIVED = formula / extrapolation,
+WORKING = plausibility band. The Polish summary table is `docs/04_FIZYKA.md` §6a.
 
 | docs/04 §6 | Scenario | Key result | Expected / tolerance | Status of expectation |
 |---|---|---|---|---|
-| 1 | park_12pct_down/up_comb (300 s, tractor spring brakes only) | creep after 60 s ≤ 1.8e-7 m; total creep ≤ 0.39 mm; max speed ≤ 0.66 mm/s | ≤ 0.5 mm / ≤ 5 mm / ≤ 1 mm/s | **SOURCED** 12 % (S5 2.3.2) + WORKING no-creep ✅ |
-| 1 | park_flat_5min_comb, soak_30min_parked | drift 5e-7 m, KE 2e-7 J over 30 min, air 12.5 bar | ≤ 5 mm, ≤ 1e-3 J, ≥ 10.5 bar | WORKING ✅ |
-| 2 | launch_6pct_uphill_comb (full throttle, HSA) | rollback 2.1 / 2.3 mm; 0–15 km/h 2.5 / 4.5 s; clutch 30 / 37 °C; 7 / 5 shifts | ≤ 5 cm; ≤ 250 °C; ≤ 14 shifts | WORKING ✅ |
-| 2 | launch_6pct_uphill_light_comb (35 % pedal, 40 t) | rollback 2.3 mm, 0–10 km/h 19.7 s | ≤ 5 cm | WORKING ✅ |
-| 3 | launch_0_80_flat / launch_flat_comb | 0–60: 9.7 / 13.3 / 26.9 s; 0–80: 13.8 / 20.5 / 46.2 s | 40 t: 25–60 / 40–95 s | DERIVED (power-to-weight + shift losses) ✅ |
-| 4 | top_speed_flat_comb | 89.4 / 89.2 km/h in 12th | ≤ 90.5, settles 88–90 (ADR 0082) | **SOURCED** S3 ✅ |
-| 4a | limiter_downhill_2pct_comb / limiter_downhill_5pct_comb (40 t, full throttle held; ADR 0082) | 2 %: max 94.3, settled 93.9; 5 %: max 95.1, settled 94.0 km/h, service brake 0 | max ≤ 96, no drop below 88 | WORKING_VALUE (overrun offset 4 km/h) ✅ |
-| 4 | grade_5pct_steady (40 t) | 50.2 km/h steady, ±0.03 km/h, 1516 rpm | 44–60 km/h | DERIVED: η P / (m g (sin α + f_r) + aero) ≈ 54 km/h ✅ |
-| 5 | brake_80_0_dry (ABS) | 34.9 / 39.0 / 40.5 m; MFDD 7.41 / 7.48 / 7.07 m/s² | ≤ 61.2 m; 5.0–8.0 | WORKING (R13 N3 type-0 figures UNVERIFIED) ✅ |
-| 5 | brake_80_0_wet (ABS) | 50.9 (solo, Stage 1 file) / 54.9 / 56.5 m; MFDD 5.0 / 4.8 / 4.7 | 45–95 m | WORKING ✅ |
-| 5 | brake_80_0_dry / wet no ABS | dry 44.7 / 44.6 / 49.1 m; wet 75.4 / 78.2 / 81.9 m (locked) | longer than ABS | WORKING ✅ |
-| 5 | brake_response_static | front 0.25 s, rear 0.31 s, trailer 0.53–0.54 s (75 % of final) | ≤ 0.6 s | **SOURCED** S5 4.1.1 ✅ |
-| 5 | rear / trailer lock under ABS (all ABS runs) | 0 s above 2 m/s | ≤ 0.03 / 0.05 s | Stage 1 note fixed ✅ |
-| 6 | downhill_7pct_typeIIA (40 t, 6 km, brake cruise 30 km/h) | mean 30.0 km/h, service brake 0, max 1971 rpm | 25–35 km/h, no service brake | **SOURCED** S5 1.8.2 ✅ |
-| 6 | downhill_7pct_brake_cruise_60 | 60.0 km/h ± 0.000; EB ≈ 200 kW + retarder ≈ 170 kW (≤ 3103 Nm) | 59–61.5; ≤ 4000 Nm | S2 retarder limit ✅ |
-| 6 | downhill_7pct_full_lever | speed settles (range 0.001 km/h over 40 s), EB torque 1173 Nm | stabilises | WORKING ✅ |
-| 6 | downhill_7pct_service_pumping (endurance brakes off) | service circuits fall to 5.06 bar, warning on | ≤ 9 bar, ≥ 3 bar, warning | WORKING (real consequence) ✅ |
-| 6 | air_leak_rear_circuit (burst at 60 km/h) | warning; rear circuit 0 bar; stop 33.1 m on the remaining circuits | ≤ 64.4 m | **SOURCED** S5 2.2 secondary braking ✅ |
+| 1 | park_12pct_down/up_comb (300 s, tractor spring brakes + trailer through the hand control valve) | creep 0.26 / 0.20 mm down, 0.21 / 0.06 mm up (empty / 40 t); trailer creep 0.69 / 0.65 mm down, **0.69 / 0.29 mm up** (was 4.97 mm empty uphill before ADR 0280 §10.3); max speed ≤ 0.32 mm/s | ≤ 5 mm; ≤ 1 mm/s | **SOURCED** 12 % (S5 2.3.2) + WORKING no-creep ✅ |
+| 1 | park_flat_5min_comb, soak_30min_parked | drift 0.20 mm, KE ≤ 1.8e-5 J over 30 min, energy drift 0.62 J, air 12.5 bar | ≤ 5 mm, ≤ 1e-3 J, ≤ 5 J | WORKING ✅ |
+| 2 | launch_6pct_uphill_comb (full throttle, HSA) | rollback 2.2 / 2.4 mm; 0–15 km/h 3.13 / 4.96 s; clutch 29 / 37 °C; 7 / 5 shifts | ≤ 5 cm; ≤ 250 °C | WORKING ✅ |
+| 2 | launch_6pct_uphill_light_comb (35 % pedal, 40 t) | rollback 2.4 mm, 0–10 km/h 20.1 s | ≤ 5 cm | WORKING ✅ |
+| 3 | launch_0_80_flat / launch_flat_comb | 0–60: 9.69 / 13.77 / 28.04 s; 0–80: **14.06** / 21.19 / 47.59 s | 40 t: 25–60 / 40–95 s; empty 0–80 ≥ 20 s | DERIVED (power-to-weight + shift losses); solo WORKING ✅ |
+| 4 | top_speed_flat_comb | 89.38 / 89.17 km/h in 12th | ≤ 90.5, settles 88–90 (ADR 0082) | **SOURCED** S3 ✅ |
+| 4a | limiter_downhill_2pct / 5pct_comb (40 t, full throttle held) | 2 %: max 94.3, min 93.8; 5 %: max 95.3, settled 94.0 km/h; service brake 0 | max ≤ 96, no drop below 88 | WORKING (overrun offset 4 km/h) ✅ |
+| 4 | grade_5pct_steady (40 t) | 49.76 km/h, range 0.05 km/h, ≥ 1464 rpm | 44–60 km/h | DERIVED ≈ 54 km/h ✅ |
+| 5 | **brake_60_0_dry_abs_comb** (new, engine disconnected: N with the brake) | **23.13 / 24.08 m**; MFDD 7.23 / 6.86 m/s² | **s ≤ 36.7 m, dm ≥ 5.0 m/s²** | **SOURCED**: UN R13 Annex 4 para 2.1.1, N3 Type-0 engine disconnected, v = 60 km/h, s ≤ 0.15 v + v²/130, dm ≥ 5.0 (read on the MLIT page image pp. 27–28, ADR 0280) ✅ |
+| 5 | brake_80_0_dry_abs_comb | 39.03 / 41.31 m; MFDD 7.48 / 6.88 | ≤ 61.2 m; 5.0–8.0 | **DERIVED**: the same formula at 80 km/h is an extrapolation (was marked SOURCED until ADR 0280) ✅ |
+| 5 | brake_50_0_dry_abs_comb | 16.65 / 17.52 m; MFDD 6.71 / 6.59 | ≤ 26.7 m; 5.0–8.0 | DERIVED (extrapolation at 50 km/h) ✅ |
+| 5 | brake_80_0_dry (solo, ABS) | 34.26 m; MFDD 7.72 m/s² | 32–55 m; MFDD ≥ 5.0 | WORKING; MFDD bound DERIVED (R13 dm at 60 km/h applied at 80) ✅ |
+| 5 | brake_80_0_wet (ABS) | 50.75 (solo) / 55.18 / 56.90 m; MFDD 4.92 / 4.80 / 4.68 | 45–95 m | WORKING ✅ |
+| 5 | brake_80_0_dry / wet no ABS | dry 44.07 / 43.99 / 49.18 m; wet 75.58 / 78.32 / 82.00 m (locked) | longer than ABS | WORKING ✅ |
+| 5 | brake_response_static | front 0.25 s, rear 0.31 s, trailer 0.54 / 0.53 s (75 % of final) | ≤ 0.6 s | **SOURCED** S5 4.1.1 ✅ |
+| 5 | rear / trailer lock under ABS (all ABS runs) | 0 s above 2 m/s | ≤ 0.03 / 0.05 s | ✅ |
+| 6 | downhill_7pct_typeIIA (40 t, 6 km, brake cruise 30 km/h) | mean 30.0 km/h, service brake 0, max 1930 rpm | 25–35 km/h, no service brake | **SOURCED** S5 1.8.2 ✅ |
+| 6 | downhill_7pct_brake_cruise_60 / downhill_8pct_retarder_comb | 60.0 km/h (retarder ≤ 2856 N m) / 40.0 km/h (2192 N m) | 59–61.5 / 35–45; ≤ 4000 N m | S2 retarder limit ✅ |
+| 6 | downhill_7pct_full_lever | range 0.001 km/h, engine-brake torque 1155 N m | stabilises | WORKING ✅ |
+| 6 | downhill_7pct_service_pumping (endurance brakes off) | service circuits fall to 5.14 bar, warning on | ≤ 9, ≥ 3 bar, warning | WORKING ✅ |
+| 6 | air_leak_rear_circuit (burst at 60 km/h, 40 t) | warning; rear circuit 0 bar; stop 32.54 m | ≤ 52.4 m (residual braking N3 laden from 40 km/h) | **SOURCED** S5 2.4.1 / S9 R3-161 (game test from 60 km/h is harder) ✅ |
 | 6 | air_leak_park_circuit | trailer emergency braking + spring brakes stop the combination | stops | WORKING ✅ |
-| 7 | circle_r50_10/35kmh_comb | offtracking 0.61 / 0.60 m at 10 km/h, 0.48 / 0.41 m at 35 km/h; a_y within 1 % of v²/R | 0.4–0.8 m at 10 km/h | DERIVED (√(R²+e²) − √(R²+e²−L²) = 0.59 m) ✅ |
-| 7 | rollover_r50_cog_low / high (40 t, speed ramp) | first wheel lift at **0.462 g** (CoG 1.9 m) / **0.341 g** (CoG 2.6 m) | 0.25–0.55 g; high < low | WORKING (literature 0.3–0.45 g, UNVERIFIED) ✅ |
-| 8 | lane_change_60 / 80 (double, 3.5 m over 50 / 70 m; path peak 0.18–0.19 g, driver-realised 0.09–0.10 g) | max articulation 0.8–1.4°; RA 0.96–0.99; residual ≤ 0.04°; no lift | RA 0.8–1.6 | WORKING (literature RA 1.0–1.3, UNVERIFIED) ✅ |
-| 9 | jackknife_wet_curve_noabs (EBS fault: no ABS, no load sensing, half pedal, steering held) | **81.4°** articulation (empty); drive axle locked 2.95 s | ≥ 30° (must be possible) | ✅ |
-| 9 | jackknife_wet_curve_retarder_noabs (lever 5 on wet, ABS failed) | **92°** (empty; reaches the soft cab stop); drive axle locked 1.7 s | ≥ 30° | ✅ |
-| 9 | jackknife_wet_curve_abs_50 / _100 (ABS + load sensing working) | 4.8–7.2° max, no lock | ≤ 10° | ✅ |
-| 11 | curb_15cm_left_comb, speed_bump_comb (+ Stage 1 curbs) | Fz peak ≤ 3.45× static, trailer roll ≤ 3.3°, cab heave ≤ 46 mm, no teleport | ≤ 4×, ≤ 8°, ≤ 50 mm | WORKING ✅ |
-| 12 | dt 50/100/120 Hz and substeps 2/4/8 (section 4) | ≤ 1.0 % (all metrics) | ≤ 5 % | WORKING ✅ |
-| 14 | soak_30min_cycle (40 t, 20 × accelerate / lane change / stop) | first vs last cycle cruise 74.0 / 73.5 km/h; standstill speed 4.6e-5 / 4.3e-5 m/s; kingpin error ≤ 0.03 mm; max articulation 2.3°; air ≥ 11.4 bar | no drift | WORKING ✅ |
-| 15 | steer_sign_right / reverse_right_comb | +17.4 to +22 °/s forward, −3.1 to −3.9 °/s reversing | sign as solo | DERIVED ✅ |
-| — | couple_standstill_locked (R6) | kingpin load 1.005 / 1.014 × static on locked brakes with legs up, speed < 5 mm/s | 0.97–1.03 | DERIVED ✅ |
-| — | couple_offset_right_15cm, couple_offset_left_18cm (R5) | couples with a 15 cm / 18 cm offset (4° yaw), bump ≤ 107 kN, kingpin error < 5 mm after the engagement | 1 coupling | WORKING ✅ |
-| — | couple_miss_25cm (R5) | no coupling at 25 cm | 0 couplings | WORKING ✅ |
-| — | couple_uncouple | 1 coupling, kingpin load 0.97–0.98 × static after raising the legs, coupling bump ≤ 62 kN, dv ≤ 0.14 m/s/step, uncoupled trailer moves ≤ 3 mm | | WORKING ✅ |
-| — | manual_mode_shifts (40 t) | gears 2→5 by hand, 4 over-revving requests refused, max 2074 rpm | ≤ 2130 rpm | S1 max revs ✅ |
-| — | zero allocation (test) | 0 bytes over 2000 steps, solo and 40 t combination | 0 | CLAUDE.md ✅ |
+| 7 | **ring_96_53_comb** (game trailer: kingpin → tridem centre **7.63 m**, D79 correction, ADR 0280 §10) | outer 12.486 / 12.482 m, **inner 5.309 / 5.312 m**, ring width 7.177 / 7.170 m (at 7.70 m: inner 5.228 / 5.230 FAIL) | outer ≤ 12.50, inner ≥ 5.30 (width ≤ 7.20); margin guard width ≤ 7.18 (2 cm, WORKING; was 7.15 at 7.60 m) | **SOURCED** Directive 96/53/EC Annex I 1.5 (CELEX 01996L0053-20190814) + WORKING ✅ |
+| 7 | circle_r50_10 / 35kmh_comb | offtracking 0.598 / 0.593 m at 10 km/h, 0.473 / 0.403 m at 35 km/h; a_y 1.88 m/s² at 35 km/h | 0.4–0.8 m at 10 km/h | DERIVED (√(R²+e²) − √(R²+e²−L²) = 0.59 m, L = 7.63 m) ✅ |
+| 7 | rollover_r50_cog_low / high (40 t, speed ramp) | first wheel lift at **0.459 g** (CoG 1.9 m) / **0.339 g** (CoG 2.6 m) | 0.25–0.55 g; high < low | WORKING (literature 0.3–0.45 g, UNVERIFIED) ✅ |
+| 8 | lane_change_80 | max articulation 0.84 / 0.81°; RA 0.992 / 0.997; residual ≤ 0.0004°; no lift | RA 0.8–1.6 | WORKING (literature RA 1.0–1.3, UNVERIFIED) ✅ |
+| 9 | jackknife_wet_curve_noabs (EBS fault, empty) | **87.44°** articulation; drive axle locked 2.54 s | ≥ 30° (must be possible) | ✅ (state before ADR 0228 / PR #113) |
+| 9 | jackknife_wet_curve_retarder_noabs (empty) | **92.65°** (soft cab stop 90° + 2.65°, D59 ≤ 3.5°); drive axle locked 1.85 s | ≥ 30° | ✅ |
+| 9 | jackknife_wet_curve_abs_50 / _100 | 7.67 / 4.55° (empty), 5.16 / 5.16° (40 t), no lock | ≤ 10° | ✅ |
+| 11 | curb_15cm_left_comb, speed_bump_comb | Fz peak 3.25 / 2.95 × static, trailer roll 2.79 / 3.39°; bump Fz ≤ 1.83×, cab heave ≤ 41.3 mm | ≤ 4×, ≤ 8°, ≤ 50 mm | WORKING ✅ |
+| 11 | kerb_step_27cm_42kmh_comb (40 t, chassis colliders on, D58 / ADR 0165) | Fz 6.03×, front-axle airtime 0.39 s, bumper crush 0.036 m | 5.2–7.5×; ≤ 0.5 s; ≤ 0.05 m | WORKING ✅ |
+| 12 | dt 50/60/100/120 Hz and substeps 2/4/8 (section 4) | ≤ 0.63 % (all metrics) | ≤ 5 % | WORKING ✅ |
+| 14 | soak_30min_cycle (40 t, 20 cycles) | first vs last cycle cruise 73.01 / 72.44 km/h; energy drift +0.32 J; max articulation 2.24°; air ≥ 11.34 bar | no drift | WORKING ✅ |
+| 15 | steer_sign_right / reverse_right_comb | +21.08 / +17.16 °/s forward, −3.98 / −3.16 °/s reversing | sign as solo | DERIVED ✅ |
+| — | couple_standstill_locked (R6) | kingpin load 1.010 / 1.000 × static | 0.97–1.03 | DERIVED ✅ |
+| — | couple_offset_right_15cm / left_18cm (R5); couple_miss_25cm | 1 coupling each, kingpin long. ≤ 36 / 84 kN; miss: 0 couplings | 1 / 0 couplings | WORKING ✅ |
+| — | couple_uncouple | 1 coupling, kingpin load 0.986 / 0.972 × static, uncoupled trailer moves ≤ 3.1 mm | | WORKING ✅ |
+| — | manual_mode_shifts (40 t) | gears 2→5 by hand, 4 over-revving requests refused, max 2072 rpm | ≤ 2130 rpm | S1 max revs ✅ |
+| — | zero allocation (xUnit) | 0 bytes over 2000 steps, solo and 40 t combination | 0 | CLAUDE.md ✅ |
 
-All 21 Stage 1 solo scenarios still pass. Their values moved slightly:
-- 0–80 is now 13.8 s (it was 14.2 s), because the AMT no longer over-revs.
-- The dry stop is now 34.9 m (it was 33.3 m), because EBS load sensing gives less rear pressure solo.
-- The solo 12 % parking now measures creep in the ground plane, because the rear suspension levels.
+History: the Stage 2 table (2026-11-09, `artifacts/physics/stage2-final`) had 0–80 solo 13.8 s, 80→0 solo 34.9 m, jackknife
+81.4°; the changes since are ADR 0134/0158/0165/0201/0201b (section 6d–6g) and ADR 0280 §10 (trailer axles 7.63 m, standstill relaxation target). Full per-check list: runner `summary.md` (not committed; ADR 0280 §10.5 has the before / after table).
 
 ## 3a. Kerb strike 14 cm at 50 km/h: wheel unload analysis (2026-11-09)
 
@@ -168,7 +174,7 @@ PlayMode `KerbStrikeParityTests` runs the same block, speed hold, load cases and
 | runner, 40 t | 3.53 | 0.08 s | 0.09 s | 1.99° | 0.079 |
 | Unity box / mesh, 40 t | 3.56 / 3.56 | 0.08 / 0.08 s | 0.09 / 0.09 s | 1.98° | 0.081 |
 
-The adapter agrees with the core within 1 % on every metric, and no PhysX body contact occurs. Ray normals on vertical mesh faces, ray count, step and substeps are therefore **not** the cause of the phone values.
+The adapter agrees with the core within 1 % on every metric, and no PhysX body contact occurs. **Update 2026-11-18 (ADR 0228 r4):** the bump-stop unloading hysteresis (ADR 0228) lowers the wheel unload and pitch peaks; Fz peaks are unchanged by it. Runner on `alt-113-s24` (PR #113 + D79), first 6 s, = new constants in `KerbStrikeParityTests`: empty 3.68 / 0.08 s / 0.20 s / 1.44°, 40 t 3.30 / 0.08 s / 0.08 s / 1.42°; 27 cm step 6.03 / 0.33 s / 3.54° (main without hysteresis: 3.66 / 0.11 / 0.20 / 1.61°, 3.30 / 0.09 / 0.09 / 1.86°, 6.04 / 0.39 / 5.91°). Unity with #113 (int-h3-s23): 40 t pitch 1.38° (runner 1.42°). Tolerances unchanged; xUnit `KerbParityReferenceTests` re-runs the runner and fails when the constants go stale. The table above is the 2026-11-09 state. Ray normals on vertical mesh faces, ray count, step and substeps are therefore **not** the cause of the phone values.
 
 **The phone event was not a 14 cm kerb.** Telemetry from r3 (`artifacts/device/RFGL34SJYDZ/20261109-180828`, t = 72.12–72.14 s): front left suspension compression goes 0.057 → 0.106 → 0.128 m and tyre deflection 0.036 → 0.117 → 0.212 m in two 10 ms steps. Their sum (the geometric rise of the ground under the ray fan) is 0.246 m. The front hardpoint itself rises about 3 cm (pitch −0.31 → −0.10°), so the effective step was **about 0.27 m**: a kerb on a higher carriageway or verge edge at the split, not the 5–14 cm kerb face. Scenario `kerb_step_27cm_42kmh_comb@laden40` (same block, 0.27 m, 42 km/h, 40 t) gives in the core Fz 6.50× static, tractor wheel unload 0.42 s (both front wheels 0.25 s), pitch +6.4°. On the phone: 6.8×, about 0.4 s, +8°. Unity (mesh) gives 6.48×, 0.45 s, +6.37°. The sum of compression and deflection at the peak is 0.251 m in the core and 0.254 m on the phone.
 
@@ -180,13 +186,18 @@ Consequences: no adapter change is needed. The fix for the phone event is the wo
 
 | Check | Values | Max deviation |
 |---|---|---|
-| Repeatability 0–60 / 0–80, headings 0°/37°/113° | 9.678 / 13.825 s | 0.00 % |
-| dt 50/100/120 Hz: solo 0–80 | 14.05 / 13.83 / 13.85 s | 0.99 % |
-| dt: solo dry stop | 34.85 / 34.91 / 34.89 m | **0.09 %** (Stage 1: 0.64 %; before the substep ABS fix: 5.3 %) |
-| dt: 40 t dry ABS stop | 40.45 / 40.52 / 40.67 m | 0.29 % (before the fix: 6.5 %) |
-| dt: 40 t lane change max articulation | 0.801 / 0.802 / 0.803° | 0.09 % |
-| dt: 40 t 0–60 | 27.05 / 26.90 / 26.92 s | 0.35 % |
-| substeps 2/4/8: solo / 40 t dry stop | 34.61–34.99 / 40.52–40.82 m | 0.66 % / 0.49 % |
+| Repeatability 0–60 / 0–80, headings 0°/37°/113° | 9.688 / 14.055 s | 0.00 % |
+| dt 50/60/100/120 Hz: solo 0–80 | 14.212 / 14.210 / 14.055 / 14.070 s | 0.58 % |
+| dt: solo dry stop | 34.173 / 34.211 / 34.264 / 34.281 m | 0.17 % |
+| dt: circle R25 20 km/h lateral acceleration | 1.218 m/s² ×4 | 0.02 % |
+| dt: 40 t dry ABS stop | 40.897 / 40.989 / 41.309 / 41.366 m | 0.59 % |
+| dt: 40 t lane change max articulation | 0.823 / 0.824 / 0.826 / 0.827° | 0.28 % |
+| dt: 40 t 0–60 | 28.395 / 28.283 / 28.042 / 28.161 s | 0.63 % |
+| substeps 2/4/8: solo / 40 t dry stop | 34.506 / 34.264 / 34.599 m; 41.087 / 41.309 / 41.117 m | 0.56 % / 0.33 % |
+
+(2026-11-16, `artifacts/tc-s23/run/summary.md`; the 2026-11-09 values are in git history.) Cost on that run (Linux desktop, Release,
+`--bench`): mean 15.1 µs/step, p50 14.6, p99 28.5, max 289 µs — a different machine than the numbers below; neither is the
+Windows reference PC nor a phone.
 
 **Cost per fixed step**, full 40 t combination: 10 wheel ends × 15 rays, 4 substeps, clutch + brake PGS, fifth wheel 8 iterations, both body integrations. Desktop, Release, `--bench`, 30 000 steps:
 - **p50 6.4–6.7 µs**;
@@ -271,6 +282,15 @@ phone and 16.9 km/h in the runner. Each up-shift then fell at -1.55 m/s². New s
 
 Evidence: `artifacts/physics/shift-brake/` (before/, after/ CSV + PNG, suite-before/, suite-after/ summaries).
 
+Note (D42, 2026-11-16, ADR 0280 §10.5a): `park_brake_hold_no_interlock_comb@laden40` `creep_m` was 26.8 mm (main) and
+55.2 mm (after the ADR 0280 §10.3 relaxation fix). Both values came from a leak, not from wind-up. The standstill
+relaxation bled the trailer brakes' reaction to the engine push at 1.3 and then 4.1 mm/s with no end (55 mm at 12 s, 251 mm
+at 60 s). While a towing wheel carries driveline torque, the braked trailer wheels now keep their deflection. The creep is
+now 14.4 mm and stops there (13.95 mm at 60 s). It is the same at dt 1/50 to 1/120 (14.36-14.37 mm) and equal to the run
+with relaxation off (14.29 mm).
+Runner determinism (ADR 0004 addendum 2026-11-16): each scenario run loads its own definitions, so a test cannot change
+the physics of a run on another xUnit thread.
+
 ### 6d. Truck feel after the Fold test, ADR 0134 (2026-11-12)
 
 Owner: rocking "like a sports car" when accelerating, gears change "very quickly". Diagnosis: the free-drive default is the
@@ -309,12 +329,33 @@ Runner → Unity editor: 0–80 13.60 → 13.67 s / 20.54 → 20.68 s / 47.52 �
 40.52 → 40.78 m; MFDD 7.0–7.5 m/s², no wheel lock, lateral ≤ 4 mm; solo ×3 0.00 %. `Metrics.FirstBrake` is now the first
 rising edge of the pedal (unchanged for all `brake_*` scenarios). Phone numbers: `gate12-phone.ps1 -Only s080_*` (leader).
 
+### 6g. Axle loads 73/27 % and suspension retune, ADR 0201b (2026-11-15)
+
+- Mass split calibrated to the S9 sheet (R3-013/014): solo without fuel 5.06 / 1.84 t (73.3 %), with fuel 5.35 / 2.15 t, 40 t 7.20 / 10.26 / 22.55 t. Front leaf 250 kN/m, front dampers 10/20 kN s/m, anti-roll 222 / 240 kN m/rad, rear air spring unchanged hardware (73 kN/m at the new reference load), rear bump stop 15 mm. AMT: shift schedule from the driver pedal (not the ASR-cut torque request), anti-stall clutch opening 8/s.
+- Runner 135/135 (`artifacts/axleloads-0201b/final/`), tolerances unchanged; the 4 scenarios that the uncalibrated shift (ADR 0201 n1) broke: kerb 0.11 s / 3.66 (base 0.12 / 3.94), eye nod 3.64° (3.79°), rollover first lift 0.458 g (0.460 g), soak drift −2.8 J (1.4 J). The n1 soak drift (44.9 J) is the same at dt 0.005 s and 8 substeps (`soak-dt/`): physical settling after the stop, not the integrator.
+- Solo 0–80 13.58 → 14.06 s (+3.5 %; masses alone +8.2 %, AMT fix −1.3 %): ASR-limited launch on the lighter drive axle. Solo 80→0 35.77 → 35.39 m; 40 t 47.54 → 47.58 s, 41.02 → 41.20 m.
+- Goldens: 6 re-recorded (overlays `artifacts/axleloads-0201b/plots/golden-*.png`).
+- **F2 energy source (owner decision 2026-11-15: fix the physics, not the test).** Per-step energy balance of the F2 mutation run without chassis colliders (`artifacts/axleloads-0201b/f2/energy-balance.txt`): the kingpin point / Baumgarte row does ≤ 40 J per step (mostly negative); the free-flight KE + PE gain came from (1) the **rebound of the compliant fifth-wheel stops** (pitch 10 Hz ζ 0.7, roll stop, yaw 3 Hz ζ 1: stored spring energy returned as relative velocity, e.g. 4.5 kJ of a 58 kJ plate-pitch impact) and (2) the **roll spring releasing energy injected by raycast tyre contact at grazing incidence** (lying combination: S = d/cos(tilt) − r jumped +0.19 → −0.50 m in one step, 1.6 MN per wheel, +52 kJ of wheel work in 10 ms). KE + PE + coupling elastic energy never grew in free flight. Fix: stops keep the soft spring-damper on approach but push the bodies apart at ≤ `stopRecoveryRateDegS` 0.5 deg/s (no rebound; ≤ 0.87 J of KE); no tyre contact when the surface normal is > `maxContactTiltDeg` 72.5° (acos 0.3, the existing clamp) from the suspension axis. F2 scan 230–260 kN/m step 0.5: before 42/61 values > 1 J (max 2044 J), after **0/61 (max 0.000 J)** (`f2/f2-scan.png`). .NET **277/277** (3 new tests in `F2CouplingEnergyTests`); runner 135/135 (789), 772 checks bit-identical, 17 changed (all PASS, `f2/runner-diff.txt`): A16 launch/brake values identical; kerb 15 cm roll +0.007° / trailer +0.010° (ray grazing the kerb's vertical face no longer loads the suspension); with-collider rollover F2 max dv/step 0.67 → 0.82 m/s (≤ 4.2) and kingpin error 5.7 → 14.0 mm (≤ 50), lying wheels no longer push; reverse dock laden final z −17.33 → −17.25 m (yaw stop without rebound).
+
+### 6h. Tractor-trailer body contact (jackknife limit) and heavy landing, ADR 0228 (2026-11-15)
+
+- The articulation is limited by the **physical contact** of the trailer body with the cab / mudguards / frame (`CouplingContact`, soft no-rebound contact rows in the fifth-wheel PGS, 5 Hz, ζ 0.3, recovery 0.05 m/s, μ 0.3), from the definitions' `bodyBoxes` (one geometry source with the runner's chassis colliders). Level first contact **117.12°** (trailer side wall on the cab rear corner); the ±90° angular stop is only the fallback without body boxes.
+- New scenarios (`tests/physics/generate_jackknife_scenarios.py`): fold 90° (laden / empty: 108.6° / 105.4°, no contact), fold "120°" pushed into the cab (contact 7.5 / 9.3 s, excess over 117.12° 1.48 / 1.50°, penetration 0.046 / 0.051 m, yaw restitution 0.03), fast swing impact at 53–54°/s (penetration 0.050 / 0.053 m, peak contact force ~270 kN for ~0.1 s, dv/step 0.23 m/s), reverse with counter-steer then pull forward (final articulation ~0°), 0.5 m drop.
+- Heavy landing: bump-stop unloading hysteresis (Hunt–Crossley form, h 4 s/m, compression elastic): 0.5 m drop 40 t rebound 0.68 → **0.39** of the drop energy, second take-off 0.27 s → **0**; empty 0.37 → 0.16; 1 m drop (`free_fall_drop_comb`) 0.78 → 0.30 (still 0.16 s airborne). Kerb Fz peaks unchanged (a symmetric version raised 14 cm kerb max_fz_ratio 3.66 → 5.76 and was rejected).
+- Changed existing checks (**ADR 0228**): `reverse_dock_s_maneuver_comb` max articulation 95° → excess ≤ 1.5° over the contact angle + penetration ≤ 5 cm (folds to 118.2°). Golden `brake_80_0_dry_abs_comb@laden40` re-recorded (front bump stop in the 40 t stop; 41.31 → 41.25 m, MFDD 6.885 → 6.899 m/s²).
+- Runner **145/145 (879 checks)**, .NET **295/295**, robustness bit-identical / 0 NaN, bench p50 +0.4 µs/step (`artifacts/jackknife-0228/`). Before/after plots: `artifacts/jackknife-0228/png/`.
+- **H11 (2026-11-16, after merging main; review s22 #113 P1 + FFB #132):**
+  - *Tight forward turn.* The flat graybox trailer front (corner 2.063 m, 7 mm to the cab back) touched the cab in tight turns once the plate pitched / rolled: runner probes at 55–60° articulation, hard stop from 13–20 km/h: 0.11–6.8 s of contact, 38–131 kN (mostly 40 t) (a "brake" on the trailer from the cab). The coupling outline now follows the art model's rounded front (swing 2.029 m, boxes BodyCoupling + Nose; `Body` stays the ground collider): 4.1 cm clearance, no contact up to 110° for |relative pitch| ≤ 1.13° / |roll| ≤ 1.44°. New scenarios `jackknife_tight_turn_forward_comb` (5 km/h, lock 0.57, 57.6 / 58.1°) and `jackknife_tight_turn_forward_10_comb` (10 km/h, other side, 57.3 / 58.5°), each with a full stop at 40 s: **0 contact** (checks `coupling_contact_s` = 0, penetration = 0, force = 0). Residual (open): a full stop from 13–20 km/h at 55–60° with 40 t still grazes after the stop (tractor rocks back ~1.2° nose-up; all contact at ≤ 1.33 km/h, 0.03–0.94 s, ≤ 0.61 mm, 25–99 kN peaks; FFB aligning term faded to ~0 below 1.1 km/h); empty at 60° / 20 km/h one speculative touch while turning in (18 km/h, 0.02 s, 0 mm, 10 kN). Probes `artifacts/jackknife-0228/h11/probe_scenarios/` (before: 0.11–6.8 s, 38–131 kN).
+  - *Steering feedback.* The contact force does not enter `AligningTorqueTotal` directly, but it reverses the tractor's yaw in ~0.1 s and drags the steered axle sideways; the aligning torque swung −0.9 → +2.3 kN m in 80 ms (40 t fold into the cab) and the FFB model (ADR 0263 defaults) reversed −0.75 → +1.0 at its slew limit. `AligningTorqueTotal` is now lagged (0.5 s) while the bodies touch and 0.5 s after (raw value in `AligningTorqueRaw`, tyre forces unchanged): FFB rim-torque target change per 10 ms in the contact **0.34–0.49 N m** (was 2.0–4.5; kerb strikes 1.7–3.8 via the road-feel term; lane change 80 km/h 0.03), output step ≤ 0.061 (slew step 0.2). xUnit `JackknifeForceFeedbackTests` (real `ForceFeedbackModel` compiled from `game/Assets/_Project/Input`).
+  - Runner **149/149 (915 checks)**; vs before H11 only `jackknife_reverse_countersteer_comb@laden40` changed (penetration 1.3 mm → 0). .NET **319/319**. Bench p50 13.4–14.3 µs vs 13.9–14.0 µs before (noise). Plots `artifacts/jackknife-0228/h11/png/` (`turn_*`, `ffb_*`).
+- **r4 (2026-11-18, `alt-113-s24`, after merging main with D79 7.63 m):** golden `brake_80_0_dry_abs_comb@laden40` is the **main file again** (the #113 file was recorded on the 7.70 m geometry; the merged run passes the main file: worst column kingpin_fz 2.0 % outliers of 3 %; stop 41.385 m, MFDD 6.876; no body / coupling contact in the run). New metric `max_pitch_deg`; `KerbStrikeParityTests` constants from the runner (§3b). Residual cab brush after a hard stop in a 48–56° turn (ADR 0228 Otwarte 1) as scenarios `jackknife_turn_stop_brush_{20,15}_comb`: 40 t 1.10 / 0.09 s, 75.9 / 90.5 kN (first contact step, ~0 mm), 0.155 / 0.610 mm; bounds 1.5 s / 100 kN / 1 mm. Steering-feedback smoothing now hands back to the raw value at most hold + lag = 1.0 s after the last contact (was up to > 6.9 s; rim output unchanged); CSV column `aligning_torque_raw`. Runner **159/159 (987 checks)**, .NET **338/338**, pytest `tests/physics` 35 passed.
+
 ## 7. Known gaps / not modelled
 
 - **Not run in Unity or on the phone.** PhysX integration of two bodies with this constraint, cost on the Samsung A, and the feel test (docs/03 Stage 2 gate) are still open.
 - **No tyre bottoming (rim contact)**: the radial spring is linear without a deflection limit, so a step above about 0.2 m deflects the tyre 0.19–0.21 m and lets the body drop onto its bumper collider in Unity (§3b). A progressive end stop needs a source for the rim-contact deflection (not opened).
 - **Items not covered by the runner:** §6.10 (reversing to a ramp, tight yard manoeuvres; needs a reversing driver, and a dock or ramp geometry), §6.13 (floating origin and streaming, Unity), §6.15 for input modes other than the direct steer command (touch, gyro: Unity input layer).
-- **No chassis–ground or tractor–trailer collision geometry.** Jackknife ends on the soft 90° stop, rollover scenarios stop at wheel lift, and uncoupling requires the legs to be down.
+- ~~No chassis–ground or tractor–trailer collision geometry.~~ Chassis colliders since ADR 0158/0165; tractor–trailer side contact since ADR 0228 (jackknife ends on the cab at ~117°). Still not modelled: top-to-bottom contact (trailer body on a mudguard / the frame end), landing-gear legs and the gooseneck as contact geometry; the trailer front clears the cab back by 4.1 cm (rounded coupling outline since H11; a 40 t stop from ≥ 13 km/h at 55–57° still grazes after the stop, ADR 0228 Open 1).
 - **Ruts are not modelled**: rays are in the wheel plane only. No dynamic load sharing between interconnected bellows (only static equalisation by levelling). A trial on the kerb strike made no difference (§3a). **No trailer frame torsion**: on a one-sided step the rigid frame lets a tridem axle hang at full droop (0.21 s, empty, §3a). **No unsprung mass**: wheel ends are massless, and the tire is in series with the suspension, so there is no wheel hop.
 - **Brakes:** no thermal model or fade; no EBS coupling-force control; ABS uses the true contact-point speed as the reference speed (a real ECU estimates it); the trailer ABS is one generic layout. Compressed-air response is checked against R13 Annex 4 §4.1.1, but the Annex 6 method was not read.
 - **Endurance brakes:** the retarder has no oil-temperature derating (only the 600 kW power cap); the EPG-only exhaust brake stage is not separate.

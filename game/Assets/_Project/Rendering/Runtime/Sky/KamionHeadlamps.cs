@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,7 +12,8 @@ namespace Game.Rendering
         static readonly int k_On = Shader.PropertyToID("_KamionHeadlampOn"),
             k_Left = Shader.PropertyToID("_KamionHeadlampLeft"), k_Right = Shader.PropertyToID("_KamionHeadlampRight"),
             k_AxisRight = Shader.PropertyToID("_KamionHeadlampAxisRight"), k_Up = Shader.PropertyToID("_KamionHeadlampUp"),
-            k_Forward = Shader.PropertyToID("_KamionHeadlampForward"), k_Color = Shader.PropertyToID("_KamionHeadlampColor");
+            k_Forward = Shader.PropertyToID("_KamionHeadlampForward"), k_Color = Shader.PropertyToID("_KamionHeadlampColor"),
+            k_State = Shader.PropertyToID("_TruckLightState");   // ADR 0244: id, not the string per frame
         static CabInteriorLighting s_Source;
         static Transform s_Frame, s_Left, s_Right;
         static Texture2D s_State;
@@ -47,27 +47,48 @@ namespace Game.Rendering
             if (scene == s_Scene && now < s_NextSearch && valid) return true;
             if (scene == s_Scene && now < s_NextSearch && s_Source == null) return false;
             s_Scene = scene; s_NextSearch = now+BindingRefreshSeconds;
-            var sources = Resources.FindObjectsOfTypeAll<CabInteriorLighting>()
-                .Where(c => c.isActiveAndEnabled && c.cab != null && c.gameObject.scene == ownerScene && ownerScene.isLoaded).ToArray();
-            if (sources.Length != 1)
+            // ADR 0244: the periodic recheck (4 Hz at night) walks the enabled-cab registry instead of
+            // Resources.FindObjectsOfTypeAll + LINQ (array, closure, iterators every 0.25 s). Same filter, same counts:
+            // isActiveAndEnabled is true exactly between OnEnable and OnDisable, where the registry adds and removes.
+            CabInteriorLighting source = null;
+            int count = 0;
+            var all = CabInteriorLighting.s_Enabled;
+            for (int i = 0; i < all.Count; i++)
+            {
+                var c = all[i];
+                if (c == null || !c.isActiveAndEnabled || c.cab == null || c.gameObject.scene != ownerScene || !ownerScene.isLoaded) continue;
+                if (count == 0) source = c;
+                count++;
+            }
+            if (count != 1)
             {
                 s_Source = null; s_Frame = s_Left = s_Right = null;
-                if (sources.Length == 0) { Diagnostics = "no player cab in environment scene"; return false; }
-                return Reject("requires exactly one active player cab; found "+sources.Length);
+                if (count == 0) { Diagnostics = "no player cab in environment scene"; return false; }
+                return Reject("requires exactly one active player cab; found "+count);
             }
-            var source = sources[0];
             if (valid && source == s_Source) return true;
-            var anchors = source.cab.GetComponentsInChildren<Transform>(true);
-            var left = anchors.Where(t => t.name == "LIGHT_LowBeam_L").ToArray();
-            var right = anchors.Where(t => t.name == "LIGHT_LowBeam_R").ToArray();
-            if (left.Length != 1 || right.Length != 1)
+            // Binding change only (not per frame): anchor lookup into a reused list; Transform.name marshals a string.
+            source.cab.GetComponentsInChildren(true, s_Anchors);
+            Transform left = null, right = null;
+            int nLeft = 0, nRight = 0;
+            for (int i = 0; i < s_Anchors.Count; i++)
+            {
+                var t = s_Anchors[i];
+                string n = t.name;
+                if (n == "LIGHT_LowBeam_L") { left = t; nLeft++; }
+                else if (n == "LIGHT_LowBeam_R") { right = t; nRight++; }
+            }
+            s_Anchors.Clear();
+            if (nLeft != 1 || nRight != 1)
             {
                 s_Source = null; s_Frame = s_Left = s_Right = null;
                 return Reject("missing or ambiguous actual LIGHT_LowBeam_L/R anchors");
             }
-            s_Source = source; s_Frame = source.cab; s_Left = left[0]; s_Right = right[0];
+            s_Source = source; s_Frame = source.cab; s_Left = left; s_Right = right;
             return true;
         }
+
+        static readonly System.Collections.Generic.List<Transform> s_Anchors = new System.Collections.Generic.List<Transform>(256);
 
         static bool Reject(string reason)
         {
@@ -81,7 +102,7 @@ namespace Game.Rendering
             Enabled = false; Shader.SetGlobalFloat(k_On, 0f);
             if (!requested || model == null) { Diagnostics = "disabled by preset/override"; return; }
             if (float.IsNaN(peakCd) || float.IsInfinity(peakCd) || peakCd <= 0f) { Diagnostics = "zero/invalid peak cd"; return; }
-            var state = Shader.GetGlobalTexture("_TruckLightState") as Texture2D;
+            var state = Shader.GetGlobalTexture(k_State) as Texture2D;
             if (state == null || !state.isReadable || state.width < 4 || state.height < 1)
             { Diagnostics = "readable player light-state texture unavailable"; return; }
             // Existing vehicle contract: texel2 is low-beam lens emission. Read only its on/off state,
@@ -101,7 +122,7 @@ namespace Game.Rendering
             Shader.SetGlobalVector(k_Forward, frame.forward);
             Shader.SetGlobalVector(k_Color, new Vector4(1f, 0.97f, 0.92f, 0f)*(Mathf.Min(peakCd, 60000f)*model.Exposure/Mathf.PI));
             Shader.SetGlobalFloat(k_On, 1f); Enabled = true;
-            Diagnostics = "actual anchors; low beam on; uncalibrated diffuse cone; no occlusion";
+            Diagnostics = "actual anchors; low beam on; R112 class B-shaped beam (HeadlampBeam); no occlusion";
         }
 
         static bool Finite(Vector3 v) => !float.IsNaN(v.x) && !float.IsNaN(v.y) && !float.IsNaN(v.z) &&

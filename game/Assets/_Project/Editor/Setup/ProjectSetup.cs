@@ -136,7 +136,23 @@ namespace Game.Editor.Setup
                 for (int i = 0; i < qp.tiers.Length; i++)
                     foreach (var d in defs)
                         if (string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) qp.tiers[i].lampPoolSpecular = d.lampPoolSpecular;
-                qp.revision = QualityProfile.CurrentRevision;
+                qp.revision = 191;
+                dirty = true;
+            }
+            if (qp.revision < 240)
+            {
+                // ADR 0240 (B-088): Low takes the reviewed Medium / High shadow bias (0.4 / 0.3) and stops casting from thin
+                // world casters. A Low bias that someone tuned away from the old 1.0 / 1.0 default is kept.
+                for (int i = 0; i < qp.tiers.Length; i++)
+                    foreach (var d in defs)
+                    {
+                        if (!string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) continue;
+                        qp.tiers[i].thinCasterShadowsOff = d.thinCasterShadowsOff;
+                        if (d.name != "Low") continue;
+                        if (Mathf.Abs(qp.tiers[i].shadowDepthBias - 1f) < 1e-4f) qp.tiers[i].shadowDepthBias = d.shadowDepthBias;
+                        if (Mathf.Abs(qp.tiers[i].shadowNormalBias - 1f) < 1e-4f) qp.tiers[i].shadowNormalBias = d.shadowNormalBias;
+                    }
+                qp.revision = 240;
                 dirty = true;
             }
             if (qp.canopyMaterial == null)
@@ -218,6 +234,25 @@ namespace Game.Editor.Setup
             Debug.Log("[SETUP] fixedDeltaTime 0.01 s, max 0.1 s/frame, layer 8 = Vehicle, layer 9 = WorldKerb (ignores Vehicle)");
         }
 
+        /// <summary>
+        /// Standalone Windows graphics API order (ADR 0291, owner decision 18.11.2026 after the GTX 1070 A/B in
+        /// artifacts/d3d-ab/): Direct3D 11 first = default, Direct3D 12 stays in the build as the opt-in
+        /// <c>-force-d3d12</c> (launchers Kamion-d3d12.cmd / Kamion-korytarz-d3d12.cmd). The D3D12 exclusive -> borderless
+        /// mitigation (Game.Core.Settings.ExclusiveFullscreenPolicy, crash-diag-s23) checks the runtime device type, so it
+        /// still applies when D3D12 is forced.
+        /// </summary>
+        public static readonly GraphicsDeviceType[] WindowsGraphicsApis =
+            { GraphicsDeviceType.Direct3D11, GraphicsDeviceType.Direct3D12 };
+
+        /// <summary>Idempotent: explicit (non-automatic) API list for StandaloneWindows64 in the order above.</summary>
+        public static void ApplyWindowsGraphicsApis()
+        {
+            PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64, false);
+            PlayerSettings.SetGraphicsAPIs(BuildTarget.StandaloneWindows64, (GraphicsDeviceType[])WindowsGraphicsApis.Clone());
+            Debug.Log("[SETUP] Windows graphics APIs: " + string.Join(", ", PlayerSettings.GetGraphicsAPIs(BuildTarget.StandaloneWindows64))
+                      + " (automatic=" + PlayerSettings.GetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64) + ", ADR 0291)");
+        }
+
         public static void ApplyPlayerSettings()
         {
             var android = NamedBuildTarget.Android;
@@ -231,6 +266,7 @@ namespace Game.Editor.Setup
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.Android, false);
             PlayerSettings.SetGraphicsAPIs(BuildTarget.Android, new[] { GraphicsDeviceType.Vulkan, GraphicsDeviceType.OpenGLES3 });
+            ApplyWindowsGraphicsApis();
             PlayerSettings.colorSpace = ColorSpace.Linear;
             PlayerSettings.Android.minSdkVersion = (AndroidSdkVersions)MinSdk;
             PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)TargetSdk;
@@ -258,7 +294,27 @@ namespace Game.Editor.Setup
             PlayerSettings.bakeCollisionMeshes = false;
             // GPU / CPU frame times in the diagnostics CSV (FrameTimingManager) for on-device profiling.
             PlayerSettings.enableFrameTimingStats = true;
+            ApplyStandaloneWindowSettings();
+            ApplyBatchingSettings();
             Debug.Log($"[SETUP] player settings: {ApplicationId} min={MinSdk} target={TargetSdk} IL2CPP ARM64 Vulkan+GLES3 linear landscape");
+        }
+
+        /// <summary>
+        /// Windows player window (owner request 2026-11-16): first start in borderless full screen at the native
+        /// resolution of the monitor, the window is resizable when the player switches to windowed mode, and Alt+Enter
+        /// toggles full screen / window. 1600x900 is only the size of a non-native window. A saved PC settings file
+        /// (PcSettingsRuntime, ADR 0270) still wins at startup; scripts/postbuild-windows.py forces a window only in
+        /// Kamion-okno.cmd.
+        /// </summary>
+        static void ApplyStandaloneWindowSettings()
+        {
+            PlayerSettings.fullScreenMode = FullScreenMode.FullScreenWindow;
+            PlayerSettings.defaultIsNativeResolution = true;
+            PlayerSettings.defaultScreenWidth = 1600;
+            PlayerSettings.defaultScreenHeight = 900;
+            PlayerSettings.resizableWindow = true;
+            PlayerSettings.allowFullscreenSwitch = true;
+            Debug.Log("[SETUP] standalone window: FullScreenWindow native, resizable, Alt+Enter switch, window 1600x900");
         }
 
         /// <summary>
@@ -276,6 +332,39 @@ namespace Game.Editor.Setup
             Set(ps, "androidAutoRotationBehavior", 1);   // 1 = User
             Set(ps, "AndroidIsGame", true);
             ps.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>
+        /// build-fix-s24: per-platform batching entries (m_BuildTargetBatching) written explicitly, static on / dynamic off
+        /// (Unity's defaults). Unity adds the entry of the active target to ProjectSettings.asset during the first player
+        /// build of that target, which left the tree modified after every Windows build (version stamp "-dirty"). Entry
+        /// order = the order Unity appends them in (Android first in this project, then Standalone).
+        /// </summary>
+        public static void ApplyBatchingSettings()
+        {
+            var ps = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/ProjectSettings.asset")[0]);
+            var list = Find(ps, "m_BuildTargetBatching");
+            foreach (string target in new[] { "Android", "Standalone" })
+            {
+                SerializedProperty entry = null;
+                for (int i = 0; i < list.arraySize; i++)
+                    if (list.GetArrayElementAtIndex(i).FindPropertyRelative("m_BuildTarget").stringValue == target) entry = list.GetArrayElementAtIndex(i);
+                if (entry == null)
+                {
+                    list.InsertArrayElementAtIndex(list.arraySize);
+                    entry = list.GetArrayElementAtIndex(list.arraySize - 1);
+                    entry.FindPropertyRelative("m_BuildTarget").stringValue = target;
+                }
+                SetFlag(entry.FindPropertyRelative("m_StaticBatching"), true);
+                SetFlag(entry.FindPropertyRelative("m_DynamicBatching"), false);
+            }
+            ps.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        static void SetFlag(SerializedProperty p, bool on)
+        {
+            if (p.propertyType == SerializedPropertyType.Boolean) p.boolValue = on;
+            else p.intValue = on ? 1 : 0;
         }
 
         static UniversalRenderPipelineAsset[] CreateUrpTierAssets()

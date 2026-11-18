@@ -94,3 +94,83 @@ D63/D64 uzupełnienie (2026-11-14 23:1x): w wersji „z grubsza” PRIORYTETEM j
 
 ## D65 — Odpowiedzi właściciela do tras DK65/Knyszyn (2026-11-15)
 1. Trasa Białystok → Knyszyn: **wariant A** (stara droga przez Fasty i Dobrzyniewo Duże). 2. Knyszyn DK65 × DW671: **rondo** (jak OSM). 3. Wiadukt S19 w Fastach: **stoi, otwarty**. 4. Budowa przy DK65 km 16,7–25: **jazda starą DK65, bez objazdu** (place budowy obok). 5. Ełcka/Studzienna: **wąska ~7 m** (zwęzić z 7,6 do ~6,9 m). 6. Nowa jezdnia DK65 w dk65-05: **nieotwarta** — plac budowy, trasa po starej. 7. Domyślna pora roku/światło: **lato** (zmierzch ~21:00, azymut ~300°). 8. Latarnie na trasie DK65/Knyszyn: **białe LED**.
+
+## D66 — Szerokość ul. Ełckiej (2026-11-15)
+Właściciel wybrał **6,6 m** szerokości jezdni (`width`) ul. Ełckiej / Studziennej w kaflach dk65-02…05 zamiast 6,9 m z D65. Powód: ortofoto 0,1 m pokazuje asfalt 6,5–7,1 m i linie krawędziowe 6,1–6,4 m od siebie (research K1, weryfikacja PR #80); przy 6,6 m generator rysuje linie ok. 6,2 m od siebie.
+
+## D67 — Korytarz do Knyszyna w APK (2026-11-15, s21)
+Właściciel: „dodaj korytarz do następnego APK”. Następny APK (po naprawie budżetu trójkątów C, ADR 0221) zawiera oprócz WorldC sceny regionów korytarza Białystok → DK65 → Knyszyn (Dojlidy, bialystok-knyszynska, dk65-01…11, knyszyn-s, knyszyn; w miarę rozmiaru także knyszyn-w, dk65-monki-01, dw671-tykocin-01, kleeberga, maczka) z wyborem regionu/trasy w menu. Na start bez płynnego przejścia między kaflami. Kod: chmura E, E2 (ADR 0229); lider weryfikuje i mierzy na A16 (rozmiar APK, PSS, gate3 w C bez pogorszenia). Punkt odniesienia: APK z samym C ma 224 MB.
+Uzupełnienie (właściciel, 15.11): APK instaluje sam, więc **nie może być duży**. Do korytarza wchodzi tylko tyle regionów, ile mieści się w limicie ≤ 2 GB (właściciel 15.11: instaluje sam, 2 GB akceptowalne), w razie potrzeby sama trasa główna. Docelowo regiony jako osobne paczki do pobrania (podział: osobne zadanie po tym APK).
+
+## D68 — Pora roku i zmierzch (2026-11-15, s21)
+Właściciel (decyzje z ADR 0216 §Otwarte): (1) azymut zmierzchu **300°** (ok. 15 sierpnia, −6°) — zostaje obecne LP_Dusk; (2) **lato wszędzie**: letni preset (zmierzch ok. 21:00) także w Białymstoku C i na Dojlidach — przebudowa C i D po scaleniu naprawy budżetu (0221), potem pomiar na telefonie; (3) LED Knyszyna zostaje **4000 K** (WORKING_VALUE, bez nocnego zdjęcia).
+
+## D69 — Drobne potwierdzenia (2026-11-15, s21)
+Właściciel: (1) droga **1392B** (dk65-10/11) poza zabudową **bez latarni** — potwierdzone; (2) metryka bramki 3 (B-112): **≤ 12 klatek > 40 ms na przejazd**; (3) weryfikację/recenzję kodu PR robi sesja w chmurze (prompt docs/owner/CLOUD-REVIEW-PROMPT-S21.md), lokalny lider robi budowę świata, rendery i telefon.
+
+## D70 — Sterowanie i lusterka (2026-11-15, s21; B-076)
+Właściciel: domyślny zakres kierownicy dotykowej **270°** (900° w ustawieniach); lusterka jako **stałe okienka na ekranie**; feel test bramki 2 (B-075) **później** — po bramce 3.
+
+## D71 — Decyzje po recenzji kodu s21 (2026-11-15, s21; REVIEW-2026-11-15-s21-code-*)
+Właściciel: (1) **APK D67** — dodać zestaw regionów **`d67-full`** = obecny `d67` + Dojlidy, Knyszyn-W, Mońki, Tykocin (ESTIMATED do ~1,95 GB; limit 2 GB z D67 mierzyć na buildzie); `d67` zostaje jako lżejszy wariant (PR #104, ADR 0229). (2) **Opaska ronda Knyszyn** (DK65×Tykocka, PR #97, ADR 0218) — **jasna kostka betonowa**: nowy jasny materiał z fakturą kostki zgodny ze zdjęciami S21 (nie ciepły brąz `apron_sett`, nie gładki beton). (3) **Oznakowanie dojazdu do przejazdów kolejowych** (Dz.U. 2025 poz. 1105 § 79: A-9/A-10, G-1a–f, tablica „Sygnalizacja automatyczna”, U-1) — **osobne zadanie teraz**, po scaleniu rail-fix-s21 i #102.
+
+## D72 — Limit rozmiaru APK 10 GB (2026-11-15, s22)
+Właściciel: limit rozmiaru APK z regionami podniesiony z 2 GB (D67/D71) do **10 GB**. Uwaga techniczna: pojedynczy plik APK powyżej ~4 GB nie jest obsługiwany przez Androida i format ZIP32 (UNVERIFIED dla Unity 6000.3 — sprawdzić przy buildzie); powyżej tej granicy regiony muszą iść jako osobne paczki (PR #112, ADR 0234) albo asset packs.
+
+## D73 — Windows jako platforma główna, telefon później (2026-11-15, s22)
+Właściciel: na telefon „jednak za ciężkie” → **Windows (PC) jest teraz platformą główną**; Android/iOS później jako lżejsza wersja. **Silnik bez zmian: Unity 6 URP** (właściciel wybrał wariant rekomendowany zamiast Unreal 5). Zastępuje kolejność z D56 (PC po bramce 3). D67/D71/D72 (APK z korytarzem, limit rozmiaru) stają się drugorzędne. Budżety i bramki PC: do zdefiniowania (referencyjny PC, FPS, wejście — pytanie do właściciela); do czasu pomiaru WORKING_VALUE. Dotychczasowe budżety mobilne (np. < 2 M tris High) zostają jako zabezpieczenie dla przyszłej wersji telefonowej. ADR 0260.
+
+## D74 — Wymagania sprzętowe PC jak w ETS2/ATS (2026-11-15, s22)
+Właściciel: „zobacz wymagania Euro i American Truck Simulator 2 i zrób podobne”. Przyjęte klasy (Windows 10 64-bit; źródło: karta Steam ATS 270880 i serwisy cytujące kartę ETS2 227300, stan 15.11.2026 — ETS2 do potwierdzenia na samej karcie Steam):
+- **Minimalne:** Intel Core i5-6400 / AMD Ryzen 3 1200, NVIDIA GTX 660 / AMD RX 460 / Intel HD 630 (2 GB VRAM), 8 GB RAM. Cel: tier Low, 1080p, **30 fps** (WORKING_VALUE).
+- **Zalecane:** Intel Core i5-9600 / AMD Ryzen 5 3600, NVIDIA GTX 1660 / AMD RX 590, 12 GB RAM. Cel: tier High, 1080p, **60 fps** (WORKING_VALUE).
+- Dysk: jak u nich ≤ 25 GB na grę bazową (WORKING_VALUE).
+Progi FPS i dysk to propozycja lidera (SCS nie publikuje FPS) — do potwierdzenia przy pierwszym pomiarze. Ryzyko: Intel HD 630 przy obecnym świecie (do 2 M tris High) — pomiar Low na iGPU konieczny przed obietnicą. Pomiar na maszynie deweloperskiej (RTX 5070) nie zastępuje klas minimalnej/zalecanej. ADR 0260 (uzupełnienie), chmura H zadanie H4 (0266).
+
+## D75 — Rondo Knyszyn: nowy jasny materiał i przejezdność (2026-11-15, s22)
+Właściciel: (1) opaska ronda DK65×Tykocka = **nowy jasny materiał kostki betonowej z fakturą** (nie istniejący materiał chodnika, albedo ok. 0,26 ≈ odrzucony brąz); (2) wymiary: **przejezdność przed wiernością** — asfalt pierścienia 5,0 m + opaska 3,2 m (zawracanie zestawu 16,5 m), choć na zdjęciu ok. 3,1 + 2,4 m (ESTIMATED). ADR 0218.
+
+## D76 — Pomiar klas PC: emulacja na maszynie deweloperskiej (2026-11-16, s23, OD-001)
+Właściciel: klasy „min” i „zalecany” z D74 mierzymy teraz **emulacją na RTX 5070** (ograniczenie rozdzielczości, tieru i limitu FPS) jako metodą zastępczą; raporty PC mogą zaliczać bramki z adnotacją „emulacja”. Przed publiczną obietnicą wymagań sprzętowych — pomiar na prawdziwym słabszym sprzęcie (iGPU HD 630 / GTX 660 i GTX 1660). ADR 0266.
+
+## D77 — Feel test bramki 2 na exe PC (2026-11-16, s23, OD-002)
+Właściciel robi feel test bramki 2 (ruszanie pod górę z 40 t, hamowanie, rondo, cofanie pod rampę) **na najnowszym exe PC z padem/klawiaturą** (`docs/owner/FEEL-TEST.md`); uwagi idą do strojenia 0201b, 0228, 0264. Kierownica z FFB później (nie blokuje bramki 2).
+
+## D78 — Rynek Knyszyn (#139): przejęcie lokalne, +64 draw calls Low przyjęte (2026-11-16, s23, OD-003)
+Właściciel: lider przejmuje gałąź `knyszyn-rynek-0227` lokalnie (po zakończeniu pracy Codexa) — sprzątanie artefaktów, poprawki z recenzji `REVIEW-2026-11-16-s23-code-139.md`, przebudowa kafla knyszyn, rendery i budżet; wzrost Low na kamerze `dk65-inlet-south` 240 → 304 draw calls przyjęty (telefon drugorzędny, D73). ADR 0227.
+
+## D79 — Naczepa: rozstaw sworzeń–środek tridemu 7,60 m (2026-11-16, s23, ADR 0280)
+Właściciel: skrócić rozstaw sworzeń–środek tridemu naczepy z 7,70 m do **7,60 m**, żeby zestaw mieścił się w pierścieniu skrętu 12,5/5,3 m z dyrektywy 96/53/WE (zał. I pkt 1.5): 7,135 m przy granicy 7,20 m, zapas 6,5 cm (runner fizyki, sesja P r4). Wartość 3 cm poniżej najmniejszej z kart producentów naczep 13,6 m → **WORKING_VALUE** (do potwierdzenia rysunkiem/kartą). Zmiana obejmuje dane naczepy (trailer.json, dims.json), `TrailerAssetBuilder.cs:215`, model Blendera i fizykę — lista w ADR 0280 §5; scenariusz pierścienia skrętu z oczekiwanego błędu na PASS.
+
+## D80 — Pad: warstwa „przytrzymaj Back + przycisk” (2026-11-16, s23)
+Właściciel: 6 akcji bez wolnego przycisku pada dostaje warstwę modyfikatora **Back (przytrzymany) + przycisk**; Back przestaje być wstecznym (R) — wsteczny przechodzi na inny przycisk ustalony w implementacji (ADR 0264, propozycja w raporcie sesji P r4 / docs/owner/JAK-GRAC-PC.md). Do oceny w feel teście (D77).
+
+## D81 — Trasa C ↔ Dojlidy przez DK19 Piastowska–Branickiego (2026-11-16, s23)
+Właściciel: trasa ciężarówki C ↔ Dojlidy idzie DK19 przez ul. Piastowską, pl. Antonowicza i Branickiego do ronda Meyera, ze skrętem w Ciołkowskiego (za rondem Meyera zakaz 3,5 t). Podstawa: plan UM Białegostoku (2018, 40 t) + OSM bez ograniczeń tonażowych; brak zdjęcia znaków → WORKING_VALUE do potwierdzenia. Nocne 40 km/h na Piastowskiej jako WORKING_VALUE. Kafle bialystok-mickiewicza, -bojary, -wygoda wg ADR 0278. Research: docs/owner/MAP-DECISIONS-2026-11-16.md (a).
+
+## D82 — Kierunek Podlasia: najpierw pętla S8 ↔ DW671 ↔ Tykocin (2026-11-16, s23)
+Właściciel: po kaflach Białegostoku z ADR 0278 pierwszym kierunkiem Podlasia jest **pętla S8 ↔ DW671 ↔ Tykocin** (15 kafli: S8 z węzłami i MOP, powrót przez Tykocin–Knyszyn, strefa przemysłowa przy dk65-01); zgoda na S8 mimo D64. Mońki → Grajewo później (kafel Grajewa > 2 M High wymaga redukcji). Research: docs/owner/MAP-DECISIONS-2026-11-16.md (b).
+
+## D83 — Budżety kafli dla PC: pomiar per tier zamiast limitu z telefonu (2026-11-16, s23)
+Właściciel: limit 2 mln trójkątów na kamerę High pochodzi z telefonu (A16) i nie jest automatycznie limitem PC. Budżety trójkątów i draw calls ustalamy **pomiarem per tier** (emulacja klas D74 na RTX 5070 wg D76; skalowanie na inne karty tylko z cytowanych porównań, ESTIMATED): Low (GTX 660 / HD 630) ostrożnie, High/Ultra wyżej. Do czasu pomiaru gęste kafle Białegostoku (2,6–3,75 mln) i kafel Grajewa czekają; budżety mobilne zostają jako zabezpieczenie. ADR 0266, 0269, 0278, 0282.
+
+**D79 — korekta (2026-11-16, s23, po raporcie sesji P r5):** brak karty producenta z 7,60 m; najbliższa realna wartość **7,63 m** (7 kart, rozstaw osi 1,31 m) przechodzi pierścień skrętu (zapas ~2,9 cm). Przy 7,60 m wychodziło pełzanie pustej naczepy na 12 % 5,04 mm (> 5 mm), które przechodzi dopiero od ~7,69 m. Właściciel: **7,63 m + uczciwa poprawka modelu hamulca postojowego/tarcia statycznego naczepy** (bez osłabiania testu). Zastępuje 7,60 m.
+
+## D84 — Feel test bramki 2: zaliczony 5/5 + uwagi do PC (2026-11-16, s23)
+Właściciel zrobił feel test (D77) na exe `kamion-0.1.0-e28533ca31-regions`, klawiatura, plac testowy (`-scene DrivingLab -trailer 40`): ruszanie pod górę 7 %/12 % — 5, hamowanie — 5, okrąg R50/rondo — 5, cofanie pod rampę — 5 („jak prawdziwe”). **Odczucie jazdy bramki 2 zaliczone** (pad i kierownica FFB nietestowane; geometria naczepy sprzed D79). Uwagi poza próbami: (1) **wnętrze kabiny na PC brzydkie, na telefonie było ładne** — właściciel przyśle zrzuty (do diagnozy: materiały/tekstury/oświetlenie kabiny w tierach PC); (2) **HUD i menu „zbyt AI slop”** — przeprojektować na poziom jakości gier symulacyjnych ciężarówek (styl własny, bez kopiowania cudzego wyglądu, marek i elementów), menu niewygodne w obsłudze; (3) **lusterka za małe / złe**.
+
+
+## D85 — Kontrolki dotykowe na PC: jednorazowa migracja „zawsze” → „auto” (2026-11-16, s23)
+Właściciel (klik): zapis `ui.touchControls = zawsze` na PC bez ekranu dotykowego zmienia się jednorazowo na `auto`, żeby nowy HUD monitora (ADR 0283) był widoczny. Telefon bez zmian. Źródło: raport integracji int-ui-s23 (§ ustawienia).
+
+## D86 — Sceny dk65-03/04 w buildzie dopiero z wersją High (2026-11-16, s23)
+Właściciel (klik): najpierw zbudować treść High dla dk65-03 i dk65-04, potem dodać je do EditorBuildSettings każdego buildu. Powód: po #168 jeden kafel tylko-Low przełącza streaming PC na treść Low.
+
+## D87 — Tło menu startowego: zdjęcie z gry (2026-11-16, s23)
+Właściciel (klik): menu startowe na tle statycznego zrzutu z gry (np. DK65 o świcie) z przyciemnieniem pod tekstem; bez marek. Zastępuje obecny brak tła (tekst na szachownicy placu — najgorszy element UI wg integracji int-ui-s23).
+
+## D88 — Direct3D 11 domyślnym API grafiki na Windows, D3D12 jako opcja (2026-11-18, s24, ADR 0291)
+Właściciel (klik) po pomiarze A/B na GTX 1070 (`artifacts/d3d-ab/`, knyszyn High, autopilot, 2 powtórzenia): bez limitu D3D11 171–190 kl./s vs D3D12 153–157; High 60 obie trzymają 60 (D3D12 r1: 4 klatki > 100 ms); pamięć prywatna D3D11 2,64–2,89 GB vs 3,04–3,27 GB; VRAM 1,76 vs 1,87 GB; 0 crashy przy wyjściu na obu (3 + 3 cykle). Lista API Windows = [Direct3D11, Direct3D12] jako kod (`ProjectSetup`); `-force-d3d12` (launchery `Kamion-d3d12.cmd`, `Kamion-korytarz-d3d12.cmd`) zostaje do porównań; mitygacja D3D12 (pełny ekran wyłączny → bez ramki) bez zmian. Numer D88 nadany przez agenta — do potwierdzenia przez lidera.
+
+## D90 — Kamera z fotela: FOV 70°, pasek HUD ukryty w kabinie (2026-11-18, s24, ADR 0294)
+Właściciel (klik) po wariantach `artifacts/cab-view-s24/WARIANTY.md`: domyślne pionowe FOV kamery kabiny 55° → **70°** (wariant B, wzrok 6° w dół, oko bez zmian), kamera QA `cab-driver` tak samo, suwak 45–75° zostaje; zapisane ustawienia z dawnym domyślnym 55° → 70° jednorazowo (jak D85), ręcznie zmienione zostają. Dolny pasek HUD (prędkość, bieg, ciśnienie) **ukryty w widoku z kabiny** (zasłaniał prawdziwe zegary), widoczny w kamerach zewnętrznych. Lusterek bocznych FOV nie pokaże (54–76° od osi) — zostają okienka D70.

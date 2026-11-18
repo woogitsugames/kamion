@@ -14,7 +14,7 @@ using UnityEngine.TestTools;
 namespace Game.Tests
 {
     /// <summary>
-    /// Drives the full start route of the imported world (WorldC: Kwadrat Park gate → Rondo Bieżeństwa → Andersa →
+    /// Drives the full start route of the imported world (WorldC: depot gate → Rondo Bieżeństwa → Andersa →
     /// Rondo Putry → DK8/DK19, ~2.4 km) on the imported collision with the route path follower, physics stepped in
     /// script mode at exactly 0.01 s (many steps per frame, independent of rendering speed).
     /// Checks: no fall-through (chassis never below the route ground by more than 1.5 m, wheels in contact),

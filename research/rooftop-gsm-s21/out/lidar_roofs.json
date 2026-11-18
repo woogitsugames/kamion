@@ -1,0 +1,1020 @@
+{
+ "skorupska17": {
+  "laz": "83268_1745992_N-34-107-C-b-1-4-4-2.laz",
+  "n_pts_wycinek": 120241,
+  "x2180": 779563.01,
+  "y2180": 593571.72,
+  "Z_roof_m_EVRF2007": 163.15,
+  "roof_band_IQR_m": 0.21,
+  "Z_ground_median": 143.82,
+  "roof_above_ground_m": 19.3,
+  "gps_time_min": 429002703.7215915,
+  "gps_time_max": 429002705.0283639,
+  "utc_min": "2025-04-18 09:11:25.721591",
+  "utc_max": "2025-04-18 09:11:27.028364",
+  "classes": {
+   "0": 4452,
+   "2": 61763,
+   "3": 1307,
+   "4": 929,
+   "5": 33083,
+   "6": 18691,
+   "7": 16
+  },
+  "masts": [
+   {
+    "id": "c12",
+    "dx": -1.88,
+    "dy": -2.38,
+    "opis": "maszt środkowy na ramie X (ortofoto)",
+    "telecom": true,
+    "z_top": 174.79,
+    "h_nad_dachem": 11.64,
+    "n_pts_r": 175,
+    "n_pts_powyzej_1m": 63
+   },
+   {
+    "id": "c1",
+    "dx": 1.12,
+    "dy": 15.88,
+    "opis": "wspornik/maszt narożny NE",
+    "telecom": true,
+    "z_top": 167.59,
+    "h_nad_dachem": 4.44,
+    "n_pts_r": 108,
+    "n_pts_powyzej_1m": 33
+   },
+   {
+    "id": "c29",
+    "dx": -12.38,
+    "dy": -19.12,
+    "opis": "wspornik/maszt narożny SW",
+    "telecom": true,
+    "z_top": 168.01,
+    "h_nad_dachem": 4.86,
+    "n_pts_r": 253,
+    "n_pts_powyzej_1m": 24
+   },
+   {
+    "id": "c22",
+    "dx": -22.62,
+    "dy": -11.12,
+    "opis": "wspornik przy attyce W",
+    "telecom": true,
+    "z_top": 167.57,
+    "h_nad_dachem": 4.42,
+    "n_pts_r": 112,
+    "n_pts_powyzej_1m": 24
+   }
+  ],
+  "clusters": [
+   {
+    "id": "c12",
+    "dx": -1.88,
+    "dy": -2.38,
+    "area_m2": 3.0,
+    "h_glob": 11.64,
+    "Z_base_lok": 163.22,
+    "h_lok": 11.57,
+    "n_cells": 48
+   },
+   {
+    "id": "c29",
+    "dx": -12.38,
+    "dy": -19.12,
+    "area_m2": 1.19,
+    "h_glob": 4.86,
+    "Z_base_lok": 163.18,
+    "h_lok": 4.83,
+    "n_cells": 19
+   },
+   {
+    "id": "c22",
+    "dx": -22.62,
+    "dy": -11.12,
+    "area_m2": 1.31,
+    "h_glob": 4.42,
+    "Z_base_lok": 163.13,
+    "h_lok": 4.44,
+    "n_cells": 21
+   },
+   {
+    "id": "c1",
+    "dx": 1.12,
+    "dy": 15.88,
+    "area_m2": 1.44,
+    "h_glob": 4.44,
+    "Z_base_lok": 163.18,
+    "h_lok": 4.41,
+    "n_cells": 23
+   },
+   {
+    "id": "c20",
+    "dx": -12.12,
+    "dy": -8.88,
+    "area_m2": 0.06,
+    "h_glob": 4.33,
+    "Z_base_lok": 163.19,
+    "h_lok": 4.29,
+    "n_cells": 1
+   },
+   {
+    "id": "c17",
+    "dx": -1.38,
+    "dy": -3.38,
+    "area_m2": 0.12,
+    "h_glob": 2.95,
+    "Z_base_lok": 163.2,
+    "h_lok": 2.9,
+    "n_cells": 2
+   },
+   {
+    "id": "c16",
+    "dx": -3.62,
+    "dy": -1.62,
+    "area_m2": 0.06,
+    "h_glob": 2.89,
+    "Z_base_lok": 163.21,
+    "h_lok": 2.83,
+    "n_cells": 1
+   },
+   {
+    "id": "c11",
+    "dx": -1.88,
+    "dy": 0.62,
+    "area_m2": 0.06,
+    "h_glob": 2.76,
+    "Z_base_lok": 163.2,
+    "h_lok": 2.71,
+    "n_cells": 1
+   },
+   {
+    "id": "c9",
+    "dx": -4.12,
+    "dy": -1.62,
+    "area_m2": 3.31,
+    "h_glob": 2.52,
+    "Z_base_lok": 163.2,
+    "h_lok": 2.47,
+    "n_cells": 53
+   },
+   {
+    "id": "c31",
+    "dx": -24.12,
+    "dy": -24.38,
+    "area_m2": 0.19,
+    "h_glob": 1.49,
+    "Z_base_lok": 162.18,
+    "h_lok": 2.46,
+    "n_cells": 3
+   },
+   {
+    "id": "c13",
+    "dx": -3.12,
+    "dy": -0.62,
+    "area_m2": 0.06,
+    "h_glob": 2.42,
+    "Z_base_lok": 163.2,
+    "h_lok": 2.37,
+    "n_cells": 1
+   },
+   {
+    "id": "c14",
+    "dx": -2.62,
+    "dy": -0.62,
+    "area_m2": 0.06,
+    "h_glob": 2.38,
+    "Z_base_lok": 163.21,
+    "h_lok": 2.32,
+    "n_cells": 1
+   },
+   {
+    "id": "c30",
+    "dx": -25.12,
+    "dy": -19.88,
+    "area_m2": 0.06,
+    "h_glob": 1.05,
+    "Z_base_lok": 162.05,
+    "h_lok": 2.15,
+    "n_cells": 1
+   },
+   {
+    "id": "c18",
+    "dx": -1.38,
+    "dy": -4.12,
+    "area_m2": 0.06,
+    "h_glob": 2.17,
+    "Z_base_lok": 163.19,
+    "h_lok": 2.13,
+    "n_cells": 1
+   },
+   {
+    "id": "c15",
+    "dx": -5.62,
+    "dy": -1.12,
+    "area_m2": 0.25,
+    "h_glob": 1.93,
+    "Z_base_lok": 163.2,
+    "h_lok": 1.88,
+    "n_cells": 4
+   }
+  ],
+  "h_min_med_max": [
+   4.4,
+   4.7,
+   11.6
+  ]
+ },
+ "dobra3": {
+  "laz": "83268_1745986_N-34-107-C-b-1-4-2-4.laz",
+  "n_pts_wycinek": 123605,
+  "x2180": 779516.66,
+  "y2180": 594026.08,
+  "Z_roof_m_EVRF2007": 164.29,
+  "roof_band_IQR_m": 0.5,
+  "Z_ground_median": 147.47,
+  "roof_above_ground_m": 16.8,
+  "gps_time_min": 429002712.7393468,
+  "gps_time_max": 429002714.2180543,
+  "utc_min": "2025-04-18 09:11:34.739347",
+  "utc_max": "2025-04-18 09:11:36.218054",
+  "classes": {
+   "0": 1544,
+   "2": 65937,
+   "3": 1157,
+   "4": 849,
+   "5": 18714,
+   "6": 35295,
+   "7": 109
+  },
+  "masts": [
+   {
+    "id": "c11",
+    "dx": -1.12,
+    "dy": 1.62,
+    "opis": "maszt przy węźle skrzydeł (OSM man_made=antenna)",
+    "telecom": true,
+    "z_top": 174.12,
+    "h_nad_dachem": 9.83,
+    "n_pts_r": 177,
+    "n_pts_powyzej_1m": 37
+   },
+   {
+    "id": "c6",
+    "dx": -29.88,
+    "dy": 3.62,
+    "opis": "maszt/wspornik narożnik NW skrzydła",
+    "telecom": true,
+    "z_top": 171.72,
+    "h_nad_dachem": 7.43,
+    "n_pts_r": 180,
+    "n_pts_powyzej_1m": 66
+   }
+  ],
+  "clusters": [
+   {
+    "id": "c11",
+    "dx": -1.12,
+    "dy": 1.62,
+    "area_m2": 0.94,
+    "h_glob": 9.83,
+    "Z_base_lok": 164.52,
+    "h_lok": 9.6,
+    "n_cells": 15
+   },
+   {
+    "id": "c6",
+    "dx": -29.88,
+    "dy": 3.62,
+    "area_m2": 3.31,
+    "h_glob": 7.43,
+    "Z_base_lok": 164.04,
+    "h_lok": 7.68,
+    "n_cells": 53
+   },
+   {
+    "id": "c1",
+    "dx": 5.88,
+    "dy": 9.38,
+    "area_m2": 4.06,
+    "h_glob": 2.59,
+    "Z_base_lok": 162.5,
+    "h_lok": 4.38,
+    "n_cells": 65
+   },
+   {
+    "id": "c23",
+    "dx": 12.38,
+    "dy": -5.38,
+    "area_m2": 31.25,
+    "h_glob": 4.06,
+    "Z_base_lok": 164.26,
+    "h_lok": 4.09,
+    "n_cells": 500
+   },
+   {
+    "id": "c2",
+    "dx": 5.12,
+    "dy": 8.38,
+    "area_m2": 0.25,
+    "h_glob": 2.15,
+    "Z_base_lok": 162.53,
+    "h_lok": 3.91,
+    "n_cells": 4
+   },
+   {
+    "id": "c41",
+    "dx": 29.88,
+    "dy": -16.38,
+    "area_m2": 5.19,
+    "h_glob": 3.33,
+    "Z_base_lok": 163.75,
+    "h_lok": 3.87,
+    "n_cells": 83
+   },
+   {
+    "id": "c51",
+    "dx": 29.62,
+    "dy": -18.62,
+    "area_m2": 0.06,
+    "h_glob": 2.71,
+    "Z_base_lok": 163.68,
+    "h_lok": 3.32,
+    "n_cells": 1
+   },
+   {
+    "id": "c17",
+    "dx": -0.12,
+    "dy": 0.12,
+    "area_m2": 0.06,
+    "h_glob": 2.88,
+    "Z_base_lok": 164.54,
+    "h_lok": 2.63,
+    "n_cells": 1
+   },
+   {
+    "id": "c21",
+    "dx": 16.88,
+    "dy": -0.38,
+    "area_m2": 0.25,
+    "h_glob": 2.13,
+    "Z_base_lok": 163.83,
+    "h_lok": 2.59,
+    "n_cells": 4
+   },
+   {
+    "id": "c15",
+    "dx": -1.62,
+    "dy": 0.38,
+    "area_m2": 0.12,
+    "h_glob": 2.81,
+    "Z_base_lok": 164.52,
+    "h_lok": 2.58,
+    "n_cells": 2
+   },
+   {
+    "id": "c47",
+    "dx": 29.88,
+    "dy": -17.62,
+    "area_m2": 0.12,
+    "h_glob": 1.89,
+    "Z_base_lok": 163.63,
+    "h_lok": 2.55,
+    "n_cells": 2
+   },
+   {
+    "id": "c10",
+    "dx": -1.88,
+    "dy": 0.88,
+    "area_m2": 0.38,
+    "h_glob": 2.73,
+    "Z_base_lok": 164.52,
+    "h_lok": 2.5,
+    "n_cells": 6
+   },
+   {
+    "id": "c13",
+    "dx": -2.38,
+    "dy": 0.62,
+    "area_m2": 0.06,
+    "h_glob": 2.66,
+    "Z_base_lok": 164.53,
+    "h_lok": 2.42,
+    "n_cells": 1
+   },
+   {
+    "id": "c27",
+    "dx": -10.62,
+    "dy": -2.62,
+    "area_m2": 5.56,
+    "h_glob": 2.41,
+    "Z_base_lok": 164.36,
+    "h_lok": 2.34,
+    "n_cells": 89
+   },
+   {
+    "id": "c46",
+    "dx": 27.38,
+    "dy": -17.62,
+    "area_m2": 0.06,
+    "h_glob": 1.6,
+    "Z_base_lok": 163.76,
+    "h_lok": 2.13,
+    "n_cells": 1
+   }
+  ],
+  "h_min_med_max": [
+   7.4,
+   8.6,
+   9.8
+  ]
+ },
+ "zwierzyniecka4": {
+  "laz": "83268_1746066_N-34-107-C-b-3-1-2-4.laz",
+  "n_pts_wycinek": 121362,
+  "x2180": 777543.29,
+  "y2180": 591858.86,
+  "Z_roof_m_EVRF2007": 185.94,
+  "roof_band_IQR_m": 2.7,
+  "Z_ground_median": 150.77,
+  "roof_above_ground_m": 35.2,
+  "gps_time_min": 429001122.3297029,
+  "gps_time_max": 429001647.696272,
+  "utc_min": "2025-04-18 08:45:04.329703",
+  "utc_max": "2025-04-18 08:53:49.696272",
+  "classes": {
+   "0": 3830,
+   "2": 58785,
+   "3": 265,
+   "4": 641,
+   "5": 12764,
+   "6": 23890,
+   "7": 222,
+   "12": 20965
+  },
+  "masts": [
+   {
+    "id": "c3",
+    "dx": -0.62,
+    "dy": -1.12,
+    "opis": "maszt rurowy z odciągami (OSM guyed_tube)",
+    "telecom": true,
+    "z_top": 196.49,
+    "h_nad_dachem": 10.55,
+    "n_pts_r": 162,
+    "n_pts_powyzej_1m": 162
+   },
+   {
+    "id": "c1",
+    "dx": -1.88,
+    "dy": 8.62,
+    "opis": "element przy N krawędzi",
+    "telecom": true,
+    "z_top": 189.84,
+    "h_nad_dachem": 3.9,
+    "n_pts_r": 169,
+    "n_pts_powyzej_1m": 9
+   }
+  ],
+  "clusters": [
+   {
+    "id": "c3",
+    "dx": -0.62,
+    "dy": -1.12,
+    "area_m2": 95.25,
+    "h_glob": 10.55,
+    "Z_base_lok": 187.92,
+    "h_lok": 8.57,
+    "n_cells": 1524
+   },
+   {
+    "id": "c1",
+    "dx": -1.88,
+    "dy": 8.62,
+    "area_m2": 0.38,
+    "h_glob": 3.9,
+    "Z_base_lok": 184.06,
+    "h_lok": 5.78,
+    "n_cells": 6
+   },
+   {
+    "id": "c2",
+    "dx": -0.62,
+    "dy": 8.88,
+    "area_m2": 0.12,
+    "h_glob": 2.25,
+    "Z_base_lok": 184.08,
+    "h_lok": 4.11,
+    "n_cells": 2
+   },
+   {
+    "id": "c4",
+    "dx": -6.62,
+    "dy": 3.12,
+    "area_m2": 0.06,
+    "h_glob": 1.84,
+    "Z_base_lok": 184.12,
+    "h_lok": 3.66,
+    "n_cells": 1
+   }
+  ],
+  "h_min_med_max": [
+   3.9,
+   7.2,
+   10.6
+  ]
+ },
+ "hallera19": {
+  "laz": "83268_1745939_N-34-107-C-b-1-1-3-1.laz",
+  "n_pts_wycinek": 156887,
+  "x2180": 775721.27,
+  "y2180": 595531.32,
+  "Z_roof_m_EVRF2007": 169.06,
+  "roof_band_IQR_m": 0.21,
+  "Z_ground_median": 134.38,
+  "roof_above_ground_m": 34.7,
+  "gps_time_min": 428999980.8385644,
+  "gps_time_max": 429006398.6938942,
+  "utc_min": "2025-04-18 08:26:02.838564",
+  "utc_max": "2025-04-18 10:13:00.693894",
+  "classes": {
+   "0": 2194,
+   "2": 43815,
+   "3": 853,
+   "4": 2056,
+   "5": 11566,
+   "6": 46214,
+   "7": 63,
+   "12": 50126
+  },
+  "masts": [
+   {
+    "id": "osm",
+    "dx": 0.0,
+    "dy": 0.0,
+    "r": 1.5,
+    "opis": "punkt OSM man_made=tower",
+    "telecom": false,
+    "z_top": 170.15,
+    "h_nad_dachem": 1.09,
+    "n_pts_r": 265,
+    "n_pts_powyzej_1m": 1
+   },
+   {
+    "id": "mS",
+    "dx": 0.8,
+    "dy": 2.5,
+    "r": 2.0,
+    "opis": "nadbudówka S (maszynownia?)",
+    "telecom": false,
+    "z_top": 170.18,
+    "h_nad_dachem": 1.12,
+    "n_pts_r": 483,
+    "n_pts_powyzej_1m": 15
+   },
+   {
+    "id": "mN",
+    "dx": 5.0,
+    "dy": 18.3,
+    "r": 2.0,
+    "opis": "nadbudówka N (maszynownia?)",
+    "telecom": false,
+    "z_top": 170.32,
+    "h_nad_dachem": 1.26,
+    "n_pts_r": 442,
+    "n_pts_powyzej_1m": 4
+   }
+  ],
+  "clusters": [],
+  "h_min_med_max": [
+   1.1,
+   1.1,
+   1.3
+  ]
+ },
+ "kopernika5a": {
+  "laz": "83268_1746063_N-34-107-C-b-3-1-2-1.laz",
+  "n_pts_wycinek": 111729,
+  "x2180": 777111.54,
+  "y2180": 592054.93,
+  "Z_roof_m_EVRF2007": 182.89,
+  "roof_band_IQR_m": 0.18,
+  "Z_ground_median": 148.37,
+  "roof_above_ground_m": 34.5,
+  "gps_time_min": 429001117.4847207,
+  "gps_time_max": 429001118.8903324,
+  "utc_min": "2025-04-18 08:44:59.484721",
+  "utc_max": "2025-04-18 08:45:00.890332",
+  "classes": {
+   "0": 4691,
+   "2": 66440,
+   "3": 155,
+   "4": 150,
+   "5": 13990,
+   "6": 26298,
+   "7": 5
+  },
+  "masts": [
+   {
+    "id": "c49",
+    "dx": 4.88,
+    "dy": -30.88,
+    "opis": "blok S, element wysoki",
+    "telecom": true,
+    "z_top": 186.32,
+    "h_nad_dachem": 3.43,
+    "n_pts_r": 133,
+    "n_pts_powyzej_1m": 64
+   },
+   {
+    "id": "c48",
+    "dx": 12.12,
+    "dy": -29.62,
+    "opis": "blok S, element wysoki",
+    "telecom": true,
+    "z_top": 185.68,
+    "h_nad_dachem": 2.79,
+    "n_pts_r": 150,
+    "n_pts_powyzej_1m": 35
+   },
+   {
+    "id": "c40",
+    "dx": -6.5,
+    "dy": -28.3,
+    "opis": "blok S, zach. koniec",
+    "telecom": true,
+    "z_top": 185.78,
+    "h_nad_dachem": 2.89,
+    "n_pts_r": 83,
+    "n_pts_powyzej_1m": 16
+   },
+   {
+    "id": "c8",
+    "dx": -4.12,
+    "dy": 17.38,
+    "opis": "blok N, wsch. koniec",
+    "telecom": true,
+    "z_top": 186.08,
+    "h_nad_dachem": 3.19,
+    "n_pts_r": 154,
+    "n_pts_powyzej_1m": 32
+   },
+   {
+    "id": "c24",
+    "dx": 2.12,
+    "dy": 11.12,
+    "opis": "blok N, krawędź S",
+    "telecom": true,
+    "z_top": 185.4,
+    "h_nad_dachem": 2.51,
+    "n_pts_r": 237,
+    "n_pts_powyzej_1m": 26
+   },
+   {
+    "id": "c6",
+    "dx": 3.12,
+    "dy": 19.38,
+    "opis": "blok N, narożnik NE",
+    "telecom": true,
+    "z_top": 185.28,
+    "h_nad_dachem": 2.39,
+    "n_pts_r": 392,
+    "n_pts_powyzej_1m": 21
+   }
+  ],
+  "clusters": [
+   {
+    "id": "c49",
+    "dx": 4.88,
+    "dy": -30.88,
+    "area_m2": 2.69,
+    "h_glob": 3.43,
+    "Z_base_lok": 183.04,
+    "h_lok": 3.28,
+    "n_cells": 43
+   },
+   {
+    "id": "c8",
+    "dx": -4.12,
+    "dy": 17.38,
+    "area_m2": 1.81,
+    "h_glob": 3.19,
+    "Z_base_lok": 182.83,
+    "h_lok": 3.25,
+    "n_cells": 29
+   },
+   {
+    "id": "c40",
+    "dx": -6.88,
+    "dy": -28.12,
+    "area_m2": 0.19,
+    "h_glob": 2.89,
+    "Z_base_lok": 183.1,
+    "h_lok": 2.68,
+    "n_cells": 3
+   },
+   {
+    "id": "c50",
+    "dx": 7.38,
+    "dy": -31.38,
+    "area_m2": 0.38,
+    "h_glob": 2.82,
+    "Z_base_lok": 183.07,
+    "h_lok": 2.64,
+    "n_cells": 6
+   },
+   {
+    "id": "c48",
+    "dx": 12.12,
+    "dy": -29.62,
+    "area_m2": 2.56,
+    "h_glob": 2.79,
+    "Z_base_lok": 183.06,
+    "h_lok": 2.62,
+    "n_cells": 41
+   },
+   {
+    "id": "c24",
+    "dx": 2.12,
+    "dy": 11.12,
+    "area_m2": 1.12,
+    "h_glob": 2.51,
+    "Z_base_lok": 182.83,
+    "h_lok": 2.57,
+    "n_cells": 18
+   },
+   {
+    "id": "c44",
+    "dx": -6.12,
+    "dy": -28.62,
+    "area_m2": 0.19,
+    "h_glob": 2.74,
+    "Z_base_lok": 183.09,
+    "h_lok": 2.54,
+    "n_cells": 3
+   },
+   {
+    "id": "c41",
+    "dx": -6.12,
+    "dy": -28.12,
+    "area_m2": 0.25,
+    "h_glob": 2.71,
+    "Z_base_lok": 183.08,
+    "h_lok": 2.52,
+    "n_cells": 4
+   },
+   {
+    "id": "c6",
+    "dx": 3.12,
+    "dy": 19.38,
+    "area_m2": 1.12,
+    "h_glob": 2.39,
+    "Z_base_lok": 182.83,
+    "h_lok": 2.45,
+    "n_cells": 18
+   },
+   {
+    "id": "c14",
+    "dx": -4.88,
+    "dy": 16.88,
+    "area_m2": 0.19,
+    "h_glob": 2.4,
+    "Z_base_lok": 182.85,
+    "h_lok": 2.44,
+    "n_cells": 3
+   },
+   {
+    "id": "c17",
+    "dx": -4.12,
+    "dy": 16.62,
+    "area_m2": 0.12,
+    "h_glob": 2.34,
+    "Z_base_lok": 182.85,
+    "h_lok": 2.38,
+    "n_cells": 2
+   },
+   {
+    "id": "c13",
+    "dx": -5.62,
+    "dy": 16.88,
+    "area_m2": 0.06,
+    "h_glob": 2.32,
+    "Z_base_lok": 182.86,
+    "h_lok": 2.35,
+    "n_cells": 1
+   },
+   {
+    "id": "c9",
+    "dx": -6.62,
+    "dy": 17.62,
+    "area_m2": 0.12,
+    "h_glob": 2.31,
+    "Z_base_lok": 182.86,
+    "h_lok": 2.34,
+    "n_cells": 2
+   },
+   {
+    "id": "c15",
+    "dx": -3.38,
+    "dy": 16.88,
+    "area_m2": 0.06,
+    "h_glob": 2.3,
+    "Z_base_lok": 182.85,
+    "h_lok": 2.34,
+    "n_cells": 1
+   },
+   {
+    "id": "c27",
+    "dx": -4.62,
+    "dy": -23.62,
+    "area_m2": 0.12,
+    "h_glob": 2.28,
+    "Z_base_lok": 183.1,
+    "h_lok": 2.07,
+    "n_cells": 2
+   }
+  ],
+  "h_min_med_max": [
+   2.4,
+   2.8,
+   3.4
+  ]
+ },
+ "wiezowiec_m57": {
+  "laz": "83268_1745956_N-34-107-C-b-1-2-3-2.laz",
+  "n_pts_wycinek": 100470,
+  "x2180": 778573.54,
+  "y2180": 595663.57,
+  "Z_roof_m_EVRF2007": 182.45,
+  "roof_band_IQR_m": 0.26,
+  "Z_ground_median": 141.39,
+  "roof_above_ground_m": 41.1,
+  "gps_time_min": 429002137.8833538,
+  "gps_time_max": 429002139.2632442,
+  "utc_min": "2025-04-18 09:01:59.883354",
+  "utc_max": "2025-04-18 09:02:01.263244",
+  "classes": {
+   "0": 3605,
+   "2": 78645,
+   "3": 464,
+   "4": 1410,
+   "5": 734,
+   "6": 15548,
+   "7": 64
+  },
+  "masts": [],
+  "clusters": [
+   {
+    "id": "c41",
+    "dx": -11.88,
+    "dy": -13.38,
+    "area_m2": 1.56,
+    "h_glob": 10.8,
+    "Z_base_lok": 182.55,
+    "h_lok": 10.7,
+    "n_cells": 25
+   },
+   {
+    "id": "c1",
+    "dx": -0.38,
+    "dy": 12.38,
+    "area_m2": 0.38,
+    "h_glob": 5.33,
+    "Z_base_lok": 182.48,
+    "h_lok": 5.3,
+    "n_cells": 6
+   },
+   {
+    "id": "c7",
+    "dx": 11.12,
+    "dy": 9.12,
+    "area_m2": 0.56,
+    "h_glob": 5.3,
+    "Z_base_lok": 182.51,
+    "h_lok": 5.24,
+    "n_cells": 9
+   },
+   {
+    "id": "c25",
+    "dx": 3.62,
+    "dy": -5.12,
+    "area_m2": 0.69,
+    "h_glob": 5.15,
+    "Z_base_lok": 182.46,
+    "h_lok": 5.14,
+    "n_cells": 11
+   },
+   {
+    "id": "c2",
+    "dx": 8.38,
+    "dy": 11.88,
+    "area_m2": 0.75,
+    "h_glob": 4.63,
+    "Z_base_lok": 182.44,
+    "h_lok": 4.64,
+    "n_cells": 12
+   },
+   {
+    "id": "c22",
+    "dx": -9.12,
+    "dy": -1.88,
+    "area_m2": 1.69,
+    "h_glob": 4.57,
+    "Z_base_lok": 182.55,
+    "h_lok": 4.47,
+    "n_cells": 27
+   },
+   {
+    "id": "c5",
+    "dx": -3.12,
+    "dy": 9.38,
+    "area_m2": 0.19,
+    "h_glob": 4.49,
+    "Z_base_lok": 182.52,
+    "h_lok": 4.42,
+    "n_cells": 3
+   },
+   {
+    "id": "c19",
+    "dx": -6.88,
+    "dy": 2.38,
+    "area_m2": 0.19,
+    "h_glob": 4.01,
+    "Z_base_lok": 182.5,
+    "h_lok": 3.96,
+    "n_cells": 3
+   },
+   {
+    "id": "c17",
+    "dx": 9.62,
+    "dy": 3.12,
+    "area_m2": 0.56,
+    "h_glob": 3.62,
+    "Z_base_lok": 182.53,
+    "h_lok": 3.54,
+    "n_cells": 9
+   },
+   {
+    "id": "c44",
+    "dx": -11.38,
+    "dy": -13.38,
+    "area_m2": 0.06,
+    "h_glob": 3.63,
+    "Z_base_lok": 182.55,
+    "h_lok": 3.53,
+    "n_cells": 1
+   },
+   {
+    "id": "c24",
+    "dx": 6.12,
+    "dy": -2.62,
+    "area_m2": 0.56,
+    "h_glob": 3.33,
+    "Z_base_lok": 182.5,
+    "h_lok": 3.28,
+    "n_cells": 9
+   },
+   {
+    "id": "c40",
+    "dx": 1.12,
+    "dy": -13.38,
+    "area_m2": 1.31,
+    "h_glob": 3.17,
+    "Z_base_lok": 182.55,
+    "h_lok": 3.07,
+    "n_cells": 21
+   },
+   {
+    "id": "c50",
+    "dx": -0.62,
+    "dy": -15.62,
+    "area_m2": 2.0,
+    "h_glob": 3.13,
+    "Z_base_lok": 182.54,
+    "h_lok": 3.04,
+    "n_cells": 32
+   },
+   {
+    "id": "c29",
+    "dx": -11.62,
+    "dy": -6.12,
+    "area_m2": 2.06,
+    "h_glob": 3.14,
+    "Z_base_lok": 182.57,
+    "h_lok": 3.02,
+    "n_cells": 33
+   },
+   {
+    "id": "c42",
+    "dx": -10.88,
+    "dy": -13.12,
+    "area_m2": 0.06,
+    "h_glob": 2.95,
+    "Z_base_lok": 182.52,
+    "h_lok": 2.88,
+    "n_cells": 1
+   }
+  ],
+  "h_min_med_max": null
+ }
+}

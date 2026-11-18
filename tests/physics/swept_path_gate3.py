@@ -48,13 +48,14 @@ SMOOTH_M = 4.0                  # WORKING_VALUE: driver-line smoothing (Gaussian
 # = ground below kingpin). Tyre lateral positions: centre of each tyre, half tread width.
 WB = 3.70
 FW_LEAD = 0.68
+KP_TRIDEM = 7.63                # kingpin -> tridem centre (dims.json trailer_axle_z_m; D79 / ADR 0280: 7.70 -> 7.60 -> 7.63)
 TYRES = {   # name: (frame, z, lateral centre |x|, half tread)
     "steer":   ("T", WB, 1.02, 0.1575),                          # 315/80 R22.5, track 2.04
     "drive_o": ("T", 0.0, 0.91 + 0.17, 0.1575),                  # duals, pair centre 0.91, spacing 0.34
     "drive_i": ("T", 0.0, 0.91 - 0.17, 0.1575),
-    "trl_1":   ("S", -6.39, 1.02, 0.1925),                       # 385/65 R22.5 singles, track 2.04
-    "trl_2":   ("S", -7.70, 1.02, 0.1925),
-    "trl_3":   ("S", -9.01, 1.02, 0.1925),
+    "trl_1":   ("S", -KP_TRIDEM + 1.31, 1.02, 0.1925),                       # 385/65 R22.5 singles, track 2.04
+    "trl_2":   ("S", -KP_TRIDEM, 1.02, 0.1925),
+    "trl_3":   ("S", -KP_TRIDEM - 1.31, 1.02, 0.1925),
 }
 BODY = {    # name: (frame, z, |x|)  corners
     "bumper":       ("T", WB + 1.45, 1.245),
@@ -115,7 +116,7 @@ def offtracking(k):
     R = 1.0 / np.maximum(np.abs(k), 1e-4)
     Rr = np.sqrt(np.maximum(R ** 2 - WB ** 2, 1.0))
     Rk = np.sqrt(Rr ** 2 + FW_LEAD ** 2)
-    Rt = np.sqrt(np.maximum(Rk ** 2 - 7.70 ** 2, 1.0))
+    Rt = np.sqrt(np.maximum(Rk ** 2 - KP_TRIDEM ** 2, 1.0))
     return R - Rt
 
 
@@ -217,7 +218,7 @@ def surface_raster(lo, hi):
             for mat, T in RC.node_triangles(doc, data, binoff, node).items():
                 if mat in CARRIAGEWAY:
                     c = CAT["carriageway"]
-                elif mat == "apron_sett":
+                elif mat in ("apron_sett", "apron_paving_light"):
                     c = CAT["apron"]
                 elif mat == "curb_concrete":
                     c = CAT["kerb"]
@@ -317,7 +318,7 @@ def frames(P):
         err = np.median(np.linalg.norm(tr - kp, axis=1))
         # the right sign makes the tridem centre move along the trailer axis (no side slip at walking-pace
         # off-tracking); the wrong one is off by twice the articulation
-        ax_ = tr + fS * (-7.70)
+        ax_ = tr + fS * (-KP_TRIDEM)
         v = np.gradient(ax_, axis=0)
         sp = np.linalg.norm(v, axis=1)
         mv = sp > 1e-3

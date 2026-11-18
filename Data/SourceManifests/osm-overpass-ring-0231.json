@@ -1,0 +1,41 @@
+{
+  "id": "osm-overpass-ring-0231",
+  "name": "OpenStreetMap: drogi DK65/DW671, kolej, rzeki, miejscowości i granice powiatów (admin_level 6) wokół Knyszyna, Moniek i Tykocina - wycinek do planu pierścienia ADR 0231",
+  "adr": "0231",
+  "purpose": "Definicja kafli pierścienia (bbox, drogi przelotowe, szwy, powiat) bez budowy regionów. Pipeline build_region/build_world nadal czyta przypięty pbf Geofabrik (osm-geofabrik-podlaskie, 2026-11-08).",
+  "endpoints": [
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter (major, minor)",
+    "https://overpass.private.coffee/api/interpreter (admin)"
+  ],
+  "queries": "pełny tekst zapytań Overpass QL w polu sources[].query pliku wycinka",
+  "query_bbox_wgs84": [53.15, 22.62, 53.47, 23.02],
+  "request_count": 3,
+  "user_agent": "generic (research-fetch/1.0), bez nazwy projektu",
+  "fetched_utc": {"major": "2026-11-15T17:26:02Z", "minor": "2026-11-15T17:39:56Z", "admin": "2026-11-15T17:38:49Z"},
+  "timestamp_osm_base": {"major": "2026-11-15T17:23:36Z", "minor": "2026-11-15T17:37:48Z", "admin": "2026-07-24T11:04:51Z"},
+  "timestamp_note": "Lustro Overpass dla granic (admin) miało bazę z 2026-07-24, starszą od dróg (2026-11-15). Zmiana granic powiatów 2002/2008 w tym czasie: UNVERIFIED (nie sprawdzano).",
+  "raw_answers": {
+    "in_git": false,
+    "sha256": {
+      "major.json": "2ff1c5287ebfe133b0d53a8e286b54ed3ff62cb5539ebe5b692baa6be044572a",
+      "minor.json": "a0162402972a5bcc08695e980641dbbaff0749218b99ab3b46cfb8b8c002d0f9",
+      "admin.json": "9f12e0b392325e99bbd9cbafb2edcc1de5ec326fa57cc3dc4b5b2d22792683eb"
+    },
+    "bytes": {"major.json": 399067, "minor.json": 2313599, "admin.json": 1875738},
+    "note": "Surowe odpowiedzi poza gitem (sesja chmurowa, nie zachowane). Odtworzenie: te same zapytania + ring_0231_plan.py --extract <dir>; wynik będzie inny o zmiany w OSM po dacie bazy."
+  },
+  "extract_in_git": {
+    "path": "Data/Plans/ring-0231/osm_ring_extract.json",
+    "sha256": "2a2676111ba3341ead995bafe7b5b86dcf82628dc379730233c2264b7b3b433d",
+    "size_bytes": 314303,
+    "filter": "drogi z ref 65 lub 671, highway=construction|proposed, railway=rail, waterway=river|canal, węzły railway=level_crossing i place=town|village w pasie 2048 m wokół kafli pierścienia; powiaty: relacje admin_level=6 spoligonizowane i przycięte do tego pasa"
+  },
+  "crs": "EPSG:4326 (lon/lat jak z Overpass) w wycinku; plan przelicza do EPSG:2180 (pyproj, always_xy)",
+  "extent": "kafle siatki ADR 0203 (i -13..-8, j 2..13) + 2048 m",
+  "accuracy": "Dane wolontariuszy OSM; położenie dróg zwykle 1-5 m (UNVERIFIED dla tych kafli - nieporównane z ortofoto). Wysokości: brak (wycinek 2D).",
+  "license": "ODbL 1.0",
+  "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+  "attribution": "© OpenStreetMap contributors",
+  "related": ["docs/reports/map/ring_0231_nmt_coverage.json (skorowidz arkuszy NMT GUGiK, WFS, zapytanie 2026-11-15T17:42:06Z)"],
+  "used_by": ["tools/worldgen/qa/ring_0231_plan.py", "tests/gis/test_ring_0231.py"]
+}

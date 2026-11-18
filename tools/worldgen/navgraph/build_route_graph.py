@@ -1,7 +1,9 @@
 """Routing graph of one region (KRTG v2) for the in-game GPS (ADR 0150).
 
 Inputs (all in git, no network):
-  Data/Regions/<id>/roads.graph.json       road graph with provenance (OSM ODbL + BDOT10k), EPSG:2180
+  Data/Regions/<id>/roads.graph.json       road graph with provenance (OSM ODbL + BDOT10k), EPSG:2180, read through
+                                           roads.pipeline.effective_graph (ADR 0274: authored carriageway_split
+                                           overrides applied - the topology of the generated network)
   Data/Regions/<id>/region.yaml            origin of the region-local frame (E = x - origin.x, N = y - origin.y)
   Data/Regions/<id>/turn_restrictions.json OSM type=restriction relations touching the region's ways
                                            (refreshed from the cached Geofabrik extract with --refresh-restrictions;
@@ -297,6 +299,39 @@ def _dp(points, tol):
     return [p for p, k in zip(points, keep) if k]
 
 
+def load_graph(region: str) -> dict:
+    """The routing input: roads.graph.json with the graph-level authored overrides applied (ADR 0274 `carriageway_split`,
+    roads.pipeline.effective_graph), i.e. the nodes / edges the generated network is built from, so the GPS graph
+    has the separated carriageways the player drives on. Not a silent fallback: a missing worldgen module is an
+    error (raw OSM topology would disagree with the world there). Stale overrides are reported, not hidden."""
+    sys.path.insert(0, os.path.join(REPO, "tools", "worldgen"))
+    from roads import pipeline
+    applied, stale = [], []
+    graph = pipeline.effective_graph(region, applied=applied, stale=stale)
+    if applied:
+        print(f"graph overrides applied (ADR 0274 carriageway_split): {', '.join(a['id'] for a in applied)}")
+    if stale:
+        print(f"WARNING: stale carriageway_split overrides (ingested topology kept there): {', '.join(map(str, stale))}")
+    return graph
+
+
+AXIS_SPAN_EPS_M = 1e-6  # WORKING_VALUE: arc-length tolerance when cutting an edge span out of the dense chain axis.
+                        # Far above float noise (~1e-14 m on a few-hundred-metre chain), far below the 0.5 m sampling.
+
+
+def axis_span_slice(s, a: float, b: float, eps: float = AXIS_SPAN_EPS_M) -> tuple[int, int]:
+    """Index range [i0, i1) of the samples of a chain axis (arc lengths `s`, ascending) that belong to the span
+    [a, b] (ADR 0144, D35). Rule: both ends INCLUSIVE with tolerance eps - every sample with
+    a - eps <= s[i] <= b + eps is taken. A span boundary is normally a chain vertex, i.e. a sample, and `a`/`b`
+    come out of `raw_span * k`, which can miss that sample by a few ulp (the last span's s1 * k vs the chain
+    length: +-1e-14 m, and the sign depends on summation order / platform). Without the tolerance one platform
+    kept the boundary sample and another dropped it (axis end moved by one 0.5 m step: D31, edges 22/68/.../640)."""
+    import numpy as np
+    i0 = int(np.searchsorted(s, a - eps, side="left"))
+    i1 = int(np.searchsorted(s, b + eps, side="right"))
+    return i0, i1
+
+
 def load_carriageway_axes(region: str, graph: dict) -> dict:
     """{graph edge id -> [(e, n), ...]} final carriageway centre line per edge, region-local, in the edge's
     stored from -> to orientation.
@@ -323,8 +358,7 @@ def load_carriageway_axes(region: str, graph: dict) -> dict:
         k = c.length / max(c.raw_spans[-1][1], 1e-9)      # raw span arc length -> dense line arc length
         s, p = c.line.s, c.line.p
         for s0, s1, eid, rev in c.raw_spans:
-            i0 = int(np.searchsorted(s, s0 * k))
-            i1 = int(np.searchsorted(s, s1 * k, side="right"))
+            i0, i1 = axis_span_slice(s, s0 * k, s1 * k)
             seg = p[i0:i1]
             if len(seg) < 2:
                 continue
@@ -337,8 +371,28 @@ def load_carriageway_axes(region: str, graph: dict) -> dict:
     return axes
 
 
-def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], axes: dict | None = None) -> dict:
+def load_closed_edges(region: str, graph: dict) -> set:
+    """Ids of the graph edges closed as a building site by `set: {construction: true}` in overrides.yaml (ADR 0215,
+    owner D65 p.6; schema in roads/closures.py). No overrides.yaml -> empty set. A missing yaml module is an error
+    here, not a silent fallback: an unread closure would put a road that is not open into the GPS graph."""
+    path = os.path.join(REPO, "Data", "Regions", region, "overrides.yaml")
+    if not os.path.exists(path):
+        return set()
+    sys.path.insert(0, os.path.join(REPO, "tools", "worldgen"))
+    import yaml
+    from roads import closures
+    with open(path, encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+    return closures.construction_edge_ids(graph["edges"], data.get("overrides") or [])
+
+
+def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], axes: dict | None = None,
+          closed_edges=None) -> dict:
     """Pure transform: road graph JSON -> routing graph tables (lists), deterministic order.
+
+    closed_edges (optional): graph edge ids that are not open to traffic (ADR 0215: authored `construction: true`).
+    They are left out of the routing graph together with the nodes only they touch, so neither the GPS planner nor
+    anything else that routes on KRTG (AI traffic) can use them; t["closed_edges"] lists what was dropped.
 
     axes (optional): {edge id -> carriageway axis pts, from -> to}, see load_carriageway_axes. When an edge has
     an axis, its stored geometry is the axis (the line the player sees on the minimap / GPS); the stored length
@@ -354,12 +408,24 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], ax
             names.append(n)
         return name_idx[n]
 
-    node_ids = sorted(n["id"] for n in graph["nodes"])
+    closed = set(closed_edges or ())
+    all_edges = graph["edges"]
+    graph = dict(graph, edges=[e for e in all_edges if e["id"] not in closed])
+    dropped = sorted(e["id"] for e in all_edges if e["id"] in closed)
+    orphan = ({n for e in all_edges if e["id"] in closed for n in (e["from"], e["to"])}
+              - {n for e in graph["edges"] for n in (e["from"], e["to"])})
+    node_ids = sorted(n["id"] for n in graph["nodes"] if n["id"] not in orphan)
     node_index = {nid: i for i, nid in enumerate(node_ids)}
     by_id = {n["id"]: n for n in graph["nodes"]}
     nodes = [(round(by_id[nid]["x"] - ox, 3), round(by_id[nid]["y"] - oy, 3), 1 if by_id[nid].get("boundary") else 0)
              for nid in node_ids]
     osm_node_to_idx = {by_id[nid]["osm_node"]: node_index[nid] for nid in node_ids if "osm_node" in by_id[nid]}
+    # ADR 0274: a split node moved by an authored carriageway_split (effective graph) takes over the OSM via node of
+    # the node it replaces - the restriction belongs to the same way pair, which now meets there
+    for nid in node_ids:
+        so = str(by_id[nid].get("split_of") or "")
+        if so[:1] == "n" and so[1:].isdigit():
+            osm_node_to_idx.setdefault(int(so[1:]), node_index[nid])
 
     edges = []
     skipped = 0
@@ -446,7 +512,7 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], ax
                 restr.append((f, via, t, 0 if kind.startswith("no_") else 1))
     restr = sorted(set(restr))
     t = {"names": names, "nodes": nodes, "edges": edges, "restrictions": restr, "unmapped_restrictions": unmapped,
-         "skipped_edges": skipped, "hgv_conditional_unparsed": cond_unparsed}
+         "skipped_edges": skipped, "hgv_conditional_unparsed": cond_unparsed, "closed_edges": dropped}
     t["reachability"] = mark_reachability(t)
     return t
 
@@ -706,7 +772,7 @@ def main(argv=None) -> int:
                     help="keep the raw OSM axes as edge geometry (debug / comparison)")
     args = ap.parse_args(argv)
     rdir = os.path.join(REPO, "Data", "Regions", args.region)
-    graph = json.load(open(os.path.join(rdir, "roads.graph.json"), encoding="utf-8"))
+    graph = load_graph(args.region)                 # ADR 0274: effective graph (authored carriageway splits)
     rpath = os.path.join(rdir, "turn_restrictions.json")
     if args.refresh_restrictions:
         rows = refresh_restrictions(rdir, graph, args.pbf)
@@ -717,7 +783,10 @@ def main(argv=None) -> int:
         print("WARNING: no turn_restrictions.json - all turns treated as allowed (UNVERIFIED)")
     origin = read_origin(rdir)
     axes = {} if args.no_carriageway_axis else load_carriageway_axes(args.region, graph)
-    t = build(graph, origin, rows, axes)
+    t = build(graph, origin, rows, axes, load_closed_edges(args.region, graph))
+    if t["closed_edges"]:
+        print(f"closed (construction, ADR 0215): {len(t['closed_edges'])} edges left out of the routing graph: "
+              + ", ".join(t["closed_edges"]))
     data = serialize(t)
     os.makedirs(args.out_dir, exist_ok=True)
     path = os.path.join(args.out_dir, args.region + "_route.bytes")

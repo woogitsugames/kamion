@@ -1,6 +1,5 @@
 {
  "by_kind": {
-  "furniture_in_lane": 9,
   "lane_blind_end": 12
  },
  "cases": [
@@ -23,178 +22,6 @@
    "to_chain": "c:w249303541:3993784057-2559254744",
    "turn_lanes": null,
    "what": "kerb"
-  },
-  {
-   "chain": "c:w1151440421:10711806886-14240633940",
-   "e": -780.8,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.1596562,
-   "lon": 23.0256492,
-   "n": -390.52,
-   "on_route": false,
-   "osm_ways": [
-    1516161716,
-    1567436412,
-    1570133794,
-    1567436414,
-    1151531622,
-    1570133795,
-    1557429212,
-    1151440421,
-    1564227969,
-    1564227968
-   ],
-   "what": "furniture"
-  },
-  {
-   "chain": "c:w1151440421:10711806886-14240633940",
-   "e": -777.15,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.1596479,
-   "lon": 23.025703,
-   "n": -391.25,
-   "on_route": false,
-   "osm_ways": [
-    1516161716,
-    1567436412,
-    1570133794,
-    1567436414,
-    1151531622,
-    1570133795,
-    1557429212,
-    1151440421,
-    1564227969,
-    1564227968
-   ],
-   "what": "furniture"
-  },
-  {
-   "chain": "c:w1151440421:10711806886-14240633940",
-   "e": -774.73,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.1596422,
-   "lon": 23.0257388,
-   "n": -391.75,
-   "on_route": false,
-   "osm_ways": [
-    1516161716,
-    1567436412,
-    1570133794,
-    1567436414,
-    1151531622,
-    1570133795,
-    1557429212,
-    1151440421,
-    1564227969,
-    1564227968
-   ],
-   "what": "furniture"
-  },
-  {
-   "chain": "c:w1151440421:10711806886-14240633940",
-   "e": -772.3,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.1596365,
-   "lon": 23.0257747,
-   "n": -392.25,
-   "on_route": false,
-   "osm_ways": [
-    1516161716,
-    1567436412,
-    1570133794,
-    1567436414,
-    1151531622,
-    1570133795,
-    1557429212,
-    1151440421,
-    1564227969,
-    1564227968
-   ],
-   "what": "furniture"
-  },
-  {
-   "chain": "c:w1390791621:12873954153-12873954152",
-   "e": -596.05,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.1684723,
-   "lon": 23.0292421,
-   "n": 602.77,
-   "on_route": false,
-   "osm_ways": [
-    1477375140,
-    1390791621,
-    1390791622
-   ],
-   "what": "furniture"
-  },
-  {
-   "chain": "c:w1390791621:12873954153-12873954152",
-   "e": -595.71,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.1684714,
-   "lon": 23.0292471,
-   "n": 602.68,
-   "on_route": false,
-   "osm_ways": [
-    1477375140,
-    1390791621,
-    1390791622
-   ],
-   "what": "furniture"
-  },
-  {
-   "chain": "c:w1390791621:12873954153-12873954152",
-   "e": -595.16,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.1685046,
-   "lon": 23.0292583,
-   "n": 606.41,
-   "on_route": false,
-   "osm_ways": [
-    1477375140,
-    1390791621,
-    1390791622
-   ],
-   "what": "furniture"
-  },
-  {
-   "chain": "c:w1390791621:12873954153-12873954152",
-   "e": -547.36,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.1683332,
-   "lon": 23.029958,
-   "n": 590.0,
-   "on_route": false,
-   "osm_ways": [
-    1477375140,
-    1390791621,
-    1390791622
-   ],
-   "what": "furniture"
-  },
-  {
-   "chain": "c:w1390791621:12873954153-12873954152",
-   "e": -546.94,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.1683573,
-   "lon": 23.0299666,
-   "n": 592.71,
-   "on_route": false,
-   "osm_ways": [
-    1477375140,
-    1390791621,
-    1390791622
-   ],
-   "what": "furniture"
   },
   {
    "chain": "c:w816196397:4881628415-14315732346",
@@ -418,7 +245,7 @@
    "what": "kerb"
   }
  ],
- "count": 21,
+ "count": 12,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "lane_blind_end": 1
@@ -442,10 +269,10 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 201,
-  "kerb_tris": 48944,
+  "kerb_tris": 48804,
   "lane_samples": 66814,
   "lane_samples_in_taper": 20,
-  "marking_tris": 13249,
-  "props_checked": 687
+  "marking_tris": 13253,
+  "props_checked": 695
  }
 }

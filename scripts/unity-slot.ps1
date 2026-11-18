@@ -33,7 +33,12 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $main = 'C:\Users\matma\Documents\Claude\kamion'
-if ($MaxSlots -le 0) { $MaxSlots = if ($Pool -eq 'heavy') { 4 } else { 4 } }
+# s23 17.11: 4 parallel Unity editors (7+4+3+1 GB) plus pytest/build_world left ~9 GB of 64 GB RAM free -> unity pool 2, heavy 3.
+# Override: -MaxSlots N or $env:KAMION_UNITY_SLOTS / $env:KAMION_HEAVY_SLOTS.
+if ($MaxSlots -le 0) {
+    $envMax = if ($Pool -eq 'heavy') { $env:KAMION_HEAVY_SLOTS } else { $env:KAMION_UNITY_SLOTS }
+    $MaxSlots = if ($envMax -as [int]) { [int]$envMax } elseif ($Pool -eq 'heavy') { 3 } else { 2 }
+}
 $dir = Join-Path $main ("artifacts\locks\{0}-slots" -f $Pool)
 $phone = Join-Path $main 'artifacts\locks\PHONE_RUN'
 New-Item -ItemType Directory -Force $dir | Out-Null

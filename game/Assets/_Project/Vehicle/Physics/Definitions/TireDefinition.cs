@@ -15,8 +15,15 @@ namespace Game.Vehicle.Physics
         public string id = "";
         public string size = "";
 
-        /// <summary>Effective rolling radius [m] (used for geometry and kinematics).</summary>
+        /// <summary>Geometric radius [m] of the contact model (rigid disc): used for the contact rays and the suspension
+        /// hardpoint. The tire's radial deflection is added in series (WheelGroup: hardpoint height = radius + SStatic -
+        /// refLoad / radialStiffness), so the static wheel-centre height is radius minus the static deflection (ADR 0201).
+        /// Also the contact-patch plane of the visual wheel (tyreFlatRadius).</summary>
         public double radius = 0.51;
+        /// <summary>Effective rolling radius [m] = rolling circumference / 2π: wheel speed ↔ road speed and tire force ↔ wheel
+        /// torque (drive, brake, rolling resistance). 0 = use <see cref="radius"/> (pre-ADR 0201 data).</summary>
+        public double rollingRadius = 0;
+        public double EffectiveRollingRadius => rollingRadius > 0 ? rollingRadius : radius;
         public double widthM = 0.315;
         /// <summary>Rotational inertia of tire+rim+hub+brake rotor per single wheel [kg m^2].</summary>
         public double wheelInertia = 20.0;
@@ -63,6 +70,7 @@ namespace Game.Vehicle.Physics
         {
             if (schemaVersion != CurrentSchemaVersion) throw new FormatException($"TireDefinition '{id}': unsupported schemaVersion {schemaVersion}");
             if (radius <= 0.1 || radius > 1.0) throw new FormatException($"TireDefinition '{id}': radius out of range");
+            if (rollingRadius != 0 && (rollingRadius < radius || rollingRadius > radius * 1.15)) throw new FormatException($"TireDefinition '{id}': rollingRadius must be in [radius, 1.15 radius]");
             if (peakMu <= 0 || peakMu > 2) throw new FormatException($"TireDefinition '{id}': peakMu out of range");
             if (shapeCx <= 1 || shapeCx >= 2 || shapeCy <= 1 || shapeCy >= 2) throw new FormatException($"TireDefinition '{id}': shape factor C must be in (1,2)");
             if (relaxationLengthX <= 0 || relaxationLengthY <= 0) throw new FormatException($"TireDefinition '{id}': relaxation length must be > 0");

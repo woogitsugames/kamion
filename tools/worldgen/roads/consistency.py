@@ -32,6 +32,7 @@ import shapely
 
 from . import standards as S
 from .markings import _lanes_continue, lane_layout
+from .network import lane_w_of
 
 CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
 OBSTACLE = {"curb_concrete": "kerb", "sidewalk_paving": "sidewalk", "verge_grass": "verge_grass",
@@ -57,13 +58,15 @@ class SurfaceIndex:
         for p in parts:
             if p.layer not in ("road", "bridge", "paved") or len(p.T) == 0:
                 continue
+            if p.src.startswith("tunnel"):                   # ADR 0211: ground re-emitted on a tunnel slab (merged
+                continue                                     # into the terrain) and the slab body: not road surfaces
             if p.mat in CARRIAGEWAY:
                 k = "carriageway"
             elif p.mat in OBSTACLE:
                 k = OBSTACLE[p.mat]
             elif p.layer == "paved":
                 k = "yard"
-            elif p.mat in ("apron_sett",):
+            elif p.mat in ("apron_sett", "apron_paving_light"):
                 k = "apron"
             else:
                 continue                                     # soffits, parapets, piers, barriers: not a top surface
@@ -194,7 +197,7 @@ def _lane_bands(c, secs, s):
     hw = float(c.hw_at(s))
     dirn = int(c.dirn[c.idx(s)]) or 1
     _, _, cen = lane_layout(sec, hw, dirn)
-    hb = max(0.3, sec.lane_w / 2 - LANE_INSET_M)
+    hb = max(0.3, float(lane_w_of(sec, hw)) / 2 - LANE_INSET_M)
     out = []
     if sec.oneway:
         for i, lat in enumerate(cen["fwd"]):

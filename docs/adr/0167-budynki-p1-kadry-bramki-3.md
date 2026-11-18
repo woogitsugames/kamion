@@ -1,6 +1,6 @@
 # ADR 0167 — P1 budynków w kadrach bramki 3 (cm92458760, cm109685822, wieżowiec przy Kwadracie)
 
-Status: PROPOSED na gałęzi `bldg-0167` (2026-11-13, s17); nie scalone. Liczby w „Walidacja” są zmierzone na świecie
+Status: przyjęty (scalony do main 2026-11-13, `63ddfae4f`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED na gałęzi `bldg-0167` (2026-11-13, s17); nie scalone. Liczby w „Walidacja” są zmierzone na świecie
 tej gałęzi; ocena `visual-critic` jeszcze wymagana (subagent nie uruchamia subagentów).
 Źródło: `docs/reports/visual/REVIEW-2026-11-13-s16b-final.md` (P1 cm92458760: „bezokienny biały prostopadłościan
 x 0,1–0,3”, „budynek EC szary zamiast niebieskiego”; P1 cm109685822: „budynek z prawej beżowy 3-kondygnacyjny vs

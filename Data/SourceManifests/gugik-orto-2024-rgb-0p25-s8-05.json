@@ -1,0 +1,78 @@
+{
+  "id": "gugik-orto-2024-rgb-0p25-s8-05",
+  "name": "GUGiK orthophoto RGB 0.25 m, 2024-05-27, sheets covering s8-05",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "ORTO",
+  "region": "s8-05",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze",
+  "format": "GeoTIFF",
+  "crs": "EPSG:2180 (PL-1992)",
+  "resolution_m": 0.25,
+  "extent": "sheets intersecting bbox [758539.0, 595199.0, 760587.0, 597247.0]",
+  "usage_restriction": "visual reference + alignment QA only; not a game texture (docs/05 §3)",
+  "license": "GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)",
+  "license_status": "LEGAL_REVIEW_REQUIRED (statutory basis cited from secondary sources, not from ISAP text)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)",
+  "used_by": [
+    "tools/worldgen/build_region.py --region s8-05"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393277_N-34-106-B-c-4-4.tif",
+      "godlo": "N-34-106-B-c-4-4",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-s8-05/81427_1393277_N-34-106-B-c-4-4.tif",
+      "sha256": "e425f87985a351ecd6da412a6d4380c1740dc1e32cdcb2752a0863bd9fb1b015",
+      "size_bytes": 36999536,
+      "downloaded_utc": "2026-11-16T18:45:29+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393288_N-34-106-B-d-3-3.tif",
+      "godlo": "N-34-106-B-d-3-3",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-s8-05/81427_1393288_N-34-106-B-d-3-3.tif",
+      "sha256": "4b3b72fdb67af6fbf9f9b2f8fe5678618a92cde6e8454cb1ae31da580098dae2",
+      "size_bytes": 38555840,
+      "downloaded_utc": "2026-11-16T18:45:48+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393294_N-34-106-D-a-2-2.tif",
+      "godlo": "N-34-106-D-a-2-2",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-s8-05/81427_1393294_N-34-106-D-a-2-2.tif",
+      "sha256": "2f991d79ea3b75a0f734ae2635c07f451cec1bbbb97cf51440be25b7a4064270",
+      "size_bytes": 39259512,
+      "downloaded_utc": "2026-11-16T18:46:10+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393296_N-34-106-D-b-1-1.tif",
+      "godlo": "N-34-106-D-b-1-1",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-s8-05/81427_1393296_N-34-106-D-b-1-1.tif",
+      "sha256": "3920c734d85793c2eda286c0684b91541cb6f4fff3cc2f72e3c25b85aa912854",
+      "size_bytes": 40323348,
+      "downloaded_utc": "2026-11-16T18:46:34+00:00"
+    }
+  ]
+}

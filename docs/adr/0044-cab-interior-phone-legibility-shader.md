@@ -1,6 +1,6 @@
 # ADR 0044 — Cab interior legibility at phone resolution (shader side)
 
-Status: Proposed (truck-artist), 2026-11-10. Needs visual-critic review and an A16 run. Extends the A6 shader contract
+Status: Accepted (merged to main 2026-11-10, `4b012bff2`; status updated 2026-11-16); originally: Proposed (truck-artist), 2026-11-10. Needs visual-critic review and an A16 run. Extends the A6 shader contract
 (`cab_interior_manifest.json` "shader_contract"); the manifest formula is now a lower bound, not the exact shader.
 
 ## Context

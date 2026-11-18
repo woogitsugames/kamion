@@ -18,3 +18,20 @@ overrides:
     confidence: high
     verify: probe_lod2.py / probe_underpass.py after the rebuild (nothing lower than 4.5 m above the DK8 road collision)
     set: {bridge: true}
+  # world2-s23, OD-005 (leader s23): DK8 way 261104557 crosses the seam bialystok-kleeberga | bialystok-knyszynska; the
+  # "fast" rule of assign_sides (per chain) gave a flat kerb on one side of the seam and the rural shoulder + ditch on
+  # the other (asphalt edge 3.75 | 4.75 m from the axis, qa/seams.py FAIL). GUGiK orthophoto WMS StandardResolution,
+  # tools/worldgen/qa/ortho_xsec.py, 4 stations every 40 m in bialystok-kleeberga (2026-11-16; strips
+  # artifacts/world2-s23/od005/, outside git): read by eye - guard rail right at the carriageway edge and a hard
+  # (paved) strip behind it on both sides, no ground shoulder, no ditch. The automatic asphalt width is not usable
+  # here (12-25 m: both carriageways and the slip road merge in the profile). The same entry is in both tiles.
+  - id: dk8-seam-kerb-od005
+    target: {osm_way: [261104557]}
+    source: "GUGiK orthophoto WMS StandardResolution, read 2026-11-16 (sheet date / native resolution UNVERIFIED)"
+    reason: >-
+      One cross-section family on both sides of the tile seam: hard edge (kerb profile) instead of the rural ground
+      shoulder + ditch. Stations measured only on the bialystok-kleeberga side (the edges of this way in
+      bialystok-knyszynska are too short for a station 25 m from their ends).
+    confidence: low
+    verify: owner photo or Mapillary frame of the DK8 carriageway edge at the DK65 interchange (barrier, strip behind it)
+    set: {shoulder: {kind: kerb}}

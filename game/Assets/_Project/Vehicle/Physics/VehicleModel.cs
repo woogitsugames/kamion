@@ -14,6 +14,15 @@ namespace Game.Vehicle.Physics
         public double contactArcDeg = 63;
         /// <summary>Projected Gauss-Seidel iterations for clutch + brake constraints.</summary>
         public int constraintIterations = 4;
+        /// <summary>
+        /// Largest tilt [deg] of the suspension axis from the ground-surface normal at which a wheel still has tyre contact
+        /// (ADR 0201b, F2). The raycast travel S = d / cos(tilt) - r becomes hypersensitive near 90 deg: a lying combination's
+        /// wheels jumped from S +0.19 to -0.50 m in one step (1.6 MN per wheel, +52 kJ of work in 10 ms). 72.5 deg = acos 0.3,
+        /// the angle below which <see cref="WheelGroup"/> already stopped applying F / cos(tilt) (clamp at 0.3). Beyond it
+        /// the truck is on its side and the chassis colliders carry it (Unity: PhysX colliders, runner: BodyGroundContact).
+        /// WORKING_VALUE. Also rejects a ray grazing a vertical face (kerb side): no suspension load from a side face.
+        /// </summary>
+        public double maxContactTiltDeg = 72.5;
     }
 
     /// <summary>
@@ -81,7 +90,25 @@ namespace Game.Vehicle.Physics
         public bool ParkingBrakeWarning { get; private set; }
         /// <summary>Increments on every rising edge of <see cref="ParkingBrakeWarning"/> (chime event; poll and compare, zero GC).</summary>
         public int ParkingBrakeWarningCount { get; private set; }
+        /// <summary>Steered-axle aligning torque for the steering feedback [N m] (wheel force feedback, touch-wheel return):
+        /// the raw sum, smoothed while the tractor-trailer bodies touch (ADR 0228, see <see cref="NotifyBodyContact"/>).</summary>
         public double AligningTorqueTotal { get; private set; }
+        /// <summary>Unfiltered sum of the steered wheels' aligning torque of this step [N m] (telemetry, tests).</summary>
+        public double AligningTorqueRaw { get; private set; }
+        double _contactFeedbackTimer, _contactFeedbackRelease;
+        bool _feedbackSmoothing;
+
+        /// <summary>
+        /// Called by <see cref="CombinationModel"/> after a step with tractor-trailer body contact: the steering-feedback estimate
+        /// is smoothed with <see cref="SteeringDefinition.contactFeedbackLagS"/> from the next step on (allocation-free).
+        /// </summary>
+        public void NotifyBodyContact()
+        {
+            if (Steering.Def.contactFeedbackLagS <= 0) return;
+            _contactFeedbackTimer = Steering.Def.contactFeedbackHoldS;
+            _contactFeedbackRelease = 0;
+            _feedbackSmoothing = true;
+        }
         public double ClutchSlipPower { get; private set; }
 
         readonly int[] _driven;
@@ -123,7 +150,7 @@ namespace Game.Vehicle.Physics
             _driven = driven.ToArray();
             _invDrivenInertiaSum = 0;
             foreach (int i in _driven) _invDrivenInertiaSum += 1.0 / Wheels[i].Inertia;
-            _wheelRadiusRef = Wheels[_driven[0]].Radius;
+            _wheelRadiusRef = Wheels[_driven[0]].RollingRadius;
 
             Forces = new AppliedForce[Wheels.Length + 1];
             Air.InitSpringChambers(Group, false);
@@ -154,7 +181,7 @@ namespace Game.Vehicle.Physics
         /// <summary>Initialise wheel speeds and drivetrain for a vehicle already moving at `speed` m/s.</summary>
         public void InitializeMoving(double speed, int gear)
         {
-            foreach (var w in Wheels) { w.Omega = speed / w.Radius; w.OmegaPrevStep = w.Omega; w.Ux = 0; w.Uy = 0; }
+            foreach (var w in Wheels) { w.Omega = speed / w.RollingRadius; w.OmegaPrevStep = w.Omega; w.Ux = 0; w.Uy = 0; }
             if (gear == 0 && speed > 0.5)
             {
                 gear = Amt.BestGearForSpeed(speed / _wheelRadiusRef, Amt.Def.downshiftRpmLight + 150);
@@ -208,6 +235,7 @@ namespace Game.Vehicle.Physics
             double pedal = Math.Min(MathUtil.Clamp01(input.Throttle), SpeedLimiterFactor) * AsrFactor;
             DriverInput amtInput = input;
             amtInput.Throttle = pedal;
+            Amt.ShiftSchedulePedal = Math.Min(MathUtil.Clamp01(input.Throttle), SpeedLimiterFactor);
             Amt.AbsActive = Air.AbsAnyActive;
             Amt.EngineBrakeRequest = EngineBrakeCommand > 0.01;
             // Spring brakes count as applied until fully released (the AMT waits for the release, ~0.7 s).
@@ -299,7 +327,21 @@ namespace Game.Vehicle.Physics
             Group.AssembleForces(ns, chassis, Forces, ref count, ref totalF, ref totalT);
             double mz = 0;
             foreach (var w in Wheels) if (w.Steered && w.Contact) mz += w.AligningTorque;
-            AligningTorqueTotal = mz;
+            AligningTorqueRaw = mz;
+            if (_feedbackSmoothing)
+            {
+                // Contact (or its hold) active: lag the feedback (first order, contactFeedbackLagS). After the hold the lag
+                // shrinks linearly to 0 within one lag time, so the estimate meets the raw value at most hold + lag after the
+                // last contact and without a step. (Before: hand-back at |raw - smoothed| < 1 N m, which never came while the
+                // raw torque kept ramping: 4.1 s / > 6.9 s tails measured, review P2-113-2.)
+                double lag = Steering.Def.contactFeedbackLagS;
+                double lagEff = lag * Math.Max(0.0, 1.0 - _contactFeedbackRelease / lag);
+                AligningTorqueTotal += (mz - AligningTorqueTotal) * (dt / (lagEff + dt));
+                if (_contactFeedbackTimer > 0) _contactFeedbackTimer -= dt;
+                else _contactFeedbackRelease += dt;
+                if (_contactFeedbackRelease >= lag) { _feedbackSmoothing = false; AligningTorqueTotal = mz; }
+            }
+            else AligningTorqueTotal = mz;
 
             // Aerodynamic drag (still air).
             Vec3 v = chassis.LinearVelocity;

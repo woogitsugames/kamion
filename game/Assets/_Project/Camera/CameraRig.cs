@@ -23,7 +23,7 @@ namespace Game.Cameras
         public CameraMode mode = CameraMode.Cab;
 
         [Header("Cab")]
-        public float cabFov = 55f;
+        public float cabFov = 70f;   // D90 / ADR 0294 (ControlSettings.DefaultCabFovDeg sets it at runtime)
         /// <summary>Informational: the rest gaze is DriverHead.RestPitchDownDeg (same as the A7 control cameras).</summary>
         public float CabPitchDown => DriverHead.RestPitchDownDeg;
         public float headGain = 0.006f;      // m per m/s^2
@@ -192,7 +192,26 @@ namespace Game.Cameras
             m_LogN = 0;
         }
 
-        void OnDisable() => FlushPoseLog();
+        void OnDisable()
+        {
+            FlushPoseLog();
+            if (m_OnOriginMoved != null) Game.Core.FloatingOrigin.Moved -= m_OnOriginMoved;
+        }
+
+        System.Action<Vector3> m_OnOriginMoved;
+
+        void OnEnable()
+        {
+            if (m_OnOriginMoved == null) m_OnOriginMoved = OnOriginMoved;
+            Game.Core.FloatingOrigin.Moved += m_OnOriginMoved;
+        }
+
+        /// <summary>Floating-origin rebase (ADR 0235): the smoothed chase position and the pose-log reference move with the world.</summary>
+        void OnOriginMoved(Vector3 offset)
+        {
+            m_ChasePos += offset;
+            m_LastTargetPos += offset;
+        }
         void OnApplicationPause(bool paused) { if (paused) FlushPoseLog(); }
 
         /// <summary>Public for tests; called from LateUpdate in Cab mode.</summary>

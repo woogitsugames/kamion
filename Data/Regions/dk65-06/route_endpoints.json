@@ -1,0 +1,15 @@
+{
+ "provenance": "authored_override (ADR 0214): control route for cameras/QA = the D64 truck route Białystok -> Knyszyn (variant A of ADR 0203, owner D65 p.4: old DK65, no diversion) inside this tile",
+ "description": "Old DK65 north-westbound from the south edge (seam with dk65-05) to the west edge (seam with dk65-07). Route variant A km 16.561-18.264 of docs/reports/map/dk65_route_plan.json.",
+ "start_epsg2180": [
+  767660.9,
+  603391.0
+ ],
+ "end_epsg2180": [
+  766731.0,
+  604721.5
+ ],
+ "confidence": "high (OSM geometry; plan tile entry/exit points snapped to the tile edge; seam points identical to the neighbour tiles)",
+ "start_s_m": 340.0,
+ "start_s_note": "authored_override (owner decision 2026-11-16, s23): the rule start (90 m: 60 m closure + 25 m + 5 m, ADR 0262) fell on the entry of the Dobrzyniewo roundabout (route s ~103-195 m on the ring, exit arm to ~230 m, link to ~311 m). 340 m = tractor origin on the first straight past the roundabout (route heading constant from s ~320 m, measured on route_start.json points_en; trailer rear end ~326 m). WORKING_VALUE."
+}

@@ -27,8 +27,9 @@ MonoBehaviour:
     cascade4Split: {x: 0.067, y: 0.2, z: 0.467}
     softShadows: 0
     softShadowQuality: 1
-    shadowDepthBias: 1
-    shadowNormalBias: 1
+    shadowDepthBias: 0.4
+    shadowNormalBias: 0.3
+    thinCasterShadowsOff: 1
     anisotropic: 1
     worldTextureAniso: 2
     worldMipBias: 0
@@ -64,6 +65,7 @@ MonoBehaviour:
     nightWindowsOff: 0
     lampGlareOff: 0
     lampFloorOff: 0
+    projectedHeadlamps: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 0
@@ -95,6 +97,7 @@ MonoBehaviour:
     softShadowQuality: 1
     shadowDepthBias: 0.4
     shadowNormalBias: 0.3
+    thinCasterShadowsOff: 0
     anisotropic: 1
     worldTextureAniso: 4
     worldMipBias: 0
@@ -130,6 +133,7 @@ MonoBehaviour:
     nightWindowsOff: 0
     lampGlareOff: 0
     lampFloorOff: 0
+    projectedHeadlamps: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 1
@@ -161,6 +165,7 @@ MonoBehaviour:
     softShadowQuality: 1
     shadowDepthBias: 0.4
     shadowNormalBias: 0.3
+    thinCasterShadowsOff: 0
     anisotropic: 1
     worldTextureAniso: 8
     worldMipBias: 0
@@ -196,6 +201,7 @@ MonoBehaviour:
     nightWindowsOff: 0
     lampGlareOff: 0
     lampFloorOff: 0
+    projectedHeadlamps: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 1
@@ -227,6 +233,7 @@ MonoBehaviour:
     softShadowQuality: 3
     shadowDepthBias: 0.6
     shadowNormalBias: 0.6
+    thinCasterShadowsOff: 0
     anisotropic: 2
     worldTextureAniso: 16
     worldMipBias: 0
@@ -262,6 +269,7 @@ MonoBehaviour:
     nightWindowsOff: 0
     lampGlareOff: 0
     lampFloorOff: 0
+    projectedHeadlamps: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 2
@@ -277,7 +285,7 @@ MonoBehaviour:
     budgetTextureMB: 384
     budgetShadowMs: 3
     budgetStatus: UNMEASURED (no flagship attached)
-  revision: 191
+  revision: 240
   deviceRules:
   - gpuContains: Mali-G57
     modelContains: 
@@ -318,7 +326,8 @@ MonoBehaviour:
     modelContains: 
     maxRamMb: 0
     tier: High
-    note: "Galaxy Z Fold (Adreno 840, 5.65 Mpx inner): measured, High/30 GPU p95 29 ms; Ultra/60 ~25 FPS (ADR 0152)"
+    note: 'Galaxy Z Fold (Adreno 840, 5.65 Mpx inner): measured, High/30 GPU p95
+      29 ms; Ultra/60 ~25 FPS (ADR 0152)'
   - gpuContains: Immortalis
     modelContains: 
     maxRamMb: 0

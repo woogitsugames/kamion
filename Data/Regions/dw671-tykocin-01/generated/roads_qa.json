@@ -477,7 +477,9 @@
    ],
    "length_m": 51.5,
    "max_grade": 0.0044,
-   "overrides": [],
+   "overrides": [
+    "dw671-ground-shoulder"
+   ],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -500,7 +502,9 @@
    ],
    "length_m": 443.3,
    "max_grade": 0.0184,
-   "overrides": [],
+   "overrides": [
+    "dw671-ground-shoulder"
+   ],
    "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -686,7 +690,9 @@
    ],
    "length_m": 228.7,
    "max_grade": 0.0258,
-   "overrides": [],
+   "overrides": [
+    "dw671-ground-shoulder"
+   ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -709,7 +715,9 @@
    ],
    "length_m": 89.6,
    "max_grade": 0.0196,
-   "overrides": [],
+   "overrides": [
+    "dw671-ground-shoulder-crossing"
+   ],
    "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -732,7 +740,9 @@
    ],
    "length_m": 752.2,
    "max_grade": 0.051,
-   "overrides": [],
+   "overrides": [
+    "dw671-ground-shoulder"
+   ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -755,7 +765,9 @@
    ],
    "length_m": 742.7,
    "max_grade": 0.0368,
-   "overrides": [],
+   "overrides": [
+    "dw671-ground-shoulder"
+   ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1008,7 +1020,9 @@
    ],
    "length_m": 168.7,
    "max_grade": 0.0094,
-   "overrides": [],
+   "overrides": [
+    "seam-field-road-98071886-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1257,18 +1271,19 @@
    "S": 5.0,
    "Z": 4.5
   },
+  "compact_roundabouts": [],
   "crossings_in_junction": [],
   "crossings_merged": 0,
   "crossings_p11": 0,
   "crossings_skipped": [],
   "crossings_snapped": 1,
   "decals": {
-   "gullies": 487,
+   "gullies": 390,
    "oil": 33,
-   "patches": 101
+   "patches": 125
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 84305,
+  "footprint_nodes": 91339,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1417,7 +1432,10 @@
   "markings": {
    "P-1 centre line": 8,
    "P-10 crossing": 1,
-   "P-13": 5
+   "P-13": 5,
+   "P-14 level crossing": 2,
+   "P-4 level crossing approach": 1,
+   "P-7b edge line": 12
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
@@ -1428,6 +1446,30 @@
     "targets": [
      "w98072327:1134823349-1842392498"
     ]
+   },
+   {
+    "id": "dw671-ground-shoulder",
+    "targets": [
+     "w145989268:2294616501-840039859",
+     "w145989268:839431484-2294616501",
+     "w286989055:1134818383-1134823349",
+     "w286989055:1134823349-3048903671",
+     "w286989055:1845461231-839431484",
+     "w286989055:2906546700-1134818383",
+     "w286989055:3048903671-1845461231"
+    ]
+   },
+   {
+    "id": "dw671-ground-shoulder-crossing",
+    "targets": [
+     "w286989055:1845461231-839431484"
+    ]
+   },
+   {
+    "id": "seam-field-road-98071886-unlit",
+    "targets": [
+     "w98071886:1134817563-839431340"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -1436,6 +1478,23 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 0,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 0
+  },
+  "seam_tapers": [
+   {
+    "chain": "c:w98071886:1134817563-839431340",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "knyszyn-s",
+    "step_m": 0.1,
+    "width_other": 5.7,
+    "width_own": 5.5,
+    "width_seam": 5.6
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 0,
    "parts": 0,
@@ -1446,14 +1505,16 @@
    "crossing_pairs_skipped": 6,
    "junctions": 5,
    "lines": {
+    "P-7a": 4,
+    "P-7b": 4,
     "lane": 5
    },
    "pairs": 22,
-   "unmatched": 1
+   "unmatched": 3
   },
   "verge_strips": {
-   "chunks": 32,
-   "tris": 10656
+   "chunks": 28,
+   "tris": 9916
   },
   "walled_ramps": []
  }

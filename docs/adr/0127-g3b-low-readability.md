@@ -1,6 +1,6 @@
 # ADR 0127 — G3-B legibility on Low: lattice portal at distance, HV tower, noise screens
 
-Status: implemented on branch `g3b-lowread` (base main `31e54e00`, 2026-11-12); not merged. Gate 3 is NOT re-judged
+Status: Accepted (merged to main 2026-11-12, `a6cfe38ab`; status updated 2026-11-16); originally: implemented on branch `g3b-lowread` (base main `31e54e00`, 2026-11-12); not merged. Gate 3 is NOT re-judged
 here (visual-critic).
 Source: `docs/reports/visual/REVIEW-2026-11-12-s11-0125.md` — P1 "bramownica z daleka (LOD)", P1 "czytelność słupa WN
 i ekranów", P2 "tablice wiszą pod górnym pasem"; open blockers 5 and 6 of gate 3 (D51). Starting point: ADR 0125.

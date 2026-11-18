@@ -1,0 +1,288 @@
+{
+ "seed": 20261115,
+ "metoda": "random.seed(20261115); random.sample(range(N), ceil(0.2*N)); ponowne obejrzenie obrazu (zoom ortofoto / JPG 960 px) + ponowny sha256 + ponowne pobranie URL",
+ "n_rows": 136,
+ "n_audited": 28,
+ "items": [
+  {
+   "id": "K1-006",
+   "temat": "a",
+   "element": "DK65 trasa A km 12.00 (DK65 km ~158.05)",
+   "plik": "files/orto/km/km12.00_rot.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "url_ct": "image/jpeg",
+   "wynik": "FIX",
+   "uwagi": "Ponowne obejrzenie zoom km 12,00: lewej linii krawędziowej nie widać wyraźnie (wcześniej 'ciągła słabo widoczna'); pozycja L wzięta z krawędzi asfaltu → status UNVERIFIED, opis poprawiony."
+  },
+  {
+   "id": "K1-007",
+   "temat": "a",
+   "element": "DK65 trasa A km 12.50 (DK65 km ~157.55)",
+   "plik": "files/orto/km/km12.50_rot.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "url_ct": "image/jpeg",
+   "wynik": "FIX",
+   "uwagi": "Zoom km 12,50: lewa linia krawędziowa jest przerywana (krótkie kreski), nie ciągła → poprawiono opis."
+  },
+  {
+   "id": "K1-011",
+   "temat": "a",
+   "element": "DK65 trasa A km 14.50 (DK65 km ~155.55)",
+   "plik": "files/orto/km/km14.50_rot.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "url_ct": "image/jpeg",
+   "wynik": "PASS",
+   "uwagi": "Zoom km 14,50: L ciągła −3,25, oś ciągła, P przerywana wzdłuż poszerzenia — zgodne."
+  },
+  {
+   "id": "K1-020",
+   "temat": "a",
+   "element": "DK65 trasa A km 21.65 (DK65 km ~148.4)",
+   "plik": "files/orto/km/km21.65_rot.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "url_ct": "image/jpeg",
+   "wynik": "PASS",
+   "uwagi": "Zoom km 21,65: obie krawędziowe przerywane, oś przerywana — zgodne."
+  },
+  {
+   "id": "K1-021",
+   "temat": "a",
+   "element": "DK65 trasa A km 22.00 (DK65 km ~148.05)",
+   "plik": "files/orto/km/km22.00_rot.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "url_ct": "image/jpeg",
+   "wynik": "PASS",
+   "uwagi": "Zoom km 22,00: jw. — zgodne."
+  },
+  {
+   "id": "K1-024",
+   "temat": "a",
+   "element": "DK65 trasa A km 24.60 (DK65 km ~145.45)",
+   "plik": "files/orto/km/km24.60_rot.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "url_ct": "image/jpeg",
+   "wynik": "PASS",
+   "uwagi": "Zoom km 24,60: L ciągła, oś długie kreski, P ciągła ~+2,75 — zgodne."
+  },
+  {
+   "id": "K1-025",
+   "temat": "a",
+   "element": "DK65 trasa A km 25.00 (DK65 km ~145.05)",
+   "plik": "files/orto/km/km25.00_rot.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "url_ct": "image/jpeg",
+   "wynik": "PASS",
+   "uwagi": "Zoom km 25,00: L ciągła −3,75, oś ciągła −0,75, P przerywana +2,25, zatoka P — zgodne."
+  },
+  {
+   "id": "K1-031",
+   "temat": "a",
+   "element": "OSM secondary  Szosa Knyszyńska",
+   "plik": "",
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "API ways 200; tagi lanes/surface/maxspeed zgodne z data/osm_route_ways.json."
+  },
+  {
+   "id": "K1-042",
+   "temat": "a",
+   "element": "OSM secondary ref=671 Tykocka",
+   "plik": "",
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "API 200; Tykocka secondary ref=671."
+  },
+  {
+   "id": "K1-044",
+   "temat": "a",
+   "element": "OSM secondary ref=671 Tykocka",
+   "plik": "",
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "API 200."
+  },
+  {
+   "id": "K1-046",
+   "temat": "a",
+   "element": "pokrycie zdjęciami ulicznymi kafla",
+   "plik": "",
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "Panoramax search URL 200; liczba zgodna z query_log."
+  },
+  {
+   "id": "K1-050",
+   "temat": "a",
+   "element": "pokrycie zdjęciami ulicznymi kafla",
+   "plik": "",
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "jw."
+  },
+  {
+   "id": "K1-064",
+   "temat": "f",
+   "element": "ul. Grodzieńska — stara tabliczka",
+   "plik": "files/photos/K1-P05.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "Ponownie obejrzane: niebieska tabliczka UL. GRODZIEŃSKA na białym tynku — zgodne."
+  },
+  {
+   "id": "K1-066",
+   "temat": "f",
+   "element": "Urząd Miasta przy Rynku",
+   "plik": "files/photos/K1-P07.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "Ponownie obejrzane w 960 px: 2 kondygnacje + lukarny, czerwony dach, kremowe kolumny portyku, żółte obramienia — zgodne; dodatkowo widać szyldy biblioteki i ośrodka kultury."
+  },
+  {
+   "id": "K1-067",
+   "temat": "f",
+   "element": "Rynek — pomnik Zygmunta Augusta i zegar słoneczny",
+   "plik": "files/photos/K1-P08.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "Pomnik na granitowym cokole + blok z tablicą, kostka z czerwonym wzorem — zgodne."
+  },
+  {
+   "id": "K1-070",
+   "temat": "f",
+   "element": "dom z XVIII w. (2019)",
+   "plik": "files/photos/K1-P11.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "Biały parterowy dom, czerwono-brązowa dachówka, brązowy płot, słup — zgodne."
+  },
+  {
+   "id": "K1-078",
+   "temat": "f",
+   "element": "pierzeja Rynku — budynek handlowy",
+   "plik": "files/photos/K1-P19.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "Ciemnoczerwona cegła + tynk, napis firmowy — zgodne."
+  },
+  {
+   "id": "K1-088",
+   "temat": "a",
+   "element": "Szosa Knyszyńska w Fastach km 8,12 (2020)",
+   "plik": "files/photos/K1-P29.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "Podwójna ciągła oś → przerywana, chodnik L, znak pieszo-rowerowy P, słupy z wysięgnikami L — zgodne."
+  },
+  {
+   "id": "K1-091",
+   "temat": "g",
+   "element": "stacja Knyszyn (Krypno) — perony",
+   "plik": "files/photos/K1-P32.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "Peron, latarnia z 2 ramionami, trakcja, EZT — zgodne; ~3 km od trasy (współrzędne Commons)."
+  },
+  {
+   "id": "K1-092",
+   "temat": "g",
+   "element": "stacja Knyszyn — budynek",
+   "plik": "files/photos/K1-P33.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "Żółty budynek dworca 2 kondygnacje z tablicą nazwy — zgodne."
+  },
+  {
+   "id": "K1-100",
+   "temat": "f",
+   "element": "tablica pamiątkowa na ścianie kościoła",
+   "plik": "files/photos/K1-P41.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "Granitowa tablica złote litery 1930 — zgodne."
+  },
+  {
+   "id": "K1-106",
+   "temat": "b",
+   "element": "rondo S16 na DK65 ~3 km na S od Knyszyna (w budowie)",
+   "plik": "",
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "OSM way 1511762690 200; cytat Auto Świat sprawdzony (WebFetch 2026-11-15)."
+  },
+  {
+   "id": "K1-111",
+   "temat": "c",
+   "element": "S19 Krynice–Dobrzyniewo–Białystok Zachód",
+   "plik": "",
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "URL 200; cytat o oddaniu 20.10.2026 zgodny."
+  },
+  {
+   "id": "K1-112",
+   "temat": "c",
+   "element": "wiadukt S19 nad Szosą Knyszyńską w Fastach — objazd",
+   "plik": "",
+   "url_status": "ERR ConnectionError",
+   "wynik": "PASS",
+   "uwagi": "gov.pl nadal niedostępne (ConnectionError) — wiersz już UNVERIFIED, bez zmian."
+  },
+  {
+   "id": "K1-113",
+   "temat": "c",
+   "element": "wiadukt S19 w Fastach — stan na ortofoto",
+   "plik": "files/orto/junctions/J_s19_wiadukt_km10_3_north.jpg",
+   "sha_ok": true,
+   "url_status": 200,
+   "url_ct": "WMS_XML",
+   "wynik": "FIX",
+   "uwagi": "Ponowne obejrzenie wycinka: obiekt to płyta wiaduktu na przyczółkach nad wykopem korytarza S19 (N–S), droga objazdem łukiem obok — doprecyzowano opis."
+  },
+  {
+   "id": "K1-116",
+   "temat": "c",
+   "element": "OSM — budowa wzdłuż DK65",
+   "plik": "",
+   "url_status": 200,
+   "wynik": "PASS",
+   "uwagi": "OSM way 200."
+  },
+  {
+   "id": "K1-118",
+   "temat": "e",
+   "element": "latarnie w OSM",
+   "plik": "",
+   "url_status": 400,
+   "wynik": "FIX",
+   "uwagi": "URL bez bbox zwracał 400 → podmieniono na przykładowe zapytanie z bbox (200)."
+  },
+  {
+   "id": "K1-122",
+   "temat": "e",
+   "element": "oświetlenie DK65 poza terenem zabudowanym",
+   "plik": "",
+   "url_status": 200,
+   "url_ct": "WMS_XML",
+   "wynik": "PASS",
+   "uwagi": "WMS 200; ponowne obejrzenie zoomów km 17–25: brak cieni słupów przy jezdni poza zatoką km 19."
+  }
+ ],
+ "pass": 24,
+ "fix": 4
+}

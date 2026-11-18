@@ -107,11 +107,28 @@ def clean_under_bridges(nmt, deck, deck_mask, thickness, iters=400):
     return out, bad
 
 
+TERRAIN_UNDER_WALLED = 0.15   # m: ground kept under the surface of a walled ramp (fill, no soffit), c-p1-s23, WORKING_VALUE
+
+
 def clamp_under_decks(z, deck, deck_mask, thickness, ground_mask):
     """Terrain under a deck stays >= 0.3 m below the soffit (except where a ground road runs)."""
     top = ndimage.maximum_filter(np.where(deck_mask, deck, -np.inf), size=3)
     under = np.isfinite(top) & ~ground_mask
     return np.where(under, np.minimum(z, top - thickness - 0.3), z)
+
+
+def level_under_walled(z, fill, keep):
+    """c-p2-s23 (REVIEW s23 c-p1 P2, g3b_ext34_s1482): ground inside the outline of a walled ramp (`fill`: nodes
+    between the two wall lines + margin, build_world.walled_fill_mask) never stands above the nearest ground node
+    outside it. The fill is hidden under the deck, but a node kept just under the ramp surface made the terrain
+    triangles that cross the wall line climb through the wall face and its painted band (0.3-0.45 m above the
+    wall foot at E -387 N -104). Nodes of `keep` (ground roads / paved) are not moved. Returns (z, nodes lowered)."""
+    fill = np.asarray(fill, bool) & ~np.asarray(keep, bool)
+    if not fill.any() or fill.all():
+        return z, 0
+    _, (jj, ii) = ndimage.distance_transform_edt(fill, return_indices=True)
+    out = np.where(fill, np.minimum(z, z[jj, ii]), z)
+    return out, int((out < z - 1e-6).sum())
 
 
 def tidy(z, road, mask, dist, close_m=7, iters=150):
@@ -176,7 +193,7 @@ def conform(hf, road, mask, soft=None):
 
 WALL_MAX = 0.15            # m: visible vertical step between a ground surface edge and the terrain (REVIEW r4 W-H5)
 WALL_STEEP_NZ = 0.26       # |normal.z| below this = "vertical" face (steeper than ~75 deg)
-WALL_SKIP_MATS = ("curb_concrete", "edging_concrete", "bridge_concrete", "bridge_soffit", "apron_sett",
+WALL_SKIP_MATS = ("curb_concrete", "edging_concrete", "bridge_concrete", "bridge_soffit", "apron_sett", "apron_paving_light",
                   # ADR 0092: the gate closure line (panel fence on a plinth, steel posts) lives in the paved layer
                   # (streetscape.gate._closure) - fence faces are not terrain walls
                   "concrete_plinth", "fence_anthracite", "fence_anthracite_mesh", "paint_yellow")

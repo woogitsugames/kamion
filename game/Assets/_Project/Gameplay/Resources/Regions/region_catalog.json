@@ -1,0 +1,393 @@
+{
+  "schema": "truck-sim-pl/region-catalog/1",
+  "note": "ADR 0229. Order = start-menu order (D67 corridor Bialystok -> DK65 -> Knyszyn, then the rest). Labels name streets and places only (no companies). routeLengthM/startS: scripts/export-region-catalog.py.",
+  "regions": [
+    {
+      "id": "bialystok-industrial-c",
+      "label": "Białystok — Andersa, Rondo Putry → DK8/DK19",
+      "group": "Białystok",
+      "routeLengthM": 2397.47,
+      "startS": 12.0
+    },
+    {
+      "id": "bialystok-maczka",
+      "label": "Białystok — Gen. Maczka (DK8/DK65)",
+      "group": "Białystok",
+      "routeLengthM": 2054.08,
+      "startS": 90.0
+    },
+    {
+      "id": "bialystok-kleeberga",
+      "label": "Białystok — Gen. Kleeberga (DK8/DK65)",
+      "group": "Białystok",
+      "routeLengthM": 2221.2,
+      "startS": 90.0
+    },
+    {
+      "id": "bialystok-knyszynska",
+      "label": "Białystok — Szosa Ełcka → Szosa Knyszyńska",
+      "group": "Białystok",
+      "routeLengthM": 2961.35,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-01",
+      "label": "DK65 01 — Szosa Knyszyńska za miastem",
+      "group": "DK65",
+      "routeLengthM": 631.76,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-02",
+      "label": "DK65 02 — Fasty (południe), most",
+      "group": "DK65",
+      "routeLengthM": 2400.68,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-03",
+      "label": "DK65 03 — Ełcka za Fastami",
+      "group": "DK65",
+      "routeLengthM": 484.43,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-04",
+      "label": "DK65 04 — Fasty (północ)",
+      "group": "DK65",
+      "routeLengthM": 2079.43,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-05",
+      "label": "DK65 05 — Dobrzyniewo Duże",
+      "group": "DK65",
+      "routeLengthM": 2201.88,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-06",
+      "label": "DK65 06 — stara DK65, km 16,6–18,3",
+      "group": "DK65",
+      "routeLengthM": 1701.95,
+      "startS": 340.0
+    },
+    {
+      "id": "dk65-07",
+      "label": "DK65 07 — stara DK65, km 18,3–19,1",
+      "group": "DK65",
+      "routeLengthM": 865.6,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-08",
+      "label": "DK65 08 — stara DK65, km 19,1–21,5",
+      "group": "DK65",
+      "routeLengthM": 2355.15,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-09",
+      "label": "DK65 09 — stara DK65, km 21,5–21,8",
+      "group": "DK65",
+      "routeLengthM": 352.36,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-10",
+      "label": "DK65 10 — stara DK65, km 21,8–24,4",
+      "group": "DK65",
+      "routeLengthM": 2615.35,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-11",
+      "label": "DK65 11 — stara DK65, km 24,4–24,8",
+      "group": "DK65",
+      "routeLengthM": 377.82,
+      "startS": 90.0
+    },
+    {
+      "id": "knyszyn-s",
+      "label": "Knyszyn — wlot DK65, strefa budowy",
+      "group": "Knyszyn",
+      "routeLengthM": 2420.72,
+      "startS": 90.0
+    },
+    {
+      "id": "knyszyn",
+      "label": "Knyszyn — rondo DK65/DW671, Rynek",
+      "group": "Knyszyn",
+      "routeLengthM": 1159.8,
+      "startS": 90.0
+    },
+    {
+      "id": "knyszyn-w",
+      "label": "Knyszyn — wylot na Mońki i Tykocin",
+      "group": "Knyszyn",
+      "routeLengthM": 1988.7,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-monki-01",
+      "label": "DK65 w stronę Moniek",
+      "group": "Knyszyn",
+      "routeLengthM": 1185.04,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-01",
+      "label": "DW671 w stronę Tykocina",
+      "group": "Knyszyn",
+      "routeLengthM": 2608.56,
+      "startS": 90.0
+    },
+    {
+      "id": "bialystok-dojlidy",
+      "label": "Białystok — Dojlidy, Dywizjonu 303 / Kuronia",
+      "group": "Białystok",
+      "routeLengthM": 2133.17,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-monki-02",
+      "label": "DK65 w stronę Moniek 02",
+      "group": "Mońki",
+      "routeLengthM": 2111.75,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-monki-03",
+      "label": "DK65 w stronę Moniek 03",
+      "group": "Mońki",
+      "routeLengthM": 413.45,
+      "startS": 90.0,
+      "noStart": true
+    },
+    {
+      "id": "dk65-monki-04",
+      "label": "DK65 w stronę Moniek 04",
+      "group": "Mońki",
+      "routeLengthM": 2821.13,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-monki-05",
+      "label": "DK65 w stronę Moniek 05",
+      "group": "Mońki",
+      "routeLengthM": 163.23,
+      "startS": 63.23,
+      "noStart": true
+    },
+    {
+      "id": "dk65-monki-06",
+      "label": "DK65 w stronę Moniek 06",
+      "group": "Mońki",
+      "routeLengthM": 2112.62,
+      "startS": 90.0
+    },
+    {
+      "id": "dk65-monki-07",
+      "label": "DK65 w stronę Moniek 07",
+      "group": "Mońki",
+      "routeLengthM": 2278.23,
+      "startS": 90.0
+    },
+    {
+      "id": "monki-e",
+      "label": "Mońki wschód",
+      "group": "Mońki",
+      "routeLengthM": 292.88,
+      "startS": 90.0,
+      "noStart": true
+    },
+    {
+      "id": "monki",
+      "label": "Mońki",
+      "group": "Mońki",
+      "routeLengthM": 2727.9,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-02",
+      "label": "DW671 w stronę Tykocina 02",
+      "group": "Tykocin",
+      "routeLengthM": 107.78,
+      "startS": 7.78,
+      "noStart": true
+    },
+    {
+      "id": "dw671-tykocin-03",
+      "label": "DW671 w stronę Tykocina 03",
+      "group": "Tykocin",
+      "routeLengthM": 2265.41,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-04",
+      "label": "DW671 w stronę Tykocina 04",
+      "group": "Tykocin",
+      "routeLengthM": 1880.58,
+      "startS": 92.0
+    },
+    {
+      "id": "dw671-tykocin-05",
+      "label": "DW671 w stronę Tykocina 05",
+      "group": "Tykocin",
+      "routeLengthM": 691.99,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-06",
+      "label": "DW671 w stronę Tykocina 06",
+      "group": "Tykocin",
+      "routeLengthM": 2154.23,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-07",
+      "label": "DW671 w stronę Tykocina 07",
+      "group": "Tykocin",
+      "routeLengthM": 1006.44,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-08",
+      "label": "DW671 w stronę Tykocina 08",
+      "group": "Tykocin",
+      "routeLengthM": 1675.91,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-tykocin-09",
+      "label": "DW671 w stronę Tykocina 09",
+      "group": "Tykocin",
+      "routeLengthM": 1063.0,
+      "startS": 90.0
+    },
+    {
+      "id": "tykocin",
+      "label": "Tykocin",
+      "group": "Tykocin",
+      "routeLengthM": 2542.0,
+      "startS": 90.0
+    },
+    {
+      "id": "dw671-jasionowka-01",
+      "label": "DW671 w stronę Jasionówki 01",
+      "group": "Knyszyn",
+      "routeLengthM": 2354.77,
+      "startS": 90.0
+    },
+    {
+      "id": "s8-01",
+      "label": "S8 — węzeł Choroszcz",
+      "group": "S8",
+      "routeLengthM": 2101.53,
+      "startS": 90.0
+    },
+    {
+      "id": "s8-02",
+      "label": "S8 — Choroszcz → Tykocin 02",
+      "group": "S8",
+      "routeLengthM": 2084.34,
+      "startS": 90.0
+    },
+    {
+      "id": "s8-03",
+      "label": "S8 — węzeł Tykocin",
+      "group": "S8",
+      "routeLengthM": 2049.71,
+      "startS": 90.0
+    },
+    {
+      "id": "s8-04",
+      "label": "S8 — za węzłem Tykocin 04",
+      "group": "S8",
+      "routeLengthM": 2132.91,
+      "startS": 90.0
+    },
+    {
+      "id": "s8-05",
+      "label": "S8 — w stronę Rzędzian 05",
+      "group": "S8",
+      "routeLengthM": 843.07,
+      "startS": 90.0
+    }
+  ],
+  "aliases": [
+    {
+      "alias": "c",
+      "region": "bialystok-industrial-c"
+    }
+  ],
+  "sets": [
+    {
+      "name": "d67",
+      "regions": [
+        "bialystok-industrial-c",
+        "bialystok-maczka",
+        "bialystok-kleeberga",
+        "bialystok-knyszynska",
+        "dk65-01",
+        "dk65-02",
+        "dk65-03",
+        "dk65-04",
+        "dk65-05",
+        "dk65-06",
+        "dk65-07",
+        "dk65-08",
+        "dk65-09",
+        "dk65-10",
+        "dk65-11",
+        "knyszyn-s",
+        "knyszyn"
+      ]
+    },
+    {
+      "name": "d67-full",
+      "note": "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin; owner decision 2026-11-16: + the 18 ring tiles of ADR 0231 (DK65 to Monki, DW671 to Tykocin, DW671 towards Jasionowka). Build size not measured with the ring (ADR 0267).",
+      "regions": [
+        "bialystok-industrial-c",
+        "bialystok-maczka",
+        "bialystok-kleeberga",
+        "bialystok-knyszynska",
+        "dk65-01",
+        "dk65-02",
+        "dk65-03",
+        "dk65-04",
+        "dk65-05",
+        "dk65-06",
+        "dk65-07",
+        "dk65-08",
+        "dk65-09",
+        "dk65-10",
+        "dk65-11",
+        "knyszyn-s",
+        "knyszyn",
+        "bialystok-dojlidy",
+        "knyszyn-w",
+        "dk65-monki-01",
+        "dw671-tykocin-01",
+        "dk65-monki-02",
+        "dk65-monki-03",
+        "dk65-monki-04",
+        "dk65-monki-05",
+        "dk65-monki-06",
+        "dk65-monki-07",
+        "monki-e",
+        "monki",
+        "dw671-tykocin-02",
+        "dw671-tykocin-03",
+        "dw671-tykocin-04",
+        "dw671-tykocin-05",
+        "dw671-tykocin-06",
+        "dw671-tykocin-07",
+        "dw671-tykocin-08",
+        "dw671-tykocin-09",
+        "tykocin",
+        "dw671-jasionowka-01"
+      ]
+    }
+  ]
+}

@@ -66,7 +66,7 @@ def test_roundtrip_and_determinism():
 
 
 def _region():
-    graph = json.load(open(os.path.join(RDIR, "roads.graph.json"), encoding="utf-8"))
+    graph = brg.load_graph(REGION)            # as main(): effective graph (ADR 0274)
     rows = json.load(open(os.path.join(RDIR, "turn_restrictions.json"), encoding="utf-8"))["restrictions"]
     return graph, brg.build(graph, brg.read_origin(RDIR), rows)
 

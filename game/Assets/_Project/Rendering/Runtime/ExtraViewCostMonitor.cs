@@ -21,7 +21,8 @@ namespace Game.Rendering
     /// <c>rq_ab &lt;key&gt;</c> alternates the shipping configuration (A) and a variant (B) every <c>rq_ab_period</c> s
     /// (default 4) and logs FrameTimingManager GPU / CPU-main percentiles per window ([PASSAB] lines, CSV column ab).
     /// Keys: mirrors (B = no mirror renders), mirrorcfg (B = pre-0068 mirror configuration), mirrorlod (B = mirrors at the
-    /// main-view LOD), envcap (B = no capture faces), shadows (B = shadow distance 0), shadowcasc (B = one cascade fewer).
+    /// main-view LOD), mirrorrate (B = mirror round-robin, ADR 0243), envcap (B = no capture faces), shadows (B = shadow
+    /// distance 0), shadowcasc (B = one cascade fewer).
     /// Use with a fixed render scale (rq_scale) and rq_pacing 0, otherwise the adaptive controller reacts to the toggling.
     /// </para>
     /// No allocation per frame (log lines only at window ends). Added by <see cref="QualityProfileApplier"/> in play mode.
@@ -113,6 +114,7 @@ namespace Game.Rendering
             "mirrors" => "no mirror renders",
             "mirrorcfg" => "pre-ADR 0068 mirrors",
             "mirrorlod" => "mirrors at main-view LOD",
+            "mirrorrate" => "mirror round-robin (pre-ADR 0243 Low)",
             "envcap" => "no reflection-capture faces",
             "shadows" => "shadow distance 0",
             "shadowcasc" => "one shadow cascade fewer",
@@ -458,6 +460,8 @@ namespace Game.Rendering
                 case "mirrors": MirrorOverrides.Suspended = b; break;
                 case "mirrorcfg": MirrorOverrides.Legacy = b; break;
                 case "mirrorlod": MirrorOverrides.LodScale = b ? 1f : (float?)null; break;
+                // ADR 0243: B = the ADR 0042 weighted round-robin (Low with mirror windows: one render every frame).
+                case "mirrorrate": MirrorOverrides.DueSchedule = b ? false : (bool?)null; break;
                 case "envcap": VehicleReflectionCapture.Paused = b; break;
                 case "shadows":
                     if (urp == null) break;

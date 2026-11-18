@@ -1,0 +1,4756 @@
+{
+ "schema": "kamion/research-s8-loop-destinations/1",
+ "source": "OSM API 0.6 (raw/osm/manifest.json), ODbL 1.0; nazwy marek celowo pominięte — tylko funkcja obiektu",
+ "note": "obiekty w promieniu 2500 m od dróg pętli (15 kafli + pierścień); farmyardy policzone osobno (agri_summary)",
+ "destinations": [
+  {
+   "osm": "way/301110038",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.765133,
+    53.199074
+   ],
+   "epsg2180": [
+    751389.2,
+    599265.2
+   ],
+   "area_m2": 1467.0,
+   "cell": [
+    -13,
+    1
+   ],
+   "tile": "dw671-jezewo-03",
+   "dist_to_loop_road_m": 29.1,
+   "tags": {
+    "building": "industrial",
+    "source:addr": "tykocin.e-mapa.net"
+   },
+   "truck_gate_est": {
+    "service_way": 301110057,
+    "length_m": 28.2
+   }
+  },
+  {
+   "osm": "way/301110048",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.765743,
+    53.198896
+   ],
+   "epsg2180": [
+    751430.9,
+    599247.5
+   ],
+   "area_m2": 864.0,
+   "cell": [
+    -13,
+    1
+   ],
+   "tile": "dw671-jezewo-03",
+   "dist_to_loop_road_m": 73.1,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/984881124",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.766246,
+    53.19897
+   ],
+   "epsg2180": [
+    751464.1,
+    599257.5
+   ],
+   "area_m2": 17529.0,
+   "cell": [
+    -13,
+    1
+   ],
+   "tile": "dw671-jezewo-03",
+   "dist_to_loop_road_m": 97.5,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 301110057,
+    "length_m": 28.2
+   }
+  },
+  {
+   "osm": "way/202427726",
+   "functions": [
+    "żwirownia (quarry)"
+   ],
+   "kinds": [
+    "quarry"
+   ],
+   "wgs84": [
+    22.758097,
+    53.191752
+   ],
+   "epsg2180": [
+    750962.4,
+    598426.7
+   ],
+   "area_m2": 93822.0,
+   "cell": [
+    -13,
+    1
+   ],
+   "tile": "dw671-jezewo-03",
+   "dist_to_loop_road_m": 141.1,
+   "tags": {
+    "landuse": "quarry",
+    "natural": "sand"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1527436046",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.986026,
+    53.155095
+   ],
+   "epsg2180": [
+    766403.8,
+    595177.2
+   ],
+   "area_m2": 3478.0,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2.7,
+   "tags": {
+    "landuse": "industrial",
+    "man_made": "wastewater_plant"
+   },
+   "truck_gate_est": {
+    "service_way": 1527436047,
+    "length_m": 45.4
+   }
+  },
+  {
+   "osm": "node/3804148383",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.765946,
+    53.202853
+   ],
+   "epsg2180": [
+    751421.3,
+    599688.0
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 15.0,
+   "tags": {
+    "shop": "doityourself"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1114704567",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.76568,
+    53.200369
+   ],
+   "epsg2180": [
+    751418.1,
+    599411.0
+   ],
+   "area_m2": 569.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 30.8,
+   "tags": {
+    "building": "supermarket",
+    "building:levels": "1",
+    "opening_hours": "Mo-Sa 06:00-22:30",
+    "payment:cash": "yes",
+    "payment:mastercard": "yes",
+    "payment:visa": "yes",
+    "roof:shape": "gabled",
+    "shop": "supermarket",
+    "wheelchair": "yes"
+   },
+   "truck_gate_est": {
+    "service_way": 1346048897,
+    "length_m": 70.8
+   }
+  },
+  {
+   "osm": "node/3052234947",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.76488,
+    53.202071
+   ],
+   "epsg2180": [
+    751354.7,
+    599597.4
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 37.3,
+   "tags": {
+    "shop": "trade",
+    "trade": "building_supplies"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "node/3052234948",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.764675,
+    53.201494
+   ],
+   "epsg2180": [
+    751344.4,
+    599532.6
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 37.9,
+   "tags": {
+    "shop": "trade",
+    "trade": "agricultural_supplies"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/301111812",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.759378,
+    53.202456
+   ],
+   "epsg2180": [
+    750985.3,
+    599620.9
+   ],
+   "area_m2": 526.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 42.7,
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1",
+    "source:addr": "gugik.gov.pl",
+    "source:building": "BDOT"
+   },
+   "truck_gate_est": {
+    "service_way": 1364049324,
+    "length_m": 69.9
+   }
+  },
+  {
+   "osm": "node/3052234985",
+   "functions": [
+    "stacja paliw"
+   ],
+   "kinds": [
+    "fuel"
+   ],
+   "wgs84": [
+    22.765012,
+    53.202788
+   ],
+   "epsg2180": [
+    751359.3,
+    599677.6
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 44.8,
+   "tags": {
+    "amenity": "fuel",
+    "fuel:diesel": "yes",
+    "fuel:lpg": "yes",
+    "fuel:octane_95": "yes"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1050745402",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.76575,
+    53.200578
+   ],
+   "epsg2180": [
+    751421.6,
+    599434.6
+   ],
+   "area_m2": 950.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 47.2,
+   "tags": {
+    "building": "supermarket",
+    "shop": "supermarket"
+   },
+   "truck_gate_est": {
+    "service_way": 1346048897,
+    "length_m": 70.8
+   }
+  },
+  {
+   "osm": "way/297375206",
+   "functions": [
+    "zakład przemysłowy (man_made=works)",
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "works",
+    "hall"
+   ],
+   "wgs84": [
+    23.031215,
+    53.154168
+   ],
+   "epsg2180": [
+    769428.4,
+    595243.5
+   ],
+   "area_m2": 1224.0,
+   "cell": [
+    -4,
+    0
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 65.2,
+   "tags": {
+    "building": "industrial",
+    "man_made": "works",
+    "source:addr": "choroszcz.e-mapa.net"
+   },
+   "truck_gate_est": {
+    "service_way": 297375214,
+    "length_m": 183.3
+   }
+  },
+  {
+   "osm": "way/970376487",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.007669,
+    53.174174
+   ],
+   "epsg2180": [
+    767730.7,
+    597378.4
+   ],
+   "area_m2": 12906.0,
+   "cell": [
+    -5,
+    1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 69.2,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1477375122,
+    "length_m": 140.4
+   }
+  },
+  {
+   "osm": "way/229365497",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.986004,
+    53.151981
+   ],
+   "epsg2180": [
+    766421.6,
+    594831.0
+   ],
+   "area_m2": 230.0,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 84.4,
+   "tags": {
+    "building": "retail",
+    "building:levels": "1",
+    "shop": "supermarket",
+    "source:building": "BDOT",
+    "source:geometry": "EGiB"
+   },
+   "truck_gate_est": {
+    "service_way": 215869713,
+    "length_m": 47.6
+   }
+  },
+  {
+   "osm": "way/1477375138",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.02755,
+    53.169267
+   ],
+   "epsg2180": [
+    769089.0,
+    596907.7
+   ],
+   "area_m2": 304.0,
+   "cell": [
+    -4,
+    0
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 93.4,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1477375136,
+    "length_m": 239.2
+   }
+  },
+  {
+   "osm": "way/297375211",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.031295,
+    53.154443
+   ],
+   "epsg2180": [
+    769432.0,
+    595274.4
+   ],
+   "area_m2": 2094.0,
+   "cell": [
+    -4,
+    0
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 95.2,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 297375214,
+    "length_m": 183.3
+   }
+  },
+  {
+   "osm": "way/1426176073",
+   "functions": [
+    "stacja paliw"
+   ],
+   "kinds": [
+    "fuel"
+   ],
+   "wgs84": [
+    22.767563,
+    53.204513
+   ],
+   "epsg2180": [
+    751519.5,
+    599878.3
+   ],
+   "area_m2": 65.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 98.5,
+   "tags": {
+    "amenity": "fuel",
+    "building": "yes",
+    "fuel:diesel": "yes",
+    "fuel:octane_95": "yes",
+    "fuel:propane": "yes",
+    "self_service": "no"
+   },
+   "truck_gate_est": {
+    "service_way": 1426176071,
+    "length_m": 56.6
+   }
+  },
+  {
+   "osm": "way/297375208",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.030839,
+    53.154586
+   ],
+   "epsg2180": [
+    769400.6,
+    595288.5
+   ],
+   "area_m2": 204.0,
+   "cell": [
+    -4,
+    0
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 101.1,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 297375214,
+    "length_m": 183.3
+   }
+  },
+  {
+   "osm": "way/330968178",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)",
+    "zakład przemysłowy (man_made=works)"
+   ],
+   "kinds": [
+    "industrial_land",
+    "works"
+   ],
+   "wgs84": [
+    23.002984,
+    53.153102
+   ],
+   "epsg2180": [
+    767549.0,
+    595019.0
+   ],
+   "area_m2": 12538.0,
+   "cell": [
+    -5,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 122.1,
+   "tags": {
+    "landuse": "industrial",
+    "man_made": "works"
+   },
+   "truck_gate_est": {
+    "service_way": 297367157,
+    "length_m": 145.9
+   }
+  },
+  {
+   "osm": "way/297375210",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.030579,
+    53.155105
+   ],
+   "epsg2180": [
+    769380.0,
+    595345.2
+   ],
+   "area_m2": 931.0,
+   "cell": [
+    -4,
+    0
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 151.3,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 297375214,
+    "length_m": 183.3
+   }
+  },
+  {
+   "osm": "way/196786464",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.030184,
+    53.155352
+   ],
+   "epsg2180": [
+    769352.1,
+    595371.2
+   ],
+   "area_m2": 76162.0,
+   "cell": [
+    -4,
+    0
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 170.0,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 297375214,
+    "length_m": 183.3
+   }
+  },
+  {
+   "osm": "way/297375207",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.031395,
+    53.155199
+   ],
+   "epsg2180": [
+    769434.0,
+    595358.7
+   ],
+   "area_m2": 5144.0,
+   "cell": [
+    -4,
+    0
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 177.2,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 297375214,
+    "length_m": 183.3
+   }
+  },
+  {
+   "osm": "way/301362677",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.770831,
+    53.205113
+   ],
+   "epsg2180": [
+    751734.0,
+    599956.4
+   ],
+   "area_m2": 1379.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 326.3,
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1",
+    "source:addr": "tykocin.e-mapa.net",
+    "source:building": "BDOT"
+   },
+   "truck_gate_est": {
+    "service_way": 1364049313,
+    "length_m": 56.0
+   }
+  },
+  {
+   "osm": "way/301094813",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.767979,
+    53.207041
+   ],
+   "epsg2180": [
+    751532.4,
+    600160.7
+   ],
+   "area_m2": 225.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 342.7,
+   "tags": {
+    "building": "yes",
+    "check_date": "2026-08-20",
+    "opening_hours": "Mo-Sa 06:00-22:00; Su 08:00-20:00",
+    "shop": "supermarket",
+    "source:addr": "tykocin.e-mapa.net"
+   },
+   "truck_gate_est": {
+    "service_way": 716818157,
+    "length_m": 42.4
+   }
+  },
+  {
+   "osm": "node/4475469220",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.988104,
+    53.149921
+   ],
+   "epsg2180": [
+    766574.7,
+    594610.0
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 343.9,
+   "tags": {
+    "name:ru": "Бедронка",
+    "opening_hours": "Mo-Th 06:00-22:00; Fr,Sa 06:00-23:00; Su 07:00-21:00",
+    "shop": "supermarket"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "node/13097820027",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.987405,
+    53.14958
+   ],
+   "epsg2180": [
+    766530.1,
+    594569.4
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 364.0,
+   "tags": {
+    "opening_hours": "Mo-Sa 06:00-22:00",
+    "shop": "supermarket"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "node/3010272735",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.98749,
+    53.149025
+   ],
+   "epsg2180": [
+    766539.2,
+    594508.1
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 425.2,
+   "tags": {
+    "shop": "trade",
+    "trade": "building_supplies"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/301092639",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.771349,
+    53.206538
+   ],
+   "epsg2180": [
+    751760.3,
+    600116.6
+   ],
+   "area_m2": 177.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 433.8,
+   "tags": {
+    "building": "yes",
+    "opening_hours": "Mo-Sa 06:00-20:00; Su 08:00-14:00",
+    "shop": "supermarket"
+   },
+   "truck_gate_est": {
+    "service_way": 1497887856,
+    "length_m": 26.6
+   }
+  },
+  {
+   "osm": "node/4296523904",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.770971,
+    53.207418
+   ],
+   "epsg2180": [
+    751729.9,
+    600213.1
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -13,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 482.9,
+   "tags": {
+    "check_date": "2025-10-19",
+    "opening_hours": "Mo-Sa 06:00-21:00; Su 09:00-17:00",
+    "shop": "supermarket"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "node/3010272733",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.987315,
+    53.148255
+   ],
+   "epsg2180": [
+    766532.3,
+    594421.9
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 506.8,
+   "tags": {
+    "shop": "trade"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/587232560",
+   "functions": [
+    "silos / elewator"
+   ],
+   "kinds": [
+    "silo"
+   ],
+   "wgs84": [
+    22.69416,
+    53.139855
+   ],
+   "epsg2180": [
+    746992.5,
+    592435.9
+   ],
+   "area_m2": 511.0,
+   "cell": [
+    -15,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 595.9,
+   "tags": {
+    "building": "yes",
+    "man_made": "silo"
+   },
+   "truck_gate_est": {
+    "service_way": 1479669274,
+    "length_m": 99.1
+   }
+  },
+  {
+   "osm": "way/536228308",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.997097,
+    53.147345
+   ],
+   "epsg2180": [
+    767191.5,
+    594357.2
+   ],
+   "area_m2": 81.0,
+   "cell": [
+    -5,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 618.4,
+   "tags": {
+    "amenity": "car_wash",
+    "automated": "no",
+    "building": "industrial",
+    "opening_hours": "24/7",
+    "self_service": "yes"
+   },
+   "truck_gate_est": {
+    "service_way": 1527436053,
+    "length_m": 95.2
+   }
+  },
+  {
+   "osm": "way/229332500",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.990002,
+    53.147557
+   ],
+   "epsg2180": [
+    766716.2,
+    594354.4
+   ],
+   "area_m2": 727.0,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 636.0,
+   "tags": {
+    "building": "yes",
+    "shop": "mall"
+   },
+   "truck_gate_est": {
+    "service_way": 297180977,
+    "length_m": 50.9
+   }
+  },
+  {
+   "osm": "way/780135952",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.040475,
+    53.153237
+   ],
+   "epsg2180": [
+    770052.9,
+    595175.0
+   ],
+   "area_m2": 48150.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 642.0,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 310634015,
+    "length_m": 120.9
+   }
+  },
+  {
+   "osm": "way/485375105",
+   "functions": [
+    "żwirownia (quarry)"
+   ],
+   "kinds": [
+    "quarry"
+   ],
+   "wgs84": [
+    22.744122,
+    53.103049
+   ],
+   "epsg2180": [
+    750545.8,
+    588518.9
+   ],
+   "area_m2": 19238.0,
+   "cell": [
+    -13,
+    -4
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 647.2,
+   "tags": {
+    "landuse": "quarry"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/246178212",
+   "functions": [
+    "zakład przemysłowy (man_made=works)",
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "works",
+    "hall"
+   ],
+   "wgs84": [
+    23.041437,
+    53.152734
+   ],
+   "epsg2180": [
+    770120.2,
+    595122.7
+   ],
+   "area_m2": 811.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 710.8,
+   "tags": {
+    "building": "industrial",
+    "man_made": "works",
+    "source:addr": "gugik.gov.pl"
+   },
+   "truck_gate_est": {
+    "service_way": 310634015,
+    "length_m": 120.9
+   }
+  },
+  {
+   "osm": "way/297335863",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.997326,
+    53.14648
+   ],
+   "epsg2180": [
+    767212.2,
+    594262.0
+   ],
+   "area_m2": 174.0,
+   "cell": [
+    -5,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 715.7,
+   "tags": {
+    "building": "industrial",
+    "building:levels": "2",
+    "source:addr": "choroszcz.e-mapa.net"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/146849205",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.662526,
+    53.153628
+   ],
+   "epsg2180": [
+    744799.9,
+    593858.1
+   ],
+   "area_m2": 115.0,
+   "cell": [
+    -16,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 753.7,
+   "tags": {
+    "building": "warehouse"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1172701187",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.040697,
+    53.149426
+   ],
+   "epsg2180": [
+    770091.6,
+    594752.3
+   ],
+   "area_m2": 1629.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 798.2,
+   "tags": {
+    "building": "industrial",
+    "source:addr": "gugik.gov.pl"
+   },
+   "truck_gate_est": {
+    "service_way": 1188149038,
+    "length_m": 46.1
+   }
+  },
+  {
+   "osm": "way/1172701188",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.04142,
+    53.150094
+   ],
+   "epsg2180": [
+    770135.7,
+    594829.2
+   ],
+   "area_m2": 707.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 800.5,
+   "tags": {
+    "building": "industrial",
+    "source:addr": "gugik.gov.pl"
+   },
+   "truck_gate_est": {
+    "service_way": 1188149038,
+    "length_m": 46.1
+   }
+  },
+  {
+   "osm": "way/1352889332",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.041349,
+    53.149694
+   ],
+   "epsg2180": [
+    770133.5,
+    594784.5
+   ],
+   "area_m2": 18815.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 818.6,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1188149038,
+    "length_m": 46.1
+   }
+  },
+  {
+   "osm": "way/1172701184",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.042908,
+    53.150219
+   ],
+   "epsg2180": [
+    770234.3,
+    594848.8
+   ],
+   "area_m2": 69.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 883.6,
+   "tags": {
+    "building": "industrial",
+    "source:addr": "gugik.gov.pl"
+   },
+   "truck_gate_est": {
+    "service_way": 536228346,
+    "length_m": 234.3
+   }
+  },
+  {
+   "osm": "way/1352889336",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.042885,
+    53.15001
+   ],
+   "epsg2180": [
+    770234.1,
+    594825.5
+   ],
+   "area_m2": 4926.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 892.0,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 536228346,
+    "length_m": 234.3
+   }
+  },
+  {
+   "osm": "way/990091571",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.973169,
+    53.147774
+   ],
+   "epsg2180": [
+    765590.1,
+    594315.8
+   ],
+   "area_m2": 15696.0,
+   "cell": [
+    -6,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1020.7,
+   "tags": {
+    "landuse": "industrial",
+    "man_made": "wastewater_plant"
+   },
+   "truck_gate_est": {
+    "service_way": 1353092013,
+    "length_m": 85.1
+   }
+  },
+  {
+   "osm": "way/1352889337",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.044433,
+    53.148924
+   ],
+   "epsg2180": [
+    770344.4,
+    594710.6
+   ],
+   "area_m2": 45138.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1040.0,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 196786467,
+    "length_m": 406.0
+   }
+  },
+  {
+   "osm": "way/780135965",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.046542,
+    53.155526
+   ],
+   "epsg2180": [
+    770443.7,
+    595452.3
+   ],
+   "area_m2": 12117.0,
+   "cell": [
+    -4,
+    0
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1070.9,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1517368825,
+    "length_m": 60.3
+   }
+  },
+  {
+   "osm": "way/1137713938",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.049502,
+    53.151085
+   ],
+   "epsg2180": [
+    770669.4,
+    594970.0
+   ],
+   "area_m2": 736.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1274.2,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   },
+   "truck_gate_est": {
+    "service_way": 716796240,
+    "length_m": 200.6
+   }
+  },
+  {
+   "osm": "way/221521924",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.049694,
+    53.149227
+   ],
+   "epsg2180": [
+    770693.9,
+    594764.1
+   ],
+   "area_m2": 1298.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1345.4,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 816196399,
+    "length_m": 136.0
+   }
+  },
+  {
+   "osm": "way/1172701176",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.049105,
+    53.147908
+   ],
+   "epsg2180": [
+    770662.9,
+    594615.3
+   ],
+   "area_m2": 262.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1369.0,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 528183343,
+    "length_m": 92.9
+   }
+  },
+  {
+   "osm": "way/1172701183",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.050158,
+    53.149345
+   ],
+   "epsg2180": [
+    770724.2,
+    594779.0
+   ],
+   "area_m2": 91.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1370.0,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 636073221,
+    "length_m": 148.3
+   }
+  },
+  {
+   "osm": "way/1172701175",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.048978,
+    53.147574
+   ],
+   "epsg2180": [
+    770656.5,
+    594577.7
+   ],
+   "area_m2": 235.0,
+   "cell": [
+    -4,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1378.9,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 528183343,
+    "length_m": 92.9
+   }
+  },
+  {
+   "osm": "way/266077863",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    23.05396,
+    53.151572
+   ],
+   "epsg2180": [
+    770964.2,
+    595041.0
+   ],
+   "area_m2": 1558.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1558.6,
+   "tags": {
+    "building": "retail",
+    "building:levels": "1",
+    "name:ru": "Бедронка",
+    "payment:blik": "yes",
+    "payment:cash": "yes",
+    "payment:contactless": "yes",
+    "payment:diners_club": "yes",
+    "payment:maestro": "yes",
+    "payment:mastercard": "yes",
+    "payment:sodexo": "yes",
+    "payment:visa": "yes",
+    "payment:visa_debit": "yes",
+    "payment:visa_electron": "yes",
+    "payment:v_pay": "yes",
+    "shop": "supermarket",
+    "source:addr": "choroszcz.e-mapa.net",
+    "source:building": "BDOT"
+   },
+   "truck_gate_est": {
+    "service_way": 266077865,
+    "length_m": 144.6
+   }
+  },
+  {
+   "osm": "way/196784097",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.054762,
+    53.148616
+   ],
+   "epsg2180": [
+    771036.4,
+    594715.5
+   ],
+   "area_m2": 15994.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1687.6,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 344213934,
+    "length_m": 241.8
+   }
+  },
+  {
+   "osm": "node/13291409372",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    23.0527,
+    53.145803
+   ],
+   "epsg2180": [
+    770916.4,
+    594395.0
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1692.8,
+   "tags": {
+    "shop": "supermarket"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/196784126",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    23.055155,
+    53.148415
+   ],
+   "epsg2180": [
+    771063.9,
+    594694.6
+   ],
+   "area_m2": 5099.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1719.8,
+   "tags": {
+    "building": "yes",
+    "shop": "wholesale",
+    "source:addr": "choroszcz.e-mapa.net",
+    "wholesale": "seafood"
+   },
+   "truck_gate_est": {
+    "service_way": 344213934,
+    "length_m": 241.8
+   }
+  },
+  {
+   "osm": "way/1449693296",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.677525,
+    53.116616
+   ],
+   "epsg2180": [
+    746013.5,
+    589795.7
+   ],
+   "area_m2": 3251.0,
+   "cell": [
+    -16,
+    -3
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1846.2,
+   "tags": {
+    "building": "warehouse"
+   },
+   "truck_gate_est": {
+    "service_way": 1469110939,
+    "length_m": 438.5
+   }
+  },
+  {
+   "osm": "way/544352475",
+   "functions": [
+    "żwirownia (quarry)"
+   ],
+   "kinds": [
+    "quarry"
+   ],
+   "wgs84": [
+    22.932711,
+    53.138038
+   ],
+   "epsg2180": [
+    762946.4,
+    593084.2
+   ],
+   "area_m2": 78723.0,
+   "cell": [
+    -7,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1879.7,
+   "tags": {
+    "landuse": "quarry",
+    "natural": "sand"
+   },
+   "truck_gate_est": {
+    "service_way": 1476744497,
+    "length_m": 185.7
+   }
+  },
+  {
+   "osm": "way/1469110941",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.677849,
+    53.115866
+   ],
+   "epsg2180": [
+    746039.5,
+    589713.4
+   ],
+   "area_m2": 30239.0,
+   "cell": [
+    -16,
+    -3
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1886.5,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1469110938,
+    "length_m": 93.4
+   }
+  },
+  {
+   "osm": "way/1449693297",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.677879,
+    53.115766
+   ],
+   "epsg2180": [
+    746042.0,
+    589702.5
+   ],
+   "area_m2": 3282.0,
+   "cell": [
+    -16,
+    -3
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1892.8,
+   "tags": {
+    "building": "warehouse"
+   },
+   "truck_gate_est": {
+    "service_way": 1469110938,
+    "length_m": 93.4
+   }
+  },
+  {
+   "osm": "way/214483747",
+   "functions": [
+    "stacja paliw"
+   ],
+   "kinds": [
+    "fuel"
+   ],
+   "wgs84": [
+    23.057908,
+    53.14817
+   ],
+   "epsg2180": [
+    771249.4,
+    594677.9
+   ],
+   "area_m2": 695.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1903.0,
+   "tags": {
+    "amenity": "fuel",
+    "building": "yes",
+    "fuel:diesel": "yes",
+    "fuel:lpg": "yes",
+    "fuel:octane_95": "yes",
+    "source:addr": "choroszcz.e-mapa.net"
+   },
+   "truck_gate_est": {
+    "service_way": 344213933,
+    "length_m": 129.0
+   }
+  },
+  {
+   "osm": "way/1449693298",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.677957,
+    53.11535
+   ],
+   "epsg2180": [
+    746049.6,
+    589656.5
+   ],
+   "area_m2": 3328.0,
+   "cell": [
+    -16,
+    -3
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1921.5,
+   "tags": {
+    "building": "warehouse"
+   },
+   "truck_gate_est": {
+    "service_way": 1469110939,
+    "length_m": 438.5
+   }
+  },
+  {
+   "osm": "node/3008918451",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.975513,
+    53.136514
+   ],
+   "epsg2180": [
+    765816.3,
+    593073.1
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -6,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 1937.3,
+   "tags": {
+    "shop": "trade",
+    "trade": "building_supplies"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/196784132",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.059358,
+    53.147192
+   ],
+   "epsg2180": [
+    771352.5,
+    594574.6
+   ],
+   "area_m2": 48131.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2030.5,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 221526901,
+    "length_m": 58.5
+   }
+  },
+  {
+   "osm": "way/541537126",
+   "functions": [
+    "żwirownia (quarry)"
+   ],
+   "kinds": [
+    "quarry"
+   ],
+   "wgs84": [
+    22.882206,
+    53.124997
+   ],
+   "epsg2180": [
+    759649.7,
+    591450.5
+   ],
+   "area_m2": 20851.0,
+   "cell": [
+    -9,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2039.7,
+   "tags": {
+    "landuse": "quarry",
+    "natural": "sand"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/588950958",
+   "functions": [
+    "żwirownia (quarry)"
+   ],
+   "kinds": [
+    "quarry"
+   ],
+   "wgs84": [
+    22.823185,
+    53.185061
+   ],
+   "epsg2180": [
+    755346.9,
+    597913.5
+   ],
+   "area_m2": 1542.0,
+   "cell": [
+    -11,
+    1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2043.4,
+   "tags": {
+    "landuse": "quarry"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/196784105",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    23.060357,
+    53.146961
+   ],
+   "epsg2180": [
+    771420.7,
+    594552.8
+   ],
+   "area_m2": 8082.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2102.2,
+   "tags": {
+    "building": "yes",
+    "shop": "wholesale",
+    "source:addr": "choroszcz.e-mapa.net",
+    "wholesale": "foods"
+   },
+   "truck_gate_est": {
+    "service_way": 286466814,
+    "length_m": 307.4
+   }
+  },
+  {
+   "osm": "way/303982082",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.062905,
+    53.152164
+   ],
+   "epsg2180": [
+    771558.1,
+    595140.6
+   ],
+   "area_m2": 307.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2147.4,
+   "tags": {
+    "building": "warehouse",
+    "source:addr": "gugik.gov.pl"
+   },
+   "truck_gate_est": {
+    "service_way": 1448035606,
+    "length_m": 53.4
+   }
+  },
+  {
+   "osm": "way/1113335031",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.021475,
+    53.195572
+   ],
+   "epsg2180": [
+    768518.8,
+    599808.2
+   ],
+   "area_m2": 613.0,
+   "cell": [
+    -5,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2154.2,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1113335032",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.021958,
+    53.195589
+   ],
+   "epsg2180": [
+    768550.9,
+    599811.9
+   ],
+   "area_m2": 493.0,
+   "cell": [
+    -5,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2168.9,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1266307039",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.058538,
+    53.167816
+   ],
+   "epsg2180": [
+    771167.5,
+    596863.5
+   ],
+   "area_m2": 630.0,
+   "cell": [
+    -3,
+    0
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2169.2,
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1"
+   },
+   "truck_gate_est": {
+    "service_way": 1266307040,
+    "length_m": 120.8
+   }
+  },
+  {
+   "osm": "way/1016213255",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.063873,
+    53.150857
+   ],
+   "epsg2180": [
+    771631.0,
+    594999.1
+   ],
+   "area_m2": 2904.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2226.6,
+   "tags": {
+    "building": "industrial",
+    "shop": "car_repair",
+    "source:addr": "gugik.gov.pl"
+   },
+   "truck_gate_est": {
+    "service_way": 1264587484,
+    "length_m": 378.5
+   }
+  },
+  {
+   "osm": "node/14194524829",
+   "functions": [
+    "stacja paliw"
+   ],
+   "kinds": [
+    "fuel"
+   ],
+   "wgs84": [
+    22.985917,
+    53.132631
+   ],
+   "epsg2180": [
+    766535.7,
+    592680.3
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -6,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2238.1,
+   "tags": {
+    "amenity": "fuel"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1046575258",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.985883,
+    53.132577
+   ],
+   "epsg2180": [
+    766533.8,
+    592674.1
+   ],
+   "area_m2": 3502.0,
+   "cell": [
+    -6,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2244.1,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 636073164,
+    "length_m": 78.0
+   }
+  },
+  {
+   "osm": "way/528752941",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.06425,
+    53.151058
+   ],
+   "epsg2180": [
+    771654.9,
+    595022.8
+   ],
+   "area_m2": 24238.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2248.7,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 528752942,
+    "length_m": 83.1
+   }
+  },
+  {
+   "osm": "way/1477375093",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.666154,
+    53.121121
+   ],
+   "epsg2180": [
+    745227.5,
+    590257.3
+   ],
+   "area_m2": 21728.0,
+   "cell": [
+    -16,
+    -3
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2265.1,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1477375090,
+    "length_m": 121.3
+   }
+  },
+  {
+   "osm": "way/1493375689",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.034115,
+    53.131117
+   ],
+   "epsg2180": [
+    769766.6,
+    592692.7
+   ],
+   "area_m2": 8749.0,
+   "cell": [
+    -4,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2298.4,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1234699682,
+    "length_m": 379.0
+   }
+  },
+  {
+   "osm": "node/13267635287",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.986494,
+    53.132091
+   ],
+   "epsg2180": [
+    766577.6,
+    592622.4
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -6,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2298.5,
+   "tags": {
+    "opening_hours": "Mo-Sa 06:00-22:30",
+    "shop": "supermarket",
+    "source:url": "https://marketdino.pl/map"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1040804968",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.017932,
+    53.197985
+   ],
+   "epsg2180": [
+    768267.2,
+    600063.1
+   ],
+   "area_m2": 23030.0,
+   "cell": [
+    -5,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2329.4,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 249298648,
+    "length_m": 118.1
+   }
+  },
+  {
+   "osm": "way/542637402",
+   "functions": [
+    "żwirownia (quarry)"
+   ],
+   "kinds": [
+    "quarry"
+   ],
+   "wgs84": [
+    22.974261,
+    53.133031
+   ],
+   "epsg2180": [
+    765754.1,
+    592681.4
+   ],
+   "area_m2": 6439.0,
+   "cell": [
+    -6,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2329.9,
+   "tags": {
+    "landuse": "quarry",
+    "natural": "sand"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1113334915",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.011807,
+    53.198728
+   ],
+   "epsg2180": [
+    767853.8,
+    600122.8
+   ],
+   "area_m2": 322.0,
+   "cell": [
+    -5,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2337.9,
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   },
+   "truck_gate_est": {
+    "service_way": 738681238,
+    "length_m": 30.0
+   }
+  },
+  {
+   "osm": "way/1115316455",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.022951,
+    53.128485
+   ],
+   "epsg2180": [
+    769036.9,
+    592358.2
+   ],
+   "area_m2": 203.0,
+   "cell": [
+    -4,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2413.6,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "node/11473338030",
+   "functions": [
+    "zakład przemysłowy (man_made=works)"
+   ],
+   "kinds": [
+    "works"
+   ],
+   "wgs84": [
+    23.065158,
+    53.145822
+   ],
+   "epsg2180": [
+    771748.6,
+    594444.4
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -3,
+    -1
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2447.5,
+   "tags": {
+    "man_made": "works"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/833314948",
+   "functions": [
+    "zakład przemysłowy (man_made=works)",
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "works",
+    "hall"
+   ],
+   "wgs84": [
+    22.979601,
+    53.13094
+   ],
+   "epsg2180": [
+    766124.0,
+    592468.8
+   ],
+   "area_m2": 5481.0,
+   "cell": [
+    -6,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2463.8,
+   "tags": {
+    "building": "manufacture",
+    "man_made": "works"
+   },
+   "truck_gate_est": {
+    "service_way": 944270691,
+    "length_m": 117.8
+   }
+  },
+  {
+   "osm": "way/1034853393",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.980513,
+    53.130753
+   ],
+   "epsg2180": [
+    766186.1,
+    592451.5
+   ],
+   "area_m2": 39420.0,
+   "cell": [
+    -6,
+    -2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2474.5,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 944270691,
+    "length_m": 117.8
+   }
+  },
+  {
+   "osm": "way/1124089064",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    23.021258,
+    53.198783
+   ],
+   "epsg2180": [
+    768484.2,
+    600164.3
+   ],
+   "area_m2": 493.0,
+   "cell": [
+    -5,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2481.3,
+   "tags": {
+    "building": "retail",
+    "building:levels": "1",
+    "height": "4",
+    "shop": "supermarket",
+    "smoking": "no",
+    "start_date": "2022-06-01"
+   },
+   "truck_gate_est": {
+    "service_way": 1124089066,
+    "length_m": 78.4
+   }
+  },
+  {
+   "osm": "way/552902414",
+   "functions": [
+    "stacja paliw"
+   ],
+   "kinds": [
+    "fuel"
+   ],
+   "wgs84": [
+    23.022931,
+    53.198476
+   ],
+   "epsg2180": [
+    768597.7,
+    600136.5
+   ],
+   "area_m2": 91.0,
+   "cell": [
+    -5,
+    2
+   ],
+   "tile": "poza pętlą (pierścień ±2 km)",
+   "dist_to_loop_road_m": 2489.8,
+   "tags": {
+    "amenity": "fuel",
+    "building": "yes",
+    "fuel:lpg": "yes"
+   },
+   "truck_gate_est": {
+    "service_way": 1428963535,
+    "length_m": 271.3
+   }
+  },
+  {
+   "osm": "way/972362710",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.998545,
+    53.160746
+   ],
+   "epsg2180": [
+    767205.0,
+    595852.0
+   ],
+   "area_m2": 8831.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 1.5,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 550896624,
+    "length_m": 128.9
+   }
+  },
+  {
+   "osm": "way/1385343897",
+   "functions": [
+    "stacja paliw"
+   ],
+   "kinds": [
+    "fuel"
+   ],
+   "wgs84": [
+    23.014044,
+    53.157403
+   ],
+   "epsg2180": [
+    768261.1,
+    595538.5
+   ],
+   "area_m2": 66.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 6.2,
+   "tags": {
+    "amenity": "fuel",
+    "building": "commercial",
+    "self_service": "yes"
+   },
+   "truck_gate_est": {
+    "service_way": 1385343894,
+    "length_m": 103.1
+   }
+  },
+  {
+   "osm": "way/196779652",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.004553,
+    53.160024
+   ],
+   "epsg2180": [
+    767610.7,
+    595794.2
+   ],
+   "area_m2": 14348.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 11.0,
+   "tags": {
+    "industrial": "factory",
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1477375116,
+    "length_m": 86.5
+   }
+  },
+  {
+   "osm": "way/972362712",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.993819,
+    53.162108
+   ],
+   "epsg2180": [
+    766880.8,
+    595985.6
+   ],
+   "area_m2": 149807.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 12.6,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 550896624,
+    "length_m": 128.9
+   }
+  },
+  {
+   "osm": "way/1083837410",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.996301,
+    53.164782
+   ],
+   "epsg2180": [
+    767030.0,
+    596292.1
+   ],
+   "area_m2": 93147.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 13.8,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1210174183,
+    "length_m": 62.1
+   }
+  },
+  {
+   "osm": "way/972362720",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.999487,
+    53.158371
+   ],
+   "epsg2180": [
+    767282.6,
+    595591.6
+   ],
+   "area_m2": 358.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 14.6,
+   "tags": {
+    "building": "industrial",
+    "source:addr": "gugik.gov.pl"
+   },
+   "truck_gate_est": {
+    "service_way": 180455855,
+    "length_m": 294.5
+   }
+  },
+  {
+   "osm": "way/215414825",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.001422,
+    53.157319
+   ],
+   "epsg2180": [
+    767418.4,
+    595481.8
+   ],
+   "area_m2": 407.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 15.2,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 180455855,
+    "length_m": 294.5
+   }
+  },
+  {
+   "osm": "way/215414835",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.001072,
+    53.157608
+   ],
+   "epsg2180": [
+    767393.2,
+    595512.6
+   ],
+   "area_m2": 15863.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 15.2,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 180455855,
+    "length_m": 294.5
+   }
+  },
+  {
+   "osm": "way/1131537015",
+   "functions": [
+    "stacja paliw"
+   ],
+   "kinds": [
+    "fuel"
+   ],
+   "wgs84": [
+    23.00187,
+    53.159877
+   ],
+   "epsg2180": [
+    767432.4,
+    595767.8
+   ],
+   "area_m2": 431.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 16.1,
+   "tags": {
+    "amenity": "fuel",
+    "building": "yes",
+    "opening_hours": "24/7",
+    "source:addr": "Yanosik"
+   },
+   "truck_gate_est": {
+    "service_way": 1131537016,
+    "length_m": 39.0
+   }
+  },
+  {
+   "osm": "way/1215374065",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.000148,
+    53.158305
+   ],
+   "epsg2180": [
+    767327.2,
+    595586.7
+   ],
+   "area_m2": 412.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 18.0,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source:building": "BDOT"
+   },
+   "truck_gate_est": {
+    "service_way": 180455855,
+    "length_m": 294.5
+   }
+  },
+  {
+   "osm": "way/297368883",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.993654,
+    53.156103
+   ],
+   "epsg2180": [
+    766907.1,
+    595317.7
+   ],
+   "area_m2": 287.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 18.8,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/972362713",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.993468,
+    53.158506
+   ],
+   "epsg2180": [
+    766879.8,
+    595584.0
+   ],
+   "area_m2": 14578.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 20.4,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 297346885,
+    "length_m": 56.2
+   }
+  },
+  {
+   "osm": "way/1210174179",
+   "functions": [
+    "silos / elewator"
+   ],
+   "kinds": [
+    "silo"
+   ],
+   "wgs84": [
+    22.993903,
+    53.164256
+   ],
+   "epsg2180": [
+    766873.1,
+    596224.7
+   ],
+   "area_m2": 112.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 21.1,
+   "tags": {
+    "building": "silo",
+    "man_made": "silo"
+   },
+   "truck_gate_est": {
+    "service_way": 1210174185,
+    "length_m": 668.3
+   }
+  },
+  {
+   "osm": "node/3012439146",
+   "functions": [
+    "zakład przemysłowy (man_made=works)"
+   ],
+   "kinds": [
+    "works"
+   ],
+   "wgs84": [
+    22.993635,
+    53.156152
+   ],
+   "epsg2180": [
+    766905.5,
+    595323.0
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 21.4,
+   "tags": {
+    "man_made": "works"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1433331154",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.994354,
+    53.163424
+   ],
+   "epsg2180": [
+    766908.4,
+    596133.9
+   ],
+   "area_m2": 221.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 22.1,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1210174183,
+    "length_m": 62.1
+   }
+  },
+  {
+   "osm": "way/640913100",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.00996,
+    53.15917
+   ],
+   "epsg2180": [
+    767977.3,
+    595719.5
+   ],
+   "area_m2": 489.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 22.7,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 640913094,
+    "length_m": 152.5
+   }
+  },
+  {
+   "osm": "way/972362718",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.99857,
+    53.15844
+   ],
+   "epsg2180": [
+    767221.0,
+    595595.8
+   ],
+   "area_m2": 19415.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 24.3,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 180455855,
+    "length_m": 294.5
+   }
+  },
+  {
+   "osm": "way/309436260",
+   "functions": [
+    "zakład przemysłowy (man_made=works)"
+   ],
+   "kinds": [
+    "works"
+   ],
+   "wgs84": [
+    23.004478,
+    53.160213
+   ],
+   "epsg2180": [
+    767604.6,
+    595814.9
+   ],
+   "area_m2": 3154.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 25.8,
+   "tags": {
+    "building": "yes",
+    "man_made": "works",
+    "product": "food",
+    "source:addr": "choroszcz.e-mapa.net"
+   },
+   "truck_gate_est": {
+    "service_way": 1477375116,
+    "length_m": 86.5
+   }
+  },
+  {
+   "osm": "way/196779649",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.005689,
+    53.166535
+   ],
+   "epsg2180": [
+    767646.1,
+    596522.1
+   ],
+   "area_m2": 24101.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 27.1,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 970376439,
+    "length_m": 129.1
+   }
+  },
+  {
+   "osm": "way/330967468",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.007935,
+    53.158474
+   ],
+   "epsg2180": [
+    767846.3,
+    595634.6
+   ],
+   "area_m2": 11297.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 27.7,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 99623147,
+    "length_m": 151.0
+   }
+  },
+  {
+   "osm": "way/972362726",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.007744,
+    53.156051
+   ],
+   "epsg2180": [
+    767848.7,
+    595364.6
+   ],
+   "area_m2": 57670.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 28.4,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 297368060,
+    "length_m": 19.1
+   }
+  },
+  {
+   "osm": "way/972362729",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.993139,
+    53.159794
+   ],
+   "epsg2180": [
+    766849.8,
+    595725.9
+   ],
+   "area_m2": 1774.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 31.7,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "node/12837492206",
+   "functions": [
+    "zakład przemysłowy (man_made=works)"
+   ],
+   "kinds": [
+    "works"
+   ],
+   "wgs84": [
+    22.996859,
+    53.165394
+   ],
+   "epsg2180": [
+    767063.5,
+    596362.3
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 33.1,
+   "tags": {
+    "man_made": "works",
+    "product": "packaging"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/297368881",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.99379,
+    53.156214
+   ],
+   "epsg2180": [
+    766915.5,
+    595330.6
+   ],
+   "area_m2": 696.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 33.8,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/196779622",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.00949,
+    53.158611
+   ],
+   "epsg2180": [
+    767949.4,
+    595655.6
+   ],
+   "area_m2": 32808.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 34.9,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 99623147,
+    "length_m": 151.0
+   }
+  },
+  {
+   "osm": "way/940426267",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.992406,
+    53.163364
+   ],
+   "epsg2180": [
+    766778.7,
+    596120.0
+   ],
+   "area_m2": 4067.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 35.9,
+   "tags": {
+    "building": "warehouse"
+   },
+   "truck_gate_est": {
+    "service_way": 1035771576,
+    "length_m": 72.5
+   }
+  },
+  {
+   "osm": "way/297369201",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.994288,
+    53.155979
+   ],
+   "epsg2180": [
+    766950.2,
+    595306.3
+   ],
+   "area_m2": 900.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 37.6,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1482181800,
+    "length_m": 138.8
+   }
+  },
+  {
+   "osm": "way/1447210559",
+   "functions": [
+    "zakład przemysłowy (man_made=works)",
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "works",
+    "hall"
+   ],
+   "wgs84": [
+    23.007841,
+    53.15857
+   ],
+   "epsg2180": [
+    767839.4,
+    595645.0
+   ],
+   "area_m2": 3913.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 40.0,
+   "tags": {
+    "building": "industrial",
+    "man_made": "works"
+   },
+   "truck_gate_est": {
+    "service_way": 99623147,
+    "length_m": 151.0
+   }
+  },
+  {
+   "osm": "way/673837271",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.992309,
+    53.162349
+   ],
+   "epsg2180": [
+    766778.5,
+    596006.8
+   ],
+   "area_m2": 9622.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 43.6,
+   "tags": {
+    "building": "warehouse"
+   },
+   "truck_gate_est": {
+    "service_way": 1035771576,
+    "length_m": 72.5
+   }
+  },
+  {
+   "osm": "way/196786466",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    23.012858,
+    53.15797
+   ],
+   "epsg2180": [
+    768178.3,
+    595597.0
+   ],
+   "area_m2": 19466.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 43.7,
+   "tags": {
+    "barrier": "fence",
+    "fence_type": "metal",
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 297372431,
+    "length_m": 292.9
+   }
+  },
+  {
+   "osm": "way/550896625",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.99264,
+    53.161159
+   ],
+   "epsg2180": [
+    766808.0,
+    595875.8
+   ],
+   "area_m2": 929.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 45.0,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source:addr": "gugik.gov.pl",
+    "source:building": "BDOT",
+    "source:geometry": "EGiB"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/972362719",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.99853,
+    53.15815
+   ],
+   "epsg2180": [
+    767220.1,
+    595563.4
+   ],
+   "area_m2": 4032.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 47.4,
+   "tags": {
+    "building": "industrial",
+    "source:addr": "gugik.gov.pl"
+   },
+   "truck_gate_est": {
+    "service_way": 1307417851,
+    "length_m": 75.0
+   }
+  },
+  {
+   "osm": "way/1215425602",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.007637,
+    53.154636
+   ],
+   "epsg2180": [
+    767850.3,
+    595207.0
+   ],
+   "area_m2": 601.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 47.6,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source:building": "BDOT"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1433331151",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.994931,
+    53.162044
+   ],
+   "epsg2180": [
+    766955.5,
+    595982.8
+   ],
+   "area_m2": 6715.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 52.3,
+   "tags": {
+    "building": "industrial",
+    "source:building": "EGiB"
+   },
+   "truck_gate_est": {
+    "service_way": 1477375113,
+    "length_m": 786.2
+   }
+  },
+  {
+   "osm": "way/550896626",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.991855,
+    53.161149
+   ],
+   "epsg2180": [
+    766755.6,
+    595871.8
+   ],
+   "area_m2": 1042.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 54.3,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source:addr": "choroszcz.e-mapa.net",
+    "source:building": "BDOT",
+    "source:geometry": "EGiB"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "node/13765678320",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.998446,
+    53.158076
+   ],
+   "epsg2180": [
+    767214.9,
+    595554.9
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 55.3,
+   "tags": {
+    "shop": "wholesale"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1083837407",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.995179,
+    53.164786
+   ],
+   "epsg2180": [
+    766955.0,
+    596288.4
+   ],
+   "area_m2": 9990.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 61.2,
+   "tags": {
+    "building": "warehouse"
+   },
+   "truck_gate_est": {
+    "service_way": 1210174185,
+    "length_m": 668.3
+   }
+  },
+  {
+   "osm": "node/4709699428",
+   "functions": [
+    "zakład przemysłowy (man_made=works)"
+   ],
+   "kinds": [
+    "works"
+   ],
+   "wgs84": [
+    23.008531,
+    53.156313
+   ],
+   "epsg2180": [
+    767899.6,
+    595396.7
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 65.7,
+   "tags": {
+    "man_made": "works",
+    "opening_hours": "Mo-Fr 08:00-16:00"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/221526856",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    23.008523,
+    53.156168
+   ],
+   "epsg2180": [
+    767900.0,
+    595380.5
+   ],
+   "area_m2": 14436.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 71.4,
+   "tags": {
+    "building": "industrial",
+    "source:addr": "choroszcz.e-mapa.net"
+   },
+   "truck_gate_est": {
+    "service_way": 297368060,
+    "length_m": 19.1
+   }
+  },
+  {
+   "osm": "way/1083837408",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.997503,
+    53.164654
+   ],
+   "epsg2180": [
+    767111.1,
+    596282.4
+   ],
+   "area_m2": 27711.0,
+   "cell": [
+    -5,
+    0
+   ],
+   "tile": "s8-01",
+   "dist_to_loop_road_m": 94.7,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source:building": "BDOT",
+    "source:geometry": "EGiB"
+   },
+   "truck_gate_est": {
+    "service_way": 1210174184,
+    "length_m": 105.6
+   }
+  },
+  {
+   "osm": "way/1411154885",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.979952,
+    53.160289
+   ],
+   "epsg2180": [
+    765965.9,
+    595731.8
+   ],
+   "area_m2": 16478.0,
+   "cell": [
+    -6,
+    0
+   ],
+   "tile": "s8-02",
+   "dist_to_loop_road_m": 23.8,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1411154882,
+    "length_m": 192.8
+   }
+  },
+  {
+   "osm": "way/1411154881",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.97981,
+    53.160407
+   ],
+   "epsg2180": [
+    765955.6,
+    595744.4
+   ],
+   "area_m2": 2556.0,
+   "cell": [
+    -6,
+    0
+   ],
+   "tile": "s8-02",
+   "dist_to_loop_road_m": 40.0,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1411154882,
+    "length_m": 192.8
+   }
+  },
+  {
+   "osm": "way/1469469642",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.986805,
+    53.158313
+   ],
+   "epsg2180": [
+    766435.8,
+    595537.7
+   ],
+   "area_m2": 37481.0,
+   "cell": [
+    -6,
+    0
+   ],
+   "tile": "s8-02",
+   "dist_to_loop_road_m": 108.9,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 297364533,
+    "length_m": 70.3
+   }
+  },
+  {
+   "osm": "way/1525765624",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.991286,
+    53.164932
+   ],
+   "epsg2180": [
+    766694.1,
+    596290.0
+   ],
+   "area_m2": 69216.0,
+   "cell": [
+    -6,
+    0
+   ],
+   "tile": "s8-02",
+   "dist_to_loop_road_m": 140.6,
+   "tags": {
+    "landuse": "industrial",
+    "start_date": "2026"
+   },
+   "truck_gate_est": {
+    "service_way": 1210174183,
+    "length_m": 62.1
+   }
+  },
+  {
+   "osm": "way/1525431951",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.991138,
+    53.164974
+   ],
+   "epsg2180": [
+    766683.9,
+    596294.2
+   ],
+   "area_m2": 33173.0,
+   "cell": [
+    -6,
+    0
+   ],
+   "tile": "s8-02",
+   "dist_to_loop_road_m": 149.1,
+   "tags": {
+    "building": "warehouse",
+    "source:building": "EGiB"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/906614318",
+   "functions": [
+    "stacja paliw"
+   ],
+   "kinds": [
+    "fuel"
+   ],
+   "wgs84": [
+    22.936379,
+    53.165129
+   ],
+   "epsg2180": [
+    763025.7,
+    596108.6
+   ],
+   "area_m2": 2592.0,
+   "cell": [
+    -7,
+    0
+   ],
+   "tile": "s8-03",
+   "dist_to_loop_road_m": 14.0,
+   "tags": {
+    "amenity": "fuel",
+    "opening_hours": "24/7"
+   },
+   "truck_gate_est": {
+    "service_way": 99624284,
+    "length_m": 218.6
+   }
+  },
+  {
+   "osm": "way/364773481",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.930644,
+    53.162557
+   ],
+   "epsg2180": [
+    762658.4,
+    595801.6
+   ],
+   "area_m2": 2429.0,
+   "cell": [
+    -7,
+    0
+   ],
+   "tile": "s8-03",
+   "dist_to_loop_road_m": 45.3,
+   "tags": {
+    "building": "warehouse",
+    "source:addr": "choroszcz.e-mapa.net"
+   },
+   "truck_gate_est": {
+    "service_way": 364773483,
+    "length_m": 710.5
+   }
+  },
+  {
+   "osm": "way/1187872184",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.947539,
+    53.166414
+   ],
+   "epsg2180": [
+    763763.2,
+    596292.5
+   ],
+   "area_m2": 588.0,
+   "cell": [
+    -7,
+    0
+   ],
+   "tile": "s8-03",
+   "dist_to_loop_road_m": 86.4,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1187872183",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.948382,
+    53.16645
+   ],
+   "epsg2180": [
+    763819.3,
+    596299.7
+   ],
+   "area_m2": 340.0,
+   "cell": [
+    -7,
+    0
+   ],
+   "tile": "s8-03",
+   "dist_to_loop_road_m": 102.3,
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/541688564",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.929239,
+    53.163199
+   ],
+   "epsg2180": [
+    762560.6,
+    595867.8
+   ],
+   "area_m2": 64832.0,
+   "cell": [
+    -8,
+    0
+   ],
+   "tile": "s8-04",
+   "dist_to_loop_road_m": 9.3,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 364773483,
+    "length_m": 710.5
+   }
+  },
+  {
+   "osm": "way/202776762",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.929961,
+    53.165402
+   ],
+   "epsg2180": [
+    762595.4,
+    596115.4
+   ],
+   "area_m2": 27463.0,
+   "cell": [
+    -8,
+    0
+   ],
+   "tile": "s8-04",
+   "dist_to_loop_road_m": 71.8,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 202776761,
+    "length_m": 173.6
+   }
+  },
+  {
+   "osm": "way/1248150391",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.883954,
+    53.164449
+   ],
+   "epsg2180": [
+    759528.3,
+    595841.4
+   ],
+   "area_m2": 1685.0,
+   "cell": [
+    -9,
+    0
+   ],
+   "tile": "s8-05",
+   "dist_to_loop_road_m": 39.5,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 274268356,
+    "length_m": 139.0
+   }
+  },
+  {
+   "osm": "way/1411154896",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.872085,
+    53.157139
+   ],
+   "epsg2180": [
+    758779.6,
+    594986.0
+   ],
+   "area_m2": 7634.0,
+   "cell": [
+    -9,
+    -1
+   ],
+   "tile": "s8-06",
+   "dist_to_loop_road_m": 3.1,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1411154895,
+    "length_m": 96.6
+   }
+  },
+  {
+   "osm": "way/1312971651",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.865662,
+    53.157965
+   ],
+   "epsg2180": [
+    758345.6,
+    595054.6
+   ],
+   "area_m2": 809.0,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tile": "s8-07",
+   "dist_to_loop_road_m": 22.2,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1312971652,
+    "length_m": 44.5
+   }
+  },
+  {
+   "osm": "node/7497135141",
+   "functions": [
+    "sklep wielkopowierzchniowy / hurtownia (cel dostaw)"
+   ],
+   "kinds": [
+    "retail_delivery"
+   ],
+   "wgs84": [
+    22.866725,
+    53.152755
+   ],
+   "epsg2180": [
+    758447.9,
+    594479.4
+   ],
+   "area_m2": 0.0,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tile": "s8-07",
+   "dist_to_loop_road_m": 38.3,
+   "tags": {
+    "opening_hours": "Mo-Sa 06:00-20:00; Su 09:00-20:00",
+    "shop": "supermarket"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/1336267451",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.847645,
+    53.153009
+   ],
+   "epsg2180": [
+    757171.6,
+    594438.8
+   ],
+   "area_m2": 838.0,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tile": "s8-07",
+   "dist_to_loop_road_m": 42.2,
+   "tags": {
+    "building": "industrial"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  },
+  {
+   "osm": "way/415534091",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.859498,
+    53.153398
+   ],
+   "epsg2180": [
+    757961.2,
+    594524.7
+   ],
+   "area_m2": 48029.0,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tile": "s8-07",
+   "dist_to_loop_road_m": 43.7,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1485607834,
+    "length_m": 130.6
+   }
+  },
+  {
+   "osm": "way/1469402077",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.859993,
+    53.152379
+   ],
+   "epsg2180": [
+    758000.4,
+    594413.3
+   ],
+   "area_m2": 13657.0,
+   "cell": [
+    -10,
+    -1
+   ],
+   "tile": "s8-07",
+   "dist_to_loop_road_m": 52.5,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 1485607834,
+    "length_m": 130.6
+   }
+  },
+  {
+   "osm": "way/1469402098",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.795852,
+    53.145935
+   ],
+   "epsg2180": [
+    753753.0,
+    593467.6
+   ],
+   "area_m2": 5327.0,
+   "cell": [
+    -12,
+    -1
+   ],
+   "tile": "s8-09",
+   "dist_to_loop_road_m": 19.5,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 536417357,
+    "length_m": 517.5
+   }
+  },
+  {
+   "osm": "way/301402242",
+   "functions": [
+    "stacja paliw"
+   ],
+   "kinds": [
+    "fuel"
+   ],
+   "wgs84": [
+    22.750293,
+    53.135815
+   ],
+   "epsg2180": [
+    750767.6,
+    592182.2
+   ],
+   "area_m2": 210.0,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tile": "s8-11",
+   "dist_to_loop_road_m": 7.9,
+   "tags": {
+    "amenity": "fuel",
+    "building": "retail",
+    "fuel:diesel": "yes",
+    "fuel:lpg": "yes",
+    "fuel:octane_95": "yes",
+    "fuel:octane_98": "yes",
+    "opening_hours": "Mo-Su 06:00-06:00",
+    "shop": "convenience",
+    "source:addr": "tykocin.e-mapa.net",
+    "toilets": "yes"
+   },
+   "truck_gate_est": {
+    "service_way": 439078098,
+    "length_m": 105.9
+   }
+  },
+  {
+   "osm": "way/536432114",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.748823,
+    53.136916
+   ],
+   "epsg2180": [
+    750662.9,
+    592299.5
+   ],
+   "area_m2": 1179.0,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tile": "s8-11",
+   "dist_to_loop_road_m": 22.5,
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl",
+    "source:addr": "tykocin.e-mapa.net"
+   },
+   "truck_gate_est": {
+    "service_way": 536432112,
+    "length_m": 36.4
+   }
+  },
+  {
+   "osm": "way/439366052",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.748493,
+    53.128232
+   ],
+   "epsg2180": [
+    750691.5,
+    591333.1
+   ],
+   "area_m2": 15048.0,
+   "cell": [
+    -13,
+    -2
+   ],
+   "tile": "s8-11",
+   "dist_to_loop_road_m": 24.0,
+   "tags": {
+    "landuse": "industrial",
+    "surface": "paved"
+   },
+   "truck_gate_est": {
+    "service_way": 439366225,
+    "length_m": 378.4
+   }
+  },
+  {
+   "osm": "way/222577665",
+   "functions": [
+    "teren przemysłowy (landuse=industrial)"
+   ],
+   "kinds": [
+    "industrial_land"
+   ],
+   "wgs84": [
+    22.738926,
+    53.13528
+   ],
+   "epsg2180": [
+    750011.0,
+    592082.9
+   ],
+   "area_m2": 15144.0,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tile": "s8-12",
+   "dist_to_loop_road_m": 20.1,
+   "tags": {
+    "landuse": "industrial"
+   },
+   "truck_gate_est": {
+    "service_way": 222577661,
+    "length_m": 245.5
+   }
+  },
+  {
+   "osm": "way/1050737625",
+   "functions": [
+    "hala / magazyn / produkcja (building)"
+   ],
+   "kinds": [
+    "hall"
+   ],
+   "wgs84": [
+    22.730683,
+    53.135271
+   ],
+   "epsg2180": [
+    749460.0,
+    592053.2
+   ],
+   "area_m2": 659.0,
+   "cell": [
+    -14,
+    -2
+   ],
+   "tile": "s8-12",
+   "dist_to_loop_road_m": 52.4,
+   "tags": {
+    "building": "manufacture",
+    "description": "Autorstwa Hubert Śmietanka - Praca własna, CC BY-SA 2.5, https://commons.wikimedia.org/w/index.php?curid=2044713",
+    "historic": "building",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/de/POL_Stare_Je%C5%BCewo_browar_Glogera.jpg",
+    "source": "https://pl.m.wikipedia.org/wiki/Zygmunt_Gloger"
+   },
+   "truck_gate_est": "UNVERIFIED (brak drogi dojazdowej service w OSM w promieniu 30 m; brama do ustalenia z ortofoto)"
+  }
+ ],
+ "agri_summary": {
+  "farmyards_count": 348,
+  "farmyard_area_ha": 266.8,
+  "note": "podwórza gospodarstw w zasięgu pętli ( cele 'rolnicze' typu zjazd na pole )"
+ }
+}

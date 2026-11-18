@@ -102,6 +102,7 @@ namespace Game.Editor.Setup
         {
             var ext = Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot, ExtManifest))));
             var inn = Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot, IntManifest))));
+            DrivingVehiclePrefabs.PinGuid(PrefabPath, DrivingVehiclePrefabs.TractorGuid);   // D84: DrivingLab.unity (git) references this prefab
             CopySources(ext, inn);
             ConfigureImporters();
             var sets = BuildMaterials(inn);
@@ -250,9 +251,26 @@ namespace Game.Editor.Setup
                     ti.SetPlatformTextureSettings(a);
                     dirty = true;
                 }
+                // Windows (ADR 0261): the automatic Standalone format of an opaque RGB map is BC1 (5:6:5 endpoints, 4x4
+                // blocks). The cab AO atlas is mostly 0..0.3 and the cab shader maps it through smoothstep(0.04, 0.28) into
+                // the albedo, so BC1's few dark levels per block showed as stair-stepped black 4x4 blocks in the driver's
+                // view on Win64 (review 2026-11-17 cabin-pc P1-1; Android's ASTC override was clean). Single-channel BC4.
+                TextureImporterFormat? pc = StandaloneFormatFor(n);
+                var s = ti.GetPlatformTextureSettings("Standalone");
+                if (pc.HasValue && (!s.overridden || s.format != pc.Value || s.maxTextureSize != maxSize))
+                {
+                    s.overridden = true; s.format = pc.Value; s.maxTextureSize = maxSize; s.compressionQuality = 50;
+                    ti.SetPlatformTextureSettings(s);
+                    dirty = true;
+                }
                 if (dirty) ti.SaveAndReimport();
             }
         }
+
+        /// <summary>Standalone (Windows) format override for a truck/cab texture, null = Unity's automatic format.
+        /// Ambient-occlusion atlases (<c>*_AO*</c>, linear, single channel) get BC4 (8-bit endpoints per 4x4 block).</summary>
+        public static TextureImporterFormat? StandaloneFormatFor(string textureName) =>
+            textureName.Contains("_AO", StringComparison.Ordinal) ? TextureImporterFormat.BC4 : (TextureImporterFormat?)null;
 
         // ------------------------------------------------------------------ 3. materials
 
@@ -836,7 +854,7 @@ namespace Game.Editor.Setup
                 rig.interiorLods = interiorLods.Select(l => new TruckVisualRig.RendererList { renderers = l.ToArray() }).ToArray();
                 rig.slots = rendererSlots.ToArray();
                 rig.residentSet = sets["Low"];
-                rig.tyreFlatRadius = (float)probe.Wheels[0].Radius;   // physics rolling radius: contact-patch plane of the wheel meshes
+                rig.tyreFlatRadius = (float)probe.Wheels[0].Radius;   // geometric tyre radius (contact plane), not rollingRadius (ADR 0201)
                 var sz = Json.Obj(ext["lod_screen_size_suggestion"]);
                 rig.screenSizes = new[] { (float)Json.Num(sz["LOD0"]), (float)Json.Num(sz["LOD1"]), (float)Json.Num(sz["LOD2"]), (float)Json.Num(sz["cull"]) };
                 rig.forceLevel = 0;
@@ -863,6 +881,9 @@ namespace Game.Editor.Setup
                           $"interior LOD0 {tris(interiorLods[0])} LOD1 {tris(interiorLods[1])} LOD2 {tris(interiorLods[2])}; eye {eyeLocal}; mount {mount}");
                 Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, Root));
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+                // Fresh checkout: the Refresh in CopySources drops the orphan .meta written before the save, so the first
+                // save gets a random GUID; re-pin it (and the generated scenes that already reference it).
+                DrivingVehiclePrefabs.PinGuid(PrefabPath, DrivingVehiclePrefabs.TractorGuid);
                 Debug.Log("[TRUCK] prefab " + PrefabPath);
             }
             finally
@@ -1250,7 +1271,21 @@ namespace Game.Editor.Setup
                 var qa = go.AddComponent<ControlCamera>();
                 qa.id = id; qa.note = note;
             }
-            Q("cab-driver", eye, Quaternion.Euler(Game.Cameras.DriverHead.RestPitchDownDeg, 0f, 0f), 62f, "A7: driver eye, straight ahead (windscreen base, frit, dash top, cluster in the rim window).");
+            // D90 / ADR 0294: the game's default cab FOV (70 deg vertical; 62 until 2026-11-18).
+            Q("cab-driver", eye, Quaternion.Euler(Game.Cameras.DriverHead.RestPitchDownDeg, 0f, 0f), Game.Controls.ControlSettings.DefaultCabFovDeg, "A7: driver eye, straight ahead (windscreen base, frit, dash top, cluster in the rim window).");
+            // D84 polish (review P1-4): A/B of the rest gaze for the owner (10 deg down instead of 6: dash and rim take ~26 %
+            // of the frame instead of ~20 %) and the driver's A-pillar with its seals, blind bar and mirror edge. QA only.
+            Q("cab-driver-ab10", eye, Quaternion.Euler(10f, 0f, 0f), 62f, "D84 A/B: driver eye, rest gaze 10 deg down (not the game camera).");
+            // D84 / P1-4 cab-view-s24: the owner's choice of driver view (FOV / rest gaze), same eye point. QA only.
+            foreach (var v in Game.Cameras.CabViewVariants.All)
+            {
+                Q(v.Id, eye, Quaternion.Euler(v.PitchDownDeg, 0f, 0f), v.VerticalFovDeg, "D84 view variant: " + v.Note + " (not the game camera).");
+                // The same frame as the player sees it: driving HUD + the D70 class II mirror windows (ControlSettings.mirrorInsets, default on).
+                Q(v.Id + "-hud", eye, Quaternion.Euler(v.PitchDownDeg, 0f, 0f), v.VerticalFovDeg, "D84 view variant with the driving HUD and mirror windows.");
+                var hudCam = parent.Find("QA_" + v.Id + "-hud").GetComponent<ControlCamera>();
+                hudCam.includeDrivingHud = true; hudCam.drivingHudMirrorInsets = true;
+            }
+            Q("cab-apillar", eye, Quaternion.Euler(-6f, -34f, 0f), 50f, "D84: driver's A-pillar trim, seal beads, drawn blind, mirror edge.");
             Q("cab-dash", eye, Quaternion.Euler(24f, 12f, 0f), 62f, "A7: cluster, steering wheel, centre stack, lower dash (low-sun black-cab check: lower dash > 8 %).");
             Q("cab-left", eye, Quaternion.Euler(4f, -68f, 0f), 62f, "A7: driver door card, door glass and the main/wide mirrors on the left.");
             Q("cab-right", eye, Quaternion.Euler(8f, 58f, 0f), 62f, "A7: passenger seat, passenger door card, right mirrors through the glass.");
@@ -1298,12 +1333,18 @@ namespace Game.Editor.Setup
             // r10 (ADR 0083): the views the player really has of the exterior - the chase camera (CameraRig with a trailer:
             // 26 m behind, 7.5 m up, 50 deg), the tractor side (steps, tank, skirt, wheels, cab back / trailer gap), the
             // tractor from behind the cab on the driver side, the trailer side (curtain, rail, side guards, tridem) and the
-            // passenger side 3/4 (exhaust, battery box, AdBlue).
+            // passenger side 3/4 (exhaust, battery box, AUS 32 tank).
             void QL(string id, Vector3 p, Vector3 l, float fov, string note) => Q(id, p, Quaternion.LookRotation(l - p, Vector3.up), fov, note);
             QL("chase", new Vector3(0f, 7.5f, -26f), new Vector3(0f, 2f, 3f), 50f, "r10: chase camera framing with the trailer (rear doors, lamps, roof, cab over the trailer).");
+            // D90 / ADR 0294: the exterior view with the driving HUD (speed / gear / air strip shown outside the cab).
+            QL("chase-hud", new Vector3(0f, 7.5f, -26f), new Vector3(0f, 2f, 3f), 50f, "D90: chase framing with the driving HUD.");
+            { var c = parent.Find("QA_chase-hud").GetComponent<ControlCamera>(); c.includeDrivingHud = true; }   // no mirror windows: the game shows them in the cab only (DrivingLabBootstrap.MirrorInsetsOn)
             QL("truck-side", new Vector3(-9.5f, 1.7f, 1.9f), new Vector3(0f, 1.6f, 1.9f), 42f, "r10: tractor driver side, square on (door, steps, arch, tank, skirt, rear wheels, gap to the trailer).");
             QL("truck-rear34", new Vector3(-5.2f, 2.0f, -3.6f), new Vector3(-0.4f, 1.3f, 2.2f), 45f, "r10: tractor from behind the cab, driver side (tank, rear mudguard, cab back, coiled lines, trailer front).");
             QL("trailer-side", new Vector3(-11.5f, 1.8f, -6.2f), new Vector3(0f, 1.7f, -6.2f), 55f, "r10: curtainsider driver side (curtain, straps, rail, side guards, pallet box, tridem).");
+            // s23 trailer-rims (review s23 P1): tridem close-up framed on axle 2 (kingpin z 0.67 - 7.63 m), same view as the
+            // Blender control render zbl_kolo - steel rims must show no red / text from other atlas islands (docs/06 §2).
+            QL("trailer-wheels", new Vector3(-3.9f, 0.85f, -4.66f), new Vector3(-1.1f, 0.62f, -6.96f), 32f, "s23: trailer tridem close-up, driver side (steel rims, hubs, tyres, mudguards).");
             // ADR 0181: lamp close-ups (lens structure, plate illumination). Trailer rear lamps sit 12.0 m behind the kingpin
             // (truck frame z -11.33), the tractor combination lamp at the frame end under the trailer front.
             QL("lamp-trailer", new Vector3(-1.75f, 1.20f, -13.2f), new Vector3(-0.50f, 0.90f, -11.33f), 30f, "0181: trailer left combination lamp + number plate, 2 m (lens structure, plate lamp).");

@@ -85,6 +85,59 @@ namespace Game.Tests
             UnityEngine.Object.Destroy(menu.gameObject);
         }
 
+        /// <summary>D87: the menu always has a background under the block (photo + scrim, or the dark fallback), drawn first,
+        /// outside the safe area (not a menu item); the panel covers every menu item. §7 p.2: the footer follows the form factor.</summary>
+        [UnityTest]
+        public IEnumerator Menu_Backdrop_UnderBlock_AndFooterFollowsFormFactor()
+        {
+            var menu = BootMenu.Create(null, StartMenuOptions.Load(), new List<(string, Action)> { ("A", () => { }) }, null);
+            menu.OverrideScreen(new Vector2(1920f, 1080f), new Rect(0f, 0f, 1920f, 1080f), 96f, true);
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            var backdrop = menu.transform.Find(BootMenu.BackdropName);
+            Assert.IsNotNull(backdrop, "backdrop present");
+            Assert.AreEqual(0, backdrop.GetSiblingIndex(), "backdrop drawn first, under the safe area");
+            Assert.IsFalse(backdrop.IsChildOf(menu.SafeAreaRect), "backdrop is not a menu item");
+            Assert.AreEqual(menu.HasBackgroundPhoto, backdrop.Find(BootMenu.BackdropPhotoName) != null, "photo only when the texture ships");
+            RectTransform panel = null;
+            foreach (var rt in backdrop.GetComponentsInChildren<RectTransform>(false)) if (rt.name == BootMenu.BackdropPanelName) panel = rt;
+            Assert.IsNotNull(panel, "block panel active");
+            var pc = new Vector3[4]; panel.GetWorldCorners(pc);
+            var pr = Rect.MinMaxRect(pc[0].x, pc[0].y, pc[2].x, pc[2].y);
+            foreach (var t in menu.SafeAreaRect.GetComponentsInChildren<Text>(false))
+            {
+                if (string.IsNullOrEmpty(t.text)) continue;
+                var c = new Vector3[4]; t.rectTransform.GetWorldCorners(c);
+                Assert.IsTrue(pr.Contains(c[0]) && pr.Contains(c[2]), "panel covers " + t.transform.parent.name + "/" + t.name);
+            }
+            StringAssert.Contains("Esc", menu.FooterText);
+            StringAssert.DoesNotContain("przycisk Menu", menu.FooterText);
+            menu.OverrideScreen(new Vector2(2400f, 1080f), new Rect(0f, 0f, 2400f, 1080f), 400f, false);
+            StringAssert.Contains("przycisk Menu", menu.FooterText);
+            UnityEngine.Object.Destroy(menu.gameObject);
+        }
+
+        [UnityTest]
+        public IEnumerator Menu_InformacjeOpensAbout_CloseReturns()
+        {
+            bool about = false;
+            var menu = BootMenu.Create(null, StartMenuOptions.Load(), new List<(string, Action)> { ("A", () => { }) }, null, () => about = true);
+            yield return null;
+            Click(menu.gameObject, BootMenu.AboutLabel);
+            Assert.IsTrue(about, "Informacje button calls back");
+            UnityEngine.Object.Destroy(menu.gameObject);
+
+            bool closed = false;
+            LogAssert.Expect(LogType.Log, new Regex(@"\[ABOUT\] opened blocks=\d+ problems=0"));
+            var p = AboutPanel.Create(null, () => closed = true);
+            yield return null;
+            Assert.Greater(p.Document.Blocks.Count, 20, "attribution blocks parsed");
+            Click(p.gameObject, AboutPanel.CloseLabel);
+            yield return null;
+            Assert.IsTrue(closed);
+            Assert.IsTrue(p == null, "panel destroyed on close");
+        }
+
         static Button Find(GameObject root, string name)
         {
             foreach (var b in root.GetComponentsInChildren<Button>(true)) if (b.name == name) return b;
@@ -131,6 +184,44 @@ namespace Game.Tests
             Assert.IsNotNull(boot, "Boot scene not reloaded");
             Assert.IsNotNull(boot.Menu, "start menu missing after returning");
             Assert.IsNull(UnityEngine.Object.FindAnyObjectByType<DrivingLabBootstrap>());
+        }
+
+        /// <summary>ADR 0229: the region picker starts on the first region in the APK, greys out a missing one (start
+        /// button disabled, no action), starts an available one and remembers it.</summary>
+        [UnityTest]
+        public IEnumerator Menu_RegionPicker_GreysMissing_StartsAvailable_RemembersPick()
+        {
+            PlayerPrefs.DeleteKey(BootMenu.PrefRegion);
+            string started = null;
+            var regions = new List<BootRegionChoice>
+            {
+                new BootRegionChoice("missing-a", "Brak A", "brak w tym APK", false, () => started = "missing-a"),
+                new BootRegionChoice("ok-b", "Region B", "trasa 1,0 km", true, () => started = "ok-b"),
+                new BootRegionChoice("ok-c", "Region C", "trasa 2,0 km", true, () => started = "ok-c"),
+            };
+            var menu = BootMenu.Create(null, StartMenuOptions.Load(), new List<(string, Action)> { ("A", () => { }) }, null, null, regions);
+            yield return null;
+            Assert.AreEqual(1, menu.RegionIndex, "first region present in the APK");
+            Click(menu.gameObject, BootMenu.RegionPrevName);
+            Assert.AreEqual(0, menu.RegionIndex);
+            Button start = null;
+            foreach (var b in menu.GetComponentsInChildren<Button>(true)) if (b.name == BootMenu.RegionStartName) start = b;
+            Assert.IsNotNull(start);
+            Assert.IsFalse(start.interactable, "missing region: start disabled");
+            start.onClick.Invoke();
+            Assert.IsNull(started, "missing region never starts");
+            Click(menu.gameObject, BootMenu.RegionPrevName);   // wraps to the last one
+            Assert.AreEqual(2, menu.RegionIndex);
+            Assert.IsTrue(start.interactable);
+            LogAssert.Expect(LogType.Log, new Regex(@"\[CONTROLS\] menu-start scene=region ok-c"));
+            Click(menu.gameObject, BootMenu.RegionStartName);
+            Assert.AreEqual("ok-c", started);
+            Assert.AreEqual("ok-c", PlayerPrefs.GetString(BootMenu.PrefRegion));
+            Assert.AreEqual(2, BootMenu.InitialRegionIndex(regions, "ok-c"), "stored pick comes back");
+            Assert.AreEqual(1, BootMenu.InitialRegionIndex(regions, "missing-a"), "stored pick missing from the APK: first available");
+            Assert.AreEqual(-1, BootMenu.InitialRegionIndex(new List<BootRegionChoice> { regions[0] }, ""), "nothing in the APK: no picker");
+            PlayerPrefs.DeleteKey(BootMenu.PrefRegion);
+            UnityEngine.Object.Destroy(menu.gameObject);
         }
     }
 }
