@@ -11,3 +11,7 @@
 - Kamery C obejrzane (sbs vs vegetation-r3/before High clear): putry-above, route-putry-approach, g3b-rondo-putry-approach, g3b-eye-s1482, driver-andersa-to-putry, edge-*: narożniki ronda Putry, ekrany, mur s1482 bez regresji. edge-south: płaska jasnoszara łata (~7x4 m) z ciemną obwódką na jezdni — do sprawdzenia (decal_patch?).
 - Uwaga: import przeliczył manifest_sha256 w region.yaml (LF) — niezacommitowane, decyzja lidera.
 - NASTĘPNY KROK: `Get-Content artifacts/regen-c-s24/unity3.status, artifacts/regen-c-s24/pytest.status`.
+- 19:00 pytest tests/gis: 2479 passed, 1 skipped, 2 xfailed (2936 s) — zielono, test_ec_chimneys i test_export_is_deterministic przeszły.
+- EditMode Win64 powtórka (po imporcie z LOD0): 1340 / 1252 pass / 1 fail / 87 skip; jedyny fail DrivingScenesFullTruckTests.ArtPrefabs_HavePinnedGuids — Trailer prefab w `_Generated/Trailer` (poza gitem, kopia z main) ma GUID cac16030… zamiast pinned ab5e5ba6… → środowiskowe na nowym PC (main ma ten sam stary prefab; przebudowa naczepy = lider).
+- Commit region.yaml/build_manifest.json: manifest_sha256 źródeł przeliczone przez import po przejściu repo na LF.
+- NASTĘPNY KROK (lider): scal regen-c-s24; na main przebuduj naczepę (Kamion/Setup) i powtórz EditMode; sprawdź łatę na jezdni w edge-south.
