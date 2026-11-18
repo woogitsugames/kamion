@@ -660,7 +660,15 @@ Shader "Kamion/Truck Exterior"
                 half gl = 1.0 + _CabShadowLift.x * ql * ql * ql;
                 col.rgb = lerp(col.rgb * gl, (yl * gl).xxx, _CabShadowLift.z * (1.0 - 1.0 / gl));   // neutral lift (r5 L2)
                 col.rgb = KamionToeParity(col.rgb);   // cab view on the tiers without the D23 LUT (identity elsewhere)
-                col.rgb = KamionMixFog(col.rgb, i.fogFactor);
+                // ADR 0197: lamp pixels are exempt from the night dim-colour desaturation in proportion to their emissive
+                // share (self-luminous signal colours stay R48 red / amber); surfaces keep the ADR 0108 look.
+                half dimScale = 1.0;
+            #if defined(_KAMION_TRUCK_LAMPS)
+                half emitMax = max(s.emission.r, max(s.emission.g, s.emission.b));
+                half colMax = max(col.r, max(col.g, col.b));
+                dimScale = 1.0 - saturate(emitMax / max(colMax, 1e-4));
+            #endif
+                col.rgb = KamionMixFogScaled(col.rgb, i.fogFactor, dimScale);
                 return half4(col.rgb, 1);
             }
             ENDHLSL

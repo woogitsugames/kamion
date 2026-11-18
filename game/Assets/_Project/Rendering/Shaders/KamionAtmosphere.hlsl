@@ -33,23 +33,35 @@ half KamionFogTau(float3 pw, float viewDepth)
 float _KamionDimColourDesaturation;
 float _KamionSkyCapOff; // Existing physical-capture bypass.
 
-half3 KamionTone(half3 c)
+// dimScale (ADR 0197): 1 = full ADR 0108 dim-colour desaturation; the truck exterior passes 1 - (emissive share of the
+// pixel), so self-luminous signal lamps (>= 1 300 cd/m2, seen photopically) keep their R48 red / amber at night - a red
+// lamp has a low luma (0.2126 R) and was pulled toward grey (stop 148,67,67 sRGB; tail lamp fully grey).
+half3 KamionToneScaled(half3 c, half dimScale)
 {
     if (_KamionDimColourDesaturation > 0.0 && _KamionSkyCapOff < 0.5)
     {
         half y = dot(c,half3(0.2126h,0.7152h,0.0722h));
-        half amount = (half)_KamionDimColourDesaturation * (1.0h-smoothstep(0.02h,0.25h,y));
+        half amount = (half)_KamionDimColourDesaturation * dimScale * (1.0h-smoothstep(0.02h,0.25h,y));
         c = lerp(c,y.xxx,amount);
     }
     half3 k = 1.0h - (half)_KamionTone.x * (half)_KamionTone.y / (c + (half)_KamionTone.y + 1e-4h);
     return c * k * (1.0h + (half)_KamionTone.z);
 }
 
+half3 KamionTone(half3 c) { return KamionToneScaled(c, 1.0h); }
+
 // Replaces MixFog(color, fogFactor): fogFactor carries KamionFogTau.
 half3 KamionMixFog(half3 c, half tau)
 {
     c = lerp(_KamionHazeColor.rgb, c, exp(-tau));
     return KamionTone(c);
+}
+
+// KamionMixFog with the ADR 0197 dim-colour scale (see KamionToneScaled).
+half3 KamionMixFogScaled(half3 c, half tau, half dimScale)
+{
+    c = lerp(_KamionHazeColor.rgb, c, exp(-tau));
+    return KamionToneScaled(c, dimScale);
 }
 
 // Rain-wet surface (parameter, not weather simulation): water in the pores darkens rough materials (asphalt, concrete,
