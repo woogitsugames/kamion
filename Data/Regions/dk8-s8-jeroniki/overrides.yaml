@@ -4,6 +4,18 @@
 # neighbours carry no cross-section override on the ways crossing the shared edges, so the generator rules
 # apply (D63: drivable first). Open (ADR 0278): lamp policy (LED like bialystok-knyszynska?) - lead / owner.
 overrides:
+  - id: dk8-median-rural
+    target: {osm_way: [223394828, 825177457, 303988444, 303988445, 197904075, 889307875, 685399521, 685398186, 825177452, 1530059183, 1567973365, 1379858308]}
+    reason: >-
+      ADR 0292: DK8 (trunk 8;65) dual carriageway through the junction Bialystok Zachod. Orthophoto GUGiK 2024 0.25 m
+      (artifacts/dk8-s8-s24/ortho/jeroniki_east_edge.jpg, jeroniki_roundabout.jpg): the median is a grass strip with a
+      steel barrier, no raised kerb; the generator rule made it a kerbed URBAN median wherever a path runs along the
+      outer side, while bialystok-porosly builds the same ways with the rural median (qa.seams r4: FAIL "pobocze" on
+      223394828 / 889307875 at x = 770827). The median edge (left in the OSM direction of these one-way ways) is kept
+      rural.
+    confidence: "medium (orthophoto, median edge type only; widths unchanged)"
+    verify: render route-s1110 / edge-east after the rebuild; qa.seams jeroniki | porosly
+    set: {side_left: median_rural}
   # ---- BEGIN generated: tools/worldgen/qa/s8_xsec_overrides.py (ADR 0288) - do not edit between the markers ----
   - id: s8-xsec-w183639794
     target: {osm_way: 183639794}
