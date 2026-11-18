@@ -171,6 +171,9 @@ namespace PhysicsRunner.Sim
                     return 0;
                 }
                 case "max_abs_roll_deg": return Max(s, i0, i1, x => Math.Abs(x.Roll)) * MathUtil.Rad2Deg;
+                // Signed peak of the tractor body pitch asin(fwd.y), nose up + (same definition as KerbStrikeParityTests
+                // PitchMaxDeg, the Unity-runner parity reference; ADR 0228 r4).
+                case "max_pitch_deg": return Max(s, i0, i1, x => x.Pitch) * MathUtil.Rad2Deg;
                 case "max_trailer_roll_deg": return Max(s, i0, i1, x => Math.Abs(x.TrailerRoll)) * MathUtil.Rad2Deg;
                 case "final_z_m": return s[i1].Pos.z;
                 case "final_gear": return s[i1].Gear;

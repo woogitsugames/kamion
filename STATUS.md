@@ -9,3 +9,7 @@
 - Roleta wróciła do autorskiego 0,10 m. ADR: `docs/adr/DRAFT-d84-kabina-polish-zmierzch-i-ziarno.md`.
 - Otwarte: lusterka/daszek poza kadrem 62° (decyzja pitch/FOV — A/B `cab-driver-ab10`), ciepła poświata niemierzalna na piaście, brak zdjęć referencyjnych (docs/06 §5 pkt 3), kurz bez zmian, pojedyncze jaśniejsze odcinki żeber tacek (atlas AO), kamery QA nie w scenie DrivingLab (`pwsh scripts/build-lab.ps1 -SkipAudio`).
 - NASTĘPNY KROK (lider): visual-critic na `view/ab-*.jpg`, `f-*`; po scaleniu w main: `-executeMethod Game.Editor.Setup.TruckAssetBuilder.BuildBatch`, potem `Game.World.Import.WorldTruckInstaller.InstallBatch`.
+
+# STATUS — alt-113-s24 (PR #113 jackknife-0228 r4, ADR 0228)
+- Krok 1: merge origin/main 33541aa04 czysty (D79 osie tridemu 7,63 m, #171). bodyBoxes naczepy bez zmian i zgodne (test_dims_sync 12/12; BoxCollidery graybox nie zależą od osi). dotnet: tylko golden brake_80_0_dry_abs_comb@laden40 FAIL (jak w recenzji).
+- NASTĘPNY KROK: izolacja przyczyny golden: `dotnet run -c Release --project tools/physics-runner/Runner -- --only brake_80_0_dry_abs_comb@laden40 --out <dir>` + porównanie z goldenami main/#113

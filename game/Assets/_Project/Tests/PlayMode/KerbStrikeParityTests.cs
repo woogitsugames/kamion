@@ -292,14 +292,16 @@ namespace Game.Tests
         /// wheels unloaded ~0.4 s, pitch +8°). Runner (step_27cm_42kmh_comb@laden40, same block): Fz/static 6.50, tractor
         /// 0.42 s, pitch max 6.36°. Shows that the adapter reproduces the core and that the phone values need a ~27 cm step.
         /// </summary>
+        const double Step27Fz = 6.50, Step27Tractor = 0.42, Step27Pitch = 6.36;
+
         [Test]
         public void KerbStep27cm42_40t_Mesh_MatchesRunnerAndPhone()
         {
             var m = Run(CargoPreset.Gross40t, KerbKind.MeshKerbLayer, 0.27f, 42f, 6.0, "kerb27_42_Gross40t_Mesh");
-            Debug.Log($"[TEST] kerb 27 cm 42 km/h 40 t mesh: Unity {m} | runner Fz/static 6.50, tractor 0.42 s, pitch 6.36° | phone 6.8×, ~0.4 s, +8°");
-            AssertClose(6.50, m.FzRatio, 0.20, 0, "Fz / static");
-            AssertClose(0.42, m.TractorAirtime, 0.20, 0.03, "tractor single-wheel unload");
-            AssertClose(6.36, m.PitchMaxDeg, 0.20, 0.2, "pitch peak");
+            Debug.Log($"[TEST] kerb 27 cm 42 km/h 40 t mesh: Unity {m} | runner Fz/static {Step27Fz:F2}, tractor {Step27Tractor:F2} s, pitch {Step27Pitch:F2}° | phone 6.8×, ~0.4 s, +8°");
+            AssertClose(Step27Fz, m.FzRatio, 0.20, 0, "Fz / static");
+            AssertClose(Step27Tractor, m.TractorAirtime, 0.20, 0.03, "tractor single-wheel unload");
+            AssertClose(Step27Pitch, m.PitchMaxDeg, 0.20, 0.2, "pitch peak");
         }
 
         static void AssertClose(double expected, double actual, double rel, double abs, string what)
