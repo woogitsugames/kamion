@@ -50,7 +50,7 @@ overrides:
     set: {z: 137.06}
   - id: seam-z-w889307875-770827-594847
     target: {node: "Bw889307875:5821223987-5821206792:0s"}
-    reason: "trunk way 889307875 at the bialystok-porosly | dk8-s8-jeroniki seam: bialystok-porosly 137.219 m, dk8-s8-jeroniki 136.769 m (GLB, tools/worldgen/qa/seam_z.py) -> mean in both tiles (ADR 0292)"
+    reason: "trunk way 889307875 (DK8 westbound) at the bialystok-porosly | dk8-s8-jeroniki seam: r6 GLB porosly 137.219 / jeroniki 136.769 m; the r7 mean (136.99) was taken by jeroniki but NOT by porosly, whose profile there is set by the ramp onto the bridge 615609890 (+3.3 %, z 137.29 at 2 m inside, tools/worldgen/qa/seam_z.py) -> both tiles at the porosly seam height 137.23 (ADR 0292)"
     confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
     verify: tools/worldgen/qa/seam_z.py bialystok-porosly:dk8-s8-jeroniki dz <= 0.1 m
-    set: {z: 136.99}
+    set: {z: 137.23}
