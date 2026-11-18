@@ -6,12 +6,13 @@ whose graph width equals `graph_w`; the reason text carries the station count an
 (dk19_xsec_summary rules). Ways crossing a seam with a locked built tile are left out (the neighbour keeps the BDOT width).
 
   uv run --project tools/worldgen python tools/worldgen/qa/dk19_xsec_overrides.py          # prints the yaml entries
-  uv run --project tools/worldgen python tools/worldgen/qa/dk19_xsec_overrides.py --write  # rewrites overrides.yaml
+  uv run --project tools/worldgen python tools/worldgen/qa/dk19_xsec_overrides.py --write  # merges into overrides.yaml by id
 """
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import statistics
 from pathlib import Path
 
@@ -48,16 +49,6 @@ SEAM = {
         "    confidence: medium\n"
         "    verify: tools/worldgen/qa/seams.py row w1329465432 (both tiles equal on the seam)\n"
         "    set: {width: [[0.0, 8.0], [0.25, 8.0], [0.63, 13.6], [1.0, 14.0]]}\n",
-        "  - id: dk19-piastowska-seam-n-transition\n"
-        "    target: {osm_way: [440321721]}\n"
-        "    reason: >-\n"
-        "      DK19 Piastowska northbound, first 65 m after the south seam (3 lanes, BDOT rule 9.5 m): the neighbour\n"
-        "      bialystok-mickiewicza is still inside its 15 m width transition from the 2-lane way before (8.0 m) on the\n"
-        "      seam (qa/seams.py: 9.50 | 9.04 m). The profile continues that transition here (t = 0 at the seam; 8.9 m gives 9.04 m after the 15 m smoothing). The\n"
-        "      orthophoto run at s = 25 m is 10.3 m (one station, bus bay beside it): width itself not changed.\n"
-        "    confidence: low\n"
-        "    verify: tools/worldgen/qa/seams.py row w440321721\n"
-        "    set: {width: [[0.0, 8.9], [0.15, 9.5], [1.0, 9.5]]}\n",
     ],
     "bialystok-mickiewicza": [
         "  - id: dk19-piastowska-seam-s-approach-width\n"
@@ -76,8 +67,8 @@ SEAM = {
 }
 
 
-def entries() -> dict[str, list[str]]:
-    out: dict[str, list[str]] = {t: list(v) for t, v in SEAM.items()}
+def entries(seams: bool = True) -> dict[str, list[str]]:
+    out: dict[str, list[str]] = {t: list(v) for t, v in SEAM.items()} if seams else {}
     for G in GROUPS:
         g = json.loads((REPO / "Data" / "Regions" / G["tile"] / "roads.graph.json").read_text(encoding="utf-8"))
         ways = set()
@@ -114,14 +105,61 @@ def entries() -> dict[str, list[str]]:
     return out
 
 
+_ID = re.compile(r"^  - id: (\S+)\s*$")
+# Entries that must never come back from the seeds (Codex review s24): removed by hand when the ADR 0275 seam taper took
+# over the Piastowska transition on the bojary | mickiewicza seam (s23b, 40b77da5b).
+RETIRED = {"dk19-piastowska-seam-n-transition"}
+
+
+def split_entries(text: str) -> tuple[str, list[tuple[str, str]]]:
+    """overrides.yaml text -> (header incl. the `overrides:` line, [(id, raw block)]); raw text kept byte for byte."""
+    head, blocks = [], []
+    for ln in text.splitlines(keepends=True):
+        m = _ID.match(ln.rstrip("\n"))
+        if m:
+            blocks.append([m.group(1), ln])
+        elif not blocks:
+            head.append(ln)
+        else:
+            blocks[-1][1] += ln
+    return "".join(head), [(i, b) for i, b in blocks]
+
+
+def merge(text: str, measured: dict[str, str], seeds: dict[str, str]) -> str:
+    """Merge generated entries into an existing overrides.yaml (Codex review s24: --write used to replace the whole file
+    and drop hand-written entries such as dk19-ciolkowskiego-seam-dojlidy-left-kerb).
+    measured: ortho-measured entries, replaced in place by id (appended when new);
+    seeds: hand-written seam entries, added only when the id is absent (once written, the file is the authority);
+    every other existing entry is kept unchanged and in order; RETIRED ids are dropped."""
+    head, blocks = split_entries(text)
+    head = head.replace("overrides: []", "overrides:")
+    if "overrides:" not in head:
+        head += "overrides:\n"
+    out, seen = [], set()
+    for i, b in blocks:
+        if i in RETIRED:
+            continue
+        seen.add(i)
+        out.append(measured.get(i, b))
+    for i, b in list(seeds.items()) + list(measured.items()):
+        if i not in seen and i not in RETIRED:
+            out.append(b)
+            seen.add(i)
+    return head + "".join(out)
+
+
+def by_id(blocks: list[str]) -> dict[str, str]:
+    return {_ID.match(b.splitlines()[0]).group(1): b for b in blocks}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--write", action="store_true")
     a = ap.parse_args()
-    for tile, ents in entries().items():
+    measured = entries(seams=False)
+    for tile in sorted(set(measured) | set(SEAM)):
         p = REPO / "Data" / "Regions" / tile / "overrides.yaml"
-        head = "".join(ln for ln in p.read_text(encoding="utf-8").splitlines(keepends=True) if ln.startswith("#"))
-        text = head + "overrides:\n" + "".join(ents)
+        text = merge(p.read_text(encoding="utf-8"), by_id(measured.get(tile, [])), by_id(SEAM.get(tile, [])))
         print(f"# {tile}\n{text}")
         if a.write:
             p.write_text(text, encoding="utf-8", newline="\n")

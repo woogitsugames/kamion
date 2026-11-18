@@ -38,6 +38,28 @@ def blocked(a) -> bool:
         return False
 
 
+def directions(oneway) -> tuple[bool, bool]:
+    """(forward, backward) for an OSM oneway value - the rule of dk19_route_check.py (Codex review s24): a missing tag
+    (None) or "no" is two-way, "yes" / "true" / "1" forward only, "-1" backward only."""
+    ow = None if oneway is None else str(oneway).lower()
+    return ow != "-1", ow in (None, "no", "false", "0", "-1")
+
+
+def apply_endpoints(j: dict, start, end, via: list, total: float) -> dict:
+    """Write start / end / via into a route_endpoints.json dict. An empty via list REMOVES stale via_epsg2180 / via_note
+    (Codex review s24: they used to survive and kept forcing the old path through export-route.py)."""
+    j["start_epsg2180"], j["end_epsg2180"] = [start[0], start[1]], [end[0], end[1]]
+    if via:
+        j["via_epsg2180"] = via
+        j["via_note"] = ("graph nodes of the truck route about every 300 m (tools/worldgen/qa/dk19_route_vias.py): the plain "
+                         "shortest path of the tile leaves DK19")
+    else:
+        j.pop("via_epsg2180", None)
+        j.pop("via_note", None)
+    j["length_truck_route_m"] = round(total, 1)
+    return j
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--write", action="store_true")
@@ -54,11 +76,12 @@ def main() -> None:
             if blocked(at):
                 continue
             f = 1.0 if at.get("ref") else 2.0 if str(at.get("highway", "")).split("_")[0] in ("motorway", "trunk", "primary") else 4.0
-            u, v, ow = pos[e["from"]], pos[e["to"]], at.get("oneway")
+            u, v = pos[e["from"]], pos[e["to"]]
             kw = dict(d=e["length_m"], w=e["length_m"] * f, tile=rid, name=at.get("name") or f"(way {e['osm_way']})")
-            if ow in ("yes", "no"):
+            fwd, back = directions(at.get("oneway"))
+            if fwd:
                 g.add_edge(u, v, **kw)
-            if ow in ("-1", "no"):
+            if back:
                 g.add_edge(v, u, **kw)
     s = min(g.nodes, key=lambda n: (n[0] - START[0]) ** 2 + (n[1] - START[1]) ** 2)
     t = min(g.nodes, key=lambda n: (n[0] - END[0]) ** 2 + (n[1] - END[1]) ** 2)
@@ -85,13 +108,7 @@ def main() -> None:
         print(f"{rid}: {total:.1f} m, {len(via)} via, " + " > ".join(f"{n} {m:.0f}" for n, m in names[rid]))
         if a.write:
             f = REPO / "Data" / "Regions" / rid / "route_endpoints.json"
-            j = json.loads(f.read_text(encoding="utf-8"))
-            j["start_epsg2180"], j["end_epsg2180"] = [pts[0][0][0], pts[0][0][1]], [pts[-1][0][0], pts[-1][0][1]]
-            if via:
-                j["via_epsg2180"] = via
-                j["via_note"] = ("graph nodes of the truck route about every 300 m (tools/worldgen/qa/dk19_route_vias.py): the plain "
-                                 "shortest path of the tile leaves DK19")
-            j["length_truck_route_m"] = round(total, 1)
+            j = apply_endpoints(json.loads(f.read_text(encoding="utf-8")), pts[0][0], pts[-1][0], via, total)
             f.write_text(json.dumps(j, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     assert regions.get(TILES[0]) is not None
 

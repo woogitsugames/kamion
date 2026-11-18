@@ -75,6 +75,12 @@ links:
     replaces_route: bialystok-industrial-c
     end_epsg2180: [779019.0, 595242.45]   # Andersa southbound boundary node on the C | wygoda seam (wygoda route entry)
     tail_to: route:bialystok-wygoda
+    # dk19-tiles-s24 (after knyszyn-r24 swept-path gate, qa/link_swept_check.py): following the right lane centre the
+    # semitrailer cut the inside of the turn at s 363-370 m (14 tyre points off the hard surface). Swing wide: 2.0 m left
+    # at s 364 m, raised cosine over +-30 m -> 0 off the hard surface, 0 off the carriageway. Searched apex s 340-372 m
+    # (step 8) x 1.0-3.0 m x 20/30 m: at s 364 m / 30 m every offset 1.0-3.0 m gives 0/0 (WORKING_VALUE, middle picked).
+    swing:
+      - {near_epsg2180: [778546.8, 595529.6], left_m: 2.0, half_m: 30.0}
     note: "C route start -> rondo Pamieci Biezenstwa 1915 -> Andersa (DK19/DK65) south-east to the seam with bialystok-wygoda"
   # The 91 m wygoda route ends 2.72 m off the bojary route entry (lane centre of the 2-lane Andersa end vs the first lane
   # of Sosabowskiego in bojary): the link shifts its last BLEND_M m onto the bojary entry instead of a sideways step.
