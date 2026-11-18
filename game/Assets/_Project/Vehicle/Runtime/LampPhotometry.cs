@@ -24,8 +24,10 @@ namespace Game.Vehicle.Runtime
 
         // ------------------------------------------------------------------ lamp luminances, cd/m^2
         // WORKING_VALUEs retained from ADR 0087 (display calibrations, not measured lamp photometry). The stop : tail
-        // ratio 20 000 / 1 300 = 15.4 : 1 is the R148 4.8.11 quantity (>= 5 : 1) once the limiter keeps it (ADR 0197).
-        public const float DrlNits = 1.6e5f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f,
+        // ratio is the R148 4.8.11 quantity (>= 5 : 1) once the limiter keeps it (ADR 0197). ADR 0297 (owner 18.11 "rozjaśnij
+        // + poświata"): TailNits 1 300 -> 3 800 (the ADR 0197 headroom was BrakeNits / 5 = 4 000); 20 000 / 3 800 = 5.26 : 1,
+        // 5 % margin over the regulation minimum for the RGBAHalf encoding and the GPU limiter.
+        public const float DrlNits = 1.6e5f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 3.8e3f, BrakeNits = 2.0e4f,
             ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f, RearFogNits = 1.5e4f;
         /// <summary>UN R148 4.8.11: (stop + tail) : tail at least 5 : 1 inside +-5 V / +-10 H (P16-035, SOURCED).</summary>
         public const float MinStopToTailRatio = 5f;
@@ -164,6 +166,9 @@ namespace Game.Vehicle.Runtime
         /// <summary>Plate luminance at reflectance 1 / plate-lamp luminance (material _PlateIllum, WORKING_VALUE). ADR 0197:
         /// 0.005 -> 0.006 so the minimum over every possible R148 measuring circle is >= 2.5 cd/m^2 with margin.</summary>
         public const float PlateIllum = 0.006f;
+        /// <summary>ADR 0297: display shoulder of the lit plate (exposed luminance M in y / (1 + y / M), TruckExterior
+        /// _PlateDisplayMax). Display mapping only: the plate photometry above (>= 2.5 cd/m^2) is unchanged. WORKING_VALUE.</summary>
+        public const float PlateDisplayMax = 0.55f;
         /// <summary>Plate lamp luminance: TruckLights writes MarkerNits (white) to group 13.</summary>
         public const float PlateLampNits = MarkerNits;
         /// <summary>R148 5.11.3 (a): minimum B in every measuring point, categories 1a/1b/1c/2a/2b (P16-090, SOURCED).</summary>

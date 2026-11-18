@@ -9,3 +9,8 @@
   schodkowe cienie = CabInterior.shader bez wariantów _SHADOWS_SOFT (twarde 1 próbka niezależnie od tieru).
 - NASTĘPNY KROK: implementacja (halo shader, plate shoulder, TailNits, spill zegarów, soft shadows w CabInterior), potem
   `pwsh -NoProfile -File artifacts/night-truck-s24/go.ps1 -Name after1 -Unity -Cmd '...assets.ps1; lamps.ps1 -Tag after1; cab.ps1 -Tag after1'`
+
+## 23:1x after1 (pierwsza implementacja)
+- TailNits 3800 (5,26:1), halo `Kamion/Truck Lamp Halo` (1 quad/emiter, 5 ciągnik + 10 naczepa), plate shoulder 0,55, cab soft shadows (PC), spill zegarów/nawigacji, lift nocą ×0,2, panelGlow 0,015.
+- after1: pozycyjne 54,7 → 89,7 R; tablica 205 → 143; kabina noc: deska 12,4 → 5,7, słupek A 17,7 → 6,9 (niebo 12); cienie gładkie (crop). Halo miało ciemny pierścień (wycięcie rdzenia) → after2 bez wycięcia, K 0,25; spill słaby (powierzchnie współpłaszczyznowe z ekranami fizycznie ciemne).
+- NASTĘPNY KROK: `pwsh -NoProfile -File artifacts/night-truck-s24/go.ps1 -Name after2 -Unity -Cmd 'pwsh artifacts/night-truck-s24/assets.ps1; ...lamps.ps1 -Tag after2; cab.ps1 -Tag after2; ab.ps1 -Tag after2'`
