@@ -53,7 +53,8 @@ namespace Game.Tests.EditMode
         static MeshRenderer[] ActualDoors()
         {
             var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Generated/Truck/Tractor4x2_TRAKT.prefab");
-            Assert.That(prefab,Is.Not.Null,"Build canonical truck before fixture tests");
+            // test-hygiene-s24: Assets/_Generated is outside git; a fresh worktree has no TRAKT prefab. Built prefab = full check.
+            if(prefab==null) Assert.Ignore("TRAKT prefab not built in this checkout (outside git): Kamion/Setup/Rebuild TRAKT truck or -executeMethod Game.Editor.Setup.TruckAssetBuilder.BuildBatch");
             var renderers=prefab.GetComponentsInChildren<MeshRenderer>(true);
             var doors=renderers.Where(r=>r.name.StartsWith("DOOR_L_LOD",StringComparison.Ordinal)||r.name.StartsWith("DOOR_R_LOD",StringComparison.Ordinal)).ToArray();
             Assert.That(doors.Length,Is.EqualTo(6),"Both doors all3LOD");
