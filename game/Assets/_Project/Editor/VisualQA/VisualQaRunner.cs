@@ -217,6 +217,7 @@ namespace Game.Editor.VisualQA
                     if (lampSet.Contains("low") || lampSet.Contains("rearfog")) tl.forceLowBeam = true;
                     if (lampSet.Contains("rearfog")) tl.rearFog = true;
                     if (lampSet.Contains("brake")) tl.forceBrake = true;
+                    if (lampSet.Contains("reverse")) tl.forceReverse = true;   // ADR 0299: reversing-lamp halo
                     if (lampSet.Contains("hazard")) { tl.indicatorLever = 2; tl.flasherLit = true; }
                     tl.Refresh();
                 }

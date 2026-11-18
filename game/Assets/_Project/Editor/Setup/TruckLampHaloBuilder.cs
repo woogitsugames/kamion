@@ -19,8 +19,17 @@ namespace Game.Editor.Setup
     public static class TruckLampHaloBuilder
     {
         /// <summary>Red rear signals: tractor tail+stop chamber, rear markers, rear fog, trailer tail / stop chambers.</summary>
-        public static readonly int[] HaloGroups =
+        public static readonly int[] RedRearGroups =
             { LampPhotometry.TailBrake, LampPhotometry.MarkerRear, LampPhotometry.FogRear, LampPhotometry.Tail, LampPhotometry.Stop };
+
+        /// <summary>ADR 0299: every signal lamp with a halo - the red rear signals (ADR 0297), the amber direction indicators
+        /// (front, side repeaters, rear; UN R48 6.5) and the white reversing lamps (R48 6.4, rearward). The colour is the lamp's
+        /// own state texel (TruckLights: Amber / White / Red), so the halo has the regulation colour of its lamp.</summary>
+        public static readonly int[] HaloGroups =
+            { LampPhotometry.TailBrake, LampPhotometry.MarkerRear, LampPhotometry.FogRear, LampPhotometry.Tail, LampPhotometry.Stop,
+              LampPhotometry.IndL, LampPhotometry.IndR, LampPhotometry.Reverse };
+
+        static bool IsIndicator(int g) => g == LampPhotometry.IndL || g == LampPhotometry.IndR;
 
         public const string ShaderName = "Kamion/Truck Lamp Halo";
         /// <summary>Material values (WORKING_VALUE, judged on renders; = shader defaults, set on every rebuild because an
@@ -67,18 +76,34 @@ namespace Game.Editor.Setup
                     else sums[best] = (g, sums[best].c + c * a, sums[best].n + (Vector3.Dot(sums[best].n, cr) < 0f ? -cr : cr), sums[best].a + a);
                 }
             }
-            // Lens winding is not consistent in the exports (after2: 9 of 10 trailer clusters summed to +Z, into the lamp). Every
-            // halo group is a red rear signal, which faces rearward by regulation (R48), and the vehicle frame has +Z forward:
-            // the emitting side is the one with z <= 0 (also the red rear faces of the end-outline markers on the trailer's
-            // front corners, which an "outward from the mesh centre" rule turned forward in after3).
+            // Lens winding is not consistent in the exports (after2: 9 of 10 trailer clusters summed to +Z, into the lamp), so the
+            // emitting side is chosen by regulation, in the vehicle frame (+Z forward, +X right):
+            // - red rear signals and reversing lamps face rearward (R48): z <= 0 (also the red rear faces of the end-outline
+            //   markers on the trailer's front corners, which an "outward from the mesh centre" rule turned forward in after3);
+            // - direction indicators (ADR 0299) come as front, side repeater and rear lamps (R48 6.5.3). A cluster whose lens
+            //   axis is mostly lateral is a side repeater and faces away from the centreline (sign of x); otherwise it faces
+            //   forward in the front half of the part's indicator extent (middle of the indicator clusters, or the mesh centre
+            //   when the part has a single indicator row) and rearward in the rear half.
+            float zMid = mesh.bounds.center.z, zMin = float.MaxValue, zMax = float.MinValue;
+            foreach (var s in sums)
+                if (IsIndicator(s.g)) { float z = s.c.z / s.a; zMin = Mathf.Min(zMin, z); zMax = Mathf.Max(zMax, z); }
+            if (zMax - zMin > 1f) zMid = 0.5f * (zMin + zMax);
             foreach (var s in sums)
             {
                 Vector3 c = s.c / s.a;
                 Vector3 n = s.n.sqrMagnitude > 1e-12f ? s.n.normalized : Vector3.back;
-                if (n.z > 0f) n = -n;
-                result.Add(new Cluster { group = s.g, centre = c, normal = n, area = s.a });
+                result.Add(new Cluster { group = s.g, centre = c, normal = EmittingSide(s.g, c, n, zMid), area = s.a });
             }
             return result;
+        }
+
+        /// <summary>Regulation emitting side of a lens (see <see cref="Clusters"/>); <paramref name="n"/> = summed lens normal.</summary>
+        public static Vector3 EmittingSide(int group, Vector3 centre, Vector3 n, float zMid)
+        {
+            if (!IsIndicator(group)) return n.z > 0f ? -n : n;
+            if (Mathf.Abs(n.x) > Mathf.Abs(n.z)) return (n.x >= 0f) == (centre.x >= 0f) ? n : -n;   // side repeater
+            bool front = centre.z > zMid;
+            return (n.z >= 0f) == front ? n : -n;
         }
 
         public static Mesh BuildMesh(IList<Cluster> clusters, string name)
