@@ -149,6 +149,24 @@ for sid, kmh, steer in (("jackknife_tight_turn_forward_comb", 5, 0.57), ("jackkn
        ], articulation=0,
        extra={"driver": {"type": "speedhold", "targetKmh": kmh, "steer": steer, "selector": "D", "brakeAt": 40, "brakeLevel": 1}})
 
+# 7. ADR 0228 "Otwarte 1" residual (review P2-113-1, H11 probes artifacts/jackknife-0228/h11/probe_scenarios): a hard stop
+#    from 15-20 km/h in a 48-56 deg turn, laden, ends with the trailer front brushing the cab after the stop. The peak force
+#    comes in the first contact step at ~0 mm penetration (the speculative contact stops the closing speed of ~1 km/h within
+#    1-3 steps); the 0.6 mm penetration is a later step. Measured on alt-113-s24 (PR #113 + D79 7.63 m, 2026-11-18):
+#    laden40 20 km/h: 1.10 s, 75.9 kN, 0.155 mm; 15 km/h: 0.09 s, 90.5 kN, 0.610 mm; empty: no contact. Bounds = regression
+#    guards (review proposal 100 kN / 1.5 s), not a requirement; the residual is a dimension / feel decision (Otwarte 1).
+for sid, kmh, steer in (("jackknife_turn_stop_brush_20_comb", 20, 0.55), ("jackknife_turn_stop_brush_15_comb", 15, 0.57)):
+    sc(sid,
+       f"ADR 0228 Otwarte 1 (review P2-113-1): forward at {kmh} km/h with a steady {steer:.2f} lock until the articulation "
+       "settles (~48-56 deg), then a full service-brake stop with the lock held. The laden trailer may brush the cab after "
+       "the stop (known residual); the brush must stay short, shallow and below 100 kN.",
+       50, [], robust() + [
+           chk("coupling_contact_s", mx=1.5, source="residual brush after the stop: measured 1.10 s (20 km/h) / 0.09 s (15 km/h) laden, 0 empty (review P2-113-1 bound 1.5 s)"),
+           chk("max_coupling_contact_force_kn", mx=100, source="first-step stop of a ~1 km/h closing speed: measured 75.9 kN (20 km/h) / 90.5 kN (15 km/h) laden, 0 empty (review P2-113-1 bound 100 kN)"),
+           chk("max_coupling_penetration_m", mx=0.001, source="sub-millimetre brush: measured 0.155 mm / 0.610 mm laden"),
+       ], articulation=0,
+       extra={"driver": {"type": "speedhold", "targetKmh": kmh, "steer": steer, "selector": "D", "brakeAt": 40, "brakeLevel": 1}})
+
 # 5. Heavy landing: 0.5 m drop at standstill.
 sc("drop_05m_comb",
    "ADR 0228 (B-077, ADR 0158 Open 4): the coupled combination lifted 0.5 m above its equilibrium pose and released at "
