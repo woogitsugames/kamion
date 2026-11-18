@@ -78,6 +78,7 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Cubic progression | 2.0e6 | 1.5e6 | N/m³ | WORKING_VALUE | |
 | Travel (bump to droop) | 0.18 | 0.20 | m | WORKING_VALUE | Trailer axles also 0.20 m. That is more than the 150 mm that S8 quotes for a *high-travel* trailer air suspension, so the droop is not too short (kerb-strike analysis in PHYSICS_VALIDATION §3a). |
 | Bump-stop clearance / quadratic rate | 0.025 / 4e7 | 0.015 / 4e7 | m, N/m² | WORKING_VALUE | Rear: 25 → 15 mm (ADR 0201b) = +10 mm free jounce before the bump stop (85 mm from the static ride height). With the drive axle 20 % lighter (solo) the 14 cm kerb strike drove the rear bump stop hard enough to throw the rear axle (single-wheel unload 0.19 s > 0.15 s, Fz peak/static 4.18); with 15 mm: 0.11 s, 3.66 (before ADR 0201b: 0.12 s, 3.94). No travel data in the open sheets (S9 R3-157 UNVERIFIED) |
+| Bump-stop unloading hysteresis (`bumpStopHysteresis`) | 4 | 4 | s/m | WORKING_VALUE | ADR 0228: while the stop extends its force is rate·b²·(1 + h·ḃ) ≥ 0 (Hunt–Crossley form, J. Appl. Mech. 42(2), 1975); compression stays elastic (kerb Fz peaks unchanged). Trailer axles also 4. 0.5 m drop, 40 t: 68 % → 39 % of the drop energy in the first rebound, no second take-off. No measured stop hysteresis |
 | Damper bump / rebound | 10 000 / 20 000 | 5000 / 10000 | N s/m | DERIVED from WORKING | Front: ζ ≈ 0.3 of sqrt(k m) at the new solo load (×1.11, ADR 0201b; was 9000 / 18000). Rear unchanged (damper hardware sized for the laden axle; solo ζ rises 0.35 → 0.43); rebound is twice bump |
 | Damper knee / high-speed slope factor | 0.3 / 0.4 | 0.3 / 0.4 | m/s, – | WORKING_VALUE | |
 | Anti-roll stiffness (axle) | 222 000 | 240 000 | N m/rad | WORKING_VALUE | ADR 0201b: scaled with the solo static axle load (front ×1.11, rear ×0.80) so that each axle keeps its roll stiffness per unit load (axle roll frequency); was 200 000 / 300 000 |
@@ -197,13 +198,45 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Pitch (fore/aft plate) limit | ±12 | deg | WORKING_VALUE | Soft stop, 10 Hz, damping ratio `stopDampingRatio` 0.7 (also the roll stop) |
 | Stop recovery rate (`stopRecoveryRateDegS`) | 0.5 | deg/s | WORKING_VALUE | ADR 0201b F2: pitch / roll / articulation stops do not rebound: soft spring-damper on approach, the push-out rate is capped. Derivation: the row inertia is ≤ the tractor's largest principal inertia 22 719 kg m², so the KE a stop can give is ≤ ½·22 719·(0.5°/s)² = 0.87 J (≤ 1 J free-flight criterion). The old elastic stop returned up to 4.5 kJ of a 58 kJ plate-pitch impact. A 1° stop crush recovers in ≥ 2 s while unloaded (rubber/steel stop hysteresis, not measured) |
 | Roll coupling stiffness / damping / hard limit | 1.0e7 N m/rad / 2.0e5 N m s/rad / ±4° | – | WORKING_VALUE | Implicit soft constraint (unconditionally stable) |
-| Articulation stop (cab/frame contact) | ±90 | deg | WORKING_VALUE | Soft stop 3 Hz, critically damped (deformable contact) |
+| Articulation limit | first body contact at **117.12°** (level combination) | deg | DERIVED (ADR 0228) | Physical contact of the trailer body with the cab / mudguards / frame from the `bodyBoxes` (see below): trailer side wall on the cab rear corner (x 1.245 m, 2.07 m ahead of the kingpin). The angular stop `yawLimitDeg` ±90° (3 Hz, ζ 1) is only the fallback for definitions without body boxes |
+| Tractor-trailer contact (`contactFrequencyHz` / `contactDampingRatio`) | 5 Hz / 0.3 | – | WORKING_VALUE | ADR 0228: implicit spring-damper per contact point on max(two-body point mass, articulation inertia / arm²). No measured crush stiffness; bounded by penetration ≤ 7 cm while the drive axle pushes and jerk ≤ 0.35 m/s per step at a 35 km/h jackknife (sweep in the ADR) |
+| Contact recovery speed / friction / margin | 0.05 m/s / 0.3 / 0.05 m | – | WORKING_VALUE | No rebound (restitution ~0, crushing panels); μ painted steel / GRP on aluminium UNVERIFIED; speculative margin covers 55°/s at 2.4 m radius |
+| Steering feedback during body contact (`steering.contactFeedbackLagS` / `contactFeedbackHoldS`) | 0.5 / 0.5 | s | WORKING_VALUE (feel decision) | ADR 0228 × ADR 0263 (H11): while the tractor and trailer bodies touch and 0.5 s after, `VehicleModel.AligningTorqueTotal` (input of the wheel force feedback and the touch-wheel return) is a first-order lag of the raw tyre value (`AligningTorqueRaw`); then it converges back and hands over (< 1 N m). The tyre forces on the vehicle are not filtered. Without it the cab contact reversed the FFB output −0.75 → +1.0 in ~0.1 s (aligning torque −0.9 → +2.3 kN m in 80 ms, 40 t); with it ≤ 0.49 N m per 10 ms at the rim (xUnit `JackknifeForceFeedbackTests`). No source for a steering-system response to a cab impact |
 | Plate friction | μ 0.08 × kingpin load × 0.35 m | – | WORKING_VALUE | Greased plate. Order of magnitude: patent US 6045148 (semi-trailer coupling) specifies friction-lining segments with μ 0.1–0.2 for "comfortable sliding" (design target for a non-greased lining, not a measurement of a greased plate); patent US 5746438 calls grease the usual way to cut plate friction and links high break-away friction to trailer swing. No measured greased-plate μ found (UNVERIFIED) |
 | Plate creep rate (`plateFrictionCreepRateDegS`) | 1.0 | deg/s | WORKING_VALUE | ADR 0151: below the break-away torque the plate friction is viscous (torque ∝ relative yaw rate, full at 1 deg/s) instead of an ideal stick. The ideal stick held a released 40 t combination at −0.41° articulation turning 0.43 deg/s with straight wheels for 20 s; a real plate under road vibration and kingpin play creeps. 1 deg/s: residual < 0.01° within ~8 s (`straight_after_steer_pulse`); 0.25–4 deg/s all return (sweep in ADR 0151) |
 | Capture window | 0.05 m horizontal, 0.12 m vertical, < 1.5 m/s | – | WORKING_VALUE | |
 | Jaw engagement | 0.4 s compliant phase, 4 Hz critically damped | – | WORKING_VALUE | Spreads the coupling bump (measured ≤ 62 kN, dv ≤ 0.14 m/s per step) |
 | Baumgarte factor / speed cap / iterations | 0.2 / 0.5 m/s / 8 | – | Solver setting | Max kingpin separation in all scenarios 0.16 mm |
 | Tyre contact tilt limit (`SolverSettings.maxContactTiltDeg`) | 72.5 | deg | WORKING_VALUE (solver setting) | ADR 0201b F2: no tyre contact when the ground-surface normal is more than 72.5° (acos 0.3, the existing F/cos clamp in `WheelGroup`) from the suspension axis. The raycast travel S = d/cos(tilt) − r is hypersensitive near 90°: a lying combination got 1.6 MN per wheel and +52 kJ of work in one 10 ms step. Beyond the limit the chassis colliders carry the body |
+
+### Body boxes (`bodyBoxes`, ADR 0228)
+
+One geometry source for the chassis-ground contact of the .NET runner (`ground`: mirror of the graybox PhysX BoxColliders) and
+the tractor-trailer contact of the coupling solver (`coupling`). DERIVED from art-source/truck/dims.json and the graybox builder
+constants; `tests/physics/test_dims_sync.py` recomputes every box, EditMode `BodyBoxGeometryTests` compares them with the built
+colliders. Vehicle frame (tractor: origin under the rear axle; trailer: origin under the kingpin), centre / size in m.
+
+| Box | Centre (x, y, z) | Size (x, y, z) | ground | coupling |
+|---|---|---|---|---|
+| Tractor Frame | 0, 0.86, 2.175 | 0.85, 0.22, 5.95 | yes | yes |
+| Tractor Cab | 0, 2.45, 3.925 | 2.49, 2.60, 2.35 | yes | yes |
+| Tractor Bumper | 0, 0.60, 5.05 | 2.45, 0.50, 0.20 | yes | no |
+| Tractor Mudguard_L / _R | ∓0.91, 1.12, 0 | 0.70, 0.03, 1.20 | no | yes |
+| Trailer Body | 0, 2.61, −5.178 | 2.55, 2.78, 13.6 | yes | no (since H11) |
+| Trailer BodyCoupling | 0, 2.61, −5.2 | 2.55, 2.78, 13.556 | no | yes |
+| Trailer Nose | 0, 2.61, 1.6 | 2.438, 2.78, 0.044 | no | yes |
+| Trailer Beams | 0, 1.06, −7.239 | 1.2, 0.28, 9.278 | yes | yes |
+| Trailer RearUnderrun | 0, 0.475, −11.728 | 2.35, 0.15, 0.12 | yes | yes |
+
+Swing clearance: the flat graybox trailer front corner is 2.063 m from the kingpin (front wall 1.622 m = cargo front + 0.05 m) vs
+cab back 2.07 m → 7 mm; it touched the cab in tight turns with plate pitch / roll (review P1, s22 #113). Since H11 the
+**coupling outline follows the art model's rounded front**: front swing radius **2.0294 m** (DERIVED: measured in the Blender
+export, `art-source/truck/trailer/export/trailer_manifest.json` `measured.front_swing`; legal limit 2.04 m, Directive 96/53/EC
+Annex I 1.6). BodyCoupling = full width up to z₁ = √(R² − 1.275²) = 1.578 m, Nose = z₁ … 1.622 m at half width √(R² − 1.622²)
+= 1.219 m (both rounded down to the mm, corners at 2.0287 / 2.0290 m). Clearance to the cab back **4.1 cm**: no contact up to
+110° articulation for |relative plate pitch| ≤ 1.13° or |relative roll| ≤ 1.44° (xUnit `FrontClearance_ToleratesPlatePitchAndRoll`).
+The `Body` box stays the ground collider (PhysX mirror of the graybox). Capacity: `CouplingContact.MaxPoints` 64 = 4 tractor ×
+4 trailer coupling boxes × 4; more boxes fail at setup (FormatException).
 
 ## Semi-trailer (`curtainsider_tridem_13_6.trailer.json`)
 

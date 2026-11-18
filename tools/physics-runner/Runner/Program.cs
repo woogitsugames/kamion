@@ -42,6 +42,16 @@ namespace PhysicsRunner
                 // ADR 0165: chassis-ground contact spring-damper sweep (defaults are the WORKING_VALUEs in BodyGroundContact).
                 else if (args[i] == "--body-hz" && i + 1 < args.Length) BodyGroundContact.DefaultHertz = double.Parse(args[++i], CultureInfo.InvariantCulture);
                 else if (args[i] == "--body-zeta" && i + 1 < args.Length) BodyGroundContact.DefaultDampingRatio = double.Parse(args[++i], CultureInfo.InvariantCulture);
+                // ADR 0228: tractor-trailer body contact sweep (overrides fifthWheel.contactFrequencyHz / contactDampingRatio of every tractor).
+                else if (args[i] == "--contact-hz" && i + 1 < args.Length) { double v = double.Parse(args[++i], CultureInfo.InvariantCulture); foreach (var d in ScenarioRunner.Defs.Vehicles.Values) d.fifthWheel.contactFrequencyHz = v; }
+                else if (args[i] == "--contact-zeta" && i + 1 < args.Length) { double v = double.Parse(args[++i], CultureInfo.InvariantCulture); foreach (var d in ScenarioRunner.Defs.Vehicles.Values) d.fifthWheel.contactDampingRatio = v; }
+                // ADR 0228 before/after evidence: the pre-0228 model (angular 90 deg yaw stop instead of the body contact; elastic bump stops, undamped tyres).
+                else if (args[i] == "--no-coupling-contact") { foreach (var d in ScenarioRunner.Defs.Vehicles.Values) foreach (var b in d.bodyBoxes) b.coupling = false; }
+                else if (args[i] == "--elastic-landing")
+                {
+                    foreach (var d in ScenarioRunner.Defs.Vehicles.Values) foreach (var a in d.axles) a.suspension.bumpStopHysteresis = 0;
+                    foreach (var d in ScenarioRunner.Defs.Trailers.Values) foreach (var a in d.axles) a.suspension.bumpStopHysteresis = 0;
+                }
             }
             if (bench) { Bench(); return 0; }
             if (robustness)
