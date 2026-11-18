@@ -38,8 +38,10 @@
 
 - 18.11 (wznowienie, polecenie lidera): merge origin/main (knyszyn-r24, s8-loop; konflikty = sumy). Budżety streamingu PC Low 640→850, High 1450→2000 MB (decyzja właściciela; `StreamingPolicy.cs`, testy, ADR 0273 dopisek, ADR 0290). Recenzja Codex P2 a/b/c poprawiona + `tests/gis/test_dk19_qa_s24.py` (6 testów). Nowy test main swept path: link c-andersa-to-wygoda 14 → 0 punktów opon poza nawierzchnią (swing 2,0 m / ±30 m przy s 364 m). seam_p2a main: bez zmian dla DK19 (sprawdzone); wood_planks set_tile_m + despike_arcs → przebudowa 3 kafli.
 - r2: bojary przebudowana 20:38 (GLB High 1043 / Low 417 MiB), mickiewicza przerwana 22:2x przeze mnie — main scalił screens-s24 (ADR 0293: furniture/profile/gores/markings), które zmieniają kafle DK19 z ekranami; merge origin/main `40b9ddd1d`, przebudowa wszystkich trzech razem.
+- 22:25 r3 zrestartowane po merge origin/main `9d3740902` (knyszyn-p1-s24, ADR 0295: domy drewniane, mozaika pól, WorldPBR) — ostatnia globalna zmiana generatora przed końcem tego zadania (lider).
 - W TOKU: `artifacts/dk19-tiles-s24/jobs/r3.ps1` (status `r3.status`, logi `artifacts/logs/dk19-r3-*.log`): world/fidelity/route ×3 → route_links/tile_graph/katalog → import Win64 ×3 + VQA mickiewicza (`vqa-r3`) → EditMode → pytest.
-- NASTĘPNY KROK po `DONE` w `r3.status`: exit każdego kroku, WORLD_MEMORY z `artifacts/logs/dk19-r3-import-*.log` → `tools/worldgen/streaming/tile_graph.py`, render ekranów (rondo Meyera / Ciołkowskiego) vs ref Commons, commit + push. Ręcznie: `powershell -c "Start-Process pwsh -ArgumentList '-NoProfile','-File','artifacts\dk19-tiles-s24\jobs3.ps1' -WindowStyle Hidden"`
+- NASTĘPNY KROK po `DONE` w `r3.status`: exit każdego kroku, WORLD_MEMORY z `artifacts/logs/dk19-r3-import-*.log` → `tools/worldgen/streaming/tile_graph.py`, render ekranów (rondo Meyera / Ciołkowskiego) vs ref Commons, commit + push. Ręcznie: `powershell -c "Start-Process pwsh -ArgumentList '-NoProfile','-File','artifacts\dk19-tiles-s24\jobs
+3.ps1' -WindowStyle Hidden"`
 
 # STATUS cabin-polish-s23 (D84: wnętrze kabiny PC — polish po recenzji REVIEW-2026-11-17-s23-cabin-pc)
 - Worktree z origin/main 14925a7cc. Skrypty odłączone: `artifacts/cabin-polish-s23/{run,chain,assets-win64,bl,a6}.ps1` (status `*.status`, `exit=`).
