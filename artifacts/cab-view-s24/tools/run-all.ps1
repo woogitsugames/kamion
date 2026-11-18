@@ -11,7 +11,7 @@ try {
   if (-not $SkipInstall) {
     $c = Invoke-UnityBatch -LogFile "$logs\install.log" -BuildTarget Win64 -Arguments @('-executeMethod', 'Game.World.Import.WorldTruckInstaller.InstallBatch')
     St 'install' $c
-    if (-not (Select-String "$logs\install.log" -SimpleMatch 'TRUCK_RESULT: OK' -Quiet)) { return }
+    if (-not (Select-String -Path "$logs\install.log" -SimpleMatch -Pattern 'TRUCK_RESULT: OK' -Quiet)) { return }
   }
   $cams = 'cab-view-0-fov55,cab-view-a-fov62,cab-view-b-fov70,cab-view-c-fov75,cab-view-d-fov70-p10,cab-driver,cab-view-0-fov55-hud,cab-view-a-fov62-hud,cab-view-b-fov70-hud,cab-view-c-fov75-hud,cab-view-d-fov70-p10-hud'
   if ($Steps -match 'start') {
