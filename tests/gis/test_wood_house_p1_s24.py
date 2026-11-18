@@ -128,24 +128,39 @@ def test_field_ids_depend_on_the_position_only():
     assert 4 <= len(np.unique(b0)) <= 40 and len(np.unique(f0)) > 3 * len(np.unique(b0))
 
 
-def test_farmland_mask_is_a_mosaic_not_patch_noise():
+def test_farmland_mask_is_a_flag_for_the_per_pixel_mosaic():
+    """ADR 0298: fields carry the farmland flag (the shader draws the mosaic per pixel); other ground never reaches it."""
     hf = _Hf()
     sq = [[[-250.0, -250.0], [250.0, -250.0], [250.0, 250.0], [-250.0, 250.0], [-250.0, -250.0]]]
     src = {"bdot10k": {"OT_PTTR_A": [{"geometry": {"type": "Polygon", "coordinates": sq},
                                       "props": {"rodzaj": "roślinność trawiasta"}}], "OT_PTNZ_A": []},
            "osm": {"areas": []}}
+    arable = {"bdot10k": {"OT_PTTR_A": [{"geometry": {"type": "Polygon", "coordinates": sq},
+                                         "props": {"rodzaj": "uprawa na gruntach ornych"}}], "OT_PTNZ_A": []},
+              "osm": {"areas": []}}
     rep = {}
     far = np.full(hf.z.shape, 100.0)
     C = VG.ground_masks(src, (0.0, 0.0), hf, far, [], report=rep)
     C0 = VG.ground_masks(NO_SRC, (0.0, 0.0), hf, far, [])
     b, b0 = C[100:500, 100:500, 2], C0[100:500, 100:500, 2]
-    rough = lambda a: float(np.abs(a[:, 6:] - a[:, :-6]).mean())    # mean step between cells 6 m apart
-    assert rough(b) < 0.4 * rough(b0), (rough(b), rough(b0))        # the 8 m patch noise is gone from the fields
-    assert rep["farmland"]["share"] > 0.6 and rep["farmland"]["b_mean_after"] < rep["farmland"]["b_mean_before"]
+    assert np.allclose(b, VG.FIELD_FLAG_B["roślinność trawiasta"], atol=1e-4)      # one flag over the whole field
+    assert np.allclose(VG.ground_masks(arable, (0.0, 0.0), hf, far, [])[100:500, 100:500, 2], 1.0, atol=1e-4)
+    assert b0.max() <= VG.GROUND_B_MAX + 1e-6                                        # open ground never reads as a flag
+    assert rep["farmland"]["share"] > 0.6 and "flag" in rep["farmland"]["encoding"]
     assert np.array_equal(C[..., [0, 1, 3]], C0[..., [0, 1, 3]])     # road distance, forest floor, bare soil untouched
     near = np.full(hf.z.shape, 2.0)                                  # beside a road the verge rule stays
     assert np.array_equal(VG.ground_masks(src, (0.0, 0.0), hf, near, [])[..., 2],
                           VG.ground_masks(NO_SRC, (0.0, 0.0), hf, near, [])[..., 2])
+
+
+def test_field_mosaic_shader_matches_the_python_reference_layout():
+    """KamionFieldMosaic.hlsl ports field_ids (salts 911-929, 300 m blocks, 22-46 m strips); keep both in step."""
+    src = (ROOT / "game/Assets/_Project/Environment/Shaders/KamionFieldMosaic.hlsl").read_text(encoding="utf-8")
+    for token in ("911u", "913u", "917u", "919u", "923u", "929u", "1597334677u", "3812015801u", "2246822519u"):
+        assert token in src, token
+    assert f"#define KF_BLOCK_M {VG.FIELD_BLOCK_M:.1f}" in src
+    assert f"#define KF_STRIP_MIN_M {VG.FIELD_STRIP_M[0]:.1f}" in src
+    assert f"#define KF_STRIP_SPAN_M {VG.FIELD_STRIP_M[1] - VG.FIELD_STRIP_M[0]:.1f}" in src
 
 
 def test_gardens_of_residential_land_are_calmer_than_open_ground():
