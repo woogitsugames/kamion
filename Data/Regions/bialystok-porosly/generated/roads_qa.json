@@ -3690,52 +3690,6 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
-   "bridge_m": 0.0,
-   "grade_limit": 0.12,
-   "highway": [
-    "service"
-   ],
-   "id": "c:w222465086:3144063329-486724229",
-   "lanes": [
-    2
-   ],
-   "length_m": 12.8,
-   "max_grade": 0.0289,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.005,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    5.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.99,
-   "bridge_m": 0.0,
-   "grade_limit": 0.12,
-   "highway": [
-    "service"
-   ],
-   "id": "c:w222465086:3144063344-3144063329",
-   "lanes": [
-    2
-   ],
-   "length_m": 55.1,
-   "max_grade": 0.0235,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.008,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    5.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
    "axis_smoothing_dev_max_m": 0.8,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
@@ -6102,7 +6056,7 @@
    "highway": [
     "residential"
    ],
-   "id": "c:w40329438:3140046661-486724229",
+   "id": "c:w40329438:3140046661-2239535195",
    "lanes": [
     2
    ],
@@ -12625,10 +12579,6 @@
   "j:n2840897619": [
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ],
-  "j:n3144063329": [
-   "corner 0-1: no fillet fits (alpha 89 deg) -> sharp",
-   "corner 1-2: no fillet fits (alpha 91 deg) -> sharp"
-  ],
   "j:n3626954254": [
    "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)"
   ],
@@ -12829,7 +12779,7 @@
     "span_m": 73.5
    }
   ],
-  "chains": 545,
+  "chains": 543,
   "clearance_by_class_m": {
    "A": 5.0,
    "D": 4.5,
@@ -12878,12 +12828,12 @@
   "crossings_skipped": [],
   "crossings_snapped": 71,
   "decals": {
-   "gullies": 1593,
+   "gullies": 1590,
    "oil": 343,
-   "patches": 701
+   "patches": 698
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 789749,
+  "footprint_nodes": 789614,
   "fork_abreast": [
    {
     "beside": "c:w303739901:2504262095-5749430431",
@@ -14322,10 +14272,10 @@
   "grade_over_limit": [],
   "junction_patches": {
    "delaunay": 34,
-   "polar": 222,
+   "polar": 221,
    "repaired": 17
   },
-  "junctions": 273,
+  "junctions": 272,
   "junctions_earclip": [],
   "junctions_repaired": [
    "j:n12061319694",
@@ -14385,9 +14335,9 @@
   },
   "seam_tapers": [],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 6877,
-   "parts": 910,
-   "side_tris": 934
+   "kerb_tris": 6871,
+   "parts": 902,
+   "side_tris": 926
   },
   "signalised_junctions": 1,
   "through_lines": {
@@ -14398,12 +14348,12 @@
     "P-7b": 11,
     "lane": 99
    },
-   "pairs": 317,
+   "pairs": 316,
    "unmatched": 18
   },
   "verge_strips": {
    "chunks": 62,
-   "tris": 80453
+   "tris": 80317
   },
   "walled_ramps": [
    {
