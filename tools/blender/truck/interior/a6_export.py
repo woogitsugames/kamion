@@ -982,6 +982,9 @@ def write_rgba(arr, path, size):
     bpy.data.images.remove(im)
 
 
+KEEP_LEATHER = [False]   # --keep-leather-maps (main)
+
+
 def build_textures(out_dir, cab_materials_only=False):
     """Per slot: _Detail (R variation, G micro-AO, B roughness, A perforation/extra) + _Normal (OpenGL, +Y up);
     decal atlas (RGBA, A = coverage); display placeholders; glass grime. Sizes per tier (power of two, ASTC 4x4..8x8)."""
@@ -1052,7 +1055,7 @@ def build_textures(out_dir, cab_materials_only=False):
     # ADR 0112 r2: optional scan keeps this export's sizes, alpha and material slots.
     # Enabled-but-missing sources fail explicitly; there is no synthetic fallback.
     import cc0_leather
-    cc0_leather.apply_runtime_maps(out_dir)
+    cc0_leather.apply_runtime_maps(out_dir, skip=("leather",) if KEEP_LEATHER[0] else ())
     return written
 
 
@@ -1438,6 +1441,10 @@ def main():
     p.add_argument("--debug-ao", action="store_true", help="URP renders show only the AO atlas (QA)")
     p.add_argument("--probe-gain", type=float, default=1.0, help="QA: scale the windscreen probe reflection")
     p.add_argument("--debug-col", action="store_true", help="URP renders show only the vertex tint (QA)")
+    p.add_argument("--keep-leather-maps", action="store_true",
+                   help="Geometry / AO re-export in a checkout without the CC0 leather raw scans (cc0/_raw is outside git): "
+                        "the committed scan-derived T_Cab_Leather_* maps of --out are kept byte-identical instead of "
+                        "being regenerated. Not a fallback: without this flag a missing scan still fails")
     a = p.parse_args(argv)
     out = os.path.abspath(a.out)
     if a.urp_out:   # A6 r3: Blender resolves a relative render path against the drive root, not the cwd
@@ -1457,10 +1464,22 @@ def main():
         old = json.load(open(man_path, encoding="utf-8"))
         manifest["lods"].update(old.get("lods", {}))
     lods = [int(x) for x in a.lods.split(",") if x != ""]
+    kept = {}
+    if a.keep_leather_maps:
+        import glob
+        KEEP_LEATHER[0] = True
+        for f in glob.glob(os.path.join(out, "textures", "*", "T_Cab_Leather_*.png")):
+            kept[f] = open(f, "rb").read()
+        if not kept:
+            raise FileNotFoundError("--keep-leather-maps: no T_Cab_Leather_* maps under " + os.path.join(out, "textures"))
     for lod in sorted(lods, reverse=True):          # LOD0 last: its scene stays loaded for the URP-like renders
         process_lod(lod, a, out, manifest)
         if tex is None:
             tex = build_textures(os.path.join(out, "textures"))
+            for f, data in kept.items():            # build_textures rewrote the pre-scan maps: put the scan-derived ones back
+                open(f, "wb").write(data)
+            if kept:
+                print(f"CAB_CC0 profile=leather kept {len(kept)} committed maps (--keep-leather-maps)")
     manifest.update(contract(tex, out))
     json.dump(manifest, open(man_path, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     print("WROTE", man_path)
