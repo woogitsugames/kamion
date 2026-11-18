@@ -104,9 +104,9 @@ def test_regions_from_log_expanded_low_scenes_in_order(tmp_path):
 
 def test_launchers_window_and_one_per_region(tmp_path):
     b = make_build(tmp_path)
-    written, skipped = pb.write_launchers(b, ["knyszyn", "dk65-01", "bad id & del *", "okno", "korytarz", "d3d11"])
-    assert written == ["Kamion-okno.cmd", "Kamion-d3d11.cmd", "Kamion-knyszyn.cmd", "Kamion-dk65-01.cmd"]
-    assert skipped == ["bad id & del *", "okno", "korytarz", "d3d11"]
+    written, skipped = pb.write_launchers(b, ["knyszyn", "dk65-01", "bad id & del *", "okno", "korytarz", "d3d12"])
+    assert written == ["Kamion-okno.cmd", "Kamion-d3d12.cmd", "Kamion-knyszyn.cmd", "Kamion-dk65-01.cmd"]
+    assert skipped == ["bad id & del *", "okno", "korytarz", "d3d12"]
     k = (b / "Kamion-knyszyn.cmd").read_bytes().decode("ascii")
     # Region launchers force no screen mode (settings file / PlayerSettings: borderless full screen, Alt+Enter).
     assert k == '@echo off\r\nstart "" "%~dp0Kamion.exe" -scene knyszyn %*\r\n'
@@ -160,6 +160,6 @@ def test_corridor_launcher_only_with_knyszyn_and_knyszyn_s(tmp_path):
     assert "Kamion-korytarz.cmd" not in written
     b2 = tmp_path / "b"; b2.mkdir()
     written, _ = pb.write_launchers(b2, ["knyszyn-s", "knyszyn"])
-    assert written[-2:] == ["Kamion-korytarz.cmd", "Kamion-korytarz-d3d11.cmd"]
+    assert written[-2:] == ["Kamion-korytarz.cmd", "Kamion-korytarz-d3d12.cmd"]
     k = (b2 / "Kamion-korytarz.cmd").read_bytes().decode("ascii")
     assert k.startswith("@echo off\r\n") and "-scene knyszyn -stream 1 %*" in k and "-screen-" not in k

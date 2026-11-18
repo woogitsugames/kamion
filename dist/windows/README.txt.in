@@ -11,8 +11,9 @@ URUCHOMIENIE
    Skróty (są tylko te, których mapy są w tej paczce):
    Kamion-korytarz.cmd   — jazda ciągła od Knyszyna, sąsiednie odcinki doładowują się w trakcie jazdy;
    Kamion-<region>.cmd   — start od razu w jednym regionie (np. Kamion-knyszyn.cmd).
-   Gdy gra się zamyka albo pokazuje błąd grafiki (w Player.log „d3d12” / „Device failed”): uruchom
-   Kamion-d3d11.cmd albo Kamion-korytarz-d3d11.cmd (to samo z Direct3D 11) i napisz o tym w zgłoszeniu.
+   Gra domyślnie używa Direct3D 11. Kamion-d3d12.cmd i Kamion-korytarz-d3d12.cmd uruchamiają to samo
+   z Direct3D 12 — tylko do porównań albo gdy autor o to poprosi. Jeśli na Direct3D 12 gra się zamyka albo
+   pokazuje błąd grafiki (w Player.log „d3d12” / „Device failed”), wróć do zwykłego startu i napisz o tym w zgłoszeniu.
 3. Windows może pokazać „System Windows ochronił ten komputer” (SmartScreen) — gra nie jest podpisana
    certyfikatem. Sprawdź, czy plik pochodzi od autora (suma SHA256 poniżej), wybierz „Więcej informacji”
    i „Uruchom mimo to”.
