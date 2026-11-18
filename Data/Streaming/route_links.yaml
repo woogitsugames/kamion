@@ -83,12 +83,14 @@ links:
     destination: s8
     replaces_route: bialystok-knyszynska  # same entry: Kleeberga westbound on the seam with bialystok-kleeberga
     end_epsg2180: [772286.3, 595199.0]    # Kleeberga southbound (way 606396500, DK8) on the knyszynska | porosly seam
+    head_from: route:bialystok-kleeberga  # the kleeberga route ends 0.86 m to the side of this link's lane start
     note: "Kleeberga (DK8) straight on past the rondo Kresowian exit, south to the seam with bialystok-porosly"
   - id: porosly-dk8-w
     tile: bialystok-porosly
     destination: s8
     start_epsg2180: [772286.3, 595199.0]  # boundary node of way 606396500 (north edge)
     end_epsg2180: [770827.0, 594847.7]    # boundary node of way 889307875 (west edge, DK8 westbound, seam with jeroniki)
+    head_from: link:knyszynska-kleeberga-s   # lanes 0.65 m apart on the knyszynska | porosly seam
     note: "DK8 Kleeberga south-west through Porosly to the seam with dk8-s8-jeroniki"
   - id: jeroniki-dk8-to-s8
     tile: dk8-s8-jeroniki
