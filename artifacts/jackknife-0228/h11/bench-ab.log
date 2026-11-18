@@ -1,0 +1,3 @@
+H11 bench (--bench, desktop Release, cloud VM, 3x each):
+old geometry (PR head, 3 trailer coupling boxes): p50 14.0 / 14.0 / 13.9 us, mean 20.6 / 19.5 / 22.6 us
+new geometry (BodyCoupling + Nose, 4 boxes):      p50 14.3 / 14.2 / 13.4 us, mean 22.2 / 20.5 / 21.1 us

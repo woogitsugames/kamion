@@ -1,0 +1,176 @@
+physics-runner  commit=57a496b50  out=/workspace/kamion/.claude/worktrees/agent-a12a8d88242dc3b73/artifacts/jackknife-0228/before
+[PASS] brake_80_0_dry_abs_comb@empty  (0.3s wall)
+    max_dv_step_ms = 0.07623 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.014445 [-inf, 5] PASS
+    stop_distance_m = 39.191 [35, 61.2] PASS
+    mfdd_ms2 = 7.4217 [5, 8] PASS
+    max_lateral_deviation_m = 5.7368E-06 [-inf, 0.5] PASS
+    max_articulation_deg = 0 [-inf, 2] PASS
+    rear_lock_time_s = 0 [-inf, 0.03] PASS
+    trailer_lock_time_s = 0 [-inf, 0.05] PASS
+[PASS] brake_80_0_dry_abs_comb@laden40  (0.3s wall)
+    max_dv_step_ms = 0.074503 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.01674 [-inf, 5] PASS
+    stop_distance_m = 41.309 [35, 61.2] PASS
+    mfdd_ms2 = 6.8849 [5, 8] PASS
+    max_lateral_deviation_m = 8.9107E-06 [-inf, 0.5] PASS
+    max_articulation_deg = 0 [-inf, 2] PASS
+    rear_lock_time_s = 0 [-inf, 0.03] PASS
+    trailer_lock_time_s = 0 [-inf, 0.05] PASS
+[PASS] drop_05m_comb@empty  (0.1s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    free_flight_s = 0.27 [0.2, +inf] PASS
+    max_free_flight_energy_gain_j = 0 [-inf, 1] PASS
+    drop_rebound_ratio = 0.36959 [-inf, 0.45] PASS
+    drop_relaunch_s = 0 [-inf, 0.1] PASS
+    max_body_penetration_m = 0 [-inf, 0.05] PASS
+    min_com_height_m = 0.88628 [0.5, +inf] PASS
+    max_fifth_wheel_error_mm = 0.10495 [-inf, 15] PASS
+[FAIL] drop_05m_comb@laden40  (0.1s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    free_flight_s = 0.52 [0.2, +inf] PASS
+    max_free_flight_energy_gain_j = 0 [-inf, 1] PASS
+    drop_rebound_ratio = 0.67691 [-inf, 0.45] FAIL
+    drop_relaunch_s = 0.27 [-inf, 0.1] FAIL
+    max_body_penetration_m = 0 [-inf, 0.05] PASS
+    min_com_height_m = 0.83833 [0.5, +inf] PASS
+    max_fifth_wheel_error_mm = 0.44164 [-inf, 15] PASS
+[PASS] free_fall_drop_comb  (0.1s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    free_flight_s = 1.05 [0.3, +inf] PASS
+    max_free_flight_energy_gain_j = 0 [-inf, 1] PASS
+    max_free_flight_accel_error_ms2 = 0.0076631 [-inf, 0.05] PASS
+    max_body_penetration_m = 0.012293 [-inf, 0.05] PASS
+    min_com_height_m = 0.74491 [0.5, +inf] PASS
+    max_fifth_wheel_error_mm = 1.5949 [-inf, 15] PASS
+[PASS] fuzz_shrink_speed_runaway_fulllock  (0.5s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 6.8446E-15 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.13114 [-inf, 0.35] PASS
+    max_dv_step_ms = 0.82225 [-inf, 4.2] PASS
+    max_tire_friction_ratio = 0.99999 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 0.75869 [-inf, 5] PASS
+    max_fifth_wheel_error_mm = 14.013 [-inf, 50] PASS
+    min_air_all_bar = 8.5 [0, +inf] PASS
+    max_speed_kmh = 30.237 [-inf, 90.5] PASS
+    min_com_height_m = 1.0603 [0.9, +inf] PASS
+    max_body_penetration_m = 0.086114 [-inf, 0.1] PASS
+    max_body_penetration_m = 0.028595 [-inf, 0.035] PASS
+    body_contact_s = 25.92 [1, +inf] PASS
+    max_free_flight_energy_gain_j = 0 [-inf, 1] PASS
+    max_energy_j = 2.055E+06 [-inf, 2.133E+06] PASS
+    max_speed_after_ms = 1.1547E-07 [-inf, 0.05] PASS
+[FAIL] jackknife_fast_fold_impact_comb@empty  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 1.3473E-15 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.15768 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.21379 [-inf, 5] PASS
+    coupling_contact_s = 0 [1, +inf] FAIL
+    max_articulation_rate_dps = 50.279 [30, +inf] PASS
+    articulation_limit_excess_deg = 1.9686 [-inf, 2.5] PASS
+    max_coupling_penetration_m = 0 [-inf, 0.07] PASS
+    coupling_contact_restitution = NaN [-inf, 0.1] FAIL
+    max_body_rate_dps = 31.293 [-inf, 60] PASS
+[FAIL] jackknife_fast_fold_impact_comb@laden40  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 1.3279E-15 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.24038 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.24517 [-inf, 5] PASS
+    coupling_contact_s = 0 [1, +inf] FAIL
+    max_articulation_rate_dps = 53.258 [30, +inf] PASS
+    articulation_limit_excess_deg = 1.9735 [-inf, 2.5] PASS
+    max_coupling_penetration_m = 0 [-inf, 0.07] PASS
+    coupling_contact_restitution = NaN [-inf, 0.1] FAIL
+    max_body_rate_dps = 35.07 [-inf, 60] PASS
+[FAIL] jackknife_fold_120_reverse_comb@empty  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 1.336E-15 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.15567 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.20255 [-inf, 5] PASS
+    coupling_contact_s = 0 [1, +inf] FAIL
+    articulation_limit_excess_deg = 1.8903 [-inf, 2.5] PASS
+    max_coupling_penetration_m = 0 [-inf, 0.07] PASS
+    coupling_contact_restitution = NaN [-inf, 0.1] FAIL
+    max_body_rate_dps = 30.969 [-inf, 60] PASS
+[FAIL] jackknife_fold_120_reverse_comb@laden40  (0.1s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 6.475E-16 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.18829 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.13044 [-inf, 5] PASS
+    coupling_contact_s = 0 [1, +inf] FAIL
+    articulation_limit_excess_deg = 1.8095 [-inf, 2.5] PASS
+    max_coupling_penetration_m = 0 [-inf, 0.07] PASS
+    coupling_contact_restitution = NaN [-inf, 0.1] FAIL
+    max_body_rate_dps = 25.839 [-inf, 60] PASS
+[FAIL] jackknife_fold_90_reverse_comb  (0.1s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 5.0665E-16 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.18829 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.13044 [-inf, 5] PASS
+    max_articulation_deg = 91.807 [95, 112] FAIL
+    coupling_contact_s = 0 [-inf, 0] PASS
+    max_coupling_penetration_m = 0 [-inf, 0] PASS
+[FAIL] jackknife_fold_90_reverse_empty  (0.0s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 4.9162E-16 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.16285 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.19779 [-inf, 5] PASS
+    max_articulation_deg = 91.66 [95, 112] FAIL
+    coupling_contact_s = 0 [-inf, 0] PASS
+    max_coupling_penetration_m = 0 [-inf, 0] PASS
+[PASS] jackknife_reverse_countersteer_comb@empty  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 4.1177E-14 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.15567 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.28782 [-inf, 5] PASS
+    max_articulation_deg = 91.89 [60, +inf] PASS
+    articulation_limit_excess_deg = 1.8903 [-inf, 2.5] PASS
+    max_coupling_penetration_m = 0 [-inf, 0.07] PASS
+    final_articulation_deg = 2.3232E-08 [-inf, 15] PASS
+    max_body_rate_dps = 34.623 [-inf, 60] PASS
+[PASS] jackknife_reverse_countersteer_comb@laden40  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 2.1213E-14 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.13101 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.23689 [-inf, 5] PASS
+    max_articulation_deg = 91.909 [60, +inf] PASS
+    articulation_limit_excess_deg = 1.9092 [-inf, 2.5] PASS
+    max_coupling_penetration_m = 0 [-inf, 0.07] PASS
+    final_articulation_deg = 0.00035005 [-inf, 15] PASS
+    max_body_rate_dps = 31.066 [-inf, 60] PASS
+[PASS] jackknife_wet_curve_noabs@empty  (0.1s wall)
+    max_articulation_deg = 87.452 [30, +inf] PASS
+    rear_lock_time_s = 2.53 [0.5, +inf] PASS
+    max_dv_step_ms = 0.046387 [-inf, 0.35] PASS
+[PASS] jackknife_wet_curve_noabs@laden40  (0.1s wall)
+    rear_lock_time_s = 4.51 [0.5, +inf] PASS
+    max_dv_step_ms = 0.04133 [-inf, 0.35] PASS
+[PASS] jackknife_wet_curve_retarder_noabs@empty  (0.0s wall)
+    max_articulation_deg = 92.629 [30, +inf] PASS
+    rear_lock_time_s = 1.84 [0.2, +inf] PASS
+    max_dv_step_ms = 0.23819 [-inf, 0.35] PASS
+[PASS] jackknife_wet_curve_retarder_noabs@laden40  (0.0s wall)
+    rear_lock_time_s = 0.82 [0.2, +inf] PASS
+    max_dv_step_ms = 0.24529 [-inf, 0.35] PASS
+[PASS] reverse_dock_s_maneuver_comb@empty  (0.1s wall)
+    max_articulation_deg = 91.408 [20, +inf] PASS
+    articulation_limit_excess_deg = 1.4083 [-inf, 1.5] PASS
+    max_coupling_penetration_m = 0 [-inf, 0.05] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_speed_kmh = -9.6586 [-15, -2] PASS
+    final_z_m = -29.268 [-inf, -3] PASS
+    max_dv_step_ms = 0.11592 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.17606 [-inf, 5] PASS
+[FAIL] reverse_dock_s_maneuver_comb@laden40  (0.1s wall)
+    max_articulation_deg = 91.724 [20, +inf] PASS
+    articulation_limit_excess_deg = 1.7243 [-inf, 1.5] FAIL
+    max_coupling_penetration_m = 0 [-inf, 0.05] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_speed_kmh = -9.6768 [-15, -2] PASS
+    final_z_m = -17.253 [-inf, -3] PASS
+    max_dv_step_ms = 0.15754 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.1421 [-inf, 5] PASS
+8 OF 20 SCENARIO(S) FAILED

@@ -25,6 +25,8 @@ namespace Game.Vehicle.Physics
         /// <summary>Drag area added by the trailer to the coupled combination [m^2], applied at aeroCenter.</summary>
         public double dragArea = 1.5;
         public Vec3 aeroCenter = new Vec3(0, 2.5, -5.0);
+        /// <summary>Body envelope boxes in the trailer frame (ADR 0228): chassis-ground contact (runner) and the tractor-trailer contact.</summary>
+        public BodyBoxDefinition[] bodyBoxes = new BodyBoxDefinition[0];
 
         public void Validate()
         {
@@ -37,6 +39,7 @@ namespace Game.Vehicle.Physics
                 if (a.steered || a.driven) throw new FormatException($"TrailerDefinition '{id}': trailer axles are neither steered nor driven");
                 if (a.positionZ >= 0) throw new FormatException($"TrailerDefinition '{id}': axles must be behind the kingpin (z < 0)");
             }
+            foreach (var b in bodyBoxes) b.Validate(id);
         }
     }
 

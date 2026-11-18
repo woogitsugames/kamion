@@ -9,3 +9,14 @@
 - Roleta wróciła do autorskiego 0,10 m. ADR: `docs/adr/DRAFT-d84-kabina-polish-zmierzch-i-ziarno.md`.
 - Otwarte: lusterka/daszek poza kadrem 62° (decyzja pitch/FOV — A/B `cab-driver-ab10`), ciepła poświata niemierzalna na piaście, brak zdjęć referencyjnych (docs/06 §5 pkt 3), kurz bez zmian, pojedyncze jaśniejsze odcinki żeber tacek (atlas AO), kamery QA nie w scenie DrivingLab (`pwsh scripts/build-lab.ps1 -SkipAudio`).
 - NASTĘPNY KROK (lider): visual-critic na `view/ab-*.jpg`, `f-*`; po scaleniu w main: `-executeMethod Game.Editor.Setup.TruckAssetBuilder.BuildBatch`, potem `Game.World.Import.WorldTruckInstaller.InstallBatch`.
+
+# STATUS — alt-113-s24 (PR #113 jackknife-0228 r4, ADR 0228)
+- Krok 1: merge origin/main 33541aa04 czysty (D79 osie tridemu 7,63 m, #171). bodyBoxes naczepy bez zmian i zgodne (test_dims_sync 12/12; BoxCollidery graybox nie zależą od osi). dotnet: tylko golden brake_80_0_dry_abs_comb@laden40 FAIL (jak w recenzji).
+- NASTĘPNY KROK: izolacja przyczyny golden: `dotnet run -c Release --project tools/physics-runner/Runner -- --only brake_80_0_dry_abs_comb@laden40 --out <dir>` + porównanie z goldenami main/#113
+- Krok 2: golden brake_80_0_dry_abs_comb@laden40: po scaleniu przebieg mieści się w tolerancji pliku z main (outliers ≤ 2 %) — przywrócony plik main zamiast nowego nagrania; różnica #113-golden vs scalone = chwila zatrzymania t≈4,1 s (geometria 7,70→7,63 m), kontakty 0.
+- Krok 3: KerbStrikeParityTests stałe z runnera (14 cm: 3.68/0.08/0.20/1.44°, 3.30/0.08/0.08/1.42°; 27 cm: 6.03/0.33/3.54°), tolerancje bez zmian; przyczyna = histereza odbojnika (h=0 → wartości main). Strażnik xUnit KerbParityReferenceTests.
+- NASTĘPNY KROK: `dotnet test tools/physics-runner/Tests` (pełny) + ADR 0228 / PHYSICS_VALIDATION §3a
+- Krok 4: sondy muśnięcia jako scenariusze jackknife_turn_stop_brush_{20,15}_comb (40 t: 75,9/90,5 kN, 1,10/0,09 s, 0,155/0,610 mm; szczyt siły w 1. kroku przy ~0 mm). FFB P2-113-2: ogon wygładzania po kontakcie ograniczony do hold+lag (0,99 s; było do >6,9 s), wyjście FFB bez zmian; kolumna aligning_torque_raw w CSV.
+- NASTĘPNY KROK: `dotnet test tools/physics-runner/Tests`; `dotnet run -c Release --project tools/physics-runner/Runner`; pytest tests/physics; docs ADR 0228
+- Krok 5-6: dotnet 338/338 (golden 9/9), runner 159/987 ALL PASSED (artifacts/jackknife-0228/r4/full-runner.log), pytest tests/physics 35 passed. ADR 0228 sekcja Aktualizacja r4 + PHYSICS_VALIDATION 3b/6h; komentarz VehicleBody.cs:136.
+- NASTĘPNY KROK (lider): `pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64 -Filter KerbStrikeParityTests`, potem CombinationLabTests + EditMode BodyBoxGeometryTests; feel test B-075
