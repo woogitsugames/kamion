@@ -350,6 +350,10 @@ M = {
                     "set_tile_m": [6.0, 2.6]},
     "wood_planks_green": {"color": [0.08, 0.14, 0.10], "rough": 0.85, "texture_set": "wood_siding", "set_tile": True,
                           "set_tile_m": [6.0, 2.6]},
+    # ADR 0295 (review 2026-11-18 P1-1): painted boards round the openings of a boarded house (surrounds, head
+    # boards). Aged white oil paint, well under the soffit boarding (0.55) the review called "plastic white":
+    # WORKING_VALUE, no photo of a Knyszyn wooden house in the repo. Only buildings_mesh.wood_surround uses it.
+    "wood_trim_white": {"color": [0.40, 0.39, 0.35], "rough": 0.75},
     "chimney_brick": {"color": [0.20, 0.092, 0.07], "rough": 0.9, "texture_set": "brick", "set_tile": True},
     # behaton (I-shaped interlocking blocks) in truck yards (streetscape.paved)
     "yard_behaton": {"color": [0.23, 0.228, 0.22], "rough": 0.85, "surface": "paving_stones", "texture_set": "behaton_i_grey"},

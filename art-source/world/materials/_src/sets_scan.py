@@ -572,10 +572,14 @@ SCAN_SETS = {
     # highlights > 1.3 x the board tone compressed 5:1, and the local hue mostly removed (hue_keep 0.12, the scan's
     # grey-green weathering read cyan under the brown tint); grain, knots, nail holes and the dark butt / edge joints
     # stay. Modulation set: colour from the manifest. Parameters WORKING_VALUE (judged on the tinted previews).
+    # knyszyn-p1-s24 (review 2026-11-18 P1-2 "kontrast OK, wariacja nie"): k 1.0 -> 0.85. With the boards stretched to
+    # 1-4 m (set_tile_m 6 x 2.6 m, knyszyn-r24) fully equalised boards read as one printed sheet; 15 % of the scan's
+    # board-to-board tone comes back (CV in materials_spec.json). 0.7 was rendered first (look_dom_klattow, High
+    # clear): the sunlit wall went patchy again (single boards a third lighter than their neighbours).
     "wood_siding": (["raw_plank_wall"], lambda: tiling_from_scan(
         "wood_siding", "raw_plank_wall", target=0.5, hue=NEUTRAL, out_L=1.87, out_n=1024, seed=6321,
         flat_m=0.25, flat_k=0.6, hue_keep=0.12, modulation=True, ao_gamma=0.3,
-        boards={"sy_m": 0.015, "sx_m": 0.08, "k": 1.0, "hi_knee": 1.3})),
+        boards={"sy_m": 0.015, "sx_m": 0.08, "k": 0.85, "hi_knee": 1.3})),
     # hybrids: procedural layout + scan micro-detail
     "concrete_slab_3x1.5": (["concrete_floor_worn_001"], _jomb),
     "concrete_cast_5m_joints": (["brushed_concrete"], _cast),

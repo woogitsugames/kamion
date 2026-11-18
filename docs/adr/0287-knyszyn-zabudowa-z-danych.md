@@ -112,3 +112,11 @@ Domy drewniane (`dom_drewniany`, materiały `wood_planks` / `wood_planks_green`,
 
 Otwarte: render kontrolny `look_dom_klattow` po przebudowie Knyszyna i imporcie (lider) + ocena `visual-critic` /
 właściciela; pozostała mała jasna plama farby na jednej desce powtarza się co 1,87 m (do oceny z wysokości oczu).
+
+## Aktualizacja 2026-11-18 (knyszyn-p1-s24): P1 z recenzji s24 → ADR 0295
+
+Recenzja `docs/reports/REVIEW-2026-11-18-s24-knyszyn.md` (FAIL anti-slop) — poprawki P1-1…P1-4 są regułami generatora
+dla wszystkich regionów, dlatego mają własny rekord: **ADR 0295** (dom drewniany: deski narożne, lisice, listwa cokołowa,
+szczyt pionowo, opaski z nadokiennikiem; przebiegi desek krótsze niż kafel; mozaika pól i spokojniejsze ogrody w masce
+suchości terenu; autorskie cofnięcie zamknięcia krawędzi świata — `Data/Regions/knyszyn/world_edge.authored.json`).
+Dom Klattów (`look-dom-klattow-wooden`) bez zmian w nadpisaniu — detale bierze z reguły `dom_drewniany`.

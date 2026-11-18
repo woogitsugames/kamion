@@ -60,7 +60,7 @@
       "eye_m": 2.5,
       "fov_deg": 60,
       "pitch_deg": -2,
-      "note": "driver eye leaving the roundabout on DK65 towards Monki; the west tile edge is ~40 m ahead (tile (-9,8) not built)"
+      "note": "driver eye leaving the roundabout on DK65 towards Monki. Stand-alone scene: the world-edge closure stands 12 m inside the west edge (world_edge.authored.json, ADR 0295); with streaming and knyszyn-w loaded it is open"
     },
     {
       "id": "tykocka_into_town",
@@ -164,6 +164,8 @@
      "note": "knyszyn-look-s23 (review 2026-11-17 P2-3): eye level from the street towards the wooden Dom Klattow (BDOT 2F22, OSM material=wood), 18 m. NO owner photo."},
     {"id": "look_rynek_corner_2e17", "pos_en": [-625, -146], "heading_deg": 72, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 4,
      "note": "knyszyn-look-s23 (review 2026-11-17 P2-3): eye level towards the two-storey corner house Grodzienska / Rynek (BDOT 2E17), 18 m. NO owner photo."},
+    {"id": "look_wooden_house_brown", "pos_en": [-358.0, -65.9], "heading_deg": 313.5, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 2,
+     "note": "ADR 0295 QA: eye level across the street from a RULE-chosen boarded house (BDOT 2FA5, wood_planks, no override): corner boards, battens, gable boarding, surrounds. NO owner photo."},
     {
       "id": "rynek_owner_03",
       "pos_en": [
