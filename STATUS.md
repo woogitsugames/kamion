@@ -6,3 +6,5 @@
 - NASTĘPNY KROK: EditMode r2 (artifacts/run-editmode.ps1 z r2)
 - 23:05 EditMode r2: 1387 / 1265 pass / 0 fail / 117 skip, ale Unity exit 2: 5 x Inconclusive (Assume.That na brak TRAKT) -> Assert.Ignore (EditMode+PlayMode); test.ps1 pokazuje Inconclusive i exit Unity.
 - NASTĘPNY KROK: EditMode r3
+- 23:10 EditMode r3 (świeży worktree): 1387 / 1265 pass / 0 fail / 0 inconclusive / 122 skip, Unity exit 0. r4 z danymi (TRAKT zbudowany, car_grime_clean Medium): 36/36 pass w 7 dotkniętych klasach (ArtPrefabs z naczepą przepiętą skryptem). Dowody: artifacts/test-hygiene-s24/ (main).
+- KONIEC. Lider: scalić; na main jednorazowo `pwsh scripts/repin-generated-guids.ps1` (naczepa cac16030 -> ab5e5ba6) gdy żaden Unity nie ma main otwartego.
