@@ -12,7 +12,7 @@ COL = {"edge": (0, 255, 255), "lane": (255, 230, 0), "arrow": (255, 140, 0), "st
        "island_ok": (255, 0, 255), "island_bad": (255, 0, 0), "gen_only": (255, 60, 60), "ortho_only": (60, 140, 255),
        "missing_island": (0, 255, 80), "det": (255, 255, 255)}
 LANE_KINDS = ("lane", "lane-P-2a", "centre", "centre-P-2a", "P-4", "P-7b")
-STOP_KINDS = ("P-14", "P-13")
+STOP_KINDS = ("P-14", "P-13", "P-12")   # knyszyn-r24: P-12 (conditional stop line) recorded with its own kind
 
 
 def _outline(m, px):

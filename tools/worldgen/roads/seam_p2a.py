@@ -13,6 +13,11 @@ rule (markings.approach_ends) which chain ends are P-2a approaches, and for ever
 OSM way + position, seam_taper.match) whose neighbour half approaches a junction closer than P2A_MIN_LEN to the seam,
 paints the rest solid from the seam: carry = P2A_MIN_LEN - (distance from the seam to the junction end of the
 neighbour chain). Nothing else changes; tiles with no such road are byte-identical.
+
+Through several seams (Codex review s24, ADR 0289 'Recenzja s24'): when the neighbour's chain is shorter than
+P2A_MIN_LEN and its far end lies on another seam, the neighbour's own carry at that far end (plan() of the neighbour,
+CARRY_DEPTH hops at most) minus the chain length is passed on, so a junction 10 m before seam A|B with 5 m of road in B
+paints the last 5 m in C as well.
 """
 from __future__ import annotations
 
@@ -27,10 +32,11 @@ from . import seam_taper as ST
 from . import standards as S
 
 MIN_CARRY_M = 0.5      # a remainder shorter than this is left alone (float noise of the junction trim)
+CARRY_DEPTH = 3        # seams a P-2a remainder may cross (a remainder <= 20 m passes only chains < 20 m long)
 
 
-@lru_cache(maxsize=32)
-def _neighbour_approaches(region_dir: str) -> tuple:
+@lru_cache(maxsize=64)
+def _neighbour_approaches(region_dir: str, depth: int = CARRY_DEPTH) -> tuple:
     """((End, carry_from_seam_needed or None), ...) for the boundary ends of a tile: what its own marking rule paints
     solid next to the seam. Cached per tile directory (a build reads every neighbour once)."""
     from . import markings as MK
@@ -45,8 +51,11 @@ def _neighbour_approaches(region_dir: str) -> tuple:
     juncs = J.build_junctions(net, pts)
     arm_info = MK.arm_infos(juncs, net.sec_list)
     chains = {c.id: c for c in net.chains}
+    bends = ST.ends(net)
+    end_keys = {(e.chain, e.end) for e in bends}
+    received = None                                  # this tile's own carry from its other neighbours (lazy)
     out = []
-    for e in ST.ends(net):
+    for e in bends:
         c = chains[e.chain]
         appr = MK.approach_ends(c, arm_info, net.sec_list)
         other = "b" if e.end == 0 else "a"           # the junction end is the other end of the chain
@@ -54,11 +63,18 @@ def _neighbour_approaches(region_dir: str) -> tuple:
         if other in appr:
             s_seam = 0.0 if e.end == 0 else float(c.length)
             rest = S.P2A_MIN_LEN - abs(float(appr[other]) - s_seam)
+        elif depth > 0 and float(c.length) < S.P2A_MIN_LEN and (e.chain, -1 if e.end == 0 else 0) in end_keys:
+            # a short chain from seam to seam: pass on what this tile itself receives at the far end
+            if received is None:
+                received = plan(net, d.name, d.parent, depth - 1)
+            got = received.get((e.chain, other))
+            if got is not None:
+                rest = float(got) - float(c.length)
         out.append((e, rest))
     return tuple(out)
 
 
-def plan(net, region_id: str, regions: Path | None = None) -> dict:
+def plan(net, region_id: str, regions: Path | None = None, depth: int = CARRY_DEPTH) -> dict:
     """{(chain id, "a" | "b"): solid length from the seam [m]} for this tile's boundary chain ends."""
     regions = regions or ST.REGIONS
     own = ST.ends(net)
@@ -69,7 +85,7 @@ def plan(net, region_id: str, regions: Path | None = None) -> dict:
         mine = [e for e in own if ST.on_seam(e.xy, se)]
         if not mine:
             continue
-        theirs = [(e, r) for e, r in _neighbour_approaches(str(regions / nb)) if ST.on_seam(e.xy, se)]
+        theirs = [(e, r) for e, r in _neighbour_approaches(str(regions / nb), depth) if ST.on_seam(e.xy, se)]
         rest = {(e.chain, e.end): r for e, r in theirs}
         for a, b in ST.match(mine, [e for e, _ in theirs]):
             r = rest.get((b.chain, b.end))

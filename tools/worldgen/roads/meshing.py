@@ -1087,21 +1087,35 @@ def despike_arcs(zb, tags, pts=None, tol=ARC_SPIKE_M, half=ARC_SPIKE_HALF):
     med = np.median(zb[(np.arange(n)[:, None] + k[None, :]) % n], axis=1)
     arc = np.array([t[0] == "arc" for t in tags])
     bad = arc & (np.abs(zb - med) > tol)
+    if pts is not None:
+        pts = np.asarray(pts, float)
+        ds = np.hypot(*(pts[(np.arange(n) + 1) % n] - pts).T)
+    else:
+        ds = np.ones(n)                       # no geometry: stations evenly spaced (index = distance)
+    # distance along the closed outline to station i, unrolled over one extra lap on both sides
+    cum = np.concatenate([[0.0], np.cumsum(ds)])
+    perim = cum[-1]
+
+    def _s(i):
+        lap, r = divmod(int(i), n)
+        return cum[r] + lap * perim
+
     if bad.any() and not bad.all():
-        # flagged points: linear between the nearest good points on both sides (the median itself is one rank off on a
-        # sloping corner)
+        # flagged points: linear BY DISTANCE ALONG THE OUTLINE between the nearest good points on both sides (the
+        # median itself is one rank off on a sloping corner). Codex review s24: interpolating by station index gave a
+        # point 0.1 m from a good one half of a 10 m difference on unevenly sampled outlines (1 m/m instead of 0.02).
         zb = zb.copy()
         good = np.nonzero(~bad)[0]
         for i in np.nonzero(bad)[0]:
             lo = good[good < i][-1] if (good < i).any() else good[-1] - n
             hi = good[good > i][0] if (good > i).any() else good[0] + n
-            zb[i] = zb[lo % n] + (zb[hi % n] - zb[lo % n]) * (i - lo) / (hi - lo)
+            span = _s(hi) - _s(lo)
+            t = (_s(i) - _s(lo)) / span if span > 1e-9 else 0.5
+            zb[i] = zb[lo % n] + (zb[hi % n] - zb[lo % n]) * t
     if pts is None:
         return zb
     # a step left between two arc points (two surfaces of the blend meeting: 0.16 m in 0.54 m on the DK65 south-west
     # corner) becomes a straight ramp over 2 * half + 1 outline segments of arc points (a corner only, never a mouth)
-    pts = np.asarray(pts, float)
-    ds = np.hypot(*(pts[(np.arange(n) + 1) % n] - pts).T)
     for i in range(n):
         i1 = (i + 1) % n
         if abs(zb[i1] - zb[i]) / max(ds[i], 0.25) <= ARC_GRADE_MAX:

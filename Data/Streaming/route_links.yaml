@@ -48,6 +48,13 @@ links:
     after_route: knyszyn
     end_epsg2180: [760587.0, 612073.7]    # = end of knyszyn-dk65-to-dk65-w = knyszyn-w route entry (ADR 0209)
     tail_to: route:knyszyn-w
+    # knyszyn-r24 (ADR 0289 'Recenzja s24'): the right turn Tykocka -> DK65 W on the compact roundabout follows the right
+    # lane centre through a ~7 m corner and the semitrailer cut the kerb corner between the arms (15 tyre points off the
+    # hard surface at s 696-702 m, qa/link_swept_check.py). Swing wide into the ring: 3.0 m left at the ring apex,
+    # raised cosine over +-30 m -> 0 tyre points off the hard surface and 0 off the carriageway (asphalt only).
+    # Searched 680-692 m x 1.0-3.0 m x 15-35 m; 2.5 m / 35 m leaves 7 points on kerb / apron (WORKING_VALUE).
+    swing:
+      - {near_epsg2180: [760625.1, 612005.4], left_m: 3.0, half_m: 30.0}
     note: "Rynek (end of the knyszyn control route) -> Grodzienska -> Tykocka -> roundabout split -> DK65 west to the seam"
   - id: knyszyn-w-dw671
     tile: knyszyn-w
