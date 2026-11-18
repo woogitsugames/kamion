@@ -91,6 +91,8 @@ DETAIL_SET = {"MI_Cab_Plastic": ("dashgrain", 1024), "MI_Cab_Leather": ("leather
 WEAR_MUL = {"leather_trim": 1.9, "leather": 2.3, "leather_wheel": 2.5, "leather_wheel_perf": 2.5, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3,
             "switch": 1.35, "grab_dark": 2.0, "knob": 1.8, "dash_lower": 1.45}
 BLACK_TINT = 0.04          # mean linear tint below this = black part: its worn spots are darkened so that the shader's
+DUST_RGB = (0.210, 0.195, 0.165)   # D84 / ADR 0296: settled dust, linear albedo (warm light grey). WORKING_VALUE
+DUST_ROUGH = 0.5                   # roughness added per unit dust (a matt film)
 BLACK_WEAR_DARKEN = 0.30   # worn albedo (lerp to max(base, 0.05)) stays <= 0.05 (ADR 0044 r6)
 NO_AO = ("curtain_", "blind_", "hatch_blind",     # thin interpenetrating cloth (critic #15) and the rim, which
          "wheel_rim", "wheel_stitch",           # rotates (a baked occlusion pattern would turn with it): median value
@@ -343,6 +345,7 @@ def consolidate(objs):
         wear = me.attributes.get("wear")
         tadd = me.attributes.get("tint_add")     # r6b: authored zones (build_interior.set_attr_w)
         radd = me.attributes.get("rough_add")
+        dust = me.attributes.get("dust")         # D84 / ADR 0296: dust film 0..1 (mix towards DUST_RGB, + roughness)
         uv0 = me.uv_layers["UVMap"].data
         d0 = me.uv_layers["Data0"].data
         d1 = me.uv_layers["Data1"].data
@@ -373,8 +376,10 @@ def consolidate(objs):
                 tk = 1.0 + (tadd.data[vi].value if tadd else 0.0)
                 if sum(tint[:3]) / 3.0 < BLACK_TINT:
                     tk *= 1.0 - BLACK_WEAR_DARKEN * min(1.0, wn)
-                col.data[li].color = (tint[0] * tk, tint[1] * tk, tint[2] * tk,
-                                      max(0.02, min(1.0, rough + (radd.data[vi].value if radd else 0.0))))
+                du = max(0.0, min(1.0, dust.data[vi].value)) if dust else 0.0
+                col.data[li].color = (tint[0] * tk * (1 - du) + DUST_RGB[0] * du, tint[1] * tk * (1 - du) + DUST_RGB[1] * du,
+                                      tint[2] * tk * (1 - du) + DUST_RGB[2] * du,
+                                      max(0.02, min(1.0, rough + (radd.data[vi].value if radd else 0.0) + DUST_ROUGH * du)))
                 d0[li].uv = (wn, strength)
                 d1[li].uv = (perf, metal)
                 if slot == "MI_Cab_Decal":
@@ -402,6 +407,8 @@ def texel_weight(name):
           "drv_", "stack_", "door_insert", "dash_insert", "dash_tray", "column_shroud")
     lo = ("bunk_base", "drawer_", "rear_oh", "rear_lid", "upper_bunk", "floor_slab", "back_wall", "side_rear",
           "footwell_wall", "_bellows", "_base", "_rail", "_pan", "skin", "roof_", "mirror_", "kerb_", "front_")
+    if name.startswith("dash_tray_ribs_"):   # D84 / ADR 0296: 6 mm flanks need ~1 mm texels (0.09 m2 in total)
+        return 3.0
     if name.startswith(lo) or any(k in name for k in ("skin", "_bellows", "_rail_")):
         return 0.45
     if name.startswith(hi):
@@ -641,6 +648,19 @@ def layout_bake_uv(objs, receivers):
     bpy.ops.uv.smart_project(angle_limit=math.radians(UV_CFG["angle"]), island_margin=0.0, area_weight=0.0, correct_aspect=True,
                              scale_to_bounds=False)
     bpy.ops.object.mode_set(mode="OBJECT")
+    # D84 / ADR 0296: parts with an authored atlas unwrap ('BakeAuth', metres: dash tray ribs) keep it; the layer must not
+    # reach the joined groups / FBX
+    for o in objs:
+        la = o.data.uv_layers.get("BakeAuth")
+        if la is None:
+            continue
+        if o in rec:
+            auth = [tuple(d.uv) for d in la.data]
+            for d, uv_ in zip(o.data.uv_layers["Bake"].data, auth):
+                d.uv = uv_
+        o.data.uv_layers.remove(o.data.uv_layers["BakeAuth"])
+        o.data.uv_layers.active = o.data.uv_layers["Bake"]
+    UV_STATS["authored_bake_uv_parts"] = sum(1 for o in rec if (o["src"] if "src" in o else o.name).startswith("dash_tray_ribs_"))
     for o in rec:  # uniform density, then texel priority
         me = o.data
         uv = me.uv_layers["Bake"].data

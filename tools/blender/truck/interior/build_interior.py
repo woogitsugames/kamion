@@ -501,6 +501,15 @@ def set_attr_w(ob, name, fn, add=True):
         at.data[v.index].value = at.data[v.index].value + val if add else val
 
 
+def set_attr_l(ob, name, fn, add=True):
+    """Like set_attr_w, but fn(local co, local normal): parts authored in their own frame (seats)."""
+    me = ob.data
+    at = me.attributes.get(name) or me.attributes.new(name, "FLOAT", "POINT")
+    for v in me.vertices:
+        val = fn(v.co, v.normal)
+        at.data[v.index].value = at.data[v.index].value + val if add else val
+
+
 def vnoise(x, y, z=0.0):
     """Smooth value noise 0..1 (trilinear hash01 lattice): wear break-up that does not alias on the vertex grid."""
     xi, yi, zi = math.floor(x), math.floor(y), math.floor(z)
@@ -980,8 +989,18 @@ def build_dash():
         return dust, pol
     # dust film: tint x up to 1.6 (albedo 0.046 -> ~0.07 at the glass in the corners; a film on the pad, not wear of the
     # black part), polish: tint x 0.88, roughness -0.42 (WORKING_VALUE, read in cab-dash at 1024 px)
-    set_attr_w(d, "tint_add", lambda co, nr: (lambda dp: 0.60 * dp[0] * (1 - dp[1]) - 0.12 * dp[1])(top_zones(co, nr)))
+    set_attr_w(d, "tint_add", lambda co, nr: (lambda dp: 0.25 * dp[0] * (1 - dp[1]) - 0.12 * dp[1])(top_zones(co, nr)))
     set_attr_w(d, "rough_add", lambda co, nr: (lambda dp: 0.10 * dp[0] * (1 - dp[1]) - 0.42 * dp[1])(top_zones(co, nr)))
+    # D84 / ADR 0296 (review P2 "sterile"): the film is dust, not a lighter pad - its own attribute ('dust' 0..1: the
+    # export mixes the vertex tint towards a warm grey and adds roughness), uneven like a pad wiped now and then:
+    # 6-12 cm blotches, a cloth swath in front of the driver, thick in the corners at the glass where no hand
+    # reaches. WORKING_VALUE (no measured film; read in cab-driver / cab-trays at 1080p).
+    def top_dust(co, nr):
+        dst, pol = top_zones(co, nr)
+        blotch = (0.45 + 0.55 * vnoise(co.x * 9.0, co.y * 13.0, 5.0)) * (0.6 + 0.4 * vnoise(co.x * 31.0, co.y * 27.0, 2.0)) / 0.8
+        swath = 1.0 - 0.55 * math.exp(-((co.x + 0.55) / 0.34) ** 2) * (1 - smooth(yg - 0.16, yg - 0.05, co.y))
+        return 0.20 * dst * (1 - pol) * min(1.0, blotch) * swath
+    set_attr_w(d, "dust", top_dust)
     # parting line between the two mouldings
     pts = [lp[split] + V(0, -0.0015, 0) for lp in loops[1:-1]]
     strip("dash_parting", pts, V(0, -1, 0.2).normalized(), 0.003, "gap", offset=0.0005)
@@ -1037,7 +1056,9 @@ def build_dash():
         for i in range(nmx):
             for j in range(nmy):
                 bm.faces.new((grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1]))
-        G.finish(f"dash_tray_mat_{ti}", bm, "floor_mat", smooth=True, sharp=None)
+        tm = G.finish(f"dash_tray_mat_{ti}", bm, "floor_mat", smooth=True, sharp=None)
+        # D84 / ADR 0296: dust and grit collect between the ribs (the mat floor), more in the passenger tray nobody uses
+        set_attr_w(tm, "dust", lambda co, nr, ti=ti: (0.20 + 0.08 * ti) * (0.55 + 0.45 * vnoise(co.x * 11.0, co.y * 17.0, 9.0 + ti)))
         lip = []
         for (x, y) in ([(tx0 + (tx1 - tx0) * i / 10, ty0) for i in range(11)] + [(tx1, ty0 + (ty1 - ty0) * j / 4) for j in range(1, 5)] +
                        [(tx1 - (tx1 - tx0) * i / 10, ty1) for i in range(1, 11)] + [(tx0, ty1 - (ty1 - ty0) * j / 4) for j in range(1, 5)]):
@@ -1049,15 +1070,33 @@ def build_dash():
         if G.STATE["q"] > 0.5:
             nr_ = int((ty1 - ty0 - 0.034) / 0.022)
             bm = bmesh.new()
+            bm.loops.layers.uv.new("UVMap")
+            # D84 / ADR 0296: authored AO-atlas unwrap ('BakeAuth', metres; a6_export.layout_bake_uv copies it into
+            # 'Bake'). The flank of a rib stands 65 deg to its crown, at the 66 deg limit of the atlas smart-project:
+            # per segment the flank fell either into the crown's projection (0.42 x foreshortened, ~1 texel wide, so it
+            # took the bright crown value) or into its own island - single lighter stretches along a rib. Each rib is
+            # now one unfolded strip (flank, crown, flank by arc length), no foreshortening.
+            uva = bm.loops.layers.uv.new("BakeAuth")
+            prof_r = ((-0.0055, 0.0012), (-0.003, 0.0065), (0.003, 0.0065), (0.0055, 0.0012))
+            arc = [0.0]
+            for (ya, za), (yb_, zb) in zip(prof_r, prof_r[1:]):
+                arc.append(arc[-1] + math.hypot(yb_ - ya, zb - za))
             for j in range(nr_ + 1):
                 yr = ty0 + 0.017 + j * 0.022
                 rows = [[drape(tx0 + 0.014 + (tx1 - tx0 - 0.028) * i / nmx, yr + dy, lz) for i in range(nmx + 1)]
-                        for dy, lz in ((-0.0055, 0.0012), (-0.003, 0.0065), (0.003, 0.0065), (0.0055, 0.0012))]
+                        for dy, lz in prof_r]
                 vr = [[bm.verts.new(p_) for p_ in row] for row in rows]
+                ul = [0.0]
+                for i in range(nmx):
+                    ul.append(ul[-1] + (rows[1][i + 1] - rows[1][i]).length)
                 for k_ in range(3):
                     for i in range(nmx):
-                        bm.faces.new((vr[k_][i], vr[k_][i + 1], vr[k_ + 1][i + 1], vr[k_ + 1][i]))
-            G.finish(f"dash_tray_ribs_{ti}", bm, "floor_mat", smooth=True, sharp=30)
+                        f_ = bm.faces.new((vr[k_][i], vr[k_][i + 1], vr[k_ + 1][i + 1], vr[k_ + 1][i]))
+                        for l_, (kk, ii) in zip(f_.loops, ((k_, i), (k_, i + 1), (k_ + 1, i + 1), (k_ + 1, i))):
+                            l_[uva].uv = (ul[ii], j * 0.030 + arc[kk])
+            tr_ = G.finish(f"dash_tray_ribs_{ti}", bm, "floor_mat", smooth=True, sharp=30)
+            set_attr_w(tr_, "dust", lambda co, nr: 0.05 * smooth(0.5, 0.9, nr.z))
+            tr_.data.uv_layers.active = tr_.data.uv_layers["UVMap"]
     # speaker grille in the passenger corner of the dash top
     sx0, sx1, sy0, sy1 = 0.93, 1.07, dash_face_y(1.0) + 0.09, dash_face_y(1.0) + 0.20
     bm = bmesh.new()
@@ -1160,6 +1199,9 @@ def build_binnacle():
             lp.append(V(x, yy, zz))
         loops.append(lp)
     hood = loft("binnacle_hood", loops, "dash_soft", closed=True, cap0=True, cap1=True, sharp=70)
+    # D84 / ADR 0296: dust on the hood top, thicker towards the glass (the hand wipes the front edge), blotchy
+    set_attr_w(hood, "dust", lambda co, nr: smooth(0.45, 0.85, nr.z) * (0.05 + 0.11 * smooth(0.02, 0.16, co.y - CLUSTER_C.y))
+               * (0.5 + 0.5 * vnoise(co.x * 14.0, co.y * 14.0, 4.0)))
     # parting seam where the hood skin meets the dash skin (3 mm dark groove following the intersection)
     for i, lp in enumerate(loops):
         x = lp[0].x
@@ -1755,7 +1797,8 @@ def build_wheel(badge):
                         (0.165, 0.130, 0.116, 0.034), (0.320, 0.136, 0.126, 0.032)):
         pc = C + d * t
         loops.append([pc + u * px + v * py for px, py in rrect(w, h, rr, 4)])
-    loft("column_shroud", loops, "dash_dark", closed=True, cap0=True, cap1=True)
+    csh = loft("column_shroud", loops, "dash_dark", closed=True, cap0=True, cap1=True)
+    set_attr_w(csh, "dust", lambda co, nr: 0.09 * smooth(0.55, 0.9, nr.z) * (0.5 + 0.5 * vnoise(co.x * 23.0, co.y * 23.0, 6.0)))
     for s in (-1, 1):
         pts = [C + d * t + u * (s * w / 2) + v * (-0.010) for t, w in ((0.080, 0.150), (0.135, 0.150), (0.165, 0.130),
                                                                        (0.318, 0.136))]
@@ -1864,7 +1907,11 @@ def emblem(badge, c, n, v, mat="satin", rise=0.0012, h=0.0018):
         hub_wordmark(c, n, v, mat=mat, rise=rise, h=h)
         return
     if badge == "none":
-        panel("emblem_plate", rrect(0.050, 0.022, 0.008, 3), c + n * 0.002, n, v, 0.003, "metal_dark", bev=0.001)
+        # D84 / ADR 0296: the blank plate took the baked occlusion of the pad UNDER it (its own contact shadow, like the
+        # spoke pods before r8) and read as a black rectangle on the hub. It now takes the occlusion of the open pad
+        # 22 mm above its centre (a6_export 'ao_probe') and stands 1 mm proud instead of 2.
+        ob = panel("emblem_plate", rrect(0.050, 0.022, 0.008, 3), c + n * 0.001, n, v, 0.003, "metal_dark", bev=0.001)
+        ob["ao_probe"] = tuple(c + v * 0.022)
         return
     path = os.path.join(REPO, "art-source", "truck", "brand", f"{badge}.svg")
     txt = open(path, encoding="utf-8").read()
@@ -1988,6 +2035,13 @@ def seat(prefix, cx, driver):
     cush = loft(f"{prefix}_cushion", loops, ["leather", "leather_centre"], closed=True, cap0=True, cap1=True,
                 mat_idx=midx, sharp=70)
     cush.matrix_world = Mc
+    if driver:
+        # D84 / ADR 0296: sat-on cloth is darker and flatter under the thighs, lint and crumbs gather at the rear crease
+        set_attr_l(cush, "tint_add", lambda co, nr: -0.14 * (1 - smooth(c_w - 0.07, c_w - 0.01, abs(co.x)))
+                   * smooth(-0.16, -0.04, co.y) * (1 - smooth(0.16, 0.26, co.y))
+                   * (0.45 + 0.55 * vnoise(co.x * 13.0, co.y * 13.0, 7.0)) * smooth(0.3, 0.8, nr.z))
+        set_attr_l(cush, "dust", lambda co, nr: 0.10 * (1 - smooth(-0.21, -0.13, co.y))
+                   * (1 - smooth(c_w - 0.03, c_w + 0.02, abs(co.x))) * smooth(0.3, 0.8, nr.z))
     if driver:  # entry wear on the left (door-side) bolster, front half
         # r6b (C-R2): one shaped patch, no hash / sine pattern: the door-side bolster is rubbed flat and shiny where the
         # driver slides in and out (front two thirds, strongest on the crown and the outer flank), the front edge under
@@ -2069,6 +2123,9 @@ def seat(prefix, cx, driver):
     back.matrix_world = Mb
     if driver:
         set_wear(back, lambda co: 0.85 * smooth(0.16, 0.22, -co.x) * smooth(0.05, 0.20, co.z) * (1 - smooth(0.45, 0.6, co.z)))
+        # D84 / ADR 0296: the cloth centre darkens where the back rests (shoulder blades and lumbar, uneven)
+        set_attr_l(back, "tint_add", lambda co, nr: -0.13 * (1 - smooth(0.10, 0.17, abs(co.x))) * smooth(0.10, 0.22, co.z)
+                   * (1 - smooth(0.50, 0.66, co.z)) * (0.45 + 0.55 * vnoise(co.x * 15.0, co.z * 11.0, 3.0)))
     for sx in (-1, 1):  # vertical stitch lines
         pts, nr = [], []
         for k in range(30):
@@ -2303,6 +2360,18 @@ def build_floor():
     # mat is worn in the driver's heel area and the entry path
     set_wear(m, lambda co: 0.9 * math.exp(-(((co.x + 0.48) / 0.10) ** 2 + ((co.y - 1.14) / 0.08) ** 2)) +
              0.5 * math.exp(-(((co.x + 0.95) / 0.20) ** 2 + ((co.y - 0.45) / 0.35) ** 2)))
+
+    # D84 / ADR 0296: dry grit carried in on the boots: a ring round the heel patch (swept aside by the feet), the
+    # driver's entry strip, thin elsewhere; blotchy, none where the sole polishes the rubber.
+    def mat_dust(co, nr):
+        if nr.z < 0.5:
+            return 0.0
+        heel = math.exp(-(((co.x + 0.48) / 0.10) ** 2 + ((co.y - 1.14) / 0.08) ** 2))
+        ring = math.exp(-(((co.x + 0.48) / 0.24) ** 2 + ((co.y - 1.10) / 0.20) ** 2)) * (1 - heel)
+        entry = math.exp(-(((co.x + 1.0) / 0.16) ** 2)) * smooth(-0.1, 0.2, co.y) * (1 - smooth(0.9, 1.2, co.y))
+        n_ = vnoise(co.x * 7.0, co.y * 7.0, 8.0) * (0.55 + 0.45 * vnoise(co.x * 19.0, co.y * 19.0, 1.0))
+        return (0.05 + 0.20 * ring + 0.14 * entry) * (0.35 + 0.65 * n_ / 0.6) * (1 - 0.8 * heel)
+    set_attr_w(m, "dust", mat_dust)
 
 
 def build_bunk():
