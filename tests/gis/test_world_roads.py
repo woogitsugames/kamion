@@ -20,6 +20,51 @@ HEIGHTMAP = REPO / "Data" / "raw" / "derived" / REGION_ID / "heightmap_2049.r16"
 needs_heightmap = pytest.mark.skipif(not HEIGHTMAP.exists(), reason="heightmap not built (Data/raw is gitignored)")
 
 
+# Files build_world.build() writes even with out_root redirected (test-hygiene-s24): the region's generated/*.json and
+# landmark specs (git), the far-field source manifest, the authored landmark assets and the far-field GIS cache. The
+# cache lives in Data/raw/derived, a junction to the MAIN checkout in agent worktrees: an unguarded run in a worktree
+# rewrote main's data (and could race the lead's tile rebuild). The fixture snapshots them and undoes the build's writes.
+def _side_effect_paths():
+    return [REGION_DIR, REPO / "Data" / "SourceManifests" / f"{REGION_ID}-far-field.manifest.json",
+            REPO / "art-source" / "world" / "landmarks",
+            REPO / "Data" / "raw" / "derived" / REGION_ID / "world" / "far_field_gis_cache.json"]
+
+
+def _snapshot():
+    snap = {}
+    for root in _side_effect_paths():
+        files = [root] if root.is_file() else (sorted(p for p in root.rglob("*") if p.is_file()) if root.is_dir() else [])
+        for f in files:
+            snap[f] = f.read_bytes()
+    return snap
+
+
+def _restore(before, after_build):
+    """Restore files the build changed and delete files it created. A file whose content differs from what the build
+    left (another process wrote it during the session) is kept and reported, never clobbered."""
+    now = _snapshot()
+    kept = []
+    for f, data in now.items():
+        if before.get(f) == data:
+            continue
+        if after_build.get(f) != data:
+            kept.append(str(f))
+        elif f in before:
+            f.write_bytes(before[f])
+        else:
+            f.unlink()
+    for f, data in before.items():
+        if f in now:
+            continue
+        if f in after_build:
+            kept.append(str(f) + " (deleted by another process)")
+        else:   # the build deleted it
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_bytes(data)
+    if kept:
+        print("[test_world_roads] changed by another process during the session, left as is:", *kept, sep="\n  ")
+
+
 @pytest.fixture(scope="session")
 def world(tmp_path_factory):
     if not HEIGHTMAP.exists():
@@ -29,8 +74,17 @@ def world(tmp_path_factory):
     # build() rewrites generated/*.json: keep the manifest of the earlier CLI run for test_export_is_deterministic
     mp = REGION_DIR / "generated" / "world_manifest.json"
     before = json.loads(mp.read_text(encoding="utf-8")) if mp.exists() else None
-    w, manifest, qa = build_world.build(REGION_ID, out_root=out, verbose=False)
-    return {"w": w, "manifest": manifest, "qa": qa, "out": out, "manifest_before": before}
+    snap = _snapshot()
+    try:
+        w, manifest, qa = build_world.build(REGION_ID, out_root=out, verbose=False)
+    except BaseException:
+        _restore(snap, _snapshot())
+        raise
+    after_build = _snapshot()
+    try:
+        yield {"w": w, "manifest": manifest, "qa": qa, "out": out, "manifest_before": before}
+    finally:
+        _restore(snap, after_build)
 
 
 def q(p):

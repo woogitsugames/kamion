@@ -56,7 +56,7 @@ namespace Game.Tests
         public void Prefab_InCabGlassRenderer_EnabledAndNearLod_OnEveryTier()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
-            Assume.That(prefab, Is.Not.Null, "TRAKT prefab not generated (Kamion/Setup/Rebuild TRAKT truck)");
+            if (prefab == null) Assert.Ignore("TRAKT prefab not generated (outside git): Kamion/Setup/Rebuild TRAKT truck");   // Ignore, not Assume: Unity counts Inconclusive as a failed run (exit 2)
             m_Go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             var rig = m_Go.GetComponent<TruckVisualRig>();
             Assert.IsNotNull(rig.glassGroup, "cab glazing has its own LOD group (rebuild the TRAKT prefab)");
@@ -101,7 +101,7 @@ namespace Game.Tests
         public void Prefab_SingleGlassLayer_OnEveryTier()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
-            Assume.That(prefab, Is.Not.Null, "TRAKT prefab not generated (Kamion/Setup/Rebuild TRAKT truck)");
+            if (prefab == null) Assert.Ignore("TRAKT prefab not generated (outside git): Kamion/Setup/Rebuild TRAKT truck");   // Ignore, not Assume: Unity counts Inconclusive as a failed run (exit 2)
             m_Go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             var rig = m_Go.GetComponent<TruckVisualRig>();
             var gb = rig.glassLods.SelectMany(l => l.renderers).Where(g => g != null).Select(g => { var b = g.bounds; b.Expand(0.04f); return b; }).ToArray();

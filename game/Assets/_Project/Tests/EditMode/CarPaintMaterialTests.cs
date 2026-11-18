@@ -22,6 +22,16 @@ namespace Game.Tests
                 { "paint", new List<object>(new object[count]) }
             };
             var type = Type.GetType("Game.World.Import.WorldPbrMaterials, Game.World.Import.Editor", true);
+            // test-hygiene-s24: Channels() returns no channels at all when the material's texture set is not generated
+            // (Has() checks the PNGs in art-source/world/materials/<set>/<tier>, which are outside git - README there).
+            // A fresh worktree / main checkout has none, so both "true" cases failed there and the "false" cases passed
+            // without testing anything. Without the set the gate cannot be exercised: skip with the rebuild command.
+            var has = type.GetMethod("Has", BindingFlags.Static | BindingFlags.Public);
+            Assert.NotNull(has);
+            var probe = new Dictionary<string, object> { { "texture_set", "car_grime_clean" } };
+            if (!(bool)has.Invoke(null, new object[] { probe, "car_paint_blue" }))
+                Assert.Ignore("texture set car_grime_clean not generated in this checkout (outside git): " +
+                              "uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only car_grime_clean");
             var method = type.GetMethod("Channels", BindingFlags.Static | BindingFlags.Public);
             Assert.NotNull(method);
             var args = new object[] { def, id, false, false, false };

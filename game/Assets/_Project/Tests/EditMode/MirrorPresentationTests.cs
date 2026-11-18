@@ -12,7 +12,9 @@ namespace Game.Tests.EditMode
         public void OwnTrailerSide_AppearsAtInnerGlassEdge(int phase, float side)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Generated/Truck/Tractor4x2_TRAKT.prefab");
-            Assert.NotNull(prefab, "build TRAKT before testing mirror presentation");
+            // test-hygiene-s24: Assets/_Generated is outside git; a fresh worktree has no TRAKT prefab (same rule as
+            // DrivingScenesFullTruckTests.ArtPrefabs_HavePinnedGuids). Built prefab = full check.
+            if (prefab == null) Assert.Ignore("TRAKT prefab not built in this checkout (outside git): Kamion/Setup/Rebuild TRAKT truck or -executeMethod Game.Editor.Setup.TruckAssetBuilder.BuildBatch");
             var mirror = prefab.GetComponentsInChildren<RenderTextureMirror>(true).Single(m => m.phase == phase);
             var eye = prefab.GetComponentsInChildren<Transform>(true).Single(t => t.name == "DriverEyePoint");
             var cam = mirror.GetComponent<Camera>();

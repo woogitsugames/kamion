@@ -86,7 +86,7 @@ namespace Game.Tests
 #if UNITY_EDITOR
             // Cluster and cab view need the art truck (TRAKT prefab, generated outside git); the DrivingLab uses the graybox.
             var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Generated/Truck/Tractor4x2_TRAKT.prefab");
-            Assume.That(prefab, Is.Not.Null, "TRAKT prefab not generated (Kamion/Setup/Rebuild TRAKT truck)");
+            if (prefab == null) Assert.Ignore("TRAKT prefab not generated (outside git): Kamion/Setup/Rebuild TRAKT truck");   // Ignore, not Assume: Unity counts Inconclusive as a failed run (exit 2)
             var O = new Vector3(0f, -900f, 0f);
             var g = GameObject.CreatePrimitive(PrimitiveType.Cube);
             g.transform.SetPositionAndRotation(O + new Vector3(0f, -0.5f, 0f), Quaternion.identity);
