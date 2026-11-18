@@ -71,6 +71,31 @@ links:
   # ONLY from the south seam node (the on-ramps of the junction Bialystok Zachod towards Warsaw lie in dk8-s8-jeroniki),
   # so a link from the dk65-01 control route is not possible inside this tile; the dk65-01 route stays untouched.
   # Missing for a continuous trip Bialystok -> S8: dk8-s8-jeroniki built + two links (dk65-01 -> south seam, jeroniki).
+  # ADR 0292 (agent dk8-s8-s24): the trip Bialystok -> S8 towards Warsaw. In the directed graphs the S8 westbound
+  # carriageway (way 305447699) at the jeroniki | dk65-01 seam is reachable ONLY from the DK8 westbound carriageway on the
+  # jeroniki | bialystok-porosly seam (way 889307875): Warszawska (dk65-01 -> jeroniki) has no on-ramp to DK8 westbound,
+  # and the other graph paths use the median crossover ways 1571341511/1571341512 (access=no). The truck route is DK8
+  # Kleeberga south from the rondo Kresowian (bialystok-knyszynska) -> bialystok-porosly -> junction Bialystok Zachod in
+  # dk8-s8-jeroniki -> S8 across the dk65-01 corner -> s8-01. Each link lies in one tile (the control routes of
+  # knyszynska / porosly / jeroniki all run INTO the city, ADR 0208 / 0278).
+  - id: knyszynska-kleeberga-s
+    tile: bialystok-knyszynska
+    destination: s8
+    replaces_route: bialystok-knyszynska  # same entry: Kleeberga westbound on the seam with bialystok-kleeberga
+    end_epsg2180: [772286.3, 595199.0]    # Kleeberga southbound (way 606396500, DK8) on the knyszynska | porosly seam
+    note: "Kleeberga (DK8) straight on past the rondo Kresowian exit, south to the seam with bialystok-porosly"
+  - id: porosly-dk8-w
+    tile: bialystok-porosly
+    destination: s8
+    start_epsg2180: [772286.3, 595199.0]  # boundary node of way 606396500 (north edge)
+    end_epsg2180: [770827.0, 594847.7]    # boundary node of way 889307875 (west edge, DK8 westbound, seam with jeroniki)
+    note: "DK8 Kleeberga south-west through Porosly to the seam with dk8-s8-jeroniki"
+  - id: jeroniki-dk8-to-s8
+    tile: dk8-s8-jeroniki
+    destination: s8
+    start_epsg2180: [770827.0, 594847.7]  # boundary node of way 889307875 (east edge)
+    end_epsg2180: [769340.8, 595199.0]    # boundary node of way 305447699 (north edge) = start of dk65-01-s8-corner
+    note: "DK8 westbound through the junction Bialystok Zachod onto the S8 towards Warsaw, to the seam with dk65-01"
   - id: dk65-01-s8-corner
     tile: dk65-01
     destination: s8
@@ -100,6 +125,11 @@ corridors:
             dk65-01, dk65-02, dk65-03, dk65-04, dk65-05, dk65-06, dk65-07, dk65-08, dk65-09, dk65-10, dk65-11,
             knyszyn-s, knyszyn, knyszyn-w, dw671-tykocin-01, dw671-tykocin-02, dw671-tykocin-03, dw671-tykocin-04,
             dw671-tykocin-05, dw671-tykocin-06, dw671-tykocin-07, dw671-tykocin-08, dw671-tykocin-09, tykocin]
+  # ADR 0292: Bialystok C -> DK8 Kleeberga -> junction Bialystok Zachod -> S8 loop (`-route_to s8`)
+  - id: bialystok-s8
+    destination: s8
+    tiles: [bialystok-industrial-c, bialystok-maczka, bialystok-kleeberga, bialystok-knyszynska, bialystok-porosly,
+            dk8-s8-jeroniki, dk65-01, s8-01, s8-02, s8-03, s8-04, s8-05, s8-06, s8-07, s8-08, s8-09, s8-10, s8-11, s8-12]
   - id: s8-loop
     destination: s8
     tiles: [dk65-01, s8-01, s8-02, s8-03, s8-04, s8-05, s8-06, s8-07, s8-08, s8-09, s8-10, s8-11, s8-12]
