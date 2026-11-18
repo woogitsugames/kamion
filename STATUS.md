@@ -11,3 +11,5 @@
 - NASTEPNY KROK: obejrzec artifacts/knyszyn-r24/vqa-knyszyn/look_dom_klattow.png; potem pwsh artifacts/knyszyn-r24/unity1.ps1 -Region knyszyn-w
 - [6] deski: look_dom_klattow czytal sie jak podloga -> set_tile_m [6.0,2.6] (materials.py), knyszyn+knyszyn-w przebudowane 21:56. Czeka na MEASURE DONE lidera.
 - NASTEPNY KROK: artifacts/knyszyn-r24/after_measure.ps1 (uruchomiony; import+VQA knyszyn, import knyszyn-w, EditMode Win64, pytest tests/gis) -> sprawdzic after_measure.log
+- [7] GOTOWE: VQA knyszyn 80 kamer (deski po poprawce czytaja sie jak dlugie deski), import knyszyn-w OK; EditMode Win64 1223/1336, 7 porazek niezwiazanych (truck/mirror/door/lightpost), RouteLinks 6/6; pytest gis 2476 passed / 3 failed (chimneys cp1250 znane; C: fidelity stale przez meshing/seam_p2a + export nondet. - C manifest bez roof_sheet_grey z main, juz przed zmiana).
+- NASTEPNY KROK (lider): po scaleniu uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c + przebudowa C przez wlasciciela kafla (wood set_tile_m + roof_sheet_grey).
