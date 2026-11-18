@@ -138,6 +138,8 @@ namespace Game.Editor.VisualQA
             // trailer patch under the asphalt).
             foreach (var ck in UnityEngine.Object.FindObjectsByType<Game.World.WorldCollisionCooker>(FindObjectsInactive.Include, FindObjectsSortMode.None)) ck.Cook();
             Physics.SyncTransforms();
+            // D84 cab-view-s24: -qaTruckPose E,N,headingDeg moves the combination (e.g. onto a roundabout ring).
+            CabViewQa.ApplyTruckPose(EditorTools.Arg("-qaTruckPose", null));
             if (!string.IsNullOrEmpty(gate3Json))
             {
                 Game.Gameplay.Gate3Cameras.CreateAll(UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>(), null, File.ReadAllText(gate3Json));
@@ -171,6 +173,8 @@ namespace Game.Editor.VisualQA
                         System.Globalization.CultureInfo.InvariantCulture, out float rsArg) && rsArg > 0.1f && rsArg <= 2f)
                     scale = rsArg;
             }
+            // D84 cab-view-s24: -qaCabViewAudit <tsv> - mirror heads / windscreen top edge vs the cab-view frames.
+            CabViewQa.Audit(EditorTools.Arg("-qaCabViewAudit", null), cams, width, height);
             var stats = new System.Text.StringBuilder();
             // Warm-up: the very first Camera.Render after opening a scene in batchmode can draw with
             // stale per-material SRP-batcher data (every object showed the ground material). Render
