@@ -1,6 +1,6 @@
 # uv run --no-project --with pillow --with numpy --with scipy python measure_cab.py <tagdir>
 # Regions in 1920x1080 cab-driver (FOV 70) = review s24 K1 regions x2 (they were on 960x540 sheets).
-# Shadow jaggedness (clear, cab-hub left dash 0..700 x 120..500 and cab-dash lower left 0..600 x 780..1080): binarise at
+# Shadow jaggedness (after a 2 px gaussian that removes the leather grain; clear, cab-hub left dash 0..700 x 120..500 and cab-dash lower left 0..600 x 780..1080): binarise at
 # the midpoint between the 20th and 80th luminance percentile, perimeter of the binary mask vs perimeter after a
 # gaussian (sigma 3 px) smoothing of the mask -> ratio 1.0 = smooth edges, > 1 = staircase.
 import sys, os, numpy as np
@@ -29,8 +29,15 @@ for tl in ('High-clear', 'Ultra-clear', 'Low-clear'):
     for cam, box in (('cab-hub', (0, 700, 120, 500)), ('cab-dash', (0, 600, 780, 1080)), ('cab-driver', (0, 400, 840, 1000))):
         p = os.path.join(tag, f'cab-{tl}', cam + '.png')
         if not os.path.exists(p): continue
-        y = reg(luma(load(p)), *box)
+        y = ndimage.gaussian_filter(reg(luma(load(p)), *box), 2.0)   # leather grain out, shadow-map steps (>= 8 px) stay
         thr = 0.5 * (np.percentile(y, 20) + np.percentile(y, 80))
         m = y > thr
         sm = ndimage.gaussian_filter(m.astype(np.float32), 3) > 0.5
+        g = ndimage.gaussian_filter(reg(luma(load(p)), *box), 1.0)
+        gx = ndimage.sobel(g, 1); gy = ndimage.sobel(g, 0); mag = np.hypot(gx, gy)
+        sel = mag > np.percentile(mag, 97)
+        ang = np.degrees(np.arctan2(gy[sel], gx[sel])) % 90.0
+        axis = ((ang < 10) | (ang > 80)).mean()   # staircase edges put their gradient on the pixel axes
+        w = np.percentile(mag, 99.5)              # peak edge gradient (sharpness)
+        print(f'{tl:11s} {cam:10s} axis-aligned edge share {axis:5.2f} | peak grad {w:6.1f}')
         print(f'{tl:11s} {cam:10s} jagged {perim(m) / max(perim(sm), 1):5.2f} (thr {thr:5.1f}, p20 {np.percentile(y, 20):5.1f}, p80 {np.percentile(y, 80):5.1f})')

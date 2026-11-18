@@ -42,13 +42,13 @@ namespace Game.Tests.EditMode
                 Quad(new Vector3(1f, 1f, 0f), 0.1f, P.Tail, 1f, true),  // right tail chamber, lens wound inward (after2 export)
                 Quad(new Vector3(0f, 1f, 0f), 0.1f, P.IndL, 1f),      // amber: not a halo group
                 Quad(new Vector3(0f, 0.5f, 0f), 0.1f, P.Tail, 0f),    // lens frame without emissive mask
-                Quad(new Vector3(0f, 1f, 6f), 0.1f, 0, 0f));          // vehicle body ahead of the rear lamps (mesh centre)
+                Quad(new Vector3(0f, 1f, -6f), 0.1f, 0, 0f));         // body behind the lamps (front-corner marker case): still -Z
             var cs = TruckLampHaloBuilder.Clusters(mesh, new HashSet<int>(TruckLampHaloBuilder.HaloGroups));
             Assert.That(cs.Count, Is.EqualTo(3));
             foreach (var c in cs)
             {
                 Assert.That(c.area, Is.EqualTo(0.01f).Within(1e-5f));
-                Assert.That(Vector3.Dot(c.normal, Vector3.back), Is.GreaterThan(0.999f), "emitting side faces away from the vehicle");
+                Assert.That(Vector3.Dot(c.normal, Vector3.back), Is.GreaterThan(0.999f), "red rear signals emit rearward (-Z)");
             }
             var halo = TruckLampHaloBuilder.BuildMesh(cs, "t");
             Assert.That(halo.vertexCount, Is.EqualTo(12));

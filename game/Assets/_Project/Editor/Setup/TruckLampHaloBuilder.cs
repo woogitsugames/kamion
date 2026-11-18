@@ -67,14 +67,15 @@ namespace Game.Editor.Setup
                     else sums[best] = (g, sums[best].c + c * a, sums[best].n + (Vector3.Dot(sums[best].n, cr) < 0f ? -cr : cr), sums[best].a + a);
                 }
             }
-            // Lens winding is not consistent in the exports (after2: 9 of 10 trailer clusters summed to +Z, into the lamp), so
-            // the emitting side is taken outward from the mesh centre (rear lamps of a vehicle part face away from it).
-            Vector3 mid = mesh.bounds.center;
+            // Lens winding is not consistent in the exports (after2: 9 of 10 trailer clusters summed to +Z, into the lamp). Every
+            // halo group is a red rear signal, which faces rearward by regulation (R48), and the vehicle frame has +Z forward:
+            // the emitting side is the one with z <= 0 (also the red rear faces of the end-outline markers on the trailer's
+            // front corners, which an "outward from the mesh centre" rule turned forward in after3).
             foreach (var s in sums)
             {
                 Vector3 c = s.c / s.a;
                 Vector3 n = s.n.sqrMagnitude > 1e-12f ? s.n.normalized : Vector3.back;
-                if (Vector3.Dot(n, c - mid) < 0f) n = -n;
+                if (n.z > 0f) n = -n;
                 result.Add(new Cluster { group = s.g, centre = c, normal = n, area = s.a });
             }
             return result;
