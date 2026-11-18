@@ -1287,6 +1287,11 @@ namespace Game.Editor.Setup
             }
             Q("cab-apillar", eye, Quaternion.Euler(-6f, -34f, 0f), 50f, "D84: driver's A-pillar trim, seal beads, drawn blind, mirror edge.");
             Q("cab-dash", eye, Quaternion.Euler(24f, 12f, 0f), 62f, "A7: cluster, steering wheel, centre stack, lower dash (low-sun black-cab check: lower dash > 8 %).");
+            // D84 / ADR 0296: narrow views from the eye onto the parts the open review points name (measurement frames for
+            // legend backlight, hub glow, tray ribs); offsets from build_interior.py (WHEEL_C, centre stack c0, dash trays).
+            Q("cab-hub", eye, Quaternion.LookRotation(new Vector3(0f, -0.38f, 0.425f), Vector3.up), 38f, "0296: steering-wheel hub, spoke key pods and their legends from the eye.");
+            Q("cab-switches", eye, Quaternion.LookRotation(new Vector3(0.58f, -0.655f, 0.48f), Vector3.up), 30f, "0296: centre-stack rocker rows and legends from the eye (night legibility of the backlight).");
+            Q("cab-trays", eye, Quaternion.LookRotation(new Vector3(1.0f, -0.47f, 0.70f), Vector3.up), 34f, "0296: dash-top trays, rubber mat ribs and the dust film at the windscreen base from the eye.");
             Q("cab-left", eye, Quaternion.Euler(4f, -68f, 0f), 62f, "A7: driver door card, door glass and the main/wide mirrors on the left.");
             Q("cab-right", eye, Quaternion.Euler(8f, 58f, 0f), 62f, "A7: passenger seat, passenger door card, right mirrors through the glass.");
             // ADR 0104: the driving views cannot expose the driver's bolster or resolve moulded grain.
