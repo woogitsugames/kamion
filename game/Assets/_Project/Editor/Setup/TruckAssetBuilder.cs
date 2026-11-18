@@ -1276,7 +1276,13 @@ namespace Game.Editor.Setup
             Q("cab-driver-ab10", eye, Quaternion.Euler(10f, 0f, 0f), 62f, "D84 A/B: driver eye, rest gaze 10 deg down (not the game camera).");
             // D84 / P1-4 cab-view-s24: the owner's choice of driver view (FOV / rest gaze), same eye point. QA only.
             foreach (var v in Game.Cameras.CabViewVariants.All)
+            {
                 Q(v.Id, eye, Quaternion.Euler(v.PitchDownDeg, 0f, 0f), v.VerticalFovDeg, "D84 view variant: " + v.Note + " (not the game camera).");
+                // The same frame as the player sees it: driving HUD + the D70 class II mirror windows (ControlSettings.mirrorInsets, default on).
+                Q(v.Id + "-hud", eye, Quaternion.Euler(v.PitchDownDeg, 0f, 0f), v.VerticalFovDeg, "D84 view variant with the driving HUD and mirror windows.");
+                var hudCam = parent.Find("QA_" + v.Id + "-hud").GetComponent<ControlCamera>();
+                hudCam.includeDrivingHud = true; hudCam.drivingHudMirrorInsets = true;
+            }
             Q("cab-apillar", eye, Quaternion.Euler(-6f, -34f, 0f), 50f, "D84: driver's A-pillar trim, seal beads, drawn blind, mirror edge.");
             Q("cab-dash", eye, Quaternion.Euler(24f, 12f, 0f), 62f, "A7: cluster, steering wheel, centre stack, lower dash (low-sun black-cab check: lower dash > 8 %).");
             Q("cab-left", eye, Quaternion.Euler(4f, -68f, 0f), 62f, "A7: driver door card, door glass and the main/wide mirrors on the left.");

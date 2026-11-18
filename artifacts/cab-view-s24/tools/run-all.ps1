@@ -13,7 +13,7 @@ try {
     St 'install' $c
     if (-not (Select-String "$logs\install.log" -SimpleMatch 'TRUCK_RESULT: OK' -Quiet)) { return }
   }
-  $cams = 'cab-view-0-fov55,cab-view-a-fov62,cab-view-b-fov70,cab-view-c-fov75,cab-view-d-fov70-p10,cab-driver'
+  $cams = 'cab-view-0-fov55,cab-view-a-fov62,cab-view-b-fov70,cab-view-c-fov75,cab-view-d-fov70-p10,cab-driver,cab-view-0-fov55-hud,cab-view-a-fov62-hud,cab-view-b-fov70-hud,cab-view-c-fov75-hud,cab-view-d-fov70-p10-hud'
   if ($Steps -match 'start') {
     pwsh scripts/visual-qa.ps1 -Scene WorldC_High -Tier High -Pc -BuildTarget Win64 -Width 1920 -Height 1080 -Lighting clear `
       -Cameras $cams -OutputDir "$out\start" -CabViewAudit "$out\start\audit.tsv" *> "$logs\render-start.out"
