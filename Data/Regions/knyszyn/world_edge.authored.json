@@ -1,24 +1,18 @@
 {
   "schema": "truck-sim-pl/world-edge-authored/1",
-  "note": "ADR 0287 (review 2026-11-18 P1-3). Read by Game.World.Import.WorldEdgeBuilder.ReadExits at import; survives every regeneration of the region. near_en = region-local (E, N) metres, as in control_cameras_place.authored.json.",
+  "note": "ADR 0295 (review 2026-11-18 P1-3). Read by Game.World.Import.WorldEdgeBuilder.ReadExits at import; survives every regeneration of the region. near_en = region-local (E, N) metres, as in control_cameras_place.authored.json.",
   "closures": [
     {
       "id": "dk65-nw-out-of-the-roundabout",
-      "near_en": [-1024.0, -533.3],
+      "near_en": [
+        -1024.0,
+        -533.3
+      ],
       "radius_m": 15.0,
       "setback_m": 12.0,
-      "reason": "DK65 (Obozowa) leaves the tile ~100 m beyond the roundabout DK65 / DW671; the default 60 m setback put the red-white barrier row across the arm 20-40 m from the roundabout (camera dk65_outlet_nw). The neighbouring tile knyszyn-w continues the road: with streaming the closure is opened anyway, in the stand-alone scene it now stands 12 m inside the edge. WORKING_VALUE.",
+      "reason": "DK65 (Obozowa) leaves the tile 61.7 m (along the road) beyond the roundabout DK65 / DW671; the default rule (60 m, or 80 % of a shorter road piece = 49.4 m) put the red-white barrier row across the arm ~12 m from the roundabout (camera dk65_outlet_nw). The neighbouring tile knyszyn-w continues the road: with streaming the closure is opened anyway, in the stand-alone scene it now stands 12 m inside the edge. The DW671 arm (Tykocka, edge at n = -642.5) needs no entry: its road piece is 12.6 m, so its closure already stands 10 m inside the edge. WORKING_VALUE.",
       "confidence": "high",
       "verify": "camera dk65_outlet_nw, rondo_dk65_above"
-    },
-    {
-      "id": "dw671-w-out-of-the-roundabout",
-      "near_en": [-1024.0, -642.5],
-      "radius_m": 15.0,
-      "setback_m": 12.0,
-      "reason": "DW671 (Tykocka) leaves the tile ~85 m west of the same roundabout; same reason. WORKING_VALUE.",
-      "confidence": "high",
-      "verify": "camera rondo_dk65_above"
     }
   ]
 }

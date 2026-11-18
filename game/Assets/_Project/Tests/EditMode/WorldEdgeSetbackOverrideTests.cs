@@ -8,9 +8,10 @@ using UnityEngine;
 namespace Game.Tests.EditMode
 {
     /// <summary>
-    /// ADR 0287 (review 2026-11-18 P1-3): authored closure setbacks (Data/Regions/&lt;id&gt;/world_edge.authored.json).
-    /// Knyszyn: the closures of DK65 and DW671 on the west edge stand 12 m inside the edge instead of 60 m (out of the
-    /// roundabout); every closure stays inside the drivable rectangle, and the resolved list has no conflicts.
+    /// ADR 0295 (review 2026-11-18 P1-3): authored closure setbacks (Data/Regions/&lt;id&gt;/world_edge.authored.json).
+    /// Knyszyn: the closure of DK65 on the west edge stands 12 m (along the road) inside the edge instead of 49.4 m, out
+    /// of the roundabout (DW671 next to it: 10 m by the default rule, its road piece is 12.6 m); the other closures keep
+    /// the default, and the resolved list has no conflicts.
     /// </summary>
     public class WorldEdgeSetbackOverrideTests
     {
@@ -30,11 +31,13 @@ namespace Game.Tests.EditMode
             foreach (var c in west)
             {
                 float inside = c.localPos.x + 1024f;
-                Assert.That(inside, Is.InRange(8f * 0.4f, 12.5f), $"{c.road}: {inside:F1} m inside the west edge (authored setback 12 m along the road)");
+                Assert.That(inside, Is.InRange(8f * 0.4f, 12.5f), $"{c.road}: {inside:F1} m inside the west edge (DK65: authored 12 m along the road; DW671: 80 % of 12.6 m)");
             }
-            // every other closure of the region keeps the default: none of them moved to the edge
-            int nearEdge = raw.Count(c => Mathf.Min(Mathf.Min(c.localPos.x + 1024f, 1024f - c.localPos.x), Mathf.Min(c.localPos.z + 1024f, 1024f - c.localPos.z)) < 13f);
-            Assert.LessOrEqual(nearEdge, 2, "only the two authored closures stand within 13 m of the edge");
+            // the closures that the file does not name keep the default rule: 60 m, or 80 % of a road shorter than that
+            float def = (float)Builder.GetField("ClosureSetbackM").GetValue(null);
+            Assert.AreEqual(17, raw.Count, "roads leaving the tile (roads.graph.json boundary nodes)");
+            Assert.GreaterOrEqual(raw.Count(c => Mathf.Min(Mathf.Min(c.localPos.x + 1024f, 1024f - c.localPos.x), Mathf.Min(c.localPos.z + 1024f, 1024f - c.localPos.z)) > 0.5f * def), 8,
+                "closures of the other long roads still stand well inside the edge");
             var resolved = Call<List<WorldBoundary.Closure>>("ResolveClosures", raw);
             Assert.AreEqual(0, Call<List<(int a, int b, float gapM)>>("FindClosureConflicts", resolved).Count);
         }

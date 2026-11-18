@@ -683,7 +683,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
     return out, forests
 
 
-# ------------------------------------------------------------------------------------------- farmland (ADR 0287, P1-4)
+# ------------------------------------------------------------------------------------------- farmland (ADR 0295, P1-4)
 # Review 2026-11-18 P1-4: the dryness mask (COLOR_0.b) was the same 8 m / 2.5 m patch noise on every square metre away
 # from the roads, so meadows and arable land read as one mottled carpet from the roundabout to the horizon; the owner's
 # drone photo 11 and the GUGiK orthophoto show smooth strip fields, each of one tone, with sharp baulks. Inside BDOT10k
@@ -807,7 +807,7 @@ def ground_masks(src, origin, hf, dist_road, forests, cleared=(), report=None):
     dry = np.clip((.8 * large + .2 * small - .5) * 2.4 + .5, 0, 1)
     B = np.where(mapped_lawn, .06 + dry * .40,
                  np.where(dist_road < 4.0, .08 + dry * .84, .25 + dry * .75))
-    # ADR 0287 (review 2026-11-18 P1-4): farmland = a mosaic of fields, not the patch noise
+    # ADR 0295 (review 2026-11-18 P1-4): farmland = a mosaic of fields, not the patch noise
     flevel, finside = field_mosaic(src, origin, hf)
     fields = finside & ~mapped_lawn & (dist_road >= FIELD_ROAD_M) & ~G.astype(bool)
     if report is not None:

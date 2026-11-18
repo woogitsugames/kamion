@@ -472,7 +472,7 @@ namespace Game.World.Import
             return exits;
         }
 
-        /// <summary>Authored closure setbacks of a region, next to its roads.graph.json (ADR 0287, review 2026-11-18 P1-3).</summary>
+        /// <summary>Authored closure setbacks of a region, next to its roads.graph.json (ADR 0295, review 2026-11-18 P1-3).</summary>
         public const string SetbackOverridesFile = "world_edge.authored.json";
         /// <summary>An authored setback is never shorter than this [m]: the barrier row and its collider stay inside the
         /// drivable rectangle with room for the board posts. WORKING_VALUE.</summary>

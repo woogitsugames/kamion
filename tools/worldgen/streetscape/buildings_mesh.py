@@ -571,7 +571,7 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
             acc.box(layer, "hall_flashing" if mat.startswith("hall") else "window_sill", c, d3 * (w / 2 + 0.04),
                     n3 * (depth / 2 + 0.025), [0, 0, 0.02], skip=(0, 2, 4, 5))   # top + nose only (Low budget)
 
-# ---------------------------------------------------------------- boarded wooden house of Podlasie (ADR 0287, P1-1/P1-2)
+# ---------------------------------------------------------------- boarded wooden house of Podlasie (ADR 0295, P1-1/P1-2)
 # Review 2026-11-18 (docs/reports/REVIEW-2026-11-18-s24-knyszyn.md): a wooden house was "a wood texture on a box" and
 # its boards repeated every tile. Every `dom_drewniany` now gets, on LOD0: boarded corners, vertical clamp battens
 # (lisice) that cut long walls into runs shorter than the plank tile, a drip board over the plinth, a board at the
@@ -705,7 +705,7 @@ def wood_surround(acc, a, d, nout, L, o, ztop, key, mat=WOOD_TRIM_MAT):
 
 def wood_wall(acc, wall, plinth, a, d, nout, L, zbot, zpl, zt, zref, u_acc, ops, prof, aw, ground, key, corners,
               runs_out=None):
-    """LOD0 wall of a boarded house on one outline edge (ADR 0287, review 2026-11-18 P1-1 / P1-2).
+    """LOD0 wall of a boarded house on one outline edge (ADR 0295, review 2026-11-18 P1-1 / P1-2).
     Boarding: horizontal boards up to the eave line zt in runs between clamp battens, every run with its own UV phase
     (wood_phase), so no two runs - and no two houses - show the same boards; above the eave line of a gable end the
     boards run up (UV0 swapped), with the loft window `aw` (attic_window) in its column. Boards on top (the wall's own
@@ -1509,7 +1509,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     pav_fronts = 0
     roof_kinds = {}
     canopy_skipped = 0
-    wood_stats = {"runs": [], "tris": 0}        # ADR 0287 P1-2: boarding runs of the wooden houses, m
+    wood_stats = {"runs": [], "tris": 0}        # ADR 0295 P1-2: boarding runs of the wooden houses, m
     lod1_house_openings = 0
     l1_pending, l1_cells, l1_fallback = [], set(), 0
     l1_frame_cells, l1_framed = {}, 0
@@ -1633,7 +1633,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         dist = [roads_poly.distance(shapely.Point(*(0.5 * (a + c_)))) if roads_poly is not None else 0 for a, c_ in edges]
         main = int(np.argmin(dist)) if dist else 0
         lens = [float(np.linalg.norm(c_ - a)) for a, c_ in edges]
-        # ADR 0287 (P1-1): outer corners of the outline (turn of more than ~25 degrees) - a boarded house gets its
+        # ADR 0295 (P1-1): outer corners of the outline (turn of more than ~25 degrees) - a boarded house gets its
         # corner boards there; convex[i] = the corner at the START of edge i
         convex = []
         for i_ in range(len(edges)):

@@ -1,4 +1,4 @@
-"""knyszyn-p1-s24 (ADR 0287, review 2026-11-18): boarded wooden houses (P1-1 corner boards, battens, drip board,
+"""knyszyn-p1-s24 (ADR 0295, review 2026-11-18): boarded wooden houses (P1-1 corner boards, battens, drip board,
 vertical gable boarding, opening surrounds; P1-2 boarding runs shorter than the plank tile, each with its own UV
 phase) and the farmland mosaic of the terrain dryness mask (P1-4)."""
 import json
