@@ -82,6 +82,7 @@ namespace Game.Rendering
             [Tooltip("Mean linear luminance of the screen texture (0..1)")] public float meanEmission;
             [Tooltip("Panel luminance at full white, cd/m^2 (Kamion/Cab Display _Luminance)")] public float luminance;
             [Tooltip("Display ceiling of the panel (Kamion/Cab Display _MaxDisplay)")] public float maxDisplay;
+            [Tooltip("ADR 0299: night-mode ceiling (Kamion/Cab Display _NightMaxDisplay); 0 = same as maxDisplay")] public float nightMaxDisplay;
         }
         [Header("ADR 0297: instrument spill, night lift, cab soft shadows")]
         [Tooltip("Light of the cluster / navigation screen on the trim around them (review s24 K1)")]
@@ -193,9 +194,14 @@ namespace Game.Rendering
         /// without the readability floor (Kamion/Cab Display clamps at _MinDisplay for legibility by day; physically a
         /// 500 cd/m^2 panel adds nothing to a sunlit dash), so the spill is ~0 by day and the screen's displayed
         /// level at night (where the panel sits at its ceiling, i.e. a night-dimmed screen).</summary>
-        public static float SpillPower(SpillSource s, float exposure, float scale) =>
-            Mathf.Min(Mathf.Max(0f, s.luminance) * Mathf.Max(0f, exposure), Mathf.Max(0f, s.maxDisplay)) * Mathf.Max(0f, s.meanEmission)
-            * Mathf.Max(0f, s.area) * Mathf.Max(0f, scale);
+        public static float SpillPower(SpillSource s, float exposure, float scale) => SpillPower(s, exposure, scale, 0f, -1f);
+
+        /// <summary>ADR 0299: with the screens' night mode (<paramref name="night"/>, CabDisplayNight) the ceiling falls to
+        /// nightMaxDisplay, and a live image mean (<paramref name="liveMean"/> &gt;= 0, the dark night map) replaces the baked
+        /// day-texture mean (ADR 0297 used the A6 day map, 0.596, also at night).</summary>
+        public static float SpillPower(SpillSource s, float exposure, float scale, float night, float liveMean) =>
+            Mathf.Min(Mathf.Max(0f, s.luminance) * Mathf.Max(0f, exposure), Mathf.Max(0f, CabDisplayNight.Cap(s.maxDisplay, s.nightMaxDisplay, night)))
+            * Mathf.Max(0f, liveMean >= 0f ? liveMean : s.meanEmission) * Mathf.Max(0f, s.area) * Mathf.Max(0f, scale);
 
         /// <summary>ADR 0297: share of the cab-view shadow lift kept at the given night factor.</summary>
         public static float NightLiftScale(float night, float nightShare) => Mathf.Lerp(1f, Mathf.Clamp01(nightShare), Mathf.Clamp01(night));
@@ -211,7 +217,8 @@ namespace Game.Rendering
             var s = spillSources[i];
             Vector3 p = s.frame.TransformPoint(s.centre);
             Vector3 n = s.frame.TransformDirection(s.normal).normalized;
-            Shader.SetGlobalVector(kPos, new Vector4(p.x, p.y, p.z, SpillPower(s, exposure, spillScale)));
+            float live = i == 1 ? CabDisplayNight.NavMeanEmission : -1f;   // [1] = navigation (ADR 0299 live mean)
+            Shader.SetGlobalVector(kPos, new Vector4(p.x, p.y, p.z, SpillPower(s, exposure, spillScale, CabDisplayNight.Value, live)));
             Shader.SetGlobalVector(kDir, new Vector4(n.x, n.y, n.z, Mathf.Max(1e-4f, s.area / Mathf.PI)));   // r^2 of the equal-area disc
         }
 

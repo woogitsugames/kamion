@@ -523,13 +523,21 @@ namespace Game.Editor.VisualQA
         static Color32[] RenderToPixels(Camera cam, int width, int height, out int count, Action beforeRender = null, int msaa = 1, float scale = 1f)
         {
             int sw = Mathf.Max(16, Mathf.RoundToInt(width * scale)), sh = Mathf.Max(16, Mathf.RoundToInt(height * scale));
-            var src = new RenderTexture(sw, sh, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB) { antiAliasing = msaa };
+            // ADR 0299: URP takes the intermediate colour format of a camera with a target texture from that texture, so an
+            // ARGB32 target rendered every HDR tier through an 8-bit sRGB scene buffer - a QA-only quantisation the player
+            // (screen target, R11G11B10 intermediate) does not have: 1-level plateaus in the night sky that no dither could
+            // break (smoothed steps 0.9 LSB). HDR cameras render into a half-float target; the 8-bit readback then quantises
+            // the post output with URP's dither, as the backbuffer does. -qaLdrTarget 1 restores the old capture (A/B).
+            bool hdrTarget = cam.allowHDR && EditorTools.Arg("-qaLdrTarget", "0") != "1";
+            var src = hdrTarget
+                ? new RenderTexture(sw, sh, 24, RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Linear) { antiAliasing = msaa }
+                : new RenderTexture(sw, sh, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB) { antiAliasing = msaa };
             var prev = cam.targetTexture;
             cam.targetTexture = src;
             beforeRender?.Invoke();
             cam.Render();
             var rt = src;
-            if (sw != width || sh != height || msaa > 1)
+            if (sw != width || sh != height || msaa > 1 || hdrTarget)
             {
                 rt = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB) { antiAliasing = 1, filterMode = FilterMode.Bilinear };
                 src.filterMode = FilterMode.Bilinear;

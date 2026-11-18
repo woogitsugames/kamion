@@ -34,7 +34,9 @@ namespace Game.Editor.Setup
         public const string ShaderName = "Kamion/Truck Lamp Halo";
         /// <summary>Material values (WORKING_VALUE, judged on renders; = shader defaults, set on every rebuild because an
         /// existing material keeps its serialized values).</summary>
-        public const float HaloK = 0.25f, HaloMaxDeg = 2f, HaloCap = 0.5f;
+        // ADR 0299: K 0.25 -> 0.15 - at 4 m (plate-trailer) the stop / indicator halo added a ring as wide as the lamp on each
+        // side and the lens read as a soft blob; the night references (ref4, ref5) keep a tight glow at the clipped lens.
+        public const float HaloK = 0.15f, HaloMaxDeg = 2f, HaloCap = 0.5f;
 
         public struct Cluster
         {

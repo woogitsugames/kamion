@@ -200,6 +200,8 @@ namespace Game.UI.CabDisplays
             if (m_Cluster == null) return;
             float dt = Time.unscaledDeltaTime;
             m_ClusterT += dt; m_NavT += dt; m_DinT += dt; m_NavDt += dt;
+            // ADR 0299: backlight night mode follows the light-sensor state (State.Night, sampled on refresh), eased.
+            Game.Rendering.CabDisplayNight.Set(Game.Rendering.CabDisplayNight.Step(Game.Rendering.CabDisplayNight.Value, State.Night, dt));
             bool c = m_ClusterT >= 1f / ClusterHz, n = m_NavT >= 1f / NavHz, d = m_DinT >= 1f / dinHz;
             if (!c && !n && !d) return;
             float needleDt = m_ClusterT < 1f ? m_ClusterT : 0f, navDt = m_NavDt < 2f ? m_NavDt : 0f;
@@ -228,6 +230,7 @@ namespace Game.UI.CabDisplays
             if (m_Cluster == null) Init();
             long t0 = Stopwatch.GetTimestamp();
             Sample(0f);
+            Game.Rendering.CabDisplayNight.Set(Game.Rendering.CabDisplayNight.Step(0f, State.Night, 0f));   // ADR 0299: no fade in a still frame
             RequestGlyphs();
             m_ClusterLayout.Draw(m_Cluster, State);
             m_NavLayout.Draw(m_Nav, State, 0f);

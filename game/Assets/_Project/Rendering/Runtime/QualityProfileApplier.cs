@@ -27,6 +27,21 @@ namespace Game.Rendering
             return t;
         }
 
+        /// <summary>
+        /// Final URP dither of the camera (8-bit output). ADR 0108 removed it from the phone High tier only, whose FSR / RCAS
+        /// final pass amplified it on the clean day sky. ADR 0299: the PC overlay runs High without FSR (upscalingFilter Auto,
+        /// render scale 1), where the same rule left High as the one undithered tier - contour rings in the night sky
+        /// (cab-driver runs of one 8-bit level 115 px against 4.6 px on Ultra). So the exception follows the cause (FSR), not
+        /// the tier name.
+        /// </summary>
+        public static bool FinalDither(QualityProfile.Tier t) =>
+            t.postProcessing && !(t.name == "High" && t.upscalingFilter == UpscalingFilterSelection.FSR);
+
+        /// <summary>ADR 0299: the sky adds a dither of one quantisation step of the R11G11B10 HDR colour buffer (6-bit mantissa
+        /// R / G, 5-bit B) whenever the camera renders HDR; grading / tone mapping then expands the dark-sky steps past one 8-bit
+        /// level (coloured rings, also on the dithered Ultra / Low PC tiers).</summary>
+        public static bool SkyQuantDither(QualityProfile.Tier t) => t.hdr;
+
         public static float ArchitecturalGlassBias(QualityProfile.Tier t, float? requested = null)
         {
             float policy = t.name == "Medium" || t.name == "High" ? MaxArchitecturalGlassReceiverBias : 0f;
@@ -47,6 +62,7 @@ namespace Game.Rendering
         static readonly int k_ClearCoatOff = Shader.PropertyToID("_KamionClearCoatOff");
         static readonly int k_GrimeDetailOff = Shader.PropertyToID("_KamionGrimeDetailOff");
         static readonly int k_SkyDitherOff = Shader.PropertyToID("_KamionSkyDitherOff");
+        static readonly int k_SkyQuantDither = Shader.PropertyToID("_KamionSkyQuantDither");   // ADR 0299
         static readonly int k_GlassShadowBias = Shader.PropertyToID("_KamionGlassShadowBias");
 
         public Camera targetCamera;
@@ -145,7 +161,8 @@ namespace Game.Rendering
                     data.antialiasingQuality = (AntialiasingQuality)PcTierTable.Get(pcTier).smaaQuality;
                 // ADR 0108: High RCAS uses a final pass whose dither raises clean-sky RMS above the review limit.
                 // Measured native PNG A/B: sky 0.64 -> 0.14, asphalt detail retained. Other tiers keep their policy.
-                data.dithering = RenderOverrides.Dither ?? (t.postProcessing && t.name != "High");
+                // ADR 0299: the RCAS exception is the phone High tier (FSR), not every tier called High (PC High: no FSR).
+                data.dithering = RenderOverrides.Dither ?? FinalDither(t);
                 // pc-visual-s23: t.ssao was not read anywhere (SSAO = renderer 0 of the tier's URP asset), so rq_ssao=0 was a
                 // no-op. A tier / override with ssao off on an asset whose default renderer has SSAO uses the plain renderer
                 // (index 1, the same one VehicleReflectionCapture uses, ADR 0152); otherwise the asset default.
@@ -166,6 +183,7 @@ namespace Game.Rendering
             // Pre-LUT sky noise is amplified by grading/RCAS; post tiers keep the final URP dither instead.
             bool skyDither = RenderOverrides.SkyDither ?? !t.postProcessing;
             Shader.SetGlobalFloat(k_SkyDitherOff, skyDither ? 0f : 1f);
+            Shader.SetGlobalFloat(k_SkyQuantDither, (RenderOverrides.SkyQuantDither ?? SkyQuantDither(t)) ? 1f : 0f);
             Shader.SetGlobalFloat(k_GlassShadowBias, ArchitecturalGlassBias(t, RenderOverrides.GlassShadowBias));
 #if UNITY_EDITOR
             Debug.Log($"[QUALITY_STATE] tier={t.name} cameraDither={(cam != null ? cam.GetUniversalAdditionalCameraData().dithering.ToString() : "none")} skyDitherOff={Shader.GetGlobalFloat(k_SkyDitherOff)} glassShadowBias={Shader.GetGlobalFloat(k_GlassShadowBias)}");
