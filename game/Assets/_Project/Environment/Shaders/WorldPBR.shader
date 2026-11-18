@@ -394,6 +394,16 @@ Shader "Kamion/World PBR"
                 // world-space macro mask (8-64 m damp / worn hollows + 0.5-4 m mottling, ~35 % of the area) and along the
                 // carriageway edge (terrain COLOR_0.r); elsewhere the soil texels are refilled with the calibrated grass
                 // albedo at their own luminance. Low: +1 fetch (Var), Medium+: +3 fetches. ADR 0042.
+                // ---- ADR 0295 (review 2026-11-18 P1-4 "jednolity szum na wszystkim"): kept sward away from the roads
+                // (terrain COLOR_0: R > 10-18 m from a road / yard, B dryness below 0.3-0.6 = lawns, gardens, meadows
+                // and crops of the field mosaic) carries no scorched straw patches and no bare-soil spots, and half
+                // the 8-64 m tone clouds - a meadow is one sward, a field one crop. Dry unmown ground (B high) and
+                // the verge beside the road keep every patch. No fetch, no keyword; strength = _GroundTint.
+                half swardCalm = 0.0;
+            #if defined(_GRASS_DETILE) && defined(_GROUNDMASKS)
+                swardCalm = _GroundTint * smoothstep(0.5, 0.9, i.masks.r) * (1.0 - smoothstep(0.30, 0.60, i.masks.b))
+                            * (1.0 - i.masks.g) * (1.0 - i.masks.a);
+            #endif
             #if defined(_GRASS_DETILE)
                 {
                     half soil = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb).b;
@@ -409,6 +419,7 @@ Shader "Kamion/World PBR"
                     tn = normalize(lerp(tn, tn2, wmix));
                 #endif
                     half keep = smoothstep(0.45, 0.65, macro.b * 0.6 + macro.r * 0.4 + (macro.a - 0.5) * 0.5);
+                    keep *= 1.0 - swardCalm;
                 #if defined(_GROUNDMASKS)
                     keep = max(keep, KamionGrassGrit(i.masks, macro.a));
                 #endif
@@ -428,9 +439,9 @@ Shader "Kamion/World PBR"
                     if (gv > 0.0)
                     {
                         half lumG = dot(albedo, half3(0.2126, 0.7152, 0.0722));
-                        half clump = smoothstep(0.42, 0.68, macro.a * 0.7 + macro.g * 0.3);
+                        half clump = smoothstep(0.42, 0.68, macro.a * 0.7 + macro.g * 0.3) * (1.0 - 0.5 * swardCalm);
                         albedo *= lerp(half3(1, 1, 1), half3(0.74, 0.86, 0.70), clump * gv);
-                        half burn = smoothstep(0.58, 0.68, macro.r * 0.55 + macro.b * 0.45 - (macro.a - 0.5) * 0.35);
+                        half burn = smoothstep(0.58, 0.68, macro.r * 0.55 + macro.b * 0.45 - (macro.a - 0.5) * 0.35) * (1.0 - 0.9 * swardCalm);
                         half3 straw = half3(1.55, 1.30, 0.72) * lumG * 1.15;
                         albedo = lerp(albedo, straw, burn * 0.5 * gv);
                         half micro = saturate(lumG / max(glum, 1e-3) - 0.5);          // 0 gaps .. 1 tips
@@ -452,7 +463,7 @@ Shader "Kamion/World PBR"
                     }
                 }
             #endif
-                half tone = (macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 0.6 + (macro.a - 0.5) * 0.4;
+                half tone = ((macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 0.6 + (macro.a - 0.5) * 0.4) * (1.0 - 0.5 * swardCalm);
             #if defined(_PANELTONE)
                 {
                     // ADR 0092 (review 2026-11-11 s9 par. 4): a coated sandwich-panel wall does not drift in tone like a
