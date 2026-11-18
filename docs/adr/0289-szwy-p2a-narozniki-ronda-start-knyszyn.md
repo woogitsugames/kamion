@@ -123,3 +123,7 @@ Ocena z wysokości oczu (18 m): ściana szczytowa Domu Klattów czytała się ja
 Poprawka: `set_tile_m [6,0, 2,6]` dla `wood_planks*` (wzdłuż ściany ×3,2 — styki 3,2 × rzadziej, deski ~1–4 m;
 w poprzek ×1,39 — rozstaw 0,129 m). WORKING_VALUE: w repo brak zmierzonej szerokości desek domów knyszyńskich i
 zdjęcia właściciela Domu Klattów. Test `test_wood_planks_long_boards_not_floor`.
+Po przebudowie i imporcie (render 18.11, `artifacts/knyszyn-r24/small/klattow_before_after.jpg`): ściana czyta się jako
+długie poziome deski (styki rzadkie, przesunięte), nie jak podłoga / cegła. Zostaje: deski wyglądają na surowe,
+spłowiałe (plamy tonu między deskami widoczne w cieniu), a domy podlaskie są zwykle malowane jednolicie i mają opaski
+okienne / deski narożne, których generator nie robi — do oceny `visual-critic` / właściciela (brak zdjęcia Domu Klattów).
