@@ -73,10 +73,7 @@ def lane_path(rid: str, start_node: str | None, start_xy, end_xy, regions: Path 
     u = start_node if start_node in ids else (start_node + "s" if start_node and start_node + "s" in ids else nearest(start_xy))
     v = nearest(end_xy)
     g = roadgraph.to_digraph(graph)
-    graph_back = None
-    if came_from is not None and g.has_edge(u, came_from):
-        graph_back = g.copy()
-        g.remove_edge(u, came_from)
+    pre = arrival_edge(g, u, came_from)
     stops = [u, *[nearest(p) for p in vias], v]
     path = [u]
     for a_, b_ in zip(stops, stops[1:]):
@@ -85,14 +82,14 @@ def lane_path(rid: str, start_node: str | None, start_xy, end_xy, regions: Path 
     net, _, _, _ = pipeline.build_network(rid, graph)
     node_xy = {n["id"]: (n["x"] - ox, n["y"] - oy) for n in graph["nodes"]}
     path_edges = [(g[a][b]["id"], a, b) for a, b in zip(path, path[1:])]
-    if came_from is not None and graph_back is not None:
+    if pre is not None:
         # the edge the route arrived on goes first, so lane_route rounds the corner at start_node like any other joint
         # of a route (JOINT_ROUND_M); the link then starts where that rounded lane passes closest to the route end
         # (start_xy) and its head is blended onto that point by build()
-        pre = (graph_back[came_from][u]["id"], came_from, u)
-        pts, eid_pt, _, _ = lane_route(net, [pre] + path_edges, node_xy, STEP_M)
+        pre_id, pre_len = pre
+        pts, eid_pt, _, _ = lane_route(net, [(pre_id, came_from, u)] + path_edges, node_xy, STEP_M)
         q = np.asarray(start_xy, float) - np.array([ox, oy])
-        n_pre = int(math.ceil((graph_back[came_from][u]["length"] + 2.0 * JOIN_TOL_M) / STEP_M)) + 1
+        n_pre = int(math.ceil((pre_len + 2.0 * JOIN_TOL_M) / STEP_M)) + 1
         k = int(np.argmin(np.hypot(*(pts[:n_pre] - q).T)))
         pts, eid_pt = pts[k:], eid_pt[k:]
         length = float(np.sum(np.hypot(*np.diff(pts, axis=0).T)))
@@ -109,6 +106,22 @@ def lane_path(rid: str, start_node: str | None, start_xy, end_xy, regions: Path 
     return {"points": [[round(float(x), 3), round(float(y), 3)] for x, y in pts],
             "maxspeed": [ms(e) for e in eid_pt], "length": float(length), "nodes": path,
             "end_node_xy": [end_node["x"], end_node["y"]], "origin": (ox, oy)}
+
+
+def arrival_edge(g, u, came_from):
+    """(id, length) of the edge came_from -> u the route arrived on, or None (no after_route / no such edge). Removes
+    the edge back u -> came_from from g (in place) when it exists, so the link does not turn the articulated vehicle
+    round on the spot. Codex review s24 (ADR 0289): the arrival edge used to be looked up only when the back edge
+    existed, so a link continuing a route that came in along a ONE-WAY street got no rounded start corner."""
+    if came_from is None or not g.has_edge(came_from, u):
+        if came_from is not None and g.has_edge(u, came_from):
+            g.remove_edge(u, came_from)
+        return None
+    d = g[came_from][u]
+    pre = (d["id"], float(d["length"]))
+    if g.has_edge(u, came_from):
+        g.remove_edge(u, came_from)
+    return pre
 
 
 def _blend(pts: list[list[float]], target, head: bool) -> float:
@@ -131,6 +144,38 @@ def _blend(pts: list[list[float]], target, head: bool) -> float:
         q[0] += dx * w
         q[1] += dy * w
     return math.hypot(dx, dy)
+
+
+def _swing(pts: list[list[float]], near, left_m: float, half_m: float) -> float:
+    """Shift the path sideways (left_m > 0 = to the left of the travel direction) around the path point nearest to near,
+    with a raised-cosine weight over +-half_m along the path (0 at both ends, left_m at the centre). knyszyn-r24 (ADR 0289
+    'Recenzja s24'): the right turn Tykocka -> DK65 W at the compact roundabout of Knyszyn follows the right-lane centre
+    through a ~7 m corner, and the semitrailer cut the kerb corner between the arms (15 tyre points off the hard surface,
+    qa/link_swept_check.py); a driver swings wide into the ring there. Returns the station [m] of the centre."""
+    P = np.asarray(pts, float)
+    s = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+    k = int(np.argmin(np.hypot(*(P - np.asarray(near, float)).T)))
+    d = np.gradient(P, axis=0)
+    d /= np.maximum(np.linalg.norm(d, axis=1), 1e-9)[:, None]
+    nrm = np.column_stack([-d[:, 1], d[:, 0]])
+    u = (s - s[k]) / half_m
+    w = np.where(np.abs(u) < 1.0, 0.5 * (1.0 + np.cos(np.pi * u)), 0.0)
+    for i in np.nonzero(w)[0]:
+        pts[i][0] += float(nrm[i, 0] * left_m * w[i])
+        pts[i][1] += float(nrm[i, 1] * left_m * w[i])
+    return float(s[k])
+
+
+def _resample(pts: list[list[float]], maxspeed: list[float]):
+    """Back to STEP_M spacing after a swing (the outside of the bend is stretched); speed limit of the nearest
+    original point. Returns (points, maxspeed, length)."""
+    P = np.asarray(pts, float)
+    s = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+    n = max(2, int(math.ceil(s[-1] / STEP_M)) + 1)
+    si = np.linspace(0.0, s[-1], n)
+    out = [[float(np.interp(x, s, P[:, 0])), float(np.interp(x, s, P[:, 1]))] for x in si]
+    k = np.clip(np.searchsorted(s, si), 0, len(s) - 1)
+    return out, [maxspeed[int(i)] for i in k], float(s[-1])
 
 
 def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
@@ -167,14 +212,20 @@ def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
             reg2 = _region(L["tail_to"].split(":", 1)[1], regions)
             tgt = [r2["points_en"][0][0] + reg2["origin"]["x"], r2["points_en"][0][1] + reg2["origin"]["y"]]
             blend["tail"] = _blend(pts, tgt, head=False)
+        maxspeed, length = lp["maxspeed"], lp["length"]
+        if L.get("swing"):
+            for sw in L["swing"]:
+                _swing(pts, sw["near_epsg2180"], float(sw["left_m"]), float(sw["half_m"]))
+                blend["swing_left"] = float(sw["left_m"])
+            pts, maxspeed, length = _resample(pts, maxspeed)
         loc = [[round(x - ox, 3), round(y - oy, 3)] for x, y in pts]
         links.append({
             "id": L["id"], "tile": rid, "destination": L.get("destination", "any"),
             "afterRoute": L.get("after_route", ""), "replacesRoute": L.get("replaces_route", ""),
             "note": L.get("note", ""), "blendM": {k: round(v, 3) for k, v in blend.items()},
-            "lengthM": round(lp["length"], 2),
+            "lengthM": round(length, 2),
             "e": [p[0] for p in loc], "n": [p[1] for p in loc],
-            "maxspeedKmh": lp["maxspeed"],
+            "maxspeedKmh": maxspeed,
             "startX": round(pts[0][0], 3), "startY": round(pts[0][1], 3),
             "endX": round(pts[-1][0], 3), "endY": round(pts[-1][1], 3),
             "graphNodes": lp["nodes"],

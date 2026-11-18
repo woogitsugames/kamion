@@ -3,7 +3,7 @@
 Automatycznie generowany przez `tools/docs/adr_index.py` — nie edytuj ręcznie.
 Ponowne wygenerowanie: `python3 tools/docs/adr_index.py` (z katalogu głównego repo).
 
-Liczba ADR: **261** (numery 0001–None, z lukami — patrz raport audytu).
+Liczba ADR: **262** (numery 0001–None, z lukami — patrz raport audytu).
 
 | Numer | Tytuł | Status | Data | Link |
 |---|---|---|---|---|
@@ -263,6 +263,7 @@ Liczba ADR: **261** (numery 0001–None, z lukami — patrz raport audytu).
 | 0285 | trasy łączące korytarza streamingu (Białystok → Knyszyn → Tykocin bez przerw) | Proposed (agent stream-gaps-s23, 2026-11-16). Numer nadaje lider przy scalaniu (0283 zajęty przez HUD/menu #1… | 2026-11-16 | [0285-trasy-laczace-korytarza-streamingu.md](0285-trasy-laczace-korytarza-streamingu.md) |
 | 0286 | Dźwięk na PC: import PCM dla Standalone, wyjście audio playera Windows, pomiar miksu w playerze | Proposed (agent audio-pc-s23, gałąź `audio-pc-s23`), 2026-11-16. **Numer do potwierdzenia przez lidera** | 2026-11-16 | [0286-audio-pc-pcm-wyjscie.md](0286-audio-pc-pcm-wyjscie.md) |
 | 0287 | Knyszyn: zabudowa z danych (dachy z ortofoto, klasy obrysów OSM, nadpisania domów) | Proposed, 2026-11-17 (knyszyn-look-s23). Numer potwierdzony przez lidera. Recenzja `visual-critic` | 2026-11-17 | [0287-knyszyn-zabudowa-z-danych.md](0287-knyszyn-zabudowa-z-danych.md) |
+| 0288 | pętla S8 ↔ DW671 ↔ Tykocin: 15 kafli, pierwsze 5 zbudowane, przekrój S8 klasy S | Proposed (agenci s8-loop-s23 / s23b / s23c, 2026-11-16…17). Numer potwierdzony przez lidera (0287 = knyszyn-l… | 2026-11-16 | [0288-petla-s8-dw671-tykocin.md](0288-petla-s8-dw671-tykocin.md) |
 | 0289 | P-2a przez szew kafli, wysokości narożników ronda kompaktowego, start autopilota w knyszyn (seams-fix-s23) | Accepted (lider s24, 2026-11-17; numer 0289 — 0288 = pętla S8). | 2026-11-17 | [0289-szwy-p2a-narozniki-ronda-start-knyszyn.md](0289-szwy-p2a-narozniki-ronda-start-knyszyn.md) |
 | 0290 | Kafle DK19 w Białymstoku: bialystok-wygoda, -bojary, -mickiewicza (D81, dk19-tiles-s23/s24) | Proposed (dk19-tiles-s24, 2026-11-17; numer 0290 — następny wolny po 0289; do przyjęcia przez lidera przy sca… | 2026-11-17 | [0290-kafle-dk19-wygoda-bojary-mickiewicza.md](0290-kafle-dk19-wygoda-bojary-mickiewicza.md) |
 | ???? | ADR DRAFT — Direct3D 11 jako domyślne API grafiki playera Windows (D3D12 jako drugie + furtka `-force-d3d12`) | **Proposed** — 2026-11-16, szkic P24 (sesja P r8, gałąź `adr-d3d11-draft` z `origin/main` @ `eebb9813c`). | 2026-11-16 | [DRAFT-d3d11-default.md](DRAFT-d3d11-default.md) |

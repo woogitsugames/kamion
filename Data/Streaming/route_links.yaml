@@ -48,6 +48,13 @@ links:
     after_route: knyszyn
     end_epsg2180: [760587.0, 612073.7]    # = end of knyszyn-dk65-to-dk65-w = knyszyn-w route entry (ADR 0209)
     tail_to: route:knyszyn-w
+    # knyszyn-r24 (ADR 0289 'Recenzja s24'): the right turn Tykocka -> DK65 W on the compact roundabout follows the right
+    # lane centre through a ~7 m corner and the semitrailer cut the kerb corner between the arms (15 tyre points off the
+    # hard surface at s 696-702 m, qa/link_swept_check.py). Swing wide into the ring: 3.0 m left at the ring apex,
+    # raised cosine over +-30 m -> 0 tyre points off the hard surface and 0 off the carriageway (asphalt only).
+    # Searched 680-692 m x 1.0-3.0 m x 15-35 m; 2.5 m / 35 m leaves 7 points on kerb / apron (WORKING_VALUE).
+    swing:
+      - {near_epsg2180: [760625.1, 612005.4], left_m: 3.0, half_m: 30.0}
     note: "Rynek (end of the knyszyn control route) -> Grodzienska -> Tykocka -> roundabout split -> DK65 west to the seam"
   - id: knyszyn-w-dw671
     tile: knyszyn-w
@@ -78,6 +85,30 @@ links:
     end_epsg2180: [779098.27, 595199.0]   # graph boundary node on the wygoda | bojary seam (bojary route entry)
     tail_to: route:bialystok-bojary
     note: "Andersa / Sosabowskiego across the south-west corner of wygoda to the seam with bialystok-bojary"
+  # ADR 0288 (owner D82): the loop S8 <-> DW671 <-> Tykocin. The S8 westbound carriageway (way 305447699) only cuts the
+  # south-west corner of dk65-01: it enters from the south seam (tile dk8-s8-jeroniki, ADR 0278 - defined, not built)
+  # and leaves on the west seam = the s8-01 route entry. In the directed graph of dk65-01 that seam node is reachable
+  # ONLY from the south seam node (the on-ramps of the junction Bialystok Zachod towards Warsaw lie in dk8-s8-jeroniki),
+  # so a link from the dk65-01 control route is not possible inside this tile; the dk65-01 route stays untouched.
+  # Missing for a continuous trip Bialystok -> S8: dk8-s8-jeroniki built + two links (dk65-01 -> south seam, jeroniki).
+  - id: dk65-01-s8-corner
+    tile: dk65-01
+    destination: s8
+    start_epsg2180: [769340.8, 595199.0]  # boundary node of way 305447699 (south edge, seam with dk8-s8-jeroniki)
+    end_epsg2180: [768779.0, 595332.7]    # boundary node of way 305447699 (west edge) = s8-01 route entry
+    tail_to: route:s8-01
+    note: "S8 westbound across the south-west corner of dk65-01 to the seam with s8-01"
+  # ADR 0288: the cross-section of way 536205568 is the same on both sides of the s8-03 | s8-04 seam (3 x 3.50 m,
+  # qa.seams), but the two control routes sit one lane apart there (3.5 m: s8-03 ends in the rightmost of 3 lanes after
+  # the junction Tykocin, s8-04 starts one lane to the left). The link replaces the s8-03 route with the same path and
+  # shifts its last BLEND_M m onto the s8-04 route start, so the autopilot path has no lateral step on the seam.
+  - id: s8-03-to-s8-04
+    tile: s8-03
+    destination: s8
+    replaces_route: s8-03
+    end_epsg2180: [762635.0, 596015.9]    # S8 westbound on the s8-03 | s8-04 seam = s8-04 route entry
+    tail_to: route:s8-04
+    note: "S8 westbound through the junction Tykocin, lane shift before the seam with s8-04"
 # Driving corridors as ordered tile lists (Bialystok -> Knyszyn -> Tykocin, owner request s23). The generator keeps the
 # prefix of tiles present in Data/Regions (main: up to dw671-tykocin-01; the ring branch world2-s23 adds
 # dw671-tykocin-02..09 and tykocin) and checks every consecutive pair: edge neighbours (N/E/S/W) and a route join
@@ -97,3 +128,6 @@ corridors:
     destination: dojlidy
     tiles: [bialystok-industrial-c, bialystok-wygoda, bialystok-bojary, bialystok-mickiewicza, bialystok-krywlany,
             bialystok-dojlidy]
+  - id: s8-loop
+    destination: s8
+    tiles: [dk65-01, s8-01, s8-02, s8-03, s8-04, s8-05, s8-06, s8-07, s8-08, s8-09, s8-10, s8-11, s8-12]

@@ -2612,7 +2612,7 @@
     "z_max_evrf2007": 137.56,
     "z_min_evrf2007": 122.33
    },
-   "bytes": 11656112,
+   "bytes": 11656188,
    "file": "Data/raw/derived/knyszyn-w/world/chunk_6_2.glb",
    "forest_cells": [],
    "id": "6_2",
@@ -2622,9 +2622,9 @@
     "sha256": "d4cc5821a8ce3b5d85ba49e91a2e6096ff05c86387b1932128a30d4d2d6a6aa3"
    },
    "low": {
-    "bytes": 6333020,
+    "bytes": 6333100,
     "file": "Data/raw/derived/knyszyn-w/world/chunk_6_2.low.glb",
-    "sha256": "2e1d2f8901c9f4da2e0df706ae6cd5d57a4a9ee332cd8aabfeb349864929e132"
+    "sha256": "c224985ad5a955e22ce94bfab36cc967ef7929fa9a6cf34bac308b344fa6ccb3"
    },
    "materials": [
     "balcony_slab",
@@ -2676,7 +2676,7 @@
     "wood_planks_green",
     "yard_paving"
    ],
-   "sha256": "5568b9d382c5ba19f63c4178853739a26a3208be67bc3c7332732cd01f0c6326",
+   "sha256": "8ba4ba6030f34cdbf918a99e64cc82f133a4148a3156d5b8fefce602480dcb96",
    "triangles": {
     "buildings": 11934,
     "buildings_lod1": 1867,
@@ -3456,7 +3456,7 @@
     "z_max_evrf2007": 137.17,
     "z_min_evrf2007": 118.82
    },
-   "bytes": 13492304,
+   "bytes": 13492384,
    "file": "Data/raw/derived/knyszyn-w/world/chunk_7_5.glb",
    "forest_cells": [],
    "id": "7_5",
@@ -3466,9 +3466,9 @@
     "sha256": "5cff0110ed47fb8499451e3582b90db668b32d773378c18590979398b472675d"
    },
    "low": {
-    "bytes": 7150088,
+    "bytes": 7150168,
     "file": "Data/raw/derived/knyszyn-w/world/chunk_7_5.low.glb",
-    "sha256": "15f2f46020aadc35bfaf23c5edc3bd7594cd37d78c082cc41c14b3446c7a546f"
+    "sha256": "557910aea130b6f31ebe86184c323534079b83ee23b3fb1fbf264a912aa3b520"
    },
    "materials": [
     "brick_red",
@@ -3524,7 +3524,7 @@
     "yard_asphalt",
     "yard_paving"
    ],
-   "sha256": "b6cf41b7256e34adc24ab5fee28c868d1f09e36234c484289f0373a1e3607698",
+   "sha256": "f2bd0f926bbf54292e7e3e7839a8cd090e26a2eb763f8b9389067d7d350c5705",
    "triangles": {
     "buildings": 20733,
     "buildings_lod1": 3852,
@@ -3552,7 +3552,7 @@
     "z_max_evrf2007": 135.57,
     "z_min_evrf2007": 116.34
    },
-   "bytes": 11135780,
+   "bytes": 11135820,
    "file": "Data/raw/derived/knyszyn-w/world/chunk_7_6.glb",
    "forest_cells": [],
    "id": "7_6",
@@ -3562,9 +3562,9 @@
     "sha256": "4071df0ce6e7684a8d91c95e61f553754f7ac995adb14fb6aa5b45858c6a2d74"
    },
    "low": {
-    "bytes": 6224308,
+    "bytes": 6224348,
     "file": "Data/raw/derived/knyszyn-w/world/chunk_7_6.low.glb",
-    "sha256": "9cc57dac6d0452db3d23546b3df322d21e80328701763d8f1277019d26aee81b"
+    "sha256": "62614efff3b39f75f6966c4abdcfcb0bfcf66db32940f1e027e51b80ee2843fc"
    },
    "materials": [
     "brick_red",
@@ -3619,7 +3619,7 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "bc235c16eb8a7d9d3c1a4c0f8d30aaf09e2087bddd7c7fd7e5a92100bfbfe1cc",
+   "sha256": "ba2feb6cbb02eb8486b97b659c1156bf4754436af2d2bc89988c5455b90271ab",
    "triangles": {
     "buildings": 7564,
     "buildings_lod1": 1056,
@@ -7471,9 +7471,9 @@
   },
   "roof_sheet_grey": {
    "color": [
-    0.15,
-    0.155,
-    0.16
+    0.105,
+    0.108,
+    0.112
    ],
    "metal": 0.2,
    "rough": 0.55,
@@ -8251,6 +8251,11 @@
     0.09
    ],
    "rough": 0.85,
+   "set_tile": true,
+   "set_tile_m": [
+    6.0,
+    2.6
+   ],
    "sky_occ": [
     0.5,
     0.0
@@ -8265,6 +8270,11 @@
     0.1
    ],
    "rough": 0.85,
+   "set_tile": true,
+   "set_tile_m": [
+    6.0,
+    2.6
+   ],
    "sky_occ": [
     0.5,
     0.0

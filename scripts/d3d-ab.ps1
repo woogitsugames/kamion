@@ -1,6 +1,6 @@
 # D3D11 vs D3D12 (DRAFT-d3d11 §4): pc-metrics High60 (klasa zalecany) i bez limitu, przeplatane, + cykle start/wyjście.
-param([Parameter(Mandatory)][string]$Exe, [int]$Reps = 2, [int]$QuitCycles = 3, [string]$Repo = 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\win-build-s23')
-$A = 'C:\Users\matma\Documents\Claude\kamion\artifacts\full-build-s23\d3d-ab'
+param([Parameter(Mandatory)][string]$Exe, [int]$Reps = 2, [int]$QuitCycles = 3, [string]$Repo = 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\win-build', [string]$Out = 'C:\Users\matma\Documents\Claude\kamion\artifacts\d3d-ab')
+$A = $Out
 New-Item -ItemType Directory -Force $A | Out-Null
 $st = "$A\d3d-ab.status"
 function Log($m) { "$(Get-Date -f s) $m" | Out-File "$A\d3d-ab.log" -Append; "RUNNING $m" | Out-File $st }

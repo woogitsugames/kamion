@@ -62,9 +62,10 @@ def _stations(points):
 
 
 def test_catalog_has_all_regions():
-    # 21 regions before the ring of ADR 0231; the ring tiles join the catalog one by one as they are built (up to 39)
-    # + 3 tiles of ADR 0278 / D81 (wygoda, bojary, mickiewicza)
-    assert 21 <= len(REGION_IDS) <= 42 and len(set(REGION_IDS)) == len(REGION_IDS)
+    # 21 regions before the ring of ADR 0231; the ring tiles join the catalog one by one as they are built (up to 39);
+    # ADR 0288: + the 15 tiles of the loop S8 <-> DW671 <-> Tykocin (5 built on 2026-11-17) = up to 54;
+    # + 3 tiles of ADR 0278 / D81 (wygoda, bojary, mickiewicza) = up to 57
+    assert 21 <= len(REGION_IDS) <= 57 and len(set(REGION_IDS)) == len(REGION_IDS)
 
 
 def test_catalog_is_what_the_exporter_derives():

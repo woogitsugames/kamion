@@ -335,8 +335,17 @@ M = {
     "plaster_accent_green": {"color": [0.26, 0.33, 0.24], "rough": 0.9, "texture_set": "plaster"},
     "plaster_accent_ochre": {"color": [0.52, 0.38, 0.16], "rough": 0.9, "texture_set": "plaster"},
     "plaster_accent_grey": {"color": [0.20, 0.21, 0.22], "rough": 0.9, "texture_set": "plaster"},
-    "wood_planks": {"color": [0.22, 0.15, 0.09], "rough": 0.85, "texture_set": "wood_siding"},
-    "wood_planks_green": {"color": [0.08, 0.14, 0.10], "rough": 0.85, "texture_set": "wood_siding"},
+    # D-17.11 / ADR 0287: wood_siding = horizontal boards from the CC0 scan raw_plank_wall (1.87 m tile, board pitch
+    # 0.093 m measured). set_tile: at the shader default 4 m the boards would come out 2.1x too wide (0.20 m)
+    # knyszyn-r24 (ADR 0289 'Recenzja s24'): sampled at the scan's own 1.87 m the boards were 0.093 m wide and ~0.3-1.2 m
+    # long with staggered butt joints - from the street (look_dom_klattow, 18 m) the wall read as a floor / pallet wall,
+    # not as siding. set_tile_m [6.0, 2.6]: along the wall x3.2 (boards ~1-4 m, joints 3.2x sparser; grain and knots
+    # stretched along the board), across x1.39 (board pitch 0.093 -> 0.129 m). WORKING_VALUE (no measured board width of
+    # Knyszyn houses in the repo; typical horizontal siding 0.12-0.18 m UNVERIFIED).
+    "wood_planks": {"color": [0.22, 0.15, 0.09], "rough": 0.85, "texture_set": "wood_siding", "set_tile": True,
+                    "set_tile_m": [6.0, 2.6]},
+    "wood_planks_green": {"color": [0.08, 0.14, 0.10], "rough": 0.85, "texture_set": "wood_siding", "set_tile": True,
+                          "set_tile_m": [6.0, 2.6]},
     "chimney_brick": {"color": [0.20, 0.092, 0.07], "rough": 0.9, "texture_set": "brick", "set_tile": True},
     # behaton (I-shaped interlocking blocks) in truck yards (streetscape.paved)
     "yard_behaton": {"color": [0.23, 0.228, 0.22], "rough": 0.85, "surface": "paving_stones", "texture_set": "behaton_i_grey"},

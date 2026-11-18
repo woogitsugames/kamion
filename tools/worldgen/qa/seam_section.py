@@ -104,13 +104,21 @@ def seam_axis(root, a, b):
 def measure_side(root, t, o, r, first, sp, d, sign):
     loc = sp - np.array([o["x"], o["y"]]); n = np.array([-d[1], d[0]])        # left of travel
     road = tris(root, t, "road", loc); mark = tris(root, t, "markings", loc)
-    asp = np.concatenate([v for k, v in road.items() if k.startswith("road_asphalt")])
+    # a deck at the seam carries its asphalt in the `bridge` node (s8-02 | s8-03, S8 way 98599908: ADR 0288 s24);
+    # it fills only the points where the road node has no asphalt (a deck above a road must not win `locate`)
+    asp = np.concatenate([v for k, v in road.items() if k.startswith("road_asphalt")] or [np.zeros((0, 3, 3))])
+    deck = [v for k, v in tris(root, t, "bridge", loc).items() if k.startswith("road_asphalt")]
+    deck = np.concatenate(deck) if deck else None
+
+    def locate_asp(p):
+        z = locate(asp, p)
+        return z if deck is None else np.where(np.isnan(z), locate(deck, p), z)
     other = {k: v for k, v in road.items() if not k.startswith("road_asphalt")}
     mk = np.concatenate(list(mark.values())) if mark else np.zeros((0, 3, 3))
     side = {"sections": []}
     for dist in (2.0, 4.0, 6.0):
         c = loc + sign * dist * d; pts = c[None, :] + LAT[:, None] * n[None, :]
-        za = locate(asp, pts); zm = locate(mk, pts)
+        za = locate_asp(pts); zm = locate(mk, pts)
         ar = [x for x in runs(~np.isnan(za), LAT) if x[1] - x[0] > 1.0]
         lines = [(round((x0 + x1) / 2, 2), round(x1 - x0 + 0.02, 2)) for x0, x1 in runs(~np.isnan(zm), LAT)]
         el = [ln for ln in lines if abs(ln[0]) > 2.0]
@@ -124,7 +132,7 @@ def measure_side(root, t, o, r, first, sp, d, sign):
             "edge_line_spacing": round(max(ln[0] for ln in el) - min(ln[0] for ln in el), 2) if len(el) >= 2 else None,
             "other": sh, "z_axis": zi(0.0), "z_at": {str(l): zi(l) for l in (-3.0, -1.5, 1.5, 3.0)}})
     dd = np.array([0.1, 1.0, 2.0, 5.0, 10.0])
-    z = locate(asp, loc[None, :] + sign * dd[:, None] * d[None, :])
+    z = locate_asp(loc[None, :] + sign * dd[:, None] * d[None, :])
     side["axis"] = [{"inside_m": float(x), "z": None if np.isnan(v) else round(float(v), 3)} for x, v in zip(dd, z)]
     ok = ~np.isnan(z[:3])
     side["z_seam"] = round(float(np.polyval(np.polyfit(dd[:3][ok], z[:3][ok], 1), 0.0)), 3) if ok.sum() >= 2 else None

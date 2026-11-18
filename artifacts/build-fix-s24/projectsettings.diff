@@ -1,0 +1,14 @@
+diff --git a/game/ProjectSettings/ProjectSettings.asset b/game/ProjectSettings/ProjectSettings.asset
+index c0118dc78..4643dd70a 100644
+--- a/game/ProjectSettings/ProjectSettings.asset
++++ b/game/ProjectSettings/ProjectSettings.asset
+@@ -532,6 +532,9 @@ PlayerSettings:
+   - m_BuildTarget: Android
+     m_StaticBatching: 1
+     m_DynamicBatching: 0
++  - m_BuildTarget: Standalone
++    m_StaticBatching: 1
++    m_DynamicBatching: 0
+   m_BuildTargetShaderSettings: []
+   m_BuildTargetGraphicsJobs: []
+   m_BuildTargetGraphicsJobMode: []

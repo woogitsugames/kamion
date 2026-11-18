@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using Game.Editor.Build;
 using Game.Vehicle.Runtime;
 using UnityEditor;
@@ -28,14 +29,71 @@ namespace Game.Editor.Setup
         public const string TractorGuid = "4cd4c98f4f348194ea87e419fbf570d6";
         public const string TrailerGuid = "ab5e5ba631cc6c347bf674dc848945bc";
 
-        /// <summary>Writes the .meta with the pinned GUID when the generated prefab has none yet (the asset builders call
-        /// this before saving the prefab). An existing .meta is never rewritten.</summary>
-        public static void PinGuid(string prefabPath, string guid)
+        /// <summary>Folders whose scenes (outside git) are rewritten when a prefab GUID is re-pinned.</summary>
+        public static readonly string[] RemapSceneRoots = { "Assets/_Generated/World" };
+
+        static readonly Regex k_MetaGuid = new Regex(@"^guid: ([0-9a-f]{32})\s*$", RegexOptions.Multiline | RegexOptions.Compiled);
+
+        /// <summary>
+        /// Makes the generated prefab at <paramref name="prefabPath"/> carry the pinned <paramref name="guid"/>. The asset
+        /// builders call it before AND after saving the prefab:
+        /// - no .meta yet: writes one with the pinned GUID (an AssetDatabase.Refresh before the save deletes such an orphan
+        ///   .meta, which is why the call after SaveAsPrefabAsset is required);
+        /// - .meta with another GUID (fresh checkout: the prefab got a random GUID on its first save/import): rewrites the
+        ///   GUID line, refreshes the AssetDatabase and rewrites references to the old GUID in the generated scenes under
+        ///   <paramref name="sceneRoots"/> (default <see cref="RemapSceneRoots"/>), so the committed DrivingLab.unity and the
+        ///   generated world scenes keep the art truck.
+        /// Returns the replaced GUID, or null when the .meta was written fresh or already carried the pinned GUID.
+        /// </summary>
+        public static string PinGuid(string prefabPath, string guid, string[] sceneRoots = null)
         {
             string meta = Path.Combine(EditorTools.ProjectRoot, prefabPath + ".meta");
-            if (File.Exists(meta)) return;
-            Directory.CreateDirectory(Path.GetDirectoryName(meta));
-            File.WriteAllText(meta, "fileFormatVersion: 2\nguid: " + guid + "\nPrefabImporter:\n  externalObjects: {}\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n");
+            if (!File.Exists(meta))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(meta));
+                File.WriteAllText(meta, "fileFormatVersion: 2\nguid: " + guid + "\nPrefabImporter:\n  externalObjects: {}\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n");
+                return null;
+            }
+            string text = File.ReadAllText(meta);
+            var m = k_MetaGuid.Match(text);
+            if (!m.Success) throw new InvalidDataException("no guid line in " + meta);
+            string old = m.Groups[1].Value;
+            if (old == guid) return null;
+
+            string owner = AssetDatabase.GUIDToAssetPath(guid);
+            if (!string.IsNullOrEmpty(owner) && owner != prefabPath && File.Exists(Path.Combine(EditorTools.ProjectRoot, owner)))
+                throw new InvalidOperationException($"pinned GUID {guid} for {prefabPath} is already used by {owner}");
+
+            File.WriteAllText(meta, text.Substring(0, m.Groups[1].Index) + guid + text.Substring(m.Groups[1].Index + old.Length));
+            int scenes = RemapGuidInScenes(old, guid, sceneRoots ?? RemapSceneRoots);
+            // The .meta changed on disk: a synchronous refresh drops the old GUID and registers the pinned one.
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+            string now = AssetDatabase.AssetPathToGUID(prefabPath);
+            if (File.Exists(Path.Combine(EditorTools.ProjectRoot, prefabPath)) && now != guid)
+                throw new InvalidOperationException($"GUID re-pin of {prefabPath} failed: AssetDatabase reports {now}, want {guid}");
+            Debug.LogWarning($"[VEHICLE] GUID re-pinned {prefabPath}: {old} -> {guid} ({scenes} generated scenes rewritten)");
+            return old;
+        }
+
+        /// <summary>Rewrites "guid: old" to "guid: new" in every .unity file under <paramref name="roots"/> (project-relative);
+        /// returns the number of files changed.</summary>
+        public static int RemapGuidInScenes(string oldGuid, string newGuid, string[] roots)
+        {
+            int changed = 0;
+            string from = "guid: " + oldGuid, to = "guid: " + newGuid;
+            foreach (string root in roots)
+            {
+                string dir = Path.Combine(EditorTools.ProjectRoot, root);
+                if (!Directory.Exists(dir)) continue;
+                foreach (string f in Directory.GetFiles(dir, "*.unity", SearchOption.AllDirectories))
+                {
+                    string t = File.ReadAllText(f);
+                    if (t.IndexOf(from, StringComparison.Ordinal) < 0) continue;
+                    File.WriteAllText(f, t.Replace(from, to));
+                    changed++;
+                }
+            }
+            return changed;
         }
 
         /// <summary>Builds the art prefabs that are missing (no-op when both exist). Call before creating a scene.</summary>

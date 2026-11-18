@@ -180,6 +180,9 @@ def test_every_ref_road_crossing_between_any_two_defined_tiles_is_on_both_sides(
              if "highway" in w["tags"] and {"65", "671"} & set(RP.refs(w["tags"]))
              and w["tags"]["highway"] not in ("construction", "proposed")]
     listed = {(s["a"], s["b"]) for s in PLAN["seams"]} | {(s["built"], s["new"]) for s in PLAN["existing_seams"]}
+    # ADR 0288: the loop S8 <-> DW671 <-> Tykocin closes on the ring here - DW671 leaves `tykocin` westwards into
+    # dw671-jezewo-03 (defined after the ring plan; docs/reports/map/s8_loop_plan.json)
+    listed |= {("tykocin", "dw671-jezewo-03")}
     for a, b in combinations(regions.REGIONS.values(), 2):
         if a.id not in NEW and b.id not in NEW:
             continue

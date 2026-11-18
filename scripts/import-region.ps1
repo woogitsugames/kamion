@@ -71,6 +71,10 @@ if ($check -eq 3) {
     throw "build_all.py --check failed ($check)"
 }
 
+# Cab interior LOD0 FBX is outside git: without it (and without the generated TRAKT prefab) the vehicle builders fall back
+# to the graybox. Fail before Unity with the regeneration command (build-fix-s24).
+& "$PSScriptRoot/cab-lod0.ps1"
+if ($LASTEXITCODE -ne 0) { exit 2 }
 $log = Join-Path $LogsDir "import-region-$Region-$(Get-Timestamp).log"
 $unityArgs = @('-executeMethod', 'Game.World.Import.RegionImporter.ImportBatch', '-region', $Region, '-tiers', $Tiers, '-materialTier', $MaterialTier)
 $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs -BuildTarget $BuildTarget
