@@ -85,6 +85,11 @@ Zmiany 1, 2 i 4 działają w generatorze dla wszystkich regionów, ale pokażą 
 - pola: każdy kafel z `OT_PTTR_A` (wszystkie pozamiejskie: dk65-*, dw671-*, s8-*, knyszyn-s, monki*, tykocin);
   do czasu przebudowy sąsiada szew pokazuje mozaikę po jednej i szum po drugiej stronie;
 - nowy materiał `wood_trim_white` dochodzi do tabeli materiałów manifestu każdego przebudowanego kafla.
+- **kafel C (`bialystok-industrial-c`) trzeba przebudować przed scaleniem albo zaraz po nim**: `tests/gis/test_world_roads.py::
+  test_export_is_deterministic` buduje C w procesie i porównuje z zapisanym manifestem — po zmianie generatora różni się
+  już chunk 0_0 (maska pól w COLOR_0 terenu, 3 domy drewniane). To jedyny test GIS, który ta zmiana czerwieni
+  (pełny przebieg: 2486 passed, 2 failed; drugi — `test_ec_chimneys…one_authored_instance_per_chimney` — pada także na
+  main: `read_text()` bez kodowania na `streetscape_qa.json` kafla C).
 Przebudowane w tej gałęzi: `knyszyn`, `knyszyn-w`. Do przebudowy przez właścicieli kafli: `knyszyn-s` (szew S Knyszyna)
 i pozostałe przy najbliższej okazji.
 
@@ -112,7 +117,10 @@ Baseline ADR 0238 kafla C (`tests/gis/data/typology_0238_baseline_bialystok-indu
 kafla C dają +102…+106 trójkątów High na 4 kamerach; suma budynków 961 562 → 958 445 (inne zmiany od ostatniego
 przeliczenia). Low (LOD1) bez zmian w tej decyzji.
 
-Testy: `tests/gis/test_wood_house_p1_s24.py` (9), EditMode `WorldEdgeSetbackOverrideTests` (2).
+Testy: `tests/gis/test_wood_house_p1_s24.py` (9), EditMode `WorldEdgeSetbackOverrideTests` (2). Pełny `pytest tests/gis`:
+2486 passed, 2 failed (patrz „Skutki dla innych kafli”), 1 skipped, 2 xfailed. EditMode Win64: 1257 passed, 2 failed
+(`ArtPrefabs_HavePinnedGuids`, `ImportedGlassSemanticIsRestrictedAndStillReceivesShadows` — środowisko świeżego worktree, te
+same w przebiegach regen-c-s24 / knyszyn-r24), 90 skipped.
 Dowody: `artifacts/knyszyn-p1-s24/{before,after2,sbs}/*.jpg`, `budget-before-after2.json`, `field-noise-before-after2.json`.
 
 Obejrzane rendery (ocena własna agenta, nie `visual-critic`): `look-dom-klattow` — szczyt pionowo, deska na linii okapu,

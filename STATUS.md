@@ -10,10 +10,11 @@ Worktree `.claude/worktrees/knyszyn-p1-s24`, gałąź `knyszyn-p1-s24`. Skrypty 
 - Testy: `tests/gis/test_wood_house_p1_s24.py` 9 passed; podzbiór GIS (materials/wood/knyszyn_look/typology/buildings_0167) 78 passed po przeliczeniu baseline 0238 kafla C; EditMode pełny 1254 passed / 3 failed (2 środowiskowe jak w regen-c-s24 + mój test, poprawiony), EditMode z filtrem closure/StartClearance 100 passed / 0 failed.
 - Dowody: `artifacts/knyszyn-p1-s24/{before,after2,after2-w,sbs}` + kopia w main `artifacts/knyszyn-p1-s24/`.
 
-## W toku
-Pełny `pytest tests/gis` czeka na slot heavy: `artifacts/knyszyn-p1-s24/logs/pytest-gis.{log,status}`.
+## Testy końcowe
+- `pytest tests/gis` (44 min 56 s): 2486 passed, 2 failed, 1 skipped, 2 xfailed. `test_world_roads::test_export_is_deterministic` — kafel C zbudowany w procesie nowym generatorem ≠ zapisany manifest (chunk 0_0): **C wymaga przebudowy** (test nadpisał `Data/Regions/bialystok-industrial-c/generated/*.json` w worktree — cofnięte, nie commitowane). `test_ec_chimneys::…one_authored_instance_per_chimney` pada też na main (UnicodeDecodeError, `read_text()` bez kodowania).
+- EditMode Win64 (po wszystkich zmianach): 1257 passed, 2 failed (środowiskowe: ArtPrefabs_HavePinnedGuids, ImportedGlassSemantic…), 90 skipped.
 
-NASTĘPNY KROK: `Get-Content artifacts/knyszyn-p1-s24/logs/pytest-gis.status` → przy `exit=0` wpisać wynik do raportu; przy błędach `Select-String FAILED artifacts/knyszyn-p1-s24/logs/pytest-gis.log`. Potem ocena `visual-critic` (lider) na `artifacts/knyszyn-p1-s24/after2/*.jpg`.
+NASTĘPNY KROK (lider): ocena `visual-critic` na `artifacts/knyszyn-p1-s24/after2/*.jpg` i `sbs/*.jpg`; po scaleniu `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` + `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c -BuildTarget Win64` + kamery kontrolne C (shader `swardCalm` i mozaika pól zmieniają teren C).
 
 ## Otwarte
 - Zdjęcia Domu Klattów od właściciela (kolor desek/opasek, okiennice, ganek).
