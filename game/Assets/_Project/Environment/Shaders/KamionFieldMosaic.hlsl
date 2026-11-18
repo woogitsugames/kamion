@@ -41,20 +41,20 @@ void KFUse(float r, bool arable, out half b, out half a, out half3 tint, out hal
     tram = 0.0h; a = 0.0h;
     if (arable)
     {
-        if (r < 0.26)      { b = 0.70h; a = 0.06h; tint = half3(1.10h, 0.98h, 0.74h); tram = 1.0h; }  // cereal stubble, straw
+        if (r < 0.26)      { b = 0.66h; a = 0.06h; tint = half3(1.16h, 1.08h, 0.80h); tram = 1.0h; }  // cereal stubble, straw
         else if (r < 0.36) { b = 0.42h; a = 0.86h; tint = half3(1.00h, 0.98h, 0.96h); }                // disked / ploughed
-        else if (r < 0.52) { b = 0.02h; a = 0.08h; tint = half3(0.74h, 0.96h, 0.62h); }                // maize
-        else if (r < 0.62) { b = 0.10h; a = 0.18h; tint = half3(0.84h, 1.00h, 0.70h); }                // potatoes / beet
-        else if (r < 0.76) { b = 0.18h; a = 0.26h; tint = half3(0.90h, 1.02h, 0.78h); tram = 1.0h; }  // catch crop on stubble
-        else if (r < 0.88) { b = 0.05h; a = 0.0h;  tint = half3(0.84h, 1.06h, 0.76h); }                // clover / young rape
-        else               { b = 0.12h; a = 0.0h;  tint = half3(0.90h, 1.05h, 0.80h); }                // grass ley
+        else if (r < 0.52) { b = 0.02h; a = 0.06h; tint = half3(0.80h, 1.30h, 0.84h); }                // maize
+        else if (r < 0.62) { b = 0.10h; a = 0.14h; tint = half3(0.90h, 1.32h, 0.92h); }                // potatoes / beet
+        else if (r < 0.76) { b = 0.16h; a = 0.20h; tint = half3(0.96h, 1.34h, 0.96h); tram = 1.0h; }  // catch crop on stubble
+        else if (r < 0.88) { b = 0.05h; a = 0.0h;  tint = half3(0.92h, 1.42h, 1.04h); }                // clover / young rape
+        else               { b = 0.12h; a = 0.0h;  tint = half3(0.98h, 1.40h, 1.04h); }                // grass ley
     }
     else
     {
-        if (r < 0.45)      { b = 0.06h; tint = half3(0.88h, 1.06h, 0.78h); }   // meadow, regrowth after the 2nd cut
-        else if (r < 0.70) { b = 0.14h; tint = half3(0.93h, 1.04h, 0.82h); }   // pasture
-        else if (r < 0.85) { b = 0.38h; tint = half3(1.02h, 1.04h, 0.86h); }   // freshly mown
-        else               { b = 0.60h; tint = half3(1.04h, 1.00h, 0.82h); }   // uncut hay
+        if (r < 0.45)      { b = 0.06h; tint = half3(0.96h, 1.42h, 1.06h); }   // meadow, regrowth after the 2nd cut
+        else if (r < 0.70) { b = 0.14h; tint = half3(1.00h, 1.36h, 1.02h); }   // pasture
+        else if (r < 0.85) { b = 0.36h; tint = half3(1.06h, 1.22h, 0.92h); }   // freshly mown
+        else               { b = 0.56h; tint = half3(1.08h, 1.10h, 0.84h); }   // uncut hay
     }
 }
 
@@ -118,7 +118,7 @@ void KamionFieldMosaic(float2 en, float footprint, half driftN, inout half4 m, o
     half baulk = (half)(saturate((1.0 - e) / fp + 0.5) * saturate(2.0 / fp + 0.25));
     fb = lerp(fb, 0.56h, baulk);
     fa = lerp(fa, 0.0h, baulk);
-    ft = lerp(ft, half3(0.98h, 1.03h, 0.84h), baulk);
+    ft = lerp(ft, half3(1.04h, 1.18h, 0.90h), baulk);
 
     m.b = lerp(m.b, fb, farm);
     m.a = lerp(m.a, fa, farm);

@@ -782,8 +782,13 @@ namespace Game.World.Import
                     nrm.Add(Vector3.up);
                     uv.Add(p);
                     var mc = ApronMask(p, Mathf.Max(0f, d));
-                    if (s_BorderMask != null && d <= BorderBlendM && s_BorderMask(basePt[i]) is Color32 bc)
-                        mc = Color32.Lerp(bc, mc, Mathf.Clamp01(d / BorderBlendM));   // ADR 0298: the terrain's own masks at the edge
+                    if (s_BorderMask != null && s_BorderMask(basePt[i]) is Color32 bc)
+                    {
+                        // ADR 0298: a field crossing the edge keeps its BDOT kind (grassland 0.90 / arable 1.00 flag) out
+                        // into the apron, so the mosaic palette does not switch at the seam
+                        if (s_FarmApron && bc.b >= 219) mc.b = bc.b;
+                        if (d <= BorderBlendM) mc = Color32.Lerp(bc, mc, Mathf.Clamp01(d / BorderBlendM));   // the terrain's own masks at the edge
+                    }
                     col.Add(mc);
                 }
             for (int i = 0; i < np; i++)

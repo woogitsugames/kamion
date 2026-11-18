@@ -1450,17 +1450,18 @@ def _patch_uv1(net, j, V, poly=None):
         # plate. The lateral offset is the perpendicular distance to the nearest segment's line instead.
         dist = np.abs(cross) / np.sqrt(l2[k])
         lat = np.copysign(dist, cross)
+        dnear = D[np.arange(len(P)), k]          # the arm whose chain is nearest still owns the vertex (no flip-flop)
         hw = hws[i]
         # Clamp lateral position inside [-hw, hw] and ramp smoothly to an integer lane boundary (frac=0 -> wp/drip=0)
         # outside hw so turnoff-flare triangles never interpolate UV1.x across [-1, +2] into sawtooth wheel ruts.
         lc = _lane_coord(sec, np.clip(lat, -hw, hw), hw, dir_val)
         u_flare = np.clip((dist - hw) / 1.0, 0.0, 1.0)
         lc = lc + u_flare * (np.rint(lc) - lc)
-        better_any = dist < score
+        better_any = dnear < score
         lane[better_any] = lc[better_any]
         edge[better_any] = np.where(dist <= hw + 0.3, np.maximum(hw - dist, 0.0), 5.0)[better_any]
         flare_d[better_any] = np.maximum(dist - hw, 0.0)[better_any]
-        score[better_any] = dist[better_any]
+        score[better_any] = dnear[better_any]
     if poly is not None:
         import shapely
         ring = shapely.LinearRing(np.asarray(poly, float)[:, :2])
