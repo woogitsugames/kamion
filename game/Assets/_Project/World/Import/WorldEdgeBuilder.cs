@@ -395,6 +395,7 @@ namespace Game.World.Import
         {
             var exits = new List<RoadExit>();
             if (!File.Exists(path)) { Debug.LogWarning("[IMPORT] world edge: roads.graph.json missing - no closures"); return exits; }
+            var setbacks = ReadSetbackOverrides(Path.Combine(Path.GetDirectoryName(path), SetbackOverridesFile));
             var g = Obj(Parse(File.ReadAllText(path)));
             var boundaryNodes = new HashSet<string>();
             foreach (var no in Arr(g.Get("nodes")))
@@ -452,7 +453,7 @@ namespace Game.World.Import
                 // Walk back along the polyline by the setback (short edges: 80 % of their length).
                 float total = 0f;
                 for (int i = 1; i < pts.Count; i++) total += Vector2.Distance(pts[i - 1], pts[i]);
-                float back = Mathf.Min(ClosureSetbackM, total * 0.8f), acc = 0f;
+                float back = Mathf.Min(SetbackFor(setbacks, edgePt), total * 0.8f), acc = 0f;
                 Vector2 cp = edgePt, cd = edgeDir;
                 for (int i = pts.Count - 1; i > 0; i--)
                 {
@@ -469,6 +470,62 @@ namespace Game.World.Import
                 exits.Add(new RoadExit { edgeEN = edgePt, edgeDir = edgeDir, closureEN = cp, closureDir = cd, width = Mathf.Clamp(width, 3f, 16f), road = Sanitize(nm ?? hw) });
             }
             return exits;
+        }
+
+        /// <summary>Authored closure setbacks of a region, next to its roads.graph.json (ADR 0287, review 2026-11-18 P1-3).</summary>
+        public const string SetbackOverridesFile = "world_edge.authored.json";
+        /// <summary>An authored setback is never shorter than this [m]: the barrier row and its collider stay inside the
+        /// drivable rectangle with room for the board posts. WORKING_VALUE.</summary>
+        public const float MinClosureSetbackM = 8f;
+
+        public struct SetbackOverride
+        {
+            public Vector2 nearEN;     // region-local point (E, N) near the place where the road crosses the region edge
+            public float radiusM, setbackM;
+            public string id;
+        }
+
+        /// <summary>
+        /// Reads <c>Data/Regions/&lt;id&gt;/world_edge.authored.json</c>: <c>{"closures": [{"id", "near_en": [e, n],
+        /// "radius_m", "setback_m", "reason"}]}</c>. An entry moves the closure of every road that crosses the region
+        /// edge within radius_m of near_en to setback_m inside the edge (clamped to
+        /// [<see cref="MinClosureSetbackM"/>, <see cref="ClosureSetbackM"/>]). Why: the default 60 m puts the barrier
+        /// row of a road that leaves the tile 80-100 m beyond a junction into that junction (Knyszyn, roundabout
+        /// DK65 / DW671: a red-white barrier across the DK65 arm in the town). The closure stays - with its collider
+        /// and the "Koniec mapy" rectangle untouched - only nearer to the edge. A missing file = no overrides. Pure.
+        /// </summary>
+        public static List<SetbackOverride> ReadSetbackOverrides(string path)
+        {
+            var list = new List<SetbackOverride>();
+            if (!File.Exists(path)) return list;
+            var root = Obj(Parse(File.ReadAllText(path)));
+            if (root.Get("closures") == null) return list;
+            foreach (var co in Arr(root.Get("closures")))
+            {
+                var c = Obj(co);
+                var en = Arr(c.Get("near_en"));
+                list.Add(new SetbackOverride
+                {
+                    nearEN = new Vector2((float)Num(en[0]), (float)Num(en[1])),
+                    radiusM = (float)Num(c.Get("radius_m")),
+                    setbackM = Mathf.Clamp((float)Num(c.Get("setback_m")), MinClosureSetbackM, ClosureSetbackM),
+                    id = Str(c.Get("id")),
+                });
+            }
+            return list;
+        }
+
+        /// <summary>Setback of the closure of a road that crosses the region edge at <paramref name="edgeEN"/> [m].</summary>
+        public static float SetbackFor(IList<SetbackOverride> overrides, Vector2 edgeEN)
+        {
+            float best = ClosureSetbackM, bestD = float.MaxValue;
+            if (overrides == null) return best;
+            foreach (var o in overrides)
+            {
+                float d = Vector2.Distance(o.nearEN, edgeEN);
+                if (d <= o.radiusM && d < bestD) { bestD = d; best = o.setbackM; }
+            }
+            return best;
         }
 
         /// <summary>One closure per road exit, on the road axis at the setback point, y = 0 (the caller sets the road height).</summary>
