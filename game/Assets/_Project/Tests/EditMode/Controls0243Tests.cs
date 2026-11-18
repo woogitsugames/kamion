@@ -32,7 +32,7 @@ namespace Game.Tests.EditMode
         public void Defaults_Wheel270_MirrorWindowsOn_Schema5()
         {
             var d = ControlSettings.Defaults();
-            Assert.AreEqual(5, ControlSettings.CurrentSchema);
+            Assert.GreaterOrEqual(ControlSettings.CurrentSchema, 5);   // 6 since D90 / ADR 0294
             Assert.AreEqual(ControlSettings.TouchHalfRangeComfortDeg, d.wheelRangeDeg);
             Assert.AreEqual(270f, ControlSettings.TouchHalfRangeComfortDeg);
             Assert.AreEqual(900f, ControlSettings.TouchHalfRangeSimDeg);

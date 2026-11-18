@@ -1270,7 +1270,8 @@ namespace Game.Editor.Setup
                 var qa = go.AddComponent<ControlCamera>();
                 qa.id = id; qa.note = note;
             }
-            Q("cab-driver", eye, Quaternion.Euler(Game.Cameras.DriverHead.RestPitchDownDeg, 0f, 0f), 62f, "A7: driver eye, straight ahead (windscreen base, frit, dash top, cluster in the rim window).");
+            // D90 / ADR 0294: the game's default cab FOV (70 deg vertical; 62 until 2026-11-18).
+            Q("cab-driver", eye, Quaternion.Euler(Game.Cameras.DriverHead.RestPitchDownDeg, 0f, 0f), Game.Controls.ControlSettings.DefaultCabFovDeg, "A7: driver eye, straight ahead (windscreen base, frit, dash top, cluster in the rim window).");
             // D84 polish (review P1-4): A/B of the rest gaze for the owner (10 deg down instead of 6: dash and rim take ~26 %
             // of the frame instead of ~20 %) and the driver's A-pillar with its seals, blind bar and mirror edge. QA only.
             Q("cab-driver-ab10", eye, Quaternion.Euler(10f, 0f, 0f), 62f, "D84 A/B: driver eye, rest gaze 10 deg down (not the game camera).");
@@ -1334,6 +1335,9 @@ namespace Game.Editor.Setup
             // passenger side 3/4 (exhaust, battery box, AUS 32 tank).
             void QL(string id, Vector3 p, Vector3 l, float fov, string note) => Q(id, p, Quaternion.LookRotation(l - p, Vector3.up), fov, note);
             QL("chase", new Vector3(0f, 7.5f, -26f), new Vector3(0f, 2f, 3f), 50f, "r10: chase camera framing with the trailer (rear doors, lamps, roof, cab over the trailer).");
+            // D90 / ADR 0294: the exterior view with the driving HUD (speed / gear / air strip shown outside the cab).
+            QL("chase-hud", new Vector3(0f, 7.5f, -26f), new Vector3(0f, 2f, 3f), 50f, "D90: chase framing with the driving HUD.");
+            { var c = parent.Find("QA_chase-hud").GetComponent<ControlCamera>(); c.includeDrivingHud = true; }   // no mirror windows: the game shows them in the cab only (DrivingLabBootstrap.MirrorInsetsOn)
             QL("truck-side", new Vector3(-9.5f, 1.7f, 1.9f), new Vector3(0f, 1.6f, 1.9f), 42f, "r10: tractor driver side, square on (door, steps, arch, tank, skirt, rear wheels, gap to the trailer).");
             QL("truck-rear34", new Vector3(-5.2f, 2.0f, -3.6f), new Vector3(-0.4f, 1.3f, 2.2f), 45f, "r10: tractor from behind the cab, driver side (tank, rear mudguard, cab back, coiled lines, trailer front).");
             QL("trailer-side", new Vector3(-11.5f, 1.8f, -6.2f), new Vector3(0f, 1.7f, -6.2f), 55f, "r10: curtainsider driver side (curtain, straps, rail, side guards, pallet box, tridem).");

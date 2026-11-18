@@ -373,6 +373,9 @@ namespace Game.Editor.VisualQA
                             if (mir.phase == 0) ctx.LeftMirrorTexture = () => mt; else ctx.RightMirrorTexture = () => mt;
                         }
                     }
+                    // D90 / ADR 0294: cab control cameras render the cab-view HUD (no speed strip over the live dash cluster).
+                    bool cabView = CabViewQa.IsCabCameraId(qa.id);
+                    ctx.CameraModeOverride = () => cabView ? Game.Cameras.CameraMode.Cab : Game.Cameras.CameraMode.Chase;
                     hud = DrivingHud.Create(uiCam, ctx);
                     hud.OverrideSafeAreaNormalized(new Rect(0.04f, 0f, 0.96f, 1f));
                     hud.SetTelemetryVisible(qa.drivingHudTelemetry);

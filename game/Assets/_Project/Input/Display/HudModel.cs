@@ -39,6 +39,10 @@ namespace Game.Controls
         /// (no second speedometer over the live one; int-ui-s23 §7 p.4, <see cref="DesktopHudInput.Compact"/>).</summary>
         public bool Compact;
 
+        /// <summary>D90 / ADR 0294: whether the HUD sits over the driver's-eye view. The live rig decides; without one (visual-QA
+        /// renders) the control camera's mode; neither known = not the cab (the strip shows).</summary>
+        public static bool IsCabView(bool? rigInCab, bool? overrideInCab) => rigInCab ?? overrideInCab ?? false;
+
         /// <param name="cabCamera">Camera in the cab (driver's eye).</param>
         /// <param name="cabInstrumentsLive">The truck has live cab screens (the TRAKT cluster; the graybox lab truck has none).</param>
         public static HudVisibility Resolve(HudDetail detail, CabHudMode cab, bool cabCamera, bool cabInstrumentsLive, bool devDiagnostics)

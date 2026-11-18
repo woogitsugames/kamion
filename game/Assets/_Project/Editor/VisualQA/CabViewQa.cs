@@ -26,6 +26,11 @@ namespace Game.Editor.VisualQA
     {
         static readonly CultureInfo Ci = CultureInfo.InvariantCulture;
 
+        /// <summary>D90 / ADR 0294: a control camera at the driver's eye (cab-driver, cab-view-*, lab-cab-eye ...) renders the
+        /// cab-view HUD; every other one (chase-hud, exterior) the exterior HUD.</summary>
+        public static bool IsCabCameraId(string id) =>
+            !string.IsNullOrEmpty(id) && (id.StartsWith("cab-", StringComparison.Ordinal) || id.Contains("-cab-"));
+
         public static void ApplyTruckPose(string spec)
         {
             if (string.IsNullOrEmpty(spec)) return;

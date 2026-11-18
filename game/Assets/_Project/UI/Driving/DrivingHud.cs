@@ -22,6 +22,13 @@ namespace Game.UI.Driving
         public TouchControls Touch;
         public GyroSteering Gyro;
         public CameraRig Rig;
+        /// <summary>D90 / ADR 0294: camera mode when there is no rig (visual-QA renders of cab / exterior control cameras).</summary>
+        public Func<CameraMode> CameraModeOverride;
+
+        /// <summary>The HUD is drawn over the driver's-eye view (D90: the speed / gear / air strip hides there, the dash cluster
+        /// is the speedometer). Rig mode first, then <see cref="CameraModeOverride"/>; neither = not the cab.</summary>
+        public bool IsCabView => HudVisibility.IsCabView(Rig != null ? Rig.mode == CameraMode.Cab : (bool?)null,
+            CameraModeOverride != null ? CameraModeOverride() == CameraMode.Cab : (bool?)null);
         public VehicleTelemetryRecorder Recorder;
         public DiagnosticsSampler Sampler;
         public DriverInputMixer Mixer;
