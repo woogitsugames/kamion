@@ -40,7 +40,7 @@ namespace Game.Tests
             Assert.AreEqual("FOG", Json.Str(groups[FogFront.ToString()]));
             Assert.AreEqual("PLATE", Json.Str(groups[Plate.ToString()]));
             Assert.AreEqual("FOG_REAR", Json.Str(groups[FogRear.ToString()]));
-            Assert.LessOrEqual(groups.Count, 16, "TruckLights state texture is 16 x 1");
+            Assert.LessOrEqual(groups.Count, LampPhotometry.StateTexels, "TruckLights state texture is 32 x 1 (ADR 0197)");
         }
 
         /// <summary>Lamp-emitter vertices (uv2.y > 0) of one light group in the root frame, all meshes of the LOD0 FBX.</summary>
@@ -142,6 +142,27 @@ namespace Game.Tests
                 Assert.That(p.z, Is.LessThan(-0.5f), "rear fog lamp sits at the frame end, behind the rear axle");
                 Assert.That(p.y, Is.InRange(0.25f, 1.00f), "rear fog lamp height (R48 6.11.4.2)");
             }
+        }
+
+        /// <summary>ADR 0197 (review M59 G1): the trailer combination lamp has separate tail and stop chambers; they must carry
+        /// separate light groups (16 TAIL, 17 STOP) on every LOD, so only the tail chamber glows with the position lamps.
+        /// Needs the trailer FBX re-exported by trailer_export.py after ADR 0197 (fails on the pre-0197 export: TAIL_BRAKE).</summary>
+        [TestCase("LOD0", "Trailer_LOD0"), TestCase("LOD2", "Trailer_LOD2")]
+        public void Trailer_TailAndStopChambers_HaveSeparateLightGroups(string lod, string tmp)
+        {
+            var groups = Json.Obj(Json.Obj(Load(TrlManifest)["shader_contract"])["light_groups"]);
+            Assert.AreEqual("TAIL", Json.Str(groups[LampPhotometry.Tail.ToString()]), "manifest group 16");
+            Assert.AreEqual("STOP", Json.Str(groups[LampPhotometry.Stop.ToString()]), "manifest group 17");
+            var tail = GroupVerts(TrlManifest, lod, tmp, LampPhotometry.Tail, true);
+            var stop = GroupVerts(TrlManifest, lod, tmp, LampPhotometry.Stop, true);
+            Assert.That(tail.Exists(p => p.x < -0.3f) && tail.Exists(p => p.x > 0.3f), "tail chamber in both combination lamps");
+            Assert.That(stop.Exists(p => p.x < -0.3f) && stop.Exists(p => p.x > 0.3f), "stop chamber in both combination lamps");
+            Assert.AreEqual(0, GroupVerts(TrlManifest, lod, tmp, LampPhotometry.TailBrake, true).Count,
+                "no shared TAIL_BRAKE emitters left on the trailer");
+            float tailInner = float.MaxValue, stopInner = float.MaxValue;
+            foreach (var p in tail) tailInner = Mathf.Min(tailInner, Mathf.Abs(p.x));
+            foreach (var p in stop) stopInner = Mathf.Min(stopInner, Mathf.Abs(p.x));
+            Assert.That(stopInner, Is.LessThan(tailInner), "stop chamber inboard of the tail chamber (trailer_build: ind, tail, stop, rev, fog)");
         }
 
         [Test]

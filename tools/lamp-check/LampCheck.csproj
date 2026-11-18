@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- ADR 0197: plain .NET check of the Unity-free lamp arithmetic (no Unity needed). Run: dotnet test tools/lamp-check -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- the same source file Unity compiles (Game.Vehicle.Runtime); it must not use UnityEngine -->
+    <Compile Include="../../game/Assets/_Project/Vehicle/Runtime/LampPhotometry.cs" Link="LampPhotometry.cs" />
+    <Compile Include="LampPhotometryTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+</Project>

@@ -35,7 +35,7 @@ namespace Game.Tests.EditMode
             sunObject.transform.rotation=Quaternion.Euler(elevation,0,0); lights.highBeam=high; lights.Refresh();
             Assert.That(lights.LowBeamOn,Is.EqualTo(low));
             Assert.That(lights.StateTexture.format,Is.EqualTo(TextureFormat.RGBAHalf));
-            Assert.That(lights.StateTexture.width,Is.EqualTo(16)); Assert.That(lights.StateTexture.height,Is.EqualTo(1));
+            Assert.That(lights.StateTexture.width,Is.EqualTo(LampPhotometry.StateTexels)); Assert.That(lights.StateTexture.height,Is.EqualTo(1));
             foreach(var c in lights.StateTexture.GetPixels())
                 foreach(float value in new[]{c.r,c.g,c.b,c.a}) Assert.That(float.IsNaN(value)||float.IsInfinity(value),Is.False);
             CheckNits(1,low?56000f:160000f); CheckNits(2,low?50000f:0f); CheckNits(3,high?80000f:0f);
@@ -50,7 +50,7 @@ namespace Game.Tests.EditMode
         {
             if(SystemInfo.graphicsDeviceType==GraphicsDeviceType.Null) Assert.Ignore("Actual GPU readback requires graphics device");
             lights.highBeam=true; lights.Refresh(); Shader.SetGlobalFloat("_KamionExposure",0.0001f);
-            string u=((group+0.5f)/16f).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+            string u=((group+0.5f)/LampPhotometry.StateTexels).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
             var shader=TruckPaintProbe.BuildProbeShader("TruckLampRadiance(SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2("+u+",0.5),0).rgb)");
             float value=TruckPaintProbe.Read(shader,1f,false,true,out _);
             Assert.That(float.IsNaN(value)||float.IsInfinity(value),Is.False);
@@ -61,7 +61,7 @@ namespace Game.Tests.EditMode
         {
             if(SystemInfo.graphicsDeviceType==GraphicsDeviceType.Null) Assert.Ignore("Actual GPU readback requires graphics device");
             lights.Refresh(); Shader.SetGlobalFloat("_KamionExposure",exposure);
-            const string raw="TruckLampRadiance(SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(1.5/16.0,0.5),0).rgb)";
+            const string raw="TruckLampRadiance(SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(1.5/KAMION_LAMP_TEXELS,0.5),0).rgb)";
             var shader=TruckPaintProbe.BuildProbeShader("dot(TruckDrlHighlight("+raw+", _DrlHighlightShoulder),float3(0.2126,0.7152,0.0722)).xxx");
             float value=TruckPaintProbe.Read(shader,1f,false,true,out _);
             Assert.That(float.IsNaN(value)||float.IsInfinity(value),Is.False);
@@ -84,11 +84,14 @@ namespace Game.Tests.EditMode
             float z=0.0193f*linear.r+0.1192f*linear.g+0.9505f*linear.b;
             float sum=x+y+z; return new Vector2(x/sum,y/sum);
         }
-        [Test] public void SignalColoursLieInsideEceChromaticityBands()
+        // ADR 0197: R48 2.11.1 limits (Dz.U. L 347, P16-111/112) instead of the ADR 49/00 band. Both areas lie outside sRGB;
+        // the reachable limits must hold (red: yellow; amber: green + red). Full area checks: LampRegulationTests.
+        [Test] public void SignalColoursMeetTheReachableR48Limits()
         {
             Vector2 red=Chromaticity(TruckLights.Red), amber=Chromaticity(TruckLights.Amber);
             Assert.That(red.y,Is.LessThanOrEqualTo(0.335f),"R48 red: limit towards yellow y <= 0.335");
-            Assert.That(amber.y,Is.InRange(0.398f,0.429f),"amber: 0.398 <= y <= 0.429 (towards red / towards green)");
+            Assert.That(amber.y,Is.LessThanOrEqualTo(amber.x-0.120f),"R48 amber: limit towards green y <= x - 0.120");
+            Assert.That(amber.y,Is.GreaterThanOrEqualTo(0.390f),"R48 amber: limit towards red y >= 0.390");
         }
         static string F(float v)=>v.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
         static string Raw(Color c,float scale)=>"float3("+F(c.r*scale)+","+F(c.g*scale)+","+F(c.b*scale)+")";
