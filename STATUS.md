@@ -6,3 +6,5 @@
 - NEXT: qa2 (HDR-capture A/B) then pwsh scripts/build-windows.ps1 -Slot -Regions knyszyn-w; player night shots; pc-metrics -Extra lighting=night
 - 00:25 qa3: ROOT CAUSES banding = (a) QA capture 8-bit target (fixed, ARGBHalf), (b) PC High no final dither (FinalDither), (c) URP fast sRGB in dither crushed darks 12->7 on dithered tiers (all 9 URP assets m_UseFastSRGBLinearConversion 0). High night runlen 154->2.0 px, mean 11.6->11.7. Sky R11G11B10 dither dropped (no measurable effect). EditMode 1298/1 fail (StartClearance knyszyn-w: stale world copied from win-build)/99 skip.
 - NEXT: pwsh scripts/build-windows.ps1 -Slot -SlotOwner night-polish-s24 -Regions knyszyn-w
+- 00:55 player build OK (artifacts/win/kamion-0.1.0-28a4640160-dirty-regions, knyszyn-w + WorldC copied from win-build); qa4 lamps (K 0.15) done; ADR 0299 sections 1-3 written. Player runs waiting for heavy slot (first try: -lighting not passed, fixed in player.ps1).
+- NEXT: pwsh artifacts/night-polish-s24/go.ps1 -Name player -Cmd 'pwsh artifacts/night-polish-s24/player.ps1 -Exe <exe>'
