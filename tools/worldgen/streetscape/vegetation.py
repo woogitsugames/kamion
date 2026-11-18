@@ -630,7 +630,16 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
             poly = PV._poly_local(f["geometry"]["coordinates"], origin)
             rng = np.random.default_rng(_seed(f["id"]) + 7)
             P = _scatter(poly, 14.0, rng)
-            P = P[rng.uniform(0, 1, len(P)) < 0.45]
+            u = rng.uniform(0, 1, len(P))
+            if layer == "OT_PTTR_A" and len(P):
+                # ADR 0298 (review 2026-11-18 N4 "część pojedynczo na polu"): OT_PTTR_A is grassland / arable land in use -
+                # owner drone photo 11 and the 2025 orthophoto show clean fields with scrub along the margins, not a
+                # tree every 20 m. Keep SELF_SEED_EDGE_KEEP within SELF_SEED_EDGE_M of the polygon boundary (field
+                # margins, ditches), SELF_SEED_FIELD_KEEP inside (a lone pear / willow). Same random stream.
+                d_edge = shapely.distance(shapely.points(P), poly.boundary)
+                P = P[u < np.where(d_edge <= SELF_SEED_EDGE_M, SELF_SEED_EDGE_KEEP, SELF_SEED_FIELD_KEEP)]
+            else:
+                P = P[u < 0.45]
             sp = pick(rng, [0.2, 0.35, 0.05, 0.05, 0.0, 0.35], len(P))
             emit(P, [SELF_SEEDED[k] for k in sp], rng, f"bdot:{f['id']}:self", 1.0)
     # ADR 0179: authored open ground (override `kind: open_ground`, `polygons_en`: region-local E/N rings) - land the
@@ -681,6 +690,12 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
     report["forest_mantle"] = sum(1 for t in out if t["src"].endswith(":edge"))
     report["_forest_mix"] = forest_mix
     return out, forests
+
+
+# ADR 0298: self-seeded trees on BDOT10k OT_PTTR_A (land in agricultural use) - margins only. WORKING_VALUE.
+SELF_SEED_EDGE_M = 8.0
+SELF_SEED_EDGE_KEEP = 0.35
+SELF_SEED_FIELD_KEEP = 0.02
 
 
 # ------------------------------------------------------------------------------------------- farmland (ADR 0295, P1-4)
