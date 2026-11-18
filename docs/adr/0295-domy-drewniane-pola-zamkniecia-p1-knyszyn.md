@@ -12,10 +12,11 @@ Recenzja: `docs/reports/REVIEW-2026-11-18-s24-knyszyn.md` (FAIL anti-slop, P1-1�
 2. **P1-2** Deski (`wood_planks*`, kafel UV 6,0 × 2,6 m) powtarzały się co kafel: najdłuższa ściana Domu Klattów
    21,10 m = 3,52 kafla wzdłuż, UV ciągłe dookoła budynku (ta sama faza na każdym domu).
 3. **P1-3** Biało-czerwona zapora w poprzek DK65 za rondem to **zamknięcie krawędzi świata** (`WorldEdgeBuilder`, ADR 0082 /
-   0169): rząd barier z tablicą U-20 i koliderem 60 m przed krawędzią kafla, na każdej drodze przeciętej przez bbox. Rondo
-   DK65 / DW671 leży ~85–100 m od zachodniej krawędzi kafla `knyszyn`, więc zamknięcia DK65 (wylot W przy n = −533,3) i DW671
-   (n = −642,5) stały 20–40 m za rondem. Przy streamingu (`stream=1`, ADR 0273) z gotowym sąsiadem `knyszyn-w` streamer te
-   zamknięcia otwiera; w scenie pojedynczego kafla (edytor, visual-qa, `-Scene knyszyn` bez streamingu) stoją.
+   0169): rząd barier z tablicą U-20 i koliderem na każdej drodze przeciętej przez bbox kafla, 60 m przed krawędzią albo
+   w 80 % długości krótszego odcinka drogi. DK65 wychodzi z kafla `knyszyn` krawędzią W (n = −533,3) 61,7 m za rondem
+   DK65 / DW671, więc zamknięcie stało 49,4 m przed krawędzią = ~12 m za rondem. Przy streamingu (`stream=1`, ADR 0273)
+   z gotowym sąsiadem `knyszyn-w` streamer to zamknięcie otwiera; w scenie pojedynczego kafla (edytor, visual-qa,
+   `-Scene knyszyn` bez streamingu) stoi.
 4. **P1-4** Maska suchości trawy (COLOR_0.b terenu, ADR 0109) poza pasem 4 m od dróg była wszędzie tym samym szumem łat
    8 m / 2,5 m (`0,25 + 0,75 × dry`), a shader mnoży nią jasność trawy 0,70…1,30 — stąd jednakowe plamy od ronda po horyzont.
    Zdjęcie właściciela nr 11 i ortofoto GUGiK 2025 pokazują gładkie pola pasowe, każde w jednym tonie, z miedzami.
@@ -43,14 +44,17 @@ obrysu). OSM `building:material` nie trafia do `buildings.geojson` — otwarte (
 - Ściana dzielona lisicami na **przebiegi krótsze niż kafel** (6,0 m); każdy przebieg i szczyt ma własną fazę UV
   (`wood_phase`: dowolne przesunięcie wzdłuż desek, całe rzędy desek w poprzek — rzędy sąsiednich przebiegów zostają na
   jednym poziomie), więc ani dwa przebiegi, ani dwa domy nie pokazują tych samych desek.
-- Zestaw `wood_siding`: wyrównanie tonu desek `k` 1,0 → 0,7 (wraca 30 % zróżnicowania desek skanu; przy deskach 1–4 m
-  po ADR 0289 ściana nie czyta się już jak palety). CV tonu desek (`materials_spec.json`): 0,0157 → 0,0502 (skan 0,124).
+- Zestaw `wood_siding`: wyrównanie tonu desek `k` 1,0 → 0,85 (wraca 15 % zróżnicowania desek skanu). CV tonu desek
+  (`materials_spec.json`): 0,0157 → 0,0324 (skan 0,124). Pierwsza próba `k` 0,7 (CV 0,0502) na renderze
+  `look_dom_klattow` dała znów łaciatą ścianę w słońcu (pojedyncze deski o 1/3 jaśniejsze) — odrzucona.
 
 ### 3. Zamknięcia krawędzi (P1-3): autorskie cofnięcie na kafel
 `Data/Regions/<id>/world_edge.authored.json` (`closures: [{id, near_en, radius_m, setback_m, reason}]`), czytane przez
 `WorldEdgeBuilder.ReadExits` przy imporcie (przeżywa każdą regenerację): zamknięcie drogi, która przecina krawędź w promieniu
-`radius_m` od `near_en`, staje `setback_m` (8…60 m) przed krawędzią zamiast 60 m. Knyszyn: DK65 i DW671 na krawędzi W →
-12 m. Zamknięcie zostaje (bariery + kolider + tablica), prostokąt `WorldBoundary` i ostrzeżenie „Koniec mapy” bez zmian;
+`radius_m` od `near_en`, staje `setback_m` (8…60 m) przed krawędzią zamiast domyślnych 60 m (albo 80 % długości krótszego
+odcinka drogi). Knyszyn: DK65 na krawędzi W — odcinek do ronda ma 61,7 m, więc zamknięcie stało 49,4 m przed krawędzią,
+~12 m za rondem; teraz 12 m przed krawędzią. DW671 (Tykocka) wpisu nie potrzebuje: jej odcinek ma 12,6 m, zamknięcie
+stoi 10 m przed krawędzią z reguły 80 %. Zamknięcie zostaje (bariery + kolider + tablica), prostokąt `WorldBoundary` i ostrzeżenie „Koniec mapy” bez zmian;
 kafel bez pliku — bez zmian. Odrzucone: usunięcie zamknięcia na szwie z istniejącym sąsiadem (scena pojedynczego kafla
 kończyłaby się wtedy bez fizycznej granicy), reguła automatyczna dla wszystkich kafli (przesuwa zamknięcia w ~60 kaflach
 bez przeglądu).
@@ -62,6 +66,18 @@ jedno pole = jeden poziom suchości (paleta wg RODZAJ), dryf ±3 % w skali 40 m,
 pasy 22–46 m — odczytane z ortofoto Knyszyna, `WORKING_VALUE`) są funkcją wyłącznie położenia w EPSG:2180: ten sam wzór
 po obu stronach szwu kafli. Blok ma jeden użytek (pasy różnią się o ±0,05), 20 % pasów ma własny. Kanały R / G / A maski
 i pas przydrożny bez zmian. Ortofoto służy tylko do pomiaru szerokości pasów — żaden piksel nie trafia do gry.
+
+**Ogrody** (`OT_PTZB_A` o RODZAJ jednorodzinna / wielorodzinna / zagrodowa, dalej niż 4 m od dróg, poza trawnikami):
+suchość 0,12 + 0,30 × (łaty 18 m z domieszką 2,5 m) zamiast 0,25 + 0,75 × (łaty 8 m) — między domami jest utrzymana ruń,
+nie nieużytek. Inne klasy zabudowy (przemysłowo-składowa, handlowo-usługowa, pozostała) i grunt bez klasy — bez zmian.
+
+**Shader** (`Environment/Shaders/WorldPBR.shader`, wszystkie kafle od razu, bez przebudowy): „spokojna ruń” —
+`swardCalm = _GroundTint × smoothstep(0,5; 0,9; R) × (1 − smoothstep(0,30; 0,60; B)) × (1 − G) × (1 − A)`; gdzie teren jest
+dalej niż ~10–18 m od drogi / placu i ma niską suchość (trawniki, ogrody, pola mozaiki), znikają plamy słomy (×0,1) i
+gleby (×0), kępy słabną o połowę, chmury tonu 8–64 m o połowę. Sucha, niekoszona ziemia (B wysokie) i pas przy drodze
+zachowują wszystkie plamy. Zero nowych próbek tekstur i słów kluczowych. Na nieprzebudowanych kaflach maska B poza
+drogami ma 0,25–1,0, więc efekt jest tam częściowy (ok. 1/3 powierzchni otwartego terenu) — **kafel C i pozostałe
+zatwierdzone kadry wymagają ponownego renderu kamer kontrolnych przez lidera** (w tej gałęzi renderowany tylko Knyszyn).
 
 ## Skutki dla innych kafli
 Zmiany 1, 2 i 4 działają w generatorze dla wszystkich regionów, ale pokażą się dopiero po `build_world` danego kafla:
