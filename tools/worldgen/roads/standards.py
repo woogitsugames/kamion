@@ -83,6 +83,21 @@ ADJ_NODE_SKIP_M = 30.0
 # takes that road's surface height at the shared edge, weight ADJ_WEIGHT against 1 for an NMT sample (WORKING_VALUEs)
 ADJ_TOUCH_M = 0.5
 ADJ_WEIGHT = 400.0
+# ADR 0293 (B): a one-way carriageway running beside the main carriageway of a motorway / expressway in the same
+# direction (OSM draws the deceleration / acceleration lane as its own *_link way from the diverge node; dk65-01
+# S8 x Szosa Knyszynska: 1.4-3.1 m apart over ~200 m) shares that carriageway's surface: profile tie up to this gap
+# between the edges, and the gap is an asphalt strip with P-21 hatching (gores "express"), never a raised kerb
+# (PTB2022: no kerbs on A / S outside junction islands). 4.0 m = gores.GORE_MIN_NOSE_W. WORKING_VALUE
+EXPRESS_PARALLEL_GAP_M = 4.0
+
+
+def is_express_main(sec) -> bool:
+    """Through carriageway of a motorway / expressway: class A (highway=motorway) or an S / A road number, not a link."""
+    hw = str(getattr(sec, "highway", "") or "")
+    if hw.endswith("_link"):
+        return False
+    ref = str(getattr(sec, "ref", "") or "")
+    return sec.cls in ("A", "S") or any(r.strip()[:1] in ("S", "A") and r.strip()[1:2].isdigit() for r in ref.split(";"))
 KERB_HEIGHT_APRON = 0.04            # WORKING_VALUE: roundabout truck apron kerb (mountable)
 # Sidewalk. PTB2022 § 29 ust. 1: >= 1.80 m. 2.00 m = WORKING_VALUE. Crossfall towards the road
 # <= 3 % (PTB2022 § 33); we use 2 %.

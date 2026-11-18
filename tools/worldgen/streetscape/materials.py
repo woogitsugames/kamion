@@ -200,6 +200,10 @@ M = {
     # (Mapillary 1801374876712141: posts 55-80 / 66-95 / 66-100 sRGB against the sky, cassette band 33-37), not the
     # light green-grey of the Andersa / Putry barriers. Used through the zone key `post_mat`. WORKING_VALUE
     "noise_post_dark": {"color": [0.055, 0.080, 0.066], "rough": 0.6, "metal": 0.2},
+    # ADR 0293 (style `clear`): posts and panel frames of the clear city screens read light grey to white on the open
+    # photos (Commons cm106568383 / cm106790713 overcast and sunlit, Mapillary 1032387041872194): galvanised / RAL 9006
+    # class aluminium. Linear 0.42 (sRGB ~0.68) with a little metal; WORKING_VALUE (no measured plate)
+    "noise_post_light": {"color": [0.42, 0.43, 0.43], "rough": 0.45, "metal": 0.35},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
     # contact shadow / AO patch under parked vehicles (ADR 0050): Kamion/World Vehicle Contact, parameters per
     # prototype from the LOD0 node extras ("contact", life_props.contact_spec)
