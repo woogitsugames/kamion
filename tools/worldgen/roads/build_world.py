@@ -1549,6 +1549,7 @@ def qa_report(w, mk_report, mask):
             "crossings_p11": mk_report.get("crossings_p11", 0),
             "through_lines": mk_report.get("through_lines", {}),
             "painted_zones": mk_report.get("painted_zones", []),
+            "gore_p21": mk_report.get("gore_p21", {}),                     # ADR 0293
             "authored_paint": mk_report.get("authored_paint", []),          # ADR 0095
             "paint_clear_tris": mk_report.get("paint_clear_tris", {}),
             "paint_erased_in_zones_tris": mk_report.get("paint_erased_in_zones_tris", 0),
