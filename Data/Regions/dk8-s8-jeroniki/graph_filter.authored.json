@@ -1,7 +1,11 @@
 {
- "provenance": "authored_override (ADR 0204 rule, ADR 0288 precedent in s8-04, ADR 0292): ways left out of the drivable road graph of this region",
- "drop_service": [],
- "drop_osm_ways": [221522232],
- "reason": "OSM way 221522232 (tertiary, tunnel=yes, layer=-1, EPSG:2180 770189,594978 -> 770200,595017) is the underpass of the local road from the roundabout south of the DK8 below both DK8 carriageways and Warszawska (way 685399520). The generator's cut for it left a ~15 m hole in each of them (r2 road_consistency_qa obstacle_in_lane 'none': 32 on DK8 eastbound = the control route, 31 on DK8 westbound = route link jeroniki-dk8-to-s8, 27 on Warszawska; local E 380-401, N 805-837). Same choice as s8-04 (ADR 0288 pkt 7): drivable first (D63), the underpass is left out, DK8 and Warszawska stay at grade; the local road ends at the embankment on both sides.",
- "verify": "road_consistency_qa obstacle_in_lane = 0 on DK8 / Warszawska after the rebuild; model the underpass when a bridge flag per station range exists (ADR 0288 Otwarte 7/11)"
+  "provenance": "authored_override (ADR 0204 rule, ADR 0288 precedent in s8-04, ADR 0292): ways left out of the drivable road graph of this region",
+  "drop_service": [],
+  "drop_osm_ways": [
+    221522232,
+    1571341511,
+    1571341512
+  ],
+  "reason": "OSM way 221522232 (tertiary, tunnel=yes, layer=-1, EPSG:2180 770189,594978 -> 770200,595017) is the underpass of the local road from the roundabout south of the DK8 below both DK8 carriageways and Warszawska (way 685399520). The generator's cut for it left a ~15 m hole in each of them (r2 road_consistency_qa obstacle_in_lane 'none': 32 on DK8 eastbound = the control route, 31 on DK8 westbound = route link jeroniki-dk8-to-s8, 27 on Warszawska; local E 380-401, N 805-837). Same choice as s8-04 (ADR 0288 pkt 7): drivable first (D63), the underpass is left out, DK8 and Warszawska stay at grade; the local road ends at the embankment on both sides. r3: OSM ways 1571341511 / 1571341512 (highway=service, access=no, lanes 2, ~12 m wide) are the emergency median crossover of the DK8 near E 107-175 m local: with them the DK8 carriageways got a junction there and the generator cut the through lane (road_consistency_qa lane_blind_end 'none' 2 on the control route, r3), and they were the only graph path from the north seam to the S8 westbound (a U-turn of the articulated vehicle, never a route). Left out: DK8 is continuous, routes cannot use them.",
+  "verify": "road_consistency_qa obstacle_in_lane = 0 on DK8 / Warszawska after the rebuild; model the underpass when a bridge flag per station range exists (ADR 0288 Otwarte 7/11)"
 }
