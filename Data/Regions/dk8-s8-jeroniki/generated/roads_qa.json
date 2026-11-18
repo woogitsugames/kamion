@@ -1366,7 +1366,9 @@
    ],
    "length_m": 1322.7,
    "max_grade": 0.0156,
-   "overrides": [],
+   "overrides": [
+    "dk8-median-rural"
+   ],
    "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -2868,7 +2870,9 @@
    ],
    "length_m": 665.2,
    "max_grade": 0.0122,
-   "overrides": [],
+   "overrides": [
+    "dk8-median-rural"
+   ],
    "profile_rms_vs_nmt_m": 0.037,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -2985,7 +2989,9 @@
    ],
    "length_m": 790.2,
    "max_grade": 0.0289,
-   "overrides": [],
+   "overrides": [
+    "dk8-median-rural"
+   ],
    "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -5333,7 +5339,9 @@
    ],
    "length_m": 143.1,
    "max_grade": 0.0279,
-   "overrides": [],
+   "overrides": [
+    "dk8-median-rural"
+   ],
    "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -5782,7 +5790,7 @@
    "patches": 446
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 452909,
+  "footprint_nodes": 454764,
   "fork_abreast": [
    {
     "beside": "c:w183639794:8860869967-2081020069",
@@ -6362,6 +6370,23 @@
   "nmt_nodes_replaced_under_decks": 567,
   "overrides_applied": [
    {
+    "id": "dk8-median-rural",
+    "targets": [
+     "w1379858308:14280540014-2081020070",
+     "w1530059183:8291788019-12775606646",
+     "w1567973365:12775606646-14280540014",
+     "w197904075:2081020069-3085047997",
+     "w223394828:2322965305-6422971938",
+     "w303988444:2305516685-7705043403",
+     "w303988445:3085047997-2305516685",
+     "w685398186:6422942461-7705043402",
+     "w685399521:5821206792-6422942461",
+     "w825177452:7705043402-8291788019",
+     "w825177457:7705043403-2322965305",
+     "w889307875:5821223987-5821206792"
+    ]
+   },
+   {
     "id": "s8-xsec-w183639794",
     "targets": [
      "w183639794:8860869967-2081020069"
@@ -6398,7 +6423,7 @@
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 3221,
+   "kerb_tris": 3219,
    "parts": 289,
    "side_tris": 208
   },
@@ -6415,7 +6440,7 @@
   },
   "verge_strips": {
    "chunks": 55,
-   "tris": 44714
+   "tris": 44270
   },
   "walled_ramps": [
    {
