@@ -73,6 +73,7 @@ Shader "Kamion/Truck Exterior"
         _LampHueCeiling ("Signal lamps: hue-preserving ceiling of max(r,g,b) (0 = off)", Range(0, 4)) = 0.8
         _LensDetail ("Lamp lens optics from uv1 (ADR 0181; 0 = flat lenses)", Range(0, 1)) = 1
         _PlateIllum ("Number plate luminance / plate lamp luminance at the top edge (ADR 0181, 0197)", Range(0, 0.1)) = 0.006
+        _PlateDisplayMax ("Number plate: display shoulder of the lit plate, exposed luminance (ADR 0297; 0 = off)", Range(0, 2)) = 0.55
     }
     SubShader
     {
@@ -89,6 +90,7 @@ Shader "Kamion/Truck Exterior"
             float _DrlHighlightShoulder;
             float _LampHueKnee, _LampHueCeiling;
             float _LensDetail, _PlateIllum;   // ADR 0181
+            float _PlateDisplayMax;           // ADR 0297
             float _CoatedBaseRoughness, _OrangePeel, _GrimeHeight, _GrimeChassis;
             float4 _CurtainGrime, _CurtainAxles, _CurtainPosts, _RearGrime, _RearGrime2, _RearGrime3, _RearGrimeColor;
         CBUFFER_END
@@ -585,6 +587,12 @@ Shader "Kamion/Truck Exterior"
                     if (lens.style > 4.5) lampRadiance *= albedo * (_PlateIllum * lens.plate);
                     float refMax = TruckLampRadiance(encoded.aaa).x * lens.hdr;   // 0 for groups without a reference
                     lampRadiance = TruckLampHueLimitRef(lampRadiance * lens.hdr, refMax, _LampHueKnee, _LampHueCeiling) * lens.disp;
+                    // ADR 0297 (owner 18.11, review s24 L3: plate 205/255 against tail lamps at 55 - hierarchy inverted). The
+                    // lamps are display-limited (ADR 0178 / 0197), the lit plate was not: its 3-12 cd/m^2 (R148 5.11.3 >= 2.5,
+                    // LampPhotometry, unchanged) reached the white end at the night exposure while 4 000 cd/m^2 lamps sit at
+                    // <= 0.8 x 1/5. Same display-side treatment: a luminance shoulder y / (1 + y / M) keeps the gradient from the
+                    // plate lamp and the legibility, and puts the plate under the stop lamp. Plate pixels only.
+                    if (lens.style > 4.5) lampRadiance = TruckDrlHighlight(lampRadiance, _PlateDisplayMax);
                 }
                 s.emission = (half3)(lampRadiance * saturate(i.uv2.y));
             #endif

@@ -122,6 +122,56 @@ namespace Game.Editor.Setup
         {
             m.SetFloat("_LensDetail", 1f);
             m.SetFloat("_PlateIllum", PlateIllum);
+            m.SetFloat("_PlateDisplayMax", LampPhotometry.PlateDisplayMax);   // ADR 0297
+        }
+
+        /// <summary>ADR 0297: the cluster and the navigation screen as spill emitters for CabInteriorLighting. Centre, area
+        /// and normal (towards the driver's eye) from the LOD0 display quad; mean linear luminance of the screen texture;
+        /// luminance / ceiling = the Kamion/Cab Display material values set in BuildMaterials (500 cd/m^2, 0.9).</summary>
+        static CabInteriorLighting.SpillSource[] CabSpillSources(List<Renderer> lod0, Vector3 eyeWorld)
+        {
+            var list = new List<CabInteriorLighting.SpillSource>();
+            foreach (var (role, tex) in new[] { ("DISPLAY_Cluster", "T_Display_cluster"), ("DISPLAY_Infotainment", "T_Display_infotainment") })
+            {
+                var r = lod0.FirstOrDefault(x => x != null && x.name.StartsWith(role, StringComparison.Ordinal));
+                var mf = r != null ? r.GetComponent<MeshFilter>() : null;
+                if (mf == null || mf.sharedMesh == null) { Debug.LogWarning($"[TRUCK] spill source {role} missing"); continue; }
+                var mesh = mf.sharedMesh;
+                var v = mesh.vertices;
+                var tri = mesh.triangles;
+                Vector3 c = Vector3.zero, n = Vector3.zero;
+                float area = 0f;
+                for (int t = 0; t + 2 < tri.Length; t += 3)
+                {
+                    Vector3 cr = Vector3.Cross(v[tri[t + 1]] - v[tri[t]], v[tri[t + 2]] - v[tri[t]]);
+                    float a = cr.magnitude * 0.5f;
+                    c += (v[tri[t]] + v[tri[t + 1]] + v[tri[t + 2]]) / 3f * a; n += cr; area += a;
+                }
+                if (area <= 0f) continue;
+                c /= area; n = n.normalized;
+                Vector3 toEye = r.transform.InverseTransformPoint(eyeWorld) - c;
+                if (Vector3.Dot(n, toEye) < 0f) n = -n;
+                // Mean linear luminance of the screen image (sRGB PNG), read from the file so the importer settings do not matter.
+                float mean = 0.1f;
+                string png = Path.Combine(EditorTools.ProjectRoot, $"{SrcInt}/Textures/Displays/{tex}.png");
+                if (File.Exists(png))
+                {
+                    var img = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                    if (img.LoadImage(File.ReadAllBytes(png)))
+                    {
+                        var px = img.GetPixels32();
+                        double sum = 0;
+                        foreach (var q in px)
+                            sum += 0.2126 * Mathf.GammaToLinearSpace(q.r / 255f) + 0.7152 * Mathf.GammaToLinearSpace(q.g / 255f) + 0.0722 * Mathf.GammaToLinearSpace(q.b / 255f);
+                        mean = (float)(sum / Math.Max(1, px.Length));
+                    }
+                    UnityEngine.Object.DestroyImmediate(img);
+                }
+                else Debug.LogWarning($"[TRUCK] spill texture {png} missing, mean emission {mean} (WORKING_VALUE)");
+                list.Add(new CabInteriorLighting.SpillSource { frame = r.transform, centre = c, normal = n, area = area, meanEmission = mean, luminance = 500f, maxDisplay = 0.9f });
+                Debug.Log($"[CAB_SPILL] {role} centre {c:F3} normal {n:F2} area {area * 1e4f:F0} cm2 mean emission {mean:F3} eye distance {toEye.magnitude:F2} m");
+            }
+            return list.ToArray();
         }
 
         // ------------------------------------------------------------------ 1. sources
@@ -864,6 +914,7 @@ namespace Game.Editor.Setup
                 lamps.body = body;
                 var cabLight = root.AddComponent<CabInteriorLighting>();
                 cabLight.cab = cabBody;
+                cabLight.spillSources = CabSpillSources(interiorLods[0], root.transform.TransformPoint(eyeLocal));   // ADR 0297
                 // A8 (review r4 E-N1 / E1 / E2): contact shadow under the tractor and its wheels, local reflection capture.
                 // Cab + bumper + engine block from the front (solid, ~0.38 m clearance), then chassis with tanks and fenders
                 // (gaps between the rails, ~0.55 m). Clearances WORKING_VALUE (docs/07, dims.json).
@@ -871,6 +922,9 @@ namespace Game.Editor.Setup
                 AddContactShadow(root, visuals.wheelPivots, td.cabWidth * 0.5f,
                     new[] { (td.FrontFaceZ - td.CabRearZ, 0.38f, 0.95f, 2), (0f, 0.55f, 0.85f, 3) });
                 root.AddComponent<VehicleReflectionCapture>();
+                // ADR 0297: veiling-glare halo of the red rear lamps (tail+stop chamber, rear markers, rear fog).
+                int halos = TruckLampHaloBuilder.Attach(exteriorLods[0], Root + "/Meshes", TruckLampHaloBuilder.EnsureMaterial(MatDir), "Truck");
+                Debug.Log($"[TRUCK] lamp halo quads {halos}");
 
                 SetLayer(root, UnityGroundQuery.ResolveVehicleLayer());
                 foreach (var r in root.GetComponentsInChildren<Renderer>(true)) { r.lightProbeUsage = LightProbeUsage.BlendProbes; r.reflectionProbeUsage = ReflectionProbeUsage.BlendProbes; }
