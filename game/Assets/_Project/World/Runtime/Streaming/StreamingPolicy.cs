@@ -87,7 +87,11 @@ namespace Game.World.Streaming
         /// World budget per platform and quality tier [MB] (WORKING_VALUE, ADR 0273 §6). Desktop (D73 main platform, D74
         /// classes: minimum 8 GB RAM / 2 GB VRAM, recommended 12 GB RAM): the worst 3-tile set of the corridor (C + Maczka +
         /// Kleeberga: Low 434.1, High 1044.2 MB, tile_graph.json) + the pinned respawn tile (worst case C: Low 124.2, High
-        /// 267.0) + ~10 %: Low 640, Medium 800 (Low content + one corner tile), High 1450, Ultra 2000. Phone: see
+        /// 267.0) + ~10 %: Low 640, Medium 800 (Low content + one corner tile), High 1450, Ultra 2000.
+        /// Owner decision 18.11 (ADR 0273 dopisek D81, ADR 0290): the DK19 tiles of D81 made the worst set bojary +
+        /// mickiewicza + wygoda + pinned C = Low 796.2 / High 1935.2 MB -> Low 850, High 2000 (measured on the GTX 1070,
+        /// class "zalecany": High corridor VRAM 1.07-1.87 GB of 8 GB, private 2.1-3.3 GB; Low VRAM 0.45 GB;
+        /// artifacts/pc/DOM/20261118-*, artifacts/d3d-ab). WORKING_VALUE. Medium 800 unchanged (no decision). Phone: see
         /// <see cref="BudgetForTier(string)"/>.
         /// </summary>
         public static float BudgetForTier(string tier, bool desktop)
@@ -96,11 +100,11 @@ namespace Game.World.Streaming
             {
                 switch (tier)
                 {
-                    case "Low": return 640f;
+                    case "Low": return 850f;
                     case "Medium": return 800f;
-                    case "High": return 1450f;
+                    case "High": return 2000f;
                     case "Ultra": return 2000f;
-                    default: return 640f;
+                    default: return 850f;
                 }
             }
             switch (tier)

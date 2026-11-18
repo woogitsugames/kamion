@@ -513,9 +513,9 @@ namespace Game.Tests
             Assert.AreEqual(200f, StreamingSettings.BudgetForTier("Low", false));
             Assert.AreEqual(400f, StreamingSettings.BudgetForTier("Medium", false));
             Assert.AreEqual(600f, StreamingSettings.BudgetForTier("Ultra", false));
-            Assert.AreEqual(640f, StreamingSettings.BudgetForTier("Low", true));
+            Assert.AreEqual(850f, StreamingSettings.BudgetForTier("Low", true));   // owner 18.11 (ADR 0290)
             Assert.AreEqual(800f, StreamingSettings.BudgetForTier("Medium", true));
-            Assert.AreEqual(1450f, StreamingSettings.BudgetForTier("High", true));
+            Assert.AreEqual(2000f, StreamingSettings.BudgetForTier("High", true));
             Assert.AreEqual(2000f, StreamingSettings.BudgetForTier("Ultra", true));
             var g = TileGraph.LoadDefault();
             int c = g.IndexOf("bialystok-industrial-c");

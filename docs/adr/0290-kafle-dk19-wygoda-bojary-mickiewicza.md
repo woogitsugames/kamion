@@ -46,11 +46,12 @@ nowy PC 17.11 (przebudowa bojary/mickiewicza po poprawce szwu Piastowskiej zabit
   bojary sosabowskiego 1 541 k / ~1203.
 
 ## Konsekwencje
-- **Budżet streamingu PC przekroczony (otwarte, decyzja lidera):** `WorldStreamingPolicyTests.Budgets_DesktopTiers_…` —
-  najgorszy zestaw 3 sąsiadów to teraz łańcuch DK19: bojary 251,6 + mickiewicza 232,1 + wygoda 188,3 + przypięty C 124,2 =
-  **796,2 MB > 640 MB (PC Low)**; High 620,7 + 557,6 + 489,9 + 267,0 = 1935,2 MB > 1450 MB. Test zostaje czerwony — nie
-  poluzowano budżetu. Opcje: LOD gęstych kafli (ADR 0282: budynki High bojary 279,2 MB, teren High 201,4 MB to główne
-  pozycje) albo nowe budżety (ADR 0273). Kafle DK19 są ~3× cięższe od Dojlid w High (620,7 vs 214,9 MB).
+- **Budżet streamingu PC (rozwiązane 18.11 decyzją właściciela):** najgorszy zestaw 3 sąsiadów to łańcuch DK19:
+  bojary 251,6 + mickiewicza 232,1 + wygoda 188,3 + przypięty C 124,2 = **796,2 MB** (było > 640 PC Low); High 620,7 + 557,6 +
+  489,9 + 267,0 = **1935,2 MB** (było > 1450). Właściciel (klik 18.11, po pomiarze GTX 1070: High VRAM 1,07–1,87 GB z 8 GB,
+  prywatna 2,1–3,3 GB; Low VRAM 0,45 GB; `artifacts/pc/DOM/20261118-*`, `artifacts/d3d-ab`) podniósł budżety PC:
+  **Low 640 → 850, High 1450 → 2000 MB** (WORKING_VALUE, dopisek w ADR 0273). Zapas 53,8 / 64,8 MB. LOD gęstych kafli
+  (ADR 0282; budynki High bojary 279,2 MB, teren High 201,4 MB) pozostaje drogą na kolejne kafle miejskie.
 - EditMode Win64 s24: 1328 / 1219 passed / 9 failed / 95 skipped; `RegionSelectTests` poprawiony (kafel `noStart` nie oferuje
   startu, ADR 0231 §5a); 7 błędów ciężarówki = brak zbudowanej ciężarówki w worktree. pytest tests/gis 2440 passed / 1 failed
   (`test_ec_chimneys`: `read_text()` bez kodowania na locale cp1250 — poprawione, 18/18).
