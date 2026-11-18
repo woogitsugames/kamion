@@ -1,0 +1,199 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0159",
+   "look_at": [
+    -306.716,
+    973.844,
+    127.626
+   ],
+   "note": "driver eye 2.5 m, control route s = 159 m of 1586 m (unnamed)",
+   "pos": [
+    -365.495,
+    986.013,
+    128.486
+   ],
+   "route_s_m": 158.621,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0476",
+   "look_at": [
+    2.005,
+    900.812,
+    129.538
+   ],
+   "note": "driver eye 2.5 m, control route s = 476 m of 1586 m (unnamed)",
+   "pos": [
+    -57.247,
+    910.946,
+    130.423
+   ],
+   "route_s_m": 475.863,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0793",
+   "look_at": [
+    310.567,
+    827.125,
+    132.244
+   ],
+   "note": "driver eye 2.5 m, control route s = 793 m of 1586 m (unnamed)",
+   "pos": [
+    251.303,
+    837.363,
+    132.677
+   ],
+   "route_s_m": 793.105,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1110",
+   "look_at": [
+    619.203,
+    753.733,
+    136.45
+   ],
+   "note": "driver eye 2.5 m, control route s = 1110 m of 1586 m (unnamed)",
+   "pos": [
+    560.409,
+    765.849,
+    136.954
+   ],
+   "route_s_m": 1110.347,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1428",
+   "look_at": [
+    928.066,
+    681.302,
+    136.679
+   ],
+   "note": "driver eye 2.5 m, control route s = 1428 m of 1586 m (unnamed)",
+   "pos": [
+    869.251,
+    693.299,
+    138.361
+   ],
+   "route_s_m": 1427.589,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_01_above",
+   "look_at": [
+    348.059,
+    719.79,
+    127.425
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1235817192:6492922969-2070873737",
+   "pos": [
+    418.059,
+    799.79,
+    169.425
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_02_above",
+   "look_at": [
+    339.578,
+    711.929,
+    127.285
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1235817193:2070873460-6492922969",
+   "pos": [
+    409.578,
+    791.929,
+    169.285
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_03_above",
+   "look_at": [
+    326.1,
+    714.621,
+    127.243
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1235817193:2070873532-2070873460",
+   "pos": [
+    396.1,
+    794.621,
+    169.243
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_04_above",
+   "look_at": [
+    318.675,
+    723.043,
+    127.194
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1235817193:7944573879-2070873532",
+   "pos": [
+    388.675,
+    803.043,
+    169.194
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_05_above",
+   "look_at": [
+    319.611,
+    731.568,
+    127.334
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1235817194:2070873434-7944573879",
+   "pos": [
+    389.611,
+    811.568,
+    169.334
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_06_above",
+   "look_at": [
+    345.358,
+    737.759,
+    127.518
+   ],
+   "note": "roundabout from ~40 m: ring_c:w636073217:2070873380-6492922975",
+   "pos": [
+    415.358,
+    817.759,
+    169.518
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 280.25,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk8-s8-jeroniki",
+ "schema": "truck-sim-pl/control-cameras/1"
+}
