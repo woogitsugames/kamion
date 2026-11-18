@@ -995,11 +995,22 @@ def build_dash():
     # export mixes the vertex tint towards a warm grey and adds roughness), uneven like a pad wiped now and then:
     # 6-12 cm blotches, a cloth swath in front of the driver, thick in the corners at the glass where no hand
     # reaches. WORKING_VALUE (no measured film; read in cab-driver / cab-trays at 1080p).
+    # Round 2 (after/High-clear cab-driver: the band at the glass lies behind the crown of the pad as seen from the
+    # eye, the film did not read): a thin film on the whole up-facing pad, drifts against the tray lips and in the
+    # passenger corner by the A-pillar - the parts of the pad the driver actually sees.
     def top_dust(co, nr):
         dst, pol = top_zones(co, nr)
+        up = smooth(0.35, 0.8, nr.z) if (co.y <= FRONT_WALL_Y - 0.03 and nr.z >= 0.35) else 0.0
         blotch = (0.45 + 0.55 * vnoise(co.x * 9.0, co.y * 13.0, 5.0)) * (0.6 + 0.4 * vnoise(co.x * 31.0, co.y * 27.0, 2.0)) / 0.8
         swath = 1.0 - 0.55 * math.exp(-((co.x + 0.55) / 0.34) ** 2) * (1 - smooth(yg - 0.16, yg - 0.05, co.y))
-        return 0.20 * dst * (1 - pol) * min(1.0, blotch) * swath
+        yf = dash_face_y(0.6)
+        drift = 0.0
+        for tx0_, tx1_ in ((0.00, 0.38), (0.44, 0.90)):
+            dd = max(tx0_ - co.x, co.x - tx1_, (yf + 0.085) - co.y, co.y - (yf + 0.245))
+            if dd > 0.0:
+                drift = max(drift, 1.0 - smooth(0.004, 0.05, dd))
+        corner = smooth(0.92, 1.10, co.x)
+        return ((0.065 * up + 0.20 * dst + 0.10 * up * drift + 0.08 * up * corner) * (1 - pol)) * min(1.0, blotch) * swath
     set_attr_w(d, "dust", top_dust)
     # parting line between the two mouldings
     pts = [lp[split] + V(0, -0.0015, 0) for lp in loops[1:-1]]
@@ -1058,7 +1069,7 @@ def build_dash():
                 bm.faces.new((grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1]))
         tm = G.finish(f"dash_tray_mat_{ti}", bm, "floor_mat", smooth=True, sharp=None)
         # D84 / ADR 0296: dust and grit collect between the ribs (the mat floor), more in the passenger tray nobody uses
-        set_attr_w(tm, "dust", lambda co, nr, ti=ti: (0.20 + 0.08 * ti) * (0.55 + 0.45 * vnoise(co.x * 11.0, co.y * 17.0, 9.0 + ti)))
+        set_attr_w(tm, "dust", lambda co, nr, ti=ti: (0.34 + 0.10 * ti) * (0.55 + 0.45 * vnoise(co.x * 11.0, co.y * 17.0, 9.0 + ti)))
         lip = []
         for (x, y) in ([(tx0 + (tx1 - tx0) * i / 10, ty0) for i in range(11)] + [(tx1, ty0 + (ty1 - ty0) * j / 4) for j in range(1, 5)] +
                        [(tx1 - (tx1 - tx0) * i / 10, ty1) for i in range(1, 11)] + [(tx0, ty1 - (ty1 - ty0) * j / 4) for j in range(1, 5)]):
@@ -1909,8 +1920,10 @@ def emblem(badge, c, n, v, mat="satin", rise=0.0012, h=0.0018):
     if badge == "none":
         # D84 / ADR 0296: the blank plate took the baked occlusion of the pad UNDER it (its own contact shadow, like the
         # spoke pods before r8) and read as a black rectangle on the hub. It now takes the occlusion of the open pad
-        # 22 mm above its centre (a6_export 'ao_probe') and stands 1 mm proud instead of 2.
-        ob = panel("emblem_plate", rrect(0.050, 0.022, 0.008, 3), c + n * 0.001, n, v, 0.003, "metal_dark", bev=0.001)
+        # 22 mm above its centre (a6_export 'ao_probe'), stands 1 mm proud instead of 2 and is moulded in the pad's
+        # own soft skin (brushed dark metal with open-pad occlusion read as a pale pill, 41 vs 33 sRGB): a blank
+        # tone-on-tone boss, visible by its edge only.
+        ob = panel("emblem_plate", rrect(0.050, 0.022, 0.008, 3), c + n * 0.001, n, v, 0.003, "dash_soft", bev=0.001)
         ob["ao_probe"] = tuple(c + v * 0.022)
         return
     path = os.path.join(REPO, "art-source", "truck", "brand", f"{badge}.svg")
