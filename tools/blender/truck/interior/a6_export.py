@@ -91,6 +91,8 @@ DETAIL_SET = {"MI_Cab_Plastic": ("dashgrain", 1024), "MI_Cab_Leather": ("leather
 WEAR_MUL = {"leather_trim": 1.9, "leather": 2.3, "leather_wheel": 2.5, "leather_wheel_perf": 2.5, "leather_centre": 1.5, "floor_mat": 2.4, "scuff_plate": 1.3,
             "switch": 1.35, "grab_dark": 2.0, "knob": 1.8, "dash_lower": 1.45}
 BLACK_TINT = 0.04          # mean linear tint below this = black part: its worn spots are darkened so that the shader's
+DUST_RGB = (0.210, 0.195, 0.165)   # D84 / ADR 0296: settled dust, linear albedo (warm light grey). WORKING_VALUE
+DUST_ROUGH = 0.35                  # roughness added per unit dust (a matt film)
 BLACK_WEAR_DARKEN = 0.30   # worn albedo (lerp to max(base, 0.05)) stays <= 0.05 (ADR 0044 r6)
 NO_AO = ("curtain_", "blind_", "hatch_blind",     # thin interpenetrating cloth (critic #15) and the rim, which
          "wheel_rim", "wheel_stitch",           # rotates (a baked occlusion pattern would turn with it): median value
@@ -343,6 +345,7 @@ def consolidate(objs):
         wear = me.attributes.get("wear")
         tadd = me.attributes.get("tint_add")     # r6b: authored zones (build_interior.set_attr_w)
         radd = me.attributes.get("rough_add")
+        dust = me.attributes.get("dust")         # D84 / ADR 0296: dust film 0..1 (mix towards DUST_RGB, + roughness)
         uv0 = me.uv_layers["UVMap"].data
         d0 = me.uv_layers["Data0"].data
         d1 = me.uv_layers["Data1"].data
@@ -373,8 +376,10 @@ def consolidate(objs):
                 tk = 1.0 + (tadd.data[vi].value if tadd else 0.0)
                 if sum(tint[:3]) / 3.0 < BLACK_TINT:
                     tk *= 1.0 - BLACK_WEAR_DARKEN * min(1.0, wn)
-                col.data[li].color = (tint[0] * tk, tint[1] * tk, tint[2] * tk,
-                                      max(0.02, min(1.0, rough + (radd.data[vi].value if radd else 0.0))))
+                du = max(0.0, min(1.0, dust.data[vi].value)) if dust else 0.0
+                col.data[li].color = (tint[0] * tk * (1 - du) + DUST_RGB[0] * du, tint[1] * tk * (1 - du) + DUST_RGB[1] * du,
+                                      tint[2] * tk * (1 - du) + DUST_RGB[2] * du,
+                                      max(0.02, min(1.0, rough + (radd.data[vi].value if radd else 0.0) + DUST_ROUGH * du)))
                 d0[li].uv = (wn, strength)
                 d1[li].uv = (perf, metal)
                 if slot == "MI_Cab_Decal":
@@ -402,6 +407,8 @@ def texel_weight(name):
           "drv_", "stack_", "door_insert", "dash_insert", "dash_tray", "column_shroud")
     lo = ("bunk_base", "drawer_", "rear_oh", "rear_lid", "upper_bunk", "floor_slab", "back_wall", "side_rear",
           "footwell_wall", "_bellows", "_base", "_rail", "_pan", "skin", "roof_", "mirror_", "kerb_", "front_")
+    if name.startswith("dash_tray_ribs_"):   # D84 / ADR 0296: 6 mm flanks need ~1 mm texels (0.09 m2 in total)
+        return 3.0
     if name.startswith(lo) or any(k in name for k in ("skin", "_bellows", "_rail_")):
         return 0.45
     if name.startswith(hi):
@@ -641,6 +648,19 @@ def layout_bake_uv(objs, receivers):
     bpy.ops.uv.smart_project(angle_limit=math.radians(UV_CFG["angle"]), island_margin=0.0, area_weight=0.0, correct_aspect=True,
                              scale_to_bounds=False)
     bpy.ops.object.mode_set(mode="OBJECT")
+    # D84 / ADR 0296: parts with an authored atlas unwrap ('BakeAuth', metres: dash tray ribs) keep it; the layer must not
+    # reach the joined groups / FBX
+    for o in objs:
+        la = o.data.uv_layers.get("BakeAuth")
+        if la is None:
+            continue
+        if o in rec:
+            auth = [tuple(d.uv) for d in la.data]
+            for d, uv_ in zip(o.data.uv_layers["Bake"].data, auth):
+                d.uv = uv_
+        o.data.uv_layers.remove(o.data.uv_layers["BakeAuth"])
+        o.data.uv_layers.active = o.data.uv_layers["Bake"]
+    UV_STATS["authored_bake_uv_parts"] = sum(1 for o in rec if (o["src"] if "src" in o else o.name).startswith("dash_tray_ribs_"))
     for o in rec:  # uniform density, then texel priority
         me = o.data
         uv = me.uv_layers["Bake"].data
@@ -962,6 +982,9 @@ def write_rgba(arr, path, size):
     bpy.data.images.remove(im)
 
 
+KEEP_LEATHER = [False]   # --keep-leather-maps (main)
+
+
 def build_textures(out_dir, cab_materials_only=False):
     """Per slot: _Detail (R variation, G micro-AO, B roughness, A perforation/extra) + _Normal (OpenGL, +Y up);
     decal atlas (RGBA, A = coverage); display placeholders; glass grime. Sizes per tier (power of two, ASTC 4x4..8x8)."""
@@ -1032,7 +1055,7 @@ def build_textures(out_dir, cab_materials_only=False):
     # ADR 0112 r2: optional scan keeps this export's sizes, alpha and material slots.
     # Enabled-but-missing sources fail explicitly; there is no synthetic fallback.
     import cc0_leather
-    cc0_leather.apply_runtime_maps(out_dir)
+    cc0_leather.apply_runtime_maps(out_dir, skip=("leather",) if KEEP_LEATHER[0] else ())
     return written
 
 
@@ -1418,6 +1441,10 @@ def main():
     p.add_argument("--debug-ao", action="store_true", help="URP renders show only the AO atlas (QA)")
     p.add_argument("--probe-gain", type=float, default=1.0, help="QA: scale the windscreen probe reflection")
     p.add_argument("--debug-col", action="store_true", help="URP renders show only the vertex tint (QA)")
+    p.add_argument("--keep-leather-maps", action="store_true",
+                   help="Geometry / AO re-export in a checkout without the CC0 leather raw scans (cc0/_raw is outside git): "
+                        "the committed scan-derived T_Cab_Leather_* maps of --out are kept byte-identical instead of "
+                        "being regenerated. Not a fallback: without this flag a missing scan still fails")
     a = p.parse_args(argv)
     out = os.path.abspath(a.out)
     if a.urp_out:   # A6 r3: Blender resolves a relative render path against the drive root, not the cwd
@@ -1437,10 +1464,22 @@ def main():
         old = json.load(open(man_path, encoding="utf-8"))
         manifest["lods"].update(old.get("lods", {}))
     lods = [int(x) for x in a.lods.split(",") if x != ""]
+    kept = {}
+    if a.keep_leather_maps:
+        import glob
+        KEEP_LEATHER[0] = True
+        for f in glob.glob(os.path.join(out, "textures", "*", "T_Cab_Leather_*.png")):
+            kept[f] = open(f, "rb").read()
+        if not kept:
+            raise FileNotFoundError("--keep-leather-maps: no T_Cab_Leather_* maps under " + os.path.join(out, "textures"))
     for lod in sorted(lods, reverse=True):          # LOD0 last: its scene stays loaded for the URP-like renders
         process_lod(lod, a, out, manifest)
         if tex is None:
             tex = build_textures(os.path.join(out, "textures"))
+            for f, data in kept.items():            # build_textures rewrote the pre-scan maps: put the scan-derived ones back
+                open(f, "wb").write(data)
+            if kept:
+                print(f"CAB_CC0 profile=leather kept {len(kept)} committed maps (--keep-leather-maps)")
     manifest.update(contract(tex, out))
     json.dump(manifest, open(man_path, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     print("WROTE", man_path)

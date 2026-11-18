@@ -46,10 +46,13 @@ def config_args(output, alpha, config=CONFIG, fetch=False, profile='leather'):
     return args, entry
 
 
-def apply_runtime_maps(output):
-    """Called by the cab exporter; an enabled scan must be available and verified."""
+def apply_runtime_maps(output, skip=()):
+    """Called by the cab exporter; an enabled scan must be available and verified. `skip`: profiles whose existing
+    maps the caller keeps (a6_export --keep-leather-maps)."""
     document = json.loads(CONFIG.read_text(encoding='utf-8-sig'))
     for profile in ('leather', 'plastic'):
+        if profile in skip:
+            continue
         entry = document.get(profile)
         if entry and profile == 'plastic' and entry.get('mode') == 'procedural_stipple':
             # D84: moulded plastic is a synthesised stipple, not a derivative of the leather scan (plastic_grain.py).
