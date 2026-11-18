@@ -21,3 +21,11 @@
 - Spill fizyczny ≤ +7/255 (A/B rq_cabspill) → spillScale 4 (WORKING_VALUE, brakujące źródła: pierścienie zegarów, legendy, odbicia).
 - Timing edytora GTX 1070: soft cab cab-driver 1,90 → 1,93 ms, Ultra 7,06 → 7,19; cab-dash 2,54 → 4,48 (podejrzany warm-up, powtórka w after3).
 - NASTĘPNY KROK: czekać na after3 (`artifacts/night-truck-s24/after3.status`), zmierzyć, EditMode Win64, ADR 0297.
+
+## 23:5x KONIEC (gotowe do review / scalenia)
+- final: pozycyjne 54,7 → 110,7 R (High noc, z bliska), z dystansu 54,6 → 120,9; stop 236; tablica 205 → 143 (< stop); poświata obudowy wokół stopu 9 → 24 R (2 m) / 120 R (4 m); stop:pozycyjne 5,26:1 (regulamin, test).
+- Kabina noc High: deska 12,4 → 6,1, słupek A 17,7 → 7,1, niebo 12 (kabina ciemniejsza od nieba); spill zegarów/nawigacji +1–7/255 (fizycznie lekki, ×4).
+- Cienie kabiny PC: miękkie (warianty _SHADOWS_SOFT w CabInterior + gałąź telefonów), krawędź 10 → 22 px High; koszt w szumie edytora.
+- Testy: EditMode Win64 1296/1393 (3 porażki jak na main), NightTruck0297Tests 6/6, LampRegulationTests 19/19, lamp-check 187/187.
+- Dowody: artifacts/night-truck-s24/view (worktree + main). ADR 0297.
+- NASTĘPNY KROK (lider): scal `night-truck-s24`, potem BuildBatch truck+trailer, build Windows i `pc-metrics.ps1` (czas GPU spill/soft w buildzie), zrzut z playera nocą, visual-critic.
