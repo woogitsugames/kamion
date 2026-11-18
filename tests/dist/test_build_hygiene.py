@@ -1,4 +1,4 @@
-"""build-hygiene-s23: corridor / D3D11 launchers (postbuild-windows.py), their way into the tester zip
+"""build-hygiene-s23: corridor / D3D12 opt-in launchers (D3D11 default since ADR 0291) (postbuild-windows.py), their way into the tester zip
 (package-windows.py), the scene check before a full build (check-build-scenes.py) and the region catalog invariants of
 the full build (d67-full). No Unity, no real build.
 
@@ -61,7 +61,7 @@ def make_build(root: Path, log_text: str) -> Path:
     return b
 
 
-# ---------------------------------------------------------------- postbuild: tiles, corridor, D3D11
+# ---------------------------------------------------------------- postbuild: tiles, corridor, D3D12 opt-in
 
 def test_tile_regions_from_log():
     assert pb.tile_regions_from_log(CORRIDOR_LOG) == ["knyszyn-s", "knyszyn"]
@@ -74,22 +74,24 @@ def test_tile_regions_from_log():
 def test_corridor_needs_the_neighbour_tile_scene(tmp_path):
     a = tmp_path / "a"; a.mkdir()
     written, _ = pb.write_launchers(a, ["knyszyn-s", "knyszyn"], tiles=[])
-    assert "Kamion-korytarz.cmd" not in written and "Kamion-korytarz-d3d11.cmd" not in written
+    assert "Kamion-korytarz.cmd" not in written and "Kamion-korytarz-d3d12.cmd" not in written
     assert not (a / "Kamion-korytarz.cmd").exists()
     b = tmp_path / "b"; b.mkdir()
     written, _ = pb.write_launchers(b, ["knyszyn-s", "knyszyn"], tiles=["knyszyn-s"])
-    assert written[-2:] == ["Kamion-korytarz.cmd", "Kamion-korytarz-d3d11.cmd"]
+    assert written[-2:] == ["Kamion-korytarz.cmd", "Kamion-korytarz-d3d12.cmd"]
 
 
-def test_d3d11_launchers_exact_text(tmp_path):
+def test_d3d12_launchers_exact_text(tmp_path):
     pb.write_launchers(tmp_path, ["knyszyn-s", "knyszyn"], tiles=["knyszyn-s"])
-    assert (tmp_path / "Kamion-d3d11.cmd").read_bytes() == b'@echo off\r\nstart "" "%~dp0Kamion.exe" -force-d3d11 %*\r\n'
-    assert (tmp_path / "Kamion-korytarz-d3d11.cmd").read_bytes() == (
-        b'@echo off\r\nstart "" "%~dp0Kamion.exe" -scene knyszyn -stream 1 -force-d3d11 %*\r\n')
-    # the fallback forces no screen mode (StartupDisplayPolicy: only -screen-* / -window-mode / -popupwindow do)
-    for n in ("Kamion-d3d11.cmd", "Kamion-korytarz-d3d11.cmd"):
+    assert (tmp_path / "Kamion-d3d12.cmd").read_bytes() == b'@echo off\r\nstart "" "%~dp0Kamion.exe" -force-d3d12 %*\r\n'
+    assert (tmp_path / "Kamion-korytarz-d3d12.cmd").read_bytes() == (
+        b'@echo off\r\nstart "" "%~dp0Kamion.exe" -scene knyszyn -stream 1 -force-d3d12 %*\r\n')
+    # the D3D12 opt-in forces no screen mode (StartupDisplayPolicy: only -screen-* / -window-mode / -popupwindow do)
+    for n in ("Kamion-d3d12.cmd", "Kamion-korytarz-d3d12.cmd"):
         t = (tmp_path / n).read_text(encoding="ascii")
         assert "-screen-" not in t and "-window-mode" not in t and "-popupwindow" not in t
+    # ADR 0291: Direct3D 11 is the default, so no -force-d3d11 launcher any more
+    assert not (tmp_path / "Kamion-d3d11.cmd").exists() and not (tmp_path / "Kamion-korytarz-d3d11.cmd").exists()
 
 
 def test_cli_warns_when_corridor_tiles_missing(tmp_path, capsys):
@@ -98,7 +100,7 @@ def test_cli_warns_when_corridor_tiles_missing(tmp_path, capsys):
     cap = capsys.readouterr()
     out = json.loads(cap.out)
     assert out["tileRegionIds"] == [] and "Kamion-korytarz.cmd" not in out["launchers"]
-    assert "Kamion-d3d11.cmd" in out["launchers"]
+    assert "Kamion-d3d12.cmd" in out["launchers"]
     assert "Kamion-korytarz.cmd not written" in cap.err
 
 
@@ -110,12 +112,12 @@ def test_postbuild_launchers_reach_the_zip_with_readme(tmp_path, capsys):
     capsys.readouterr()
     plan = pw.plan_package(b)
     shipped = {f.as_posix() for f in plan.files}
-    for n in ("Kamion-okno.cmd", "Kamion-d3d11.cmd", "Kamion-korytarz.cmd", "Kamion-korytarz-d3d11.cmd",
+    for n in ("Kamion-okno.cmd", "Kamion-d3d12.cmd", "Kamion-korytarz.cmd", "Kamion-korytarz-d3d12.cmd",
               "Kamion-knyszyn.cmd", "Kamion-knyszyn-s.cmd", "Kamion-dk65-11.cmd", "build-id.json"):
         assert n in shipped, n
     ex = pw.extras(plan)
     readme = ex["README.txt"].decode("utf-8-sig")
-    for must in ("Kamion-korytarz.cmd", "Kamion-<region>.cmd", "Kamion-d3d11.cmd", "Kamion-korytarz-d3d11.cmd",
+    for must in ("Kamion-korytarz.cmd", "Kamion-<region>.cmd", "Kamion-d3d12.cmd", "Kamion-korytarz-d3d12.cmd",
                  r"%LOCALAPPDATA%\CrashDumps"):
         assert must in readme, must
     assert "Zbierz-logi.cmd" in ex and "collect-logs.ps1" in ex
@@ -127,8 +129,8 @@ def test_corridor_launcher_left_out_of_zip_when_knyszyn_not_built(tmp_path, caps
     capsys.readouterr()
     (tmp_path / "build-win.log").write_text(log_line(region_scenes("dk65-11", False)), encoding="utf-8")
     plan = pw.plan_package(b)
-    assert "Kamion-korytarz.cmd" in plan.excluded and "Kamion-korytarz-d3d11.cmd" in plan.excluded
-    assert "Kamion-d3d11.cmd" in {f.as_posix() for f in plan.files}
+    assert "Kamion-korytarz.cmd" in plan.excluded and "Kamion-korytarz-d3d12.cmd" in plan.excluded
+    assert "Kamion-d3d12.cmd" in {f.as_posix() for f in plan.files}
 
 
 def test_collect_logs_takes_wer_crash_dumps():

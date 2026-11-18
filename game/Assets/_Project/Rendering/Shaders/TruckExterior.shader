@@ -6,7 +6,8 @@
 // - Lights slot (_KAMION_TRUCK_LAMPS): emission = _TruckLightState[uv2.x] (RGB luminance / _TruckLightNitsScale, written by
 //   TruckLights) * _TruckLightNitsScale * uv2.y * _KamionExposure, decoded in float (EnvironmentLighting). Lamps are therefore in the same
 //   exposed units as the sun and sky: a DRL is bright, a tail lamp is a dim red by day, both read correctly at dusk.
-//   Display limits: DRL = luminance shoulder (ADR 0115); all other groups = hue-preserving max-channel shoulder (ADR 0178).
+//   Display limits: DRL = luminance shoulder (ADR 0115); all other groups = hue-preserving max-channel shoulder (ADR 0178),
+//   taken at the group's reference level from the state alpha where set (ADR 0197: stop : tail kept after the limit).
 // - Lighting: URP UniversalFragmentPBR (main light + cascaded shadows, SH ambient x AO, reflection probe / custom
 //   environment). Tyre deflection: renderers with rendering layer bit 8 (TruckVisualRig.TyreRenderingLayer, the wheel
 //   meshes, origin = wheel centre) or bit 9 (TrailerVisualRig.TyreRenderingLayer, trailer wheels) are flattened in the vertex shader at _KamionTyreFlatRadius below the wheel centre
@@ -71,7 +72,8 @@ Shader "Kamion/Truck Exterior"
         _LampHueKnee ("Signal lamps: hue-preserving shoulder knee (max channel, exposed units)", Range(0, 2)) = 0.4
         _LampHueCeiling ("Signal lamps: hue-preserving ceiling of max(r,g,b) (0 = off)", Range(0, 4)) = 0.8
         _LensDetail ("Lamp lens optics from uv1 (ADR 0181; 0 = flat lenses)", Range(0, 1)) = 1
-        _PlateIllum ("Number plate luminance / plate lamp luminance at the top edge (ADR 0181)", Range(0, 0.1)) = 0.005
+        _PlateIllum ("Number plate luminance / plate lamp luminance at the top edge (ADR 0181, 0197)", Range(0, 0.1)) = 0.006
+        _PlateDisplayMax ("Number plate: display shoulder of the lit plate, exposed luminance (ADR 0297; 0 = off)", Range(0, 2)) = 0.55
     }
     SubShader
     {
@@ -88,6 +90,7 @@ Shader "Kamion/Truck Exterior"
             float _DrlHighlightShoulder;
             float _LampHueKnee, _LampHueCeiling;
             float _LensDetail, _PlateIllum;   // ADR 0181
+            float _PlateDisplayMax;           // ADR 0297
             float _CoatedBaseRoughness, _OrangePeel, _GrimeHeight, _GrimeChassis;
             float4 _CurtainGrime, _CurtainAxles, _CurtainPosts, _RearGrime, _RearGrime2, _RearGrime3, _RearGrimeColor;
         CBUFFER_END
@@ -156,6 +159,9 @@ Shader "Kamion/Truck Exterior"
             TEXTURE2D(_MMap);
             TEXTURE2D(_DecalMap); SAMPLER(sampler_DecalMap);
             TEXTURE2D(_TruckLightState); SAMPLER(sampler_point_clamp);
+            // Lamp-state texture width (texel x = light group id). ADR 0197: 32 (ids 16 TAIL / 17 STOP of the trailer).
+            // Must equal LampPhotometry.StateTexels (TruckLights writes it).
+            #define KAMION_LAMP_TEXELS 32.0
             float _KamionExposure;
             float _TruckLightNitsScale; // TruckLights: nits per RGBAHalf encoded unit
             float3 TruckLampRadiance(float3 encoded)
@@ -177,13 +183,24 @@ Shader "Kamion/Truck Exterior"
             // push the secondary channels up until the core is white. One common RGB scale bounds max(r,g,b): identity up to
             // the knee, then a rational shoulder that approaches the ceiling. Channel ratios (chromaticity) are untouched.
             // ceiling <= knee or <= 0 disables it. Lamp pixels only (_KAMION_TRUCK_LAMPS, uv2 group != 0). WORKING_VALUEs.
-            float3 TruckLampHueLimit(float3 radiance, float knee, float ceiling)
+            // ADR 0197: the common scale is taken at r = max(refMax, m), refMax = the exposed max channel of the group's
+            // brightest state (state texel alpha, LampPhotometry.LimiterReferenceNits). Every state of the group then shares
+            // one gain and keeps its linear ratio to that state: tail stays 1 / 15.4 of the stop after the limit (UN R148
+            // 4.8.11 >= 5 : 1; the per-pixel limit gave 1 : 1 at dusk). refMax = 0 is ADR 0178. Output max channel is still
+            // <= ceiling (m <= r). Mirrors LampPhotometry.HueLimitScale (plain C#, tools/lamp-check).
+            float3 TruckLampHueLimitRef(float3 radiance, float refMax, float knee, float ceiling)
             {
                 if (ceiling <= 0.0 || ceiling <= knee) return radiance;
                 float m = max(max(radiance.r, radiance.g), radiance.b);
-                float over = max(m - knee, 0.0);
-                float limited = min(m, knee) + over / (1.0 + over / (ceiling - knee));
-                return radiance * (limited / max(m, 1e-6));
+                float r = max(refMax, m);
+                if (r <= knee) return radiance; // identity below the knee (review O1)
+                float over = max(r - knee, 0.0);
+                float limited = min(r, knee) + over / (1.0 + over / (ceiling - knee));
+                return radiance * (limited / max(r, 1e-6));
+            }
+            float3 TruckLampHueLimit(float3 radiance, float knee, float ceiling)
+            {
+                return TruckLampHueLimitRef(radiance, 0.0, knee, ceiling);
             }
             float _KamionClearCoatOff;
             half4 _CabShadowLift;   // cab-view local shadow lift (CabInteriorLighting; 0 outside the cab view)
@@ -555,10 +572,10 @@ Shader "Kamion/Truck Exterior"
                 s.alpha = 1;
                 s.normalTS = nTS;
             #if defined(_KAMION_TRUCK_LAMPS)
-                // 16 x 1 state texture: texel x = light group id (0 = none).
-                float u = (i.uv2.x + 0.5) / 16.0;
-                float3 encoded = SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(u, 0.5), 0).rgb;
-                float3 lampRadiance = TruckLampRadiance(encoded);
+                // 32 x 1 state texture: texel x = light group id (0 = none); rgb = luminance, a = limiter reference (ADR 0197).
+                float u = (i.uv2.x + 0.5) / KAMION_LAMP_TEXELS;
+                float4 encoded = SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(u, 0.5), 0);
+                float3 lampRadiance = TruckLampRadiance(encoded.rgb);
                 // Manifest light group 1 = DRL keeps its ADR 0115 luminance shoulder (white, output <= 0.8); every other
                 // group gets the ADR 0178 max-channel hue limit, so red / amber stay red / amber instead of clipping white.
                 if (abs(i.uv2.x - 1.0) < 0.25)
@@ -568,7 +585,14 @@ Shader "Kamion/Truck Exterior"
                     // ADR 0181: emitter structure in exposed radiance before the limit, residual contrast after it; the
                     // number plate re-emits the plate lamp diffusely (its dirty albedo x falloff from the lamp above).
                     if (lens.style > 4.5) lampRadiance *= albedo * (_PlateIllum * lens.plate);
-                    lampRadiance = TruckLampHueLimit(lampRadiance * lens.hdr, _LampHueKnee, _LampHueCeiling) * lens.disp;
+                    float refMax = TruckLampRadiance(encoded.aaa).x * lens.hdr;   // 0 for groups without a reference
+                    lampRadiance = TruckLampHueLimitRef(lampRadiance * lens.hdr, refMax, _LampHueKnee, _LampHueCeiling) * lens.disp;
+                    // ADR 0297 (owner 18.11, review s24 L3: plate 205/255 against tail lamps at 55 - hierarchy inverted). The
+                    // lamps are display-limited (ADR 0178 / 0197), the lit plate was not: its 3-12 cd/m^2 (R148 5.11.3 >= 2.5,
+                    // LampPhotometry, unchanged) reached the white end at the night exposure while 4 000 cd/m^2 lamps sit at
+                    // <= 0.8 x 1/5. Same display-side treatment: a luminance shoulder y / (1 + y / M) keeps the gradient from the
+                    // plate lamp and the legibility, and puts the plate under the stop lamp. Plate pixels only.
+                    if (lens.style > 4.5) lampRadiance = TruckDrlHighlight(lampRadiance, _PlateDisplayMax);
                 }
                 s.emission = (half3)(lampRadiance * saturate(i.uv2.y));
             #endif
@@ -644,7 +668,15 @@ Shader "Kamion/Truck Exterior"
                 half gl = 1.0 + _CabShadowLift.x * ql * ql * ql;
                 col.rgb = lerp(col.rgb * gl, (yl * gl).xxx, _CabShadowLift.z * (1.0 - 1.0 / gl));   // neutral lift (r5 L2)
                 col.rgb = KamionToeParity(col.rgb);   // cab view on the tiers without the D23 LUT (identity elsewhere)
-                col.rgb = KamionMixFog(col.rgb, i.fogFactor);
+                // ADR 0197: lamp pixels are exempt from the night dim-colour desaturation in proportion to their emissive
+                // share (self-luminous signal colours stay R48 red / amber); surfaces keep the ADR 0108 look.
+                half dimScale = 1.0;
+            #if defined(_KAMION_TRUCK_LAMPS)
+                half emitMax = max(s.emission.r, max(s.emission.g, s.emission.b));
+                half colMax = max(col.r, max(col.g, col.b));
+                dimScale = 1.0 - saturate(emitMax / max(colMax, 1e-4));
+            #endif
+                col.rgb = KamionMixFogScaled(col.rgb, i.fogFactor, dimScale);
                 return half4(col.rgb, 1);
             }
             ENDHLSL

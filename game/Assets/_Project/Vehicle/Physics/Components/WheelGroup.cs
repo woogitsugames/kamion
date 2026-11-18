@@ -194,7 +194,21 @@ namespace Game.Vehicle.Physics
             w.SPrev = sEff;
             w.HasPrev = true;
             w.Compression = w.SStatic - sEff;
-            w.SuspensionForce = SpringForce(su, w, sEff) + DamperForce(su, rate);
+            w.SuspensionForce = SpringForce(su, w, sEff) + DamperForce(su, rate) + BumpStopUnloading(su, sEff, rate);
+        }
+
+        /// <summary>
+        /// ADR 0228: unloading hysteresis of the elastomer bump stop. While the stop extends (b_dot &lt; 0) its force is
+        /// lowered to rate b^2 (1 + h b_dot) (Hunt-Crossley form, K. H. Hunt, F. R. E. Crossley, J. Appl. Mech. 42(2), 1975),
+        /// never below 0; on compression it stays elastic, so impact peaks (kerb Fz ceilings) are unchanged and only the
+        /// energy given back is reduced. Zero off the stop or with bumpStopHysteresis = 0.
+        /// </summary>
+        static double BumpStopUnloading(SuspensionDefinition su, double s, double rate)
+        {
+            if (su.bumpStopHysteresis <= 0 || s >= su.bumpStopClearance || rate >= 0) return 0;
+            double b = su.bumpStopClearance - s;
+            double elastic = su.bumpStopRate * b * b;
+            return Math.Max(-elastic, elastic * su.bumpStopHysteresis * rate);
         }
 
         static double RateScale(SuspensionDefinition su, WheelState w) =>

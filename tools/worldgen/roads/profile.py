@@ -303,7 +303,8 @@ def _surface_offset(e, roof, lat):
     return -S.CROSSFALL * abs(lat) if roof else e * lat
 
 
-def adjacent_targets(c, ground: list, el, min_dot: float = 0.9) -> dict:
+def adjacent_targets(c, ground: list, el, min_dot: float = 0.9, touch_m: float | None = None,
+                     same_dir: bool = False) -> dict:
     """Stations of chain c (not elevated) whose edge touches or overlaps a roughly parallel, already solved ground
     road (gap between the edges < ADJ_TOUCH_M): the centreline height that puts this edge on that road's surface.
     Two carriageways side by side (a merge, an on-ramp along a main road) share their edge height; the NMT alone
@@ -313,6 +314,7 @@ def adjacent_targets(c, ground: list, el, min_dot: float = 0.9) -> dict:
         return {}
     from shapely import STRtree
     from shapely.geometry import LineString, Point
+    touch = S.ADJ_TOUCH_M if touch_m is None else float(touch_m)
     tree = STRtree([LineString(g.line.p) for g in ground])
     ce = crossfall(c)
     out = {}
@@ -321,7 +323,7 @@ def adjacent_targets(c, ground: list, el, min_dot: float = 0.9) -> dict:
             continue
         p, t = c.line.p[i], c.line.t[i]
         best = None
-        for k in tree.query(Point(*p).buffer(float(c.hw[i]) + 8.0 + S.ADJ_TOUCH_M)):
+        for k in tree.query(Point(*p).buffer(float(c.hw[i]) + 8.0 + touch)):
             g = ground[int(k)]
             if g is c:
                 continue
@@ -331,8 +333,10 @@ def adjacent_targets(c, ground: list, el, min_dot: float = 0.9) -> dict:
             io = g.idx(s_o)
             if abs(float(np.dot(g.line.t[io], t))) < min_dot:
                 continue
+            if same_dir and float(np.dot(g.line.t[io] * g.dirn[io], t * c.dirn[i])) < min_dot:
+                continue
             hw_o = float(g.hw_at(s_o))
-            if abs(lat_o) - hw_o - float(c.hw[i]) >= S.ADJ_TOUCH_M:
+            if abs(lat_o) - hw_o - float(c.hw[i]) >= touch:
                 continue
             sg = 1.0 if float(np.dot(g.line.point(s_o) - p, c.line.n[i])) > 0 else -1.0
             edge = p + c.line.n[i] * sg * float(c.hw[i])
@@ -430,6 +434,60 @@ def build_profiles(net, hf: Heightfield, ties=None) -> dict:
                                              zend.get((c.id, -1), zn.get(c.node_b)), rmin_of[c.id], el_of[c.id],
                                              adj=adj)
             stats[c.id]["adjacent_edge"] = {"stations": len(adj)}
+            ground[c.id] = c.z
+    # 1d) ADR 0293 (B): a one-way carriageway beside the through carriageway of a motorway / expressway, same direction,
+    #     gap < EXPRESS_PARALLEL_GAP_M (OSM deceleration / acceleration lanes drawn as *_link ways from the diverge
+    #     node) is on that carriageway's surface. From the NMT alone the S8 links of dk65-01 lay 0.3-1.1 m below the
+    #     S8 edge 1.5-3 m away, so the gap became a raised kerb strip instead of a painted wedge.
+    mains = [c for c in net.chains if c.id in ground and (c.dirn != 0).all()
+             and S.is_express_main(net.sec_list[int(c.sec_idx[len(c.sec_idx) // 2])])]
+    if mains:
+        for c in mains:
+            c.e = crossfall(c)
+        main_ids = {m.id for m in mains}
+        main_nodes = {nd for m in mains for nd in (m.node_a, m.node_b)}
+        adj_x = {}
+        for c in net.chains:
+            if c.id not in ground or c.id in main_ids or not (c.dirn != 0).all() or c.roundabout:
+                continue
+            adj = adjacent_targets(c, mains, el_of[c.id], touch_m=S.EXPRESS_PARALLEL_GAP_M, same_dir=True)
+            if len(adj) * DENSE >= 10.0:         # else a node touch, not a lane beside the main carriageway
+                adj_x[c.id] = adj
+        # the OSM lane is split into several ways: the nodes between them (not on a main carriageway) lie beside
+        # the main carriageway too, so they take the tied height (else every way kept the NMT node height at its
+        # ends: residuals up to 0.9 m at the joints, measured in dk65-01)
+        node_t = {}
+        for c in net.chains:
+            adj = adj_x.get(c.id)
+            if not adj:
+                continue
+            for e, nd in ((0, c.node_a), (len(c.line.s) - 1, c.node_b)):
+                if nd in main_nodes or (c.id, 0 if e == 0 else -1) in zend:
+                    continue
+                k = min(adj, key=lambda i: abs(i - e))
+                if abs(k - e) * DENSE <= 3.0:
+                    node_t.setdefault(nd, []).append(float(adj[k]))
+        moved = {nd: float(np.mean(v)) for nd, v in node_t.items()}
+        zn_old = {nd: zn.get(nd) for nd in moved}
+        zn.update(moved)
+        # a chain end shifted off a moved node (1c) keeps its offset to the node: the lane that leaves the stem
+        # beside the main carriageway starts on the stem's new surface, not on its NMT height
+        for (cid, e), zz in list(zend.items()):
+            c = by_id[cid]
+            nd = c.node_a if e == 0 else c.node_b
+            if nd in moved and zn_old[nd] is not None:
+                zend[(cid, e)] = moved[nd] + (zz - zn_old[nd])
+        for c in net.chains:
+            if c.id not in ground or c.id in main_ids:
+                continue
+            if c.id not in adj_x and c.node_a not in moved and c.node_b not in moved:
+                continue
+            c.z, stats[c.id] = chain_profile(c, hf, zend.get((c.id, 0), zn.get(c.node_a)),
+                                             zend.get((c.id, -1), zn.get(c.node_b)), rmin_of[c.id], el_of[c.id],
+                                             adj=adj_x.get(c.id))
+            if c.id in adj_x:
+                stats[c.id]["express_parallel_tie"] = {"stations": len(adj_x[c.id]),
+                                                       "nodes_moved": sum(nd in moved for nd in (c.node_a, c.node_b))}
             ground[c.id] = c.z
     # 2) grade separation: deck heights over the ground roads
     req = clearance_requirements(net, el_of, ground)

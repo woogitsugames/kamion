@@ -234,6 +234,25 @@ namespace Game.Editor.Setup
             Debug.Log("[SETUP] fixedDeltaTime 0.01 s, max 0.1 s/frame, layer 8 = Vehicle, layer 9 = WorldKerb (ignores Vehicle)");
         }
 
+        /// <summary>
+        /// Standalone Windows graphics API order (ADR 0291, owner decision 18.11.2026 after the GTX 1070 A/B in
+        /// artifacts/d3d-ab/): Direct3D 11 first = default, Direct3D 12 stays in the build as the opt-in
+        /// <c>-force-d3d12</c> (launchers Kamion-d3d12.cmd / Kamion-korytarz-d3d12.cmd). The D3D12 exclusive -> borderless
+        /// mitigation (Game.Core.Settings.ExclusiveFullscreenPolicy, crash-diag-s23) checks the runtime device type, so it
+        /// still applies when D3D12 is forced.
+        /// </summary>
+        public static readonly GraphicsDeviceType[] WindowsGraphicsApis =
+            { GraphicsDeviceType.Direct3D11, GraphicsDeviceType.Direct3D12 };
+
+        /// <summary>Idempotent: explicit (non-automatic) API list for StandaloneWindows64 in the order above.</summary>
+        public static void ApplyWindowsGraphicsApis()
+        {
+            PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64, false);
+            PlayerSettings.SetGraphicsAPIs(BuildTarget.StandaloneWindows64, (GraphicsDeviceType[])WindowsGraphicsApis.Clone());
+            Debug.Log("[SETUP] Windows graphics APIs: " + string.Join(", ", PlayerSettings.GetGraphicsAPIs(BuildTarget.StandaloneWindows64))
+                      + " (automatic=" + PlayerSettings.GetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64) + ", ADR 0291)");
+        }
+
         public static void ApplyPlayerSettings()
         {
             var android = NamedBuildTarget.Android;
@@ -247,6 +266,7 @@ namespace Game.Editor.Setup
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.Android, false);
             PlayerSettings.SetGraphicsAPIs(BuildTarget.Android, new[] { GraphicsDeviceType.Vulkan, GraphicsDeviceType.OpenGLES3 });
+            ApplyWindowsGraphicsApis();
             PlayerSettings.colorSpace = ColorSpace.Linear;
             PlayerSettings.Android.minSdkVersion = (AndroidSdkVersions)MinSdk;
             PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)TargetSdk;

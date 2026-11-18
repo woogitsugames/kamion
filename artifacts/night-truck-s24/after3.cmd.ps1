@@ -1,0 +1,1 @@
+pwsh artifacts/night-truck-s24/assets.ps1; if ($LASTEXITCODE) { exit $LASTEXITCODE }; pwsh artifacts/night-truck-s24/lamps.ps1 -Tag after3; $a=$LASTEXITCODE; pwsh artifacts/night-truck-s24/cab.ps1 -Tag after3 -Runs "High:clear;High:night;High:dusk;Low:night;Low:clear;Ultra:clear"; $a+=$LASTEXITCODE; pwsh artifacts/night-truck-s24/time.ps1 -Tag after3; exit $a

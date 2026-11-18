@@ -150,7 +150,7 @@ namespace Game.Editor.VisualQA
                 evidence.drlFinite=!float.IsNaN(drl)&&!float.IsInfinity(drl);
                 evidence.highFinite=!float.IsNaN(high)&&!float.IsInfinity(high);
                 evidence.daytimeLowBeamOff=lights.StateTexture.GetPixel(2,0).r==0f;
-                var lampShader=BuildProbeShader("SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2((_PaintColor.r + 0.5)/16.0,0.5),0).rgb");
+                var lampShader=BuildProbeShader("SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2((_PaintColor.r + 0.5)/KAMION_LAMP_TEXELS,0.5),0).rgb");
                 float drlGpu=Read(lampShader,1f,true,true,out _), highGpu=Read(lampShader,3f,true,true,out _);
                 evidence.drlGpuR=drlGpu.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
                 evidence.highGpuR=highGpu.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
@@ -161,7 +161,7 @@ namespace Game.Editor.VisualQA
                 evidence.highOffGpuR=Read(lampShader,3f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
                 evidence.nitsPerEncodedUnit=TruckLights.NitsPerEncodedUnit;
                 evidence.emissionProbeExposure=0.0001f; Shader.SetGlobalFloat("_KamionExposure",evidence.emissionProbeExposure);
-                var decodeShader=BuildProbeShader("TruckLampRadiance(SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2((_PaintColor.r + 0.5)/16.0,0.5),0).rgb)");
+                var decodeShader=BuildProbeShader("TruckLampRadiance(SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2((_PaintColor.r + 0.5)/KAMION_LAMP_TEXELS,0.5),0).rgb)");
                 sun.transform.rotation=Quaternion.Euler(40f,0f,0f); lights.highBeam=true; lights.Refresh();
                 evidence.exposedDayDrl=Read(decodeShader,1f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);
                 evidence.exposedHigh=Read(decodeShader,3f,true,true,out _).ToString("R",System.Globalization.CultureInfo.InvariantCulture);

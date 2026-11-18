@@ -16,13 +16,13 @@ ustalić z kodu, oznaczono **UNVERIFIED**. Liczby wydajności i wymagań to **WO
 | `Kamion-okno.cmd` | Start w oknie 1600 × 900 (jedyny launcher wymuszający okno), do menu startowego. |
 | `Kamion-<region>.cmd` | Jeden plik na **każdy region, którego scena jest w buildzie** (lista z logu buildu), np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`, `Kamion-dk65-05.cmd`. Tryb ekranu jak `Kamion.exe` (pełny ekran bez ramki) i od razu `-scene <region>`. Bez strumieniowania. |
 | `Kamion-korytarz.cmd` | **Ciągła jazda** (sekcja 1.4): tryb ekranu jak `Kamion.exe`, start w regionie knyszyn, `-stream 1`. Powstaje tylko, gdy w buildzie są regiony `knyszyn` **i** `knyszyn-s` **oraz** scena kafla `World_knyszyn-s_Tile` (bez niej szew zostaje zamknięty; build-hygiene-s23). |
-| `Kamion-d3d11.cmd`, `Kamion-korytarz-d3d11.cmd` | Awaryjnie (sekcja 1.6): to samo co `Kamion.exe` / `Kamion-korytarz.cmd` z `-force-d3d11`. Korytarzowy tylko razem z `Kamion-korytarz.cmd`. |
+| `Kamion-d3d12.cmd`, `Kamion-korytarz-d3d12.cmd` | Opcjonalnie (sekcja 1.6): to samo co `Kamion.exe` / `Kamion-korytarz.cmd` z `-force-d3d12` (domyślne API = Direct3D 11, ADR 0291). Do porównań / na prośbę autora. Korytarzowy tylko razem z `Kamion-korytarz.cmd`. |
 | `build-id.json` | Skrót zawartości `Kamion_Data` — gra pokazuje go w menu, w „Informacjach” i w logu `[BOOT]`; po nim rozpoznaje się build. |
 | `Kamion.exe.sha256`, `build.json` | Metadane buildu (suma exe, liczba plików, rozmiar). Suma exe nie identyfikuje buildu (exe to ten sam launcher Unity w każdym buildzie). |
 
 Launchery pisze `scripts/postbuild-windows.py` (wywoływany przez `scripts/build-windows.ps1` po udanym buildzie).
 Każdy `.cmd` przekazuje dalej własne argumenty (`%*`), np. `Kamion-okno.cmd -tier Low -fps 30` albo
-`Kamion-korytarz.cmd -force-d3d11`. Gotowe warianty D3D11: `Kamion-d3d11.cmd`, `Kamion-korytarz-d3d11.cmd` (sekcja 1.6).
+`Kamion-korytarz.cmd -force-d3d12`. Gotowe warianty D3D12: `Kamion-d3d12.cmd`, `Kamion-korytarz-d3d12.cmd` (sekcja 1.6).
 
 `-scene` działa **raz na uruchomienie**: po „Menu” w jeździe zostajesz w menu startowym (log
 `[BOOT] launch argument scene already used this run`), a nie wracasz do regionu z launchera. Region wybierzesz wtedy
@@ -55,7 +55,7 @@ Tester:
 ### 1.3 Argumenty wiersza poleceń
 
 Zapis: `Kamion.exe -nazwa wartość` (argumenty gry: zawsze para; flaga bez wartości na końcu linii jest ignorowana).
-Argumenty silnika Unity (`-screen-*`, `-window-mode`, `-force-d3d11`, `-logFile`) czyta sam Unity, nie kod gry.
+Argumenty silnika Unity (`-screen-*`, `-window-mode`, `-force-d3d12`, `-logFile`) czyta sam Unity, nie kod gry.
 Kolejność ważności: argument > zapisany wybór > wartość domyślna.
 
 **Dla gracza / testera**
@@ -72,7 +72,7 @@ Kolejność ważności: argument > zapisany wybór > wartość domyślna.
 | `-lighting` | `clear`, `overcast`, `lowsun`, `dusk` | wybór „Pora dnia” z menu | Nieznana nazwa → ostrzeżenie w logu. |
 | `-screen-fullscreen`, `-screen-width`, `-screen-height` | Unity: `0`/`1`, piksele | — | Jeśli podasz dowolny `-screen-*`, `-window-mode` albo `-popupwindow`, gra **nie** nakłada trybu ekranu z pliku ustawień (sekcja 1.5). |
 | `-window-mode` | Unity (tylko Windows): `exclusive` / `borderless` | — | Rodzaj pełnego ekranu. Żaden launcher go nie podaje (od alt-window-s23 korytarz bierze tryb z ustawień). |
-| `-force-d3d11` / `-force-d3d12` | Unity (tylko Windows), **bez wartości** | API wybrane przez Unity (sekcja 1.6) | Wymusza Direct3D 11 / 12. Awaryjnie przy crashu D3D12 (sekcja 1.6). |
+| `-force-d3d11` / `-force-d3d12` | Unity (tylko Windows), **bez wartości** | Direct3D 11 (pierwsze na liście API, ADR 0291) | Wymusza Direct3D 11 / 12. `-force-d3d12` = opcjonalny D3D12 (sekcja 1.6). |
 
 **Pomiarowe (nie dla zwykłej gry)**
 
@@ -137,7 +137,7 @@ Jedyny pomiar przejazdu (HANDOVER 16.11 16:5x): knyszynska → dk65-01 → 02 �
 |---|---|
 | `Kamion.exe` bez argumentów | z pliku ustawień (sekcja 3), a bez pliku — projekt: `fullscreenMode: 1` (bez ramki, rozdzielczość natywna) |
 | `Kamion-okno.cmd` | okno 1600 × 900 (`-screen-fullscreen 0 -screen-width 1600 -screen-height 900`) |
-| `Kamion-<region>.cmd`, `Kamion-korytarz.cmd`, `Kamion-*-d3d11.cmd` | jak `Kamion.exe` (bez `-screen-*`; `-force-d3d11` nie zmienia trybu ekranu) |
+| `Kamion-<region>.cmd`, `Kamion-korytarz.cmd`, `Kamion-*-d3d12.cmd` | jak `Kamion.exe` (bez `-screen-*`; `-force-d3d12` nie zmienia trybu ekranu, ale na D3D12 „pełny ekran” wybrany w menu działa jako bez ramki — sekcja 1.6) |
 
 - Z dowolnym `-screen-*` / `-window-mode` / `-popupwindow` gra przy starcie **pomija** tryb ekranu z pliku ustawień.
 - Okna 1600 × 900 **nie da się powiększyć** przeciągnięciem: w projekcie `resizableWindow: 0` (zgłoszenie właściciela
@@ -148,18 +148,21 @@ Jedyny pomiar przejazdu (HANDOVER 16.11 16:5x): knyszynska → dk65-01 → 02 �
 - Trwała zmiana: menu startowe → **Ekran, grafika, dźwięk** → „Tryb okna” (okno / bez ramki / pełny ekran),
   „Rozdzielczość” → Zastosuj (sekcja 3).
 
-### 1.6 Awaryjnie: Direct3D 11 (`-force-d3d11`)
+### 1.6 Direct3D 11 domyślnie, Direct3D 12 opcjonalnie (`-force-d3d12`, ADR 0291)
 
-16.11 gra padła u właściciela (exe 13104cf215, knyszyn, pełny ekran bez ramki, RTX 5070) z błędem
-`d3d12: Device failed error (887a0001)` (urządzenie D3D12 usunięte); lider uruchomił ją potem z `-force-d3d11`.
-Przyczyna nieustalona (hipoteza o równoległym obciążeniu GPU przez Unity — **UNVERIFIED**).
+Od decyzji właściciela 18.11.2026 (ADR 0291) lista API grafiki Windows jest ustawiana kodem
+(`ProjectSetup.ApplyWindowsGraphicsApis`): **Direct3D 11, potem Direct3D 12**. Zwykły start (`Kamion.exe`, wszystkie
+launchery bez `-d3d12`) = D3D11; w `Player.log` linia `Direct3D:` / `Version:  Direct3D 11.0 …`.
 
-- Projekt nie ustawia listy API grafiki dla Windows (w ProjectSettings są wpisy tylko dla iOS i Androida) → Unity
-  wybiera API sam; którego używa domyślnie — z repo nie wynika (crash pokazuje D3D12).
-- Gdy gra pada (zwłaszcza z „d3d12” / „Device failed” w `Player.log`), uruchom `Kamion-d3d11.cmd` (menu) albo
-  `Kamion-korytarz-d3d11.cmd` (jazda ciągła); inne starty: dopisz argument, np. `Kamion-okno.cmd -force-d3d11`,
-  `Kamion-knyszyn.cmd -force-d3d11`.
-- Czy D3D11 usuwa problem — jedna obserwacja, bez pomiaru (**UNVERIFIED**). W zgłoszeniu podaj, czy był `-force-d3d11`.
+- Powód: 16.11 gra padła u właściciela na D3D12 (`d3d12: Device failed error (887a0001)` z `Present`, pełny ekran
+  wyłączny; `docs/reports/CRASH-2026-11-16-d3d12.md`), a pomiar 18.11 na GTX 1070 (`artifacts/d3d-ab/`) dał D3D11
+  171–190 kl./s bez limitu vs D3D12 153–157, mniej pamięci, 0 crashy przy wyjściu na obu API (3 + 3 cykle).
+- `Kamion-d3d12.cmd` (menu) i `Kamion-korytarz-d3d12.cmd` (jazda ciągła) uruchamiają to samo z `-force-d3d12` —
+  do porównań albo na prośbę autora; inne starty: dopisz argument, np. `Kamion-knyszyn.cmd -force-d3d12`.
+- Na D3D12 nadal działa mitygacja crash-diag-s23: „pełny ekran” (wyłączny) z menu jest stosowany jako **bez ramki**;
+  `-allow-exclusive-d3d12` przywraca tryb wyłączny (tylko do testów). Na D3D11 tryb wyłączny działa normalnie.
+- Crash przy zamykaniu gry (crash B z raportu 16.11) występował na obu API — D3D11 go nie naprawia.
+- W zgłoszeniu podaj, czy był `-force-d3d12`.
 
 ---
 
@@ -372,7 +375,7 @@ Dołącz:
 2. **Region** (nazwa z menu albo argument `-scene`) i mniej więcej **gdzie** (ulica, rondo, km trasy).
 3. **Godzinę** zdarzenia (żeby znaleźć miejsce w logu).
 4. **Tier** i limit klatek (z menu albo z argumentów), tryb okna, którym launcherem (`Kamion-korytarz.cmd` /
-   `-stream 1`?) i czy z `-force-d3d11`.
+   `-stream 1`?) i czy z `-force-d3d12` (`Kamion-*-d3d12.cmd`).
 5. Czym sterowałeś: klawiatura / pad (jaki) / kierownica (jaka).
 6. Opis: co robiłeś → co się stało → czego się spodziewałeś. Czy powtarza się?
 7. Zrzut ekranu (klawisz Print Screen / Win+Shift+S) albo krótkie nagranie.
@@ -406,7 +409,7 @@ Przegląd P19 (16.11 wieczór, gałąź `player-guide-r2`, tylko ta instrukcja):
 | 11 | ADR 0261, uzupełnienie s23 §3: „trzy launchery, `build-windows.ps1:94-96`” | **zostaje** w ADR (dopisek ADR 0276 w tym samym pliku mówi już o `Kamion-<region>.cmd`); stan kodu: launchery pisze `postbuild-windows.py` — `Kamion-okno.cmd`, `Kamion-<region>.cmd` dla każdego regionu w buildzie, `Kamion-korytarz.cmd` |
 | 12 | `build-windows.ps1` (nagłówek i komentarz przy postbuild): „launchers (windowed)” | **zostaje** — `Kamion-korytarz.cmd` jest pełnoekranowy; tylko komentarz |
 | 13 | `collect-logs.ps1` / `Zbierz-logi.cmd` nie zbiera `%LOCALAPPDATA%\CrashDumps` (tam był dump crasha D3D12 16.11) | **poprawione** (build-hygiene-s23): `collect-logs.ps1` zbiera `Kamion*.dmp` (2 najnowsze, ≤ 1 GB), README w zipie o tym mówi |
-| 14 | `dist/windows/README.txt.in` (README w zip): brak `Kamion-korytarz.cmd`, `Kamion-<region>.cmd`, `-force-d3d11`, `CrashDumps` | **poprawione** (build-hygiene-s23): README opisuje korytarz, skróty regionów, `Kamion-d3d11.cmd` / `Kamion-korytarz-d3d11.cmd`, CrashDumps |
+| 14 | `dist/windows/README.txt.in` (README w zip): brak `Kamion-korytarz.cmd`, `Kamion-<region>.cmd`, `-force-d3d11`, `CrashDumps` | **poprawione** (build-hygiene-s23): README opisuje korytarz, skróty regionów, `Kamion-d3d11.cmd` / `Kamion-korytarz-d3d11.cmd`, CrashDumps; od ADR 0291 (18.11) D3D11 jest domyślne, launchery to `Kamion-d3d12.cmd` / `Kamion-korytarz-d3d12.cmd` |
 | 15 | HANDOVER 16.11 15:2x: skróty dla gracza pełny ekran bez ramki, `resizableWindow` + Alt+Enter | **częściowo** — pełny ekran ma tylko `Kamion-korytarz.cmd`; `Kamion-okno.cmd` / `Kamion-<region>.cmd` nadal 1600 × 900, `resizableWindow: 0` |
 | 16 | ADR 0261 „Otwarte”: „Dotykowy HUD jest widoczny także na PC” | **nieaktualne** w ADR — kod (ADR 0265) ukrywa go na PC przy „auto”; widoczny tylko przy zapisanym „zawsze” |
 | 17 | Wcześniejsza wersja tej instrukcji: „argumentu `-stream` w `origin/main` nie ma” | **naprawione** — streaming scalony 16.11 (`int-stream-s23`), opis w sekcji 1.4 |
@@ -421,8 +424,8 @@ Przegląd P19 (16.11 wieczór, gałąź `player-guide-r2`, tylko ta instrukcja):
 - Działanie pada w playerze (ADR 0261: „Pad: UNVERIFIED”).
 - `collect-logs.ps1` nie był uruchomiony na Windows (ADR 0271 „Nieuruchomione”).
 - Alt+Enter na buildzie (`allowFullscreenSwitch: 1`) i czy zmiana trybu skrótem zapisuje się w `settings_pc.json`.
-- Domyślne API grafiki Unity na Windows dla tego projektu (brak listy w ProjectSettings) i czy `-force-d3d11` usuwa
-  crash `887a0001` (jedna obserwacja).
+- Czy D3D11 (domyślne od ADR 0291) usuwa crash `887a0001` — na D3D11 go dotąd nie widziano, ale crash na D3D12 był
+  jednorazowy i nieodtworzony, więc brak wystąpień nie jest dowodem.
 - Przejazd przez szwy knyszyn ↔ knyszyn-w i knyszyn-w ↔ dw671-tykocin-01 (brak portalu trasy; nikt nie jechał);
   zmierzony tylko odcinek knyszynska → dk65-03.
 - Które regiony mają sceny `_Tile` w danym buildzie (zależy od lokalnego importu, poza gitem).

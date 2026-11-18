@@ -236,7 +236,7 @@
     -511.397,
     121.388
    ],
-   "note": "place camera: driver eye leaving the roundabout on DK65 towards Monki; the west tile edge is ~40 m ahead (tile (-9,8) not built)",
+   "note": "place camera: driver eye leaving the roundabout on DK65 towards Monki. Stand-alone scene: the world-edge closure stands 12 m inside the west edge (world_edge.authored.json, ADR 0295); with streaming and knyszyn-w loaded it is open",
    "pos": [
     -993.0,
     -598.0,
@@ -497,6 +497,22 @@
     -625.0,
     -146.0,
     128.82
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "look_wooden_house_brown",
+   "look_at": [
+    -430.537,
+    2.935,
+    131.072
+   ],
+   "note": "place camera: ADR 0295 QA: eye level across the street from a RULE-chosen boarded house (BDOT 2FA5, wood_planks, no override): corner boards, battens, gable boarding, surrounds. NO owner photo.",
+   "pos": [
+    -358.0,
+    -65.9,
+    127.58
    ],
    "type": "persp"
   },

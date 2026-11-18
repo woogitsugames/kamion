@@ -179,7 +179,7 @@ namespace PhysicsRunner.Sim
         /// <summary>circle: speed ramp [km/h per s] starting at rampStart [s] (rollover threshold search).</summary>
         public double rampKmhPerS;
         public double rampStart;
-        /// <summary>circle / lanechange: at brakeAt [s] the driver brakes with brakeLevel and (optionally) freezes the steering.</summary>
+        /// <summary>circle / lanechange / speedhold: at brakeAt [s] the driver brakes with brakeLevel and (optionally) freezes the steering.</summary>
         public double brakeAt = -1;
         public double brakeLevel = 1;
         public bool holdSteerOnBrake;

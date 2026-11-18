@@ -110,10 +110,11 @@ namespace Game.Editor.Setup
             AssetDatabase.SaveAssets();
         }
 
-        /// <summary>ADR 0181: number-plate luminance as a fraction of the plate lamp's lens luminance at the plate's top
-        /// edge (2 000 cd/m2 lens -> ~8 cd/m2 on a white plate; UN R4 asks for >= 2.5 cd/m2 - quoted from memory,
-        /// UNVERIFIED). WORKING_VALUE, tuned on the dusk control cameras.</summary>
-        public const float PlateIllum = 0.005f;
+        /// <summary>ADR 0181 / 0197: number-plate luminance (reflectance 1) as a fraction of the plate lamp's lens luminance
+        /// at the plate's top edge. 0.006: 2 000 cd/m2 lens -> 11.8 cd/m2 top centre, >= 2.9 cd/m2 over every 25 mm
+        /// measuring circle (UN R148 5.11.3 (a): >= 2.5 cd/m2, SOURCED; checked by LampPhotometry / tools/lamp-check).
+        /// WORKING_VALUE.</summary>
+        public const float PlateIllum = Game.Vehicle.Runtime.LampPhotometry.PlateIllum;
 
         /// <summary>ADR 0181: lens optics parameters of a Kamion/Truck Exterior material (tractor and trailer). Set here on
         /// every rebuild: an existing material asset keeps its serialized values when the shader default changes.</summary>
@@ -121,6 +122,56 @@ namespace Game.Editor.Setup
         {
             m.SetFloat("_LensDetail", 1f);
             m.SetFloat("_PlateIllum", PlateIllum);
+            m.SetFloat("_PlateDisplayMax", LampPhotometry.PlateDisplayMax);   // ADR 0297
+        }
+
+        /// <summary>ADR 0297: the cluster and the navigation screen as spill emitters for CabInteriorLighting. Centre, area
+        /// and normal (towards the driver's eye) from the LOD0 display quad; mean linear luminance of the screen texture;
+        /// luminance / ceiling = the Kamion/Cab Display material values set in BuildMaterials (500 cd/m^2, 0.9).</summary>
+        static CabInteriorLighting.SpillSource[] CabSpillSources(List<Renderer> lod0, Vector3 eyeWorld)
+        {
+            var list = new List<CabInteriorLighting.SpillSource>();
+            foreach (var (role, tex) in new[] { ("DISPLAY_Cluster", "T_Display_cluster"), ("DISPLAY_Infotainment", "T_Display_infotainment") })
+            {
+                var r = lod0.FirstOrDefault(x => x != null && x.name.StartsWith(role, StringComparison.Ordinal));
+                var mf = r != null ? r.GetComponent<MeshFilter>() : null;
+                if (mf == null || mf.sharedMesh == null) { Debug.LogWarning($"[TRUCK] spill source {role} missing"); continue; }
+                var mesh = mf.sharedMesh;
+                var v = mesh.vertices;
+                var tri = mesh.triangles;
+                Vector3 c = Vector3.zero, n = Vector3.zero;
+                float area = 0f;
+                for (int t = 0; t + 2 < tri.Length; t += 3)
+                {
+                    Vector3 cr = Vector3.Cross(v[tri[t + 1]] - v[tri[t]], v[tri[t + 2]] - v[tri[t]]);
+                    float a = cr.magnitude * 0.5f;
+                    c += (v[tri[t]] + v[tri[t + 1]] + v[tri[t + 2]]) / 3f * a; n += cr; area += a;
+                }
+                if (area <= 0f) continue;
+                c /= area; n = n.normalized;
+                Vector3 toEye = r.transform.InverseTransformPoint(eyeWorld) - c;
+                if (Vector3.Dot(n, toEye) < 0f) n = -n;
+                // Mean linear luminance of the screen image (sRGB PNG), read from the file so the importer settings do not matter.
+                float mean = 0.1f;
+                string png = Path.Combine(EditorTools.ProjectRoot, $"{SrcInt}/Textures/Displays/{tex}.png");
+                if (File.Exists(png))
+                {
+                    var img = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                    if (img.LoadImage(File.ReadAllBytes(png)))
+                    {
+                        var px = img.GetPixels32();
+                        double sum = 0;
+                        foreach (var q in px)
+                            sum += 0.2126 * Mathf.GammaToLinearSpace(q.r / 255f) + 0.7152 * Mathf.GammaToLinearSpace(q.g / 255f) + 0.0722 * Mathf.GammaToLinearSpace(q.b / 255f);
+                        mean = (float)(sum / Math.Max(1, px.Length));
+                    }
+                    UnityEngine.Object.DestroyImmediate(img);
+                }
+                else Debug.LogWarning($"[TRUCK] spill texture {png} missing, mean emission {mean} (WORKING_VALUE)");
+                list.Add(new CabInteriorLighting.SpillSource { frame = r.transform, centre = c, normal = n, area = area, meanEmission = mean, luminance = 500f, maxDisplay = 0.9f });
+                Debug.Log($"[CAB_SPILL] {role} centre {c:F3} normal {n:F2} area {area * 1e4f:F0} cm2 mean emission {mean:F3} eye distance {toEye.magnitude:F2} m");
+            }
+            return list.ToArray();
         }
 
         // ------------------------------------------------------------------ 1. sources
@@ -863,6 +914,7 @@ namespace Game.Editor.Setup
                 lamps.body = body;
                 var cabLight = root.AddComponent<CabInteriorLighting>();
                 cabLight.cab = cabBody;
+                cabLight.spillSources = CabSpillSources(interiorLods[0], root.transform.TransformPoint(eyeLocal));   // ADR 0297
                 // A8 (review r4 E-N1 / E1 / E2): contact shadow under the tractor and its wheels, local reflection capture.
                 // Cab + bumper + engine block from the front (solid, ~0.38 m clearance), then chassis with tanks and fenders
                 // (gaps between the rails, ~0.55 m). Clearances WORKING_VALUE (docs/07, dims.json).
@@ -870,6 +922,9 @@ namespace Game.Editor.Setup
                 AddContactShadow(root, visuals.wheelPivots, td.cabWidth * 0.5f,
                     new[] { (td.FrontFaceZ - td.CabRearZ, 0.38f, 0.95f, 2), (0f, 0.55f, 0.85f, 3) });
                 root.AddComponent<VehicleReflectionCapture>();
+                // ADR 0297: veiling-glare halo of the red rear lamps (tail+stop chamber, rear markers, rear fog).
+                int halos = TruckLampHaloBuilder.Attach(exteriorLods[0], Root + "/Meshes", TruckLampHaloBuilder.EnsureMaterial(MatDir), "Truck");
+                Debug.Log($"[TRUCK] lamp halo quads {halos}");
 
                 SetLayer(root, UnityGroundQuery.ResolveVehicleLayer());
                 foreach (var r in root.GetComponentsInChildren<Renderer>(true)) { r.lightProbeUsage = LightProbeUsage.BlendProbes; r.reflectionProbeUsage = ReflectionProbeUsage.BlendProbes; }
@@ -1270,12 +1325,27 @@ namespace Game.Editor.Setup
                 var qa = go.AddComponent<ControlCamera>();
                 qa.id = id; qa.note = note;
             }
-            Q("cab-driver", eye, Quaternion.Euler(Game.Cameras.DriverHead.RestPitchDownDeg, 0f, 0f), 62f, "A7: driver eye, straight ahead (windscreen base, frit, dash top, cluster in the rim window).");
+            // D90 / ADR 0294: the game's default cab FOV (70 deg vertical; 62 until 2026-11-18).
+            Q("cab-driver", eye, Quaternion.Euler(Game.Cameras.DriverHead.RestPitchDownDeg, 0f, 0f), Game.Controls.ControlSettings.DefaultCabFovDeg, "A7: driver eye, straight ahead (windscreen base, frit, dash top, cluster in the rim window).");
             // D84 polish (review P1-4): A/B of the rest gaze for the owner (10 deg down instead of 6: dash and rim take ~26 %
             // of the frame instead of ~20 %) and the driver's A-pillar with its seals, blind bar and mirror edge. QA only.
             Q("cab-driver-ab10", eye, Quaternion.Euler(10f, 0f, 0f), 62f, "D84 A/B: driver eye, rest gaze 10 deg down (not the game camera).");
+            // D84 / P1-4 cab-view-s24: the owner's choice of driver view (FOV / rest gaze), same eye point. QA only.
+            foreach (var v in Game.Cameras.CabViewVariants.All)
+            {
+                Q(v.Id, eye, Quaternion.Euler(v.PitchDownDeg, 0f, 0f), v.VerticalFovDeg, "D84 view variant: " + v.Note + " (not the game camera).");
+                // The same frame as the player sees it: driving HUD + the D70 class II mirror windows (ControlSettings.mirrorInsets, default on).
+                Q(v.Id + "-hud", eye, Quaternion.Euler(v.PitchDownDeg, 0f, 0f), v.VerticalFovDeg, "D84 view variant with the driving HUD and mirror windows.");
+                var hudCam = parent.Find("QA_" + v.Id + "-hud").GetComponent<ControlCamera>();
+                hudCam.includeDrivingHud = true; hudCam.drivingHudMirrorInsets = true;
+            }
             Q("cab-apillar", eye, Quaternion.Euler(-6f, -34f, 0f), 50f, "D84: driver's A-pillar trim, seal beads, drawn blind, mirror edge.");
             Q("cab-dash", eye, Quaternion.Euler(24f, 12f, 0f), 62f, "A7: cluster, steering wheel, centre stack, lower dash (low-sun black-cab check: lower dash > 8 %).");
+            // D84 / ADR 0296: narrow views from the eye onto the parts the open review points name (measurement frames for
+            // legend backlight, hub glow, tray ribs); offsets from build_interior.py (WHEEL_C, centre stack c0, dash trays).
+            Q("cab-hub", eye, Quaternion.LookRotation(new Vector3(0f, -0.38f, 0.425f), Vector3.up), 38f, "0296: steering-wheel hub, spoke key pods and their legends from the eye.");
+            Q("cab-switches", eye, Quaternion.LookRotation(new Vector3(0.58f, -0.655f, 0.48f), Vector3.up), 30f, "0296: centre-stack rocker rows and legends from the eye (night legibility of the backlight).");
+            Q("cab-trays", eye, Quaternion.LookRotation(new Vector3(1.0f, -0.47f, 0.70f), Vector3.up), 34f, "0296: dash-top trays, rubber mat ribs and the dust film at the windscreen base from the eye.");
             Q("cab-left", eye, Quaternion.Euler(4f, -68f, 0f), 62f, "A7: driver door card, door glass and the main/wide mirrors on the left.");
             Q("cab-right", eye, Quaternion.Euler(8f, 58f, 0f), 62f, "A7: passenger seat, passenger door card, right mirrors through the glass.");
             // ADR 0104: the driving views cannot expose the driver's bolster or resolve moulded grain.
@@ -1325,6 +1395,9 @@ namespace Game.Editor.Setup
             // passenger side 3/4 (exhaust, battery box, AUS 32 tank).
             void QL(string id, Vector3 p, Vector3 l, float fov, string note) => Q(id, p, Quaternion.LookRotation(l - p, Vector3.up), fov, note);
             QL("chase", new Vector3(0f, 7.5f, -26f), new Vector3(0f, 2f, 3f), 50f, "r10: chase camera framing with the trailer (rear doors, lamps, roof, cab over the trailer).");
+            // D90 / ADR 0294: the exterior view with the driving HUD (speed / gear / air strip shown outside the cab).
+            QL("chase-hud", new Vector3(0f, 7.5f, -26f), new Vector3(0f, 2f, 3f), 50f, "D90: chase framing with the driving HUD.");
+            { var c = parent.Find("QA_chase-hud").GetComponent<ControlCamera>(); c.includeDrivingHud = true; }   // no mirror windows: the game shows them in the cab only (DrivingLabBootstrap.MirrorInsetsOn)
             QL("truck-side", new Vector3(-9.5f, 1.7f, 1.9f), new Vector3(0f, 1.6f, 1.9f), 42f, "r10: tractor driver side, square on (door, steps, arch, tank, skirt, rear wheels, gap to the trailer).");
             QL("truck-rear34", new Vector3(-5.2f, 2.0f, -3.6f), new Vector3(-0.4f, 1.3f, 2.2f), 45f, "r10: tractor from behind the cab, driver side (tank, rear mudguard, cab back, coiled lines, trailer front).");
             QL("trailer-side", new Vector3(-11.5f, 1.8f, -6.2f), new Vector3(0f, 1.7f, -6.2f), 55f, "r10: curtainsider driver side (curtain, straps, rail, side guards, pallet box, tridem).");

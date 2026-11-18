@@ -54,8 +54,13 @@ Shader "Kamion/Cab Interior"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            // Hard shadows in the cab (no soft-shadow variants): the sun patches come through the glass edges and the
-            // frit, soft filtering on a full-screen interior cost ~3 ms GPU on the S24+ High (A7 measurement, throttled).
+            // A7: hard shadows in the cab on phones - soft filtering on a full-screen interior cost ~3 ms GPU on the S24+
+            // High (A7 measurement, throttled). ADR 0297 (review s24 K2, s23 P1-1): the hard 1-tap shadow of the glazing
+            // frame showed the shadow-map texel staircase on the dash from the seat on PC. The soft variants are compiled
+            // (same keyword set as Kamion/Truck Exterior) and used only where _KamionCabSoftShadow = 1 (PC tiers,
+            // CabInteriorLighting); otherwise a uniform branch takes the A7 hard sample (CabHardShadow).
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #pragma shader_feature_local _KAMION_CAB_DECAL
             #pragma shader_feature_local _KAMION_CAB_BACKLIGHT
             #pragma multi_compile_fog
@@ -74,6 +79,39 @@ Shader "Kamion/Cab Interior"
             half _CabGain;      // cab-view tone-mapping gain (1 = off)
             half4 _CabShadowLift; // x: strength k, y: knee k0 (exposed linear); gain = 1 + k (k0 / (Y + k0))^3, cab view only
             float4 _CabBacklightEnvironment; // true sun elevation, camera exposure, validity, unused
+            // ADR 0297: instrument spill. Per source: Pos xyz = emitter centre (world), w = displayed radiance x area
+            // (display units x m^2: the screen's own displayed value, CabDisplay, times its mean emission); Dir xyz = emitter
+            // normal (world), w = softening radius^2 (m^2, ~ the emitter's size, so the near field stays finite).
+            float4 _CabSpill0Pos, _CabSpill0Dir, _CabSpill1Pos, _CabSpill1Dir;
+            half4 _CabSpillColor;          // rgb: linear tint of the screens' light (cool LCD white), w unused
+            half _KamionCabSoftShadow;     // 1 = soft-filtered sun shadow in the cab (PC tiers), 0 = A7 hard sample
+
+            // Diffuse irradiance from a small Lambertian emitter of area A and radiance L: E = L A cos_s cos_r / (d^2 + r^2).
+            // No occlusion (two screens facing the driver: the back of the dash is culled by cos_s). Display units.
+            float3 CabSpillOne(float4 P, float4 D, float3 p, float3 n)
+            {
+                float3 L = P.xyz - p;
+                float d2 = dot(L, L);
+                float3 l = L * rsqrt(max(d2, 1e-6));
+                float cosR = saturate(dot(n, l));
+                float cosS = saturate(-dot(D.xyz, l));
+                return P.w * cosS * cosR / (d2 + D.w);
+            }
+            half3 CabInstrumentSpill(float3 p, float3 n)
+            {
+                return (half3)((CabSpillOne(_CabSpill0Pos, _CabSpill0Dir, p, n) + CabSpillOne(_CabSpill1Pos, _CabSpill1Dir, p, n)) * _CabSpillColor.rgb);
+            }
+            half CabHardShadow(float4 shadowCoord, float3 positionWS)
+            {
+            #if defined(_MAIN_LIGHT_SHADOWS) || defined(_MAIN_LIGHT_SHADOWS_CASCADE)
+                half a = SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_LinearClampCompare, shadowCoord.xyz);
+                a = LerpWhiteTo(a, GetMainLightShadowParams().x);
+                a = BEYOND_SHADOW_FAR(shadowCoord) ? 1.0 : a;
+                return lerp(a, 1.0, GetMainLightShadowFade(positionWS));
+            #else
+                return 1.0;
+            #endif
+            }
 
             struct Attributes
             {
@@ -187,6 +225,9 @@ Shader "Kamion/Cab Interior"
                 half alpha = 1.0;
                 InitializeBRDFData(saturate(albedo), metal, half3(0, 0, 0), 1.0 - rough, alpha, brdf);
                 Light sun = GetMainLight(input.shadowCoord, input.positionWS, input.shadowMask);
+            #if (defined(_SHADOWS_SOFT) || defined(_SHADOWS_SOFT_LOW) || defined(_SHADOWS_SOFT_MEDIUM) || defined(_SHADOWS_SOFT_HIGH)) && (defined(_MAIN_LIGHT_SHADOWS) || defined(_MAIN_LIGHT_SHADOWS_CASCADE))
+                if (_KamionCabSoftShadow < 0.5) sun.shadowAttenuation = CabHardShadow(input.shadowCoord, input.positionWS);   // A7 phones
+            #endif
                 // The sun reaches every cab surface through the glazing, which casts no shadow: x transmittance (unset = 1).
                 half3 direct = LightingPhysicallyBased(brdf, sun, nWS, input.viewDirectionWS) * (_CabFill.w > 0.0 ? _CabFill.w : 1.0);
                 const BRDFData noCoat = (BRDFData)0;
@@ -201,6 +242,9 @@ Shader "Kamion/Cab Interior"
                 // The lifted share is neutral (review r5 L2: black plastics turned brown under the warm low-sun fill); a
                 // phone's local tone mapping lifts luminance, not the chroma of deep shade. z = desaturation of that share.
                 col.rgb = lerp(col.rgb * g, (yl * g).xxx, _CabShadowLift.z * (1.0 - 1.0 / g));
+                // ADR 0297 (review s24 K1): light of the cluster and the navigation screen on the trim around them, after the
+                // lift (it is a real local source, not shade the phone lifts) and before the toe. Diffuse x baked AO.
+                col.rgb += brdf.diffuse * INV_PI * CabInstrumentSpill(input.positionWS, nWS) * ao;
             #if defined(_KAMION_CAB_DECAL) && defined(_KAMION_CAB_BACKLIGHT)
                 // Existing atlas bands: icons < 0.5; grilles/stitching above. No extra sample/pass.
                 // Add after the local ambient lift: backlighting is not amplified by cab metering or shadow lift.

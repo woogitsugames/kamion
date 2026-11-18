@@ -22,7 +22,7 @@ namespace Game.Tests
         const string ExtManifest = "art-source/truck/exterior/export/truck_exterior_manifest.json";
         const string TrlManifest = "art-source/truck/trailer/export/trailer_manifest.json";
         const string TmpDir = "Assets/_TestTmp_LampLens";
-        const int IndL = 4, TailBrake = 6, Reverse = 7, Plate = 13, Reflex = 15;
+        const int IndL = 4, TailBrake = 6, Reverse = 7, Plate = 13, Reflex = 15, Tail = 16, Stop = 17;   // 16/17: ADR 0197 trailer chambers
         const int Pillow = 1, Fresnel = 3, ReflexStyle = 4, PlateStyle = 5;
 
         struct LensVert { public Vector3 p; public int group, style, w, h; public float emit, u, v; }
@@ -109,8 +109,11 @@ namespace Game.Tests
                 else Assert.That(x.group != Reflex && x.emit > 0.01f, "lamp lens styles only on emitters");
             }
             // Stop / tail and indicator chambers on both sides are pillow lenses, reversing lamps Fresnel.
-            Assert.That(verts.Exists(x => x.group == TailBrake && x.style == Pillow && x.p.x < -0.5f) &&
-                        verts.Exists(x => x.group == TailBrake && x.style == Pillow && x.p.x > 0.5f), "tail / stop lens frame, both sides");
+            // ADR 0197: the tractor has one red chamber (TAIL_BRAKE); the trailer lamp has separate TAIL and STOP chambers.
+            int[] red = manifest == TrlManifest ? new[] { Tail, Stop } : new[] { TailBrake };
+            foreach (int g in red)
+                Assert.That(verts.Exists(x => x.group == g && x.style == Pillow && x.p.x < -0.5f) &&
+                            verts.Exists(x => x.group == g && x.style == Pillow && x.p.x > 0.5f), $"tail / stop lens frame (group {g}), both sides");
             Assert.That(verts.Exists(x => x.group == IndL && x.style == Pillow), "rear indicator lens frame");
             Assert.That(verts.Exists(x => x.group == Reverse && x.style == Fresnel), "reversing lamp lens frame");
         }

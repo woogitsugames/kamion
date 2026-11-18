@@ -30,7 +30,7 @@ namespace Game.Tests
         public void Rig_FollowsSolverState_WheelsSpinAndSteer_CabAndSteeringWheel()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
-            Assume.That(prefab, Is.Not.Null, "TRAKT prefab not generated (Kamion/Setup/Rebuild TRAKT truck)");
+            if (prefab == null) Assert.Ignore("TRAKT prefab not generated (outside git): Kamion/Setup/Rebuild TRAKT truck");   // Ignore, not Assume: Unity counts Inconclusive as a failed run (exit 2)
             m_Truck = Object.Instantiate(prefab, new Vector3(0f, -900f, 0f), Quaternion.identity);
             var body = m_Truck.GetComponent<VehicleBody>();
             if (!body.Initialized) body.Initialize(body.Data);

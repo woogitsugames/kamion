@@ -420,7 +420,7 @@ namespace PhysicsRunner.Sim
             }
             finally { csv?.Dispose(); }
             res.MeanStepMicros = steps > 0 ? ticks * 1e6 / Stopwatch.Frequency / Math.Max(1, res.Samples.Count * every) : 0;
-            res.ArticulationLimitDeg = s.Tractor.Def.fifthWheel.yawLimitDeg;
+            res.ArticulationLimitDeg = ArticulationLimitDeg(s);
             res.CouplingEvents = s.Combo.FifthWheel.CouplingEvents;
             res.UncouplingEvents = s.Combo.FifthWheel.UncouplingEvents;
             res.ShiftCount = s.Tractor.Amt.ShiftCount;
@@ -433,6 +433,20 @@ namespace PhysicsRunner.Sim
                 res.Checks.Add(new CheckResult { Spec = c, Value = v, Passed = ok });
             }
             return res;
+        }
+
+        /// <summary>
+        /// Articulation at which the coupling stops the trailer [deg]: the first tractor-trailer body contact of the level
+        /// combination when both definitions have body boxes (ADR 0228), else the fallback angular yaw stop.
+        /// </summary>
+        public static double ArticulationLimitDeg(SimContext s)
+        {
+            if (s.Trailer != null)
+            {
+                double g = CouplingContact.FirstContactArticulationDeg(s.Tractor.Def, s.Trailer.Def);
+                if (!double.IsNaN(g)) return g;
+            }
+            return s.Tractor.Def.fifthWheel.yawLimitDeg;
         }
 
         /// <summary>Integrates both bodies with the solver forces plus the chassis-ground contact (ADR 0158).</summary>
@@ -546,8 +560,11 @@ namespace PhysicsRunner.Sim
                 smp.ChamberTrailer = tr.Wheels[0].ChamberPressure;
                 smp.TrailerSlip = tSlip;
                 smp.LandingGearLoad = tr.LandingGearLoad;
+                smp.CouplingContacts = fw.ContactPoints; smp.CouplingPenetration = fw.ContactPenetration; smp.CouplingContactForce = fw.ContactForceOnTrailer.Magnitude;
+                smp.TrailerAngRate = tb.AngularVelocity.Magnitude;
                 smp.KineticEnergy += tb.KineticEnergy;
             }
+            smp.TractorAngRate = b.AngularVelocity.Magnitude;
             smp.MinFz = minFz;
             smp.MaxFrictionRatio = maxFric;
             smp.PotentialEnergy = 9.81 * (b.Mass * b.CenterOfMassWorld.y + (s.TrailerBody != null ? s.TrailerBody.Mass * s.TrailerBody.CenterOfMassWorld.y : 0));

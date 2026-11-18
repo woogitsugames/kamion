@@ -683,7 +683,111 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
     return out, forests
 
 
-def ground_masks(src, origin, hf, dist_road, forests, cleared=()):
+# ------------------------------------------------------------------------------------------- farmland (ADR 0295, P1-4)
+# Review 2026-11-18 P1-4: the dryness mask (COLOR_0.b) was the same 8 m / 2.5 m patch noise on every square metre away
+# from the roads, so meadows and arable land read as one mottled carpet from the roundabout to the horizon; the owner's
+# drone photo 11 and the GUGiK orthophoto show smooth strip fields, each of one tone, with sharp baulks. Inside BDOT10k
+# OT_PTTR_A (grassland / arable land) the mask is now a mosaic of fields: one dryness level per field, a faint 40 m
+# drift inside it and a rough baulk line between neighbours.
+# The field LAYOUT is ESTIMATED: the repo has no cadastral parcels (EGiB), so blocks of parallel strips are laid out
+# as a function of the EPSG:2180 position only (same pattern on both sides of a tile seam). Sizes WORKING_VALUE, read
+# off the orthophoto of Knyszyn (strips 20-45 m wide, blocks 200-400 m).
+FIELD_BLOCK_M = 300.0           # mean size of a block of parallel strips, m
+FIELD_STRIP_M = (22.0, 46.0)    # strip width range per block, m
+FIELD_BAULK_M = 1.0             # half-width of the rough baulk line between two fields, m (mask grid = 1 m)
+FIELD_BAULK_B = 0.78
+FIELD_ROAD_M = 4.0              # the verge rule keeps the first metres beside a road
+# dryness (COLOR_0.b) of a field by BDOT10k RODZAJ: lush sward ... dry, unmown meadow (VegetationGround.hlsl: gain
+# 0.70 + 0.60 x smoothstep(0.05, 0.95, b))
+FIELD_LEVELS = {"roślinność trawiasta": (0.06, 0.10, 0.16, 0.22, 0.30, 0.42, 0.58),
+                "uprawa na gruntach ornych": (0.04, 0.08, 0.14, 0.24, 0.50)}
+FIELD_DRIFT = 0.06              # peak-to-peak drift of the level inside one field
+FIELD_STRIP_DEV = 0.05          # a strip differs from its block by up to this
+FIELD_OWN_SHARE = 0.2           # share of strips with a use of their own
+# Residential land (BDOT10k OT_PTZB_A of a housing RODZAJ) away from the roads = gardens and yards between houses:
+# on the orthophoto mostly kept sward. Dryness GARDEN_B[0] + GARDEN_B[1] x (18 m patches with a little 2.5 m detail)
+# instead of 0.25 + 0.75 x (8 m patches): the straw patches of unmanaged ground do not belong there. WORKING_VALUE.
+GARDEN_RODZAJ = ("jednorodzinna", "wielorodzinna", "zagrodowa")
+GARDEN_B = (0.12, 0.30)
+
+
+def _h32(a, b, salt):
+    h = (a.astype(np.int64).astype(np.uint32) * np.uint32(1597334677)
+         ^ b.astype(np.int64).astype(np.uint32) * np.uint32(3812015801) ^ np.uint32(salt))
+    h ^= h >> np.uint32(16)
+    h *= np.uint32(2246822519)
+    h ^= h >> np.uint32(13)
+    return h
+
+
+def _u01(h):
+    return (h & np.uint32(0xFFFFFF)).astype(np.float64) / float(0xFFFFFF)
+
+
+def field_ids(x, y):
+    """(field id, block id), uint32, at EPSG:2180 positions x, y (arrays of one shape): the nearest jittered block seed
+    (one per FIELD_BLOCK_M cell) gives the strip direction and width, the strip index inside the block the field. A
+    pure function of the position, so two tiles agree along their seam."""
+    x, y = np.asarray(x, np.float64), np.asarray(y, np.float64)
+    cx, cy = np.floor(x / FIELD_BLOCK_M), np.floor(y / FIELD_BLOCK_M)
+    best = np.full(x.shape, np.inf)
+    bi, bj = np.zeros(x.shape), np.zeros(x.shape)
+    for dj in (-1, 0, 1):
+        for di in (-1, 0, 1):
+            i, j = cx + di, cy + dj
+            sx = (i + 0.15 + 0.7 * _u01(_h32(i, j, 911))) * FIELD_BLOCK_M
+            sy = (j + 0.15 + 0.7 * _u01(_h32(i, j, 913))) * FIELD_BLOCK_M
+            dd = (x - sx) ** 2 + (y - sy) ** 2
+            m = dd < best
+            best = np.where(m, dd, best)
+            bi, bj = np.where(m, i, bi), np.where(m, j, bj)
+    th = np.pi * _u01(_h32(bi, bj, 917))
+    w = FIELD_STRIP_M[0] + (FIELD_STRIP_M[1] - FIELD_STRIP_M[0]) * _u01(_h32(bi, bj, 919))
+    k = np.floor((x * np.cos(th) + y * np.sin(th)) / w)
+    bid = _h32(bi, bj, 923)
+    return _h32(bid.astype(np.float64), k, 929), bid
+
+
+def field_mosaic(src, origin, hf):
+    """(level, inside): dryness level (H, W) of the farmland mosaic and its mask - the cells inside BDOT10k OT_PTTR_A.
+    level already carries the baulks and the in-field drift."""
+    H, W = hf.z.shape
+    feats = (src.get("bdot10k") or {}).get("OT_PTTR_A") or []
+    inside = np.zeros((H, W), bool)
+    kind = np.zeros((H, W), np.uint8)
+    kinds = sorted(FIELD_LEVELS)
+    for n, rodzaj in enumerate(kinds, 1):
+        m = PV.rasterize_polys([PV._poly_local(f["geometry"]["coordinates"], origin) for f in feats
+                                if (f.get("props") or {}).get("rodzaj") == rodzaj], hf)
+        kind[m] = n
+        inside |= m
+    if not inside.any():
+        return np.zeros((H, W), np.float32), inside
+    X = origin[0] + hf.x0 + np.arange(W)[None, :] + np.zeros((H, 1))
+    Y = origin[1] + hf.y1 - np.arange(H)[:, None] + np.zeros((1, W))
+    fid, bid = field_ids(X, Y)
+    zero = np.zeros(fid.shape)
+    # a block of strips is mostly one use (the orthophoto: neighbouring strips of a block differ a little, blocks
+    # differ a lot): the block draws the level, a strip moves it by +-FIELD_STRIP_DEV, FIELD_OWN_SHARE of the strips
+    # draw their own
+    own = _u01(_h32(fid.astype(np.float64), zero, 931)) < FIELD_OWN_SHARE
+    r = np.where(own, _u01(_h32(fid.astype(np.float64), zero, 937)), _u01(_h32(bid.astype(np.float64), zero, 939)))
+    dev = (_u01(_h32(fid.astype(np.float64), zero, 943)) - 0.5) * 2.0 * FIELD_STRIP_DEV
+    level = np.zeros((H, W), np.float64)
+    for n, rodzaj in enumerate(kinds, 1):
+        lv = np.asarray(FIELD_LEVELS[rodzaj])
+        level = np.where(kind == n, lv[np.minimum((r * len(lv)).astype(int), len(lv) - 1)] + dev, level)
+    level += FIELD_DRIFT * (metric_patch_field(hf.x0 + np.arange(W), hf.y1 - np.arange(H), 40.0, 941) - 0.5)
+    edge = np.zeros((H, W), bool)                    # baulk: a neighbour cell belongs to another field or land class
+    key = fid.astype(np.int64) * 4 + kind
+    edge[:, 1:] |= key[:, 1:] != key[:, :-1]
+    edge[1:, :] |= key[1:, :] != key[:-1, :]
+    baulk = ndimage.distance_transform_edt(~edge) <= FIELD_BAULK_M
+    level = np.where(baulk, FIELD_BAULK_B, level)
+    return np.clip(level, 0.0, 1.0).astype(np.float32), inside
+
+
+def ground_masks(src, origin, hf, dist_road, forests, cleared=(), report=None):
     """(H, W, 4) float32 terrain vertex colours (see module doc)."""
     H, W = hf.z.shape
     R = np.clip(dist_road / 20.0, 0, 1)
@@ -703,6 +807,28 @@ def ground_masks(src, origin, hf, dist_road, forests, cleared=()):
     dry = np.clip((.8 * large + .2 * small - .5) * 2.4 + .5, 0, 1)
     B = np.where(mapped_lawn, .06 + dry * .40,
                  np.where(dist_road < 4.0, .08 + dry * .84, .25 + dry * .75))
+    # ADR 0295 (review 2026-11-18 P1-4): farmland = a mosaic of fields, not the patch noise
+    flevel, finside = field_mosaic(src, origin, hf)
+    fields = finside & ~mapped_lawn & (dist_road >= FIELD_ROAD_M) & ~G.astype(bool)
+    if report is not None:
+        report["farmland"] = {"cells_m2": int(fields.sum()), "share": round(float(fields.mean()), 4),
+                              "b_std_before": round(float(B[fields].std()), 4) if fields.any() else None,
+                              "b_std_after": round(float(flevel[fields].std()), 4) if fields.any() else None,
+                              "b_mean_before": round(float(B[fields].mean()), 4) if fields.any() else None,
+                              "b_mean_after": round(float(flevel[fields].mean()), 4) if fields.any() else None,
+                              "layout": "ESTIMATED strips (no cadastral parcels in the repo)"}
+    gardens = PV.rasterize_polys([PV._poly_local(f["geometry"]["coordinates"], origin)
+                                  for f in (src.get("bdot10k") or {}).get("OT_PTZB_A") or []
+                                  if str((f.get("props") or {}).get("rodzaj", "")).strip() in GARDEN_RODZAJ], hf)
+    gardens &= ~fields & ~mapped_lawn & (dist_road >= FIELD_ROAD_M) & ~G.astype(bool)
+    calm = GARDEN_B[0] + GARDEN_B[1] * (.75 * metric_patch_field(east, north, 18.0, 947) + .25 * small)
+    if report is not None:
+        report["farmland"].update({"garden_cells_m2": int(gardens.sum()),
+                                   "garden_b_mean_before": round(float(B[gardens].mean()), 4) if gardens.any() else None,
+                                   "garden_b_mean_after": round(float(calm[gardens].mean()), 4) if gardens.any() else None,
+                                   "garden_b_std_before": round(float(B[gardens].std()), 4) if gardens.any() else None,
+                                   "garden_b_std_after": round(float(calm[gardens].std()), 4) if gardens.any() else None})
+    B = np.where(fields, flevel, np.where(gardens, calm, B))
     bare_polys = [PV._poly_local(f["geometry"]["coordinates"], origin) for f in src["bdot10k"]["OT_PTNZ_A"]]
     bare_polys += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
                    if a["tags"].get("landuse") in ("construction", "brownfield")]

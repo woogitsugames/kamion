@@ -19,9 +19,14 @@ Bloomu w projekcie nie ma (docs/06 §2, `LookDevAssets`: bloom wyłączony) i ta
    `_LampHueCeiling` = 0,8 (WORKING_VALUE; 0 wyłącza). Ceiling 0,8 > clip High 0,7 → rdzeń lampy osiąga 100 % kanału
    dominującego na High; na Low ~90 % (sRGB 0,8). Bursztyn przy 0,8 ma luminancję 0,31 — poniżej progu desaturacji.
    Dzień: lampa poniżej kolana (ogon 1,3 kcd/m² w słońcu) — bez zmian.
-2. **Barwy w obszarach ECE (w gamucie sRGB)** — `TruckLights.Red = (1, 0, 0)`, `Amber = (1, 0.28, 0)` (r2; r1 miał 0.25) (liniowe sRGB).
-   - Czerwony: CIE x 0,640, y 0,330; R48 granica w stronę żółci y ≤ 0,335 (cytat granicy: dokument GRE
-     ECE/TRANS/WP.29/GRE/2006/25 przytaczający definicje R48). Stary (1, 0.03, 0.01): y 0,339 — poza.
+2. **Barwy: najbliższe osiągalne punkty; obszary R48 czerwony i bursztynowy leżą poza sRGB** (poprawka tekstu, ADR 0197) —
+   `TruckLights.Red = (1, 0, 0)`, `Amber` = (1, 0.28, 0) w r2 → **(1, 0.22, 0) od ADR 0197** (liniowe sRGB).
+   *ADR 0197: R48 §2.11.1.4 (Dz.U. UE L 347 z 30.9.2021, s. 1; SOURCED) — czerwony: y ≤ 0,335 i x + y ≥ 0,980; sRGB
+   osiąga maks. x + y = 0,970, więc (1, 0, 0) jest najbliższym punktem, nie punktem „w obszarze”. Bursztyn §2.11.1.3:
+   y ≤ x − 0,120, y ≥ 0,390, y ≥ 0,790 − 0,670 x — także poza sRGB; (1, 0.28, 0) łamał granicę zieleni. Poniższe liczby
+   r1/r2 zostają jako historia.*
+   - Czerwony: CIE x 0,640, y 0,330; R48 granica w stronę żółci y ≤ 0,335 (pierwotnie cytat pośredni GRE
+     ECE/TRANS/WP.29/GRE/2006/25; od ADR 0197 SOURCED z Dz.U. L 347, §2.11.1.4; granica purpury nieosiągalna). Stary (1, 0.03, 0.01): y 0,339 — poza.
    - Bursztyn: x 0,524, y 0,422 (r2, mniej pomarańczowy — recenzja s18 P2; r1 0,25: y 0,415); pasmo 0,398 ≤ y ≤ 0,429 (Australian Design Rule 49/00, transpozycja wymagań uznanych
      za równoważne R48). Stary (1, 0.42, 0.02): y 0,440 — za żółto-zielony.
    - Granice „w stronę bieli/purpury” (z ≤ 0,007/0,008) leżą poza gamutem sRGB — UNVERIFIED w tekście R48, nieosiągalne.

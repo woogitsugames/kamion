@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "id": "jackknife_fold_120_reverse_comb",
+  "description": "ADR 0228: reversing with full lock from 30 deg and keeping the throttle on after the trailer side wall meets the cab rear corner (the driver asks for ~120 deg): the body contact stops the fold near 117 deg, the drive axle pushes the trailer into the cab for ~3 s, then the driver brakes.",
+  "spec": "docs/04 s6.9/s6.10, ADR 0228 (B-077, gate 2)",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "overrides": {
+    "articulationDeg": 30.0
+  },
+  "duration": 14,
+  "dt": 0.01,
+  "substeps": 4,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": 0.0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 1,
+        "throttle": 0.3,
+        "brake": 0.0,
+        "steer": 1,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 9,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": 1,
+        "parkingBrake": false,
+        "selector": "R"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "no NaN (solver explosion)",
+      "max": 0
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "no teleport |dx_com - v dt| <= 1e-4 m",
+      "max": 0.0001
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "per-step velocity change <= 0.35 m/s (kerb jerk ceiling, ADR 0165 / D58)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin stays in the jaw through the contact (driving limit 5 mm)",
+      "max": 5
+    },
+    {
+      "metric": "coupling_contact_s",
+      "status": "WORKING_VALUE",
+      "source": "the trailer reaches the cab and stays on it",
+      "min": 1
+    },
+    {
+      "metric": "articulation_limit_excess_deg",
+      "status": "WORKING_VALUE",
+      "source": "articulation beyond the geometric contact angle (first contact of the level combination at 117.12 deg (trailer side wall, half width 1.275 m, on the cab rear corner x 1.245 m, 2.07 m ahead of the kingpin; CouplingContact.FirstContactArticulationDeg, analytic in JackknifeContactTests)); measured 1.4-1.7 deg = crush + plate pitch / roll lean",
+      "max": 2.5
+    },
+    {
+      "metric": "max_coupling_penetration_m",
+      "status": "WORKING_VALUE",
+      "source": "cab corner / trailer side crush while the drive axle pushes (5 Hz soft contact, measured 0.046-0.051 m) <= 7 cm",
+      "max": 0.07
+    },
+    {
+      "metric": "coupling_contact_restitution",
+      "status": "WORKING_VALUE",
+      "source": "no rebound off the cab (crushing panels; recovery speed 0.05 m/s)",
+      "max": 0.1
+    },
+    {
+      "metric": "max_body_rate_dps",
+      "status": "WORKING_VALUE",
+      "source": "no spin-up: body angular rates stay at the folding rates (< 40 deg/s measured)",
+      "max": 60
+    }
+  ]
+}
