@@ -55,8 +55,26 @@ Przełącznik A/B (do renderów „przed”): `WORLDGEN_NOISE_RULE_OFF=1` = zach
    raport `roads_qa.json` → `summary.markings.gore_p21`. Reguła miejska ADR 0093 (brak farby z reguły) bez zmian —
    dotyczy tylko jezdni, które nie są A/S.
 
-## Liczby
-(uzupełniane po przebudowie — patrz niżej)
+## Liczby (zmierzone 2026-11-18, `artifacts/screens-s24/`, statystyki VisualQA = estymata przed SRP batching)
+| | przed | po |
+|---|---|---|
+| `bialystok-maczka` ekrany (BDOT 753 m): styl | solid 753 m | clear 753 m (`rule: city arterial`) |
+| `dk65-01` ekrany (OSM 222 m) | solid | solid (`rule: motorway / expressway`) |
+| `dk65-01` gore `express` (asfalt + P-21) | 0 (2 „merge” odrzucone, krawężnik ~200 m) | 78 kawałków, 2444 m²; 1 kawałek 28,6 m² odrzucony (−465, −1016) |
+| maczka High `screen_wb_eye` draws / tris | 987 / 1 593 924 | 987 / 1 600 227 (+0,4 %) |
+| maczka High `screen_eb_eye` | 794 / 1 729 579 | 794 / 1 735 882 |
+| maczka Low `screen_wb_eye` | 467 / 309 792 | 467 / 311 277 (+0,5 %) |
+| maczka Low `screen_eb_eye` | 404 / 301 774 | 404 / 304 029 |
+| dk65-01 High `s8_corner_eye` | 115 / 485 216 | 116 / 495 764 (+2,2 %) |
+| dk65-01 Low `s8_corner_eye` | 87 / 147 151 | 88 / 153 546 (+4,3 %) |
+Szkło nie dodaje wywołań w kadrach maczka (materiał `noise_glass` zamiast `noise_panel_dark` w tym samym chunku);
+koszt to overdraw jednej przezroczystej płaszczyzny ~3,3 m × długość ekranu — nie zmierzony na GPU (estymator nie
+liczy fill-rate), do pomiaru `pc-metrics.ps1` na trasie przez Maczka. `build_world` maczka 2840 s (bez zmian
+kodu ścieżki krytycznej), dk65-01 ~760 s.
+Obejrzane (High i Low): maczka `screen_wb_eye` (szkło w jasnych ramach, dom i płot widoczne przez ekran, brak
+artefaktów sortowania, brudny pas u dołu), `screen_eb_eye`; dk65-01 `s8_corner_eye` (krawężnik zniknął, pas P-21
+między S8 a pasem wyłączania), `s8_corner_top` (pasy P-21 wzdłuż 4 pasów węzła). `screen_close_0293` nie trafia
+w ekran (kamera do poprawy, nie zmienia wniosku).
 
 ## Konsekwencje
 - Kafle do przebudowy po scaleniu: z ekranami bez stref autorskich (A) — `bialystok-kleeberga`, `bialystok-knyszynska`,
