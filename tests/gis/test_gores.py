@@ -53,7 +53,8 @@ def test_no_paint_from_the_gore_rule(qa, overrides):
     """ADR 0093: P-21 comes only from painted_zone polygons traced on the orthophoto; the gore stage paints nothing
     (the rule-based ladders of ADR 0077 did not match the photo) and `hatch:` on a paved_gore is gone."""
     assert not any(o.get("kind") == "paved_gore" and "hatch" in o for o in overrides)
-    assert not any(x["hatch"] or "P-21" in x["note"] for x in qa["summary"]["gores"]["gores"])
+    # ADR 0293: the only exception - strips beside a motorway / expressway through carriageway ("express")
+    assert not any((x["hatch"] and x["why"] != "express") or "P-21" in x["note"] for x in qa["summary"]["gores"]["gores"])
 
 
 def test_slivers_obey_rule(qa):
