@@ -29,13 +29,14 @@ namespace PhysicsRunner.Tests
         static string UnityTestSource =>
             File.ReadAllText(Path.Combine(RepoPaths.Root, "game", "Assets", "_Project", "Tests", "PlayMode", "KerbStrikeParityTests.cs"));
 
-        static (double fz, double tractor, double all, double pitch) Measure(string id)
+        static (double fz, double tractor, double all, double pitch, double pen) Measure(string id, bool bodyContact = true)
         {
-            var r = ScenarioRunner.Run(Suites.Find(id), new RunOptions());
+            var r = ScenarioRunner.Run(Suites.Find(id), new RunOptions { DisableBodyContact = !bodyContact });
             return (Metrics.Compute(r, "max_fz_ratio", 0, 0, Window),
                     Metrics.Compute(r, "max_wheel_airtime_s", 1, 0, Window),
                     Metrics.Compute(r, "max_wheel_airtime_s", 0, 0, Window),
-                    Metrics.Compute(r, "max_pitch_deg", 0, 0, Window));
+                    Metrics.Compute(r, "max_pitch_deg", 0, 0, Window),
+                    Metrics.Compute(r, "max_body_penetration_m", 0, 0, Window));
         }
 
         void AssertRef(string what, double expected, double runner)
@@ -54,8 +55,11 @@ namespace PhysicsRunner.Tests
             var rx = new Regex(@"\[TestCase\(CargoPreset\." + preset + @", KerbKind\.(\w+), ([\d.]+), ([\d.]+), ([\d.]+), ([\d.]+),");
             var cases = rx.Matches(src).Cast<Match>().ToList();
             Assert.Equal(2, cases.Count); // Box and Mesh
+            // Box case: body colliders may touch the kerb in both Unity and the runner; Unity asserts 0 body contacts,
+            // so the runner must not have any either (then the metrics do not depend on the body contact).
             var m = Measure(id);
-            _out.WriteLine(string.Format(Inv, "{0}: Fz/static {1:F4}, tractor {2:F2} s, all {3:F2} s, pitch max {4:F4} deg", id, m.fz, m.tractor, m.all, m.pitch));
+            _out.WriteLine(string.Format(Inv, "{0}: Fz/static {1:F4}, tractor {2:F2} s, all {3:F2} s, pitch max {4:F4} deg, body pen {5:F4} m", id, m.fz, m.tractor, m.all, m.pitch, m.pen));
+            Assert.Equal(0.0, m.pen);
             foreach (var c in cases)
             {
                 double P(int g) => double.Parse(c.Groups[g].Value, Inv);
@@ -73,12 +77,17 @@ namespace PhysicsRunner.Tests
             var src = UnityTestSource;
             double C(string name)
             {
-                var mm = Regex.Match(src, @"const double " + name + @" = ([\d.]+);");
+                var mm = Regex.Match(src, @"\b" + name + @" = ([\d.]+)[,;]");
                 Assert.True(mm.Success, name + " not found in KerbStrikeParityTests.cs");
                 return double.Parse(mm.Groups[1].Value, Inv);
             }
-            var m = Measure("kerb_step_27cm_42kmh_comb@laden40");
-            _out.WriteLine(string.Format(Inv, "kerb_step_27cm_42kmh_comb@laden40: Fz/static {0:F4}, tractor {1:F2} s, all {2:F2} s, pitch max {3:F4} deg", m.fz, m.tractor, m.all, m.pitch));
+            // Unity runs this case on a MeshCollider on the WorldKerb layer: wheel rays only, the body colliders never
+            // touch the step. The committed runner scenario has the bumper strike on (ADR 0165, D58), so the parity
+            // reference is the same scenario without body contact. Both are printed.
+            var on = Measure("kerb_step_27cm_42kmh_comb@laden40", true);
+            var m = Measure("kerb_step_27cm_42kmh_comb@laden40", false);
+            _out.WriteLine(string.Format(Inv, "kerb_step_27cm_42kmh_comb@laden40 body contact ON: Fz/static {0:F4}, tractor {1:F2} s, all {2:F2} s, pitch max {3:F4} deg, body pen {4:F4} m", on.fz, on.tractor, on.all, on.pitch, on.pen));
+            _out.WriteLine(string.Format(Inv, "kerb_step_27cm_42kmh_comb@laden40 body contact OFF (Unity mesh parity): Fz/static {0:F4}, tractor {1:F2} s, all {2:F2} s, pitch max {3:F4} deg", m.fz, m.tractor, m.all, m.pitch));
             AssertRef("27 cm Fz/static", C("Step27Fz"), m.fz);
             AssertRef("27 cm tractor unload", C("Step27Tractor"), m.tractor);
             AssertRef("27 cm pitch peak", C("Step27Pitch"), m.pitch);

@@ -13,3 +13,6 @@
 # STATUS — alt-113-s24 (PR #113 jackknife-0228 r4, ADR 0228)
 - Krok 1: merge origin/main 33541aa04 czysty (D79 osie tridemu 7,63 m, #171). bodyBoxes naczepy bez zmian i zgodne (test_dims_sync 12/12; BoxCollidery graybox nie zależą od osi). dotnet: tylko golden brake_80_0_dry_abs_comb@laden40 FAIL (jak w recenzji).
 - NASTĘPNY KROK: izolacja przyczyny golden: `dotnet run -c Release --project tools/physics-runner/Runner -- --only brake_80_0_dry_abs_comb@laden40 --out <dir>` + porównanie z goldenami main/#113
+- Krok 2: golden brake_80_0_dry_abs_comb@laden40: po scaleniu przebieg mieści się w tolerancji pliku z main (outliers ≤ 2 %) — przywrócony plik main zamiast nowego nagrania; różnica #113-golden vs scalone = chwila zatrzymania t≈4,1 s (geometria 7,70→7,63 m), kontakty 0.
+- Krok 3: KerbStrikeParityTests stałe z runnera (14 cm: 3.68/0.08/0.20/1.44°, 3.30/0.08/0.08/1.42°; 27 cm: 6.03/0.33/3.54°), tolerancje bez zmian; przyczyna = histereza odbojnika (h=0 → wartości main). Strażnik xUnit KerbParityReferenceTests.
+- NASTĘPNY KROK: `dotnet test tools/physics-runner/Tests` (pełny) + ADR 0228 / PHYSICS_VALIDATION §3a
