@@ -89,7 +89,38 @@ Przebudowane w tej gałęzi: `knyszyn`, `knyszyn-w`. Do przebudowy przez właśc
 i pozostałe przy najbliższej okazji.
 
 ## Pomiary (przed → po)
-TBD_MEASURE
+Wszystko zmierzone w tej gałęzi; rendery = edytor, High clear, 1920 × 1080 (nie build Windows).
+
+| | przed | po | źródło |
+|---|---|---|---|
+| Dom Klattów: najdłuższy przebieg desek / kafel 6 m | 21,10 m = 3,52 kafla | 4,65 m = 0,78 kafla | `BM.build`, `streetscape_qa.json` |
+| Knyszyn: przebiegi desek > kafel | wszystkie ściany > 6 m | 0 z 256 (max 5,50 m) | `buildings.wooden_houses` |
+| CV tonu desek `wood_siding` | 0,0157 | 0,0324 | `materials_spec.json` |
+| Budynki LOD0, cały kafel `knyszyn` (25 domów drewnianych) | 656 343 tris | 669 021 (+12 678, +1,9 %) | `world_manifest.json` |
+| Budynki LOD0, `knyszyn-w` (5 domów drewnianych) | 127 160 | 129 718 (+2 558) | `world_manifest.json` |
+| Chunki z nowym materiałem `wood_trim_white` (LOD0) | 0 | 13 z 64 (`knyszyn`) | `world_manifest.json` |
+| Draw calle, maks. z 83 kamer / średnio | 731 | 732 / +1,65 (najgorzej +6 `rynek-owner-04`) | `stats.txt` (szacunek edytora przed SRP batchingiem) |
+| Trójkąty, maks. z 83 kamer | 2 333 091 | 2 339 271 (najgorzej +7 756) | jw.; kadry kabinowe (`cab-mirror-front`, `cab-mirrors-right`) były > 2 mln już przed zmianą |
+| `look-dom-klattow`: draws / tris | 603 / 1 442 088 | 607 / 1 447 136 | jw. |
+| DK65 W: zamknięcie przed krawędzią kafla (wzdłuż drogi) | 49,4 m (~12 m za rondem) | 12,0 m (~50 m za rondem) | `roads.graph.json` + reguła `ReadExits` |
+| Maska suchości na polach (72 % kafla): średnia / odch. | 0,624 / 0,262 (szum 8 m) | 0,327 / 0,228 (różnice między polami) | `vegetation.farmland` |
+| Maska suchości w ogrodach (22 ha): średnia / odch. | 0,628 / 0,264 | 0,269 / 0,050 | jw. |
+| Plamistość pola na `rondo-owner-11` (odch. luminancji w paśmie 4–24 px, pole NE) | 0,0219 | 0,0165 (−25 %; w tym zamierzone pasy pól) | `artifacts/knyszyn-p1-s24/field_noise.py` |
+| Średni kolor pola NE (sRGB) | 131 / 133 / 101 | 118 / 123 / 96 | jw. |
+
+Baseline ADR 0238 kafla C (`tests/gis/data/typology_0238_baseline_bialystok-industrial-c.json`) przeliczony: 3 domy drewniane
+kafla C dają +102…+106 trójkątów High na 4 kamerach; suma budynków 961 562 → 958 445 (inne zmiany od ostatniego
+przeliczenia). Low (LOD1) bez zmian w tej decyzji.
+
+Testy: `tests/gis/test_wood_house_p1_s24.py` (9), EditMode `WorldEdgeSetbackOverrideTests` (2).
+Dowody: `artifacts/knyszyn-p1-s24/{before,after2,sbs}/*.jpg`, `budget-before-after2.json`, `field-noise-before-after2.json`.
+
+Obejrzane rendery (ocena własna agenta, nie `visual-critic`): `look-dom-klattow` — szczyt pionowo, deska na linii okapu,
+narożniki, lisica, opaski z nadokiennikiem, wiatrownica w kolorze ściany; `look-wooden-house-brown` — to samo na domu
+z reguły (ganek); `rondo-owner-11` — pasy pól z miedzami zamiast plam, ale ton pól wciąż oliwkowy (zdjęcie nr 11: soczysta
+zieleń) i teren w pasie ~20 m od dróg bez zmian; `dk65-outlet-nw` — zapora ok. 50 m dalej niż przedtem (61,7 − 12 = 49,7 m za rondem), **nadal
+widoczna** w scenie pojedynczego kafla; `rondo-dk65-above` — zamknięcie DW671 W zostaje 10 m przed krawędzią (kafel kończy
+się 12,6 m za rondem). Zapory na obu ramionach znikają dopiero przy streamingu z `knyszyn-w`.
 
 ## Otwarte
 - Zdjęcia Domu Klattów (Kościelna) od właściciela: kolor desek i opasek, okiennice, ganek — wymiary desek do weryfikacji.
