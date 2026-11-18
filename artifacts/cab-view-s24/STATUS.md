@@ -15,3 +15,4 @@
 - ControlSettings.DefaultCabFovDeg = 70, schemat 6 (55→70 jednorazowo, inne wartości zostają), cab-driver QA = 70; HudVisibility.IsCabView + DrivingHudContext.CameraModeOverride (render QA zna tryb kamery), CabViewQa.IsCabCameraId, kamera QA chase-hud; testy CabView0294Tests + poprawione ControlSettingsTests/Controls0243Tests; ADR 0294, D90, indeks ADR.
 - Rendery po zmianie: start/ i rondo/ (pasek w kabinie znika, w chase-hud jest). Stare w przed-d90/.
 - NASTĘPNY KROK: wynik EditMode `artifacts/cab-view-s24/logs/tests.status`, potem `git merge origin/main`, commit, push.
+- 19:0x EditMode Win64 po merge origin/main: 1362 / 1273 passed / 2 failed / 87 skipped; porażki tylko znane środowiskowe CarPaintMaterialTests.DepositionChannel (×2); CabView0294Tests 18/18. KONIEC — gotowe do integracji.
