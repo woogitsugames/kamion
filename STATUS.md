@@ -4,3 +4,5 @@
 - NASTĘPNY KROK: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` w worktree (Library z win-build skopiowana).
 - 22:50 EditMode r1 (świeży worktree): 1387 / 1266 pass / 5 fail / 111 skip; 4 cele OK, 5 nowych porażek = brak prefabu TRAKT (Mirror x2, DoorCrown x3) -> Ignore z komendą budowy.
 - NASTĘPNY KROK: EditMode r2 (artifacts/run-editmode.ps1 z r2)
+- 23:05 EditMode r2: 1387 / 1265 pass / 0 fail / 117 skip, ale Unity exit 2: 5 x Inconclusive (Assume.That na brak TRAKT) -> Assert.Ignore (EditMode+PlayMode); test.ps1 pokazuje Inconclusive i exit Unity.
+- NASTĘPNY KROK: EditMode r3
