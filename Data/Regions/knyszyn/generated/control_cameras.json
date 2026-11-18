@@ -837,100 +837,100 @@
    "type": "persp"
   },
   {
-   "id": "seam_w_above",
-   "type": "persp",
    "fov_deg": 55.0,
-   "pos": [
-    -985.0,
-    -430.0,
-    233.86
-   ],
+   "id": "seam_w_above",
    "look_at": [
     -1085.0,
     -430.0,
     171.373
    ],
-   "note": "place camera: QA (knyszyn-p2-s24): the west tile edge (E -1024) from 40 m inside, 110 m up - terrain mask / brightness continuity across the seam into the apron or knyszyn-w"
+   "note": "place camera: QA (knyszyn-p2-s24): the west tile edge (E -1024) from 40 m inside, 110 m up - terrain mask / brightness continuity across the seam into the apron or knyszyn-w",
+   "pos": [
+    -985.0,
+    -430.0,
+    233.86
+   ],
+   "type": "persp"
   },
   {
-   "id": "seam_w_top",
-   "type": "persp",
    "fov_deg": 50.0,
-   "pos": [
-    -1024.0,
-    -380.0,
-    284.73
-   ],
+   "id": "seam_w_top",
    "look_at": [
     -1024.0,
     -280.0,
     -57010.991
    ],
-   "note": "place camera: QA (knyszyn-p2-s24): straight down on the west tile edge north of DK65 - luminance step across the seam measured on this frame"
+   "note": "place camera: QA (knyszyn-p2-s24): straight down on the west tile edge north of DK65 - luminance step across the seam measured on this frame",
+   "pos": [
+    -1024.0,
+    -380.0,
+    284.73
+   ],
+   "type": "persp"
   },
   {
-   "id": "seam_s_above",
-   "type": "persp",
    "fov_deg": 55.0,
-   "pos": [
-    -560.0,
-    -985.0,
-    226.88
-   ],
+   "id": "seam_s_above",
    "look_at": [
     -560.0,
     -1085.0,
     164.393
    ],
-   "note": "place camera: QA (knyszyn-p2-s24): the south tile edge (N -1024, seam with knyszyn-s) from 40 m inside, 110 m up"
+   "note": "place camera: QA (knyszyn-p2-s24): the south tile edge (N -1024, seam with knyszyn-s) from 40 m inside, 110 m up",
+   "pos": [
+    -560.0,
+    -985.0,
+    226.88
+   ],
+   "type": "persp"
   },
   {
-   "id": "rings_w_arm_top",
-   "type": "persp",
    "fov_deg": 50.0,
-   "pos": [
-    -1021.0,
-    -635.0,
-    149.17
-   ],
+   "id": "rings_w_arm_top",
    "look_at": [
     -1021.0,
     -535.0,
     -57146.551
    ],
-   "note": "place camera: QA (knyszyn-p2-s24): asphalt of the DK65 west arm near the edge closure (review N2: concentric rings)"
+   "note": "place camera: QA (knyszyn-p2-s24): asphalt of the DK65 west arm near the edge closure (review N2: concentric rings)",
+   "pos": [
+    -1021.0,
+    -635.0,
+    149.17
+   ],
+   "type": "persp"
   },
   {
-   "id": "rings_ne_arm_top",
-   "type": "persp",
    "fov_deg": 50.0,
-   "pos": [
-    -961.0,
-    -590.0,
-    150.83
-   ],
+   "id": "rings_ne_arm_top",
    "look_at": [
     -961.0,
     -490.0,
     -57144.891
    ],
-   "note": "place camera: QA (knyszyn-p2-s24): asphalt of the Tykocka NE arm 35 m from the ring (review N2: concentric rings)"
+   "note": "place camera: QA (knyszyn-p2-s24): asphalt of the Tykocka NE arm 35 m from the ring (review N2: concentric rings)",
+   "pos": [
+    -961.0,
+    -590.0,
+    150.83
+   ],
+   "type": "persp"
   },
   {
-   "id": "gardens_tykocka_eye",
-   "type": "persp",
    "fov_deg": 60.0,
-   "pos": [
-    -905.0,
-    -540.0,
-    126.38
-   ],
+   "id": "gardens_tykocka_eye",
    "look_at": [
     -818.397,
     -490.0,
     128.126
    ],
-   "note": "place camera: QA (knyszyn-p2-s24): pedestrian eye on Tykocka between the house plots - garden trees, shrubs, hedges (review N4)"
+   "note": "place camera: QA (knyszyn-p2-s24): pedestrian eye on Tykocka between the house plots - garden trees, shrubs, hedges (review N4)",
+   "pos": [
+    -905.0,
+    -540.0,
+    126.38
+   ],
+   "type": "persp"
   },
   {
    "center": [
