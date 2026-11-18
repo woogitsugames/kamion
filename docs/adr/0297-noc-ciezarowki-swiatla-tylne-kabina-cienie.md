@@ -32,11 +32,11 @@ Decyzja:
 Wyniki (High noc; Low w nawiasie), przed → po:
 | element | przed | po |
 |---|---|---|
-| pozycyjne ciągnika (maska komory) | 54,7 R (51,3) | AFTER3_TAIL |
-| stop ciągnika | 192,9 R | AFTER3_STOP |
-| stop : pozycyjne (liniowo, ekran) | 14,1 | AFTER3_RATIO |
-| tablica naczepy (średnia / max) | 205 / 254 (182 / 236) | AFTER3_PLATE |
-| obudowa 4–24 px wokół stopu, z bliska (lamp-truck) | 9,2 R (bez zmiany przy stopie) | AFTER3_RING |
+| pozycyjne ciągnika (maska komory) | 54,7 R (51,3) | **110,7 R** (106,5); z dystansu (plate-truck-bobtail) 54,6 → 120,9 |
+| stop ciągnika | 192,9 R | 236,5 R (halo nad kloszem; G, B 23 — bez bieli) |
+| stop : pozycyjne (liniowo, ekran) | 14,1 | 5,3 (Low 4,9 — halo dokłada czerwień także nad kloszem pozycyjnych; regulaminowe 5,26 : 1 dotyczy lampy, test) |
+| tablica naczepy (średnia / max) | 205 / 254 (182 / 236) | **143 / 153** (140 / 156) — poniżej stopu, czytelna, gradient od lampki |
+| obudowa 4–24 px wokół stopu, z bliska (lamp-truck) | 9,2 R (bez zmiany przy stopie) | pozycyjne 14,1 / stop 23,8 R; z 4 m (plate-trailer) pozycyjne 21,7 / stop 120 R |
 Przepalenia (> 250): bez zmian (≤ 0,02 % kadru).
 
 ## 2. Kabina nocą (K1)
@@ -56,7 +56,20 @@ Decyzja:
    legendy, wielokrotne odbicia w osłonie zegarów, odbicie w szybie). Bez cieni od ekranów (koszt), dwa globalne wektory.
    Przełączniki: `instrumentSpill`, `rq_cabspill=0`.
 
-Wyniki `cab-driver` High noc (Low), przed → po: AFTER3_CABTABLE
+Wyniki `cab-driver` High noc (Low), przed → po: 
+| region | przed | po |
+|---|---|---|
+| średnia kadru | 12,5 (8,8) | 9,7 (6,1) |
+| niebo | 12,0 (7,1) | 12,0 (7,1) |
+| deska pod zegarami | 12,4 (10,5) | 6,1 (5,0) |
+| słupek A | **17,7** (16,4) | **7,1** (5,8) |
+| droga | 8,2 (3,3) | 8,2 (3,3) |
+| wieniec (góra) | 17,1 | 7,2 |
+Kabina jest teraz ciemniejsza od nieba (separacja zamiast „wszystko 12/255”), słupek A nie świeci bez źródła; zegary, legendy
+i nawigacja bez zmian jasności (cab-dash p99 29,9, max 197). Spill (A/B `rq_cabspill`, ×4): +1–7/255 na wieńcu i ramionach
+kierownicy od strony nawigacji, 46 px > 3 — „lekkie”, zgodnie z fizyką małych, ciemnych ekranów; cel krytyka 20–25/255 na desce
+wokół zegarów nie ma podstawy fizycznej (deska współpłaszczyznowa z ekranem: cos θ_s ≈ 0). Zmierzch High: deska 14,4 → 8,1,
+słupek 18,9 → 9,4, niebo 63.
 
 ## 3. Schodkowe cienie słońca w kabinie (K2, znane od s23 P1-1)
 Przyczyna: `CabInterior.shader` **nie miał wariantów `_SHADOWS_SOFT`** (decyzja A7: na S24+ miękkie cienie kabiny kosztowały
@@ -66,12 +79,14 @@ PC nie miały wpływu. Kaskady, rozdzielczość (4096/8192), bias 0,6/0,6 — be
 Decyzja: warianty `_SHADOWS_SOFT*` w przebiegu forward kabiny (zestaw jak `TruckExterior`) + gałąź jednorodna
 `_KamionCabSoftShadow` (CabInteriorLighting: `pcSoftShadows && PcGraphicsTiers.Enabled`, A/B `rq_cabsoft`): na PC filtr URP z assetu
 tieru (High/Ultra: Soft High, Medium: Soft Low, Low: brak — twarde), na telefonach twarda próbka A7 (`CabHardShadow`) — koszt
-mobilny bez zmian. Wynik: krawędź cienia słupka na desce `cab-hub` clear: szerokość przejścia 10–90 % (mediana) AFTER3_EDGE;
+mobilny bez zmian. Wynik: krawędź cienia słupka na desce `cab-hub` clear: szerokość przejścia 10–90 % (mediana) 10 → 22 px (High), 9 → 13 px (Ultra), Low bez zmian 47 px (twarde, ale rozmyte niską rozdzielczością);
 schodki niewidoczne (`artifacts/night-truck-s24/view/hub-*`).
 
 ## Koszt
-- Draws: halo +1 na ciągnik, +1 na naczepę (addytywny quad, bez cieni, bez sond). AFTER3_DRAWS
-- GPU (edytor, GTX 1070, `-TimeFrames 120`, A/B naprzemiennie ×2): AFTER3_TIME. **Czas w buildzie: UNVERIFIED** (lider: `pc-metrics.ps1`).
+- Draws: halo +1 na ciągnik, +1 na naczepę (addytywny quad, bez cieni, bez sond). Zmierzone `stats.txt`: lamp-truck 198 → 200, plate-trailer 208 → 211 (drawsEst, przed batchingiem), trisy +26…+30.
+- GPU (edytor, GTX 1070, `-TimeFrames 120`, A/B naprzemiennie ×2): miękkie cienie kabiny cab-driver 1,96 / 1,82 ms (hard) vs 1,76 / 1,72 ms (soft), cab-hub 2,30 / 2,33 vs 2,24 / 2,30 —
+w szumie (±0,2 ms; cab-dash 3,42 / 2,26 vs 2,48 / 2,33 — rozrzut ±1 ms); Ultra cab-driver 7,06 → 7,19 ms (+0,13); spill
+noc cab-driver 1,32 → 1,69 ms, cab-dash 1,46 → 2,86 ms (jeden przebieg, rozrzut tego samego rzędu — **do pomiaru w buildzie**). **Czas w buildzie: UNVERIFIED** (lider: `pc-metrics.ps1`).
 - Shader kabiny: +2 źródła × ~15 ALU (spill) dla pikseli kabiny; warianty kabiny ×4 (miękkie cienie) — rozmiar buildu UNVERIFIED.
 - Pamięć: 2 siatki halo (40 + 20 wierzchołków), 1 materiał.
 
@@ -88,3 +103,13 @@ schodki niewidoczne (`artifacts/night-truck-s24/view/hub-*`).
 - Pasma (banding) nieba nocą w kabinie (pierścienie w 8 bitach) — zauważone, poza zakresem.
 - Referencje nocne (Commons, CC BY / BY-SA, poza gitem): `Data/raw/refs/night-truck-s24/` + `LICENSES.txt`; najbliższa: tył
   furgonu nocą (ref5) — lampy najjaśniejsze i nasycone z małą poświatą, tablica ciemniejsza od lamp.
+
+## Weryfikacja (2026-11-18, Unity 6000.3.28f1 Win64)
+- `TruckAssetBuilder.BuildBatch` / `TrailerAssetBuilder.BuildBatch` OK (halo: ciągnik 5, naczepa 10 quadów; spill: zegary 328 cm²,
+  średnia 0,023; nawigacja 304 cm², 0,596), `build-lab.ps1 -SkipAudio -BuildTarget Win64`.
+- EditMode Win64 1393: 1296 passed, 3 failed, 94 skipped — 3 porażki te same co na main (2× `CarPaintMaterialTests.DepositionChannel_*`,
+  `LightPostPolicyTests.ImportedGlassSemanticIsRestrictedAndStillReceivesShadows`, dane `_Generated`); `NightTruck0297Tests` 6/6,
+  `LampRegulationTests` 19/19 (w tym `_PlateDisplayMax` = `LampPhotometry.PlateDisplayMax`). `dotnet test tools/lamp-check` 187/187.
+- Rendery (obejrzane): `lamp-truck`, `lamp-trailer`, `plate-trailer`, `plate-truck-bobtail` noc pozycyjne / pozycyjne+stop High i Low,
+  zmierzch High; `cab-driver` (FOV 70), `cab-dash`, `cab-hub` noc / zmierzch / clear High, Ultra, Low.
+  Dowody: `artifacts/night-truck-s24/view/` (≤ 960 px, lewa = przed, prawa = po), liczby `base-*.txt`, `final-*.txt`, `after3-time.txt`.
