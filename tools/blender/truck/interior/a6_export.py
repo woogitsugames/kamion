@@ -92,7 +92,7 @@ WEAR_MUL = {"leather_trim": 1.9, "leather": 2.3, "leather_wheel": 2.5, "leather_
             "switch": 1.35, "grab_dark": 2.0, "knob": 1.8, "dash_lower": 1.45}
 BLACK_TINT = 0.04          # mean linear tint below this = black part: its worn spots are darkened so that the shader's
 DUST_RGB = (0.210, 0.195, 0.165)   # D84 / ADR 0296: settled dust, linear albedo (warm light grey). WORKING_VALUE
-DUST_ROUGH = 0.5                   # roughness added per unit dust (a matt film)
+DUST_ROUGH = 0.35                  # roughness added per unit dust (a matt film)
 BLACK_WEAR_DARKEN = 0.30   # worn albedo (lerp to max(base, 0.05)) stays <= 0.05 (ADR 0044 r6)
 NO_AO = ("curtain_", "blind_", "hatch_blind",     # thin interpenetrating cloth (critic #15) and the rim, which
          "wheel_rim", "wheel_stitch",           # rotates (a baked occlusion pattern would turn with it): median value

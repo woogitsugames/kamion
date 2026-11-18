@@ -1010,7 +1010,9 @@ def build_dash():
             if dd > 0.0:
                 drift = max(drift, 1.0 - smooth(0.004, 0.05, dd))
         corner = smooth(0.92, 1.10, co.x)
-        return ((0.065 * up + 0.20 * dst + 0.10 * up * drift + 0.08 * up * corner) * (1 - pol)) * min(1.0, blotch) * swath
+        # round 3 (after2: dash-right mean +0.7 sRGB only - on this pad about a third of the signal is diffuse, and the
+        # matt film also takes sheen away): amounts doubled
+        return ((0.13 * up + 0.30 * dst + 0.26 * up * drift + 0.18 * up * corner) * (1 - pol)) * min(1.0, blotch) * swath
     set_attr_w(d, "dust", top_dust)
     # parting line between the two mouldings
     pts = [lp[split] + V(0, -0.0015, 0) for lp in loops[1:-1]]
@@ -1069,7 +1071,7 @@ def build_dash():
                 bm.faces.new((grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1]))
         tm = G.finish(f"dash_tray_mat_{ti}", bm, "floor_mat", smooth=True, sharp=None)
         # D84 / ADR 0296: dust and grit collect between the ribs (the mat floor), more in the passenger tray nobody uses
-        set_attr_w(tm, "dust", lambda co, nr, ti=ti: (0.34 + 0.10 * ti) * (0.55 + 0.45 * vnoise(co.x * 11.0, co.y * 17.0, 9.0 + ti)))
+        set_attr_w(tm, "dust", lambda co, nr, ti=ti: (0.58 + 0.12 * ti) * (0.55 + 0.45 * vnoise(co.x * 11.0, co.y * 17.0, 9.0 + ti)))
         lip = []
         for (x, y) in ([(tx0 + (tx1 - tx0) * i / 10, ty0) for i in range(11)] + [(tx1, ty0 + (ty1 - ty0) * j / 4) for j in range(1, 5)] +
                        [(tx1 - (tx1 - tx0) * i / 10, ty1) for i in range(1, 11)] + [(tx0, ty1 - (ty1 - ty0) * j / 4) for j in range(1, 5)]):
@@ -1211,7 +1213,7 @@ def build_binnacle():
         loops.append(lp)
     hood = loft("binnacle_hood", loops, "dash_soft", closed=True, cap0=True, cap1=True, sharp=70)
     # D84 / ADR 0296: dust on the hood top, thicker towards the glass (the hand wipes the front edge), blotchy
-    set_attr_w(hood, "dust", lambda co, nr: smooth(0.45, 0.85, nr.z) * (0.05 + 0.11 * smooth(0.02, 0.16, co.y - CLUSTER_C.y))
+    set_attr_w(hood, "dust", lambda co, nr: smooth(0.45, 0.85, nr.z) * (0.10 + 0.18 * smooth(0.02, 0.16, co.y - CLUSTER_C.y))
                * (0.5 + 0.5 * vnoise(co.x * 14.0, co.y * 14.0, 4.0)))
     # parting seam where the hood skin meets the dash skin (3 mm dark groove following the intersection)
     for i, lp in enumerate(loops):
@@ -1809,7 +1811,7 @@ def build_wheel(badge):
         pc = C + d * t
         loops.append([pc + u * px + v * py for px, py in rrect(w, h, rr, 4)])
     csh = loft("column_shroud", loops, "dash_dark", closed=True, cap0=True, cap1=True)
-    set_attr_w(csh, "dust", lambda co, nr: 0.09 * smooth(0.55, 0.9, nr.z) * (0.5 + 0.5 * vnoise(co.x * 23.0, co.y * 23.0, 6.0)))
+    set_attr_w(csh, "dust", lambda co, nr: 0.16 * smooth(0.55, 0.9, nr.z) * (0.5 + 0.5 * vnoise(co.x * 23.0, co.y * 23.0, 6.0)))
     for s in (-1, 1):
         pts = [C + d * t + u * (s * w / 2) + v * (-0.010) for t, w in ((0.080, 0.150), (0.135, 0.150), (0.165, 0.130),
                                                                        (0.318, 0.136))]
@@ -2053,7 +2055,7 @@ def seat(prefix, cx, driver):
         set_attr_l(cush, "tint_add", lambda co, nr: -0.14 * (1 - smooth(c_w - 0.07, c_w - 0.01, abs(co.x)))
                    * smooth(-0.16, -0.04, co.y) * (1 - smooth(0.16, 0.26, co.y))
                    * (0.45 + 0.55 * vnoise(co.x * 13.0, co.y * 13.0, 7.0)) * smooth(0.3, 0.8, nr.z))
-        set_attr_l(cush, "dust", lambda co, nr: 0.10 * (1 - smooth(-0.21, -0.13, co.y))
+        set_attr_l(cush, "dust", lambda co, nr: 0.18 * (1 - smooth(-0.21, -0.13, co.y))
                    * (1 - smooth(c_w - 0.03, c_w + 0.02, abs(co.x))) * smooth(0.3, 0.8, nr.z))
     if driver:  # entry wear on the left (door-side) bolster, front half
         # r6b (C-R2): one shaped patch, no hash / sine pattern: the door-side bolster is rubbed flat and shiny where the
@@ -2383,7 +2385,7 @@ def build_floor():
         ring = math.exp(-(((co.x + 0.48) / 0.24) ** 2 + ((co.y - 1.10) / 0.20) ** 2)) * (1 - heel)
         entry = math.exp(-(((co.x + 1.0) / 0.16) ** 2)) * smooth(-0.1, 0.2, co.y) * (1 - smooth(0.9, 1.2, co.y))
         n_ = vnoise(co.x * 7.0, co.y * 7.0, 8.0) * (0.55 + 0.45 * vnoise(co.x * 19.0, co.y * 19.0, 1.0))
-        return (0.05 + 0.20 * ring + 0.14 * entry) * (0.35 + 0.65 * n_ / 0.6) * (1 - 0.8 * heel)
+        return (0.10 + 0.30 * ring + 0.22 * entry) * (0.35 + 0.65 * n_ / 0.6) * (1 - 0.8 * heel)
     set_attr_w(m, "dust", mat_dust)
 
 
