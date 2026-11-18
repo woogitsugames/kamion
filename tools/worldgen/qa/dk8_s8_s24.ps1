@@ -83,7 +83,7 @@ elseif ($Phase -eq 'post') {
     } | Out-Null
     Step 'seams' '' {
         New-Item -ItemType Directory -Force artifacts/dk8-s8-s24/seams | Out-Null
-        uv run --project tools/worldgen python -m tools.worldgen.qa.seams --tiles dk8-s8-jeroniki,dk65-01,s8-01 --json artifacts/dk8-s8-s24/seams/seams-$Tag.json --md artifacts/dk8-s8-s24/seams/seams-$Tag.md
+        uv run --project tools/worldgen python -m tools.worldgen.qa.seams --tiles dk8-s8-jeroniki,bialystok-porosly,dk65-01,bialystok-knyszynska,s8-01--json artifacts/dk8-s8-s24/seams/seams-$Tag.json --md artifacts/dk8-s8-s24/seams/seams-$Tag.md
     } | Out-Null
     foreach ($r in $Tiles) {
         Step "fid-$r" 'heavy' { uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region $r --fetch } | Out-Null

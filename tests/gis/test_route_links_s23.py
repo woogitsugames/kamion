@@ -84,7 +84,8 @@ def test_links_stay_in_their_tile_and_replace_only_knyszyn():
             assert t["xmin"] - 3 <= x <= t["xmax"] + 3 and t["ymin"] - 3 <= y <= t["ymax"] + 3, (L["id"], x, y)
         assert len(L["e"]) == len(L["n"]) == len(L["maxspeedKmh"]) >= 2
         # knyszyn: ADR 0285; s8-03: ADR 0288 (same path as the s8-03 route, lane shift onto the s8-04 route before the seam)
-        assert L["replacesRoute"] in ("", "knyszyn", "s8-03"), L["id"]
+        # bialystok-knyszynska: ADR 0292 (destination s8: Kleeberga straight on south instead of the rondo Kresowian exit)
+        assert L["replacesRoute"] in ("", "knyszyn", "s8-03", "bialystok-knyszynska"), L["id"]
         steps = [((L["e"][i + 1] - L["e"][i]) ** 2 + (L["n"][i + 1] - L["n"][i]) ** 2) ** 0.5 for i in range(len(L["e"]) - 1)]
         assert max(steps) < 2.6, L["id"]                   # no jump (blend never breaks the 2 m sampling)
 
