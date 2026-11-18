@@ -571,6 +571,202 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
             acc.box(layer, "hall_flashing" if mat.startswith("hall") else "window_sill", c, d3 * (w / 2 + 0.04),
                     n3 * (depth / 2 + 0.025), [0, 0, 0.02], skip=(0, 2, 4, 5))   # top + nose only (Low budget)
 
+# ---------------------------------------------------------------- boarded wooden house of Podlasie (ADR 0287, P1-1/P1-2)
+# Review 2026-11-18 (docs/reports/REVIEW-2026-11-18-s24-knyszyn.md): a wooden house was "a wood texture on a box" and
+# its boards repeated every tile. Every `dom_drewniany` now gets, on LOD0: boarded corners, vertical clamp battens
+# (lisice) that cut long walls into runs shorter than the plank tile, a drip board over the plinth, a board at the
+# eave line of a gable with VERTICAL boarding above it, and board surrounds with a head board round every opening.
+# All sizes WORKING_VALUE (the review's 0.12-0.15 m corners / 0.10 m surrounds; no measured Knyszyn house in the repo).
+WOOD_TILE_M = (6.0, 2.6)        # set_tile_m of wood_planks* (materials.py) - the UV0 period of the boarding, m
+# joints between the board rows of the wood_siding set as fractions of the tile height (v up), measured on
+# art-source/world/materials/wood_siding/High/T_wood_siding_BaseColor.png (row-mean minima; the two faint joints at
+# 0.548 and 0.706 interpolated). tests/gis/test_wood_house_p1_s24.py re-measures them when the set is built.
+WOOD_JOINT_V = (0.0317, 0.0815, 0.1343, 0.1870, 0.2388, 0.2876, 0.3394, 0.3940, 0.4438, 0.4966, 0.5484, 0.6001,
+                0.6499, 0.7061, 0.7622, 0.8188, 0.8745, 0.9224, 0.9761)
+WOOD_ROW_M = WOOD_TILE_M[1] / len(WOOD_JOINT_V)     # mean board pitch, m (0.137)
+WOOD_CORNER_W = 0.14            # corner board face, m
+WOOD_BATTEN_W = 0.12            # clamp batten (lisica), m
+WOOD_PROUD = 0.03               # boards stand this far off the boarding, m
+WOOD_RUN_M = 4.6                # target wall run between battens, m: every run < WOOD_TILE_M[0], so no run shows the
+WOOD_RUN_MAX_M = 5.6            # tile twice (measured by the test: longest run of the Knyszyn houses)
+WOOD_PLINTH_BOARD_H = 0.11      # drip board over the plinth, m
+WOOD_GABLE_BOARD_H = 0.14       # board at the eave line of a gable end, m
+WOOD_SURROUND_W = 0.10          # window / door surround boards, m
+WOOD_HEAD_H = 0.16              # head board (nadokiennik) with a 3 cm cap that stands 3 cm further out
+WOOD_TRIM_MAT = "wood_trim_white"
+
+
+class _WoodUV:
+    """Acc proxy for one run of boarding: UV0 of wood_planks* faces shifted by (du, dv) metres, and swapped when the
+    boards run up the wall (gable). Every other material passes through unchanged."""
+
+    def __init__(self, acc, du=0.0, dv=0.0, swap=False):
+        self.acc, self.off, self.swap = acc, np.array([du, dv]), swap
+
+    def _uv(self, mat, uv):
+        if uv is None or not str(mat).startswith("wood_planks"):
+            return uv
+        uv = np.asarray(uv, float) + self.off
+        return uv[:, ::-1] if self.swap else uv
+
+    def add(self, layer, mat, V, T, UV=None, UV1=None):
+        self.acc.add(layer, mat, V, T, self._uv(mat, UV), UV1)
+
+    def quad(self, layer, mat, a, b, c, d, uv=None, uv1=None):
+        self.acc.quad(layer, mat, a, b, c, d, self._uv(mat, uv), uv1)
+
+    def box(self, *a, **k):
+        self.acc.box(*a, **k)
+
+
+def wood_phase(*key):
+    """(du, dv) of one run of boarding: any shift along the boards, whole board rows across them (so the rows of
+    neighbouring runs stay level, as the courses of a real wall do)."""
+    return (WOOD_TILE_M[0] * FK.hfloat(*key, "wu"),
+            WOOD_ROW_M * int(FK.hfloat(*key, "wv") * len(WOOD_JOINT_V)))
+
+
+def wood_runs(L, ops, key):
+    """Batten positions [u] that cut a boarded wall of length L into runs of about WOOD_RUN_M (never over
+    WOOD_RUN_MAX_M when the openings leave room), off the openings and their surrounds."""
+    if L <= WOOD_RUN_MAX_M:
+        return []
+    n = int(np.ceil(L / WOOD_RUN_M))
+    wide = [(o[0] - WOOD_SURROUND_W - 0.12, o[1] + WOOD_SURROUND_W + 0.12, *o[2:]) for o in ops]
+    out = []
+    for j in range(1, n):
+        u = FK.safe_u(L * j / n + (FK.hfloat(key, j, "lis") - 0.5) * 0.6, wide, L)
+        if u is not None and WOOD_CORNER_W + 0.4 < u < L - WOOD_CORNER_W - 0.4 and all(abs(u - q) > 1.0 for q in out):
+            out.append(float(u))
+    return out
+
+
+def wood_board(acc, mat, a, d, nout, u0, u1, z0, z1, proud, key, back=0.0, layer="buildings"):
+    """One board [u0, u1] x [z0, z1] on the wall plane through `a` along `d`: its face `proud` m in front of the wall,
+    both ends and the top edge (8 triangles; the underside is never seen from the street). A wood_planks* board takes
+    ONE board row of the set (between two measured joints), its grain along the longer side; other materials are flat
+    colours. back: the plane the board stands on is this far in front of the footprint wall. Returns the triangles."""
+    if u1 - u0 < 0.02 or z1 - z0 < 0.02:
+        return 0
+    a, d, nout = (np.asarray(x, float) for x in (a, d, nout))
+    W = lambda u, z: np.array([a[0] + d[0] * u + nout[0] * back, a[1] + d[1] * u + nout[1] * back, z])
+    n3 = np.array([nout[0], nout[1], 0.0]) * proud
+    F = lambda u, z: W(u, z) + n3
+    uvs = [None] * 4
+    if str(mat).startswith("wood_planks"):
+        k = int(FK.hfloat(key, "row") * len(WOOD_JOINT_V)) % len(WOOD_JOINT_V)
+        j0 = WOOD_JOINT_V[k]
+        j1 = WOOD_JOINT_V[k + 1] if k + 1 < len(WOOD_JOINT_V) else WOOD_JOINT_V[0] + 1.0
+        va, vb = (j0 + 0.008) * WOOD_TILE_M[1], (j1 - 0.008) * WOOD_TILE_M[1]
+        s0 = WOOD_TILE_M[0] * FK.hfloat(key, "along")
+        if z1 - z0 > u1 - u0:              # upright board: grain up
+            lz = z1 - z0
+            uvs[0] = [[s0, va], [s0, vb], [s0 + lz, vb], [s0 + lz, va]]
+            uvs[1] = [[s0, va], [s0 + lz, va], [s0 + lz, vb], [s0, vb]]
+            uvs[2] = [[s0, va], [s0 + lz, va], [s0 + lz, vb], [s0, vb]]
+            uvs[3] = [[s0, va], [s0, vb], [s0 + proud, vb], [s0 + proud, va]]
+        else:
+            lu = u1 - u0
+            uvs[0] = [[s0, va], [s0 + lu, va], [s0 + lu, vb], [s0, vb]]
+            uvs[1] = [[s0, va], [s0, vb], [s0 + proud, vb], [s0 + proud, va]]
+            uvs[2] = [[s0, va], [s0, vb], [s0 + proud, vb], [s0 + proud, va]]
+            uvs[3] = [[s0, va], [s0 + lu, va], [s0 + lu, vb], [s0, vb]]
+    acc.quad(layer, mat, F(u0, z0), F(u1, z0), F(u1, z1), F(u0, z1), uv=uvs[0])              # face
+    acc.quad(layer, mat, F(u0, z0), F(u0, z1), W(u0, z1), W(u0, z0), uv=uvs[1])              # end at u0 (faces -d)
+    acc.quad(layer, mat, W(u1, z0), W(u1, z1), F(u1, z1), F(u1, z0), uv=uvs[2])              # end at u1 (faces +d)
+    acc.quad(layer, mat, F(u0, z1), F(u1, z1), W(u1, z1), W(u0, z1), uv=uvs[3])              # top edge
+    return 8
+
+
+def wood_surround(acc, a, d, nout, L, o, ztop, key, mat=WOOD_TRIM_MAT):
+    """Board surround of one opening of a boarded wall: two jamb boards, a sill board under a window, a head board
+    with a cap (nadokiennik). ztop: the wall top above the opening (where the head board with its cap does not fit
+    under it, a plain head board; none when even that runs into the eave). Returns the triangle count."""
+    u0, u1, z0, z1 = o[:4]
+    w = WOOD_SURROUND_W
+    if u0 - w < 0.02 or u1 + w > L - 0.02:
+        return 0
+    n = 0
+    pr = WOOD_PROUD - 0.005         # 5 mm under the corner boards / battens: no coplanar faces where they meet
+    zs = z0 - 0.09 if o[5] == "window" else z0
+    n += wood_board(acc, mat, a, d, nout, u0 - w, u0, zs, z1, pr, key)
+    n += wood_board(acc, mat, a, d, nout, u1, u1 + w, zs, z1, pr, key)
+    if o[5] == "window":
+        n += wood_board(acc, mat, a, d, nout, u0, u1, zs, z0 - 0.025, pr, key)
+    if z1 + WOOD_HEAD_H + 0.03 <= ztop - 0.03:
+        e = max(0.0, min(0.04, u0 - w - 0.02, L - 0.02 - u1 - w))
+        n += wood_board(acc, mat, a, d, nout, u0 - w - e, u1 + w + e, z1, z1 + WOOD_HEAD_H, WOOD_PROUD + 0.01, key)
+        n += wood_board(acc, mat, a, d, nout, u0 - w - e, u1 + w + e, z1 + WOOD_HEAD_H, z1 + WOOD_HEAD_H + 0.03,
+                        WOOD_PROUD + 0.04, key)
+    elif z1 + w <= ztop - 0.01:
+        n += wood_board(acc, mat, a, d, nout, u0 - w, u1 + w, z1, z1 + w, pr, key)
+    return n
+
+
+def wood_wall(acc, wall, plinth, a, d, nout, L, zbot, zpl, zt, zref, u_acc, ops, prof, aw, ground, key, corners,
+              runs_out=None):
+    """LOD0 wall of a boarded house on one outline edge (ADR 0287, review 2026-11-18 P1-1 / P1-2).
+    Boarding: horizontal boards up to the eave line zt in runs between clamp battens, every run with its own UV phase
+    (wood_phase), so no two runs - and no two houses - show the same boards; above the eave line of a gable end the
+    boards run up (UV0 swapped), with the loft window `aw` (attic_window) in its column. Boards on top (the wall's own
+    material unless noted): corner boards at the convex ends `corners` = (start, end), battens, a drip board over the
+    plinth, a board along the eave line of a gable, surrounds of the openings (WOOD_TRIM_MAT).
+    prof: roof profile over the edge [(u, z)] or None (flat top). Returns the triangle count of the boards on top."""
+    n = 0
+    mat_fn = lambda u0, u1, z0, z1: plinth if z1 <= zpl + 1e-6 else wall
+    bat = wood_runs(L, ops, key)
+    us = [0.0] + bat + [L]
+    for j, (s0, s1) in enumerate(zip(us, us[1:])):
+        du, dv = wood_phase(key, j)
+        FK.wall_pieces(wall_with_openings, _WoodUV(acc, du, dv), a + d * s0, d, nout, s1 - s0, zbot, zt,
+                       [(o[0] - s0, o[1] - s0, *o[2:]) for o in ops], u_acc + s0, zref, [zpl], [], mat_fn,
+                       ground=ground)
+        if runs_out is not None:
+            runs_out.append(float(s1 - s0))
+    gable = (prof is not None and len(prof) == 3 and abs(prof[0][1] - prof[2][1]) < 0.3
+             and prof[1][1] - max(prof[0][1], prof[2][1]) > 0.8)
+    if prof is not None:
+        g = _WoodUV(acc, *wood_phase(key, "top"), swap=gable)
+        base_z, pr = (lambda u: zt), prof
+        if aw and gable:
+            base_z = lambda u: aw["zband"] if aw["u0"] < u < aw["u1"] else zt
+            pr = sorted(set(prof) | {(u, _prof_z(prof, u)) for u in (aw["u0"], aw["u1"])})
+            o = aw["op"]
+            FK.wall_pieces(wall_with_openings, g, a + d * aw["u0"], d, nout, aw["u1"] - aw["u0"], zt, aw["zband"],
+                           [(o[0] - aw["u0"], o[1] - aw["u0"], *o[2:])], u_acc + aw["u0"], zref, [], [],
+                           lambda *_: wall)
+            n += wood_surround(acc, a, d, nout, L, o, aw["zband"] + 0.4, f"{key}:aw")
+        wall_top_fill(g, "buildings", wall, a, d, pr, base_z, u_acc, zref)
+    ztop = lambda u: _prof_z(prof, min(max(u, 0.0), L)) if prof is not None else zt
+    e0, e1 = (WOOD_PROUD if corners[0] else 0.0), (WOOD_PROUD if corners[1] else 0.0)
+    if L > 2 * WOOD_CORNER_W + 0.3:
+        if corners[0]:
+            n += wood_board(acc, wall, a, d, nout, -e0, WOOD_CORNER_W, zpl, min(ztop(0.0), ztop(WOOD_CORNER_W)),
+                            WOOD_PROUD, f"{key}:c0")
+        if corners[1]:
+            n += wood_board(acc, wall, a, d, nout, L - WOOD_CORNER_W, L + e1, zpl,
+                            min(ztop(L), ztop(L - WOOD_CORNER_W)), WOOD_PROUD, f"{key}:c1")
+    for j, u in enumerate(bat):
+        n += wood_board(acc, wall, a, d, nout, u - WOOD_BATTEN_W / 2, u + WOOD_BATTEN_W / 2, zpl,
+                        zt if gable else min(ztop(u - WOOD_BATTEN_W / 2), ztop(u + WOOD_BATTEN_W / 2)), WOOD_PROUD,
+                        f"{key}:b{j}")
+    # drip board over the plinth, left out under the doors
+    cuts = sorted((o[0] - 0.02, o[1] + 0.02) for o in ops if o[5] == "door" and o[2] < zpl + WOOD_PLINTH_BOARD_H)
+    u = -e0 - 0.015 if corners[0] else 0.0
+    for c0, c1 in cuts + [(L + (e1 + 0.015 if corners[1] else 0.0), None)]:
+        n += wood_board(acc, wall, a, d, nout, u, min(c0, L + e1 + 0.015), zpl - 0.02, zpl - 0.02 + WOOD_PLINTH_BOARD_H,
+                        WOOD_PROUD + 0.015, f"{key}:p{u:.1f}")
+        if c1 is None:
+            break
+        u = max(u, c1)
+    if gable:
+        n += wood_board(acc, wall, a, d, nout, -e0 - 0.01 if corners[0] else 0.0, L + (e1 + 0.01 if corners[1] else 0.0),
+                        zt - WOOD_GABLE_BOARD_H / 2, zt + WOOD_GABLE_BOARD_H / 2, WOOD_PROUD + 0.01, f"{key}:g")
+    for j, o in enumerate(ops):
+        if o[5] in ("window", "door") and o[1] - o[0] >= 0.4 and o[3] <= zt + 1e-6:
+            n += wood_surround(acc, a, d, nout, L, o, min(ztop(o[0]), ztop(o[1])), f"{key}:s{j}")
+    return n
+
 
 def ring_edges(ring):
     c = np.asarray(ring.coords)[:-1]
@@ -1313,6 +1509,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     pav_fronts = 0
     roof_kinds = {}
     canopy_skipped = 0
+    wood_stats = {"runs": [], "tris": 0}        # ADR 0287 P1-2: boarding runs of the wooden houses, m
     lod1_house_openings = 0
     l1_pending, l1_cells, l1_fallback = [], set(), 0
     l1_frame_cells, l1_framed = {}, 0
@@ -1436,6 +1633,12 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         dist = [roads_poly.distance(shapely.Point(*(0.5 * (a + c_)))) if roads_poly is not None else 0 for a, c_ in edges]
         main = int(np.argmin(dist)) if dist else 0
         lens = [float(np.linalg.norm(c_ - a)) for a, c_ in edges]
+        # ADR 0287 (P1-1): outer corners of the outline (turn of more than ~25 degrees) - a boarded house gets its
+        # corner boards there; convex[i] = the corner at the START of edge i
+        convex = []
+        for i_ in range(len(edges)):
+            dp_, dc_ = edges[i_ - 1][1] - edges[i_ - 1][0], edges[i_][1] - edges[i_][0]
+            convex.append(float(dp_[0] * dc_[1] - dp_[1] * dc_[0]) > 0.42 * max(lens[i_ - 1] * lens[i_], 1e-9))
         # block: balconies on the long side(s) away from the main (entrance) facade
         # ADR 0091: balconies on the sunny long side (living rooms of the PRL blocks face S / W; WORKING_VALUE rule,
         # no per-building data) and on both long sides of 35 % of the blocks, on every wall run of at least one bay -
@@ -1716,7 +1919,19 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                     return float(hf.sample(np.array([q_[0]]), np.array([q_[1]]))[0])
                 lod1_gfn = gfn
                 cols = [(0.0, L, zt)]
-                if pitched:
+                if wooden:
+                    aw = attic_window(prof, zt, zref, zbase, sh, storeys, f"{key}:{ei}") if pitched else None
+                    if aw and aw["op"][2] < zt + 0.12:       # a window across the eave line: no gable window
+                        aw = None
+                    wood_stats["tris"] += wood_wall(acc, wall, plinth, a, d, nout, L, zbot, zpl, zt, zref, u_acc, ops,
+                                                    prof if pitched else None, aw, gfn, f"{key}:{ei}",
+                                                    (convex[ei], convex[(ei + 1) % len(edges)]), wood_stats["runs"])
+                    if aw:
+                        ops.append(aw["op"])
+                    if pitched:
+                        wall_top_fill(acc, "buildings_low", wall, a, d, prof, lambda u, zt=zt: zt, u_acc, zref)
+                    cols = []
+                elif pitched:
                     aw = attic_window(prof, zt, zref, zbase, sh, storeys, f"{key}:{ei}")
                     base_z = lambda u, zt=zt: zt
                     pr = prof
@@ -1845,7 +2060,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # fascia / verge board: white boards with a tile roof, sheet flashing in the roof tone with a metal roof
             # (review s9 P2-3 "thick black verge board")
             eaves = RF.build(acc, roof, poly, rmat, soffit_mat="soffit_boards",
-                             fascia_mat="hall_flashing" if rmat.startswith("roof_metal") else "soffit_boards",
+                             fascia_mat=(wall if wooden else "hall_flashing" if rmat.startswith("roof_metal")
+                                         else "soffit_boards"),
                              step_mat=wall)       # ADR 0107: wall faces closing the steps of a MultiRoof
             # ADR 0097 (review 0094 P2-c "wiatrownica biała vs szara"): with a tile roof the fascia / verge boards are
             # the soffit boarding material, so main roof and wing show one board colour (was white reveal_plaster
@@ -1939,6 +2155,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                    "subtypes": dict(sorted(subtypes.items())), "roofs_other": dict(sorted(roofs_other.items())),
                    "pavilion_fronts": int(pav_fronts),
                    "house_canopies_under_eave_skipped": canopy_skipped, "balconies": bal_count,
+                   "wooden_houses": {"boarding_runs": len(wood_stats["runs"]),
+                                     "longest_run_m": round(max(wood_stats["runs"], default=0.0), 2),
+                                     "runs_over_tile": sum(1 for r_ in wood_stats["runs"] if r_ > WOOD_TILE_M[0]),
+                                     "board_tris_lod0": int(wood_stats["tris"])},
                    "lod1_house_openings": lod1_house_openings, "lod1_house_openings_fallback_mat": int(l1_fallback),
                    "lod1_house_openings_framed": int(l1_framed),
                    "frontages": frontages, "frontage_props": frontage_props, "roof_masts": roof_masts_report})
