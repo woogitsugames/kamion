@@ -168,6 +168,7 @@ class _ChainSurface:
     def __init__(self, net):
         self.chains = [c for c in net.chains if not c.meta.get("absorbed")]
         self.tree = shapely.STRtree([shapely.LineString(c.line.p) for c in self.chains])
+        self.secs = getattr(net, "sec_list", None)
 
     def z(self, p, reach=14.0):
         best = None
@@ -184,8 +185,9 @@ class _ChainSurface:
                 best = (d, float(c.crossfall_z(s, float(np.clip(lat, -hw, hw)))))
         return None if best is None or best[0] > 9.0 else best[1]
 
-    def same_direction(self, pg):
-        """True when the two carriageways nearest to the gap are one-way and run the same way."""
+    def same_direction(self, pg, express=False):
+        """True when the two carriageways nearest to the gap are one-way and run the same way. express=True: and one
+        of them is the through carriageway of a motorway / expressway (standards.is_express_main, ADR 0293)."""
         p = np.array(pg.representative_point().coords[0])
         near = []
         for k in self.tree.query(Point(*p).buffer(20.0)):
@@ -197,12 +199,40 @@ class _ChainSurface:
             if d > 5.0:
                 continue
             i = int(c.idx(s))
-            near.append((d, int(c.dirn[i]), c.line.t[i] * float(c.dirn[i]), bool(c.roundabout)))
+            near.append((d, int(c.dirn[i]), c.line.t[i] * float(c.dirn[i]), bool(c.roundabout),
+                         bool(self.secs) and S.is_express_main(c.section(s, self.secs))))
         near.sort(key=lambda x: x[0])
         if len(near) < 2:
             return False
-        (_, d0, t0, r0), (_, d1, t1, r1) = near[:2]
-        return d0 != 0 and d1 != 0 and not r0 and not r1 and float(np.dot(t0, t1)) > 0.7
+        (_, d0, t0, r0, x0), (_, d1, t1, r1, x1) = near[:2]
+        same = d0 != 0 and d1 != 0 and not r0 and not r1 and float(np.dot(t0, t1)) > 0.7
+        return same and (x0 or x1) if express else same
+
+
+EXPRESS_CHUNK_M = 12.0      # ADR 0293: express strips are checked / built in pieces this long (WORKING_VALUE)
+
+
+def _chunks(pg, step):
+    """Pieces of pg cut perpendicular to the long side of its minimum rotated rectangle every `step` m."""
+    R = np.asarray(pg.minimum_rotated_rectangle.exterior.coords)[:4]
+    e0, e1 = R[1] - R[0], R[2] - R[1]
+    ax = e0 if np.hypot(*e0) >= np.hypot(*e1) else e1
+    L = float(np.hypot(*ax))
+    if L <= step * 1.5:
+        return [pg]
+    u = ax / L
+    v = np.array([-u[1], u[0]])
+    c = np.asarray(pg.centroid.coords[0])
+    proj = (np.asarray(pg.exterior.coords) - c) @ u
+    lo, hi = float(proj.min()), float(proj.max())
+    n = max(1, int(round((hi - lo) / step)))
+    W = float(np.hypot(*(np.asarray(pg.bounds[2:]) - np.asarray(pg.bounds[:2])))) + 10.0
+    out = []
+    for k in range(n):
+        a, b = lo + (hi - lo) * k / n, lo + (hi - lo) * (k + 1) / n
+        box = Polygon([c + u * a - v * W, c + u * b - v * W, c + u * b + v * W, c + u * a + v * W])
+        out += _parts(pg.intersection(box))
+    return out
 
 
 def _triangulate(pg, step=1.5):
@@ -260,7 +290,19 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
     # the surface is continuous (painted P-21 at most). Medians (opposite directions) are not touched by this rule.
     r2 = GORE_MIN_NOSE_W / 2
     for pg in _parts(U.buffer(r2, quad_segs=6).buffer(-r2, quad_segs=6).difference(U)):
-        if pg.area < GORE_SLIVER_MIN_M2 or _length(pg) > GORE_MERGE_MAX_LEN_M:
+        if pg.area < GORE_SLIVER_MIN_M2:
+            continue
+        # ADR 0293 (B): beside the through carriageway of a motorway / expressway the strip between the carriageways
+        # is a painted wedge / strip (P-21 on asphalt, no kerb) at any length: S8 x Szosa Knyszynska (dk65-01) had a
+        # 200 m raised kerb strip between the S8 and its deceleration lane. The city rule below stays (ADR 0093).
+        if surf.same_direction(pg, express=True):
+            # in pieces: a piece whose carriageways disagree in height (a lane end held at its NMT node height)
+            # keeps its kerbs, the rest of the strip is still painted
+            for piece in _chunks(pg, EXPRESS_CHUNK_M):
+                if piece.area >= GORE_SLIVER_MIN_M2:
+                    cand.append(Gore(piece, "express", hatch=True))
+            continue
+        if _length(pg) > GORE_MERGE_MAX_LEN_M:
             continue
         if surf.same_direction(pg):
             # owner reference 2026-11-10 (docs/refs/owner-aerials-2026-11-10.md) + orthophoto (s 1440): the surface
@@ -297,7 +339,7 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
     # authored overrides first, in file order (a small hatched zone listed before the larger plain gap keeps its
     # paint), then merge gores, then slivers / holes by area
     order = {id(g): i for i, g in enumerate(cand)}
-    cand.sort(key=lambda g: ({"o": 0, "m": 1}.get(g.why[0], 2), order[id(g)] if g.why[0] == "o" else -g.poly.area))
+    cand.sort(key=lambda g: ({"o": 0, "m": 1, "e": 1}.get(g.why[0], 2), order[id(g)] if g.why[0] == "o" else -g.poly.area))
     taken = None
     for g in cand:
         pg = g.poly if taken is None else g.poly.difference(taken.buffer(0.05))
@@ -670,6 +712,26 @@ def kerbs_in_fills(buf, gp: GorePlan) -> int:
         cen = p.V[p.T].mean(1)
         n += int(shapely.contains_xy(zone, cen[:, 0], cen[:, 1]).sum())
     return n
+
+
+def p21_zones(gp: GorePlan) -> list:
+    """ADR 0293 (B): painted_zone dicts (through_lines.paint_zones / p21_hatch.hatch) of the built hatched gores.
+    No border ring: the edge lines (P-7a) of the two carriageways bound the strip; stripes at the p21_hatch angle to
+    the long side of the strip (traffic direction)."""
+    out = []
+    polys = [g.poly for g in gp.gores if g.hatch and g.built]
+    if not polys:
+        return out
+    # the built pieces of one strip are painted as one zone (one stripe phase across the piece joints)
+    # (plan() leaves 0.05 m between the pieces of one strip: taken.buffer(0.05))
+    for pg in _parts(shapely.union_all([p.buffer(0.08, join_style="mitre") for p in polys]).buffer(-0.08, join_style="mitre")):
+        pg = Polygon(pg.exterior).simplify(0.05)
+        if pg.geom_type != "Polygon" or not pg.is_valid or pg.area < 1.0:
+            continue
+        cx, cy = pg.centroid.coords[0]
+        out.append({"id": f"gore-express@{cx:.0f},{cy:.0f}", "kind": "painted_zone", "border": False,
+                    "polygon_en": [[round(float(x), 3), round(float(y), 3)] for x, y in np.asarray(pg.exterior.coords)[:-1]]})
+    return out
 
 
 def report(gp: GorePlan) -> dict:

@@ -168,3 +168,9 @@ Właściciel (klik): najpierw zbudować treść High dla dk65-03 i dk65-04, pote
 
 ## D87 — Tło menu startowego: zdjęcie z gry (2026-11-16, s23)
 Właściciel (klik): menu startowe na tle statycznego zrzutu z gry (np. DK65 o świcie) z przyciemnieniem pod tekstem; bez marek. Zastępuje obecny brak tła (tekst na szachownicy placu — najgorszy element UI wg integracji int-ui-s23).
+
+## D88 — Direct3D 11 domyślnym API grafiki na Windows, D3D12 jako opcja (2026-11-18, s24, ADR 0291)
+Właściciel (klik) po pomiarze A/B na GTX 1070 (`artifacts/d3d-ab/`, knyszyn High, autopilot, 2 powtórzenia): bez limitu D3D11 171–190 kl./s vs D3D12 153–157; High 60 obie trzymają 60 (D3D12 r1: 4 klatki > 100 ms); pamięć prywatna D3D11 2,64–2,89 GB vs 3,04–3,27 GB; VRAM 1,76 vs 1,87 GB; 0 crashy przy wyjściu na obu (3 + 3 cykle). Lista API Windows = [Direct3D11, Direct3D12] jako kod (`ProjectSetup`); `-force-d3d12` (launchery `Kamion-d3d12.cmd`, `Kamion-korytarz-d3d12.cmd`) zostaje do porównań; mitygacja D3D12 (pełny ekran wyłączny → bez ramki) bez zmian. Numer D88 nadany przez agenta — do potwierdzenia przez lidera.
+
+## D90 — Kamera z fotela: FOV 70°, pasek HUD ukryty w kabinie (2026-11-18, s24, ADR 0294)
+Właściciel (klik) po wariantach `artifacts/cab-view-s24/WARIANTY.md`: domyślne pionowe FOV kamery kabiny 55° → **70°** (wariant B, wzrok 6° w dół, oko bez zmian), kamera QA `cab-driver` tak samo, suwak 45–75° zostaje; zapisane ustawienia z dawnym domyślnym 55° → 70° jednorazowo (jak D85), ręcznie zmienione zostają. Dolny pasek HUD (prędkość, bieg, ciśnienie) **ukryty w widoku z kabiny** (zasłaniał prawdziwe zegary), widoczny w kamerach zewnętrznych. Lusterek bocznych FOV nie pokaże (54–76° od osi) — zostają okienka D70.

@@ -181,7 +181,7 @@ namespace Game.UI.Driving
         void UpdateDesktopLayout(bool screenChanged)
         {
             var prefs = HudPreferences.Current;
-            bool cab = m_Ctx.Rig != null && m_Ctx.Rig.mode == CameraMode.Cab;
+            bool cab = m_Ctx.IsCabView;   // D90 / ADR 0294
             m_Vis = HudVisibility.Resolve(prefs.Detail, prefs.Cab, cab, CabScreens.LiveClusters > 0, DevDiagnostics);
             if (!m_Vis.DevToggle && m_DevOpen) { m_DevOpen = false; m_LabOpen = false; }
 

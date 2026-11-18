@@ -149,6 +149,7 @@
         "staticPositionFraction": 0.5,
         "bumpStopClearance": 0.025,
         "bumpStopRate": 40000000.0,
+        "bumpStopHysteresis": 4.0,
         "damperBump": 10000,
         "damperRebound": 20000,
         "damperKneeVelocity": 0.3,
@@ -181,6 +182,7 @@
         "staticPositionFraction": 0.5,
         "bumpStopClearance": 0.015,
         "bumpStopRate": 40000000.0,
+        "bumpStopHysteresis": 4.0,
         "damperBump": 5000,
         "damperRebound": 10000,
         "damperKneeVelocity": 0.3,
@@ -206,7 +208,9 @@
     "maxRoadWheelAngleDeg": 40,
     "maxSteerRateDegS": 30,
     "ackermannFactor": 1.0,
-    "steeringRatio": 20
+    "steeringRatio": 20,
+    "contactFeedbackLagS": 0.5,
+    "contactFeedbackHoldS": 0.5
   },
   "brakes": {
     "applyTimeConstant": 0.25,
@@ -322,6 +326,88 @@
     "maxCorrectionSpeed": 0.5,
     "iterations": 8,
     "engageTime": 0.4,
-    "engageFrequencyHz": 4
-  }
+    "engageFrequencyHz": 4,
+    "contactFrequencyHz": 5.0,
+    "contactDampingRatio": 0.3,
+    "contactRecoverySpeed": 0.05,
+    "contactFriction": 0.3,
+    "contactMargin": 0.05
+  },
+  "bodyBoxes": [
+    {
+      "name": "Frame",
+      "center": {
+        "x": 0,
+        "y": 0.86,
+        "z": 2.175
+      },
+      "size": {
+        "x": 0.85,
+        "y": 0.22,
+        "z": 5.95
+      },
+      "ground": true,
+      "coupling": true
+    },
+    {
+      "name": "Cab",
+      "center": {
+        "x": 0,
+        "y": 2.45,
+        "z": 3.925
+      },
+      "size": {
+        "x": 2.49,
+        "y": 2.6,
+        "z": 2.35
+      },
+      "ground": true,
+      "coupling": true
+    },
+    {
+      "name": "Bumper",
+      "center": {
+        "x": 0,
+        "y": 0.6,
+        "z": 5.05
+      },
+      "size": {
+        "x": 2.45,
+        "y": 0.5,
+        "z": 0.2
+      },
+      "ground": true,
+      "coupling": false
+    },
+    {
+      "name": "Mudguard_L",
+      "center": {
+        "x": -0.91,
+        "y": 1.12,
+        "z": 0
+      },
+      "size": {
+        "x": 0.7,
+        "y": 0.03,
+        "z": 1.2
+      },
+      "ground": false,
+      "coupling": true
+    },
+    {
+      "name": "Mudguard_R",
+      "center": {
+        "x": 0.91,
+        "y": 1.12,
+        "z": 0
+      },
+      "size": {
+        "x": 0.7,
+        "y": 0.03,
+        "z": 1.2
+      },
+      "ground": false,
+      "coupling": true
+    }
+  ]
 }

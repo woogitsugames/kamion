@@ -364,6 +364,14 @@ def build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     authored = getattr(net, "authored", None) or []
     AP.clear_zones(buf, authored, report, net.overrides_applied)        # ADR 0095: erase zones, then authored paint
     TL.paint_zones(buf, authored, report, net.overrides_applied, net.overrides_stale)
+    # ADR 0293 (B): P-21 on the generated express gores (gores "express": strips beside A / S through carriageways)
+    gz = getattr(net, "gore_zones", None) or []
+    if gz:
+        rep_g = {}
+        TL.paint_zones(buf, gz, rep_g, [], [])
+        report["gore_p21"] = {"zones": len(gz), "built": sum(1 for z in rep_g.get("painted_zones", []) if z["built"]),
+                              "area_m2": round(sum(z.get("area_m2", 0.0) for z in rep_g.get("painted_zones", [])), 1),
+                              "paint_erased_tris": rep_g.get("paint_erased_in_zones_tris", 0)}
     AP.paint(buf, authored, report, net.overrides_applied, net.overrides_stale)
 
 

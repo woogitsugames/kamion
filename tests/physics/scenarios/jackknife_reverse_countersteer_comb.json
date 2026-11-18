@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "id": "jackknife_reverse_countersteer_comb",
+  "description": "ADR 0228: reversing with full lock folds the combination; at ~60 deg the driver counter-steers while still reversing (too late: the empty trailer still folds into the cab, the laden one stops at ~110 deg), stops, then pulls forward with the lock towards the trailer side for 3.5 s and straight on, which straightens the combination.",
+  "spec": "docs/04 s6.9/s6.10, ADR 0228 (B-077, gate 2)",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "overrides": {
+    "articulationDeg": 30.0
+  },
+  "duration": 40,
+  "dt": 0.01,
+  "substeps": 4,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": 0.0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 1,
+        "throttle": 0.3,
+        "brake": 0.0,
+        "steer": 1,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 4.5,
+        "throttle": 0.3,
+        "brake": 0.0,
+        "steer": -1,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 9,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": -1,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 10,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": 1,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 11,
+        "throttle": 0.3,
+        "brake": 0.0,
+        "steer": 1,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 14.5,
+        "throttle": 0.3,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 36,
+        "throttle": 0.0,
+        "brake": 0.5,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "no NaN (solver explosion)",
+      "max": 0
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "no teleport |dx_com - v dt| <= 1e-4 m",
+      "max": 0.0001
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "per-step velocity change <= 0.35 m/s (kerb jerk ceiling, ADR 0165 / D58)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin stays in the jaw through the contact (driving limit 5 mm)",
+      "max": 5
+    },
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "the counter-steer comes after the fold is deep",
+      "min": 60
+    },
+    {
+      "metric": "articulation_limit_excess_deg",
+      "status": "WORKING_VALUE",
+      "source": "articulation beyond the geometric contact angle (first contact of the level combination at 117.12 deg (trailer side wall, half width 1.275 m, on the cab rear corner x 1.245 m, 2.07 m ahead of the kingpin; CouplingContact.FirstContactArticulationDeg, analytic in JackknifeContactTests))",
+      "max": 2.5
+    },
+    {
+      "metric": "max_coupling_penetration_m",
+      "status": "WORKING_VALUE",
+      "source": "body contact crush <= 7 cm",
+      "max": 0.07
+    },
+    {
+      "metric": "final_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "pulling forward unfolds the combination (no sticking at the cab)",
+      "max": 15
+    },
+    {
+      "metric": "max_body_rate_dps",
+      "status": "WORKING_VALUE",
+      "source": "no spin-up",
+      "max": 60
+    }
+  ]
+}

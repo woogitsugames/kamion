@@ -267,14 +267,17 @@ namespace Game.Tests
         // ------------------------------------------------------------------ tests
 
         /// <summary>
-        /// Runner reference (physics-runner, commit with ADR 0014 dimensions, artifacts/physics run 2026-11-09):
-        /// empty: Fz/static 3.90, tractor 0.11 s, all 0.21 s, pitch max 1.66°; 40 t: 3.53, 0.08 s, 0.09 s, 1.99°.
-        /// Tolerance: Fz and pitch ±20 %, airtimes ±20 % or ±0.03 s (3 steps), whichever is larger.
+        /// Runner reference (physics-runner, branch alt-113-s24 = PR #113 + main D79 7.63 m, run 2026-11-18, first 6 s; guarded by
+        /// xUnit KerbParityReferenceTests, which re-runs the runner and fails when these constants go stale):
+        /// empty: Fz/static 3.68, tractor 0.08 s, all 0.20 s, pitch max 1.44°; 40 t: 3.30, 0.08 s, 0.08 s, 1.42°.
+        /// Before (2026-11-09, no bump-stop hysteresis): empty 3.90, 0.11, 0.21, 1.66°; 40 t 3.53, 0.08, 0.09, 1.99°. Change:
+        /// ADR 0228 bump-stop unloading hysteresis (with it set to 0 the runner gives the main values again).
+        /// Tolerance (unchanged): Fz and pitch ±20 %, airtimes ±20 % or ±0.03 s (3 steps), whichever is larger.
         /// </summary>
-        [TestCase(CargoPreset.Empty, KerbKind.BoxDefaultLayer, 3.90, 0.11, 0.21, 1.66, TestName = "KerbStrike14cm50_Empty_Box_MatchesRunner")]
-        [TestCase(CargoPreset.Empty, KerbKind.MeshKerbLayer, 3.90, 0.11, 0.21, 1.66, TestName = "KerbStrike14cm50_Empty_Mesh_MatchesRunner")]
-        [TestCase(CargoPreset.Gross40t, KerbKind.BoxDefaultLayer, 3.53, 0.08, 0.09, 1.99, TestName = "KerbStrike14cm50_40t_Box_MatchesRunner")]
-        [TestCase(CargoPreset.Gross40t, KerbKind.MeshKerbLayer, 3.53, 0.08, 0.09, 1.99, TestName = "KerbStrike14cm50_40t_Mesh_MatchesRunner")]
+        [TestCase(CargoPreset.Empty, KerbKind.BoxDefaultLayer, 3.68, 0.08, 0.20, 1.44, TestName = "KerbStrike14cm50_Empty_Box_MatchesRunner")]
+        [TestCase(CargoPreset.Empty, KerbKind.MeshKerbLayer, 3.68, 0.08, 0.20, 1.44, TestName = "KerbStrike14cm50_Empty_Mesh_MatchesRunner")]
+        [TestCase(CargoPreset.Gross40t, KerbKind.BoxDefaultLayer, 3.30, 0.08, 0.08, 1.42, TestName = "KerbStrike14cm50_40t_Box_MatchesRunner")]
+        [TestCase(CargoPreset.Gross40t, KerbKind.MeshKerbLayer, 3.30, 0.08, 0.08, 1.42, TestName = "KerbStrike14cm50_40t_Mesh_MatchesRunner")]
         public void KerbStrike14cm50(CargoPreset cargo, KerbKind kind, double fz, double airT, double airAll, double pitch)
         {
             var m = Run(cargo, kind, 0.14f, 50f, 6.0, $"kerb14_50_{cargo}_{kind}");
@@ -289,17 +292,20 @@ namespace Game.Tests
 
         /// <summary>
         /// Phone event reconstruction: 27 cm effective step, 42 km/h, 40 t (DEVICE-RUN r3: Fz 35 → 239 kN = 6.8×, both front
-        /// wheels unloaded ~0.4 s, pitch +8°). Runner (step_27cm_42kmh_comb@laden40, same block): Fz/static 6.50, tractor
-        /// 0.42 s, pitch max 6.36°. Shows that the adapter reproduces the core and that the phone values need a ~27 cm step.
+        /// wheels unloaded ~0.4 s, pitch +8°). Runner (kerb_step_27cm_42kmh_comb@laden40, same block, body contact off as on
+        /// the WorldKerb mesh, first 6 s, 2026-11-18): Fz/static 6.03, tractor 0.33 s, pitch max 3.54°. Before (2026-11-09,
+        /// no bump-stop hysteresis): 6.50, 0.42 s, 6.36°. The phone event (no hysteresis then) needed a ~27 cm step.
         /// </summary>
+        const double Step27Fz = 6.03, Step27Tractor = 0.33, Step27Pitch = 3.54;
+
         [Test]
         public void KerbStep27cm42_40t_Mesh_MatchesRunnerAndPhone()
         {
             var m = Run(CargoPreset.Gross40t, KerbKind.MeshKerbLayer, 0.27f, 42f, 6.0, "kerb27_42_Gross40t_Mesh");
-            Debug.Log($"[TEST] kerb 27 cm 42 km/h 40 t mesh: Unity {m} | runner Fz/static 6.50, tractor 0.42 s, pitch 6.36° | phone 6.8×, ~0.4 s, +8°");
-            AssertClose(6.50, m.FzRatio, 0.20, 0, "Fz / static");
-            AssertClose(0.42, m.TractorAirtime, 0.20, 0.03, "tractor single-wheel unload");
-            AssertClose(6.36, m.PitchMaxDeg, 0.20, 0.2, "pitch peak");
+            Debug.Log($"[TEST] kerb 27 cm 42 km/h 40 t mesh: Unity {m} | runner Fz/static {Step27Fz:F2}, tractor {Step27Tractor:F2} s, pitch {Step27Pitch:F2}° | phone 6.8×, ~0.4 s, +8°");
+            AssertClose(Step27Fz, m.FzRatio, 0.20, 0, "Fz / static");
+            AssertClose(Step27Tractor, m.TractorAirtime, 0.20, 0.03, "tractor single-wheel unload");
+            AssertClose(Step27Pitch, m.PitchMaxDeg, 0.20, 0.2, "pitch peak");
         }
 
         static void AssertClose(double expected, double actual, double rel, double abs, string what)

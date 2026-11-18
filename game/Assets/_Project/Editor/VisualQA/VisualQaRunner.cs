@@ -138,6 +138,8 @@ namespace Game.Editor.VisualQA
             // trailer patch under the asphalt).
             foreach (var ck in UnityEngine.Object.FindObjectsByType<Game.World.WorldCollisionCooker>(FindObjectsInactive.Include, FindObjectsSortMode.None)) ck.Cook();
             Physics.SyncTransforms();
+            // D84 cab-view-s24: -qaTruckPose E,N,headingDeg moves the combination (e.g. onto a roundabout ring).
+            CabViewQa.ApplyTruckPose(EditorTools.Arg("-qaTruckPose", null));
             if (!string.IsNullOrEmpty(gate3Json))
             {
                 Game.Gameplay.Gate3Cameras.CreateAll(UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>(), null, File.ReadAllText(gate3Json));
@@ -171,6 +173,8 @@ namespace Game.Editor.VisualQA
                         System.Globalization.CultureInfo.InvariantCulture, out float rsArg) && rsArg > 0.1f && rsArg <= 2f)
                     scale = rsArg;
             }
+            // D84 cab-view-s24: -qaCabViewAudit <tsv> - mirror heads / windscreen top edge vs the cab-view frames.
+            CabViewQa.Audit(EditorTools.Arg("-qaCabViewAudit", null), cams, width, height);
             var stats = new System.Text.StringBuilder();
             // Warm-up: the very first Camera.Render after opening a scene in batchmode can draw with
             // stale per-material SRP-batcher data (every object showed the ground material). Render
@@ -369,6 +373,9 @@ namespace Game.Editor.VisualQA
                             if (mir.phase == 0) ctx.LeftMirrorTexture = () => mt; else ctx.RightMirrorTexture = () => mt;
                         }
                     }
+                    // D90 / ADR 0294: cab control cameras render the cab-view HUD (no speed strip over the live dash cluster).
+                    bool cabView = CabViewQa.IsCabCameraId(qa.id);
+                    ctx.CameraModeOverride = () => cabView ? Game.Cameras.CameraMode.Cab : Game.Cameras.CameraMode.Chase;
                     hud = DrivingHud.Create(uiCam, ctx);
                     hud.OverrideSafeAreaNormalized(new Rect(0.04f, 0f, 0.96f, 1f));
                     hud.SetTelemetryVisible(qa.drivingHudTelemetry);

@@ -31,6 +31,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 
 import numpy as np
 import shapely
@@ -2556,11 +2557,27 @@ def is_noise_wall(tags):
 #   solid    dark absorbing cassettes from a 0.5 m concrete plinth to the top (2018 photo at g3b_eye_s1482)
 #   glazed   light concrete plinth to 0.6 m, dark cassette band to `band_m` (p38 1.0 m, p40 1.6 m), clear panels above,
 #            green-grey steel posts every 4 m, a top rail (p38 / p40 2024)
+#   clear    ADR 0293: light concrete plinth to 0.6 m, clear panels from the plinth to the top, light galvanised posts and
+#            rails (Rondo Meyera / Nowowarszawska DK19, Ciolkowskiego DW678, Sulika DK65: Wikimedia Commons cm106568383,
+#            cm106790713, cm94000570 CC0; Mapillary 1032387041872194, 1035629900575719 CC BY-SA, reference only)
 NOISE_STYLES = {
     "solid": {"plinth_m": 0.5, "band_m": None, "post_mat": "noise_post", "panel": "noise_panel_dark"},
     "glazed": {"plinth_m": 0.6, "band_m": 1.0, "post_mat": "noise_post", "panel": "noise_panel_dark"},
+    "clear": {"plinth_m": 0.6, "band_m": 0.0, "post_mat": "noise_post_light", "panel": "noise_panel_dark",
+              "rail_m": 1.0},
 }
 NOISE_DEFAULT_STYLE = "solid"
+# ADR 0293: style of a barrier with no authored zone. Neither OSM (184 ways in Bialystok: barrier=wall +
+# wall=noise_barrier, no material / colour tag, checked 2026-11-18 on podlaskie-261108) nor BDOT10k OT_OIKM_L (RODZAJ
+# only) says what the panels are, so: (1) OSM material=* when a way has it; (2) a region with authored style zones
+# keeps `solid` (its unzoned barriers were checked against photos, ADR 0069); (3) road rule (WORKING_VALUE): next to
+# a motorway / expressway or a road >= 100 km/h -> solid absorbing cassettes; next to a city arterial (GP / G / Z,
+# <= 70 km/h) -> clear (4 of 4 city locations with open photos are clear, list above; Andersa / Putry are authored).
+NOISE_GLASS_MATERIALS = {"glass", "acrylic_glass", "plexiglass", "pmma", "plastic", "polycarbonate", "acrylic"}
+NOISE_SOLID_MATERIALS = {"concrete", "metal", "steel", "aluminium", "wood", "brick", "stone", "reinforced_concrete",
+                         "plaster", "gabion", "earth"}
+NOISE_CTX_M = 30.0           # WORKING_VALUE: carriageways within this of the barrier decide the road rule
+NOISE_CITY_MAX_KMH = 70.0    # WORKING_VALUE
 NOISE_POST_W = 0.22
 NOISE_DEDUP_M = 4.0          # an OSM way within this of a BDOT10k barrier is the same object (BDOT geometry kept)
 
@@ -2621,8 +2638,12 @@ def noise_wall(lin, P, Z, st, H, key, end_post=True):
     if st["band_m"] is None:                                   # solid absorbing cassettes to the top
         lin.slab(st["panel"], P, zp, Z + H, 0.12, key)
     else:
-        zb = Z + max(st["band_m"], st["plinth_m"] + 0.2)
-        lin.slab(st["panel"], P, zp, zb, 0.12, key)
+        if st["band_m"] <= st["plinth_m"]:                     # ADR 0293 `clear`: glass from the plinth, framed
+            zb = zp + 0.06
+            lin.slab(st["post_mat"], P, zp, zb, 0.10, key + ":rail")          # bottom frame on the plinth
+        else:
+            zb = Z + max(st["band_m"], st["plinth_m"] + 0.2)
+            lin.slab(st["panel"], P, zp, zb, 0.12, key)
         # clear panel, one double-sided sheet (alpha blended). Kamion/World Car Glass dust mask as on the viaduct
         # screens (roads.meshing): u = 0, v = 1 at the foot -> -0.25 at the top
         lin.ribbon("noise_glass", P, zb, Z + H, 0.0, key, both=True)
@@ -2630,7 +2651,12 @@ def noise_wall(lin, P, Z, st, H, key, end_post=True):
             k = len(prt.V) // 2
             prt.UV = np.column_stack([np.zeros(2 * k), np.concatenate([np.ones(k), np.full(k, -0.25)])])
         lin.slab(st["post_mat"], P, Z + H - 0.08, Z + H, 0.10, key + ":rail")        # top rail
-        if Z is not None and H - (zb - Z).max() > 2.0:      # ADR 0125: panel joint rail at mid height of the glazing
+        if st.get("rail_m"):                                 # ADR 0293 `clear`: framed panels rail_m high (photos)
+            n_r = max(1, int(round(float(H - (zb - Z).max()) / float(st["rail_m"]))))
+            for k_r in range(1, n_r):
+                zm = zb + (Z + H - zb) * k_r / n_r
+                lin.slab(st["post_mat"], P, zm - 0.03, zm + 0.03, 0.08, key + ":rail")
+        elif Z is not None and H - (zb - Z).max() > 2.0:    # ADR 0125: panel joint rail at mid height of the glazing
             zm = (zb + Z + H) / 2                           # (frames read at distance where the clear sheet does not)
             lin.slab(st["post_mat"], P, zm - 0.04, zm + 0.04, 0.08, key + ":rail")
     lin.ribbon("collision_fence", P, Z - 0.2, Z + H, 0.0, key, both=False)
@@ -2670,6 +2696,48 @@ def deck_screen_keepout(net):
     return shapely.union_all(polys) if polys else None
 
 
+def noise_material_style(tags):
+    """ADR 0293 (1): style from OSM material=* of a noise barrier way, None when the tag is missing / unknown."""
+    m = str(tags.get("material", "") or "").strip().lower()
+    if m in NOISE_GLASS_MATERIALS:
+        return "clear"
+    if m in NOISE_SOLID_MATERIALS:
+        return "solid"
+    return None
+
+
+class _NoiseRoadContext:
+    """ADR 0293 (3): the carriageways within NOISE_CTX_M of a barrier decide its style (WORKING_VALUE rule)."""
+
+    def __init__(self, net):
+        self.net = net
+        self.chains = [c for c in net.chains if not c.meta.get("absorbed")]
+        self.tree = shapely.STRtree([LineString(c.line.p) for c in self.chains]) if self.chains else None
+
+    def style(self, part):
+        if self.tree is None:
+            return NOISE_DEFAULT_STYLE, "no road"
+        fast = city = False
+        for f in (0.25, 0.5, 0.75):
+            q = part.interpolate(f, normalized=True)
+            for k in self.tree.query(q.buffer(NOISE_CTX_M + 15.0)):
+                c = self.chains[int(k)]
+                s_, lat = c.line.project(np.array([q.x, q.y]))
+                if s_ <= 0.0 or s_ >= c.length or abs(lat) - float(c.hw_at(s_)) > NOISE_CTX_M:
+                    continue
+                sec = c.section(s_, self.net.sec_list)
+                v = sec.maxspeed or 50.0
+                if S.is_express_main(sec) or sec.cls == "A" or v >= 100.0:
+                    fast = True
+                elif sec.cls in ("GP", "G", "Z") and v <= NOISE_CITY_MAX_KMH:
+                    city = True
+        if fast:
+            return "solid", "rule: motorway / expressway"
+        if city:
+            return "clear", "rule: city arterial"
+        return NOISE_DEFAULT_STYLE, "rule: other road"
+
+
 def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None, net=None):
     """BDOT10k OT_OIKM_L + OSM barrier=wall/wall=noise_barrier (parts > NOISE_DEDUP_M from BDOT) + authored lines,
     styled by authored zones (kind: noise_barrier_style, Mapillary image ids as provenance), default `solid`.
@@ -2680,29 +2748,47 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
     zones, extra = _noise_style_overrides(overrides, np.asarray(origin, float))
     default = dict(NOISE_STYLES[NOISE_DEFAULT_STYLE], name=NOISE_DEFAULT_STYLE)
     bdot = [LineString(np.asarray(f["geometry"]["coordinates"], float) - origin) for f in src["bdot10k"]["OT_OIKM_L"]]
-    feats = [(ln, f"bdot:{f['id']}", "bdot", S.NOISE_BARRIER_H) for ln, f in zip(bdot, src["bdot10k"]["OT_OIKM_L"])]
+    feats = [(ln, f"bdot:{f['id']}", "bdot", S.NOISE_BARRIER_H, None) for ln, f in zip(bdot, src["bdot10k"]["OT_OIKM_L"])]
     near_bdot = shapely.union_all([b.buffer(NOISE_DEDUP_M) for b in bdot]) if bdot else None
+    osm_mat = []                     # ADR 0293: (line, style) of OSM ways with a material=* tag (also styles BDOT copies)
     for f in src["osm"]["ways"]:
         if not is_noise_wall(f["tags"]):
             continue
         ln = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
+        mst = noise_material_style(f["tags"])
+        if mst is not None:
+            osm_mat.append((ln, mst))
         for part in cut_by(ln, near_bdot):
             if part.length > 6.0:
-                feats.append((part, f"osm:way/{f['osm_way']}:{f['part']}", "osm", S.NOISE_BARRIER_H))
+                feats.append((part, f"osm:way/{f['osm_way']}:{f['part']}", "osm", S.NOISE_BARRIER_H, mst))
     for ln, style, H, key in extra:
-        feats.append((ln, key, "override", H))
+        feats.append((ln, key, "override", H, style))
+    audited = bool(zones)            # ADR 0293 (2): a region with authored style zones keeps `solid` elsewhere
+    if os.environ.get("WORLDGEN_NOISE_RULE_OFF"):        # A/B switch for the "before" renders (ADR 0293)
+        audited = True
+    ctx = _NoiseRoadContext(net) if net is not None and not audited else None
+    why = {}
     used_zones = set()
     walls = []
     on_deck = deck_screen_keepout(net) if net is not None else None
     if on_deck is not None:
         cutter = on_deck if cutter is None else cutter.union(on_deck)
     m_on_deck = sum(f[0].intersection(on_deck).length for f in feats if f[2] != "override") if on_deck is not None else 0.0
-    for line, key, kind, H in feats:
+    for line, key, kind, H, fst in feats:
         for part in cut_by(line, cutter):
             walls.append(part)
             P = lin.dens(part, 2.0)
             Z = lin.z(P)
-            for sl, st in _noise_runs(P, zones, default):
+            name, reason = fst, ("override" if kind == "override" else "osm material") if fst else None
+            if name is None and kind == "bdot":
+                name = next((m for ln_, m in osm_mat if ln_.distance(part) <= NOISE_DEDUP_M), None)
+                reason = "osm material" if name else None
+            if name is None:
+                name, reason = (NOISE_DEFAULT_STYLE, "audited region") if audited else (
+                    ctx.style(part) if ctx is not None else (NOISE_DEFAULT_STYLE, "no network"))
+            why[reason] = why.get(reason, 0.0) + part.length
+            dflt = dict(NOISE_STYLES[name], name=name)
+            for sl, st in _noise_runs(P, zones, dflt):
                 noise_wall(lin, P[sl], Z[sl], st, st.get("height_m", H), key, end_post=sl.stop >= len(P))
                 seg = float(np.sum(np.hypot(*np.diff(P[sl], axis=0).T)))
                 by_style[st["name"]] = by_style.get(st["name"], 0.0) + seg
@@ -2713,7 +2799,8 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
     report["noise_barriers_m"] = round(sum(L.values()))
     report["noise_barriers"] = {"m_by_source": {k: round(v) for k, v in L.items()},
                                 "m_by_style": {k: round(v) for k, v in by_style.items()},
-                                "zones_stale": sorted({z[3] for z in zones} - used_zones)}
+                                "zones_stale": sorted({z[3] for z in zones} - used_zones),
+                                "style_rule_m": {k: round(v) for k, v in why.items()}}          # ADR 0293
     report["noise_barriers"]["on_screened_deck_m"] = round(float(m_on_deck), 1)       # ADR 0146: not built twice
     if pl is not None:
         report["noise_barriers"]["signs_moved_off_wall"] = _signs_off_walls(pl, walls, roads_poly)

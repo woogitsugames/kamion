@@ -139,8 +139,12 @@ def light_group(oname):
     sd = "L" if n.endswith(("_L", "_-1")) or "_L_" in n or "_-1_" in n else "R"
     if "_ind_" in n:
         return "IND_" + sd
-    if "_tail_" in n or "_stop_" in n:
-        return "TAIL_BRAKE"
+    # ADR 0197: separate chambers keep separate groups - with the position lamps only the tail chamber glows; braking
+    # lights the stop chamber (UN R148 4.8.11 stop : tail >= 5 : 1 is then also visible as a second chamber).
+    if "_tail_" in n:
+        return "TAIL"
+    if "_stop_" in n:
+        return "STOP"
     if "_rev_" in n:
         return "REVERSE"
     if "_fog_" in n:
@@ -1170,7 +1174,7 @@ def qa_renders(a, tex, roots, objs0, manifest):
     render("zbl_noga_overcast_lod0.jpg", "Naczepa | LOD0 | podpory z korbą (prawa strona), osłona boczna | pochmurno")
     cam("zbl_firanka")
     render("zbl_firanka_overcast_lod0.jpg", "Naczepa | LOD0 | firanka: pasy, napinacze, fałdy (normal map) | pochmurno")
-    preview_materials(tex, "szary", lights={"TAIL_BRAKE": 0.6, "MARKER_REAR": 1.5, "MARKER_SIDE": 1.5,
+    preview_materials(tex, "szary", lights={"TAIL": 0.6, "MARKER_REAR": 1.5, "MARKER_SIDE": 1.5,
                                             "IND_L": 2.5, "PLATE": 1.0})
     cam("zbl_lampy")
     render("zbl_lampy_overcast_lod0.jpg", "Naczepa | LOD0 | lampy tylne: pozycja + kierunek L + obrysowe + tablica "
@@ -1354,7 +1358,8 @@ def meta(tex, td, tri_pieces, meas):
             "roughness": "C.a + 0.35 * M.g * _Dirt",
             "metallic": "M.b (Trim/Metal/Lights), 0 on Paint/Curtain; * (1 - saturate(M.g * _Dirt))",
             "occlusion": "M.r",
-            "emission": "Lights: _LightState[uv2.x] * uv2.y (ids shared with the tractor; 13 = PLATE, 14 = FOG_REAR)",
+            "emission": "Lights: _LightState[uv2.x] * uv2.y (ids shared with the tractor; 13 = PLATE, 14 = FOG_REAR, "
+                        "16 = TAIL / 17 = STOP chambers, ADR 0197)",
             "_Dirt": "0 washed, 0.5 = renders, 1 = very dirty",
             "_DirtColor": list(DUST),
             "urp_lit_fallback": "stock URP Lit: _BaseMap = T_Trl_<Slot>_BaseMap[_<livery>] (_Dirt 0.5 baked), "

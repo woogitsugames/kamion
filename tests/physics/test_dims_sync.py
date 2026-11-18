@@ -8,6 +8,9 @@ DATA = ROOT / "game/Assets/_Project/Vehicle/Physics/Definitions/Data"
 dims = json.loads((ROOT / "art-source/truck/dims.json").read_text(encoding="utf-8"))["values"]
 veh = json.loads((DATA / "tractor_4x2_generic.vehicle.json").read_text(encoding="utf-8"))
 trl = json.loads((DATA / "curtainsider_tridem_13_6.trailer.json").read_text(encoding="utf-8"))
+# Art model measurements of the trailer (Blender export manifest): measured.front_swing = horizontal kingpin -> farthest point
+# of the rounded trailer front (ADR 0228 review P1: the coupling outline follows it, not the flat graybox box).
+ART_TRL = json.loads((ROOT / "art-source/truck/trailer/export/trailer_manifest.json").read_text(encoding="utf-8"))["measured"]
 TIRES = {n: json.loads((DATA / (n + ".tire.json")).read_text(encoding="utf-8")) for n in ("tire_385_65_r22_5",)}
 TOL = 0.0005
 
@@ -97,6 +100,75 @@ def test_trailer_landing_gear():
     check("leg half track", lg["half_track"], g["halfTrack"])
     check("leg raised foot", lg["raised_foot_y"], g["raisedFootY"])
     check("leg lowered foot", lg["lowered_foot_y"], g["loweredFootY"])
+
+
+def _boxes(defn):
+    return {b["name"]: b for b in defn["bodyBoxes"]}
+
+
+def _check_box(b, center, size, ground, coupling):
+    for ax, c, s in zip("xyz", center, size):
+        check(f"{b['name']} centre {ax}", c, b["center"][ax])
+        check(f"{b['name']} size {ax}", s, b["size"][ax])
+    assert b["ground"] is ground and b["coupling"] is coupling, f"{b['name']}: flags ground={b['ground']} coupling={b['coupling']}"
+
+
+def test_body_boxes_tractor():
+    """ADR 0228: tractor body boxes (one geometry source for the chassis-ground and tractor-trailer contact) = the
+    graybox colliders (GrayboxTractorBuilder 'Colliders': Frame, Cab, Bumper) + the graybox rear mudguards, from dims.json.
+    Builder constants (frame depth 0.22, bumper 0.60 / 0.50 / 0.20, cab gap 0.05, mudguard 1.12 / 0.70 x 0.03 x 1.20)."""
+    b = _boxes(veh)
+    wb, front, rear = d("wheelbase_m"), d("wheelbase_m") + d("front_overhang_m"), -d("rear_overhang_m")
+    cab_rear = wb - d("cab_back_behind_front_axle_m")
+    cab_len, cab_h = front - 0.05 - cab_rear, d("overall_height_m") - d("cab_body_bottom_m")
+    _check_box(b["Frame"], (0, d("frame_top_height_m") - 0.11, rear + (front - rear) / 2), (d("frame_width_outer_m"), 0.22, front - rear), True, True)
+    _check_box(b["Cab"], (0, d("cab_body_bottom_m") + cab_h / 2, cab_rear + cab_len / 2), (d("cab_width_m"), cab_h, cab_len), True, True)
+    _check_box(b["Bumper"], (0, 0.60, front - 0.10), (d("cab_width_m") - 0.04, 0.50, 0.20), True, False)
+    for side, s in (("Mudguard_L", -1), ("Mudguard_R", 1)):
+        _check_box(b[side], (s * d("rear_track_m") / 2, 1.12, 0), (0.70, 0.03, 1.20), False, True)
+    assert len(b) == 5
+
+
+def test_body_boxes_trailer():
+    """ADR 0228: trailer body boxes = GrayboxTrailerBuilder colliders (Body, Beams, RearUnderrun). Builder constants: front wall
+    0.05 ahead of the cargo front, plate bottom 1.15 (+0.07), beam bottom 0.92, floor - 0.10, underrun 0.40-0.55 / 2.35 x 0.12."""
+    b = _boxes(trl)
+    cb, lg = trl["cargoBay"], trl["landingGear"]["positionZ"]
+    fz = cb["frontZ"] + 0.05
+    rz = fz - d("trailer_body_length_m")
+    h, w = d("trailer_overall_height_m"), d("max_width_m")
+    floor_bottom = cb["floorHeight"] - 0.10
+    yc, hy = (1.15 + 0.07 + h) / 2, h - 1.15 - 0.07
+    _check_box(b["Body"], (0, yc, (fz + rz) / 2), (w, hy, d("trailer_body_length_m")), True, False)
+    # Coupling outline of the body (review P1, s22 #113): the art model's rounded front, swing radius R = 2.0294 m.
+    # BodyCoupling: full width up to z1 = sqrt(R^2 - (w/2)^2); Nose: z1 .. graybox front fz at half width sqrt(R^2 - fz^2)
+    # (both rounded down to the mm, so every corner stays inside R).
+    R = ART_TRL["front_swing"]
+    z1 = int((R * R - (w / 2) ** 2) ** 0.5 * 1000) / 1000
+    nose_hw = int((R * R - fz * fz) ** 0.5 * 1000) / 1000
+    _check_box(b["BodyCoupling"], (0, yc, (z1 + rz) / 2), (w, hy, z1 - rz), False, True)
+    _check_box(b["Nose"], (0, yc, (z1 + fz) / 2), (2 * nose_hw, hy, fz - z1), False, True)
+    _check_box(b["Beams"], (0, (0.92 + floor_bottom) / 2, (lg - 0.4 + rz + 0.1) / 2), (1.2, floor_bottom - 0.92, lg - 0.4 - rz - 0.1), True, True)
+    _check_box(b["RearUnderrun"], (0, (0.40 + 0.55) / 2, rz + 0.25), (2.35, 0.15, 0.12), True, True)
+    assert len(b) == 5
+
+
+def test_body_box_swing_clearance():
+    """ADR 0228 finding: the flat graybox front corner (cargo front + 0.05 m wall, half width 1.275 m) swings at 2.063 m, 7 mm
+    from the cab back (2.07 m ahead of the kingpin), and touched it in tight turns with plate pitch / roll. Review P1 (s22 #113):
+    the coupling boxes follow the art model's rounded front (2.029 m): >= 4 cm clearance, inside the legal 2.04 m.
+    Pinned here so a dims or box change that closes the gap fails loudly."""
+    swing = 0.0
+    for b in trl["bodyBoxes"]:
+        if not b["coupling"]:
+            continue
+        zf, hx = b["center"]["z"] + b["size"]["z"] / 2, b["size"]["x"] / 2
+        if zf > 0:
+            swing = max(swing, (zf * zf + hx * hx) ** 0.5)
+    cab_back = d("wheelbase_m") - d("cab_back_behind_front_axle_m") - veh["fifthWheel"]["position"]["z"]
+    assert swing <= ART_TRL["front_swing"] + 1e-9, f"coupling outline swing {swing:.4f} m > art model {ART_TRL['front_swing']} m"
+    assert swing <= d("semitrailer_front_swing_radius_m"), f"coupling outline swing {swing:.4f} m > 96/53/EC limit"
+    assert cab_back - swing >= 0.04, f"trailer front ({swing:.3f} m) within 4 cm of the cab back ({cab_back:.3f} m)"
 
 
 if __name__ == "__main__":

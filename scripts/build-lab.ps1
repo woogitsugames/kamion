@@ -4,11 +4,13 @@
   generated vehicle audio when tools/audio's WAVs are present.
 .EXAMPLE
   pwsh scripts/build-lab.ps1
+  pwsh scripts/build-lab.ps1 -SkipAudio -BuildTarget Win64
 .NOTES
   Entry points: Game.Editor.Setup.DrivingLabSceneBuilder.BuildBatch, Game.Editor.Audio.VehicleAudioImporter.ImportBatch.
   Logs: artifacts/logs/build-lab-<ts>.log, artifacts/logs/audio-import-<ts>.log. Exit 0 = both OK.
 #>
-param([switch]$SkipAudio)
+# -BuildTarget Win64: no platform switch in a checkout whose Library is imported for Windows (ADR 0261, as test.ps1 / visual-qa.ps1).
+param([switch]$SkipAudio, [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android')
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
 $ts = Get-Timestamp
@@ -18,7 +20,7 @@ $ts = Get-Timestamp
 & "$PSScriptRoot/cab-lod0.ps1"
 if ($LASTEXITCODE -ne 0) { exit 2 }
 $log = Join-Path $LogsDir "build-lab-$ts.log"
-$code = Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod', 'Game.Editor.Setup.DrivingLabSceneBuilder.BuildBatch')
+$code = Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod', 'Game.Editor.Setup.DrivingLabSceneBuilder.BuildBatch') -BuildTarget $BuildTarget
 $r = Select-String -Path $log -Pattern 'DRIVINGLAB_RESULT:.*' | Select-Object -Last 1
 if ($code -ne 0 -or -not $r -or $r.Line -notmatch 'OK') {
     Write-Host "DrivingLab build FAILED (exit $code), log: $log" -ForegroundColor Red
@@ -29,7 +31,7 @@ Write-Host $r.Line
 if ($SkipAudio) { exit 0 }
 
 $alog = Join-Path $LogsDir "audio-import-$ts.log"
-$code = Invoke-UnityBatch -LogFile $alog -Arguments @('-executeMethod', 'Game.Editor.Audio.VehicleAudioImporter.ImportBatch')
+$code = Invoke-UnityBatch -LogFile $alog -Arguments @('-executeMethod', 'Game.Editor.Audio.VehicleAudioImporter.ImportBatch') -BuildTarget $BuildTarget
 $r = Select-String -Path $alog -Pattern 'AUDIOIMPORT_RESULT:.*' | Select-Object -Last 1
 if ($code -ne 0 -or -not $r) {
     Write-Host "audio import FAILED (exit $code), log: $alog" -ForegroundColor Red

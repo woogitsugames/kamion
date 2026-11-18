@@ -127,7 +127,7 @@ namespace Game.Tests
             var v1 = ControlSettings.FromJson("{\"schema\":1,\"wheelRangeDeg\":540,\"gyroEnabled\":true,\"throttleProgressive\":false}");
             Assert.AreEqual(ControlSettings.CurrentSchema, v1.schema);
             Assert.AreEqual(540f, v1.wheelRangeDeg); Assert.IsTrue(v1.gyroEnabled); Assert.IsFalse(v1.throttleProgressive);
-            Assert.AreEqual(1f, v1.lookSensitivity); Assert.AreEqual(55f, v1.cabFov); Assert.IsTrue(v1.headMotion);
+            Assert.AreEqual(1f, v1.lookSensitivity); Assert.AreEqual(ControlSettings.DefaultCabFovDeg, v1.cabFov); Assert.IsTrue(v1.headMotion);
         }
 
         [Test]
@@ -143,8 +143,8 @@ namespace Game.Tests
         public void LogLine_ContainsAllChoices()
         {
             string l = Custom().LogLine("saved");
-            StringAssert.StartsWith("[CONTROLS] saved v" + ControlSettings.CurrentSchema + " ", l);   // schema 5 since #117 (ADR 0243)
-            foreach (string part in new[] { "steer=gyro", "wheelRange=540", "wheelSens=1.40", "centre=0.60", "deadZone=0.040", "gyroInvert=on", "gyroSens=1.50", "throttle=linear", "brake=progressive", "lookSens=1.00", "cabFov=55", "headMotion=on", "speedSteer=on", "grab=drag" })
+            StringAssert.StartsWith("[CONTROLS] saved v" + ControlSettings.CurrentSchema + " ", l);   // schema 6 since D90 (ADR 0294)
+            foreach (string part in new[] { "steer=gyro", "wheelRange=540", "wheelSens=1.40", "centre=0.60", "deadZone=0.040", "gyroInvert=on", "gyroSens=1.50", "throttle=linear", "brake=progressive", "lookSens=1.00", "cabFov=70", "headMotion=on", "speedSteer=on", "grab=drag" })
                 StringAssert.Contains(part, l);
         }
 

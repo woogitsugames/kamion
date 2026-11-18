@@ -31,6 +31,13 @@ namespace Game.Vehicle.Physics
         public AeroDefinition aero = new AeroDefinition();
         public CabSuspensionDefinition cab = new CabSuspensionDefinition();
         public FifthWheelDefinition fifthWheel = new FifthWheelDefinition();
+        /// <summary>
+        /// Body envelope boxes in the vehicle frame (ADR 0228): the ONE geometry source for the chassis-ground contact of the
+        /// .NET runner (<see cref="BodyBoxDefinition.ground"/>, = the PhysX BoxColliders of GrayboxTractorBuilder) and for the
+        /// tractor-trailer contact of the coupling solver (<see cref="BodyBoxDefinition.coupling"/>). Empty = no body contact
+        /// (the fifth wheel then uses its angular yaw stop).
+        /// </summary>
+        public BodyBoxDefinition[] bodyBoxes = new BodyBoxDefinition[0];
 
         public void Validate()
         {
@@ -48,6 +55,7 @@ namespace Game.Vehicle.Physics
             if (driveline.finalDriveRatio <= 0) throw new FormatException($"VehicleDefinition '{id}': finalDriveRatio must be > 0");
             if (air.cutInBar >= air.cutOutBar) throw new FormatException($"VehicleDefinition '{id}': air cut-in must be below cut-out");
             if (brakes.maxChamberPressureBar <= brakes.thresholdPressureBar) throw new FormatException($"VehicleDefinition '{id}': bad brake pressures");
+            foreach (var b in bodyBoxes) b.Validate(id);
         }
     }
 
@@ -59,6 +67,28 @@ namespace Game.Vehicle.Physics
         public Vec3 center;
         /// <summary>Box full extents [m] (x width, y height, z length) for the inertia contribution.</summary>
         public Vec3 size;
+    }
+
+    /// <summary>
+    /// Axis-aligned box of the body envelope in the vehicle (or trailer) frame [m] (ADR 0228). DERIVED from
+    /// art-source/truck/dims.json and the graybox builders (tests/physics/test_dims_sync.py recomputes every box).
+    /// </summary>
+    [Serializable]
+    public class BodyBoxDefinition
+    {
+        public string name = "";
+        public Vec3 center;
+        /// <summary>Full extents [m] (x width, y height, z length).</summary>
+        public Vec3 size;
+        /// <summary>Chassis-ground contact (mirror of a PhysX BoxCollider of the graybox builder; .NET runner).</summary>
+        public bool ground = true;
+        /// <summary>Tractor-trailer contact in the coupling solver (cab / mudguards / frame vs trailer front, jackknife).</summary>
+        public bool coupling = true;
+
+        public void Validate(string owner)
+        {
+            if (!(size.x > 0 && size.y > 0 && size.z > 0)) throw new FormatException($"'{owner}': body box '{name}' needs a positive size");
+        }
     }
 
     [Serializable]
@@ -115,6 +145,13 @@ namespace Game.Vehicle.Physics
         /// <summary>Bump-stop engages this far before full bump [m]; quadratic stiffness [N/m^2].</summary>
         public double bumpStopClearance = 0.03;
         public double bumpStopRate = 3.0e7;
+        /// <summary>
+        /// Bump-stop unloading hysteresis [s/m] (ADR 0228): while the elastomer stop extends (b_dot &lt; 0) its force is
+        /// rate b^2 (1 + h b_dot), never below 0 (Hunt-Crossley form: K. H. Hunt, F. R. E. Crossley, J. Appl. Mech. 42(2),
+        /// 1975, 440-445); compression stays elastic, so impact peaks are unchanged. b = engagement, b_dot = compression rate.
+        /// 0 = elastic stop (before ADR 0228). WORKING_VALUE: no measured hysteresis of this fictional truck's stops.
+        /// </summary>
+        public double bumpStopHysteresis;
         /// <summary>Damping per side [N s/m] (bump / rebound), linear up to knee velocity, then highSpeedFactor slope.</summary>
         public double damperBump = 8000;
         public double damperRebound = 16000;
@@ -149,6 +186,18 @@ namespace Game.Vehicle.Physics
         public double ackermannFactor = 1.0;
         /// <summary>Overall steering ratio (handwheel angle / road-wheel angle) [-], used for handwheel telemetry and feedback.</summary>
         public double steeringRatio = 20;
+        /// <summary>
+        /// ADR 0228 x ADR 0263: first-order lag [s] of the steering-feedback estimate <c>VehicleModel.AligningTorqueTotal</c> while
+        /// the tractor and trailer bodies touch (jackknife limit) and for <see cref="contactFeedbackHoldS"/> after. The contact
+        /// reverses the tractor's yaw in ~0.1 s and drags the steered axle sideways, so the tyres' aligning torque swings through
+        /// its peak (measured: -0.9 to +2.3 kN m in 80 ms, 40 t fold into the cab); passed on unfiltered, the wheel force
+        /// feedback and the touch-wheel return turn that into a full-scale kick. The tyre forces on the vehicle are not
+        /// filtered. WORKING_VALUE (feel decision, owner feel test B-075); 0 = off.
+        /// </summary>
+        public double contactFeedbackLagS = 0.5;
+        /// <summary>How long after the last tractor-trailer contact step the lag stays on [s]; then the estimate converges back
+        /// to the raw value with the same lag (no step). WORKING_VALUE.</summary>
+        public double contactFeedbackHoldS = 0.5;
     }
 
     [Serializable]
@@ -309,7 +358,11 @@ namespace Game.Vehicle.Physics
         public double rollStiffness = 1.0e7;
         public double rollDamping = 2.0e5;
         public double rollLimitDeg = 4;
-        /// <summary>Articulation (yaw) stop: trailer front corner meets the cab / frame [deg].</summary>
+        /// <summary>
+        /// Angular articulation (yaw) stop [deg]. FALLBACK only (ADR 0228): used when the tractor or the trailer has no
+        /// coupling body boxes. With body boxes the articulation is limited by the physical contact of the trailer body with
+        /// the cab / mudguards / frame (<see cref="CouplingContact"/>), at the angle the geometry gives.
+        /// </summary>
         public double yawLimitDeg = 90;
         /// <summary>Stop compliance: natural frequency of the pitch/roll stops and of the articulation (cab contact) stop [Hz].</summary>
         public double stopFrequencyHz = 10;
@@ -351,5 +404,20 @@ namespace Game.Vehicle.Physics
         /// <summary>Jaw engagement phase after locking [s] and its compliance (natural frequency, critically damped) [Hz].</summary>
         public double engageTime = 0.4;
         public double engageFrequencyHz = 4;
+
+        /// <summary>
+        /// Tractor-trailer body contact (ADR 0228), per contact point: implicit spring-damper on the point's effective mass,
+        /// k = m_eff (2 pi f)^2, c = 2 zeta m_eff (2 pi f) (same soft-contact parameterisation as the chassis-ground contact,
+        /// ADR 0165). WORKING_VALUE: no crush stiffness of a cab rear wall / trailer front corner exists for this fictional
+        /// combination. Bounds in ADR 0228 (penetration while the drive axle pushes the trailer into the cab, jerk limit).
+        /// </summary>
+        public double contactFrequencyHz = 5;
+        public double contactDampingRatio = 0.3;
+        /// <summary>Largest separating speed [m/s] a compressed contact may give back (no rebound: panels crush, restitution ~0). WORKING_VALUE.</summary>
+        public double contactRecoverySpeed = 0.05;
+        /// <summary>Coulomb friction between the trailer body and the cab / mudguards. WORKING_VALUE (painted steel / GRP on aluminium, UNVERIFIED).</summary>
+        public double contactFriction = 0.3;
+        /// <summary>Speculative margin [m]: boxes closer than this are already contact rows (no tunnelling at full yaw rate).</summary>
+        public double contactMargin = 0.05;
     }
 }

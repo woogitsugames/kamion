@@ -18,7 +18,7 @@ namespace Game.Controls
         public const string LegacySteerModeKey = "controls.steerMode";
         /// <summary>Retired developer-page pref of the mirror windows (before schema 5; ADR 0243). Deleted on load, never read.</summary>
         public const string RetiredMirrorInsetsKey = "lab.mirrorInsets";
-        public const int CurrentSchema = 5;
+        public const int CurrentSchema = 6;
 
         public const float RangeMin = 180f, RangeMax = 900f;
         /// <summary>D70 (owner, 2026-11-15; ADR 0243): default on-screen (touch) wheel half range = comfort 270 deg; the simulator
@@ -34,6 +34,11 @@ namespace Game.Controls
         public const float DeadMin = 0f, DeadMax = 0.15f;
         public const float LookMin = 0.5f, LookMax = 2f;
         public const float FovMin = 45f, FovMax = 75f;
+        /// <summary>D90 / ADR 0294 (owner, 2026-11-18, variant B of cab-view-s24): default vertical cab FOV 70 deg (was 55 until
+        /// schema 5). WORKING_VALUE (no seated reference photo, docs/07 section 4). The QA camera cab-driver uses the same value.</summary>
+        public const float DefaultCabFovDeg = 70f;
+        /// <summary>The pre-D90 default; a schema &lt; 6 save holding exactly this value never had the FOV moved by the player.</summary>
+        public const float LegacyDefaultCabFovDeg = 55f;
         /// <summary>CameraRig defaults the camera settings scale (Game.Cameras.CameraRig lookDegPerPixel, headGain).</summary>
         public const float BaseLookDegPerPixel = 0.12f, BaseHeadGain = 0.006f;
 
@@ -58,8 +63,8 @@ namespace Game.Controls
         public bool brakeProgressive = true;
         /// <summary>Schema 2: gain of the look-around drag in the cab view.</summary>
         public float lookSensitivity = 1f;
-        /// <summary>Schema 2: field of view of the cab camera [deg] (vertical).</summary>
-        public float cabFov = 55f;
+        /// <summary>Schema 2: field of view of the cab camera [deg] (vertical). Default <see cref="DefaultCabFovDeg"/> since schema 6.</summary>
+        public float cabFov = DefaultCabFovDeg;
         /// <summary>Schema 2: head sway from accelerations (limited, see CameraRig); off for motion-sickness-prone players.</summary>
         public bool headMotion = true;
         /// <summary>
@@ -147,7 +152,8 @@ namespace Game.Controls
         /// the old gesture was the cause of the report). v2 to v3 explicitly switches speed-sensitive steering on: the v2 mapping
         /// was the cause of the "wheel turns far too fast" feel report (ADR 0058), so an old save gets the new feel.
         /// v4 to v5 (D70, ADR 0243) switches the mirror windows on: the owner chose them as the standard; the old developer-page
-        /// toggle (PlayerPrefs "lab.mirrorInsets") is not read any more. The wheel range is NOT reset: 270 deg has been the default
+        /// toggle (PlayerPrefs "lab.mirrorInsets") is not read any more. v5 to v6 (D90, ADR 0294) moves a cab FOV still at the old
+        /// default 55 deg to the new 70 deg, once (as D85); a FOV the player changed stays (a v6 save at 55 is a choice, kept). The wheel range is NOT reset: 270 deg has been the default
         /// since the first settings schema, so a saved 900 (or 450 ...) is the player's own choice and is kept.
         /// </summary>
         static void Migrate(ControlSettings s)
@@ -157,6 +163,11 @@ namespace Game.Controls
             if (s.schema < 3) { s.speedSensitiveSteering = true; s.schema = 3; }   // v3: ADR 0058 steering column
             if (s.schema < 4) { s.wheelDragGrab = true; s.schema = 4; }            // v4: ADR 0135 drag gesture (owner report)
             if (s.schema < 5) { s.mirrorInsets = true; s.schema = 5; }             // v5: D70 / ADR 0243 mirror windows (owner decision)
+            if (s.schema < 6)   // v6: D90 / ADR 0294 cab FOV 55 -> 70, once; a value the player moved (stepper: 5 deg steps) is kept
+            {
+                if (Mathf.Abs(s.cabFov - LegacyDefaultCabFovDeg) < 0.01f) s.cabFov = DefaultCabFovDeg;
+                s.schema = 6;
+            }
             if (s.schema > CurrentSchema) s.schema = CurrentSchema;   // saved by a newer build: keep known fields
         }
 

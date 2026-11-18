@@ -20,4 +20,10 @@
     <ProjectReference Include="../Sim/Sim.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- ADR 0228 x ADR 0263: the wheel force-feedback model (plain C#, no Unity types) fed by the physics in
+         JackknifeForceFeedbackTests. Compiled straight from the Unity project like the physics sources. -->
+    <Compile Include="../../../game/Assets/_Project/Input/ForceFeedback.cs;../../../game/Assets/_Project/Input/WheelAxis.cs" LinkBase="Controls" />
+  </ItemGroup>
+
 </Project>
