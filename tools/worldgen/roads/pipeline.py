@@ -202,6 +202,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
         if collision:
             M.build_patch(buf, net, j, coarse=True)
     GO.build(buf, net, gore_plan)                                    # paved gores / P-21 (ADR 0077)
+    net.gore_zones = GO.p21_zones(gore_plan)                         # ADR 0293 (B): painted by the marking stage
     stats["compact_roundabouts"] = CR.build(buf, net, juncs)         # ADR 0218 5c: apron annulus + centre island
     stats["sides_on_carriageway_culled"] = M.cull_sides_on_carriageway(buf)
     stats["kerb_tris_dropped_in_fills"] = GO.drop_kerbs_in_fills(buf, gore_plan)     # ADR 0093: removed, not sunk
