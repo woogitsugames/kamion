@@ -22,7 +22,7 @@
 #define KF_STRIP_MIN_M 22.0
 #define KF_STRIP_SPAN_M 24.0
 #define KF_TRAM_M 18.0          // WORKING_VALUE: tramline spacing (sprayer boom 18 m), two wheel tracks 1.8 m apart
-#define KF_OWN_SHARE 0.2
+#define KF_OWN_SHARE 0.55      // Podlasie strip farms: neighbouring strips are separate holdings (own crop)
 
 uint KFHash(int a, int b, uint salt)
 {
@@ -113,10 +113,11 @@ void KamionFieldMosaic(float2 en, float footprint, half driftN, inout half4 m, o
         fa = lerp(fa, 0.55h, track * 0.8h);
         fb = lerp(fb, 0.30h, track * 0.5h);
     }
-    // baulk (miedza): rough grass line 2 m wide between two fields, box-filtered by the pixel footprint
+    // baulk (miedza): rough grass line ~1.2 m wide between two fields, box-filtered by the pixel footprint and faded
+    // with distance (a sub-pixel line must not paint a grid over the horizon)
     float e = min(stripEdge, blockEdge);
-    half baulk = (half)(saturate((1.0 - e) / fp + 0.5) * saturate(2.0 / fp + 0.25));
-    fb = lerp(fb, 0.56h, baulk);
+    half baulk = (half)(saturate((0.6 - e) / fp + 0.5) * saturate(1.2 / fp)) * 0.8h;
+    fb = lerp(fb, 0.50h, baulk);
     fa = lerp(fa, 0.0h, baulk);
     ft = lerp(ft, half3(1.04h, 1.18h, 0.90h), baulk);
 
