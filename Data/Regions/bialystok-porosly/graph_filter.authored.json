@@ -1,0 +1,7 @@
+{
+ "provenance": "authored_override (ADR 0204 rule, ADR 0292): ways left out of the drivable road graph of this region",
+ "drop_service": [],
+ "drop_osm_ways": [222465086],
+ "reason": "OSM way 222465086 (highway=service) meets the north tile edge (seam with bialystok-knyszynska) at EPSG:2180 (772812.5, 595199.0), 2.7 m from the boundary node of the residential way 40329438. The importer's world-edge closures of the two roads overlapped (WorldEdgeBuilder: 'world edge: 2 closure rows overlap after ResolveClosures (first: service x residential, 0,00 m)', import r2b failed). A service access off the residential street next to the seam; not on any route. Left out of this tile only (bialystok-knyszynska keeps it).",
+ "verify": "import-region bialystok-porosly exit 0 (no closure overlap); qa.seams knyszynska | porosly reports the service end as a one-sided road at most"
+}
