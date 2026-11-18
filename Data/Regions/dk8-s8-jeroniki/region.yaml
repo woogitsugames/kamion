@@ -1,0 +1,68 @@
+id: dk8-s8-jeroniki
+title: DK8 → S8 — węzeł na południe od dk65-01, łącznik ekspresówki z Kleeberga (Jeroniki, Sienkiewicze)
+status: WORKING_ASSUMPTION (ADR 0278, owner D63; tile = lattice (-4,-1) of the ADR 0203 plan)
+candidate: P_s8_zachod
+crs:
+  horizontal: EPSG:2180 (ETRF2000-PL / CS92)
+  vertical: PL-EVRF2007-NH (EPSG:9651)
+  axes_unity: X = east (EPSG:2180 x), Y = up, Z = north (EPSG:2180 y)  [ADR 0003]
+bbox:
+  xmin: 768779.0
+  ymin: 593151.0
+  xmax: 770827.0
+  ymax: 595199.0
+  width_m: 2048.0
+  height_m: 2048.0
+origin:
+  x: 769803.0
+  y: 594175.0
+  z: 119.39
+  note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
+teryt_powiat: '2002'
+products:
+  buildings.geojson: Data/Regions/dk8-s8-jeroniki/buildings.geojson
+  ortho.json: Data/Regions/dk8-s8-jeroniki/ortho.json
+  roads.graph.json: Data/Regions/dk8-s8-jeroniki/roads.graph.json
+  terrain.json: Data/Regions/dk8-s8-jeroniki/terrain.json
+big_products_not_in_git:
+- Data/raw/derived/dk8-s8-jeroniki/heightmap_2049.r16
+- Data/raw/derived/dk8-s8-jeroniki/ortho_0p25m.tif
+sources:
+- id: osm-geofabrik-podlaskie
+  license: ODbL 1.0
+  attribution: © OpenStreetMap contributors
+  manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
+  manifest_sha256: 3a63ebb442f2e09904c18a62cbf1eec9bce2fccf8c8d0dfd6264bef37843b3c0
+- id: gugik-nmt-2025-dk8-s8-jeroniki
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-nmt-2025-dk8-s8-jeroniki.json
+  manifest_sha256: 648dc2454461189601023e67366c3986759cdea8fae9a281510f005d6166327a
+- id: gugik-orto-2024-rgb-0p25-dk8-s8-jeroniki
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-dk8-s8-jeroniki.json
+  manifest_sha256: 58fb2d8261677c81f2b9fac0e3cf732c75f8d66053433ffd244b03b71c3c5230
+- id: gugik-bdot10k-2002
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2002.json
+  manifest_sha256: 550a4ca928a47b0cdd25282a46ee71f8973fcb1f3fedca850a48508253edf143
+- id: gugik-lod1-2024-2002
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2002.json
+  manifest_sha256: f1e73b0d1556eba660c75c3fe6340b8674b78b7d9f22d7495a9f3d12d441098d
+- id: gugik-lod2-2017-2002
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2002.json
+  manifest_sha256: e6805b9986e80e66df4a55d0173e1cf65f002614bb49daece804d913421a9842
+rebuild:
+- uv run --project tools/worldgen tools/worldgen/ingest.py --region dk8-s8-jeroniki
+- uv run --project tools/worldgen tools/worldgen/build_region.py --region dk8-s8-jeroniki
