@@ -89,6 +89,8 @@ przy odciążaniu (10 kN s/m): 40 t → 0,35, ale zmienia przebieg nacisku osi w
 hamowania) — nie wprowadzona, zostaje w „Otwarte”. Histereza odbojnika zmieniła złotą telemetrię jednego scenariusza:
 `brake_80_0_dry_abs_comb@laden40` (przednia oś dobija w hamowaniu 40 t; po zatrzymaniu kołysanie wygasa szybciej). Droga hamowania
 41,31 → 41,25 m, MFDD 6,885 → 6,899 m/s². Plik `tests/golden/brake_80_0_dry_abs_comb_laden40.csv` przepisany (`--update-golden`).
+**r4 (2026-11-18): nieaktualne** — po scaleniu D79 (osie 7,63 m) plik wrócił do wersji z main, bo scalony przebieg mieści się w
+jej tolerancji (sekcja „Aktualizacja r4”).
 
 ### Geometria i kąt kontaktu
 Poziomy zestaw dotyka pierwszy raz przy **117,12°**: ściana boczna naczepy (pół szerokości 1,275 m) na tylnym narożniku kabiny
@@ -159,7 +161,9 @@ wnikanie, siła kontaktu, prędkości kątowe; zrzut 0,5 m: wysokość, ugięcie
 ## Otwarte
 1. ~~**Prześwit przodu naczepy do kabiny 7 mm**~~ — H11: obrys kontaktowy = zaokrąglony przód z modelu (2,029 m), prześwit 4,1 cm
    (niżej). Zostaje: zatrzymanie z 13–20 km/h przy 55–60° (głównie 40 t) daje po zatrzymaniu muśnięcie (≤ 0,61 mm, ≤ 1,33 km/h,
-   ciągnik kołysze się ~1,2° do tyłu). Pełne usunięcie = decyzja o wymiarach (odstęp tyłu kabiny od sworznia 2,07 m, `fifth_wheel_lead`
+   ciągnik kołysze się ~1,2° do tyłu) z **siłą szczytową 71–79 kN (przed r4) / 76–90 kN (r4, po D79)** w pierwszym kroku kontaktu
+   przy wnikaniu ~0 mm; 0,61 mm to inny, późniejszy krok. Pilnowane scenariuszami `jackknife_turn_stop_brush_{20,15}_comb`
+   (≤ 100 kN, ≤ 1,5 s, ≤ 1 mm; r4). Pełne usunięcie = decyzja o wymiarach (odstęp tyłu kabiny od sworznia 2,07 m, `fifth_wheel_lead`
    ograniczone długością 16,50 m) albo o tłumieniu kołysania ciągnika — lider/właściciel po feel teście.
 2. Brak kontaktu pionowego (naczepa na błotniku/ramie) i brak geometrii podpór naczepy i szyi — świadomie poza zakresem.
 3. Strata energii opony (lądowanie z 1 m nadal ma 0,16 s lotu) — zmienia złotą telemetrię hamowania; do decyzji z feel testem.
@@ -168,7 +172,9 @@ wnikanie, siła kontaktu, prędkości kątowe; zrzut 0,5 m: wysokość, ugięcie
    lider. Po rozpięciu kontakt kabina–naczepa liczy solver; czy `ConnectTrailer` przywraca kolizje PhysX po rozpięciu, nie
    sprawdzano (kod Unity-only, poza własnością fizyki).
 5. Feel test właściciela (B-075): cofanie pod rampę z kontrą, „stuk” w kabinę, zrzut/próg; po H11 także kierownica z FFB przy
-   „stuku” (wygładzenie 0,5 s — WORKING_VALUE, decyzja feelingu).
+   „stuku” (wygładzenie 0,5 s — WORKING_VALUE, decyzja feelingu; r4: oddanie surowej wartości najpóźniej 1,0 s po kontakcie).
+8. (r4) PlayMode `KerbStrikeParityTests` z nowymi stałymi i `CombinationLabTests` Win64 — nieuruchomione (Unity poza zakresem
+   agenta); pochylenie 27 cm w Unity po #113 nieznane (asercja oderwania koła przerywała test wcześniej).
 6. (H11) `CouplingContact.MaxPoints` = 64 (4 × 4 pudła × 4 punkty); naczepa DLC z większą liczbą pudeł `coupling` zatrzyma się
    wyjątkiem przy `SetGeometry` — trzeba podnieść stałą (bufory solvera rosną liniowo).
 7. (H11) Normy wolnej przestrzeni siodła przy pochyleniu naczepy (np. ISO 1726) nie zostały przeczytane — tolerancja 1,13° / 1,44°
@@ -218,3 +224,85 @@ manifestu); bench p50 13,4–14,3 µs vs 13,9–14,0 µs (szum, 16 zamiast 12 pa
 (`CombinationStep_WithBodyContact_DoesNotAllocate` zielony). Wykresy (obejrzane): `artifacts/jackknife-0228/h11/png/` — `ffb_*`
 (siła kontaktu, moment samonastawności, wyjście FFB przed/po), `turn_*` (skręt + hamowanie przed/po); CSV 20 Hz
 `artifacts/jackknife-0228/h11/{before,after}/`, sondy `h11/probe_scenarios/`.
+
+## Aktualizacja r4 (2026-11-18, gałąź `alt-113-s24`)
+Zlecenie: `REVIEW-2026-11-16-s23-old-prs.md` §#113 i `INTEGRATION-2026-11-16-int-h3-s23.md` §„#113 → FIX”. Liczby z runnera .NET
+(dt 10 ms, 4 substepy) na drzewie po scaleniu; skrypty analizy jednorazowe, CSV nie wersjonowane (odtwarzalne komendami niżej).
+
+**Merge `origin/main` @ `33541aa04`.** Bez konfliktów. Istotne z main: D79 / ADR 0280 (osie tridemu −6,32/−7,63/−8,94 m zamiast
+−6,39/−7,70/−9,01; masa tridemu z = −7,63), #171 (relaksacja postoju naczepy), `TowingWheels` w `CombinationModel`. **`bodyBoxes`
+naczepy bez zmian i zgodne:** pudła `Body`/`BodyCoupling`/`Nose`/`Beams`/`RearUnderrun` nie zależą od położenia osi (BoxCollidery
+graybox liczone z frontu skrzyni, nóg podporowych i tyłu; `GrayboxTrailerBuilder.cs:62-68`), `test_dims_sync.py` 12/12, obrys
+przodu 2,029 m (`trailer_manifest.json` `front_swing` bez zmian).
+
+**Złota telemetria `brake_80_0_dry_abs_comb@laden40` (FAIL 328/329 po scaleniu).** Cztery przebiegi, porównanie jak w `Golden.cs`
+(udział próbek poza tolerancją, limit 3 %):
+
+| przebieg | droga / MFDD | vs plik #113 (7,70 m, h 4) | vs plik main (7,70 m, h 0) |
+|---|---|---|---|
+| głowa #113 `a84ad5e14` (7,70 m, h 4) | 41,250 m / 6,899 | = (0 %) | FAIL: kingpin_fz 11 %, front_L_fz 24 %, rear_L_fz 44,5 %, a_long 4 % |
+| to samo, h 0 | 41,309 / 6,885 | — | (= main przed D79) |
+| scalone, h 0 | 41,311 / 6,890 | FAIL (kingpin 27,5 %) | ok (≤ 1 %) |
+| **scalone, h 4 (ten kod)** | **41,385 / 6,876** | **FAIL: kingpin 32,5 %, rear_L_fz 39,5 %, front_L_fz 23,5 %, a_long 3,5 %** | **ok: a_long 1,0 %, kingpin 2,0 %, front_L_fz 2,0 %, rear_L_fz 0,5 %** |
+
+Różnice skupiają się w chwili zatrzymania (t ≈ 4,0–4,7 s): przy 7,70 m histereza przesuwała koniec hamowania o ~0,04–0,05 s
+(a_long w t = 4,1 s: −1,48 zamiast −3,5…−4,1 m/s²) i fazę kołysania po zatrzymaniu (kingpin_fz po zatrzymaniu 91–109 kN zamiast
+72–106 kN). Przy 7,63 m ten sam efekt jest mały: h 4 vs h 0 różni się o 0,07 m drogi i mieści się w tolerancji pliku z main.
+Kontaktów nadwozie–droga i ciągnik–naczepa w tym scenariuszu: 0 (geometria `bodyBoxes` nie gra roli). Wniosek: brak błędu;
+plik #113 był nagrany na starej geometrii i przestał opisywać kod. **Decyzja: plik z main przywrócony (nie nagrany ponownie)** —
+scalony kod przechodzi go z zapasem (najgorsza kolumna kingpin_fz 2,0 % z 3 %), a PR nie zmienia złotych plików. Złota telemetria
+9/9 zielona.
+
+**`KerbStrikeParityTests` (PlayMode) — stałe referencyjne z runnera.** Nowa metryka runnera `max_pitch_deg` (znakowany szczyt
+asin(fwd.y) ciągnika, jak `PitchMaxDeg` w teście Unity) i test xUnit `KerbParityReferenceTests`: uruchamia te same scenariusze,
+liczy te same metryki w tym samym oknie 6 s i **czyta stałe z pliku testu Unity** — zawodzi, gdy stała różni się od runnera o
+więcej niż zaokrąglenie 0,005 (żeby stałe nie zestarzały się drugi raz). 27 cm na siatce `WorldKerb` (bez kontaktu nadwozia w
+Unity) liczone w runnerze z `DisableBodyContact` (z kontaktem: te same Fz i pochylenie, oderwanie 0,32 s). Tolerancje testu Unity
+bez zmian (±20 %, oderwania ±20 % lub ±0,03 s).
+
+| przypadek (6 s) | metryka | stała przed (2026-11-09) | runner main (h 0) | **runner r4 (h 4) = nowa stała** | Unity z #113 (int-h3) |
+|---|---|---|---|---|---|
+| 14 cm 50 km/h pusty | Fz/static; oderwanie ciągnik / wszystkie; pochylenie | 3,90; 0,11 / 0,21 s; 1,66° | 3,66; 0,11 / 0,20 s; 1,61° | **3,68; 0,08 / 0,20 s; 1,44°** | ciągnik 0,08 s |
+| 14 cm 50 km/h 40 t | jw. | 3,53; 0,08 / 0,09 s; 1,99° | 3,30; 0,09 / 0,09 s; 1,86° | **3,30; 0,08 / 0,08 s; 1,42°** | pochylenie **1,38°** |
+| 27 cm 42 km/h 40 t | Fz/static; oderwanie ciągnik; pochylenie | 6,50; 0,42 s; 6,36° | 6,04; 0,39 s; 5,91° | **6,03; 0,33 s; 3,54°** | ciągnik 0,31 s |
+
+(„runner main” liczony z CSV tymi samymi regułami; Fz/static z CSV ±0,02 wobec metryki.) Atrybucja: scalone drzewo z
+`bumpStopHysteresis` = 0 daje dokładnie wartości main (pochylenie 1,61 / 1,86 / 5,91°, oderwania 0,11 / 0,09 / 0,39 s), więc
+**zmianę pochylenia i oderwań robi histereza odbojnika** (koło po zjeździe/najeździe nie jest odpychane przez rozprężający się
+odbojnik). Szczyty Fz histereza zostawia bez zmian (3,296 z i bez; zgodnie z „Decyzja 4”); spadek Fz 3,90 → 3,68 / 3,53 → 3,30 /
+6,50 → 6,03 względem 2026-11-09 był już na main (zmiany po 09.11, m.in. ADR 0201b). **Pochylenie 40 t: runner 1,42° vs Unity 1,38°
+(−2,6 %)** — zgodne, brak rozbieżności Unity–runner do szukania. Pochylenia 27 cm w Unity po #113 nie zmierzono (test przerywała
+wcześniejsza asercja oderwania) — PlayMode lidera.
+
+**P2-113-1 (siła przy „muśnięciu”).** Sondy H11 (`artifacts/jackknife-0228/h11/probe_scenarios/`), 40 t: przed scaleniem
+20 km/h 0,94 s, 78,8 kN, 0,19 mm; 15 km/h 0,04 s, 71,1 kN, 0,59 mm (= „71–79 kN” z recenzji). Po scaleniu: **1,10 s, 75,9 kN,
+0,155 mm; 0,09 s, 90,5 kN, 0,610 mm**; pusty 0. Szczyt siły przypada na pierwszy krok kontaktu przy wnikaniu 0–0,03 mm (kontakt
+spekulatywny zatrzymuje prędkość zbliżania ~1 km/h w 1–3 krokach; > 10 kN przez 3 kroki przy 15 km/h, 32 kroki przy 20 km/h);
+„0,61 mm” to inny krok. Opis w „Otwarte 1” uzupełniony. Sondy weszły jako scenariusze `jackknife_turn_stop_brush_20_comb` i
+`_15_comb` (pusty + 40 t): `coupling_contact_s` ≤ 1,5 s, `max_coupling_contact_force_kn` ≤ 100, `max_coupling_penetration_m`
+≤ 1 mm (straże regresji, WORKING_VALUE; zapas siły 9,5 %).
+
+**P2-113-2 (wygładzanie FFB).** Zmierzone przed poprawką (kolumna CSV `aligning_torque_raw` = `AligningTorqueRaw`, nowa): po
+ostatnim kontakcie wygładzanie trwało **4,07 s** (`reverse_countersteer@empty`, surowy moment narasta do 3,1 kN m/s) i **> 6,9 s**
+(`turn_stop_brush_20@laden40`, do końca przebiegu: na postoju surowy moment dryfuje do 0,25 kN m/s, a filtr 0,5 s nigdy nie schodzi
+z błędem poniżej progu 1 N m) — zastrzeżenie recenzji potwierdzone; tak długo FFB i powrót kierownicy dotykowej dostawały opóźniony
+moment. Poprawka w `VehicleModel`: po czasie podtrzymania (0,5 s) stała opóźnienia maleje liniowo do 0 w ciągu jednej stałej
+(0,5 s), więc estymata spotyka surową wartość najpóźniej **1,0 s po ostatnim kontakcie** bez skoku (zmierzone: 0,99 s we wszystkich
+scenariuszach kontaktu; czas wygładzania brush_20@40 t 8,85 → 2,92 s, countersteer@pusty 6,23 → 3,15 s). Wyjście FFB bez zmian:
+`JackknifeForceFeedbackTests` przed / po poprawce identyczne — zmiana celu na wieńcu w kontakcie 0,477 / 0,361 (fold_120 40 t /
+pusty), 0,484 / 0,359 (fast_fold), 0,365 (countersteer), dOut ≤ 0,060 (limit testu 0,6 N m, slew 0,2); w fazie oddawania
+countersteer 0,283 N m/krok (bez zmian). Wartości 0,5 / 0,5 s dalej WORKING_VALUE (feel test).
+
+**Wyniki r4:** `dotnet test tools/physics-runner/Tests` **338/338** (golden 9/9, `KerbParityReferenceTests` 3/3,
+`JackknifeForceFeedbackTests` zielone); runner **159 scenariuszy / 987 checków ALL PASSED**
+(`artifacts/jackknife-0228/r4/full-runner.log`); pytest `tests/physics` 35 passed. Unity nie uruchamiane (PlayMode
+`KerbStrikeParityTests|CombinationLabTests` Win64 — lider).
+
+Komendy odtworzenia (PowerShell, `DOTNET_ROLL_FORWARD=Major`):
+```
+dotnet test tools/physics-runner/Tests
+dotnet test tools/physics-runner/Tests --filter "FullyQualifiedName~KerbParityReferenceTests" --logger "console;verbosity=detailed"
+dotnet run -c Release --project tools/physics-runner/Runner -- --only brake_80_0_dry_abs_comb@laden40 --no-multi --out <dir>
+dotnet run -c Release --project tools/physics-runner/Runner -- --scenarios artifacts/jackknife-0228/h11/probe_scenarios --no-multi --out <dir>
+# wariant h 0: "bumpStopHysteresis": 0.0 w game/Assets/_Project/Vehicle/Physics/Definitions/Data/*.json (tymczasowo)
+```
