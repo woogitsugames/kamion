@@ -1267,29 +1267,6 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.07,
-   "bridge_m": 0.0,
-   "grade_limit": 0.12,
-   "highway": [
-    "service"
-   ],
-   "id": "c:w1302282015:12061319698-12061319700",
-   "lanes": [
-    2
-   ],
-   "length_m": 11.5,
-   "max_grade": 0.0386,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.035,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    5.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
    "axis_smoothing_dev_max_m": 0.0,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
@@ -2641,10 +2618,10 @@
    "lanes": [
     2
    ],
-   "length_m": 134.9,
+   "length_m": 156.3,
    "max_grade": 0.0323,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.017,
+   "profile_rms_vs_nmt_m": 0.016,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0
@@ -5387,29 +5364,6 @@
    ],
    "length_m": 149.1,
    "max_grade": 0.0373,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.006,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    5.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.0,
-   "bridge_m": 0.0,
-   "grade_limit": 0.12,
-   "highway": [
-    "service"
-   ],
-   "id": "c:w310632172:12061319700-2228870854",
-   "lanes": [
-    2
-   ],
-   "length_m": 21.4,
-   "max_grade": 0.0281,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
@@ -12687,7 +12641,7 @@
     "span_m": 73.5
    }
   ],
-  "chains": 539,
+  "chains": 537,
   "clearance_by_class_m": {
    "A": 5.0,
    "D": 4.5,
@@ -12738,10 +12692,10 @@
   "decals": {
    "gullies": 1587,
    "oil": 340,
-   "patches": 693
+   "patches": 694
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 789194,
+  "footprint_nodes": 789184,
   "fork_abreast": [
    {
     "beside": "c:w303739901:2504262095-5749430431",
@@ -14180,10 +14134,10 @@
   "grade_over_limit": [],
   "junction_patches": {
    "delaunay": 34,
-   "polar": 219,
+   "polar": 218,
    "repaired": 17
   },
-  "junctions": 270,
+  "junctions": 269,
   "junctions_earclip": [],
   "junctions_repaired": [
    "j:n12061319694",
@@ -14256,12 +14210,12 @@
     "P-7b": 11,
     "lane": 99
    },
-   "pairs": 314,
+   "pairs": 313,
    "unmatched": 18
   },
   "verge_strips": {
    "chunks": 62,
-   "tris": 80049
+   "tris": 80017
   },
   "walled_ramps": [
    {
