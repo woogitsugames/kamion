@@ -83,8 +83,30 @@ def closures(rid: str) -> list[dict]:
         h, r = (w + 5.0) / 2.0, (cd[1], -cd[0])
         out.append({"way": e["osm_way"], "highway": a["highway"]["v"], "edge_xy": [round(v, 1) for v in pts[-1]],
                     "heading_deg": round(math.degrees(math.atan2(cd[0], cd[1])), 1),
+                    "cp": cp, "fwd": cd, "half": h,
                     "row": LineString([(cp[0] - r[0] * h, cp[1] - r[1] * h), (cp[0] + r[0] * h, cp[1] + r[1] * h)])})
     return out
+
+
+MERGE_HEADING_DEG = 20.0   # WorldEdgeBuilder.ClosureMergeHeadingDeg - UNVERIFIED value, only used to label pairs
+
+
+def crossing_resolved(x: dict, y: dict, tol: float = 0.5) -> bool:
+    """ResolveClosures step 3 (crossing rows): cut when the rows meet within their spans AND each road axis is in front
+    of the other row (closure centre of b behind a's forward direction and vice versa)."""
+    fa, fb = x["fwd"], y["fwd"]
+    ra, rb = (fa[1], -fa[0]), (fb[1], -fb[0])
+    d = (y["cp"][0] - x["cp"][0], y["cp"][1] - x["cp"][1])
+    den = ra[0] * rb[1] - ra[1] * rb[0]
+    if abs(den) < 1e-4:
+        return False
+    s = (d[0] * rb[1] - d[1] * rb[0]) / den
+    t = (d[0] * ra[1] - d[1] * ra[0]) / den
+    if abs(s) > x["half"] + tol or abs(t) > y["half"] + tol:
+        return False
+    b_before_a = d[0] * fa[0] + d[1] * fa[1] < 0
+    a_before_b = -d[0] * fb[0] - d[1] * fb[1] < 0
+    return b_before_a and a_before_b
 
 
 def suspects(rid: str, tol: float = 0.5) -> list[tuple[dict, dict, float]]:
@@ -107,6 +129,8 @@ def main(argv=None) -> int:
     for x, y, d in s:
         dh = abs((x["heading_deg"] - y["heading_deg"] + 180) % 360 - 180)
         same = " SAME WAY" if x["way"] == y["way"] else ""
+        if dh > MERGE_HEADING_DEG:
+            same += " crossing: " + ("cut by ResolveClosures" if crossing_resolved(x, y, a.tol) else "NOT CUT -> import fails")
         print(f"{x['way']} {x['highway']} {x['edge_xy']} | {y['way']} {y['highway']} {y['edge_xy']}  gap {d} m, "
               f"heading diff {dh:.0f} deg{same}")
     print(f"{a.region}: {len(s)} suspect pair(s) before ResolveClosures")

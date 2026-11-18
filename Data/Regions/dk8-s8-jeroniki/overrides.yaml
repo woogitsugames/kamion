@@ -30,3 +30,27 @@ overrides:
     verify: orthophoto cross-section per way (tools/worldgen/qa/ortho_xsec.py) / owner drive
     set: {lane_edges: [0.2, 3.7, 7.2], width: 9.95, center_offset: -1.025, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
   # ---- END generated: tools/worldgen/qa/s8_xsec_overrides.py ----
+  - id: seam-z-w439766168-770827-594598
+    target: {node: "Bw439766168:5133527562-2070873542:0e"}
+    reason: "unclassified way 439766168 at the bialystok-porosly | dk8-s8-jeroniki seam: bialystok-porosly 131.364 m, dk8-s8-jeroniki 131.612 m (GLB, tools/worldgen/qa/seam_z.py) -> mean in both tiles (ADR 0292)"
+    confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
+    verify: tools/worldgen/qa/seam_z.py bialystok-porosly:dk8-s8-jeroniki dz <= 0.1 m
+    set: {z: 131.49}
+  - id: seam-z-w255111421-770827-594818
+    target: {node: "Bw255111421:6644330415-2425775816:0s"}
+    reason: "unclassified way 255111421 at the bialystok-porosly | dk8-s8-jeroniki seam: bialystok-porosly 134.399 m, dk8-s8-jeroniki 134.611 m (GLB, tools/worldgen/qa/seam_z.py) -> mean in both tiles (ADR 0292)"
+    confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
+    verify: tools/worldgen/qa/seam_z.py bialystok-porosly:dk8-s8-jeroniki dz <= 0.1 m
+    set: {z: 134.5}
+  - id: seam-z-w223394828-770827-594833
+    target: {node: "Bw223394828:2322965305-6422971938:0e"}
+    reason: "trunk way 223394828 at the bialystok-porosly | dk8-s8-jeroniki seam: bialystok-porosly 137.229 m, dk8-s8-jeroniki 136.887 m (GLB, tools/worldgen/qa/seam_z.py) -> mean in both tiles (ADR 0292)"
+    confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
+    verify: tools/worldgen/qa/seam_z.py bialystok-porosly:dk8-s8-jeroniki dz <= 0.1 m
+    set: {z: 137.06}
+  - id: seam-z-w889307875-770827-594847
+    target: {node: "Bw889307875:5821223987-5821206792:0s"}
+    reason: "trunk way 889307875 at the bialystok-porosly | dk8-s8-jeroniki seam: bialystok-porosly 137.219 m, dk8-s8-jeroniki 136.769 m (GLB, tools/worldgen/qa/seam_z.py) -> mean in both tiles (ADR 0292)"
+    confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
+    verify: tools/worldgen/qa/seam_z.py bialystok-porosly:dk8-s8-jeroniki dz <= 0.1 m
+    set: {z: 136.99}
