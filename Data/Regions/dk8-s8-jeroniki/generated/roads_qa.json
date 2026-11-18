@@ -1352,7 +1352,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.01,
    "bridge_m": 0.0,
    "grade_limit": 0.08,
    "highway": [
@@ -1360,18 +1360,23 @@
    ],
    "id": "c:w1379858308:14280540014-2081020070",
    "lanes": [
-    2
+    2,
+    3,
+    4
    ],
-   "length_m": 528.1,
-   "max_grade": 0.0091,
+   "length_m": 1322.7,
+   "max_grade": 0.0156,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.013,
+   "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.0,
    "width_m": [
-    8.0
+    8.0,
+    11.0,
+    14.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "PTB2022 §17 ust.1 standard",
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
    ]
   },
   {
@@ -2114,57 +2119,6 @@
   {
    "axis_smoothing_dev_max_m": 0.0,
    "bridge_m": 0.0,
-   "grade_limit": 0.08,
-   "highway": [
-    "trunk"
-   ],
-   "id": "c:w1530059183:14315731156-14315731154",
-   "lanes": [
-    2
-   ],
-   "length_m": 66.7,
-   "max_grade": 0.0079,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.015,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    8.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.01,
-   "bridge_m": 0.0,
-   "grade_limit": 0.08,
-   "highway": [
-    "trunk"
-   ],
-   "id": "c:w1530059183:8291788019-14315731156",
-   "lanes": [
-    2,
-    3,
-    4
-   ],
-   "length_m": 727.9,
-   "max_grade": 0.0156,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.014,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    8.0,
-    11.0,
-    14.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard",
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.0,
-   "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
     "service"
@@ -2246,98 +2200,6 @@
    "max_grade": 0.0458,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.046,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    5.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.0,
-   "bridge_m": 0.0,
-   "grade_limit": 0.12,
-   "highway": [
-    "service"
-   ],
-   "id": "c:w1571341511:14315731154-14315731157",
-   "lanes": [
-    2
-   ],
-   "length_m": 32.7,
-   "max_grade": 0.0097,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.009,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    5.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.0,
-   "bridge_m": 0.0,
-   "grade_limit": 0.12,
-   "highway": [
-    "service"
-   ],
-   "id": "c:w1571341511:14315731157-12775606647",
-   "lanes": [
-    2
-   ],
-   "length_m": 34.2,
-   "max_grade": 0.0062,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.01,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    5.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.0,
-   "bridge_m": 0.0,
-   "grade_limit": 0.12,
-   "highway": [
-    "service"
-   ],
-   "id": "c:w1571341512:14315731155-14315731157",
-   "lanes": [
-    2
-   ],
-   "length_m": 34.4,
-   "max_grade": 0.0124,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.007,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    5.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.0,
-   "bridge_m": 0.0,
-   "grade_limit": 0.12,
-   "highway": [
-    "service"
-   ],
-   "id": "c:w1571341512:14315731157-14315731156",
-   "lanes": [
-    2
-   ],
-   "length_m": 34.9,
-   "max_grade": 0.0077,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0
@@ -2993,7 +2855,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.01,
    "bridge_m": 0.0,
    "grade_limit": 0.08,
    "highway": [
@@ -3004,10 +2866,10 @@
     2,
     3
    ],
-   "length_m": 512.7,
+   "length_m": 665.2,
    "max_grade": 0.0122,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.041,
+   "profile_rms_vs_nmt_m": 0.037,
    "sidewalk_frac": 0.0,
    "width_m": [
     8.0,
@@ -3292,52 +3154,6 @@
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.0,
-   "bridge_m": 0.0,
-   "grade_limit": 0.08,
-   "highway": [
-    "trunk"
-   ],
-   "id": "c:w303988445:12775606647-2305516685",
-   "lanes": [
-    3
-   ],
-   "length_m": 85.0,
-   "max_grade": 0.0127,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.013,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    12.0
-   ],
-   "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.0,
-   "bridge_m": 0.0,
-   "grade_limit": 0.08,
-   "highway": [
-    "trunk"
-   ],
-   "id": "c:w303988445:14315731155-12775606647",
-   "lanes": [
-    3
-   ],
-   "length_m": 67.5,
-   "max_grade": 0.0088,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.013,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    12.0
-   ],
-   "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
    ]
   },
   {
@@ -5874,10 +5690,6 @@
   }
  ],
  "junction_notes": {
-  "j:n12775606647": [
-   "corner 1-2: arms touch (gap -7.35 m) -> no nose",
-   "corner 0-1: kerb chamfer 1:4 over 14.5 m (width step 3.63 m)"
-  ],
   "j:n13236416984": [
    "corner 0-1: no fillet fits (alpha 91 deg) -> sharp",
    "corner 1-2: no fillet fits (alpha 89 deg) -> sharp",
@@ -5886,18 +5698,6 @@
   ],
   "j:n13405554554": [
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
-  ],
-  "j:n14315731154": [
-   "corner 0-1: arms touch (gap -5.45 m) -> no nose",
-   "corner 2-0: kerb chamfer 1:4 over 8.6 m (width step 2.15 m)"
-  ],
-  "j:n14315731155": [
-   "corner 0-1: arms touch (gap -7.42 m) -> no nose",
-   "corner 1-2: kerb chamfer 1:4 over 14.5 m (width step 3.63 m)"
-  ],
-  "j:n14315731156": [
-   "corner 1-2: arms touch (gap -5.54 m) -> no nose",
-   "corner 2-0: kerb chamfer 1:4 over 8.7 m (width step 2.18 m)"
   ],
   "j:n2070873434": [
    "corner 1-2: no fillet fits (alpha 152 deg) -> sharp"
@@ -5940,7 +5740,7 @@
   "axis_smoothing_deviation_m": {
    "max": 4.875,
    "p50": 0.0,
-   "p95": 0.204
+   "p95": 0.212
   },
   "bridges": [
    {
@@ -5951,7 +5751,7 @@
     "span_m": 53.4
    }
   ],
-  "chains": 254,
+  "chains": 246,
   "clearance_by_class_m": {
    "A": 5.0,
    "D": 4.5,
@@ -5977,12 +5777,12 @@
   "crossings_skipped": [],
   "crossings_snapped": 16,
   "decals": {
-   "gullies": 1227,
-   "oil": 188,
-   "patches": 441
+   "gullies": 1226,
+   "oil": 181,
+   "patches": 446
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 452977,
+  "footprint_nodes": 452909,
   "fork_abreast": [
    {
     "beside": "c:w183639794:8860869967-2081020069",
@@ -6348,28 +6148,6 @@
      ]
     },
     {
-     "area_m2": 15.9,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "sliver",
-     "xy": [
-      166.3,
-      868.8
-     ]
-    },
-    {
-     "area_m2": 14.4,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "sliver",
-     "xy": [
-      117.5,
-      880.4
-     ]
-    },
-    {
      "area_m2": 12.2,
      "built": true,
      "hatch": false,
@@ -6426,7 +6204,7 @@
     }
    ],
    "islands": [],
-   "kerb_dropped_m": 566.5,
+   "kerb_dropped_m": 484.0,
    "kerb_tris_in_fill": 0,
    "paved": {
     "merge": {
@@ -6434,8 +6212,8 @@
      "count": 4
     },
     "sliver": {
-     "area_m2": 218.6,
-     "count": 9
+     "area_m2": 188.3,
+     "count": 7
     }
    },
    "rejected": [
@@ -6546,18 +6324,14 @@
   ],
   "junction_patches": {
    "delaunay": 9,
-   "polar": 97,
-   "repaired": 11
+   "polar": 96,
+   "repaired": 7
   },
-  "junctions": 117,
+  "junctions": 112,
   "junctions_earclip": [],
   "junctions_repaired": [
    "j:n10951775662",
-   "j:n12775606647",
    "j:n14310371738",
-   "j:n14315731154",
-   "j:n14315731155",
-   "j:n14315731156",
    "j:n2070873460",
    "j:n2081020070",
    "j:n10951775660",
@@ -6572,19 +6346,18 @@
   ],
   "markings": {
    "P-1 centre line": 16,
-   "P-1 lane line": 26,
+   "P-1 lane line": 20,
    "P-10 crossing": 14,
    "P-10 crossing in junction": 6,
    "P-11 cycle crossing": 2,
    "P-11 cycle crossing in junction": 2,
    "P-12": 1,
    "P-13": 6,
-   "P-7b edge line": 38,
+   "P-7b edge line": 30,
    "P-8 arrow": 7,
-   "P-8 skipped (lanes continue)": 2,
    "P-8 skipped (off carriageway)": 3
   },
-  "markings_overlap_removed_tris": 68,
+  "markings_overlap_removed_tris": 35,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 567,
   "overrides_applied": [
@@ -6625,24 +6398,24 @@
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 3967,
-   "parts": 389,
-   "side_tris": 269
+   "kerb_tris": 3221,
+   "parts": 289,
+   "side_tris": 208
   },
   "signalised_junctions": 0,
   "through_lines": {
-   "crossing_pairs_skipped": 30,
-   "junctions": 18,
+   "crossing_pairs_skipped": 28,
+   "junctions": 14,
    "lines": {
-    "P-7b": 13,
-    "lane": 26
+    "P-7b": 5,
+    "lane": 18
    },
-   "pairs": 131,
+   "pairs": 121,
    "unmatched": 3
   },
   "verge_strips": {
    "chunks": 55,
-   "tris": 44706
+   "tris": 44714
   },
   "walled_ramps": [
    {
