@@ -9,6 +9,7 @@ TEXTURE2D(_KamionGIMap); SAMPLER(sampler_KamionGIMap);
 float4 _KamionGIRect;     // xy world XZ of the texel-(0,0) corner, zw 1 / extent (m)
 float4 _KamionGIHeight;   // x world y of A = 0, y metres per A step, z texel size (m), w strength (0 = off)
 float4 _KamionGISun;      // x, y weight of the G, B channel for the live sun, z far shadows on, w occluder bounce
+#define KAMION_GI_EDGE_FADE_M 120.0   // ADR 0298: WORKING_VALUE
 
 // ambientK: multiplies the SH ambient and the environment reflection (sky visibility; occluded directions return
 //           `bounce` of the sky radiance they hide).
@@ -26,8 +27,14 @@ void KamionWorldGI(float3 pw, half3 nGeo, out half ambientK, out half bakedSun)
     float lh = length(nh);
     float2 off = lh > 1e-3 ? nh * (1.5 * _KamionGIHeight.z / lh) * (1.0 - up) : float2(0.0, 0.0);
     float2 uv = (pw.xz + off - _KamionGIRect.xy) * _KamionGIRect.zw;
-    half4 g = SAMPLE_TEXTURE2D(_KamionGIMap, sampler_KamionGIMap, uv);
-    half inside = (uv.x > 0.0 && uv.y > 0.0 && uv.x < 1.0 && uv.y < 1.0) ? _KamionGIHeight.w : 0.0h;
+    // ADR 0298 (review 2026-11-18 N1): the map stopped with a step at the tile edge - the apron / neighbouring tile got
+    // full sky visibility at once (one of the causes of the 15-22 level seam). Outside the rect the border texel holds and
+    // fades out over KAMION_GI_EDGE_FADE_M.
+    float2 halfTexel = 0.5 * _KamionGIHeight.z * _KamionGIRect.zw;
+    float2 uvc = clamp(uv, halfTexel, 1.0 - halfTexel);
+    float outM = length(max(abs(uv - 0.5) - 0.5, 0.0) / max(_KamionGIRect.zw, 1e-9));
+    half4 g = SAMPLE_TEXTURE2D(_KamionGIMap, sampler_KamionGIMap, uvc);
+    half inside = (half)(1.0 - smoothstep(0.0, KAMION_GI_EDGE_FADE_M, outM)) * (half)_KamionGIHeight.w;
 
     float ground = _KamionGIHeight.x + g.a * 255.0 * _KamionGIHeight.y;
     half hag = (half)(pw.y - ground);                          // height above the baked ground
