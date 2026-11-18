@@ -1443,8 +1443,12 @@ def _patch_uv1(net, j, V, poly=None):
         C = A[None] + AB[None] * t[..., None]
         D = np.hypot(P[:, None, 0] - C[..., 0], P[:, None, 1] - C[..., 1])
         k = D.argmin(1)
-        dist = D[np.arange(len(P)), k]
         cross = AB[k, 0] * (P[:, 1] - A[k, 1]) - AB[k, 1] * (P[:, 0] - A[k, 0])
+        # ADR 0298 (review 2026-11-18 N2 "koncentryczne pierścienie na asfalcie wlotów"): beyond the free end of the
+        # chain window (the tile edge, a carriageway split) the nearest point is the END VERTEX, so the Euclidean
+        # distance grew radially and the wheel paths (frac of the lane coordinate) drew onion rings around it on every
+        # plate. The lateral offset is the perpendicular distance to the nearest segment's line instead.
+        dist = np.abs(cross) / np.sqrt(l2[k])
         lat = np.copysign(dist, cross)
         hw = hws[i]
         # Clamp lateral position inside [-hw, hw] and ramp smoothly to an integer lane boundary (frac=0 -> wp/drip=0)
