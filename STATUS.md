@@ -18,3 +18,5 @@
 - NASTĘPNY KROK: `dotnet test tools/physics-runner/Tests` (pełny) + ADR 0228 / PHYSICS_VALIDATION §3a
 - Krok 4: sondy muśnięcia jako scenariusze jackknife_turn_stop_brush_{20,15}_comb (40 t: 75,9/90,5 kN, 1,10/0,09 s, 0,155/0,610 mm; szczyt siły w 1. kroku przy ~0 mm). FFB P2-113-2: ogon wygładzania po kontakcie ograniczony do hold+lag (0,99 s; było do >6,9 s), wyjście FFB bez zmian; kolumna aligning_torque_raw w CSV.
 - NASTĘPNY KROK: `dotnet test tools/physics-runner/Tests`; `dotnet run -c Release --project tools/physics-runner/Runner`; pytest tests/physics; docs ADR 0228
+- Krok 5-6: dotnet 338/338 (golden 9/9), runner 159/987 ALL PASSED (artifacts/jackknife-0228/r4/full-runner.log), pytest tests/physics 35 passed. ADR 0228 sekcja Aktualizacja r4 + PHYSICS_VALIDATION 3b/6h; komentarz VehicleBody.cs:136.
+- NASTĘPNY KROK (lider): `pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64 -Filter KerbStrikeParityTests`, potem CombinationLabTests + EditMode BodyBoxGeometryTests; feel test B-075
