@@ -45,7 +45,6 @@ Shader "Kamion/Sky"
             // while the vehicle reflection capture renders (reflections keep the physical sky radiance).
             float4 _KamionSkyCap;
             float _KamionSkyDitherOff; // ADR0098 A/B; zero preserves existing sky dither.
-            float _KamionSkyQuantDither; // ADR 0299: 1 = HDR camera, dither the R11G11B10 store (QualityProfileApplier)
             // _KamionSkyCapOff is declared by the shared atmosphere include above.
             TEXTURE2D(_SkyChroma); SAMPLER(sampler_SkyChroma);   // u = γ/π, v = sqrt(cos θ); rgb of luminance 1
             TEXTURE2D(_KamionCloudTex); SAMPLER(sampler_KamionCloudTex);   // R billows, G medium, B fine, A sheets; mean 0.5 each
@@ -222,16 +221,6 @@ Shader "Kamion/Sky"
                 float n = frac(52.9829189 * frac(dot(i.positionCS.xy, float2(0.06711056, 0.00583715)))) - 0.5;
                 float3 srgb = LinearToSRGB(saturate(c)) + n * (1.0 - _KamionSkyDitherOff) / 255.0;
                 c = lerp(c, SRGBToLinear(saturate(srgb)), step(c, 1.0));
-                // ADR 0299: HDR cameras store the sky in R11G11B10 (6-bit mantissa R / G, 5-bit B). Tone mapping and grading
-                // expand the dark night dome's float steps past one 8-bit level (coloured contour rings, measured on every PC
-                // tier); ±0.5 of the channel's own quantisation step decorrelates them before the store. Below one 8-bit level
-                // in the day sky, so invisible there; the final URP dither then handles the 8-bit output.
-                if (_KamionSkyQuantDither > 0.5)
-                {
-                    float3 qstep = exp2(floor(log2(max(c, 1e-7))) - float3(6.0, 6.0, 5.0));
-                    float n2 = frac(52.9829189 * frac(dot(i.positionCS.xy + 17.0, float2(0.06711056, 0.00583715)))) - 0.5;
-                    c = max(0.0, c + float3(n, n2, -n) * qstep);
-                }
                 return half4(c, 1.0);
             }
             ENDHLSL

@@ -36,7 +36,6 @@ namespace Game.Rendering
         public static bool? Post;
         public static bool? Dither;       // ADR0098: isolate output noise from material microstructure.
         public static bool? SkyDither;
-        public static bool? SkyQuantDither;   // ADR 0299 rq_skyqdither: R11G11B10 quantiser dither of the sky
         public static float? GlassShadowBias; // metres, architectural glazing only (ADR0098 diagnosis).
         public static bool? Hdr;
         public static bool? LeafA2C;
@@ -119,7 +118,7 @@ namespace Game.Rendering
         {
             Msaa = I(arg("rq_msaa")); RenderScale = F(arg("rq_scale")); ShadowDistance = F(arg("rq_shadow"));
             Post = B(arg("rq_post")); Hdr = B(arg("rq_hdr")); LeafA2C = B(arg("rq_a2c")); Trees = B(arg("rq_trees"));
-            Dither = B(arg("rq_dither")); SkyDither = B(arg("rq_skydither")); SkyQuantDither = B(arg("rq_skyqdither"));   // ADR 0299
+            Dither = B(arg("rq_dither")); SkyDither = B(arg("rq_skydither"));
             GlassShadowBias = F(arg("rq_glassshadow"));
             TreeShadowMask = I(arg("rq_treeshadow")); TreeCardScale = F(arg("rq_card")); TreeCull = F(arg("rq_cull"));
             TreeThin = F(arg("rq_thin")); SimpleFoliage = B(arg("rq_vegshader")); ForestHlod = F(arg("rq_hlod"));

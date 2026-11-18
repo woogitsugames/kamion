@@ -29,13 +29,17 @@ namespace Game.Tests.EditMode
         }
 
         [Test]
-        public void SkyQuantDither_FollowsHdrAndShaderHasIt()
+        public void UrpAssets_NoFastSrgbConversion_DitherDoesNotCrushDarks()
         {
-            Assert.That(QualityProfileApplier.SkyQuantDither(Tier("Low", false, UpscalingFilterSelection.Auto, hdr: false)), Is.False);
-            Assert.That(QualityProfileApplier.SkyQuantDither(Tier("High", true, UpscalingFilterSelection.Auto, hdr: true)), Is.True);
-            string sh = File.ReadAllText(Path.Combine(EditorTools.ProjectRoot, "Assets/_Project/Rendering/Shaders/Sky.shader"));
-            StringAssert.Contains("_KamionSkyQuantDither", sh);
-            StringAssert.Contains("float3(6.0, 6.0, 5.0)", sh, "R11G11B10 mantissa bits");
+            // URP ApplyDithering round-trips GetLinearToSRGB / GetSRGBToLinear; the fast pair maps linear 0.0037 to 0.0021.
+            int n = 0;
+            foreach (string guid in UnityEditor.AssetDatabase.FindAssets("t:UniversalRenderPipelineAsset", new[] { "Assets/_Project/Rendering" }))
+            {
+                var a = UnityEditor.AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(UnityEditor.AssetDatabase.GUIDToAssetPath(guid));
+                Assert.That(a.useFastSRGBLinearConversion, Is.False, a.name);
+                n++;
+            }
+            Assert.That(n, Is.GreaterThanOrEqualTo(9), "5 phone + 4 PC tier assets");
         }
 
         [Test]

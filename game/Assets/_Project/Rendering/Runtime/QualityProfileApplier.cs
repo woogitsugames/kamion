@@ -37,11 +37,6 @@ namespace Game.Rendering
         public static bool FinalDither(QualityProfile.Tier t) =>
             t.postProcessing && !(t.name == "High" && t.upscalingFilter == UpscalingFilterSelection.FSR);
 
-        /// <summary>ADR 0299: the sky adds a dither of one quantisation step of the R11G11B10 HDR colour buffer (6-bit mantissa
-        /// R / G, 5-bit B) whenever the camera renders HDR; grading / tone mapping then expands the dark-sky steps past one 8-bit
-        /// level (coloured rings, also on the dithered Ultra / Low PC tiers).</summary>
-        public static bool SkyQuantDither(QualityProfile.Tier t) => t.hdr;
-
         public static float ArchitecturalGlassBias(QualityProfile.Tier t, float? requested = null)
         {
             float policy = t.name == "Medium" || t.name == "High" ? MaxArchitecturalGlassReceiverBias : 0f;
@@ -62,7 +57,6 @@ namespace Game.Rendering
         static readonly int k_ClearCoatOff = Shader.PropertyToID("_KamionClearCoatOff");
         static readonly int k_GrimeDetailOff = Shader.PropertyToID("_KamionGrimeDetailOff");
         static readonly int k_SkyDitherOff = Shader.PropertyToID("_KamionSkyDitherOff");
-        static readonly int k_SkyQuantDither = Shader.PropertyToID("_KamionSkyQuantDither");   // ADR 0299
         static readonly int k_GlassShadowBias = Shader.PropertyToID("_KamionGlassShadowBias");
 
         public Camera targetCamera;
@@ -183,7 +177,6 @@ namespace Game.Rendering
             // Pre-LUT sky noise is amplified by grading/RCAS; post tiers keep the final URP dither instead.
             bool skyDither = RenderOverrides.SkyDither ?? !t.postProcessing;
             Shader.SetGlobalFloat(k_SkyDitherOff, skyDither ? 0f : 1f);
-            Shader.SetGlobalFloat(k_SkyQuantDither, (RenderOverrides.SkyQuantDither ?? SkyQuantDither(t)) ? 1f : 0f);
             Shader.SetGlobalFloat(k_GlassShadowBias, ArchitecturalGlassBias(t, RenderOverrides.GlassShadowBias));
 #if UNITY_EDITOR
             Debug.Log($"[QUALITY_STATE] tier={t.name} cameraDither={(cam != null ? cam.GetUniversalAdditionalCameraData().dithering.ToString() : "none")} skyDitherOff={Shader.GetGlobalFloat(k_SkyDitherOff)} glassShadowBias={Shader.GetGlobalFloat(k_GlassShadowBias)}");
