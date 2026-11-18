@@ -67,8 +67,16 @@ namespace Game.Editor.Setup
                     else sums[best] = (g, sums[best].c + c * a, sums[best].n + (Vector3.Dot(sums[best].n, cr) < 0f ? -cr : cr), sums[best].a + a);
                 }
             }
+            // Lens winding is not consistent in the exports (after2: 9 of 10 trailer clusters summed to +Z, into the lamp), so
+            // the emitting side is taken outward from the mesh centre (rear lamps of a vehicle part face away from it).
+            Vector3 mid = mesh.bounds.center;
             foreach (var s in sums)
-                result.Add(new Cluster { group = s.g, centre = s.c / s.a, normal = s.n.sqrMagnitude > 1e-12f ? s.n.normalized : Vector3.back, area = s.a });
+            {
+                Vector3 c = s.c / s.a;
+                Vector3 n = s.n.sqrMagnitude > 1e-12f ? s.n.normalized : Vector3.back;
+                if (Vector3.Dot(n, c - mid) < 0f) n = -n;
+                result.Add(new Cluster { group = s.g, centre = c, normal = n, area = s.a });
+            }
             return result;
         }
 

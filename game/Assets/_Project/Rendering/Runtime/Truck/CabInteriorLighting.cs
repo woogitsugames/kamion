@@ -86,7 +86,10 @@ namespace Game.Rendering
         [Header("ADR 0297: instrument spill, night lift, cab soft shadows")]
         [Tooltip("Light of the cluster / navigation screen on the trim around them (review s24 K1)")]
         public bool instrumentSpill = true;
-        [Tooltip("Scale of the spill (1 = the screens' displayed radiance x area, no extra gain). WORKING_VALUE")] public float spillScale = 1f;
+        [Tooltip("Scale of the spill. 1 = the screens' displayed radiance x area only: after2 measured at most +7/255 on the " +
+            "trim (black plastics, albedo ~0.05, 30 cm from a 300 cm^2 screen), invisible. 4 stands in for the sources the two " +
+            "display quads do not model (backlit gauge rings and switch legends, the cluster hood's inter-reflection, the " +
+            "windscreen's reflection of the screens). WORKING_VALUE, judged on renders")] public float spillScale = 4f;
         [Tooltip("Linear tint of the screens' light (cool LCD white)")] public Color spillColor = new Color(0.86f, 0.93f, 1f);
         [Tooltip("Up to two screens: [0] cluster, [1] navigation / infotainment")] public SpillSource[] spillSources = new SpillSource[0];
         [Tooltip("Share of the cab-view shadow lift (phone local tone mapping) kept at night: k = 8 lifted the whole dark cab " +

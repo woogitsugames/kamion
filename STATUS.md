@@ -14,3 +14,10 @@
 - TailNits 3800 (5,26:1), halo `Kamion/Truck Lamp Halo` (1 quad/emiter, 5 ciągnik + 10 naczepa), plate shoulder 0,55, cab soft shadows (PC), spill zegarów/nawigacji, lift nocą ×0,2, panelGlow 0,015.
 - after1: pozycyjne 54,7 → 89,7 R; tablica 205 → 143; kabina noc: deska 12,4 → 5,7, słupek A 17,7 → 6,9 (niebo 12); cienie gładkie (crop). Halo miało ciemny pierścień (wycięcie rdzenia) → after2 bez wycięcia, K 0,25; spill słaby (powierzchnie współpłaszczyznowe z ekranami fizycznie ciemne).
 - NASTĘPNY KROK: `pwsh -NoProfile -File artifacts/night-truck-s24/go.ps1 -Name after2 -Unity -Cmd 'pwsh artifacts/night-truck-s24/assets.ps1; ...lamps.ps1 -Tag after2; cab.ps1 -Tag after2; ab.ps1 -Tag after2'`
+
+## 23:3x after2 → after3
+- after2: pozycyjne 110,7 R (cel 110–150 ✓), stop 236, tablica 143 (< stop ✓), kabina noc deska 6,1 / słupek 7,1 / niebo 12.
+- Błąd: halo tylko po lewej — normalne klastrów soczewek z eksportu skierowane do wnętrza lampy (9/10 +Z) → orientacja na zewnątrz od środka siatki (test).
+- Spill fizyczny ≤ +7/255 (A/B rq_cabspill) → spillScale 4 (WORKING_VALUE, brakujące źródła: pierścienie zegarów, legendy, odbicia).
+- Timing edytora GTX 1070: soft cab cab-driver 1,90 → 1,93 ms, Ultra 7,06 → 7,19; cab-dash 2,54 → 4,48 (podejrzany warm-up, powtórka w after3).
+- NASTĘPNY KROK: czekać na after3 (`artifacts/night-truck-s24/after3.status`), zmierzyć, EditMode Win64, ADR 0297.
