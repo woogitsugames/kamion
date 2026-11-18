@@ -16,3 +16,5 @@
 - Krok 2: golden brake_80_0_dry_abs_comb@laden40: po scaleniu przebieg mieści się w tolerancji pliku z main (outliers ≤ 2 %) — przywrócony plik main zamiast nowego nagrania; różnica #113-golden vs scalone = chwila zatrzymania t≈4,1 s (geometria 7,70→7,63 m), kontakty 0.
 - Krok 3: KerbStrikeParityTests stałe z runnera (14 cm: 3.68/0.08/0.20/1.44°, 3.30/0.08/0.08/1.42°; 27 cm: 6.03/0.33/3.54°), tolerancje bez zmian; przyczyna = histereza odbojnika (h=0 → wartości main). Strażnik xUnit KerbParityReferenceTests.
 - NASTĘPNY KROK: `dotnet test tools/physics-runner/Tests` (pełny) + ADR 0228 / PHYSICS_VALIDATION §3a
+- Krok 4: sondy muśnięcia jako scenariusze jackknife_turn_stop_brush_{20,15}_comb (40 t: 75,9/90,5 kN, 1,10/0,09 s, 0,155/0,610 mm; szczyt siły w 1. kroku przy ~0 mm). FFB P2-113-2: ogon wygładzania po kontakcie ograniczony do hold+lag (0,99 s; było do >6,9 s), wyjście FFB bez zmian; kolumna aligning_torque_raw w CSV.
+- NASTĘPNY KROK: `dotnet test tools/physics-runner/Tests`; `dotnet run -c Release --project tools/physics-runner/Runner`; pytest tests/physics; docs ADR 0228

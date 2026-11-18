@@ -88,7 +88,7 @@ namespace PhysicsRunner.Sim
             _sb.Append("rpm,gear,amt_state,clutch_cmd,engine_torque,clutch_torque,boost,asr_factor,clutch_temp_c,");
             _sb.Append("engine_brake_cmd,engine_brake_torque,retarder_cmd,retarder_torque,retarder_power_kw,");
             _sb.Append("air_supply_bar,air_front_bar,air_rear_bar,air_park_bar,air_red_bar,air_yellow_bar,air_trailer_res_bar,low_air_warning,compressor_on,trailer_emergency,");
-            _sb.Append("steer_angle_deg,handwheel_deg,aligning_torque,cab_pitch_deg,cab_roll_deg,cab_heave_mm,");
+            _sb.Append("steer_angle_deg,handwheel_deg,aligning_torque,aligning_torque_raw,cab_pitch_deg,cab_roll_deg,cab_heave_mm,");
             _sb.Append("articulation_deg,kingpin_fz,kingpin_fx,kingpin_fy,fifth_wheel_err_mm,coupled,trailer_yaw_rate_dps,trailer_a_lat,trailer_roll_deg,trailer_x,trailer_z,landing_gear_load,");
             foreach (var wh in s.AllWheels)
             {
@@ -119,7 +119,7 @@ namespace PhysicsRunner.Sim
             var a = m.Air;
             F(a.Supply); F(a.Front); F(a.Rear); F(a.ParkTrailer); F(a.TrailerSupplyLine); F(a.TrailerControlLine); F(tr != null ? tr.Brakes.Reservoir : 0);
             F(a.LowPressureWarning ? 1 : 0); F(a.CompressorLoaded ? 1 : 0); F(tr != null && tr.Brakes.Emergency ? 1 : 0);
-            F(m.Steering.Angle * MathUtil.Rad2Deg); F(m.Steering.HandwheelDeg); F(m.AligningTorqueTotal); F(m.Cab.Pitch * MathUtil.Rad2Deg); F(m.Cab.Roll * MathUtil.Rad2Deg); F(m.Cab.Heave * 1000);
+            F(m.Steering.Angle * MathUtil.Rad2Deg); F(m.Steering.HandwheelDeg); F(m.AligningTorqueTotal); F(m.AligningTorqueRaw); F(m.Cab.Pitch * MathUtil.Rad2Deg); F(m.Cab.Roll * MathUtil.Rad2Deg); F(m.Cab.Heave * 1000);
             if (tr != null)
             {
                 var tb = s.TrailerBody;

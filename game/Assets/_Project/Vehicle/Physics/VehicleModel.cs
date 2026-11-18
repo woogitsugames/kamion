@@ -95,7 +95,7 @@ namespace Game.Vehicle.Physics
         public double AligningTorqueTotal { get; private set; }
         /// <summary>Unfiltered sum of the steered wheels' aligning torque of this step [N m] (telemetry, tests).</summary>
         public double AligningTorqueRaw { get; private set; }
-        double _contactFeedbackTimer;
+        double _contactFeedbackTimer, _contactFeedbackRelease;
         bool _feedbackSmoothing;
 
         /// <summary>
@@ -106,6 +106,7 @@ namespace Game.Vehicle.Physics
         {
             if (Steering.Def.contactFeedbackLagS <= 0) return;
             _contactFeedbackTimer = Steering.Def.contactFeedbackHoldS;
+            _contactFeedbackRelease = 0;
             _feedbackSmoothing = true;
         }
         public double ClutchSlipPower { get; private set; }
@@ -329,12 +330,16 @@ namespace Game.Vehicle.Physics
             AligningTorqueRaw = mz;
             if (_feedbackSmoothing)
             {
-                // Contact (or its hold) active: lag the feedback; afterwards keep lagging until it has caught up, then hand back
-                // the raw value (the last hand-over step is < 1 N m at the road wheels, ~0.01 N m at the rim).
+                // Contact (or its hold) active: lag the feedback (first order, contactFeedbackLagS). After the hold the lag
+                // shrinks linearly to 0 within one lag time, so the estimate meets the raw value at most hold + lag after the
+                // last contact and without a step. (Before: hand-back at |raw - smoothed| < 1 N m, which never came while the
+                // raw torque kept ramping: 4.1 s / > 6.9 s tails measured, review P2-113-2.)
                 double lag = Steering.Def.contactFeedbackLagS;
-                AligningTorqueTotal += (mz - AligningTorqueTotal) * (dt / (lag + dt));
+                double lagEff = lag * Math.Max(0.0, 1.0 - _contactFeedbackRelease / lag);
+                AligningTorqueTotal += (mz - AligningTorqueTotal) * (dt / (lagEff + dt));
                 if (_contactFeedbackTimer > 0) _contactFeedbackTimer -= dt;
-                else if (Math.Abs(mz - AligningTorqueTotal) < 1.0) { _feedbackSmoothing = false; AligningTorqueTotal = mz; }
+                else _contactFeedbackRelease += dt;
+                if (_contactFeedbackRelease >= lag) { _feedbackSmoothing = false; AligningTorqueTotal = mz; }
             }
             else AligningTorqueTotal = mz;
 
