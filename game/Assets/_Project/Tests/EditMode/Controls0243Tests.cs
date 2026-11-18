@@ -32,7 +32,7 @@ namespace Game.Tests.EditMode
         public void Defaults_Wheel270_MirrorWindowsOn_Schema5()
         {
             var d = ControlSettings.Defaults();
-            Assert.AreEqual(5, ControlSettings.CurrentSchema);
+            Assert.GreaterOrEqual(ControlSettings.CurrentSchema, 5);   // 6 since D90 / ADR 0294
             Assert.AreEqual(ControlSettings.TouchHalfRangeComfortDeg, d.wheelRangeDeg);
             Assert.AreEqual(270f, ControlSettings.TouchHalfRangeComfortDeg);
             Assert.AreEqual(900f, ControlSettings.TouchHalfRangeSimDeg);
@@ -55,7 +55,7 @@ namespace Game.Tests.EditMode
             var l = ControlSettings.Load(TestKey, null);
             Assert.AreEqual(900f, l.wheelRangeDeg);
             Assert.IsFalse(l.mirrorInsets, "explicit v5 choice kept");
-            Assert.AreEqual(5, l.schema);
+            Assert.AreEqual(ControlSettings.CurrentSchema, l.schema);   // 6 since D90 / ADR 0294
             StringAssert.Contains("mirrors=look", l.LogLine("t"));
             l.SetTouchWheelPreset(false);
             Assert.AreEqual(270f, l.wheelRangeDeg);
@@ -68,7 +68,7 @@ namespace Game.Tests.EditMode
             foreach (float range in new[] { 270f, 450f, 900f })
             {
                 var v4 = ControlSettings.FromJson("{\"schema\":4,\"wheelRangeDeg\":" + range.ToString(System.Globalization.CultureInfo.InvariantCulture) + ",\"wheelDragGrab\":false}");
-                Assert.AreEqual(5, v4.schema);
+                Assert.AreEqual(ControlSettings.CurrentSchema, v4.schema);
                 Assert.AreEqual(range, v4.wheelRangeDeg, "the player's own range is kept");
                 Assert.IsTrue(v4.mirrorInsets, "D70: windows on for an old save");
                 Assert.IsFalse(v4.wheelDragGrab, "other v4 choices kept");

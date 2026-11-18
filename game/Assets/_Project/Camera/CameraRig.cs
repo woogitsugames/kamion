@@ -23,7 +23,7 @@ namespace Game.Cameras
         public CameraMode mode = CameraMode.Cab;
 
         [Header("Cab")]
-        public float cabFov = 55f;
+        public float cabFov = 70f;   // D90 / ADR 0294 (ControlSettings.DefaultCabFovDeg sets it at runtime)
         /// <summary>Informational: the rest gaze is DriverHead.RestPitchDownDeg (same as the A7 control cameras).</summary>
         public float CabPitchDown => DriverHead.RestPitchDownDeg;
         public float headGain = 0.006f;      // m per m/s^2

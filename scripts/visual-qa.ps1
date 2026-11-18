@@ -53,7 +53,11 @@ param(
     # ADR 0269 (pc-visual-s23): render the PC tier (URP_PC_<Tier>, PcGraphicsTiers values) instead of the mobile tier.
     [switch]$Pc,
     # Diagnostic A/B: QualitySettings.anisotropicFiltering for this render (0 Disable, 1 Enable, 2 ForceEnable).
-    [ValidateSet('', '0', '1', '2')] [string]$Aniso = ''
+    [ValidateSet('', '0', '1', '2')] [string]$Aniso = '',
+    # D84 cab-view-s24: move the truck + trailer to region-local E,N with a compass heading (e.g. a roundabout ring)
+    [string]$TruckPose = '',
+    # D84 cab-view-s24: TSV of mirror heads / windscreen top edge vs the cab-view frames (Editor/VisualQA/CabViewQa.cs)
+    [string]$CabViewAudit = ''
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -83,6 +87,8 @@ if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 if ($EnvDump) { $qaArgs += @('-qaEnvDump', '1') }
 if ($Pc) { $qaArgs += @('-qaPcTiers', '1') }
 if ($Aniso) { $qaArgs += @('-qaAniso', $Aniso) }
+if ($TruckPose) { $qaArgs += @('-qaTruckPose', $TruckPose) }
+if ($CabViewAudit) { $qaArgs += @('-qaCabViewAudit', [IO.Path]::GetFullPath($CabViewAudit, (Get-Location).Path)) }
 $runStart = Get-Date
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs -BuildTarget $BuildTarget
 
