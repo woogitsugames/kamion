@@ -1,7 +1,7 @@
 # STATUS tier-budget-cli — s24
 - Wdrożona drabinka PC 850/850/2000/2000 MB (WORKING_VALUE); źródła: D89, ADR 0273/0290, uzasadnienie ADR 0309. Medium +50 MB; konfiguracje URP nie zawierają limitu streamingu.
-- Zaktualizowane testy EditMode oraz kontrakt JSON/C# w pytest; weryfikacja pytest w następnym kroku. Unity/buildy zabronione; ProjectSettings bez zmian.
-- NASTĘPNY KROK: `uv run --no-project --with pytest python -m pytest tools/pcperf -q`; potem raport i commit, bez push.
+- Testy: `uv run --no-project --with pytest python -m pytest tools/pcperf -q` — 55/55 PASS; `git diff --check` czysty. Zaktualizowane EditMode (monotoniczność i wczytanie 825 MB bez wyjątku) nieuruchomione: Unity/buildy zabronione; ProjectSettings bez zmian. Raport: docs/reports/tier-budget-cli-s24.md.
+- NASTĘPNY KROK (lider po review, osobna sesja z Unity): `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64`; potem pomiar przejazdu Medium. Bez push; commit implementacji `15b2981e7`.
 
 # STATUS gps-roundabout-cli — s24
 - Przyczyna: tracker kończył rondo na wjeździe, mimo poprawnego manewru „2. zjazd” w grafie DK65-06. Dodano punkt końca manewru i zachowanie go przy CopyFrom/Compose.
