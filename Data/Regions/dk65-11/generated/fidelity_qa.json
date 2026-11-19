@@ -1,0 +1,457 @@
+{
+ "adr": "0075",
+ "connectivity": {
+  "missing_in_graph": [],
+  "osm_drivable_ways_in_tile": 4
+ },
+ "inputs_sha256": {
+  "overrides.yaml": "a9b3e2e29ee96e89c1462acb29aa3a534f00ab857dbd3446f268f97e3bc2ce46",
+  "roads.graph.json": "b0f3b96d9532231b2bfd05a555e3918a81a8fd77afb7f62342366e3a88478b58",
+  "route_start.json": "dcfd693dc0992e7e824411359168fb9c7b129a031700485a7f237468fe3e3aee",
+  "tools/worldgen/roads/__init__.py": "0c26fa3038394a956286b47576ce1d6a0725f8dc0a2e7682901a055d264a6e40",
+  "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
+  "tools/worldgen/roads/authored_paint.py": "cfa394a6e9c34275a8e07176ac76336a035d50acd959c11a530b55ab1508451e",
+  "tools/worldgen/roads/barrier_audit.py": "786d6dfd30de7dd51f60c793136839d43fcd9d214e103f392d613b68f1b18103",
+  "tools/worldgen/roads/build_world.py": "fc18566ef9806e03a9c5bd9f3ef18e291b65cdda1923cc8fd70ae5b652c91f72",
+  "tools/worldgen/roads/carriageway_split.py": "c79e82ddcf05d4363e231b4546f25dc37ada97e8d9cfe2f3974a91f2fe1b603d",
+  "tools/worldgen/roads/closures.py": "608718189eb6680ca61538d47acb021d1be85e4dbbd001f315a0f2caffb45fa9",
+  "tools/worldgen/roads/compact_roundabout.py": "ff0089a0fed14118214e58eb12e719595cd375f4709c61be7640be316df44625",
+  "tools/worldgen/roads/consistency.py": "1a500ba1bad92f6c745c65ba2a84764e3558f5263725bb6767c6388a0cd574dc",
+  "tools/worldgen/roads/context.py": "90f3a943cc21d0be5c46f4346c01c02dfa52ef7abb3d850c0fbe20f31fe37aa2",
+  "tools/worldgen/roads/decals.py": "b371e415bf5dd322bd9358b34b046678bc689a68baf4d25b55ac1335a35d3f3e",
+  "tools/worldgen/roads/geom.py": "8f9f732d90273b92cf23f00f65c6a2c7eed6d1f9a0b3cc211679a908f2788e21",
+  "tools/worldgen/roads/gores.py": "3502f14e19eb9711092ba27b287f75c9d7b4013deb79614a273df03850c5c63b",
+  "tools/worldgen/roads/junctions.py": "ccb0a1a97e98062b2cc7d254b1054dd73c9afc2131ea82db5e528b3d739b0fde",
+  "tools/worldgen/roads/markings.py": "573a9a027e40923ef9d6a5112dc29d052ec800a8029681803b5338e95bad6c5e",
+  "tools/worldgen/roads/meshing.py": "39a845715549a1c8479bc9694942773373bed640ea4f58982a5710757be8f506",
+  "tools/worldgen/roads/network.py": "a7b6efd364d4befc321dc612d3e356f8396fd5c6f3c7ed8e0e259065ca41e952",
+  "tools/worldgen/roads/p21_hatch.py": "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
+  "tools/worldgen/roads/pipeline.py": "2ee2df8e8e06456c2d51df7fc89506978cce51a5b742dd14860230f79f8d064e",
+  "tools/worldgen/roads/profile.py": "9d6e30a5492c79815637b1462aa74b88853ee9ec864eb3aa9a32109cd8124a58",
+  "tools/worldgen/roads/qa_ortho.py": "6e32d52950954922afceae3ee2f0aa379b8d42467c2d294b7e951750d39f3e6b",
+  "tools/worldgen/roads/route.py": "e8bb7cd40bd2bf4dfef526aff16bafda35e2b8e68d64f2a8fb576818a453c5b4",
+  "tools/worldgen/roads/route_km.py": "4e961cd1608d6265c3fd27edd2690830628bffec0ec8f65bec44659b06143086",
+  "tools/worldgen/roads/seam_p2a.py": "56835afa4136a1648aa3a9bb69d8bb0381d5951c4a7922c146de313ab5162c4f",
+  "tools/worldgen/roads/seam_taper.py": "534bfa9173f914844780309aa9ae5040734e080a3d838b985df2c1c2f0792244",
+  "tools/worldgen/roads/standards.py": "b9f9f91e376482a2456875224a038b884f3e1080ec9f0603226d7981d9ef0228",
+  "tools/worldgen/roads/swept_path.py": "0112cbd81b02fd3c5930d385e6ba918b607011d4f6dd5f7a80809c0d62ae2d05",
+  "tools/worldgen/roads/through_lines.py": "be22b6b67118b50577e67ae1520287dcd5831b39400e7f2b805fde1b6e2795c5",
+  "tools/worldgen/roads/tunnels.py": "457ebe6b41c49ce56af52d2a3ac5db2b170e9be2644745ad3c9de441447bd88f",
+  "tools/worldgen/roads/xsec.py": "df88d8f332b8ec24ab2645c7039f3a55832c2e844056637a08b45b648dee7805"
+ },
+ "lane_into_island": [],
+ "lane_issues_tile": {},
+ "ortho_hr_cells": 0,
+ "region": "dk65-11",
+ "roundabouts": [],
+ "route_edges": [
+  {
+   "axis": {
+    "max": 0.001,
+    "n": 379,
+    "p50": 0.0,
+    "p95": 0.0
+   },
+   "edge": "w27718745:897574813-1134817563",
+   "edges": {
+    "all_sides": {
+     "max": 5.025,
+     "n": 371,
+     "p50": 0.525,
+     "p95": 2.5
+    },
+    "detected_sides": 371,
+    "n": 0,
+    "signed_p50": null,
+    "stations": 186,
+    "valid_sides": 0
+   },
+   "lanes": {
+    "edge": "w27718745:897574813-1134817563",
+    "gen": {
+     "bwd": 1,
+     "fwd": 1,
+     "lane_w": 3.1,
+     "lanes": 2,
+     "oneway": false,
+     "turn_bwd": null,
+     "turn_fwd": null,
+     "width": 6.6,
+     "width_src": "authored_override:dk65-xsec-k1"
+    },
+    "highway": "primary",
+    "issues": [],
+    "length_m": 377.8,
+    "match": true,
+    "name": null,
+    "ortho": null,
+    "ortho_vs_osm": null,
+    "osm": {
+     "extra": {},
+     "lanes": "2"
+    },
+    "truth": 2,
+    "truth_src": "osm",
+    "way": 27718745
+   }
+  }
+ ],
+ "route_node_arms": [
+  {
+   "gen_arms_at_node": null,
+   "junction": null,
+   "node": "Bw27718745:897574813-1134817563:0s",
+   "osm_degree": null,
+   "osm_way": 27718745,
+   "skipped": "tile_boundary"
+  },
+  {
+   "gen_arms_at_node": null,
+   "junction": null,
+   "node": "Bw27718745:897574813-1134817563:0e",
+   "osm_degree": null,
+   "osm_way": 27718745,
+   "skipped": "tile_boundary"
+  }
+ ],
+ "schema": "kamion/fidelity/1",
+ "sites": [
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    712,
+    -412
+   ],
+   "gen_islands": [],
+   "half_m": 55,
+   "id": "01_gate",
+   "iou": {
+    "gen_m2": 573.6,
+    "iou": 0.904,
+    "ortho_m2": 616.3
+   },
+   "lane_into_island": [],
+   "name": "Brama Kwadrat Park (start)",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/01_gate.jpg",
+   "stop_lines": []
+  },
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    612,
+    -612
+   ],
+   "gen_islands": [],
+   "half_m": 55,
+   "id": "02_s230_approach",
+   "iou": {
+    "gen_m2": 0.0,
+    "iou": 0.0,
+    "ortho_m2": 0.0
+   },
+   "lane_into_island": [],
+   "name": "Dojazd do Ronda Bieżeństwa (s 230-300)",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/02_s230_approach.jpg",
+   "stop_lines": []
+  },
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    555,
+    -705
+   ],
+   "gen_islands": [],
+   "half_m": 120,
+   "id": "03_rondo_biezenstwa",
+   "iou": {
+    "gen_m2": 0.0,
+    "iou": 0.0,
+    "ortho_m2": 0.0
+   },
+   "lane_into_island": [],
+   "name": "Rondo Pamięci Bieżeństwa (dwupoziomowe)",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/03_rondo_biezenstwa.jpg",
+   "stop_lines": []
+  },
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    322,
+    -578
+   ],
+   "gen_islands": [],
+   "half_m": 60,
+   "id": "04_s610_ramps",
+   "iou": {
+    "gen_m2": 0.0,
+    "iou": 0.0,
+    "ortho_m2": 0.0
+   },
+   "lane_into_island": [],
+   "name": "Andersa: łącznice przy s 610",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/04_s610_ramps.jpg",
+   "stop_lines": []
+  },
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    62,
+    -442
+   ],
+   "gen_islands": [],
+   "half_m": 70,
+   "id": "05_s900",
+   "iou": {
+    "gen_m2": 0.0,
+    "iou": 0.0,
+    "ortho_m2": 0.0
+   },
+   "lane_into_island": [],
+   "name": "Andersa s 900 (n1881569071)",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/05_s900.jpg",
+   "stop_lines": []
+  },
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    -88,
+    -348
+   ],
+   "gen_islands": [],
+   "half_m": 60,
+   "id": "06_s1060_merge",
+   "iou": {
+    "gen_m2": 0.0,
+    "iou": 0.0,
+    "ortho_m2": 0.0
+   },
+   "lane_into_island": [],
+   "name": "Andersa s 1060-1130 (włączenie)",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/06_s1060_merge.jpg",
+   "stop_lines": []
+  },
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    -221,
+    -234
+   ],
+   "gen_islands": [],
+   "half_m": 55,
+   "id": "07_s1270",
+   "iou": {
+    "gen_m2": 0.0,
+    "iou": 0.0,
+    "ortho_m2": 0.0
+   },
+   "lane_into_island": [],
+   "name": "Andersa s 1270 (n10015785253)",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/07_s1270.jpg",
+   "stop_lines": []
+  },
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    -322,
+    -172
+   ],
+   "gen_islands": [],
+   "half_m": 70,
+   "id": "08_signals",
+   "iou": {
+    "gen_m2": 0.0,
+    "iou": 0.0,
+    "ortho_m2": 0.0
+   },
+   "lane_into_island": [],
+   "name": "Skrzyżowanie z sygnalizacją s 1355-1415",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/08_signals.jpg",
+   "stop_lines": []
+  },
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    -463,
+    -11
+   ],
+   "gen_islands": [],
+   "half_m": 55,
+   "id": "09_s1600",
+   "iou": {
+    "gen_m2": 0.0,
+    "iou": 0.0,
+    "ortho_m2": 0.0
+   },
+   "lane_into_island": [],
+   "name": "Andersa s 1600 (przed Rondem Putry)",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/09_s1600.jpg",
+   "stop_lines": []
+  },
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    -548,
+    62
+   ],
+   "gen_islands": [],
+   "half_m": 125,
+   "id": "10_rondo_putry",
+   "iou": {
+    "gen_m2": 0.0,
+    "iou": 0.0,
+    "ortho_m2": 0.0
+   },
+   "lane_into_island": [],
+   "name": "Rondo Putry (dwupoziomowe)",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/10_rondo_putry.jpg",
+   "stop_lines": []
+  },
+  {
+   "area_diffs_top": [],
+   "arrows": [],
+   "center_en": [
+    -556,
+    215
+   ],
+   "gen_islands": [],
+   "half_m": 100,
+   "id": "11_dk8",
+   "iou": {
+    "gen_m2": 0.0,
+    "iou": 0.0,
+    "ortho_m2": 0.0
+   },
+   "lane_into_island": [],
+   "name": "DK8/DK19 za Rondem Putry (s 1780-1950)",
+   "ortho_islands_missing_in_gen": [],
+   "ortho_src": "sheet_0.25_2024-05-27",
+   "overlay": "artifacts/fidelity-r9/overlays/11_dk8.jpg",
+   "stop_lines": []
+  }
+ ],
+ "summary": {
+  "osm_sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d",
+  "osm_snapshot": "261108",
+  "route": {
+   "arrows_checked": 0,
+   "arrows_not_on_ortho": 0,
+   "axis_vs_osm_m": {
+    "max": 0.001,
+    "n": 378,
+    "p50": 0.0,
+    "p95": 0.0
+   },
+   "edge_vs_ortho_m": {
+    "all_sides": {
+     "max": 5.025,
+     "n": 371,
+     "p50": 0.525,
+     "p95": 2.5
+    },
+    "detected_sides": 371,
+    "n": 0,
+    "signed_p50": null,
+    "stations": 186,
+    "valid_sides": 0
+   },
+   "edges": 1,
+   "gen_islands_absent_on_ortho": 0,
+   "gen_islands_absent_on_ortho_windows": 0,
+   "lane_into_island": 0,
+   "lane_into_island_generator_bug": 0,
+   "lanes": {
+    "match": 1,
+    "mismatch": [],
+    "segments": 1,
+    "unverified": [],
+    "verified": 1
+   },
+   "ortho_islands_missing_in_gen": 0,
+   "sites_iou": {
+    "01_gate": 0.904,
+    "02_s230_approach": 0.0,
+    "03_rondo_biezenstwa": 0.0,
+    "04_s610_ramps": 0.0,
+    "05_s900": 0.0,
+    "06_s1060_merge": 0.0,
+    "07_s1270": 0.0,
+    "08_signals": 0.0,
+    "09_s1600": 0.0,
+    "10_rondo_putry": 0.0,
+    "11_dk8": 0.0
+   },
+   "stop_lines_checked": 0,
+   "stop_lines_not_on_ortho": 0
+  },
+  "tile": {
+   "axis_vs_osm_m": {
+    "max": 0.273,
+    "n": 4,
+    "p50": 0.007,
+    "p95": 0.234
+   },
+   "edge_vs_ortho_m": {
+    "all_sides": {
+     "max": 5.375,
+     "n": 904,
+     "p50": 0.875,
+     "p95": 4.375
+    },
+    "detected_sides": 904,
+    "max": 5.125,
+    "n": 120,
+    "p50": 1.125,
+    "p95": 3.887,
+    "signed_p50": 0.875,
+    "stations": 574,
+    "valid_sides": 120
+   },
+   "graph_vs_fresh_osm_max_m": {
+    "max": 0.0,
+    "n": 4,
+    "p50": 0.0,
+    "p95": 0.0
+   },
+   "junction_iou": {
+    "n": 0
+   },
+   "junction_windows": 0,
+   "lane_into_island": 0,
+   "lane_issue_counts": {
+    "lanes_default": 3
+   },
+   "osm_drivable_ways_missing_in_graph": 0
+  }
+ },
+ "tile_sites": []
+}

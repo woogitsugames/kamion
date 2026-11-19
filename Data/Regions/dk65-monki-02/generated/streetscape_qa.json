@@ -34,6 +34,12 @@
    "house": 8,
    "office": 3,
    "shed": 12
+  },
+  "wooden_houses": {
+   "board_tris_lod0": 504,
+   "boarding_runs": 8,
+   "longest_run_m": 4.52,
+   "runs_over_tile": 0
   }
  },
  "cycleways": {
@@ -5687,6 +5693,7 @@
    "m_by_style": {},
    "on_screened_deck_m": 0.0,
    "signs_moved_off_wall": [],
+   "style_rule_m": {},
    "zones_stale": []
   },
   "noise_barriers_m": 0,
@@ -6075,8 +6082,8 @@
      "trees_lod2": 2858
     },
     "camera": "route_s0151",
-    "materials_high": 46,
-    "materials_low": 46,
+    "materials_high": 47,
+    "materials_low": 47,
     "tris_high": 1440952,
     "tris_low": 356130
    },
@@ -6103,14 +6110,14 @@
      "trees_lod2": 4538
     },
     "camera": "route_s0452",
-    "materials_high": 46,
-    "materials_low": 46,
+    "materials_high": 47,
+    "materials_low": 47,
     "tris_high": 1872067,
     "tris_low": 420818
    },
    {
     "by_category_high": {
-     "buildings": 2490,
+     "buildings": 2996,
      "forest_hlod": 38379,
      "furniture": 7114,
      "props": 5295,
@@ -6131,9 +6138,9 @@
      "trees_lod2": 2822
     },
     "camera": "route_s0754",
-    "materials_high": 48,
-    "materials_low": 48,
-    "tris_high": 1467596,
+    "materials_high": 49,
+    "materials_low": 49,
+    "tris_high": 1468102,
     "tris_low": 360132
    },
    {
@@ -6682,10 +6689,10 @@
    {
     "chunk": "5_0",
     "instances": 3133,
-    "materials": 19,
+    "materials": 20,
     "trees": 3132,
     "tris_forest_hlod": 1609,
-    "tris_high_static": 136920,
+    "tris_high_static": 137426,
     "tris_low_static": 35090
    },
    {
@@ -7242,6 +7249,20 @@
  "schema": "truck-sim-pl/streetscape-qa/1",
  "terrain_soft_nodes": 9505,
  "vegetation": {
+  "farmland": {
+   "b_mean_after": 0.2972,
+   "b_mean_before": 0.6239,
+   "b_std_after": 0.2449,
+   "b_std_before": 0.2618,
+   "cells_m2": 1805226,
+   "garden_b_mean_after": 0.2623,
+   "garden_b_mean_before": 0.6132,
+   "garden_b_std_after": 0.0536,
+   "garden_b_std_before": 0.262,
+   "garden_cells_m2": 10924,
+   "layout": "ESTIMATED strips (no cadastral parcels in the repo)",
+   "share": 0.43
+  },
   "forest_clearings": {
    "applied": [],
    "stale": []

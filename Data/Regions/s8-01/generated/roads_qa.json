@@ -406,9 +406,9 @@
     2
    ],
    "length_m": 263.9,
-   "max_grade": 0.0088,
+   "max_grade": 0.0099,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.061,
+   "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
    "width_m": [
     4.5,
@@ -432,9 +432,9 @@
     2
    ],
    "length_m": 249.1,
-   "max_grade": 0.0117,
+   "max_grade": 0.0092,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.188,
+   "profile_rms_vs_nmt_m": 0.257,
    "sidewalk_frac": 0.0,
    "width_m": [
     4.5,
@@ -457,9 +457,9 @@
     1
    ],
    "length_m": 86.2,
-   "max_grade": 0.0191,
+   "max_grade": 0.0129,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.015,
+   "profile_rms_vs_nmt_m": 0.001,
    "sidewalk_frac": 0.0,
    "width_m": [
     4.0
@@ -480,9 +480,9 @@
     1
    ],
    "length_m": 98.6,
-   "max_grade": 0.0168,
+   "max_grade": 0.0134,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.024,
+   "profile_rms_vs_nmt_m": 0.064,
    "sidewalk_frac": 0.0,
    "width_m": [
     4.5
@@ -779,9 +779,9 @@
     1
    ],
    "length_m": 133.7,
-   "max_grade": 0.0261,
+   "max_grade": 0.0336,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.016,
+   "profile_rms_vs_nmt_m": 0.024,
    "sidewalk_frac": 0.0,
    "width_m": [
     4.0
@@ -1677,9 +1677,9 @@
     1
    ],
    "length_m": 85.9,
-   "max_grade": 0.0325,
+   "max_grade": 0.0338,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.069,
+   "profile_rms_vs_nmt_m": 0.076,
    "sidewalk_frac": 0.0,
    "width_m": [
     4.5
@@ -2086,9 +2086,9 @@
     1
    ],
    "length_m": 114.1,
-   "max_grade": 0.0224,
+   "max_grade": 0.0217,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.196,
+   "profile_rms_vs_nmt_m": 0.186,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0
@@ -2109,9 +2109,9 @@
     1
    ],
    "length_m": 169.4,
-   "max_grade": 0.0297,
+   "max_grade": 0.0299,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.211,
+   "profile_rms_vs_nmt_m": 0.189,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -2132,9 +2132,9 @@
     1
    ],
    "length_m": 228.5,
-   "max_grade": 0.0316,
+   "max_grade": 0.0317,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.038,
+   "profile_rms_vs_nmt_m": 0.044,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -2155,9 +2155,9 @@
     1
    ],
    "length_m": 115.2,
-   "max_grade": 0.0306,
+   "max_grade": 0.0339,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.058,
+   "profile_rms_vs_nmt_m": 0.079,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0
@@ -5495,12 +5495,12 @@
   ],
   "crossings_snapped": 20,
   "decals": {
-   "gullies": 922,
+   "gullies": 909,
    "oil": 130,
    "patches": 301
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 337253,
+  "footprint_nodes": 338222,
   "fork_abreast": [
    {
     "alongside_run_m": 36.5,
@@ -5749,28 +5749,419 @@
     "to_hw": 2.5
    }
   ],
+  "gore_p21": {
+   "area_m2": 1554.7,
+   "built": 7,
+   "paint_erased_tris": 0,
+   "zones": 7
+  },
   "gores": {
    "gores": [
     {
-     "area_m2": 50.3,
+     "area_m2": 42.6,
      "built": true,
-     "hatch": false,
+     "hatch": true,
      "note": "",
-     "why": "merge",
+     "why": "express",
      "xy": [
-      -359.2,
-      -571.3
+      1005.8,
+      -908.3
+     ]
+    },
+    {
+     "area_m2": 42.0,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      995.5,
+      -875.6
+     ]
+    },
+    {
+     "area_m2": 41.8,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      1007.1,
+      -878.4
+     ]
+    },
+    {
+     "area_m2": 41.7,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      994.1,
+      -905.5
+     ]
+    },
+    {
+     "area_m2": 41.3,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      775.5,
+      -823.6
+     ]
+    },
+    {
+     "area_m2": 40.8,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      787.0,
+      -826.3
+     ]
+    },
+    {
+     "area_m2": 39.6,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      763.9,
+      -820.9
+     ]
+    },
+    {
+     "area_m2": 38.7,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      982.6,
+      -902.6
+     ]
+    },
+    {
+     "area_m2": 38.5,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      745.2,
+      -845.1
+     ]
+    },
+    {
+     "area_m2": 37.2,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      1016.7,
+      -911.0
+     ]
+    },
+    {
+     "area_m2": 37.0,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      752.4,
+      -818.3
+     ]
+    },
+    {
+     "area_m2": 36.5,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      984.1,
+      -873.1
+     ]
+    },
+    {
+     "area_m2": 35.5,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      1017.9,
+      -881.0
+     ]
+    },
+    {
+     "area_m2": 34.4,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      -362.9,
+      -570.2
+     ]
+    },
+    {
+     "area_m2": 34.2,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      807.8,
+      -860.3
+     ]
+    },
+    {
+     "area_m2": 33.9,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      924.1,
+      -888.5
+     ]
+    },
+    {
+     "area_m2": 32.3,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      912.4,
+      -885.7
+     ]
+    },
+    {
+     "area_m2": 32.0,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      900.7,
+      -882.8
+     ]
+    },
+    {
+     "area_m2": 32.0,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      819.0,
+      -862.7
+     ]
+    },
+    {
+     "area_m2": 31.9,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      889.0,
+      -879.9
+     ]
+    },
+    {
+     "area_m2": 31.8,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      877.4,
+      -877.1
+     ]
+    },
+    {
+     "area_m2": 31.6,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      865.7,
+      -874.2
+     ]
+    },
+    {
+     "area_m2": 31.6,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      935.5,
+      -891.2
+     ]
+    },
+    {
+     "area_m2": 31.7,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      937.6,
+      -862.4
+     ]
+    },
+    {
+     "area_m2": 31.5,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      854.0,
+      -871.3
+     ]
+    },
+    {
+     "area_m2": 31.4,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      842.4,
+      -868.4
+     ]
+    },
+    {
+     "area_m2": 31.2,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      830.7,
+      -865.6
+     ]
+    },
+    {
+     "area_m2": 30.9,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      798.1,
+      -829.4
+     ]
+    },
+    {
+     "area_m2": 29.5,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      971.2,
+      -899.6
+     ]
+    },
+    {
+     "area_m2": 28.0,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      948.8,
+      -865.2
+     ]
+    },
+    {
+     "area_m2": 27.7,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      972.5,
+      -870.8
+     ]
+    },
+    {
+     "area_m2": 27.7,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      925.9,
+      -859.8
+     ]
+    },
+    {
+     "area_m2": 26.6,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      914.3,
+      -857.1
+     ]
+    },
+    {
+     "area_m2": 26.5,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      741.0,
+      -816.1
+     ]
+    },
+    {
+     "area_m2": 25.7,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      902.7,
+      -854.4
      ]
     },
     {
      "area_m2": 25.5,
      "built": true,
-     "hatch": false,
+     "hatch": true,
      "note": "",
-     "why": "merge",
+     "why": "express",
      "xy": [
       -481.8,
       -541.8
+     ]
+    },
+    {
+     "area_m2": 24.8,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      891.1,
+      -851.7
      ]
     },
     {
@@ -5785,36 +6176,168 @@
      ]
     },
     {
+     "area_m2": 23.9,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      879.5,
+      -849.0
+     ]
+    },
+    {
      "area_m2": 23.7,
      "built": true,
-     "hatch": false,
+     "hatch": true,
      "note": "",
-     "why": "merge",
+     "why": "express",
      "xy": [
       -741.5,
       -507.0
      ]
     },
     {
+     "area_m2": 23.0,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      867.9,
+      -846.3
+     ]
+    },
+    {
+     "area_m2": 22.8,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      960.6,
+      -868.2
+     ]
+    },
+    {
+     "area_m2": 22.1,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      856.3,
+      -843.6
+     ]
+    },
+    {
      "area_m2": 22.0,
      "built": true,
-     "hatch": false,
+     "hatch": true,
      "note": "",
-     "why": "merge",
+     "why": "express",
      "xy": [
       -855.7,
       -478.9
      ]
     },
     {
-     "area_m2": 19.5,
+     "area_m2": 21.4,
      "built": true,
-     "hatch": false,
+     "hatch": true,
      "note": "",
-     "why": "merge",
+     "why": "express",
      "xy": [
-      936.8,
-      -898.5
+      734.2,
+      -841.8
+     ]
+    },
+    {
+     "area_m2": 21.2,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      844.8,
+      -840.9
+     ]
+    },
+    {
+     "area_m2": 20.9,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      947.1,
+      -893.5
+     ]
+    },
+    {
+     "area_m2": 20.6,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      809.8,
+      -832.6
+     ]
+    },
+    {
+     "area_m2": 20.4,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      833.2,
+      -838.2
+     ]
+    },
+    {
+     "area_m2": 20.1,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      959.6,
+      -896.4
+     ]
+    },
+    {
+     "area_m2": 19.4,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      821.6,
+      -835.5
+     ]
+    },
+    {
+     "area_m2": 15.8,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      -351.2,
+      -573.7
+     ]
+    },
+    {
+     "area_m2": 11.9,
+     "built": true,
+     "hatch": true,
+     "note": "",
+     "why": "express",
+     "xy": [
+      730.1,
+      -814.1
      ]
     },
     {
@@ -5826,28 +6349,6 @@
      "xy": [
       -867.1,
       -52.2
-     ]
-    },
-    {
-     "area_m2": 18.0,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "sliver",
-     "xy": [
-      960.3,
-      -868.1
-     ]
-    },
-    {
-     "area_m2": 16.9,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "sliver",
-     "xy": [
-      731.9,
-      -814.4
      ]
     },
     {
@@ -5870,17 +6371,6 @@
      "xy": [
       -757.1,
       -635.2
-     ]
-    },
-    {
-     "area_m2": 9.1,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "sliver",
-     "xy": [
-      731.0,
-      -840.8
      ]
     },
     {
@@ -5973,27 +6463,31 @@
     }
    ],
    "islands": [],
-   "kerb_dropped_m": 453.0,
+   "kerb_dropped_m": 1488.0,
    "kerb_tris_in_fill": 0,
    "paved": {
+    "express": {
+     "area_m2": 1546.8,
+     "count": 52
+    },
     "merge": {
-     "area_m2": 165.6,
-     "count": 6
+     "area_m2": 24.6,
+     "count": 1
     },
     "sliver": {
-     "area_m2": 126.0,
-     "count": 14
+     "area_m2": 82.0,
+     "count": 11
     }
    },
    "rejected": [
     {
-     "area_m2": 60.0,
+     "area_m2": 19.5,
      "reason": "carriageways at different heights",
-     "step_m": 0.23,
+     "step_m": 0.21,
      "why": "merge",
      "xy": [
-      741.3,
-      -843.9
+      936.8,
+      -898.5
      ]
     },
     {
@@ -6007,13 +6501,13 @@
      ]
     },
     {
-     "area_m2": 32.7,
+     "area_m2": 4.6,
      "reason": "carriageways at different heights",
-     "step_m": 0.16,
+     "step_m": 0.18,
      "why": "sliver",
      "xy": [
-      954.3,
-      -895.1
+      933.3,
+      -897.4
      ]
     },
     {
@@ -6201,9 +6695,9 @@
   },
   "seam_tapers": [],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 3149,
-   "parts": 441,
-   "side_tris": 343
+   "kerb_tris": 7221,
+   "parts": 430,
+   "side_tris": 299
   },
   "signalised_junctions": 0,
   "through_lines": {
@@ -6218,7 +6712,7 @@
   },
   "verge_strips": {
    "chunks": 44,
-   "tris": 38356
+   "tris": 37592
   },
   "walled_ramps": []
  }

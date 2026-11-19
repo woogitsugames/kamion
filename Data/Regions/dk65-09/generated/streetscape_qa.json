@@ -37,6 +37,12 @@
    "house": 38,
    "office": 17,
    "shed": 50
+  },
+  "wooden_houses": {
+   "board_tris_lod0": 1200,
+   "boarding_runs": 25,
+   "longest_run_m": 4.64,
+   "runs_over_tile": 0
   }
  },
  "construction_sites": {
@@ -280,6 +286,7 @@
    "m_by_style": {},
    "on_screened_deck_m": 0.0,
    "signs_moved_off_wall": [],
+   "style_rule_m": {},
    "zones_stale": []
   },
   "noise_barriers_m": 0,
@@ -989,8 +996,8 @@
      "trees_lod2": 2460
     },
     "camera": "rev_09",
-    "materials_high": 44,
-    "materials_low": 44,
+    "materials_high": 45,
+    "materials_low": 45,
     "tris_high": 969465,
     "tris_low": 198057
    }
@@ -1104,10 +1111,10 @@
    {
     "chunk": "0_4",
     "instances": 2863,
-    "materials": 30,
+    "materials": 31,
     "trees": 2859,
     "tris_forest_hlod": 1491,
-    "tris_high_static": 138328,
+    "tris_high_static": 138932,
     "tris_low_static": 35537
    },
    {
@@ -1608,10 +1615,10 @@
    {
     "chunk": "7_4",
     "instances": 548,
-    "materials": 37,
+    "materials": 38,
     "trees": 526,
     "tris_forest_hlod": 313,
-    "tris_high_static": 149178,
+    "tris_high_static": 149814,
     "tris_low_static": 42554
    },
    {
@@ -3228,6 +3235,20 @@
  "schema": "truck-sim-pl/streetscape-qa/1",
  "terrain_soft_nodes": 1574,
  "vegetation": {
+  "farmland": {
+   "b_mean_after": 0.3483,
+   "b_mean_before": 0.6207,
+   "b_std_after": 0.2403,
+   "b_std_before": 0.2618,
+   "cells_m2": 1218561,
+   "garden_b_mean_after": 0.2782,
+   "garden_b_mean_before": 0.6289,
+   "garden_b_std_after": 0.0495,
+   "garden_b_std_before": 0.2602,
+   "garden_cells_m2": 40576,
+   "layout": "ESTIMATED strips (no cadastral parcels in the repo)",
+   "share": 0.2902
+  },
   "forest_clearings": {
    "applied": [],
    "stale": []

@@ -41,6 +41,12 @@
    "house": 109,
    "office": 25,
    "shed": 157
+  },
+  "wooden_houses": {
+   "board_tris_lod0": 1560,
+   "boarding_runs": 29,
+   "longest_run_m": 4.66,
+   "runs_over_tile": 0
   }
  },
  "construction_sites": {
@@ -1981,6 +1987,7 @@
    "m_by_style": {},
    "on_screened_deck_m": 0.0,
    "signs_moved_off_wall": [],
+   "style_rule_m": {},
    "zones_stale": []
   },
   "noise_barriers_m": 0,
@@ -3075,14 +3082,14 @@
      "trees_lod2": 906
     },
     "camera": "route_s0144",
-    "materials_high": 64,
-    "materials_low": 64,
+    "materials_high": 65,
+    "materials_low": 65,
     "tris_high": 751500,
     "tris_low": 230013
    },
    {
     "by_category_high": {
-     "buildings": 49267,
+     "buildings": 50335,
      "forest_hlod": 6943,
      "furniture": 54985,
      "props": 6996,
@@ -3103,14 +3110,14 @@
      "trees_lod2": 1446
     },
     "camera": "route_s0433",
-    "materials_high": 64,
-    "materials_low": 64,
-    "tris_high": 1023451,
+    "materials_high": 65,
+    "materials_low": 65,
+    "tris_high": 1024519,
     "tris_low": 246409
    },
    {
     "by_category_high": {
-     "buildings": 30226,
+     "buildings": 30371,
      "forest_hlod": 6770,
      "furniture": 33294,
      "props": 19024,
@@ -3131,9 +3138,9 @@
      "trees_lod2": 1580
     },
     "camera": "route_s0721",
-    "materials_high": 63,
-    "materials_low": 63,
-    "tris_high": 513624,
+    "materials_high": 64,
+    "materials_low": 64,
+    "tris_high": 513769,
     "tris_low": 151982
    },
    {
@@ -3159,8 +3166,8 @@
      "trees_lod2": 546
     },
     "camera": "top_seam_e",
-    "materials_high": 62,
-    "materials_low": 62,
+    "materials_high": 63,
+    "materials_low": 63,
     "tris_high": 368116,
     "tris_low": 123369
    },
@@ -3243,14 +3250,14 @@
      "trees_lod2": 1016
     },
     "camera": "drive_wood",
-    "materials_high": 65,
-    "materials_low": 65,
+    "materials_high": 66,
+    "materials_low": 66,
     "tris_high": 810804,
     "tris_low": 244925
    },
    {
     "by_category_high": {
-     "buildings": 49267,
+     "buildings": 50335,
      "forest_hlod": 6943,
      "furniture": 54985,
      "props": 6864,
@@ -3271,9 +3278,9 @@
      "trees_lod2": 1414
     },
     "camera": "drive_kozince",
-    "materials_high": 64,
-    "materials_low": 64,
-    "tris_high": 1013507,
+    "materials_high": 65,
+    "materials_low": 65,
+    "tris_high": 1014575,
     "tris_low": 245250
    },
    {
@@ -3594,19 +3601,19 @@
    {
     "chunk": "3_0",
     "instances": 1427,
-    "materials": 40,
+    "materials": 41,
     "trees": 1403,
     "tris_forest_hlod": 780,
-    "tris_high_static": 164729,
+    "tris_high_static": 165162,
     "tris_low_static": 52052
    },
    {
     "chunk": "3_1",
     "instances": 133,
-    "materials": 36,
+    "materials": 37,
     "trees": 94,
     "tris_forest_hlod": 0,
-    "tris_high_static": 157681,
+    "tris_high_static": 157780,
     "tris_low_static": 50682
    },
    {
@@ -3666,19 +3673,19 @@
    {
     "chunk": "4_0",
     "instances": 2853,
-    "materials": 38,
+    "materials": 39,
     "trees": 2837,
     "tris_forest_hlod": 1216,
-    "tris_high_static": 156479,
+    "tris_high_static": 156624,
     "tris_low_static": 45558
    },
    {
     "chunk": "4_1",
     "instances": 121,
-    "materials": 44,
+    "materials": 45,
     "trees": 99,
     "tris_forest_hlod": 0,
-    "tris_high_static": 164931,
+    "tris_high_static": 165854,
     "tris_low_static": 51434
    },
    {
@@ -8398,6 +8405,20 @@
  "schema": "truck-sim-pl/streetscape-qa/1",
  "terrain_soft_nodes": 3028,
  "vegetation": {
+  "farmland": {
+   "b_mean_after": 0.3214,
+   "b_mean_before": 0.6252,
+   "b_std_after": 0.2441,
+   "b_std_before": 0.2612,
+   "cells_m2": 1677795,
+   "garden_b_mean_after": 0.2764,
+   "garden_b_mean_before": 0.621,
+   "garden_b_std_after": 0.0491,
+   "garden_b_std_before": 0.261,
+   "garden_cells_m2": 87637,
+   "layout": "ESTIMATED strips (no cadastral parcels in the repo)",
+   "share": 0.3996
+  },
   "forest_clearings": {
    "applied": [],
    "stale": []
