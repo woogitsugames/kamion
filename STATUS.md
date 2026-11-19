@@ -27,3 +27,5 @@
   nie jest jej nawierzchnią). tykocin opp 7 (przed 109), ze swingiem 0. r3 = C + knyszyn + knyszyn-s + knyszyn-w + fidelity
   (CI lidera: wyspa fantomowa 11_dk8 + lane_blind_end 57 > 55 w C — sprawdzę po przebudowie).
 - NASTĘPNY KROK: po r3: `road_consistency_qa.json` C (lane_blind_end ≤ 55), fidelity islands 0; combo after na 7 kaflach.
+- 13:5x: PRZED (main, poprawiony klasyfikator, 7 kafli + łączniki Knyszyna): środek pasa opp 205 / kerb 166 / off 29;
+  ze swingiem opp 11 / kerb 129 / off 12 (`artifacts/road-widen-s24/before/final_swing.json`). r3 buduje C (13:52).
