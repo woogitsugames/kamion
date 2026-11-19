@@ -20,6 +20,7 @@ from . import forest_hlod as FH
 from . import frontage as FR
 from . import furniture as FU
 from . import fab_details as FD
+from . import limit_signs as LS
 from . import signs_route as SR
 from . import gate as GT
 from . import depot_yard as DY
@@ -271,6 +272,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.crossing_signs(pl, w.net, w.ctx["points"], frep, codes)
     FU.direction_boards(pl, w.net, attrs, frep, boards)
     SR.osm_signs(pl, w.net, src, origin, w.junctions, frep, codes)
+    LS.limit_signs(pl, w.net, attrs, frep, codes)                # ADR 0307: B-16 / B-18 before limited structures
     SR.roundabout_signs(pl, w.net, w.junctions, attrs, frep, codes, boards, src=src, origin=origin)
     LM.build(pl, w.net, graph, overrides, origin, boards, frep)
     SR.drop_rule_diagrams_near_gantries(pl, boards, frep)       # ADR 0236: the authored portal replaces the rule E-1
