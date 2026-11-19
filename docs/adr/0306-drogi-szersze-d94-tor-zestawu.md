@@ -42,18 +42,32 @@ Wszystko poniżej to **GAMEPLAY_WIDEN** (nie fakt pomiarowy), WORKING_VALUE.
    `KAMION_DATA_ROOT` = inny checkout (np. main dla „przed”). Powierzchnia klasyfikowana na poziomie jezdni pod osią
    przednią (wiadukt nad trasą / droga pod wiaduktem to inny poziom, `LAYER_M` 2 m) — bez tego Kleeberga pod wiaduktem
    dawała 663 / 347 fałszywych punktów.
-5. **Jezdnia jednokierunkowa rośnie w prawo** (`network.gameplay_widen`): lewa krawędź (pas dzielący, klin) zostaje jak
-   zmierzona, środek przesuwa się w prawo o połowę wzrostu (+0,25 × pasy oraz wzrost z podłogi BDOT ADR 0301). Symetryczne
-   poszerzenie zjadało pas dzielący DK8 w kaflu C (fidelity: wyspy „absent_on_ortho” 1 → 4).
-6. **L / D**: górny limit pasa z BDOT z powrotem std + 0,25 (L 3,00, D 2,75; ADR 0301 dał 3,50): BDOT liczy zatoki i
-   podjazdy dróg serwisowych / stref zamieszkania, kolejne krawędzie jednej drogi wychodziły 5,5 / 6,5 / 7,0 m, a tory
-   pasów przez skrzyżowania wpadały na krawężniki (C: road_consistency lane_blind_end 54 → 57, w tym 2 przy trasie).
+5. **Jezdnia jednokierunkowa rośnie w prawo** (`network.gameplay_widen`): środek przesuwa się w prawo o połowę wzrostu
+   D94, najwyżej `GROW_RIGHT_MAX_M` 0,5 m; profil położenia z ortofoto (ADR 0095) zostaje symetryczny. **Podłoga BDOT
+   ADR 0301 zaliczana do D94**: pasy, które ADR 0301 już poszerzył ponad BDOT o ≥ 0,25 m, nie rosną dalej (DK8 w C).
+   Wersje pośrednie (C, fidelity wyspy „absent_on_ortho” przy trasie; main 1): symetrycznie 4, całe w prawo 2 (ale
+   marking_off 6 — jezdnia na chodnikach / wiadukcie), w prawo ≤ 0,5 m 3.
+6. **L / D**: górny limit pasa z BDOT z powrotem std + 0,25 (L 3,00; ADR 0301 dał 3,50), klasa D (service, living_street)
+   w ogóle bez szerokości BDOT (standard klasy): BDOT liczy zatoki i podjazdy, kolejne krawędzie jednej drogi wychodziły
+   5,5 / 6,5 / 7,0 m, a tory pasów przez skrzyżowania wpadały na krawężniki (C: lane_blind_end 54 → 57 po ADR 0301).
 7. **Rondo kompaktowe — narożniki** między ramionami zamykane promieniem `TRUCK_CORNER_R_M = 12` m (było `NOSE_R_M` 4 m):
    naczepa ścinała krawężnik narożnika przy wlocie DK65 od Białegostoku; kształt zgodny ze zdjęciem drona nr 9.
 8. Autorski `swing` łącznika `knyszyn-rynek-to-dk65-w` usunięty (po regule pogarszał: krawężnik 59 → 23 pkt bez niego).
 
 ## Wyniki
-(uzupełnione po przebudowie — patrz niżej)
+Tor zestawu (`qa/combo_lane_check.py`, oś przednia na środku pasa; punkty opon przeciwny pas / krawężnik / poza
+nawierzchnią; „przed” = kafle main, `--widen 0`, `artifacts/road-widen-s24/before/final_swing.json`):
+
+| odcinek | przed | po |
+|---|---|---|
+| rondo Knyszyn DK65 → DW671 W (korytarz Tykocin) | 0 / 23 / 5 | 0 / 3 / 0 (ze swingiem kierowcy 0 / 0 / 0) |
+| rondo Knyszyn DK65 → DK65 W | 0 / 16 / 0 | 0 / 0 / 0 |
+| Tykocin DW671 → Rynek | 109 / 0 / 0 | 7 / 0 / 0 (ze swingiem 0) |
+| Rynek Knyszyn → rondo (2 łączniki) | 42–45 / 18–63 / 0 | 32–37 / 0–59 / 0 (przeciwny pas: skręty w ulicach Rynku) |
+| kleeberga, dk65-05, knyszyn-s, knyszyn-w | 0 / 0 / 0 | 0 / 0 / 0 |
+
+Rzut z góry przed / po: `artifacts/road-widen-s24/top/knyszyn_before_after_lc_960.jpg`; render High
+`artifacts/road-widen-s24/top_vqa_after_vs_before.jpg` (narożniki ronda jak na zdjęciu drona nr 9).
 
 ## Konsekwencje
 - Każdy kafel zmienia się przy najbliższej przebudowie (szersze pasy wszędzie, łuki); szwy zgodne dopiero, gdy obie strony
