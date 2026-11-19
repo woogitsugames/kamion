@@ -15,6 +15,9 @@
 // ragged, smeared edge; the 2 cm / 2 deg border drew a sharp arc and a vertical line across the sky against the sun), the
 // periodic 1.5 cm blade arcs are gone (concentric banding in the sky), and the sun glare of the film is capped at 2x
 // isotropic (was 4x).
+// Drive review s24 #11: the analytic unwiped regions read as upright smoke columns from the driver's eye.
+// Keep this stylised road film for exterior views only (including the far pane seen through the cab).
+// Cab views retain absorption, Fresnel, interior reflections and optional authored grime, without the sweep-shaped veil.
 Shader "Kamion/Truck Glass"
 {
     Properties
@@ -161,7 +164,7 @@ Shader "Kamion/Truck Glass"
                 half3 nOut = i.inside > 0.5 ? -n : n;
                 half3 amb = i.amb;
                 half film = 0;
-                if (_Wiper > 0.0)
+                if (_Wiper > 0.0 && (i.inside < 0.5 || _KamionCamOutside > 0.5))
                 {
                     half2 p = (half2)i.positionOS.xy;
                     half wiped = max(SweepH(p, (half4)_WiperPivotA, (half2)_WiperSweep.xy), SweepH(p, (half4)_WiperPivotB, (half2)_WiperSweep.xy));
@@ -228,7 +231,7 @@ Shader "Kamion/Truck Glass"
 
                 // ---- road film outside the wiper sweeps (windscreen) ----
                 half film = 0;
-                if (_Wiper > 0.0)
+                if (_Wiper > 0.0 && (i.inside < 0.5 || _KamionCamOutside > 0.5))
                 {
                     float2 p = i.positionOS.xy;
                     float rA, rB;
