@@ -10,3 +10,7 @@ Worktree: .claude/worktrees/lanes-audit-s24 (gałąź lanes-audit-s24, -NoLibrar
   Kleeberga 2 pasy: ortofoto 3,65/3,80 m, generator 3,35/3,40; Maczka w606396475: OSM 2 pasy, ortofoto 3 (pas przeplatania). Knyszyńska: szerokość ok (6,45 vs ~6,4 między liniami krawędziowymi), brak linii krawędziowych.
 - Poprawka A (standards/network): BDOT może tylko poszerzyć pas do max §17 ust.1, dolna granica = standard klasy (A/S/GP/G).
   NASTĘPNY KROK: narzędzie qa/ortho_lane_fit.py -> Data/Regions/<id>/overrides.ortho_lanes.json (center_offset, lane_edges, lanes).
+- 19.11 ~04:40: poprawka B — qa/ortho_lane_fit.py -> overrides.ortho_lanes.json (16 wpisów, 4 kafle), podłoga BDOT tylko jednokier. A/S/GP; trasy przeliczone; ADR 0301 (draft w docs/adr). Test 18/18.
+  Po (generator w pamięci): maczka błąd linii mediana 0,50 -> 0,12 m, p90 1,52 -> 0,55; kleeberga 0,60 -> 0,30.
+  W toku: artifacts/lanes-audit-s24/build.ps1 (build_world 4 kafli, slot heavy; status build/build.status).
+  NASTĘPNY KROK: po build.status -> Library (robocopy z win-build gdy brak Unity tam) -> pwsh scripts/import-region.ps1 -Region bialystok-maczka -SkipCopy? -> visual-qa WorldC High.
