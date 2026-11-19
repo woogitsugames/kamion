@@ -67,19 +67,6 @@ namespace Game.World.Streaming
             return a != TileSide.None && b != TileSide.None ? a | b : TileSide.None;
         }
 
-        /// <summary>Bit of a diagonal side in a corner mask (NE 1, SE 2, SW 4, NW 8); 0 for anything else.</summary>
-        public static int CornerBit(TileSide corner)
-        {
-            switch (corner)
-            {
-                case TileSide.NE: return 1;
-                case TileSide.SE: return 2;
-                case TileSide.SW: return 4;
-                case TileSide.NW: return 8;
-                default: return 0;
-            }
-        }
-
         /// <summary>True when one of the corners in <paramref name="cornerMask"/> (<see cref="CornerBit"/>) touches side <paramref name="side"/>.</summary>
         public static bool CornerMaskTouches(int cornerMask, TileSide side)
         {
