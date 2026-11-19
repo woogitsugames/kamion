@@ -11,3 +11,4 @@
   kleeberga 41 756 m, planowanie 1,2 ms w 26 klatkach (max 0,25 ms/odcinek, edytor), śledzenie 3,8 µs/krok, 0 B GC.
 - Build 3 regionów w toku (`_Generated` kleeberga/knyszynska/dk65-01 + Truck/Trailer skopiowane z win-build, kafle z 17.11).
 - NASTĘPNY KROK: `& .\scripts\build-windows.ps1 -SkipBuild -Exe <exe> -Run -Scene bialystok-kleeberga -Autopilot route -Speed 50 -RunSeconds 400 -ShotSeconds 20 -ExtraPlayerArgs @('-stream','1','-route_to','tykocin','-route_s','1900','-nav_log','5','-shot_every','20')`
+- 04:40: build `artifacts/win/kamion-0.1.0-f72bf08d6e-dirty-regions` (3 regiony + WorldC z win-build) OK, 449 s. Przejazd 400 s w toku.
