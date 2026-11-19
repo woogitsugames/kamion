@@ -5,3 +5,8 @@ Worktree: .claude/worktrees/lanes-audit-s24 (gałąź lanes-audit-s24, -NoLibrar
 ## Log
 - 19.11: worktree; narzędzie tools/worldgen/qa/lane_width_audit.py (ortofoto HR 0,08 m / arkusz 0,25 m vs generator w pamięci, przekroje co 50 m po route_start).
   NASTĘPNY KROK: `uv run --project tools/worldgen python tools/worldgen/qa/lane_width_audit.py --region bialystok-maczka --fetch --out artifacts/lanes-audit-s24/before`
+- 19.11 pomiar „przed” (4 kafle, 174 stacje co 50 m, ortofoto HR 0,08 m): artifacts/lanes-audit-s24/before/*.md + strips_*.jpg.
+  Główne: DK8 Maczka 3 pasy: ortofoto pasy 3,55–3,60 m, linie krawędziowe 10,8 m; generator 3×3,25 (BDOT 10,5 przycięte), jezdnia przesunięta ~1,0–1,5 m ku pasowi dzielącemu (oś OSM), trasa na linii pasa.
+  Kleeberga 2 pasy: ortofoto 3,65/3,80 m, generator 3,35/3,40; Maczka w606396475: OSM 2 pasy, ortofoto 3 (pas przeplatania). Knyszyńska: szerokość ok (6,45 vs ~6,4 między liniami krawędziowymi), brak linii krawędziowych.
+- Poprawka A (standards/network): BDOT może tylko poszerzyć pas do max §17 ust.1, dolna granica = standard klasy (A/S/GP/G).
+  NASTĘPNY KROK: narzędzie qa/ortho_lane_fit.py -> Data/Regions/<id>/overrides.ortho_lanes.json (center_offset, lane_edges, lanes).

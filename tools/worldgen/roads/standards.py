@@ -39,6 +39,15 @@ LANE_WIDTH = {
     "A": (3.75, 3.50), "S": (3.50, 3.25), "GP": (3.50, 3.25), "G": (3.50, 3.00),
     "Z": (3.00, 2.75), "L": (2.75, 2.50), "D": (2.50, 2.25),
 }
+# PTB2022 § 17 ust. 1 (text re-read 2026-11-19, ADR 0301): the widest value the regulation allows ("dopuszcza się")
+# per class: S 3.75, Z / L / D 3.50 m. A, GP and G name no wider value -> std + 0.25 m (WORKING_VALUE, as before).
+LANE_WIDTH_MAX = {"A": 4.00, "S": 3.75, "GP": 3.75, "G": 3.75, "Z": 3.50, "L": 3.50, "D": 3.50}
+# ADR 0301: the lower bound of a lane width derived from BDOT10k SZEROKOSCNAWIERZCHNI on a multi-lane carriageway.
+# Measured on the GUGiK orthophoto 0.08 m along the start route (tools/worldgen/qa/lane_width_audit.py, 2026-11-19):
+# BDOT gives 3.0-3.25 m per lane on DK8 Maczka / Kleeberga, the painted lanes are 3.55-3.80 m. On the main classes
+# BDOT therefore may widen a lane up to LANE_WIDTH_MAX but never narrows it below the class standard; on Z / L / D
+# (no measurement) the "difficult conditions" value stays the floor.
+LANE_WIDTH_BDOT_FLOOR = {"A": 3.75, "S": 3.50, "GP": 3.50, "G": 3.50, "Z": 2.75, "L": 2.50, "D": 2.25}
 # PTB2022 § 17 ust. 3 – single-lane carriageway: < two lanes but >= 3.50 m.
 SINGLE_LANE_MIN = 3.50
 SINGLE_LANE_DEFAULT = 4.00          # WORKING_VALUE (between 3.50 and 2 x lane)
