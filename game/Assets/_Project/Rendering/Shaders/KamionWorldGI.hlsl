@@ -29,12 +29,17 @@ void KamionWorldGI(float3 pw, half3 nGeo, out half ambientK, out half bakedSun)
     float2 uv = (pw.xz + off - _KamionGIRect.xy) * _KamionGIRect.zw;
     // ADR 0298 (review 2026-11-18 N1): the map stopped with a step at the tile edge - the apron / neighbouring tile got
     // full sky visibility at once (one of the causes of the 15-22 level seam). Outside the rect the border texel holds and
-    // fades out over KAMION_GI_EDGE_FADE_M.
+    // is held (blurred over KAMION_GI_EDGE_FADE_M); baked sun shadows fade within 24 m.
     float2 halfTexel = 0.5 * _KamionGIHeight.z * _KamionGIRect.zw;
     float2 uvc = clamp(uv, halfTexel, 1.0 - halfTexel);
     float outM = length(max(abs(uv - 0.5) - 0.5, 0.0) / max(_KamionGIRect.zw, 1e-9));
-    half4 g = SAMPLE_TEXTURE2D(_KamionGIMap, sampler_KamionGIMap, uvc);
-    half inside = (half)(1.0 - smoothstep(0.0, KAMION_GI_EDGE_FADE_M, outM)) * (half)_KamionGIHeight.w;
+    // Outside: a blurred border (up to mip 6 = 64 texels) so a house or tree on the edge does not smear a streak outwards,
+    // held at full strength - fading to "open sky" made the apron 10-20 % brighter in ambient than the open fields of the
+    // tile (their baked visibility is < 1: horizon, trees).
+    half4 g = outM > 0.0 ? SAMPLE_TEXTURE2D_LOD(_KamionGIMap, sampler_KamionGIMap, uvc, 6.0 * saturate(outM / KAMION_GI_EDGE_FADE_M))
+                         : SAMPLE_TEXTURE2D(_KamionGIMap, sampler_KamionGIMap, uv);
+    half inside = (half)_KamionGIHeight.w;
+    half insideSun = (half)(1.0 - smoothstep(0.0, 24.0, outM)) * (half)_KamionGIHeight.w;   // baked shadows: 24 m only
 
     float ground = _KamionGIHeight.x + g.a * 255.0 * _KamionGIHeight.y;
     half hag = (half)(pw.y - ground);                          // height above the baked ground
@@ -48,7 +53,7 @@ void KamionWorldGI(float3 pw, half3 nGeo, out half ambientK, out half bakedSun)
     ambientK = vis + (1.0h - vis) * (half)_KamionGISun.w;
 
     half sunRaw = g.g * (half)_KamionGISun.x + g.b * (half)_KamionGISun.y + (1.0h - (half)(_KamionGISun.x + _KamionGISun.y));
-    half sunApply = inside * (half)_KamionGISun.z * lerp(1.0h - saturate(hag), nearGround, up);   // walls: foot only
+    half sunApply = insideSun * (half)_KamionGISun.z * lerp(1.0h - saturate(hag), nearGround, up);   // walls: foot only
     bakedSun = lerp(1.0h, sunRaw, sunApply);
 }
 

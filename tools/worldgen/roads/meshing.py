@@ -1386,6 +1386,7 @@ def _repair_fill(poly, zb, ph, spacing):
 #   UV1.y = PLATE_EDGE_FLAG + PLATE_SPREAD_SCALE * spread + min(edge, 1 m)
 # (the shader's gutter / damp strip only reads edge < 0.65 m, and at the outline spread = 0, so the kerb edge survives).
 PLATE_EDGE_FLAG = 20.0
+PLATE_END_FADE_M = 3.0      # ADR 0298: wheel paths fade out past the end of an arm chain window
 PLATE_SPREAD_SCALE = 100.0
 PLATE_SPREAD_M = 8.0          # WORKING_VALUE: ~two lane widths into the box
 
@@ -1457,6 +1458,14 @@ def _patch_uv1(net, j, V, poly=None):
         lc = _lane_coord(sec, np.clip(lat, -hw, hw), hw, dir_val)
         u_flare = np.clip((dist - hw) / 1.0, 0.0, 1.0)
         lc = lc + u_flare * (np.rint(lc) - lc)
+        # ADR 0298: past the free ends of the chain window the wheel paths fade out over PLATE_END_FADE_M instead of
+        # being extrapolated (two extrapolated arms crossed into a diamond of ruts at the roundabout mouth)
+        tk = ((P - A[k]) * AB[k]).sum(1) / l2[k]
+        seg = np.sqrt(l2[k])
+        beyond = np.where(k == len(A) - 1, np.maximum(tk - 1.0, 0.0) * seg, 0.0)
+        beyond = np.maximum(beyond, np.where(k == 0, np.maximum(-tk, 0.0) * seg, 0.0))
+        u_end = np.clip(beyond / PLATE_END_FADE_M, 0.0, 1.0)
+        lc = lc + u_end * (np.rint(lc) - lc)
         better_any = dnear < score
         lane[better_any] = lc[better_any]
         edge[better_any] = np.where(dist <= hw + 0.3, np.maximum(hw - dist, 0.0), 5.0)[better_any]

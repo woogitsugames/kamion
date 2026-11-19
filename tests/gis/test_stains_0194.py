@@ -144,7 +144,8 @@ def test_plate_uv1_no_rings_beyond_the_chain_end():
     V = np.array([[x, y, 0.0] for x in (-1.0, 3.0, 6.0) for y in lat])     # before and 3 / 6 m past the end vertex
     uv1 = MS._patch_uv1(SimpleNamespace(sec_list=[sec]), j, V, None)
     lane = uv1[:, 0].reshape(3, len(lat))
-    assert np.allclose(lane[1], lane[0], atol=1e-6) and np.allclose(lane[2], lane[0], atol=1e-6), lane
+    # no radial growth: past the end the coordinate only eases to the nearest lane boundary (wheel paths fade out)
+    assert np.all(np.abs(lane[1] - lane[0]) <= 0.5 + 1e-9) and np.allclose(lane[2], np.rint(lane[0]), atol=1e-6), lane
 
 
 def test_road_asphalt_shoulder_strip_uses_no_roadwear_uv1():
