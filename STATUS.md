@@ -14,3 +14,7 @@ Worktree: .claude/worktrees/lanes-audit-s24 (gałąź lanes-audit-s24, -NoLibrar
   Po (generator w pamięci): maczka błąd linii mediana 0,50 -> 0,12 m, p90 1,52 -> 0,55; kleeberga 0,60 -> 0,30.
   W toku: artifacts/lanes-audit-s24/build.ps1 (build_world 4 kafli, slot heavy; status build/build.status).
   NASTĘPNY KROK: po build.status -> Library (robocopy z win-build gdy brak Unity tam) -> pwsh scripts/import-region.ps1 -Region bialystok-maczka -SkipCopy? -> visual-qa WorldC High.
+- 19.11 ~05:40: fit mierzy też przeciwną jezdnię; 19 wpisów (maczka 14, kleeberga 6). Po (after2): maczka linie 0,50->0,10 m (p90 1,52->0,60), kleeberga 0,60->0,25, knyszynska bez zmian.
+  Rendery przed: vqa/before/{bialystok-kleeberga,bialystok-maczka} (High overcast, kamery route_s*); po (r1 maczka, przed fitem przeciwnej jezdni): vqa/after/bialystok-maczka; pary vqa/view/pair-maczka-*.jpg.
+  W toku: build.ps1 r2 (maczka -> kleeberga -> industrial-c -> knyszynska, ~45 min/kafel), pytest roads/world_roads/0233.
+  NASTĘPNY KROK: po każdym kaflu `pwsh -File artifacts/lanes-audit-s24/vqa.ps1 -Region <id> -Tag after`, pary, visual-critic, kopia artifacts do main.
