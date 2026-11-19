@@ -1,3 +1,8 @@
+# STATUS edge-barriers-cli — s24
+- Naprawa źródłowa: indywidualne szlabany renderer+collider, rzeczywista strona wyjazdu, wysokość z nawierzchni własnego kafla, WorldEdge ukryty do Ready. Walidacja brakujących materiałów/błędów shaderów; build odrzuca stare ClosureGroup_*.
+- Testy: `dotnet test tools/spawn-runner/Tests/Tests.csproj` 30/30 PASS; dodano także testy integracyjne EditMode (bez uruchamiania Unity). Magenta t=510: dokładny materiał/wariant nadal UNVERIFIED; brak artefaktów zaimportowanych scen i logu kompilacji w tym worktree.
+- NASTĘPNY KROK (osobna sesja z Unity): `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64`, przebudować krawędzie obu tiers wszystkich używanych kafli, sprawdzić materiały Maczka/Kleeberga, następnie powtórzyć przejazd Windows. Bez push.
+
 # STATUS nav-uturn-alt — DK8 / wybór jezdni startowej
 - Odtworzono błędny snap 526 zamiast 530 na al. Tysiąclecia; kierunek był sprawdzany dopiero po ustaleniu krawędzi. Poprawka wybiera bliską jezdnię zgodną z kursem przed A*.
 - Dwa nowe testy EditMode + odpowiedniki .NET; regresja czerwona przed poprawką, całość nav-runner 96/96 PASS. Raport: `docs/reports/nav-uturn-alt.md`; dowody lokalne: `artifacts/nav-uturn/`.

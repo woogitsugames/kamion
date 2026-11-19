@@ -20,6 +20,11 @@
   <ItemGroup>
     <Compile Include="../../../game/Assets/_Project/Gameplay/StartSearch.cs" Link="Game/StartSearch.cs" />
     <Compile Include="../../../game/Assets/_Project/World/Runtime/StartClearance.cs" Link="Game/StartClearance.cs" />
+    <Compile Include="../../../game/Assets/_Project/World/Runtime/Streaming/EdgeClosureRules.cs" Link="Game/EdgeClosureRules.cs" />
+    <Compile Include="../../../game/Assets/_Project/World/Runtime/Streaming/EdgeSides.cs" Link="Game/EdgeSides.cs" />
+    <Compile Include="../../../game/Assets/_Project/World/Runtime/Streaming/TileGraph.cs" Link="Game/TileGraph.cs" />
+    <Compile Include="../../../game/Assets/_Project/World/Runtime/Streaming/TilePlacement.cs" Link="Game/TilePlacement.cs" />
+    <Compile Include="../../../game/Assets/_Project/World/Runtime/Streaming/StreamingPolicy.cs" Link="Game/StreamingPolicy.cs" />
     <Compile Include="*.cs" />
   </ItemGroup>
 
