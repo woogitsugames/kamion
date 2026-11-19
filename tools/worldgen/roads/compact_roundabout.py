@@ -77,6 +77,10 @@ LIMITS = {"closing_r_m": (1.0, 30.0), "splitter_w_m": (0.6, 8.0), "splitter_gap_
 # (WORKING_VALUE, GAMEPLAY_WIDEN: not measured; the owner's drone photo 9 shows wide sweeping returns there too).
 TRUCK_ENTRY_R_MIN_M = 12.0
 TRUCK_EXIT_R_MIN_M = 15.0
+# ... and the kerb returns between neighbouring arms (morphological closing of the paved outline, NOSE_R_M otherwise):
+# the semitrailer cut the 4 m returns at the entry of DK65 from the south (combo_lane_check); 12 m also matches the
+# sweeping corners on the owner's drone photo 9 (not measured).
+TRUCK_CORNER_R_M = 12.0
 OUTER_D_MAX_SHIFT = 0.4
 OUTER_D_MIN_SHIFT_M = 2.0
 FILLS = ("island_sand", "island_gravel", "verge_grass")
@@ -549,7 +553,8 @@ def _kerb_outline(net, spec: Spec, arms, disc, stubs):
     raw = shapely.union_all([disc] + list(stubs) + strips + [_ribbon(c) for c in spec.feeders])
     # the kerb radii are in the lanes already (lay_lanes); what is left are the cusps where the returns of two
     # neighbouring arms meet before the ring kerb and the slivers where a return runs into the ring disc
-    out = raw.buffer(NOSE_R_M, 32).buffer(-NOSE_R_M, 32)
+    rn = max(NOSE_R_M, TRUCK_CORNER_R_M) if S.GAMEPLAY_LANE_WIDEN_M else NOSE_R_M      # D94 / ADR 0306
+    out = raw.buffer(rn, 32).buffer(-rn, 32)
     return out.buffer(-1.0, 16).buffer(1.0, 16)              # nubs: corners of ribbons proud of a return
 
 

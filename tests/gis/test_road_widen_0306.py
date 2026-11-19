@@ -113,3 +113,23 @@ def test_corridor_pieces_follow_the_links():
     assert pieces["knyszyn-w"] == "link:knyszyn-w-dw671"               # start_epsg2180 link replaces the route
     assert pieces["bialystok-industrial-c"] == "route+link:c-dk8-to-maczka"
     assert pieces["dk65-05"] == "route"
+
+
+def test_knyszyn_widened_roundabout_builds_clean():
+    """The D94 roundabout (returns 12 / 15 m, corners TRUCK_CORNER_R_M) keeps 4 splitters, 4 crossings, 4 P-13 and no notes."""
+    import json
+    from roads import junctions as J
+    from roads import markings as MK  # noqa: F401
+    rid = "knyszyn"
+    region = pipeline.load_region(rid)
+    origin = (region["origin"]["x"], region["origin"]["y"])
+    ctx = json.loads((pipeline.REGIONS / rid / "generated" / "osm_context.json").read_text(encoding="utf-8"))
+    net = _net(rid, 0.25)
+    pts, foot = pipeline.ctx_local(ctx, origin)
+    N.assign_sides(net, foot, built_up=True, walkways=[], yards=None)
+    j = next(j for j in J.build_junctions(net, pts) if j.compact is not None)
+    sp = j.compact
+    rep = CR.report_one(sp)
+    assert rep["notes"] == [] and len(rep["rules"]) == 2, rep
+    assert rep["splitters"] >= 4 and len(sp.crossings) == 4 and len(sp.p13) == 4     # 7 at GAMEPLAY 0 (refuges cut)
+    assert rep["ring_asphalt_m"] == pytest.approx(5.25, abs=0.05)

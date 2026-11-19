@@ -32,6 +32,7 @@ def main(argv=None):
     ap.add_argument("combo"); ap.add_argument("tile"); ap.add_argument("e", type=float); ap.add_argument("n", type=float)
     ap.add_argument("half", type=float); ap.add_argument("out")
     ap.add_argument("--title", default=""); ap.add_argument("--piece", action="append")
+    ap.add_argument("--swing", action="store_true", help="draw the driver-swing line instead of the lane centre")
     a = ap.parse_args(argv)
     c = np.array([a.e, a.n])
     fig, ax = plt.subplots(figsize=(9.6, 9.6), dpi=100)
@@ -59,7 +60,7 @@ def main(argv=None):
         if a.piece and r["piece"] not in a.piece or r["piece"] in seen:
             continue
         seen.add(r["piece"])
-        D = r["dump"]
+        D = r["swing"]["dump"] if a.swing and "swing" in r and "dump" in r["swing"] else r["dump"]
         P = np.array(D["path"]); ax.plot(P[:, 0], P[:, 1], color="black", lw=0.8, zorder=4)
         pts, cls, axle = np.array(D["pts"]), np.array(D["cls"]), np.array(D["axle"])
         tr = np.char.startswith(axle.astype(str), "trailer")
