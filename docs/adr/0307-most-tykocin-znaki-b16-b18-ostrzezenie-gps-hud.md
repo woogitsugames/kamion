@@ -71,7 +71,31 @@ ok. 15–20 m), po prawej, twarzą do ruchu; B-16 na górze, B-18 pod nim. Warto
 - Teksty w tabelach `NavText` / `HudTexts` (PL). Nic nie jest blokowane ani przeplanowywane.
 
 ## Liczby (zmierzone 2026-11-19, `artifacts/bridge-warn-s24/`)
-PLACEHOLDER_NUMBERS
+| | wynik |
+|---|---|
+| kafel `tykocin` po przebudowie (`build_world` 470 s) | 2 słupki: wjazd południowy E 517,9 N −19,3, północny E 494,5 N 203,9 (układ kafla), oba 15,0 m przed mostem; `B-16_3.7` × 2, `B-18_12` × 2 (`streetscape_qa.json → furniture.limit_signs`) |
+| pytest `tests/gis/test_limit_signs_0307.py` | 5/5; ze znakami 0279 / 0236: 58 pass, 1 skip |
+| Unity EditMode Win64 (`NavRestriction0307Tests` 7, `NavTruckLimitsTests`, `HudRedesign0283Tests`, `NavRoutingTests`, `Nav0168Tests`) | 63/63 (`editmode-20261119-115752.xml`) |
+| Unity PlayMode Win64 (`NavRestrictionWarning0307Tests` 4, `NavTripTests`, `NavStreamFollowTests`, `CabScreensTests`) | 28/28 (`playmode-20261119-115912.xml`) |
+| .NET `tools/nav-runner` / `tools/hud-runner` | 94/94 / 11/11 |
+| most na trasie testowej (start 300 m przed szwem `dw671-tykocin-09` → `tykocin`) | kilometraż 1249…1443 m z 1610 m; początek odcinka < 2 m od północnego przyczółka |
+
+Przejazd playerem Windows (exe `kamion-0.1.0-b7374f8d68-dirty-regions`: `dw671-tykocin-09` + `tykocin`, Medium, 60 FPS cap,
+1600×900, autopilot 50 km/h, `-stream 1 -route_to tykocin -shot_every 5 -nav_log 10`, 300 s, exit 0, 0 wyjątków;
+`artifacts/bridge-warn-s24/run/player.log`, zrzuty `run/`):
+- `[NAV] trip tykocin planned: legs 27..28, length 2283 m … legs over a truck limit 1` — trasa zostaje przez most (D91).
+- między t = 115 s a 125 s: `[NAV] restriction ahead: maxheight 3.70 m, maxweight 12.00 t …; combination 4.00 m / 40.00 t;
+  exceeded=Height, Weight; in 500 m on 'Włodzimierza Puchalskiego' (route); warning only, not blocked`.
+- zrzut t = 125 s (`run/crops.jpg`): minimapa — pod wskazówką pasek ze znakami „3,7m” i „12t”, „Ograniczenie / za 440 m”;
+  HUD w kabinie — bursztynowe kafle wysokości i masy. t = 165 s (`run/sign.jpg`): w świecie przed mostem słupek B-16 „3,7 m”
+  nad B-18 „12t” po prawej; t = 170 s: na moście pasek „na tym odcinku”.
+- między t = 165 s a 176 s: `[NAV] on the restricted stretch …`; za mostem pasek i kafle znikają; t = 216 s: ciężarówka stoi na
+  Rynku (remaining 4 m) — nic nie zablokowane, 0 przeplanowań.
+- p50 / p95 / p99 = 16,67 / 16,67 / 17,00 ms (cap 60 FPS, maszyna dewelopera — nie pomiar wydajności).
+- Znalezisko z pierwszego zrzutu: kafel „WYSOKOŚĆ 3,7 m” łamał się na dwie linie (kafel 184 j) → tekst skrócony do
+  „WYS. 3,7 m”; RUN2_NOTE
+- Znalezisko z importu: `WorldPbrMaterials.FurnitureSign` odrzucał nazwę twarzy z kropką (`B-16_3.7`; tak samo odrzuciłby
+  `B-18_7.5`) — wyrażenie rozszerzone o „.”.
 
 ## Konsekwencje / otwarte
 - B-18 12 t na moście: WORKING_VALUE do zdjęcia po 08.2026 (i rodzaj znaku: B-18 czy B-5 + tabliczka).
