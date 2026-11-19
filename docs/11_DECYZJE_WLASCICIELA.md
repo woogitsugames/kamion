@@ -183,3 +183,6 @@ Właściciel (klik, bez odsłuchu): docelowa głośność dźwięku w kabinie �
 
 ## D93 — Priorytety po buildzie #2 (2026-11-19, s24)
 Właściciel (klik, wszystkie cztery): (1) Białystok — drogi (pasy, szerokości, oznakowanie, skrzyżowania na trasie), (2) wygląd świata (drzewa przydrożne, lasy, zieleń miasta, kontrast/światło), (3) ciężarówka i jazda (kabina, dźwięk, fizyka, lusterka, sterowanie), (4) nowe regiony (Krywlany, dalej S8/DK8, Mońki). Agenci równolegle, do 5 + CLI.
+
+## D94 — Drogi szersze niż w rzeczywistości dla grywalności (2026-11-19, s24)
+Właściciel: „trzeba zrobić jezdnie szersze niż w realu, bo będzie ludziom ciężko” — np. wlot ronda w Knyszynie wymusza lekki wjazd na przeciwny pas. Decyzja (klik): **każdy pas +0,25 m względem rzeczywistości/pomiaru (ortofoto, OSM, BDOT)**, a **wloty/wyloty rond i skrzyżowań oraz łuki krawężników poszerzone tak, by zestaw 16,5 m (ciągnik + naczepa 13,6 m) mieścił się bez wjazdu na przeciwny pas** — sprawdzane torem jazdy naczepy (link_swept_check / route_obstacles) na wszystkich trasach korytarza. Wierność układu (liczba pasów, przebieg) bez zmian; tylko szerokości i promienie. Pierwszeństwo: rondo DK65/DW671 w Knyszynie i podobne ciasne miejsca.
