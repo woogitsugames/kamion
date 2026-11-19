@@ -62,3 +62,9 @@
   i `uv run --project tools/worldgen python -m pytest -q tests/gis/test_road_fidelity.py tests/gis/test_road_consistency.py tests/gis/test_road_widen_0306.py`.
 - Otwarte: przejazd playerem przez rondo (nie zrobiony), EditMode Win64 (nie uruchomione), pełne pytest tests/gis
   (uruchomione podzbiory 0306/0301/0274/lane_edges: 103 zielone), łączniki Rynek Knyszyn (skręty w Rynku: opp 32–37).
+- 15:5x (wznowienie): reguła w prawo tylko część GAMEPLAY (≤ 0,5 m, `GROW_RIGHT_MAX_M`), podłoga BDOT symetrycznie;
+  r5 = C + fidelity w toku (`artifacts/road-widen-s24/rebuild-r5.log`). VQA Knyszyn after2 obejrzane: narożniki ronda
+  szerokie jak na zdjęciu 9, oznakowanie P-10/P-13 na miejscu (`artifacts/road-widen-s24/top_vqa_after_vs_before.jpg`).
+  Build playera knyszyn-s/knyszyn/knyszyn-w + przejazd autopilota (`player.ps1`, log `player-build.log` / `player-run.log`).
+- NASTĘPNY KROK: po r5 consistency/fidelity C; po player.status analiza telemetrii
+  `uv run --no-project python tools/worldgen/qa/combo_player_run.py <telemetry.csv> --link knyszyn-dk65-to-dw671-w`.
