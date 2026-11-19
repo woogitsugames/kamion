@@ -9,7 +9,7 @@ overrides.yaml, so an authored entry for the same edge wins; edges an authored o
 Per station (every --step m of route_start.json, >= END_SKIP_M from both ends of the graph edge, one-way edges of
 FIT_HIGHWAYS with >= 2 lanes): the orthophoto profile of qa/lane_width_audit.py (0.08 m cells, 25 rows +-6 m) in the
 frame of the raw OSM way (x = left of travel from the way). Lane boundaries = the longest chain of paint lines spaced
-LANE_GAP m; at each side the chain ends on an edge line (<= EDGE_NEAR_M from the asphalt edge) or on the asphalt edge
+LANE_GAP m; at each side the chain ends on an edge line (asphalt < one lane beyond it) or on the asphalt edge
 itself when that is one lane further out; a side gap of AMBIG_GAP m (a missed line) rejects the station.
 Per edge: the modal lane count among >= MIN_STATIONS stations, share >= MODE_SHARE; median boundaries and asphalt
 edges of those stations; every boundary MAD <= MAX_MAD_M, else the edge keeps the generator default.
@@ -118,7 +118,9 @@ def station_layout(asph, lines, at=None, lanes=None):
     for side, edge in ((0, aR), (1, aL)):
         end = b[0] if side == 0 else b[-1]
         gap = abs(edge - end)
-        if gap <= EDGE_NEAR_M:
+        if gap < LANE_GAP[0]:
+            # the outermost line with asphalt less than a lane beyond it: an edge line (P-7) with the edge strip /
+            # paved strip / gutter behind it (gap <= EDGE_NEAR_M: right at the kerb)
             flags[side] = closed[side] = True
         elif LANE_GAP[0] <= gap <= LANE_GAP[1]:
             closed[side] = True
@@ -259,7 +261,7 @@ def fit(regions, step=10.0, out=None, dry=False):
             continue
         fl = [sum(x["flags"][i] for x in g) * 2 > len(g) for i in (0, 1)]
         le = [round(aL - x, 2) for x in reversed(B)]
-        el = {(True, True): "both", (False, True): "left", (True, False): "right"}.get((fl[1], fl[0]), "none")
+        el = {(True, True): "both", (True, False): "left", (False, True): "right"}.get((fl[1], fl[0]), "none")
         e = frames[eid][3]
         osm_l = (e["attrs"].get("lanes") or {}).get("v")
         entry = {"id": f"ortho-lanes-{eid}", "target": {"edge": eid},
