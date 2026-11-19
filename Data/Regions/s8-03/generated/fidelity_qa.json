@@ -97,7 +97,7 @@
   "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
   "tools/worldgen/roads/authored_paint.py": "cfa394a6e9c34275a8e07176ac76336a035d50acd959c11a530b55ab1508451e",
   "tools/worldgen/roads/barrier_audit.py": "786d6dfd30de7dd51f60c793136839d43fcd9d214e103f392d613b68f1b18103",
-  "tools/worldgen/roads/build_world.py": "fc18566ef9806e03a9c5bd9f3ef18e291b65cdda1923cc8fd70ae5b652c91f72",
+  "tools/worldgen/roads/build_world.py": "6b1177a5d1cd42c157cd522ce8ab3da35786c2b709d9347b934de25a13e02beb",
   "tools/worldgen/roads/carriageway_split.py": "c79e82ddcf05d4363e231b4546f25dc37ada97e8d9cfe2f3974a91f2fe1b603d",
   "tools/worldgen/roads/closures.py": "608718189eb6680ca61538d47acb021d1be85e4dbbd001f315a0f2caffb45fa9",
   "tools/worldgen/roads/compact_roundabout.py": "ff0089a0fed14118214e58eb12e719595cd375f4709c61be7640be316df44625",
@@ -109,16 +109,16 @@
   "tools/worldgen/roads/junctions.py": "ccb0a1a97e98062b2cc7d254b1054dd73c9afc2131ea82db5e528b3d739b0fde",
   "tools/worldgen/roads/markings.py": "573a9a027e40923ef9d6a5112dc29d052ec800a8029681803b5338e95bad6c5e",
   "tools/worldgen/roads/meshing.py": "698b233175e9aaecafbbc9459842899bac88e28a6d5e39acee8537609d315f97",
-  "tools/worldgen/roads/network.py": "3794dd1c9fd1787fda6f686a010c71b0373fa9a2396e2ff61cc7d470aeed6bce",
+  "tools/worldgen/roads/network.py": "f88ee349bc366da02dac986a277bfa19afd147375fc7a3c770b5ab0718402dae",
   "tools/worldgen/roads/p21_hatch.py": "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
-  "tools/worldgen/roads/pipeline.py": "2ee2df8e8e06456c2d51df7fc89506978cce51a5b742dd14860230f79f8d064e",
+  "tools/worldgen/roads/pipeline.py": "5652e58227bd1c7a3cf4512a7306c5e3983e0578e8bfab0d59c27b1ab393a3c4",
   "tools/worldgen/roads/profile.py": "9d6e30a5492c79815637b1462aa74b88853ee9ec864eb3aa9a32109cd8124a58",
   "tools/worldgen/roads/qa_ortho.py": "6e32d52950954922afceae3ee2f0aa379b8d42467c2d294b7e951750d39f3e6b",
   "tools/worldgen/roads/route.py": "e8bb7cd40bd2bf4dfef526aff16bafda35e2b8e68d64f2a8fb576818a453c5b4",
   "tools/worldgen/roads/route_km.py": "4e961cd1608d6265c3fd27edd2690830628bffec0ec8f65bec44659b06143086",
   "tools/worldgen/roads/seam_p2a.py": "56835afa4136a1648aa3a9bb69d8bb0381d5951c4a7922c146de313ab5162c4f",
-  "tools/worldgen/roads/seam_taper.py": "534bfa9173f914844780309aa9ae5040734e080a3d838b985df2c1c2f0792244",
-  "tools/worldgen/roads/standards.py": "b9f9f91e376482a2456875224a038b884f3e1080ec9f0603226d7981d9ef0228",
+  "tools/worldgen/roads/seam_taper.py": "0ebb1ff856da89a7600aa1686e3faccb41a27a2cc4d8ce45fd169d054a43c141",
+  "tools/worldgen/roads/standards.py": "662899007136da033393a84bfdfe7803349d54a83ea126e5e4dfb90e09dc2c65",
   "tools/worldgen/roads/swept_path.py": "0112cbd81b02fd3c5930d385e6ba918b607011d4f6dd5f7a80809c0d62ae2d05",
   "tools/worldgen/roads/through_lines.py": "be22b6b67118b50577e67ae1520287dcd5831b39400e7f2b805fde1b6e2795c5",
   "tools/worldgen/roads/tunnels.py": "457ebe6b41c49ce56af52d2a3ac5db2b170e9be2644745ad3c9de441447bd88f",
@@ -147,7 +147,7 @@
   },
   {
    "chain": "c:w536211865:1937542648-1937542649",
-   "dist_m": 10.0,
+   "dist_m": 10.5,
    "junction": "j:n1937542649",
    "lane_index_from_left": 2,
    "lane_start_xy": [
@@ -156,13 +156,13 @@
    ],
    "on_route": false,
    "ortho_green_frac": 0.0,
-   "ortho_road_frac": 0.993,
+   "ortho_road_frac": 0.388,
    "ortho_src": "wms_hr_0.08",
    "turn": "slight_right",
-   "verdict": "generator_island_on_real_road",
+   "verdict": "ambiguous",
    "xy": [
-    -94.69,
-    -164.92
+    -95.18,
+    -164.95
    ]
   },
   {
@@ -230,13 +230,13 @@
    "gen": {
     "bwd": 0,
     "fwd": 2,
-    "lane_w": 3.5,
+    "lane_w": 3.75,
     "lanes": 2,
     "oneway": true,
     "turn_bwd": null,
     "turn_fwd": null,
-    "width": 8.5,
-    "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "width": 9.0,
+    "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    },
    "highway": "motorway_link",
    "issues": [
@@ -1168,18 +1168,18 @@
    "edges": {
     "all_sides": {
      "max": 5.0,
-     "n": 603,
-     "p50": 0.52,
-     "p95": 2.195
+     "n": 543,
+     "p50": 0.6,
+     "p95": 2.2
     },
-    "detected_sides": 603,
+    "detected_sides": 543,
     "max": 2.68,
-    "n": 481,
-    "p50": 0.6,
-    "p95": 1.96,
-    "signed_p50": 0.6,
-    "stations": 538,
-    "valid_sides": 481
+    "n": 424,
+    "p50": 0.76,
+    "p95": 2.04,
+    "signed_p50": 0.76,
+    "stations": 537,
+    "valid_sides": 424
    },
    "lanes": {
     "edge": "w536205569:469876632-1937542657",
@@ -1200,8 +1200,8 @@
     "match": true,
     "name": null,
     "ortho": {
-     "agree": 0.83,
-     "lanes": 3,
+     "agree": 1.0,
+     "lanes": 1,
      "strips": [
       {
        "frac_max": 0.899,
@@ -1209,56 +1209,6 @@
        "n_sep": 0,
        "s": 68.0,
        "width": 5.28
-      },
-      {
-       "frac_max": 0.938,
-       "lines": [
-        -4.3,
-        2.94
-       ],
-       "n_sep": 2,
-       "s": 284.0,
-       "width": 10.64
-      },
-      {
-       "frac_max": 1.0,
-       "lines": [
-        -4.34,
-        2.9
-       ],
-       "n_sep": 2,
-       "s": 308.0,
-       "width": 10.68
-      },
-      {
-       "frac_max": 1.0,
-       "lines": [
-        -4.34,
-        2.9
-       ],
-       "n_sep": 2,
-       "s": 332.0,
-       "width": 10.48
-      },
-      {
-       "frac_max": 1.0,
-       "lines": [
-        -4.38,
-        2.86
-       ],
-       "n_sep": 2,
-       "s": 356.0,
-       "width": 10.48
-      },
-      {
-       "frac_max": 1.0,
-       "lines": [
-        -4.3,
-        2.94
-       ],
-       "n_sep": 2,
-       "s": 380.0,
-       "width": 10.48
       }
      ]
     },
@@ -1835,11 +1785,11 @@
      ]
     },
     {
-     "area_m2": 29.6,
+     "area_m2": 30.8,
      "kind": "gen_only",
      "xy": [
-      -326.25,
-      -180.654
+      -326.289,
+      -180.657
      ]
     },
     {
@@ -1867,6 +1817,14 @@
      ]
     },
     {
+     "area_m2": 11.5,
+     "kind": "gen_only",
+     "xy": [
+      -305.908,
+      -179.808
+     ]
+    },
+    {
      "area_m2": 10.8,
      "kind": "ortho_only",
      "xy": [
@@ -1891,11 +1849,11 @@
      ]
     },
     {
-     "area_m2": 9.4,
+     "area_m2": 9.5,
      "kind": "gen_only",
      "xy": [
-      -381.181,
-      -182.14
+      -381.174,
+      -182.135
      ]
     },
     {
@@ -2018,7 +1976,7 @@
      "area_m2": 489.0,
      "half_width_m": 2.0,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.349,
+     "ortho_road_frac": 0.348,
      "route_dist_m": 7.7,
      "verdict": "partial",
      "xy": [
@@ -2030,7 +1988,7 @@
      "area_m2": 1393.6,
      "half_width_m": 5.25,
      "ortho_green_frac": 0.639,
-     "ortho_road_frac": 0.108,
+     "ortho_road_frac": 0.109,
      "route_dist_m": 25.0,
      "verdict": "present",
      "xy": [
@@ -2042,20 +2000,20 @@
    "half_m": 70,
    "id": "08_signals",
    "iou": {
-    "gen_m2": 5692.1,
-    "iou": 0.899,
-    "ortho_m2": 6106.9
+    "gen_m2": 5695.6,
+    "iou": 0.895,
+    "ortho_m2": 6085.3
    },
    "lane_into_island": [],
    "name": "Skrzyżowanie z sygnalizacją s 1355-1415",
    "ortho_islands_missing_in_gen": [
     {
-     "area_m2": 32.9,
+     "area_m2": 33.9,
      "green_frac": 0.0,
      "on_gen_carriageway": 1.0,
      "route_dist_m": 6.3,
      "xy": [
-      -326.301,
+      -326.329,
       -180.721
      ]
     }
@@ -2155,18 +2113,18 @@
    "edge_vs_ortho_m": {
     "all_sides": {
      "max": 5.0,
-     "n": 1384,
-     "p50": 0.49,
+     "n": 1324,
+     "p50": 0.52,
      "p95": 2.6
     },
-    "detected_sides": 1384,
+    "detected_sides": 1324,
     "max": 3.56,
-    "n": 941,
-    "p50": 0.6,
+    "n": 884,
+    "p50": 0.68,
     "p95": 2.2,
-    "signed_p50": 0.36,
-    "stations": 954,
-    "valid_sides": 941
+    "signed_p50": 0.44,
+    "stations": 953,
+    "valid_sides": 884
    },
    "edges": 5,
    "gen_islands_absent_on_ortho": 0,
@@ -2189,7 +2147,7 @@
     "05_s900": 0.0,
     "06_s1060_merge": 0.663,
     "07_s1270": 0.856,
-    "08_signals": 0.899,
+    "08_signals": 0.895,
     "09_s1600": 0.876,
     "10_rondo_putry": 0.902,
     "11_dk8": 0.0
@@ -2207,18 +2165,18 @@
    "edge_vs_ortho_m": {
     "all_sides": {
      "max": 6.76,
-     "n": 4835,
+     "n": 4815,
      "p50": 0.71,
-     "p95": 3.16
+     "p95": 3.146
     },
-    "detected_sides": 4835,
+    "detected_sides": 4815,
     "max": 5.375,
-    "n": 2045,
-    "p50": 0.663,
-    "p95": 2.125,
-    "signed_p50": 0.44,
-    "stations": 2652,
-    "valid_sides": 2045
+    "n": 2001,
+    "p50": 0.68,
+    "p95": 2.04,
+    "signed_p50": 0.41,
+    "stations": 2650,
+    "valid_sides": 2001
    },
    "graph_vs_fresh_osm_max_m": {
     "max": 0.001,
@@ -2230,7 +2188,7 @@
     "max": 0.83,
     "n": 37,
     "p50": 0.744,
-    "p95": 0.797
+    "p95": 0.809
    },
    "junction_windows": 37,
    "lane_into_island": 3,
@@ -2283,9 +2241,9 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 986.0,
-    "iou": 0.527,
-    "ortho_m2": 929.6
+    "gen_m2": 1006.2,
+    "iou": 0.54,
+    "ortho_m2": 931.1
    },
    "junction": "j:n10289698288",
    "ortho_islands_missing": 0,
@@ -2334,9 +2292,9 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 1016.9,
-    "iou": 0.622,
-    "ortho_m2": 838.9
+    "gen_m2": 1031.9,
+    "iou": 0.607,
+    "ortho_m2": 821.1
    },
    "junction": "j:n1937542673",
    "ortho_islands_missing": 1,
@@ -2399,8 +2357,8 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 845.0,
-    "iou": 0.707,
+    "gen_m2": 845.5,
+    "iou": 0.708,
     "ortho_m2": 760.8
    },
    "junction": "j:n1937542664",
@@ -2447,9 +2405,9 @@
    ],
    "gen_islands_absent_on_ortho": 1,
    "iou": {
-    "gen_m2": 1122.6,
-    "iou": 0.725,
-    "ortho_m2": 1316.1
+    "gen_m2": 1124.0,
+    "iou": 0.726,
+    "ortho_m2": 1316.9
    },
    "junction": "j:n5195037167",
    "ortho_islands_missing": 0,
@@ -2511,9 +2469,9 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 1338.6,
+    "gen_m2": 1340.5,
     "iou": 0.743,
-    "ortho_m2": 1479.8
+    "ortho_m2": 1480.1
    },
    "junction": "j:n1937542622",
    "ortho_islands_missing": 0,
@@ -2559,7 +2517,7 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 1253.2,
+    "gen_m2": 1253.5,
     "iou": 0.745,
     "ortho_m2": 1329.6
    },
@@ -2591,9 +2549,9 @@
    ],
    "gen_islands_absent_on_ortho": 1,
    "iou": {
-    "gen_m2": 1290.2,
+    "gen_m2": 1290.9,
     "iou": 0.756,
-    "ortho_m2": 1327.9
+    "ortho_m2": 1327.8
    },
    "junction": "j:n5591725226",
    "ortho_islands_missing": 0,
@@ -2639,9 +2597,9 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 1367.9,
+    "gen_m2": 1367.8,
     "iou": 0.76,
-    "ortho_m2": 1406.5
+    "ortho_m2": 1406.4
    },
    "junction": "j:n2790261605",
    "ortho_islands_missing": 0,
@@ -2655,29 +2613,13 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 1249.9,
+    "gen_m2": 1251.1,
     "iou": 0.762,
-    "ortho_m2": 1379.0
+    "ortho_m2": 1379.8
    },
    "junction": "j:n5195037169",
    "ortho_islands_missing": 0,
    "roundabout": true,
-   "signalized": false
-  },
-  {
-   "center_en": [
-    227.1,
-    -276.2
-   ],
-   "gen_islands_absent_on_ortho": 0,
-   "iou": {
-    "gen_m2": 612.0,
-    "iou": 0.765,
-    "ortho_m2": 722.8
-   },
-   "junction": "j:n1937542627",
-   "ortho_islands_missing": 1,
-   "roundabout": false,
    "signalized": false
   },
   {
@@ -2694,22 +2636,6 @@
    "junction": "j:n2790261610",
    "ortho_islands_missing": 1,
    "roundabout": true,
-   "signalized": false
-  },
-  {
-   "center_en": [
-    263.0,
-    -254.4
-   ],
-   "gen_islands_absent_on_ortho": 0,
-   "iou": {
-    "gen_m2": 744.6,
-    "iou": 0.767,
-    "ortho_m2": 895.2
-   },
-   "junction": "j:n2329880102",
-   "ortho_islands_missing": 0,
-   "roundabout": false,
    "signalized": false
   },
   {
@@ -2746,22 +2672,6 @@
   },
   {
    "center_en": [
-    106.6,
-    -322.6
-   ],
-   "gen_islands_absent_on_ortho": 0,
-   "iou": {
-    "gen_m2": 557.6,
-    "iou": 0.784,
-    "ortho_m2": 629.4
-   },
-   "junction": "j:n6302208052",
-   "ortho_islands_missing": 1,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
     -66.3,
     74.7
    ],
@@ -2778,12 +2688,28 @@
   },
   {
    "center_en": [
+    227.1,
+    -276.2
+   ],
+   "gen_islands_absent_on_ortho": 0,
+   "iou": {
+    "gen_m2": 636.6,
+    "iou": 0.793,
+    "ortho_m2": 723.8
+   },
+   "junction": "j:n1937542627",
+   "ortho_islands_missing": 1,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
     -63.3,
     62.5
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 1492.9,
+    "gen_m2": 1493.1,
     "iou": 0.795,
     "ortho_m2": 1596.2
    },
@@ -2822,6 +2748,38 @@
    "junction": "j:n5195037174",
    "ortho_islands_missing": 0,
    "roundabout": true,
+   "signalized": false
+  },
+  {
+   "center_en": [
+    263.0,
+    -254.4
+   ],
+   "gen_islands_absent_on_ortho": 0,
+   "iou": {
+    "gen_m2": 784.3,
+    "iou": 0.809,
+    "ortho_m2": 892.8
+   },
+   "junction": "j:n2329880102",
+   "ortho_islands_missing": 0,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
+    106.6,
+    -322.6
+   ],
+   "gen_islands_absent_on_ortho": 0,
+   "iou": {
+    "gen_m2": 581.8,
+    "iou": 0.811,
+    "ortho_m2": 635.1
+   },
+   "junction": "j:n6302208052",
+   "ortho_islands_missing": 1,
+   "roundabout": false,
    "signalized": false
   },
   {

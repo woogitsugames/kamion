@@ -210,11 +210,11 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.54,
+   "axis_smoothing_dev_max_m": 0.56,
    "bridge_m": 83.2,
    "grade_limit": 0.11,
    "highway": [
@@ -225,17 +225,17 @@
     2
    ],
    "length_m": 489.5,
-   "max_grade": 0.044,
+   "max_grade": 0.0439,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.072,
+   "profile_rms_vs_nmt_m": 0.113,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5,
-    6.0
+    6.5
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard",
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -281,7 +281,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -304,7 +304,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -375,7 +375,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -421,7 +421,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -605,7 +605,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -628,7 +628,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -651,7 +651,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -813,7 +813,7 @@
    "patches": 114
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 161297,
+  "footprint_nodes": 161282,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -869,7 +869,7 @@
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 296,
+  "nmt_nodes_replaced_under_decks": 322,
   "overrides_applied": [
    {
     "id": "s8-xsec-w100133887",
@@ -924,7 +924,7 @@
   },
   "verge_strips": {
    "chunks": 34,
-   "tris": 9084
+   "tris": 9128
   },
   "walled_ramps": [
    {
