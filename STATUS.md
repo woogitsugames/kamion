@@ -25,3 +25,8 @@
 - Roleta wróciła do autorskiego 0,10 m. ADR: `docs/adr/DRAFT-d84-kabina-polish-zmierzch-i-ziarno.md`.
 - Otwarte: lusterka/daszek poza kadrem 62° (decyzja pitch/FOV — A/B `cab-driver-ab10`), ciepła poświata niemierzalna na piaście, brak zdjęć referencyjnych (docs/06 §5 pkt 3), kurz bez zmian, pojedyncze jaśniejsze odcinki żeber tacek (atlas AO), kamery QA nie w scenie DrivingLab (`pwsh scripts/build-lab.ps1 -SkipAudio`).
 - NASTĘPNY KROK (lider): visual-critic na `view/ab-*.jpg`, `f-*`; po scaleniu w main: `-executeMethod Game.Editor.Setup.TruckAssetBuilder.BuildBatch`, potem `Game.World.Import.WorldTruckInstaller.InstallBatch`.
+
+# STATUS guardrail-zebra-cli — s24 (WIP)
+- Dodano kontrolę odcinków barier po wygładzaniu/łączeniu oraz przycinanie P-10 przy wysepkach i między łańcuchami; review drugiego agenta uwzględnione.
+- Testy jednostkowe: 9/9 PASS; istniejące testy barier/oznakowania: 29/29 PASS. Testy rzeczywistych kafli w toku, bez Unity/build_world.
+- NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_drive_s24_surface_safety.py -q -s` (pomiar regresji na Data/Regions); dokończyć raport i commit. Bez push.
