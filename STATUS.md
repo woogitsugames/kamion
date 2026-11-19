@@ -1,3 +1,9 @@
+# STATUS nav-uturn-alt — DK8 / wybór jezdni startowej
+- Odtworzono błędny snap 526 zamiast 530 na al. Tysiąclecia; kierunek był sprawdzany dopiero po ustaleniu krawędzi. Poprawka wybiera bliską jezdnię zgodną z kursem przed A*.
+- Dwa nowe testy EditMode + odpowiedniki .NET; regresja czerwona przed poprawką, całość nav-runner 96/96 PASS. Raport: `docs/reports/nav-uturn-alt.md`; dowody lokalne: `artifacts/nav-uturn/`.
+- Unity i player nieuruchamiane; brak potwierdzenia dokładnej klatki „300 m”. Bez zmian w Pythonie i bez pushowania.
+- NASTĘPNY KROK (w osobnej autoryzowanej sesji Unity): `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64`, następnie przejazd DK8 z logiem `-nav_log 1`.
+
 # STATUS cabin-polish-s23 (D84: wnętrze kabiny PC — polish po recenzji REVIEW-2026-11-17-s23-cabin-pc)
 - Worktree z origin/main 14925a7cc. Skrypty odłączone: `artifacts/cabin-polish-s23/{run,chain,assets-win64,bl,a6}.ps1` (status `*.status`, `exit=`).
 - Plastik (P1-2): `plastic_grain.py` + `cab_material_scans.json` — ziarno 2–5 mm (waga 0,7) + plamy połysku 2,5–10 cm; normalne mediana 10,3°, p95 20,7° (było 6,9°/14,1°). Z fotela 1 px ≈ 0,9 mm (wyliczone).

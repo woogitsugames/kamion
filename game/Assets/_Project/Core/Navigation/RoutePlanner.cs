@@ -29,6 +29,8 @@ namespace Game.Core.Navigation
         public const float MaxTruckKmh = 80f;
         /// <summary>Snap distance for the start and the destination [m].</summary>
         public const float SnapStartM = 60f, SnapGoalM = 80f;
+        /// <summary>Maximum extra snap distance to resolve opposing carriageways at the start [m], WORKING_VALUE.</summary>
+        public const float SnapHeadingExtraM = 15f;
         /// <summary>Penalties [s]. WORKING_VALUES.</summary>
         public const float RightTurnS = 6f, LeftTurnS = 10f, SharpTurnS = 20f, DeadEndUTurnS = 240f, AgainstHeadingS = 300f, RestrictedS = 600f;
 
@@ -191,8 +193,20 @@ namespace Game.Core.Navigation
             path.Clear();
             LastExpanded = 0;
             m_UsedRelaxed = false;
-            int se = g.Snap(start, SnapStartM, out float sAlong, out Vector2 sPt, out _);
+            Vector2 heading = float.IsNaN(headingDeg) ? Vector2.zero
+                : new Vector2(Mathf.Sin(headingDeg * Mathf.Deg2Rad), Mathf.Cos(headingDeg * Mathf.Deg2Rad));
+            int se = g.Snap(start, SnapStartM, out float sAlong, out Vector2 sPt, out float sDist);
             if (se < 0) return PlanStatus.StartOffRoad;
+            // Distance alone can select the opposite one-way carriageway. The A* heading penalty is too late:
+            // it can only start on that edge, so it would drive against the truck and plan a false U-turn.
+            // Reconsider nearby aligned edges before se fixes the start topology; retain the nearest edge when
+            // no plausible alternative exists (e.g. a truck actually facing the wrong way on a one-way road).
+            if (heading != Vector2.zero && g.IsOneway(se) && Vector2.Dot(g.DirectionAt(se * 2, sAlong, 8f), heading) < -0.2f)
+            {
+                int aligned = g.Snap(start, Mathf.Min(SnapStartM, sDist + SnapHeadingExtraM),
+                    out float aAlong, out Vector2 aPt, out _, heading: heading);
+                if (aligned >= 0) { se = aligned; sAlong = aAlong; sPt = aPt; }
+            }
             // M27: prefer an edge drivable to from the main component; an off-reach goal falls back to the plain snap
             // and then fails with NoPath (the UI never sends such a goal - SetPin snaps the pin to the reachable part).
             // Off-reach edges are NOT skipped in the search (integration r5): A* never reaches them from the main part
@@ -207,8 +221,6 @@ namespace Game.Core.Navigation
             int gen = Gen();
             int goalState = g.DirectedCount;
             m_HeapCount = 0;
-            Vector2 heading = float.IsNaN(headingDeg) ? Vector2.zero
-                : new Vector2(Mathf.Sin(headingDeg * Mathf.Deg2Rad), Mathf.Cos(headingDeg * Mathf.Deg2Rad));
             float hInv = 3.6f / MaxTruckKmh;
             int goalPrev = -1, goalVia = -1;   // goalVia = directed edge that reaches the goal point; goalPrev = its predecessor (-1: start)
             float goalCost = float.MaxValue;
