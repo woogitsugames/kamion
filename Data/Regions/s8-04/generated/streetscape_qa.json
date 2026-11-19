@@ -39,6 +39,12 @@
    "house": 40,
    "office": 22,
    "shed": 93
+  },
+  "wooden_houses": {
+   "board_tris_lod0": 0,
+   "boarding_runs": 0,
+   "longest_run_m": 0.0,
+   "runs_over_tile": 0
   }
  },
  "cycleways": {
@@ -33465,6 +33471,9 @@
    },
    "on_screened_deck_m": 0.0,
    "signs_moved_off_wall": [],
+   "style_rule_m": {
+    "rule: motorway / expressway": 123
+   },
    "zones_stale": []
   },
   "noise_barriers_m": 123,
@@ -36645,6 +36654,20 @@
  "terrain_soft_nodes": 7665,
  "terrain_walled_fill_lowered_nodes": 42,
  "vegetation": {
+  "farmland": {
+   "b_mean_after": 0.2721,
+   "b_mean_before": 0.6251,
+   "b_std_after": 0.2381,
+   "b_std_before": 0.2618,
+   "cells_m2": 3407881,
+   "garden_b_mean_after": 0.2739,
+   "garden_b_mean_before": 0.6176,
+   "garden_b_std_after": 0.0505,
+   "garden_b_std_before": 0.2604,
+   "garden_cells_m2": 51200,
+   "layout": "ESTIMATED strips (no cadastral parcels in the repo)",
+   "share": 0.8117
+  },
   "forest_clearings": {
    "applied": [],
    "stale": []
