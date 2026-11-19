@@ -42,3 +42,23 @@
 - NASTĘPNY KROK: po r4: fidelity C islands 0, road_consistency C (≤55, trasa ≤1); import knyszyn + VQA; testy gis.
 - 15:1x: C r4 (prawo-rosnące + L/D limit): lane_blind_end 44 (ratchet 55 OK, main 57), trasa 2 (>1; main 3),
   marking_off_carriageway 6 (>3; main 4), obstacle_in_lane 3 (>2). Badam przypadki (fidelity zoom c_cases). fidelity C po r4 w toku.
+
+## STOP 15:4x (limit tygodniowy 91 %) — stan dokładny
+- Gałąź `road-widen-s24`, worktree `.claude/worktrees/road-widen-s24` (prywatna kopia derived; przebudowane tam: knyszyn
+  (r4, po merge klattow), knyszyn-s, knyszyn-w (r3), tykocin, dk65-05, bialystok-kleeberga (r2, PRZED regułą „rośnie w prawo”),
+  bialystok-industrial-c (r4)). Nic w tle nie działa (r4 exit=0, Unity after2 exit=0). Pliki generated/route_start/
+  route_links w worktree NIE commitowane (przelicza fala w main).
+- Wyniki: knyszyn DK65→DW671 W środek pasa opp/kerb/off 0/23/5 → 0/3/0, DK65→DK65 W 0/16/0 → 0/0/0 (r3); tykocin opp
+  109 → 7 (swing 0); C r4: road_consistency lane_blind_end 44 (≤55, main 57), na trasie 2 (>1, main 3),
+  marking_off_carriageway 6 (>3, main 4), obstacle_in_lane 3 (>2); fidelity islands_absent 2 (main 1, r3 symetrycznie 4)
+  — oba na DK8 11_dk8 (xy -549.8/216.1 i -554.3/118.8), ortho_road_frac 0,91–0,98: pas dzielący po regule „jednokierunkowa
+  rośnie w prawo” szerszy niż w realu (3,87 m vs ~1,5 m zieleni) → NIE ZAMKNIĘTE. Przyczyna markings 6: przesunięcie w prawo
+  0,75–1,125 m (podłoga BDOT + widen) wpycha jezdnię na chodniki/wiadukt (artifacts/road-widen-s24/c_cases/*.jpg).
+- Propozycja następnego kroku (do decyzji): w `network.gameplay_widen` przesuwać w prawo tylko część GAMEPLAY (add/2),
+  wzrost z podłogi BDOT zostawić symetryczny (jak ADR 0301) i ograniczyć przesunięcie do ≤ 0,5 m; potem przebudować C i
+  sprawdzić fidelity + consistency:
+  `pwsh -File artifacts/road-widen-s24/rebuild.ps1 -Regions bialystok-industrial-c -Tag r5 -Fidelity`
+  następnie `uv run --no-project python -c "import json;d=json.load(open('Data/Regions/bialystok-industrial-c/generated/road_consistency_qa.json'));print(d['by_kind'],d['on_route'])"`
+  i `uv run --project tools/worldgen python -m pytest -q tests/gis/test_road_fidelity.py tests/gis/test_road_consistency.py tests/gis/test_road_widen_0306.py`.
+- Otwarte: przejazd playerem przez rondo (nie zrobiony), EditMode Win64 (nie uruchomione), pełne pytest tests/gis
+  (uruchomione podzbiory 0306/0301/0274/lane_edges: 103 zielone), łączniki Rynek Knyszyn (skręty w Rynku: opp 32–37).
