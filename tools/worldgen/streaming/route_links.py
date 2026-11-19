@@ -40,6 +40,7 @@ SCHEMA = "truck-sim-pl/route-links/1"
 STEP_M = 2.0
 BLEND_M = 60.0     # WORKING_VALUE: length of the lateral lane shift at a link head / tail
 JOIN_TOL_M = 3.0   # = WorldStreamer.routeJoinM: link start vs the path end it continues
+STOP_TOL_M = 3.0   # ADR 0303: a stop point lies within this of the link lane (the lane centre, not the kerb)
 
 
 def _region(rid: str, regions: Path) -> dict:
@@ -166,6 +167,21 @@ def _swing(pts: list[list[float]], near, left_m: float, half_m: float) -> float:
     return float(s[k])
 
 
+def _stop(pts: list[list[float]], maxspeed: list[float], stop_xy):
+    """ADR 0303: cut the link at the lane point nearest to stop_xy (EPSG:2180): the route autopilot stops at the path
+    end, the GPS goal of the trip is the same point. The stop must lie on the link (<= STOP_TOL_M from its lane), and
+    not in its first or last STEP_M (a stop is an authored spot along a street, not a graph node).
+    Returns (points, maxspeed, length, distance of the stop point from the lane)."""
+    P = np.asarray(pts, float)
+    d = np.hypot(*(P - np.asarray(stop_xy, float)).T)
+    k = int(np.argmin(d))
+    if d[k] > STOP_TOL_M or k < 1 or k >= len(P) - 1:
+        raise SystemExit(f"stop_epsg2180 {stop_xy} not on the link (nearest lane point {d[k]:.2f} m, index {k}/{len(P)})")
+    P = P[:k + 1]
+    length = float(np.sum(np.hypot(*np.diff(P, axis=0).T)))
+    return P.tolist(), list(maxspeed[:k + 1]), length, float(d[k])
+
+
 def _resample(pts: list[list[float]], maxspeed: list[float]):
     """Back to STEP_M spacing after a swing (the outside of the bend is stretched); speed limit of the nearest
     original point. Returns (points, maxspeed, length)."""
@@ -205,8 +221,15 @@ def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
         if came_from is not None:     # exact join on the route end (lane_path cut the rounded corner nearest to it)
             blend["head"] = _blend(pts, start_xy, head=True)
         if L.get("head_from"):
-            src = next(x for x in links if x["id"] == L["head_from"].split(":", 1)[1])
-            blend["head"] = _blend(pts, [src["endX"], src["endY"]], head=True)
+            kind, ref = L["head_from"].split(":", 1)
+            if kind == "route":       # ADR 0292: first BLEND_M m shifted onto the END of a neighbour tile's route
+                r0 = _route(ref, regions)
+                reg0 = _region(ref, regions)
+                src_xy = [r0["points_en"][-1][0] + reg0["origin"]["x"], r0["points_en"][-1][1] + reg0["origin"]["y"]]
+            else:
+                src = next(x for x in links if x["id"] == ref)
+                src_xy = [src["endX"], src["endY"]]
+            blend["head"] = _blend(pts, src_xy, head=True)
         if L.get("tail_to"):
             r2 = _route(L["tail_to"].split(":", 1)[1], regions)
             reg2 = _region(L["tail_to"].split(":", 1)[1], regions)
@@ -218,6 +241,8 @@ def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
                 _swing(pts, sw["near_epsg2180"], float(sw["left_m"]), float(sw["half_m"]))
                 blend["swing_left"] = float(sw["left_m"])
             pts, maxspeed, length = _resample(pts, maxspeed)
+        if L.get("stop_epsg2180"):    # ADR 0303: the trip ends here (parking spot), not at the end graph node
+            pts, maxspeed, length, blend["stop_offset"] = _stop(pts, maxspeed, L["stop_epsg2180"])
         loc = [[round(x - ox, 3), round(y - oy, 3)] for x, y in pts]
         links.append({
             "id": L["id"], "tile": rid, "destination": L.get("destination", "any"),

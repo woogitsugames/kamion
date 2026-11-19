@@ -213,12 +213,21 @@ namespace LampCheck
         }
 
         [Fact]
+        public void TailNits_Adr0297_BrighterButStopStaysFiveToOne()
+        {
+            // ADR 0297 (owner 18.11 "rozjaśnij + poświata"): tail lamps up to the ADR 0197 headroom, R148 4.8.11 kept with margin.
+            Assert.InRange(P.TailNits, 3000f, P.BrakeNits / P.MinStopToTailRatio);
+            Assert.True(P.BrakeNits / P.TailNits >= 1.05 * P.MinStopToTailRatio, "5 % margin over 5 : 1 for RGBAHalf / GPU");
+        }
+
+        [Fact]
         public void Shader_Defaults_And_PlateFalloff_MatchLampPhotometry()
         {
             string sh = Read("game/Assets/_Project/Rendering/Shaders/TruckExterior.shader");
             Assert.Equal(P.HueKnee, Num(sh, @"_LampHueKnee \(""[^""]*"", Range\([^)]*\)\) = ([0-9.]+)"), 6);
             Assert.Equal(P.HueCeiling, Num(sh, @"_LampHueCeiling \(""[^""]*"", Range\([^)]*\)\) = ([0-9.]+)"), 6);
             Assert.Equal(P.PlateIllum, Num(sh, @"_PlateIllum \(""[^""]*"", Range\([^)]*\)\) = ([0-9.]+)"), 6);
+            Assert.Equal(P.PlateDisplayMax, Num(sh, @"_PlateDisplayMax \(""[^""]*"", Range\([^)]*\)\) = ([0-9.]+)"), 6);   // ADR 0297
             Assert.Equal(P.StateTexels, Num(sh, @"#define KAMION_LAMP_TEXELS ([0-9.]+)"), 6);
             Assert.Contains("TruckLampHueLimitRef(", sh);
             string lens = Read("game/Assets/_Project/Rendering/Shaders/KamionLampLens.hlsl");

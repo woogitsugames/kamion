@@ -3,4 +3,54 @@
 # or EPSG:2180 where the key says so. Nothing was checked on the orthophoto of this tile, and the built
 # neighbours carry no cross-section override on the ways crossing the shared edges, so the generator rules
 # apply (D63: drivable first). Open (ADR 0278): lamp policy (LED like bialystok-knyszynska?) - lead / owner.
-overrides: []
+overrides:
+  - id: dk8-median-rural
+    target: {osm_way: [223394828, 825177457, 303988444, 303988445, 197904075, 889307875, 685399521, 685398186, 825177452, 1530059183, 1567973365, 1379858308]}
+    reason: >-
+      ADR 0292: DK8 (trunk 8;65) dual carriageway through the junction Bialystok Zachod. Orthophoto GUGiK 2024 0.25 m
+      (artifacts/dk8-s8-s24/ortho/jeroniki_east_edge.jpg, jeroniki_roundabout.jpg): the median is a grass strip with a
+      steel barrier, no raised kerb; the generator rule made it a kerbed URBAN median wherever a path runs along the
+      outer side, while bialystok-porosly builds the same ways with the rural median (qa.seams r4: FAIL "pobocze" on
+      223394828 / 889307875 at x = 770827). The median edge (left in the OSM direction of these one-way ways) is kept
+      rural.
+    confidence: "medium (orthophoto, median edge type only; widths unchanged)"
+    verify: render route-s1110 / edge-east after the rebuild; qa.seams jeroniki | porosly
+    set: {side_left: median_rural}
+  # ---- BEGIN generated: tools/worldgen/qa/s8_xsec_overrides.py (ADR 0288) - do not edit between the markers ----
+  - id: s8-xsec-w183639794
+    target: {osm_way: 183639794}
+    reason: "S8 carriageway, 2 lanes (OSM): class S section instead of the class A rule centred on the OSM way - see tools/worldgen/qa/s8_xsec_overrides.py (QA 2026-11-16 rows 78, 81, 82; PTB2022 § 17, § 23). Axis spacing p50 13.86 m, extra shift to the median 0.00 m."
+    confidence: "medium (widths - orthophoto +-0.3 m at 3 stations; lateral position - WORKING_VALUE)"
+    verify: orthophoto cross-section per way (tools/worldgen/qa/ortho_xsec.py) / owner drive
+    set: {lane_edges: [0.2, 3.7, 7.2], width: 9.95, center_offset: -1.025, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
+  - id: s8-xsec-w305447699
+    target: {osm_way: 305447699}
+    reason: "S8 carriageway, 2 lanes (OSM): class S section instead of the class A rule centred on the OSM way - see tools/worldgen/qa/s8_xsec_overrides.py (QA 2026-11-16 rows 78, 81, 82; PTB2022 § 17, § 23). Axis spacing p50 13.86 m, extra shift to the median 0.00 m."
+    confidence: "medium (widths - orthophoto +-0.3 m at 3 stations; lateral position - WORKING_VALUE)"
+    verify: orthophoto cross-section per way (tools/worldgen/qa/ortho_xsec.py) / owner drive
+    set: {lane_edges: [0.2, 3.7, 7.2], width: 9.95, center_offset: -1.025, edge_lines: both, shoulder_right: {kind: ground, paved_m: 0.05, ground_m: 1.0, ditch_m: 0}}
+  # ---- END generated: tools/worldgen/qa/s8_xsec_overrides.py ----
+  - id: seam-z-w439766168-770827-594598
+    target: {node: "Bw439766168:5133527562-2070873542:0e"}
+    reason: "unclassified way 439766168 at the bialystok-porosly | dk8-s8-jeroniki seam: bialystok-porosly 131.364 m, dk8-s8-jeroniki 131.612 m (GLB, tools/worldgen/qa/seam_z.py) -> mean in both tiles (ADR 0292)"
+    confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
+    verify: tools/worldgen/qa/seam_z.py bialystok-porosly:dk8-s8-jeroniki dz <= 0.1 m
+    set: {z: 131.49}
+  - id: seam-z-w255111421-770827-594818
+    target: {node: "Bw255111421:6644330415-2425775816:0s"}
+    reason: "unclassified way 255111421 at the bialystok-porosly | dk8-s8-jeroniki seam: bialystok-porosly 134.399 m, dk8-s8-jeroniki 134.611 m (GLB, tools/worldgen/qa/seam_z.py) -> mean in both tiles (ADR 0292)"
+    confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
+    verify: tools/worldgen/qa/seam_z.py bialystok-porosly:dk8-s8-jeroniki dz <= 0.1 m
+    set: {z: 134.5}
+  - id: seam-z-w223394828-770827-594833
+    target: {node: "Bw223394828:2322965305-6422971938:0e"}
+    reason: "trunk way 223394828 at the bialystok-porosly | dk8-s8-jeroniki seam: bialystok-porosly 137.229 m, dk8-s8-jeroniki 136.887 m (GLB, tools/worldgen/qa/seam_z.py) -> mean in both tiles (ADR 0292)"
+    confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
+    verify: tools/worldgen/qa/seam_z.py bialystok-porosly:dk8-s8-jeroniki dz <= 0.1 m
+    set: {z: 137.06}
+  - id: seam-z-w889307875-770827-594847
+    target: {node: "Bw889307875:5821223987-5821206792:0s"}
+    reason: "trunk way 889307875 (DK8 westbound) at the bialystok-porosly | dk8-s8-jeroniki seam: r6 GLB porosly 137.219 / jeroniki 136.769 m; the r7 mean (136.99) was taken by jeroniki but NOT by porosly, whose profile there is set by the ramp onto the bridge 615609890 (+3.3 %, z 137.29 at 2 m inside, tools/worldgen/qa/seam_z.py) -> both tiles at the porosly seam height 137.23 (ADR 0292)"
+    confidence: "medium (continuity across the seam; absolute height +-0.1 m)"
+    verify: tools/worldgen/qa/seam_z.py bialystok-porosly:dk8-s8-jeroniki dz <= 0.1 m
+    set: {z: 137.23}

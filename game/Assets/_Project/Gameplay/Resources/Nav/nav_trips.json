@@ -1,0 +1,483 @@
+{
+ "schema": "truck-sim-pl/nav-trips/1",
+ "generator": "tools/ui/build_nav_trips.py",
+ "frame": "EPSG:2180",
+ "trips": [
+  {
+   "id": "tykocin",
+   "label": "Tykocin",
+   "tiles": [
+    "bialystok-industrial-c",
+    "bialystok-maczka",
+    "bialystok-kleeberga",
+    "bialystok-knyszynska",
+    "dk65-01",
+    "dk65-02",
+    "dk65-03",
+    "dk65-04",
+    "dk65-05",
+    "dk65-06",
+    "dk65-07",
+    "dk65-08",
+    "dk65-09",
+    "dk65-10",
+    "dk65-11",
+    "knyszyn-s",
+    "knyszyn",
+    "knyszyn-w",
+    "dw671-tykocin-01",
+    "dw671-tykocin-02",
+    "dw671-tykocin-03",
+    "dw671-tykocin-04",
+    "dw671-tykocin-05",
+    "dw671-tykocin-06",
+    "dw671-tykocin-07",
+    "dw671-tykocin-08",
+    "dw671-tykocin-09",
+    "tykocin"
+   ],
+   "joins": [
+    {
+     "from": "bialystok-industrial-c",
+     "to": "bialystok-maczka",
+     "side": "W",
+     "x": 776970.83,
+     "y": 596281.056
+    },
+    {
+     "from": "bialystok-maczka",
+     "to": "bialystok-kleeberga",
+     "side": "W",
+     "x": 774923.013,
+     "y": 596187.351
+    },
+    {
+     "from": "bialystok-kleeberga",
+     "to": "bialystok-knyszynska",
+     "side": "W",
+     "x": 772874.237,
+     "y": 595513.001
+    },
+    {
+     "from": "bialystok-knyszynska",
+     "to": "dk65-01",
+     "side": "W",
+     "x": 770827.315,
+     "y": 597008.13
+    },
+    {
+     "from": "dk65-01",
+     "to": "dk65-02",
+     "side": "N",
+     "x": 770245.211,
+     "y": 597248.359
+    },
+    {
+     "from": "dk65-02",
+     "to": "dk65-03",
+     "side": "W",
+     "x": 768780.502,
+     "y": 598818.174
+    },
+    {
+     "from": "dk65-03",
+     "to": "dk65-04",
+     "side": "N",
+     "x": 768696.475,
+     "y": 599295.265
+    },
+    {
+     "from": "dk65-04",
+     "to": "dk65-05",
+     "side": "N",
+     "x": 768336.369,
+     "y": 601343.274
+    },
+    {
+     "from": "dk65-05",
+     "to": "dk65-06",
+     "side": "N",
+     "x": 767661.612,
+     "y": 603391.951
+    },
+    {
+     "from": "dk65-06",
+     "to": "dk65-07",
+     "side": "W",
+     "x": 766732.264,
+     "y": 604723.082
+    },
+    {
+     "from": "dk65-07",
+     "to": "dk65-08",
+     "side": "N",
+     "x": 766247.491,
+     "y": 605439.853
+    },
+    {
+     "from": "dk65-08",
+     "to": "dk65-09",
+     "side": "W",
+     "x": 764684.32,
+     "y": 607187.579
+    },
+    {
+     "from": "dk65-09",
+     "to": "dk65-10",
+     "side": "N",
+     "x": 764499.883,
+     "y": 607487.812
+    },
+    {
+     "from": "dk65-10",
+     "to": "dk65-11",
+     "side": "N",
+     "x": 762894.028,
+     "y": 609536.059
+    },
+    {
+     "from": "dk65-11",
+     "to": "knyszyn-s",
+     "side": "W",
+     "x": 762636.132,
+     "y": 609812.166
+    },
+    {
+     "from": "knyszyn-s",
+     "to": "knyszyn",
+     "side": "N",
+     "x": 760987.026,
+     "y": 611584.158
+    },
+    {
+     "from": "knyszyn",
+     "to": "knyszyn-w",
+     "side": "W",
+     "x": 760586.504,
+     "y": 611965.078
+    },
+    {
+     "from": "knyszyn-w",
+     "to": "dw671-tykocin-01",
+     "side": "S",
+     "x": 760128.23,
+     "y": 611584.149
+    },
+    {
+     "from": "dw671-tykocin-01",
+     "to": "dw671-tykocin-02",
+     "side": "S",
+     "x": 758585.784,
+     "y": 609535.727
+    },
+    {
+     "from": "dw671-tykocin-02",
+     "to": "dw671-tykocin-03",
+     "side": "W",
+     "x": 758537.548,
+     "y": 609439.348
+    },
+    {
+     "from": "dw671-tykocin-03",
+     "to": "dw671-tykocin-04",
+     "side": "S",
+     "x": 757551.644,
+     "y": 607487.594
+    },
+    {
+     "from": "dw671-tykocin-04",
+     "to": "dw671-tykocin-05",
+     "side": "W",
+     "x": 756489.772,
+     "y": 605937.776
+    },
+    {
+     "from": "dw671-tykocin-05",
+     "to": "dw671-tykocin-06",
+     "side": "S",
+     "x": 756009.754,
+     "y": 605440.221
+    },
+    {
+     "from": "dw671-tykocin-06",
+     "to": "dw671-tykocin-07",
+     "side": "W",
+     "x": 754442.142,
+     "y": 603968.647
+    },
+    {
+     "from": "dw671-tykocin-07",
+     "to": "dw671-tykocin-08",
+     "side": "S",
+     "x": 753617.146,
+     "y": 603392.231
+    },
+    {
+     "from": "dw671-tykocin-08",
+     "to": "dw671-tykocin-09",
+     "side": "W",
+     "x": 752393.895,
+     "y": 602260.411
+    },
+    {
+     "from": "dw671-tykocin-09",
+     "to": "tykocin",
+     "side": "S",
+     "x": 751936.716,
+     "y": 601343.325
+    }
+   ],
+   "goalTile": "tykocin",
+   "goalX": 751818.485,
+   "goalY": 600215.101
+  },
+  {
+   "id": "monki",
+   "label": "Mońki (DK65)",
+   "tiles": [
+    "bialystok-industrial-c",
+    "bialystok-maczka",
+    "bialystok-kleeberga",
+    "bialystok-knyszynska",
+    "dk65-01",
+    "dk65-02",
+    "dk65-03",
+    "dk65-04",
+    "dk65-05",
+    "dk65-06",
+    "dk65-07",
+    "dk65-08",
+    "dk65-09",
+    "dk65-10",
+    "dk65-11",
+    "knyszyn-s",
+    "knyszyn",
+    "knyszyn-w"
+   ],
+   "joins": [
+    {
+     "from": "bialystok-industrial-c",
+     "to": "bialystok-maczka",
+     "side": "W",
+     "x": 776970.83,
+     "y": 596281.056
+    },
+    {
+     "from": "bialystok-maczka",
+     "to": "bialystok-kleeberga",
+     "side": "W",
+     "x": 774923.013,
+     "y": 596187.351
+    },
+    {
+     "from": "bialystok-kleeberga",
+     "to": "bialystok-knyszynska",
+     "side": "W",
+     "x": 772874.237,
+     "y": 595513.001
+    },
+    {
+     "from": "bialystok-knyszynska",
+     "to": "dk65-01",
+     "side": "W",
+     "x": 770827.315,
+     "y": 597008.13
+    },
+    {
+     "from": "dk65-01",
+     "to": "dk65-02",
+     "side": "N",
+     "x": 770245.211,
+     "y": 597248.359
+    },
+    {
+     "from": "dk65-02",
+     "to": "dk65-03",
+     "side": "W",
+     "x": 768780.502,
+     "y": 598818.174
+    },
+    {
+     "from": "dk65-03",
+     "to": "dk65-04",
+     "side": "N",
+     "x": 768696.475,
+     "y": 599295.265
+    },
+    {
+     "from": "dk65-04",
+     "to": "dk65-05",
+     "side": "N",
+     "x": 768336.369,
+     "y": 601343.274
+    },
+    {
+     "from": "dk65-05",
+     "to": "dk65-06",
+     "side": "N",
+     "x": 767661.612,
+     "y": 603391.951
+    },
+    {
+     "from": "dk65-06",
+     "to": "dk65-07",
+     "side": "W",
+     "x": 766732.264,
+     "y": 604723.082
+    },
+    {
+     "from": "dk65-07",
+     "to": "dk65-08",
+     "side": "N",
+     "x": 766247.491,
+     "y": 605439.853
+    },
+    {
+     "from": "dk65-08",
+     "to": "dk65-09",
+     "side": "W",
+     "x": 764684.32,
+     "y": 607187.579
+    },
+    {
+     "from": "dk65-09",
+     "to": "dk65-10",
+     "side": "N",
+     "x": 764499.883,
+     "y": 607487.812
+    },
+    {
+     "from": "dk65-10",
+     "to": "dk65-11",
+     "side": "N",
+     "x": 762894.028,
+     "y": 609536.059
+    },
+    {
+     "from": "dk65-11",
+     "to": "knyszyn-s",
+     "side": "W",
+     "x": 762636.132,
+     "y": 609812.166
+    },
+    {
+     "from": "knyszyn-s",
+     "to": "knyszyn",
+     "side": "N",
+     "x": 760987.026,
+     "y": 611584.158
+    },
+    {
+     "from": "knyszyn",
+     "to": "knyszyn-w",
+     "side": "W",
+     "x": 760588.532,
+     "y": 612074.441
+    }
+   ],
+   "goalTile": "knyszyn-w",
+   "goalX": 759428.06,
+   "goalY": 613631.0
+  },
+  {
+   "id": "s8",
+   "label": "S8",
+   "tiles": [
+    "bialystok-industrial-c",
+    "bialystok-maczka",
+    "bialystok-kleeberga",
+    "bialystok-knyszynska",
+    "bialystok-porosly",
+    "dk8-s8-jeroniki",
+    "dk65-01",
+    "s8-01",
+    "s8-02",
+    "s8-03",
+    "s8-04",
+    "s8-05"
+   ],
+   "joins": [
+    {
+     "from": "bialystok-industrial-c",
+     "to": "bialystok-maczka",
+     "side": "W",
+     "x": 776970.83,
+     "y": 596281.056
+    },
+    {
+     "from": "bialystok-maczka",
+     "to": "bialystok-kleeberga",
+     "side": "W",
+     "x": 774923.013,
+     "y": 596187.351
+    },
+    {
+     "from": "bialystok-kleeberga",
+     "to": "bialystok-knyszynska",
+     "side": "W",
+     "x": 772874.237,
+     "y": 595513.001
+    },
+    {
+     "from": "bialystok-knyszynska",
+     "to": "bialystok-porosly",
+     "side": "S",
+     "x": 772285.603,
+     "y": 595200.447
+    },
+    {
+     "from": "bialystok-porosly",
+     "to": "dk8-s8-jeroniki",
+     "side": "W",
+     "x": 770827.746,
+     "y": 594850.904
+    },
+    {
+     "from": "dk8-s8-jeroniki",
+     "to": "dk65-01",
+     "side": "N",
+     "x": 769341.171,
+     "y": 595200.458
+    },
+    {
+     "from": "dk65-01",
+     "to": "s8-01",
+     "side": "W",
+     "x": 768779.345,
+     "y": 595334.122
+    },
+    {
+     "from": "s8-01",
+     "to": "s8-02",
+     "side": "W",
+     "x": 766731.281,
+     "y": 595803.607
+    },
+    {
+     "from": "s8-02",
+     "to": "s8-03",
+     "side": "W",
+     "x": 764682.955,
+     "y": 596092.218
+    },
+    {
+     "from": "s8-03",
+     "to": "s8-04",
+     "side": "W",
+     "x": 762634.968,
+     "y": 596017.419
+    },
+    {
+     "from": "s8-04",
+     "to": "s8-05",
+     "side": "W",
+     "x": 760586.613,
+     "y": 595459.926
+    }
+   ],
+   "goalTile": "s8-05",
+   "goalX": 759784.9,
+   "goalY": 595199.0
+  }
+ ]
+}

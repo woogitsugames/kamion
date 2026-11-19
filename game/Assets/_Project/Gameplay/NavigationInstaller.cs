@@ -23,8 +23,9 @@ namespace Game.Gameplay
             var route = Object.FindAnyObjectByType<WorldRoute>();
             Transform frame = route != null ? route.transform : null;   // same frame as the cab screens
             var nav = NavigationService.Install(host, vehicle.transform, vehicle.GetComponent<Rigidbody>(), frame, region.regionId);
-            if (!nav.Ready) return nav;
             var screens = vehicle.GetComponent<CabScreens>();
+            NavStreamFollower.Install(host, nav, screens, vehicle.transform);   // ADR 0300: GPS follows the streamed tile
+            if (!nav.Ready) return nav;
             if (screens != null)
             {
                 screens.NavLayout.Live = nav;

@@ -1244,6 +1244,22 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             other = rural_d[os_] & ~path_d[os_]          # median rule unchanged: other side free of paths
             fast_med = fast and (sec_mid.maxspeed or 50) >= 90
             kind[med_d] = np.where(other[med_d] | fast_med, MEDIAN_RURAL, URBAN)
+            # ADR 0292: authored `side_left` / `side_right: median_rural` (OSM edge direction) keeps the median edge of a
+            # dual carriageway kerbless (paved strip + gravel + grass, MEDIAN_RURAL) where the rule above found a path on
+            # the OUTER side and made it a kerbed URBAN median - read off the orthophoto (DK8 at the jeroniki | porosly
+            # seam: the neighbour tile builds the rural median, qa.seams FAIL "pobocze L"). Only median stations change.
+            for i_sec in np.unique(c.sec_idx):
+                sec = net.sec_list[int(i_sec)]
+                if not sec.side_override:
+                    continue
+                m = c.sec_idx == i_sec
+                osm_side = {"L": "left", "R": "right"}[side]
+                if bool(c.meta["rev"][m][0]):
+                    osm_side = {"left": "right", "right": "left"}[osm_side]
+                if sec.side_override.get(osm_side) == "median_rural":
+                    sel = m & med_d
+                    kind[sel] = MEDIAN_RURAL
+                    w[sel], mat[sel] = 0.0, 0
             # ADR 0100 (REVIEW s10-0095 P1-7): a rural station turned into a kerbed URBAN median kept the DITCH depth
             # as its kerb height (h = 0.60): 0.6 m concrete "walls" along the DK8 median E -888...-768 and others
             h[(kind == URBAN) & rural_here] = S.KERB_HEIGHT

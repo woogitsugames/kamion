@@ -35,6 +35,12 @@
    "house": 39,
    "office": 4,
    "shed": 70
+  },
+  "wooden_houses": {
+   "board_tris_lod0": 984,
+   "boarding_runs": 18,
+   "longest_run_m": 5.11,
+   "runs_over_tile": 0
   }
  },
  "cycleways": {
@@ -316,6 +322,7 @@
    "m_by_style": {},
    "on_screened_deck_m": 0.0,
    "signs_moved_off_wall": [],
+   "style_rule_m": {},
    "zones_stale": []
   },
   "noise_barriers_m": 0,
@@ -955,8 +962,8 @@
      "trees_lod2": 3794
     },
     "camera": "route_s0154",
-    "materials_high": 45,
-    "materials_low": 45,
+    "materials_high": 46,
+    "materials_low": 46,
     "tris_high": 1743303,
     "tris_low": 372244
    },
@@ -983,8 +990,8 @@
      "trees_lod2": 1232
     },
     "camera": "route_s0462",
-    "materials_high": 46,
-    "materials_low": 46,
+    "materials_high": 47,
+    "materials_low": 47,
     "tris_high": 938327,
     "tris_low": 272588
    },
@@ -1011,14 +1018,14 @@
      "trees_lod2": 724
     },
     "camera": "route_s0769",
-    "materials_high": 45,
-    "materials_low": 45,
+    "materials_high": 46,
+    "materials_low": 46,
     "tris_high": 717233,
     "tris_low": 212293
    },
    {
     "by_category_high": {
-     "buildings": 13519,
+     "buildings": 14091,
      "forest_hlod": 14430,
      "furniture": 15915,
      "props": 13085,
@@ -1039,9 +1046,9 @@
      "trees_lod2": 796
     },
     "camera": "route_s1077",
-    "materials_high": 45,
-    "materials_low": 45,
-    "tris_high": 784200,
+    "materials_high": 46,
+    "materials_low": 46,
+    "tris_high": 784772,
     "tris_low": 232923
    },
    {
@@ -1067,14 +1074,14 @@
      "trees_lod2": 1234
     },
     "camera": "route_s1385",
-    "materials_high": 44,
-    "materials_low": 44,
+    "materials_high": 45,
+    "materials_low": 45,
     "tris_high": 675809,
     "tris_low": 197053
    },
    {
     "by_category_high": {
-     "buildings": 1941,
+     "buildings": 2381,
      "forest_hlod": 4675,
      "furniture": 2611,
      "props": 5244,
@@ -1095,9 +1102,9 @@
      "trees_lod2": 1014
     },
     "camera": "route_s1693",
-    "materials_high": 35,
-    "materials_low": 35,
-    "tris_high": 673979,
+    "materials_high": 36,
+    "materials_low": 36,
+    "tris_high": 674419,
     "tris_low": 187650
    },
    {
@@ -1328,10 +1335,10 @@
    {
     "chunk": "1_6",
     "instances": 1550,
-    "materials": 23,
+    "materials": 24,
     "trees": 1545,
     "tris_forest_hlod": 927,
-    "tris_high_static": 136872,
+    "tris_high_static": 137312,
     "tris_low_static": 34682
    },
    {
@@ -1463,10 +1470,10 @@
    {
     "chunk": "3_5",
     "instances": 153,
-    "materials": 33,
+    "materials": 34,
     "trees": 136,
     "tris_forest_hlod": 0,
-    "tris_high_static": 140721,
+    "tris_high_static": 141293,
     "tris_low_static": 38121
    },
    {
@@ -3553,6 +3560,20 @@
  "schema": "truck-sim-pl/streetscape-qa/1",
  "terrain_soft_nodes": 0,
  "vegetation": {
+  "farmland": {
+   "b_mean_after": 0.3109,
+   "b_mean_before": 0.625,
+   "b_std_after": 0.2324,
+   "b_std_before": 0.2616,
+   "cells_m2": 3255768,
+   "garden_b_mean_after": 0.2688,
+   "garden_b_mean_before": 0.6129,
+   "garden_b_std_after": 0.0495,
+   "garden_b_std_before": 0.2594,
+   "garden_cells_m2": 33396,
+   "layout": "ESTIMATED strips (no cadastral parcels in the repo)",
+   "share": 0.7755
+  },
   "forest_clearings": {
    "applied": [],
    "stale": []

@@ -37,10 +37,14 @@ foreach ($p in $platforms) {
     }
     [xml]$doc = Get-Content $xml
     $run = $doc.'test-run'
-    $line = "{0}: {1} total, {2} passed, {3} failed, {4} skipped ({5}) -> {6}" -f $p, $run.total, $run.passed, $run.failed, $run.skipped, $run.result, $xml
-    if ($code -ne 0 -or [int]$run.failed -gt 0 -or [int]$run.total -eq 0) {
+    # Unity exits 2 also for Inconclusive (Assume.That) cases, which the NUnit "failed" count leaves out: list them, so a
+    # red run is never reported as "0 failed" without a reason (test-hygiene-s24).
+    $inconclusive = $doc.SelectNodes('//test-case[@result="Inconclusive"]')
+    $line = "{0}: {1} total, {2} passed, {3} failed, {4} inconclusive, {5} skipped ({6}), unity exit {7} -> {8}" -f $p, $run.total, $run.passed, $run.failed, $inconclusive.Count, $run.skipped, $run.result, $code, $xml
+    if ($code -ne 0 -or [int]$run.failed -gt 0 -or [int]$run.total -eq 0 -or $inconclusive.Count -gt 0) {
         Write-Host $line -ForegroundColor Red
         $doc.SelectNodes('//test-case[@result="Failed"]') | ForEach-Object { Write-Host "  FAILED $($_.fullname): $($_.failure.message.'#cdata-section')" -ForegroundColor Red }
+        $inconclusive | ForEach-Object { Write-Host "  INCONCLUSIVE $($_.fullname): $($_.reason.message.'#cdata-section')" -ForegroundColor Red }
         $failed++
     } else { Write-Host $line }
 }

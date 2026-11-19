@@ -1,0 +1,10 @@
+{
+ "provenance": "authored_override (ADR 0204 rule, ADR 0292): ways left out of the drivable road graph of this region",
+ "drop_service": [],
+ "drop_osm_ways": [
+  1155215350,
+  248109972
+ ],
+ "reason": "Two service ways make the importer's world-edge closures overlap in a way WorldEdgeBuilder.ResolveClosures does not cut, so the import aborted ('world edge: N closure rows overlap after ResolveClosures', r2: service x residential, r5: service x service); both found with tools/worldgen/qa/edge_closures_check.py (port of ReadExits/PlanClosures + the crossing-cut test of ResolveClosures, validated: every crossing pair of dk8-s8-jeroniki, bialystok-knyszynska, dk65-01 is reported as cut, and those tiles import). (1) 1155215350 (service=driveway, north edge EPSG:2180 771895.7) x residential 245695246 (771924.0): rows cross but the road axes are not in front of each other's row -> NOT CUT. (2) 248109972 (service loop) leaves and re-enters across the south edge at 772223.4 / 772230.2 (6.8 m, opposite headings): parallel overlapping rows. Accesses next to the edge, on no route. Guesses of r3-r5 (222465086, 461379037, 1302282015) reverted in r7: reported as cut / not involved; 1302282015 had left a road ending on the seam with bialystok-knyszynska.",
+ "verify": "tools/worldgen/qa/edge_closures_check.py bialystok-porosly: no 'NOT CUT' / 'SAME WAY'; import-region exit 0"
+}

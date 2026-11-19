@@ -28,6 +28,7 @@ namespace Game.UI.CabDisplays
         Mesh m_Static;            // roads + buildings of the whole region in metres, baked once per palette
         bool m_StaticNight;
         DisplayCanvas m_StaticFor;
+        Mesh m_LiveMesh;          // ADR 0300: the GPS map of Live (tile under the truck + neighbours), owned by Live
 
         public NavMapData Map { get => m_Map; set { m_Map = value; m_RouteHint = -1; ReleaseStatic(); } }
         /// <summary>The truck's GPS (ADR 0150). When set, the screen shows its route and guidance (the player's destination)
@@ -39,6 +40,7 @@ namespace Game.UI.CabDisplays
         {
             if (m_StaticFor != null) m_StaticFor.SetUnderlay(null);
             m_StaticFor = null;
+            m_LiveMesh = null;
             if (m_Static == null) return;
             if (Application.isPlaying) Object.Destroy(m_Static); else Object.DestroyImmediate(m_Static);
             m_Static = null;
@@ -57,19 +59,36 @@ namespace Game.UI.CabDisplays
 
         static readonly float[] s_Sizes = { 46f, 44f, 32f, 30f, 26f };
 
+        /// <summary>Linear luminance (Rec. 709) of an sRGB palette colour.</summary>
+        public static float Lum(Color32 c)
+        {
+            Color l = ((Color)c).linear;
+            return 0.2126f * l.r + 0.7152f * l.g + 0.0722f * l.b;
+        }
+
+        /// <summary>ADR 0299: mean linear value of the live map image for the screen's light spill. Day: negative = the baked
+        /// A6 day-map texture mean; night: background with a quarter of road / building area (the dark map is mostly
+        /// background, WORKING_VALUE share).</summary>
+        public static float MapMean(bool night, in P.Nav pal) =>
+            night ? 0.65f * Lum(pal.Bg) + 0.2f * Lum(pal.Road) + 0.15f * Lum(pal.Building) : -1f;
+
         /// <param name="dt">Seconds since the last refresh (zoom smoothing).</param>
         public void Draw(DisplayCanvas d, in CabDisplayState s, float dt)
         {
             var pal = s.Night ? P.NavNight : P.NavDay;
             d.Begin();
-            if (m_Map == null || !s.HasPosition)
+            bool live = Live != null && Live.Ready;    // ADR 0300: the GPS follows the streamed tile, the start map may be gone
+            if ((m_Map == null && !live) || !s.HasPosition)
             {
                 // D84: no map (DrivingLab) = the dark screen with a legible message, day or night; the day map
                 // background alone read as a blank light-grey slab in the cab on PC.
+                // ADR 0299: nothing to show = the bar colour (near black) under the message; at night the panel itself dims
+                // (Kamion/Cab Display _NightMaxDisplay): the no-map slab was the brightest surface of the night cab (31/255).
                 pal = P.NavNight;
                 d.Text(T.NoMap, Width * 0.5f, MapH * 0.5f, 44f, pal.BarText, DisplayCanvas.Align.Center);
                 Bar(d, s, pal, float.NaN, -1);
-                d.End(pal.Bg);
+                Game.Rendering.CabDisplayNight.NavMeanEmission = Lum(pal.Bar);
+                d.End(pal.Bar);
                 return;
             }
 
@@ -78,8 +97,10 @@ namespace Game.UI.CabDisplays
             m_Zoom = dt <= 0f ? target : Mathf.Lerp(m_Zoom, target, 1f - Mathf.Exp(-dt / 1.5f));
             float h = s.HeadingDeg * Mathf.Deg2Rad;
             m_Cos = Mathf.Cos(h); m_Sin = Mathf.Sin(h); m_E = s.PosE; m_N = s.PosN;
-            if (Live != null && Live.Ready)
+            if (live)
             {
+                // ADR 0300: position in the frame of the GPS (tile under the truck), not of the start region
+                if (Live.HasPosition) { m_E = Live.Position.x; m_N = Live.Position.y; }
                 DrawLive(d, s, pal);
                 return;
             }
@@ -100,6 +121,7 @@ namespace Game.UI.CabDisplays
             Maneuver(d, pal, onRoute);
             SpeedLimit(d, pal, onRoute);
             Bar(d, s, pal, onRoute ? m_Map.RouteLength - m_Map.RouteS[RouteIndex] : float.NaN, onRoute ? RouteIndex : -1);
+            Game.Rendering.CabDisplayNight.NavMeanEmission = MapMean(s.Night, pal);
             d.End(pal.Bg);
         }
 
@@ -108,7 +130,7 @@ namespace Game.UI.CabDisplays
         {
             var g = Live.Guidance;
             var path = Live.Path;
-            EnsureStatic(d, s.Night, pal);
+            EnsureLiveStatic(d, s.Night);
             d.DrawUnderlay(MapMatrix(), m_Zoom * d.Scale);
             var xf = Game.UI.Navigation.MapXf.Make(new Vector2(m_E, m_N), s.HeadingDeg, m_Zoom, ArrowX, ArrowY);
             bool route = g.HasRoute;
@@ -170,7 +192,10 @@ namespace Game.UI.CabDisplays
                 AppendDistance(m_B, g.RemainingM);
                 d.Text(m_B, 220f, by, 44f, pal.BarText);
                 float frac = path.Length > 1f ? g.RemainingM / path.Length : 0f;
-                int eta = s.ClockMinutes + Mathf.CeilToInt(path.CostSeconds * frac / 60f);
+                // ADR 0302: the tracker's ETA (OSM limits + truck profile, NavEta) - the same number as the full map;
+                // the planner's cost share only until the first ETA sample
+                float remS = g.RemainingSeconds > 0f ? g.RemainingSeconds : path.CostSeconds * frac;
+                int eta = s.ClockMinutes + Mathf.CeilToInt(remS / 60f);
                 m_B.Clear().Append(T.Arrive).Append(' ').AppendClock(eta);
                 d.Text(m_B, 470f, by - 2f, 32f, pal.BarSub);
                 string dest = Live.NameOf(path.DestinationName);
@@ -181,6 +206,7 @@ namespace Game.UI.CabDisplays
                 string street = Live.NameOf(Live.CurrentStreet);
                 if (street.Length > 0) d.Text(Abbreviate(street), Width - 30f, by - 2f, 30f, pal.BarSub, DisplayCanvas.Align.Right);
             }
+            Game.Rendering.CabDisplayNight.NavMeanEmission = MapMean(s.Night, pal);
             d.End(pal.Bg);
         }
 
@@ -206,6 +232,17 @@ namespace Game.UI.CabDisplays
         /// <summary>Minimum drawn road width per class [m] (≈ 5 / 9 / 12 / 15 px at 2 px/m, so minor roads stay visible).</summary>
         static float RoadMinM(byte cls) => cls switch { 0 => 2.5f, 1 => 4.5f, 2 => 6f, _ => 7.5f };
 
+        /// <summary>ADR 0300: underlay = the GPS static map (re-fetched when Live rebuilt it after a tile switch).</summary>
+        void EnsureLiveStatic(DisplayCanvas d, bool night)
+        {
+            var mesh = Live.StaticMap(night);
+            if (mesh == m_LiveMesh && m_StaticFor == d && mesh != null) return;
+            ReleaseStatic();
+            m_LiveMesh = mesh;
+            m_StaticFor = d;
+            d.SetUnderlay(mesh);
+        }
+
         void EnsureStatic(DisplayCanvas d, bool night, in P.Nav pal)
         {
             if (m_Static != null && m_StaticNight == night && m_StaticFor == d) return;
@@ -217,24 +254,42 @@ namespace Game.UI.CabDisplays
         }
 
         /// <summary>Bakes buildings, road casings and road fills of the whole map into one mesh (region metres).</summary>
-        public static Mesh BuildStatic(NavMapData m, in P.Nav pal, float padMetres)
+        public static Mesh BuildStatic(NavMapData m, in P.Nav pal, float padMetres) => BuildStatic(new[] { m }, pal, padMetres);
+
+        /// <summary>ADR 0300: several maps in one frame (the tile under the truck + its resident neighbours, already moved
+        /// into that frame by <see cref="NavMapData.Shifted"/>). All buildings first, then all casings, then all fills, so a
+        /// road crossing a seam joins without a casing line over the neighbour's fill. Null entries are skipped.</summary>
+        public static Mesh BuildStatic(System.Collections.Generic.IReadOnlyList<NavMapData> maps, in P.Nav pal, float padMetres)
         {
-            int quads = m.BuildingTris.Length / 3 + 64;
-            for (int i = 0; i < m.RoadCount; i++) quads += 2 * (2 * (m.RoadStart[i + 1] - m.RoadStart[i]));
+            int quads = 64;
+            foreach (var m in maps)
+            {
+                if (m == null) continue;
+                quads += m.BuildingTris.Length / 3;
+                for (int i = 0; i < m.RoadCount; i++) quads += 2 * (2 * (m.RoadStart[i + 1] - m.RoadStart[i]));
+            }
             var b = new DisplayCanvas("NavStatic", quads, padMetres);
             try
             {
                 b.Begin();
-                for (int i = 0; i < m.BuildingTriStart.Length - 1; i++)
-                    for (int t = m.BuildingTriStart[i]; t < m.BuildingTriStart[i + 1]; t += 3)
-                        b.Triangle(m.BuildingPoints[m.BuildingTris[t]], m.BuildingPoints[m.BuildingTris[t + 1]], m.BuildingPoints[m.BuildingTris[t + 2]], pal.Building);
+                foreach (var m in maps)
+                {
+                    if (m == null) continue;
+                    for (int i = 0; i < m.BuildingTriStart.Length - 1; i++)
+                        for (int t = m.BuildingTriStart[i]; t < m.BuildingTriStart[i + 1]; t += 3)
+                            b.Triangle(m.BuildingPoints[m.BuildingTris[t]], m.BuildingPoints[m.BuildingTris[t + 1]], m.BuildingPoints[m.BuildingTris[t + 2]], pal.Building);
+                }
                 for (int pass = 0; pass < 2; pass++)
-                    for (int i = 0; i < m.RoadCount; i++)
+                    foreach (var m in maps)
                     {
-                        bool major = m.RoadClass[i] >= 2, casing = pass == 0;
-                        float w = Mathf.Max(RoadMinM(m.RoadClass[i]), m.RoadWidth[i]) + (casing ? 2f : 0f);
-                        Color32 c = casing ? (major ? pal.MajorCasing : pal.Casing) : (major ? pal.Major : pal.Road);
-                        StaticPolyline(b, m.RoadPoints, m.RoadStart[i], m.RoadStart[i + 1], w, c);
+                        if (m == null) continue;
+                        for (int i = 0; i < m.RoadCount; i++)
+                        {
+                            bool major = m.RoadClass[i] >= 2, casing = pass == 0;
+                            float w = Mathf.Max(RoadMinM(m.RoadClass[i]), m.RoadWidth[i]) + (casing ? 2f : 0f);
+                            Color32 c = casing ? (major ? pal.MajorCasing : pal.Casing) : (major ? pal.Major : pal.Road);
+                            StaticPolyline(b, m.RoadPoints, m.RoadStart[i], m.RoadStart[i + 1], w, c);
+                        }
                     }
                 return b.BakeStatic("NavStaticMap");
             }

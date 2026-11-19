@@ -66,8 +66,37 @@ namespace Game.Rendering
         [Tooltip("True sun elevation where the twilight fade starts / is complete [deg]")] public float twilightStartSunDeg = 3f;
         public float twilightFullSunDeg = -5f;
         [Tooltip("D84: warm spill of backlit legends / cluster / courtesy light on the trim at night (display-referred " +
-            "radiance per unit albedo; 0 = off). WORKING_VALUE")] public float panelGlow = 0.07f;
+            "radiance per unit albedo; 0 = off). ADR 0297: 0.07 -> 0.015 - the uniform term lit the light-grey A-pillar trim " +
+            "(albedo ~0.4) above the dark dash with no source in sight (review s24 K1); the cluster and the navigation screen " +
+            "now light the trim locally (spillSources), this is only the courtesy-light floor. WORKING_VALUE")] public float panelGlow = 0.015f;
         public Color panelGlowColor = new Color(1f, 0.80f, 0.58f);
+
+        /// <summary>ADR 0297: a backlit screen as a small Lambertian emitter (mesh data from TruckAssetBuilder).</summary>
+        [System.Serializable]
+        public struct SpillSource
+        {
+            [Tooltip("Transform the centre / normal are expressed in (the display renderer)")] public Transform frame;
+            public Vector3 centre;
+            [Tooltip("Emitting side (towards the driver's eye)")] public Vector3 normal;
+            [Tooltip("Screen area (m^2)")] public float area;
+            [Tooltip("Mean linear luminance of the screen texture (0..1)")] public float meanEmission;
+            [Tooltip("Panel luminance at full white, cd/m^2 (Kamion/Cab Display _Luminance)")] public float luminance;
+            [Tooltip("Display ceiling of the panel (Kamion/Cab Display _MaxDisplay)")] public float maxDisplay;
+            [Tooltip("ADR 0299: night-mode ceiling (Kamion/Cab Display _NightMaxDisplay); 0 = same as maxDisplay")] public float nightMaxDisplay;
+        }
+        [Header("ADR 0297: instrument spill, night lift, cab soft shadows")]
+        [Tooltip("Light of the cluster / navigation screen on the trim around them (review s24 K1)")]
+        public bool instrumentSpill = true;
+        [Tooltip("Scale of the spill. 1 = the screens' displayed radiance x area only: after2 measured at most +7/255 on the " +
+            "trim (black plastics, albedo ~0.05, 30 cm from a 300 cm^2 screen), invisible. 4 stands in for the sources the two " +
+            "display quads do not model (backlit gauge rings and switch legends, the cluster hood's inter-reflection, the " +
+            "windscreen's reflection of the screens). WORKING_VALUE, judged on renders")] public float spillScale = 4f;
+        [Tooltip("Linear tint of the screens' light (cool LCD white)")] public Color spillColor = new Color(0.86f, 0.93f, 1f);
+        [Tooltip("Up to two screens: [0] cluster, [1] navigation / infotainment")] public SpillSource[] spillSources = new SpillSource[0];
+        [Tooltip("Share of the cab-view shadow lift (phone local tone mapping) kept at night: k = 8 lifted the whole dark cab " +
+            "to the sky's level (~12/255, review s24 K1). WORKING_VALUE")] [Range(0f, 1f)] public float nightShadowLift = 0.3f;
+        [Tooltip("PC tiers: soft-filtered sun shadow on the interior (phones keep the A7 hard sample, ~3 ms on the S24+)")]
+        public bool pcSoftShadows = true;
 
         // Interior ambient key of the overcast reference preset (computed once; no per-frame allocation).
         static float s_RefKey = -1f;
@@ -78,6 +107,9 @@ namespace Game.Rendering
             k_Parity = Shader.PropertyToID("_KamionToeParity"),
             k_CamOutside = Shader.PropertyToID("_KamionCamOutside"),
             k_ToeInv = Shader.PropertyToID("_KamionCabToeInv"), k_ToeInvDisplay = Shader.PropertyToID("_KamionCabToeInvDisplay");
+        static readonly int k_Spill0Pos = Shader.PropertyToID("_CabSpill0Pos"), k_Spill0Dir = Shader.PropertyToID("_CabSpill0Dir"),
+            k_Spill1Pos = Shader.PropertyToID("_CabSpill1Pos"), k_Spill1Dir = Shader.PropertyToID("_CabSpill1Dir"),
+            k_SpillColor = Shader.PropertyToID("_CabSpillColor"), k_CabSoft = Shader.PropertyToID("_KamionCabSoftShadow");
 
         [Tooltip("ADR 0080: share (0..1) of the world contrast toe (LightingPreset.lookToe, overcast variant 3) that the cab " +
                  "view undoes on the interior and the cluster, so the dash, wheel and gauges keep their ADR 0044 display " +
@@ -153,6 +185,41 @@ namespace Game.Rendering
             Shader.SetGlobalFloat(k_CamOutside, 0f);
             Shader.SetGlobalVector(k_ToeInv, Vector4.zero);
             Shader.SetGlobalVector(k_ToeInvDisplay, Vector4.zero);
+            Shader.SetGlobalVector(k_Spill0Pos, Vector4.zero);
+            Shader.SetGlobalVector(k_Spill1Pos, Vector4.zero);
+            Shader.SetGlobalFloat(k_CabSoft, 0f);
+        }
+
+        /// <summary>ADR 0297: displayed radiance x area of a screen (display units x m^2). The screen's own displayed value
+        /// without the readability floor (Kamion/Cab Display clamps at _MinDisplay for legibility by day; physically a
+        /// 500 cd/m^2 panel adds nothing to a sunlit dash), so the spill is ~0 by day and the screen's displayed
+        /// level at night (where the panel sits at its ceiling, i.e. a night-dimmed screen).</summary>
+        public static float SpillPower(SpillSource s, float exposure, float scale) => SpillPower(s, exposure, scale, 0f, -1f);
+
+        /// <summary>ADR 0299: with the screens' night mode (<paramref name="night"/>, CabDisplayNight) the ceiling falls to
+        /// nightMaxDisplay, and a live image mean (<paramref name="liveMean"/> &gt;= 0, the dark night map) replaces the baked
+        /// day-texture mean (ADR 0297 used the A6 day map, 0.596, also at night).</summary>
+        public static float SpillPower(SpillSource s, float exposure, float scale, float night, float liveMean) =>
+            Mathf.Min(Mathf.Max(0f, s.luminance) * Mathf.Max(0f, exposure), Mathf.Max(0f, CabDisplayNight.Cap(s.maxDisplay, s.nightMaxDisplay, night)))
+            * Mathf.Max(0f, liveMean >= 0f ? liveMean : s.meanEmission) * Mathf.Max(0f, s.area) * Mathf.Max(0f, scale);
+
+        /// <summary>ADR 0297: share of the cab-view shadow lift kept at the given night factor.</summary>
+        public static float NightLiftScale(float night, float nightShare) => Mathf.Lerp(1f, Mathf.Clamp01(nightShare), Mathf.Clamp01(night));
+
+        void SetSpill(int i, int kPos, int kDir, float exposure)
+        {
+            if (!instrumentSpill || (RenderOverrides.CabSpill.HasValue && !RenderOverrides.CabSpill.Value) || spillSources == null ||
+                i >= spillSources.Length || spillSources[i].frame == null)
+            {
+                Shader.SetGlobalVector(kPos, Vector4.zero);
+                return;
+            }
+            var s = spillSources[i];
+            Vector3 p = s.frame.TransformPoint(s.centre);
+            Vector3 n = s.frame.TransformDirection(s.normal).normalized;
+            float live = i == 1 ? CabDisplayNight.NavMeanEmission : -1f;   // [1] = navigation (ADR 0299 live mean)
+            Shader.SetGlobalVector(kPos, new Vector4(p.x, p.y, p.z, SpillPower(s, exposure, spillScale, CabDisplayNight.Value, live)));
+            Shader.SetGlobalVector(kDir, new Vector4(n.x, n.y, n.z, Mathf.Max(1e-4f, s.area / Mathf.PI)));   // r^2 of the equal-area disc
         }
 
         void LateUpdate() => RefreshForView();
@@ -269,6 +336,9 @@ namespace Game.Rendering
                 // Phone-like local tone mapping of the cab view (review r4 L1): only the interior surfaces, only in the
                 // cab view, strongest in the deepest shade - the sky through the glass and the lit dash are untouched.
                 lift = shadowLift >= 0f ? shadowLift : QualityProfileApplier.HasCurrent ? QualityProfileApplier.Current.cabShadowLift : 8f;
+                // ADR 0297: the phone-style lift of deep shade fades with the twilight like the cab-view gain (D84): at night
+                // the dark cab is dark, the instruments light what is near them.
+                lift *= NightLiftScale(night, nightShadowLift);
             }
             LastMeterEv = Mathf.Log(gain, 2f) - (gain > 1f ? cabViewEv : 0f);
             LastFill = fill;
@@ -284,6 +354,11 @@ namespace Game.Rendering
             Shader.SetGlobalVector(k_ToeInvDisplay, post ? toeInv : Vector4.zero);
             // ADR 0059: Kamion/Truck Glass dims the far pane of the see-through path only for views from outside the cab.
             Shader.SetGlobalFloat(k_CamOutside, outside);
+            float exposure = m != null ? m.Exposure : 0f;
+            SetSpill(0, k_Spill0Pos, k_Spill0Dir, exposure);
+            SetSpill(1, k_Spill1Pos, k_Spill1Dir, exposure);
+            Shader.SetGlobalVector(k_SpillColor, (Vector4)spillColor);
+            Shader.SetGlobalFloat(k_CabSoft, (RenderOverrides.CabSoft ?? (pcSoftShadows && PcGraphicsTiers.Enabled)) ? 1f : 0f);
         }
     }
 }

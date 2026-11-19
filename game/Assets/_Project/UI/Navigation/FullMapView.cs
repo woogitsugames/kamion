@@ -52,15 +52,19 @@ namespace Game.UI.Navigation
         int m_StateKey = int.MinValue;
         Mesh m_Under;
         bool m_UnderNight;
+        int m_UnderVer = -1;
 
         GameObject m_Panel;
         Text m_Title, m_Sub, m_PauseNote;
         Button m_Primary, m_Secondary;
+        Button m_Trip;                 // ADR 0302: destination of the multi-tile trip
+        Text m_TripLabel;
         Text m_PrimaryLabel, m_SecondaryLabel;
         System.Action m_PrimaryAction, m_SecondaryAction;
 
         readonly TextBuffer m_B = new TextBuffer(48);
         int[] m_RoadOrder;
+        NavMapData m_LabelMap;
         Vector4[] m_Placed = new Vector4[128];
         int m_PlacedCount;
         Vector2[] m_NameAt;
@@ -112,6 +116,7 @@ namespace Game.UI.Navigation
             Btn(m_SafeRt, "ZoomIn", new Vector2(1f, 1f), new Vector2(-Margin - 88f, -Margin - 88f), new Vector2(88f, 88f), NavText.ZoomIn, 40, k_Button, () => ZoomBy(1.6f), out _);
             Btn(m_SafeRt, "ZoomOut", new Vector2(1f, 1f), new Vector2(-Margin - 88f, -Margin - 184f), new Vector2(88f, 88f), NavText.ZoomOut, 40, k_Button, () => ZoomBy(1f / 1.6f), out _);
             Btn(m_SafeRt, "Recenter", new Vector2(1f, 1f), new Vector2(-Margin - 132f, -Margin - 280f), new Vector2(132f, 80f), NavText.Recenter, 24, k_Button, Recenter, out _);
+            m_Trip = Btn(m_SafeRt, "Trip", new Vector2(0f, 1f), new Vector2(Margin, -Margin - 176f), new Vector2(380f, 80f), "", 24, k_Button, CycleTrip, out m_TripLabel);
             var pn = NewRect("PauseNote", m_SafeRt);
             pn.anchorMin = pn.anchorMax = new Vector2(0.5f, 1f); pn.pivot = new Vector2(0.5f, 1f);
             pn.anchoredPosition = new Vector2(0f, -Margin); pn.sizeDelta = new Vector2(560f, 48f);
@@ -277,6 +282,18 @@ namespace Game.UI.Navigation
             m_Dirty = true;
         }
 
+        /// <summary>ADR 0302: next destination of the multi-tile trip (the corridor trips, then none).</summary>
+        public void CycleTrip()
+        {
+            var ids = m_Nav.TripIds;
+            if (ids == null || ids.Length == 0 || m_Nav.RequestTrip == null) return;
+            int cur = m_Nav.Trip != null ? System.Array.IndexOf(ids, m_Nav.Trip.Id) : ids.Length;
+            int next = (cur + 1) % (ids.Length + 1);
+            m_Nav.RequestTrip(next < ids.Length ? ids[next] : null);
+            m_StateKey = int.MinValue;
+            m_Dirty = true;
+        }
+
         public void ClearRoute()
         {
             m_Nav.ClearRoute();
@@ -310,6 +327,8 @@ namespace Game.UI.Navigation
         int StateKey()
         {
             int k = m_Nav.HasPin ? 1 : 0;
+            k |= m_Nav.Trip != null ? 1 << 30 : 0;
+            k |= m_Nav.TripPlanning ? 1 << 29 : 0;
             k |= m_Nav.Path != null && m_Nav.Path.HasRoute ? 2 : 0;
             k |= (int)m_Nav.LastStatus << 2;
             return k ^ (m_Nav.Path != null ? m_Nav.Path.Version << 8 : 0) ^ (m_Nav.Pin.GetHashCode() << 3);
@@ -335,9 +354,22 @@ namespace Game.UI.Navigation
             else if (route)
             {
                 title = NavText.Destination + ": " + NavLayout.Abbreviate(dest);
-                m_B.Clear(); NavDraw.AppendDistance(m_B, m_Nav.Path.Length);
-                int min = Mathf.Max(1, Mathf.RoundToInt(m_Nav.Path.CostSeconds / 60f));
-                sub = m_B.ToString() + " · " + NavText.About + " " + min + " " + NavText.Minutes;
+                if (m_Nav.Trip != null)
+                {
+                    // ADR 0302: remaining along the multi-tile route (tracker), ETA from the speed limits (NavEta)
+                    var g = m_Nav.Guidance;
+                    m_B.Clear(); NavDraw.AppendDistance(m_B, g.RemainingM);
+                    int tm = Mathf.Max(1, Mathf.RoundToInt(g.RemainingSeconds / 60f));
+                    sub = NavText.Remaining + " " + m_B.ToString() + " · " + NavText.About + " " + tm + " " + NavText.Minutes;
+                    if (m_Nav.TripPlanning) sub += " · " + NavText.TripPlanning;
+                    else if (m_Nav.Trip.RelaxedCount > 0) sub += " · " + NavText.TripRelaxed;
+                }
+                else
+                {
+                    m_B.Clear(); NavDraw.AppendDistance(m_B, m_Nav.Path.Length);
+                    int min = Mathf.Max(1, Mathf.RoundToInt(m_Nav.Path.CostSeconds / 60f));
+                    sub = m_B.ToString() + " · " + NavText.About + " " + min + " " + NavText.Minutes;
+                }
                 pl = NavText.Drive; m_PrimaryAction = Close;
                 sl = NavText.ClearRoute; m_SecondaryAction = ClearRoute;
             }
@@ -354,6 +386,9 @@ namespace Game.UI.Navigation
                 sl = NavText.ClearPin; m_SecondaryAction = ClearRoute;
             }
             m_Title.text = title; m_Sub.text = sub;
+            bool trips = m_Nav.TripIds != null && m_Nav.TripIds.Length > 0 && m_Nav.RequestTrip != null;
+            m_Trip.gameObject.SetActive(trips);
+            if (trips) m_TripLabel.text = NavText.TripButton + ": " + (m_Nav.Trip != null ? m_Nav.Trip.Label : NavText.TripNone);
             bool two = pw >= 900f;   // buttons beside the text, otherwise the text gets the top row
             SetBtn(m_Primary, m_PrimaryLabel, pl, new Vector2(-Margin - 280f, 22f));
             SetBtn(m_Secondary, m_SecondaryLabel, sl, new Vector2(-Margin - 280f - 16f - 240f, 22f));
@@ -384,7 +419,7 @@ namespace Game.UI.Navigation
             m_Dirty = false; m_RedrawT = 0f;
             bool night = m_Nav.Night;
             var pal = night ? P.NavNight : P.NavDay;
-            if (m_Under == null || m_UnderNight != night) { m_Under = m_Nav.StaticMap(night); m_UnderNight = night; m_Canvas.SetUnderlay(m_Under); }
+            if (m_Under == null || m_UnderNight != night || m_UnderVer != m_Nav.MapVersion) { m_Under = m_Nav.StaticMap(night); m_UnderNight = night; m_UnderVer = m_Nav.MapVersion; m_Canvas.SetUnderlay(m_Under); }   // ADR 0300
             var d = m_Canvas;
             float W = m_DesignSize.x, H = m_DesignSize.y;
             var xf = Xf();
@@ -449,8 +484,9 @@ namespace Game.UI.Navigation
         {
             var map = m_Nav.Map;
             if (map == null || m_Zoom < 0.25f) return;
-            if (m_RoadOrder == null)
+            if (m_RoadOrder == null || m_LabelMap != map)      // ADR 0300: the map changes with the streamed tile
             {
+                m_LabelMap = map;
                 BuildChains(map);
                 m_NameAt = new Vector2[map.Names.Length];
                 m_NameN = new byte[map.Names.Length];

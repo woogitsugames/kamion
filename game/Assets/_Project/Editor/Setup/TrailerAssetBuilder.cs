@@ -382,6 +382,9 @@ namespace Game.Editor.Setup
                 rig.forceLevel = 0;
                 rig.Apply();
                 rig.forceLevel = -1;
+                // ADR 0297: veiling-glare halo of the red rear lamps (tail / stop chambers, markers, rear fog).
+                int halos = TruckLampHaloBuilder.Attach(lodRenderers[0], Root + "/Meshes", TruckLampHaloBuilder.EnsureMaterial(MatDir), "Trailer");
+                Debug.Log($"[TRAILER] lamp halo quads {halos}");
 
                 foreach (var t in root.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = layer;
                 foreach (var r in root.GetComponentsInChildren<Renderer>(true)) { r.lightProbeUsage = LightProbeUsage.BlendProbes; r.reflectionProbeUsage = ReflectionProbeUsage.BlendProbes; }

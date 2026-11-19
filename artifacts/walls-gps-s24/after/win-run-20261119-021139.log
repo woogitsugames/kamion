@@ -1,0 +1,98 @@
+Mono path[0] = 'C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/walls-gps-s24/artifacts/win/kamion-0.1.0-f2b35ba227-dirty-regions/Kamion_Data/Managed'
+Mono config path = 'C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/walls-gps-s24/artifacts/win/kamion-0.1.0-f2b35ba227-dirty-regions/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/walls-gps-s24/artifacts/win/kamion-0.1.0-f2b35ba227-dirty-regions/Kamion_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/walls-gps-s24/artifacts/win/kamion-0.1.0-f2b35ba227-dirty-regions/Kamion_Data/UnitySubsystems
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1070 (ID=0x1b81)
+    Vendor:   NVIDIA
+    VRAM:     8067 MB
+    Driver:   32.0.15.8278
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.187 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.638000 ms
+[AUDIO-PC] output reset: rate=48000 dsp=512 (10,7 ms) speakers=Stereo driver=Stereo real=64 virtual=512 spatializer='' (project: dsp=1024 real=32)
+[PC_TIER] Medium urp=URP_PC_Medium scale=1 msaa=4 shadows=100m/3c/2048 lodBias=1,25 mipLimit=0 far=2000 ssao=False (WORKING_VALUE (between D74 classes, 4 GB VRAM) - UNMEASURED)
+[SETTINGS] pc load source=File fileSchema=1 migrated=False newer=False corrupt=False fixed=[] path=C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\settings_pc.json
+[SETTINGS] pc apply startup desktop=True mode=borderless size=0x0 vsync=False cap=60 tier=medium hud=1 units=metric vol=1/1/1/1
+[BOOT] Kamion 0.1.0 (f2b35ba227-dirty) content=71d4b7f174f8 unity=6000.3.28f1 platform=default device='MS-7C75 (Micro-Star International Co., Ltd.)' gpu='NVIDIA GeForce GTX 1070' api='Direct3D 11.0 [level 11.1]' ram=65457MB screen=1600x900 tier=Medium targetFps=60
+[DIAG] sensor poll mode=Background (diag_poll main|bg|off, ADR 0177)
+[BOOT] diagnostics output: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\diag
+[CONTROLS] boot v6 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=70 headMotion=on speedSteer=on grab=drag mirrors=insets
+[CONTROLS] menu shown light=overcast tier=Medium fps=60
+[AUTOSHOT] shot='C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\walls-gps-s24\artifacts\win\runs\20261119-021139\shot.png' shot_t=100.0 quit_t=110.0
+[BOOT] launch argument scene=World_bialystok-knyszynska
+Unloading 7 Unused Serialized files (Serialized files now loaded: 0)
+[PSO] collection pso_Vulkan_Low_g3a api=Vulkan quality=Low variants=88 states=164 match=False
+[PSO] collection pso_Vulkan_Low_g3b api=Vulkan quality=Low variants=82 states=158 match=False
+[PSO] warm-up started: 0 of 2 collections (api=Direct3D11 quality=Medium)
+UnloadTime: 9.895200 ms
+[WORLD] collision cooked at load: 409 meshes, bake 57 ms (parallel), enable 1 ms, total 59 ms
+[DIAG] sensor poll mode=Background (diag_poll main|bg|off, ADR 0177)
+[CONTROLS] loaded v6 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=70 headMotion=on speedSteer=on grab=drag mirrors=insets
+[NAV] ready region=bialystok-knyszynska nodes=438 edges=461 restrictions=0 map=True
+[STREAM] content Low, budget 800 MB: desktop tier Medium; quality tier Medium from saved choice Medium (menu / PC settings), start scene World_bialystok-knyszynska
+[STREAM] on: start bialystok-knyszynska, 1/3 neighbour tile scenes available (0 from packs), load radius 400 m, unload +300 m, max 4 tiles, budget 800 MB (Low content, desktop)
+[STREAM] safety-net rectangle of bialystok-knyszynska widened to the union of 2 tiles: E -3072..1024 N -1024..1024 m (region-local; ADR 0273 §10)
+[START] region=bialystok-knyszynska route_s=2550.0 en=-622.6,694.2 road_edge=217 road='Szosa Knyszyńska' road_dist=1.5
+[LAB] DrivingLab ready: vehicle=Tractor4x2_TRAKT trailer=Trailer_Curtainsider_Art spawn=Gross40t steer=Wheel270 autopilot=route fixedDt=0,009999993
+Unloading 120 unused Assets to reduce memory usage. Loaded Objects now: 16719.
+Total: 4.526000 ms (FindLiveObjects: 1.653900 ms CreateObjectMapping: 0.850600 ms MarkObjects: 1.840100 ms  DeleteObjects: 0.180800 ms)
+
+The referenced script on this Behaviour (Game Object '<null>') is missing!
+[AUDIO] VehicleAudioLibrary missing (run tools/audio/render_all.py + Kamion/Audio/Import vehicle audio) — truck is silent
+[CONTROLS] pc-input installed schema=1 overrides=no
+[STREAM] pinned bialystok-knyszynska (start tile: no safe pose yet)
+[CAB] view camera Main Camera cabView=False gain 1,00 meter 0,00 EV
+[DIAG] t=1s tier=Medium target=60 fps=1.0 p50=979.55 p95=979.55 p99=979.55 max=979.55ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CAB] view camera Main Camera cabView=True gain 4,73 meter 1,24 EV
+[STREAM] load World_dk65-01_Tile (resident 2 tiles)
+[WORLD] collision cooked deferred (streamed tile Region_dk65-01): 315 colliders, 344 ms wall clock over frames
+[STREAM] ready World_dk65-01_Tile: load 350 ms, activation 345 ms (64 chunks), vehicle 397 m from the tile, resident 2 tiles / 186 MB (ESTIMATED)
+[STREAM] edges dk65-01: open E
+[STREAM] edges bialystok-knyszynska: open W
+[STREAM] route continued into dk65-01: +632 m
+[DIAG] t=5s tier=Medium target=60 fps=48.9 p50=16.67 p95=16.67 p99=37.56 max=979.55ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.72 gpu=- cap=0.05/f cpu=0.02 gpu=- shd_gpu=- main_cpu=1.07
+[DIAG] t=11s tier=Medium target=60 fps=54.2 p50=16.67 p95=16.67 p99=16.70 max=979.55ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.56 gpu=- cap=0.16/f cpu=0.07 gpu=- shd_gpu=- main_cpu=1.66
+[DIAG] t=16s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.68ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.71 gpu=- cap=0.16/f cpu=0.07 gpu=- shd_gpu=- main_cpu=1.70
+[DIAG] t=21s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.68ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.51 gpu=- cap=0.18/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.65
+[DIAG] t=26s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.74ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.49 gpu=- cap=0.19/f cpu=0.09 gpu=- shd_gpu=- main_cpu=1.62
+[DIAG] t=31s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.74ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.39 gpu=- cap=0.18/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.48
+[DIAG] t=36s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.69ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.37 gpu=- cap=0.20/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.52
+[DIAG] t=41s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.69ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.37 gpu=- cap=0.18/f cpu=0.07 gpu=- shd_gpu=- main_cpu=1.47
+[NAV] region switched to dk65-01 nodes=235 edges=229 map=True pin=none
+[STREAM] pinned dk65-01 (newest safe pose)
+[DIAG] t=46s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.68ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.46 gpu=- cap=0.19/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.46
+[STREAM] origin rebase #1 to dk65-01: offset (2048.0, 0.0) m, 1.93 ms
+[DIAG] t=51s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=20.25ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.42 gpu=- cap=0.18/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.34
+[DIAG] t=56s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=20.25ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.40 gpu=- cap=0.19/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.32
+[DIAG] t=61s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.82ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.42 gpu=- cap=0.19/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.26
+[DIAG] t=65s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.69ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.37 gpu=- cap=0.18/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.20
+[DIAG] t=71s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.94ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.30 gpu=- cap=0.19/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.12
+[DIAG] t=76s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.94ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.33 gpu=- cap=0.18/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.11
+[DIAG] t=81s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.80ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.42 gpu=- cap=0.18/f cpu=0.08 gpu=- shd_gpu=- main_cpu=1.08
+[DIAG] t=86s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.80ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.50 gpu=- cap=0.08/f cpu=0.04 gpu=- shd_gpu=- main_cpu=1.04
+[DIAG] t=91s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.68ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.48 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=1.01
+[AUTOSHOT] screenshot C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\walls-gps-s24\artifacts\win\runs\20261119-021139\shot.png 1600x900 scene=World_bialystok-knyszynska
+[DIAG] t=96s tier=Medium target=60 fps=60.0 p50=16.67 p95=16.67 p99=16.67 max=16.75ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.48 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=1.02
+[DIAG] t=101s tier=Medium target=60 fps=59.9 p50=16.67 p95=16.67 p99=16.73 max=20.62ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=2.00/f cpu=1.61 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=1.07
+[AUTOSHOT] quit
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.

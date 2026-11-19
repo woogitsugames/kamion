@@ -136,6 +136,12 @@ namespace Game.Tests
         public void ImportedGlassSemanticIsRestrictedAndStillReceivesShadows()
         {
             const string directory = "Assets/_Generated/World/bialystok-industrial-c/Materials";
+            // test-hygiene-s24: Assets/_Generated/World is outside git and a fresh worktree copies _Generated from main,
+            // which has no imported region; FindAssets on the missing folder found 0 materials and the test failed
+            // with a misleading importer message. Not imported = nothing to check; an imported region is checked fully.
+            if (!AssetDatabase.IsValidFolder(directory))
+                Assert.Ignore("region bialystok-industrial-c not imported in this checkout (Assets/_Generated/World is outside git): " +
+                              "pwsh scripts/import-region.ps1 -Region bialystok-industrial-c");
             var flagged = AssetDatabase.FindAssets("t:Material", new[] { directory })
                 .Select(AssetDatabase.GUIDToAssetPath).Select(AssetDatabase.LoadAssetAtPath<Material>)
                 .Where(m => m != null && m.HasProperty("_ArchitecturalGlass") && m.GetFloat("_ArchitecturalGlass") > 0.5f).ToArray();

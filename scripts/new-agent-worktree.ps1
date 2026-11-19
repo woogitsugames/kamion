@@ -38,6 +38,9 @@ foreach ($c in $copies) {
     if ($LASTEXITCODE -ge 8) { throw "robocopy failed ($LASTEXITCODE): $c" }
     "copied $c"
 }
+# test-hygiene-s24: main's copied _Generated can carry a prefab .meta from before the D84 GUID pin (trailer cac16030...
+# instead of ab5e5ba6..., 18.11); fix it as text before Unity ever opens the worktree (ArtPrefabs_HavePinnedGuids).
+& (Join-Path $PSScriptRoot 'repin-generated-guids.ps1') -Root $wt
 foreach ($j in $junctions) {
     $src = Join-Path $root "Data/raw/$j"
     if (-not (Test-Path $src)) { "skip junction (missing): $j"; continue }
