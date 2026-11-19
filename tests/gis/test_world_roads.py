@@ -321,8 +321,9 @@ def test_cross_section_from_tags():
     wide = edge_section(e(highway="trunk", oneway="yes", lanes=3, width=8.0))
     assert wide.lane_w == pytest.approx(3.5) and wide.width == pytest.approx(3 * 3.5 + 1.0)
     assert wide.provenance["width_rejected"]["bdot_width"] == 8.0
-    narrow = edge_section(e(highway="trunk", oneway="yes", lanes=2, width=7.0))  # 3.0 m/lane -> clamp 3.25
-    assert narrow.lane_w == pytest.approx(3.25)
+    # ADR 0301: BDOT under-reads one-way GP carriageways (DK8 orthophoto: 3.55-3.80 m lanes): 3.0 m/lane -> standard 3.50
+    narrow = edge_section(e(highway="trunk", oneway="yes", lanes=2, width=7.0))
+    assert narrow.lane_w == pytest.approx(3.50)
     res = edge_section(e(highway="residential", oneway="no", lanes=2))
     assert res.width == pytest.approx(2 * 2.75) and res.lanes_fwd == 1 and res.lanes_bwd == 1
     ramp = edge_section(e(highway="trunk_link", oneway="yes", lanes=1))

@@ -1,0 +1,31 @@
+# Authored overrides of region bialystok-bojary (ADR 0278, owner D81). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 780043, 594175) or EPSG:2180 where the key says so.
+overrides:
+  - id: dk19-piastowska-seam-s-widening
+    target: {osm_way: [1329465432]}
+    reason: >-
+      DK19 Piastowska southbound, last 79 m before the south seam with bialystok-mickiewicza: the carriageway
+      widens from 2 lanes to the 4-lane approach of the junction that lies in the next tile (OSM way 440321719,
+      lanes=4). GUGiK orthophoto WMS cross-sections (ortho_xsec, step 10 m): asphalt run 9.05 m at s = 25 m,
+      10.90 m at 35 m, 13.45 m at 45 m; the 4-lane way behind the seam 13.60-14.15 m (2 stations). Without the
+      profile this tile ends 8.0 m wide and the neighbour starts mid-transition (qa/seams.py: 8.00 | 10.82 m).
+      Profile t = 0..1 along the edge (north to the seam): 8.0 m to t 0.25, 13.6 m at t 0.63, 14.0 m from t 0.75 to the seam
+      (flat end longer than the 15 m smoothing: exactly 14.0 m on the seam = bialystok-mickiewicza; s23b, test_seam_taper_0275).
+      The former dk19-piastowska-seam-n-transition (way 440321721) is removed: the ADR 0275 seam taper now mirrors that
+      transition in both tiles (9.5 | 9.037 m, 23.1 m S-curve).
+    confidence: medium
+    verify: tools/worldgen/qa/seams.py row w1329465432 (both tiles equal on the seam)
+    set: {width: [[0.0, 8.0], [0.25, 8.0], [0.63, 13.6], [0.75, 14.0], [1.0, 14.0]]}
+  - id: dk19-piastowska-70-carriageway-width
+    target: {osm_way: [137540631, 194922745, 665625574, 672162901]}
+    reason: >-
+      DK19 Piastowska, the two one-way carriageways of the 70 km/h section north of the 50 km/h zone. BDOT10k gives 7.0 m per carriageway.
+      GUGiK orthophoto WMS cross-sections (tools/worldgen/qa/ortho_xsec.py, step 40 m, ADR 0272):
+      13 usable stations on 2 of the 4 ways, asphalt run incl. the kerb line median
+      8.25 m (quartiles 8.10-8.40 m, reading +-0.3 m); innermost bright lines left and right of the
+      axis 6.95 m apart (median of 13 stations). Set to 2 x 3.50 m + 2 x 0.50 m = 8.00 m between kerbs (WORKING_VALUE inside the measured range,
+      kerbstones not resolved at the WMS resolution). Lanes = OSM lanes=2. Turn-pocket ways (3-4 lanes) keep
+      the generator rule. Stations: artifacts/dk19-tiles-s23/xsec/*40*.json.
+    confidence: medium
+    verify: owner drive or a street-level photo of the section (Panoramax returned 0 photos on 2026-11-16)
+    set: {lanes: 2, lane_width: 3.5, edge_strip: 0.5}

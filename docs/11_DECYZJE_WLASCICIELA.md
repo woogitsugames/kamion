@@ -174,3 +174,18 @@ Właściciel (klik) po pomiarze A/B na GTX 1070 (`artifacts/d3d-ab/`, knyszyn Hi
 
 ## D90 — Kamera z fotela: FOV 70°, pasek HUD ukryty w kabinie (2026-11-18, s24, ADR 0294)
 Właściciel (klik) po wariantach `artifacts/cab-view-s24/WARIANTY.md`: domyślne pionowe FOV kamery kabiny 55° → **70°** (wariant B, wzrok 6° w dół, oko bez zmian), kamera QA `cab-driver` tak samo, suwak 45–75° zostaje; zapisane ustawienia z dawnym domyślnym 55° → 70° jednorazowo (jak D85), ręcznie zmienione zostają. Dolny pasek HUD (prędkość, bieg, ciśnienie) **ukryty w widoku z kabiny** (zasłaniał prawdziwe zegary), widoczny w kamerach zewnętrznych. Lusterek bocznych FOV nie pokaże (54–76° od osi) — zostają okienka D70.
+
+## D91 — Most na Narwi w Tykocinie: trasa zostaje, gra ostrzega (2026-11-19, s24)
+Właściciel (klik): OSM podaje dla mostu DW671 na Narwi `maxheight=3.7` i `maxweight:hgv=12 t` (edycja 08.2026); zestaw 4 m / 40 t nie powinien przejechać. Decyzja: trasa autopilota i GPS do Rynku w Tykocinie zostaje przez most, ale gra pokazuje ostrzeżenie o ograniczeniu (znaki B-16/B-18 przy moście i komunikat w nawigacji/HUD przed wjazdem). Znaki na zdjęciach nadal UNVERIFIED. Źródło decyzji: ADR 0303 (otwarte), HANDOVER s24.
+
+## D92 — Głośność kabiny −18 LUFS (2026-11-19, s24)
+Właściciel (klik, bez odsłuchu): docelowa głośność dźwięku w kabinie −18 LUFS (było −20,8 zmierzone w s23, ADR 0286); zewnątrz bez zmiany decyzji (−29,7 dziś). Limit true peak bez zmian (≤ −1 dBTP, dziś ≤ −6,6). Wykonanie: agent audio, pomiar z playera.
+
+## D93 — Priorytety po buildzie #2 (2026-11-19, s24)
+Właściciel (klik, wszystkie cztery): (1) Białystok — drogi (pasy, szerokości, oznakowanie, skrzyżowania na trasie), (2) wygląd świata (drzewa przydrożne, lasy, zieleń miasta, kontrast/światło), (3) ciężarówka i jazda (kabina, dźwięk, fizyka, lusterka, sterowanie), (4) nowe regiony (Krywlany, dalej S8/DK8, Mońki). Agenci równolegle, do 5 + CLI.
+
+## D94 — Drogi szersze niż w rzeczywistości dla grywalności (2026-11-19, s24)
+Właściciel: „trzeba zrobić jezdnie szersze niż w realu, bo będzie ludziom ciężko” — np. wlot ronda w Knyszynie wymusza lekki wjazd na przeciwny pas. Decyzja (klik): **każdy pas +0,25 m względem rzeczywistości/pomiaru (ortofoto, OSM, BDOT)**, a **wloty/wyloty rond i skrzyżowań oraz łuki krawężników poszerzone tak, by zestaw 16,5 m (ciągnik + naczepa 13,6 m) mieścił się bez wjazdu na przeciwny pas** — sprawdzane torem jazdy naczepy (link_swept_check / route_obstacles) na wszystkich trasach korytarza. Wierność układu (liczba pasów, przebieg) bez zmian; tylko szerokości i promienie. Pierwszeństwo: rondo DK65/DW671 w Knyszynie i podobne ciasne miejsca.
+
+## D89 — Budżety streamingu PC z pomiaru GTX 1070 (2026-11-18, s24)
+Właściciel (klik): najpierw pomiar, potem budżety. Po pomiarze GTX 1070 (klasa zalecany; korytarz High VRAM 1,07–1,87 GB z 8 GB, prywatna 2,1–3,3 GB): **Low 640→850 MB, High 1450→2000 MB** (WORKING_VALUE) i scalenie DK19. Wdrożone: StreamingPolicy.cs (dk19-tiles-s24, ADR 0273/0290). Otwarte: Medium (800) < Low (850) — do ujednolicenia.

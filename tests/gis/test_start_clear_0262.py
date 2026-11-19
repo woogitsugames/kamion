@@ -63,8 +63,9 @@ def _stations(points):
 
 def test_catalog_has_all_regions():
     # 21 regions before the ring of ADR 0231; the ring tiles join the catalog one by one as they are built (up to 39);
-    # ADR 0288: + the 15 tiles of the loop S8 <-> DW671 <-> Tykocin (5 built on 2026-11-17) = up to 54
-    assert 21 <= len(REGION_IDS) <= 54 and len(set(REGION_IDS)) == len(REGION_IDS)
+    # ADR 0288: + the 15 tiles of the loop S8 <-> DW671 <-> Tykocin (5 built on 2026-11-17) = up to 54;
+    # + 3 tiles of ADR 0278 / D81 (wygoda, bojary, mickiewicza) = up to 57
+    assert 21 <= len(REGION_IDS) <= 57 and len(set(REGION_IDS)) == len(REGION_IDS)
 
 
 def test_catalog_is_what_the_exporter_derives():
@@ -124,7 +125,8 @@ def test_route_after_the_start_uses_open_roads_only(region):
 
 # ADR 0231 §5a: only the corner tiles of the ring (< 0.5 km of corridor) may carry noStart; any other tile that cannot
 # host a start is a data error to fix, not to mark
-CORNER_TILES_0231 = {"dk65-monki-03", "dk65-monki-05", "monki-e", "dw671-tykocin-02"}
+CORNER_TILES_0231 = {"dk65-monki-03", "dk65-monki-05", "monki-e", "dw671-tykocin-02",
+                     "bialystok-wygoda"}   # D81: 91 m of Andersa across the SW corner of the tile (ADR 0278 tile 5)
 
 
 def test_no_start_marker_only_on_corner_tiles_and_matches_route_endpoints():

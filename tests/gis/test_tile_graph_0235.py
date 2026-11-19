@@ -61,9 +61,12 @@ def test_d67_corridor_is_one_chain_of_portals_on_shared_edges():
 def test_non_adjacent_regions_have_no_link():
     g = _graph()
     by = {t["id"]: t for t in g["tiles"]}
-    # Dojlidy is 4 km south-east of C (ADR 0224 not_adjacent) and C touches only Maczka.
-    assert by["bialystok-dojlidy"]["neighbors"] == []
-    assert [n["id"] for n in by["bialystok-industrial-c"]["neighbors"]] == ["bialystok-maczka"]
+    # Dojlidy is 4 km south-east of C (ADR 0224 not_adjacent): never a neighbour of C. Since D81 (ADR 0278 tiles 5-7)
+    # C touches Maczka (W) and wygoda (E); Dojlidy touches only mickiewicza (N), the ring tiles stay apart.
+    assert [n["id"] for n in by["bialystok-dojlidy"]["neighbors"]] == ["bialystok-mickiewicza"]
+    assert sorted(n["id"] for n in by["bialystok-industrial-c"]["neighbors"] if len(n["side"]) == 1) == \
+        ["bialystok-maczka", "bialystok-wygoda"]
+    assert "bialystok-dojlidy" not in {n["id"] for n in by["bialystok-industrial-c"]["neighbors"]}
 
 
 def test_side_of_corner_and_overlap(tmp_path):

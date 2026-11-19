@@ -288,7 +288,8 @@ namespace Game.Tests
                 Assert.AreEqual(length, r.routeLengthM, 0.05f, id + ": routeLengthM stale (scripts/export-region-catalog.py)");
                 float s = RegionStart.ClampStartS(r.startS, r.routeLengthM);
                 Assert.GreaterOrEqual(s, 0f, id);
-                Assert.LessOrEqual(s, r.routeLengthM - RegionStart.MinAheadM, id + ": start leaves too little route");
+                if (!r.noStart)   // ADR 0231 §5a: a corner tile (noStart, e.g. bialystok-wygoda 91 m) offers no start; StartClearanceTests checks it
+                    Assert.LessOrEqual(s, r.routeLengthM - RegionStart.MinAheadM, id + ": start leaves too little route");
                 StringAssert.DoesNotContain("Kwadrat", r.label, id + ": labels name streets and places, not companies");
             }
             foreach (var set in catalog.sets)

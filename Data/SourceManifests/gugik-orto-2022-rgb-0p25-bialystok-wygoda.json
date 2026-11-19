@@ -1,0 +1,78 @@
+{
+  "id": "gugik-orto-2022-rgb-0p25-bialystok-wygoda",
+  "name": "GUGiK orthophoto RGB 0.25 m, 2022-08-27, sheets covering bialystok-wygoda",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "ORTO",
+  "region": "bialystok-wygoda",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze",
+  "format": "GeoTIFF",
+  "crs": "EPSG:2180 (PL-1992)",
+  "resolution_m": 0.25,
+  "extent": "sheets intersecting bbox [779019.0, 595199.0, 781067.0, 597247.0]",
+  "usage_restriction": "visual reference + alignment QA only; not a game texture (docs/05 §3)",
+  "license": "GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)",
+  "license_status": "LEGAL_REVIEW_REQUIRED (statutory basis cited from secondary sources, not from ISAP text)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)",
+  "used_by": [
+    "tools/worldgen/build_region.py --region bialystok-wygoda"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151570_N-34-107-A-d-3-4.tif",
+      "godlo": "N-34-107-A-d-3-4",
+      "akt_data": "2022-08-27",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-bialystok-wygoda/76751_1151570_N-34-107-A-d-3-4.tif",
+      "sha256": "f31c893fb1e8891ca2b88981690fcc3f07084ea96b2d3fcd036fa78497e9aff2",
+      "size_bytes": 52355682,
+      "downloaded_utc": "2026-11-16T18:15:46+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151576_N-34-107-A-d-4-3.tif",
+      "godlo": "N-34-107-A-d-4-3",
+      "akt_data": "2022-08-27",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-bialystok-wygoda/76751_1151576_N-34-107-A-d-4-3.tif",
+      "sha256": "cbd297b42f5111d050cdd2c91d0cb5f80cbc405385096a02a455c2ee452bb399",
+      "size_bytes": 52934926,
+      "downloaded_utc": "2026-11-16T18:16:10+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151742_N-34-107-C-b-1-2.tif",
+      "godlo": "N-34-107-C-b-1-2",
+      "akt_data": "2022-08-27",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-bialystok-wygoda/76751_1151742_N-34-107-C-b-1-2.tif",
+      "sha256": "9fcb6294c68df464b51855ee78e093a030e61a396240f62a72206469b2c5f7ff",
+      "size_bytes": 55150194,
+      "downloaded_utc": "2026-11-16T18:16:38+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151748_N-34-107-C-b-2-1.tif",
+      "godlo": "N-34-107-C-b-2-1",
+      "akt_data": "2022-08-27",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-bialystok-wygoda/76751_1151748_N-34-107-C-b-2-1.tif",
+      "sha256": "1f2924c8ee610cdf812546e26d978f6f9cb87e5ae877e2e2e79a8f711cbb5593",
+      "size_bytes": 56631830,
+      "downloaded_utc": "2026-11-16T18:17:00+00:00"
+    }
+  ]
+}

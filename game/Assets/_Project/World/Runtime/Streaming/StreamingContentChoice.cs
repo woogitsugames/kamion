@@ -30,7 +30,7 @@ namespace Game.World.Streaming
     /// Pure: platform, quality tier name, start scene tier and "is a High tile of a neighbour available" in, decision out.
     /// <list type="bullet">
     /// <item><b>Desktop</b> (ADR 0269 PC tiers): the PC quality tier decides, not the start scene name. Low / Medium = Low
-    /// content (640 / 800 MB); High / Ultra = High content (1450 / 2000 MB) when at least one neighbour has a
+    /// content (850 / 800 MB, owner 18.11 ADR 0290); High / Ultra = High content (2000 / 2000 MB) when at least one neighbour has a
     /// <c>World_&lt;id&gt;_High_Tile</c> scene in the build or an installed pack, else an explicit Low fallback (logged) with the
     /// tier's budget unchanged. A start scene that is already High keeps High content also on Low / Medium (the start tile is
     /// counted with its High memory; the budget stays the tier's).</item>

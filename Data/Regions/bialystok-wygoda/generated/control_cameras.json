@@ -1,0 +1,85 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0015",
+   "look_at": [
+    -958.278,
+    -1016.823,
+    139.247
+   ],
+   "note": "driver eye 2.5 m, control route s = 15 m of 90 m (Generała Władysława Andersa)",
+   "pos": [
+    -1012.384,
+    -990.667,
+    140.252
+   ],
+   "route_s_m": 15.066,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0045",
+   "look_at": [
+    -944.732,
+    -1024.0,
+    139.348
+   ],
+   "note": "driver eye 2.5 m, control route s = 45 m of 90 m (Generała Władysława Andersa)",
+   "pos": [
+    -985.057,
+    -1003.596,
+    140.359
+   ],
+   "route_s_m": 45.198,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0075",
+   "look_at": [
+    -944.732,
+    -1024.0,
+    139.348
+   ],
+   "note": "driver eye 2.5 m, control route s = 75 m of 90 m (Generała Władysława Andersa)",
+   "pos": [
+    -959.042,
+    -1018.829,
+    140.505
+   ],
+   "route_s_m": 75.33,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_01_above",
+   "look_at": [
+    773.757,
+    839.981,
+    149.322
+   ],
+   "note": "roundabout from ~40 m: Rondo Świętych Cyryla i Metodego",
+   "pos": [
+    843.757,
+    919.981,
+    191.322
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 287.885,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "bialystok-wygoda",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

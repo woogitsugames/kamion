@@ -298,3 +298,16 @@ Select-String -Path "$env:USERPROFILE\AppData\LocalLow\woogitsugames\Kamion\Play
 ```
 Jeśli źródłem jest zapisany wybór Medium — to zgodne z ADR 0269/0270 (jawny wybór gracza wygrywa); „auto” w ustawieniach PC
 przywraca autodetekcję. Jeśli `VRAM unknown` przy D3D11 — osobna poprawka detekcji (ADR 0269, właściciel kodu Rendering).
+
+## Dopisek 18.11 (decyzja właściciela po pomiarze GTX 1070; dk19-tiles-s24, ADR 0290) — budżety PC Low 850, High 2000 MB
+Kafle DK19 (D81: bialystok-wygoda / -bojary / -mickiewicza) zmieniły najgorszy zestaw 3 sąsiadów korytarza z tabeli §6:
+zmierzone WORLD_MEMORY (import Win64 s24) bojary 251,6 + mickiewicza 232,1 + wygoda 188,3 + przypięty C 124,2 =
+**796,2 MB Low** (> 640) i 620,7 + 557,6 + 489,9 + 267,0 = **1935,2 MB High** (> 1450);
+`WorldStreamingPolicyTests.Budgets_DesktopTiers_…` był czerwony. Właściciel (klik, 18.11) wybrał podniesienie budżetów
+zamiast LOD gęstych kafli: **PC Low 640 → 850 MB, PC High 1450 → 2000 MB** (WORKING_VALUE; Medium 800 i Ultra 2000 bez zmian,
+telefon bez zmian). Uzasadnienie — pomiar na GTX 1070 8 GB (i5-10400F, klasa „zalecany”, maszyna dewelopera, nie
+referencja): High korytarz VRAM dedykowany 1,07–1,87 GB z 8 GB, pamięć prywatna 2,1–3,3 GB; Low VRAM 0,45 GB
+(`artifacts/pc/DOM/20261118-*`: Low VRAM 448–510 MB / prywatna szczyt 1360–1397 MB, High VRAM 1004–1068 MB / prywatna
+szczyt 1964–2074 MB; górne wartości z `artifacts/d3d-ab`). Zapas: Low 850 − 796,2 = 53,8 MB, High 2000 − 1935,2 = 64,8 MB
+(bez +10 % z §6 — margines świadomie mniejszy). Kod: `StreamingSettings.BudgetForTier` (`StreamingPolicy.cs`), testy
+`StreamingContentChoiceTests`, `WorldStreamingPolicyTests`. Uwaga: Medium (800) jest teraz niższe od Low (850) — do decyzji.

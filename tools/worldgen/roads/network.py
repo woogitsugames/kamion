@@ -180,8 +180,10 @@ def edge_section(e: dict) -> EdgeSection:
         if bw:
             per = (bw - 2 * edge) / lanes
             if 2.4 <= per <= 4.75:
-                lw = min(max(per, diff), std + 0.25)
-                wsrc = "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+                # ADR 0301: BDOT10k under-reads one-way A / S / GP carriageways (orthophoto, DK8): it may widen a lane up
+                # to the widest value of PTB2022 § 17 ust. 1, but not narrow it below the class standard there
+                lw = min(max(per, S.bdot_lane_floor(cls, oneway)), S.LANE_WIDTH_MAX[cls])
+                wsrc = "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
             else:
                 prov["width_rejected"] = {"bdot_width": bw, "per_lane": round(per, 2)}
     width = lanes * lw + 2 * edge

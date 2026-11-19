@@ -63,7 +63,8 @@ def generated_overrides(region_id: str) -> list[dict]:
     return out
 
 
-GENERATED_OVERRIDES = ("overrides.class_fixes.json", "overrides.ortho_roofs.json")
+GENERATED_OVERRIDES = ("overrides.class_fixes.json", "overrides.ortho_roofs.json",
+                      "overrides.ortho_lanes.json")   # ADR 0301: qa/ortho_lane_fit.py (one-way lane layouts)
 
 
 def effective_graph(region_id: str, graph: dict | None = None, applied: list | None = None,
