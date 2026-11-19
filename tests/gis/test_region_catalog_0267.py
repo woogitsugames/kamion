@@ -15,7 +15,10 @@ D71_EXTRA = ["bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-0
 # owner decision 2026-11-16: the 18 ring tiles of ADR 0231 are part of d67-full (driving order)
 RING_0231 = (["dk65-monki-%02d" % i for i in range(2, 8)] + ["monki-e", "monki"]
              + ["dw671-tykocin-%02d" % i for i in range(2, 10)] + ["tykocin", "dw671-jasionowka-01"])
-FULL_EXTRA = D71_EXTRA + RING_0231
+# 2026-11-19 (lead, build #2 report): + S8 / Jeroniki / Porosly / DK19 - d67-full = every catalog region
+S8_DK19 = (["s8-%02d" % i for i in range(1, 6)] + ["dk8-s8-jeroniki", "bialystok-porosly",
+           "bialystok-wygoda", "bialystok-bojary", "bialystok-mickiewicza"])
+FULL_EXTRA = D71_EXTRA + RING_0231 + S8_DK19
 
 
 def _module():
@@ -41,7 +44,7 @@ def test_d67_full_is_d67_plus_the_d71_regions():
     assert len(sets["d67"]) == 17
     assert sets["d67-full"] == sets["d67"] + FULL_EXTRA
     assert len(RING_0231) == 18
-    assert len(sets["d67-full"]) == 39 == len(set(sets["d67-full"]))
+    assert len(sets["d67-full"]) == 49 == len(set(sets["d67-full"]))
     assert all(r in ids for r in sets["d67-full"])
     assert all((REPO / "Data/Regions" / r / "route_start.json").exists() for r in FULL_EXTRA)
 
