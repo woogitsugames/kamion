@@ -630,7 +630,16 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
             poly = PV._poly_local(f["geometry"]["coordinates"], origin)
             rng = np.random.default_rng(_seed(f["id"]) + 7)
             P = _scatter(poly, 14.0, rng)
-            P = P[rng.uniform(0, 1, len(P)) < 0.45]
+            u = rng.uniform(0, 1, len(P))
+            if layer == "OT_PTTR_A" and len(P):
+                # ADR 0298 (review 2026-11-18 N4 "część pojedynczo na polu"): OT_PTTR_A is grassland / arable land in use -
+                # owner drone photo 11 and the 2025 orthophoto show clean fields with scrub along the margins, not a
+                # tree every 20 m. Keep SELF_SEED_EDGE_KEEP within SELF_SEED_EDGE_M of the polygon boundary (field
+                # margins, ditches), SELF_SEED_FIELD_KEEP inside (a lone pear / willow). Same random stream.
+                d_edge = shapely.distance(shapely.points(P), poly.boundary)
+                P = P[u < np.where(d_edge <= SELF_SEED_EDGE_M, SELF_SEED_EDGE_KEEP, SELF_SEED_FIELD_KEEP)]
+            else:
+                P = P[u < 0.45]
             sp = pick(rng, [0.2, 0.35, 0.05, 0.05, 0.0, 0.35], len(P))
             emit(P, [SELF_SEEDED[k] for k in sp], rng, f"bdot:{f['id']}:self", 1.0)
     # ADR 0179: authored open ground (override `kind: open_ground`, `polygons_en`: region-local E/N rings) - land the
@@ -683,6 +692,12 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
     return out, forests
 
 
+# ADR 0298: self-seeded trees on BDOT10k OT_PTTR_A (land in agricultural use) - margins only. WORKING_VALUE.
+SELF_SEED_EDGE_M = 8.0
+SELF_SEED_EDGE_KEEP = 0.35
+SELF_SEED_FIELD_KEEP = 0.02
+
+
 # ------------------------------------------------------------------------------------------- farmland (ADR 0295, P1-4)
 # Review 2026-11-18 P1-4: the dryness mask (COLOR_0.b) was the same 8 m / 2.5 m patch noise on every square metre away
 # from the roads, so meadows and arable land read as one mottled carpet from the roundabout to the horizon; the owner's
@@ -709,6 +724,14 @@ FIELD_OWN_SHARE = 0.2           # share of strips with a use of their own
 # instead of 0.25 + 0.75 x (8 m patches): the straw patches of unmanaged ground do not belong there. WORKING_VALUE.
 GARDEN_RODZAJ = ("jednorodzinna", "wielorodzinna", "zagrodowa")
 GARDEN_B = (0.12, 0.30)
+# ADR 0298 (knyszyn-p2-s24, review 2026-11-18 N1 / N3): the mosaic levels above no longer reach the mesh. The High terrain
+# band keeps 1 m vertices only near the roads (8 m elsewhere), Low is 2 m: the per-field level baked into COLOR_0.b lost
+# its 2 m baulks and read as smudges, and the apron outside the tile could not carry it at all (hard seam on every tile
+# edge). Farmland now carries a FLAG in COLOR_0.b and Kamion/World PBR draws the mosaic per pixel from the EPSG:2180
+# position (game/Assets/_Project/Environment/Shaders/KamionFieldMosaic.hlsl: same field on both sides of any seam). Every
+# other ground keeps B <= GROUND_B_MAX so it never reads as a flag.
+FIELD_FLAG_B = {"roślinność trawiasta": 0.90, "uprawa na gruntach ornych": 1.00}
+GROUND_B_MAX = 0.80
 
 
 def _h32(a, b, salt):
@@ -748,9 +771,10 @@ def field_ids(x, y):
     return _h32(bid.astype(np.float64), k, 929), bid
 
 
-def field_mosaic(src, origin, hf):
-    """(level, inside): dryness level (H, W) of the farmland mosaic and its mask - the cells inside BDOT10k OT_PTTR_A.
-    level already carries the baulks and the in-field drift."""
+def field_mosaic(src, origin, hf, with_kind=False):
+    """(level, inside[, kind]): dryness level (H, W) of the farmland mosaic and its mask - the cells inside BDOT10k
+    OT_PTTR_A; kind = 1-based index into sorted(FIELD_LEVELS). level carries the baulks and the in-field drift (QA
+    reference of the per-pixel shader since ADR 0298; the mesh gets the flag only)."""
     H, W = hf.z.shape
     feats = (src.get("bdot10k") or {}).get("OT_PTTR_A") or []
     inside = np.zeros((H, W), bool)
@@ -762,7 +786,7 @@ def field_mosaic(src, origin, hf):
         kind[m] = n
         inside |= m
     if not inside.any():
-        return np.zeros((H, W), np.float32), inside
+        return (np.zeros((H, W), np.float32), inside) + ((kind,) if with_kind else ())
     X = origin[0] + hf.x0 + np.arange(W)[None, :] + np.zeros((H, 1))
     Y = origin[1] + hf.y1 - np.arange(H)[:, None] + np.zeros((1, W))
     fid, bid = field_ids(X, Y)
@@ -784,7 +808,7 @@ def field_mosaic(src, origin, hf):
     edge[1:, :] |= key[1:, :] != key[:-1, :]
     baulk = ndimage.distance_transform_edt(~edge) <= FIELD_BAULK_M
     level = np.where(baulk, FIELD_BAULK_B, level)
-    return np.clip(level, 0.0, 1.0).astype(np.float32), inside
+    return (np.clip(level, 0.0, 1.0).astype(np.float32), inside) + ((kind,) if with_kind else ())
 
 
 def ground_masks(src, origin, hf, dist_road, forests, cleared=(), report=None):
@@ -808,7 +832,7 @@ def ground_masks(src, origin, hf, dist_road, forests, cleared=(), report=None):
     B = np.where(mapped_lawn, .06 + dry * .40,
                  np.where(dist_road < 4.0, .08 + dry * .84, .25 + dry * .75))
     # ADR 0295 (review 2026-11-18 P1-4): farmland = a mosaic of fields, not the patch noise
-    flevel, finside = field_mosaic(src, origin, hf)
+    flevel, finside, fkind = field_mosaic(src, origin, hf, with_kind=True)
     fields = finside & ~mapped_lawn & (dist_road >= FIELD_ROAD_M) & ~G.astype(bool)
     if report is not None:
         report["farmland"] = {"cells_m2": int(fields.sum()), "share": round(float(fields.mean()), 4),
@@ -828,7 +852,13 @@ def ground_masks(src, origin, hf, dist_road, forests, cleared=(), report=None):
                                    "garden_b_mean_after": round(float(calm[gardens].mean()), 4) if gardens.any() else None,
                                    "garden_b_std_before": round(float(B[gardens].std()), 4) if gardens.any() else None,
                                    "garden_b_std_after": round(float(calm[gardens].std()), 4) if gardens.any() else None})
-    B = np.where(fields, flevel, np.where(gardens, calm, B))
+    flag = np.zeros((H, W), np.float32)
+    kinds = sorted(FIELD_LEVELS)
+    for n, rodzaj in enumerate(kinds, 1):
+        flag = np.where(fkind == n, FIELD_FLAG_B[rodzaj], flag)
+    if report is not None:
+        report["farmland"]["encoding"] = "COLOR_0.b flag (0.90 grassland, 1.00 arable), mosaic per pixel (ADR 0298)"
+    B = np.where(fields, flag, np.minimum(np.where(gardens, calm, B), GROUND_B_MAX))
     bare_polys = [PV._poly_local(f["geometry"]["coordinates"], origin) for f in src["bdot10k"]["OT_PTNZ_A"]]
     bare_polys += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
                    if a["tags"].get("landuse") in ("construction", "brownfield")]

@@ -79,6 +79,7 @@ Shader "Kamion/World PBR"
         _RunoffMap ("Parapet run-off (R soot, G rust; _RUNOFF)", 2D) = "black" {}
         _RunoffStrength ("Parapet run-off strength", Range(0, 1)) = 0.5
         _GroundTint ("Terrain grass ground-mask strength", Range(0, 1)) = 1
+        _RegionOriginEN ("Field mosaic (ADR 0298): xy EPSG:2180 of the region origin, z 1 = on", Vector) = (0, 0, 0, 0)
         _GrassFill ("Grass refill albedo (_GRASS_DETILE, linear; Vector: no sRGB conversion)", Vector) = (0.079, 0.109, 0.037, 1)
         _Stripe ("Stripes (_STRIPES): xy direction in UV0 metres, z period m", Vector) = (1, 0, 1, 0)
         _StripeA ("Stripe colour A (linear)", Color) = (0.55, 0.03, 0.02, 1)
@@ -134,6 +135,7 @@ Shader "Kamion/World PBR"
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
             float _ShadowNormalBiasScale;
             float _NightWindows;
+            float4 _RegionOriginEN;   // ADR 0298 field mosaic
         CBUFFER_END
         ENDHLSL
 
@@ -175,6 +177,7 @@ Shader "Kamion/World PBR"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
+            #include "Assets/_Project/Environment/Shaders/KamionFieldMosaic.hlsl"   // ADR 0298 farmland mosaic per pixel
 
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
             TEXTURE2D(_NormalMap); SAMPLER(sampler_NormalMap);
@@ -231,6 +234,9 @@ Shader "Kamion/World PBR"
                 float3 posOS : TEXCOORD6;       // ADR 0192: window anchor (object space, camera independent)
                 float3 posRel : TEXCOORD7;      // camera-relative position: precise screen derivatives
                 #endif
+                #if defined(_GROUNDMASKS)
+                float2 posEN : TEXCOORD8;       // ADR 0298: object space = region-local E/N (field mosaic)
+                #endif
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -248,6 +254,9 @@ Shader "Kamion/World PBR"
                 o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
                 o.masks = v.color;
                 o.uv = float4(v.uv0, v.uv1);
+                #if defined(_GROUNDMASKS)
+                o.posEN = v.positionOS.xz;
+                #endif
                 #if defined(_CARPAINT)
                 o.carFilm = CarInstanceFilm(float2(GetObjectToWorldMatrix()._m03, GetObjectToWorldMatrix()._m23));
                 #endif
@@ -399,6 +408,12 @@ Shader "Kamion/World PBR"
                 // and crops of the field mosaic) carries no scorched straw patches and no bare-soil spots, and half
                 // the 8-64 m tone clouds - a meadow is one sward, a field one crop. Dry unmown ground (B high) and
                 // the verge beside the road keep every patch. No fetch, no keyword; strength = _GroundTint.
+                // ---- ADR 0298: farmland mosaic per pixel (flag in COLOR_0.b), before anything reads the masks
+                half3 fieldTint = half3(1.0h, 1.0h, 1.0h);
+            #if defined(_GROUNDMASKS)
+                if (_RegionOriginEN.z > 0.5)
+                    KamionFieldMosaic(i.posEN + _RegionOriginEN.xy, footprint, macro.g, i.masks, fieldTint);
+            #endif
                 half swardCalm = 0.0;
             #if defined(_GRASS_DETILE) && defined(_GROUNDMASKS)
                 swardCalm = _GroundTint * smoothstep(0.5, 0.9, i.masks.r) * (1.0 - smoothstep(0.30, 0.60, i.masks.b))
@@ -780,6 +795,7 @@ Shader "Kamion/World PBR"
                     albedo = lerp(albedo, albedo * half3(1.22, 1.10, 0.92), k.b * 0.8 * _GroundTint);
                     // ADR0109: additive ground-only dry matter, behind the existing data keyword.
                     albedo = KamionGrassDryMatter(albedo, k, _GroundTint);
+                    albedo *= fieldTint;          // ADR 0298: crop / stubble / meadow tone of the field mosaic
                     // Pine-forest floor (bór sosnowy): needle litter in patches with feather moss and bilberry, not a
                     // uniform beige (review r3 W2 / r4 W-H8). Linear albedo: litter 0.045/0.035/0.021, moss + bilberry
                     // 0.034/0.049/0.019 (WORKING_VALUE, judged against the CC0 Tysiąclecia photos); patches from the

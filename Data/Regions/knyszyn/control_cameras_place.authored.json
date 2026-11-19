@@ -405,6 +405,18 @@
       "fov_deg": 50,
       "pitch_deg": -89.9,
       "note": "QA only (ADR 0237 D38): top view, north up, of the Poludniowa x Szkolna crossroads and the school parking tee - pair = GUGiK orthophoto crop of docs/reports/knyszyn-szkolna/ortho_readings.json"
-    }
+        },
+    {"id": "seam_w_above", "pos_en": [-985, -430], "heading_deg": 270, "eye_m": 110.0, "fov_deg": 55, "pitch_deg": -32,
+     "note": "QA (knyszyn-p2-s24): the west tile edge (E -1024) from 40 m inside, 110 m up - terrain mask / brightness continuity across the seam into the apron or knyszyn-w"},
+    {"id": "seam_w_top", "pos_en": [-1024, -380], "heading_deg": 0, "eye_m": 160.0, "fov_deg": 50, "pitch_deg": -89.9,
+     "note": "QA (knyszyn-p2-s24): straight down on the west tile edge north of DK65 - luminance step across the seam measured on this frame"},
+    {"id": "seam_s_above", "pos_en": [-560, -985], "heading_deg": 180, "eye_m": 110.0, "fov_deg": 55, "pitch_deg": -32,
+     "note": "QA (knyszyn-p2-s24): the south tile edge (N -1024, seam with knyszyn-s) from 40 m inside, 110 m up"},
+    {"id": "rings_w_arm_top", "pos_en": [-1021, -635], "heading_deg": 0, "eye_m": 28.0, "fov_deg": 50, "pitch_deg": -89.9,
+     "note": "QA (knyszyn-p2-s24): asphalt of the DK65 west arm near the edge closure (review N2: concentric rings)"},
+    {"id": "rings_ne_arm_top", "pos_en": [-961, -590], "heading_deg": 0, "eye_m": 28.0, "fov_deg": 50, "pitch_deg": -89.9,
+     "note": "QA (knyszyn-p2-s24): asphalt of the Tykocka NE arm 35 m from the ring (review N2: concentric rings)"},
+    {"id": "gardens_tykocka_eye", "pos_en": [-905, -540], "heading_deg": 60, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 1,
+     "note": "QA (knyszyn-p2-s24): pedestrian eye on Tykocka between the house plots - garden trees, shrubs, hedges (review N4)"}
   ]
 }
