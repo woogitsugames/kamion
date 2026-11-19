@@ -14,3 +14,11 @@
   `plot_fence` (styl płotu działki z nadpisania domu) — płot działki Klattów = sztachety. Runda r1 czeka w kolejce slotu heavy;
   EditMode Win64 w toku (`artifacts/klattow-s24/editmode.status`).
   NASTĘPNY KROK: po `artifacts/klattow-s24/r1.status` z `exit=0`: `bash artifacts/klattow-s24/sbs.sh r1` i obejrzeć `artifacts/klattow-s24/sbs/*-r1.jpg`
+- 12:15 Runda 1 obejrzana (High = scena `World_knyszyn_High`; wcześniejsze rendery `*-low` to treść Low — scena `World_knyszyn`).
+  `look-dom-klattow` High: 615 → 623 draws, 1 481 809 → 1 486 527 tris (przed = `artifacts/knyszyn-p2-s24/stats-after5.txt`, stan main).
+  Poprawki do rundy 2: zestawy `roof_tiles_old`, `boards_painted`, `wood_shingles`; lamus jako obiekt autorski; płot na linii czoła
+  ganku (na modelowanym chodniku, gdy zostaje ≥ 1,4 m); pas trawy za płotem; `plot_canopy_exclude` (cień domu = 8 „koron”).
+  UWAGA: `Data/raw/derived` w tym worktree to teraz KATALOG z junctionami + prywatna kopia `knyszyn` (road-widen-s24 budował
+  knyszyn równolegle do tego samego katalogu main) — przed usunięciem worktree odpiąć KAŻDY junction `cmd /c rmdir`, nie `-Recurse`.
+  Runda 2 w kolejce slotu heavy (`artifacts/klattow-s24/r2.world.status`).
+  NASTĘPNY KROK: po `artifacts/klattow-s24/r2.status` z `exit=0`: `bash artifacts/klattow-s24/sbs.sh r2`; obejrzeć `artifacts/klattow-s24/sbs/*-r2.jpg`
