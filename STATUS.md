@@ -1,3 +1,8 @@
+# STATUS stream-hitch-cli
+- Analiza logu: load dk65-10 267 ms, aktywacja 183 ms; trzy pauzy później, bez zdarzeń streamingu. Dowody: docs/reports/stream-hitch-cli.md.
+- Potwierdzono dług AUTOSHOT po luce oraz luki harmonogramu streamingu; utrata fokusu prawdopodobna, niepotwierdzona.
+- Unity/buildy nieuruchamiane. NASTĘPNY KROK: git diff -- game/Assets/_Project/World/Runtime/Streaming
+
 # STATUS nav-uturn-alt — DK8 / wybór jezdni startowej
 - Odtworzono błędny snap 526 zamiast 530 na al. Tysiąclecia; kierunek był sprawdzany dopiero po ustaleniu krawędzi. Poprawka wybiera bliską jezdnię zgodną z kursem przed A*.
 - Dwa nowe testy EditMode + odpowiedniki .NET; regresja czerwona przed poprawką, całość nav-runner 96/96 PASS. Raport: `docs/reports/nav-uturn-alt.md`; dowody lokalne: `artifacts/nav-uturn/`.
