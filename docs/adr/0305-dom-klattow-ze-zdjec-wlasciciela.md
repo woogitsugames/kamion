@@ -38,23 +38,50 @@ teraz białe deski `wood_planks_white` zamiast brązowych).
 | Podmurówka | zdjęcie 05 | kamień polny 0,30 m |
 
 Wymiary elementów (deski, listwy, przekroje) to `WORKING_VALUE` odczytane ze zdjęć. Bez tabliczek, numerów, napisów.
-Płot stoi tylko tam, gdzie cały pas między ścianą a sztachetami jest wolny od obrysu jezdni / chodnika (0,15 m zapasu);
-inaczej linia cofa się co 0,1 m, a poniżej 0,8 m płotu nie ma (raport `streetscape_qa.json`).
+**Płot a chodnik z generatora.** Na zdjęciach sztachety stoją w linii czoła ganku, przy tylnej krawędzi chodnika.
+W świecie gry tylna krawędź chodnika Kościelnej leży ~1 m od ściany (ganek ma 2 m), więc reguła „płot poza obrysem
+drogi” dała w rundzie 1 płot 0,83 m od ściany i ganek wystający przez płot na chodnik. Decyzja: gdy linia czoła ganku
+wypada na modelowanym chodniku, płot i tak tam staje, o ile do jezdni zostaje ≥ 1,4 m chodnika (`WALKWAY_MIN_M`,
+`WORKING_VALUE`; zmierzone w raporcie `streetscape_qa.json`: `fence.walkway_left_m`); podstawy sztachet biorą wysokość
+z wierzchu siatki chodnika (`furniture.SurfaceTop`), a między podmurówką a płotem leży pas trawy 5 cm nad chodnikiem
+z betonowym obrzeżem. Gdy chodnika zostałoby mniej — linia cofa się poza obrys drogi (0,15 m zapasu) co 0,1 m,
+a poniżej 0,8 m od ściany płotu nie ma. Właściwa poprawka (szerokość i odsunięcie chodnika Kościelnej z danych) należy
+do warstwy dróg — otwarte.
 
-### 2. Materiały (bez pobrań — zestawy proceduralne, licencja: własne, kod w repo)
-- **`log_whitewash`** (nowy zestaw modulacyjny, `sets_facade.log_whitewash`, kafel 4,0 × 2,2 m = cała wysokość ściany):
+**Płot działki** (`plot_fence`, nowe pole nadpisania budynku czytane przez `streetscape.plots.plan`): styl płotu
+frontowego / bocznego działki z nadpisania zamiast losowania z wieku zabudowy. Dom Klattów: sztachety (`picket`)
+zamiast ceglanych słupków ze sztachetami. Działki bez pola — bez zmian.
+
+**Cień domu jako „korony”** (`kind: plot_canopy_exclude`, `polygons_en`): `plot_canopy.json` (korony z ortofoto,
+ADR 0132 / 0298) miał osiem „koron” o promieniu 1,0–1,25 m co 2,5 m, metr na północ od ściany podwórza — to cień
+budynku na trawniku. W rundzie 1 wyrosły z nich krzewy zasłaniające bieloną ścianę. Wpis nadpisania wycina pas
+0,2–2,7 m od tej ściany; prawdziwe drzewa w głębi podwórza zostają. **Uwaga ogólna dla lidera:** ten sam fałszywy
+odczyt (ciemna zieleń w cieniu po północnej stronie budynku) może dotyczyć innych domów we wszystkich kaflach
+z `plot_canopy.json` — do sprawdzenia przy źródle (`streetscape/plot_canopy.py`), poza zakresem tej decyzji.
+
+### 2. Materiały (bez pobrań — pięć zestawów proceduralnych, licencja: własne, kod w repo)
+- **`log_whitewash`** (zestaw modulacyjny, `sets_facade.log_whitewash`, kafel 4,0 × 2,2 m = cała wysokość ściany):
   dziesięć wieńców bali 0,20–0,24 m, falujące fugi z pakułami, pęknięcia wzdłuż włókien, chmury pędzla, zabrudzony
-  i łuszczący się dół. Materiał `log_wall_white` (liniowo 0,66 / 0,65 / 0,61).
-- **`fieldstone`** (nowy, kafel 2,4 × 0,6 m): otoczaki 0,15–0,30 m w zaprawie, wilgotny dół. Materiał `fieldstone_plinth`.
-- **`wood_planks_white`**, **`wood_planks_stain`** — istniejący skan CC0 `wood_siding` (Poly Haven `raw_plank_wall`, wpis
-  w `docs/LICENSES.md` od ADR 0287) pod białą farbą (szczyty, wiatrownice, deski czołowe) i czerwonobrązową bejcą (ganek, płot).
-- **`roof_tiles_old`** — istniejący zestaw `roof_tiles` (esówka: fala 0,20 m, rząd 0,35 m), kolor pomarańczowo-brązowy,
-  silny dryf tonu w małej skali (`macro` 3,5 m / 0,34) = łaty starej dachówki. Zielonego mchu dryf jasności nie da (otwarte).
-- **`wood_trim_brown`** — płaski ciemny brąz stolarki (elementy 2–9 cm).
-- **`wood_shingles`** (nowy zestaw, kafel 1,5 × 1,5 m) i **`log_wall_raw`** — lamus, pkt 4.
-- `log_wall_` i `fieldstone_` dopisane do `_TINT_LINEAR` (kolor liniowy, jak tynki i dachy).
-Poly Haven / ambientCG nie mają skanu bielonej ściany z bali; zestaw proceduralny daje kontrolę nad wysokością wieńców
-i zabrudzeniem dołu. Wszystkie kolory `WORKING_VALUE` do oceny właściciela.
+  i łuszczący się dół. Materiał `log_wall_white` (liniowo 0,60 / 0,595 / 0,565; po rundzie 1 z 0,66 — ściana w słońcu
+  przepalała się do bieli i gubiła fugi).
+- **`boards_painted`** (kafel 6,0 × 2,6 m, 19 rzędów **na fugach `wood_siding`** — `buildings_mesh.WOOD_JOINT_V`, więc
+  każda reguła UV desek `wood_planks*` działa bez zmian): deski pod kryjącą farbą, cienkie fugi, włosowate spękania.
+  Materiał `wood_planks_white` (szczyty, wiatrownice, deski czołowe, narożniki). Runda 1: skan `wood_siding` pod białą
+  barwą czytał się jak szare, zwietrzałe deski.
+- **`roof_tiles_old`** (kafel 2,8 × 2,8 m, fala 0,20 m, rząd 0,35 m jak `roof_tiles`): każda dachówka ma własny ton
+  (pomarańcz → ciemny brąz, kilka jasnych wymienionych), nierówne linie rzędów, mech w korytach i na zakładach, porosty —
+  barwa mchu jest w mapie modulacji. Materiał `roof_tiles_old` (liniowo 0,145 / 0,047 / 0,021). Runda 1: `roof_tiles`
+  z silnym dryfem makro dawał równą, bladopomarańczową kratę (w słońcu sRGB ~185 / 125 / 85; zdjęcie ~175 / 92 / 58).
+- **`fieldstone`** (kafel 2,4 × 0,6 m): otoczaki 0,15–0,30 m w zaprawie, wilgotny dół. Materiał `fieldstone_plinth`.
+- **`wood_shingles`** (kafel 1,5 × 1,5 m): gont, rzędy 0,15 m, szerokości 7–12 cm, srebrnoszary. Materiał
+  `roof_shingles_grey` (lamus, pkt 4); `log_wall_raw` = `log_whitewash` pod barwą surowego drewna, kafel 4,6 × 2,55 m.
+- **`wood_planks_stain`** — istniejący skan CC0 `wood_siding` (Poly Haven `raw_plank_wall`, wpis w `docs/LICENSES.md`
+  od ADR 0287) pod czerwonobrązową bejcą (ganek, płot; liniowo 0,125 / 0,055 / 0,026).
+- **`wood_trim_brown`** — płaski ciemny brąz stolarki (elementy 2–9 cm); pas trawy za płotem: istniejący `plot_lawn`.
+- `log_wall_`, `fieldstone_`, `roof_shingles_` dopisane do `_TINT_LINEAR` (kolor liniowy, jak tynki i dachy).
+Poly Haven / ambientCG nie mają skanu bielonej ściany z bali ani starej esówki o znanych wymiarach; zestawy proceduralne
+dają kontrolę nad wysokością wieńców, rozstawem dachówek i zabrudzeniem. Wszystkie kolory `WORKING_VALUE` do oceny
+właściciela.
 
 ### 3. Reguła ogólna „dom z bali bielony” — NIE wprowadzona (brak danych)
 Sprawdzone na danych Knyszyna: w OSM (`podlaskie-261108.osm.pbf`) znacznik `material` / `building:material` ma **jeden**
@@ -89,11 +116,13 @@ jak na zdjęciu). W OSM nie ma znaczników. Reguła budowała płaską szarą sz
 `look_dom_klattow`; `look_lamus_plebanski` (kadr zdjęcia 02, pozycja ESTIMATED).
 
 ## Budżet i walidacja
-(uzupełniane pomiarem — patrz sekcja „Pomiary”)
+__MEASURE__
 
 ## Otwarte
 - Ocena właściciela i `visual-critic` (kolory bielenia, dachówki, bejcy; rozmieszczenie okien).
-- Mech i porosty na dachu (kolor), krzew i pnącze przy ganku, tabliczka z numerem, słup energetyczny przy narożniku.
+- Krzew i pnącze przy ganku, tabliczka z numerem, słup energetyczny przy narożniku.
+- Chodnik Kościelnej: w grze szerszy i bliżej ściany niż na zdjęciach (płot stoi na modelowanym chodniku).
+- Płot działki z atlasu `plot_kit` ma inny (czerwony) odcień niż sztachety obiektu — atlas nie ma barwienia per działka.
 - Zachodni szczyt (brak zdjęcia), wnętrze ganku.
 - Płot w LOD1 (treść Low / Medium) — pominięty; atlas `plot_kit` ma sztachety, ale w innym kolorze.
 - Lamus: potwierdzenie strony podcienia, wole oko, załamanie połaci, ostatki zrębu.
