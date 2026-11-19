@@ -21,3 +21,5 @@ Worktree: .claude/worktrees/lanes-audit-s24 (gałąź lanes-audit-s24, -NoLibrar
 - 19.11 07:15: r2 przebudowane maczka + kleeberga (generated/ w gicie), rendery after (vqa/view/pair-{maczka,kleeberga}-route-*.jpg): pas dzielący z zielenią i barierą wrócił (s1613), 3 pasy 3,6 m. Regresja r2: brak linii krawędziowych przy fit edge_lines=none -> poprawka (linia na otwartej stronie = P-7), r3 maczka+kleeberga w kolejce (round3.ps1).
   W toku: build r2 industrial-c -> knyszynska (after_chain.ps1 renderuje), potem round3.ps1 (maczka, kleeberga, Tag after3).
   NASTĘPNY KROK: po round3.status: pary before/after3, kopia do main artifacts/lanes-audit-s24, commit generated/, raport.
+- 19.11 08:00: r2 gotowe dla 4 kafli (generated/ w gicie: maczka, kleeberga, industrial-c, knyszynska + wiadukt Bieżeństwa); rendery after: vqa/after/<kafel>/ (industrial-c scena WorldC). Testy: 0301 18/18, maczka/kleeberga/knyszynska/effective_graph 60/60 po klasyfikacji czytników; test_world_roads::test_export_is_deterministic był czerwony przed przebudową industrial-c (oczekiwane).
+  W toku: round3.ps1 (maczka 07:46 -> kleeberga, Tag after3).

@@ -88,4 +88,9 @@ od najbliższej linii generatora; „po” = generator w pamięci po wszystkich 
   w606396479, w668340288, w76073122 (tunel pod rondem), w242987870 / w301702368 / w261104557 (wyloty z pasami do skrętu
   — potrzebny profil wzdłuż krawędzi, nie jedna stała), w306609228.
 - Szosa Knyszyńska: linie krawędziowe P-7 widoczne na ortofoto nie są malowane (klasa G bez override `edge_lines`).
+- Łącznice jednopasowe (`lanes=1`): BDOT 7,0 m → 5,5 m (górny limit reguły) przy ~4,9 m na ortofoto (w242989867,
+  `knyszynska`) — fit obejmuje tylko ≥ 2 pasy; do osobnego pomiaru.
+- Strona jezdni otwarta na łącznicę / strefę włączania: brakujący pas dołożony z szerokością zmierzonego pasa (bez linii
+  krawędziowej po tej stronie) — prawdziwa linia P-7 przy krawężniku bywa niewykryta (prawy pas do krawężnika 3,9 m).
+- Recenzja `visual-critic` renderów przed/po: do zlecenia przez lidera (agent nie tworzy subagentów).
 - Linie przerywane w miejscu zwężeń/poszerzeń (P-1e / P-6) nie są osobno weryfikowane.
