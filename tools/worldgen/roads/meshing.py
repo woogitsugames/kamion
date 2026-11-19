@@ -1473,7 +1473,9 @@ def _patch_uv1(net, j, V, poly=None):
         lc = lc + u_end * (np.rint(lc) - lc)
         better_any = dnear < score
         lane[better_any] = lc[better_any]
-        edge[better_any] = np.where(dist <= hw + 0.3, np.maximum(hw - dist, 0.0), 5.0)[better_any]
+        e_arm = np.where(dist <= hw + 0.3, np.maximum(hw - dist, 0.0), 5.0)
+        e_arm = e_arm + u_end * (np.maximum(e_arm, 1.0) - e_arm)     # ADR 0298: no gutter grime along extended kerb lines
+        edge[better_any] = e_arm[better_any]
         flare_d[better_any] = np.maximum(dist - hw, 0.0)[better_any]
         score[better_any] = dnear[better_any]
     if poly is not None:
