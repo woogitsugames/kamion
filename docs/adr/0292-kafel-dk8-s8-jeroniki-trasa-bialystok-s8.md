@@ -80,12 +80,15 @@ osiągalny z wejścia trasy kontrolnej knyszynska — sprawdzone na grafie).
 | qa.seams r8 (5 kafli, 72 drogi) | 0 FAIL na drogach tras; 3 FAIL poza: service 309106711 porosly/knyszynska, 2 research K1 dk65-01/knyszynska (istniejące) | `artifacts/dk8-s8-s24/seams/seams-r8.md` |
 | wysokość na szwie porosly / jeroniki r8 (6 węzłów) i knyszynska / porosly (14 z asfaltem) | max |dz| 0,086 / 0,075 m | `qa/seam_z.py`, `seams/seam_z-r8.json`, `seam_z-r7.json` |
 
-## Testy (18.11)
-- pytest tests/gis r6: 2482 passed, 5 failed, 1 skipped, 2 xfailed (53 min). Po poprawkach / ponownym uruchomieniu:
-  `test_committed_graph_is_fresh` i `test_export_is_deterministic` — pass (wyścig z plikami przebudowywanymi w trakcie
-  przebiegu); `test_every_graph_reader_is_classified` — naprawione (klasyfikacja); zostają 2: skok z 0,437 m (Otwarte 8)
-  i fidelity industrial-c (Otwarte 9).
-- EditMode Win64 r6: 1348, 1252 passed, 2 failed (Otwarte 7), 94 skipped.
+## Testy (19.11, po scaleniu origin/main: screens-s24 0293, knyszyn-p1 0295, C z fidelity)
+- pytest tests/gis r8: 2501 passed, 2 failed, 1 skipped, 2 xfailed (47 min). `test_committed_graph_is_fresh` — tile_graph
+  nieodświeżony po pamięci porosly r7, naprawione (rerun: tile_graph, route_links z `test_link_seams_route_and_height_continuous`
+  i `test_road_fidelity` — 31 passed). `test_export_is_deterministic` (bialystok-industrial-c): FAIL w tym worktree także z
+  `network.py` z main (chunk 0_1; wcześniej 0_7), na main pass — środowisko worktree (kopie `art-source`/`_Generated` z
+  chwili utworzenia), nie kod gałęzi (jedyna różnica kodu względem main to `network.py`).
+- EditMode Win64 r8: 1401, 1305 passed, 1 failed (`DrivingScenesFullTruckTests.ArtPrefabs_HavePinnedGuids` — prefab
+  wygenerowany w worktree; gałąź bez zmian C#), 95 skipped.
+- fidelity `bialystok-industrial-c` przeliczone w worktree (r7, exit 0) — tylko `generated/fidelity_qa.json`.
 
 ## Odrzucone
 - Trasa przez Warszawską (`dk65-01` → jeroniki): brak wjazdu na DK8 W w grafie OSM; jedyna ścieżka = przejazd
