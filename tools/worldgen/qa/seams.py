@@ -173,8 +173,10 @@ def build_plain(t: Tile):
     return ST.plain_network(t.graph, t.origin, t.overrides)
 
 
-def add_sides(t: Tile, net):
-    """network.assign_sides, first pass (no junction trims): same inputs as roads.pipeline.build."""
+def add_sides(t: Tile, net, trims: bool = False):
+    """network.assign_sides, first pass (no junction trims): same inputs as roads.pipeline.build. trims=True (ADR 0304):
+    then the junctions are built (`junctions.build_junctions` on the osm_context points, as pipeline.build) and the
+    second pass runs - the side profile the generator meshes."""
     from shapely.geometry import LineString, Polygon
     import shapely
     o = np.array(t.origin)
@@ -196,10 +198,18 @@ def add_sides(t: Tile, net):
             yards = shapely.union_all([shapely.make_valid(p) for p in polys])
             shapely.prepare(yards)
     Nw.assign_sides(net, foot, built_up=True, walkways=walk, yards=yards)
+    net.sides_pass = 2 if trims else 1
+    if trims:
+        from roads import junctions as J
+        ST.apply_shoulders(net, getattr(net, "seam_tapers", []))
+        o2 = np.array(t.origin)
+        pts = [dict(p, e=p["x"] - o2[0], n=p["y"] - o2[1]) for p in (t.ctx or {}).get("points", [])]
+        J.build_junctions(net, pts)
+        Nw.assign_sides(net, foot, built_up=True, walkways=walk, yards=yards, trims=True)
     return net
 
 
-def build_nets(ts: list, pairs: list, taper: bool = True) -> dict:
+def build_nets(ts: list, pairs: list, taper: bool = True, trims: bool = False) -> dict:
     """{tile id: network} as the generator builds them: every tile on its own, then the seam transitions of ADR 0275
     planned from the nominal chain ends of both tiles of a pair (roads.seam_taper.plan), widths, sides, shoulders.
     Each network carries `seam_tapers` (list of ST.Taper) and `nominal_ends` ({(chain, end): ST.End})."""
@@ -215,7 +225,7 @@ def build_nets(ts: list, pairs: list, taper: bool = True) -> dict:
         net.nominal_ends = {(e.chain, e.end): e for e in ends[t.id]}
         net.seam_tapers = ST.plan(ends[t.id], others[t.id]) if taper else []
         ST.apply_widths(net, net.seam_tapers)
-        add_sides(t, net)
+        add_sides(t, net, trims=trims)
         ST.apply_shoulders(net, net.seam_tapers)
     return nets
 
@@ -357,7 +367,7 @@ def crossings(t: Tile, se, net=None) -> list[Crossing]:
                     w = float(sd["raw"]["w"][end])
                     kind += f" + chodnik {w:.2f}" if bool(sd["walk"][end]) and w > 0 else (
                         " (płasko)" if float(sd["raw"]["h"][end]) < 0.05 else "")
-                P[f"pobocze {k}"] = (kind, "derived:network (assign_sides, 1. przebieg)")
+                P[f"pobocze {k}"] = (kind, "derived:network (assign_sides, %d. przebieg)" % getattr(net, "sides_pass", 1))
             P["oświetlenie"] = ("brak (override)" if sec.provenance.get("no_lamps") else "reguła klasy", src_n)
             P["oś jezdni E [m]"] = (round(float(pg[0]), 3), src_n)
             P["oś jezdni N [m]"] = (round(float(pg[1]), 3), src_n)
@@ -535,7 +545,8 @@ def _cat(v):
 
 
 def run(tiles: list[str] | None = None, overrides_ref: str | None = None, tol: float = TOL_M,
-        loaded: list[Tile] | None = None, base: str | None = "origin/main", taper: bool = True) -> dict:
+        loaded: list[Tile] | None = None, base: str | None = "origin/main", taper: bool = True,
+        trims: bool = True) -> dict:
     """overrides_ref: overrides.yaml of the tiles that ref changes against `base` (merge base) are read from ref, the
     rest from the checkout = "checkout + that PR's overrides" (base=None: every tile from ref)."""
     only = changed_tiles(overrides_ref, base) if overrides_ref and base else None
@@ -543,7 +554,7 @@ def run(tiles: list[str] | None = None, overrides_ref: str | None = None, tol: f
                     for t in (tiles or TILES) if (REG / t / "region.yaml").exists()]
     pairs = adjacent_pairs(ts)
     used = {t.id for a, b, _ in pairs for t in (a, b)}
-    nets = build_nets([t for t in ts if t.id in used], pairs, taper=taper)
+    nets = build_nets([t for t in ts if t.id in used], pairs, taper=taper, trims=trims)
     seams = []
     for a, b, se in pairs:
         ca, cb = crossings(a, se, nets[a.id]), crossings(b, se, nets[b.id])
@@ -577,7 +588,7 @@ def run(tiles: list[str] | None = None, overrides_ref: str | None = None, tol: f
                       "overrides_src": {a.id: a.overrides_src, b.id: b.overrides_src}})
     not_adjacent = sorted({t.id for t in ts} - {s[k] for s in seams for k in ("a", "b")})
     return {"schema": "truck-sim-pl/seams-qa/1", "tolerance_m": tol, "overrides_ref": overrides_ref,
-            "seam_taper": bool(taper), "edge_tolerance_m": min(tol, EDGE_TOL_M), "tiles": [t.id for t in ts], "not_adjacent": not_adjacent, "seams": seams,
+            "seam_taper": bool(taper), "sides_pass": 2 if trims else 1, "edge_tolerance_m": min(tol, EDGE_TOL_M), "tiles": [t.id for t in ts], "not_adjacent": not_adjacent, "seams": seams,
             "summary": {"seams": len(seams), "roads": sum(len(s["roads"]) for s in seams),
                         "fail_rows": sum(s["fail"] for s in seams), "warn_rows": sum(s["warn"] for s in seams),
                         "taper_rows": sum(s["taper"] for s in seams)}}
@@ -657,14 +668,16 @@ def main(argv=None):
     ap.add_argument("--md", default=None, help="write the tables (FAIL + route roads) as Markdown")
     ap.add_argument("--all-rows", action="store_true", help="print every row, not only FAIL")
     ap.add_argument("--no-taper", action="store_true", help="tiles on their own, without the transitions of ADR 0275")
+    ap.add_argument("--pass1", action="store_true", help="side profile of the first assign_sides pass (no junction "
+                    "trims; the report before ADR 0304) instead of the second pass the generator meshes")
     a = ap.parse_args(argv)
     tiles = [t for t in a.tiles.split(",") if t]
     base = None if a.base == "none" else a.base
-    rep = run(tiles, a.overrides_ref, a.tol, base=base, taper=not a.no_taper)
+    rep = run(tiles, a.overrides_ref, a.tol, base=base, taper=not a.no_taper, trims=not a.pass1)
     out = {"main": rep}
     gone = None
     if a.compare_ref:
-        rep2 = run(tiles, a.compare_ref, a.tol, base=base, taper=not a.no_taper)
+        rep2 = run(tiles, a.compare_ref, a.tol, base=base, taper=not a.no_taper, trims=not a.pass1)
         gone = fail_keys(rep) - fail_keys(rep2)
         out["ref"] = rep2
         out["fail_gone_with_ref"] = sorted([list(k[:3]) + [k[4]] for k in gone])
