@@ -7,3 +7,7 @@
   -> referencje miały rację; override width 6.7 (Szosa Knyszyńska, 2 kafle) + dk65-edge-line-spacing-0304 = 6.8 (4 kafle).
 - qa.seams po: 7 FAIL, na trasie 0 (artifacts/seams-p3-s24/seams_after1.md). pytest 0304/0212/0220/0208: 55 passed.
 - NASTĘPNY KROK: przebudowa prywatna 6 kafli: pwsh -File artifacts/seams-p3-s24/rebuild.ps1 ; potem import Win64 + visual-qa.
+- 07:3x: docstring qa.seams + ADR 0304 draft w 7d221a2ec (wypchnięte). Library skopiowana z win-build (robocopy exit 1 = OK).
+  Przebudowa prywatna 6 kafli w toku (artifacts/seams-p3-s24/rebuild.status); snapshot „przed” derived knyszynska + knyszyn-w
+  w artifacts/seams-p3-s24/before-derived/.
+- NASTĘPNY KROK: po `DONE` w rebuild.status: import Win64 + visual-qa (-Cameras seam_*, dk65_seam_east_out) po/przed.
