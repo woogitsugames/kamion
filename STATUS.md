@@ -16,4 +16,4 @@ Worktree `.claude/worktrees/knyszyn-p2-s24`, gałąź `knyszyn-p2-s24`. Skrypty:
 
 - r3 (after3): szew W systematyczny Δluma 17,1 → 1,0 (kontrola w kaflu 2,3), |Δ| mediana 20,2 → 9,4; pole owner-11 114/120/92 → 110/128/92, G−R +5,8 → +18,3 (zdjęcie +26,9), σ 14,6 → 18,6 (zdjęcie 16,9). Pierścienie N2 zniknęły (NE), W: zygzaki → poprawka r4 (płyta ronda kompaktowego = wszystkie ramiona).
 
-NASTĘPNY KROK: czekaj `unity-after4.status` (build b4 + import + VQA wszystkich kamer), `pytest.status` (pytest tests/gis w tle), potem EditMode Win64 `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64`, sbs `bash artifacts/knyszyn-p2-s24/sbs.sh after4`, kopia do main.
+KONIEC (r5): EditMode Win64 1312 passed / 0 failed; pytest gis podzbiór 79 passed; ADR 0298. NASTĘPNY KROK (lider): scalenie, przebudowa knyszyn-s i kafli pozamiejskich + C, visual-critic na artifacts/knyszyn-p2-s24/sbs.
