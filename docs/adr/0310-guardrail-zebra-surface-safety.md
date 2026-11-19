@@ -1,4 +1,4 @@
-# ADR 0308 — Końcowe przycinanie barier i P-10 do nawierzchni
+# ADR 0310 — Końcowe przycinanie barier i P-10 do nawierzchni
 
 Data: 2026-11-19. Status: przyjęta w gałęzi guardrail-zebra-cli; walidacja playera po integracji.
 
