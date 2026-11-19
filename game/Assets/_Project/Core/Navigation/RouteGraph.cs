@@ -457,9 +457,11 @@ namespace Game.Core.Navigation
         /// along it from EdgeFrom and the projected point. Edges flagged no-truck are skipped when <paramref name="truckOnly"/>,
         /// off-reach edges (M27) when <paramref name="mainComponentOnly"/> (destination snap). Brute force over all segments
         /// with bounding-box culling: ~0.1 ms for this region, called on taps and reroutes only.
+        /// A nonzero unit heading restricts candidates to directions within 60 degrees of travel (either direction on
+        /// two-way edges). Used only to disambiguate a start between nearby opposing carriageways.
         /// </summary>
         public int Snap(Vector2 p, float maxDist, out float along, out Vector2 onEdge, out float dist, bool truckOnly = false,
-            bool mainComponentOnly = false)
+            bool mainComponentOnly = false, Vector2 heading = default)
         {
             int best = -1; along = 0f; onEdge = p; dist = maxDist;
             float best2 = maxDist * maxDist;
@@ -476,6 +478,12 @@ namespace Game.Core.Navigation
                     float t = l2 > 1e-8f ? Mathf.Clamp01(Vector2.Dot(p - a, ab) / l2) : 0f;
                     Vector2 q = a + ab * t;
                     float d2 = (p - q).sqrMagnitude;
+                    if (heading != Vector2.zero && l2 > 1e-8f)
+                    {
+                        float alignment = Vector2.Dot(ab / Mathf.Sqrt(l2), heading);
+                        if (!IsOneway(e)) alignment = Mathf.Abs(alignment);
+                        if (alignment < 0.5f) continue;
+                    }
                     if (d2 < best2)
                     {
                         best2 = d2; best = e; onEdge = q; along = PointS[k - 1] + t * (PointS[k] - PointS[k - 1]);

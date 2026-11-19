@@ -14,6 +14,31 @@ namespace NavRunner.Tests
     {
         const string Region = "bialystok-industrial-c";
 
+        [Fact]
+        public void Tysiaclecia_StartSnapUsesHeadingBetweenParallelCarriageways()
+        {
+            var g = Region_();
+            var start = new Vector2(-537f, -270f);
+            var goal = new Vector2(-734.943f, 695.352f);
+            int nearest = g.Snap(start, RoutePlanner.SnapStartM, out _, out _, out _);
+            Assert.Equal(526, nearest);
+            var planner = new RoutePlanner(g) { AllowTileExit = true };
+            var p = RoutePath.For(g);
+            Assert.Equal(PlanStatus.Ok, planner.Plan(start, -16.2f, goal, p));
+            Assert.Equal(530, p.Directed[0] >> 1);
+            AssertValid(g, p);
+            for (int k = 0; k < p.ManCount; k++) Assert.NotEqual(Maneuver.UTurn, p.ManType[k]);
+            Assert.True(p.Length < 1100f);
+            foreach (float heading in new[] { 163.8f, float.NaN })
+            {
+                Assert.Equal(PlanStatus.Ok, planner.Plan(start, heading, goal, p));
+                Assert.Equal(nearest, p.Directed[0] >> 1);
+                bool turnsRound = false;
+                for (int k = 0; k < p.ManCount; k++) turnsRound |= p.ManType[k] == Maneuver.UTurn;
+                Assert.True(turnsRound);
+            }
+        }
+
         static RouteGraph Region_() { var g = RouteGraph.Load(Region); Assert.NotNull(g); return g; }
 
         static void AssertValid(RouteGraph g, RoutePath p)
@@ -203,6 +228,27 @@ namespace NavRunner.Tests
             {
                 (0, 1, flags01, "Dolna"), (1, 2, 0, "Prawa"), (2, 3, 0, "Górna"), (3, 0, 0, "Lewa"), (1, 4, 0, "Dalsza"),
             });
+        }
+
+        [Fact]
+        public void Synthetic_StartHeadingDoesNotSnapToRemoteOrCrossingRoad()
+        {
+            var g = Build(new[]
+            {
+                new Vector2(0, 100), new Vector2(0, -100),
+                new Vector2(40, -100), new Vector2(40, 100),
+                new Vector2(-100, 2), new Vector2(100, 2),
+            }, new (int, int, byte, string)[]
+            {
+                (0, 1, RouteGraph.FlagOneway, "Nearest"),
+                (2, 3, RouteGraph.FlagOneway, "Remote"),
+                (4, 5, 0, "Crossing"),
+            });
+            var planner = new RoutePlanner(g) { AllowTileExit = true };
+            var p = RoutePath.For(g);
+            Assert.Equal(PlanStatus.Ok, planner.Plan(Vector2.zero, 0f, new Vector2(0, -80), p));
+            Assert.Equal(0, p.Directed[0]);
+            AssertValid(g, p);
         }
 
         [Fact]
