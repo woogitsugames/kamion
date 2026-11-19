@@ -428,7 +428,10 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         wtrees = w.water.bank_vegetation(w.buf, zground, bank_keep, trees + ptrees, blocked, rep, log)
         for t_ in wtrees:
             vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
-    instances = pl.items + trees + ptrees + wtrees
+    # ADR 0308: no crown below cab height over the carriageway (rule trees, rows, garden and bank trees alike)
+    cleared = VG.road_clearance(trees + ptrees + wtrees, carriage, rep)
+    log("road clearance", rep["road_clearance"])
+    instances = pl.items + cleared
     hero_tris = {**hero_tris, **HBD.apply(w.buf, heroes, instances, rep, log)}      # depot halls + hero buildings
     if heroes or rep.get("hero_buildings", {}).get("stale"):
         log("hero buildings", {k: [x["id"] for x in v] for k, v in rep["hero_buildings"].items()})
