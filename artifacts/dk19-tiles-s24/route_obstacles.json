@@ -1,0 +1,58 @@
+{
+ "schema": "truck-sim-pl/route-obstacles/1",
+ "adr": "0300",
+ "envelope": {
+  "half_width_m": 1.2,
+  "floor_m": 0.35,
+  "top_m": 3.8
+ },
+ "tiles": [
+  {
+   "tile": "bialystok-wygoda",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 90.6,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:wygoda-andersa-to-bojary",
+     "length_m": 90.6,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "bialystok-bojary",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 3266.7,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "bialystok-mickiewicza",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 3720.3,
+     "no_surface_samples": 3,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  }
+ ],
+ "colliders_total": 0
+}
