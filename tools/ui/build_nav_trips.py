@@ -10,7 +10,7 @@ tools/worldgen/streaming/route_links.py, ADR 0285) and the control-route end poi
   autopilot stops), goal tile.
 
 Trips:
-  tykocin  corridor `bialystok-tykocin` (whole)
+  tykocin  corridor `bialystok-tykocin` (whole); goal = end of the link `tykocin-dw671-to-rynek` (Rynek, ADR 0303)
   s8       corridor `bialystok-s8`, cut at the first missing tile (the rest of the S8 loop is not built yet)
   monki    corridor `bialystok-tykocin` up to `knyszyn`, then `knyszyn-w` entered on DK65 (end of the link
            `knyszyn-dk65-to-dk65-w`) to the end of the knyszyn-w control route (DK65 towards Monki, ADR 0209)
@@ -63,8 +63,17 @@ def joins_of(c: dict, tiles: list[str]) -> list[dict]:
     return out
 
 
-def trip(tid: str, label: str, tiles: list[str], joins: list[dict]) -> dict:
-    gx, gy = end_of_route(tiles[-1])
+def goal_of(links: dict, tid: str, tile: str) -> tuple[float, float]:
+    """ADR 0303: a route link of this trip that replaces (or continues) the last tile's control route ends where the
+    route autopilot stops (e.g. the Rynek in Tykocin) - that is the goal; otherwise the end of the control route."""
+    for l in links["links"]:
+        if l["tile"] == tile and l["destination"] == tid and tile in (l.get("replacesRoute"), l.get("afterRoute")):
+            return float(l["endX"]), float(l["endY"])
+    return end_of_route(tile)
+
+
+def trip(tid: str, label: str, tiles: list[str], joins: list[dict], links: dict | None = None) -> dict:
+    gx, gy = goal_of(links, tid, tiles[-1]) if links is not None else end_of_route(tiles[-1])
     return {"id": tid, "label": label, "tiles": tiles, "joins": joins, "goalTile": tiles[-1],
             "goalX": round(gx, 3), "goalY": round(gy, 3)}
 
@@ -74,7 +83,7 @@ def build() -> dict:
     trips = []
 
     ty = corridor(links, "bialystok-tykocin")
-    trips.append(trip("tykocin", "Tykocin", list(ty["tiles"]), joins_of(ty, ty["tiles"])))
+    trips.append(trip("tykocin", "Tykocin", list(ty["tiles"]), joins_of(ty, ty["tiles"]), links))
 
     k = ty["tiles"].index("knyszyn")
     mt = list(ty["tiles"][: k + 1]) + ["knyszyn-w"]
