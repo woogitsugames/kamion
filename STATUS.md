@@ -13,3 +13,4 @@
 - NASTĘPNY KROK: po `DONE` w rebuild.status: import Win64 + visual-qa (-Cameras seam_*, dk65_seam_east_out) po/przed.
 - 07:5x: przebudowane knyszyn-w, dk65-monki-01, bialystok-knyszynska (exit 0); render przed/po wystartowany (artifacts/seams-p3-s24/vqa.status).
 - 08:2x: import exit 2 = brak SM_CabInterior_LOD0.fbx w worktree; skopiowane z main, rendery wystartowane ponownie.
+- 09:3x: 6/6 kafli przebudowane (exit 0), rendery przed/po gotowe (vqa/{before,after}); pytest tests/gis w toku (pytest.status).
