@@ -40,4 +40,4 @@ def test_dk65_01_route_edges_carry_the_override():
     ov = yaml.safe_load((Path(__file__).resolve().parents[2] / "Data/Regions/dk65-01/overrides.yaml").read_text(encoding="utf-8"))
     route = [o for o in ov["overrides"] if o.get("set", {}).get("edge_lines") == "both"   # ADR 0220: kind entries have no set
              and not str(o.get("id", "")).startswith("s8-xsec-")]                    # ADR 0288: S8 corner, not the route
-    assert len(route) == 5 and route[0]["set"]["width"] == 6.0
+    assert len(route) == 5 and route[0]["set"]["width"] == 6.7   # ADR 0304: 6.0 -> 6.7 (ortho 0.1 m at the seam)
