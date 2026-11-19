@@ -26,9 +26,15 @@ Przekrój prostopadły do trasy co 50 m (174 stacje), ortofoto GUGiK WMS HighRes
 | Szosa Knyszyńska / Ełcka (dwukierunkowa, G) | 2 / 6,0 m | 2 × 3,00 m = 6,5 m | linie krawędziowe 6,3–6,5 m od siebie + utwardzone pobocza | bez zmian (reguła potwierdzona) |
 
 Zbiorczo (`qa/lane_audit_compare.py`, stacje z czytelnym łańcuchem linii; błąd linii = odległość granicy pasa z ortofoto
-od najbliższej linii generatora): `maczka` mediana 0,50 → 0,12 m, p90 1,52 → 0,55 m, błąd szerokości pasa trasy
-−0,32 → +0,13 m; `kleeberga` mediana 0,60 → 0,30 m; `industrial-c` bez zmian (ręczne `lane_edges`), `knyszynska` bez zmian
-po korekcie reguły (p. 1). Liczby „po” z generatora w pamięci (ten sam kod co `build_world`).
+od najbliższej linii generatora; „po” = generator w pamięci po wszystkich zmianach, ten sam kod co `build_world`,
+`artifacts/lanes-audit-s24/after2/`):
+
+| kafel | stacje przed / po | błąd linii mediana | p90 | błąd szer. pasa trasy (mediana) |
+|---|---|---|---|---|
+| `bialystok-maczka` | 19 / 24 | 0,50 → 0,10 m | 1,52 → 0,60 m | −0,32 → +0,10 m |
+| `bialystok-kleeberga` | 27 / 28 | 0,60 → 0,25 m | 1,75 → 1,88 m (krawędzie bez fitu przy wylotach) | −0,10 → +0,12 m |
+| `bialystok-knyszynska` | 14 / 15 | 0,40 → 0,40 m | 1,70 → 1,70 m | +0,05 → +0,02 m |
+| `bialystok-industrial-c` | 16 | 0,25 m (ręczne `lane_edges` ADR 0095, bez zmian) | 0,72 m | 0,00 m |
 
 ## Przyczyny
 1. **BDOT10k zaniża szerokość jezdni jednokierunkowych DK8** (10,5 m przy 11,8 m; 7,0–7,5 m przy 8,3–8,5 m), a
@@ -58,8 +64,10 @@ po korekcie reguły (p. 1). Liczby „po” z generatora w pamięci (ten sam kod
    modalna liczba pasów ≥ 60 % stacji, MAD granic ≤ 0,25 m (zewnętrznych ≤ 0,40 m), żaden pas trunk/primary < 2,9 m.
    Strona otwarta (łącznica / strefa włączania bez linii) — brakujące granice od strony zamkniętej z szerokością pasa z
    pomiaru i liczbą pasów OSM. Wszystkie progi WORKING_VALUE. Plik jest generowany — nie edytować; reimport = ponowne
-   uruchomienie narzędzia. Wynik: 16 wpisów (4 kafle), raport `artifacts/lanes-audit-s24/fit/fit_report.json`
-   (odrzucone krawędzie z powodem).
+   uruchomienie narzędzia. Ten sam przekrój mierzy też **przeciwną jezdnię** dwujezdniowej (way antyrównoległy 5–16 m od
+   punktu trasy), żeby obie jezdnie odsunęły się od pasa dzielącego razem; wpis odrzucany, gdy |środek − oś OSM| > 2,5 m
+   albo pas > 4,2 m. Wynik: 19 wpisów (`maczka` 14, `kleeberga` 6, krawędź szwu w249740774 w obu), raport
+   `artifacts/lanes-audit-s24/fit/fit_report.json` (odrzucone krawędzie z powodem).
 3. `seam_taper._load_overrides` (nominalny przekrój sąsiada) i `build_world` (sha wejść w manifeście) czytają też plik
    generowany.
 4. `route_start.json` czterech kafli przeliczone (`scripts/export-route.py`) — trasa idzie środkiem zmierzonego pasa.
