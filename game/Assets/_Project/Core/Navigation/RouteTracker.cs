@@ -103,9 +103,12 @@ namespace Game.Core.Navigation
             for (int k = 0; k < p.ManCount; k++)
             {
                 float ms = p.S[p.ManPoint[k]];
-                if (ms > s + 1f || p.ManType[k] == Maneuver.Arrive)
+                bool onRoundabout = p.ManType[k] == Maneuver.Roundabout && s >= ms && s <= p.S[p.ManEndPoint[k]];
+                bool roundaboutAhead = p.ManType[k] == Maneuver.Roundabout && s <= p.S[p.ManEndPoint[k]];
+                if (ms > s + 1f || roundaboutAhead || p.ManType[k] == Maneuver.Arrive)
                 {
-                    g.Next = k; g.NextM = Mathf.Max(0f, ms - s); g.NextExit = p.ManExit[k];
+                    float target = onRoundabout ? p.S[p.ManEndPoint[k]] : ms;
+                    g.Next = k; g.NextM = Mathf.Max(0f, target - s); g.NextExit = p.ManExit[k];
                     g.NextLaneCount = p.ManLaneCount[k]; g.NextLaneCls = p.ManLaneCls[k];
                     g.NextLanesAllowed = p.ManLanesAllowed[k]; g.NextLanesRec = p.ManLanesRec[k];
                     g.NextLaneSrc = p.ManIn[k];

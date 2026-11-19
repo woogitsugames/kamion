@@ -14,6 +14,59 @@ namespace Game.Tests
         const string Region = "bialystok-industrial-c";
 
         [Test]
+        public void Dk6506_RoundaboutGuidanceStaysUntilExit()
+        {
+            var g = RouteGraph.Load("dk65-06");
+            var p = RoutePath.For(g);
+            var planner = new RoutePlanner(g) { AllowTileExit = true, RelaxTruckLimits = true };
+            // Real trip leg, south -> west seam; anchor (767755, 604415).
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(new Vector2(-94.1f, -1016f), float.NaN,
+                new Vector2(-1016f, 306.5f), p));
+            int rb = -1;
+            for (int k = 0; k < p.ManCount; k++)
+                if (p.ManType[k] == Maneuver.Roundabout) { rb = k; break; }
+            Assert.IsTrue(rb >= 0, "Dobrzyniewo roundabout is generated inside dk65-06");
+            Assert.AreEqual(2, (int)p.ManExit[rb]);
+            int exit = -1;
+            bool onRing = false;
+            for (int i = 0; i < p.DirectedCount; i++)
+            {
+                bool ring = g.IsRoundabout(p.Directed[i] >> 1);
+                if (onRing && !ring) { exit = i; break; }
+                onRing |= ring;
+            }
+            Assert.IsTrue(exit > 0);
+            Vector2 exitPoint = g.PointAlong(p.Directed[exit], 0f);
+            int end = -1;
+            for (int i = p.ManPoint[rb]; i < p.Count; i++)
+                if (Vector2.Distance(p.Points[i], exitPoint) < 0.1f) { end = i; break; }
+            Assert.IsTrue(end > p.ManPoint[rb]);
+            var tr = new RouteTracker();
+            var gd = new NavGuidance();
+            tr.Update(p, p.Points[0], 0f, 0f, 0.02f, ref gd);
+            Assert.AreEqual(rb, gd.Next);
+            Assert.IsTrue(gd.NextM > 0f);
+            Vector2 entry = p.Points[p.ManPoint[rb]];
+            Vector2 approach = (entry - p.Points[p.ManPoint[rb] - 1]).normalized;
+            tr.Update(p, entry - approach * 0.5f, 0f, 0f, 0.02f, ref gd);
+            Assert.AreEqual(rb, gd.Next); // no gap in guidance in the last metre before entry
+            for (int i = p.ManPoint[rb]; i <= end; i++)
+            {
+                tr.Update(p, p.Points[i], 0f, 0f, 0.02f, ref gd);
+                Assert.AreEqual(rb, gd.Next);
+                Assert.AreEqual(2, (int)gd.NextExit);
+                Assert.IsTrue(Mathf.Abs(gd.NextM - (p.S[end] - p.S[i])) < 0.1f,
+                    "on the ring the distance is to this exit");
+            }
+            // Stopping on the ring must keep the same guidance too.
+            var stopped = new RouteTracker();
+            for (int i = 0; i < 50; i++) stopped.Update(p, p.Points[end - 1], 0f, 0f, 0.1f, ref gd);
+            Assert.AreEqual(rb, gd.Next);
+            tr.Update(p, g.PointAlong(p.Directed[exit], 12f), 0f, 0f, 0.02f, ref gd);
+            Assert.IsTrue(gd.Next > rb, "next manoeuvre only after leaving the roundabout");
+        }
+
+        [Test]
         public void Tysiaclecia_StartSnapUsesHeadingBetweenParallelCarriageways()
         {
             var g = Region_();

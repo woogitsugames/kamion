@@ -29,6 +29,8 @@ namespace Game.Core.Navigation
         public int DirectedCount;
 
         public readonly int[] ManPoint;
+        /// <summary>Point where a manoeuvre finishes (roundabout exit); equals ManPoint for a single junction.</summary>
+        public readonly int[] ManEndPoint;
         public readonly Maneuver[] ManType;
         public readonly float[] ManTurn;
         public readonly byte[] ManExit;
@@ -64,7 +66,7 @@ namespace Game.Core.Navigation
             Class = new byte[pointCapacity];
             Directed = new int[edgeCapacity];
             int m = edgeCapacity + 4;
-            ManPoint = new int[m]; ManType = new Maneuver[m]; ManTurn = new float[m]; ManExit = new byte[m]; ManName = new ushort[m];
+            ManPoint = new int[m]; ManEndPoint = new int[m]; ManType = new Maneuver[m]; ManTurn = new float[m]; ManExit = new byte[m]; ManName = new ushort[m];
             ManIn = new int[m]; ManLaneCount = new byte[m]; ManLaneCls = new byte[m];
             ManLanesAllowed = new uint[m]; ManLanesRec = new uint[m];
         }
@@ -106,7 +108,7 @@ namespace Game.Core.Navigation
         public void AddManeuver(int point, Maneuver type, float turnDeg, int exit, ushort name, int inDirected = -1)
         {
             if (ManCount >= ManPoint.Length) return;
-            ManPoint[ManCount] = point; ManType[ManCount] = type; ManTurn[ManCount] = turnDeg; ManExit[ManCount] = (byte)Mathf.Clamp(exit, 0, 255);
+            ManPoint[ManCount] = point; ManEndPoint[ManCount] = point; ManType[ManCount] = type; ManTurn[ManCount] = turnDeg; ManExit[ManCount] = (byte)Mathf.Clamp(exit, 0, 255);
             ManName[ManCount] = name; ManIn[ManCount] = inDirected;
             ManLaneCount[ManCount] = 0; ManLaneCls[ManCount] = 0; ManLanesAllowed[ManCount] = 0; ManLanesRec[ManCount] = 0;
             ManCount++;
@@ -140,6 +142,7 @@ namespace Game.Core.Navigation
             System.Array.Copy(o.Class, Class, o.Count); Count = o.Count;
             System.Array.Copy(o.Directed, Directed, o.DirectedCount); DirectedCount = o.DirectedCount;
             System.Array.Copy(o.ManPoint, ManPoint, o.ManCount); System.Array.Copy(o.ManType, ManType, o.ManCount);
+            System.Array.Copy(o.ManEndPoint, ManEndPoint, o.ManCount);
             System.Array.Copy(o.ManTurn, ManTurn, o.ManCount); System.Array.Copy(o.ManExit, ManExit, o.ManCount);
             System.Array.Copy(o.ManName, ManName, o.ManCount); System.Array.Copy(o.ManIn, ManIn, o.ManCount);
             System.Array.Copy(o.ManLaneCount, ManLaneCount, o.ManCount); System.Array.Copy(o.ManLaneCls, ManLaneCls, o.ManCount);
