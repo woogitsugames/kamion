@@ -81,3 +81,7 @@
 - 16:4x: C r6 consistency: lane_blind_end 44, marking_off 3, obstacle 2, arrow 8 — wszystkie ratchety kafla OK
   (main: 57 / 4 / 2 / 7). Na trasie 2 (> ROUTE_MAX 1; main 3): pętla serwisowa w435369082 E -208 N -287 + znana brama.
   fidelity r6 w toku.
+- 17:1x: C r6 fidelity: islands_absent 3 (main 1); edge p95 1,33 (main 2,09). Wyspa 11_dk8 E -549.8 N 218.9 to pas
+  między jezdnią a parkingiem PO PRAWEJ — przesunięcie w prawo go zjada. Poprawka: podłoga BDOT ADR 0301 (już ≥ +0,25/pas
+  ponad pomiar) zaliczana do D94 → DK8 bez dodatkowego poszerzenia. r7 (C + fidelity) w toku. Build playera OK
+  (`artifacts/win/kamion-0.1.0-422206cde4-dirty-regions`), przejazd `run.ps1` w toku; chain2 (EditMode → pytest) w toku.
