@@ -30,3 +30,8 @@
 - Dodano kontrolę odcinków barier po wygładzaniu/łączeniu oraz przycinanie P-10 przy wysepkach i między łańcuchami; review drugiego agenta uwzględnione.
 - Testy jednostkowe: 9/9 PASS; istniejące testy barier/oznakowania: 29/29 PASS. Testy rzeczywistych kafli w toku, bez Unity/build_world.
 - NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_drive_s24_surface_safety.py -q -s` (pomiar regresji na Data/Regions); dokończyć raport i commit. Bez push.
+
+# STATUS guardrail-zebra-cli — s24 (walidacja kafli)
+- 81/81 testów bez pełnej generacji kafli PASS; NMT Knyszyn/Knyszyn-w 4/4 PASS (SHA wejść zgodne), dodatkowy test chowania zebry pod nawierzchnią 1/1 PASS.
+- Płaski Kleeberga: zachowane 2610 odcinków, wycięte 38; porównanie PNG obejrzane. Nie odtworzono overlap zebr ani ich schowania pod drogą — konkretny artefakt t=2560 UNVERIFIED, log wskazuje jeszcze knyszyn.
+- NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_drive_s24_surface_safety.py -q -s` — zakończyć bieżący przebieg płaski i NMT Kleeberga, uzupełnić docs/reports/guardrail-zebra-cli-s24.md, commit bez push.
