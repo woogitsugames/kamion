@@ -22,3 +22,7 @@
   knyszyn równolegle do tego samego katalogu main) — przed usunięciem worktree odpiąć KAŻDY junction `cmd /c rmdir`, nie `-Recurse`.
   Runda 2 w kolejce slotu heavy (`artifacts/klattow-s24/r2.world.status`).
   NASTĘPNY KROK: po `artifacts/klattow-s24/r2.status` z `exit=0`: `bash artifacts/klattow-s24/sbs.sh r2`; obejrzeć `artifacts/klattow-s24/sbs/*-r2.jpg`
+- 13:40 Runda 2 obejrzana (`artifacts/klattow-s24/sbs/*-r2.jpg`): dach łaciaty, szczyty białe, lamus z podcieniem, krzewy z cienia usunięte.
+  `look-dom-klattow` 615 → 626 draws, 1 481 809 → 1 484 401 tris; kafel budynki LOD0 +2 836. Płot został 0,83 m od ściany (chodnika < 1,4 m).
+  Otwarte: podmurówka (kontrast odwrotny), chodnik Kościelnej. Rundy 3 nie użyto. Pełny pytest gis + EditMode w toku.
+  NASTĘPNY KROK: `cat artifacts/klattow-s24/pytest.status artifacts/klattow-s24/editmode.status`; potem raport.

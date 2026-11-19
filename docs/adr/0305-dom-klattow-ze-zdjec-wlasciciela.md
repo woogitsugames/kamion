@@ -45,7 +45,8 @@ wypada na modelowanym chodniku, płot i tak tam staje, o ile do jezdni zostaje �
 `WORKING_VALUE`; zmierzone w raporcie `streetscape_qa.json`: `fence.walkway_left_m`); podstawy sztachet biorą wysokość
 z wierzchu siatki chodnika (`furniture.SurfaceTop`), a między podmurówką a płotem leży pas trawy 5 cm nad chodnikiem
 z betonowym obrzeżem. Gdy chodnika zostałoby mniej — linia cofa się poza obrys drogi (0,15 m zapasu) co 0,1 m,
-a poniżej 0,8 m od ściany płotu nie ma. Właściwa poprawka (szerokość i odsunięcie chodnika Kościelnej z danych) należy
+a poniżej 0,8 m od ściany płotu nie ma. **Wynik w Knyszynie (runda 2): chodnika zostałoby < 1,4 m, więc płot
+stoi 0,83 m od ściany, a ganek nadal wystaje przez płot na chodnik** — odstępstwo od zdjęcia. Właściwa poprawka (szerokość i odsunięcie chodnika Kościelnej z danych) należy
 do warstwy dróg — otwarte.
 
 **Płot działki** (`plot_fence`, nowe pole nadpisania budynku czytane przez `streetscape.plots.plan`): styl płotu
@@ -116,11 +117,50 @@ jak na zdjęciu). W OSM nie ma znaczników. Reguła budowała płaską szarą sz
 `look_dom_klattow`; `look_lamus_plebanski` (kadr zdjęcia 02, pozycja ESTIMATED).
 
 ## Budżet i walidacja
-__MEASURE__
+Wszystko zmierzone w tej gałęzi; rendery = edytor, High clear, 1920 × 1080, scena `World_knyszyn_High` (nie build
+Windows). „Przed” dla kamery `look_dom_klattow` = `artifacts/knyszyn-p2-s24/stats-after5.txt` (stan main, ten sam
+generator); pozostałe kamery są nowe i nie mają pomiaru „przed” na treści High.
+
+| | przed | po (runda 2) | źródło |
+|---|---|---|---|
+| Dom Klattów, LOD0 / LOD1 | dom z reguły | 3 854 / 99 tris | `streetscape_qa.json` |
+| Lamus, LOD0 / LOD1 | szopa z reguły | 232 / 70 tris | jw. |
+| Kafel `knyszyn`: budynki LOD0 | 669 021 | 671 857 (+2 836) | `world_manifest.json` (`artifacts/klattow-s24/budget-r2.json`) |
+| Kafel `knyszyn`: budynki LOD1 | 110 008 | 110 049 (+41) | jw. |
+| Kafel `knyszyn`: działki (`plots`) | 432 339 | 432 095 (−244; krzewy z cienia, płot działki) | jw. |
+| Chunk 0_4: materiały | 52 | 62 (+10; każdy = draw call, gdy widoczny) | jw. |
+| Tabela materiałów manifestu | 345 | 353 | jw. |
+| `look-dom-klattow`: draws / tris | 615 / 1 481 809 | 626 / 1 484 401 (+11 / +2 592) | `stats.txt` (szacunek edytora przed SRP batchingiem) |
+| `look-dom-klattow-street` (nowa) | — | 547 / 1 466 323 | `artifacts/klattow-s24/r2/stats.txt` |
+| `look-dom-klattow-gable-e` (nowa) | — | 234 / 955 389 | jw. |
+| `look-dom-klattow-yard` (nowa) | — | 98 / 375 046 | jw. |
+| `look-lamus-plebanski` (nowa) | — | 458 / 1 119 089 | jw. |
+| Tekstury nowych zestawów (szacunek ASTC z mipami) | 0 | Medium 2,21 MB, High 11,26 MB (5 zestawów) | `materials_spec.json` |
+
+Wszystkie kadry poniżej 2 mln trójkątów; draw calle +11 na kadrze z domem (limit roboczy 850 z D-s24).
+Treść Low (scena `World_knyszyn`, LOD1) zmierzona przed / po rundzie 1: `look-dom-klattow` 600 → 604 draws,
+865 370 → 866 030 tris (`artifacts/klattow-s24/before2-low`, `r1-low`).
+
+Rundy wizualne (2 z 3): `artifacts/klattow-s24/sbs/*-r1.jpg`, `*-r2.jpg` (render nad zdjęciem właściciela).
+Ocena własna agenta (nie `visual-critic`): bryła, biel ścian z wieńcami, szczyt z pionowych desek z okienkiem
+i daszkiem, daszek okapowy, łaciata stara dachówka, dwa kominy, ganek z kratką, rytm okien i płot — rozpoznawalne
+wobec zdjęć 01 / 04 / 05. Odstępstwa: płot 0,83 m od ściany zamiast w linii ganku (chodnik z generatora), podmurówka
+czyta się jako ciemne kamienie w jasnej zaprawie (odwrotnie niż tekstura — przyczyna nieustalona), brak krzewu,
+pnącza i słupa, płot działki z atlasu jest czerwony. Lamus: bryła, podcień ze słupami i mieczami, dach czterospadowy
+z gontu — zgodne z kierunkiem zdjęcia 02; kadr z wysokości 3,2 m.
+
+Testy: `tests/gis/test_dom_klattow_0305.py` (8). Pełny `pytest tests/gis` i EditMode Win64 — wyniki w raporcie agenta
+i `docs/status/klattow-s24-STATUS.md`.
+
+**Do lidera:** (1) agent `road-widen-s24` budował `knyszyn` równolegle do wspólnego `Data/raw/derived` — po scaleniu obu
+gałęzi kafel trzeba przebudować raz jeszcze; ten worktree ma prywatną kopię `Data/raw/derived/knyszyn` (reszta to
+junctiony — odpinać `cmd /c rmdir`, nigdy `-Recurse`). (2) Nowe materiały trafiają do tabeli manifestu każdego kafla
+przy jego najbliższej przebudowie (GLB bez zmian).
 
 ## Otwarte
 - Ocena właściciela i `visual-critic` (kolory bielenia, dachówki, bejcy; rozmieszczenie okien).
 - Krzew i pnącze przy ganku, tabliczka z numerem, słup energetyczny przy narożniku.
+- Podmurówka `fieldstone_plinth` w silniku: ciemne kamienie / jasna zaprawa (tekstura ma odwrotnie) — do diagnozy.
 - Chodnik Kościelnej: w grze szerszy i bliżej ściany niż na zdjęciach (płot stoi na modelowanym chodniku).
 - Płot działki z atlasu `plot_kit` ma inny (czerwony) odcień niż sztachety obiektu — atlas nie ma barwienia per działka.
 - Zachodni szczyt (brak zdjęcia), wnętrze ganku.
