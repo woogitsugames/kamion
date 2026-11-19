@@ -382,13 +382,19 @@ def gameplay_widen(net: Network, d: float) -> None:
         if "gameplay_widen_m" in sec.provenance:
             continue
         n = max(int(sec.lanes), 1)
-        add = n * d
+        dl = d
+        if sec.width_src.startswith("bdot10k") and "bdot_floor_growth_m" in sec.provenance:
+            # the ADR 0301 floor already made these lanes wider than measured (BDOT): D94 asks for +d over the
+            # measurement, so only what the floor did not give yet (DK8 in tile C: floor +0.5 m/lane -> +0)
+            dl = max(0.0, d - float(sec.provenance["bdot_floor_growth_m"]) / n)
+            sec.provenance["gameplay_widen_floor_credit_m"] = round(d - dl, 3)
+        add = n * dl
         if sec.lane_edges:
             le = [float(v) for v in sec.lane_edges]
-            sec.lane_edges = [round(le[0] + (v - le[0]) + i * d, 3) for i, v in enumerate(le)]
+            sec.lane_edges = [round(le[0] + (v - le[0]) + i * dl, 3) for i, v in enumerate(le)]
             sec.lane_w = round((sec.lane_edges[-1] - sec.lane_edges[0]) / n, 3)
         else:
-            sec.lane_w = round(sec.lane_w + d, 3)
+            sec.lane_w = round(sec.lane_w + dl, 3)
         sec.width = round(sec.width + add, 3)
         if sec.width_profile:
             sec.width_profile = [(t, round(w + add, 3)) for t, w in sec.width_profile]

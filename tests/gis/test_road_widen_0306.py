@@ -43,16 +43,19 @@ def test_every_lane_quarter_metre_wider(maczka):
     for k, a in base.sections.items():
         b = wide.sections[k]
         assert b.lanes == a.lanes
-        assert b.width == pytest.approx(a.width + 0.25 * a.lanes, abs=1e-3), k
-        assert b.lane_w == pytest.approx(a.lane_w + 0.25, abs=2e-3), k
+        credit = float(b.provenance.get("gameplay_widen_floor_credit_m", 0.0))   # ADR 0301 floor counts towards D94
+        dl = 0.25 - credit
+        assert b.width == pytest.approx(a.width + dl * a.lanes, abs=1e-3), k
+        assert b.lane_w == pytest.approx(a.lane_w + dl, abs=2e-3), k
+        assert b.lane_w >= a.lane_w - 1e-9
         if a.oneway and not a.roundabout and not a.center_offset_profile:
             # one-way: grows to the right, the left (median) edge stays: centre moves right by half the growth
-            sh = min(0.25 * a.lanes / 2, S.GROW_RIGHT_MAX_M)
+            sh = min(dl * a.lanes / 2, S.GROW_RIGHT_MAX_M)
             assert b.center_offset == pytest.approx(a.center_offset - sh, abs=2e-3), k
-            assert (b.center_offset + b.width / 2) - (a.center_offset + a.width / 2) <= 0.25 * a.lanes / 2 + 2e-3
+            assert (b.center_offset + b.width / 2) - (a.center_offset + a.width / 2) <= dl * a.lanes / 2 + 2e-3
         else:
             assert b.center_offset == a.center_offset                 # two-way: symmetric, alignment kept
-        assert b.provenance["gameplay_widen_m"] == pytest.approx(0.25 * a.lanes)
+        assert b.provenance["gameplay_widen_m"] == pytest.approx(dl * a.lanes, abs=0.01)
 
 
 def test_measured_lane_edges_keep_left_strip_and_grow_per_lane(maczka):
