@@ -186,6 +186,8 @@ def specs(net, junction_nodes=None) -> list:
                 o = getattr(net.sec_list[int(i)], "compact", None)
                 if o:
                     opts.update(o)
+        # D94 / ADR 0306: the designed entry / exit lane is a lane - GAMEPLAY_WIDEN on top of the authored width
+        opts["lane_w_m"] = float(opts["lane_w_m"]) + S.GAMEPLAY_LANE_WIDEN_M
         ring_nodes = set(nodes)
         feeders = []
         for c in net.chains:

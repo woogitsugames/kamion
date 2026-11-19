@@ -325,6 +325,7 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     net.overrides_applied += cs_applied
     net.overrides_stale += cs_stale
     apply_edge_overrides(net, edges, overrides or [])
+    gameplay_widen(net, S.GAMEPLAY_LANE_WIDEN_M)     # D94 / ADR 0306: +0.25 m per lane on top of the measured base
     net.sec_list = [sections[k] for k in sorted(sections)]
     sec_index = {s.edge_id: i for i, s in enumerate(net.sec_list)}
     net.chains = build_chains(nodes, edges)
@@ -359,6 +360,33 @@ def _truck_apron(v) -> dict | None:
             return None
         h = 0.0
     return {"width_m": w, "height_m": h, "material": TRUCK_APRON_MATS[code], "code": code}
+
+
+def gameplay_widen(net: Network, d: float) -> None:
+    """D94 / ADR 0306 (GAMEPLAY_WIDEN, not a measurement): every lane of every section `d` wider than the measured /
+    rule / authored width resolved so far. Lane count, alignment (`center_offset`) and edge strips stay; measured
+    `lane_edges` (ADR 0095 / 0301) keep their left edge strip and each lane grows by `d`; width profiles and the
+    authored edge-line spacing grow by lanes x d. Runs once per load, after every override (idempotent by the
+    provenance key)."""
+    if not d:
+        return
+    for sec in net.sections.values():
+        if "gameplay_widen_m" in sec.provenance:
+            continue
+        n = max(int(sec.lanes), 1)
+        add = n * d
+        if sec.lane_edges:
+            le = [float(v) for v in sec.lane_edges]
+            sec.lane_edges = [round(le[0] + (v - le[0]) + i * d, 3) for i, v in enumerate(le)]
+            sec.lane_w = round((sec.lane_edges[-1] - sec.lane_edges[0]) / n, 3)
+        else:
+            sec.lane_w = round(sec.lane_w + d, 3)
+        sec.width = round(sec.width + add, 3)
+        if sec.width_profile:
+            sec.width_profile = [(t, round(w + add, 3)) for t, w in sec.width_profile]
+        if sec.edge_line_spacing is not None:
+            sec.edge_line_spacing = round(sec.edge_line_spacing + add, 3)
+        sec.provenance["gameplay_widen_m"] = round(add, 3)
 
 
 def apply_edge_overrides(net: Network, edges, overrides):

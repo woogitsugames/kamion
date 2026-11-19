@@ -55,6 +55,12 @@ LANE_WIDTH_BDOT_FLOOR = {"A": 3.75, "S": 3.50, "GP": 3.50}
 def bdot_lane_floor(cls: str, oneway: bool) -> float:
     """Lower bound of a BDOT10k-derived lane width (ADR 0301)."""
     return LANE_WIDTH_BDOT_FLOOR[cls] if oneway and cls in LANE_WIDTH_BDOT_FLOOR else LANE_WIDTH[cls][1]
+# D94 / ADR 0306 - GAMEPLAY_WIDEN, NOT a measured fact: every lane is built this much wider than the measured or rule
+# width (orthophoto lane_edges of ADR 0301, BDOT10k, OSM, PTB2022 rules and authored overrides are the base; this is
+# the delta on top, applied once in network.load after all overrides). Owner decision D94 (2026-11-19): a 16.5 m
+# tractor + semitrailer must be easy to keep in lane; layout (lane count, alignment, position) stays as measured.
+# Set to 0.0 to get the measured cross-sections (QA against the orthophoto, tests of measured widths).
+GAMEPLAY_LANE_WIDEN_M = 0.25
 # PTB2022 § 17 ust. 3 – single-lane carriageway: < two lanes but >= 3.50 m.
 SINGLE_LANE_MIN = 3.50
 SINGLE_LANE_DEFAULT = 4.00          # WORKING_VALUE (between 3.50 and 2 x lane)
