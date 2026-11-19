@@ -83,4 +83,16 @@ więc `bialystok-industrial-c` / `bialystok-maczka` / `bialystok-kleeberga` nie 
 1. 7 FAIL poza trasą (wyżej).
 2. w27718745 (`knyszyn-s`): szeroka końcówka profilu (km 25,32–25,49) ma linie 7,1 m; ortofoto: przerywane 7,1–7,5 m
    do km 25,49, potem 6,7–6,8 m — reszta poza szwem, bez zmian.
-3. Rendery szwów i ocena `visual-critic` — patrz STATUS / raport agenta.
+3. Ocena `visual-critic` niewykonana (subagent nie tworzy subagentów) — do lidera. Na kadrze `seam_w_back_into_tile` (knyszynska) przed i po: pognieciona płyta kostki po lewej (plac) — istniejąca usterka, nie z tej zmiany.
+
+## Weryfikacja (prywatna kopia derived, przebudowa 6 kafli exit 0; import Win64 + visual-qa High clear, edytor)
+- Rendery `artifacts/seams-p3-s24/vqa/{before,after}/{bialystok-knyszynska,knyszyn-w}/*.jpg`: DK8 przy szwie z kleeberga
+  (`seam-e-into-tile`) — pas dodatkowy zlicowany z DK8 bez krawężnika między nimi (jak w kleeberga); Szosa Knyszyńska
+  (`seam-w-*`) — jezdnia szersza, linie dalej od siebie; DK65 knyszyn-w (`dk65-seam-east-out`) — linie odsunięte od
+  krawędzi 7,5 m. Kadr „przed” knyszyn-w ma różowy budynek: import starego snapshotu derived bez materiału — artefakt
+  porównania, nie zmiany.
+- `pytest tests/gis` (na przebudowanych kaflach): 2510 passed, 5 failed → po poprawce `test_edge_lines_0205` (6.0 → 6.7)
+  zostają 4 testy świeżości, które lider odświeża po przebudowie w main: `test_region_catalog_0267` /
+  `test_start_clear_0262` (routeLengthM knyszynska 2961,35 → 2961,34, dk65-01 631,76 → 631,54 —
+  `scripts/export-region-catalog.py`), `test_route_links_s23::test_links_json_fresh` (`streaming/route_links.py`),
+  `test_world_roads::test_export_is_deterministic` (bialystok-industrial-c — stan C w tym worktree sprzed d39c96bca, bez związku).

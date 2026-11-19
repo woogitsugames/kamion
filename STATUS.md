@@ -14,3 +14,5 @@
 - 07:5x: przebudowane knyszyn-w, dk65-monki-01, bialystok-knyszynska (exit 0); render przed/po wystartowany (artifacts/seams-p3-s24/vqa.status).
 - 08:2x: import exit 2 = brak SM_CabInterior_LOD0.fbx w worktree; skopiowane z main, rendery wystartowane ponownie.
 - 09:3x: 6/6 kafli przebudowane (exit 0), rendery przed/po gotowe (vqa/{before,after}); pytest tests/gis w toku (pytest.status).
+- 10:4x: pytest gis 2510 passed / 5 failed -> poprawiony test_edge_lines_0205 (6.7); 4 pozostałe = świeżość katalogu / route_links /
+  manifest C (do odświeżenia przez lidera po przebudowie w main). ADR 0304 uzupełniony. KONIEC zadania — raport do lidera.
