@@ -949,6 +949,8 @@ def grow_crown(species, variant, lod, rng, crng, g, H):
                 up = dvec + _unit(crng) * 0.35
             pos = clip(pos, 1.04)
             cell, mirror = crng.randrange(4), crng.random() < 0.5
+            if P["hang"]:                       # birch atlas: cells 0-1 upright sprays, 2-3 hanging strands
+                cell = cell % 2 + (2 if hang else 0)
             if crng.random() > keep:
                 continue
             nrm = nrm.normalized()

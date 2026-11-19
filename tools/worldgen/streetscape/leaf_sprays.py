@@ -38,6 +38,9 @@ TWIG = {"birch": (58, 44, 40), "willow": (112, 104, 62)}
 #   strand = long slender twigs fanning from the base with small leaves (birch, willow: the hanging twigs)
 FORM = {"linden": (0.082, 250, "spray"), "maple": (0.128, 125, "spray"), "alder": (0.080, 230, "spray"),
         "poplar": (0.074, 250, "spray"), "birch": (0.052, 420, "strand"), "willow": (0.105, 330, "strand")}
+# birch: cells 0-1 are upright sprays (the crown mass), cells 2-3 the hanging strands (make_trees `hang` cards);
+# a crown of strand fans alone read as bursts of spikes (preview r1)
+UPRIGHT_CELLS = {"birch": (2, 520)}             # species -> (cells drawn as sprays, their leaf count)
 CARD_M = {"linden": 1.25, "maple": 1.35, "alder": 1.2, "poplar": 1.25, "birch": 1.15, "willow": 1.3}
 SEED = {"linden": 3081, "maple": 3082, "birch": 3083, "alder": 3084, "poplar": 3085, "willow": 3086}
 
@@ -138,10 +141,12 @@ def _fit(twigs, margin):
     return [([(0.5 + (x - 0.5) * k, 0.03 + (y - 0.03) * k) for x, y in tw], w) for tw, w in twigs]
 
 
-def spray(species, seed, n=CELL):
-    """One branchlet cell, RGBA uint8 (n x n x 4). Deterministic in (species, seed)."""
+def spray(species, seed, n=CELL, upright=False):
+    """One branchlet cell, RGBA uint8 (n x n x 4). Deterministic in (species, seed, upright)."""
     rng = np.random.default_rng(seed)
     length, count, style = FORM[species]
+    if upright:
+        style, count = "spray", UPRIGHT_CELLS[species][1]
     twigs = _fit(_twigs(style, rng), margin=length * 0.72 + 0.02)
     S = n * SS
     im = Image.new("RGBA", (S, S), (0, 0, 0, 0))
@@ -230,7 +235,8 @@ def atlas(species, seed=None, n=CELL):
     out = np.zeros((n * GRID, n * GRID, 4), np.uint8)
     for i in range(GRID * GRID):
         r, c = divmod(i, GRID)
-        out[r * n:(r + 1) * n, c * n:(c + 1) * n] = spray(species, seed * 31 + i * 7919, n)
+        out[r * n:(r + 1) * n, c * n:(c + 1) * n] = spray(species, seed * 31 + i * 7919, n,
+                                                           upright=i < UPRIGHT_CELLS.get(species, (0, 0))[0])
     return out
 
 
