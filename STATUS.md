@@ -36,3 +36,8 @@ Pozostałe: dk65-02..11, s8-01..05, bialystok-dojlidy, dk65-monki-01..07, monki,
 - W toku: pytest tests/gis (artifacts/regen-wave-s24/pytest.status).
 
 NASTĘPNY KROK: `Get-Content artifacts/regen-wave-s24/pytest.status`; potem lider scala gałąź regen-wave-s24 (tylko Data/Regions/*/generated + route_start.json; derived już w main przez junction).
+
+- 2026-11-19 06:1x: pytest tests/gis: 2492 passed, 3 failed, 1 skipped, 2 xfailed (49 min). Porażki NIE w moich kaflach: test_ec_chimneys (cp1250 UnicodeDecodeError, znany), test_road_fidelity::test_report_not_stale i test_world_roads::test_export_is_deterministic (oba bialystok-industrial-c — kafel lidera, w toku przebudowy; committed fidelity/manifest sprzed ADR 0293/0295).
+- Gałąź zmienia tylko Data/Regions/<39 kafli> + STATUS.md. Dowody skopiowane do main: artifacts/regen-wave-s24/.
+
+NASTĘPNY KROK (lider): scalić regen-wave-s24; po przebudowie industrial-c ponowić pytest tests/gis.
