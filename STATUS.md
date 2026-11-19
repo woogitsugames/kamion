@@ -15,3 +15,7 @@
   r2 (knyszyn, tykocin, dk65-05, kleeberga, po merge main) w toku. Zlecenie lidera: fantomowa wyspa C (11_dk8, xy -549.8/218.9,
   między jezdniami trunk w197904074 | w266084696, ortho_road_frac 0,654 ≥ 0,6) — analiza w toku (fidelity zoom).
 - NASTĘPNY KROK: po r2 `combo_lane_check --swing` na 4 kaflach; import Win64 + VQA (`pwsh -File artifacts/road-widen-s24/unity.ps1 -Tag after -Import knyszyn`).
+- 12:2x: knyszyn po r2: DK65→DW671 W środek pasa kerb 23→15, off 5→0; ze swingiem 0→11 (krawężnik narożnika SE przy wlocie
+  z płd. — narożniki zamykane NOSE_R_M 4 m). Dodane `TRUCK_CORNER_R_M 12` (kształt jak zdjęcie drona 9). Kolejka:
+  r2 (tykocin, dk65-05, kleeberga) → r3 (knyszyn, knyszyn-s, knyszyn-w) → r4 (C + fidelity). Unity: import knyszyn r2 + VQA (`unity-after`).
+- NASTĘPNY KROK: po r3 `combo_lane_check --swing --tiles knyszyn,...`, import r3 knyszyn + VQA (`unity.ps1 -Tag after2 -Import knyszyn,knyszyn-s,knyszyn-w`).
