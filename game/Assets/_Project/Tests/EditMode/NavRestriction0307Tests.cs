@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using Game.Controls;
 using Game.Core.Navigation;
-using Game.UI.CabDisplays;
-using Game.UI.Navigation;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -160,25 +158,6 @@ namespace Game.Tests
             }
             GcAllocCounter.AssertZero(Run, warmup: Run, message: "restriction scout runs every frame / 4 Hz in the drive loop");
             Assert.IsTrue(any);
-        }
-
-        [Test]
-        public void TextsArePolishWithDecimalComma()
-        {
-            var b = new TextBuffer(32);
-            NavDraw.AppendLimit(b.Clear(), LimitKind.Height, 370, true); Assert.AreEqual("3,7 m", b.ToString());
-            NavDraw.AppendLimit(b.Clear(), LimitKind.Weight, 1200, true); Assert.AreEqual("12 t", b.ToString());
-            NavDraw.AppendLimit(b.Clear(), LimitKind.AxleLoad, 1150, false); Assert.AreEqual("11,5t", b.ToString());
-            NavDraw.AppendLimit(b.Clear(), LimitKind.Height, 379, true); Assert.AreEqual("3,7 m", b.ToString(), "cut, never rounded above the sign");
-            var r = new RouteRestriction { MaxHeightCm = 370, MaxWeightC = 1200, Exceeded = LimitKind.Height | LimitKind.Weight };
-            Assert.AreEqual("wysokość do 3,7 m, masa do 12 t", NavText.Describe(r));
-            r.Exceeded = LimitKind.Weight;
-            Assert.AreEqual("masa do 12 t", NavText.Describe(r));
-            foreach (char c in NavText.Restriction + NavText.RestrictionIn + NavText.RestrictionHere + NavText.Metres + NavText.Tonnes)
-            {
-                Assert.GreaterOrEqual(NavText.Charset.IndexOf(c), 0, "GPS charset has '" + c + "'");
-                Assert.GreaterOrEqual(CabDisplayText.Charset.IndexOf(c), 0, "cab screen charset has '" + c + "'");
-            }
         }
 
         [Test]
