@@ -79,8 +79,46 @@ idzie do sektora, w którym leży. dk65-07 po regeneracji: trójkąty poza włas
 
 ## Wyniki (pomiar w edytorze, High, pogodnie, 1920 × 1080; `artifacts/trees-s24/`)
 
-WYNIKI_PLACEHOLDER
+Rundy: „przed” → r1 (korony, atlasy, instancje ogrodowe) → r2 (świerk jako kalenice ze zwisającymi gałązkami, brzoza
+z dwoma rodzajami kart, skrajnia, LOD1 odchudzony). Rundy 3 nie użyto. SBS: `artifacts/trees-s24/sbs/*-before-vs-r2.jpg`,
+referencja `refs/ref_mly_knyszyn_road.jpg` (Mapillary 525325368849219, CC BY-SA 4.0) w `sbs/ref-vs-game-dk65-inlet-south.jpg`.
+
+| Pomiar (edytor, `compare_stats.py`) | przed | po (r2) |
+|---|---|---|
+| knyszyn, 66 kamer: draws (szacunek) | 18 390 | 18 452 (+0,3 %) |
+| knyszyn: trójkąty sceny | 55,26 M | 54,67 M (−1,1 %; karty koron ogrodowych zniknęły z High) |
+| knyszyn: draws instancji / trójkąty instancji | 5 573 / 1,306 M | 5 833 (+4,7 %) / 1,455 M (+11,5 %) |
+| knyszyn: najcięższa kamera (`rynek-owner-04`) | — | 536 draws, 1,72 M + 0,03 M instancji |
+| dk65-05, 26 kamer: draws / trójkąty sceny | 3 759 / 11,43 M | bez zmian |
+| dk65-05: trójkąty instancji | 1,104 M | 1,113 M (+0,8 %) |
+| tło dali dk65-07 (High / Low) | 53 508 / 12 446 | 60 137 / 13 101 |
+
+| Model (tris LOD0 / LOD1) | przed | po |
+|---|---|---|
+| lipa | 3128–3272 / 684–720 | 3272–3354 / 776–822 |
+| klon | 2450–2520 / 524–586 | 2916–2996 / 670–688 |
+| brzoza | 3380–3534 / 908–970 | 2936–2976 / 690–744 |
+| olsza | 4024–4130 / 826–874 | 3098–3122 / 744–810 |
+| sosna | 1484–2414 / 780–1306 | 1628–2670 / 838–1408 |
+| świerk | 676–900 / 344–364 | 696–904 / 344–364 |
+| topola (nowa) | — | 3638–3660 / 850–892 |
+
+Skrajnia w Knyszynie: 5604 drzewa sprawdzone, 36 obniżonych, 4 usunięte. Drzewa ogrodowe: 1770 z 3243 to instancje biblioteki
+na High. Czas klatki GPU i pamięć NIE były mierzone (pomiar tylko w buildzie na bezczynnej maszynie — lider, `pc-metrics.ps1`);
+liczby wyżej to szacunek draws / trójkątów edytora. Tekstury: 5 atlasów liści 512 → 1024 px (`UNVERIFIED` wpływ na pamięć,
+rząd +5 MB po kompresji).
 
 ## Konsekwencje i otwarte punkty
 
-OTWARTE_PLACEHOLDER
+- **Po scaleniu trzeba**: zregenerować tło dali każdego kafla (`far_field.py --region <id>`, < 2 min / kafel) i zaimportować
+  kafle ponownie (narożniki fartucha, nowe drzewa i tekstury lasu wchodzą przy imporcie; instancje ogrodowe i skrajnia
+  dopiero po `build_world`). Bez reimportu działa już reguła streamera (stare sceny chowają cały bok fartucha).
+- **Brak potwierdzenia w jeździe**: poprawka „zielonej ściany” jest potwierdzona danymi i testami, nie renderem ze streamingu
+  w dk65-08 / industrial-c / dk65-10 / tykocin-06 / -09 — to wymaga buildu z przebudowanymi kaflami.
+- Świerk z bliska nadal uproszczony (4 trójkąty na konar, limit 1000 tris z ADR 0187); impostory liściastych na 60–150 m
+  bywają rozmyte (256 × 384 px na widok).
+- Wierzba (głowiasta) — brak modelu; studium 0227 nietknięte. Topola jest w bibliotece, ale żadne dane jej nie używają
+  (gatunki szpalerów DK65 są `UNVERIFIED`).
+- Jesion i kasztanowiec ogrodowy używają modeli lipy i klonu.
+- Odległości LOD drzew (20 / 60 m × lodBias) są z czasów telefonu; na PC warto je wydłużyć (zakres rendering-perf).
+- Low: bez zmian w treści poza nowymi siatkami LOD1 / impostorami biblioteki; nie mierzone na telefonie (D73).

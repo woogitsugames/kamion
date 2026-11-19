@@ -67,3 +67,8 @@
   Runda 2 W TLE: świerk = konary jako kalenica ze zwisającymi gałązkami (te same 4 tris/konar), wypiek `bake-r3`, build_world knyszyn
   ze skrajnią, import + render obu kafli (`round.ps1 -Tag r2`).
   NASTĘPNY KROK: `cat artifacts/trees-s24/round-r2.status artifacts/trees-s24/unity-r2-*.status` → `bash artifacts/trees-s24/sbs.sh r2` (z katalogu artifacts/trees-s24)
+- 19:10 Runda 2 OBEJRZANA (`artifacts/trees-s24/sbs/*-before-vs-r2.jpg`): świerk bez talerzy, liściaste zwarte; skrajnia Knyszyn:
+  5604 sprawdzone, 36 obniżonych, 4 usunięte. Budżet r2: knyszyn draws +0,3 %, tris sceny −1,1 %, tris instancji +11,5 %;
+  dk65-05 draws ±0, tris instancji +0,8 %. LOD1 liściastych odchudzony do poziomu sprzed zmiany. ADR 0308 uzupełniony.
+  pytest podzbiór (9 plików): 172 passed. W TLE: `artifacts/trees-s24/tests.ps1` = EditMode Win64 → pełny pytest tests/gis.
+  NASTĘPNY KROK: `cat artifacts/trees-s24/editmode.status artifacts/trees-s24/pytest-gis.status; tail -5 artifacts/trees-s24/pytest-gis.log`
