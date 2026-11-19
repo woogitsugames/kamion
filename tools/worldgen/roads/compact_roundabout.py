@@ -79,8 +79,9 @@ TRUCK_ENTRY_R_MIN_M = 12.0
 TRUCK_EXIT_R_MIN_M = 15.0
 # ... and the kerb returns between neighbouring arms (morphological closing of the paved outline, NOSE_R_M otherwise):
 # the semitrailer cut the 4 m returns at the entry of DK65 from the south (combo_lane_check); 12 m also matches the
-# sweeping corners on the owner's drone photo 9 (not measured).
-TRUCK_CORNER_R_M = 12.0
+# sweeping corners on the owner's drone photo 9 (not measured). 12 m left the trailer of the control route (DK65 S ->
+# Tykocka E, first exit) on the SE corner kerb (player run 19.11: 2.4 s; combo_lane_check 53 points) -> 16 m.
+TRUCK_CORNER_R_M = 16.0
 OUTER_D_MAX_SHIFT = 0.4
 OUTER_D_MIN_SHIFT_M = 2.0
 FILLS = ("island_sand", "island_gravel", "verge_grass")
