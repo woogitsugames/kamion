@@ -33,3 +33,4 @@
   ADR 0301 na drogach serwisowych/strefie zamieszkania: BDOT 6,5 m → pas 3,25 przy limicie 3,50). Poprawka: L/D maks.
   std+0,25 (`standards.LANE_WIDTH_MAX`), testy 0301 zaktualizowane. r4 = C ponownie + fidelity (czeka na r3).
 - NASTĘPNY KROK: po r4 sprawdzić `road_consistency_qa.json` (on_route ≤ 1, tile ≤ 55) i `fidelity_qa.json` (wyspy 0).
+- 14:2x: merge main (klattow-s24, ADR 0305) dee1788db; r4 = C + knyszyn (po merge) + fidelity, czeka na r3.
