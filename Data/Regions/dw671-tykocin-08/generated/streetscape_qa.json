@@ -34,6 +34,12 @@
    "block": 1,
    "house": 13,
    "shed": 22
+  },
+  "wooden_houses": {
+   "board_tris_lod0": 0,
+   "boarding_runs": 0,
+   "longest_run_m": 0.0,
+   "runs_over_tile": 0
   }
  },
  "cycleways": {
@@ -289,6 +295,7 @@
    "m_by_style": {},
    "on_screened_deck_m": 0.0,
    "signs_moved_off_wall": [],
+   "style_rule_m": {},
    "zones_stale": []
   },
   "noise_barriers_m": 0,
@@ -2112,6 +2119,20 @@
  "schema": "truck-sim-pl/streetscape-qa/1",
  "terrain_soft_nodes": 0,
  "vegetation": {
+  "farmland": {
+   "b_mean_after": 0.3361,
+   "b_mean_before": 0.6249,
+   "b_std_after": 0.2289,
+   "b_std_before": 0.2617,
+   "cells_m2": 3406729,
+   "garden_b_mean_after": 0.2648,
+   "garden_b_mean_before": 0.5934,
+   "garden_b_std_after": 0.0544,
+   "garden_b_std_before": 0.2584,
+   "garden_cells_m2": 13234,
+   "layout": "ESTIMATED strips (no cadastral parcels in the repo)",
+   "share": 0.8114
+  },
   "forest_clearings": {
    "applied": [],
    "stale": []
