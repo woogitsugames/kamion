@@ -306,6 +306,7 @@ namespace Game.UI.Navigation
 
         public PlanStatus PlanToPin()
         {
+            if (m_Trip != null) return LastStatus;   // ADR 0302: the trip plans itself (incrementally)
             if (!HasPin || m_Graph == null) return LastStatus = PlanStatus.GoalOffRoad;
             Replan(false);
             if (LastStatus == PlanStatus.Ok) SaveDestination(Pin);
