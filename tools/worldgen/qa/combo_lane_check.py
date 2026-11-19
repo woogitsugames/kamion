@@ -55,6 +55,7 @@ ALIGN_DEG = 30.0         # WORKING_VALUE: the vehicle part runs along the road i
 JUNCTION_SKIP_M = 14.0   # WORKING_VALUE: no lane test this close to a node of degree >= 3 (turning through a junction)
 TAIL_M = 45.0            # previous piece prepended (longer than tractor + trailer, 16.5 m, plus the settling of the tractrix)
 SAMPLE_M, EVERY = LS.SAMPLE_M, LS.EVERY
+LAYER_M = 2.0           # WORKING_VALUE: surfaces this far above the lowest one over a point are another level
 CW_PREFIX = ("road_",)
 APRON_PREFIX = ("apron_",)
 
@@ -169,10 +170,39 @@ def surfaces(tile, path):
     return {k: (np.concatenate(v) if v else np.zeros((0, 3, 3))) for k, v in groups.items()}
 
 
-def classify_surface(surf, pts):
+def _locate_near(T, pts, zref, cell=25.0):
+    """Height of the triangle of T over each point nearest to zref (nan: none within LAYER_M of zref)."""
+    z = np.full(len(pts), np.nan)
+    if not len(T) or not len(pts):
+        return z
+    lo, hi = T[:, :, :2].min(1), T[:, :, :2].max(1)
+    key = np.floor(pts / cell).astype(int)
+    for k in {tuple(x) for x in key}:
+        m = np.nonzero(np.all(key == k, axis=1))[0]
+        c0, c1 = np.array(k) * cell, (np.array(k) + 1) * cell
+        Tk = T[np.all(hi >= c0, axis=1) & np.all(lo <= c1, axis=1)]
+        if not len(Tk):
+            continue
+        for i in m:
+            zz = _all_z(Tk, pts[i])
+            if len(zz):
+                d = np.abs(zz - zref[i])
+                j = int(np.argmin(d))
+                if d[j] <= LAYER_M:
+                    # kerbs / islands sit ON the patch: of the surfaces at this level the highest one counts
+                    z[i] = float(zz[d <= LAYER_M].max())
+    return z
+
+
+def classify_surface(surf, pts, zref=None):
     """Category of the highest triangle over each point ('none' where no triangle)."""
     keys = ("cw", "apron", "hard", "soft")
-    Z = np.column_stack([LS._locate(surf[k], pts) for k in keys])
+    if zref is None:
+        Z = np.column_stack([LS._locate(surf[k], pts) for k in keys])
+    else:
+        Z = np.column_stack([_locate_near(surf[k], pts, zref) for k in keys])
+    # another level (an overpass deck 4.5+ m above the road, the road under a deck) is not this road's surface:
+    # only triangles within LAYER_M of the carriageway level the truck is on (zref) compete (_locate_near)
     Zf = np.where(np.isnan(Z), -1e9, Z)
     # 5 mm tolerance: a patch and a ribbon meeting at the same level count as carriageway
     top = Zf.max(1)
@@ -197,13 +227,51 @@ def classify(tile, path, surf, lanes: LaneModel, keep_s0=0.0):
     keep = s_ok & inside & ~near
     n_seam = int((s_ok & near).sum())
     pts, hd, tags = pts[keep], hd[keep], [t for t, k in zip(tags, keep) if k]
-    sc = classify_surface(surf, pts)
+    sc = classify_surface(surf, pts, level_z(surf, path, tags))
     on_cw = sc == "cw"
     opp = lanes.opposite(pts, hd) & on_cw
     off = (sc == "soft") | (sc == "none")
     cls = np.where(opp, "opposite", np.where(off, "off_hard", np.where(sc == "hard", "kerb",
                    np.where(sc == "apron", "apron", "ok"))))
     return pts, tags, cls, n_seam
+
+
+def _all_z(T, q):
+    """Heights of every triangle of T (k,3,3) over point q (E, N)."""
+    a, b, c = T[:, 0, :2], T[:, 1, :2], T[:, 2, :2]
+    den = (b[:, 1] - c[:, 1]) * (a[:, 0] - c[:, 0]) + (c[:, 0] - b[:, 0]) * (a[:, 1] - c[:, 1])
+    ok = np.abs(den) > 1e-12
+    den = np.where(ok, den, 1.0)
+    w0 = ((b[:, 1] - c[:, 1]) * (q[0] - c[:, 0]) + (c[:, 0] - b[:, 0]) * (q[1] - c[:, 1])) / den
+    w1 = ((c[:, 1] - a[:, 1]) * (q[0] - c[:, 0]) + (a[:, 0] - c[:, 0]) * (q[1] - c[:, 1])) / den
+    w2 = 1 - w0 - w1
+    hit = ok & (w0 >= -1e-9) & (w1 >= -1e-9) & (w2 >= -1e-9)
+    return w0[hit] * T[hit, 0, 2] + w1[hit] * T[hit, 1, 2] + w2[hit] * T[hit, 2, 2]
+
+
+def level_z(surf, path, tags):
+    """Carriageway level under the front axle for every tyre point: the cw surface under path[i] nearest to the
+    previous level (decks over ground roads, ground roads under decks; route_obstacles.py does the same)."""
+    T = surf["cw"]
+    if not len(T):
+        return None
+    lo, hi = T[:, :, :2].min(1), T[:, :, :2].max(1)
+    idx = sorted({int(round(t[0] / SAMPLE_M)) for t in tags})
+    zs, prev = {}, None
+    for i in range(0, len(path), EVERY):
+        q = path[i]
+        m = np.all(hi >= q - 0.01, axis=1) & np.all(lo <= q + 0.01, axis=1)
+        z = _all_z(T[m], q) if m.any() else np.zeros(0)
+        if len(z):
+            prev = float(z.min() if prev is None else z[np.argmin(np.abs(z - prev))])
+        zs[i] = prev
+    out = []
+    for t in tags:
+        i = int(round(t[0] / SAMPLE_M))
+        v = zs.get(i - i % EVERY)
+        out.append(np.nan if v is None else v)
+    out = np.array(out, float)
+    return np.where(np.isnan(out), np.nanmedian(out) if np.isfinite(out).any() else 0.0, out)
 
 
 def cost(cls):
