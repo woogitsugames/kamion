@@ -5822,7 +5822,7 @@
    "sidewalk_frac": 0.0,
    "width_m": [
     8.38,
-    11.64
+    11.67
    ],
    "width_src": [
     "authored_override:ortho-lanes-w249740774:2563060454-131612937 (lane_edges, orthophoto)",
@@ -5830,7 +5830,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 1.21,
+   "axis_smoothing_dev_max_m": 1.22,
    "bridge_m": 0.0,
    "grade_limit": 0.08,
    "highway": [
@@ -5894,7 +5894,7 @@
     1
    ],
    "length_m": 136.9,
-   "max_grade": 0.0136,
+   "max_grade": 0.0137,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
@@ -6143,7 +6143,7 @@
    "sidewalk_frac": 0.0,
    "width_m": [
     8.0,
-    11.93,
+    11.98,
     12.15
    ],
    "width_src": [
@@ -12414,7 +12414,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 4.2,
+   "axis_smoothing_dev_max_m": 4.17,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -12426,9 +12426,9 @@
     2
    ],
    "length_m": 205.2,
-   "max_grade": 0.0669,
+   "max_grade": 0.067,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.797,
+   "profile_rms_vs_nmt_m": 0.791,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5,
@@ -13176,7 +13176,7 @@
    "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
-    11.9
+    11.85
    ],
    "width_src": [
     "authored_override:ortho-lanes-w76073115:2357583403-897482222 (lane_edges, orthophoto)"
@@ -14288,10 +14288,10 @@
   "decals": {
    "gullies": 1616,
    "oil": 374,
-   "patches": 779
+   "patches": 776
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 993955,
+  "footprint_nodes": 993957,
   "fork_abreast": [
    {
     "beside": "c:w257355878:12962166397-2357583390",
@@ -14332,8 +14332,8 @@
     "beside": "c:w249740778:897482323-897482326",
     "chain": "c:w249810914:2504239861-2235605459",
     "node": "n2235605459",
-    "overlap_max_m": 7.2,
-    "overlap_run_m": 77.0,
+    "overlap_max_m": 7.17,
+    "overlap_run_m": 76.5,
     "shift_max_m": 0.0,
     "side": "right"
    },
@@ -14392,7 +14392,7 @@
     "side": "right"
    },
    {
-    "alongside_run_m": 94.0,
+    "alongside_run_m": 94.5,
     "beside": "c:w249740778:897482323-897482326",
     "chain": "c:w606396492:1908972352-897482239",
     "node": "n897482222",
@@ -14548,21 +14548,21 @@
     "hold_m": 40.0,
     "lanes": [
      3.7,
-     0.08
+     0.1
     ],
     "node": "n897482222",
-    "shift_m": 1.17,
+    "shift_m": 1.18,
     "taper_m": 40.0
    },
    {
     "chain": "c:w606396492:1908972352-897482239",
     "hold_m": 40.0,
     "lanes": [
-     -3.48
+     -3.45
     ],
     "node": "n897482222",
-    "shift_m": -4.19,
-    "taper_m": 83.9
+    "shift_m": -4.17,
+    "taper_m": 83.4
    },
    {
     "chain": "c:w1133330596:897482361-897482241",
@@ -15755,25 +15755,25 @@
      ]
     },
     {
-     "area_m2": 36.2,
+     "area_m2": 35.3,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "sliver",
      "xy": [
-      -406.0,
-      -352.1
+      1002.0,
+      -42.4
      ]
     },
     {
-     "area_m2": 35.7,
+     "area_m2": 35.2,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "sliver",
      "xy": [
-      1001.9,
-      -42.4
+      -406.6,
+      -352.5
      ]
     },
     {
@@ -15915,7 +15915,7 @@
      "note": "",
      "why": "sliver",
      "xy": [
-      748.1,
+      748.2,
       -21.9
      ]
     },
@@ -15998,7 +15998,7 @@
     }
    ],
    "islands": [],
-   "kerb_dropped_m": 1330.0,
+   "kerb_dropped_m": 1328.5,
    "kerb_tris_in_fill": 0,
    "paved": {
     "hole": {
@@ -16010,7 +16010,7 @@
      "count": 8
     },
     "sliver": {
-     "area_m2": 514.1,
+     "area_m2": 512.7,
      "count": 23
     }
    },
@@ -16108,20 +16108,20 @@
     {
      "area_m2": 15.4,
      "reason": "carriageways at different heights",
-     "step_m": 0.48,
+     "step_m": 0.47,
      "why": "sliver",
      "xy": [
-      239.5,
+      239.4,
       -37.8
      ]
     },
     {
-     "area_m2": 5.7,
+     "area_m2": 7.2,
      "reason": "carriageways at different heights",
      "step_m": 0.19,
      "why": "sliver",
      "xy": [
-      933.2,
+      933.1,
       -42.3
      ]
     },
@@ -16131,7 +16131,7 @@
      "step_m": 5.85,
      "why": "sliver",
      "xy": [
-      -157.2,
+      -157.1,
       -213.4
      ]
     },
@@ -16166,9 +16166,9 @@
   },
   "grade_over_limit": [],
   "junction_patches": {
-   "delaunay": 40,
+   "delaunay": 39,
    "polar": 228,
-   "repaired": 22
+   "repaired": 23
   },
   "junctions": 290,
   "junctions_earclip": [],
@@ -16182,6 +16182,7 @@
    "j:n2314345019",
    "j:n2329921428",
    "j:n2357583390",
+   "j:n2357583403",
    "j:n2431036782",
    "j:n2629122135",
    "j:n2927425563",
@@ -16212,13 +16213,13 @@
    "P-13": 24,
    "P-14": 14,
    "P-4 double centre line": 3,
-   "P-7b edge line": 76,
+   "P-7b edge line": 77,
    "P-8 arrow": 53,
    "P-8 skipped (lane too narrow)": 13,
    "P-8 skipped (lanes continue)": 9,
    "P-8 skipped (off carriageway)": 59
   },
-  "markings_overlap_removed_tris": 198,
+  "markings_overlap_removed_tris": 251,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 1734,
   "overrides_applied": [
@@ -16318,9 +16319,9 @@
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 7813,
-   "parts": 820,
-   "side_tris": 997
+   "kerb_tris": 7861,
+   "parts": 827,
+   "side_tris": 970
   },
   "signalised_junctions": 4,
   "through_lines": {
@@ -16329,7 +16330,7 @@
    "lines": {
     "P-4": 8,
     "P-7a": 1,
-    "P-7b": 15,
+    "P-7b": 17,
     "lane": 100
    },
    "pairs": 302,
@@ -16337,7 +16338,7 @@
   },
   "verge_strips": {
    "chunks": 58,
-   "tris": 89194
+   "tris": 89193
   },
   "walled_ramps": [
    {
