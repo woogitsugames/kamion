@@ -50,6 +50,33 @@ LOD0 / LOD1 / impostor): wysokość taka, żeby korona modelu miała promień z 
 z G7 i pułapu gatunku. Jesion → model lipy, kasztanowiec → model klonu (`WORKING_VALUE`: brak własnych modeli).
 Poziom Low zachowuje lekkie drzewo z kart (budżety A16, ADR 0163 bez zmian). Drzewa owocowe i iglaki ogrodowe bez zmian.
 
+### 4. Skrajnia jezdni (`vegetation.road_clearance`)
+Po złożeniu wszystkich drzew kafla (reguły, szpalery, ogrody, brzegi wód): drzewo, którego korona ma podstawę poniżej
+4,7 m (`CLEAR_H_M`, `WORKING_VALUE`: skrajnia 4,5 m + 0,2 m) i sięgałaby nad jezdnię dalej niż 0,3 m, jest obniżane
+tak, żeby promień korony = odległość pnia od krawędzi jezdni + 0,3 m; gdyby musiało zmaleć poniżej 65 % wysokości —
+jest usuwane. Promień korony / H i wysokość pnia / H na gatunek w `vegetation.CROWN_FORM` (te same liczby co
+`make_trees.CROWN`). Sosna i świerk drzewostanowy mają koronę powyżej skrajni i zostają.
+
+### 5. „Zielona ściana” na DK65 = tło dali w złym sektorze (`far_field.split_by_sector`) — zgłoszenie właściciela, przegląd przejazdu s24 #1, 2, 4, 5, 6
+Przyczyna (potwierdzona danymi, `artifacts/trees-s24/audit_far_sectors.py`, `far_sectors_dk65-07_before_after.png`):
+`far_field.py` wstawiał cały drzewostan tła do sektora jego **centroidu**. Las owijający narożnik kafla trafiał np.
+do `far_east`, choć jego połowa leżała na północ od kafla — w sąsiednim kaflu, którego otwarty szew chowa tylko
+`far_north`. dk65-07: 47 ha lasu rysowane z `far_east` leży w południowych 580 m dk65-08; po zwolnieniu dk65-06 bok E
+kafla 07 zamyka się, sektor wraca i kopiec podszytu (płaski, kolor wierzchołków) z kurtynami staje na jezdni kafla 08.
+To samo: dk65-11 104 ha, dw671-tykocin-07 35 ha, -08 27 ha, -09 25 ha, industrial-c 14 ha, maczka 6,5 ha.
+Poprawka: drzewostan jest cięty po granicach sektorów (`sector_regions` = ten sam podział co `sector_of`), każda część
+idzie do sektora, w którym leży. dk65-07 po regeneracji: trójkąty poza własnym sektorem `far_east` 20,3 % → 0 %,
+`far_south` 11,9 % → 0 %; koszt +12 % trójkątów tła High (53 508 → 60 137), Low 12 446 → 13 101 (limit 27 000).
+
+### 6. Streamer: obiekty krawędzi pod gotowym kaflem (`EdgeSides`, `WorldStreamer.RefreshEdges`, `WorldEdgeBuilder`)
+- Sektor dali i część fartucha chowają się także wtedy, gdy gotowy jest kafel **po przekątnej** (korytarz DK65 idzie
+  schodkami 06 → 07 → 08: 06 i 08 nie mają wspólnego boku, więc ich szew nigdy się nie otwierał).
+- Fartuch jest cięty na 8 części (boki + narożniki `Apron_NE/SE/SW/NW`); narożnik znika, gdy otwarty jest któryś z jego
+  boków albo gotowy kafel po przekątnej. Sceny ze starego importu (4 części) chowają wtedy cały bok fartucha.
+- Widoczność sektorów dali i fartucha liczy się od gotowych sąsiadów niezależnie od stanu samego kafla (`coveredSides`):
+  kafel w trakcie aktywacji nie rysuje już swojego tła w kaflu, po którym jedzie ciężarówka. Zamknięcia dróg (kolizja,
+  tablice) nadal otwierają się dopiero, gdy oba kafle są gotowe.
+
 ## Wyniki (pomiar w edytorze, High, pogodnie, 1920 × 1080; `artifacts/trees-s24/`)
 
 WYNIKI_PLACEHOLDER
