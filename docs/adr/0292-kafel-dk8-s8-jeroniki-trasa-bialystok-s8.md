@@ -45,12 +45,18 @@ osiągalny z wejścia trasy kontrolnej knyszynska — sprawdzone na grafie).
    (ścieżka po stronie zewnętrznej), `porosly` — wiejski; ortofoto = trawa + bariera bez krawężnika. Nadpisanie
    `dk8-median-rural` na 12 way DK8 w `Data/Regions/dk8-s8-jeroniki/overrides.yaml` (qa.seams jeroniki | porosly
    2 FAIL → 0).
-7. **Porosly — zapory krawędzi świata:** import przerywał `WorldEdgeBuilder` („closure rows overlap”). Przyczyna:
-   pętla `service` 248109972 przecina szew S dwa razy (6,8 m, przeciwne kierunki → równoległe rzędy, których
-   `ResolveClosures` nie tnie). `graph_filter.authored.json` porosly: 248109972 + 4 wcześniejsze trafienia „na oko”
-   (222465086, 1155215350, 461379037, 1302282015 — dojazdy przy krawędzi, poza trasami; 1302282015 daje teraz FAIL
-   „droga urywa się na szwie” z knyszynska → do cofnięcia). Narzędzie `tools/worldgen/qa/edge_closures_check.py`
-   (port `ReadExits`/`PlanClosures`) wskazuje podejrzane pary przed 20-minutowym importem.
+7. **Porosly — zapory krawędzi świata:** import przerywał `WorldEdgeBuilder` („closure rows overlap”). Narzędzie
+   `tools/worldgen/qa/edge_closures_check.py` (port `ReadExits`/`PlanClosures` + test cięcia rzędów krzyżujących się
+   z `ResolveClosures`; sprawdzone: wszystkie pary krzyżujące jeroniki / knyszynska / dk65-01 = „cut”, kafle się
+   importują) wskazało 2 przyczyny: `service` 1155215350 × residential 245695246 (szew N, rzędy się krzyżują, osie nie są
+   przed rzędem drugiej drogi → nie cięte) i pętla `service` 248109972 (szew S, dwa wyjścia 6,8 m, przeciwne kierunki →
+   równoległe rzędy). `graph_filter.authored.json` porosly = tylko te 2 way; 3 wcześniejsze trafienia „na oko” cofnięte (r7).
+9. **Wysokość na szwie porosly | jeroniki** (piny NMT 2022 / 2025): `tools/worldgen/qa/seam_z.py` (wspólne węzły
+   brzegowe dwóch kafli, asfalt z GLB, `--overrides` wypisuje nadpisania). r6: DK8 E −0,341 m, DK8 W −0,450 m, 439766168
+   +0,249, 255111421 +0,212 → `authored_overrides` `seam-z-w*` (`target: {node}`, `set: {z}` = średnia) w obu kaflach.
+   porosly nie przyjmuje z na węźle DK8 W (profil wyznacza tam rampa na most 615609890, +3,3 %), więc jeroniki
+   dostaje dla 889307875 wysokość porosly 137,23 m (wpis porosly zostaje bez skutku — zmiana pliku wymusiłaby
+   przebudowę porosly). r8: wszystkie 6 węzłów |dz| ≤ 0,086 m (DK8 E −0,023, DK8 W −0,040).
 8. `tools/worldgen/streaming/route_links.py`: `head_from: route:<kafel>` (wygładzenie początku linku na koniec trasy
    sąsiada) — potrzebne dla `knyszynska-kleeberga-s` (0,86 m) i `porosly-dk8-w` (`head_from: link:`, 0,65 m).
 
@@ -63,15 +69,16 @@ osiągalny z wejścia trasy kontrolnej knyszynska — sprawdzone na grafie).
 | nowy odcinek koniec trasy kleeberga → szew s8-01 | 4333 m | suma linków |
 | złącza korytarza bialystok-s8 (11 par) | 0,0–0,001 m | `route_links.json` corridors |
 | ślad zestawu (ciągnik + naczepa 13,6 m) poza nawierzchnią, 4 linki | 0 / 15085, 6510, 15439, 5620 pkt | `qa/link_swept_check.py` |
-| WORLD_MEMORY jeroniki Low / High (total) | 94,3 / 217,6 MB | import Win64 r5 |
-| WORLD_MEMORY porosly Low / High (total) | 118,5 / 285,7 MB | import Win64 r6 |
+| WORLD_MEMORY jeroniki Low / High (total) | 94,4 / 217,9 MB | import Win64 r7 (r8: patrz STATUS) |
+| WORLD_MEMORY porosly Low / High (total) | 118,6 / 286,0 MB | import Win64 r7 |
 | najcięższe 3 kafle korytarza (bez zmian: C+Maczka+Kleeberga) | 434,1 / 1044,2 MB | `tile_graph.json` |
 | nowe okna: Kleeberga+Knyszyńska+Porosły / narożnik 2×2 (Knysz., Poros., Jeron., dk65-01) | 391,2 / 902,7; 398,4 / 933,0 MB | `tile_graph.json` |
 | narożnik 2×2 + przypięty C | 522,6 / 1200,0 MB (< 850 / 2000 i < 640 / 1450 w `StreamingPolicy`) | j.w. |
 | DK8 jezdnia (trunk, 2 pasy): asfalt / rozstaw linii krawędziowych | p50 8,55 m / p50 8,4 m (26 stacji co 50 m, 5 way) | `qa/ortho_xsec.py` (WMS GUGiK); generator 8,0 m |
 | wysokość S8 na szwie jeroniki / dk65-01 | dz −0,023 / +0,039 m | `qa/s8_seam_z.py` |
 | road_consistency na trasie: jeroniki r5 / porosly r6 | 0 / 25 (11 marking_off_carriageway, 5 obstacle_in_lane przy łącznicach wiaduktu 1266830099/100, 3 furniture, 4 arrow_no_exit, 2 lane_blind_end) | `generated/road_consistency_qa.json` |
-| qa.seams r6 (5 kafli, 72 drogi) | 0 FAIL na drogach tras; 4 FAIL poza: 2 service porosly/knyszynska, 2 research K1 dk65-01/knyszynska (istniejące) | `artifacts/dk8-s8-s24/seams/seams-r6.md` |
+| qa.seams r8 (5 kafli, 72 drogi) | 0 FAIL na drogach tras; 3 FAIL poza: service 309106711 porosly/knyszynska, 2 research K1 dk65-01/knyszynska (istniejące) | `artifacts/dk8-s8-s24/seams/seams-r8.md` |
+| wysokość na szwie porosly / jeroniki r8 (6 węzłów) i knyszynska / porosly (14 z asfaltem) | max |dz| 0,086 / 0,075 m | `qa/seam_z.py`, `seams/seam_z-r8.json`, `seam_z-r7.json` |
 
 ## Testy (18.11)
 - pytest tests/gis r6: 2482 passed, 5 failed, 1 skipped, 2 xfailed (53 min). Po poprawkach / ponownym uruchomieniu:
@@ -86,30 +93,15 @@ osiągalny z wejścia trasy kontrolnej knyszynska — sprawdzone na grafie).
 - Model przejazdu pod DK8 (tunel 221522232) teraz: wymaga flagi pomostu na zakres stacji (ADR 0288 Otwarte 7/11).
 
 ## Otwarte
-1. **Ekrany akustyczne i klin P-21 (screens-s24, ADR 0293)**: po scaleniu na main przebudować `dk8-s8-jeroniki`
-   (render r4 `chase`: podniesiony separator zamiast malowanego klina przy włączeniu łącznicy w S8; ortofoto =
-   malowany klin — ADR 0288 Otwarte 10). Na polecenie lidera.
-2. porosly: cofnąć zbędny drop `service` 1302282015 (FAIL szwu z knyszynska, poza trasą) i sprawdzić
-   `edge_closures_check.py` + import; 309106711 (service) pobocze krawężnik / krawężnik płaski — poza trasą.
-3. porosly road_consistency na trasie 25 (łącznice wiaduktu 1266830099/100, przewężenie przy włączeniu DK8) — do
-   przejrzenia na renderach; kafel zbudowany w trybie „przejezdne” (D63).
-4. Włazy kanalizacyjne w pasie ruchu DK8 (trunk; `no_manhole_classes` = A, S) — render route-s0159 obu kafli.
-5. Tunel 221522232 (jeroniki) i przejazd awaryjny 1571341511/12 poza grafem — model przejazdu przy fladze pomostu na
+1. 309106711 (service, porosly | knyszynska) pobocze krawężnik / krawężnik płaski — poza trasą.
+2. porosly road_consistency na trasie 25 (łącznice wiaduktu 1266830099/100, włączenie DK8) — kafel „przejezdny” (D63).
+3. Włazy kanalizacyjne w pasie ruchu DK8 (trunk; `no_manhole_classes` = A, S) — render route-s0159 obu kafli.
+4. Tunel 221522232 (jeroniki) i przejazd awaryjny 1571341511/12 poza grafem — model przejazdu przy fladze pomostu na
    zakres stacji (ADR 0288 Otwarte 7/11).
-6. Pin NMT porosly 2022 vs jeroniki 2025 (ADR 0278 Otwarte 3): qa.seams nie zgłasza, z na szwie DK8 niezmierzone.
-8. **BLOKER scalenia: skok wysokości 0,437 m na szwie porosly | jeroniki** (DK8 W, link porosly-dk8-w → jeroniki-dk8-to-s8;
-   `tests/gis/test_route_links_s23.py::test_link_seams_route_and_height_continuous`, próg 0,10 m). Piny NMT 2022 / 2025
-   (ADR 0278 Otwarte 3); qa.seams nie mierzy z. Poprawka jak ADR 0288 s24 (`s8-seam-z-*`): nadpisanie `target: {node}`,
-   `set: {z}` = średnia obu stron na węzłach brzegowych DK8 (223394828, 889307875, 615607622) w obu kaflach + przebudowa
-   obu + import; alternatywnie wspólny pin NMT.
-9. `network.py` (pkt 6) unieważnia `fidelity_qa.json` kafla testowego `bialystok-industrial-c`
-   (`test_road_fidelity.py::test_report_not_stale`; na main zielony): po scaleniu `fidelity/run.py --region
-   bialystok-industrial-c` (kafel agenta regen-c) — albo odrzucić pkt 6 i przyjąć 2 FAIL szwu jeroniki | porosly.
-10. ADR 0274 „Czytniki grafu”: dopisać `qa/edge_closures_check.py` (RAW, jak `WorldEdgeBuilder.ReadExits`); test już
-   go klasyfikuje.
-7. EditMode 2 FAIL poza zakresem (bez zmian C# w tej gałęzi): `DrivingScenesFullTruckTests.ArtPrefabs_HavePinnedGuids`,
-   `LightPostPolicyTests.ImportedGlassSemanticIsRestrictedAndStillReceivesShadows` — stan wygenerowanych assetów
-   w świeżym worktree; do porównania z main.
+5. Wpis `seam-z-w889307875` w porosly bez skutku (rampa mostu) — usunąć przy następnej przebudowie porosly.
+6. `qa.seams` nie mierzy wysokości; `qa/seam_z.py` warto dołączyć do kroku `post` wszystkich kafli.
+7. EditMode 2 FAIL poza zakresem (bez zmian C#): `ArtPrefabs_HavePinnedGuids`, `LightPostPolicy…Glass` — wynik r8 w STATUS.
+8. Budżety `StreamingPolicy` bez zmian (podnosi agent DK19); okna korytarza w tabeli mieszczą się w obu wariantach.
 
 ## Odtworzenie
 ```
