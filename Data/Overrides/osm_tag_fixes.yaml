@@ -1,0 +1,19 @@
+# ADR 0303: authored_override of OSM tags for the in-game GPS routing graph (tools/worldgen/navgraph/build_route_graph.py).
+# Survives reimport: applied by OSM way id on every rebuild of <region>_route.bytes; the world meshes do not use these tags.
+schema: truck-sim-pl/osm-tag-fixes/1
+fixes:
+  - id: maxaxleload-10t-2017-regulation
+    tag: maxaxleload
+    only_value: "10"
+    set: null            # no posted limit: art. 41 ust. 1 ustawy o drogach publicznych = 11.5 t on paved public roads
+    reason: >-
+      Every maxaxleload=10 way of the Bialystok - Knyszyn - Monki - Tykocin area (Overpass 2026-11-19, bbox 53.05-53.60 N,
+      22.70-23.30 E: 78 ways - DK64, DK65, DW671 and others) carries source:maxaxleload = "Rozporzadzenie Ministra
+      Infrastruktury i Budownictwa z dnia 21 kwietnia 2017 r" (bulk edit, OSM changeset 53384754, 2017-10-31, plus
+      single later ways copying the tag). That regulation listed the roads open to 10 t axles under the old art. 41
+      ust. 2 (Dz.U. 2017 poz. 878; ELI record eli.gov.pl/eli/DU/2017/878: "uznany za uchylony" 2021-03-13). The amendment Dz.U. 2021 poz. 54 (ustawa z 18 grudnia 2020, published 2021-01-11, in force 60 days later,
+      13.03.2021) replaced it: art. 41 ust. 1 allows 11.5 t on public roads; lower limits (10 t / 8 t) only by sign B-19
+      of the road manager or a gmina resolution (art. 41 ust. 2-3), 8 t on unpaved roads (art. 41b). No B-19 is mapped
+      in OSM in the area (Overpass 2026-11-19); street-level photos not checked (Mapillary token invalid on 2026-11-19).
+      A way with a real B-19 must be removed from this list (or mapped with a source newer than 2021-03-13).
+    osm_ways: [13926478, 27718745, 41533342, 41533343, 98070954, 98071176, 98072434, 98072613, 183373471, 208187096, 213138975, 224155050, 224155051, 232511646, 232511647, 234919333, 234919340, 272699573, 272699574, 280165819, 286989045, 286989049, 286990127, 286990128, 301702376, 303739902, 303739903, 305910042, 396566353, 396566354, 407798960, 407798961, 551984616, 551984617, 551984618, 551984622, 606396498, 623133896, 634210359, 692277641, 692277642, 692277643, 692277644, 692277648, 692277649, 692277650, 716806121, 716806122, 1024956364, 1024956365, 1111506750, 1111506754, 1151531610, 1181762243, 1243220441, 1266859919, 1281924652, 1281924653, 1281925347, 1321811065, 1321811066, 1375217648, 1375217649, 1399803717, 1442886949, 1442886950, 1448265994, 1464342634, 1464342635, 1464342638, 1464342640, 1471753528, 1471753529, 1471753530, 1560819273, 1577741392, 1577741393, 1577741394]
