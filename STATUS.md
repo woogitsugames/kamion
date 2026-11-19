@@ -8,3 +8,5 @@
 - NEXT: pwsh scripts/build-windows.ps1 -Slot -SlotOwner night-polish-s24 -Regions knyszyn-w
 - 00:55 player build OK (artifacts/win/kamion-0.1.0-28a4640160-dirty-regions, knyszyn-w + WorldC copied from win-build); qa4 lamps (K 0.15) done; ADR 0299 sections 1-3 written. Player runs waiting for heavy slot (first try: -lighting not passed, fixed in player.ps1).
 - NEXT: pwsh artifacts/night-polish-s24/go.ps1 -Name player -Cmd 'pwsh artifacts/night-polish-s24/player.ps1 -Exe <exe>'
+- 01:20 DONE: player night shots (cab/chase/dusk/nodither A/B), banding in player 115.7 -> 2.0 px, mean 12.0 = 12.0; pc-metrics night High PASS (GPU p50 5.62 ms), ADR 0297 cost +0.40 ms GPU mean (orientacyjny). ADR 0299 complete. Evidence copied to main artifacts/night-polish-s24.
+- NEXT (lead): review + merge night-polish-s24; HANDOVER ADR counter 0299.

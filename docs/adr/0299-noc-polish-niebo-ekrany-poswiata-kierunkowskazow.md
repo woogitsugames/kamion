@@ -78,8 +78,44 @@ do sufitu 0,5 z 4 m — silna, jak oślepienie światłem cofania nocą; bez zmi
 
 ## 4. Zrzuty z playera i koszt (pc-metrics)
 
-__PLAYER__
+Build Windows x64 z tej gałęzi: `pwsh scripts/build-windows.ps1 -Slot -Regions knyszyn-w` → `artifacts/win/kamion-0.1.0-28a4640160-dirty-regions/`
+(content `f73a1440691a`; „dirty” = przegenerowane banki audio, cofnięte). Świat `knyszyn-w` i `bialystok-industrial-c` (WorldC) skopiowane z
+worktree `win-build` (nieaktualny względem danych main: `StartClearanceTests` knyszyn-w, start 1 085 m od punktu z danych —
+przebudowa regionu poza zakresem). Noc w playerze: argument `-lighting night` (istniejący, `DrivingLabBootstrap`), widok
+zewnętrzny: nowy argument **`-cam chase|orbit|cab`** (tylko wybór startowej kamery). Uruchomienia
+`build-windows.ps1 -SkipBuild -Run -Scene knyszyn-w -Tier High -Fps 60 -Width 1920 -Height 1080 -ExtraPlayerArgs '-lighting','night'[,'-cam','chase']`
+(skrypt `artifacts/night-polish-s24/player.ps1`, slot heavy, jeden Kamion.exe naraz).
+- Zrzuty: `player/cab-night/shot.png`, `player/chase-night/shot.png`, `player/cab-dusk/shot.png`, A/B `player/cab-night-nodither/`
+  (`-rq_dither 0` = stan sprzed ADR 0299); widoki `view/player-cab-night.jpg`, `view/player-chase-night.jpg`,
+  `view/player-sky-x8-nodither-vs-dither.jpg`.
+- **Banding w playerze był prawdziwy na High** (nie tylko artefakt QA): niebo 900–1600 × 20–220, runlen **115,7 → 2,0 px**,
+  kroki 14/13/12/11 → ciągły gradient; średnia **12,0 = 12,0** (dither nie zgniata już cieni — wariant bez szybkiej konwersji
+  jest w buildzie, brak błędów shaderów w logu).
+- **pc-metrics nocą** (`pc-metrics.ps1 -Exe … -Scene knyszyn-w -Tier High -Fps 60 -Width 1920 -Height 1080 -DurationSeconds 90
+  -Class zalecany -Extra lighting=night`), GTX 1070 / i5-10400F (maszyna dewelopera, nie referencja → informacyjny):
+  **PASS**, klatka p50/p95/p99 16,67 / 16,67 / 16,99 ms (limit 60 FPS), > 33 ms 0 %, GPU p50/p95/p99 5,62 / 8,80 / 9,77 ms,
+  CPU główny 3,84 / 5,68 / 10,85 ms, draw calls p95 910, pamięć prywatna 1 532 MB, VRAM 871 MB, GC 0, ładowanie regionu 1,76 s.
+- **Koszt ADR 0297 w buildzie** (A/B `-Extra lighting=night,rq_cabspill=0,rq_cabsoft=0`, widok z kabiny): GPU średnio
+  **6,13 vs 5,73 ms (+0,40 ms)**; klatki parzyste/nieparzyste (lusterka co drugą klatkę) p50 5,45 vs 4,96 i 8,04 vs 7,27 ms.
+  **Orientacyjne**: po jednym przebiegu, w tle 1 proces Unity innego agenta, CPU maszyny 17–34 %. Zastępuje „UNVERIFIED ±1 ms” z ADR 0297.
 
 ## Weryfikacja
 
-__VERIFY__
+- Unity 6000.3.28f1 Win64, `TruckAssetBuilder.BuildBatch` / `TrailerAssetBuilder.BuildBatch` OK (halo: ciągnik 13, naczepa 14 quadów),
+  `build-lab.ps1 -SkipAudio -BuildTarget Win64`.
+- EditMode Win64 (`artifacts/tests/editmode-20261119-001512.xml`): 1398 — **1298 passed, 1 failed, 99 skipped**; jedyna porażka
+  `StartClearanceTests.ImportedScene_BakedSpawnIsTheImportersStart("knyszyn-w")` — skopiowany nieaktualny świat (bez świata
+  test jest pomijany; przebieg przed kopią: 1297 / 0 / 101). `NightPolish0299Tests` 5/5, `NightTruck0297Tests` 6/6 (zaktualizowany
+  podział `RedRearGroups` / `HaloGroups`). `dotnet test tools/lamp-check` 187/187.
+- Rendery obejrzane: `cab-driver`, `cab-dash` noc High / Ultra / Medium / Low PC / Low telefon, zmierzch, dzień High i Ultra;
+  `lamp-truck`, `lamp-trailer`, `plate-trailer`, `plate-truck-bobtail` noc (pozycyjne, + stop + awaryjne, + cofanie), zmierzch,
+  Low. Zrzuty z playera powyżej. Dowody `artifacts/night-polish-s24/` (≤ 960 px w `view/`, liczby `band-final.txt`, `pc-*`).
+- **Skutek uboczny dla wszystkich**: kamery QA tierów HDR renderują teraz przez cel ARGBHalf (jak player) — rendery QA
+  z innych gałęzi przed / po tej zmianie różnią się w ciemnych gradientach (pasma), a tiery z ditherem (Medium, Ultra, PC Low)
+  są w cieniach jaśniejsze (koniec zgniatania przez szybką konwersję sRGB) — porównania A/B robić w obrębie jednej wersji.
+
+## Otwarte
+- Low telefonu (bez post) zostaje ciemniejszy nocą (niebo 7,1 vs 11,7 PC) — własna krzywa tonu (ADR 0080), telefon odroczony.
+- Koszt dokładnej konwersji sRGB na telefonach (Mali/Adreno) — UNVERIFIED.
+- Region knyszyn-w do przebudowy (start niezgodny z danymi) przed pomiarem trasowym; pc-metrics powtórzyć na spokojnej maszynie.
+- Halo przednich świateł (mijania/DRL) — poza zakresem.
