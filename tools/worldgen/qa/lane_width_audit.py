@@ -81,8 +81,9 @@ def run_through(mask, k0=K0, gap=6):
     return float(U[ext(-1)]), float(U[ext(+1)])
 
 
-def ortho_profile(rgb):
-    """rgb (len(V), len(U), 3) -> dict(asphalt (uR, uL) | None, lines [u], core brightness)."""
+def ortho_profile(rgb, k0=K0):
+    """rgb (len(V), len(U), 3) -> dict(asphalt (uR, uL) | None, lines [u], core brightness); the asphalt run and its
+    reference brightness are taken around profile index k0 (default: the route point)."""
     a = rgb.astype(float)
     med = np.median(a, axis=0)
     v = med.mean(axis=1)
@@ -99,11 +100,11 @@ def ortho_profile(rgb):
     peak = (L > np.maximum(side, side2) + LINE_DV) & (S_ < 0.18)
     frac = peak.mean(axis=0)
     frac = np.convolve(frac, np.ones(3) / 3, mode="same")
-    core = slice(K0 - 24, K0 + 25)
+    core = slice(max(0, k0 - 24), k0 + 25)
     a_v, a_sat = float(np.median(v[core])), float(np.median(sat[core]))
     ok = (sat < a_sat + 0.07) & (np.abs(v - a_v) < 38) & (green < 6)
     paint = frac >= LINE_ROWS
-    asph = run_through(ok | paint | (np.percentile(L, 80, axis=0) > a_v + LINE_DV))
+    asph = run_through(ok | paint | (np.percentile(L, 80, axis=0) > a_v + LINE_DV), k0)
     lines = []
     for i0, i1 in runs(paint):
         lines.append(round(float(U[i0 + int(np.argmax(frac[i0:i1 + 1]))]), 2))

@@ -41,6 +41,9 @@ EDGE_NEAR_M = 1.0
 MIN_STATIONS = 3
 MODE_SHARE = 0.6
 MAX_MAD_M = 0.25
+MAX_OFFSET_M = 2.5      # |centre - OSM way| beyond this = the chain belongs to a neighbouring carriageway: no fit
+MAX_LANE_M = 4.2        # a wider "lane" (even one running to the kerb with its gutter) = a missed line: no fit
+OPP_DIST_M = (5.0, 16.0)  # the OSM way of the opposite carriageway this far (laterally) from the route point
 MAX_MAD_OUTER_M = 0.40  # outer boundaries mix an edge line with the kerb a lane further out at some stations
 MIN_LANE_MAIN_M = 2.9   # a narrower "lane" on trunk / primary is a line of something else (bay, hatching edge): no fit
 DOUBLE_LINE_M = 0.5     # lines closer than this are one (double line P-4: 0.12 + 0.12 + 0.12 m)
@@ -204,6 +207,33 @@ def collect(region, step=10.0):
                              lanes=int(v("lanes") or 1))
         per_edge.setdefault(eid, []).append({"region": region, "s_edge": round(se, 1), "d": round(d, 2),
                                              "layout": lay})
+        # the opposite carriageway of a dual carriageway is on the same profile: measured too, so both carriageways
+        # move off the median together (way antiparallel, OPP_DIST_M from the route point)
+        for eid2, (P2, s2, a2, e2) in frames.items():
+            if eid2 in skip or eid2 == eid:
+                continue
+            v2 = lambda k: (a2.get(k) or {}).get("v")
+            if v2("oneway") == "no" or v2("highway") not in FIT_HIGHWAYS or int(v2("lanes") or 1) < 2:
+                continue
+            if np.min(np.hypot(*(P2 - c).T)) > OPP_DIST_M[1] + 30:
+                continue
+            se2, d2 = project(P2, s2, c)
+            if not (OPP_DIST_M[0] <= abs(d2) <= OPP_DIST_M[1]) or se2 < END_SKIP_M or se2 > s2[-1] - END_SKIP_M:
+                continue
+            i2 = int(np.clip(np.searchsorted(s2, se2) - 1, 0, len(P2) - 2))
+            t2 = (P2[i2 + 1] - P2[i2]) / max(np.hypot(*(P2[i2 + 1] - P2[i2])), 1e-9)
+            if float(t2 @ t) > -0.97:
+                continue                                 # not antiparallel
+            k2 = int(round((d2 - LWA.U[0]) / 0.05))      # route-frame u of the way = d2 (x2 = d2 - u)
+            if not 30 <= k2 < len(LWA.U) - 30:
+                continue
+            o2 = LWA.ortho_profile(rgb[row, col], k0=k2)
+            if not o2["asphalt"]:
+                continue
+            lay2 = station_layout((d2 - o2["asphalt"][1], d2 - o2["asphalt"][0]), [d2 - u for u in o2["lines"]],
+                                  at=0.0, lanes=int(v2("lanes") or 1))
+            per_edge.setdefault(eid2, []).append({"region": region, "s_edge": round(se2, 1), "d": round(d2, 2),
+                                                  "layout": lay2, "opposite_of": eid})
     return per_edge, skip, frames
 
 
@@ -258,6 +288,9 @@ def fit(regions, step=10.0, out=None, dry=False):
         hw_ = (frames[eid][2].get("highway") or {}).get("v")
         if hw_ in ("motorway", "trunk", "primary") and min(b - a for a, b in zip(B, B[1:])) < MIN_LANE_MAIN_M:
             rec["result"] = "lane narrower than MIN_LANE_MAIN_M"
+            continue
+        if abs(0.5 * (aL + aR)) > MAX_OFFSET_M or max(b - a for a, b in zip(B, B[1:])) > MAX_LANE_M:
+            rec["result"] = "implausible (offset / lane width)"
             continue
         fl = [sum(x["flags"][i] for x in g) * 2 > len(g) for i in (0, 1)]
         le = [round(aL - x, 2) for x in reversed(B)]
