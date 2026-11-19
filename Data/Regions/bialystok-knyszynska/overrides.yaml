@@ -10,10 +10,10 @@ overrides:
       Szosa Knyszyńska, last ~180 m of way 234919333 before the seam with dk65-01. dk65-01 (ADR 0205) measured this
       way on the 2024 orthophoto strip: asphalt 6.1 m (BDOT10k 6.0 m), solid edge lines both sides, and set
       width 6.0 + edge_lines both on it. Same values here, so the carriageway and its lines run through the seam
-      without a 0.5 m step (ADR 0205 Otwarte 8).
+      without a 0.5 m step (ADR 0205 Otwarte 8). ADR 0304: width 6.0 -> 6.7 m. GUGiK orthophoto WMS HighResolution 0.1 m (2025), cross profiles every 0.5 m +-40 m around the seam x = 770827 (qa/seam_line_ortho.py, artifacts/seams-p3-s24/ortho/knyszynska-dk65-01): edge lines 6.45 m (bialystok-knyszynska side, n = 45) and 6.4 m (dk65-01 side, n = 49) apart axis to axis, asphalt ~7.8 m; K1 km 8.8 = 6.3 m, km 9.0 = 6.2 m. The 2024 0.25 m strip read of 6.1 m asphalt does not match. 6.7 m puts the lines (0.20 m inside the edge, EDGE_LINE_INSET_MINOR) 6.3 m apart; both tiles carry the same set.
     confidence: medium
     verify: owner drive / owner photo of Szosa Knyszyńska
-    set: {width: 6.0, edge_lines: both}
+    set: {width: 6.7, edge_lines: both}
   # ---------------------------------------------------------------- seam with bialystok-kleeberga (x = 772875)
   # BDOT10k widths are matched per graph edge, and the tile edge cuts three ways into edges of different length, so
   # the two tiles got different widths for the same way. The edge that touches the seam takes the value the

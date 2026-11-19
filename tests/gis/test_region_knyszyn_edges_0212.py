@@ -36,7 +36,7 @@ def test_same_dk65_set_in_all_knyszyn_tiles():
 def test_dk65_sections_paint_narrow_edge_lines_at_measured_offset(region_id):
     from roads import pipeline
     from roads import standards as S
-    from roads.markings import edge_line_width, edge_lines
+    from roads.markings import EDGE_LINE_MIN_INSET, edge_line_width, edge_lines
     net, _, _, _ = pipeline.build_network(region_id)
     assert not net.overrides_stale
     ways = {f"w{w}" for w in _dk65_override(region_id)["target"]["osm_way"]}
@@ -45,9 +45,16 @@ def test_dk65_sections_paint_narrow_edge_lines_at_measured_offset(region_id):
     for s in secs:
         hw = s.width / 2
         lats = sorted(lat for lat, _ in edge_lines(s, hw, 1))
-        # generator: axis 0.20 m inside the 7.5 m edge = 3.55 m (7.1 m line to line); orthophoto 0.1 m 2025: 6.8 m line to
-        # line on the cleanest series (way 305910042) -> +0.3 m, WORKING_VALUE (ADR 0212)
-        assert lats == pytest.approx([-(hw - S.EDGE_LINE_INSET_MINOR), hw - S.EDGE_LINE_INSET_MINOR]), s.edge_id
+        # ADR 0212: axis 0.20 m inside the 7.5 m edge = 3.55 m (7.1 m line to line, +0.3 m against the orthophoto).
+        # ADR 0304: `dk65-edge-line-spacing-0304` puts them 6.8 m apart (orthophoto 0.1 m at the seams: 6.75-6.8 m);
+        # way 27718745 (knyszyn-s, width profile 6.6 -> 7.5 m) keeps the 0.20 m inset
+        off = hw - S.EDGE_LINE_INSET_MINOR
+        if s.edge_line_spacing:
+            assert s.edge_line_spacing == 6.8 and str(s.edge_id).split(":")[0] != "w27718745", s.edge_id
+            off = min(0.5 * s.edge_line_spacing, hw - EDGE_LINE_MIN_INSET)
+        else:
+            assert str(s.edge_id).split(":")[0] == "w27718745", s.edge_id
+        assert lats == pytest.approx([-off, off]), s.edge_id
         assert 3.3 <= lats[1] <= 3.8
         assert edge_line_width(s) == S.LINE_W_NARROW
 
