@@ -21,6 +21,8 @@ namespace Game.UI.Navigation
     public sealed class MiniMapView : MonoBehaviour, IPointerClickHandler
     {
         public const float BannerH = 108f, StreetH = 36f, LaneBarH = 30f;
+        /// <summary>ADR 0307: height of the restriction strip under the banner.</summary>
+        public const float RestrH = 58f;
         static readonly Color k_Frame = new Color(0.06f, 0.065f, 0.07f, 0.95f);
 
         NavigationService m_Nav;
@@ -152,7 +154,9 @@ namespace Game.UI.Navigation
             bool route = g.HasRoute;
             // Lane bar under the banner when the next manoeuvre has lane data with turn directions.
             float laneBar = route && g.OnRoute && !g.Arrived && g.Next >= 0 && g.NextLaneCount > 0 && g.NextLanesAllowed != 0 ? LaneBarH : 0f;
-            float top = route ? BannerH + laneBar : 0f;
+            var restr = m_Nav.Restriction;                      // ADR 0307: limit below the combination within 500 m
+            float restrH = restr.Active ? RestrH : 0f;
+            float top = (route ? BannerH + laneBar : 0f) + restrH;
             float mapH = H - top - StreetH;
 
             float kmh = Mathf.Abs(m_Nav.SpeedMs) * 3.6f;
@@ -177,6 +181,7 @@ namespace Game.UI.Navigation
                 Vector2 pp = xf.ToScreen(m_Nav.PinOnRoad);
                 NavDraw.Pin(d, pp.x, pp.y, 34f, P.TellRed, pal.LimitFace, pal.ArrowEdge);
             }
+            NavDraw.RestrictionMarkers(d, m_B, m_Nav, xf, 17f, 15f, W, H, top, pal);
             NavDraw.TruckArrow(d, ax, ay, 0f, 20f, pal.Arrow, pal.ArrowEdge);
             NavDraw.North(d, W - 26f, top + 26f, 17f, m_Nav.HeadingDeg, pal.Bar, pal.BarSub, P.TellRed);
 
@@ -189,6 +194,7 @@ namespace Game.UI.Navigation
             if (street.Length > 0) NavDraw.FitText(d, m_Fit, NavLayout.Abbreviate(street), W * 0.5f, H - 11f, 19f, W - 16f, pal.BarText, DisplayCanvas.Align.Center);
 
             if (route) Banner(d, g, path, W, laneBar, pal);
+            if (restr.Active) NavDraw.RestrictionStrip(d, m_B, 0f, top - restrH, W, restrH, 15f, 21f, 15f, restr, pal);
             d.End(pal.Bg);
 
             LastCpuMs = (Stopwatch.GetTimestamp() - t0) * 1000.0 / Stopwatch.Frequency;

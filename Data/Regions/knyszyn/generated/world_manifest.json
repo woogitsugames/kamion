@@ -364,7 +364,7 @@
     "z_max_evrf2007": 160.79,
     "z_min_evrf2007": 123.86
    },
-   "bytes": 15346304,
+   "bytes": 15541764,
    "file": "Data/raw/derived/knyszyn/world/chunk_0_4.glb",
    "forest_cells": [
     {
@@ -399,9 +399,9 @@
     "sha256": "b511cba9e2dbf62cc663c73d14b20ff998901cd952678555f84440a035f72241"
    },
    "low": {
-    "bytes": 7816408,
+    "bytes": 7820488,
     "file": "Data/raw/derived/knyszyn/world/chunk_0_4.low.glb",
-    "sha256": "55f927a11230326e796e961688d078bab4ec1d2009bb641bec8c7bedccdc45e1"
+    "sha256": "9360f118123c8a10898a7eee60791c89746235c486cb5d1b09b5ec3620058bfb"
    },
    "materials": [
     "brick_red",
@@ -424,9 +424,13 @@
     "fence_anthracite_mesh",
     "fence_galv",
     "fence_galv_mesh",
+    "fieldstone_plinth",
     "glass",
     "hall_flashing",
+    "hall_plinth",
     "hall_wall_silver",
+    "log_wall_raw",
+    "log_wall_white",
     "marking_white",
     "plaster_beige",
     "plaster_cream",
@@ -444,7 +448,9 @@
     "roof_membrane",
     "roof_metal_graphite",
     "roof_sheet_grey",
+    "roof_shingles_grey",
     "roof_tiles_brown",
+    "roof_tiles_old",
     "roof_tiles_red",
     "sidewalk_paving",
     "soffit_boards",
@@ -453,23 +459,27 @@
     "wire",
     "wood_planks",
     "wood_planks_graphite",
+    "wood_planks_red",
+    "wood_planks_stain",
+    "wood_planks_white",
+    "wood_trim_brown",
     "wood_trim_white",
     "yard_asphalt",
     "yard_paving"
    ],
-   "sha256": "f17c3f23a0e74f3c7b77a8f117d12d29e618e6b0c7dc52438b892af3c4e3fefc",
+   "sha256": "cfc7011fb57d0662e3c2b2e3dc0eec79676d72a0faf112b1ad6efdeb0e746859",
    "triangles": {
-    "buildings": 29395,
-    "buildings_lod1": 4835,
+    "buildings": 32231,
+    "buildings_lod1": 4876,
     "forest_hlod": 128,
     "furniture": 2540,
     "markings": 299,
     "paved": 817,
     "plot_ground": 12553,
-    "plots": 22004,
-    "plots_low": 14688,
+    "plots": 21741,
+    "plots_low": 14632,
     "road": 12765,
-    "road_collision": 12976,
+    "road_collision": 12969,
     "terrain_lod0": 136856,
     "terrain_lod1": 35480,
     "terrain_lod2": 8704,
@@ -1193,7 +1203,7 @@
     "z_max_evrf2007": 147.41,
     "z_min_evrf2007": 118.77
    },
-   "bytes": 15671452,
+   "bytes": 15671648,
    "file": "Data/raw/derived/knyszyn/world/chunk_1_5.glb",
    "forest_cells": [],
    "id": "1_5",
@@ -1203,9 +1213,9 @@
     "sha256": "ade15be919afb69699c33e067772a3e613e066e6666924cffa92823bff863a56"
    },
    "low": {
-    "bytes": 7356888,
+    "bytes": 7356148,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_5.low.glb",
-    "sha256": "fadf4512b005af7ce70979949b052e745c4b7c894e51d6ae86b03db9f7a58440"
+    "sha256": "4c003367045d3b130afaf486fe721c57bc17cb0cb487797dd12c35ec1be84c82"
    },
    "materials": [
     "balcony_slab",
@@ -1274,7 +1284,7 @@
     "wood_trim_white",
     "yard_paving"
    ],
-   "sha256": "46debf5272ce74433e3799dfaaae6c320e580ce3409e6ec99b9f5ba985dfbf33",
+   "sha256": "d255ad8ea349356f4b2ea6c3de6da5c4c3c35225b1f83e225ca11a9d71283c91",
    "triangles": {
     "buildings": 43815,
     "buildings_lod1": 6210,
@@ -1282,8 +1292,8 @@
     "markings": 512,
     "paved": 1216,
     "plot_ground": 10611,
-    "plots": 15498,
-    "plots_low": 10731,
+    "plots": 15517,
+    "plots_low": 10715,
     "road": 8132,
     "road_collision": 10669,
     "terrain_lod0": 136383,
@@ -6217,6 +6227,21 @@
    ],
    "texture": "fence_mesh"
   },
+  "fieldstone_plinth": {
+   "color": [
+    0.235,
+    0.225,
+    0.205
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "fieldstone",
+   "tint_linear": true
+  },
   "fire_station": {
    "color": [
     0.181,
@@ -6890,6 +6915,40 @@
     0.2
    ],
    "rough": 0.25
+  },
+  "log_wall_raw": {
+   "color": [
+    0.33,
+    0.21,
+    0.115
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "set_tile_m": [
+    4.6,
+    2.55
+   ],
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "log_whitewash",
+   "tint_linear": true
+  },
+  "log_wall_white": {
+   "color": [
+    0.6,
+    0.595,
+    0.565
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "log_whitewash",
+   "tint_linear": true
   },
   "luminaire_housing": {
    "color": [
@@ -8119,6 +8178,21 @@
    "texture_set": "trapezoid_sheet",
    "tint_linear": true
   },
+  "roof_shingles_grey": {
+   "color": [
+    0.17,
+    0.168,
+    0.16
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "wood_shingles",
+   "tint_linear": true
+  },
   "roof_tiles_brown": {
    "color": [
     0.11,
@@ -8136,6 +8210,25 @@
     0.0
    ],
    "texture_set": "roof_tiles",
+   "tint_linear": true
+  },
+  "roof_tiles_old": {
+   "color": [
+    0.145,
+    0.047,
+    0.021
+   ],
+   "macro": [
+    9.0,
+    0.1
+   ],
+   "rough": 0.85,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "roof_tiles_old",
    "tint_linear": true
   },
   "roof_tiles_red": {
@@ -8954,6 +9047,56 @@
    "texture_set": "wood_siding",
    "tint_linear": true
   },
+  "wood_planks_stain": {
+   "color": [
+    0.125,
+    0.055,
+    0.026
+   ],
+   "rough": 0.8,
+   "set_tile": true,
+   "set_tile_m": [
+    6.0,
+    2.6
+   ],
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "wood_siding",
+   "tint_linear": true
+  },
+  "wood_planks_white": {
+   "color": [
+    0.6,
+    0.595,
+    0.565
+   ],
+   "rough": 0.8,
+   "set_tile": true,
+   "set_tile_m": [
+    6.0,
+    2.6
+   ],
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "boards_painted",
+   "tint_linear": true
+  },
+  "wood_trim_brown": {
+   "color": [
+    0.05,
+    0.027,
+    0.017
+   ],
+   "rough": 0.6,
+   "sky_occ": [
+    0.5,
+    0.0
+   ]
+  },
   "wood_trim_white": {
    "color": [
     0.4,
@@ -9200,7 +9343,7 @@
  "sources_sha256": {
   "generated/osm_context.json": "ae4237e05e9b3f00b243175b307743c03f5650c012b800e06f0f9d72f7a68f98",
   "heightmap.r16 (Data/raw)": "309c5fe6503e6ead00e5ddb4daafb1053944acb70d37c2777cc9f65c420a2f52",
-  "overrides.yaml": "b4c5d1a91d8d9bb6561d54fc2bc3faff4fb1a402829de0b4d0546c5f545ff34e",
+  "overrides.yaml": "be56578c7dc106976a858f142acd8f96799efd4c3d34c41ed6c9bb0542ee7b8b",
   "roads.graph.json": "be6b3b5629f67fd533d95386a42ef220e0aecc3621ebb61105547f80ac680439",
   "terrain.json": "36279e41ff3952cd7b8963778865c082fc315ca18ddf2eb8633888428f3d821f"
  },

@@ -89,7 +89,7 @@ def test_roof_tone_reaches_the_mesh(blds):
 
 
 def test_landmark_overrides(blds):
-    assert blds[KLATT]["sub"] == "dom_drewniany" and "wood_planks" in _mats(blds[KLATT])
+    assert blds[KLATT]["sub"] == "dom_drewniany" and "wood_planks_white" in _mats(blds[KLATT])   # ADR 0305 fallback
     assert not {"plaster_light", "plaster_grey", "plaster_beige", "plaster_cream"} & _mats(blds[KLATT])
     assert "plaster_white" in _mats(blds[CORNER])
     assert "plaster_peach" in _mats(blds[POST])

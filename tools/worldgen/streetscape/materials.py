@@ -361,6 +361,38 @@ M = {
     # boards). Aged white oil paint, well under the soffit boarding (0.55) the review called "plastic white":
     # WORKING_VALUE, no photo of a Knyszyn wooden house in the repo. Only buildings_mesh.wood_surround uses it.
     "wood_trim_white": {"color": [0.40, 0.39, 0.35], "rough": 0.75},
+    # ADR 0305 (klattow-s24): Dom Klattow, Koscielna, Knyszyn - owner photos klattow-01..05 (local reference only).
+    # Tints read by eye off those photos against the lit white wall, WORKING_VALUE until the owner's review:
+    # - log_wall_white: limewashed hewn logs (set log_whitewash: courses, caulked joints, shakes, worn foot; one tile
+    #   = the wall height, so set_tile is the set's own 4.0 x 2.2 m). Old limewash is a little greyer than fresh render
+    #   (plaster_white 0.76).
+    # - wood_planks_white: white-painted boards (vertical gable boarding, corner / barge / fascia boards) - set
+    #   boards_painted, whose rows sit on the joints of wood_siding (same UV rules as every wood_planks*).
+    # - wood_planks_stain: red-brown stained softwood of the porch and the picket fence (photo ~ sRGB 150/95/60 in sun).
+    # - wood_trim_brown: dark brown painted window joinery and surrounds (flat colour: members are 3-9 cm wide).
+    # - roof_tiles_old: old ceramic S-tile (esowka), weathered orange-brown with dark and mossy tiles (set
+    #   roof_tiles_old: the moss / lichen hue is in the modulation map).
+    # - fieldstone_plinth: fieldstone footing (set fieldstone).
+    # Round 1 of ADR 0305 (High clear, editor): the lit street wall clipped to white (0.66 -> 0.60); wood_siding under
+    # a white tint read as grey weathered boards -> its own painted-board set at the same row joints; roof_tiles with
+    # a macro drift stayed an even pale orange grid (lit sRGB ~185/125/85 for linear 0.165/0.074/0.036; the photo has
+    # ~175/92/58 with dark and mossy tiles) -> its own old-tile set (per-tile tone, moss, lichen) and a deeper tint;
+    # the stain read light tan (170/115/75; photo ~150/90/55).
+    "log_wall_white": {"color": [0.60, 0.595, 0.565], "rough": 0.9, "texture_set": "log_whitewash", "set_tile": True},
+    "wood_planks_white": {"color": [0.60, 0.595, 0.565], "rough": 0.8, "texture_set": "boards_painted", "set_tile": True,
+                          "set_tile_m": [6.0, 2.6]},
+    "wood_planks_stain": {"color": [0.125, 0.055, 0.026], "rough": 0.8, "texture_set": "wood_siding", "set_tile": True,
+                          "set_tile_m": [6.0, 2.6]},
+    "wood_trim_brown": {"color": [0.050, 0.027, 0.017], "rough": 0.6},
+    "roof_tiles_old": {"color": [0.145, 0.047, 0.021], "rough": 0.85, "texture_set": "roof_tiles_old", "set_tile": True,
+                       "macro": [9.0, 0.10]},
+    "fieldstone_plinth": {"color": [0.235, 0.225, 0.205], "rough": 0.9, "texture_set": "fieldstone", "set_tile": True},
+    # ADR 0305: timber granary by the presbytery (owner photo klattow-02): unpainted, weathered honey-brown logs - the
+    # log_whitewash set as a neutral modulation map under a wood tint, stretched to 4.6 x 2.55 m so one tile covers the
+    # 2.45 m wall (courses 0.23-0.28 m); weathered silver-grey wooden shingles (set wood_shingles). WORKING_VALUE.
+    "log_wall_raw": {"color": [0.33, 0.21, 0.115], "rough": 0.9, "texture_set": "log_whitewash", "set_tile": True,
+                     "set_tile_m": [4.6, 2.55]},
+    "roof_shingles_grey": {"color": [0.17, 0.168, 0.16], "rough": 0.9, "texture_set": "wood_shingles", "set_tile": True},
     "chimney_brick": {"color": [0.20, 0.092, 0.07], "rough": 0.9, "texture_set": "brick", "set_tile": True},
     # behaton (I-shaped interlocking blocks) in truck yards (streetscape.paved)
     "yard_behaton": {"color": [0.23, 0.228, 0.22], "rough": 0.85, "surface": "paving_stones", "texture_set": "behaton_i_grey"},
@@ -514,7 +546,8 @@ M = {
 # roofs, doors) - the materials this task renders and reviews; the other modulation materials keep the look they
 # were reviewed with until the lead switches the flag on globally (open point in the ADR).
 _TINT_LINEAR = ("plaster_", "plinth_", "panel_concrete", "brick_red", "chimney_brick", "hall_wall_", "hall_plinth",
-                "roof_tiles_", "roof_metal_", "roof_sheet_", "wood_planks", "garage_door", "dock_door", "balcony_panel")
+                "roof_tiles_", "roof_metal_", "roof_sheet_", "wood_planks", "garage_door", "dock_door", "balcony_panel",
+                "log_wall_", "fieldstone_", "roof_shingles_")
 for _k, _v in M.items():
     if _k.startswith(_TINT_LINEAR) and "texture_set" in _v:
         _v["tint_linear"] = True

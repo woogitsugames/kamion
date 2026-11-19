@@ -341,6 +341,13 @@ def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
         ss = _pick_w(SIDE_BY_AGE[age], key, "side")
         if ss == "front":
             ss = SIDE_OF_BRICK.get(fs, fs)
+        # ADR 0305: authored fence styles of a photographed plot (override `plot_fence: {front: <style>, side: <style>}`
+        # on its house); the rule picks stay for every other plot
+        pf = (g[0].get("ovr") or {}).get("plot_fence") or {}
+        if pf:
+            if not set(pf) <= {"front", "side"} or not set(pf.values()) <= set(STYLES):
+                raise ValueError(f"building {g[0]['id']}: plot_fence {pf!r}: keys front / side, styles {sorted(STYLES)}")
+            fs, ss = pf.get("front", fs), pf.get("side", ss)
         lo, hi = STYLES[fs][1]
         fh = round(lo + (hi - lo) * hfloat(key, "fh"), 2)
         lo, hi = STYLES[ss][1]
@@ -815,7 +822,8 @@ def region_plan(blds, roads_poly, carriage, yards, src, origin, bpoly, net=None,
     """Plan every plot of the region once (pass 1 of build_world; the streetscape stage reuses it). blds:
     buildings_mesh.load() list, yards: polygons of paved yards, src: streetscape sources (OSM / BDOT barriers).
     Returns dict(plots=[... with 'lay' and 'access'], drops=[...])."""
-    houses = [{"id": b["id"], "poly": b["poly"], "props": b.get("props") or {}} for b in blds if b["typ"] == "house"]
+    houses = [{"id": b["id"], "poly": b["poly"], "props": b.get("props") or {}, "ovr": b.get("ovr") or {}} for b in blds
+              if b["typ"] == "house"]
     obstacles = [b["poly"] for b in blds if b["typ"] != "house" and b["poly"].area >= BIG_BUILDING_M2]
     obstacles += [p for p in yards if p.area > 20.0]
     small = [b["poly"] for b in blds if b["typ"] != "house" and b["poly"].area < BIG_BUILDING_M2]

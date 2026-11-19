@@ -947,6 +947,106 @@
       "hf_ratio_albedo": 0.0661,
       "ao_mean": 0.927
     },
+    "boards_painted": {
+      "tile_m": [
+        6.0,
+        2.6
+      ],
+      "slots": [
+        "wood_planks_white"
+      ],
+      "note": "ADR 0305: boards under old opaque paint, 19 rows at the joints of wood_siding (u along the boards).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            884
+          ],
+          "texel_mm": 2.93,
+          "dir": "boards_painted/High",
+          "png_bytes": 5798145,
+          "files": [
+            "T_boards_painted_BaseColor.png",
+            "T_boards_painted_MaskMap.png",
+            "T_boards_painted_Normal.png",
+            "T_boards_painted_Var.png"
+          ],
+          "smoothness_mean": 0.177,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 4296758
+        },
+        "Medium": {
+          "res": [
+            1024,
+            442
+          ],
+          "texel_mm": 5.86,
+          "dir": "boards_painted/Medium",
+          "png_bytes": 1828161,
+          "files": [
+            "T_boards_painted_BaseColor.png",
+            "T_boards_painted_MaskMap.png",
+            "T_boards_painted_Normal.png",
+            "T_boards_painted_Var.png"
+          ],
+          "smoothness_mean": 0.173,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 838833
+        },
+        "Low": {
+          "res": [
+            512,
+            221
+          ],
+          "texel_mm": 11.72,
+          "dir": "boards_painted/Low",
+          "png_bytes": 478681,
+          "files": [
+            "T_boards_painted_BaseColor.png",
+            "T_boards_painted_MaskMap.png",
+            "T_boards_painted_Normal.png",
+            "T_boards_painted_Var.png"
+          ],
+          "smoothness_mean": 0.165,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 150869
+        }
+      },
+      "height_range_m": [
+        -0.00476,
+        0.00152
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3974,
+        "p95": 0.5457,
+        "mean_rgb_linear": [
+          0.4997,
+          0.4991,
+          0.4981
+        ]
+      },
+      "hf_ratio_albedo": 0.0625,
+      "ao_mean": 0.96
+    },
     "box_panel": {
       "tile_m": [
         4.8,
@@ -2665,6 +2765,106 @@
       "hf_ratio_albedo": 0.0251,
       "ao_mean": 0.978
     },
+    "fieldstone": {
+      "tile_m": [
+        2.4,
+        0.6
+      ],
+      "slots": [
+        "fieldstone_plinth"
+      ],
+      "note": "ADR 0305: fieldstone footing of a log house, boulders 0.15-0.30 m in lime mortar, damp mossy foot.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            256
+          ],
+          "texel_mm": 2.34,
+          "dir": "fieldstone/High",
+          "png_bytes": 1537493,
+          "files": [
+            "T_fieldstone_BaseColor.png",
+            "T_fieldstone_MaskMap.png",
+            "T_fieldstone_Normal.png",
+            "T_fieldstone_Var.png"
+          ],
+          "smoothness_mean": 0.152,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 622155
+        },
+        "Medium": {
+          "res": [
+            512,
+            128
+          ],
+          "texel_mm": 4.69,
+          "dir": "fieldstone/Medium",
+          "png_bytes": 459480,
+          "files": [
+            "T_fieldstone_BaseColor.png",
+            "T_fieldstone_MaskMap.png",
+            "T_fieldstone_Normal.png",
+            "T_fieldstone_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 121460
+        },
+        "Low": {
+          "res": [
+            256,
+            64
+          ],
+          "texel_mm": 9.38,
+          "dir": "fieldstone/Low",
+          "png_bytes": 126994,
+          "files": [
+            "T_fieldstone_BaseColor.png",
+            "T_fieldstone_MaskMap.png",
+            "T_fieldstone_Normal.png",
+            "T_fieldstone_Var.png"
+          ],
+          "smoothness_mean": 0.112,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 21845
+        }
+      },
+      "height_range_m": [
+        -0.006,
+        0.03287
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.363,
+        "p95": 0.6597,
+        "mean_rgb_linear": [
+          0.5059,
+          0.4994,
+          0.4884
+        ]
+      },
+      "hf_ratio_albedo": 0.0384,
+      "ao_mean": 0.819
+    },
     "fire_station": {
       "tile_m": [
         14.0,
@@ -3334,6 +3534,106 @@
       },
       "hf_ratio_albedo": 0.0676,
       "ao_mean": 0.981
+    },
+    "log_whitewash": {
+      "tile_m": [
+        4.0,
+        2.2
+      ],
+      "slots": [
+        "log_wall_*"
+      ],
+      "note": "ADR 0305: limewashed hewn-log wall, ten courses 0.20-0.24 m, caulked joints, shakes, worn foot (u along the wall, v up from the plinth; one tile = the wall height).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            560
+          ],
+          "texel_mm": 3.91,
+          "dir": "log_whitewash/High",
+          "png_bytes": 2376913,
+          "files": [
+            "T_log_whitewash_BaseColor.png",
+            "T_log_whitewash_MaskMap.png",
+            "T_log_whitewash_Normal.png",
+            "T_log_whitewash_Var.png"
+          ],
+          "smoothness_mean": 0.097,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1360964
+        },
+        "Medium": {
+          "res": [
+            512,
+            280
+          ],
+          "texel_mm": 7.81,
+          "dir": "log_whitewash/Medium",
+          "png_bytes": 674036,
+          "files": [
+            "T_log_whitewash_BaseColor.png",
+            "T_log_whitewash_MaskMap.png",
+            "T_log_whitewash_Normal.png",
+            "T_log_whitewash_Var.png"
+          ],
+          "smoothness_mean": 0.093,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 265693
+        },
+        "Low": {
+          "res": [
+            256,
+            140
+          ],
+          "texel_mm": 15.62,
+          "dir": "log_whitewash/Low",
+          "png_bytes": 181810,
+          "files": [
+            "T_log_whitewash_BaseColor.png",
+            "T_log_whitewash_MaskMap.png",
+            "T_log_whitewash_Normal.png",
+            "T_log_whitewash_Var.png"
+          ],
+          "smoothness_mean": 0.088,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 47786
+        }
+      },
+      "height_range_m": [
+        -0.0092,
+        0.00695
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3604,
+        "p95": 0.5628,
+        "mean_rgb_linear": [
+          0.5015,
+          0.4998,
+          0.4971
+        ]
+      },
+      "hf_ratio_albedo": 0.0334,
+      "ao_mean": 0.94
     },
     "macro_variation": {
       "tile_m": [
@@ -4136,6 +4436,106 @@
       "hf_ratio_albedo": 0.0368,
       "ao_mean": 0.939
     },
+    "roof_tiles_old": {
+      "tile_m": [
+        2.8,
+        2.8
+      ],
+      "slots": [
+        "roof_tiles_old"
+      ],
+      "note": "ADR 0305: old hand-laid ceramic S-tile, roll 0.20 m, gauge 0.35 m, per-tile tone, moss, lichen.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 2.73,
+          "dir": "roof_tiles_old/High",
+          "png_bytes": 5276531,
+          "files": [
+            "T_roof_tiles_old_BaseColor.png",
+            "T_roof_tiles_old_MaskMap.png",
+            "T_roof_tiles_old_Normal.png",
+            "T_roof_tiles_old_Var.png"
+          ],
+          "smoothness_mean": 0.134,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 5.47,
+          "dir": "roof_tiles_old/Medium",
+          "png_bytes": 1291534,
+          "files": [
+            "T_roof_tiles_old_BaseColor.png",
+            "T_roof_tiles_old_MaskMap.png",
+            "T_roof_tiles_old_Normal.png",
+            "T_roof_tiles_old_Var.png"
+          ],
+          "smoothness_mean": 0.128,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 10.94,
+          "dir": "roof_tiles_old/Low",
+          "png_bytes": 283669,
+          "files": [
+            "T_roof_tiles_old_BaseColor.png",
+            "T_roof_tiles_old_MaskMap.png",
+            "T_roof_tiles_old_Normal.png",
+            "T_roof_tiles_old_Var.png"
+          ],
+          "smoothness_mean": 0.124,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00028,
+        0.03066
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.2495,
+        "p95": 0.6955,
+        "mean_rgb_linear": [
+          0.4932,
+          0.5024,
+          0.4964
+        ]
+      },
+      "hf_ratio_albedo": 0.0103,
+      "ao_mean": 0.938
+    },
     "sandwich_ribbed": {
       "tile_m": [
         6.0,
@@ -4889,6 +5289,106 @@
         0.3586,
         0.3062
       ]
+    },
+    "wood_shingles": {
+      "tile_m": [
+        1.5,
+        1.5
+      ],
+      "slots": [
+        "roof_shingles_*"
+      ],
+      "note": "ADR 0305: split wooden shingles (gont), courses 0.15 m, shingles 0.07-0.12 m, weathered silver-grey.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.46,
+          "dir": "wood_shingles/High",
+          "png_bytes": 6408518,
+          "files": [
+            "T_wood_shingles_BaseColor.png",
+            "T_wood_shingles_MaskMap.png",
+            "T_wood_shingles_Normal.png",
+            "T_wood_shingles_Var.png"
+          ],
+          "smoothness_mean": 0.133,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 2.93,
+          "dir": "wood_shingles/Medium",
+          "png_bytes": 1657142,
+          "files": [
+            "T_wood_shingles_BaseColor.png",
+            "T_wood_shingles_MaskMap.png",
+            "T_wood_shingles_Normal.png",
+            "T_wood_shingles_Var.png"
+          ],
+          "smoothness_mean": 0.104,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 5.86,
+          "dir": "wood_shingles/Low",
+          "png_bytes": 339082,
+          "files": [
+            "T_wood_shingles_BaseColor.png",
+            "T_wood_shingles_MaskMap.png",
+            "T_wood_shingles_Normal.png",
+            "T_wood_shingles_Var.png"
+          ],
+          "smoothness_mean": 0.085,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00691,
+        0.01266
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.2737,
+        "p95": 0.6483,
+        "mean_rgb_linear": [
+          0.5049,
+          0.4995,
+          0.4903
+        ]
+      },
+      "hf_ratio_albedo": 0.0587,
+      "ao_mean": 0.897
     },
     "wood_siding": {
       "tile_m": [

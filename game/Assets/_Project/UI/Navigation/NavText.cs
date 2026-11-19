@@ -41,6 +41,30 @@ namespace Game.UI.Navigation
         /// <summary>A leg of the trip only over a road with a truck limit (OSM, e.g. axle load 10 t) - no legal detour in the corridor.</summary>
         public const string TripRelaxed = "odcinek z ograniczeniem dla ciężarówek";
 
+        // ADR 0307 (D91): limit of the road below the combination - warning only, the drive is never blocked
+        public const string Restriction = "Ograniczenie";
+        public const string RestrictionIn = "za";
+        public const string RestrictionHere = "na tym odcinku";
+        public const string LimitHeight = "wysokość do", LimitWeight = "masa do", LimitAxle = "nacisk osi do", LimitLength = "długość do";
+        public const string Metres = "m", Tonnes = "t";
+
+        /// <summary>"wysokość do 3,7 m, masa do 12 t": the limits of <paramref name="r"/> the combination exceeds.
+        /// Allocates (full map panel, logs, tests) - the per-frame views draw signs (<see cref="NavDraw.RestrictionSigns"/>).</summary>
+        public static string Describe(in Game.Core.Navigation.RouteRestriction r)
+        {
+            var b = new Game.UI.CabDisplays.TextBuffer(96);
+            for (int i = 0; i < 4; i++)
+            {
+                var k = (Game.Core.Navigation.LimitKind)(1 << i);
+                if ((r.Exceeded & k) == 0) continue;
+                if (b.Length > 0) b.Append(", ");
+                b.Append(k == Game.Core.Navigation.LimitKind.Height ? LimitHeight : k == Game.Core.Navigation.LimitKind.Weight ? LimitWeight
+                    : k == Game.Core.Navigation.LimitKind.AxleLoad ? LimitAxle : LimitLength).Append(' ');
+                NavDraw.AppendLimit(b, k, NavDraw.LimitValue(r, k), true);
+            }
+            return b.ToString();
+        }
+
         /// <summary>Every character the map canvases draw (glyph requests).</summary>
         public const string Charset =
             " 0123456789,.:+-–−/°%()©ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzĄĆĘŁŃÓŚŹŻąćęłńóśźż·";

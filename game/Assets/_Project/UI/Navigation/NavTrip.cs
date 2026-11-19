@@ -86,6 +86,8 @@ namespace Game.UI.Navigation
         readonly Dictionary<string, ushort> m_NameIx = new Dictionary<string, ushort> { { "", 0 } };
         readonly ushort m_LabelName;
         int m_Next;            // next leg to plan (StepPlan)
+        /// <summary>ADR 0307: the combination the restrictions on the trip are reported for (set before planning).</summary>
+        public TruckLimits Truck = TruckLimits.Default;
 
         /// <summary>Leg of the tile the GPS measures in; -1 = the current tile is not on the trip.</summary>
         public int Current { get; private set; } = -1;
@@ -196,7 +198,7 @@ namespace Game.UI.Navigation
             {
                 leg.Graph = RouteGraph.Load(leg.RegionId);
                 if (leg.Graph == null) { leg.Status = PlanStatus.NoPath; return false; }
-                leg.Planner = new RoutePlanner(leg.Graph) { AllowTileExit = true };   // legs end on the seam (ADR 0302)
+                leg.Planner = new RoutePlanner(leg.Graph) { AllowTileExit = true, Truck = Truck };   // legs end on the seam (ADR 0302)
                 leg.Path = RoutePath.For(leg.Graph);
                 leg.NameMap = new ushort[leg.Graph.Names.Length];
                 for (int k = 0; k < leg.NameMap.Length; k++) leg.NameMap[k] = Intern(leg.Graph.Names[k]);
@@ -208,6 +210,7 @@ namespace Game.UI.Navigation
             Vector2 start = fromTruck ? pos : leg.Entry;
             float hd = fromTruck ? headingDeg : leg.EntryHeadingDeg;
             leg.Planner.RelaxTruckLimits = false;
+            leg.Planner.Truck = Truck;
             leg.Status = leg.Planner.Plan(start, hd, leg.Exit, leg.Path);
             leg.Relaxed = false;
             if (leg.Status == PlanStatus.NoPath)
@@ -275,6 +278,8 @@ namespace Game.UI.Navigation
                 var p = leg.Path;
                 var off = new Vector2((float)(leg.AnchorX - frameX), (float)(leg.AnchorY - frameY));
                 int b = c.Count;
+                // ADR 0307: chainage of the leg's first point in the combined path (after the straight seam join)
+                float sBase = b > 0 && p.Count > 0 ? c.S[b - 1] + Vector2.Distance(c.Points[b - 1], p.Points[0] + off) : 0f;
                 // seam: the previous leg ended SeamInsetM before the seam, this one starts SeamInsetM after - straight join
                 for (int k = 0; k < p.Count; k++)
                 {
@@ -291,6 +296,13 @@ namespace Game.UI.Navigation
                     int m = c.ManCount - 1;
                     c.ManLaneCount[m] = p.ManLaneCount[k]; c.ManLaneCls[m] = p.ManLaneCls[k];
                     c.ManLanesAllowed[m] = p.ManLanesAllowed[k]; c.ManLanesRec[m] = p.ManLanesRec[k];
+                }
+                for (int k = 0; k < p.RestrCount; k++)
+                {
+                    var r = p.Restr[k];
+                    r.S0 += sBase; r.S1 += sBase; r.Pos += off;
+                    r.Name = r.Name < leg.NameMap.Length ? leg.NameMap[r.Name] : (ushort)0;
+                    c.AddRestriction(r);
                 }
                 cost += p.CostSeconds;
                 if (last) c.Destination = p.Destination + off;
