@@ -41,6 +41,10 @@ namespace Game.Gameplay
         /// <summary>ADR 0302: start the multi-tile trip automatically (tests switch it off).</summary>
         public bool autoTrip = true;
         bool m_TripTried;
+        float m_LogT = -1f;
+        /// <summary>ADR 0302 evidence: launch argument <c>-nav_log &lt;s&gt;</c> logs the GPS state every s seconds
+        /// ([NAV] status: tile, leg, remaining, ETA, on route) - allocates a log line, so only when asked.</summary>
+        public float logEveryS = -1f;
         NavTripsData m_Trips;
         public string CurrentTile => nav != null ? nav.regionId : "";
 
@@ -49,6 +53,10 @@ namespace Game.Gameplay
             if (host == null || nav == null) return null;
             if (!host.TryGetComponent(out NavStreamFollower f)) f = host.AddComponent<NavStreamFollower>();
             f.nav = nav; f.screens = screens; f.vehicle = vehicle;
+            var args = System.Environment.GetCommandLineArgs();
+            for (int i = 0; i + 1 < args.Length; i++)
+                if (args[i] == "-nav_log" && float.TryParse(args[i + 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float s) && s > 0f)
+                    f.logEveryS = s;
             return f;
         }
 
@@ -59,6 +67,17 @@ namespace Game.Gameplay
             m_T = intervalS;
             var ws = WorldStreamer.Active;
             if (ws != null && ws.Graph != null && nav != null && vehicle != null) Step(ws);
+            if (logEveryS > 0f && nav != null && Time.unscaledTime >= m_LogT)
+            {
+                m_LogT = Time.unscaledTime + logEveryS;
+                var gd = nav.Guidance;
+                var t = nav.Trip;
+                Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                    "[NAV] status t={0:F0}s tile={1} trip={2} leg={3}/{4} route={5} onRoute={6} remaining={7:F0} m eta={8:F0} s next={9:F0} m street='{10}' pos=({11:F1},{12:F1}) pathV={13}",
+                    Time.unscaledTime, nav.regionId, t != null ? t.Id : "-", t != null ? t.Current + 1 : 0, t != null ? t.Legs.Length : 0,
+                    gd.HasRoute, gd.OnRoute, gd.RemainingM, gd.RemainingSeconds, gd.Next >= 0 ? gd.NextM : -1f, nav.NameOf(nav.CurrentStreet),
+                    nav.Position.x, nav.Position.y, nav.Path != null ? nav.Path.Version : -1));
+            }
         }
 
         /// <summary>One check (public for tests).</summary>
