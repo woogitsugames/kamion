@@ -27,6 +27,7 @@ from . import hero_building as HBD
 from . import knyszyn_church_0227 as KC
 from . import knyszyn_townhall_0227 as KT
 from . import knyszyn_dom_klattow_0305 as KDK
+from . import knyszyn_lamus_0305 as KLM
 from . import knyszyn_park_props_0227 as KP
 from . import knyszyn_market_0227 as KM
 from . import knyszyn_market_buildings_0227 as KMB
@@ -81,6 +82,15 @@ def plan_plots(w, rid, blds=None):
     rp = PLT.region_plan(blds, roads_poly, carriage, yards, src, origin, bpoly, net=w.net)
     from . import plot_canopy as PCN                 # ADR 0132: crowns read off the orthophoto (None when not built)
     rp["canopy"] = PCN.load(rid)
+    # ADR 0305: authored `kind: plot_canopy_exclude` (`polygons_en`, region-local rings): orthophoto "crowns" that are
+    # a building's cast shadow on the lawn (dark green, evenly spaced along the north wall) are dropped before the
+    # garden trees / shrubs are planned
+    excl = [shapely.geometry.Polygon(r) for o in overrides if o.get("kind") == "plot_canopy_exclude"
+            for r in o.get("polygons_en", [])]
+    if excl and rp["canopy"] is not None and len(rp["canopy"]):
+        inside = shapely.contains_xy(shapely.union_all(excl), rp["canopy"][:, 0], rp["canopy"][:, 1])
+        rp["canopy_excluded"] = int(inside.sum())
+        rp["canopy"] = rp["canopy"][~inside]
     # ADR 0237: kerbs lowered at the marked pedestrian crossings ride with the driveway drops into pass 2
     # (build_world applies plot_plan["drops"]); a region without `pavement_rules` gets none
     from . import pavements as PVM
@@ -110,7 +120,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     heroes = HBD.plan(rid, overrides, fc, w.origin, lambda e, n: float(np.asarray(zsmooth(e, n)).ravel()[0]), rep, log)
     blds = BM.load(fc, w.origin, overrides,
                    hero={**HBD.targets(heroes), **KC.hero_targets(rid, fc), **KT.hero_targets(rid, fc),
-                         **KMB.hero_targets(rid, fc), **KDK.hero_targets(rid, fc)})
+                         **KMB.hero_targets(rid, fc), **KDK.hero_targets(rid, fc),
+                         **KLM.hero_targets(rid, fc)})
     yard_src = _yard_src(src, w.origin, overrides)
     yard_union = shapely.union_all([shapely.make_valid(p) for p in yard_src] + [roads_poly])
     brep = {}
@@ -120,7 +131,12 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     KC.build(w.buf, rid, blds, zsmooth, rep)
     KT.build(w.buf, rid, blds, zsmooth, rep)
     KMB.build(w.buf, rid, blds, zsmooth, rep, overrides)     # ADR 0227 D41: pavilion form from overrides
-    KDK.build(w.buf, rid, blds, zsmooth, rep, roads_poly)    # ADR 0305: Dom Klattow from the owner's photos
+    if KDK.hero_targets(rid, fc):                            # ADR 0305: Dom Klattow from the owner's photos
+        from . import furniture as _FU
+        KDK.build(w.buf, rid, blds, zsmooth, rep, roads_poly,
+                  carriage=PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")]),
+                  surface=_FU.SurfaceTop(road_parts))
+    KLM.build(w.buf, rid, blds, zsmooth, rep)                # ADR 0305: timber granary by the presbytery
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])

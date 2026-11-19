@@ -51,6 +51,7 @@ inaczej linia cofa się co 0,1 m, a poniżej 0,8 m płotu nie ma (raport `street
 - **`roof_tiles_old`** — istniejący zestaw `roof_tiles` (esówka: fala 0,20 m, rząd 0,35 m), kolor pomarańczowo-brązowy,
   silny dryf tonu w małej skali (`macro` 3,5 m / 0,34) = łaty starej dachówki. Zielonego mchu dryf jasności nie da (otwarte).
 - **`wood_trim_brown`** — płaski ciemny brąz stolarki (elementy 2–9 cm).
+- **`wood_shingles`** (nowy zestaw, kafel 1,5 × 1,5 m) i **`log_wall_raw`** — lamus, pkt 4.
 - `log_wall_` i `fieldstone_` dopisane do `_TINT_LINEAR` (kolor liniowy, jak tynki i dachy).
 Poly Haven / ambientCG nie mają skanu bielonej ściany z bali; zestaw proceduralny daje kontrolę nad wysokością wieńców
 i zabrudzeniem dołu. Wszystkie kolory `WORKING_VALUE` do oceny właściciela.
@@ -66,11 +67,22 @@ z OSM (otwarte w ADR 0295). Masowa zmiana bez danych byłaby zgadywaniem. Zamias
 - droga do reguły: przeniesienie `building:material` / `building:colour` z OSM do `buildings.geojson` + uzupełnienie
   znaczników w OSM dla Knyszyna i Tykocina (praca terenowa właściciela lub Mapillary) — osobne zadanie geo-worldgen.
 
-### 4. Lamus przy plebanii (zdjęcie 02) — tylko nadpisanie danych
-Budynek zidentyfikowany na ortofoto (BDOT `40f8044a…6fe1`, „budynek gospodarczy”, 6,7 × 12,1 m, jedyny ciemnoszary dach
-czterospadowy między frontem kościoła a Kościelną). W OSM nie ma go jako osobnego obiektu ze znacznikami. Wpis
-`look-lamus-plebanski`: dom drewniany z brązowych desek, dach czterospadowy, wysokość 6,4 m (ESTIMATED ze zdjęcia).
-Gont i podcień na słupach z mieczami wymagają osobnego obiektu autorskiego i zestawu gontu — otwarte.
+### 4. Lamus przy plebanii (zdjęcie 02) — drugi obiekt autorski (`streetscape/knyszyn_lamus_0305.py`)
+Budynek zidentyfikowany na ortofoto (BDOT `40f8044a…6fe1`, „budynek gospodarczy”, 12,05 × 6,67 m, bez wysokości LoD,
+jedyny ciemnoszary dach czterospadowy między frontem kościoła a Kościelną; czerwony dach plebanii między nim a kościołem
+jak na zdjęciu). W OSM nie ma znaczników. Reguła budowała płaską szarą szopę 4,5 m.
+- SOURCED: obrys. ESTIMATED ze zdjęcia: okap 2,7 m, kalenica 6,5 m (dach ~1,5 × ściana), okap 0,55 m, podcień 1,7 m
+  głęboki na 0,72 długości z pięcioma słupami 20 cm i mieczami, pomieszczenie zrębowe na pełną głębokość przy końcu
+  zachodnim, podłoga z desek, podmurówka z kamienia.
+- **Strona podcienia jest ESTIMATED**: na zdjęciu kościół stoi za dalszym końcem podcienia, a budynek po prawej stronie
+  osi widzenia; kościół leży na przedłużeniu osi budynku ku ESE, więc podcień patrzy na NNE. Do potwierdzenia przez
+  właściciela (jedno słowo: „od plebanii” / „od ulicy”).
+- Materiały: `log_wall_raw` (zestaw `log_whitewash` pod barwą surowego, spatynowanego drewna, kafel 4,6 × 2,55 m),
+  `roof_shingles_grey` (nowy zestaw proceduralny `wood_shingles`: gont, rzędy 0,15 m, szerokości 7–12 cm), `wood_planks`
+  (słupy, miecze, oczep, podłoga, drzwi), `fieldstone_plinth`.
+- Nadpisanie `look-lamus-plebanski` zostaje jako zapas reguły (dom drewniany, dach czterospadowy 6,4 m), gdyby obiekt
+  autorski się wyłączył (zmiana obrysu).
+- Pominięte: wole oko w połaci, załamanie połaci przy okapie, wrota i detale zrębu (ostatki).
 
 ### 5. Kamery kontrolne
 `look_dom_klattow_street` (z drugiej strony Kościelnej, 18,4 m od ściany, 1,6 m, kadr zdjęcia 01) obok istniejącej
@@ -84,5 +96,5 @@ Gont i podcień na słupach z mieczami wymagają osobnego obiektu autorskiego i 
 - Mech i porosty na dachu (kolor), krzew i pnącze przy ganku, tabliczka z numerem, słup energetyczny przy narożniku.
 - Zachodni szczyt (brak zdjęcia), wnętrze ganku.
 - Płot w LOD1 (treść Low / Medium) — pominięty; atlas `plot_kit` ma sztachety, ale w innym kolorze.
-- Lamus: gont, podcień, surowe bale.
+- Lamus: potwierdzenie strony podcienia, wole oko, załamanie połaci, ostatki zrębu.
 - Reguła ogólna dla bielonych domów — po danych (pkt 3).

@@ -62,6 +62,8 @@ PICKET_W, PICKET_PITCH, PICKET_H = 0.09, 0.14, 1.05
 FENCE_PAST = (0.4, 0.4)                           # past the west / east corner; beyond it the plot's own picket fence
                                                   # (override plot_fence of the house, streetscape.plots) carries on, m
 ROAD_CLEAR_M = 0.15                               # the fence keeps this far off the road / footway footprint
+WALKWAY_MIN_M = 1.4                               # footway left in front of pickets that stand on the modelled footway
+BED = "plot_lawn"                                 # raised grass strip between the wall and the pickets
 
 
 def hero_targets(region, feature_collection):
@@ -258,22 +260,35 @@ def _door(m, wl, uc, w, z0, z1, key, low=False):
         m.box(L0, TRIM, c, wl.d3 * (a1 - a0) / 2, wl.n3 * 0.02, [0, 0, (b1 - b0) / 2], skip=("-y",))
 
 
-def _fence_line(a, d, n, L, pu0, pu1, pd, roads_poly):
-    """Offset of the picket line from the street wall (the porch front, pulled back while it would stand on the road
-    / footway footprint) and its two runs [(u0, u1)]. None when no line 0.8 m or more off the wall is clear."""
+def _fence_line(a, d, n, L, pu0, pu1, pd, roads_poly, carriage=None):
+    """Offset of the picket line from the street wall and its two runs [(u0, u1)]: (w, runs, on_footway, walkway m).
+    The photos show the pickets flush with the porch front, along the back of the footway. Where the generated
+    footway reaches further towards the wall than the real one (Koscielna: its back edge lies ~1 m from the wall,
+    the porch is 2 m deep), the line still goes to the porch front when at least WALKWAY_MIN_M of footway stays
+    between the pickets and the carriageway; otherwise it is pulled back off the road footprint, and dropped when no
+    line 0.8 m or more off the wall is clear."""
     runs = [(-FENCE_PAST[0], pu0), (pu1, L + FENCE_PAST[1])]
     w = pd - 0.03
     if roads_poly is None:
-        return w, runs
+        return w, runs, False, None
+
+    def strips(w_):
+        return [Polygon([a + d * u0 + n * 0.3, a + d * u1 + n * 0.3, a + d * u1 + n * w_, a + d * u0 + n * w_]) for u0, u1 in runs]
+    if min(float(roads_poly.distance(st)) for st in strips(w)) >= ROAD_CLEAR_M:
+        return w, runs, False, None
+    if carriage is not None and not carriage.is_empty:
+        walk = min(float(carriage.distance(st)) for st in strips(w))
+        if walk >= WALKWAY_MIN_M:
+            return w, runs, True, walk
     while w >= 0.8:                                           # the whole strip between the wall and the pickets is clear
-        strips = [Polygon([a + d * u0 + n * 0.3, a + d * u1 + n * 0.3, a + d * u1 + n * w, a + d * u0 + n * w]) for u0, u1 in runs]
-        if min(float(roads_poly.distance(st)) for st in strips) >= ROAD_CLEAR_M:
-            return w, runs
+        if min(float(roads_poly.distance(st)) for st in strips(w)) >= ROAD_CLEAR_M:
+            return w, runs, False, None
         w -= 0.1
     return None
 
 
-def build(buf, region, blds, zsmooth, report, roads_poly=None):
+def build(buf, region, blds, zsmooth, report, roads_poly=None, carriage=None, surface=None):
+    """surface: streetscape.furniture.SurfaceTop of the road layer (exact footway top) or None."""
     result = {"id": ASSET_ID, "status": "skipped", "sources": [BUILDING_ID]}
     if region != REGION:
         return result
@@ -471,21 +486,45 @@ def build(buf, region, blds, zsmooth, report, roads_poly=None):
                grain="nat_ab", key=(ASSET_ID, "punder", sgn))
 
     # ---- picket fence along the footway (LOD0)
-    fence = _fence_line(a, d, n, L, pu0, pu1, pd, roads_poly)
+    fence = _fence_line(a, d, n, L, pu0, pu1, pd, roads_poly, carriage)
     pickets = 0
+
+    def ground(q):
+        """Top of the footway mesh where the point stands on it, else the smoothed terrain."""
+        z = np.asarray(zsmooth(q[:, 0], q[:, 1]), float).copy()
+        if surface is not None:
+            for i, (e_, n_) in enumerate(q):
+                t = surface.top(float(e_), float(n_))
+                if math.isfinite(t) and abs(t - z[i]) < 0.6:
+                    z[i] = max(z[i], t)
+        return z
+
     if fence is not None:
-        fw, runs = fence
+        fw, runs = fence[0], fence[1]
         af = a + n * fw
         for r, (u0, u1) in enumerate(runs):
             nb = max(1, int(math.ceil((u1 - u0) / 2.4)))
             ub = np.linspace(u0, u1, nb + 1)
-            q = af[None, :] + np.outer(ub, d)
-            gb = np.asarray(zsmooth(q[:, 0], q[:, 1]), float)
+            gb = ground(af[None, :] + np.outer(ub, d))
+            gw = ground(a[None, :] + n[None, :] * 0.045 + np.outer(ub, d))           # ground at the footing
             for j, (ua, zb_) in enumerate(zip(ub, gb)):          # posts behind the pickets
                 m.box(L0, STAIN, np.r_[af + d * ua - n * 0.09, zb_ + 0.56], d3 * 0.045, n3 * 0.045, up * 0.56, grain=up,
                       key=(ASSET_ID, "fpost", r, j), skip=("-z",))
             for j in range(nb):
                 ua, ub_, za, zb_ = ub[j], ub[j + 1], gb[j], gb[j + 1]
+                # grass strip between the footing and the pickets, 5 cm proud of whatever lies under it (terrain or
+                # the modelled footway), with a concrete edging under the pickets
+                b0, b1 = max(ua, 0.0), min(ub_, L)
+                if b1 - b0 > 0.05:
+                    f0, f1 = (b0 - ua) / (ub_ - ua), (b1 - ua) / (ub_ - ua)
+                    zf0, zf1 = za + (zb_ - za) * f0 + 0.05, za + (zb_ - za) * f1 + 0.05
+                    zw0 = max(gw[j] + (gw[j + 1] - gw[j]) * f0 + 0.05, zf0)
+                    zw1 = max(gw[j] + (gw[j + 1] - gw[j]) * f1 + 0.05, zf1)
+                    q = [np.r_[a + d * b0 + n * 0.045, zw0], np.r_[a + d * b1 + n * 0.045, zw1],
+                         np.r_[af + d * b1 - n * 0.03, zf1], np.r_[af + d * b0 - n * 0.03, zf0]]
+                    m.quad(L0, BED, q, up, uv=[[float(p_[0]), float(p_[1])] for p_ in q])
+                    m.quad(L0, CONCRETE, [np.r_[af + d * b0 - n * 0.03, zf0 - 0.25], np.r_[af + d * b1 - n * 0.03, zf1 - 0.25],
+                                          np.r_[af + d * b1 - n * 0.03, zf1], np.r_[af + d * b0 - n * 0.03, zf0]], n3)
                 ax = np.r_[d * (ub_ - ua) / 2, (zb_ - za) / 2]
                 for h in (0.28, 0.82):                           # two rails
                     m.box(L0, STAIN, np.r_[af + d * (ua + ub_) / 2 - n * 0.022, (za + zb_) / 2 + h], ax, n3 * 0.022, up * 0.04,
@@ -514,6 +553,8 @@ def build(buf, region, blds, zsmooth, report, roads_poly=None):
         roof_pitch_deg=round(math.degrees(math.atan(slope)), 1),
         windows={"street": len(FRONT_WINDOWS), "yard": len(BACK_WINDOWS), "gables": 2 * (len(GABLE_WINDOWS) + 1)},
         doors=2, chimneys=len(CHIMNEYS), lattice_laths=laths,
-        fence={"offset_from_wall_m": None if fence is None else round(fence[0], 2), "pickets": pickets},
+        fence={"offset_from_wall_m": None if fence is None else round(fence[0], 2), "pickets": pickets,
+               "on_modelled_footway": bool(fence and fence[2]),
+               "walkway_left_m": None if not (fence and fence[3] is not None) else round(fence[3], 2)},
         triangles={"lod0": m.n[L0], "lod1": m.n[L1]})
     return result

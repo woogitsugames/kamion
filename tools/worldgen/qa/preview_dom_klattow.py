@@ -88,6 +88,11 @@ views = {
     "street_se": (n * 12.0 + d * 22.0 + Vector((0, 0, 1.6)), d * 6.0 + Vector((0, 0, 2.6)), 40),
     "porch": (n * 8.0 + d * 1.5 + Vector((0, 0, 1.6)), n * 2.0 + Vector((0, 0, 1.9)), 40),
 }
+if len(argv) > 4 and argv[4] == "lamus":      # knyszyn_lamus_0305: the framing of owner photo klattow-02 and the back
+    d, n = Vector((-0.9, 0.4366, 0)), Vector((0.4366, 0.9, 0))
+    views = {"lamus_photo02": (n * 11.0 + d * 11.0 + Vector((0, 0, 1.6)), -d * 1.0 + Vector((0, 0, 2.6)), 40),
+             "lamus_front": (n * 16.0 + Vector((0, 0, 1.6)), Vector((0, 0, 2.8)), 40),
+             "lamus_back": (-n * 14.0 - d * 9.0 + Vector((0, 0, 1.6)), Vector((0, 0, 2.6)), 40)}
 for name, (pos, tgt, fov) in views.items():
     cam.location = pos
     cam.rotation_euler = (tgt - pos).to_track_quat("-Z", "Y").to_euler()

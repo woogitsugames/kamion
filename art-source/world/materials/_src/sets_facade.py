@@ -783,6 +783,143 @@ def fieldstone(n=1024):
     return _finish("fieldstone", c, lum, h, rough, t, mort, extra=tint, ao_k=0.9)
 
 
+def wood_shingles(n=1024):
+    """ADR 0305: split wooden shingles (gont) of the timber granary by the presbytery of Knyszyn (owner photo
+    klattow-02, reference only): courses with 0.15 m exposure, shingles 0.07-0.12 m wide with staggered joints,
+    weathered silver-grey, darker butt edges and gaps, fibre along the slope. u along the eave, v up the slope.
+    Tile 1.5 x 1.5 m (10 courses). WORKING_VALUE sizes."""
+    L = 1.5
+    c = Ctx(n, n, L, L, seed=3053)
+    X, Y = c.xy()
+    v = L - Y
+    course = 0.15
+    warp = 0.004 * noise(c, 1, 0.1, 0.8, beta=1.0, aniso=3.0)
+    vv = (v + warp) % L
+    row = np.floor(vv / course).astype(int) % 10
+    pv = (vv % course) / course                 # 0 = exposed butt edge of a course, 1 = under the next course
+    rng = c.rng(2)
+    sid = np.zeros(X.shape, np.int64)
+    du = np.zeros(X.shape, np.float32)
+    for r in range(10):
+        w = rng.uniform(0.07, 0.12, 40)
+        w = w[: int(np.searchsorted(np.cumsum(w), L)) + 1]
+        edges = np.concatenate([[0.0], np.cumsum(w * (L / w.sum()))]) + rng.uniform(0, 0.05)
+        xs = (X - edges[0]) % L
+        k = np.clip(np.searchsorted(edges - edges[0], xs, side="right") - 1, 0, len(w) - 1)
+        lo, hi = (edges - edges[0])[k], (edges - edges[0])[k + 1]
+        sel = row == r
+        sid[sel] = (r * 64 + k)[sel]
+        du[sel] = np.minimum(xs - lo, hi - xs)[sel]
+    gap = sstep(0.0035, 0.0012, du)
+    butt = sstep(0.10, 0.0, pv)                 # shadow / dark weathered butt
+    under = sstep(0.93, 1.0, pv)
+    t = hash01(sid, 1)
+    cup = hash01(sid, 2)
+    fibre = noise(c, 3, c.px * 2, 0.012, beta=0.5, aniso=0.12)
+    cloud = noise(c, 4, 0.3, 1.5, beta=1.2)
+    lich = sstep(0.9, 2.2, noise(c, 5, 0.02, 0.2, beta=0.9))
+    lum = (1 + 0.30 * (t - 0.5) + 0.13 * fibre + 0.06 * cloud) * (1 - 0.40 * butt) * (1 - 0.55 * under) * (1 - 0.6 * gap)
+    lum *= 1 - 0.05 * lich
+    h = 0.010 * (1 - pv) + 0.002 * (cup - 0.5) * 2 + 0.5e-3 * fibre - 5e-3 * gap
+    rough = 0.86 + 0.06 * gap + 0.05 * lich
+
+    def tint(alb):
+        k = (lich * 0.3)[..., None]
+        warm = (sstep(0.7, 1.0, t) * 0.5)[..., None]             # a few younger, browner shingles
+        out = alb * (1 - warm) + alb * np.array([1.12, 0.98, 0.82], np.float32) * warm
+        return out * (1 - k) + out * np.array([0.92, 1.04, 0.86], np.float32) * k
+    return _finish("wood_shingles", c, lum, h, rough, t, np.maximum(gap, under), extra=tint, ao_k=0.8)
+
+
+# joints between board rows as fractions of the tile height - the measured rows of wood_siding
+# (streetscape.buildings_mesh.WOOD_JOINT_V), so every wood_planks* UV rule (one board row per trim board, runs,
+# vertical gable boarding) fits this set too
+_BOARD_JOINT_V = (0.0317, 0.0815, 0.1343, 0.1870, 0.2388, 0.2876, 0.3394, 0.3940, 0.4438, 0.4966, 0.5484, 0.6001,
+                  0.6499, 0.7061, 0.7622, 0.8188, 0.8745, 0.9224, 0.9761)
+
+
+def boards_painted(n=2048):
+    """ADR 0305: boards under old opaque paint (white gable boarding, barge and fascia boards of Dom Klattow - owner
+    photos, reference only): 19 rows on the 6.0 x 2.6 m tile at the joints of wood_siding, thin shadow joints, a
+    little grain and hairline cracks showing through the paint, faint tone from board to board. The scan
+    wood_siding under a white tint read as grey weathered wood (round 1 of ADR 0305). u along the boards, v across."""
+    Lx, Ly = 6.0, 2.6
+    c = Ctx(n, int(n * Ly / Lx) // 4 * 4, Lx, Ly, seed=3054)
+    X, Y = c.xy()
+    v = Ly - Y
+    J = np.array(_BOARD_JOINT_V) * Ly
+    wob = 0.0012 * noise(c, 1, 0.5, 4.0, beta=1.0, aniso=4.0)
+    vv = (v + wob) % Ly
+    k = np.searchsorted(J, vv, side="right")                     # 0..19; 0 and 19 are the same board (wraps)
+    row = k % len(J)
+    lo = np.where(k == 0, J[-1] - Ly, J[np.clip(k - 1, 0, len(J) - 1)])
+    hi = np.where(k == len(J), J[0] + Ly, J[np.clip(k, 0, len(J) - 1)])
+    dj = np.minimum(vv - lo, hi - vv)
+    joint = sstep(0.0042, 0.0015, dj)
+    arris = sstep(0.014, 0.004, dj) * (1 - joint)
+    tone = hash01(row, 3)
+    grain = noise(c, 2, c.px * 2, 0.02, beta=0.6, aniso=10.0)
+    crack_n = noise(c, 3, 0.004, 0.5, beta=0.9, aniso=16.0)
+    crack = sstep(2.5, 3.0, np.abs(crack_n)) * (1 - joint)
+    cloud = noise(c, 4, 0.3, 2.5, beta=1.2)
+    chalk = noise(c, 5, 0.01, 0.1, beta=0.6)
+    lum = (1 + 0.035 * (tone - 0.5) + 0.02 * grain + 0.03 * cloud + 0.012 * chalk) * (1 - 0.05 * arris) * (1 - 0.35 * crack)
+    lum = lum * (1 - joint) + joint * 0.42
+    h = (0.35e-3 * grain + 0.15e-3 * chalk) * (1 - joint) - 5e-3 * joint - 1.5e-3 * arris - 1.2e-3 * crack
+    rough = 0.82 + 0.06 * joint + 0.04 * crack
+
+    def tint(alb):
+        kk = np.clip(joint + crack, 0, 1)[..., None]
+        return alb * (1 - kk) + alb * np.array([1.04, 0.98, 0.88], np.float32) * kk
+    return _finish("boards_painted", c, lum, h, rough, tone, joint, extra=tint, ao_k=0.8)
+
+
+def roof_tiles_old(n=1024):
+    """ADR 0305: old hand-laid ceramic S-tile (esowka) of Dom Klattow (owner photos klattow-01 / -05, reference
+    only): the roll pitch 0.20 m and course gauge 0.35 m of `roof_tiles`, but every tile its own tone (orange to
+    dark brown, a few pale replacements), uneven course lines, moss in the pans and along the laps, lichen spots.
+    Tile 2.8 x 2.8 m (14 rolls x 8 courses) so a slope of 5.6 m repeats twice, not four times. u along the eave,
+    v up the slope. WORKING_VALUE look."""
+    L = 2.8
+    c = Ctx(n, n, L, L, seed=3055)
+    X, Y = c.xy()
+    v = L - Y
+    wave, course = 0.20, 0.35
+    col = np.floor(X / wave).astype(int) % 14
+    off = 0.012 * (hash01(col, 21) - 0.5) * 2                      # each column of tiles hangs a little differently
+    vv = (v + off) % L
+    row = np.floor(vv / course).astype(int) % 8
+    pu = (X % wave) / wave
+    pv = (vv % course) / course                 # 0 = exposed lower edge of a course, 1 = under the next course
+    roll = 0.5 - 0.5 * np.cos(2 * np.pi * np.clip(pu * 1.25, 0, 1))
+    tid = row * 14 + col
+    t = hash01(tid, 1)
+    patch = noise(c, 1, 0.5, 2.8, beta=1.3)
+    grain = noise(c, 2, c.px * 2, 0.012, beta=0.4)
+    dark = (hash01(tid, 2) < 0.18).astype(np.float32)                                    # sooty / soaked tiles
+    pale = (hash01(tid, 3) > 0.95).astype(np.float32)                                     # replaced tiles
+    shadow = sstep(0.88, 1.0, pv)
+    moss_n = noise(c, 3, 0.03, 0.5, beta=1.0)
+    moss = np.clip(sstep(1.1, 2.4, moss_n + 0.9 * patch) * (0.35 + 0.65 * (1 - roll)) + 0.35 * sstep(0.84, 0.97, pv) * sstep(0.2, 1.4, moss_n), 0, 1)
+    lichen = sstep(2.0, 2.7, noise(c, 4, 0.015, 0.12, beta=0.8))
+    h = 0.012 * roll + 0.018 * (1 - pv) + 0.3e-3 * grain + 1.5e-3 * moss
+    lum = (1 + 0.42 * (t - 0.5) + 0.10 * patch + 0.05 * grain) * (1 - 0.38 * dark) * (1 + 0.25 * pale)
+    lum *= (1 - 0.6 * shadow) * (1 - 0.07 * (1 - roll)) * (1 - 0.30 * moss) * (1 + 0.18 * lichen)
+    rough = 0.80 + 0.10 * (1 - roll) + 0.08 * moss
+
+    def tint(alb):
+        hue = hash01(tid, 5)[..., None]
+        warm = np.array([1.06, 0.97, 0.88], np.float32)            # brighter orange tiles
+        cold = np.array([0.94, 1.00, 1.10], np.float32)            # brown, greyed tiles
+        out = alb * (1 + (warm - 1) * sstep(0.5, 1.0, hue) + (cold - 1) * sstep(0.5, 0.0, hue))
+        out = out * (1 - dark[..., None] * 0.5) + out * np.array([0.85, 0.95, 1.05], np.float32) * dark[..., None] * 0.5
+        m_ = (moss * 0.75)[..., None]
+        out = out * (1 - m_) + out * np.array([0.70, 1.12, 0.80], np.float32) * m_          # moss: olive over the red clay
+        l_ = (lichen * 0.7)[..., None]
+        return out * (1 - l_) + out * np.array([0.97, 1.15, 1.25], np.float32) * l_         # lichen: pale grey
+    return _finish("roof_tiles_old", c, lum, h, rough, t, shadow, extra=tint)
+
+
 FACADE_SETS = {
     "sandwich_ribbed": dict(fn=sandwich_ribbed, tile_m=[6.0, 6.0],
         slots=["hall_wall_grey", "hall_wall_silver", "hall_wall_white", "hall_wall_ivory", "booth_panel"],
@@ -837,4 +974,10 @@ FACADE_SETS = {
              "(u along the wall, v up from the plinth; one tile = the wall height)."),
     "fieldstone": dict(fn=fieldstone, tile_m=[2.4, 0.6], slots=["fieldstone_plinth"],
         note="ADR 0305: fieldstone footing of a log house, boulders 0.15-0.30 m in lime mortar, damp mossy foot."),
+    "wood_shingles": dict(fn=wood_shingles, tile_m=[1.5, 1.5], slots=["roof_shingles_*"],
+        note="ADR 0305: split wooden shingles (gont), courses 0.15 m, shingles 0.07-0.12 m, weathered silver-grey."),
+    "boards_painted": dict(fn=boards_painted, tile_m=[6.0, 2.6], slots=["wood_planks_white"],
+        note="ADR 0305: boards under old opaque paint, 19 rows at the joints of wood_siding (u along the boards)."),
+    "roof_tiles_old": dict(fn=roof_tiles_old, tile_m=[2.8, 2.8], slots=["roof_tiles_old"],
+        note="ADR 0305: old hand-laid ceramic S-tile, roll 0.20 m, gauge 0.35 m, per-tile tone, moss, lichen."),
 }

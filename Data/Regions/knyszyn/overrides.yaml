@@ -408,20 +408,19 @@ overrides:
     confidence: high
     verify: owner review of look_dom_klattow / look_dom_klattow_street against the photos
     set: {typology: dom_drewniany, wall_material: wood_planks_white, plot_fence: {front: picket, side: picket}}
-  - id: look-lamus-plebanski
-    target: {building: "bdot:40f8044a-d048-4ad8-ad57-d8b8a2886fe1"}
-    sources: ["owner photo klattow-02 (2026-11-19, local reference only)", "GUGiK orthophoto 2025 0.25 m (reference only)"]
+  - id: look-dom-klattow-yard-shadow-crowns
+    kind: plot_canopy_exclude
+    sources: ["plot_canopy.json (GUGiK orthophoto 2025, crowns read by streetscape.plot_canopy)",
+              "owner photo klattow-05 (2026-11-19, local reference only): open lawn along the yard wall"]
     reason: >-
-      Timber granary / shelter next to the presbytery west of the church (owner photo klattow-02: unpainted log
-      walls, tall hipped shingle roof, open arcade on posts with braces along the long side). BDOT: 'budynek
-      gospodarczy', 80 m2, 6.7 x 12.1 m, no LoD height (default 4.5 m) - the rule built a flat grey shed. Identified on
-      the orthophoto: the only dark grey hipped roof of that size between the church front and Koscielna, the
-      red-roofed presbytery between it and the church as on the photo. ESTIMATED: total height 6.4 m (the photo shows
-      a roof about 1.5 x the wall height), boarded brown walls as the nearest material, grey sheet as the nearest
-      roof tone (no shingle set, no arcade - open point of ADR 0305).
-    confidence: medium
-    verify: owner review; shingle roof set and the arcade on posts are a later authored asset
-    set: {typology: dom_drewniany, wall_material: wood_planks, roof_shape: hip, roof_material: roof_sheet_grey, height_m: 6.4, storeys: 1}
+      ADR 0305: plot_canopy.json holds a row of eight crowns (radius 1.0-1.25 m, luma 63-74) 1 m north of the yard
+      wall of Dom Klattow, one every 2.5 m - the cast shadow of the house on the lawn, not vegetation. They became
+      a hedge of shrubs against the limewashed wall (round 1 render look_dom_klattow_yard). The strip 0.2-2.7 m north
+      of that wall is excluded; the real trees further into the yard stay.
+    confidence: high
+    verify: owner photo klattow-05
+    polygons_en:
+    - [[-893.62, -173.45], [-871.26, -182.42], [-870.33, -180.10], [-892.69, -171.13]]
   - id: look-east-square-kiosk
     target: {building: "osm:way/1427273958"}
     sources: ["OSM way/1427273958 (building=yes, 12 m2, no other tag)", "GUGiK orthophoto 2025 0.25 m (reference only)"]
