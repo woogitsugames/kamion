@@ -362,6 +362,7 @@ namespace Game.UI.Navigation
                     int tm = Mathf.Max(1, Mathf.RoundToInt(g.RemainingSeconds / 60f));
                     sub = NavText.Remaining + " " + m_B.ToString() + " · " + NavText.About + " " + tm + " " + NavText.Minutes;
                     if (m_Nav.TripPlanning) sub += " · " + NavText.TripPlanning;
+                    else if (m_Nav.Trip.RelaxedCount > 0) sub += " · " + NavText.TripRelaxed;
                 }
                 else
                 {

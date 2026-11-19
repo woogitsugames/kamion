@@ -171,7 +171,8 @@ namespace Game.UI.Navigation
                 // ADR 0302: the trip keeps its goal - re-expressed in the new frame, nothing re-planned
                 m_Trip.SetCurrent(newRegionId);
                 SetTripPin();
-                if (m_Trip.Current >= 0 && m_Trip.Legs[m_Trip.Current].Planned) m_Trip.Compose(AnchorX, AnchorY);
+                // recomposed in the new frame (off the corridor too: the route stays drawn where it is)
+                if (m_Trip.Combined != null) m_Trip.Compose(AnchorX, AnchorY);
                 m_Tracker.Update(Path, Position, HeadingDeg, SpeedMs, 0f, ref m_Guide);
                 pinNote = m_Trip.Current >= 0
                     ? string.Format(CultureInfo.InvariantCulture, "trip {0} kept (leg {1}/{2}, remaining {3:F0} m, ETA {4:F0} s)",
@@ -427,9 +428,9 @@ namespace Game.UI.Navigation
                 LastPlanMs = t.TotalPlanMs;
                 var c = t.Combined;
                 Debug.Log(string.Format(CultureInfo.InvariantCulture,
-                    "[NAV] trip {0} planned: legs {1}..{2}, length {3:F0} m, ETA {4:F0} s, points {5}, manoeuvres {6}, planning {7:F1} ms over {8} frames",
+                    "[NAV] trip {0} planned: legs {1}..{2}, length {3:F0} m, ETA {4:F0} s, points {5}, manoeuvres {6}, planning {7:F1} ms over {8} frames (max leg {9:F2} ms), legs over a truck limit {10}",
                     t.Id, t.Current + 1, t.Legs.Length, c != null ? c.Length : 0f, m_Guide.RemainingSeconds,
-                    c != null ? c.Count : 0, c != null ? c.ManCount : 0, t.TotalPlanMs, t.StepCount));
+                    c != null ? c.Count : 0, c != null ? c.ManCount : 0, t.TotalPlanMs, t.StepCount, t.MaxLegMs, t.RelaxedCount));
             }
         }
 

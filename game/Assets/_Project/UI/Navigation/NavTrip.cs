@@ -75,6 +75,8 @@ namespace Game.UI.Navigation
             public ushort[] NameMap;
             public PlanStatus Status = PlanStatus.NoPath;
             public bool Planned;
+            /// <summary>Planned only with the truck limits relaxed (<see cref="RoutePlanner.RelaxTruckLimits"/>).</summary>
+            public bool Relaxed;
             public double PlanMs;
         }
 
@@ -97,6 +99,9 @@ namespace Game.UI.Navigation
         public int StepCount { get; private set; }
         /// <summary>Trip street index of the trip label (destination name).</summary>
         public ushort LabelName => m_LabelName;
+        /// <summary>Planned legs from the current one that needed the relaxed truck limits.</summary>
+        public int RelaxedCount { get { int n = 0; for (int i = Mathf.Max(0, Current); i < Legs.Length; i++) if (Legs[i].Planned && Legs[i].Relaxed) n++; return n; } }
+        public double MaxLegMs { get { double m = 0; foreach (var l in Legs) if (l.PlanMs > m) m = l.PlanMs; return m; } }
         public int PlannedCount { get { int n = 0; foreach (var l in Legs) if (l.Planned) n++; return n; } }
 
         /// <summary>Goal point in tile-local metres of the last leg.</summary>
@@ -158,7 +163,13 @@ namespace Game.UI.Navigation
         }
 
         /// <summary>Sets the current leg (tile the GPS measures in). Legs before it are not shown any more.</summary>
-        public void SetCurrent(string regionId) => Current = IndexOf(regionId);
+        public void SetCurrent(string regionId)
+        {
+            Current = IndexOf(regionId);
+            if (Current >= 0) m_From = Current;
+        }
+
+        int m_From;   // first leg composed: the current one, or the last one the truck was on while off the corridor
 
         /// <summary>
         /// Plans the next unplanned leg (one A* in one tile; loads the tile's graph the first time - allocates, a planning
@@ -196,7 +207,18 @@ namespace Game.UI.Navigation
             bool fromTruck = i == Current || !leg.HasEntry;
             Vector2 start = fromTruck ? pos : leg.Entry;
             float hd = fromTruck ? headingDeg : leg.EntryHeadingDeg;
+            leg.Planner.RelaxTruckLimits = false;
             leg.Status = leg.Planner.Plan(start, hd, leg.Exit, leg.Path);
+            leg.Relaxed = false;
+            if (leg.Status == PlanStatus.NoPath)
+            {
+                // no legal path inside the tile (OSM truck limit on the corridor road, detour outside the corridor):
+                // plan over the limit with a penalty and say so (ADR 0302)
+                leg.Planner.RelaxTruckLimits = true;
+                leg.Status = leg.Planner.Plan(start, hd, leg.Exit, leg.Path);
+                leg.Planner.RelaxTruckLimits = false;
+                leg.Relaxed = leg.Status == PlanStatus.Ok;
+            }
             if (leg.Status == PlanStatus.AlreadyThere) { leg.Path.Clear(); leg.Status = PlanStatus.Ok; }   // truck already at the seam
             leg.PlanMs = (System.Diagnostics.Stopwatch.GetTimestamp() - t0) * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
             TotalPlanMs += leg.PlanMs;
@@ -233,7 +255,7 @@ namespace Game.UI.Navigation
         /// </summary>
         public int Compose(double frameX, double frameY)
         {
-            int from = Mathf.Max(0, Current);
+            int from = Current >= 0 ? Current : m_From;
             int points = 16, edges = 4;
             for (int i = from; i < Legs.Length && Legs[i].Planned; i++) { points += Legs[i].Path.Count; edges += Legs[i].Path.ManCount; }
             var c = Combined;
