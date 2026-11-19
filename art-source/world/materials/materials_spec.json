@@ -3335,6 +3335,106 @@
       "hf_ratio_albedo": 0.0676,
       "ao_mean": 0.981
     },
+    "log_whitewash": {
+      "tile_m": [
+        4.0,
+        2.2
+      ],
+      "slots": [
+        "log_wall_*"
+      ],
+      "note": "ADR 0305: limewashed hewn-log wall, ten courses 0.20-0.24 m, caulked joints, shakes, worn foot (u along the wall, v up from the plinth; one tile = the wall height).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            560
+          ],
+          "texel_mm": 3.91,
+          "dir": "log_whitewash/High",
+          "png_bytes": 2376913,
+          "files": [
+            "T_log_whitewash_BaseColor.png",
+            "T_log_whitewash_MaskMap.png",
+            "T_log_whitewash_Normal.png",
+            "T_log_whitewash_Var.png"
+          ],
+          "smoothness_mean": 0.097,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1360964
+        },
+        "Medium": {
+          "res": [
+            512,
+            280
+          ],
+          "texel_mm": 7.81,
+          "dir": "log_whitewash/Medium",
+          "png_bytes": 674036,
+          "files": [
+            "T_log_whitewash_BaseColor.png",
+            "T_log_whitewash_MaskMap.png",
+            "T_log_whitewash_Normal.png",
+            "T_log_whitewash_Var.png"
+          ],
+          "smoothness_mean": 0.093,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 265693
+        },
+        "Low": {
+          "res": [
+            256,
+            140
+          ],
+          "texel_mm": 15.62,
+          "dir": "log_whitewash/Low",
+          "png_bytes": 181810,
+          "files": [
+            "T_log_whitewash_BaseColor.png",
+            "T_log_whitewash_MaskMap.png",
+            "T_log_whitewash_Normal.png",
+            "T_log_whitewash_Var.png"
+          ],
+          "smoothness_mean": 0.088,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 47786
+        }
+      },
+      "height_range_m": [
+        -0.0092,
+        0.00695
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3604,
+        "p95": 0.5628,
+        "mean_rgb_linear": [
+          0.5015,
+          0.4998,
+          0.4971
+        ]
+      },
+      "hf_ratio_albedo": 0.0334,
+      "ao_mean": 0.94
+    },
     "macro_variation": {
       "tile_m": [
         64.0,

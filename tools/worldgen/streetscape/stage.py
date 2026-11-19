@@ -26,6 +26,7 @@ from . import depot_yard as DY
 from . import hero_building as HBD
 from . import knyszyn_church_0227 as KC
 from . import knyszyn_townhall_0227 as KT
+from . import knyszyn_dom_klattow_0305 as KDK
 from . import knyszyn_park_props_0227 as KP
 from . import knyszyn_market_0227 as KM
 from . import knyszyn_market_buildings_0227 as KMB
@@ -109,7 +110,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     heroes = HBD.plan(rid, overrides, fc, w.origin, lambda e, n: float(np.asarray(zsmooth(e, n)).ravel()[0]), rep, log)
     blds = BM.load(fc, w.origin, overrides,
                    hero={**HBD.targets(heroes), **KC.hero_targets(rid, fc), **KT.hero_targets(rid, fc),
-                         **KMB.hero_targets(rid, fc)})
+                         **KMB.hero_targets(rid, fc), **KDK.hero_targets(rid, fc)})
     yard_src = _yard_src(src, w.origin, overrides)
     yard_union = shapely.union_all([shapely.make_valid(p) for p in yard_src] + [roads_poly])
     brep = {}
@@ -119,6 +120,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     KC.build(w.buf, rid, blds, zsmooth, rep)
     KT.build(w.buf, rid, blds, zsmooth, rep)
     KMB.build(w.buf, rid, blds, zsmooth, rep, overrides)     # ADR 0227 D41: pavilion form from overrides
+    KDK.build(w.buf, rid, blds, zsmooth, rep, roads_poly)    # ADR 0305: Dom Klattow from the owner's photos
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])

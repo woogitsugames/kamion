@@ -697,6 +697,92 @@ def soil_bed(n=512):
     return _finish("soil_bed", c, lum, h, rough, chip, crack, extra=tint, ao_k=0.8)
 
 
+def log_whitewash(n=1024):
+    """ADR 0305: limewashed hewn-log wall of an old Podlasie house (Dom Klattow, Knyszyn - owner photos, reference
+    only): ten courses of squared logs 0.20-0.24 m high (WORKING_VALUE: the photos show 9-10 courses on a ~2.0 m
+    wall), wavering caulked joints that read as thin darker lines, drying shakes along the grain, brush clouds of
+    the limewash, a soiled / flaking band on the two bottom logs and faint run-off under the joints.
+    u along the wall, v up from the top of the plinth. Tile 4.0 x 2.2 m (one tile = the whole wall height)."""
+    Lx, Ly = 4.0, 2.2
+    c = Ctx(n, int(n * Ly / Lx) // 4 * 4, Lx, Ly, seed=3051)
+    X, Y = c.xy()
+    v = Ly - Y
+    heights = np.array([0.23, 0.21, 0.24, 0.20, 0.22, 0.23, 0.21, 0.24, 0.20, 0.22])
+    tops = np.cumsum(heights)                                    # joint j lies at tops[j] (the last one = tile edge)
+    wob = 0.006 * noise(c, 1, 0.8, 4.0, beta=1.2, aniso=0.5) + 0.0012 * noise(c, 2, 0.08, 0.5, beta=1.0)
+    vv = (v + wob) % Ly
+    row = np.searchsorted(tops, vv, side="right") % len(heights)
+    lo = np.concatenate([[0.0], tops[:-1]])[row]
+    hi = tops[row]
+    dj = np.minimum(vv - lo, hi - vv)                            # distance to the nearest joint line, m
+    jw = 0.003 + 0.0025 * sstep(-1.0, 1.5, noise(c, 3, 0.3, 2.0, aniso=3.0))      # half width of the open joint
+    joint = sstep(jw + 0.003, jw * 0.4, dj)
+    arris = sstep(0.030, 0.006, dj) * (1 - joint)                # hewn edge rolling into the joint
+    tone = hash01(row, 11)
+    grain = noise(c, 4, c.px * 2, 0.02, beta=0.5, aniso=8.0)     # wood fibre under the wash, along the log
+    adze = noise(c, 5, 0.04, 0.3, beta=1.0, aniso=2.5)           # hewing facets
+    brush = noise(c, 6, 0.01, 0.12, beta=0.7, aniso=0.6)         # limewash brush strokes
+    cloud = noise(c, 7, 0.4, 3.0, beta=1.3)
+    sh = noise(c, 8, 0.004, 0.6, beta=0.9, aniso=14.0)           # shakes: long thin cracks along the grain
+    shake = sstep(2.35, 2.9, np.abs(sh) * (0.75 + 0.5 * sstep(-0.5, 1.5, noise(c, 9, 0.5, 2.5)))) * (1 - joint)
+    # limewash worn off low down (rain splash) and in patches where it flakes: grey wood shows through
+    low = sstep(0.50, 0.05, v)
+    flake_n = noise(c, 10, 0.03, 0.5, beta=1.1, aniso=1.8)
+    flake = sstep(1.55 - 1.1 * low, 2.3 - 1.1 * low, flake_n) * (0.35 + 0.65 * low)
+    under = sstep(0.07, 0.0, hi - vv) * 0.0 + sstep(0.09, 0.0, vv - lo) * sstep(-0.2, 1.2, noise(c, 12, 0.05, 0.6))
+    lum = (1 + 0.05 * (tone - 0.5) + 0.018 * grain + 0.025 * adze + 0.02 * brush + 0.035 * cloud)
+    lum *= (1 - 0.07 * arris) * (1 - 0.06 * under) * (1 - 0.10 * low * (0.6 + 0.4 * sstep(-1, 1, cloud)))
+    lum = lum * (1 - 0.30 * flake) * (1 - 0.45 * shake)
+    lum = lum * (1 - joint) + joint * 0.50
+    lum *= _streaks(c, 13, 0.05)
+    h = (1.5e-3 * adze + 0.4e-3 * grain + 0.25e-3 * brush - 0.5e-3 * flake) * (1 - joint) \
+        - 9e-3 * joint - 4e-3 * arris - 2.5e-3 * shake
+    rough = 0.90 + 0.04 * flake + 0.05 * joint
+
+    def tint(alb):
+        # joints, shakes and bare patches are warm grey wood / old caulk, the wash itself stays neutral
+        k = np.clip(joint + 0.8 * flake + 0.8 * shake, 0, 1)[..., None]
+        return alb * (1 - k) + alb * np.array([1.05, 0.98, 0.86], np.float32) * k
+    return _finish("log_whitewash", c, lum, h, rough, tone, joint, extra=tint, ao_k=0.9)
+
+
+def fieldstone(n=1024):
+    """ADR 0305: fieldstone footing (podmurowka z kamienia polnego) of an old log house: rounded glacial boulders
+    0.15-0.30 m bedded in grey lime mortar, per-stone tone and hue (grey, pink and rusty granites), a damp, mossy
+    foot. u along the wall, v up. Tile 2.4 x 0.6 m (one tile = the footing height). WORKING_VALUE sizes read off
+    the owner photos of Dom Klattow (reference only)."""
+    Lx, Ly = 2.4, 0.6
+    c = Ctx(n, n // 4, Lx, Ly, seed=3052)
+    X, Y = c.xy()
+    v = Ly - Y
+    warp = (0.02 * noise(c, 1, 0.1, 0.6), 0.015 * noise(c, 2, 0.1, 0.6))
+    d1, d2, i1, _, _ = voronoi(c, 3, 0.24, 0.85, warp=warp, cell_y=0.20)
+    e = edge_dist(d1, d2)
+    mort = sstep(0.013, 0.004, e)
+    dome = np.sqrt(np.clip(e / 0.09, 0, 1))                      # rounded boulder face
+    t = hash01(i1, 1)
+    hue = hash01(i1, 2)
+    speck = noise(c, 4, c.px * 2, 0.012, beta=0.3)               # granite crystals
+    lump = noise(c, 5, 0.03, 0.2, beta=1.1)
+    damp = sstep(0.30, 0.0, v) * (0.6 + 0.4 * sstep(-1, 1, noise(c, 6, 0.1, 0.8)))
+    lum = (0.80 + 0.55 * (t - 0.5) + 0.07 * speck + 0.06 * lump) * (0.80 + 0.20 * dome) * (1 - mort) + mort * 0.52
+    lum *= 1 - 0.30 * damp
+    h = (0.028 * dome + 2e-3 * lump + 0.4e-3 * speck) * (1 - mort) - 6e-3 * mort
+    rough = 0.82 + 0.10 * mort + 0.05 * damp
+
+    def tint(alb):
+        m = mort[..., None]
+        warm = np.array([1.10, 0.97, 0.88], np.float32)          # pink / rusty granite
+        cool = np.array([0.95, 1.00, 1.06], np.float32)          # grey-blue granite
+        k = sstep(0.55, 0.95, hue)[..., None]
+        k2 = sstep(0.30, 0.0, hue)[..., None]
+        stone = alb * (1 + (warm - 1) * k + (cool - 1) * k2)
+        moss = (damp * sstep(0.2, 1.4, noise(c, 7, 0.02, 0.2)))[..., None] * 0.5
+        out = stone * (1 - m) + alb * m * np.array([1.0, 0.99, 0.95], np.float32)
+        return out * (1 - moss) + out * np.array([0.80, 1.05, 0.62], np.float32) * moss
+    return _finish("fieldstone", c, lum, h, rough, t, mort, extra=tint, ao_k=0.9)
+
+
 FACADE_SETS = {
     "sandwich_ribbed": dict(fn=sandwich_ribbed, tile_m=[6.0, 6.0],
         slots=["hall_wall_grey", "hall_wall_silver", "hall_wall_white", "hall_wall_ivory", "booth_panel"],
@@ -746,4 +832,9 @@ FACADE_SETS = {
         note="Parked-car paint film: road spray on sills, dust on top, rain runs (u along body, v = height)."),
     "box_panel": dict(fn=box_panel, tile_m=[4.8, 2.7], slots=["trailer_box_white"],
         note="Box body panels with seam profiles every 1.2 m, road film low down."),
+    "log_whitewash": dict(fn=log_whitewash, tile_m=[4.0, 2.2], slots=["log_wall_*"],
+        note="ADR 0305: limewashed hewn-log wall, ten courses 0.20-0.24 m, caulked joints, shakes, worn foot "
+             "(u along the wall, v up from the plinth; one tile = the wall height)."),
+    "fieldstone": dict(fn=fieldstone, tile_m=[2.4, 0.6], slots=["fieldstone_plinth"],
+        note="ADR 0305: fieldstone footing of a log house, boulders 0.15-0.30 m in lime mortar, damp mossy foot."),
 }

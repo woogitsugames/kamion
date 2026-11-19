@@ -361,6 +361,28 @@ M = {
     # boards). Aged white oil paint, well under the soffit boarding (0.55) the review called "plastic white":
     # WORKING_VALUE, no photo of a Knyszyn wooden house in the repo. Only buildings_mesh.wood_surround uses it.
     "wood_trim_white": {"color": [0.40, 0.39, 0.35], "rough": 0.75},
+    # ADR 0305 (klattow-s24): Dom Klattow, Koscielna, Knyszyn - owner photos klattow-01..05 (local reference only).
+    # Tints read by eye off those photos against the lit white wall, WORKING_VALUE until the owner's review:
+    # - log_wall_white: limewashed hewn logs (set log_whitewash: courses, caulked joints, shakes, worn foot; one tile
+    #   = the wall height, so set_tile is the set's own 4.0 x 2.2 m). Old limewash is a little greyer than fresh render
+    #   (plaster_white 0.76).
+    # - wood_planks_white: white-painted boards (vertical gable boarding, corner / barge / fascia boards) - the
+    #   wood_siding set under white paint.
+    # - wood_planks_stain: red-brown stained softwood of the porch and the picket fence (photo ~ sRGB 150/95/60 in sun).
+    # - wood_trim_brown: dark brown painted window joinery and surrounds (flat colour: members are 3-9 cm wide).
+    # - roof_tiles_old: old ceramic S-tile (esowka), weathered orange-brown with dark patches; the roof_tiles set with
+    #   a strong, small-scale macro drift (importer `macro` = [size m, strength]) for the patchy, mossy slope. A
+    #   luminance drift cannot give the green of the moss itself (open point of the ADR).
+    # - fieldstone_plinth: fieldstone footing (set fieldstone).
+    "log_wall_white": {"color": [0.66, 0.65, 0.61], "rough": 0.9, "texture_set": "log_whitewash", "set_tile": True},
+    "wood_planks_white": {"color": [0.60, 0.59, 0.55], "rough": 0.8, "texture_set": "wood_siding", "set_tile": True,
+                          "set_tile_m": [6.0, 2.6]},
+    "wood_planks_stain": {"color": [0.150, 0.070, 0.035], "rough": 0.8, "texture_set": "wood_siding", "set_tile": True,
+                          "set_tile_m": [6.0, 2.6]},
+    "wood_trim_brown": {"color": [0.050, 0.027, 0.017], "rough": 0.6},
+    "roof_tiles_old": {"color": [0.165, 0.074, 0.036], "rough": 0.85, "texture_set": "roof_tiles", "set_tile": True,
+                       "macro": [3.5, 0.34]},
+    "fieldstone_plinth": {"color": [0.30, 0.29, 0.27], "rough": 0.9, "texture_set": "fieldstone", "set_tile": True},
     "chimney_brick": {"color": [0.20, 0.092, 0.07], "rough": 0.9, "texture_set": "brick", "set_tile": True},
     # behaton (I-shaped interlocking blocks) in truck yards (streetscape.paved)
     "yard_behaton": {"color": [0.23, 0.228, 0.22], "rough": 0.85, "surface": "paving_stones", "texture_set": "behaton_i_grey"},
@@ -514,7 +536,8 @@ M = {
 # roofs, doors) - the materials this task renders and reviews; the other modulation materials keep the look they
 # were reviewed with until the lead switches the flag on globally (open point in the ADR).
 _TINT_LINEAR = ("plaster_", "plinth_", "panel_concrete", "brick_red", "chimney_brick", "hall_wall_", "hall_plinth",
-                "roof_tiles_", "roof_metal_", "roof_sheet_", "wood_planks", "garage_door", "dock_door", "balcony_panel")
+                "roof_tiles_", "roof_metal_", "roof_sheet_", "wood_planks", "garage_door", "dock_door", "balcony_panel",
+                "log_wall_", "fieldstone_")
 for _k, _v in M.items():
     if _k.startswith(_TINT_LINEAR) and "texture_set" in _v:
         _v["tint_linear"] = True
