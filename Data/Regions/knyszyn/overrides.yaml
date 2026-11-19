@@ -413,13 +413,31 @@ overrides:
     set: {wall_material: plaster_white}
   - id: look-dom-klattow-wooden
     target: {building: "bdot:2002917F-2F22-5C99-E053-CC2BA8C01CFC"}
-    sources: ["OSM way/294345657 (material=wood, tourism=attraction, wikidata Q16540625)"]
+    sources: ["OSM way/294345657 (material=wood, tourism=attraction, wikidata Q16540625)",
+              "owner photos klattow-01, -03, -04, -05 (2026-11-19, Data/raw/refs/owner-knyszyn-klattow-2026-11-19, local reference only)"]
     reason: >-
-      Listed wooden house at Koscielna (OSM material=wood). 171 m2, so the footprint rule (wooden only under
-      120 m2, 12 % by hash) never boards it. SOURCED: wooden; ESTIMATED: plank colour (dark brown).
-    confidence: medium
-    verify: owner photo or a Commons photo of the house (plank colour, porch)
-    set: {typology: dom_drewniany, wall_material: wood_planks}
+      Listed wooden house at Koscielna (OSM material=wood). ADR 0305: the visible house is the authored asset
+      streetscape/knyszyn_dom_klattow_0305.py (limewashed logs, old tile roof, porch, picket fence - read off the
+      owner's photos); this entry is only the fallback of the rule generator when that asset is skipped: a boarded
+      house in WHITE (the first version of this entry said dark brown boards with no photo - wrong, owner 2026-11-19).
+      plot_fence: the photos show brown wooden pickets along the footway and towards the neighbours (the rule had
+      picked brick posts with pickets); the pickets in front of the house itself are part of the authored asset.
+    confidence: high
+    verify: owner review of look_dom_klattow / look_dom_klattow_street against the photos
+    set: {typology: dom_drewniany, wall_material: wood_planks_white, plot_fence: {front: picket, side: picket}}
+  - id: look-dom-klattow-yard-shadow-crowns
+    kind: plot_canopy_exclude
+    sources: ["plot_canopy.json (GUGiK orthophoto 2025, crowns read by streetscape.plot_canopy)",
+              "owner photo klattow-05 (2026-11-19, local reference only): open lawn along the yard wall"]
+    reason: >-
+      ADR 0305: plot_canopy.json holds a row of eight crowns (radius 1.0-1.25 m, luma 63-74) 1 m north of the yard
+      wall of Dom Klattow, one every 2.5 m - the cast shadow of the house on the lawn, not vegetation. They became
+      a hedge of shrubs against the limewashed wall (round 1 render look_dom_klattow_yard). The strip 0.2-2.7 m north
+      of that wall is excluded; the real trees further into the yard stay.
+    confidence: high
+    verify: owner photo klattow-05
+    polygons_en:
+    - [[-893.62, -173.45], [-871.26, -182.42], [-870.33, -180.10], [-892.69, -171.13]]
   - id: look-east-square-kiosk
     target: {building: "osm:way/1427273958"}
     sources: ["OSM way/1427273958 (building=yes, 12 m2, no other tag)", "GUGiK orthophoto 2025 0.25 m (reference only)"]
