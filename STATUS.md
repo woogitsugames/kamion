@@ -40,3 +40,5 @@
   (przed 0/16/0); rzut z góry `artifacts/road-widen-s24/top/`. Usunięty autorski swing rynek→dk65-w.
   r4 = C + knyszyn (po merge klattow) + fidelity.
 - NASTĘPNY KROK: po r4: fidelity C islands 0, road_consistency C (≤55, trasa ≤1); import knyszyn + VQA; testy gis.
+- 15:1x: C r4 (prawo-rosnące + L/D limit): lane_blind_end 44 (ratchet 55 OK, main 57), trasa 2 (>1; main 3),
+  marking_off_carriageway 6 (>3; main 4), obstacle_in_lane 3 (>2). Badam przypadki (fidelity zoom c_cases). fidelity C po r4 w toku.
