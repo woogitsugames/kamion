@@ -91,6 +91,10 @@ właściciela (edycja publicznych danych).
 | krawędzie grafów tras z naciskiem < 11,5 t (15 kafli korytarza) | DK65 w 11 kaflach (ADR 0302) | **0** |
 | pytest `tests/gis/test_route_links_s23.py` | | 13/13 (1 nowy) |
 | pytest `tools/worldgen/navgraph/tests` | | 58/58 (3 nowe) |
+| pytest `test_route_links_s23` + `test_route_connectivity` + `test_effective_graph_readers` | | 36/36 (+1 nowy: równoległe krawędzie) |
+| .NET `tools/nav-runner` (golden routes) | | 94/94 |
+| Unity PlayMode Win64 (`NavTripTests`, `NavStreamFollowTests`, `CabScreensTests` …) | | 24/24 (`playmode-20261119-062239.xml`) |
+| Unity EditMode Win64 (`NavTruckLimitsTests`, `WorldStreamerRouteLinksTests`, `NavRoutingTests`) | | 31/31 (`editmode-20261119-062320.xml`) |
 
 Przejazd playerem Windows (exe `kamion-0.1.0-c41c3083a1-dirty-regions`: `dw671-tykocin-09` + `tykocin`, import Win64
 z manifestami regen-wave-s24; Medium, 60 FPS cap, autopilot 50 km/h, `-stream 1 -route_to tykocin -shot_every 20
