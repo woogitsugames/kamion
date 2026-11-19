@@ -75,3 +75,6 @@
   (serwisowa pętla w435369082 + znana brama zajezdni). Poprawki: klasa D ignoruje szerokość BDOT; profil położenia z ortofoto
   (ADR 0095) bez przesunięcia w prawo (rampa wiaduktu DK8 E -692 N 73). r6 (C + fidelity) startuje po imporcie C w łańcuchu
   (`r6.ps1`, log `rebuild-r6.log`). Testy: EditMode Win64 + pełne pytest gis w `chain2.ps1` po przejeździe playerem.
+- 16:3x: fidelity C r5: islands_absent 2 (main 1): 11_dk8 E -549.8 N 218.9 (ta sama co w main, 543 m²) + nowa mała
+  E -554.6 N 118.8 (41 m², nos pasa dzielącego przy rozwidleniu Putry). r6 (D bez BDOT, profil bez przesunięcia) w toku;
+  łańcuch import C → player → EditMode → pytest czeka na `rebuild-r6.status`.
