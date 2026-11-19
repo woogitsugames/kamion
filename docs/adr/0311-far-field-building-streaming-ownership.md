@@ -6,9 +6,11 @@ Status: Accepted (implementacja źródłowa, 2026-11-19); walidacja Windows/obra
 
 ADR 0085 kompresuje położenie obiektów spoza kafla do pasa ≤660 m od jego granicy.
 Wykluczenie tylko własnego kafla nie chroni dróg sąsiada. Budynek odległy o kilka
-kilometrów może przykryć DK65 i zniknąć po przejściu sąsiada do Ready. Dowód właściciela:
+kilometrów może przykryć DK65; runtime dodatkowo skokowo wyłącza sektory przy Ready. Dowód właściciela:
 `owner-01-dk8-wiadukt.webp`, faktycznie DK65/Ełcka, `dk65-04`, t1200→1210
 (raport `artifacts/drive-review-s24/REPORT.md` w repo właściciela).
+Sam log tej pary klatek nie zawiera przejścia Ready; dk65-05 ładuje się dopiero około
+DIAG t1310. Dokładny bodziec zniknięcia tej konkretnej bryły pozostaje UNVERIFIED.
 
 ## Decyzja
 
