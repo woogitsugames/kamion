@@ -55,6 +55,27 @@ namespace Game.UI.Navigation
         public string[] TripIds = System.Array.Empty<string>(), TripLabels = System.Array.Empty<string>();
         public System.Action<string> RequestTrip;
 
+        /// <summary>ADR 0307 (D91): the combination the road limits are compared with. The weight follows
+        /// <see cref="WeightKgSource"/> (mass of the vehicle model) when set; height / length / axle load = constants.</summary>
+        public TruckLimits Truck = TruckLimits.Default;
+        public System.Func<double> WeightKgSource;
+        /// <summary>ADR 0307: limited stretch (height / weight / axle load / length below the combination) within
+        /// <see cref="RestrictionScout.WarnM"/> before the truck - on the route, or straight on along the road without one.
+        /// The game warns (GPS strip, map marker, HUD tile); it never blocks the drive.</summary>
+        public struct RestrictionWarning
+        {
+            public bool Active, OnRoute;
+            public float DistM;
+            public RouteRestriction R;
+        }
+        public RestrictionWarning Restriction => m_Restr;
+        /// <summary>Times a warning became active (diagnostics / tests).</summary>
+        public int RestrictionWarnings { get; private set; }
+        RestrictionWarning m_Restr;
+        float m_ScoutT;
+        bool m_RestrOnLogged;
+        const float ScoutPeriodS = 0.25f;
+
         public RouteGraph Graph => m_Graph;
         public NavMapData Map => m_Map;
         /// <summary>The planned route: the multi-tile trip's combined path when a trip is active (ADR 0302).</summary>
@@ -221,6 +242,7 @@ namespace Game.UI.Navigation
                 if (m_Trip != null) ReplanTripLeg(); else Replan(true);
                 m_Tracker.ClearOffRoute();
             }
+            UpdateRestriction(Time.unscaledDeltaTime);
             m_StreetT -= Time.unscaledDeltaTime;
             if (m_StreetT <= 0f && HasPosition)
             {
@@ -229,6 +251,49 @@ namespace Game.UI.Navigation
                 m_Street = e >= 0 ? m_Graph.EdgeName[e] : (ushort)0;
             }
         }
+
+        /// <summary>ADR 0307: next limited stretch ahead. On the route every frame (a loop over the route's few
+        /// restrictions); without a route the road ahead is scouted every <see cref="ScoutPeriodS"/>. No allocation.</summary>
+        void UpdateRestriction(float dt)
+        {
+            if (m_Graph == null || !HasPosition) { m_Restr = default; return; }
+            bool route = m_Guide.HasRoute && m_Guide.OnRoute && !m_Guide.Arrived;
+            bool was = m_Restr.Active;
+            if (route)
+            {
+                m_Restr.Active = RestrictionScout.OnRoute(Path, m_Guide.RouteS, RestrictionScout.WarnM, out m_Restr.R, out m_Restr.DistM);
+                m_Restr.OnRoute = true;
+            }
+            else
+            {
+                m_ScoutT -= dt;
+                if (m_ScoutT > 0f && !m_Restr.OnRoute) return;
+                m_ScoutT = ScoutPeriodS;
+                if (WeightKgSource != null) Truck.WeightCt = Mathf.Clamp((int)System.Math.Round(WeightKgSource() / 10.0), 0, 65535);
+                m_Restr.Active = RestrictionScout.OnRoad(m_Graph, Position, HeadingDeg, Truck, RestrictionScout.WarnM, out m_Restr.R, out m_Restr.DistM);
+                m_Restr.OnRoute = false;
+                if (m_Restr.Active && m_Trip != null) m_Restr.R.Name = m_Trip.MapCurrentName(m_Restr.R.Name);
+            }
+            if (m_Restr.Active && !was)
+            {
+                RestrictionWarnings++;
+                m_RestrOnLogged = false;
+                LogRestriction("restriction ahead");
+            }
+            if (m_Restr.Active && m_Restr.DistM <= 0f && !m_RestrOnLogged) { m_RestrOnLogged = true; LogRestriction("on the restricted stretch"); }
+        }
+
+        void LogRestriction(string what)
+        {
+            var r = m_Restr.R;
+            Debug.Log(string.Format(CultureInfo.InvariantCulture,
+                "[NAV] {0}: maxheight {1:F2} m, maxweight {2:F2} t, maxaxleload {3:F2} t, maxlength {4:F2} m (0 = none); combination {5:F2} m / {6:F2} t; exceeded={7}; in {8:F0} m on '{9}' ({10}); warning only, not blocked",
+                what, r.MaxHeightCm / 100f, r.MaxWeightC / 100f, r.MaxAxleLoadC / 100f, r.MaxLengthCm / 100f,
+                Truck.HeightCm / 100f, Truck.WeightCt / 100f, r.Exceeded, m_Restr.DistM, NameOf(r.Name), m_Restr.OnRoute ? "route" : "road ahead"));
+        }
+
+        /// <summary>For tests: one restriction update now (as Update does), scouting the road at once.</summary>
+        public void UpdateRestrictionForTest() { m_ScoutT = 0f; UpdateRestriction(1f); }
 
         void Sample(float dt)
         {
@@ -317,6 +382,7 @@ namespace Game.UI.Navigation
         {
             long t0 = System.Diagnostics.Stopwatch.GetTimestamp();
             // Plan to the snapped point (M27: a pin redirected to the main component plans to that node, not to the off-reach tap).
+            m_Planner.Truck = Truck;
             LastStatus = m_Planner.Plan(Position, HasPosition ? HeadingDeg : float.NaN, PinOnRoad, m_Path);
             LastPlanMs = (System.Diagnostics.Stopwatch.GetTimestamp() - t0) * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
             if (automatic) { LastRerouteTime = Time.unscaledTime; RerouteCount++; }
@@ -372,6 +438,8 @@ namespace Game.UI.Navigation
             if (trip == null) return;
             AnchorX = frameX; AnchorY = frameY;
             m_Trip = trip;
+            if (WeightKgSource != null) Truck.WeightCt = Mathf.Clamp((int)System.Math.Round(WeightKgSource() / 10.0), 0, 65535);
+            trip.Truck = Truck;
             m_RestoreAt = -1f;
             m_Path?.Clear();
             trip.SetCurrent(regionId);

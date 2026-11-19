@@ -58,6 +58,8 @@ namespace Game.UI.CabDisplays
         }
 
         static readonly float[] s_Sizes = { 46f, 44f, 32f, 30f, 26f };
+        /// <summary>Width of the restriction strip (ADR 0307) [design units].</summary>
+        public const float RestrW = 430f;
 
         /// <summary>Linear luminance (Rec. 709) of an sRGB palette colour.</summary>
         public static float Lum(Color32 c)
@@ -142,6 +144,7 @@ namespace Game.UI.CabDisplays
                 Vector2 fp = xf.ToScreen(path.Points[path.Count - 1]);
                 Game.UI.Navigation.NavDraw.Flag(d, fp.x, fp.y, 44f, pal.Arrow, P.TellRed);
             }
+            Game.UI.Navigation.NavDraw.RestrictionMarkers(d, m_B, Live, xf, 28f, 26f, Width, MapH, 0f, pal);   // ADR 0307
             TruckArrow(d, pal);
             RouteIndex = -1; RouteDistance = g.OffRouteM;
             const float bh = 130f;
@@ -181,6 +184,10 @@ namespace Game.UI.CabDisplays
                 m_B.Clear().Append(g.CurrentLimit);
                 d.Text(m_B, cx, cy + 11f, 30f, pal.LimitText, DisplayCanvas.Align.Center);
             }
+            // ADR 0307 (D91): limit below the combination within 500 m - strip at the top right of the map
+            var restr = Live.Restriction;
+            if (restr.Active)
+                Game.UI.Navigation.NavDraw.RestrictionStrip(d, m_B, Width - RestrW, 0f, RestrW, 110f, 26f, 32f, 26f, restr, pal);
             // Bottom bar: clock, remaining distance, arrival (planner travel-time model), destination street.
             d.Rect(0f, MapH, Width, BarH, pal.Bar);
             const float by = Height - 38f;

@@ -37,6 +37,9 @@ namespace Game.UI.Driving
         readonly Text[] m_DTileText = new Text[HudWarnings.MaxShown];
         readonly HudWarning[] m_DWarn = new HudWarning[HudWarnings.MaxShown];
         readonly HudWarning[] m_DWarnShown = new HudWarning[HudWarnings.MaxShown];
+        int m_DLimitH, m_DLimitW;
+        /// <summary>ADR 0307: the GPS whose road-limit scout feeds the limit tiles (set by the navigation installer).</summary>
+        [System.NonSerialized] public Game.UI.Navigation.NavigationService Nav;
         int m_DWarnCount = -1;
         DesktopHudInput m_DIn;
         DesktopHudResult m_D;
@@ -350,8 +353,22 @@ namespace Game.UI.Driving
             w.AbsFault = m_Ctx.AbsFault != null && m_Ctx.AbsFault();
             w.TrailerAbsFault = false;   // no trailer ABS fault model yet (cab cluster shows the same)
             w.AbsActive = absActive;
+            // ADR 0307 (D91): limit of the road ahead below the combination (GPS scout, 500 m before); warning only
+            w.RoadLimitHeightCm = 0; w.RoadLimitWeightC = 0; w.RoadLimitOther = false;
+            if (Nav != null)
+            {
+                var rw = Nav.Restriction;
+                if (rw.Active)
+                {
+                    var ex = rw.R.Exceeded;
+                    if ((ex & Game.Core.Navigation.LimitKind.Height) != 0) w.RoadLimitHeightCm = rw.R.MaxHeightCm;
+                    if ((ex & Game.Core.Navigation.LimitKind.Weight) != 0) w.RoadLimitWeightC = rw.R.MaxWeightC;
+                    w.RoadLimitOther = (ex & (Game.Core.Navigation.LimitKind.AxleLoad | Game.Core.Navigation.LimitKind.Length)) != 0;
+                }
+            }
             int n = HudWarnings.Collect(w, m_DWarn);
-            bool same = n == m_DWarnCount;
+            bool same = n == m_DWarnCount && w.RoadLimitHeightCm == m_DLimitH && w.RoadLimitWeightC == m_DLimitW;
+            m_DLimitH = w.RoadLimitHeightCm; m_DLimitW = w.RoadLimitWeightC;
             for (int i = 0; same && i < m_DWarn.Length; i++) same = m_DWarn[i] == m_DWarnShown[i];
             if (!same)
             {
@@ -366,7 +383,7 @@ namespace Game.UI.Driving
                     bool red = HudWarnings.IsRed(m_DWarn[i]);
                     m_DTileBg[i].color = red ? P.TellRed : P.TellAmber;
                     m_DTileText[i].color = red ? P.Ink : P.InkOnLight;
-                    m_DTileText[i].text = HudTexts.Warning(m_DWarn[i]);
+                    m_DTileText[i].text = HudTexts.Warning(m_DWarn[i], w);
                     m_DTile[i].anchoredPosition = new Vector2(x0 + i * TilePitch, 0f);
                 }
             }

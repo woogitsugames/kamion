@@ -167,6 +167,105 @@ namespace Game.UI.Navigation
             d.Text(b, cx, cy + r * 0.27f, r * (kmh >= 100 ? 0.62f : 0.72f), pal.LimitText, DisplayCanvas.Align.Center);
         }
 
+        // ------------------------------------------------------------------ ADR 0307: road limits below the combination
+
+        /// <summary>Value of limit <paramref name="k"/> of <paramref name="r"/> in the graph's units (0.01 t / cm).</summary>
+        public static int LimitValue(in RouteRestriction r, LimitKind k) =>
+            k == LimitKind.Height ? r.MaxHeightCm : k == LimitKind.Weight ? r.MaxWeightC : k == LimitKind.AxleLoad ? r.MaxAxleLoadC : r.MaxLengthCm;
+
+        /// <summary>"3,7 m" / "12 t" (Polish decimal comma, one decimal, cut - never rounded up above the limit).</summary>
+        public static void AppendLimit(TextBuffer b, LimitKind k, int centi, bool space)
+        {
+            b.Append(centi / 100);
+            int tenths = centi % 100 / 10;
+            if (tenths != 0) b.Append(',').Append(tenths);
+            if (space) b.Append(' ');
+            b.Append(k == LimitKind.Height || k == LimitKind.Length ? NavText.Metres : NavText.Tonnes);
+        }
+
+        /// <summary>Round prohibition sign with the limit value (schematic, like <see cref="LimitSign"/>): height with the two
+        /// black triangles (B-16), weight plain (B-18); axle load / length the same disc with the value.</summary>
+        public static void RestrictionSign(DisplayCanvas d, TextBuffer b, float cx, float cy, float r, float textSize, LimitKind k, int centi, bool unit,
+            in DisplayPalette.Nav pal)
+        {
+            d.Disc(cx, cy, r, pal.LimitFace);
+            d.Ring(cx, cy, r * 0.80f, r, pal.Limit);
+            b.Clear();
+            if (unit) AppendLimit(b, k, centi, false);
+            else { b.Append(centi / 100); if (centi % 100 / 10 != 0) b.Append(',').Append(centi % 100 / 10); }
+            d.Text(b, cx, cy + textSize * 0.36f, textSize, pal.LimitText, DisplayCanvas.Align.Center);
+            if (k == LimitKind.Height)
+            {
+                float t = r * 0.17f, y0 = cy - r * 0.74f, y1 = cy + r * 0.74f;
+                d.Triangle(new Vector2(cx - t, y0), new Vector2(cx + t, y0), new Vector2(cx, y0 + t * 1.2f), pal.LimitText);
+                d.Triangle(new Vector2(cx - t, y1), new Vector2(cx + t, y1), new Vector2(cx, y1 - t * 1.2f), pal.LimitText);
+            }
+        }
+
+        /// <summary>One sign per limit the combination exceeds, left to right from <paramref name="x"/> (centre of the first).
+        /// Returns the x after the last sign.</summary>
+        public static float RestrictionSigns(DisplayCanvas d, TextBuffer b, float x, float cy, float r, float textSize, float pitch,
+            in RouteRestriction rs, in DisplayPalette.Nav pal)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                var k = (LimitKind)(1 << i);
+                if ((rs.Exceeded & k) == 0) continue;
+                RestrictionSign(d, b, x, cy, r, textSize, k, LimitValue(rs, k), true, pal);
+                x += pitch;
+            }
+            return x - pitch + r;
+        }
+
+        /// <summary>Map marker of a limited stretch: the sign of its first exceeded limit at the screen point.</summary>
+        public static void RestrictionMarker(DisplayCanvas d, TextBuffer b, Vector2 at, float r, float textSize, in RouteRestriction rs,
+            in DisplayPalette.Nav pal)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                var k = (LimitKind)(1 << i);
+                if ((rs.Exceeded & k) == 0) continue;
+                d.Disc(at.x, at.y, r + 2f, pal.ArrowEdge);
+                RestrictionSign(d, b, at.x, at.y, r, textSize, k, LimitValue(rs, k), false, pal);
+                return;
+            }
+        }
+
+        /// <summary>Markers of every limited stretch of the route, and of the scouted one without a route.</summary>
+        public static void RestrictionMarkers(DisplayCanvas d, TextBuffer b, NavigationService nav, in MapXf xf, float r, float textSize,
+            float w, float h, float top, in DisplayPalette.Nav pal)
+        {
+            var p = nav.Path;
+            var cur = nav.Restriction;
+            if (p != null && p.HasRoute)
+                for (int i = 0; i < p.RestrCount; i++)
+                {
+                    Vector2 s = xf.ToScreen(p.Restr[i].Pos);
+                    if (s.x < -r || s.x > w + r || s.y < top - r || s.y > h + r) continue;
+                    RestrictionMarker(d, b, s, r, textSize, p.Restr[i], pal);
+                }
+            if (cur.Active && !cur.OnRoute)
+            {
+                Vector2 s = xf.ToScreen(cur.R.Pos);
+                if (s.x >= -r && s.x <= w + r && s.y >= top - r && s.y <= h + r) RestrictionMarker(d, b, s, r, textSize, cur.R, pal);
+            }
+        }
+
+        /// <summary>Warning strip: signs of the exceeded limits, "Ograniczenie" and "za 450 m" / "na tym odcinku".</summary>
+        public static void RestrictionStrip(DisplayCanvas d, TextBuffer b, float x, float y, float w, float h, float labelSize, float distSize,
+            float signText, in NavigationService.RestrictionWarning rw, in DisplayPalette.Nav pal)
+        {
+            d.Rect(x, y, w, h, pal.Bar);
+            d.Rect(x, y, 5f, h, pal.Limit);
+            float r = h * 0.41f;
+            float tx = RestrictionSigns(d, b, x + 14f + r, y + h * 0.5f, r, signText, r * 2f + 6f, rw.R, pal) + 12f;
+            d.Text(NavText.Restriction, tx, y + h * 0.40f, labelSize, pal.BarSub);
+            b.Clear();
+            if (rw.DistM > 0f) { b.Append(NavText.RestrictionIn).Append(' '); AppendDistance(b, rw.DistM); }
+            else b.Append(NavText.RestrictionHere);
+            d.Text(b, tx, y + h * 0.84f, distSize, pal.BarText);
+        }
+
         /// <summary>North marker: small triangle + "N" at (cx, cy) for a map whose up direction is <paramref name="upDeg"/>.</summary>
         public static void North(DisplayCanvas d, float cx, float cy, float r, float upDeg, Color32 bg, Color32 fg, Color32 accent)
         {
