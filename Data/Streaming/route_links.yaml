@@ -116,6 +116,26 @@ links:
     end_epsg2180: [762635.0, 596015.9]    # S8 westbound on the s8-03 | s8-04 seam = s8-04 route entry
     tail_to: route:s8-04
     note: "S8 westbound through the junction Tykocin, lane shift before the seam with s8-04"
+  # ADR 0303: the trip "Tykocin" ends on the Rynek (Plac Stefana Czarnieckiego), not on the south edge of the tile. The
+  # tykocin control route (cameras / QA) runs on through the town to the tile edge; for the trip this link REPLACES it:
+  # same entry (seam with dw671-tykocin-09), DW671 Puchalskiego over the Narew bridge, round the SE corner of the square
+  # onto its south side (DW671), and stops in the westbound lane at the square-side kerb between the driveways at
+  # OSM nodes 13718175880 and 13718175884 (orthophoto 0.25 m: 47 m of kerb without exits, no parking bay for an
+  # articulated truck on the square; the paved square and the Czarniecki monument are not entered).
+  - id: tykocin-dw671-to-rynek
+    tile: tykocin
+    destination: tykocin
+    replaces_route: tykocin               # starts at the tykocin route start (seam dw671-tykocin-09 | tykocin)
+    via_epsg2180: [[751892.77, 600222.959]]   # OSM node 1123400983: SE corner of the square, stays on DW671
+    end_epsg2180: [751806.787, 600211.932]    # OSM node 13718175884 (DW671, south side of the square)
+    stop_epsg2180: [751818.0, 600215.0]       # stop spot: westbound lane centre, ~12 m before that node's driveway
+    # The right turn Puchalskiego -> south side of the square at node 1123400983 (carriageway 5 m, BDOT10k): on the lane
+    # centre the semitrailer's right tyres cut the inner corner (30 tyre points off the hard surface at link s 1249-1256,
+    # qa/link_swept_check.py). Swing wide 1.5 m left at the corner, raised cosine over +-25 m -> 0 off the hard surface,
+    # 0 off the carriageway. Searched 1.0-3.0 m x 15-30 m: 1.0 m / 20 m still has 9 points on the kerb (WORKING_VALUE).
+    swing:
+      - {near_epsg2180: [751887.0, 600226.0], left_m: 1.5, half_m: 25.0}
+    note: "DW671 Puchalskiego from dw671-tykocin-09 -> Narew bridge -> SE corner of Rynek -> stop on the south side of the square"
 # Driving corridors as ordered tile lists (Bialystok -> Knyszyn -> Tykocin, owner request s23). The generator keeps the
 # prefix of tiles present in Data/Regions (main: up to dw671-tykocin-01; the ring branch world2-s23 adds
 # dw671-tykocin-02..09 and tykocin) and checks every consecutive pair: edge neighbours (N/E/S/W) and a route join

@@ -165,6 +165,31 @@ NO_TRUCK_ACCESS = {"no"}
 RESTRICTED_ACCESS = {"private", "destination", "customers", "delivery", "permissive"}
 
 NO_LIMIT = ("", "none", "default", "national")
+OSM_TAG_FIXES = os.path.join(REPO, "Data", "Overrides", "osm_tag_fixes.yaml")
+
+
+def load_tag_fixes(path=OSM_TAG_FIXES) -> dict:
+    """ADR 0303 authored_override: {(osm way id, tag): (only_value or None, new value or None)} from
+    Data/Overrides/osm_tag_fixes.yaml (stale OSM limits, e.g. maxaxleload=10 from the repealed Dz.U. 2017 poz. 878).
+    No file -> {}."""
+    if not os.path.exists(path):
+        return {}
+    import yaml
+    data = yaml.safe_load(open(path, encoding="utf-8")) or {}
+    out = {}
+    for f in data.get("fixes") or []:
+        only = None if f.get("only_value") is None else str(f["only_value"])
+        for w in f.get("osm_ways") or []:
+            out[(int(w), f["tag"])] = (only, f.get("set"))
+    return out
+
+
+def fixed_attr(fixes: dict, e: dict, tag: str, value):
+    """OSM attribute value after the authored tag fixes (ADR 0303)."""
+    fx = fixes.get((e.get("osm_way"), tag)) if fixes else None
+    if fx is None or (fx[0] is not None and str(value).strip() != fx[0]):
+        return value
+    return fx[1]
 
 
 def parse_weight_t(v) -> float | None:
@@ -387,7 +412,7 @@ def load_closed_edges(region: str, graph: dict) -> set:
 
 
 def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], axes: dict | None = None,
-          closed_edges=None) -> dict:
+          closed_edges=None, tag_fixes=None) -> dict:
     """Pure transform: road graph JSON -> routing graph tables (lists), deterministic order.
 
     closed_edges (optional): graph edge ids that are not open to traffic (ADR 0215: authored `construction: true`).
@@ -396,7 +421,10 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], ax
 
     axes (optional): {edge id -> carriageway axis pts, from -> to}, see load_carriageway_axes. When an edge has
     an axis, its stored geometry is the axis (the line the player sees on the minimap / GPS); the stored length
-    stays the OSM polyline length, so topology AND the A* cost are unchanged (ADR 0144 open item)."""
+    stays the OSM polyline length, so topology AND the A* cost are unchanged (ADR 0144 open item).
+
+    tag_fixes (optional): see load_tag_fixes (ADR 0303); None = Data/Overrides/osm_tag_fixes.yaml."""
+    tag_fixes = load_tag_fixes() if tag_fixes is None else tag_fixes
     ox, oy = origin
     names = [""]
     name_idx = {"": 0}
@@ -486,7 +514,7 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], ax
             "id": e["id"], "osm_way": e.get("osm_way"), "from": a, "to": b, "length": length, "class": cls,
             "flags": flags, "name": name_id(attr(e, "name", "") or ""), "maxspeed": max(0, min(255, ms)),
             "maxspeed_src": ms_src, "pts": pts, "lanes": (fwd_lanes, bwd_lanes),
-            "maxweight_c": to_c(mw, 100.0), "maxaxleload_c": to_c(parse_weight_t(osm_attr(e, "maxaxleload")), 100.0),
+            "maxweight_c": to_c(mw, 100.0), "maxaxleload_c": to_c(parse_weight_t(fixed_attr(tag_fixes, e, "maxaxleload", osm_attr(e, "maxaxleload"))), 100.0),
             "maxheight_cm": to_c(parse_length_m(osm_attr(e, "maxheight")), 100.0),
             "maxlength_cm": to_c(parse_length_m(osm_attr(e, "maxlength")), 100.0),
         })

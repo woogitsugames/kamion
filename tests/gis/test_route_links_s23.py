@@ -85,7 +85,8 @@ def test_links_stay_in_their_tile_and_replace_only_knyszyn():
         assert len(L["e"]) == len(L["n"]) == len(L["maxspeedKmh"]) >= 2
         # knyszyn: ADR 0285; s8-03: ADR 0288 (same path as the s8-03 route, lane shift onto the s8-04 route before the seam)
         # bialystok-knyszynska: ADR 0292 (destination s8: Kleeberga straight on south instead of the rondo Kresowian exit)
-        assert L["replacesRoute"] in ("", "knyszyn", "s8-03", "bialystok-knyszynska"), L["id"]
+        # tykocin: ADR 0303 (destination tykocin: the trip ends on the Rynek, the control route runs on to the tile edge)
+        assert L["replacesRoute"] in ("", "knyszyn", "s8-03", "bialystok-knyszynska", "tykocin"), L["id"]
         steps = [((L["e"][i + 1] - L["e"][i]) ** 2 + (L["n"][i + 1] - L["n"][i]) ** 2) ** 0.5 for i in range(len(L["e"]) - 1)]
         assert max(steps) < 2.6, L["id"]                   # no jump (blend never breaks the 2 m sampling)
 
@@ -212,3 +213,40 @@ def test_swept_gate_catches_the_monki_corner_without_swing(tmp_path):
     links = RL.build(src)["links"]
     r = SW.check("knyszyn-rynek-to-dk65-w", links=links)
     assert r["off_hard"] > 0, r
+
+
+def test_tykocin_trip_ends_on_the_rynek_0303():
+    """ADR 0303: the trip `tykocin` ends on the south side of the Rynek (link stop), not on the south tile edge; the GPS
+    goal (nav_trips.json) is the same point; the stop lies in the 47 m of kerb between the driveways at OSM nodes
+    13718175880 / 13718175884 with the whole 16.5 m combination behind it on the straight; and the control route of the
+    tile (cameras / QA) stays on DW671 (no service way, ADR 0300 kerb at s 1902)."""
+    L = next(x for x in _links()["links"] if x["id"] == "tykocin-dw671-to-rynek")
+    assert L["replacesRoute"] == "tykocin" and L["destination"] == "tykocin"
+    t = {g["id"]: g for g in _graph()["tiles"]}["tykocin"]
+    ex, ey = L["endX"], L["endY"]
+    assert abs(ex - 751818.0) < 1.5 and abs(ey - 600215.0) < 1.5, (ex, ey)
+    assert 751806.8 < ex - 0 and ex + 16.5 < 751854.1, "combination between the two driveways"
+    # last 20 m heading west (straight): the trailer stands on the straight, not in the corner
+    de, dn = L["e"][-1] - L["e"][-11], L["n"][-1] - L["n"][-11]
+    assert de < -19.0 and abs(dn) < 3.0, (de, dn)
+    trips = json.loads((ROOT / "game/Assets/_Project/Gameplay/Resources/Nav/nav_trips.json").read_text(encoding="utf-8"))
+    ty = next(x for x in trips["trips"] if x["id"] == "tykocin")
+    assert ty["goalTile"] == "tykocin" and abs(ty["goalX"] - ex) < 0.01 and abs(ty["goalY"] - ey) < 0.01
+    g = json.loads((ROOT / "Data/Regions/tykocin/roads.graph.json").read_text(encoding="utf-8"))
+    hw = {e["id"]: e["attrs"]["highway"]["v"] for e in g["edges"]}
+    rs = json.loads((ROOT / "Data/Regions/tykocin/route_start.json").read_text(encoding="utf-8"))
+    assert all(hw[e] == "secondary" for e in rs["edge"]), sorted({e for e in rs["edge"] if hw[e] != "secondary"})
+    assert t["anchorX"] < ex < t["xmax"]
+
+
+def test_parallel_edges_keep_the_shorter_0303():
+    """ADR 0303: roadgraph.to_digraph keeps the shorter of two ways between the same node pair (dw671-tykocin-03: the
+    46 m DW671 edge, not the 124 m service loop 553605081 beside it)."""
+    import roadgraph
+    nodes = [{"id": "a", "x": 0.0, "y": 0.0}, {"id": "b", "x": 46.0, "y": 0.0}]
+    mk = lambda i, L: {"id": i, "from": "a", "to": "b", "length_m": L, "attrs": {"oneway": {"v": "no"}}}
+    for order in ([mk("dw", 46.0), mk("svc", 124.0)], [mk("svc", 124.0), mk("dw", 46.0)]):
+        g = roadgraph.to_digraph({"nodes": nodes, "edges": order})
+        assert g["a"]["b"]["id"] == "dw" and g["b"]["a"]["id"] == "dw"
+    rs = json.loads((ROOT / "Data/Regions/dw671-tykocin-03/route_start.json").read_text(encoding="utf-8"))
+    assert not any(e.startswith("w553605081:") for e in rs["edge"])
