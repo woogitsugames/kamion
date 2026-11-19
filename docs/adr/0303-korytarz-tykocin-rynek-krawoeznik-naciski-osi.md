@@ -53,6 +53,9 @@ w regen-wave — kafel spoza fali, do właściciela kafla.) Materiał jako taki 
 **Decyzja.** Bez zmiany materiału: naprawą jest scalenie regen-wave-s24. Nowa sonda
 `tools/worldgen/qa/manifest_materials.py --tiles …` (exit 1 = materiał z GLB nieobecny w manifeście tej gałęzi) —
 uruchamiać przed importem kafla zbudowanego w innym worktree.
+**Sprawdzone renderem:** import Win64 `bialystok-knyszynska` z manifestem regen-wave-s24 (GLB ze wspólnego derived),
+visual-qa High / clear, kamera `seam_e_into_tile` (ekrany „clear” przy Kleeberga, E ~974 N ~−760): słupki jasnoszare,
+panele przezroczyste, 0 pikseli magenty (próg R,B > 0,7, G < 0,3) — `vqa/knyszynska/seam-e-into-tile_posts.jpg`.
 
 ## 4. `maxaxleload=10` na DK65 (i DK64, DW671…) w OSM
 **Źródła.**
