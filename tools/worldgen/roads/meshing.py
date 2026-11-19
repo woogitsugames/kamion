@@ -1417,6 +1417,11 @@ def _patch_uv1(net, j, V, poly=None):
             best = (dot, i)
     if best is not None:
         ref.append(best[1])
+    if getattr(j, "compact", None) is not None:
+        # ADR 0298: a compact roundabout plate (ADR 0218 5c) covers the mouths of ALL its arms; arms outside the through
+        # pair fell to the flare ramp (integer lane) and their wheel paths ended in zigzags at the barrier of DK65 W.
+        # Every arm references its own lanes; past the chain end they fade (PLATE_END_FADE_M).
+        ref = list(range(len(j.arms)))
 
     def _lane_coord(sec, lat_arr, hw_val, dir_val):
         if getattr(sec, "lane_edges", None):
