@@ -1,3 +1,8 @@
+# STATUS guardrail-zebra-cli — s24, zakończone prace generatora
+- 81 regresyjnych + 16 płaskich + 6 NMT + 1 kontrola farby PASS. Kleeberga NMT: 23 odcinki wycięte, 2520 zachowanych; review bez blokujących uwag. Raport: docs/reports/guardrail-zebra-cli-s24.md; ADR 0308.
+- Wdrożono bufor bariera–nawierzchnia i przycinanie/deduplikację P-10; artefakt zebry t=2560 NIEODTWORZONY (0 m² overlap przed zmianą, także NMT i szew). Log wskazuje jeszcze knyszyn. Unity/build_world/player nieuruchamiane, bez push.
+- NASTĘPNY KROK (po integracji, osobna sesja przebudowy): przebudować/reimportować bialystok-kleeberga, knyszyn, knyszyn-w i sprawdzić przejazd; testy bez przebudowy: `uv run --project tools/worldgen pytest tests/gis/test_drive_s24_surface_safety.py -q -s`.
+
 # STATUS gps-roundabout-cli — s24
 - Przyczyna: tracker kończył rondo na wjeździe, mimo poprawnego manewru „2. zjazd” w grafie DK65-06. Dodano punkt końca manewru i zachowanie go przy CopyFrom/Compose.
 - Testy: nav-runner 98/98 PASS, 36 golden routes bez różnic, 0 B GC. Dodano regresję EditMode; Unity i buildów gry nie uruchamiano. Raport: docs/reports/gps-roundabout-cli-s24.md; dowody: artifacts/gps-roundabout/.
