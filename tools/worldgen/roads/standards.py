@@ -41,7 +41,12 @@ LANE_WIDTH = {
 }
 # PTB2022 § 17 ust. 1 (text re-read 2026-11-19, ADR 0301): the widest value the regulation allows ("dopuszcza się")
 # per class: S 3.75, Z / L / D 3.50 m. A, GP and G name no wider value -> std + 0.25 m (WORKING_VALUE, as before).
-LANE_WIDTH_MAX = {"A": 4.00, "S": 3.75, "GP": 3.75, "G": 3.75, "Z": 3.50, "L": 3.50, "D": 3.50}
+# ADR 0306 (CI regression of tile C after ADR 0301): L / D (residential, living street, service) keep std + 0.25 m as before
+# ADR 0301. BDOT10k SZEROKOSCNAWIERZCHNI of such ways counts the whole paved strip (parking bays, yard fronts): with the
+# 3.50 m cap consecutive edges of one service way came out 5.5 / 6.5 / 7.0 m wide and the lane paths through their
+# junctions ran into kerbs (road_consistency lane_blind_end 54 -> 57, 2 of them next to the start route). Not measured
+# on the orthophoto for these classes (ADR 0301 measured GP / G only).
+LANE_WIDTH_MAX = {"A": 4.00, "S": 3.75, "GP": 3.75, "G": 3.75, "Z": 3.50, "L": 3.00, "D": 2.75}
 # ADR 0301: the lower bound of a lane width derived from BDOT10k SZEROKOSCNAWIERZCHNI on a multi-lane carriageway.
 # Measured on the GUGiK orthophoto 0.08 m along the start route (tools/worldgen/qa/lane_width_audit.py, 2026-11-19):
 # BDOT gives 3.0-3.25 m per lane on the one-way carriageways of DK8 Maczka / Kleeberga (class GP), the painted lanes
