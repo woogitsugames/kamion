@@ -107,6 +107,7 @@ class Spec:
     mouths: dict = field(default_factory=dict)      # kerb mode: split node -> {"mid": axis ring <- split, "half_w"}
     crossings: list = field(default_factory=list)   # kerb mode: planned P-10 (stripes as polygons)
     p13: list = field(default_factory=list)         # kerb mode: (arm chain id, polyline along the ring edge)
+    rules: list = field(default_factory=list)      # D94 / ADR 0306: rule values applied over the authored ones
     r_axis_fit: float | None = None                 # fitted (OSM) ring axis radius; differs from r_axis only with the
                                                     # authored `outer_diameter_m` (ADR 0227 D41)
 
@@ -231,16 +232,17 @@ def specs(net, junction_nodes=None) -> list:
             net.overrides_stale += [i for i in override_ids(net, grp) if i not in net.overrides_stale]
             continue
         ap = (ap[0], ap[1], max(0.2, min(ap[2], r - w / 2 - 1.0)), ap[3], ap[4])       # at least 1 m of island inside
+        rules = []
         if kerb_mode(opts):
             opts = {**KERB_DEFAULTS, **opts}
             # D94 / ADR 0306 (GAMEPLAY_WIDEN): kerb returns at least the radii a 16.5 m tractor + semitrailer needs
             # to enter / leave the ring in its own lane (qa/combo_lane_check.py), whatever the authored value
             for k_, rmin in (("entry_r_m", TRUCK_ENTRY_R_MIN_M), ("exit_r_m", TRUCK_EXIT_R_MIN_M)):
-                if float(opts[k_]) < rmin:
+                if S.GAMEPLAY_LANE_WIDEN_M and float(opts[k_]) < rmin:     # 0 = authored / measured geometry
                     opts[k_] = rmin
-                    notes.append(f"{k_} raised to {rmin:.1f} m (D94 truck rule)")
+                    rules.append(f"{k_} raised to {rmin:.1f} m (D94 truck rule, ADR 0306)")
         out.append(Spec(id="cr:" + sorted(ring_nodes)[0], ring=grp, feeders=feeders, nodes=sorted(nodes), center=ctr,
-                        r_axis=r, w_ring=w, apron=ap, opts=opts, notes=notes, r_axis_fit=r_fit))
+                        r_axis=r, w_ring=w, apron=ap, opts=opts, notes=notes, r_axis_fit=r_fit, rules=rules))
     return out
 
 
@@ -936,7 +938,7 @@ def report_one(spec: Spec, built=True) -> dict:
             "island_r_m": round(spec.r_in - spec.apron[2], 2), "splitters": len(spec.splitters),
             "splitter_m2": [round(pg.area, 1) for _, pg in spec.splitters],
             "outline_m2": round(spec.outline.area, 1) if spec.outline is not None else None,
-            "ring_chains": len(spec.ring), "feeders": len(spec.feeders), "notes": list(spec.notes),
+            "ring_chains": len(spec.ring), "feeders": len(spec.feeders), "notes": list(spec.notes), "rules": list(spec.rules),
             "mode": "kerbs" if kerb_mode(spec.opts) else "closing",
             "splitter_len_m": [round(_long_side(pg), 1) for _, pg in spec.splitters],
             "crossings": [{"arm": c["arm"], "near_edge_from_ring_m": c["near_edge_from_ring_m"],

@@ -701,8 +701,8 @@ def curve_widen(c: Chain, net: Network) -> None:
     centre line: lane >= truck tyre width + 2 x (off-tracking + tolerance), at most CURVE_WIDEN_MAX_M per lane.
     The lanes of such a section share the local width (`lane_follow`, ADR 0233), so both lanes and the centre line
     follow. Not near junction nodes (corner geometry) nor near tile seams (the neighbour does not know the bend)."""
-    if c.closed or c.roundabout or len(c.line.s) < 8:
-        return
+    if c.closed or c.roundabout or len(c.line.s) < 8 or not S.GAMEPLAY_LANE_WIDEN_M:
+        return                           # GAMEPLAY_LANE_WIDEN_M = 0 switches every D94 rule off (measured geometry)
     secs = [net.sec_list[int(i)] for i in np.unique(c.sec_idx)]
     ok = {id(s_) for s_ in secs if not s_.oneway and s_.lanes == 2 and not s_.lane_edges and s_.cls in ("GP", "G", "Z")
           and not s_.construction}

@@ -94,7 +94,7 @@ def test_generated_lane_overrides_loaded_before_authored():
     ("bialystok-maczka", "w249740773:2563060452-2357583396"),
     ("bialystok-maczka", "w257357743:2629158252-2357583392"),
 ])
-def test_maczka_three_lanes_as_painted(region, edge):
+def test_maczka_three_lanes_as_painted(region, edge, measured_widths):
     """The 3-lane DK8 carriageway is built with the painted lanes (3.4-4.0 m each; a lane to the kerb includes the gutter) and its centre
     1.0-2.2 m right of the OSM way (the way is drawn along the lane lines, toward the median)."""
     from roads import pipeline
