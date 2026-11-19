@@ -9,20 +9,20 @@ namespace Game.Tests
 {
     /// <summary>
     /// D44 (ADR 0273 §6 dopisek): content tier and world budget of the streamer per (platform, quality tier). On desktop the
-    /// PC tier decides (High / Ultra = High content 1450 / 2000 MB, explicit Low fallback without _High_Tile scenes); phones
+    /// PC tier decides (High / Ultra = High content 2000 / 2000 MB (owner 18.11, ADR 0290), explicit Low fallback without _High_Tile scenes); phones
     /// keep the start scene's content and their own budgets. Pure, no scenes.
     /// </summary>
     public class StreamingContentChoiceTests
     {
         const string Low = RegionScenes.LowTier, High = RegionScenes.HighTier;
 
-        [TestCase("Low", false, Low, 640f)]
+        [TestCase("Low", false, Low, 850f)]
         [TestCase("Medium", false, Low, 800f)]
-        [TestCase("High", false, High, 1450f)]
+        [TestCase("High", false, High, 2000f)]
         [TestCase("Ultra", false, High, 2000f)]
-        [TestCase("Low", true, High, 640f)]      // a High start scene stays High (counted with High memory)
+        [TestCase("Low", true, High, 850f)]      // a High start scene stays High (counted with High memory)
         [TestCase("Medium", true, High, 800f)]
-        [TestCase("High", true, High, 1450f)]
+        [TestCase("High", true, High, 2000f)]
         [TestCase("Ultra", true, High, 2000f)]
         public void Desktop_PcTierPicksContentAndBudget(string tier, bool startHigh, string content, float budget)
         {
@@ -32,17 +32,17 @@ namespace Game.Tests
             Assert.IsFalse(c.highFallback);
         }
 
-        /// <summary>The reported case: RTX 5070, tier High, start scene World_knyszyn (Low) -> High content, 1450 MB.</summary>
+        /// <summary>The reported case: RTX 5070, tier High, start scene World_knyszyn (Low) -> High content, 2000 MB.</summary>
         [Test]
         public void Desktop_HighTier_LowStartScene_StreamsHigh()
         {
             var c = StreamingContentChoice.Choose(true, "High", startSceneHigh: false, highTilesAvailable: true);
             Assert.AreEqual(High, c.contentTier);
-            Assert.AreEqual(1450f, c.budgetMB);
+            Assert.AreEqual(2000f, c.budgetMB);
             StringAssert.Contains("desktop tier High", c.reason);
         }
 
-        [TestCase("High", 1450f)]
+        [TestCase("High", 2000f)]
         [TestCase("Ultra", 2000f)]
         public void Desktop_HighTier_NoHighTiles_ExplicitLowFallback(string tier, float budget)
         {
@@ -71,7 +71,7 @@ namespace Game.Tests
         {
             var c = StreamingContentChoice.Choose(true, null, false, true);
             Assert.AreEqual(Low, c.contentTier);
-            Assert.AreEqual(640f, c.budgetMB);
+            Assert.AreEqual(850f, c.budgetMB);
         }
 
         [TestCase("World_knyszyn_High", true)]

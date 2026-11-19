@@ -85,6 +85,9 @@ WORLD_MEMORY_LOW_MB = {
     "dw671-tykocin-09": (53.4, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
     "tykocin": (79.4, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
     "dw671-jasionowka-01": (48.7, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
+    "bialystok-bojary": (252.4, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
+    "bialystok-mickiewicza": (232.8, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
+    "bialystok-wygoda": (189.0, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
 }
 # WORLD_MEMORY High [MB] per region, ADR 0234 §7 table (ESTIMATED; same imports as the Low values above).
 WORLD_MEMORY_HIGH_MB = {
@@ -134,9 +137,12 @@ WORLD_MEMORY_HIGH_MB = {
     "dw671-tykocin-09": (123.9, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
     "tykocin": (171.7, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
     "dw671-jasionowka-01": (121.3, "ADR 0231 ring, import world2-finish r3 2026-11-17 (Win64)"),
+    "bialystok-bojary": (622.4, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
+    "bialystok-mickiewicza": (559.1, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
+    "bialystok-wygoda": (491.6, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
 }
-UNKNOWN_MEMORY_MB = 160.0   # a region without a measurement counts as the heaviest measured one (conservative)
-UNKNOWN_MEMORY_HIGH_MB = 420.4   # same rule for High: the heaviest measured High import (Maczka)
+UNKNOWN_MEMORY_MB = 252.4   # a region without a measurement counts as the heaviest measured one (conservative; bojary since D81)
+UNKNOWN_MEMORY_HIGH_MB = 622.4   # same rule for High: the heaviest measured High import (bojary since D81; was Maczka 420.4)
 
 
 def load_tiles(regions_dir: Path = REGIONS) -> list[dict]:
@@ -239,6 +245,11 @@ def build(regions_dir: Path = REGIONS) -> dict:
         for n in b["neighbors"]:
             a = by_id[n["id"]]
             if a["routeExit"] is not None or len(n["side"]) != 1:
+                continue
+            # C has two such neighbours since D81 (maczka W-bound, wygoda E-bound on Andersa): a portal chain has one
+            # exit per tile, so the first implicit portal (tile order) wins; the D81 branch C -> wygoda is joined by
+            # the route link c-andersa-to-wygoda (route_links.json, ADR 0285), not by this chain.
+            if any(p["from"] == a["id"] for p in portals):
                 continue
             if on_seam(b["routeEntry"], b, n["side"]):
                 opposite = {"N": "S", "S": "N", "E": "W", "W": "E"}[n["side"]]

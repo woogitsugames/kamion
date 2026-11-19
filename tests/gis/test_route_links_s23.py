@@ -64,8 +64,22 @@ def test_corridor_connected_in_tile_graph_bfs():
                 seen.add(n)
                 q.append(n)
     assert "dw671-tykocin-01" in seen and "knyszyn-w" in seen
-    # known gap (report, plan in docs): Dojlidy has no edge neighbour - 1 column east, 2 rows (4096 m) south of C
-    assert "bialystok-dojlidy" not in seen
+    # D81 / ADR 0278 tiles 5-7 (wygoda, bojary, mickiewicza) close the former gap: C -> wygoda (E) -> bojary (S) ->
+    # mickiewicza (S) -> Dojlidy (S) are edge neighbours
+    assert {"bialystok-wygoda", "bialystok-bojary", "bialystok-mickiewicza", "bialystok-dojlidy"} <= seen
+
+
+def test_dojlidy_corridor_joins_closed_up_to_the_missing_tile():
+    """D81: C -> wygoda -> bojary -> mickiewicza joined by routes / links; Ciolkowskiego continues through the 129 m
+    stub of Dojlidy into bialystok-krywlany (ADR 0278 tile 4, not defined) - listed as missing, never skipped."""
+    g = {t["id"]: t for t in _graph()["tiles"]}
+    c = next(c for c in _links()["corridors"] if c["id"] == "bialystok-dojlidy-dk19")
+    assert c["tiles"][:4] == ["bialystok-industrial-c", "bialystok-wygoda", "bialystok-bojary", "bialystok-mickiewicza"]
+    assert c["missing"][:1] == ["bialystok-krywlany"]
+    for j in c["joins"]:
+        assert len(j["side"]) == 1 and j["gapM"] <= TG.PORTAL_TOL_M, j
+        # lane point of the oblique Piastowska crossing lies ~2.2 m off the seam line; joined within JOIN_TOL_M
+        assert TG.on_seam([j["x"], j["y"]], g[j["from"]], j["side"], eps=RL.JOIN_TOL_M), j
 
 
 def test_corridor_tiles_are_in_the_d67_full_build_set():
@@ -85,8 +99,9 @@ def test_links_stay_in_their_tile_and_replace_only_knyszyn():
         assert len(L["e"]) == len(L["n"]) == len(L["maxspeedKmh"]) >= 2
         # knyszyn: ADR 0285; s8-03: ADR 0288 (same path as the s8-03 route, lane shift onto the s8-04 route before the seam)
         # bialystok-knyszynska: ADR 0292 (destination s8: Kleeberga straight on south instead of the rondo Kresowian exit)
-        # tykocin: ADR 0303 (destination tykocin: the trip ends on the Rynek, the control route runs on to the tile edge)
-        assert L["replacesRoute"] in ("", "knyszyn", "s8-03", "bialystok-knyszynska", "tykocin"), L["id"]
+        # C / wygoda: D81 trip to Dojlidy (ADR 0290); tykocin: ADR 0303 (destination tykocin: the trip ends on the Rynek, the control route runs on to the tile edge)
+        assert L["replacesRoute"] in ("", "knyszyn", "s8-03", "bialystok-knyszynska", "tykocin",
+                                   "bialystok-industrial-c", "bialystok-wygoda"), L["id"]
         steps = [((L["e"][i + 1] - L["e"][i]) ** 2 + (L["n"][i + 1] - L["n"][i]) ** 2) ** 0.5 for i in range(len(L["e"]) - 1)]
         assert max(steps) < 2.6, L["id"]                   # no jump (blend never breaks the 2 m sampling)
 
