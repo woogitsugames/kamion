@@ -60,7 +60,7 @@ def test_standards_follow_ptb2022_17_1():
 @pytest.mark.parametrize("asph,lines,lanes,flags", [
     ((-7.35, 4.50), [-6.90, -3.35, 0.30, 3.90], 3, [True, True]),          # Maczka 3 lanes, both edge lines
     ((-2.75, 5.80), [-2.15, 1.60, 5.65], 2, [True, True]),                 # Maczka 2 lanes
-    ((-3.40, 12.0), [-2.80, 0.85, 4.65], 2, [True, False]),                # Kleeberga, hatched median to the left
+    ((-3.40, 12.0), [-2.80, 0.85, 4.65], 2, [True, True]),                 # Kleeberga, hatched median: its border line
     ((-5.00, 5.95), [-1.75, 1.75, 5.35], 3, [False, True]),                # lane to the kerb, no right edge line
 ])
 def test_station_layout_real_profiles(asph, lines, lanes, flags):

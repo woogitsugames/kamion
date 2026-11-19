@@ -133,13 +133,17 @@ def station_layout(asph, lines, at=None, lanes=None):
                 b.append(aL)
         elif AMBIG_GAP[0] < gap < AMBIG_GAP[1]:
             return None
-        # gap >= AMBIG_GAP[1]: hatching / island / parking / merge area beside the lanes - lanes end on the line
+        else:
+            # gap >= AMBIG_GAP[1]: hatching / island / barrier and footway in asphalt grey / merge area beside the
+            # lanes - the lanes end on that painted line (edge line P-7 or the border of the hatching)
+            flags[side] = True
     extra = 0
     if lanes and len(b) >= 2 and len(b) - 1 < lanes and closed[0] != closed[1]:
         w = (b[-1] - b[0]) / (len(b) - 1)
         if not LANE_GAP[0] <= w <= LANE_GAP[1]:
             w = None
         if w is not None:
+            flags[0 if closed[1] else 1] = False         # the extrapolated side has no measured line
             while len(b) - 1 < lanes:
                 if closed[1]:
                     b.insert(0, b[0] - w)

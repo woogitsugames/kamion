@@ -19,7 +19,7 @@
     ],
     "width": 8.05,
     "center_offset": -0.09,
-    "edge_lines": "left"
+    "edge_lines": "both"
    }
   },
   {
@@ -28,16 +28,16 @@
     "edge": "w249740763:2357570527-260019936"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "3 of 7 route stations: 2 lanes (OSM lanes=2), lane widths 3.65, 3.58 m, asphalt 8.23 m, centre +0.30 m left of the OSM way; boundary MAD <= 0.03 m",
+   "reason": "4 of 7 route stations: 2 lanes (OSM lanes=2), lane widths 3.66, 3.60 m, asphalt 8.28 m, centre +0.26 m left of the OSM way; boundary MAD <= 0.10 m",
    "confidence": "low",
    "set": {
     "lane_edges": [
-     0.5,
-     4.15,
-     7.73
+     0.52,
+     4.18,
+     7.78
     ],
-    "width": 8.23,
-    "center_offset": 0.3,
+    "width": 8.28,
+    "center_offset": 0.26,
     "edge_lines": "both"
    }
   },
@@ -47,16 +47,16 @@
     "edge": "w249740766:2563060456-2563060432"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "5 of 6 route stations: 2 lanes (OSM lanes=2), lane widths 3.60, 3.68 m, asphalt 8.20 m, centre +0.23 m left of the OSM way; boundary MAD <= 0.07 m",
+   "reason": "6 of 6 route stations: 2 lanes (OSM lanes=2), lane widths 3.60, 3.69 m, asphalt 8.27 m, centre +0.09 m left of the OSM way; boundary MAD <= 0.15 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
-     0.47,
-     4.07,
-     7.75
+     0.48,
+     4.08,
+     7.77
     ],
-    "width": 8.2,
-    "center_offset": 0.23,
+    "width": 8.27,
+    "center_offset": 0.09,
     "edge_lines": "both"
    }
   },
@@ -66,16 +66,16 @@
     "edge": "w249740767:2563060432-1889474194"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "4 of 4 route stations: 2 lanes (OSM lanes=3), lane widths 3.68, 3.60 m, asphalt 8.20 m, centre -0.68 m left of the OSM way; boundary MAD <= 0.06 m",
+   "reason": "3 of 4 route stations: 2 lanes (OSM lanes=3), lane widths 3.65, 3.60 m, asphalt 8.25 m, centre -0.63 m left of the OSM way; boundary MAD <= 0.12 m",
    "confidence": "low",
    "set": {
     "lane_edges": [
-     0.42,
-     4.1,
-     7.7
+     0.5,
+     4.15,
+     7.75
     ],
-    "width": 8.2,
-    "center_offset": -0.68,
+    "width": 8.25,
+    "center_offset": -0.63,
     "edge_lines": "both"
    }
   },
@@ -85,14 +85,14 @@
     "edge": "w249740773:2563060452-2357583396"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "10 of 10 route stations: 3 lanes (OSM lanes=3), lane widths 3.63, 3.65, 3.92 m, asphalt 11.80 m, centre -1.38 m left of the OSM way; boundary MAD <= 0.10 m",
+   "reason": "10 of 10 route stations: 3 lanes (OSM lanes=3), lane widths 3.60, 3.68, 3.72 m, asphalt 11.80 m, centre -1.38 m left of the OSM way; boundary MAD <= 0.27 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
      0.55,
-     4.18,
+     4.15,
      7.83,
-     11.75
+     11.55
     ],
     "width": 11.8,
     "center_offset": -1.38,
@@ -105,16 +105,16 @@
     "edge": "w249740774:2563060454-131612937"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "9 of 9 route stations: 2 lanes (OSM lanes=2), lane widths 3.68, 3.67 m, asphalt 8.38 m, centre +0.16 m left of the OSM way; boundary MAD <= 0.05 m",
+   "reason": "9 of 9 route stations: 2 lanes (OSM lanes=2), lane widths 3.63, 3.70 m, asphalt 8.38 m, centre +0.15 m left of the OSM way; boundary MAD <= 0.07 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
      0.5,
-     4.18,
-     7.85
+     4.13,
+     7.83
     ],
     "width": 8.38,
-    "center_offset": 0.16,
+    "center_offset": 0.15,
     "edge_lines": "both"
    }
   },
@@ -124,17 +124,17 @@
     "edge": "w257352528:1847317037-1889474199"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "4 of 9 route stations: 3 lanes (OSM lanes=3), lane widths 4.07, 3.63, 3.55 m, asphalt 12.00 m, centre -1.53 m left of the OSM way; boundary MAD <= 0.05 m",
+   "reason": "4 of 9 route stations: 3 lanes (OSM lanes=3), lane widths 4.10, 3.60, 3.57 m, asphalt 11.97 m, centre -1.58 m left of the OSM way; boundary MAD <= 0.05 m",
    "confidence": "low",
    "set": {
     "lane_edges": [
-     0.18,
-     4.25,
-     7.88,
-     11.43
+     0.1,
+     4.2,
+     7.8,
+     11.37
     ],
-    "width": 12.0,
-    "center_offset": -1.53,
+    "width": 11.97,
+    "center_offset": -1.58,
     "edge_lines": "both"
    }
   },
@@ -144,17 +144,17 @@
     "edge": "w257357743:2629158252-2357583392"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "11 of 11 route stations: 3 lanes (OSM lanes=3), lane widths 3.65, 3.60, 3.95 m, asphalt 11.80 m, centre -1.81 m left of the OSM way; boundary MAD <= 0.10 m",
+   "reason": "11 of 11 route stations: 3 lanes (OSM lanes=3), lane widths 3.65, 3.65, 3.90 m, asphalt 11.80 m, centre -1.86 m left of the OSM way; boundary MAD <= 0.10 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
-     0.55,
-     4.2,
+     0.5,
+     4.15,
      7.8,
-     11.75
+     11.7
     ],
     "width": 11.8,
-    "center_offset": -1.81,
+    "center_offset": -1.86,
     "edge_lines": "left"
    }
   },
@@ -164,16 +164,16 @@
     "edge": "w257358866:1889474199-2629158252"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "24 of 43 route stations: 2 lanes (OSM lanes=2), lane widths 3.55, 3.75 m, asphalt 8.46 m, centre -0.18 m left of the OSM way; boundary MAD <= 0.10 m",
+   "reason": "23 of 43 route stations: 2 lanes (OSM lanes=2), lane widths 3.55, 3.75 m, asphalt 8.45 m, centre -0.21 m left of the OSM way; boundary MAD <= 0.10 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
-     0.61,
-     4.16,
-     7.91
+     0.6,
+     4.15,
+     7.9
     ],
-    "width": 8.46,
-    "center_offset": -0.18,
+    "width": 8.45,
+    "center_offset": -0.21,
     "edge_lines": "both"
    }
   },
@@ -183,16 +183,16 @@
     "edge": "w606396474:282520087-1847317032"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "4 of 5 route stations: 2 lanes (OSM lanes=3), lane widths 3.60, 3.70 m, asphalt 8.85 m, centre +0.17 m left of the OSM way; boundary MAD <= 0.04 m",
+   "reason": "4 of 5 route stations: 2 lanes (OSM lanes=3), lane widths 3.58, 3.72 m, asphalt 9.00 m, centre +0.11 m left of the OSM way; boundary MAD <= 0.03 m",
    "confidence": "low",
    "set": {
     "lane_edges": [
-     0.77,
-     4.37,
-     8.07
+     0.8,
+     4.38,
+     8.1
     ],
-    "width": 8.85,
-    "center_offset": 0.17,
+    "width": 9.0,
+    "center_offset": 0.11,
     "edge_lines": "both"
    }
   },
@@ -202,13 +202,13 @@
     "edge": "w606396475:2629158253-2563060452"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "9 of 9 route stations: 2 lanes (OSM lanes=2), lane widths 3.65, 3.60 m, asphalt 8.40 m, centre +0.01 m left of the OSM way; boundary MAD <= 0.15 m",
+   "reason": "9 of 9 route stations: 2 lanes (OSM lanes=2), lane widths 3.65, 3.65 m, asphalt 8.40 m, centre +0.01 m left of the OSM way; boundary MAD <= 0.19 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
      0.6,
      4.25,
-     7.85
+     7.9
     ],
     "width": 8.4,
     "center_offset": 0.01,
@@ -221,16 +221,16 @@
     "edge": "w707029846:6644270078-2563060456"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "3 of 3 route stations: 2 lanes (OSM lanes=3), lane widths 3.66, 3.60 m, asphalt 8.25 m, centre -0.05 m left of the OSM way; boundary MAD <= 0.01 m",
+   "reason": "3 of 3 route stations: 2 lanes (OSM lanes=3), lane widths 3.66, 3.55 m, asphalt 8.16 m, centre -0.06 m left of the OSM way; boundary MAD <= 0.01 m",
    "confidence": "low",
    "set": {
     "lane_edges": [
-     0.49,
-     4.15,
-     7.75
+     0.45,
+     4.11,
+     7.66
     ],
-    "width": 8.25,
-    "center_offset": -0.05,
+    "width": 8.16,
+    "center_offset": -0.06,
     "edge_lines": "both"
    }
   },
@@ -240,17 +240,17 @@
     "edge": "w707029850:6644301685-2563060454"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "17 of 18 route stations: 3 lanes (OSM lanes=3), lane widths 3.65, 3.60, 3.65 m, asphalt 11.75 m, centre -1.58 m left of the OSM way; boundary MAD <= 0.10 m",
+   "reason": "16 of 17 route stations: 3 lanes (OSM lanes=3), lane widths 3.65, 3.65, 3.63 m, asphalt 11.85 m, centre -1.63 m left of the OSM way; boundary MAD <= 0.07 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
      0.45,
      4.1,
-     7.7,
-     11.35
+     7.75,
+     11.38
     ],
-    "width": 11.75,
-    "center_offset": -1.58,
+    "width": 11.85,
+    "center_offset": -1.63,
     "edge_lines": "left"
    }
   },
@@ -260,17 +260,17 @@
     "edge": "w707029854:6644301694-2629158253"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "8 of 8 route stations: 3 lanes (OSM lanes=3), lane widths 3.60, 3.60, 3.72 m, asphalt 11.85 m, centre -1.89 m left of the OSM way; boundary MAD <= 0.30 m",
+   "reason": "8 of 8 route stations: 3 lanes (OSM lanes=3), lane widths 3.61, 3.59, 3.90 m, asphalt 11.77 m, centre -1.93 m left of the OSM way; boundary MAD <= 0.15 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
-     0.65,
-     4.25,
-     7.85,
-     11.57
+     0.57,
+     4.18,
+     7.77,
+     11.67
     ],
-    "width": 11.85,
-    "center_offset": -1.89,
+    "width": 11.77,
+    "center_offset": -1.93,
     "edge_lines": "left"
    }
   }

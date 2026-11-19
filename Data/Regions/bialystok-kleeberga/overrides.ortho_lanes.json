@@ -9,16 +9,16 @@
     "edge": "w249740774:2563060454-131612937"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "9 of 9 route stations: 2 lanes (OSM lanes=2), lane widths 3.68, 3.67 m, asphalt 8.38 m, centre +0.16 m left of the OSM way; boundary MAD <= 0.05 m",
+   "reason": "9 of 9 route stations: 2 lanes (OSM lanes=2), lane widths 3.63, 3.70 m, asphalt 8.38 m, centre +0.15 m left of the OSM way; boundary MAD <= 0.07 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
      0.5,
-     4.18,
-     7.85
+     4.13,
+     7.83
     ],
     "width": 8.38,
-    "center_offset": 0.16,
+    "center_offset": 0.15,
     "edge_lines": "both"
    }
   },
@@ -28,17 +28,17 @@
     "edge": "w257355878:131612937-12962166397"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "14 of 15 route stations: 3 lanes (OSM lanes=3), lane widths 3.67, 3.63, 3.49 m, asphalt 11.64 m, centre -1.08 m left of the OSM way; boundary MAD <= 0.15 m",
+   "reason": "14 of 15 route stations: 3 lanes (OSM lanes=3), lane widths 3.67, 3.62, 3.51 m, asphalt 11.67 m, centre -1.09 m left of the OSM way; boundary MAD <= 0.12 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
      0.35,
      4.02,
-     7.65,
-     11.14
+     7.64,
+     11.15
     ],
-    "width": 11.64,
-    "center_offset": -1.08,
+    "width": 11.67,
+    "center_offset": -1.09,
     "edge_lines": "both"
    }
   },
@@ -48,18 +48,18 @@
     "edge": "w257355879:2357583390-5749430006"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "7 of 7 route stations: 3 lanes (OSM lanes=3), lane widths 3.95, 3.80, 3.50 m, asphalt 12.15 m, centre -1.92 m left of the OSM way; boundary MAD <= 0.15 m",
+   "reason": "7 of 7 route stations: 3 lanes (OSM lanes=3), lane widths 3.95, 3.80, 4.04 m, asphalt 12.15 m, centre -1.92 m left of the OSM way; boundary MAD <= 0.15 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
      0.2,
      4.15,
      7.95,
-     11.45
+     11.99
     ],
     "width": 12.15,
     "center_offset": -1.92,
-    "edge_lines": "both"
+    "edge_lines": "left"
    }
   },
   {
@@ -68,17 +68,17 @@
     "edge": "w301702369:897482256-2235605459"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "17 of 34 route stations: 2 lanes (OSM lanes=2), lane widths 3.70, 3.60 m, asphalt 8.30 m, centre -0.85 m left of the OSM way; boundary MAD <= 0.20 m",
+   "reason": "18 of 33 route stations: 2 lanes (OSM lanes=2), lane widths 3.72, 3.58 m, asphalt 8.30 m, centre -0.82 m left of the OSM way; boundary MAD <= 0.20 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
      0.5,
-     4.2,
+     4.22,
      7.8
     ],
     "width": 8.3,
-    "center_offset": -0.85,
-    "edge_lines": "none"
+    "center_offset": -0.82,
+    "edge_lines": "both"
    }
   },
   {
@@ -87,17 +87,17 @@
     "edge": "w693614875:131612936-2357583403"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "6 of 7 route stations: 3 lanes (OSM lanes=3), lane widths 3.60, 3.57, 3.50 m, asphalt 11.93 m, centre -0.55 m left of the OSM way; boundary MAD <= 0.13 m",
+   "reason": "6 of 7 route stations: 3 lanes (OSM lanes=3), lane widths 3.58, 3.54, 3.51 m, asphalt 11.98 m, centre -0.54 m left of the OSM way; boundary MAD <= 0.15 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
-     0.62,
-     4.22,
-     7.79,
-     11.29
+     0.69,
+     4.27,
+     7.81,
+     11.32
     ],
-    "width": 11.93,
-    "center_offset": -0.55,
+    "width": 11.98,
+    "center_offset": -0.54,
     "edge_lines": "both"
    }
   },
@@ -107,16 +107,16 @@
     "edge": "w76073115:2357583403-897482222"
    },
    "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
-   "reason": "9 of 10 route stations: 3 lanes (OSM lanes=3), lane widths 3.70, 3.55, 3.55 m, asphalt 11.90 m, centre -0.72 m left of the OSM way; boundary MAD <= 0.18 m",
+   "reason": "9 of 10 route stations: 3 lanes (OSM lanes=3), lane widths 3.65, 3.55, 3.55 m, asphalt 11.85 m, centre -0.72 m left of the OSM way; boundary MAD <= 0.20 m",
    "confidence": "medium",
    "set": {
     "lane_edges": [
      0.4,
-     4.1,
-     7.65,
-     11.2
+     4.05,
+     7.6,
+     11.15
     ],
-    "width": 11.9,
+    "width": 11.85,
     "center_offset": -0.72,
     "edge_lines": "both"
    }
