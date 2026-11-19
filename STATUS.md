@@ -23,3 +23,6 @@ Worktree: .claude/worktrees/lanes-audit-s24 (gałąź lanes-audit-s24, -NoLibrar
   NASTĘPNY KROK: po round3.status: pary before/after3, kopia do main artifacts/lanes-audit-s24, commit generated/, raport.
 - 19.11 08:00: r2 gotowe dla 4 kafli (generated/ w gicie: maczka, kleeberga, industrial-c, knyszynska + wiadukt Bieżeństwa); rendery after: vqa/after/<kafel>/ (industrial-c scena WorldC). Testy: 0301 18/18, maczka/kleeberga/knyszynska/effective_graph 60/60 po klasyfikacji czytników; test_world_roads::test_export_is_deterministic był czerwony przed przebudową industrial-c (oczekiwane).
   W toku: round3.ps1 (maczka 07:46 -> kleeberga, Tag after3).
+- 19.11 09:47 KONIEC: r3 maczka + kleeberga (linie krawędziowe przywrócone), rendery vqa/after3; pary przed/po artifacts/lanes-audit-s24/vqa/view/pair-{maczka,kleeberga}-route-*.jpg (+ kopia w main). Testy: 0301 18/18; gis maczka/kleeberga/knyszynska/effective_graph/fab/lane_edges/putry/rail/0233 = 139 passed; test_world_roads 15/15 po korekcie test_cross_section_from_tags.
+  Do scalenia (po DK19): przebudować bialystok-maczka, bialystok-kleeberga, bialystok-industrial-c, bialystok-knyszynska (build_world + import) i odświeżyć Nav/*_route.bytes importem.
+  NASTĘPNY KROK (lider): visual-critic na vqa/view/pair-*.jpg; scalenie gałęzi lanes-audit-s24.
