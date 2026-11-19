@@ -12,15 +12,15 @@
     2
    ],
    "length_m": 8.2,
-   "max_grade": 0.0224,
+   "max_grade": 0.022,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.051,
+   "profile_rms_vs_nmt_m": 0.047,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -701,7 +701,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1010,7 +1010,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1425,7 +1425,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1448,7 +1448,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1471,7 +1471,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1494,7 +1494,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1517,7 +1517,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1540,7 +1540,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1563,7 +1563,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1586,7 +1586,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1609,7 +1609,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1632,7 +1632,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1655,7 +1655,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1678,7 +1678,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1701,7 +1701,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1839,7 +1839,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2686,7 +2686,7 @@
    "patches": 228
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 294642,
+  "footprint_nodes": 294649,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -2706,7 +2706,7 @@
    },
    {
     "chain": "c:w249298658:2559220768-2559220770",
-    "from_hw": 2.75,
+    "from_hw": 3.5,
     "node": "n2559220768",
     "taper_m": 4.8,
     "to_hw": 2.5
@@ -2846,7 +2846,7 @@
   },
   "verge_strips": {
    "chunks": 46,
-   "tris": 26630
+   "tris": 26626
   },
   "walled_ramps": []
  }
