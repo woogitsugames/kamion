@@ -90,3 +90,7 @@
   w złotej trasie). Do powtórki po r7.
 - 17:2x: przejazd 1 (knyszyn-s, 240 s, 40 km/h): 0 wyjątków, 60 fps (GTX 1070, High), ale skończył 410 m przed rondem.
   Przejazd 2: `-scene knyszyn -route_s 150 -speed 30`, 150 s (`run.ps1`, status `run.status`), telemetria → `combo_player_run.py`.
+- 17:3x: przejazd 2 (scena knyszyn, route_s 150, 30 km/h; trasa kontrolna DK65 S → Tykocka E, 1. zjazd): 0 wyjątków;
+  w strefie ronda (r ≤ 45 m) ciągnik zawsze na asfalcie, max 0,65 m od linii trasy; naczepa 2,4 s (t 57,4–59,8) kołami
+  na betonie/kostce = krawężnik narożnika SE (to samo combo_lane_check: 53 pkt na trasie kontrolnej knyszyn).
+  Poprawka: `TRUCK_CORNER_R_M` 12 → 16 m; r8 = knyszyn w toku; potem import knyszyn + VQA + przejazd 3.
