@@ -85,3 +85,6 @@
   między jezdnią a parkingiem PO PRAWEJ — przesunięcie w prawo go zjada. Poprawka: podłoga BDOT ADR 0301 (już ≥ +0,25/pas
   ponad pomiar) zaliczana do D94 → DK8 bez dodatkowego poszerzenia. r7 (C + fidelity) w toku. Build playera OK
   (`artifacts/win/kamion-0.1.0-422206cde4-dirty-regions`), przejazd `run.ps1` w toku; chain2 (EditMode → pytest) w toku.
+- EditMode Win64 (16:29, C z r5): 1320/2 — `RegionSelectTests` (katalog routeLengthM C nieaktualny: kafel przebudowany,
+  katalog przelicza fala w main) i `Nav0168Tests.Exit_GoldenRoutes` (graf nawigacji C z nowej geometrii: 5 manewrów vs 4
+  w złotej trasie). Do powtórki po r7.
