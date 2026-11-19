@@ -11,3 +11,4 @@
   Przebudowa prywatna 6 kafli w toku (artifacts/seams-p3-s24/rebuild.status); snapshot „przed” derived knyszynska + knyszyn-w
   w artifacts/seams-p3-s24/before-derived/.
 - NASTĘPNY KROK: po `DONE` w rebuild.status: import Win64 + visual-qa (-Cameras seam_*, dk65_seam_east_out) po/przed.
+- 07:5x: przebudowane knyszyn-w, dk65-monki-01, bialystok-knyszynska (exit 0); render przed/po wystartowany (artifacts/seams-p3-s24/vqa.status).
