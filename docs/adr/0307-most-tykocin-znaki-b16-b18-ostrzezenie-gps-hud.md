@@ -93,7 +93,7 @@ Przejazd playerem Windows (exe `kamion-0.1.0-b7374f8d68-dirty-regions`: `dw671-t
   Rynku (remaining 4 m) — nic nie zablokowane, 0 przeplanowań.
 - p50 / p95 / p99 = 16,67 / 16,67 / 17,00 ms (cap 60 FPS, maszyna dewelopera — nie pomiar wydajności).
 - Znalezisko z pierwszego zrzutu: kafel „WYSOKOŚĆ 3,7 m” łamał się na dwie linie (kafel 184 j) → tekst skrócony do
-  „WYS. 3,7 m”; RUN2_NOTE
+  „WYS. 3,7 m”; sprawdzone drugim przejazdem (exe `kamion-0.1.0-20847b9176-dirty-regions`, 240 s, exit 0, 0 wyjątków, `run/player_run2.log`): kafle „WYS. 3,7 m” i „MASA 12 t” w jednej linii (`run/run2_tiles.png`, t = 130 s), ostrzeżenie i postój na Rynku (t = 215 s, remaining 4 m) jak w pierwszym.
 - Znalezisko z importu: `WorldPbrMaterials.FurnitureSign` odrzucał nazwę twarzy z kropką (`B-16_3.7`; tak samo odrzuciłby
   `B-18_7.5`) — wyrażenie rozszerzone o „.”.
 
