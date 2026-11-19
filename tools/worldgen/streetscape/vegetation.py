@@ -40,11 +40,12 @@ MIX = {"iglasty": [0.64, 0.10, 0.02, 0.02, 0.02, 0.0, 0.20], "mieszany": [0.36, 
        # as flat "stone pine" crowns (review s17 0163 P1 / P2); same weights in make_trees.py FOREST_MIX (HLOD bake).
        "liściasty": [0.0, 0.36, 0.26, 0.22, 0.16, 0.0, 0.0], None: [0.4, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0]}
 HEIGHT = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0),
-          "spruce": (14, 25), "pineyoung": (1.5, 5.0), "birchyoung": (2.0, 6.5), "floor": (0.45, 0.9)}
+          "spruce": (14, 25), "pineyoung": (1.5, 5.0), "birchyoung": (2.0, 6.5), "floor": (0.45, 0.9),
+          "poplar": (18, 28)}      # ADR 0308: roadside poplar (tree_rows / overrides only; WORKING_VALUE)
 # Prototype variants per species (make_trees.py NVAR; 3 when not listed). The variant is drawn from 0..2 for every
 # tree (unchanged random stream) and folded: spruce canopy trees take the stand forms 0 / 1, young spruce and the
 # open side of a stand take variant 2 (boughs to the ground).
-NVAR = {"pineyoung": 1, "birchyoung": 1, "floor": 2}
+NVAR = {"pineyoung": 1, "birchyoung": 1, "floor": 2, "poplar": 2}
 SPRUCE_OPEN = 2
 SPACING = {"las": 4.5, "zagajnik": 3.2, "zadrzewienie": 6.0}
 # Understorey of a Podlasie pine / mixed stand (v3.4, review r3 X4 "trunks like a fence", r4 W-H8): hazel and

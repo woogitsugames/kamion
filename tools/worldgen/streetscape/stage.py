@@ -411,8 +411,11 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         if mg_conifers:
             plot_plan.setdefault("garden_trees", []).extend(mg_conifers)
         PT.garden_trees(w.buf, plot_plan, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2, region_trees=trees)
-        log("garden trees", {k: v for k, v in rep["garden_trees"].items() if k not in ("list", "conifers")})
+        log("garden trees", {k: v for k, v in rep["garden_trees"].items() if k not in ("list", "conifers", "library_instances")})
         ptrees = VG.garden_canopies(ptrees, plot_plan, rep)
+        lib = rep["garden_trees"].pop("library_instances", [])      # ADR 0308: High-tier library crowns of the gardens
+        rep["garden_trees"]["library_instances"] = len(lib)
+        ptrees = ptrees + lib
     if any(o.get("kind") == "tree_groups" and o.get("form") == "kit" for o in overrides or []):     # ADR 0186
         PT.authored_trees(w.buf, overrides, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2)
         log("authored trees", {k: v for k, v in rep["authored_trees"].items() if k != "list"})

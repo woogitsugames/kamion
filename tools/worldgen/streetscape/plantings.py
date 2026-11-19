@@ -1513,6 +1513,32 @@ def claim_street_crowns(rp, rep):
     return out
 
 
+# ADR 0308 (Windows primary, D73): on the High tier a broadleaf garden tree is an instance of the region's tree library
+# (closed lobed crown, LOD1, impostor) instead of the crossed crown cards, which read as dark-cored balls from the
+# street ("broccoli", owner s24); the Low tier keeps the lite kit tree (A16 budgets, ADR 0163). Kit species -> library
+# species; ash / chestnut have no model of their own (WORKING_VALUE stand-ins of the same habit class).
+LIB_SPECIES = {"linden": "linden", "maple": "maple", "birch": "birch", "ash": "linden", "chestnut": "maple"}
+LIB_CROWN_R_PER_H = {"linden": 0.33, "maple": 0.375, "birch": 0.235}       # make_trees.CROWN rmax
+LIB_H_M = {"linden": (6.0, 24.0), "maple": (6.0, 22.0), "birch": (6.0, 20.0)}    # ceilings: G7 # 12
+LIB_MIN_R_M = 1.6            # smaller crowns stay kit trees (a 5 m sapling of a 13 m model is a toy)
+
+
+def library_instance(t, sp, H, z, key):
+    """Tree-library record for garden tree t (kit species sp, kit height H), or None when it stays a kit tree.
+    The height is the one whose library crown has the orthophoto crown radius, within 0.8-1.3 of the kit height."""
+    lib = LIB_SPECIES.get(sp)
+    r = float(t["r"])
+    if lib is None or r < LIB_MIN_R_M:
+        return None
+    lo, hi = LIB_H_M[lib]
+    h = min(max(r / LIB_CROWN_R_PER_H[lib], 0.8 * H, lo), 1.3 * H, hi)
+    p = t["p"]
+    return {"p": f"tree_{lib}", "v": int(PLT.hfloat(key, "lib-v") * 3) % 3, "e": round(float(p[0]), 2),
+            "n": round(float(p[1]), 2), "z": round(float(z), 2), "h": round(float(h), 1),
+            "yaw": round(PLT.hfloat(key, "lib-yaw") * 6.2832, 3), "lean": round(PLT.hfloat(key, "lib-lean") * 0.04, 3),
+            "src": f"plot:{t['plot']}:g7-lib", "tier": "high"}
+
+
 def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
     """ADR 0163: mesh the broadleaf garden trees plots.build recorded from the orthophoto crowns (rp["garden_trees"])
     into the plot kit - on every tier (ADR 0132 r4b drew them as instances of the region's tree library, High / Medium
@@ -1522,7 +1548,8 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
     plan = rp.get("garden_trees") or []
     groups = _garden_groups(buf, half)
     rep = {"source": "crowns: GUGiK orthophoto 2024 (plot_canopy.json); habit / height: G7 # 6-7, 11-14",
-           "trees": 0, "street_strip": 0, "species": {}, "tris_high": 0, "tris_low": 0, "skipped": {}, "list": []}
+           "trees": 0, "street_strip": 0, "species": {}, "tris_high": 0, "tris_low": 0, "skipped": {}, "list": [],
+           "library_instances": []}
     claimed = claim_street_crowns(rp, rep)
     todo = [t for t in claimed if t.get("kind") == "broadleaf"]
     extra_conifers = [t for t in claimed if t.get("kind") == "conifer"]
@@ -1562,6 +1589,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
         z = zf(p)
         kit = PLT.Kit()                                      # one part per tree: a tree that would open a new chunk
         kit.tag = "g7_garden_tree"                           # group is left out alone, not with its whole plot
+        inst = None
         if sp == "fruit":
             if t["near"]:
                 kit.low = False
@@ -1569,13 +1597,18 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
                 kit.low = "only"
             PLT.fruit_tree_lite(kit, p, z, H, key, r=r)
         else:
-            if t["near"]:
+            inst = library_instance(t, sp, H, z, key)
+            if inst is not None:
+                kit.low = "only"                             # High: the library instance below
+            elif t["near"]:
                 kit.low = False
                 garden_tree(kit, p, z, r, H, cb, sp, key, sprite=sprite)
                 kit.low = "only"
             garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2, sprite=sprite, core=bool(t["near"]))
         if not _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
             continue
+        if inst is not None:
+            rep["library_instances"].append(inst)
         rep["trees"] += 1
         rep["street_strip"] += int(not t["in_plot"])
         rep["species"][sp] = rep["species"].get(sp, 0) + 1
