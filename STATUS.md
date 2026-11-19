@@ -1,3 +1,7 @@
+# STATUS gps-roundabout-cli — s24
+- Przyczyna: tracker kończył rondo na wjeździe, mimo poprawnego manewru „2. zjazd” w grafie DK65-06. Dodano punkt końca manewru i zachowanie go przy CopyFrom/Compose.
+- Testy: nav-runner 98/98 PASS, 36 golden routes bez różnic, 0 B GC. Dodano regresję EditMode; Unity i buildów gry nie uruchamiano. Raport: docs/reports/gps-roundabout-cli-s24.md; dowody: artifacts/gps-roundabout/.
+- NASTĘPNY KROK (kontrola bez Unity): `dotnet test tools/nav-runner/Tests/Tests.csproj`; test obrazu HUD wymaga osobnej sesji z autoryzacją playera. Bez push.
 # STATUS edge-barriers-cli — s24
 - Naprawa źródłowa: indywidualne szlabany renderer+collider, rzeczywista strona wyjazdu, wysokość z nawierzchni własnego kafla, WorldEdge ukryty do Ready. Walidacja brakujących materiałów/błędów shaderów; build odrzuca stare ClosureGroup_*.
 - Raport: `docs/reports/edge-barriers-cli-s24.md`, kod `e6184e7b2`; review niezależnego agenta bez blokujących uwag.
