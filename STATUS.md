@@ -10,3 +10,4 @@ NASTĘPNY KROK: po `build exit=0` w chain.status — przejazd `& .\scripts\build
 - 06:0x: ADR 0303 szkic w docs/adr; navgraph pytest 58/58, nav-runner .NET 94/94. Import dw671-tykocin-09 exit 0; w toku tykocin, knyszynska, build.
 - 06:1x: to_digraph: równoległe krawędzie trzymały ostatnią (dw671-tykocin-03: serwis 124 m zamiast DW671 46 m) → trzyma krótszą; route dw671-tykocin-03 2265→2191 m, po DW671; industrial-c/dk65-05 bez zmian; route_links bez zmian; pytest 36/36. Import tykocin exit 0.
 - 06:15: import 3 kafli + build exe kamion-0.1.0-c41c3083a1-dirty-regions exit 0; przejazd w toku (artifacts/corridor-polish-s24/run.status).
+- 06:3x: PRZEJAZD OK: dw671-tykocin-09 → Rynek, stop t=217 s, 'Cel osiągnięty' (run_t0240.jpg), exit 0, 0 wyjątków. Znalezisko: most Narew w96942026 maxheight 3.7 / maxweight:hgv 12 t (OSM 2026-08) — decyzja właściciela. W toku: VQA knyszynska + PlayMode/EditMode (vqa.status).

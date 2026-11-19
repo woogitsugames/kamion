@@ -89,7 +89,28 @@ właściciela (edycja publicznych danych).
 | pytest `tests/gis/test_route_links_s23.py` | | 13/13 (1 nowy) |
 | pytest `tools/worldgen/navgraph/tests` | | 58/58 (3 nowe) |
 
-PRZEJAZD: (uzupełnić)
+Przejazd playerem Windows (exe `kamion-0.1.0-c41c3083a1-dirty-regions`: `dw671-tykocin-09` + `tykocin`, import Win64
+z manifestami regen-wave-s24; Medium, 60 FPS cap, autopilot 50 km/h, `-stream 1 -route_to tykocin -shot_every 20
+-nav_log 10`, 400 s, exit 0, 0 wyjątków, log `artifacts/corridor-polish-s24/run/win-run-20261119-061434.log`):
+- `[NAV] trip tykocin planned: legs 27..28, length 2283 m, ETA 139 s`; `[STREAM] route continued by link
+  tykocin-dw671-to-rynek in tykocin: +1309 m`; `[NAV] region switched to tykocin … pin=trip tykocin kept (leg 28/28,
+  remaining 1295 m)`; wyładowanie kafla startowego bez zmian w GPS.
+- t = 217 s: ciężarówka stoi na (451,1 −103,4) w ramce kafla `tykocin` — 3,6 m przed końcem linku (autopilot staje
+  < 4 m przed końcem ścieżki, `PathFollowerDriverInput`), GPS `remaining 4 m`; do końca przebiegu bez ruchu.
+- Zrzut t = 240 s (`run/run_t0240.jpg`): minimapa „Cel osiągnięty”, „Plac Stefana Czarnieckiego”, 0 km/h, pas przy
+  krawężniku od strony placu; t = 200 s (`run_t0200.jpg`): „65 m” na południowej pierzei.
+- p50/p95/p99 = 16,67 ms (cap 60 FPS) na końcu przebiegu — nie pomiar wydajności (maszyna dewelopera).
+
+## Znalezisko: most na Narwi w Tykocinie (DW671) — limit dla zestawu
+Log przejazdu: „legs over a truck limit 1” = odcinek `tykocin`. OSM w96942026 (most Puchalskiego, `start_date=1910`,
+`bridge=yes`): `maxheight=3.7` (od 2017-01-23, zestaw zmian 45395651) i `maxweight:hgv=12 ton` (od 2026-08-22, zestaw
+zmian 187860421, mapper lokalny). To nie jest ślad uchylonego rozporządzenia (inna wartość, inna data, inny tag) —
+najpewniej B-18 / B-16 na moście kratownicowym. Zestaw 40 t / 4,0 m nie powinien tamtędy jechać: realny dojazd
+ciężarówki na Rynek Tykocina jest od południa (DW671 Sokołowska od S8), nie od Knyszyna. Tu nic nie zmieniono (GPS
+już oznacza odcinek, ADR 0302); świat nie ma kratownicy nad jezdnią (sonda B nic nie widzi na 3,7 m).
+**UNVERIFIED** bez zdjęcia znaków; decyzja właściciela: (a) cel „Tykocin” od południa (korytarz przez S8 / węzeł
+Tykocin, kafle niezbudowane), (b) zostawić dojazd od północy jako „zjazd z ograniczeniem” z ostrzeżeniem,
+(c) zweryfikować znaki zdjęciem.
 
 ## Konsekwencje / otwarte
 - Po scaleniu regen-wave-s24 sprawdzić `manifest_materials.py` dla wszystkich kafli korytarza (knyszyn: 3 materiały).
