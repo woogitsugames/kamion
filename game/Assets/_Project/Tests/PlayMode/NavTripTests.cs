@@ -139,9 +139,17 @@ namespace Game.Tests
             Assert.IsTrue(p.HasRoute);
             Debug.Log($"[TEST] 3-tile trip: {p.Length:F0} m, {p.Count} points, {p.ManCount} manoeuvres, planning {trip.TotalPlanMs:F1} ms, ETA {nav.Guidance.RemainingSeconds:F0} s");
 
-            float maxGap = 0f;
-            for (int i = 1; i < p.Count; i++) maxGap = Mathf.Max(maxGap, (p.Points[i] - p.Points[i - 1]).magnitude);
-            Assert.Less(maxGap, 2f * NavTrip.SeamInsetM + 60f, "no jump in the polyline (seam join = straight inset bridge)");
+            // seams: each leg ends SeamInsetM before the seam and the next starts SeamInsetM after it (+ snap to the
+            // carriageway centreline, <= ~4 m) - a short straight bridge, no jump
+            for (int i = 0; i + 1 < trip.Legs.Length; i++)
+            {
+                var la = trip.Legs[i]; var lb = trip.Legs[i + 1];
+                Vector2 end = la.Path.Points[la.Path.Count - 1] + new Vector2((float)(la.AnchorX - ta.anchorX), (float)(la.AnchorY - ta.anchorY));
+                Vector2 beg = lb.Path.Points[0] + new Vector2((float)(lb.AnchorX - ta.anchorX), (float)(lb.AnchorY - ta.anchorY));
+                float gap = (beg - end).magnitude;
+                Debug.Log($"[TEST] seam {la.RegionId}|{lb.RegionId}: bridge {gap:F2} m");
+                Assert.Less(gap, 2f * NavTrip.SeamInsetM + 8f, $"seam {la.RegionId}|{lb.RegionId}: no jump");
+            }
             foreach (var j in data.joins)
             {
                 float d = DistToPath(p, Local(g, A, j.x, j.y));
