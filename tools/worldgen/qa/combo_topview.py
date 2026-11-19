@@ -23,6 +23,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import seam_section as SS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[3]
+import os  # noqa: E402
+if os.environ.get("KAMION_DATA_ROOT"):
+    ROOT = Path(os.environ["KAMION_DATA_ROOT"])   # built chunks of another checkout (main = BEFORE)
 COL = {"ok_t": "#1f5fbf", "ok_tr": "#2bb5c9", "apron": "#8a3fd1", "kerb": "#ff8c00", "opposite": "#e01010",
        "off_hard": "#ff00ff"}
 
