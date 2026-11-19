@@ -56,8 +56,28 @@ Poziom nawierzchni śledzi poprzednią próbkę (pomost nad drogą naziemną). ~
   licencja jak `nav-map-data` w `docs/LICENSES.md`).
 - Bez streamingu (jeden region, DrivingLab) nic się nie zmienia.
 
-## Liczby
-(uzupełniane — patrz sekcja Wyniki)
+## Liczby (zmierzone 2026-11-19, `artifacts/walls-gps-s24/`)
+| | przed | po |
+|---|---|---|
+| `route_obstacles` korytarz `bialystok-tykocin` (28 kafli, main) | kleeberga: 1 collider (s 1806–1856, 27 próbek); tykocin: 1 próbka krawężnika | — |
+| `route_obstacles` kleeberga + knyszynska po przebudowie kleeberga | 1 collider | **0** |
+| `bialystok-kleeberga` `noise_barriers.cut_on_deck_carriageway_m` | — | 69,9 m (ekrany 1158 m → zbudowane) |
+| `build_world` kleeberga (slot heavy) | 3891 s (regen-wave) | 3196 s |
+| testy pytest `tests/gis/test_walls_on_deck_0300.py` + 0208 + c_p2_s23 | | 4 nowe + 16 zielonych |
+| PlayMode `NavStreamFollowTests` (5) + `NavHudTests` + `CabScreensTests` | | 20/21; `Capture_Devices` pada na brak prefabu TRAKT w worktree (środowisko) |
+| mapy KNAV | 1 region | 44 regiony, 2,5 MB |
+
+Przejazdy w playerze Windows (GTX 1070, Medium, 1600×900, autopilot 50 km/h, `-stream 1 -route_to tykocin`):
+- exe `kamion-0.1.0-cd208786be-dirty-regions` (kleeberga przebudowana + knyszynska + dk65-01), start
+  `bialystok-kleeberga -route_s 1700`, 380 s: przejazd rampą wiaduktu Kleeberga bez ekranu w pasie (zrzut t = 20 s
+  w miejscu z nagrania właściciela), `[NAV] region switched to bialystok-knyszynska` → rebase #1 → `unload start region
+  bialystok-kleeberga (root destroyed)` → `[NAV] region switched to dk65-01` → rebase #2; całe 2961 m knyszynska
+  przejechane, 0 wyjątków. Minimapa na każdym zrzucie z drogą pod strzałką ciężarówki.
+- exe `kamion-0.1.0-f2b35ba227-dirty-regions` (knyszynska + dk65-01), szew knyszynska → dk65-01: jak wyżej.
+
+Uwaga (tylko worktree): magenta na słupkach ekranów w knyszynska — kafel zaimportowany z GLB regen-wave (z
+`noise_post_light`, ADR 0293) przy starszym `world_manifest.json` z main (brak `M_noise_post_light.mat`); po scaleniu
+regen-wave-s24 (zaktualizowane manifesty) do ponownego sprawdzenia.
 
 ## Konsekwencje
 - Po scaleniu przebudować kafle z ekranami przy pomostach. Pewnie: `bialystok-kleeberga` (przebudowany tu do weryfikacji

@@ -7,3 +7,5 @@
 - NASTĘPNY KROK: po exit= w build_kleeberga.status: pwsh scripts/import-region.ps1 -Region bialystok-kleeberga (+knyszynska, dk65-01), build-windows -Regions, przejazd.
 - 02:15: PlayMode 20/21 (5 nowych zielone; Capture_Devices = brak prefabu TRAKT w worktree, nie moje). Build Win knyszynska+dk65-01: przejazd przez szew -> [NAV] region switched to dk65-01, rebase bez skoku, minimapa z drogą pod ciężarówką (artifacts/walls-gps-s24/after). Build kleeberga z poprawką w toku.
 - NASTĘPNY KROK: po exit= w build_kleeberga.status: import-region kleeberga -BuildTarget Win64, build-windows -Regions kleeberga,knyszynska,dk65-01, przejazd od kleeberga -route_s 1700.
+- 03:1x: przejazd kleeberga->knyszynska->dk65-01 OK (rampa bez ekranu, NAV switch x2, rebase x2, unload startu). ADR 0300 z liczbami. GOTOWE do scalenia.
+- NASTĘPNY KROK (lider): scalić; przebudowa po scaleniu: bialystok-kleeberga już przebudowany w Data/raw/derived (main generator + 0300) — zaimportować; reszta kafli bez kolizji.
