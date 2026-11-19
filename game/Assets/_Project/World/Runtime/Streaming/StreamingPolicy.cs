@@ -91,7 +91,8 @@ namespace Game.World.Streaming
         /// Owner decision 18.11 (ADR 0273 dopisek D81, ADR 0290): the DK19 tiles of D81 made the worst set bojary +
         /// mickiewicza + wygoda + pinned C = Low 796.2 / High 1935.2 MB -> Low 850, High 2000 (measured on the GTX 1070,
         /// class "zalecany": High corridor VRAM 1.07-1.87 GB of 8 GB, private 2.1-3.3 GB; Low VRAM 0.45 GB;
-        /// artifacts/pc/DOM/20261118-*, artifacts/d3d-ab). WORKING_VALUE. Medium 800 unchanged (no decision). Phone: see
+        /// artifacts/pc/DOM/20261118-*, artifacts/d3d-ab). ADR 0309: Medium 800 -> 850, the same Low content and corridor
+        /// envelope as Low; desktop ladder 850 / 850 / 2000 / 2000 MB (WORKING_VALUE). Phone: see
         /// <see cref="BudgetForTier(string)"/>.
         /// </summary>
         public static float BudgetForTier(string tier, bool desktop)
@@ -101,7 +102,7 @@ namespace Game.World.Streaming
                 switch (tier)
                 {
                     case "Low": return 850f;
-                    case "Medium": return 800f;
+                    case "Medium": return 850f;
                     case "High": return 2000f;
                     case "Ultra": return 2000f;
                     default: return 850f;

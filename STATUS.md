@@ -1,3 +1,8 @@
+# STATUS tier-budget-cli — s24
+- Wdrożona drabinka PC 850/850/2000/2000 MB (WORKING_VALUE); źródła: D89, ADR 0273/0290, uzasadnienie ADR 0309. Medium +50 MB; konfiguracje URP nie zawierają limitu streamingu.
+- Zaktualizowane testy EditMode oraz kontrakt JSON/C# w pytest; weryfikacja pytest w następnym kroku. Unity/buildy zabronione; ProjectSettings bez zmian.
+- NASTĘPNY KROK: `uv run --no-project --with pytest python -m pytest tools/pcperf -q`; potem raport i commit, bez push.
+
 # STATUS gps-roundabout-cli — s24
 - Przyczyna: tracker kończył rondo na wjeździe, mimo poprawnego manewru „2. zjazd” w grafie DK65-06. Dodano punkt końca manewru i zachowanie go przy CopyFrom/Compose.
 - Testy: nav-runner 98/98 PASS, 36 golden routes bez różnic, 0 B GC. Dodano regresję EditMode; Unity i buildów gry nie uruchamiano. Raport: docs/reports/gps-roundabout-cli-s24.md; dowody: artifacts/gps-roundabout/.

@@ -514,7 +514,7 @@ namespace Game.Tests
             Assert.AreEqual(400f, StreamingSettings.BudgetForTier("Medium", false));
             Assert.AreEqual(600f, StreamingSettings.BudgetForTier("Ultra", false));
             Assert.AreEqual(850f, StreamingSettings.BudgetForTier("Low", true));   // owner 18.11 (ADR 0290)
-            Assert.AreEqual(800f, StreamingSettings.BudgetForTier("Medium", true));
+            Assert.AreEqual(850f, StreamingSettings.BudgetForTier("Medium", true)); // ADR 0309: same Low content
             Assert.AreEqual(2000f, StreamingSettings.BudgetForTier("High", true));
             Assert.AreEqual(2000f, StreamingSettings.BudgetForTier("Ultra", true));
             var g = TileGraph.LoadDefault();
@@ -538,6 +538,34 @@ namespace Game.Tests
                 TestContext.WriteLine($"{(high ? "High" : "Low")}: worst 3 tiles {worst3:F1} MB + pinned C {st.MemoryOf(g.Tiles[c]):F1} = {need:F1} <= {budget}");
                 Assert.LessOrEqual(need, budget, high ? "PC High" : "PC Low");
             }
+        }
+
+        [TestCase("Low")]
+        [TestCase("Medium")]
+        public void DesktopLowContent_Loads825MBWithoutOverBudgetException(string tier)
+        {
+            // Between the old Medium 800 MB and D89 Low 850 MB. Disable the escape hatch
+            // so a stale Medium budget actually prevents the neighbour from loading.
+            var p = new StreamingPolicy(Grid(2, 1, (c, r) => c == 0 ? 400f : 425f),
+                new StreamingSettings { memoryBudgetMB = StreamingSettings.BudgetForTier(tier, true), allowOneOverBudget = false });
+            p.InitResident(0);
+            var cmd = new StreamCommand[8];
+            Assert.AreEqual(1, p.Decide(1900, 1024, 25f, 0f, cmd));
+            Assert.AreEqual(StreamOp.Load, cmd[0].op);
+            Assert.AreEqual(1, cmd[0].tile);
+            Assert.IsFalse(p.OverBudget);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void Budgets_AreNondecreasingAcrossQualityTiers(bool desktop)
+        {
+            string[] tiers = { "Low", "Medium", "High", "Ultra" };
+            for (int i = 1; i < tiers.Length; i++)
+                Assert.LessOrEqual(StreamingSettings.BudgetForTier(tiers[i - 1], desktop),
+                    StreamingSettings.BudgetForTier(tiers[i], desktop), tiers[i - 1] + " <= " + tiers[i]);
+            Assert.AreEqual(StreamingSettings.BudgetForTier("Low", desktop),
+                StreamingSettings.BudgetForTier(null, desktop), "unknown tier falls back to Low");
         }
 
         [Test]

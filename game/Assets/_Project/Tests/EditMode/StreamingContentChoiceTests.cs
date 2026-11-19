@@ -17,11 +17,11 @@ namespace Game.Tests
         const string Low = RegionScenes.LowTier, High = RegionScenes.HighTier;
 
         [TestCase("Low", false, Low, 850f)]
-        [TestCase("Medium", false, Low, 800f)]
+        [TestCase("Medium", false, Low, 850f)]
         [TestCase("High", false, High, 2000f)]
         [TestCase("Ultra", false, High, 2000f)]
         [TestCase("Low", true, High, 850f)]      // a High start scene stays High (counted with High memory)
-        [TestCase("Medium", true, High, 800f)]
+        [TestCase("Medium", true, High, 850f)]
         [TestCase("High", true, High, 2000f)]
         [TestCase("Ultra", true, High, 2000f)]
         public void Desktop_PcTierPicksContentAndBudget(string tier, bool startHigh, string content, float budget)
