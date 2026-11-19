@@ -1,0 +1,55 @@
+# ADR 0306 — Drogi szersze niż w realu (D94): +0,25 m/pas, poszerzenie na łukach, łuki wylotów ronda kompaktowego, kontrola toru zestawu 16,5 m
+
+Status: Proposed (agent `road-widen-s24`, gałąź `road-widen-s24`), 2026-11-19. Decyzja właściciela **D94** (docs/11).
+Powiązane: ADR 0301 (pasy z ortofoto — baza), 0095 / 0077 (`lane_edges`, `center_offset`), 0233 (`lane_follow`),
+0218 / 0274 / 0289 (rondo Knyszyn, tor naczepy), 0280 (pierścień 12,50/5,30, osie naczepy 6,32 / 7,63 / 8,94 m),
+0300 (route_obstacles), PTB2022 (Dz.U. 2022 poz. 1518) § 17 ust. 5 i § 58 ust. 3.
+
+## Kontekst
+Właściciel (D94, 19.11): jezdnie mają być szersze niż w realu, „bo będzie ludziom ciężko”; przykład — wlot ronda
+DK65/DW671 w Knyszynie wymusza lekki wjazd na przeciwny pas. Decyzja: **każdy pas +0,25 m** względem pomiaru
+(ortofoto / OSM / BDOT, ADR 0301), **wloty / wyloty rond i skrzyżowań oraz łuki krawężników** tak, by zestaw 16,5 m
+mieścił się bez wjazdu na przeciwny pas. Układ (liczba pasów, przebieg, położenie) bez zmian.
+
+PTB2022 nie podaje wzoru poszerzenia na łuku ani promienia łuku krawężnika — tylko wymaganie wynikowe: pas na łuku
+„powinien umożliwiać przejazd pojazdu miarodajnego” (§ 17 ust. 5), skrzyżowanie „umożliwiające przejazd pojazdu
+miarodajnego bez utrudnień dla ruchu innych pojazdów” (§ 58 ust. 3); tekst przeczytany 2026-11-19 na
+api.sejm.gov.pl/eli/acts/DU/2022/1518/text.html. Dlatego kryterium jest tor jazdy naszego zestawu, nie liczba z przepisu.
+
+## Decyzja
+Wszystko poniżej to **GAMEPLAY_WIDEN** (nie fakt pomiarowy), WORKING_VALUE.
+1. **Jeden parametr** `roads/standards.py: GAMEPLAY_LANE_WIDEN_M = 0.25`, stosowany raz w `network.load` po wszystkich
+   overrides (`network.gameplay_widen`): `lane_w` +0,25, `width` + liczba pasów × 0,25, zmierzone `lane_edges` (ADR
+   0095/0301) — lewa opaska bez zmian, każdy pas +0,25; `width_profile` i autorskie `edge_line_spacing` + pasy × 0,25;
+   `center_offset` bez zmian; ślad w `provenance.gameplay_widen_m`. Projektowany pas wlotu ronda kompaktowego
+   (`lane_w_m`) też +0,25; pierścień jednopasowy Knyszyna 5,00 → 5,25 m. `GAMEPLAY_LANE_WIDEN_M = 0` daje przekroje
+   zmierzone (QA z ortofoto, `combo_lane_check --widen 0`).
+2. **Poszerzenie pasa na łuku** (`network.curve_widen`): dwukierunkowe 2-pasowe GP / G / Z bez `lane_edges`, łuki
+   R < 200 m: pas ≥ 2,48 m (koła napędowe) + 2 × (offtracking + 0,10 m), offtracking ustalony zestawu
+   `network.offtrack_ss(R)` (z `swept_path.Combination`, ≈ 40/R dla R ≥ 40 m — stara polska reguła), maks. 1,0 m/pas,
+   rampa ~20 m, nie bliżej 15 m od węzła ≥ 3 ani 40 m od szwu kafla; sekcje dostają `lane_follow` (ADR 0233), więc oba
+   pasy i oś rosną symetrycznie.
+3. **Rondo kompaktowe** (`compact_roundabout`): łuki krawężników wlotu / wylotu co najmniej
+   `TRUCK_ENTRY_R_MIN_M = 12` / `TRUCK_EXIT_R_MIN_M = 15` m (autorskie 6 / 8 m w Knyszynie podniesione regułą, notatka w
+   raporcie ronda); zdjęcie drona właściciela nr 9 pokazuje tam szerokie łuki — kierunek zgodny z rzeczywistością.
+4. **Kontrola toru zestawu** `tools/worldgen/qa/combo_lane_check.py` (+ `qa/combo_topview.py`): dla każdego kafla
+   korytarzy z `route_links.json` (trasa kafla / łącznik, ostatnie 45 m poprzedniego kafla doklejone) i każdego łącznika
+   (ronda Knyszyna) oś przednia na środku pasa, tractrix ciągnika i naczepy (model ADR 0218/0280), krawędzie opon co 1 m
+   klasyfikowane po **najwyższym** trójkącie zbudowanego kafla: `opposite` (za osią jezdni dwukierunkowej o > 0,10 m,
+   pojazd wzdłuż drogi, poza wylotami skrzyżowań), `kerb` (krawężnik / chodnik / pobocze), `apron` (dozwolony fartuch
+   ronda), `off_hard` (trawa, wyspa). Opcja `--swing`: najlepszy „swing” kierowcy (przesunięcie toru w obrębie własnego
+   pasa / skrzyżowania, ten sam kształt co autorskie `swing` łączników) — przyjmowany tylko, gdy poprawia całą trasę.
+   `KAMION_DATA_ROOT` = inny checkout (np. main dla „przed”).
+
+## Wyniki
+(uzupełnione po przebudowie — patrz niżej)
+
+## Konsekwencje
+- Każdy kafel zmienia się przy najbliższej przebudowie (szersze pasy wszędzie, łuki); szwy zgodne dopiero, gdy obie strony
+  są przebudowane tym samym kodem (seam_taper liczy sąsiada tym samym `network.load`).
+- `route_start.json` każdego przebudowanego kafla trzeba wyeksportować ponownie (środek pasa przesuwa się o 0,125 m na
+  pas), potem `streaming/route_links.py`.
+- Testy mierzonych szerokości (ADR 0301, 0220, 0233 …) porównują z `GAMEPLAY_LANE_WIDEN_M = 0` albo z bazą + delta.
+
+## Otwarte
+(uzupełnione na końcu)
