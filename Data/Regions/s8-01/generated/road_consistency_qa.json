@@ -363,43 +363,43 @@
   },
   {
    "chain": "c:w640913097:6036982460-6036982456",
-   "dist_from_stop_m": 16.6,
-   "e": 282.03,
+   "dist_from_stop_m": 16.2,
+   "e": 282.06,
    "junction": "j:n1151892073",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.1587426,
-   "lon": 23.0108151,
-   "n": -547.77,
+   "lat": 53.1587466,
+   "lon": 23.0108159,
+   "n": -547.32,
    "on_route": false,
    "osm_ways": [
     640913097
    ],
    "to_chain": "c:w1442574455:13236416979-13236416981",
    "turn_lanes": null,
-   "what": "verge_grass"
+   "what": "kerb"
   },
   {
    "chain": "c:w1442574455:13236416979-13236416981",
-   "dist_from_stop_m": 37.3,
-   "e": 286.98,
+   "dist_from_stop_m": 19.0,
+   "e": 285.49,
    "junction": "j:n1151892073",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.1588,
-   "lon": 23.0108944,
-   "n": -541.09,
+   "lat": 53.1586323,
+   "lon": 23.0108566,
+   "n": -559.87,
    "on_route": false,
    "osm_ways": [
     1442574455
    ],
    "to_chain": "c:w640913097:6036982460-6036982456",
    "turn_lanes": null,
-   "what": "kerb"
+   "what": "none"
   },
   {
    "chain": "c:w1385343896:12825813565-12825813566",
@@ -424,15 +424,15 @@
   {
    "chain": "c:w1516017274:3012480692-10284658289",
    "dist_from_stop_m": 24.0,
-   "e": 1025.27,
+   "e": 1025.33,
    "junction": "j:n7283285854",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.1562509,
-   "lon": 23.0217085,
-   "n": -783.79,
+   "lat": 53.1562499,
+   "lon": 23.0217093,
+   "n": -783.9,
    "on_route": false,
    "osm_ways": [
     1516017274,
@@ -467,10 +467,10 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 293,
-  "kerb_tris": 57856,
-  "lane_samples": 67529,
-  "lane_samples_in_taper": 7,
+  "kerb_tris": 57814,
+  "lane_samples": 67497,
+  "lane_samples_in_taper": 9,
   "marking_tris": 12137,
-  "props_checked": 816
+  "props_checked": 813
  }
 }
