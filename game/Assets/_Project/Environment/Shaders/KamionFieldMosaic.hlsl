@@ -43,17 +43,17 @@ void KFUse(float r, bool arable, out half b, out half a, out half3 tint, out hal
     {
         if (r < 0.26)      { b = 0.66h; a = 0.06h; tint = half3(1.16h, 1.08h, 0.80h); tram = 1.0h; }  // cereal stubble, straw
         else if (r < 0.36) { b = 0.42h; a = 0.86h; tint = half3(1.00h, 0.98h, 0.96h); }                // disked / ploughed
-        else if (r < 0.52) { b = 0.02h; a = 0.06h; tint = half3(0.80h, 1.30h, 0.84h); }                // maize
-        else if (r < 0.62) { b = 0.10h; a = 0.14h; tint = half3(0.90h, 1.32h, 0.92h); }                // potatoes / beet
-        else if (r < 0.76) { b = 0.16h; a = 0.20h; tint = half3(0.96h, 1.34h, 0.96h); tram = 1.0h; }  // catch crop on stubble
-        else if (r < 0.88) { b = 0.05h; a = 0.0h;  tint = half3(0.92h, 1.42h, 1.04h); }                // clover / young rape
-        else               { b = 0.12h; a = 0.0h;  tint = half3(0.98h, 1.40h, 1.04h); }                // grass ley
+        else if (r < 0.52) { b = 0.02h; a = 0.06h; tint = half3(0.92h, 1.62h, 1.09h); }                // maize
+        else if (r < 0.62) { b = 0.10h; a = 0.14h; tint = half3(1.03h, 1.65h, 1.20h); }                // potatoes / beet
+        else if (r < 0.76) { b = 0.16h; a = 0.20h; tint = half3(1.10h, 1.68h, 1.25h); tram = 1.0h; }  // catch crop on stubble
+        else if (r < 0.88) { b = 0.05h; a = 0.0h;  tint = half3(1.06h, 1.77h, 1.35h); }                // clover / young rape
+        else               { b = 0.12h; a = 0.0h;  tint = half3(1.13h, 1.75h, 1.35h); }                // grass ley
     }
     else
     {
-        if (r < 0.45)      { b = 0.06h; tint = half3(0.96h, 1.42h, 1.06h); }   // meadow, regrowth after the 2nd cut
-        else if (r < 0.70) { b = 0.14h; tint = half3(1.00h, 1.36h, 1.02h); }   // pasture
-        else if (r < 0.85) { b = 0.36h; tint = half3(1.06h, 1.22h, 0.92h); }   // freshly mown
+        if (r < 0.45)      { b = 0.06h; tint = half3(1.10h, 1.77h, 1.38h); }   // meadow, regrowth after the 2nd cut
+        else if (r < 0.70) { b = 0.14h; tint = half3(1.15h, 1.70h, 1.33h); }   // pasture
+        else if (r < 0.85) { b = 0.36h; tint = half3(1.12h, 1.37h, 1.03h); }   // freshly mown
         else               { b = 0.56h; tint = half3(1.08h, 1.10h, 0.84h); }   // uncut hay
     }
 }
