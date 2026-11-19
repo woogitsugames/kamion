@@ -177,3 +177,9 @@ Właściciel (klik) po wariantach `artifacts/cab-view-s24/WARIANTY.md`: domyśln
 
 ## D91 — Most na Narwi w Tykocinie: trasa zostaje, gra ostrzega (2026-11-19, s24)
 Właściciel (klik): OSM podaje dla mostu DW671 na Narwi `maxheight=3.7` i `maxweight:hgv=12 t` (edycja 08.2026); zestaw 4 m / 40 t nie powinien przejechać. Decyzja: trasa autopilota i GPS do Rynku w Tykocinie zostaje przez most, ale gra pokazuje ostrzeżenie o ograniczeniu (znaki B-16/B-18 przy moście i komunikat w nawigacji/HUD przed wjazdem). Znaki na zdjęciach nadal UNVERIFIED. Źródło decyzji: ADR 0303 (otwarte), HANDOVER s24.
+
+## D92 — Głośność kabiny −18 LUFS (2026-11-19, s24)
+Właściciel (klik, bez odsłuchu): docelowa głośność dźwięku w kabinie −18 LUFS (było −20,8 zmierzone w s23, ADR 0286); zewnątrz bez zmiany decyzji (−29,7 dziś). Limit true peak bez zmian (≤ −1 dBTP, dziś ≤ −6,6). Wykonanie: agent audio, pomiar z playera.
+
+## D93 — Priorytety po buildzie #2 (2026-11-19, s24)
+Właściciel (klik, wszystkie cztery): (1) Białystok — drogi (pasy, szerokości, oznakowanie, skrzyżowania na trasie), (2) wygląd świata (drzewa przydrożne, lasy, zieleń miasta, kontrast/światło), (3) ciężarówka i jazda (kabina, dźwięk, fizyka, lusterka, sterowanie), (4) nowe regiony (Krywlany, dalej S8/DK8, Mońki). Agenci równolegle, do 5 + CLI.
