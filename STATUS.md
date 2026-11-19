@@ -23,3 +23,7 @@
   Przed (main, widen 0, 7 kafli) środek pasa opp 205 / kerb 1620 / off 357; ze swingiem opp 11 / kerb 557 / off 84.
   r3 (knyszyn+narożniki 12 m, knyszyn-s, knyszyn-w) czeka na slot heavy; potem r4 (C + fidelity → fantomowa wyspa).
 - NASTĘPNY KROK: wynik `after/r2tiles_swing.json`; po r3 import knyszyn + VQA.
+- 13:3x: kleeberga po: 0/0/0 (przed 663 kerb / 347 off — klasyfikator poprawiony: poziom jezdni pod pojazdem, wiadukt nad trasą
+  nie jest jej nawierzchnią). tykocin opp 7 (przed 109), ze swingiem 0. r3 = C + knyszyn + knyszyn-s + knyszyn-w + fidelity
+  (CI lidera: wyspa fantomowa 11_dk8 + lane_blind_end 57 > 55 w C — sprawdzę po przebudowie).
+- NASTĘPNY KROK: po r3: `road_consistency_qa.json` C (lane_blind_end ≤ 55), fidelity islands 0; combo after na 7 kaflach.
