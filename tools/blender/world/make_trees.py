@@ -658,17 +658,21 @@ def grow_0187(species, variant, lod, rng, crng, g, H):
                 dh = Vector((math.cos(a), math.sin(a), 0))
                 d = (dh + Vector((0, 0, rise))).normalized()
                 tip = p0 + d * L + Vector((0, 0, 0.10 * L))            # sabre: the bough end sweeps up
-                roll = rng.uniform(-0.55, 0.55)
-                side = (Vector((-math.sin(a), math.cos(a), 0)) * math.cos(roll) + Vector((0, 0, 1)) * math.sin(roll))
+                # ADR 0308 r2: a bough is a ridge with its twigs hanging to both sides (inverted V along the bough
+                # axis) instead of a level frond + one curtain: seen from the road below, the level fronds of a whorl
+                # read as a saw-edged plate. Same 4 triangles per bough.
+                side = Vector((-math.sin(a), math.cos(a), 0))
                 w = max(0.30, 0.40 * L) * (1.0 if lod == 0 else 1.3)
-                nout = (dh + Vector((0, 0, 0.30))).normalized()      # curtain: faces out of the crown
-                ntop = (dh * 0.75 + Vector((0, 0, 0.80))).normalized()  # bough top: faces the sky (lighter tier above
-                b0 = p0 + d * 0.04 * L                                 # the dark curtain, not one flat green)
-                g.quad(leaf, b0 - side * w, b0 + side * w, tip + side * w * 0.9, tip - side * w * 0.9,
-                       [(0, 0), (1, 0), (1, 1), (0, 1)], ntop)
-                hang = max(0.45, 0.80 * L) * (1 - 0.35 * f) * (1.0 if lod == 0 else 1.25)    # curtain of hanging twigs
-                g.quad(leaf, b0, tip, tip - up_z * hang * 0.7, b0 - up_z * hang,
-                       [(0.5, 0), (0.5, 1), (1, 1), (1, 0)], nout)
+                b0 = p0 + d * 0.04 * L
+                hang_k = (1 - 0.30 * f) * (1.0 if lod == 0 else 1.15)
+                for sgn in (-1.0, 1.0):
+                    th = rng.uniform(0.75, 1.20)                       # 43-69 degrees below the horizontal
+                    out_v = side * (sgn * math.cos(th)) - up_z * math.sin(th)
+                    wb, wt = w * 1.25 * hang_k, w * 0.95 * hang_k
+                    nrm = (dh * 0.55 + side * (sgn * 0.55) + up_z * 0.50).normalized()
+                    uo = 0.0 if sgn < 0 else 1.0
+                    g.quad(leaf, b0, tip, tip + out_v * wt, b0 + out_v * wb,
+                           [(0.5, 0), (0.5, 1), (uo, 1), (uo, 0)], nrm)
             z += step * rng.uniform(0.85, 1.15)
         top = at(H * 0.90)
         for k in range(2):                                             # pointed leader

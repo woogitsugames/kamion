@@ -59,3 +59,11 @@
   < 2 min/kafel) + reimport. Manifesty dk65-07 cofnięte (derived tylko w prywatnej kopii).
   Runda 1 nadal w tle (build_world knyszyn od 15:39 wg zegara maszyny).
   NASTĘPNY KROK: `cat artifacts/trees-s24/round-r1.status artifacts/trees-s24/unity-r1-*.status`
+- 18:20 Runda 1 OBEJRZANA (`artifacts/trees-s24/sbs/*-before-vs-r1b.jpg`, kopia w main): drzewa liściaste i ogrodowe bez „brokułów" —
+  zwarte, płatowe korony; kompilacja C# OK (import przeszedł). Budżet High (edytor, `compare_stats.py`): knyszyn 64 kamery
+  draws 18 390 → 18 452 (+0,3 %), tris sceny 55,26 M → 54,67 M (−1,1 %), tris instancji 1,306 M → 1,490 M (+14 %);
+  dk65-05: draws ±0, tris sceny ±0, tris instancji +4,0 %. Usterki r1: świerk przy drodze nadal jak talerze; korony nad jezdnią
+  (dk65-outlet-nw) — skrajnia nie była jeszcze w tym buildzie świata.
+  Runda 2 W TLE: świerk = konary jako kalenica ze zwisającymi gałązkami (te same 4 tris/konar), wypiek `bake-r3`, build_world knyszyn
+  ze skrajnią, import + render obu kafli (`round.ps1 -Tag r2`).
+  NASTĘPNY KROK: `cat artifacts/trees-s24/round-r2.status artifacts/trees-s24/unity-r2-*.status` → `bash artifacts/trees-s24/sbs.sh r2` (z katalogu artifacts/trees-s24)
