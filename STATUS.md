@@ -34,3 +34,9 @@
   std+0,25 (`standards.LANE_WIDTH_MAX`), testy 0301 zaktualizowane. r4 = C ponownie + fidelity (czeka na r3).
 - NASTĘPNY KROK: po r4 sprawdzić `road_consistency_qa.json` (on_route ≤ 1, tile ≤ 55) i `fidelity_qa.json` (wyspy 0).
 - 14:2x: merge main (klattow-s24, ADR 0305) dee1788db; r4 = C + knyszyn (po merge) + fidelity, czeka na r3.
+- 14:5x: C z r3 (symetryczne poszerzenie): fidelity islands_absent 4 (DK8 11_dk8 ×3, Putry) — pas dzielący zjadany.
+  Reguła: jezdnia jednokierunkowa rośnie w prawo (lewa krawędź jak zmierzona), także wzrost z podłogi BDOT (ADR 0301);
+  DK8 przy wyspie: szczelina 2,62 → 3,87 m. Knyszyn r3: DK65→DW671 W środek pasa 0/3/0 (przed 0/23/5), DK65→DK65 W 0/0/0
+  (przed 0/16/0); rzut z góry `artifacts/road-widen-s24/top/`. Usunięty autorski swing rynek→dk65-w.
+  r4 = C + knyszyn (po merge klattow) + fidelity.
+- NASTĘPNY KROK: po r4: fidelity C islands 0, road_consistency C (≤55, trasa ≤1); import knyszyn + VQA; testy gis.
