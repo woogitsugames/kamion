@@ -5,7 +5,8 @@ and compares, at the seam, the cross-section the generator builds on both sides:
 
   carriageway width (2 x half-width at the chain end, after overrides + tapers: `pipeline.build_network`), lanes and
   lane width, edge lines (spacing axis to axis, which sides, solid/broken), centre line, side profile (rural paved
-  shoulder + gravel + ditch / kerb / sidewalk: `network.assign_sides`, first pass), lighting rule, axis position
+  shoulder + gravel + ditch / kerb / sidewalk: `network.assign_sides`, SECOND pass with the junction trims - the one the
+  generator meshes, ADR 0304; `--pass1` = the first pass as before), lighting rule, axis position
   (centre of the carriageway on the seam), terrain height at the axis (graph `z_terrain`, NMT) and the carriageway width
   of the last build (`generated/roads_qa.json`, may be stale against the overrides).
 
