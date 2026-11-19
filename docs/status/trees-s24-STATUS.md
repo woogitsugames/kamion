@@ -45,3 +45,17 @@
   `pwsh artifacts/trees-s24/round.ps1 -Tag r2 -NoWorld`. Testy: `uv run --project tools/worldgen pytest tests/gis/test_trees_0308.py -q`
   (10 passed bez testu meta; test `meta` uruchomić po wypieku), potem `pwsh scripts/unity-slot.ps1 -Acquire -Owner trees-s24; pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64; pwsh scripts/unity-slot.ps1 -Release -Owner trees-s24`.
   Sprzątanie worktree: `Data/raw/derived` to PRYWATNA KOPIA (37 GB) — knyszyn przebudowany tu NIE jest w main (lider i tak przebuduje po scaleniu).
+- 17:30 WZNOWIONE (właściciel odwołał STOP). ZIELONA ŚCIANA — PRZYCZYNA POTWIERDZONA DANYMI (korekta wpisu wyżej: fartuch to tylko
+  ryzyko poboczne): `far_field.py` przypisywał cały drzewostan dali do sektora jego CENTROIDU. `audit_far_sectors.py`: dk65-07 ma
+  47 ha lasu rysowanego z `far_east`, a leżącego na północ od kafla (e −505…1614, n 1024…1605 = południowe 580 m dk65-08).
+  Po zwolnieniu dk65-06 bok E kafla 07 się zamyka → `far_east` wraca → kopiec podszytu + kurtyny stoją w 08 (zgadza się z DIAG
+  krytyka t=1738). To samo: dk65-11 104 ha (E→N), tykocin-07 35 ha, -08 27 ha, -09 25 ha, industrial-c 14 ha, maczka 6,5 ha.
+  POPRAWKI (commit 8bd… + wcześniejsze): (a) `far_field.split_by_sector` — drzewostan cięty po granicach sektorów;
+  dk65-07 po regeneracji: trójkąty poza własnym sektorem `far_east` 20,3 % → 0 %, `far_south` 11,9 % → 0 % (`audit_far_glb.py`;
+  High 53 508 → 60 137 tris, Low 12 446 → 13 101, limit Low 27k); (b) streamer chowa sektor dali / fartuch także przy gotowym
+  kaflu PO PRZEKĄTNEJ i gdy sam kafel jeszcze się aktywuje (`coveredSides`); (c) fartuch cięty na 8 części (narożniki);
+  (d) `vegetation.road_clearance` — korona z podstawą < 4,7 m nie wchodzi nad jezdnię > 0,3 m (test, 12 passed).
+  WYMAGA po scaleniu: regeneracja dali KAŻDEGO kafla (`uv run --project tools/worldgen python tools/worldgen/streetscape/far_field.py --region <id>`,
+  < 2 min/kafel) + reimport. Manifesty dk65-07 cofnięte (derived tylko w prywatnej kopii).
+  Runda 1 nadal w tle (build_world knyszyn od 15:39 wg zegara maszyny).
+  NASTĘPNY KROK: `cat artifacts/trees-s24/round-r1.status artifacts/trees-s24/unity-r1-*.status`
