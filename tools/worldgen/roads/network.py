@@ -394,10 +394,9 @@ def gameplay_widen(net: Network, d: float) -> None:
             # measured or mapped: the median / gore between the carriageways of a dual road keeps its width and position
             # (a symmetric growth ate 0.5-1.0 m of the DK8 median in tile C and left 1.2-2.0 m strips over real asphalt:
             # fidelity islands_absent 1 -> 4). The ADR 0301 BDOT floor (lanes widened over BDOT) grows the same way.
-            grow = add
-            if sec.width_src.startswith("bdot10k"):
-                grow += float(sec.provenance.get("bdot_floor_growth_m", 0.0))
-            sh = grow / 2.0
+            # only the GAMEPLAY part moves right, at most GROW_RIGHT_MAX_M: the ADR 0301 BDOT floor stays symmetric (a
+            # full right shift of 0.75-1.1 m pushed DK8 / Andersa onto sidewalks and the viaduct edge in tile C)
+            sh = min(add / 2.0, S.GROW_RIGHT_MAX_M)
             sec.center_offset = round(sec.center_offset - sh, 3)
             if sec.center_offset_end is not None:
                 sec.center_offset_end = round(sec.center_offset_end - sh, 3)
