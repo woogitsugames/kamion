@@ -18,3 +18,6 @@ Worktree: .claude/worktrees/lanes-audit-s24 (gałąź lanes-audit-s24, -NoLibrar
   Rendery przed: vqa/before/{bialystok-kleeberga,bialystok-maczka} (High overcast, kamery route_s*); po (r1 maczka, przed fitem przeciwnej jezdni): vqa/after/bialystok-maczka; pary vqa/view/pair-maczka-*.jpg.
   W toku: build.ps1 r2 (maczka -> kleeberga -> industrial-c -> knyszynska, ~45 min/kafel), pytest roads/world_roads/0233.
   NASTĘPNY KROK: po każdym kaflu `pwsh -File artifacts/lanes-audit-s24/vqa.ps1 -Region <id> -Tag after`, pary, visual-critic, kopia artifacts do main.
+- 19.11 07:15: r2 przebudowane maczka + kleeberga (generated/ w gicie), rendery after (vqa/view/pair-{maczka,kleeberga}-route-*.jpg): pas dzielący z zielenią i barierą wrócił (s1613), 3 pasy 3,6 m. Regresja r2: brak linii krawędziowych przy fit edge_lines=none -> poprawka (linia na otwartej stronie = P-7), r3 maczka+kleeberga w kolejce (round3.ps1).
+  W toku: build r2 industrial-c -> knyszynska (after_chain.ps1 renderuje), potem round3.ps1 (maczka, kleeberga, Tag after3).
+  NASTĘPNY KROK: po round3.status: pary before/after3, kopia do main artifacts/lanes-audit-s24, commit generated/, raport.
