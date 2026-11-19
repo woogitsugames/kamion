@@ -1,0 +1,199 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0159",
+   "look_at": [
+    -810.718,
+    609.069,
+    137.06
+   ],
+   "note": "driver eye 2.5 m, control route s = 159 m of 1589 m (unnamed)",
+   "pos": [
+    -870.137,
+    618.324,
+    139.748
+   ],
+   "route_s_m": 158.935,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0477",
+   "look_at": [
+    -494.905,
+    596.799,
+    136.376
+   ],
+   "note": "driver eye 2.5 m, control route s = 477 m of 1589 m (unnamed)",
+   "pos": [
+    -554.319,
+    587.656,
+    137.511
+   ],
+   "route_s_m": 476.805,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0795",
+   "look_at": [
+    -196.97,
+    702.873,
+    137.894
+   ],
+   "note": "driver eye 2.5 m, control route s = 795 m of 1589 m (unnamed)",
+   "pos": [
+    -248.839,
+    672.373,
+    138.871
+   ],
+   "route_s_m": 794.675,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1113",
+   "look_at": [
+    92.527,
+    833.088,
+    141.121
+   ],
+   "note": "driver eye 2.5 m, control route s = 1113 m of 1589 m (unnamed)",
+   "pos": [
+    36.436,
+    811.778,
+    141.42
+   ],
+   "route_s_m": 1112.545,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1430",
+   "look_at": [
+    375.659,
+    977.275,
+    140.521
+   ],
+   "note": "driver eye 2.5 m, control route s = 1430 m of 1589 m (Generała Franciszka Kleeberga)",
+   "pos": [
+    323.247,
+    948.019,
+    143.483
+   ],
+   "route_s_m": 1430.415,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_01_above",
+   "look_at": [
+    397.179,
+    331.233,
+    144.551
+   ],
+   "note": "roundabout from ~40 m: Rondo Wolnej Ukrainy",
+   "pos": [
+    467.179,
+    411.233,
+    186.551
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_02_above",
+   "look_at": [
+    -875.191,
+    712.962,
+    130.681
+   ],
+   "note": "roundabout from ~40 m: ring_c:w360598445:3651136714-3651136723",
+   "pos": [
+    -805.191,
+    792.962,
+    172.681
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_03_above",
+   "look_at": [
+    -873.286,
+    722.146,
+    130.876
+   ],
+   "note": "roundabout from ~40 m: ring_c:w360598445:3651136723-3651136734",
+   "pos": [
+    -803.286,
+    802.146,
+    172.876
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_04_above",
+   "look_at": [
+    -878.953,
+    730.255,
+    130.769
+   ],
+   "note": "roundabout from ~40 m: ring_c:w360598445:3651136734-3651136745",
+   "pos": [
+    -808.953,
+    810.255,
+    172.769
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_05_above",
+   "look_at": [
+    -888.976,
+    731.85,
+    130.535
+   ],
+   "note": "roundabout from ~40 m: ring_c:w360598445:3651136745-3651136741",
+   "pos": [
+    -818.976,
+    811.85,
+    172.535
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_06_above",
+   "look_at": [
+    -85.329,
+    821.622,
+    137.224
+   ],
+   "note": "roundabout from ~40 m: ring_c:w615607617:5821206042-5821206959",
+   "pos": [
+    -15.329,
+    901.622,
+    179.224
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 286.444,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "bialystok-porosly",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

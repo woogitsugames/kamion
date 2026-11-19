@@ -60,6 +60,11 @@
      "id": "bialystok-knyszynska",
      "side": "W",
      "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-porosly",
+     "side": "SW",
+     "seamM": 0.0
     }
    ]
   },
@@ -82,6 +87,11 @@
      "seamM": 2048.0
     },
     {
+     "id": "bialystok-porosly",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
      "id": "dk65-01",
      "side": "W",
      "seamM": 2048.0
@@ -89,6 +99,11 @@
     {
      "id": "dk65-02",
      "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk8-s8-jeroniki",
+     "side": "SW",
      "seamM": 0.0
     }
    ]
@@ -119,6 +134,41 @@
    ]
   },
   {
+   "id": "bialystok-porosly",
+   "xmin": 770827.0,
+   "ymin": 593151.0,
+   "xmax": 772875.0,
+   "ymax": 595199.0,
+   "anchorX": 771851.0,
+   "anchorY": 594175.0,
+   "anchorZ": 136.6,
+   "worldMemoryMB": 118.6,
+   "worldMemoryHighMB": 286.0,
+   "memorySource": "ADR 0292: import Win64 2026-11-19 dk8-s8-s24 r7 (WORLD_MEMORY total)",
+   "neighbors": [
+    {
+     "id": "bialystok-knyszynska",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk8-s8-jeroniki",
+     "side": "W",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-kleeberga",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "dk65-01",
+     "side": "NW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
    "id": "dk65-01",
    "xmin": 768779.0,
    "ymin": 595199.0,
@@ -142,6 +192,11 @@
      "seamM": 2048.0
     },
     {
+     "id": "dk8-s8-jeroniki",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
      "id": "s8-01",
      "side": "W",
      "seamM": 2048.0
@@ -149,6 +204,11 @@
     {
      "id": "dk65-03",
      "side": "NW",
+     "seamM": 0.0
+    },
+    {
+     "id": "bialystok-porosly",
+     "side": "SE",
      "seamM": 0.0
     }
    ]
@@ -734,6 +794,41 @@
    ]
   },
   {
+   "id": "dk8-s8-jeroniki",
+   "xmin": 768779.0,
+   "ymin": 593151.0,
+   "xmax": 770827.0,
+   "ymax": 595199.0,
+   "anchorX": 769803.0,
+   "anchorY": 594175.0,
+   "anchorZ": 119.39,
+   "worldMemoryMB": 94.4,
+   "worldMemoryHighMB": 217.9,
+   "memorySource": "ADR 0292: import Win64 2026-11-19 dk8-s8-s24 r7 (WORLD_MEMORY total)",
+   "neighbors": [
+    {
+     "id": "bialystok-porosly",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk65-01",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-knyszynska",
+     "side": "NE",
+     "seamM": 0.0
+    },
+    {
+     "id": "s8-01",
+     "side": "NW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
    "id": "dw671-jasionowka-01",
    "xmin": 760587.0,
    "ymin": 613631.0,
@@ -1295,6 +1390,11 @@
      "id": "dk65-02",
      "side": "NE",
      "seamM": 0.0
+    },
+    {
+     "id": "dk8-s8-jeroniki",
+     "side": "SE",
+     "seamM": 0.0
     }
    ]
   },
@@ -1594,6 +1694,14 @@
    "gapM": 0.0
   },
   {
+   "from": "dk8-s8-jeroniki",
+   "to": "bialystok-porosly",
+   "side": "E",
+   "x": 770827.0,
+   "y": 594833.4,
+   "gapM": 0.0
+  },
+  {
    "from": "dw671-tykocin-01",
    "to": "dw671-tykocin-02",
    "side": "S",
@@ -1751,6 +1859,13 @@
     "dk65-11",
     "knyszyn-s",
     "knyszyn"
+   ]
+  },
+  {
+   "id": "dk8-s8-jeroniki..bialystok-porosly",
+   "tiles": [
+    "dk8-s8-jeroniki",
+    "bialystok-porosly"
    ]
   },
   {
