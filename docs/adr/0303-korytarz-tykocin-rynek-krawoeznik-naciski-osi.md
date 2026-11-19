@@ -17,6 +17,14 @@ w220327904) i — po pierwszym `via` — na Bernardyńską / Choroszczańską.
 węzły OSM 1123400983 (róg SE Rynku), 2791676438 (Złota), 1842358780 (Sokołowska/Klasztorna). Trasa kontrolna:
 2558 m, 100 % krawędzi `secondary` ref 671 (test `test_tykocin_trip_ends_on_the_rynek_0303`).
 
+**Znalezisko przy okazji — równoległe krawędzie.** `roadgraph.to_digraph` (networkx `DiGraph`, jedna krawędź na
+kierunek) przy dwóch drogach między tą samą parą węzłów zostawiał ostatnią dodaną. W `dw671-tykocin-03` droga serwisowa
+w553605081 (124 m) zastępowała krawędź DW671 w1111506762 (46 m) i trasa kontrolna jechała pętlą serwisową. Teraz
+zostaje krótsza krawędź (test `test_parallel_edges_keep_the_shorter_0303`). Skan tras kontrolnych wszystkich regionów:
+równoległe krawędzie na trasie w 3 regionach; zmiana trasy tylko w `dw671-tykocin-03` (2265 → 2191 m, cała po DW671,
+`route_obstacles` 0/0); `bialystok-industrial-c`, `dk65-05` bez zmian; `route_links.json` bez zmian (`--check`).
+Kamery kontrolne `dw671-tykocin-03` (`build_world` → `control_cameras.json`) przesuną się przy następnej przebudowie kafla.
+
 ## 2. Cel „Tykocin” = Rynek
 **Miejsce postoju** (ortofoto 0,25 m, `ortho_rynek.png`, `ortho_rynek_south.png`): na placu nie ma zatoki ani parkingu
 dla zestawu 16,5 m (parking przy Alumnacie i miejsca wzdłuż wschodniej pierzei — osobowe). Płyta placu z pomnikiem
