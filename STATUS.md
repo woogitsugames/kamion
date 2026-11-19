@@ -78,3 +78,6 @@
 - 16:3x: fidelity C r5: islands_absent 2 (main 1): 11_dk8 E -549.8 N 218.9 (ta sama co w main, 543 m²) + nowa mała
   E -554.6 N 118.8 (41 m², nos pasa dzielącego przy rozwidleniu Putry). r6 (D bez BDOT, profil bez przesunięcia) w toku;
   łańcuch import C → player → EditMode → pytest czeka na `rebuild-r6.status`.
+- 16:4x: C r6 consistency: lane_blind_end 44, marking_off 3, obstacle 2, arrow 8 — wszystkie ratchety kafla OK
+  (main: 57 / 4 / 2 / 7). Na trasie 2 (> ROUTE_MAX 1; main 3): pętla serwisowa w435369082 E -208 N -287 + znana brama.
+  fidelity r6 w toku.
