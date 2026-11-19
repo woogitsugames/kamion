@@ -44,6 +44,27 @@ namespace Game.UI.CabDisplays
         public int BuildingCount => BuildingTriStart.Length - (BuildingTriStart.Length > 0 ? 1 : 0);
         public float RouteLength => RouteS.Length > 0 ? RouteS[RouteS.Length - 1] : 0f;
 
+        /// <summary>ADR 0300: copy of the map moved by <paramref name="offset"/> metres (a neighbour tile drawn in the frame of
+        /// the tile the truck is on: offset = neighbour origin - current origin). Geometry arrays are new; names, classes
+        /// and the start route are shared (only the geometry is drawn). Allocates - called on a tile switch only.</summary>
+        public NavMapData Shifted(Vector2 offset)
+        {
+            var d = (NavMapData)MemberwiseClone();
+            d.Min = Min + offset; d.Max = Max + offset;
+            d.RoadPoints = new Vector2[RoadPoints.Length];
+            for (int i = 0; i < RoadPoints.Length; i++) d.RoadPoints[i] = RoadPoints[i] + offset;
+            d.BuildingPoints = new Vector2[BuildingPoints.Length];
+            for (int i = 0; i < BuildingPoints.Length; i++) d.BuildingPoints[i] = BuildingPoints[i] + offset;
+            var o4 = new Vector4(offset.x, offset.y, offset.x, offset.y);
+            d.RoadBounds = new Vector4[RoadBounds.Length];
+            for (int i = 0; i < RoadBounds.Length; i++) d.RoadBounds[i] = RoadBounds[i] + o4;
+            d.BuildingBounds = new Vector4[BuildingBounds.Length];
+            for (int i = 0; i < BuildingBounds.Length; i++) d.BuildingBounds[i] = BuildingBounds[i] + o4;
+            d.Route = new Vector2[Route.Length];
+            for (int i = 0; i < Route.Length; i++) d.Route[i] = Route[i] + offset;
+            return d;
+        }
+
         public static NavMapData Load(string regionId)
         {
             if (string.IsNullOrEmpty(regionId)) return null;

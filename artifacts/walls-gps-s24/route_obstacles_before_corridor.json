@@ -1,0 +1,531 @@
+{
+ "schema": "truck-sim-pl/route-obstacles/1",
+ "adr": "0300",
+ "envelope": {
+  "half_width_m": 1.2,
+  "floor_m": 0.35,
+  "top_m": 3.8
+ },
+ "tiles": [
+  {
+   "tile": "bialystok-industrial-c",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2397.2,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:c-dk8-to-maczka",
+     "length_m": 1508.7,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "bialystok-maczka",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2053.8,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "bialystok-kleeberga",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2221.0,
+     "no_surface_samples": 1,
+     "colliders": [
+      {
+       "kind": "collider",
+       "label": "road_collision|collision_fence",
+       "s": [
+        1806.0,
+        1856.0
+       ],
+       "first_en": [
+        -662.7,
+        -508.9
+       ],
+       "dz": [
+        -3.88,
+        3.9
+       ],
+       "samples": 27
+      }
+     ],
+     "visual": [
+      {
+       "kind": "visual",
+       "label": "furniture|concrete_plinth",
+       "s": [
+        1806.0,
+        1808.0
+       ],
+       "first_en": [
+        -662.7,
+        -508.9
+       ],
+       "dz": [
+        -1.06,
+        0.5
+       ],
+       "samples": 2
+      },
+      {
+       "kind": "visual",
+       "label": "furniture|noise_glass",
+       "s": [
+        1806.0,
+        1856.0
+       ],
+       "first_en": [
+        -662.7,
+        -508.9
+       ],
+       "dz": [
+        -3.02,
+        3.9
+       ],
+       "samples": 27
+      },
+      {
+       "kind": "visual",
+       "label": "furniture|noise_post_light",
+       "s": [
+        1806.0,
+        1856.0
+       ],
+       "first_en": [
+        -662.7,
+        -508.9
+       ],
+       "dz": [
+        -3.96,
+        4.0
+       ],
+       "samples": 27
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tile": "bialystok-knyszynska",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2961.3,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-01",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 631.6,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:dk65-01-s8-corner",
+     "length_m": 577.5,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-02",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2400.7,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-03",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 484.4,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-04",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2079.4,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-05",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2201.9,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-06",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1701.8,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-07",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 865.6,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-08",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2355.1,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-09",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 352.4,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-10",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2615.4,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-11",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 377.8,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "knyszyn-s",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2420.7,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "knyszyn",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1159.8,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszyn-dk65-to-dw671-w",
+     "length_m": 617.9,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszyn-dk65-to-dk65-w",
+     "length_m": 639.1,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszyn-rynek-to-dw671-w",
+     "length_m": 745.8,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszyn-rynek-to-dk65-w",
+     "length_m": 771.7,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "knyszyn-w",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1988.7,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszyn-w-dw671",
+     "length_m": 596.0,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-01",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2608.5,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-02",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 107.8,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-03",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2265.3,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-04",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1880.6,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-05",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 692.0,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-06",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2154.2,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-07",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1006.4,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-08",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1675.4,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-09",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1063.0,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "tykocin",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2541.2,
+     "no_surface_samples": 4,
+     "colliders": [
+      {
+       "kind": "collider",
+       "label": "road_collision|collision_curb",
+       "s": [
+        1902.0,
+        1902.0
+       ],
+       "first_en": [
+        138.9,
+        -454.7
+       ],
+       "dz": [
+        0.02,
+        0.38
+       ],
+       "samples": 1
+      }
+     ],
+     "visual": [
+      {
+       "kind": "visual",
+       "label": "buildings|steel_painted",
+       "s": [
+        1886.0,
+        1886.0
+       ],
+       "first_en": [
+        154.0,
+        -450.0
+       ],
+       "dz": [
+        -0.25,
+        6.35
+       ],
+       "samples": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "colliders_total": 2
+}

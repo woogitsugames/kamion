@@ -962,6 +962,15 @@ namespace Game.World.Streaming
             return CorridorEdge.InsideDistance(Graph, m_EdgeState, m_EdgeDrivable, m_EdgeTile, worldPos.x, worldPos.z, out inside);
         }
 
+        /// <summary>ADR 0300: region root of a Ready tile = its region-local frame (local (x, z) = region-local (E, N);
+        /// moved by every origin rebase together with the vehicle). Null when the tile is not Ready / not placed.</summary>
+        public Transform FrameOf(int tile)
+        {
+            if (m_Tiles == null || tile < 0 || tile >= m_Tiles.Length || Policy == null) return null;
+            var t = m_Tiles[tile];
+            return t.root != null && Policy.StateOf(tile) == TileState.Ready ? t.root.transform : null;
+        }
+
         /// <summary>World-space start route of a resident tile (null when the tile is not resident or has none).</summary>
         public WorldRoute RouteOf(string regionId)
         {

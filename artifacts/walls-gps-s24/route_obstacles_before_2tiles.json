@@ -1,0 +1,108 @@
+{
+ "schema": "truck-sim-pl/route-obstacles/1",
+ "adr": "0300",
+ "envelope": {
+  "half_width_m": 1.2,
+  "floor_m": 0.35,
+  "top_m": 3.8
+ },
+ "tiles": [
+  {
+   "tile": "bialystok-kleeberga",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2221.0,
+     "no_surface_samples": 1,
+     "colliders": [
+      {
+       "kind": "collider",
+       "label": "road_collision|collision_fence",
+       "s": [
+        1806.0,
+        1856.0
+       ],
+       "first_en": [
+        -662.7,
+        -508.9
+       ],
+       "dz": [
+        -3.88,
+        3.9
+       ],
+       "samples": 27
+      }
+     ],
+     "visual": [
+      {
+       "kind": "visual",
+       "label": "furniture|concrete_plinth",
+       "s": [
+        1806.0,
+        1808.0
+       ],
+       "first_en": [
+        -662.7,
+        -508.9
+       ],
+       "dz": [
+        -1.06,
+        0.5
+       ],
+       "samples": 2
+      },
+      {
+       "kind": "visual",
+       "label": "furniture|noise_glass",
+       "s": [
+        1806.0,
+        1856.0
+       ],
+       "first_en": [
+        -662.7,
+        -508.9
+       ],
+       "dz": [
+        -3.02,
+        3.9
+       ],
+       "samples": 27
+      },
+      {
+       "kind": "visual",
+       "label": "furniture|noise_post_light",
+       "s": [
+        1806.0,
+        1856.0
+       ],
+       "first_en": [
+        -662.7,
+        -508.9
+       ],
+       "dz": [
+        -3.96,
+        4.0
+       ],
+       "samples": 27
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tile": "bialystok-knyszynska",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2961.3,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  }
+ ],
+ "colliders_total": 1
+}
