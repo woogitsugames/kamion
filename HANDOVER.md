@@ -1,3 +1,5 @@
+> **STAŁA ZASADA WŁAŚCICIELA (19.11.2026, s24): ZAWSZE zlecaj pracę innym modelom przez CLI** — claude-alt (`%USERPROFILE%\.local\bin\claude-alt.cmd`, drugie konto, osobny limit), Codex (`codex exec -m gpt-6.1-sol`, recenzje z diffem w prompcie), Mistral Vibe (`vibe.exe --prompt-file … --workdir <własny worktree>`). Po to są, żeby limit lidera starczał na maksa. Przy każdym wolnym zadaniu z kolejki najpierw sprawdź, czy da się je oddać CLI; równolegle z własnymi agentami trzymaj w toku co najmniej 1–2 zlecenia CLI (każde we własnym worktree), lider tylko przegląda i scala.
+
 # SESJA 20 (start 2026-11-13 22:3x lokalnie; 5 h 0 % — reset 03:20; tydzień wszystkie modele 79 %, Fable 16 %, reset 16.11 05:00)
 - **main** `f48317146`. C: 723 GB. adb: A16 RFGL34SJYDZ + S24+ RZCX60VE8ZY online. Nic nie działało w tle (stare tail.exe zabite). PHONE_RUN brak.
 - Właściciel: „weź jednorazowo 20 agentów”; „M52-FIX-3 gotowe” (26aeb871f na `research/mistral-p2-surfaces-2`).
