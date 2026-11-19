@@ -5,3 +5,5 @@
 - NASTĘPNY KROK: narzędzie QA przeszkód na trasie korytarza (tools/worldgen/qa/route_obstacles.py), potem GPS.
 - 19.11 01:4x: GPS: NavStreamFollower + SwitchRegion + mapy sąsiadów; KNAV dla 44 regionów; QA korytarza: 1 kolizja (kleeberga s1806-1856), tykocin 1 krawężnik. Build kleeberga z poprawką w toku (artifacts/walls-gps-s24/build_kleeberga.status), testy PlayMode w toku. ADR 0300 szkic.
 - NASTĘPNY KROK: po exit= w build_kleeberga.status: pwsh scripts/import-region.ps1 -Region bialystok-kleeberga (+knyszynska, dk65-01), build-windows -Regions, przejazd.
+- 02:15: PlayMode 20/21 (5 nowych zielone; Capture_Devices = brak prefabu TRAKT w worktree, nie moje). Build Win knyszynska+dk65-01: przejazd przez szew -> [NAV] region switched to dk65-01, rebase bez skoku, minimapa z drogą pod ciężarówką (artifacts/walls-gps-s24/after). Build kleeberga z poprawką w toku.
+- NASTĘPNY KROK: po exit= w build_kleeberga.status: import-region kleeberga -BuildTarget Win64, build-windows -Regions kleeberga,knyszynska,dk65-01, przejazd od kleeberga -route_s 1700.
