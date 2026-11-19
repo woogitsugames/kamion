@@ -1,7 +1,7 @@
 {
  "chains": [
   {
-   "axis_smoothing_dev_max_m": 0.59,
+   "axis_smoothing_dev_max_m": 0.65,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -12,18 +12,18 @@
    "lanes": [
     2
    ],
-   "length_m": 147.4,
-   "max_grade": 0.0248,
+   "length_m": 147.3,
+   "max_grade": 0.0249,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.021,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0,
-    6.0
+    7.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard",
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -233,7 +233,7 @@
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard",
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -489,7 +489,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -511,12 +511,12 @@
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0,
-    6.5
+    6.5,
+    6.7
    ],
    "width_src": [
     "authored_override:knyszynska-seam-w-xsec",
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -536,10 +536,10 @@
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -861,7 +861,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -884,7 +884,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -907,7 +907,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1116,7 +1116,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1139,7 +1139,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1162,7 +1162,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1185,7 +1185,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1254,7 +1254,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1277,7 +1277,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1300,7 +1300,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1323,7 +1323,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1829,7 +1829,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1852,7 +1852,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1875,7 +1875,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1898,7 +1898,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1921,7 +1921,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1944,7 +1944,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -1990,7 +1990,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2013,7 +2013,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2036,7 +2036,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2059,7 +2059,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2082,7 +2082,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2105,7 +2105,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2312,7 +2312,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2335,7 +2335,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2358,7 +2358,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2427,7 +2427,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2611,7 +2611,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2657,7 +2657,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2726,7 +2726,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2772,7 +2772,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -2933,7 +2933,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3050,7 +3050,7 @@
     5.4
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3259,7 +3259,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3412,14 +3412,14 @@
     2
    ],
    "length_m": 40.0,
-   "max_grade": 0.0129,
+   "max_grade": 0.0131,
    "overrides": [
     "knyszynska-seam-w-xsec"
    ],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.7
    ],
    "width_src": [
     "authored_override:knyszynska-seam-w-xsec"
@@ -3437,14 +3437,14 @@
     2
    ],
    "length_m": 73.8,
-   "max_grade": 0.0039,
+   "max_grade": 0.0034,
    "overrides": [
     "knyszynska-seam-w-xsec"
    ],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.7
    ],
    "width_src": [
     "authored_override:knyszynska-seam-w-xsec"
@@ -3462,14 +3462,14 @@
     2
    ],
    "length_m": 43.6,
-   "max_grade": 0.0191,
+   "max_grade": 0.0192,
    "overrides": [
     "knyszynska-seam-w-xsec"
    ],
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.7
    ],
    "width_src": [
     "authored_override:knyszynska-seam-w-xsec"
@@ -3518,7 +3518,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3612,7 +3612,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3635,7 +3635,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3678,10 +3678,10 @@
    "profile_rms_vs_nmt_m": 1.849,
    "sidewalk_frac": 1.0,
    "width_m": [
-    7.5
+    8.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3719,15 +3719,15 @@
     2
    ],
    "length_m": 543.3,
-   "max_grade": 0.0651,
+   "max_grade": 0.064,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 2.057,
+   "profile_rms_vs_nmt_m": 2.037,
    "sidewalk_frac": 1.0,
    "width_m": [
-    7.5
+    8.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3749,11 +3749,11 @@
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5,
-    7.5
+    8.0
    ],
    "width_src": [
     "bdot10k (clamped 3.50-5.50)",
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3891,7 +3891,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3914,7 +3914,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3936,10 +3936,10 @@
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    8.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -3985,7 +3985,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4008,7 +4008,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4031,7 +4031,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4054,7 +4054,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4077,7 +4077,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4100,7 +4100,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4123,7 +4123,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4146,7 +4146,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4169,7 +4169,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4192,7 +4192,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4215,7 +4215,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4238,7 +4238,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4261,7 +4261,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4284,7 +4284,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4307,7 +4307,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4330,7 +4330,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4353,7 +4353,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4376,7 +4376,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4399,7 +4399,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4422,7 +4422,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4472,7 +4472,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 1.21,
+   "axis_smoothing_dev_max_m": 1.33,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -4482,17 +4482,17 @@
    "lanes": [
     2
    ],
-   "length_m": 106.0,
-   "max_grade": 0.0163,
+   "length_m": 105.7,
+   "max_grade": 0.0166,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0,
-    5.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4538,10 +4538,10 @@
    "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    8.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4559,15 +4559,15 @@
    "length_m": 208.9,
    "max_grade": 0.0594,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.008,
+   "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.5,
    "width_m": [
     5.5,
-    7.5
+    8.0
    ],
    "width_src": [
     "bdot10k (clamped 3.50-5.50)",
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4615,7 +4615,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -4640,7 +4640,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5008,7 +5008,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5051,10 +5051,10 @@
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    8.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5077,7 +5077,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5100,7 +5100,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5261,7 +5261,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5284,7 +5284,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5560,7 +5560,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5583,7 +5583,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5606,7 +5606,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5652,7 +5652,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5695,10 +5695,10 @@
    "profile_rms_vs_nmt_m": 0.0,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5721,7 +5721,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -5736,19 +5736,19 @@
     2
    ],
    "length_m": 26.3,
-   "max_grade": 0.0051,
+   "max_grade": 0.0049,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.23,
+   "axis_smoothing_dev_max_m": 0.25,
    "bridge_m": 0.0,
    "grade_limit": 0.11,
    "highway": [
@@ -5759,15 +5759,15 @@
     2
    ],
    "length_m": 95.8,
-   "max_grade": 0.0089,
+   "max_grade": 0.0086,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.005,
+   "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6365,7 +6365,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6528,7 +6528,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6551,7 +6551,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6574,7 +6574,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6597,7 +6597,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6620,7 +6620,7 @@
     6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6635,15 +6635,15 @@
     2
    ],
    "length_m": 110.4,
-   "max_grade": 0.0084,
+   "max_grade": 0.0082,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6658,15 +6658,15 @@
     2
    ],
    "length_m": 69.3,
-   "max_grade": 0.0137,
+   "max_grade": 0.0136,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.004,
-   "sidewalk_frac": 0.0,
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.5,
    "width_m": [
-    6.0
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6755,10 +6755,10 @@
    "profile_rms_vs_nmt_m": 0.054,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6778,10 +6778,10 @@
    "profile_rms_vs_nmt_m": 0.002,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6801,10 +6801,10 @@
    "profile_rms_vs_nmt_m": 0.026,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6819,15 +6819,15 @@
     2
    ],
    "length_m": 234.3,
-   "max_grade": 0.0573,
+   "max_grade": 0.057,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6847,10 +6847,10 @@
    "profile_rms_vs_nmt_m": 0.07,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -6877,7 +6877,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.76,
+   "axis_smoothing_dev_max_m": 0.88,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -6887,18 +6887,18 @@
    "lanes": [
     2
    ],
-   "length_m": 426.3,
+   "length_m": 426.1,
    "max_grade": 0.0306,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.016,
+   "profile_rms_vs_nmt_m": 0.015,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0,
-    5.5
+    7.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard",
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7051,15 +7051,15 @@
     2
    ],
    "length_m": 36.7,
-   "max_grade": 0.0186,
+   "max_grade": 0.0187,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.025,
+   "profile_rms_vs_nmt_m": 0.024,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7076,13 +7076,13 @@
    "length_m": 123.6,
    "max_grade": 0.0319,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.04,
+   "profile_rms_vs_nmt_m": 0.039,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7097,15 +7097,15 @@
     2
    ],
    "length_m": 57.3,
-   "max_grade": 0.01,
+   "max_grade": 0.0099,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.1
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7125,10 +7125,10 @@
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 0.5,
    "width_m": [
-    6.0
+    6.1
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7148,10 +7148,10 @@
    "profile_rms_vs_nmt_m": 0.002,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.1
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7168,13 +7168,13 @@
    "length_m": 33.1,
    "max_grade": 0.0088,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.004,
+   "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.1
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7189,15 +7189,15 @@
     2
    ],
    "length_m": 30.1,
-   "max_grade": 0.0077,
+   "max_grade": 0.0078,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.1
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7217,10 +7217,10 @@
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.1
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7243,7 +7243,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7312,7 +7312,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7335,7 +7335,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7381,7 +7381,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7450,7 +7450,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7473,7 +7473,7 @@
     5.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7496,7 +7496,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7516,10 +7516,10 @@
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 0.5,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7539,10 +7539,10 @@
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.5,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7562,10 +7562,10 @@
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.5,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7580,15 +7580,15 @@
     2
    ],
    "length_m": 118.4,
-   "max_grade": 0.0277,
+   "max_grade": 0.0279,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.005,
+   "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.5,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7611,7 +7611,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7626,15 +7626,15 @@
     2
    ],
    "length_m": 39.0,
-   "max_grade": 0.0424,
+   "max_grade": 0.0426,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.5,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7649,15 +7649,15 @@
     2
    ],
    "length_m": 27.3,
-   "max_grade": 0.0379,
+   "max_grade": 0.0382,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.5,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7677,10 +7677,10 @@
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.5,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7700,10 +7700,10 @@
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.5,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -7718,15 +7718,15 @@
     2
    ],
    "length_m": 95.6,
-   "max_grade": 0.0108,
+   "max_grade": 0.0109,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.005,
+   "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.5,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -8339,15 +8339,15 @@
     2
    ],
    "length_m": 34.0,
-   "max_grade": 0.0185,
+   "max_grade": 0.0189,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -8613,8 +8613,8 @@
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ],
   "j:n2504239797": [
-   "corner 1-2: arms touch (gap -5.69 m) -> no nose",
-   "corner 2-0: kerb chamfer 1:4 over 7.0 m (width step 1.74 m)"
+   "corner 1-2: arms touch (gap -5.94 m) -> no nose",
+   "corner 2-0: kerb chamfer 1:4 over 7.3 m (width step 1.81 m)"
   ],
   "j:n2504262114": [
    "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)"
@@ -8646,7 +8646,7 @@
   "j:n486724229": [
    "corner 0-1: no fillet fits (alpha 88 deg) -> sharp",
    "corner 1-2: no fillet fits (alpha 91 deg) -> sharp",
-   "corner 1-2: kerb chamfer 1:4 over 3.2 m (width step 0.80 m)"
+   "corner 1-2: kerb chamfer 1:4 over 5.2 m (width step 1.30 m)"
   ],
   "j:n5137694874": [
    "corner 0-1: no fillet fits (alpha 88 deg) -> sharp",
@@ -8663,7 +8663,7 @@
   "axis_smoothing_deviation_m": {
    "max": 2.75,
    "p50": 0.0,
-   "p95": 0.144
+   "p95": 0.145
   },
   "bridges": [
    {
@@ -8731,18 +8731,18 @@
   ],
   "crossings_snapped": 55,
   "decals": {
-   "gullies": 1283,
+   "gullies": 1282,
    "oil": 273,
-   "patches": 567
+   "patches": 555
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 664663,
+  "footprint_nodes": 666796,
   "fork_abreast": [
    {
     "beside": "c:w261104557:2927425559-2504239797",
     "chain": "c:w561326924:3626955261-2504239797",
     "node": "n2504239797",
-    "overlap_max_m": 6.45,
+    "overlap_max_m": 6.7,
     "overlap_run_m": 27.5,
     "shift_max_m": 0.0,
     "side": "right"
@@ -8751,8 +8751,8 @@
     "beside": "c:w242989862:2504262098-2504262143",
     "chain": "c:w242989864:2504262123-2927425557",
     "node": "n2504262148",
-    "overlap_max_m": 6.2,
-    "overlap_run_m": 43.0,
+    "overlap_max_m": 6.45,
+    "overlap_run_m": 45.5,
     "shift_max_m": 0.0,
     "side": "right"
    },
@@ -8760,8 +8760,8 @@
     "beside": "c:w242989866:2504262144-2504262100",
     "chain": "c:w242989867:2504262150-3626955231",
     "node": "n2504262150",
-    "overlap_max_m": 6.2,
-    "overlap_run_m": 44.0,
+    "overlap_max_m": 6.45,
+    "overlap_run_m": 46.5,
     "shift_max_m": 0.0,
     "side": "right"
    }
@@ -8791,7 +8791,7 @@
   "fork_tapers": [
    {
     "chain": "c:w659412402:3160866532-1782932321",
-    "from_hw": 3.0,
+    "from_hw": 3.25,
     "node": "n1782932321",
     "taper_m": 15.0,
     "to_hw": 2.5
@@ -8826,14 +8826,14 @@
    },
    {
     "chain": "c:w659412402:2070721859-3160866532",
-    "from_hw": 3.0,
+    "from_hw": 3.25,
     "node": "n2070721859",
     "taper_m": 15.0,
     "to_hw": 2.5
    },
    {
     "chain": "c:w659412402:3993779705-2070721859",
-    "from_hw": 3.0,
+    "from_hw": 3.25,
     "node": "n2070721859",
     "taper_m": 15.0,
     "to_hw": 2.5
@@ -8861,10 +8861,24 @@
    },
    {
     "chain": "c:w76084088:3116310522-2268776071",
-    "from_hw": 3.25,
+    "from_hw": 3.5,
     "node": "n2268776071",
     "taper_m": 15.0,
     "to_hw": 3.0
+   },
+   {
+    "chain": "c:w659412402:2070722587-2268776081",
+    "from_hw": 3.25,
+    "node": "n2268776081",
+    "taper_m": 13.3,
+    "to_hw": 2.75
+   },
+   {
+    "chain": "c:w659412402:2268776081-3993779705",
+    "from_hw": 3.25,
+    "node": "n2268776081",
+    "taper_m": 15.0,
+    "to_hw": 2.75
    },
    {
     "chain": "c:w217591014:5133969514-2268776091",
@@ -8872,6 +8886,13 @@
     "node": "n2268776091",
     "taper_m": 15.0,
     "to_hw": 2.5
+   },
+   {
+    "chain": "c:w40329438:486724246-2314286220",
+    "from_hw": 3.5,
+    "node": "n2314286220",
+    "taper_m": 15.0,
+    "to_hw": 3.0
    },
    {
     "chain": "c:w222615988:2329921567-2315670005",
@@ -8888,10 +8909,17 @@
     "to_hw": 2.0
    },
    {
-    "chain": "c:w300697966:3048054709-3048054727",
-    "from_hw": 2.75,
-    "node": "n3048054709",
+    "chain": "c:w70534974:3951232439-2431036797",
+    "from_hw": 3.05,
+    "node": "n2431036797",
     "taper_m": 15.0,
+    "to_hw": 2.75
+   },
+   {
+    "chain": "c:w300697966:3048054709-3048054727",
+    "from_hw": 3.5,
+    "node": "n3048054709",
+    "taper_m": 20.0,
     "to_hw": 2.5
    },
    {
@@ -8931,17 +8959,24 @@
    },
    {
     "chain": "c:w40329438:486724229-486724246",
-    "from_hw": 3.0,
+    "from_hw": 3.5,
     "node": "n486724246",
-    "taper_m": 15.0,
+    "taper_m": 15.8,
     "to_hw": 2.5
    },
    {
     "chain": "c:w40329438:486724246-2314286220",
-    "from_hw": 3.0,
+    "from_hw": 3.5,
     "node": "n486724246",
-    "taper_m": 15.0,
+    "taper_m": 20.0,
     "to_hw": 2.5
+   },
+   {
+    "chain": "c:w623133905:5885126752-2329921454",
+    "from_hw": 3.5,
+    "node": "n5885126752",
+    "taper_m": 15.0,
+    "to_hw": 2.75
    },
    {
     "chain": "c:w623133911:5885126757-2431036797",
@@ -8952,10 +8987,17 @@
    },
    {
     "chain": "c:w687816192:6448194344-7184251768",
-    "from_hw": 2.75,
+    "from_hw": 3.5,
     "node": "n6448194344",
-    "taper_m": 15.0,
+    "taper_m": 20.0,
     "to_hw": 2.5
+   },
+   {
+    "chain": "c:w687816198:6448194372-11398170650",
+    "from_hw": 3.5,
+    "node": "n6448194372",
+    "taper_m": 15.0,
+    "to_hw": 3.0
    },
    {
     "chain": "c:w1167312479:6732654005-10855593505",
@@ -8966,7 +9008,7 @@
    },
    {
     "chain": "c:w779083414:7274176735-7274176724",
-    "from_hw": 2.75,
+    "from_hw": 3.25,
     "node": "n7274176724",
     "taper_m": 15.0,
     "to_hw": 2.5
@@ -8983,14 +9025,25 @@
   "gores": {
    "gores": [
     {
+     "area_m2": 184.3,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "merge",
+     "xy": [
+      469.2,
+      -1000.4
+     ]
+    },
+    {
      "area_m2": 22.3,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "sliver",
      "xy": [
-      883.3,
-      -805.1
+      880.8,
+      -806.7
      ]
     },
     {
@@ -9000,8 +9053,8 @@
      "note": "",
      "why": "sliver",
      "xy": [
-      860.6,
-      -793.4
+      858.3,
+      -794.4
      ]
     },
     {
@@ -9042,7 +9095,7 @@
      "built": true,
      "hatch": false,
      "note": "",
-     "why": "sliver",
+     "why": "hole",
      "xy": [
       429.2,
       613.9
@@ -9050,53 +9103,41 @@
     }
    ],
    "islands": [],
-   "kerb_dropped_m": 116.0,
+   "kerb_dropped_m": 258.5,
    "kerb_tris_in_fill": 0,
    "paved": {
+    "hole": {
+     "area_m2": 2.0,
+     "count": 1
+    },
+    "merge": {
+     "area_m2": 184.3,
+     "count": 1
+    },
     "sliver": {
-     "area_m2": 66.7,
-     "count": 6
+     "area_m2": 64.7,
+     "count": 5
     }
    },
    "rejected": [
     {
-     "area_m2": 158.9,
+     "area_m2": 148.1,
      "reason": "carriageways at different heights",
-     "step_m": 0.98,
+     "step_m": 0.99,
      "why": "merge",
      "xy": [
       502.8,
-      -1008.8
+      -1008.9
      ]
     },
     {
-     "area_m2": 153.5,
-     "reason": "carriageways at different heights",
-     "step_m": 0.29,
-     "why": "merge",
-     "xy": [
-      462.8,
-      -1004.0
-     ]
-    },
-    {
-     "area_m2": 131.9,
+     "area_m2": 120.7,
      "reason": "carriageways at different heights",
      "step_m": 0.76,
      "why": "merge",
      "xy": [
-      839.7,
-      -803.8
-     ]
-    },
-    {
-     "area_m2": 16.6,
-     "reason": "carriageways at different heights",
-     "step_m": 0.24,
-     "why": "sliver",
-     "xy": [
-      440.6,
-      -1016.4
+      838.5,
+      -804.3
      ]
     }
    ],
@@ -9139,7 +9180,7 @@
   ],
   "markings": {
    "P-1 centre line": 52,
-   "P-1 lane line": 29,
+   "P-1 lane line": 28,
    "P-10 crossing": 42,
    "P-10 crossing in junction": 22,
    "P-11 cycle crossing": 12,
@@ -9152,9 +9193,9 @@
    "P-8 skipped (lanes continue)": 1,
    "P-8 skipped (off carriageway)": 13
   },
-  "markings_overlap_removed_tris": 28,
+  "markings_overlap_removed_tris": 25,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 838,
+  "nmt_nodes_replaced_under_decks": 816,
   "overrides_applied": [
    {
     "id": "knyszynska-seam-w-xsec",
@@ -9209,17 +9250,6 @@
   },
   "seam_tapers": [
    {
-    "chain": "c:w222579345:2315344515-2315344551",
-    "end": "a",
-    "in_tile_m": 12.5,
-    "length_m": 25.0,
-    "neighbour": "bialystok-kleeberga",
-    "step_m": 0.25,
-    "width_other": 5.5,
-    "width_own": 6.0,
-    "width_seam": 5.75
-   },
-   {
     "chain": "c:w224161424:2329921567-2329921561",
     "end": "a",
     "in_tile_m": 10.42,
@@ -9243,40 +9273,40 @@
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 848,
-   "parts": 207,
-   "side_tris": 161
+   "kerb_tris": 1306,
+   "parts": 196,
+   "side_tris": 133
   },
   "signalised_junctions": 0,
   "through_lines": {
    "crossing_pairs_skipped": 47,
-   "junctions": 49,
+   "junctions": 48,
    "lines": {
     "P-7a": 2,
     "P-7b": 7,
-    "lane": 56
+    "lane": 54
    },
-   "pairs": 176,
-   "unmatched": 21
+   "pairs": 175,
+   "unmatched": 19
   },
   "verge_strips": {
    "chunks": 59,
-   "tris": 56442
+   "tris": 56406
   },
   "walled_ramps": [
    {
     "chain": "c:w242989862:2504262098-2504262143",
     "confidence": "medium",
     "max_wall_h_m": 4.54,
-    "nmt_fill_max_m": 0.32,
+    "nmt_fill_max_m": 0.33,
     "walled_m": 158.9
    },
    {
     "chain": "c:w242989866:2504262144-2504262100",
     "confidence": "medium",
-    "max_wall_h_m": 5.05,
-    "nmt_fill_max_m": 0.2,
-    "walled_m": 160.4
+    "max_wall_h_m": 4.99,
+    "nmt_fill_max_m": 0.21,
+    "walled_m": 159.9
    }
   ]
  }
