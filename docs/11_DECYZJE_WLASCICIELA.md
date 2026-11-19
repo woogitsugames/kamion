@@ -186,3 +186,6 @@ Właściciel (klik, wszystkie cztery): (1) Białystok — drogi (pasy, szerokoś
 
 ## D94 — Drogi szersze niż w rzeczywistości dla grywalności (2026-11-19, s24)
 Właściciel: „trzeba zrobić jezdnie szersze niż w realu, bo będzie ludziom ciężko” — np. wlot ronda w Knyszynie wymusza lekki wjazd na przeciwny pas. Decyzja (klik): **każdy pas +0,25 m względem rzeczywistości/pomiaru (ortofoto, OSM, BDOT)**, a **wloty/wyloty rond i skrzyżowań oraz łuki krawężników poszerzone tak, by zestaw 16,5 m (ciągnik + naczepa 13,6 m) mieścił się bez wjazdu na przeciwny pas** — sprawdzane torem jazdy naczepy (link_swept_check / route_obstacles) na wszystkich trasach korytarza. Wierność układu (liczba pasów, przebieg) bez zmian; tylko szerokości i promienie. Pierwszeństwo: rondo DK65/DW671 w Knyszynie i podobne ciasne miejsca.
+
+## D89 — Budżety streamingu PC z pomiaru GTX 1070 (2026-11-18, s24)
+Właściciel (klik): najpierw pomiar, potem budżety. Po pomiarze GTX 1070 (klasa zalecany; korytarz High VRAM 1,07–1,87 GB z 8 GB, prywatna 2,1–3,3 GB): **Low 640→850 MB, High 1450→2000 MB** (WORKING_VALUE) i scalenie DK19. Wdrożone: StreamingPolicy.cs (dk19-tiles-s24, ADR 0273/0290). Otwarte: Medium (800) < Low (850) — do ujednolicenia.

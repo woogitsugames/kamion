@@ -1,15 +1,28 @@
 {
  "by_source": {
-  "skirt:j:road_asphalt": 2,
+  "skirt:j:road_asphalt": 3,
   "skirt:j:road_paving": 1,
+  "skirt:j:sidewalk_paving": 1,
   "skirt:path_asphalt": 2,
   "skirt:yard_asphalt": 4,
-  "skirt:yard_gravel": 3
+  "skirt:yard_gravel": 3,
+  "steep_grass:verge_grass": 4
  },
- "count": 12,
- "max_m": 0.396,
- "p99_m": 0.391,
+ "count": 18,
+ "max_m": 1.298,
+ "p99_m": 1.21,
  "skirt_area": [
+  {
+   "e": 581.2,
+   "exposed_m2": 4.462,
+   "mat": "road_asphalt",
+   "max_h": 1.298,
+   "n": 0.9,
+   "points": 2,
+   "run_m": 29.652,
+   "src": "j:n1847317032",
+   "visible": true
+  },
   {
    "e": -356.1,
    "exposed_m2": 1.334,
@@ -111,12 +124,12 @@
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 167,
+ "thin_steep_faces_skipped": 195,
  "thresh_m": 0.15,
  "verge_strips": {
   "max_m": 1.144,
   "skirt": 19,
-  "steep_grass": 230,
+  "steep_grass": 247,
   "worst": [
    "steep_grass",
    "j:n3064590173:corner1:vg",
@@ -125,6 +138,30 @@
   ]
  },
  "worst": [
+  {
+   "e": 581.2,
+   "h": 1.298,
+   "kind": "skirt",
+   "mat": "sidewalk_paving",
+   "n": 0.8,
+   "src": "j:n1847317032:corner1"
+  },
+  {
+   "e": 581.2,
+   "h": 0.779,
+   "kind": "skirt",
+   "mat": "road_asphalt",
+   "n": 0.9,
+   "src": "j:n1847317032"
+  },
+  {
+   "e": -705.9,
+   "h": 0.503,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -57.7,
+   "src": "c:w249740770:2357579520-6644270078:R:1"
+  },
   {
    "e": -356.1,
    "h": 0.396,
@@ -190,6 +227,14 @@
    "src": "bdot:ec03b3d0-91b3-4ab7-8ccb-5106c43b52bd:0#0:edge"
   },
   {
+   "e": -705.8,
+   "h": 0.265,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -57.2,
+   "src": "c:w249740770:2357579520-6644270078:R:1"
+  },
+  {
    "e": -355.9,
    "h": 0.253,
    "kind": "skirt",
@@ -220,6 +265,22 @@
    "mat": "road_paving",
    "n": -360.3,
    "src": "j:n12609722635"
+  },
+  {
+   "e": -705.7,
+   "h": 0.21,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -56.5,
+   "src": "c:w249740770:2357579520-6644270078:R:1"
+  },
+  {
+   "e": -705.7,
+   "h": 0.21,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -56.5,
+   "src": "c:w249740770:2357579520-6644270078:R:1"
   }
  ]
 }

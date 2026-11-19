@@ -1174,7 +1174,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
 
     gen = pipeline.REGIONS / region_id / "generated"
     srcs = {}
-    for k in ("roads.graph.json", "terrain.json", "overrides.yaml", "generated/osm_context.json"):
+    for k in ("roads.graph.json", "terrain.json", "overrides.yaml", "generated/osm_context.json",
+              "overrides.ortho_lanes.json"):          # ADR 0301 (None = no file)
         p = pipeline.REGIONS / region_id / k
         # ADR 0173: hash LF-normalised text, so a CRLF checkout (worktree) and an LF checkout (main) agree
         srcs[k] = sha(p.read_bytes().replace(b"\r\n", b"\n")) if p.exists() else None

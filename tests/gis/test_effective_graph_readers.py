@@ -238,6 +238,8 @@ RAW_OK = {      # ingested graph on purpose (reason in ADR 0274 "Czytniki grafu"
     "tools/worldgen/fidelity/run.py": "compares with OSM; input hashes",
     "tools/worldgen/fidelity/inputs.py": "hashes the ingested graph file (fidelity input hashes, ADR 0245)",
     "tools/worldgen/qa/typology_budget.py": "road mask from OSM axes for regions C/Dojlidy (no split), ADR 0238",
+    "tools/worldgen/qa/lane_width_audit.py": "OSM tags (lanes, width) of route edges by id for the audit table (ADR 0301)",
+    "tools/worldgen/qa/ortho_lane_fit.py": "raw OSM way geometry per edge id: the measured offset is relative to the ingested way (ADR 0301)",
     "tools/worldgen/qa_report.py": "source data QA against orthophoto / BDOT10k",
     "tools/worldgen/qa/roundabout_ortho.py": "orthophoto probe on the OSM axes (the evidence for the override)",
     "tools/worldgen/qa/ortho_xsec.py": "orthophoto cross-sections of the OSM axes",
