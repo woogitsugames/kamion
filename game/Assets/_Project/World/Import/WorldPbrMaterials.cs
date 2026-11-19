@@ -395,7 +395,13 @@ namespace Game.World.Import
                     mat.SetFloat("_DetailFade", 25f);
                 }
             }
-            if (id == "terrain_grass") { mat.EnableKeyword("_GROUNDMASKS"); mat.SetFloat("_GroundTint", 1f); }
+            if (id == "terrain_grass")
+            {
+                mat.EnableKeyword("_GROUNDMASKS"); mat.SetFloat("_GroundTint", 1f);
+                // ADR 0298: the farmland mosaic is a function of the EPSG:2180 position (KamionFieldMosaic.hlsl); the
+                // region material carries its origin so terrain and apron of every tile agree along the seams.
+                mat.SetVector("_RegionOriginEN", new Vector4((float)r.AnchorX, (float)r.AnchorY, 1f, 0f));
+            }
             if (id == "terrain_grass" || id == "verge_grass" || id == "plot_lawn")   // plot_lawn: ADR 0114
             {
                 // Review r5 W-N3: macro-masked bare soil + rotated second sample (ADR 0042). Refill = linear mean of

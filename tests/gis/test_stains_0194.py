@@ -125,6 +125,31 @@ def test_plate_uv1_large_plate_never_drops_into_gutter_band():
     assert MS.PLATE_EDGE_FLAG <= uv1[5, 1] < MS.PLATE_EDGE_FLAG + 0.65
 
 
+def test_plate_uv1_no_rings_beyond_the_chain_end():
+    """ADR 0298 (review 2026-11-18 N2): past the free end of an arm chain (tile edge, carriageway split) the lane
+    coordinate must follow the lateral offset, not the distance to the end vertex (onion rings of wheel paths)."""
+    from types import SimpleNamespace
+    import numpy as np
+    from roads import meshing as MS
+    from roads.geom import Polyline
+
+    sec = SimpleNamespace(lane_edges=None, oneway=False, roundabout=False, edge_strip=0.0, lane_w=3.5)
+    line = Polyline(np.column_stack([np.linspace(-30.0, 0.0, 61), np.zeros(61)]))
+    ch = SimpleNamespace(line=line, length=float(line.length), dirn=np.zeros(len(line.p), int),
+                         idx=lambda s: int(np.argmin(np.abs(line.s - float(s)))), hw_at=lambda s: 4.0,
+                         section=lambda s, sec_list: sec_list[0])
+    arm = SimpleNamespace(chain=ch, end="b", s=lambda d: float(ch.length - d), direction=lambda d: np.array([-1.0, 0.0]))
+    j = SimpleNamespace(arms=[arm], trims={0: 2.0})
+    lat = np.array([0.4, 1.3, 2.2, 3.1])
+    V = np.array([[x, y, 0.0] for x in (-1.0, 3.0, 6.0) for y in lat])     # before and 3 / 6 m past the end vertex
+    uv1 = MS._patch_uv1(SimpleNamespace(sec_list=[sec]), j, V, None)
+    lane = uv1[:, 0].reshape(3, len(lat))
+    # no radial growth: past the end the coordinate only eases to the nearest lane boundary (wheel paths fade out)
+    assert np.all(np.abs(lane[1] - lane[0]) <= 0.5 + 1e-9) and np.allclose(lane[2], np.rint(lane[0]), atol=1e-6), lane
+    edge = (uv1[:, 1] - MS.PLATE_EDGE_FLAG).reshape(3, len(lat))
+    assert np.all(edge[2] >= 1.0 - 1e-9), edge     # the kerb line of the arm is not extended as gutter grime past its end
+
+
 def test_road_asphalt_shoulder_strip_uses_no_roadwear_uv1():
     """RURAL paved-shoulder / flush road_asphalt strips must use UV1=(-1, 5), never longitudinal metres along."""
     import numpy as np

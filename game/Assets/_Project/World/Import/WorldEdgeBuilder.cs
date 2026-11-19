@@ -35,6 +35,13 @@ namespace Game.World.Import
         public const float StubLengthM = 420f;
         const float SampleStepM = 16f;
         static readonly float[] k_RingDist = { -1f, 0f, 30f, 80f, 160f, 280f, 440f, 600f, ApronReachM };
+        // ADR 0298 (knyszyn-p2-s24, review 2026-11-18 N1: seam 15-22 sRGB levels between the tile and the apron). The apron
+        // ring at the edge takes the terrain's own ground masks (COLOR_0 of the terrain band along the border) and blends to
+        // the apron mask by the 30 m ring; rural tiles (every region but C) flag the apron as arable farmland so the
+        // per-pixel field mosaic (KamionFieldMosaic.hlsl) runs on unbroken across the edge. Context of one Build call.
+        const float BorderBlendM = 30f;
+        static Func<Vector2, Color32?> s_BorderMask;
+        static bool s_FarmApron;
         static readonly string[] k_FarSectors = { "far_north", "far_east", "far_south", "far_west" };
 
         /// <summary>Batch entry point to rebuild WorldEdge (apron + closures + far-field) in WorldC and WorldC_High in place.</summary>
@@ -122,7 +129,10 @@ namespace Game.World.Import
             var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(meshPath);
             bool created = mesh == null;
             if (created) mesh = new Mesh { name = "world_edge" };
-            BuildApron(mesh, root, min, max, stubs);
+            s_FarmApron = r.Region != RegionScenes.RegionC;
+            s_BorderMask = BorderMaskSampler(r, tier, min, max);
+            try { BuildApron(mesh, root, min, max, stubs); }
+            finally { s_BorderMask = null; s_FarmApron = false; }
             if (created) AssetDatabase.CreateAsset(mesh, meshPath); else EditorUtility.SetDirty(mesh);
             var apron = new GameObject("Apron");
             apron.transform.SetParent(edge, false);
@@ -609,9 +619,62 @@ namespace Game.World.Import
         }
 
         // ------------------------------------------------------------------------------------------------ apron
+        /// <summary>ADR 0298: terrain ground masks along the four tile edges, linearly interpolated along each edge from the
+        /// vertices of the imported terrain band of this tier (null when the region has none).</summary>
+        static Func<Vector2, Color32?> BorderMaskSampler(RegionImporter.Result r, string tier, Vector2 min, Vector2 max)
+        {
+            var sides = new List<(float t, Color32 c)>[4];   // 0 S (t = E), 1 E (t = N), 2 N (t = E), 3 W (t = N)
+            for (int s = 0; s < 4; s++) sides[s] = new List<(float, Color32)>();
+            const float tol = 0.3f;
+            foreach (var ch in r.Chunks)
+            {
+                if (!ch.Layers.TryGetValue(tier, out var layers)) continue;
+                bool touches = ch.Min.x <= min.x + tol || ch.Min.y <= min.y + tol || ch.Max.x >= max.x - tol || ch.Max.y >= max.y - tol;
+                if (!touches) continue;
+                foreach (var l in layers)
+                {
+                    if (l.Node != "terrain_band" || l.Mesh == null) continue;
+                    var v = l.Mesh.vertices;
+                    var c = l.Mesh.colors32;
+                    if (c == null || c.Length != v.Length) continue;
+                    for (int i = 0; i < v.Length; i++)
+                    {
+                        float x = v[i].x, z = v[i].z;
+                        if (x < min.x - tol || x > max.x + tol || z < min.y - tol || z > max.y + tol) continue;
+                        if (Mathf.Abs(z - min.y) < tol) sides[0].Add((x, c[i]));
+                        if (Mathf.Abs(x - max.x) < tol) sides[1].Add((z, c[i]));
+                        if (Mathf.Abs(z - max.y) < tol) sides[2].Add((x, c[i]));
+                        if (Mathf.Abs(x - min.x) < tol) sides[3].Add((z, c[i]));
+                    }
+                }
+            }
+            int total = 0;
+            for (int s = 0; s < 4; s++) { sides[s].Sort((a, b) => a.t.CompareTo(b.t)); total += sides[s].Count; }
+            if (total == 0) return null;
+            Color32? At(List<(float t, Color32 c)> list, float t)
+            {
+                if (list.Count == 0) return null;
+                int hi = list.FindIndex(e => e.t >= t);
+                if (hi < 0) return list[list.Count - 1].c;
+                if (hi == 0) return list[0].c;
+                var a = list[hi - 1]; var b = list[hi];
+                return Color32.Lerp(a.c, b.c, b.t > a.t ? (t - a.t) / (b.t - a.t) : 0f);
+            }
+            return p =>
+            {
+                if (Mathf.Abs(p.y - min.y) < 0.5f) return At(sides[0], p.x);
+                if (Mathf.Abs(p.x - max.x) < 0.5f) return At(sides[1], p.y);
+                if (Mathf.Abs(p.y - max.y) < 0.5f) return At(sides[2], p.x);
+                if (Mathf.Abs(p.x - min.x) < 0.5f) return At(sides[3], p.y);
+                return null;
+            };
+        }
+
         static Color32 ApronMask(Vector2 p, float d, bool shoulder = false)
         {
             byte r = shoulder ? (byte)12 : (byte)255;
+            // ADR 0298: rural tiles - arable farmland flag (B = 1), no forest litter / urban soil zones of region C
+            if (s_FarmApron) return new Color32(r, 0, 255, 0);
             float n1 = 0.5f + 0.5f * Mathf.Sin(p.x * 0.013f + p.y * 0.009f) * Mathf.Cos(p.y * 0.017f - p.x * 0.011f);
             float n2 = 0.5f + 0.5f * Mathf.Sin(p.x * 0.031f - p.y * 0.023f);
             // Forest floor needle/leaf litter in the northern/north-western forest belts (Las Pietrasze, Las Bacieczki)
@@ -718,7 +781,15 @@ namespace Game.World.Import
                     pos.Add(new Vector3(p.x, y, p.y));
                     nrm.Add(Vector3.up);
                     uv.Add(p);
-                    col.Add(ApronMask(p, Mathf.Max(0f, d)));
+                    var mc = ApronMask(p, Mathf.Max(0f, d));
+                    if (s_BorderMask != null && s_BorderMask(basePt[i]) is Color32 bc)
+                    {
+                        // ADR 0298: a field crossing the edge keeps its BDOT kind (grassland 0.90 / arable 1.00 flag) out
+                        // into the apron, so the mosaic palette does not switch at the seam
+                        if (s_FarmApron && bc.b >= 219) mc.b = bc.b;
+                        if (d <= BorderBlendM) mc = Color32.Lerp(bc, mc, Mathf.Clamp01(d / BorderBlendM));   // the terrain's own masks at the edge
+                    }
+                    col.Add(mc);
                 }
             for (int i = 0; i < np; i++)
             {

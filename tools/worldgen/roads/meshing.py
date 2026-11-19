@@ -1386,6 +1386,7 @@ def _repair_fill(poly, zb, ph, spacing):
 #   UV1.y = PLATE_EDGE_FLAG + PLATE_SPREAD_SCALE * spread + min(edge, 1 m)
 # (the shader's gutter / damp strip only reads edge < 0.65 m, and at the outline spread = 0, so the kerb edge survives).
 PLATE_EDGE_FLAG = 20.0
+PLATE_END_FADE_M = 3.0      # ADR 0298: wheel paths fade out past the end of an arm chain window
 PLATE_SPREAD_SCALE = 100.0
 PLATE_SPREAD_M = 8.0          # WORKING_VALUE: ~two lane widths into the box
 
@@ -1416,6 +1417,11 @@ def _patch_uv1(net, j, V, poly=None):
             best = (dot, i)
     if best is not None:
         ref.append(best[1])
+    if getattr(j, "compact", None) is not None:
+        # ADR 0298: a compact roundabout plate (ADR 0218 5c) covers the mouths of ALL its arms; arms outside the through
+        # pair fell to the flare ramp (integer lane) and their wheel paths ended in zigzags at the barrier of DK65 W.
+        # Every arm references its own lanes; past the chain end they fade (PLATE_END_FADE_M).
+        ref = list(range(len(j.arms)))
 
     def _lane_coord(sec, lat_arr, hw_val, dir_val):
         if getattr(sec, "lane_edges", None):
@@ -1443,20 +1449,35 @@ def _patch_uv1(net, j, V, poly=None):
         C = A[None] + AB[None] * t[..., None]
         D = np.hypot(P[:, None, 0] - C[..., 0], P[:, None, 1] - C[..., 1])
         k = D.argmin(1)
-        dist = D[np.arange(len(P)), k]
         cross = AB[k, 0] * (P[:, 1] - A[k, 1]) - AB[k, 1] * (P[:, 0] - A[k, 0])
+        # ADR 0298 (review 2026-11-18 N2 "koncentryczne pierścienie na asfalcie wlotów"): beyond the free end of the
+        # chain window (the tile edge, a carriageway split) the nearest point is the END VERTEX, so the Euclidean
+        # distance grew radially and the wheel paths (frac of the lane coordinate) drew onion rings around it on every
+        # plate. The lateral offset is the perpendicular distance to the nearest segment's line instead.
+        dist = np.abs(cross) / np.sqrt(l2[k])
         lat = np.copysign(dist, cross)
+        dnear = D[np.arange(len(P)), k]          # the arm whose chain is nearest still owns the vertex (no flip-flop)
         hw = hws[i]
         # Clamp lateral position inside [-hw, hw] and ramp smoothly to an integer lane boundary (frac=0 -> wp/drip=0)
         # outside hw so turnoff-flare triangles never interpolate UV1.x across [-1, +2] into sawtooth wheel ruts.
         lc = _lane_coord(sec, np.clip(lat, -hw, hw), hw, dir_val)
         u_flare = np.clip((dist - hw) / 1.0, 0.0, 1.0)
         lc = lc + u_flare * (np.rint(lc) - lc)
-        better_any = dist < score
+        # ADR 0298: past the free ends of the chain window the wheel paths fade out over PLATE_END_FADE_M instead of
+        # being extrapolated (two extrapolated arms crossed into a diamond of ruts at the roundabout mouth)
+        tk = ((P - A[k]) * AB[k]).sum(1) / l2[k]
+        seg = np.sqrt(l2[k])
+        beyond = np.where(k == len(A) - 1, np.maximum(tk - 1.0, 0.0) * seg, 0.0)
+        beyond = np.maximum(beyond, np.where(k == 0, np.maximum(-tk, 0.0) * seg, 0.0))
+        u_end = np.clip(beyond / PLATE_END_FADE_M, 0.0, 1.0)
+        lc = lc + u_end * (np.rint(lc) - lc)
+        better_any = dnear < score
         lane[better_any] = lc[better_any]
-        edge[better_any] = np.where(dist <= hw + 0.3, np.maximum(hw - dist, 0.0), 5.0)[better_any]
+        e_arm = np.where(dist <= hw + 0.3, np.maximum(hw - dist, 0.0), 5.0)
+        e_arm = e_arm + u_end * (np.maximum(e_arm, 1.0) - e_arm)     # ADR 0298: no gutter grime along extended kerb lines
+        edge[better_any] = e_arm[better_any]
         flare_d[better_any] = np.maximum(dist - hw, 0.0)[better_any]
-        score[better_any] = dist[better_any]
+        score[better_any] = dnear[better_any]
     if poly is not None:
         import shapely
         ring = shapely.LinearRing(np.asarray(poly, float)[:, :2])

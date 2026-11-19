@@ -350,6 +350,13 @@ M = {
                     "set_tile_m": [6.0, 2.6]},
     "wood_planks_green": {"color": [0.08, 0.14, 0.10], "rough": 0.85, "texture_set": "wood_siding", "set_tile": True,
                           "set_tile_m": [6.0, 2.6]},
+    # ADR 0298 (knyszyn-p2-s24, review 2026-11-18 N5 "surowa jasna sosna"): owner photo 7 (Rynek, local only) shows the
+    # wooden houses PAINTED - oxide red-brown and graphite / blue-grey boards - not raw pine. Linear tints read by eye off
+    # that photo in overcast light (red ~ sRGB 128/58/44, graphite ~ 78/84/90), WORKING_VALUE. Same wood_siding set.
+    "wood_planks_red": {"color": [0.216, 0.042, 0.025], "rough": 0.8, "texture_set": "wood_siding", "set_tile": True,
+                        "set_tile_m": [6.0, 2.6]},
+    "wood_planks_graphite": {"color": [0.076, 0.088, 0.102], "rough": 0.8, "texture_set": "wood_siding", "set_tile": True,
+                             "set_tile_m": [6.0, 2.6]},
     # ADR 0295 (review 2026-11-18 P1-1): painted boards round the openings of a boarded house (surrounds, head
     # boards). Aged white oil paint, well under the soffit boarding (0.55) the review called "plastic white":
     # WORKING_VALUE, no photo of a Knyszyn wooden house in the repo. Only buildings_mesh.wood_surround uses it.

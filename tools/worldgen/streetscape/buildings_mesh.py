@@ -77,7 +77,20 @@ ROOF_OVERRIDES = {name for name, _ in HOUSE_ROOFS} | {"roof_sheet_grey"}
 OVR_ROOF_ONLY = {"roof_material"}
 # house walls an authored override may name (read off a licensed street-level photo): the rule tones plus boarding
 HOUSE_WALL_OVERRIDES = {m for m, _, _ in HOUSE_TONES} | {"plaster_white", "plaster_yellow", "plaster_peach",
-                                                      "plaster_sage", "brick_red", "wood_planks", "wood_planks_green"}
+                                                      "plaster_sage", "brick_red", "wood_planks", "wood_planks_green",
+                                                      "wood_planks_red", "wood_planks_graphite"}
+# ADR 0298 (review 2026-11-18 N5): boarding colour of a rule wooden house - painted red-brown / graphite as on owner
+# photo 7, the stained brown and green of ADR 0287 kept for a share. Shares WORKING_VALUE (no survey of Knyszyn houses).
+WOOD_PAINTS = (("wood_planks_red", 0.32), ("wood_planks_graphite", 0.24), ("wood_planks", 0.26), ("wood_planks_green", 0.18))
+
+
+def wood_paint(key):
+    u, acc = FK.hfloat(key, "woodc"), 0.0
+    for mat, share in WOOD_PAINTS:
+        acc += share
+        if u < acc:
+            return mat
+    return WOOD_PAINTS[-1][0]
 
 
 def house_roof_material(building, default):
@@ -1695,7 +1708,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         plinth = FK.hpick(PLINTHS, key, "plinth") if typ in ("block", "office") else "plinth_dark"   # draws (Low)
         if wooden:
             wall = (b["ovr"]["wall_material"] if str(b["ovr"].get("wall_material", "")).startswith("wood_planks")
-                    else "wood_planks" if FK.hfloat(key, "woodc") < 0.6 else "wood_planks_green")
+                    else wood_paint(key))
         u_acc = 0.0
         ro_blocks = (runoff_blocks(key, float(sum(lens)) + 1.0)
                      if b.get("runoff_shuffle") and typ == "hall" and not front else None)
