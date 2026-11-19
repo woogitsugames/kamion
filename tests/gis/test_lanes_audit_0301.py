@@ -31,6 +31,8 @@ def _edge(tags):
     ({"highway": "trunk", "oneway": "yes", "lanes": "2", "width": 7.5}, 3.50),
     # ... and may widen it up to the widest value (GP: std + 0.25, WORKING_VALUE)
     ({"highway": "trunk", "oneway": "yes", "lanes": "2", "width": 10.0}, 3.75),
+    # two-way class G with BDOT 6.0 m (Szosa Knyszyńska): 3.00 m lanes as painted, floor unchanged
+    ({"highway": "secondary", "lanes": "2", "width": 6.0}, 3.00),
     # Z / L: § 17 ust. 1 pkt 5-6 allow up to 3.50 m (was capped at std + 0.25)
     ({"highway": "tertiary", "lanes": "2", "width": 7.0}, 3.50),
     ({"highway": "residential", "lanes": "2", "width": 6.6}, 3.30),
@@ -47,8 +49,10 @@ def test_bdot_lane_width_rule(tags, lane_w):
 def test_standards_follow_ptb2022_17_1():
     from roads import standards as S
     for cls, (std, diff) in S.LANE_WIDTH.items():
-        assert diff <= S.LANE_WIDTH_BDOT_FLOOR[cls] <= std
+        for ow in (True, False):
+            assert diff <= S.bdot_lane_floor(cls, ow) <= std
         assert S.LANE_WIDTH_MAX[cls] >= std
+    assert S.bdot_lane_floor("G", False) == 3.00          # two-way G: BDOT right (Szosa Knyszyńska, edge lines 6.3-6.5 m)
     assert S.LANE_WIDTH_MAX["Z"] == S.LANE_WIDTH_MAX["L"] == S.LANE_WIDTH_MAX["D"] == 3.50   # "dopuszcza się ... 3,50"
     assert S.LANE_WIDTH_MAX["S"] == 3.75
 
@@ -91,7 +95,7 @@ def test_generated_lane_overrides_loaded_before_authored():
     ("bialystok-maczka", "w257357743:2629158252-2357583392"),
 ])
 def test_maczka_three_lanes_as_painted(region, edge):
-    """The 3-lane DK8 carriageway is built with the painted lanes (3.4-3.8 m each, edge lines both sides) and its centre
+    """The 3-lane DK8 carriageway is built with the painted lanes (3.4-4.0 m each; a lane to the kerb includes the gutter) and its centre
     1.0-2.2 m right of the OSM way (the way is drawn along the lane lines, toward the median)."""
     from roads import pipeline
     net = pipeline.build_network(region)[0]
@@ -99,7 +103,7 @@ def test_maczka_three_lanes_as_painted(region, edge):
     assert sec.lane_edges, sec.width_src
     widths = [b - a for a, b in zip(sec.lane_edges, sec.lane_edges[1:])]
     assert len(widths) == 3
-    assert all(3.4 <= w <= 3.8 for w in widths), widths
+    assert all(3.4 <= w <= 4.0 for w in widths), widths   # lane to the kerb (no edge line) includes the gutter
     assert -2.2 <= sec.center_offset <= -1.0
     assert sec.edge_lines in ("both", "right")
 
