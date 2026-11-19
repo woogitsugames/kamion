@@ -2665,6 +2665,106 @@
       "hf_ratio_albedo": 0.0251,
       "ao_mean": 0.978
     },
+    "fieldstone": {
+      "tile_m": [
+        2.4,
+        0.6
+      ],
+      "slots": [
+        "fieldstone_plinth"
+      ],
+      "note": "ADR 0305: fieldstone footing of a log house, boulders 0.15-0.30 m in lime mortar, damp mossy foot.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            256
+          ],
+          "texel_mm": 2.34,
+          "dir": "fieldstone/High",
+          "png_bytes": 1546088,
+          "files": [
+            "T_fieldstone_BaseColor.png",
+            "T_fieldstone_MaskMap.png",
+            "T_fieldstone_Normal.png",
+            "T_fieldstone_Var.png"
+          ],
+          "smoothness_mean": 0.152,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 622155
+        },
+        "Medium": {
+          "res": [
+            512,
+            128
+          ],
+          "texel_mm": 4.69,
+          "dir": "fieldstone/Medium",
+          "png_bytes": 462945,
+          "files": [
+            "T_fieldstone_BaseColor.png",
+            "T_fieldstone_MaskMap.png",
+            "T_fieldstone_Normal.png",
+            "T_fieldstone_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 121460
+        },
+        "Low": {
+          "res": [
+            256,
+            64
+          ],
+          "texel_mm": 9.38,
+          "dir": "fieldstone/Low",
+          "png_bytes": 128480,
+          "files": [
+            "T_fieldstone_BaseColor.png",
+            "T_fieldstone_MaskMap.png",
+            "T_fieldstone_Normal.png",
+            "T_fieldstone_Var.png"
+          ],
+          "smoothness_mean": 0.112,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 21845
+        }
+      },
+      "height_range_m": [
+        -0.006,
+        0.03287
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3157,
+        "p95": 0.7517,
+        "mean_rgb_linear": [
+          0.5064,
+          0.4993,
+          0.4881
+        ]
+      },
+      "hf_ratio_albedo": 0.0178,
+      "ao_mean": 0.819
+    },
     "fire_station": {
       "tile_m": [
         14.0,

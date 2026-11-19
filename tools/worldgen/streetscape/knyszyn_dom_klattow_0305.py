@@ -264,10 +264,9 @@ def _fence_line(a, d, n, L, pu0, pu1, pd, roads_poly):
     w = pd - 0.03
     if roads_poly is None:
         return w, runs
-    from shapely.geometry import LineString
-    while w >= 0.8:
-        lines = [LineString([a + d * u0 + n * w, a + d * u1 + n * w]) for u0, u1 in runs]
-        if min(float(roads_poly.distance(ln)) for ln in lines) >= ROAD_CLEAR_M:
+    while w >= 0.8:                                           # the whole strip between the wall and the pickets is clear
+        strips = [Polygon([a + d * u0 + n * 0.3, a + d * u1 + n * 0.3, a + d * u1 + n * w, a + d * u0 + n * w]) for u0, u1 in runs]
+        if min(float(roads_poly.distance(st)) for st in strips) >= ROAD_CLEAR_M:
             return w, runs
         w -= 0.1
     return None

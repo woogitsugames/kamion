@@ -396,13 +396,30 @@ overrides:
     set: {wall_material: plaster_white}
   - id: look-dom-klattow-wooden
     target: {building: "bdot:2002917F-2F22-5C99-E053-CC2BA8C01CFC"}
-    sources: ["OSM way/294345657 (material=wood, tourism=attraction, wikidata Q16540625)"]
+    sources: ["OSM way/294345657 (material=wood, tourism=attraction, wikidata Q16540625)",
+              "owner photos klattow-01, -03, -04, -05 (2026-11-19, Data/raw/refs/owner-knyszyn-klattow-2026-11-19, local reference only)"]
     reason: >-
-      Listed wooden house at Koscielna (OSM material=wood). 171 m2, so the footprint rule (wooden only under
-      120 m2, 12 % by hash) never boards it. SOURCED: wooden; ESTIMATED: plank colour (dark brown).
+      Listed wooden house at Koscielna (OSM material=wood). ADR 0305: the visible house is the authored asset
+      streetscape/knyszyn_dom_klattow_0305.py (limewashed logs, old tile roof, porch, picket fence - read off the
+      owner's photos); this entry is only the fallback of the rule generator when that asset is skipped: a boarded
+      house in WHITE (the first version of this entry said dark brown boards with no photo - wrong, owner 2026-11-19).
+    confidence: high
+    verify: owner review of look_dom_klattow / look_dom_klattow_street against the photos
+    set: {typology: dom_drewniany, wall_material: wood_planks_white}
+  - id: look-lamus-plebanski
+    target: {building: "bdot:40f8044a-d048-4ad8-ad57-d8b8a2886fe1"}
+    sources: ["owner photo klattow-02 (2026-11-19, local reference only)", "GUGiK orthophoto 2025 0.25 m (reference only)"]
+    reason: >-
+      Timber granary / shelter next to the presbytery west of the church (owner photo klattow-02: unpainted log
+      walls, tall hipped shingle roof, open arcade on posts with braces along the long side). BDOT: 'budynek
+      gospodarczy', 80 m2, 6.7 x 12.1 m, no LoD height (default 4.5 m) - the rule built a flat grey shed. Identified on
+      the orthophoto: the only dark grey hipped roof of that size between the church front and Koscielna, the
+      red-roofed presbytery between it and the church as on the photo. ESTIMATED: total height 6.4 m (the photo shows
+      a roof about 1.5 x the wall height), boarded brown walls as the nearest material, grey sheet as the nearest
+      roof tone (no shingle set, no arcade - open point of ADR 0305).
     confidence: medium
-    verify: owner photo or a Commons photo of the house (plank colour, porch)
-    set: {typology: dom_drewniany, wall_material: wood_planks}
+    verify: owner review; shingle roof set and the arcade on posts are a later authored asset
+    set: {typology: dom_drewniany, wall_material: wood_planks, roof_shape: hip, roof_material: roof_sheet_grey, height_m: 6.4, storeys: 1}
   - id: look-east-square-kiosk
     target: {building: "osm:way/1427273958"}
     sources: ["OSM way/1427273958 (building=yes, 12 m2, no other tag)", "GUGiK orthophoto 2025 0.25 m (reference only)"]

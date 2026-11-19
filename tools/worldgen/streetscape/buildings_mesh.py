@@ -78,7 +78,8 @@ OVR_ROOF_ONLY = {"roof_material"}
 # house walls an authored override may name (read off a licensed street-level photo): the rule tones plus boarding
 HOUSE_WALL_OVERRIDES = {m for m, _, _ in HOUSE_TONES} | {"plaster_white", "plaster_yellow", "plaster_peach",
                                                       "plaster_sage", "brick_red", "wood_planks", "wood_planks_green",
-                                                      "wood_planks_red", "wood_planks_graphite"}
+                                                      "wood_planks_red", "wood_planks_graphite",
+                                                      "wood_planks_white"}       # ADR 0305: white-painted boards
 # ADR 0298 (review 2026-11-18 N5): boarding colour of a rule wooden house - painted red-brown / graphite as on owner
 # photo 7, the stained brown and green of ADR 0287 kept for a share. Shares WORKING_VALUE (no survey of Knyszyn houses).
 WOOD_PAINTS = (("wood_planks_red", 0.32), ("wood_planks_graphite", 0.24), ("wood_planks", 0.26), ("wood_planks_green", 0.18))
