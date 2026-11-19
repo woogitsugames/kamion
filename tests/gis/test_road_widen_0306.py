@@ -29,7 +29,7 @@ def _net(region, widen):
 
 
 def test_widen_is_one_global_gameplay_value():
-    assert S.GAMEPLAY_LANE_WIDEN_M == 0.25
+    assert S.GAMEPLAY_LANE_WIDEN_DEFAULT_M == 0.25      # (tests/gis/conftest.py runs the GIS suite at 0 = measured)
 
 
 @pytest.fixture(scope="module")
@@ -103,7 +103,8 @@ def test_curve_widening_on_tight_two_way_bends_only():
                 assert np.all(c.hw[m] <= base[m] + 0.05), c.id        # nothing added at a tile seam
 
 
-def test_knyszyn_compact_roundabout_truck_returns():
+def test_knyszyn_compact_roundabout_truck_returns(monkeypatch):
+    monkeypatch.setattr(S, "GAMEPLAY_LANE_WIDEN_M", 0.25)
     net = _net("knyszyn", 0.25)
     (spec,) = CR.specs(net)
     assert spec.opts["entry_r_m"] >= CR.TRUCK_ENTRY_R_MIN_M
@@ -124,7 +125,8 @@ def test_corridor_pieces_follow_the_links():
     assert pieces["dk65-05"] == "route"
 
 
-def test_knyszyn_widened_roundabout_builds_clean():
+def test_knyszyn_widened_roundabout_builds_clean(monkeypatch):
+    monkeypatch.setattr(S, "GAMEPLAY_LANE_WIDEN_M", 0.25)
     """The D94 roundabout (returns 12 / 15 m, corners TRUCK_CORNER_R_M) keeps 4 splitters, 4 crossings, 4 P-13 and no notes."""
     import json
     from roads import junctions as J

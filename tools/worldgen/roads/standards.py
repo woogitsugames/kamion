@@ -66,7 +66,8 @@ def bdot_lane_floor(cls: str, oneway: bool) -> float:
 # tractor + semitrailer must be easy to keep in lane; layout (lane count, alignment, position) stays as measured.
 # Set to 0.0 to get the measured cross-sections (QA against the orthophoto, tests of measured widths): 0 also switches
 # off the other D94 rules (network.curve_widen, compact_roundabout truck kerb returns).
-GAMEPLAY_LANE_WIDEN_M = 0.25
+GAMEPLAY_LANE_WIDEN_DEFAULT_M = 0.25
+GAMEPLAY_LANE_WIDEN_M = GAMEPLAY_LANE_WIDEN_DEFAULT_M
 # D94 / ADR 0306 curve widening of two-way 2-lane GP / G / Z carriageways (network.curve_widen), GAMEPLAY_WIDEN /
 # WORKING_VALUE: bends tighter than CURVE_WIDEN_R_M; lane >= TRUCK_TYRE_W_M + 2 x (off-tracking + CURVE_WIDEN_TOL_M);
 # at most CURVE_WIDEN_MAX_M per lane; none within the skip distances of junction nodes / tile seams.
