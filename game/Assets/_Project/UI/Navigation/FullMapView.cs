@@ -52,6 +52,7 @@ namespace Game.UI.Navigation
         int m_StateKey = int.MinValue;
         Mesh m_Under;
         bool m_UnderNight;
+        int m_UnderVer = -1;
 
         GameObject m_Panel;
         Text m_Title, m_Sub, m_PauseNote;
@@ -61,6 +62,7 @@ namespace Game.UI.Navigation
 
         readonly TextBuffer m_B = new TextBuffer(48);
         int[] m_RoadOrder;
+        NavMapData m_LabelMap;
         Vector4[] m_Placed = new Vector4[128];
         int m_PlacedCount;
         Vector2[] m_NameAt;
@@ -384,7 +386,7 @@ namespace Game.UI.Navigation
             m_Dirty = false; m_RedrawT = 0f;
             bool night = m_Nav.Night;
             var pal = night ? P.NavNight : P.NavDay;
-            if (m_Under == null || m_UnderNight != night) { m_Under = m_Nav.StaticMap(night); m_UnderNight = night; m_Canvas.SetUnderlay(m_Under); }
+            if (m_Under == null || m_UnderNight != night || m_UnderVer != m_Nav.MapVersion) { m_Under = m_Nav.StaticMap(night); m_UnderNight = night; m_UnderVer = m_Nav.MapVersion; m_Canvas.SetUnderlay(m_Under); }   // ADR 0300
             var d = m_Canvas;
             float W = m_DesignSize.x, H = m_DesignSize.y;
             var xf = Xf();
@@ -449,8 +451,9 @@ namespace Game.UI.Navigation
         {
             var map = m_Nav.Map;
             if (map == null || m_Zoom < 0.25f) return;
-            if (m_RoadOrder == null)
+            if (m_RoadOrder == null || m_LabelMap != map)      // ADR 0300: the map changes with the streamed tile
             {
+                m_LabelMap = map;
                 BuildChains(map);
                 m_NameAt = new Vector2[map.Names.Length];
                 m_NameN = new byte[map.Names.Length];

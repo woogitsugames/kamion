@@ -31,6 +31,8 @@ namespace Game.UI.Navigation
         readonly RouteTracker m_Tracker = new RouteTracker();
         NavGuidance m_Guide;
         NavMapData m_Map;
+        readonly System.Collections.Generic.List<NavMapData> m_Drawn = new System.Collections.Generic.List<NavMapData>();
+        NavMapData[] m_Neighbours = System.Array.Empty<NavMapData>();
         Mesh m_StaticDay, m_StaticNight;
         float m_StreetT;
         ushort m_Street;
@@ -44,6 +46,11 @@ namespace Game.UI.Navigation
         public NavGuidance Guidance => m_Guide;
         public bool Ready => m_Graph != null && m_Map != null;
         public bool Night => NightSource != null && NightSource();
+        /// <summary>ADR 0300: bumped whenever the static map changes (tile switch, neighbour set); map views re-fetch
+        /// <see cref="StaticMap"/> when it differs from the version they baked.</summary>
+        public int MapVersion { get; private set; }
+        /// <summary>Neighbour maps drawn around the current region (already in its frame).</summary>
+        public int NeighbourCount => m_Neighbours.Length;
 
         public bool HasPin { get; private set; }
         public Vector2 Pin { get; private set; }
@@ -97,13 +104,68 @@ namespace Game.UI.Navigation
             m = null;
         }
 
-        /// <summary>Roads and buildings of the region baked once per palette (region metres), shared by every map canvas.</summary>
+        /// <summary>Roads and buildings of the region (+ the resident neighbour tiles, ADR 0300) baked once per palette
+        /// (region metres), shared by every map canvas.</summary>
         public Mesh StaticMap(bool night)
         {
             if (m_Map == null) return null;
             ref Mesh m = ref night ? ref m_StaticNight : ref m_StaticDay;
-            if (m == null) m = NavLayout.BuildStatic(m_Map, night ? DisplayPalette.NavNight : DisplayPalette.NavDay, 1.6f);
+            if (m == null)
+            {
+                m_Drawn.Clear();
+                m_Drawn.Add(m_Map);
+                m_Drawn.AddRange(m_Neighbours);
+                m = NavLayout.BuildStatic(m_Drawn, night ? DisplayPalette.NavNight : DisplayPalette.NavDay, 1.6f);
+            }
             return m;
+        }
+
+        /// <summary>
+        /// ADR 0300 (streaming): the GPS follows the tile under the truck. Loads the routing graph and the map of
+        /// <paramref name="newRegionId"/>, measures the truck in <paramref name="frame"/> (that tile's root: region-local
+        /// metres, moved by every origin rebase together with the truck) and keeps the destination when it lies on a road
+        /// of the new tile: <paramref name="oldToNew"/> = old region origin - new region origin (EPSG:2180 metres) moves
+        /// the pin into the new frame. False (nothing changed) when the tile has no routing graph. Allocates (tile event).
+        /// </summary>
+        public bool SwitchRegion(string newRegionId, Transform frame, Vector2 oldToNew)
+        {
+            var g = RouteGraph.Load(newRegionId);
+            if (g == null) return false;
+            bool hadPin = HasPin;
+            Vector2 pin = Pin + oldToNew;
+            m_Graph = g;
+            m_Map = NavMapData.Load(newRegionId);
+            m_Planner = new RoutePlanner(g);
+            m_Path = RoutePath.For(g);
+            m_Tracker.Reset();
+            m_Guide = default;
+            m_Guide.Next = -1;
+            HasPin = false;
+            m_RestoreAt = -1f;
+            regionId = newRegionId;
+            regionFrame = frame;
+            m_Neighbours = System.Array.Empty<NavMapData>();
+            InvalidateStatic();
+            Sample(0f);
+            if (hadPin && SetPin(pin)) PlanToPin();
+            Debug.Log($"[NAV] region switched to {newRegionId} nodes={g.NodeCount} edges={g.EdgeCount} map={(m_Map != null)} pin={(HasPin ? "kept" : (hadPin ? "dropped (not in this tile)" : "none"))}");
+            return true;
+        }
+
+        /// <summary>ADR 0300: neighbour tiles drawn around the current one (each already moved into the current frame,
+        /// <see cref="NavMapData.Shifted"/>). Rebuilds the static map on the next <see cref="StaticMap"/> call.</summary>
+        public void SetNeighbourMaps(System.Collections.Generic.IReadOnlyList<NavMapData> maps)
+        {
+            var a = new NavMapData[maps != null ? maps.Count : 0];
+            for (int i = 0; i < a.Length; i++) a[i] = maps[i];
+            m_Neighbours = a;
+            InvalidateStatic();
+        }
+
+        void InvalidateStatic()
+        {
+            DestroyMesh(ref m_StaticDay); DestroyMesh(ref m_StaticNight);
+            MapVersion++;
         }
 
         void Update()
@@ -142,6 +204,9 @@ namespace Game.UI.Navigation
             float v = truckBody != null ? Vector3.Dot(truckBody.linearVelocity, truck.forward) : 0f;
             SpeedMs = dt > 0f ? Mathf.Lerp(SpeedMs, v, 1f - Mathf.Exp(-dt / 0.3f)) : v;
         }
+
+        /// <summary>For tests (ADR 0300): one position sample from the truck transform now.</summary>
+        public void SampleForTest() => Sample(0f);
 
         /// <summary>For tests: replace the routing graph (e.g. a synthetic one with reachability flags, M27).</summary>
         public void SetGraphForTest(RouteGraph g)
