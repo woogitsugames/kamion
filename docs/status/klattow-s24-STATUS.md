@@ -26,3 +26,7 @@
   `look-dom-klattow` 615 → 626 draws, 1 481 809 → 1 484 401 tris; kafel budynki LOD0 +2 836. Płot został 0,83 m od ściany (chodnika < 1,4 m).
   Otwarte: podmurówka (kontrast odwrotny), chodnik Kościelnej. Rundy 3 nie użyto. Pełny pytest gis + EditMode w toku.
   NASTĘPNY KROK: `cat artifacts/klattow-s24/pytest.status artifacts/klattow-s24/editmode.status`; potem raport.
+- 14:15 KONIEC. pytest tests/gis: 2516 passed, 3 failed (wszystkie kafel C: `test_export_is_deterministic` chunk 0_1, `test_far_field…manifests`,
+  `test_hero_bridge::test_instances_emitted` — manifest C w bazie gałęzi sprzed przebudowy C5 lidera 11:37; pierwszy padał też w seams-p3-s24),
+  1 skipped, 2 xfailed. EditMode Win64 po imporcie rundy 2: 1407 / 1310 passed / 0 failed / 97 skipped.
+  NASTĘPNY KROK (lider): scalić, przebudować `knyszyn` po scaleniu z road-widen-s24, `visual-critic` na `artifacts/klattow-s24/sbs/*-r2.jpg`.
