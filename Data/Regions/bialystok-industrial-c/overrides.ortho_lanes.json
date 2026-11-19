@@ -1,0 +1,26 @@
+{
+ "schema": "truck-sim-pl/overrides/1",
+ "generator": "tools/worldgen/qa/ortho_lane_fit.py (ADR 0301), regions pooled: bialystok-industrial-c, bialystok-maczka, bialystok-kleeberga, bialystok-knyszynska",
+ "note": "generated - do not edit; rerun the tool. Authored overrides.yaml entries win.",
+ "overrides": [
+  {
+   "id": "ortho-lanes-w257367422:1847317049-1847317047",
+   "target": {
+    "edge": "w257367422:1847317049-1847317047"
+   },
+   "source": "GUGiK orthophoto WMS HighResolution 0.08 m, tools/worldgen/qa/ortho_lane_fit.py (ADR 0301)",
+   "reason": "3 of 10 route stations: 2 lanes (OSM lanes=2), lane widths 4.00, 3.65 m, asphalt 8.80 m, centre +0.12 m left of the OSM way; boundary MAD <= 0.00 m",
+   "confidence": "low",
+   "set": {
+    "lane_edges": [
+     0.65,
+     4.65,
+     8.3
+    ],
+    "width": 8.8,
+    "center_offset": 0.12,
+    "edge_lines": "right"
+   }
+  }
+ ]
+}

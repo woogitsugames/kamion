@@ -80,9 +80,11 @@ def project(P, s, q):
     return best[1], best[2]
 
 
-def station_layout(asph, lines, at=None):
+def station_layout(asph, lines, at=None, lanes=None):
     """Boundaries (x ascending = right to left of travel), edge-line flags (right, left) or None. `at` = lateral of the
-    route point (in the lane the truck drives): only chains of lines around it count."""
+    route point (in the lane the truck drives): only chains of lines around it count. `lanes` (OSM count): where one
+    side is closed (edge line / kerb) and the other opens into unmarked asphalt (a merge area, a slip road alongside),
+    the missing boundaries are laid out from the closed side with the measured lane width ("extrapolated")."""
     if not asph:
         return None
     aR, aL = asph
@@ -112,22 +114,37 @@ def station_layout(asph, lines, at=None):
         return None
     b = list(best)
     flags = [False, False]
+    closed = [False, False]
     for side, edge in ((0, aR), (1, aL)):
         end = b[0] if side == 0 else b[-1]
         gap = abs(edge - end)
         if gap <= EDGE_NEAR_M:
-            flags[side] = True
+            flags[side] = closed[side] = True
         elif LANE_GAP[0] <= gap <= LANE_GAP[1]:
+            closed[side] = True
             if side == 0:
                 b.insert(0, aR)
             else:
                 b.append(aL)
         elif AMBIG_GAP[0] < gap < AMBIG_GAP[1]:
             return None
-        # gap >= AMBIG_GAP[1]: hatching / island / parking beside the lanes - lanes end on the line
+        # gap >= AMBIG_GAP[1]: hatching / island / parking / merge area beside the lanes - lanes end on the line
+    extra = 0
+    if lanes and len(b) >= 2 and len(b) - 1 < lanes and closed[0] != closed[1]:
+        w = (b[-1] - b[0]) / (len(b) - 1)
+        if not LANE_GAP[0] <= w <= LANE_GAP[1]:
+            w = None
+        if w is not None:
+            while len(b) - 1 < lanes:
+                if closed[1]:
+                    b.insert(0, b[0] - w)
+                else:
+                    b.append(b[-1] + w)
+                extra += 1
     if len(b) < 3:
         return None
-    return {"b": b, "flags": flags, "aR": aR, "aL": aL}
+    return {"b": b, "flags": flags, "aR": aR if closed[0] or not extra else b[0] - STRIP_DEFAULT_M,
+            "aL": aL if closed[1] or not extra else b[-1] + STRIP_DEFAULT_M, "extrapolated": extra}
 
 
 def mad(v):
@@ -181,7 +198,8 @@ def collect(region, step=10.0):
         o = LWA.ortho_profile(rgb[row, col])
         if not o["asphalt"]:
             continue
-        lay = station_layout((o["asphalt"][0] + d, o["asphalt"][1] + d), [u + d for u in o["lines"]], at=d)
+        lay = station_layout((o["asphalt"][0] + d, o["asphalt"][1] + d), [u + d for u in o["lines"]], at=d,
+                             lanes=int(v("lanes") or 1))
         per_edge.setdefault(eid, []).append({"region": region, "s_edge": round(se, 1), "d": round(d, 2),
                                              "layout": lay})
     return per_edge, skip, frames
