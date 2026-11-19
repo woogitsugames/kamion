@@ -54,6 +54,9 @@ APRON_EASE_M = 600.0
 FORESHORTEN_FREE_M = 140.0
 FORESHORTEN_SPAN_M = 520.0
 FORESHORTEN_TAU_M = 950.0
+# WORKING_VALUE: StreamingSettings defaults: 25 m/s * (8 + 1 + 1) s + 150 m.
+# Static exclusion is independent of scene availability, load timing and memory budget.
+STREAMING_ROUTE_CLEARANCE_M = 400.0
 
 SECTORS = ("far_north", "far_east", "far_south", "far_west")
 # ADR 0141 skyline node: the tall ring objects (and far stand-ins of landmark stacks that the region itself draws) live
@@ -74,30 +77,18 @@ OSM_WINDOW_MARGIN_DEG = (0.08, 0.05)   # lon, lat (~5.3 / 5.6 km): a feature is 
 #                                        reaches past the ring; for C it contains the old fixed window 23.08-23.30 E,
 #                                        53.10-53.24 N (test_qa_tools_0219), i.e. nothing C read before is dropped
 
-# Linear RGB albedos calibrated to docs/06 §3 and streetscape/materials.py
-PALETTE_BLOCK = [
-    (0.52, 0.46, 0.34),  # plaster_cream
-    (0.54, 0.46, 0.26),  # plaster_yellow
-    (0.52, 0.38, 0.29),  # plaster_peach
-    (0.36, 0.42, 0.33),  # plaster_sage
-    (0.48, 0.47, 0.44),  # plaster_light
-    (0.34, 0.35, 0.35),  # plaster_grey
-    (0.34, 0.40, 0.46),  # plaster_pastel_blue
-    (0.28, 0.27, 0.25),  # panel_concrete
-]
-PALETTE_BLOCK_GABLE = [
-    (0.40, 0.20, 0.13),  # terracotta accent
-    (0.48, 0.35, 0.16),  # ochre accent
-    (0.25, 0.32, 0.23),  # green accent
-    (0.22, 0.23, 0.24),  # grey accent
-]
-PALETTE_HALL = [
-    (0.38, 0.39, 0.40),  # hall_wall_silver
-    (0.25, 0.26, 0.27),  # hall_wall_grey
-    (0.50, 0.50, 0.48),  # hall_wall_white
-    (0.44, 0.41, 0.35),  # hall_wall_ivory
-    (0.11, 0.115, 0.12), # hall_wall_graphite
-]
+def _material_palette(*names: str) -> list[tuple]:
+    """Same linear albedos as real tile envelopes; keep hash selection order stable."""
+    return [tuple(SM.M[name]["color"][:3]) for name in names]
+
+
+PALETTE_BLOCK = _material_palette(
+    "plaster_cream", "plaster_yellow", "plaster_peach", "plaster_sage",
+    "plaster_light", "plaster_grey", "plaster_pastel_blue", "panel_concrete")
+PALETTE_BLOCK_GABLE = _material_palette(
+    "plaster_accent_terracotta", "plaster_accent_ochre", "plaster_accent_green", "plaster_accent_grey")
+PALETTE_HALL = _material_palette(
+    "hall_wall_silver", "hall_wall_grey", "hall_wall_white", "hall_wall_ivory", "hall_wall_graphite")
 PALETTE_HALL_ACCENT = [
     (0.06, 0.12, 0.21),  # blue fascia
     (0.24, 0.05, 0.04),  # red fascia
@@ -105,26 +96,11 @@ PALETTE_HALL_ACCENT = [
     (0.09, 0.095, 0.10), # graphite fascia
     (0.44, 0.24, 0.04),  # amber/orange fascia
 ]
-PALETTE_OFFICE = [
-    (0.48, 0.47, 0.44),  # plaster_light
-    (0.35, 0.36, 0.36),  # plaster_grey
-    (0.44, 0.39, 0.31),  # plaster_beige
-    (0.54, 0.54, 0.52),  # plaster_white
-    (0.23, 0.095, 0.065),# brick_red
-]
-PALETTE_HOUSE = [
-    (0.50, 0.48, 0.44),
-    (0.46, 0.41, 0.33),
-    (0.52, 0.46, 0.35),
-    (0.38, 0.39, 0.38),
-]
-PALETTE_ROOF_PITCHED = [
-    (0.24, 0.085, 0.055), # red clay / metal tile
-    (0.14, 0.095, 0.068), # dark brown tile
-    (0.10, 0.105, 0.11),  # graphite sheet
-]
+PALETTE_OFFICE = _material_palette("plaster_light", "plaster_grey", "plaster_beige", "plaster_white", "brick_red")
+PALETTE_HOUSE = _material_palette("plaster_light", "plaster_beige", "plaster_cream", "plaster_grey")
+PALETTE_ROOF_PITCHED = _material_palette("roof_tiles_red", "roof_tiles_brown", "roof_metal_graphite")
 COL_PLINTH = (0.17, 0.165, 0.155)
-COL_ROOF_FLAT = (0.14, 0.14, 0.145)
+COL_ROOF_FLAT = tuple(SM.M["roof_membrane"]["color"][:3])
 COL_PARAPET = (0.20, 0.205, 0.21)
 COL_CHIMNEY_CONCRETE = (0.37, 0.36, 0.34)
 COL_CHIMNEY_BRICK = (0.23, 0.09, 0.06)
@@ -134,7 +110,7 @@ COL_PYLON_STEEL = (0.27, 0.285, 0.30)
 
 
 def _sha256(path: Path) -> str:
-    if path.suffix.lower() in (".json", ".geojson", ".yaml", ".yml"):
+    if path.suffix.lower() in (".json", ".geojson", ".yaml", ".yml", ".py"):
         # ADR 0173: git-tracked text inputs may be checked out with CRLF (worktrees) or LF (main); hash LF content
         return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
     h = hashlib.sha256()
@@ -401,6 +377,44 @@ def building_outside_region(footprint, half: float, exclusion=None) -> bool:
     """
     exclusion = exclusion if exclusion is not None else box(-half, -half, half, half)
     return not footprint.is_empty and not exclusion.intersects(footprint)
+
+
+def streaming_building_exclusion(ox: float, oy: float) -> tuple[shapely.Geometry, dict]:
+    """Reserve real tiles and driving corridors in both source and render space.
+
+    Registered tiles own their buildings even before import/loading. Routes are in
+    each tile's local XZ coordinates; translate to this backdrop's local EN frame.
+    Apply at mesh generation, after the GIS cache, so route/registry edits take
+    effect without re-extracting BDOT/OSM. Never infer a corridor from fixed C exits.
+    """
+    from regions import REGIONS
+
+    parts = []
+    inputs = {}
+    registry = REPO / "tools/worldgen/regions.py"
+    if registry.exists():
+        inputs["tools/worldgen/regions.py"] = _sha256(registry)
+    for region_id, reg in sorted(REGIONS.items()):
+        x0, y0, x1, y1 = reg.bbox
+        parts.append(box(x0 - ox, y0 - oy, x1 - ox, y1 - oy))
+        route_path = REPO / "Data/Regions" / region_id / "route_start.json"
+        if not route_path.exists():
+            continue  # Planned tiles still reserve their complete bbox.
+        route = json.loads(route_path.read_text(encoding="utf-8"))
+        points = route["points_en"]
+        if len(points) < 2:
+            raise ValueError(f"{route_path}: route needs at least two points")
+        dx, dy = reg.origin[0] - ox, reg.origin[1] - oy
+        line = LineString([(float(e) + dx, float(n) + dy) for e, n in points])
+        # GEOS round buffers are inscribed polygons. Inflate by the chord error
+        # so even a footprint near a cap/join cannot enter the promised 400 m.
+        segments = 16
+        radius = STREAMING_ROUTE_CLEARANCE_M / math.cos(math.pi / (4 * segments))
+        parts.append(line.buffer(radius, quad_segs=segments))
+        inputs[route_path.relative_to(REPO).as_posix()] = _sha256(route_path)
+    exclusion = shapely.union_all(parts)
+    shapely.prepare(exclusion)
+    return exclusion, inputs
 
 
 def building_rectangle_outside_region(rect, half: float, exclusion=None) -> bool:
@@ -1327,7 +1341,7 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
         gable_rgb = _hpick(bid, PALETTE_BLOCK_GABLE, "gable") if _hfloat(bid, "has_gable") < 0.65 else wall_rgb
         storeys = b.get("storeys") or max(4, int(round((h_raw - 1.2) / 2.85)))
         storeys = max(3, min(storeys, 12))
-        z_attic = z_top - (min(0.45 * s_h, h_eff * 0.08) if tier == "High" else 0.0)
+        z_attic = z_top - min(0.45 * s_h, h_eff * 0.08)
 
         for i in range(4):
             a, c = pts[i], pts[(i + 1) % 4]
@@ -1350,14 +1364,14 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
                 else:
                     sec.add_quad0([a[0], a[1], z_bot], [c[0], c[1], z_bot], [c[0], c[1], z_attic], [a[0], a[1], z_attic],
                                   (*rgb, 0.0))
-            if tier == "High":
+            if z_attic < z_top:
                 sec.add_quad0([a[0], a[1], z_attic], [c[0], c[1], z_attic], [c[0], c[1], z_top], [a[0], a[1], z_top],
                               (*COL_PARAPET, 0.0))
 
-        if tier == "High" or h_eff <= 4.5:
-            sec.add_quad0([pts[0, 0], pts[0, 1], z_top], [pts[1, 0], pts[1, 1], z_top],
-                          [pts[2, 0], pts[2, 1], z_top], [pts[3, 0], pts[3, 1], z_top],
-                          (*COL_ROOF_FLAT, 0.0), normal=[0.0, 0.0, 1.0])
+        # Close roofs on Low too; no open boxes when viewed downhill.
+        sec.add_quad0([pts[0, 0], pts[0, 1], z_top], [pts[1, 0], pts[1, 1], z_top],
+                      [pts[2, 0], pts[2, 1], z_top], [pts[3, 0], pts[3, 1], z_top],
+                      (*COL_ROOF_FLAT, 0.0), normal=[0.0, 0.0, 1.0])
 
         # Elevator / stairwell penthouse on taller wielka-płyta blocks
         if storeys >= 6 and (tier == "High" or (d_raw < 900.0 and storeys >= 8)):
@@ -1390,7 +1404,7 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
         wall_rgb = (0.24, 0.10, 0.07) if appearance == "energy" else _hpick(bid, PALETTE_HALL, "wall")
         # Unknown branding is not a reason for a bright 16%-height coloured stripe.
         acc_rgb = tuple(c * 0.72 for c in wall_rgb) if industrial else _hpick(bid, PALETTE_HALL_ACCENT, "acc")
-        use_fascia = tier == "High" or d_raw < 700.0
+        use_fascia = True
         fascia_h = min(max(0.35 * s_h, 0.10), h_eff * 0.04) if industrial else max(1.1 * s_h, h_eff * 0.16)
         z_fascia = z_top - fascia_h if use_fascia else z_top
         has_clerestory = panel_hall or _hfloat(bid, "clere") < 0.55
@@ -1424,10 +1438,9 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
                 sec.add_quad0([a[0], a[1], z_fascia], [c[0], c[1], z_fascia], [c[0], c[1], z_top], [a[0], a[1], z_top],
                               (*acc_rgb, 0.0))
 
-        if tier == "High" or h_eff <= 4.5:
-            sec.add_quad0([pts[0, 0], pts[0, 1], z_top], [pts[1, 0], pts[1, 1], z_top],
-                          [pts[2, 0], pts[2, 1], z_top], [pts[3, 0], pts[3, 1], z_top],
-                          (*COL_ROOF_FLAT, 0.0), normal=[0.0, 0.0, 1.0])
+        sec.add_quad0([pts[0, 0], pts[0, 1], z_top], [pts[1, 0], pts[1, 1], z_top],
+                      [pts[2, 0], pts[2, 1], z_top], [pts[3, 0], pts[3, 1], z_top],
+                      (*COL_ROOF_FLAT, 0.0), normal=[0.0, 0.0, 1.0])
         return
 
     if typ == "office":
@@ -1435,6 +1448,7 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
         storeys = b.get("storeys") or max(2, int(round((h_raw - 0.8) / 3.4)))
         storeys = max(2, min(storeys, 8))
         w_mode = 0.75 if _hfloat(bid, "rib") < 0.4 else 1.0
+        z_attic = z_top - min(0.4 * s_h, h_eff * 0.08)
         for i in range(4):
             a, c = pts[i], pts[(i + 1) % 4]
             if not _wall_visible_from_tile(a, c, half):
@@ -1443,15 +1457,16 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
             if L_raw >= 6.0:
                 bays = max(2, int(round(L_raw / 3.2)))
                 uv1 = [[0.0, -0.25], [float(bays), -0.25], [float(bays), float(storeys)], [0.0, float(storeys)]]
-                sec.add_quad0([a[0], a[1], z_bot], [c[0], c[1], z_bot], [c[0], c[1], z_top], [a[0], a[1], z_top],
+                sec.add_quad0([a[0], a[1], z_bot], [c[0], c[1], z_bot], [c[0], c[1], z_attic], [a[0], a[1], z_attic],
                               (*wall_rgb, w_mode), uv1=uv1)
             else:
-                sec.add_quad0([a[0], a[1], z_bot], [c[0], c[1], z_bot], [c[0], c[1], z_top], [a[0], a[1], z_top],
+                sec.add_quad0([a[0], a[1], z_bot], [c[0], c[1], z_bot], [c[0], c[1], z_attic], [a[0], a[1], z_attic],
                               (*wall_rgb, 0.0))
-        if tier == "High" or h_eff <= 4.5:
-            sec.add_quad0([pts[0, 0], pts[0, 1], z_top], [pts[1, 0], pts[1, 1], z_top],
-                          [pts[2, 0], pts[2, 1], z_top], [pts[3, 0], pts[3, 1], z_top],
-                          (*COL_ROOF_FLAT, 0.0), normal=[0.0, 0.0, 1.0])
+            sec.add_quad0([a[0], a[1], z_attic], [c[0], c[1], z_attic], [c[0], c[1], z_top], [a[0], a[1], z_top],
+                          (*COL_PARAPET, 0.0))
+        sec.add_quad0([pts[0, 0], pts[0, 1], z_top], [pts[1, 0], pts[1, 1], z_top],
+                      [pts[2, 0], pts[2, 1], z_top], [pts[3, 0], pts[3, 1], z_top],
+                      (*COL_ROOF_FLAT, 0.0), normal=[0.0, 0.0, 1.0])
         return
 
     # Single-family house with pitched gable roof
@@ -1713,6 +1728,24 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
     elev = BorderElevation.from_region(region_id, half=half, out_root=out_root)
     gis = extract_ring_gis(region_id, ox, oy, half=half)
     building_exclusion = region_building_exclusion(region_id, ox, oy, half)
+    stream_exclusion, stream_inputs = streaming_building_exclusion(ox, oy)
+    building_exclusion = shapely.union_all([building_exclusion, stream_exclusion])
+    shapely.prepare(building_exclusion)
+    source_building_count = len(gis["buildings"])
+    # Also filter apron building masks; a rejected proxy must leave no urban scar.
+    render_buildings = [b for b in gis["buildings"]
+                        if building_rectangle_outside_region(b["rect"], half, building_exclusion)]
+    streaming_policy = {
+        "schema": "far-field-building-ownership/1",
+        "route_clearance_m": STREAMING_ROUTE_CLEARANCE_M,
+        "status": "WORKING_VALUE",
+        "reserve_all_registered_tiles": True,
+        "check_source_and_compressed_footprint": True,
+        "source_buildings": source_building_count,
+        "retained_buildings": len(render_buildings),
+        "excluded_buildings": source_building_count - len(render_buildings),
+        "inputs_sha256": stream_inputs,
+    }
 
     # Supplement power line pylons along OT_SULN_L spans where point towers were sparse
     extra_pylons = []
@@ -1739,7 +1772,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         for f in gis["forests"] + _corridor_treelines(half):
             _add_forest_stand(sectors, f["coords"], f.get("mix", "mixed"), elev, half, tier)
 
-        for b in gis["buildings"]:
+        for b in render_buildings:
             _add_building(sectors, b, elev, half, tier, exclusion=building_exclusion, skyline=skyline)
 
         for ch in gis["chimneys"]:
@@ -1807,7 +1840,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         }
 
     # Write apron JSON (border height profile for WorldEdgeBuilder)
-    apron_info = build_apron_masks(gis, elev, half)
+    apron_info = build_apron_masks({**gis, "buildings": render_buildings}, elev, half)
     apron_json = {k: v for k, v in apron_info.items() if not k.startswith("_")}
     apron_path = out_root / "far_field_apron.json"
     apron_path.write_text(json.dumps(apron_json, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
@@ -1816,7 +1849,9 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
     manifest_dir = REPO / "Data" / "SourceManifests"
     manifest_dir.mkdir(parents=True, exist_ok=True)
     appearance_policy = {
-        "schema": "far-field-appearance/1",
+        "schema": "far-field-appearance/2",
+        "closed_roofs_all_tiers": True,
+        "windowless_roof_fascia_all_tiers": True,
         "status": "WORKING_VALUE",
         "not_measured": ["wall_colour", "cladding_modules", "glazing_band", "roof_fascia"],
         "classification": "declared function; height alone does not imply an energy plant",
@@ -1836,6 +1871,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         "region": region_id,
         "adr": "0085-far-field-backdrop",
         "appearance_policy": appearance_policy,
+        "streaming_building_policy": streaming_policy,
         "ring_bounds_local_m": {"inner_half_m": half, "outer_half_m": RING_MAX_M},
         "region_inputs_sha256": {k: v for k, v in gis["sources_sha256"].items() if k.startswith("region/")},
         "lod1_height_audit": gis["lod1_height_audit"],
@@ -1890,6 +1926,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         "region": region_id,
         "feature_counts": src_manifest["feature_counts"],
         "appearance_policy": appearance_policy,
+        "streaming_building_policy": streaming_policy,
         "boundary_exclusions": gis["boundary_exclusions"],
         "lod1_height_audit": gis["lod1_height_audit"],
         "building_height_sources": gis["building_height_sources"],
