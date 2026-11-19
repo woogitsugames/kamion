@@ -177,6 +177,12 @@ def edge_section(e: dict) -> EdgeSection:
             wsrc = "bdot10k (clamped 3.50-5.50)"
     else:
         lw = std
+        if bw and cls == "D":
+            # ADR 0306: BDOT10k width of service ways / living streets is the whole paved strip (parking bays, yard
+            # fronts) - consecutive edges of one way came out 5.5 / 6.5 m and lane paths through their junctions ran into
+            # kerbs (tile C, road_consistency lane_blind_end next to the start route). Class standard instead.
+            prov["width_ignored"] = {"bdot_width": bw, "reason": "class D, ADR 0306"}
+            bw = None
         if bw:
             per = (bw - 2 * edge) / lanes
             if 2.4 <= per <= 4.75:
@@ -389,7 +395,8 @@ def gameplay_widen(net: Network, d: float) -> None:
         if sec.edge_line_spacing is not None:
             sec.edge_line_spacing = round(sec.edge_line_spacing + add, 3)
         sec.provenance["gameplay_widen_m"] = round(add, 3)
-        if sec.oneway and not sec.roundabout:
+        if sec.oneway and not sec.roundabout and not sec.center_offset_profile:
+            # (a placement traced along the edge on the orthophoto, ADR 0095 profile, is kept as measured: symmetric)
             # ADR 0306: a one-way carriageway grows to the RIGHT (kerb / verge side), its left edge stays where it was
             # measured or mapped: the median / gore between the carriageways of a dual road keeps its width and position
             # (a symmetric growth ate 0.5-1.0 m of the DK8 median in tile C and left 1.2-2.0 m strips over real asphalt:

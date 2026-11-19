@@ -45,7 +45,7 @@ def test_every_lane_quarter_metre_wider(maczka):
         assert b.lanes == a.lanes
         assert b.width == pytest.approx(a.width + 0.25 * a.lanes, abs=1e-3), k
         assert b.lane_w == pytest.approx(a.lane_w + 0.25, abs=2e-3), k
-        if a.oneway and not a.roundabout:
+        if a.oneway and not a.roundabout and not a.center_offset_profile:
             # one-way: grows to the right, the left (median) edge stays: centre moves right by half the growth
             sh = min(0.25 * a.lanes / 2, S.GROW_RIGHT_MAX_M)
             assert b.center_offset == pytest.approx(a.center_offset - sh, abs=2e-3), k

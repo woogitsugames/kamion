@@ -37,7 +37,7 @@ def _edge(tags):
     ({"highway": "tertiary", "lanes": "2", "width": 7.0}, 3.50),
     # L / D: back to std + 0.25 (ADR 0306: BDOT counts parking bays / yard fronts of these ways, lane paths into kerbs)
     ({"highway": "residential", "lanes": "2", "width": 6.6}, 3.00),
-    ({"highway": "service", "lanes": "2", "width": 6.5}, 2.75),
+    ({"highway": "service", "lanes": "2", "width": 6.5}, 2.50),      # class D: BDOT ignored (ADR 0306)
     # Z / L floor unchanged (no measurement): the difficult-conditions value
     ({"highway": "residential", "lanes": "2", "width": 4.8}, 2.50),
 ])
