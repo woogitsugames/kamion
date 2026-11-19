@@ -105,7 +105,7 @@ def test_maczka_three_lanes_as_painted(region, edge):
     assert len(widths) == 3
     assert all(3.4 <= w <= 4.0 for w in widths), widths   # lane to the kerb (no edge line) includes the gutter
     assert -2.2 <= sec.center_offset <= -1.0
-    assert sec.edge_lines in ("both", "right")
+    assert sec.edge_lines in ("both", "left")       # P-7 at the median; the right lane may run to the kerb
 
 
 def test_fit_file_is_reproducible_schema():
