@@ -71,3 +71,7 @@
 - 16:0x: build playera padł (brak zaimportowanej sceny WorldC w worktree — `BUILD_ERROR ... WorldC.unity`). Łańcuch w tle
   `artifacts/road-widen-s24/chain.ps1`: po r5 → import C (Unity) → `player.ps1` (build knyszyn-s/knyszyn/knyszyn-w + przejazd
   autopilota -stream 1 -route_to tykocin -telemetry 1). Stan: `chain.status`, `player.status`, logi `player-build.log`/`player-run.log`.
+- 16:2x: C r5: lane_blind_end 42, marking_off 4 (3 z nich już w main: w257367423 E -955 N 56), obstacle 2 ✓, na trasie 2
+  (serwisowa pętla w435369082 + znana brama zajezdni). Poprawki: klasa D ignoruje szerokość BDOT; profil położenia z ortofoto
+  (ADR 0095) bez przesunięcia w prawo (rampa wiaduktu DK8 E -692 N 73). r6 (C + fidelity) startuje po imporcie C w łańcuchu
+  (`r6.ps1`, log `rebuild-r6.log`). Testy: EditMode Win64 + pełne pytest gis w `chain2.ps1` po przejeździe playerem.
