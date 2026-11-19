@@ -237,3 +237,16 @@ def test_tykocin_trip_ends_on_the_rynek_0303():
     rs = json.loads((ROOT / "Data/Regions/tykocin/route_start.json").read_text(encoding="utf-8"))
     assert all(hw[e] == "secondary" for e in rs["edge"]), sorted({e for e in rs["edge"] if hw[e] != "secondary"})
     assert t["anchorX"] < ex < t["xmax"]
+
+
+def test_parallel_edges_keep_the_shorter_0303():
+    """ADR 0303: roadgraph.to_digraph keeps the shorter of two ways between the same node pair (dw671-tykocin-03: the
+    46 m DW671 edge, not the 124 m service loop 553605081 beside it)."""
+    import roadgraph
+    nodes = [{"id": "a", "x": 0.0, "y": 0.0}, {"id": "b", "x": 46.0, "y": 0.0}]
+    mk = lambda i, L: {"id": i, "from": "a", "to": "b", "length_m": L, "attrs": {"oneway": {"v": "no"}}}
+    for order in ([mk("dw", 46.0), mk("svc", 124.0)], [mk("svc", 124.0), mk("dw", 46.0)]):
+        g = roadgraph.to_digraph({"nodes": nodes, "edges": order})
+        assert g["a"]["b"]["id"] == "dw" and g["b"]["a"]["id"] == "dw"
+    rs = json.loads((ROOT / "Data/Regions/dw671-tykocin-03/route_start.json").read_text(encoding="utf-8"))
+    assert not any(e.startswith("w553605081:") for e in rs["edge"])

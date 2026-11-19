@@ -330,15 +330,25 @@ def attach_bdot(edges: list[dict], bdot) -> None:
 
 
 def to_digraph(graph: dict):
-    """networkx DiGraph honouring `oneway` (used by tests and QA)."""
+    """networkx DiGraph honouring `oneway` (used by tests and QA, and by the control routes / route links).
+
+    Parallel edges (two ways between the same node pair, e.g. DW671 and a service loop beside it) keep the SHORTER one
+    (ADR 0303): a DiGraph holds one edge per direction and the last added used to win - in dw671-tykocin-03 the
+    124 m service way 553605081 replaced the 46 m DW671 edge and the control route drove through the service loop."""
     import networkx as nx
     g = nx.DiGraph()
     for n in graph["nodes"]:
         g.add_node(n["id"], x=n["x"], y=n["y"])
+
+    def add(a, b, e):
+        cur = g.get_edge_data(a, b)
+        if cur is None or e["length_m"] < cur["length"]:
+            g.add_edge(a, b, id=e["id"], length=e["length_m"])
+
     for e in graph["edges"]:
         ow = e["attrs"]["oneway"]["v"]
         if ow in ("yes", "no"):
-            g.add_edge(e["from"], e["to"], id=e["id"], length=e["length_m"])
+            add(e["from"], e["to"], e)
         if ow in ("-1", "no"):
-            g.add_edge(e["to"], e["from"], id=e["id"], length=e["length_m"])
+            add(e["to"], e["from"], e)
     return g
