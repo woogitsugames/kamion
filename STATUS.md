@@ -68,3 +68,6 @@
   Build playera knyszyn-s/knyszyn/knyszyn-w + przejazd autopilota (`player.ps1`, log `player-build.log` / `player-run.log`).
 - NASTĘPNY KROK: po r5 consistency/fidelity C; po player.status analiza telemetrii
   `uv run --no-project python tools/worldgen/qa/combo_player_run.py <telemetry.csv> --link knyszyn-dk65-to-dw671-w`.
+- 16:0x: build playera padł (brak zaimportowanej sceny WorldC w worktree — `BUILD_ERROR ... WorldC.unity`). Łańcuch w tle
+  `artifacts/road-widen-s24/chain.ps1`: po r5 → import C (Unity) → `player.ps1` (build knyszyn-s/knyszyn/knyszyn-w + przejazd
+  autopilota -stream 1 -route_to tykocin -telemetry 1). Stan: `chain.status`, `player.status`, logi `player-build.log`/`player-run.log`.
