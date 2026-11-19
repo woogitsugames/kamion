@@ -45,7 +45,14 @@ def test_every_lane_quarter_metre_wider(maczka):
         assert b.lanes == a.lanes
         assert b.width == pytest.approx(a.width + 0.25 * a.lanes, abs=1e-3), k
         assert b.lane_w == pytest.approx(a.lane_w + 0.25, abs=2e-3), k
-        assert b.center_offset == a.center_offset                     # alignment kept (ADR 0077)
+        if a.oneway and not a.roundabout:
+            # one-way: grows to the right, the left (median) edge stays: centre moves right by half the growth
+            grow = 0.25 * a.lanes + (float(a.provenance.get("bdot_floor_growth_m", 0.0))
+                                     if a.width_src.startswith("bdot10k") else 0.0)
+            assert b.center_offset == pytest.approx(a.center_offset - grow / 2, abs=2e-3), k
+            assert (b.center_offset + b.width / 2) - (a.center_offset + a.width / 2) <= grow / 2 + 2e-3   # left edge
+        else:
+            assert b.center_offset == a.center_offset                 # two-way: symmetric, alignment kept
         assert b.provenance["gameplay_widen_m"] == pytest.approx(0.25 * a.lanes)
 
 

@@ -184,6 +184,8 @@ def edge_section(e: dict) -> EdgeSection:
                 # to the widest value of PTB2022 § 17 ust. 1, but not narrow it below the class standard there
                 lw = min(max(per, S.bdot_lane_floor(cls, oneway)), S.LANE_WIDTH_MAX[cls])
                 wsrc = "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
+                if lw > per:
+                    prov["bdot_floor_growth_m"] = round((lw - per) * lanes, 3)   # ADR 0306: grows away from the median
             else:
                 prov["width_rejected"] = {"bdot_width": bw, "per_lane": round(per, 2)}
     width = lanes * lw + 2 * edge
@@ -387,6 +389,21 @@ def gameplay_widen(net: Network, d: float) -> None:
         if sec.edge_line_spacing is not None:
             sec.edge_line_spacing = round(sec.edge_line_spacing + add, 3)
         sec.provenance["gameplay_widen_m"] = round(add, 3)
+        if sec.oneway and not sec.roundabout:
+            # ADR 0306: a one-way carriageway grows to the RIGHT (kerb / verge side), its left edge stays where it was
+            # measured or mapped: the median / gore between the carriageways of a dual road keeps its width and position
+            # (a symmetric growth ate 0.5-1.0 m of the DK8 median in tile C and left 1.2-2.0 m strips over real asphalt:
+            # fidelity islands_absent 1 -> 4). The ADR 0301 BDOT floor (lanes widened over BDOT) grows the same way.
+            grow = add
+            if sec.width_src.startswith("bdot10k"):
+                grow += float(sec.provenance.get("bdot_floor_growth_m", 0.0))
+            sh = grow / 2.0
+            sec.center_offset = round(sec.center_offset - sh, 3)
+            if sec.center_offset_end is not None:
+                sec.center_offset_end = round(sec.center_offset_end - sh, 3)
+            if sec.center_offset_profile:
+                sec.center_offset_profile = [(t, round(v - sh, 3)) for t, v in sec.center_offset_profile]
+            sec.provenance["grow_right_m"] = round(sh, 3)
 
 
 def apply_edge_overrides(net: Network, edges, overrides):
