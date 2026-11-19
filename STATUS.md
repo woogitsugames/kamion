@@ -1,3 +1,9 @@
+# STATUS cab-haze-cli — s24 #11
+- Obejrzano 4 wejściowe PNG; źródło wskazane analizą: proceduralny film poza polami wycieraczek, brak emitera dymu w sprawdzonym `_Project`. Raport: `docs/reports/cab-haze-cli-s24.md`.
+- Shader pełny + fast: film pomijany na wewnętrznej ścianie w widoku kabiny; widoki zewnętrzne zachowują film. Uzupełniono ADR 0059. Kontrola statyczna 8 kombinacji i `git diff --check`: PASS.
+- Unity/build/player nieuruchamiane zgodnie z poleceniem. Potwierdzenie wizualne przyczyny i efektu A/B, kompilacja shadera oraz niezależny review pozostają otwarte. Bez push.
+- NASTĘPNY KROK (odczyt raportu): `Get-Content docs/reports/cab-haze-cli-s24.md`; build i przejazd dopiero w osobnej autoryzowanej sesji.
+
 # STATUS edge-barriers-cli — s24
 - Naprawa źródłowa: indywidualne szlabany renderer+collider, rzeczywista strona wyjazdu, wysokość z nawierzchni własnego kafla, WorldEdge ukryty do Ready. Walidacja brakujących materiałów/błędów shaderów; build odrzuca stare ClosureGroup_*.
 - Raport: `docs/reports/edge-barriers-cli-s24.md`, kod `e6184e7b2`; review niezależnego agenta bez blokujących uwag.
