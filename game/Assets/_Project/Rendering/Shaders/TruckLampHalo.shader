@@ -7,14 +7,14 @@
 // limiter, max channel <= 0.8), so no threshold above 1 can single the lamps out; Low renders without post at all.
 // Model (Stiles-Holladay / CIE 146): L_veil(phi) = K E / phi^2, phi in degrees, E = I / d^2 lux at the camera,
 // I = L_lamp x A_emitter x cos(theta) (Lambertian lens, L from the 32 x 1 lamp-state texture of TruckLights, in cd/m^2);
-// K = _HaloK (WORKING_VALUE 0.25, judged on renders; the street-lamp value is 0.4). The 1 / phi^2 profile is
+// K = _HaloK (WORKING_VALUE 0.15 since ADR 0299, was 0.25 in ADR 0297; the street-lamp value is 0.4). The 1 / phi^2 profile is
 // flattened inside the angular radius of the emitter (phi^2 + phi_core^2) and fades to 0 at _HaloMaxDeg. Output capped per
 // channel (no clipping white).
 Shader "Kamion/Truck Lamp Halo"
 {
     Properties
     {
-        _HaloK ("Veiling glare coefficient K (display x deg^2 per lux x exposure), WORKING_VALUE", Float) = 0.25
+        _HaloK ("Veiling glare coefficient K (display x deg^2 per lux x exposure), WORKING_VALUE", Float) = 0.15
         _HaloMaxDeg ("Halo outer radius (deg)", Float) = 2.0
         _HaloCap ("Max display value of the halo per channel", Float) = 0.5
     }

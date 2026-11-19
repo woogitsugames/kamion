@@ -125,6 +125,13 @@ namespace Game.Editor.Setup
             m.SetFloat("_PlateDisplayMax", LampPhotometry.PlateDisplayMax);   // ADR 0297
         }
 
+        /// <summary>ADR 0299: night-mode ceiling of a cab screen (Kamion/Cab Display _NightMaxDisplay; day ceiling 0.9).
+        /// Navigation / infotainment and the DIN radio auto-dim their backlight like real head units; the cluster keeps 0.9
+        /// (its night palette already dims the graphics, DisplayPalette.ClusterNight). WORKING_VALUE, judged on night renders.</summary>
+        public static float NightMaxDisplay(string displayObject) =>
+            displayObject.StartsWith("DISPLAY_Infotainment", StringComparison.Ordinal) ? 0.3f
+            : displayObject.StartsWith("DISPLAY_Cluster", StringComparison.Ordinal) ? 0.9f : 0.45f;
+
         /// <summary>ADR 0297: the cluster and the navigation screen as spill emitters for CabInteriorLighting. Centre, area
         /// and normal (towards the driver's eye) from the LOD0 display quad; mean linear luminance of the screen texture;
         /// luminance / ceiling = the Kamion/Cab Display material values set in BuildMaterials (500 cd/m^2, 0.9).</summary>
@@ -168,7 +175,7 @@ namespace Game.Editor.Setup
                     UnityEngine.Object.DestroyImmediate(img);
                 }
                 else Debug.LogWarning($"[TRUCK] spill texture {png} missing, mean emission {mean} (WORKING_VALUE)");
-                list.Add(new CabInteriorLighting.SpillSource { frame = r.transform, centre = c, normal = n, area = area, meanEmission = mean, luminance = 500f, maxDisplay = 0.9f });
+                list.Add(new CabInteriorLighting.SpillSource { frame = r.transform, centre = c, normal = n, area = area, meanEmission = mean, luminance = 500f, maxDisplay = 0.9f, nightMaxDisplay = NightMaxDisplay(role) });
                 Debug.Log($"[CAB_SPILL] {role} centre {c:F3} normal {n:F2} area {area * 1e4f:F0} cm2 mean emission {mean:F3} eye distance {toEye.magnitude:F2} m");
             }
             return list.ToArray();
@@ -485,6 +492,7 @@ namespace Game.Editor.Setup
                     m.SetFloat("_Luminance", 500f);
                     m.SetFloat("_MinDisplay", 0.45f);
                     m.SetFloat("_MaxDisplay", 0.9f);
+                    m.SetFloat("_NightMaxDisplay", NightMaxDisplay(d));   // ADR 0299 auto-dimmed backlight at night
                     m.SetFloat("_Reflection", 0.1f);   // sky reflection mostly occluded by the cluster hood / dash top
                     Add("MI_Cab_Display:" + d, m);
                 }

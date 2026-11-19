@@ -90,6 +90,9 @@ namespace Game.Rendering.Editor
             Set(so, "m_RequireDepthTexture", false);
             Set(so, "m_RequireOpaqueTexture", false);
             Set(so, "m_UseSRPBatcher", true);
+            // ADR 0299: URP's dither round-trips through GetLinearToSRGB / GetSRGBToLinear; the fast approximations crush the
+            // darks (linear 0.0037 -> 0.0021, sRGB 12 -> 7: the night sky / road of every dithered tier).
+            Set(so, "m_UseFastSRGBLinearConversion", false);
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(asset);
         }
@@ -120,6 +123,7 @@ namespace Game.Rendering.Editor
             var so = new SerializedObject(a);
             Eq(so.FindProperty("m_SoftShadowQuality").intValue, s.softShadowQuality, "softShadowQuality");
             Eq(so.FindProperty("m_UpscalingFilter").intValue, 0, "upscalingFilter");
+            Eq(so.FindProperty("m_UseFastSRGBLinearConversion").boolValue, false, "useFastSRGBLinearConversion (ADR 0299)");
             bool hasSsao = false;
             var r0 = a.rendererDataList.Length > 0 ? a.rendererDataList[0] : null;
             if (r0 != null)

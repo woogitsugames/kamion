@@ -40,7 +40,7 @@ namespace Game.Tests.EditMode
                 Quad(new Vector3(-1f, 1f, 0f), 0.1f, P.Tail, 1f),     // left tail chamber 100 cm^2
                 Quad(new Vector3(-0.85f, 1f, 0f), 0.1f, P.Stop, 1f),  // left stop chamber, same lamp body, other group
                 Quad(new Vector3(1f, 1f, 0f), 0.1f, P.Tail, 1f, true),  // right tail chamber, lens wound inward (after2 export)
-                Quad(new Vector3(0f, 1f, 0f), 0.1f, P.IndL, 1f),      // amber: not a halo group
+                Quad(new Vector3(0f, 1f, 0f), 0.1f, P.MarkerSide, 1f), // amber side marker: not a halo group
                 Quad(new Vector3(0f, 0.5f, 0f), 0.1f, P.Tail, 0f),    // lens frame without emissive mask
                 Quad(new Vector3(0f, 1f, -6f), 0.1f, 0, 0f));         // body behind the lamps (front-corner marker case): still -Z
             var cs = TruckLampHaloBuilder.Clusters(mesh, new HashSet<int>(TruckLampHaloBuilder.HaloGroups));
@@ -60,7 +60,8 @@ namespace Game.Tests.EditMode
         [Test]
         public void HaloGroups_AreTheRedRearSignals()
         {
-            CollectionAssert.AreEquivalent(new[] { P.TailBrake, P.MarkerRear, P.FogRear, P.Tail, P.Stop }, TruckLampHaloBuilder.HaloGroups);
+            CollectionAssert.AreEquivalent(new[] { P.TailBrake, P.MarkerRear, P.FogRear, P.Tail, P.Stop }, TruckLampHaloBuilder.RedRearGroups);
+            CollectionAssert.IsSubsetOf(TruckLampHaloBuilder.RedRearGroups, TruckLampHaloBuilder.HaloGroups);   // ADR 0299 adds amber / white
             Assert.That(Shader.Find(TruckLampHaloBuilder.ShaderName), Is.Not.Null);
             string sh = File.ReadAllText(Path.Combine(EditorTools.ProjectRoot, "Assets/_Project/Rendering/Shaders/TruckLampHalo.shader"));
             StringAssert.Contains("#define KAMION_LAMP_TEXELS 32.0", sh, "same state texture layout as TruckExterior");

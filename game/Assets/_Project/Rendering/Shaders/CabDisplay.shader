@@ -4,6 +4,7 @@
 //   exposure makes it follow the light like a real panel at dusk, the floor keeps it readable in direct sun (a real
 //   cluster is hard to read there; a game instrument must not be), the cap avoids a glowing slab at night.
 //   Texture black (~0.02) stays black: contrast = texture contrast (≥ 8:1 target), nothing is added on top.
+// - ADR 0299 night mode: with the screens' night palette (light sensor) the panel also auto-dims - cap _NightMaxDisplay.
 // - Cover-glass reflection: a weak Fresnel term from the environment (F0 0.04, smooth), no grime.
 Shader "Kamion/Cab Display"
 {
@@ -13,6 +14,7 @@ Shader "Kamion/Cab Display"
         _Luminance ("Panel luminance at full white (cd/m^2)", Float) = 500
         _MinDisplay ("Readability floor (exposed value of full white)", Float) = 0.45
         _MaxDisplay ("Cap (exposed value of full white)", Float) = 0.9
+        _NightMaxDisplay ("Night-mode cap (auto-dimmed panel, ADR 0299)", Float) = 0.9
         _Reflection ("Cover glass reflection scale", Range(0, 1)) = 1
     }
     SubShader
@@ -23,7 +25,7 @@ Shader "Kamion/Cab Display"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;
-            float _Luminance, _MinDisplay, _MaxDisplay, _Reflection;
+            float _Luminance, _MinDisplay, _MaxDisplay, _NightMaxDisplay, _Reflection;
         CBUFFER_END
         ENDHLSL
 
@@ -40,6 +42,7 @@ Shader "Kamion/Cab Display"
             #include "KamionToeParity.hlsl"
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
             float _KamionExposure;
+            float _KamionCabDisplayNight;   // ADR 0299: 0 day .. 1 night mode of the screens (CabDisplayNight, eased)
             struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; };
             struct V { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; float3 positionWS : TEXCOORD1; half3 normalWS : TEXCOORD2; };
             V vert(A v)
@@ -55,7 +58,10 @@ Shader "Kamion/Cab Display"
             {
                 half3 screen = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv).rgb;
                 float k = _KamionExposure > 0.0 ? _KamionExposure : 1e-3;
-                half gain = clamp(_Luminance * k, _MinDisplay, _MaxDisplay);
+                // ADR 0299: night mode = the panel auto-dims (light sensor, as real cab screens do): the cap falls to
+                // _NightMaxDisplay and the readability floor never exceeds it.
+                half cap = lerp(_MaxDisplay, min(_MaxDisplay, _NightMaxDisplay), saturate(_KamionCabDisplayNight));
+                half gain = clamp(_Luminance * k, min(_MinDisplay, cap), cap);
                 half3 n = normalize(i.normalWS);
                 float3 Vd = GetWorldSpaceNormalizeViewDir(i.positionWS);
                 half NoV = saturate(dot(n, Vd));

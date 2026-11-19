@@ -57,6 +57,19 @@ namespace Game.UI.CabDisplays
 
         static readonly float[] s_Sizes = { 46f, 44f, 32f, 30f, 26f };
 
+        /// <summary>Linear luminance (Rec. 709) of an sRGB palette colour.</summary>
+        public static float Lum(Color32 c)
+        {
+            Color l = ((Color)c).linear;
+            return 0.2126f * l.r + 0.7152f * l.g + 0.0722f * l.b;
+        }
+
+        /// <summary>ADR 0299: mean linear value of the live map image for the screen's light spill. Day: negative = the baked
+        /// A6 day-map texture mean; night: background with a quarter of road / building area (the dark map is mostly
+        /// background, WORKING_VALUE share).</summary>
+        public static float MapMean(bool night, in P.Nav pal) =>
+            night ? 0.65f * Lum(pal.Bg) + 0.2f * Lum(pal.Road) + 0.15f * Lum(pal.Building) : -1f;
+
         /// <param name="dt">Seconds since the last refresh (zoom smoothing).</param>
         public void Draw(DisplayCanvas d, in CabDisplayState s, float dt)
         {
@@ -66,10 +79,13 @@ namespace Game.UI.CabDisplays
             {
                 // D84: no map (DrivingLab) = the dark screen with a legible message, day or night; the day map
                 // background alone read as a blank light-grey slab in the cab on PC.
+                // ADR 0299: nothing to show = the bar colour (near black) under the message; at night the panel itself dims
+                // (Kamion/Cab Display _NightMaxDisplay): the no-map slab was the brightest surface of the night cab (31/255).
                 pal = P.NavNight;
                 d.Text(T.NoMap, Width * 0.5f, MapH * 0.5f, 44f, pal.BarText, DisplayCanvas.Align.Center);
                 Bar(d, s, pal, float.NaN, -1);
-                d.End(pal.Bg);
+                Game.Rendering.CabDisplayNight.NavMeanEmission = Lum(pal.Bar);
+                d.End(pal.Bar);
                 return;
             }
 
@@ -100,6 +116,7 @@ namespace Game.UI.CabDisplays
             Maneuver(d, pal, onRoute);
             SpeedLimit(d, pal, onRoute);
             Bar(d, s, pal, onRoute ? m_Map.RouteLength - m_Map.RouteS[RouteIndex] : float.NaN, onRoute ? RouteIndex : -1);
+            Game.Rendering.CabDisplayNight.NavMeanEmission = MapMean(s.Night, pal);
             d.End(pal.Bg);
         }
 
@@ -181,6 +198,7 @@ namespace Game.UI.CabDisplays
                 string street = Live.NameOf(Live.CurrentStreet);
                 if (street.Length > 0) d.Text(Abbreviate(street), Width - 30f, by - 2f, 30f, pal.BarSub, DisplayCanvas.Align.Right);
             }
+            Game.Rendering.CabDisplayNight.NavMeanEmission = MapMean(s.Night, pal);
             d.End(pal.Bg);
         }
 
