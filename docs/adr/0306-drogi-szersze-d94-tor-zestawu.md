@@ -50,8 +50,13 @@ Wszystko poniżej to **GAMEPLAY_WIDEN** (nie fakt pomiarowy), WORKING_VALUE.
 6. **L / D**: górny limit pasa z BDOT z powrotem std + 0,25 (L 3,00; ADR 0301 dał 3,50), klasa D (service, living_street)
    w ogóle bez szerokości BDOT (standard klasy): BDOT liczy zatoki i podjazdy, kolejne krawędzie jednej drogi wychodziły
    5,5 / 6,5 / 7,0 m, a tory pasów przez skrzyżowania wpadały na krawężniki (C: lane_blind_end 54 → 57 po ADR 0301).
-7. **Rondo kompaktowe — narożniki** między ramionami zamykane promieniem `TRUCK_CORNER_R_M = 12` m (było `NOSE_R_M` 4 m):
-   naczepa ścinała krawężnik narożnika przy wlocie DK65 od Białegostoku; kształt zgodny ze zdjęciem drona nr 9.
+7. **Rondo kompaktowe — narożniki** między ramionami zamykane promieniem `TRUCK_CORNER_R_M = 16` m (było `NOSE_R_M` 4 m):
+   przy 4 m naczepa ścinała krawężnik narożnika SE przy wlocie DK65 od Białegostoku, przy 12 m nadal na trasie kontrolnej
+   DK65 S → Tykocka E (przejazd playerem 19.11: naczepa 2,4 s na krawężniku; combo_lane_check 53 pkt). Kształt bliższy
+   zdjęciu drona nr 9 (szerokie łuki).
+9. **Testy GIS na geometrii zmierzonej**: `tests/gis/conftest.py` ustawia `GAMEPLAY_LANE_WIDEN_M = 0` na całą sesję
+   (testy porównują generator z pomiarem / autorskimi wartościami); reguły D94 testuje `test_road_widen_0306.py`
+   (ustawia 0,25). Domyślna wartość generatora: `GAMEPLAY_LANE_WIDEN_DEFAULT_M = 0.25`.
 8. Autorski `swing` łącznika `knyszyn-rynek-to-dk65-w` usunięty (po regule pogarszał: krawężnik 59 → 23 pkt bez niego).
 
 ## Wyniki
@@ -76,5 +81,17 @@ Rzut z góry przed / po: `artifacts/road-widen-s24/top/knyszyn_before_after_lc_9
   pas), potem `streaming/route_links.py`.
 - Testy mierzonych szerokości (ADR 0301, 0220, 0233 …) porównują z `GAMEPLAY_LANE_WIDEN_M = 0` albo z bazą + delta.
 
+## Kafel C (CI lidera po ADR 0301)
+road_consistency (r6): lane_blind_end 44 (ratchet 55; main 57), marking_off_carriageway 3 (3; main 4), obstacle_in_lane 2
+(2), arrow_no_exit 8 (8; main 7) — w ratchetach. Na trasie 2 (ROUTE_MAX 1; main 3): pętla parkingu w435369082 (E -208
+N -287, przy trasie od ADR 0301) + znana brama zajezdni. fidelity: wyspy „absent_on_ortho” przy trasie r6 3 (main 1),
+edge p95 1,33 m (main 2,09); r7 (podłoga BDOT zaliczana do D94) — wynik w raporcie agenta.
+
 ## Otwarte
-(uzupełnione na końcu)
+- Wyspy fidelity C i pętla parkingu przy trasie (powyżej) — jeśli r7 nie zamknie, reguła „rośnij od sąsiedniej jezdni”
+  (geometria, po zbudowaniu łańcuchów) zamiast stałego „w prawo”.
+- Łączniki z Rynku Knyszyna: skręty w ulicach Rynku przechodzą przez oś (32–37 pkt) — narożniki L/D bez reguły D94
+  (wierność zabudowy).
+- Po przebudowie C w main: złote trasy nawigacji (`dotnet run -c Release --project tools/nav-runner/Runner -- --write-golden`,
+  EditMode `Nav0168Tests.Exit_GoldenRoutes` 5 vs 4 manewry) i katalog regionów (`scripts/export-region-catalog.py`).
+- Recenzja `visual-critic` renderów Knyszyna — do zlecenia przez lidera.
