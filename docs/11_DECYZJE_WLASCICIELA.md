@@ -174,3 +174,6 @@ Właściciel (klik) po pomiarze A/B na GTX 1070 (`artifacts/d3d-ab/`, knyszyn Hi
 
 ## D90 — Kamera z fotela: FOV 70°, pasek HUD ukryty w kabinie (2026-11-18, s24, ADR 0294)
 Właściciel (klik) po wariantach `artifacts/cab-view-s24/WARIANTY.md`: domyślne pionowe FOV kamery kabiny 55° → **70°** (wariant B, wzrok 6° w dół, oko bez zmian), kamera QA `cab-driver` tak samo, suwak 45–75° zostaje; zapisane ustawienia z dawnym domyślnym 55° → 70° jednorazowo (jak D85), ręcznie zmienione zostają. Dolny pasek HUD (prędkość, bieg, ciśnienie) **ukryty w widoku z kabiny** (zasłaniał prawdziwe zegary), widoczny w kamerach zewnętrznych. Lusterek bocznych FOV nie pokaże (54–76° od osi) — zostają okienka D70.
+
+## D91 — Most na Narwi w Tykocinie: trasa zostaje, gra ostrzega (2026-11-19, s24)
+Właściciel (klik): OSM podaje dla mostu DW671 na Narwi `maxheight=3.7` i `maxweight:hgv=12 t` (edycja 08.2026); zestaw 4 m / 40 t nie powinien przejechać. Decyzja: trasa autopilota i GPS do Rynku w Tykocinie zostaje przez most, ale gra pokazuje ostrzeżenie o ograniczeniu (znaki B-16/B-18 przy moście i komunikat w nawigacji/HUD przed wjazdem). Znaki na zdjęciach nadal UNVERIFIED. Źródło decyzji: ADR 0303 (otwarte), HANDOVER s24.
