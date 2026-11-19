@@ -3,3 +3,5 @@
   bialystok-kleeberga E -700..-663 N -545..-496, s 1806..1878 trasy kafla) przebijał niski koniec pomostu i stał w pasie;
   roads_poly nie ma trójkątów warstwy bridge. Poprawka: DeckKeepout (ADR 0208) także w noise_barriers. Test tests/gis/test_walls_on_deck_0300.py (4 zielone).
 - NASTĘPNY KROK: narzędzie QA przeszkód na trasie korytarza (tools/worldgen/qa/route_obstacles.py), potem GPS.
+- 19.11 01:4x: GPS: NavStreamFollower + SwitchRegion + mapy sąsiadów; KNAV dla 44 regionów; QA korytarza: 1 kolizja (kleeberga s1806-1856), tykocin 1 krawężnik. Build kleeberga z poprawką w toku (artifacts/walls-gps-s24/build_kleeberga.status), testy PlayMode w toku. ADR 0300 szkic.
+- NASTĘPNY KROK: po exit= w build_kleeberga.status: pwsh scripts/import-region.ps1 -Region bialystok-kleeberga (+knyszynska, dk65-01), build-windows -Regions, przejazd.
