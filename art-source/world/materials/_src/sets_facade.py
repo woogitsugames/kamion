@@ -765,7 +765,7 @@ def fieldstone(n=1024):
     speck = noise(c, 4, c.px * 2, 0.012, beta=0.3)               # granite crystals
     lump = noise(c, 5, 0.03, 0.2, beta=1.1)
     damp = sstep(0.30, 0.0, v) * (0.6 + 0.4 * sstep(-1, 1, noise(c, 6, 0.1, 0.8)))
-    lum = (0.80 + 0.55 * (t - 0.5) + 0.07 * speck + 0.06 * lump) * (0.80 + 0.20 * dome) * (1 - mort) + mort * 0.52
+    lum = (0.80 + 0.26 * (t - 0.5) + 0.07 * speck + 0.06 * lump) * (0.80 + 0.20 * dome) * (1 - mort) + mort * 0.58
     lum *= 1 - 0.30 * damp
     h = (0.028 * dome + 2e-3 * lump + 0.4e-3 * speck) * (1 - mort) - 6e-3 * mort
     rough = 0.82 + 0.10 * mort + 0.05 * damp

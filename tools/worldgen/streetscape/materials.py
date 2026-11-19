@@ -386,7 +386,7 @@ M = {
     "wood_trim_brown": {"color": [0.050, 0.027, 0.017], "rough": 0.6},
     "roof_tiles_old": {"color": [0.145, 0.047, 0.021], "rough": 0.85, "texture_set": "roof_tiles_old", "set_tile": True,
                        "macro": [9.0, 0.10]},
-    "fieldstone_plinth": {"color": [0.30, 0.29, 0.27], "rough": 0.9, "texture_set": "fieldstone", "set_tile": True},
+    "fieldstone_plinth": {"color": [0.235, 0.225, 0.205], "rough": 0.9, "texture_set": "fieldstone", "set_tile": True},
     # ADR 0305: timber granary by the presbytery (owner photo klattow-02): unpainted, weathered honey-brown logs - the
     # log_whitewash set as a neutral modulation map under a wood tint, stretched to 4.6 x 2.55 m so one tile covers the
     # 2.45 m wall (courses 0.23-0.28 m); weathered silver-grey wooden shingles (set wood_shingles). WORKING_VALUE.
