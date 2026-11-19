@@ -107,7 +107,7 @@ def MT_SPEC():
 def test_fence_stands_off_the_road_footprint(fc):
     b, _, res, _ = _build(fc)
     a, d, n, L, W, pu0, pu1, pd = K._frame(b["poly"])
-    assert res["fence"]["offset_from_wall_m"] == pytest.approx(pd - 0.03, abs=0.01) and res["fence"]["pickets"] > 150
+    assert res["fence"]["offset_from_wall_m"] == pytest.approx(pd - 0.03, abs=0.01) and res["fence"]["pickets"] > 120
     road = LineString([a + n * 1.6 - d * 10, a + n * 1.6 + d * 40]).buffer(0.25)      # footway edge 1.35 m off the wall
     res2 = _build(fc, road)[2]
     assert 0.8 <= res2["fence"]["offset_from_wall_m"] <= 1.35 - K.ROAD_CLEAR_M + 1e-6
@@ -143,3 +143,24 @@ def test_log_courses_of_the_set():
     dark = row < -0.25 * row.std() - 2.0
     joints = int(np.sum(dark & ~np.roll(dark, 1)))
     assert 8 <= joints <= 12                                    # ten courses of 0.20-0.24 m in the 2.2 m tile
+
+
+def test_plot_fence_override_and_lamus(fc):
+    import shapely
+    from streetscape import plots as PL
+    ov = pipeline.load_overrides("knyszyn")
+    blds = BM.load(fc, ORIGIN, ov, hero=K.hero_targets("knyszyn", fc))
+    b = next(x for x in blds if x["id"] == K.BUILDING_ID)
+    assert b["ovr"]["hero_asset"] == K.ASSET_ID and b["ovr"]["plot_fence"] == {"front": "picket", "side": "picket"}
+    near = [{"id": x["id"], "poly": x["poly"], "props": x["props"], "ovr": x["ovr"]} for x in blds
+            if x["typ"] == "house" and x["poly"].distance(b["poly"]) < 60]
+    plots = {p["id"]: p for p in PL.plan(near, shapely.geometry.Polygon(), [])}
+    assert (plots[K.BUILDING_ID]["front_style"], plots[K.BUILDING_ID]["side_style"]) == ("picket", "picket")
+    rule = {p["id"]: p for p in PL.plan([{**h, "ovr": {}} for h in near], shapely.geometry.Polygon(), [])}
+    assert all(rule[i]["front_style"] == plots[i]["front_style"] for i in plots if i != K.BUILDING_ID)   # others untouched
+    bad = [{**h, "ovr": {"plot_fence": {"front": "marble"}}} if h["id"] == K.BUILDING_ID else h for h in near]
+    with pytest.raises(ValueError, match="plot_fence"):
+        PL.plan(bad, shapely.geometry.Polygon(), [])
+    lamus = next(x for x in blds if x["id"] == "bdot:40f8044a-d048-4ad8-ad57-d8b8a2886fe1")
+    assert lamus["typ"] == "house" and lamus["sub"] == "dom_drewniany" and lamus["props"]["height_m"] == 6.4
+    assert lamus["ovr"]["roof_shape"] == "hip"

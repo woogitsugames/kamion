@@ -59,7 +59,8 @@ PORCH_EAVE, PORCH_RIDGE, PORCH_OV, PORCH_FRONT_OV = 2.22, 3.15, 0.25, 0.30
 PORCH_RAIL, PORCH_BEAM = 1.10, 2.08               # top of the board panels / underside of the head beam
 PORCH_DOOR_W = 1.10                               # clear opening of the porch front
 PICKET_W, PICKET_PITCH, PICKET_H = 0.09, 0.14, 1.05
-FENCE_PAST = (2.6, 4.5)                           # the fence runs this far past the west / east corner (photo 01), m
+FENCE_PAST = (0.4, 0.4)                           # past the west / east corner; beyond it the plot's own picket fence
+                                                  # (override plot_fence of the house, streetscape.plots) carries on, m
 ROAD_CLEAR_M = 0.15                               # the fence keeps this far off the road / footway footprint
 
 

@@ -403,9 +403,11 @@ overrides:
       streetscape/knyszyn_dom_klattow_0305.py (limewashed logs, old tile roof, porch, picket fence - read off the
       owner's photos); this entry is only the fallback of the rule generator when that asset is skipped: a boarded
       house in WHITE (the first version of this entry said dark brown boards with no photo - wrong, owner 2026-11-19).
+      plot_fence: the photos show brown wooden pickets along the footway and towards the neighbours (the rule had
+      picked brick posts with pickets); the pickets in front of the house itself are part of the authored asset.
     confidence: high
     verify: owner review of look_dom_klattow / look_dom_klattow_street against the photos
-    set: {typology: dom_drewniany, wall_material: wood_planks_white}
+    set: {typology: dom_drewniany, wall_material: wood_planks_white, plot_fence: {front: picket, side: picket}}
   - id: look-lamus-plebanski
     target: {building: "bdot:40f8044a-d048-4ad8-ad57-d8b8a2886fe1"}
     sources: ["owner photo klattow-02 (2026-11-19, local reference only)", "GUGiK orthophoto 2025 0.25 m (reference only)"]

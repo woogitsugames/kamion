@@ -9,3 +9,8 @@
   wolny od obrysu drogi (test znalazł błąd pierwszej wersji). Nadpisanie `look-lamus-plebanski` (BDOT 6fe1, klattow-02) + kamera
   `look_lamus_plebanski`; fallback Domu Klattów = `wood_planks_white`. Baseline nadal w imporcie.
   NASTĘPNY KROK: po `artifacts/klattow-s24/before.status` z `exit=0`: build_world knyszyn (slot heavy) → `pwsh artifacts/klattow-s24/run-vqa.ps1 -Tag r1 -Cameras look_dom_klattow,look_dom_klattow_street,look_lamus_plebanski`
+- 11:15 Baseline (main, High clear, edytor): `look-dom-klattow` 600 draws / 865 370 tris; `-street` (11,5 m) 515 / 846 659; `-gable-e` 204 / 405 989;
+  `-yard` (stara pozycja, za płotem) 72 / 149 474; `look-lamus-plebanski` 552 / 889 748 (`artifacts/klattow-s24/before2/`). Nadpisanie
+  `plot_fence` (styl płotu działki z nadpisania domu) — płot działki Klattów = sztachety. Runda r1 czeka w kolejce slotu heavy;
+  EditMode Win64 w toku (`artifacts/klattow-s24/editmode.status`).
+  NASTĘPNY KROK: po `artifacts/klattow-s24/r1.status` z `exit=0`: `bash artifacts/klattow-s24/sbs.sh r1` i obejrzeć `artifacts/klattow-s24/sbs/*-r1.jpg`
