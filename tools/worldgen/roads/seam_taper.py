@@ -269,10 +269,19 @@ def neighbours(region_id: str, regions: Path | None = None) -> list[tuple[str, d
 
 
 def _load_overrides(d: Path) -> list:
+    """The neighbour's overrides as its own build sees them: the tool-written files of pipeline.GENERATED_OVERRIDES
+    (ADR 0301: overrides.ortho_lanes.json lays out seam edges) first, then overrides.yaml."""
+    import json
+    from .pipeline import GENERATED_OVERRIDES
+    out = []
+    for name in GENERATED_OVERRIDES:
+        g = d / name
+        if g.exists():
+            out += json.loads(g.read_text(encoding="utf-8")).get("overrides", []) or []
     p = d / "overrides.yaml"
     if not p.exists():
-        return []
-    return (yaml.safe_load(p.read_text(encoding="utf-8")) or {}).get("overrides", []) or []
+        return out
+    return out + ((yaml.safe_load(p.read_text(encoding="utf-8")) or {}).get("overrides", []) or [])
 
 
 def neighbour_ends(region_id: str, own: list[End], regions: Path | None = None) -> dict:
