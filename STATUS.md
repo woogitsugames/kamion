@@ -94,3 +94,7 @@
   w strefie ronda (r ≤ 45 m) ciągnik zawsze na asfalcie, max 0,65 m od linii trasy; naczepa 2,4 s (t 57,4–59,8) kołami
   na betonie/kostce = krawężnik narożnika SE (to samo combo_lane_check: 53 pkt na trasie kontrolnej knyszyn).
   Poprawka: `TRUCK_CORNER_R_M` 12 → 16 m; r8 = knyszyn w toku; potem import knyszyn + VQA + przejazd 3.
+- 18:3x: pełne pytest tests/gis (17:31, przed poprawkami): 64 failed / 2506 passed — głównie testy geometrii zmierzonej
+  (szwy, K1, przekroje wiejskie, ronda) liczone z GAMEPLAY 0,25. `tests/gis/conftest.py` uruchamia teraz suite przy
+  `GAMEPLAY_LANE_WIDEN_M = 0` (geometria zmierzona; testy D94 ustawiają 0,25). Powtórka 64: `pyfail.ps1` → `pytest-fail2.log`.
+  r7 (C) i r8 (knyszyn, narożniki 16 m) czekają na slot heavy.
