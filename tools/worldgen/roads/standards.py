@@ -61,6 +61,15 @@ def bdot_lane_floor(cls: str, oneway: bool) -> float:
 # tractor + semitrailer must be easy to keep in lane; layout (lane count, alignment, position) stays as measured.
 # Set to 0.0 to get the measured cross-sections (QA against the orthophoto, tests of measured widths).
 GAMEPLAY_LANE_WIDEN_M = 0.25
+# D94 / ADR 0306 curve widening of two-way 2-lane GP / G / Z carriageways (network.curve_widen), GAMEPLAY_WIDEN /
+# WORKING_VALUE: bends tighter than CURVE_WIDEN_R_M; lane >= TRUCK_TYRE_W_M + 2 x (off-tracking + CURVE_WIDEN_TOL_M);
+# at most CURVE_WIDEN_MAX_M per lane; none within the skip distances of junction nodes / tile seams.
+CURVE_WIDEN_R_M = 200.0
+TRUCK_TYRE_W_M = 2.48           # outer edges of the drive duals (roads.swept_path.Combination.rear_outer_half x 2)
+CURVE_WIDEN_TOL_M = 0.10
+CURVE_WIDEN_MAX_M = 1.0
+CURVE_WIDEN_JUNCTION_SKIP_M = 15.0
+CURVE_WIDEN_SEAM_SKIP_M = 40.0
 # PTB2022 § 17 ust. 3 – single-lane carriageway: < two lanes but >= 3.50 m.
 SINGLE_LANE_MIN = 3.50
 SINGLE_LANE_DEFAULT = 4.00          # WORKING_VALUE (between 3.50 and 2 x lane)

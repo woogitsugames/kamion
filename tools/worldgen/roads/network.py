@@ -679,8 +679,56 @@ def prepare_chain(c: Chain, net: Network, sec_index: dict):
     # width transitions: PTB2022 §17 ust.6 asks for smooth changes -> 15 m smoothing (WORKING_VALUE)
     c.hw = smooth_1d(hw, 7.5 / DENSE) if len(hw) > 3 else hw
     c.meta["rev"] = rev
+    curve_widen(c, net)                  # D94 / ADR 0306: two-way lanes wider on tight bends (semitrailer off-tracking)
     m = max(2, int(math.ceil(2 * float(c.hw.max()) / 1.75)))
     c.m_lat = m + (m % 2)          # even -> the crown (lat 0) is always a vertex
+
+
+def offtrack_ss(R: float) -> float:
+    """Steady-state off-tracking [m] of the 16.5 m combination (roads.swept_path.Combination, ADR 0218 / 0280) whose
+    front axle runs on radius R: R - trailer-axle radius. ~ 40 / R for R >= 30 m (the old Polish lane widening rule)."""
+    from .swept_path import Combination
+    v = Combination()
+    r1 = R * R - v.L1 * v.L1
+    rk2 = r1 + v.c * v.c
+    return R - math.sqrt(max(rk2 - v.l2 * v.l2, 0.0))
+
+
+def curve_widen(c: Chain, net: Network) -> None:
+    """D94 / ADR 0306 (GAMEPLAY_WIDEN; PTB2022 § 17 ust. 5 only asks that the lane on a curve lets the design vehicle
+    pass): on a two-way 2-lane carriageway of class GP / G / Z each lane is widened on bends tighter than
+    CURVE_WIDEN_R_M so that the semitrailer of a combination whose front axle keeps the lane centre does not cross the
+    centre line: lane >= truck tyre width + 2 x (off-tracking + tolerance), at most CURVE_WIDEN_MAX_M per lane.
+    The lanes of such a section share the local width (`lane_follow`, ADR 0233), so both lanes and the centre line
+    follow. Not near junction nodes (corner geometry) nor near tile seams (the neighbour does not know the bend)."""
+    if c.closed or c.roundabout or len(c.line.s) < 8:
+        return
+    secs = [net.sec_list[int(i)] for i in np.unique(c.sec_idx)]
+    ok = {id(s_) for s_ in secs if not s_.oneway and s_.lanes == 2 and not s_.lane_edges and s_.cls in ("GP", "G", "Z")
+          and not s_.construction}
+    if not ok:
+        return
+    k = smooth_1d(np.abs(c.line.kappa), 10.0 / DENSE)
+    R = 1.0 / np.maximum(k, 1e-6)
+    lw = np.array([float(net.sec_list[int(i)].lane_w) for i in c.sec_idx])
+    off = np.array([offtrack_ss(float(r)) if r < S.CURVE_WIDEN_R_M else 0.0 for r in R])
+    need = S.TRUCK_TYRE_W_M + 2.0 * (off + S.CURVE_WIDEN_TOL_M)
+    add = np.clip(need - lw, 0.0, S.CURVE_WIDEN_MAX_M)
+    add[np.array([id(net.sec_list[int(i)]) not in ok for i in c.sec_idx])] = 0.0
+    for node, s_end in ((c.node_a, 0.0), (c.node_b, c.length)):
+        nd = net.nodes[node]
+        skip = S.CURVE_WIDEN_SEAM_SKIP_M if nd.get("boundary") else (S.CURVE_WIDEN_JUNCTION_SKIP_M if nd["deg"] >= 3 else 0.0)
+        if skip:
+            add[np.abs(c.line.s - s_end) < skip] = 0.0
+    if not add.any():
+        return
+    add = smooth_1d(add, 10.0 / DENSE)           # ramps in and out over ~20 m (PTB2022 § 17 ust. 6: smooth changes)
+    c.hw = c.hw + add                              # 2 lanes x add / 2
+    for s_ in secs:
+        if id(s_) in ok:
+            s_.lane_follow = True
+            s_.provenance.setdefault("curve_widen", "D94 / ADR 0306")
+    c.meta["curve_widen_max_m"] = float(add.max())
 
 
 def taper_forks(net: Network, report: list | None = None):

@@ -71,6 +71,12 @@ LIMITS = {"closing_r_m": (1.0, 30.0), "splitter_w_m": (0.6, 8.0), "splitter_gap_
 # (kerb mode) meet the ring on that circle. The ring may move at most OUTER_D_MAX_SHIFT of the fitted axis radius
 # (at least OUTER_D_MIN_SHIFT_M): a value further off is a different roundabout (wrong target, typo) - stale, fitted
 # radius kept.
+# D94 / ADR 0306: smallest kerb return radii of a compact roundabout (entry: kerb on the right of the entering lane,
+# exit: on the right of the leaving lane) with which the 16.5 m combination (roads.swept_path.Combination) keeps its
+# tyres off the kerbs and splitters in its own lane - found with qa/combo_lane_check.py on the Knyszyn ring
+# (WORKING_VALUE, GAMEPLAY_WIDEN: not measured; the owner's drone photo 9 shows wide sweeping returns there too).
+TRUCK_ENTRY_R_MIN_M = 12.0
+TRUCK_EXIT_R_MIN_M = 15.0
 OUTER_D_MAX_SHIFT = 0.4
 OUTER_D_MIN_SHIFT_M = 2.0
 FILLS = ("island_sand", "island_gravel", "verge_grass")
@@ -227,6 +233,12 @@ def specs(net, junction_nodes=None) -> list:
         ap = (ap[0], ap[1], max(0.2, min(ap[2], r - w / 2 - 1.0)), ap[3], ap[4])       # at least 1 m of island inside
         if kerb_mode(opts):
             opts = {**KERB_DEFAULTS, **opts}
+            # D94 / ADR 0306 (GAMEPLAY_WIDEN): kerb returns at least the radii a 16.5 m tractor + semitrailer needs
+            # to enter / leave the ring in its own lane (qa/combo_lane_check.py), whatever the authored value
+            for k_, rmin in (("entry_r_m", TRUCK_ENTRY_R_MIN_M), ("exit_r_m", TRUCK_EXIT_R_MIN_M)):
+                if float(opts[k_]) < rmin:
+                    opts[k_] = rmin
+                    notes.append(f"{k_} raised to {rmin:.1f} m (D94 truck rule)")
         out.append(Spec(id="cr:" + sorted(ring_nodes)[0], ring=grp, feeders=feeders, nodes=sorted(nodes), center=ctr,
                         r_axis=r, w_ring=w, apron=ap, opts=opts, notes=notes, r_axis_fit=r_fit))
     return out

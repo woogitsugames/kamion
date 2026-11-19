@@ -227,7 +227,7 @@ def optimise(tile, path, surf, lanes, keep_s0, events, lead_m):
     """Best driver swing per event cluster (kerb / off_hard), greedy along the path: the line may move inside its own
     lane / the junction (a swing that puts a tyre over the centre line counts as `opposite`). Returns (path, swings)."""
     swings = []
-    for ev in [e for e in events if e["kind"] in ("kerb", "off_hard")]:
+    for ev in [e for e in events if e["kind"] in ("kerb", "off_hard", "opposite")]:
         s_hit = ev["s0"] + lead_m
         lo, hi = s_hit - 80.0, s_hit + 60.0
         i0, i1 = max(0, int(lo / SAMPLE_M)), min(len(path), int(hi / SAMPLE_M))
@@ -261,7 +261,7 @@ def evaluate(tile, path, lead_m, lanes: LaneModel, keep_s0=0.0, dump=False, opt=
     surf = surfaces(tile, path)
     pts, tags, cls, n_seam = classify(tile, path, surf, lanes, keep_s0)
     r = summarise(pts, tags, cls, lead_m, n_seam, dump, path)
-    if opt and (r["kerb"] or r["off_hard"]):
+    if opt and (r["kerb"] or r["off_hard"] or r["opposite"]):
         p2, sw = optimise(tile, path, surf, lanes, keep_s0, r["events"], lead_m)
         pts, tags, cls, n_seam = classify(tile, p2, surf, lanes, keep_s0)
         r["swing"] = summarise(pts, tags, cls, lead_m, n_seam, dump, p2)
