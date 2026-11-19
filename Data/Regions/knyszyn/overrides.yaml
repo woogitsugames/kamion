@@ -120,6 +120,23 @@ overrides:
     confidence: high
     verify: none
     set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  # ADR 0304: line-to-line distance of the edge lines measured at the tile seams (GUGiK orthophoto WMS
+  # HighResolution 0.1 m, qa/seam_line_ortho.py, artifacts/seams-p3-s24/ortho). Separate entry so the cross-section
+  # set of `dk65-carriageway-width` (ADR 0212 test) stays the same in every tile.
+  - id: dk65-edge-line-spacing-0304
+    target: {osm_way: [232511646, 286990127]}
+    reason: >-
+      Edge lines P-7b of DK65 6.75-6.8 m apart axis to axis (medians of 40-79 cross profiles every 0.5 m, +-40 m
+      around the seams knyszyn-s | knyszyn (way 286990127) and knyszyn | knyszyn-w (way 232511646);
+      knyszyn-s | knyszyn 6.75 / 6.8, knyszyn | knyszyn-w 6.75 / 6.75, knyszyn-w | dk65-monki-01
+      6.75 / 6.75). ADR 0204 / 0212 read 6.8 m at the stations of way 305910042. The generator painted them 0.20 m inside
+      the 7.5 m carriageway edge = 7.1 m (ADR 0212 WORKING_VALUE, +0.3 m). Same entry in knyszyn, knyszyn-w,
+      knyszyn-s (not way 27718745: its width profile 6.6 -> 7.5 m keeps the 0.20 m inset, 6.2 m measured on the narrow
+      part) and dk65-monki-01.
+    source: "GUGiK orthophoto 0.1 m 2025 (WMS HighResolution), ADR 0304"
+    confidence: medium
+    verify: owner drive / owner photo with a tape across the road
+    set: {edge_line_spacing: 6.8}
   # ADR 0237 D38: sidewalks of the town streets (owner s23: "w Knyszynie chodniki wszędzie, obustronne, kostka").
   - id: knyszyn-pavement-rules-d38
     kind: pavement_rules
