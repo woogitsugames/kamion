@@ -1,3 +1,8 @@
+# STATUS guardrail-zebra-cli — s24, zakończone prace generatora
+- 81 regresyjnych + 16 płaskich + 6 NMT + 1 kontrola farby PASS. Kleeberga NMT: 23 odcinki wycięte, 2520 zachowanych; review bez blokujących uwag. Raport: docs/reports/guardrail-zebra-cli-s24.md; ADR 0308.
+- Wdrożono bufor bariera–nawierzchnia i przycinanie/deduplikację P-10; artefakt zebry t=2560 NIEODTWORZONY (0 m² overlap przed zmianą, także NMT i szew). Log wskazuje jeszcze knyszyn. Unity/build_world/player nieuruchamiane, bez push.
+- NASTĘPNY KROK (po integracji, osobna sesja przebudowy): przebudować/reimportować bialystok-kleeberga, knyszyn, knyszyn-w i sprawdzić przejazd; testy bez przebudowy: `uv run --project tools/worldgen pytest tests/gis/test_drive_s24_surface_safety.py -q -s`.
+
 # STATUS gps-roundabout-cli — s24
 - Przyczyna: tracker kończył rondo na wjeździe, mimo poprawnego manewru „2. zjazd” w grafie DK65-06. Dodano punkt końca manewru i zachowanie go przy CopyFrom/Compose.
 - Testy: nav-runner 98/98 PASS, 36 golden routes bez różnic, 0 B GC. Dodano regresję EditMode; Unity i buildów gry nie uruchamiano. Raport: docs/reports/gps-roundabout-cli-s24.md; dowody: artifacts/gps-roundabout/.
@@ -25,3 +30,13 @@
 - Roleta wróciła do autorskiego 0,10 m. ADR: `docs/adr/DRAFT-d84-kabina-polish-zmierzch-i-ziarno.md`.
 - Otwarte: lusterka/daszek poza kadrem 62° (decyzja pitch/FOV — A/B `cab-driver-ab10`), ciepła poświata niemierzalna na piaście, brak zdjęć referencyjnych (docs/06 §5 pkt 3), kurz bez zmian, pojedyncze jaśniejsze odcinki żeber tacek (atlas AO), kamery QA nie w scenie DrivingLab (`pwsh scripts/build-lab.ps1 -SkipAudio`).
 - NASTĘPNY KROK (lider): visual-critic na `view/ab-*.jpg`, `f-*`; po scaleniu w main: `-executeMethod Game.Editor.Setup.TruckAssetBuilder.BuildBatch`, potem `Game.World.Import.WorldTruckInstaller.InstallBatch`.
+
+# STATUS guardrail-zebra-cli — s24 (WIP)
+- Dodano kontrolę odcinków barier po wygładzaniu/łączeniu oraz przycinanie P-10 przy wysepkach i między łańcuchami; review drugiego agenta uwzględnione.
+- Testy jednostkowe: 9/9 PASS; istniejące testy barier/oznakowania: 29/29 PASS. Testy rzeczywistych kafli w toku, bez Unity/build_world.
+- NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_drive_s24_surface_safety.py -q -s` (pomiar regresji na Data/Regions); dokończyć raport i commit. Bez push.
+
+# STATUS guardrail-zebra-cli — s24 (walidacja kafli)
+- 81/81 testów bez pełnej generacji kafli PASS; NMT Knyszyn/Knyszyn-w 4/4 PASS (SHA wejść zgodne), dodatkowy test chowania zebry pod nawierzchnią 1/1 PASS.
+- Płaski Kleeberga: zachowane 2610 odcinków, wycięte 38; porównanie PNG obejrzane. Nie odtworzono overlap zebr ani ich schowania pod drogą — konkretny artefakt t=2560 UNVERIFIED, log wskazuje jeszcze knyszyn.
+- NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_drive_s24_surface_safety.py -q -s` — zakończyć bieżący przebieg płaski i NMT Kleeberga, uzupełnić docs/reports/guardrail-zebra-cli-s24.md, commit bez push.

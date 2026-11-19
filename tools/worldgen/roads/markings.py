@@ -373,6 +373,7 @@ def build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                               "area_m2": round(sum(z.get("area_m2", 0.0) for z in rep_g.get("painted_zones", [])), 1),
                               "paint_erased_tris": rep_g.get("paint_erased_in_zones_tris", 0)}
     AP.paint(buf, authored, report, net.overrides_applied, net.overrides_stale)
+    report["zebra_safety"] = clip_zebras(buf)
 
 
 FRAGMENT_MIN_M = 2.0        # ADR 0093: a line cut by the overlap pass to less than this is removed
@@ -1116,3 +1117,62 @@ def _segmented(buf, c, sa, sb, lat, w, dash, gap, cont, kind):
         cur = max(cur, b)
     if sb > cur:
         dashed(buf, c, cur, sb, lat, w, dash, gap, kind)
+
+
+def clip_zebras(buf):
+    """Exact P-10 clipping across chain boundaries and on raised refuges.
+
+    The earlier station merge only sees one chain. Keep earlier paint where two
+    independently snapped crossings overlap; interpolate mesh attributes at cuts.
+    Heights keep crossings on separate bridge levels independent.
+    """
+    from .surface_safety import SurfaceIndex, carriageway, island
+    road, islands = SurfaceIndex(buf.parts, carriageway), SurfaceIndex(buf.parts, island)
+    parts = [p for p in buf.parts if p.layer == "markings" and p.src.startswith(("P-10@", "P-10J@", "AP-P-10@"))]
+    footprints = [shapely.union_all(shapely.polygons(p.V[p.T, :2])) for p in parts]
+    tree = shapely.STRtree(footprints)
+    heights = [float(p.V[:, 2].mean()) for p in parts]
+    removed, before = 0.0, 0.0
+    for pi, p in enumerate(parts):
+        lo, hi = float(p.V[:, 2].min()), float(p.V[:, 2].max())
+        area = footprints[pi]
+        allowed = road.near(area, lo, hi).difference(islands.near(area, lo, hi).buffer(0.05))
+        prior = [footprints[int(j)] for j in tree.query(area, predicate="intersects") if j < pi
+                 and abs(heights[int(j)] - heights[pi]) < 1.0]
+        if prior:
+            allowed = allowed.difference(shapely.union_all(prior))
+        if allowed.covers(area):
+            before += float(shapely.area(shapely.polygons(p.V[p.T, :2])).sum())
+            continue
+        vertices, weights, triangles = [], [], []
+        for idx in p.T:
+            xyz = p.V[idx]
+            pg = Polygon(xyz[:, :2])
+            before += pg.area
+            cut = pg.intersection(allowed)
+            removed += max(0.0, pg.area - cut.area)
+            if cut.is_empty or cut.area < 1e-10:
+                continue
+            # Every result lies inside this original triangle, so barycentric
+            # interpolation retains height, UV/UV1 and optional vertex colour.
+            basis = np.vstack([xyz[:, :2].T, np.ones(3)])
+            for tri in shapely.get_parts(shapely.constrained_delaunay_triangles(cut)):
+                if tri.area < 1e-10 or not cut.covers(tri):
+                    continue
+                xy = np.asarray(tri.exterior.coords)[:3]
+                w = np.linalg.solve(basis, np.vstack([xy.T, np.ones(3)])).T
+                if (xy[1, 0]-xy[0, 0])*(xy[2, 1]-xy[0, 1]) - (xy[1, 1]-xy[0, 1])*(xy[2, 0]-xy[0, 0]) < 0:
+                    w = w[[0, 2, 1]]
+                base = len(vertices)
+                vertices.extend(w @ xyz)
+                weights.extend((idx, ww) for ww in w)
+                triangles.append((base, base + 1, base + 2))
+        for field in ("UV", "UV1", "COL"):
+            old = getattr(p, field)
+            if old is not None:
+                setattr(p, field, np.asarray([w @ old[idx] for idx, w in weights]).reshape(-1, old.shape[1]))
+        p.V = np.asarray(vertices).reshape(-1, 3)
+        p.T = np.asarray(triangles, dtype=np.int64).reshape(-1, 3)
+    buf.parts[:] = [p for p in buf.parts if len(p.T)]
+    return {"removed_m2": round(removed, 4), "before_m2": round(before, 4)}
+
