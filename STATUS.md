@@ -11,3 +11,7 @@
   zestawu, ≤1 m/pas), `compact_roundabout.TRUCK_ENTRY_R_MIN_M 12 / TRUCK_EXIT_R_MIN_M 15`, ring +0,25, `lane_w_m` +0,25.
   knyszyn przebudowany r1 (przed scaleniem main z ADR 0304); main scalony (a464ac123) — kafle trzeba przebudować ponownie.
 - NASTĘPNY KROK: `pwsh -File artifacts/road-widen-s24/rebuild.ps1 -Regions knyszyn,bialystok-kleeberga,dk65-05,tykocin -Tag r2`
+- 11:5x: testy 0274/0301 na geometrii zmierzonej (`GAMEPLAY_LANE_WIDEN_M=0` wyłącza wszystkie reguły D94), 101 zielonych.
+  r2 (knyszyn, tykocin, dk65-05, kleeberga, po merge main) w toku. Zlecenie lidera: fantomowa wyspa C (11_dk8, xy -549.8/218.9,
+  między jezdniami trunk w197904074 | w266084696, ortho_road_frac 0,654 ≥ 0,6) — analiza w toku (fidelity zoom).
+- NASTĘPNY KROK: po r2 `combo_lane_check --swing` na 4 kaflach; import Win64 + VQA (`pwsh -File artifacts/road-widen-s24/unity.ps1 -Tag after -Import knyszyn`).
