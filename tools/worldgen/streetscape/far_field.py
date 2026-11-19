@@ -201,6 +201,29 @@ def sector_of(e: float, n: float, half: float = 1024.0) -> str:
     return "far_west"
 
 
+def sector_regions(half: float = 1024.0) -> dict:
+    """The four sectors of sector_of() as polygons (outside the tile; same partition, edges shared)."""
+    B = 1.0e6
+    return {"far_north": box(-half - 320.0, half, B, B),
+            "far_east": box(half, -B, B, half),
+            "far_south": box(-B, -B, half, -half),
+            "far_west": shapely.union_all([box(-B, -half, -half, half), box(-B, half, -half - 320.0, B)])}
+
+
+def split_by_sector(poly, half: float = 1024.0, min_area: float = 60.0) -> list:
+    """[(sector name, polygon)]: poly cut along the sector borders (ADR 0308). A stand used to go whole to the sector
+    of its centroid: a forest wrapping a tile corner was drawn with the east sector although half of it lay north of
+    the tile - inside the neighbour tile whose open seam hides only the NORTH sector. Its mounds and curtains then
+    stood in the driven tile (owner s24, DK65 km 19.5; drive review s24 # 1, 2, 4, 5, 6)."""
+    out = []
+    for name, reg in sector_regions(half).items():
+        piece = shapely.make_valid(poly.intersection(reg))
+        for g in getattr(piece, "geoms", [piece]):
+            if g.geom_type == "Polygon" and g.area >= min_area:
+                out.append((name, g))
+    return out
+
+
 class BorderElevation:
     """Synchronized apron ground elevation model shared between Python (far_field.py) and Unity (WorldEdgeBuilder)."""
 
@@ -1122,11 +1145,16 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
         if poly_eff.geom_type != "Polygon" or poly_eff.area < 60.0:
             return
 
-    ce, cn = float(poly_eff.centroid.x), float(poly_eff.centroid.y)
-    sec = sectors[sector_of(ce, cn, half)]
     _, s_h = foreshorten_scales(d_cen)
     h_base = (21.5 if mix == "conifer" else 19.5 if mix == "mixed" else 18.0) * s_h
     h_base = max(h_base, 8.5)
+    for name, part in split_by_sector(poly_eff, half):          # ADR 0308: every piece in the sector it lies in
+        _stand_geometry(sectors[name], part, mix, elev, half, tier, h_base)
+
+
+def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevation, half: float, tier: str, h_base: float):
+    """Curtains and under-canopy mound of one stand piece (foreshortened coordinates) into sector builder sec."""
+    ce, cn = float(poly_eff.centroid.x), float(poly_eff.centroid.y)
 
     seg_step = 9.0 if tier == "High" else 28.0
     ext = np.asarray(poly_eff.exterior.coords, dtype=np.float64)

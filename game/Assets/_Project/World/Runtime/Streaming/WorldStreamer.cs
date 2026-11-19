@@ -126,6 +126,7 @@ namespace Game.World.Streaming
             public float loadStart, activateStart;
             public Vector2 min, max;
             public TileSide openSides;
+            public TileSide coveredSides;   // sides with a Ready neighbour, whatever this tile's own state (ADR 0308)
             public int readyCorners;        // ready diagonal neighbours (EdgeSides.CornerBit mask, ADR 0308)
             public bool apronCorners;       // the scene has Apron_NE / SE / SW / NW pieces
             // edge objects (ADR 0169 closures, ADR 0085 far field, apron)
@@ -670,7 +671,7 @@ namespace Game.World.Streaming
         {
             int i = t.index;
             // Close the seams of the neighbours first (their closures come back before the geometry goes).
-            t.openSides = TileSide.None;
+            t.openSides = TileSide.None; t.readyCorners = 0; t.coveredSides = TileSide.None;
             var nb = Graph.Neighbors[i];
             for (int k = 0; k < nb.Length; k++) RefreshEdges(nb[k], i);
             UnloadCount++;
@@ -857,7 +858,7 @@ namespace Game.World.Streaming
             t.apronPieces = pieces.ToArray(); t.apronSide = ps.ToArray();
             t.apronCorners = false;
             for (int i = 0; i < t.apronSide.Length; i++) t.apronCorners |= EdgeSides.CornerBit(t.apronSide[i]) != 0;
-            t.openSides = TileSide.None; t.readyCorners = 0;
+            t.openSides = TileSide.None; t.readyCorners = 0; t.coveredSides = TileSide.None;
         }
 
         static int ParseIndex(string name)
@@ -873,7 +874,7 @@ namespace Game.World.Streaming
             t.chunks = System.Array.Empty<GameObject>(); t.nextChunk = 0;
             t.closures = System.Array.Empty<GameObject>(); t.groups = System.Array.Empty<GameObject>();
             t.farSectors = System.Array.Empty<GameObject>(); t.apronPieces = System.Array.Empty<GameObject>(); t.apronWhole = null;
-            t.openSides = TileSide.None;
+            t.openSides = TileSide.None; t.readyCorners = 0; t.coveredSides = TileSide.None;
         }
 
         void RefreshEdgesAround(int tile)
@@ -889,9 +890,13 @@ namespace Game.World.Streaming
         {
             var t = m_Tiles[tile];
             if (t.root == null) return;
-            TileSide open = TileSide.None;
+            // open: seams (closures) - both tiles Ready. covered / corners: sides and corners where a Ready tile stands,
+            // whatever the state of THIS tile (ADR 0308): the apron and the far-field sectors of a tile that is still
+            // activating were all drawn, so the forest mounds / curtains of its far field stood in the tile the truck
+            // was driving in until the seam opened.
+            TileSide open = TileSide.None, covered = TileSide.None;
             int corners = 0;
-            if (Policy.StateOf(tile) == TileState.Ready)
+            bool selfReady = Policy.StateOf(tile) == TileState.Ready;
             {
                 var nb = Graph.Neighbors[tile];
                 for (int k = 0; k < nb.Length; k++)
@@ -899,12 +904,13 @@ namespace Game.World.Streaming
                     var side = Graph.NeighborSides[tile][k];
                     bool ready = nb[k] != leaving && Policy.StateOf(nb[k]) == TileState.Ready && m_Tiles[nb[k]].root != null;
                     if (!ready) continue;
-                    if (side == TileSide.N || side == TileSide.E || side == TileSide.S || side == TileSide.W) open |= side;
+                    if (side == TileSide.N || side == TileSide.E || side == TileSide.S || side == TileSide.W) { covered |= side; if (selfReady) open |= side; }
                     else corners |= EdgeSides.CornerBit(side);      // diagonal neighbour (ADR 0308)
                 }
             }
-            if (open == t.openSides && open == TileSide.None && corners == t.readyCorners && corners == 0) return;
-            t.openSides = open; t.readyCorners = corners;
+            if (open == t.openSides && open == TileSide.None && covered == t.coveredSides && covered == TileSide.None
+                && corners == t.readyCorners && corners == 0) return;
+            t.openSides = open; t.readyCorners = corners; t.coveredSides = covered;
             for (int i = 0; i < t.closures.Length; i++)
             {
                 t.closureOpen[i] = (open & t.closureSide[i]) != 0;
@@ -917,19 +923,19 @@ namespace Game.World.Streaming
                 if (t.groups[i] != null) t.groups[i].SetActive(!hide);
             }
             for (int i = 0; i < t.farSectors.Length; i++)
-                if (t.farSectors[i] != null) t.farSectors[i].SetActive(EdgeSides.FarSectorVisible(t.farSide[i], open, corners));
+                if (t.farSectors[i] != null) t.farSectors[i].SetActive(EdgeSides.FarSectorVisible(t.farSide[i], covered, corners));
             if (t.apronPieces.Length > 0)
             {
-                if (t.apronWhole != null) t.apronWhole.SetActive(open == TileSide.None && corners == 0);
+                if (t.apronWhole != null) t.apronWhole.SetActive(covered == TileSide.None && corners == 0);
                 for (int i = 0; i < t.apronPieces.Length; i++)
-                    if (t.apronPieces[i] != null) t.apronPieces[i].SetActive(EdgeSides.ApronPieceVisible(t.apronSide[i], open, corners, t.apronCorners));
+                    if (t.apronPieces[i] != null) t.apronPieces[i].SetActive(EdgeSides.ApronPieceVisible(t.apronSide[i], covered, corners, t.apronCorners));
             }
-            else if ((open != TileSide.None || corners != 0) && !t.warnedApron)
+            else if ((covered != TileSide.None || corners != 0) && !t.warnedApron)
             {
                 t.warnedApron = true;
                 Debug.LogWarning($"[STREAM] {Graph.Tiles[tile].id}: scene has no Apron_N/E/S/W pieces (imported before ADR 0235) - the apron overlaps the neighbour; reimport with scripts/import-region.ps1");
             }
-            Debug.Log($"[STREAM] edges {Graph.Tiles[tile].id}: open {open}, diagonal mask {corners}");
+            Debug.Log($"[STREAM] edges {Graph.Tiles[tile].id}: open {open}, covered {covered}, diagonal mask {corners}");
         }
 
         // ------------------------------------------------------------------ queries (safety net, tests)
