@@ -106,8 +106,10 @@ namespace Game.Tests
                     var j = t.joins[i];
                     int a = g.IndexOf(j.from), b = g.IndexOf(j.to);
                     Assert.GreaterOrEqual(a, 0, j.from); Assert.GreaterOrEqual(b, 0, j.to);
-                    Assert.Less(g.DistanceTo(a, j.x, j.y), 1.0, $"{id}: join {j.from}->{j.to} on the seam (tile {j.from})");
-                    Assert.Less(g.DistanceTo(b, j.x, j.y), 1.0, $"{id}: join {j.from}->{j.to} on the seam (tile {j.to})");
+                    // within 2 m of both tiles (the corridor joins are graph boundary nodes; tile rectangles vs the
+                    // 2048 m lattice differ by up to ~1.4 m, e.g. dk65-01 | dk65-02)
+                    Assert.Less(g.DistanceTo(a, j.x, j.y), 2.0, $"{id}: join {j.from}->{j.to} on the seam (tile {j.from})");
+                    Assert.Less(g.DistanceTo(b, j.x, j.y), 2.0, $"{id}: join {j.from}->{j.to} on the seam (tile {j.to})");
                     Assert.NotNull(Game.Core.Navigation.RouteGraph.Load(j.from), j.from);
                 }
                 int last = g.IndexOf(t.goalTile);

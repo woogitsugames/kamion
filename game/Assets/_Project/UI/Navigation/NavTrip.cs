@@ -185,7 +185,7 @@ namespace Game.UI.Navigation
             {
                 leg.Graph = RouteGraph.Load(leg.RegionId);
                 if (leg.Graph == null) { leg.Status = PlanStatus.NoPath; return false; }
-                leg.Planner = new RoutePlanner(leg.Graph);
+                leg.Planner = new RoutePlanner(leg.Graph) { AllowTileExit = true };   // legs end on the seam (ADR 0302)
                 leg.Path = RoutePath.For(leg.Graph);
                 leg.NameMap = new ushort[leg.Graph.Names.Length];
                 for (int k = 0; k < leg.NameMap.Length; k++) leg.NameMap[k] = Intern(leg.Graph.Names[k]);
