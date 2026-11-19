@@ -886,8 +886,9 @@ def grow_crown(species, variant, lod, rng, crng, g, H):
                 p += Vector((rng.uniform(-1, 1), rng.uniform(-1, 1), rng.uniform(-0.6, 0.6))) * 0.012 * H
             pts.append(p)
         rb = min(ra * rng.uniform(0.42, 0.62), 0.14 * k * (1.5 if leader else 1.0) + 0.02)
-        g.tube(P["bark"] if species != "birch" or rb > 0.07 else "bark_twig", pts,
-               [rb * (1 - j / 5) ** 0.9 + 0.014 for j in range(6)], max(3, seg // 2 + 1))
+        sel = range(6) if lod == 0 else (0, 2, 5)            # LOD1: two segments per limb (Low tier budget)
+        g.tube(P["bark"] if species != "birch" or rb > 0.07 else "bark_twig", [pts[j] for j in sel],
+               [rb * (1 - j / 5) ** 0.9 + 0.014 for j in sel], max(3, seg // 2 + 1))
         limbs += pts[2:]
         lobe(pts[5])
         L = (tip - pa).length
@@ -932,7 +933,7 @@ def grow_crown(species, variant, lod, rng, crng, g, H):
     cc = Vector((0, 0, zb + 0.5 * hc))
     up_z = Vector((0, 0, 1))
     per = P["cards"] / len(lobes)
-    keep = 1.0 if lod == 0 else 0.36            # LOD1 count only: reuse_leaf_lod takes the LOD0 cards themselves
+    keep = 1.0 if lod == 0 else 0.31            # LOD1 count only: reuse_leaf_lod takes the LOD0 cards themselves
     for lc, lo in lobes:
         rl = P["lobe"] * H * crng.uniform(0.85, 1.2)
         n = int(per) + (1 if crng.random() < per - int(per) else 0)
