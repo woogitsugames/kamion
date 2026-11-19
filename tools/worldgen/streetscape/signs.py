@@ -780,6 +780,20 @@ def b18(t):
     return im
 
 
+def b16(m):
+    """B-16 "zakaz wjazdu pojazdów o wysokości ponad ... m" (Z1 pkt 3.2.17, rys. 3.2.17.1): the value + "m" in black
+    between two black triangles pointing at it from the top and the bottom of the field. Decimal comma (ADR 0307)."""
+    im, d = disc(WHITE, RED)
+    txt = f"{_fmt_t(m)} m"
+    f = _font(int(S * (0.22 if len(txt) <= 5 else 0.19)))
+    bb = d.textbbox((0, 0), txt, font=f)
+    d.text(((S - (bb[2] - bb[0])) / 2 - bb[0], (S - (bb[3] - bb[1])) / 2 - bb[1]), txt, font=f, fill=BLACK)
+    hw, th = S * 0.10, S * 0.115
+    d.polygon([(S / 2 - hw, S * 0.115), (S / 2 + hw, S * 0.115), (S / 2, S * 0.115 + th)], fill=BLACK)
+    d.polygon([(S / 2 - hw, S * 0.885), (S / 2 + hw, S * 0.885), (S / 2, S * 0.885 - th)], fill=BLACK)
+    return im
+
+
 def _fmt_t(t):
     v = float(t)
     return str(int(v)) if v.is_integer() else f"{v:.1f}".replace(".", ",")
@@ -870,7 +884,7 @@ FACES = {"A-7": ("triangle", a7), "B-20": ("octagon", b20), "C-12": ("disc", c12
          "A-8": ("triangle_up", a8), "B-5": ("disc", b5), "D-42": ("rect", d42), "D-43": ("rect", lambda: d42(True))}
 KNOWN = set(FACES)
 # parametric faces: B-33_<km/h>, B-18_<t>, T-1_<m>, T-1S_<m> ("Stop <m>")
-PARAMETRIC = ("B-33_", "B-18_", "T-1_", "T-1S_")
+PARAMETRIC = ("B-33_", "B-18_", "B-16_", "T-1_", "T-1S_")
 
 
 def is_known(code) -> bool:
@@ -996,6 +1010,8 @@ def face(code):
         return "disc", b33(code.split("_")[1])
     if code.startswith("B-18_"):
         return "disc", b18(code.split("_")[1])
+    if code.startswith("B-16_"):
+        return "disc", b16(code.split("_")[1])
     if code.startswith("T-1S_"):
         return "rect", t1(code.split("_")[1], stop=True)
     if code.startswith("T-1_"):

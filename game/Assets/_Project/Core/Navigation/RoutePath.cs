@@ -42,6 +42,12 @@ namespace Game.Core.Navigation
         public readonly uint[] ManLanesAllowed, ManLanesRec;
         public int ManCount;
 
+        /// <summary>ADR 0307: stretches of the route with a limit below the combination (height / weight / axle load /
+        /// length), by chainage. Filled by the planner (only a relaxed plan can cross one) and by the trip composer.</summary>
+        public readonly RouteRestriction[] Restr = new RouteRestriction[MaxRestrictions];
+        public int RestrCount;
+        public const int MaxRestrictions = 32;
+
         public Vector2 Destination;
         public ushort DestinationName;
         /// <summary>Planner cost [s] (travel-time model, WORKING_VALUES in <see cref="RoutePlanner"/>).</summary>
@@ -68,7 +74,7 @@ namespace Game.Core.Navigation
 
         public void Clear()
         {
-            Count = 0; DirectedCount = 0; ManCount = 0; CostSeconds = 0f; DestinationName = 0;
+            Count = 0; DirectedCount = 0; ManCount = 0; RestrCount = 0; CostSeconds = 0f; DestinationName = 0;
             Version++;
         }
 
@@ -82,6 +88,19 @@ namespace Game.Core.Navigation
             Name[Count] = name; Limit[Count] = limit; Class[Count] = cls;
             Count++;
             return true;
+        }
+
+        /// <summary>Appends a limited stretch; one that continues the previous stretch with the same limits extends it.</summary>
+        public void AddRestriction(in RouteRestriction r)
+        {
+            if (RestrCount > 0 && Restr[RestrCount - 1].SameLimits(r) && r.S0 - Restr[RestrCount - 1].S1 < 1f)
+            {
+                Restr[RestrCount - 1].S1 = r.S1;
+                Restr[RestrCount - 1].Exceeded |= r.Exceeded;
+                return;
+            }
+            if (RestrCount >= Restr.Length) return;
+            Restr[RestrCount++] = r;
         }
 
         public void AddManeuver(int point, Maneuver type, float turnDeg, int exit, ushort name, int inDirected = -1)
@@ -126,6 +145,7 @@ namespace Game.Core.Navigation
             System.Array.Copy(o.ManLaneCount, ManLaneCount, o.ManCount); System.Array.Copy(o.ManLaneCls, ManLaneCls, o.ManCount);
             System.Array.Copy(o.ManLanesAllowed, ManLanesAllowed, o.ManCount); System.Array.Copy(o.ManLanesRec, ManLanesRec, o.ManCount);
             ManCount = o.ManCount;
+            System.Array.Copy(o.Restr, Restr, o.RestrCount); RestrCount = o.RestrCount;
             Destination = o.Destination; DestinationName = o.DestinationName; CostSeconds = o.CostSeconds;
             Version = System.Math.Max(Version, o.Version) + 1;
         }

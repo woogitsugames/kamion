@@ -683,7 +683,7 @@ namespace Game.World.Import
         static Material FurnitureSign(RegionImporter.Result r, string id, Dictionary<string, object> def,
             string face, string path)
         {
-            if (id != "sign_" + face || !System.Text.RegularExpressions.Regex.IsMatch(face, @"^[A-Z][A-Za-z0-9_-]*$"))
+            if (id != "sign_" + face || !System.Text.RegularExpressions.Regex.IsMatch(face, @"^[A-Z][A-Za-z0-9_.-]*$"))   // "." = decimal value of a parametric face (B-16_3.7, B-18_7.5; ADR 0307)
                 throw new InvalidOperationException("Invalid explicitly flagged furniture sign face");
             string png = WorldLibrary.Resolve(r.Region, "signs", face + ".png");
             if (!File.Exists(png)) throw new FileNotFoundException("Flagged furniture sign texture missing", png);

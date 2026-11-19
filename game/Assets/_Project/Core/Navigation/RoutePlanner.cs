@@ -75,6 +75,9 @@ namespace Game.Core.Navigation
         /// allowed at their normal cost. The caller reports it (<see cref="LastUsedRelaxed"/>).</summary>
         public bool RelaxTruckLimits;
         bool m_UsedRelaxed;
+        /// <summary>ADR 0307: the combination the route restrictions (<see cref="RoutePath.Restr"/>) are reported for.
+        /// Routing legality keeps the constants (<see cref="EdgeAllowed"/>).</summary>
+        public TruckLimits Truck = TruckLimits.Default;
         /// <summary>The last search expanded at least one edge over the truck's limits (with <see cref="RelaxTruckLimits"/>).</summary>
         public bool LastUsedRelaxed => m_UsedRelaxed;
 
@@ -368,7 +371,15 @@ namespace Game.Core.Navigation
                 if (i == m - 1) b = RouteGraph.Reversed(d) ? len - gAlong : gAlong;
                 m_EdgeFirstPoint[i] = Mathf.Max(0, p.Count - 1);
                 if (b < a) b = a;
+                float s0 = p.Count > 0 ? p.S[p.Count - 1] : 0f;
                 AppendRange(g, p, d, a, b);
+                LimitKind over = Truck.Exceeded(g, e);
+                if (over != LimitKind.None && p.Count > 0)   // ADR 0307: only a relaxed plan gets here
+                {
+                    var r = RouteRestriction.Of(g, e, over);
+                    r.S0 = s0; r.S1 = p.S[p.Count - 1]; r.Pos = g.PointAlong(d, a);
+                    p.AddRestriction(r);
+                }
             }
             m_EdgeFirstPoint[0] = 0;
         }

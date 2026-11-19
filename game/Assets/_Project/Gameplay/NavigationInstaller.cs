@@ -1,3 +1,4 @@
+using Game.Core.Navigation;
 using Game.UI.CabDisplays;
 using Game.UI.Driving;
 using Game.UI.Navigation;
@@ -23,6 +24,9 @@ namespace Game.Gameplay
             var route = Object.FindAnyObjectByType<WorldRoute>();
             Transform frame = route != null ? route.transform : null;   // same frame as the cab screens
             var nav = NavigationService.Install(host, vehicle.transform, vehicle.GetComponent<Rigidbody>(), frame, region.regionId);
+            // ADR 0307 (D91): road limits are compared with the real mass of the combination (tractor + trailer + cargo)
+            nav.WeightKgSource = () => vehicle.Model != null ? vehicle.Model.TotalMass : RoutePlanner.TruckMaxWeightCt * 10.0;
+            hud.Nav = nav;
             var screens = vehicle.GetComponent<CabScreens>();
             NavStreamFollower.Install(host, nav, screens, vehicle.transform);   // ADR 0300: GPS follows the streamed tile
             if (!nav.Ready) return nav;

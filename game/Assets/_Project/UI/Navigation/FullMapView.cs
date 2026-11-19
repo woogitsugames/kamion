@@ -362,6 +362,8 @@ namespace Game.UI.Navigation
                     int tm = Mathf.Max(1, Mathf.RoundToInt(g.RemainingSeconds / 60f));
                     sub = NavText.Remaining + " " + m_B.ToString() + " · " + NavText.About + " " + tm + " " + NavText.Minutes;
                     if (m_Nav.TripPlanning) sub += " · " + NavText.TripPlanning;
+                    else if (m_Nav.Path.RestrCount > 0)   // ADR 0307: say which limit, not only that there is one
+                        sub += " · " + NavText.Restriction.ToLowerInvariant() + ": " + NavText.Describe(m_Nav.Path.Restr[0]);
                     else if (m_Nav.Trip.RelaxedCount > 0) sub += " · " + NavText.TripRelaxed;
                 }
                 else
@@ -439,6 +441,7 @@ namespace Game.UI.Navigation
                 Vector2 pp = xf.ToScreen(m_Nav.PinOnRoad);
                 NavDraw.Pin(d, pp.x, pp.y, 46f, P.TellRed, pal.LimitFace, pal.ArrowEdge);
             }
+            NavDraw.RestrictionMarkers(d, m_B, m_Nav, xf, 19f, 15f, W, H, 0f, pal);   // ADR 0307
             if (m_Nav.HasPosition)
             {
                 Vector2 tp = xf.ToScreen(m_Nav.Position);

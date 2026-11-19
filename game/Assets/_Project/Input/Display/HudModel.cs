@@ -18,12 +18,22 @@ namespace Game.Controls
         TrailerAbsFault = 6,
         /// <summary>ABS regulating right now (amber, short).</summary>
         AbsActive = 7,
+        /// <summary>ADR 0307 (D91): the road ahead has a height limit below the combination (amber; the drive is not blocked).</summary>
+        RoadLimitHeight = 8,
+        /// <summary>ADR 0307: weight limit below the combination's mass.</summary>
+        RoadLimitWeight = 9,
+        /// <summary>ADR 0307: axle-load or length limit below the combination.</summary>
+        RoadLimitOther = 10,
     }
 
     /// <summary>Plain inputs of the warning row (filled from the vehicle model by the HUD; no Unity objects).</summary>
     public struct HudWarningInput
     {
         public bool ParkingBrake, ParkDriveAway, AirLow, TrailerEmergency, AbsFault, TrailerAbsFault, AbsActive;
+        /// <summary>ADR 0307: limits of the road ahead that the combination exceeds (0 = none): height [cm], weight [0.01 t];
+        /// <see cref="RoadLimitOther"/> = axle load / length.</summary>
+        public int RoadLimitHeightCm, RoadLimitWeightC;
+        public bool RoadLimitOther;
     }
 
     /// <summary>Which parts of the screen HUD are on (ADR 0283). Pure.</summary>
@@ -76,6 +86,10 @@ namespace Game.Controls
             if (s.AirLow && n < max) buffer[n++] = HudWarning.AirLow;
             if (s.TrailerEmergency && n < max) buffer[n++] = HudWarning.TrailerEmergency;
             if (s.ParkingBrake && !s.ParkDriveAway && n < max) buffer[n++] = HudWarning.ParkingBrake;
+            // ADR 0307: road limits right after the red tiles - the driver has to decide before the bridge
+            if (s.RoadLimitHeightCm > 0 && n < max) buffer[n++] = HudWarning.RoadLimitHeight;
+            if (s.RoadLimitWeightC > 0 && n < max) buffer[n++] = HudWarning.RoadLimitWeight;
+            if (s.RoadLimitOther && s.RoadLimitHeightCm <= 0 && s.RoadLimitWeightC <= 0 && n < max) buffer[n++] = HudWarning.RoadLimitOther;
             if (s.AbsFault && n < max) buffer[n++] = HudWarning.AbsFault;
             if (s.TrailerAbsFault && n < max) buffer[n++] = HudWarning.TrailerAbsFault;
             if (s.AbsActive && !s.AbsFault && n < max) buffer[n++] = HudWarning.AbsActive;
@@ -119,9 +133,35 @@ namespace Game.Controls
             "USTERKA ABS",
             "ABS NACZEPY",
             "ABS",
+            "LIMIT WYSOKOŚCI",
+            "LIMIT MASY",
+            "OGRANICZENIE",
         };
 
         public static string Warning(HudWarning w) => k_Warnings[(int)w];
+
+        // ADR 0307: limit tiles carry the value of the sign ("WYS. 3,7 m", "MASA 12 t"; the tile is 184 units wide); built once per value
+        static readonly string[] k_LimitHeight = new string[100];    // 0,0 .. 9,9 m
+        static readonly string[] k_LimitWeight = new string[1000];   // 0,0 .. 99,9 t
+
+        /// <summary>"WYS. 3,7 m" for a height limit [cm] (one decimal, cut - never above the sign).</summary>
+        public static string RoadLimitHeight(int cm) => Limit(k_LimitHeight, cm / 10, "WYS. ", " m");
+
+        /// <summary>"MASA 12 t" for a weight limit [0.01 t].</summary>
+        public static string RoadLimitWeight(int centiTonnes) => Limit(k_LimitWeight, centiTonnes / 10, "MASA ", " t");
+
+        static string Limit(string[] cache, int tenths, string head, string unit)
+        {
+            if (tenths < 0) tenths = 0;
+            if (tenths >= cache.Length) tenths = cache.Length - 1;
+            return cache[tenths] ??= head + (tenths / 10).ToString(CultureInfo.InvariantCulture)
+                + (tenths % 10 != 0 ? "," + (tenths % 10).ToString(CultureInfo.InvariantCulture) : "") + unit;
+        }
+
+        /// <summary>Tile text of warning <paramref name="w"/> for the inputs it was collected from.</summary>
+        public static string Warning(HudWarning w, in HudWarningInput s) =>
+            w == HudWarning.RoadLimitHeight ? RoadLimitHeight(s.RoadLimitHeightCm)
+            : w == HudWarning.RoadLimitWeight ? RoadLimitWeight(s.RoadLimitWeightC) : Warning(w);
 
         /// <summary>All warning labels (tests: Polish, no brands, fit the tile).</summary>
         public static int WarningCount => k_Warnings.Length;
