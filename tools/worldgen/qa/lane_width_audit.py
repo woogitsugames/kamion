@@ -42,8 +42,9 @@ V = np.arange(-6.0, 6.0 + 1e-9, 0.5)   # +-6 m covers one period of P-1a (4 + 8 
 K0 = len(U) // 2
 LINE_DV = 22.0          # WORKING_VALUE: paint brighter than the asphalt core by this much (0-255 mean RGB)
 LINE_MAX_W = 0.45       # m, wider bright runs are kerbs / concrete / crossings, not a line
+LINE_ROWS = 0.2         # WORKING_VALUE: share of the 25 rows with a narrow peak at that column
 EDGE_TOL = 0.6          # m, a line this close to the asphalt edge is an edge line (P-7), not a lane boundary
-LONG_KINDS = {"P-1a", "P-1b", "P-1c", "P-1d", "P-1e", "P-2a", "P-2b", "P-3a", "P-3b", "P-4", "P-6", "P-7a", "P-7b",
+LONG_KINDS = {"lane", "centre", "P-1a", "P-1b", "P-1c", "P-1d", "P-1e", "P-2a", "P-2b", "P-3a", "P-3b", "P-4", "P-6", "P-7a", "P-7b",
               "P-7c", "P-7d"}
 
 
@@ -85,23 +86,27 @@ def ortho_profile(rgb):
     a = rgb.astype(float)
     med = np.median(a, axis=0)
     v = med.mean(axis=1)
-    # dashed lines cover 1/3 of the rows: the 80th percentile keeps them, cars (dark or coloured) mostly drop out
-    hi = np.percentile(a.mean(axis=2), 80, axis=0)
-    hsat = np.percentile((a.max(axis=2) - a.min(axis=2)) / np.maximum(a.max(axis=2), 1), 50, axis=0)
     mx, mn = med.max(axis=1), med.min(axis=1)
     sat = (mx - mn) / np.maximum(mx, 1)
     green = med[:, 1] - 0.5 * (med[:, 0] + med[:, 2])
-    core = slice(K0 - 24, K0 + 25)                 # +-1.2 m around the generated route point
+    # paint: per row, narrow (<= LINE_MAX_W) peaks brighter than the asphalt 0.4-0.6 m to both sides by LINE_DV and
+    # unsaturated; a line = a column where such peaks occur in >= LINE_ROWS of the rows (dashes cover 1/3 of +-6 m,
+    # car roofs and kerbs are wider than a line and drop out)
+    L = a.mean(axis=2)
+    S_ = (a.max(axis=2) - a.min(axis=2)) / np.maximum(a.max(axis=2), 1)
+    side = np.maximum(np.roll(L, 10, axis=1), np.roll(L, -10, axis=1))
+    side2 = np.maximum(np.roll(L, 12, axis=1), np.roll(L, -12, axis=1))
+    peak = (L > np.maximum(side, side2) + LINE_DV) & (S_ < 0.18)
+    frac = peak.mean(axis=0)
+    frac = np.convolve(frac, np.ones(3) / 3, mode="same")
+    core = slice(K0 - 24, K0 + 25)
     a_v, a_sat = float(np.median(v[core])), float(np.median(sat[core]))
     ok = (sat < a_sat + 0.07) & (np.abs(v - a_v) < 38) & (green < 6)
-    paint = (hi > a_v + LINE_DV) & (hsat < 0.18)
-    asph = run_through(ok | paint)
+    paint = frac >= LINE_ROWS
+    asph = run_through(ok | paint | (np.percentile(L, 80, axis=0) > a_v + LINE_DV))
     lines = []
     for i0, i1 in runs(paint):
-        w = (i1 - i0 + 1) * 0.05
-        if w <= LINE_MAX_W:
-            seg = hi[i0:i1 + 1]
-            lines.append(round(float(U[i0 + int(np.argmax(seg))]), 2))
+        lines.append(round(float(U[i0 + int(np.argmax(frac[i0:i1 + 1]))]), 2))
     if asph:
         lines = [u for u in lines if asph[0] - 0.15 <= u <= asph[1] + 0.15]
     return {"asphalt": asph, "lines": lines, "core_v": round(a_v, 1)}
@@ -164,7 +169,7 @@ def gen_profile(G, c, t, res=0.05):
     cw = rasterize(G.tris, x0, y1, res, shape)[row, col].mean(0) >= 0.5
     lm = np.zeros(shape, bool)
     for k, tr in G.mark_tris.items():
-        if k in LONG_KINDS:
+        if k.split("-P-2a")[0] in LONG_KINDS:
             lm |= rasterize(tr, x0, y1, res, shape)
     lp = lm[row, col].mean(0) >= 0.12
     asph = run_through(cw, gap=4)
@@ -211,7 +216,7 @@ def osm_attrs(graph, eid):
     return {}
 
 
-def audit(region, step=50.0, fetch=False, out=None, gen=None):
+def audit(region, step=50.0, fetch=False, out=None, gen=None, reuse_gen=None):
     from fidelity import ortho as O
     from fidelity import gen as FG
     from roads import pipeline
@@ -224,9 +229,12 @@ def audit(region, step=50.0, fetch=False, out=None, gen=None):
         line = shapely.LineString(np.array(rs["points_en"], float)[:, :2] + [ox, oy])
         O.fetch_cells(reg, O.cells_for(reg, [line], pad=24.0))
     orth = O.Ortho(reg)
-    G = gen or FG.build(region)
+    prev = None
+    if reuse_gen:
+        prev = {r["station"]: r for r in json.loads(Path(reuse_gen).read_text(encoding="utf-8"))}
+    G = gen or (None if prev else FG.build(region))
     graph = json.loads((REPO / "Data/Regions" / region / "roads.graph.json").read_text(encoding="utf-8"))
-    secs = G.world.net.sections
+    secs = G.world.net.sections if G else {}
     rows, strips = [], []
     for k, s in enumerate(st):
         c, t = s["xy"], s["t"]
@@ -236,12 +244,12 @@ def audit(region, step=50.0, fetch=False, out=None, gen=None):
         col = np.clip(((X + ox - bb[0]) / 0.05).astype(int), 0, rgb.shape[1] - 1)
         row = np.clip(((bb[3] - (Y + oy)) / 0.05).astype(int), 0, rgb.shape[0] - 1)
         o = ortho_profile(rgb[row, col])
-        g = gen_profile(G, c, t)
+        g = ({kk: prev[k]["gen"][kk] for kk in ("asphalt", "lines")} if prev else gen_profile(G, c, t))
         lo, lg = layout(o["asphalt"], o["lines"]), layout(g["asphalt"], g["lines"])
         sec = secs.get(s["edge"])
         r = {"region": region, "station": k, "s": s["s"], "e": round(float(c[0]), 1), "n": round(float(c[1]), 1),
              "edge": s["edge"], "osm": osm_attrs(graph, s["edge"]), "ortho_src": src,
-             "gen_sec": None if sec is None else {"lanes": sec.lanes, "lane_w": sec.lane_w, "width": sec.width,
+             "gen_sec": prev[k]["gen_sec"] if prev else None if sec is None else {"lanes": sec.lanes, "lane_w": sec.lane_w, "width": sec.width,
                                                   "edge_strip": sec.edge_strip, "width_src": sec.width_src,
                                                   "cls": sec.cls},
              "ortho": dict(o, layout=lo), "gen": dict(g, layout=lg)}
@@ -318,9 +326,10 @@ def main(argv=None):
     ap.add_argument("--step", type=float, default=50.0)
     ap.add_argument("--fetch", action="store_true")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--reuse-gen", default=None, help="<dir>: take the generated profiles from <dir>/<region>.json")
     a = ap.parse_args(argv)
     for r in a.region:
-        audit(r, a.step, a.fetch, a.out)
+        audit(r, a.step, a.fetch, a.out, reuse_gen=(Path(a.reuse_gen) / f"{r}.json") if a.reuse_gen else None)
 
 
 if __name__ == "__main__":
