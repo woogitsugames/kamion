@@ -13,7 +13,7 @@ Zmiany i artefakty wyłącznie we własnym worktree.
 - `:867–873`: unload dk65-08 i UnloadUnusedAssets **7,3043 ms**;
   `:879–885`: unload dk65-09 i UnloadUnusedAssets **4,6201 ms**.
 - `:894–934`: pauzy bez nowych zdarzeń streamingu. DIAG zgłasza 21106,15 ms
-  (`:902`), 2134,71 ms (`:907`) i 165917 ms (`:933`). Następny load to
+  (`:900`), 2134,71 ms (`:906`) i 165917 ms (`:934`). Następny load to
   dopiero dk65-11 (`:938–940`), 250 ms + 129 ms.
 - `frametimes.csv:120282`, `:120708`, `:122715`: klatki 120281, 120707,
   122714, odpowiednio t_s=2031,9634 / 2041,9558 / 2241,3096 i
@@ -22,7 +22,7 @@ Zmiany i artefakty wyłącznie we własnym worktree.
   Te próbki CPU/GPU mogą być opóźnione — nie dowodzą czasu pracy konkretnej
   zawieszonej klatki. `t_s` i `frame_ms` mają różne momenty próbkowania:
   nie należy wyliczać początku pauzy prostym odejmowaniem tych kolumn.
-- `:898–901`, `:916–932`: po luce w aktualizacjach AUTOSHOT nadrabia terminy;
+- `:897–901`, `:915–933`: po luce w aktualizacjach AUTOSHOT nadrabia terminy;
   wielokrotnie zapisuje `shot_t2036.png`, `shot_t2245.png`, `shot_t2246.png` itd.
   `summary.json` opisuje końcowe okno 600 klatek, a nie maksimum całego przejazdu.
 - Brak wyjątków w tym przedziale, brak telemetrii GC oraz zmian fokusu/pauzy.
@@ -59,9 +59,9 @@ Potwierdzony skutek wznowienia to dług zrzutów:
 
 Osobne, rzeczywiste luki streamingu, bez dowodu związku z tymi trzema pauzami:
 
-- `StreamingPolicy.cs:320` limituje tylko Loading, zwalniając slot przed końcem
+- `StreamingPolicy.cs:291` limituje tylko Loading, zwalniając slot przed końcem
   aktywacji/gotowania (nakładanie widoczne w `player.log:1049–1058`).
-- `StreamingPolicy.cs:294,343` pozwala usuwać Activating. Destrukcja cookera może
+- `StreamingPolicy.cs:274,308` pozwala usuwać Activating. Destrukcja cookera może
   wtedy czekać synchronicznie w `WorldCollisionCooker.OnDestroy` na JobHandle.Complete.
 - `WorldStreamer.cs:709` porzuca AsyncOperation z UnloadUnusedAssets; kolejna
   decyzja może zacząć load zanim czyszczenie się zakończy. Obecne czyszczenie
@@ -69,5 +69,49 @@ Osobne, rzeczywiste luki streamingu, bez dowodu związku z tymi trzema pauzami:
 
 ## Zmiana i weryfikacja
 
-W toku. Wymagany kolejny przejazd playera z rejestracją fokusu/pauzy i stanów
-streamingu; samo przejrzenie kodu nie potwierdza usunięcia pauz 21/2/166 s.
+- `StreamingPolicy.cs:292`: limit obejmuje Loading + Activating. Warunki wyładowania
+  (`:275`) i eksmisji (`:309`) dopuszczają tylko Ready, więc streamer nie niszczy
+  cookera z trwającym jobem. Nie usunięto zabezpieczenia Complete w OnDestroy:
+  przy zamknięciu całego świata nadal trzeba bezpiecznie zwolnić NativeArray.
+- `WorldStreamer`: śledzony uchwyt UnloadUnusedAssets i blokada nowych decyzji
+  do isDone; czyszczenie nie nakłada się również na Unloading. Log start/done
+  pokazuje wall-clock czyszczenia. Log focus/pause i update gap >= 1 s pokazuje
+  realtime, fokus, runInBackground, liczby Loading/Activating/Unloading, cleanup
+  i przyrost liczników GC od poprzedniej aktualizacji. Bez alokacji w zwykłej klatce
+  z tej diagnostyki (przegląd kodu; pomiar w Unity odroczony).
+- `DesktopAutoShot.cs:43,49–53`: okresowy przebieg dowodowy pracuje w tle;
+  po zrzucie termin jest planowany od teraz, bez nadrabiania utraconych obrazów.
+  To eliminuje potwierdzoną serię zrzutów po wznowieniu i usuwa domyślną pauzę
+  po utracie fokusu dla tego trybu. Domyślna zwykła gra nie jest zmieniona.
+- Dodano 6 testów EditMode w `StreamingWorkSchedulingTests.cs`: slot do Ready,
+  mieszany limit Loading/Activating, daleki unload i eksmisja dopiero po Ready,
+  brak długu zrzutów po 166 s, warunki wyłączenia/terminu/quit.
+- Bez Unity wykonano **6/6 PASS** tych samych ciał testów przez in-memory C#
+  harness: `pwsh -NoProfile -File tools/streaming-check/check-logic.ps1`.
+  To **nie jest wynik Unity EditMode/NUnit**: harness ma minimalne atrapy API Unity
+  i asercji NUnit; nie implementuje ładowania, gotowania, renderu ani cleanup.
+  `-Before` używa StreamingPolicy z bazowego `f08172268` i przywraca stary
+  przyrost terminu zrzutów (`+= every`) w wydzielonej funkcji: 5 FAIL, 1 PASS.
+  Wyniki lokalne: `artifacts/stream-hitch-cli/logic-before.txt`, `logic-after.txt`.
+- `git diff --check`: PASS. Nie uruchamiano edytora Unity, test runnera Unity,
+  playera, buildów ani narzędzi generujących świat. Nie kopiowano dowodów do main
+  (polecenie użytkownika: pracować wyłącznie w tym worktree).
+
+## Co wymaga weryfikacji w buildzie
+
+1. Po integracji: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64`
+   oraz PlayMode streamingu, w osobnej autoryzowanej sesji. Sprawdzić brak regresji
+   testu zerowych alokacji `WorldStreamerHook0273Tests`.
+2. Powtórzyć Windows High C → Tykocin tym samym playerem/hardware, z `-stream 1`
+   i `-shot_every 10`. Celowo przełączyć fokus na >= 30 s i >= 166 s: jazda powinna
+   trwać, log ma rejestrować focus=false, background=true, bez serii zrzutów po powrocie.
+3. Osobny pomiar bez zrzutów, przy utrzymanym fokusie, obejmujący dk65-08 → knyszyn-s.
+   Porównać wszystkie surowe klatki CSV, pamięć i gotowość kafli przed dojazdem
+   (zwłaszcza skrzyżowania, gdzie serializacja Loading + Activating opóźnia następną scenę).
+4. Jeśli pauza wróci: skorelować update gap z focus/pause, gcDelta i cleanup start/done;
+   profilerem playera ustalić blokujące I/O / wątek / native engine. Liczba GC mówi,
+   czy wystąpiła kolekcja, ale sama nie mierzy czasu GC. Nadal nie można ogłosić
+   usunięcia pierwotnej pauzy 165,9 s bez takiego przejazdu.
+5. W środowisku posiadającym `_Generated` porównać rozmiary rzeczywistych scen,
+   meshy i tekstur z manifestami; lokalne dane nie dowodzą zgodności ze starym buildem
+   `edeb582320` z badanego przejazdu.

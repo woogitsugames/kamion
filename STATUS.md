@@ -1,7 +1,8 @@
-# STATUS stream-hitch-cli
-- Analiza logu: load dk65-10 267 ms, aktywacja 183 ms; trzy pauzy później, bez zdarzeń streamingu. Dowody: docs/reports/stream-hitch-cli.md.
-- Potwierdzono dług AUTOSHOT po luce oraz luki harmonogramu streamingu; utrata fokusu prawdopodobna, niepotwierdzona.
-- Unity/buildy nieuruchamiane. NASTĘPNY KROK: git diff -- game/Assets/_Project/World/Runtime/Streaming
+# STATUS stream-hitch-cli — analiza pauz DK65-10 i poprawki harmonogramu
+- player.log:833: load 267 ms + activation 183 ms; pauzy 21,106 / 2,135 / 165,917 s później, bez zdarzeń streamingu. Przyczyna pierwotna niepotwierdzona; fokus/runInBackground=0 jest hipotezą. Raport: docs/reports/stream-hitch-cli.md.
+- Slot Loading+Activating, brak unload/eksmisji podczas gotowania, śledzony UnloadUnusedAssets; diagnostyka luk/fokusu/GC. Okresowy AUTOSHOT pracuje w tle i pomija zaległe terminy.
+- Dodano 6 testów EditMode; te same ciała testów w in-memory harness C#: 6/6 PASS, stara polityka i stary przyrost zrzutów 5 FAIL / 1 PASS. Nie są to wyniki Unity. git diff --check PASS; Unity/player/buildy nieuruchamiane, bez push.
+- NASTĘPNY KROK (lider, osobna sesja dopuszczająca Unity): pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64; następnie przejazd High C → Tykocin z testem utraty fokusu i osobny pomiar bez zrzutów.
 
 # STATUS nav-uturn-alt — DK8 / wybór jezdni startowej
 - Odtworzono błędny snap 526 zamiast 530 na al. Tysiąclecia; kierunek był sprawdzany dopiero po ustaleniu krawędzi. Poprawka wybiera bliską jezdnię zgodną z kursem przed A*.

@@ -65,7 +65,7 @@ namespace Game.World.Streaming
         /// <summary>When the budget leaves no room, the single best tile ahead is still loaded (a closed road is worse
         /// than a PSS overshoot that the device run measures). WORKING_VALUE decision, ADR 0235 §4.</summary>
         public bool allowOneOverBudget = true;
-        /// <summary>Simultaneous async loads (Unity serialises scene loads anyway). </summary>
+        /// <summary>Simultaneous loads including chunk activation and collision cooking.</summary>
         public int maxConcurrentLoads = 1;
 
         public float BaseLoadRadiusM => maxSpeedMs * (loadTimeS + activationTimeS + cookTimeS) + marginM;
@@ -271,7 +271,8 @@ namespace Game.World.Streaming
             {
                 if (i == cur || i == Pinned || m_Wanted[i]) continue;
                 var s = m_State[i];
-                if ((s == TileState.Ready || s == TileState.Activating) && m_Dist[i] > unloadR)
+                // Do not destroy a cooker with an outstanding bake: OnDestroy must Complete its job.
+                if (s == TileState.Ready && m_Dist[i] > unloadR)
                 {
                     output[count++] = new StreamCommand { op = StreamOp.Unload, tile = i };
                     m_State[i] = TileState.Unloading;
@@ -288,7 +289,7 @@ namespace Game.World.Streaming
                 m_Order[p] = i;
                 m++;
             }
-            if (m == 0 || CountState(TileState.Loading) >= Settings.maxConcurrentLoads) return count;
+            if (m == 0 || CountState(TileState.Loading) + CountState(TileState.Activating) >= Settings.maxConcurrentLoads) return count;
             // Memory frees only when an unload completes, so a tile still unloading keeps counting.
             int best = m_Order[0];
             float mem = ResidentMemoryMB();
@@ -305,7 +306,7 @@ namespace Game.World.Streaming
             for (int i = 0; i < n; i++)
             {
                 if (i == cur || i == Pinned || m_Wanted[i]) continue;
-                if (m_State[i] != TileState.Ready && m_State[i] != TileState.Activating) continue;
+                if (m_State[i] != TileState.Ready) continue;
                 if (evict < 0 || m_Dist[i] > m_Dist[evict]) evict = i;
             }
             if (evict >= 0)

@@ -39,8 +39,18 @@ namespace Game.Gameplay
             a.m_QuitAt = quit;
             a.m_Every = string.IsNullOrEmpty(path) ? -1f : ParseSeconds(arg("shot_every"), -1f);
             if (a.m_Every > 0f) a.m_NextEvery = a.m_ShotAt + a.m_Every;
+            // An unattended periodic evidence run must keep driving when another window takes focus (as G3PoseRunner).
+            if (a.m_Every > 0f) Application.runInBackground = true;
             Debug.Log($"[AUTOSHOT] shot='{path}' shot_t={a.m_ShotAt.ToString("F1", CultureInfo.InvariantCulture)} quit_t={a.m_QuitAt.ToString("F1", CultureInfo.InvariantCulture)}");
             return a;
+        }
+
+        /// <summary>Take at most one periodic screenshot after a stall/pause; missed captures cannot be recovered.</summary>
+        public static bool TryTakePeriodicShot(float now, float every, float quitAt, ref float nextAt)
+        {
+            if (every <= 0f || now < nextAt || (quitAt >= 0f && now >= quitAt - 1f)) return false;
+            nextAt = now + every;
+            return true;
         }
 
         void Update()
@@ -58,9 +68,8 @@ namespace Game.Gameplay
                 }
                 catch (Exception e) { Debug.LogWarning("[AUTOSHOT] screenshot failed: " + e.Message); }
             }
-            if (m_Every > 0f && t >= m_NextEvery && (m_QuitAt < 0f || t < m_QuitAt - 1f))
+            if (TryTakePeriodicShot(t, m_Every, m_QuitAt, ref m_NextEvery))
             {
-                m_NextEvery += m_Every;
                 string p = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(m_Path)) ?? "",
                     Path.GetFileNameWithoutExtension(m_Path) + "_t" + Mathf.RoundToInt(t).ToString("D4", CultureInfo.InvariantCulture) + ".png");
                 ScreenCapture.CaptureScreenshot(p);

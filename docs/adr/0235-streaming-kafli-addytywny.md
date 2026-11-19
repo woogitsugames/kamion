@@ -123,3 +123,16 @@ field, a scena zawiera też słońce, wolumen, kamerę, ciężarówkę i bootstr
   pod Mono zawsze 0 — test nie mógł spaść). Pod .NET 8: 32/32, `Decide` 0 B (wcześniejsze 24 B znikło po rozgrzewce).
 - Otwarte bez zmian: P2-3 (`StreetLamps.SetHeads` globalne), P2-5 (GPS tylko region startowy), pomiar szwu z dwoma kaflami
   High w C (recenzja #114 P1-1), baza pamięci procesu Windows.
+
+## Uzupełnienie 2026-11-19 — harmonogram po analizie pauz DK65-10
+
+- Slot `maxConcurrentLoads` obejmuje Loading **i Activating**, do końca gotowania i aktywacji chunków.
+  Kafel Activating nie podlega wyładowaniu/eksmisji: unikamy czekania na job w `WorldCollisionCooker.OnDestroy`.
+- `Resources.UnloadUnusedAssets` ma śledzony uchwyt. Dopóki nie zakończy się operacja, streamer nie wydaje
+  kolejnych decyzji load/unload. Czyszczenie startuje po zakończeniu wszystkich operacji scen.
+- Logowane są początek/koniec czyszczenia, focus/pause oraz luki Update >= 1 s ze stanami streamingu i przyrostem
+  liczników GC. Zwykła klatka nie alokuje na potrzeby tej diagnostyki.
+- Okresowe dowody `DesktopAutoShot` (`-shot_every`) pracują w tle i pomijają utracone terminy zrzutów,
+  aby po wznowieniu nie zapisywać serii tych samych nazw plików. Zwykła gra zachowuje dotychczasowe ustawienie fokusu.
+- To uszczelnienie harmonogramu, **nie potwierdzenie przyczyny pauz 21/2/166 s**; load dk65-10 był gotowy
+  wcześniej (267 + 183 ms). Dowody, testy i ograniczenia: [raport stream-hitch-cli](../reports/stream-hitch-cli.md).
