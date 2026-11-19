@@ -19,3 +19,7 @@
   z płd. — narożniki zamykane NOSE_R_M 4 m). Dodane `TRUCK_CORNER_R_M 12` (kształt jak zdjęcie drona 9). Kolejka:
   r2 (tykocin, dk65-05, kleeberga) → r3 (knyszyn, knyszyn-s, knyszyn-w) → r4 (C + fidelity). Unity: import knyszyn r2 + VQA (`unity-after`).
 - NASTĘPNY KROK: po r3 `combo_lane_check --swing --tiles knyszyn,...`, import r3 knyszyn + VQA (`unity.ps1 -Tag after2 -Import knyszyn,knyszyn-s,knyszyn-w`).
+- 13:2x: r2 gotowe (knyszyn r2, tykocin, dk65-05, kleeberga), VQA tykocin High OK (artifacts/road-widen-s24/vqa-tykocin).
+  Przed (main, widen 0, 7 kafli) środek pasa opp 205 / kerb 1620 / off 357; ze swingiem opp 11 / kerb 557 / off 84.
+  r3 (knyszyn+narożniki 12 m, knyszyn-s, knyszyn-w) czeka na slot heavy; potem r4 (C + fidelity → fantomowa wyspa).
+- NASTĘPNY KROK: wynik `after/r2tiles_swing.json`; po r3 import knyszyn + VQA.
