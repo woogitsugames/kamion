@@ -1,0 +1,78 @@
+{
+  "id": "gugik-orto-2022-rgb-0p25-bialystok-porosly",
+  "name": "GUGiK orthophoto RGB 0.25 m, 2022-07-29, sheets covering bialystok-porosly",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "ORTO",
+  "region": "bialystok-porosly",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze",
+  "format": "GeoTIFF",
+  "crs": "EPSG:2180 (PL-1992)",
+  "resolution_m": 0.25,
+  "extent": "sheets intersecting bbox [770827.0, 593151.0, 772875.0, 595199.0]",
+  "usage_restriction": "visual reference + alignment QA only; not a game texture (docs/05 §3)",
+  "license": "GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)",
+  "license_status": "LEGAL_REVIEW_REQUIRED (statutory basis cited from secondary sources, not from ISAP text)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)",
+  "used_by": [
+    "tools/worldgen/build_region.py --region bialystok-porosly"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151710_N-34-107-C-a-1-2.tif",
+      "godlo": "N-34-107-C-a-1-2",
+      "akt_data": "2022-07-29",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-bialystok-porosly/76751_1151710_N-34-107-C-a-1-2.tif",
+      "sha256": "0bacad5a6a6dcf556f0a2563ac478dc3d90168ea5912ab18753289c1d6b6e8d9",
+      "size_bytes": 51200826,
+      "downloaded_utc": "2026-11-18T16:43:10+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151714_N-34-107-C-a-1-4.tif",
+      "godlo": "N-34-107-C-a-1-4",
+      "akt_data": "2022-07-29",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-bialystok-porosly/76751_1151714_N-34-107-C-a-1-4.tif",
+      "sha256": "2d038c37901137587879edaf736bcfd677a9e3baa7c11d9e87bf4a7072daf11a",
+      "size_bytes": 53798010,
+      "downloaded_utc": "2026-11-18T16:44:00+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151716_N-34-107-C-a-2-1.tif",
+      "godlo": "N-34-107-C-a-2-1",
+      "akt_data": "2022-07-29",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-bialystok-porosly/76751_1151716_N-34-107-C-a-2-1.tif",
+      "sha256": "7c118b129ecf286548e3bb5ad4993bd08c8716c2d9fceba142439e82ef90e749",
+      "size_bytes": 53064054,
+      "downloaded_utc": "2026-11-18T16:44:56+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151720_N-34-107-C-a-2-3.tif",
+      "godlo": "N-34-107-C-a-2-3",
+      "akt_data": "2022-07-29",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-bialystok-porosly/76751_1151720_N-34-107-C-a-2-3.tif",
+      "sha256": "4ede21c6d43806faf917c4a9c3f16189f64c68574a47f6022596934520ecb03c",
+      "size_bytes": 55248938,
+      "downloaded_utc": "2026-11-18T16:45:42+00:00"
+    }
+  ]
+}

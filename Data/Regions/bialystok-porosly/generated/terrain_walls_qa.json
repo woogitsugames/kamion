@@ -1,0 +1,112 @@
+{
+ "by_source": {
+  "skirt:j:road_asphalt": 2,
+  "skirt:yard_asphalt": 2,
+  "skirt:yard_concrete": 1
+ },
+ "count": 5,
+ "max_m": 0.343,
+ "p99_m": 0.343,
+ "skirt_area": [
+  {
+   "e": 264.8,
+   "exposed_m2": 0.23,
+   "mat": "yard_asphalt",
+   "max_h": 0.343,
+   "n": 398.0,
+   "points": 1,
+   "run_m": 1.856,
+   "src": "osm:way/248339256:0#0:edge",
+   "visible": true
+  },
+  {
+   "e": -642.4,
+   "exposed_m2": 0.175,
+   "mat": "yard_asphalt",
+   "max_h": 0.229,
+   "n": 384.6,
+   "points": 1,
+   "run_m": 1.895,
+   "src": "osm:way/1421370675:0#0:edge",
+   "visible": true
+  },
+  {
+   "e": 387.3,
+   "exposed_m2": 0.14,
+   "mat": "road_asphalt",
+   "max_h": 0.341,
+   "n": 419.1,
+   "points": 2,
+   "run_m": 1.557,
+   "src": "j:n9098614123",
+   "visible": true
+  },
+  {
+   "e": 456.9,
+   "exposed_m2": 0.068,
+   "mat": "yard_concrete",
+   "max_h": 0.331,
+   "n": -761.0,
+   "points": 1,
+   "run_m": 0.9,
+   "src": "bdot:2BE4B431-FE3F-1BF0-E053-CC2BA8C0D140:0#0:edge",
+   "visible": true
+  }
+ ],
+ "sliver_m2": 0.02,
+ "thin_steep_faces_skipped": 214,
+ "thresh_m": 0.15,
+ "verge_strips": {
+  "max_m": 1.108,
+  "skirt": 7,
+  "steep_grass": 272,
+  "worst": [
+   "steep_grass",
+   "j:n2070873518:corner1:vg",
+   -701.4,
+   -446.8
+  ]
+ },
+ "worst": [
+  {
+   "e": 264.8,
+   "h": 0.343,
+   "kind": "skirt",
+   "mat": "yard_asphalt",
+   "n": 398.0,
+   "src": "osm:way/248339256:0#0:edge"
+  },
+  {
+   "e": 387.9,
+   "h": 0.341,
+   "kind": "skirt",
+   "mat": "road_asphalt",
+   "n": 419.3,
+   "src": "j:n9098614123"
+  },
+  {
+   "e": 456.9,
+   "h": 0.331,
+   "kind": "skirt",
+   "mat": "yard_concrete",
+   "n": -761.0,
+   "src": "bdot:2BE4B431-FE3F-1BF0-E053-CC2BA8C0D140:0#0:edge"
+  },
+  {
+   "e": 387.3,
+   "h": 0.325,
+   "kind": "skirt",
+   "mat": "road_asphalt",
+   "n": 419.1,
+   "src": "j:n9098614123"
+  },
+  {
+   "e": -642.4,
+   "h": 0.229,
+   "kind": "skirt",
+   "mat": "yard_asphalt",
+   "n": 384.6,
+   "src": "osm:way/1421370675:0#0:edge"
+  }
+ ]
+}

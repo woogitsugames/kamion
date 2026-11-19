@@ -2738,10 +2738,15 @@ class _NoiseRoadContext:
         return NOISE_DEFAULT_STYLE, "rule: other road"
 
 
-def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None, net=None):
+def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None, net=None, decks=None):
     """BDOT10k OT_OIKM_L + OSM barrier=wall/wall=noise_barrier (parts > NOISE_DEDUP_M from BDOT) + authored lines,
     styled by authored zones (kind: noise_barrier_style, Mapillary image ids as provenance), default `solid`.
-    Parts along a deck edge that carries a bridge_style screen are not built (deck_screen_keepout, ADR 0146)."""
+    Parts along a deck edge that carries a bridge_style screen are not built (deck_screen_keepout, ADR 0146).
+    decks: bridge-layer carriageway parts. ADR 0300: roads_poly has no bridge-layer triangles, so a ground barrier
+    mapped along the at-grade road beside a viaduct ramp came up through the low end of the deck and stood in its
+    right lane (bialystok-kleeberga E -700..-663 N -545..-496, Kleeberga westbound w301702368: the autopilot truck
+    drove into it). The same DeckKeepout as fences() (ADR 0208) cuts the parts whose top (ground + H + post cap)
+    reaches the deck lane surface less LANE_FLOOR_M; a barrier under a deck that clears it stays."""
     L = {"bdot": 0.0, "osm": 0.0, "override": 0.0}
     by_style = {}
     cutter = roads_poly.buffer(0.2) if roads_poly is not None else None
@@ -2774,8 +2779,11 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
     if on_deck is not None:
         cutter = on_deck if cutter is None else cutter.union(on_deck)
     m_on_deck = sum(f[0].intersection(on_deck).length for f in feats if f[2] != "override") if on_deck is not None else 0.0
+    dk = DeckKeepout(lin, decks)
     for line, key, kind, H, fst in feats:
-        for part in cut_by(line, cutter):
+        def top(za, zb, H=H):                     # posts stand 0.1 m over the panels (noise_wall)
+            return np.maximum(za, zb) + H + 0.1
+        for part in (y for x in cut_by(line, cutter) for y in dk.cut(x, top)):
             walls.append(part)
             P = lin.dens(part, 2.0)
             Z = lin.z(P)
@@ -2802,6 +2810,7 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
                                 "zones_stale": sorted({z[3] for z in zones} - used_zones),
                                 "style_rule_m": {k: round(v) for k, v in why.items()}}          # ADR 0293
     report["noise_barriers"]["on_screened_deck_m"] = round(float(m_on_deck), 1)       # ADR 0146: not built twice
+    report["noise_barriers"]["cut_on_deck_carriageway_m"] = round(float(dk.cut_m), 1)  # ADR 0300
     if pl is not None:
         report["noise_barriers"]["signs_moved_off_wall"] = _signs_off_walls(pl, walls, roads_poly)
 

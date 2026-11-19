@@ -175,6 +175,7 @@ namespace Game.Tests.EditMode
             Assert.That(Num(sh, @"_LampHueKnee \(""[^""]*"", Range\([^)]*\)\) = ([0-9.]+)"), Is.EqualTo(P.HueKnee).Within(1e-6));
             Assert.That(Num(sh, @"_LampHueCeiling \(""[^""]*"", Range\([^)]*\)\) = ([0-9.]+)"), Is.EqualTo(P.HueCeiling).Within(1e-6));
             Assert.That(Num(sh, @"_PlateIllum \(""[^""]*"", Range\([^)]*\)\) = ([0-9.]+)"), Is.EqualTo(P.PlateIllum).Within(1e-6));
+            Assert.That(Num(sh, @"_PlateDisplayMax \(""[^""]*"", Range\([^)]*\)\) = ([0-9.]+)"), Is.EqualTo(P.PlateDisplayMax).Within(1e-6), "ADR 0297");
             string lens = File.ReadAllText(Path.Combine(EditorTools.ProjectRoot, "Assets/_Project/Rendering/Shaders/KamionLampLens.hlsl"));
             Assert.That(Num(lens, @"abs\(p\.x\) - ([0-9.]+) \* W"), Is.EqualTo(P.PlateStripHalfWidthFraction).Within(1e-6));
             Assert.That(Num(lens, @"hs\.y - p\.y \+ ([0-9.]+);"), Is.EqualTo(P.PlateLampAboveTopMm).Within(1e-6));

@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "tools" / "worldgen" / "qa"))
 import seam_section as SS  # noqa: E402
 
-TILES = ["dk65-01", "s8-01", "s8-02", "s8-03", "s8-04", "s8-05"]
+TILES = ["dk65-01", "s8-01", "s8-02", "s8-03", "s8-04", "s8-05", "dk8-s8-jeroniki"]  # + ADR 0292
 TOL_M = 0.10
 INSIDE_M = 0.3
 

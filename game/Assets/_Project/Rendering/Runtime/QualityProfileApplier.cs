@@ -27,6 +27,16 @@ namespace Game.Rendering
             return t;
         }
 
+        /// <summary>
+        /// Final URP dither of the camera (8-bit output). ADR 0108 removed it from the phone High tier only, whose FSR / RCAS
+        /// final pass amplified it on the clean day sky. ADR 0299: the PC overlay runs High without FSR (upscalingFilter Auto,
+        /// render scale 1), where the same rule left High as the one undithered tier - contour rings in the night sky
+        /// (cab-driver runs of one 8-bit level 115 px against 4.6 px on Ultra). So the exception follows the cause (FSR), not
+        /// the tier name.
+        /// </summary>
+        public static bool FinalDither(QualityProfile.Tier t) =>
+            t.postProcessing && !(t.name == "High" && t.upscalingFilter == UpscalingFilterSelection.FSR);
+
         public static float ArchitecturalGlassBias(QualityProfile.Tier t, float? requested = null)
         {
             float policy = t.name == "Medium" || t.name == "High" ? MaxArchitecturalGlassReceiverBias : 0f;
@@ -145,7 +155,8 @@ namespace Game.Rendering
                     data.antialiasingQuality = (AntialiasingQuality)PcTierTable.Get(pcTier).smaaQuality;
                 // ADR 0108: High RCAS uses a final pass whose dither raises clean-sky RMS above the review limit.
                 // Measured native PNG A/B: sky 0.64 -> 0.14, asphalt detail retained. Other tiers keep their policy.
-                data.dithering = RenderOverrides.Dither ?? (t.postProcessing && t.name != "High");
+                // ADR 0299: the RCAS exception is the phone High tier (FSR), not every tier called High (PC High: no FSR).
+                data.dithering = RenderOverrides.Dither ?? FinalDither(t);
                 // pc-visual-s23: t.ssao was not read anywhere (SSAO = renderer 0 of the tier's URP asset), so rq_ssao=0 was a
                 // no-op. A tier / override with ssao off on an asset whose default renderer has SSAO uses the plain renderer
                 // (index 1, the same one VehicleReflectionCapture uses, ADR 0152); otherwise the asset default.

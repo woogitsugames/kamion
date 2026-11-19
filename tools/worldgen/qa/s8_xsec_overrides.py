@@ -38,7 +38,12 @@ REPO = Path(__file__).resolve().parents[3]
 REGIONS = REPO / "Data" / "Regions"
 # dk65-01 (ADR 0205, main): the S8 cuts its south-west corner; same section, or the carriageways step sideways by
 # 1.0-2.8 m on the seam with s8-01 (qa.seams: "droga urywa sie na szwie")
-TILES = ("s8-01", "s8-02", "s8-03", "s8-04", "s8-05", "dk65-01")
+# dk8-s8-jeroniki (ADR 0292): the S8 ways 183639794 / 305447699 of the dk65-01 corner continue across its north seam
+TILES = ("s8-01", "s8-02", "s8-03", "s8-04", "s8-05", "dk65-01", "dk8-s8-jeroniki")
+# spacing() pools the S8 ways of these tiles only: the jeroniki ends of 183639794 / 305447699 diverge into the junction
+# (p50 > JOINT_SPACING_MAX_M either way, extra 0.0) and adding them would only rewrite the 'reason' text of dk65-01 /
+# s8-01 (13.86 -> 13.78 m) and force a rebuild of tiles that do not change
+SPACING_TILES = TILES[:6]
 BEGIN = "  # ---- BEGIN generated: tools/worldgen/qa/s8_xsec_overrides.py (ADR 0288) - do not edit between the markers ----"
 END = "  # ---- END generated: tools/worldgen/qa/s8_xsec_overrides.py ----"
 
@@ -74,7 +79,7 @@ def section(lanes: int, extra: float = 0.0) -> tuple[list[float], float, float]:
 
 def _segments() -> list[tuple[int, tuple[float, float], tuple[float, float]]]:
     out = []
-    for t in TILES:
+    for t in SPACING_TILES:
         g = json.loads((REGIONS / t / "roads.graph.json").read_text(encoding="utf-8"))
         for e in g["edges"]:
             a = e["attrs"]

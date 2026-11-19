@@ -70,6 +70,7 @@ namespace Game.Rendering
         public static bool? Ssao;        // rq_ssao
         public static bool Look;         // any of rq_look / rq_ev / rq_wet / rq_grassvar given
         public static float? CabToe;     // ADR 0080: rq_cabtoe 0..1 cab-view compensation of the world contrast toe (A/B)
+        public static bool? CabSoft, CabSpill;   // ADR 0297: rq_cabsoft 0|1 cab soft sun shadow, rq_cabspill 0|1 instrument spill (A/B)
         public static string Ab;
         public static float? AbPeriod;
         // ADR 0106
@@ -108,7 +109,7 @@ namespace Game.Rendering
                                   ThinShadows.HasValue ||
                                   Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue ||
-                                  Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue ||
+                                  Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue || CabSoft.HasValue || CabSpill.HasValue ||
                                   LodBias.HasValue || FarClip.HasValue || VehicleCull.HasValue || Grime.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || ForestFast.HasValue ||
                                   GpuAbOverrides.Any;   // ADR 0241
 
@@ -139,6 +140,7 @@ namespace Game.Rendering
             Look = look.HasValue || ev.HasValue || wet.HasValue || gvar.HasValue || WorldAtmosphere.ClearCloudCoverOverride.HasValue || WorldAtmosphere.HeadlampsOverride.HasValue;
             WorldAtmosphere.LookVariant = look ?? -1;
             CabToe = F(arg("rq_cabtoe"));
+            CabSoft = B(arg("rq_cabsoft")); CabSpill = B(arg("rq_cabspill"));   // ADR 0297
             // ADR 0080 r11 A/B: rq_skycct overcast dome colour temperature K (0 = achromatic, the r10 dome), rq_hazegf /
             // rq_hazeh ground haze factor / scale height m (r10: 1.6 / 60), rq_leafamb 0 = no sky light through the leaves.
             float? cct = F(arg("rq_skycct")); float? hgf = F(arg("rq_hazegf")); float? hh = F(arg("rq_hazeh")); float? leaf = F(arg("rq_leafamb"));
@@ -177,7 +179,7 @@ namespace Game.Rendering
                          $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
                          $"mirror_off={Game.Core.MirrorOverrides.Suspended} worldgi={WorldGi} worldsun={WorldSun} " +
                          $"clouds={Clouds} haze={GroundHaze} ssao={Ssao} look={WorldAtmosphere.LookVariant} ev={LightingPreset.ExposureBiasOverride} wet={WorldAtmosphere.WetOverride} " +
-                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast} vehcull={VehicleCull} grime={Grime} thinshadow={ThinShadows}" : null;
+                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast} vehcull={VehicleCull} grime={Grime} thinshadow={ThinShadows} cabsoft={CabSoft} cabspill={CabSpill}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>

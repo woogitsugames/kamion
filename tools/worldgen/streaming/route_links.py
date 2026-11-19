@@ -205,8 +205,15 @@ def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
         if came_from is not None:     # exact join on the route end (lane_path cut the rounded corner nearest to it)
             blend["head"] = _blend(pts, start_xy, head=True)
         if L.get("head_from"):
-            src = next(x for x in links if x["id"] == L["head_from"].split(":", 1)[1])
-            blend["head"] = _blend(pts, [src["endX"], src["endY"]], head=True)
+            kind, ref = L["head_from"].split(":", 1)
+            if kind == "route":       # ADR 0292: first BLEND_M m shifted onto the END of a neighbour tile's route
+                r0 = _route(ref, regions)
+                reg0 = _region(ref, regions)
+                src_xy = [r0["points_en"][-1][0] + reg0["origin"]["x"], r0["points_en"][-1][1] + reg0["origin"]["y"]]
+            else:
+                src = next(x for x in links if x["id"] == ref)
+                src_xy = [src["endX"], src["endY"]]
+            blend["head"] = _blend(pts, src_xy, head=True)
         if L.get("tail_to"):
             r2 = _route(L["tail_to"].split(":", 1)[1], regions)
             reg2 = _region(L["tail_to"].split(":", 1)[1], regions)

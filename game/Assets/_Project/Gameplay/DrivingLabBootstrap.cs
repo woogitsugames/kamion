@@ -253,6 +253,13 @@ namespace Game.Gameplay
                 var env = FindAnyObjectByType<EnvironmentLighting>();
                 if (env == null || !env.SetPreset(lighting)) Debug.LogWarning($"[LAB] lighting={lighting}: no such preset");
             }
+            // ADR 0299 player evidence: cam=chase | orbit | cab picks the start view (night exterior shots from the player).
+            string camArg = platform.GetLaunchArgument("cam");
+            if (m_Rig != null && !string.IsNullOrEmpty(camArg) && System.Enum.TryParse(camArg, true, out CameraMode camMode))
+            {
+                m_Rig.SetMode(camMode);
+                Debug.Log($"[LAB] start camera {camMode}");
+            }
             ActivateControlCamera(platform.GetLaunchArgument("qacam"), platform.GetLaunchArgument("qacam_set"));
             // telemetry=1: record the vehicle CSV from the first physics step (device runs, e.g. the route jolt check).
             m_AutoRecord = platform.GetLaunchArgument("telemetry") == "1";

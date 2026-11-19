@@ -1,0 +1,41 @@
+bialystok-industrial-c       route_start                         2397 m  colliders 0  visual 0  no-surface 0
+bialystok-industrial-c       link:c-dk8-to-maczka                1509 m  colliders 0  visual 0  no-surface 0
+bialystok-maczka             route_start                         2054 m  colliders 0  visual 0  no-surface 0
+bialystok-kleeberga          route_start                         2221 m  colliders 1  visual 3  no-surface 1
+    collider road_collision|collision_fence     s 1806..1856 at [-662.7, -508.9] dz -3.88..3.90 (27 samples)
+    visual   furniture|concrete_plinth          s 1806..1808 at [-662.7, -508.9] dz -1.06..0.50 (2 samples)
+    visual   furniture|noise_glass              s 1806..1856 at [-662.7, -508.9] dz -3.02..3.90 (27 samples)
+    visual   furniture|noise_post_light         s 1806..1856 at [-662.7, -508.9] dz -3.96..4.00 (27 samples)
+bialystok-knyszynska         route_start                         2961 m  colliders 0  visual 0  no-surface 0
+dk65-01                      route_start                          632 m  colliders 0  visual 0  no-surface 0
+dk65-01                      link:dk65-01-s8-corner               578 m  colliders 0  visual 0  no-surface 2
+dk65-02                      route_start                         2401 m  colliders 0  visual 0  no-surface 2
+dk65-03                      route_start                          484 m  colliders 0  visual 0  no-surface 0
+dk65-04                      route_start                         2079 m  colliders 0  visual 0  no-surface 1
+dk65-05                      route_start                         2202 m  colliders 0  visual 0  no-surface 0
+dk65-06                      route_start                         1702 m  colliders 0  visual 0  no-surface 1
+dk65-07                      route_start                          866 m  colliders 0  visual 0  no-surface 2
+dk65-08                      route_start                         2355 m  colliders 0  visual 0  no-surface 0
+dk65-09                      route_start                          352 m  colliders 0  visual 0  no-surface 2
+dk65-10                      route_start                         2615 m  colliders 0  visual 0  no-surface 1
+dk65-11                      route_start                          378 m  colliders 0  visual 0  no-surface 1
+knyszyn-s                    route_start                         2421 m  colliders 0  visual 0  no-surface 0
+knyszyn                      route_start                         1160 m  colliders 0  visual 0  no-surface 1
+knyszyn                      link:knyszyn-dk65-to-dw671-w         618 m  colliders 0  visual 0  no-surface 2
+knyszyn                      link:knyszyn-dk65-to-dk65-w          639 m  colliders 0  visual 0  no-surface 2
+knyszyn                      link:knyszyn-rynek-to-dw671-w        746 m  colliders 0  visual 0  no-surface 1
+knyszyn                      link:knyszyn-rynek-to-dk65-w         772 m  colliders 0  visual 0  no-surface 1
+knyszyn-w                    route_start                         1989 m  colliders 0  visual 0  no-surface 1
+knyszyn-w                    link:knyszyn-w-dw671                 596 m  colliders 0  visual 0  no-surface 2
+dw671-tykocin-01             route_start                         2608 m  colliders 0  visual 0  no-surface 0
+dw671-tykocin-02             route_start                          108 m  colliders 0  visual 0  no-surface 1
+dw671-tykocin-03             route_start                         2265 m  colliders 0  visual 0  no-surface 1
+dw671-tykocin-04             route_start                         1881 m  colliders 0  visual 0  no-surface 2
+dw671-tykocin-05             route_start                          692 m  colliders 0  visual 0  no-surface 1
+dw671-tykocin-06             route_start                         2154 m  colliders 0  visual 0  no-surface 2
+dw671-tykocin-07             route_start                         1006 m  colliders 0  visual 0  no-surface 0
+dw671-tykocin-08             route_start                         1675 m  colliders 0  visual 0  no-surface 1
+dw671-tykocin-09             route_start                         1063 m  colliders 0  visual 0  no-surface 1
+tykocin                      route_start                         2541 m  colliders 1  visual 1  no-surface 4
+    collider road_collision|collision_curb      s 1902..1902 at [138.9, -454.7] dz 0.02..0.38 (1 samples)
+    visual   buildings|steel_painted            s 1886..1886 at [154.0, -450.0] dz -0.25..6.35 (1 samples)

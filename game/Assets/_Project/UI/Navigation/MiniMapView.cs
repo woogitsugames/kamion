@@ -34,6 +34,7 @@ namespace Game.UI.Navigation
         float m_T, m_Zoom = 1.6f;
         bool m_NightBaked;
         Mesh m_Under;
+        int m_UnderVer = -1;
         readonly TextBuffer m_B = new TextBuffer(48), m_Fit = new TextBuffer(96);
         int m_Refreshes;
         double m_CpuSum;
@@ -137,10 +138,11 @@ namespace Game.UI.Navigation
             if (m_NeedGlyphs) RequestGlyphs();
             bool night = m_Nav.Night;
             var pal = night ? P.NavNight : P.NavDay;
-            if (m_Under == null || m_NightBaked != night)
+            if (m_Under == null || m_NightBaked != night || m_UnderVer != m_Nav.MapVersion)   // ADR 0300: tile switch
             {
                 m_Under = m_Nav.StaticMap(night);
                 m_NightBaked = night;
+                m_UnderVer = m_Nav.MapVersion;
                 m_Canvas.SetUnderlay(m_Under);
             }
             var d = m_Canvas;
