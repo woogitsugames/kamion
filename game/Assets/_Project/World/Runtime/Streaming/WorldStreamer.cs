@@ -127,7 +127,7 @@ namespace Game.World.Streaming
             public Vector2 min, max;
             public TileSide openSides;
             // edge objects (ADR 0169 closures, ADR 0085 far field, apron)
-            public GameObject[] closures; public TileSide[] closureSide; public float[] closureE, closureN; public bool[] closureOpen;
+            public GameObject edgeRoot; public GameObject[] closures; public TileSide[] closureSide; public float[] closureE, closureN; public bool[] closureOpen;
             public GameObject[] groups; public Vector4[] groupBounds;   // (minE, minN, maxE, maxN)
             public GameObject[] farSectors; public TileSide[] farSide;
             public GameObject apronWhole; public GameObject[] apronPieces; public TileSide[] apronSide;
@@ -628,6 +628,7 @@ namespace Game.World.Streaming
                     return;
                 }
                 Register(t, root, route);
+                if (t.edgeRoot != null) t.edgeRoot.SetActive(false);
                 Place(t);   // before the first render of the new scene
                 t.activateStart = Time.realtimeSinceStartup;
                 if (t.cooker != null) t.cooker.BeginCook();
@@ -660,6 +661,7 @@ namespace Game.World.Streaming
                 Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] ready {0}: load {1:F0} ms, activation {2:F0} ms ({3} chunks), vehicle {4:F0} m from the tile, resident {5} tiles / {6:F0} MB (ESTIMATED)",
                     t.sceneName, LastLoadMs, LastActivationMs, t.chunks.Length, dist, Policy.ResidentCount(), Policy.ResidentMemoryMB()));
                 RefreshEdgesAround(i);
+                if (t.edgeRoot != null) t.edgeRoot.SetActive(true);
                 return;
             }
         }
@@ -816,6 +818,7 @@ namespace Game.World.Streaming
             var far = new List<GameObject>(); var fs = new List<TileSide>();
             var pieces = new List<GameObject>(); var ps = new List<TileSide>();
             t.apronWhole = null;
+            t.edgeRoot = edge != null ? edge.gameObject : null;
             if (edge != null)
             {
                 var data = t.boundary != null ? t.boundary.closures : System.Array.Empty<WorldBoundary.Closure>();
@@ -833,10 +836,11 @@ namespace Game.World.Streaming
                     else if (n.StartsWith("Closure_", System.StringComparison.Ordinal))
                     {
                         Vector3 lp = c.localPosition; float heading = c.localEulerAngles.y;
+                        TileSide exitSide = TileSide.None;
                         int idx = ParseIndex(n);
-                        if (idx >= 0 && idx < data.Length) { lp = data[idx].localPos; heading = data[idx].headingDeg; }
+                        if (idx >= 0 && idx < data.Length) { lp = data[idx].localPos; heading = data[idx].headingDeg; exitSide = data[idx].exitSide; }
                         closures.Add(c.gameObject); ce.Add(lp.x); cn.Add(lp.z);
-                        cs.Add(EdgeSides.ClosureSide(lp.x, lp.z, heading, t.min.x, t.min.y, t.max.x, t.max.y));
+                        cs.Add(exitSide != TileSide.None ? exitSide : EdgeSides.ClosureSide(lp.x, lp.z, heading, t.min.x, t.min.y, t.max.x, t.max.y));
                     }
                     else if (n == "Apron") t.apronWhole = c.gameObject;
                     else if (EdgeSides.ApronPieceSide(n) != TileSide.None) { pieces.Add(c.gameObject); ps.Add(EdgeSides.ApronPieceSide(n)); }
@@ -865,6 +869,7 @@ namespace Game.World.Streaming
 
         static void Clear(Tile t)
         {
+            t.edgeRoot = null;
             t.root = null; t.route = null; t.routeComp = null; t.boundary = null; t.cooker = null; t.instances = null;
             t.chunks = System.Array.Empty<GameObject>(); t.nextChunk = 0;
             t.closures = System.Array.Empty<GameObject>(); t.groups = System.Array.Empty<GameObject>();
@@ -893,14 +898,14 @@ namespace Game.World.Streaming
                 {
                     var side = Graph.NeighborSides[tile][k];
                     if (side != TileSide.N && side != TileSide.E && side != TileSide.S && side != TileSide.W) continue;
-                    if (nb[k] != leaving && Policy.StateOf(nb[k]) == TileState.Ready && m_Tiles[nb[k]].root != null) open |= side;
+                    if (EdgeClosureRules.SeamReady(Policy.StateOf(tile), Policy.StateOf(nb[k]), m_Tiles[nb[k]].root != null, nb[k] == leaving)) open |= side;
                 }
             }
             if (open == t.openSides && open == TileSide.None) return;
             t.openSides = open;
             for (int i = 0; i < t.closures.Length; i++)
             {
-                t.closureOpen[i] = (open & t.closureSide[i]) != 0;
+                t.closureOpen[i] = EdgeClosureRules.IsOpen(t.closureSide[i], open);
                 if (t.closures[i] != null) t.closures[i].SetActive(!t.closureOpen[i]);
             }
             for (int i = 0; i < t.groups.Length; i++)

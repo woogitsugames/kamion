@@ -351,7 +351,7 @@ namespace Game.World.Import
                 mat.SetFloat("_MetallicScale", Mathf.Clamp01((float)Num(m.Get("set_metal"))));
                 EditorUtility.SetDirty(mat);
             }
-            return mat;
+            return WorldMaterialValidation.Require(mat, $"{r.Region}/material {id}");
         }
 
         static Material CreateMaterialCore(Result r, string id, Dictionary<string, object> m, Dictionary<string, object> roadAsphalt)
@@ -712,8 +712,8 @@ namespace Game.World.Import
                 for (int i = 0; i < mats.Length; i++)
                 {
                     string id = nd.Primitives[i].Material;
-                    if (id != null && r.Materials.TryGetValue(id, out var mm)) mats[i] = mm;
-                    else Debug.LogWarning($"[IMPORT] {ch.Id}/{layer}: material '{id}' not in manifest");
+                    r.Materials.TryGetValue(id ?? "", out var mm);
+                    mats[i] = WorldMaterialValidation.Require(mm, $"{r.Region}/{ch.Id}/{tier}/{layer}, material '{id}', slot {i}");
                     if (id != null && r.MaterialDefs.TryGetValue(id, out var def))
                     {
                         if (def.Get("texture") != null) uv = true;

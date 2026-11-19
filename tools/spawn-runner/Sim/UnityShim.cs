@@ -49,9 +49,24 @@ namespace Game.World
         {
             public UnityEngine.Vector3 localPos;
             public float headingDeg;
+            public Game.World.Streaming.TileSide exitSide;
             public float widthM;
             public string road;
             public float spanM;
         }
+    }
+}
+
+namespace UnityEngine
+{
+    public sealed class TextAsset { public string text; }
+    public static class Resources
+    {
+        public static T Load<T>(string path) => throw new NotSupportedException("Resources.Load requires Unity");
+    }
+    public static class JsonUtility
+    {
+        public static T FromJson<T>(string json) => System.Text.Json.JsonSerializer.Deserialize<T>(json,
+            new System.Text.Json.JsonSerializerOptions { IncludeFields = true });
     }
 }

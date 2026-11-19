@@ -122,6 +122,14 @@ namespace Game.World.Import
             var conflicts = FindClosureConflicts(closures);
             if (conflicts.Count > 0)
                 throw new InvalidDataException($"world edge: {conflicts.Count} closure rows overlap after ResolveClosures (first: {closures[conflicts[0].a].road} x {closures[conflicts[0].b].road}, {conflicts[0].gapM:F2} m)");
+            for (int i = 0; i < closures.Count; i++)
+            {
+                var c = closures[i];
+                if (!RoadY(root, new Vector2(c.localPos.x, c.localPos.z), out float y))
+                    throw new InvalidDataException($"world edge: no road/terrain under resolved closure {c.road}");
+                c.localPos.y = y;
+                closures[i] = c;
+            }
             boundary.closures = closures.ToArray();
 
             // ---- apron + road stubs (one mesh asset per region, updated in place so both tier scenes keep the reference) ----
@@ -149,24 +157,8 @@ namespace Game.World.Import
             // ---- far-field backdrop sectors (ADR 0085) ----
             int farTris = BuildFarField(r, edge, tier, min, max);
 
-            // ---- closures (ADR 0141) ----
-            // Physical end of the road: one collider object per closure (unchanged contract, WorldEdgeRecoveryTests).
-            for (int i = 0; i < closures.Count; i++)
-            {
-                var c = closures[i];
-                var go = new GameObject($"Closure_{i:00}_{c.road}");
-                go.transform.SetParent(edge, false);
-                go.transform.localPosition = c.localPos;
-                go.transform.localRotation = Quaternion.Euler(0f, c.headingDeg, 0f);
-                var bc = go.AddComponent<BoxCollider>();
-                bc.center = new Vector3(0f, 1.25f, 0f);
-                bc.size = new Vector3(ClosureSpan(c), 2.5f, 0.6f);
-                go.AddComponent<GroundSurface>().kind = SurfaceKind.Concrete;
-                go.isStatic = true;
-            }
-            // Visible part: neighbouring closures share one mesh in region space with two materials (concrete barriers;
-            // boards, posts and B-1 faces as linear vertex colours on the far-field paint material), i.e. 2 draws per
-            // group instead of 4 per closure. Mesh sub-assets are updated in place so both tier scenes keep references.
+            // One independently switchable renderer per closure. A proximity cluster could span two tile sides:
+            // its collider opened with one neighbour, but its boards stayed visible until BOTH sides opened.
             string closurePath = $"{r.Dir}/Meshes/world_edge_closures.asset";
             var host = AssetDatabase.LoadAssetAtPath<Mesh>(closurePath);
             if (host == null) { host = new Mesh { name = "world_edge_closures" }; AssetDatabase.CreateAsset(host, closurePath); }
@@ -176,37 +168,29 @@ namespace Game.World.Import
                 Mat(r, "concrete_wall", "concrete_plinth", "road_concrete", "bridge_concrete"),
                 Mat(r, "far_field_buildings"),
             };
-            var visible = closures;
-            var groups = ClusterClosures(visible, ClosureGroupLinkM);
             var keep = new HashSet<string>();
             int closureTris = 0;
-            for (int k = 0; k < groups.Count; k++)
+            for (int i = 0; i < closures.Count; i++)
             {
-                string name = $"closure_group_{k:00}";
+                var c = closures[i];
+                string name = $"closure_single_{i:00}";
                 keep.Add(name);
                 if (!existing.TryGetValue(name, out var cm))
                 {
                     cm = new Mesh { name = name };
                     AssetDatabase.AddObjectToAsset(cm, host);
                 }
-                BuildClosureGroupMesh(cm, groups[k].Select(i => visible[i]).ToList());
+                // Geometry in the collider's frame: elevation/heading applied exactly once by its Transform.
+                BuildClosureMesh(cm, c);
                 EditorUtility.SetDirty(cm);
                 closureTris += (int)((cm.GetIndexCount(0) + cm.GetIndexCount(1)) / 3);
-                var go = new GameObject($"ClosureGroup_{k:00}");
-                go.transform.SetParent(edge, false);
-                go.AddComponent<MeshFilter>().sharedMesh = cm;
-                var mr = go.AddComponent<MeshRenderer>();
-                mr.sharedMaterials = mats;
-                mr.shadowCastingMode = ShadowCastingMode.On;
-                mr.lightProbeUsage = LightProbeUsage.Off;
-                mr.reflectionProbeUsage = ReflectionProbeUsage.Off;
-                go.isStatic = true;
+                BuildClosureObject(edge, i, c, cm, mats);
             }
             foreach (var kv in existing)
-                if (!keep.Contains(kv.Key)) UnityEngine.Object.DestroyImmediate(kv.Value, true);   // meshes of the per-closure layout
+                if (!keep.Contains(kv.Key)) UnityEngine.Object.DestroyImmediate(kv.Value, true);
             EditorUtility.SetDirty(host);
             Debug.Log($"[IMPORT] world edge (tier {tier}): bounds E {min.x:F0}..{max.x:F0} N {min.y:F0}..{max.y:F0}, {exits.Count} roads leave the region, " +
-                      $"{raw.Count} graph closures {ClosureSetbackM:F0} m inside resolved to {closures.Count} (one list: colliders = boards), in {groups.Count} render groups ({closureTris} tris), {stubs.Count} road stubs, apron {mesh.vertexCount} verts to {ApronReachM:F0} m, far-field {farTris} tris");
+                      $"{raw.Count} graph closures {ClosureSetbackM:F0} m inside resolved to {closures.Count} (one list: colliders = boards), in {closures.Count} independent renderers ({closureTris} tris), {stubs.Count} road stubs, apron {mesh.vertexCount} verts to {ApronReachM:F0} m, far-field {farTris} tris");
         }
 
         static readonly Streaming.TileSide[] k_ApronSides = { Streaming.TileSide.N, Streaming.TileSide.E, Streaming.TileSide.S, Streaming.TileSide.W };
@@ -394,6 +378,7 @@ namespace Game.World.Import
         {
             public Vector2 edgeEN, edgeDir;        // point on the region edge, unit direction of the road leaving the region
             public Vector2 closureEN, closureDir;  // closure centre and the road direction there (towards the edge)
+            public Streaming.TileSide exitSide;   // actual graph cut, independent of the tangent at the setback
             public float width;
             public string road;
         }
@@ -477,7 +462,9 @@ namespace Game.World.Import
                     }
                     acc += seg;
                 }
-                exits.Add(new RoadExit { edgeEN = edgePt, edgeDir = edgeDir, closureEN = cp, closureDir = cd, width = Mathf.Clamp(width, 3f, 16f), road = Sanitize(nm ?? hw) });
+                exits.Add(new RoadExit { edgeEN = edgePt, edgeDir = edgeDir, closureEN = cp, closureDir = cd,
+                    exitSide = Streaming.EdgeSides.NearestSide(edgePt.x, edgePt.y, min.x, min.y, max.x, max.y),
+                    width = Mathf.Clamp(width, 3f, 16f), road = Sanitize(nm ?? hw) });
             }
             return exits;
         }
@@ -549,6 +536,7 @@ namespace Game.World.Import
                 {
                     localPos = new Vector3(ex.closureEN.x, 0f, ex.closureEN.y),
                     headingDeg = Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg,
+                    exitSide = ex.exitSide,
                     widthM = ex.width, road = ex.road,
                 });
             }
@@ -589,17 +577,20 @@ namespace Game.World.Import
         }
 
         // ------------------------------------------------------------------------------------------------ heights
-        /// <summary>Road surface (highest collider) at a region-local point; false when there is no collision there.</summary>
-        static bool RoadY(Transform root, Vector2 en, out float localY)
+        /// <summary>Road collision of THIS region, with its terrain as fallback. Returns a region-local elevation.</summary>
+        public static bool RoadY(Transform root, Vector2 en, out float localY)
         {
-            localY = 0f;
             Vector3 w = root.TransformPoint(new Vector3(en.x, 0f, en.y));
             var hits = Physics.RaycastAll(new Vector3(w.x, root.position.y + 600f, w.z), Vector3.down, 1200f, ~0, QueryTriggerInteraction.Ignore);
-            if (hits.Length == 0) return false;
-            float best = float.NegativeInfinity;
-            foreach (var h in hits) if (h.point.y > best) best = h.point.y;
-            localY = root.InverseTransformPoint(new Vector3(w.x, best, w.z)).y;
-            return true;
+            int priority = 0;
+            localY = float.NegativeInfinity;
+            foreach (var h in hits)
+            {
+                int candidate = Streaming.EdgeClosureRules.HeightPriority(h.collider.name,
+                    h.collider.transform.IsChildOf(root), h.normal.y);
+                Streaming.EdgeClosureRules.ConsiderHeight(candidate, root.InverseTransformPoint(h.point).y, ref priority, ref localY);
+            }
+            return priority > 0;
         }
 
         /// <summary>Terrain height (col_terrain; else the lowest collider) at a region-local point.</summary>
@@ -611,11 +602,12 @@ namespace Game.World.Import
             float terrain = float.NaN, lowest = float.PositiveInfinity;
             foreach (var h in hits)
             {
+                if (!h.collider.transform.IsChildOf(root)) continue;
                 if (h.collider.name == "col_terrain") terrain = h.point.y;
                 if (h.point.y < lowest) lowest = h.point.y;
             }
             float y = float.IsNaN(terrain) ? lowest : terrain;
-            return root.InverseTransformPoint(new Vector3(w.x, y, w.z)).y;
+            return float.IsInfinity(y) ? fallback : root.InverseTransformPoint(new Vector3(w.x, y, w.z)).y;
         }
 
         // ------------------------------------------------------------------------------------------------ apron
@@ -1087,6 +1079,7 @@ namespace Game.World.Import
                         // a = the wider road: its frame, name, width and height are kept.
                         WorldBoundary.Closure a = list[i].widthM >= list[j].widthM ? list[i] : list[j];
                         WorldBoundary.Closure b = list[i].widthM >= list[j].widthM ? list[j] : list[i];
+                        if (a.exitSide != Streaming.TileSide.None && b.exitSide != Streaming.TileSide.None && a.exitSide != b.exitSide) continue;
                         if (Mathf.Abs(Mathf.DeltaAngle(a.headingDeg, b.headingDeg)) > ClosureMergeHeadingDeg) continue;
                         Frame(a, out Vector2 pa, out Vector2 fwd, out Vector2 right);
                         Vector2 d = new Vector2(b.localPos.x, b.localPos.z) - pa;
@@ -1099,6 +1092,34 @@ namespace Game.World.Import
                     }
             }
             return list;
+        }
+
+        /// <summary>Renderer and physical closure share one independently switchable object.</summary>
+        public static GameObject BuildClosureObject(Transform parent, int index, WorldBoundary.Closure closure, Mesh mesh, Material[] materials)
+        {
+            var go = new GameObject($"Closure_{index:00}_{closure.road}");
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = closure.localPos;
+            go.transform.localRotation = Quaternion.Euler(0f, closure.headingDeg, 0f);
+            var bc = go.AddComponent<BoxCollider>();
+            bc.center = new Vector3(0f, 1.25f, 0f);
+            bc.size = new Vector3(ClosureSpan(closure), 2.5f, 0.6f);
+            go.AddComponent<GroundSurface>().kind = SurfaceKind.Concrete;
+            go.AddComponent<MeshFilter>().sharedMesh = mesh;
+            var mr = go.AddComponent<MeshRenderer>();
+            mr.sharedMaterials = materials;
+            mr.shadowCastingMode = ShadowCastingMode.On;
+            mr.lightProbeUsage = LightProbeUsage.Off;
+            mr.reflectionProbeUsage = ReflectionProbeUsage.Off;
+            go.isStatic = true;
+            return go;
+        }
+
+        public static void BuildClosureMesh(Mesh mesh, WorldBoundary.Closure closure)
+        {
+            closure.localPos = Vector3.zero;
+            closure.headingDeg = 0f;
+            BuildClosureGroupMesh(mesh, new[] { closure });
         }
 
         /// <summary>
