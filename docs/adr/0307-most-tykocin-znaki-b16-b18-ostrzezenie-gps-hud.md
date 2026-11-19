@@ -66,7 +66,7 @@ ok. 15–20 m), po prawej, twarzą do ruchu; B-16 na górze, B-18 pod nim. Warto
 - Widoki: pasek „Ograniczenie / za 450 m” ze znakami (3,7 m, 12 t) na minimapie HUD i na ekranie nawigacji w kabinie;
   znacznik-znak w miejscu początku odcinka na minimapie, pełnej mapie i ekranie kabiny; pełna mapa w opisie trasy:
   „ograniczenie: wysokość do 3,7 m, masa do 12 t”. Pokazywane są tylko limity, które zestaw przekracza.
-- HUD (ADR 0283, rząd kafli — jedyny element HUD widoczny w widoku z kabiny): bursztynowe kafle „WYSOKOŚĆ 3,7 m”,
+- HUD (ADR 0283, rząd kafli — jedyny element HUD widoczny w widoku z kabiny): bursztynowe kafle „WYS. 3,7 m”,
   „MASA 12 t” („OGRANICZENIE” dla nacisku / długości) zaraz po czerwonych; znikają za mostem.
 - Teksty w tabelach `NavText` / `HudTexts` (PL). Nic nie jest blokowane ani przeplanowywane.
 

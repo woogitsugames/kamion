@@ -140,12 +140,12 @@ namespace Game.Controls
 
         public static string Warning(HudWarning w) => k_Warnings[(int)w];
 
-        // ADR 0307: limit tiles carry the value of the sign ("WYSOKOŚĆ 3,7 m", "MASA 12 t"); built once per value
+        // ADR 0307: limit tiles carry the value of the sign ("WYS. 3,7 m", "MASA 12 t"; the tile is 184 units wide); built once per value
         static readonly string[] k_LimitHeight = new string[100];    // 0,0 .. 9,9 m
         static readonly string[] k_LimitWeight = new string[1000];   // 0,0 .. 99,9 t
 
-        /// <summary>"WYSOKOŚĆ 3,7 m" for a height limit [cm] (one decimal, cut - never above the sign).</summary>
-        public static string RoadLimitHeight(int cm) => Limit(k_LimitHeight, cm / 10, "WYSOKOŚĆ ", " m");
+        /// <summary>"WYS. 3,7 m" for a height limit [cm] (one decimal, cut - never above the sign).</summary>
+        public static string RoadLimitHeight(int cm) => Limit(k_LimitHeight, cm / 10, "WYS. ", " m");
 
         /// <summary>"MASA 12 t" for a weight limit [0.01 t].</summary>
         public static string RoadLimitWeight(int centiTonnes) => Limit(k_LimitWeight, centiTonnes / 10, "MASA ", " t");

@@ -167,7 +167,7 @@ namespace Game.Tests
             var s = new HudWarningInput { RoadLimitHeightCm = 370, RoadLimitWeightC = 1200 };
             Assert.AreEqual(2, HudWarnings.Collect(s, buf));
             Assert.AreEqual(HudWarning.RoadLimitHeight, buf[0]); Assert.AreEqual(HudWarning.RoadLimitWeight, buf[1]);
-            Assert.AreEqual("WYSOKOŚĆ 3,7 m", HudTexts.Warning(buf[0], s));
+            Assert.AreEqual("WYS. 3,7 m", HudTexts.Warning(buf[0], s));
             Assert.AreEqual("MASA 12 t", HudTexts.Warning(buf[1], s));
             Assert.IsFalse(HudWarnings.IsRed(buf[0]), "amber: caution, the drive is not blocked");
             Assert.AreSame(HudTexts.RoadLimitHeight(370), HudTexts.RoadLimitHeight(370), "label built once per value (no per-frame allocation)");
