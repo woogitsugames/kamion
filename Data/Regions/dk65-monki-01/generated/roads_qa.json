@@ -22,7 +22,7 @@
     6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -47,7 +47,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -147,7 +147,7 @@
     5.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   }
  ],
@@ -237,6 +237,14 @@
   "overrides_applied": [
    {
     "id": "dk65-carriageway-width",
+    "targets": [
+     "w232511647:1134811124-1134824484",
+     "w98070954:1134824484-1894655657",
+     "w98070954:1894655657-2407684457"
+    ]
+   },
+   {
+    "id": "dk65-edge-line-spacing-0304",
     "targets": [
      "w232511647:1134811124-1134824484",
      "w98070954:1134824484-1894655657",
