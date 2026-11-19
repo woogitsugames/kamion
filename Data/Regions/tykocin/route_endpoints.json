@@ -5,6 +5,21 @@
   751938.3,
   601343.0
  ],
+ "via_epsg2180": [
+  [
+   751892.77,
+   600222.959
+  ],
+  [
+   751563.293,
+   600180.414
+  ],
+  [
+   751530.736,
+   599851.592
+  ]
+ ],
+ "via_note": "ADR 0303: keep the route on DW671 (ref 671) where a shorter minor way exists. (1) OSM node 1123400983, SE corner of Rynek (Plac Stefana Czarnieckiego): DW671 Puchalskiego -> south side of the square; the plain shortest path took the residential north side of the square (way 630270670) and the unnamed way 220327904. (2) OSM node 2791676438 on Zlota: without it the path from (1) left DW671 for Bernardynska / Choroszczanska. (3) OSM node 1842358780, Sokolowska / Klasztorna: the shortest path cut the corner through the one-way service ways 1426176071 / 1426176072 (57 m vs 58 m on DW671); its kerbed island put a 0.38 m kerb into the truck envelope (route_obstacles s 1902, ADR 0300).",
  "end_epsg2180": [
   751346.7,
   599295.0
