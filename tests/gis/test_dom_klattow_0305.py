@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from shapely.geometry import LineString
+from shapely.geometry import LineString, Polygon
 
 from roads import pipeline
 from streetscape import buildings_mesh as BM
@@ -98,6 +98,84 @@ def test_mesh_materials_budget_and_winding(fc):
     assert V[:, 2].max() - Z0 == pytest.approx(K.RIDGE + 0.07, abs=0.02)
     assert b["props"]["lod2_eave_rel_m"] == pytest.approx(K.WALL_TOP, abs=0.05)
     assert b["props"]["height_lod2_2017_m"] == pytest.approx(K.RIDGE, abs=0.05)
+
+
+def _footprint(length=21.1, width=7.84, centre=10.35, porch_width=2.7, depth=2.0):
+    p0, p1 = centre - porch_width / 2, centre + porch_width / 2
+    return Polygon([(0, 0), (p0, 0), (p0, -depth), (p1, -depth), (p1, 0),
+                    (length, 0), (length, width), (0, width)])
+
+
+@pytest.mark.parametrize("length", [20.0, 22.2])
+@pytest.mark.parametrize("width", [7.0, 8.7])
+def test_boundary_dimensions_keep_openings_and_porch_inside_walls(length, width, monkeypatch):
+    poly = _footprint(length, width)
+    frame = K._frame(poly)
+    assert frame is not None
+    a, d, n, L, W, pu0, pu1, pd = frame
+    assert (L, W) == pytest.approx((length, width))
+    assert pu0 - K.PORCH_OV >= 0.3 and pu1 + K.PORCH_OV <= L - 0.3
+    # Inspect the actual emitter calls, covering both LODs, every wall and both house doors.
+    windows, doors = [], []
+    window, door = K._window, K._door
+
+    def checked_window(m, wall, centre, span, sill, head, key, *args, **kwargs):
+        assert centre - span / 2 - 0.105 >= 0.3
+        assert centre + span / 2 + 0.105 <= wall.L - 0.3
+        if key[0] == "fw":
+            assert (centre + span / 2 + 0.105 <= pu0 - K.PORCH_OV - 0.1 or
+                    centre - span / 2 - 0.105 >= pu1 + K.PORCH_OV + 0.1)
+        if key[-1] == "attic":
+            slope = (K.RIDGE - K.EAVE_EDGE) / (W / 2 + K.EAVE_OV)
+            assert head + 0.085 <= Z0 + K.RIDGE - slope * (span / 2 + 0.105)
+        else:
+            assert Z0 + K.PLINTH_TOP <= sill - 0.06 and head + 0.085 <= Z0 + K.WALL_TOP
+        windows.append(key)
+        return window(m, wall, centre, span, sill, head, key, *args, **kwargs)
+
+    def checked_door(m, wall, centre, span, *args, **kwargs):
+        assert centre - span / 2 - 0.09 >= 0.3
+        assert centre + span / 2 + 0.09 <= wall.L - 0.3
+        doors.append(centre)
+        return door(m, wall, centre, span, *args, **kwargs)
+
+    monkeypatch.setattr(K, "_window", checked_window)
+    monkeypatch.setattr(K, "_door", checked_door)
+    res = K.build(_Buf(), "knyszyn", [{"id": K.BUILDING_ID, "poly": poly,
+                  "ovr": {"hero_asset": K.ASSET_ID}}], lambda e, n: np.full(np.shape(e), Z0), {})
+    assert res["status"] == "applied" and len(windows) == 36 and len(doors) == 3
+
+
+@pytest.mark.parametrize("dimensions", [
+    {"length": 15.01}, {"length": 19.99}, {"length": 22.21}, {"length": 29.99},
+    {"width": 5.01}, {"width": 6.99}, {"width": 8.71}, {"width": 10.99},
+    {"centre": 9.0}, {"centre": 12.5}, {"porch_width": 2.1}, {"depth": 1.6}, {"depth": 2.4},
+])
+def test_incompatible_layout_keeps_rule_house(dimensions):
+    poly = _footprint(**dimensions)
+    fc = {"features": [{"id": K.BUILDING_ID, "properties": {}, "geometry": {
+        "type": "MultiPolygon", "coordinates": [[list(poly.exterior.coords)]]}}]}
+    assert K._frame(poly) is None
+    hero = K.hero_targets("knyszyn", fc)
+    assert hero == {}
+    blds = BM.load(fc, (0, 0), pipeline.load_overrides("knyszyn"), hero=hero)
+    assert blds[0]["ovr"].get("hero_asset") != K.ASSET_ID
+    buf = _Buf()
+    assert K.build(buf, "knyszyn", blds, None, {})["status"] == "skipped"
+    assert buf.parts == []
+    # Even a stale hero assignment must never emit detached geometry.
+    blds[0]["ovr"]["hero_asset"] = K.ASSET_ID
+    assert K.build(buf, "knyszyn", blds, None, {})["status"] == "skipped"
+    assert buf.parts == []
+
+
+def test_fence_extensions_west_and_east(fc):
+    b, _, _, _ = _build(fc)
+    a, d, n, L, W, pu0, pu1, pd = K._frame(b["poly"])
+    _, runs, _, _ = K._fence_line(a, d, n, L, pu0, pu1, pd, None)
+    assert runs[0] == pytest.approx((-2.6, pu0))
+    assert runs[1] == pytest.approx((pu1, L + 4.5))
+    assert sum(end - start for start, end in runs) == pytest.approx(L - (pu1 - pu0) + 7.1)
 
 
 def MT_SPEC():
