@@ -29,3 +29,7 @@
 - NASTĘPNY KROK: po r3: `road_consistency_qa.json` C (lane_blind_end ≤ 55), fidelity islands 0; combo after na 7 kaflach.
 - 13:5x: PRZED (main, poprawiony klasyfikator, 7 kafli + łączniki Knyszyna): środek pasa opp 205 / kerb 166 / off 29;
   ze swingiem opp 11 / kerb 129 / off 12 (`artifacts/road-widen-s24/before/final_swing.json`). r3 buduje C (13:52).
+- 14:1x: C z r3 (stary limit L/D): lane_blind_end 49 (≤ 55 OK), ale na trasie 3 (> ROUTE_MAX 1; w main też 3 — dwa nowe po
+  ADR 0301 na drogach serwisowych/strefie zamieszkania: BDOT 6,5 m → pas 3,25 przy limicie 3,50). Poprawka: L/D maks.
+  std+0,25 (`standards.LANE_WIDTH_MAX`), testy 0301 zaktualizowane. r4 = C ponownie + fidelity (czeka na r3).
+- NASTĘPNY KROK: po r4 sprawdzić `road_consistency_qa.json` (on_route ≤ 1, tile ≤ 55) i `fidelity_qa.json` (wyspy 0).
