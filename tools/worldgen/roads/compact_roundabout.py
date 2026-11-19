@@ -363,6 +363,7 @@ def lay_lanes(net) -> list:
                         continue
                     head = S0 + np.outer(x[keep], d) + np.outer(sg * np.minimum(np.abs(y[keep]), off), nl)
                     pts = np.vstack([P[:i0], head, S0 + d * xq + nl * sg * off, tail])
+                    c.meta["cr_lane_rc"] = (round(rc - hw, 2), "entry" if entry else "exit")
                     break
                 if pts is None and abs(yn) <= off + 0.05:
                     # the ring node itself lies inside the designed lane line: the mapped line, held within it

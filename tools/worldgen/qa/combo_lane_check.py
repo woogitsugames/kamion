@@ -45,6 +45,11 @@ from roads import standards as STD  # noqa: E402
 from roads.swept_path import Combination, _unit  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[3]
+# data root (built chunks, route_start, route_links) may be another checkout, e.g. main for the BEFORE numbers
+import os  # noqa: E402
+if os.environ.get("KAMION_DATA_ROOT"):
+    ROOT = Path(os.environ["KAMION_DATA_ROOT"])
+    LS.LINKS = ROOT / "game/Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming/route_links.json"
 OPPOSITE_TOL_M = 0.10    # WORKING_VALUE: outer tyre edge beyond the centre line axis (line 0.12 m wide -> past its far half)
 ALIGN_DEG = 30.0         # WORKING_VALUE: the vehicle part runs along the road it is tested against
 JUNCTION_SKIP_M = 14.0   # WORKING_VALUE: no lane test this close to a node of degree >= 3 (turning through a junction)
@@ -227,6 +232,7 @@ def optimise(tile, path, surf, lanes, keep_s0, events, lead_m):
     """Best driver swing per event cluster (kerb / off_hard), greedy along the path: the line may move inside its own
     lane / the junction (a swing that puts a tyre over the centre line counts as `opposite`). Returns (path, swings)."""
     swings = []
+    total = cost(classify(tile, path, surf, lanes, keep_s0)[2])
     for ev in [e for e in events if e["kind"] in ("kerb", "off_hard", "opposite")]:
         s_hit = ev["s0"] + lead_m
         lo, hi = s_hit - 80.0, s_hit + 60.0
@@ -250,7 +256,11 @@ def optimise(tile, path, surf, lanes, keep_s0, events, lead_m):
                         best = (c, (k + i0, lm, hm))
         if best[1] is not None:
             k, lm, hm = best[1]
-            path = swing(path, k, lm, hm)
+            cand = swing(path, k, lm, hm)
+            t2 = cost(classify(tile, cand, surf, lanes, keep_s0)[2])
+            if t2 >= total:                     # the window improved, the whole path did not: keep the old line
+                continue
+            path, total = cand, t2
             swings.append({"s": round(k * SAMPLE_M - lead_m, 1), "left_m": lm, "half_m": hm,
                            "en": [round(float(path[k][0]), 2), round(float(path[k][1]), 2)],
                            "cost_before": base, "cost_after": best[0]})
@@ -392,12 +402,12 @@ def main(argv=None):
             r = evaluate(L["tile"], path, lead, lanes(L["tile"]), keep_s0=settle, dump=L["tile"] in a.dump_tile, opt=a.swing)
             r.update({"tile": L["tile"], "piece": "link:" + L["id"], "lead_m": round(lead, 1)})
             res["links"][L["id"]] = r
+            print(f"{'(free link)':24s} {L['tile']:24s} {L['id']:36s} opp {r['opposite']:4d} kerb {r['kerb']:4d} "
+                  f"apron {r['apron']:4d} off {r['off_hard']:4d} / {r['tyre_points']}", flush=True)
             if "swing" in r:
                 w = r["swing"]
                 print(f"{'':24s} {'':24s} {'  + driver swing':36s} opp {w['opposite']:4d} kerb {w['kerb']:4d} "
                       f"apron {w['apron']:4d} off {w['off_hard']:4d}  swings {len(w['swings'])}", flush=True)
-            print(f"{'(free link)':24s} {L['tile']:24s} {L['id']:36s} opp {r['opposite']:4d} kerb {r['kerb']:4d} "
-                  f"apron {r['apron']:4d} off {r['off_hard']:4d} / {r['tyre_points']}", flush=True)
     allr = [r for rows in res["corridors"].values() for r in rows if "tyre_points" in r] + list(res["links"].values())
     keys = ("tyre_points", "opposite", "kerb", "apron", "off_hard", "seam_skipped")
     res["total"] = {k: int(sum(r[k] for r in allr)) for k in keys}
