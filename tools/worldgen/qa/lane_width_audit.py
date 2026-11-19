@@ -38,7 +38,7 @@ sys.path.insert(0, str(HERE.parents[1]))
 REPO = HERE.parents[3]
 
 U = np.arange(-20.0, 20.0 + 1e-9, 0.05)
-V = np.arange(-3.0, 3.0 + 1e-9, 0.5)
+V = np.arange(-6.0, 6.0 + 1e-9, 0.5)   # +-6 m covers one period of P-1a (4 + 8 m)
 K0 = len(U) // 2
 LINE_DV = 22.0          # WORKING_VALUE: paint brighter than the asphalt core by this much (0-255 mean RGB)
 LINE_MAX_W = 0.45       # m, wider bright runs are kerbs / concrete / crossings, not a line
@@ -82,21 +82,25 @@ def run_through(mask, k0=K0, gap=6):
 
 def ortho_profile(rgb):
     """rgb (len(V), len(U), 3) -> dict(asphalt (uR, uL) | None, lines [u], core brightness)."""
-    med = np.median(rgb.astype(float), axis=0)
+    a = rgb.astype(float)
+    med = np.median(a, axis=0)
     v = med.mean(axis=1)
+    # dashed lines cover 1/3 of the rows: the 80th percentile keeps them, cars (dark or coloured) mostly drop out
+    hi = np.percentile(a.mean(axis=2), 80, axis=0)
+    hsat = np.percentile((a.max(axis=2) - a.min(axis=2)) / np.maximum(a.max(axis=2), 1), 50, axis=0)
     mx, mn = med.max(axis=1), med.min(axis=1)
     sat = (mx - mn) / np.maximum(mx, 1)
     green = med[:, 1] - 0.5 * (med[:, 0] + med[:, 2])
     core = slice(K0 - 24, K0 + 25)                 # +-1.2 m around the generated route point
     a_v, a_sat = float(np.median(v[core])), float(np.median(sat[core]))
     ok = (sat < a_sat + 0.07) & (np.abs(v - a_v) < 38) & (green < 6)
-    paint = (v > a_v + LINE_DV) & (sat < 0.15)
+    paint = (hi > a_v + LINE_DV) & (hsat < 0.18)
     asph = run_through(ok | paint)
     lines = []
     for i0, i1 in runs(paint):
         w = (i1 - i0 + 1) * 0.05
         if w <= LINE_MAX_W:
-            seg = v[i0:i1 + 1]
+            seg = hi[i0:i1 + 1]
             lines.append(round(float(U[i0 + int(np.argmax(seg))]), 2))
     if asph:
         lines = [u for u in lines if asph[0] - 0.15 <= u <= asph[1] + 0.15]
@@ -162,7 +166,7 @@ def gen_profile(G, c, t, res=0.05):
     for k, tr in G.mark_tris.items():
         if k in LONG_KINDS:
             lm |= rasterize(tr, x0, y1, res, shape)
-    lp = lm[row, col].mean(0) >= 0.3
+    lp = lm[row, col].mean(0) >= 0.12
     asph = run_through(cw, gap=4)
     lines = [round(float(0.5 * (U[i0] + U[i1])), 2) for i0, i1 in runs(lp)]
     if asph:
