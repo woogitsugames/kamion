@@ -17,6 +17,8 @@ namespace Game.UI.Navigation
     public sealed class NavigationService : MonoBehaviour
     {
         const string PrefPrefix = "nav.dest.";
+        /// <summary>ADR 0302: id of the active multi-tile trip (survives a restart; "-" = none chosen).</summary>
+        public const string TripPref = "nav.trip";
 
         public Transform truck;
         public Rigidbody truckBody;
@@ -39,10 +41,24 @@ namespace Game.UI.Navigation
         float m_RestoreAt = -1f;
         bool m_TestPose;
         Vector2 m_RestoreGoal;
+        NavTrip m_Trip;
+        bool m_TripPlanning;
+
+        /// <summary>ADR 0302: EPSG:2180 origin of the current region frame (streaming; 0 without). Set by
+        /// <see cref="StartTrip"/>, moved by every <see cref="SwitchRegion"/> (old origin - oldToNew).</summary>
+        public double AnchorX, AnchorY;
+        /// <summary>ADR 0302: multi-tile trip (route over several streamed tiles) or null.</summary>
+        public NavTrip Trip => m_Trip;
+        public bool TripPlanning => m_TripPlanning;
+        /// <summary>ADR 0302: trips offered in the map UI (ids / labels) and the request to start one (null id = none);
+        /// set by the streaming follower (Gameplay), empty without streaming.</summary>
+        public string[] TripIds = System.Array.Empty<string>(), TripLabels = System.Array.Empty<string>();
+        public System.Action<string> RequestTrip;
 
         public RouteGraph Graph => m_Graph;
         public NavMapData Map => m_Map;
-        public RoutePath Path => m_Path;
+        /// <summary>The planned route: the multi-tile trip's combined path when a trip is active (ADR 0302).</summary>
+        public RoutePath Path => m_Trip != null && m_Trip.Combined != null ? m_Trip.Combined : m_Path;
         public NavGuidance Guidance => m_Guide;
         public bool Ready => m_Graph != null && m_Map != null;
         public bool Night => NightSource != null && NightSource();
@@ -68,7 +84,8 @@ namespace Game.UI.Navigation
         public float SpeedMs { get; private set; }
         public bool HasPosition { get; private set; }
         /// <summary>Street under the truck (route name when on the route, else nearest road, refreshed twice a second).</summary>
-        public ushort CurrentStreet => m_Guide.HasRoute && m_Guide.OnRoute ? m_Guide.CurrentName : m_Street;
+        public ushort CurrentStreet => m_Guide.HasRoute && m_Guide.OnRoute ? m_Guide.CurrentName
+            : m_Trip != null ? m_Trip.MapCurrentName(m_Street) : m_Street;
 
         public static NavigationService Install(GameObject host, Transform truck, Rigidbody body, Transform regionFrame, string regionId)
         {
@@ -131,8 +148,9 @@ namespace Game.UI.Navigation
         {
             var g = RouteGraph.Load(newRegionId);
             if (g == null) return false;
-            bool hadPin = HasPin;
+            bool hadPin = HasPin && m_Trip == null;
             Vector2 pin = Pin + oldToNew;
+            AnchorX -= oldToNew.x; AnchorY -= oldToNew.y;
             m_Graph = g;
             m_Map = NavMapData.Load(newRegionId);
             m_Planner = new RoutePlanner(g);
@@ -147,8 +165,26 @@ namespace Game.UI.Navigation
             m_Neighbours = System.Array.Empty<NavMapData>();
             InvalidateStatic();
             Sample(0f);
-            if (hadPin && SetPin(pin)) PlanToPin();
-            Debug.Log($"[NAV] region switched to {newRegionId} nodes={g.NodeCount} edges={g.EdgeCount} map={(m_Map != null)} pin={(HasPin ? "kept" : (hadPin ? "dropped (not in this tile)" : "none"))}");
+            string pinNote;
+            if (m_Trip != null)
+            {
+                // ADR 0302: the trip keeps its goal - re-expressed in the new frame, nothing re-planned
+                m_Trip.SetCurrent(newRegionId);
+                SetTripPin();
+                // recomposed in the new frame (off the corridor too: the route stays drawn where it is)
+                if (m_Trip.Combined != null) m_Trip.Compose(AnchorX, AnchorY);
+                m_Tracker.Update(Path, Position, HeadingDeg, SpeedMs, 0f, ref m_Guide);
+                pinNote = m_Trip.Current >= 0
+                    ? string.Format(CultureInfo.InvariantCulture, "trip {0} kept (leg {1}/{2}, remaining {3:F0} m, ETA {4:F0} s)",
+                        m_Trip.Id, m_Trip.Current + 1, m_Trip.Legs.Length, m_Guide.RemainingM, m_Guide.RemainingSeconds)
+                    : "trip " + m_Trip.Id + " kept (tile off the corridor)";
+            }
+            else
+            {
+                if (hadPin && SetPin(pin)) PlanToPin();
+                pinNote = HasPin ? "kept" : (hadPin ? "dropped (not in this tile)" : "none");
+            }
+            Debug.Log($"[NAV] region switched to {newRegionId} nodes={g.NodeCount} edges={g.EdgeCount} map={(m_Map != null)} pin={pinNote}");
             return true;
         }
 
@@ -176,12 +212,13 @@ namespace Game.UI.Navigation
             if (m_RestoreAt >= 0f)
             {
                 m_RestoreAt -= Time.unscaledDeltaTime;
-                if (m_RestoreAt < 0f && HasPosition) { SetPin(m_RestoreGoal); PlanToPin(); }
+                if (m_RestoreAt < 0f && HasPosition && m_Trip == null) { SetPin(m_RestoreGoal); PlanToPin(); }
             }
-            m_Tracker.Update(m_Path, Position, HeadingDeg, SpeedMs, dt, ref m_Guide);
+            if (m_TripPlanning) StepTrip();
+            m_Tracker.Update(Path, Position, HeadingDeg, SpeedMs, dt, ref m_Guide);
             if (m_Guide.NeedsReroute && HasPin)
             {
-                Replan(true);
+                if (m_Trip != null) ReplanTripLeg(); else Replan(true);
                 m_Tracker.ClearOffRoute();
             }
             m_StreetT -= Time.unscaledDeltaTime;
@@ -221,7 +258,7 @@ namespace Game.UI.Navigation
         public void SetPoseForTest(Vector2 pos, float headingDeg, float speedMs)
         {
             truck = null; m_TestPose = true; HasPosition = true; Position = pos; HeadingDeg = headingDeg; SpeedMs = speedMs;
-            m_Tracker.Update(m_Path, Position, HeadingDeg, SpeedMs, 0.02f, ref m_Guide);
+            m_Tracker.Update(Path, Position, HeadingDeg, SpeedMs, 0.02f, ref m_Guide);
             int e = m_Graph.Snap(Position, 30f, out _, out _, out _);
             m_Street = e >= 0 ? m_Graph.EdgeName[e] : (ushort)0;
         }
@@ -230,7 +267,7 @@ namespace Game.UI.Navigation
         public void StepForTest(Vector2 pos, float headingDeg, float speedMs, float dt)
         {
             HasPosition = true; Position = pos; HeadingDeg = headingDeg; SpeedMs = speedMs;
-            m_Tracker.Update(m_Path, Position, HeadingDeg, SpeedMs, dt, ref m_Guide);
+            m_Tracker.Update(Path, Position, HeadingDeg, SpeedMs, dt, ref m_Guide);
         }
 
         // ------------------------------------------------------------------ destination and route
@@ -242,6 +279,7 @@ namespace Game.UI.Navigation
         public bool SetPin(Vector2 p)
         {
             if (m_Graph == null) return false;
+            if (m_Trip != null) EndTrip(false);   // a pin from the map replaces the trip (ADR 0302)
             int any = m_Graph.Snap(p, RoutePlanner.SnapGoalM, out _, out _, out _);
             if (any >= 0 && m_Graph.EdgeNotDestination(any))   // M27 off-reach or ADR 0168 no-return zone
             {
@@ -268,6 +306,7 @@ namespace Game.UI.Navigation
 
         public PlanStatus PlanToPin()
         {
+            if (m_Trip != null) return LastStatus;   // ADR 0302: the trip plans itself (incrementally)
             if (!HasPin || m_Graph == null) return LastStatus = PlanStatus.GoalOffRoad;
             Replan(false);
             if (LastStatus == PlanStatus.Ok) SaveDestination(Pin);
@@ -290,6 +329,7 @@ namespace Game.UI.Navigation
         /// <summary>Removes the route and the pin (and the saved destination).</summary>
         public void ClearRoute()
         {
+            if (m_Trip != null) EndTrip(true);
             HasPin = false;
             m_Path?.Clear();
             m_Tracker.Reset();
@@ -317,6 +357,111 @@ namespace Game.UI.Navigation
             return true;
         }
 
-        public string NameOf(ushort i) => m_Graph != null && i < m_Graph.Names.Length ? m_Graph.Names[i] : "";
+        public string NameOf(ushort i) => m_Trip != null ? m_Trip.NameOf(i)
+            : m_Graph != null && i < m_Graph.Names.Length ? m_Graph.Names[i] : "";
+
+        // ------------------------------------------------------------------ multi-tile trip (ADR 0302)
+
+        /// <summary>
+        /// Starts a trip over several streamed tiles. <paramref name="frameX"/> / <paramref name="frameY"/> = EPSG:2180
+        /// origin of the current region frame. The legs are planned incrementally, one per frame (<see cref="Update"/>,
+        /// or <see cref="StepTripForTest"/>); the truck's leg first, so the guidance starts at once.
+        /// </summary>
+        public void StartTrip(NavTrip trip, double frameX, double frameY, bool remember = true)
+        {
+            if (trip == null) return;
+            AnchorX = frameX; AnchorY = frameY;
+            m_Trip = trip;
+            m_RestoreAt = -1f;
+            m_Path?.Clear();
+            trip.SetCurrent(regionId);
+            SetTripPin();
+            m_TripPlanning = !trip.Failed;
+            m_Tracker.Reset();
+            m_Guide = default; m_Guide.Next = -1;
+            if (remember) { PlayerPrefs.SetString(TripPref, trip.Id); PlayerPrefs.Save(); }
+            Debug.Log($"[NAV] trip {trip.Id} ({trip.Label}): {trip.Legs.Length} tiles, current {regionId} = leg {trip.Current + 1}{(trip.Failed ? " FAILED " + trip.FailReason : "")}");
+        }
+
+        void SetTripPin()
+        {
+            HasPin = true;
+            Pin = PinOnRoad = m_Trip.GoalIn(AnchorX, AnchorY);
+            PinName = m_Trip.LabelName;
+            LastStatus = PlanStatus.Ok;
+        }
+
+        /// <summary>Ends the trip (route and pin gone). <paramref name="forget"/>: also the remembered choice.</summary>
+        public void EndTrip(bool forget)
+        {
+            if (m_Trip == null) return;
+            Debug.Log($"[NAV] trip {m_Trip.Id} ended");
+            m_Trip = null; m_TripPlanning = false;
+            HasPin = false;
+            m_Tracker.Reset();
+            m_Guide = default; m_Guide.Next = -1;
+            if (forget) { PlayerPrefs.SetString(TripPref, "-"); PlayerPrefs.Save(); }
+        }
+
+        /// <summary>One incremental planning step (one leg); composes after the truck's leg and at the end.</summary>
+        void StepTrip()
+        {
+            var t = m_Trip;
+            int before = t.PlannedCount;
+            bool done = t.StepPlan(Position, HasPosition ? HeadingDeg : float.NaN);
+            int after = t.PlannedCount;
+            if (t.Failed)
+            {
+                m_TripPlanning = false;
+                LastStatus = PlanStatus.NoPath;
+                Debug.LogWarning($"[NAV] trip {t.Id} planning failed: {t.FailReason}");
+                if (after > 0) t.Compose(AnchorX, AnchorY);
+                return;
+            }
+            if ((before == 0 && after > 0) || done)
+            {
+                t.Compose(AnchorX, AnchorY);
+                m_Tracker.Update(Path, Position, HeadingDeg, SpeedMs, 0f, ref m_Guide);
+            }
+            if (done)
+            {
+                m_TripPlanning = false;
+                LastPlanMs = t.TotalPlanMs;
+                var c = t.Combined;
+                Debug.Log(string.Format(CultureInfo.InvariantCulture,
+                    "[NAV] trip {0} planned: legs {1}..{2}, length {3:F0} m, ETA {4:F0} s, points {5}, manoeuvres {6}, planning {7:F1} ms over {8} frames (max leg {9:F2} ms), legs over a truck limit {10}",
+                    t.Id, t.Current + 1, t.Legs.Length, c != null ? c.Length : 0f, m_Guide.RemainingSeconds,
+                    c != null ? c.Count : 0, c != null ? c.ManCount : 0, t.TotalPlanMs, t.StepCount, t.MaxLegMs, t.RelaxedCount));
+            }
+        }
+
+        /// <summary>Off the route during a trip: re-plan the truck's leg only (one A* in this tile, no allocation) and
+        /// recompose. Off the corridor (tile not on the trip) there is nothing to plan in: the route stays drawn.</summary>
+        void ReplanTripLeg()
+        {
+            var t = m_Trip;
+            if (t.Current < 0 || m_TripPlanning) return;
+            t.PlanLeg(t.Current, Position, HeadingDeg);
+            LastPlanMs = t.Legs[t.Current].PlanMs;
+            LastRerouteTime = Time.unscaledTime; RerouteCount++;
+            if (t.Legs[t.Current].Planned) t.Compose(AnchorX, AnchorY);
+            LastStatus = t.Legs[t.Current].Status;
+            m_Tracker.Update(Path, Position, HeadingDeg, SpeedMs, 0f, ref m_Guide);
+            if (RerouteCount < 20)
+                Debug.Log(string.Format(CultureInfo.InvariantCulture, "[NAV] trip reroute in {0}: status={1} remaining={2:F0} m {3:F2} ms",
+                    regionId, LastStatus, m_Guide.RemainingM, LastPlanMs));
+        }
+
+        /// <summary>For tests: run the incremental trip planning to the end (one leg per call, as Update does).</summary>
+        public int StepTripForTest(int maxSteps = 1000)
+        {
+            int n = 0;
+            while (m_TripPlanning && n < maxSteps) { StepTrip(); n++; }
+            m_Tracker.Update(Path, Position, HeadingDeg, SpeedMs, 0f, ref m_Guide);
+            return n;
+        }
+
+        /// <summary>For tests: the re-route path of a trip (as Update does after leaving the route).</summary>
+        public void ReplanTripLegForTest() => ReplanTripLeg();
     }
 }

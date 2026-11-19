@@ -64,6 +64,17 @@ namespace Game.Core.Navigation
         /// legally drive out on, including exits closed to trucks (what the driver sees and counts).</summary>
         public const ExitCountPolicy DefaultExitCounting = ExitCountPolicy.AnyMotorVehicle;
         public ExitCountPolicy ExitCounting = DefaultExitCounting;
+        /// <summary>ADR 0302: a leg of a multi-tile trip ends on the seam, i.e. on an outbound carriageway towards the tile
+        /// edge - the no-return zone (ADR 0168) and the off-reach exits (M27) are the way OUT there, not traps. True: the
+        /// goal snaps to any road and the search may enter the no-return zone (it can only end at the goal or a dead end).</summary>
+        public bool AllowTileExit;
+        /// <summary>ADR 0302: fallback of a trip leg that has no legal path inside its tile (e.g. DK65 tagged maxaxleload
+        /// 10 t &lt; the truck's 11.5 t, while the detour lies outside the corridor tiles): edges over the truck's limits are
+        /// allowed at their normal cost. The caller reports it (<see cref="LastUsedRelaxed"/>).</summary>
+        public bool RelaxTruckLimits;
+        bool m_UsedRelaxed;
+        /// <summary>The last search expanded at least one edge over the truck's limits (with <see cref="RelaxTruckLimits"/>).</summary>
+        public bool LastUsedRelaxed => m_UsedRelaxed;
 
         readonly RouteGraph m_G;
         readonly float[] m_Cost;
@@ -179,13 +190,14 @@ namespace Game.Core.Navigation
             var g = m_G;
             path.Clear();
             LastExpanded = 0;
+            m_UsedRelaxed = false;
             int se = g.Snap(start, SnapStartM, out float sAlong, out Vector2 sPt, out _);
             if (se < 0) return PlanStatus.StartOffRoad;
             // M27: prefer an edge drivable to from the main component; an off-reach goal falls back to the plain snap
             // and then fails with NoPath (the UI never sends such a goal - SetPin snaps the pin to the reachable part).
             // Off-reach edges are NOT skipped in the search (integration r5): A* never reaches them from the main part
             // anyway, and a truck starting on a one-way entry from the tile edge (off-reach) must still route out.
-            int ge = g.Snap(goal, SnapGoalM, out float gAlong, out Vector2 gPt, out _, truckOnly: false, mainComponentOnly: true);
+            int ge = g.Snap(goal, SnapGoalM, out float gAlong, out Vector2 gPt, out _, truckOnly: false, mainComponentOnly: !AllowTileExit);
             if (ge < 0) ge = g.Snap(goal, SnapGoalM, out gAlong, out gPt, out _, truckOnly: false);
             if (ge < 0) return PlanStatus.GoalOffRoad;
             // ADR 0168: edges of the no-return zone (outbound carriageways ending at the region-edge closure) are skipped,
@@ -253,8 +265,14 @@ namespace Game.Core.Navigation
                         extra = TurnCost(s, d);
                     }
                     if ((g.EdgeFlags[e] & RouteGraph.FlagNoTruck) != 0 && e != ge) continue;
-                    if (!startInTrap && g.EdgeNoReturnMask[e]) continue;   // ADR 0168: never route into the no-return zone
-                    if (!EdgeAllowed(g, e, e == ge)) continue;   // OSM weight / height / length limits below the truck's, hgv=destination off-goal
+                    if (!startInTrap && !AllowTileExit && g.EdgeNoReturnMask[e]) continue;   // ADR 0168: never route into the no-return zone
+                    if (!EdgeAllowed(g, e, e == ge))   // OSM weight / height / length limits below the truck's, hgv=destination off-goal
+                    {
+                        if (!RelaxTruckLimits) continue;
+                        // ADR 0302 fallback: allowed at its normal cost - every path of the leg crosses the limited road
+                        // anyway (the strict search found none), a per-edge penalty would only push it onto side roads
+                        m_UsedRelaxed = true;
+                    }
                     if ((g.EdgeFlags[e] & RouteGraph.FlagRestricted) != 0 && e != ge && e != se) extra += RestrictedS;
                     float v = SpeedMs(g, e), len = g.GeomLength(e);
                     if (e == ge)

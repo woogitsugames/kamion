@@ -192,7 +192,10 @@ namespace Game.UI.CabDisplays
                 AppendDistance(m_B, g.RemainingM);
                 d.Text(m_B, 220f, by, 44f, pal.BarText);
                 float frac = path.Length > 1f ? g.RemainingM / path.Length : 0f;
-                int eta = s.ClockMinutes + Mathf.CeilToInt(path.CostSeconds * frac / 60f);
+                // ADR 0302: the tracker's ETA (OSM limits + truck profile, NavEta) - the same number as the full map;
+                // the planner's cost share only until the first ETA sample
+                float remS = g.RemainingSeconds > 0f ? g.RemainingSeconds : path.CostSeconds * frac;
+                int eta = s.ClockMinutes + Mathf.CeilToInt(remS / 60f);
                 m_B.Clear().Append(T.Arrive).Append(' ').AppendClock(eta);
                 d.Text(m_B, 470f, by - 2f, 32f, pal.BarSub);
                 string dest = Live.NameOf(path.DestinationName);

@@ -10,11 +10,13 @@ namespace Game.Gameplay
     /// <c>-shot &lt;file.png&gt; [-shot_t 20] [-quit_t 30]</c> save one screenshot of the back buffer (HUD included) shot_t
     /// seconds after start and quit the player after quit_t seconds (quit_t alone = timed run for the [DIAG] frame
     /// statistics). Survives scene loads; does nothing without the arguments. Unscaled time, no per-frame allocation.
+    /// ADR 0302: <c>-shot_every &lt;s&gt;</c> also saves <c>&lt;file&gt;_t&lt;seconds&gt;.png</c> every s seconds after shot_t
+    /// (evidence of the GPS before / after a seam; allocates only when it shoots).
     /// </summary>
     public sealed class DesktopAutoShot : MonoBehaviour
     {
         string m_Path;
-        float m_ShotAt = -1f, m_QuitAt = -1f;
+        float m_ShotAt = -1f, m_QuitAt = -1f, m_Every = -1f, m_NextEvery = -1f;
         bool m_Shot;
 
         /// <summary>Parses "12.5" style seconds; negative / missing / not a number = <paramref name="fallback"/>.</summary>
@@ -35,6 +37,8 @@ namespace Game.Gameplay
             a.m_Path = path;
             a.m_ShotAt = string.IsNullOrEmpty(path) ? -1f : ParseSeconds(arg("shot_t"), 20f);
             a.m_QuitAt = quit;
+            a.m_Every = string.IsNullOrEmpty(path) ? -1f : ParseSeconds(arg("shot_every"), -1f);
+            if (a.m_Every > 0f) a.m_NextEvery = a.m_ShotAt + a.m_Every;
             Debug.Log($"[AUTOSHOT] shot='{path}' shot_t={a.m_ShotAt.ToString("F1", CultureInfo.InvariantCulture)} quit_t={a.m_QuitAt.ToString("F1", CultureInfo.InvariantCulture)}");
             return a;
         }
@@ -53,6 +57,14 @@ namespace Game.Gameplay
                     Debug.Log($"[AUTOSHOT] screenshot {m_Path} {Screen.width}x{Screen.height} scene={UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
                 }
                 catch (Exception e) { Debug.LogWarning("[AUTOSHOT] screenshot failed: " + e.Message); }
+            }
+            if (m_Every > 0f && t >= m_NextEvery && (m_QuitAt < 0f || t < m_QuitAt - 1f))
+            {
+                m_NextEvery += m_Every;
+                string p = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(m_Path)) ?? "",
+                    Path.GetFileNameWithoutExtension(m_Path) + "_t" + Mathf.RoundToInt(t).ToString("D4", CultureInfo.InvariantCulture) + ".png");
+                ScreenCapture.CaptureScreenshot(p);
+                Debug.Log($"[AUTOSHOT] screenshot {p}");
             }
             if (m_QuitAt >= 0f && t >= m_QuitAt)
             {

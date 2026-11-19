@@ -33,6 +33,13 @@ namespace Game.UI.Navigation
         public const string Then = "potem";
         public const string Exit = "zjazd";
         public const string Paused = "Pauza - jazda wstrzymana na czas mapy";
+        /// <summary>ADR 0302: destination of the multi-tile trip (button cycles the trips of the corridor).</summary>
+        public const string TripButton = "Cel trasy";
+        public const string TripNone = "brak";
+        public const string TripPlanning = "Wyznaczanie trasy...";
+        public const string Remaining = "pozostało";
+        /// <summary>A leg of the trip only over a road with a truck limit (OSM, e.g. axle load 10 t) - no legal detour in the corridor.</summary>
+        public const string TripRelaxed = "odcinek z ograniczeniem dla ciężarówek";
 
         /// <summary>Every character the map canvases draw (glyph requests).</summary>
         public const string Charset =
