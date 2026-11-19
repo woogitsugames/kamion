@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="33" result="Passed" total="33" passed="33" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-19 03:22:20Z" end-time="2026-11-19 03:22:30Z" duration="9,4880092">
+  <test-suite type="TestSuite" id="1279" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="218" result="Passed" start-time="2026-11-19 03:22:20Z" end-time="2026-11-19 03:22:30Z" duration="9.488009" total="33" passed="33" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1273" name="Game.Tests.PlayMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/nav-route-s24/game/Library/ScriptAssemblies/Game.Tests.PlayMode.dll" runstate="Runnable" testcasecount="218" result="Passed" start-time="2026-11-19 03:22:20Z" end-time="2026-11-19 03:22:30Z" duration="9.477086" total="33" passed="33" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2368" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1274" name="Game" fullname="Game" runstate="Runnable" testcasecount="218" result="Passed" start-time="2026-11-19 03:22:20Z" end-time="2026-11-19 03:22:30Z" duration="9.475812" total="33" passed="33" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1275" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="218" result="Passed" start-time="2026-11-19 03:22:20Z" end-time="2026-11-19 03:22:30Z" duration="9.474780" total="33" passed="33" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1013" name="CabScreensTests" fullname="Game.Tests.CabScreensTests" classname="Game.Tests.CabScreensTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-11-19 03:22:20Z" end-time="2026-11-19 03:22:21Z" duration="1.110947" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1018" name="EcoBand_IsTorquePlateau" fullname="Game.Tests.CabScreensTests.EcoBand_IsTorquePlateau" methodname="EcoBand_IsTorquePlateau" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="1465867434" result="Passed" start-time="2026-11-19 03:22:20Z" end-time="2026-11-19 03:22:20Z" duration="0.031748" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TEST] green band 950-1390 1/min
+]]></output>
+            </test-case>
+            <test-case id="1020" name="Instruments_FollowSimulationAndStalk" fullname="Game.Tests.CabScreensTests.Instruments_FollowSimulationAndStalk" methodname="Instruments_FollowSimulationAndStalk" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="487735497" result="Passed" start-time="2026-11-19 03:22:20Z" end-time="2026-11-19 03:22:21Z" duration="0.240064" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="NavManeuver_TurnDirection" fullname="Game.Tests.CabScreensTests.NavManeuver_TurnDirection" methodname="NavManeuver_TurnDirection" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="808376792" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:21Z" duration="0.002501" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="NavMap_RegionDataLoads" fullname="Game.Tests.CabScreensTests.NavMap_RegionDataLoads" methodname="NavMap_RegionDataLoads" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="1045221384" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:21Z" duration="0.002228" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1024" name="Screens_DumpReviewFrames" fullname="Game.Tests.CabScreensTests.Screens_DumpReviewFrames" methodname="Screens_DumpReviewFrames" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="599916054" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:21Z" duration="0.344073" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TEST] review frames in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\nav-route-s24\artifacts\visual-qa\cab-screens: speed 50 km/h gear 10 rpm 1124 lever 3 station 566 next 566 m 37°
+]]></output>
+            </test-case>
+            <test-case id="1019" name="Screens_FollowTheSolver_NotAStaticPicture" fullname="Game.Tests.CabScreensTests.Screens_FollowTheSolver_NotAStaticPicture" methodname="Screens_FollowTheSolver_NotAStaticPicture" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="2020301964" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:21Z" duration="0.200723" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TEST] cluster RT 1170x450, refresh 0,924 ms CPU, verts cluster 912 nav 80
+]]></output>
+            </test-case>
+            <test-case id="1023" name="Screens_NavMap_OnRoute_ZeroGcAndManeuver" fullname="Game.Tests.CabScreensTests.Screens_NavMap_OnRoute_ZeroGcAndManeuver" methodname="Screens_NavMap_OnRoute_ZeroGcAndManeuver" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="174907258" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:21Z" duration="0.129835" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TEST] nav on route: station 300, next manoeuvre 1098 m turn 37°, verts 1780/24000
+[TEST] cost (editor CPU): navigation on route 0,474 ms
+]]></output>
+            </test-case>
+            <test-case id="1021" name="Screens_NightModeWithTheLightSensor" fullname="Game.Tests.CabScreensTests.Screens_NightModeWithTheLightSensor" methodname="Screens_NightModeWithTheLightSensor" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="724797542" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:21Z" duration="0.034412" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TEST] nav background day 0,88 night 0,11, clock dusk 7:09
+]]></output>
+            </test-case>
+            <test-case id="1022" name="Screens_Refresh_ZeroGcAllocation" fullname="Game.Tests.CabScreensTests.Screens_Refresh_ZeroGcAllocation" methodname="Screens_Refresh_ZeroGcAllocation" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="846930682" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:21Z" duration="0.104491" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TEST] GC: cab screen refresh allocated nothing; mean refresh 0,445 ms CPU (editor), last 0,253 ms
+[TEST] cost (editor CPU, sample + build + submit + mips): cluster 0,234 ms, DIN 0,066 ms
+]]></output>
+            </test-case>
+            <test-case id="1015" name="SolarClock_MatchesLightingPresets" fullname="Game.Tests.CabScreensTests.SolarClock_MatchesLightingPresets" methodname="SolarClock_MatchesLightingPresets" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="832286429" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:21Z" duration="0.001005" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TEST] sun clock: overcast 12:37, low sun 5:19, dusk 20:04
+]]></output>
+            </test-case>
+            <test-case id="1014" name="TextBuffer_PolishNumberStyle" fullname="Game.Tests.CabScreensTests.TextBuffer_PolishNumberStyle" methodname="TextBuffer_PolishNumberStyle" classname="Game.Tests.CabScreensTests" runstate="Runnable" seed="1675694247" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:21Z" duration="0.000602" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1160" name="NavHudTests" fullname="Game.Tests.NavHudTests" classname="Game.Tests.NavHudTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:29Z" duration="8.035294" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1165" name="Capture_Devices" fullname="Game.Tests.NavHudTests.Capture_Devices" methodname="Capture_Devices" classname="Game.Tests.NavHudTests" runstate="Explicit" seed="1950820262" result="Passed" start-time="2026-11-19 03:22:21Z" end-time="2026-11-19 03:22:29Z" duration="7.450910" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="_SKIPREASON" value="visual capture, run on demand" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Detected one or more triangles where the distance between any 2 vertices is greater than 500 units. The resulting Triangle Mesh can impact simulation and query stability. It is recommended to tessellate meshes that have large triangles. Source mesh name: HillRamp
+[RQ_PIPELINE] scale=0,85 fsrSharpness=0,92 fsrOverride=False cascades=2 shadowResolution=1024 shadowDistance=60 bias=0,4/0,3 splits=(0.07, 0.20)
+[QUALITY_STATE] tier=Medium cameraDither=True skyDitherOff=1 glassShadowBias=0,08
+[DIAG] sensor poll mode=Background (diag_poll main|bg|off, ADR 0177)
+[CONTROLS] loaded v6 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=70 headMotion=on speedSteer=on grab=drag mirrors=insets
+[LAB] DrivingLab ready: vehicle=Tractor4x2_TRAKT trailer=Trailer_Curtainsider_Art spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+The referenced script (Unknown) on this Behaviour is missing!
+[AUDIO] VehicleAudioLibrary missing (run tools/audio/render_all.py + Kamion/Audio/Import vehicle audio) — truck is silent
+[CONTROLS] pc-input installed schema=1 overrides=no
+[CAB] view camera Main Camera cabView=True gain 5,05 meter 1,34 EV
+[DIAG] t=3s tier=Medium target=60 fps=0.3 p50=3951.03 p95=3951.03 p99=3951.03 max=3951.03ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=0.85 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[NAV] ready region=bialystok-industrial-c nodes=550 edges=646 restrictions=7 map=True
+[NAV] plan status=Ok length=1642 m edges=24 manoeuvres=4 expanded=204 4.48 ms
+[NAV] capture cab-nav-live-route.png 1280x768
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.643 dpi=120 wheel=26,21 257x257 grab=0,0 289x283 turn=26,283 257x41 stalk=289,21 67x242 look=rest of screen (px, origin bottom-left; ADR 0135)
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.643 dpi=120 wheel=26,21 257x257 grab=0,0 289x283 turn=26,283 257x41 stalk=289,21 67x242 look=rest of screen (px, origin bottom-left; ADR 0135)
+[NAV] capture fold-rec-1080x1200-1-hud.png 864x960
+[NAV] capture fold-rec-1080x1200-1b-minimap-native.png 215x279
+[NAV] map open (simulation paused)
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.643 dpi=120 wheel=26,21 257x257 grab=0,0 289x283 turn=26,283 257x41 stalk=289,21 67x242 look=rest of screen (px, origin bottom-left; ADR 0135)
+[NAV] plan status=Ok length=1485 m edges=22 manoeuvres=3 expanded=179 0.26 ms
+[NAV] capture fold-rec-1080x1200-2-map-route.png 864x960
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.643 dpi=120 wheel=26,21 257x257 grab=0,0 289x283 turn=26,283 257x41 stalk=289,21 67x242 look=rest of screen (px, origin bottom-left; ADR 0135)
+[NAV] capture fold-rec-1080x1200-3-map-pin.png 864x960
+[NAV] plan status=Ok length=1485 m edges=22 manoeuvres=3 expanded=179 0.26 ms
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.999 dpi=120 wheel=40,32 400x400 grab=0,0 449x440 turn=40,440 400x64 stalk=449,32 104x376 look=rest of screen (px, origin bottom-left; ADR 0135)
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.999 dpi=120 wheel=40,32 400x400 grab=0,0 449x440 turn=40,440 400x64 stalk=449,32 104x376 look=rest of screen (px, origin bottom-left; ADR 0135)
+[NAV] capture phone-2340x1080-1-hud.png 960x443
+[NAV] capture phone-2340x1080-1b-minimap-native.png 334x434
+[NAV] map open (simulation paused)
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.999 dpi=120 wheel=40,32 400x400 grab=0,0 449x440 turn=40,440 400x64 stalk=449,32 104x376 look=rest of screen (px, origin bottom-left; ADR 0135)
+[NAV] capture phone-2340x1080-2-map-route.png 960x443
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.999 dpi=120 wheel=40,32 400x400 grab=0,0 449x440 turn=40,440 400x64 stalk=449,32 104x376 look=rest of screen (px, origin bottom-left; ADR 0135)
+[NAV] capture phone-2340x1080-3-map-pin.png 960x443
+[NAV] plan status=Ok length=1485 m edges=22 manoeuvres=3 expanded=179 0.31 ms
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=1.180 dpi=120 wheel=47,38 472x472 grab=0,0 531x519 turn=47,519 472x76 stalk=531,38 123x444 look=rest of screen (px, origin bottom-left; ADR 0135)
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=1.180 dpi=120 wheel=47,38 472x472 grab=0,0 531x519 turn=47,519 472x76 stalk=531,38 123x444 look=rest of screen (px, origin bottom-left; ADR 0135)
+[NAV] capture fold-inner-2176x1812-1-hud.png 960x799
+[NAV] capture fold-inner-2176x1812-1b-minimap-native.png 394x512
+[NAV] map open (simulation paused)
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=1.180 dpi=120 wheel=47,38 472x472 grab=0,0 531x519 turn=47,519 472x76 stalk=531,38 123x444 look=rest of screen (px, origin bottom-left; ADR 0135)
+[NAV] capture fold-inner-2176x1812-2-map-route.png 960x799
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=1.180 dpi=120 wheel=47,38 472x472 grab=0,0 531x519 turn=47,519 472x76 stalk=531,38 123x444 look=rest of screen (px, origin bottom-left; ADR 0135)
+[NAV] capture fold-inner-2176x1812-3-map-pin.png 960x799
+[NAV] plan status=Ok length=1485 m edges=22 manoeuvres=3 expanded=179 0.26 ms
+]]></output>
+            </test-case>
+            <test-case id="1164" name="FullMap_PausesAndSetsRoute" fullname="Game.Tests.NavHudTests.FullMap_PausesAndSetsRoute" methodname="FullMap_PausesAndSetsRoute" classname="Game.Tests.NavHudTests" runstate="Runnable" seed="180773126" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:29Z" duration="0.082844" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-industrial-c nodes=550 edges=646 restrictions=7 map=True
+[NAV] map open (simulation paused)
+[NAV] plan status=Ok length=1642 m edges=24 manoeuvres=4 expanded=204 0.28 ms
+]]></output>
+            </test-case>
+            <test-case id="1163" name="LaneBar_DrawsZeroGc" fullname="Game.Tests.NavHudTests.LaneBar_DrawsZeroGc" methodname="LaneBar_DrawsZeroGc" classname="Game.Tests.NavHudTests" runstate="Runnable" seed="705266044" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:29Z" duration="0.054353" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1162" name="MiniMap_RefreshAndGuidance_ZeroGc" fullname="Game.Tests.NavHudTests.MiniMap_RefreshAndGuidance_ZeroGc" methodname="MiniMap_RefreshAndGuidance_ZeroGc" classname="Game.Tests.NavHudTests" runstate="Runnable" seed="1433414210" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:29Z" duration="0.126960" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-industrial-c nodes=550 edges=646 restrictions=7 map=True
+[NAV] plan status=Ok length=1642 m edges=24 manoeuvres=4 expanded=204 0.27 ms
+[NAV] minimap refresh: avg 0,170 ms CPU over 300 refreshes, last 0,090 ms; canvas 334x434 design px, 656 verts, overflow 0
+]]></output>
+            </test-case>
+            <test-case id="1161" name="NavZone_NeverOverlapsHud_AllDevicesAllStates" fullname="Game.Tests.NavHudTests.NavZone_NeverOverlapsHud_AllDevicesAllStates" methodname="NavZone_NeverOverlapsHud_AllDevicesAllStates" classname="Game.Tests.NavHudTests" runstate="Runnable" seed="805040246" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:29Z" duration="0.291188" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] nav zone shown in 3072/6144 layouts
+[NAV] phone-2340x1080: canvas 2249x1081 units, nav zone (x:24.00, y:617.20, width:340.00, height:440.00)
+[NAV] phone-2400x1080: canvas 2310x1080 units, nav zone (x:24.00, y:616.00, width:340.00, height:440.00)
+[NAV] fold-rec-1080x1200: canvas 1680x1867 units, nav zone (x:24.00, y:1402.67, width:340.00, height:440.00)
+[NAV] fold-inner-2176x1812: canvas 1844x1485 units, nav zone (x:24.00, y:1021.05, width:340.00, height:440.00)
+[NAV] fold-inner-rotated-1968x2184: canvas 1680x1813 units, nav zone (x:24.00, y:1349.17, width:340.00, height:440.00)
+[NAV] tablet-2560x1600: canvas 2686x1679 units, nav zone (x:24.00, y:1214.61, width:340.00, height:440.00)
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1166" name="NavReachabilityServiceTests" fullname="Game.Tests.NavReachabilityServiceTests" classname="Game.Tests.NavReachabilityServiceTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:29Z" duration="0.013488" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1170" name="Region_ReachabilityFlags_AndersaRoutable_BuskaSnapped" fullname="Game.Tests.NavReachabilityServiceTests.Region_ReachabilityFlags_AndersaRoutable_BuskaSnapped" methodname="Region_ReachabilityFlags_AndersaRoutable_BuskaSnapped" classname="Game.Tests.NavReachabilityServiceTests" runstate="Runnable" seed="1606382042" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:29Z" duration="0.005556" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-industrial-c nodes=550 edges=646 restrictions=7 map=True
+[NAV] plan status=Ok length=998 m edges=20 manoeuvres=4 expanded=169 0.24 ms
+]]></output>
+            </test-case>
+            <test-case id="1168" name="Synthetic_SetPin_MainPart_Unchanged" fullname="Game.Tests.NavReachabilityServiceTests.Synthetic_SetPin_MainPart_Unchanged" methodname="Synthetic_SetPin_MainPart_Unchanged" classname="Game.Tests.NavReachabilityServiceTests" runstate="Runnable" seed="1545920894" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:29Z" duration="0.001806" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1169" name="Synthetic_SetPin_NoReturnTap_SnapsOutOfTheZone" fullname="Game.Tests.NavReachabilityServiceTests.Synthetic_SetPin_NoReturnTap_SnapsOutOfTheZone" methodname="Synthetic_SetPin_NoReturnTap_SnapsOutOfTheZone" classname="Game.Tests.NavReachabilityServiceTests" runstate="Runnable" seed="1511357755" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:29Z" duration="0.001404" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] plan status=Ok length=180 m edges=1 manoeuvres=1 expanded=1 0.01 ms
+]]></output>
+            </test-case>
+            <test-case id="1167" name="Synthetic_SetPin_OffReachTap_SnapsToNearestMainNodeAndReports" fullname="Game.Tests.NavReachabilityServiceTests.Synthetic_SetPin_OffReachTap_SnapsToNearestMainNodeAndReports" methodname="Synthetic_SetPin_OffReachTap_SnapsToNearestMainNodeAndReports" classname="Game.Tests.NavReachabilityServiceTests" runstate="Runnable" seed="1199693849" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:29Z" duration="0.000682" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] plan status=Ok length=380 m edges=2 manoeuvres=1 expanded=1 0.01 ms
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1171" name="NavStreamFollowTests" fullname="Game.Tests.NavStreamFollowTests" classname="Game.Tests.NavStreamFollowTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:30Z" duration="0.185103" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1172" name="EveryCorridorTileHasARoutingGraphAndAMap" fullname="Game.Tests.NavStreamFollowTests.EveryCorridorTileHasARoutingGraphAndAMap" methodname="EveryCorridorTileHasARoutingGraphAndAMap" classname="Game.Tests.NavStreamFollowTests" runstate="Runnable" seed="618749273" result="Passed" start-time="2026-11-19 03:22:29Z" end-time="2026-11-19 03:22:30Z" duration="0.077464" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1176" name="FollowerHysteresisNeedsTheTruckInsideTheNextTile" fullname="Game.Tests.NavStreamFollowTests.FollowerHysteresisNeedsTheTruckInsideTheNextTile" methodname="FollowerHysteresisNeedsTheTruckInsideTheNextTile" classname="Game.Tests.NavStreamFollowTests" runstate="Runnable" seed="764127695" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.000441" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1173" name="ShiftedMapMovesGeometryAndCombinedStaticHoldsBoth" fullname="Game.Tests.NavStreamFollowTests.ShiftedMapMovesGeometryAndCombinedStaticHoldsBoth" methodname="ShiftedMapMovesGeometryAndCombinedStaticHoldsBoth" classname="Game.Tests.NavStreamFollowTests" runstate="Runnable" seed="30873099" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.039270" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1174" name="SwitchRegionMeasuresInTheNewTileAndRebaseMovesNothing" fullname="Game.Tests.NavStreamFollowTests.SwitchRegionMeasuresInTheNewTileAndRebaseMovesNothing" methodname="SwitchRegionMeasuresInTheNewTileAndRebaseMovesNothing" classname="Game.Tests.NavStreamFollowTests" runstate="Runnable" seed="177789134" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.058841" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-kleeberga nodes=670 edges=766 restrictions=0 map=True
+[NAV] region switched to bialystok-knyszynska nodes=438 edges=461 map=True pin=none
+]]></output>
+            </test-case>
+            <test-case id="1175" name="SwitchToARegionWithoutGraphChangesNothing" fullname="Game.Tests.NavStreamFollowTests.SwitchToARegionWithoutGraphChangesNothing" methodname="SwitchToARegionWithoutGraphChangesNothing" classname="Game.Tests.NavStreamFollowTests" runstate="Runnable" seed="627687856" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.004633" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-kleeberga nodes=670 edges=766 restrictions=0 map=True
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1177" name="NavTripTests" fullname="Game.Tests.NavTripTests" classname="Game.Tests.NavTripTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.115882" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1185" name="MapPinEndsTheTripAndClearForgetsIt" fullname="Game.Tests.NavTripTests.MapPinEndsTheTripAndClearForgetsIt" methodname="MapPinEndsTheTripAndClearForgetsIt" classname="Game.Tests.NavTripTests" runstate="Runnable" seed="924168435" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.012120" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-kleeberga nodes=670 edges=766 restrictions=0 map=True
+[NAV] trip test3 (Test): 3 tiles, current bialystok-kleeberga = leg 1
+[NAV] trip test3 ended
+[NAV] trip test3 (Test): 3 tiles, current bialystok-kleeberga = leg 1
+[NAV] trip test3 ended
+]]></output>
+            </test-case>
+            <test-case id="1181" name="RerouteReplansOnlyTheTrucksLegAndKeepsTheGoal" fullname="Game.Tests.NavTripTests.RerouteReplansOnlyTheTrucksLegAndKeepsTheGoal" methodname="RerouteReplansOnlyTheTrucksLegAndKeepsTheGoal" classname="Game.Tests.NavTripTests" runstate="Runnable" seed="827288779" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.011786" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-kleeberga nodes=670 edges=766 restrictions=0 map=True
+[NAV] trip test3 (Test): 3 tiles, current bialystok-kleeberga = leg 1
+[NAV] trip test3 planned: legs 1..3, length 5808 m, ETA 334 s, points 181, manoeuvres 5, planning 0.3 ms over 3 frames (max leg 0.23 ms), legs over a truck limit 2
+[NAV] trip reroute in bialystok-kleeberga: status=Ok remaining=5656 m 0.05 ms
+]]></output>
+            </test-case>
+            <test-case id="1180" name="SeamSwitchKeepsTheGoalAndRebaseMovesNothing" fullname="Game.Tests.NavTripTests.SeamSwitchKeepsTheGoalAndRebaseMovesNothing" methodname="SeamSwitchKeepsTheGoalAndRebaseMovesNothing" classname="Game.Tests.NavTripTests" runstate="Runnable" seed="2103111787" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.012675" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-kleeberga nodes=670 edges=766 restrictions=0 map=True
+[NAV] trip test3 (Test): 3 tiles, current bialystok-kleeberga = leg 1
+[NAV] trip test3 planned: legs 1..3, length 5808 m, ETA 334 s, points 181, manoeuvres 5, planning 0.3 ms over 3 frames (max leg 0.22 ms), legs over a truck limit 2
+[NAV] region switched to bialystok-knyszynska nodes=438 edges=461 map=True pin=trip test3 kept (leg 2/3, remaining 3440 m, ETA 211 s)
+]]></output>
+            </test-case>
+            <test-case id="1179" name="ThreeTileTripIsOneContinuousRouteThroughTheSeams" fullname="Game.Tests.NavTripTests.ThreeTileTripIsOneContinuousRouteThroughTheSeams" methodname="ThreeTileTripIsOneContinuousRouteThroughTheSeams" classname="Game.Tests.NavTripTests" runstate="Runnable" seed="322709989" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.010661" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-kleeberga nodes=670 edges=766 restrictions=0 map=True
+[NAV] trip test3 (Test): 3 tiles, current bialystok-kleeberga = leg 1
+[NAV] trip test3 planned: legs 1..3, length 5808 m, ETA 334 s, points 181, manoeuvres 5, planning 0.3 ms over 3 frames (max leg 0.22 ms), legs over a truck limit 2
+[TEST] 3-tile trip: 5808 m, 181 points, 5 manoeuvres, planning 0,3 ms, ETA 334 s
+[TEST] seam bialystok-kleeberga|bialystok-knyszynska: bridge 6,75 m
+[TEST] seam bialystok-knyszynska|dk65-01: bridge 5,85 m
+]]></output>
+            </test-case>
+            <test-case id="1182" name="TrackingTheLongRouteAllocatesNothing" fullname="Game.Tests.NavTripTests.TrackingTheLongRouteAllocatesNothing" methodname="TrackingTheLongRouteAllocatesNothing" classname="Game.Tests.NavTripTests" runstate="Runnable" seed="1870759738" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.017269" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-kleeberga nodes=670 edges=766 restrictions=0 map=True
+[NAV] trip tykocin (Tykocin): 28 tiles, current bialystok-kleeberga = leg 3
+[NAV] trip tykocin planned: legs 3..28, length 41756 m, ETA 2165 s, points 875, manoeuvres 14, planning 1.3 ms over 26 frames (max leg 0.25 ms), legs over a truck limit 11
+[TEST] tracking on the 41756 m trip (875 points): 3,8 us/step over 825 steps, 0 B allocated
+]]></output>
+            </test-case>
+            <test-case id="1184" name="TripChoiceRouteToThenRememberedThenStreamer" fullname="Game.Tests.NavTripTests.TripChoiceRouteToThenRememberedThenStreamer" methodname="TripChoiceRouteToThenRememberedThenStreamer" classname="Game.Tests.NavTripTests" runstate="Runnable" seed="166255015" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.000595" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1178" name="TripDataJoinsLieOnTheSeamsAndGoalsInTheLastTile" fullname="Game.Tests.NavTripTests.TripDataJoinsLieOnTheSeamsAndGoalsInTheLastTile" methodname="TripDataJoinsLieOnTheSeamsAndGoalsInTheLastTile" classname="Game.Tests.NavTripTests" runstate="Runnable" seed="2086594456" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.027474" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1183" name="WholeTykocinTripFromKleeberga" fullname="Game.Tests.NavTripTests.WholeTykocinTripFromKleeberga" methodname="WholeTykocinTripFromKleeberga" classname="Game.Tests.NavTripTests" runstate="Runnable" seed="690901649" result="Passed" start-time="2026-11-19 03:22:30Z" end-time="2026-11-19 03:22:30Z" duration="0.018886" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[NAV] ready region=bialystok-kleeberga nodes=670 edges=766 restrictions=0 map=True
+[NAV] trip tykocin (Tykocin): 28 tiles, current bialystok-kleeberga = leg 3
+[NAV] trip tykocin planned: legs 3..28, length 41756 m, ETA 2165 s, points 875, manoeuvres 14, planning 1.2 ms over 26 frames (max leg 0.25 ms), legs over a truck limit 11
+[TEST] tykocin trip from bialystok-kleeberga: 41756 m (straight 23770 m), 875 points, 14 manoeuvres, planning 1,2 ms over 26 frames (max leg 0,25 ms), ETA 36,1 min
+Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

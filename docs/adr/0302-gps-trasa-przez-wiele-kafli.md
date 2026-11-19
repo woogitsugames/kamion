@@ -56,11 +56,35 @@ zastępuje podróż; „Wyczyść trasę” kończy podróż i zapamiętuje „b
 Pozostała odległość = długość sklejonej trasy od rzutu ciężarówki (tracker); ETA = `NavEta` (limity OSM + profil
 ciężarówki PL), ta sama liczba na pełnej mapie i (od teraz) na ekranie kabiny (wcześniej kabina skalowała koszt planera).
 
-## Liczby (zmierzone 2026-11-19)
-Do uzupełnienia wynikami testów i przejazdu.
+## Liczby (zmierzone 2026-11-19, `artifacts/nav-route-s24/`)
+| | wynik |
+|---|---|
+| PlayMode `NavTripTests` (8) + `NavStreamFollowTests` (5) + `NavHudTests` + `NavReachabilityServiceTests` + `CabScreensTests` | **33/33** (`playmode-20261119-042010.xml`) |
+| .NET `tools/nav-runner` (rdzeń nawigacji, golden routes) | 94/94 |
+| podróż 3 kafli kleeberga → knyszynska → dk65-01 (test) | 5808 m, 181 pkt, 5 manewrów, 1 „Cel”; mostki na szwach 6,75 / 5,85 m |
+| podróż tykocin z kleeberga (test, edytor) | 41 756 m (w linii prostej 23 770 m), 26 odcinków w 26 klatkach, razem 1,2 ms, max 0,25 ms/odcinek; ETA 36,1 min; 11 odcinków ponad limit nacisku osi |
+| śledzenie na trasie 41,8 km (875 pkt), edytor | 3,8 µs/krok, **0 B GC** (825 kroków) |
+| player: planowanie podróży (start kleeberga, route_s 2092) | 39 673 m, ETA 2058 s, 26 odcinków w 26 klatkach, razem 6,5 ms, max **3,14 ms** w jednej klatce |
+
+Przejazd playerem Windows (exe `kamion-0.1.0-f72bf08d6e-dirty-regions`: kleeberga, knyszynska, dk65-01 + WorldC; kafle
+świata z worktree win-build, import 17.11; GTX 1070, Medium, 1600×900, autopilot 50 km/h, `-stream 1 -route_to tykocin
+-route_s 2030 -nav_log 5 -shot_every 15`, 400 s, exit 0, 0 wyjątków, log `win-run-20261119-044204.log`):
+- `[NAV] region switched to bialystok-knyszynska … pin=trip tykocin kept (leg 4/28, remaining 39524 m, ETA 2050 s)`;
+  pozostało przed / po szwie: 39 556 → 39 524 → 39 519 m (co 5 s ok. −55 m przy ~11 m/s); rebase #1 (3,38 ms) — bez skoku
+  (39 474 → 39 418 m); wyładowanie kafla startowego bez zmian w GPS.
+- `[NAV] region switched to dk65-01 … (leg 5/28, remaining 36563 m, ETA 1862 s)`; 36 629 → 36 563 → 36 560 → 36 493 m;
+  rebase #2 (1,17 ms).
+- Minimapa: linia trasy przed i za szwem (`run2_t0015.jpg`, `run2_t0030.jpg`, `run2_t0255.jpg`, `run2_t0270.jpg`),
+  wskazówka „rondo, zjazd 2 — 8,0 km” = rondo DK65/DW671 w Knyszynie, 6 kafli dalej (kafli nie ma w buildzie).
+- Pierwsza próba od `-route_s 1900`: ciężarówka stanęła pod wiaduktem Kleeberga w starym kaflu z win-build (przeszkoda z
+  ADR 0300, kafel sprzed poprawki) — nie dotyczy GPS.
 
 ## Konsekwencje / otwarte
 - Podróż prowadzi korytarzem z `route_links.json`; trasy alternatywne spoza kafli korytarza nie są szukane (planowanie
   na grafie łączonym = osobne zadanie). Poza korytarzem GPS nie przelicza — tylko pokazuje trasę.
 - Limit nacisku osi 10 t na DK65/DW671 z OSM: do weryfikacji (dane / właściciel) — dziś trasa idzie nim z oznaczeniem.
 - Cele „miasta” (rynek Tykocina, centrum Moniek) jako autorskie punkty — później.
+- Ekran nawigacji w kabinie czyta tę samą ścieżkę (ETA z `NavEta`), ale w kadrze kamery przejazdu go nie widać —
+  zrzut ekranu kabiny z podróżą do zrobienia (`CabScreensTests` zielone).
+- Wybór celu w UI (przycisk na pełnej mapie) — sprawdzony kodem i testem logiki wyboru, bez zrzutu pełnej mapy.
+- `-shot_every` / `-nav_log` (dowody): przełączniki uruchomienia, bez wpływu na grę bez nich.

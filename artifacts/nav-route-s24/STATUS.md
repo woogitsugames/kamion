@@ -12,3 +12,6 @@
 - Build 3 regionów w toku (`_Generated` kleeberga/knyszynska/dk65-01 + Truck/Trailer skopiowane z win-build, kafle z 17.11).
 - NASTĘPNY KROK: `& .\scripts\build-windows.ps1 -SkipBuild -Exe <exe> -Run -Scene bialystok-kleeberga -Autopilot route -Speed 50 -RunSeconds 400 -ShotSeconds 20 -ExtraPlayerArgs @('-stream','1','-route_to','tykocin','-route_s','1900','-nav_log','5','-shot_every','20')`
 - 04:40: build `artifacts/win/kamion-0.1.0-f72bf08d6e-dirty-regions` (3 regiony + WorldC z win-build) OK, 449 s. Przejazd 400 s w toku.
+- 05:00: przejazd 400 s OK (exit 0, 0 wyjątków): 2 przełączenia GPS (knyszynska, dk65-01) z zachowanym celem, pozostała
+  odległość ciągła, 2 rebase bez skoku. Zrzuty run2_t*.jpg. ADR 0302 z liczbami. GOTOWE do recenzji/scalenia.
+- Otwarte: zrzut ekranu nawigacji w kabinie i pełnej mapy z przyciskiem „Cel trasy”; limit maxaxleload 10 t DK65 (OSM) do weryfikacji.
