@@ -88,3 +88,5 @@
 - EditMode Win64 (16:29, C z r5): 1320/2 — `RegionSelectTests` (katalog routeLengthM C nieaktualny: kafel przebudowany,
   katalog przelicza fala w main) i `Nav0168Tests.Exit_GoldenRoutes` (graf nawigacji C z nowej geometrii: 5 manewrów vs 4
   w złotej trasie). Do powtórki po r7.
+- 17:2x: przejazd 1 (knyszyn-s, 240 s, 40 km/h): 0 wyjątków, 60 fps (GTX 1070, High), ale skończył 410 m przed rondem.
+  Przejazd 2: `-scene knyszyn -route_s 150 -speed 30`, 150 s (`run.ps1`, status `run.status`), telemetria → `combo_player_run.py`.
