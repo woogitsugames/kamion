@@ -36,6 +36,12 @@
    "house": 12,
    "office": 3,
    "shed": 43
+  },
+  "wooden_houses": {
+   "board_tris_lod0": 568,
+   "boarding_runs": 12,
+   "longest_run_m": 4.07,
+   "runs_over_tile": 0
   }
  },
  "cycleways": {
@@ -242,6 +248,7 @@
    "m_by_style": {},
    "on_screened_deck_m": 0.0,
    "signs_moved_off_wall": [],
+   "style_rule_m": {},
    "zones_stale": []
   },
   "noise_barriers_m": 0,
@@ -909,10 +916,10 @@
    {
     "chunk": "2_3",
     "instances": 160,
-    "materials": 23,
+    "materials": 24,
     "trees": 159,
     "tris_forest_hlod": 0,
-    "tris_high_static": 138613,
+    "tris_high_static": 139189,
     "tris_low_static": 35497
    },
    {
@@ -1854,6 +1861,20 @@
  "schema": "truck-sim-pl/streetscape-qa/1",
  "terrain_soft_nodes": 0,
  "vegetation": {
+  "farmland": {
+   "b_mean_after": 0.287,
+   "b_mean_before": 0.6242,
+   "b_std_after": 0.24,
+   "b_std_before": 0.2615,
+   "cells_m2": 3820503,
+   "garden_b_mean_after": 0.2778,
+   "garden_b_mean_before": 0.6443,
+   "garden_b_std_after": 0.0491,
+   "garden_b_std_before": 0.2611,
+   "garden_cells_m2": 21112,
+   "layout": "ESTIMATED strips (no cadastral parcels in the repo)",
+   "share": 0.91
+  },
   "forest_clearings": {
    "applied": [],
    "stale": []
