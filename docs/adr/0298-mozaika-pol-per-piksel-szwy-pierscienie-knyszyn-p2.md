@@ -67,3 +67,39 @@ zamiast ekstrapolacji (dwa ekstrapolowane ramiona dawały „romb” kolein u wl
 odczytane okiem ze zdjęcia właściciela nr 7; reguła `buildings_mesh.wood_paint`: 32 % czerwone, 24 % grafit, 26 %
 bejcowane brązowe, 18 % zielone (`WORKING_VALUE`). Nadpisanie `wall_material` (Dom Klattów) bez zmian.
 Ekrany przezroczyste (N7) nie leżą w kaflach Knyszyna — nietknięte.
+
+## Pomiary (przed → po, edytor High clear 1920 × 1080, nie build Windows)
+Przed = main po ADR 0295 (`artifacts/knyszyn-p2-s24/vqa-before`), po = runda 5 (`vqa-after5`); skrypty `measure.py`,
+`seam2.py`, `budget.py` w `artifacts/knyszyn-p2-s24/`.
+
+| | przed | po | źródło |
+|---|---|---|---|
+| Szew W (`seam_w_top`, kolumna krawędzi): systematyczny skok luma (średnia ze znakiem) | 17,1 | 1,0 (kontrola w kaflu 2,3) | `seam2.py` |
+| Szew W: mediana \|Δluma\| wiersz po wierszu | 20,2 | 9,6 (kontrola w kaflu 2,7; reszta = różne pola przy krawędzi, pas przejścia 30 m) | `seam2.py` |
+| Pole `rondo_owner_11` (wycinek recenzji): RGB / G−R / σ luma | 114,0/119,8/92,4 / +5,8 / 14,6 | 109,9/128,4/91,8 / +18,5 / 18,6 | `measure.py`; zdjęcie 11: 122,7/149,7/115,5 / +26,9 / 16,9 |
+| Kadr `rondo_owner_11`: σ luma | 34,9 | 37,0 | zdjęcie 11: 58,4 (światło / mgła — poza zakresem) |
+| Pierścienie N2 | `rings_ne_arm_top` szewron, `rings_w_arm_top` pierścienie | NE brak; W: pierścienie zniknęły, zostały zygzakowate ciemne linie (UV1 płyty po poprawce bez kolein — przyczyna inna, otwarte) | obejrzane |
+| Drzewa ogrodowe (koron ortofoto) knyszyn / knyszyn-w | 0 / 0 | 3 243 / 809 (High +113 732 / +30 692 tris) | `streetscape_qa.json` |
+| Samosiew knyszyn: brzoza młoda / krzew / sosna młoda | 3 126 / 5 281 / 1 517 | 616 / 2 846 / 292 | jw. |
+| 15 kamer: max draws / max tris | 732 / 1 470 593 | 739 / 1 505 968; Δ draws śr. +2,2, max +8; tris +1,3…3,6 % (`seam_w_above` +12 328 = +22 %) | `stats.txt` (szacunek edytora) |
+| Wszystkie 104 kamery po: max tris | — | 2 407 443 (`cab-mirror-front`, kadr kabinowy; ADR 0295: 2 339 271) | `vqa-after4/stats.txt` |
+
+Testy: pytest `tests/gis` (pełny, bez `test_export_is_deterministic`, który przebudowuje C): 2494 passed, 2 failed →
+oba naprawione (baseline 0238 C przeliczony, `fidelity_qa.json` C odświeżony po zmianie `meshing.py`); podzbiór po
+naprawie 79 passed, 1 xfailed. Nowe: `test_plate_uv1_no_rings_beyond_the_chain_end`, `test_farmland_mask_is_a_flag…`,
+`test_field_mosaic_shader_matches…`, EditMode `WorldEdgeApronFarmMaskTests`.
+
+## Skutki dla innych kafli
+- Shader (mozaika, GI za krawędzią) działa od razu, ale mozaika pojawia się tylko na kaflach przebudowanych po tej zmianie
+  (flaga w COLOR_0.b) i po reimporcie (`_RegionOriginEN`). Do tego czasu stare kafle mają poziomy ADR 0295 (B ≤ 0,78 —
+  nie flaga), więc wyglądają jak przed; fartuch reimportowanego kafla wiejskiego pokazuje mozaikę.
+- Przebudowane tu: `knyszyn`, `knyszyn-w`. **Do przebudowy po scaleniu:** `knyszyn-s` (szew S, kafel regen-wave-s24),
+  wszystkie pozamiejskie (dk65-*, dw671-*, s8-*, monki*, tykocin) i C (`test_export_is_deterministic`: generator zmienił
+  maski, płyty UV1, samosiew, kolory domów drewnianych).
+
+## Otwarte
+- Zygzakowate ciemne linie na płycie ronda przy zamknięciu DK65 W (nie z UV1 kolein — do zbadania: dekale / normalne).
+- G−R pól +18,5 vs +26,9 na zdjęciu (zdjęcie majowe i pochmurne vs lato w słońcu); kontrast kadru (σ 37 vs 58) — światło.
+- Drzewa biblioteki regionu (`make_trees.py`) w szpalerach DK65 nadal „kępki” z ciemną płaszczyzną w koronie — model.
+- Dom Klattów: `wall_material` z nadpisania (surowe brązowe deski) — czeka na zdjęcia właściciela.
+- Ekrany przezroczyste N7 (poza kaflami Knyszyna).
