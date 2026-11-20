@@ -563,7 +563,9 @@ def test_knyszyn_outline_is_tighter_than_adr_0218(knyszyn):
     sp, sp0 = j.compact, _knyszyn_adr0218()
     m2, m2_old = _mouths_on(sp, 2.0), _mouths_on(sp0, 2.0)
     assert len(m2) == len(m2_old) == 4
-    assert max(m2) <= 11.6 and min(m2_old) >= 11.7, (m2, m2_old)
+    # D95 preserves 11.75 m asphalt on W with two lanes: its authored base
+    # is 0.25 m wider when this historical fixture disables D94 (+0.50 vs +0.75).
+    assert max(m2) <= 11.8 and sorted(m2)[-2] <= 11.6 and min(m2_old) >= 11.7, (m2, m2_old)
     near = [s.outline.intersection(Point(*s.center).buffer(s.r_out + 3.0)).area - math.pi * s.r_out ** 2 for s in (sp, sp0)]
     assert near[0] < 0.88 * near[1], near
     assert all(b - a < -1.0 for a, b in zip(sorted(_mouths_on(sp0, 2.0)), sorted(_mouths_on(sp0, 8.0)))), "0218: funnels"

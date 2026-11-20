@@ -50,3 +50,9 @@
 - Usunięto metrykę schodkowego obrysu w konformowaniu skarpy: obrys wektorowy + interpolacja wysokości w pasie 16 m. Pylony far-field: otwarta kratownica, 420 tris/słup, bez nowego materiału.
 - Nowe testy syntetyczne 18/18 PASS; review w toku. Unity i build_world nieuruchamiane, zmiany tylko w tym worktree, bez push.
 - NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_embankment_pylons_s24.py tests/gis/test_unit_meshing_chunks.py tests/gis/test_terrain_walls.py -q`; uzupełnić walidację końcowej skarpy i podgląd offline.
+
+## STATUS rondo-fix-cli — D95, 2026-11-20
+- WIP commit `31e534e35`, bez push. Raport: `docs/reports/visual/2026-11-20-knyszyn-d95-cli.md`.
+- Szerokości/promienie D94 zachowane; dwa pasy W przy 11,75 m asfaltu po D94; wydłużone soczewki E/W; świeży asfalt i materiał płyty z pierścienia; opaska, znaki, lampy. Zapora/szew nadal otwarte, brak wizualnego PASS.
+- W tle uruchomiono wyłącznie build_world knyszyn, przez slot heavy rondo-fix-cli; potem automatycznie pytest i combo. Runner: `artifacts/logs/d95-run.ps1`, logi `d95-build.log`, `d95-tests-final.log`, `d95-combo-after.log`, kody w `*.exit`.
+- NASTĘPNY KROK: `Get-Content artifacts/logs/d95-build.log -Tail 30; Get-Content artifacts/logs/d95-tests-final.log -Tail 30; Get-Content artifacts/logs/d95-combo-after.log -Tail 30`; sprawdzić bramkę D95, poprawić błędy, uzupełnić raport i commit. Nie uruchamiać Unity ani build_world innego kafla.

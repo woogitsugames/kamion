@@ -1046,7 +1046,7 @@ overrides:
 
   # D95: new roundabout wearing course, not the generic aged/cracked asphalt.
   - id: knyszyn-roundabout-fresh-d95
-    target: {osm_way: [1426801304, 1464342634, 1464342635, 1464342636, 1464342637, 1464342638, 1464342639, 1464342640, 1464342641, 1478765548]}
+    target: {osm_way: [1426801304, 1426600413, 1464342634, 1464342635, 1464342636, 1464342637, 1464342638, 1464342639, 1464342640, 1464342641, 1478765548]}
     reason: "D95 owner photos 9-11: fresh asphalt; remove the repeated asphalt_worn crack layer."
     confidence: high
     verify: owner cameras 09/10/11 after import
@@ -1077,7 +1077,8 @@ overrides:
     reason: "D95: C-12 and A-7 at each entry; placement WORKING_VALUE, confirm in owner cameras."
     confidence: low
     verify: owner camera 11
-    along: {osm_way: 1464342634, before_node: n13432353443, distance_m: 8.0, side: R, offset_m: 0.8}
+    at_en: [-1004, -595]
+    travel_bearing_deg: 150
     parts: [{face: A-7}, {face: C-12}]
 
   - id: knyszyn-roundabout-sign-1464342635-d95
@@ -1085,7 +1086,8 @@ overrides:
     reason: "D95: C-12 and A-7 at each entry; placement WORKING_VALUE, confirm in owner cameras."
     confidence: low
     verify: owner camera 11
-    along: {osm_way: 1464342635, before_node: n13115969582, distance_m: 8.0, side: R, offset_m: 0.8}
+    at_en: [-969, -627]
+    travel_bearing_deg: 330
     parts: [{face: A-7}, {face: C-12}]
 
   - id: knyszyn-roundabout-sign-1464342636-d95
@@ -1093,7 +1095,8 @@ overrides:
     reason: "D95: C-12 and A-7 at each entry; placement WORKING_VALUE, confirm in owner cameras."
     confidence: low
     verify: owner camera 11
-    along: {osm_way: 1464342636, before_node: n13432353458, distance_m: 8.0, side: R, offset_m: 0.8}
+    at_en: [-970, -592]
+    travel_bearing_deg: 240
     parts: [{face: A-7}, {face: C-12}]
 
   - id: knyszyn-roundabout-sign-1464342639-d95
@@ -1101,7 +1104,8 @@ overrides:
     reason: "D95: C-12 and A-7 at each entry; placement WORKING_VALUE, confirm in owner cameras."
     confidence: low
     verify: owner camera 11
-    along: {osm_way: 1464342639, before_node: n13432353449, distance_m: 8.0, side: R, offset_m: 0.8}
+    at_en: [-1003, -629]
+    travel_bearing_deg: 60
     parts: [{face: A-7}, {face: C-12}]
 
   - id: knyszyn-roundabout-lamp-0-d95
