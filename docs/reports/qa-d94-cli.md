@@ -18,7 +18,9 @@ Gałąź `qa-d94-cli`. Bez Unity, przebudowy kafli i push. Wszystkie zapisy w ty
 
 `artifacts/qa-d94-cli/references.{json,md,log}`: wszystkie 15 szwów korytarza DK65, 57 dróg, **30/30 referencji OK**, zero fałszywych FAIL referencji. Ten dodatkowy przebieg używa `--pass1` do kontroli rozstawów; jego 8 innych FAIL nie stanowi globalnego PASS geometrii.
 
-Pierwszy pełny przebieg (`pytest.log`): 94 passed, 3 skipped, 2 failed (stara lista zastępowanych tras i metadane D94 w teście pomiarowym, oba poprawione). `test_links_json_fresh` przeszedł przy D94; porównanie JSON z generatorem jest niezmienione. Końcowy przebieg powtarza pozostałe testy po korektach (`pytest-final.log`, `-k 'not links_json_fresh'`), bez ponawiania kosztownego niezmienionego porównania JSON. Trzy SKIP wynikają z braku gotowych GLB w tym worktree.
+Pierwszy pełny przebieg (`pytest.log`): 94 passed, 3 skipped, 2 failed (stara lista zastępowanych tras i metadane D94 w teście pomiarowym, oba poprawione). `test_links_json_fresh` przeszedł przy D94; porównanie JSON z generatorem jest niezmienione. Końcowy przebieg po korektach (`pytest-final.log`, `-k 'not links_json_fresh'`): **110 passed, 3 skipped, 1 deselected, 492,85 s**. Pominięty selektorem test świeżości JSON przeszedł w pierwszym przebiegu; razem **111 passed, 3 skipped** w dotkniętych modułach, bez FAIL. Nie powtarzano kosztownego niezmienionego porównania JSON. Trzy SKIP wynikają z braku gotowych GLB w tym worktree.
+
+Po doprecyzowaniu sesyjnej konfiguracji wykonano dodatkowo `pytest-session-config.log`: 13 passed (test sesyjnego 0 i modułowego D94 oraz wszystkie przypadki zakresów).
 
 Testy kontrolne: `pytest-reference.log` 12 passed; `pytest-boundaries.log` 2 passed; `pytest-config.log` 13 passed; `pytest-route-config.log` 2 passed; `pytest-session-config.log` 13 passed (częściowo te same testy, nie sumować).
 

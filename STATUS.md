@@ -1,11 +1,12 @@
-# qa-d94-cli — stan
+# qa-d94-cli — zakończone
 
-Testy tras: D94 generatora per moduł; pomiary i fixture sesyjne nadal 0. Kontrola kolejności fixture i zakresów: 13 passed.
-Regresje rzeczywistych szwów: 2 passed. QA DK65: 30/30 referencji OK. QA zgłoszonych szwów: brak urwań, 4 FAIL osi po 0,25 m pozostają jawne.
-Pierwszy pytest: 94 passed/3 skipped/2 failed; oba błędy testów poprawione. Końcowe powtórzenie bez niezmienionego test_links_json_fresh (PASS w pierwszym przebiegu) w toku.
-Dodatkowo fidelity/consistency: 16 passed, 1 xfailed, 1 istniejący stale report FAIL.
-NASTĘPNY KROK: `Get-Content artifacts/qa-d94-cli/pytest-final.log -Tail 60`
-Raport: docs/reports/qa-d94-cli.md. Bez Unity, przebudów kafli i push; wszystkie zapisy w worktree.
+Konfiguracja GIS: pomiary i fixture sesyjne 0, testy tras D94 generatora per moduł. Referencje K1/0212 zależne od allowance; geometrii/progów nie osłabiono.
+Walidacja dotkniętych modułów: 110 passed/3 skipped + wcześniejszy PASS niezmienionego test_links_json_fresh = 111 passed/3 skipped. Kontrola sesyjnego 0/modułowego D94: 13 passed.
+QA 15 szwów DK65: 30/30 referencji OK. Oba zgłoszone szwy: brak urwań; istniejąca poprawka generatora ad6f732d2 pokrywa oba (nowe regresje 2 passed). Nadal 4 jawne FAIL osi po 0,25 m.
+Dodatkowo fidelity/consistency: 16 passed, 1 xfailed, 1 istniejący stale report FAIL; szczegóły w docs/reports/qa-d94-cli.md. Brak GLB = 3 istniejące SKIP.
+Do przebudowy tylko jeśli siatki sprzed ad6f732d2: bialystok-kleeberga, bialystok-knyszynska, dk65-05, dk65-06; potem export-route i route_links. Same zmiany QA nie wymagają build_world.
+NASTĘPNY KROK: `git show --stat HEAD` — przekazać gałąź liderowi; nie pushowano.
+Bez Unity i przebudów kafli; wszystkie zapisy w tym worktree. Dowody: artifacts/qa-d94-cli/.
 
 ---
 
