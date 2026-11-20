@@ -221,7 +221,44 @@ o ile nie napisano inaczej.
 - **Słup energetyczny:** w danych go nie ma (BDOT10k `OT_BUWT_P`: najbliższy obiekt 476 m; `OT_SULN_L`: tylko linie SN
   183 m dalej; OSM: brak `power=*` w kaflu przy Kościelnej) — nie dodany, zostaje otwarty.
 
+**Budżet rundy 3** (edytor, High clear, 1920 × 1080, scena `World_knyszyn_High`; „przed” dla kafla = manifest z gita
+8ad119ad9, „przed” dla kamer = runda 2 z tabeli wyżej — render stanu main w tej gałęzi nie był możliwy, patrz niżej):
+
+| | przed | po (przebieg 3) |
+|---|---|---|
+| Dom Klattów LOD0 / LOD1 (+ ogród w `plots`) | 4 404 / 99 (po korektach P2 / P3) | 4 404 / 99 (+ 78 tris zieleni) |
+| Lamus LOD0 / LOD1 | 232 / 70 | 891 / 86 |
+| Kafel `knyszyn`: budynki LOD0 / LOD1 | 671 857 / 110 049 | 673 066 / 110 065 (+1 209 / +16) |
+| Kafel: `plots` / `plots_low` | 432 095 / 291 942 | 432 789 / 292 418 (+694 / +476: dłuższy płot działki przy węższym chodniku, zieleń) |
+| Kafel: `road` | 258 116 | 258 214 (+98) |
+| Tabela materiałów / chunk 0_4 | 353 / 62 | 355 / 63 (`wood_planks_weathered`, `plaster_peach__far_ribbon`) |
+| `look-dom-klattow`: draws / tris | 626 / 1 484 401 | 627 / 1 487 203 |
+| `look-dom-klattow-street` | 547 / 1 466 323 | 556 / 1 469 104 |
+| `look-dom-klattow-gable-e` | 234 / 955 389 | 241 / 957 803 |
+| `look-dom-klattow-yard` | 98 / 375 046 | 99 / 377 550 |
+| `look-lamus-plebanski` | 458 / 1 119 089 | 459 / 1 121 790 |
+| `look-lamus-plebanski-close` (nowa) | — | 473 / 936 456 |
+
+Różnice kamer względem rundy 2 obejmują też zmiany main między rundami (m.in. `road-widen-s24`); wkład tej rundy w kaflu
+to +1 209 trójkątów budynków i +2 materiały. Wszystkie kadry < 2 mln trójkątów i < 850 draw calli.
+
+**Błąd importu z main (naprawiony przy okazji):** kafel `knyszyn` (chunk 1_4, LOD1) używa `plaster_peach__far_ribbon`,
+którego nie było w tabeli materiałów (`_FAR_WALLS["ribbon"]` = lista biurowa bez `plaster_peach`) — import Unity kończył się
+`[WORLD_MATERIAL] … missing material` zarówno na kopii derived z main, jak i po świeżym `build_world` na 8ad119ad9.
+Dopisane do `materials.py`.
+
+**Ocena.** `visual-critic` na przebiegu 2: dom PASS, lamus FAIL (P0 kropki słońca w cieniu dachu, wole oko niewidoczne,
+kamień pod podestem, zrąb za szary, pnącze jak tuja). Przebieg 3 poprawia te punkty (ocena własna agenta, bez
+ponownego krytyka — limit trzech przebiegów): cień dachu pełny, zrąb cieplejszy, brew z brązowej deski, pnącze jako
+girlanda. Zostaje: pod podestem od strony niższego terenu widać kamień, wole oko jest małe z kadru zdjęcia.
+SBS: `artifacts/klattow-r3-s24/sbs/*-r1.jpg`, `*-r2.jpg`, `*-r3.jpg`.
+
 ## Otwarte
+- Runda 3: `visual-critic` na przebiegu 3 i ocena właściciela; płot działki z atlasu — mnożnik daje rdzawy brąz, pojedyncze
+  szare sztachety oliwkowe (potrzebny brązowy rząd sztachet w atlasie `plot_kit`); chodnik Kościelnej 0,70 m (węższy
+  niż na zdjęciu — oś / szerokość jezdni do pomiaru); dachówka domu nadal jako równa krata (P1 krytyka, poza zakresem
+  rundy); słup energetyczny (brak w danych); ostatki zrębu i czerwonawe górne wieńce lamusa; kamień pod podestem lamusa;
+  EditMode: `RegionSelectTests` — `routeLengthM` kafla `bialystok-industrial-c` nieaktualne (poza tą gałęzią).
 - Ocena właściciela i `visual-critic` (kolory bielenia, dachówki, bejcy; rozmieszczenie okien).
 - Krzew i pnącze przy ganku, tabliczka z numerem, słup energetyczny przy narożniku.
 - Podmurówka `fieldstone_plinth` w silniku: ciemne kamienie / jasna zaprawa (tekstura ma odwrotnie) — do diagnozy.

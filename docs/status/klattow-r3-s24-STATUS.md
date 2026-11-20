@@ -33,3 +33,6 @@
   Poprawki zacommitowane (a7792c5d7). Testy: EditMode Win64 1462 / 1358 passed / 1 failed (RegionSelectTests: routeLengthM bialystok-industrial-c
   nieaktualne - inny region, poza galezia) / 103 skipped; pytest tests/gis -k powiazane: 200 passed; test_dom_klattow_0305: 27 passed.
   NASTEPNY KROK: `pwsh artifacts/klattow-r3-s24/run-round.ps1 -Tag r3 -World -Sets wood_shingles -Cameras look_dom_klattow,look_dom_klattow_street,look_dom_klattow_yard,look_dom_klattow_gable_e,look_lamus_plebanski,look_lamus_plebanski_close`; po exit=0 `bash artifacts/klattow-r3-s24/sbs.sh r3`
+- 12:58 KONIEC. Przebieg r3 obejrzany (sbs/*-r3.jpg): cien dachu pelny, zrab cieplejszy, brew wolego oka brazowa, pnacze girlanda. Lamus LOD0 891 / LOD1 86,
+  kafel budynki LOD0 673 066 (+1 209), materialy 355 (+2). Dowody skopiowane do main artifacts/klattow-r3-s24/. ADR 0305 uzupelniony (Runda 3).
+  NASTEPNY KROK (lider): scalic klattow-r3-s24, przebudowac knyszyn w main (kafel w tym worktree to prywatna kopia derived), visual-critic na sbs/*-r3.jpg.
