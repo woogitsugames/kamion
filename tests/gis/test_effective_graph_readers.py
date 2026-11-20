@@ -250,6 +250,7 @@ RAW_OK = {      # ingested graph on purpose (reason in ADR 0274 "Czytniki grafu"
     "tools/worldgen/qa/s8_median_gap.py": "S8 median gap on the plain network of seam_taper (same as qa/seams.py), ADR 0288 s24",
     "tools/worldgen/qa/seam_section.py": "route edges at region seams: far ends, ids unchanged",
     "tools/worldgen/qa/map_plan_0278.py": "plan of new tiles: boundary nodes of built neighbours (ADR 0278), ids unchanged",
+    "tools/worldgen/qa/dk8_north_plan.py": "2D control render of built tiles (edge centrelines + class only, ADR 0315); no split override on these tiles",
     # D81 tiles wygoda / bojary / mickiewicza have no carriageway_split override: file graph == effective graph
     "tools/worldgen/qa/dk19_place_cameras.py": "D81 tiles (no split): street names of route edges",
     "tools/worldgen/qa/dk19_route_check.py": "D81 tiles (no split): hgv / maxweight attrs + truck route on the graphs",

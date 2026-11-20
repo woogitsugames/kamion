@@ -72,6 +72,7 @@ def test_two_powiaty_and_single_powiat_regions_are_unchanged():
     multi = {RID, "dk65-10", "dk65-11"}        # ADR 0214: the DK65 tiles on the białostocki / moniecki boundary
     multi |= {"bialystok-porosly", "bialystok-dojlidy-gorne"}   # ADR 0278: tiles on the city / powiat białostocki boundary
     multi |= {"dw671-tykocin-08", "dw671-tykocin-09", "tykocin"}   # ADR 0231: DW671 tiles on the same boundary
+    multi |= {"dk8-wasilkow-01"}   # ADR 0315: DK8 north of C crosses the city limit (2002 57.8 % + 2061)
     assert all(r.powiaty == (r.teryt_powiat,) for i, r in regions.REGIONS.items() if i not in multi)
     assert regions.get("dk65-10").powiaty == ("2002", "2008") and regions.get("dk65-11").powiaty == ("2008", "2002")
     reg = yaml.safe_load((RDIR / "region.yaml").read_text(encoding="utf-8"))

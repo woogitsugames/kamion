@@ -78,6 +78,11 @@
      "seamM": 2048.0
     },
     {
+     "id": "dk8-wasilkow-01",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
      "id": "bialystok-maczka",
      "side": "W",
      "seamM": 2048.0
@@ -206,6 +211,11 @@
      "id": "bialystok-kleeberga",
      "side": "W",
      "seamM": 2048.0
+    },
+    {
+     "id": "dk8-wasilkow-01",
+     "side": "NE",
+     "seamM": 0.0
     }
    ]
   },
@@ -296,6 +306,11 @@
      "id": "bialystok-industrial-c",
      "side": "W",
      "seamM": 2048.0
+    },
+    {
+     "id": "dk8-wasilkow-01",
+     "side": "NW",
+     "seamM": 0.0
     }
    ]
   },
@@ -925,6 +940,26 @@
    ]
   },
   {
+   "id": "dk8-korycin-01",
+   "xmin": 776971.0,
+   "ymin": 603391.0,
+   "xmax": 779019.0,
+   "ymax": 605439.0,
+   "anchorX": 777995.0,
+   "anchorY": 604415.0,
+   "anchorZ": 123.59,
+   "worldMemoryMB": 61.2,
+   "worldMemoryHighMB": 148.7,
+   "memorySource": "ADR 0315: import Win64 2026-11-20 s8-north-s24 r3 (WORLD_MEMORY total)",
+   "neighbors": [
+    {
+     "id": "dk8-wasilkow-03",
+     "side": "S",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
    "id": "dk8-s8-jeroniki",
    "xmin": 768779.0,
    "ymin": 593151.0,
@@ -956,6 +991,91 @@
      "id": "s8-01",
      "side": "NW",
      "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk8-wasilkow-01",
+   "xmin": 776971.0,
+   "ymin": 597247.0,
+   "xmax": 779019.0,
+   "ymax": 599295.0,
+   "anchorX": 777995.0,
+   "anchorY": 598271.0,
+   "anchorZ": 129.71,
+   "worldMemoryMB": 78.7,
+   "worldMemoryHighMB": 159.0,
+   "memorySource": "ADR 0315: import Win64 2026-11-20 s8-north-s24 r3 (WORLD_MEMORY total)",
+   "neighbors": [
+    {
+     "id": "dk8-wasilkow-02",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-industrial-c",
+     "side": "S",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-wygoda",
+     "side": "SE",
+     "seamM": 0.0
+    },
+    {
+     "id": "bialystok-maczka",
+     "side": "SW",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
+   "id": "dk8-wasilkow-02",
+   "xmin": 776971.0,
+   "ymin": 599295.0,
+   "xmax": 779019.0,
+   "ymax": 601343.0,
+   "anchorX": 777995.0,
+   "anchorY": 600319.0,
+   "anchorZ": 115.93,
+   "worldMemoryMB": 86.6,
+   "worldMemoryHighMB": 199.3,
+   "memorySource": "ADR 0315: import Win64 2026-11-20 s8-north-s24 r3 (WORLD_MEMORY total)",
+   "neighbors": [
+    {
+     "id": "dk8-wasilkow-03",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk8-wasilkow-01",
+     "side": "S",
+     "seamM": 2048.0
+    }
+   ]
+  },
+  {
+   "id": "dk8-wasilkow-03",
+   "xmin": 776971.0,
+   "ymin": 601343.0,
+   "xmax": 779019.0,
+   "ymax": 603391.0,
+   "anchorX": 777995.0,
+   "anchorY": 602367.0,
+   "anchorZ": 127.45,
+   "worldMemoryMB": 87.6,
+   "worldMemoryHighMB": 200.5,
+   "memorySource": "ADR 0315: import Win64 2026-11-20 s8-north-s24 r3 (WORLD_MEMORY total)",
+   "neighbors": [
+    {
+     "id": "dk8-korycin-01",
+     "side": "N",
+     "seamM": 2048.0
+    },
+    {
+     "id": "dk8-wasilkow-02",
+     "side": "S",
+     "seamM": 2048.0
     }
    ]
   },
@@ -1857,6 +1977,30 @@
    "gapM": 0.0
   },
   {
+   "from": "dk8-wasilkow-01",
+   "to": "dk8-wasilkow-02",
+   "side": "N",
+   "x": 777135.1,
+   "y": 599295.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk8-wasilkow-02",
+   "to": "dk8-wasilkow-03",
+   "side": "N",
+   "x": 777286.3,
+   "y": 601343.0,
+   "gapM": 0.0
+  },
+  {
+   "from": "dk8-wasilkow-03",
+   "to": "dk8-korycin-01",
+   "side": "N",
+   "x": 777296.7,
+   "y": 603391.0,
+   "gapM": 0.0
+  },
+  {
    "from": "dw671-tykocin-01",
    "to": "dw671-tykocin-02",
    "side": "S",
@@ -2036,6 +2180,15 @@
    "tiles": [
     "dk8-s8-jeroniki",
     "bialystok-porosly"
+   ]
+  },
+  {
+   "id": "dk8-wasilkow-01..dk8-korycin-01",
+   "tiles": [
+    "dk8-wasilkow-01",
+    "dk8-wasilkow-02",
+    "dk8-wasilkow-03",
+    "dk8-korycin-01"
    ]
   },
   {

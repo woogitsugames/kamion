@@ -1,0 +1,176 @@
+{
+  "adr": "0085-far-field-backdrop",
+  "appearance_policy": {
+    "classification": "declared function; height alone does not imply an energy plant",
+    "closed_roofs_all_tiers": true,
+    "industrial_panel_min_height_m": 12.0,
+    "not_measured": [
+      "wall_colour",
+      "cladding_modules",
+      "glazing_band",
+      "roof_fascia"
+    ],
+    "panel_alpha": 0.25,
+    "panel_ribbon_alpha": 0.65,
+    "schema": "far-field-appearance/2",
+    "source_hall_counts": {
+      "energy": 0,
+      "industrial": 100,
+      "other": 215
+    },
+    "source_panel_hall_count": 3,
+    "status": "WORKING_VALUE",
+    "windowless_roof_fascia_all_tiers": true
+  },
+  "building_height_sources": {
+    "WORKING_VALUE-bdot-storeys-typology": 158,
+    "WORKING_VALUE-osm-storeys-typology": 1276,
+    "gugik-lod1-measuredHeight": 1126,
+    "osm-height-tag-UNVERIFIED": 31
+  },
+  "feature_counts": {
+    "buildings": 2591,
+    "buildings_by_typology": {
+      "block": 186,
+      "hall": 315,
+      "house": 477,
+      "office": 1613
+    },
+    "chimneys": 5,
+    "forest_polygons": 754,
+    "power_lines": 165,
+    "pylons": 348
+  },
+  "id": "dk8-wasilkow-02-far-field",
+  "lod1_height_audit": {
+    "buildings": 133679,
+    "conflicting_ids": 0,
+    "duplicate_records": 0,
+    "invalid_or_missing": 0,
+    "members": 620,
+    "usable_ids": 133679
+  },
+  "osm_lonlat_window": [
+    23.0171,
+    53.1054,
+    23.3099,
+    53.2851
+  ],
+  "region": "dk8-wasilkow-02",
+  "region_inputs_sha256": {
+    "region/buildings.geojson": "ac65e9ae515f1e2d245c7f4314028ea17331f1897f168314fa6fa2d030f734d4"
+  },
+  "ring_bounds_local_m": {
+    "inner_half_m": 1024.0,
+    "outer_half_m": 4200.0
+  },
+  "ring_powiaty": [
+    "2002",
+    "2061"
+  ],
+  "ring_powiaty_missing": [],
+  "schema": "truck-sim-pl/source-manifest/1",
+  "sources": [
+    {
+      "dataset": "BDOT10k powiaty 2002, 2061: OT_PTLZ_A, OT_BUBD_A, OT_BUWT_P, OT_SULN_L",
+      "files": {
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_BUBD_A.gpkg": "19da71661a8ca20b7ac1aa6b55f5e821ff50504899d6889c75eb01797fe73225",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_BUWT_P.gpkg": "5646dcd6360cb1da020ca83b946d974d5cbabdd151d533d5fe9c2cfb6b184f10",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_PTLZ_A.gpkg": "24cf9f283d4b346be6e361452d3a25a1ccd0bedeada64dcdf35cfd1bcc4dfc6b",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_SULN_L.gpkg": "2b2578512c0cc784525a562b5d643becab1be007e4000e9ffbfcc68b770ae8df",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_BUBD_A.gpkg": "2ac7d2004c025ed1854f1077b4e6f51b2ff8c0e056a4e2b5820c371ebe7119b8",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_BUWT_P.gpkg": "c758f8489cab8b8935f832407362a3d20b90733224e5f08780113f4b2896e029",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_PTLZ_A.gpkg": "bb4cbe19c388401ea1dbc48d3ac54fbcf6e21c48e2cfd73a3f8d9f8e5f9d9e7e",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_SULN_L.gpkg": "96a8661f6372627120a6f90d0dbc4d794e4be5997e7a9b859adbc8c20694648e"
+      },
+      "id": "gugik-bdot10k-2002+2061",
+      "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. a Prawa geodezyjnego i kartograficznego (Dz.U. 2020 poz. 276)",
+      "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
+    },
+    {
+      "dataset": "Modele 3D budynków LoD1 (2024) powiaty 2002, 2061",
+      "files": {
+        "lod1/2002_lod1_2024.zip": "337f8abdc4e8e94cda1d45d07afa7f6faf684f6ac2b7f0c6e85321b4522305e9",
+        "lod1/2061_lod1_2024.zip": "57d3e14d4620c17232eaabd85a8aa5579ed1539772945e23a3971d867901d380"
+      },
+      "id": "gugik-lod1-2024-2002+2061",
+      "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. i Prawa geodezyjnego i kartograficznego",
+      "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
+    },
+    {
+      "dataset": "podlaskie-261108.osm.pbf (ring outside the tile, lon/lat window osm_lonlat_window)",
+      "files": {
+        "osm/podlaskie-261108.osm.pbf": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d"
+      },
+      "id": "geofabrik-osm-podlaskie-261108",
+      "license": "ODbL 1.0 (© OpenStreetMap contributors)",
+      "provider": "OpenStreetMap contributors / Geofabrik GmbH"
+    }
+  ],
+  "streaming_building_policy": {
+    "check_source_and_compressed_footprint": true,
+    "excluded_buildings": 1126,
+    "inputs_sha256": {
+      "Data/Regions/bialystok-bojary/route_start.json": "ab029cb7a394575b33568471a0ee79f64eae72c5cc5e64a806814cb19b9c560b",
+      "Data/Regions/bialystok-dojlidy/route_start.json": "fc5ac18dd3426eed4dc4b785602fb3e145cace40291453422a95426b1d861cd8",
+      "Data/Regions/bialystok-industrial-c/route_start.json": "02d8f65178aaed2949e60436f0f8ed7690415ac5b8c6239b58efe3e20467cf7f",
+      "Data/Regions/bialystok-kleeberga/route_start.json": "93274c9ff852646b7f3ee2bbce236b554daee363a720979eb51ae45e77269b7b",
+      "Data/Regions/bialystok-knyszynska/route_start.json": "8e64c6eb0b2b8b5906fd4663d4f048f133bd3a2d0f5041d37dc92d28b7ddae4a",
+      "Data/Regions/bialystok-maczka/route_start.json": "182c151282a264413b5e3b55d884add869119f857ca846ef318e4c07e6e545ca",
+      "Data/Regions/bialystok-mickiewicza/route_start.json": "65d1f99a89661aa021655a26fd83c40be0526fa5eddcbe0d19e6f05df6036bd5",
+      "Data/Regions/bialystok-porosly/route_start.json": "af50abab370f74fced743e24bb2b6f329d9c00c065ada262107f133af6a455a6",
+      "Data/Regions/bialystok-wygoda/route_start.json": "03daba4ded4231eca028184f6afd585dac7a7db5342224a4553ecff9dd737699",
+      "Data/Regions/dk65-01/route_start.json": "81b322d6af5dff0ff4d75d6abbc34134e02c42771b8c86e5d3d5b5d07413416f",
+      "Data/Regions/dk65-02/route_start.json": "60038914bf9768fdb1ec798c5a4c15abae83e6ac9556ff6a5db9ba5ddb44ee09",
+      "Data/Regions/dk65-03/route_start.json": "25c09a34dcb078fc47162b26c6d75a821512b19d01107de8a8cbd6cc4e63fece",
+      "Data/Regions/dk65-04/route_start.json": "5029134f4b38114805de69f9a166e45d9ce70b4fb6fd44ea793fc2a369ecc793",
+      "Data/Regions/dk65-05/route_start.json": "39f3471f954e1ed8eefda7428cd10dbc4c4c34e079d0ca6c99193a1596c61cc0",
+      "Data/Regions/dk65-06/route_start.json": "2a780cbe98112d8fd5ae2600f475861afbd4fc424955bfd6b6e6e854c3c6bd9f",
+      "Data/Regions/dk65-07/route_start.json": "dd5af55125bb74aad91892a770108daefc651a942427625a99190c9a8de96ee8",
+      "Data/Regions/dk65-08/route_start.json": "352bba9ef1de508800ac5f5d62776dc292f8d60bdbcf2511cf167eb368393a60",
+      "Data/Regions/dk65-09/route_start.json": "1164ca845533f7385e92cc6a8ca3e50d758961268d36a417b81e6275cbc9e257",
+      "Data/Regions/dk65-10/route_start.json": "f75e8e62ce5651f0d4666208ba0de4d4cff1e94376169d2442d1459277297be0",
+      "Data/Regions/dk65-11/route_start.json": "dcfd693dc0992e7e824411359168fb9c7b129a031700485a7f237468fe3e3aee",
+      "Data/Regions/dk65-monki-01/route_start.json": "5959b71da7bbedb0ec580090deb3a6626650f51d26454482f76c1924ee2c8721",
+      "Data/Regions/dk65-monki-02/route_start.json": "39e5078416d7811521070c05b8abb40578ea06de52b1ac16418fb1087295615a",
+      "Data/Regions/dk65-monki-03/route_start.json": "5b8baa028b267b9306bd296e75cff912cdb10e898e944ced8201773d0acdc3d2",
+      "Data/Regions/dk65-monki-04/route_start.json": "b2249bb45c1bfb48da2cf41070ecbf03386c71e9a83058c6555254c3e053bf4a",
+      "Data/Regions/dk65-monki-05/route_start.json": "f855ef05aed50fc8c2d492537af921b705c4fbaafd982dc978f7aa732e81efd8",
+      "Data/Regions/dk65-monki-06/route_start.json": "039614602d00fc651ebdead3c48fab89a7b985cd13c963d56375f58314fcb153",
+      "Data/Regions/dk65-monki-07/route_start.json": "21fec1ef62e67501bbc891b4885a9f58bf430692b000ce458859508ddfa5d788",
+      "Data/Regions/dk8-korycin-01/route_start.json": "a585db0060cdf31dbdfa67d16b17e8cbd1bdc132352f974a7080df77a4bb615a",
+      "Data/Regions/dk8-s8-jeroniki/route_start.json": "e61bfa905fe1a8e4641a375152a45cbfcc240840ddc53ab961567df444a3d261",
+      "Data/Regions/dk8-wasilkow-01/route_start.json": "8fc8b37c2db51d75efa354cfae025c4f3595fca3fd5c3107c2b5bce614b8955e",
+      "Data/Regions/dk8-wasilkow-02/route_start.json": "d53413a4ee38bc4b69817392981c9da927fc334d45a658e58616b63c342a172d",
+      "Data/Regions/dk8-wasilkow-03/route_start.json": "9856c0e9318a28312c095f4c59b16db69db432e354a2585d8988f7fcfffa0cb9",
+      "Data/Regions/dw671-jasionowka-01/route_start.json": "c7808b2c5dcd4268c783ff4d1fb792af3e51bce1ad384568e121ce2d96054ad9",
+      "Data/Regions/dw671-tykocin-01/route_start.json": "a739de4ac2a64b0da5129b9192bfa1280cc94d5ea41729899d0b94a638385445",
+      "Data/Regions/dw671-tykocin-02/route_start.json": "2cefd38a4c745bd311e6d12de75027acf627aab20bafbd0d351c66ac7c414c0b",
+      "Data/Regions/dw671-tykocin-03/route_start.json": "3afc72c48deea999231a49e5146b66f1490d2ad53a15d5ac37c34207755344f7",
+      "Data/Regions/dw671-tykocin-04/route_start.json": "48ec0d8ac606e0dfc394a0bb202c2c5955aa52cd011920ed6813c502d6f16d62",
+      "Data/Regions/dw671-tykocin-05/route_start.json": "007960ba85ca3668b73f63640bce3b179eb221a92b3e50a95533a2edb57aa033",
+      "Data/Regions/dw671-tykocin-06/route_start.json": "94cf701cef0992c598c8cecfcf18b746bffe10fce9ca34f077ddfe34a1f80779",
+      "Data/Regions/dw671-tykocin-07/route_start.json": "f4186ab9375c06cbbdc527dab94a0f80c35e920c0ceb89dd32a8a9f41dc0b170",
+      "Data/Regions/dw671-tykocin-08/route_start.json": "117efdb73126e82e429da694a3a6b461ddfbb3fceb085bc7c6c98f59c3209306",
+      "Data/Regions/dw671-tykocin-09/route_start.json": "fa4666f0fa086825ac6ce70a049f20d99b9130ff144fac52142ad5498cc454db",
+      "Data/Regions/knyszyn-s/route_start.json": "48b02881ba3f1ba1ad116d0137ca1ecc7abf1c3abf6a352ec9df8b51a6e8a0f5",
+      "Data/Regions/knyszyn-w/route_start.json": "db8f4bad7c4862a2e6ca5bb017f7afc5bbfc70bdc51a4cf9c74a5c09d668ea3c",
+      "Data/Regions/knyszyn/route_start.json": "d7d764abea1aeb27a199a1ef6c34eaff9938acd40a648d432e947623a5206216",
+      "Data/Regions/monki-e/route_start.json": "2f5af7a32887c5385b7bae7ee3da497d7876cfefd57e96abee93ad62ff0197fe",
+      "Data/Regions/monki/route_start.json": "760f349e18fa1779062b1296356454d38e542d635f61dde16804cd3a34748f16",
+      "Data/Regions/s8-01/route_start.json": "126e6584e9ecd3a004a44dc10fcb99580e06712f6c2cfedb517c92ddfc35d3fc",
+      "Data/Regions/s8-02/route_start.json": "735beed6b5323829a5bd461c6b2dd774b634a861c42e52f0f93cb911eb57431d",
+      "Data/Regions/s8-03/route_start.json": "43b952b1871e13f65af0f0e6037a5f0d5a4df3d1b0d837c60b2e03dfdec44c5f",
+      "Data/Regions/s8-04/route_start.json": "9349d281879b233846bb355f4bd9cc1d8a364c88dc30f7743e1413cbbb0bb0a5",
+      "Data/Regions/s8-05/route_start.json": "69f70b462e6acfe589c91d754e7460d35b5755c05b0c65be5a37a72aef77a67d",
+      "Data/Regions/tykocin/route_start.json": "fc4ba94b308ff1203a7cd574a9398ac96711c9d5154509b4c7b8f9279392db67",
+      "tools/worldgen/regions.py": "fc399cbd9bffda699e5adf368eaa3f0281acf0abb0a00839ba7d47a7a5b5f9ec"
+    },
+    "reserve_all_registered_tiles": true,
+    "retained_buildings": 1465,
+    "route_clearance_m": 400.0,
+    "schema": "far-field-building-ownership/1",
+    "source_buildings": 2591,
+    "status": "WORKING_VALUE"
+  }
+}

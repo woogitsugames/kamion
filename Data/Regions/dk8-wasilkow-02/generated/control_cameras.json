@@ -1,0 +1,137 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0152",
+   "look_at": [
+    -793.782,
+    -822.77,
+    119.76
+   ],
+   "note": "driver eye 2.5 m, control route s = 152 m of 2125 m (unnamed)",
+   "pos": [
+    -810.705,
+    -880.366,
+    121.308
+   ],
+   "route_s_m": 151.81,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0455",
+   "look_at": [
+    -699.067,
+    -534.302,
+    119.065
+   ],
+   "note": "driver eye 2.5 m, control route s = 455 m of 2125 m (unnamed)",
+   "pos": [
+    -716.037,
+    -591.883,
+    120.251
+   ],
+   "route_s_m": 455.429,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0759",
+   "look_at": [
+    -604.356,
+    -245.833,
+    120.121
+   ],
+   "note": "driver eye 2.5 m, control route s = 759 m of 2125 m (unnamed)",
+   "pos": [
+    -621.115,
+    -303.483,
+    121.054
+   ],
+   "route_s_m": 759.049,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1063",
+   "look_at": [
+    -534.95,
+    49.15,
+    121.931
+   ],
+   "note": "driver eye 2.5 m, control route s = 1063 m of 2125 m (unnamed)",
+   "pos": [
+    -539.984,
+    -10.802,
+    122.731
+   ],
+   "route_s_m": 1062.669,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1366",
+   "look_at": [
+    -543.609,
+    351.318,
+    126.629
+   ],
+   "note": "driver eye 2.5 m, control route s = 1366 m of 2125 m (Białostocka)",
+   "pos": [
+    -532.99,
+    292.237,
+    126.147
+   ],
+   "route_s_m": 1366.288,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1670",
+   "look_at": [
+    -651.478,
+    634.452,
+    135.703
+   ],
+   "note": "driver eye 2.5 m, control route s = 1670 m of 2125 m (unnamed)",
+   "pos": [
+    -625.839,
+    580.2,
+    135.579
+   ],
+   "route_s_m": 1669.908,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1974",
+   "look_at": [
+    -702.519,
+    932.397,
+    139.774
+   ],
+   "note": "driver eye 2.5 m, control route s = 1974 m of 2125 m (unnamed)",
+   "pos": [
+    -696.244,
+    872.686,
+    140.538
+   ],
+   "route_s_m": 1973.527,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 270.301,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk8-wasilkow-02",
+ "schema": "truck-sim-pl/control-cameras/1"
+}
