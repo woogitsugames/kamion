@@ -103,3 +103,7 @@
   r8 knyszyn (narożniki 16 m) gotowy: import + VQA `after3` i combo knyszyn w toku. pytest powtórka 64 → 15 failed: kafle
   przebudowane w worktree vs sąsiedzi nieprzebudowani (szwy, łącznik jeroniki), katalog (fala), zebra/ściany/most C;
   test Monki zamieniony na „bez swingu, 0 poza nawierzchnią”.
+- 09:2x: knyszyn r8 (narożniki 16 m): DK65→DW671 W środek pasa 0/5/0 (swing 0/0/0), DK65→DK65 W 0/0/0, Rynek→DK65 W
+  kerb 59 → 0 (przeciwny pas 33 w ulicach Rynku), trasa kontrolna 29 pkt na narożniku SE (swing 0). VQA after3
+  (`artifacts/road-widen-s24/vqa-after3`). Przejazd 3 (knyszyn-s route_s 2150 → łącznik DK65→DW671 W, 30 km/h, po rebuild
+  playera) w toku (`player.status`).
