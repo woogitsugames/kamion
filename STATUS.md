@@ -182,3 +182,12 @@
   Review PASS wariantuQA; nie zmieniać ratchetów, kategorii, SurfaceIndex ani nie pomijać case.
 - NASTĘPNY KROK: po zakończeniu rebuild/validate-g2b wdrożyć razem (1) ochronę całego szerokiego przeciwbieżnego medianu,
   (2) bounded outbound sample w consistency.py + testy blocked/unblocked short/long; potem finalny rebuild C+knyszyn g3.
+
+- G3 wdrożone po pełnym G2b: (1) najbliższy rzeczywisty sąsiad, dokładny dystans≤40m (STRtree sam zwracał też
+  odległe łuki, których obrys pokrywał punkt), (2) pełna ochrona medianu przeciwbieżnych oneway, (3) target_s QA
+  wewnątrz istniejącego ramienia, ta sama stacja w fan/wyborze pasa/q1/q_end/z. SurfaceIndex/kategorie/ratchety bez zmian.
+  Regresje przed: median20→19 i short-curve falseNone (2fail/4pass), far-envelope niezasadnie przesuwał drogę;
+  po: 10 nowych testów PASS, w tym zachowane wykrywanie rzeczywistego kerbu i normalne długie ramiona.
+  Fingerprint po dokładnym filtrowaniu: C83sekcje/82łańcuchy zmienione, Knyszyn29/26 — pełny rebuild obu obowiązkowy.
+  G2b końcowo: wyspy0/marking0/obstacle2/blind41/route2; pytest43pass/1xfail/1fail(tylko nieprawidłowa próbka parkingu).
+- NASTĘPNY KROK: `pwsh -File artifacts/road-widen-s24/rebuild.ps1 -Regions bialystok-industrial-c,knyszyn -Tag g3 -Fidelity -HeavySlots 4`.

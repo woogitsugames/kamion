@@ -73,7 +73,7 @@ GAMEPLAY_LANE_WIDEN_M = GAMEPLAY_LANE_WIDEN_DEFAULT_M
 # at most CURVE_WIDEN_MAX_M per lane; none within the skip distances of junction nodes / tile seams.
 CURVE_WIDEN_R_M = 200.0
 WIDEN_NEIGHBOUR_SEARCH_M = 40.0  # ADR 0306: same-level parallel roads, including parking/service carriageways
-WIDEN_SEPARATOR_RESERVE_M = 12.0 # reserve existing close separator; only excess beyond this may be spent
+WIDEN_SEPARATOR_RESERVE_M = 12.0 # other neighbours: reserve close separators; opposing oneways keep their WHOLE gap
 TRUCK_TYRE_W_M = 2.48           # outer edges of the drive duals (roads.swept_path.Combination.rear_outer_half x 2)
 CURVE_WIDEN_TOL_M = 0.10
 CURVE_WIDEN_MAX_M = 1.0

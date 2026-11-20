@@ -48,6 +48,8 @@ KERB_RING_M = 0.30         # a kerb with carriageway all around it at this radiu
 PROP_INSET_M = 0.20        # a pole base this far inside the carriageway edge is "on the road"
 ROUTE_BAND_M = 30.0        # cases within this distance of the start route polyline (both carriageways) are on route
 JUNCTION_THROUGH_DEG = 35.0
+JUNCTION_PROBE_M = 3.0     # unchanged look-ahead, where the outbound arm is long enough
+JUNCTION_END_MARGIN_M = 1.0 # WORKING_VALUE: keep the <=0.9 m lateral probe off a terminal cap
 
 
 class SurfaceIndex:
@@ -220,6 +222,18 @@ def _turns(tag):
     return t or {"through"}
 
 
+def _outbound_probe_s(arm, trim):
+    """A real station on the outbound ribbon, never an implicit Polyline clip beyond its end.
+
+    Short parking arms can have less than 3 m left after their junction trim. Ending the Hermite path at the cap
+    with a different tangent puts a lateral sample beyond the actual road and invents a blind end. Keep the target
+    inside the existing arm; the complete crossing is still classified against the same obstacle triangles.
+    """
+    trim = float(np.clip(trim, 0.0, arm.L))
+    distance = max(trim, min(trim + JUNCTION_PROBE_M, arm.L - JUNCTION_END_MARGIN_M))
+    return float(arm.s(distance))
+
+
 def check(w, instances, region_id, pipeline, report_extra=None):
     secs = w.net.sec_list
     idx = SurfaceIndex(w.buf.parts)
@@ -343,7 +357,7 @@ def check(w, instances, region_id, pipeline, report_extra=None):
                 # diverge (lanes of the branches add up to the approach lanes): lanes are dealt out from the left,
                 # as network.align_forks lays the branches out
                 fan = sorted([x for x in outs if abs(x[0]) <= 60.0], key=lambda x: -x[0])
-                fan_l = [[b for b in _lane_bands(x[2].chain, secs, float(x[2].s(float(j.trims.get(x[1], 0.0)) + 3.0)))
+                fan_l = [[b for b in _lane_bands(x[2].chain, secs, _outbound_probe_s(x[2], float(j.trims.get(x[1], 0.0))))
                           if b[1] == (1 if x[2].end == "a" else -1)] for x in fan]
                 forced = None
                 if len(fan) >= 2 and sum(len(f) for f in fan_l) == len(bands):
@@ -355,7 +369,8 @@ def check(w, instances, region_id, pipeline, report_extra=None):
                             break
                         k -= len(fl)
                 tt = float(j.trims.get(k_t, 0.0))
-                q_end = tgt.chain.line.point(tgt.s(tt + 3.0))
+                target_s = _outbound_probe_s(tgt, tt)
+                q_end = tgt.chain.line.point(target_s)
                 dist = float(np.dot(q_end - p0, d_in))
                 if dist <= 0 or dist > 120:
                     continue
@@ -364,17 +379,17 @@ def check(w, instances, region_id, pipeline, report_extra=None):
                 n_in = np.array([-d_in[1], d_in[0]])
                 n_out = np.array([-d_out[1], d_out[0]])
                 lat_in = float(np.dot(p0 - c.line.point(s_end), n_in))
-                c_out = tgt.chain.line.point(tgt.s(tt + 3.0))
+                c_out = tgt.chain.line.point(target_s)
                 # outbound lane with the same index from the right edge (lanes keep to the right through a junction)
-                ob = [b for b in _lane_bands(tgt.chain, secs, float(tgt.s(tt + 3.0)))
+                ob = [b for b in _lane_bands(tgt.chain, secs, target_s)
                       if b[1] == (1 if tgt.end == "a" else -1)]
                 nl_in, nl_out = len(bands), len(ob)
                 k_r = nl_in - 1 - li
                 if forced is not None:
-                    q1 = tgt.chain.line.offset_point(tgt.s(tt + 3.0), forced)
+                    q1 = tgt.chain.line.offset_point(target_s, forced)
                 elif nl_out and k_r < nl_out:
                     lat_o = sorted(ob, key=lambda b: b[0])[nl_out - 1 - k_r][2]
-                    q1 = tgt.chain.line.offset_point(tgt.s(tt + 3.0), lat_o)
+                    q1 = tgt.chain.line.offset_point(target_s, lat_o)
                 else:
                     q1 = c_out + n_out * lat_in
                 n = max(4, int(dist / 0.5))
@@ -386,7 +401,7 @@ def check(w, instances, region_id, pipeline, report_extra=None):
                 tang = np.gradient(path, axis=0)
                 tang /= np.maximum(np.linalg.norm(tang, axis=1), 1e-9)[:, None]
                 nrm = np.column_stack([-tang[:, 1], tang[:, 0]])
-                z0, z1 = float(c.crossfall_z(s_end, lat)), float(tgt.chain.zc(tgt.s(tt + 3.0)))
+                z0, z1 = float(c.crossfall_z(s_end, lat)), float(tgt.chain.zc(target_s))
                 zz = z0 + (z1 - z0) * u
                 hb2 = min(hb, 0.9)
                 PP = np.concatenate([np.column_stack([path + nrm * o, zz]) for o in (-hb2, 0.0, hb2)])
@@ -486,7 +501,8 @@ def check(w, instances, region_id, pipeline, report_extra=None):
            "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
            "route_segments_s_m": route[2] if route else None, "route_band_m": ROUTE_BAND_M,
            "params": {"kerb_ring_m": KERB_RING_M, "lane_inset_m": LANE_INSET_M, "station_m": STATION_M, "dz_m": DZ_M,
-                      "prop_inset_m": PROP_INSET_M, "through_deg": JUNCTION_THROUGH_DEG},
+                      "prop_inset_m": PROP_INSET_M, "through_deg": JUNCTION_THROUGH_DEG,
+                      "outbound_probe_m": JUNCTION_PROBE_M, "outbound_end_margin_m": JUNCTION_END_MARGIN_M},
            "stats": stats, "count": len(items), "by_kind": dict(sorted(by_kind.items())),
            "on_route": dict(sorted(on_route.items())), "cases": items}
     if report_extra:

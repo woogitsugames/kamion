@@ -375,8 +375,9 @@ def widening_clearance(net: Network, edges: dict) -> dict:
 
     Compare actual gutter positions (including authored placement), not OSM axes. The snapshot is immutable:
     both carriageways see the same gap regardless of iteration order. Same-level service/parking roads count too.
-    A close parallel neighbour reserves its entire existing gap; a distant one leaves only the excess over the
-    separator search distance available. Thresholds are GAMEPLAY WORKING_VALUE, not orthophoto measurements.
+    Opposing one-way carriageways reserve their entire existing median. Other neighbours reserve the close
+    separator, leaving only the excess over WIDEN_SEPARATOR_RESERVE_M available. These search/reserve thresholds
+    are GAMEPLAY WORKING_VALUE, not orthophoto measurements.
     """
     def local_width(sec, t):
         if sec.width_profile:
@@ -407,6 +408,7 @@ def widening_clearance(net: Network, edges: dict) -> dict:
                 line.interpolate(max(0, s - 1)).coords[0])
             u /= max(np.linalg.norm(u), 1e-9)
             normal = np.array([-u[1], u[0]])
+            nearest = [(float("inf"), False), (float("inf"), False)]
             for j in tree.query(_qbox(q, S.WIDEN_NEIGHBOUR_SEARCH_M)):
                 other = net.sections[keys[j]]
                 if i == j or other.layer != sec.layer or other.bridge != sec.bridge:
@@ -418,18 +420,33 @@ def widening_clearance(net: Network, edges: dict) -> dict:
                 v = ln.project(q)
                 if v < 1 or v > ln.length - 1:
                     continue  # do not confuse a junction endpoint with a parallel road
+                delta = np.asarray(ln.interpolate(v).coords[0]) - np.asarray(q.coords[0])
+                if float(delta @ delta) > S.WIDEN_NEIGHBOUR_SEARCH_M ** 2:
+                    continue  # STRtree queried envelopes; a long bend's box can cover a very distant road
                 tangent = np.asarray(ln.interpolate(min(v + 2, ln.length)).coords[0]) - np.asarray(
                     ln.interpolate(max(v - 2, 0)).coords[0])
                 tangent /= max(np.linalg.norm(tangent), 1e-9)
-                if abs(float(u @ tangent)) < .9:
+                parallel = float(u @ tangent)
+                if abs(parallel) < .9:
                     continue
-                lat = float((np.asarray(ln.interpolate(v).coords[0]) - np.asarray(q.coords[0])) @ normal)
+                lat = float(delta @ normal)
                 gap = abs(lat) - (local_width(sec, s / line.length) + local_width(other, v / ln.length)) / 2
                 if gap < 0 and set(edges[eid][2:]) & set(edges[keys[j]][2:]):
                     continue  # topologically shared junction pavement, not a separator
                 side = 0 if lat > 0 else 1
+                median = sec.oneway and other.oneway and not other.roundabout and parallel < 0
+                if gap < nearest[side][0]:
+                    nearest[side] = (gap, median)
+                elif gap == nearest[side][0]:
+                    nearest[side] = (gap, median or nearest[side][1])
+            for side, (gap, median) in enumerate(nearest):
+                if math.isinf(gap):
+                    continue
+                # An opposing pair owns the WHOLE existing median, including wide rural separators. The class
+                # reserve is not an orthophoto measurement and must never license eating such a median down to it.
+                surplus = 0.0 if median else max(0.0, gap - S.WIDEN_SEPARATOR_RESERVE_M)
                 # Both roads may grow into this gap. Each owns at most half the available surplus.
-                room[side] = min(room[side], max(0.0, gap - S.WIDEN_SEPARATOR_RESERVE_M) / 2)
+                room[side] = min(room[side], surplus / 2)
         result[eid] = room
     return result
 

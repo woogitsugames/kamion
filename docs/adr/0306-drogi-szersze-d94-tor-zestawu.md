@@ -167,3 +167,17 @@ Na tej samej referencji sheet0,25m2024 główny komponent DK8 zmienia się absen
 powierzchnia545,4→508,9m²). Pozostały mały absent przyN120 jest27m od trasy. Obejrzane oba rzuty DK8 i parkingu:
 zachowany rzeczywisty separator oraz dwa lokalne T. Bez zmian klasyfikatora, źródła referencji i ratchetów.
 Pełna przebudowa i ponowne QA nadal wymagane.
+
+### G3 — pełna ochrona medianu i poprawna domena próbkowania QA
+Wybieramy najbliższą równoległą jezdnię osobno na każdej stronie/stacji PRZED zastosowaniem reguły separatora.
+Kandydat z obwiedni STRtree musi spełniać również faktyczny dystans≤40m; sam obrys długiego zakrętu nie dowodzi
+bliskości jezdni. Przeciwbieżne oneway (bez pierścieni rond) rezerwują CAŁY bazowy median, także >12m. Dla innych
+sąsiadów nadal chroniona jest bliska szczelina, a nadwyżka ponad12m dzielona na pół. 12m nie jest pomiarem ortofoto.
+Dla parkingu pozostający błąd nie był zamknięciem asfaltu: trim8,911+3=11,911m przekraczał L10,745m krótkiego ramienia.
+Polyline klipował środek do końca, a normalna Hermite'a wypychała skrajną próbkę poza cap. QA ogranicza target do
+istniejącej drogi z marginesem1m (WORKING_VALUE wobec maks.0,9m skrajnej próbki), zachowując look-ahead3m na długich
+ramionach. Jedna target_s jest używana w fan_l, wyborze pasa, q_end/c_out/q1/z1. Nie zmieniamy geometrii tylko pod
+błędny cel QA, nie pomijamy przypadku i nie zmieniamy klasyfikatora ani ratchetów. Test na rzeczywistych trójkątach
+obejmuje krótkie zakrzywione i długie ramię, bez przeszkody i z prawdziwym krawężnikiem: falseNone znika, kerb zostaje.
+Dodatkowe regresje: median20m z blokadą parkingową pozostaje20m (przed19m), bliższy sąsiad przed dalszym przeciwnym,
+odległa droga z nakładającą się obwiednią nie przesuwa jezdni. 10 nowych testów PASS. Pełne G3 QA w toku.

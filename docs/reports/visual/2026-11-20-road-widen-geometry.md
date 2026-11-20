@@ -130,3 +130,19 @@ To nie podnosi ratchetu, o ile implementacja zachowuje klasyfikator, progi i spr
 pomijania przypadków. Jedna ograniczona stacja powinna być użyta konsekwentnie dla celu, pasów i wysokości.
 Potrzebna jest regresja krótkiego ramienia, niezmienionego zwykłego ramienia i nadal wykrywanej rzeczywistej przeszkody
 wewnątrz przejazdu. Kontrola endpointu QA nie zastępuje kontroli przeszkód na pozostałej wstędze drogi.
+
+## Przegląd kodu G3 przed pełną przebudową
+
+**PASS, bez nowego P1 w przejrzanym diffie `network.py` / `consistency.py` i regresjach.**
+
+- Najbliższa krawędź na każdej stronie i stacji jest wybierana przed określeniem rodzaju separatora. Dalsza
+  przeciwbieżna droga za bliższym sąsiadem nie wymusza przez to fałszywej rezerwy medianu. Przeciwbieżne oneway
+  poza roundabout zachowują cały bazowy gap, także ponad 12 m; pozostałe pary dzielą nadwyżkę po połowie.
+- `_outbound_probe_s` ogranicza trim do legalnej domeny i wyznacza jeden istniejący cel. `fan_l`, `q_end`,
+  `c_out`, `ob`, `q1` i `z1` używają tej samej reguły/stacji. Zwykły długi wylot zachowuje look-ahead 3 m.
+- SurfaceIndex, DRIVABLE i ratchety nie są zmienione. Przeczytana regresja krótkiego zakrzywionego ramienia
+  używa rzeczywistych trójkątów nawierzchni i krawężnika oraz produkcyjnej klasyfikacji, sprawdzając zarówno brak
+  fałszywego blind-end, jak i zachowane wykrywanie rzeczywistego kerbu wewnątrz przejazdu. Są też testy szerokiego
+  medianu z wolnymi i zablokowanymi stronami zewnętrznymi oraz stacji długiego ramienia w obu kierunkach.
+
+Nie uruchamiano dodatkowych procesów. PASS dotyczy przeglądu kodu; wyniki C i ronda mają pochodzić z pełnego G3.

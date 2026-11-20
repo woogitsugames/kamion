@@ -274,3 +274,129 @@ def test_parking_tees_keep_their_connector_and_both_directions():
     spur = "c:w435369082:4103450295-4332859784"
     approach = "c:w408409090:4103450291-4332859780"
     assert not any({spur,approach} <= {arm.chain.id for arm in j.arms} for j in js)
+
+
+@pytest.mark.parametrize("parking", [False, True])
+def test_wide_median_keeps_its_entire_width(parking):
+    from dataclasses import replace
+    from types import SimpleNamespace
+    base = N.EdgeSection("w1:a-b", "primary", "G", True, 2, 2, 0, 3.0, .25, 6.5,
+                         "measured", "road_asphalt", False, 0, False, None, None, None)
+    a = replace(base, edge_id="w1:a-b", provenance={})
+    b = replace(base, edge_id="w2:c-d", provenance={})
+    items = [(a, 0., False), (b, 26.5, True)]
+    if parking:
+        for key, y in (("w3:e-f", -9.), ("w4:g-h", 35.5)):
+            items.append((replace(base, edge_id=key, oneway=False, lanes_fwd=1, lanes_bwd=1,
+                                  provenance={}), y, False))
+    net = SimpleNamespace(sections={sec.edge_id:sec for sec,_,_ in items})
+    edges = {sec.edge_id: ({}, np.array([[100.,y],[0.,y]]) if reverse else np.array([[0.,y],[100.,y]]),
+                           str(i), str(i+10)) for i,(sec,y,reverse) in enumerate(items)}
+    N.gameplay_widen(net,.25,edges)
+    # b travels west, so its positive left offset moves south, towards a.
+    gap = 26.5 - b.center_offset - a.center_offset - (a.width + b.width) / 2
+    assert gap == pytest.approx(20.,abs=.002)
+    assert a.width == b.width == (6.5 if parking else 7.0)
+
+
+def _probe_surface_part(polygon, material="road_asphalt"):
+    from types import SimpleNamespace
+    from shapely.ops import triangulate
+    triangles = [np.asarray(t.exterior.coords)[:3] for t in triangulate(polygon) if polygon.covers(t)]
+    vertices = np.asarray(triangles).reshape(-1,2)
+    z = .05 if material == "curb_concrete" else 0.
+    return SimpleNamespace(layer="road",mat=material,src="probe-fixture",
+                           V=np.column_stack([vertices,np.full(len(vertices),z)]),
+                           T=np.arange(len(vertices)).reshape(-1,3))
+
+
+def _probe_world(length, blocked):
+    from dataclasses import replace
+    from types import SimpleNamespace
+    import shapely
+    from shapely.geometry import LineString
+    from roads import junctions as J
+    from roads.geom import Polyline, smooth_open
+    base = N.EdgeSection("w1:a-b", "service", "D", False, 2, 1, 1, 3., .25, 6.5,
+                         "measured", "road_asphalt", False, 0, False, None, None, None)
+    sections = [replace(base,edge_id=f"w{i+1}:a-b",provenance={}) for i in range(3)]
+    records = [([[-20.,0.],[0.,0.]],"a","j",0.,3.),
+               ([[0.,0.],[length-1,0.],[length,1.]],"j","b",2.5,0.),
+               ([[0.,0.],[0.,15.]],"j","c",3.,0.)]
+    chains = []
+    for i,(points,na,nb,ta,tb) in enumerate(records):
+        raw = np.asarray(points)
+        c = N.Chain(f"c:probe{i}",na,nb,[(sections[i].edge_id,False)],raw,[])
+        c.line = Polyline(smooth_open(raw,0,.5))
+        c.raw_spans = [(0.,c.line.length,sections[i].edge_id,False)]
+        n = len(c.line.p)
+        c.sec_idx = np.full(n,i,int); c.hw = np.full(n,3.25); c.dirn = np.zeros(n,int)
+        c.bridge = np.zeros(n,bool); c.z = np.zeros(n); c.e = np.zeros(n)
+        c.t_a,c.t_b = ta,tb
+        chains.append(c)
+    arms = [J.Arm(chains[0],"b","j"),J.Arm(chains[1],"a","j"),J.Arm(chains[2],"a","j")]
+    junction = J.Junction("j:probe",["j"],arms=arms,center=np.zeros(2),trims={0:3.,1:2.5,2:3.})
+    nodes = {key:{"deg":3 if key=="j" else 1,"boundary":False}
+             for key in ("a","b","c","j")}
+    net = SimpleNamespace(sec_list=sections,chains=chains,nodes=nodes)
+    road = shapely.union_all([LineString(c.line.p).buffer(3.25,cap_style="flat") for c in chains])
+    parts = [_probe_surface_part(road)]
+    if blocked:
+        parts.append(_probe_surface_part(shapely.box(-.6,-3.25,.6,3.25),"curb_concrete"))
+    return SimpleNamespace(net=net,buf=SimpleNamespace(parts=parts),junctions=[junction],origin=(700000.,500000.))
+
+
+@pytest.mark.parametrize("length", [4.,20.])
+@pytest.mark.parametrize("blocked", [False,True])
+def test_bounded_junction_probe_retains_real_kerb_detection(length,blocked):
+    from types import SimpleNamespace
+    from roads import consistency as C
+    world = _probe_world(length,blocked)
+    # The fixture has real road/kerb triangles and the production SurfaceIndex, no mocked classification.
+    result = C.check(world,[],"probe-fixture",SimpleNamespace(REGIONS=ROOT/"artifacts"/"probe-no-regions"))
+    cases = [c for c in result["cases"] if c["kind"]=="lane_blind_end" and c["chain"]=="c:probe0"
+             and c.get("to_chain")=="c:probe1"]
+    assert result["stats"]["approach_lanes"] >= 3
+    if blocked:
+        assert len(cases)==1 and cases[0]["what"]=="kerb"
+    else:
+        assert not cases, cases
+
+
+@pytest.mark.parametrize("reverse,expected", [(False,13.),(True,87.)])
+def test_long_outbound_probe_preserves_station(reverse,expected):
+    from types import SimpleNamespace
+    from roads import consistency as C
+    arm = SimpleNamespace(L=100.,s=lambda d:100.-d if reverse else d)
+    assert C._outbound_probe_s(arm,10.) == expected
+
+
+def test_more_distant_opposite_road_does_not_replace_the_nearest_neighbour():
+    from dataclasses import replace
+    from types import SimpleNamespace
+    base = N.EdgeSection("w1:a-b", "primary", "G", True, 2, 2, 0, 3., .25, 6.5,
+                         "measured", "road_asphalt", False, 0, False, None, None, None)
+    a = replace(base,provenance={})
+    collector = replace(base,edge_id="w2:c-d",provenance={})
+    opposite = replace(base,edge_id="w3:e-f",provenance={})
+    parking = replace(base,edge_id="w4:g-h",oneway=False,lanes_fwd=1,lanes_bwd=1,provenance={})
+    items = [(a,0.,False),(collector,26.5,False),(opposite,35.5,True),(parking,-9.,False)]
+    net = SimpleNamespace(sections={sec.edge_id:sec for sec,_,_ in items})
+    edges = {sec.edge_id: ({},np.array([[100.,y],[0.,y]]) if rev else np.array([[0.,y],[100.,y]]),
+                          str(i),str(i+10)) for i,(sec,y,rev) in enumerate(items)}
+    N.gameplay_widen(net,.25,edges)
+    assert a.width == 7.0 and a.center_offset == .25
+
+
+def test_neighbour_envelope_is_not_a_carriageway_within_search_distance():
+    from dataclasses import replace
+    from types import SimpleNamespace
+    a = N.EdgeSection("w1:a-b", "primary", "G", True, 2, 2, 0, 3., .25, 6.5,
+                      "measured", "road_asphalt", False, 0, False, None, None, None)
+    b = replace(a,edge_id="w2:c-d",provenance={})
+    net = SimpleNamespace(sections={a.edge_id:a,b.edge_id:b})
+    # The distant U's envelope covers a, but its nearest pavement is at least 90 m away.
+    edges = {a.edge_id: ({},np.array([[-10.,0.],[10.,0.]]),"a","b"),
+             b.edge_id: ({},np.array([[100.,100.],[-100.,100.],[-100.,-100.]]),"c","d")}
+    N.gameplay_widen(net,.25,edges)
+    assert a.width == 7.0 and a.center_offset == 0.0
