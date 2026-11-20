@@ -1,0 +1,15 @@
+{
+  "schema": "truck-sim-pl/world-edge-authored/1",
+  "note": "ADR 0314 (krywlany-s24). Read by Game.World.Import.WorldEdgeBuilder.ReadExits at import; survives every regeneration of the region. near_en = region-local (E, N) metres (origin EPSG:2180 777995, 590079).",
+  "closures": [
+    {
+      "id": "ciolkowskiego-route-entry-east",
+      "near_en": [1024.0, 976.7],
+      "radius_m": 15.0,
+      "setback_m": 50.0,
+      "reason": "Route entry (Ciolkowskiego DW678, seam with bialystok-dojlidy at EPSG:2180 779019, 591055.7). With the default 60 m the closure stood 67.4 m along the route (oblique crossing of the edge), so the catalog start 90 m (EDGE_START_S_M = 60 + 25 + 5) was 2.4 m short of the 25 m behind the row (EditMode StartClearanceTests, r2). 50 m puts the row ~57 m along the route; with streaming the closure is opened by the loaded Dojlidy tile anyway. WORKING_VALUE.",
+      "confidence": "medium",
+      "verify": "EditMode StartClearanceTests (bialystok-krywlany), camera truck-at-gate / chase"
+    }
+  ]
+}
