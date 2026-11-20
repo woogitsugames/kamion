@@ -59,3 +59,10 @@
   karpiówka). Karpiówka: drobna łuska, ton w plamach, bez linii kraty; z 30–150 m wyraźnie inna niż esówka. Zakładkowa po podbiciu tonu:
   lekko plamista. Wszystkie 4 zestawy obejrzane w silniku; do r1 zostają: gąsiory (UV), `picket_wood` / `picket_paint`, tinty siatki, budżet.
   NASTĘPNY KROK: `cat artifacts/roof-tiles-s24/r1.status`; po `exit=0`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`
+- 18:10 KONIEC. r1 (exit=0 17:41): SBS `artifacts/roof-tiles-s24/sbs/*-r1.jpg`, budżet `budget-r1.json` (w ADR 0316): kamery draws +0…+7
+  (≤ +1,7 %), maks. 750 draws / 1,62 mln tris; zestawy dachów High 3,11 → 10,58 MB (+7,47 MB); płoty 0 drawów / 0 tris. Obejrzane arkusze:
+  Dom Klattów (dach plamisty, płot brązowy bez oliwkowych), dom drewniany (`picket_wood`), siatka ocynk / zielona, Tykocin Złota.
+  `picket_paint` nie trafił w kadr (tylko test + podgląd atlasu). pytest 12 dotkniętych plików: 150 passed (`pytest-related.log`).
+  Rund 2–3 nie użyłem. Dowody skopiowane do main `artifacts/roof-tiles-s24/`.
+  NASTĘPNY KROK (lider): `visual-critic` na `artifacts/roof-tiles-s24/sbs/*-r1.jpg`; scalić (generated → wg zwyczaju), przebudować knyszyn + tykocin
+  w main (kafle r1 są w prywatnej kopii derived tego worktree: `robocopy .claude\worktrees\roof-tiles-s24\Data\raw\derived\knyszyn Data\raw\derived\knyszyn /E /MT:16`).
