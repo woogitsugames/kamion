@@ -109,6 +109,7 @@ def require_lfs(*paths) -> None:
 
 
 def pytest_configure(config):
+    config.addinivalue_line("markers", "generated_world: use generator gameplay cross-sections (D94)")
     config.addinivalue_line(
         "markers",
         "unit: fast pure-function unit tests on small synthetic data; run in CI without Data/raw "
@@ -128,12 +129,33 @@ def measured_widths(monkeypatch):
 
 
 
-def pytest_configure(config):
-    """D94 / ADR 0306: GIS tests check the generator against measurements / authored values, so the in-memory network is
-    built with GAMEPLAY_LANE_WIDEN_M = 0 (measured cross-sections; every D94 rule off) for the whole session, module
-    fixtures included. tests/gis/test_road_widen_0306.py sets the value per call (its `_net`)."""
-    import sys as _sys
-    from pathlib import Path as _P
-    _sys.path.insert(0, str(_P(__file__).resolve().parents[2] / "tools" / "worldgen"))
-    from roads import standards as _S
-    _S.GAMEPLAY_LANE_WIDEN_M = 0.0
+@pytest.fixture(scope="session", autouse=True)
+def gis_session_cross_sections():
+    """Keep session network fixtures (piers/world) in their measured baseline.
+
+    Pytest builds session fixtures before module fixtures. Generated-world modules
+    override this baseline below, after their session dependencies are ready.
+    """
+    from roads import standards as S
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(S, "GAMEPLAY_LANE_WIDEN_M", 0.0)
+        yield
+
+
+@pytest.fixture(scope="module", autouse=True)
+def gis_cross_sections(request):
+    """Measured geometry by default; generated_world modules use the generator's D94.
+
+    Module scope includes module fixtures, unlike a function monkeypatch. Restore
+    the value afterwards so test order cannot change route/link generation.
+    """
+    from roads import standards as S
+    value = S.GAMEPLAY_LANE_WIDEN_M
+    S.GAMEPLAY_LANE_WIDEN_M = (
+        S.GAMEPLAY_LANE_WIDEN_DEFAULT_M
+        if request.node.get_closest_marker("generated_world") else 0.0
+    )
+    try:
+        yield
+    finally:
+        S.GAMEPLAY_LANE_WIDEN_M = value

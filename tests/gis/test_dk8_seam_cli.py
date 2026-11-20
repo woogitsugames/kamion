@@ -96,3 +96,44 @@ def test_korycin_route_480m_right_edge_mesh_survives_overlap_pass(gameplay):
         assert sec.edge_id.startswith("w304733170:")
         q = c.line.offset_point(s, -c.hw_at(s) + S.LINE_W_WIDE / 2)
         assert paint.covers(shapely.Point(q)), f"missing right edge at chain station {s}"
+
+
+@pytest.mark.parametrize("pair,way", [
+    (("bialystok-kleeberga", "bialystok-knyszynska"), 261104557),
+    (("dk65-05", "dk65-06"), 1560819273),
+])
+def test_d94_reported_breaks_use_graph_boundary(gameplay, tmp_path, pair, way):
+    """Wave 2: displaced oblique endpoints are real seam ends, in both directions.
+
+    Exercise the generator's neighbour loader as well as QA; a loose matching
+    tolerance alone cannot recover a candidate rejected by the seam plane test.
+    """
+    tiles = [Q.load_tile(t) for t in pair]
+    seam = Q.shared_edge(tiles[0].bbox, tiles[1].bbox)
+    nets = [Q.build_plain(t) for t in tiles]
+    for t in tiles:
+        d = tmp_path / t.id
+        d.mkdir()
+        (d / "region.yaml").write_text(yaml.safe_dump(t.region), encoding="utf-8")
+        (d / "roads.graph.json").write_text(json.dumps(t.graph), encoding="utf-8")
+        (d / "overrides.yaml").write_text(yaml.safe_dump({"overrides": t.overrides}), encoding="utf-8")
+    ends = [next(e for e in ST.ends(n) if e.osm_way == way and e.on_seam(seam)) for n in nets]
+    assert any(not ST.on_seam(e.xy, seam) for e in ends)  # reproduces the old rejection
+    assert ST.match([ends[0]], [ends[1]]) == [(ends[0], ends[1])]
+    transitions = []
+    crossings = []
+    for t, n, e in zip(tiles, nets, ends):
+        neighbours = ST.neighbour_ends(t.id, [e], tmp_path)
+        assert any(x.osm_way == way for xs in neighbours.values() for x in xs)
+        tp = ST.plan_region(n, t.id, tmp_path)
+        transitions.append(next((p for p in tp if p.chain == e.chain and p.end == e.end), None))
+        ST.apply_widths(n, tp)
+        Q.add_sides(t, n)
+        crossings.append(next(x for x in Q.crossings(t, seam, n) if x.osm_way == way))
+    assert (transitions[0] is None) == (transitions[1] is None)
+    if transitions[0]:
+        assert transitions[0].hw_seam == pytest.approx(transitions[1].hw_seam)
+        assert transitions[0].length == pytest.approx(transitions[1].length)
+    rows = Q.compare_pair(*crossings)
+    assert all(r["param"] != "droga po drugiej stronie" for r in rows)
+    assert next(r for r in rows if r["param"].startswith("szeroko"))["status"] == "OK"
