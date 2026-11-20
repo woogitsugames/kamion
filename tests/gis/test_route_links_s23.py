@@ -69,13 +69,16 @@ def test_corridor_connected_in_tile_graph_bfs():
     assert {"bialystok-wygoda", "bialystok-bojary", "bialystok-mickiewicza", "bialystok-dojlidy"} <= seen
 
 
-def test_dojlidy_corridor_joins_closed_up_to_the_missing_tile():
-    """D81: C -> wygoda -> bojary -> mickiewicza joined by routes / links; Ciolkowskiego continues through the 129 m
-    stub of Dojlidy into bialystok-krywlany (ADR 0278 tile 4, not defined) - listed as missing, never skipped."""
+def test_dojlidy_corridor_joins_closed_through_krywlany():
+    """D81: C -> wygoda -> bojary -> mickiewicza joined by routes / links; Ciolkowskiego crosses the NW corner of Dojlidy
+    (link dojlidy-ciolkowskiego-corner-to-krywlany) into bialystok-krywlany (ADR 0278 tile 4, krywlany-s24), whose route
+    ends at the Dojlidy route entry - the corridor reaches the Dojlidy network, nothing missing."""
     g = {t["id"]: t for t in _graph()["tiles"]}
     c = next(c for c in _links()["corridors"] if c["id"] == "bialystok-dojlidy-dk19")
-    assert c["tiles"][:4] == ["bialystok-industrial-c", "bialystok-wygoda", "bialystok-bojary", "bialystok-mickiewicza"]
-    assert c["missing"][:1] == ["bialystok-krywlany"]
+    assert c["tiles"] == ["bialystok-industrial-c", "bialystok-wygoda", "bialystok-bojary", "bialystok-mickiewicza",
+                          "bialystok-dojlidy", "bialystok-krywlany", "bialystok-dojlidy"]
+    assert c["missing"] == []
+    assert [j["entry"] for j in c["joins"]][-3:] == ["link:dojlidy-ciolkowskiego-corner-to-krywlany", "route", "route"]
     for j in c["joins"]:
         assert len(j["side"]) == 1 and j["gapM"] <= TG.PORTAL_TOL_M, j
         # lane point of the oblique Piastowska crossing lies ~2.2 m off the seam line; joined within JOIN_TOL_M
