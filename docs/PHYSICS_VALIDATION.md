@@ -428,3 +428,14 @@ steady yaw rate (0.43 °/s) with straight wheels; solo returns to zero. Plate fr
 ideal-stick plate friction it failed (40 t: 0.413° / 0.426 °/s held for 20 s); with plate creep 1 °/s it passes
 (0.0027° / 0.0011 °/s). Drag gesture above 60 km/h: lateral acceleration per mm held at the 60 km/h value; PIO onset
 thumb gain at 70/80/90 km/h 6/6/5 → 8/10/10 mm/m.
+
+## PC input chain in the loop (drive-feel-s24, 2026-11-20, ADR 0312)
+
+`dotnet run -c Release --project tools/physics-runner/Runner -- --input-feel <dir> [--feel <json>]` drives the physics core with
+the game's own keyboard / pad chain (`KeyboardAxisRamp`, `PadSteerFilter`, `SteeringColumn`, shipped `pad_keyboard_feel.json`
+and `steering_feel.json`): full key / stick held at 20-90 km/h (40 t, cargo CoG 2.6 m, and empty), a 0.1 s key tap, and lane
+changes by a human model (keyboard bang-bang with hysteresis; pad proportional, gains 0.25 / 0.5 / 1.0 per m). Plots:
+`uv run tools/telemetry/plot_input_feel.py <before> <after> --cases ... --out <dir>`.
+Before ADR 0312 a held key tipped the high-CoG 40 t combination at 30-90 km/h (wheel lift; rollover at 80/90); after: no
+wheel lift, tractor peak ≤ 2.53 m/s², trailer ≤ 2.39 m/s² (< 0.8 x the 3.3 m/s² threshold of `rollover_r50_cog_high`);
+a tap moves the combination 0.26 m in 4 s at 50/80 km/h (was 0.70 / 0.65). The 159-run suite is unchanged (987/987 PASS).
