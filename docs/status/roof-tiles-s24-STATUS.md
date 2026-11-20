@@ -40,3 +40,7 @@
   blachodachówka do oceny dopiero po build_world (r1). Rendery oglądam odtąd jako arkusze / wycinki ≤ 1500 px, po kilka, wnioski tutaj.
   Stan kolejki 15:20: heavy 3/3 (regen-wave-2 A / B / C), czekają: roof-tiles-s24, s8-north-s24.
   NASTĘPNY KROK: po `exit=0` w `artifacts/roof-tiles-s24/r1.status`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`
+- 15:42 EditMode Win64 (stan t2): 1485 / 1383 passed / 1 failed / 101 skipped; porażka `RegionSelectTests…routeLengthM` kafla C (2398,27 vs
+  2397,47 — katalog po road-widen w origin/main, poza gałęzią; brak zmian C# w tej gałęzi). Log: `artifacts/roof-tiles-s24/editmode.log`.
+  r1 dalej w kolejce heavy (regen-wave-2 trzyma 3/3 od 14:08–15:02).
+  NASTĘPNY KROK: bez zmian (po `exit=0` w r1.status: sbs.sh r1 + budget.py r1).
