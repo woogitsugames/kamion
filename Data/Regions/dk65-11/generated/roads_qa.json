@@ -12,19 +12,19 @@
     2
    ],
    "length_m": 2432.4,
-   "max_grade": 0.0699,
+   "max_grade": 0.0704,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.015,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 1.06,
+   "axis_smoothing_dev_max_m": 1.09,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -34,13 +34,13 @@
    "lanes": [
     2
    ],
-   "length_m": 102.7,
-   "max_grade": 0.0528,
+   "length_m": 102.6,
+   "max_grade": 0.0529,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.018,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.0
+    5.5
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -65,7 +65,7 @@
    "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.6
+    7.1
    ],
    "width_src": [
     "authored_override:dk65-xsec-k1"
@@ -78,9 +78,9 @@
  "summary": {
   "authored_paint": [],
   "axis_smoothing_deviation_m": {
-   "max": 1.055,
+   "max": 1.092,
    "p50": 0.0,
-   "p95": 0.006
+   "p95": 0.009
   },
   "bridges": [],
   "chains": 3,
@@ -105,7 +105,7 @@
    "patches": 26
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 47655,
+  "footprint_nodes": 49162,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -211,9 +211,9 @@
      }
     },
     "step_m": 0.27,
-    "width_other": 6.6,
-    "width_own": 6.6,
-    "width_seam": 6.6
+    "width_other": 7.1,
+    "width_own": 7.1,
+    "width_seam": 7.1
    }
   ],
   "sides_on_carriageway_culled": {
@@ -231,7 +231,7 @@
   },
   "verge_strips": {
    "chunks": 14,
-   "tris": 1416
+   "tris": 1424
   },
   "walled_ramps": []
  }

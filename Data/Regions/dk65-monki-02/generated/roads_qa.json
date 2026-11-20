@@ -19,14 +19,14 @@
    "profile_rms_vs_nmt_m": 0.076,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    8.0
    ],
    "width_src": [
     "authored_override:dk65-carriageway-width"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.27,
+   "axis_smoothing_dev_max_m": 0.29,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -42,7 +42,7 @@
    "profile_rms_vs_nmt_m": 0.064,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.0
+    5.5
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -67,7 +67,7 @@
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    8.0
    ],
    "width_src": [
     "authored_override:dk65-carriageway-width"
@@ -85,12 +85,12 @@
     2
    ],
    "length_m": 1228.5,
-   "max_grade": 0.0394,
+   "max_grade": 0.0397,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.5
    ],
    "width_src": [
     "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
@@ -108,12 +108,12 @@
     2
    ],
    "length_m": 391.4,
-   "max_grade": 0.0192,
+   "max_grade": 0.0186,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.5
    ],
    "width_src": [
     "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
@@ -126,9 +126,9 @@
  "summary": {
   "authored_paint": [],
   "axis_smoothing_deviation_m": {
-   "max": 0.273,
+   "max": 0.288,
    "p50": 0.0,
-   "p95": 0.016
+   "p95": 0.018
   },
   "bridges": [
    {
@@ -158,10 +158,10 @@
   "decals": {
    "gullies": 138,
    "oil": 4,
-   "patches": 32
+   "patches": 35
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 63688,
+  "footprint_nodes": 65925,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -201,7 +201,7 @@
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 82,
+  "nmt_nodes_replaced_under_decks": 80,
   "overrides_applied": [
    {
     "id": "dk65-carriageway-width",
@@ -252,7 +252,7 @@
   },
   "verge_strips": {
    "chunks": 13,
-   "tris": 1632
+   "tris": 1648
   },
   "walled_ramps": []
  }

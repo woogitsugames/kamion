@@ -8,6 +8,8 @@
   "dz_m": 0.8,
   "kerb_ring_m": 0.3,
   "lane_inset_m": 0.45,
+  "outbound_end_margin_m": 1.0,
+  "outbound_probe_m": 3.0,
   "prop_inset_m": 0.2,
   "station_m": 2.0,
   "through_deg": 35.0
@@ -23,10 +25,9 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 28,
-  "kerb_tris": 14436,
-  "lane_samples": 25606,
-  "lane_samples_in_taper": 2,
-  "marking_tris": 4784,
-  "props_checked": 318
+  "kerb_tris": 14400,
+  "lane_samples": 25560,
+  "marking_tris": 5069,
+  "props_checked": 317
  }
 }

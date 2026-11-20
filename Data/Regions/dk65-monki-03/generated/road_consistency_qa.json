@@ -5,16 +5,16 @@
  "cases": [
   {
    "chain": "c:w1473575592:13519137482-13519137489",
-   "dist_from_stop_m": 14.1,
-   "e": -842.3,
+   "dist_from_stop_m": 15.6,
+   "e": -841.52,
    "junction": "j:n1134846333",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.3445712,
-   "lon": 22.8573933,
-   "n": -938.56,
+   "lat": 53.3445714,
+   "lon": 22.8574051,
+   "n": -938.5,
    "on_route": true,
    "osm_ways": [
     232415596,
@@ -26,16 +26,16 @@
   },
   {
    "chain": "c:w70329867:1134846333-2906546945",
-   "dist_from_stop_m": 16.5,
-   "e": -814.05,
+   "dist_from_stop_m": 18.1,
+   "e": -814.99,
    "junction": "j:n1134846333",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.344661,
-   "lon": 22.8578262,
-   "n": -927.03,
+   "lat": 53.3446606,
+   "lon": 22.8578121,
+   "n": -927.13,
    "on_route": true,
    "osm_ways": [
     70329867
@@ -54,6 +54,8 @@
   "dz_m": 0.8,
   "kerb_ring_m": 0.3,
   "lane_inset_m": 0.45,
+  "outbound_end_margin_m": 1.0,
+  "outbound_probe_m": 3.0,
   "prop_inset_m": 0.2,
   "station_m": 2.0,
   "through_deg": 35.0
@@ -69,8 +71,8 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 7,
-  "kerb_tris": 5194,
-  "lane_samples": 8208,
+  "kerb_tris": 5188,
+  "lane_samples": 8196,
   "marking_tris": 836,
   "props_checked": 105
  }
