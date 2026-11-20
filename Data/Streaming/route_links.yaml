@@ -187,6 +187,9 @@ links:
     # 12 tyre points off the hard surface at s 364-368 m (trailer, inside of the turn); the swing of that link reused
     swing:
       - {near_epsg2180: [778546.8, 595529.6], left_m: 2.0, half_m: 30.0}
+      # after the D94 merge (C rebuilt by road-widen): 4 drive-axle tyre points off the hard surface at s 1346-1349 m
+      # (right side, DK8/DK19); 0.6 m left leaves 1 point on the kerb, 1.0 m / +-30 m -> 0 / 0 (WORKING_VALUE)
+      - {near_epsg2180: [777718.0, 596033.8], left_m: 1.0, half_m: 30.0}
     note: "C route start -> DK8/DK19 Al. Tysiaclecia northbound to the seam with dk8-wasilkow-01"
   # ADR 0315 after D94 (road-widen merge): the dk8-wasilkow-01 route ends 0.31 m beside the dk8-wasilkow-02 route entry
   # (lane centres of the two builds on the DK8 northbound seam, route_links corridor join); like s8-03-to-s8-04 the link
