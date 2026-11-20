@@ -20,3 +20,8 @@
   chodniku 1,10 m (os drogi nierownolegla do sciany) -> nadpisanie 0,70 m + ROAD_CLEAR_M 0,05 (wejdzie w r2). Import padal na bledzie z main:
   brak materialu plaster_peach__far_ribbon w tabeli (kafel 1_4) - dopisany do materials.py i recznie do manifestu r1. Import + render r1 w tle.
   NASTEPNY KROK: po `exit=0` w artifacts/klattow-r3-s24/r1.status: `bash artifacts/klattow-r3-s24/sbs.sh r1`; potem `pwsh artifacts/klattow-r3-s24/run-round.ps1 -Tag r2 -World`
+- 11:25 r1 obejrzana (sbs/*-r1.jpg): gont schodkowy i zalamanie czytelne, podmurowka naturalna, plot dzialki brazowy (szare sztachety zielonkawe),
+  krzew / drzewko / pnacze sa. Kamery r1: look-dom-klattow 627 draws / 1 486 884 tris, -street 556 / 1 468 778, -gable-e 241 / 957 477,
+  -yard 99 / 377 229, look-lamus 459 / 1 121 469. Poprawki do r2: chodnik 0,70 m, tint plotu [0.9,1.4,1.1], zrab szarszy, wole oko wieksze,
+  podwalina podestu 0,28 m, krzew r 1,2 m, nowa kamera look_lamus_plebanski_close (kadr zdjecia 02, 1,7 m).
+  NASTEPNY KROK: `pwsh artifacts/klattow-r3-s24/run-round.ps1 -Tag r2 -World -Cameras look_dom_klattow,look_dom_klattow_street,look_dom_klattow_yard,look_dom_klattow_gable_e,look_lamus_plebanski,look_lamus_plebanski_close`; po exit=0: `bash artifacts/klattow-r3-s24/sbs.sh r2`

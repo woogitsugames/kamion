@@ -253,13 +253,13 @@ def test_plot_fence_override_and_shadow_crowns(fc):
     ov = pipeline.load_overrides("knyszyn")
     blds = BM.load(fc, ORIGIN, ov, hero=K.hero_targets("knyszyn", fc))
     b = next(x for x in blds if x["id"] == K.BUILDING_ID)
-    assert b["ovr"]["hero_asset"] == K.ASSET_ID and b["ovr"]["plot_fence"] == {"front": "picket", "side": "picket", "tint": [0.80, 2.0, 1.30]}
+    assert b["ovr"]["hero_asset"] == K.ASSET_ID and b["ovr"]["plot_fence"] == {"front": "picket", "side": "picket", "tint": [0.90, 1.40, 1.10]}
     near = [{"id": x["id"], "poly": x["poly"], "props": x["props"], "ovr": x["ovr"]} for x in blds
             if x["typ"] == "house" and x["poly"].distance(b["poly"]) < 60]
     plots = {p["id"]: p for p in PL.plan(near, shapely.geometry.Polygon(), [])}
     assert (plots[K.BUILDING_ID]["front_style"], plots[K.BUILDING_ID]["side_style"]) == ("picket", "picket")
     # round 3: the plot's fences take the brown stain of the authored pickets, not the rust-red of the atlas
-    assert plots[K.BUILDING_ID]["kit_tint"] == [0.80, 2.0, 1.30] and PL.Kit(plots[K.BUILDING_ID]["kit_tint"]).tint[:3] == [0.40, 1.0, 0.65]
+    assert plots[K.BUILDING_ID]["kit_tint"] == [0.90, 1.40, 1.10] and PL.Kit(plots[K.BUILDING_ID]["kit_tint"]).tint[:3] == pytest.approx([0.45, 0.70, 0.55])
     assert all(p["kit_tint"] is None for i, p in plots.items() if i != K.BUILDING_ID)
     for bad_t in ([1, 2], [0.5, 3.0, 1.0]):
         with pytest.raises(ValueError, match="plot_fence"):
@@ -347,7 +347,7 @@ def test_round3_garden_and_footway_override(fc):
     a, d, n, L, W, pu0, pu1, pd = K._frame(b["poly"])
     V = np.concatenate([V for l, m, V, UV, T in buf.parts if l == "plots" and m == "plot_kit"])
     w = (V[:, :2] - a) @ n
-    assert w.min() > -0.3 and w.max() < pd + 1.3                 # in the strip in front of the street wall
+    assert w.min() > -0.6 and w.max() < pd + 1.3                 # in the strip in front of the street wall
     assert V[:, 2].max() - Z0 < 3.2
     assert not any(l == "plots_low" for l, *_ in buf.parts)      # High content only
     # no room for a garden strip (pickets pulled back to the wall): only the climber stays

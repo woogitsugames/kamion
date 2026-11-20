@@ -181,13 +181,13 @@ o ile nie napisano inaczej.
   normalnych była już w rundzie 2 (płaska szara płyta z 20 m).
 - **Proporcje dachu:** krawędź okapu 2,35 m, kalenica 6,8 m (było 2,7 / 6,5), okap 0,9 m (0,55), **załamanie połaci**:
   dolne 1,15 m rzutu pod kątem 27°, wyżej ~51°. Dach ≈ 1,6 × ściana jak na zdjęciu. Brak wysokości LoD — ESTIMATED.
-- **Wole oko** na połaci od podcienia tuż nad załamaniem: brew o profilu cos² (1,6 × 0,45 m) z gontu, czoło z deski
+- **Wole oko** na połaci od podcienia tuż nad załamaniem: brew o profilu cos² (1,9 × 0,60 m) z gontu, czoło z deski
   z ciemnym półokrągłym otworem.
 - **Podcień:** głębokość 2,1 m (1,7), sześć słupów 20 cm (5), miecze 0,65 m po obu stronach każdego słupa, oczep 22 cm,
   nad nim końce belek stropowych co ~0,87 m wysunięte 0,28 m, płatew, strop z desek; **podest deskowy** na podwalinie
   wysunięty 0,25 m przed słupy, na kamieniach, z jednym stopniem. Izba zrębowa: mały kwadratowy otwór zamiast okiennicy.
-- Materiały: `log_wall_raw` 0,21 / 0,165 / 0,12 (miodowy z rundy 2 wychodził pomarańczowo; zdjęcie: zrąb zszarzały),
-  nowy `wood_planks_weathered` (skan `wood_siding`, 0,20 / 0,16 / 0,12) na słupy, miecze, belki, podest zamiast brązowego
+- Materiały: `log_wall_raw` 0,185 / 0,160 / 0,135 (miodowy z rundy 2 wychodził pomarańczowo; zdjęcie: zrąb zszarzały),
+  nowy `wood_planks_weathered` (skan `wood_siding`, 0,185 / 0,162 / 0,138) na słupy, miecze, belki, podest zamiast brązowego
   `wood_planks`; `roof_shingles_grey` 0,195 / 0,196 / 0,192.
 
 **Dom.**
@@ -199,7 +199,8 @@ o ile nie napisano inaczej.
   Barwa `fieldstone_plinth` 0,215 / 0,200 / 0,172.
 - **Płot działki** (`plot_fence.tint`): atlas `plot_kit` maluje sztachety rdzawoczerwono; nowe pole `tint: [r, g, b]`
   (mnożnik liniowy 0–2 barw atlasu = `Kit.tint` tej działki zamiast barwy starzenia klasy wieku). Dom Klattów:
-  `[0.80, 2.0, 1.30]` → ok. 107 / 68 / 43 sRGB, jak bejca sztachet autorskich. Inne działki bez zmian.
+  `[0.90, 1.40, 1.10]` → ok. 112 / 58 / 40 sRGB (przebieg 1 z `[0.80, 2.0, 1.30]`: szare, „złuszczone” sztachety
+  atlasu — 16 % — wychodziły zielone; mnożnik nie zrobi z rdzawej i szarej deski tego samego brązu). Inne działki bez zmian.
 - **Ganek a płot i chodnik — warstwa dróg, nadpisanie lokalne.** Zmierzone w danych: oś OSM Kościelnej 4,06 m od czoła
   ganku (BDOT), jezdnia 5,5 m (BDOT) → krawężnik 1,31 m przed gankiem. Reguła `implied_sidewalks` kładzie chodnik
   standardowy 2,0 m, więc jego tylna krawędź wchodziła 0,7 m w głąb ganku. Zdjęcie 01 i ortofoto 0,25 m pokazują
@@ -211,7 +212,7 @@ o ile nie napisano inaczej.
   **0,70 m** + zapas płotu od obrysu drogi `ROAD_CLEAR_M` 0,15 → 0,05 m (sztachety stoją przy samej krawędzi chodnika,
   jak na zdjęciu). Chodnik wychodzi o 0,1–0,3 m węższy niż na zdjęciu — właściwa poprawka to oś / szerokość jezdni
   Kościelnej (warstwa dróg, otwarte).
-- **Zieleń przy ścianie (zdjęcie 01):** krzew (r 1,05 m, 2,0 m) między pierwszym a drugim oknem na zachód od ganku,
+- **Zieleń przy ścianie (zdjęcie 01):** krzew (r 1,2 m, 2,2 m) między pierwszym a drugim oknem na zachód od ganku,
   młode drzewko (2,8 m) między dwoma ostatnimi na wschód, pnącze na wschodniej połowie czoła ganku — siatki atlasu
   `plot_kit` (`plots.bush`, `fruit_tree`, `card`), tylko treść High, tylko gdy pas między ścianą a płotem ma ≥ 1,5 m.
 - **Słup energetyczny:** w danych go nie ma (BDOT10k `OT_BUWT_P`: najbliższy obiekt 476 m; `OT_SULN_L`: tylko linie SN

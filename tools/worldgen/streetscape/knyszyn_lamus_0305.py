@@ -40,8 +40,8 @@ SHINGLE_STEP = 0.035                                      # butt of a course abo
 ARCADE_D, ARCADE_SHARE, POSTS, POST = 2.10, 0.72, 6, 0.20
 BEAM_H, JOIST_H, PLATE_H = 0.22, 0.16, 0.16               # head beam, joist ends above it, top plate under the roof
 BRACE_LEG, BRACE_HALF = 0.65, 0.06
-DECK_OUT, DECK_SILL = 0.25, 0.20                          # deck past the post line; sill beam under its edge
-DORMER_U, DORMER_HALF_W, DORMER_H = 0.58, 0.80, 0.45      # eyebrow: centre as a share of the arcade, half width, rise
+DECK_OUT, DECK_SILL = 0.25, 0.28                          # deck past the post line; sill beam under its edge
+DORMER_U, DORMER_HALF_W, DORMER_H = 0.58, 0.95, 0.60      # eyebrow: centre as a share of the arcade, half width, rise
 ARCADE_SIDE = np.array([0.4366, 0.9])       # the long side that carries the arcade looks this way (E, N) - ESTIMATED
 FLOOR = 0.35
 
@@ -286,7 +286,7 @@ def build(buf, region, blds, zsmooth, report):
     cb = F(face, xd, rf)                                     # brow board: two fans from the middle of its foot
     for half in (slice(0, 7), slice(6, 13)):
         m.poly(L0, WOOD, [cb] + A[half], out3, [[0.3, 0.9]] + [[0.3 + x_, 0.9 + h_] for x_, h_ in zip(xs[half], hs[half])])
-    hole = [F(face, xd + 0.27 * math.cos(g), rf, 0.06 + 0.25 * math.sin(g)) + out3 * 0.012 for g in np.linspace(0.0, math.pi, 9)]
+    hole = [F(face, xd + 0.34 * math.cos(g), rf, 0.08 + 0.34 * math.sin(g)) + out3 * 0.012 for g in np.linspace(0.0, math.pi, 9)]
     m.poly(L0, DARK, hole, out3, [[0.0, 0.0]] * len(hole))
 
     acc.flush(buf, ASSET_ID)

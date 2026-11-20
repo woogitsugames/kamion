@@ -392,12 +392,12 @@ M = {
     # log_whitewash set as a neutral modulation map under a wood tint, stretched to 4.6 x 2.55 m so one tile covers the
     # 2.45 m wall (courses 0.23-0.28 m); weathered silver-grey wooden shingles (set wood_shingles). WORKING_VALUE.
     # Round 3 (klattow-r3-s24): the honey tint (0.33 / 0.21 / 0.115) rendered orange-tan in the sun; the photo shows
-    # old logs weathered grey-brown (~ sRGB 120 / 105 / 90 under an overcast sky) -> log_wall_raw 0.21 / 0.165 / 0.12,
+    # old logs weathered grey-brown (~ sRGB 120 / 105 / 90 under an overcast sky) -> log_wall_raw 0.185 / 0.160 / 0.135 (run 1 of round 3 with 0.21 / 0.165 / 0.12 still read tan in the sun),
     # and the posts, braces, beams and deck of the lamus in the same weathered tone (wood_planks_weathered, the
     # wood_siding scan) instead of the brown wood_planks. WORKING_VALUE.
-    "log_wall_raw": {"color": [0.21, 0.165, 0.12], "rough": 0.9, "texture_set": "log_whitewash", "set_tile": True,
+    "log_wall_raw": {"color": [0.185, 0.160, 0.135], "rough": 0.9, "texture_set": "log_whitewash", "set_tile": True,
                      "set_tile_m": [4.6, 2.55]},
-    "wood_planks_weathered": {"color": [0.20, 0.16, 0.12], "rough": 0.88, "texture_set": "wood_siding", "set_tile": True,
+    "wood_planks_weathered": {"color": [0.185, 0.162, 0.138], "rough": 0.88, "texture_set": "wood_siding", "set_tile": True,
                               "set_tile_m": [6.0, 2.6]},
     "roof_shingles_grey": {"color": [0.195, 0.196, 0.192], "rough": 0.9, "texture_set": "wood_shingles", "set_tile": True},
     "chimney_brick": {"color": [0.20, 0.092, 0.07], "rough": 0.9, "texture_set": "brick", "set_tile": True},

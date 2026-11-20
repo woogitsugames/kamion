@@ -425,10 +425,11 @@ overrides:
     confidence: high
     verify: owner review of look_dom_klattow / look_dom_klattow_street against the photos
     set: {typology: dom_drewniany, wall_material: wood_planks_white,
-          plot_fence: {front: picket, side: picket, tint: [0.80, 2.0, 1.30]}}
+          plot_fence: {front: picket, side: picket, tint: [0.90, 1.40, 1.10]}}
   # ADR 0305 round 3: the plot_kit atlas paints pickets rust-red (118 / 50 / 38 sRGB); the photos show the same brown
   # stain on the plot's fences as on the authored pickets in front of the house. tint = linear multiplier of the atlas
-  # colours for this plot (-> about 107 / 68 / 43 sRGB), WORKING_VALUE.
+  # colours for this plot (-> about 112 / 58 / 40 sRGB), WORKING_VALUE. Run 1 used [0.80, 2.0, 1.30]: the grey,
+  # peeled pickets of the atlas (16 %) turned green.
   - id: look-dom-klattow-koscielna-footway
     target: {edge: "w98072526:1134839334-1134842485"}
     sources: ["owner photo klattow-01 (2026-11-19, local reference only): pickets flush with the porch front, a narrow footway between them and the kerb",
