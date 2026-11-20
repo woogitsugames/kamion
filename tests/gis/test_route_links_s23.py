@@ -14,6 +14,8 @@ sys.path.insert(0, str(ROOT / "tools" / "worldgen" / "streaming"))
 import route_links as RL  # noqa: E402
 import tile_graph as TG  # noqa: E402
 
+pytestmark = pytest.mark.generated_world
+
 CORRIDOR = "bialystok-tykocin"
 MUST = ["bialystok-industrial-c", "bialystok-knyszynska", "dk65-01", "dk65-11", "knyszyn-s", "knyszyn", "knyszyn-w",
         "dw671-tykocin-01"]

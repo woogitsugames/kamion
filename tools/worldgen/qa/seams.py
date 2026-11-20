@@ -580,6 +580,12 @@ def run(tiles: list[str] | None = None, overrides_ref: str | None = None, tol: f
             refr = REFERENCE.get((a.id, b.id)) or REFERENCE.get((b.id, a.id))
             if refr and road["on_route"]:
                 lo, hi, why = refr
+                # K1 / ADR 0212 describe measured two-lane cross-sections.
+                # D94 adds the gameplay allowance once to each lane.
+                extra = 2 * S.GAMEPLAY_LANE_WIDEN_M
+                lo, hi = lo + extra, hi + extra
+                if extra:
+                    why += f"; ADR 0306 D94: +{S.GAMEPLAY_LANE_WIDEN_M:g} m/pas (2 pasy)"
                 for side_name, c in (("lewa", x), ("prawa", y)):
                     v = c.params["rozstaw linii krawędziowych [m]"][0] if c else None
                     rows.append({"param": f"referencja rozstawu linii ({side_name}) {lo:.1f}–{hi:.1f} m",

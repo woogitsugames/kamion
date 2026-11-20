@@ -219,3 +219,25 @@ def test_real_seam_dk65_11_knyszyn_s_lanes_follow_width(real):
     for k in ("pasy × szer. pasa [m]", "szerokość jezdni [m]", "rozstaw linii krawędziowych [m]", *SM.EDGE_ROWS):
         assert rows[k]["status"] == "OK", rows[k]
     assert not [r for r in rd["rows"] if r["status"] == "FAIL"], [r for r in rd["rows"] if r["status"] == "FAIL"]
+
+
+@pytest.mark.parametrize("widen", [0.0, 0.1, 0.25])
+@pytest.mark.parametrize("pair,spacing,limits", [
+    (("dk65-05", "dk65-06"), 6.2, (6.0, 6.4)),
+    (("knyszyn-s", "knyszyn"), 6.8, (6.6, 7.0)),
+])
+@pytest.mark.parametrize("error", [0.0, 0.5])
+def test_reference_tracks_d94_without_relaxing_measured_range(monkeypatch, widen, pair, spacing, limits, error):
+    from roads import standards as S
+    monkeypatch.setattr(S, "GAMEPLAY_LANE_WIDEN_M", widen)
+    st = {"width": 8.0, "edge_lines": "both", "edge_line_spacing": spacing + error}
+    a, b = _tile(pair[0], 0.0, set_=st), _tile(pair[1], 100.0, set_=st)
+    rep = SM.run(loaded=[a, b], trims=False)
+    refs = [r for seam in rep["seams"] for road in seam["roads"] for r in road["rows"]
+            if r["param"].startswith("referencja rozstawu linii")]
+    assert len(refs) == 2
+    lo, hi = (v + 2 * widen for v in limits)
+    for r in refs:
+        assert f"{lo:.1f}�{hi:.1f} m" in r["param"]
+        assert r["status"] == ("FAIL" if error else "OK")
+        assert (r["left"] if r["left"] is not None else r["right"]) == pytest.approx(spacing + error + 2 * widen)
