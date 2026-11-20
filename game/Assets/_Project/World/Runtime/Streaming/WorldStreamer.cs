@@ -390,6 +390,7 @@ namespace Game.World.Streaming
             foreach (var chunk in t.chunks) chunk.SetActive(true);
             t.nextChunk = t.chunks.Length;
             if (t.cooker != null) t.cooker.Cook();
+            if (t.instances != null) t.instances.enabled = true;
             Physics.SyncTransforms();
             Policy.SetUnavailable(i, false);
             Policy.SetState(i, TileState.Ready);
