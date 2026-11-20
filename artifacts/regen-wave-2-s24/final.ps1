@@ -11,6 +11,7 @@ while (-not (Test-Path "$o\chain.status") -or @(Select-String 'chain=. DONE' "$o
 S 'chains DONE'
 pwsh -NoProfile -File "$o\commit.ps1" *>> "$o\autocommit.log"
 pwsh -NoProfile -File "$main\scripts\unity-slot.ps1" -Acquire -Pool heavy -Owner rw2-final *>> "$L\final-slot.log"
+uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-krywlany *> "$Lidelity-krywlany.log"; S "fidelity krywlany exit=$LASTEXITCODE"
 uv run --project tools/worldgen python tools/worldgen/streaming/route_links.py *> "$L\route_links.log"; S "route_links exit=$LASTEXITCODE"
 uv run --project tools/worldgen python tools/worldgen/streaming/tile_graph.py *> "$L\tile_graph.log"; S "tile_graph exit=$LASTEXITCODE"
 uv run --project tools/worldgen python scripts/export-region-catalog.py *> "$L\catalog.log"; S "catalog exit=$LASTEXITCODE"

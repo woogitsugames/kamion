@@ -27,14 +27,14 @@
       "id": "bialystok-knyszynska",
       "label": "Białystok — Szosa Ełcka → Szosa Knyszyńska",
       "group": "Białystok",
-      "routeLengthM": 2961.39,
+      "routeLengthM": 2961.38,
       "startS": 90.0
     },
     {
       "id": "dk65-01",
       "label": "DK65 01 — Szosa Knyszyńska za miastem",
       "group": "DK65",
-      "routeLengthM": 631.76,
+      "routeLengthM": 631.54,
       "startS": 90.0
     },
     {
@@ -146,14 +146,14 @@
       "id": "bialystok-dojlidy",
       "label": "Białystok — Dojlidy, Dywizjonu 303 / Kuronia",
       "group": "Białystok",
-      "routeLengthM": 2133.17,
+      "routeLengthM": 2132.89,
       "startS": 90.0
     },
     {
       "id": "bialystok-wygoda",
       "label": "Białystok — Andersa (DK19/DK65), narożnik Wygody",
       "group": "Białystok",
-      "routeLengthM": 90.85,
+      "routeLengthM": 90.81,
       "startS": 0.0,
       "noStart": true
     },
@@ -161,7 +161,7 @@
       "id": "bialystok-bojary",
       "label": "Białystok — Andersa, Sosabowskiego → Piastowska (DK19)",
       "group": "Białystok",
-      "routeLengthM": 3266.97,
+      "routeLengthM": 3266.55,
       "startS": 90.0
     },
     {
@@ -234,7 +234,7 @@
       "id": "monki",
       "label": "Mońki",
       "group": "Mońki",
-      "routeLengthM": 2727.9,
+      "routeLengthM": 2727.74,
       "startS": 90.0
     },
     {
@@ -249,63 +249,63 @@
       "id": "dw671-tykocin-03",
       "label": "DW671 w stronę Tykocina 03",
       "group": "Tykocin",
-      "routeLengthM": 2191.19,
+      "routeLengthM": 2191.94,
       "startS": 90.0
     },
     {
       "id": "dw671-tykocin-04",
       "label": "DW671 w stronę Tykocina 04",
       "group": "Tykocin",
-      "routeLengthM": 1880.58,
+      "routeLengthM": 1880.55,
       "startS": 92.0
     },
     {
       "id": "dw671-tykocin-05",
       "label": "DW671 w stronę Tykocina 05",
       "group": "Tykocin",
-      "routeLengthM": 691.99,
+      "routeLengthM": 691.97,
       "startS": 90.0
     },
     {
       "id": "dw671-tykocin-06",
       "label": "DW671 w stronę Tykocina 06",
       "group": "Tykocin",
-      "routeLengthM": 2154.23,
+      "routeLengthM": 2154.21,
       "startS": 90.0
     },
     {
       "id": "dw671-tykocin-07",
       "label": "DW671 w stronę Tykocina 07",
       "group": "Tykocin",
-      "routeLengthM": 1006.44,
+      "routeLengthM": 1006.45,
       "startS": 90.0
     },
     {
       "id": "dw671-tykocin-08",
       "label": "DW671 w stronę Tykocina 08",
       "group": "Tykocin",
-      "routeLengthM": 1675.91,
+      "routeLengthM": 1675.93,
       "startS": 90.0
     },
     {
       "id": "dw671-tykocin-09",
       "label": "DW671 w stronę Tykocina 09",
       "group": "Tykocin",
-      "routeLengthM": 1063.0,
+      "routeLengthM": 1063.28,
       "startS": 90.0
     },
     {
       "id": "tykocin",
       "label": "Tykocin",
       "group": "Tykocin",
-      "routeLengthM": 2557.94,
+      "routeLengthM": 2558.34,
       "startS": 90.0
     },
     {
       "id": "dw671-jasionowka-01",
       "label": "DW671 w stronę Jasionówki 01",
       "group": "Knyszyn",
-      "routeLengthM": 2354.77,
+      "routeLengthM": 2354.63,
       "startS": 90.0
     },
     {
@@ -389,7 +389,7 @@
     },
     {
       "name": "d67-full",
-      "note": "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin; owner decision 2026-11-16: + the 18 ring tiles of ADR 0231 (DK65 to Monki, DW671 to Tykocin, DW671 towards Jasionowka). Build size not measured with the ring (ADR 0267).",
+      "note": "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin; owner decision 2026-11-16: + the 18 ring tiles of ADR 0231 (DK65 to Monki, DW671 to Tykocin, DW671 towards Jasionowka); 2026-11-19: + S8 01-05, DK8 Jeroniki, Porosly, DK19 Wygoda / Bojary / Mickiewicza, Krywlany (ADR 0314) - every catalog region. Build size not measured with the ring (ADR 0267).",
       "regions": [
         "bialystok-industrial-c",
         "bialystok-maczka",
@@ -429,7 +429,18 @@
         "dw671-tykocin-08",
         "dw671-tykocin-09",
         "tykocin",
-        "dw671-jasionowka-01"
+        "dw671-jasionowka-01",
+        "s8-01",
+        "s8-02",
+        "s8-03",
+        "s8-04",
+        "s8-05",
+        "dk8-s8-jeroniki",
+        "bialystok-porosly",
+        "bialystok-wygoda",
+        "bialystok-bojary",
+        "bialystok-mickiewicza",
+        "bialystok-krywlany"
       ]
     }
   ]
