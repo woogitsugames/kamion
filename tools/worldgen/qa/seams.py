@@ -218,7 +218,7 @@ def build_nets(ts: list, pairs: list, taper: bool = True, trims: bool = False) -
     ends = {tid: ST.ends(n) for tid, n in nets.items()}
     others = {t.id: {} for t in ts}
     for a, b, se in pairs:
-        ea, eb = ([e for e in ends[x.id] if ST.on_seam(e.xy, se)] for x in (a, b))
+        ea, eb = ([e for e in ends[x.id] if e.on_seam(se)] for x in (a, b))
         others[a.id][b.id] = others[a.id].get(b.id, []) + eb
         others[b.id][a.id] = others[b.id].get(a.id, []) + ea
     for t in ts:
@@ -286,7 +286,7 @@ class Crossing:
 
 
 def crossings(t: Tile, se, net=None) -> list[Crossing]:
-    """Every generated chain end lying on the seam, with its cross-section in the a -> b travel frame
+    """Every generated chain end at a seam cut (boundary node before lateral placement), with its cross-section in the a -> b travel frame
     (L / P = left / right looking from tile a into tile b)."""
     net = net or build_net(t)
     o = np.array(t.origin)
@@ -296,7 +296,12 @@ def crossings(t: Tile, se, net=None) -> list[Crossing]:
     for c in net.chains:
         for end in (0, -1):
             pg = c.line.p[end] + o
-            if not _on_seam(pg, se):
+            # D94 can shift an oblique carriageway end off the tile plane by centimetres.
+            # Membership belongs to the boundary node; keep the generated position below
+            # so real placement / cross-section differences still fail their own rows.
+            node = net.nodes.get(c.node_a if end == 0 else c.node_b, {})
+            boundary_xy = np.asarray(node.get("xy", c.line.p[end])) + o
+            if not (_on_seam(pg, se) or (node.get("boundary") and _on_seam(boundary_xy, se))):
                 continue
             s = float(c.line.s[end])
             i_sec = int(c.sec_idx[end])

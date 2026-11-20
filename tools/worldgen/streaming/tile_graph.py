@@ -5,6 +5,9 @@
 
 Input (all in git, no Data/raw):
   - Data/Regions/<id>/region.yaml       bbox (EPSG:2180) and the floating-origin anchor (origin x / y / z)
+  - Data/Regions/<id>/streaming.authored.json (optional; survives build_region.py)
+      needs_neighbour_context (boolean, default false) + neighbour_context_reason (required when true):
+      desktop starts load neighbours by default; explicit stream switches / overrides still win.
   - Data/Regions/<id>/route_endpoints.json  route entry / exit points snapped to the tile edge (ADR 0203-0214)
 Output:
   game/Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming/tile_graph.json
@@ -161,10 +164,21 @@ def load_tiles(regions_dir: Path = REGIONS) -> list[dict]:
         d = yaml.safe_load(ry.read_text(encoding="utf-8"))
         b, o = d["bbox"], d["origin"]
         rid = d["id"]
+        authored_path = ry.parent / "streaming.authored.json"
+        authored = json.loads(authored_path.read_text(encoding="utf-8")) if authored_path.exists() else {}
+        if not isinstance(authored, dict):
+            raise ValueError(f"{rid}: streaming.authored.json must be an object")
+        context = authored.get("needs_neighbour_context", False)
+        if type(context) is not bool:
+            raise ValueError(f"{rid}: needs_neighbour_context must be a boolean")
+        reason = authored.get("neighbour_context_reason", "")
+        if context and (not isinstance(reason, str) or not reason.strip()):
+            raise ValueError(f"{rid}: needs_neighbour_context requires neighbour_context_reason")
         mem, src = WORLD_MEMORY_LOW_MB.get(rid, (UNKNOWN_MEMORY_MB, "UNKNOWN: conservative default"))
         mem_high, _ = WORLD_MEMORY_HIGH_MB.get(rid, (UNKNOWN_MEMORY_HIGH_MB, "UNKNOWN"))
         t = {
             "id": rid,
+            "needsNeighbourContext": context,
             "xmin": float(b["xmin"]), "ymin": float(b["ymin"]), "xmax": float(b["xmax"]), "ymax": float(b["ymax"]),
             "anchorX": float(o["x"]), "anchorY": float(o["y"]), "anchorZ": float(o["z"]),
             "worldMemoryMB": mem, "worldMemoryHighMB": mem_high, "memorySource": src,
@@ -229,6 +243,9 @@ def build(regions_dir: Path = REGIONS) -> dict:
             a["neighbors"].append({"id": b["id"], "side": s, "seamM": round(length, 3)})
             s2, _ = side_of(b, a)
             b["neighbors"].append({"id": a["id"], "side": s2, "seamM": round(length, 3)})
+    for t in tiles:
+        if t["needsNeighbourContext"] and not any(len(n["side"]) == 1 for n in t["neighbors"]):
+            raise ValueError(f"{t['id']}: needs_neighbour_context requires a neighbour sharing an edge")
     portals = []
     for a in tiles:
         if a["routeExit"] is None:
@@ -281,7 +298,7 @@ def build(regions_dir: Path = REGIONS) -> dict:
         corridors.append({"id": f"{chain[0]}..{chain[-1]}", "tiles": chain})
     out_tiles = []
     for t in tiles:
-        out_tiles.append({k: t[k] for k in ("id", "xmin", "ymin", "xmax", "ymax", "anchorX", "anchorY", "anchorZ",
+        out_tiles.append({k: t[k] for k in ("id", "needsNeighbourContext", "xmin", "ymin", "xmax", "ymax", "anchorX", "anchorY", "anchorZ",
                                              "worldMemoryMB", "worldMemoryHighMB", "memorySource")} |
                          {"neighbors": sorted(t["neighbors"], key=lambda n: (len(n["side"]), n["side"], n["id"]))})
     return {

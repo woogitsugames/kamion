@@ -1230,6 +1230,14 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                 (pipeline.REGIONS / region_id / "water_banks.json").read_bytes().replace(b"\r\n", b"\n"))
         write_json(gen / "water_qa.json", {"schema": "truck-sim-pl/water-qa/1", "region": region_id,
                                            **w.water.report})
+    if region_id == "knyszyn":
+        # D95: photo 9, fresh pale blocks with readable joints. Visual WORKING_VALUE;
+        # keep the mountable 4 cm lip and every collision vertex from D94 unchanged.
+        apron = dict(manifest["materials"]["apron_paving_light"])
+        apron["color"] = [0.35, 0.35, 0.34]
+        apron["ground_grime"] = {**apron["ground_grime"], "joint_dirt": 0.6}
+        manifest["materials"] = {**manifest["materials"], "apron_paving_light": apron}
+
     if w.rail is not None:
         manifest["materials"] = {**manifest["materials"], **RL.RAIL_MATERIALS}
         srcs["generated/rail_sources.json"] = sha(RL.sources_path(region_id).read_bytes().replace(b"\r\n", b"\n"))

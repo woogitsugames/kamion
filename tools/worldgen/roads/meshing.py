@@ -13,7 +13,7 @@ import numpy as np
 
 from . import standards as S
 from .geom import ear_clip, polygon_area
-from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, lane_w_of, side_extent, side_params, side_profile
+from .network import BRIDGE, FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, lane_w_of, side_extent, side_params, side_profile
 
 
 @dataclass
@@ -198,6 +198,10 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
             lo, hi = max(0, a - 1) if r else a, b
             sl = slice(lo, hi)
             kr, fl = kl[a]
+            if kr == BRIDGE and kl[lo] != kl[a]:
+                # Never borrow a flush/shared-carriageway station into a raised
+                # bridge run: that would restore a kerb over the neighbouring lane.
+                lo, sl = a, slice(a, hi)
             prm = [(kr, p[1], p[2], p[3], MAT_FLUSH_ROAD if fl else (0 if p[4] == MAT_FLUSH_ROAD else p[4]))
                    for p in params[lo:hi]]
             if r and kr == RURAL and len(prm) > 1 and prm[0][4] != prm[1][4]:
@@ -628,10 +632,24 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
     idx = np.where(br)[0]
     # contiguous runs
     runs = np.split(idx, np.where(np.diff(idx) > 1)[0] + 1)
+    # Split where a cap disappears at a shared carriageway. All dressing of that
+    # edge (including railing/posts) must disappear with it, on both decks.
+    active = {}
+    for side in ("L", "R"):
+        prm = [side_params(c, side, s) for s in st]
+        active[side] = np.array([p[4] != MAT_FLUSH_ROAD and (p[0] != BRIDGE or p[2] >= 0.30) for p in prm])
+    runs = [piece for run in runs for piece in np.split(
+        run, np.where((np.diff(active["L"][run].astype(int)) != 0)
+                      | (np.diff(active["R"][run].astype(int)) != 0))[0] + 1)]
     for run in runs:
         if len(run) < 2:
             continue
         i0, i1 = max(0, run[0] - 1), min(len(st) - 1, run[-1] + 1)
+        for edge_active in active.values():
+            if edge_active[i0] != edge_active[run[0]]:
+                i0 = run[0]
+            if edge_active[i1] != edge_active[run[-1]]:
+                i1 = run[-1]
         sel = np.arange(i0, i1 + 1)
         ss = st[sel]
         outer = {}
@@ -643,7 +661,8 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                 u_end = prof[-1][2]
                 zg = float(c.crossfall_z(s, sgn * h))
                 q = p + nn * sgn * (h + u_end)
-                pts.append([q[0], q[1], zg + prof[-1][3]])          # fascia bottom
+                bottom = -S.BRIDGE_DECK_THICKNESS if mat == MAT_FLUSH_ROAD else prof[-1][3]
+                pts.append([q[0], q[1], zg + bottom])              # fascia bottom
                 tops.append([q[0], q[1], zg + prof[-1][1]])         # cap outer top
             outer[side] = (np.array(pts), np.array(tops))
         # deck soffit: from right bottom to left bottom, facing down
@@ -659,6 +678,8 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
             buf.add("bridge", "bridge_soffit", V, V[:, :2], Ts, src=c.id + ":soffit")
         tt0, nn0 = c.line.frame(ss)
         for side, sgn in (("L", 1.0), ("R", -1.0)):
+            if not active[side][run[0]]:
+                continue
             bot, top = outer[side]
             off = np.column_stack([nn0 * sgn * 0.015, np.zeros(len(ss))])
             if style["fascia"] and not hero:          # painted band at the cap edge (top FASCIA_BAND_H of the edge), 1.5 cm proud;
@@ -727,6 +748,8 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                 if len(wr) < 2:
                     continue
                 for side, sgn in (("L", 1.0), ("R", -1.0)):
+                    if not active[side][run[0]]:
+                        continue
                     top = outer[side][1][wr].copy()
                     zg = c.interp(c.meta["walled_zg"][side], ss[wr]) - 0.5
                     bot = top.copy()
@@ -768,6 +791,8 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
         # the barrier-railing that made three rail systems side by side, REVIEW s10-0100 P1-6 p0_lamp_w1101181473_eye)
         scr = screen_sides(c, style)                 # ADR 0125: an edge without a screen keeps its railing
         for side, sgn in (() if hero else tuple(x for x in (("L", 1.0), ("R", -1.0)) if x[0] not in scr)):
+            if not active[side][run[0]]:
+                continue
             top = outer[side][1].copy()
             top[:, :2] -= nn * sgn * 0.15
             for z0, z1, th in ((S.BRIDGE_PARAPET_H - 0.10, S.BRIDGE_PARAPET_H, 0.06), (0.45, 0.60, 0.04)):
@@ -1497,6 +1522,12 @@ def _patch_mat(net, j):
     # ADR 0100 (REVIEW s10-0095 P1-6): the majority of the arms' ENGINE materials (incl. the resurfaced share,
     # standards.surface_material). Taking the raw section material made every plate between two resurfaced arms a
     # lighter worn rectangle across the carriageway (n10015785253, the bay at s 1060, the fork at s 1440).
+    # D95: a compact roundabout is one wearing course. The long two-way arms may
+    # still be old asphalt; their majority must not repaint the authored fresh ring.
+    compact = getattr(j, "compact", None)
+    if compact is not None:
+        mats = [S.surface_material(c, c.section(c.length / 2, net.sec_list)) for c in compact.ring]
+        return max(sorted(set(mats)), key=mats.count)
     mats = [S.surface_material(a.chain, a.chain.section(a.s(1.0), net.sec_list)) for a in j.arms]
     return max(sorted(set(mats)), key=mats.count)
 

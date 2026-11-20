@@ -62,6 +62,30 @@ def test_synthetic_equal_pair_all_ok():
     assert r["położenie osi na szwie [m]"]["delta"] == pytest.approx(0.0, abs=1e-6)
 
 
+def test_oblique_boundary_shift_is_matched_but_position_error_still_fails():
+    tiles = [_tile("a", 0.0), _tile("b", 100.0)]
+    for t in tiles:
+        for node in t.graph["nodes"]:
+            node["y"] = 20.0 + 0.3 * node["x"]
+        edge = t.graph["edges"][0]
+        edge["geometry"] = [[x, 20.0 + 0.3 * x] for x, _ in edge["geometry"]]
+    tiles[0].overrides[0]["set"]["center_offset"] = 0.25
+    roads, rows = _rows(SM.run(loaded=tiles, taper=False))
+    assert len(roads) == 1
+    assert roads[0]["chain_left"] and roads[0]["chain_right"]
+    # Normal shift moves the end > 5 cm off x=100; it is still the boundary road.
+    pos = rows["położenie osi na szwie [m]"]
+    assert pos["status"] == "FAIL"
+    assert pos["delta"] == pytest.approx(0.25, abs=0.001)
+
+
+def test_oblique_non_boundary_end_is_not_invented_as_a_crossing():
+    a, b = _tile("a", 0.0, stop_short=True), _tile("b", 100.0)
+    roads, rows = _rows(SM.run(loaded=[a, b], taper=False))
+    assert len(roads) == 1 and roads[0]["chain_left"] is None
+    assert rows["droga po drugiej stronie"]["status"] == "FAIL"
+
+
 def _pair_0p2():
     return [_tile("a", 0.0), _tile("b", 100.0, set_={"lanes": 2, "lane_width": 3.2, "edge_strip": 0.2,
                                                      "edge_lines": "both"})]

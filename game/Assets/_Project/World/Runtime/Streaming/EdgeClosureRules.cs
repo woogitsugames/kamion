@@ -5,6 +5,17 @@ namespace Game.World.Streaming
     /// <summary>Import/streaming rules for a single road closure. Heights are region-local absolute elevations.</summary>
     public static class EdgeClosureRules
     {
+        /// <summary>Authored region metadata exported to the tile graph; missing metadata defaults to standalone.</summary>
+        public static bool NeedsNeighbourContext(TileGraph graph, string region)
+        {
+            int i = graph != null ? graph.IndexOf(region) : -1;
+            return i >= 0 && graph.Tiles[i].needsNeighbourContext;
+        }
+
+        public static bool StreamingRequested(string argument, string region, bool desktop, bool? enabledOverride, TileGraph graph = null) =>
+            enabledOverride ?? (argument == "1" ||
+                (string.IsNullOrEmpty(argument) && desktop && NeedsNeighbourContext(graph, region)));
+
         public static bool IsOpen(TileSide side, TileSide openSides) =>
             side != TileSide.None && (openSides & side) == side;
 

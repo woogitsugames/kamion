@@ -5,6 +5,41 @@ namespace Game.Tests
 {
     public class EdgeClosureRulesTests
     {
+        [TestCase(null, "knyszyn", true, null, true)]
+        [TestCase("", "knyszyn", true, null, true)]
+        [TestCase("0", "knyszyn", true, null, false)]
+        [TestCase(null, "knyszyn", false, null, false)]
+        [TestCase(null, "knyszyn-w", true, null, false)]
+        [TestCase("1", "other", false, null, true)]
+        [TestCase(null, "knyszyn", true, false, false)]
+        [TestCase("0", "knyszyn", true, true, true)]
+        [TestCase(null, null, true, null, false)]
+        [TestCase(null, "unknown", true, null, false)]
+        [TestCase("invalid", "knyszyn", true, null, false)]
+        [TestCase("1", "knyszyn", true, false, false)]
+        public void FlaggedDesktopStartLoadsRealNeighbours_ExplicitChoiceWins(
+            string argument, string region, bool desktop, bool? forced, bool expected)
+        {
+            var graph = TileGraph.FromJson("{\"schema\":\"truck-sim-pl/tile-graph/1\",\"tiles\":[" +
+                "{\"id\":\"knyszyn\",\"needsNeighbourContext\":true},{\"id\":\"knyszyn-w\"}]}");
+            Assert.AreEqual(expected, EdgeClosureRules.StreamingRequested(argument, region, desktop, forced, graph));
+        }
+
+        [Test]
+        public void NeighbourContextComesFromMetadata_RegardlessOfRegionName()
+        {
+            var graph = TileGraph.FromJson("{\"schema\":\"truck-sim-pl/tile-graph/1\",\"tiles\":[" +
+                "{\"id\":\"synthetic\",\"needsNeighbourContext\":true},{\"id\":\"knyszyn\"}]}");
+            Assert.IsTrue(EdgeClosureRules.NeedsNeighbourContext(graph, "synthetic"));
+            Assert.IsTrue(EdgeClosureRules.StreamingRequested(null, "synthetic", true, null, graph));
+            Assert.IsFalse(EdgeClosureRules.NeedsNeighbourContext(graph, "knyszyn"), "old graphs default to false");
+            Assert.IsFalse(EdgeClosureRules.NeedsNeighbourContext(graph, "unknown"));
+            Assert.IsFalse(EdgeClosureRules.NeedsNeighbourContext(null, "knyszyn"));
+            Assert.IsFalse(EdgeClosureRules.StreamingRequested(null, "knyszyn", true, null));
+            Assert.IsTrue(EdgeClosureRules.StreamingRequested("1", "unknown", false, null));
+            Assert.IsTrue(EdgeClosureRules.StreamingRequested(null, "unknown", false, true));
+        }
+
         [TestCase(TileSide.N, false)]
         [TestCase(TileSide.E, false)]
         [TestCase(TileSide.S, true)]

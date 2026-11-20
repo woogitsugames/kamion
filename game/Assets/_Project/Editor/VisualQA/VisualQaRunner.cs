@@ -96,6 +96,7 @@ namespace Game.Editor.VisualQA
             if (pc) Debug.Log($"[VISUALQA] PC tier {tier}: pipeline {QualitySettings.renderPipeline?.name}");
             ShaderUtil.allowAsyncCompilation = false; // avoid cyan placeholder shaders in captures
             EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            WorldNeighbourQa.Prepare(tier);
             Directory.CreateDirectory(outDir);
 
             // Look development (ADR 0010): lighting preset and the tier's camera-side settings (post, AA, far clip).

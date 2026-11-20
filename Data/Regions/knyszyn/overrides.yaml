@@ -1044,3 +1044,121 @@ overrides:
     confidence: medium
     verify: control camera rondo_dk65_from_south + knyszyn_s_kerb_step.py (drop <= 0.15 m); owner photo 9-11
     set: {shoulder: {kind: kerb}}
+
+  # D95: new roundabout wearing course, not the generic aged/cracked asphalt.
+  - id: knyszyn-roundabout-fresh-d95
+    target: {osm_way: [1426801304, 1426600413, 1464342634, 1464342635, 1464342636, 1464342637, 1464342638, 1464342639, 1464342640, 1464342641, 1478765548]}
+    reason: "D95 owner photos 9-11: fresh asphalt; remove the repeated asphalt_worn crack layer."
+    confidence: high
+    verify: owner cameras 09/10/11 after import
+    set: {surface: asphalt_new}
+  - id: knyszyn-roundabout-west-two-lanes-d95
+    target: {osm_way: [1478765548]}
+    reason: "D95 photo 9: one entry and one exit at the ring; retain asphalt width for D94 truck clearance."
+    confidence: high
+    verify: owner camera 09 and combo_lane_check
+    set: {lanes: 2, width: 11.25}
+  - id: knyszyn-roundabout-split-e-d95
+    kind: carriageway_split
+    node: 3047667218
+    reason: "D95 photo 9: raised E splitter; extension 12 m is WORKING_VALUE, preserve D94 lane width."
+    confidence: low
+    verify: owner camera 09 and combo_lane_check
+    set: {length_m: 12.0, taper_m: 10.0, lane_offset_m: 3.0}
+  - id: knyszyn-roundabout-split-w-d95
+    kind: carriageway_split
+    node: 13432353453
+    reason: "D95 photo 9: raised W splitter; short tile-edge segment limits extension to 6 m, WORKING_VALUE."
+    confidence: low
+    verify: owner camera 09 and combo_lane_check
+    set: {length_m: 6.0, taper_m: 5.0, lane_offset_m: 3.0}
+
+  - id: knyszyn-roundabout-sign-1464342634-d95
+    kind: gate3_sign
+    reason: "D95: C-12 and A-7 at each entry; placement WORKING_VALUE, confirm in owner cameras."
+    confidence: low
+    verify: owner camera 11
+    at_en: [-1004, -595]
+    travel_bearing_deg: 150
+    parts: [{face: A-7}, {face: C-12}]
+
+  - id: knyszyn-roundabout-sign-1464342635-d95
+    kind: gate3_sign
+    reason: "D95: C-12 and A-7 at each entry; placement WORKING_VALUE, confirm in owner cameras."
+    confidence: low
+    verify: owner camera 11
+    at_en: [-969, -627]
+    travel_bearing_deg: 330
+    parts: [{face: A-7}, {face: C-12}]
+
+  - id: knyszyn-roundabout-sign-1464342636-d95
+    kind: gate3_sign
+    reason: "D95: C-12 and A-7 at each entry; placement WORKING_VALUE, confirm in owner cameras."
+    confidence: low
+    verify: owner camera 11
+    at_en: [-970, -592]
+    travel_bearing_deg: 240
+    parts: [{face: A-7}, {face: C-12}]
+
+  - id: knyszyn-roundabout-sign-1464342639-d95
+    kind: gate3_sign
+    reason: "D95: C-12 and A-7 at each entry; placement WORKING_VALUE, confirm in owner cameras."
+    confidence: low
+    verify: owner camera 11
+    at_en: [-1003, -629]
+    travel_bearing_deg: 60
+    parts: [{face: A-7}, {face: C-12}]
+
+  - id: knyszyn-roundabout-lamp-0-d95
+    kind: gate3_lamp
+    reason: "D95 owner photo 11: lighting at roundabout and DK65 S; position and 9 m pole WORKING_VALUE."
+    confidence: low
+    verify: owner camera 11; check no duplication with rule lamps
+    at_en: [-1010, -601]
+    proto: lamp_arc_9m
+    arm_bearing_deg: 90
+
+  - id: knyszyn-roundabout-lamp-1-d95
+    kind: gate3_lamp
+    reason: "D95 owner photo 11: lighting at roundabout and DK65 S; position and 9 m pole WORKING_VALUE."
+    confidence: low
+    verify: owner camera 11; check no duplication with rule lamps
+    at_en: [-977, -589]
+    proto: lamp_arc_9m
+    arm_bearing_deg: 270
+
+  - id: knyszyn-roundabout-lamp-2-d95
+    kind: gate3_lamp
+    reason: "D95 owner photo 11: lighting at roundabout and DK65 S; position and 9 m pole WORKING_VALUE."
+    confidence: low
+    verify: owner camera 11; check no duplication with rule lamps
+    at_en: [-966, -620]
+    proto: lamp_arc_9m
+    arm_bearing_deg: 270
+
+  - id: knyszyn-roundabout-lamp-3-d95
+    kind: gate3_lamp
+    reason: "D95 owner photo 11: lighting at roundabout and DK65 S; position and 9 m pole WORKING_VALUE."
+    confidence: low
+    verify: owner camera 11; check no duplication with rule lamps
+    at_en: [-998, -635]
+    proto: lamp_arc_9m
+    arm_bearing_deg: 90
+
+  - id: knyszyn-roundabout-lamp-4-d95
+    kind: gate3_lamp
+    reason: "D95 owner photo 11: lighting at roundabout and DK65 S; position and 9 m pole WORKING_VALUE."
+    confidence: low
+    verify: owner camera 11; check no duplication with rule lamps
+    at_en: [-953, -654]
+    proto: lamp_arc_9m
+    arm_bearing_deg: 270
+
+  - id: knyszyn-roundabout-lamp-5-d95
+    kind: gate3_lamp
+    reason: "D95 owner photo 11: lighting at roundabout and DK65 S; position and 9 m pole WORKING_VALUE."
+    confidence: low
+    verify: owner camera 11; check no duplication with rule lamps
+    at_en: [-930, -685]
+    proto: lamp_arc_9m
+    arm_bearing_deg: 270
