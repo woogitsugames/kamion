@@ -18,3 +18,4 @@
 - W tle: `pwsh -File tools/worldgen/qa/krywlany_s24.ps1 -Phase unity -Tag r1`. NASTĘPNY KROK: obejrzeć artifacts/krywlany-s24/vqa-r1/bialystok-krywlany/*.png
 - 12:46 pytest (13 plików: route_links, katalog, start_clear, seams×4, tile_graph, map_plan, qa_tools_0219, dk19, generic_0166, far_field_streaming): 423 pass / 1 fail → test_tile_graph poprawiony (Dojlidy mają sąsiada krywlany W), 7/7. Import Win64 w toku.
 - 12:50 import r1 exit 2: brak `art-source/truck/interior/export/SM_CabInterior_LOD0.fbx` w worktree (poza gitem) → skopiowany z main; unity r1 ponownie w tle.
+- 13:0x import r1 exit 1: „closure rows overlap” (Sławińskiego ×2 + 2 drogi serwisowe na W krawędzi, qa/edge_closures_check.py NOT CUT) → `graph_filter.authored.json` (drop 251389617, 271890047), build_region r2, check: 0 NOT CUT. W tle: world r2 → unity r2 (`krywlany_s24.ps1 -Tag r2`). Po nich: post r3 (streaming, seams, fidelity).
