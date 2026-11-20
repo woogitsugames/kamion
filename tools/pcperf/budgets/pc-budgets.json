@@ -75,6 +75,12 @@
       ]
     }
   },
+  "streamingWorldMemory": {
+    "status": "WORKING_VALUE",
+    "source": "D89, ADR 0273/0290/0309",
+    "note": "Suma WORLD_MEMORY rezydentnych kafli, w tym przypiętego kafla odrodzenia; nie pamięć całego procesu ani VRAM. Runtime: StreamingSettings.BudgetForTier(tier, true); zgodność sprawdza pytest. Parser pc_metrics nie sprawdza tej tabeli (brak telemetrii WORLD_MEMORY).",
+    "perTierMB": {"Low": 850, "Medium": 850, "High": 2000, "Ultra": 2000}
+  },
   "tileBudgetsD83": {
     "status": "WORKING_VALUE",
     "method": "D83/D76: pomiar per tier na RTX 5070 (emulacja klas D74, nie referencja), 11 punktów x 6 konfiguracji, 1080p, exe kamion-0.1.0-e28533ca31-regions (stary świat, sprzed scaleń 16.11 wieczór); raport docs/reports/PC-BUDGET-2026-11-16.md, dane artifacts/pc-budget-s23/ (summary.csv, fit.json). Budżety = obwiednia zmierzona (bez ekstrapolacji poza zakres pomiaru), p95 w kadrze kamery jazdy. Skalowanie na GTX 660/1660/HD 630 NIE zrobione (brak cytowanego porównania) - patrz raport.",

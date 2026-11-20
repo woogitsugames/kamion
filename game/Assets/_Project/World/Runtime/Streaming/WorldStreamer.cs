@@ -127,7 +127,7 @@ namespace Game.World.Streaming
             public Vector2 min, max;
             public TileSide openSides;
             // edge objects (ADR 0169 closures, ADR 0085 far field, apron)
-            public GameObject[] closures; public TileSide[] closureSide; public float[] closureE, closureN; public bool[] closureOpen;
+            public GameObject edgeRoot; public GameObject[] closures; public TileSide[] closureSide; public float[] closureE, closureN; public bool[] closureOpen;
             public GameObject[] groups; public Vector4[] groupBounds;   // (minE, minN, maxE, maxN)
             public GameObject[] farSectors; public TileSide[] farSide;
             public GameObject apronWhole; public GameObject[] apronPieces; public TileSide[] apronSide;
@@ -146,6 +146,9 @@ namespace Game.World.Streaming
         readonly Stopwatch m_Clock = new Stopwatch();
         float m_NextDecide, m_LastUnloadAssets = -1000f;
         bool m_UnloadAssetsPending, m_RebasePending;
+        AsyncOperation m_UnloadAssetsOp;
+        double m_UnloadAssetsStart, m_LastUpdateReal = -1;
+        int m_LastGc0, m_LastGc1, m_LastGc2;
         int m_RebaseTile = -1;
         ThreadPriority m_PrevPriority;
 
@@ -394,14 +397,53 @@ namespace Game.World.Streaming
         void Update()
         {
             if (Policy == null || vehicle == null) return;
+            LogUpdateGap();
             ProgressLoads();
             ProgressActivation();
             ProgressUnloads();
+            // UnloadUnusedAssets is an async operation too. Do not enqueue a new scene load/unload behind it.
+            if (m_UnloadAssetsOp != null) return;
             if (Time.unscaledTime >= m_NextDecide)
             {
                 m_NextDecide = Time.unscaledTime + decideIntervalS;
                 Decide();
             }
+        }
+
+        void LogUpdateGap()
+        {
+            double now = Time.realtimeSinceStartupAsDouble;
+            int gc0 = System.GC.CollectionCount(0), gc1 = System.GC.CollectionCount(1), gc2 = System.GC.CollectionCount(2);
+            if (m_LastUpdateReal >= 0 && now - m_LastUpdateReal >= 1.0)
+            {
+                int loading = 0, activating = 0, unloading = 0;
+                for (int i = 0; i < m_Tiles.Length; i++)
+                {
+                    var s = Policy.StateOf(i);
+                    if (s == TileState.Loading) loading++;
+                    else if (s == TileState.Activating) activating++;
+                    else if (s == TileState.Unloading) unloading++;
+                }
+                Debug.LogWarning(string.Format(CultureInfo.InvariantCulture,
+                    "[STREAM] update gap t={0:F3}s gap={1:F0}ms focused={2} background={3} loading={4} activating={5} unloading={6} cleanup={7} gcDelta={8}/{9}/{10}",
+                    now, (now - m_LastUpdateReal) * 1000.0, Application.isFocused, Application.runInBackground,
+                    loading, activating, unloading, m_UnloadAssetsOp != null,
+                    gc0 - m_LastGc0, gc1 - m_LastGc1, gc2 - m_LastGc2));
+            }
+            m_LastUpdateReal = now;
+            m_LastGc0 = gc0; m_LastGc1 = gc1; m_LastGc2 = gc2;
+        }
+
+        void OnApplicationFocus(bool focused) => LogLifecycle("focus", focused);
+        void OnApplicationPause(bool paused) => LogLifecycle("pause", paused);
+
+        void LogLifecycle(string kind, bool value)
+        {
+            if (Policy == null) return;
+            Debug.Log(string.Format(CultureInfo.InvariantCulture,
+                "[STREAM] {0}={1} t={2:F3}s background={3} gc={4}/{5}/{6}", kind, value,
+                Time.realtimeSinceStartupAsDouble, Application.runInBackground,
+                System.GC.CollectionCount(0), System.GC.CollectionCount(1), System.GC.CollectionCount(2)));
         }
 
         void FixedUpdate()
@@ -628,6 +670,7 @@ namespace Game.World.Streaming
                     return;
                 }
                 Register(t, root, route);
+                if (t.edgeRoot != null) t.edgeRoot.SetActive(false);
                 Place(t);   // before the first render of the new scene
                 t.activateStart = Time.realtimeSinceStartup;
                 if (t.cooker != null) t.cooker.BeginCook();
@@ -660,6 +703,7 @@ namespace Game.World.Streaming
                 Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] ready {0}: load {1:F0} ms, activation {2:F0} ms ({3} chunks), vehicle {4:F0} m from the tile, resident {5} tiles / {6:F0} MB (ESTIMATED)",
                     t.sceneName, LastLoadMs, LastActivationMs, t.chunks.Length, dist, Policy.ResidentCount(), Policy.ResidentMemoryMB()));
                 RefreshEdgesAround(i);
+                if (t.edgeRoot != null) t.edgeRoot.SetActive(true);
                 return;
             }
         }
@@ -691,6 +735,14 @@ namespace Game.World.Streaming
 
         void ProgressUnloads()
         {
+            if (m_UnloadAssetsOp != null)
+            {
+                if (!m_UnloadAssetsOp.isDone) return;
+                Debug.Log(string.Format(CultureInfo.InvariantCulture,
+                    "[STREAM] cleanup done t={0:F3}s wall={1:F1}ms", Time.realtimeSinceStartupAsDouble,
+                    (Time.realtimeSinceStartupAsDouble - m_UnloadAssetsStart) * 1000.0));
+                m_UnloadAssetsOp = null;
+            }
             for (int i = 0; i < m_Tiles.Length; i++)
             {
                 var t = m_Tiles[i];
@@ -701,21 +753,23 @@ namespace Game.World.Streaming
                 ReleaseLease(t);   // the scene is gone: its pack bundles may go (ref-counted, ADR 0273 §4)
                 m_UnloadAssetsPending = true;
             }
-            // Scene unload does not free the meshes / textures: Resources.UnloadUnusedAssets, throttled, never while loading.
-            if (m_UnloadAssetsPending && Time.unscaledTime - m_LastUnloadAssets >= unloadAssetsMinIntervalS && !AnyLoadingOrActivating())
+            // Scene unload does not free the meshes / textures. Reclaim only after all scene work has finished.
+            if (m_UnloadAssetsPending && Time.unscaledTime - m_LastUnloadAssets >= unloadAssetsMinIntervalS && !AnySceneWork())
             {
                 m_UnloadAssetsPending = false;
                 m_LastUnloadAssets = Time.unscaledTime;
-                Resources.UnloadUnusedAssets();
+                m_UnloadAssetsStart = Time.realtimeSinceStartupAsDouble;
+                Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] cleanup start t={0:F3}s", m_UnloadAssetsStart));
+                m_UnloadAssetsOp = Resources.UnloadUnusedAssets();
             }
         }
 
-        bool AnyLoadingOrActivating()
+        bool AnySceneWork()
         {
             for (int i = 0; i < m_Tiles.Length; i++)
             {
                 var s = Policy.StateOf(i);
-                if (s == TileState.Loading || s == TileState.Activating) return true;
+                if (s == TileState.Loading || s == TileState.Activating || s == TileState.Unloading) return true;
             }
             return false;
         }
@@ -816,6 +870,7 @@ namespace Game.World.Streaming
             var far = new List<GameObject>(); var fs = new List<TileSide>();
             var pieces = new List<GameObject>(); var ps = new List<TileSide>();
             t.apronWhole = null;
+            t.edgeRoot = edge != null ? edge.gameObject : null;
             if (edge != null)
             {
                 var data = t.boundary != null ? t.boundary.closures : System.Array.Empty<WorldBoundary.Closure>();
@@ -833,10 +888,11 @@ namespace Game.World.Streaming
                     else if (n.StartsWith("Closure_", System.StringComparison.Ordinal))
                     {
                         Vector3 lp = c.localPosition; float heading = c.localEulerAngles.y;
+                        TileSide exitSide = TileSide.None;
                         int idx = ParseIndex(n);
-                        if (idx >= 0 && idx < data.Length) { lp = data[idx].localPos; heading = data[idx].headingDeg; }
+                        if (idx >= 0 && idx < data.Length) { lp = data[idx].localPos; heading = data[idx].headingDeg; exitSide = data[idx].exitSide; }
                         closures.Add(c.gameObject); ce.Add(lp.x); cn.Add(lp.z);
-                        cs.Add(EdgeSides.ClosureSide(lp.x, lp.z, heading, t.min.x, t.min.y, t.max.x, t.max.y));
+                        cs.Add(exitSide != TileSide.None ? exitSide : EdgeSides.ClosureSide(lp.x, lp.z, heading, t.min.x, t.min.y, t.max.x, t.max.y));
                     }
                     else if (n == "Apron") t.apronWhole = c.gameObject;
                     else if (EdgeSides.ApronPieceSide(n) != TileSide.None) { pieces.Add(c.gameObject); ps.Add(EdgeSides.ApronPieceSide(n)); }
@@ -865,6 +921,7 @@ namespace Game.World.Streaming
 
         static void Clear(Tile t)
         {
+            t.edgeRoot = null;
             t.root = null; t.route = null; t.routeComp = null; t.boundary = null; t.cooker = null; t.instances = null;
             t.chunks = System.Array.Empty<GameObject>(); t.nextChunk = 0;
             t.closures = System.Array.Empty<GameObject>(); t.groups = System.Array.Empty<GameObject>();
@@ -893,14 +950,14 @@ namespace Game.World.Streaming
                 {
                     var side = Graph.NeighborSides[tile][k];
                     if (side != TileSide.N && side != TileSide.E && side != TileSide.S && side != TileSide.W) continue;
-                    if (nb[k] != leaving && Policy.StateOf(nb[k]) == TileState.Ready && m_Tiles[nb[k]].root != null) open |= side;
+                    if (EdgeClosureRules.SeamReady(Policy.StateOf(tile), Policy.StateOf(nb[k]), m_Tiles[nb[k]].root != null, nb[k] == leaving)) open |= side;
                 }
             }
             if (open == t.openSides && open == TileSide.None) return;
             t.openSides = open;
             for (int i = 0; i < t.closures.Length; i++)
             {
-                t.closureOpen[i] = (open & t.closureSide[i]) != 0;
+                t.closureOpen[i] = EdgeClosureRules.IsOpen(t.closureSide[i], open);
                 if (t.closures[i] != null) t.closures[i].SetActive(!t.closureOpen[i]);
             }
             for (int i = 0; i < t.groups.Length; i++)

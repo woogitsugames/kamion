@@ -133,3 +133,18 @@ Measured on the committed `bialystok-industrial-c_route.bytes` (550 nodes, 646 e
 4. The corner rule is skipped when one road axis lies behind the other row (not present in this region); `Build`
    then stops with the conflict message instead of building a doubled closure.
 5. `docs/adr/README.md` index not regenerated here (leader).
+
+## Korekta s24 — niezależne zamknięcia i wysokość (2026-11-19)
+
+Implementacja `edge-barriers-cli`, po raporcie przejazdu Windows s24 #7/#8. Jedna lista resolved closures pozostaje
+źródłem danych, kolizji i wyglądu. Wycofano grupowanie widoczności według odległości: renderer i collider każdego
+zamknięcia należą do jednego obiektu `Closure_*`. Dzięki temu otwarcie szwu nie zależy od zamknięcia innej strony
+w tej samej grupie. `exitSide` zachowuje rzeczywistą granicę przeciętą przez drogę; tangent przy odsuniętej zaporze
+jest jedynie fallbackiem dla starych danych. Wysokość po resolve pobierana jest z kolizji nawierzchni własnego root
+(teren jako fallback), z wykluczeniem dachów `col_concrete`. WorldEdge nowego kafla pozostaje ukryty do Ready.
+
+Wymagany pełny import obu tiers wszystkich scen, w tym `_Tile`; sam RebuildEdgeBatch nie wystarcza. Guard buildu
+odrzuca stare ClosureGroup_*. Większa liczba rendererów wymaga pomiaru draw calls w playerze. Testy czystej logiki
+C# przechodzą, integracyjne EditMode, rendering i przejazd Windows nieuruchomione w tej sesji na polecenie właściciela.
+Przyczyna konkretnej magenty t=510 niepotwierdzona; dodano kontrolę brakujących materiałów i znanych błędów shaderów.
+Szczegóły, lokalizacje i komendy integracji: [raport po polsku](../reports/edge-barriers-cli-s24.md).

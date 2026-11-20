@@ -21,10 +21,12 @@ namespace Game.World
         [Serializable]
         public struct Closure
         {
-            [Tooltip("Centre of the barrier line on the road surface, region-local (x east, y height above the anchor, z north)")]
+            [Tooltip("Centre of the barrier line on the road surface, region-local (x east, y absolute elevation, z north)")]
             public Vector3 localPos;
             [Tooltip("Heading of the road towards the region edge (degrees clockwise from north)")]
             public float headingDeg;
+            [Tooltip("Actual tile edge reached by the road; None in legacy scenes (heading-based fallback)")]
+            public Streaming.TileSide exitSide;
             [Tooltip("Width of the closed road [m]")]
             public float widthM;
             public string road;

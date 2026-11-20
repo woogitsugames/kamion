@@ -65,7 +65,7 @@ namespace Game.World.Streaming
         /// <summary>When the budget leaves no room, the single best tile ahead is still loaded (a closed road is worse
         /// than a PSS overshoot that the device run measures). WORKING_VALUE decision, ADR 0235 §4.</summary>
         public bool allowOneOverBudget = true;
-        /// <summary>Simultaneous async loads (Unity serialises scene loads anyway). </summary>
+        /// <summary>Simultaneous loads including chunk activation and collision cooking.</summary>
         public int maxConcurrentLoads = 1;
 
         public float BaseLoadRadiusM => maxSpeedMs * (loadTimeS + activationTimeS + cookTimeS) + marginM;
@@ -91,7 +91,8 @@ namespace Game.World.Streaming
         /// Owner decision 18.11 (ADR 0273 dopisek D81, ADR 0290): the DK19 tiles of D81 made the worst set bojary +
         /// mickiewicza + wygoda + pinned C = Low 796.2 / High 1935.2 MB -> Low 850, High 2000 (measured on the GTX 1070,
         /// class "zalecany": High corridor VRAM 1.07-1.87 GB of 8 GB, private 2.1-3.3 GB; Low VRAM 0.45 GB;
-        /// artifacts/pc/DOM/20261118-*, artifacts/d3d-ab). WORKING_VALUE. Medium 800 unchanged (no decision). Phone: see
+        /// artifacts/pc/DOM/20261118-*, artifacts/d3d-ab). ADR 0309: Medium 800 -> 850, the same Low content and corridor
+        /// envelope as Low; desktop ladder 850 / 850 / 2000 / 2000 MB (WORKING_VALUE). Phone: see
         /// <see cref="BudgetForTier(string)"/>.
         /// </summary>
         public static float BudgetForTier(string tier, bool desktop)
@@ -101,7 +102,7 @@ namespace Game.World.Streaming
                 switch (tier)
                 {
                     case "Low": return 850f;
-                    case "Medium": return 800f;
+                    case "Medium": return 850f;
                     case "High": return 2000f;
                     case "Ultra": return 2000f;
                     default: return 850f;
@@ -271,7 +272,8 @@ namespace Game.World.Streaming
             {
                 if (i == cur || i == Pinned || m_Wanted[i]) continue;
                 var s = m_State[i];
-                if ((s == TileState.Ready || s == TileState.Activating) && m_Dist[i] > unloadR)
+                // Do not destroy a cooker with an outstanding bake: OnDestroy must Complete its job.
+                if (s == TileState.Ready && m_Dist[i] > unloadR)
                 {
                     output[count++] = new StreamCommand { op = StreamOp.Unload, tile = i };
                     m_State[i] = TileState.Unloading;
@@ -288,7 +290,7 @@ namespace Game.World.Streaming
                 m_Order[p] = i;
                 m++;
             }
-            if (m == 0 || CountState(TileState.Loading) >= Settings.maxConcurrentLoads) return count;
+            if (m == 0 || CountState(TileState.Loading) + CountState(TileState.Activating) >= Settings.maxConcurrentLoads) return count;
             // Memory frees only when an unload completes, so a tile still unloading keeps counting.
             int best = m_Order[0];
             float mem = ResidentMemoryMB();
@@ -305,7 +307,7 @@ namespace Game.World.Streaming
             for (int i = 0; i < n; i++)
             {
                 if (i == cur || i == Pinned || m_Wanted[i]) continue;
-                if (m_State[i] != TileState.Ready && m_State[i] != TileState.Activating) continue;
+                if (m_State[i] != TileState.Ready) continue;
                 if (evict < 0 || m_Dist[i] > m_Dist[evict]) evict = i;
             }
             if (evict >= 0)

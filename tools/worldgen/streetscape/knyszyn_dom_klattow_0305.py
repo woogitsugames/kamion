@@ -59,8 +59,9 @@ PORCH_EAVE, PORCH_RIDGE, PORCH_OV, PORCH_FRONT_OV = 2.22, 3.15, 0.25, 0.30
 PORCH_RAIL, PORCH_BEAM = 1.10, 2.08               # top of the board panels / underside of the head beam
 PORCH_DOOR_W = 1.10                               # clear opening of the porch front
 PICKET_W, PICKET_PITCH, PICKET_H = 0.09, 0.14, 1.05
-FENCE_PAST = (0.4, 0.4)                           # past the west / east corner; beyond it the plot's own picket fence
-                                                  # (override plot_fence of the house, streetscape.plots) carries on, m
+FENCE_PAST = (2.6, 4.5)                           # past the west / east corner, m (photo 01, ADR 0305)
+OPENING_MARGIN = 0.30                            # clear wall beyond the opening's surround / sill, m
+OPENING_TRIM = 0.105                             # widest window trim: 0.085 m surround + 0.02 m sill
 ROAD_CLEAR_M = 0.15                               # the fence keeps this far off the road / footway footprint
 WALKWAY_MIN_M = 1.4                               # footway left in front of pickets that stand on the modelled footway
 BED = "plot_lawn"                                 # raised grass strip between the wall and the pickets
@@ -100,12 +101,41 @@ def _frame(poly):
         off = float((pc - (a + b) / 2) @ n)
         if off > 0 and (best is None or L > best[3]):
             best = (a, d, n, L, float(np.linalg.norm(rect[(k + 2) % 4] - b)))
-    if best is None or not (15.0 < best[3] < 30.0 and 5.0 < best[4] < 11.0):
+    # This is an authored photo layout, not a generic long house. Keep close to the sourced 21.10 x 7.84 m body.
+    if best is None or not (20.0 <= best[3] <= 22.2 and 7.0 <= best[4] <= 8.7):
         return None
     a, d, n, L, W = best
     q = np.asarray(parts[0].exterior.coords) - a
     u, w = q @ d, q @ n
-    return a, d, n, L, W, float(u.min()), float(u.max()), float(w.max())
+    pu0, pu1, pd = float(u.min()), float(u.max()), float(w.max())
+    pc = (pu0 + pu1) / 2
+    if not (2.4 <= pu1 - pu0 <= 2.8 and 1.7 <= pd <= 2.3):
+        return None
+
+    def fits(centre, width, length, trim=OPENING_TRIM):
+        return (centre - width / 2 - trim >= OPENING_MARGIN and
+                centre + width / 2 + trim <= length - OPENING_MARGIN)
+
+    # Include all trim (especially the projecting sill), and keep street windows off the porch roof.
+    for off in FRONT_WINDOWS:
+        centre = pc + off
+        if not fits(centre, WIN_W, L):
+            return None
+        if not (centre + WIN_W / 2 + OPENING_TRIM <= pu0 - PORCH_OV - 0.10 or
+                centre - WIN_W / 2 - OPENING_TRIM >= pu1 + PORCH_OV + 0.10):
+            return None
+    if not all(fits(centre, width, L) for centre, width in BACK_WINDOWS + (BACK_DOOR,)):
+        return None
+    if not all(fits(W / 2 + off, WIN_W, W) for off in GABLE_WINDOWS):
+        return None
+    if not (fits(pc, 0.92, L) and fits(pc, pu1 - pu0, L, PORCH_OV)):
+        return None
+    # The attic trim must also sit below the sloping gable edge, including the small window roof.
+    slope = (RIDGE - EAVE_EDGE) / (W / 2 + EAVE_OV)
+    attic_half = GABLE_WIN[0] / 2 + 0.17
+    if not fits(W / 2, 2 * attic_half, W, 0.0) or GABLE_WIN[2] + 0.26 > RIDGE - slope * attic_half:
+        return None
+    return a, d, n, L, W, pu0, pu1, pd
 
 
 def _row(key):

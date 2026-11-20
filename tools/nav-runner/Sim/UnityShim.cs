@@ -9,6 +9,12 @@ using System.IO;
 
 namespace UnityEngine
 {
+    public static class JsonUtility
+    {
+        public static T FromJson<T>(string json) => System.Text.Json.JsonSerializer.Deserialize<T>(json,
+            new System.Text.Json.JsonSerializerOptions { IncludeFields = true });
+    }
+
     public static class Mathf
     {
         public const float Rad2Deg = 57.29578f;

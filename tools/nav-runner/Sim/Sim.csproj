@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Compile Include="../../../game/Assets/_Project/Core/Navigation/*.cs" LinkBase="Navigation" />
+    <Compile Include="../../../game/Assets/_Project/UI/Navigation/NavTrip.cs" Link="Navigation/NavTrip.cs" />
     <Compile Include="*.cs" />
   </ItemGroup>
 

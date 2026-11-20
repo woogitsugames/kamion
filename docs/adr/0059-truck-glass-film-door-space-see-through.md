@@ -83,3 +83,17 @@ Do potwierdzenia na A16: `device-metrics.ps1` cab-dash/cab-left przed/po.
 - **N-17** (przepał deflektora High 4 %, niezależny od capture) — lakier/krzywa High, nie szkło.
 - Lider po scaleniu: `TruckAssetBuilder.BuildBatch` (nowe materiały drzwi), potem build APK; telefon: N-16 1:1, `cab-left`.
 - Test: `TruckDoorGlassTests` (EditMode).
+
+## Uzupełnienie 2026-11-19 — przejazd s24 #11, słup w przedniej szybie
+
+Proceduralny film poza polami wycieraczek pozostaje wyłącznie w widokach zewnętrznych. W obu ścieżkach
+`TruckGlass.shader` (pełna i `_KAMION_GLASS_FAST`) liczymy go tylko dla zewnętrznej ściany szyby lub gdy
+`_KamionCamOutside > 0.5`. Wewnętrzna ściana oglądana z kabiny otrzymuje `film = 0`; dalsza szyba oglądana
+z zewnątrz zachowuje film. Używamy istniejącej klasyfikacji kamery i ściany z ADR 0059.
+
+To świadomy kompromis czytelności: analityczna maska niewytartych pól tworzyła szerokie, jasne pionowe smugi
+na tle drogi. Nie jest to symulacja oczyszczenia zewnętrznej powierzchni ani model fizycznego brudu widocznego
+z obu stron. Absorpcja, Fresnel, odbicie kabiny, opcjonalna tekstura brudu i atmosfera pozostają aktywne.
+Bez nowych materiałów, wariantów lub zmian generatora. Raport i ograniczenia dowodu:
+`docs/reports/cab-haze-cli-s24.md`. Obejrzano wejściowe PNG; wynik po poprawce i kompilacja shadera wymagają
+weryfikacji w buildzie (w tej sesji zakaz uruchamiania Unity i buildów).

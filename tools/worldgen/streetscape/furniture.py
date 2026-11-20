@@ -1901,8 +1901,14 @@ def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), den
             if queue is not None:
                 queue.append(it)
             else:
-                guardrail(lin, it["P"], it["Z"], key, it["tall"], it["term"], dense=it["dense"], dark=it["dark"])
-            built.append(LineString(Ps))
+                direct = [it]
+                _clip_rails_to_pavement(direct, lin.buf.parts, m)
+                for safe in direct:
+                    guardrail(lin, safe["P"], safe["Z"], key, safe["tall"], safe["term"],
+                              dense=safe["dense"], dark=safe["dark"])
+                    built.append(LineString(safe["P"]))
+            if queue is not None:
+                built.append(LineString(Ps))
         else:
             m["dedup_dropped_pts"] = m.get("dedup_dropped_pts", 0) + (kk - k + 1)
         k = kk + 1
@@ -2043,11 +2049,59 @@ def _drop_doubled_rows(queue, m=None):
             m["doubled_rows_keys"] = removed
 
 
+# WORKING_VALUE: clear pavement + hardware envelope + beam simplification tolerance.
+GUARDRAIL_PAVEMENT_CLEAR_M = 0.25
+GUARDRAIL_ENVELOPE_M = 0.20 + RAIL_DP_M
+
+
+def _clip_rails_to_pavement(queue, parts, m=None):
+    """Check whole segments AFTER smoothing/joins; never reconnect across a cut.
+
+    Height filtering preserves rails above underpasses. Raised islands are refuges,
+    including where an underlying carriageway ribbon has not been cut out.
+    """
+    from roads.surface_safety import SurfaceIndex, carriageway, island
+    road, islands = SurfaceIndex(parts, carriageway), SurfaceIndex(parts, island)
+    out, removed = [], 0
+    radius = GUARDRAIL_PAVEMENT_CLEAR_M + GUARDRAIL_ENVELOPE_M
+    for it in queue:
+        P, Z = np.asarray(it["P"]), np.asarray(it["Z"])
+        safe = []
+        for k in range(len(P) - 1):
+            seg = shapely.LineString(P[k:k + 2])
+            zone = seg.buffer(radius)
+            lo, hi = float(min(Z[k:k + 2])), float(max(Z[k:k + 2]))
+            driven = road.near(zone, lo, hi).difference(islands.near(zone, lo, hi))
+            safe.append(driven.is_empty or not seg.intersects(driven.buffer(radius)))
+        k = 0
+        while k < len(safe):
+            if not safe[k]:
+                removed += 1
+                k += 1
+                continue
+            end = k
+            while end + 1 < len(safe) and safe[end + 1]:
+                end += 1
+            if end - k + 2 >= GUARDRAIL_MIN_RUN:
+                item = dict(it)
+                for field in ("P", "Z", "tall", "dense", "dark"):
+                    if it.get(field) is not None:
+                        item[field] = np.asarray(it[field])[k:end + 2].copy()
+                item["term"] = (it["term"][0] if k == 0 else True,
+                                it["term"][1] if end == len(safe) - 1 else True)
+                out.append(item)
+            k = end + 1
+    queue[:] = out
+    if m is not None:
+        m["pavement_cut_segments"] = m.get("pavement_cut_segments", 0) + removed
+
+
 def _flush_rails(lin, m=None):
     queue = getattr(lin, "rail_queue", None) or []
     if queue and m is not None:
         _join_free_ends(queue, m)
     _drop_doubled_rows(queue, m)
+    _clip_rails_to_pavement(queue, lin.buf.parts, m)
     _mark_free_deck_ends(queue, m)
     for it in queue:
         guardrail(lin, it["P"], it["Z"], it["key"], it["tall"], it["term"], it.get("term_tall", (False, False)),
@@ -2432,7 +2486,7 @@ def guardrails(lin, net, zground, report):
     for zid, _zp, zcnt in nozones:
         (net.overrides_applied.append({"id": zid, "targets": [f"rule guardrail points removed: {zcnt[0]}"]})
          if zcnt[0] else net.overrides_stale.append(zid))
-    deck_flags = _flush_rails(lin, m)
+    _flush_rails(lin, m)
     drop_parapets_at_barriers(lin.buf, lin.rail_runs, m, extra=par_extra)
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}
     # ADR 0144: every built run (1 m points: E, N, foot z, deck flag) for tests/gis/test_guardrail_overlap.py
@@ -2441,7 +2495,7 @@ def guardrails(lin, net, zground, report):
                                  "pts": [[round(float(a), 2), round(float(b), 2), round(float(z_), 2), int(t_)]
                                          for (a, b), z_, t_ in zip(r["P"], r["Z"], r["tall"])]} for r in lin.rail_runs]
     # pier_guardrails (after the bridge supports exist) dedups against the GROUND rails (deck rails pass overhead)
-    net.guardrail_built = [b for b, dk in zip(built, deck_flags) if not dk] if len(deck_flags) == len(built) else built
+    net.guardrail_built = [shapely.LineString(r["P"]) for r in lin.rail_runs if not np.all(r["tall"])]
     d = np.array(drops) if drops else np.zeros(1)
     report["embankment_check"] = {"rural_sides": len(drops), "max_drop_m": round(float(d.max()), 2),
                                   "p95_drop_m": round(float(np.percentile(d, 95)), 2),

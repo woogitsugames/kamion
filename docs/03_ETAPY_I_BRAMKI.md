@@ -56,6 +56,19 @@ Progi FPS, RAM/VRAM procesu i dysk to propozycja lidera (SCS nie publikuje FPS) 
 
 Te same liczby jako dane (jedno źródło prawdy dla parsera): `tools/pcperf/budgets/pc-budgets.json`.
 Zmiana budżetu = zmiana tego pliku + wiersza w tabeli + wpis w ADR 0266 (lub nowy ADR), po decyzji właściciela.
+
+Budżet streamingu świata PC (suma `WORLD_MEMORY` kafli rezydentnych wraz z przypiętym kaflem odrodzenia;
+**WORKING_VALUE**, D89, ADR 0273/0290/0309):
+
+| Tier | Low | Medium | High | Ultra |
+|---|---|---|---|---|
+| Treść | Low | Low | High | High |
+| Świat [MB] | 850 | 850 | 2000 | 2000 |
+
+Dane: `streamingWorldMemory.perTierMB` w `pc-budgets.json`; runtime: `StreamingSettings.BudgetForTier(tier, true)`.
+To osobny limit od pamięci procesu i VRAM powyżej. Parser pcperf nie ocenia `WORLD_MEMORY` (brak takiej telemetrii);
+pytest pilnuje zgodności tabeli z runtime. Równe sąsiednie progi są zamierzone: ta sama treść, bez nowego pomiaru.
+
 **Ryzyko (D74):** Intel HD 630 przy obecnym świecie — pomiar tieru Low na iGPU konieczny, zanim klasa „min” zostanie
 obiecana. Liczby z maszyny deweloperskiej (ADR 0261: RTX 5070, High, 1600×900, 360–445 fps głównie na postoju) są
 informacyjne i nie zastępują pomiaru klas min/zalecany (ani emulacji D76 w warunkach klasy, ani prawdziwego sprzętu).

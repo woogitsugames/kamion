@@ -24,6 +24,16 @@ Obiekt powstaje wyłącznie z danych i stałych w kodzie — przeżywa każdy re
 „długim domem z jednym gankiem”, generator się wyłącza i wraca dom z reguły (nadpisanie `look-dom-klattow-wooden`,
 teraz białe deski `wood_planks_white` zamiast brązowych).
 
+Korekta P2 (`klattow-fix-cli`): autorski układ wymaga korpusu 20,0–22,2 × 7,0–8,7 m i ganku
+2,4–2,8 × 1,7–2,3 m. Każdy otwór wraz z obramowaniem i parapetem musi mieć ≥ 0,30 m zapasu
+do narożnika; okna uliczne ≥ 0,10 m do dachu ganku. Sprawdzane są również drzwi, osadzenie ganku
+z okapem oraz okno strychowe z daszkiem pod skosem szczytu. Niespełnienie warunków wyłącza
+`hero_targets()` i pozostawia dom z reguły; `build()` również odrzuca taki obrys przed emisją siatki.
+Korekta P3: `FENCE_PAST` ma osobne wartości W/E **2,6 / 4,5 m**, zgodnie z tabelą poniżej.
+Testy obejmują graniczne wymiary, niezgodne obrysy i zapas reguły oraz długości obu odcinków płotu.
+W tej korekcie nie przebudowywano świata ani nie wykonywano oceny wizualnej kolizji z płotem działki;
+wcześniejsze pomiary i rendery poniżej dotyczą stanu sprzed korekty.
+
 | Element | Źródło | Wartość |
 |---|---|---|
 | Bryła, ganek | BDOT10k (SOURCED) | korpus 21,10 × 7,84 m; ganek 2,7 × 2,0 m, środek 10,35 m od zachodniego narożnika ściany od ulicy |

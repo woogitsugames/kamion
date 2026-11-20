@@ -290,10 +290,12 @@ namespace Game.UI.Navigation
                 for (int k = 0; k < p.ManCount; k++)
                 {
                     if (p.ManType[k] == Maneuver.Arrive && !last) continue;   // the seam is not an arrival
-                    int pt = Mathf.Clamp(b + p.ManPoint[k] - (b > 0 && p.Count > 0 && (p.Points[0] + off - c.Points[b - 1]).sqrMagnitude < 1e-4f ? 1 : 0), 0, c.Count - 1);
+                    int pointBase = b - (b > 0 && p.Count > 0 && (p.Points[0] + off - c.Points[b - 1]).sqrMagnitude < 1e-4f ? 1 : 0);
+                    int pt = Mathf.Clamp(pointBase + p.ManPoint[k], 0, c.Count - 1);
                     ushort mn = p.ManName[k] < leg.NameMap.Length ? leg.NameMap[p.ManName[k]] : (ushort)0;
                     c.AddManeuver(pt, p.ManType[k], p.ManTurn[k], p.ManExit[k], mn, -1);
                     int m = c.ManCount - 1;
+                    c.ManEndPoint[m] = Mathf.Clamp(pointBase + p.ManEndPoint[k], 0, c.Count - 1);
                     c.ManLaneCount[m] = p.ManLaneCount[k]; c.ManLaneCls[m] = p.ManLaneCls[k];
                     c.ManLanesAllowed[m] = p.ManLanesAllowed[k]; c.ManLanesRec[m] = p.ManLanesRec[k];
                 }
