@@ -293,7 +293,7 @@ def test_lamus_by_the_presbytery(fc):
     a, d, n, L, W = KL._frame(blds[0]["poly"])
     assert float(n @ KL.ARCADE_SIDE) > 0.95                       # the arcade looks north-north-east
     mats = {m for _, m, *_ in buf.parts}
-    assert mats <= set(MT.M) and {KL.LOG, KL.SHINGLE, KL.WOOD, KL.STONE} <= mats
+    assert mats <= set(MT.M) and {KL.LOG, KL.SHINGLE, KL.WOOD, KL.STONE, KL.BROW} <= mats
     assert MT.M[KL.LOG]["set_tile_m"][1] >= res["roof"]["wall_top_m"] - KL.PLINTH_TOP   # one tile of courses covers the wall
     assert MT.M[KL.WOOD]["texture_set"] == "wood_siding" and MT.M[KL.WOOD]["tint_linear"] is True
     assert MT.M[KL.SHINGLE]["texture_set"] == "wood_shingles" and MT.M[KL.SHINGLE]["tint_linear"] is True
@@ -311,9 +311,11 @@ def test_lamus_by_the_presbytery(fc):
     hw, zk, slope, s_k, s_top = KL.roof_profile(W)
     courses = res["roof"]["shingle_courses"]
     assert courses == pytest.approx(s_top / KL.SHINGLE_COURSE, abs=1.0) and butts == 2 * 4 * courses    # every course steps
+    under = [(V_, T_) for l, m, V_, UV_, T_ in buf.parts if l == "buildings" and m == KL.SHINGLE]
+    assert len(T) >= 8 * courses + 16                            # courses + butts + the closed shell under them
     assert 45.0 < res["roof_pitch_deg"] < 56.0 and KL.KICK_DEG < res["roof_pitch_deg"] - 15           # kicked eaves
     assert V[:, 2].max() - Z0 == pytest.approx(KL.RIDGE + 0.0, abs=KL.SHINGLE_STEP + 1e-6)
-    assert V[:, 2].min() - Z0 == pytest.approx(KL.EAVE_EDGE)
+    assert V[:, 2].min() - Z0 == pytest.approx(KL.EAVE_EDGE - 0.02)
     # the eaves reach ROOF_OV past the footprint on every side
     foot = blds[0]["poly"]
     import shapely

@@ -9,8 +9,8 @@ low on the arcade slope; an open arcade (podcien) on six posts with braces (miec
 under a head beam with the ends of the ceiling joists above it; a plank deck on a sill beam that stands proud of the
 posts, with one plank step; a full-depth log room at the west end with one small square opening. ESTIMATED: which
 long side carries the arcade (the church stands beyond the far end of the arcade on the photo, the building to the
-right of the view axis -> the NNE side), every height and the roof pitches (round 3: eave edge 2.35 m, ridge 6.8 m,
-kick 27 deg over 1.15 m, main slope ~51 deg, overhang 0.9 m - the roof is ~1.6 x the wall on the photo), arcade
+right of the view axis -> the NNE side), every height and the roof pitches (round 3: eave edge 2.27 m, ridge 6.8 m,
+kick 32 deg over 1.15 m, main slope ~51 deg, overhang 0.9 m - the roof is ~1.6 x the wall on the photo), arcade
 2.1 m deep over 0.72 of the length. All member sizes WORKING_VALUE.
 
 Round 3 (klattow-r3-s24): the shingle courses are geometry - every course is its own strip whose butt edge stands
@@ -32,15 +32,16 @@ REGION = "knyszyn"
 BUILDING_ID = "bdot:40f8044a-d048-4ad8-ad57-d8b8a2886fe1"
 ASSET_ID = "knyszyn_lamus_0305"
 LOG, WOOD, SHINGLE, STONE, DARK = "log_wall_raw", "wood_planks_weathered", "roof_shingles_grey", "fieldstone_plinth", "plinth_dark"
+BROW = "wood_planks"                                     # warm brown board of the eyebrow dormer (red-brown on the photo)
 PLINTH_TOP = 0.25
-EAVE_EDGE, RIDGE, ROOF_OV = 2.35, 6.80, 0.90              # lower edge of the shingles / ridge above the ground; overhang
-KICK_RUN, KICK_DEG = 1.15, 27.0                           # flatter lower part of every slope (horizontal run, pitch)
+EAVE_EDGE, RIDGE, ROOF_OV = 2.27, 6.80, 0.90              # lower edge of the shingles / ridge above the ground; overhang
+KICK_RUN, KICK_DEG = 1.15, 32.0                           # flatter lower part of every slope (horizontal run, pitch)
 SHINGLE_COURSE = 1.5 / 7                                  # exposure of a course along the slope = the set's course, m
-SHINGLE_STEP = 0.035                                      # butt of a course above the course below, m
+SHINGLE_STEP = 0.05                                       # butt of a course above the course below, m
 ARCADE_D, ARCADE_SHARE, POSTS, POST = 2.10, 0.72, 6, 0.20
 BEAM_H, JOIST_H, PLATE_H = 0.22, 0.16, 0.16               # head beam, joist ends above it, top plate under the roof
 BRACE_LEG, BRACE_HALF = 0.65, 0.06
-DECK_OUT, DECK_SILL = 0.25, 0.28                          # deck past the post line; sill beam under its edge
+DECK_OUT, DECK_SILL = 0.25, 0.42                          # deck past the post line; sill beam under its edge
 DORMER_U, DORMER_HALF_W, DORMER_H = 0.58, 0.95, 0.60      # eyebrow: centre as a share of the arcade, half width, rise
 ARCADE_SIDE = np.array([0.4366, 0.9])       # the long side that carries the arcade looks this way (E, N) - ESTIMATED
 FLOOR = 0.35
@@ -257,6 +258,10 @@ def build(buf, region, blds, zsmooth, report):
                    out3, uv=[[uoff + ra, sa - 0.012], [uoff + Lf - ra, sa - 0.012], [uoff + Lf - ra, sa - 0.003], [uoff + ra, sa - 0.003]])
         for r0_, r1_ in ((0.0, KICK_RUN), (KICK_RUN, hw)):   # LOD1: the two pitches as plain faces
             strip(L1, face, r0_, r1_)
+            # LOD0: the same closed faces 2 cm under the courses. Round 3 review (P0): the shadow pass pulls every
+            # vertex in along its normal, which opened slits between a course and its butt - dots of sun in the
+            # roof's shadow. The shell is hidden by the courses and closes the caster.
+            strip(L0, face, r0_, r1_, -0.02, -0.02)
         # eave board and the boarded underside of the overhang (to the wall line)
         m.quad(L0, WOOD, [F(face, 0, 0, -0.07), F(face, Lf, 0, -0.07), F(face, Lf, 0), F(face, 0, 0)], out3, grain="ab",
                key=(ASSET_ID, "edge", name))
@@ -285,8 +290,8 @@ def build(buf, region, blds, zsmooth, report):
             m.quad(L0, SHINGLE, quad, up, uv=uv)
     cb = F(face, xd, rf)                                     # brow board: two fans from the middle of its foot
     for half in (slice(0, 7), slice(6, 13)):
-        m.poly(L0, WOOD, [cb] + A[half], out3, [[0.3, 0.9]] + [[0.3 + x_, 0.9 + h_] for x_, h_ in zip(xs[half], hs[half])])
-    hole = [F(face, xd + 0.34 * math.cos(g), rf, 0.08 + 0.34 * math.sin(g)) + out3 * 0.012 for g in np.linspace(0.0, math.pi, 9)]
+        m.poly(L0, BROW, [cb] + A[half], out3, [[0.3, 0.9]] + [[0.3 + x_, 0.9 + h_] for x_, h_ in zip(xs[half], hs[half])])
+    hole = [F(face, xd + 0.36 * math.cos(g), rf, 0.09 + 0.36 * math.sin(g)) + out3 * 0.012 for g in np.linspace(0.0, math.pi, 9)]
     m.poly(L0, DARK, hole, out3, [[0.0, 0.0]] * len(hole))
 
     acc.flush(buf, ASSET_ID)

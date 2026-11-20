@@ -829,11 +829,11 @@ def wood_shingles(n=1024):
     cup = hash01(sid, 2)
     drop = (hash01(sid, 3) - 0.5) * 0.10        # butts not on one line: each shingle hangs up to 1 cm lower / higher
     butt = sstep(0.07, 0.0, pv + drop)          # dark, weathered end grain of the butt
-    under = sstep(0.84, 1.0, pv - drop)         # cast shadow of the next course
+    under = sstep(0.80, 0.97, pv - drop)         # cast shadow of the next course
     fibre = noise(c, 3, c.px * 2, 0.012, beta=0.5, aniso=0.12)
     cloud = noise(c, 4, 0.3, 1.5, beta=1.2)
     lich = sstep(0.9, 2.2, noise(c, 5, 0.02, 0.2, beta=0.9))
-    lum = (1 + 0.34 * (t - 0.5) + 0.14 * fibre + 0.07 * cloud) * (1 - 0.30 * butt) * (1 - 0.55 * under) * (1 - 0.6 * gap)
+    lum = (1 + 0.34 * (t - 0.5) + 0.14 * fibre + 0.07 * cloud) * (1 - 0.30 * butt) * (1 - 0.68 * under) * (1 - 0.6 * gap)
     lum *= 1 - 0.05 * lich
     h = 0.012 * (1 - pv) + 0.003 * (cup - 0.5) * 2 + 0.6e-3 * fibre - 6e-3 * gap
     rough = 0.86 + 0.06 * gap + 0.05 * lich

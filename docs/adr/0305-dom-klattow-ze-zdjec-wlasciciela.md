@@ -173,21 +173,23 @@ Stan wyjściowy: main z korektami P2 / P3 (`klattow-fix-cli`). Wszystkie wymiary
 o ile nie napisano inaczej.
 
 **Lamus (`knyszyn_lamus_0305.py`, zdjęcie 02).**
-- **Gont jako geometria.** Każdy rząd to osobny pas siatki, którego dolna krawędź (czoło) stoi 3,5 cm nad rzędem niżej
+- **Gont jako geometria.** Każdy rząd to osobny pas siatki, którego dolna krawędź (czoło) stoi 5 cm nad rzędem niżej (3,5 cm w przebiegach 1–2 — za płytko wg `visual-critic`)
   (`SHINGLE_STEP`); rząd 0,214 m (`SHINGLE_COURSE` = 1,5 m / 7 — na zdjęciu ~29 rzędów na ~6,2 m połaci), 29 rzędów na
   każdej z czterech połaci, w jednej linii na narożach. Zestaw `wood_shingles` ma ten sam rząd (7 na kafel, było 10 po
   0,15 m), gonty 9–15 cm, cień pod następnym rzędem — linia czoła tekstury leży na stopniu geometrii. LOD1: dwie płaskie
-  połacie na stronę. Wariant „normal / parallax w materiale” odrzucony: shader świata nie ma parallaksy, a sama mapa
+  połacie na stronę; te same płaskie połacie leżą w LOD0 2 cm pod rzędami jako zamknięta bryła rzucająca cień
+  (przebieg 2: przesunięcie wierzchołków w przebiegu cieni otwierało szczeliny między rzędem a czołem — jasne kropki
+  w cieniu dachu, P0 krytyka). Wariant „normal / parallax w materiale” odrzucony: shader świata nie ma parallaksy, a sama mapa
   normalnych była już w rundzie 2 (płaska szara płyta z 20 m).
-- **Proporcje dachu:** krawędź okapu 2,35 m, kalenica 6,8 m (było 2,7 / 6,5), okap 0,9 m (0,55), **załamanie połaci**:
-  dolne 1,15 m rzutu pod kątem 27°, wyżej ~51°. Dach ≈ 1,6 × ściana jak na zdjęciu. Brak wysokości LoD — ESTIMATED.
-- **Wole oko** na połaci od podcienia tuż nad załamaniem: brew o profilu cos² (1,9 × 0,60 m) z gontu, czoło z deski
-  z ciemnym półokrągłym otworem.
+- **Proporcje dachu:** krawędź okapu 2,27 m, kalenica 6,8 m (było 2,7 / 6,5), okap 0,9 m (0,55), **załamanie połaci**:
+  dolne 1,15 m rzutu pod kątem 32° (27° w przebiegach 1–2: okap na szczycie czytał się jak odklejona półka), wyżej ~51°. Dach ≈ 1,6 × ściana jak na zdjęciu. Brak wysokości LoD — ESTIMATED.
+- **Wole oko** na połaci od podcienia tuż nad załamaniem: brew o profilu cos² (1,9 × 0,60 m) z gontu, czoło z brązowej deski
+  (`wood_planks`) z ciemnym półokrągłym otworem 0,72 m.
 - **Podcień:** głębokość 2,1 m (1,7), sześć słupów 20 cm (5), miecze 0,65 m po obu stronach każdego słupa, oczep 22 cm,
   nad nim końce belek stropowych co ~0,87 m wysunięte 0,28 m, płatew, strop z desek; **podest deskowy** na podwalinie
-  wysunięty 0,25 m przed słupy, na kamieniach, z jednym stopniem. Izba zrębowa: mały kwadratowy otwór zamiast okiennicy.
-- Materiały: `log_wall_raw` 0,185 / 0,160 / 0,135 (miodowy z rundy 2 wychodził pomarańczowo; zdjęcie: zrąb zszarzały),
-  nowy `wood_planks_weathered` (skan `wood_siding`, 0,185 / 0,162 / 0,138) na słupy, miecze, belki, podest zamiast brązowego
+  wysunięty 0,25 m przed słupy, czoło z drewna do poziomu terenu (kamień tylko tam, gdzie teren opada), jeden stopień. Izba zrębowa: mały kwadratowy otwór zamiast okiennicy.
+- Materiały: `log_wall_raw` 0,235 / 0,172 / 0,118 (przebieg 2: 0,185 / 0,160 / 0,135 — zimna szarość, P1 krytyka) (miodowy z rundy 2 wychodził pomarańczowo; zdjęcie: zrąb zszarzały),
+  nowy `wood_planks_weathered` (skan `wood_siding`, 0,215 / 0,168 / 0,125) na słupy, miecze, belki, podest zamiast brązowego
   `wood_planks`; `roof_shingles_grey` 0,195 / 0,196 / 0,192.
 
 **Dom.**
@@ -213,7 +215,8 @@ o ile nie napisano inaczej.
   jak na zdjęciu). Chodnik wychodzi o 0,1–0,3 m węższy niż na zdjęciu — właściwa poprawka to oś / szerokość jezdni
   Kościelnej (warstwa dróg, otwarte).
 - **Zieleń przy ścianie (zdjęcie 01):** krzew (r 1,2 m, 2,2 m) między pierwszym a drugim oknem na zachód od ganku,
-  młode drzewko (2,8 m) między dwoma ostatnimi na wschód, pnącze na wschodniej połowie czoła ganku — siatki atlasu
+  młode drzewko (2,8 m) między dwoma ostatnimi na wschód, pnącze jako girlanda na wschodniej połowie szczytu ganku z wąskim zwisem przy narożnym słupku (przebieg 2: karta
+  na całą wysokość czytała się jak tuja) — siatki atlasu
   `plot_kit` (`plots.bush`, `fruit_tree`, `card`), tylko treść High, tylko gdy pas między ścianą a płotem ma ≥ 1,5 m.
 - **Słup energetyczny:** w danych go nie ma (BDOT10k `OT_BUWT_P`: najbliższy obiekt 476 m; `OT_SULN_L`: tylko linie SN
   183 m dalej; OSM: brak `power=*` w kaflu przy Kościelnej) — nie dodany, zostaje otwarty.

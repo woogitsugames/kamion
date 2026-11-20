@@ -66,8 +66,9 @@ ROAD_CLEAR_M = 0.05                               # the fence keeps this far off
 WALKWAY_MIN_M = 1.4                               # footway left in front of pickets that stand on the modelled footway
 # garden strip (photo 01): (kind, centre relative to the porch centre m, crown radius m, height m)
 GARDEN = (("bush", -6.95, 1.20, 2.2), ("tree", 7.0, 0.8, 2.8))
-# climber on the porch front, east of the doorway: cards (offset from the porch centre m, foot above the ground m, w, h)
-CLIMBER = ((0.95, 0.15, 0.80, 2.05), (0.85, 1.95, 1.10, 0.70))
+# climber on the porch front (photo 01: a garland across the east half of the porch gable, a thin drape down the
+# east corner post, a small plant at its foot - a full-height card read as a thuja, visual-critic r3): cards (offset from the porch centre m, foot above the ground m, w, h)
+CLIMBER = ((0.75, 1.95, 1.30, 0.75), (1.22, 1.05, 0.50, 1.15), (1.25, 0.10, 0.45, 0.65))
 BED = "plot_lawn"                                 # raised grass strip between the wall and the pickets
 
 
