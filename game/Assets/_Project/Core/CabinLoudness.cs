@@ -13,7 +13,8 @@ namespace Game.Core
     /// The gains are measured, not tuned by ear: <c>tools/audio/lufs_calibrate.py</c> reads the player captures
     /// (<c>-audio_capture</c>, ADR 0286) and prints the new value = old + (target - measured). Per sound set, because the
     /// ElevenLabs and procedural cab mixes differ in level. Launch argument <c>-audio_cab_gain_db X</c> overrides both
-    /// (measurement / A-B; 0 = the pre-D92 mix).
+    /// (measurement / A-B; 0 = the pre-D92 mix). The bus also runs <see cref="BusLimiter"/> (-1.5 dBFS sample ceiling) so the
+    /// loudest moments (full-throttle launch, horn) stay under the true-peak ceiling.
     /// </summary>
     public static class CabinLoudness
     {
@@ -22,10 +23,10 @@ namespace Game.Core
         /// <summary>D92 / docs/08: true-peak ceiling [dBTP].</summary>
         public const float TruePeakCeilingDbtp = -1f;
 
-        /// <summary>Cab bus gain with the ElevenLabs sound set [dB] - measured, see ADR 0311 table.</summary>
-        public const float ElevenLabsCabGainDb = 0f;
-        /// <summary>Cab bus gain with the procedural sound set [dB] - measured, see ADR 0311 table.</summary>
-        public const float ProceduralCabGainDb = 0f;
+        /// <summary>Cab bus gain with the ElevenLabs sound set [dB]: before -25.1 LUFS (straight050 + circle50, 40 t, build 83226d958) -> +7.1 (ADR 0311).</summary>
+        public const float ElevenLabsCabGainDb = 7.1f;
+        /// <summary>Cab bus gain with the procedural sound set [dB]: before -24.2 LUFS (same programme) -> +6.2 (ADR 0311).</summary>
+        public const float ProceduralCabGainDb = 6.2f;
         /// <summary>Sanity range of a calibration gain [dB] (a larger correction means the mix itself is off).</summary>
         public const float MinGainDb = -12f, MaxGainDb = 12f;
 
@@ -90,12 +91,11 @@ namespace Game.Core
                 for (int i = 0; i < frames * channels; i++) data[i] *= to;
                 return to;
             }
-            float step = (to - from) / frames;
-            float g = from;
+            float span = to - from, inv = 1f / frames;
             int k = 0;
             for (int f = 0; f < frames; f++)
             {
-                g += step;
+                float g = from + span * ((f + 1) * inv);   // no running sum: the block ends exactly on the target
                 for (int c = 0; c < channels; c++) data[k++] *= g;
             }
             return to;

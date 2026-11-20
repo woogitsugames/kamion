@@ -20,6 +20,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import numpy as np
 import soundfile as sf
 
 import pc_capture
@@ -63,9 +64,9 @@ def plan(measured_i: float, measured_tp: float, current_db: float, target: float
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("wav", type=Path)
-    ap.add_argument("--seg", required=True, help="name:t0:t1 (seconds into the capture) = the calibrated cab drive")
-    ap.add_argument("--current-db", type=float, required=True, help="cab bus gain the capture was made with")
+    ap.add_argument("wav", type=Path, nargs="+", help="one or more captures; several = one programme (concatenated)")
+    ap.add_argument("--seg", required=True, help="name:t0:t1 (seconds into each capture) = the calibrated cab drive")
+    ap.add_argument("--current-db", type=float, required=True, help="cab bus gain the captures were made with")
     ap.add_argument("--target", type=float, default=-18.0)
     ap.add_argument("--tol", type=float, default=1.0)
     ap.add_argument("--ceiling", type=float, default=-1.0)
@@ -73,19 +74,32 @@ def main() -> int:
     ap.add_argument("--label", default="calib")
     a = ap.parse_args()
     name, t0, t1 = a.seg.split(":")[0], float(a.seg.split(":")[1]), float(a.seg.split(":")[2])
-    x, fs = sf.read(a.wav, always_2d=True, dtype="float64")
-    seg = x[int(t0 * fs):int(t1 * fs)]
+    parts, fs = [], None
+    for w in a.wav:
+        x, r = sf.read(w, always_2d=True, dtype="float64")
+        if fs is not None and r != fs:
+            raise SystemExit(f"rate mismatch: {w}")
+        fs = r
+        parts.append(x[int(t0 * fs):int(t1 * fs)])
+    seg = np.concatenate(parts)
     m = pc_capture.measure(seg, fs)
-    ff = ffmpeg_ebur128(a.wav, t0, t1)
+    if len(a.wav) == 1:
+        ff = ffmpeg_ebur128(a.wav[0], t0, t1)
+    else:  # the concatenated programme through ffmpeg too (temp float WAV next to the output)
+        tmp = (a.out or Path(".")) / f"{a.label}_concat.wav"
+        tmp.parent.mkdir(parents=True, exist_ok=True)
+        sf.write(tmp, seg.astype(np.float32), fs, subtype="FLOAT")
+        ff = ffmpeg_ebur128(tmp, 0.0, len(seg) / fs)
+        tmp.unlink()
     p = plan(m["lufs_integrated"], m["true_peak_dbtp"], a.current_db, a.target, a.tol, a.ceiling)
-    rep = {"file": str(a.wav), "segment": {"name": name, "t0": t0, "t1": t1}, "current_gain_db": a.current_db,
-           "target_lufs": a.target, "tolerance_lu": a.tol, "ceiling_dbtp": a.ceiling, "bs1770": m, "ffmpeg_ebur128": ff,
-           "plan": p}
+    rep = {"files": [str(w) for w in a.wav], "segment": {"name": name, "t0": t0, "t1": t1},
+           "current_gain_db": a.current_db, "target_lufs": a.target, "tolerance_lu": a.tol, "ceiling_dbtp": a.ceiling,
+           "bs1770": m, "ffmpeg_ebur128": ff, "plan": p}
     if a.out:
         a.out.mkdir(parents=True, exist_ok=True)
         (a.out / f"{a.label}_calib.json").write_text(json.dumps(rep, indent=2), encoding="utf-8")
     print(json.dumps({k: rep[k] for k in ("segment", "current_gain_db", "plan")}, indent=2))
-    print(f"BS.1770 I={m['lufs_integrated']} LUFS TP={m['true_peak_dbtp']} dBTP | ffmpeg "
+    print(f"BS.1770 I={m['lufs_integrated']} LUFS TP={m['true_peak_dbtp']} dBTP LRA={m['lra_lu']} | ffmpeg "
           f"I={ff['lufs_integrated'] if ff else 'n/a'} TP={ff['true_peak_dbtp'] if ff else 'n/a'}")
     return p["code"]
 
