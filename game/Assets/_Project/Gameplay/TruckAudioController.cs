@@ -82,6 +82,9 @@ namespace Game.Gameplay
         bool m_PurgeAlt, m_SurfaceInit;
         float m_SquealGain, m_ScrubGain, m_RetarderGain, m_CompressorGain;
         float m_Interior = 1f;
+        // D92 / ADR 0313: cab loudness bus on the listener (one gain for the whole cab mix, exterior = 1)
+        CabinBusFilter m_Bus;
+        float m_CabBusGain = 1f, m_NextBusLookup;
         float m_BrakePeak, m_BrakeHeld;
         bool m_PrevPark, m_PrevCompressor, m_HasPrev;
         AmtState m_PrevAmt;
@@ -95,6 +98,9 @@ namespace Game.Gameplay
 
         public bool HasAudio => m_Engine != null;
         public float InteriorBlend => m_Interior;
+        /// <summary>Linear cab bus gain of the active sound set (D92 calibration, ADR 0313) and the current bus target.</summary>
+        public float CabBusGain => m_CabBusGain;
+        public float BusGainTarget => m_Bus != null ? m_Bus.Target : 1f;
         public EngineAudio Engine => m_Engine;
         /// <summary>Engine sound set in use (falls back to procedural when the ElevenLabs set is not imported).</summary>
         public EngineSoundSource EngineSource => m_Engine != null ? m_Engine.Source : EngineSoundSource.Procedural;
@@ -260,6 +266,7 @@ namespace Game.Gameplay
                 m_Ambient.cabBedFactor = m_El ? elCabBedFactor : m_SynthCabBed;
             }
             m_Engine.CabEngineScale = m_El ? elCabEngineScale : 1f;
+            m_CabBusGain = CabinLoudness.CabGainLinear(m_El);
             if (!m_El)
             {
                 m_Beeper?.Set(0f, 1f, m_Interior);
@@ -309,6 +316,34 @@ namespace Game.Gameplay
 
         void Update() => AudioStep(Time.deltaTime);
 
+        /// <summary>
+        /// D92 / ADR 0313: the listener bus gain follows the interior blend (exterior 1, cab = calibrated gain). The filter
+        /// is added once to the listener of the camera rig (fallback: any listener) and found again only if that object
+        /// goes away (lookup at most twice a second); per frame it is one float write. No allocation after the lookup.
+        /// </summary>
+        void UpdateCabBus()
+        {
+            if (m_Bus == null)
+            {
+                float now = Time.unscaledTime;
+                if (now < m_NextBusLookup) return;
+                m_NextBusLookup = now + 0.5f;
+                AudioListener l = rig != null && rig.cam != null ? rig.cam.GetComponent<AudioListener>() : null;
+                if (l == null) l = FindAnyObjectByType<AudioListener>();
+                if (l == null) return;
+                m_Bus = l.GetComponent<CabinBusFilter>();
+                if (m_Bus == null) m_Bus = l.gameObject.AddComponent<CabinBusFilter>();
+                Debug.Log($"[AUDIO] cab bus on '{l.name}': {CabinLoudness.CabGainDb(m_El):+0.0;-0.0;0.0} dB in the cab view (D92 target {CabinLoudness.TargetLufs} LUFS{(float.IsNaN(CabinLoudness.OverrideDb) ? "" : ", -audio_cab_gain_db override")})");
+            }
+            m_Bus.Target = CabinLoudness.BusGain(m_CabBusGain, m_Interior);
+        }
+
+        void OnDestroy()
+        {
+            // the bus belongs to this truck's mix: a menu or another scene on the same camera must not stay boosted
+            if (m_Bus != null) Destroy(m_Bus);
+        }
+
         /// <summary>One audio update with an explicit time step (Update uses the frame time; tests drive it with the physics
         /// step in script simulation mode). No allocation.</summary>
         public void AudioStep(float dt)
@@ -319,6 +354,7 @@ namespace Game.Gameplay
             float target = rig == null || rig.mode == CameraMode.Cab ? 1f : 0f;
             m_Interior = Mathf.MoveTowards(m_Interior, target, dt / 0.15f);
             m_Engine.InteriorBlend = m_Interior;
+            UpdateCabBus();
             float spatial = 1f - m_Interior; // cab: 2D, outside: 3D at the source
 
             var m = vehicle.Model;
