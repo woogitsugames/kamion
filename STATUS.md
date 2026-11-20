@@ -173,3 +173,10 @@ NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/
 - pytest gis (przed ostatnim merge): 12 failed / 2732 passed. C (lider): test_report_not_stale, zebry 2882674819/20, typology C x2, export_is_deterministic. route_links x5: conftest ustawia GAMEPLAY_LANE_WIDEN_M=0 na całą sesję (road-widen), a route_links.json jest z D94 => test_links_json_fresh nie może przejść (zweryfikowane: poza pytest build()==plik, 0 różnic); pozostałe 4 liczą tory przy D94=0 + knyszyn/knyszyn-w nieprzebudowane na D94. typology dojlidy: hash domu po ADR 0316 (dojlidy w redo-0316). seams_p3 dk8 kerb w261104557 (kleeberga|knyszynska).
 - qa.seams 53 FAIL — przyczyny wyżej (K1/ADR 0212 vs D94, knyszyn-w, urwania kleeberga|knyszynska i dk65-05|06, C|maczka 0,242 m).
 NASTĘPNY KROK (lider): decyzja o fali 0316 (redo-0316.txt) + mosty/DK8 po bridge-kerb/dk8-seam; poprawka conftest D94 dla test_route_links_s23; tabele referencji rozstawu linii w qa.seams po D94; przebudowa knyszyn-w na D94.
+
+## 2026-11-20 21:29 — fala 5 (finalna przed buildem #3, D95), main 04c60cade
+- Kolejka 27 (queue-wave5.txt): bojary, mickiewicza, wygoda, industrial-c, porosly, maczka, dojlidy, krywlany, knyszyn, knyszyn-w, tykocin, dk8-wasilkow-01..03, dk8-korycin-01, dk65-01..04, dw671-tykocin-03..09, dw671-jasionowka-01.
+- WSTRZYMANE do sygnału lidera (Codex qa-d94-cli naprawia szwy): bialystok-kleeberga, bialystok-knyszynska, dk65-05, dk65-06.
+- plot_canopy.json dodane: dk8-wasilkow-01..03, dk8-korycin-01, bialystok-krywlany.
+- W tle: chain.ps1 A/B/C, autocommit.ps1, final.ps1 (route_links, tile_graph, katalog+check, seams, route_obstacles, commit, pytest -> final.status). Poprzednie statusy: chain-wave4.status, final-wave4.status.
+NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/regen-wave-2-s24/final.status`
