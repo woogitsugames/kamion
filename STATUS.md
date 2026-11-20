@@ -1,3 +1,15 @@
+# qa-d94-cli — zakończone
+
+Konfiguracja GIS: pomiary i fixture sesyjne 0, testy tras D94 generatora per moduł. Referencje K1/0212 zależne od allowance; geometrii/progów nie osłabiono.
+Walidacja dotkniętych modułów: 110 passed/3 skipped + wcześniejszy PASS niezmienionego test_links_json_fresh = 111 passed/3 skipped. Kontrola sesyjnego 0/modułowego D94: 13 passed.
+QA 15 szwów DK65: 30/30 referencji OK. Oba zgłoszone szwy: brak urwań; istniejąca poprawka generatora ad6f732d2 pokrywa oba (nowe regresje 2 passed). Nadal 4 jawne FAIL osi po 0,25 m.
+Dodatkowo fidelity/consistency: 16 passed, 1 xfailed, 1 istniejący stale report FAIL; szczegóły w docs/reports/qa-d94-cli.md. Brak GLB = 3 istniejące SKIP.
+Do przebudowy tylko jeśli siatki sprzed ad6f732d2: bialystok-kleeberga, bialystok-knyszynska, dk65-05, dk65-06; potem export-route i route_links. Same zmiany QA nie wymagają build_world.
+NASTĘPNY KROK: `git show --stat HEAD` — przekazać gałąź liderowi; nie pushowano.
+Bez Unity i przebudów kafli; wszystkie zapisy w tym worktree. Dowody: artifacts/qa-d94-cli/.
+
+---
+
 # STATUS regen-wave-2-s24
 
 Cel: przebudowa 43 kafli korytarza po ADR 0298/0300/0303 (bez zajętych: industrial-c, bojary, mickiewicza, wygoda, knyszyn, knyszyn-w).
