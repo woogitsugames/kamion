@@ -55,3 +55,7 @@
   Sztachety rdzawe: mniej „gołych” i ciepłe zamiast szarych. Karpiówka, gąsiory, `picket_wood` / `picket_paint` i tinty siatki — dopiero r1.
   r1 (odłączony, pid 26092) czeka w kolejce heavy.
   NASTĘPNY KROK: `cat artifacts/roof-tiles-s24/r1.status`; po `exit=0`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`
+- 16:10 Runda t4 (podgląd: karpiówka podpięta ręcznie pod czerwone dachy baseline Tykocina): `sbs/sheet-karp-t4.jpg` (lewa esówka t3, prawa
+  karpiówka). Karpiówka: drobna łuska, ton w plamach, bez linii kraty; z 30–150 m wyraźnie inna niż esówka. Zakładkowa po podbiciu tonu:
+  lekko plamista. Wszystkie 4 zestawy obejrzane w silniku; do r1 zostają: gąsiory (UV), `picket_wood` / `picket_paint`, tinty siatki, budżet.
+  NASTĘPNY KROK: `cat artifacts/roof-tiles-s24/r1.status`; po `exit=0`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`
