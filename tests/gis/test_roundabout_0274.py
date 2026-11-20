@@ -506,7 +506,15 @@ def test_knyszyn_islands_have_the_authored_lengths(knyszyn):
     assert all(n in (1, 2) for lo, hi, n in ext.values()) and ext[286990127][2] == ext[232511646][2] == 2
     isl = shapely.union_all([pg for _, pg in sp.splitters])
     assert all(not isl.intersects(c["band"].buffer(-0.05)) for c in sp.crossings), "islands cut through at the crossings"
-    assert ext[1478765548][1] < 20.0 and ext[1464342641][1] < 20.0
+    # D95: E/W now have a raised tail beyond the pedestrian refuge.
+    assert ext[1478765548][1] < 28.0 and ext[1464342641][1] < 28.0
+    for a in j.arms:
+        if CR._arm_way(net, a) not in (1478765548, 1464342641):
+            continue
+        mid = LineString(sp.mouths[a.node]["mid"])
+        own = [pg for _, pg in sp.splitters if pg.distance(mid) < 0.5]
+        assert 15.0 <= max(CR._long_side(pg) for pg in own) <= 20.0
+        assert all(pg.is_valid and pg.area > 3.0 for pg in own)
     for _, pg in sp.splitters:
         e = np.hypot(*np.diff(np.asarray(pg.minimum_rotated_rectangle.exterior.coords)[:3], axis=0).T)
         assert min(e) <= sp.opts["splitter_w_m"] + 0.2
@@ -588,7 +596,7 @@ def test_knyszyn_overrides_and_probe_are_consistent():
     o = next(o for o in ovs if o["id"] == "knyszyn-roundabout-compact")
     assert CR.validate(o["set"]["compact_roundabout"]) is not None and o["confidence"] == "low"
     assert "8 m kerb returns" not in o["reason"] and "gravel island" not in o["reason"], "review D18 P2-11"
-    assert sum(1 for o in ovs if o.get("kind") == CS.KIND) == 2
+    assert sum(1 for o in ovs if o.get("kind") == CS.KIND) == 4
     probe = json.loads((ROOT / "docs/reports/roundabout-0274/knyszyn_ortho_probe.json").read_text(encoding="utf-8"))
     assert probe["roundabout_visible"] is False, "when a newer orthophoto shows the roundabout, measure and re-author"
     assert max(s["date"] for s in probe["source"]["sheets_at_centre"]) == "2025-05-27"
@@ -665,3 +673,21 @@ def test_knyszyn_island_plantings_are_low_clear_of_the_kerb_and_in_budget(knyszy
     assert tris <= 1300, tris
     assert len({p.mat for p in parts}) <= 4
     assert ov["confidence"] == "low" and "ESTIMATED" in ov["reason"]
+
+
+def test_knyszyn_west_arm_two_lanes_preserves_d94_width(knyszyn):
+    net = knyszyn[0]
+    sections = [s for s in net.sec_list if "1478765548" in s.edge_id]
+    assert sections and all(s.lanes == 2 for s in sections)
+    assert all(s.width == pytest.approx(11.25) for s in sections)  # measured design, D94 off in fixture
+
+
+def test_knyszyn_roundabout_uses_fresh_asphalt(knyszyn):
+    net, j, *_ = knyszyn
+    assert all(net.sections[e].surface_mat == "road_asphalt_new"
+               for c in j.compact.feeders + j.compact.ring for e, _ in c.edges)
+
+
+def test_knyszyn_patch_keeps_the_ring_wearing_course(knyszyn):
+    net, j, *_ = knyszyn
+    assert M._patch_mat(net, j) == "road_asphalt_new"

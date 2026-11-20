@@ -1497,6 +1497,12 @@ def _patch_mat(net, j):
     # ADR 0100 (REVIEW s10-0095 P1-6): the majority of the arms' ENGINE materials (incl. the resurfaced share,
     # standards.surface_material). Taking the raw section material made every plate between two resurfaced arms a
     # lighter worn rectangle across the carriageway (n10015785253, the bay at s 1060, the fork at s 1440).
+    # D95: a compact roundabout is one wearing course. The long two-way arms may
+    # still be old asphalt; their majority must not repaint the authored fresh ring.
+    compact = getattr(j, "compact", None)
+    if compact is not None:
+        mats = [S.surface_material(c, c.section(c.length / 2, net.sec_list)) for c in compact.ring]
+        return max(sorted(set(mats)), key=mats.count)
     mats = [S.surface_material(a.chain, a.chain.section(a.s(1.0), net.sec_list)) for a in j.arms]
     return max(sorted(set(mats)), key=mats.count)
 

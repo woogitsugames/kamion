@@ -112,3 +112,14 @@ parkingowe T oraz rzeczywisty blocker w krótkim ramieniu QA. Ratchety fidelity/
 Po scaleniu pozostałe kafle wymagają regeneracji, export-route i route_links; szwy dopiero po obu stronach.
 Tutaj pełna walidacja obejmuje C i Knyszyn. Poza zakresem: skręty ulicami Rynku Knyszyna z przeciwnym pasem,
 globalny katalog regionów i złote trasy po fali przebudów. Nie oznacza to zerowego combo dla całej sieci.
+
+## D95 — korekta wyglądu Knyszyna (rondo-fix-cli, 2026-11-20, WIP)
+
+D95 zachowuje poszerzenie i promienie D94. Nadpisania Knyszyna zmieniają nawierzchnię pierścienia i feederów na
+`asphalt_new`, liczbę pasów zachodniego ramienia na 2 (asfalt po D94 nadal 11,75 m) oraz wydłużają rozdziały E/W.
+Główne części wysepek na płaskiej geometrii: 15,89 / 17,53 m, azyle oddzielne. Materiał płyty ronda kompaktowego
+pochodzi z pierścienia, zamiast z większości długich ramion. Opaska: lokalny tint 0,35 i mocniejsze fugi, bez zmiany
+progu/kolizji. Znaki A-7/C-12 na 4 wlotach i 6 lamp przez istniejące authored gate3_landmarks; pozycje WORKING_VALUE.
+
+To nie jest wizualny PASS ani zamknięcie D95. Zapora/szew i kontrola renderem pozostają otwarte; Unity nie uruchamiano
+na polecenie właściciela. Bieżące wyniki i ograniczenia: `docs/reports/visual/2026-11-20-knyszyn-d95-cli.md`.
