@@ -19,7 +19,7 @@
    "profile_rms_vs_nmt_m": 0.02,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    8.0
    ],
    "width_src": [
     "authored_override:dk65-carriageway-width"
@@ -37,21 +37,21 @@
     2
    ],
    "length_m": 826.0,
-   "max_grade": 0.0544,
+   "max_grade": 0.0545,
    "overrides": [
     "rural-roads-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    8.0
    ],
    "width_src": [
     "authored_override:dk65-k1-section-to-km25.32 (profile)"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.22,
+   "axis_smoothing_dev_max_m": 0.23,
    "bridge_m": 0.0,
    "grade_limit": 0.11,
    "highway": [
@@ -66,10 +66,10 @@
    "overrides": [
     "rural-roads-unlit"
    ],
-   "profile_rms_vs_nmt_m": 0.012,
+   "profile_rms_vs_nmt_m": 0.013,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.7
+    6.2
    ],
    "width_src": [
     "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
@@ -82,7 +82,7 @@
  "summary": {
   "authored_paint": [],
   "axis_smoothing_deviation_m": {
-   "max": 0.223,
+   "max": 0.231,
    "p50": 0.0,
    "p95": 0.001
   },
@@ -117,7 +117,7 @@
    "patches": 29
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 64167,
+  "footprint_nodes": 66097,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -157,7 +157,7 @@
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 175,
+  "nmt_nodes_replaced_under_decks": 185,
   "overrides_applied": [
    {
     "id": "dk65-carriageway-width",
@@ -247,9 +247,9 @@
      }
     },
     "step_m": 0.27,
-    "width_other": 6.6,
-    "width_own": 6.6,
-    "width_seam": 6.6
+    "width_other": 7.1,
+    "width_own": 7.1,
+    "width_seam": 7.1
    },
    {
     "chain": "c:w98071886:1134817563-839431340",
@@ -258,9 +258,9 @@
     "length_m": 20.0,
     "neighbour": "dw671-tykocin-01",
     "step_m": 0.1,
-    "width_other": 5.5,
-    "width_own": 5.7,
-    "width_seam": 5.6
+    "width_other": 6.0,
+    "width_own": 6.2,
+    "width_seam": 6.1
    }
   ],
   "sides_on_carriageway_culled": {
@@ -282,7 +282,7 @@
   },
   "verge_strips": {
    "chunks": 8,
-   "tris": 536
+   "tris": 512
   },
   "walled_ramps": []
  }
