@@ -82,6 +82,7 @@ class EdgeSection:
     turn_fwd: list | None
     turn_bwd: list | None
     side_override: dict = field(default_factory=dict)     # {"left"/"right": kind} in OSM edge direction
+    sidewalk_w: dict = field(default_factory=dict)        # ADR 0305 r3: {"left"/"right": measured sidewalk width, m}
     center_offset: float = 0.0  # authored: carriageway centre this far LEFT of the OSM way (edge direction), m (ADR 0077)
     # ADR 0095 (measured on the orthophoto, one-way carriageways only): distances from the LEFT carriageway edge in the
     # direction of travel to [start of lane 1, lane boundary 1|2, ..., end of the last lane]. lane_edges[0] is the
@@ -501,6 +502,14 @@ def apply_edge_overrides(net: Network, edges, overrides):
             for side in ("left", "right"):
                 if f"side_{side}" in st:
                     sec.side_override[side] = st[f"side_{side}"]
+                if f"sidewalk_w_{side}" in st:
+                    # ADR 0305 r3: measured width of the sidewalk of this side (orthophoto / photo) instead of the
+                    # standard S.SIDEWALK_W; only where the side has a sidewalk at all
+                    wv = float(st[f"sidewalk_w_{side}"])
+                    if not 0.6 <= wv <= 6.0:
+                        raise ValueError(f"override {ov['id']}: sidewalk_w_{side} {wv} m outside 0.6-6.0")
+                    sec.sidewalk_w[side] = wv
+                    sec.provenance[f"sidewalk_w_{side}_m"] = f"authored_override:{ov['id']}"
             if any(k in st for k in ("shoulder", "shoulder_left", "shoulder_right")):
                 # ADR 0272: shoulder instead of a kerb (or the reverse) on this edge, read off the orthophoto / photos.
                 # `shoulder: ground | paved | kerb` (both sides) or a mapping {kind, paved_m, ground_m, ditch_m};
@@ -1242,6 +1251,16 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                     w[m], mat[m] = 0.0, 0
                 elif kd == "flush":           # paved yard / no kerb: flat edge strip at road level
                     h[m], w[m], mat[m] = 0.0, 0.0, 0
+            for i_sec in np.unique(c.sec_idx):           # ADR 0305 r3: measured sidewalk width of an edge side
+                sec = net.sec_list[int(i_sec)]
+                if not sec.sidewalk_w:
+                    continue
+                m = c.sec_idx == i_sec
+                osm_side = {"L": "left", "R": "right"}[side]
+                if bool(c.meta["rev"][m][0]):
+                    osm_side = {"left": "right", "right": "left"}[osm_side]
+                if osm_side in sec.sidewalk_w:
+                    w[m & (w > 0) & (mat == 1)] = sec.sidewalk_w[osm_side]
             os_ = "L" if side == "R" else "R"
             other = rural_d[os_] & ~path_d[os_]          # median rule unchanged: other side free of paths
             fast_med = fast and (sec_mid.maxspeed or 50) >= 90

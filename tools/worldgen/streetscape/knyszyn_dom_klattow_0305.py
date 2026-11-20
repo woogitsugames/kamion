@@ -64,6 +64,10 @@ OPENING_MARGIN = 0.30                            # clear wall beyond the opening
 OPENING_TRIM = 0.105                             # widest window trim: 0.085 m surround + 0.02 m sill
 ROAD_CLEAR_M = 0.15                               # the fence keeps this far off the road / footway footprint
 WALKWAY_MIN_M = 1.4                               # footway left in front of pickets that stand on the modelled footway
+# garden strip (photo 01): (kind, centre relative to the porch centre m, crown radius m, height m)
+GARDEN = (("bush", -6.95, 1.05, 2.0), ("tree", 7.0, 0.8, 2.8))
+# climber on the porch front, east of the doorway: cards (offset from the porch centre m, foot above the ground m, w, h)
+CLIMBER = ((0.95, 0.15, 0.80, 2.05), (0.55, 1.95, 1.50, 0.75))
 BED = "plot_lawn"                                 # raised grass strip between the wall and the pickets
 
 
@@ -572,9 +576,33 @@ def build(buf, region, blds, zsmooth, report, roads_poly=None, carriage=None, su
                            grain="ad", key=(key, "b"))
                     pickets += 1
 
+    # ---- garden strip between the wall and the pickets (photo 01, round 3): a big rounded shrub between the first two
+    # windows west of the porch, a young tree between the last two east of it, a climber on the east half of the
+    # porch front. plot_kit atlas (streetscape.plots.Kit), High content only. Positions ESTIMATED +-0.5 m.
+    from . import plots as PL
+    kit = PL.Kit()
+    kit.low = False
+    strip_w = fence[0] if fence is not None else 1.0
+    plants = []
+    if strip_w >= 1.5:
+        for kind, off, r_, h_ in GARDEN:
+            q = a + d * (pc + off) + n * (strip_w * 0.5)
+            zq = float(ground(q[None, :])[0])
+            (PL.bush if kind == "bush" else PL.fruit_tree)(kit, q, zq, *((r_, h_) if kind == "bush" else (h_,)), (ASSET_ID, kind, off),
+                                                           **({} if kind == "bush" else {"r": r_}))
+            plants.append(kind)
+    ang = math.atan2(d[1], d[0])
+    for k, (uo, zo, w_, h_) in enumerate(CLIMBER):
+        q = a + d * (pc + uo) + n * (pd + 0.06)
+        PL.card(kit, q, z0 + zo, "shrub_a", w_, h_, ang)
+    plants.append("climber")
+    o = kit.out()
+    if o is not None:
+        buf.add(PL.KIT_LAYER, "plot_kit", o[0], o[1], o[2], src=ASSET_ID, COL=o[3])
+
     acc.flush(buf, ASSET_ID)
     result.update(
-        status="applied",
+        status="applied", garden=plants, garden_tris=0 if o is None else int(len(o[2])),
         confidence={"footprint_porch": "SOURCED BDOT10k", "eave_ridge": "SOURCED GUGiK LoD2 2017",
                     "openings_chimneys": "ESTIMATED from owner photos / orthophoto (+-0.3-0.5 m)",
                     "west_gable": "ESTIMATED (mirrors the east gable)", "member_sizes": "WORKING_VALUE"},
