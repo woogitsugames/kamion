@@ -378,6 +378,11 @@ def widening_clearance(net: Network, edges: dict) -> dict:
     A close parallel neighbour reserves its entire existing gap; a distant one leaves only the excess over the
     separator search distance available. Thresholds are GAMEPLAY WORKING_VALUE, not orthophoto measurements.
     """
+    def local_width(sec, t):
+        if sec.width_profile:
+            return float(np.interp(t, *np.asarray(sec.width_profile, float).T))
+        return sec.width
+
     lines, keys = [], []
     for eid, (_, g, _, _) in edges.items():
         sec = net.sections[eid]
@@ -391,7 +396,7 @@ def widening_clearance(net: Network, edges: dict) -> dict:
     result = {}
     for i, eid in enumerate(keys):
         sec = net.sections[eid]
-        if not sec.oneway or sec.roundabout:
+        if sec.roundabout:
             continue
         line = lines[i]
         room = [float("inf"), float("inf")]  # left, right
@@ -419,11 +424,12 @@ def widening_clearance(net: Network, edges: dict) -> dict:
                 if abs(float(u @ tangent)) < .9:
                     continue
                 lat = float((np.asarray(ln.interpolate(v).coords[0]) - np.asarray(q.coords[0])) @ normal)
-                gap = abs(lat) - (sec.width + other.width) / 2
-                if gap < .25:
-                    continue  # shared/overlapping junction pavement has no separator to protect
+                gap = abs(lat) - (local_width(sec, s / line.length) + local_width(other, v / ln.length)) / 2
+                if gap < 0 and set(edges[eid][2:]) & set(edges[keys[j]][2:]):
+                    continue  # topologically shared junction pavement, not a separator
                 side = 0 if lat > 0 else 1
-                room[side] = min(room[side], max(0.0, gap - S.WIDEN_SEPARATOR_RESERVE_M))
+                # Both roads may grow into this gap. Each owns at most half the available surplus.
+                room[side] = min(room[side], max(0.0, gap - S.WIDEN_SEPARATOR_RESERVE_M) / 2)
         result[eid] = room
     return result
 
@@ -443,7 +449,7 @@ def gameplay_widen(net: Network, d: float, edges: dict | None = None) -> None:
         dl = d
         add = n * dl
         shift = 0.0
-        if sec.oneway and not sec.roundabout:
+        if not sec.roundabout:
             left, right = clearance.get(sec.edge_id, [float("inf"), float("inf")])
             # Allocate towards the greater clearance. Neither neighbour loses any of its existing separator.
             if left == right == float("inf"):
@@ -471,7 +477,7 @@ def gameplay_widen(net: Network, d: float, edges: dict | None = None) -> None:
         if sec.edge_line_spacing is not None:
             sec.edge_line_spacing = round(sec.edge_line_spacing + add, 3)
         sec.provenance["gameplay_widen_m"] = round(add, 3)
-        if sec.oneway and not sec.roundabout:
+        if not sec.roundabout:
             sh = -shift
             sec.center_offset = round(sec.center_offset - sh, 3)
             if sec.center_offset_end is not None:

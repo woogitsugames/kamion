@@ -122,3 +122,8 @@ za zakręt pętli serwisowej, dając przycięcia ramion 40,44 / 81,57 m i krawę
 Klasa D kończy wyszukiwanie i przycięcie przed pierwszym odchyleniem stycznej o >45° (WORKING_VALUE).
 Odcinek za zakrętem pozostaje wstęgą drogi; nos jest lokalny. Przycięcia wynoszą 13,15 / 13,00 m.
 Plan na ortofoto GUGiK HR sprawdzony, bez Unity. Regresja wymaga poprawnego poligonu i przejezdnego starego punktu błędu.
+
+### Wspólny budżet (G3, po niezależnej recenzji)
+Planowanie obejmuje także drogi dwukierunkowe obok drogi głównej. Nadwyżka szczeliny ponad rezerwę jest dzielona
+po połowie między obu sąsiadów; nie wolno wydać jej dwukrotnie. Porównanie używa lokalnych width_profile
+oraz center_offset_profile. Jedynie topologicznie wspólna, nakładająca się nawierzchnia skrzyżowania jest pomijana.

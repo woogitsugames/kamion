@@ -126,3 +126,8 @@
   przejazd w miejscu starego blind-end jest wewnątrz asfaltu; porównanie GUGiK HR 0,08 m. Unity nie uruchamiano.
   G1 nadal czeka na heavy slot; testy 15/15, dodatkowa regresja geometrii parkingu w toku.
 - NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g1.log -Tail 25`.
+
+- G3 (uwagi niezależnej recenzji): ochrona szczeliny obejmuje również sąsiada dwukierunkowego; obie drogi dzielą
+  nadwyżkę szerokości po połowie. Szerokości przy porównaniu pochodzą z lokalnego width_profile, nie maksimum sekcji.
+  Regresje D94 18/18 przed dodaniem testów wspólnego budżetu i profili. Raport przeglądu w docs/reports/visual/.
+- NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g1.log -Tail 25` (kolejka heavy: pozycja 0).

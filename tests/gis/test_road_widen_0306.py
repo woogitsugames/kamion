@@ -48,7 +48,7 @@ def test_every_lane_quarter_metre_wider(maczka):
         assert b.width == pytest.approx(a.width + dl * a.lanes, abs=1e-3), k
         assert b.lane_w == pytest.approx(a.lane_w + dl, abs=2e-3), k
         assert b.lane_w >= a.lane_w - 1e-9
-        if a.oneway and not a.roundabout:
+        if not a.roundabout:
             shift = b.center_offset - a.center_offset
             left, right = b.provenance["gameplay_clearance_m"]
             growth = dl * a.lanes
@@ -151,12 +151,14 @@ def test_knyszyn_widened_roundabout_builds_clean(monkeypatch):
 
 
 @pytest.mark.parametrize("neighbour_y,expected_shift", [(9.0, -0.25), (-9.0, 0.25)])
-def test_grows_away_from_parallel_road_on_either_side(neighbour_y, expected_shift):
+@pytest.mark.parametrize("other_oneway", [True, False])
+def test_grows_away_from_parallel_road_on_either_side(neighbour_y, expected_shift, other_oneway):
     from dataclasses import replace
     from types import SimpleNamespace
     sec = N.EdgeSection("w1:a-b", "primary", "G", True, 2, 2, 0, 3.0, .25, 6.5,
                         "measured", "road_asphalt", False, 0, False, None, None, None)
-    other = replace(sec, edge_id="w2:c-d", provenance={})
+    other = replace(sec, edge_id="w2:c-d", oneway=other_oneway, lanes_fwd=2 if other_oneway else 1,
+                    lanes_bwd=0 if other_oneway else 1, provenance={})
     net = SimpleNamespace(sections={sec.edge_id: sec, other.edge_id: other})
     edges = {sec.edge_id: ({}, np.array([[0., 0.], [100., 0.]]), "a", "b"),
              other.edge_id: ({}, np.array([[0., neighbour_y], [100., neighbour_y]]), "c", "d")}
@@ -193,3 +195,33 @@ def test_parking_loop_is_not_absorbed_past_its_first_bend():
     polygon = Polygon([p for p, tag in junction.boundary])
     assert polygon.is_valid
     assert polygon.contains(Point(-208.01, -287.49).buffer(.3))
+
+
+def test_neighbours_share_the_surplus_instead_of_spending_it_twice():
+    from dataclasses import replace
+    from types import SimpleNamespace
+    sec = N.EdgeSection("w1:a-b", "primary", "G", True, 2, 2, 0, 3.0, .25, 6.5,
+                        "measured", "road_asphalt", False, 0, False, None, None, None)
+    secs = [replace(sec, edge_id=f"w{i}:a-b", provenance={}) for i in range(4)]
+    net = SimpleNamespace(sections={s.edge_id: s for s in secs})
+    edges = {s.edge_id: ({}, np.array([[0., y], [100., y]]), str(i), str(i + 10))
+             for i, (s, y) in enumerate(zip(secs, [-9., 0., 18.75, 27.75]))}
+    N.gameplay_widen(net, .25, edges)
+    a,b = secs[1:3]
+    gap = 18.75 + b.center_offset - a.center_offset - (a.width + b.width) / 2
+    assert gap >= S.WIDEN_SEPARATOR_RESERVE_M - .002
+    assert a.provenance["gameplay_widen_limited_m"] > 0
+    assert b.provenance["gameplay_widen_limited_m"] > 0
+
+
+def test_clearance_uses_local_profile_width_instead_of_maximum():
+    from dataclasses import replace
+    from types import SimpleNamespace
+    sec = N.EdgeSection("w1:a-b", "primary", "G", True, 2, 2, 0, 3.0, .25, 14.0,
+                        "measured", "road_asphalt", False, 0, False, None, None, None,
+                        width_profile=[(0,14),(.1,6.5),(.9,6.5),(1,14)])
+    other = replace(sec, edge_id="w2:c-d", width=6.5, width_profile=None, provenance={})
+    net = SimpleNamespace(sections={sec.edge_id:sec,other.edge_id:other})
+    edges = {sec.edge_id: ({}, np.array([[0.,0.],[100.,0.]]), "a", "b"),
+             other.edge_id: ({}, np.array([[20.,22.],[80.,22.]]), "c", "d")}
+    assert N.widening_clearance(net, edges)[sec.edge_id][0] == pytest.approx(1.75)
