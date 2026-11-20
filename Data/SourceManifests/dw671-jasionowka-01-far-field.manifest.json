@@ -2,6 +2,7 @@
   "adr": "0085-far-field-backdrop",
   "appearance_policy": {
     "classification": "declared function; height alone does not imply an energy plant",
+    "closed_roofs_all_tiers": true,
     "industrial_panel_min_height_m": 12.0,
     "not_measured": [
       "wall_colour",
@@ -11,14 +12,15 @@
     ],
     "panel_alpha": 0.25,
     "panel_ribbon_alpha": 0.65,
-    "schema": "far-field-appearance/1",
+    "schema": "far-field-appearance/2",
     "source_hall_counts": {
       "energy": 0,
       "industrial": 26,
       "other": 186
     },
     "source_panel_hall_count": 0,
-    "status": "WORKING_VALUE"
+    "status": "WORKING_VALUE",
+    "windowless_roof_fascia_all_tiers": true
   },
   "building_height_sources": {
     "WORKING_VALUE-bdot-storeys-typology": 53,
@@ -103,5 +105,67 @@
       "license": "ODbL 1.0 (© OpenStreetMap contributors)",
       "provider": "OpenStreetMap contributors / Geofabrik GmbH"
     }
-  ]
+  ],
+  "streaming_building_policy": {
+    "check_source_and_compressed_footprint": true,
+    "excluded_buildings": 1187,
+    "inputs_sha256": {
+      "Data/Regions/bialystok-bojary/route_start.json": "b22916ede57428325c815a9ff24718337c695496e8bfe82b6891600771c5ff3e",
+      "Data/Regions/bialystok-dojlidy/route_start.json": "ff3316b468474c03da46673d0a62cd285d3e519a8ec7d256a14b387ff5c7aeb7",
+      "Data/Regions/bialystok-industrial-c/route_start.json": "02d8f65178aaed2949e60436f0f8ed7690415ac5b8c6239b58efe3e20467cf7f",
+      "Data/Regions/bialystok-kleeberga/route_start.json": "93274c9ff852646b7f3ee2bbce236b554daee363a720979eb51ae45e77269b7b",
+      "Data/Regions/bialystok-knyszynska/route_start.json": "86ad43d3ccf15d849aa92df344230e92019081b01b19fe591229b39b18a4599b",
+      "Data/Regions/bialystok-maczka/route_start.json": "182c151282a264413b5e3b55d884add869119f857ca846ef318e4c07e6e545ca",
+      "Data/Regions/bialystok-mickiewicza/route_start.json": "29d761f972898ba108e1258e6d272f5fdf41a4d7e8899adbf8803fdcd6c2a4bb",
+      "Data/Regions/bialystok-porosly/route_start.json": "5bfa574cd10d00ac0d23260c6335615d29b7bc9a7a5c7b65027bfe5ca211936d",
+      "Data/Regions/bialystok-wygoda/route_start.json": "f8da505f1d85be903f71e267baed6e2b592c0b07f41c4d4bc95451ff08b5e0bd",
+      "Data/Regions/dk65-01/route_start.json": "66ee552fa52c7e4336419dc84598ae654f342a59f8ac134f1647c11eb4d17e01",
+      "Data/Regions/dk65-02/route_start.json": "60038914bf9768fdb1ec798c5a4c15abae83e6ac9556ff6a5db9ba5ddb44ee09",
+      "Data/Regions/dk65-03/route_start.json": "25c09a34dcb078fc47162b26c6d75a821512b19d01107de8a8cbd6cc4e63fece",
+      "Data/Regions/dk65-04/route_start.json": "5029134f4b38114805de69f9a166e45d9ce70b4fb6fd44ea793fc2a369ecc793",
+      "Data/Regions/dk65-05/route_start.json": "39f3471f954e1ed8eefda7428cd10dbc4c4c34e079d0ca6c99193a1596c61cc0",
+      "Data/Regions/dk65-06/route_start.json": "2a780cbe98112d8fd5ae2600f475861afbd4fc424955bfd6b6e6e854c3c6bd9f",
+      "Data/Regions/dk65-07/route_start.json": "dd5af55125bb74aad91892a770108daefc651a942427625a99190c9a8de96ee8",
+      "Data/Regions/dk65-08/route_start.json": "352bba9ef1de508800ac5f5d62776dc292f8d60bdbcf2511cf167eb368393a60",
+      "Data/Regions/dk65-09/route_start.json": "1164ca845533f7385e92cc6a8ca3e50d758961268d36a417b81e6275cbc9e257",
+      "Data/Regions/dk65-10/route_start.json": "f75e8e62ce5651f0d4666208ba0de4d4cff1e94376169d2442d1459277297be0",
+      "Data/Regions/dk65-11/route_start.json": "dcfd693dc0992e7e824411359168fb9c7b129a031700485a7f237468fe3e3aee",
+      "Data/Regions/dk65-monki-01/route_start.json": "5959b71da7bbedb0ec580090deb3a6626650f51d26454482f76c1924ee2c8721",
+      "Data/Regions/dk65-monki-02/route_start.json": "39e5078416d7811521070c05b8abb40578ea06de52b1ac16418fb1087295615a",
+      "Data/Regions/dk65-monki-03/route_start.json": "5b8baa028b267b9306bd296e75cff912cdb10e898e944ced8201773d0acdc3d2",
+      "Data/Regions/dk65-monki-04/route_start.json": "b2249bb45c1bfb48da2cf41070ecbf03386c71e9a83058c6555254c3e053bf4a",
+      "Data/Regions/dk65-monki-05/route_start.json": "f855ef05aed50fc8c2d492537af921b705c4fbaafd982dc978f7aa732e81efd8",
+      "Data/Regions/dk65-monki-06/route_start.json": "039614602d00fc651ebdead3c48fab89a7b985cd13c963d56375f58314fcb153",
+      "Data/Regions/dk65-monki-07/route_start.json": "21fec1ef62e67501bbc891b4885a9f58bf430692b000ce458859508ddfa5d788",
+      "Data/Regions/dk8-s8-jeroniki/route_start.json": "e61bfa905fe1a8e4641a375152a45cbfcc240840ddc53ab961567df444a3d261",
+      "Data/Regions/dw671-jasionowka-01/route_start.json": "c7808b2c5dcd4268c783ff4d1fb792af3e51bce1ad384568e121ce2d96054ad9",
+      "Data/Regions/dw671-tykocin-01/route_start.json": "a739de4ac2a64b0da5129b9192bfa1280cc94d5ea41729899d0b94a638385445",
+      "Data/Regions/dw671-tykocin-02/route_start.json": "7533a1b849d69fa764d62d62dfc4c1f6c94cdac959652cd0cfa18f4682a79f52",
+      "Data/Regions/dw671-tykocin-03/route_start.json": "be60e99252732db2b2d7990ab6e982195b030c80504ff6d64e3b00ae4bc9a4db",
+      "Data/Regions/dw671-tykocin-04/route_start.json": "7aad6800df310d1dd58a41ff7b37d2dea7988cd7680aae2000936042da94103c",
+      "Data/Regions/dw671-tykocin-05/route_start.json": "94c5c01c067bb0a637ce3d3179614b74a6e4bc6e1e1423bc9d5405809d0a82cf",
+      "Data/Regions/dw671-tykocin-06/route_start.json": "440bd9909e3dd35f72700bad0ff4df639828951b68421b37923fb08b9994fce5",
+      "Data/Regions/dw671-tykocin-07/route_start.json": "56fe83030ad9c0b09ddc65a111fa7ef9965872dea8cade34e654448e7777db91",
+      "Data/Regions/dw671-tykocin-08/route_start.json": "74b111957f69f0b56cefdc46ae6c31c6d6caff47719ca9ee76800865d7f4d4cf",
+      "Data/Regions/dw671-tykocin-09/route_start.json": "099ece93e79a54cab767129a5f13f35d0e4f334d5e6f183a04e1ab63172f7f59",
+      "Data/Regions/knyszyn-s/route_start.json": "48b02881ba3f1ba1ad116d0137ca1ecc7abf1c3abf6a352ec9df8b51a6e8a0f5",
+      "Data/Regions/knyszyn-w/route_start.json": "db8f4bad7c4862a2e6ca5bb017f7afc5bbfc70bdc51a4cf9c74a5c09d668ea3c",
+      "Data/Regions/knyszyn/route_start.json": "d7d764abea1aeb27a199a1ef6c34eaff9938acd40a648d432e947623a5206216",
+      "Data/Regions/monki-e/route_start.json": "cba669af74d07e694b7d9175e5f013555e3525d65c8f78e23bf6726e0429fd89",
+      "Data/Regions/monki/route_start.json": "777ccd39ea51deea579741338e8eee3e1db56754f3bb3f348ceb71ef84d7818a",
+      "Data/Regions/s8-01/route_start.json": "126e6584e9ecd3a004a44dc10fcb99580e06712f6c2cfedb517c92ddfc35d3fc",
+      "Data/Regions/s8-02/route_start.json": "735beed6b5323829a5bd461c6b2dd774b634a861c42e52f0f93cb911eb57431d",
+      "Data/Regions/s8-03/route_start.json": "43b952b1871e13f65af0f0e6037a5f0d5a4df3d1b0d837c60b2e03dfdec44c5f",
+      "Data/Regions/s8-04/route_start.json": "9349d281879b233846bb355f4bd9cc1d8a364c88dc30f7743e1413cbbb0bb0a5",
+      "Data/Regions/s8-05/route_start.json": "69f70b462e6acfe589c91d754e7460d35b5755c05b0c65be5a37a72aef77a67d",
+      "Data/Regions/tykocin/route_start.json": "fc4ba94b308ff1203a7cd574a9398ac96711c9d5154509b4c7b8f9279392db67",
+      "tools/worldgen/regions.py": "a73c69ee6de6b9f0313dd4a4b6f3f3463bcc777cdd5db4508832d48818b4d497"
+    },
+    "reserve_all_registered_tiles": true,
+    "retained_buildings": 339,
+    "route_clearance_m": 400.0,
+    "schema": "far-field-building-ownership/1",
+    "source_buildings": 1526,
+    "status": "WORKING_VALUE"
+  }
 }
