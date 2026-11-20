@@ -51,6 +51,11 @@
      "id": "bialystok-mickiewicza",
      "side": "N",
      "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-krywlany",
+     "side": "W",
+     "seamM": 2048.0
     }
    ]
   },
@@ -155,6 +160,31 @@
    ]
   },
   {
+   "id": "bialystok-krywlany",
+   "xmin": 776971.0,
+   "ymin": 589055.0,
+   "xmax": 779019.0,
+   "ymax": 591103.0,
+   "anchorX": 777995.0,
+   "anchorY": 590079.0,
+   "anchorZ": 151.99,
+   "worldMemoryMB": 105.9,
+   "worldMemoryHighMB": 254.0,
+   "memorySource": "ADR 0314 tile 4, import krywlany-s24 r3 2026-11-20 (Win64)",
+   "neighbors": [
+    {
+     "id": "bialystok-dojlidy",
+     "side": "E",
+     "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-mickiewicza",
+     "side": "NE",
+     "seamM": 0.0
+    }
+   ]
+  },
+  {
    "id": "bialystok-maczka",
    "xmin": 774923.0,
    "ymin": 595199.0,
@@ -201,6 +231,11 @@
      "id": "bialystok-dojlidy",
      "side": "S",
      "seamM": 2048.0
+    },
+    {
+     "id": "bialystok-krywlany",
+     "side": "SW",
+     "seamM": 0.0
     }
    ]
   },
@@ -1646,6 +1681,14 @@
    "gapM": 0.0
   },
   {
+   "from": "bialystok-krywlany",
+   "to": "bialystok-dojlidy",
+   "side": "E",
+   "x": 779019.0,
+   "y": 590253.0,
+   "gapM": 0.0
+  },
+  {
    "from": "bialystok-maczka",
    "to": "bialystok-kleeberga",
    "side": "W",
@@ -1971,6 +2014,13 @@
     "dk65-11",
     "knyszyn-s",
     "knyszyn"
+   ]
+  },
+  {
+   "id": "bialystok-krywlany..bialystok-dojlidy",
+   "tiles": [
+    "bialystok-krywlany",
+    "bialystok-dojlidy"
    ]
   },
   {

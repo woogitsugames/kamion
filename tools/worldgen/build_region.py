@@ -110,6 +110,32 @@ def build_terrain(region, out_dir: Path, raw_dir: Path, nmt_id: str) -> tuple[di
     return meta, z
 
 
+def _as_epsg2180(srcs: list, vrts: list) -> list:
+    """krywlany-s24: GUGiK ORTO 2024 sheets N-34-107-C-b-3-1/-3-3 carry a WKT "ETRF2000-PL / CS92" without an EPSG code
+    on the datum (rasterio: to_epsg() None, CRS != EPSG:2180) while the neighbour sheets say EPSG:2180; rasterio.merge
+    refuses the mix. Checked 2026-11-20: same datum (ETRF2000 Poland, GRS 1980), same Transverse Mercator parameters
+    (lon_0 19, k 0.9993, x_0 500000, y_0 -5300000) and the WKT ends with AUTHORITY["EPSG","2180"]. Such a source is
+    re-labelled EPSG:2180 through a WarpedVRT (same grid, no reprojection); anything else still fails in merge."""
+    from pyproj import CRS
+    from rasterio.vrt import WarpedVRT
+    e = CRS.from_epsg(2180)
+    out = []
+    for s in srcs:
+        c = CRS.from_wkt(s.crs.to_wkt())
+        same = (s.crs.to_epsg() != 2180 and c.datum.name == e.datum.name and c.ellipsoid.name == e.ellipsoid.name
+                and c.coordinate_operation is not None
+                and {p.name: round(p.value, 9) for p in c.coordinate_operation.params}
+                == {p.name: round(p.value, 9) for p in e.coordinate_operation.params})
+        if same:
+            v = WarpedVRT(s, src_crs="EPSG:2180", crs="EPSG:2180", transform=s.transform, width=s.width,
+                          height=s.height)
+            vrts.append(v)
+            out.append(v)
+        else:
+            out.append(s)
+    return out
+
+
 def build_ortho(region, raw_dir: Path, orto_id: str) -> dict:
     import rasterio
     from rasterio.merge import merge
@@ -122,9 +148,10 @@ def build_ortho(region, raw_dir: Path, orto_id: str) -> dict:
     srcs = [rasterio.open(p) for p in sorted(files)]
     crs = {str(s.crs) for s in srcs}
     res = {s.res for s in srcs}
+    vrts = []
     try:
         if not out.exists():
-            mosaic, transform = merge(srcs, bounds=region.bbox, res=0.25, nodata=0)
+            mosaic, transform = merge(_as_epsg2180(srcs, vrts), bounds=region.bbox, res=0.25, nodata=0)
             prof = {"driver": "GTiff", "height": mosaic.shape[1], "width": mosaic.shape[2], "count": 3,
                     "dtype": mosaic.dtype, "crs": srcs[0].crs, "transform": transform, "tiled": True,
                     "blockxsize": 512, "blockysize": 512, "compress": "JPEG", "photometric": "YCBCR",
@@ -135,7 +162,7 @@ def build_ortho(region, raw_dir: Path, orto_id: str) -> dict:
         with rasterio.open(out) as o:
             shape, bounds = (o.width, o.height), list(o.bounds)
     finally:
-        for s in srcs:
+        for s in vrts + srcs:
             s.close()
     return {"source_manifest": orto_id, "source_crs": sorted(crs), "source_res_m": sorted(res),
             "file": f"Data/raw/derived/{region.id}/{out.name}", "size_px": list(shape), "bounds": bounds,

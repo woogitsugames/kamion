@@ -62,8 +62,10 @@ def test_non_adjacent_regions_have_no_link():
     g = _graph()
     by = {t["id"]: t for t in g["tiles"]}
     # Dojlidy is 4 km south-east of C (ADR 0224 not_adjacent): never a neighbour of C. Since D81 (ADR 0278 tiles 5-7)
-    # C touches Maczka (W) and wygoda (E); Dojlidy touches only mickiewicza (N), the ring tiles stay apart.
-    assert [n["id"] for n in by["bialystok-dojlidy"]["neighbors"]] == ["bialystok-mickiewicza"]
+    # C touches Maczka (W) and wygoda (E); Dojlidy touches mickiewicza (N) and, since krywlany-s24 (ADR 0278 tile 4,
+    # ADR 0314), bialystok-krywlany (W); krywlany touches mickiewicza only at a corner. The ring tiles stay apart.
+    assert sorted(n["id"] for n in by["bialystok-dojlidy"]["neighbors"]) == ["bialystok-krywlany", "bialystok-mickiewicza"]
+    assert {n["id"]: n["side"] for n in by["bialystok-krywlany"]["neighbors"]} ==         {"bialystok-dojlidy": "E", "bialystok-mickiewicza": "NE"}
     assert sorted(n["id"] for n in by["bialystok-industrial-c"]["neighbors"] if len(n["side"]) == 1) == \
         ["bialystok-maczka", "bialystok-wygoda"]
     assert "bialystok-dojlidy" not in {n["id"] for n in by["bialystok-industrial-c"]["neighbors"]}
