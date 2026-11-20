@@ -31,3 +31,4 @@ NASTĘPNY KROK: po `artifacts/s8-north-s24/run/final-world-*-r2.exit` → tile_g
 - 03/korycin r2 czekają na heavy; import r3 01/02 w toku (przebudowa PBR Medium).
 - 16:09 import+vqa r3 01 (High 159,0 / Low 78,7 MB) i 02 (199,3 / 86,6 MB) po merge — OK (arkusz vqa-r3/dk8-wasilkow-01/sheet.jpg). 03/korycin r2 nadal w kolejce heavy (wszystkie 3 sloty: regen-wave-2 A/B/C).
 NASTĘPNY KROK (po starcie/końcu world 03 i korycin r2): `pwsh -NoProfile -File tools/worldgen/qa/s8_north_s24.ps1 -Phase unity -Tiles dk8-wasilkow-03,dk8-korycin-01 -Tag r3`, potem tile_graph (WORLD_MEMORY z logów), route_links, nav_trips, catalog, route_obstacles, seams, `-Phase editmode -Tag r2`
+- 16:16 EditMode Win64 r2 (po merge krywlany + road-widen): 1505, 1398 pass, 0 FAIL, 107 skip — artifacts/tests/editmode-20261120-161228.xml
