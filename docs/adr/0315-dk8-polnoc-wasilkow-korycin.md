@@ -40,5 +40,20 @@ północny zachód (Korycin, Augustów).
 - Dalszy ciąg do Korycina: kafel (−1,4) i dalej na NW (DK8 w (−1,5), (−2,6..10)).
 - S19 Białystok Północ – Wasilków: po oddaniu do ruchu (nowy pbf) — pętla S8 → S19 → Wasilków.
 
-## Liczby
-Uzupełniane w trakcie (STATUS: `docs/status/s8-north-s24-STATUS.md`).
+5. **Link C:** pierwsze ~400 m jak `c-andersa-to-wygoda` (rondo Pamięci Bieżeństwa) — bez wychylenia 12 punktów opon
+   naczepy poza nawierzchnią (s 364–368 m); użyte to samo `swing` (2,0 m / ±30 m) → 0 / 0.
+
+## Liczby (zmierzone 20.11, worktree s8-north-s24)
+| wielkość | wartość | źródło |
+|---|---|---|
+| trasy kontrolne 01 / 02 / 03 / korycin-01 | 2071,26 / 2125,83 / 2067,86 / 962,59 m | `route_start.json` |
+| link c-dk8-north-to-wasilkow | 2755 m | `route_links.json` |
+| złącza korytarza bialystok-wasilkow (4 pary) | 0,000–0,007 m | `route_links.json` corridors |
+| ślad zestawu (ciągnik + naczepa 13,6 m) poza nawierzchnią, link C | 0 / 27359 pkt (przed swing: 12) | `qa/link_swept_check.py` |
+| route_obstacles korytarz (5 kafli + link) | colliders 0, visual 0 (no-surface 1 próbka w 02, korycin, linku C) | `artifacts/s8-north-s24/route_obstacles-r1.json` |
+| qa.seams C, 01, 02, 03, korycin (4 szwy, 21 dróg) | 0 FAIL | `artifacts/s8-north-s24/seams/seams-r1.md` |
+| wysokość na szwach (GLB), drogi trasy (trunk) | \|dz\| ≤ 0,038 m; wszystkie drogi ≤ 0,088 m | `qa/seam_z.py`, `seams/seam_z-r1.json` |
+| road_consistency na trasie 01 / 02 / 03 / korycin | 0 / 0 / 0 / 0 (w kaflu: 95 / 20 / 239 / 9) | `generated/road_consistency_qa.json` |
+| WORLD_MEMORY High 01 / 02 / 03 / korycin | 159,0 / 199,4 / 200,4 / 148,7 MB | import Win64 (log import-region) |
+| far_field High (trójkąty) 01 / 02 / 03 / korycin | 148 684 / 126 879 / 107 997 / 91 089 | build_world |
+| NMT | 2025 na wszystkich 4 kaflach (pin), ortofoto 2024 0,25 m | `Data/SourceManifests/gugik-*` |
