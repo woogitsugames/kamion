@@ -44,3 +44,8 @@
   2397,47 — katalog po road-widen w origin/main, poza gałęzią; brak zmian C# w tej gałęzi). Log: `artifacts/roof-tiles-s24/editmode.log`.
   r1 dalej w kolejce heavy (regen-wave-2 trzyma 3/3 od 14:08–15:02).
   NASTĘPNY KROK: bez zmian (po `exit=0` w r1.status: sbs.sh r1 + budget.py r1).
+- 15:55 Launcher r1 w tle zginął (przerwanie sesji ~15:22 — bilet kolejki zniknął) → uruchomiony ponownie ODŁĄCZONY (`Start-Process pwsh
+  -File artifacts/roof-tiles-s24/run-r1.ps1`, pid 26092, log `run-r1.out/.err`); działa niezależnie od sesji agenta. Kolejka heavy: regen-wave-2
+  buduje bojary / mickiewicza (od 14:08) i wygoda (od 15:03), po ~2,5–3 h na kafel; przede mną s8-north i rondo-fix-cli → start r1 ok. 17:00+.
+  NASTĘPNY KROK: `cat artifacts/roof-tiles-s24/r1.status`; po `exit=0`: `bash artifacts/roof-tiles-s24/sbs.sh r1`;
+  `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`; obejrzeć `sbs/crop-*-r1.jpg`, uzupełnić ADR 0316 (Budżet / Wyniki)
