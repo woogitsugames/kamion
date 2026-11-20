@@ -51,6 +51,12 @@ na zachód do kafla 4, który nie istniał; trasa Dojlid zaczyna się na ich W k
 - Import Win64 r3: 64 chunki, WORLD_MEMORY Low 105,9 / High 254,0 MB (wpisane do `tile_graph.py`).
 - Kamery High (visual-qa, clear): route-s0154/0461/0768/1076, roundabout-02-above, chase, truck-at-gate, cab-view —
   obejrzane (`artifacts/krywlany-s24/vqa-r3/`).
+- Testy: EditMode Win64 r3 1489 / 1384 pass / 0 fail / 105 skip (r2: 3× StartClearanceTests krywlany → §6).
+  pytest (14 plików gis: route_links, katalog, start_clear, seams ×4, tile_graph, map_plan, qa_tools_0219, dk19,
+  generic_0166, far_field_streaming, road_widen_0306): 458 pass; 3 fail w test_route_links_s23 (json_fresh, knyszyn
+  Rynek, ciągłość kleeberga|knyszynska) — te same 3 padają na main 3d55252ec (nie dotyczą krywlany).
+- `route_links.json` = wersja main + link narożnika + korytarz (prywatna kopia derived worktree jest starsza od main —
+  pełna regeneracja tutaj zmieniłaby linki knyszyn/tykocin); lider: `route_links.py` w main po scaleniu.
 
 ## Konsekwencje / Otwarte
 - Dojlidy do przebudowy po road-widen (fala regeneracji) — wtedy szwy krywlany | Dojlidy bez FAIL.
