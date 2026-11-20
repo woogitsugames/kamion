@@ -82,6 +82,16 @@ namespace TruckSim.Audio
         static float[] s_Buf;
         static int s_Write, s_Channels, s_Rate;
         static volatile bool s_Recording;
+        static GameObject s_BusTap;
+
+        /// <summary>ADR 0311: a listener bus filter (cab gain) on <paramref name="listenerObject"/> pushes the mix itself,
+        /// after its gain; the capture then adds no tap of its own on that object (it would record before the gain).</summary>
+        public static void SetBusTap(GameObject listenerObject) => s_BusTap = listenerObject;
+
+        public static void ClearBusTap(GameObject listenerObject)
+        {
+            if (s_BusTap == listenerObject) s_BusTap = null;
+        }
 
         string m_Path;
         float m_T0, m_T1, m_NextStats, m_NextListener;
@@ -127,7 +137,7 @@ namespace TruckSim.Audio
 
         /// <summary>Audio thread: append one mix block (interleaved). No allocation; drops a block whose channel count
         /// does not match the preallocated layout.</summary>
-        internal static void Push(float[] data, int channels)
+        public static void Push(float[] data, int channels)
         {
             if (!s_Recording || s_Buf == null || channels != s_Channels) return;
             int n = Math.Min(data.Length, s_Buf.Length - s_Write);
@@ -174,11 +184,12 @@ namespace TruckSim.Audio
         void FollowListener()
         {
             var l = FindAnyObjectByType<AudioListener>();
-            if (l == m_Listener) return;
+            bool bus = l != null && s_BusTap != null && s_BusTap == l.gameObject;
+            if (l == m_Listener && (m_Tap != null) == (l != null && !bus)) return;
             if (m_Tap != null) Destroy(m_Tap);
             m_Listener = l;
-            m_Tap = l != null ? l.gameObject.AddComponent<AudioOutputTap>() : null;
-            Debug.Log($"[AUDIO-PC] listener -> {(l != null ? l.name : "none")}");
+            m_Tap = l != null && !bus ? l.gameObject.AddComponent<AudioOutputTap>() : null;
+            Debug.Log($"[AUDIO-PC] listener -> {(l != null ? l.name : "none")} tap={(bus ? "cab bus (after gain)" : m_Tap != null ? "own" : "none")}");
         }
 
         static void SetView(string view)
