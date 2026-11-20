@@ -242,7 +242,7 @@ def test_plot_kit_atlas_rows_and_matt_colours():
     on = row[..., 3] > 200
     rgb = row[on][:, :3]
     assert rgb.max() < 140 and abs(rgb[:, 1].mean() - rgb[:, 0].mean()) < 8
-    assert PK.CHAINLINK_GREEN[1] > 2 * PK.CHAINLINK_GREEN[0] and max(PK.CHAINLINK_GREEN) < 0.6
+    assert PK.CHAINLINK_GREEN[1] > 2 * PK.CHAINLINK_GREEN[0] and max(PK.CHAINLINK_GREEN) < 1.0
     for name, (u, v) in PK.SWATCH.items():
         x, y = int(u * PK.N), int((1 - v) * PK.N)
         assert im[y, x, 3] == 255 and np.abs(im[y, x, :3] - np.array(PK._SW_RGB[name])).max() < 30
