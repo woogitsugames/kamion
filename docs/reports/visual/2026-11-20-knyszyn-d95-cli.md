@@ -1,6 +1,6 @@
 # D95 — Knyszyn, rondo-fix-cli (2026-11-20)
 
-Stan: WIP; bez Unity, bez push. Nie stanowi wizualnego PASS.
+Stan: poprawki i walidacja CLI zakończone; bez Unity, bez push. Nie stanowi wizualnego PASS.
 
 ## D95 r2 — końcowy eksport i pomiar gotowych łączników
 
@@ -9,7 +9,11 @@ Stan: WIP; bez Unity, bez push. Nie stanowi wizualnego PASS.
   Dwa znaki generator odsunął o 1,15 i 3,36 m na dostępne podłoże; orientacja i ewentualne duplikaty wymagają renderu.
 - road_consistency: 3 lane_blind_end / 5 obstacle_in_lane, na trasie 0. Ostrzeżenia o brakujących skanach
   wyposażenia i nieaktywnych zasobach Fab występowały też w pierwszym buildzie; brak nowego błędu eksportu.
-- Pełny retest pytest jeszcze w toku; nie jest to deklaracja PASS testów.
+- Pełny retest: **160 passed, 2 skipped, exit0**, 316,06 s (`artifacts/logs/d95-retest.log`).
+  Zakres: roundabout/0274, road_widen/0306, compact_roundabout/0218, lane_edges, dk65_seam_knyszyn/0233,
+  seam_taper/0275, seams_fix_s23, seams_p3/0304. Oba wcześniejsze błędy usunięte; trzy nowe regresje PASS.
+  Dwa istniejące testy siatek szwów DK65 pominięto: w tym worktree brak GLB dk65-10, dk65-11 i knyszyn-s.
+  Nie generowano innych kafli. Runner zakończony, slot heavy zwolniony.
 
 Pomiar `d95-combo-final.json` wykonano **bez --swing**, na wyeksportowanych ścieżkach i gotowych GLB:
 
@@ -27,6 +31,13 @@ Korekta zapisanego toru zmieniła koniec linku, lecz stary head_from i opis szwu
 Rzeczywisty brak ciągłości 0,3494 m usunięto: głowa sąsiada i koniec Knyszyna teraz identyczne,
 gapM=0, EPSG:2180 [760586,688; 611964,781]. Pozostałe eksportowane linki bez zmian; koniec linku
 knyszyn-w-dw671 bez przesunięcia. Trzy nowe regresje kontrolują gotowe tory i rzeczywisty gap/metadane.
+
+Najważniejsze lokalizacje kontynuacji:
+- `Data/Streaming/route_links.yaml:27`: korekta zapisanego toru 0,75 m w prawo, half_m=35; nie driver optimiser.
+- `game/Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming/route_links.json:6617`: odświeżona głowa zależnego łącznika; opis szwu w tym samym pliku.
+- `game/Assets/_Project/World/Runtime/Streaming/EdgeClosureRules.cs:9` i `WorldStreamer.cs:227`: domyślne ładowanie sąsiadów przy starcie Knyszyna na PC.
+- `game/Assets/_Project/Editor/VisualQA/WorldNeighbourQa.cs:14`, `VisualQaRunner.cs:99` i `WorldStreamer.cs:380`: rzeczywisty kontekst sąsiada, kolizje, instancje oraz wspólne otwieranie szwu.
+- `tests/gis/test_roundabout_0274.py:42` i `:61`: obie bramki toru i kontrola rzeczywistej ciągłości/metadanych.
 
 ## Kontynuacja — kontekst szwu w statycznym QA
 
@@ -63,18 +74,18 @@ Przyczyny i poprawki:
 - `tools/worldgen/roads/build_world.py`: lokalne przyciemnienie opaski (0,42 → 0,35) i wzmocnienie fug; kostka paving_20x10_grey była już przypisana. Próg 4 cm, spadek i kolizja bez zmian.
 - Cztery zespoły A-7/C-12 i sześć lamp łukowych 9 m przez gate3_landmarks. Pozycje i wysokość WORKING_VALUE, do sprawdzenia na kamerach 09/10/11; nie są pomiarem fotogrametrycznym.
 
-Otwarte:
-- Zapora i widoczny szew: `world_edge.authored.json:13` przesuwa jedynie zaporę 12 m od krawędzi. `WorldEdgeBuilder.cs:90` buduje domknięcie i prosty stub poza kaflem. Brak poprawki tej części; ukrycie samej zapory nie zszywa drogi z knyszyn-w. Wymaga rozwiązania ciągłości sceny/streamingu, bez przebudowy sąsiada w tym zadaniu.
+Otwarte do weryfikacji w Unity/playerze:
+- Zapora i widoczny szew: sam `world_edge.authored.json:13` przesuwał jedynie zaporę, a `WorldEdgeBuilder.cs:90` nadal tworzy domknięcie i stub dla końca mapy. D95 r2 zastępuje je rzeczywistym kontekstem knyszyn-w w QA i domyślnym streamingiem PC; wymagane potwierdzenie obrazu i załadowania sąsiada przed dojazdem. Jawne `-stream 0` zachowuje diagnostyczny koniec pojedynczego kafla.
 - Brak renderu po zmianach, zgodnie z zakazem uruchamiania Unity. Sprawdzić asfalt (spękania i UV1), bryłę wysepek, fugi i cień opaski, pozycje/duplikaty lamp, orientację i widoczność znaków.
 
-Walidacja w toku. Pierwszy przebieg: 105 passed, 3 failed; stare oczekiwania długości/liczby wysepek i stara trasa przecinająca wydłużoną wysepkę. Trasa zregenerowana, oczekiwania zaktualizowane oraz dodane regresje długości soczewek, liczby pasów i świeżego materiału płyty.
+Historyczna walidacja wstępna: 105 passed, 3 failed; stare oczekiwania długości/liczby wysepek i stara trasa przecinająca wydłużoną wysepkę. Trasa zregenerowana, oczekiwania zaktualizowane oraz dodane regresje długości soczewek, liczby pasów i świeżego materiału płyty. Końcowy wynik r2 podano u góry.
 
 Lokalne siatki skopiowane z main dają historyczne DK65→DW671 W 0/23/5 oraz DK65→DK65 W 0/16/0 (swing w obu przypadkach 0/0/0). To NIE jest baseline G3: ADR 0306 podaje 0/5/0 (swing 0/0/0) oraz 0/0/0. Wymagana bramka pozostaje G3/D95, nie starsze siatki.
 
 ## Wyniki pierwszej pełnej przebudowy i pomiaru
 
 - `d95-build.log`: exit 0, 1164,7 s; 64 GLB, High 548 MiB / Low 233 MiB; road_consistency 3 lane_blind_end / 5 obstacle_in_lane, na trasie 0.
-- `d95-tests-final.log`: 142 passed, 2 skipped, 2 failed (200,97 s). Poprawiono pominięty feeder 1426600413 oraz historyczny limit obrysu z wyłączonym D94 (zachowanie 11,75 m przy zmianie liczby pasów wymaga bazy większej o 0,25 m). Ponowny test w kolejce; nie uznawać za zielony przed wynikiem.
+- `d95-tests-final.log`: 142 passed, 2 skipped, 2 failed (200,97 s). Poprawiono pominięty feeder 1426600413 oraz historyczny limit obrysu z wyłączonym D94 (zachowanie 11,75 m przy zmianie liczby pasów wymaga bazy większej o 0,25 m). Późniejszy retest r2 jest zielony.
 - `d95-combo-after.json`: całość exit 1 przez istniejące łączniki z Rynku; łącznie opposite/kerb/off_hard 68/30/0, ze swingiem 4/77/0.
 
 | Przejazd | G3 (ADR 0306) | po D95 r1 | po D95 r1 swing |
@@ -82,18 +93,29 @@ Lokalne siatki skopiowane z main dają historyczne DK65→DW671 W 0/23/5 oraz DK
 | DK65 → DW671 W | 0/5/0 | 0/17/0 | 0/0/0 |
 | DK65 → DK65 W | 0/0/0 | 0/0/0 | 0/0/0 |
 
-Kolejność: opposite / kerb / off_hard. DW671 spełnia wymagane 0 przeciwnego pasa i wariant ze swingiem pozostaje 0/0/0, lecz tor środkiem pasa pogarsza kerb 5→17. **Nie potwierdzono pełnego braku pogorszenia toru.**
+Kolejność: opposite / kerb / off_hard. W r1 DW671 spełniał wymagane 0 przeciwnego pasa, lecz tor środkiem pasa pogarszał kerb 5→17. Wynik r2 bez driver swing wynosi już 0/0/0.
 
-Pierwszy eksport przyjął wszystkie 6 lamp, ale odrzucił 4 authored zespoły znaków `along not found` (wchłonięte feedery); zwykła reguła nadal wykrywa A-7/C-12 na trasie, dalej od pierścienia. Poprawiono wpisy na jawne at_en/bearing. Druga przebudowa jest w kolejce heavy, wynik i ewentualne duplikaty znaków trzeba sprawdzić.
+Pierwszy eksport przyjął wszystkie 6 lamp, ale odrzucił 4 authored zespoły znaków `along not found` (wchłonięte feedery); zwykła reguła nadal wykrywa A-7/C-12 na trasie, dalej od pierścienia. Poprawiono wpisy na jawne at_en/bearing. R2 przyjął cztery zespoły; ewentualne duplikaty wymagają renderu.
 
 ### Korekta toru łącznika (po r1)
-Optymalizator r1 znalazł ruch 0,75 m w prawo, half_m=35, near EPSG:2180 [760608, 611987,39], który daje 0/0/0 bez przeciwnego pasa. Zapisano go jako `swing` w `Data/Streaming/route_links.yaml` i zregenerowano wyłącznie łączniki Knyszyna. To korekta authored trasy, nie zwężenie wysepek ani zmiana progów QA. Osobny pomiar gotowego łącznika oczekuje w heavy (`d95-combo-final.*`); wynik optymalizatora nie zastępuje tego pomiaru.
+Optymalizator r1 znalazł ruch 0,75 m w prawo, half_m=35, near EPSG:2180 [760608, 611987,39], który daje 0/0/0 bez przeciwnego pasa. Zapisano go jako `swing` w `Data/Streaming/route_links.yaml`. To korekta authored trasy, nie zwężenie wysepek ani zmiana progów QA. Osobny pomiar gotowego łącznika r2 (`d95-combo-final.*`) potwierdził 0/0/0 bez uruchamiania driver swing.
 
-## Stan przekazania — 15:08, zablokowane pulą heavy
-Wszystkie trzy sloty zajęte przez regen-wave-2-s24 A/B/C. W tle pozostają uprawnione zadania wyłącznie dla Knyszyna:
+## Archiwum: przekazanie o 15:08, zablokowane pulą heavy
+Wtedy wszystkie trzy sloty były zajęte przez regen-wave-2-s24 A/B/C. W tle pozostawiono uprawnione zadania wyłącznie dla Knyszyna (nie są już aktywne; zastąpił je zakończony runner resume):
 - `artifacts/logs/d95-signs-run.ps1`: drugi build z poprawionymi współrzędnymi znaków i brakującym świeżym feederem; log `d95-build-signs.log`, kod `d95-build-signs.exit`.
 - `artifacts/logs/d95-retest-run.ps1`: ponowny moduł 0274 po korektach; log `d95-retest.log`, kod `d95-retest.exit`.
 - `artifacts/logs/d95-final-combo-run.ps1`: gotowy authored łącznik DW671, bez ponownego szukania potrzebnej korekty; log `d95-combo-final.log`, kod `d95-combo-final.exit`.
 Każdy runner zwalnia swój slot przez finally. Nie uruchamia Unity ani innego kafla. Nie wolno uznać testów za PASS na podstawie samego ustawienia w kolejce. Drugi build zmieni pliki wygenerowane po commicie WIP; wymagają późniejszego przeglądu i commitu.
 
-Przyczyny / najważniejsze miejsca zmian: overrides.yaml:1048 (świeży asfalt), :1054 (dwa pasy bez zwężenia D94), :1060 (wysepki), :1075 (znaki), :1111 (lampy); meshing.py:1502 (materiał płyty), build_world.py:1233 (lokalna opaska). Źródło zapory/stuba: WorldEdgeBuilder.cs:90 oraz world_edge.authored.json:13. Finalnie nadal WIP: zapora/szew niewykonane, finalna walidacja w kolejce, brak renderu po zmianach.
+Przyczyny / najważniejsze miejsca zmian: overrides.yaml:1048 (świeży asfalt), :1054 (dwa pasy bez zwężenia D94), :1060 (wysepki), :1075 (znaki), :1111 (lampy); meshing.py:1502 (materiał płyty), build_world.py:1233 (lokalna opaska). Źródło zapory/stuba: WorldEdgeBuilder.cs:90 oraz world_edge.authored.json:13. Stan o 15:08 był WIP; aktualna walidacja CLI r2 jest zakończona, kontrola renderem pozostaje otwarta.
+
+## Następna sesja z Unity — nie wykonano w tej pracy
+
+Siatki Knyszyna są w prywatnym `Data/raw/derived/knyszyn` tego worktree (bez junctiona). Przed usunięciem worktree
+trzeba zachować artefakty albo odtworzyć je po integracji. Do renderu potrzebne są zaimportowane sceny Knyszyna
+i knyszyn-w w tym samym tierze; w tym zadaniu nie generowano GLB sąsiada.
+
+Po integracji i osobnym dopuszczeniu Unity: reimport obu kafli, test scenowy EditMode, następnie kamery 09/10/11
+oraz dk65-outlet-nw, np. `pwsh scripts/visual-qa.ps1 -Scene World_knyszyn_High -Tier High -Pc -Cameras rondo-owner-09,rondo-owner-10,rondo-owner-11,dk65-outlet-nw`.
+Obejrzeć ciągłość drogi i brak zapór/stubów, smugi/spękania/UV1 asfaltu, soczewki i krawężniki, fugi/cień opaski,
+lampy oraz widoczność/orientację/duplikaty znaków. W playerze potwierdzić Ready knyszyn-w przed dojazdem do szwu.

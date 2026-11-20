@@ -77,3 +77,9 @@
 - Gotowe linki bez --swing: DK65→DW671 W **0/0/0** (r1 0/17/0), DK65→DK65 W **0/0/0**. Globalny combo nadal exit1 przez Rynek:68/13/0. Zależny head_from i metadane naprawione: gap0,3494→0 m.
 - NASTĘPNY KROK: `Get-Content artifacts/logs/d95-retest.log -Tail 20; Get-Content artifacts/logs/d95-retest.exit -ErrorAction SilentlyContinue`; dokończyć retest, commit łącznika i raportu. Slot rondo-fix-cli-resume zwalnia runner w finally.
 - Eksport w commicie `93c9ea22d`. Przejrzano diff łączników: zmieniony tylko zależny knyszyn-w-dw671 i opis szwu; maksymalna różnica sparowanych próbek0,3494 m, punkt końcowy bez zmiany, liczba punktów298 bez zmiany. Pozostałe linki identyczne. Pytest88%, bez F.
+
+### D95 — wynik końcowy CLI, 17:34
+- Retest **160 passed / 2 skipped / exit0**, 316,06 s. Oba wcześniejsze błędy i trzy nowe regresje PASS. Dwa stare testy szwów GLB pominięte z braku siatek dk65-10/11/knyszyn-s; innych kafli nie generowano. .NET 43/43 i Roslyn lokalnego World/helpera QA/testu PASS; Unity nie uruchomiono.
+- Gotowe GLB + zapisany tor, bez driver swing: DK65→DW671 W **0/17/0→0/0/0**, DK65→DK65 W **0/0/0→0/0/0**. Rzeczywisty gap sąsiada 0,3494→0 m; globalny combo exit1 przez Rynek: 68/13/0. Eksport `93c9ea22d`, łącznik `98000e9d2`; bez push.
+- Runner zakończony i slot heavy zwolniony. Zapora/stub: rzeczywisty sąsiad w QA oraz domyślny streaming PC Knyszyna; potwierdzenie obrazu i czasu ładowania wymaga playera. Siatki w prywatnym Data/raw/derived/knyszyn, zachować przed usunięciem worktree.
+- NASTĘPNY KROK bez Unity: `Get-Content artifacts/logs/d95-retest.log -Tail 5; Get-Content artifacts/logs/d95-combo-final.log`; po integracji w osobnej sesji reimport Knyszyna i knyszyn-w, EditMode scenowy i render 09/10/11 + wylot NW. Raport: docs/reports/visual/2026-11-20-knyszyn-d95-cli.md.
