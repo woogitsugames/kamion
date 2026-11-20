@@ -12,13 +12,13 @@ Gałąź `dk8-seam-cli`. Bez Unity, przebudowy kafli i pushowania.
    (`network.py:760`). Przy ukośnej drodze przesuwa się także współrzędna w kierunku normalnym
    do krawędzi kafla. Koniec DK8 w 01 ma N=599294,921933, a serwisowej w 02 N=599295,091205,
    wobec szwu N=599295. Odchylenia 0,078/0,091 m przekraczają `SEAM_EPS_M=0,05`.
-   `qa/seams.py:304` odrzucał je **przed** dopasowaniem ±5 m. `seam_taper.py:296` stosował
+   `qa/seams.py:304` odrzucał je **przed** dopasowaniem ±5 m. `seam_taper.py:299` stosował
    analogiczny filtr sąsiadów, przez co tylko 01 dostawał taper DK8 9,00→8,75 m, a 02 pozostawał
    przy 8,50 m. Przynależność końca do szwu jest teraz ustalana z granicznego węzła grafu
    (`End.boundary_xy`, `End.on_seam`), a pomiar położenia nadal używa wygenerowanej osi.
    Nie zwiększono tolerancji. Obie strony dostają ten sam taper: 8,75 m na szwie, po 12,5 m w kaflu.
 3. **Brak linii w Korycinie:** na way 304733170 trasa przechodzi na sekcję jednopasową.
-   `network.py:177` zeruje wtedy `edge_strip`; `markings.py:200` uzależniał domyślne P-7b klasy
+   `network.py:173` zeruje wtedy `edge_strip`; `markings.py:200` uzależniał domyślne P-7b klasy
    A/S/GP od `edge_strip > 0`, więc obie linie krawędziowe znikały. Reguła oznakowania nie wymaga
    już opaski: bez niej linia 0,24 m leży w całości na asfalcie, z osią 0,12 m od krawędzi.
    Zachowane są override `none/left/right/both`, zakaz oznakowania budowy/ronda i osobna reguła
@@ -38,6 +38,29 @@ Gałąź `dk8-seam-cli`. Bez Unity, przebudowy kafli i pushowania.
 - Test syntetyczny QA sprawdza, że ukośny przesunięty koniec jest dopasowany, jego rzeczywisty
   błąd położenia nadal daje FAIL, a droga kończąca się przed szwem nadal jest wykrywana jako brak.
 - Logi pytest: `artifacts/dk8-seam-cli/pytest.log` i `pytest-widen.log`.
+
+Walidacja podstawowa: **66 passed, 1 xfailed** (213,96 s). Polecenie:
+
+```powershell
+uv run --project tools/worldgen python -m pytest -q tests/gis/test_dk8_seam_cli.py tests/gis/test_seams_0224.py tests/gis/test_seam_taper_0275.py tests/gis/test_markings_pl_standards.py tests/gis/test_markings_pl_verify.py
+```
+
+Jedyny xfail jest istniejącym testem P-21. Dwa istniejące `PytestUnknownMarkWarning` dotyczą
+`pytest.mark.unit` w testach oznakowania (drugie `pytest_configure` w conftest zastępuje rejestrację).
+Nie zmieniano skip/xfail, ratchetów ani konfiguracji pytest.
+
+Dodatkowa regresja D94 i przekrojów szwów: **45 passed** (208,91 s), łącznie **111 passed,
+1 istniejący xfailed**:
+
+```powershell
+uv run --project tools/worldgen python -m pytest -q tests/gis/test_road_widen_0306.py tests/gis/test_seams_p3_0304.py
+```
+
+Powtórzenie QA (CLI zwraca 0 również przy wierszach FAIL; wynik oceniono z raportu):
+
+```powershell
+uv run --project tools/worldgen python -m tools.worldgen.qa.seams --tiles dk8-wasilkow-01,dk8-wasilkow-02 --json artifacts/dk8-seam-cli/seams.json --md artifacts/dk8-seam-cli/seams.md
+```
 
 ## Integracja
 
