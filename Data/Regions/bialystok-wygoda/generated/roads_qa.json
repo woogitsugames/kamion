@@ -14889,7 +14889,7 @@
    "patches": 785
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 1418672,
+  "footprint_nodes": 1418670,
   "fork_abreast": [],
   "fork_shifts": [
    {
@@ -16080,14 +16080,14 @@
      ]
     },
     {
-     "area_m2": 54.1,
+     "area_m2": 55.4,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "sliver",
      "xy": [
       -259.8,
-      -997.8
+      -998.3
      ]
     },
     {
@@ -16305,7 +16305,7 @@
    "kerb_tris_in_fill": 0,
    "paved": {
     "sliver": {
-     "area_m2": 515.9,
+     "area_m2": 517.2,
      "count": 23
     }
    },
@@ -16381,7 +16381,7 @@
    "P-13": 7,
    "P-14": 43,
    "P-4 double centre line": 11,
-   "P-7b edge line": 10,
+   "P-7b edge line": 14,
    "P-8 arrow": 34,
    "P-8 skipped (lane too narrow)": 27,
    "P-8 skipped (lanes continue)": 4,
@@ -16434,6 +16434,17 @@
     "width_other": 7.0,
     "width_own": 7.5,
     "width_seam": 7.25
+   },
+   {
+    "chain": "c:w264219602:2185359279-257899854",
+    "end": "a",
+    "in_tile_m": 14.8,
+    "length_m": 29.6,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.5,
+    "width_other": 9.75,
+    "width_own": 10.75,
+    "width_seam": 10.25
    }
   ],
   "sides_on_carriageway_culled": {
@@ -16448,15 +16459,15 @@
    "lines": {
     "P-4": 3,
     "P-7a": 1,
-    "P-7b": 3,
+    "P-7b": 4,
     "lane": 100
    },
    "pairs": 275,
-   "unmatched": 45
+   "unmatched": 44
   },
   "verge_strips": {
    "chunks": 57,
-   "tris": 106204
+   "tris": 106212
   },
   "walled_ramps": []
  }
