@@ -193,7 +193,10 @@ namespace Game.World.Import
                       $"{raw.Count} graph closures {ClosureSetbackM:F0} m inside resolved to {closures.Count} (one list: colliders = boards), in {closures.Count} independent renderers ({closureTris} tris), {stubs.Count} road stubs, apron {mesh.vertexCount} verts to {ApronReachM:F0} m, far-field {farTris} tris");
         }
 
-        static readonly Streaming.TileSide[] k_ApronSides = { Streaming.TileSide.N, Streaming.TileSide.E, Streaming.TileSide.S, Streaming.TileSide.W };
+        // ADR 0308: + the four corner quadrants as their own pieces. They are the only apron ground over a DIAGONAL
+        // neighbour tile, which never opens a seam with this tile (the streamer hides them when that tile is ready).
+        static readonly Streaming.TileSide[] k_ApronSides = { Streaming.TileSide.N, Streaming.TileSide.E, Streaming.TileSide.S, Streaming.TileSide.W,
+                                                              Streaming.TileSide.NE, Streaming.TileSide.SE, Streaming.TileSide.SW, Streaming.TileSide.NW };
 
         /// <summary>
         /// Splits the apron mesh by side (ADR 0235): each triangle goes to the side its centroid lies beyond
@@ -225,7 +228,8 @@ namespace Game.World.Import
                     for (int i = 0; i + 2 < t.Length; i += 3)
                     {
                         Vector3 c = (v[t[i]] + v[t[i + 1]] + v[t[i + 2]]) / 3f;
-                        var ts = Streaming.EdgeSides.ApronSide(c.x, c.z, min.x, min.y, max.x, max.y);
+                        var ts = Streaming.EdgeSides.ApronCorner(c.x, c.z, min.x, min.y, max.x, max.y);
+                        if (ts == Streaming.TileSide.None) ts = Streaming.EdgeSides.ApronSide(c.x, c.z, min.x, min.y, max.x, max.y);
                         if (ts == Streaming.TileSide.None) ts = Streaming.EdgeSides.NearestSide(c.x, c.z, min.x, min.y, max.x, max.y);
                         if (ts != side) continue;
                         for (int j = 0; j < 3; j++)

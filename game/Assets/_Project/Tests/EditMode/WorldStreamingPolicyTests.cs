@@ -407,6 +407,37 @@ namespace Game.Tests
         }
 
         [Test]
+        public void ApronCornerPieces_HideUnderAReadyDiagonalTile_0308()
+        {
+            // DK65 staircase 06 -> 07 (W) -> 08 (N of 07 = NW of 06): 06 has W open and its NW diagonal ready.
+            Assert.AreEqual(TileSide.NW, EdgeSides.ApronCorner(-1100f, 1200f, -1024f, -1024f, 1024f, 1024f));
+            Assert.AreEqual(TileSide.None, EdgeSides.ApronCorner(0f, 1200f, -1024f, -1024f, 1024f, 1024f));
+            Assert.AreEqual(TileSide.SE, EdgeSides.ApronPieceSide("Apron_SE"));
+            int nw = EdgeSides.CornerBit(TileSide.NW);
+            Assert.AreEqual(0, EdgeSides.CornerBit(TileSide.N));
+            // scene with corner pieces: only the corner over the diagonal tile goes, the north strip stays
+            Assert.IsFalse(EdgeSides.ApronPieceVisible(TileSide.NW, TileSide.W, nw, true));
+            Assert.IsTrue(EdgeSides.ApronPieceVisible(TileSide.N, TileSide.W, nw, true));
+            Assert.IsTrue(EdgeSides.ApronPieceVisible(TileSide.NE, TileSide.W, nw, true));
+            Assert.IsFalse(EdgeSides.ApronPieceVisible(TileSide.SW, TileSide.W, nw, true), "a corner next to an open side");
+            Assert.IsFalse(EdgeSides.ApronPieceVisible(TileSide.W, TileSide.W, nw, true));
+            // the diagonal tile alone (the tile between them not loaded yet) already hides the corner
+            Assert.IsFalse(EdgeSides.ApronPieceVisible(TileSide.NW, TileSide.None, nw, true));
+            Assert.IsTrue(EdgeSides.ApronPieceVisible(TileSide.E, TileSide.None, nw, true));
+            // no neighbour at all: the undivided apron is drawn instead of the pieces
+            Assert.IsFalse(EdgeSides.ApronPieceVisible(TileSide.N, TileSide.None, 0, true));
+            // older import (corner quadrants are halves of the side pieces): the side next to the diagonal tile goes whole
+            Assert.IsFalse(EdgeSides.ApronPieceVisible(TileSide.N, TileSide.W, nw, false));
+            Assert.IsTrue(EdgeSides.ApronPieceVisible(TileSide.E, TileSide.W, nw, false));
+            Assert.IsTrue(EdgeSides.ApronPieceVisible(TileSide.S, TileSide.W, nw, false));
+            // far-field sectors reach into the diagonal tile as well
+            Assert.IsFalse(EdgeSides.FarSectorVisible(TileSide.N, TileSide.W, nw));
+            Assert.IsFalse(EdgeSides.FarSectorVisible(TileSide.W, TileSide.W, 0));
+            Assert.IsTrue(EdgeSides.FarSectorVisible(TileSide.E, TileSide.W, nw));
+            Assert.IsTrue(EdgeSides.FarSectorVisible(TileSide.N, TileSide.W, 0));
+        }
+
+        [Test]
         public void UnionInsideDistance_IgnoresOpenSeams_AndCountsMissingCorners()
         {
             // Point 10 m from the north edge, 500 m from the others.

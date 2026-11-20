@@ -5,6 +5,36 @@ namespace Game.Tests
 {
     public class EdgeClosureRulesTests
     {
+        [TestCase(TileSide.N, false)]
+        [TestCase(TileSide.E, false)]
+        [TestCase(TileSide.S, true)]
+        [TestCase(TileSide.W, true)]
+        public void FarField_ReservesCardinalAndCornerNeighboursBeforeLoading(TileSide sector, bool visible)
+        {
+            Assert.AreEqual(visible, EdgeSides.FarSectorMayShow(sector, new[] { TileSide.NE }));
+            Assert.AreEqual(visible, EdgeSides.FarSectorMayShow(sector, new[] { TileSide.N, TileSide.E }));
+        }
+
+        [Test]
+        public void FarField_DoesNotPopWhenNeighbourLoadsOrUnloads()
+        {
+            var graph = new TileGraph(new TileGraphData { schema = TileGraph.Schema, tiles = new[] {
+                new TileData { id = "owner", xmin = 0, ymin = 0, xmax = 2048, ymax = 2048,
+                    neighbors = new[] { new NeighborData { id = "next", side = "N", seamM = 2048 } } },
+                new TileData { id = "next", xmin = 0, ymin = 2048, xmax = 2048, ymax = 4096 }
+            } });
+            var policy = new StreamingPolicy(graph, new StreamingSettings());
+            foreach (var state in new[] { TileState.Unloaded, TileState.Loading, TileState.Activating,
+                                         TileState.Ready, TileState.Unloading, TileState.Unloaded })
+            {
+                policy.SetState(1, state);
+                Assert.IsFalse(EdgeSides.FarSectorMayShow(TileSide.N, graph.NeighborSides[0]), state.ToString());
+                Assert.IsTrue(EdgeSides.FarSectorMayShow(TileSide.S, graph.NeighborSides[0]), state.ToString());
+            }
+            Assert.IsTrue(EdgeSides.FarSectorMayShow(TileSide.N, System.Array.Empty<TileSide>()));
+            Assert.IsTrue(EdgeSides.FarSectorMayShow(TileSide.None, new[] { TileSide.NE }));
+        }
+
         [TestCase(TileState.Unloaded, false)]
         [TestCase(TileState.Loading, false)]
         [TestCase(TileState.Activating, false)]

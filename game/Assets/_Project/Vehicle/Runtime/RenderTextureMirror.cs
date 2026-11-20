@@ -119,18 +119,45 @@ namespace Game.Vehicle.Runtime
         public static Vector3 AdjustEuler(int phase, float yawOutDeg, float pitchDownDeg) =>
             new Vector3(pitchDownDeg, phase == 0 ? yawOutDeg : -yawOutDeg, 0f);
 
+        /// <summary>
+        /// ADR 0312 (drive-feel-s24): articulation of the coupled trailer [deg], + = trailer rear swung to the vehicle's left
+        /// (a left turn); 0 = solo / straight. Set every frame by the scene (DrivingLabBootstrap).
+        /// </summary>
+        public static float TrailerArticulationLeftDeg;
+        /// <summary>
+        /// ADR 0312: the class II mirror on the inside of a turn pans outward with the articulation so the trailer's last
+        /// axle stays in the main mirror (as the HUD insets show only class II, D70). Pure static geometry from the R46 fields
+        /// (MirrorTrailerVisibilityTests): without it the inside wheel of the last trailer axle leaves the class II field
+        /// from 25-30 deg of articulation (roundabouts) and is only in the class IV glass. Off = the fixed R46 aim.
+        /// WORKING_VALUE (gain 0.7 / start 20 deg / max 25 deg: the smallest pan that reaches the wheel + 3.5-5 deg margin, from
+        /// MirrorTrailerVisibilityTests; owner feel test). Camera-monitor systems with trailer panning exist (UNVERIFIED).
+        /// </summary>
+        public static bool TrailerPanEnabled = true;
+        public static float TrailerPanGain = 0.7f, TrailerPanStartDeg = 20f, TrailerPanMaxDeg = 25f;
+
+        /// <summary>Outward pan [deg] of a main mirror (<paramref name="phase"/> 0 = left) for an articulation (+ = left turn):
+        /// only the inside mirror moves, nothing below <paramref name="startDeg"/>, capped at <paramref name="maxDeg"/>. Pure.</summary>
+        public static float TrailerPanDeg(int phase, float articulationLeftDeg, float gain, float startDeg, float maxDeg)
+        {
+            float inside = phase == 0 ? articulationLeftDeg : -articulationLeftDeg;
+            if (float.IsNaN(inside) || gain <= 0f || inside <= startDeg) return 0f;
+            return Mathf.Min(Mathf.Max(0f, maxDeg), gain * (inside - startDeg));
+        }
+
         Quaternion m_BaseLocalRotation;
         bool m_HasBaseRotation;
         float m_AppliedYaw = float.NaN, m_AppliedPitch = float.NaN;
 
-        /// <summary>Applies <see cref="AdjustYawOutDeg"/> / <see cref="AdjustPitchDownDeg"/> to a main mirror (only on change).</summary>
+        /// <summary>Applies <see cref="AdjustYawOutDeg"/> / <see cref="AdjustPitchDownDeg"/> and the trailer pan to a main
+        /// mirror (only on a change of more than 0.05 deg; no allocation).</summary>
         void ApplyAdjustment()
         {
             if (!main) return;
             if (!m_HasBaseRotation) { m_BaseLocalRotation = transform.localRotation; m_HasBaseRotation = true; }
-            if (AdjustYawOutDeg == m_AppliedYaw && AdjustPitchDownDeg == m_AppliedPitch) return;
-            m_AppliedYaw = AdjustYawOutDeg; m_AppliedPitch = AdjustPitchDownDeg;
-            transform.localRotation = m_BaseLocalRotation * Quaternion.Euler(AdjustEuler(phase, AdjustYawOutDeg, AdjustPitchDownDeg));
+            float yaw = AdjustYawOutDeg + (TrailerPanEnabled ? TrailerPanDeg(phase, TrailerArticulationLeftDeg, TrailerPanGain, TrailerPanStartDeg, TrailerPanMaxDeg) : 0f);
+            if (Mathf.Abs(yaw - m_AppliedYaw) < 0.05f && AdjustPitchDownDeg == m_AppliedPitch) return;
+            m_AppliedYaw = yaw; m_AppliedPitch = AdjustPitchDownDeg;
+            transform.localRotation = m_BaseLocalRotation * Quaternion.Euler(AdjustEuler(phase, yaw, AdjustPitchDownDeg));
         }
 
         /// <summary>Total mirror renders scheduled since start (telemetry: renders per frame).</summary>

@@ -825,6 +825,9 @@ namespace Game.Gameplay
             // Extra cameras: mirrors only in the cab view; reversing view while in R (or forced on).
             RenderTextureMirror.GlobalEnabled = m_Rig.mode == CameraMode.Cab;
             RenderTextureMirror.ForceRender = MirrorInsetsOn;
+            // ADR 0312: inside class II mirror pans with the trailer (FifthWheel.Articulation < 0 = left turn).
+            RenderTextureMirror.TrailerArticulationLeftDeg = vehicle.Initialized && vehicle.Coupled && vehicle.Combination != null
+                ? -(float)(vehicle.Combination.FifthWheel.Articulation * MathUtil.Rad2Deg) : 0f;
             bool rev = m_Selector == GearSelector.Reverse || m_ReverseCamForced;
             var want = !rev ? null : (vehicle.Coupled && m_TrailerCam != null ? m_TrailerCam : m_TractorCam);
             if (m_ActiveRevCam != want)

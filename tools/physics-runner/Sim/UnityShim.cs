@@ -18,6 +18,8 @@ namespace UnityEngine
         public static float Sqrt(float f) => (float)Math.Sqrt(f);
         public static float Exp(float f) => (float)Math.Exp(f);
         public static float Atan2(float y, float x) => (float)Math.Atan2(y, x);
+        public static float Atan(float f) => (float)Math.Atan(f);
+        public static float Pow(float f, float p) => (float)Math.Pow(f, p);
         public static float Clamp(float v, float lo, float hi) => v < lo ? lo : v > hi ? hi : v;
         public static float Clamp01(float v) => v < 0f ? 0f : v > 1f ? 1f : v;
         public static float Lerp(float a, float b, float t) => a + (b - a) * Clamp01(t);
@@ -54,6 +56,12 @@ namespace UnityEngine
 
     public class Object { }
     public class TextAsset : Object { public string text = ""; }
+
+    /// <summary>InputBindingsStore.DefaultPath only (drive-feel-s24: pad/keyboard chain in the runner).</summary>
+    public static class Application
+    {
+        public static string persistentDataPath => ".";
+    }
 
     public static class Resources
     {

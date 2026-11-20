@@ -48,16 +48,30 @@ namespace Game.Controls
         /// <summary>Keyboard return to centre when the key is released [fraction of lock / s] (previous SteerReturnRate 2.0).</summary>
         public float keyReturnRatePerS = 2.0f;
         /// <summary>
-        /// Amplitude limit at speed: full stick / a held key asks at most for the road-wheel angle giving this lateral
-        /// acceleration on a kinematic bicycle [m/s²]. WORKING_VALUE (a loaded artic is far from its rollover threshold at 4).
+        /// Progressive key onset (drive-feel-s24, ADR 0312): a freshly pressed steering key turns the wheel at this fraction of
+        /// <see cref="keyRatePerS"/>, rising linearly to the full rate over <see cref="keyOnsetS"/> of holding - a short tap is
+        /// a fine correction, a held key still reaches the speed amplitude. 1 = off (the ADR 0264 constant rate). WORKING_VALUE
+        /// from the runner tap evidence (physics-runner --input-feel: 0.1 s tap at 50 km/h moved the 40 t combination 0.70 m in 4 s).
         /// </summary>
-        public float maxLatAccelMs2 = 4.0f;
+        public float keyOnsetFraction = 0.35f;
+        /// <summary>Holding time after which a steering key turns at the full <see cref="keyRatePerS"/> [s]. WORKING_VALUE.</summary>
+        public float keyOnsetS = 0.4f;
+        /// <summary>
+        /// Amplitude limit at speed: full stick / a held key asks at most for the road-wheel angle giving this lateral
+        /// acceleration on a kinematic bicycle [m/s²]. WORKING_VALUE. drive-feel-s24 (ADR 0312): 4.0 -> 2.5. At 4.0 a held key / full
+        /// stick tipped the 40 t combination with the cargo CoG at 2.6 m (static rollover threshold 0.339 g = 3.3 m/s² in the
+        /// runner, rollover_r50_cog_high) at every speed from 30 to 80 km/h (physics-runner --input-feel, wheel lift; 80 km/h
+        /// rolled over). 2.5 keeps the tractor and trailer peaks below 0.8 x that threshold; the player can widen it 2x
+        /// (<see cref="PadUserTuning.SpeedLimitScale"/>).
+        /// </summary>
+        public float maxLatAccelMs2 = 2.5f;
         /// <summary>Wheelbase used for the amplitude limit [m]: art-source/truck/dims.json wheelbase_m 3.70 (WORKING_VALUE there).</summary>
         public float wheelbaseM = 3.70f;
         /// <summary>Maximum road-wheel angle [deg]: tractor_4x2_generic.vehicle.json maxRoadWheelAngleDeg 40.</summary>
         public float maxRoadWheelDeg = 40f;
-        /// <summary>Floor of the amplitude limit (evasive steering always possible), fraction of lock. WORKING_VALUE.</summary>
-        public float minAmplitude = 0.05f;
+        /// <summary>Floor of the amplitude limit (evasive steering always possible), fraction of lock. WORKING_VALUE. ADR 0312: 0.05 -> 0.02 (0.05 = 2 deg
+        /// road wheel overrode the lateral-acceleration limit from ~70 km/h and tipped the high-CoG 40 t combination; 0.02 binds above ~95 km/h).</summary>
+        public float minAmplitude = 0.02f;
 
         // ---------------------------------------------------------------- keyboard pedals
         /// <summary>Key ramps [1/s] (same as the previous KeyboardDriverInput: 2.5 / 3.0 / 5.0).</summary>
@@ -88,6 +102,8 @@ namespace Game.Controls
             throttleExponent = Safe(throttleExponent, 1f, 4f, d.throttleExponent);
             brakeExponent = Safe(brakeExponent, 1f, 4f, d.brakeExponent);
             keyReturnRatePerS = Safe(keyReturnRatePerS, 0.1f, 20f, d.keyReturnRatePerS);
+            keyOnsetFraction = Safe(keyOnsetFraction, 0.05f, 1f, d.keyOnsetFraction);
+            keyOnsetS = Safe(keyOnsetS, 0f, 2f, d.keyOnsetS);
             maxLatAccelMs2 = Safe(maxLatAccelMs2, 0.5f, 10f, d.maxLatAccelMs2);
             wheelbaseM = Safe(wheelbaseM, 2f, 8f, d.wheelbaseM);
             maxRoadWheelDeg = Safe(maxRoadWheelDeg, 10f, 60f, d.maxRoadWheelDeg);
@@ -117,6 +133,8 @@ namespace Game.Controls
         public float PadRate(float speedKmh) => PadSteeringMath.Piecewise(Mathf.Abs(speedKmh), rateSpeedsKmh, padRatePerS);
         /// <summary>Keyboard steering rate at a speed [fraction of lock / s].</summary>
         public float KeyRate(float speedKmh) => PadSteeringMath.Piecewise(Mathf.Abs(speedKmh), rateSpeedsKmh, keyRatePerS);
+        /// <summary>Fraction of the key steering rate after holding a key for <paramref name="heldS"/> seconds (progressive onset).</summary>
+        public float KeyOnset(float heldS) => keyOnsetS <= 1e-4f ? 1f : Mathf.Lerp(Mathf.Clamp01(keyOnsetFraction), 1f, heldS / keyOnsetS);
         /// <summary>Amplitude limit at a speed [m/s] with a player scale of the lateral acceleration (1 = shipped).</summary>
         public float Amplitude(float speedMs, float latAccelScale = 1f) =>
             PadSteeringMath.SpeedAmplitude(speedMs, wheelbaseM, maxLatAccelMs2 * Mathf.Max(0.1f, latAccelScale), maxRoadWheelDeg, minAmplitude);

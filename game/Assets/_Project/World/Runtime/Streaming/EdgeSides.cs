@@ -56,6 +56,49 @@ namespace Game.World.Streaming
             return e > maxE ? TileSide.E : TileSide.W;
         }
 
+        /// <summary>
+        /// Corner quadrant of an apron triangle (ADR 0308): NE / SE / SW / NW when the centroid lies beyond the rectangle
+        /// on both axes, else None. The corner quadrants are the only apron ground that covers a DIAGONAL neighbour tile.
+        /// </summary>
+        public static TileSide ApronCorner(float e, float n, float minE, float minN, float maxE, float maxN)
+        {
+            TileSide a = n > maxN ? TileSide.N : n < minN ? TileSide.S : TileSide.None;
+            TileSide b = e > maxE ? TileSide.E : e < minE ? TileSide.W : TileSide.None;
+            return a != TileSide.None && b != TileSide.None ? a | b : TileSide.None;
+        }
+
+        /// <summary>True when one of the corners in <paramref name="cornerMask"/> (<see cref="CornerBit"/>) touches side <paramref name="side"/>.</summary>
+        public static bool CornerMaskTouches(int cornerMask, TileSide side)
+        {
+            if ((cornerMask & 1) != 0 && (side & TileSide.NE) != 0) return true;
+            if ((cornerMask & 2) != 0 && (side & TileSide.SE) != 0) return true;
+            if ((cornerMask & 4) != 0 && (side & TileSide.SW) != 0) return true;
+            if ((cornerMask & 8) != 0 && (side & TileSide.NW) != 0) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Should an apron piece be drawn (ADR 0235 + 0308)? <paramref name="piece"/>: N / E / S / W or a corner (NE ...),
+        /// <paramref name="open"/>: sides with a ready neighbour, <paramref name="readyCorners"/>: ready DIAGONAL neighbours
+        /// (<see cref="CornerBit"/> mask), <paramref name="hasCornerPieces"/>: the scene was imported with corner pieces.
+        /// A corner piece hides when either of its sides is open or its diagonal tile is ready (owner s24: tile A's corner
+        /// apron lay as a green sheet over the road of the diagonal tile on the DK65 staircase 06 - 07 - 08). A scene
+        /// without corner pieces (older import: the corner quadrants are halves of the side pieces) hides the whole side
+        /// piece next to a ready diagonal tile instead.
+        /// </summary>
+        public static bool ApronPieceVisible(TileSide piece, TileSide open, int readyCorners, bool hasCornerPieces)
+        {
+            if (open == TileSide.None && readyCorners == 0) return false;      // the undivided apron is shown
+            if ((open & piece) != 0) return false;
+            if (CornerBit(piece) != 0) return (readyCorners & CornerBit(piece)) == 0;
+            return hasCornerPieces || !CornerMaskTouches(readyCorners, piece);
+        }
+
+        /// <summary>Should a far-field sector be drawn? Hidden when its side is open or a ready diagonal tile touches it
+        /// (the sector reaches into that tile; the diagonal tile's own sectors show the horizon beyond).</summary>
+        public static bool FarSectorVisible(TileSide sector, TileSide open, int readyCorners)
+            => (open & sector) == 0 && !CornerMaskTouches(readyCorners, sector);
+
         /// <summary>Far-field sector names of the importer (WorldEdgeBuilder k_FarSectors, ADR 0085) → side.</summary>
         public static TileSide FarSectorSide(string objectName)
         {
@@ -67,6 +110,19 @@ namespace Game.World.Streaming
             return TileSide.None;
         }
 
+        /// <summary>
+        /// Reserve the backdrop toward registered neighbours from the first frame, including corners.
+        /// Loading/Ready/Unloading must never toggle it: compressed proxies cannot replace real tiles.
+        /// Unknown nodes (None, e.g. the separate skyline) are not directional sectors.
+        /// </summary>
+        public static bool FarSectorMayShow(TileSide sector, TileSide[] neighbourSides)
+        {
+            if (sector == TileSide.None || neighbourSides == null) return true;
+            for (int i = 0; i < neighbourSides.Length; i++)
+                if ((sector & neighbourSides[i]) != 0) return false;
+            return true;
+        }
+
         /// <summary>Apron piece names written by the importer for streaming (Apron_N / _E / _S / _W) → side.</summary>
         public static TileSide ApronPieceSide(string objectName)
         {
@@ -76,6 +132,10 @@ namespace Game.World.Streaming
                 case "Apron_E": return TileSide.E;
                 case "Apron_S": return TileSide.S;
                 case "Apron_W": return TileSide.W;
+                case "Apron_NE": return TileSide.NE;     // ADR 0308 corner quadrants
+                case "Apron_SE": return TileSide.SE;
+                case "Apron_SW": return TileSide.SW;
+                case "Apron_NW": return TileSide.NW;
                 default: return TileSide.None;
             }
         }

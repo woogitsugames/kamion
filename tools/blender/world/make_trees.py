@@ -45,6 +45,7 @@ if "--out" in ARGV:
 VEG.mkdir(parents=True, exist_ok=True)
 HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "shrub": 2.8,
         "spruce": 21.0, "pineyoung": 5.0, "birchyoung": 6.0, "floor": 0.7,
+        "poplar": 24.0,  # ADR 0308: Populus x canadensis / nigra of the roadside rows (WORKING_VALUE)
         "willow": 13.5}  # 0227 prototype: all dimensions WORKING_VALUE, no measured willow height
 # ADR 0187 (forest wall): species of a Podlasie pine / spruce stand that the first six could not stand in for.
 #   spruce      Norway spruce (Picea abies): variants 0, 1 = stand form (live crown from ~0.36-0.46 H, dead stubs
@@ -57,10 +58,11 @@ HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.
 # They reuse the existing materials (bark_pine_lower, bark_pine, bark_birch, leaves_pine, leaves_birch,
 # leaves_shrub); the only new texture is leaves_spruce.png (streetscape/leaf_textures.py spruce_spray).
 NEW_SPECIES = ("spruce", "pineyoung", "birchyoung", "floor")
+ADDED_0308 = ("poplar",)
 # Variants: one per young species (a thicket is uniform; yaw and height vary per instance) - every variant costs the
 # Low tier up to three instanced draws (LOD1 bark + foliage, impostor). Build 1 with 2 + 2 young variants raised the
 # instanced draws of the forest cameras by 8-30 (artifacts/forest-0187/compare1-dojlidy-Low.tsv).
-NVAR = {"spruce": 3, "pineyoung": 1, "birchyoung": 1, "floor": 2, "willow": 1}  # others: 3
+NVAR = {"spruce": 3, "pineyoung": 1, "birchyoung": 1, "floor": 2, "willow": 1, "poplar": 2}  # others: 3
 IMP_SCALE = {"pineyoung": 0.5}    # impostor views of the pine thicket at half resolution (a filled cone; the airy
 # young birch at half resolution left the trim polygon of ImpostorTrim over 60 % of the frame)
 NO_IMPOSTOR = ("floor",)
@@ -508,11 +510,11 @@ def grow(species, variant, lod):
                     kk = t * (len(br) - 1)
                     ia = int(kk)
                     q = br[ia].lerp(br[min(ia + 1, len(br) - 1)], kk - ia)
-                    rcl = rng.uniform(0.45, 0.85) * (0.7 + 0.4 * bias)
-                    for _ in range(int((5 + 3 * rcl) * (1.0 if lod == 0 else 0.45)) + 1):
+                    rcl = rng.uniform(0.55, 0.95) * (0.7 + 0.4 * bias)          # ADR 0308: fuller clumps
+                    for _ in range(int((6 + 3.5 * rcl) * (1.0 if lod == 0 else 0.45)) + 1):
                         pc = q + Vector((crng.uniform(-rcl, rcl), crng.uniform(-rcl, rcl), crng.uniform(-0.55, 0.45) * rcl))
                         nrm = Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.2, 1.4)))
-                        g.card(leaf, pc, nrm, Vector((0, 0, 1)), 0.95 * csize_k * crng.uniform(0.8, 1.2), cc)
+                        g.card(leaf, pc, nrm, Vector((0, 0, 1)), 1.2 * csize_k * crng.uniform(0.8, 1.2), cc)
                 nlimb += 1
             z += rng.uniform(0.9, 1.45)
         # leader: the stem ends inside the top clumps (no tuft on a bare pole)
@@ -532,7 +534,11 @@ def grow(species, variant, lod):
     if species in NEW_SPECIES:
         g.crown_height = 0                  # no crown windows (crown_opening): conifers and saplings are closed
         return grow_0187(species, variant, lod, rng, crng, g, H), H
-    # broadleaf + shrub
+    if species in CROWN and "--legacy-crowns" not in ARGV:
+        # ADR 0308: closed lobed crowns (linden, maple, birch, alder, poplar)
+        g.crown_height = 0                  # the gaps between lobes are the openings; no cut windows
+        return grow_crown(species, variant, lod, rng, crng, g, H), H
+    # shrub; the broadleaf code below it is the pre-0308 grower (reference renders: --legacy-crowns)
     if species == "shrub":
         # ADR 0187: hazel / buckthorn clump. The stems splay less and carry leaves from 10 % of their length, with
         # a leafy middle at the base: the old clump (cards from 25 %, wobble 0.2) left single stems standing apart
@@ -644,21 +650,29 @@ def grow_0187(species, variant, lod, rng, crng, g, H):
                     continue
                 a = a0 + 2 * math.pi * k / nb + rng.uniform(-0.22, 0.22)
                 L = max(0.35, R * rng.uniform(0.82, 1.12))
-                rise = -0.42 + 0.66 * f + rng.uniform(-0.06, 0.06)     # lower boughs droop, the top ones ascend
-                p0 = at(z + rng.uniform(-0.15, 0.15) * step)
+                # ADR 0308: the boughs of one whorl left at one height, level, with level fronds - the crown was a
+                # stack of saw-edged plates. Each bough now has its own droop, height and roll about its axis.
+                rise = -0.52 + 0.74 * f + rng.uniform(-0.14, 0.14)     # lower boughs droop, the top ones ascend
+                L *= rng.uniform(0.78, 1.10)
+                p0 = at(z + rng.uniform(-0.45, 0.45) * step)
                 dh = Vector((math.cos(a), math.sin(a), 0))
                 d = (dh + Vector((0, 0, rise))).normalized()
                 tip = p0 + d * L + Vector((0, 0, 0.10 * L))            # sabre: the bough end sweeps up
+                # ADR 0308 r2: a bough is a ridge with its twigs hanging to both sides (inverted V along the bough
+                # axis) instead of a level frond + one curtain: seen from the road below, the level fronds of a whorl
+                # read as a saw-edged plate. Same 4 triangles per bough.
                 side = Vector((-math.sin(a), math.cos(a), 0))
                 w = max(0.30, 0.40 * L) * (1.0 if lod == 0 else 1.3)
-                nout = (dh + Vector((0, 0, 0.30))).normalized()      # curtain: faces out of the crown
-                ntop = (dh * 0.45 + Vector((0, 0, 1.0))).normalized()  # bough top: faces the sky (lighter tier above
-                b0 = p0 + d * 0.04 * L                                 # the dark curtain, not one flat green)
-                g.quad(leaf, b0 - side * w, b0 + side * w, tip + side * w * 0.9, tip - side * w * 0.9,
-                       [(0, 0), (1, 0), (1, 1), (0, 1)], ntop)
-                hang = max(0.45, 0.80 * L) * (1 - 0.35 * f) * (1.0 if lod == 0 else 1.25)    # curtain of hanging twigs
-                g.quad(leaf, b0, tip, tip - up_z * hang * 0.7, b0 - up_z * hang,
-                       [(0.5, 0), (0.5, 1), (1, 1), (1, 0)], nout)
+                b0 = p0 + d * 0.04 * L
+                hang_k = (1 - 0.30 * f) * (1.0 if lod == 0 else 1.15)
+                for sgn in (-1.0, 1.0):
+                    th = rng.uniform(0.75, 1.20)                       # 43-69 degrees below the horizontal
+                    out_v = side * (sgn * math.cos(th)) - up_z * math.sin(th)
+                    wb, wt = w * 1.25 * hang_k, w * 0.95 * hang_k
+                    nrm = (dh * 0.55 + side * (sgn * 0.55) + up_z * 0.50).normalized()
+                    uo = 0.0 if sgn < 0 else 1.0
+                    g.quad(leaf, b0, tip, tip + out_v * wt, b0 + out_v * wb,
+                           [(0.5, 0), (0.5, 1), (uo, 1), (uo, 0)], nrm)
             z += step * rng.uniform(0.85, 1.15)
         top = at(H * 0.90)
         for k in range(2):                                             # pointed leader
@@ -738,6 +752,224 @@ def grow_0187(species, variant, lod, rng, crng, g, H):
         c = Vector((math.cos(a) * r, math.sin(a) * r, H * rng.uniform(0.28, 0.45)))
         nrm = Vector((math.cos(a) * 0.9, math.sin(a) * 0.9, rng.uniform(0.8, 1.3)))
         g.card("leaves_shrub", c, nrm, up_z, H * rng.uniform(1.3, 1.75) * (1.0 if lod == 0 else 1.25), Vector((0, 0, -3)))
+    return g
+
+
+# ------------------------------------------------------------------------------------------- broadleaf crowns (ADR 0308)
+# The first broadleaf grower hung ~15 one-metre cards within 0.3 m of each of ~50 short twigs: the crown was a handful
+# of dense balls on bare limbs with sky between them ("broccoli", owner s24). A roadside linden / maple is one closed
+# mass with a lumpy outline: scaffold limbs fork into branches whose leafy ends (lobes) overlap, and the foliage sits in
+# the outer shell of the crown. grow_crown builds exactly that: a crown envelope per species (radius over height, with
+# azimuthal lobes per variant), scaffold limbs that end on it, forks, and the branchlet cards (streetscape/leaf_sprays.py
+# atlas, twig base towards the branch) on the outer side of every lobe. Lobes that the skeleton leaves uncovered are
+# filled from the nearest limb, so no part of the outline is a bare stick.
+# All proportions are WORKING_VALUE read off the reference photos (Data/raw/refs/commons-trees, Mapillary DK65 / Knyszyn),
+# not dendrometric data:
+#   bole   clear stem / H                 rmax  largest crown radius / H        peak  its height in the crown (0 base, 1 top)
+#   base   crown-base radius / rmax       lo/hi exponents of the lower / upper outline (smaller = fuller)
+#   n_sc   scaffold limbs                 rise  height a limb gains (share of the crown height)
+#   mono   share of the crown height the stem runs through (1 = monopodial)   arch  0 = limbs leave level, 1 = steep
+#   cards  LOD0 branchlet cards           size  card edge in metres at HREF     hang  share of hanging cards (birch)
+CROWN = {
+    "linden": dict(bole=.17, rmax=.33, peak=.40, base=.55, lo=.70, hi=.62, n_sc=8, rise=(.30, .50), mono=.70, arch=.55,
+                   cards=880, size=1.30, hang=.0, r0=.26, bark="bark_linden", lobe=.092),
+    "maple": dict(bole=.18, rmax=.375, peak=.42, base=.60, lo=.60, hi=.55, n_sc=7, rise=(.24, .42), mono=.52, arch=.45,
+                  cards=720, size=1.50, hang=.0, r0=.24, bark="bark_maple", lobe=.105),
+    "birch": dict(bole=.27, rmax=.235, peak=.42, base=.40, lo=.85, hi=.95, n_sc=10, rise=(.26, .42), mono=.96, arch=.80,
+                  cards=820, size=1.15, hang=.42, r0=.17, bark="bark_birch", lobe=.080),
+    "alder": dict(bole=.22, rmax=.24, peak=.28, base=.55, lo=.80, hi=.95, n_sc=12, rise=(.04, .20), mono=1.0, arch=.25,
+                  cards=800, size=1.20, hang=.0, r0=.19, bark="bark_alder", lobe=.080),
+    "poplar": dict(bole=.19, rmax=.195, peak=.45, base=.50, lo=.80, hi=.72, n_sc=14, rise=(.12, .32), mono=1.0, arch=.85,
+                   cards=960, size=1.80, hang=.0, r0=.32, bark="bark_linden", lobe=.072),
+}
+
+
+def spray_uv(cell, mirror=False):
+    """UVs of cell 0..3 of a 2 x 2 branchlet atlas (= streetscape.leaf_sprays.cell_uv; v = 0 is the twig base)."""
+    r, c = divmod(int(cell) % 4, 2)
+    u0, u1 = c / 2, (c + 1) / 2
+    v1, v0 = 1.0 - r / 2, 1.0 - (r + 1) / 2
+    if mirror:
+        u0, u1 = u1, u0
+    return ((u0, v0), (u1, v0), (u1, v1), (u0, v1))
+
+
+def crown_radius(P, u, phi, ph):
+    """Envelope radius / H of crown form P at relative crown height u (0..1) and azimuth phi; ph = variant phases."""
+    u = min(max(u, 0.0), 1.0)
+    if u < P["peak"]:
+        r = P["base"] + (1.0 - P["base"]) * math.sin(math.pi / 2 * u / P["peak"]) ** P["lo"]
+    else:
+        r = max(0.0, math.cos(math.pi / 2 * (u - P["peak"]) / (1.0 - P["peak"]))) ** P["hi"]
+    wav = (1.0 + 0.12 * math.sin(phi + ph[0]) + 0.11 * math.sin(2 * phi + ph[1] + 2.0 * u)
+           + 0.09 * math.sin(3 * phi + ph[2] - 3.0 * u) + 0.06 * math.sin(5 * phi + ph[3] + 6.0 * u))
+    return P["rmax"] * r * wav
+
+
+def _unit(rng):
+    while True:
+        v = Vector((rng.uniform(-1, 1), rng.uniform(-1, 1), rng.uniform(-1, 1)))
+        if 1e-3 < v.length <= 1.0:
+            return v.normalized()
+
+
+def grow_crown(species, variant, lod, rng, crng, g, H):
+    """Closed, lobed broadleaf crown (see CROWN). rng drives the skeleton (identical at LOD0 / LOD1), crng the cards."""
+    P = CROWN[species]
+    leaf = f"leaves_{species}"
+    k = H / HREF[species]
+    zb, zt = P["bole"] * H, H * 0.985
+    hc = zt - zb
+    ph = [rng.uniform(0, 2 * math.pi) for _ in range(4)]
+    seg = 8 if lod == 0 else 5
+    # stem
+    zm = zb + P["mono"] * hc * 0.97
+    lean = Vector((rng.uniform(-0.04, 0.04), rng.uniform(-0.04, 0.04), 1))
+    trunk = bend_path(Vector((0, 0, -0.3)), lean, zm + 0.3, 10, rng, 0.035)
+    r0 = P["r0"] * k
+    trad = [r0 * (1 - i / 10) ** 0.85 + 0.02 + 0.22 * r0 * math.exp(-i / 0.8) for i in range(11)]
+    g.tube(P["bark"], trunk, trad, seg)
+
+    def axis(z):
+        t = min(max((z + 0.3) / (zm + 0.3), 0.0), 1.0) * 10
+        i = min(int(t), 9)
+        p = trunk[i].lerp(trunk[i + 1], t - i)
+        return Vector((p.x, p.y, z)), trad[i] + (trad[i + 1] - trad[i]) * (t - i)
+
+    def envelope(p):
+        """(u, radial distance, envelope radius in metres) of point p."""
+        u = (p.z - zb) / hc
+        a, _ = axis(min(p.z, zm))
+        d = Vector((p.x - a.x, p.y - a.y, 0))
+        return u, d.length, crown_radius(P, u, math.atan2(d.y, d.x), ph) * H
+
+    def clip(p, share=0.92):
+        u, d, R = envelope(p)
+        if d > share * R and d > 1e-3:
+            a, _ = axis(min(p.z, zm))
+            f = share * R / d
+            p = Vector((a.x + (p.x - a.x) * f, a.y + (p.y - a.y) * f, p.z))
+        p.z = min(max(p.z, zb - 0.03 * hc), zt - 0.02 * hc)
+        return p
+
+    lobes = []          # (centre, outward direction)
+    limbs = []          # sampled limb points (for the fill twigs)
+
+    def lobe(c):
+        a, _ = axis(min(c.z, zm))
+        o = Vector((c.x - a.x, c.y - a.y, 0))
+        o = o.normalized() if o.length > 0.05 * H else Vector((0, 0, 0))
+        u = (c.z - zb) / hc
+        o = (o + Vector((0, 0, 0.25 + 1.3 * max(0.0, u - 0.7) - 0.5 * max(0.0, 0.2 - u)))).normalized()
+        lobes.append((c, o))
+
+    n_sc = P["n_sc"]
+    a0 = rng.uniform(0, 2 * math.pi)
+    u_hi = 0.80 * P["mono"]
+    for i in range(n_sc + (0 if P["mono"] > 0.9 else 3)):
+        leader = i >= n_sc                       # the stem of a sympodial crown ends in 3 steep leaders
+        ua = u_hi * ((i + rng.uniform(0.15, 0.85)) / n_sc) if not leader else P["mono"] * 0.93
+        phi = a0 + i * 2.39996 + rng.uniform(-0.35, 0.35)
+        za = zb + ua * hc
+        pa, ra = axis(za)
+        ut = min(0.95, ua + rng.uniform(*P["rise"])) if not leader else rng.uniform(0.86, 0.97)
+        rt = crown_radius(P, ut, phi, ph) * H * (rng.uniform(0.74, 0.90) if not leader else rng.uniform(0.25, 0.6))
+        tip = Vector((pa.x + math.cos(phi) * rt, pa.y + math.sin(phi) * rt, zb + ut * hc))
+        out = Vector((math.cos(phi), math.sin(phi), 0))
+        arch = P["arch"] if not leader else 0.9
+        ctrl = pa + out * rt * (0.62 - 0.38 * arch) + Vector((0, 0, (tip.z - pa.z) * (0.15 + 0.75 * arch)))
+        pts = []
+        for j in range(6):
+            t = j / 5
+            p = pa * (1 - t) ** 2 + ctrl * 2 * t * (1 - t) + tip * t * t
+            if 0 < j < 5:
+                p += Vector((rng.uniform(-1, 1), rng.uniform(-1, 1), rng.uniform(-0.6, 0.6))) * 0.012 * H
+            pts.append(p)
+        rb = min(ra * rng.uniform(0.42, 0.62), 0.14 * k * (1.5 if leader else 1.0) + 0.02)
+        sel = range(6) if lod == 0 else (0, 2, 5)            # LOD1: two segments per limb (Low tier budget)
+        g.tube(P["bark"] if species != "birch" or rb > 0.07 else "bark_twig", [pts[j] for j in sel],
+               [rb * (1 - j / 5) ** 0.9 + 0.014 for j in sel], max(3, seg // 2 + 1))
+        limbs += pts[2:]
+        lobe(pts[5])
+        L = (tip - pa).length
+        side = 1 if rng.random() < 0.5 else -1
+        for s in range(rng.randint(3, 4)):
+            t = 0.30 + 0.62 * (s + rng.uniform(0.2, 0.8)) / 4
+            j = min(int(t * 5), 4)
+            q0 = pts[j].lerp(pts[j + 1], t * 5 - j)
+            tan = (pts[j + 1] - pts[j]).normalized()
+            az = math.atan2(tan.y, tan.x) + side * rng.uniform(0.6, 1.25)
+            d2 = Vector((math.cos(az), math.sin(az), tan.z * 0.5 + rng.uniform(-0.15, 0.40)))
+            sub = bend_path(q0, d2, L * rng.uniform(0.34, 0.52) * (1.0 - 0.35 * t), 3, rng, 0.14,
+                            gravity=0.05 if species == "birch" else -0.02)
+            sub[-1] = clip(sub[-1])
+            if lod == 0:
+                g.tube("bark_twig", sub, [0.045 * k * (1 - j2 / 4) + 0.008 for j2 in range(4)], 3)
+            limbs += sub[1:]
+            lobe(sub[-1])
+            side = -side
+    if P["mono"] > 0.9:                          # monopodial: the leader carries the top of the crown
+        top, _ = axis(zm)
+        lobe(top + Vector((0, 0, 0.01 * H)))
+        lobe(axis(zb + 0.86 * hc)[0])
+    # fill: envelope points no lobe covers get a lobe on a thin twig from the nearest limb
+    gap = 0.135 * H
+    for iu in range(8):
+        u = 0.06 + 0.88 * (iu + 0.5) / 8
+        nphi = max(4, int(round(2 * math.pi * crown_radius(P, u, 0.0, ph) * H / (0.15 * H))))
+        for ip in range(nphi):
+            phi = 2 * math.pi * (ip + rng.uniform(0.2, 0.8)) / nphi
+            a, _ = axis(min(zb + u * hc, zm))
+            R = crown_radius(P, u, phi, ph) * H * 0.74
+            c = Vector((a.x + math.cos(phi) * R, a.y + math.sin(phi) * R, zb + u * hc + rng.uniform(-0.02, 0.02) * H))
+            if min((c - lc).length for lc, _ in lobes) < gap:
+                continue
+            if lod == 0 and limbs:
+                near = min(limbs, key=lambda q: (q - c).length)
+                mid = near.lerp(c, 0.5) + Vector((0, 0, 0.02 * H))
+                g.tube("bark_twig", [near, mid, c], [0.03 * k, 0.018 * k, 0.008], 3)
+            lobe(c)
+    # foliage: branchlet cards on the outer side of every lobe
+    cc = Vector((0, 0, zb + 0.5 * hc))
+    up_z = Vector((0, 0, 1))
+    per = P["cards"] / len(lobes)
+    keep = 1.0 if lod == 0 else 0.31            # LOD1 count only: reuse_leaf_lod takes the LOD0 cards themselves
+    for lc, lo in lobes:
+        rl = P["lobe"] * H * crng.uniform(0.85, 1.2)
+        n = int(per) + (1 if crng.random() < per - int(per) else 0)
+        for _ in range(n):
+            dvec = (lo * 0.85 + _unit(crng)).normalized()
+            pos = lc + Vector((dvec.x, dvec.y, dvec.z * 0.8)) * rl * crng.uniform(0.30, 1.0)
+            if crng.random() < 0.14:            # inner card: between the lobe and the stem (no sky through the middle)
+                a_in, _ = axis(min(lc.z, zm))
+                pos = lc.lerp(a_in, crng.uniform(0.25, 0.6)) + _unit(crng) * rl * 0.5
+            hang = crng.random() < P["hang"]
+            size = P["size"] * k * crng.uniform(0.80, 1.20)
+            if hang:
+                pos.z -= 0.35 * size
+                nrm = Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.15, 0.15)))
+                up = Vector((dvec.x * 0.25, dvec.y * 0.25, -1.0))       # twig base up, the strands hang
+            else:
+                nrm = dvec * 0.55 + _unit(crng) * 0.85 + up_z * 0.2
+                up = dvec + _unit(crng) * 0.35
+            pos = clip(pos, 1.04)
+            cell, mirror = crng.randrange(4), crng.random() < 0.5
+            if P["hang"]:                       # birch atlas: cells 0-1 upright sprays, 2-3 hanging strands
+                cell = cell % 2 + (2 if hang else 0)
+            if crng.random() > keep:
+                continue
+            nrm = nrm.normalized()
+            r = up.cross(nrm)
+            if r.length < 1e-3:
+                r = Vector((1, 0, 0)).cross(nrm)
+            r.normalize()
+            uax = nrm.cross(r).normalized()
+            sn = (pos - cc)
+            sn = sn.normalized() if sn.length > 1e-3 else up_z
+            sn = (sn * 0.55 + dvec * 0.45 + up_z * 0.28).normalized()
+            h = size / 2
+            g.quad(leaf, pos - r * h - uax * h, pos + r * h - uax * h, pos + r * h + uax * h, pos - r * h + uax * h,
+                   spray_uv(cell, mirror), sn)
     return g
 
 
@@ -1427,7 +1659,7 @@ def main():
         # This writes only the requested output directory and must not run during
         # module import, on normal species-only exports, or while r2 is active.
         write_willow_leaf_atlas(VEG / "leaves_willow.png")
-    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES + experimental:
+    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES + experimental + ADDED_0308:
         for v in range(NVAR.get(sp, 3)):
             name = f"tree_{sp}_{v}"
             if quick and name != quick:

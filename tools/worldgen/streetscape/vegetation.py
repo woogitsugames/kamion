@@ -40,11 +40,12 @@ MIX = {"iglasty": [0.64, 0.10, 0.02, 0.02, 0.02, 0.0, 0.20], "mieszany": [0.36, 
        # as flat "stone pine" crowns (review s17 0163 P1 / P2); same weights in make_trees.py FOREST_MIX (HLOD bake).
        "liściasty": [0.0, 0.36, 0.26, 0.22, 0.16, 0.0, 0.0], None: [0.4, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0]}
 HEIGHT = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0),
-          "spruce": (14, 25), "pineyoung": (1.5, 5.0), "birchyoung": (2.0, 6.5), "floor": (0.45, 0.9)}
+          "spruce": (14, 25), "pineyoung": (1.5, 5.0), "birchyoung": (2.0, 6.5), "floor": (0.45, 0.9),
+          "poplar": (18, 28)}      # ADR 0308: roadside poplar (tree_rows / overrides only; WORKING_VALUE)
 # Prototype variants per species (make_trees.py NVAR; 3 when not listed). The variant is drawn from 0..2 for every
 # tree (unchanged random stream) and folded: spruce canopy trees take the stand forms 0 / 1, young spruce and the
 # open side of a stand take variant 2 (boughs to the ground).
-NVAR = {"pineyoung": 1, "birchyoung": 1, "floor": 2}
+NVAR = {"pineyoung": 1, "birchyoung": 1, "floor": 2, "poplar": 2}
 SPRUCE_OPEN = 2
 SPACING = {"las": 4.5, "zagajnik": 3.2, "zadrzewienie": 6.0}
 # Understorey of a Podlasie pine / mixed stand (v3.4, review r3 X4 "trunks like a fence", r4 W-H8): hazel and
@@ -929,3 +930,50 @@ def garden_canopies(trees, rp, report, parts=()):
     report["garden_canopies"] = {"source": "G7 # 12 ceilings (research/g7-street-greenery/README.md)", "instances": len(result),
                                  "capped": len(rows), "added_instances": 0, "widened": 0, "list": rows}
     return result
+
+
+# ADR 0308: clearance of the carriageway (owner s24, DK65: crowns hang over the road at cab height). A tree whose crown
+# base is under CLEAR_H_M may reach at most CLEAR_OVERHANG_M over the carriageway edge. Crown radius / H and clear
+# stem / H of the library models (make_trees.CROWN; pine / stand spruce from their growers; the open-grown spruce
+# variant and the young forms carry boughs to the ground). Species not listed (shrub, floor) are left alone: they are
+# lower than the cab and already 2.5 m off the surface.
+CLEAR_H_M = 4.7            # WORKING_VALUE: 4.5 m clearance gauge of a rural road (Dz.U. 2022 poz. 1518) + 0.2 m
+CLEAR_OVERHANG_M = 0.3
+CLEAR_MIN_SCALE = 0.65     # a tree that would have to shrink below this share of its height is removed instead
+CROWN_FORM = {"linden": (0.33, 0.17), "maple": (0.375, 0.18), "birch": (0.235, 0.27), "alder": (0.24, 0.22),
+              "poplar": (0.195, 0.19), "pine": (0.22, 0.48), "spruce": (0.185, 0.05), "willow": (0.48, 0.20),
+              "pineyoung": (0.34, 0.08), "birchyoung": (0.27, 0.16)}
+
+
+def road_clearance(trees, carriage, report):
+    """Shrink or drop the trees whose crown would hang into the carriageway below CLEAR_H_M. Returns the new list
+    (records are copied when changed); report["road_clearance"] = counts. Deterministic, order kept."""
+    rep = {"checked": 0, "lowered": 0, "removed": 0, "clear_h_m": CLEAR_H_M, "overhang_m": CLEAR_OVERHANG_M}
+    report["road_clearance"] = rep
+    if carriage is None or carriage.is_empty or not trees:
+        return trees
+    import shapely
+    shapely.prepare(carriage)
+    idx = [i for i, t in enumerate(trees) if str(t.get("p", "")).startswith("tree_") and t["p"][5:] in CROWN_FORM]
+    if not idx:
+        return trees
+    d = shapely.distance(carriage, shapely.points([trees[i]["e"] for i in idx], [trees[i]["n"] for i in idx]))
+    out = list(trees)
+    drop = set()
+    for i, dist in zip(idx, d):
+        t = trees[i]
+        k, bole = CROWN_FORM[t["p"][5:]]
+        if t["p"] == "tree_spruce" and t.get("v") != SPRUCE_OPEN:
+            k, bole = 0.15, 0.36                # stand form: live crown from ~0.36 H
+        h = float(t["h"])
+        rep["checked"] += 1
+        if bole * h >= CLEAR_H_M or k * h <= dist + CLEAR_OVERHANG_M:
+            continue
+        h2 = (float(dist) + CLEAR_OVERHANG_M) / k
+        if h2 < CLEAR_MIN_SCALE * h:
+            drop.add(i)
+            rep["removed"] += 1
+        else:
+            out[i] = dict(t, h=round(h2, 1))
+            rep["lowered"] += 1
+    return [t for i, t in enumerate(out) if i not in drop]

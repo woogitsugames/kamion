@@ -114,3 +114,26 @@ def pytest_configure(config):
         "unit: fast pure-function unit tests on small synthetic data; run in CI without Data/raw "
         "(`pytest tests/gis -m unit`)",
     )
+
+
+@pytest.fixture
+def measured_widths(monkeypatch):
+    """D94 / ADR 0306: the network with the MEASURED cross-sections (GAMEPLAY_LANE_WIDEN_M = 0) for tests that compare
+    the generator with the orthophoto / BDOT / authored measurements."""
+    import sys as _sys
+    from pathlib import Path as _P
+    _sys.path.insert(0, str(_P(__file__).resolve().parents[2] / "tools" / "worldgen"))
+    from roads import standards as _S
+    monkeypatch.setattr(_S, "GAMEPLAY_LANE_WIDEN_M", 0.0)
+
+
+
+def pytest_configure(config):
+    """D94 / ADR 0306: GIS tests check the generator against measurements / authored values, so the in-memory network is
+    built with GAMEPLAY_LANE_WIDEN_M = 0 (measured cross-sections; every D94 rule off) for the whole session, module
+    fixtures included. tests/gis/test_road_widen_0306.py sets the value per call (its `_net`)."""
+    import sys as _sys
+    from pathlib import Path as _P
+    _sys.path.insert(0, str(_P(__file__).resolve().parents[2] / "tools" / "worldgen"))
+    from roads import standards as _S
+    _S.GAMEPLAY_LANE_WIDEN_M = 0.0
