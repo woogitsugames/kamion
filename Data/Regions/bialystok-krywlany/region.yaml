@@ -1,0 +1,68 @@
+id: bialystok-krywlany
+title: Białystok — Ciołkowskiego DW678, rondo Wünschego i Dywizjonu 303 przy lotnisku Krywlany, zachodni sąsiad Dojlid (Krywlany)
+status: WORKING_ASSUMPTION (ADR 0278 tile 4, owner D81/D93; tile = lattice (0,-3) of the ADR 0203 plan)
+candidate: P_g10_c_dojlidy
+crs:
+  horizontal: EPSG:2180 (ETRF2000-PL / CS92)
+  vertical: PL-EVRF2007-NH (EPSG:9651)
+  axes_unity: X = east (EPSG:2180 x), Y = up, Z = north (EPSG:2180 y)  [ADR 0003]
+bbox:
+  xmin: 776971.0
+  ymin: 589055.0
+  xmax: 779019.0
+  ymax: 591103.0
+  width_m: 2048.0
+  height_m: 2048.0
+origin:
+  x: 777995.0
+  y: 590079.0
+  z: 151.99
+  note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
+teryt_powiat: '2061'
+products:
+  buildings.geojson: Data/Regions/bialystok-krywlany/buildings.geojson
+  ortho.json: Data/Regions/bialystok-krywlany/ortho.json
+  roads.graph.json: Data/Regions/bialystok-krywlany/roads.graph.json
+  terrain.json: Data/Regions/bialystok-krywlany/terrain.json
+big_products_not_in_git:
+- Data/raw/derived/bialystok-krywlany/heightmap_2049.r16
+- Data/raw/derived/bialystok-krywlany/ortho_0p25m.tif
+sources:
+- id: osm-geofabrik-podlaskie
+  license: ODbL 1.0
+  attribution: © OpenStreetMap contributors
+  manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
+  manifest_sha256: 3a63ebb442f2e09904c18a62cbf1eec9bce2fccf8c8d0dfd6264bef37843b3c0
+- id: gugik-nmt-2025-bialystok-krywlany
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-nmt-2025-bialystok-krywlany.json
+  manifest_sha256: fb6dd4527cdd8a3c34fc7374826029d6d79d5be6602b934e75c1c8b338ce78fe
+- id: gugik-orto-2024-rgb-0p25-bialystok-krywlany
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-bialystok-krywlany.json
+  manifest_sha256: 5019cc486a8738a0315f0efe232b6fea8ca9416a5d2c90a4829224eb845713e7
+- id: gugik-bdot10k-2061
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2061.json
+  manifest_sha256: a8f0f31b701953f8718d55592c817a8d737d74ed9ef42ad9136d190e0d9fe303
+- id: gugik-lod1-2024-2061
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2061.json
+  manifest_sha256: da3a0e254a8e4076d29469a92a167e18b8b769d80560eafe99f50ef3a8aebb7b
+- id: gugik-lod2-2017-2061
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2061.json
+  manifest_sha256: e33f858b3afcd65150b12b7eaf990c8da4fd02e5891210f53f0bed24ad3ad2d5
+rebuild:
+- uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-krywlany
+- uv run --project tools/worldgen tools/worldgen/build_region.py --region bialystok-krywlany

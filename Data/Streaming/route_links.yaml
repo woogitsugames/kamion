@@ -162,6 +162,17 @@ links:
     swing:
       - {near_epsg2180: [751887.0, 600226.0], left_m: 1.5, half_m: 25.0}
     note: "DW671 Puchalskiego from dw671-tykocin-09 -> Narew bridge -> SE corner of Rynek -> stop on the south side of the square"
+  # ADR 0278 tile 4 (krywlany-s24, D93): Ciolkowskiego leaves mickiewicza on the north seam of Dojlidy (mickiewicza route
+  # exit), crosses the NW corner of Dojlidy (~87 m, OSM way 279881972) and enters bialystok-krywlany on the west seam of
+  # Dojlidy (krywlany route entry). The krywlany route ends at the Dojlidy route entry (Dywizjonu 303, west edge).
+  - id: dojlidy-ciolkowskiego-corner-to-krywlany
+    tile: bialystok-dojlidy
+    destination: dojlidy
+    start_epsg2180: [779092.4, 591103.0]  # Ciolkowskiego on the mickiewicza | Dojlidy seam (mickiewicza route end)
+    end_epsg2180: [779019.0, 591055.7]    # Ciolkowskiego on the Dojlidy | krywlany seam (krywlany route entry)
+    head_from: route:bialystok-mickiewicza
+    tail_to: route:bialystok-krywlany
+    note: "Ciolkowskiego DW678 across the NW corner of Dojlidy from the seam with mickiewicza to the seam with krywlany"
   # s8-north-s24 (owner D93 p.4, D95 p.4): trip Bialystok -> DK8 north -> Wasilkow -> towards Korycin (`-route_to wasilkow`).
   # The C control route ends on the DK8 northbound carriageway (way 882366265) ~330 m before the north seam, where the
   # `any` link c-dk8-to-maczka turns west; for this trip the link REPLACES the C route (same first node, as
@@ -194,13 +205,13 @@ corridors:
     tiles: [bialystok-industrial-c, bialystok-maczka, bialystok-kleeberga, bialystok-knyszynska, bialystok-porosly,
             dk8-s8-jeroniki, dk65-01, s8-01, s8-02, s8-03, s8-04, s8-05, s8-06, s8-07, s8-08, s8-09, s8-10, s8-11, s8-12]
   # D81: C -> wygoda -> bojary -> mickiewicza (ADR 0278 tiles 5-7). Ciolkowskiego leaves mickiewicza on the north seam
-  # of bialystok-dojlidy, runs ~129 m inside Dojlidy and turns west into bialystok-krywlany (ADR 0278 tile 4, not
-  # defined yet: 1206 m of Dywizjonu 303), then re-enters Dojlidy at the Dojlidy route entry (west edge). Until tile 4
-  # exists the corridor stops at mickiewicza (krywlany and dojlidy listed as missing).
+  # of bialystok-dojlidy, crosses the NW corner of Dojlidy (link dojlidy-ciolkowskiego-corner-to-krywlany, ~87 m) and
+  # turns into bialystok-krywlany (ADR 0278 tile 4, krywlany-s24: rondo Wunschego, Dywizjonu 303, ~1205 m), then
+  # re-enters Dojlidy at the Dojlidy route entry (west edge). Dojlidy is listed twice: corner link, then its route.
   - id: bialystok-dojlidy-dk19
     destination: dojlidy
-    tiles: [bialystok-industrial-c, bialystok-wygoda, bialystok-bojary, bialystok-mickiewicza, bialystok-krywlany,
-            bialystok-dojlidy]
+    tiles: [bialystok-industrial-c, bialystok-wygoda, bialystok-bojary, bialystok-mickiewicza, bialystok-dojlidy,
+            bialystok-krywlany, bialystok-dojlidy]
   - id: s8-loop
     destination: s8
     tiles: [dk65-01, s8-01, s8-02, s8-03, s8-04, s8-05, s8-06, s8-07, s8-08, s8-09, s8-10, s8-11, s8-12]
