@@ -24,3 +24,8 @@ NASTĘPNY KROK: po `artifacts/s8-north-s24/run/final-world-*-r2.exit` → tile_g
 - 01 r2 gotowy (2071 m). road_consistency na trasie (pas 30 m): 63 bridge_kerb w pasie 0 (lewy, przy pasie dzielącym) na moście DK8 (way 145631572/3), 5,2–6,6 m od toru ciężarówki — nie w obwiedni; 1 arrow_no_exit (zjazd węzła wychodzi zachodnią krawędzią do (-1,1)). W r1 na trasie było „0”, bo route_start.json nie istniał w chwili build_world (pierwszy build) — to nie regres road-widen.
 - pytest: test_dense_lod_0282[bialystok-kleeberga] FAIL także w main (istniejący).
 - 02/03/korycin r2 czekają na slot heavy (3/3 zajęte: regen-wave-2 A/C, rondo-fix-cli).
+
+## 15:50
+- merge origin/main (krywlany ADR 0314) — konflikty rozwiązane (gugik_index: retry z main + mój raport `unavailable_layers`; route_links.yaml: oba linki; katalog: wartości z main), regeneracja streaming.
+- pytest r2 (przed poprawkami): 14 FAIL; moje poprawione (graph reader ADR 0274, powiat 01, sąsiad N kafla C, plan 0278 — kafle ADR 0315 = komórki planu dk8-dk19-pn-01/-jurowce/dk8-sochonie/dk8-woroszyly, plan bez zmian). Istniejące w main: dense_lod kleeberga, road_fidelity stale, zebras r9, route_links json_fresh (conftest GAMEPLAY_LANE_WIDEN_M=0 vs skrypt), knyszyn rynek, world_roads deterministic. keep_tyres/monki_corner — tylko w worktree (stara kopia derived knyszyn/monki).
+- 03/korycin r2 czekają na heavy; import r3 01/02 w toku (przebudowa PBR Medium).
