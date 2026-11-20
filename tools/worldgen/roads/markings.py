@@ -179,7 +179,8 @@ def follow_edge(sec, lat, hw_mid, hw_s, dirn):
 
 def edge_lines(sec, hw, dirn):
     """[(lat, kind)] of the painted edge lines of a section at half-width hw (scalar or array). Default rule:
-    P-7b on both sides of class A / S / GP roads with an edge strip. `edge_lines` (override, direction of travel)
+    P-7b on both sides of class A / S / GP roads, inset inside asphalt when there is no edge strip.
+    `edge_lines` (override, direction of travel)
     narrows it; a section with measured `lane_edges` paints only what `edge_lines` names (ADR 0095)."""
     if sec.roundabout or unmarked(sec):
         return []
@@ -196,10 +197,13 @@ def edge_lines(sec, hw, dirn):
             strip_r = float(sec.width) - le[-1] >= S.LINE_W_WIDE
             out.append((d * (hw - (le[-1] + half if strip_r else le[-1] - half)), "P-7b"))
         return out
-    if sec.cls in ("A", "S", "GP") and sec.edge_strip > 0 and el != "none":
+    if sec.cls in ("A", "S", "GP") and el != "none":
+        # A single-lane main carriageway has no modelled edge strip (network.edge_section).
+        # It still needs edge paint: keep the whole stripe inside the asphalt in that case.
+        off = np.minimum(hw - sec.edge_strip + half, hw - half)
         for sg, name in ((1, "left"), (-1, "right")):       # sg in the travel frame: +1 = travel-left
             if el in (None, "both", name):
-                out.append(((d if sec.oneway else 1) * sg * (hw - sec.edge_strip + half), "P-7b"))
+                out.append(((d if sec.oneway else 1) * sg * off, "P-7b"))
     elif el in ("left", "right", "both"):
         # ADR 0205: edge lines read off the orthophoto on a road below class GP (rural G road, no edge strip):
         # only by authored override; narrow line (see edge_line_width) just inside the carriageway edge

@@ -43,6 +43,16 @@ północny zachód (Korycin, Augustów).
    ADR 0288, plan zostaje bez zmian.
 
 ## Konsekwencje / otwarte
+
+- Wyjaśnienie `dk8-seam-cli` (20.11): krótka sekcja DK8 pozostaje w dłuższym łańcuchu.
+  D94 przesuwa ukośne końce osi o 0,078/0,091 m poza płaszczyznę szwu; filtr 0,05 m w QA
+  błędnie zgłaszał urwanie, a filtr sąsiadów generatora stosował taper DK8 tylko po jednej stronie.
+  Przynależność do szwu ustalana z granicznego węzła grafu; obustronny taper daje 8,75 m.
+  Pozostają jawne 2 FAIL położenia osi po 0,25 m (DK8/serwisowa), bez rozluźnienia progów.
+  Korycin: jednopasowa sekcja way 304733170 ma `edge_strip=0`, co wyłączało P-7b; oznakowanie
+  A/S/GP działa teraz także bez opaski, w całości na asfalcie. Testy siatki bez Unity/przebudowy;
+  szczegóły i zakres regeneracji: `docs/reports/dk8-seam-cli.md`. Poniższe r1/r3 pozostają historią.
+
 - qa.seams 01|02: 2 FAIL „droga urywa się na szwie” (trunk 876126468, service 306912739). W sieci 01 po D94 odcinek
   27,6 m way 876126468 przy szwie nie tworzy osobnego łańcucha (łańcuch w211148033 kończy się na szwie z taperem
   9,0 → 8,5 m); wysokości |dz| ≤ 0,014 m, przesunięcie toru 0,31 m przejmuje link `wasilkow-01-to-02`. Do wyjaśnienia

@@ -1,3 +1,8 @@
+# STATUS dk8-seam-cli — DK8 północ, 2026-11-20
+- Przyczyny: przesunięte ukośne końce D94 poza tolerancją płaszczyzny szwu w QA i filtrze taperu; P-7b wyłączone przez edge_strip=0 sekcji jednopasowej.
+- Naprawiono dopasowanie końców i obustronny taper 8,75 m; linia Korycina powstaje i przechodzi overlap-pass przy s=450/480/510 m. QA zachowuje 2 rzeczywiste FAIL położenia osi po 0,25 m. Raport: docs/reports/dk8-seam-cli.md.
+- Testy regresji w toku; bez Unity, przebudowy kafli i push. NASTĘPNY KROK: `Get-Content artifacts/dk8-seam-cli/pytest*.log -Tail 30`.
+
 # STATUS neighbour-ctx-cli — D95, zakończone
 - Reguła z `streaming.authored.json` → `tile_graph.json` → EdgeClosureRules; flaga tylko knyszyn (1/54), jawne przełączniki i mobile zachowane. ADR 0317; review drugiego agenta bez uwag blokujących.
 - Testy: spawn-runner 48/48 PASS, pytest grafu 20/20 PASS, eksport --check PASS. Dodatkowy katalog: 2 PASS / 1 istniejący FAIL (knyszyn routeLengthM 1159.09 vs 1159.28). Logi w artifacts/logs/neighbour-context-*.log. Bez Unity, push i zapisów poza worktree.
