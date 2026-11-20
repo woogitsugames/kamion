@@ -107,6 +107,11 @@ class End:
     length: float             # chain length
     shoulder: dict            # {"L" / "R": (paved_cm, ground_cm) | None}: ADR 0272 rule / override of the end section
     blendable: bool = True    # False: the lanes of the end section cannot follow a changing width (ADR 0095 data)
+    boundary_xy: tuple | None = None  # graph boundary before lateral placement (D94)
+
+    def on_seam(self, se) -> bool:
+        """Tile membership uses the graph cut, even if lateral placement moved the axis off its plane."""
+        return on_seam(self.boundary_xy if self.boundary_xy is not None else self.xy, se)
 
 
 def _osm_way(edge_id: str) -> int:
@@ -146,7 +151,8 @@ def ends(net: Nw.Network) -> list[End]:
             out.append(End(chain=c.id, end=e, osm_way=_osm_way(sec.edge_id), xy=(float(pg[0]), float(pg[1])),
                            left=(float(n[0]), float(n[1])), hw=float(c.hw[e]), length=float(c.line.s[-1]),
                            shoulder=nominal_shoulder(sec, rev),
-                           blendable=not (sec.lane_edges or (sec.width_profile and not sec.lane_follow))))
+                           blendable=not (sec.lane_edges or (sec.width_profile and not sec.lane_follow)),
+                           boundary_xy=tuple(np.asarray(nd["xy"]) + o)))
     return out
 
 
@@ -290,13 +296,13 @@ def neighbour_ends(region_id: str, own: list[End], regions: Path | None = None) 
     regions = regions or REGIONS
     out = {}
     for nb, se in neighbours(region_id, regions):
-        if not any(on_seam(e.xy, se) for e in own):
+        if not any(e.on_seam(se) for e in own):
             continue
         d = regions / nb
         reg = yaml.safe_load((d / "region.yaml").read_text(encoding="utf-8"))
         graph = json.loads((d / "roads.graph.json").read_text(encoding="utf-8"))
         net = plain_network(graph, (reg["origin"]["x"], reg["origin"]["y"]), _load_overrides(d))
-        out[nb] = [e for e in ends(net) if on_seam(e.xy, se)]
+        out[nb] = [e for e in ends(net) if e.on_seam(se)]
     return out
 
 
