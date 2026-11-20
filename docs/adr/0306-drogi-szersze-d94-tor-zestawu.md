@@ -143,3 +143,11 @@ Plan G2: skorygować sam pomiar centrum; nie przepisywać wykrytych szerokości 
 Reprodukcja diagnostyczna (bez zapisu danych): `uv run --project tools/worldgen python -c "import sys;
 sys.path.insert(0,'tools/worldgen/qa'); import ortho_lane_fit as F; F.LANE_KEYS=('lane_edges','lanes','width','lane_width');
 F.fit(['bialystok-industrial-c'],step=10,out='artifacts/road-widen-s24/fit-placement-diagnostic',dry=True)"`.
+
+### G2 — dwa lokalne T i korekta pomiaru centrum
+Zachowujemy dwa osobne skrzyżowania serwisowe, jeśli całe aktualne grupy składają się wyłącznie z klasy D,
+nie zawierają pierścienia/compact i dzieli je fizycznie ≥2 szerokości jezdni (WORKING_VALUE). Sprawdzamy wszystkie
+węzły grup, także wcześniej wchłonięte; odległość euklidesowa wyklucza zakręcony łącznik wracający obok siebie.
+Finalny solver dzieli krótki łącznik między dwa lokalne łuki. Ten mechanizm usuwa długi skrót Hermite'a przez parking.
+Wprowadzono osobno zweryfikowaną korektę dk8-placement-b -0,55→+0,02 m. Szerokość i liczba pasów pozostają te same.
+Równe dostępne luzy po obu stronach zachowują centrum. Ratchety bez zmian.

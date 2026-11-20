@@ -145,3 +145,10 @@
   obejrzane (`dk8-placement-strips.png`), recenzent PASS. Plan: tylko center -0,55→+0,02, bez liczby pasów/szerokości.
   Przed kolejnym rebuild: dwa osobne T parkingu; ochrona całych grup klastra, rond i publicznych dróg, odległość euklidesowa.
 - NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g1.log -Tail 15`; po pełnym G1 zastosować G2 i powtórzyć C+knyszyn.
+
+- G1 pełne QA: wyspy1, edge p95 1,62; 34 passed/1 xfailed/3 failed (wyspa ×2, parking ×1).
+  Combo krytyczne zachowane: DK65→DW671 0/5/0 (swing0/0/0), DK65→DK65W0/0/0. Poza zakresem Rynek nadal przeciwne pasy.
+- G2: osobne T wyłącznie dla całych grup klasy D bez ronda/compact; fizyczny odstęp ≥2 szerokości jezdni (także
+  odległość euklidesowa, nie sama długość łukowa). Środkowy łącznik nie jest absorbowany. Równe luzy → bez przesunięcia.
+  dk8-placement-b: pomiar centrum -0,55→+0,02 m (tylko położenie, liczba pasów/szerokość bez zmian).
+- NASTĘPNY KROK: `pwsh -File artifacts/road-widen-s24/preview-g2.ps1` (fidelity zoom DK8+parking przed pełnym rebuild).

@@ -452,8 +452,8 @@ def gameplay_widen(net: Network, d: float, edges: dict | None = None) -> None:
         if not sec.roundabout:
             left, right = clearance.get(sec.edge_id, [float("inf"), float("inf")])
             # Allocate towards the greater clearance. Neither neighbour loses any of its existing separator.
-            if left == right == float("inf"):
-                grow_l = grow_r = add / 2
+            if left == right:
+                grow_l = grow_r = min(add / 2, left)
             elif left >= right:
                 grow_l = min(add, left)
                 grow_r = min(add - grow_l, right)

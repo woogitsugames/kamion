@@ -416,11 +416,13 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
             if c.node_a in parent and c.node_b in parent and find(c.node_a) != find(c.node_b):
                 ta, tb = trims.get((c.id, "a"), 0), trims.get((c.id, "b"), 0)
                 if c.length < ta + tb + 1.0:
+                    ga = [n for n in jn if find(n) == find(c.node_a)]
+                    gb = [n for n in jn if find(n) == find(c.node_b)]
+                    if _service_tees_fit(net, c, (ga, gb), ends):
+                        continue
                     if (c.node_a in keep_apart or c.node_b in keep_apart) and c.length >= MINOR_TEE_MIN_M \
                             and _road_highway(net, c) not in MINOR_HIGHWAYS:
                         continue            # ADR 0237 D38: authored `cluster: separate`
-                    ga = [n for n in jn if find(n) == find(c.node_a)]
-                    gb = [n for n in jn if find(n) == find(c.node_b)]
                     pts = np.array([net.nodes[n]["xy"] for n in ga + gb])
                     diam = float(np.max(np.hypot(*(pts[:, None, :] - pts[None, :, :]).transpose(2, 0, 1))))
                     if diam <= 30.0:
@@ -506,6 +508,26 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
     for j in juncs:
         j.boundary = patch_boundary(j)
     return juncs
+
+
+def _service_tees_fit(net, link, groups, ends):
+    """Keep spaced service-road tees local instead of replacing a parking entrance by a long merged patch.
+
+    Two carriageway widths of physical separation is a conservative WORKING_VALUE. The final corner solver shares
+    the connector between both junctions and reduces their radii to fit. Inspect WHOLE current clusters: a public
+    road or compact/ring junction absorbed earlier must never be split by this service-only rule (ADR 0306).
+    """
+    chains = [c for group in groups for node in group for c, _ in ends[node]]
+    if not chains:
+        return False
+    for c in chains:
+        if c.roundabout or any(net.sec_list[int(i)].cls != "D" or net.sec_list[int(i)].compact is not None
+                               for i in np.unique(c.sec_idx)):
+            return False
+    need = 4.0 * max(float(c.hw.max()) for c in chains)
+    pa, pb = (np.array([net.nodes[n]["xy"] for n in group]) for group in groups)
+    gap = float(np.linalg.norm(pa[:, None, :] - pb[None, :, :], axis=2).min())
+    return link.length >= need and gap >= need
 
 
 # ADR 0237 D38 (Knyszyn, Poludniowa x Szkolna, OSM node 7015352011): a parking aisle leaving Poludniowa 23 m from the

@@ -225,3 +225,52 @@ def test_clearance_uses_local_profile_width_instead_of_maximum():
     edges = {sec.edge_id: ({}, np.array([[0.,0.],[100.,0.]]), "a", "b"),
              other.edge_id: ({}, np.array([[20.,22.],[80.,22.]]), "c", "d")}
     assert N.widening_clearance(net, edges)[sec.edge_id][0] == pytest.approx(1.75)
+
+
+def test_equal_clearance_keeps_alignment_between_parallel_roads():
+    from dataclasses import replace
+    from types import SimpleNamespace
+    sec = N.EdgeSection("w1:a-b", "primary", "G", True, 2, 2, 0, 3.0, .25, 6.5,
+                        "measured", "road_asphalt", False, 0, False, None, None, None)
+    secs = [replace(sec, edge_id=f"w{i}:a-b", provenance={}) for i in range(3)]
+    net = SimpleNamespace(sections={s.edge_id:s for s in secs})
+    edges = {s.edge_id: ({}, np.array([[0., y],[100.,y]]), str(i), str(i+10))
+             for i,(s,y) in enumerate(zip(secs,[-20.,0.,20.]))}
+    N.gameplay_widen(net,.25,edges)
+    assert secs[1].width == 7.0
+    assert secs[1].center_offset == 0.0
+
+
+@pytest.mark.parametrize("public,ring,compact,close", [(False,False,False,False), (True,False,False,False),
+                                                     (False,True,False,False), (False,False,True,False),
+                                                     (False,False,False,True)])
+def test_separate_service_tees_checks_whole_groups_and_physical_spacing(public,ring,compact,close):
+    from types import SimpleNamespace as NS
+    from roads import junctions as J
+    private = NS(cls="D",compact=None)
+    protected = NS(cls="L" if public else "D",compact={} if compact else None)
+    link = NS(length=30.0,hw=np.array([2.75]),sec_idx=np.array([0]),roundabout=False)
+    # Node c is already absorbed into group a and is not an endpoint of the connector.
+    branch = NS(hw=np.array([2.75]),sec_idx=np.array([1]),roundabout=ring)
+    net = NS(sec_list=[private,protected],nodes={"a":{"xy":np.array([0.,0.])},
+             "b":{"xy":np.array([5. if close else 20.,0.])},"c":{"xy":np.array([0.,1.])}})
+    ends = {"a":[(link,"a")],"b":[(link,"b")],"c":[(branch,"a")]}
+    assert J._service_tees_fit(net,link,(["a","c"],["b"]),ends) == (not (public or ring or compact or close))
+
+
+def test_parking_tees_keep_their_connector_and_both_directions():
+    from roads import junctions as J
+    from shapely.geometry import Polygon
+    net = _net("bialystok-industrial-c",.25)
+    js = J.build_junctions(net,[])
+    a = next(j for j in js if "n4103450295" in j.nodes)
+    b = next(j for j in js if "n4332859780" in j.nodes)
+    assert a is not b
+    connector = next(c for c in net.chains if set((c.node_a,c.node_b)) == {"n4103450295","n4332859780"})
+    assert not connector.meta.get("absorbed")
+    assert connector.t_a + connector.t_b < connector.length
+    assert all(Polygon([p for p,tag in j.boundary]).is_valid for j in (a,b))
+    # Each approach enters its own local junction; there is no long cubic shortcut across both tees.
+    spur = "c:w435369082:4103450295-4332859784"
+    approach = "c:w408409090:4103450291-4332859780"
+    assert not any({spur,approach} <= {arm.chain.id for arm in j.arms} for j in js)
