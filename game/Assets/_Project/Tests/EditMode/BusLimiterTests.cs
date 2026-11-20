@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Game.Tests
 {
-    /// <summary>ADR 0312: look-ahead peak limiter of the listener bus - transparent under the ceiling, no sample over it,
+    /// <summary>ADR 0313: look-ahead peak limiter of the listener bus - transparent under the ceiling, no sample over it,
     /// no gain step (click).</summary>
     public sealed class BusLimiterTests
     {

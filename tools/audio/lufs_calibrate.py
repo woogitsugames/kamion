@@ -1,6 +1,6 @@
-"""D92 / ADR 0312: cab loudness calibration from Windows player captures.
+"""D92 / ADR 0313: cab loudness calibration from Windows player captures.
 
-The player records the listener mix after the cab bus gain (``-audio_capture``, ADR 0286; ``CabinBusFilter``, ADR 0312).
+The player records the listener mix after the cab bus gain (``-audio_capture``, ADR 0286; ``CabinBusFilter``, ADR 0313).
 This script measures a capture segment (BS.1770-4 via ``pc_capture.measure``), cross-checks it with ffmpeg's ``ebur128``
 filter when ffmpeg is on PATH, and prints the gain that puts the segment on the target:
 

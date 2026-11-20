@@ -1,16 +1,16 @@
-# audio-lufs-s24 — STATUS (D92: kabina −18 LUFS)
+# audio-lufs-s24 — STATUS (D92: kabina −18 LUFS) — DONE, czeka na scalenie i odsłuch
 
-Worktree `.claude/worktrees/audio-lufs-s24`, gałąź `audio-lufs-s24`. ADR 0312 (0311 zajęty przez embankment-cli).
+Worktree `.claude/worktrees/audio-lufs-s24`, gałąź `audio-lufs-s24`. **ADR 0313** (0311 zajęty na main ×2, 0312 = drive-feel-s24).
 
-## Kroki
-- [x] Build „przed” (main 83226d958, `-noWorld`, Truck z win-build) → `artifacts/win/before-83226d958/`
-- [x] Pomiar przed (DrivingLab 40 t, kabina): EL straight050 −23,1 / circle50 −26,3 / razem −25,1 LUFS, TP −9,5; synth −22,8 / −24,7 / −24,2, TP −8,3
-- [x] Kod: `Game.Core.CabinLoudness` (EL +7,1 dB, synth +6,2 dB), `Game.Core.BusLimiter` (look-ahead, −1,5 dBFS), `Game.Gameplay.CabinBusFilter`; przechwyt po gainie
-- [x] Build „po” f8176c049 + pomiar: EL razem −17,9 LUFS, TP −3,0 (OK); synth razem −16,5 (poza ±1 — sprawdzam powtarzalność, A/B `-audio_cab_gain_db 0`)
-- [x] EditMode: 1475, 1 fail (RegionSelectTests — katalog regionów, niezwiązany z audio); nowe 13 testów zielone
-- [ ] Powtarzalność synth, ewentualna korekta, straight80 (TP/limiter), chase (zewnątrz bez zmian), ADR 0312, raport
+## Wynik (player Windows, DrivingLab 40 t, kabina, program straight050 + circle50)
+- Przed (main 83226d958): EL −25,1 LUFS, synteza −24,2 / −22,8 / −23,4 (rozrzut przebiegów do 1,2 LU), TP ≤ −8,3
+- Po (7eadff67d, EL +7,1 dB, synteza +4,8 dB): **EL −17,9, synteza −18,3 LUFS**, TP ≤ −2,9 dBTP
+- Kontrole: straight080 kabina −20,8 → −13,7, TP −1,5 (limiter min −0,9 dB); zewnątrz (chase) −28,5 → −28,2 (bez zmian)
+- EditMode 1475: 1 fail niezwiązany (RegionSelectTests, katalog regionów); 13 nowych zielone; pytest 5/5
 
-## Następny krok
+## Następny krok (lider)
 ```
-pwsh tools/audio/lufs_runs.ps1 -Exe artifacts/win/after-f8176c049/Kamion.exe -OutDir artifacts/audio-lufs-s24/ab -Label g0 -Sets synth -Scenarios circle,straight -GainDb 0
+git -C C:\Users\matma\Documents\Claude\kamion merge --no-ff audio-lufs-s24
+pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64
 ```
+Odsłuch właściciela: `artifacts/audio-lufs-s24/final/f1-*/capture.wav` (main).

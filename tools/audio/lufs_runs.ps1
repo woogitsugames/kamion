@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-  D92 / ADR 0312: cab loudness measurement runs of a Windows player (DrivingLab, autopilot, 40 t combination).
+  D92 / ADR 0313: cab loudness measurement runs of a Windows player (DrivingLab, autopilot, 40 t combination).
 .DESCRIPTION
   Runs the player once per (sound set x scenario), records the listener mix (-audio_capture, ADR 0286; after the cab
-  bus gain of ADR 0312) and measures it with pc_capture.py (BS.1770-4) + lufs_calibrate.py (ffmpeg ebur128 cross-check).
+  bus gain of ADR 0313) and measures it with pc_capture.py (BS.1770-4) + lufs_calibrate.py (ffmpeg ebur128 cross-check).
   Scenarios:
     straight = autopilot straight080 -speed 50: idle (settle), full-throttle launch 0 -> 50 km/h, hold 50, emergency stop,
                idle until quit. THE calibration scenario of D92 (whole capture integrated).
@@ -14,7 +14,7 @@
   (capture.wav, player.log, *_report.json, *_spectrogram.png, *_calib.json).
 .EXAMPLE
   pwsh tools/audio/lufs_runs.ps1 -Exe artifacts/win/before/Kamion.exe -OutDir artifacts/audio-lufs-s24/before -Label before
-  pwsh tools/audio/lufs_runs.ps1 -Exe ... -Label a0 -GainDb 0       # -audio_cab_gain_db override (A/B, ADR 0312)
+  pwsh tools/audio/lufs_runs.ps1 -Exe ... -Label a0 -GainDb 0       # -audio_cab_gain_db override (A/B, ADR 0313)
 #>
 param(
     [Parameter(Mandatory)][string]$Exe,

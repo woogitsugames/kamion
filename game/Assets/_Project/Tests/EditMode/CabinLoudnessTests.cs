@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Game.Tests
 {
     /// <summary>
-    /// D92 / ADR 0312: cab loudness bus. The exterior keeps unity gain (D92: exterior unchanged), the cab gets the measured
+    /// D92 / ADR 0313: cab loudness bus. The exterior keeps unity gain (D92: exterior unchanged), the cab gets the measured
     /// calibration gain, the ramp inside a DSP block is continuous (no click on a view change) and a unity gain is a
     /// bit-exact pass-through.
     /// </summary>

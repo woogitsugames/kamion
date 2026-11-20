@@ -1,4 +1,4 @@
-"""ADR 0312: cab loudness calibration decision (lufs_calibrate.plan) and BS.1770 level of a known signal."""
+"""ADR 0313: cab loudness calibration decision (lufs_calibrate.plan) and BS.1770 level of a known signal."""
 import numpy as np
 
 import lufs_calibrate

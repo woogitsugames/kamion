@@ -84,7 +84,7 @@ namespace TruckSim.Audio
         static volatile bool s_Recording;
         static GameObject s_BusTap;
 
-        /// <summary>ADR 0312: a listener bus filter (cab gain) on <paramref name="listenerObject"/> pushes the mix itself,
+        /// <summary>ADR 0313: a listener bus filter (cab gain) on <paramref name="listenerObject"/> pushes the mix itself,
         /// after its gain; the capture then adds no tap of its own on that object (it would record before the gain).</summary>
         public static void SetBusTap(GameObject listenerObject) => s_BusTap = listenerObject;
 
