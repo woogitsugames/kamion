@@ -207,3 +207,28 @@
 - Niezależny przegląd świeżego C: PASS2/2/32/trasa1, brak parkingu435369082 w przypadkach.
 - Dalej: Get-Content artifacts/road-widen-s24/rebuild-g3.log -Tail 8;
   po statusie0 automatyczny combo C/Knyszyn i pytest (validate-g3.ps1). Unity nie uruchamiano.
+
+## Komendy odtworzenia G3 (tylko ten worktree, bez Unity)
+Ciężką sekwencję uruchomiono ukrytym Start-Process pwsh, pod lease heavy road-widen-s24; log sprawdzany w trakcie.
+Wrapper lokalny: `pwsh -NoProfile -File artifacts/road-widen-s24/rebuild.ps1 -Regions bialystok-industrial-c,knyszyn -Tag g3 -Fidelity -HeavySlots 4`.
+Równoważna sekwencja (każda komenda dopiero po sukcesie poprzedniej):
+```powershell
+uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+uv run --project tools/worldgen python -u scripts/export-route.py --region bialystok-industrial-c
+uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region knyszyn
+uv run --project tools/worldgen python -u scripts/export-route.py --region knyszyn
+uv run --project tools/worldgen python -u tools/worldgen/fidelity/run.py --region bialystok-industrial-c
+uv run --project tools/worldgen python -u tools/worldgen/streaming/route_links.py
+uv run --project tools/worldgen python -u tools/worldgen/qa/combo_lane_check.py --tiles bialystok-industrial-c --no-free-links --out artifacts/road-widen-s24/after/geometry-g3-c.json
+uv run --project tools/worldgen python -u tools/worldgen/qa/combo_lane_check.py --tiles knyszyn --swing --dump-tile knyszyn --out artifacts/road-widen-s24/after/geometry-g3-knyszyn.json
+uv run --project tools/worldgen python -m pytest -q tests/gis/test_road_fidelity.py tests/gis/test_road_consistency.py tests/gis/test_road_widen_0306.py
+```
+Combo zwraca niezero również dla znanych zgłoszeń poza dwoma wymaganymi manewrami ronda; wynik należy odczytać per piece.
+Fidelity i road_consistency mają własne raporty w Data/Regions/<region>/generated; consistency uruchamia build_world.
+
+## 20.11 13:04 — G3 fidelity zakończone
+- C: gen_islands_absent_on_ortho przy trasie1→0, lane_into_island_generator_bug0, lanes mismatch0.
+  axis p95 .044→.044m; edge p95 1.625→2.032m (pogorszenie, w niezmienionym ratchecie2.36m).
+- Obejrzano świeży11_dk8.jpg: brak podstaw do globalnego0; mały absentN120 pozostaje poza pasmem trasy.
+  Referencja sheet0.25m2024 i progi niezmienione. Wszystkie pięć celów C osiągnięte.
+- Dalej: route_links→combo→pytest, logi artifacts/road-widen-s24/{rebuild-g3,combo-g3-c,combo-g3-knyszyn,pytest-g3}.log.

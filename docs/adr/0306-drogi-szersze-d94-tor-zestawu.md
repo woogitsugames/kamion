@@ -63,17 +63,20 @@ prawdziwy krawężnik wewnątrz przejazdu nadal jest wykrywany. Odrzucony protot
 
 ## Walidacja G3
 
-W toku: build_world + export-route C i Knyszyn, fidelity C, route_links, road_consistency,
-combo_lane_check C/Knyszyn i trzy wymagane moduły pytest. Kod c06c16ea2. Bez edytora Unity.
+Zakończone build_world + export-route C i Knyszyn, fidelity C i road_consistency.
+W toku route_links, combo_lane_check C/Knyszyn i trzy wymagane moduły pytest. Kod c06c16ea2. Bez edytora Unity.
 Niezależna recenzja offline: docs/reports/visual/2026-11-20-road-widen-geometry.md.
 
-| C | przed (r7) | cel |
-|---|---:|---:|
-| fidelity absent_on_ortho przy trasie |1|≤1, cel0|
-| marking_off_carriageway |6|≤3|
-| obstacle_in_lane |3|≤2|
-| lane_blind_end na trasie |3|≤1|
-| lane_blind_end cały kafel |45|≤55|
+| C | przed (r7) | G3 | cel |
+|---|---:|---:|---:|
+| fidelity absent_on_ortho przy trasie |1|0|≤1, cel0|
+| marking_off_carriageway |6|2|≤3|
+| obstacle_in_lane |3|2|≤2|
+| lane_blind_end na trasie |3|1|≤1|
+| lane_blind_end cały kafel |45|32|≤55|
+
+G3 fidelity: oś p95 0,044→0,044 m; krawędź p95 1,625→2,032 m (pogorszenie, nadal poniżej istniejącego ratchetu2,36 m).
+Knyszyn road_consistency: G2b blind7/obstacle6/trasa1→G3 3/5/0.
 
 G2b przed korektą QA/dystansu: wyspy0, marking0, obstacle2, blind41, trasa2;
 43passed/1failed/1xfailed. Jedyna porażka: nieistniejący cel krótkiego ramienia opisany wyżej.
