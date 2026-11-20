@@ -1,9 +1,10 @@
 {
  "by_source": {
-  "skirt:path_asphalt": 2,
-  "skirt:yard_asphalt": 9
+  "skirt:path_asphalt": 3,
+  "skirt:yard_asphalt": 8,
+  "skirt:yard_slabs": 1
  },
- "count": 11,
+ "count": 12,
  "max_m": 0.349,
  "p99_m": 0.349,
  "skirt_area": [
@@ -20,7 +21,7 @@
   },
   {
    "e": 269.0,
-   "exposed_m2": 0.188,
+   "exposed_m2": 0.189,
    "mat": "yard_asphalt",
    "max_h": 0.349,
    "n": 903.8,
@@ -31,7 +32,7 @@
   },
   {
    "e": 165.9,
-   "exposed_m2": 0.175,
+   "exposed_m2": 0.174,
    "mat": "yard_asphalt",
    "max_h": 0.326,
    "n": 914.5,
@@ -55,22 +56,22 @@
    "e": 611.6,
    "exposed_m2": 0.078,
    "mat": "yard_asphalt",
-   "max_h": 0.318,
+   "max_h": 0.317,
    "n": 665.8,
    "points": 2,
-   "run_m": 0.917,
+   "run_m": 0.916,
    "src": "osm:way/431050809:0#0:edge",
    "visible": true
   },
   {
-   "e": 523.8,
-   "exposed_m2": 0.069,
-   "mat": "yard_asphalt",
-   "max_h": 0.306,
-   "n": 652.1,
+   "e": -91.8,
+   "exposed_m2": 0.066,
+   "mat": "yard_slabs",
+   "max_h": 0.281,
+   "n": 910.7,
    "points": 1,
-   "run_m": 0.914,
-   "src": "osm:way/431050809:0#1:edge",
+   "run_m": 1.686,
+   "src": "bdot:2BE4B432-6E61-1BF0-E053-CC2BA8C0D140:0#0:edge",
    "visible": true
   },
   {
@@ -83,20 +84,31 @@
    "run_m": 0.851,
    "src": "bdot:e45bc697-6c66-4508-8e92-b38699141851:0#0:edge",
    "visible": true
+  },
+  {
+   "e": 984.0,
+   "exposed_m2": 0.045,
+   "mat": "path_asphalt",
+   "max_h": 0.345,
+   "n": 921.5,
+   "points": 1,
+   "run_m": 1.096,
+   "src": "bdot:2BE4B432-F844-1BF0-E053-CC2BA8C0D140:0#1:edge",
+   "visible": true
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 126,
+ "thin_steep_faces_skipped": 123,
  "thresh_m": 0.15,
  "verge_strips": {
-  "max_m": 0.531,
-  "skirt": 8,
-  "steep_grass": 137,
+  "max_m": 0.516,
+  "skirt": 14,
+  "steep_grass": 146,
   "worst": [
    "steep_grass",
-   "c:w1281916350:11896557655-11896557656:L:vg",
-   656.8,
-   802.3
+   "j:n11896581796:corner2:vg",
+   784.7,
+   879.8
   ]
  },
  "worst": [
@@ -107,6 +119,14 @@
    "mat": "yard_asphalt",
    "n": 903.8,
    "src": "osm:way/325708383:0#0:edge"
+  },
+  {
+   "e": 984.0,
+   "h": 0.345,
+   "kind": "skirt",
+   "mat": "path_asphalt",
+   "n": 921.5,
+   "src": "bdot:2BE4B432-F844-1BF0-E053-CC2BA8C0D140:0#1:edge"
   },
   {
    "e": 211.3,
@@ -134,7 +154,7 @@
   },
   {
    "e": 611.2,
-   "h": 0.318,
+   "h": 0.317,
    "kind": "skirt",
    "mat": "yard_asphalt",
    "n": 665.6,
@@ -157,28 +177,20 @@
    "src": "bdot:e45bc697-6c66-4508-8e92-b38699141851:0#0:edge"
   },
   {
-   "e": 611.6,
-   "h": 0.31,
-   "kind": "skirt",
-   "mat": "yard_asphalt",
-   "n": 665.8,
-   "src": "osm:way/431050809:0#0:edge"
-  },
-  {
-   "e": 523.8,
-   "h": 0.306,
-   "kind": "skirt",
-   "mat": "yard_asphalt",
-   "n": 652.1,
-   "src": "osm:way/431050809:0#1:edge"
-  },
-  {
    "e": 164.9,
-   "h": 0.305,
+   "h": 0.31,
    "kind": "skirt",
    "mat": "yard_asphalt",
    "n": 915.7,
    "src": "osm:way/325708381:0#0:edge"
+  },
+  {
+   "e": 611.6,
+   "h": 0.309,
+   "kind": "skirt",
+   "mat": "yard_asphalt",
+   "n": 665.8,
+   "src": "osm:way/431050809:0#0:edge"
   },
   {
    "e": 217.7,
@@ -187,6 +199,14 @@
    "mat": "path_asphalt",
    "n": 811.4,
    "src": "bdot:ee5ea8a7-195c-11ed-a9a5-b8ca3aa2e5c2:0#0:edge"
+  },
+  {
+   "e": -91.8,
+   "h": 0.281,
+   "kind": "skirt",
+   "mat": "yard_slabs",
+   "n": 910.7,
+   "src": "bdot:2BE4B432-6E61-1BF0-E053-CC2BA8C0D140:0#0:edge"
   }
  ]
 }
