@@ -6,3 +6,5 @@
 - NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-krywlany --dry-run`
 - Krok 1b (gotowe): `Data/Streaming/route_links.yaml` — link `dojlidy-ciolkowskiego-corner-to-krywlany` (narożnik Dojlid 87 m, head_from mickiewicza, tail_to krywlany) + korytarz `bialystok-dojlidy-dk19` = [... mickiewicza, dojlidy, krywlany, dojlidy] (mickiewicza|krywlany to tylko narożnik, nie krawędź).
 - Ingest dry-run #1: GUGiK WFS (indeks arkuszy) zerwał połączenie (RemoteDisconnected) — ponawiam. NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-krywlany --dry-run` (log artifacts/logs/krywlany-ingest-dry2.log)
+- 2026-11-20: GUGiK WFS (mapy.geoportal.gov.pl Skorowidze) nie odpowiada (dry-run #2 ReadTimeout, curl 000 po 10 s); opendata.geoportal.gov.pl OK. Dodane ponowienia w `gugik_index.get_feature` (5×). W tle `artifacts/krywlany-s24/run/ingest-wait.sh` (sonda co 3 min do 2 h → ingest; log `artifacts/krywlany-s24/run/ingest.log`, koniec = linia INGEST_EXIT).
+- NASTĘPNY KROK (po INGEST_EXIT=0): `uv run tools/worldgen/build_region.py --region bialystok-krywlany`
