@@ -188,6 +188,16 @@ links:
     swing:
       - {near_epsg2180: [778546.8, 595529.6], left_m: 2.0, half_m: 30.0}
     note: "C route start -> DK8/DK19 Al. Tysiaclecia northbound to the seam with dk8-wasilkow-01"
+  # ADR 0315 after D94 (road-widen merge): the dk8-wasilkow-01 route ends 0.31 m beside the dk8-wasilkow-02 route entry
+  # (lane centres of the two builds on the DK8 northbound seam, route_links corridor join); like s8-03-to-s8-04 the link
+  # replaces the 01 route with the same path and shifts its last BLEND_M m onto the 02 route start.
+  - id: wasilkow-01-to-02
+    tile: dk8-wasilkow-01
+    destination: wasilkow
+    replaces_route: dk8-wasilkow-01
+    end_epsg2180: [777135.11, 599295.0]   # boundary node of way 876126468 (DK8 northbound) on the 01 | 02 seam
+    tail_to: route:dk8-wasilkow-02
+    note: "DK8 northbound through dk8-wasilkow-01, lane shift onto the dk8-wasilkow-02 route entry before the seam"
 # Driving corridors as ordered tile lists (Bialystok -> Knyszyn -> Tykocin, owner request s23). The generator keeps the
 # prefix of tiles present in Data/Regions (main: up to dw671-tykocin-01; the ring branch world2-s23 adds
 # dw671-tykocin-02..09 and tykocin) and checks every consecutive pair: edge neighbours (N/E/S/W) and a route join
