@@ -1,0 +1,298 @@
+{
+ "schema": "truck-sim-pl/dk8-north-plan/1",
+ "agent": "s8-north-s24",
+ "source": "Data/SourceManifests/osm-geofabrik-podlaskie.json (pinned pbf) + Data/Admin/powiaty_prg.geojson",
+ "lattice": {
+  "x0": 776971.0,
+  "y0": 595199.0,
+  "tile_m": 2048.0
+ },
+ "nmt_pin": "2025",
+ "tiles": [
+  {
+   "id": "dk8-wasilkow-01",
+   "ij": [
+    0,
+    1
+   ],
+   "title": "DK8/DK19 Al. Tysiąclecia Państwa Polskiego na północ od kafla C, wylot z Białegostoku (Wysoki Stoczek, Dziesięciny)",
+   "bbox": [
+    776971.0,
+    597247.0,
+    779019.0,
+    599295.0
+   ],
+   "origin": [
+    777995.0,
+    598271.0
+   ],
+   "powiaty": [
+    "2002",
+    "2061"
+   ],
+   "powiat_shares": {
+    "2002": 0.578,
+    "2061": 0.422
+   },
+   "entry": {
+    "edge": "S",
+    "crossing": {
+     "x": 777138.5,
+     "y": 597247.0,
+     "osm_way": 882366263,
+     "ref": "8;19",
+     "oneway": "yes",
+     "lanes": "2",
+     "into_tile": true
+    },
+    "candidates": [
+     {
+      "x": 777138.5,
+      "y": 597247.0,
+      "osm_way": 882366263,
+      "ref": "8;19",
+      "oneway": "yes",
+      "lanes": "2",
+      "into_tile": true
+     }
+    ]
+   },
+   "exit": {
+    "edge": "N",
+    "crossing": {
+     "x": 777135.1,
+     "y": 599295.0,
+     "osm_way": 876126468,
+     "ref": "8;19",
+     "oneway": "yes",
+     "lanes": "2",
+     "into_tile": false
+    },
+    "candidates": [
+     {
+      "x": 777135.1,
+      "y": 599295.0,
+      "osm_way": 876126468,
+      "ref": "8;19",
+      "oneway": "yes",
+      "lanes": "2",
+      "into_tile": false
+     }
+    ],
+    "joins_next": true
+   }
+  },
+  {
+   "id": "dk8-wasilkow-02",
+   "ij": [
+    0,
+    2
+   ],
+   "title": "DK8/DK19 Białostocka — Wasilków południe, węzeł Jurowiecka / Wasilkowska",
+   "bbox": [
+    776971.0,
+    599295.0,
+    779019.0,
+    601343.0
+   ],
+   "origin": [
+    777995.0,
+    600319.0
+   ],
+   "powiaty": [
+    "2002"
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "entry": {
+    "edge": "S",
+    "crossing": {
+     "x": 777135.1,
+     "y": 599295.0,
+     "osm_way": 876126468,
+     "ref": "8;19",
+     "oneway": "yes",
+     "lanes": "2",
+     "into_tile": true
+    },
+    "candidates": [
+     {
+      "x": 777135.1,
+      "y": 599295.0,
+      "osm_way": 876126468,
+      "ref": "8;19",
+      "oneway": "yes",
+      "lanes": "2",
+      "into_tile": true
+     }
+    ]
+   },
+   "exit": {
+    "edge": "N",
+    "crossing": {
+     "x": 777286.3,
+     "y": 601343.0,
+     "osm_way": 703487195,
+     "ref": "8;19",
+     "oneway": "yes",
+     "lanes": "2",
+     "into_tile": false
+    },
+    "candidates": [
+     {
+      "x": 777286.3,
+      "y": 601343.0,
+      "osm_way": 703487195,
+      "ref": "8;19",
+      "oneway": "yes",
+      "lanes": "2",
+      "into_tile": false
+     }
+    ],
+    "joins_next": true
+   }
+  },
+  {
+   "id": "dk8-wasilkow-03",
+   "ij": [
+    0,
+    3
+   ],
+   "title": "Węzeł Wasilków — rozdział DK8 (Korycin, Augustów) i DK19 (Sokółka)",
+   "bbox": [
+    776971.0,
+    601343.0,
+    779019.0,
+    603391.0
+   ],
+   "origin": [
+    777995.0,
+    602367.0
+   ],
+   "powiaty": [
+    "2002"
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "entry": {
+    "edge": "S",
+    "crossing": {
+     "x": 777286.3,
+     "y": 601343.0,
+     "osm_way": 703487195,
+     "ref": "8;19",
+     "oneway": "yes",
+     "lanes": "2",
+     "into_tile": true
+    },
+    "candidates": [
+     {
+      "x": 777286.3,
+      "y": 601343.0,
+      "osm_way": 703487195,
+      "ref": "8;19",
+      "oneway": "yes",
+      "lanes": "2",
+      "into_tile": true
+     }
+    ]
+   },
+   "exit": {
+    "edge": "N",
+    "crossing": {
+     "x": 777296.7,
+     "y": 603391.0,
+     "osm_way": 100913073,
+     "ref": "8",
+     "oneway": "yes",
+     "lanes": "2",
+     "into_tile": false
+    },
+    "candidates": [
+     {
+      "x": 777296.7,
+      "y": 603391.0,
+      "osm_way": 100913073,
+      "ref": "8",
+      "oneway": "yes",
+      "lanes": "2",
+      "into_tile": false
+     }
+    ],
+    "joins_next": true
+   }
+  },
+  {
+   "id": "dk8-korycin-01",
+   "ij": [
+    0,
+    4
+   ],
+   "title": "DK8 za Wasilkowem w stronę Korycina — wyjazd na zachodni szew",
+   "bbox": [
+    776971.0,
+    603391.0,
+    779019.0,
+    605439.0
+   ],
+   "origin": [
+    777995.0,
+    604415.0
+   ],
+   "powiaty": [
+    "2002"
+   ],
+   "powiat_shares": {
+    "2002": 1.0
+   },
+   "entry": {
+    "edge": "S",
+    "crossing": {
+     "x": 777296.7,
+     "y": 603391.0,
+     "osm_way": 100913073,
+     "ref": "8",
+     "oneway": "yes",
+     "lanes": "2",
+     "into_tile": true
+    },
+    "candidates": [
+     {
+      "x": 777296.7,
+      "y": 603391.0,
+      "osm_way": 100913073,
+      "ref": "8",
+      "oneway": "yes",
+      "lanes": "2",
+      "into_tile": true
+     }
+    ]
+   },
+   "exit": {
+    "edge": "W",
+    "crossing": {
+     "x": 776971.0,
+     "y": 604291.6,
+     "osm_way": 808947563,
+     "ref": "8",
+     "oneway": NaN,
+     "lanes": "2",
+     "into_tile": true
+    },
+    "candidates": [
+     {
+      "x": 776971.0,
+      "y": 604291.6,
+      "osm_way": 808947563,
+      "ref": "8",
+      "oneway": NaN,
+      "lanes": "2",
+      "into_tile": true
+     }
+    ]
+   }
+  }
+ ]
+}

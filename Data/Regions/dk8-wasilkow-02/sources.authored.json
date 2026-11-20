@@ -1,0 +1,8 @@
+{
+ "provenance": "authored_override (s8-north-s24, mechanism of ADR 0209/0212): source pins of region dk8-wasilkow-02, read by ingest.py and build_region.py",
+ "pins": {
+  "nmt_year": "2025"
+ },
+ "reason": "The DK8 seam chain starts at bialystok-industrial-c, built from NMT 2025 (gugik-nmt-2025-bialystok-industrial-c); the same series on every tile of the chain keeps the terrain of the shared edges identical (ADR 0209).",
+ "verify": "ingest.py exits with 'no NMT 1 m series fully covers the tile' when the 2025 series does not cover the tile - then pin the year of the neighbour on the entry seam"
+}

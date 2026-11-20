@@ -1,0 +1,13 @@
+{
+ "provenance": "authored_override (s8-north-s24): control route for cameras/QA = the DK8 through road",
+ "description": "DK8 carriageway in driving direction from the S tile edge (OSM way 100913073) to the W tile edge (OSM way 808947563); points = edge crossings of the pinned pbf (tools/worldgen/qa/dk8_north_plan.py); build_world snaps them to the nearest graph node.",
+ "start_epsg2180": [
+  777296.7,
+  603391.0
+ ],
+ "end_epsg2180": [
+  776971.0,
+  604291.6
+ ],
+ "confidence": "high (crossings computed from the pinned pbf used by build_region.py)"
+}
