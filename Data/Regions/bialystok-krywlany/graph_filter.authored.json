@@ -1,0 +1,10 @@
+{
+ "provenance": "authored_override (ADR 0204 rule, ADR 0314): ways left out of the drivable road graph of this region",
+ "drop_service": [],
+ "drop_osm_ways": [
+  251389617,
+  271890047
+ ],
+ "reason": "Import r1 aborted: 'world edge: 1 closure rows overlap after ResolveClosures (first: WitoldaSławińskiego x WitoldaSławińskiego, 0,00 m)'. tools/worldgen/qa/edge_closures_check.py bialystok-krywlany reported two NOT CUT pairs on the west edge (no neighbour tile there): (1) service 211179100 x service 251389617 at EPSG:2180 x 776971, y 589881.3 / 589891.0 (gap 0.07 m, heading diff 22 deg) - 251389617 dropped; (2) Witolda Sławińskiego (secondary) 257258194 x 271890047 at y 589770.1 / 589753.7: the street dips one node (2286418394) into the tile and leaves it again 16 m further, next to the junction with primary 251388401 - the 8.4 m piece 271890047 dropped, 257258194 stays as a 22.8 m stub. All on no route (the control route is Ciolkowskiego / Dywizjonu 303 at the east edge).",
+ "verify": "tools/worldgen/qa/edge_closures_check.py bialystok-krywlany: no 'NOT CUT' / 'SAME WAY'; import-region exit 0"
+}
