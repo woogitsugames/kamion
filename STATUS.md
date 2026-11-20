@@ -40,3 +40,8 @@
 - 81/81 testów bez pełnej generacji kafli PASS; NMT Knyszyn/Knyszyn-w 4/4 PASS (SHA wejść zgodne), dodatkowy test chowania zebry pod nawierzchnią 1/1 PASS.
 - Płaski Kleeberga: zachowane 2610 odcinków, wycięte 38; porównanie PNG obejrzane. Nie odtworzono overlap zebr ani ich schowania pod drogą — konkretny artefakt t=2560 UNVERIFIED, log wskazuje jeszcze knyszyn.
 - NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_drive_s24_surface_safety.py -q -s` — zakończyć bieżący przebieg płaski i NMT Kleeberga, uzupełnić docs/reports/guardrail-zebra-cli-s24.md, commit bez push.
+
+# STATUS embankment-cli — s24 (WIP)
+- Usunięto metrykę schodkowego obrysu w konformowaniu skarpy: obrys wektorowy + interpolacja wysokości w pasie 16 m. Pylony far-field: otwarta kratownica, 420 tris/słup, bez nowego materiału.
+- Nowe testy syntetyczne 18/18 PASS; review w toku. Unity i build_world nieuruchamiane, zmiany tylko w tym worktree, bez push.
+- NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_embankment_pylons_s24.py tests/gis/test_unit_meshing_chunks.py tests/gis/test_terrain_walls.py -q`; uzupełnić walidację końcowej skarpy i podgląd offline.

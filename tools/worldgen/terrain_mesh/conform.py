@@ -167,7 +167,40 @@ SOFT_UNDER = 0.04          # m: terrain just under grass verges / island grass (
 SOFT_CLEAR_CELLS = 2       # ... only where no hard surface (carriageway, kerb, paving) is within this many nodes
 
 
-def conform(hf, road, mask, soft=None):
+def edge_distances(hf, mask, raster_dist, footprint, band_m=16.0):
+    """Sub-cell distances to the actual surface outline, only in the roadside band.
+
+    EDT measures from *grid nodes* inside the road. On a diagonal this moves the
+    apparent edge by up to a cell at every row, imprinting teeth into the batter.
+    Index individual outline segments, so querying a long road is still local.
+    The far terrain keeps the inexpensive EDT and the road mask is never changed.
+    """
+    import shapely
+
+    if footprint.is_empty:
+        return raster_dist
+    lines = shapely.get_parts(footprint.boundary)
+    segments = []
+    for line in lines:
+        xy = shapely.get_coordinates(line)
+        segments.extend(np.stack([xy[:-1], xy[1:]], axis=1))
+    if not segments:
+        return raster_dist
+    tree = shapely.STRtree(shapely.linestrings(np.asarray(segments)))
+    jj, ii = np.where(~mask & (raster_dist <= band_m))
+    out = raster_dist.copy()
+    for start in range(0, len(ii), 65536):
+        j, i = jj[start:start + 65536], ii[start:start + 65536]
+        points = shapely.points(hf.x0 + i, hf.y1 - j)
+        _, distances = tree.query_nearest(points, all_matches=False, return_distance=True)
+        # Fade back to the raster metric outside the visible batter to avoid a
+        # discontinuity at the end of this band (WORKING_VALUE: last 4 metres).
+        weight = np.clip((band_m - raster_dist[j, i]) / 4.0, 0.0, 1.0)
+        out[j, i] += weight * (distances - out[j, i])
+    return out
+
+
+def conform(hf, road, mask, soft=None, footprint=None):
     """soft (optional bool grid): footprint nodes covered only by grass verge strips. Those that are at least
     SOFT_CLEAR_CELLS nodes from any hard surface get the terrain SOFT_UNDER under the grass instead of
     TERRAIN_UNDER_ROAD: the coarse terrain grid (1-2 m) used to dip 0.35 m inside narrow kerbed islands and behind
@@ -178,6 +211,13 @@ def conform(hf, road, mask, soft=None):
         return out, np.zeros_like(nmt)
     d, (jj, ii) = ndimage.distance_transform_edt(~mask, return_indices=True)
     zedge = road[jj, ii]
+    if footprint is not None and not footprint.is_empty:
+        d = edge_distances(hf, mask, d, footprint)
+        # Interpolate the nearest-node height extension too: changing which
+        # road node is closest must not create a vertical ridge along the slope.
+        sm_edge = ndimage.gaussian_filter(zedge, 0.8)
+        weight = np.where(mask, 0.0, np.clip((16.0 - d) / 4.0, 0.0, 1.0))
+        zedge += weight * (sm_edge - zedge)
     k = 1.0 / S.EMBANKMENT_SLOPE
     run = np.maximum(0.0, d - S.BERM_W) * k
     lo = zedge - 0.03 - run
