@@ -88,6 +88,7 @@ WORLD_MEMORY_LOW_MB = {
     "bialystok-bojary": (252.4, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
     "bialystok-mickiewicza": (232.8, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
     "bialystok-wygoda": (189.0, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
+    "bialystok-krywlany": (105.9, "ADR 0314 tile 4, import krywlany-s24 r3 2026-11-20 (Win64)"),
 }
 # WORLD_MEMORY High [MB] per region, ADR 0234 §7 table (ESTIMATED; same imports as the Low values above).
 WORLD_MEMORY_HIGH_MB = {
@@ -140,6 +141,7 @@ WORLD_MEMORY_HIGH_MB = {
     "bialystok-bojary": (622.4, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
     "bialystok-mickiewicza": (559.1, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
     "bialystok-wygoda": (491.6, "D81 DK19 tile, import dk19-tiles-s24 r4 2026-11-19 (Win64)"),
+    "bialystok-krywlany": (254.0, "ADR 0314 tile 4, import krywlany-s24 r3 2026-11-20 (Win64)"),
 }
 UNKNOWN_MEMORY_MB = 252.4   # a region without a measurement counts as the heaviest measured one (conservative; bojary since D81)
 UNKNOWN_MEMORY_HIGH_MB = 622.4   # same rule for High: the heaviest measured High import (bojary since D81; was Maczka 420.4)
