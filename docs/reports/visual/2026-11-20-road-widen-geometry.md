@@ -176,3 +176,23 @@ Ponownie obejrzany wcześniejszy dowód `parking-bounded-target-0.5.png` jest zg
 i boczne próbki pozostają wewnątrz istniejącego przejazdu. To wcześniejszy rzut diagnostyczny, nie nowy render G3;
 aktualny raport klasyfikacji gotowego kafla dostarcza świeżego potwierdzenia. Nie deklaruje się na tym etapie PASS
 fidelity ani ronda Knyszyn — ich końcowe przebiegi jeszcze trwają.
+
+## G3 — końcowe fidelity C i świeży kadr DK8
+
+Niezależnie odczytano aktualny `generated/fidelity_qa.json` i obejrzano świeży
+`artifacts/fidelity-r9/overlays/11_dk8.jpg` (20.11, 13:02:28). Podkład tego kadru to niezmieniony arkusz
+`sheet_0.25_2024-05-27`; wcześniejsze diagnostyczne paski HR służyły osobnemu pomiarowi położenia.
+
+**PASS celu fantomowych wysp przy trasie: 0**, wobec 1 w zapisanej bazie r7. `lane_into_island_generator_bug = 0`,
+liczba pasów zgadza się na wszystkich 25 zweryfikowanych odcinkach. Axis p95 pozostaje 0,044 m.
+Edge p95 wynosi **2,032 m**, na 629 ważnych stronach; względem bazy 1,625 m pogorszył się o **0,407 m**.
+Nie jest to poprawa wierności krawędzi, choć pozostaje poniżej istniejącego ratchetu 2,31 + 0,05 m.
+
+Nie ma globalnego wyniku „0 wysp”. W całym kadrze `11_dk8` pozostaje jeden `absent_on_ortho`:
+59,8 m² przy E -572,37 / N 120,585, odległość od trasy 27,1 m — poza pasem liczonym do wyniku trasy.
+Kadr zawiera też dwa komponenty separatorów `partial` oraz trzy `ortho_islands_missing_in_gen`; nadal występują
+rozbieżności pokrycia nawierzchni i separatorów. Widoczny mały czerwony obszar przy południowym skraju kadru jest
+zgodny z pozostałym przypadkiem poza trasą. Nie deklaruje się perfekcyjnej zgodności całego DK8 z ortofoto.
+
+To zamyka niezależny przegląd raportowanych celów C (road_consistency i wyspy przy trasie), z powyższymi ograniczeniami.
+Nie deklaruje się jeszcze PASS combo/ronda Knyszyn — końcowy wynik oczekuje.

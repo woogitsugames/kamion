@@ -232,3 +232,11 @@ Fidelity i road_consistency mają własne raporty w Data/Regions/<region>/genera
 - Obejrzano świeży11_dk8.jpg: brak podstaw do globalnego0; mały absentN120 pozostaje poza pasmem trasy.
   Referencja sheet0.25m2024 i progi niezmienione. Wszystkie pięć celów C osiągnięte.
 - Dalej: route_links→combo→pytest, logi artifacts/road-widen-s24/{rebuild-g3,combo-g3-c,combo-g3-knyszyn,pytest-g3}.log.
+
+## 20.11 13:06 — zakończona pełna sekwencja przebudowy G3
+- rebuild-g3.status exit=0; heavy lease zwolniony. Walidator rozpoczął combo C→Knyszyn swing→pytest.
+- Zapisujemy świeże QA C/Knyszyn oraz route_start i odpowiadające im route.bytes, żeby raport fidelity
+  miał w gicie wszystkie hashowane wejścia. Pozostałe zastane generated/nav innych kafli pozostają nietknięte.
+- Globalne route_links przeliczono lokalnie do combo; wynik całej sieci pozostaje roboczy do fali regeneracji
+  (dotychczasowy plik zawierał także zmiany innych kafli). Tożsamości korytarzy committed/generated są zgodne.
+- Dalej: Get-Content artifacts/road-widen-s24/validate-g3.status; Get-Content artifacts/road-widen-s24/pytest-g3.log -Tail 12.
