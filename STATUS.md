@@ -107,3 +107,7 @@
   kerb 59 → 0 (przeciwny pas 33 w ulicach Rynku), trasa kontrolna 29 pkt na narożniku SE (swing 0). VQA after3
   (`artifacts/road-widen-s24/vqa-after3`). Przejazd 3 (knyszyn-s route_s 2150 → łącznik DK65→DW671 W, 30 km/h, po rebuild
   playera) w toku (`player.status`).
+- 09:3x: przejazd 3 (build z knyszyn r8; knyszyn-s route_s 2150 → łącznik DK65 → DW671 W, lewo 275°, 30 km/h, stream):
+  0 wyjątków; w strefie ronda (r ≤ 45 m, 1952 próbek) ciągnik i prawe koła naczepy zawsze na asfalcie, ciągnik ≤ 0,85 m od
+  linii łącznika, min 12,6 km/h, przegub maks. 48°; lewe koła naczepy 5,8 s na kostce = fartuch ronda (zaprojektowany).
+  Telemetria `artifacts/road-widen-s24/player_run3_telemetry.csv`.
