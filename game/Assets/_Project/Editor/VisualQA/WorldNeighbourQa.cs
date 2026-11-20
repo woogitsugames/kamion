@@ -14,11 +14,11 @@ namespace Game.Editor.VisualQA
         public static void Prepare(string qualityTier)
         {
             var start = UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>();
+            var graph = Game.World.Streaming.TileGraph.LoadDefault();
             string requested = EditorTools.Arg("-qaNeighbours",
-                start != null && Game.World.Streaming.EdgeClosureRules.NeedsNeighbourContext(start.regionId) ? "knyszyn-w" : "");
+                start != null && Game.World.Streaming.EdgeClosureRules.NeedsNeighbourContext(graph, start.regionId) ? "knyszyn-w" : "");
             if (string.IsNullOrWhiteSpace(requested)) return;
             if (start == null) throw new InvalidOperationException("QA neighbours require an imported world scene");
-            var graph = Game.World.Streaming.TileGraph.LoadDefault();
             int index = graph != null ? graph.IndexOf(start.regionId) : -1;
             if (index < 0) throw new InvalidOperationException("QA start region is missing from tile_graph.json");
             var host = new GameObject("VisualQaNeighbourContext");

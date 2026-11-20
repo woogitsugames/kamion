@@ -637,7 +637,7 @@ def mark_walled_ramps(net, hf: Heightfield) -> list:
         c.meta["walled"] = keep
         if c.side:
             from .network import structure_sides
-            structure_sides(c, keep)
+            structure_sides(c, keep, net)
         # ground at the wall foot (NMT 1.5 m beyond the deck edge cap), per side ("L" = +normal)
         zg = {}
         from .meshing import bridge_cap_w

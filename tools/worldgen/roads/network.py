@@ -29,7 +29,7 @@ SURFACE_MAT = {"asphalt": "road_asphalt", "asphalt_new": "road_asphalt_new", "pa
 SIDEWALK_TAGS = ("sidewalk", "sidewalk:left", "sidewalk:right", "sidewalk:both")   # ADR 0237 D38
 
 # side profile families
-URBAN, ISLAND, RURAL, MEDIAN_RURAL = 0, 1, 2, 3
+URBAN, ISLAND, RURAL, MEDIAN_RURAL, BRIDGE = 0, 1, 2, 3, 4
 WALK_MATS = ["curb_concrete", "sidewalk_paving", "bridge_concrete", "verge_grass", "road_asphalt"]
 FLUSH_FILL_MAX_M = 1.5  # a flush edge strip is at most this wide (the flush mask is dilated 4 m past gap < NOSE_MIN_GAP_M)
 MAT_FLUSH_ROAD = 4      # side `mat` code: flush edge shared with another carriageway -> asphalt, no kerb (ADR 0076)
@@ -1525,7 +1525,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             mat[ssel] = sh_code[side][ssel]
             c.side[side] = {"kind": kind, "walk": walk_d, "median": med_d, "raw": {"h": h, "w": w, "depth": depth},
                             "mat": mat, "verge": verge}
-        structure_sides(c, c.bridge)
+        structure_sides(c, c.bridge, net, (all_tree, all_chains))
     if implied is not None:
         net.implied_sidewalk_m = round(implied_m, 1)     # ADR 0237 D38: metres of sidewalk added by the rule
 
@@ -1612,23 +1612,79 @@ def _side_gap(c, sgn, idx, tree, chains, trims=False, reach=2 * 3.0 + 1.0):
     return out
 
 
-def structure_sides(c: Chain, mask: np.ndarray):
+def _structure_limits(c, mask, net, index=None):
+    """Available extent per edge, shared equally with parallel decks on the same layer.
+
+    Use final axes/widths (including D94), never the pre-widening cross-section. Dense
+    samples and a conservative minimum over the mesh station neighbourhood protect
+    triangles between samples. Overlapping carriageways have no internal raised edge.
+    """
+    chains = list(net.chains) if index is None else index[1]
+    tree = shapely.STRtree([LineString(o.line.p) for o in chains]) if index is None else index[0]
+    from .meshing import bridge_cap_w
+    reach = 2 * (S.BRIDGE_CLEAR_M + S.KERB_TOP_W + bridge_cap_w(c)) + max(float(o.hw.max()) for o in chains)
+    result = {}
+    for side, sgn in (("L", 1), ("R", -1)):
+        gap = np.full(len(c.hw), np.inf)
+        for i in np.flatnonzero(mask):
+            p, normal = c.line.p[i], c.line.n[i] * sgn
+            edge = p + normal * c.hw[i]
+            for k in tree.query(_qbox(Point(*edge), reach)):
+                other = chains[int(k)]
+                if other is c or other.meta.get("absorbed"):
+                    continue
+                s, lat = other.line.project(edge)
+                j = other.idx(s)
+                deck_j = j
+                if not other.bridge[j]:
+                    # The two OSM bridge tags can end a few metres apart. The
+                    # approach of the neighbouring deck is still a live lane.
+                    elevated = np.flatnonzero(other.bridge)
+                    if not len(elevated):
+                        continue
+                    deck_j = elevated[np.argmin(np.abs(other.line.s[elevated] - s))]
+                    if abs(other.line.s[deck_j] - s) > 12.0:
+                        continue
+                if other.section(other.line.s[deck_j], net.sec_list).layer != c.section(c.line.s[i], net.sec_list).layer:
+                    continue
+                if abs(np.dot(c.line.t[i], other.line.t[j])) < 0.9:
+                    continue
+                delta = other.line.point(s) - p
+                if np.dot(delta, normal) <= 0:
+                    continue
+                # Reject projections clamped far beyond the other deck's end.
+                if abs(np.dot(other.line.point(s) - edge, other.line.t[j])) > 1.0:
+                    continue
+                gap[i] = min(gap[i], abs(float(lat)) - float(other.hw_at(s)))
+        radius = int(math.ceil(4.0 / DENSE))
+        gap = np.array([gap[max(0, i - radius):i + radius + 1].min() for i in range(len(gap))])
+        result[side] = np.maximum(0.0, gap / 2 - S.BRIDGE_CLEAR_M)
+    return result
+
+
+def structure_sides(c: Chain, mask: np.ndarray, net=None, index=None):
     """Side profile of deck stations (bridges, and walled ramps once profile.mark_walled_ramps found them):
-    kerb 0.20 + cap 1.50 + fascia = deck thickness, then the per-station values are smoothed (2 m). v3.1 marked
+    asphalt buffer + kerb + cap + fascia. Smooth dimensions (2 m), then constrain
+    the profile to the space between final carriageways in side_params. v3.1 marked
     walled ramps after assign_sides, so they kept the rural shoulder + ditch at deck height (a 2.65 m strip
     instead of the 1.5 m cap, overhanging the on-ramp beside Andersa at Rondo Bieżeństwa)."""
     sig = 2.0 / DENSE
     from . import meshing as _M              # bridge_style overrides (ADR 0117: per-bridge cap width `cap_w`)
     cap_w = _M.bridge_cap_w(c)
+    limits = _structure_limits(c, mask, net, index) if net is not None and mask.any() else None
     for side in ("L", "R"):
         d = c.side[side]
         raw = d["raw"]
-        d["kind"][mask] = URBAN
+        d["kind"][mask] = BRIDGE
         raw["h"][mask] = S.BRIDGE_KERB_H
         raw["w"][mask] = cap_w
         d["mat"][mask] = 2
         raw["depth"][mask] = S.BRIDGE_DECK_THICKNESS + S.BRIDGE_KERB_H
         d["h"], d["w"], d["depth"] = smooth_1d(raw["h"], sig), smooth_1d(raw["w"], sig), smooth_1d(raw["depth"], sig)
+        if limits is not None:
+            old = d.get("structure_limit", np.full(len(c.hw), np.inf))
+            old[mask] = limits[side][mask]
+            d["structure_limit"] = old
 
 
 def walk_mat(mat: int) -> str:
@@ -1642,6 +1698,18 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
     The topology (number of segments) depends only on `kind`, so stations of one family can be
     connected into strips and interpolated.
     """
+    if kind == BRIDGE:
+        if mat == MAT_FLUSH_ROAD:
+            # Same topology as the raised profile; no kerb, cap or fascia inside
+            # a shared carriageway. w is the available flush asphalt extent.
+            return [(0., 0., w, 0., "road_asphalt")] + [(w, 0., w, 0., "road_asphalt")] * 4
+        b, tw = S.BRIDGE_CLEAR_M, S.KERB_TOP_W
+        top = h + S.SIDEWALK_CROSSFALL * w
+        return [(0., 0., b, 0., "road_asphalt"),
+                (b, 0., b, h, "curb_concrete"),
+                (b, h, b + tw, h, "curb_concrete"),
+                (b + tw, h, b + tw + w, top, "bridge_concrete"),
+                (b + tw + w, top, b + tw + w, top - depth, "bridge_concrete")]
     if kind == ISLAND:
         ha = S.KERB_HEIGHT_APRON
         ap = w
@@ -1712,6 +1780,12 @@ def side_shoulder(c: Chain, side: str, s: float):
 def side_params(c: Chain, side: str, s: float) -> tuple:
     d = c.side[side]
     i = int(c.idx(s))
+    if d["kind"][i] == BRIDGE:
+        limit = min(float(d["structure_limit"][i]), float(c.interp(d["structure_limit"], s))) if "structure_limit" in d else np.inf
+        width = min(float(c.interp(d["w"], s)), limit - S.BRIDGE_CLEAR_M - S.KERB_TOP_W)
+        if width < 0.05:
+            return BRIDGE, 0.0, min(limit, FLUSH_FILL_MAX_M), 0.0, MAT_FLUSH_ROAD
+        return BRIDGE, float(c.interp(d["h"], s)), width, float(c.interp(d["depth"], s)), 2
     return (int(d["kind"][i]), float(c.interp(d["h"], s)), float(c.interp(d["w"], s)),
             float(c.interp(d["depth"], s)), int(d["mat"][i]))
 
