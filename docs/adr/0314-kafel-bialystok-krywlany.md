@@ -26,6 +26,11 @@ na zachód do kafla 4, który nie istniał; trasa Dojlid zaczyna się na ich W k
    „ETRF2000-PL / CS92” bez kodu EPSG (arkusze N-34-107-C-b-3-1/-3-3 z 2024) jako EPSG:2180 przez WarpedVRT bez
    reprojekcji — sprawdzone: ten sam datum (ETRF2000 Poland, GRS 1980) i parametry TM (lon_0 19, k 0,9993, x_0 500000,
    y_0 −5300000), WKT kończy się AUTHORITY["EPSG","2180"]. Inny CRS nadal kończy się błędem `merge`.
+5. **`graph_filter.authored.json`** (mechanizm ADR 0204): import r1 przerwany „closure rows overlap after ResolveClosures”
+   (Witolda Sławińskiego × Witolda Sławińskiego); `qa/edge_closures_check.py` wskazał 2 pary NOT CUT na W krawędzi (brak
+   tam sąsiada): serwisowe 211179100 × 251389617 i Sławińskiego 257258194 × 271890047 (ulica wchodzi jednym węzłem do
+   kafla i wychodzi 16 m dalej obok skrzyżowania z primary 251388401). Usunięte z grafu: 251389617, 271890047 (żadna na
+   trasie). Po przebudowie: 0 par NOT CUT.
 
 ## Zmierzone
 - Ingest 2026-11-20: 8 plików, 339 074 329 B (NMT 2025 ×4, ORTO 2024 ×4); BDOT/LoD 2061 już na dysku.
