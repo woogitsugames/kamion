@@ -109,13 +109,14 @@
   ],
   "streaming_building_policy": {
     "check_source_and_compressed_footprint": true,
-    "excluded_buildings": 2294,
+    "excluded_buildings": 2299,
     "inputs_sha256": {
       "Data/Regions/bialystok-bojary/route_start.json": "ab029cb7a394575b33568471a0ee79f64eae72c5cc5e64a806814cb19b9c560b",
       "Data/Regions/bialystok-dojlidy/route_start.json": "fc5ac18dd3426eed4dc4b785602fb3e145cace40291453422a95426b1d861cd8",
       "Data/Regions/bialystok-industrial-c/route_start.json": "85d505baf0726e6183f82b6e43b9a33bb9ad1326978ca1113a8683d9373b3e6d",
       "Data/Regions/bialystok-kleeberga/route_start.json": "93274c9ff852646b7f3ee2bbce236b554daee363a720979eb51ae45e77269b7b",
       "Data/Regions/bialystok-knyszynska/route_start.json": "8e64c6eb0b2b8b5906fd4663d4f048f133bd3a2d0f5041d37dc92d28b7ddae4a",
+      "Data/Regions/bialystok-krywlany/route_start.json": "3038b19c36a4e70243b57da587cde2d69cf4187dea4b9ebd874937dc1998b1e9",
       "Data/Regions/bialystok-maczka/route_start.json": "182c151282a264413b5e3b55d884add869119f857ca846ef318e4c07e6e545ca",
       "Data/Regions/bialystok-mickiewicza/route_start.json": "65d1f99a89661aa021655a26fd83c40be0526fa5eddcbe0d19e6f05df6036bd5",
       "Data/Regions/bialystok-porosly/route_start.json": "af50abab370f74fced743e24bb2b6f329d9c00c065ada262107f133af6a455a6",
@@ -163,7 +164,7 @@
       "tools/worldgen/regions.py": "9c2617a34fa2aea5d4799c87bc622c04429cd7a53d36afc4a4c9549f3178023b"
     },
     "reserve_all_registered_tiles": true,
-    "retained_buildings": 6277,
+    "retained_buildings": 6272,
     "route_clearance_m": 400.0,
     "schema": "far-field-building-ownership/1",
     "source_buildings": 8571,

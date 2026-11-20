@@ -166,16 +166,16 @@
   },
   {
    "chain": "c:w263731424:2593294149-2286418394",
-   "dist_from_stop_m": 32.1,
-   "e": -1021.68,
+   "dist_from_stop_m": 31.1,
+   "e": -1020.83,
    "junction": "j:n2286418394",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 3,
    "lanes_out": 2,
-   "lat": 53.1009559,
-   "lon": 23.1390334,
-   "n": -337.27,
+   "lat": 53.1009603,
+   "lon": 23.1390465,
+   "n": -336.73,
    "on_route": false,
    "osm_ways": [
     263731424,
@@ -591,14 +591,19 @@
  },
  "region": "bialystok-krywlany",
  "route_band_m": 30.0,
- "route_segments_s_m": null,
+ "route_segments_s_m": [
+  [
+   0.0,
+   1232.0
+  ]
+ ],
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
-  "approach_lanes": 490,
-  "kerb_tris": 65275,
-  "lane_samples": 70027,
+  "approach_lanes": 485,
+  "kerb_tris": 65073,
+  "lane_samples": 69973,
   "lane_samples_in_taper": 83,
-  "marking_tris": 9821,
-  "props_checked": 916
+  "marking_tris": 9813,
+  "props_checked": 915
  }
 }
