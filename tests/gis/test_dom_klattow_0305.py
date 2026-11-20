@@ -226,7 +226,7 @@ def test_materials_and_sets():
     assert F.FACADE_SETS["log_whitewash"]["tile_m"] == [4.0, 2.2] and F.FACADE_SETS["fieldstone"]["tile_m"] == [2.4, 0.6]
     # painted boards: the row joints and the tile of wood_siding, so every wood_planks* UV rule holds for the set
     assert F._BOARD_JOINT_V == BM.WOOD_JOINT_V and tuple(F.FACADE_SETS["boards_painted"]["tile_m"]) == BM.WOOD_TILE_M
-    assert F.FACADE_SETS["roof_tiles_old"]["tile_m"] == [2.8, 2.8] and F.FACADE_SETS["wood_shingles"]["tile_m"] == [1.5, 1.5]
+    assert F.FACADE_SETS["roof_tiles_old"]["tile_m"] == [4.2, 4.2] and F.FACADE_SETS["wood_shingles"]["tile_m"] == [1.5, 1.5]
     spec = MT_SPEC()
     for name in ("log_whitewash", "fieldstone", "boards_painted", "roof_tiles_old", "wood_shingles"):
         if name not in spec:

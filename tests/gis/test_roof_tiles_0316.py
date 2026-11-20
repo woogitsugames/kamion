@@ -26,7 +26,7 @@ def test_every_covering_has_its_own_set():
         assert m["texture_set"] == st and m["set_tile"] is True and m["tint_linear"] is True, mat
         assert st in F.FACADE_SETS
     # the tile sets are larger than the 1.4 m lattice of ADR 0091 (7 x 4 tiles repeated over every slope)
-    for st in ("roof_tiles", "roof_karpiowka", "roof_zakladkowa"):
+    for st in ("roof_tiles", "roof_tiles_old", "roof_karpiowka", "roof_zakladkowa"):
         assert F.FACADE_SETS[st]["tile_m"] == [4.2, 4.2]
     assert F.FACADE_SETS["roof_metal_tile"]["tile_m"] == [1.4, 1.4]          # a pressed sheet is a lattice
     # LOD1 draws the plain tile with the S-tile material: same colour, so no tone step at the LOD switch
@@ -36,7 +36,7 @@ def test_every_covering_has_its_own_set():
         assert MT.M[mat]["macro"][1] > 0.1
 
 
-@pytest.mark.parametrize("name,cols,rows", [("roof_tiles", 21, 12), ("roof_tiles_old", 14, 8), ("roof_karpiowka", 23, 28),
+@pytest.mark.parametrize("name,cols,rows", [("roof_tiles", 21, 12), ("roof_tiles_old", 21, 12), ("roof_karpiowka", 23, 28),
                                             ("roof_zakladkowa", 18, 12)])
 def test_tile_sets_are_neutral_tileable_and_not_a_lattice(name, cols, rows):
     import sets_roof as R
@@ -55,7 +55,7 @@ def test_tile_sets_are_neutral_tileable_and_not_a_lattice(name, cols, rows):
     assert cells.std() > 0.012
     # ... and the two halves of the set are not copies of each other (the 1.4 m set repeated every 7 x 4 tiles)
     assert np.abs(cells[:, :cols // 2] - cells[:, cols - cols // 2:]).mean() > 0.008
-    assert L in (2.8, 4.2)
+    assert L == 4.2
 
 
 def test_roof_variant_is_deterministic_and_keeps_other_roofs():

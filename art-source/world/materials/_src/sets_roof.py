@@ -87,10 +87,12 @@ def _s_profile(pu):
 _S_AGE = {
     "mid": dict(tone=0.15, cluster=0.20, dark=0.05, dark_k=0.24, pale=0.035, pale_k=0.20, jit_v=0.008, jit_u=0.003,
                 tilt=0.7, row_wob=0.008, col_wob=0.003, pan=0.32, moss=0.0, lichen_thr=1.55, lichen_k=0.22,
-                pale_lichen=0.10, soot=0.07, hue=0.5),
-    "old": dict(tone=0.26, cluster=0.26, dark=0.14, dark_k=0.34, pale=0.05, pale_k=0.26, jit_v=0.013, jit_u=0.005,
+                pale_lichen=0.10, soot=0.07, hue=0.5, shadow=0.70, blotch=0.0),
+    # round t1 against klattow-01: the photo roof is blotchier (grey-brown weathered patches of 10-30 tiles, more pale
+    # orange replacements) and its course lines are softer than the first version -> blotch, more dark / pale, shadow 0.56
+    "old": dict(tone=0.28, cluster=0.24, dark=0.19, dark_k=0.38, pale=0.08, pale_k=0.30, jit_v=0.014, jit_u=0.005,
                 tilt=1.0, row_wob=0.014, col_wob=0.004, pan=0.34, moss=1.0, lichen_thr=1.05, lichen_k=0.36,
-                pale_lichen=0.18, soot=0.09, hue=1.0),
+                pale_lichen=0.18, soot=0.09, hue=1.0, shadow=0.56, blotch=0.22),
 }
 
 
@@ -140,7 +142,8 @@ def _s_tile(name, L, n, cols, rows, seed, age):
     lum *= (1 - A["dark_k"] * dark) * (1 + A["pale_k"] * pale)
     lum *= 1 - A["pan"] * (1 - roll) ** 1.4                      # pans: less sky, the dirt stays there
     lum *= 1 + 0.12 * sstep(0.55, 1.0, roll)                     # crests: washed and sun-bleached
-    lum *= (1 - 0.70 * shadow) * (1 - 0.22 * lap) * (1 - A["soot"] * streak * (0.4 + 0.6 * (1 - roll)))
+    blotch = A["blotch"] * sstep(0.2, 1.4, noise(c, 13, 0.6, min(2.8, L), beta=1.0) - 0.4 * cluster)   # weathered patches
+    lum *= (1 - A["shadow"] * shadow) * (1 - blotch) * (1 - 0.22 * lap) * (1 - A["soot"] * streak * (0.4 + 0.6 * (1 - roll)))
     lum *= 1 - 0.10 * sstep(0.10, 0.0, pv)                       # weathered band at the exposed lower edge
     lum *= (1 - A["lichen_k"] * lich) * (1 + 0.30 * plich) * (1 - 0.30 * moss)
     rough = 0.80 + 0.08 * (1 - roll) + 0.08 * moss + 0.05 * lich
@@ -150,7 +153,7 @@ def _s_tile(name, L, n, cols, rows, seed, age):
         out = _mix(alb, [1.07, 0.97, 0.87], A["hue"] * sstep(0.55, 1.0, hue))        # brighter orange tiles
         out = _mix(out, [0.93, 1.00, 1.10], A["hue"] * sstep(0.45, 0.0, hue))        # brown, greyed tiles
         out = _mix(out, [1.05, 0.98, 0.90], np.clip(0.5 * cluster, 0, 1) * 0.6)
-        out = _mix(out, [0.86, 0.95, 1.06], dark * 0.6)
+        out = _mix(out, [0.86, 0.95, 1.06], np.clip(dark * 0.6 + blotch * 2.0, 0, 1))
         out = _mix(out, [1.10, 1.00, 0.86], pale * 0.7)
         out = _mix(out, [0.80, 0.93, 1.04], lich * 0.8)                              # black-grey lichen crust
         out = _mix(out, [0.98, 1.14, 1.20], np.clip(plich, 0, 1) * 0.7)              # pale grey-green lichen
@@ -168,8 +171,9 @@ def roof_tiles(n=1024):
 def roof_tiles_old(n=1024):
     """Old hand-laid S-tile (ADR 0305 Dom Klattow, rewritten in ADR 0316): as `roof_tiles` with uneven courses, every
     tile its own tone and tilt, sooty and replaced tiles, lichen crusts, moss in the pans and laps.
-    Tile 2.8 x 2.8 m (14 rolls x 8 courses)."""
-    return _s_tile("roof_tiles_old", 2.8, n, 14, 8, 3055, "old")
+    Tile 4.2 x 4.2 m (21 rolls x 12 courses; 2.8 m in ADR 0305 - the weathered patches of a blotchy roof must
+    not repeat three times along one slope)."""
+    return _s_tile("roof_tiles_old", 4.2, n, 21, 12, 3055, "old")
 
 
 # ------------------------------------------------------------------------------------------------- karpiowka
@@ -296,7 +300,7 @@ ROOF_SETS = {
     "roof_tiles": dict(fn=roof_tiles, tile_m=[4.2, 4.2], slots=["roof_tiles_red"],
         note="ADR 0316: ceramic S-tile (esowka), roll pitch 0.20 m, gauge 0.35 m, clustered tone, hollows under the "
              "lower edges, sparse lichen (u along the eave, v up the slope)."),
-    "roof_tiles_old": dict(fn=roof_tiles_old, tile_m=[2.8, 2.8], slots=["roof_tiles_old"],
+    "roof_tiles_old": dict(fn=roof_tiles_old, tile_m=[4.2, 4.2], slots=["roof_tiles_old"],
         note="ADR 0305 / 0316: old hand-laid ceramic S-tile, roll 0.20 m, gauge 0.35 m, uneven courses, per-tile tone "
              "and tilt, lichen crusts, moss in the pans."),
     "roof_karpiowka": dict(fn=roof_karpiowka, tile_m=[4.2, 4.2], slots=["roof_karp_*"],

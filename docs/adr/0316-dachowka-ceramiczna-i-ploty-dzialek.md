@@ -31,7 +31,7 @@ wzdłuż spadku, cień pod krawędzią rzędu wyżej.
 | zestaw | kafel | wymiary (WORKING_VALUE w zakresie wyrobów) | cechy |
 |---|---|---|---|
 | `roof_tiles` (przepisany) | 4,2 m, 21 × 12 | esówka: krycie 0,20 m, rozstaw łat 0,35 m, wałek 28 mm | ciemne koryta, jasne grzbiety, **ciemny łuk pod wylotem każdego wałka** zamiast ciągłej kreski, zakład boczny |
-| `roof_tiles_old` (przepisany) | 2,8 m, 14 × 8 | jak wyżej | stara, kładziona ręcznie: krawędzie ±13 mm, ton ±13 % + skupiska, 14 % ciemnych, mech w korytach i na zakładach, skorupy porostów |
+| `roof_tiles_old` (przepisany) | 4,2 m, 21 × 12 (było 2,8 m) | jak wyżej | stara, kładziona ręcznie: krawędzie ±13 mm, ton ±13 % + skupiska, 14 % ciemnych, mech w korytach i na zakładach, skorupy porostów |
 | `roof_karpiowka` (nowy) | 4,2 m, 23 × 28 | karpiówka 18 × 38 cm w łuskę, rozstaw 0,15 m, rzędy przesunięte o pół | łukowa dolna krawędź (strzałka 34 mm), styk 3 mm, ciemny klin między narożami |
 | `roof_zakladkowa` (nowy) | 4,2 m, 18 × 12 | zakładkowa płaska (cementowa / angobowana): krycie 0,233 m, rozstaw 0,35 m, rzędy przesunięte o pół | dwa płaskie pola, żeberko, wałek zamka, nosek; równy ton fabryczny, pył przy żeberkach, jasne porosty |
 | `roof_metal_tile` (= dawny `roof_tiles`) | 1,4 m, 7 × 4 | blachodachówka, moduł 350 mm | bez zmian: tłoczona blacha **jest** idealną kratą |

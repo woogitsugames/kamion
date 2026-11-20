@@ -393,7 +393,7 @@ M = {
                           "set_tile_m": [6.0, 2.6]},
     "wood_trim_brown": {"color": [0.050, 0.027, 0.017], "rough": 0.6},
     "roof_tiles_old": {"color": [0.145, 0.047, 0.021], "rough": 0.85, "texture_set": "roof_tiles_old", "set_tile": True,
-                       "macro": [9.0, 0.10]},
+                       "macro": [6.0, 0.16]},        # ADR 0316: was [9.0, 0.10]; the set is 4.2 m now
     # Round 3 (klattow-r3-s24): a little darker and warmer (photo 05: a low grey-brown band, no pale mortar net).
     "fieldstone_plinth": {"color": [0.215, 0.200, 0.172], "rough": 0.9, "texture_set": "fieldstone", "set_tile": True},
     # ADR 0305: timber granary by the presbytery (owner photo klattow-02): unpainted, weathered honey-brown logs - the

@@ -29,3 +29,9 @@
   `before.status.hold` na czas t1 (wstrzymuje start build_world r1, który nadpisałby GLB pod importem).
   NASTĘPNY KROK: po `exit=0` w t1.status: `mv artifacts/roof-tiles-s24/before.status.hold artifacts/roof-tiles-s24/before.status`;
   `bash artifacts/roof-tiles-s24/sbs.sh t1`; obejrzeć `sbs/*-t1.jpg`
+- 15:20 Rundy t1 / t2 (same tekstury, światy baseline) obejrzane: `artifacts/roof-tiles-s24/sbs/crop-klattow-roof-t1.jpg`, `-t2.jpg`,
+  `crop-above-k-t1.jpg`, `crop-above-t-t1.jpg`, `crop-into-town-t1.jpg`. Szachownica znikła, widać wałki i „oczka” pod krawędziami.
+  Po t1: stara esówka plamistsza (łaty zwietrzałe, 19 % ciemnych, 8 % jasnych), cień rzędu 0,70 → 0,56, kafel 2,8 → 4,2 m, macro [6, 0.16].
+  (W t1 / t2 blachodachówka ma teksturę esówki — skutek importu starego świata z nową nazwą zestawu; znika po build_world.)
+  r1 nadal w kolejce slotu heavy (regen-wave-2 A / B / C).
+  NASTĘPNY KROK: po `exit=0` w `artifacts/roof-tiles-s24/r1.status`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`

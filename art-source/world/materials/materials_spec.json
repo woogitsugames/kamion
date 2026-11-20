@@ -4637,8 +4637,8 @@
     },
     "roof_tiles_old": {
       "tile_m": [
-        2.8,
-        2.8
+        4.2,
+        4.2
       ],
       "slots": [
         "roof_tiles_old"
@@ -4653,9 +4653,9 @@
             1024,
             1024
           ],
-          "texel_mm": 2.73,
+          "texel_mm": 4.1,
           "dir": "roof_tiles_old/High",
-          "png_bytes": 5887278,
+          "png_bytes": 5963944,
           "files": [
             "T_roof_tiles_old_BaseColor.png",
             "T_roof_tiles_old_MaskMap.png",
@@ -4676,16 +4676,16 @@
             512,
             512
           ],
-          "texel_mm": 5.47,
+          "texel_mm": 8.2,
           "dir": "roof_tiles_old/Medium",
-          "png_bytes": 1576523,
+          "png_bytes": 1539230,
           "files": [
             "T_roof_tiles_old_BaseColor.png",
             "T_roof_tiles_old_MaskMap.png",
             "T_roof_tiles_old_Normal.png",
             "T_roof_tiles_old_Var.png"
           ],
-          "smoothness_mean": 0.129,
+          "smoothness_mean": 0.13,
           "astc": {
             "BaseColor": "6x6",
             "Normal": "6x6",
@@ -4699,16 +4699,16 @@
             256,
             256
           ],
-          "texel_mm": 10.94,
+          "texel_mm": 16.41,
           "dir": "roof_tiles_old/Low",
-          "png_bytes": 384034,
+          "png_bytes": 374701,
           "files": [
             "T_roof_tiles_old_BaseColor.png",
             "T_roof_tiles_old_MaskMap.png",
             "T_roof_tiles_old_Normal.png",
             "T_roof_tiles_old_Var.png"
           ],
-          "smoothness_mean": 0.12,
+          "smoothness_mean": 0.119,
           "astc": {
             "BaseColor": "8x8",
             "Normal": "8x8",
@@ -4719,21 +4719,21 @@
         }
       },
       "height_range_m": [
-        -0.00654,
-        0.04583
+        -0.00661,
+        0.04554
       ],
       "albedo": {
-        "mean_lum_linear": 0.4988,
-        "p05": 0.2427,
-        "p95": 0.8261,
+        "mean_lum_linear": 0.4972,
+        "p05": 0.2437,
+        "p95": 0.8639,
         "mean_rgb_linear": [
-          0.4898,
-          0.5017,
-          0.4974
+          0.4868,
+          0.5003,
+          0.4964
         ]
       },
-      "hf_ratio_albedo": 0.0136,
-      "ao_mean": 0.896
+      "hf_ratio_albedo": 0.0157,
+      "ao_mean": 0.9
     },
     "roof_zakladkowa": {
       "tile_m": [
