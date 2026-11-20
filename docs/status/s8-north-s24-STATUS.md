@@ -19,3 +19,8 @@ Zadanie: lider s24 (D93 p.4 + D95 p.4, D63 rough first) — przedłużenie koryt
 - [~] 20.11 14:05 merge origin/main (road-widen D94, ADR 0306) bez konfliktów → przebudowa 4 kafli r2 (world+route), potem route_links/swept/seams/import/vqa/pytest/EditMode
 
 NASTĘPNY KROK: po `artifacts/s8-north-s24/run/final-world-*-r2.exit` → tile_graph/route_links/nav_trips, link_swept_check c-dk8-north-to-wasilkow, seams, `-Phase unity -Tag r3`, route_obstacles, pytest, `-Phase editmode -Tag r2`
+
+## 14:35 r2
+- 01 r2 gotowy (2071 m). road_consistency na trasie (pas 30 m): 63 bridge_kerb w pasie 0 (lewy, przy pasie dzielącym) na moście DK8 (way 145631572/3), 5,2–6,6 m od toru ciężarówki — nie w obwiedni; 1 arrow_no_exit (zjazd węzła wychodzi zachodnią krawędzią do (-1,1)). W r1 na trasie było „0”, bo route_start.json nie istniał w chwili build_world (pierwszy build) — to nie regres road-widen.
+- pytest: test_dense_lod_0282[bialystok-kleeberga] FAIL także w main (istniejący).
+- 02/03/korycin r2 czekają na slot heavy (3/3 zajęte: regen-wave-2 A/C, rondo-fix-cli).
