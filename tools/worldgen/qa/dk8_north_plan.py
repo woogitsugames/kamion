@@ -207,13 +207,59 @@ def render_png(plan: dict) -> None:
     fig.savefig(PNG)
 
 
+def render_routes(plan: dict, out: Path) -> dict:
+    """Control render of the BUILT tiles (own data only): graph edges of roads.graph.json + the control routes of
+    route_start.json (rightmost lane centre) + C; returns route lengths and the gap between consecutive route ends."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    ids = ["bialystok-industrial-c"] + [t["id"] for t in plan["tiles"]]
+    fig, ax = plt.subplots(figsize=(7, 13), dpi=120)
+    col = {"motorway": "#3a5a9a", "trunk": "#b5462e", "trunk_link": "#d07a5e", "primary": "#c98a2b",
+           "secondary": "#c9b22b", "tertiary": "#777777"}
+    info, ends = {}, []
+    for rid in ids:
+        d = REG / rid
+        if not (d / "roads.graph.json").exists():
+            continue
+        g = json.loads((d / "roads.graph.json").read_text(encoding="utf-8"))
+        for e in g["edges"]:
+            hw = e["attrs"]["highway"]["v"]
+            x, y = zip(*e["geometry"])
+            ax.plot(x, y, color=col.get(hw, "#c8c8c8"), lw=1.6 if hw in col else 0.4, zorder=2 if hw in col else 1)
+        bb = g["bbox"] if isinstance(g["bbox"], list) else [g["bbox"][k] for k in ("xmin", "ymin", "xmax", "ymax")]
+        ax.add_patch(plt.Rectangle(bb[:2], bb[2] - bb[0], bb[3] - bb[1], fill=False, ec="#1b1b1b", lw=1.0))
+        ax.text(bb[0] + 30, bb[3] - 110, rid, fontsize=7, weight="bold")
+        rp = d / "route_start.json"
+        if rp.exists():
+            r = json.loads(rp.read_text(encoding="utf-8"))
+            ox, oy = (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2
+            pts = [(e_ + ox, n_ + oy) for e_, n_ in r["points_en"]]
+            ax.plot(*zip(*pts), color="#1f6fd1", lw=2.4, zorder=4)
+            info[rid] = {"length_m": r["length_m"], "start": [round(v, 2) for v in pts[0]],
+                         "end": [round(v, 2) for v in pts[-1]]}
+            ends.append((rid, pts[0], pts[-1]))
+    for (a, _, ea), (b, sb, _) in zip(ends, ends[1:]):
+        info[b]["gap_from_prev_end_m"] = round(((ea[0] - sb[0]) ** 2 + (ea[1] - sb[1]) ** 2) ** 0.5, 2)
+    ax.set_aspect("equal")
+    ax.set_title("s8-north-s24: zbudowane kafle, graf dróg i trasy kontrolne (dane własne, EPSG:2180)", fontsize=8)
+    ax.tick_params(labelsize=6)
+    fig.tight_layout()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out)
+    return info
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--png", action="store_true")
     ap.add_argument("--print-regions", action="store_true")
     ap.add_argument("--init-regions", action="store_true")
+    ap.add_argument("--routes-png", type=Path, help="control render of the built tiles + routes to this file")
     a = ap.parse_args()
     plan = build_plan()
+    if a.routes_png:
+        print(json.dumps(render_routes(plan, a.routes_png), indent=1))
     PLAN.parent.mkdir(parents=True, exist_ok=True)
     PLAN.write_text(json.dumps(plan, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     for t in plan["tiles"]:
