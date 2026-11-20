@@ -12,6 +12,7 @@ tools/worldgen/streaming/route_links.py, ADR 0285) and the control-route end poi
 Trips:
   tykocin  corridor `bialystok-tykocin` (whole); goal = end of the link `tykocin-dw671-to-rynek` (Rynek, ADR 0303)
   s8       corridor `bialystok-s8`, cut at the first missing tile (the rest of the S8 loop is not built yet)
+  wasilkow corridor `bialystok-wasilkow` (s8-north-s24): C -> DK8 north -> junction Wasilkow -> towards Korycin
   monki    corridor `bialystok-tykocin` up to `knyszyn`, then `knyszyn-w` entered on DK65 (end of the link
            `knyszyn-dk65-to-dk65-w`) to the end of the knyszyn-w control route (DK65 towards Monki, ADR 0209)
 
@@ -95,6 +96,12 @@ def build() -> dict:
     s8 = corridor(links, "bialystok-s8")
     st = list(s8["tiles"])   # route_links.py keeps only the present prefix; "missing" lists the rest
     trips.append(trip("s8", "S8", st, joins_of(s8, st)))
+
+    # s8-north-s24 (D93/D95): DK8 north to Wasilkow / Korycin; the C leg is the link c-dk8-north-to-wasilkow
+    wk = next((c for c in links["corridors"] if c["id"] == "bialystok-wasilkow"), None)
+    if wk is not None and len(wk["tiles"]) > 1:
+        wt = list(wk["tiles"])
+        trips.append(trip("wasilkow", "Wasilków (DK8)", wt, joins_of(wk, wt), links))
 
     return {"schema": SCHEMA, "generator": "tools/ui/build_nav_trips.py", "frame": "EPSG:2180", "trips": trips}
 
