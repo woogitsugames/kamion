@@ -114,3 +114,9 @@
 - 09:4x: EditMode Win64 1329/1 (tylko katalog routeLengthM — kafle przebudowane w worktree, katalog przelicza fala).
   KONIEC kroków D94 w tej sesji; raport wysłany. Do przebudowy w main: wszystkie kafle (reguły globalne), najpierw korytarz
   bialystok-tykocin + bialystok-s8, potem `export-route`, `streaming/route_links.py`, katalog, złote trasy nav-runner.
+
+- 20.11 właściwa poprawka G1 (0d4ee6045): zamiast stałego prawo snapshot równoległych jezdni (także parking/service,
+  ten sam poziom), ochrona szczeliny i mniej wzrostu przy obu zajętych stronach. Bez sąsiadów symetrycznie.
+  Podłoga BDOT nie zastępuje D94 (powrót do szerokości r6). D94 12/12 przed dodaniem regresji lewo/prawo/brak miejsca.
+  Rebuild C + knyszyn + fidelity w tle: `artifacts/road-widen-s24/rebuild-g1.log` / `rebuild-g1.status`.
+- NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g1.log -Tail 25` i pytest trzech wskazanych plików po rebuild.

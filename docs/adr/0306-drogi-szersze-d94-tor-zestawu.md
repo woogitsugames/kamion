@@ -107,3 +107,11 @@ wyspy i trasa C (wyżej). EditMode Win64 (20.11): 1329 / 1 — `RegionSelectTest
 - Po przebudowie C w main: złote trasy nawigacji (`dotnet run -c Release --project tools/nav-runner/Runner -- --write-golden`,
   EditMode `Nav0168Tests.Exit_GoldenRoutes` 5 vs 4 manewry) i katalog regionów (`scripts/export-region-catalog.py`).
 - Recenzja `visual-critic` renderów Knyszyna — do zlecenia przez lidera.
+
+## Decyzja właściciela 20.11 — właściwa poprawka (G1, walidacja w toku)
+Stałe „w prawo” zastępuje geometria nieposzerzonych jezdni: odległości krawędzi do równoległych dróg po obu stronach,
+wliczając drogi parkingowe i serwisowe na tym samym poziomie. Wzrost idzie od bliższego sąsiada; istniejąca szczelina
+w odległości do 12 m jest rezerwowana w całości (WORKING_VALUE, nie pomiar ortofoto). Przy braku miejsca po obu
+stronach sekcja dostaje mniejsze poszerzenie, zapisane w provenance. Bez sąsiadów wzrost symetryczny.
+Snapshot przed mutacjami zapewnia niezależność od kolejności i chroni szczelinę również między dwiema rosnącymi jezdniami.
+Reguła obejmuje profile położenia z ortofoto. Podłoga BDOT nie zastępuje już GAMEPLAY (punkt 5 historyczny).
