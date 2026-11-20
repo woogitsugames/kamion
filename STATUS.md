@@ -56,3 +56,8 @@
 - Szerokości/promienie D94 zachowane; dwa pasy W przy 11,75 m asfaltu po D94; wydłużone soczewki E/W; świeży asfalt i materiał płyty z pierścienia; opaska, znaki, lampy. Zapora/szew nadal otwarte, brak wizualnego PASS.
 - W tle uruchomiono wyłącznie build_world knyszyn, przez slot heavy rondo-fix-cli; potem automatycznie pytest i combo. Runner: `artifacts/logs/d95-run.ps1`, logi `d95-build.log`, `d95-tests-final.log`, `d95-combo-after.log`, kody w `*.exit`.
 - NASTĘPNY KROK: `Get-Content artifacts/logs/d95-build.log -Tail 30; Get-Content artifacts/logs/d95-tests-final.log -Tail 30; Get-Content artifacts/logs/d95-combo-after.log -Tail 30`; sprawdzić bramkę D95, poprawić błędy, uzupełnić raport i commit. Nie uruchamiać Unity ani build_world innego kafla.
+
+### D95 15:08 — walidacja w kolejce
+- Pierwszy build knyszyn exit0 (1164,7 s), road_consistency 3/5 i zero na trasie. Pytest 142 pass / 2 skip / 2 fail; oba błędy poprawione, retest w kolejce.
+- Combo r1: DK65→DW671 W 0/17/0, swing0/0/0; DK65→DK65 W0/0/0. Zapisano korektę authored toru 0,75 m w prawo (optymalizator daje0/0/0); finalny pomiar gotowego linku w kolejce. Rynek nadal nie przechodzi globalnie.
+- Dalsze runnery w tle: d95-signs-run.ps1, d95-retest-run.ps1, d95-final-combo-run.ps1 w artifacts/logs, wszystkie przez heavy. Pula zajęta regen-wave A/B/C. Nie uruchamiać ponownie tych samych zadań; sprawdzać *.exit i logi. Drugi build pozostawi nowe wygenerowane pliki do przeglądu/commitu. Szew i zapora nadal wymagają poprawki, Unity nie uruchomiono.

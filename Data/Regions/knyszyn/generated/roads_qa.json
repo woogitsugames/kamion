@@ -291,9 +291,11 @@
    "lanes": [
     2
    ],
-   "length_m": 427.5,
+   "length_m": 415.5,
    "max_grade": 0.0283,
-   "overrides": [],
+   "overrides": [
+    "knyszyn-roundabout-fresh-d95"
+   ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 1.0,
    "width_m": [
@@ -567,18 +569,20 @@
    ],
    "id": "c:w1478765548:13432353453-3047667183",
    "lanes": [
-    3
+    2
    ],
-   "length_m": 12.6,
-   "max_grade": 0.0194,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.009,
+   "length_m": 6.6,
+   "max_grade": 0.0188,
+   "overrides": [
+    "knyszyn-roundabout-west-two-lanes-d95"
+   ],
+   "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 1.0,
    "width_m": [
     11.75
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:knyszyn-roundabout-west-two-lanes-d95"
    ]
   },
   {
@@ -3022,7 +3026,9 @@
    ],
    "length_m": 303.1,
    "max_grade": 0.0108,
-   "overrides": [],
+   "overrides": [
+    "look-dom-klattow-koscielna-footway"
+   ],
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 1.0,
    "width_m": [
@@ -3113,17 +3119,17 @@
      {
       "arm": "c:w286990127:1134813637-4898926854",
       "near_edge_from_ring_m": 5.0,
-      "stripes": 10
+      "stripes": 9
      },
      {
       "arm": "c:w1464342641:3047667218-13114267776",
       "near_edge_from_ring_m": 5.0,
-      "stripes": 7
+      "stripes": 9
      },
      {
       "arm": "c:w232511646:3047667219-1134814357",
       "near_edge_from_ring_m": 5.0,
-      "stripes": 8
+      "stripes": 9
      }
     ],
     "feeders": 8,
@@ -3131,7 +3137,7 @@
     "island_r_m": 2.83,
     "mode": "kerbs",
     "notes": [],
-    "outline_m2": 1984.2,
+    "outline_m2": 2203.0,
     "p13_entries": 4,
     "r_axis_fit_m": 8.65,
     "r_axis_m": 8.65,
@@ -3144,8 +3150,9 @@
     ],
     "splitter_len_m": [
      4.6,
-     7.7,
-     4.5,
+     17.5,
+     4.6,
+     15.9,
      4.5,
      26.6,
      4.5,
@@ -3153,14 +3160,15 @@
     ],
     "splitter_m2": [
      10.6,
-     13.6,
+     38.7,
      10.6,
+     29.8,
      10.6,
      58.9,
      10.6,
      44.3
     ],
-    "splitters": 7
+    "splitters": 8
    }
   ],
   "crossings_in_junction": [
@@ -3197,12 +3205,12 @@
   "crossings_skipped": [],
   "crossings_snapped": 35,
   "decals": {
-   "gullies": 746,
-   "oil": 107,
-   "patches": 226
+   "gullies": 747,
+   "oil": 103,
+   "patches": 225
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 472389,
+  "footprint_nodes": 472549,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3366,50 +3374,57 @@
     {
      "area_m2": 10.6,
      "built": true,
-     "id": "cr:n13115969575:splitter:n13432353453:a",
-     "note": "z 121.85",
+     "id": "cr:n13115969575:splitter:n13432353453s:a",
+     "note": "z 121.84",
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 13.6,
+     "area_m2": 38.7,
      "built": true,
-     "id": "cr:n13115969575:splitter:n13432353453:b",
-     "note": "z 121.55",
+     "id": "cr:n13115969575:splitter:n13432353453s:b",
+     "note": "z 121.42",
      "surface": "sidewalk_paving"
     },
     {
      "area_m2": 10.6,
      "built": true,
-     "id": "cr:n13115969575:splitter:n3047667218:a",
-     "note": "z 122.32",
+     "id": "cr:n13115969575:splitter:n3047667218s:a",
+     "note": "z 122.25",
+     "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 29.8,
+     "built": true,
+     "id": "cr:n13115969575:splitter:n3047667218s:b",
+     "note": "z 122.66",
      "surface": "sidewalk_paving"
     },
     {
      "area_m2": 10.6,
      "built": true,
      "id": "cr:n13115969575:splitter:n3047667219s:a",
-     "note": "z 122.26",
+     "note": "z 122.25",
      "surface": "sidewalk_paving"
     },
     {
      "area_m2": 58.9,
      "built": true,
      "id": "cr:n13115969575:splitter:n3047667219s:b",
-     "note": "z 122.59",
+     "note": "z 122.57",
      "surface": "sidewalk_paving"
     },
     {
      "area_m2": 10.6,
      "built": true,
      "id": "cr:n13115969575:splitter:n4898926854s:a",
-     "note": "z 121.91",
+     "note": "z 121.93",
      "surface": "sidewalk_paving"
     },
     {
      "area_m2": 44.3,
      "built": true,
      "id": "cr:n13115969575:splitter:n4898926854s:b",
-     "note": "z 121.61",
+     "note": "z 121.60",
      "surface": "sidewalk_paving"
     }
    ],
@@ -3453,7 +3468,6 @@
   ],
   "markings": {
    "P-1 centre line": 35,
-   "P-1 lane line": 1,
    "P-10 at compact roundabout": 4,
    "P-10 crossing": 35,
    "P-10 crossing in junction": 27,
@@ -3476,6 +3490,18 @@
     "id": "knyszyn-roundabout-dk65-split-n",
     "targets": [
      "n3047667219"
+    ]
+   },
+   {
+    "id": "knyszyn-roundabout-split-e-d95",
+    "targets": [
+     "n3047667218"
+    ]
+   },
+   {
+    "id": "knyszyn-roundabout-split-w-d95",
+    "targets": [
+     "n13432353453"
     ]
    },
    {
@@ -3544,6 +3570,12 @@
     ]
    },
    {
+    "id": "look-dom-klattow-koscielna-footway",
+    "targets": [
+     "w98072526:1134839334-1134842485"
+    ]
+   },
+   {
     "id": "dk65-obozowa-south-unlit-0216",
     "targets": [
      "w286990127:1134813637-4898926854",
@@ -3567,6 +3599,34 @@
     "targets": [
      "w1464342635:4898926854-13115969582",
      "w1464342640:13115969578-4898926854"
+    ]
+   },
+   {
+    "id": "knyszyn-roundabout-fresh-d95",
+    "targets": [
+     "w1426801304:13115969575-13432353449",
+     "w1426801304:13115969578-13115969582",
+     "w1426801304:13115969582-13115969583",
+     "w1426801304:13115969583-13432353458",
+     "w1426801304:13115969587-13432353443",
+     "w1426801304:13432353443-13115969575",
+     "w1426801304:13432353449-13115969578",
+     "w1426801304:13432353458-13115969587",
+     "w1464342634:3047667219-13432353443",
+     "w1464342635:4898926854-13115969582",
+     "w1464342636:3047667218-13432353458",
+     "w1464342637:13115969575-13432353453",
+     "w1464342638:13115969587-3047667219",
+     "w1464342639:13432353453-13432353449",
+     "w1464342640:13115969578-4898926854",
+     "w1464342641:3047667218-13114267776",
+     "w1478765548:13432353453-3047667183"
+    ]
+   },
+   {
+    "id": "knyszyn-roundabout-west-two-lanes-d95",
+    "targets": [
+     "w1478765548:13432353453-3047667183"
     ]
    }
   ],
@@ -3596,11 +3656,11 @@
     "lane": 21
    },
    "pairs": 57,
-   "unmatched": 13
+   "unmatched": 12
   },
   "verge_strips": {
    "chunks": 39,
-   "tris": 27536
+   "tris": 27632
   },
   "walled_ramps": []
  }

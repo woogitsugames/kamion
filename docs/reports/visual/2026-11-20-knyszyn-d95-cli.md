@@ -34,3 +34,15 @@ Lokalne siatki skopiowane z main dają historyczne DK65→DW671 W 0/23/5 oraz DK
 Kolejność: opposite / kerb / off_hard. DW671 spełnia wymagane 0 przeciwnego pasa i wariant ze swingiem pozostaje 0/0/0, lecz tor środkiem pasa pogarsza kerb 5→17. **Nie potwierdzono pełnego braku pogorszenia toru.**
 
 Pierwszy eksport przyjął wszystkie 6 lamp, ale odrzucił 4 authored zespoły znaków `along not found` (wchłonięte feedery); zwykła reguła nadal wykrywa A-7/C-12 na trasie, dalej od pierścienia. Poprawiono wpisy na jawne at_en/bearing. Druga przebudowa jest w kolejce heavy, wynik i ewentualne duplikaty znaków trzeba sprawdzić.
+
+### Korekta toru łącznika (po r1)
+Optymalizator r1 znalazł ruch 0,75 m w prawo, half_m=35, near EPSG:2180 [760608, 611987,39], który daje 0/0/0 bez przeciwnego pasa. Zapisano go jako `swing` w `Data/Streaming/route_links.yaml` i zregenerowano wyłącznie łączniki Knyszyna. To korekta authored trasy, nie zwężenie wysepek ani zmiana progów QA. Osobny pomiar gotowego łącznika oczekuje w heavy (`d95-combo-final.*`); wynik optymalizatora nie zastępuje tego pomiaru.
+
+## Stan przekazania — 15:08, zablokowane pulą heavy
+Wszystkie trzy sloty zajęte przez regen-wave-2-s24 A/B/C. W tle pozostają uprawnione zadania wyłącznie dla Knyszyna:
+- `artifacts/logs/d95-signs-run.ps1`: drugi build z poprawionymi współrzędnymi znaków i brakującym świeżym feederem; log `d95-build-signs.log`, kod `d95-build-signs.exit`.
+- `artifacts/logs/d95-retest-run.ps1`: ponowny moduł 0274 po korektach; log `d95-retest.log`, kod `d95-retest.exit`.
+- `artifacts/logs/d95-final-combo-run.ps1`: gotowy authored łącznik DW671, bez ponownego szukania potrzebnej korekty; log `d95-combo-final.log`, kod `d95-combo-final.exit`.
+Każdy runner zwalnia swój slot przez finally. Nie uruchamia Unity ani innego kafla. Nie wolno uznać testów za PASS na podstawie samego ustawienia w kolejce. Drugi build zmieni pliki wygenerowane po commicie WIP; wymagają późniejszego przeglądu i commitu.
+
+Przyczyny / najważniejsze miejsca zmian: overrides.yaml:1048 (świeży asfalt), :1054 (dwa pasy bez zwężenia D94), :1060 (wysepki), :1075 (znaki), :1111 (lampy); meshing.py:1502 (materiał płyty), build_world.py:1233 (lokalna opaska). Źródło zapory/stuba: WorldEdgeBuilder.cs:90 oraz world_edge.authored.json:13. Finalnie nadal WIP: zapora/szew niewykonane, finalna walidacja w kolejce, brak renderu po zmianach.
