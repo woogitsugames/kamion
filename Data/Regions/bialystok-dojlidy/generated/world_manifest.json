@@ -4798,7 +4798,7 @@
     "z_max_evrf2007": 170.0,
     "z_min_evrf2007": 141.76
    },
-   "bytes": 17882060,
+   "bytes": 17885468,
    "file": "Data/raw/derived/bialystok-dojlidy/world/chunk_4_0.glb",
    "forest_cells": [
     {
@@ -4833,9 +4833,9 @@
     "sha256": "e9ecf880b1da271be87fdb9b5f7fe819cc8cd1ec918b0aee3fd1c5d0255e1e75"
    },
    "low": {
-    "bytes": 7981844,
+    "bytes": 7984580,
     "file": "Data/raw/derived/bialystok-dojlidy/world/chunk_4_0.low.glb",
-    "sha256": "2678edb3f33ec9b918d7f82e9c97802286b35e258a6c0bf43a09cceddb9b10e4"
+    "sha256": "c128a40bda7efa87b7f3324302b69dd0555b5e0604982a1743e9d2e3689fc46a"
    },
    "materials": [
     "balcony_slab",
@@ -4912,13 +4912,13 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "86395aa12b9e5bf582c0b4c21a16ea94356aa8fc925ca655209907473b8b5582",
+   "sha256": "9ade64e8509d7e5d63e0aae209058e09f2a17f21cf5e71877994c40d5f2ccd0e",
    "triangles": {
     "buildings": 63984,
     "buildings_lod1": 6289,
     "forest_hlod": 99,
     "furniture": 6742,
-    "markings": 1295,
+    "markings": 1303,
     "paved": 4941,
     "plot_ground": 9684,
     "plots": 14795,
@@ -12307,6 +12307,21 @@
    ],
    "texture": "fence_mesh"
   },
+  "fieldstone_plinth": {
+   "color": [
+    0.235,
+    0.225,
+    0.205
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "fieldstone",
+   "tint_linear": true
+  },
   "fire_station": {
    "color": [
     0.181,
@@ -12980,6 +12995,40 @@
     0.2
    ],
    "rough": 0.25
+  },
+  "log_wall_raw": {
+   "color": [
+    0.33,
+    0.21,
+    0.115
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "set_tile_m": [
+    4.6,
+    2.55
+   ],
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "log_whitewash",
+   "tint_linear": true
+  },
+  "log_wall_white": {
+   "color": [
+    0.6,
+    0.595,
+    0.565
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "log_whitewash",
+   "tint_linear": true
   },
   "luminaire_housing": {
    "color": [
@@ -14209,6 +14258,21 @@
    "texture_set": "trapezoid_sheet",
    "tint_linear": true
   },
+  "roof_shingles_grey": {
+   "color": [
+    0.17,
+    0.168,
+    0.16
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "wood_shingles",
+   "tint_linear": true
+  },
   "roof_tiles_brown": {
    "color": [
     0.11,
@@ -14226,6 +14290,25 @@
     0.0
    ],
    "texture_set": "roof_tiles",
+   "tint_linear": true
+  },
+  "roof_tiles_old": {
+   "color": [
+    0.145,
+    0.047,
+    0.021
+   ],
+   "macro": [
+    9.0,
+    0.1
+   ],
+   "rough": 0.85,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "roof_tiles_old",
    "tint_linear": true
   },
   "roof_tiles_red": {
@@ -15043,6 +15126,56 @@
    ],
    "texture_set": "wood_siding",
    "tint_linear": true
+  },
+  "wood_planks_stain": {
+   "color": [
+    0.125,
+    0.055,
+    0.026
+   ],
+   "rough": 0.8,
+   "set_tile": true,
+   "set_tile_m": [
+    6.0,
+    2.6
+   ],
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "wood_siding",
+   "tint_linear": true
+  },
+  "wood_planks_white": {
+   "color": [
+    0.6,
+    0.595,
+    0.565
+   ],
+   "rough": 0.8,
+   "set_tile": true,
+   "set_tile_m": [
+    6.0,
+    2.6
+   ],
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "boards_painted",
+   "tint_linear": true
+  },
+  "wood_trim_brown": {
+   "color": [
+    0.05,
+    0.027,
+    0.017
+   ],
+   "rough": 0.6,
+   "sky_occ": [
+    0.5,
+    0.0
+   ]
   },
   "wood_trim_white": {
    "color": [
