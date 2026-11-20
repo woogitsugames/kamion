@@ -167,6 +167,53 @@ gałęzi kafel trzeba przebudować raz jeszcze; ten worktree ma prywatną kopię
 junctiony — odpinać `cmd /c rmdir`, nigdy `-Recurse`). (2) Nowe materiały trafiają do tabeli manifestu każdego kafla
 przy jego najbliższej przebudowie (GLB bez zmian).
 
+## Runda 3 (klattow-r3-s24, 2026-11-20) — poprawki po przeglądzie lidera
+
+Stan wyjściowy: main z korektami P2 / P3 (`klattow-fix-cli`). Wszystkie wymiary poniżej `WORKING_VALUE` / ESTIMATED ze zdjęć,
+o ile nie napisano inaczej.
+
+**Lamus (`knyszyn_lamus_0305.py`, zdjęcie 02).**
+- **Gont jako geometria.** Każdy rząd to osobny pas siatki, którego dolna krawędź (czoło) stoi 3,5 cm nad rzędem niżej
+  (`SHINGLE_STEP`); rząd 0,214 m (`SHINGLE_COURSE` = 1,5 m / 7 — na zdjęciu ~29 rzędów na ~6,2 m połaci), 29 rzędów na
+  każdej z czterech połaci, w jednej linii na narożach. Zestaw `wood_shingles` ma ten sam rząd (7 na kafel, było 10 po
+  0,15 m), gonty 9–15 cm, cień pod następnym rzędem — linia czoła tekstury leży na stopniu geometrii. LOD1: dwie płaskie
+  połacie na stronę. Wariant „normal / parallax w materiale” odrzucony: shader świata nie ma parallaksy, a sama mapa
+  normalnych była już w rundzie 2 (płaska szara płyta z 20 m).
+- **Proporcje dachu:** krawędź okapu 2,35 m, kalenica 6,8 m (było 2,7 / 6,5), okap 0,9 m (0,55), **załamanie połaci**:
+  dolne 1,15 m rzutu pod kątem 27°, wyżej ~51°. Dach ≈ 1,6 × ściana jak na zdjęciu. Brak wysokości LoD — ESTIMATED.
+- **Wole oko** na połaci od podcienia tuż nad załamaniem: brew o profilu cos² (1,6 × 0,45 m) z gontu, czoło z deski
+  z ciemnym półokrągłym otworem.
+- **Podcień:** głębokość 2,1 m (1,7), sześć słupów 20 cm (5), miecze 0,65 m po obu stronach każdego słupa, oczep 22 cm,
+  nad nim końce belek stropowych co ~0,87 m wysunięte 0,28 m, płatew, strop z desek; **podest deskowy** na podwalinie
+  wysunięty 0,25 m przed słupy, na kamieniach, z jednym stopniem. Izba zrębowa: mały kwadratowy otwór zamiast okiennicy.
+- Materiały: `log_wall_raw` 0,21 / 0,165 / 0,12 (miodowy z rundy 2 wychodził pomarańczowo; zdjęcie: zrąb zszarzały),
+  nowy `wood_planks_weathered` (skan `wood_siding`, 0,20 / 0,16 / 0,12) na słupy, miecze, belki, podest zamiast brązowego
+  `wood_planks`; `roof_shingles_grey` 0,195 / 0,196 / 0,192.
+
+**Dom.**
+- **Podmurówka (`fieldstone`).** Przyczyna „odwrotnego” odczytu: (a) kopuła kamienia `sqrt(e)` miała pionową ścianę przy
+  fudze — mapa normalnych rysowała w słońcu cienką czarną kreskę wokół każdego kamienia („płytki łamane”); (b) w albedo
+  brzegi kamieni i wilgotny dół były ciemniejsze od zaprawy — w cieniu wychodziły ciemne kamienie w jasnej siatce.
+  Nowy zestaw: gładka kopuła bez ostrza, fugi 2–4 cm tylko lekko cofnięte, zaprawa piaskowa ciemniejsza od średniego
+  kamienia i jaśniejsza od ciemnych, ton kamieni 0,53–1,03 × z kilkoma ciemnymi głazami, AO 0,5 (było 0,9).
+  Barwa `fieldstone_plinth` 0,215 / 0,200 / 0,172.
+- **Płot działki** (`plot_fence.tint`): atlas `plot_kit` maluje sztachety rdzawoczerwono; nowe pole `tint: [r, g, b]`
+  (mnożnik liniowy 0–2 barw atlasu = `Kit.tint` tej działki zamiast barwy starzenia klasy wieku). Dom Klattów:
+  `[0.80, 2.0, 1.30]` → ok. 107 / 68 / 43 sRGB, jak bejca sztachet autorskich. Inne działki bez zmian.
+- **Ganek a płot i chodnik — warstwa dróg, nadpisanie lokalne.** Zmierzone w danych: oś OSM Kościelnej 4,06 m od czoła
+  ganku (BDOT), jezdnia 5,5 m (BDOT) → krawężnik 1,31 m przed gankiem. Reguła `implied_sidewalks` kładzie chodnik
+  standardowy 2,0 m, więc jego tylna krawędź wchodziła 0,7 m w głąb ganku. Zdjęcie 01 i ortofoto 0,25 m pokazują
+  wąski chodnik (~1,1–1,2 m) między krawężnikiem a płotem. Nowy klucz nadpisania krawędzi `sidewalk_w_left` /
+  `sidewalk_w_right` (m, 0,6–6,0; `roads/network.py`: szerokość chodnika tej strony zamiast `SIDEWALK_W`, tylko tam,
+  gdzie strona ma chodnik) i wpis `look-dom-klattow-koscielna-footway`: **1,10 m po stronie północnej** krawędzi
+  `w98072526:1134839334-1134842485` (303 m; szerokość z dala od domu ESTIMATED z ortofoto). Płot staje w linii czoła
+  ganku poza obrysem drogi (reguła z rundy 1 bez zmian), ganek nie wchodzi na chodnik.
+- **Zieleń przy ścianie (zdjęcie 01):** krzew (r 1,05 m, 2,0 m) między pierwszym a drugim oknem na zachód od ganku,
+  młode drzewko (2,8 m) między dwoma ostatnimi na wschód, pnącze na wschodniej połowie czoła ganku — siatki atlasu
+  `plot_kit` (`plots.bush`, `fruit_tree`, `card`), tylko treść High, tylko gdy pas między ścianą a płotem ma ≥ 1,5 m.
+- **Słup energetyczny:** w danych go nie ma (BDOT10k `OT_BUWT_P`: najbliższy obiekt 476 m; `OT_SULN_L`: tylko linie SN
+  183 m dalej; OSM: brak `power=*` w kaflu przy Kościelnej) — nie dodany, zostaje otwarty.
+
 ## Otwarte
 - Ocena właściciela i `visual-critic` (kolory bielenia, dachówki, bejcy; rozmieszczenie okien).
 - Krzew i pnącze przy ganku, tabliczka z numerem, słup energetyczny przy narożniku.
