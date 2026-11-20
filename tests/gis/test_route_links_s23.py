@@ -211,23 +211,18 @@ def test_links_keep_tyres_on_hard_surface():
         pytest.skip("no link tile built on this machine (build_world not run)")
 
 
-def test_swept_gate_catches_the_monki_corner_without_swing(tmp_path):
-    """Negative control: the Monki link without its authored swing cuts the kerb corner of the roundabout again."""
+def test_monki_corner_needs_no_swing_after_d94():
+    """D94 / ADR 0306: with the truck kerb returns and 16 m corners of the compact roundabout the Monki link keeps its
+    tyres on the hard surface without the authored swing of knyszyn-r24 (the swing was removed from route_links.yaml)."""
     SW = _swept()
     if not SW.built("knyszyn"):
         pytest.skip("knyszyn not built on this machine")
     import yaml
     cfg = yaml.safe_load(RL.SRC.read_text(encoding="utf-8"))
     L = next(x for x in cfg["links"] if x["id"] == "knyszyn-rynek-to-dk65-w")
-    assert L.get("swing"), "the swing is what keeps the semitrailer on the roundabout"
-    L.pop("swing")
-    cfg["links"] = [x for x in cfg["links"] if x["id"] == "knyszyn-rynek-to-dk65-w"]
-    cfg["corridors"] = []
-    src = tmp_path / "links.yaml"
-    src.write_text(yaml.safe_dump(cfg), encoding="utf-8")
-    links = RL.build(src)["links"]
-    r = SW.check("knyszyn-rynek-to-dk65-w", links=links)
-    assert r["off_hard"] > 0, r
+    assert not L.get("swing"), "D94 geometry: no authored swing needed"
+    r = SW.check("knyszyn-rynek-to-dk65-w")
+    assert r["off_hard"] == 0, r
 
 
 def test_tykocin_trip_ends_on_the_rynek_0303():

@@ -33,9 +33,11 @@ def _edge(tags):
     ({"highway": "trunk", "oneway": "yes", "lanes": "2", "width": 10.0}, 3.75),
     # two-way class G with BDOT 6.0 m (Szosa Knyszyńska): 3.00 m lanes as painted, floor unchanged
     ({"highway": "secondary", "lanes": "2", "width": 6.0}, 3.00),
-    # Z / L: § 17 ust. 1 pkt 5-6 allow up to 3.50 m (was capped at std + 0.25)
+    # Z: § 17 ust. 1 pkt 5 allows up to 3.50 m (was capped at std + 0.25)
     ({"highway": "tertiary", "lanes": "2", "width": 7.0}, 3.50),
-    ({"highway": "residential", "lanes": "2", "width": 6.6}, 3.30),
+    # L / D: back to std + 0.25 (ADR 0306: BDOT counts parking bays / yard fronts of these ways, lane paths into kerbs)
+    ({"highway": "residential", "lanes": "2", "width": 6.6}, 3.00),
+    ({"highway": "service", "lanes": "2", "width": 6.5}, 2.50),      # class D: BDOT ignored (ADR 0306)
     # Z / L floor unchanged (no measurement): the difficult-conditions value
     ({"highway": "residential", "lanes": "2", "width": 4.8}, 2.50),
 ])
@@ -53,7 +55,8 @@ def test_standards_follow_ptb2022_17_1():
             assert diff <= S.bdot_lane_floor(cls, ow) <= std
         assert S.LANE_WIDTH_MAX[cls] >= std
     assert S.bdot_lane_floor("G", False) == 3.00          # two-way G: BDOT right (Szosa Knyszyńska, edge lines 6.3-6.5 m)
-    assert S.LANE_WIDTH_MAX["Z"] == S.LANE_WIDTH_MAX["L"] == S.LANE_WIDTH_MAX["D"] == 3.50   # "dopuszcza się ... 3,50"
+    assert S.LANE_WIDTH_MAX["Z"] == 3.50                  # "dopuszcza się ... 3,50"
+    assert S.LANE_WIDTH_MAX["L"] == 3.00 and S.LANE_WIDTH_MAX["D"] == 2.75   # ADR 0306: std + 0.25 (BDOT over-reads)
     assert S.LANE_WIDTH_MAX["S"] == 3.75
 
 
@@ -94,7 +97,7 @@ def test_generated_lane_overrides_loaded_before_authored():
     ("bialystok-maczka", "w249740773:2563060452-2357583396"),
     ("bialystok-maczka", "w257357743:2629158252-2357583392"),
 ])
-def test_maczka_three_lanes_as_painted(region, edge):
+def test_maczka_three_lanes_as_painted(region, edge, measured_widths):
     """The 3-lane DK8 carriageway is built with the painted lanes (3.4-4.0 m each; a lane to the kerb includes the gutter) and its centre
     1.0-2.2 m right of the OSM way (the way is drawn along the lane lines, toward the median)."""
     from roads import pipeline

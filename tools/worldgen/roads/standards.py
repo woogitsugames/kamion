@@ -41,7 +41,12 @@ LANE_WIDTH = {
 }
 # PTB2022 § 17 ust. 1 (text re-read 2026-11-19, ADR 0301): the widest value the regulation allows ("dopuszcza się")
 # per class: S 3.75, Z / L / D 3.50 m. A, GP and G name no wider value -> std + 0.25 m (WORKING_VALUE, as before).
-LANE_WIDTH_MAX = {"A": 4.00, "S": 3.75, "GP": 3.75, "G": 3.75, "Z": 3.50, "L": 3.50, "D": 3.50}
+# ADR 0306 (CI regression of tile C after ADR 0301): L / D (residential, living street, service) keep std + 0.25 m as before
+# ADR 0301. BDOT10k SZEROKOSCNAWIERZCHNI of such ways counts the whole paved strip (parking bays, yard fronts): with the
+# 3.50 m cap consecutive edges of one service way came out 5.5 / 6.5 / 7.0 m wide and the lane paths through their
+# junctions ran into kerbs (road_consistency lane_blind_end 54 -> 57, 2 of them next to the start route). Not measured
+# on the orthophoto for these classes (ADR 0301 measured GP / G only).
+LANE_WIDTH_MAX = {"A": 4.00, "S": 3.75, "GP": 3.75, "G": 3.75, "Z": 3.50, "L": 3.00, "D": 2.75}
 # ADR 0301: the lower bound of a lane width derived from BDOT10k SZEROKOSCNAWIERZCHNI on a multi-lane carriageway.
 # Measured on the GUGiK orthophoto 0.08 m along the start route (tools/worldgen/qa/lane_width_audit.py, 2026-11-19):
 # BDOT gives 3.0-3.25 m per lane on the one-way carriageways of DK8 Maczka / Kleeberga (class GP), the painted lanes
@@ -55,6 +60,25 @@ LANE_WIDTH_BDOT_FLOOR = {"A": 3.75, "S": 3.50, "GP": 3.50}
 def bdot_lane_floor(cls: str, oneway: bool) -> float:
     """Lower bound of a BDOT10k-derived lane width (ADR 0301)."""
     return LANE_WIDTH_BDOT_FLOOR[cls] if oneway and cls in LANE_WIDTH_BDOT_FLOOR else LANE_WIDTH[cls][1]
+# D94 / ADR 0306 - GAMEPLAY_WIDEN, NOT a measured fact: every lane is built this much wider than the measured or rule
+# width (orthophoto lane_edges of ADR 0301, BDOT10k, OSM, PTB2022 rules and authored overrides are the base; this is
+# the delta on top, applied once in network.load after all overrides). Owner decision D94 (2026-11-19): a 16.5 m
+# tractor + semitrailer must be easy to keep in lane; layout (lane count, alignment, position) stays as measured.
+# Set to 0.0 to get the measured cross-sections (QA against the orthophoto, tests of measured widths): 0 also switches
+# off the other D94 rules (network.curve_widen, compact_roundabout truck kerb returns).
+GAMEPLAY_LANE_WIDEN_DEFAULT_M = 0.25
+GAMEPLAY_LANE_WIDEN_M = GAMEPLAY_LANE_WIDEN_DEFAULT_M
+# D94 / ADR 0306 curve widening of two-way 2-lane GP / G / Z carriageways (network.curve_widen), GAMEPLAY_WIDEN /
+# WORKING_VALUE: bends tighter than CURVE_WIDEN_R_M; lane >= TRUCK_TYRE_W_M + 2 x (off-tracking + CURVE_WIDEN_TOL_M);
+# at most CURVE_WIDEN_MAX_M per lane; none within the skip distances of junction nodes / tile seams.
+CURVE_WIDEN_R_M = 200.0
+WIDEN_NEIGHBOUR_SEARCH_M = 40.0  # ADR 0306: same-level parallel roads, including parking/service carriageways
+WIDEN_SEPARATOR_RESERVE_M = 12.0 # other neighbours: reserve close separators; opposing oneways keep their WHOLE gap
+TRUCK_TYRE_W_M = 2.48           # outer edges of the drive duals (roads.swept_path.Combination.rear_outer_half x 2)
+CURVE_WIDEN_TOL_M = 0.10
+CURVE_WIDEN_MAX_M = 1.0
+CURVE_WIDEN_JUNCTION_SKIP_M = 15.0
+CURVE_WIDEN_SEAM_SKIP_M = 40.0
 # PTB2022 § 17 ust. 3 – single-lane carriageway: < two lanes but >= 3.50 m.
 SINGLE_LANE_MIN = 3.50
 SINGLE_LANE_DEFAULT = 4.00          # WORKING_VALUE (between 3.50 and 2 x lane)

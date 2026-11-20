@@ -166,6 +166,16 @@ ISLAND_CURB_R = (2.0, 30.0)   # m, WORKING_VALUE: accepted node override `island
 def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
     arms = j.arms
     n = len(arms)
+    max_trim = dict(max_trim)
+    for i, arm in enumerate(arms):
+        if arm.cls(net.sec_list) != "D":
+            continue
+        # A service-road loop's distant bend belongs to the ribbon, not the intersection mouth. Do not find a
+        # fillet/fork or align a separator nose around that bend (C parking: trims formerly 40 and 82 metres).
+        ds = np.arange(1.0, min(LOOK, arm.L), STEP)
+        turns = np.nonzero(arm.direction(ds) @ arm.direction(0.0) < math.cos(math.radians(45)))[0]
+        if len(turns):
+            max_trim[i] = min(max_trim[i], max(S.JUNCTION_MIN_TRIM, float(ds[turns[0]]) - STEP))
     corners = []
     tau = {i: [S.JUNCTION_MIN_TRIM, S.JUNCTION_MIN_TRIM] for i in range(n)}   # [right, left]
     for k in range(n):
@@ -199,6 +209,13 @@ def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
             nose_ang = max(nose_ang, float(net.nodes[n_].get("override", {}).get("nose_max_angle", 0.0)))
         if alpha_deg < nose_ang:
             h0 = hit(0.0, 160.0)
+            if h0 is not None and A.cls(net.sec_list) == B.cls(net.sec_list) == "D":
+                # A parking loop returns beside its own entrance. A gutter crossing beyond its bend is not the
+                # end of a diverging fork: trimming to it absorbs the loop and puts the nose across the entrance.
+                # Keep the parallel separator's local nose instead (C: 40 / 82 m trims at w435369082).
+                if any(float(arm.direction(max(t, 0.0)) @ arm.direction(0.0)) < math.cos(math.radians(45))
+                       for arm, t in ((A, h0[0]), (B, h0[1]))):
+                    h0 = None
             if h0 is not None:   # fork: gutters cross -> gore nose just after the carriageways separate
                 c = Corner("nose", k, k1, tau_k=min(h0[0] + 1.5, mA), tau_k1=min(h0[1] + 1.5, mB))
                 c.meta_fork = True
@@ -399,11 +416,13 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
             if c.node_a in parent and c.node_b in parent and find(c.node_a) != find(c.node_b):
                 ta, tb = trims.get((c.id, "a"), 0), trims.get((c.id, "b"), 0)
                 if c.length < ta + tb + 1.0:
+                    ga = [n for n in jn if find(n) == find(c.node_a)]
+                    gb = [n for n in jn if find(n) == find(c.node_b)]
+                    if _service_tees_fit(net, c, (ga, gb), ends):
+                        continue
                     if (c.node_a in keep_apart or c.node_b in keep_apart) and c.length >= MINOR_TEE_MIN_M \
                             and _road_highway(net, c) not in MINOR_HIGHWAYS:
                         continue            # ADR 0237 D38: authored `cluster: separate`
-                    ga = [n for n in jn if find(n) == find(c.node_a)]
-                    gb = [n for n in jn if find(n) == find(c.node_b)]
                     pts = np.array([net.nodes[n]["xy"] for n in ga + gb])
                     diam = float(np.max(np.hypot(*(pts[:, None, :] - pts[None, :, :]).transpose(2, 0, 1))))
                     if diam <= 30.0:
@@ -489,6 +508,26 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
     for j in juncs:
         j.boundary = patch_boundary(j)
     return juncs
+
+
+def _service_tees_fit(net, link, groups, ends):
+    """Keep spaced service-road tees local instead of replacing a parking entrance by a long merged patch.
+
+    Two carriageway widths of physical separation is a conservative WORKING_VALUE. The final corner solver shares
+    the connector between both junctions and reduces their radii to fit. Inspect WHOLE current clusters: a public
+    road or compact/ring junction absorbed earlier must never be split by this service-only rule (ADR 0306).
+    """
+    chains = [c for group in groups for node in group for c, _ in ends[node]]
+    if not chains:
+        return False
+    for c in chains:
+        if c.roundabout or any(net.sec_list[int(i)].cls != "D" or net.sec_list[int(i)].compact is not None
+                               for i in np.unique(c.sec_idx)):
+            return False
+    need = 4.0 * max(float(c.hw.max()) for c in chains)
+    pa, pb = (np.array([net.nodes[n]["xy"] for n in group]) for group in groups)
+    gap = float(np.linalg.norm(pa[:, None, :] - pb[None, :, :], axis=2).min())
+    return link.length >= need and gap >= need
 
 
 # ADR 0237 D38 (Knyszyn, Poludniowa x Szkolna, OSM node 7015352011): a parking aisle leaving Poludniowa 23 m from the
