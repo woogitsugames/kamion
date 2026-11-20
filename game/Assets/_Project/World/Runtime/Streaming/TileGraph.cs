@@ -21,6 +21,8 @@ namespace Game.World.Streaming
     public sealed class TileData
     {
         public string id;
+        /// <summary>Desktop starts need neighbouring scenes by default (streaming.authored.json; absent = false).</summary>
+        public bool needsNeighbourContext;
         /// <summary>Tile rectangle, EPSG:2180 (x east, y north).</summary>
         public double xmin, ymin, xmax, ymax;
         /// <summary>Floating-origin anchor of the region import (region.yaml origin): Unity (0,0,0) of the region scene.</summary>
