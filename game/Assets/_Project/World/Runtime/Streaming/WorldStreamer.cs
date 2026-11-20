@@ -903,7 +903,12 @@ namespace Game.World.Streaming
                         foreach (Transform f in c)
                         {
                             var side = EdgeSides.FarSectorSide(f.name);
-                            if (side != TileSide.None) { far.Add(f.gameObject); fs.Add(side); }
+                            if (side != TileSide.None)
+                            {
+                                far.Add(f.gameObject); fs.Add(side);
+                                // Apply before WorldEdge becomes visible, even with no Ready seams.
+                                f.gameObject.SetActive(EdgeSides.FarSectorMayShow(side, Graph.NeighborSides[t.index]));
+                            }
                         }
                 }
             }
@@ -982,7 +987,9 @@ namespace Game.World.Streaming
                 if (t.groups[i] != null) t.groups[i].SetActive(!hide);
             }
             for (int i = 0; i < t.farSectors.Length; i++)
-                if (t.farSectors[i] != null) t.farSectors[i].SetActive(EdgeSides.FarSectorVisible(t.farSide[i], covered, corners));
+                if (t.farSectors[i] != null)
+                    t.farSectors[i].SetActive(EdgeSides.FarSectorMayShow(t.farSide[i], Graph.NeighborSides[tile])   // Codex s24: neighbour sectors hidden from start
+                        && EdgeSides.FarSectorVisible(t.farSide[i], covered, corners));                          // ADR 0308: covered sides / corners
             if (t.apronPieces.Length > 0)
             {
                 if (t.apronWhole != null) t.apronWhole.SetActive(covered == TileSide.None && corners == 0);

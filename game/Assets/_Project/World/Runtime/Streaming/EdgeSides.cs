@@ -110,6 +110,19 @@ namespace Game.World.Streaming
             return TileSide.None;
         }
 
+        /// <summary>
+        /// Reserve the backdrop toward registered neighbours from the first frame, including corners.
+        /// Loading/Ready/Unloading must never toggle it: compressed proxies cannot replace real tiles.
+        /// Unknown nodes (None, e.g. the separate skyline) are not directional sectors.
+        /// </summary>
+        public static bool FarSectorMayShow(TileSide sector, TileSide[] neighbourSides)
+        {
+            if (sector == TileSide.None || neighbourSides == null) return true;
+            for (int i = 0; i < neighbourSides.Length; i++)
+                if ((sector & neighbourSides[i]) != 0) return false;
+            return true;
+        }
+
         /// <summary>Apron piece names written by the importer for streaming (Apron_N / _E / _S / _W) → side.</summary>
         public static TileSide ApronPieceSide(string objectName)
         {
