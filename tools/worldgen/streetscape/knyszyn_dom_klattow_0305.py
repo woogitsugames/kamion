@@ -67,7 +67,7 @@ WALKWAY_MIN_M = 1.4                               # footway left in front of pic
 # garden strip (photo 01): (kind, centre relative to the porch centre m, crown radius m, height m)
 GARDEN = (("bush", -6.95, 1.05, 2.0), ("tree", 7.0, 0.8, 2.8))
 # climber on the porch front, east of the doorway: cards (offset from the porch centre m, foot above the ground m, w, h)
-CLIMBER = ((0.95, 0.15, 0.80, 2.05), (0.55, 1.95, 1.50, 0.75))
+CLIMBER = ((0.95, 0.15, 0.80, 2.05), (0.85, 1.95, 1.10, 0.70))
 BED = "plot_lawn"                                 # raised grass strip between the wall and the pickets
 
 

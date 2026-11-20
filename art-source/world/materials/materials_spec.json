@@ -2785,14 +2785,14 @@
           ],
           "texel_mm": 2.34,
           "dir": "fieldstone/High",
-          "png_bytes": 1537493,
+          "png_bytes": 1736640,
           "files": [
             "T_fieldstone_BaseColor.png",
             "T_fieldstone_MaskMap.png",
             "T_fieldstone_Normal.png",
             "T_fieldstone_Var.png"
           ],
-          "smoothness_mean": 0.152,
+          "smoothness_mean": 0.124,
           "astc": {
             "BaseColor": "6x6",
             "Normal": "5x5",
@@ -2800,70 +2800,24 @@
             "Var": "8x8"
           },
           "gpu_bytes_astc_mips": 622155
-        },
-        "Medium": {
-          "res": [
-            512,
-            128
-          ],
-          "texel_mm": 4.69,
-          "dir": "fieldstone/Medium",
-          "png_bytes": 459480,
-          "files": [
-            "T_fieldstone_BaseColor.png",
-            "T_fieldstone_MaskMap.png",
-            "T_fieldstone_Normal.png",
-            "T_fieldstone_Var.png"
-          ],
-          "smoothness_mean": 0.131,
-          "astc": {
-            "BaseColor": "6x6",
-            "Normal": "6x6",
-            "MaskMap": "8x8",
-            "Var": "8x8"
-          },
-          "gpu_bytes_astc_mips": 121460
-        },
-        "Low": {
-          "res": [
-            256,
-            64
-          ],
-          "texel_mm": 9.38,
-          "dir": "fieldstone/Low",
-          "png_bytes": 126994,
-          "files": [
-            "T_fieldstone_BaseColor.png",
-            "T_fieldstone_MaskMap.png",
-            "T_fieldstone_Normal.png",
-            "T_fieldstone_Var.png"
-          ],
-          "smoothness_mean": 0.112,
-          "astc": {
-            "BaseColor": "8x8",
-            "Normal": "8x8",
-            "MaskMap": "8x8",
-            "Var": "8x8"
-          },
-          "gpu_bytes_astc_mips": 21845
         }
       },
       "height_range_m": [
-        -0.006,
-        0.03287
+        -0.00388,
+        0.02299
       ],
       "albedo": {
         "mean_lum_linear": 0.5,
-        "p05": 0.363,
-        "p95": 0.6597,
+        "p05": 0.3573,
+        "p95": 0.735,
         "mean_rgb_linear": [
-          0.5059,
-          0.4994,
-          0.4884
+          0.5205,
+          0.4973,
+          0.4663
         ]
       },
-      "hf_ratio_albedo": 0.0384,
-      "ao_mean": 0.819
+      "hf_ratio_albedo": 0.0255,
+      "ao_mean": 0.925
     },
     "fire_station": {
       "tile_m": [
@@ -5310,14 +5264,14 @@
           ],
           "texel_mm": 1.46,
           "dir": "wood_shingles/High",
-          "png_bytes": 6408518,
+          "png_bytes": 6565202,
           "files": [
             "T_wood_shingles_BaseColor.png",
             "T_wood_shingles_MaskMap.png",
             "T_wood_shingles_Normal.png",
             "T_wood_shingles_Var.png"
           ],
-          "smoothness_mean": 0.133,
+          "smoothness_mean": 0.134,
           "astc": {
             "BaseColor": "6x6",
             "Normal": "5x5",
@@ -5325,69 +5279,23 @@
             "Var": "8x8"
           },
           "gpu_bytes_astc_mips": 2488620
-        },
-        "Medium": {
-          "res": [
-            512,
-            512
-          ],
-          "texel_mm": 2.93,
-          "dir": "wood_shingles/Medium",
-          "png_bytes": 1657142,
-          "files": [
-            "T_wood_shingles_BaseColor.png",
-            "T_wood_shingles_MaskMap.png",
-            "T_wood_shingles_Normal.png",
-            "T_wood_shingles_Var.png"
-          ],
-          "smoothness_mean": 0.104,
-          "astc": {
-            "BaseColor": "6x6",
-            "Normal": "6x6",
-            "MaskMap": "8x8",
-            "Var": "8x8"
-          },
-          "gpu_bytes_astc_mips": 485840
-        },
-        "Low": {
-          "res": [
-            256,
-            256
-          ],
-          "texel_mm": 5.86,
-          "dir": "wood_shingles/Low",
-          "png_bytes": 339082,
-          "files": [
-            "T_wood_shingles_BaseColor.png",
-            "T_wood_shingles_MaskMap.png",
-            "T_wood_shingles_Normal.png",
-            "T_wood_shingles_Var.png"
-          ],
-          "smoothness_mean": 0.085,
-          "astc": {
-            "BaseColor": "8x8",
-            "Normal": "8x8",
-            "MaskMap": "8x8",
-            "Var": "8x8"
-          },
-          "gpu_bytes_astc_mips": 87381
         }
       },
       "height_range_m": [
-        -0.00691,
-        0.01266
+        -0.00862,
+        0.01567
       ],
       "albedo": {
         "mean_lum_linear": 0.5,
-        "p05": 0.2737,
-        "p95": 0.6483,
+        "p05": 0.2602,
+        "p95": 0.666,
         "mean_rgb_linear": [
-          0.5049,
+          0.5051,
           0.4995,
-          0.4903
+          0.49
         ]
       },
-      "hf_ratio_albedo": 0.0587,
+      "hf_ratio_albedo": 0.0551,
       "ao_mean": 0.897
     },
     "wood_siding": {
