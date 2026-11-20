@@ -23,7 +23,8 @@ with the tighter tolerance EDGE_TOL_M. Lane width is the LOCAL one (`EdgeSection
 with `lanes_follow_width` is compared by the lanes it paints at the seam, not by the lane width of its widest station.
 
 Tolerance: +-0.1 m on lengths (TOL_M), categories must be equal. Reference ranges (research K1, ADR 0212) are checked on
-the route road of the corridor seams (`REFERENCE`).
+the route road of the corridor seams (`REFERENCE`), shifted by two lane allowances of
+GAMEPLAY_LANE_WIDEN_M (D94); the measured range and its tolerance stay unchanged.
 
   uv run --project tools/worldgen python -m tools.worldgen.qa.seams [--tiles a,b,...] [--overrides-ref <git ref>]
         [--json out.json] [--md out.md] [--compare-ref origin/dk65-k1-0220]

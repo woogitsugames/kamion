@@ -29,6 +29,11 @@ def _graph():
     return json.loads(TG.OUT.read_text(encoding="utf-8"))
 
 
+def test_links_use_generator_cross_sections():
+    from roads import standards as S
+    assert S.GAMEPLAY_LANE_WIDEN_M == S.GAMEPLAY_LANE_WIDEN_DEFAULT_M
+
+
 def test_links_json_fresh():
     assert RL.OUT.read_text(encoding="utf-8") == RL.dumps(RL.build()), "run tools/worldgen/streaming/route_links.py"
 
@@ -94,7 +99,7 @@ def test_corridor_tiles_are_in_the_d67_full_build_set():
     assert [t for t in c["tiles"] if t not in full] == []
 
 
-def test_links_stay_in_their_tile_and_replace_only_knyszyn():
+def test_links_stay_in_their_tile_and_use_authored_replacements():
     g = {t["id"]: t for t in _graph()["tiles"]}
     for L in _links()["links"]:
         t = g[L["tile"]]
@@ -105,8 +110,10 @@ def test_links_stay_in_their_tile_and_replace_only_knyszyn():
         # knyszyn: ADR 0285; s8-03: ADR 0288 (same path as the s8-03 route, lane shift onto the s8-04 route before the seam)
         # bialystok-knyszynska: ADR 0292 (destination s8: Kleeberga straight on south instead of the rondo Kresowian exit)
         # C / wygoda: D81 trip to Dojlidy (ADR 0290); tykocin: ADR 0303 (destination tykocin: the trip ends on the Rynek, the control route runs on to the tile edge)
+        # ADR 0315: the Wasilkow link replaces its tile route to close the D94 lane join.
         assert L["replacesRoute"] in ("", "knyszyn", "s8-03", "bialystok-knyszynska", "tykocin",
-                                   "bialystok-industrial-c", "bialystok-wygoda"), L["id"]
+                                   "bialystok-industrial-c", "bialystok-wygoda", "dk8-wasilkow-01"), L["id"]
+        assert not L["replacesRoute"] or L["replacesRoute"] == L["tile"], L["id"]
         steps = [((L["e"][i + 1] - L["e"][i]) ** 2 + (L["n"][i + 1] - L["n"][i]) ** 2) ** 0.5 for i in range(len(L["e"]) - 1)]
         assert max(steps) < 2.6, L["id"]                   # no jump (blend never breaks the 2 m sampling)
 

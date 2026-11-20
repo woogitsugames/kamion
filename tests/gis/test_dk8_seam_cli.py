@@ -136,4 +136,4 @@ def test_d94_reported_breaks_use_graph_boundary(gameplay, tmp_path, pair, way):
         assert transitions[0].length == pytest.approx(transitions[1].length)
     rows = Q.compare_pair(*crossings)
     assert all(r["param"] != "droga po drugiej stronie" for r in rows)
-    assert next(r for r in rows if r["param"] == "szerokoœæ jezdni [m]")["status"] == "OK"
+    assert next(r for r in rows if r["param"].startswith("szeroko"))["status"] == "OK"
