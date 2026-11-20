@@ -14,7 +14,8 @@ namespace Game.Editor.VisualQA
         public static void Prepare(string qualityTier)
         {
             var start = UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>();
-            string requested = EditorTools.Arg("-qaNeighbours", start != null && start.regionId == "knyszyn" ? "knyszyn-w" : "");
+            string requested = EditorTools.Arg("-qaNeighbours",
+                start != null && Game.World.Streaming.EdgeClosureRules.NeedsNeighbourContext(start.regionId) ? "knyszyn-w" : "");
             if (string.IsNullOrWhiteSpace(requested)) return;
             if (start == null) throw new InvalidOperationException("QA neighbours require an imported world scene");
             var graph = Game.World.Streaming.TileGraph.LoadDefault();
@@ -31,7 +32,8 @@ namespace Game.Editor.VisualQA
                 if (next < 0 || !graph.Neighbors[index].Contains(next))
                     throw new ArgumentException("QA context must be a graph neighbour: " + id);
                 string path = Game.World.RegionScenes.TileScenePathFor(id, content);
-                if (!File.Exists(path)) throw new FileNotFoundException("Import the QA neighbour in the same content tier first", path);
+                if (!File.Exists(Path.Combine(EditorTools.ProjectRoot, path)))
+                    throw new FileNotFoundException("Import the QA neighbour in the same content tier first", path);
                 var scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
                 var root = scene.GetRootGameObjects().Select(go => go.GetComponent<Game.World.WorldRegionRoot>())
                     .SingleOrDefault(r => r != null && r.regionId == id);

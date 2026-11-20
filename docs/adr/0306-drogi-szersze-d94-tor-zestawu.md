@@ -123,3 +123,8 @@ progu/kolizji. Znaki A-7/C-12 na 4 wlotach i 6 lamp przez istniejące authored g
 
 To nie jest wizualny PASS ani zamknięcie D95. Zapora/szew i kontrola renderem pozostają otwarte; Unity nie uruchamiano
 na polecenie właściciela. Bieżące wyniki i ograniczenia: `docs/reports/visual/2026-11-20-knyszyn-d95-cli.md`.
+
+Kontynuacja D95: statyczny QA Knyszyna ładuje prawdziwą scenę knyszyn-w tego samego tieru; wspólne reguły streamera
+usuwają zapory i aprony/stuby po przygotowaniu kolizji. Brak sceny przerywa render. Start playera PC w Knyszynie bez
+argumentu `-stream` domyślnie włącza streaming (lokalny wyjątek od opt-in ADR 0273); jawne `-stream 0` oraz override
+wygrywają. Nie zmienia to budżetów, gotowości kolizji ani telefonów. Obraz i terminowość ładowania wymagają playera.

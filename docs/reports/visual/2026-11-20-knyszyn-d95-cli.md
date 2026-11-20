@@ -15,13 +15,17 @@ ją przez `TilePlacement` i otwiera szew tym samym `RefreshEdgesAround` co playe
 Usuwane są zapory obu stron oraz nakładające się aprony/stuby i tło. Brak zaimportowanego sąsiada przerywa
 render z błędem — nie powstaje pozornie poprawny obraz nad pustką. Dodano regresję EditMode sprawdzającą
 obie zapory, oba stuby i położenie sąsiada; jej uruchomienie oraz kompilacja Unity pozostają odroczone.
-Dotyczy to kontekstu statycznego QA; w playerze nadal wymagany jest streaming (`-stream 1`) i gotowy sąsiad.
-Samodzielna scena bez streamingu nadal kończy mapę zaporą. Nie jest to dowód wizualnego usunięcia szwu.
+Player PC uruchomiony w Knyszynie bez argumentu `-stream` teraz automatycznie włącza streaming, żeby rzeczywista
+droga zastąpiła stub także w zwykłym przejeździe. Jawne `-stream 0` i EnabledOverride zachowują pierwszeństwo;
+telefony oraz inne sceny zachowują poprzednią regułę. Nadal trzeba mieć scenę sąsiada w buildzie; zapory otwierają
+się dopiero po gotowości kafla i kolizji. Samodzielna scena z jawnym wyłączeniem streamingu kończy mapę zaporą.
+Nie jest to dowód wizualnego usunięcia szwu; stan po starcie i przejazd wymagają playera.
 Helper wydzielono do `WorldNeighbourQa.cs`. Sprawdzono kompilatorem Roslyn (bez edytora): całe lokalne
 Game.World, nowy helper QA i zmieniony plik testu EditMode — exit0 dla wszystkich trzech; referencje z cache
 main. Pełny stary kod Game.Editor ma niezgodności z tym cache (CabViewQa/forceReverse/CameraModeOverride),
 więc kompilacja helpera nie jest deklaracją pełnego buildu. `dotnet test tools/spawn-runner/Tests/Tests.csproj`:
-35/35 PASS. Nowy scenowy test EditMode nie został wykonany, zgodnie z zakazem Unity.
+43/43 PASS (w tym 8 przypadków domyślnego streamingu Knyszyna i pierwszeństwa jawnych ustawień).
+Nowy scenowy test EditMode nie został wykonany, zgodnie z zakazem Unity.
 
 Zachowane promienie, szerokość pierścienia i fartuch D94. Zachodnie ramię ma dwa pasy z zachowaniem 11,75 m asfaltu po D94 (11,25 m + 2 × 0,25 m zamiast 11,00 m + 3 × 0,25 m).
 

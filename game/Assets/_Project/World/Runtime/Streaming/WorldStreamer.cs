@@ -204,7 +204,8 @@ namespace Game.World.Streaming
 
         /// <summary>
         /// The single hook of the driving scene (ADR 0273 §10, <c>DrivingLabBootstrap.Start</c>, one statement): installs the
-        /// streamer only when it is switched on - <see cref="EnabledOverride"/> or the launch argument <c>stream=1</c> - and
+        /// streamer when requested by <see cref="EnabledOverride"/>, <c>stream=1</c>, or a desktop Knyszyn start without
+        /// an explicit stream argument (D95: the roundabout needs real neighbour context), and
         /// the start region has an available neighbour tile scene; otherwise returns null and the scene is exactly as before
         /// (closed region edge). Everything the bootstrap used to wire by hand is done here, so Game.Gameplay keeps one line:
         /// <list type="bullet">
@@ -223,7 +224,7 @@ namespace Game.World.Streaming
         public static WorldStreamer TryInstallFromLaunch(GameObject host, WorldRegionRoot start, Transform vehicle, Rigidbody body,
             string streamArgument, SafePoseBuffer safePoses, float safeMinAge, System.Action<Vector3> onOriginMoved)
         {
-            if (!IsRequested(streamArgument)) return null;
+            if (!IsRequested(streamArgument, start != null ? start.regionId : null, !Application.isMobilePlatform)) return null;
             if (host == null || start == null || vehicle == null) return null;
             // D44 (ADR 0273 §6 dopisek): on desktop the PC quality tier picks the content (High / Ultra -> _High_Tile), not the
             // start scene name; phones unchanged. Explicit Low fallback when no High tile scene is available.
@@ -263,8 +264,9 @@ namespace Game.World.Streaming
             return c;
         }
 
-        /// <summary>Streaming switch: <see cref="EnabledOverride"/> when set, else launch argument <c>stream</c> == "1".</summary>
-        public static bool IsRequested(string streamArgument) => EnabledOverride ?? streamArgument == "1";
+        /// <summary>Explicit switch / override, with the D95 desktop Knyszyn default when no argument was supplied.</summary>
+        public static bool IsRequested(string streamArgument, string region = null, bool desktop = false) =>
+            EdgeClosureRules.StreamingRequested(streamArgument, region, desktop, EnabledOverride);
 
         SafePoseBuffer m_SafePoses;
         float m_SafeMinAge;
