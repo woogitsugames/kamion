@@ -15,7 +15,11 @@ D71_EXTRA = ["bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-0
 # owner decision 2026-11-16: the 18 ring tiles of ADR 0231 are part of d67-full (driving order)
 RING_0231 = (["dk65-monki-%02d" % i for i in range(2, 8)] + ["monki-e", "monki"]
              + ["dw671-tykocin-%02d" % i for i in range(2, 10)] + ["tykocin", "dw671-jasionowka-01"])
-FULL_EXTRA = D71_EXTRA + RING_0231
+# 2026-11-19 (lead, build #2 report): + S8 / Jeroniki / Porosly / DK19 - d67-full = every catalog region
+S8_DK19 = (["s8-%02d" % i for i in range(1, 6)] + ["dk8-s8-jeroniki", "bialystok-porosly",
+           "bialystok-wygoda", "bialystok-bojary", "bialystok-mickiewicza",
+           "bialystok-krywlany", "dk8-wasilkow-01", "dk8-wasilkow-02", "dk8-wasilkow-03", "dk8-korycin-01"])
+FULL_EXTRA = D71_EXTRA + RING_0231 + S8_DK19
 
 
 def _module():
@@ -41,7 +45,7 @@ def test_d67_full_is_d67_plus_the_d71_regions():
     assert len(sets["d67"]) == 17
     assert sets["d67-full"] == sets["d67"] + FULL_EXTRA
     assert len(RING_0231) == 18
-    assert len(sets["d67-full"]) == 39 == len(set(sets["d67-full"]))
+    assert len(sets["d67-full"]) == 54 == len(set(sets["d67-full"]))
     assert all(r in ids for r in sets["d67-full"])
     assert all((REPO / "Data/Regions" / r / "route_start.json").exists() for r in FULL_EXTRA)
 
@@ -63,7 +67,7 @@ def test_derived_set_is_regenerated_when_missing_or_stale():
     mod.apply_derived_sets(stale, problems)
     assert any("d67-full: stale" in p for p in problems)
     full = _sets(stale)["d67-full"]
-    assert full.count("dk65-monki-01") == 1 and len(full) == 39, "no duplicates when the base set already holds an extra"
+    assert full.count("dk65-monki-01") == 1 and len(full) == 54, "no duplicates when the base set already holds an extra"
 
     unchanged = copy.deepcopy(cat)
     problems = []

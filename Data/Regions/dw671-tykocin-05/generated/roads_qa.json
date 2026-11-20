@@ -1,7 +1,7 @@
 {
  "chains": [
   {
-   "axis_smoothing_dev_max_m": 0.34,
+   "axis_smoothing_dev_max_m": 0.37,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -11,20 +11,20 @@
    "lanes": [
     2
    ],
-   "length_m": 1001.2,
-   "max_grade": 0.0571,
+   "length_m": 1001.1,
+   "max_grade": 0.057,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.024,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.0
+    5.5
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.6,
+   "axis_smoothing_dev_max_m": 0.63,
    "bridge_m": 0.0,
    "grade_limit": 0.11,
    "highway": [
@@ -34,13 +34,13 @@
    "lanes": [
     2
    ],
-   "length_m": 1993.5,
+   "length_m": 1993.4,
    "max_grade": 0.032,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -58,12 +58,12 @@
     2
    ],
    "length_m": 299.7,
-   "max_grade": 0.0305,
+   "max_grade": 0.0308,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -81,15 +81,15 @@
     2
    ],
    "length_m": 419.3,
-   "max_grade": 0.006,
+   "max_grade": 0.0061,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.007,
+   "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.4
+    7.9
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -109,14 +109,14 @@
    "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.03,
+   "axis_smoothing_dev_max_m": 0.04,
    "bridge_m": 0.0,
    "grade_limit": 0.11,
    "highway": [
@@ -132,10 +132,10 @@
    "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -150,15 +150,15 @@
     2
    ],
    "length_m": 625.5,
-   "max_grade": 0.0365,
+   "max_grade": 0.0372,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.0
+    6.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -173,12 +173,12 @@
     2
    ],
    "length_m": 198.4,
-   "max_grade": 0.0197,
+   "max_grade": 0.0194,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.007,
+   "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -191,7 +191,7 @@
  "summary": {
   "authored_paint": [],
   "axis_smoothing_deviation_m": {
-   "max": 0.6,
+   "max": 0.626,
    "p50": 0.0,
    "p95": 0.002
   },
@@ -215,19 +215,40 @@
   "decals": {
    "gullies": 278,
    "oil": 3,
-   "patches": 61
+   "patches": 51
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 36983,
+  "footprint_nodes": 39450,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
    {
     "chain": "c:w244403510:1134817758-4090521617",
-    "from_hw": 3.7,
+    "from_hw": 3.95,
     "node": "n1134817758",
     "taper_m": 15.0,
-    "to_hw": 3.25
+    "to_hw": 3.5
+   },
+   {
+    "chain": "c:w98070983:1134824376-1891022012",
+    "from_hw": 3.25,
+    "node": "n1134824376",
+    "taper_m": 15.0,
+    "to_hw": 3.0
+   },
+   {
+    "chain": "c:w98070983:1134824376-1891022012",
+    "from_hw": 3.25,
+    "node": "n1891022012",
+    "taper_m": 15.0,
+    "to_hw": 3.0
+   },
+   {
+    "chain": "c:w98070983:1891022012-3630057461",
+    "from_hw": 3.25,
+    "node": "n1891022012",
+    "taper_m": 15.0,
+    "to_hw": 3.0
    }
   ],
   "gore_p21": {},
@@ -294,7 +315,7 @@
   },
   "verge_strips": {
    "chunks": 22,
-   "tris": 3264
+   "tris": 3296
   },
   "walled_ramps": []
  }

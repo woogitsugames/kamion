@@ -72,7 +72,9 @@ def test_dojlidy_overrides_applied():
     assert row["placed"] >= 20 and row["rule_lamps_removed"] >= 30
     assert fu["life"]["tyre_scrub_passes_cut_at_road"] > 0
     og = rep["vegetation"]["open_ground"][0]
-    assert og["trees_removed"] > 500
+    # ADR 0298: self-seeded trees on OT_PTTR_A only at the margins (35 % in 8 m, 2 % inside, was 45 % everywhere), so the
+    # meadow holds far fewer rule trees to clear (1343 -> 119 after the regen-wave-2 rebuild); the zone still removes them
+    assert og["trees_removed"] > 50
     tg = rep["vegetation"]["tree_groups"]          # ADR 0186: the shrub band is a plantings mass, the corner clump kit trees
     at = rep.get("authored_trees") or {}
     assert tg["trees"] + tg.get("points", 0) + at.get("trees", 0) >= 3

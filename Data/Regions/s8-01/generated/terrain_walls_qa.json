@@ -1,49 +1,21 @@
 {
- "by_source": {
-  "steep_grass:verge_grass": 3
- },
- "count": 3,
- "max_m": 0.661,
- "p99_m": 0.658,
+ "by_source": {},
+ "count": 0,
+ "max_m": 0.0,
+ "p99_m": 0.0,
  "skirt_area": [],
- "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 81,
+ "thin_steep_faces_skipped": 94,
  "thresh_m": 0.15,
  "verge_strips": {
-  "max_m": 0.551,
-  "skirt": 4,
-  "steep_grass": 99,
+  "max_m": 0.562,
+  "skirt": 9,
+  "steep_grass": 118,
   "worst": [
    "steep_grass",
    "j:n985990076:corner0:vg",
-   -964.7,
+   -964.3,
    -1021.1
   ]
  },
- "worst": [
-  {
-   "e": -748.5,
-   "h": 0.661,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": -506.5,
-   "src": "c:w279914644:1940503816-2248465421:R:1"
-  },
-  {
-   "e": -748.6,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": -507.1,
-   "src": "c:w279914644:1940503816-2248465421:R:1"
-  },
-  {
-   "e": -749.2,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": -506.7,
-   "src": "c:w279914644:1940503816-2248465421:R:1"
-  }
- ]
+ "worst": []
 }

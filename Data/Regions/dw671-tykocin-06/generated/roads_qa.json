@@ -1,7 +1,7 @@
 {
  "chains": [
   {
-   "axis_smoothing_dev_max_m": 0.4,
+   "axis_smoothing_dev_max_m": 0.42,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -12,19 +12,19 @@
     2
    ],
    "length_m": 219.9,
-   "max_grade": 0.0345,
+   "max_grade": 0.0341,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.0
+    5.5
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.62,
+   "axis_smoothing_dev_max_m": 0.65,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -34,13 +34,13 @@
    "lanes": [
     2
    ],
-   "length_m": 315.8,
-   "max_grade": 0.0428,
+   "length_m": 315.7,
+   "max_grade": 0.043,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.041,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.0
+    5.5
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -58,12 +58,12 @@
     2
    ],
    "length_m": 880.6,
-   "max_grade": 0.014,
+   "max_grade": 0.0141,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -81,12 +81,12 @@
     2
    ],
    "length_m": 550.8,
-   "max_grade": 0.0074,
+   "max_grade": 0.0075,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -104,12 +104,12 @@
     2
    ],
    "length_m": 238.9,
-   "max_grade": 0.007,
+   "max_grade": 0.0071,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -132,7 +132,7 @@
    "profile_rms_vs_nmt_m": 0.016,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -150,15 +150,15 @@
     2
    ],
    "length_m": 641.2,
-   "max_grade": 0.0081,
+   "max_grade": 0.0079,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.4
+    7.9
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -178,14 +178,14 @@
    "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.4
+    7.9
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.05,
+   "axis_smoothing_dev_max_m": 0.06,
    "bridge_m": 0.0,
    "grade_limit": 0.11,
    "highway": [
@@ -196,15 +196,15 @@
     2
    ],
    "length_m": 530.3,
-   "max_grade": 0.0079,
+   "max_grade": 0.007,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.4
+    7.9
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -224,10 +224,10 @@
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -242,15 +242,15 @@
     2
    ],
    "length_m": 570.8,
-   "max_grade": 0.0037,
+   "max_grade": 0.0038,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.4
+    7.9
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
@@ -270,14 +270,14 @@
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.5
+    7.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.34,
+   "axis_smoothing_dev_max_m": 0.36,
    "bridge_m": 0.0,
    "grade_limit": 0.11,
    "highway": [
@@ -288,12 +288,12 @@
     2
    ],
    "length_m": 714.3,
-   "max_grade": 0.0568,
+   "max_grade": 0.0569,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.031,
+   "profile_rms_vs_nmt_m": 0.03,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
     "PTB2022 §17 ust.1 standard"
@@ -306,9 +306,9 @@
  "summary": {
   "authored_paint": [],
   "axis_smoothing_deviation_m": {
-   "max": 0.62,
+   "max": 0.653,
    "p50": 0.0,
-   "p95": 0.008
+   "p95": 0.009
   },
   "bridges": [],
   "chains": 13,
@@ -328,21 +328,21 @@
   "crossings_skipped": [],
   "crossings_snapped": 0,
   "decals": {
-   "gullies": 345,
+   "gullies": 344,
    "oil": 18,
-   "patches": 81
+   "patches": 82
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 66382,
+  "footprint_nodes": 69786,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
    {
     "chain": "c:w244403510:11774170893-1997633028",
-    "from_hw": 3.7,
+    "from_hw": 3.95,
     "node": "n1997633028",
     "taper_m": 15.0,
-    "to_hw": 3.25
+    "to_hw": 3.5
    }
   ],
   "gore_p21": {},
@@ -410,7 +410,7 @@
   },
   "verge_strips": {
    "chunks": 27,
-   "tris": 4564
+   "tris": 4520
   },
   "walled_ramps": []
  }

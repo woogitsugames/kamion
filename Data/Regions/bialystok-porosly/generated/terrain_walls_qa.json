@@ -1,10 +1,10 @@
 {
  "by_source": {
   "skirt:j:road_asphalt": 2,
-  "skirt:yard_asphalt": 2,
+  "skirt:yard_asphalt": 3,
   "skirt:yard_concrete": 1
  },
- "count": 5,
+ "count": 6,
  "max_m": 0.343,
  "p99_m": 0.343,
  "skirt_area": [
@@ -21,9 +21,9 @@
   },
   {
    "e": -642.4,
-   "exposed_m2": 0.175,
+   "exposed_m2": 0.174,
    "mat": "yard_asphalt",
-   "max_h": 0.229,
+   "max_h": 0.226,
    "n": 384.6,
    "points": 1,
    "run_m": 1.895,
@@ -32,20 +32,31 @@
   },
   {
    "e": 387.3,
-   "exposed_m2": 0.14,
+   "exposed_m2": 0.142,
    "mat": "road_asphalt",
-   "max_h": 0.341,
+   "max_h": 0.335,
    "n": 419.1,
    "points": 2,
-   "run_m": 1.557,
+   "run_m": 1.57,
    "src": "j:n9098614123",
+   "visible": true
+  },
+  {
+   "e": 444.6,
+   "exposed_m2": 0.085,
+   "mat": "yard_asphalt",
+   "max_h": 0.328,
+   "n": 282.0,
+   "points": 1,
+   "run_m": 1.821,
+   "src": "osm:way/286464069:0#0:edge",
    "visible": true
   },
   {
    "e": 456.9,
    "exposed_m2": 0.068,
    "mat": "yard_concrete",
-   "max_h": 0.331,
+   "max_h": 0.33,
    "n": -761.0,
    "points": 1,
    "run_m": 0.9,
@@ -54,17 +65,17 @@
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 214,
+ "thin_steep_faces_skipped": 165,
  "thresh_m": 0.15,
  "verge_strips": {
-  "max_m": 1.108,
-  "skirt": 7,
-  "steep_grass": 272,
+  "max_m": 1.121,
+  "skirt": 13,
+  "steep_grass": 308,
   "worst": [
    "steep_grass",
    "j:n2070873518:corner1:vg",
-   -701.4,
-   -446.8
+   -701.1,
+   -446.5
   ]
  },
  "worst": [
@@ -77,8 +88,8 @@
    "src": "osm:way/248339256:0#0:edge"
   },
   {
-   "e": 387.9,
-   "h": 0.341,
+   "e": 387.8,
+   "h": 0.335,
    "kind": "skirt",
    "mat": "road_asphalt",
    "n": 419.3,
@@ -86,15 +97,23 @@
   },
   {
    "e": 456.9,
-   "h": 0.331,
+   "h": 0.33,
    "kind": "skirt",
    "mat": "yard_concrete",
    "n": -761.0,
    "src": "bdot:2BE4B431-FE3F-1BF0-E053-CC2BA8C0D140:0#0:edge"
   },
   {
+   "e": 444.6,
+   "h": 0.328,
+   "kind": "skirt",
+   "mat": "yard_asphalt",
+   "n": 282.0,
+   "src": "osm:way/286464069:0#0:edge"
+  },
+  {
    "e": 387.3,
-   "h": 0.325,
+   "h": 0.323,
    "kind": "skirt",
    "mat": "road_asphalt",
    "n": 419.1,
@@ -102,7 +121,7 @@
   },
   {
    "e": -642.4,
-   "h": 0.229,
+   "h": 0.226,
    "kind": "skirt",
    "mat": "yard_asphalt",
    "n": 384.6,
