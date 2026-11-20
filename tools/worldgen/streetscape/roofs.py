@@ -859,11 +859,26 @@ def _safe_intersection(a, b):
         return shapely.make_valid(a).intersection(shapely.make_valid(b), grid_size=0.001)
 
 
+# ADR 0316: UV0 of the ridge / hip cap per covering = (u centre m, u half width m, v scale). The cap is a strip of the
+# roof's own set turned by 90 deg (v runs along the ridge, so the course lines of the set are the joints between the
+# cap tiles). Its 0.22 m must not cut across the profile of the set:
+#   S-tile       u 0..0.14 = exactly one roll (crest on the cap's axis, the hollows of the set end every cap tile)
+#   karpiowka    a 6 cm strip a quarter tile off the centre line: never on a butt joint of either half-offset course;
+#                v x 0.43 -> the 0.15 m gauge reads as caps 0.35 m long
+#   zakladkowa   a 6 cm strip of flat pan (pu 0.36 / 0.86 on the half-offset courses)
+# Coverings not listed (metal tile sheet, sheet) keep the plain turned strip (u = offset from the axis).
+RIDGE_UV = {"roof_tiles_red": (0.07, 0.07, 1.0), "roof_tiles_old": (0.07, 0.07, 1.0),
+            "roof_karp_red": (0.25 * 4.2 / 23, 0.03, 0.43),
+            "roof_tiles_brown": (0.36 * 4.2 / 18, 0.03, 1.0), "roof_cement_grey": (0.36 * 4.2 / 18, 0.03, 1.0)}
+
+
 def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_layer="buildings_low", soffit_mat=None,
-          step_mat=None):
+          step_mat=None, low_mat=None):
     """Roof covering (LOD0, LOD1, collision), soffit and fascia (LOD0). Returns the horizontal eave edges
     [(a, b, z_top)] of the covering (outward normal = right of a -> b) for the gutters.
-    soffit_mat: material of the soffit under the overhang (default = fascia_mat)."""
+    soffit_mat: material of the soffit under the overhang (default = fascia_mat).
+    low_mat: material of the covering on LOD1 (default = mat; ADR 0316: a covering variant of the same colour)."""
+    low_mat = low_mat or mat
     exp = covering(poly, roof, ov)
     soffit_mat = soffit_mat or fascia_mat
     eaves = []
@@ -878,7 +893,7 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
             UV = np.column_stack([xy @ e, np.asarray(d0(xy)) * roof.sl])
             idx = np.arange(len(V)).reshape(-1, 3)
             acc.add("buildings", mat, V, idx, UV)
-            acc.add(low_layer, mat, V, idx, UV)
+            acc.add(low_layer, low_mat, V, idx, UV)
             acc.add("collision", "collision_building", V, idx, UV)
             ring = np.asarray(shapely.geometry.polygon.orient(g).exterior.coords)
             for a, b in zip(ring, ring[1:]):
@@ -923,7 +938,7 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
             UV_ = [[0.0, 3.0 + zl[0] - zmin], [ls.length, 3.0 + zl[1] - zmin], [ls.length, 3.0 + zh[1] - zmin],
                    [0.0, 3.0 + zh[0] - zmin]]
             acc.add("buildings", step_mat or fascia_mat, V_, [[0, 1, 2], [0, 2, 3]], UV_)
-            acc.add(low_layer, mat, V_, [[0, 1, 2], [0, 2, 3]], UV_)
+            acc.add(low_layer, low_mat, V_, [[0, 1, 2], [0, 2, 3]], UV_)
     # ADR 0097: valley flashing (kosz) of a MultiRoof - a 0.36 m sheet strip folded along the valley, 1.2 cm over the
     # covering, in the flashing material (dark sheet; LOD0)
     for p0, p1 in roof.valley_lines(ov):
@@ -957,7 +972,8 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
                 for off, zz in ((-0.11, None), (-0.04, zt_), (0.04, zt_), (0.11, None)):
                     r = q + n * off
                     V.append([r[0], r[1], float(roof.z(r)) + T_TOP + 0.01 if zz is None else zz])
-                    UV.append([off, sa])
+                    UV.append([off, sa] if mat not in RIDGE_UV else
+                              [RIDGE_UV[mat][0] + off / 0.11 * RIDGE_UV[mat][1], sa * RIDGE_UV[mat][2]])
             T = []
             for j in range(3):
                 T += [[j, j + 1, j + 5], [j, j + 5, j + 4]]

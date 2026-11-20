@@ -6,13 +6,13 @@
    "look_at": [
     522.465,
     808.453,
-    109.927
+    109.926
    ],
    "note": "driver eye 2.5 m, control route s = 160 m of 2563 m (unnamed)",
    "pos": [
-    532.908,
-    867.573,
-    111.245
+    532.785,
+    867.599,
+    111.241
    ],
    "route_s_m": 160.167,
    "type": "persp"
@@ -27,9 +27,9 @@
    ],
    "note": "driver eye 2.5 m, control route s = 480 m of 2563 m (Włodzimierza Puchalskiego)",
    "pos": [
-    464.255,
-    558.057,
-    110.938
+    464.156,
+    558.138,
+    110.935
    ],
    "route_s_m": 480.5,
    "type": "persp"
@@ -40,13 +40,13 @@
    "look_at": [
     491.014,
     278.509,
-    109.769
+    109.77
    ],
    "note": "driver eye 2.5 m, control route s = 801 m of 2563 m (Włodzimierza Puchalskiego)",
    "pos": [
-    453.851,
-    323.06,
-    110.833
+    453.778,
+    322.954,
+    110.83
    ],
    "route_s_m": 800.833,
    "type": "persp"
@@ -61,9 +61,9 @@
    ],
    "note": "driver eye 2.5 m, control route s = 1121 m of 2563 m (Włodzimierza Puchalskiego)",
    "pos": [
-    508.901,
-    19.036,
-    111.182
+    508.776,
+    19.028,
+    111.203
    ],
    "route_s_m": 1121.166,
    "type": "persp"
@@ -74,13 +74,13 @@
    "look_at": [
     259.357,
     -129.605,
-    109.654
+    109.647
    ],
    "note": "driver eye 2.5 m, control route s = 1441 m of 2563 m (Złota)",
    "pos": [
-    318.66,
-    -120.324,
-    111.441
+    318.613,
+    -119.952,
+    111.437
    ],
    "route_s_m": 1441.5,
    "type": "persp"
@@ -91,13 +91,13 @@
    "look_at": [
     177.89,
     -379.395,
-    109.457
+    109.451
    ],
    "note": "driver eye 2.5 m, control route s = 1762 m of 2563 m (Sokołowska)",
    "pos": [
-    181.471,
-    -319.48,
-    110.445
+    181.596,
+    -319.491,
+    110.443
    ],
    "route_s_m": 1761.833,
    "type": "persp"
@@ -108,13 +108,13 @@
    "look_at": [
     38.659,
     -608.243,
-    110.641
+    110.639
    ],
    "note": "driver eye 2.5 m, control route s = 2082 m of 2563 m (Sokołowska)",
    "pos": [
-    46.123,
-    -548.687,
-    111.73
+    46.0,
+    -548.668,
+    111.726
    ],
    "route_s_m": 2082.166,
    "type": "persp"
@@ -125,15 +125,79 @@
    "look_at": [
     -9.31,
     -924.964,
-    112.932
+    112.926
    ],
    "note": "driver eye 2.5 m, control route s = 2402 m of 2563 m (Sokołowska)",
    "pos": [
-    -1.903,
-    -865.401,
-    113.206
+    -2.273,
+    -865.345,
+    113.204
    ],
    "route_s_m": 2402.499,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "look_tykocin_rynek_n",
+   "look_at": [
+    426.118,
+    4.593,
+    121.57
+   ],
+   "note": "place camera: ADR 0316 QA: pedestrian eye on Plac Czarnieckiego looking at the north frontage - tile roofs of the market houses",
+   "pos": [
+    452.0,
+    -92.0,
+    111.06
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "look_tykocin_rynek_s",
+   "look_at": [
+    469.365,
+    -166.481,
+    121.18
+   ],
+   "note": "place camera: ADR 0316 QA: pedestrian eye on Plac Czarnieckiego looking at the south frontage - tile roofs of the market houses",
+   "pos": [
+    452.0,
+    -68.0,
+    110.67
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "look_tykocin_roofs_above",
+   "look_at": [
+    452.0,
+    -130.0,
+    101.277
+   ],
+   "note": "place camera: ADR 0316 QA only: 32 m above the blocks south of the market looking north and down - roof coverings at 40-200 m (tile grid / moire check)",
+   "pos": [
+    452.0,
+    -230.0,
+    141.68
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "look_tykocin_zlota",
+   "look_at": [
+    398.481,
+    -110.635,
+    117.573
+   ],
+   "note": "place camera: ADR 0316 QA: pedestrian eye on Zlota looking east towards the market - house roofs and plot fences along a street",
+   "pos": [
+    300.0,
+    -128.0,
+    110.58
+   ],
    "type": "persp"
   },
   {
@@ -141,7 +205,7 @@
     0.0,
     0.0
    ],
-   "height": 259.85,
+   "height": 259.847,
    "id": "ortho_tile",
    "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
    "size_m": 2048.0,
