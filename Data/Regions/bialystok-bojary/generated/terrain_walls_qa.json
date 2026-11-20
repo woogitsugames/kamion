@@ -6,11 +6,11 @@
   "skirt:verge_grass": 4,
   "skirt:yard_asphalt": 10,
   "skirt:yard_concrete": 2,
-  "skirt:yard_gravel": 2,
+  "skirt:yard_gravel": 1,
   "steep_grass:j:verge_grass": 6,
   "steep_grass:verge_grass": 5
  },
- "count": 39,
+ "count": 38,
  "max_m": 0.5,
  "p99_m": 0.5,
  "skirt_area": [
@@ -84,7 +84,7 @@
    "e": -626.1,
    "exposed_m2": 0.101,
    "mat": "yard_asphalt",
-   "max_h": 0.32,
+   "max_h": 0.321,
    "n": 418.0,
    "points": 1,
    "run_m": 1.82,
@@ -172,7 +172,7 @@
    "e": 415.4,
    "exposed_m2": 0.043,
    "mat": "path_asphalt",
-   "max_h": 0.299,
+   "max_h": 0.298,
    "n": -741.3,
    "points": 1,
    "run_m": 1.097,
@@ -211,21 +211,10 @@
    "run_m": 0.748,
    "src": "osm:way/235751134:0#0:edge",
    "visible": true
-  },
-  {
-   "e": -163.1,
-   "exposed_m2": 0.032,
-   "mat": "yard_gravel",
-   "max_h": 0.337,
-   "n": -26.8,
-   "points": 1,
-   "run_m": 0.46,
-   "src": "bdot:e9ec4748-4ac7-4519-8971-52898eda5a45:0#0:edge",
-   "visible": true
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 427,
+ "thin_steep_faces_skipped": 426,
  "thresh_m": 0.15,
  "verge_strips": {
   "max_m": 1.032,
@@ -304,14 +293,6 @@
    "src": "osm:way/1255381416:0#0:edge"
   },
   {
-   "e": -163.1,
-   "h": 0.337,
-   "kind": "skirt",
-   "mat": "yard_gravel",
-   "n": -26.8,
-   "src": "bdot:e9ec4748-4ac7-4519-8971-52898eda5a45:0#0:edge"
-  },
-  {
    "e": -191.9,
    "h": 0.334,
    "kind": "skirt",
@@ -337,7 +318,7 @@
   },
   {
    "e": -626.1,
-   "h": 0.32,
+   "h": 0.321,
    "kind": "skirt",
    "mat": "yard_asphalt",
    "n": 418.0,
@@ -400,28 +381,28 @@
    "src": "c:w267388107:2728481584-4679914894:R"
   },
   {
+   "e": 409.4,
+   "h": 0.298,
+   "kind": "skirt",
+   "mat": "verge_grass",
+   "n": 389.7,
+   "src": "c:w267388107:2728481584-4679914894:R"
+  },
+  {
+   "e": 409.4,
+   "h": 0.298,
+   "kind": "skirt",
+   "mat": "verge_grass",
+   "n": 389.7,
+   "src": "c:w267388107:2728481584-4679914894:R"
+  },
+  {
    "e": 415.4,
-   "h": 0.299,
+   "h": 0.298,
    "kind": "skirt",
    "mat": "path_asphalt",
    "n": -741.3,
    "src": "bdot:7ddded81-3c06-11ed-9b07-e454e883742c:0#0:edge"
-  },
-  {
-   "e": 409.4,
-   "h": 0.298,
-   "kind": "skirt",
-   "mat": "verge_grass",
-   "n": 389.7,
-   "src": "c:w267388107:2728481584-4679914894:R"
-  },
-  {
-   "e": 409.4,
-   "h": 0.298,
-   "kind": "skirt",
-   "mat": "verge_grass",
-   "n": 389.7,
-   "src": "c:w267388107:2728481584-4679914894:R"
   },
   {
    "e": -401.5,
@@ -478,6 +459,14 @@
    "mat": "road_asphalt",
    "n": -346.1,
    "src": "j:n2206837039"
+  },
+  {
+   "e": 408.4,
+   "h": 0.227,
+   "kind": "skirt",
+   "mat": "verge_grass",
+   "n": 388.3,
+   "src": "c:w267388107:2728481584-4679914894:R"
   }
  ]
 }
