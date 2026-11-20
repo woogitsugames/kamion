@@ -12,9 +12,9 @@ Zadanie: lider s24 (D93 p.4 + D95 p.4, D63 rough first) — przedłużenie koryt
 
 ## Kroki
 - [x] definicje regionów + pliki authored (pin NMT 2025 jak C), skrypt `tools/worldgen/qa/s8_north_s24.ps1`
-- [ ] ingest → build_region → build_world → export-route
+- [~] ingest → build_region → build_world → export-route: 03 (2068 m, road_consistency 239, na trasie 0) i korycin-01 (963 m, 9, na trasie 0) gotowe; 01/02 ingest — WFS GUGiK zrywa połączenie (SkorowidzOrtofomapy2026), retry + raport warstw niedostępnych
 - [ ] link C → szew N, tile_graph/route_links/katalog, qa.seams, route_obstacles
 - [ ] import Win64 + visual-qa High
 - [ ] pytest + EditMode
 
-NASTĘPNY KROK: `pwsh -NoProfile -File tools/worldgen/qa/s8_north_s24.ps1 -Phase ingest`
+NASTĘPNY KROK: `pwsh -NoProfile -File tools/worldgen/qa/s8_north_s24.ps1 -Phase ingest -Tiles dk8-wasilkow-01,dk8-wasilkow-02 -Tag r3` potem `-Phase world -Tiles dk8-wasilkow-01,dk8-wasilkow-02 -Context`

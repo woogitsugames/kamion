@@ -56,6 +56,7 @@ class Sheet:
 
 RETRIES = 3                       # transient network errors only (WORKING_VALUE)
 RETRY_PAUSE_S = (15, 45, 120)
+FAILED_LAYERS: list[dict] = []   # layers that stayed unreachable in this process (reported by ingest.py)
 
 
 def _session() -> requests.Session:
@@ -118,6 +119,13 @@ def query(product: str, bbox: tuple[float, float, float, float],
             xml = get_feature(session, endpoint, layer, bbox)
         except requests.HTTPError as e:  # a missing year layer is not fatal; report it
             print(f"[gugik_index] {product} {layer}: {e}")
+            continue
+        except (requests.ConnectionError, requests.Timeout) as e:
+            # s8-north-s24: one layer (SkorowidzOrtofomapy2026) kept closing the connection after all retries while the
+            # other layers answered; treated like a missing layer, but recorded (ingest writes it to the availability
+            # snapshot) so the gap is reported, never silent
+            print(f"[gugik_index] {product} {layer}: UNAVAILABLE after {RETRIES} retries ({type(e).__name__})")
+            FAILED_LAYERS.append({"product": product, "layer": layer, "error": type(e).__name__})
             continue
         sheets.extend(parse_features(product, layer, xml))
     return sheets
