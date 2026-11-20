@@ -49,3 +49,9 @@
   buduje bojary / mickiewicza (od 14:08) i wygoda (od 15:03), po ~2,5–3 h na kafel; przede mną s8-north i rondo-fix-cli → start r1 ok. 17:00+.
   NASTĘPNY KROK: `cat artifacts/roof-tiles-s24/r1.status`; po `exit=0`: `bash artifacts/roof-tiles-s24/sbs.sh r1`;
   `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`; obejrzeć `sbs/crop-*-r1.jpg`, uzupełnić ADR 0316 (Budżet / Wyniki)
+- 16:05 Runda t3 (same tekstury + ręczne przepięcie zestawów w manifestach baseline + nowy `plot_kit.png`): `sbs/sheet-knyszyn-t3.jpg`,
+  `sbs/crop-above-t-t3.jpg`, `sbs/sheet-zlota-t3.jpg`. Zakładkowa na brązowych dachach: krata znikła, połać równa z delikatnymi rzędami
+  (po t3 ton dachówki 0,07 → 0,10 i skupiska 0,06 → 0,10, bo czytała się jako jednolity brąz); blachodachówka jak przed; czerwone esówką.
+  Sztachety rdzawe: mniej „gołych” i ciepłe zamiast szarych. Karpiówka, gąsiory, `picket_wood` / `picket_paint` i tinty siatki — dopiero r1.
+  r1 (odłączony, pid 26092) czeka w kolejce heavy.
+  NASTĘPNY KROK: `cat artifacts/roof-tiles-s24/r1.status`; po `exit=0`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`

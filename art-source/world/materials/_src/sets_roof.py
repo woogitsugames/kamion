@@ -282,7 +282,7 @@ def roof_zakladkowa(n=1024):
     moss = np.clip(sstep(0.016, 0.0, gap) * sstep(0.5, 1.7, noise(c, 10, 0.03, 0.5) + 0.9 * cluster), 0, 1) * 0.7
     h = (0.012 * (1 - np.clip(pv, 0, 1.2)) + 0.011 * side + 0.006 * rib + 0.003 * nose - 0.004 * lapline
          + 0.003 * tilt_v * (np.clip(pv, 0, 1) - 0.5) + 0.3e-3 * grain + 0.3e-3 * sand + 1.2e-3 * moss)
-    lum = 1 + 0.07 * (t - 0.5) + 0.06 * cluster + 0.03 * grain + 0.03 * sand
+    lum = 1 + 0.10 * (t - 0.5) + 0.10 * cluster + 0.03 * grain + 0.03 * sand      # t3: 0.07 / 0.06 read as one flat brown
     lum *= (1 - 0.10 * flute) * (1 + 0.05 * side + 0.04 * rib) * (1 - 0.40 * lapline)
     lum *= (1 - 0.66 * shadow) * (1 - 0.13 * streak * (0.5 + 0.5 * flute)) * (1 + 0.06 * nose)
     lum *= (1 + 0.22 * plich) * (1 - 0.30 * moss)
