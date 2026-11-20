@@ -54,6 +54,10 @@ class Sheet:
         return self.attrs.get("akt_data")
 
 
+RETRIES = 3                       # transient network errors only (WORKING_VALUE)
+RETRY_PAUSE_S = (15, 45, 120)
+
+
 def _session() -> requests.Session:
     s = requests.Session()
     s.headers["User-Agent"] = USER_AGENT
@@ -66,7 +70,17 @@ def get_feature(session: requests.Session, endpoint: str, layer: str,
         "SERVICE": "WFS", "VERSION": "1.0.0", "REQUEST": "GetFeature", "TYPENAME": layer,
         "SRSNAME": "EPSG:2180", "BBOX": ",".join(f"{v:.2f}" for v in bbox),
     }
-    r = session.get(endpoint, params=params, timeout=120)
+    # s8-north-s24: the index WFS drops connections / stalls under load (2026-11-20: ReadTimeout and RemoteDisconnected
+    # on 2 of 4 tiles); retry transient network errors with a growing pause, HTTP errors stay immediate (caller reports)
+    for attempt in range(RETRIES + 1):
+        try:
+            r = session.get(endpoint, params=params, timeout=120)
+            break
+        except (requests.ConnectionError, requests.Timeout) as e:
+            if attempt == RETRIES:
+                raise
+            print(f"[gugik_index] {layer}: {type(e).__name__}, retry {attempt + 1}/{RETRIES} in {RETRY_PAUSE_S[attempt]} s")
+            time.sleep(RETRY_PAUSE_S[attempt])
     r.raise_for_status()
     time.sleep(POLITE_DELAY_S)
     return r.content
