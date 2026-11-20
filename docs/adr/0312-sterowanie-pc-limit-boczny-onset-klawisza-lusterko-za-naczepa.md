@@ -63,3 +63,18 @@ Pełne tabele: `artifacts/drive-feel-s24/input-before|input-after/summary.csv`, 
 - Fizyka, autopilot i kierownica PC (`DirectSteer`) bez zmian. Limit dotyczy wyłącznie pada i klawiatury.
 - Testy: `PadKeyboardInputTests` (+2), `MirrorTrailerVisibilityTests` (2, nowe). Runner `--input-feel` zostaje jako
   dowód przy każdej zmianie `pad_keyboard_feel.json` / `steering_feel.json`.
+
+## Koszt lusterek (pomiar, informacyjny)
+
+Build #2 (edeb582320), knyszyn-w, High, 1920×1080, bez limitu FPS (VSync 0), widok z kabiny, autopilot 50 km/h,
+GTX 1070 / i5-10400F (maszyna dewelopera, nie referencja). Dwie pary przebiegów pc-metrics A/B naprzemiennie, 60 s każdy,
+`-Extra rq_mirror_off=1` (`artifacts/drive-feel-s24/pc/`). Werdykt narzędzia: INVALID, bo przebieg bez limitu FPS
+nie podlega bramce.
+
+| | GPU p50 [ms] | CPU główny p50 [ms] |
+|---|---|---|
+| lusterka włączone (2 rendery/klatkę) | 4,45 / 4,62 | 4,28 / 4,43 |
+| lusterka wyłączone | 3,49 / 3,43 | 2,93 / 2,71 |
+| **koszt lusterek** | **+0,96 / +1,19** | **+1,35 / +1,72** |
+
+Obrót za naczepą tego kosztu nie zmienia, bo dochodzi tylko obrót transformu kamery.
