@@ -37,5 +37,25 @@ na zachód do kafla 4, który nie istniał; trasa Dojlid zaczyna się na ich W k
 
 ## Zmierzone
 - Ingest 2026-11-20: 8 plików, 339 074 329 B (NMT 2025 ×4, ORTO 2024 ×4); BDOT/LoD 2061 już na dysku.
-- build_region: 396 węzłów, 455 krawędzi, 700 budynków; teren 141,33–167,01 m EVRF2007, 0 brakujących próbek.
+- build_region r1: 396 węzłów, 455 krawędzi, 700 budynków (r2 po graph_filter: 393 / 452 w grafie GPS); teren 141,33–167,01 m EVRF2007, 0 brakujących próbek.
 - Szew z Dojlidami (graf): 6/6 węzłów brzegowych, odchyłka 0,0 m.
+- build_world --context r3 (po merge road-widen D94, i5-10400F): 1061 s; far_field High 174 525 / Low 63 186 tris;
+  ściany terenu > 0,15 m: 7 (max 0,347 m); road consistency 23 (na trasie 1: obstacle_in_lane „kerb” na rondzie
+  Wünschego s ≈ 960 m — tor przecina narożnik opaski wyspy, topview `artifacts/krywlany-s24/junctions/route-s0960-kerb.jpg`).
+- Trasa kontrolna 1233 m (export-route r3); wyjście 0,14 m od wejścia trasy Dojlid → portal krywlany → dojlidy w
+  `tile_graph.json`; korytarz `bialystok-dojlidy-dk19` 7 kafli, missing 0, złącza ≤ PORTAL_TOL_M.
+- `qa/route_obstacles.py` (krywlany + Dojlidy + link narożnika): colliders 0, visual 0.
+- Szwy (`qa/seams.py`, krywlany | Dojlidy | mickiewicza, r4): na trasie FAIL tylko „szer. jezdni ostatni build” — Dojlidy
+  zbudowane przed ADR 0306 (7,5 m) vs krywlany 8,5 m; przekrój nominalny 8,5 | 8,5 OK, oś na szwie 0,011 m → znika po
+  przebudowie Dojlid. Poza trasą: w107760411 (Dojlidy | mickiewicza, istniejący).
+- Import Win64 r3: 64 chunki, WORLD_MEMORY Low 105,9 / High 254,0 MB (wpisane do `tile_graph.py`).
+- Kamery High (visual-qa, clear): route-s0154/0461/0768/1076, roundabout-02-above, chase, truck-at-gate, cab-view —
+  obejrzane (`artifacts/krywlany-s24/vqa-r3/`).
+
+## Konsekwencje / Otwarte
+- Dojlidy do przebudowy po road-widen (fala regeneracji) — wtedy szwy krywlany | Dojlidy bez FAIL.
+- Rondo Wünschego: OSM (ramię SW, 2025) nowsze niż ORTO 2024; tor przez narożnik opaski wyspy — sprawdzić z
+  referencją (Panoramax/Mapillary) i ewentualnie override geometrii ronda.
+- Zamknięcie krawędzi E (koniec trasy) widoczne w scenie samodzielnej (route-s1076) — przy streamingu z Dojlidami otwarte.
+- Fidelity kafla nie uruchomione (kolejka heavy): `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-krywlany --fetch`.
+- Krywlany poza zestawem `d67-full` (jak mickiewicza/bojary/wygoda) — decyzja lidera przy buildzie z `-Regions`.
