@@ -1,7 +1,6 @@
 # ADR 0315 — korytarz DK8 na północ: Białystok → węzeł Wasilków → w stronę Korycina
 
-Status: Proposed (agent s8-north-s24, 2026-11-20). Numer wzięty jako następny wolny po 0313 z pominięciem 0314
-(zarezerwowany przez lidera dla krywlany-s24) — lider może przenumerować.
+Status: Proposed (agent s8-north-s24, 2026-11-20). 0314 = krywlany (scalony), więc 0315 jest wolny.
 
 Powiązane: D93 pkt 4, D95 pkt 4 (następny region po Krywlanach: S8/DK8 dalej, Wasilków/Korycin), D63 (najpierw przejezdne),
 ADR 0203 (siatka 2048 m), 0209 (pin NMT), 0285/0292 (linki i korytarze), 0300 (route_obstacles), 0302 (nawigacja).
@@ -33,7 +32,19 @@ północny zachód (Korycin, Augustów).
    20.11 warstwa `SkorowidzOrtofomapy2026` dla bbox kafli 01/02 zrywała połączenie przy każdej próbie; ortofoto jest
    tylko referencją (docs/05 §3), NMT/BDOT/LoD z tego nie zależą.
 
+6. **Po scaleniu road-widen (D94, ADR 0306):** kafle przebudowane (01, 02 = r2; 03, korycin = r2 w kolejce heavy).
+   Trasa 01 kończy się 0,31 m obok wejścia trasy 02 → link `wasilkow-01-to-02` (jak `s8-03-to-s8-04`: ta sama ścieżka,
+   ostatnie BLEND_M m przesunięte na start 02; ślad zestawu 0 / 20559 pkt poza nawierzchnią).
+7. **Plan ADR 0278:** komórki (0,1)..(0,4) były już kandydatami planu (`dk8-dk19-pn-01`, `dk8-dk19-jurowce`,
+   `dk8-sochonie`, `dk8-woroszyly`); zbudowane pod nazwami tego ADR — `map_plan_0278.built_regions` pomija je jak kafle
+   ADR 0288, plan zostaje bez zmian.
+
 ## Konsekwencje / otwarte
+- Na moście DK8 w 01 (way 145631572/3, 3 pasy) krawężnik mostu wchodzi w lewy pas (pas 0, przy pasie dzielącym):
+  road_consistency 63 × `bridge_kerb` w pasie 30 m wokół trasy, 5,2–6,6 m od toru ciężarówki (route_obstacles 0) —
+  błąd generatora mostów przy wielopasowej jezdni, do osobnego zadania (występuje też w porosly/bojary).
+- `arrow_no_exit` w 01 i 02: strzałki „slight_right” do zjazdów wychodzących zachodnią krawędzią kolumny (kafle (−1,j)).
+- Prawa linia krawędziowa korycin-01 ok. s 480 m niewidoczna na renderze r2 (szerokie pobocze) — sprawdzić po r2.
 - DK8 biegnie 150–300 m od zachodniej krawędzi kolumny i = 0: zabudowa i łącznice po zachodniej stronie drogi są
   ucięte krawędzią kafla (w 01 węzeł z ul. do Dziesięcin częściowo w (−1,1)); widok zastępuje far-field. Kafle (−1,j)
   — później, jeśli właściciel uzna to za widoczne (D63).
