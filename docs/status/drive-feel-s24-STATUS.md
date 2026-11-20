@@ -27,3 +27,6 @@ Gałąź `drive-feel-s24`, worktree `.claude/worktrees/drive-feel-s24` (z main 9
 - 11:00: Truck BuildBatch w worktree (po skopiowaniu SM_CabInterior_LOD0.fbx z main) → **PlayMode 205 pass / 0 fail / 17 skip**. EditMode 1339/1 fail (RegionSelectTests, dane katalogu — niezależne).
 - Zrzuty przed (build #2) rondo Knyszyn t=75/82/90: `artifacts/drive-feel-s24/mirrors-before/`. Po = wymaga buildu z tej gałęzi (lider).
 - W toku: pc-metrics A/B rq_mirror_off (`artifacts/drive-feel-s24/pc*`).
+- 11:20: koszt lusterek GTX 1070 (A/B rq_mirror_off, 2×2 przebiegi): GPU +0,96/+1,19 ms, CPU główny +1,35/+1,72 ms. Dowody skopiowane do main `artifacts/drive-feel-s24/`.
+- **GOTOWE do przeglądu.** NASTĘPNY KROK (lider): build Windows z tej gałęzi → zrzuty „po” na rondzie:
+  `pwsh scripts/build-windows.ps1 -SkipBuild -Run -Exe <nowy exe> -Scene knyszyn -Tier High -Autopilot route -Speed 25 -RunSeconds 86 -ShotSeconds 82`
