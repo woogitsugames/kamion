@@ -188,7 +188,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     _, vmask = CF.rasterise([p for p in road_parts if p.mat == "verge_grass"], hf)
     _, hmask = CF.rasterise([p for p in road_parts if p.mat != "verge_grass"], hf)
     soft = vmask & ~hmask & ~pmask
-    zc, dist = CF.conform(hf, zjoin, mask, soft=soft)
+    surface_outline = shapely.union_all([roads_poly] + [p["poly"] for p in paved + plot_paved])
+    zc, dist = CF.conform(hf, zjoin, mask, soft=soft, footprint=surface_outline)
     rep["terrain_soft_nodes"] = int(soft.sum())
     # c-p1-s23 (REVIEW s20 gate3-phone P1-2): a walled ramp is a fill, not a span - the ground beside it is not
     # pushed under a soffit (the clamp dug a 1.5 m pit beside the wall end at the ramp toe, g3b_ext34_s1482)
@@ -198,7 +199,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         # ... but never through the ramp surface itself: at the toe the fill meets the ground road and the cone of the
         # conform reached the deck shoulder (-0.003 m at E -386.8 N -104.2); kept CF.TERRAIN_UNDER_WALLED below it
         zc = CF.clamp_under_decks(zc, deck, deck_mask & _wr, CF.TERRAIN_UNDER_WALLED - 0.3, mask)
-    zc = CF.tidy(zc, zjoin, mask, dist)
+    zc = CF.tidy(zc, zjoin, mask, dist, smooth_slopes=surface_outline.is_empty)
     # c-p2-s23: ... and never through the face of the retaining walls (CF.level_under_walled)
     _wf = getattr(w, "walled_fill_mask", None)
     if _wf is not None and _wf.any():

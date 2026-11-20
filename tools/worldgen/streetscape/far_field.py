@@ -1668,16 +1668,38 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             [ce - ux * w + vx * w, cn - uy * w + vy * w, z],
         ]
 
-    # 4 corner legs as 2 crossed tapered fins (double-sided quads so silhouette reads from every angle for 16 tris)
+    # Open lattice, including in Low: solid crossed fins read as grey cones
+    # against the sky (drive-review-s24 #15). Uncapped triangular members keep
+    # holes visible at any yaw, without textures or additional draw calls.
+    def member(a, b, radius):
+        a, b = np.asarray(a, float), np.asarray(b, float)
+        axis = b - a
+        axis /= np.linalg.norm(axis)
+        ref = np.array([0., 0., 1.]) if abs(axis[2]) < 0.9 else np.array([1., 0., 0.])
+        u = np.cross(axis, ref)
+        u /= np.linalg.norm(u)
+        v = np.cross(axis, u)
+        angles = np.arange(3) * (2.0 * math.pi / 3.0)
+        offsets = radius * (np.cos(angles)[:, None] * u + np.sin(angles)[:, None] * v)
+        for k in range(3):
+            q = (k + 1) % 3
+            sec.add_quad0(a + offsets[k], a + offsets[q], b + offsets[q], b + offsets[k], col)
+
+    scale = max(s_h, 0.65)
     rb = ring_pts(w_bot, z_bot)
     rt = ring_pts(w_top, z_top)
-    for a0, a1, b1, b0 in (
-        (rb[0], rb[2], rt[2], rt[0]),
-        (rb[2], rb[0], rt[0], rt[2]),
-        (rb[1], rb[3], rt[3], rt[1]),
-        (rb[3], rb[1], rt[1], rt[3]),
-    ):
-        sec.add_quad0(a0, a1, b1, b0, col)
+    for a, b in zip(rb, rt):
+        member(a, b, 0.13 * scale)
+    rings = [ring_pts(w_bot + (w_top - w_bot) * f, z_bot + (z_top - z_bot) * f)
+             for f in np.linspace(0.0, 1.0, 4)]
+    for panel, (lower, upper) in enumerate(zip(rings[:-1], rings[1:])):
+        for k in range(4):
+            q = (k + 1) % 4
+            # Alternating lacing on opposite faces reads as X in projection;
+            # three panels keep the ring's hundreds of towers inexpensive.
+            a, b = (k, q) if (panel + k) % 2 == 0 else (q, k)
+            member(lower[a], upper[b], 0.075 * scale)
+            member(upper[k], upper[q], 0.075 * scale)
 
     # Two horizontal cross-arms at 70% and 88% height
     for frac, span in ((0.70, 5.2), (0.88, 3.8)):
@@ -1687,8 +1709,9 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
         p_l0 = [ce - vx * sp, cn - vy * sp, za]
         p_r0 = [ce + vx * sp, cn + vy * sp, za]
         p_mid = [ce, cn, za + zh]
-        sec.add_tri0(p_l0, p_r0, p_mid, col)
-        sec.add_tri0(p_r0, p_l0, p_mid, col)
+        member(p_l0, p_r0, 0.13 * scale)
+        member(p_l0, p_mid, 0.09 * scale)
+        member(p_mid, p_r0, 0.09 * scale)
 
 
 def _corridor_treelines(half: float = 1024.0) -> list[dict]:

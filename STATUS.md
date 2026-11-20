@@ -1,3 +1,8 @@
+# STATUS embankment-cli — s24, zakończone prace generatora
+- Ciągły obrys skarpy i interpolacja wysokości w pasie 16 m; usunięto wtórne schodki z filtra tidy, jezdnia V/T bez zmian (test DK65-10). Pylony far-field mają otwartą kratownicę 204 tris zamiast pełnego trzonu 12 tris.
+- 91 PASS / 1 SKIP (brak cache surowej ekstrakcji FF); review kodu i podglądu bez blokujących uwag. Raport: docs/reports/embankment-cli-s24.md; ADR 0311; podgląd i log: artifacts/embankment-cli/. Unity/build_world/player nieuruchamiane; bez push i zapisów poza worktree.
+- NASTĘPNY KROK (bez przebudowy): `uv run --project tools/worldgen pytest tests/gis/test_embankment_pylons_s24.py -q`; po integracji osobno przebudować/reimportować minimum dk65-10 i dw671-tykocin-09 oraz sąsiadów, docelowo d67-full. Wygląd playera i przełączeń LOD UNVERIFIED.
+
 # STATUS guardrail-zebra-cli — s24, zakończone prace generatora
 - 81 regresyjnych + 16 płaskich + 6 NMT + 1 kontrola farby PASS. Kleeberga NMT: 23 odcinki wycięte, 2520 zachowanych; review bez blokujących uwag. Raport: docs/reports/guardrail-zebra-cli-s24.md; ADR 0308.
 - Wdrożono bufor bariera–nawierzchnia i przycinanie/deduplikację P-10; artefakt zebry t=2560 NIEODTWORZONY (0 m² overlap przed zmianą, także NMT i szew). Log wskazuje jeszcze knyszyn. Unity/build_world/player nieuruchamiane, bez push.
@@ -40,3 +45,8 @@
 - 81/81 testów bez pełnej generacji kafli PASS; NMT Knyszyn/Knyszyn-w 4/4 PASS (SHA wejść zgodne), dodatkowy test chowania zebry pod nawierzchnią 1/1 PASS.
 - Płaski Kleeberga: zachowane 2610 odcinków, wycięte 38; porównanie PNG obejrzane. Nie odtworzono overlap zebr ani ich schowania pod drogą — konkretny artefakt t=2560 UNVERIFIED, log wskazuje jeszcze knyszyn.
 - NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_drive_s24_surface_safety.py -q -s` — zakończyć bieżący przebieg płaski i NMT Kleeberga, uzupełnić docs/reports/guardrail-zebra-cli-s24.md, commit bez push.
+
+# STATUS embankment-cli — s24 (WIP)
+- Usunięto metrykę schodkowego obrysu w konformowaniu skarpy: obrys wektorowy + interpolacja wysokości w pasie 16 m. Pylony far-field: otwarta kratownica, 420 tris/słup, bez nowego materiału.
+- Nowe testy syntetyczne 18/18 PASS; review w toku. Unity i build_world nieuruchamiane, zmiany tylko w tym worktree, bez push.
+- NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_embankment_pylons_s24.py tests/gis/test_unit_meshing_chunks.py tests/gis/test_terrain_walls.py -q`; uzupełnić walidację końcowej skarpy i podgląd offline.

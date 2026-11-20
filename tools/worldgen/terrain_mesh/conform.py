@@ -4,9 +4,11 @@
    not bridges, not vertical flanges) onto the terrain nodes -> road height + footprint mask.
 2. Inside the footprint the terrain is pushed TERRAIN_UNDER_ROAD below the road surface (no z-fighting,
    nothing pokes through; the road flanges hide the step).
-3. Outside, every node takes the height of its nearest footprint node (exact Euclidean distance
-   transform) and is clamped into the embankment cone around it: a BERM_W flat strip at the road edge,
-   then 1 : EMBANKMENT_SLOPE cut or fill until it meets the NMT again.
+3. Outside, the nearest footprint node seeds the edge height. With a vector footprint,
+   distances use the continuous outline in the roadside band and edge heights are interpolated.
+   The terrain is clamped into the embankment cone: a BERM_W flat strip at the road edge,
+   then 1 : EMBANKMENT_SLOPE cut or fill until it meets the NMT again. The raster-only
+   metric remains available for callers without a footprint.
 """
 
 from __future__ import annotations
@@ -131,12 +133,14 @@ def level_under_walled(z, fill, keep):
     return out, int((out < z - 1e-6).sum())
 
 
-def tidy(z, road, mask, dist, close_m=7, iters=150):
+def tidy(z, road, mask, dist, close_m=7, iters=150, smooth_slopes=True):
     """Visual cleanup after conform (visual review 2026-11-09, items 8):
     1. narrow enclosed strips (medians, splitter islands, gaps between a road and a yard, closed by
        `close_m` m) get a harmonic surface spanning the adjacent road edges (no lumps in medians);
     2. the slope band 1.5-12 m from the road is smoothed (sigma 1.2 m) to remove the faceted
-       EDT-cone creases, never rising above the unsmoothed value next to the road."""
+       EDT-cone creases. Set smooth_slopes=False after continuous-outline conform:
+       filtering that profile again mixes buried road nodes into the batter and
+       reintroduces the raster edge, with a hard step at the band limits."""
     closed = ndimage.binary_closing(mask, iterations=close_m) & ~mask
     out = z.copy()
     if closed.any():
@@ -157,9 +161,10 @@ def tidy(z, road, mask, dist, close_m=7, iters=150):
                 avg = 0.25 * (p[:-2, 1:-1] + p[2:, 1:-1] + p[1:-1, :-2] + p[1:-1, 2:])
                 sub[m] = avg[m]
             out[sl] = np.where(m, sub, out[sl])
-    band = (~mask) & ~closed & (dist > 1.5) & (dist < 12.0)
-    sm = ndimage.gaussian_filter(out, 1.2)
-    out = np.where(band, sm, out)
+    if smooth_slopes:
+        band = (~mask) & ~closed & (dist > 1.5) & (dist < 12.0)
+        sm = ndimage.gaussian_filter(out, 1.2)
+        out = np.where(band, sm, out)
     return out
 
 
@@ -167,7 +172,40 @@ SOFT_UNDER = 0.04          # m: terrain just under grass verges / island grass (
 SOFT_CLEAR_CELLS = 2       # ... only where no hard surface (carriageway, kerb, paving) is within this many nodes
 
 
-def conform(hf, road, mask, soft=None):
+def edge_distances(hf, mask, raster_dist, footprint, band_m=16.0):
+    """Sub-cell distances to the actual surface outline, only in the roadside band.
+
+    EDT measures from *grid nodes* inside the road. On a diagonal this moves the
+    apparent edge by up to a cell at every row, imprinting teeth into the batter.
+    Index individual outline segments, so querying a long road is still local.
+    The far terrain keeps the inexpensive EDT and the road mask is never changed.
+    """
+    import shapely
+
+    if footprint.is_empty:
+        return raster_dist
+    lines = shapely.get_parts(footprint.boundary)
+    segments = []
+    for line in lines:
+        xy = shapely.get_coordinates(line)
+        segments.extend(np.stack([xy[:-1], xy[1:]], axis=1))
+    if not segments:
+        return raster_dist
+    tree = shapely.STRtree(shapely.linestrings(np.asarray(segments)))
+    jj, ii = np.where(~mask & (raster_dist <= band_m))
+    out = raster_dist.copy()
+    for start in range(0, len(ii), 65536):
+        j, i = jj[start:start + 65536], ii[start:start + 65536]
+        points = shapely.points(hf.x0 + i, hf.y1 - j)
+        _, distances = tree.query_nearest(points, all_matches=False, return_distance=True)
+        # Fade back to the raster metric outside the visible batter to avoid a
+        # discontinuity at the end of this band (WORKING_VALUE: last 4 metres).
+        weight = np.clip((band_m - raster_dist[j, i]) / 4.0, 0.0, 1.0)
+        out[j, i] += weight * (distances - out[j, i])
+    return out
+
+
+def conform(hf, road, mask, soft=None, footprint=None):
     """soft (optional bool grid): footprint nodes covered only by grass verge strips. Those that are at least
     SOFT_CLEAR_CELLS nodes from any hard surface get the terrain SOFT_UNDER under the grass instead of
     TERRAIN_UNDER_ROAD: the coarse terrain grid (1-2 m) used to dip 0.35 m inside narrow kerbed islands and behind
@@ -178,6 +216,13 @@ def conform(hf, road, mask, soft=None):
         return out, np.zeros_like(nmt)
     d, (jj, ii) = ndimage.distance_transform_edt(~mask, return_indices=True)
     zedge = road[jj, ii]
+    if footprint is not None and not footprint.is_empty:
+        d = edge_distances(hf, mask, d, footprint)
+        # Interpolate the nearest-node height extension too: changing which
+        # road node is closest must not create a vertical ridge along the slope.
+        sm_edge = ndimage.gaussian_filter(zedge, 0.8)
+        weight = np.where(mask, 0.0, np.clip((16.0 - d) / 4.0, 0.0, 1.0))
+        zedge += weight * (sm_edge - zedge)
     k = 1.0 / S.EMBANKMENT_SLOPE
     run = np.maximum(0.0, d - S.BERM_W) * k
     lo = zedge - 0.03 - run
