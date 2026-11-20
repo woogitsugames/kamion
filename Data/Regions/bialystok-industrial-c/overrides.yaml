@@ -1267,19 +1267,19 @@ overrides:
     set: {center_offset: -0.95}
   - id: dk8-placement-a
     target: {edge: "w882366266:2256069816-8205694666"}
-    reason: "edge_sides (edge reversed): left +0.70 m (n 93), right -0.36 m (n 93, verge 36: -0.28)."
-    confidence: low
-    verify: orthophoto overlay 11_dk8.jpg
-    set: {center_offset: -0.5}
+    reason: >-
+      GUGiK WMS HighResolution 0.08 m, ortho_lane_fit (ADR 0306): 9/15 usable profiles, two lanes in all 9;
+      boundary MAD 0.07/0.07/0.05 m, centre -0.18 m left of OSM. Replaces the low-confidence edge-colour fit
+      (-0.50 m). Actual frame positions N180.001/219.979/260.008 verified; lane count and width unchanged.
+    confidence: medium
+    verify: artifacts/road-widen-s24/dk8-correct-edge-strips.png
+    set: {center_offset: -0.18}
   - id: dk8-placement-b
     target: {edge: "w238861874:8205694666-2081020082"}
-    reason: >-
-      GUGiK WMS HighResolution 0.08 m, ortho_lane_fit (ADR 0306): 17/29 usable profiles, two lanes in all 17;
-      boundary MAD 0.09/0.05/0.10 m, centre +0.02 m left of OSM. Replaces the low-confidence edge-colour fit
-      (-0.55 m); lane line alignment verified at N180/220/260. Only placement changes, not lane count or width.
-    confidence: medium
-    verify: artifacts/road-widen-s24/dk8-placement-strips.png
-    set: {center_offset: 0.02}
+    reason: "edge_sides (edge reversed): left +0.94 m (n 162, verge 15: +1.02), right -0.20 m (n 164, verge 35)."
+    confidence: low
+    verify: orthophoto overlay 11_dk8.jpg
+    set: {center_offset: -0.55}
   # ---------------------------------------------------------------- ADR 0095: lanes and widths measured on the orthophoto
   # lane_edges = distances (m) from the LEFT carriageway edge in the direction of travel to [start of lane 1,
   # lane line 1|2, ..., end of the last lane]; the first value is the left gutter / edge strip, the last one the

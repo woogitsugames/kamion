@@ -151,3 +151,13 @@ węzły grup, także wcześniej wchłonięte; odległość euklidesowa wyklucza 
 Finalny solver dzieli krótki łącznik między dwa lokalne łuki. Ten mechanizm usuwa długi skrót Hermite'a przez parking.
 Wprowadzono osobno zweryfikowaną korektę dk8-placement-b -0,55→+0,02 m. Szerokość i liczba pasów pozostają te same.
 Równe dostępne luzy po obu stronach zachowują centrum. Ratchety bez zmian.
+
+### Sprostowanie identyfikacji krawędzi (G2b)
+Wcześniejsza identyfikacja dk8-placement-b jako krawędzi przy wyspie N219 była błędna. w238861874 zaczyna się na
+N335,85; projekcja prób N180/220/260 zatrzymywała się na końcu tej krawędzi. Opisy tych próbek i decyzja zmiany b
+są WYCOFANE; b wraca do -0,55. To błąd diagnostyki, nie generatora. Kolejny skrypt kontroluje zakres i podpisuje
+rzeczywistą stację. Preview z błędnym wyborem nie rozpoczął generacji (czekał w kolejce).
+Właściwy odcinek to w882366266 N146,58..335,85, override dk8-placement-a. Fitter: 9/15 profili, 2 pasy we wszystkich9,
+MAD0,07/0,07/0,05m, centrum -0,18m zamiast -0,50. Profile z rzeczywistych N180,001/219,979/260,008 pokazują linię
+między pasami -0,30/-0,10/-0,05m od OSM. Korygujemy tylko położenie a; szerokość i liczba pasów nie zmieniają się.
+Dowód zastępujący błędny rzut: `artifacts/road-widen-s24/dk8-correct-edge-strips.png`.

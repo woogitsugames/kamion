@@ -152,3 +152,11 @@
   odległość euklidesowa, nie sama długość łukowa). Środkowy łącznik nie jest absorbowany. Równe luzy → bez przesunięcia.
   dk8-placement-b: pomiar centrum -0,55→+0,02 m (tylko położenie, liczba pasów/szerokość bez zmian).
 - NASTĘPNY KROK: `pwsh -File artifacts/road-widen-s24/preview-g2.ps1` (fidelity zoom DK8+parking przed pełnym rebuild).
+
+- KOREKTA diagnostyki G2: wcześniejsze profile opisane N180/220/260 dla w238861874 były rzutowane na jego koniec
+  N335,85 (błąd wyboru krawędzi). Cofnięto zmianę dk8-placement-b, pierwotne -0,55 zostaje. Poprzednia diagnoza
+  DK8-b i opisy tych trzech profili są wycofane. Preview jeszcze nie ruszył (kolejka), został zatrzymany.
+  Właściwa krawędź wyspy: w882366266 (N146,58..335,85), dk8-placement-a. Pomiar 9/15 profili, MAD0,07/0,07/0,05,
+  center -0,50→-0,18. NOWE profile mają kontrolę zakresu i rzeczywiste N180,001/219,979/260,008; linia między pasami
+  odpowiednio -0,30/-0,10/-0,05 m od OSM. Rzut `dk8-correct-edge-strips.png`, liczba pasów i szerokość bez zmian.
+- NASTĘPNY KROK: `pwsh -File artifacts/road-widen-s24/preview-g2b.ps1` (poprawiony zakres, bez Unity).
