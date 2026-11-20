@@ -1,0 +1,10 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0316): control cameras at named places of Tykocin. Position region-local E/N (origin 751371, 600319), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions from the road graph (Plac Stefana Czarnieckiego, +-5 m). No owner photo.",
+ "cameras": [
+  {"id": "look_tykocin_rynek_n", "pos_en": [452, -92], "heading_deg": 345, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 6, "note": "ADR 0316 QA: pedestrian eye on Plac Czarnieckiego looking at the north frontage - tile roofs of the market houses"},
+  {"id": "look_tykocin_rynek_s", "pos_en": [452, -68], "heading_deg": 170, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 6, "note": "ADR 0316 QA: pedestrian eye on Plac Czarnieckiego looking at the south frontage - tile roofs of the market houses"},
+  {"id": "look_tykocin_roofs_above", "pos_en": [452, -230], "heading_deg": 0, "eye_m": 32.0, "fov_deg": 50, "pitch_deg": -22, "note": "ADR 0316 QA only: 32 m above the blocks south of the market looking north and down - roof coverings at 40-200 m (tile grid / moire check)"},
+  {"id": "look_tykocin_zlota", "pos_en": [300, -128], "heading_deg": 80, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 4, "note": "ADR 0316 QA: pedestrian eye on Zlota looking east towards the market - house roofs and plot fences along a street"}
+ ]
+}

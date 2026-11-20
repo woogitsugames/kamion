@@ -173,6 +173,34 @@ links:
     head_from: route:bialystok-mickiewicza
     tail_to: route:bialystok-krywlany
     note: "Ciolkowskiego DW678 across the NW corner of Dojlidy from the seam with mickiewicza to the seam with krywlany"
+  # s8-north-s24 (owner D93 p.4, D95 p.4): trip Bialystok -> DK8 north -> Wasilkow -> towards Korycin (`-route_to wasilkow`).
+  # The C control route ends on the DK8 northbound carriageway (way 882366265) ~330 m before the north seam, where the
+  # `any` link c-dk8-to-maczka turns west; for this trip the link REPLACES the C route (same first node, as
+  # c-andersa-to-wygoda) and runs on along the DK8 northbound to the dk8-wasilkow-01 route entry.
+  - id: c-dk8-north-to-wasilkow
+    tile: bialystok-industrial-c
+    destination: wasilkow
+    replaces_route: bialystok-industrial-c
+    end_epsg2180: [777138.46, 597247.0]   # boundary node of way 882366263 (DK8 northbound) on the C | dk8-wasilkow-01 seam
+    tail_to: route:dk8-wasilkow-01
+    # same first ~400 m as c-andersa-to-wygoda (rondo Pamieci Biezenstwa): qa/link_swept_check.py without the swing =
+    # 12 tyre points off the hard surface at s 364-368 m (trailer, inside of the turn); the swing of that link reused
+    swing:
+      - {near_epsg2180: [778546.8, 595529.6], left_m: 2.0, half_m: 30.0}
+      # after the D94 merge (C rebuilt by road-widen): 4 drive-axle tyre points off the hard surface at s 1346-1349 m
+      # (right side, DK8/DK19); 0.6 m left leaves 1 point on the kerb, 1.0 m / +-30 m -> 0 / 0 (WORKING_VALUE)
+      - {near_epsg2180: [777718.0, 596033.8], left_m: 1.0, half_m: 30.0}
+    note: "C route start -> DK8/DK19 Al. Tysiaclecia northbound to the seam with dk8-wasilkow-01"
+  # ADR 0315 after D94 (road-widen merge): the dk8-wasilkow-01 route ends 0.31 m beside the dk8-wasilkow-02 route entry
+  # (lane centres of the two builds on the DK8 northbound seam, route_links corridor join); like s8-03-to-s8-04 the link
+  # replaces the 01 route with the same path and shifts its last BLEND_M m onto the 02 route start.
+  - id: wasilkow-01-to-02
+    tile: dk8-wasilkow-01
+    destination: wasilkow
+    replaces_route: dk8-wasilkow-01
+    end_epsg2180: [777135.11, 599295.0]   # boundary node of way 876126468 (DK8 northbound) on the 01 | 02 seam
+    tail_to: route:dk8-wasilkow-02
+    note: "DK8 northbound through dk8-wasilkow-01, lane shift onto the dk8-wasilkow-02 route entry before the seam"
 # Driving corridors as ordered tile lists (Bialystok -> Knyszyn -> Tykocin, owner request s23). The generator keeps the
 # prefix of tiles present in Data/Regions (main: up to dw671-tykocin-01; the ring branch world2-s23 adds
 # dw671-tykocin-02..09 and tykocin) and checks every consecutive pair: edge neighbours (N/E/S/W) and a route join
@@ -200,3 +228,7 @@ corridors:
   - id: s8-loop
     destination: s8
     tiles: [dk65-01, s8-01, s8-02, s8-03, s8-04, s8-05, s8-06, s8-07, s8-08, s8-09, s8-10, s8-11, s8-12]
+  # s8-north-s24: C -> DK8 north -> junction Wasilkow (DK8 / DK19) -> DK8 towards Korycin (`-route_to wasilkow`)
+  - id: bialystok-wasilkow
+    destination: wasilkow
+    tiles: [bialystok-industrial-c, dk8-wasilkow-01, dk8-wasilkow-02, dk8-wasilkow-03, dk8-korycin-01]

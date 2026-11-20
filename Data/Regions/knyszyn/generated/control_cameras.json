@@ -6,13 +6,13 @@
    "look_at": [
     -764.83,
     -873.858,
-    118.732
+    118.731
    ],
    "note": "driver eye 2.5 m, control route s = 145 m of 1160 m (Obozowa)",
    "pos": [
-    -722.758,
-    -916.669,
-    119.778
+    -722.666,
+    -916.584,
+    119.774
    ],
    "route_s_m": 145.022,
    "type": "persp"
@@ -27,9 +27,9 @@
    ],
    "note": "driver eye 2.5 m, control route s = 435 m of 1160 m (Obozowa)",
    "pos": [
-    -919.988,
-    -704.044,
-    122.417
+    -919.895,
+    -703.96,
+    122.414
    ],
    "route_s_m": 435.066,
    "type": "persp"
@@ -40,13 +40,13 @@
    "look_at": [
     -799.506,
     -455.188,
-    127.771
+    127.767
    ],
    "note": "driver eye 2.5 m, control route s = 725 m of 1160 m (Tykocka)",
    "pos": [
-    -844.436,
-    -494.987,
-    128.64
+    -844.356,
+    -495.083,
+    128.637
    ],
    "route_s_m": 725.11,
    "type": "persp"
@@ -57,13 +57,13 @@
    "look_at": [
     -595.675,
     -251.411,
-    127.429
+    127.426
    ],
    "note": "driver eye 2.5 m, control route s = 1015 m of 1160 m (Tykocka)",
    "pos": [
-    -643.734,
-    -287.618,
-    129.176
+    -643.681,
+    -287.73,
+    129.173
    ],
    "route_s_m": 1015.154,
    "type": "persp"
@@ -1013,11 +1013,27 @@
    "type": "persp"
   },
   {
+   "fov_deg": 50.0,
+   "id": "look_roofs_above",
+   "look_at": [
+    -862.635,
+    -176.519,
+    116.087
+   ],
+   "note": "place camera: ADR 0316 QA only: 30 m above the plots south of Koscielna looking north and down - roof coverings of the houses at 40-200 m (tile grid / moire check)",
+   "pos": [
+    -880.0,
+    -275.0,
+    156.49
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0
    ],
-   "height": 272.959,
+   "height": 272.957,
    "id": "ortho_tile",
    "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
    "size_m": 2048.0,

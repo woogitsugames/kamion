@@ -198,5 +198,6 @@ def test_atlas_conifers_use_the_cc0_twig_or_say_so():
     assert PK.SOURCE["conifer"].startswith(("polyhaven fir_tree_01", "drawn fronds"))
     cov = PK.coverage()
     assert 0.3 < cov["tall"] < 0.8 and 0.3 < cov["sprites"] < 0.7 and cov["hedge"] > 0.7 and cov["thuja"] > 0.9
-    assert set(PK.HALF_ROWS) == {"picket", "boards_rust", "boards_brown", "chainlink", "concrete", "bars", "lamella", "boards_grey"}
+    assert set(PK.HALF_ROWS) == {"picket", "boards_rust", "boards_brown", "chainlink", "concrete", "bars", "lamella", "boards_grey",
+                                 "picket_wood", "picket_paint"}        # ADR 0316: the low strip
     assert PK.uspan("bars", 0.0, 5.12)[1] - PK.uspan("bars", 0.0, 5.12)[0] < 0.5

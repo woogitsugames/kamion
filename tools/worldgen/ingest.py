@@ -64,6 +64,8 @@ def load_or_query_index(region: regions.Region, refresh: bool) -> dict:
             row["ring_bounds"] = [round(v, 2) for v in shapely.Polygon(sh.ring).bounds] if sh.ring else None
             row["ring"] = [[round(x, 2), round(y, 2)] for x, y in sh.ring]
         snap["products"][product] = sorted(rows, key=lambda r: (r.get("akt_data", ""), r.get("url_do_pobrania", "")))
+    if gi.FAILED_LAYERS:      # s8-north-s24: index layers that never answered (gugik_index.query) - reported, not hidden
+        snap["unavailable_layers"] = list(gi.FAILED_LAYERS)
     write_if_changed(p, json.dumps(snap, indent=1, ensure_ascii=False) + "\n")
     return snap
 
