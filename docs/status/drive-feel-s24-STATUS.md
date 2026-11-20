@@ -18,3 +18,9 @@ Gałąź `drive-feel-s24`, worktree `.claude/worktrees/drive-feel-s24` (z main 9
 - EditMode pełne: 1339 pass / 1 fail (RegionSelectTests routeLengthM stale bialystok-industrial-c — dane katalogu, nie moje).
 - NASTĘPNY KROK: wynik PlayMode (`artifacts/drive-feel-s24/pm-full.log`), potem zrzuty lusterek (player build #2 = przed) i koszt:
   `pwsh scripts/build-windows.ps1 -SkipBuild -Run -Exe <win-build exe> -Scene knyszyn-w -Autopilot route -ExtraPlayerArgs '-shot_every','5'`
+
+## Krok 4 — testy Unity, zrzuty (2026-11-20 ~10:50)
+- PlayMode #1: 22 fail — wszystkie NRE w VehicleBody.Initialize (brak zbudowanego prefabu TRAKT w _Generated main, „skip (not built)” przy tworzeniu worktree). W toku: TruckAssetBuilder+TrailerAssetBuilder.BuildBatch w worktree i PlayMode ponownie (`artifacts/drive-feel-s24/pm-full2.log`).
+- Koszt lusterek (build #2, knyszyn-w High, GTX 1070, DIAG): 2 rendery/klatkę, CPU średnio 0,99 ms (maks. 1,27), GPU nieraportowane.
+- Zrzuty build #2 (przed) knyszyn t=25/45/65 s: `artifacts/drive-feel-s24/mirrors-before/` — rondo dopiero przed maską w t=65.
+- NASTĘPNY KROK: zrzuty t=75/82/90 s i A/B pc-metrics `-Extra rq_mirror_off=1`.
