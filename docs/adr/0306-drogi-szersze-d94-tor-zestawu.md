@@ -1,6 +1,6 @@
 # ADR 0306 — Drogi szersze niż w realu (D94): +0,25 m/pas, poszerzenie na łukach, łuki wylotów ronda kompaktowego, kontrola toru zestawu 16,5 m
 
-Status: Proposed (agent `road-widen-s24`, gałąź `road-widen-s24`), 2026-11-19. Decyzja właściciela **D94** (docs/11).
+Status: Proposed (agent `road-widen-s24`, gałąź `road-widen-s24`), 2026-11-19 / 20. Decyzja właściciela **D94** (docs/11).
 Powiązane: ADR 0301 (pasy z ortofoto — baza), 0095 / 0077 (`lane_edges`, `center_offset`), 0233 (`lane_follow`),
 0218 / 0274 / 0289 (rondo Knyszyn, tor naczepy), 0280 (pierścień 12,50/5,30, osie naczepy 6,32 / 7,63 / 8,94 m),
 0300 (route_obstacles), PTB2022 (Dz.U. 2022 poz. 1518) § 17 ust. 5 i § 58 ust. 3.
@@ -90,7 +90,14 @@ Rzut z góry przed / po: `artifacts/road-widen-s24/top/knyszyn_before_after_lc_9
 road_consistency (r6): lane_blind_end 44 (ratchet 55; main 57), marking_off_carriageway 3 (3; main 4), obstacle_in_lane 2
 (2), arrow_no_exit 8 (8; main 7) — w ratchetach. Na trasie 2 (ROUTE_MAX 1; main 3): pętla parkingu w435369082 (E -208
 N -287, przy trasie od ADR 0301) + znana brama zajezdni. fidelity: wyspy „absent_on_ortho” przy trasie r6 3 (main 1),
-edge p95 1,33 m (main 2,09); r7 (podłoga BDOT zaliczana do D94) — wynik w raporcie agenta.
+edge p95 1,33 m (main 2,09). r7 (obecny kod: podłoga BDOT zaliczana do D94): wyspy 1 (= main), edge p95 1,63 m, ale
+lane_blind_end 45, marking_off 6, obstacle 3, na trasie 3 — oba warianty łamią część ratchetów; wybór dla lidera.
+
+## Testy
+pytest `tests/gis/test_road_widen_0306.py` 12, 0274 / 0301 / lane_edges zielone; pełne `tests/gis` (19.11, przed
+przejściem suite na geometrię zmierzoną) 64 / 2570 czerwone, powtórka 64 po zmianie: 15 — kafle przebudowane w worktree
+obok nieprzebudowanych sąsiadów (szwy, łącznik jeroniki), katalog regionów (fala w main), zebry / ściany terenu / most w C,
+wyspy i trasa C (wyżej). EditMode Win64 (20.11): 1329 / 1 — `RegionSelectTests` katalog routeLengthM (fala w main).
 
 ## Otwarte
 - Wyspy fidelity C i pętla parkingu przy trasie (powyżej) — jeśli r7 nie zamknie, reguła „rośnij od sąsiedniej jezdni”

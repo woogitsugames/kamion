@@ -111,3 +111,6 @@
   0 wyjątków; w strefie ronda (r ≤ 45 m, 1952 próbek) ciągnik i prawe koła naczepy zawsze na asfalcie, ciągnik ≤ 0,85 m od
   linii łącznika, min 12,6 km/h, przegub maks. 48°; lewe koła naczepy 5,8 s na kostce = fartuch ronda (zaprojektowany).
   Telemetria `artifacts/road-widen-s24/player_run3_telemetry.csv`.
+- 09:4x: EditMode Win64 1329/1 (tylko katalog routeLengthM — kafle przebudowane w worktree, katalog przelicza fala).
+  KONIEC kroków D94 w tej sesji; raport wysłany. Do przebudowy w main: wszystkie kafle (reguły globalne), najpierw korytarz
+  bialystok-tykocin + bialystok-s8, potem `export-route`, `streaming/route_links.py`, katalog, złote trasy nav-runner.
