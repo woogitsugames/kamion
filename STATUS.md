@@ -1,3 +1,8 @@
+# STATUS bridge-kerb-cli — s24, zakończona naprawa generatora
+- `structure_sides` przywracał pełną kapę po flush/tight; kapa sąsiedniego pomostu DK8 leżała na lewym pasie. Profil BRIDGE ma bufor 0,30 m i limit między końcowymi jezdniami; przy nakładaniu brak wewnętrznego krawężnika i bariery. Render/kolizja/hero korzystają z jednego profilu. ADR 0317; raport: `docs/reports/bridge-kerb-cli-s24.md`.
+- 42 PASS / 1 SKIP dla mostów i istniejącego QA, 75 PASS / 1 DESELECTED dla D94 i przekrojów. Odtworzone stare kapy w punktach QA: DK8-01 63, DK8-03 87, Porosły 2, Bojary 6; po poprawce 0 dla D94=0/0,25. PNG rzutu przed/po obejrzany; XML/PNG w `artifacts/bridge-kerb-cli/`. Pełne raporty kafli nieodświeżone; Unity/Blender/build_world nieuruchamiane. Praca tylko w tym worktree, bez push.
+- NASTĘPNY KROK (bez przebudowy): `uv run --project tools/worldgen python -m pytest -q tests/gis/test_bridge_clearance.py`; po integracji przebudować minimum dk8-wasilkow-01, dk8-wasilkow-03, bialystok-porosly i bialystok-bojary, docelowo używane kafle z mostami/rampami ścianowymi oraz zależne assety hero; ponowić pełne road_consistency/route_obstacles i przejazd.
+
 # STATUS embankment-cli — s24, zakończone prace generatora
 - Ciągły obrys skarpy i interpolacja wysokości w pasie 16 m; usunięto wtórne schodki z filtra tidy, jezdnia V/T bez zmian (test DK65-10). Pylony far-field mają otwartą kratownicę 204 tris zamiast pełnego trzonu 12 tris.
 - 91 PASS / 1 SKIP (brak cache surowej ekstrakcji FF); review kodu i podglądu bez blokujących uwag. Raport: docs/reports/embankment-cli-s24.md; ADR 0311; podgląd i log: artifacts/embankment-cli/. Unity/build_world/player nieuruchamiane; bez push i zapisów poza worktree.

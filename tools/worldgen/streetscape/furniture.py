@@ -38,7 +38,7 @@ import shapely
 from shapely.geometry import LineString, Point
 
 from roads import standards as S
-from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
+from roads.network import BRIDGE, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
 from roads.geom import dp_keep
 from roads.meshing import bridge_cap_w, bridge_style
 
@@ -2362,7 +2362,8 @@ def guardrails(lin, net, zground, report):
             zb = zg.copy()
             # bridges: barrier-railing on the cap, BRIDGE_BARRIER_EDGE_M in from its outer edge (ADR 0110: the
             # orthophoto of the Biezenstwa decks has it 0.2-0.4 m from the deck edge, 0.8-1.0 m behind the kerb)
-            want[br] = 1
+            deck_edge = br & (kmat != MAT_FLUSH_ROAD) & (kw >= 0.90)
+            want[deck_edge] = 1
             # ADR 0117: the post line keeps BRIDGE_BARRIER_EDGE_M to the cap edge on a 1.5 m cap; on a narrower cap
             # (bridge_style cap_w, Biezenstwa 1.0 m) the beam face stands BRIDGE_BARRIER_FACE_M behind the kerb face
             # (Mapillary 454716650857984: edge line -> face ~1.25 m, kerb -> face ~0.7 m) but never closer than
@@ -2374,7 +2375,7 @@ def guardrails(lin, net, zground, report):
             edge = kw[br] + S.KERB_TOP_W - (face_m + W_BACK + 0.083)
             edge = np.where(kw[br] < 1.3, np.maximum(edge, S.BRIDGE_BARRIER_EDGE_MIN_M),
                             np.clip(edge, S.BRIDGE_BARRIER_EDGE_MIN_M, S.BRIDGE_BARRIER_EDGE_M))
-            off[br] = hw[br] + S.KERB_TOP_W + kw[br] - edge
+            off[br] = hw[br] + S.KERB_TOP_W + kw[br] - edge + np.where(kinds[br] == BRIDGE, S.BRIDGE_CLEAR_M, 0.0)
             zb[br] = zg[br] + S.BRIDGE_KERB_H
             med = (kinds == MEDIAN_RURAL) & ~br
             want[med] = 2
@@ -2433,6 +2434,9 @@ def guardrails(lin, net, zground, report):
             want[tr] = 5
             off[tr] = np.where(rur[tr], r_off[tr], hw[tr] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
             zb[tr] = np.where(rur[tr], r_zb[tr], zg[tr] + kh[tr])
+            # A flush internal deck edge has no cap to carry a barrier. The
+            # approach transition must not put the barrier back on that lane.
+            want[br & ~deck_edge] = 0
             if nozones and want.any():
                 Pw = c.line.offset_point(ss, sgn * off)
                 for _zid, zpoly, zcnt in nozones:
