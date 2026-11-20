@@ -35,3 +35,9 @@ NASTĘPNY KROK (po starcie/końcu world 03 i korycin r2): `pwsh -NoProfile -File
 - 16:52 link wasilkow-01-to-02 (gap 0,31 m → 0; swept 0/0). Testy dotknięte: 173 pass. Artefakty i derived 01/02/03/korycin skopiowane do main (03/korycin = r1).
 - W toku (odłączony pwsh): world r2 03 → korycin (czeka na heavy; regen-wave-2 trzyma 3/3 od 14:08).
 NASTĘPNY KROK: po `artifacts/s8-north-s24/run/route-dk8-korycin-01-r2.exit`: `pwsh -NoProfile -File tools/worldgen/qa/s8_north_s24.ps1 -Phase unity -Tiles dk8-wasilkow-03,dk8-korycin-01 -Tag r3`; WORLD_MEMORY z logów → tools/worldgen/streaming/tile_graph.py; `uv run --project tools/worldgen python tools/worldgen/streaming/tile_graph.py; ...route_links.py; uv run --no-project python scripts/export-region-catalog.py; uv run --no-project python tools/ui/build_nav_trips.py`; seams (02|03 musi wrócić do 0 FAIL, złącze 02→03 ≤ 0,1 m, inaczej link jak 01→02); route_obstacles --corridor bialystok-wasilkow; robocopy derived 03/korycin do main.
+
+## 18:25 r3
+- merge origin/main (roof-tiles ADR 0316) czysty. Kafle NIE przebudowane po 0316 (dachy/płoty działek w GLB = r2) — zostaje do pełnej przebudowy lidera.
+- 03 r2: road_consistency na trasie (pas 30 m): 88 bridge_kerb (≥ 5,3 m od toru), 95 obstacle 'none' (20 < 2,5 m od toru, s 614–626 m, łańcuch 703487195/239748583 przy zjeździe węzła — było też w r1, route_obstacles r1 = 0), 46 marking_off, 4 furniture (≥ 7,3 m). korycin-01 r2: na trasie 0.
+- seams r3: 02|03 i 03|korycin 0 FAIL; 01|02 2 FAIL (service 306912739, trunk 876126468: w sieci 01 krótki odcinek 27,6 m way 876126468 przy szwie nie tworzy własnego łańcucha — szew obsługuje taper 9,0→8,5 m w 01 i link wasilkow-01-to-02).
+- import r3 03/korycin w toku (przebudowa PBR Medium po merge).
