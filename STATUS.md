@@ -131,3 +131,10 @@
   nadwyżkę szerokości po połowie. Szerokości przy porównaniu pochodzą z lokalnego width_profile, nie maksimum sekcji.
   Regresje D94 18/18 przed dodaniem testów wspólnego budżetu i profili. Raport przeglądu w docs/reports/visual/.
 - NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g1.log -Tail 25` (kolejka heavy: pozycja 0).
+
+- G1 C z kodu 6c058ba9c ukończony 10:21 (1077 s): consistency marking_off 6→0, obstacle 3→2, lane_blind 45→46 (≤55),
+  arrow 8. Na trasie 3→2: brama + parking (w przeciwnym kierunku, None E -210,68 N -279,71).
+  Knyszyn w toku; fidelity C uruchomi się po nim. Kod bez zmian w trakcie generacji.
+  Diagnostyka bez zapisu kodu: dwa osobne T na serwisowej zamiast wspólnego klastra (`parking-separate-ortho.png`)
+  zachowują łącznik i lokalne łuki; do sprawdzenia po pełnym G1. Slot 4 użyty przy wolnych 44 GB RAM i CPU 20%.
+- NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g1.log -Tail 15` (następnie validate-g1.ps1 automatycznie).

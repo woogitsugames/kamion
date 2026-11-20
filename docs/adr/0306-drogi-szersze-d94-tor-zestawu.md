@@ -127,3 +127,9 @@ Plan na ortofoto GUGiK HR sprawdzony, bez Unity. Regresja wymaga poprawnego poli
 Planowanie obejmuje także drogi dwukierunkowe obok drogi głównej. Nadwyżka szczeliny ponad rezerwę jest dzielona
 po połowie między obu sąsiadów; nie wolno wydać jej dwukrotnie. Porównanie używa lokalnych width_profile
 oraz center_offset_profile. Jedynie topologicznie wspólna, nakładająca się nawierzchnia skrzyżowania jest pomijana.
+
+### Pierwszy pełny pomiar geometrii (G1 C, 20.11 10:21)
+marking_off_carriageway 6→0; obstacle_in_lane 3→2; lane_blind_end 45→46 (limit55); na trasie3→2.
+Stary punkt krawężnika parkingu zniknął, ale przejazd przeciwny przez scalone dwa T jest nadal błędny (None,
+E -210,68 N -279,71). Wariant diagnostyczny z zachowaniem dwóch osobnych węzłów lepiej odtwarza obrys z ortofoto.
+Fidelity i kontrola Knyszyna w toku; bramki nie są jeszcze zamknięte.
