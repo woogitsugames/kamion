@@ -12529,6 +12529,7 @@
    "median": 1867,
    "no_guardrail": 0,
    "parapet_tris_dropped": 3732,
+   "pavement_cut_segments": 0,
    "pier": 24,
    "structure": 0
   },
@@ -12537,6 +12538,7 @@
    "dedup_dropped_pts": 1,
    "dedup_skipped_pts": 24,
    "gap_m": 4.5,
+   "pavement_cut_segments": 0,
    "piers": 2,
    "runs": [
     {
@@ -13078,6 +13080,11 @@
    "tyre_scrub_tracks": 38,
    "yard_drains": 20,
    "yard_trailers": 31
+  },
+  "limit_signs": {
+   "placed": {},
+   "rule": "ADR 0307: B-16 / B-18 15 m before a bridge / tunnel with maxheight / maxweight in roads.graph.json",
+   "structures": []
   },
   "megascans": {
    "added_drainage_triangles": 332,
