@@ -35,3 +35,8 @@
   (W t1 / t2 blachodachówka ma teksturę esówki — skutek importu starego świata z nową nazwą zestawu; znika po build_world.)
   r1 nadal w kolejce slotu heavy (regen-wave-2 A / B / C).
   NASTĘPNY KROK: po `exit=0` w `artifacts/roof-tiles-s24/r1.status`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`
+- 15:25 (po watchdogu) Wnioski z t1 Tykocin / Knyszyn ulica (`sbs/crop-above-t-t1.jpg`, `crop-into-town-t1.jpg`): czerwone dachy z reguły —
+  drobniejszy rysunek, wałki i rzędy zamiast kraty prostokątów, ton w plamach; z 60–150 m bez mory. Brązowe (zakładkowa) i grafitowa
+  blachodachówka do oceny dopiero po build_world (r1). Rendery oglądam odtąd jako arkusze / wycinki ≤ 1500 px, po kilka, wnioski tutaj.
+  Stan kolejki 15:20: heavy 3/3 (regen-wave-2 A / B / C), czekają: roof-tiles-s24, s8-north-s24.
+  NASTĘPNY KROK: po `exit=0` w `artifacts/roof-tiles-s24/r1.status`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`
