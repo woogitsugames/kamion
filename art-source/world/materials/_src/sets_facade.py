@@ -19,6 +19,7 @@ from __future__ import annotations
 import numpy as np
 
 from pbrkit import Ctx, SurfaceSet, noise, voronoi, edge_dist, sstep, hash01, blur, calibrate, LUM
+import sets_roof as RS
 
 MOD_MEAN = 0.5
 
@@ -282,10 +283,11 @@ def concrete_panels_wall(n=1024):
     return _finish("concrete_panels_wall", c, lum, h, rough, tone, joint)
 
 
-def roof_tiles(n=512):
-    """S-profile roof tile courses (ADR 0091): roll pitch 0.20 m, course gauge 0.35 m - ceramic / concrete pantile and
-    pressed metal tile sheet (blachodachowka module 350 mm) share it (dimensions WORKING_VALUE inside the product
-    ranges). u along the eave, v up the slope. Tile 1.4 x 1.4 m (7 rolls x 4 courses)."""
+def roof_metal_tile(n=512):
+    """Pressed metal tile sheet (blachodachowka, module 350 mm; ADR 0091): roll pitch 0.20 m, course step 0.35 m
+    (dimensions WORKING_VALUE inside the product ranges). u along the eave, v up the slope. Tile 1.4 x 1.4 m
+    (7 rolls x 4 courses). Until ADR 0316 this lattice was also the ceramic tile (set `roof_tiles`); a pressed sheet
+    IS a perfect lattice, ceramic tiles are not - they have their own sets in sets_roof.py now."""
     L = 1.4
     c = Ctx(n, n, L, L, seed=531)
     X, Y = c.xy()
@@ -309,7 +311,7 @@ def roof_tiles(n=512):
            * (1 - 0.10 * lichen))
     lum *= _streaks(c, 3, 0.08)
     rough = 0.72 + 0.12 * (1 - roll) + 0.1 * lichen
-    return _finish("roof_tiles", c, lum, h, rough, t, shadow)
+    return _finish("roof_metal_tile", c, lum, h, rough, t, shadow)
 
 
 def curtain_folds(n=2048):
@@ -889,52 +891,6 @@ def boards_painted(n=2048):
     return _finish("boards_painted", c, lum, h, rough, tone, joint, extra=tint, ao_k=0.8)
 
 
-def roof_tiles_old(n=1024):
-    """ADR 0305: old hand-laid ceramic S-tile (esowka) of Dom Klattow (owner photos klattow-01 / -05, reference
-    only): the roll pitch 0.20 m and course gauge 0.35 m of `roof_tiles`, but every tile its own tone (orange to
-    dark brown, a few pale replacements), uneven course lines, moss in the pans and along the laps, lichen spots.
-    Tile 2.8 x 2.8 m (14 rolls x 8 courses) so a slope of 5.6 m repeats twice, not four times. u along the eave,
-    v up the slope. WORKING_VALUE look."""
-    L = 2.8
-    c = Ctx(n, n, L, L, seed=3055)
-    X, Y = c.xy()
-    v = L - Y
-    wave, course = 0.20, 0.35
-    col = np.floor(X / wave).astype(int) % 14
-    off = 0.012 * (hash01(col, 21) - 0.5) * 2                      # each column of tiles hangs a little differently
-    vv = (v + off) % L
-    row = np.floor(vv / course).astype(int) % 8
-    pu = (X % wave) / wave
-    pv = (vv % course) / course                 # 0 = exposed lower edge of a course, 1 = under the next course
-    roll = 0.5 - 0.5 * np.cos(2 * np.pi * np.clip(pu * 1.25, 0, 1))
-    tid = row * 14 + col
-    t = hash01(tid, 1)
-    patch = noise(c, 1, 0.5, 2.8, beta=1.3)
-    grain = noise(c, 2, c.px * 2, 0.012, beta=0.4)
-    dark = (hash01(tid, 2) < 0.18).astype(np.float32)                                    # sooty / soaked tiles
-    pale = (hash01(tid, 3) > 0.95).astype(np.float32)                                     # replaced tiles
-    shadow = sstep(0.88, 1.0, pv)
-    moss_n = noise(c, 3, 0.03, 0.5, beta=1.0)
-    moss = np.clip(sstep(1.1, 2.4, moss_n + 0.9 * patch) * (0.35 + 0.65 * (1 - roll)) + 0.35 * sstep(0.84, 0.97, pv) * sstep(0.2, 1.4, moss_n), 0, 1)
-    lichen = sstep(2.0, 2.7, noise(c, 4, 0.015, 0.12, beta=0.8))
-    h = 0.012 * roll + 0.018 * (1 - pv) + 0.3e-3 * grain + 1.5e-3 * moss
-    lum = (1 + 0.42 * (t - 0.5) + 0.10 * patch + 0.05 * grain) * (1 - 0.38 * dark) * (1 + 0.25 * pale)
-    lum *= (1 - 0.6 * shadow) * (1 - 0.07 * (1 - roll)) * (1 - 0.30 * moss) * (1 + 0.18 * lichen)
-    rough = 0.80 + 0.10 * (1 - roll) + 0.08 * moss
-
-    def tint(alb):
-        hue = hash01(tid, 5)[..., None]
-        warm = np.array([1.06, 0.97, 0.88], np.float32)            # brighter orange tiles
-        cold = np.array([0.94, 1.00, 1.10], np.float32)            # brown, greyed tiles
-        out = alb * (1 + (warm - 1) * sstep(0.5, 1.0, hue) + (cold - 1) * sstep(0.5, 0.0, hue))
-        out = out * (1 - dark[..., None] * 0.5) + out * np.array([0.85, 0.95, 1.05], np.float32) * dark[..., None] * 0.5
-        m_ = (moss * 0.75)[..., None]
-        out = out * (1 - m_) + out * np.array([0.70, 1.12, 0.80], np.float32) * m_          # moss: olive over the red clay
-        l_ = (lichen * 0.7)[..., None]
-        return out * (1 - l_) + out * np.array([0.97, 1.15, 1.25], np.float32) * l_         # lichen: pale grey
-    return _finish("roof_tiles_old", c, lum, h, rough, t, shadow, extra=tint)
-
-
 FACADE_SETS = {
     "sandwich_ribbed": dict(fn=sandwich_ribbed, tile_m=[6.0, 6.0],
         slots=["hall_wall_grey", "hall_wall_silver", "hall_wall_white", "hall_wall_ivory", "booth_panel"],
@@ -960,8 +916,8 @@ FACADE_SETS = {
         note="Split-face concrete blocks 1.0 x 0.5 m, half-bond, dark recessed joints (ramp retaining walls, ADR 0159)."),
     "concrete_panels_wall": dict(fn=concrete_panels_wall, tile_m=[3.0, 3.0], slots=["ramp_wall_panels"],
         note="Precast facing panels 1.5 x 1.5 m in columns shifted by half a panel, open joints (Biezenstwa ramp walls, ADR 0159)."),
-    "roof_tiles": dict(fn=roof_tiles, tile_m=[1.4, 1.4], slots=["roof_tiles_*", "roof_metal_*"],
-        note="S-profile roof tile courses, roll pitch 0.20 m, gauge 0.35 m (u along the eave, v up the slope)."),
+    "roof_metal_tile": dict(fn=roof_metal_tile, tile_m=[1.4, 1.4], slots=["roof_metal_*"],
+        note="Pressed metal tile sheet, roll pitch 0.20 m, course step 0.35 m (u along the eave, v up the slope)."),
     "curtain_folds": dict(fn=curtain_folds, tile_m=[4.8, 2.7], slots=["trailer_curtain_*"],
         note="Curtainsider tarpaulin folds, sag between straps, grime on the lower third."),
     "container_corrugation": dict(fn=container_corrugation, tile_m=[2.78, 2.6], slots=["container_*"],
@@ -993,6 +949,7 @@ FACADE_SETS = {
         note="ADR 0305: split wooden shingles (gont), courses 0.15 m, shingles 0.07-0.12 m, weathered silver-grey."),
     "boards_painted": dict(fn=boards_painted, tile_m=[6.0, 2.6], slots=["wood_planks_white"],
         note="ADR 0305: boards under old opaque paint, 19 rows at the joints of wood_siding (u along the boards)."),
-    "roof_tiles_old": dict(fn=roof_tiles_old, tile_m=[2.8, 2.8], slots=["roof_tiles_old"],
-        note="ADR 0305: old hand-laid ceramic S-tile, roll 0.20 m, gauge 0.35 m, per-tile tone, moss, lichen."),
 }
+# ADR 0316: ceramic / cement roof tiles (esowka, karpiowka, zakladkowa) live in sets_roof.py
+FACADE_SETS.update(RS.ROOF_SETS)
+roof_tiles, roof_tiles_old, roof_karpiowka, roof_zakladkowa = RS.roof_tiles, RS.roof_tiles_old, RS.roof_karpiowka, RS.roof_zakladkowa

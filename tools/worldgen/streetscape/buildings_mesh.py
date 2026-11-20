@@ -72,7 +72,25 @@ HOUSE_ROOFS = [("roof_tiles_red", 0.40), ("roof_tiles_brown", 0.32), ("roof_meta
 
 # roofs an authored / orthophoto-read override may name (knyszyn-look-s23): the palette of the rule plus the light
 # grey sheet (fibre cement, galvanised sheet) that the rule never picks, so regions without overrides do not change
-ROOF_OVERRIDES = {name for name, _ in HOUSE_ROOFS} | {"roof_sheet_grey"}
+ROOF_OVERRIDES = {name for name, _ in HOUSE_ROOFS} | {"roof_sheet_grey", "roof_karp_red", "roof_cement_grey"}
+# ADR 0316: coverings of the ceramic tile roofs. The palette (house_palette) still deals red tile / brown tile / metal
+# sheet, so the neighbour rule and every earlier choice hold; a red tile roof is then, by the house's own hash,
+#   - on a wooden house mostly the old hand-laid S-tile with moss and lichen (`roof_tiles_old`, owner photos of Dom
+#     Klattow: the old wooden houses of Knyszyn / Tykocin kept their first roofs),
+#   - otherwise for KARP_SHARE of the houses the plain tile (karpiowka), else the S-tile (esowka).
+# Shares WORKING_VALUE (no survey). ROOF_LOD1: the LOD1 covering of a variant whose colour is its base material's.
+KARP_SHARE = 0.22
+OLD_TILE_SHARE = 0.7
+ROOF_LOD1 = {"roof_karp_red": "roof_tiles_red"}
+
+
+def roof_variant(key, material, wooden):
+    """The covering of a rule-chosen tile roof (see KARP_SHARE); other materials pass through."""
+    if material != "roof_tiles_red":
+        return material
+    if wooden:
+        return "roof_tiles_old" if hfloat(key, "roofold") < OLD_TILE_SHARE else material
+    return "roof_karp_red" if hfloat(key, "roofkarp") < KARP_SHARE else material
 # overrides that leave the facade to the rules (a building that only has these still gets e.g. the rule shopfront)
 OVR_ROOF_ONLY = {"roof_material"}
 # house walls an authored override may name (read off a licensed street-level photo): the rule tones plus boarding
@@ -2065,6 +2083,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 uh += L
         if pitched:
             rmat = house_roof_material(b, house_pal[key][1] if typ == "house" else hpick(key, ROOFS_PITCHED, "roof"))
+            if typ == "house":      # ADR 0316; also over an orthophoto-read colour (it says red tile, not which tile)
+                rmat = roof_variant(key, rmat, wooden)
             # ADR 0094 (review s9 P1-4): the soffit is light boarding (`soffit_boards`), not the graphite flashing
             # (0.045) that read 24-26 sRGB under the verge of r10_house_2 next to a wall of 140. Measured there
             # (High overcast): white `reveal_plaster` 72, the wall material 70-73, `plinth_dark` (0.20) 38 - the engine
@@ -2076,7 +2096,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             eaves = RF.build(acc, roof, poly, rmat, soffit_mat="soffit_boards",
                              fascia_mat=(wall if wooden else "hall_flashing" if rmat.startswith("roof_metal")
                                          else "soffit_boards"),
-                             step_mat=wall)       # ADR 0107: wall faces closing the steps of a MultiRoof
+                             step_mat=wall,       # ADR 0107: wall faces closing the steps of a MultiRoof
+                             low_mat=ROOF_LOD1.get(rmat))
             # ADR 0097 (review 0094 P2-c "wiatrownica biała vs szara"): with a tile roof the fascia / verge boards are
             # the soffit boarding material, so main roof and wing show one board colour (was white reveal_plaster
             # fascia next to the grey soffit_boards under the short wing overhang)

@@ -370,8 +370,9 @@ def test_r3_materials():
     from streetscape.materials import M
     for k in ("plinth_dark", "plinth_grey"):
         assert M[k]["splash_h"] == (0.8 if k == "plinth_dark" else 0.5) and M[k]["tint_linear"] and "runoff" not in M[k]   # ADR 0097: 0.8 m
-    for k in ("roof_tiles_red", "roof_tiles_brown", "roof_metal_graphite"):
-        assert M[k]["texture_set"] == "roof_tiles" and M[k]["set_tile"]
+    # ADR 0316: one set per covering (S-tile, flat interlocking tile, pressed metal tile sheet)
+    for k, st in (("roof_tiles_red", "roof_tiles"), ("roof_tiles_brown", "roof_zakladkowa"), ("roof_metal_graphite", "roof_metal_tile")):
+        assert M[k]["texture_set"] == st and M[k]["set_tile"]
     assert M["brick_red"]["macro"][1] > 0.06
     r, g, b = M["brick_red"]["color"]
     assert r / b < 0.26 / 0.07                                                   # less saturated than r10

@@ -1,0 +1,68 @@
+# STATUS roof-tiles-s24 (dachówka ceramiczna + atlas płotów plot_kit, ADR 0316)
+
+- 13:30 Worktree z main (10adb1a5a), prywatna kopia derived. Kamery QA: `look_roofs_above` (knyszyn), Tykocin
+  `look_tykocin_rynek_n/_s`, `look_tykocin_roofs_above`, `look_tykocin_zlota` (nowy `control_cameras_place.authored.json`).
+  Baseline w tle (build_world knyszyn + tykocin na kodzie main → import High → render High clear): `artifacts/roof-tiles-s24/before.status`.
+  Nowe zestawy dachówek (esówka, stara esówka, karpiówka, zakładkowa) napisane i obejrzane w podglądzie — do czasu końca
+  baseline leżą poza worktree (import baseline buduje zestawy z kodu main).
+  NASTĘPNY KROK: po `exit=0` w `artifacts/roof-tiles-s24/before.status`: wgrać `sets_roof.py`, materiały, reguły dachów,
+  `pwsh artifacts/roof-tiles-s24/run-round.ps1 -Tag r1 -World -Sets roof_tiles,roof_tiles_old,roof_karpiowka,roof_zakladkowa,roof_metal_tile`
+- 14:10 `git merge origin/main` (a31564b90: road-widen D94) bez konfliktów. Pierwszy baseline (kod sprzed scalenia) padł na imporcie
+  (brak `SM_CabInterior_LOD0.fbx` — skopiowany z main) → zarchiwizowany `artifacts/roof-tiles-s24/before-premerge/`; zestawy PBR High
+  zbudowane z kodu main (972 s). Baseline na scalonym kodzie w tle: `artifacts/roof-tiles-s24/before.status`.
+  Gotowe poza worktree (scratch, czekają na koniec budowy świata baseline): `sets_roof.py` (esówka 4,2 m, stara esówka, karpiówka,
+  zakładkowa), łatka `plot_kit.py` (rzędy `picket_wood`, `picket_paint`, siatka neutralna + tint), łatka materiałów / reguł / `roofs.py`.
+  NASTĘPNY KROK: po `world-tykocin exit=0` w before.status wgrać łatki worldgen + testy; po `exit=0` całości:
+  `pwsh artifacts/roof-tiles-s24/run-round.ps1 -Tag r1 -World -Sets roof_tiles,roof_tiles_old,roof_karpiowka,roof_zakladkowa,roof_metal_tile`
+- 14:35 Baseline gotowy (`artifacts/roof-tiles-s24/before/{knyszyn,tykocin}`, High clear; świat sprzed scalenia road-widen — kolejka slotu
+  heavy 3/3 + 4 czekających, drugi build baseline odpuszczony; drogi w „przed” są sprzed D94, budynki / działki bez różnic).
+  Kamery przed: look-dom-klattow-street 556 draws / 1 495 926 tris; look-roofs-above 542 / 1 618 590; gardens-tykocka-eye 725 / 1 538 467;
+  tykocin roofs-above 309 / 914 027, zlota 332 / 1 035 051. Kod worldgen + testy wgrane i wypchnięte (c1f535291); pytest powiązanych
+  plików: 144 passed (1 własny test poprawiony). Runda r1 czeka na slot heavy (`artifacts/roof-tiles-s24/run-r1.ps1` w tle:
+  zestawy → build_world knyszyn + tykocin → import → render): `artifacts/roof-tiles-s24/r1.status`.
+  NASTĘPNY KROK: po `exit=0` w r1.status: `bash artifacts/roof-tiles-s24/sbs.sh r1`, obejrzeć `artifacts/roof-tiles-s24/sbs/*-r1.jpg`
+- 15:10 BLOKADA KOLEJKI: slot heavy 3/3 zajęty przez tory regen-wave-2 (A od 14:10, C od 14:08, B od 15:02 — duże kafle), r1 (build_world
+  knyszyn + tykocin, ~27 min) czeka w kolejce FIFO od 14:28 (`run-r1.ps1` w tle; RAM wolne 43 GB, CPU 25 % — lider może dopuścić 4. slot:
+  `$env:KAMION_HEAVY_SLOTS=4`, sam limitu nie podnoszę). W międzyczasie runda t1 „same tekstury”: 5 zestawów dachówek zbudowane
+  (`build_all.py --only …`, 30 s) i import światów baseline z nowymi zestawami + render (pula unity): `artifacts/roof-tiles-s24/t1.status`
+  (esówka / stara esówka w silniku; karpiówka, zakładkowa i płoty dopiero po build_world). `before.status` przemianowany na
+  `before.status.hold` na czas t1 (wstrzymuje start build_world r1, który nadpisałby GLB pod importem).
+  NASTĘPNY KROK: po `exit=0` w t1.status: `mv artifacts/roof-tiles-s24/before.status.hold artifacts/roof-tiles-s24/before.status`;
+  `bash artifacts/roof-tiles-s24/sbs.sh t1`; obejrzeć `sbs/*-t1.jpg`
+- 15:20 Rundy t1 / t2 (same tekstury, światy baseline) obejrzane: `artifacts/roof-tiles-s24/sbs/crop-klattow-roof-t1.jpg`, `-t2.jpg`,
+  `crop-above-k-t1.jpg`, `crop-above-t-t1.jpg`, `crop-into-town-t1.jpg`. Szachownica znikła, widać wałki i „oczka” pod krawędziami.
+  Po t1: stara esówka plamistsza (łaty zwietrzałe, 19 % ciemnych, 8 % jasnych), cień rzędu 0,70 → 0,56, kafel 2,8 → 4,2 m, macro [6, 0.16].
+  (W t1 / t2 blachodachówka ma teksturę esówki — skutek importu starego świata z nową nazwą zestawu; znika po build_world.)
+  r1 nadal w kolejce slotu heavy (regen-wave-2 A / B / C).
+  NASTĘPNY KROK: po `exit=0` w `artifacts/roof-tiles-s24/r1.status`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`
+- 15:25 (po watchdogu) Wnioski z t1 Tykocin / Knyszyn ulica (`sbs/crop-above-t-t1.jpg`, `crop-into-town-t1.jpg`): czerwone dachy z reguły —
+  drobniejszy rysunek, wałki i rzędy zamiast kraty prostokątów, ton w plamach; z 60–150 m bez mory. Brązowe (zakładkowa) i grafitowa
+  blachodachówka do oceny dopiero po build_world (r1). Rendery oglądam odtąd jako arkusze / wycinki ≤ 1500 px, po kilka, wnioski tutaj.
+  Stan kolejki 15:20: heavy 3/3 (regen-wave-2 A / B / C), czekają: roof-tiles-s24, s8-north-s24.
+  NASTĘPNY KROK: po `exit=0` w `artifacts/roof-tiles-s24/r1.status`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`
+- 15:42 EditMode Win64 (stan t2): 1485 / 1383 passed / 1 failed / 101 skipped; porażka `RegionSelectTests…routeLengthM` kafla C (2398,27 vs
+  2397,47 — katalog po road-widen w origin/main, poza gałęzią; brak zmian C# w tej gałęzi). Log: `artifacts/roof-tiles-s24/editmode.log`.
+  r1 dalej w kolejce heavy (regen-wave-2 trzyma 3/3 od 14:08–15:02).
+  NASTĘPNY KROK: bez zmian (po `exit=0` w r1.status: sbs.sh r1 + budget.py r1).
+- 15:55 Launcher r1 w tle zginął (przerwanie sesji ~15:22 — bilet kolejki zniknął) → uruchomiony ponownie ODŁĄCZONY (`Start-Process pwsh
+  -File artifacts/roof-tiles-s24/run-r1.ps1`, pid 26092, log `run-r1.out/.err`); działa niezależnie od sesji agenta. Kolejka heavy: regen-wave-2
+  buduje bojary / mickiewicza (od 14:08) i wygoda (od 15:03), po ~2,5–3 h na kafel; przede mną s8-north i rondo-fix-cli → start r1 ok. 17:00+.
+  NASTĘPNY KROK: `cat artifacts/roof-tiles-s24/r1.status`; po `exit=0`: `bash artifacts/roof-tiles-s24/sbs.sh r1`;
+  `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`; obejrzeć `sbs/crop-*-r1.jpg`, uzupełnić ADR 0316 (Budżet / Wyniki)
+- 16:05 Runda t3 (same tekstury + ręczne przepięcie zestawów w manifestach baseline + nowy `plot_kit.png`): `sbs/sheet-knyszyn-t3.jpg`,
+  `sbs/crop-above-t-t3.jpg`, `sbs/sheet-zlota-t3.jpg`. Zakładkowa na brązowych dachach: krata znikła, połać równa z delikatnymi rzędami
+  (po t3 ton dachówki 0,07 → 0,10 i skupiska 0,06 → 0,10, bo czytała się jako jednolity brąz); blachodachówka jak przed; czerwone esówką.
+  Sztachety rdzawe: mniej „gołych” i ciepłe zamiast szarych. Karpiówka, gąsiory, `picket_wood` / `picket_paint` i tinty siatki — dopiero r1.
+  r1 (odłączony, pid 26092) czeka w kolejce heavy.
+  NASTĘPNY KROK: `cat artifacts/roof-tiles-s24/r1.status`; po `exit=0`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`
+- 16:10 Runda t4 (podgląd: karpiówka podpięta ręcznie pod czerwone dachy baseline Tykocina): `sbs/sheet-karp-t4.jpg` (lewa esówka t3, prawa
+  karpiówka). Karpiówka: drobna łuska, ton w plamach, bez linii kraty; z 30–150 m wyraźnie inna niż esówka. Zakładkowa po podbiciu tonu:
+  lekko plamista. Wszystkie 4 zestawy obejrzane w silniku; do r1 zostają: gąsiory (UV), `picket_wood` / `picket_paint`, tinty siatki, budżet.
+  NASTĘPNY KROK: `cat artifacts/roof-tiles-s24/r1.status`; po `exit=0`: `bash artifacts/roof-tiles-s24/sbs.sh r1`; `uv run --project tools/worldgen python artifacts/roof-tiles-s24/budget.py r1`
+- 18:10 KONIEC. r1 (exit=0 17:41): SBS `artifacts/roof-tiles-s24/sbs/*-r1.jpg`, budżet `budget-r1.json` (w ADR 0316): kamery draws +0…+7
+  (≤ +1,7 %), maks. 750 draws / 1,62 mln tris; zestawy dachów High 3,11 → 10,58 MB (+7,47 MB); płoty 0 drawów / 0 tris. Obejrzane arkusze:
+  Dom Klattów (dach plamisty, płot brązowy bez oliwkowych), dom drewniany (`picket_wood`), siatka ocynk / zielona, Tykocin Złota.
+  `picket_paint` nie trafił w kadr (tylko test + podgląd atlasu). pytest 12 dotkniętych plików: 150 passed (`pytest-related.log`).
+  Rund 2–3 nie użyłem. Dowody skopiowane do main `artifacts/roof-tiles-s24/`.
+  NASTĘPNY KROK (lider): `visual-critic` na `artifacts/roof-tiles-s24/sbs/*-r1.jpg`; scalić (generated → wg zwyczaju), przebudować knyszyn + tykocin
+  w main (kafle r1 są w prywatnej kopii derived tego worktree: `robocopy .claude\worktrees\roof-tiles-s24\Data\raw\derived\knyszyn Data\raw\derived\knyszyn /E /MT:16`).

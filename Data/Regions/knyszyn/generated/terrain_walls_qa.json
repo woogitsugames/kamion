@@ -1,31 +1,18 @@
 {
  "by_source": {
-  "skirt:yard_asphalt": 1,
-  "steep_grass:verge_grass": 12
+  "steep_grass:verge_grass": 15
  },
- "count": 13,
+ "count": 15,
  "max_m": 0.698,
  "p99_m": 0.698,
- "skirt_area": [
-  {
-   "e": -846.9,
-   "exposed_m2": 0.07,
-   "mat": "yard_asphalt",
-   "max_h": 0.251,
-   "n": 530.7,
-   "points": 1,
-   "run_m": 1.785,
-   "src": "osm:way/300808373:0#0:edge",
-   "visible": true
-  }
- ],
+ "skirt_area": [],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 92,
+ "thin_steep_faces_skipped": 99,
  "thresh_m": 0.15,
  "verge_strips": {
-  "max_m": 1.014,
-  "skirt": 2,
-  "steep_grass": 55,
+  "max_m": 1.019,
+  "skirt": 1,
+  "steep_grass": 52,
   "worst": [
    "steep_grass",
    "j:n7015352014:corner0:vg",
@@ -35,67 +22,67 @@
  },
  "worst": [
   {
-   "e": -962.6,
+   "e": -962.9,
    "h": 0.698,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -663.4,
+   "n": -663.3,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -962.7,
+   "e": -963.0,
    "h": 0.698,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -664.3,
+   "n": -664.2,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -955.6,
+   "e": -951.9,
+   "h": 0.697,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -678.1,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -951.9,
+   "h": 0.697,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -679.0,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -956.0,
    "h": 0.662,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -673.7,
+   "n": -673.6,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -966.3,
+   "e": -966.5,
    "h": 0.662,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -658.6,
+   "n": -658.7,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -956.2,
+   "e": -952.4,
    "h": 0.5,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -674.1,
+   "n": -678.6,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -963.2,
+   "e": -956.5,
    "h": 0.5,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -663.8,
-   "src": "c:w286990127:1134813637-4898926854:L"
-  },
-  {
-   "e": -966.8,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": -659.0,
-   "src": "c:w286990127:1134813637-4898926854:L"
-  },
-  {
-   "e": -955.5,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": -674.4,
+   "n": -674.0,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
@@ -103,11 +90,43 @@
    "h": 0.5,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -664.7,
+   "n": -663.6,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -966.2,
+   "e": -967.1,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -659.0,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -952.5,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -679.5,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -955.9,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -674.4,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -963.7,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -664.6,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -966.5,
    "h": 0.5,
    "kind": "steep_grass",
    "mat": "verge_grass",
@@ -115,27 +134,11 @@
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -846.9,
-   "h": 0.251,
-   "kind": "skirt",
-   "mat": "yard_asphalt",
-   "n": 530.7,
-   "src": "osm:way/300808373:0#0:edge"
-  },
-  {
-   "e": -955.1,
-   "h": 0.155,
+   "e": -955.4,
+   "h": 0.154,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -674.1,
-   "src": "c:w286990127:1134813637-4898926854:L"
-  },
-  {
-   "e": -965.8,
-   "h": 0.152,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": -659.0,
+   "n": -674.0,
    "src": "c:w286990127:1134813637-4898926854:L"
   }
  ]

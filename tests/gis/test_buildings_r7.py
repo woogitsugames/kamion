@@ -234,13 +234,15 @@ def test_plot_kit_atlas_rows_and_matt_colours():
     cov = PK.coverage()
     assert cov["concrete"] == 1.0 and cov["wall"] == 1.0 and cov["brick"] == 1.0
     assert 0.25 < cov["chainlink"] < 0.6 and 0.1 < cov["bars"] < 0.35 and cov["picket"] > 0.5
-    # review 0107 P1-r7-b: the mesh must not glow - opaque chain-link texels are dark green, far from white
+    # review 0107 P1-r7-b: the mesh must not glow - opaque chain-link texels are far from white. ADR 0316: the wire is
+    # neutral aged zinc; the green coat is the run tint (plots.style_col), which makes it darker still
     y0, h = PK.ROW_Y["chainlink"]
     x0, wpx = PK.ROW_X["chainlink"]
     row = im[y0:y0 + h, x0:x0 + wpx]
     on = row[..., 3] > 200
     rgb = row[on][:, :3]
-    assert rgb.max() < 140 and rgb[:, 1].mean() > rgb[:, 0].mean() + 20
+    assert rgb.max() < 140 and abs(rgb[:, 1].mean() - rgb[:, 0].mean()) < 8
+    assert PK.CHAINLINK_GREEN[1] > 2 * PK.CHAINLINK_GREEN[0] and max(PK.CHAINLINK_GREEN) < 1.0
     for name, (u, v) in PK.SWATCH.items():
         x, y = int(u * PK.N), int((1 - v) * PK.N)
         assert im[y, x, 3] == 255 and np.abs(im[y, x, :3] - np.array(PK._SW_RGB[name])).max() < 30

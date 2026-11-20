@@ -15,6 +15,9 @@ Colours are sRGB albedo (material colour white), WORKING_VALUE read off the fram
 
 Layout: 2048 x 2048. v never tiles; rows are separated by PAD px with replicated edges; v = 0 is the image bottom
 (generator convention, gltf.py flips to glTF).
+  * ADR 0316: `chainlink` is neutral galvanised wire (green = run tint), and the last strip holds two more picket
+    rows at a lower vertical resolution: `picket_wood` (brown stain / natural) and `picket_paint` (neutral paint, the
+    colour is the run tint);
   * fence rows share a band in pairs (ADR 0124: the freed 450 px carry the plant cards): each is HALF the width and
     stands for HALF_M = 5.12 m - exactly one fence panel (plots.SEG_M), so a panel never wraps. `uspan(row, m0, m1)`;
   * `wall`, `brick`, `thuja`, `hedge` span the full width and tile in u (period KIT_M);
@@ -40,10 +43,14 @@ BAY_M = KIT_M / 4           # post pitch drawn into the framed rows (chain-link,
 # bands top to bottom: (names sharing the band, height px); ROW_H_M: metres a row stands for
 _BANDS = [(("picket", "boards_rust"), 150), (("boards_brown", "chainlink"), 150), (("concrete", "bars"), 150),
           (("lamella", "boards_grey"), 150), (("wall",), 56), (("brick",), 160), (("swatch",), 28), (("thuja",), 180),
-          (("hedge",), 170), (("sprites",), 256), (("tall",), 420)]
+          (("hedge",), 170), (("sprites",), 256), (("tall",), 420),
+          # ADR 0316: the last free strip of the atlas (the rows above keep their place: regions built before this
+          # ADR hold their UVs). 58 px for 1.3 m - pickets are vertical, so the low vertical resolution only softens
+          # the tops and the rails (the `wall` row has 31 px / m, the crown cards 57-66 px / m).
+          (("picket_wood", "picket_paint"), 58)]
 ROW_H_M = {"picket": 1.30, "boards_rust": 1.80, "boards_brown": 1.80, "chainlink": 1.50, "concrete": 1.60, "bars": 1.40,
            "lamella": 1.70, "boards_grey": 1.80, "wall": 1.80, "brick": 2.00, "swatch": 0.0, "thuja": 1.00, "hedge": 1.50,
-           "sprites": 0.0, "tall": 0.0}
+           "sprites": 0.0, "tall": 0.0, "picket_wood": 1.30, "picket_paint": 1.30}
 ROW_Y = {}                  # name -> (y0 px from the top, height px)
 ROW_X = {}                  # name -> (x0 px, width px)
 _y = PAD // 2
@@ -176,8 +183,10 @@ def _picket(rng, h, w, per=HALF_M):
     tip = top - np.abs(X - xc) * 0.9                      # pointed tops (Commons C04)
     on = (np.abs(X - xc) < half) & (Y < tip) & (Y > 0.03)
     base = np.array([118, 50, 38], np.float32) * (0.82 + 0.36 * rng.random(n))[k][..., None]
-    peel = rng.random(n) < 0.16                           # paint gone: grey wood
-    base[peel[k]] = np.array([112, 102, 92], np.float32) * (0.85 + 0.3 * rng.random())
+    # paint gone: weathered wood. ADR 0316: warm grey-brown and half as many (was a neutral grey 112 / 102 / 92 on
+    # 16 % of the pickets, which a brown plot tint (G x 1.4, ADR 0305) turned olive - "szare sztachety oliwkowe")
+    peel = (rng.random(n) < 0.16) & (rng.random(n) < 0.5)
+    base[peel[k]] = np.array([124, 100, 82], np.float32) * (0.85 + 0.3 * rng.random())
     rgb = _weather(base, rng, h, w, bottom=0.2)
     sun = np.clip((Y - (top - 0.12)) / 0.12, 0, 1)        # bleached tips
     rgb = rgb * (1 + 0.16 * sun[..., None])
@@ -230,6 +239,51 @@ def _boards(rng, h, w, name, col, per=HALF_M, grey=False):
     return im
 
 
+# ADR 0316: the chain-link row is neutral galvanised wire (was green 40 / 88 / 64 mesh in a 28 / 72 / 52 frame). The
+# green PVC-coated mesh of ADR 0114 is this row under the run tint CHAINLINK_GREEN (= old mesh colour / CHAINLINK_RGB,
+# linear multiplier of the sRGB-decoded texel; plots.STYLE_TINT), so one row gives galvanised and coated meshes.
+# A region built before this ADR shows galvanised mesh on its green posts until it is rebuilt.
+CHAINLINK_RGB = (104, 108, 106)        # aged zinc, matt: must not glow under the overcast sky (review 0107 P1-r7-b)
+CHAINLINK_GREEN = tuple(round(((a / 255) ** 2.2) / ((b / 255) ** 2.2), 3) for a, b in zip((40, 88, 64), CHAINLINK_RGB))
+
+
+def _picket_low(rng, h, w, name, base_rgb, tone, weathered, peel, flat, rails_rgb, per=HALF_M):
+    """Picket rows of the low strip (ADR 0316): 38 pickets of 9 cm on two rails, flat or dog-eared tops within 2 cm.
+    tone: spread of the picket-to-picket luminance; weathered: share of pickets bleached towards grey-brown wood;
+    peel: strength of the dull, darker patches (paint chalking / flaking; luminance only, so any tint keeps its hue)."""
+    hm = ROW_H_M[name]
+    X, Y = _grid(h, w, hm, per)
+    n = 38
+    pitch = per / n
+    k = np.floor(X / pitch).astype(int)
+    xc = (k + 0.5) * pitch
+    half = 0.335 * pitch
+    top = hm - 0.035 - 0.022 * rng.random(n)[k]
+    cut = np.zeros_like(X) if flat else np.clip(np.abs(X - xc) - 0.5 * half, 0, None) * 1.0      # dog-eared corners
+    on = (np.abs(X - xc) < half) & (Y < top - cut) & (Y > 0.03)
+    base = np.array(base_rgb, np.float32) * (1 - tone + 2 * tone * rng.random(n))[k][..., None]
+    grey = rng.random(n) < weathered
+    base[grey[k]] = base[grey[k]] * 0.55 + np.array([128, 112, 96], np.float32) * 0.45 * (np.mean(base_rgb) / 110.0)
+    ky = h / (150.0 * SS)                                 # the noise sizes below were tuned on the 150 px rows
+    grain = _noise(rng, h, w, 40 * SS * ky, 0.6 * SS)     # grain / rain streaks along the picket
+    blot = _noise(rng, h, w, 14 * SS * ky, 18 * SS)
+    yn = (np.arange(h) + 0.5)[:, None] / h
+    foot = np.clip((yn - 0.8) / 0.2, 0, 1) ** 1.5         # damp, splashed foot
+    sun = np.clip((Y - (top - 0.14)) / 0.14, 0, 1)        # bleached tips
+    rgb = base * ((0.88 + 0.2 * grain) * (0.93 + 0.12 * blot) * (1 - 0.24 * foot) * (1 + 0.14 * sun))[..., None]
+    if peel > 0:
+        flake = (_noise(rng, h, w, 26 * SS * ky, 0.9 * SS) > 0.64) & (_noise(rng, h, w, 30 * SS * ky, 40 * SS) > 0.5)   # narrow runs
+        rgb[flake] *= 1 - peel
+    im = _rgba(h, w)
+    for yr in (0.24 * hm, 0.78 * hm):                     # rails behind the pickets
+        rail = np.abs(Y - yr) < 0.04
+        im[rail, :3] = np.array(rails_rgb, np.float32) * (0.85 + 0.25 * _noise(rng, h, w, 2, 30)[rail][:, None])
+        im[rail, 3] = 1.0
+    im[on, :3] = rgb[on]
+    im[on, 3] = 1.0
+    return im
+
+
 def _chainlink(rng, h, w, per=HALF_M):
     hm = ROW_H_M["chainlink"]
     X, Y = _grid(h, w, hm, per)
@@ -241,14 +295,14 @@ def _chainlink(rng, h, w, per=HALF_M):
     mesh = ((d1 < wire) | (d2 < wire)) & (Y > 0.05) & (Y < hm - 0.03)
     im = _rgba(h, w)
     tone = 0.85 + 0.3 * _noise(rng, h, w, 20, 20)
-    im[mesh, :3] = np.array([40, 88, 64], np.float32) * tone[mesh][:, None]
+    im[mesh, :3] = np.array(CHAINLINK_RGB, np.float32) * tone[mesh][:, None]
     im[mesh, 3] = 1.0
     xb = np.abs((X / BAY_M + 0.5) % 1.0 - 0.5) * BAY_M
     frame = (xb < 0.025) | (np.abs(Y - (hm - 0.025)) < 0.022) | (np.abs(Y - 0.06) < 0.012)
-    im[frame, :3] = np.array([28, 72, 52], np.float32) * tone[frame][:, None]
+    im[frame, :3] = np.array(CHAINLINK_RGB, np.float32) * 0.82 * tone[frame][:, None]
     im[frame, 3] = 1.0
     rust = (_noise(rng, h, w, 3, 3) > 0.72) & frame & ((Y < 0.4) | (np.abs(Y - (hm - 0.025)) < 0.022))
-    im[rust, :3] = (92, 58, 40)
+    im[rust, :3] = (120, 84, 62)                          # ADR 0316: lighter - it is multiplied by the run tint too
     return im
 
 
@@ -859,7 +913,15 @@ def atlas():
              "boards_brown": lambda r, h, w: _boards(r, h, w, "boards_brown", (80, 54, 42)),
              "boards_grey": lambda r, h, w: _boards(r, h, w, "boards_grey", (118, 110, 100), grey=True),
              "chainlink": _chainlink, "concrete": _concrete, "bars": _bars, "lamella": _lamella, "wall": _wall,
-             "brick": _brick, "swatch": _swatches, "thuja": _thuja, "hedge": _hedge, "sprites": _sprites, "tall": _tall}
+             "brick": _brick, "swatch": _swatches, "thuja": _thuja, "hedge": _hedge, "sprites": _sprites, "tall": _tall,
+             # ADR 0316: brown stained / natural pickets with flat tops (owner photo klattow-01: about 150 / 95 / 55
+             # sunlit; reference only), and NEUTRAL painted pickets with dog-eared tops - the paint colour is the run
+             # tint (plots.PICKET_PAINTS: green, blue, ochre, cream ... oil paint of the Podlasie villages), so no bare
+             # wood is drawn into this row (a tinted grey picket was the olive picket of ADR 0305)
+             "picket_wood": lambda r, h, w: _picket_low(r, h, w, "picket_wood", (132, 86, 54), 0.17, 0.12, 0.0, True,
+                                                        (84, 56, 40)),
+             "picket_paint": lambda r, h, w: _picket_low(r, h, w, "picket_paint", (198, 198, 192), 0.07, 0.0, 0.11, False,
+                                                         (150, 150, 146))}
     k = 0
     for names, hpx in _BANDS:
         for name in names:
