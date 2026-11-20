@@ -21,3 +21,11 @@
   plików: 144 passed (1 własny test poprawiony). Runda r1 czeka na slot heavy (`artifacts/roof-tiles-s24/run-r1.ps1` w tle:
   zestawy → build_world knyszyn + tykocin → import → render): `artifacts/roof-tiles-s24/r1.status`.
   NASTĘPNY KROK: po `exit=0` w r1.status: `bash artifacts/roof-tiles-s24/sbs.sh r1`, obejrzeć `artifacts/roof-tiles-s24/sbs/*-r1.jpg`
+- 15:10 BLOKADA KOLEJKI: slot heavy 3/3 zajęty przez tory regen-wave-2 (A od 14:10, C od 14:08, B od 15:02 — duże kafle), r1 (build_world
+  knyszyn + tykocin, ~27 min) czeka w kolejce FIFO od 14:28 (`run-r1.ps1` w tle; RAM wolne 43 GB, CPU 25 % — lider może dopuścić 4. slot:
+  `$env:KAMION_HEAVY_SLOTS=4`, sam limitu nie podnoszę). W międzyczasie runda t1 „same tekstury”: 5 zestawów dachówek zbudowane
+  (`build_all.py --only …`, 30 s) i import światów baseline z nowymi zestawami + render (pula unity): `artifacts/roof-tiles-s24/t1.status`
+  (esówka / stara esówka w silniku; karpiówka, zakładkowa i płoty dopiero po build_world). `before.status` przemianowany na
+  `before.status.hold` na czas t1 (wstrzymuje start build_world r1, który nadpisałby GLB pod importem).
+  NASTĘPNY KROK: po `exit=0` w t1.status: `mv artifacts/roof-tiles-s24/before.status.hold artifacts/roof-tiles-s24/before.status`;
+  `bash artifacts/roof-tiles-s24/sbs.sh t1`; obejrzeć `sbs/*-t1.jpg`

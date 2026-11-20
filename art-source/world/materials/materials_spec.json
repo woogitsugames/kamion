@@ -4335,16 +4335,115 @@
       "hf_ratio_albedo": 0.3063,
       "ao_mean": 0.995
     },
-    "roof_tiles": {
+    "roof_karpiowka": {
+      "tile_m": [
+        4.2,
+        4.2
+      ],
+      "slots": [
+        "roof_karp_*"
+      ],
+      "note": "ADR 0316: plain tile (karpiowka) in the scale pattern, tiles 0.183 m, gauge 0.15 m, half-offset courses, segmental lower edges.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 4.1,
+          "dir": "roof_karpiowka/High",
+          "png_bytes": 5885816,
+          "files": [
+            "T_roof_karpiowka_BaseColor.png",
+            "T_roof_karpiowka_MaskMap.png",
+            "T_roof_karpiowka_Normal.png",
+            "T_roof_karpiowka_Var.png"
+          ],
+          "smoothness_mean": 0.19,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 8.2,
+          "dir": "roof_karpiowka/Medium",
+          "png_bytes": 1673286,
+          "files": [
+            "T_roof_karpiowka_BaseColor.png",
+            "T_roof_karpiowka_MaskMap.png",
+            "T_roof_karpiowka_Normal.png",
+            "T_roof_karpiowka_Var.png"
+          ],
+          "smoothness_mean": 0.167,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 16.41,
+          "dir": "roof_karpiowka/Low",
+          "png_bytes": 449136,
+          "files": [
+            "T_roof_karpiowka_BaseColor.png",
+            "T_roof_karpiowka_MaskMap.png",
+            "T_roof_karpiowka_Normal.png",
+            "T_roof_karpiowka_Var.png"
+          ],
+          "smoothness_mean": 0.149,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00574,
+        0.01686
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.258,
+        "p95": 0.6438,
+        "mean_rgb_linear": [
+          0.4996,
+          0.5,
+          0.501
+        ]
+      },
+      "hf_ratio_albedo": 0.0406,
+      "ao_mean": 0.922
+    },
+    "roof_metal_tile": {
       "tile_m": [
         1.4,
         1.4
       ],
       "slots": [
-        "roof_tiles_*",
         "roof_metal_*"
       ],
-      "note": "S-profile roof tile courses, roll pitch 0.20 m, gauge 0.35 m (u along the eave, v up the slope).",
+      "note": "Pressed metal tile sheet, roll pitch 0.20 m, course step 0.35 m (u along the eave, v up the slope).",
       "uv": "mesh_uv0_metres (u along, v up)",
       "kind": "modulation_set",
       "albedo_target_mean_lum_linear": 0.5,
@@ -4355,13 +4454,13 @@
             512
           ],
           "texel_mm": 2.73,
-          "dir": "roof_tiles/High",
+          "dir": "roof_metal_tile/High",
           "png_bytes": 1201730,
           "files": [
-            "T_roof_tiles_BaseColor.png",
-            "T_roof_tiles_MaskMap.png",
-            "T_roof_tiles_Normal.png",
-            "T_roof_tiles_Var.png"
+            "T_roof_metal_tile_BaseColor.png",
+            "T_roof_metal_tile_MaskMap.png",
+            "T_roof_metal_tile_Normal.png",
+            "T_roof_metal_tile_Var.png"
           ],
           "smoothness_mean": 0.199,
           "astc": {
@@ -4378,13 +4477,13 @@
             256
           ],
           "texel_mm": 5.47,
-          "dir": "roof_tiles/Medium",
+          "dir": "roof_metal_tile/Medium",
           "png_bytes": 268711,
           "files": [
-            "T_roof_tiles_BaseColor.png",
-            "T_roof_tiles_MaskMap.png",
-            "T_roof_tiles_Normal.png",
-            "T_roof_tiles_Var.png"
+            "T_roof_metal_tile_BaseColor.png",
+            "T_roof_metal_tile_MaskMap.png",
+            "T_roof_metal_tile_Normal.png",
+            "T_roof_metal_tile_Var.png"
           ],
           "smoothness_mean": 0.189,
           "astc": {
@@ -4401,13 +4500,13 @@
             128
           ],
           "texel_mm": 10.94,
-          "dir": "roof_tiles/Low",
+          "dir": "roof_metal_tile/Low",
           "png_bytes": 52136,
           "files": [
-            "T_roof_tiles_BaseColor.png",
-            "T_roof_tiles_MaskMap.png",
-            "T_roof_tiles_Normal.png",
-            "T_roof_tiles_Var.png"
+            "T_roof_metal_tile_BaseColor.png",
+            "T_roof_metal_tile_MaskMap.png",
+            "T_roof_metal_tile_Normal.png",
+            "T_roof_metal_tile_Var.png"
           ],
           "smoothness_mean": 0.182,
           "astc": {
@@ -4436,6 +4535,106 @@
       "hf_ratio_albedo": 0.0368,
       "ao_mean": 0.939
     },
+    "roof_tiles": {
+      "tile_m": [
+        4.2,
+        4.2
+      ],
+      "slots": [
+        "roof_tiles_red"
+      ],
+      "note": "ADR 0316: ceramic S-tile (esowka), roll pitch 0.20 m, gauge 0.35 m, clustered tone, hollows under the lower edges, sparse lichen (u along the eave, v up the slope).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 4.1,
+          "dir": "roof_tiles/High",
+          "png_bytes": 5322608,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.147,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 8.2,
+          "dir": "roof_tiles/Medium",
+          "png_bytes": 1349664,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.139,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 16.41,
+          "dir": "roof_tiles/Low",
+          "png_bytes": 319539,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.128,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00584,
+        0.04512
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4998,
+        "p05": 0.2868,
+        "p95": 0.7624,
+        "mean_rgb_linear": [
+          0.5025,
+          0.4994,
+          0.496
+        ]
+      },
+      "hf_ratio_albedo": 0.0129,
+      "ao_mean": 0.901
+    },
     "roof_tiles_old": {
       "tile_m": [
         2.8,
@@ -4444,7 +4643,7 @@
       "slots": [
         "roof_tiles_old"
       ],
-      "note": "ADR 0305: old hand-laid ceramic S-tile, roll 0.20 m, gauge 0.35 m, per-tile tone, moss, lichen.",
+      "note": "ADR 0305 / 0316: old hand-laid ceramic S-tile, roll 0.20 m, gauge 0.35 m, uneven courses, per-tile tone and tilt, lichen crusts, moss in the pans.",
       "uv": "mesh_uv0_metres (u along, v up)",
       "kind": "modulation_set",
       "albedo_target_mean_lum_linear": 0.5,
@@ -4456,14 +4655,14 @@
           ],
           "texel_mm": 2.73,
           "dir": "roof_tiles_old/High",
-          "png_bytes": 5276531,
+          "png_bytes": 5887278,
           "files": [
             "T_roof_tiles_old_BaseColor.png",
             "T_roof_tiles_old_MaskMap.png",
             "T_roof_tiles_old_Normal.png",
             "T_roof_tiles_old_Var.png"
           ],
-          "smoothness_mean": 0.134,
+          "smoothness_mean": 0.138,
           "astc": {
             "BaseColor": "6x6",
             "Normal": "5x5",
@@ -4479,14 +4678,14 @@
           ],
           "texel_mm": 5.47,
           "dir": "roof_tiles_old/Medium",
-          "png_bytes": 1291534,
+          "png_bytes": 1576523,
           "files": [
             "T_roof_tiles_old_BaseColor.png",
             "T_roof_tiles_old_MaskMap.png",
             "T_roof_tiles_old_Normal.png",
             "T_roof_tiles_old_Var.png"
           ],
-          "smoothness_mean": 0.128,
+          "smoothness_mean": 0.129,
           "astc": {
             "BaseColor": "6x6",
             "Normal": "6x6",
@@ -4502,14 +4701,14 @@
           ],
           "texel_mm": 10.94,
           "dir": "roof_tiles_old/Low",
-          "png_bytes": 283669,
+          "png_bytes": 384034,
           "files": [
             "T_roof_tiles_old_BaseColor.png",
             "T_roof_tiles_old_MaskMap.png",
             "T_roof_tiles_old_Normal.png",
             "T_roof_tiles_old_Var.png"
           ],
-          "smoothness_mean": 0.124,
+          "smoothness_mean": 0.12,
           "astc": {
             "BaseColor": "8x8",
             "Normal": "8x8",
@@ -4520,21 +4719,122 @@
         }
       },
       "height_range_m": [
-        -0.00028,
-        0.03066
+        -0.00654,
+        0.04583
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4988,
+        "p05": 0.2427,
+        "p95": 0.8261,
+        "mean_rgb_linear": [
+          0.4898,
+          0.5017,
+          0.4974
+        ]
+      },
+      "hf_ratio_albedo": 0.0136,
+      "ao_mean": 0.896
+    },
+    "roof_zakladkowa": {
+      "tile_m": [
+        4.2,
+        4.2
+      ],
+      "slots": [
+        "roof_tiles_brown",
+        "roof_cement_*"
+      ],
+      "note": "ADR 0316: flat interlocking tile (zakladkowa, cement / engobed), cover 0.233 m, gauge 0.35 m, half-offset courses, two flat pans, a middle rib and a side roll.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 4.1,
+          "dir": "roof_zakladkowa/High",
+          "png_bytes": 5277509,
+          "files": [
+            "T_roof_zakladkowa_BaseColor.png",
+            "T_roof_zakladkowa_MaskMap.png",
+            "T_roof_zakladkowa_Normal.png",
+            "T_roof_zakladkowa_Var.png"
+          ],
+          "smoothness_mean": 0.149,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 8.2,
+          "dir": "roof_zakladkowa/Medium",
+          "png_bytes": 1253403,
+          "files": [
+            "T_roof_zakladkowa_BaseColor.png",
+            "T_roof_zakladkowa_MaskMap.png",
+            "T_roof_zakladkowa_Normal.png",
+            "T_roof_zakladkowa_Var.png"
+          ],
+          "smoothness_mean": 0.133,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 16.41,
+          "dir": "roof_zakladkowa/Low",
+          "png_bytes": 267944,
+          "files": [
+            "T_roof_zakladkowa_BaseColor.png",
+            "T_roof_zakladkowa_MaskMap.png",
+            "T_roof_zakladkowa_Normal.png",
+            "T_roof_zakladkowa_Var.png"
+          ],
+          "smoothness_mean": 0.11,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00408,
+        0.02627
       ],
       "albedo": {
         "mean_lum_linear": 0.5,
-        "p05": 0.2495,
-        "p95": 0.6955,
+        "p05": 0.3612,
+        "p95": 0.5878,
         "mean_rgb_linear": [
-          0.4932,
-          0.5024,
-          0.4964
+          0.4996,
+          0.5002,
+          0.4994
         ]
       },
-      "hf_ratio_albedo": 0.0103,
-      "ao_mean": 0.938
+      "hf_ratio_albedo": 0.0573,
+      "ao_mean": 0.924
     },
     "sandwich_ribbed": {
       "tile_m": [
