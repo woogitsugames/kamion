@@ -12,3 +12,5 @@
 - W tle: `pwsh -File tools/worldgen/qa/krywlany_s24.ps1 -Phase world -Context -Tag r1` (logi/exit w artifacts/krywlany-s24/run/).
 - NASTĘPNY KROK (po world-*.exit=0): `pwsh -File tools/worldgen/qa/krywlany_s24.ps1 -Phase post -Tag r1`, potem `-Phase unity`.
 - 12:11 build_world --context ruszył (slot heavy po kolejce); szkic ADR 0314, wpis katalogu (routeLengthM po export-route), test korytarza przepisany. NASTĘPNY KROK bez zmian (post → unity).
+- 12:27 build_world OK (916 s; far_field High 174 539 / Low 63 186 tris; ściany terenu > 0,15 m: 9, max 0,405 m; road consistency na trasie 0), export-route 1232 m (wyjście 0,14 m od wejścia trasy Dojlid). W tle: post (tile_graph/route_links/katalog/seams/fidelity) → unity (import Win64 + vqa High).
+- NASTĘPNY KROK: obejrzeć `artifacts/krywlany-s24/seams/seams-r1.md` i `artifacts/krywlany-s24/vqa-r1/bialystok-krywlany/*.png`
