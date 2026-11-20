@@ -57,6 +57,19 @@ def test_d95_built_exported_truck_path_without_driver_swing(link_id, max_kerb, m
     assert result["opposite"] == 0 and result["off_hard"] == 0, result
     assert result["kerb"] <= max_kerb, result
 
+
+def test_d95_exported_correction_keeps_the_neighbour_head_and_seam_metadata_in_sync():
+    data = json.loads((ROOT / "game/Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming/route_links.json")
+                      .read_text(encoding="utf-8"))
+    links = {row["id"]: row for row in data["links"]}
+    a, b = links["knyszyn-dk65-to-dw671-w"], links["knyszyn-w-dw671"]
+    gap = math.hypot(a["endX"] - b["startX"], a["endY"] - b["startY"])
+    assert gap <= 0.002, "regenerate the head_from dependent link after the authored correction"
+    join = next(j for c in data["corridors"] if c["id"] == "bialystok-tykocin"
+                for j in c["joins"] if j["from"] == "knyszyn" and j["to"] == "knyszyn-w")
+    assert join["gapM"] == pytest.approx(gap, abs=0.001)
+    assert [join["x"], join["y"]] == pytest.approx([a["endX"], a["endY"]], abs=0.001)
+
 KERB = {"entry_r_m": 6.0, "exit_r_m": 8.0, "splitter_w_m": 2.4, "lane_w_m": 4.0, "crossing_offset_m": 5.0,
         "crossings": [T18.ARM_WAY, T18.ARM_WAY + 2]}
 SPLIT = {"id": "split0", "kind": "carriageway_split", "node": "s0".lstrip("n"),
