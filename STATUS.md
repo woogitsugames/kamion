@@ -200,3 +200,10 @@
 - ADR0306 uporządkowany wokół finalnej implementacji; historia wycofanego przypisania pomiaru b pozostaje tutaj.
   Niezależna recenzja rzeczywistego dystansu40m i regresji obwiedni: PASS.
 - Dalej: rebuild-g3.log (Knyszyn→fidelity→links), potem validate-g3.status. Bez Unity, ratchety bez zmian.
+
+## 20.11 12:55 — G3: Knyszyn przebudowany, fidelity w toku
+- build_world Knyszyn exit0 (1174,7s) + export-route580pkt/1159m zakończone; fidelity C start12:54:11.
+- road_consistency Knyszyn: blind3, obstacle5, na trasie0 (G2b:7/6/1). To audyt kafla, nie wynik toru ronda.
+- Niezależny przegląd świeżego C: PASS2/2/32/trasa1, brak parkingu435369082 w przypadkach.
+- Dalej: Get-Content artifacts/road-widen-s24/rebuild-g3.log -Tail 8;
+  po statusie0 automatyczny combo C/Knyszyn i pytest (validate-g3.ps1). Unity nie uruchamiano.

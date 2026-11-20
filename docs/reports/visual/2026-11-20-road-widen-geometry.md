@@ -155,3 +155,24 @@ sąsiada w promieniu 40 m. Ten sam `delta` służy następnie do bocznej odległ
 Kierunek przeciwbieżny nadal wynika z iloczynu jednostkowych stycznych (`parallel < 0` po warunku równoległości),
 a nie z wektora odległości. Regresja z odległym U i obwiednią obejmującą badany odcinek trafnie sprawdza zachowanie
 symetrycznego wzrostu przy braku rzeczywistego sąsiada. Nie stwierdzono nowego błędu kierunku ani medianu.
+
+## G3 — aktualny road_consistency C
+
+Niezależnie odczytano `Data/Regions/bialystok-industrial-c/generated/road_consistency_qa.json` po zakończonym buildzie C:
+
+| Kontrola | G3 | Limit właściciela |
+|---|---:|---:|
+| marking_off_carriageway | 2 | 3 |
+| obstacle_in_lane | 2 | 2 |
+| lane_blind_end | 32 | 55 |
+| przypadki przy trasie | 1 | 1 |
+
+**PASS road_consistency C i usunięcia zgłoszenia parkingu.** Jedyny przypadek przy trasie dotyczy znanej bramy
+`w188397871`, E 605,15 / N -640,4 (`kerb`, `j:n1882954015`). Nie ma przypadku `w435369082` jako `chain`, `to_chain`
+ani `osm_ways`. Liczba przypadków jest spójna: 44 = arrow 8 + blind 32 + marking 2 + obstacle 2.
+Raport jawnie zapisuje look-ahead 3 m i margines końca 1 m.
+
+Ponownie obejrzany wcześniejszy dowód `parking-bounded-target-0.5.png` jest zgodny z tym wynikiem: ograniczony cel
+i boczne próbki pozostają wewnątrz istniejącego przejazdu. To wcześniejszy rzut diagnostyczny, nie nowy render G3;
+aktualny raport klasyfikacji gotowego kafla dostarcza świeżego potwierdzenia. Nie deklaruje się na tym etapie PASS
+fidelity ani ronda Knyszyn — ich końcowe przebiegi jeszcze trwają.
