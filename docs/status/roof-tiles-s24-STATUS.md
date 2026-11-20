@@ -7,3 +7,10 @@
   baseline leżą poza worktree (import baseline buduje zestawy z kodu main).
   NASTĘPNY KROK: po `exit=0` w `artifacts/roof-tiles-s24/before.status`: wgrać `sets_roof.py`, materiały, reguły dachów,
   `pwsh artifacts/roof-tiles-s24/run-round.ps1 -Tag r1 -World -Sets roof_tiles,roof_tiles_old,roof_karpiowka,roof_zakladkowa,roof_metal_tile`
+- 14:10 `git merge origin/main` (a31564b90: road-widen D94) bez konfliktów. Pierwszy baseline (kod sprzed scalenia) padł na imporcie
+  (brak `SM_CabInterior_LOD0.fbx` — skopiowany z main) → zarchiwizowany `artifacts/roof-tiles-s24/before-premerge/`; zestawy PBR High
+  zbudowane z kodu main (972 s). Baseline na scalonym kodzie w tle: `artifacts/roof-tiles-s24/before.status`.
+  Gotowe poza worktree (scratch, czekają na koniec budowy świata baseline): `sets_roof.py` (esówka 4,2 m, stara esówka, karpiówka,
+  zakładkowa), łatka `plot_kit.py` (rzędy `picket_wood`, `picket_paint`, siatka neutralna + tint), łatka materiałów / reguł / `roofs.py`.
+  NASTĘPNY KROK: po `world-tykocin exit=0` w before.status wgrać łatki worldgen + testy; po `exit=0` całości:
+  `pwsh artifacts/roof-tiles-s24/run-round.ps1 -Tag r1 -World -Sets roof_tiles,roof_tiles_old,roof_karpiowka,roof_zakladkowa,roof_metal_tile`
