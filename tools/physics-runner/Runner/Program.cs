@@ -19,6 +19,7 @@ namespace PhysicsRunner
     ///   --no-multi           skip the multi-run checks (repeatability, dt / substep sweeps)
     ///   --update-golden      rewrite tests/golden/*.csv from this run (then review the diff!)
     ///   --bench              cost per step of the full 40 t combination (no CSV)
+    ///   --input-feel &lt;dir&gt; [--feel &lt;json&gt;]  PC keyboard / pad steering chain in the loop (drive-feel-s24)
     ///   --robustness         M34: soak metrics, bit-determinism, dt 1/50..1/120 + substep tables, CPU step
     ///                        profile, cargo-CoG 5x5 grid, mass x surface matrix, seeded kerb fuzz -> robustness.md
     /// </summary>
@@ -65,6 +66,14 @@ namespace PhysicsRunner
                 return 0;
             }
             // ADR 0149: finger-in-the-loop evidence (touch drag gesture -> column -> physics), before/after CSVs + summary.
+            // drive-feel-s24: PC keyboard / pad chain in the loop (pad_keyboard_feel.json, optional --feel <json>).
+            for (int i = 0; i < args.Length; i++)
+                if (args[i] == "--input-feel")
+                {
+                    string feel = null;
+                    for (int j = 0; j < args.Length; j++) if (args[j] == "--feel" && j + 1 < args.Length) feel = Path.GetFullPath(args[j + 1]);
+                    return PcInputEvidence.WriteAll(Path.GetFullPath(i + 1 < args.Length ? args[i + 1] : Path.Combine(RepoPaths.Root, "artifacts", "drive-feel-s24", "input"), RepoPaths.Root), feel);
+                }
             for (int i = 0; i < args.Length; i++)
                 if (args[i] == "--touch-evidence")
                     return TouchEvidence.WriteAll(Path.GetFullPath(i + 1 < args.Length ? args[i + 1] : Path.Combine(RepoPaths.Root, "artifacts", "steer-r2", "evidence"), RepoPaths.Root));
