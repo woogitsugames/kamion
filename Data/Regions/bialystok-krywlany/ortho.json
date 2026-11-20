@@ -1,0 +1,36 @@
+{
+ "bounds": [
+  776971.0,
+  589055.0,
+  779019.0,
+  591103.0
+ ],
+ "file": "Data/raw/derived/bialystok-krywlany/ortho_0p25m.tif",
+ "in_git": false,
+ "res_m": 0.25,
+ "sha256": "acc6069ea1ae9476210a15bd00dd5121038ed3ae3ac364178b8f16f4a2412eec",
+ "size_px": [
+  8192,
+  8192
+ ],
+ "source_crs": [
+  "EPSG:2180",
+  "PROJCS[\"ETRF2000-PL / CS92\",GEOGCS[\"ETRF2000-PL\",DATUM[\"ETRF2000_Poland\",SPHEROID[\"GRS 1980\",6378137,298.257222101004,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1305\"]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"9702\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",0],PARAMETER[\"central_meridian\",19],PARAMETER[\"scale_factor\",0.9993],PARAMETER[\"false_easting\",500000],PARAMETER[\"false_northing\",-5300000],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH],AUTHORITY[\"EPSG\",\"2180\"]]"
+ ],
+ "source_manifest": "gugik-orto-2024-rgb-0p25-bialystok-krywlany",
+ "source_res_m": [
+  [
+   0.24999999997209696,
+   0.2500000004449249
+  ],
+  [
+   0.24999999997225342,
+   0.2500000004449249
+  ],
+  [
+   0.25,
+   0.25
+  ]
+ ],
+ "use": "visual reference + alignment QA only (docs/05 §3); never a game texture"
+}
