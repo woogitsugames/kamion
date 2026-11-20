@@ -178,6 +178,12 @@ def edge_section(e: dict) -> EdgeSection:
             wsrc = "bdot10k (clamped 3.50-5.50)"
     else:
         lw = std
+        if bw and cls == "D":
+            # ADR 0306: BDOT10k width of service ways / living streets is the whole paved strip (parking bays, yard
+            # fronts) - consecutive edges of one way came out 5.5 / 6.5 m and lane paths through their junctions ran into
+            # kerbs (tile C, road_consistency lane_blind_end next to the start route). Class standard instead.
+            prov["width_ignored"] = {"bdot_width": bw, "reason": "class D, ADR 0306"}
+            bw = None
         if bw:
             per = (bw - 2 * edge) / lanes
             if 2.4 <= per <= 4.75:
@@ -185,6 +191,8 @@ def edge_section(e: dict) -> EdgeSection:
                 # to the widest value of PTB2022 § 17 ust. 1, but not narrow it below the class standard there
                 lw = min(max(per, S.bdot_lane_floor(cls, oneway)), S.LANE_WIDTH_MAX[cls])
                 wsrc = "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
+                if lw > per:
+                    prov["bdot_floor_growth_m"] = round((lw - per) * lanes, 3)   # ADR 0306: grows away from the median
             else:
                 prov["width_rejected"] = {"bdot_width": bw, "per_lane": round(per, 2)}
     width = lanes * lw + 2 * edge
@@ -326,6 +334,7 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     net.overrides_applied += cs_applied
     net.overrides_stale += cs_stale
     apply_edge_overrides(net, edges, overrides or [])
+    gameplay_widen(net, S.GAMEPLAY_LANE_WIDEN_M, edges)
     net.sec_list = [sections[k] for k in sorted(sections)]
     sec_index = {s.edge_id: i for i, s in enumerate(net.sec_list)}
     net.chains = build_chains(nodes, edges)
@@ -360,6 +369,140 @@ def _truck_apron(v) -> dict | None:
             return None
         h = 0.0
     return {"width_m": w, "height_m": h, "material": TRUCK_APRON_MATS[code], "code": code}
+
+
+def widening_clearance(net: Network, edges: dict) -> dict:
+    """Unwidened parallel carriageways, in travel direction. Never spend an existing separator.
+
+    Compare actual gutter positions (including authored placement), not OSM axes. The snapshot is immutable:
+    both carriageways see the same gap regardless of iteration order. Same-level service/parking roads count too.
+    Opposing one-way carriageways reserve their entire existing median. Other neighbours reserve the close
+    separator, leaving only the excess over WIDEN_SEPARATOR_RESERVE_M available. These search/reserve thresholds
+    are GAMEPLAY WORKING_VALUE, not orthophoto measurements.
+    """
+    def local_width(sec, t):
+        if sec.width_profile:
+            return float(np.interp(t, *np.asarray(sec.width_profile, float).T))
+        return sec.width
+
+    lines, keys = [], []
+    for eid, (_, g, _, _) in edges.items():
+        sec = net.sections[eid]
+        p = Polyline(smooth_open(g, 0, 4.0))
+        t = p.s / max(p.length, 1e-9)
+        off = np.interp(t, *np.asarray(sec.center_offset_profile, float).T) if sec.center_offset_profile else (
+            sec.center_offset + t * ((sec.center_offset if sec.center_offset_end is None else sec.center_offset_end) - sec.center_offset))
+        lines.append(LineString(p.p + p.n * off[:, None]))
+        keys.append(eid)
+    tree = shapely.STRtree(lines)
+    result = {}
+    for i, eid in enumerate(keys):
+        sec = net.sections[eid]
+        if sec.roundabout:
+            continue
+        line = lines[i]
+        room = [float("inf"), float("inf")]  # left, right
+        for s in np.linspace(min(3.0, line.length / 4), max(line.length - 3.0, line.length * .75),
+                             max(3, int(line.length / 8) + 1)):
+            q = line.interpolate(s)
+            u = np.asarray(line.interpolate(min(s + 1, line.length)).coords[0]) - np.asarray(
+                line.interpolate(max(0, s - 1)).coords[0])
+            u /= max(np.linalg.norm(u), 1e-9)
+            normal = np.array([-u[1], u[0]])
+            nearest = [(float("inf"), False), (float("inf"), False)]
+            for j in tree.query(_qbox(q, S.WIDEN_NEIGHBOUR_SEARCH_M)):
+                other = net.sections[keys[j]]
+                if i == j or other.layer != sec.layer or other.bridge != sec.bridge:
+                    continue
+                # Consecutive edges of the same OSM way are the same carriageway, not a separator.
+                if eid.split(":")[0] == keys[j].split(":")[0]:
+                    continue
+                ln = lines[j]
+                v = ln.project(q)
+                if v < 1 or v > ln.length - 1:
+                    continue  # do not confuse a junction endpoint with a parallel road
+                delta = np.asarray(ln.interpolate(v).coords[0]) - np.asarray(q.coords[0])
+                if float(delta @ delta) > S.WIDEN_NEIGHBOUR_SEARCH_M ** 2:
+                    continue  # STRtree queried envelopes; a long bend's box can cover a very distant road
+                tangent = np.asarray(ln.interpolate(min(v + 2, ln.length)).coords[0]) - np.asarray(
+                    ln.interpolate(max(v - 2, 0)).coords[0])
+                tangent /= max(np.linalg.norm(tangent), 1e-9)
+                parallel = float(u @ tangent)
+                if abs(parallel) < .9:
+                    continue
+                lat = float(delta @ normal)
+                gap = abs(lat) - (local_width(sec, s / line.length) + local_width(other, v / ln.length)) / 2
+                if gap < 0 and set(edges[eid][2:]) & set(edges[keys[j]][2:]):
+                    continue  # topologically shared junction pavement, not a separator
+                side = 0 if lat > 0 else 1
+                median = sec.oneway and other.oneway and not other.roundabout and parallel < 0
+                if gap < nearest[side][0]:
+                    nearest[side] = (gap, median)
+                elif gap == nearest[side][0]:
+                    nearest[side] = (gap, median or nearest[side][1])
+            for side, (gap, median) in enumerate(nearest):
+                if math.isinf(gap):
+                    continue
+                # An opposing pair owns the WHOLE existing median, including wide rural separators. The class
+                # reserve is not an orthophoto measurement and must never license eating such a median down to it.
+                surplus = 0.0 if median else max(0.0, gap - S.WIDEN_SEPARATOR_RESERVE_M)
+                # Both roads may grow into this gap. Each owns at most half the available surplus.
+                room[side] = min(room[side], surplus / 2)
+        result[eid] = room
+    return result
+
+
+def gameplay_widen(net: Network, d: float, edges: dict | None = None) -> None:
+    """D94: widen resolved sections once, preserving parallel separators from the immutable base geometry.
+    Width and placement change together, including measured width/offset profiles and lane markings.
+    A section with neighbours on both sides receives only the feasible growth; the remainder is recorded.
+    """
+    if not d:
+        return
+    clearance = widening_clearance(net, edges) if edges is not None else {}
+    for sec in net.sections.values():
+        if "gameplay_widen_m" in sec.provenance:
+            continue
+        n = max(int(sec.lanes), 1)
+        dl = d
+        add = n * dl
+        shift = 0.0
+        if not sec.roundabout:
+            left, right = clearance.get(sec.edge_id, [float("inf"), float("inf")])
+            # Allocate towards the greater clearance. Neither neighbour loses any of its existing separator.
+            if left == right:
+                grow_l = grow_r = min(add / 2, left)
+            elif left >= right:
+                grow_l = min(add, left)
+                grow_r = min(add - grow_l, right)
+            else:
+                grow_r = min(add, right)
+                grow_l = min(add - grow_r, left)
+            add = grow_l + grow_r
+            dl = add / n
+            shift = (grow_l - grow_r) / 2
+            sec.provenance["gameplay_clearance_m"] = [None if math.isinf(v) else round(v, 3) for v in (left, right)]
+            sec.provenance["gameplay_widen_limited_m"] = round(n * d - add, 3)
+        if sec.lane_edges:
+            le = [float(v) for v in sec.lane_edges]
+            sec.lane_edges = [round(le[0] + (v - le[0]) + i * dl, 3) for i, v in enumerate(le)]
+            sec.lane_w = round((sec.lane_edges[-1] - sec.lane_edges[0]) / n, 3)
+        else:
+            sec.lane_w = round(sec.lane_w + dl, 3)
+        sec.width = round(sec.width + add, 3)
+        if sec.width_profile:
+            sec.width_profile = [(t, round(w + add, 3)) for t, w in sec.width_profile]
+        if sec.edge_line_spacing is not None:
+            sec.edge_line_spacing = round(sec.edge_line_spacing + add, 3)
+        sec.provenance["gameplay_widen_m"] = round(add, 3)
+        if not sec.roundabout:
+            sh = -shift
+            sec.center_offset = round(sec.center_offset - sh, 3)
+            if sec.center_offset_end is not None:
+                sec.center_offset_end = round(sec.center_offset_end - sh, 3)
+            if sec.center_offset_profile:
+                sec.center_offset_profile = [(t, round(v - sh, 3)) for t, v in sec.center_offset_profile]
+            sec.provenance["gameplay_shift_left_m"] = round(shift, 3)
 
 
 def apply_edge_overrides(net: Network, edges, overrides):
@@ -660,8 +803,56 @@ def prepare_chain(c: Chain, net: Network, sec_index: dict):
     # width transitions: PTB2022 §17 ust.6 asks for smooth changes -> 15 m smoothing (WORKING_VALUE)
     c.hw = smooth_1d(hw, 7.5 / DENSE) if len(hw) > 3 else hw
     c.meta["rev"] = rev
+    curve_widen(c, net)                  # D94 / ADR 0306: two-way lanes wider on tight bends (semitrailer off-tracking)
     m = max(2, int(math.ceil(2 * float(c.hw.max()) / 1.75)))
     c.m_lat = m + (m % 2)          # even -> the crown (lat 0) is always a vertex
+
+
+def offtrack_ss(R: float) -> float:
+    """Steady-state off-tracking [m] of the 16.5 m combination (roads.swept_path.Combination, ADR 0218 / 0280) whose
+    front axle runs on radius R: R - trailer-axle radius. ~ 40 / R for R >= 30 m (the old Polish lane widening rule)."""
+    from .swept_path import Combination
+    v = Combination()
+    r1 = R * R - v.L1 * v.L1
+    rk2 = r1 + v.c * v.c
+    return R - math.sqrt(max(rk2 - v.l2 * v.l2, 0.0))
+
+
+def curve_widen(c: Chain, net: Network) -> None:
+    """D94 / ADR 0306 (GAMEPLAY_WIDEN; PTB2022 § 17 ust. 5 only asks that the lane on a curve lets the design vehicle
+    pass): on a two-way 2-lane carriageway of class GP / G / Z each lane is widened on bends tighter than
+    CURVE_WIDEN_R_M so that the semitrailer of a combination whose front axle keeps the lane centre does not cross the
+    centre line: lane >= truck tyre width + 2 x (off-tracking + tolerance), at most CURVE_WIDEN_MAX_M per lane.
+    The lanes of such a section share the local width (`lane_follow`, ADR 0233), so both lanes and the centre line
+    follow. Not near junction nodes (corner geometry) nor near tile seams (the neighbour does not know the bend)."""
+    if c.closed or c.roundabout or len(c.line.s) < 8 or not S.GAMEPLAY_LANE_WIDEN_M:
+        return                           # GAMEPLAY_LANE_WIDEN_M = 0 switches every D94 rule off (measured geometry)
+    secs = [net.sec_list[int(i)] for i in np.unique(c.sec_idx)]
+    ok = {id(s_) for s_ in secs if not s_.oneway and s_.lanes == 2 and not s_.lane_edges and s_.cls in ("GP", "G", "Z")
+          and not s_.construction}
+    if not ok:
+        return
+    k = smooth_1d(np.abs(c.line.kappa), 10.0 / DENSE)
+    R = 1.0 / np.maximum(k, 1e-6)
+    lw = np.array([float(net.sec_list[int(i)].lane_w) for i in c.sec_idx])
+    off = np.array([offtrack_ss(float(r)) if r < S.CURVE_WIDEN_R_M else 0.0 for r in R])
+    need = S.TRUCK_TYRE_W_M + 2.0 * (off + S.CURVE_WIDEN_TOL_M)
+    add = np.clip(need - lw, 0.0, S.CURVE_WIDEN_MAX_M)
+    add[np.array([id(net.sec_list[int(i)]) not in ok for i in c.sec_idx])] = 0.0
+    for node, s_end in ((c.node_a, 0.0), (c.node_b, c.length)):
+        nd = net.nodes[node]
+        skip = S.CURVE_WIDEN_SEAM_SKIP_M if nd.get("boundary") else (S.CURVE_WIDEN_JUNCTION_SKIP_M if nd["deg"] >= 3 else 0.0)
+        if skip:
+            add[np.abs(c.line.s - s_end) < skip] = 0.0
+    if not add.any():
+        return
+    add = smooth_1d(add, 10.0 / DENSE)           # ramps in and out over ~20 m (PTB2022 § 17 ust. 6: smooth changes)
+    c.hw = c.hw + add                              # 2 lanes x add / 2
+    for s_ in secs:
+        if id(s_) in ok:
+            s_.lane_follow = True
+            s_.provenance.setdefault("curve_widen", "D94 / ADR 0306")
+    c.meta["curve_widen_max_m"] = float(add.max())
 
 
 def taper_forks(net: Network, report: list | None = None):
