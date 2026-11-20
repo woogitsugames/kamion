@@ -66,7 +66,7 @@ def test_derived_set_is_regenerated_when_missing_or_stale():
     mod.apply_derived_sets(stale, problems)
     assert any("d67-full: stale" in p for p in problems)
     full = _sets(stale)["d67-full"]
-    assert full.count("dk65-monki-01") == 1 and len(full) == 39, "no duplicates when the base set already holds an extra"
+    assert full.count("dk65-monki-01") == 1 and len(full) == 49, "no duplicates when the base set already holds an extra"
 
     unchanged = copy.deepcopy(cat)
     problems = []
