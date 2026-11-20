@@ -34,6 +34,42 @@ from roads import standards as S  # noqa: E402
 import roundabout_ortho as RO  # noqa: E402
 from terrain_mesh.gltf import smooth_normals  # noqa: E402
 
+
+@pytest.mark.parametrize("link_id,max_kerb", [
+    ("knyszyn-dk65-to-dw671-w", 5),
+    ("knyszyn-dk65-to-dk65-w", 0),
+])
+def test_d95_built_exported_truck_path_without_driver_swing(link_id, max_kerb, monkeypatch):
+    """D95 gate on real GLB triangles and the shipped authored path, with the D94 lane width.
+    No driver optimiser: a stored route correction must itself keep the full combination clear.
+    """
+    import combo_lane_check as combo
+    if not combo.LS.built("knyszyn", ROOT):
+        pytest.skip("build_world --region knyszyn required for the real truck gate")
+    monkeypatch.setattr(S, "GAMEPLAY_LANE_WIDEN_M", 0.25)
+    link = next(row for row in json.loads(combo.LS.LINKS.read_text(encoding="utf-8"))["links"]
+                if row["id"] == link_id)
+    path, lead = combo.LS.link_path(link, combo.TAIL_M, 0.0, ROOT)
+    settle = 0.0 if lead > 0 else combo.Combination().L1 + combo.Combination().kp_rear
+    result = combo.evaluate("knyszyn", path, lead, combo.LaneModel("knyszyn"), keep_s0=settle, opt=False)
+    assert "swing" not in result
+    assert result["tyre_points"] > 1000, result
+    assert result["opposite"] == 0 and result["off_hard"] == 0, result
+    assert result["kerb"] <= max_kerb, result
+
+
+def test_d95_exported_correction_keeps_the_neighbour_head_and_seam_metadata_in_sync():
+    data = json.loads((ROOT / "game/Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming/route_links.json")
+                      .read_text(encoding="utf-8"))
+    links = {row["id"]: row for row in data["links"]}
+    a, b = links["knyszyn-dk65-to-dw671-w"], links["knyszyn-w-dw671"]
+    gap = math.hypot(a["endX"] - b["startX"], a["endY"] - b["startY"])
+    assert gap <= 0.002, "regenerate the head_from dependent link after the authored correction"
+    join = next(j for c in data["corridors"] if c["id"] == "bialystok-tykocin"
+                for j in c["joins"] if j["from"] == "knyszyn" and j["to"] == "knyszyn-w")
+    assert join["gapM"] == pytest.approx(gap, abs=0.001)
+    assert [join["x"], join["y"]] == pytest.approx([a["endX"], a["endY"]], abs=0.001)
+
 KERB = {"entry_r_m": 6.0, "exit_r_m": 8.0, "splitter_w_m": 2.4, "lane_w_m": 4.0, "crossing_offset_m": 5.0,
         "crossings": [T18.ARM_WAY, T18.ARM_WAY + 2]}
 SPLIT = {"id": "split0", "kind": "carriageway_split", "node": "s0".lstrip("n"),
@@ -506,7 +542,15 @@ def test_knyszyn_islands_have_the_authored_lengths(knyszyn):
     assert all(n in (1, 2) for lo, hi, n in ext.values()) and ext[286990127][2] == ext[232511646][2] == 2
     isl = shapely.union_all([pg for _, pg in sp.splitters])
     assert all(not isl.intersects(c["band"].buffer(-0.05)) for c in sp.crossings), "islands cut through at the crossings"
-    assert ext[1478765548][1] < 20.0 and ext[1464342641][1] < 20.0
+    # D95: E/W now have a raised tail beyond the pedestrian refuge.
+    assert ext[1478765548][1] < 28.0 and ext[1464342641][1] < 28.0
+    for a in j.arms:
+        if CR._arm_way(net, a) not in (1478765548, 1464342641):
+            continue
+        mid = LineString(sp.mouths[a.node]["mid"])
+        own = [pg for _, pg in sp.splitters if pg.distance(mid) < 0.5]
+        assert 15.0 <= max(CR._long_side(pg) for pg in own) <= 20.0
+        assert all(pg.is_valid and pg.area > 3.0 for pg in own)
     for _, pg in sp.splitters:
         e = np.hypot(*np.diff(np.asarray(pg.minimum_rotated_rectangle.exterior.coords)[:3], axis=0).T)
         assert min(e) <= sp.opts["splitter_w_m"] + 0.2
@@ -555,7 +599,9 @@ def test_knyszyn_outline_is_tighter_than_adr_0218(knyszyn):
     sp, sp0 = j.compact, _knyszyn_adr0218()
     m2, m2_old = _mouths_on(sp, 2.0), _mouths_on(sp0, 2.0)
     assert len(m2) == len(m2_old) == 4
-    assert max(m2) <= 11.6 and min(m2_old) >= 11.7, (m2, m2_old)
+    # D95 preserves 11.75 m asphalt on W with two lanes: its authored base
+    # is 0.25 m wider when this historical fixture disables D94 (+0.50 vs +0.75).
+    assert max(m2) <= 11.8 and sorted(m2)[-2] <= 11.6 and min(m2_old) >= 11.7, (m2, m2_old)
     near = [s.outline.intersection(Point(*s.center).buffer(s.r_out + 3.0)).area - math.pi * s.r_out ** 2 for s in (sp, sp0)]
     assert near[0] < 0.88 * near[1], near
     assert all(b - a < -1.0 for a, b in zip(sorted(_mouths_on(sp0, 2.0)), sorted(_mouths_on(sp0, 8.0)))), "0218: funnels"
@@ -588,7 +634,7 @@ def test_knyszyn_overrides_and_probe_are_consistent():
     o = next(o for o in ovs if o["id"] == "knyszyn-roundabout-compact")
     assert CR.validate(o["set"]["compact_roundabout"]) is not None and o["confidence"] == "low"
     assert "8 m kerb returns" not in o["reason"] and "gravel island" not in o["reason"], "review D18 P2-11"
-    assert sum(1 for o in ovs if o.get("kind") == CS.KIND) == 2
+    assert sum(1 for o in ovs if o.get("kind") == CS.KIND) == 4
     probe = json.loads((ROOT / "docs/reports/roundabout-0274/knyszyn_ortho_probe.json").read_text(encoding="utf-8"))
     assert probe["roundabout_visible"] is False, "when a newer orthophoto shows the roundabout, measure and re-author"
     assert max(s["date"] for s in probe["source"]["sheets_at_centre"]) == "2025-05-27"
@@ -665,3 +711,21 @@ def test_knyszyn_island_plantings_are_low_clear_of_the_kerb_and_in_budget(knyszy
     assert tris <= 1300, tris
     assert len({p.mat for p in parts}) <= 4
     assert ov["confidence"] == "low" and "ESTIMATED" in ov["reason"]
+
+
+def test_knyszyn_west_arm_two_lanes_preserves_d94_width(knyszyn):
+    net = knyszyn[0]
+    sections = [s for s in net.sec_list if "1478765548" in s.edge_id]
+    assert sections and all(s.lanes == 2 for s in sections)
+    assert all(s.width == pytest.approx(11.25) for s in sections)  # measured design, D94 off in fixture
+
+
+def test_knyszyn_roundabout_uses_fresh_asphalt(knyszyn):
+    net, j, *_ = knyszyn
+    assert all(net.sections[e].surface_mat == "road_asphalt_new"
+               for c in j.compact.feeders + j.compact.ring for e, _ in c.edges)
+
+
+def test_knyszyn_patch_keeps_the_ring_wearing_course(knyszyn):
+    net, j, *_ = knyszyn
+    assert M._patch_mat(net, j) == "road_asphalt_new"

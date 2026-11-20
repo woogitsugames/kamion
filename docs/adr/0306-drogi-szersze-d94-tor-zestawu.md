@@ -112,3 +112,24 @@ parkingowe T oraz rzeczywisty blocker w krótkim ramieniu QA. Ratchety fidelity/
 Po scaleniu pozostałe kafle wymagają regeneracji, export-route i route_links; szwy dopiero po obu stronach.
 Tutaj pełna walidacja obejmuje C i Knyszyn. Poza zakresem: skręty ulicami Rynku Knyszyna z przeciwnym pasem,
 globalny katalog regionów i złote trasy po fali przebudów. Nie oznacza to zerowego combo dla całej sieci.
+
+## D95 — korekta Knyszyna (rondo-fix-cli, 2026-11-20; CLI zakończone, render odroczony)
+
+D95 zachowuje poszerzenie i promienie D94. Nadpisania Knyszyna zmieniają nawierzchnię pierścienia i feederów na
+`asphalt_new`, liczbę pasów zachodniego ramienia na 2 (asfalt po D94 nadal 11,75 m) oraz wydłużają rozdziały E/W.
+Główne części wysepek na płaskiej geometrii: 15,89 / 17,53 m, azyle oddzielne. Materiał płyty ronda kompaktowego
+pochodzi z pierścienia, zamiast z większości długich ramion. Opaska: lokalny tint 0,35 i mocniejsze fugi, bez zmiany
+progu/kolizji. Znaki A-7/C-12 na 4 wlotach i 6 lamp przez istniejące authored gate3_landmarks; pozycje WORKING_VALUE.
+
+To nie jest wizualny PASS. Unity nie uruchamiano na polecenie właściciela; obraz i terminowość ładowania sąsiada
+wymagają weryfikacji po reimporcie. Wyniki i ograniczenia: `docs/reports/visual/2026-11-20-knyszyn-d95-cli.md`.
+
+Kontynuacja D95: statyczny QA Knyszyna ładuje prawdziwą scenę knyszyn-w tego samego tieru; wspólne reguły streamera
+usuwają zapory i aprony/stuby po przygotowaniu kolizji. Brak sceny przerywa render. Start playera PC w Knyszynie bez
+argumentu `-stream` domyślnie włącza streaming (lokalny wyjątek od opt-in ADR 0273); jawne `-stream 0` oraz override
+wygrywają. Nie zmienia to budżetów, gotowości kolizji ani telefonów. Obraz i terminowość ładowania wymagają playera.
+
+R2: zapisany tor DW671 przesunięty lokalnie 0,75 m w prawo daje **0/0/0 bez driver swing** (r1 0/17/0, G3 0/5/0);
+DK65→DK65 W pozostaje **0/0/0**. Nie zmieniano szerokości D94 ani progów QA. Odświeżenie zależnego head_from
+knyszyn-w usuwa różnicę końców 0,3494→0 m. Build knyszyn exit0; 4 zespoły A-7/C-12 i 6 lamp przyjęte, stale0;
+pytest 160 passed/2 skipped (brak obcych GLB), .NET 43/43. Globalny combo 68/13/0 nadal exit1 przez historyczne trasy Rynku.

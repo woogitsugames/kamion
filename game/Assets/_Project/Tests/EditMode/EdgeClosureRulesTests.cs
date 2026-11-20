@@ -5,6 +5,20 @@ namespace Game.Tests
 {
     public class EdgeClosureRulesTests
     {
+        [TestCase(null, "knyszyn", true, null, true)]
+        [TestCase("", "knyszyn", true, null, true)]
+        [TestCase("0", "knyszyn", true, null, false)]
+        [TestCase(null, "knyszyn", false, null, false)]
+        [TestCase(null, "knyszyn-w", true, null, false)]
+        [TestCase("1", "other", false, null, true)]
+        [TestCase(null, "knyszyn", true, false, false)]
+        [TestCase("0", "knyszyn", true, true, true)]
+        public void Knyszyn_DesktopStartLoadsRealNeighbours_ExplicitChoiceWins(
+            string argument, string region, bool desktop, bool? forced, bool expected)
+        {
+            Assert.AreEqual(expected, EdgeClosureRules.StreamingRequested(argument, region, desktop, forced));
+        }
+
         [TestCase(TileSide.N, false)]
         [TestCase(TileSide.E, false)]
         [TestCase(TileSide.S, true)]

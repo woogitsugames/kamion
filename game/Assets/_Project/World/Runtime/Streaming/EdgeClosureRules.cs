@@ -5,6 +5,13 @@ namespace Game.World.Streaming
     /// <summary>Import/streaming rules for a single road closure. Heights are region-local absolute elevations.</summary>
     public static class EdgeClosureRules
     {
+        /// <summary>D95: Knyszyn's roundabout meets the western seam after ~40 m; use real neighbouring tiles.</summary>
+        public static bool NeedsNeighbourContext(string region) => region == "knyszyn";
+
+        public static bool StreamingRequested(string argument, string region, bool desktop, bool? enabledOverride) =>
+            enabledOverride ?? (argument == "1" ||
+                (string.IsNullOrEmpty(argument) && desktop && NeedsNeighbourContext(region)));
+
         public static bool IsOpen(TileSide side, TileSide openSides) =>
             side != TileSide.None && (openSides & side) == side;
 

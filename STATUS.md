@@ -50,3 +50,36 @@
 - Usunięto metrykę schodkowego obrysu w konformowaniu skarpy: obrys wektorowy + interpolacja wysokości w pasie 16 m. Pylony far-field: otwarta kratownica, 420 tris/słup, bez nowego materiału.
 - Nowe testy syntetyczne 18/18 PASS; review w toku. Unity i build_world nieuruchamiane, zmiany tylko w tym worktree, bez push.
 - NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_embankment_pylons_s24.py tests/gis/test_unit_meshing_chunks.py tests/gis/test_terrain_walls.py -q`; uzupełnić walidację końcowej skarpy i podgląd offline.
+
+## STATUS rondo-fix-cli — D95, 2026-11-20
+- WIP commit `31e534e35`, bez push. Raport: `docs/reports/visual/2026-11-20-knyszyn-d95-cli.md`.
+- Szerokości/promienie D94 zachowane; dwa pasy W przy 11,75 m asfaltu po D94; wydłużone soczewki E/W; świeży asfalt i materiał płyty z pierścienia; opaska, znaki, lampy. Zapora/szew nadal otwarte, brak wizualnego PASS.
+- W tle uruchomiono wyłącznie build_world knyszyn, przez slot heavy rondo-fix-cli; potem automatycznie pytest i combo. Runner: `artifacts/logs/d95-run.ps1`, logi `d95-build.log`, `d95-tests-final.log`, `d95-combo-after.log`, kody w `*.exit`.
+- NASTĘPNY KROK: `Get-Content artifacts/logs/d95-build.log -Tail 30; Get-Content artifacts/logs/d95-tests-final.log -Tail 30; Get-Content artifacts/logs/d95-combo-after.log -Tail 30`; sprawdzić bramkę D95, poprawić błędy, uzupełnić raport i commit. Nie uruchamiać Unity ani build_world innego kafla.
+
+### D95 15:08 — walidacja w kolejce
+- Pierwszy build knyszyn exit0 (1164,7 s), road_consistency 3/5 i zero na trasie. Pytest 142 pass / 2 skip / 2 fail; oba błędy poprawione, retest w kolejce.
+- Combo r1: DK65→DW671 W 0/17/0, swing0/0/0; DK65→DK65 W0/0/0. Zapisano korektę authored toru 0,75 m w prawo (optymalizator daje0/0/0); finalny pomiar gotowego linku w kolejce. Rynek nadal nie przechodzi globalnie.
+- Dalsze runnery w tle: d95-signs-run.ps1, d95-retest-run.ps1, d95-final-combo-run.ps1 w artifacts/logs, wszystkie przez heavy. Pula zajęta regen-wave A/B/C. Nie uruchamiać ponownie tych samych zadań; sprawdzać *.exit i logi. Drugi build pozostawi nowe wygenerowane pliki do przeglądu/commitu. Szew i zapora nadal wymagają poprawki, Unity nie uruchomiono.
+
+### D95 kontynuacja — szew statycznego QA
+- Stare runnery zakończyły procesy przed przydziałem slotu, bez wyników. Wznowiono w tle `d95-resume-run.ps1`: build knyszyn → combo → pytest, jeden slot heavy, bez Unity.
+- QA Knyszyna wymaga rzeczywistej sceny knyszyn-w w tym samym tierze; wspólna logika streamera usuwa obie zapory oraz stuby dopiero po załadowaniu i cook kolizji. Brak sceny = jawny błąd. Dodana regresja EditMode, bez wykonania Unity.
+- NASTĘPNY KROK: `Get-Content artifacts/logs/d95-resume-slot.log -Tail 3; Get-Content artifacts/logs/d95-resume.status -ErrorAction SilentlyContinue; Get-Content artifacts/logs/d95-build-signs.log -Tail 15 -ErrorAction SilentlyContinue`. W playerze wymagane `-stream 1`; samodzielny kafel zachowuje koniec mapy.
+- Wydzielono `WorldNeighbourQa.cs`; kompilacja Roslyn lokalnego Game.World + nowego helpera QA + zmodyfikowanego testu EditMode PASS (bez Unity, referencje z istniejącego cache main, logi `artifacts/d95-compile/`). Runner .NET reguł krawędzi: 35/35 PASS. To nie wykonanie testu EditMode ani pełny build gry.
+- Dodano dwa testy prawdziwego toru na GLB w `test_roundabout_0274.py`: gotowe wyeksportowane linki, opt=False, D94=0,25; DW671 kerb≤5 i DK65 kerb=0, opposite/off_hard=0 dla obu. To nowe bramki bez zmiany klasyfikatora; wykonanie z pełnym retestem po przydziale heavy.
+- Uzupełnienie playera: domyślny streaming PC przy starcie w Knyszynie bez `-stream`; jawne 0/override wygrywają. Zapory znikają dopiero z gotowym prawdziwym sąsiadem, budżety bez zmian. Reguły .NET 43/43 PASS, Roslyn World/helper/test PASS. `-stream 1` pozostaje poprawnym jawnym wyborem. Kolejka heavy nadal oczekuje.
+- Kontrola JSON wykryła nieodświeżone `head_from` knyszyn-w-dw671 i opis szwu po przesunięciu toru (rzeczywisty gap≈0,35 m, zapisany 0). Dodano regresję ciągłości i metadanych. Runner po buildzie odświeży 4 linki Knyszyna + zależny link knyszyn-w, bez generowania GLB sąsiada (`d95-refresh-links.py` → `d95-links-final.log`). Heavy nadal w kolejce; znacznik FIFO zachowany.
+- Przegląd statycznego QA: sceny _Tile zapisują WorldInstances jako disabled; adopcja QA włącza teraz także instancje, tak jak ProgressActivation playera (znaki/roślinność sąsiada). Ponowna kompilacja Roslyn po tej zmianie; heavy nadal oczekuje.
+
+### D95 r2 — eksport zakończony, pomiar toru PASS, pytest w toku
+- Build knyszyn exit0, 916,9 s; 64 GLB, High548,23/Low233,63 MiB; przyjęte 4 zespoły znaków + 6 lamp, stale0. Consistency3/5, na trasie0. Bez Unity.
+- Gotowe linki bez --swing: DK65→DW671 W **0/0/0** (r1 0/17/0), DK65→DK65 W **0/0/0**. Globalny combo nadal exit1 przez Rynek:68/13/0. Zależny head_from i metadane naprawione: gap0,3494→0 m.
+- NASTĘPNY KROK: `Get-Content artifacts/logs/d95-retest.log -Tail 20; Get-Content artifacts/logs/d95-retest.exit -ErrorAction SilentlyContinue`; dokończyć retest, commit łącznika i raportu. Slot rondo-fix-cli-resume zwalnia runner w finally.
+- Eksport w commicie `93c9ea22d`. Przejrzano diff łączników: zmieniony tylko zależny knyszyn-w-dw671 i opis szwu; maksymalna różnica sparowanych próbek0,3494 m, punkt końcowy bez zmiany, liczba punktów298 bez zmiany. Pozostałe linki identyczne. Pytest88%, bez F.
+
+### D95 — wynik końcowy CLI, 17:34
+- Retest **160 passed / 2 skipped / exit0**, 316,06 s. Oba wcześniejsze błędy i trzy nowe regresje PASS. Dwa stare testy szwów GLB pominięte z braku siatek dk65-10/11/knyszyn-s; innych kafli nie generowano. .NET 43/43 i Roslyn lokalnego World/helpera QA/testu PASS; Unity nie uruchomiono.
+- Gotowe GLB + zapisany tor, bez driver swing: DK65→DW671 W **0/17/0→0/0/0**, DK65→DK65 W **0/0/0→0/0/0**. Rzeczywisty gap sąsiada 0,3494→0 m; globalny combo exit1 przez Rynek: 68/13/0. Eksport `93c9ea22d`, łącznik `98000e9d2`; bez push.
+- Runner zakończony i slot heavy zwolniony. Zapora/stub: rzeczywisty sąsiad w QA oraz domyślny streaming PC Knyszyna; potwierdzenie obrazu i czasu ładowania wymaga playera. Siatki w prywatnym Data/raw/derived/knyszyn, zachować przed usunięciem worktree.
+- NASTĘPNY KROK bez Unity: `Get-Content artifacts/logs/d95-retest.log -Tail 5; Get-Content artifacts/logs/d95-combo-final.log`; po integracji w osobnej sesji reimport Knyszyna i knyszyn-w, EditMode scenowy i render 09/10/11 + wylot NW. Raport: docs/reports/visual/2026-11-20-knyszyn-d95-cli.md.

@@ -204,7 +204,8 @@ namespace Game.World.Streaming
 
         /// <summary>
         /// The single hook of the driving scene (ADR 0273 §10, <c>DrivingLabBootstrap.Start</c>, one statement): installs the
-        /// streamer only when it is switched on - <see cref="EnabledOverride"/> or the launch argument <c>stream=1</c> - and
+        /// streamer when requested by <see cref="EnabledOverride"/>, <c>stream=1</c>, or a desktop Knyszyn start without
+        /// an explicit stream argument (D95: the roundabout needs real neighbour context), and
         /// the start region has an available neighbour tile scene; otherwise returns null and the scene is exactly as before
         /// (closed region edge). Everything the bootstrap used to wire by hand is done here, so Game.Gameplay keeps one line:
         /// <list type="bullet">
@@ -223,7 +224,7 @@ namespace Game.World.Streaming
         public static WorldStreamer TryInstallFromLaunch(GameObject host, WorldRegionRoot start, Transform vehicle, Rigidbody body,
             string streamArgument, SafePoseBuffer safePoses, float safeMinAge, System.Action<Vector3> onOriginMoved)
         {
-            if (!IsRequested(streamArgument)) return null;
+            if (!IsRequested(streamArgument, start != null ? start.regionId : null, !Application.isMobilePlatform)) return null;
             if (host == null || start == null || vehicle == null) return null;
             // D44 (ADR 0273 §6 dopisek): on desktop the PC quality tier picks the content (High / Ultra -> _High_Tile), not the
             // start scene name; phones unchanged. Explicit Low fallback when no High tile scene is available.
@@ -263,8 +264,9 @@ namespace Game.World.Streaming
             return c;
         }
 
-        /// <summary>Streaming switch: <see cref="EnabledOverride"/> when set, else launch argument <c>stream</c> == "1".</summary>
-        public static bool IsRequested(string streamArgument) => EnabledOverride ?? streamArgument == "1";
+        /// <summary>Explicit switch / override, with the D95 desktop Knyszyn default when no argument was supplied.</summary>
+        public static bool IsRequested(string streamArgument, string region = null, bool desktop = false) =>
+            EdgeClosureRules.StreamingRequested(streamArgument, region, desktop, EnabledOverride);
 
         SafePoseBuffer m_SafePoses;
         float m_SafeMinAge;
@@ -371,6 +373,29 @@ namespace Game.World.Streaming
         {
             Links = links;
             m_LinkChained = new bool[links != null ? links.Count : 0];
+        }
+
+        /// <summary>Static visual QA: adopt an already loaded tile and apply the player's seam rules.
+        /// Does not start loading or bypass runtime activation/collision readiness.</summary>
+        public void AdoptVisualQaTile(WorldRegionRoot root)
+        {
+            if (Application.isPlaying) throw new System.InvalidOperationException("Static QA adoption is edit-mode only");
+            int i = root != null ? Graph.IndexOf(root.regionId) : -1;
+            if (i < 0 || i == StartTile || m_Tiles[i].root != null)
+                throw new System.ArgumentException("QA tile must be a new region in the streaming graph");
+            var t = m_Tiles[i];
+            t.scene = root.gameObject.scene;
+            Register(t, root, FindStartRoute(t.scene));
+            Place(t);
+            foreach (var chunk in t.chunks) chunk.SetActive(true);
+            t.nextChunk = t.chunks.Length;
+            if (t.cooker != null) t.cooker.Cook();
+            if (t.instances != null) t.instances.enabled = true;
+            Physics.SyncTransforms();
+            Policy.SetUnavailable(i, false);
+            Policy.SetState(i, TileState.Ready);
+            RefreshEdgesAround(i);
+            if (t.edgeRoot != null) t.edgeRoot.SetActive(true);
         }
 
         void OnEnable()
