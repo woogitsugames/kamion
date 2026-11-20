@@ -586,7 +586,10 @@ _FAR_WALLS = {"block": ["plaster_cream", "plaster_grey", "plaster_pastel_blue", 
                         "plaster_accent_green", "plaster_accent_ochre", "plaster_accent_grey",
                         "plaster_white"],              # ADR 0238: white blocks (typology.BLOCK_WALLS)
               "office": ["plaster_light", "plaster_grey", "plaster_beige", "plaster_white", "brick_red"]}
-_FAR_WALLS["ribbon"] = _FAR_WALLS["office"]
+# klattow-r3-s24: chunk knyszyn 1_4 has an authored ribbon frontage on a plaster_peach wall (frontage.py far_kind);
+# without the entry the manifest named a material the table did not hold and the Unity import of the tile failed
+# ([WORLD_MATERIAL] plaster_peach__far_ribbon: missing material) on main 8ad119ad9.
+_FAR_WALLS["ribbon"] = _FAR_WALLS["office"] + ["plaster_peach"]
 for _k, _ws in _FAR_WALLS.items():
     for _w in _ws:
         if _w in M:

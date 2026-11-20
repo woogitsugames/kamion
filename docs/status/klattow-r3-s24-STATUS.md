@@ -16,3 +16,7 @@
   (GLB z main nowsze niz manifest galezi: brak materialu plaster_peach__far_ribbon) - 'przed' dla kamer = runda 2 z ADR, dla kafla = manifest z gita.
   Runda r1 (mats + build_world + import + render) czeka w kolejce slotu heavy: `artifacts/klattow-r3-s24/r1.status`.
   NASTEPNY KROK: po `exit=0` w r1.status: `bash artifacts/klattow-r3-s24/sbs.sh r1` i obejrzec `artifacts/klattow-r3-s24/sbs/*-r1.jpg`
+- 11:15 r1: mats 6 s, build_world knyszyn 20 min (exit 0): dom LOD0 4404 / LOD1 99 tris, lamus 861 / 86, ogrod 78 tris; plot 1,53 m od sciany przy
+  chodniku 1,10 m (os drogi nierownolegla do sciany) -> nadpisanie 0,70 m + ROAD_CLEAR_M 0,05 (wejdzie w r2). Import padal na bledzie z main:
+  brak materialu plaster_peach__far_ribbon w tabeli (kafel 1_4) - dopisany do materials.py i recznie do manifestu r1. Import + render r1 w tle.
+  NASTEPNY KROK: po `exit=0` w artifacts/klattow-r3-s24/r1.status: `bash artifacts/klattow-r3-s24/sbs.sh r1`; potem `pwsh artifacts/klattow-r3-s24/run-round.ps1 -Tag r2 -World`

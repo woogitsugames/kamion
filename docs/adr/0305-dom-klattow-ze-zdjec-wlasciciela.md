@@ -205,9 +205,12 @@ o ile nie napisano inaczej.
   standardowy 2,0 m, więc jego tylna krawędź wchodziła 0,7 m w głąb ganku. Zdjęcie 01 i ortofoto 0,25 m pokazują
   wąski chodnik (~1,1–1,2 m) między krawężnikiem a płotem. Nowy klucz nadpisania krawędzi `sidewalk_w_left` /
   `sidewalk_w_right` (m, 0,6–6,0; `roads/network.py`: szerokość chodnika tej strony zamiast `SIDEWALK_W`, tylko tam,
-  gdzie strona ma chodnik) i wpis `look-dom-klattow-koscielna-footway`: **1,10 m po stronie północnej** krawędzi
-  `w98072526:1134839334-1134842485` (303 m; szerokość z dala od domu ESTIMATED z ortofoto). Płot staje w linii czoła
-  ganku poza obrysem drogi (reguła z rundy 1 bez zmian), ganek nie wchodzi na chodnik.
+  gdzie strona ma chodnik) i wpis `look-dom-klattow-koscielna-footway` po stronie północnej krawędzi
+  `w98072526:1134839334-1134842485` (303 m; szerokość z dala od domu ESTIMATED z ortofoto). Przebieg 1 z 1,10 m:
+  płot 1,53 m od ściany (oś OSM nie jest równoległa do ściany: 1,2°, ~0,4 m na długości płotu). Ostatecznie
+  **0,70 m** + zapas płotu od obrysu drogi `ROAD_CLEAR_M` 0,15 → 0,05 m (sztachety stoją przy samej krawędzi chodnika,
+  jak na zdjęciu). Chodnik wychodzi o 0,1–0,3 m węższy niż na zdjęciu — właściwa poprawka to oś / szerokość jezdni
+  Kościelnej (warstwa dróg, otwarte).
 - **Zieleń przy ścianie (zdjęcie 01):** krzew (r 1,05 m, 2,0 m) między pierwszym a drugim oknem na zachód od ganku,
   młode drzewko (2,8 m) między dwoma ostatnimi na wschód, pnącze na wschodniej połowie czoła ganku — siatki atlasu
   `plot_kit` (`plots.bush`, `fruit_tree`, `card`), tylko treść High, tylko gdy pas między ścianą a płotem ma ≥ 1,5 m.

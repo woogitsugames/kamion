@@ -354,10 +354,10 @@ def test_round3_garden_and_footway_override(fc):
     res2 = _build(fc, Polygon([a + n * 1.0 - d * 9, a + n * 1.0 + d * 30, a + n * 12 + d * 30, a + n * 12 - d * 9]))[2]
     assert res2["garden"] == ["climber"]
     ov = [o for o in pipeline.load_overrides("knyszyn") if o["id"] == "look-dom-klattow-koscielna-footway"]
-    assert len(ov) == 1 and ov[0]["set"] == {"sidewalk_w_left": 1.10} and ov[0]["target"] == {"edge": "w98072526:1134839334-1134842485"}
+    assert len(ov) == 1 and ov[0]["set"] == {"sidewalk_w_left": 0.70} and ov[0]["target"] == {"edge": "w98072526:1134839334-1134842485"}
     # 2.75 m half carriageway + 1.10 m footway + 0.15 m clearance fits in front of the porch (4.06 m from the axis)
     g = json.loads((ROOT / "Data/Regions/knyszyn/roads.graph.json").read_text(encoding="utf8"))
     e = next(x for x in g["edges"] if x["id"] == ov[0]["target"]["edge"])
     axis = LineString(e["geometry"])
     foot = Polygon(np.asarray(b["poly"].exterior.coords) + np.asarray(ORIGIN))
-    assert axis.distance(foot) - e["attrs"]["width"]["v"] / 2 - 1.10 >= K.ROAD_CLEAR_M
+    assert axis.distance(foot) - e["attrs"]["width"]["v"] / 2 - 0.15 - 0.70 >= K.ROAD_CLEAR_M + 0.3      # kerb stone 0.15 m; 0.3 m for the 1.2 deg between axis and wall

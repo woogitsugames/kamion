@@ -62,7 +62,7 @@ PICKET_W, PICKET_PITCH, PICKET_H = 0.09, 0.14, 1.05
 FENCE_PAST = (2.6, 4.5)                           # past the west / east corner, m (photo 01, ADR 0305)
 OPENING_MARGIN = 0.30                            # clear wall beyond the opening's surround / sill, m
 OPENING_TRIM = 0.105                             # widest window trim: 0.085 m surround + 0.02 m sill
-ROAD_CLEAR_M = 0.15                               # the fence keeps this far off the road / footway footprint
+ROAD_CLEAR_M = 0.05                               # the fence keeps this far off the road / footway footprint (r3: 0.15)
 WALKWAY_MIN_M = 1.4                               # footway left in front of pickets that stand on the modelled footway
 # garden strip (photo 01): (kind, centre relative to the porch centre m, crown radius m, height m)
 GARDEN = (("bush", -6.95, 1.05, 2.0), ("tree", 7.0, 0.8, 2.8))
