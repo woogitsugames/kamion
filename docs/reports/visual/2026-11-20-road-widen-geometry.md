@@ -77,18 +77,40 @@ pochłaniania pętli. Dwie uwagi do wdrożenia:
 
 Wariant ma **PASS dla przedstawionego planu**, ale ogólna reguła wymaga usunięcia P1 i ponownego road_consistency.
 
-## DK8 — diagnostyka położenia `dk8-placement-b`
+### Ponowny przegląd właściwego kodu G2 `_service_tees_fit`
 
-Obejrzano `artifacts/road-widen-s24/dk8-placement-strips.png` (N 180 / 220 / 260, po dwie wersje), skrypt rysujący
-i `fit-placement-diagnostic.log`. Nie zmieniano danych. **PASS dla osobnej korekty pomiaru położenia -0,55 → +0,02 m.**
-We wszystkich trzech parach przewidywana linia między pasami po korekcie trafia w linię wykrytą i widoczną na
-ortofoto. Stara pozycja jest konsekwentnie odsunięta o około 0,5–0,6 m. Nowa granica bazowej jezdni po stronie
-centralnego separatora dochodzi bliżej rzeczywistej krawędzi asfaltu; widoczny separator pozostaje poza nią.
+**PASS: obie uwagi implementacyjne wariantu diagnostycznego zamknięte.** Wywołanie przekazuje całe aktualne grupy
+`ga` / `gb`. Helper zbiera ramiona wszystkich ich węzłów i sprawdza wszystkie sekcje każdego ramienia: wymagane D,
+bez ring i bez compact (także pusty obiekt compact jest poprawnie wykluczony). Droga publiczna przy wcześniej
+wchłoniętym węźle blokuje zastosowanie reguły. Próg uwzględnia najszerszą jezdnię w tych grupach.
+Wymagana jest zarówno długość łącznika, jak i minimalny fizyczny odstęp węzłów obu grup co najmniej dwóch szerokości;
+długi zakrzywiony łącznik o bliskich końcach nie wystarcza już do rozdzielenia skrzyżowań.
 
-Diagnostyczny fit dla `w238861874:8205694666-2081020082`: 17 użytecznych profili z 29, we wszystkich dwa pasy;
-MAD trzech granic 0,09 / 0,05 / 0,10 m. Jest to mocniejszy dowód niż dotychczasowy center-only override opisany
-`confidence: low`. Zmiana centrum powinna mieć własny opis źródła i dowodów, bez zmiany liczby pasów.
+Przeczytano regresje publicznego wchłoniętego węzła, ring, compact i niewystarczającego odstępu oraz test rzeczywistego
+parkingu: osobne T, zachowany niepochłonięty łącznik, dodatnia długość wstęgi między przycięciami i poprawne poligony.
+Bez uruchamiania dodatkowych procesów. Wynik gotowych powierzchni i toru w obu kierunkach potwierdza dopiero aktualne QA.
 
-Rzut pokazuje stałe bazowe 8 m, nie końcową jezdnię GAMEPLAY ani pełną geometrię jej sąsiadów. Z tego powodu
-ostateczne zachowanie separatora i usunięcie fantomowej wyspy wymagają ponownego fidelity oraz rzutu po przebudowie.
-Ocena centrum nie oznacza automatycznej akceptacji całego diagnostycznego fitu (8,44 m i lane_edges).
+## DK8 — wycofanie błędnej diagnostyki `dk8-placement-b`
+
+**Poprzedni PASS dla -0,55 → +0,02 m na podstawie pasków N180/220/260 jest wycofany.**
+Skrypt `dk8_placement_strips.py` wybrał `w238861874`, który zaczyna się przy N335,85. Projekcja trzech punktów
+zatrzymywała się na końcu tej samej krawędzi, więc etykiety N180/220/260 nie opisywały faktycznych klatek.
+Recenzja powinna była wychwycić powtarzającą się treść pasków; tamten obraz nie jest dowodem położenia w tych miejscach.
+Autor przywrócił `dk8-placement-b` do -0,55. Wynik fitu tego edge nie stanowi zatwierdzonej korekty danych w tej recenzji.
+
+## DK8 — właściwa krawędź `dk8-placement-a`
+
+Obejrzano `artifacts/road-widen-s24/dk8-correct-edge-strips.png` i poprawiony skrypt z kontrolą zakresu projekcji.
+Krawędź `w882366266:2256069816-8205694666` obejmuje N146,58…335,85; rzeczywiste środki próbek mają
+N180,001 / 219,979 / 260,008. **PASS dla osobnej korekty położenia -0,50 → -0,18 m**, bez zmian liczby pasów i szerokości.
+
+W trzech rzeczywistych próbkach linia między pasami jest wykryta przy -0,30 / -0,10 / -0,05 m. Błąd przewidywanej
+linii spada odpowiednio z 0,20 / 0,40 / 0,45 m do 0,12 / 0,08 / 0,13 m; poprawa jest widoczna w parach pasków.
+Fit całego edge: 9 użytecznych profili z 15, we wszystkich dwa pasy, MAD granic 0,07 / 0,07 / 0,05 m.
+
+Granice bazowej jezdni 8 m po korekcie wynoszą [-4,18; +3,82] m. Mieszczą się w wykrytym asfalcie każdej próbki:
+[-4,70; +3,90], [-4,40; +4,10], [-4,35; +4,20] m. Na pokazanych przekrojach nie zabierają rzeczywistego separatora.
+To silniejszy dowód położenia niż dotychczasowy center-only override z `confidence: low`.
+
+Rzut pokazuje bazowe 8 m, nie końcową jezdnię GAMEPLAY ani pełną geometrię sąsiadów. Ostateczne zachowanie separatora
+i usunięcie fantomowej wyspy nadal wymagają aktualnego fidelity oraz rzutu po przebudowie.

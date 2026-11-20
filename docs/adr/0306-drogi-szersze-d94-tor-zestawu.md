@@ -161,3 +161,9 @@ Właściwy odcinek to w882366266 N146,58..335,85, override dk8-placement-a. Fitt
 MAD0,07/0,07/0,05m, centrum -0,18m zamiast -0,50. Profile z rzeczywistych N180,001/219,979/260,008 pokazują linię
 między pasami -0,30/-0,10/-0,05m od OSM. Korygujemy tylko położenie a; szerokość i liczba pasów nie zmieniają się.
 Dowód zastępujący błędny rzut: `artifacts/road-widen-s24/dk8-correct-edge-strips.png`.
+
+### Podgląd G2b przed pełną przebudową
+Na tej samej referencji sheet0,25m2024 główny komponent DK8 zmienia się absent→partial (udział drogi0,706→0,482;
+powierzchnia545,4→508,9m²). Pozostały mały absent przyN120 jest27m od trasy. Obejrzane oba rzuty DK8 i parkingu:
+zachowany rzeczywisty separator oraz dwa lokalne T. Bez zmian klasyfikatora, źródła referencji i ratchetów.
+Pełna przebudowa i ponowne QA nadal wymagane.

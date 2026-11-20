@@ -160,3 +160,9 @@
   center -0,50→-0,18. NOWE profile mają kontrolę zakresu i rzeczywiste N180,001/219,979/260,008; linia między pasami
   odpowiednio -0,30/-0,10/-0,05 m od OSM. Rzut `dk8-correct-edge-strips.png`, liczba pasów i szerokość bez zmian.
 - NASTĘPNY KROK: `pwsh -File artifacts/road-widen-s24/preview-g2b.ps1` (poprawiony zakres, bez Unity).
+
+- Preview G2b zakończony: identyczna referencja sheet0,25m2024, DK8 główna separacja absent→partial,
+  ortho_road_frac0,706→0,482, area545,4→508,9m². Drobny absent N120 pozostaje 27m od trasy (poza kontrolą).
+  Obejrzane dk8.jpg/parking.jpg w artifacts/road-widen-s24/preview-g2b: parking ma oba lokalne T i ciągły przejazd.
+  Nie zmieniano referencji, klasyfikatora ani ratchetów. Recenzja kodu G2 i poprawnych profili a PASS.
+- NASTĘPNY KROK: `pwsh -File artifacts/road-widen-s24/rebuild.ps1 -Regions bialystok-industrial-c,knyszyn -Tag g2b -Fidelity -HeavySlots 4`.
