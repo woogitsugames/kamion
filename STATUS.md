@@ -71,3 +71,8 @@
 - Uzupełnienie playera: domyślny streaming PC przy starcie w Knyszynie bez `-stream`; jawne 0/override wygrywają. Zapory znikają dopiero z gotowym prawdziwym sąsiadem, budżety bez zmian. Reguły .NET 43/43 PASS, Roslyn World/helper/test PASS. `-stream 1` pozostaje poprawnym jawnym wyborem. Kolejka heavy nadal oczekuje.
 - Kontrola JSON wykryła nieodświeżone `head_from` knyszyn-w-dw671 i opis szwu po przesunięciu toru (rzeczywisty gap≈0,35 m, zapisany 0). Dodano regresję ciągłości i metadanych. Runner po buildzie odświeży 4 linki Knyszyna + zależny link knyszyn-w, bez generowania GLB sąsiada (`d95-refresh-links.py` → `d95-links-final.log`). Heavy nadal w kolejce; znacznik FIFO zachowany.
 - Przegląd statycznego QA: sceny _Tile zapisują WorldInstances jako disabled; adopcja QA włącza teraz także instancje, tak jak ProgressActivation playera (znaki/roślinność sąsiada). Ponowna kompilacja Roslyn po tej zmianie; heavy nadal oczekuje.
+
+### D95 r2 — eksport zakończony, pomiar toru PASS, pytest w toku
+- Build knyszyn exit0, 916,9 s; 64 GLB, High548,23/Low233,63 MiB; przyjęte 4 zespoły znaków + 6 lamp, stale0. Consistency3/5, na trasie0. Bez Unity.
+- Gotowe linki bez --swing: DK65→DW671 W **0/0/0** (r1 0/17/0), DK65→DK65 W **0/0/0**. Globalny combo nadal exit1 przez Rynek:68/13/0. Zależny head_from i metadane naprawione: gap0,3494→0 m.
+- NASTĘPNY KROK: `Get-Content artifacts/logs/d95-retest.log -Tail 20; Get-Content artifacts/logs/d95-retest.exit -ErrorAction SilentlyContinue`; dokończyć retest, commit łącznika i raportu. Slot rondo-fix-cli-resume zwalnia runner w finally.

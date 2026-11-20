@@ -2,6 +2,32 @@
 
 Stan: WIP; bez Unity, bez push. Nie stanowi wizualnego PASS.
 
+## D95 r2 — końcowy eksport i pomiar gotowych łączników
+
+- `d95-build-signs.exit`: 0; 916,9 s; 64 GLB, High 548,23 MiB / Low 233,63 MiB.
+- `gate3_landmarks`: 4 przyjęte zespoły A-7/C-12, 6 lamp, stale=[]; poprawiony feeder 1426600413 w roads_qa.
+  Dwa znaki generator odsunął o 1,15 i 3,36 m na dostępne podłoże; orientacja i ewentualne duplikaty wymagają renderu.
+- road_consistency: 3 lane_blind_end / 5 obstacle_in_lane, na trasie 0. Ostrzeżenia o brakujących skanach
+  wyposażenia i nieaktywnych zasobach Fab występowały też w pierwszym buildzie; brak nowego błędu eksportu.
+- Pełny retest pytest jeszcze w toku; nie jest to deklaracja PASS testów.
+
+Pomiar `d95-combo-final.json` wykonano **bez --swing**, na wyeksportowanych ścieżkach i gotowych GLB:
+
+| Przejazd | G3 | D95 r1 | D95 r2 (bez driver swing) |
+|---|---|---|---|
+| DK65 → DW671 W | 0/5/0 | 0/17/0 | **0/0/0**, 6079 punktów, 95 na dozwolonej opasce |
+| DK65 → DK65 W | 0/0/0 | 0/0/0 | **0/0/0**, 6224 punkty, 20 na dozwolonej opasce |
+
+Kolejność: opposite / kerb / off_hard. Nie zmieniano klasyfikatora ani progów QA.
+Globalny combo nadal exit1: **68/13/0** (r1: 68/30/0), z powodu dwóch istniejących tras z Rynku
+(33/13/0 oraz 35/0/0); oba wymagane przejazdy D95 przechodzą.
+
+Odświeżono cztery linki Knyszyna i zależny `knyszyn-w-dw671` (bez build_world sąsiada).
+Korekta zapisanego toru zmieniła koniec linku, lecz stary head_from i opis szwu nadal twierdziły gap=0.
+Rzeczywisty brak ciągłości 0,3494 m usunięto: głowa sąsiada i koniec Knyszyna teraz identyczne,
+gapM=0, EPSG:2180 [760586,688; 611964,781]. Pozostałe eksportowane linki bez zmian; koniec linku
+knyszyn-w-dw671 bez przesunięcia. Trzy nowe regresje kontrolują gotowe tory i rzeczywisty gap/metadane.
+
 ## Kontynuacja — kontekst szwu w statycznym QA
 
 Poprzednie trzy runnery nie dożyły przydziału heavy (brak procesów oraz plików exit). Wznowiono je jednym
