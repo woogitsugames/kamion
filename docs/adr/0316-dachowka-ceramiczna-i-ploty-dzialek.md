@@ -69,12 +69,33 @@ esówka — dokładnie jeden wałek (grzbiet w osi gąsiora, „oczka” zestawu
 
 ## Budżet (przed → po)
 
-Wypełniane po rundach — patrz „Wyniki”.
+Stan na rundy t1 / t2 (same tekstury); geometria, materiały w kaflach i kamery — **do uzupełnienia po rundzie r1**
+(`artifacts/roof-tiles-s24/budget.py r1` → `budget-r1.json`).
+
+- Geometria: bez nowych trójkątów (gąsior ten sam, zmienia się tylko UV; przęsła płotów te same quady).
+- Materiały: +1 materiał LOD0 w kaflu, w którym reguła wybierze karpiówkę (`roof_karp_red`; LOD1 = `roof_tiles_red`),
+  +1 LOD0 i LOD1 tam, gdzie dom drewniany dostanie `roof_tiles_old`; płoty: 0 (ten sam materiał `plot_kit`, ten sam atlas 2048²).
+- Pamięć tekstur (szacunek ASTC z mipami z `materials_spec.json`, tier High): `roof_tiles` 512² → 1024², `roof_tiles_old`
+  bez zmiany rozdzielczości, nowe `roof_karpiowka` i `roof_zakladkowa` 1024², `roof_metal_tile` 512² = dawny `roof_tiles`.
+  Liczby w `budget-r1.json` (`roof_sets_gpu_bytes_*`). Atlas `plot_kit.png`: ten sam rozmiar 2048².
 
 ## Wyniki
 
-Wypełniane po rundach.
+- Baseline (High clear, edytor; świat sprzed scalenia road-widen): `artifacts/roof-tiles-s24/before/`.
+- t1 / t2 (same tekstury na świecie baseline, 2026-11-20): `artifacts/roof-tiles-s24/sbs/crop-klattow-roof-t1.jpg`, `-t2.jpg`
+  (przed / po / zdjęcie klattow-01), `crop-above-k-t1.jpg`, `crop-above-t-t1.jpg`, `crop-into-town-t1.jpg`. Szachownica
+  płaskich prostokątów znikła; widać wałki, ciemne łuki pod krawędziami, ton w plamach. Po t1 stara esówka dostała łaty
+  zwietrzałe, więcej ciemnych i jasnych dachówek, miększy cień rzędu i kafel 4,2 m.
+- Testy: `tests/gis/test_roof_tiles_0316.py` (nowy) + pliki dotknięte — patrz STATUS; EditMode Win64 1485 / 1383 passed /
+  1 failed (`RegionSelectTests` routeLengthM kafla C — stan origin/main po road-widen, poza gałęzią).
+- r1 (build_world knyszyn + tykocin: karpiówka, zakładkowa, gąsiory, płoty): **do uzupełnienia**.
 
 ## Otwarte
 
-Wypełniane po rundach.
+- `visual-critic` na `sbs/*` (subagent nie uruchamia subagentów — po stronie lidera).
+- Udziały pokryć i stylów płotów to WORKING_VALUE; brak zdjęć referencyjnych karpiówki / zakładkowej z Knyszyna i Tykocina
+  (wzór: wyroby, nie konkretne dachy). `roof_cement_grey` czeka na nadpisania z ortofoto / zdjęć.
+- Rzędy `picket_wood` / `picket_paint` mają 45 px/m w pionie (pasek 58 px); gdyby końcówki sztachet były za miękkie z 3–5 m,
+  potrzebny drugi atlas albo 2048 × 4096 (zmiana importera — lider).
+- Regiony niezbudowane ponownie: siatka `chainlink` wygląda jak ocynkowana (zielone słupki zostają) do czasu przebudowy.
+- Krawędzie połaci (wiatrownica, okap) bez zmian geometrii; dachówki skrajne / rynny pod falą dachówki — osobne zadanie.
