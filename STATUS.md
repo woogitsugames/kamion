@@ -166,3 +166,9 @@
   Obejrzane dk8.jpg/parking.jpg w artifacts/road-widen-s24/preview-g2b: parking ma oba lokalne T i ciągły przejazd.
   Nie zmieniano referencji, klasyfikatora ani ratchetów. Recenzja kodu G2 i poprawnych profili a PASS.
 - NASTĘPNY KROK: `pwsh -File artifacts/road-widen-s24/rebuild.ps1 -Regions bialystok-industrial-c,knyszyn -Tag g2b -Fidelity -HeavySlots 4`.
+
+- Przegląd ogólnego warunku ochrony medianu: po G2b trzeba dodać guard dla przeciwbieżnych oneway (bez pierścieni),
+  rezerwujący CAŁY bazowy gap, także >12m. Obecne12m to WORKING_VALUE dla pozostałych sąsiadów, nie pomiar medianu.
+  Regresja: 20m median + parking blokujący zewnętrzne strony — szerokość20m ma zostać, przy braku miejsca mniej D94.
+  Nie zmieniać kodu w trakcie obecnego rebuild/QA. Po nim porównać geometrię C/Knyszyn przed/po i zweryfikować finalny kod.
+- NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g2b.log -Tail 10` (C w toku, start11:17:57).
