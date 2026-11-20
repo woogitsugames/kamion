@@ -167,7 +167,98 @@ gałęzi kafel trzeba przebudować raz jeszcze; ten worktree ma prywatną kopię
 junctiony — odpinać `cmd /c rmdir`, nigdy `-Recurse`). (2) Nowe materiały trafiają do tabeli manifestu każdego kafla
 przy jego najbliższej przebudowie (GLB bez zmian).
 
+## Runda 3 (klattow-r3-s24, 2026-11-20) — poprawki po przeglądzie lidera
+
+Stan wyjściowy: main z korektami P2 / P3 (`klattow-fix-cli`). Wszystkie wymiary poniżej `WORKING_VALUE` / ESTIMATED ze zdjęć,
+o ile nie napisano inaczej.
+
+**Lamus (`knyszyn_lamus_0305.py`, zdjęcie 02).**
+- **Gont jako geometria.** Każdy rząd to osobny pas siatki, którego dolna krawędź (czoło) stoi 5 cm nad rzędem niżej (3,5 cm w przebiegach 1–2 — za płytko wg `visual-critic`)
+  (`SHINGLE_STEP`); rząd 0,214 m (`SHINGLE_COURSE` = 1,5 m / 7 — na zdjęciu ~29 rzędów na ~6,2 m połaci), 29 rzędów na
+  każdej z czterech połaci, w jednej linii na narożach. Zestaw `wood_shingles` ma ten sam rząd (7 na kafel, było 10 po
+  0,15 m), gonty 9–15 cm, cień pod następnym rzędem — linia czoła tekstury leży na stopniu geometrii. LOD1: dwie płaskie
+  połacie na stronę; te same płaskie połacie leżą w LOD0 2 cm pod rzędami jako zamknięta bryła rzucająca cień
+  (przebieg 2: przesunięcie wierzchołków w przebiegu cieni otwierało szczeliny między rzędem a czołem — jasne kropki
+  w cieniu dachu, P0 krytyka). Wariant „normal / parallax w materiale” odrzucony: shader świata nie ma parallaksy, a sama mapa
+  normalnych była już w rundzie 2 (płaska szara płyta z 20 m).
+- **Proporcje dachu:** krawędź okapu 2,27 m, kalenica 6,8 m (było 2,7 / 6,5), okap 0,9 m (0,55), **załamanie połaci**:
+  dolne 1,15 m rzutu pod kątem 32° (27° w przebiegach 1–2: okap na szczycie czytał się jak odklejona półka), wyżej ~51°. Dach ≈ 1,6 × ściana jak na zdjęciu. Brak wysokości LoD — ESTIMATED.
+- **Wole oko** na połaci od podcienia tuż nad załamaniem: brew o profilu cos² (1,9 × 0,60 m) z gontu, czoło z brązowej deski
+  (`wood_planks`) z ciemnym półokrągłym otworem 0,72 m.
+- **Podcień:** głębokość 2,1 m (1,7), sześć słupów 20 cm (5), miecze 0,65 m po obu stronach każdego słupa, oczep 22 cm,
+  nad nim końce belek stropowych co ~0,87 m wysunięte 0,28 m, płatew, strop z desek; **podest deskowy** na podwalinie
+  wysunięty 0,25 m przed słupy, czoło z drewna do poziomu terenu (kamień tylko tam, gdzie teren opada), jeden stopień. Izba zrębowa: mały kwadratowy otwór zamiast okiennicy.
+- Materiały: `log_wall_raw` 0,235 / 0,172 / 0,118 (przebieg 2: 0,185 / 0,160 / 0,135 — zimna szarość, P1 krytyka) (miodowy z rundy 2 wychodził pomarańczowo; zdjęcie: zrąb zszarzały),
+  nowy `wood_planks_weathered` (skan `wood_siding`, 0,215 / 0,168 / 0,125) na słupy, miecze, belki, podest zamiast brązowego
+  `wood_planks`; `roof_shingles_grey` 0,195 / 0,196 / 0,192.
+
+**Dom.**
+- **Podmurówka (`fieldstone`).** Przyczyna „odwrotnego” odczytu: (a) kopuła kamienia `sqrt(e)` miała pionową ścianę przy
+  fudze — mapa normalnych rysowała w słońcu cienką czarną kreskę wokół każdego kamienia („płytki łamane”); (b) w albedo
+  brzegi kamieni i wilgotny dół były ciemniejsze od zaprawy — w cieniu wychodziły ciemne kamienie w jasnej siatce.
+  Nowy zestaw: gładka kopuła bez ostrza, fugi 2–4 cm tylko lekko cofnięte, zaprawa piaskowa ciemniejsza od średniego
+  kamienia i jaśniejsza od ciemnych, ton kamieni 0,53–1,03 × z kilkoma ciemnymi głazami, AO 0,5 (było 0,9).
+  Barwa `fieldstone_plinth` 0,215 / 0,200 / 0,172.
+- **Płot działki** (`plot_fence.tint`): atlas `plot_kit` maluje sztachety rdzawoczerwono; nowe pole `tint: [r, g, b]`
+  (mnożnik liniowy 0–2 barw atlasu = `Kit.tint` tej działki zamiast barwy starzenia klasy wieku). Dom Klattów:
+  `[0.90, 1.40, 1.10]` → ok. 112 / 58 / 40 sRGB (przebieg 1 z `[0.80, 2.0, 1.30]`: szare, „złuszczone” sztachety
+  atlasu — 16 % — wychodziły zielone; mnożnik nie zrobi z rdzawej i szarej deski tego samego brązu). Inne działki bez zmian.
+- **Ganek a płot i chodnik — warstwa dróg, nadpisanie lokalne.** Zmierzone w danych: oś OSM Kościelnej 4,06 m od czoła
+  ganku (BDOT), jezdnia 5,5 m (BDOT) → krawężnik 1,31 m przed gankiem. Reguła `implied_sidewalks` kładzie chodnik
+  standardowy 2,0 m, więc jego tylna krawędź wchodziła 0,7 m w głąb ganku. Zdjęcie 01 i ortofoto 0,25 m pokazują
+  wąski chodnik (~1,1–1,2 m) między krawężnikiem a płotem. Nowy klucz nadpisania krawędzi `sidewalk_w_left` /
+  `sidewalk_w_right` (m, 0,6–6,0; `roads/network.py`: szerokość chodnika tej strony zamiast `SIDEWALK_W`, tylko tam,
+  gdzie strona ma chodnik) i wpis `look-dom-klattow-koscielna-footway` po stronie północnej krawędzi
+  `w98072526:1134839334-1134842485` (303 m; szerokość z dala od domu ESTIMATED z ortofoto). Przebieg 1 z 1,10 m:
+  płot 1,53 m od ściany (oś OSM nie jest równoległa do ściany: 1,2°, ~0,4 m na długości płotu). Ostatecznie
+  **0,70 m** + zapas płotu od obrysu drogi `ROAD_CLEAR_M` 0,15 → 0,05 m (sztachety stoją przy samej krawędzi chodnika,
+  jak na zdjęciu). Chodnik wychodzi o 0,1–0,3 m węższy niż na zdjęciu — właściwa poprawka to oś / szerokość jezdni
+  Kościelnej (warstwa dróg, otwarte).
+- **Zieleń przy ścianie (zdjęcie 01):** krzew (r 1,2 m, 2,2 m) między pierwszym a drugim oknem na zachód od ganku,
+  młode drzewko (2,8 m) między dwoma ostatnimi na wschód, pnącze jako girlanda na wschodniej połowie szczytu ganku z wąskim zwisem przy narożnym słupku (przebieg 2: karta
+  na całą wysokość czytała się jak tuja) — siatki atlasu
+  `plot_kit` (`plots.bush`, `fruit_tree`, `card`), tylko treść High, tylko gdy pas między ścianą a płotem ma ≥ 1,5 m.
+- **Słup energetyczny:** w danych go nie ma (BDOT10k `OT_BUWT_P`: najbliższy obiekt 476 m; `OT_SULN_L`: tylko linie SN
+  183 m dalej; OSM: brak `power=*` w kaflu przy Kościelnej) — nie dodany, zostaje otwarty.
+
+**Budżet rundy 3** (edytor, High clear, 1920 × 1080, scena `World_knyszyn_High`; „przed” dla kafla = manifest z gita
+8ad119ad9, „przed” dla kamer = runda 2 z tabeli wyżej — render stanu main w tej gałęzi nie był możliwy, patrz niżej):
+
+| | przed | po (przebieg 3) |
+|---|---|---|
+| Dom Klattów LOD0 / LOD1 (+ ogród w `plots`) | 4 404 / 99 (po korektach P2 / P3) | 4 404 / 99 (+ 78 tris zieleni) |
+| Lamus LOD0 / LOD1 | 232 / 70 | 891 / 86 |
+| Kafel `knyszyn`: budynki LOD0 / LOD1 | 671 857 / 110 049 | 673 066 / 110 065 (+1 209 / +16) |
+| Kafel: `plots` / `plots_low` | 432 095 / 291 942 | 432 789 / 292 418 (+694 / +476: dłuższy płot działki przy węższym chodniku, zieleń) |
+| Kafel: `road` | 258 116 | 258 214 (+98) |
+| Tabela materiałów / chunk 0_4 | 353 / 62 | 355 / 63 (`wood_planks_weathered`, `plaster_peach__far_ribbon`) |
+| `look-dom-klattow`: draws / tris | 626 / 1 484 401 | 627 / 1 487 203 |
+| `look-dom-klattow-street` | 547 / 1 466 323 | 556 / 1 469 104 |
+| `look-dom-klattow-gable-e` | 234 / 955 389 | 241 / 957 803 |
+| `look-dom-klattow-yard` | 98 / 375 046 | 99 / 377 550 |
+| `look-lamus-plebanski` | 458 / 1 119 089 | 459 / 1 121 790 |
+| `look-lamus-plebanski-close` (nowa) | — | 473 / 936 456 |
+
+Różnice kamer względem rundy 2 obejmują też zmiany main między rundami (m.in. `road-widen-s24`); wkład tej rundy w kaflu
+to +1 209 trójkątów budynków i +2 materiały. Wszystkie kadry < 2 mln trójkątów i < 850 draw calli.
+
+**Błąd importu z main (naprawiony przy okazji):** kafel `knyszyn` (chunk 1_4, LOD1) używa `plaster_peach__far_ribbon`,
+którego nie było w tabeli materiałów (`_FAR_WALLS["ribbon"]` = lista biurowa bez `plaster_peach`) — import Unity kończył się
+`[WORLD_MATERIAL] … missing material` zarówno na kopii derived z main, jak i po świeżym `build_world` na 8ad119ad9.
+Dopisane do `materials.py`.
+
+**Ocena.** `visual-critic` na przebiegu 2: dom PASS, lamus FAIL (P0 kropki słońca w cieniu dachu, wole oko niewidoczne,
+kamień pod podestem, zrąb za szary, pnącze jak tuja). Przebieg 3 poprawia te punkty (ocena własna agenta, bez
+ponownego krytyka — limit trzech przebiegów): cień dachu pełny, zrąb cieplejszy, brew z brązowej deski, pnącze jako
+girlanda. Zostaje: pod podestem od strony niższego terenu widać kamień, wole oko jest małe z kadru zdjęcia.
+SBS: `artifacts/klattow-r3-s24/sbs/*-r1.jpg`, `*-r2.jpg`, `*-r3.jpg`.
+
 ## Otwarte
+- Runda 3: `visual-critic` na przebiegu 3 i ocena właściciela; płot działki z atlasu — mnożnik daje rdzawy brąz, pojedyncze
+  szare sztachety oliwkowe (potrzebny brązowy rząd sztachet w atlasie `plot_kit`); chodnik Kościelnej 0,70 m (węższy
+  niż na zdjęciu — oś / szerokość jezdni do pomiaru); dachówka domu nadal jako równa krata (P1 krytyka, poza zakresem
+  rundy); słup energetyczny (brak w danych); ostatki zrębu i czerwonawe górne wieńce lamusa; kamień pod podestem lamusa;
+  EditMode: `RegionSelectTests` — `routeLengthM` kafla `bialystok-industrial-c` nieaktualne (poza tą gałęzią).
 - Ocena właściciela i `visual-critic` (kolory bielenia, dachówki, bejcy; rozmieszczenie okien).
 - Krzew i pnącze przy ganku, tabliczka z numerem, słup energetyczny przy narożniku.
 - Podmurówka `fieldstone_plinth` w silniku: ciemne kamienie / jasna zaprawa (tekstura ma odwrotnie) — do diagnozy.

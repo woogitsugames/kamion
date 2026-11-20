@@ -53,8 +53,8 @@ links:
     # hard surface at s 696-702 m, qa/link_swept_check.py). Swing wide into the ring: 3.0 m left at the ring apex,
     # raised cosine over +-30 m -> 0 tyre points off the hard surface and 0 off the carriageway (asphalt only).
     # Searched 680-692 m x 1.0-3.0 m x 15-35 m; 2.5 m / 35 m leaves 7 points on kerb / apron (WORKING_VALUE).
-    swing:
-      - {near_epsg2180: [760625.1, 612005.4], left_m: 3.0, half_m: 30.0}
+    # road-widen-s24 (D94 / ADR 0306): with the truck kerb returns of the compact roundabout the swing is no longer
+    # needed (qa/combo_lane_check.py: lane centre through the ring without kerb / off-surface points); removed.
     note: "Rynek (end of the knyszyn control route) -> Grodzienska -> Tykocka -> roundabout split -> DK65 west to the seam"
   - id: knyszyn-w-dw671
     tile: knyszyn-w
