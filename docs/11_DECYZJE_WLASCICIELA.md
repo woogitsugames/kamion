@@ -189,3 +189,6 @@ Właściciel: „trzeba zrobić jezdnie szersze niż w realu, bo będzie ludziom
 
 ## D89 — Budżety streamingu PC z pomiaru GTX 1070 (2026-11-18, s24)
 Właściciel (klik): najpierw pomiar, potem budżety. Po pomiarze GTX 1070 (klasa zalecany; korytarz High VRAM 1,07–1,87 GB z 8 GB, prywatna 2,1–3,3 GB): **Low 640→850 MB, High 1450→2000 MB** (WORKING_VALUE) i scalenie DK19. Wdrożone: StreamingPolicy.cs (dk19-tiles-s24, ADR 0273/0290). Uzupełnienie techniczne 19.11 na zlecenie ujednolicenia tierów: **Medium 800→850 MB**, Ultra pozostaje 2000 MB; drabinka **850/850/2000/2000 MB (WORKING_VALUE)**, ADR 0309. Wartości Low/High z D89 zachowane; nie jest to nowy pomiar Medium.
+
+## D95 — Decyzje przed nieobecnością (2026-11-20, s24)
+Właściciel (klik): (1) **Rondo Knyszyn — zostaw szerokie** (priorytet łatwość jazdy); poprawiamy tylko błędy z krytyki: szlaban kafla przy rondzie, faliste smugi na asfalcie, wysepki E/W jako podniesione soczewki, 3 pasy → 2, latarnie, znaki C-12/A-7. (2) **Build #3 po scaleniu wszystkiego, samodzielnie**: kafel C, fala przebudowy, Klattów r3 → pełna przebudowa 49 kafli → build → przejazd Białystok–Tykocin z klatkami → pc-metrics na pustym PC. (3) **Audio kabiny −18 LUFS zostaje**, właściciel oceni później w grze. (4) **Następny region po Krywlanach: S8/DK8 dalej** (Wasilków/Korycin).
