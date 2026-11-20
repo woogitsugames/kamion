@@ -172,6 +172,10 @@ links:
     replaces_route: bialystok-industrial-c
     end_epsg2180: [777138.46, 597247.0]   # boundary node of way 882366263 (DK8 northbound) on the C | dk8-wasilkow-01 seam
     tail_to: route:dk8-wasilkow-01
+    # same first ~400 m as c-andersa-to-wygoda (rondo Pamieci Biezenstwa): qa/link_swept_check.py without the swing =
+    # 12 tyre points off the hard surface at s 364-368 m (trailer, inside of the turn); the swing of that link reused
+    swing:
+      - {near_epsg2180: [778546.8, 595529.6], left_m: 2.0, half_m: 30.0}
     note: "C route start -> DK8/DK19 Al. Tysiaclecia northbound to the seam with dk8-wasilkow-01"
 # Driving corridors as ordered tile lists (Bialystok -> Knyszyn -> Tykocin, owner request s23). The generator keeps the
 # prefix of tiles present in Data/Regions (main: up to dw671-tykocin-01; the ring branch world2-s23 adds
