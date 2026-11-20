@@ -203,6 +203,42 @@ namespace Game.Tests
         }
 
         [Test]
+        public void KeyboardRamp_ProgressiveOnset_TapIsFine_HoldStillReachesAmplitude()
+        {
+            // ADR 0312: a 0.1 s tap at 50 km/h turns the wheel less than the ADR 0264 constant rate, a held key still
+            // reaches the speed amplitude; onset 1 = the old behaviour.
+            var f = PadKeyboardFeel.Defaults();
+            var t = Tuning(f);
+            var old = PadKeyboardFeel.Defaults(); old.keyOnsetFraction = 1f;
+            var a = new KeyboardAxisRamp(); var b = new KeyboardAxisRamp();
+            for (int i = 0; i < 6; i++) { a.Step(f, t, +1, false, false, Kmh(50f), Dt); b.Step(old, t, +1, false, false, Kmh(50f), Dt); }
+            Assert.Less(a.Steer, 0.6f * b.Steer, "tap: finer than the constant rate");
+            Assert.Greater(a.Steer, 0f);
+            for (int i = 0; i < 600; i++) a.Step(f, t, +1, false, false, Kmh(50f), Dt);
+            Assert.AreEqual(f.Amplitude(Kmh(50f)), a.Steer, 1e-4f, "held: speed amplitude");
+            Assert.Greater(a.SteerHeldS, 9f);
+            a.Step(f, t, 0, false, false, Kmh(50f), Dt);
+            Assert.AreEqual(0f, a.SteerHeldS, "released: onset restarts");
+            Assert.AreEqual(1f, f.KeyOnset(f.keyOnsetS), 1e-6f);
+            Assert.AreEqual(f.keyOnsetFraction, f.KeyOnset(0f), 1e-6f);
+        }
+
+        [Test]
+        public void SpeedAmplitude_StaysBelowLateralLimit_From30To90Kmh()
+        {
+            // ADR 0312: the floor (minAmplitude) must not override the lateral-acceleration limit in the legal speed range
+            // (at 0.05 it did from ~70 km/h and a held key tipped the 40 t high-CoG combination in the runner).
+            var f = PadKeyboardFeel.Defaults();
+            for (float kmh = 30f; kmh <= 90f; kmh += 5f)
+            {
+                float v = Kmh(kmh);
+                float delta = f.Amplitude(v) * f.maxRoadWheelDeg * Mathf.Deg2Rad;
+                Assert.LessOrEqual(v * v * Mathf.Tan(delta) / f.wheelbaseM, f.maxLatAccelMs2 + 1e-3f, $"{kmh} km/h");
+            }
+            Assert.LessOrEqual(f.maxLatAccelMs2, 2.7f, "below 0.8 x the 0.339 g rollover threshold of rollover_r50_cog_high");
+        }
+
+        [Test]
         public void KeyboardRamp_Reversal_GoesThroughCentreAtReturnRate()
         {
             Assert.AreEqual(0.5f - 2f * 0.1f, PadSteeringMath.RampSteer(0.5f, -1, 1f, 1f, 2f, 0.1f), 1e-6f);

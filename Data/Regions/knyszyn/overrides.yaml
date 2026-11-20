@@ -424,7 +424,30 @@ overrides:
       picked brick posts with pickets); the pickets in front of the house itself are part of the authored asset.
     confidence: high
     verify: owner review of look_dom_klattow / look_dom_klattow_street against the photos
-    set: {typology: dom_drewniany, wall_material: wood_planks_white, plot_fence: {front: picket, side: picket}}
+    set: {typology: dom_drewniany, wall_material: wood_planks_white,
+          plot_fence: {front: picket, side: picket, tint: [0.90, 1.40, 1.10]}}
+  # ADR 0305 round 3: the plot_kit atlas paints pickets rust-red (118 / 50 / 38 sRGB); the photos show the same brown
+  # stain on the plot's fences as on the authored pickets in front of the house. tint = linear multiplier of the atlas
+  # colours for this plot (-> about 112 / 58 / 40 sRGB), WORKING_VALUE. Run 1 used [0.80, 2.0, 1.30]: the grey,
+  # peeled pickets of the atlas (16 %) turned green.
+  - id: look-dom-klattow-koscielna-footway
+    target: {edge: "w98072526:1134839334-1134842485"}
+    sources: ["owner photo klattow-01 (2026-11-19, local reference only): pickets flush with the porch front, a narrow footway between them and the kerb",
+              "GUGiK orthophoto 2025 0.25 m (reference only): light strip ~1.1-1.2 m wide behind the north kerb along the edge",
+              "BDOT10k footprint 2F22: porch front 4.06 m from the OSM way, carriageway 5.5 m (BDOT) -> 1.31 m from kerb to porch"]
+    reason: >-
+      ADR 0305 round 3: the implied-sidewalk rule (knyszyn-pavement-rules-d38) lays the standard 2.0 m sidewalk behind
+      both kerbs of Koscielna; on the north side its back edge then lies ~1.2 m from the wall of Dom Klattow, inside the
+      2 m deep porch, so the authored picket fence could not stand on the porch line (rounds 1-2: 0.83 m off the wall,
+      the porch reached through the pickets onto the footway). Measured: 1.31 m between the kerb line and the porch
+      front; the photo and the orthophoto show a narrow footway (~0.8-1.2 m). Round 3 run 1 with 1.10 m: the OSM axis
+      is not parallel to the wall (1.2 deg, ~0.4 m over the fence run), so the pickets still had to stand 1.53 m off
+      the wall. 0.70 m (kerb stone 0.15 m + 0.70 m of blocks) lets them stand on the porch line over the whole run.
+      North side only (left in the edge direction, west to east). ESTIMATED: narrower than the photo suggests by
+      0.1-0.3 m - the proper fix is the axis / width of the carriageway of Koscielna (road layer, open).
+    confidence: medium
+    verify: control camera look_dom_klattow_street against owner photo klattow-01; owner tape measure
+    set: {sidewalk_w_left: 0.70}
   - id: look-dom-klattow-yard-shadow-crowns
     kind: plot_canopy_exclude
     sources: ["plot_canopy.json (GUGiK orthophoto 2025, crowns read by streetscape.plot_canopy)",

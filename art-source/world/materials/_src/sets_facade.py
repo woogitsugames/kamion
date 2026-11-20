@@ -748,60 +748,74 @@ def log_whitewash(n=1024):
 
 def fieldstone(n=1024):
     """ADR 0305: fieldstone footing (podmurowka z kamienia polnego) of an old log house: rounded glacial boulders
-    0.15-0.30 m bedded in grey lime mortar, per-stone tone and hue (grey, pink and rusty granites), a damp, mossy
-    foot. u along the wall, v up. Tile 2.4 x 0.6 m (one tile = the footing height). WORKING_VALUE sizes read off
-    the owner photos of Dom Klattow (reference only)."""
+    0.15-0.30 m bedded in sandy lime mortar, per-stone tone and hue (grey, pink, rusty and dark granites), a damp,
+    mossy foot. u along the wall, v up. Tile 2.4 x 0.6 m (one tile = the footing height). WORKING_VALUE sizes read off
+    the owner photos of Dom Klattow (reference only).
+    Round 3 (klattow-r3-s24): the first version read as crazy paving - light flat stones cut by thin black lines in
+    the sun (the sqrt dome had a vertical flank at every joint, so the normal map drew a hard shadow line) and as
+    dark stones in pale mortar in the shade (stone edges and the damp foot were darker than the mortar in the albedo).
+    Now: a smooth dome with no cusp, bed joints 2-4 cm wide and only a little recessed, mortar darker than the mean
+    stone and lighter than the dark ones, stone tone 0.53-1.03 x with a few dark boulders, so neither reading wins."""
     Lx, Ly = 2.4, 0.6
     c = Ctx(n, n // 4, Lx, Ly, seed=3052)
     X, Y = c.xy()
     v = Ly - Y
     warp = (0.02 * noise(c, 1, 0.1, 0.6), 0.015 * noise(c, 2, 0.1, 0.6))
-    d1, d2, i1, _, _ = voronoi(c, 3, 0.24, 0.85, warp=warp, cell_y=0.20)
-    e = edge_dist(d1, d2)
-    mort = sstep(0.013, 0.004, e)
-    dome = np.sqrt(np.clip(e / 0.09, 0, 1))                      # rounded boulder face
+    d1, d2, i1, _, _ = voronoi(c, 3, 0.22, 0.85, warp=warp, cell_y=0.19)
+    e = edge_dist(d1, d2) + 0.004 * noise(c, 8, 0.01, 0.06)      # ragged stone outlines
+    mort = sstep(0.022, 0.009, e)
+    dome = sstep(0.0, 0.075, e)                                  # rounded boulder face, flat-topped, no cusp at the joint
     t = hash01(i1, 1)
     hue = hash01(i1, 2)
+    dark = sstep(0.82, 0.90, hash01(i1, 3))                      # a few dark (basalt-grey / wet) boulders
     speck = noise(c, 4, c.px * 2, 0.012, beta=0.3)               # granite crystals
     lump = noise(c, 5, 0.03, 0.2, beta=1.1)
+    sand = noise(c, 9, c.px * 2, 0.02, beta=0.6)
     damp = sstep(0.30, 0.0, v) * (0.6 + 0.4 * sstep(-1, 1, noise(c, 6, 0.1, 0.8)))
-    lum = (0.80 + 0.26 * (t - 0.5) + 0.07 * speck + 0.06 * lump) * (0.80 + 0.20 * dome) * (1 - mort) + mort * 0.58
-    lum *= 1 - 0.30 * damp
-    h = (0.028 * dome + 2e-3 * lump + 0.4e-3 * speck) * (1 - mort) - 6e-3 * mort
-    rough = 0.82 + 0.10 * mort + 0.05 * damp
+    stone = (0.78 + 0.50 * (t - 0.5) + 0.07 * speck + 0.07 * lump) * (1 - 0.30 * dark)
+    lum = stone * (1 - mort) + mort * (0.56 + 0.05 * sand)
+    lum *= 1 - 0.18 * damp
+    h = (0.016 * dome + 2e-3 * lump + 0.4e-3 * speck) * (1 - mort) + (-2e-3 + 0.6e-3 * sand) * mort
+    rough = 0.84 + 0.08 * mort + 0.05 * damp
 
     def tint(alb):
         m = mort[..., None]
-        warm = np.array([1.10, 0.97, 0.88], np.float32)          # pink / rusty granite
-        cool = np.array([0.95, 1.00, 1.06], np.float32)          # grey-blue granite
-        k = sstep(0.55, 0.95, hue)[..., None]
-        k2 = sstep(0.30, 0.0, hue)[..., None]
-        stone = alb * (1 + (warm - 1) * k + (cool - 1) * k2)
+        warm = np.array([1.16, 0.96, 0.80], np.float32)          # pink / rusty granite
+        cool = np.array([0.94, 1.00, 1.07], np.float32)          # grey-blue granite
+        k = sstep(0.50, 0.90, hue)[..., None]
+        k2 = sstep(0.25, 0.0, hue)[..., None]
+        stone_c = alb * (1 + (warm - 1) * k + (cool - 1) * k2)
         moss = (damp * sstep(0.2, 1.4, noise(c, 7, 0.02, 0.2)))[..., None] * 0.5
-        out = stone * (1 - m) + alb * m * np.array([1.0, 0.99, 0.95], np.float32)
+        out = stone_c * (1 - m) + alb * m * np.array([1.04, 0.99, 0.90], np.float32)      # sandy lime mortar
         return out * (1 - moss) + out * np.array([0.80, 1.05, 0.62], np.float32) * moss
-    return _finish("fieldstone", c, lum, h, rough, t, mort, extra=tint, ao_k=0.9)
+    return _finish("fieldstone", c, lum, h, rough, t, mort, extra=tint, ao_k=0.5)
+
+
+SHINGLE_ROWS = 7              # courses of the 1.5 m wood_shingles tile = streetscape.knyszyn_lamus_0305.SHINGLE_COURSE
 
 
 def wood_shingles(n=1024):
     """ADR 0305: split wooden shingles (gont) of the timber granary by the presbytery of Knyszyn (owner photo
-    klattow-02, reference only): courses with 0.15 m exposure, shingles 0.07-0.12 m wide with staggered joints,
-    weathered silver-grey, darker butt edges and gaps, fibre along the slope. u along the eave, v up the slope.
-    Tile 1.5 x 1.5 m (10 courses). WORKING_VALUE sizes."""
+    klattow-02, reference only): courses with 0.214 m exposure (the photo shows ~29 courses on the ~6.2 m slope),
+    shingles 0.09-0.15 m wide with staggered joints, weathered silver-grey, darker butt ends and gaps, fibre along
+    the slope. u along the eave, v up the slope. Tile 1.5 x 1.5 m (SHINGLE_ROWS courses). WORKING_VALUE sizes.
+    Round 3 (klattow-r3-s24): the course is geometry on the lamus (every course a strip proud at its butt), so v = 0
+    of the tile is a butt line; the band under the next course (pv -> 1) carries the cast shadow, wider and softer
+    than in the first version, whose 0.15 m courses on a flat quad read as an even grey sheet."""
     L = 1.5
     c = Ctx(n, n, L, L, seed=3053)
     X, Y = c.xy()
     v = L - Y
-    course = 0.15
+    course = L / SHINGLE_ROWS
     warp = 0.004 * noise(c, 1, 0.1, 0.8, beta=1.0, aniso=3.0)
     vv = (v + warp) % L
-    row = np.floor(vv / course).astype(int) % 10
+    row = np.floor(vv / course).astype(int) % SHINGLE_ROWS
     pv = (vv % course) / course                 # 0 = exposed butt edge of a course, 1 = under the next course
     rng = c.rng(2)
     sid = np.zeros(X.shape, np.int64)
     du = np.zeros(X.shape, np.float32)
-    for r in range(10):
-        w = rng.uniform(0.07, 0.12, 40)
+    for r in range(SHINGLE_ROWS):
+        w = rng.uniform(0.09, 0.15, 40)
         w = w[: int(np.searchsorted(np.cumsum(w), L)) + 1]
         edges = np.concatenate([[0.0], np.cumsum(w * (L / w.sum()))]) + rng.uniform(0, 0.05)
         xs = (X - edges[0]) % L
@@ -810,17 +824,18 @@ def wood_shingles(n=1024):
         sel = row == r
         sid[sel] = (r * 64 + k)[sel]
         du[sel] = np.minimum(xs - lo, hi - xs)[sel]
-    gap = sstep(0.0035, 0.0012, du)
-    butt = sstep(0.10, 0.0, pv)                 # shadow / dark weathered butt
-    under = sstep(0.93, 1.0, pv)
+    gap = sstep(0.0040, 0.0012, du)
     t = hash01(sid, 1)
     cup = hash01(sid, 2)
+    drop = (hash01(sid, 3) - 0.5) * 0.10        # butts not on one line: each shingle hangs up to 1 cm lower / higher
+    butt = sstep(0.07, 0.0, pv + drop)          # dark, weathered end grain of the butt
+    under = sstep(0.80, 0.97, pv - drop)         # cast shadow of the next course
     fibre = noise(c, 3, c.px * 2, 0.012, beta=0.5, aniso=0.12)
     cloud = noise(c, 4, 0.3, 1.5, beta=1.2)
     lich = sstep(0.9, 2.2, noise(c, 5, 0.02, 0.2, beta=0.9))
-    lum = (1 + 0.30 * (t - 0.5) + 0.13 * fibre + 0.06 * cloud) * (1 - 0.40 * butt) * (1 - 0.55 * under) * (1 - 0.6 * gap)
+    lum = (1 + 0.34 * (t - 0.5) + 0.14 * fibre + 0.07 * cloud) * (1 - 0.30 * butt) * (1 - 0.68 * under) * (1 - 0.6 * gap)
     lum *= 1 - 0.05 * lich
-    h = 0.010 * (1 - pv) + 0.002 * (cup - 0.5) * 2 + 0.5e-3 * fibre - 5e-3 * gap
+    h = 0.012 * (1 - pv) + 0.003 * (cup - 0.5) * 2 + 0.6e-3 * fibre - 6e-3 * gap
     rough = 0.86 + 0.06 * gap + 0.05 * lich
 
     def tint(alb):

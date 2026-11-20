@@ -40,6 +40,17 @@ SPLIT = {"id": "split0", "kind": "carriageway_split", "node": "s0".lstrip("n"),
          "set": {"length_m": 25.0, "taper_m": 14.0, "lane_offset_m": 3.0}}
 
 
+
+@pytest.fixture(scope="module", autouse=True)
+def _measured_geometry():
+    """ADR 0274 pins the authored roundabout design: D94 GAMEPLAY_WIDEN (ADR 0306) off here; the widened Knyszyn ring is
+    tested in tests/gis/test_road_widen_0306.py."""
+    from roads import standards as S_
+    old, S_.GAMEPLAY_LANE_WIDEN_M = S_.GAMEPLAY_LANE_WIDEN_M, 0.0
+    yield
+    S_.GAMEPLAY_LANE_WIDEN_M = old
+
+
 def _graph(split_ids=True):
     g = T18._graph()
     if split_ids:                         # carriageway_split addresses nodes as n<osm id>

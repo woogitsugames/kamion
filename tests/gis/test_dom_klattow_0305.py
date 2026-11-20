@@ -253,11 +253,18 @@ def test_plot_fence_override_and_shadow_crowns(fc):
     ov = pipeline.load_overrides("knyszyn")
     blds = BM.load(fc, ORIGIN, ov, hero=K.hero_targets("knyszyn", fc))
     b = next(x for x in blds if x["id"] == K.BUILDING_ID)
-    assert b["ovr"]["hero_asset"] == K.ASSET_ID and b["ovr"]["plot_fence"] == {"front": "picket", "side": "picket"}
+    assert b["ovr"]["hero_asset"] == K.ASSET_ID and b["ovr"]["plot_fence"] == {"front": "picket", "side": "picket", "tint": [0.90, 1.40, 1.10]}
     near = [{"id": x["id"], "poly": x["poly"], "props": x["props"], "ovr": x["ovr"]} for x in blds
             if x["typ"] == "house" and x["poly"].distance(b["poly"]) < 60]
     plots = {p["id"]: p for p in PL.plan(near, shapely.geometry.Polygon(), [])}
     assert (plots[K.BUILDING_ID]["front_style"], plots[K.BUILDING_ID]["side_style"]) == ("picket", "picket")
+    # round 3: the plot's fences take the brown stain of the authored pickets, not the rust-red of the atlas
+    assert plots[K.BUILDING_ID]["kit_tint"] == [0.90, 1.40, 1.10] and PL.Kit(plots[K.BUILDING_ID]["kit_tint"]).tint[:3] == pytest.approx([0.45, 0.70, 0.55])
+    assert all(p["kit_tint"] is None for i, p in plots.items() if i != K.BUILDING_ID)
+    for bad_t in ([1, 2], [0.5, 3.0, 1.0]):
+        with pytest.raises(ValueError, match="plot_fence"):
+            PL.plan([{**h, "ovr": {"plot_fence": {"tint": bad_t}}} if h["id"] == K.BUILDING_ID else h for h in near],
+                    shapely.geometry.Polygon(), [])
     rule = {p["id"]: p for p in PL.plan([{**h, "ovr": {}} for h in near], shapely.geometry.Polygon(), [])}
     assert all(rule[i]["front_style"] == plots[i]["front_style"] for i in plots if i != K.BUILDING_ID)   # others untouched
     bad = [{**h, "ovr": {"plot_fence": {"front": "marble"}}} if h["id"] == K.BUILDING_ID else h for h in near]
@@ -286,18 +293,46 @@ def test_lamus_by_the_presbytery(fc):
     a, d, n, L, W = KL._frame(blds[0]["poly"])
     assert float(n @ KL.ARCADE_SIDE) > 0.95                       # the arcade looks north-north-east
     mats = {m for _, m, *_ in buf.parts}
-    assert mats <= set(MT.M) and {KL.LOG, KL.SHINGLE, KL.WOOD, KL.STONE} <= mats
-    assert MT.M[KL.LOG]["set_tile_m"][1] >= KL.EAVE - KL.PLINTH_TOP      # one tile of courses covers the wall height
+    assert mats <= set(MT.M) and {KL.LOG, KL.SHINGLE, KL.WOOD, KL.STONE, KL.BROW} <= mats
+    assert MT.M[KL.LOG]["set_tile_m"][1] >= res["roof"]["wall_top_m"] - KL.PLINTH_TOP   # one tile of courses covers the wall
+    assert MT.M[KL.WOOD]["texture_set"] == "wood_siding" and MT.M[KL.WOOD]["tint_linear"] is True
     assert MT.M[KL.SHINGLE]["texture_set"] == "wood_shingles" and MT.M[KL.SHINGLE]["tint_linear"] is True
     tris = {l: sum(len(T) for ll, _, _, _, T in buf.parts if ll == l) for l in ("buildings", "buildings_low")}
     assert tris == {"buildings": res["triangles"]["lod0"], "buildings_low": res["triangles"]["lod1"]}
-    assert tris["buildings"] < 400 and tris["buildings_low"] < 100
+    assert tris["buildings"] < 1000 and tris["buildings_low"] < 100
     for l, m, V, UV, T in buf.parts:
         e1, e2 = V[T[:, 1]] - V[T[:, 0]], V[T[:, 2]] - V[T[:, 0]]
         assert np.isfinite(V).all() and (np.linalg.norm(np.cross(e1, e2), axis=1) > 1e-7).all(), (l, m)
     V, UV, T = next((V, UV, T) for l, m, V, UV, T in buf.parts if l == "buildings" and m == KL.SHINGLE)
-    assert (np.cross(V[T[:, 1]] - V[T[:, 0]], V[T[:, 2]] - V[T[:, 0]])[:, 2] > 0).all()        # four slopes look up
-    assert V[:, 2].max() - Z0 == pytest.approx(KL.RIDGE)
+    nz = np.cross(V[T[:, 1]] - V[T[:, 0]], V[T[:, 2]] - V[T[:, 0]])
+    nz = nz[:, 2] / np.linalg.norm(nz, axis=1)
+    assert (nz > -1e-9).all()                                    # slopes look up, the butts of the courses sideways
+    butts = int((np.abs(nz) < 1e-6).sum())
+    hw, zk, slope, s_k, s_top = KL.roof_profile(W)
+    courses = res["roof"]["shingle_courses"]
+    assert courses == pytest.approx(s_top / KL.SHINGLE_COURSE, abs=1.0) and butts == 2 * 4 * courses    # every course steps
+    under = [(V_, T_) for l, m, V_, UV_, T_ in buf.parts if l == "buildings" and m == KL.SHINGLE]
+    assert len(T) >= 8 * courses + 16                            # courses + butts + the closed shell under them
+    assert 45.0 < res["roof_pitch_deg"] < 56.0 and KL.KICK_DEG < res["roof_pitch_deg"] - 15           # kicked eaves
+    assert V[:, 2].max() - Z0 == pytest.approx(KL.RIDGE + 0.0, abs=KL.SHINGLE_STEP + 1e-6)
+    assert V[:, 2].min() - Z0 == pytest.approx(KL.EAVE_EDGE - 0.02)
+    # the eaves reach ROOF_OV past the footprint on every side
+    foot = blds[0]["poly"]
+    import shapely
+    far = max(float(foot.distance(shapely.Point(x, y))) for x, y in V[:, :2])
+    assert far == pytest.approx(KL.ROOF_OV * 2 ** 0.5, abs=0.03)
+    # the set has the course of the geometry: its butt shadow lies on the step
+    import sets_facade as F
+    assert F.FACADE_SETS["wood_shingles"]["tile_m"][1] / F.SHINGLE_ROWS == pytest.approx(KL.SHINGLE_COURSE)
+    # eyebrow dormer: shingle hood above the plain slope on the arcade side, dark opening in a board face
+    VD = np.concatenate([V for l, m, V, UV, T in buf.parts if l == "buildings" and m == KL.DARK])
+    assert VD[:, 2].max() - Z0 > KL.EAVE_EDGE + 0.6 and res["roof"]["dormer"] == "eyebrow"
+    # arcade: six posts, deck proud of the post line
+    assert res["posts"] == 6 and res["arcade_m"][1] == KL.ARCADE_D
+    VW = np.concatenate([V for l, m, V, UV, T in buf.parts if l == "buildings" and m == KL.WOOD])
+    out_w = (VW[:, :2] - a) @ n
+    deck = VW[np.abs(VW[:, 2] - (Z0 + KL.FLOOR)) < 1e-6]
+    assert ((deck[:, :2] - a) @ n).max() == pytest.approx(KL.DECK_OUT, abs=1e-6)
     # log walls face away from the wall outline (the arcade recess included)
     c = np.asarray(blds[0]["poly"].centroid.coords[0])
     V, UV, T = next((V, UV, T) for l, m, V, UV, T in buf.parts if l == "buildings" and m == KL.LOG)
@@ -305,3 +340,26 @@ def test_lamus_by_the_presbytery(fc):
     mid = V[T].mean(axis=1)
     out = np.einsum("ij,ij->i", nrm[:, :2], mid[:, :2] - c)
     assert (out > 0).sum() >= len(T) - 2                           # all but the return wall of the recess
+
+
+def test_round3_garden_and_footway_override(fc):
+    """ADR 0305 round 3: shrub, young tree and climber of photo 01; the measured footway of Koscielna."""
+    b, buf, res, _ = _build(fc)
+    assert res["garden"] == ["bush", "tree", "climber"] and 0 < res["garden_tris"] < 200
+    a, d, n, L, W, pu0, pu1, pd = K._frame(b["poly"])
+    V = np.concatenate([V for l, m, V, UV, T in buf.parts if l == "plots" and m == "plot_kit"])
+    w = (V[:, :2] - a) @ n
+    assert w.min() > -0.6 and w.max() < pd + 1.3                 # in the strip in front of the street wall
+    assert V[:, 2].max() - Z0 < 3.2
+    assert not any(l == "plots_low" for l, *_ in buf.parts)      # High content only
+    # no room for a garden strip (pickets pulled back to the wall): only the climber stays
+    res2 = _build(fc, Polygon([a + n * 1.0 - d * 9, a + n * 1.0 + d * 30, a + n * 12 + d * 30, a + n * 12 - d * 9]))[2]
+    assert res2["garden"] == ["climber"]
+    ov = [o for o in pipeline.load_overrides("knyszyn") if o["id"] == "look-dom-klattow-koscielna-footway"]
+    assert len(ov) == 1 and ov[0]["set"] == {"sidewalk_w_left": 0.70} and ov[0]["target"] == {"edge": "w98072526:1134839334-1134842485"}
+    # 2.75 m half carriageway + 1.10 m footway + 0.15 m clearance fits in front of the porch (4.06 m from the axis)
+    g = json.loads((ROOT / "Data/Regions/knyszyn/roads.graph.json").read_text(encoding="utf8"))
+    e = next(x for x in g["edges"] if x["id"] == ov[0]["target"]["edge"])
+    axis = LineString(e["geometry"])
+    foot = Polygon(np.asarray(b["poly"].exterior.coords) + np.asarray(ORIGIN))
+    assert axis.distance(foot) - e["attrs"]["width"]["v"] / 2 - 0.15 - 0.70 >= K.ROAD_CLEAR_M + 0.3      # kerb stone 0.15 m; 0.3 m for the 1.2 deg between axis and wall
