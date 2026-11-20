@@ -199,7 +199,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         # ... but never through the ramp surface itself: at the toe the fill meets the ground road and the cone of the
         # conform reached the deck shoulder (-0.003 m at E -386.8 N -104.2); kept CF.TERRAIN_UNDER_WALLED below it
         zc = CF.clamp_under_decks(zc, deck, deck_mask & _wr, CF.TERRAIN_UNDER_WALLED - 0.3, mask)
-    zc = CF.tidy(zc, zjoin, mask, dist)
+    zc = CF.tidy(zc, zjoin, mask, dist, smooth_slopes=surface_outline.is_empty)
     # c-p2-s23: ... and never through the face of the retaining walls (CF.level_under_walled)
     _wf = getattr(w, "walled_fill_mask", None)
     if _wf is not None and _wf.any():

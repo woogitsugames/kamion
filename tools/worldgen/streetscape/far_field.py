@@ -1648,12 +1648,14 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
     for a, b in zip(rb, rt):
         member(a, b, 0.13 * scale)
     rings = [ring_pts(w_bot + (w_top - w_bot) * f, z_bot + (z_top - z_bot) * f)
-             for f in np.linspace(0.0, 1.0, 6)]
-    for lower, upper in zip(rings[:-1], rings[1:]):
+             for f in np.linspace(0.0, 1.0, 4)]
+    for panel, (lower, upper) in enumerate(zip(rings[:-1], rings[1:])):
         for k in range(4):
             q = (k + 1) % 4
-            member(lower[k], upper[q], 0.075 * scale)
-            member(lower[q], upper[k], 0.075 * scale)
+            # Alternating lacing on opposite faces reads as X in projection;
+            # three panels keep the ring's hundreds of towers inexpensive.
+            a, b = (k, q) if (panel + k) % 2 == 0 else (q, k)
+            member(lower[a], upper[b], 0.075 * scale)
             member(upper[k], upper[q], 0.075 * scale)
 
     # Two horizontal cross-arms at 70% and 88% height

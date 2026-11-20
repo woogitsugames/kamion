@@ -31,6 +31,7 @@ def test_diagonal_batter_matches_continuous_edge_and_limits_neighbour_step(angle
     hf, road, mask, footprint = diagonal_road(angle, fill)
     before, _ = CF.conform(hf, road, mask)
     z, d = CF.conform(hf, road, mask, footprint=footprint)
+    z = CF.tidy(z, road, mask, d, smooth_slopes=False)
     jj, ii = np.indices(z.shape)
     exact = shapely.distance(shapely.points(hf.x0 + ii, hf.y1 - jj), footprint)
     run = np.maximum(0., exact - S.BERM_W) / S.EMBANKMENT_SLOPE
@@ -56,7 +57,7 @@ def test_graded_batter_is_finite_keeps_surface_and_distant_nmt():
     assert np.array_equal(road, source)
     assert np.array_equal(z[mask], road[mask] - S.TERRAIN_UNDER_ROAD)
     assert np.array_equal(z[d > 20], hf.z[d > 20])
-    assert np.isfinite(CF.tidy(z, road, mask, d)).all()
+    assert np.isfinite(CF.tidy(z, road, mask, d, smooth_slopes=False)).all()
 
 
 def test_empty_footprint_and_no_roads():
@@ -67,6 +68,33 @@ def test_empty_footprint_and_no_roads():
         assert np.array_equal(x, y)
     z, d = CF.conform(hf, np.full_like(road, -np.inf), np.zeros_like(mask), footprint=shapely.Polygon())
     assert np.array_equal(z, hf.z) and not d.any()
+
+
+def test_dk65_10_road_mesh_is_unchanged_by_final_conform():
+    """Real committed road geometry; synthetic fill below it, no world build/NMT."""
+    import hashlib
+    from qa.check_piers_vs_roads import flat_world
+    from streetscape.paved import road_footprint_polygon
+
+    w = flat_world("dk65-10")
+    parts = [p for p in w.buf.parts if p.layer == "road"]
+
+    def digest():
+        return hashlib.sha256(b"".join(p.V.tobytes() + p.T.tobytes() for p in parts)).hexdigest()
+
+    original = digest()
+    hf = SimpleNamespace(x0=-128., y1=128., z=np.zeros((257, 257)))
+    road, mask = CF.rasterise(parts, hf)
+    assert mask.any()
+    hf.z[:] = road[mask].min() - 4.
+    poly = road_footprint_polygon(parts)
+    before, _ = CF.conform(hf, road, mask)
+    z, d = CF.conform(hf, road, mask, footprint=poly)
+    z = CF.tidy(z, road, mask, d, smooth_slopes=False)
+    band = ~mask & (d > 2.) & (d < 5.)
+    assert np.max(np.abs(before[band] - z[band])) > .1
+    assert np.isfinite(z).all()
+    assert digest() == original
 
 
 def pylon_primitive(tier, yaw):
@@ -83,7 +111,7 @@ def test_pylon_has_open_lattice_and_crossarms_in_every_tier(tier, yaw):
     v, t = p["V"], p["T"]
     assert np.isfinite(v).all()
     assert t.max() < len(v) < 65536
-    assert 100 < len(t) <= 512  # bounded lightweight geometry
+    assert 100 < len(t) <= 224  # bounded lightweight geometry, also with hundreds of towers
     assert set(p["COL"][:, 3]) == {0.0}
     assert p["mat"] == "far_field_buildings"
     # Look from both cardinal directions: solid fins filled the whole shaft;

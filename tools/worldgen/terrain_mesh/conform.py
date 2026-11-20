@@ -4,9 +4,11 @@
    not bridges, not vertical flanges) onto the terrain nodes -> road height + footprint mask.
 2. Inside the footprint the terrain is pushed TERRAIN_UNDER_ROAD below the road surface (no z-fighting,
    nothing pokes through; the road flanges hide the step).
-3. Outside, every node takes the height of its nearest footprint node (exact Euclidean distance
-   transform) and is clamped into the embankment cone around it: a BERM_W flat strip at the road edge,
-   then 1 : EMBANKMENT_SLOPE cut or fill until it meets the NMT again.
+3. Outside, the nearest footprint node seeds the edge height. With a vector footprint,
+   distances use the continuous outline in the roadside band and edge heights are interpolated.
+   The terrain is clamped into the embankment cone: a BERM_W flat strip at the road edge,
+   then 1 : EMBANKMENT_SLOPE cut or fill until it meets the NMT again. The raster-only
+   metric remains available for callers without a footprint.
 """
 
 from __future__ import annotations
@@ -131,12 +133,14 @@ def level_under_walled(z, fill, keep):
     return out, int((out < z - 1e-6).sum())
 
 
-def tidy(z, road, mask, dist, close_m=7, iters=150):
+def tidy(z, road, mask, dist, close_m=7, iters=150, smooth_slopes=True):
     """Visual cleanup after conform (visual review 2026-11-09, items 8):
     1. narrow enclosed strips (medians, splitter islands, gaps between a road and a yard, closed by
        `close_m` m) get a harmonic surface spanning the adjacent road edges (no lumps in medians);
     2. the slope band 1.5-12 m from the road is smoothed (sigma 1.2 m) to remove the faceted
-       EDT-cone creases, never rising above the unsmoothed value next to the road."""
+       EDT-cone creases. Set smooth_slopes=False after continuous-outline conform:
+       filtering that profile again mixes buried road nodes into the batter and
+       reintroduces the raster edge, with a hard step at the band limits."""
     closed = ndimage.binary_closing(mask, iterations=close_m) & ~mask
     out = z.copy()
     if closed.any():
@@ -157,9 +161,10 @@ def tidy(z, road, mask, dist, close_m=7, iters=150):
                 avg = 0.25 * (p[:-2, 1:-1] + p[2:, 1:-1] + p[1:-1, :-2] + p[1:-1, 2:])
                 sub[m] = avg[m]
             out[sl] = np.where(m, sub, out[sl])
-    band = (~mask) & ~closed & (dist > 1.5) & (dist < 12.0)
-    sm = ndimage.gaussian_filter(out, 1.2)
-    out = np.where(band, sm, out)
+    if smooth_slopes:
+        band = (~mask) & ~closed & (dist > 1.5) & (dist < 12.0)
+        sm = ndimage.gaussian_filter(out, 1.2)
+        out = np.where(band, sm, out)
     return out
 
 
