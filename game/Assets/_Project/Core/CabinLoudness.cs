@@ -25,8 +25,9 @@ namespace Game.Core
 
         /// <summary>Cab bus gain with the ElevenLabs sound set [dB]: before -25.1 LUFS (straight050 + circle50, 40 t, build 83226d958) -> +7.1 (ADR 0312).</summary>
         public const float ElevenLabsCabGainDb = 7.1f;
-        /// <summary>Cab bus gain with the procedural sound set [dB]: before -24.2 LUFS (same programme) -> +6.2 (ADR 0312).</summary>
-        public const float ProceduralCabGainDb = 6.2f;
+        /// <summary>Cab bus gain with the procedural sound set [dB]: +6.2 from the first run (-24.2 LUFS) measured -16.5 after;
+        /// repeated runs put the pre-D92 programme at -22.8 / -23.4 LUFS -> +4.8 (ADR 0312).</summary>
+        public const float ProceduralCabGainDb = 4.8f;
         /// <summary>Sanity range of a calibration gain [dB] (a larger correction means the mix itself is off).</summary>
         public const float MinGainDb = -12f, MaxGainDb = 12f;
 
