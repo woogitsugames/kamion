@@ -53,3 +53,42 @@ Trzy konkretne uwagi G1 są **zamknięte w kodzie**:
 się na ich treści, a wykonanie raportuje autor. Poprzednie rzuty pokazują stan G1/G2, nie wynik nowej przebudowy.
 Pełne PASS dla kafla C i zachowania ronda pozostaje zależne od aktualnych fidelity, road_consistency i combo_lane_check.
 Rezerwa 12 m jest parametrem roboczym geometrii; sama w sobie nie jest pomiarem szerokości separatora z ortofoto.
+
+## Parking — dwa oddzielne T (wariant diagnostyczny)
+
+Obejrzano `artifacts/road-widen-s24/parking-separate-ortho.png` i mock `parking_separate.py`, bez zmiany kodu generatora.
+**PASS kierunku geometrycznego:** dwa lokalne poligony T połączone krótką wstęgą lepiej odpowiadają ortofoto.
+Południowe krawędzie zostawiają miejsce dla rzędu postojowego przy E -200 / N -297; wcześniejszy duży poligon G1
+przykrywał jego koniec. Przejazd z północy jest otwarty na planie, a zachodnie i wschodnie połączenia są ciągłe.
+
+Autor zgłosił, że pełny G1 usunął stary przypadek kerb, ale pozostał blind-end `None` w przeciwnym kierunku
+(E -210,68 / N -279,71). Rzut nie pokazuje toru testowego ani gotowych powierzchni; po rozdzieleniu węzłów należy
+powtórzyć klasyfikację obu kierunków. Samo pokrycie starego punktu poligonem nie wystarcza.
+
+Reguła zachowania osobnych skrzyżowań wyłącznie klasy D, gdy łącznik ma co najmniej dwie szerokości jezdni,
+jest sensownym ograniczeniem skali klastra. Połowa łącznika dostępna dla każdego T wymusza lokalne łuki zamiast
+pochłaniania pętli. Dwie uwagi do wdrożenia:
+
+- **P1:** mock bada klasy ramion tylko przy endpointach łącznika. W trakcie iteracyjnego scalania ich aktualne grupy
+  mogą już zawierać drogę publiczną lub rondo przy innym węźle. Warunek musi obejmować wszystkie węzły obu obecnych
+  grup (`ga + gb`) i wykluczać ring/compact, by deklarowane „publiczne i ronda bez zmian” było prawdziwe.
+- **P2:** długość łukowa nie gwarantuje fizycznego odstępu dwóch T przy zakrzywionym łączniku. Po wdrożeniu warto
+  objąć kontrolą taki przypadek i poprawność obu poligonów; obecny prosty łącznik parkingu tego ryzyka nie pokazuje.
+
+Wariant ma **PASS dla przedstawionego planu**, ale ogólna reguła wymaga usunięcia P1 i ponownego road_consistency.
+
+## DK8 — diagnostyka położenia `dk8-placement-b`
+
+Obejrzano `artifacts/road-widen-s24/dk8-placement-strips.png` (N 180 / 220 / 260, po dwie wersje), skrypt rysujący
+i `fit-placement-diagnostic.log`. Nie zmieniano danych. **PASS dla osobnej korekty pomiaru położenia -0,55 → +0,02 m.**
+We wszystkich trzech parach przewidywana linia między pasami po korekcie trafia w linię wykrytą i widoczną na
+ortofoto. Stara pozycja jest konsekwentnie odsunięta o około 0,5–0,6 m. Nowa granica bazowej jezdni po stronie
+centralnego separatora dochodzi bliżej rzeczywistej krawędzi asfaltu; widoczny separator pozostaje poza nią.
+
+Diagnostyczny fit dla `w238861874:8205694666-2081020082`: 17 użytecznych profili z 29, we wszystkich dwa pasy;
+MAD trzech granic 0,09 / 0,05 / 0,10 m. Jest to mocniejszy dowód niż dotychczasowy center-only override opisany
+`confidence: low`. Zmiana centrum powinna mieć własny opis źródła i dowodów, bez zmiany liczby pasów.
+
+Rzut pokazuje stałe bazowe 8 m, nie końcową jezdnię GAMEPLAY ani pełną geometrię jej sąsiadów. Z tego powodu
+ostateczne zachowanie separatora i usunięcie fantomowej wyspy wymagają ponownego fidelity oraz rzutu po przebudowie.
+Ocena centrum nie oznacza automatycznej akceptacji całego diagnostycznego fitu (8,44 m i lane_edges).

@@ -138,3 +138,10 @@
   Diagnostyka bez zapisu kodu: dwa osobne T na serwisowej zamiast wspólnego klastra (`parking-separate-ortho.png`)
   zachowują łącznik i lokalne łuki; do sprawdzenia po pełnym G1. Slot 4 użyty przy wolnych 44 GB RAM i CPU 20%.
 - NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g1.log -Tail 15` (następnie validate-g1.ps1 automatycznie).
+
+- Diagnostyka DK8 (bez zmiany danych podczas G1): stary override `dk8-placement-b` center -0,55 m (confidence low)
+  jest sprzeczny z linią między pasami GUGiK HR. ortho_lane_fit po dopuszczeniu ponownego pomiaru center-only:
+  w238861874 17/29 profili, 2 pasy 17/17, MAD granic 0,09/0,05/0,10 m; center +0,02 m. Profile N180/220/260
+  obejrzane (`dk8-placement-strips.png`), recenzent PASS. Plan: tylko center -0,55→+0,02, bez liczby pasów/szerokości.
+  Przed kolejnym rebuild: dwa osobne T parkingu; ochrona całych grup klastra, rond i publicznych dróg, odległość euklidesowa.
+- NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g1.log -Tail 15`; po pełnym G1 zastosować G2 i powtórzyć C+knyszyn.

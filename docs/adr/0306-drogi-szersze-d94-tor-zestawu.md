@@ -133,3 +133,13 @@ marking_off_carriageway 6→0; obstacle_in_lane 3→2; lane_blind_end 45→46 (l
 Stary punkt krawężnika parkingu zniknął, ale przejazd przeciwny przez scalone dwa T jest nadal błędny (None,
 E -210,68 N -279,71). Wariant diagnostyczny z zachowaniem dwóch osobnych węzłów lepiej odtwarza obrys z ortofoto.
 Fidelity i kontrola Knyszyna w toku; bramki nie są jeszcze zamknięte.
+
+### Ponowny pomiar położenia DK8 (diagnoza przed G2)
+Starszy `dk8-placement-b` ustawia centrum w238861874 0,55 m w prawo od OSM na podstawie niskiej pewności pomiaru
+krawędzi. Pomiar białych linii na GUGiK HR istniejącym ortho_lane_fit, po dopuszczeniu ponownego pomiaru samych
+center-only overrides, daje 17/29 użytecznych profili, 2 pasy we wszystkich 17, MAD granic 0,09/0,05/0,10 m i
+centrum +0,02 m. Profile N180/220/260 obejrzane, niezależny przegląd PASS (`dk8-placement-strips.png`).
+Plan G2: skorygować sam pomiar centrum; nie przepisywać wykrytych szerokości ani liczby pasów z całego fit.
+Reprodukcja diagnostyczna (bez zapisu danych): `uv run --project tools/worldgen python -c "import sys;
+sys.path.insert(0,'tools/worldgen/qa'); import ortho_lane_fit as F; F.LANE_KEYS=('lane_edges','lanes','width','lane_width');
+F.fit(['bialystok-industrial-c'],step=10,out='artifacts/road-widen-s24/fit-placement-diagnostic',dry=True)"`.
