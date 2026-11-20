@@ -14,3 +14,10 @@
   zakładkowa), łatka `plot_kit.py` (rzędy `picket_wood`, `picket_paint`, siatka neutralna + tint), łatka materiałów / reguł / `roofs.py`.
   NASTĘPNY KROK: po `world-tykocin exit=0` w before.status wgrać łatki worldgen + testy; po `exit=0` całości:
   `pwsh artifacts/roof-tiles-s24/run-round.ps1 -Tag r1 -World -Sets roof_tiles,roof_tiles_old,roof_karpiowka,roof_zakladkowa,roof_metal_tile`
+- 14:35 Baseline gotowy (`artifacts/roof-tiles-s24/before/{knyszyn,tykocin}`, High clear; świat sprzed scalenia road-widen — kolejka slotu
+  heavy 3/3 + 4 czekających, drugi build baseline odpuszczony; drogi w „przed” są sprzed D94, budynki / działki bez różnic).
+  Kamery przed: look-dom-klattow-street 556 draws / 1 495 926 tris; look-roofs-above 542 / 1 618 590; gardens-tykocka-eye 725 / 1 538 467;
+  tykocin roofs-above 309 / 914 027, zlota 332 / 1 035 051. Kod worldgen + testy wgrane i wypchnięte (c1f535291); pytest powiązanych
+  plików: 144 passed (1 własny test poprawiony). Runda r1 czeka na slot heavy (`artifacts/roof-tiles-s24/run-r1.ps1` w tle:
+  zestawy → build_world knyszyn + tykocin → import → render): `artifacts/roof-tiles-s24/r1.status`.
+  NASTĘPNY KROK: po `exit=0` w r1.status: `bash artifacts/roof-tiles-s24/sbs.sh r1`, obejrzeć `artifacts/roof-tiles-s24/sbs/*-r1.jpg`
