@@ -5,6 +5,9 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+import yaml
+
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from tools.worldgen.streaming import tile_graph as TG  # noqa: E402
@@ -21,6 +24,64 @@ def _graph():
 def test_committed_graph_is_fresh():
     assert TG.OUT.exists(), "run tools/worldgen/streaming/tile_graph.py"
     assert TG.OUT.read_text(encoding="utf-8") == TG.dumps(_graph()), "tile_graph.json is stale: rerun the generator"
+
+
+def test_authored_neighbour_context_preserves_d95_scope():
+    tiles = _graph()["tiles"]
+    assert [t["id"] for t in tiles if t["needsNeighbourContext"]] == ["knyszyn"]
+    assert all(type(t["needsNeighbourContext"]) is bool for t in tiles)
+
+
+def _write_context_tile(root, rid, x, y, **metadata):
+    folder = root / rid
+    folder.mkdir(exist_ok=True)
+    (folder / "region.yaml").write_text(yaml.safe_dump({
+        "id": rid, "bbox": {"xmin": x, "ymin": y, "xmax": x + 2048, "ymax": y + 2048},
+        "origin": {"x": x + 1024, "y": y + 1024, "z": 0},
+    }), encoding="utf-8")
+    if metadata:
+        (folder / "streaming.authored.json").write_text(json.dumps(metadata), encoding="utf-8")
+
+
+def test_neighbour_context_is_authored_and_survives_regeneration(tmp_path):
+    _write_context_tile(tmp_path, "synthetic", 0, 0,
+                        needs_neighbour_context=True, neighbour_context_reason="Junction near the east seam")
+    _write_context_tile(tmp_path, "next", 2048, 0)
+    graph = TG.build(tmp_path)
+    tiles = {t["id"]: t for t in json.loads(TG.dumps(graph))["tiles"]}
+    assert tiles["synthetic"]["needsNeighbourContext"] is True
+    assert tiles["next"]["needsNeighbourContext"] is False
+    assert graph == TG.build(tmp_path)
+    # build_region.py rewrites region.yaml, but does not touch the separate authored input.
+    _write_context_tile(tmp_path, "synthetic", 0, 0)
+    assert graph == TG.build(tmp_path)
+    _write_context_tile(tmp_path, "synthetic", 0, 0, needs_neighbour_context=False)
+    assert not any(t["needsNeighbourContext"] for t in TG.build(tmp_path)["tiles"])
+
+
+@pytest.mark.parametrize("value", ["true", "false", 1, 0, None])
+def test_neighbour_context_rejects_non_boolean_values(tmp_path, value):
+    _write_context_tile(tmp_path, "synthetic", 0, 0, needs_neighbour_context=value)
+    with pytest.raises(ValueError, match="must be a boolean"):
+        TG.build(tmp_path)
+
+
+@pytest.mark.parametrize("reason", [None, "", "  ", 42])
+def test_neighbour_context_requires_authored_reason(tmp_path, reason):
+    _write_context_tile(tmp_path, "synthetic", 0, 0,
+                        needs_neighbour_context=True, neighbour_context_reason=reason)
+    with pytest.raises(ValueError, match="requires neighbour_context_reason"):
+        TG.build(tmp_path)
+
+
+@pytest.mark.parametrize("neighbor", [None, (2048, 2048)])
+def test_neighbour_context_requires_shared_edge_not_just_corner(tmp_path, neighbor):
+    _write_context_tile(tmp_path, "synthetic", 0, 0,
+                        needs_neighbour_context=True, neighbour_context_reason="Junction near seam")
+    if neighbor:
+        _write_context_tile(tmp_path, "corner", *neighbor)
+    with pytest.raises(ValueError, match="requires a neighbour sharing an edge"):
+        TG.build(tmp_path)
 
 
 def test_every_region_is_a_2048_m_tile_with_a_centred_anchor():

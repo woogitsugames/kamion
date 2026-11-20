@@ -204,8 +204,8 @@ namespace Game.World.Streaming
 
         /// <summary>
         /// The single hook of the driving scene (ADR 0273 §10, <c>DrivingLabBootstrap.Start</c>, one statement): installs the
-        /// streamer when requested by <see cref="EnabledOverride"/>, <c>stream=1</c>, or a desktop Knyszyn start without
-        /// an explicit stream argument (D95: the roundabout needs real neighbour context), and
+        /// streamer when requested by <see cref="EnabledOverride"/>, <c>stream=1</c>, or a desktop start whose tile graph
+        /// metadata requires neighbour context without an explicit stream argument, and
         /// the start region has an available neighbour tile scene; otherwise returns null and the scene is exactly as before
         /// (closed region edge). Everything the bootstrap used to wire by hand is done here, so Game.Gameplay keeps one line:
         /// <list type="bullet">
@@ -264,9 +264,10 @@ namespace Game.World.Streaming
             return c;
         }
 
-        /// <summary>Explicit switch / override, with the D95 desktop Knyszyn default when no argument was supplied.</summary>
+        /// <summary>Explicit switch / override, with the authored desktop default when no argument was supplied.</summary>
         public static bool IsRequested(string streamArgument, string region = null, bool desktop = false) =>
-            EdgeClosureRules.StreamingRequested(streamArgument, region, desktop, EnabledOverride);
+            EdgeClosureRules.StreamingRequested(streamArgument, region, desktop, EnabledOverride,
+                desktop && string.IsNullOrEmpty(streamArgument) && !EnabledOverride.HasValue ? TileGraph.LoadDefault() : null);
 
         SafePoseBuffer m_SafePoses;
         float m_SafeMinAge;

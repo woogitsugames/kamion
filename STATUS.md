@@ -1,3 +1,8 @@
+# STATUS neighbour-ctx-cli — D95, zakończone
+- Reguła z `streaming.authored.json` → `tile_graph.json` → EdgeClosureRules; flaga tylko knyszyn (1/54), jawne przełączniki i mobile zachowane. ADR 0317; review drugiego agenta bez uwag blokujących.
+- Testy: spawn-runner 48/48 PASS, pytest grafu 20/20 PASS, eksport --check PASS. Dodatkowy katalog: 2 PASS / 1 istniejący FAIL (knyszyn routeLengthM 1159.09 vs 1159.28). Logi w artifacts/logs/neighbour-context-*.log. Bez Unity, push i zapisów poza worktree.
+- NASTĘPNY KROK (kontrola): `dotnet test tools/spawn-runner/Tests/Tests.csproj`; poza zakresem pozostaje istniejąca nieaktualna długość trasy w katalogu oraz walidacja playera w osobnej sesji.
+
 # STATUS embankment-cli — s24, zakończone prace generatora
 - Ciągły obrys skarpy i interpolacja wysokości w pasie 16 m; usunięto wtórne schodki z filtra tidy, jezdnia V/T bez zmian (test DK65-10). Pylony far-field mają otwartą kratownicę 204 tris zamiast pełnego trzonu 12 tris.
 - 91 PASS / 1 SKIP (brak cache surowej ekstrakcji FF); review kodu i podglądu bez blokujących uwag. Raport: docs/reports/embankment-cli-s24.md; ADR 0311; podgląd i log: artifacts/embankment-cli/. Unity/build_world/player nieuruchamiane; bez push i zapisów poza worktree.
