@@ -65,12 +65,17 @@ nawierzchnią; „przed” = kafle main, `--widen 0`, `artifacts/road-widen-s24/
 
 | odcinek | przed | po |
 |---|---|---|
-| rondo Knyszyn DK65 → DW671 W (korytarz Tykocin) | 0 / 23 / 5 | 0 / 3 / 0 (ze swingiem kierowcy 0 / 0 / 0) |
+| rondo Knyszyn DK65 → DW671 W (korytarz Tykocin) | 0 / 23 / 5 | 0 / 5 / 0 (ze swingiem kierowcy 0 / 0 / 0) |
 | rondo Knyszyn DK65 → DK65 W | 0 / 16 / 0 | 0 / 0 / 0 |
+| trasa kontrolna knyszyn (DK65 S → Tykocka E, 1. zjazd) | 0 / 80 / 0 (12 m: 53 na narożniku SE) | 0 / 56 / 0 (29 na rondzie; ze swingiem 0) |
 | Tykocin DW671 → Rynek | 109 / 0 / 0 | 7 / 0 / 0 (ze swingiem 0) |
-| Rynek Knyszyn → rondo (2 łączniki) | 42–45 / 18–63 / 0 | 32–37 / 0–59 / 0 (przeciwny pas: skręty w ulicach Rynku) |
+| Rynek Knyszyn → rondo (2 łączniki) | 42–45 / 18–63 / 0 | 29–33 / 0 / 0 (przeciwny pas: skręty w ulicach Rynku) |
 | kleeberga, dk65-05, knyszyn-s, knyszyn-w | 0 / 0 / 0 | 0 / 0 / 0 |
 
+Przejazd playerem (build Windows, GTX 1070 High 60 fps, `-stream 1 -route_to tykocin -telemetry 1`, 20.11): łącznik
+DK65 → DW671 W przez rondo (lewo 275°, 30 km/h): w promieniu 45 m od środka ronda ciągnik i prawe koła naczepy cały czas na
+asfalcie, ciągnik ≤ 0,85 m od linii łącznika, lewe koła naczepy 5,8 s na fartuchu (kostka, zaprojektowany), 0 wyjątków.
+Przejazd trasą kontrolną przy narożnikach 12 m: naczepa 2,4 s na krawężniku narożnika SE → narożniki 16 m (r8).
 Rzut z góry przed / po: `artifacts/road-widen-s24/top/knyszyn_before_after_lc_960.jpg`; render High
 `artifacts/road-widen-s24/top_vqa_after_vs_before.jpg` (narożniki ronda jak na zdjęciu drona nr 9).
 
