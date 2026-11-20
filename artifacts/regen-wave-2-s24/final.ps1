@@ -6,7 +6,8 @@ $main = 'C:\Users\matma\Documents\Claude\kamion'
 $o = "$wt\artifacts\regen-wave-2-s24"; $st = "$o\final.status"; $L = "$o\logs"
 Set-Location $wt
 function S($m) { Add-Content $st "$(Get-Date -Format s) $m" }
-while ((Select-String 'DONE' "$o\chain.status" -ErrorAction SilentlyContinue).Count -lt 3) { Start-Sleep 60 }
+Start-Sleep 120
+while (-not (Test-Path "$o\chain.status") -or @(Select-String 'chain=. DONE' "$o\chain.status").Count -lt 3) { Start-Sleep 60 }
 S 'chains DONE'
 pwsh -NoProfile -File "$o\commit.ps1" *>> "$o\autocommit.log"
 pwsh -NoProfile -File "$main\scripts\unity-slot.ps1" -Acquire -Pool heavy -Owner rw2-final *>> "$L\final-slot.log"
