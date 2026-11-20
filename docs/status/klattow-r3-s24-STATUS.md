@@ -25,3 +25,7 @@
   -yard 99 / 377 229, look-lamus 459 / 1 121 469. Poprawki do r2: chodnik 0,70 m, tint plotu [0.9,1.4,1.1], zrab szarszy, wole oko wieksze,
   podwalina podestu 0,28 m, krzew r 1,2 m, nowa kamera look_lamus_plebanski_close (kadr zdjecia 02, 1,7 m).
   NASTEPNY KROK: `pwsh artifacts/klattow-r3-s24/run-round.ps1 -Tag r2 -World -Cameras look_dom_klattow,look_dom_klattow_street,look_dom_klattow_yard,look_dom_klattow_gable_e,look_lamus_plebanski,look_lamus_plebanski_close`; po exit=0: `bash artifacts/klattow-r3-s24/sbs.sh r2`
+- 11:50 r2 obejrzana (sbs/*-r2.jpg): plot w linii czola ganku (2,03 m od sciany), chodnik 0,70 m, krzew / drzewko / pnacze, plot dzialki brazowy;
+  lamus z bliskiej kamery: gont schodkowy, zalamanie, miecze, podest. Kafel: budynki LOD0 671 857 -> 673 036, LOD1 110 049 -> 110 065,
+  plots 432 095 -> 432 787, materialy 353 -> 355, chunk 0_4 62 -> 63. Kamery r2 w artifacts/klattow-r3-s24/r2/stats.txt. Rundy 3 nie uzywam.
+  NASTEPNY KROK: `pwsh artifacts/klattow-r3-s24/run-tests.ps1` (EditMode Win64 + pytest powiazane), wynik w artifacts/klattow-r3-s24/tests.status; visual-critic na sbs/*-r2.jpg; raport
