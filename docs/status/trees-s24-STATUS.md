@@ -72,3 +72,10 @@
   dk65-05 draws ±0, tris instancji +0,8 %. LOD1 liściastych odchudzony do poziomu sprzed zmiany. ADR 0308 uzupełniony.
   pytest podzbiór (9 plików): 172 passed. W TLE: `artifacts/trees-s24/tests.ps1` = EditMode Win64 → pełny pytest tests/gis.
   NASTĘPNY KROK: `cat artifacts/trees-s24/editmode.status artifacts/trees-s24/pytest-gis.status; tail -5 artifacts/trees-s24/pytest-gis.log`
+- 20.11 09:20 KONIEC. Dowód szwu dk65-07/08: `artifacts/trees-s24/sbs/dk65-07-08-seam-far-sectors-before-after.jpg` (przed: `far_east`
+  w obszarze dk65-08; po: nic). Pełny pytest tests/gis: 2569 passed / 11 failed (kafle miejskie Białegostoku + katalogi tras, poza
+  zakresem gałęzi) / 1 skipped / 2 xfailed; EditMode Win64 1420 / 1318 / 1 failed (ten sam katalog) / 101 skipped.
+  `farfield-blocks-cli` (Codex): 1 konflikt tekstowy w `WorldStreamer.RefreshEdges` — opis w ADR 0308.
+  Kamery `owner02_seam_n_*` dodane do `Data/Regions/dk65-07/control_cameras_place.authored.json` (wejdą przy build_world dk65-07).
+  NASTĘPNY KROK (lider): scalić; `far_field.py --region <id>` dla wszystkich kafli + build_world/reimport; przejazd ze streamingiem
+  przez dk65-08, dk65-10, tykocin-06/09, industrial-c; visual-critic na `artifacts/trees-s24/sbs/`.

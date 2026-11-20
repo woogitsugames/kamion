@@ -108,6 +108,24 @@ na High. Czas klatki GPU i pamięć NIE były mierzone (pomiar tylko w buildzie 
 liczby wyżej to szacunek draws / trójkątów edytora. Tekstury: 5 atlasów liści 512 → 1024 px (`UNVERIFIED` wpływ na pamięć,
 rząd +5 MB po kompresji).
 
+Dowód renderem dla „zielonej ściany” (`sbs/dk65-07-08-seam-far-sectors-before-after.jpg`, `farproof.ps1`): scena samego
+dk65-07, kamera na wysokości kabiny 56 m za szwem północnym (strona dk65-08), maska `-Mask far_east` / `far_north`.
+Przed: w kadrze na północ od kafla widać geometrię `far_east` (las tła); po regeneracji `far_east` nie ma tam nic —
+wszystko, co stoi w obszarze dk65-08, należy do `far_north`, który streamer chowa przy sąsiedzie od północy.
+
+Testy: `tests/gis/test_trees_0308.py` 12, `test_far_field.py` +1; pełny `pytest tests/gis`: 2569 passed, 11 failed, 1 skipped,
+2 xfailed — wszystkie 11 dotyczą kafli miejskich Białegostoku i katalogów tras (industrial-c, maczka, kleeberga,
+knyszynska: `routeLengthM`, ratchety `lane_blind_end` / wysp, `route_links`, determinizm eksportu C), których ta gałąź
+nie dotyka (baza gałęzi sprzed przebudowy lidera; nie sprawdzane ponownie na main). EditMode Win64: 1420 / 1318 passed /
+1 failed (`RegionSelectTests.ShippedCatalog…`: ten sam nieaktualny `routeLengthM` industrial-c) / 101 skipped.
+
+Zbieżność z gałęzią `farfield-blocks-cli` (Codex, ADR 0311, nie scalona): tam sektor dali w stronę każdego
+zarejestrowanego sąsiada (także po przekątnej) jest wyłączony na stałe (`EdgeSides.FarSectorMayShow`). Próbne scalenie:
+jeden konflikt tekstowy w `WorldStreamer.RefreshEdges` (linia `farSectors[i].SetActive`) — przy scalaniu wziąć wersję
+Codexa dla sektorów dali, a z tej gałęzi zostawić fartuch (`ApronPieceVisible`, `coveredSides`); `far_field.py` łączy się
+automatycznie (tam budynki, tu drzewostany). Cięcie drzewostanów po sektorach jest potrzebne także z regułą Codexa:
+sektor bez sąsiada (np. `far_east` dk65-11 ze 104 ha lasu leżącego na północ) pozostaje widoczny.
+
 ## Konsekwencje i otwarte punkty
 
 - **Po scaleniu trzeba**: zregenerować tło dali każdego kafla (`far_field.py --region <id>`, < 2 min / kafel) i zaimportować
