@@ -191,3 +191,12 @@
   Fingerprint po dokładnym filtrowaniu: C83sekcje/82łańcuchy zmienione, Knyszyn29/26 — pełny rebuild obu obowiązkowy.
   G2b końcowo: wyspy0/marking0/obstacle2/blind41/route2; pytest43pass/1xfail/1fail(tylko nieprawidłowa próbka parkingu).
 - NASTĘPNY KROK: `pwsh -File artifacts/road-widen-s24/rebuild.ps1 -Regions bialystok-industrial-c,knyszyn -Tag g3 -Fidelity -HeavySlots 4`.
+
+## 20.11 12:35 — G3: pełny build C zakończony
+- Kod c06c16ea2, build_world exit0 i export-route C zakończone; rozpoczęty Knyszyn (12:34).
+- Świeże road_consistency C: marking_off_carriageway6→2 (limit3), obstacle_in_lane3→2 (2),
+  lane_blind_end45→32 (55), na trasie3→1 (1). Pozostaje znana brama zajezdni; parking nie zgłasza blind-end.
+- Fidelity i combo/pytest jeszcze oczekują. Nie deklarujemy końcowego PASS przed ich zakończeniem.
+- ADR0306 uporządkowany wokół finalnej implementacji; historia wycofanego przypisania pomiaru b pozostaje tutaj.
+  Niezależna recenzja rzeczywistego dystansu40m i regresji obwiedni: PASS.
+- Dalej: rebuild-g3.log (Knyszyn→fidelity→links), potem validate-g3.status. Bez Unity, ratchety bez zmian.

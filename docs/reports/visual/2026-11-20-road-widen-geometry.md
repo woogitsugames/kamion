@@ -146,3 +146,12 @@ wewnątrz przejazdu. Kontrola endpointu QA nie zastępuje kontroli przeszkód na
   medianu z wolnymi i zablokowanymi stronami zewnętrznymi oraz stacji długiego ramienia w obu kierunkach.
 
 Nie uruchamiano dodatkowych procesów. PASS dotyczy przeglądu kodu; wyniki C i ronda mają pochodzić z pełnego G3.
+
+### Kontrola dodatku w `c06c16ea2` — zasięg sąsiada
+
+**PASS.** Po zapytaniu STRtree rzeczywisty wektor do rzutu na linię sąsiada jest sprawdzany przez
+`delta @ delta <= WIDEN_NEIGHBOUR_SEARCH_M ** 2`. Obwiednia odległego zakrętu nie wystarcza więc do uznania go za
+sąsiada w promieniu 40 m. Ten sam `delta` służy następnie do bocznej odległości; nie ma odwrócenia znaku strony.
+Kierunek przeciwbieżny nadal wynika z iloczynu jednostkowych stycznych (`parallel < 0` po warunku równoległości),
+a nie z wektora odległości. Regresja z odległym U i obwiednią obejmującą badany odcinek trafnie sprawdza zachowanie
+symetrycznego wzrostu przy braku rzeczywistego sąsiada. Nie stwierdzono nowego błędu kierunku ani medianu.
