@@ -333,7 +333,7 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     net.overrides_applied += cs_applied
     net.overrides_stale += cs_stale
     apply_edge_overrides(net, edges, overrides or [])
-    gameplay_widen(net, S.GAMEPLAY_LANE_WIDEN_M)     # D94 / ADR 0306: +0.25 m per lane on top of the measured base
+    gameplay_widen(net, S.GAMEPLAY_LANE_WIDEN_M, edges)
     net.sec_list = [sections[k] for k in sorted(sections)]
     sec_index = {s.edge_id: i for i, s in enumerate(net.sec_list)}
     net.chains = build_chains(nodes, edges)
@@ -370,25 +370,95 @@ def _truck_apron(v) -> dict | None:
     return {"width_m": w, "height_m": h, "material": TRUCK_APRON_MATS[code], "code": code}
 
 
-def gameplay_widen(net: Network, d: float) -> None:
-    """D94 / ADR 0306 (GAMEPLAY_WIDEN, not a measurement): every lane of every section `d` wider than the measured /
-    rule / authored width resolved so far. Lane count, alignment (`center_offset`) and edge strips stay; measured
-    `lane_edges` (ADR 0095 / 0301) keep their left edge strip and each lane grows by `d`; width profiles and the
-    authored edge-line spacing grow by lanes x d. Runs once per load, after every override (idempotent by the
-    provenance key)."""
+def widening_clearance(net: Network, edges: dict) -> dict:
+    """Unwidened parallel carriageways, in travel direction. Never spend an existing separator.
+
+    Compare actual gutter positions (including authored placement), not OSM axes. The snapshot is immutable:
+    both carriageways see the same gap regardless of iteration order. Same-level service/parking roads count too.
+    A close parallel neighbour reserves its entire existing gap; a distant one leaves only the excess over the
+    separator search distance available. Thresholds are GAMEPLAY WORKING_VALUE, not orthophoto measurements.
+    """
+    lines, keys = [], []
+    for eid, (_, g, _, _) in edges.items():
+        sec = net.sections[eid]
+        p = Polyline(smooth_open(g, 0, 4.0))
+        t = p.s / max(p.length, 1e-9)
+        off = np.interp(t, *np.asarray(sec.center_offset_profile, float).T) if sec.center_offset_profile else (
+            sec.center_offset + t * ((sec.center_offset if sec.center_offset_end is None else sec.center_offset_end) - sec.center_offset))
+        lines.append(LineString(p.p + p.n * off[:, None]))
+        keys.append(eid)
+    tree = shapely.STRtree(lines)
+    result = {}
+    for i, eid in enumerate(keys):
+        sec = net.sections[eid]
+        if not sec.oneway or sec.roundabout:
+            continue
+        line = lines[i]
+        room = [float("inf"), float("inf")]  # left, right
+        for s in np.linspace(min(3.0, line.length / 4), max(line.length - 3.0, line.length * .75),
+                             max(3, int(line.length / 8) + 1)):
+            q = line.interpolate(s)
+            u = np.asarray(line.interpolate(min(s + 1, line.length)).coords[0]) - np.asarray(
+                line.interpolate(max(0, s - 1)).coords[0])
+            u /= max(np.linalg.norm(u), 1e-9)
+            normal = np.array([-u[1], u[0]])
+            for j in tree.query(_qbox(q, S.WIDEN_NEIGHBOUR_SEARCH_M)):
+                other = net.sections[keys[j]]
+                if i == j or other.layer != sec.layer or other.bridge != sec.bridge:
+                    continue
+                # Consecutive edges of the same OSM way are the same carriageway, not a separator.
+                if eid.split(":")[0] == keys[j].split(":")[0]:
+                    continue
+                ln = lines[j]
+                v = ln.project(q)
+                if v < 1 or v > ln.length - 1:
+                    continue  # do not confuse a junction endpoint with a parallel road
+                tangent = np.asarray(ln.interpolate(min(v + 2, ln.length)).coords[0]) - np.asarray(
+                    ln.interpolate(max(v - 2, 0)).coords[0])
+                tangent /= max(np.linalg.norm(tangent), 1e-9)
+                if abs(float(u @ tangent)) < .9:
+                    continue
+                lat = float((np.asarray(ln.interpolate(v).coords[0]) - np.asarray(q.coords[0])) @ normal)
+                gap = abs(lat) - (sec.width + other.width) / 2
+                if gap < .25:
+                    continue  # shared/overlapping junction pavement has no separator to protect
+                side = 0 if lat > 0 else 1
+                room[side] = min(room[side], max(0.0, gap - S.WIDEN_SEPARATOR_RESERVE_M))
+        result[eid] = room
+    return result
+
+
+def gameplay_widen(net: Network, d: float, edges: dict | None = None) -> None:
+    """D94: widen resolved sections once, preserving parallel separators from the immutable base geometry.
+    Width and placement change together, including measured width/offset profiles and lane markings.
+    A section with neighbours on both sides receives only the feasible growth; the remainder is recorded.
+    """
     if not d:
         return
+    clearance = widening_clearance(net, edges) if edges is not None else {}
     for sec in net.sections.values():
         if "gameplay_widen_m" in sec.provenance:
             continue
         n = max(int(sec.lanes), 1)
         dl = d
-        if sec.width_src.startswith("bdot10k") and "bdot_floor_growth_m" in sec.provenance:
-            # the ADR 0301 floor already made these lanes wider than measured (BDOT): D94 asks for +d over the
-            # measurement, so only what the floor did not give yet (DK8 in tile C: floor +0.5 m/lane -> +0)
-            dl = max(0.0, d - float(sec.provenance["bdot_floor_growth_m"]) / n)
-            sec.provenance["gameplay_widen_floor_credit_m"] = round(d - dl, 3)
         add = n * dl
+        shift = 0.0
+        if sec.oneway and not sec.roundabout:
+            left, right = clearance.get(sec.edge_id, [float("inf"), float("inf")])
+            # Allocate towards the greater clearance. Neither neighbour loses any of its existing separator.
+            if left == right == float("inf"):
+                grow_l = grow_r = add / 2
+            elif left >= right:
+                grow_l = min(add, left)
+                grow_r = min(add - grow_l, right)
+            else:
+                grow_r = min(add, right)
+                grow_l = min(add - grow_r, left)
+            add = grow_l + grow_r
+            dl = add / n
+            shift = (grow_l - grow_r) / 2
+            sec.provenance["gameplay_clearance_m"] = [None if math.isinf(v) else round(v, 3) for v in (left, right)]
+            sec.provenance["gameplay_widen_limited_m"] = round(n * d - add, 3)
         if sec.lane_edges:
             le = [float(v) for v in sec.lane_edges]
             sec.lane_edges = [round(le[0] + (v - le[0]) + i * dl, 3) for i, v in enumerate(le)]
@@ -401,15 +471,8 @@ def gameplay_widen(net: Network, d: float) -> None:
         if sec.edge_line_spacing is not None:
             sec.edge_line_spacing = round(sec.edge_line_spacing + add, 3)
         sec.provenance["gameplay_widen_m"] = round(add, 3)
-        if sec.oneway and not sec.roundabout and not sec.center_offset_profile:
-            # (a placement traced along the edge on the orthophoto, ADR 0095 profile, is kept as measured: symmetric)
-            # ADR 0306: a one-way carriageway grows to the RIGHT (kerb / verge side), its left edge stays where it was
-            # measured or mapped: the median / gore between the carriageways of a dual road keeps its width and position
-            # (a symmetric growth ate 0.5-1.0 m of the DK8 median in tile C and left 1.2-2.0 m strips over real asphalt:
-            # fidelity islands_absent 1 -> 4). The ADR 0301 BDOT floor (lanes widened over BDOT) grows the same way.
-            # only the GAMEPLAY part moves right, at most GROW_RIGHT_MAX_M: the ADR 0301 BDOT floor stays symmetric (a
-            # full right shift of 0.75-1.1 m pushed DK8 / Andersa onto sidewalks and the viaduct edge in tile C)
-            sh = min(add / 2.0, S.GROW_RIGHT_MAX_M)
+        if sec.oneway and not sec.roundabout:
+            sh = -shift
             sec.center_offset = round(sec.center_offset - sh, 3)
             if sec.center_offset_end is not None:
                 sec.center_offset_end = round(sec.center_offset_end - sh, 3)

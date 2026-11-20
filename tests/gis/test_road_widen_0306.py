@@ -43,18 +43,22 @@ def test_every_lane_quarter_metre_wider(maczka):
     for k, a in base.sections.items():
         b = wide.sections[k]
         assert b.lanes == a.lanes
-        credit = float(b.provenance.get("gameplay_widen_floor_credit_m", 0.0))   # ADR 0301 floor counts towards D94
-        dl = 0.25 - credit
+        limited = float(b.provenance.get("gameplay_widen_limited_m", 0.0))
+        dl = 0.25 - limited / a.lanes
         assert b.width == pytest.approx(a.width + dl * a.lanes, abs=1e-3), k
         assert b.lane_w == pytest.approx(a.lane_w + dl, abs=2e-3), k
         assert b.lane_w >= a.lane_w - 1e-9
-        if a.oneway and not a.roundabout and not a.center_offset_profile:
-            # one-way: grows to the right, the left (median) edge stays: centre moves right by half the growth
-            sh = min(dl * a.lanes / 2, S.GROW_RIGHT_MAX_M)
-            assert b.center_offset == pytest.approx(a.center_offset - sh, abs=2e-3), k
-            assert (b.center_offset + b.width / 2) - (a.center_offset + a.width / 2) <= dl * a.lanes / 2 + 2e-3
+        if a.oneway and not a.roundabout:
+            shift = b.center_offset - a.center_offset
+            left, right = b.provenance["gameplay_clearance_m"]
+            growth = dl * a.lanes
+            assert abs(shift) <= growth / 2 + .002
+            if left is not None:
+                assert growth / 2 + shift <= left + .002
+            if right is not None:
+                assert growth / 2 - shift <= right + .002
         else:
-            assert b.center_offset == a.center_offset                 # two-way: symmetric, alignment kept
+            assert b.center_offset == a.center_offset
         assert b.provenance["gameplay_widen_m"] == pytest.approx(dl * a.lanes, abs=0.01)
 
 
@@ -67,7 +71,7 @@ def test_measured_lane_edges_keep_left_strip_and_grow_per_lane(maczka):
         b = wide.sections[k]
         assert b.lane_edges[0] == a.lane_edges[0]
         for i in range(1, len(a.lane_edges)):
-            assert b.lane_edges[i] - b.lane_edges[i - 1] == pytest.approx(a.lane_edges[i] - a.lane_edges[i - 1] + 0.25, abs=1e-3)
+            assert b.lane_edges[i] - b.lane_edges[i - 1] == pytest.approx(a.lane_edges[i] - a.lane_edges[i - 1] + (b.width - a.width) / a.lanes, abs=1e-3)
         n += 1
     assert n >= 5                          # ADR 0301 orthophoto lanes on Maczka
 
@@ -144,3 +148,36 @@ def test_knyszyn_widened_roundabout_builds_clean(monkeypatch):
     assert rep["notes"] == [] and len(rep["rules"]) == 2, rep
     assert rep["splitters"] >= 4 and len(sp.crossings) == 4 and len(sp.p13) == 4     # 7 at GAMEPLAY 0 (refuges cut)
     assert rep["ring_asphalt_m"] == pytest.approx(5.25, abs=0.05)
+
+
+@pytest.mark.parametrize("neighbour_y,expected_shift", [(9.0, -0.25), (-9.0, 0.25)])
+def test_grows_away_from_parallel_road_on_either_side(neighbour_y, expected_shift):
+    from dataclasses import replace
+    from types import SimpleNamespace
+    sec = N.EdgeSection("w1:a-b", "primary", "G", True, 2, 2, 0, 3.0, .25, 6.5,
+                        "measured", "road_asphalt", False, 0, False, None, None, None)
+    other = replace(sec, edge_id="w2:c-d", provenance={})
+    net = SimpleNamespace(sections={sec.edge_id: sec, other.edge_id: other})
+    edges = {sec.edge_id: ({}, np.array([[0., 0.], [100., 0.]]), "a", "b"),
+             other.edge_id: ({}, np.array([[0., neighbour_y], [100., neighbour_y]]), "c", "d")}
+    N.gameplay_widen(net, .25, edges)
+    assert sec.width == 7.0
+    assert sec.center_offset == expected_shift
+    # Both carriageways move away: the original 2.5 m separator survives.
+    assert abs(neighbour_y + other.center_offset - sec.center_offset) - (sec.width + other.width) / 2 == pytest.approx(2.5)
+
+
+def test_no_space_between_parallel_roads_limits_growth_and_keeps_other_level_out():
+    from dataclasses import replace
+    from types import SimpleNamespace
+    sec = N.EdgeSection("w1:a-b", "primary", "G", True, 2, 2, 0, 3.0, .25, 6.5,
+                        "measured", "road_asphalt", False, 0, False, None, None, None)
+    secs = [sec, replace(sec, edge_id="w2:c-d", provenance={}), replace(sec, edge_id="w3:e-f", provenance={})]
+    net = SimpleNamespace(sections={s.edge_id: s for s in secs})
+    edges = {s.edge_id: ({}, np.array([[0., y], [100., y]]), str(i), str(i + 10))
+             for i, (s, y) in enumerate(zip(secs, [0., 9., -9.]))}
+    N.gameplay_widen(net, .25, edges)
+    assert sec.width == 6.5 and sec.center_offset == 0
+    assert sec.provenance["gameplay_widen_limited_m"] == .5
+    secs[1].layer = secs[2].layer = 1
+    assert N.widening_clearance(net, edges)[sec.edge_id] == [float("inf"), float("inf")]
