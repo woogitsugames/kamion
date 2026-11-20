@@ -13,7 +13,7 @@
       "id": "bialystok-maczka",
       "label": "Białystok — Gen. Maczka (DK8/DK65)",
       "group": "Białystok",
-      "routeLengthM": 2053.87,
+      "routeLengthM": 2054.12,
       "startS": 90.0
     },
     {
@@ -27,28 +27,28 @@
       "id": "bialystok-knyszynska",
       "label": "Białystok — Szosa Ełcka → Szosa Knyszyńska",
       "group": "Białystok",
-      "routeLengthM": 2961.38,
+      "routeLengthM": 2963.21,
       "startS": 90.0
     },
     {
       "id": "dk65-01",
       "label": "DK65 01 — Szosa Knyszyńska za miastem",
       "group": "DK65",
-      "routeLengthM": 631.54,
+      "routeLengthM": 631.76,
       "startS": 90.0
     },
     {
       "id": "dk65-02",
       "label": "DK65 02 — Fasty (południe), most",
       "group": "DK65",
-      "routeLengthM": 2400.68,
+      "routeLengthM": 2400.43,
       "startS": 90.0
     },
     {
       "id": "dk65-03",
       "label": "DK65 03 — Ełcka za Fastami",
       "group": "DK65",
-      "routeLengthM": 484.43,
+      "routeLengthM": 484.44,
       "startS": 90.0
     },
     {
@@ -146,14 +146,14 @@
       "id": "bialystok-dojlidy",
       "label": "Białystok — Dojlidy, Dywizjonu 303 / Kuronia",
       "group": "Białystok",
-      "routeLengthM": 2132.89,
+      "routeLengthM": 2133.2,
       "startS": 90.0
     },
     {
       "id": "bialystok-wygoda",
       "label": "Białystok — Andersa (DK19/DK65), narożnik Wygody",
       "group": "Białystok",
-      "routeLengthM": 90.81,
+      "routeLengthM": 91.02,
       "startS": 0.0,
       "noStart": true
     },
@@ -161,14 +161,14 @@
       "id": "bialystok-bojary",
       "label": "Białystok — Andersa, Sosabowskiego → Piastowska (DK19)",
       "group": "Białystok",
-      "routeLengthM": 3266.55,
+      "routeLengthM": 3266.7,
       "startS": 90.0
     },
     {
       "id": "bialystok-mickiewicza",
       "label": "Białystok — Piastowska, pl. Antonowicza, Branickiego, rondo Meyera → Ciołkowskiego (DK19/DW678)",
       "group": "Białystok",
-      "routeLengthM": 3720.85,
+      "routeLengthM": 3720.22,
       "startS": 90.0
     },
     {
@@ -312,7 +312,7 @@
       "id": "bialystok-porosly",
       "label": "Białystok — Kleeberga (DK8) na południe, Porosły",
       "group": "S8",
-      "routeLengthM": 1590.44,
+      "routeLengthM": 1590.69,
       "startS": 90.0
     },
     {
@@ -417,7 +417,7 @@
     },
     {
       "name": "d67-full",
-      "note": "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin; owner decision 2026-11-16: + the 18 ring tiles of ADR 0231 (DK65 to Monki, DW671 to Tykocin, DW671 towards Jasionowka); 2026-11-19: + S8 01-05, DK8 Jeroniki, Porosly, DK19 Wygoda / Bojary / Mickiewicza, Krywlany (ADR 0314) - every catalog region. Build size not measured with the ring (ADR 0267).",
+      "note": "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin; owner decision 2026-11-16: + the 18 ring tiles of ADR 0231 (DK65 to Monki, DW671 to Tykocin, DW671 towards Jasionowka); 2026-11-19: + S8 01-05, DK8 Jeroniki, Porosly, DK19 Wygoda / Bojary / Mickiewicza, Krywlany (ADR 0314), DK8 Wasilkow 01-03 / Korycin 01 (ADR 0315) - every catalog region. Build size not measured with the ring (ADR 0267).",
       "regions": [
         "bialystok-industrial-c",
         "bialystok-maczka",
@@ -468,7 +468,11 @@
         "bialystok-wygoda",
         "bialystok-bojary",
         "bialystok-mickiewicza",
-        "bialystok-krywlany"
+        "bialystok-krywlany",
+        "dk8-wasilkow-01",
+        "dk8-wasilkow-02",
+        "dk8-wasilkow-03",
+        "dk8-korycin-01"
       ]
     }
   ]

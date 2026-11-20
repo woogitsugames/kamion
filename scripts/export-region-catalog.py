@@ -48,6 +48,7 @@ S8_DK19 = [
     "s8-01", "s8-02", "s8-03", "s8-04", "s8-05", "dk8-s8-jeroniki", "bialystok-porosly",
     "bialystok-wygoda", "bialystok-bojary", "bialystok-mickiewicza",
     "bialystok-krywlany",          # ADR 0314 (krywlany-s24): Krywlany airfield tile, Dojlidy corner link
+    "dk8-wasilkow-01", "dk8-wasilkow-02", "dk8-wasilkow-03", "dk8-korycin-01",   # ADR 0315 (s8-north): DK8 north
 ]
 
 # Derived sets (ADR 0267, owner decision D71): name -> (base set, extra region ids, note). Written after the base set.
@@ -57,7 +58,7 @@ DERIVED_SETS: dict[str, tuple[str, list[str], str]] = {
         ["bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01", *RING_0231, *S8_DK19],
         "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin; owner decision 2026-11-16: + the 18 ring tiles of ADR 0231 "
         "(DK65 to Monki, DW671 to Tykocin, DW671 towards Jasionowka); 2026-11-19: + S8 01-05, DK8 Jeroniki, Porosly, "
-        "DK19 Wygoda / Bojary / Mickiewicza, Krywlany (ADR 0314) - every catalog region. Build size not measured with the ring (ADR 0267).",
+        "DK19 Wygoda / Bojary / Mickiewicza, Krywlany (ADR 0314), DK8 Wasilkow 01-03 / Korycin 01 (ADR 0315) - every catalog region. Build size not measured with the ring (ADR 0267).",
     ),
 }
 
