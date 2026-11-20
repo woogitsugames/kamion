@@ -620,6 +620,7 @@
    "embankment": 55,
    "median": 0,
    "no_guardrail": 0,
+   "pavement_cut_segments": 0,
    "pier": 0,
    "structure": 0
   },
@@ -971,6 +972,11 @@
    "tyre_scrub_tracks": 80,
    "yard_drains": 50,
    "yard_trailers": 81
+  },
+  "limit_signs": {
+   "placed": {},
+   "rule": "ADR 0307: B-16 / B-18 15 m before a bridge / tunnel with maxheight / maxweight in roads.graph.json",
+   "structures": []
   },
   "megascans": {
    "added_drainage_triangles": 232,
@@ -33250,7 +33256,7 @@
      "props": 39763,
      "roads": 178294,
      "terrain": 869009,
-     "trees_lod1": 660,
+     "trees_lod1": 806,
      "trees_lod2": 7782
     },
     "by_category_low": {
@@ -33265,7 +33271,7 @@
     "camera": "route_s0511",
     "materials_high": 107,
     "materials_low": 107,
-    "tris_high": 1518489,
+    "tris_high": 1518635,
     "tris_low": 524783
    },
    {
@@ -33276,7 +33282,7 @@
      "props": 31560,
      "roads": 116712,
      "terrain": 822213,
-     "trees_lod1": 69636,
+     "trees_lod1": 70312,
      "trees_lod2": 8708
     },
     "by_category_low": {
@@ -33291,7 +33297,7 @@
     "camera": "route_s0852",
     "materials_high": 108,
     "materials_low": 108,
-    "tris_high": 1258159,
+    "tris_high": 1258835,
     "tris_low": 403521
    },
    {
@@ -33302,8 +33308,8 @@
      "props": 55730,
      "roads": 76526,
      "terrain": 717366,
-     "trees_lod0": 42000,
-     "trees_lod1": 154228,
+     "trees_lod0": 44510,
+     "trees_lod1": 162004,
      "trees_lod2": 7394
     },
     "by_category_low": {
@@ -33313,14 +33319,14 @@
      "props": 18149,
      "roads": 76526,
      "terrain": 183325,
-     "trees_lod1": 16788,
+     "trees_lod1": 17478,
      "trees_lod2": 2182
     },
     "camera": "route_s1193",
     "materials_high": 95,
     "materials_low": 95,
-    "tris_high": 1168213,
-    "tris_low": 339704
+    "tris_high": 1178499,
+    "tris_low": 340394
    },
    {
     "by_category_high": {
@@ -33330,8 +33336,8 @@
      "props": 43964,
      "roads": 53721,
      "terrain": 671149,
-     "trees_lod0": 325396,
-     "trees_lod1": 392914,
+     "trees_lod0": 301784,
+     "trees_lod1": 383900,
      "trees_lod2": 6418
     },
     "by_category_low": {
@@ -33341,14 +33347,14 @@
      "props": 18666,
      "roads": 53721,
      "terrain": 171047,
-     "trees_lod1": 90612,
+     "trees_lod1": 85796,
      "trees_lod2": 3880
     },
     "camera": "route_s1534",
     "materials_high": 92,
     "materials_low": 92,
-    "tris_high": 1573084,
-    "tris_low": 375027
+    "tris_high": 1540458,
+    "tris_low": 370211
    },
    {
     "by_category_high": {
@@ -33359,7 +33365,7 @@
      "roads": 30298,
      "terrain": 576015,
      "trees_lod0": 460,
-     "trees_lod1": 4886,
+     "trees_lod1": 5046,
      "trees_lod2": 3904
     },
     "by_category_low": {
@@ -33375,7 +33381,7 @@
     "camera": "route_s1875",
     "materials_high": 55,
     "materials_low": 55,
-    "tris_high": 659645,
+    "tris_high": 659805,
     "tris_low": 200308
    },
    {
@@ -33386,8 +33392,8 @@
      "props": 5529,
      "roads": 17500,
      "terrain": 473584,
-     "trees_lod0": 187786,
-     "trees_lod1": 565012,
+     "trees_lod0": 192300,
+     "trees_lod1": 571750,
      "trees_lod2": 6720
     },
     "by_category_low": {
@@ -33397,14 +33403,14 @@
      "props": 1465,
      "roads": 17500,
      "terrain": 119280,
-     "trees_lod1": 80004,
+     "trees_lod1": 81870,
      "trees_lod2": 5036
     },
     "camera": "route_s2216",
     "materials_high": 43,
     "materials_low": 43,
-    "tris_high": 1266776,
-    "tris_low": 232488
+    "tris_high": 1278028,
+    "tris_low": 234354
    },
    {
     "by_category_high": {
@@ -33414,8 +33420,8 @@
      "props": 436,
      "roads": 6927,
      "terrain": 270336,
-     "trees_lod0": 56852,
-     "trees_lod1": 88484,
+     "trees_lod0": 55146,
+     "trees_lod1": 88668,
      "trees_lod2": 3144
     },
     "by_category_low": {
@@ -33425,14 +33431,14 @@
      "props": 312,
      "roads": 6927,
      "terrain": 67584,
-     "trees_lod1": 15338,
+     "trees_lod1": 15382,
      "trees_lod2": 872
     },
     "camera": "route_s2557",
     "materials_high": 11,
     "materials_low": 11,
-    "tris_high": 427434,
-    "tris_low": 93250
+    "tris_high": 425912,
+    "tris_low": 93294
    }
   ],
   "lod_policy": {

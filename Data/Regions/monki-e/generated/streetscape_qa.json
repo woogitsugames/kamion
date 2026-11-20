@@ -157,6 +157,7 @@
    "embankment": 0,
    "median": 0,
    "no_guardrail": 0,
+   "pavement_cut_segments": 0,
    "pier": 0,
    "structure": 0
   },
@@ -566,6 +567,11 @@
    "tyre_scrub_tracks": 0,
    "yard_drains": 15,
    "yard_trailers": 26
+  },
+  "limit_signs": {
+   "placed": {},
+   "rule": "ADR 0307: B-16 / B-18 15 m before a bridge / tunnel with maxheight / maxweight in roads.graph.json",
+   "structures": []
   },
   "megascans": {
    "added_drainage_triangles": 332,
@@ -44151,8 +44157,8 @@
      "props": 21253,
      "roads": 171247,
      "terrain": 297252,
-     "trees_lod0": 33844,
-     "trees_lod1": 47992,
+     "trees_lod0": 33390,
+     "trees_lod1": 46602,
      "trees_lod2": 1172
     },
     "by_category_low": {
@@ -44161,14 +44167,14 @@
      "props": 5036,
      "roads": 171247,
      "terrain": 77997,
-     "trees_lod1": 9750,
+     "trees_lod1": 10308,
      "trees_lod2": 242
     },
     "camera": "route_s0049",
     "materials_high": 98,
     "materials_low": 98,
-    "tris_high": 1290685,
-    "tris_low": 366863
+    "tris_high": 1288841,
+    "tris_low": 367421
    },
    {
     "by_category_high": {
@@ -44203,7 +44209,7 @@
      "props": 19895,
      "roads": 157362,
      "terrain": 398628,
-     "trees_lod0": 20906,
+     "trees_lod0": 22540,
      "trees_lod2": 1330
     },
     "by_category_low": {
@@ -44213,14 +44219,14 @@
      "props": 5987,
      "roads": 157362,
      "terrain": 104896,
-     "trees_lod1": 4572,
+     "trees_lod1": 5326,
      "trees_lod2": 58
     },
     "camera": "route_s0244",
     "materials_high": 94,
     "materials_low": 94,
-    "tris_high": 1285382,
-    "tris_low": 366926
+    "tris_high": 1287016,
+    "tris_low": 367680
    }
   ],
   "lod_policy": {

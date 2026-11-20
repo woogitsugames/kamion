@@ -7063,47 +7063,47 @@
  ],
  "far_field": {
   "High": {
-   "bytes": 4084776,
+   "bytes": 9695964,
    "file": "Data/raw/derived/monki-e/world/far_field.glb",
    "sectors": {
     "far_east": {
      "by_material": {
-      "far_field_buildings": 2379,
-      "forest_edge_mixed": 4750
+      "far_field_buildings": 13750,
+      "forest_edge_mixed": 4720
      },
      "submeshes": 2,
-     "triangles": 7129,
-     "vertices": 10399
+     "triangles": 18470,
+     "vertices": 32888
     },
     "far_north": {
      "by_material": {
-      "far_field_buildings": 4221,
-      "forest_edge_mixed": 10028
+      "far_field_buildings": 18984,
+      "forest_edge_mixed": 10056
      },
      "submeshes": 2,
-     "triangles": 14249,
-     "vertices": 19901
+     "triangles": 29040,
+     "vertices": 49170
     },
     "far_south": {
      "by_material": {
-      "far_field_buildings": 9610,
-      "forest_edge_mixed": 3016
+      "far_field_buildings": 32092,
+      "forest_edge_mixed": 3042
      },
      "submeshes": 2,
-     "triangles": 12626,
-     "vertices": 23522
+     "triangles": 35134,
+     "vertices": 67660
     },
     "far_west": {
      "by_material": {
-      "far_field_buildings": 11391,
-      "forest_edge_mixed": 9554
+      "far_field_buildings": 18865,
+      "forest_edge_mixed": 9512
      },
      "submeshes": 2,
-     "triangles": 20945,
-     "vertices": 34215
+     "triangles": 28377,
+     "vertices": 48221
     }
    },
-   "sha256": "2c6fae082ac1a56dff730a48f202b8fa34c6dca8d5babdf6eab62adca105a127",
+   "sha256": "da1eff5b41646987dbc413c1ffa48b46efad304d4c2ea194c2a5087150131596",
    "skyline": {
     "landmark_stack_proxies": [],
     "min_building_h_m": 24.0,
@@ -7112,51 +7112,51 @@
     "submeshes": 0,
     "triangles": 0
    },
-   "total_triangles": 54949,
-   "total_vertices": 88037
+   "total_triangles": 111021,
+   "total_vertices": 197939
   },
   "Low": {
-   "bytes": 889968,
+   "bytes": 4107772,
    "file": "Data/raw/derived/monki-e/world/far_field.low.glb",
    "sectors": {
     "far_east": {
      "by_material": {
-      "far_field_buildings": 644,
-      "forest_edge_mixed": 982
+      "far_field_buildings": 7319,
+      "forest_edge_mixed": 984
      },
      "submeshes": 2,
-     "triangles": 1626,
-     "vertices": 2680
+     "triangles": 8303,
+     "vertices": 15911
     },
     "far_north": {
      "by_material": {
-      "far_field_buildings": 1025,
-      "forest_edge_mixed": 2268
+      "far_field_buildings": 8666,
+      "forest_edge_mixed": 2266
      },
      "submeshes": 2,
-     "triangles": 3293,
-     "vertices": 5103
+     "triangles": 10932,
+     "vertices": 20232
     },
     "far_south": {
      "by_material": {
-      "far_field_buildings": 3397,
-      "forest_edge_mixed": 612
+      "far_field_buildings": 21051,
+      "forest_edge_mixed": 630
      },
      "submeshes": 2,
-     "triangles": 4009,
-     "vertices": 8031
+     "triangles": 21681,
+     "vertices": 42931
     },
     "far_west": {
      "by_material": {
-      "far_field_buildings": 2877,
-      "forest_edge_mixed": 2168
+      "far_field_buildings": 12621,
+      "forest_edge_mixed": 2154
      },
      "submeshes": 2,
-     "triangles": 5045,
-     "vertices": 8757
+     "triangles": 14775,
+     "vertices": 27941
     }
    },
-   "sha256": "99d3dd64e8d8e140da826c05616d34a2870969abd8afa99729b609046e9784e2",
+   "sha256": "30fcdb05c6e5022aa449d048bc8a4754f81924cdaeda466a6a19fa8d1ee2ebd4",
    "skyline": {
     "landmark_stack_proxies": [],
     "min_building_h_m": 24.0,
@@ -7165,8 +7165,8 @@
     "submeshes": 0,
     "triangles": 0
    },
-   "total_triangles": 13973,
-   "total_vertices": 24571
+   "total_triangles": 55691,
+   "total_vertices": 107015
   }
  },
  "generator": "world-c/1",
@@ -8946,6 +8946,21 @@
    ],
    "texture": "fence_mesh"
   },
+  "fieldstone_plinth": {
+   "color": [
+    0.235,
+    0.225,
+    0.205
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "fieldstone",
+   "tint_linear": true
+  },
   "fire_station": {
    "color": [
     0.181,
@@ -9619,6 +9634,40 @@
     0.2
    ],
    "rough": 0.25
+  },
+  "log_wall_raw": {
+   "color": [
+    0.33,
+    0.21,
+    0.115
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "set_tile_m": [
+    4.6,
+    2.55
+   ],
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "log_whitewash",
+   "tint_linear": true
+  },
+  "log_wall_white": {
+   "color": [
+    0.6,
+    0.595,
+    0.565
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "log_whitewash",
+   "tint_linear": true
   },
   "luminaire_housing": {
    "color": [
@@ -10848,6 +10897,21 @@
    "texture_set": "trapezoid_sheet",
    "tint_linear": true
   },
+  "roof_shingles_grey": {
+   "color": [
+    0.17,
+    0.168,
+    0.16
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "wood_shingles",
+   "tint_linear": true
+  },
   "roof_tiles_brown": {
    "color": [
     0.11,
@@ -10865,6 +10929,25 @@
     0.0
    ],
    "texture_set": "roof_tiles",
+   "tint_linear": true
+  },
+  "roof_tiles_old": {
+   "color": [
+    0.145,
+    0.047,
+    0.021
+   ],
+   "macro": [
+    9.0,
+    0.1
+   ],
+   "rough": 0.85,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "roof_tiles_old",
    "tint_linear": true
   },
   "roof_tiles_red": {
@@ -11682,6 +11765,56 @@
    ],
    "texture_set": "wood_siding",
    "tint_linear": true
+  },
+  "wood_planks_stain": {
+   "color": [
+    0.125,
+    0.055,
+    0.026
+   ],
+   "rough": 0.8,
+   "set_tile": true,
+   "set_tile_m": [
+    6.0,
+    2.6
+   ],
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "wood_siding",
+   "tint_linear": true
+  },
+  "wood_planks_white": {
+   "color": [
+    0.6,
+    0.595,
+    0.565
+   ],
+   "rough": 0.8,
+   "set_tile": true,
+   "set_tile_m": [
+    6.0,
+    2.6
+   ],
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "boards_painted",
+   "tint_linear": true
+  },
+  "wood_trim_brown": {
+   "color": [
+    0.05,
+    0.027,
+    0.017
+   ],
+   "rough": 0.6,
+   "sky_occ": [
+    0.5,
+    0.0
+   ]
   },
   "wood_trim_white": {
    "color": [
