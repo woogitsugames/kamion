@@ -3022,7 +3022,9 @@
    ],
    "length_m": 303.1,
    "max_grade": 0.0108,
-   "overrides": [],
+   "overrides": [
+    "look-dom-klattow-koscielna-footway"
+   ],
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 1.0,
    "width_m": [
@@ -3202,7 +3204,7 @@
    "patches": 226
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 472389,
+  "footprint_nodes": 472561,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3544,6 +3546,12 @@
     ]
    },
    {
+    "id": "look-dom-klattow-koscielna-footway",
+    "targets": [
+     "w98072526:1134839334-1134842485"
+    ]
+   },
+   {
     "id": "dk65-obozowa-south-unlit-0216",
     "targets": [
      "w286990127:1134813637-4898926854",
@@ -3600,7 +3608,7 @@
   },
   "verge_strips": {
    "chunks": 39,
-   "tris": 27536
+   "tris": 27510
   },
   "walled_ramps": []
  }

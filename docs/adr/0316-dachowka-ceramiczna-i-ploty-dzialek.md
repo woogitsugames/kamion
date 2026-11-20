@@ -69,26 +69,43 @@ esówka — dokładnie jeden wałek (grzbiet w osi gąsiora, „oczka” zestawu
 
 ## Budżet (przed → po)
 
-Stan na rundy t1 / t2 (same tekstury); geometria, materiały w kaflach i kamery — **do uzupełnienia po rundzie r1**
-(`artifacts/roof-tiles-s24/budget.py r1` → `budget-r1.json`).
+Runda r1 (build_world knyszyn + tykocin, import High, edytor, High clear 1920 × 1080; `artifacts/roof-tiles-s24/budget-r1.json`).
+„Przed” = świat sprzed scalenia road-widen (D94), więc trójkąty warstw dróg / działek zawierają też tamtą zmianę; drawy od niej
+nie zależą (te same materiały).
 
-- Geometria: bez nowych trójkątów (gąsior ten sam, zmienia się tylko UV; przęsła płotów te same quady).
-- Materiały: +1 materiał LOD0 w kaflu, w którym reguła wybierze karpiówkę (`roof_karp_red`; LOD1 = `roof_tiles_red`),
-  +1 LOD0 i LOD1 tam, gdzie dom drewniany dostanie `roof_tiles_old`; płoty: 0 (ten sam materiał `plot_kit`, ten sam atlas 2048²).
-- Pamięć tekstur (szacunek ASTC z mipami z `materials_spec.json`, tier High): `roof_tiles` 512² → 1024², `roof_tiles_old`
-  bez zmiany rozdzielczości, nowe `roof_karpiowka` i `roof_zakladkowa` 1024², `roof_metal_tile` 512² = dawny `roof_tiles`.
-  Liczby w `budget-r1.json` (`roof_sets_gpu_bytes_*`). Atlas `plot_kit.png`: ten sam rozmiar 2048².
+| kamera | draws | cień draws | tris |
+|---|---|---|---|
+| knyszyn look-dom-klattow-street | 556 → 562 (+6) | 231 → 237 | 1 495 926 → 1 494 635 |
+| knyszyn look-roofs-above | 542 → 548 (+6) | 225 → 231 | 1 618 590 → 1 616 863 |
+| knyszyn gardens-tykocka-eye | 725 → 730 (+5) | 141 → 144 | 1 538 467 → 1 535 523 |
+| knyszyn tykocka-into-town | 746 → 750 (+4) | 162 → 165 | 1 410 513 → 1 407 918 |
+| knyszyn look-wooden-house-brown | 491 → 497 (+6) | 180 → 189 | 1 506 486 → 1 504 748 |
+| tykocin look-tykocin-roofs-above | 309 → 311 (+2) | 336 → 348 | 914 027 → 912 990 |
+| tykocin look-tykocin-rynek-s | 418 → 423 (+5) | 318 → 324 | 1 193 695 → 1 191 880 |
+| tykocin look-tykocin-zlota | 332 → 335 (+3) | 204 → 210 | 1 035 051 → 1 034 207 |
+
+- Drawy: +0 … +7 na 13 kamerach (≤ +1,7 %), cień +3 … +12 — to `roof_karp_red` (LOD0) i `roof_tiles_old` w kaflach.
+  Wszystkie kamery ≤ 750 draws i ≤ 1,62 mln tris (hipoteza docs/06 §6 High: 700–1000 / 1,5–2 mln).
+- Kafel knyszyn: budynki LOD0 673 066 → 672 948, LOD1 110 065 → 110 051 (bez nowej geometrii; różnica = road-widen);
+  materiały w kaflach (suma po 64) 1 513 → 1 533, maks. 73 → 74; `roof_karp_red` w 19 kaflach, `roof_tiles_old` 1 → 3.
+  Tykocin: 1 360 → 1 379, maks. 67 → 68; `roof_karp_red` w 16 kaflach, `roof_tiles_old` w 1.
+- Płoty: 0 drawów, 0 trójkątów, ten sam atlas 2048² (kafle z `plot_kit`: 32 → 32, 27 → 27).
+- Pamięć tekstur (szacunek ASTC z mipami wg `materials_spec.json`, tier High): zestawy dachów 3,11 MB → 10,58 MB
+  (+7,47 MB: `roof_tiles` 0,62 → 2,49 MB, nowe `roof_karpiowka` i `roof_zakladkowa` po 2,49 MB, `roof_metal_tile` 0,62 MB);
+  raport importu knyszyn `pbr_textures_gpu_bytes_astc` 232,97 MB → 240,44 MB. Medium +1,46 MB, Low +0,26 MB.
 
 ## Wyniki
 
-- Baseline (High clear, edytor; świat sprzed scalenia road-widen): `artifacts/roof-tiles-s24/before/`.
-- t1 / t2 (same tekstury na świecie baseline, 2026-11-20): `artifacts/roof-tiles-s24/sbs/crop-klattow-roof-t1.jpg`, `-t2.jpg`
-  (przed / po / zdjęcie klattow-01), `crop-above-k-t1.jpg`, `crop-above-t-t1.jpg`, `crop-into-town-t1.jpg`. Szachownica
-  płaskich prostokątów znikła; widać wałki, ciemne łuki pod krawędziami, ton w plamach. Po t1 stara esówka dostała łaty
-  zwietrzałe, więcej ciemnych i jasnych dachówek, miększy cień rzędu i kafel 4,2 m.
-- Testy: `tests/gis/test_roof_tiles_0316.py` (nowy) + pliki dotknięte — patrz STATUS; EditMode Win64 1485 / 1383 passed /
-  1 failed (`RegionSelectTests` routeLengthM kafla C — stan origin/main po road-widen, poza gałęzią).
-- r1 (build_world knyszyn + tykocin: karpiówka, zakładkowa, gąsiory, płoty): **do uzupełnienia**.
+- Baseline: `artifacts/roof-tiles-s24/before/`; rundy tekstur t1–t4 (świat baseline) i runda r1 (pełna przebudowa):
+  `artifacts/roof-tiles-s24/sbs/` — `klattow-street-vs-photo01-r1.jpg`, `crop-klattow-roof-t1/-t2/-r1.jpg`, `crop-above-k-r1.jpg`,
+  `crop-above-t-r1.jpg`, `crop-wooden-r1.jpg`, `crop-gardens-r1.jpg`, `crop-zlota-r1.jpg`, `sheet-karp-t4.jpg`, `sheet-knyszyn-t3.jpg`.
+- Dachy: szachownica płaskich prostokątów znikła; widać wałki, ciemne łuki pod krawędziami, ton w plamach; z 30–150 m bez mory.
+  Dom Klattów obok zdjęcia 01: plamista stara esówka; zdjęcie ma nadal mocniejszy rysunek wałków (słońce z boku) i więcej
+  drobnych ciemnych punktów.
+- Płoty: działka Klattów — brązowe sztachety `picket_wood` bez oliwkowych; w kadrach r1 widać `picket_wood` przy domu
+  drewnianym, siatkę ocynkowaną i zieloną. `picket_paint` (malowane) nie trafił w żaden kadr kontrolny — sprawdzony tylko
+  testem i w podglądzie atlasu.
+- Testy: patrz STATUS (pytest dotkniętych plików, EditMode Win64 1485 / 1383 passed / 1 failed poza gałęzią).
 
 ## Otwarte
 
