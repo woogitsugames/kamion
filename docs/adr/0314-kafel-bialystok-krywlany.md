@@ -31,6 +31,9 @@ na zachód do kafla 4, który nie istniał; trasa Dojlid zaczyna się na ich W k
    tam sąsiada): serwisowe 211179100 × 251389617 i Sławińskiego 257258194 × 271890047 (ulica wchodzi jednym węzłem do
    kafla i wychodzi 16 m dalej obok skrzyżowania z primary 251388401). Usunięte z grafu: 251389617, 271890047 (żadna na
    trasie). Po przebudowie: 0 par NOT CUT.
+6. **`world_edge.authored.json`** (mechanizm ADR 0295): zamknięcie wjazdu Ciołkowskiego (szew z Dojlidami) 50 m od
+   krawędzi zamiast 60 m — przy skośnym przecięciu krawędzi rząd stał 67,4 m po trasie i start katalogu 90 m był 2,4 m za
+   blisko (EditMode StartClearanceTests r2). Przy streamingu zamknięcie i tak otwiera wczytany kafel Dojlid.
 
 ## Zmierzone
 - Ingest 2026-11-20: 8 plików, 339 074 329 B (NMT 2025 ×4, ORTO 2024 ×4); BDOT/LoD 2061 już na dysku.
