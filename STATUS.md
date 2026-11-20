@@ -98,3 +98,8 @@
   (szwy, K1, przekroje wiejskie, ronda) liczone z GAMEPLAY 0,25. `tests/gis/conftest.py` uruchamia teraz suite przy
   `GAMEPLAY_LANE_WIDEN_M = 0` (geometria zmierzona; testy D94 ustawiają 0,25). Powtórka 64: `pyfail.ps1` → `pytest-fail2.log`.
   r7 (C) i r8 (knyszyn, narożniki 16 m) czekają na slot heavy.
+- 20.11 09:1x: r7 C (podłoga BDOT zaliczana do D94): fidelity wyspy 1 (= main), edge p95 1,63; consistency lane_blind 45,
+  marking_off 6, obstacle 3, na trasie 3 (gorzej niż r6: 44/3/2/2 przy wyspach 3) — do decyzji lidera, który wariant.
+  r8 knyszyn (narożniki 16 m) gotowy: import + VQA `after3` i combo knyszyn w toku. pytest powtórka 64 → 15 failed: kafle
+  przebudowane w worktree vs sąsiedzi nieprzebudowani (szwy, łącznik jeroniki), katalog (fala), zebra/ściany/most C;
+  test Monki zamieniony na „bez swingu, 0 poza nawierzchnią”.
