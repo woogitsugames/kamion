@@ -1,4 +1,29 @@
-# STATUS road-widen-s24 (D94, ADR 0306)
+# STATUS road-widen-s24 — zadanie zakończone (20.11.2026, G3)
+
+- Właściwa poprawka D94 wdrożona i wypchnięta: wybór strony z geometrii najbliższych równoległych dróg,
+  zachowany cały median przeciwbieżnych oneway, wspólny budżet pozostałych szczelin, mniejszy wzrost przy braku miejsca.
+  Parking: lokalne narożniki/dwa T oraz legalny cel próbkowania QA. Pomiar DK8 dotyczy wyłącznie placement-a.
+- C przed→po: phantom przy trasie1→0; marking6→2; obstacle3→2; blind na trasie3→1; blind kafla45→32.
+  Wszystkie pięć celów właściciela spełnione. W całym kadrze DK8 pozostaje1absent poza trasą (27,1m).
+- Knyszyn DK65→DW671:0/5/0→0/5/0, swing0/0/0; DK65→DK65W:0/0/0→0/0/0 (opp/kerb/off).
+  road_consistency Knyszyn G2b7blind/6obstacle/1route→G3 3/5/0.
+- Fidelity edgep95 1.625→2.032m (pogorszenie, w istniejącym ratchecie2.36m), axisp95 .044→.044m.
+  C combo0/17/4 bez swing, linkAndersa0/0/0. Off4: rondo Bieżeństwa; kerb6 tam i11 na rampieDK8.
+  Rynek Knyszyn nadal opposite30/35 (swing1/2 +kerb40/39). CLI comboC=1/Knyszyn=1; brak globalnegoPASS.
+- Pełna przebudowa C+Knyszyn, export-route, fidelity, route_links: exit0. Trzy wymagane moduły pytest:
+  **54passed,1xfailed w58.87s**; istniejący xfail krawędźp95≤.75m. Ratchety/klasyfikatory bez zmian.
+- Źródło c06c16ea2, QA/trasy/nav C+Knyszyn ea11ceaf6. Wszystkie kroki commitowane i pushowane na road-widen-s24.
+  ADR0306 Accepted; niezależna recenzja w docs/reports/visual/2026-11-20-road-widen-geometry.md.
+- Wyłącznie ten worktree; bez Unity. Brak procesów zadania w tle, heavy lease zwolniony.
+  Zastane wygenerowane pliki pozostałych kafli i pomocnicze world manifests/art-source pozostają robocze;
+  nie cofano ani nie stage'owano ich. Globalne route_links przeliczono do QA, pozostaje robocze do fali w main.
+- NASTĘPNY KROK w tym zadaniu: brak. Po scaleniu lider przebudowuje inne kafle/globalne linki i katalog;
+  tej fali oraz znanych przypadków Bieżeństwa/rampy/Rynku nie objęto zleceniem. Komendy odtworzenia poniżej.
+- Dowody lokalne: artifacts/road-widen-s24/{rebuild-g3,combo-g3-c,combo-g3-knyszyn,pytest-g3}.log,
+  validate-g3.status, after/geometry-g3-{c,knyszyn}.json, after/g3-knyszyn-swing.png;
+  świeży artifacts/fidelity-r9/overlays/11_dk8.jpg. Raporty liczbowe C/Knyszyn zapisane w gicie.
+
+## Historia prac (poniższe NASTĘPNE KROKI są historyczne)
 
 - Krok 1: `standards.GAMEPLAY_LANE_WIDEN_M = 0.25` (GAMEPLAY_WIDEN, nie pomiar), `network.gameplay_widen` po wszystkich
   overrides w `network.load`; `compact_roundabout.specs`: `lane_w_m` + delta. maczka: każda sekcja +0,25 m/pas (dev 0,0).

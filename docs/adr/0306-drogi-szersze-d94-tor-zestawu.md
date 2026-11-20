@@ -1,6 +1,6 @@
 # ADR 0306 — D94: szersze pasy, ochrona separatorów i tor zestawu 16,5 m
 
-Status: Proposed — końcowa walidacja G3 w toku, 2026-11-20. Decyzja właściciela **D94** (docs/11).
+Status: Accepted — decyzja właściciela i pełna walidacja G3, 2026-11-20. Decyzja właściciela **D94** (docs/11).
 Gałąź road-widen-s24. Powiązane: ADR 0301 (baza pomiarowa), 0095/0077 (położenie i lane_edges),
 0233 (lane_follow), 0218/0274/0280/0289 (rondo i tor naczepy), 0300 (route_obstacles).
 
@@ -63,8 +63,9 @@ prawdziwy krawężnik wewnątrz przejazdu nadal jest wykrywany. Odrzucony protot
 
 ## Walidacja G3
 
-Zakończone build_world + export-route C i Knyszyn, fidelity C i road_consistency.
-W toku route_links, combo_lane_check C/Knyszyn i trzy wymagane moduły pytest. Kod c06c16ea2. Bez edytora Unity.
+Zakończone build_world + export-route C i Knyszyn, fidelity C, road_consistency, route_links,
+combo_lane_check C/Knyszyn i trzy wymagane moduły pytest. Kod c06c16ea2, raporty/trasy ea11ceaf6.
+Przebudowa w tle exit0; pytest **54 passed, 1 xfailed (58,87 s)**. Bez edytora Unity.
 Niezależna recenzja offline: docs/reports/visual/2026-11-20-road-widen-geometry.md.
 
 | C | przed (r7) | G3 | cel |
@@ -78,12 +79,10 @@ Niezależna recenzja offline: docs/reports/visual/2026-11-20-road-widen-geometry
 G3 fidelity: oś p95 0,044→0,044 m; krawędź p95 1,625→2,032 m (pogorszenie, nadal poniżej istniejącego ratchetu2,36 m).
 Knyszyn road_consistency: G2b blind7/obstacle6/trasa1→G3 3/5/0.
 
-G2b przed korektą QA/dystansu: wyspy0, marking0, obstacle2, blind41, trasa2;
-43passed/1failed/1xfailed. Jedyna porażka: nieistniejący cel krótkiego ramienia opisany wyżej.
 Referencja/progi fidelity bez zmian. Mały komponent N120 około27 m od trasy jest poza istniejącym pasmem
 raportowania przy trasie; nie dodano wyjątku.
 
-| Knyszyn opposite/kerb/off_hard | r8 | G2b |
+| Knyszyn opposite/kerb/off_hard | przed zadaniem (r8) | G3 |
 |---|---|---|
 | DK65→DW671 W, środek pasa |0/5/0|0/5/0|
 | DK65→DW671 W, swing w swoim pasie |0/0/0|0/0/0|
@@ -94,8 +93,18 @@ Historycznie przed D94: DK65→DW671 W0/23/5, DK65→DK65 W0/16/0. Player r8 pop
 To dowód historyczny, nie przejazd po G3. Tykocin opposite109→7 (swing0), Kleeberga/dk65-05/knyszyn-s/w0/0/0
 również pochodzą z wcześniejszych przebudów.
 
+Combo C: unikalny route+link:c-dk8-to-maczka **0/17/4** (bez swing), c-andersa-to-wygoda0/0/0.
+Pozostałe4 off_hard są przy rondzie Bieżeństwa E560,5/N-689; kerb6 tamże i11 przy rampie DK8 E-596/N73,8.
+Nie dotyczą naprawianej wyspy/parkingu. Knyszyn Rynek→DW671/DK65W: opposite30/35, kerb0, off0;
+ze swingiem opposite1/2 i kerb40/39. Dlatego CLI combo zwraca1 dla obu kafli: to nie jest globalny PASS.
+Dwa wymagane przejazdy ronda zachowują wynik r8. Rzut aktualnych gotowych siatek i kół:
+artifacts/road-widen-s24/after/g3-knyszyn-swing.png; na rondzie koła korzystają z dozwolonego fartucha.
+
 ## Testy i konsekwencje
 
+Wymagane polecenie zakończone kodem0:
+`uv run --project tools/worldgen python -m pytest -q tests/gis/test_road_fidelity.py tests/gis/test_road_consistency.py tests/gis/test_road_widen_0306.py`.
+Jedyny istniejący xfail: docelowa krawędź p95≤0,75m. Nie podniesiono ratchetów ani nie dodano xfail/skip.
 Testy przekrojów mierzonych: GAMEPLAY=0 przez tests/gis/conftest.py; test_road_widen_0306 ustawia0,25.
 Regresje: kierunek, dwukierunkowy parking, oba boki zajęte, warstwy, lokalne profile, wspólny budżet,
 median20 m, najbliższy sąsiad przed dalszym przeciwnym, odległa droga z nakładającą obwiednią,

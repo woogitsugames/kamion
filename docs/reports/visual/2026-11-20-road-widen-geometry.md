@@ -1,4 +1,4 @@
-# Kontrola geometrii D94 — G1/G2, 2026-11-20
+# Kontrola geometrii D94 — G1–G3, 2026-11-20
 
 Niezależny przegląd wg `.claude/skills/visual-qa/SKILL.md`, krok 5. Zakres: plan geometrii na ortofoto GUGiK HR;
 bez Unity, zgodnie z poleceniem właściciela. Materiały, oświetlenie, wysokości i gotowe siatki krawężników nie są oceniane.
@@ -196,3 +196,33 @@ zgodny z pozostałym przypadkiem poza trasą. Nie deklaruje się perfekcyjnej zg
 
 To zamyka niezależny przegląd raportowanych celów C (road_consistency i wyspy przy trasie), z powyższymi ograniczeniami.
 Nie deklaruje się jeszcze PASS combo/ronda Knyszyn — końcowy wynik oczekuje.
+
+## Końcowy werdykt zakresowy G3
+
+Niezależnie odczytano `after/geometry-g3-knyszyn.json`, `after/geometry-g3-c.json`, `validate-g3.status` i
+`pytest-g3.log`. Obejrzano świeży rzut gotowych siatek `after/g3-knyszyn-swing.png` (centrum E -980 / N -620,
+półrozmiar 70 m). Kolory śladów pokazują opony na jezdni i dozwolonym fartuchu; w tych dwóch torach ze swingiem
+nie ma oznaczonych kontaktów z krawężnikiem, przeciwnym pasem ani terenem poza nawierzchnią.
+
+**PASS wymaganego zachowania dwóch kontroli Knyszyna:**
+
+| Piece | oś na środku pasa: opposite / kerb / off_hard | swing |
+|---|---|---|
+| `link:knyszyn-dk65-to-dw671-w` w korytarzu bialystok-tykocin | 0 / 5 / 0 | 0 / 0 / 0 |
+| `link:knyszyn-dk65-to-dk65-w` | 0 / 0 / 0 | niepotrzebny |
+
+Fartuch pozostaje używany zgodnie z projektem: pierwszy tor ze swingiem ma 92 punkty apron, drugi 20.
+Wyniki dwóch wymaganych kontroli zachowano. Razem z uprzednio potwierdzonym C (wyspy przy trasie 0, marking 2,
+obstacle 2, blind 32, przy trasie 1) daje to **PASS zleconych liczbowych celów G3**, z ograniczeniami opisanymi wyżej.
+Pytest trzech wymaganych plików: **54 passed, 1 xfailed, 58,87 s**, kod 0.
+
+**Nie ma globalnego combo PASS.** Oba polecenia combo zakończyły się kodem 1:
+
+- C `route+link:c-dk8-to-maczka`: 0 / 17 / 4, w tym Bieżeństwa E 560,5 / N -689 i rampa DK8 E -596 / N 73,8.
+  Dwa korytarze współdzielą ten sam piece; ich sumy nie oznaczają dwóch niezależnych zestawów problemów.
+  `link:c-andersa-to-wygoda` ma 0 / 0 / 0.
+- Dwa łączniki z Rynku mają 30 / 35 punktów opposite bez swingu. Ze swingiem nadal 1 / 2 opposite oraz 40 / 39 kerb.
+  Są poza dwoma wymaganymi kontrolami ronda i pozostają otwarte.
+
+Nie uruchamiano Unity ani nowych ciężkich procesów w ramach niezależnego przeglądu. Werdykt nie obejmuje pełnego
+renderingu gry, globalnej wierności wszystkich separatorów ani bezkolizyjnego toru zestawu na każdej trasie.
