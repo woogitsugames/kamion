@@ -1,0 +1,45 @@
+{
+ "by_source": {
+  "skirt:j:road_gravel": 1
+ },
+ "count": 1,
+ "max_m": 0.352,
+ "p99_m": 0.352,
+ "skirt_area": [
+  {
+   "e": -968.6,
+   "exposed_m2": 0.408,
+   "mat": "road_gravel",
+   "max_h": 0.352,
+   "n": 684.9,
+   "points": 1,
+   "run_m": 2.673,
+   "src": "j:n2578783861",
+   "visible": true
+  }
+ ],
+ "sliver_m2": 0.02,
+ "thin_steep_faces_skipped": 33,
+ "thresh_m": 0.15,
+ "verge_strips": {
+  "max_m": 0.842,
+  "skirt": 0,
+  "steep_grass": 74,
+  "worst": [
+   "steep_grass",
+   "j:n12754228476:corner0:vg",
+   -452.2,
+   284.4
+  ]
+ },
+ "worst": [
+  {
+   "e": -968.6,
+   "h": 0.352,
+   "kind": "skirt",
+   "mat": "road_gravel",
+   "n": 684.9,
+   "src": "j:n2578783861"
+  }
+ ]
+}
