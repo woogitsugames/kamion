@@ -129,6 +129,19 @@ def measured_widths(monkeypatch):
 
 
 
+@pytest.fixture(scope="session", autouse=True)
+def gis_session_cross_sections():
+    """Keep session network fixtures (piers/world) in their measured baseline.
+
+    Pytest builds session fixtures before module fixtures. Generated-world modules
+    override this baseline below, after their session dependencies are ready.
+    """
+    from roads import standards as S
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(S, "GAMEPLAY_LANE_WIDEN_M", 0.0)
+        yield
+
+
 @pytest.fixture(scope="module", autouse=True)
 def gis_cross_sections(request):
     """Measured geometry by default; generated_world modules use the generator's D94.

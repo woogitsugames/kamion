@@ -1,9 +1,10 @@
 # qa-d94-cli — stan
 
-Konfiguracja przekrojów GIS per moduł; linki używają D94 generatora, pomiary nadal 0. Referencje K1/0212 przesuwane o 2 × GAMEPLAY_LANE_WIDEN_M.
-Regresje obu rzeczywistych szwów: 2 passed. Progi referencji: 12 passed. QA: brak urwań, 4 FAIL osi po 0,25 m pozostają jawne.
-W toku pełny pytest; dodatkowo fidelity/consistency: 16 passed, 1 xfailed, 1 istniejący stale report FAIL.
-NASTĘPNY KROK: `Get-Content artifacts/qa-d94-cli/pytest.log -Tail 60`
+Testy tras: D94 generatora per moduł; pomiary i fixture sesyjne nadal 0. Kontrola kolejności fixture i zakresów: 13 passed.
+Regresje rzeczywistych szwów: 2 passed. QA DK65: 30/30 referencji OK. QA zgłoszonych szwów: brak urwań, 4 FAIL osi po 0,25 m pozostają jawne.
+Pierwszy pytest: 94 passed/3 skipped/2 failed; oba błędy testów poprawione. Końcowe powtórzenie bez niezmienionego test_links_json_fresh (PASS w pierwszym przebiegu) w toku.
+Dodatkowo fidelity/consistency: 16 passed, 1 xfailed, 1 istniejący stale report FAIL.
+NASTĘPNY KROK: `Get-Content artifacts/qa-d94-cli/pytest-final.log -Tail 60`
 Raport: docs/reports/qa-d94-cli.md. Bez Unity, przebudów kafli i push; wszystkie zapisy w worktree.
 
 ---

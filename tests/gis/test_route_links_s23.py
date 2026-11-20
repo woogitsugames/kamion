@@ -29,8 +29,15 @@ def _graph():
     return json.loads(TG.OUT.read_text(encoding="utf-8"))
 
 
-def test_links_use_generator_cross_sections():
+@pytest.fixture(scope="session")
+def measured_session_allowance():
     from roads import standards as S
+    return S.GAMEPLAY_LANE_WIDEN_M
+
+
+def test_links_use_generator_cross_sections(measured_session_allowance):
+    from roads import standards as S
+    assert measured_session_allowance == 0.0
     assert S.GAMEPLAY_LANE_WIDEN_M == S.GAMEPLAY_LANE_WIDEN_DEFAULT_M
 
 

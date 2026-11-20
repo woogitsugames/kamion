@@ -31,9 +31,14 @@ def test_dk8_kerb_seam_matches_in_the_pass_the_generator_meshes():
     """kleeberga | knyszynska: DK8 (w261104557) beside the added lane w561326924. First pass: the 26 m chain in
     knyszynska lies inside ADJ_NODE_SKIP_M of its merge node, so its edge stays a kerb while kleeberga (no shared node)
     makes it flush -> FAIL. Second pass (junction trims known, pipeline.build) both tiles build the flush edge."""
-    tiles = ["bialystok-kleeberga", "bialystok-knyszynska"]
-    p1 = Q.run(tiles, base=None, trims=False)
-    p2 = Q.run(tiles, base=None, trims=True)
+    tiles = [Q.load_tile(t) for t in ("bialystok-kleeberga", "bialystok-knyszynska")]
+    # This regression checks the measured network (D94=0), including every side
+    # and position row. Archived D94 build widths describe different geometry;
+    # they are assessed by production QA, not this measured cross-section test.
+    for t in tiles:
+        t.roads_qa = None
+    p1 = Q.run(loaded=tiles, base=None, trims=False)
+    p2 = Q.run(loaded=tiles, base=None, trims=True)
     assert p2["sides_pass"] == 2 and p1["sides_pass"] == 1
     bad1 = [(rd["osm_way"], r["param"]) for _, rd, r in _route_rows(p1, "pobocze") if r["status"] == "FAIL"]
     bad2 = [(rd["osm_way"], r["param"]) for _, rd, r in _route_rows(p2) if r["status"] == "FAIL"]
