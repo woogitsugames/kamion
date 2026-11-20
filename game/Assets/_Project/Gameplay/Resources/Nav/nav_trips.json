@@ -49,14 +49,14 @@
      "to": "bialystok-kleeberga",
      "side": "W",
      "x": 774923.013,
-     "y": 596187.351
+     "y": 596187.366
     },
     {
      "from": "bialystok-kleeberga",
      "to": "bialystok-knyszynska",
      "side": "W",
-     "x": 772874.237,
-     "y": 595513.001
+     "x": 772874.178,
+     "y": 595513.111
     },
     {
      "from": "bialystok-knyszynska",
@@ -267,14 +267,14 @@
      "to": "bialystok-kleeberga",
      "side": "W",
      "x": 774923.013,
-     "y": 596187.351
+     "y": 596187.366
     },
     {
      "from": "bialystok-kleeberga",
      "to": "bialystok-knyszynska",
      "side": "W",
-     "x": 772874.237,
-     "y": 595513.001
+     "x": 772874.178,
+     "y": 595513.111
     },
     {
      "from": "bialystok-knyszynska",
@@ -409,28 +409,28 @@
      "to": "bialystok-kleeberga",
      "side": "W",
      "x": 774923.013,
-     "y": 596187.351
+     "y": 596187.366
     },
     {
      "from": "bialystok-kleeberga",
      "to": "bialystok-knyszynska",
      "side": "W",
-     "x": 772874.237,
-     "y": 595513.001
+     "x": 772874.178,
+     "y": 595513.111
     },
     {
      "from": "bialystok-knyszynska",
      "to": "bialystok-porosly",
      "side": "S",
-     "x": 772285.603,
-     "y": 595200.447
+     "x": 772285.546,
+     "y": 595200.558
     },
     {
      "from": "bialystok-porosly",
      "to": "dk8-s8-jeroniki",
      "side": "W",
-     "x": 770827.746,
-     "y": 594850.904
+     "x": 770827.784,
+     "y": 594851.067
     },
     {
      "from": "dk8-s8-jeroniki",
@@ -478,6 +478,50 @@
    "goalTile": "s8-05",
    "goalX": 759784.9,
    "goalY": 595199.0
+  },
+  {
+   "id": "wasilkow",
+   "label": "Wasilków (DK8)",
+   "tiles": [
+    "bialystok-industrial-c",
+    "dk8-wasilkow-01",
+    "dk8-wasilkow-02",
+    "dk8-wasilkow-03",
+    "dk8-korycin-01"
+   ],
+   "joins": [
+    {
+     "from": "bialystok-industrial-c",
+     "to": "dk8-wasilkow-01",
+     "side": "N",
+     "x": 777140.172,
+     "y": 597247.364
+    },
+    {
+     "from": "dk8-wasilkow-01",
+     "to": "dk8-wasilkow-02",
+     "side": "N",
+     "x": 777136.893,
+     "y": 599294.414
+    },
+    {
+     "from": "dk8-wasilkow-02",
+     "to": "dk8-wasilkow-03",
+     "side": "N",
+     "x": 777288.189,
+     "y": 601343.126
+    },
+    {
+     "from": "dk8-wasilkow-03",
+     "to": "dk8-korycin-01",
+     "side": "N",
+     "x": 777298.432,
+     "y": 603391.155
+    }
+   ],
+   "goalTile": "dk8-korycin-01",
+   "goalX": 776971.0,
+   "goalY": 604291.6
   }
  ]
 }
