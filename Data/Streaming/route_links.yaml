@@ -24,8 +24,8 @@ links:
     destination: tykocin
     replaces_route: knyszyn               # starts at the knyszyn route start (seam knyszyn-s | knyszyn, 760985.8, 611583)
     end_epsg2180: [760587.0, 611964.5]    # DW671 Tykocka on the knyszyn | knyszyn-w seam (graph boundary node of way 1478765548, both tiles)
-    # D95: raised W splitter; measured combo driver swing stays in the own lane.
-    # 0/17/0 -> 0/0/0, WORKING_VALUE, half-length 35 m, 0.75 m right.
+    # D95: authored connector correction around the raised W splitter, 0.75 m right, half-length 35 m.
+    # Stored in the exported path; separate from combo_lane_check's optional driver optimiser.
     swing: [{near_epsg2180: [760608.0, 611987.39], left_m: -0.75, half_m: 35.0}]
     note: "DK65 Obozowa from knyszyn-s -> roundabout DK65/DW671 -> DW671 Tykocka west to the seam with knyszyn-w"
   - id: knyszyn-dk65-to-dk65-w

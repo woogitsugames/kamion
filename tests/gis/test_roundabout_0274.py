@@ -34,6 +34,29 @@ from roads import standards as S  # noqa: E402
 import roundabout_ortho as RO  # noqa: E402
 from terrain_mesh.gltf import smooth_normals  # noqa: E402
 
+
+@pytest.mark.parametrize("link_id,max_kerb", [
+    ("knyszyn-dk65-to-dw671-w", 5),
+    ("knyszyn-dk65-to-dk65-w", 0),
+])
+def test_d95_built_exported_truck_path_without_driver_swing(link_id, max_kerb, monkeypatch):
+    """D95 gate on real GLB triangles and the shipped authored path, with the D94 lane width.
+    No driver optimiser: a stored route correction must itself keep the full combination clear.
+    """
+    import combo_lane_check as combo
+    if not combo.LS.built("knyszyn", ROOT):
+        pytest.skip("build_world --region knyszyn required for the real truck gate")
+    monkeypatch.setattr(S, "GAMEPLAY_LANE_WIDEN_M", 0.25)
+    link = next(row for row in json.loads(combo.LS.LINKS.read_text(encoding="utf-8"))["links"]
+                if row["id"] == link_id)
+    path, lead = combo.LS.link_path(link, combo.TAIL_M, 0.0, ROOT)
+    settle = 0.0 if lead > 0 else combo.Combination().L1 + combo.Combination().kp_rear
+    result = combo.evaluate("knyszyn", path, lead, combo.LaneModel("knyszyn"), keep_s0=settle, opt=False)
+    assert "swing" not in result
+    assert result["tyre_points"] > 1000, result
+    assert result["opposite"] == 0 and result["off_hard"] == 0, result
+    assert result["kerb"] <= max_kerb, result
+
 KERB = {"entry_r_m": 6.0, "exit_r_m": 8.0, "splitter_w_m": 2.4, "lane_w_m": 4.0, "crossing_offset_m": 5.0,
         "crossings": [T18.ARM_WAY, T18.ARM_WAY + 2]}
 SPLIT = {"id": "split0", "kind": "carriageway_split", "node": "s0".lstrip("n"),
