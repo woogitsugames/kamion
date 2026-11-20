@@ -8,3 +8,6 @@
 - Ingest dry-run #1: GUGiK WFS (indeks arkuszy) zerwał połączenie (RemoteDisconnected) — ponawiam. NASTĘPNY KROK: `uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-krywlany --dry-run` (log artifacts/logs/krywlany-ingest-dry2.log)
 - 2026-11-20: GUGiK WFS (mapy.geoportal.gov.pl Skorowidze) nie odpowiada (dry-run #2 ReadTimeout, curl 000 po 10 s); opendata.geoportal.gov.pl OK. Dodane ponowienia w `gugik_index.get_feature` (5×). W tle `artifacts/krywlany-s24/run/ingest-wait.sh` (sonda co 3 min do 2 h → ingest; log `artifacts/krywlany-s24/run/ingest.log`, koniec = linia INGEST_EXIT).
 - NASTĘPNY KROK (po INGEST_EXIT=0): `uv run tools/worldgen/build_region.py --region bialystok-krywlany`
+- Ingest OK (8 plików, 339 MB: NMT 2025 ×4, ORTO 2024 ×4; BDOT/LoD 2061 pominięte — są). build_region OK po poprawce `build_ortho` (arkusze 3-1/3-3 z WKT bez EPSG): 396 węzłów, 455 krawędzi, 700 budynków; szew z Dojlidami 6/6 węzłów, 0,0 m.
+- W tle: `pwsh -File tools/worldgen/qa/krywlany_s24.ps1 -Phase world -Context -Tag r1` (logi/exit w artifacts/krywlany-s24/run/).
+- NASTĘPNY KROK (po world-*.exit=0): `pwsh -File tools/worldgen/qa/krywlany_s24.ps1 -Phase post -Tag r1`, potem `-Phase unity`.
