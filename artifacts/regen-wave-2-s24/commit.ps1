@@ -11,6 +11,7 @@ foreach ($m in $st) {
 $new = @()
 foreach ($t in $done) {
     if (git status --porcelain -- "Data/Regions/$t") { git add -- "Data/Regions/$t"; $new += $t }
+    git add -- "game/Assets/_Project/UI/Resources/CabDisplay/Nav/${t}_route.bytes" 2>$null
 }
 $all = Get-Content artifacts/regen-wave-2-s24/queue.txt
 $left = $all | Where-Object { $done -notcontains $_ }
