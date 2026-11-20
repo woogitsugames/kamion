@@ -172,3 +172,13 @@
   Regresja: 20m median + parking blokujący zewnętrzne strony — szerokość20m ma zostać, przy braku miejsca mniej D94.
   Nie zmieniać kodu w trakcie obecnego rebuild/QA. Po nim porównać geometrię C/Knyszyn przed/po i zweryfikować finalny kod.
 - NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g2b.log -Tail 10` (C w toku, start11:17:57).
+
+- G2b C ukończony11:33: marking0/obstacle2/blind41/on_route2. Parkingowy None pozostał(-210,619/-279,636).
+  Dokładna diagnoza: outbound trim8,911m +3m=11,911 przy L10,745m; sampler klipuje środek do capu i skrajna próbka
+  wychodzi poza KONIEC istniejącej drogi. Obrys po dwóch T jest otwarty. Nie zmniejszać łuków tylko pod błędneQA.
+  Poprawny G3: ograniczyć target do max(trim,min(trim+3,L-1)); użyć jednej target_s w fan/wyborze pasa/q1/q_end/z.
+  Diagnostyka na rzeczywistym parkingu0punktówpoza; black-box C.check: krótki zakrzywionycase none→0,
+  rzeczywisty kerb nadal wykrywany; długie ramię bez zmian. Dowód: consistency_probe_fixture.py i parking-bounded-target.log.
+  Review PASS wariantuQA; nie zmieniać ratchetów, kategorii, SurfaceIndex ani nie pomijać case.
+- NASTĘPNY KROK: po zakończeniu rebuild/validate-g2b wdrożyć razem (1) ochronę całego szerokiego przeciwbieżnego medianu,
+  (2) bounded outbound sample w consistency.py + testy blocked/unblocked short/long; potem finalny rebuild C+knyszyn g3.

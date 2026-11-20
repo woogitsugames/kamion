@@ -114,3 +114,19 @@ To silniejszy dowód położenia niż dotychczasowy center-only override z `conf
 
 Rzut pokazuje bazowe 8 m, nie końcową jezdnię GAMEPLAY ani pełną geometrię sąsiadów. Ostateczne zachowanie separatora
 i usunięcie fantomowej wyspy nadal wymagają aktualnego fidelity oraz rzutu po przebudowie.
+
+## G2b — końcowy punkt próbkowania krótkiego ramienia parkingu
+
+Diagnostyka `parking-terminal-diagnostic.log` odtwarza jeden punkt poza geometrią przy celu 11,911 m na ramieniu
+o długości 10,745 m (trim 8,911 m). `Polyline` przycina centrum do końca ramienia, po czym normalna wyznaczona z
+końcowego odcinka Hermite'a wypycha skrajny punkt poza cap. Nie jest to dowód przeszkody na fizycznym przejeździe.
+
+**Właściwa jest poprawka domeny próbkowania QA (wariant B), nie zmniejszanie łuku geometrii dla arbitralnych 3 m QA.**
+Cel `max(trim, min(trim + 3, L - 1))` pozostaje w istniejącym ramieniu. W obejrzanym rzucie
+`parking-bounded-target-0.5.png` cały przejazd i skrajne próbki mieszczą się w nawierzchni; log potwierdza 0 punktów
+poza nią przy celu 9,745 m. Geometria pozostaje identyczna.
+
+To nie podnosi ratchetu, o ile implementacja zachowuje klasyfikator, progi i sprawdzenie całego przejazdu bez
+pomijania przypadków. Jedna ograniczona stacja powinna być użyta konsekwentnie dla celu, pasów i wysokości.
+Potrzebna jest regresja krótkiego ramienia, niezmienionego zwykłego ramienia i nadal wykrywanej rzeczywistej przeszkody
+wewnątrz przejazdu. Kontrola endpointu QA nie zastępuje kontroli przeszkód na pozostałej wstędze drogi.
