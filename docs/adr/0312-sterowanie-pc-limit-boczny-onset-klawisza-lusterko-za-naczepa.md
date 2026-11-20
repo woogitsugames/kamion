@@ -50,7 +50,7 @@ wyłącznie klasę II (D70).
 | stuknięcie 0,1 s, przesunięcie po 4 s, 30 / 50 / 80 km/h [m] | 0,44 / 0,70 / 0,65 | 0,22 / 0,26 / 0,26 |
 | zmiana pasa klawiaturą (model ludzki, 80 km/h): indeks PIO [°/s] / ustalenie [s] | 7,31 / 21,3 | 2,95 / 9,6 |
 | zmiana pasa padem (wzmocnienie 1,0/m, 80 km/h): indeks PIO [°/s] | 6,70 | 0,008 |
-| ostatnia oś naczepy w klasie II, przegub 25–45° | NIE (tylko klasa IV) | TAK (do 55°) |
+| ostatnia oś naczepy w klasie II, przegub 25–45° | NIE (tylko klasa IV) | TAK (do 60°, sprawdzone siatką co 5°) |
 
 Pełne tabele: `artifacts/drive-feel-s24/input-before|input-after/summary.csv`, wykresy `input-after/png/` (szare = przed).
 
