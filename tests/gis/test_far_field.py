@@ -211,3 +211,23 @@ def test_generated_far_field_skyline_budget():
         assert 0 < sky["triangles"] <= (3000 if tier == "Low" else 8000)
         assert sum(s["triangles"] for s in qa["tiers"][tier]["sectors"].values()) + sky["triangles"] == qa["tiers"][tier]["total_triangles"]
     assert len(qa["tiers"]["Low"]["skyline"]["landmark_stack_proxies"]) == 2
+
+
+def test_stand_wrapping_a_tile_corner_is_split_by_sector_0308():
+    """A forest around the NE corner went whole to the sector of its centroid (east) and stood in the north neighbour."""
+    from shapely.geometry import Polygon, Point
+    from streetscape import far_field as FF
+    half = 1024.0
+    reg = FF.sector_regions(half)
+    for e, n in ((0, 1500), (1500, 1500), (1500, 0), (1500, -1500), (0, -1500), (-1500, -1500), (-1500, 0), (-1500, 1500),
+                 (-1200, 1500)):
+        hit = [k for k, r in reg.items() if r.contains(Point(e, n))]
+        assert hit == [FF.sector_of(e, n, half)], (e, n, hit)
+    # L-shaped stand: an arm east of the tile and an arm north of it, centroid in the east sector
+    L = Polygon([(1100, -900), (1500, -900), (1500, 1400), (-600, 1400), (-600, 1150), (1100, 1150)])
+    assert FF.sector_of(L.centroid.x, L.centroid.y, half) == "far_east"
+    parts = FF.split_by_sector(L, half)
+    assert {n for n, _ in parts} == {"far_north", "far_east"}
+    assert sum(p.area for _, p in parts) == pytest.approx(L.area, rel=1e-6)
+    for name, p in parts:
+        assert reg[name].buffer(0.01).contains(p), name
