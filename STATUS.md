@@ -120,3 +120,9 @@
   Podłoga BDOT nie zastępuje D94 (powrót do szerokości r6). D94 12/12 przed dodaniem regresji lewo/prawo/brak miejsca.
   Rebuild C + knyszyn + fidelity w tle: `artifacts/road-widen-s24/rebuild-g1.log` / `rebuild-g1.status`.
 - NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g1.log -Tail 25` i pytest trzech wskazanych plików po rebuild.
+
+- G2: parking w435369082 — narożniki i nosy klasy D ograniczone do odcinka przed pierwszą zmianą kierunku >45°;
+  przycięcia 40,44 / 81,57 m → 13,15 / 13,00 m. Rzut `artifacts/road-widen-s24/parking-g1-ortho.png` obejrzany:
+  przejazd w miejscu starego blind-end jest wewnątrz asfaltu; porównanie GUGiK HR 0,08 m. Unity nie uruchamiano.
+  G1 nadal czeka na heavy slot; testy 15/15, dodatkowa regresja geometrii parkingu w toku.
+- NASTĘPNY KROK: `Get-Content artifacts/road-widen-s24/rebuild-g1.log -Tail 25`.

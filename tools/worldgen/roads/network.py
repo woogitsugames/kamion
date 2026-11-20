@@ -478,7 +478,7 @@ def gameplay_widen(net: Network, d: float, edges: dict | None = None) -> None:
                 sec.center_offset_end = round(sec.center_offset_end - sh, 3)
             if sec.center_offset_profile:
                 sec.center_offset_profile = [(t, round(v - sh, 3)) for t, v in sec.center_offset_profile]
-            sec.provenance["grow_right_m"] = round(sh, 3)
+            sec.provenance["gameplay_shift_left_m"] = round(shift, 3)
 
 
 def apply_edge_overrides(net: Network, edges, overrides):

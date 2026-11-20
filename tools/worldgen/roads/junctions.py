@@ -166,6 +166,16 @@ ISLAND_CURB_R = (2.0, 30.0)   # m, WORKING_VALUE: accepted node override `island
 def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
     arms = j.arms
     n = len(arms)
+    max_trim = dict(max_trim)
+    for i, arm in enumerate(arms):
+        if arm.cls(net.sec_list) != "D":
+            continue
+        # A service-road loop's distant bend belongs to the ribbon, not the intersection mouth. Do not find a
+        # fillet/fork or align a separator nose around that bend (C parking: trims formerly 40 and 82 metres).
+        ds = np.arange(1.0, min(LOOK, arm.L), STEP)
+        turns = np.nonzero(arm.direction(ds) @ arm.direction(0.0) < math.cos(math.radians(45)))[0]
+        if len(turns):
+            max_trim[i] = min(max_trim[i], max(S.JUNCTION_MIN_TRIM, float(ds[turns[0]]) - STEP))
     corners = []
     tau = {i: [S.JUNCTION_MIN_TRIM, S.JUNCTION_MIN_TRIM] for i in range(n)}   # [right, left]
     for k in range(n):
@@ -199,6 +209,13 @@ def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
             nose_ang = max(nose_ang, float(net.nodes[n_].get("override", {}).get("nose_max_angle", 0.0)))
         if alpha_deg < nose_ang:
             h0 = hit(0.0, 160.0)
+            if h0 is not None and A.cls(net.sec_list) == B.cls(net.sec_list) == "D":
+                # A parking loop returns beside its own entrance. A gutter crossing beyond its bend is not the
+                # end of a diverging fork: trimming to it absorbs the loop and puts the nose across the entrance.
+                # Keep the parallel separator's local nose instead (C: 40 / 82 m trims at w435369082).
+                if any(float(arm.direction(max(t, 0.0)) @ arm.direction(0.0)) < math.cos(math.radians(45))
+                       for arm, t in ((A, h0[0]), (B, h0[1]))):
+                    h0 = None
             if h0 is not None:   # fork: gutters cross -> gore nose just after the carriageways separate
                 c = Corner("nose", k, k1, tau_k=min(h0[0] + 1.5, mA), tau_k1=min(h0[1] + 1.5, mB))
                 c.meta_fork = True

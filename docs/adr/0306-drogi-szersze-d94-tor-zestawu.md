@@ -115,3 +115,10 @@ w odległości do 12 m jest rezerwowana w całości (WORKING_VALUE, nie pomiar o
 stronach sekcja dostaje mniejsze poszerzenie, zapisane w provenance. Bez sąsiadów wzrost symetryczny.
 Snapshot przed mutacjami zapewnia niezależność od kolejności i chroni szczelinę również między dwiema rosnącymi jezdniami.
 Reguła obejmuje profile położenia z ortofoto. Podłoga BDOT nie zastępuje już GAMEPLAY (punkt 5 historyczny).
+
+### Parking w435369082 (G2)
+Przyczyna niezależna od przesunięcia jezdni: wyszukiwanie przecięcia krawędzi i wyrównanie nosa separatora sięgało
+za zakręt pętli serwisowej, dając przycięcia ramion 40,44 / 81,57 m i krawężnik na przejeździe.
+Klasa D kończy wyszukiwanie i przycięcie przed pierwszym odchyleniem stycznej o >45° (WORKING_VALUE).
+Odcinek za zakrętem pozostaje wstęgą drogi; nos jest lokalny. Przycięcia wynoszą 13,15 / 13,00 m.
+Plan na ortofoto GUGiK HR sprawdzony, bez Unity. Regresja wymaga poprawnego poligonu i przejezdnego starego punktu błędu.

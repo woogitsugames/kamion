@@ -181,3 +181,15 @@ def test_no_space_between_parallel_roads_limits_growth_and_keeps_other_level_out
     assert sec.provenance["gameplay_widen_limited_m"] == .5
     secs[1].layer = secs[2].layer = 1
     assert N.widening_clearance(net, edges)[sec.edge_id] == [float("inf"), float("inf")]
+
+
+def test_parking_loop_is_not_absorbed_past_its_first_bend():
+    from roads import junctions as J
+    from shapely.geometry import Polygon, Point
+    net = _net("bialystok-industrial-c", .25)
+    junction = next(j for j in J.build_junctions(net, []) if "n4103450295" in j.nodes)
+    assert max(junction.trims.values()) < 20.0
+    # Previously a separator kerb crossed this actual through-lane at the parking entrance.
+    polygon = Polygon([p for p, tag in junction.boundary])
+    assert polygon.is_valid
+    assert polygon.contains(Point(-208.01, -287.49).buffer(.3))
