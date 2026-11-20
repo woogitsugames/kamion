@@ -386,13 +386,20 @@ M = {
     "wood_trim_brown": {"color": [0.050, 0.027, 0.017], "rough": 0.6},
     "roof_tiles_old": {"color": [0.145, 0.047, 0.021], "rough": 0.85, "texture_set": "roof_tiles_old", "set_tile": True,
                        "macro": [9.0, 0.10]},
-    "fieldstone_plinth": {"color": [0.235, 0.225, 0.205], "rough": 0.9, "texture_set": "fieldstone", "set_tile": True},
+    # Round 3 (klattow-r3-s24): a little darker and warmer (photo 05: a low grey-brown band, no pale mortar net).
+    "fieldstone_plinth": {"color": [0.215, 0.200, 0.172], "rough": 0.9, "texture_set": "fieldstone", "set_tile": True},
     # ADR 0305: timber granary by the presbytery (owner photo klattow-02): unpainted, weathered honey-brown logs - the
     # log_whitewash set as a neutral modulation map under a wood tint, stretched to 4.6 x 2.55 m so one tile covers the
     # 2.45 m wall (courses 0.23-0.28 m); weathered silver-grey wooden shingles (set wood_shingles). WORKING_VALUE.
-    "log_wall_raw": {"color": [0.33, 0.21, 0.115], "rough": 0.9, "texture_set": "log_whitewash", "set_tile": True,
+    # Round 3 (klattow-r3-s24): the honey tint (0.33 / 0.21 / 0.115) rendered orange-tan in the sun; the photo shows
+    # old logs weathered grey-brown (~ sRGB 120 / 105 / 90 under an overcast sky) -> log_wall_raw 0.185 / 0.160 / 0.135 (run 2 of round 3 with 0.185 / 0.160 / 0.135 read cold grey - visual-critic P1; run 3: 0.235 / 0.172 / 0.118),
+    # and the posts, braces, beams and deck of the lamus in the same weathered tone (wood_planks_weathered, the
+    # wood_siding scan) instead of the brown wood_planks. WORKING_VALUE.
+    "log_wall_raw": {"color": [0.235, 0.172, 0.118], "rough": 0.9, "texture_set": "log_whitewash", "set_tile": True,
                      "set_tile_m": [4.6, 2.55]},
-    "roof_shingles_grey": {"color": [0.17, 0.168, 0.16], "rough": 0.9, "texture_set": "wood_shingles", "set_tile": True},
+    "wood_planks_weathered": {"color": [0.215, 0.168, 0.125], "rough": 0.88, "texture_set": "wood_siding", "set_tile": True,
+                              "set_tile_m": [6.0, 2.6]},
+    "roof_shingles_grey": {"color": [0.195, 0.196, 0.192], "rough": 0.9, "texture_set": "wood_shingles", "set_tile": True},
     "chimney_brick": {"color": [0.20, 0.092, 0.07], "rough": 0.9, "texture_set": "brick", "set_tile": True},
     # behaton (I-shaped interlocking blocks) in truck yards (streetscape.paved)
     "yard_behaton": {"color": [0.23, 0.228, 0.22], "rough": 0.85, "surface": "paving_stones", "texture_set": "behaton_i_grey"},
@@ -579,7 +586,10 @@ _FAR_WALLS = {"block": ["plaster_cream", "plaster_grey", "plaster_pastel_blue", 
                         "plaster_accent_green", "plaster_accent_ochre", "plaster_accent_grey",
                         "plaster_white"],              # ADR 0238: white blocks (typology.BLOCK_WALLS)
               "office": ["plaster_light", "plaster_grey", "plaster_beige", "plaster_white", "brick_red"]}
-_FAR_WALLS["ribbon"] = _FAR_WALLS["office"]
+# klattow-r3-s24: chunk knyszyn 1_4 has an authored ribbon frontage on a plaster_peach wall (frontage.py far_kind);
+# without the entry the manifest named a material the table did not hold and the Unity import of the tile failed
+# ([WORLD_MATERIAL] plaster_peach__far_ribbon: missing material) on main 8ad119ad9.
+_FAR_WALLS["ribbon"] = _FAR_WALLS["office"] + ["plaster_peach"]
 for _k, _ws in _FAR_WALLS.items():
     for _w in _ws:
         if _w in M:

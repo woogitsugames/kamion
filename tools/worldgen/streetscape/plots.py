@@ -345,9 +345,12 @@ def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
         # on its house); the rule picks stay for every other plot
         pf = (g[0].get("ovr") or {}).get("plot_fence") or {}
         if pf:
-            if not set(pf) <= {"front", "side"} or not set(pf.values()) <= set(STYLES):
-                raise ValueError(f"building {g[0]['id']}: plot_fence {pf!r}: keys front / side, styles {sorted(STYLES)}")
-            fs, ss = pf.get("front", fs), pf.get("side", ss)
+            styles = {k: v for k, v in pf.items() if k != "tint"}
+            tn = pf.get("tint")
+            if not set(styles) <= {"front", "side"} or not set(styles.values()) <= set(STYLES) or                     (tn is not None and not (isinstance(tn, (list, tuple)) and len(tn) == 3 and all(0.0 <= float(v) <= 2.0 for v in tn))):
+                raise ValueError(f"building {g[0]['id']}: plot_fence {pf!r}: keys front / side (styles {sorted(STYLES)}), "
+                                 "tint [r, g, b] 0-2")
+            fs, ss = styles.get("front", fs), styles.get("side", ss)
         lo, hi = STYLES[fs][1]
         fh = round(lo + (hi - lo) * hfloat(key, "fh"), 2)
         lo, hi = STYLES[ss][1]
@@ -359,7 +362,10 @@ def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
                       "front_h": fh, "side_h": sh,
                       "gate_kind": "slide" if (age != "old" and hfloat(key, "slide") < SLIDE_SHARE * 1.5) else "swing",
                       "surface": "paving" if hfloat(key, "surf") < SURFACE_BY_AGE[age] else "gravel", "key": key,
-                      "house_h": float(props.get("height_m") or 6.0)})
+                      "house_h": float(props.get("height_m") or 6.0),
+                      # ADR 0305 r3: authored colour of the plot's fences / gates (linear multiplier of the atlas
+                      # colours, the Kit tint) instead of the ageing tint of the plot's age class
+                      "kit_tint": [float(v) for v in pf["tint"]] if pf.get("tint") is not None else None})
         laid.append(poly)
     return plots
 
@@ -1792,6 +1798,8 @@ def build(buf, rp, zf, surf_top, report, items=None):
         mean, spread = AGE_TINT[age]
         k0 = mean + spread * (hfloat(key, "tint") * 2 - 1)
         tint = (k0 * (1 + 0.04 * (hfloat(key, "tr") - 0.5)), k0, k0 * (1 - 0.05 * hfloat(key, "tb")))
+        if plot.get("kit_tint"):
+            tint = tuple(plot["kit_tint"])
         kit, col = Kit(tint), []
         src_id = f"plot:{plot['id']}"
         rep["age"][age] = rep["age"].get(age, 0) + 1
