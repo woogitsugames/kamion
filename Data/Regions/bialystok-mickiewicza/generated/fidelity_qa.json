@@ -2521,7 +2521,7 @@
   "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
   "tools/worldgen/roads/authored_paint.py": "cfa394a6e9c34275a8e07176ac76336a035d50acd959c11a530b55ab1508451e",
   "tools/worldgen/roads/barrier_audit.py": "786d6dfd30de7dd51f60c793136839d43fcd9d214e103f392d613b68f1b18103",
-  "tools/worldgen/roads/build_world.py": "6b1177a5d1cd42c157cd522ce8ab3da35786c2b709d9347b934de25a13e02beb",
+  "tools/worldgen/roads/build_world.py": "53263ba68e1b02456556b159422f5ae9383bbf3345a82be29a213ba6333b38c1",
   "tools/worldgen/roads/carriageway_split.py": "c79e82ddcf05d4363e231b4546f25dc37ada97e8d9cfe2f3974a91f2fe1b603d",
   "tools/worldgen/roads/closures.py": "608718189eb6680ca61538d47acb021d1be85e4dbbd001f315a0f2caffb45fa9",
   "tools/worldgen/roads/compact_roundabout.py": "b57e8ea73574bb272763ae5c4e7584118e6326fb0035beda7e4656aae4bf15ac",
@@ -2531,18 +2531,18 @@
   "tools/worldgen/roads/geom.py": "8f9f732d90273b92cf23f00f65c6a2c7eed6d1f9a0b3cc211679a908f2788e21",
   "tools/worldgen/roads/gores.py": "3502f14e19eb9711092ba27b287f75c9d7b4013deb79614a273df03850c5c63b",
   "tools/worldgen/roads/junctions.py": "ee3ea6a082078637ffad54dfaefc195d19bf7ccaa45e23ce2eed58a8bc8dfd29",
-  "tools/worldgen/roads/markings.py": "b9bc48abb774d8ab613146cb8127c32c96fe1e01c862de7377b40c28d85fc78d",
-  "tools/worldgen/roads/meshing.py": "698b233175e9aaecafbbc9459842899bac88e28a6d5e39acee8537609d315f97",
-  "tools/worldgen/roads/network.py": "3d41230d0a455189d5f67145b89d511b934b530fb1ce8c9e30f81da953ac9134",
+  "tools/worldgen/roads/markings.py": "2977f2143796773d8a67b4f47c0db496932ef30f8050321eaf0318ad850dfba3",
+  "tools/worldgen/roads/meshing.py": "9c6766916e7617da1b80e973196af60c61f64ef3eaad6bd896cc59924435766a",
+  "tools/worldgen/roads/network.py": "0fd1a6128049aca60d31e1138c65fd51c27f337ba174b02b11ec49165465af8a",
   "tools/worldgen/roads/p21_hatch.py": "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
   "tools/worldgen/roads/pipeline.py": "5652e58227bd1c7a3cf4512a7306c5e3983e0578e8bfab0d59c27b1ab393a3c4",
-  "tools/worldgen/roads/profile.py": "9d6e30a5492c79815637b1462aa74b88853ee9ec864eb3aa9a32109cd8124a58",
+  "tools/worldgen/roads/profile.py": "a4b2ab8d5eeb3eb902300e332b5d4e4b087a6d2557cef450032530da675ba3a4",
   "tools/worldgen/roads/qa_ortho.py": "6e32d52950954922afceae3ee2f0aa379b8d42467c2d294b7e951750d39f3e6b",
   "tools/worldgen/roads/route.py": "e8bb7cd40bd2bf4dfef526aff16bafda35e2b8e68d64f2a8fb576818a453c5b4",
   "tools/worldgen/roads/route_km.py": "4e961cd1608d6265c3fd27edd2690830628bffec0ec8f65bec44659b06143086",
   "tools/worldgen/roads/seam_p2a.py": "56835afa4136a1648aa3a9bb69d8bb0381d5951c4a7922c146de313ab5162c4f",
-  "tools/worldgen/roads/seam_taper.py": "0ebb1ff856da89a7600aa1686e3faccb41a27a2cc4d8ce45fd169d054a43c141",
-  "tools/worldgen/roads/standards.py": "d3ccc7f195f45692688fcd59605ffd82a38d6f4e9160a28ab23a4b1ec076ee1b",
+  "tools/worldgen/roads/seam_taper.py": "dfb73aa90cfed59f5ad6d2b855c8a3d15b30df658cbf28b5e92561e2310cd973",
+  "tools/worldgen/roads/standards.py": "7e96014b4ac7394ed39b0b024a2b346341f27726bc4832a8be467af9d721959a",
   "tools/worldgen/roads/surface_safety.py": "53388347d460630816a0cdbf53b1d5cac568ef7ad7cc59d5a9fb26a6d13a3f0f",
   "tools/worldgen/roads/swept_path.py": "0112cbd81b02fd3c5930d385e6ba918b607011d4f6dd5f7a80809c0d62ae2d05",
   "tools/worldgen/roads/through_lines.py": "be22b6b67118b50577e67ae1520287dcd5831b39400e7f2b805fde1b6e2795c5",
@@ -5778,10 +5778,10 @@
    "edge": "w385980695:2228915195-3893228681",
    "edges": {
     "all_sides": {
-     "max": 1.125,
+     "max": 4.125,
      "n": 15,
-     "p50": 0.375,
-     "p95": 1.125
+     "p50": 0.625,
+     "p95": 3.425
     },
     "detected_sides": 15,
     "n": 0,
@@ -5830,12 +5830,12 @@
    "edge": "w243052038:3893228681-6587441640",
    "edges": {
     "all_sides": {
-     "max": 3.375,
-     "n": 46,
+     "max": 5.375,
+     "n": 45,
      "p50": 0.375,
-     "p95": 3.125
+     "p95": 3.375
     },
-    "detected_sides": 46,
+    "detected_sides": 45,
     "n": 0,
     "signed_p50": null,
     "stations": 23,
@@ -9226,11 +9226,11 @@
    "edge_vs_ortho_m": {
     "all_sides": {
      "max": 8.125,
-     "n": 2592,
+     "n": 2591,
      "p50": 0.625,
      "p95": 4.375
     },
-    "detected_sides": 2592,
+    "detected_sides": 2591,
     "max": 5.375,
     "n": 172,
     "p50": 2.051,
@@ -9284,12 +9284,12 @@
     },
     "detected_sides": 13663,
     "max": 5.375,
-    "n": 1230,
+    "n": 1231,
     "p50": 1.125,
     "p95": 3.875,
     "signed_p50": 0.125,
     "stations": 7558,
-    "valid_sides": 1230
+    "valid_sides": 1231
    },
    "graph_vs_fresh_osm_max_m": {
     "max": 0.001,
@@ -10540,6 +10540,22 @@
   },
   {
    "center_en": [
+    149.8,
+    861.5
+   ],
+   "gen_islands_absent_on_ortho": 1,
+   "iou": {
+    "gen_m2": 847.4,
+    "iou": 0.608,
+    "ortho_m2": 1231.5
+   },
+   "junction": "j:n4215031139",
+   "ortho_islands_missing": 0,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
     422.6,
     813.9
    ],
@@ -10881,9 +10897,9 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 852.7,
-    "iou": 0.628,
-    "ortho_m2": 1274.1
+    "gen_m2": 855.6,
+    "iou": 0.626,
+    "ortho_m2": 1282.0
    },
    "junction": "j:n3830496238",
    "ortho_islands_missing": 0,
@@ -10952,22 +10968,6 @@
    "junction": "j:n4342248654",
    "ortho_islands_missing": 2,
    "roundabout": true,
-   "signalized": false
-  },
-  {
-   "center_en": [
-    149.8,
-    861.5
-   ],
-   "gen_islands_absent_on_ortho": 1,
-   "iou": {
-    "gen_m2": 827.1,
-    "iou": 0.63,
-    "ortho_m2": 1151.8
-   },
-   "junction": "j:n4215031139",
-   "ortho_islands_missing": 0,
-   "roundabout": false,
    "signalized": false
   },
   {
@@ -11452,22 +11452,6 @@
   },
   {
    "center_en": [
-    -931.3,
-    781.0
-   ],
-   "gen_islands_absent_on_ortho": 0,
-   "iou": {
-    "gen_m2": 1359.8,
-    "iou": 0.65,
-    "ortho_m2": 1653.1
-   },
-   "junction": "j:n2260757730",
-   "ortho_islands_missing": 1,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
     773.3,
     54.9
    ],
@@ -11478,6 +11462,22 @@
     "ortho_m2": 2078.1
    },
    "junction": "j:n5995556865",
+   "ortho_islands_missing": 1,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
+    -931.3,
+    781.0
+   ],
+   "gen_islands_absent_on_ortho": 0,
+   "iou": {
+    "gen_m2": 1366.7,
+    "iou": 0.653,
+    "ortho_m2": 1653.2
+   },
+   "junction": "j:n2260757730",
    "ortho_islands_missing": 1,
    "roundabout": false,
    "signalized": false
@@ -11644,22 +11644,6 @@
   },
   {
    "center_en": [
-    -957.6,
-    757.6
-   ],
-   "gen_islands_absent_on_ortho": 0,
-   "iou": {
-    "gen_m2": 970.1,
-    "iou": 0.661,
-    "ortho_m2": 1252.7
-   },
-   "junction": "j:n1237863034",
-   "ortho_islands_missing": 1,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
     -813.0,
     -859.1
    ],
@@ -11686,6 +11670,22 @@
     "ortho_m2": 743.9
    },
    "junction": "j:n1237909444",
+   "ortho_islands_missing": 1,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
+    -957.6,
+    757.6
+   ],
+   "gen_islands_absent_on_ortho": 0,
+   "iou": {
+    "gen_m2": 977.1,
+    "iou": 0.663,
+    "ortho_m2": 1251.4
+   },
+   "junction": "j:n1237863034",
    "ortho_islands_missing": 1,
    "roundabout": false,
    "signalized": false
@@ -12177,9 +12177,9 @@
    ],
    "gen_islands_absent_on_ortho": 1,
    "iou": {
-    "gen_m2": 1035.8,
+    "gen_m2": 1035.1,
     "iou": 0.7,
-    "ortho_m2": 1287.5
+    "ortho_m2": 1287.3
    },
    "junction": "j:n4235564522",
    "ortho_islands_missing": 1,
@@ -12193,9 +12193,9 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 1938.0,
-    "iou": 0.7,
-    "ortho_m2": 2005.7
+    "gen_m2": 1945.0,
+    "iou": 0.701,
+    "ortho_m2": 2006.2
    },
    "junction": "j:n1986877980",
    "ortho_islands_missing": 1,
@@ -12321,9 +12321,9 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 2058.7,
-    "iou": 0.706,
-    "ortho_m2": 1985.2
+    "gen_m2": 2060.2,
+    "iou": 0.705,
+    "ortho_m2": 1987.1
    },
    "junction": "j:n1844058133",
    "ortho_islands_missing": 1,
