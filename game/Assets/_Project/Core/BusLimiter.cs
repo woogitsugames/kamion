@@ -3,7 +3,7 @@ using System;
 namespace Game.Core
 {
     /// <summary>
-    /// Look-ahead peak limiter of the listener bus (ADR 0311). The D92 cab gain (+6-7 dB) puts the loudest moments of the
+    /// Look-ahead peak limiter of the listener bus (ADR 0312). The D92 cab gain (+6-7 dB) puts the loudest moments of the
     /// cab mix (full-throttle launch to 80 km/h, horn) near full scale; this keeps the bus under <see cref="CeilingDb"/>
     /// sample peak (0.5 dB under the -1 dBTP ceiling, margin for inter-sample peaks) without touching anything quieter -
     /// so it changes neither the integrated loudness of a normal drive nor the balance of the layers.

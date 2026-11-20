@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Game.Core
 {
     /// <summary>
-    /// Cabin loudness calibration (owner decision D92, ADR 0311): the whole listener mix in the cab view gets one gain so a
+    /// Cabin loudness calibration (owner decision D92, ADR 0312): the whole listener mix in the cab view gets one gain so a
     /// cab drive measures -18 LUFS integrated (BS.1770-4) at master 1.0, true peak &lt;= -1 dBTP. One gain for every
     /// source the listener hears - engine, tyres, wind, pneumatics, ambience, one-shots - so the balance of the layers
     /// (ADR 0142/0145/0148/0176 factors) is unchanged. The exterior view keeps gain 1 (D92: exterior unchanged); the
@@ -23,9 +23,9 @@ namespace Game.Core
         /// <summary>D92 / docs/08: true-peak ceiling [dBTP].</summary>
         public const float TruePeakCeilingDbtp = -1f;
 
-        /// <summary>Cab bus gain with the ElevenLabs sound set [dB]: before -25.1 LUFS (straight050 + circle50, 40 t, build 83226d958) -> +7.1 (ADR 0311).</summary>
+        /// <summary>Cab bus gain with the ElevenLabs sound set [dB]: before -25.1 LUFS (straight050 + circle50, 40 t, build 83226d958) -> +7.1 (ADR 0312).</summary>
         public const float ElevenLabsCabGainDb = 7.1f;
-        /// <summary>Cab bus gain with the procedural sound set [dB]: before -24.2 LUFS (same programme) -> +6.2 (ADR 0311).</summary>
+        /// <summary>Cab bus gain with the procedural sound set [dB]: before -24.2 LUFS (same programme) -> +6.2 (ADR 0312).</summary>
         public const float ProceduralCabGainDb = 6.2f;
         /// <summary>Sanity range of a calibration gain [dB] (a larger correction means the mix itself is off).</summary>
         public const float MinGainDb = -12f, MaxGainDb = 12f;

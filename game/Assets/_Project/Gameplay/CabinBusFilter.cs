@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Game.Gameplay
 {
     /// <summary>
-    /// Listener bus (D92, ADR 0311): sits on the AudioListener object and multiplies the whole mix by <see cref="Target"/>
+    /// Listener bus (D92, ADR 0312): sits on the AudioListener object and multiplies the whole mix by <see cref="Target"/>
     /// (set by <see cref="TruckAudioController"/> from the calibrated cab gain and the interior blend), ramped per frame
     /// inside each DSP block, then runs the look-ahead peak limiter (<see cref="BusLimiter"/>, ceiling -1.5 dBFS sample peak)
     /// so the loudest cab moments stay under -1 dBTP. There is no AudioMixer in the project and AudioListener.volume cannot

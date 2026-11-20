@@ -82,7 +82,7 @@ namespace Game.Gameplay
         bool m_PurgeAlt, m_SurfaceInit;
         float m_SquealGain, m_ScrubGain, m_RetarderGain, m_CompressorGain;
         float m_Interior = 1f;
-        // D92 / ADR 0311: cab loudness bus on the listener (one gain for the whole cab mix, exterior = 1)
+        // D92 / ADR 0312: cab loudness bus on the listener (one gain for the whole cab mix, exterior = 1)
         CabinBusFilter m_Bus;
         float m_CabBusGain = 1f, m_NextBusLookup;
         float m_BrakePeak, m_BrakeHeld;
@@ -98,7 +98,7 @@ namespace Game.Gameplay
 
         public bool HasAudio => m_Engine != null;
         public float InteriorBlend => m_Interior;
-        /// <summary>Linear cab bus gain of the active sound set (D92 calibration, ADR 0311) and the current bus target.</summary>
+        /// <summary>Linear cab bus gain of the active sound set (D92 calibration, ADR 0312) and the current bus target.</summary>
         public float CabBusGain => m_CabBusGain;
         public float BusGainTarget => m_Bus != null ? m_Bus.Target : 1f;
         public EngineAudio Engine => m_Engine;
@@ -317,7 +317,7 @@ namespace Game.Gameplay
         void Update() => AudioStep(Time.deltaTime);
 
         /// <summary>
-        /// D92 / ADR 0311: the listener bus gain follows the interior blend (exterior 1, cab = calibrated gain). The filter
+        /// D92 / ADR 0312: the listener bus gain follows the interior blend (exterior 1, cab = calibrated gain). The filter
         /// is added once to the listener of the camera rig (fallback: any listener) and found again only if that object
         /// goes away (lookup at most twice a second); per frame it is one float write. No allocation after the lookup.
         /// </summary>
