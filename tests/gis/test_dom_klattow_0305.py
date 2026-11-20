@@ -253,14 +253,17 @@ def test_plot_fence_override_and_shadow_crowns(fc):
     ov = pipeline.load_overrides("knyszyn")
     blds = BM.load(fc, ORIGIN, ov, hero=K.hero_targets("knyszyn", fc))
     b = next(x for x in blds if x["id"] == K.BUILDING_ID)
-    assert b["ovr"]["hero_asset"] == K.ASSET_ID and b["ovr"]["plot_fence"] == {"front": "picket", "side": "picket", "tint": [0.90, 1.40, 1.10]}
+    assert b["ovr"]["hero_asset"] == K.ASSET_ID and b["ovr"]["plot_fence"] == {"front": "picket_wood", "side": "picket_wood"}
     near = [{"id": x["id"], "poly": x["poly"], "props": x["props"], "ovr": x["ovr"]} for x in blds
             if x["typ"] == "house" and x["poly"].distance(b["poly"]) < 60]
     plots = {p["id"]: p for p in PL.plan(near, shapely.geometry.Polygon(), [])}
-    assert (plots[K.BUILDING_ID]["front_style"], plots[K.BUILDING_ID]["side_style"]) == ("picket", "picket")
-    # round 3: the plot's fences take the brown stain of the authored pickets, not the rust-red of the atlas
-    assert plots[K.BUILDING_ID]["kit_tint"] == [0.90, 1.40, 1.10] and PL.Kit(plots[K.BUILDING_ID]["kit_tint"]).tint[:3] == pytest.approx([0.45, 0.70, 0.55])
-    assert all(p["kit_tint"] is None for i, p in plots.items() if i != K.BUILDING_ID)
+    assert (plots[K.BUILDING_ID]["front_style"], plots[K.BUILDING_ID]["side_style"]) == ("picket_wood", "picket_wood")
+    # round 3 tinted the rust-red pickets brown for this plot; ADR 0316: the atlas row picket_wood is brown itself
+    assert all(p["kit_tint"] is None for p in plots.values())
+    tinted = PL.plan([{**h, "ovr": {**h["ovr"], "plot_fence": {"front": "picket", "tint": [0.90, 1.40, 1.10]}}} if h["id"] == K.BUILDING_ID
+                      else h for h in near], shapely.geometry.Polygon(), [])
+    tp = next(p for p in tinted if p["id"] == K.BUILDING_ID)
+    assert tp["kit_tint"] == [0.90, 1.40, 1.10] and PL.Kit(tp["kit_tint"]).tint[:3] == pytest.approx([0.45, 0.70, 0.55])
     for bad_t in ([1, 2], [0.5, 3.0, 1.0]):
         with pytest.raises(ValueError, match="plot_fence"):
             PL.plan([{**h, "ovr": {"plot_fence": {"tint": bad_t}}} if h["id"] == K.BUILDING_ID else h for h in near],

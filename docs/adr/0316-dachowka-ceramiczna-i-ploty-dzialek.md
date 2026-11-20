@@ -59,7 +59,7 @@ esówka — dokładnie jeden wałek (grzbiet w osi gąsiora, „oczka” zestawu
   `picket_wood` (sztachety bejcowane / naturalne, proste końce, wg klattow-01) i `picket_paint` (sztachety malowane,
   **neutralne** — kolor farby to tint przęsła `PICKET_PAINTS`: zielona, niebieska, ugier, kremowa, czerwonobrązowa,
   szaroniebieska; jedna farba na działkę; w rzędzie nie ma gołego drewna, więc nic nie oliwieje).
-- `chainlink` przemalowany na neutralny cynk 116 / 120 / 118; zielona siatka powlekana z ADR 0114 = ten sam rząd pod
+- `chainlink` przemalowany na neutralny cynk 104 / 108 / 106; zielona siatka powlekana z ADR 0114 = ten sam rząd pod
   tintem `CHAINLINK_GREEN` (styl `chainlink`), ocynkowana = styl `chainlink_galv` bez tintu. Region sprzed ADR pokazuje
   siatkę ocynkowaną na zielonych słupkach do czasu przebudowy.
 - `picket`: sztacheta bez farby = ciepłe, zwietrzałe drewno 124 / 100 / 82, o połowę rzadziej.

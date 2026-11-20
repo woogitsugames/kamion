@@ -99,11 +99,19 @@ M = {
     # splash zone that follows the terrain (buildings_mesh: plinth UV0.v = metres above the ground at the wall)
     "plinth_dark": {"color": [0.20, 0.20, 0.195], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
     "plinth_grey": {"color": [0.25, 0.25, 0.24], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
-    # pitched roofs (ADR 0091): one modulation set `roof_tiles` (S-profile tile courses) for ceramic tile and pressed
-    # metal tile sheet, set_tile = real course size
+    # pitched roofs (ADR 0091; sets split by covering in ADR 0316), set_tile = real course size
     "roof_tiles_red": {"color": [0.20, 0.075, 0.05], "rough": 0.75, "texture_set": "roof_tiles", "set_tile": True},
-    "roof_tiles_brown": {"color": [0.11, 0.065, 0.045], "rough": 0.75, "texture_set": "roof_tiles", "set_tile": True},
-    "roof_metal_graphite": {"color": [0.055, 0.057, 0.06], "rough": 0.5, "texture_set": "roof_tiles", "set_tile": True},
+    # ADR 0316 (D93 pkt 2 "dachy czytaja sie jako rowna krata"): every covering has its own set now -
+    #   roof_tiles_red      ceramic S-tile (esowka), set `roof_tiles` rewritten (4.2 m, clustered tone, hollows)
+    #   roof_tiles_brown    flat interlocking tile (zakladkowa, cement / engobed), set `roof_zakladkowa`
+    #   roof_karp_red       plain tile (karpiowka) in the scale pattern, set `roof_karpiowka`; the colour of
+    #                       roof_tiles_red, so LOD1 can draw it with that material (no extra LOD1 draw)
+    #   roof_cement_grey    grey cement interlocking tile of old Podlasie houses (override only), set `roof_zakladkowa`
+    #   roof_metal_graphite pressed metal tile sheet: the lattice set of ADR 0091 under its real name `roof_metal_tile`
+    "roof_tiles_brown": {"color": [0.11, 0.065, 0.045], "rough": 0.8, "texture_set": "roof_zakladkowa", "set_tile": True},
+    "roof_karp_red": {"color": [0.20, 0.075, 0.05], "rough": 0.8, "texture_set": "roof_karpiowka", "set_tile": True},
+    "roof_cement_grey": {"color": [0.150, 0.145, 0.132], "rough": 0.9, "texture_set": "roof_zakladkowa", "set_tile": True},
+    "roof_metal_graphite": {"color": [0.055, 0.057, 0.06], "rough": 0.5, "texture_set": "roof_metal_tile", "set_tile": True},
     # knyszyn-look-s23: grey roof sheet (corrugated / standing-seam steel, fibre cement), by override only
     # (orthophoto-read roofs, buildings_mesh.ROOF_OVERRIDES). Review 2026-11-17 P1-1: at 0.30 WITHOUT tint_linear (the
     # name missed the _TINT_LINEAR prefixes, so 0.30 was written as an sRGB tint) it rendered sRGB 178-211 in sun and
@@ -554,7 +562,7 @@ M = {
 # were reviewed with until the lead switches the flag on globally (open point in the ADR).
 _TINT_LINEAR = ("plaster_", "plinth_", "panel_concrete", "brick_red", "chimney_brick", "hall_wall_", "hall_plinth",
                 "roof_tiles_", "roof_metal_", "roof_sheet_", "wood_planks", "garage_door", "dock_door", "balcony_panel",
-                "log_wall_", "fieldstone_", "roof_shingles_")
+                "log_wall_", "fieldstone_", "roof_shingles_", "roof_karp_", "roof_cement_")
 for _k, _v in M.items():
     if _k.startswith(_TINT_LINEAR) and "texture_set" in _v:
         _v["tint_linear"] = True
@@ -659,7 +667,8 @@ M["balcony_slab"]["sky_occ"] = [0.0, 0.0]
 # - review 0097 P2-n "dachówka: regularne pasy, jednolity ton": the 1.4 m roof_tiles set repeats its 7 x 4 tiles; a
 #   macro tone drift of 7 m / 0.16 (importer `macro` = [size m, strength], as on brick_red: lots, weathering, moss on
 #   the north slope) breaks the repeat over a slope. Tile roofs only - a pressed metal sheet is one tone. WORKING_VALUE.
-for _k in ("roof_tiles_red", "roof_tiles_brown"):
+#   ADR 0316: also the plain and the cement tile; the new sets are 4.2 m with clustered tone, the drift stays.
+for _k in ("roof_tiles_red", "roof_tiles_brown", "roof_karp_red", "roof_cement_grey"):
     M[_k]["macro"] = [7.0, 0.16]
 
 

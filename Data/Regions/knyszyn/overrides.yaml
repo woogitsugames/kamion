@@ -425,7 +425,8 @@ overrides:
     confidence: high
     verify: owner review of look_dom_klattow / look_dom_klattow_street against the photos
     set: {typology: dom_drewniany, wall_material: wood_planks_white,
-          plot_fence: {front: picket, side: picket, tint: [0.90, 1.40, 1.10]}}
+          plot_fence: {front: picket_wood, side: picket_wood}}
+  # ADR 0316: the atlas has brown stained pickets of its own now (row picket_wood), so the tint below is gone.
   # ADR 0305 round 3: the plot_kit atlas paints pickets rust-red (118 / 50 / 38 sRGB); the photos show the same brown
   # stain on the plot's fences as on the authored pickets in front of the house. tint = linear multiplier of the atlas
   # colours for this plot (-> about 112 / 58 / 40 sRGB), WORKING_VALUE. Run 1 used [0.80, 2.0, 1.30]: the grey,
