@@ -2,6 +2,22 @@
 
 Stan: WIP; bez Unity, bez push. Nie stanowi wizualnego PASS.
 
+## Kontynuacja — kontekst szwu w statycznym QA
+
+Poprzednie trzy runnery nie dożyły przydziału heavy (brak procesów oraz plików exit). Wznowiono je jednym
+runnerem `artifacts/logs/d95-resume-run.ps1`, który serializuje build knyszyn → combo → pełny retest.
+Nie usuwano aktywnych slotów regen-wave ani nie zwiększano limitu puli.
+
+Przyczyna zapory z krytyki: `VisualQaRunner.RenderTier` otwierał tylko pojedynczą scenę, więc WorldEdge
+pokazywał zamknięcie i prosty stub z ogólnym materiałem asfaltu, zamiast rzeczywistej kontynuacji w knyszyn-w.
+QA Knyszyna ładuje teraz rzeczywistą scenę `knyszyn-w` tego samego tieru (bez generowania sąsiada), ustawia
+ją przez `TilePlacement` i otwiera szew tym samym `RefreshEdgesAround` co player, po przygotowaniu kolizji.
+Usuwane są zapory obu stron oraz nakładające się aprony/stuby i tło. Brak zaimportowanego sąsiada przerywa
+render z błędem — nie powstaje pozornie poprawny obraz nad pustką. Dodano regresję EditMode sprawdzającą
+obie zapory, oba stuby i położenie sąsiada; jej uruchomienie oraz kompilacja Unity pozostają odroczone.
+Dotyczy to kontekstu statycznego QA; w playerze nadal wymagany jest streaming (`-stream 1`) i gotowy sąsiad.
+Samodzielna scena bez streamingu nadal kończy mapę zaporą. Nie jest to dowód wizualnego usunięcia szwu.
+
 Zachowane promienie, szerokość pierścienia i fartuch D94. Zachodnie ramię ma dwa pasy z zachowaniem 11,75 m asfaltu po D94 (11,25 m + 2 × 0,25 m zamiast 11,00 m + 3 × 0,25 m).
 
 Przyczyny i poprawki:

@@ -80,6 +80,45 @@ namespace Game.Tests
         // ------------------------------------------------------------------ the hook
 
         [Test]
+        public void StaticQa_RealNeighbourOpensBothClosuresAndRemovesStubAprons()
+        {
+            var graph = Row3();
+            var a = StartRoot(graph);
+            GameObject Edge(WorldRegionRoot r, TileSide side)
+            {
+                var boundary = r.GetComponent<WorldBoundary>();
+                boundary.closures = new[] { new WorldBoundary.Closure { exitSide = side, widthM = 8f } };
+                var edge = Make("WorldEdge"); edge.transform.SetParent(r.transform, false);
+                foreach (string name in new[] { "Closure_00_test", "Apron", "Apron_E", "Apron_W" })
+                    Make(name).transform.SetParent(edge.transform, false);
+                return edge;
+            }
+            var ea = Edge(a, TileSide.E);
+            var s = HandBuilt(graph, a, _ => false, out _);
+            s.enabled = false;
+            Assert.IsTrue(ea.transform.Find("Closure_00_test").gameObject.activeSelf);
+            var b = Make("Region_t1").AddComponent<WorldRegionRoot>();
+            b.regionId = "t1";
+            b.anchorX = graph.Tiles[1].anchorX; b.anchorY = graph.Tiles[1].anchorY; b.anchorZ = graph.Tiles[1].anchorZ;
+            var bb = b.gameObject.AddComponent<WorldBoundary>();
+            bb.minEN = new Vector2(-924f, -924f); bb.maxEN = new Vector2(924f, 924f);
+            var eb = Edge(b, TileSide.W);
+            s.AdoptVisualQaTile(b);
+            Assert.AreEqual(TileState.Ready, s.Policy.StateOf(1));
+            Assert.AreEqual(0, s.Policy.Current, "context must not move the start tile");
+            Assert.AreEqual((float)Size, b.transform.position.x);
+            foreach (var edge in new[] { ea, eb })
+            {
+                Assert.IsFalse(edge.transform.Find("Closure_00_test").gameObject.activeSelf);
+                Assert.IsFalse(edge.transform.Find("Apron").gameObject.activeSelf);
+            }
+            Assert.IsFalse(ea.transform.Find("Apron_E").gameObject.activeSelf);
+            Assert.IsFalse(eb.transform.Find("Apron_W").gameObject.activeSelf);
+            Assert.IsTrue(ea.transform.Find("Apron_W").gameObject.activeSelf, "outer edges remain closed");
+            Assert.IsTrue(eb.transform.Find("Apron_E").gameObject.activeSelf);
+        }
+
+        [Test]
         public void TryInstallFromLaunch_Off_AddsNothing()
         {
             var host = Make("Host");

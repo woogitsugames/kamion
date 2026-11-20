@@ -373,6 +373,28 @@ namespace Game.World.Streaming
             m_LinkChained = new bool[links != null ? links.Count : 0];
         }
 
+        /// <summary>Static visual QA: adopt an already loaded tile and apply the player's seam rules.
+        /// Does not start loading or bypass runtime activation/collision readiness.</summary>
+        public void AdoptVisualQaTile(WorldRegionRoot root)
+        {
+            if (Application.isPlaying) throw new System.InvalidOperationException("Static QA adoption is edit-mode only");
+            int i = root != null ? Graph.IndexOf(root.regionId) : -1;
+            if (i < 0 || i == StartTile || m_Tiles[i].root != null)
+                throw new System.ArgumentException("QA tile must be a new region in the streaming graph");
+            var t = m_Tiles[i];
+            t.scene = root.gameObject.scene;
+            Register(t, root, FindStartRoute(t.scene));
+            Place(t);
+            foreach (var chunk in t.chunks) chunk.SetActive(true);
+            t.nextChunk = t.chunks.Length;
+            if (t.cooker != null) t.cooker.Cook();
+            Physics.SyncTransforms();
+            Policy.SetUnavailable(i, false);
+            Policy.SetState(i, TileState.Ready);
+            RefreshEdgesAround(i);
+            if (t.edgeRoot != null) t.edgeRoot.SetActive(true);
+        }
+
         void OnEnable()
         {
             Active = this;
