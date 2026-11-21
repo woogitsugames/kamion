@@ -1,4 +1,4 @@
-# ADR DRAFT (numer nada lider) — etap wody w Tykocinie (Narew pod mostem DW671) i w kaflach korytarza DW671 / Knyszyna
+# ADR 0318 — Woda: Narew pod mostem w Tykocinie i korytarz DW671
 Status: Proposed (agent water-tykocin-s24, gałąź `water-tykocin-s24`), 2026-11-21. Do scalenia przez lidera.
 Powiązane: ADR 0210 (etap wody, opt-in per region), ADR 0213 (szew poziomu, kolor tafli, pas trzciny), ADR 0231
 (kafle DW671 → Tykocin), ADR 0212 (dw671-tykocin-01), ADR 0204 (Knyszyn), vqa-wave5 WORST2 „tykocin narew bridge no river”.
