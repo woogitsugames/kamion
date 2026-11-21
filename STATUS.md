@@ -1,3 +1,8 @@
+# STATUS world-fix-b3-s24 (błędy świata z buildu #3)
+- krok 0 OK: worktree gotowy (derived skopiowane). Kafle łat: t=2541 -> dw671-tykocin-01 (13 km do celu), t=3221 -> dw671-tykocin-07 (4,0 km).
+- Przyczyna P2: roads/decals.py patch() = ostry prostokąt, materiał decal_patch nieprzezroczysty, aged_tone 1.08 bez _ROADWEAR (droga ciemniejsza o koleiny/drip) -> jasne łaty.
+- NASTĘPNY KROK: shader WorldPBR _DECAL_PATCH: zaokrąglone, poszarpane krawędzie (szum proceduralny) + alpha blend; ton aged ~0.95.
+
 # qa-d94-cli — zakończone
 
 Konfiguracja GIS: pomiary i fixture sesyjne 0, testy tras D94 generatora per moduł. Referencje K1/0212 zależne od allowance; geometrii/progów nie osłabiono.
