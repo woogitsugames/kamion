@@ -414,6 +414,9 @@ M = {
     # decals on roads (markings layer, depth offset like the markings)
     "decal_oil": {"color": [0.02, 0.02, 0.02], "rough": 0.35, "decal": True, "texture_set": "oil_stain_alpha"},
     "decal_tyre": {"color": [0.018, 0.018, 0.017], "rough": 0.55, "decal": True, "texture_set": "tyre_scrub_alpha"},
+    # ADR 0323: bitumen crack sealant (roads.decals.seal_cracks): the tyre-band strip material, nearly opaque
+    # (0.62 x 1.5 at strength >= 1.5). r1 used decal_tyre itself (alpha <= 0.675): the bands read as hairlines.
+    "decal_seal": {"color": [0.022, 0.022, 0.021], "rough": 0.6, "decal": True, "decal_alpha": 0.62},
     "marking_yard": {"color": [0.46, 0.46, 0.45], "rough": 0.7, "surface": "paint", "decal": True},   # worn yard paint on light pavers; 0.36 (r7) dropped line/paver contrast 1.54 -> 1.14 (review r7 part 2), back to 0.46
     "drain_grate": {"color": [0.035, 0.033, 0.03], "rough": 0.6, "decal": True, "procedural": "grate"},  # cast iron
     "decal_patch": {"color": [0.062, 0.062, 0.06], "rough": 0.85, "decal": True, "texture_set": "asphalt_patch"},

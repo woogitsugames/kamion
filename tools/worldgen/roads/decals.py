@@ -54,11 +54,15 @@ CONDITION_STATES = ((0.30, 0.25), (0.45, 1.0), (0.25, 2.4))
 # across; UV1 = (-length, strength): negative length = short end fades, strength >= 2.5 = solid band). Lift between
 # the patches and the oil, so the paint (6 mm, opaque, earlier queue) stays on top where a line crosses a seal.
 LIFT_SEAL = 0.003
-SEAL_MAT = "decal_tyre"
-SEAL_W_M = (0.07, 0.12)             # geometry width; the soft profile of the material leaves ~60 % of it dark
-HAIRLINE_W_M = 0.045                # unsealed crack: thin, broken up by the material's mottling (strength < 1.5)
-TRANSVERSE_PER_50M = 0.55           # thermal cracks across the carriageway at condition 1.0 (WORKING_VALUE)
-LONGITUDINAL_PER_50M = 0.40         # centre-joint / edge / wheel-path cracks starting per 50 m (WORKING_VALUE)
+SEAL_MAT = "decal_seal"
+WP_MAT = "decal_tyre"
+# r2 (render r1, DW671: 1 crack per 140 m of road and 7-12 cm bands at alpha 0.67 read as nothing from the cab):
+# overband 12-20 cm of geometry (visible core 7-12 cm), own nearly opaque material, rates x 3.6 / x 2.5.
+SEAL_W_M = (0.12, 0.20)             # geometry width; the soft profile of the material leaves ~60 % of it dark
+HAIRLINE_W_M = 0.06                 # unsealed crack: thin, broken up by the material's mottling (strength < 1.5)
+TRANSVERSE_PER_50M = 2.0            # thermal cracks across the carriageway at condition 1.0 (WORKING_VALUE)
+LONGITUDINAL_PER_50M = 1.0          # centre-joint / edge / wheel-path cracks starting per 50 m (WORKING_VALUE)
+PATCH_DENSITY = 1.8                 # r2: multiplier of the ADR 0194 patch rates (r1: 147 patches on 9.9 km, none in frame)
 SEAL_CLASS_RATE = {"A": 0.25, "S": 0.25, "GP": 0.6, "G": 1.0, "Z": 1.0, "L": 1.1, "D": 1.1}
 SEAL_SURFACES = ("road_asphalt",)   # worn asphalt only: not the resurfaced share, setts, concrete, gravel
 
@@ -284,7 +288,7 @@ def _wp_band(buf, top, Q, strength, src, zref, closed=False):
         u, length = ss, -ss[-1]            # negative length = short end fades (0.65 / 0.9 m)
     uv = np.column_stack([np.tile(u, 2), np.repeat([0.0, 1.0], m)])
     uv1 = np.column_stack([np.full(2 * m, length), np.full(2 * m, strength)])
-    buf.add("markings", SEAL_MAT, V, uv, np.array(T), src=src, UV1=uv1)
+    buf.add("markings", WP_MAT, V, uv, np.array(T), src=src, UV1=uv1)
     return len(T)
 
 
@@ -446,7 +450,7 @@ def build(buf, net, juncs, report):
             jz = (np.clip(min(w1, s0 + JUNCTION_ZONE_M) - w0, 0, None) + np.clip(w1 - max(w0, s1 - JUNCTION_ZONE_M), 0, None))
             jshare = min(float(jz) / max(w1 - w0, 1e-6), 1.0)
             rate = cls_rate * (JUNCTION_BOOST * jshare + MIDBLOCK_RATE * (1.0 - jshare))
-            rate *= condition(c, 0.5 * (w0 + w1))        # ADR 0323: sound / average / distressed stretches
+            rate *= PATCH_DENSITY * condition(c, 0.5 * (w0 + w1))   # ADR 0323: sound / average / distressed stretches
             kf = k * rate * (w1 - w0) / 50.0
             k = int(math.floor(kf + hf(*key, "frac")))
             for i in range(k):

@@ -361,6 +361,86 @@
    "type": "persp"
   },
   {
+   "fov_deg": 60.0,
+   "id": "limit_b16_bridge_n_025m",
+   "look_at": [
+    502.824,
+    129.569,
+    107.924
+   ],
+   "note": "place camera: world-fix-b3-s24 QA: truck driver eye on ul. Puchalskiego, right lane, 25 m before the B-16 3,7 m / B-18 12 t post (rule:limit w96942026 bwd, E 494.3 N 203.9, 15 m before the DW671 bridge over the Narew)",
+   "pos": [
+    495.5,
+    229.3,
+    111.416
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "limit_b16_bridge_n_060m",
+   "look_at": [
+    512.679,
+    165.978,
+    107.693
+   ],
+   "note": "place camera: world-fix-b3-s24 QA: truck driver eye on ul. Puchalskiego, right lane, 60 m before the B-16 3,7 m / B-18 12 t post (rule:limit w96942026 bwd, E 494.3 N 203.9, 15 m before the DW671 bridge over the Narew)",
+   "pos": [
+    492.4,
+    263.9,
+    111.185
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "limit_b16_bridge_n_100m",
+   "look_at": [
+    538.363,
+    219.922,
+    107.418
+   ],
+   "note": "place camera: world-fix-b3-s24 QA: truck driver eye on ul. Puchalskiego, right lane, 100 m before the B-16 3,7 m / B-18 12 t post (rule:limit w96942026 bwd, E 494.3 N 203.9, 15 m before the DW671 bridge over the Narew)",
+   "pos": [
+    478.6,
+    300.1,
+    110.91
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "sett_top_s1441",
+   "look_at": [
+    211.519,
+    -138.765,
+    -256.309
+   ],
+   "note": "place camera: ADR 0323 QA (road surface): granite setts of the DW671 carriageway from 8 m above (element scale 95 mm pitch)",
+   "pos": [
+    310.0,
+    -121.4,
+    116.896
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "sett_eye_kozia",
+   "look_at": [
+    103.576,
+    -361.756,
+    95.804
+   ],
+   "note": "place camera: ADR 0323 QA (road surface): field-stone cobbles (OSM unhewn_cobblestone) of ul. Kozia, pedestrian eye",
+   "pos": [
+    96.6,
+    -262.0,
+    109.858
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

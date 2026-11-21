@@ -72,7 +72,7 @@ namespace Game.World.Import
         public static bool Has(Dictionary<string, object> def, string id)
         {
             if (def.Get("vehicle_lod_atlas") is bool vehicleAtlas && vehicleAtlas) return true; // ADR0153 opt-in
-            if (id == "decal_tyre") return true;   // procedural strip profile, no set
+            if (id == "decal_tyre" || id == "decal_seal") return true;   // procedural strip profile, no set
             if (def.Get("procedural") as string == "grate") return true;   // gully grates (drain_grate)
             if (Stripes(def) != null) return true;                         // painted bands (boom, hazard)
             var s = Set(def.Get("texture_set") as string);
@@ -120,7 +120,7 @@ namespace Game.World.Import
             if ((id.StartsWith("car_paint_") && def.Get("paint") is List<object>) || YardPaint(def, id)) uv1 = true; // source deposition payload
             if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
             if ((id.StartsWith("hall_wall") || Runoff(def) || (def.Get("runoff") is bool ro && ro)) && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space): 0071 `weather` + 0081 `runoff`
-            if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
+            if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre" || id == "decal_seal") { uv0 = true; uv1 = true; }
             if (def.Get("paint") is Dictionary<string, object>) uv1 = true;              // _DECAL_PAINT wear data (ADR 0049)
             if (def.Get("procedural") as string == "grate" || Stripes(def) != null) uv0 = true;
             if (id == "terrain_grass") colors = true;
@@ -522,11 +522,13 @@ namespace Game.World.Import
                     mat.SetVector("_PaintFreshWear", new Vector4(P("fresh_wheel_scale", 1f), P("fresh_age_scale", 1f),
                         P("fresh_dirt_scale", 1f), P("fresh_underlay_scale", 1f)));
                 }
-                else if (id == "decal_tyre")
+                else if (id == "decal_tyre" || id == "decal_seal")
                 {
+                    // ADR 0323: decal_seal = bitumen crack sealant, the same soft strip profile as the tyre bands but
+                    // nearly opaque (manifest "decal_alpha"; x1.5 at strength >= 1.5 in the shader). Tyre bands: 0.45.
                     mat.EnableKeyword("_DECAL_TYRE");
                     SetLinearTint(mat, col);
-                    mat.SetFloat("_DecalAlpha", 0.45f);
+                    mat.SetFloat("_DecalAlpha", def.Get("decal_alpha") != null ? Mathf.Clamp01((float)Num(def.Get("decal_alpha"))) : 0.45f);
                     SetBlend(mat, true);
                     mat.renderQueue = (int)RenderQueue.Geometry + 20;
                 }
