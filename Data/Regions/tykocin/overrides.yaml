@@ -5,4 +5,30 @@
 # that is missing there shows up as overrides_stale in build_world. No lettering, no brands.
 # DW671 keeps the BDOT10k width and gets no edge lines, as in dw671-tykocin-01 (ADR 0212, measured there).
 # Nothing was checked on the orthophoto of this tile: add overrides after the ingest.
-overrides: []
+overrides:
+  # ADR 0320: the DW671 bridge over the Narew (ul. Puchalskiego) is a multi-span steel through truss with parabolic
+  # top chords, not the generic beam viaduct of the generator.
+  - id: tykocin-narew-truss-0320
+    kind: truss_bridge
+    osm_ways: [96942026]
+    first_span_at: south
+    upstream: east
+    confidence: 'type, member pattern, colours: Commons photos (ESTIMATED); span lengths: orthophoto (+-1 m); sections, rise, headroom: WORKING_VALUE'
+    reason: >-
+      Wikimedia Commons "Tykocin Most drogowy 01-09" (Zala, 2025-09-20, CC BY-SA 4.0; reference only, see
+      Data/raw/refs/tykocin-bridge-commons/LICENSES.json): four steel bowstring through trusses (laced verticals and
+      diagonals, lattice top bracing, striped boards on the end portals), aluminium-grey paint, footways cantilevered
+      outside the trusses with a blue edge beam and blue / white picket railing, concrete piers with an ice-breaker.
+      Span lengths measured on the GUGiK orthophoto 2024 (0.25 m, relief displacement of the chords included, +-1 m):
+      from the south abutment 15 m beam approach, 51 m main span over the river, 39 / 38 / 37 m, 15 m beam approach
+      (sum 195 m = the OSM way, 194.8 m). Panel counts: 12 on photo 05 (main span); 9 for the short spans is a
+      WORKING_VALUE (same panel length). Rise 1 : 6.5 read off photo 05 (WORKING_VALUE). upstream: east - the Narew
+      runs east to west here (BDOT OT_SWRS_L direction not checked: UNVERIFIED; photos 04 / 06, taken from the east,
+      show the ice-breakers on that side).
+    spans:
+      - {length_m: 15.0, truss: false}
+      - {length_m: 51.0, panels: 12}
+      - {length_m: 39.0, panels: 9}
+      - {length_m: 38.0, panels: 9}
+      - {length_m: 37.0, panels: 9}
+      - {length_m: 15.0, truss: false}
