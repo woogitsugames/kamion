@@ -129,7 +129,8 @@
    "length_m": 164.8,
    "max_grade": 0.0167,
    "overrides": [
-    "knyszyn-w-dw671-west-fresh-seam"
+    "knyszyn-w-dw671-west-fresh-seam",
+    "knyszyn-w-dw671-west-fresh-to-junction"
    ],
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 1.0,
@@ -1037,7 +1038,7 @@
    "patches": 84
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 141212,
+  "footprint_nodes": 141205,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1158,6 +1159,12 @@
     "targets": [
      "w1478765548:13432353453-3047667183"
     ]
+   },
+   {
+    "id": "knyszyn-w-dw671-west-fresh-to-junction",
+    "targets": [
+     "w70329870:3047667183-4898928970"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -1190,7 +1197,7 @@
   },
   "verge_strips": {
    "chunks": 25,
-   "tris": 8840
+   "tris": 8850
   },
   "walled_ramps": []
  }

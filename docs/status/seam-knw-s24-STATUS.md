@@ -33,3 +33,8 @@
 - Build #1 knyszyn: szew ciągły (asfalt/krawężniki/chodniki obu stron, DK65 też), ale 3 odwrócone trójkąty chodnika N na krótkim kikucie W (6,6 m < potrzebne 8,6 m rampy).
 - Poprawka: seam_shear per strona (NL/NR); strona cofana na za krótkim kikucie dostaje tylko ścinanie bez zawinięcia, nadmiar za szwem przycina build_world (clip_parts_to_box, chain.meta seam_clip). Test 5 passed.
 - NASTĘPNY KROK: build #3 (run-build.ps1)
+
+## krok 7
+- Build #3 knyszyn-w: road_consistency 3 (= baseline, było 35 w #1), terrain walls 74 vs 61 (max 0,662 bez zmian, worst-15 identyczne).
+- Library: robocopy z worktree win-build (Win64) do game/Library, żeby import -BuildTarget Win64 nie robił pełnego reimportu.
+- NASTĘPNY KROK: po build.exit → pwsh -File artifacts/seam-knw-s24/run-import-vqa.ps1 (tło), potem obejrzeć vqa-knyszyn/*.png
