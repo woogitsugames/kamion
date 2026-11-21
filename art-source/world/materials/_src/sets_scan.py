@@ -538,13 +538,13 @@ SCAN_SETS = {
         period_fix=[{"axis": 0, "search_m": (0.2, 0.45), "period_m": 0.353}])),
     # road-surface-s24 (ADR 0323): stone carriageways. Critic wave 6 pkt 2.1: road_sett / apron_sett had no set and fell
     # back to the legacy procedural Voronoi "Sett" texture at a 1.6 m tile (beige-pink cells of 0.3-0.6 m).
-    # sett_granite: split-granite setts in rows; the scan's pitch (measured by course_period, ~77 mm) is scaled to
+    # sett_granite: split-granite setts in rows; the scan's pitch (course_period in 60-90 mm: ~77 mm = 26 setts in 2.0 m; a 50-120 mm window locked onto 102 mm) is scaled to
     # 95 mm = sett 8/10 with a ~10 mm joint (PN-EN 1342 nominal 80-100 mm; the Tykocin photos cs153250600 /
     # cs202183436 show setts of that class laid in fans - the fan layout is NOT reproduced, rows only). WORKING_VALUE.
     "sett_granite": (["cobblestone_03"], lambda: tiling_from_scan(
         "sett_granite", "cobblestone_03", target=0.20, hue=HUE_SETT, out_L=2.0, out_n=1024, seed=6331,
         flat_m=1.2, flat_k=0.5, hue_keep=0.5, segment={"joint_quantile": 0.24},
-        period_fix=[{"axis": 0, "search_m": (0.05, 0.12), "period_m": 0.095}])),
+        period_fix=[{"axis": 0, "search_m": (0.06, 0.09), "period_m": 0.095}])),
     # cobble_fieldstone: worn mixed-colour stones in sand joints (bruk / 'kocie lby' of the side streets: OSM
     # cobblestone, unhewn_cobblestone, BDOT10k "bruk"); physical size of the scan kept (stones 0.12-0.22 m).
     "cobble_fieldstone": (["cobblestone_floor_08"], lambda: tiling_from_scan(
