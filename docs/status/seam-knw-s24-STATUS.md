@@ -11,3 +11,8 @@
 - Overrides: knyszyn-w w1478765548 lanes 2 / width 11.25 / asphalt_new (jak D95 w knyszyn); knyszyn center_offset 0.25 dla 300808749+98072226 (D94 shift z knyszyn-w).
 - seams.py knyszyn,knyszyn-w: FAIL 1→0, UWAGA 2→0.
 - NASTĘPNY KROK: przebudowa obu kafli (slot heavy): `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn-w` potem knyszyn
+
+## krok 3
+- test_seam_shear_knw.py 3 passed; route_links odświeżone (tylko knyszyn-w-dw671, max 0,33 m).
+- Przebudowa w tle: artifacts/seam-knw-s24/run-build.ps1 → build.log / build.exit (knyszyn-w, knyszyn, export-route, route_links, probe, combo).
+- NASTĘPNY KROK: `Get-Content artifacts/seam-knw-s24/build.log -Tail 20`; po exit 0 import Win64 obu kafli + visual-qa knyszyn.
