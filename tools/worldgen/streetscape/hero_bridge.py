@@ -485,13 +485,20 @@ def _quad(buf, points, mat, src, outward):
     buf.add("bridge", mat, v, np.column_stack([v[:, 0] + v[:, 2], v[:, 1] + v[:, 2]]), t, src=src)
 
 
-def _prism(buf, centre, t, hl, hw, bevel, z0, z1, mat, src, collision=False, *, bevel_mat=None, paint_weather=None):
-    """Eight-sided concrete column/head; bevel is geometry, never a round normal."""
+def prism_footprint(centre, t, hl, hw, bevel):
+    """Plan vertices shared by the underdeck column mesh, collision and clearance QA."""
     t = np.asarray(t, float)
     n = np.array([-t[1], t[0]])
     ring = [(hl, -hw + bevel), (hl, hw - bevel), (hl - bevel, hw), (-hl + bevel, hw),
             (-hl, hw - bevel), (-hl, -hw + bevel), (-hl + bevel, -hw), (hl - bevel, -hw)]
-    xy = np.asarray(centre) + np.array([t * a + n * b for a, b in ring])
+    return np.asarray(centre) + np.array([t * a + n * b for a, b in ring])
+
+
+def _prism(buf, centre, t, hl, hw, bevel, z0, z1, mat, src, collision=False, *, bevel_mat=None, paint_weather=None):
+    """Eight-sided concrete column/head; bevel is geometry, never a round normal."""
+    t = np.asarray(t, float)
+    n = np.array([-t[1], t[0]])
+    xy = prism_footprint(centre, t, hl, hw, bevel)
     v = np.concatenate([np.column_stack([xy, np.full(8, z0)]), np.column_stack([xy, np.full(8, z1)])])
     faces = []
     for i in range(8):
@@ -619,7 +626,7 @@ def _apply_underdeck(w, hero, instances=None):
                 if not math.isfinite(length_scale) or not .1 <= length_scale <= 1:
                     raise ValueError("Underdeck runoff_length_scale must be in [0.1, 1]")
                 paint_weather = {"ground_z": q[2], "runoff_scale": length_scale}
-            _prism(buf, q[:2], t, .5, .6, .25, q[2] - .5, cap_bottom,
+            _prism(buf, q[:2], t, prm["col_len_m"] / 2, prm["col_wid_m"] / 2, prm["col_chamfer_m"], q[2] - .5, cap_bottom,
                    "pier_yellow", src + ":column", collision=True,
                    bevel_mat="bridge_concrete" if prm.get("unpainted_chamfers", False) else None,
                    paint_weather=paint_weather)

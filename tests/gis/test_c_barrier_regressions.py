@@ -78,6 +78,22 @@ def test_pinned_joint_rejects_deck_at_wrong_level_or_direction(height, reverse):
     np.testing.assert_allclose(traced["P"], before)
 
 
+def test_underdeck_clearance_uses_the_generated_chamfered_collision():
+    from qa import check_piers_vs_roads as K
+    from streetscape import hero_bridge as H
+    from shapely.geometry import MultiPoint
+    params = dict(col_len_m=1., col_wid_m=1.2, col_chamfer_m=.25)
+    centre, tangent = [12., -8.], np.array([.8, -.6])
+    buf = MeshBuf()
+    H._prism(buf, centre, tangent, .5, .6, .25, 0., 5., "pier_yellow", "column", collision=True)
+    collision = next(p for p in buf.parts if p.layer == "collision")
+    actual = MultiPoint(collision.V[:, :2]).convex_hull
+    audited = K._footprint(centre, tangent, params)
+    assert actual.symmetric_difference(audited).area < 1e-10
+    assert len(audited.exterior.coords) == 9
+    assert audited.area == pytest.approx(1.2 - 4 * .25 ** 2 / 2)
+
+
 @pytest.mark.parametrize("cap_width", [.30, .40])
 def test_narrowing_cap_keeps_barrier_connected_to_ground_approaches(monkeypatch, cap_width):
     stations = np.arange(60.)

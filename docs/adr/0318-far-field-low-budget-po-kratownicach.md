@@ -19,6 +19,11 @@ stary dobór odległych budynków oraz nadbudówki dachowe Low.
   Każdy ma cztery nogi, trzy panele ukośnego kratowania na dwóch sąsiadujących
   ścianach i dwa poprzeczniki. Pręty są paskami zwróconymi ku kaflowi:
   16 pasków, 32 trójkąty. High zachowuje przestrzenne pręty, 204 trójkąty.
+  Paski są skierowane do środka własnego kafla. Przy patrzeniu z jego rogów
+  ich szerokość kątowa maleje zgodnie z kosinusem odchylenia, lecz nogi nie
+  znikają; test obejmuje wszystkie rogi, osiem położeń wokół kafla i cztery
+  obroty słupa. Widok dokładnie od boku poza własnym kaflem może zaniknąć;
+  tło tego kafla nie jest przeznaczone do oglądania z sąsiedniego kafla.
 - Dobór budynków Low uwzględnia rozmiar po kompresji. Poza 900 m od krawędzi
   pomijamy koperty o najdłuższej krawędzi poniżej 20 m i wysokości poniżej
   10 m. Wartości `WORKING_VALUE`; zachowujemy pobliską zabudowę i wysokie
