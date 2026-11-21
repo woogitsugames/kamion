@@ -218,3 +218,4 @@ NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/
   * test_bridge_clearance x8 (dk8-wasilkow-01/03, porosly, bojary): test wymaga „odtworzenia dawnej intruzji kapy” z danych kafla — po przebudowie z bridge-kerb intruzji już nie ma (assert 0 > 0) => test do aktualizacji (poprawka działa).
   * typology dojlidy: hash domu po ADR 0316 — baseline do aktualizacji.
   * route_links jeroniki->dk65-01 0,375 m: dk8-s8-jeroniki był z fali 4 (przed dk8-seam), dk65-01 z fali 5 -> przebudowuję jeroniki (redo-one.ps1 -NoFinal).
+- 2026-11-21 04:12: dk8-s8-jeroniki przebudowany (exit 0); route_links/tile_graph/katalog przeliczone, --check 0; test_route_links_s23 18/19 — nadal test_link_seams_route_and_height_continuous: jeroniki->dk65-01 (link:jeroniki-dk8-to-s8) 0,375 m > 0,1 (nie z nieaktualności kafla).
