@@ -76,7 +76,13 @@ def world(tmp_path_factory):
     before = json.loads(mp.read_text(encoding="utf-8")) if mp.exists() else None
     snap = _snapshot()
     try:
-        w, manifest, qa = build_world.build(REGION_ID, out_root=out, verbose=False)
+        # Session fixtures run before module-level generated_world selection.
+        # Compare the CLI build with the same D94 cross-sections, regardless
+        # of the measured baseline used by unrelated session fixtures.
+        from roads import standards as S
+        with pytest.MonkeyPatch.context() as patch:
+            patch.setattr(S, "GAMEPLAY_LANE_WIDEN_M", S.GAMEPLAY_LANE_WIDEN_DEFAULT_M)
+            w, manifest, qa = build_world.build(REGION_ID, out_root=out, verbose=False)
     except BaseException:
         _restore(snap, _snapshot())
         raise

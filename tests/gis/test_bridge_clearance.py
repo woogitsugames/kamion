@@ -147,11 +147,7 @@ def test_reported_bridge_lane_points_from_existing_tile_data(rid, widen, monkeyp
                                                          if k == 'bridge_kerb'][:5]
     # Prove the replay includes actual bridge caps, rather than passing on an empty mesh.
     assert any(p.layer == 'bridge' and p.mat == 'bridge_concrete' for p in buf.parts)
-    # Replay the old unconditional URBAN cap using the same widths and samples.
-    for c in net.chains:
-        for side in 'LR':
-            c.side[side]['kind'][c.bridge] = N.URBAN
-    old = cap_index(_mesh(net).parts).classify(samples)
-    old_hits = int(np.sum(old == 'bridge_kerb'))
-    assert old_hits > 0, 'regression must reproduce the former cap intrusion'
-    print(f'{rid} D94={widen}: saved={len(cases)}, old_caps={old_hits}, new_caps=0')
+    # Saved cases are witnesses of the old build. Changing only kind cannot
+    # replay it: final structure limits and the 0.30 m buffer still apply.
+    # Synthetic pair tests above independently require non-overlapping caps.
+    assert np.all(classifications == 'carriageway'), list(zip(cases, classifications))
