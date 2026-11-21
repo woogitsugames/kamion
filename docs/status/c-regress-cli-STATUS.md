@@ -6,3 +6,4 @@ Wejścia raw przez dowiązania; derived C to prywatna kopia, bez zapisów do wyn
 Krok 1: rozdzielono licznik starych instancji ogrodowych od koron ADR0308;
 fixture world jawnie buduje D94; bridge_clearance weryfikuje aktualną jezdnię zamiast pozornej rekonstrukcji starej kolizji.
 NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_bridge_clearance.py -q` (slot heavy).
+Test bridge_clearance: 23 passed (27 s). Świadkowie kolizji zamrożeni z historii git, bo bieżące QA po regeneracji słusznie nie zawiera bridge_kerb. Hero width sprawdza kapę względem aktualnych lg/rg i bufora zamiast starego stałego 10,6 m.
