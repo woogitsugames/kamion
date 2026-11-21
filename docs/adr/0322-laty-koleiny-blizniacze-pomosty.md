@@ -1,4 +1,4 @@
-# DRAFT: łaty asfaltu, łamanie kolein, wspólna bariera bliźniaczych pomostów (world-fix-b3-s24)
+# ADR 0322 — Łaty asfaltu, łamane koleiny, wspólna bariera bliźniaczych pomostów
 
 Status: propozycja (numer nada lider).
 
