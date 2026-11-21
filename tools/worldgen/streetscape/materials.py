@@ -478,8 +478,23 @@ M = {
     # ADR 0320 monuments: patinated bronze (dark brown-green, satin), grey granite block (flamed, not mirror-polished),
     # weathered sandstone of the Czarniecki monument in Tykocin (Commons cs152250554 / cs35733636, reference only).
     # WORKING_VALUE: no reflectance measurement.
-    "monument_bronze": {"color": [0.060, 0.070, 0.058], "rough": 0.52, "metal": 0.6},
-    "monument_granite": {"color": [0.17, 0.17, 0.175], "rough": 0.45, "texture_set": "plaster", "splash_h": 0.25},
+    # ADR 0325 (Knyszyn king, Commons cs128805425 / cs7518515 / cs20127375, reference only): the bronze reads blue-grey
+    # under the sky and brown in the shade - dark metallic base, a rougher, greener, less metallic patina for the fur,
+    # the ruff and the hollows, and a lighter rubbed tone for the crown, the chains and the face. Grey speckled granite
+    # of the plinth, honed (not mirror). WORKING_VALUE: no reflectance measurement.
+    "monument_bronze": {"color": [0.105, 0.098, 0.088], "rough": 0.48, "metal": 0.85},
+    "monument_bronze_patina": {"color": [0.070, 0.082, 0.072], "rough": 0.78, "metal": 0.30},
+    "monument_bronze_rubbed": {"color": [0.200, 0.155, 0.105], "rough": 0.40, "metal": 0.90},
+    "monument_granite": {"color": [0.20, 0.20, 0.205], "rough": 0.38, "texture_set": "plaster", "splash_h": 0.25},
+    # ADR 0325: stone setts of Plac Czarnieckiego in Tykocin (art-source/world/materials/_src/sets_plaza.py). The lattice
+    # set carries its own colours (tint 1 at the set mean); the neutral row set is tinted red (border band) or granite
+    # grey (walks around the lawns). Mesh UV0 in metres (paved.py: plaza `uv_frame` / dominant axis of the strip).
+    "plaza_sett_lattice": {"color": _set_mean("sett_lattice_tykocin", [0.245, 0.215, 0.205]), "rough": 0.85,
+                           "surface": "paving_stones", "texture_set": "sett_lattice_tykocin", "set_tile": True},
+    "plaza_sett_red": {"color": [0.165, 0.074, 0.060], "rough": 0.85, "surface": "paving_stones",
+                       "texture_set": "sett_rows_tint", "set_tile": True},
+    "plaza_sett_grey": {"color": [0.305, 0.305, 0.30], "rough": 0.85, "surface": "paving_stones",
+                        "texture_set": "sett_rows_tint", "set_tile": True},
     "monument_sandstone": {"color": [0.30, 0.275, 0.235], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.6},
     "monument_gilt": {"color": [0.55, 0.40, 0.10], "rough": 0.4, "metal": 0.8},
     "truss_steel": {"color": [0.40, 0.41, 0.41], "rough": 0.62, "metal": 0.15},
