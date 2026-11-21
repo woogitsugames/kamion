@@ -1612,6 +1612,18 @@ def _patch_uv1(net, j, V, poly=None):
         # pair fell to the flare ramp (integer lane) and their wheel paths ended in zigzags at the barrier of DK65 W.
         # Every arm references its own lanes; past the chain end they fade (PLATE_END_FADE_M).
         ref = list(range(len(j.arms)))
+    else:
+        # ADR 0323 (critic wave 6 pkt 2.3, dk65-06 roundabout_02_above): a carriageway split (two-way road -> entry +
+        # exit lane round a splitter island; start of a dual carriageway) took the lanes of the two-way arm and of ONE
+        # one-way arm: straight parallel wheel paths ran on across the mouth and under the island. Each of the three
+        # arms references its own lanes; outside an arm's width the coordinate ramps to an integer (no wheel path)
+        # and it fades past the chain ends, so the wedge between the two one-way arms stays clean.
+        ow = []
+        for i, a in enumerate(j.arms):
+            sec_a = a.chain.section(float(a.s(float(j.trims[i]))), net.sec_list)
+            ow.append(bool(getattr(sec_a, "oneway", False)))
+        if len(j.arms) == 3 and sum(ow) == 2:
+            ref = [0, 1, 2]
 
     def _lane_coord(sec, lat_arr, hw_val, dir_val):
         if getattr(sec, "lane_edges", None):
