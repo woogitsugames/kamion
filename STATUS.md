@@ -27,3 +27,6 @@
 - NASTĘPNY KROK po DONE: import-region.ps1 -Region <r> -SkipCopy? (sprawdzić), visual-qa WorldC High, porównanie z vqa-wave5.
 - pytest ditch_floor + water_0213 + embankment_pylons: 58 pass (przed przebudową). Czekam na slot heavy (3/3 zajęte).
 - Przygotowany łańcuch Unity: artifacts/world-fix2-s24/unity.ps1 (import High 4 kafli, VQA after/, EditMode). Start po DONE w rebuild.status: pwsh -File artifacts/world-fix2-s24/unity.ps1
+- water_banks tykocin v2: pas 9 132 m (było 9 134), koniec pasa wchodzi w bufor chodnika p50/p90 0,23/0,47 m (było
+  1,05/1,64 m, max 1,99 = na ścieżce); przy promenadzie śr. szer. pasa 7,41 -> 5,47 m. Trzcina MIĘDZY promenadą a
+  wodą zostaje — zgodne z Commons Tykocin_Most_drogowy_03/05 (szuwar za balustradą promenady).
