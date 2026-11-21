@@ -59,6 +59,8 @@ def test_extract_hash_matches_manifest():
     assert "kamion" not in RP.GENERIC_UA.lower() and "truck" not in RP.GENERIC_UA.lower()
 
 
+WATER_S24 = {"dw671-tykocin-01", "dw671-tykocin-02", "dw671-tykocin-08", "dw671-tykocin-09", "tykocin"}
+
 # ----------------------------------------------------------------------------------------------- registry
 def test_new_entries_generated_from_plan():
     assert len(NEW) == len(set(NEW)) == 18
@@ -70,7 +72,8 @@ def test_new_entries_generated_from_plan():
         # the status goes verbatim into region.yaml (build_region): it must not say "not built" - whether a tile is
         # built is read from the disk (region.yaml), see test_authored_files_present_and_consistent
         assert r.title == RP.TITLES[r.id] and "ADR 0231" in r.status and "not built" not in r.status
-        assert r.water is False                                   # ADR 0210 stays opt-in (open point in ADR 0231)
+        # ADR 0210 stays opt-in (open point in ADR 0231); water-tykocin-s24 opted in the tiles with surface water
+        assert r.water is (r.id in WATER_S24)
 
 
 def test_ids_unique_and_keys_match():

@@ -111,7 +111,7 @@ def test_reed_texture_tiles_and_clips():
 def test_regions_and_isolation():
     import regions
     on = sorted(r.id for r in regions.REGIONS.values() if r.water)
-    assert on == ["dk65-02", "dk65-03"]
+    assert on == ["dk65-02", "dk65-03", "dw671-tykocin-01", "dw671-tykocin-02", "dw671-tykocin-08", "dw671-tykocin-09", "knyszyn", "knyszyn-s", "tykocin"]      # water-tykocin-s24
     bw = (REPO / "tools" / "worldgen" / "roads" / "build_world.py").read_text(encoding="utf-8")
     assert '"water_reeds"' in bw and '"banks", "banks_low"' in bw
     assert "if w.water is not None:            # ADR 0213" in bw

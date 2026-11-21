@@ -1,0 +1,170 @@
+{
+ "banks": {
+  "bank_shrubs": {
+   "skipped": {
+    "blocked": 93,
+    "near_tree": 232
+   },
+   "tree_alder": 12,
+   "tree_shrub": 85
+  },
+  "banks": {
+   "ribbons": 1345,
+   "triangles": 43880
+  },
+  "banks_low": {
+   "ribbons": 178,
+   "triangles": 2548
+  }
+ },
+ "bodies": [
+  {
+   "area_m2": 24767,
+   "kind": "woda płynąca",
+   "name": "Nereśl",
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-9CA6-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 873,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:df832f94-f32a-4a8c-aee2-6b25ad9aa8d0:0"
+  },
+  {
+   "area_m2": 1127,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/821878530:0"
+  }
+ ],
+ "carve": {
+  "bank_nodes_lowered": 20883,
+  "bed_lowered_m_max": 3.28,
+  "bed_nodes": 30154,
+  "lip_nodes_raised": 676,
+  "water_nodes_kept_by_road": 13
+ },
+ "profiles": [
+  {
+   "kind": "canal",
+   "len_m": 507,
+   "level_first_m": 104.87,
+   "level_last_m": 104.79,
+   "name": null,
+   "raw_min_max_m": [
+    104.78,
+    104.89
+   ],
+   "reversed": false,
+   "src": "osm:way/301568230:0",
+   "stations": 102
+  },
+  {
+   "kind": "river",
+   "len_m": 2980,
+   "level_first_m": 107.71,
+   "level_last_m": 104.76,
+   "name": "Nereśl",
+   "raw_min_max_m": [
+    104.76,
+    107.71
+   ],
+   "reversed": false,
+   "src": "osm:way/308475527:0",
+   "stations": 596
+  },
+  {
+   "kind": "river",
+   "len_m": 2968,
+   "level_first_m": 107.4,
+   "level_last_m": 104.76,
+   "name": "Nereśl",
+   "raw_min_max_m": [
+    104.76,
+    107.4
+   ],
+   "reversed": false,
+   "src": "bdot10k:OT_SWRS_L:2C9A9ABA-0452-0F0D-E053-CA2BA8C04DCD:0",
+   "stations": 594
+  },
+  {
+   "kind": "stream",
+   "len_m": 510,
+   "level_first_m": 104.85,
+   "level_last_m": 104.79,
+   "name": null,
+   "raw_min_max_m": [
+    104.78,
+    104.89
+   ],
+   "reversed": false,
+   "src": "bdot10k:OT_SWRS_L:38607492-079a-4a03-8d0b-ee1b9904c304:0",
+   "stations": 103
+  }
+ ],
+ "region": "dw671-tykocin-09",
+ "schema": "truck-sim-pl/water-qa/1",
+ "seams": [
+  {
+   "edge": "E",
+   "level_m": 104.87,
+   "nodes": 6,
+   "own_m": [
+    104.86,
+    104.866
+   ]
+  },
+  {
+   "edge": "N",
+   "level_m": 106.46,
+   "nodes": 11,
+   "own_m": [
+    106.43,
+    106.431
+   ]
+  },
+  {
+   "edge": "N",
+   "level_m": 106.456,
+   "nodes": 17,
+   "own_m": [
+    106.436,
+    106.795
+   ]
+  },
+  {
+   "edge": "S",
+   "level_m": 105.15,
+   "nodes": 16,
+   "own_m": [
+    104.76,
+    104.76
+   ]
+  },
+  {
+   "edge": "S",
+   "level_m": 104.817,
+   "nodes": 10,
+   "own_m": [
+    104.79,
+    104.79
+   ]
+  }
+ ],
+ "sheet": {
+  "area_m2": 32528,
+  "triangles": 7392
+ },
+ "skipped": [],
+ "still_levels": [
+  {
+   "at_local_en": [
+    630.7,
+    -244.5
+   ],
+   "level_m": 105.29,
+   "nodes": 1237
+  }
+ ],
+ "water_nodes": 30167
+}
