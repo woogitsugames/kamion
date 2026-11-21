@@ -1,23 +1,22 @@
 {
  "by_source": {
   "skirt:j:road_asphalt": 2,
-  "skirt:j:sidewalk_paving": 1,
   "skirt:path_asphalt": 2,
   "skirt:yard_asphalt": 4,
   "skirt:yard_gravel": 3
  },
- "count": 12,
- "max_m": 1.267,
- "p99_m": 1.21,
+ "count": 11,
+ "max_m": 0.746,
+ "p99_m": 0.707,
  "skirt_area": [
   {
    "e": 581.2,
-   "exposed_m2": 5.902,
+   "exposed_m2": 4.939,
    "mat": "road_asphalt",
-   "max_h": 1.267,
+   "max_h": 0.746,
    "n": 0.9,
-   "points": 2,
-   "run_m": 29.205,
+   "points": 1,
+   "run_m": 26.465,
    "src": "j:n1847317032",
    "visible": true
   },
@@ -127,15 +126,7 @@
  "worst": [
   {
    "e": 581.2,
-   "h": 1.267,
-   "kind": "skirt",
-   "mat": "sidewalk_paving",
-   "n": 0.8,
-   "src": "j:n1847317032:corner1"
-  },
-  {
-   "e": 581.2,
-   "h": 0.745,
+   "h": 0.746,
    "kind": "skirt",
    "mat": "road_asphalt",
    "n": 0.9,

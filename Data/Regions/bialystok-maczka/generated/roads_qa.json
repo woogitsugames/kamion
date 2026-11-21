@@ -487,7 +487,7 @@
    "length_m": 440.1,
    "max_grade": 0.0345,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.316,
+   "profile_rms_vs_nmt_m": 0.317,
    "sidewalk_frac": 1.0,
    "width_m": [
     7.5
@@ -1817,7 +1817,7 @@
    "overrides": [
     "ortho-lanes-w173990800:1847317038-1847317037"
    ],
-   "profile_rms_vs_nmt_m": 2.453,
+   "profile_rms_vs_nmt_m": 2.455,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.05,
@@ -12936,7 +12936,7 @@
    "patches": 695
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 911501,
+  "footprint_nodes": 911432,
   "fork_abreast": [
    {
     "beside": "c:w173990798:1847317033-1847317040",
@@ -13989,15 +13989,15 @@
    "P-13": 18,
    "P-14": 18,
    "P-4 double centre line": 1,
-   "P-7b edge line": 63,
+   "P-7b edge line": 89,
    "P-8 arrow": 50,
    "P-8 skipped (lane too narrow)": 10,
    "P-8 skipped (lanes continue)": 6,
    "P-8 skipped (off carriageway)": 39
   },
-  "markings_overlap_removed_tris": 80,
+  "markings_overlap_removed_tris": 185,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 486,
+  "nmt_nodes_replaced_under_decks": 501,
   "overrides_applied": [
    {
     "id": "ortho-lanes-w173990800:1847317038-1847317037",
@@ -14148,26 +14148,26 @@
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 3988,
-   "parts": 496,
+   "kerb_tris": 3986,
+   "parts": 494,
    "side_tris": 491
   },
   "signalised_junctions": 6,
   "through_lines": {
    "crossing_pairs_skipped": 128,
-   "junctions": 65,
+   "junctions": 67,
    "lines": {
     "P-4": 1,
     "P-7a": 1,
-    "P-7b": 14,
+    "P-7b": 21,
     "lane": 109
    },
    "pairs": 234,
-   "unmatched": 33
+   "unmatched": 37
   },
   "verge_strips": {
    "chunks": 49,
-   "tris": 82430
+   "tris": 82596
   },
   "walled_ramps": [
    {
@@ -14180,9 +14180,9 @@
    {
     "chain": "c:w173990799:1847317047-1847317038",
     "confidence": "medium",
-    "max_wall_h_m": 5.87,
+    "max_wall_h_m": 5.88,
     "nmt_fill_max_m": 1.76,
-    "walled_m": 174.9
+    "walled_m": 175.4
    }
   ]
  }

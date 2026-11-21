@@ -104,9 +104,9 @@
     3
    ],
    "length_m": 202.3,
-   "max_grade": 0.0439,
+   "max_grade": 0.0436,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.34,
+   "profile_rms_vs_nmt_m": 0.335,
    "sidewalk_frac": 0.0,
    "width_m": [
     12.25
@@ -496,9 +496,9 @@
     3
    ],
    "length_m": 303.5,
-   "max_grade": 0.0474,
+   "max_grade": 0.0465,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.286,
+   "profile_rms_vs_nmt_m": 0.283,
    "sidewalk_frac": 0.0,
    "width_m": [
     9.0,
@@ -1147,9 +1147,9 @@
     2
    ],
    "length_m": 135.3,
-   "max_grade": 0.017,
+   "max_grade": 0.0185,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.02,
+   "profile_rms_vs_nmt_m": 0.022,
    "sidewalk_frac": 1.0,
    "width_m": [
     6.5
@@ -2642,14 +2642,14 @@
    "P-10 crossing in junction": 2,
    "P-13": 4,
    "P-14": 2,
-   "P-7b edge line": 68,
+   "P-7b edge line": 76,
    "P-8 arrow": 11,
    "P-8 skipped (lane too narrow)": 1,
    "P-8 skipped (lanes continue)": 4
   },
   "markings_overlap_removed_tris": 175,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 2046,
+  "nmt_nodes_replaced_under_decks": 2074,
   "overrides_applied": [],
   "overrides_stale": [],
   "paint_clear_tris": {},
@@ -2675,25 +2675,25 @@
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 4236,
-   "parts": 317,
-   "side_tris": 289
+   "kerb_tris": 3854,
+   "parts": 306,
+   "side_tris": 225
   },
   "signalised_junctions": 2,
   "through_lines": {
    "crossing_pairs_skipped": 4,
-   "junctions": 14,
+   "junctions": 15,
    "lines": {
-    "P-7a": 4,
-    "P-7b": 17,
+    "P-7a": 5,
+    "P-7b": 22,
     "lane": 24
    },
    "pairs": 63,
-   "unmatched": 13
+   "unmatched": 11
   },
   "verge_strips": {
    "chunks": 22,
-   "tris": 16973
+   "tris": 16987
   },
   "walled_ramps": []
  }

@@ -2,7 +2,7 @@
  "by_kind": {
   "arrow_no_exit": 6,
   "lane_blind_end": 28,
-  "marking_off_carriageway": 5,
+  "marking_off_carriageway": 9,
   "obstacle_in_lane": 2
  },
  "cases": [
@@ -120,6 +120,21 @@
    "what": "none"
   },
   {
+   "chain": "c:w227027719:2357586167-1889474201",
+   "e": -1020.74,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596087,
+   "lon": 23.1140354,
+   "n": -59.63,
+   "on_route": true,
+   "osm_ways": [
+    227027719
+   ],
+   "surface": "sidewalk",
+   "what": "P-7b"
+  },
+  {
    "chain": "c:w249740770:2357579520-6644270078",
    "e": -705.6,
    "junction": null,
@@ -132,6 +147,51 @@
     249740770
    ],
    "surface": "verge_grass",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w617517004:1889474194-5837318150",
+   "e": 13.71,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1590357,
+   "lon": 23.1294675,
+   "n": -63.86,
+   "on_route": true,
+   "osm_ways": [
+    617517004
+   ],
+   "surface": "shoulder",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w693614874:5837318150-5837318149",
+   "e": 30.51,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1590269,
+   "lon": 23.1297182,
+   "n": -63.87,
+   "on_route": true,
+   "osm_ways": [
+    693614874
+   ],
+   "surface": "verge_grass",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w693614874:5837318150-5837318149",
+   "e": 31.72,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1590381,
+   "lon": 23.1297373,
+   "n": -62.55,
+   "on_route": true,
+   "osm_ways": [
+    693614874
+   ],
+   "surface": "shoulder",
    "what": "P-7b"
   },
   {
@@ -795,12 +855,12 @@
    "what": "verge_grass"
   }
  ],
- "count": 41,
+ "count": 45,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "arrow_no_exit": 3,
   "lane_blind_end": 3,
-  "marking_off_carriageway": 5,
+  "marking_off_carriageway": 9,
   "obstacle_in_lane": 2
  },
  "params": {
@@ -818,16 +878,16 @@
  "route_segments_s_m": [
   [
    0.0,
-   2052.0
+   2054.0
   ]
  ],
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 833,
-  "kerb_tris": 110791,
+  "kerb_tris": 110779,
   "lane_samples": 115250,
   "lane_samples_in_taper": 103,
-  "marking_tris": 15119,
+  "marking_tris": 16046,
   "props_checked": 1682
  }
 }
