@@ -1,5 +1,6 @@
 """Budget table r0 -> rN from visual-qa stats.txt (editor estimate, before SRP batching). usage: budget.py rN > budget-rN.md"""
 import re, sys
+sys.stdout.reconfigure(encoding="utf-8")
 from pathlib import Path
 A = Path(__file__).resolve().parent
 R = sys.argv[1]
