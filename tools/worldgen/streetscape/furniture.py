@@ -2327,6 +2327,86 @@ def _structures(net):
     return out
 
 
+# build #3 / world-fix-b3-s24: twin decks side by side with a narrow gap (C, DK8 eastbound w173956078 beside the Putry
+# ramp w173956079 at E -749...-740 N 50: cap 0.145 m, the ramp lanes 1.15-1.65 m beyond it after D94). A cap narrower
+# than 0.30 m carries no barrier (deck_edge), so the deck barrier stopped in the air before the ramp deck.
+# Road practice for parallel structures with a narrow joint: the gap is covered and ONE double-sided barrier stands
+# in the central reserve between the two carriageways instead of a barrier on each inner deck edge (EN 1317-2 median
+# use; GDDKiA "Wytyczne stosowania drogowych barier ochronnych na drogach krajowych" 2010 - clause UNVERIFIED).
+# The rail is placed in the middle of the clear gap; below TWIN_SHARED_MIN_M there is no room for it (post line
+# GUARDRAIL_PAVEMENT_CLEAR_M + envelope from each carriageway), above TWIN_SHARED_MAX_M the decks are separate.
+TWIN_SHARED_MAX_M = 2.5      # WORKING_VALUE: clear gap between the two carriageways (lane edge to lane edge)
+TWIN_SHARED_MIN_M = 1.0      # WORKING_VALUE: 2 x (0.25 m clear + 0.22 m hardware envelope) + tolerance
+TWIN_SHARED_DZ = 0.8         # same level (a deck over a ground road is not a twin)
+
+
+def _deck_carriageways(net):
+    """[(chain id, carriageway polygon of its deck stretches (lanes only, no cap), KD-tree of axis points, heights)]."""
+    from scipy.spatial import cKDTree
+    from shapely.geometry import LineString
+    out = []
+    for c in net.chains:
+        if c.meta.get("absorbed"):
+            continue
+        idx = np.where(np.asarray(c.bridge, bool))[0]
+        if len(idx) < 3:
+            continue
+        for run in np.split(idx, np.where(np.diff(idx) > 1)[0] + 1):
+            if len(run) < 3:
+                continue
+            pts = c.line.p[run]
+            polys = [LineString(pts[i:i + 2]).buffer(float(max(c.hw[run[i]], c.hw[run[i + 1]])), cap_style="flat")
+                     for i in range(len(run) - 1)]
+            out.append((c.id, shapely.union_all(polys), cKDTree(pts),
+                        np.asarray(c.crossfall_z(c.line.s[run], 0.0), float)))
+    return out
+
+
+def _twin_deck_gap(c, ss, sgn, hw, zg, decks):
+    """Clear gap (m) from the edge of chain c on side sgn to the carriageway of ANOTHER deck at the same level, per
+    station; inf where there is none within TWIN_SHARED_MAX_M."""
+    E = c.line.offset_point(ss, sgn * hw)
+    E_out = c.line.offset_point(ss, sgn * (hw + TWIN_SHARED_MAX_M + 0.5))
+    gap = np.full(len(ss), np.inf)
+    if not len(ss):
+        return gap
+    lo, hi = E.min(0) - 5.0, E.max(0) + 5.0
+    for cid, poly, tree, z in decks:
+        if cid == c.id:
+            continue
+        b = poly.bounds
+        if b[0] > hi[0] or b[2] < lo[0] or b[1] > hi[1] or b[3] < lo[1]:
+            continue
+        pts = shapely.points(E)
+        d = shapely.distance(poly, pts)
+        # on the outer side only: the other deck is crossed by the probe going outwards, not behind this chain
+        hit = shapely.intersects(poly, shapely.linestrings(np.stack([E, E_out], axis=1)))
+        cand = hit & (d < TWIN_SHARED_MAX_M) & ~shapely.contains(poly, pts)
+        if not cand.any():
+            continue
+        _, k = tree.query(E[cand])
+        same = np.abs(z[k] - zg[cand]) <= TWIN_SHARED_DZ
+        ii = np.where(cand)[0][same]
+        gap[ii] = np.minimum(gap[ii], d[ii])
+    return gap
+
+
+def _twin_gap_cover(lin, c, ss, sgn, o_in, o_out, z, src):
+    """Concrete cover strip over this deck's half of a twin-deck gap (contiguous 1 m stations only)."""
+    quads = []
+    for i in range(len(ss) - 1):
+        if ss[i + 1] - ss[i] > 1.01 or o_out[i] <= o_in[i] or o_out[i + 1] <= o_in[i + 1]:
+            continue
+        s2 = ss[i:i + 2]
+        a = c.line.offset_point(s2, sgn * o_in[i:i + 2])
+        b = c.line.offset_point(s2, sgn * o_out[i:i + 2])
+        pts = [(*a[0], z[i]), (*a[1], z[i + 1]), (*b[1], z[i + 1]), (*b[0], z[i])]
+        if sgn < 0:
+            pts = pts[::-1]
+        quads.append((pts, [(0, 0), (1, 0), (1, 1), (0, 1)]))
+    _quads(lin, "bridge", "bridge_concrete", quads, src)
+
+
 def _beside_structure(c, ss, sgn, hw, zg, structs):
     """Stations of chain c whose edge on side sgn runs beside (not under) a viaduct / walled ramp of another chain."""
     E = c.line.offset_point(ss, sgn * (hw + 0.75))
@@ -2404,6 +2484,7 @@ def guardrails(lin, net, zground, report):
     built = []
     drops, runs = [], []
     structs = _structures(net)
+    twin_decks = None            # world-fix-b3-s24: built lazily (only chains with a cap < 0.30 m need it)
     # ADR 0117: authored rails are built FIRST (they are traced; the rule runs give way and join them); runs are
     # queued so that a later join can still cancel the turned-down terminal of the rail it lands on
     lin.rail_queue = []
@@ -2518,6 +2599,26 @@ def guardrails(lin, net, zground, report):
                             np.clip(edge, S.BRIDGE_BARRIER_EDGE_MIN_M, S.BRIDGE_BARRIER_EDGE_M))
             off[br] = hw[br] + S.KERB_TOP_W + kw[br] - edge + np.where(kinds[br] == BRIDGE, S.BRIDGE_CLEAR_M, 0.0)
             zb[br] = zg[br] + S.BRIDGE_KERB_H
+            # world-fix-b3-s24: a cap too narrow for a barrier beside a twin deck -> one shared median rail in the
+            # middle of the gap (TWIN_SHARED_*); the other deck's inner rule rail is deduplicated onto it
+            narrow = br & (kmat != MAT_FLUSH_ROAD) & (kw < 0.30)
+            if narrow.any():
+                if twin_decks is None:
+                    twin_decks = _deck_carriageways(net)
+                ni = np.where(narrow)[0]
+                gap = _twin_deck_gap(c, ss[ni], sgn, hw[ni], zg[ni], twin_decks)
+                ok = (gap >= TWIN_SHARED_MIN_M) & (gap <= TWIN_SHARED_MAX_M)
+                if ok.any():
+                    tw = ni[ok]
+                    deck_edge[tw] = True
+                    want[tw] = 1
+                    off[tw] = hw[tw] + 0.5 * gap[ok]
+                    zb[tw] = zg[tw] + S.BRIDGE_KERB_H
+                    m["twin_shared_pts"] = m.get("twin_shared_pts", 0) + int(ok.sum())
+                    # gap cover plate under the shared rail: this deck's half, cap edge -> middle of the gap, 2 cm
+                    # below the cap top (a wider cap of the other deck, if it reaches past the middle, stays on top)
+                    _twin_gap_cover(lin, c, ss[tw], sgn, hw[tw] + S.KERB_TOP_W + kw[tw], hw[tw] + 0.5 * gap[ok],
+                                    zg[tw] + S.BRIDGE_KERB_H - 0.02, f"{c.id}:{side}:twin_cover")
             med = (kinds == MEDIAN_RURAL) & ~br
             want[med] = 2
             off[med] = hw[med] + S.PAVED_SHOULDER_MEDIAN + S.GUARDRAIL_OFFSET
