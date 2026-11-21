@@ -485,7 +485,8 @@ M = {
     "monument_bronze": {"color": [0.105, 0.098, 0.088], "rough": 0.48, "metal": 0.85},
     "monument_bronze_patina": {"color": [0.070, 0.082, 0.072], "rough": 0.78, "metal": 0.30},
     "monument_bronze_rubbed": {"color": [0.200, 0.155, 0.105], "rough": 0.40, "metal": 0.90},
-    "monument_granite": {"color": [0.20, 0.20, 0.205], "rough": 0.38, "texture_set": "plaster", "splash_h": 0.25},
+    "monument_granite": {"color": [0.215, 0.215, 0.22], "rough": 0.38, "texture_set": "granite_honed_tint",
+                         "set_tile": True, "splash_h": 0.25},
     # ADR 0325: stone setts of Plac Czarnieckiego in Tykocin (art-source/world/materials/_src/sets_plaza.py). The lattice
     # set carries its own colours (tint 1 at the set mean); the neutral row set is tinted red (border band) or granite
     # grey (walks around the lawns). Mesh UV0 in metres (paved.py: plaza `uv_frame` / dominant axis of the strip).

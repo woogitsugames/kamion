@@ -9,6 +9,7 @@ tile, period LATTICE_M (2.255 m measured, residuals < 0.10 m). Band width, sett 
                          through mesh UV0 in the plaza frame (paved_area `uv_frame`), calibrated colours
   sett_rows_tint         straight rows of small setts, neutral modulation map (mean 0.5): colour from the manifest
                          (red border band of the plaza, grey walks around the lawns)
+  granite_honed_tint     honed grey granite of a monument plinth (Knyszyn), neutral modulation map
 """
 from __future__ import annotations
 
@@ -16,7 +17,7 @@ import math
 
 import numpy as np
 
-from pbrkit import Ctx, SurfaceSet, calibrate, hash01, noise, sstep
+from pbrkit import Ctx, SurfaceSet, calibrate, hash01, noise, sstep, voronoi
 
 LATTICE_M = 2.255            # measured on the orthophoto (EPSG:2180), both band families
 BAND_M = 0.48                # WORKING_VALUE: 5 rows of ~9 cm setts (photo); the orthophoto blur gives FWHM 0.57 m
@@ -155,6 +156,30 @@ def sett_rows(n=1024):
                       detail_mask=block, ao_scales=(0.004, 0.014, 0.05), ao_k=0.6)
 
 
+def granite_honed(n=1024):
+    """Honed grey granite of a monument plinth: interlocking feldspar / quartz / biotite grains, no joints. Neutral
+    modulation map (mean 0.5), tile 0.8 m; the grains are too small to repeat visibly."""
+    L = 0.8
+    c = Ctx(n, n, L, L, seed=3253)
+    warp = (0.0012 * noise(c, 1, 0.003, 0.02), 0.0012 * noise(c, 2, 0.003, 0.02))
+    d1, d2, i1, _, _ = voronoi(c, 3, 0.0042, jitter=1.0, warp=warp)
+    r = hash01(i1, 4)
+    r2 = hash01(i1, 5)
+    # light feldspar 52 %, grey quartz 33 %, black biotite / hornblende 15 %
+    tone = np.where(r < 0.52, 0.66 + 0.10 * r2, np.where(r < 0.85, 0.44 + 0.10 * r2, 0.10 + 0.08 * r2))
+    big, _, i2, _, _ = voronoi(c, 6, 0.011, jitter=1.0)            # scattered larger feldspar crystals
+    tone = np.where(hash01(i2, 7) < 0.10, 0.72, tone)
+    edge = sstep(0.0, 0.0006, 0.5 * (d2 - d1))                     # grain boundaries a touch darker
+    tone = tone * (0.93 + 0.07 * edge) * (1 + 0.05 * noise(c, 8, 0.05, 0.4, beta=1.2))
+    dark = (tone < 0.25).astype(np.float32)
+    h = (-0.00015 * dark + 0.00004 * noise(c, 9, c.px * 2, 0.004, beta=0.4)).astype(np.float32)   # mica plucked by honing
+    alb = np.repeat(tone[..., None], 3, -1).astype(np.float32)
+    alb, _ = calibrate(alb, 0.5)
+    rough = np.clip(0.34 + 0.20 * dark + 0.05 * noise(c, 10, 0.02, 0.3), 0.2, 0.8).astype(np.float32)
+    return SurfaceSet("granite_honed_tint", c, alb, h, rough, r.astype(np.float32), dark, detail_mask=1 - dark,
+                      ao_scales=(0.002, 0.006, 0.02), ao_k=0.2)
+
+
 PLAZA_SETS = {
     "sett_lattice_tykocin": dict(
         fn=sett_lattice, tile_m=[round(TILE_M, 4), round(TILE_M, 4)], target=None, kind="tiling_set",
@@ -169,4 +194,9 @@ PLAZA_SETS = {
         slots=["plaza_sett_red", "plaza_sett_grey"],
         note="ADR 0325: small setts in straight staggered rows, neutral modulation map (mean 0.5); colour from the "
              "manifest (red border band of the plaza, grey granite walks)."),
+    "granite_honed_tint": dict(
+        fn=granite_honed, tile_m=[0.8, 0.8], target=0.5, kind="modulation_set", uv="mesh_uv0_metres (u along, v up)",
+        slots=["monument_granite"],
+        note="ADR 0325: honed grey granite (feldspar / quartz / biotite grains 3-11 mm), neutral modulation map "
+             "(mean 0.5); colour from the manifest. Plinth of the king's monument in Knyszyn."),
 }
