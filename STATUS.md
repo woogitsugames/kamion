@@ -3,7 +3,8 @@
 - Przyczyna P2: roads/decals.py patch() = ostry prostokąt, materiał decal_patch nieprzezroczysty, aged_tone 1.08 bez _ROADWEAR (droga ciemniejsza o koleiny/drip) -> jasne łaty.
 - krok 1 (kod) OK: WorldPBR _DECAL_PATCH zaokrąglone + poszarpane krawędzie (value noise w przestrzeni obiektu) + alpha blend (queue +12); ton łat fresh 0,72 / aged 0,76 (było 0,88/1,08; zmierzone 1,47x jaśniej niż droga). P3: na płytach skrzyżowań koleiny łamane szumem 1-6 m i kontrast /2.
 - krok 2: kamery limit_b16_bridge_n_{025,060,100}m w tykocin (authored). Bariera C: debug clip w tle (artifacts/world-fix-b3-s24/dbg_clip.log), przebudowa dw671-01/-07 w tle (builds.status).
-- NASTĘPNY KROK: po dbg_clip naprawa bariery w furniture.py; potem pwsh scripts/import-region.ps1 -Region dw671-tykocin-01 -Tiers High -BuildTarget Win64 (slot unity) + visual-qa.
+- krok 3: przyczyna wolnego końca C w173956078 R: stacje pomostu z kapą 0,145 m (< 0,30) dostają want=0 (deck_edge) - nie dedup/clip (dbg_clip2.log). Naprawa furniture.py: TWIN_SHARED_* - jedna wspólna bariera w środku szczeliny 1,0-2,5 m między bliźniaczymi jezdniami + płyta przykrycia szczeliny (bridge_concrete). Przebudowa C w tle (build_C.log). Import dw671-01: 1. próba exit 2 (brak SM_CabInterior_LOD0.fbx w worktree - skopiowany z main), ponowiony (import_dw671-01b.log).
+- NASTĘPNY KROK: pytest tests/gis/test_barrier_ends.py tests/gis/test_barriers_0159.py po build_C; visual-qa World_dw671-tykocin-01_High.
 
 # qa-d94-cli — zakończone
 
