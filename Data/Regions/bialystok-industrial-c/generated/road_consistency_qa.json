@@ -2,8 +2,8 @@
  "by_kind": {
   "arrow_no_exit": 8,
   "lane_blind_end": 32,
-  "marking_off_carriageway": 4,
-  "obstacle_in_lane": 2
+  "marking_off_carriageway": 2,
+  "obstacle_in_lane": 1
  },
  "cases": [
   {
@@ -502,16 +502,16 @@
   },
   {
    "chain": "c:w344253268:14311000107-2229796335",
-   "dist_from_stop_m": 8.6,
-   "e": -214.83,
+   "dist_from_stop_m": 9.1,
+   "e": -214.87,
    "junction": "j:n2229796240",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.1502153,
-   "lon": 23.1558539,
-   "n": -941.9,
+   "lat": 53.1502251,
+   "lon": 23.1558543,
+   "n": -940.81,
    "on_route": false,
    "osm_ways": [
     344253268
@@ -582,16 +582,16 @@
   },
   {
    "chain": "c:w1408918579:4395843097-5202512272",
-   "dist_from_stop_m": 13.6,
-   "e": -91.65,
+   "dist_from_stop_m": 14.1,
+   "e": -90.96,
    "junction": "j:n2229796326",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.1517297,
-   "lon": 23.1578443,
-   "n": -765.87,
+   "lat": 53.1517315,
+   "lon": 23.1578548,
+   "n": -765.63,
    "on_route": false,
    "osm_ways": [
     1408918579
@@ -782,23 +782,6 @@
   },
   {
    "chain": "c:w240542867:1847044963-1832991672",
-   "e": -817.22,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1596664,
-   "lon": 23.1477495,
-   "n": 76.95,
-   "on_route": false,
-   "osm_ways": [
-    240542867,
-    257367451,
-    257367454
-   ],
-   "surface": "kerb",
-   "what": "P-7b"
-  },
-  {
-   "chain": "c:w240542867:1847044963-1832991672",
    "e": -690.52,
    "junction": null,
    "kind": "marking_off_carriageway",
@@ -832,21 +815,6 @@
    "what": "P-7b"
   },
   {
-   "chain": "c:w177948307:1883483212-1883101800",
-   "e": 983.06,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1496597,
-   "lon": 23.1737304,
-   "n": -934.05,
-   "on_route": false,
-   "osm_ways": [
-    177948307
-   ],
-   "surface": "verge_grass",
-   "what": "P-7b"
-  },
-  {
    "chain": "c:w174545870:131612943-1852176912",
    "e": -62.84,
    "junction": null,
@@ -861,25 +829,9 @@
    ],
    "s": 15.2,
    "what": "kerb"
-  },
-  {
-   "chain": "c:w177948307:1883483212-1883101800",
-   "e": 983.38,
-   "junction": null,
-   "kind": "obstacle_in_lane",
-   "lane": 0,
-   "lat": 53.1496618,
-   "lon": 23.1737354,
-   "n": -933.79,
-   "on_route": false,
-   "osm_ways": [
-    177948307
-   ],
-   "s": 10.1,
-   "what": "verge_grass"
   }
  ],
- "count": 46,
+ "count": 43,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "lane_blind_end": 1

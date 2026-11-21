@@ -1241,14 +1241,14 @@
   "tools/worldgen/roads/carriageway_split.py": "c79e82ddcf05d4363e231b4546f25dc37ada97e8d9cfe2f3974a91f2fe1b603d",
   "tools/worldgen/roads/closures.py": "608718189eb6680ca61538d47acb021d1be85e4dbbd001f315a0f2caffb45fa9",
   "tools/worldgen/roads/compact_roundabout.py": "b57e8ea73574bb272763ae5c4e7584118e6326fb0035beda7e4656aae4bf15ac",
-  "tools/worldgen/roads/consistency.py": "cfa6f630898ee6f33bd10621460bb0fd6dfe0e0d17eeff4bf6ca8b7d6acf4b7e",
+  "tools/worldgen/roads/consistency.py": "2c3aed375a203e0ce172cf523d3ae0e3e2637650aeeedd9e05b388e7ed1fbd71",
   "tools/worldgen/roads/context.py": "90f3a943cc21d0be5c46f4346c01c02dfa52ef7abb3d850c0fbe20f31fe37aa2",
   "tools/worldgen/roads/decals.py": "b371e415bf5dd322bd9358b34b046678bc689a68baf4d25b55ac1335a35d3f3e",
   "tools/worldgen/roads/geom.py": "8f9f732d90273b92cf23f00f65c6a2c7eed6d1f9a0b3cc211679a908f2788e21",
   "tools/worldgen/roads/gores.py": "3502f14e19eb9711092ba27b287f75c9d7b4013deb79614a273df03850c5c63b",
   "tools/worldgen/roads/junctions.py": "ee3ea6a082078637ffad54dfaefc195d19bf7ccaa45e23ce2eed58a8bc8dfd29",
-  "tools/worldgen/roads/markings.py": "2977f2143796773d8a67b4f47c0db496932ef30f8050321eaf0318ad850dfba3",
-  "tools/worldgen/roads/meshing.py": "9c6766916e7617da1b80e973196af60c61f64ef3eaad6bd896cc59924435766a",
+  "tools/worldgen/roads/markings.py": "1af172e7857c638fbc074e484731574393793a07b4c2fd0617559c796db305a8",
+  "tools/worldgen/roads/meshing.py": "384fc48c43696e87f9ae15199140972842c00beb865713158cee875a17581518",
   "tools/worldgen/roads/network.py": "0fd1a6128049aca60d31e1138c65fd51c27f337ba174b02b11ec49165465af8a",
   "tools/worldgen/roads/p21_hatch.py": "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
   "tools/worldgen/roads/pipeline.py": "5652e58227bd1c7a3cf4512a7306c5e3983e0578e8bfab0d59c27b1ab393a3c4",
@@ -8233,20 +8233,6 @@
       -461.136,
       -4.561
      ]
-    },
-    {
-     "chain": "c:w173956083:1852129066-2629251371",
-     "kind": "P-14",
-     "ortho": {
-      "band_frac": 0.178,
-      "offset_m": -4.5,
-      "present": false
-     },
-     "s": 50.205,
-     "xy": [
-      -502.245,
-      21.438
-     ]
     }
    ]
   },
@@ -8941,14 +8927,14 @@
      "chain": "c:w173956083:1852129066-2629251371",
      "kind": "P-14",
      "ortho": {
-      "band_frac": 0.178,
-      "offset_m": -4.5,
+      "band_frac": 0.244,
+      "offset_m": 6.2,
       "present": false
      },
-     "s": 50.205,
+     "s": 72.21,
      "xy": [
-      -502.245,
-      21.438
+      -518.393,
+      36.404
      ]
     },
     {
@@ -9266,8 +9252,8 @@
     "10_rondo_putry": 0.715,
     "11_dk8": 0.672
    },
-   "stop_lines_checked": 17,
-   "stop_lines_not_on_ortho": 13
+   "stop_lines_checked": 16,
+   "stop_lines_not_on_ortho": 12
   },
   "tile": {
    "axis_vs_osm_m": {
