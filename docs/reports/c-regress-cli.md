@@ -64,4 +64,16 @@ Replay po trzech zmianach: 7 → **1** wolny koniec. Pozostały: w173956078 R, E
 | `test_world_roads.py:202` krzywizna profilu 0,0066765 > 1/150 | fixture `world` od `d7e2912fc` (Codex, dla determinizmu) buduje geometrię CLI z D94, a test miał tolerancję 1e-6 zamiast akceptacji generatora `roads/profile.py:111` (k > kmax·1,002) | test używa tej samej tolerancji 1,002 (`PROFILE_KMAX_TOL`) — zmiana zamierzona, generator nie zmieniony |
 | `test_world_roads.py:212` szerokość 7,5 ≠ 7,0 | ta sama zmiana fixture: D94 dodaje do authored 7,0 m raz `gameplay_widen_m` = 0,5 m | test sprawdza bazową szerokość authored (`width − gameplay_widen_m` = 7,0) |
 
-Pełny wynik po przebudowie będzie uzupełniony po zakończeniu pytest.
+### Końcowy pytest (C na 1b86e7b9d, dane 0f91799fc)
+
+`pytest tests/gis -q`: **3 failed, 2859 passed, 6 skipped, 2 xfailed** w 3390 s (`artifacts/c-regress-cli/pytest-after2.log`). Przechodzą: test_bridge_clearance, typology Dojlidy/C, route_links jeroniki→dk65-01, determinizm, far-field, zebry, profil, filar, separator DK8, depot gate i oba testy world_roads.
+
+Trzecia porażka `test_yard_wear.py:79` (wysepka bramy 5,6 < 6 m²) wynikała z mojej poprawki szlabanu: obudowa przesunęła się na 17,0 m, 0,5 m za nos mediany, więc wysepka straciła 2 m z przodu. Poprawka `gate.py` (wysepka zachowuje długość i rośnie w stronę zajezdni) + przebudowa C nr 4 na `d2dc573d5`: wysepka 10,1 m², rest_on_strip na wjeździe i wyjeździe True, far_field Low 29 161. Testy celowane na danych nr 4: test_yard_wear, test_depot_yard, test_c_barrier_regressions — zielone. Pełnego pytest po przebudowie nr 4 nie uruchamiałem (polecenie lidera: koniec rund).
+
+## Otwarte
+1. `test_barrier_ends.py:102`, `test_barriers_0159.py:113`: 1 wolny koniec bariery pomostu, w173956078 R przy E −749,2 N 50,7. Kapa ma tam 0,145 m, bo bliźniacza jezdnia w173956079 po D94 jest 1,15–1,65 m dalej, więc w buforze ADR 0310 nie ma miejsca na barierę. Decyzja lidera: wspólna bariera środkowa między bliźniaczymi pomostami albo świadome zakończenie barier.
+2. Pełny pytest gis na danych nr 4 (po zmianie wysepki) przed scaleniem.
+3. Wyjątek własnego pobocza (`own_shoulder`) zmienia kontrakt ADR 0310; do dopisania w ADR przez lidera albo w nowym ADR.
+4. Inne kafle nie były przebudowane na nowym kodzie barier i szlabanu (zmiany dotyczą wszystkich kafli z mostami / bramami depot).
+
+

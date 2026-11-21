@@ -231,3 +231,5 @@ NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/
 - NASTĘPNY KROK: `Get-Content artifacts/c-regress-cli/pytest-after.log -Tail 40`
 - 08:3x C przebudowany na 1b86e7b9d (dane 0f91799fc): rest_on_strip entry/exit True, wolne końce 1, far_field Low 29161. Pytest #1 po przebudowie: 5 failed / 2857 passed (pytest-after.log). Końcowy pytest gis w tle -> pytest-after2.log.
 - NASTĘPNY KROK: `Get-Content artifacts/c-regress-cli/pytest-after2.log -Tail 20`, uzupełnić raport
+- KONIEC: przebudowa nr 4 (d2dc573d5) exit 0, wysepka 10,1 m2, testy celowane zielone. Końcowy pełny pytest (dane nr 3): 3 failed / 2859 passed. Otwarte: 1 wolny koniec (decyzja lidera), pełny pytest na danych nr 4.
+- NASTĘPNY KROK (lider): decyzja o scaleniu; `uv run --project tools/worldgen pytest tests/gis -q`
