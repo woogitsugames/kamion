@@ -37,10 +37,14 @@ namespace NavRunner.Tests
                 onRing |= ring;
             }
             Assert.True(exit > 0);
-            Vector2 exitPoint = g.PointAlong(p.Directed[exit], 0f);
+            // The roundabout ends where the last ring edge ends. Edge geometry is the carriageway axis (ADR 0144), so
+            // since the D94 widening the exit edge may start a few cm off the ring end (both points stay in the
+            // polyline): anchor on the ring edge's own end, not on the start of the exit edge.
+            Vector2 ringEnd = g.PointAlong(p.Directed[exit - 1], float.MaxValue);
+            Assert.True(Vector2.Distance(ringEnd, g.PointAlong(p.Directed[exit], 0f)) < 0.5f, "exit edge leaves at the ring end");
             int end = -1;
             for (int i = p.ManPoint[rb]; i < p.Count; i++)
-                if (Vector2.Distance(p.Points[i], exitPoint) < 0.1f) { end = i; break; }
+                if (Vector2.Distance(p.Points[i], ringEnd) < 0.1f) { end = i; break; }
             Assert.True(end > p.ManPoint[rb]);
             var tr = new RouteTracker();
             var gd = new NavGuidance();
