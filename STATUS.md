@@ -39,3 +39,4 @@
 - rebuild2 knyszyn-w: sonda E122 N787 teren 0,6 m pod skarpą tylną, za krawędzią -0,14 m (fartuch zakopany),
   steep_grass 18 -> 5, max 0,505 -> 0,441 m. dk8-wasilkow-01: soft 5 949 / obniżone 5 430, steep_grass 30 -> 7.
 - 18:4x merge origin/main (landmarks ADR 0320, acff76556); tykocin przebudowa po merge: chain2.ps1 (rebuild3 tykocin -> unity.ps1).
+- 18:53 tykocin po merge zbudowany (commit); unity.ps1 w toku (import knyszyn-w buduje zestawy PBR — pierwszy raz w worktree).
