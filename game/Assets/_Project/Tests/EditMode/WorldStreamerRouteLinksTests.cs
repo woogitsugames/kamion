@@ -232,6 +232,119 @@ namespace Game.Tests
             Assert.AreEqual(2, path.appends, "each link once");
         }
 
+        // ------------------------------------------------------------------ route-start-s24: start tile replaced
+
+        sealed class FakeReplaceableRoute : IReplaceableStreamedRoute
+        {
+            public Vector3[] pts;
+            public int appends, replaces;
+            public bool accept = true;
+            public bool TryGetPathEnd(out Vector3 worldEnd)
+            {
+                if (pts == null || pts.Length < 2) { worldEnd = default; return false; }
+                worldEnd = pts[pts.Length - 1];
+                return true;
+            }
+            public void AppendPath(Vector3[] worldPoints, float[] speedLimitsKmh)
+            {
+                var n = new Vector3[pts.Length + worldPoints.Length];
+                pts.CopyTo(n, 0); worldPoints.CopyTo(n, pts.Length);
+                pts = n; appends++;
+            }
+            public bool TryReplacePath(Vector3[] worldPoints, float[] speedLimitsKmh, float maxOffsetM)
+            {
+                if (!accept) return false;
+                pts = worldPoints; replaces++;
+                return true;
+            }
+        }
+
+        /// <summary>Start tile t0 with a control route from its centre 500 m east (the C case: the route goes on north,
+        /// the trip turns off) and three links replacing that route: any (to the south), tykocin (to the north), monki.</summary>
+        (WorldStreamer s, FakeReplaceableRoute path) StartInT0(string destination, bool accept = true)
+        {
+            var g = Row3();
+            var t0 = g.Tiles[0];
+            var root = Make("Region_t0").AddComponent<WorldRegionRoot>();
+            root.regionId = t0.id; root.anchorX = t0.anchorX; root.anchorY = t0.anchorY; root.anchorZ = t0.anchorZ;
+            var b = root.gameObject.AddComponent<WorldBoundary>();
+            b.minEN = new Vector2(-924f, -924f); b.maxEN = new Vector2(924f, 924f);
+            var route = Make("Route_t0").AddComponent<WorldRoute>();
+            route.points = new[] { new Vector3(0f, 0f, 0f), new Vector3(250f, 0f, 0f), new Vector3(500f, 0f, 0f) };
+            route.speedLimitsKmh = new[] { 50f, 50f, 50f };
+            var vehicle = Make("Vehicle").transform;
+            var s = Make("Streamer").AddComponent<WorldStreamer>();
+            s.vehicle = vehicle; s.decideIntervalS = 0f;
+            s.source = new BuildTileSource(_ => false);
+            s.Init(g, 0, root);
+            Vector3 first = route.transform.TransformPoint(route.points[0]);
+            double x0 = s.AnchorX + first.x, y0 = s.AnchorY + first.z;
+            var data = new RouteLinksData
+            {
+                links = new[]
+                {
+                    Link("t0-any", "t0", "any", "t0", t0, x0, y0, x0 + 600.0, y0 - 300.0),
+                    Link("t0-tyk", "t0", "tykocin", "t0", t0, x0, y0, x0 + 600.0, y0 + 300.0),
+                    Link("t0-monki", "t0", "monki", "t0", t0, x0, y0, x0 + 600.0, y0 + 600.0),
+                },
+            };
+            s.SetRouteLinks(new RouteLinks(data, g));
+            s.routeDestination = destination;
+            var path = new FakeReplaceableRoute { pts = route.WorldPoints(), accept = accept };
+            s.routePath = path;
+            vehicle.position = first;
+            return (s, path);
+        }
+
+        [Test]
+        public void StartTile_RouteReplaced_ByTheLinkOfTheChosenDestination_OverAny()
+        {
+            var (s, path) = StartInT0("tykocin");
+            CallUpdate(s);
+            Assert.AreEqual(1, path.replaces, "the start route is the autopilot path: replaced, not appended to");
+            Assert.AreEqual(0, path.appends);
+            Assert.AreEqual(300f, path.pts[path.pts.Length - 1].z - path.pts[0].z, 0.01f, "tykocin link (any would end 300 m south)");
+            CallUpdate(s);
+            Assert.AreEqual(1, path.replaces, "once");
+            Assert.AreEqual(0, path.appends, "no other link joins the new end");
+        }
+
+        [Test]
+        public void StartTile_RouteReplaced_ByTheAnyLink_WhenTheDestinationHasNone()
+        {
+            var (s, path) = StartInT0("maczka");
+            CallUpdate(s);
+            Assert.AreEqual(1, path.replaces);
+            Assert.AreEqual(-300f, path.pts[path.pts.Length - 1].z - path.pts[0].z, 0.01f, "any link");
+        }
+
+        [Test]
+        public void StartTile_RouteKept_WhenTheDriverRefuses()
+        {
+            var (s, path) = StartInT0("tykocin", accept: false);
+            CallUpdate(s);
+            CallUpdate(s);
+            Assert.AreEqual(0, path.replaces);
+            Assert.AreEqual(0, path.appends, "a replacing link never continues the end of the route it replaces");
+        }
+
+        [Test]
+        public void ShippedLinks_C_EveryTripReplacesTheStartRoute_DestinationLinkFirst()
+        {
+            // build #3 P2: c-dk8-to-maczka is `replaces_route` (no U-turn over the DK8 median); dojlidy / wasilkow have their own
+            var g = TileGraph.LoadDefault();
+            var l = RouteLinks.LoadDefault(g);
+            int c = g.IndexOf("bialystok-industrial-c");
+            foreach (var dest in new[] { "tykocin", "s8", "maczka", "dojlidy", "wasilkow" })
+                Assert.IsTrue(l.IsRouteReplaced(c, dest), dest);
+            foreach (var x in l.Links)
+                if (x.tile == "bialystok-industrial-c")
+                {
+                    Assert.AreEqual("bialystok-industrial-c", x.replacesRoute, x.id);
+                    Assert.IsTrue(string.IsNullOrEmpty(x.afterRoute), x.id + ": nothing continues the C control route end");
+                }
+        }
+
         // ------------------------------------------------------------------ policy along the new seams at 90 km/h
 
         [Test]

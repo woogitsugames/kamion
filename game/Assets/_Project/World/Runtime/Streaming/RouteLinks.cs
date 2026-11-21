@@ -83,9 +83,13 @@ namespace Game.World.Streaming
             return ta != null ? FromJson(ta.text, graph) : new RouteLinks(new RouteLinksData(), graph);
         }
 
+        /// <summary>Link for every destination ("any" or empty): loses to a link naming the chosen destination
+        /// (route-start-s24, WorldStreamer.FindLink).</summary>
+        public static bool IsAnyDestination(string linkDestination) =>
+            string.IsNullOrEmpty(linkDestination) || linkDestination == "any";
+
         public static bool Applies(string linkDestination, string chosen) =>
-            string.IsNullOrEmpty(linkDestination) || linkDestination == "any" ||
-            string.Equals(linkDestination, chosen, StringComparison.OrdinalIgnoreCase);
+            IsAnyDestination(linkDestination) || string.Equals(linkDestination, chosen, StringComparison.OrdinalIgnoreCase);
 
         public bool Applies(int i, string chosen) => Applies(Links[i].destination, chosen);
 

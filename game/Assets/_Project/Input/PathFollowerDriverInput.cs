@@ -7,7 +7,7 @@ namespace Game.Controls
     /// route test. Speed: min(target, per-point limit, curvature limit v = sqrt(a_lat · R)), brakes to a stop at the end.
     /// Allocation-free; the path is set once.
     /// </summary>
-    public sealed class PathFollowerDriverInput : IDriverInput, Game.Core.IStreamedRoute
+    public sealed class PathFollowerDriverInput : IDriverInput, Game.Core.IReplaceableStreamedRoute
     {
         public string Name => "route";
         public bool Enabled { get; set; }
@@ -106,6 +106,39 @@ namespace Game.Controls
             }
             m_Points = pts; m_S = s; m_LimitKmh = lim;
             Finished = false;
+        }
+
+        /// <summary>Search window past the current route distance when re-locating on a replacement path [m].</summary>
+        const float ReplaceSearchAheadM = 50f;
+
+        /// <summary>
+        /// route-start-s24: swaps the whole path for <paramref name="worldPoints"/> (the world streamer replaces the start
+        /// tile's control route by the route link of the trip destination, same first point) and keeps driving from the
+        /// point of the new path nearest to the current progress point. Only segments up to the current route distance
+        /// + <see cref="ReplaceSearchAheadM"/> are searched (the new path shares the start; a later part of it may pass
+        /// close by). false = unchanged (disabled, no path, route_end set, or more than <paramref name="maxOffsetM"/> off
+        /// the new path = already past the fork). Allocates the new arrays once (a tile event).
+        /// </summary>
+        public bool TryReplacePath(Vector3[] worldPoints, float[] speedLimitsKmh, float maxOffsetM)
+        {
+            if (!Enabled || EndS > 1f || m_Points.Length < 2 || worldPoints == null || worldPoints.Length < 2) return false;
+            Vector3 p = Flat(PointAt(Progress));
+            float best = float.MaxValue, bestT = 0f, s = 0f, limitS = Progress + ReplaceSearchAheadM;
+            int bestSeg = -1;
+            for (int i = 0; i < worldPoints.Length - 1 && s <= limitS; i++)
+            {
+                Vector3 a = Flat(worldPoints[i]), b = Flat(worldPoints[i + 1]);
+                Vector3 ab = b - a;
+                float t = Mathf.Clamp01(Vector3.Dot(p - a, ab) / Mathf.Max(ab.sqrMagnitude, 1e-6f));
+                float d = (a + ab * t - p).sqrMagnitude;
+                if (d < best) { best = d; bestSeg = i; bestT = t; }
+                s += ab.magnitude;
+            }
+            if (bestSeg < 0 || best > maxOffsetM * maxOffsetM) return false;
+            SetPath(worldPoints, speedLimitsKmh);
+            m_Seg = bestSeg;
+            Progress = Mathf.Lerp(m_S[bestSeg], m_S[bestSeg + 1], bestT);
+            return true;
         }
 
         public void Sample(float dt, in VehicleFeedback fb, ref DriverIntent intent)
