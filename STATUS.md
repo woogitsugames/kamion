@@ -225,3 +225,5 @@ NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/
 - NASTĘPNY KROK: zbadać 2 pozostałe końce (w177895177 L start, w173956078 R approach), potem przebudowa C: `pwsh -File artifacts/c-regress-cli/build-c.ps1`
 - Dedup barier z poziomem (GUARDRAIL_DEDUP_DZ 0,8) i ograniczone dopasowanie runów reguły (0,25 m). Replay: 7 -> 1 wolny koniec (w173956078 R przy E-749: kapa 0,145 m między bliźniaczymi jezdniami po D94 — brak miejsca, do decyzji lidera).
 - NASTĘPNY KROK: przebudowa C w tle `pwsh -NoProfile -File artifacts/c-regress-cli/build-c.ps1`, potem export-route, fidelity, pytest gis.
+- 06:20 przebudowa C padła (pier_guardrails: built z Z, poprawione w fe4c25a38). Restart build-c2.ps1 (czeka na slot heavy).
+- NASTĘPNY KROK: `Get-Content artifacts/c-regress-cli/build-c2.log -Tail 3; Get-Content artifacts/c-regress-cli/build-c2.exit`
