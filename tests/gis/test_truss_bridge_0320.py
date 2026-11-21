@@ -170,7 +170,8 @@ def test_square_paving_overrides_are_valid_polygons_around_the_monument():
     from shapely.geometry import Point, Polygon
     ovs = yaml.safe_load((REGION / "overrides.yaml").read_text(encoding="utf8"))["overrides"]
     areas = {o["id"]: o for o in ovs if o.get("kind") == "paved_area"}
-    assert set(areas) == {"tykocin-rynek-plaza-0320", "tykocin-rynek-walk-east-0320", "tykocin-rynek-walk-west-0320"}
+    border = {f"tykocin-rynek-plaza-border-{k}-0325" for k in "nesw"}          # ADR 0325: red sett band round the plaza
+    assert set(areas) == {"tykocin-rynek-plaza-0320", "tykocin-rynek-walk-east-0320", "tykocin-rynek-walk-west-0320"} | border
     origin = np.array([751371.0, 600319.0])
     polys = {}
     for k, o in areas.items():
@@ -178,8 +179,66 @@ def test_square_paving_overrides_are_valid_polygons_around_the_monument():
         holes = [Polygon(np.asarray(h) - origin) for h in o.get("holes_epsg2180", [])]
         assert outer.is_valid and all(h.is_valid and outer.contains(h) for h in holes)
         polys[k] = Polygon(outer.exterior.coords, [h.exterior.coords for h in holes])
-        assert o["material"] == "yard_paving"
+        # ADR 0325: stone setts - lattice on the plaza, red band, grey granite walks (was yard_paving)
+        assert o["material"] == ("plaza_sett_lattice" if k == "tykocin-rynek-plaza-0320" else
+                                 "plaza_sett_red" if k in border else "plaza_sett_grey")
     plaza = polys["tykocin-rynek-plaza-0320"]
     assert 1100 < plaza.area < 1400 and plaza.contains(Point(TY.MONUMENT_EN).buffer(3.5))
+    # the band is 0.75 m wide, joins the lattice without a gap or an overlap
+    ring = Polygon(np.asarray([areas[f"tykocin-rynek-plaza-border-{k}-0325"]["polygon_epsg2180"][0] for k in "nesw"]) - origin)
+    band = ring.difference(plaza)
+    assert abs(sum(polys[k].area for k in border) - band.area) < 0.5 and 0.70 < band.area / ring.length < 0.80
+    assert all(polys[k].intersection(plaza).area < 0.05 for k in border)
     east = polys["tykocin-rynek-walk-east-0320"]
     assert not east.contains(Point(TY.WELL_EN)) and not east.contains(Point(TY.BED_EN))    # they stand on the lawn
+
+
+def test_plaza_lattice_frame_matches_the_measured_band_families_0325():
+    """ADR 0325: uv_frame = one lattice crossing + the lattice diagonal; in that frame the bands of the set
+    (tile diagonals) fall on the two families measured on the orthophoto."""
+    import math
+    from streetscape import paved, materials
+    ovs = yaml.safe_load((REGION / "overrides.yaml").read_text(encoding="utf8"))["overrides"]
+    o = next(x for x in ovs if x.get("id") == "tykocin-rynek-plaza-0320")
+    fr = o["uv_frame"]
+    period, a1 = 2.255, math.radians(53.75)
+    ref = np.array([751808.0, 600236.0])
+    n1, n2 = np.array([math.cos(a1), math.sin(a1)]), np.array([-math.sin(a1), math.cos(a1)])
+    d = np.asarray(fr["origin_epsg2180"]) - ref
+    for n, phase in ((n1, -18.488), (n2, -18.020)):                 # measured phases of the two families
+        k = (d @ n - phase) / period
+        assert abs(k - round(k)) * period < 0.02
+    assert abs(fr["angle_deg"] - (53.75 - 45.0)) < 1e-9
+    origin = np.array([751371.0, 600319.0])
+    src = {"osm": {"areas": []}, "bdot10k": {"OT_PTPL_A": [], "OT_KUKO_A": [], "OT_SKRP_L": []}}
+    from shapely.geometry import Polygon
+    items = paved.collect(src, origin, [o], [], Polygon(), None, {})
+    assert len(items) == 1 and items[0]["mat"] == "plaza_sett_lattice"
+    ox, oy, ang = items[0]["uv_frame"]
+    assert np.allclose([ox, oy], np.asarray(fr["origin_epsg2180"]) - origin) and math.isclose(ang, math.radians(8.75))
+
+    class Buf:
+        def __init__(self): self.parts = []
+        def add(self, layer, mat, V, UV, T, **kw): self.parts.append((layer, mat, np.asarray(V), np.asarray(UV)))
+
+    class HF:
+        x0, y1 = 0.0, 0.0
+        z = np.zeros((400, 800))
+    buf = Buf()
+    paved.build_meshes(buf, items, np.full((400, 800), 104.0), HF)
+    layer, mat, V, UV = next(p for p in buf.parts if p[0] == "paved" and p[1] == "plaza_sett_lattice")
+    # a point one period along family 1 from the crossing lands on a band line of the tile: (u + v) / sqrt 2 = period
+    p = (np.asarray(fr["origin_epsg2180"]) - origin) + n1 * period
+    c, s_ = math.cos(-ang), math.sin(-ang)
+    q = p - [ox, oy]
+    uv = np.array([q[0] * c - q[1] * s_, q[0] * s_ + q[1] * c])
+    assert math.isclose((uv[0] + uv[1]) / math.sqrt(2), period, abs_tol=1e-9) and abs(uv[0] - uv[1]) < 1e-9
+    # mesh UV0 is that same frame (metres), not the dominant axis of the outline
+    k = 0
+    q = V[k, :2] - [ox, oy]
+    assert np.allclose(UV[k], [q[0] * c - q[1] * s_, q[0] * s_ + q[1] * c])
+    assert materials.M["plaza_sett_lattice"]["texture_set"] == "sett_lattice_tykocin" and materials.M["plaza_sett_lattice"]["set_tile"]
+    spec = __import__("json").loads((REGION.parents[2] / "art-source/world/materials/materials_spec.json").read_text(encoding="utf8"))
+    lat = spec["sets"]["sett_lattice_tykocin"]
+    assert math.isclose(lat["tile_m"][0], period * math.sqrt(2), abs_tol=1e-3) and lat["uv"].startswith("mesh_uv0")
+    assert lat["kind"] == "tiling_set" and spec["sets"]["sett_rows_tint"]["kind"] == "modulation_set"

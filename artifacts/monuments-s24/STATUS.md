@@ -14,3 +14,12 @@
   (2) `paved.py`: opcjonalna rama UV (`uv_frame`) z override, (3) figura króla w nowym module `streetscape/knyszyn_king_0325.py`,
   (4) build_world knyszyn + tykocin, import, visual-qa, SBS.
 - NASTĘPNY KROK: `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only <nowe zestawy>`
+
+## Krok 1 — kod rundy 1 (commit abc84990c + następny)
+- Tekstury: `sets_plaza.py` → `sett_lattice_tykocin` (kafel 3,189 m, krata na przekątnych) i `sett_rows_tint` (modulacyjny); `build_all.py --only ...` 33 s.
+- `paved.py`: `uv_frame` (override) → UV0 w ramie placu; materiały `plaza_sett_lattice/red/grey`; override'y Tykocina: płyta + 4 trapezy opaski 0,75 m + obejścia w szarej kostce.
+- Król: `streetscape/knyszyn_king_0325.py` — LOD0 2 214 tris (figura), LOD1 288; 3 materiały brązu; cokół + tablica bez napisu. Rąk brak (zgodnie z rzeźbą).
+- build_world tykocin: exit 0 (7 min 54 s; log `artifacts/monuments-s24/logs/build_world-tykocin-r1.log`); import + VQA tykocin w tle (`run-unity.ps1`).
+- pytest: `tests/gis/test_knyszyn_park_props_0227.py` 9 passed; `test_truss_bridge_0320.py -k "square or plaza"` 3 passed.
+- NASTĘPNY KROK: po zwolnieniu slotu heavy `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn`, potem
+  `pwsh artifacts/monuments-s24/run-unity.ps1 -Region knyszyn -Out artifacts/monuments-s24/r1-knyszyn -Cameras "king_front_0325,king_34_0325,king_head_0325,king_side_0325,king_square_0325,rynek_owner_01,rynek_owner_08"`
