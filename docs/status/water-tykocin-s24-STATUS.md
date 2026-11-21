@@ -19,3 +19,12 @@ włączyć etap wody ADR 0210 w `tykocin` (+ inne kafle korytarza z wodą w OSM/
   (build_region dawał dryf niezwiązany z wodą).
 - Library Win64 skopiowana z win-build (robocopy /MIR). Import tykocin Win64 w toku.
   NASTĘPNY KROK: `pwsh scripts/visual-qa.ps1 -Scene World_tykocin_High -Tier High -Lighting clear -BuildTarget Win64 -Gate3 artifacts/water-tykocin-s24/bridges-tykocin.json -OutputDir artifacts/water-tykocin-s24/after-bridges`
+- Import Win64 tykocin OK (Library z win-build, FBX kabiny skopiowany z main — import #1 padł na braku FBX).
+  WORLD_MEMORY Low 80,8 → 81,8 MB, High 173,9 → 180,3 MB. Rendery High 1920×1080 (`r2-bridges-1920`, `r2-place-1920`)
+  + Low (`r2-bridges-low`): Narew pod mostem, starorzecza, widok z łodzi pod przęsłem — otwarte, prześwit spód przęsła
+  107,5 m − tafla 104,46 m ≈ 3,0 m. Budżet A/B `artifacts/water-tykocin-s24/budget-ab.md` (most +4…+34 draws).
+- pytest (11 plików gis: water 0210/0213, ring 0231, regiony, szwy) 148 passed po aktualizacji 3 asercji listy opt-in.
+  EditMode Win64: 1519 / 1405 passed / 1 failed (`RegionSelectTests.ShippedCatalog_D67Full` 39 vs 54 — katalog
+  regionów na main, plik nietknięty tutaj) / 113 skipped.
+- build_world tykocin r3 (po zmianie kamer) zmienił 27 chunków vs r2 — sprawdzam determinizm (r4).
+  NASTĘPNY KROK: porównać `artifacts/water-tykocin-s24/world_manifest-r3.json` z r4; skopiować artefakty do main.

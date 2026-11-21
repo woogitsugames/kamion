@@ -220,15 +220,15 @@
    "fov_deg": 60.0,
    "id": "water_bank_bridge_se",
    "look_at": [
-    492.282,
-    41.461,
-    117.013
+    454.031,
+    40.202,
+    116.543
    ],
-   "note": "place camera: water-tykocin-s24 QA: pedestrian eye on the south bank east of the bridge looking WNW at the bridge over the Narew (like Commons Tykocin_Most_drogowy_05)",
+   "note": "place camera: water-tykocin-s24 QA: pedestrian eye on the south bank 40 m east of the bridge looking WNW across the Narew and under the deck (like Commons Tykocin_Most_drogowy_05); r1 at [585, 4] stood behind a building",
    "pos": [
-    585.0,
-    4.0,
-    110.02
+    548.0,
+    6.0,
+    109.55
    ],
    "type": "persp"
   },
@@ -245,6 +245,22 @@
     660.0,
     -70.0,
     156.77
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "water_boat_under_bridge",
+   "look_at": [
+    540.0,
+    42.0,
+    107.336
+   ],
+   "note": "place camera: water-tykocin-s24 QA: 1 m above the Narew 66 m west (upstream side) of the bridge looking east under the deck - soffit clearance over the water sheet",
+   "pos": [
+    440.0,
+    42.0,
+    105.59
    ],
    "type": "persp"
   },
