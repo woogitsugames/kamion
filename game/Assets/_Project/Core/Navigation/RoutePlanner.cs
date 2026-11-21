@@ -31,6 +31,9 @@ namespace Game.Core.Navigation
         public const float SnapStartM = 60f, SnapGoalM = 80f;
         /// <summary>Maximum extra snap distance to resolve opposing carriageways at the start [m], WORKING_VALUE.</summary>
         public const float SnapHeadingExtraM = 15f;
+        /// <summary>Start edge alignment below which a known heading re-snaps to an aligned edge: cos 60 deg, the same cone as
+        /// <see cref="RouteGraph.Snap"/>'s heading filter (one-way: signed; two-way: either direction). WORKING_VALUE.</summary>
+        public const float SnapHeadingMinCos = 0.5f;
         /// <summary>Penalties [s]. WORKING_VALUES.</summary>
         public const float RightTurnS = 6f, LeftTurnS = 10f, SharpTurnS = 20f, DeadEndUTurnS = 240f, AgainstHeadingS = 300f, RestrictedS = 600f;
 
@@ -186,6 +189,14 @@ namespace Game.Core.Navigation
             return st;
         }
 
+        /// <summary>Alignment (cos) of edge <paramref name="e"/> at <paramref name="along"/> with the unit heading; signed for a
+        /// one-way edge, absolute for a two-way one (it may be driven either way).</summary>
+        static float StartAlignment(RouteGraph g, int e, float along, Vector2 heading)
+        {
+            float c = Vector2.Dot(g.DirectionAt(e * 2, along, 8f), heading);
+            return g.IsOneway(e) ? c : Mathf.Abs(c);
+        }
+
         RoutePath m_Scratch;
         /// <summary>Snapped destination of the last plan (also when it failed with AlreadyThere / NoPath).</summary>
         public Vector2 LastFailedDestination { get; private set; }
@@ -204,7 +215,10 @@ namespace Game.Core.Navigation
             // it can only start on that edge, so it would drive against the truck and plan a false U-turn.
             // Reconsider nearby aligned edges before se fixes the start topology; retain the nearest edge when
             // no plausible alternative exists (e.g. a truck actually facing the wrong way on a one-way road).
-            if (heading != Vector2.zero && g.IsOneway(se) && Vector2.Dot(g.DirectionAt(se * 2, sAlong, 8f), heading) < -0.2f)
+            // gps-dk8-s24 (build #3 re-routes on DK8): the same holds for an edge that is merely off the heading, not
+            // against it - at a junction node every edge is 0 m away and a one-way slip road leaving it at ~60-90 deg
+            // won the tie (re-plan from (81, -454) in C: start on the northbound slip, false "zawroc" ahead).
+            if (heading != Vector2.zero && StartAlignment(g, se, sAlong, heading) < SnapHeadingMinCos)
             {
                 int aligned = g.Snap(start, Mathf.Min(SnapStartM, sDist + SnapHeadingExtraM),
                     out float aAlong, out Vector2 aPt, out _, heading: heading);
