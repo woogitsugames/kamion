@@ -36,3 +36,5 @@
   FLOOR_OUTSIDE_DROP_M 0,20 m poza obrysem (test: przebicie <= 0,4 cm). Wymaga ponownego build_world knyszyn-w,
   dk65-07, tykocin (rebuild2.ps1).
 - W TLE chain.ps1: czeka na rebuild DONE -> rebuild2.ps1 -> unity.ps1 (status logs/rebuild2.status, logs/unity.status)
+- rebuild2 knyszyn-w: sonda E122 N787 teren 0,6 m pod skarpą tylną, za krawędzią -0,14 m (fartuch zakopany),
+  steep_grass 18 -> 5, max 0,505 -> 0,441 m. dk8-wasilkow-01: soft 5 949 / obniżone 5 430, steep_grass 30 -> 7.
