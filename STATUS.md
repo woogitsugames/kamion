@@ -219,3 +219,7 @@ NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/
   * typology dojlidy: hash domu po ADR 0316 — baseline do aktualizacji.
   * route_links jeroniki->dk65-01 0,375 m: dk8-s8-jeroniki był z fali 4 (przed dk8-seam), dk65-01 z fali 5 -> przebudowuję jeroniki (redo-one.ps1 -NoFinal).
 - 2026-11-21 04:12: dk8-s8-jeroniki przebudowany (exit 0); route_links/tile_graph/katalog przeliczone, --check 0; test_route_links_s23 18/19 — nadal test_link_seams_route_and_height_continuous: jeroniki->dk65-01 (link:jeroniki-dk8-to-s8) 0,375 m > 0,1 (nie z nieaktualności kafla).
+
+## 2026-11-21 (Claude, przejęcie po Codex)
+- C dane z ba7332f8d zacommitowane (export-route 0, fidelity 0). Wolne końce barier mostu 7: przyczyna a207f2cd4 (ADR 0310) — przycinanie liczy własne utwardzone pobocze (road_asphalt side part) jako jezdnię i tnie przejścia deck->approach. WIP: wyjątek own_shoulder w surface_safety; replay 7 -> 2.
+- NASTĘPNY KROK: zbadać 2 pozostałe końce (w177895177 L start, w173956078 R approach), potem przebudowa C: `pwsh -File artifacts/c-regress-cli/build-c.ps1`

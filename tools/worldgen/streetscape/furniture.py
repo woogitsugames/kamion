@@ -2094,18 +2094,22 @@ def _clip_rails_to_pavement(queue, parts, m=None):
     Height filtering preserves rails above underpasses. Raised islands are refuges,
     including where an underlying carriageway ribbon has not been cut out.
     """
-    from roads.surface_safety import SurfaceIndex, carriageway, island
+    from roads.surface_safety import SurfaceIndex, carriageway, island, own_shoulder
     road, islands = SurfaceIndex(parts, carriageway), SurfaceIndex(parts, island)
     out, removed = [], 0
     radius = GUARDRAIL_PAVEMENT_CLEAR_M + GUARDRAIL_ENVELOPE_M
     for it in queue:
         P, Z = np.asarray(it["P"]), np.asarray(it["Z"])
+        # c-regress-cli: a rule run is checked against every surface except the flush asphalt shoulder of the side
+        # profile it was laid out from (posts on the gravel shoulder 0.25 m behind it, ADR 0272): with it, the
+        # deck->approach transitions of all seven C deck ends were cut and the deck barriers ended in the air
+        excl = own_shoulder(it["key"])
         safe = []
         for k in range(len(P) - 1):
             seg = shapely.LineString(P[k:k + 2])
             zone = seg.buffer(radius)
             lo, hi = float(min(Z[k:k + 2])), float(max(Z[k:k + 2]))
-            driven = road.near(zone, lo, hi).difference(islands.near(zone, lo, hi))
+            driven = road.near(zone, lo, hi, exclude=excl).difference(islands.near(zone, lo, hi))
             safe.append(driven.is_empty or not seg.intersects(driven.buffer(radius)))
         k = 0
         while k < len(safe):
