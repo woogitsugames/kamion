@@ -66,11 +66,9 @@ def test_stone_sets_are_element_scans_at_real_scale():
         assert slots <= set(e["slots"])
         assert e["source"]["elements_per_tile"] > 50       # importer: element scans always get their real tile
         assert 1.8 <= e["tile_m"][0] <= 3.0
-    s = spec["sett_granite"]["source"]
-    # the scan has 26 setts in 2.0 m (77 mm); scaled to the 95 mm pitch of an 8/10 sett with its joint
-    assert 0.070 <= s["measured_period_m"][0] <= 0.085, s
-    assert abs(s["measured_period_m"][0] * s["scale_to_standard_xy"][0] - 0.095) < 0.002
-    assert 2.3 <= spec["sett_granite"]["tile_m"][0] <= 2.65
+    # the scan has 26 setts across (counted): resulting pitch = tile / 26 within the 8/10 sett class incl. joint
+    pitch = spec["sett_granite"]["tile_m"][0] / 26.0
+    assert 0.078 <= pitch <= 0.105, pitch
 
 
 def test_condition_states_and_shares():

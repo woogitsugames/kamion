@@ -538,9 +538,11 @@ SCAN_SETS = {
         period_fix=[{"axis": 0, "search_m": (0.2, 0.45), "period_m": 0.353}])),
     # road-surface-s24 (ADR 0323): stone carriageways. Critic wave 6 pkt 2.1: road_sett / apron_sett had no set and fell
     # back to the legacy procedural Voronoi "Sett" texture at a 1.6 m tile (beige-pink cells of 0.3-0.6 m).
-    # sett_granite: split-granite setts in rows; the scan's pitch (course_period in 60-90 mm: ~77 mm = 26 setts in 2.0 m; a 50-120 mm window locked onto 102 mm) is scaled to
-    # 95 mm = sett 8/10 with a ~10 mm joint (PN-EN 1342 nominal 80-100 mm; the Tykocin photos cs153250600 /
-    # cs202183436 show setts of that class laid in fans - the fan layout is NOT reproduced, rows only). WORKING_VALUE.
+    # sett_granite: split-granite setts in rows. The scan has 26 setts in 2.0 m (77 mm pitch, counted). course_period
+    # is not stable on it (60-90 mm window: 89.8 mm, 50-120 mm window: 101.6 mm), so the "95 mm" target of period_fix
+    # yields a scale of 1.057: tile 2.115 m, RESULTING pitch 81 mm = the lower end of the 8/10 sett class (PN-EN 1342
+    # nominal 80-100 mm; Tykocin photos cs153250600 / cs202183436: setts of that class laid in fans - the fan layout
+    # is NOT reproduced, rows only). WORKING_VALUE; the test pins the resulting tile, not the measurement.
     "sett_granite": (["cobblestone_03"], lambda: tiling_from_scan(
         "sett_granite", "cobblestone_03", target=0.20, hue=HUE_SETT, out_L=2.0, out_n=1024, seed=6331,
         flat_m=1.2, flat_k=0.5, hue_keep=0.5, segment={"joint_quantile": 0.24},
@@ -614,7 +616,7 @@ SCAN_ONLY_META = {
     "sett_granite": dict(kind="tiling_set", target=0.20, uv="world_xy_planar",
                          slots=["road_sett", "apron_sett"],
                          note="ADR 0323: grey split-granite setts in rows (kostka granitowa 8/10), CC0 scan "
-                              "cobblestone_03 scaled to a 95 mm pitch (WORKING_VALUE). Var.G = sett id from the scan's "
+                              "cobblestone_03, resulting pitch 81 mm (WORKING_VALUE). Var.G = sett id from the scan's "
                               "displacement."),
     "cobble_fieldstone": dict(kind="tiling_set", target=0.22, uv="world_xy_planar",
                               slots=["road_cobble"],
