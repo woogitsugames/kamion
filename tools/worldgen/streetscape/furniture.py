@@ -2733,7 +2733,7 @@ def pier_guardrails(lin, net, piers, parts, report):
             got = sum(b_.length for b_ in built[n0:])
             total += got
             for b_ in built[n0:]:              # ADR 0144: QA list of every built run (tests/gis/test_guardrail_overlap.py)
-                C_ = np.asarray(b_.coords)
+                C_ = np.asarray(b_.coords)[:, :2]      # c-regress-cli: built runs carry Z
                 kz = np.argmin(np.hypot(E[None, :, 0] - C_[:, None, 0], E[None, :, 1] - C_[:, None, 1]), axis=1)
                 report.setdefault("guardrail_runs", []).append({
                     "key": f"pier{i}:structure", "term": [True, True], "term_tall": [False, False],
