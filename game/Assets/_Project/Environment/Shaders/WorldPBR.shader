@@ -592,15 +592,18 @@ Shader "Kamion/World PBR"
                         float lc = frac(w.x);
                         half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11);
                         wp *= lerp(1.0h, (half)KAMION_PLATE_WHEEL_KEEP, plate);
-                        // build #3 P3 (DK65 / Knyszyn roundabout mouths): on a plate the lane coordinate is interpolated
-                        // linearly over a few large triangles, so continuous wheel paths bent into dark wavy stripes
-                        // repeated at every mouth. On plates the polish is broken into 1-6 m patches (object-space
-                        // value noise, stable across origin rebases) and its contrast halved. WORKING_VALUE.
-                        if (onPlate > 0.5)
+                        // build #3 P3 (DK65 / Knyszyn roundabout mouths): the wheel paths ran as continuous dark stripes of
+                        // one strength along every lane (3 per lane: 2 paths + drip band), bending with the flared
+                        // single-lane ribbons around the splitter islands - the same stripe pattern at every mouth.
+                        // Real polish varies along the road with braking / loading: broken into 1-6 m patches (object-
+                        // space value noise, stable across origin rebases), keeping 55-125 % of the old strength
+                        // (mean ~0.84); on junction plates (lane coordinate interpolated over large triangles) half
+                        // of that. WORKING_VALUE, judged against the build #3 frame t=1530.
                         {
                             float2 po = TransformWorldToObject(pw).xz;
                             half brk = (half)(ValueNoise12(po / 4.3) * 0.65 + ValueNoise12(po / 1.3 + 17.0) * 0.35);
-                            wp *= 0.5h * smoothstep(0.38h, 0.72h, brk);
+                            half keep = lerp(0.55h, 1.25h, smoothstep(0.32h, 0.72h, brk));
+                            wp *= keep * lerp(1.0h, 0.5h, onPlate);
                         }
                         // ADR0118: traffic polish darkens binder; existing macro breaks continuous bands.
                         // Traffic accumulation varies over metres (G: 2-16 m), not the sub-metre A noise.
