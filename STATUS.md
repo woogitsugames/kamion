@@ -40,3 +40,6 @@
   steep_grass 18 -> 5, max 0,505 -> 0,441 m. dk8-wasilkow-01: soft 5 949 / obniżone 5 430, steep_grass 30 -> 7.
 - 18:4x merge origin/main (landmarks ADR 0320, acff76556); tykocin przebudowa po merge: chain2.ps1 (rebuild3 tykocin -> unity.ps1).
 - 18:53 tykocin po merge zbudowany (commit); unity.ps1 w toku (import knyszyn-w buduje zestawy PBR — pierwszy raz w worktree).
+- unity r1: import padł (brak SM_CabInterior_LOD0.fbx w worktree -> skopiowany z main). EditMode 1525: 1388 pass,
+  1 fail WorldEdgeClosureDuplicateTests (Maczka, industrial-c) = fałszywy pomost bliźniaczej jezdni -> poprawka:
+  tylko pomosty krzyżujące drogę (>30 st.). WorldEdgeClosureDeckTests PASS. Ponowny unity.ps1 w tle.
