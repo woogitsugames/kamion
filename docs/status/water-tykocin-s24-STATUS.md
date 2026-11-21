@@ -27,4 +27,11 @@ włączyć etap wody ADR 0210 w `tykocin` (+ inne kafle korytarza z wodą w OSM/
   EditMode Win64: 1519 / 1405 passed / 1 failed (`RegionSelectTests.ShippedCatalog_D67Full` 39 vs 54 — katalog
   regionów na main, plik nietknięty tutaj) / 113 skipped.
 - build_world tykocin r3 (po zmianie kamer) zmienił 27 chunków vs r2 — sprawdzam determinizm (r4).
-  NASTĘPNY KROK: porównać `artifacts/water-tykocin-s24/world_manifest-r3.json` z r4; skopiować artefakty do main.
+
+- Determinizm: build_world tykocin r3 == r4 (world_manifest identyczny). r2→r3 różniło 27 chunków (prawdopodobnie
+  nieśledzone art-source odświeżone przez import #1 — UNVERIFIED); rendery r2 vs r3 RMSE ≤ 1,2 %. Import #3 + rendery
+  r3 = stan końcowy. Dowody skopiowane do `C:\Users\matma\Documents\Claude\kamion\artifacts\water-tykocin-s24\`.
+- GOTOWE do przeglądu (nie scalone). ADR: `docs/adr/DRAFT-water-tykocin-s24-woda-narew-korytarz-dw671.md`.
+  NASTĘPNY KROK (lider): przed usunięciem worktree skopiować derived 7 kafli do main:
+  `foreach ($r in 'tykocin','dw671-tykocin-01','dw671-tykocin-02','dw671-tykocin-08','dw671-tykocin-09','knyszyn','knyszyn-s') { robocopy .claude\worktrees\water-tykocin-s24\Data\raw\derived\$r Data\raw\derived\$r /E /MT:16 }`
+  potem `pwsh scripts/import-region.ps1 -Region <id> -BuildTarget Win64` dla każdego kafla w worktree buildu.
