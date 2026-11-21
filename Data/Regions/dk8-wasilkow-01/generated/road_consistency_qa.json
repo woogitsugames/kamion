@@ -1,8 +1,7 @@
 {
  "by_kind": {
   "arrow_no_exit": 1,
-  "lane_blind_end": 4,
-  "marking_off_carriageway": 1
+  "lane_blind_end": 4
  },
  "cases": [
   {
@@ -100,24 +99,9 @@
    "to_chain": "c:w1450010411:13299400859-13299400860",
    "turn_lanes": null,
    "what": "kerb"
-  },
-  {
-   "chain": "c:w204927487:2149073334-2149073329",
-   "e": -1022.16,
-   "junction": null,
-   "kind": "marking_off_carriageway",
-   "lat": 53.1798729,
-   "lon": 23.1466321,
-   "n": 270.16,
-   "on_route": false,
-   "osm_ways": [
-    204927487
-   ],
-   "surface": "verge_grass",
-   "what": "P-7b"
   }
  ],
- "count": 6,
+ "count": 5,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "arrow_no_exit": 1
@@ -145,8 +129,9 @@
   "approach_lanes": 119,
   "kerb_tris": 25842,
   "lane_samples": 34093,
+  "lane_samples_beyond_tile": 15,
   "lane_samples_in_taper": 5,
-  "marking_tris": 10096,
-  "props_checked": 436
+  "marking_tris": 10102,
+  "props_checked": 437
  }
 }
