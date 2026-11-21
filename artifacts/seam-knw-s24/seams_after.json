@@ -1,0 +1,1543 @@
+{
+ "main": {
+  "schema": "truck-sim-pl/seams-qa/1",
+  "tolerance_m": 0.1,
+  "overrides_ref": null,
+  "seam_taper": true,
+  "sides_pass": 2,
+  "edge_tolerance_m": 0.02,
+  "tiles": [
+   "knyszyn",
+   "knyszyn-w"
+  ],
+  "not_adjacent": [],
+  "seams": [
+   {
+    "a": "knyszyn",
+    "b": "knyszyn-w",
+    "edge": {
+     "axis": "x",
+     "at": 760587.0,
+     "lo": 611583.0,
+     "hi": 613631.0,
+     "normal_ab": [
+      -1.0,
+      0.0
+     ]
+    },
+    "roads": [
+     {
+      "osm_way": 98071065,
+      "highway": "tertiary",
+      "chain_left": "c:w98071065:1134842139-9056790534",
+      "chain_right": "c:w98071065:9056790523-1134814649",
+      "on_route": false,
+      "xy": [
+       760587.0,
+       612758.48
+      ],
+      "rows": [
+       {
+        "param": "szerokość jezdni [m]",
+        "left": 6.6,
+        "right": 6.6,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "pasy × szer. pasa [m]",
+        "left": "2 × 3.30",
+        "right": "2 × 3.30",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "opaska (edge_strip) [m]",
+        "left": 0.0,
+        "right": 0.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "rozstaw linii krawędziowych [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "szer. linii krawędziowej [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa L",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa P",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia środkowa",
+        "left": "P-1b przerywana (2/4)",
+        "right": "P-1b przerywana (2/4)",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "krawędź asfaltu P [m od osi]",
+        "left": 3.3,
+        "right": 3.3,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze P",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "krawędź asfaltu L [m od osi]",
+        "left": 3.3,
+        "right": 3.3,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze L",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "oświetlenie",
+        "left": "reguła klasy",
+        "right": "reguła klasy",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "wys. terenu w osi Z [m]",
+        "left": 126.65,
+        "right": null,
+        "delta": null,
+        "status": "N/D",
+        "source": "graph:z_terrain (NMT gugik-nmt-2022-knyszyn) | brak (z_terrain = null na krawędzi S/E kafla; NMT gugik-nmt-2022-knyszyn-w)",
+        "note": "Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. Oba kafle: NMT 2022 - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, wymaga Data/raw)"
+       },
+       {
+        "param": "szer. jezdni ostatni build [m]",
+        "left": 6.6,
+        "right": 6.6,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "generated:roads_qa"
+       },
+       {
+        "param": "położenie osi na szwie [m]",
+        "left": [
+         760587.0,
+         612758.48
+        ],
+        "right": [
+         760587.0,
+         612758.48
+        ],
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       }
+      ]
+     },
+     {
+      "osm_way": 98071213,
+      "highway": "residential",
+      "chain_left": "c:w98071213:1134829752-1134842139",
+      "chain_right": "c:w98071213:1134810961-1134842139",
+      "on_route": false,
+      "xy": [
+       760587.0,
+       612931.19
+      ],
+      "rows": [
+       {
+        "param": "szerokość jezdni [m]",
+        "left": 6.5,
+        "right": 6.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "pasy × szer. pasa [m]",
+        "left": "2 × 3.25",
+        "right": "2 × 3.25",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "opaska (edge_strip) [m]",
+        "left": 0.0,
+        "right": 0.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "rozstaw linii krawędziowych [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "szer. linii krawędziowej [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa L",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa P",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia środkowa",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "krawędź asfaltu P [m od osi]",
+        "left": 3.25,
+        "right": 3.25,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze P",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "krawędź asfaltu L [m od osi]",
+        "left": 3.25,
+        "right": 3.25,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze L",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "oświetlenie",
+        "left": "reguła klasy",
+        "right": "reguła klasy",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "wys. terenu w osi Z [m]",
+        "left": 124.65,
+        "right": null,
+        "delta": null,
+        "status": "N/D",
+        "source": "graph:z_terrain (NMT gugik-nmt-2022-knyszyn) | brak (z_terrain = null na krawędzi S/E kafla; NMT gugik-nmt-2022-knyszyn-w)",
+        "note": "Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. Oba kafle: NMT 2022 - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, wymaga Data/raw)"
+       },
+       {
+        "param": "szer. jezdni ostatni build [m]",
+        "left": 6.5,
+        "right": 6.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "generated:roads_qa"
+       },
+       {
+        "param": "położenie osi na szwie [m]",
+        "left": [
+         760587.0,
+         612931.19
+        ],
+        "right": [
+         760587.0,
+         612931.19
+        ],
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       }
+      ]
+     },
+     {
+      "osm_way": 98071966,
+      "highway": "residential",
+      "chain_left": "c:w98071966:9056790533-9056790540",
+      "chain_right": "c:w98071966:13518993126-1134840483",
+      "on_route": false,
+      "xy": [
+       760587.0,
+       612580.47
+      ],
+      "rows": [
+       {
+        "param": "szerokość jezdni [m]",
+        "left": 5.5,
+        "right": 5.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "pasy × szer. pasa [m]",
+        "left": "2 × 2.75",
+        "right": "2 × 2.75",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "opaska (edge_strip) [m]",
+        "left": 0.0,
+        "right": 0.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "rozstaw linii krawędziowych [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "szer. linii krawędziowej [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa L",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa P",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia środkowa",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "krawędź asfaltu P [m od osi]",
+        "left": 2.75,
+        "right": 2.75,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze P",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "krawędź asfaltu L [m od osi]",
+        "left": 2.75,
+        "right": 2.75,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze L",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "oświetlenie",
+        "left": "reguła klasy",
+        "right": "reguła klasy",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "wys. terenu w osi Z [m]",
+        "left": 127.2,
+        "right": null,
+        "delta": null,
+        "status": "N/D",
+        "source": "graph:z_terrain (NMT gugik-nmt-2022-knyszyn) | brak (z_terrain = null na krawędzi S/E kafla; NMT gugik-nmt-2022-knyszyn-w)",
+        "note": "Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. Oba kafle: NMT 2022 - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, wymaga Data/raw)"
+       },
+       {
+        "param": "szer. jezdni ostatni build [m]",
+        "left": 5.5,
+        "right": 5.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "generated:roads_qa"
+       },
+       {
+        "param": "położenie osi na szwie [m]",
+        "left": [
+         760587.0,
+         612580.47
+        ],
+        "right": [
+         760587.0,
+         612580.47
+        ],
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       }
+      ]
+     },
+     {
+      "osm_way": 98072226,
+      "highway": "tertiary",
+      "chain_left": "c:w98072226:1134816414-3047498889",
+      "chain_right": "c:w98072226:1134816414-1134836218",
+      "on_route": false,
+      "xy": [
+       760586.93,
+       613416.49
+      ],
+      "rows": [
+       {
+        "param": "szerokość jezdni [m]",
+        "left": 6.5,
+        "right": 6.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "pasy × szer. pasa [m]",
+        "left": "2 × 3.25",
+        "right": "2 × 3.25",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "opaska (edge_strip) [m]",
+        "left": 0.0,
+        "right": 0.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "rozstaw linii krawędziowych [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "szer. linii krawędziowej [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa L",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa P",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia środkowa",
+        "left": "P-1b przerywana (2/4)",
+        "right": "P-1b przerywana (2/4)",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "krawędź asfaltu P [m od osi]",
+        "left": 3.25,
+        "right": 3.25,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze P",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "krawędź asfaltu L [m od osi]",
+        "left": 3.25,
+        "right": 3.25,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze L",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "oświetlenie",
+        "left": "reguła klasy",
+        "right": "reguła klasy",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "wys. terenu w osi Z [m]",
+        "left": 125.3,
+        "right": null,
+        "delta": null,
+        "status": "N/D",
+        "source": "graph:z_terrain (NMT gugik-nmt-2022-knyszyn) | brak (z_terrain = null na krawędzi S/E kafla; NMT gugik-nmt-2022-knyszyn-w)",
+        "note": "Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. Oba kafle: NMT 2022 - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, wymaga Data/raw)"
+       },
+       {
+        "param": "szer. jezdni ostatni build [m]",
+        "left": 6.5,
+        "right": 6.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "generated:roads_qa"
+       },
+       {
+        "param": "położenie osi na szwie [m]",
+        "left": [
+         760586.93,
+         613416.49
+        ],
+        "right": [
+         760586.93,
+         613416.49
+        ],
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       }
+      ]
+     },
+     {
+      "osm_way": 98072526,
+      "highway": "residential",
+      "chain_left": "c:w98072526:1134839334-1134842485",
+      "chain_right": "c:w98072526:1134839334-1134842485",
+      "on_route": false,
+      "xy": [
+       760587.0,
+       612472.52
+      ],
+      "rows": [
+       {
+        "param": "szerokość jezdni [m]",
+        "left": 6.0,
+        "right": 6.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "pasy × szer. pasa [m]",
+        "left": "2 × 3.00",
+        "right": "2 × 3.00",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "opaska (edge_strip) [m]",
+        "left": 0.0,
+        "right": 0.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "rozstaw linii krawędziowych [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "szer. linii krawędziowej [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa L",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa P",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia środkowa",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "krawędź asfaltu P [m od osi]",
+        "left": 3.0,
+        "right": 3.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze P",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "krawędź asfaltu L [m od osi]",
+        "left": 3.0,
+        "right": 3.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze L",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "oświetlenie",
+        "left": "reguła klasy",
+        "right": "reguła klasy",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "wys. terenu w osi Z [m]",
+        "left": 125.78,
+        "right": null,
+        "delta": null,
+        "status": "N/D",
+        "source": "graph:z_terrain (NMT gugik-nmt-2022-knyszyn) | brak (z_terrain = null na krawędzi S/E kafla; NMT gugik-nmt-2022-knyszyn-w)",
+        "note": "Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. Oba kafle: NMT 2022 - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, wymaga Data/raw)"
+       },
+       {
+        "param": "szer. jezdni ostatni build [m]",
+        "left": 6.0,
+        "right": 6.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "generated:roads_qa"
+       },
+       {
+        "param": "położenie osi na szwie [m]",
+        "left": [
+         760587.0,
+         612472.52
+        ],
+        "right": [
+         760587.0,
+         612472.52
+        ],
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       }
+      ]
+     },
+     {
+      "osm_way": 232511646,
+      "highway": "primary",
+      "chain_left": "c:w232511646:3047667219-1134814357",
+      "chain_right": "c:w232511646:3047667219-1134827821",
+      "on_route": true,
+      "xy": [
+       760587.0,
+       612073.7
+      ],
+      "rows": [
+       {
+        "param": "szerokość jezdni [m]",
+        "left": 8.0,
+        "right": 8.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "pasy × szer. pasa [m]",
+        "left": "2 × 3.65",
+        "right": "2 × 3.65",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "opaska (edge_strip) [m]",
+        "left": 0.35,
+        "right": 0.35,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "rozstaw linii krawędziowych [m]",
+        "left": 7.3,
+        "right": 7.3,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (authored_override:dk65-edge-line-spacing-0304)"
+       },
+       {
+        "param": "szer. linii krawędziowej [m]",
+        "left": 0.12,
+        "right": 0.12,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa L",
+        "left": "ciągła",
+        "right": "ciągła",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa P",
+        "left": "ciągła",
+        "right": "ciągła",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia środkowa",
+        "left": "P-1b przerywana (2/4)",
+        "right": "P-1b przerywana (2/4)",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "krawędź asfaltu P [m od osi]",
+        "left": 4.08,
+        "right": 4.08,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze P",
+        "left": "wiejski: utw. 0,08 + grunt 1,00 + rów",
+        "right": "wiejski: utw. 0,08 + grunt 1,00 + rów",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "krawędź asfaltu L [m od osi]",
+        "left": 4.08,
+        "right": 4.08,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze L",
+        "left": "wiejski: utw. 0,08 + grunt 1,00 + rów",
+        "right": "wiejski: utw. 0,08 + grunt 1,00 + rów",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "oświetlenie",
+        "left": "reguła klasy",
+        "right": "reguła klasy",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "wys. terenu w osi Z [m]",
+        "left": 123.41,
+        "right": null,
+        "delta": null,
+        "status": "N/D",
+        "source": "graph:z_terrain (NMT gugik-nmt-2022-knyszyn) | brak (z_terrain = null na krawędzi S/E kafla; NMT gugik-nmt-2022-knyszyn-w)",
+        "note": "Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. Oba kafle: NMT 2022 - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, wymaga Data/raw)"
+       },
+       {
+        "param": "szer. jezdni ostatni build [m]",
+        "left": 8.0,
+        "right": 8.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "generated:roads_qa"
+       },
+       {
+        "param": "położenie osi na szwie [m]",
+        "left": [
+         760587.0,
+         612073.7
+        ],
+        "right": [
+         760587.0,
+         612073.7
+        ],
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "referencja rozstawu linii (lewa) 7.1–7.5 m",
+        "left": 7.3,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "ADR 0212 p.1: DK65 na Mońki 6,8 m linia-linia (ortofoto 0,1 m 2025); ADR 0306 D94: +0.25 m/pas (2 pasy)"
+       },
+       {
+        "param": "referencja rozstawu linii (prawa) 7.1–7.5 m",
+        "left": null,
+        "right": 7.3,
+        "delta": null,
+        "status": "OK",
+        "source": "ADR 0212 p.1: DK65 na Mońki 6,8 m linia-linia (ortofoto 0,1 m 2025); ADR 0306 D94: +0.25 m/pas (2 pasy)"
+       }
+      ]
+     },
+     {
+      "osm_way": 300808749,
+      "highway": "service",
+      "chain_left": "c:w300808749:3048959105-3047498874",
+      "chain_right": "c:w300808749:3048959105-3047498874",
+      "on_route": false,
+      "xy": [
+       760586.96,
+       613324.11
+      ],
+      "rows": [
+       {
+        "param": "szerokość jezdni [m]",
+        "left": 5.5,
+        "right": 5.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "pasy × szer. pasa [m]",
+        "left": "2 × 2.75",
+        "right": "2 × 2.75",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "opaska (edge_strip) [m]",
+        "left": 0.0,
+        "right": 0.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "rozstaw linii krawędziowych [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "szer. linii krawędziowej [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa L",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa P",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia środkowa",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "krawędź asfaltu P [m od osi]",
+        "left": 2.75,
+        "right": 2.75,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze P",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "krawędź asfaltu L [m od osi]",
+        "left": 2.75,
+        "right": 2.75,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze L",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "oświetlenie",
+        "left": "reguła klasy",
+        "right": "reguła klasy",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "wys. terenu w osi Z [m]",
+        "left": 125.16,
+        "right": null,
+        "delta": null,
+        "status": "N/D",
+        "source": "graph:z_terrain (NMT gugik-nmt-2022-knyszyn) | brak (z_terrain = null na krawędzi S/E kafla; NMT gugik-nmt-2022-knyszyn-w)",
+        "note": "Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. Oba kafle: NMT 2022 - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, wymaga Data/raw)"
+       },
+       {
+        "param": "szer. jezdni ostatni build [m]",
+        "left": 5.5,
+        "right": 5.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "generated:roads_qa"
+       },
+       {
+        "param": "położenie osi na szwie [m]",
+        "left": [
+         760586.96,
+         613324.11
+        ],
+        "right": [
+         760586.99,
+         613324.12
+        ],
+        "delta": 0.029,
+        "status": "OK",
+        "source": "derived:network"
+       }
+      ]
+     },
+     {
+      "osm_way": 1473558108,
+      "highway": "residential",
+      "chain_left": "c:w1473558108:13518997727-1134810961",
+      "chain_right": "c:w1473558108:13518997727-1134810961",
+      "on_route": false,
+      "xy": [
+       760587.0,
+       613186.97
+      ],
+      "rows": [
+       {
+        "param": "szerokość jezdni [m]",
+        "left": 6.5,
+        "right": 6.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "pasy × szer. pasa [m]",
+        "left": "2 × 3.25",
+        "right": "2 × 3.25",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "opaska (edge_strip) [m]",
+        "left": 0.0,
+        "right": 0.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "rozstaw linii krawędziowych [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "szer. linii krawędziowej [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa L",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa P",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia środkowa",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "krawędź asfaltu P [m od osi]",
+        "left": 3.25,
+        "right": 3.25,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze P",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "krawędź asfaltu L [m od osi]",
+        "left": 3.25,
+        "right": 3.25,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze L",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "oświetlenie",
+        "left": "reguła klasy",
+        "right": "reguła klasy",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "wys. terenu w osi Z [m]",
+        "left": 124.58,
+        "right": null,
+        "delta": null,
+        "status": "N/D",
+        "source": "graph:z_terrain (NMT gugik-nmt-2022-knyszyn) | brak (z_terrain = null na krawędzi S/E kafla; NMT gugik-nmt-2022-knyszyn-w)",
+        "note": "Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. Oba kafle: NMT 2022 - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, wymaga Data/raw)"
+       },
+       {
+        "param": "szer. jezdni ostatni build [m]",
+        "left": 6.5,
+        "right": 6.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "generated:roads_qa"
+       },
+       {
+        "param": "położenie osi na szwie [m]",
+        "left": [
+         760587.0,
+         613186.97
+        ],
+        "right": [
+         760587.0,
+         613186.97
+        ],
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       }
+      ]
+     },
+     {
+      "osm_way": 1473558112,
+      "highway": "service",
+      "chain_left": "c:w1473558112:13518997727-13518997728",
+      "chain_right": "c:w1473558112:13518997727-13518997728",
+      "on_route": false,
+      "xy": [
+       760587.0,
+       613232.38
+      ],
+      "rows": [
+       {
+        "param": "szerokość jezdni [m]",
+        "left": 5.5,
+        "right": 5.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "pasy × szer. pasa [m]",
+        "left": "2 × 2.75",
+        "right": "2 × 2.75",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "opaska (edge_strip) [m]",
+        "left": 0.0,
+        "right": 0.0,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "rozstaw linii krawędziowych [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "szer. linii krawędziowej [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa L",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa P",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia środkowa",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "krawędź asfaltu P [m od osi]",
+        "left": 2.75,
+        "right": 2.75,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze P",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "krawędź asfaltu L [m od osi]",
+        "left": 2.75,
+        "right": 2.75,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze L",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "oświetlenie",
+        "left": "reguła klasy",
+        "right": "reguła klasy",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "wys. terenu w osi Z [m]",
+        "left": 124.77,
+        "right": null,
+        "delta": null,
+        "status": "N/D",
+        "source": "graph:z_terrain (NMT gugik-nmt-2022-knyszyn) | brak (z_terrain = null na krawędzi S/E kafla; NMT gugik-nmt-2022-knyszyn-w)",
+        "note": "Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. Oba kafle: NMT 2022 - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, wymaga Data/raw)"
+       },
+       {
+        "param": "szer. jezdni ostatni build [m]",
+        "left": 5.5,
+        "right": 5.5,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "generated:roads_qa"
+       },
+       {
+        "param": "położenie osi na szwie [m]",
+        "left": [
+         760587.0,
+         613232.38
+        ],
+        "right": [
+         760587.0,
+         613232.38
+        ],
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       }
+      ]
+     },
+     {
+      "osm_way": 1478765548,
+      "highway": "secondary",
+      "chain_left": "c:w1478765548:13432353453-3047667183",
+      "chain_right": "c:w1478765548:13432353453-3047667183",
+      "on_route": false,
+      "xy": [
+       760587.0,
+       611964.5
+      ],
+      "rows": [
+       {
+        "param": "szerokość jezdni [m]",
+        "left": 11.75,
+        "right": 11.75,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "pasy × szer. pasa [m]",
+        "left": "2 × 5.62",
+        "right": "2 × 5.62",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "opaska (edge_strip) [m]",
+        "left": 0.25,
+        "right": 0.25,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "rozstaw linii krawędziowych [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "szer. linii krawędziowej [m]",
+        "left": null,
+        "right": null,
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa L",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia krawędziowa P",
+        "left": "brak",
+        "right": "brak",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "linia środkowa",
+        "left": "P-1b przerywana (2/4)",
+        "right": "P-1b przerywana (2/4)",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "krawędź asfaltu P [m od osi]",
+        "left": 5.875,
+        "right": 5.875,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze P",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "krawędź asfaltu L [m od osi]",
+        "left": 5.875,
+        "right": 5.875,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network (hw + pobocze utwardzone)"
+       },
+       {
+        "param": "pobocze L",
+        "left": "krawężnik",
+        "right": "krawężnik",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network (assign_sides, 2. przebieg)"
+       },
+       {
+        "param": "oświetlenie",
+        "left": "reguła klasy",
+        "right": "reguła klasy",
+        "delta": null,
+        "status": "OK",
+        "source": "derived:network"
+       },
+       {
+        "param": "wys. terenu w osi Z [m]",
+        "left": 121.07,
+        "right": null,
+        "delta": null,
+        "status": "N/D",
+        "source": "graph:z_terrain (NMT gugik-nmt-2022-knyszyn) | brak (z_terrain = null na krawędzi S/E kafla; NMT gugik-nmt-2022-knyszyn-w)",
+        "note": "Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. Oba kafle: NMT 2022 - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, wymaga Data/raw)"
+       },
+       {
+        "param": "szer. jezdni ostatni build [m]",
+        "left": 11.75,
+        "right": 11.75,
+        "delta": 0.0,
+        "status": "OK",
+        "source": "generated:roads_qa"
+       },
+       {
+        "param": "położenie osi na szwie [m]",
+        "left": [
+         760587.0,
+         611964.5
+        ],
+        "right": [
+         760587.0,
+         611964.5
+        ],
+        "delta": 0.0,
+        "status": "OK",
+        "source": "derived:network"
+       }
+      ]
+     }
+    ],
+    "fail": 0,
+    "warn": 0,
+    "taper": 0,
+    "overrides_src": {
+     "knyszyn": "checkout",
+     "knyszyn-w": "checkout"
+    }
+   }
+  ],
+  "summary": {
+   "seams": 1,
+   "roads": 10,
+   "fail_rows": 0,
+   "warn_rows": 0,
+   "taper_rows": 0
+  }
+ }
+}

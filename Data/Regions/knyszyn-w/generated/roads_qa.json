@@ -124,12 +124,13 @@
    ],
    "id": "c:w1478765548:13432353453-3047667183",
    "lanes": [
-    2,
-    3
+    2
    ],
    "length_m": 164.8,
    "max_grade": 0.0167,
-   "overrides": [],
+   "overrides": [
+    "knyszyn-w-dw671-west-fresh-seam"
+   ],
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 1.0,
    "width_m": [
@@ -137,7 +138,7 @@
     11.75
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard",
+    "authored_override:knyszyn-w-dw671-west-two-lanes-seam",
     "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)"
    ]
   },
@@ -1036,7 +1037,7 @@
    "patches": 84
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 141361,
+  "footprint_nodes": 141212,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1091,13 +1092,11 @@
   ],
   "markings": {
    "P-1 centre line": 21,
-   "P-1 lane line": 1,
    "P-10 crossing": 8,
    "P-10 crossing in junction": 6,
    "P-12": 2,
    "P-13": 6,
-   "P-7b edge line": 18,
-   "P-8 skipped (off carriageway)": 2
+   "P-7b edge line": 18
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
@@ -1147,6 +1146,18 @@
      "w98072121:1842392508-1134832955",
      "w98072355:1134824484-13523625036"
     ]
+   },
+   {
+    "id": "knyszyn-w-dw671-west-two-lanes-seam",
+    "targets": [
+     "w1478765548:13432353453-3047667183"
+    ]
+   },
+   {
+    "id": "knyszyn-w-dw671-west-fresh-seam",
+    "targets": [
+     "w1478765548:13432353453-3047667183"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -1161,8 +1172,8 @@
   },
   "seam_tapers": [],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 7,
-   "parts": 16,
+   "kerb_tris": 15,
+   "parts": 20,
    "side_tris": 22
   },
   "signalised_junctions": 0,
@@ -1179,7 +1190,7 @@
   },
   "verge_strips": {
    "chunks": 25,
-   "tris": 8822
+   "tris": 8840
   },
   "walled_ramps": []
  }

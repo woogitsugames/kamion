@@ -974,8 +974,10 @@
     2
    ],
    "length_m": 30.4,
-   "max_grade": 0.0157,
-   "overrides": [],
+   "max_grade": 0.0162,
+   "overrides": [
+    "knyszyn-service-300808749-seam-offset"
+   ],
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -2864,9 +2866,11 @@
     2
    ],
    "length_m": 8.1,
-   "max_grade": 0.0183,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.015,
+   "max_grade": 0.0182,
+   "overrides": [
+    "knyszyn-service-300808749-seam-offset"
+   ],
+   "profile_rms_vs_nmt_m": 0.02,
    "sidewalk_frac": 0.0,
    "width_m": [
     6.5
@@ -2887,9 +2891,11 @@
     2
    ],
    "length_m": 197.1,
-   "max_grade": 0.0242,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.007,
+   "max_grade": 0.0251,
+   "overrides": [
+    "knyszyn-service-300808749-seam-offset"
+   ],
+   "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 1.0,
    "width_m": [
     6.5
@@ -3066,6 +3072,9 @@
   "j:n1134835376": [
    "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)"
   ],
+  "j:n3047498874": [
+   "corner 0-1: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
   "j:n4898911741": [
    "corner 3-0: no fillet fits (alpha 122 deg) -> sharp"
   ],
@@ -3205,12 +3214,12 @@
   "crossings_skipped": [],
   "crossings_snapped": 35,
   "decals": {
-   "gullies": 747,
+   "gullies": 746,
    "oil": 103,
-   "patches": 225
+   "patches": 227
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 472549,
+  "footprint_nodes": 472773,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3629,6 +3638,14 @@
     "targets": [
      "w1478765548:13432353453-3047667183"
     ]
+   },
+   {
+    "id": "knyszyn-service-300808749-seam-offset",
+    "targets": [
+     "w300808749:3048959105-3047498874",
+     "w98072226:1134816414-3047498889",
+     "w98072226:3047498889-1134836218"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -3661,7 +3678,7 @@
   },
   "verge_strips": {
    "chunks": 39,
-   "tris": 27744
+   "tris": 27782
   },
   "walled_ramps": []
  }

@@ -21,3 +21,10 @@
 - Pierwsza przebudowa knyszyn-w (3,4 min): road_consistency 3→35 (marking_off_carriageway 6, obstacle_in_lane 26) — wszystkie na krawędziach kafla: farba i próbki pasów prostopadłe przy punkcie szwu wychodzą poza kafel, gdy asfalt kończy się na linii szwu.
 - Poprawka: meshing.clip_layer_to_box (markings przycięte do bbox kafla, build_world po decals) + consistency: próbki pasa poza kaflem = teren sąsiada. Test 4 passed.
 - NASTĘPNY KROK: ponowny run-build.ps1 po zakończeniu bieżącego (build.exit).
+
+## krok 5
+- Build #1 (bez clipu markings): knyszyn-w szew pełny (asfalt 611956,5–611971,95 przy x=szew-0,3, oba krawężniki/chodniki), 0 zawiniętych trójkątów.
+- combo #1: knyszyn-w-dw671 opp 62 (nowe): link knyszyn kończył się 0,4 m od osi (zjazd z wyspy W wraca na oś w węźle split, 6,6 m przed szwem), 3 pasy w knyszyn-w to maskowały.
+- Poprawka authored route_links.yaml: 2 swingi -2 m (±9 m / ±8 m) + cut_at_tile (koniec dokładnie na x=760587). combo: DK65→DW671 W 0/0/0, DK65→DK65 W 0/0/0, knyszyn-w-dw671 0/0/0, razem 67/0/0 (D95: 68/13/0).
+- asphalt_new: materiał per łańcuch → override też na krawędzi w70329870:3047667183-4898928970 (do skrzyżowania).
+- NASTĘPNY KROK: rm artifacts/seam-knw-s24/build.exit; pwsh -File artifacts/seam-knw-s24/run-build.ps1 (build #2)

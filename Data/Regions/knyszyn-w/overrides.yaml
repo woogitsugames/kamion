@@ -107,3 +107,12 @@ overrides:
     confidence: medium
     verify: owner camera 09 / render rings-w-arm-top
     set: {surface: asphalt_new}
+  # The mesher gives one surface material per chain (meshing.build_ribbon: section at the chain middle), and the chain
+  # from the seam runs over way 70329870 to the junction at node 4898928970 (39.8 + 125.0 m): the fresh course stops at
+  # that junction (ADR 0019: resurfacing usually stops at a junction). Extent WORKING_VALUE, not measured.
+  - id: knyszyn-w-dw671-west-fresh-to-junction
+    target: {edge: "w70329870:3047667183-4898928970"}
+    reason: "seam-knw-s24: same chain as way 1478765548 up to the next junction; no worn/new step on the tile edge."
+    confidence: low
+    verify: orthophoto after 2025 / owner photo of Tykocka west of the roundabout
+    set: {surface: asphalt_new}
