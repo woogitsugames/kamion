@@ -1805,11 +1805,11 @@
    {
     "chunk": "2_3",
     "instances": 36,
-    "materials": 25,
+    "materials": 26,
     "trees": 35,
     "tris_forest_hlod": 0,
-    "tris_high_static": 139256,
-    "tris_low_static": 35602
+    "tris_high_static": 139102,
+    "tris_low_static": 35448
    },
    {
     "chunk": "2_4",
@@ -2258,10 +2258,12 @@
    "bars": 120,
    "boards_brown": 70,
    "brick_bars": 22,
-   "brick_picket": 48,
-   "chainlink": 756,
+   "brick_picket": 33,
+   "chainlink": 326,
+   "chainlink_galv": 447,
    "concrete": 84,
-   "picket": 36
+   "picket": 19,
+   "picket_paint": 17
   },
   "fence_step_zone_hits": 0,
   "fence_stubs_dropped": 0,
@@ -2293,7 +2295,7 @@
     "front": "bars",
     "gate": null,
     "id": "bdot:2002917F-29E8-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       -88.9,
@@ -2350,10 +2352,10 @@
       -0.28
      ]
     ],
-    "front": "chainlink",
+    "front": "chainlink_galv",
     "gate": null,
     "id": "bdot:2002917F-2A20-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       107.86,
@@ -2380,10 +2382,10 @@
       0.966
      ]
     ],
-    "front": "chainlink",
+    "front": "chainlink_galv",
     "gate": null,
     "id": "bdot:2002917F-2A5D-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       368.37,
@@ -2413,7 +2415,7 @@
     "front": "brick_picket",
     "gate": null,
     "id": "bdot:2002917F-2A5E-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       362.18,
@@ -2492,7 +2494,7 @@
      ]
     },
     "id": "bdot:2002917F-2B6C-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       -918.36,
@@ -2568,7 +2570,7 @@
       0.973
      ]
     ],
-    "front": "brick_picket",
+    "front": "chainlink_galv",
     "gate": null,
     "id": "bdot:2002917F-2C77-5C99-E053-CC2BA8C01CFC",
     "side": "boards_brown",
@@ -2628,7 +2630,7 @@
       0.95
      ]
     ],
-    "front": "picket",
+    "front": "picket_paint",
     "gate": null,
     "id": "bdot:2002917F-2CEC-5C99-E053-CC2BA8C01CFC",
     "side": "chainlink",
@@ -2710,25 +2712,28 @@
   "styles_front": {
    "bars": 3,
    "brick_bars": 1,
-   "brick_picket": 3,
-   "chainlink": 3,
-   "picket": 2
+   "brick_picket": 2,
+   "chainlink": 1,
+   "chainlink_galv": 3,
+   "picket": 1,
+   "picket_paint": 1
   },
   "styles_side": {
    "bars": 1,
    "boards_brown": 1,
-   "chainlink": 9,
+   "chainlink": 4,
+   "chainlink_galv": 5,
    "concrete": 1
   },
   "thujas": 52,
   "track_drives": 2,
-  "tris": 5591,
+  "tris": 5437,
   "tris_by": {
    "bins": 90,
    "bush": 104,
-   "fence": 2296,
+   "fence": 2144,
    "flowers": 204,
-   "gate": 1032,
+   "gate": 1030,
    "overgrowth": 396,
    "shrub": 404,
    "spruce": 160,
@@ -2737,13 +2742,13 @@
   },
   "tris_by_low": {
    "bins": 90,
-   "fence": 2296,
-   "gate": 1032,
+   "fence": 2144,
+   "gate": 1030,
    "spruce": 160,
    "thuja_row": 616,
    "thuja_single": 32
   },
-  "tris_low": 4226,
+  "tris_low": 4072,
   "verge_overlays": 3,
   "wickets": 12
  },

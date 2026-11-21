@@ -12,7 +12,7 @@
   "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
   "tools/worldgen/roads/authored_paint.py": "cfa394a6e9c34275a8e07176ac76336a035d50acd959c11a530b55ab1508451e",
   "tools/worldgen/roads/barrier_audit.py": "786d6dfd30de7dd51f60c793136839d43fcd9d214e103f392d613b68f1b18103",
-  "tools/worldgen/roads/build_world.py": "6b1177a5d1cd42c157cd522ce8ab3da35786c2b709d9347b934de25a13e02beb",
+  "tools/worldgen/roads/build_world.py": "53263ba68e1b02456556b159422f5ae9383bbf3345a82be29a213ba6333b38c1",
   "tools/worldgen/roads/carriageway_split.py": "c79e82ddcf05d4363e231b4546f25dc37ada97e8d9cfe2f3974a91f2fe1b603d",
   "tools/worldgen/roads/closures.py": "608718189eb6680ca61538d47acb021d1be85e4dbbd001f315a0f2caffb45fa9",
   "tools/worldgen/roads/compact_roundabout.py": "b57e8ea73574bb272763ae5c4e7584118e6326fb0035beda7e4656aae4bf15ac",
@@ -22,18 +22,18 @@
   "tools/worldgen/roads/geom.py": "8f9f732d90273b92cf23f00f65c6a2c7eed6d1f9a0b3cc211679a908f2788e21",
   "tools/worldgen/roads/gores.py": "3502f14e19eb9711092ba27b287f75c9d7b4013deb79614a273df03850c5c63b",
   "tools/worldgen/roads/junctions.py": "ee3ea6a082078637ffad54dfaefc195d19bf7ccaa45e23ce2eed58a8bc8dfd29",
-  "tools/worldgen/roads/markings.py": "b9bc48abb774d8ab613146cb8127c32c96fe1e01c862de7377b40c28d85fc78d",
-  "tools/worldgen/roads/meshing.py": "698b233175e9aaecafbbc9459842899bac88e28a6d5e39acee8537609d315f97",
-  "tools/worldgen/roads/network.py": "3d41230d0a455189d5f67145b89d511b934b530fb1ce8c9e30f81da953ac9134",
+  "tools/worldgen/roads/markings.py": "2977f2143796773d8a67b4f47c0db496932ef30f8050321eaf0318ad850dfba3",
+  "tools/worldgen/roads/meshing.py": "9c6766916e7617da1b80e973196af60c61f64ef3eaad6bd896cc59924435766a",
+  "tools/worldgen/roads/network.py": "0fd1a6128049aca60d31e1138c65fd51c27f337ba174b02b11ec49165465af8a",
   "tools/worldgen/roads/p21_hatch.py": "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
   "tools/worldgen/roads/pipeline.py": "5652e58227bd1c7a3cf4512a7306c5e3983e0578e8bfab0d59c27b1ab393a3c4",
-  "tools/worldgen/roads/profile.py": "9d6e30a5492c79815637b1462aa74b88853ee9ec864eb3aa9a32109cd8124a58",
+  "tools/worldgen/roads/profile.py": "a4b2ab8d5eeb3eb902300e332b5d4e4b087a6d2557cef450032530da675ba3a4",
   "tools/worldgen/roads/qa_ortho.py": "6e32d52950954922afceae3ee2f0aa379b8d42467c2d294b7e951750d39f3e6b",
   "tools/worldgen/roads/route.py": "e8bb7cd40bd2bf4dfef526aff16bafda35e2b8e68d64f2a8fb576818a453c5b4",
   "tools/worldgen/roads/route_km.py": "4e961cd1608d6265c3fd27edd2690830628bffec0ec8f65bec44659b06143086",
   "tools/worldgen/roads/seam_p2a.py": "56835afa4136a1648aa3a9bb69d8bb0381d5951c4a7922c146de313ab5162c4f",
-  "tools/worldgen/roads/seam_taper.py": "0ebb1ff856da89a7600aa1686e3faccb41a27a2cc4d8ce45fd169d054a43c141",
-  "tools/worldgen/roads/standards.py": "d3ccc7f195f45692688fcd59605ffd82a38d6f4e9160a28ab23a4b1ec076ee1b",
+  "tools/worldgen/roads/seam_taper.py": "dfb73aa90cfed59f5ad6d2b855c8a3d15b30df658cbf28b5e92561e2310cd973",
+  "tools/worldgen/roads/standards.py": "7e96014b4ac7394ed39b0b024a2b346341f27726bc4832a8be467af9d721959a",
   "tools/worldgen/roads/surface_safety.py": "53388347d460630816a0cdbf53b1d5cac568ef7ad7cc59d5a9fb26a6d13a3f0f",
   "tools/worldgen/roads/swept_path.py": "0112cbd81b02fd3c5930d385e6ba918b607011d4f6dd5f7a80809c0d62ae2d05",
   "tools/worldgen/roads/through_lines.py": "be22b6b67118b50577e67ae1520287dcd5831b39400e7f2b805fde1b6e2795c5",
@@ -2774,18 +2774,18 @@
    "edge_vs_ortho_m": {
     "all_sides": {
      "max": 6.625,
-     "n": 4621,
+     "n": 4618,
      "p50": 1.125,
      "p95": 4.375
     },
-    "detected_sides": 4621,
+    "detected_sides": 4618,
     "max": 5.375,
-    "n": 1611,
+    "n": 1615,
     "p50": 1.125,
-    "p95": 3.375,
-    "signed_p50": -0.44,
-    "stations": 3475,
-    "valid_sides": 1611
+    "p95": 3.394,
+    "signed_p50": -0.375,
+    "stations": 3473,
+    "valid_sides": 1615
    },
    "graph_vs_fresh_osm_max_m": {
     "max": 0.001,
@@ -2797,7 +2797,7 @@
     "max": 0.762,
     "n": 57,
     "p50": 0.602,
-    "p95": 0.726
+    "p95": 0.72
    },
    "junction_windows": 57,
    "lane_into_island": 3,
@@ -2867,12 +2867,12 @@
    ],
    "gen_islands_absent_on_ortho": 1,
    "iou": {
-    "gen_m2": 1215.5,
-    "iou": 0.399,
-    "ortho_m2": 1496.9
+    "gen_m2": 1216.5,
+    "iou": 0.397,
+    "ortho_m2": 1506.7
    },
    "junction": "j:n10712325873",
-   "ortho_islands_missing": 3,
+   "ortho_islands_missing": 2,
    "overlay": "artifacts/fidelity-r9/overlays/tile_04_j_n10712325873.jpg",
    "roundabout": true,
    "signalized": false
@@ -2884,9 +2884,9 @@
    ],
    "gen_islands_absent_on_ortho": 3,
    "iou": {
-    "gen_m2": 1359.1,
-    "iou": 0.408,
-    "ortho_m2": 2596.7
+    "gen_m2": 1373.8,
+    "iou": 0.406,
+    "ortho_m2": 2639.8
    },
    "junction": "j:n3160890699",
    "ortho_islands_missing": 2,
@@ -2901,30 +2901,14 @@
    ],
    "gen_islands_absent_on_ortho": 3,
    "iou": {
-    "gen_m2": 1287.3,
-    "iou": 0.413,
-    "ortho_m2": 2510.1
+    "gen_m2": 1295.3,
+    "iou": 0.412,
+    "ortho_m2": 2522.1
    },
    "junction": "j:n3160890707",
    "ortho_islands_missing": 1,
    "overlay": "artifacts/fidelity-r9/overlays/tile_06_j_n3160890707.jpg",
    "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
-    -722.4,
-    -413.6
-   ],
-   "gen_islands_absent_on_ortho": 1,
-   "iou": {
-    "gen_m2": 1232.1,
-    "iou": 0.417,
-    "ortho_m2": 1586.8
-   },
-   "junction": "j:n10712325872",
-   "ortho_islands_missing": 2,
-   "roundabout": true,
    "signalized": false
   },
   {
@@ -2961,17 +2945,33 @@
   },
   {
    "center_en": [
+    -722.4,
+    -413.6
+   ],
+   "gen_islands_absent_on_ortho": 1,
+   "iou": {
+    "gen_m2": 1235.5,
+    "iou": 0.426,
+    "ortho_m2": 1659.8
+   },
+   "junction": "j:n10712325872",
+   "ortho_islands_missing": 2,
+   "roundabout": true,
+   "signalized": false
+  },
+  {
+   "center_en": [
     -870.4,
     -996.8
    ],
    "gen_islands_absent_on_ortho": 2,
    "iou": {
-    "gen_m2": 1291.6,
-    "iou": 0.439,
-    "ortho_m2": 2367.9
+    "gen_m2": 1315.6,
+    "iou": 0.433,
+    "ortho_m2": 2450.0
    },
    "junction": "j:n3160890426",
-   "ortho_islands_missing": 1,
+   "ortho_islands_missing": 2,
    "roundabout": false,
    "signalized": false
   },
@@ -2982,12 +2982,12 @@
    ],
    "gen_islands_absent_on_ortho": 3,
    "iou": {
-    "gen_m2": 1338.6,
-    "iou": 0.44,
-    "ortho_m2": 2540.5
+    "gen_m2": 1368.9,
+    "iou": 0.434,
+    "ortho_m2": 2702.4
    },
    "junction": "j:n3160890433",
-   "ortho_islands_missing": 1,
+   "ortho_islands_missing": 0,
    "roundabout": false,
    "signalized": false
   },
@@ -3105,6 +3105,22 @@
   },
   {
    "center_en": [
+    -514.9,
+    582.6
+   ],
+   "gen_islands_absent_on_ortho": 0,
+   "iou": {
+    "gen_m2": 889.1,
+    "iou": 0.542,
+    "ortho_m2": 1567.4
+   },
+   "junction": "j:n10712325772",
+   "ortho_islands_missing": 0,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
     438.4,
     -946.2
    ],
@@ -3116,22 +3132,6 @@
    },
    "junction": "j:n9445202418",
    "ortho_islands_missing": 1,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
-    -514.9,
-    582.6
-   ],
-   "gen_islands_absent_on_ortho": 0,
-   "iou": {
-    "gen_m2": 888.1,
-    "iou": 0.546,
-    "ortho_m2": 1556.0
-   },
-   "junction": "j:n10712325772",
-   "ortho_islands_missing": 0,
    "roundabout": false,
    "signalized": false
   },
@@ -3233,33 +3233,33 @@
   },
   {
    "center_en": [
-    -453.4,
-    -1001.0
-   ],
-   "gen_islands_absent_on_ortho": 0,
-   "iou": {
-    "gen_m2": 1431.0,
-    "iou": 0.6,
-    "ortho_m2": 1422.1
-   },
-   "junction": "j:n9445202432",
-   "ortho_islands_missing": 1,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
     -628.0,
     -971.4
    ],
    "gen_islands_absent_on_ortho": 3,
    "iou": {
-    "gen_m2": 2923.9,
-    "iou": 0.601,
-    "ortho_m2": 3047.3
+    "gen_m2": 2934.8,
+    "iou": 0.597,
+    "ortho_m2": 3073.5
    },
    "junction": "j:n3160890454",
    "ortho_islands_missing": 3,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
+    -453.4,
+    -1001.0
+   ],
+   "gen_islands_absent_on_ortho": 0,
+   "iou": {
+    "gen_m2": 1438.4,
+    "iou": 0.6,
+    "ortho_m2": 1422.2
+   },
+   "junction": "j:n9445202432",
+   "ortho_islands_missing": 1,
    "roundabout": false,
    "signalized": false
   },
@@ -3286,9 +3286,9 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 1346.9,
-    "iou": 0.607,
-    "ortho_m2": 1291.0
+    "gen_m2": 1353.8,
+    "iou": 0.604,
+    "ortho_m2": 1289.5
    },
    "junction": "j:n13236416985",
    "ortho_islands_missing": 0,
@@ -3329,6 +3329,22 @@
   },
   {
    "center_en": [
+    -770.0,
+    -439.8
+   ],
+   "gen_islands_absent_on_ortho": 4,
+   "iou": {
+    "gen_m2": 1855.2,
+    "iou": 0.621,
+    "ortho_m2": 2677.6
+   },
+   "junction": "j:n7694828550",
+   "ortho_islands_missing": 1,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
     704.9,
     -641.6
    ],
@@ -3340,22 +3356,6 @@
    },
    "junction": "j:n13851689412",
    "ortho_islands_missing": 2,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
-    -770.0,
-    -439.8
-   ],
-   "gen_islands_absent_on_ortho": 4,
-   "iou": {
-    "gen_m2": 1848.0,
-    "iou": 0.625,
-    "ortho_m2": 2649.1
-   },
-   "junction": "j:n7694828550",
-   "ortho_islands_missing": 1,
    "roundabout": false,
    "signalized": false
   },
@@ -3393,6 +3393,22 @@
   },
   {
    "center_en": [
+    -785.4,
+    -438.6
+   ],
+   "gen_islands_absent_on_ortho": 4,
+   "iou": {
+    "gen_m2": 1815.9,
+    "iou": 0.641,
+    "ortho_m2": 2604.6
+   },
+   "junction": "j:n4236127140",
+   "ortho_islands_missing": 0,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
     709.5,
     -599.8
    ],
@@ -3404,22 +3420,6 @@
    },
    "junction": "j:n12114572068",
    "ortho_islands_missing": 3,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
-    -785.4,
-    -438.6
-   ],
-   "gen_islands_absent_on_ortho": 4,
-   "iou": {
-    "gen_m2": 1807.4,
-    "iou": 0.646,
-    "ortho_m2": 2570.4
-   },
-   "junction": "j:n4236127140",
-   "ortho_islands_missing": 0,
    "roundabout": false,
    "signalized": false
   },
@@ -3473,22 +3473,6 @@
   },
   {
    "center_en": [
-    -947.5,
-    -936.0
-   ],
-   "gen_islands_absent_on_ortho": 1,
-   "iou": {
-    "gen_m2": 2375.2,
-    "iou": 0.657,
-    "ortho_m2": 2402.2
-   },
-   "junction": "j:n3160890661",
-   "ortho_islands_missing": 1,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
     354.2,
     280.1
    ],
@@ -3500,6 +3484,22 @@
    },
    "junction": "j:n11329813750",
    "ortho_islands_missing": 0,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
+    -947.5,
+    -936.0
+   ],
+   "gen_islands_absent_on_ortho": 1,
+   "iou": {
+    "gen_m2": 2376.3,
+    "iou": 0.659,
+    "ortho_m2": 2394.4
+   },
+   "junction": "j:n3160890661",
+   "ortho_islands_missing": 1,
    "roundabout": false,
    "signalized": false
   },
@@ -3649,6 +3649,22 @@
   },
   {
    "center_en": [
+    -754.8,
+    -402.1
+   ],
+   "gen_islands_absent_on_ortho": 2,
+   "iou": {
+    "gen_m2": 2340.0,
+    "iou": 0.715,
+    "ortho_m2": 2425.9
+   },
+   "junction": "j:n10712325863",
+   "ortho_islands_missing": 0,
+   "roundabout": false,
+   "signalized": false
+  },
+  {
+   "center_en": [
     -955.0,
     -739.8
    ],
@@ -3676,22 +3692,6 @@
    },
    "junction": "j:n2840897625",
    "ortho_islands_missing": 1,
-   "roundabout": false,
-   "signalized": false
-  },
-  {
-   "center_en": [
-    -754.8,
-    -402.1
-   ],
-   "gen_islands_absent_on_ortho": 2,
-   "iou": {
-    "gen_m2": 2326.4,
-    "iou": 0.727,
-    "ortho_m2": 2364.0
-   },
-   "junction": "j:n10712325863",
-   "ortho_islands_missing": 0,
    "roundabout": false,
    "signalized": false
   },
