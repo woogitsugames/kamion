@@ -1,3 +1,8 @@
+# STATUS regen-wave-6-s24 (fala 6: 54 kafle d67-full po ADR 0320/0321/0322, route-start, gps-dk8; przed buildem #4)
+- 2026-11-21 19:53 start: worktree z origin/main 37eaab4f7 (bez kopii derived, junction Data/raw -> main). 3 łańcuchy heavy A/B/C: artifacts/regen-wave-6-s24/chain.ps1 (build_world --context, export-route, fidelity), autocommit co 15 min, final.ps1 (route_links, tile_graph, katalog --check, seams, route_obstacles, commit+push, pytest tests/gis).
+- Build #4 importuje kafle potokowo za falą (win-build artifacts/full-build-4-s24/run-chain.ps1), po final scala origin/regen-wave-6-s24 do build/win.
+- NASTĘPNY KROK: czekać na final.status DONE; potem lider scala regen-wave-6-s24 do main (`git merge origin/regen-wave-6-s24`).
+
 # STATUS world-fix-b3-s24 (błędy świata z buildu #3)
 - krok 0 OK: worktree gotowy (derived skopiowane). Kafle łat: t=2541 -> dw671-tykocin-01 (13 km do celu), t=3221 -> dw671-tykocin-07 (4,0 km).
 - Przyczyna P2: roads/decals.py patch() = ostry prostokąt, materiał decal_patch nieprzezroczysty, aged_tone 1.08 bez _ROADWEAR (droga ciemniejsza o koleiny/drip) -> jasne łaty.
