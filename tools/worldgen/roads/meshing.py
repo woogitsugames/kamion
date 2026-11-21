@@ -1019,7 +1019,10 @@ class PatchHeight:
         if out >= 0.5:
             return None
         d_node = sp_ if a.end == "a" else a.chain.length - sp_          # distance from the junction node
-        return float(a.chain.crossfall_z(sp_, lat_)), out, d_node
+        # The influence extends beyond the road edge, its crossfall does not:
+        # extrapolating it here but clamping in arm_plane made a height step
+        # where on_arm's 0.5 m influence ended.
+        return float(a.chain.crossfall_z(sp_, float(np.clip(lat_, -hw_, hw_)))), out, d_node
 
     def arm_plane(self, i, p):
         on = self.on_arm(i, p)
@@ -1046,6 +1049,12 @@ class PatchHeight:
         merges otherwise mixed the rising ramp into the through road (0.13 m step on route_start, s = 1478 m)."""
         num = den = 0.0
         for i, (a, s, P, d, n, hw, g, z0) in enumerate(self.arms):
+            A, B = P - n * hw, P + n * hw
+            ab = B - A
+            t = np.clip(float((p - A) @ ab) / max(float(ab @ ab), 1e-9), 0, 1)
+            dist2 = float(np.sum((p - (A + t * ab)) ** 2))
+            w = 1.0 / (dist2 + 1e-6) ** 1.5
+            z = self.arm_plane(i, p)
             on = self.on_arm(i, p)
             if on is not None:
                 # weight grows with the depth inside the carriageway and falls to 0 at 0.5 m outside it (continuous);
@@ -1054,14 +1063,10 @@ class PatchHeight:
                 # and fades out over the last 4 m before the node, so where the route passes from one arm to the next
                 # through the node their surfaces (crossfall, banking) blend instead of stepping
                 z, out, d_node = on
-                w = 50.0 * (0.5 - out) ** 4 * float(np.clip(d_node / 4.0, 0.02, 1.0)) ** 2
-            else:
-                A, B = P - n * hw, P + n * hw
-                ab = B - A
-                t = np.clip(float((p - A) @ ab) / max(float(ab @ ab), 1e-9), 0, 1)
-                dist2 = float(np.sum((p - (A + t * ab)) ** 2))
-                w = 1.0 / (dist2 + 1e-6) ** 1.5
-                z = self.arm_plane(i, p)
+                # Fade an EXTRA road-surface influence into the same IDW
+                # background. Replacing the background by a weight tending
+                # to zero caused a discontinuity at out=0.5 (C route s=275).
+                w += 50.0 * (0.5 - out) ** 4 * float(np.clip(d_node / 4.0, 0.02, 1.0)) ** 2
             num += w * z
             den += w
         for c in self.internal:          # absorbed chains (e.g. the 29 m slip w606396458 inside the Bieżeństwa merge)

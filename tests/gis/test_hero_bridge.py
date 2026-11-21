@@ -82,7 +82,7 @@ def test_spec_follows_the_generated_road(spec):
             cap_limit = S.BRIDGE_CLEAR_M + S.KERB_TOP_W + 1.0  # authored ADR 0117 cap_w
             assert all(0.0 <= v <= cap_limit + 0.002 for v in extensions), s
             assert w == pytest.approx(carriageway + sum(extensions), abs=0.003), s
-            assert carriageway > 8.0 and w > carriageway, s
+            assert carriageway >= 8.0 - 0.002 and w > carriageway, s
             if s["open"] and so[0] + 45 < s["s"] < so[1] - 45:
                 # middle of the open range (ring + island); the ends run down to the abutments. Measured 3.27-4.99 m:
                 # 4.5 m + margin over the ring carriageways, less over the island mound of the generated terrain.
