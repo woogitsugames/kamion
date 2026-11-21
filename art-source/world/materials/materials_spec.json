@@ -2973,6 +2973,107 @@
         0.4167
       ]
     },
+    "granite_honed_tint": {
+      "tile_m": [
+        0.8,
+        0.8
+      ],
+      "target": 0.5,
+      "kind": "modulation_set",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "slots": [
+        "monument_granite"
+      ],
+      "note": "ADR 0325: honed grey granite (feldspar / quartz / biotite grains 3-11 mm), neutral modulation map (mean 0.5); colour from the manifest. Plinth of the king's monument in Knyszyn.",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 0.78,
+          "dir": "granite_honed_tint/High",
+          "png_bytes": 5753056,
+          "files": [
+            "T_granite_honed_tint_BaseColor.png",
+            "T_granite_honed_tint_MaskMap.png",
+            "T_granite_honed_tint_Normal.png",
+            "T_granite_honed_tint_Var.png"
+          ],
+          "smoothness_mean": 0.633,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 1.56,
+          "dir": "granite_honed_tint/Medium",
+          "png_bytes": 1735751,
+          "files": [
+            "T_granite_honed_tint_BaseColor.png",
+            "T_granite_honed_tint_MaskMap.png",
+            "T_granite_honed_tint_Normal.png",
+            "T_granite_honed_tint_Var.png"
+          ],
+          "smoothness_mean": 0.622,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 3.12,
+          "dir": "granite_honed_tint/Low",
+          "png_bytes": 472351,
+          "files": [
+            "T_granite_honed_tint_BaseColor.png",
+            "T_granite_honed_tint_MaskMap.png",
+            "T_granite_honed_tint_Normal.png",
+            "T_granite_honed_tint_Var.png"
+          ],
+          "smoothness_mean": 0.614,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00025,
+        0.00012
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.153,
+        "p95": 0.6723,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.049,
+      "ao_mean": 0.998
+    },
     "grass_verge": {
       "tile_m": [
         3.0,
