@@ -229,3 +229,5 @@ NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/
 - NASTĘPNY KROK: `Get-Content artifacts/c-regress-cli/build-c2.log -Tail 3; Get-Content artifacts/c-regress-cli/build-c2.exit`
 - C przebudowany na 80718647d (exit 0; far_field Low 29161; wolne końce 1). Dane ad4062d25. Pełny pytest gis w tle -> artifacts/c-regress-cli/pytest-after.log.
 - NASTĘPNY KROK: `Get-Content artifacts/c-regress-cli/pytest-after.log -Tail 40`
+- 08:3x C przebudowany na 1b86e7b9d (dane 0f91799fc): rest_on_strip entry/exit True, wolne końce 1, far_field Low 29161. Pytest #1 po przebudowie: 5 failed / 2857 passed (pytest-after.log). Końcowy pytest gis w tle -> pytest-after2.log.
+- NASTĘPNY KROK: `Get-Content artifacts/c-regress-cli/pytest-after2.log -Tail 20`, uzupełnić raport
