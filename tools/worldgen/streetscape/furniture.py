@@ -1834,6 +1834,44 @@ GUARDRAIL_JOIN_M = 4.0      # ADR 0117: a run cut by the dedup is led onto the r
 GUARDRAIL_JOIN_BLEND = 8    # points (1 m) over which the cut end swings onto the other rail
 
 
+GUARDRAIL_DEDUP_DZ = 0.8     # c-regress-cli (= roads.barrier_audit.FREE_END_DZ): a rail this much higher / lower is
+                             # another level (deck beside a deck), not a duplicate of the run
+
+
+def _keep_other_level(P, Z, tall, built, keep, allb):
+    """c-regress-cli: the dedup was plan-only. Where two decks run side by side at different levels (C, decks
+    w177895177 / w175157461 at E 426 N -649: 1.0 m apart in height, the cap edges 0.02 m apart in plan after the
+    ADR 0317 cap buffer) the lower deck barrier was cut and swung onto the upper one: a beam end in the air 1 m
+    below it. A point is a duplicate only of a rail at a similar level; rails built without heights (pier pass on
+    net.guardrail_built) keep the plan-only rule. Returns (keep, the rails a cut end may join)."""
+    from shapely.geometry import Point
+    Z = np.asarray(Z, float)
+    lvl = [b for b in built if b.has_z]
+    if not lvl or keep.all():
+        return keep, allb
+    keep = keep.copy()
+    rad = np.where(tall, GUARDRAIL_DEDUP_M, GUARDRAIL_DEDUP_GROUND_M)
+    for i in np.where(~keep)[0]:
+        if not np.isfinite(Z[i]):
+            continue
+        pt = Point(P[i])
+        same = False
+        for b in built:
+            if b.distance(pt) >= rad[i]:
+                continue
+            if not b.has_z or abs(b.interpolate(b.project(pt)).z - Z[i]) <= GUARDRAIL_DEDUP_DZ:
+                same = True
+                break
+        keep[i] = not same
+    zr = Z[np.isfinite(Z)]
+    if len(zr):
+        near = [b for b in built if not b.has_z or
+                (min(c[2] for c in b.coords) <= zr.max() + GUARDRAIL_DEDUP_DZ and
+                 max(c[2] for c in b.coords) >= zr.min() - GUARDRAIL_DEDUP_DZ)]
+        allb = shapely.union_all(near) if near else allb
+    return keep, allb
+
+
 def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), dense=None, dark=None):
     """Build the parts of run P that are not within the dedup distance of a rail built before (two chains / a chain
     and an authored rail on the same separator crossed and overlapped at E -782 and on the viaduct approaches).
@@ -1855,6 +1893,7 @@ def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), den
         shapely.prepare(near)
         shapely.prepare(far)
         keep = ~np.where(tall, shapely.contains_xy(near, P[:, 0], P[:, 1]), shapely.contains_xy(far, P[:, 0], P[:, 1]))
+        keep, allb = _keep_other_level(P, Z, tall, built, keep, allb)
     queue = getattr(lin, "rail_queue", None)
 
     def join(Ps, end):
@@ -1906,9 +1945,9 @@ def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), den
                 for safe in direct:
                     guardrail(lin, safe["P"], safe["Z"], key, safe["tall"], safe["term"],
                               dense=safe["dense"], dark=safe["dark"])
-                    built.append(LineString(safe["P"]))
+                    built.append(LineString(np.column_stack([safe["P"], safe["Z"]])))
             if queue is not None:
-                built.append(LineString(Ps))
+                built.append(LineString(np.column_stack([Ps, Z[k:kk + 1]])))
         else:
             m["dedup_dropped_pts"] = m.get("dedup_dropped_pts", 0) + (kk - k + 1)
         k = kk + 1

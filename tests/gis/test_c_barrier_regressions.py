@@ -116,3 +116,33 @@ def test_narrowing_cap_keeps_barrier_connected_to_ground_approaches(monkeypatch,
     assert all(any(p[3] for p in r["pts"]) for r in runs)
     assert all(not r["pts"][0][3] and not r["pts"][-1][3] for r in runs)
     assert not BA.find_free_ends(runs)
+
+
+def _rect(buf, bounds, src, z=0.):
+    x0, y0, x1, y1 = bounds
+    v = np.array([[x0, y0, z], [x1, y0, z], [x1, y1, z], [x0, y1, z]])
+    buf.add("road", "road_asphalt", v, v[:, :2], [[0, 1, 2], [0, 2, 3]], src=src)
+
+
+def _rule_rail(key, y):
+    p = np.column_stack([np.arange(30.), np.full(30, y)])
+    return dict(P=p, Z=np.zeros(30), key=key, tall=np.zeros(30, bool), term=(True, True), dense=None, dark=None)
+
+
+def test_rule_rail_behind_own_flush_shoulder_is_kept_lanes_and_other_shoulders_still_clip():
+    # C deck->approach transitions: posts on the gravel shoulder 0.25 m behind the own flush asphalt shoulder
+    buf = MeshBuf()
+    _rect(buf, (-10., -8., 40., -1.), "c:w1:2-3")            # lanes of the chain
+    _rect(buf, (-10., -1., 40., 0.), "c:w1:2-3:L:5")         # own flush asphalt shoulder (side profile part)
+    q = [_rule_rail("c:w1:2-3:L:approach", .25)]
+    FU._clip_rails_to_pavement(q, buf.parts)
+    assert len(q) == 1 and len(q[0]["P"]) == 30
+    # the same rail of the OTHER side / another chain / an authored rail keeps the full ADR 0310 clearance
+    for key in ("c:w1:2-3:R:approach", "c:w9:2-3:L:approach", "authored:x"):
+        q = [_rule_rail(key, .25)]
+        FU._clip_rails_to_pavement(q, buf.parts)
+        assert not q, key
+    # the lanes themselves are never exempt
+    q = [_rule_rail("c:w1:2-3:L:approach", -.75)]
+    FU._clip_rails_to_pavement(q, buf.parts)
+    assert not q
