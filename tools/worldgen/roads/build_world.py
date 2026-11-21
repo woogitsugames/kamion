@@ -175,7 +175,10 @@ MATERIALS = {
                       # 0.65 -> 1.28 / 1.07 / 0.70; metal 0.7 + 0.35 -> 1.65 / 1.57 / 0.88. 0.25 = between (WORKING_VALUE)
                       "sky_occ": [0.0, 0.25]},
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
-    "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
+    # ADR 0324 (critic s24 wave 6 # 2.5: "the same pale concrete strip, reads as a footway"): ground shoulder of a
+    # voivodeship / national road = compacted aggregate mixed with soil, browner and darker than the 0.20 / 0.19 /
+    # 0.17 it had (that is the albedo of fresh crushed stone, close to the kerb concrete 0.24). WORKING_VALUE.
+    "shoulder_gravel": {"color": [0.135, 0.120, 0.095], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "terrain_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     # road paint film, albedo 0.55 under a traffic film 0.38 -> effective ~0.28-0.41, mean 0.34 (EN 1436 white in service,
     # luminance factor classes B2 >= 0.30 / B3 >= 0.40; ADR 0049 addendum r7, WORKING_VALUE) over the asphalt_worn set:
@@ -236,10 +239,13 @@ def glb_materials(region=None):
     global _GLB_MATS
     if region is not None and ((region.get("water") or {}).get("material")):
         from streetscape import rail as _RL
-        return {**MATERIALS, **PR.glb_materials(), **region_water_materials(region), **_RL.RAIL_MATERIALS}
+        from streetscape import verge_flora as _VF
+        return {**MATERIALS, **PR.glb_materials(), **region_water_materials(region), **_RL.RAIL_MATERIALS,
+                **_VF.MATERIALS}
     if _GLB_MATS is None:
         from streetscape import rail as _RL
-        _GLB_MATS = {**MATERIALS, **PR.glb_materials(), **WATER_MATERIALS, **_RL.RAIL_MATERIALS}
+        from streetscape import verge_flora as _VF      # ADR 0324
+        _GLB_MATS = {**MATERIALS, **PR.glb_materials(), **WATER_MATERIALS, **_RL.RAIL_MATERIALS, **_VF.MATERIALS}
     return _GLB_MATS
 
 
@@ -1098,6 +1104,19 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     _lod_mask = mask if w.water is None else (mask | w.water.lod_mask())
     if w.rail is not None and w.rail.lod_mask() is not None:      # ADR 0217: coarse LoDs never above the ballast
         _lod_mask = _lod_mask | w.rail.lod_mask()
+    # ADR 0324: roadside sward of the kerbless sides - grass cards (layer banks), the ditch grass as terrain with damp
+    # ground masks (streetscape.verge_flora). WORLDGEN_NO_VERGE_FLORA=1: debug A/B only.
+    w.verge_flora = False
+    if not os.environ.get("WORLDGEN_NO_VERGE_FLORA"):
+        from streetscape import verge_flora as VF
+        _vsecs = VF.sections(w.buf.parts)
+        _vrep = {}
+        if VF.build(w.buf, _vsecs, _vrep):
+            w.verge_flora = True
+        _vrep["verge_flora"]["ditch_parts_to_terrain"] = VF.tag_for_terrain(_vsecs)
+        st["col"] = VF.ditch_colours(st["col"], w.hf, _vsecs, _vrep["verge_flora"])
+        w.stats["verge_flora"] = _vrep["verge_flora"]
+        log("verge flora (ADR 0324)", w.stats["verge_flora"])
     terrain = CH.build_chunks(zc, _lod_mask, e0, n0, w.region["bbox"]["width_m"], col=st["col"], low_cut=low_cut)
     log("terrain chunks", len(terrain))
     w.stats["verge_strips"] = merge_verge_into_terrain(terrain, w.buf.parts, half, st["col"], e0, n0)
@@ -1130,6 +1149,10 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     if w.water is not None:            # ADR 0213: water_reeds.png beside the region's generated textures
         _pd = props_library_dir(region_id, out_root)
         w.water.export_textures((Path(_pd).parent / "textures") if _pd else (PR.ART / "textures"))
+    if getattr(w, "verge_flora", False):     # ADR 0324: verge_tufts.png, same place
+        from streetscape import verge_flora as VF
+        _pd = props_library_dir(region_id, out_root)
+        VF.export_textures((Path(_pd).parent / "textures") if _pd else (PR.ART / "textures"))
     # hero assets (art-source/world/landmarks), frame estimate: viaduct segments (ADR 0067), hero buildings (ADR 0070),
     # hero depot halls (ADR 0071)
     props_meta = {**props_meta, **hero_tris, **st.get("hero_tris", {})}
@@ -1264,6 +1287,12 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                 (pipeline.REGIONS / region_id / "water_banks.json").read_bytes().replace(b"\r\n", b"\n"))
         write_json(gen / "water_qa.json", {"schema": "truck-sim-pl/water-qa/1", "region": region_id,
                                            **w.water.report})
+    if getattr(w, "verge_flora", False):     # ADR 0324
+        from streetscape import verge_flora as VF
+        manifest["materials"] = {**manifest["materials"], **VF.MATERIALS}
+        manifest["nodes"].setdefault("banks", "roadside grass cards of kerbless road sides (ADR 0324, material "
+                                              "verge_tufts, Kamion/World PlotKit, COLOR_0 = foliage normal); High GLB only")
+        manifest["verge_flora"] = w.stats.get("verge_flora")
     if region_id == "knyszyn":
         # D95: photo 9, fresh pale blocks with readable joints. Visual WORKING_VALUE;
         # keep the mountable 4 cm lip and every collision vertex from D94 unchanged.

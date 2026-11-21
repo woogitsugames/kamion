@@ -316,6 +316,11 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     def znat(e, n):                              # natural ground (NMT, decks removed): embankment height
         return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
     FU.guardrails(lin, w.net, znat, frep)
+    from . import built_up as _BU               # ADR 0324: U-1a guide posts on rural sections of numbered roads
+    from . import guide_posts as GP
+    GP.place(pl, w.net, _BU.zone_for(w.net, src, origin), frep,
+             rails=[r["P"] for r in (getattr(lin, "rail_runs", None) or [])])
+    log("guide posts U-1a", frep.get("guide_posts_u1a"))
     FU.noise_barriers(lin, src, origin, roads_poly, frep, overrides, pl=pl, net=w.net,       # ADR 0300: deck lanes
                       decks=[p for p in w.buf.parts if p.layer == "bridge" and p.mat.startswith("road_")])
     FU.power_lines(lin, src, origin, frep, pl=pl, roads_poly=roads_poly)

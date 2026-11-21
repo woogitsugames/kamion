@@ -64,7 +64,9 @@ CANOPY_SPECIES = ("pine", "birch", "alder", "maple", "linden", "spruce")
 # outline], grid step, {species: (weight, h lo, h hi)}); "canopy" = the stand's own mix at 0.55-0.8 of its height.
 # M68 measurement (REVIEW-2026-11-14-s20-cloud-m68.md): outer shrub belt 3.0-5.0 m appears on ~15-20% of edges,
 # inner young-tree belt on ~50-65%, leaving pine trunks + understorey visible in the lower 1/4-1/3 elsewhere.
-MANTLE_BAND_KEEP = (0.18, 0.58, 1.0)
+# ADR 0324 (critic s24 wave 6 # 4.3 / top-5 # 4 "skraj lasu z podszytem"): shrub belt on ~40 % and young-tree belt on
+# ~75 % of the outline (M68 had 0.18 / 0.58 - most of a stand edge was bare boles behind a ruler line). WORKING_VALUE.
+MANTLE_BAND_KEEP = (0.40, 0.75, 1.0)
 MANTLE_SEG_M = 18.0
 MANTLE = {
     "conifer": [(0.0, 4.0, 2.6, {"shrub": (0.55, 3.0, 5.0), "birchyoung": (0.20, 3.0, 5.0), "pineyoung": (0.25, 3.0, 5.0)}),
