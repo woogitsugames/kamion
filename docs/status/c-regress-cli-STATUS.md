@@ -8,3 +8,4 @@ fixture world jawnie buduje D94; bridge_clearance weryfikuje aktualną jezdnię 
 NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_bridge_clearance.py -q` (slot heavy).
 Test bridge_clearance: 23 passed (27 s). Świadkowie kolizji zamrożeni z historii git, bo bieżące QA po regeneracji słusznie nie zawiera bridge_kerb. Hero width sprawdza kapę względem aktualnych lg/rg i bufora zamiast starego stałego 10,6 m.
 Krok 2: bariera mostowa trwa do kapy 0,30 m (zgodnie z meshing); authored rails dopasowane do finalnej jezdni przed clippingiem, z zachowaniem 0,25 m + obwiedni hardware. Testy celowane: 19 passed. Brama dobiera przekrój do stałego zasięgu szlabanu po D94. NASTĘPNY KROK: przebudowa C po poprawkach meshing/markings/far_field.
+Krok 3: link dk65-01-s8-corner używa head_from Jeroniki; regeneracja tylko metadanych linków, błąd 0,375 m -> 0,0 m. NASTĘPNY KROK: pełny pytest po przebudowie C.
