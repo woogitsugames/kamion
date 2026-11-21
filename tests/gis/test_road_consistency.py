@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 
+import numpy as np
 import pytest
 
 from conftest import REGION_DIR
@@ -68,3 +69,52 @@ def test_andersa_fork_lanes_aligned():
     # ADR 0095: the 3-lane edge now has its measured placement (centre 0.8 m right of the OSM way), so the part of the
     # shift that only compensated the mis-centred carriageway is gone; the viaduct still moves left under its lanes
     assert any(s["node"] == "n2840742308" and s["shift_m"] > 0.3 for s in shifts), shifts
+
+
+def _surface_index(surfaces):
+    from roads.consistency import SurfaceIndex
+    from roads.meshing import MeshBuf
+    buf = MeshBuf()
+    for material, xyz in surfaces:
+        v = np.asarray(xyz, float)
+        buf.add("road", material, v, v[:, :2].copy(), np.array([[0, 1, 2]]), src="test")
+    return SurfaceIndex(buf.parts)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("offset,expected", [(-0.24, "carriageway"), (0.15, "kerb"), (0.0, "kerb")])
+def test_surface_classification_compares_heights_on_sloped_triangles(offset, expected):
+    road = np.array([[0, 0, 0], [10, 0, 1], [0, 10, 0]], float)
+    obstacle = road.copy()
+    obstacle[:, 2] += offset
+    idx = _surface_index([("road_asphalt", road), ("curb_concrete", obstacle)])
+    assert idx.classify([[0.5, 0.5, 0.05]]).tolist() == [expected]
+
+
+@pytest.mark.unit
+def test_surface_classification_interpolates_height_instead_of_triangle_mean():
+    road = [[0, 0, 0], [10, 0, 1], [0, 10, 0]]
+    # At x=.5 the grass is -.09 m; its triangle mean is +.76 m.
+    grass = [[0, 0, -0.24], [10, 0, 2.76], [0, 10, -0.24]]
+    idx = _surface_index([("road_asphalt", road), ("verge_grass", grass)])
+    assert idx.classify([[0.5, 0.5, 0.05]]).tolist() == ["carriageway"]
+
+
+@pytest.mark.unit
+def test_surface_classification_keeps_bridge_levels_separate():
+    road = np.array([[0, 0, 0], [10, 0, 1], [0, 10, 0]], float)
+    bridge, kerb = road.copy(), road.copy()
+    bridge[:, 2] += 6.0
+    kerb[:, 2] += 6.15
+    idx = _surface_index([("road_asphalt", road), ("road_asphalt", bridge), ("curb_concrete", kerb)])
+    assert idx.classify([[0.5, 0.5, 0.05], [0.5, 0.5, 6.05]]).tolist() == ["carriageway", "kerb"]
+
+
+@pytest.mark.unit
+def test_c_edge_paint_is_above_the_neighbouring_grass_skirt():
+    # C regression, E983.06 N-934.05: interpolated road/grass heights from the generated triangles.
+    xy = np.array([[982.0, -935.0], [985.0, -935.0], [982.0, -932.0]])
+    road = np.column_stack([xy, np.full(3, 138.77898773515255)])
+    grass = np.column_stack([xy, np.full(3, 138.53445351432129)])
+    idx = _surface_index([("road_asphalt", road), ("verge_grass", grass)])
+    assert idx.classify([[983.06, -934.05, 138.77898773515255]]).tolist() == ["carriageway"]
