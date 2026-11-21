@@ -64,6 +64,7 @@ SHORE_DIP_M = 0.10       # land nodes within 1 m of the outline may dip this far
 SHORE_BAR_M = 0.07       # bed nodes within 2 m of the outline may rise this far above the level (mud spits)
 MUD_BAND_M = (0.6, 2.6)  # width range of the wet mud / sand margin outside the water line
 MUD_A = 0.85             # bare-soil mask in the margin
+BAY_SHEET_M = 1.3        # half size of the sheet patch around a bay node (crossing <= 0.72 x 1.41 m from the node)
 
 
 # ------------------------------------------------------------------------------------------------ extraction
@@ -470,7 +471,8 @@ class Plan:
         bar = inw & (d_in <= 2.0) & (nz > 0.25)
         z[bar] = np.maximum(z[bar], np.minimum(L[bar] + np.clip((nz[bar] - 0.25) * 4.0, 0.0, 1.0) * SHORE_BAR_M
                                                  - 0.03 * (d_in[bar] - 1.0), L[bar] + SHORE_BAR_M))
-        self.report["shore"] = {"bay_nodes": int(bay.sum()), "bar_nodes": int((bar & (z > L)).sum())}
+        self.bay_mask = bay & (z < L + LIP_Z_M - 1e-6)
+        self.report["shore"] = {"bay_nodes": int(self.bay_mask.sum()), "bar_nodes": int((bar & (z > L)).sum())}
         self.lfill = np.where(d_out <= BANK_M + 4.0, L, np.nan)
         self.d_in, self.d_out = d_in, d_out
         self.report["carve"] = {"bed_nodes": int(inw.sum()), "bed_lowered_m_max": round(float((zc - z)[inw].max()), 2),
@@ -541,6 +543,14 @@ class Plan:
             return 0
         bodies = [g for g in (self.flow, self.still) if not g.is_empty]
         sheet = shapely.union_all(bodies).buffer(SHEET_OVERLAP_M, join_style="round")
+        bay = getattr(self, "bay_mask", None)
+        if bay is not None and bay.any():
+            # ADR 0324: a bay node lies below the level; the ground reaches the level again before its neighbours
+            # (>= level + LIP_Z_M, 1-1.41 m away) - the sheet must cover that crossing: + a BAY_SHEET_M square per node
+            jb, ib = np.nonzero(bay)
+            eb, nb = self.hf.x0 + ib, self.hf.y1 - jb
+            sheet = shapely.union_all(np.concatenate([[sheet], shapely.box(eb - BAY_SHEET_M, nb - BAY_SHEET_M,
+                                                                          eb + BAY_SHEET_M, nb + BAY_SHEET_M)]))
         if not self.road_poly.is_empty:
             sheet = sheet.difference(self.road_poly.buffer(0.3))
         sheet = sheet.intersection(self.tile)

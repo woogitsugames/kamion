@@ -37,7 +37,7 @@ def test_stage_hooks_guarded():
     assert st.count('getattr(w, "water", None) is not None') == 3      # ADR 0213: + bank vegetation
     bw = (REPO / "tools" / "worldgen" / "roads" / "build_world.py").read_text(encoding="utf-8")
     assert 'mask if w.water is None else (mask | w.water.lod_mask())' in bw
-    assert '"materials": MATERIALS if w.water is None else {**MATERIALS, **WATER_MATERIALS}' in bw
+    assert '"materials": MATERIALS if w.water is None else {**MATERIALS, **region_water_materials(w.region)}' in bw      # ADR 0321
 
 
 class _HF:
@@ -112,10 +112,19 @@ def test_carve_bed_bank_lip(plan):
     p, z, zc, mask = plan
     keep = ndimage.binary_dilation(mask, iterations=2)          # ROAD_KEEP_M: conformed embankments stay
     W = p.mask & ~keep
-    assert np.all(zc[W] <= p.level[W] - 0.1 + 1e-6)              # bed below the water everywhere off the road
+    from streetscape import water as WT
+    deep = W & (p.d_in > 2.0)                                    # ADR 0324: mud spits may rise within 2 m of the shore
+    assert np.all(zc[deep] <= p.level[deep] - 0.1 + 1e-6)        # bed below the water everywhere off the road
+    assert np.all(zc[W] <= p.level[W] + WT.SHORE_BAR_M + 1e-6)
     assert (p.level[W] - zc[W]).max() <= max(WT_DEPTHS()) + 1e-6
     lip = ~p.mask & (p.d_out <= 1.0) & ~np.isnan(p.lfill) & ~keep
-    assert np.all(zc[lip] >= p.lfill[lip] + 0.03)                # the sheet edge is always under the bank
+    # the sheet edge is always under the bank; ADR 0324: bay nodes (next to the water) dip at most SHORE_DIP_M and
+    # the sheet gets a patch around each of them (test_sheet)
+    dry = lip & ~p.bay_mask
+    assert np.all(zc[dry] >= p.lfill[dry] + 0.03)
+    assert p.bay_mask.any() and np.all(zc[p.bay_mask] >= p.lfill[p.bay_mask] - WT.SHORE_DIP_M - 1e-6)
+    ring = ~p.mask & (p.d_out > 1.0) & (p.d_out <= 1.5) & ~np.isnan(p.lfill) & ~keep
+    assert np.all(zc[ring] >= p.lfill[ring] + 0.03)
     assert np.array_equal(zc[mask], z[mask])                     # roads untouched
 
 
@@ -137,6 +146,16 @@ def test_sheet(plan):
     assert np.all((C >= 0) & (C <= 1))
     # no water on the ground road; flow points east (+E) on the river
     assert not np.any((V[:, 0] > 60.4) & (V[:, 0] < 67.6))
+    # ADR 0324: every bay node (ground below the level) is under the sheet with a margin
+    import shapely
+    from streetscape import water as WT
+    tris = shapely.union_all([shapely.Polygon(q.V[t][:, :2]) for q in parts for t in q.T]).buffer(0.01)
+    jb, ib = np.nonzero(p.bay_mask & ~((p.hf.x0 + np.arange(p.mask.shape[1]) > 58.0)
+                                       & (p.hf.x0 + np.arange(p.mask.shape[1]) < 70.0))[None, :])
+    pts = shapely.points(p.hf.x0 + ib, p.hf.y1 - jb)
+    inside = shapely.contains(tris, pts)
+    edge = (ib < 2) | (jb < 2) | (ib > p.mask.shape[1] - 3) | (jb > p.mask.shape[0] - 3)
+    assert inside[~edge].all()
     river = (np.abs(V[:, 1] - 100) < 3) & (V[:, 0] > 80) & (V[:, 0] < 190)
     assert np.all(C[river, 2] > 0.9)
     # every chunk's triangles stay inside that chunk (assemble() picks the chunk by the centroid)
@@ -152,7 +171,9 @@ def test_bank_colours(plan):
     col = np.zeros(p.mask.shape + (4,), np.float32)
     c = p.bank_colours(col)
     near = ~p.mask & (p.d_out <= 2.0)
-    assert c[..., 2][near].min() > 0.5 and c[..., 3][p.mask].min() > 0.5
+    # ADR 0324: the bank next to the water is long grass OR the wet mud / sand margin
+    assert np.maximum(c[..., 2], c[..., 3])[near].min() > 0.4 and c[..., 3][p.mask].min() > 0.5
+    assert (c[..., 3][near] > 0.5).mean() > 0.2
 
 
 @pytest.mark.skipif(not (REGIONS_DIR / "dk65-02" / "generated" / "water_qa.json").exists(), reason="dk65-02 not built")
