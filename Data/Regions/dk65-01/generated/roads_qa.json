@@ -410,9 +410,9 @@
     2
    ],
    "length_m": 494.5,
-   "max_grade": 0.0885,
+   "max_grade": 0.0887,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 1.093,
+   "profile_rms_vs_nmt_m": 1.092,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0
@@ -458,7 +458,7 @@
    "length_m": 489.7,
    "max_grade": 0.0806,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 1.195,
+   "profile_rms_vs_nmt_m": 1.196,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0
@@ -733,7 +733,7 @@
     2
    ],
    "length_m": 262.3,
-   "max_grade": 0.0218,
+   "max_grade": 0.0219,
    "overrides": [],
    "profile_rms_vs_nmt_m": 1.803,
    "sidewalk_frac": 0.0,
@@ -787,7 +787,7 @@
    "length_m": 201.3,
    "max_grade": 0.0222,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.219,
+   "profile_rms_vs_nmt_m": 0.218,
    "sidewalk_frac": 0.0,
    "width_m": [
     4.5,
@@ -1343,7 +1343,7 @@
     2
    ],
    "length_m": 200.9,
-   "max_grade": 0.036,
+   "max_grade": 0.0361,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.576,
    "sidewalk_frac": 0.5,
@@ -3005,9 +3005,9 @@
     1
    ],
    "length_m": 48.4,
-   "max_grade": 0.0713,
+   "max_grade": 0.0716,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.976,
+   "profile_rms_vs_nmt_m": 0.972,
    "sidewalk_frac": 0.0,
    "width_m": [
     4.75
@@ -4048,7 +4048,7 @@
    "patches": 282
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 310371,
+  "footprint_nodes": 310376,
   "fork_abreast": [],
   "fork_shifts": [
    {
@@ -5678,7 +5678,7 @@
    "P-14 level crossing skipped (road end)": 1,
    "P-14 level crossing skipped (unmarked road)": 1,
    "P-7a edge line span (authored)": 2,
-   "P-7b edge line": 70,
+   "P-7b edge line": 98,
    "P-8 arrow": 2,
    "P-8 skipped (lane too narrow)": 9,
    "P-8 skipped (lanes continue)": 4,
@@ -5686,7 +5686,7 @@
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 2436,
+  "nmt_nodes_replaced_under_decks": 2550,
   "overrides_applied": [
    {
     "id": "knyszynska-xsec-main",
@@ -5784,11 +5784,34 @@
     "width_other": 9.0,
     "width_own": 9.5,
     "width_seam": 9.25
+   },
+   {
+    "chain": "c:w1151531629:2081020070-10712325913",
+    "end": "a",
+    "in_tile_m": 31.25,
+    "length_m": 62.5,
+    "neighbour": "dk8-s8-jeroniki",
+    "step_m": 0.625,
+    "width_other": 5.75,
+    "width_own": 4.5,
+    "width_seam": 5.125
+   },
+   {
+    "chain": "c:w305447699:2081020070-8860869968",
+    "end": "b",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "dk8-s8-jeroniki",
+    "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
+    "step_m": 0.0,
+    "width_other": 10.45,
+    "width_own": 9.95,
+    "width_seam": 9.95
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 9184,
-   "parts": 375,
+   "kerb_tris": 9201,
+   "parts": 398,
    "side_tris": 202
   },
   "signalised_junctions": 0,
@@ -5797,15 +5820,15 @@
    "junctions": 23,
    "lines": {
     "P-7a": 1,
-    "P-7b": 2,
+    "P-7b": 18,
     "lane": 24
    },
    "pairs": 89,
-   "unmatched": 19
+   "unmatched": 15
   },
   "verge_strips": {
    "chunks": 51,
-   "tris": 27957
+   "tris": 28087
   },
   "walled_ramps": [
    {
@@ -5839,8 +5862,8 @@
    {
     "chain": "c:w310634018:3160890454-4236127136",
     "confidence": "medium",
-    "max_wall_h_m": 1.59,
-    "nmt_fill_max_m": 1.79,
+    "max_wall_h_m": 1.6,
+    "nmt_fill_max_m": 1.78,
     "walled_m": 64.4
    }
   ]

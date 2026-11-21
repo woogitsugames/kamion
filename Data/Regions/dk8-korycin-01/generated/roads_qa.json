@@ -226,9 +226,9 @@
     2
    ],
    "length_m": 386.7,
-   "max_grade": 0.025,
+   "max_grade": 0.0264,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.021,
+   "profile_rms_vs_nmt_m": 0.022,
    "sidewalk_frac": 0.0,
    "width_m": [
     6.0
@@ -1502,7 +1502,7 @@
    "length_m": 47.6,
    "max_grade": 0.0313,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.017,
+   "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -1523,9 +1523,9 @@
     2
    ],
    "length_m": 68.9,
-   "max_grade": 0.0387,
+   "max_grade": 0.0385,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.053,
+   "profile_rms_vs_nmt_m": 0.051,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -1857,7 +1857,7 @@
    "patches": 166
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 164634,
+  "footprint_nodes": 164635,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1948,11 +1948,11 @@
    "P-1 centre line": 1,
    "P-1 lane line": 4,
    "P-13": 1,
-   "P-7b edge line": 10
+   "P-7b edge line": 14
   },
-  "markings_overlap_removed_tris": 218,
+  "markings_overlap_removed_tris": 461,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 712,
+  "nmt_nodes_replaced_under_decks": 735,
   "overrides_applied": [],
   "overrides_stale": [],
   "paint_clear_tris": {},
@@ -1966,8 +1966,8 @@
   },
   "seam_tapers": [],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 1260,
-   "parts": 42,
+   "kerb_tris": 1261,
+   "parts": 43,
    "side_tris": 7
   },
   "signalised_junctions": 0,
@@ -1975,10 +1975,11 @@
    "crossing_pairs_skipped": 4,
    "junctions": 1,
    "lines": {
+    "P-7a": 2,
     "lane": 1
    },
    "pairs": 40,
-   "unmatched": 3
+   "unmatched": 2
   },
   "verge_strips": {
    "chunks": 34,

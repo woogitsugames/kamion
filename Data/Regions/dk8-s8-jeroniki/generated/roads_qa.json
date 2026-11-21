@@ -2898,9 +2898,9 @@
     2
    ],
    "length_m": 41.9,
-   "max_grade": 0.0264,
+   "max_grade": 0.0217,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.204,
+   "profile_rms_vs_nmt_m": 0.071,
    "sidewalk_frac": 0.5,
    "width_m": [
     6.5
@@ -5785,7 +5785,7 @@
    "patches": 465
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 466790,
+  "footprint_nodes": 466762,
   "fork_abreast": [
    {
     "beside": "c:w183639794:8860869967-2081020069",
@@ -6362,13 +6362,13 @@
    "P-11 cycle crossing in junction": 2,
    "P-12": 1,
    "P-13": 6,
-   "P-7b edge line": 30,
+   "P-7b edge line": 42,
    "P-8 arrow": 8,
    "P-8 skipped (off carriageway)": 2
   },
-  "markings_overlap_removed_tris": 35,
+  "markings_overlap_removed_tris": 86,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 701,
+  "nmt_nodes_replaced_under_decks": 731,
   "overrides_applied": [
    {
     "id": "dk8-median-rural",
@@ -6436,6 +6436,17 @@
   },
   "seam_tapers": [
    {
+    "chain": "c:w1151440428:3160890441-10712325925",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "dk65-01",
+    "step_m": 0.25,
+    "width_other": 9.5,
+    "width_own": 9.0,
+    "width_seam": 9.25
+   },
+   {
     "chain": "c:w1151531629:2081020070-10712325913",
     "end": "a",
     "in_tile_m": 31.25,
@@ -6445,11 +6456,23 @@
     "width_other": 4.5,
     "width_own": 5.75,
     "width_seam": 5.125
+   },
+   {
+    "chain": "c:w305447699:2081020070-8860869968",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "dk65-01",
+    "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
+    "step_m": 0.0,
+    "width_other": 9.95,
+    "width_own": 10.45,
+    "width_seam": 10.45
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 3219,
-   "parts": 291,
+   "kerb_tris": 3221,
+   "parts": 293,
    "side_tris": 393
   },
   "signalised_junctions": 0,
@@ -6457,7 +6480,7 @@
    "crossing_pairs_skipped": 28,
    "junctions": 14,
    "lines": {
-    "P-7b": 5,
+    "P-7b": 8,
     "lane": 18
    },
    "pairs": 120,
@@ -6465,7 +6488,7 @@
   },
   "verge_strips": {
    "chunks": 55,
-   "tris": 44224
+   "tris": 44186
   },
   "walled_ramps": [
    {

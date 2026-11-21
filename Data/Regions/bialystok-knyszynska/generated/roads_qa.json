@@ -3695,9 +3695,9 @@
     2
    ],
    "length_m": 534.8,
-   "max_grade": 0.0638,
+   "max_grade": 0.0639,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 1.835,
+   "profile_rms_vs_nmt_m": 1.839,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0,
@@ -3745,7 +3745,7 @@
    "length_m": 543.3,
    "max_grade": 0.0633,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 2.059,
+   "profile_rms_vs_nmt_m": 2.058,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0,
@@ -8807,7 +8807,7 @@
    "patches": 544
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 676765,
+  "footprint_nodes": 676744,
   "fork_abreast": [
    {
     "beside": "c:w261104557:2927425559-2504239797",
@@ -9019,13 +9019,13 @@
   "gores": {
    "gores": [
     {
-     "area_m2": 184.3,
+     "area_m2": 183.7,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "merge",
      "xy": [
-      469.2,
+      469.3,
       -1000.4
      ]
     },
@@ -9112,7 +9112,7 @@
    "kerb_tris_in_fill": 0,
    "paved": {
     "merge": {
-     "area_m2": 184.3,
+     "area_m2": 183.7,
      "count": 1
     },
     "sliver": {
@@ -9122,13 +9122,13 @@
    },
    "rejected": [
     {
-     "area_m2": 152.7,
+     "area_m2": 151.2,
      "reason": "carriageways at different heights",
-     "step_m": 0.96,
+     "step_m": 0.97,
      "why": "merge",
      "xy": [
-      503.5,
-      -1008.5
+      503.3,
+      -1008.6
      ]
     },
     {
@@ -9188,15 +9188,15 @@
    "P-11 cycle crossing in junction": 8,
    "P-12": 2,
    "P-13": 10,
-   "P-7b edge line": 34,
+   "P-7b edge line": 48,
    "P-8 arrow": 7,
    "P-8 skipped (lane too narrow)": 4,
    "P-8 skipped (lanes continue)": 1,
    "P-8 skipped (off carriageway)": 13
   },
-  "markings_overlap_removed_tris": 26,
+  "markings_overlap_removed_tris": 58,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 772,
+  "nmt_nodes_replaced_under_decks": 805,
   "overrides_applied": [
    {
     "id": "knyszynska-seam-w-xsec",
@@ -9273,6 +9273,39 @@
     "width_seam": 5.0
    },
    {
+    "chain": "c:w242989862:2504262098-2504262143",
+    "end": "a",
+    "in_tile_m": 11.55,
+    "length_m": 23.1,
+    "neighbour": "bialystok-porosly",
+    "step_m": 0.231,
+    "width_other": 8.462,
+    "width_own": 8.0,
+    "width_seam": 8.231
+   },
+   {
+    "chain": "c:w242989866:2504262144-2504262100",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-porosly",
+    "step_m": 0.25,
+    "width_other": 8.5,
+    "width_own": 8.0,
+    "width_seam": 8.25
+   },
+   {
+    "chain": "c:w242989872:3626955210-3626954274",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-porosly",
+    "step_m": 0.125,
+    "width_other": 5.75,
+    "width_own": 5.5,
+    "width_seam": 5.625
+   },
+   {
     "chain": "c:w261104557:2927425559-2504239797",
     "end": "a",
     "in_tile_m": 12.5,
@@ -9282,12 +9315,23 @@
     "width_other": 8.0,
     "width_own": 8.5,
     "width_seam": 8.25
+   },
+   {
+    "chain": "c:w561326924:3626955261-2504239797",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 5.75,
+    "width_own": 6.25,
+    "width_seam": 6.0
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 1319,
-   "parts": 215,
-   "side_tris": 151
+   "kerb_tris": 1360,
+   "parts": 218,
+   "side_tris": 150
   },
   "signalised_junctions": 0,
   "through_lines": {
@@ -9295,7 +9339,7 @@
    "junctions": 49,
    "lines": {
     "P-7a": 2,
-    "P-7b": 7,
+    "P-7b": 11,
     "lane": 54
    },
    "pairs": 176,
@@ -9303,7 +9347,7 @@
   },
   "verge_strips": {
    "chunks": 59,
-   "tris": 55835
+   "tris": 55834
   },
   "walled_ramps": [
    {
@@ -9311,14 +9355,14 @@
     "confidence": "medium",
     "max_wall_h_m": 4.54,
     "nmt_fill_max_m": 0.33,
-    "walled_m": 156.4
+    "walled_m": 157.4
    },
    {
     "chain": "c:w242989866:2504262144-2504262100",
     "confidence": "medium",
     "max_wall_h_m": 4.99,
     "nmt_fill_max_m": 0.21,
-    "walled_m": 161.9
+    "walled_m": 162.4
    }
   ]
  }

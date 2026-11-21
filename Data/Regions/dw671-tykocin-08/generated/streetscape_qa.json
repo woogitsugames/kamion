@@ -556,11 +556,11 @@
   "widened": 0
  },
  "garden_fronts": {
-  "front_m": 100.4,
+  "front_m": 103.1,
   "heights_m": [
    3.31,
-   1.29,
-   2.66,
+   3.47,
+   1.39,
    2.76
   ],
   "list": [
@@ -582,27 +582,19 @@
    },
    {
     "front_m": 9.1,
-    "h_m": 1.29,
-    "kind": "broadleaf",
+    "h_m": 3.47,
+    "kind": "thuja",
     "m": 3.9,
     "plot": "bdot:2002917F-2AF0-5C99-E053-CC2BA8C01CFC",
-    "w_m": 0.73
+    "w_m": 0.8
    },
    {
     "front_m": 15.9,
-    "h_m": 2.66,
-    "kind": "thuja",
+    "h_m": 1.39,
+    "kind": "broadleaf",
     "m": 15.0,
     "plot": "bdot:2002917F-2AF4-5C99-E053-CC2BA8C01CFC",
-    "w_m": 0.97
-   },
-   {
-    "front_m": 13.3,
-    "h_m": 0.0,
-    "kind": "low",
-    "m": 12.4,
-    "plot": "bdot:2002917F-2AF6-5C99-E053-CC2BA8C01CFC",
-    "w_m": 0.9
+    "w_m": 0.62
    },
    {
     "front_m": 18.5,
@@ -619,27 +611,35 @@
     "m": 16.0,
     "plot": "bdot:2002917F-2B32-5C99-E053-CC2BA8C01CFC",
     "w_m": 0.9
+   },
+   {
+    "front_m": 16.1,
+    "h_m": 0.0,
+    "kind": "low",
+    "m": 14.3,
+    "plot": "bdot:2002917F-2B61-5C99-E053-CC2BA8C01CFC",
+    "w_m": 0.9
    }
   ],
   "m": {
-   "broadleaf": 3.9,
-   "thuja": 45.3
+   "broadleaf": 15.0,
+   "thuja": 34.2
   },
   "plots": {
    "broadleaf": 1,
    "low": 3,
    "thuja": 3
   },
-  "segments": 8,
-  "shrubs": 17,
+  "segments": 9,
+  "shrubs": 21,
   "skipped": {},
   "source": "research/g7-street-greenery/README.md (G7 # 15-21); positions are rule, not survey",
-  "tris_high": 1090,
-  "tris_low": 524,
+  "tris_high": 1196,
+  "tris_low": 604,
   "widths_m": [
    0.93,
-   0.73,
-   0.97,
+   0.8,
+   0.62,
    1.17
   ]
  },
@@ -649,14 +649,14 @@
    "bdot:2002917F-2ABA-5C99-E053-CC2BA8C01CFC": "low",
    "bdot:2002917F-2AC0-5C99-E053-CC2BA8C01CFC": "none",
    "bdot:2002917F-2AEF-5C99-E053-CC2BA8C01CFC": "thuja",
-   "bdot:2002917F-2AF0-5C99-E053-CC2BA8C01CFC": "broadleaf",
-   "bdot:2002917F-2AF4-5C99-E053-CC2BA8C01CFC": "thuja",
-   "bdot:2002917F-2AF6-5C99-E053-CC2BA8C01CFC": "low",
+   "bdot:2002917F-2AF0-5C99-E053-CC2BA8C01CFC": "thuja",
+   "bdot:2002917F-2AF4-5C99-E053-CC2BA8C01CFC": "broadleaf",
+   "bdot:2002917F-2AF6-5C99-E053-CC2BA8C01CFC": "none",
    "bdot:2002917F-2AFC-5C99-E053-CC2BA8C01CFC": "thuja",
    "bdot:2002917F-2AFD-5C99-E053-CC2BA8C01CFC": "none",
    "bdot:2002917F-2B2B-5C99-E053-CC2BA8C01CFC": "none",
    "bdot:2002917F-2B32-5C99-E053-CC2BA8C01CFC": "low",
-   "bdot:2002917F-2B61-5C99-E053-CC2BA8C01CFC": "none"
+   "bdot:2002917F-2B61-5C99-E053-CC2BA8C01CFC": "low"
   },
   "low": 3,
   "none": 5,
@@ -2050,11 +2050,11 @@
    {
     "chunk": "7_0",
     "instances": 220,
-    "materials": 40,
+    "materials": 41,
     "trees": 201,
     "tris_forest_hlod": 172,
-    "tris_high_static": 158660,
-    "tris_low_static": 47524
+    "tris_high_static": 158790,
+    "tris_low_static": 47604
    },
    {
     "chunk": "7_1",
@@ -2181,13 +2181,15 @@
   "fence_m": {
    "bars": 18,
    "boards_grey": 43,
-   "boards_rust": 32,
    "brick_boards": 20,
    "brick_picket": 22,
-   "chainlink": 760,
+   "chainlink": 291,
+   "chainlink_galv": 469,
    "concrete": 14,
    "lamella": 13,
-   "picket": 96,
+   "picket": 79,
+   "picket_paint": 32,
+   "picket_wood": 17,
    "wall": 57
   },
   "fence_step_zone_hits": 0,
@@ -2337,7 +2339,7 @@
      ]
     },
     "id": "bdot:2002917F-2AEF-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       -739.67,
@@ -2386,7 +2388,7 @@
      ]
     },
     "id": "bdot:2002917F-2AF0-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       843.31,
@@ -2422,7 +2424,7 @@
       -0.997
      ]
     ],
-    "front": "boards_rust",
+    "front": "picket_paint",
     "gate": {
      "kind": "swing",
      "m": [
@@ -2435,7 +2437,7 @@
      ]
     },
     "id": "bdot:2002917F-2AF4-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       868.66,
@@ -2490,7 +2492,7 @@
      ]
     },
     "id": "bdot:2002917F-2AF6-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       865.75,
@@ -2541,7 +2543,7 @@
     "front": "brick_boards",
     "gate": null,
     "id": "bdot:2002917F-2AFC-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       918.28,
@@ -2583,7 +2585,7 @@
      ]
     },
     "id": "bdot:2002917F-2AFD-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       904.76,
@@ -2610,7 +2612,7 @@
       0.999
      ]
     ],
-    "front": "picket",
+    "front": "picket_wood",
     "gate": null,
     "id": "bdot:2002917F-2B2B-5C99-E053-CC2BA8C01CFC",
     "side": "boards_grey",
@@ -2689,7 +2691,7 @@
       1.0
      ]
     ],
-    "front": "boards_rust",
+    "front": "picket_paint",
     "gate": null,
     "id": "bdot:2002917F-2B61-5C99-E053-CC2BA8C01CFC",
     "side": "chainlink",
@@ -2721,29 +2723,31 @@
   },
   "styles_front": {
    "bars": 1,
-   "boards_rust": 2,
    "brick_boards": 1,
    "brick_picket": 2,
    "chainlink": 2,
    "concrete": 1,
    "lamella": 1,
-   "picket": 2
+   "picket": 1,
+   "picket_paint": 2,
+   "picket_wood": 1
   },
   "styles_side": {
    "boards_grey": 1,
-   "chainlink": 9,
+   "chainlink": 3,
+   "chainlink_galv": 6,
    "picket": 1,
    "wall": 1
   },
   "thujas": 20,
   "track_drives": 4,
-  "tris": 4142,
+  "tris": 4166,
   "tris_by": {
    "bush": 196,
    "fence": 1714,
    "flowers": 102,
    "gate": 1238,
-   "overgrowth": 260,
+   "overgrowth": 284,
    "shrub": 352,
    "spruce": 80,
    "thuja_row": 168,

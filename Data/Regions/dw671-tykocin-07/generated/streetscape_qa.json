@@ -1270,8 +1270,8 @@
      "trees_lod2": 3026
     },
     "camera": "route_s0168",
-    "materials_high": 39,
-    "materials_low": 39,
+    "materials_high": 40,
+    "materials_low": 40,
     "tris_high": 1371324,
     "tris_low": 318608
    },
@@ -1504,7 +1504,7 @@
    {
     "chunk": "1_3",
     "instances": 54,
-    "materials": 34,
+    "materials": 35,
     "trees": 35,
     "tris_forest_hlod": 0,
     "tris_high_static": 146495,
@@ -1513,7 +1513,7 @@
    {
     "chunk": "1_4",
     "instances": 4652,
-    "materials": 29,
+    "materials": 30,
     "trees": 4638,
     "tris_forest_hlod": 1964,
     "tris_high_static": 140136,
@@ -2027,13 +2027,15 @@
   "drives": 12,
   "fence_m": {
    "bars": 32,
-   "boards_brown": 296,
-   "boards_rust": 87,
+   "boards_brown": 278,
    "brick_picket": 17,
-   "chainlink": 290,
+   "chainlink": 13,
+   "chainlink_galv": 277,
    "concrete": 298,
    "lamella": 17,
-   "picket": 88,
+   "picket": 96,
+   "picket_paint": 87,
+   "picket_wood": 10,
    "wall": 135
   },
   "fence_step_zone_hits": 0,
@@ -2172,7 +2174,7 @@
       -0.98
      ]
     ],
-    "front": "boards_brown",
+    "front": "picket",
     "gate": {
      "kind": "swing",
      "m": [
@@ -2185,7 +2187,7 @@
      ]
     },
     "id": "bdot:2002917F-2AE3-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       -1002.92,
@@ -2359,10 +2361,10 @@
       0.068
      ]
     ],
-    "front": "boards_rust",
+    "front": "picket_paint",
     "gate": null,
     "id": "bdot:2002917F-2AF4-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       853.97,
@@ -2398,7 +2400,7 @@
       -0.248
      ]
     ],
-    "front": "chainlink",
+    "front": "chainlink_galv",
     "gate": {
      "kind": "swing",
      "m": [
@@ -2411,7 +2413,7 @@
      ]
     },
     "id": "bdot:2002917F-2B1E-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       -675.22,
@@ -2594,7 +2596,7 @@
       0.057
      ]
     ],
-    "front": "picket",
+    "front": "picket_wood",
     "gate": {
      "kind": "swing",
      "m": [
@@ -2607,7 +2609,7 @@
      ]
     },
     "id": "bdot:2002917F-2B27-5C99-E053-CC2BA8C01CFC",
-    "side": "chainlink",
+    "side": "chainlink_galv",
     "wicket": {
      "m": [
       -651.58,
@@ -2692,7 +2694,7 @@
       0.121
      ]
     ],
-    "front": "boards_rust",
+    "front": "picket_paint",
     "gate": {
      "kind": "swing",
      "m": [
@@ -2705,7 +2707,7 @@
      ]
     },
     "id": "bdot:2002917F-2B54-5C99-E053-CC2BA8C01CFC",
-    "side": "boards_rust",
+    "side": "picket_paint",
     "wicket": {
      "m": [
       -643.74,
@@ -2734,20 +2736,22 @@
   },
   "styles_front": {
    "bars": 2,
-   "boards_brown": 3,
-   "boards_rust": 2,
+   "boards_brown": 2,
    "brick_picket": 1,
-   "chainlink": 2,
+   "chainlink": 1,
+   "chainlink_galv": 1,
    "concrete": 2,
    "lamella": 1,
-   "picket": 2
+   "picket": 2,
+   "picket_paint": 2,
+   "picket_wood": 1
   },
   "styles_side": {
    "boards_brown": 4,
-   "boards_rust": 1,
-   "chainlink": 4,
+   "chainlink_galv": 4,
    "concrete": 3,
    "picket": 1,
+   "picket_paint": 1,
    "wall": 2
   },
   "thujas": 66,

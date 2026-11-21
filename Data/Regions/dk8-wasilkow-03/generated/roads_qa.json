@@ -259,7 +259,7 @@
     2
    ],
    "length_m": 156.8,
-   "max_grade": 0.047,
+   "max_grade": 0.0469,
    "overrides": [],
    "profile_rms_vs_nmt_m": 1.785,
    "sidewalk_frac": 1.0,
@@ -862,9 +862,9 @@
     3
    ],
    "length_m": 208.0,
-   "max_grade": 0.0274,
+   "max_grade": 0.0272,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.182,
+   "profile_rms_vs_nmt_m": 0.176,
    "sidewalk_frac": 1.0,
    "width_m": [
     12.25
@@ -886,9 +886,9 @@
     3
    ],
    "length_m": 570.1,
-   "max_grade": 0.0231,
+   "max_grade": 0.0227,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.106,
+   "profile_rms_vs_nmt_m": 0.118,
    "sidewalk_frac": 0.0,
    "width_m": [
     8.5,
@@ -957,9 +957,9 @@
     2
    ],
    "length_m": 346.9,
-   "max_grade": 0.0267,
+   "max_grade": 0.0268,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.03,
+   "profile_rms_vs_nmt_m": 0.034,
    "sidewalk_frac": 0.0,
    "width_m": [
     6.5
@@ -3901,14 +3901,14 @@
    "P-1 lane line": 38,
    "P-10 crossing": 4,
    "P-10 crossing in junction": 1,
-   "P-7b edge line": 60,
+   "P-7b edge line": 76,
    "P-8 arrow": 8,
    "P-8 skipped (lane too narrow)": 4,
    "P-8 skipped (off carriageway)": 2
   },
   "markings_overlap_removed_tris": 306,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 2430,
+  "nmt_nodes_replaced_under_decks": 2490,
   "overrides_applied": [],
   "overrides_stale": [],
   "paint_clear_tris": {},
@@ -3922,24 +3922,24 @@
   },
   "seam_tapers": [],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 2288,
-   "parts": 188,
-   "side_tris": 771
+   "kerb_tris": 1758,
+   "parts": 178,
+   "side_tris": 683
   },
   "signalised_junctions": 0,
   "through_lines": {
    "crossing_pairs_skipped": 20,
-   "junctions": 6,
+   "junctions": 7,
    "lines": {
-    "P-7b": 4,
+    "P-7b": 14,
     "lane": 12
    },
    "pairs": 68,
-   "unmatched": 7
+   "unmatched": 4
   },
   "verge_strips": {
    "chunks": 54,
-   "tris": 38069
+   "tris": 38073
   },
   "walled_ramps": [
    {
@@ -3947,7 +3947,7 @@
     "confidence": "medium",
     "max_wall_h_m": 2.94,
     "nmt_fill_max_m": -0.33,
-    "walled_m": 73.4
+    "walled_m": 72.9
    }
   ]
  }

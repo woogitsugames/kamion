@@ -3314,7 +3314,7 @@
    "length_m": 161.6,
    "max_grade": 0.0258,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.107,
+   "profile_rms_vs_nmt_m": 0.116,
    "sidewalk_frac": 1.0,
    "width_m": [
     6.0,
@@ -8149,9 +8149,9 @@
     2
    ],
    "length_m": 35.2,
-   "max_grade": 0.0319,
+   "max_grade": 0.0318,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.083,
+   "profile_rms_vs_nmt_m": 0.084,
    "sidewalk_frac": 1.0,
    "width_m": [
     7.5
@@ -8195,9 +8195,9 @@
     2
    ],
    "length_m": 135.2,
-   "max_grade": 0.0169,
+   "max_grade": 0.0174,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.068,
+   "profile_rms_vs_nmt_m": 0.07,
    "sidewalk_frac": 0.0,
    "width_m": [
     8.5
@@ -14438,7 +14438,7 @@
     1
    ],
    "length_m": 88.8,
-   "max_grade": 0.0303,
+   "max_grade": 0.0306,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.049,
    "sidewalk_frac": 0.5,
@@ -14626,9 +14626,9 @@
     3
    ],
    "length_m": 87.7,
-   "max_grade": 0.0294,
+   "max_grade": 0.0304,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.042,
+   "profile_rms_vs_nmt_m": 0.045,
    "sidewalk_frac": 0.0,
    "width_m": [
     4.75,
@@ -20464,7 +20464,7 @@
    "patches": 978
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 1514005,
+  "footprint_nodes": 1513946,
   "fork_abreast": [
    {
     "beside": "c:w540735092:5337608240-5337608245",
@@ -22203,7 +22203,7 @@
    "P-12": 3,
    "P-13": 21,
    "P-14": 52,
-   "P-7b edge line": 98,
+   "P-7b edge line": 102,
    "P-8 arrow": 87,
    "P-8 skipped (lane too narrow)": 8,
    "P-8 skipped (lanes continue)": 15,
@@ -22211,7 +22211,7 @@
   },
   "markings_overlap_removed_tris": 330,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 983,
+  "nmt_nodes_replaced_under_decks": 1018,
   "overrides_applied": [
    {
     "id": "dk19-piastowska-seam-s-approach-width",
@@ -22290,6 +22290,29 @@
   },
   "seam_tapers": [
    {
+    "chain": "c:w1329465432:2214900139-4380504040",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-bojary",
+    "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
+    "step_m": 0.0,
+    "width_other": 14.5,
+    "width_own": 14.717,
+    "width_seam": 14.717
+   },
+   {
+    "chain": "c:w249690269:1757846728-2294481959",
+    "end": "a",
+    "in_tile_m": 13.5,
+    "length_m": 26.99,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.27,
+    "width_other": 10.25,
+    "width_own": 9.71,
+    "width_seam": 9.98
+   },
+   {
     "chain": "c:w552379027:1237908750-874174756",
     "end": "a",
     "in_tile_m": 2.77,
@@ -22299,11 +22322,22 @@
     "width_other": 6.0,
     "width_own": 6.5,
     "width_seam": 6.25
+   },
+   {
+    "chain": "c:w616184922:4235564522-2725108539",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-dojlidy",
+    "step_m": 0.148,
+    "width_other": 10.454,
+    "width_own": 10.75,
+    "width_seam": 10.602
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 6482,
-   "parts": 962,
+   "kerb_tris": 6486,
+   "parts": 970,
    "side_tris": 1304
   },
   "signalised_junctions": 21,
@@ -22320,7 +22354,7 @@
   },
   "verge_strips": {
    "chunks": 64,
-   "tris": 129822
+   "tris": 129829
   },
   "walled_ramps": []
  }

@@ -2,7 +2,7 @@
  "by_kind": {
   "arrow_no_exit": 8,
   "lane_blind_end": 32,
-  "marking_off_carriageway": 2,
+  "marking_off_carriageway": 4,
   "obstacle_in_lane": 2
  },
  "cases": [
@@ -782,6 +782,23 @@
   },
   {
    "chain": "c:w240542867:1847044963-1832991672",
+   "e": -817.22,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1596664,
+   "lon": 23.1477495,
+   "n": 76.95,
+   "on_route": false,
+   "osm_ways": [
+    240542867,
+    257367451,
+    257367454
+   ],
+   "surface": "kerb",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w240542867:1847044963-1832991672",
    "e": -690.52,
    "junction": null,
    "kind": "marking_off_carriageway",
@@ -810,6 +827,21 @@
     240542867,
     257367451,
     257367454
+   ],
+   "surface": "verge_grass",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w177948307:1883483212-1883101800",
+   "e": 983.06,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1496597,
+   "lon": 23.1737304,
+   "n": -934.05,
+   "on_route": false,
+   "osm_ways": [
+    177948307
    ],
    "surface": "verge_grass",
    "what": "P-7b"
@@ -847,7 +879,7 @@
    "what": "verge_grass"
   }
  ],
- "count": 44,
+ "count": 46,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "lane_blind_end": 1
@@ -880,7 +912,7 @@
   "kerb_tris": 82600,
   "lane_samples": 81615,
   "lane_samples_in_taper": 192,
-  "marking_tris": 18354,
-  "props_checked": 1114
+  "marking_tris": 19391,
+  "props_checked": 1112
  }
 }

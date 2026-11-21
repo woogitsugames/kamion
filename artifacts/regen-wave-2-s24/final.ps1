@@ -7,7 +7,7 @@ $o = "$wt\artifacts\regen-wave-2-s24"; $st = "$o\final.status"; $L = "$o\logs"
 Set-Location $wt
 function S($m) { Add-Content $st "$(Get-Date -Format s) $m" }
 Start-Sleep 120
-while (-not (Test-Path "$o\chain.status") -or @(Select-String 'chain=. DONE' "$o\chain.status").Count -lt 3) { Start-Sleep 60 }
+while (-not (Test-Path "$o\chain.status") -or @(Select-String 'chain=. DONE' "$o\chain.status").Count -lt 6) { Start-Sleep 60 }
 S 'chains DONE'
 pwsh -NoProfile -File "$o\commit.ps1" *>> "$o\autocommit.log"
 pwsh -NoProfile -File "$main\scripts\unity-slot.ps1" -Acquire -Pool heavy -Owner rw2-final *>> "$L\final-slot.log"
@@ -20,7 +20,7 @@ uv run --project tools/worldgen python -m tools.worldgen.qa.seams --json "$o\sea
 uv run --project tools/worldgen python tools/worldgen/qa/route_obstacles.py --out "$o\route_obstacles.json" *> "$L\route_obstacles.log"; S "route_obstacles exit=$LASTEXITCODE"
 git add -- game/Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming
 git add -A -- Data game/Assets/_Project/UI/Resources/CabDisplay/Nav game/Assets/_Project/Gameplay/Resources/Regions
-git commit -qm "wip(regen-wave-2-s24): fala po ADR 0310: route_links, tile_graph, katalog (d67-full 49)`n`nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+git commit -qm "wip(regen-wave-2-s24): fala 5 (D95, przed buildem #3): route_links, tile_graph, katalog (d67-full 49)`n`nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 git push -q 2>&1 | Out-Null
 S "committed $(git rev-parse --short HEAD)"
 uv run --project tools/worldgen python -m pytest tests/gis -q -p no:cacheprovider *> "$L\pytest.log"; S "pytest exit=$LASTEXITCODE"
