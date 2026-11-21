@@ -492,9 +492,9 @@ M = {
     # grey (walks around the lawns). Mesh UV0 in metres (paved.py: plaza `uv_frame` / dominant axis of the strip).
     "plaza_sett_lattice": {"color": _set_mean("sett_lattice_tykocin", [0.245, 0.215, 0.205]), "rough": 0.85,
                            "surface": "paving_stones", "texture_set": "sett_lattice_tykocin", "set_tile": True},
-    "plaza_sett_red": {"color": [0.165, 0.074, 0.060], "rough": 0.85, "surface": "paving_stones",
+    "plaza_sett_red": {"color": [0.205, 0.114, 0.088], "rough": 0.85, "surface": "paving_stones",
                        "texture_set": "sett_rows_tint", "set_tile": True},
-    "plaza_sett_grey": {"color": [0.305, 0.305, 0.30], "rough": 0.85, "surface": "paving_stones",
+    "plaza_sett_grey": {"color": [0.285, 0.282, 0.272], "rough": 0.85, "surface": "paving_stones",
                         "texture_set": "sett_rows_tint", "set_tile": True},
     "monument_sandstone": {"color": [0.30, 0.275, 0.235], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.6},
     "monument_gilt": {"color": [0.55, 0.40, 0.10], "rough": 0.4, "metal": 0.8},

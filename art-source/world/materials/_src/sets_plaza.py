@@ -25,8 +25,10 @@ TILE_M = LATTICE_M * math.sqrt(2.0)
 ROW_M = BAND_M / 5.0         # row pitch of the band setts and of the arcs
 BAND_STONES = 40             # stones per 2 lattice periods along a band (periodicity of the tile): 113 mm long
 GREY = [[0.33, 0.33, 0.325], [0.29, 0.292, 0.295], [0.36, 0.355, 0.345], [0.26, 0.262, 0.268], [0.34, 0.325, 0.31]]
-RED = [[0.175, 0.072, 0.058], [0.145, 0.066, 0.056], [0.20, 0.088, 0.066], [0.125, 0.064, 0.058], [0.16, 0.085, 0.074]]
-JOINT_FILL = np.array([0.085, 0.078, 0.066], np.float32)      # sand, soil and fines between the stones
+# r2: lighter and less saturated - sunlit dry bands on the orthophoto read sRGB ~150/125/105 against 168 fields; the
+# Commons photo (fog, damp stone) shows them darker. WORKING_VALUE between the two.
+RED = [[0.215, 0.112, 0.086], [0.185, 0.100, 0.080], [0.240, 0.130, 0.098], [0.165, 0.098, 0.084], [0.200, 0.122, 0.100]]
+JOINT_FILL = np.array([0.125, 0.115, 0.098], np.float32)      # sand, soil and fines between the stones
 
 
 def _stone_surface(c, k, sid, dj, joint_half, shade):
@@ -45,7 +47,9 @@ def _stone_surface(c, k, sid, dj, joint_half, shade):
     tone = (1 + 0.26 * (r3 - 0.5)) * (1 + 0.17 * grain) * (1 + 0.07 * mott) * (0.80 + 0.20 * cushion) * (1 + 0.06 * crown)
     alb = shade * tone[..., None]
     near = 1 - sstep(joint_half, joint_half + 0.010, dj)                # dirt band along the joint
-    alb = alb * (1 - 0.22 * near)[..., None]
+    alb = alb * (1 - 0.14 * near)[..., None]
+    dust = sstep(-0.4, 1.4, noise(c, k + 16, 0.25, 1.6, beta=1.3))       # trodden-in dirt in patches of 0.3-1.5 m
+    alb = alb * (1 - 0.13 * dust)[..., None]
     fill = JOINT_FILL * (1 + 0.3 * noise(c, k + 13, 0.003, 0.03))[..., None]
     moss = sstep(0.9, 1.8, noise(c, k + 14, 0.08, 0.9))[..., None]
     fill = fill * (1 - 0.5 * moss) + moss * np.array([0.045, 0.06, 0.028], np.float32) * 0.5
