@@ -258,6 +258,18 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src, footprint=Fal
         R = 1.0 / np.maximum(kap_toward[inside], 1e-6)
         allow = np.maximum(0.3, 0.9 * R - (hw[inside] if np.ndim(hw) else hw))
         scale[inside] = np.minimum(1.0, allow / np.maximum(tw + VW[inside] + S.FLANGE_DEPTH * S.VERGE_SKIRT_SLOPE, 1e-6))
+    # The radius bound varies along a bend. Applying it independently at each
+    # station made the outer edge turn almost parallel to OUT at the transition:
+    # a nominal 1:2 skirt then triangulated into steep, overlapping grass faces.
+    # Ease the entire footprint inward over a 1:4 width transition (WORKING_VALUE).
+    # Both passes only reduce extent, so the radius clearance stays respected.
+    full_extent = tw + VW + S.FLANGE_DEPTH * S.VERGE_SKIRT_SLOPE
+    extent = np.where(scale < 1.0, full_extent * scale, np.inf)
+    for i in range(1, n):
+        extent[i] = min(extent[i], extent[i - 1] + 0.25 * (along[i] - along[i - 1]))
+    for i in range(n - 2, -1, -1):
+        extent[i] = min(extent[i], extent[i + 1] + 0.25 * (along[i + 1] - along[i]))
+    scale = np.minimum(scale, extent / np.maximum(full_extent, 1e-6))
     on = VW > 0.0
     u0 = tw * scale
     u1 = (tw + VW) * scale

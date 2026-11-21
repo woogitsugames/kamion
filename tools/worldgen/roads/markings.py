@@ -929,7 +929,8 @@ def _emit_p11_ribbon(buf, c, s_c, hw, clear, red: bool = True):
 
 def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CLEAR, red: bool = True, red_out=None):
     """P-10/P-11 inside a junction patch: stripes/squares in the chain frame at the OSM station, z = patch + lift.
-    False (nothing added) when the station is too close to the node or any vertex is off the road meshes."""
+    At a flared mouth the nominal chain width may reach a kerb: omit the affected outer stripe/square rather
+    than discarding the whole crossing. False (nothing added) when no usable crossing remains."""
     half = (clear + 2 * S.P11_SQUARE) / 2 if kind == "P-11" else S.P10_WIDTH / 2
     d_node = min(s_c, c.length - s_c)
     if d_node - half < P10_NODE_CLEAR_M:
@@ -950,13 +951,25 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CL
     if float(np.dot(l_probe, nrm)) < 0:                 # keep the chain's lateral sign convention
         nrm = -nrm
     meshes = []
+
+    def inner_span(rows):
+        # The mouth may be narrower than the nominal ribbon. Trim its two ends;
+        # an obstruction INSIDE a crossing must never leave interrupted stripes.
+        valid = [all(row[k] is not None for row in rows) for k in range(len(rows[0]))]
+        ks = [k for k, ok in enumerate(valid) if ok]
+        if not ks or not all(valid[ks[0]:ks[-1] + 1]):
+            return []
+        return [m for row in rows for m in row[ks[0]:ks[-1] + 1]]
+
     if kind == "P-11":      # cycle crossing (ADR 0093): two rows of squares instead of stripes
         nsq = int(math.floor((W + S.P11_GAP) / (S.P11_SQUARE + S.P11_GAP)))
         if nsq < 1:
             return False
         used_p11 = nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP
         start = -used_p11 / 2
+        rows = []
         for row in (-1.0, 1.0):
+            row_meshes = []
             sr = s_c + row * (clear + S.P11_SQUARE) / 2
             sq = np.array([sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2])
             for k_ in range(nsq):
@@ -966,9 +979,16 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CL
                     p = o + np.outer(sq - s_c, t) + nrm * l_
                     z = np.array([top_of(float(e), float(nn)) for e, nn in p])
                     if not np.all(np.isfinite(z)) or np.max(np.abs(np.diff(z))) > P10_DRAPE_MAX_STEP_M:
-                        return False
+                        break
                     sides.append(np.column_stack([p, z + S.MARKING_LIFT]))
-                meshes.append((lat, sides, sq))
+                if len(sides) != 2:
+                    row_meshes.append(None)
+                else:
+                    row_meshes.append((lat, sides, sq))
+            rows.append(row_meshes)
+        meshes = inner_span(rows)
+        if not meshes:
+            return False
         for lat, (a, b), sq in meshes:
             V = np.concatenate([a[:, None], b[:, None]], axis=1).reshape(-1, 3)
             uv = np.column_stack([np.repeat(sq - sq[0], 2), np.tile([0.0, 1.0], 2)])
@@ -1010,9 +1030,15 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CL
             p = o + np.outer(ss - s_c, t) + nrm * l_       # rigid rectangle: the chain bends into the node
             z = np.array([top_of(float(e), float(nn)) for e, nn in p])
             if not np.all(np.isfinite(z)) or np.max(np.abs(np.diff(z))) > P10_DRAPE_MAX_STEP_M:
-                return False        # off the road meshes, or onto a kerb / island top
+                break               # off the road meshes, or onto a kerb / island top
             sides.append(np.column_stack([p, z + S.MARKING_LIFT]))
-        meshes.append((lat, sides))
+        if len(sides) != 2:
+            meshes.append(None)
+        else:
+            meshes.append((lat, sides))
+    meshes = inner_span([meshes])
+    if len(meshes) < 2:
+        return False
     for lat, (a, b) in meshes:
         V = np.concatenate([a[:, None], b[:, None]], axis=1).reshape(-1, 3)
         T = []

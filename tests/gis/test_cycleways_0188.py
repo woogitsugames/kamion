@@ -210,6 +210,36 @@ def test_p11_drape_crossing_keeps_red_when_kerb_edges_step():
     assert "marking_white" in mats and "cycle_crossing_red" in mats
 
 
+@pytest.mark.parametrize("kind", ["P-10", "P-11"])
+def test_flared_crossing_keeps_inner_paint_when_outer_stripe_reaches_kerb(kind):
+    """D94 Putry: the chain width reaches beyond the asphalt of a flared junction mouth."""
+    from roads import markings as M
+    from roads.meshing import MeshBuf
+
+    c, _ = _flat_chain()
+    buf = MeshBuf()
+    top_of = lambda e, n: 0.0 if abs(n) <= 2.8 else float("nan")
+    assert M._drape_crossing(buf, c, s_c=8.0, hw=3.5, s0=12.0, s1=72.0,
+                             top_of=top_of, kind=kind, clear=3.0, red=False)
+    assert len(buf.parts) >= 2
+    assert all(np.abs(p.V[:, 1]).max() <= 2.8 for p in buf.parts)
+    if kind == "P-11":
+        assert {int(np.sign(p.V[:, 0].mean() - 8.0)) for p in buf.parts} == {-1, 1}
+
+
+@pytest.mark.parametrize("kind", ["P-10", "P-11"])
+def test_crossing_rejects_obstacle_between_valid_outer_stripes(kind):
+    from roads import markings as M
+    from roads.meshing import MeshBuf
+
+    c, _ = _flat_chain()
+    buf = MeshBuf()
+    top_of = lambda e, n: float("nan") if abs(n) < 0.3 else 0.0
+    assert not M._drape_crossing(buf, c, s_c=8.0, hw=3.5, s0=12.0, s1=72.0,
+                                 top_of=top_of, kind=kind, clear=3.0, red=False)
+    assert not buf.parts
+
+
 def test_p11_crossing_clamps_to_ribbon_never_demotes_to_p10():
     from types import SimpleNamespace
     from roads import markings as M
