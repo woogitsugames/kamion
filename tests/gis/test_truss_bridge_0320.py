@@ -178,7 +178,7 @@ def test_square_paving_overrides_are_valid_polygons_around_the_monument():
         holes = [Polygon(np.asarray(h) - origin) for h in o.get("holes_epsg2180", [])]
         assert outer.is_valid and all(h.is_valid and outer.contains(h) for h in holes)
         polys[k] = Polygon(outer.exterior.coords, [h.exterior.coords for h in holes])
-        assert o["park_flush"] is True
+        assert o["material"] == "yard_paving"
     plaza = polys["tykocin-rynek-plaza-0320"]
     assert 1100 < plaza.area < 1400 and plaza.contains(Point(TY.MONUMENT_EN).buffer(3.5))
     east = polys["tykocin-rynek-walk-east-0320"]

@@ -66,7 +66,7 @@ Czarnieckiego 01 / 05 / 08” (CC BY-SA 4.0), „…, 1762 01” (CC BY-SA 3.0 p
 (CC BY 4.0) — manifest `Data/raw/refs/tykocin-rynek-commons/manifest.jsonl`.
 
 **Decyzja.**
-- Trzy `paved_area` (`park_flush`) w `Data/Regions/tykocin/overrides.yaml`: płyta, obejście wschodnie i zachodnie
+- Trzy `paved_area` w `Data/Regions/tykocin/overrides.yaml`: płyta, obejście wschodnie i zachodnie
   z otworami na trawniki; obrysy z ortofoto, ±1 m (ESTIMATED). Materiał `yard_paving` — generator nie ma zestawu
   kostki kamiennej (`paved.py` mapuje sett → yard_paving).
 - `streetscape/tykocin_rynek_0320.py`: pomnik (trzy stopnie, kute ogrodzenie, cokół prosty, cokół „wazowy” toczony

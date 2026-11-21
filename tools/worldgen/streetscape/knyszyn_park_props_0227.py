@@ -94,12 +94,12 @@ def _obelisk(acc, layer, at, z):
 # head with a crown. WORKING_VALUE. (z above the plinth top, half width, half depth, 0, forward offset, section power)
 KING_PLINTH_H = 1.05
 KING_RINGS = ((0.00, .625, .525, 0., .00, 3.2), (0.06, .630, .530, 0., .00, 3.2), (0.60, .605, .500, 0., .00, 3.0),
-              (1.20, .570, .455, 0., -.01, 2.8), (1.80, .530, .400, 0., -.02, 2.6), (2.20, .500, .350, 0., -.03, 2.5),
-              (2.42, .500, .335, 0., -.03, 2.4), (2.52, .470, .300, 0., -.03, 2.3), (2.62, .380, .255, 0., -.03, 2.2),
-              (2.70, .240, .205, 0., -.02, 2.0), (2.76, .150, .150, 0., -.01, 2.0), (2.82, .135, .145, 0., .00, 2.0),
-              (2.90, .150, .170, 0., .01, 2.0), (3.00, .158, .172, 0., .01, 2.0), (3.07, .150, .160, 0., .00, 2.0),
-              (3.07, .172, .180, 0., .00, 2.0), (3.13, .178, .186, 0., .00, 2.0))
-KING_CROWN_M = 0.13
+              (1.20, .570, .455, 0., -.01, 2.8), (1.80, .530, .400, 0., -.02, 2.6), (2.20, .505, .350, 0., -.03, 2.5),
+              (2.42, .500, .335, 0., -.03, 2.4), (2.55, .455, .300, 0., -.03, 2.3), (2.66, .360, .260, 0., -.03, 2.2),
+              (2.74, .255, .220, 0., -.02, 2.0), (2.80, .200, .190, 0., -.01, 2.0), (2.86, .200, .200, 0., .00, 2.0),
+              (2.95, .215, .220, 0., .01, 2.0), (3.05, .220, .220, 0., .01, 2.0), (3.10, .210, .210, 0., .00, 2.0),
+              (3.10, .240, .240, 0., .00, 2.0), (3.17, .245, .245, 0., .00, 2.0))
+KING_CROWN_M = 0.07
 KING_H = KING_PLINTH_H + 0.04 + KING_RINGS[-1][0] + KING_CROWN_M          # top of the crown points (LOD0)
 
 
@@ -125,29 +125,12 @@ def _king(acc, layer, at, z):
     for i in range(npts):
         a = 2*math.pi*(i+.5)/npts
         c, s = math.cos(a), math.sin(a)
-        p0 = pos(.176*math.cos(a-.17), .184*math.sin(a-.17)); p1 = pos(.176*math.cos(a+.17), .184*math.sin(a+.17))
-        p2 = pos(.19*c, .198*s)
+        p0 = pos(.243*math.cos(a-.2), .243*math.sin(a-.2)); p1 = pos(.243*math.cos(a+.2), .243*math.sin(a+.2))
+        p2 = pos(.25*c, .25*s)
         tri = [_p(p0, top-.01), _p(p1, top-.01), _p(p2, tip)]
         acc.add(layer, bronze, tri, [[0,1,2],[2,1,0]])
     if not low:
-        MK.sphere(acc, layer, bronze, [base[0], base[1], top-.005], .15, sides=8, stacks=4, squash=.45)
-        # fur collar roll and the two edges of the open cloak down the front (photo 8)
-        f3 = np.r_[KING_FORWARD, 0.]; t3 = np.r_[KING_TANGENT, 0.]
-        o3 = np.asarray(base, float)
-        def surf(x, zz, lift=.012):
-            # point on the front of the body at lateral x and height zz (linear between rings)
-            zs = [r[0] for r in KING_RINGS]
-            rx = float(np.interp(zz, zs, [r[1] for r in KING_RINGS])); ry = float(np.interp(zz, zs, [r[2] for r in KING_RINGS]))
-            off = float(np.interp(zz, zs, [r[4] for r in KING_RINGS])); pw = float(np.interp(zz, zs, [r[5] for r in KING_RINGS]))
-            y = ry * max(0., 1. - abs(x/rx)**pw)**(1./pw)
-            return o3 + t3*x + f3*(y+off+lift) + np.array([0., 0., zz])
-        for side in (-1, 1):
-            MK.limb(acc, layer, bronze, [surf(side*.10, zz) for zz in (.08, .7, 1.4, 2.0, 2.38)],
-                    [.035, .034, .032, .03, .028], sides=5)
-            # chain of office: from the shoulders to the chest (no emblem)
-            MK.limb(acc, layer, bronze, [surf(side*.36, 2.40, .02), surf(side*.20, 2.12, .02), surf(0., 1.96, .02)],
-                    [.022, .022, .022], sides=4)
-        MK.sphere(acc, layer, bronze, surf(0., 1.90, .03), .06, sides=6, stacks=3, squash=.6)
+        MK.sphere(acc, layer, bronze, [base[0], base[1], top-.005], .21, sides=8, stacks=4, squash=.25)
     # Separate sundial/plaque block on paving in front of figure, blank.
     p=body+KING_FORWARD*KING_BLOCK_DISTANCE_M
     _box(acc,layer,"monument_granite",p,z,z+.75,.65,.40,KING_TANGENT)

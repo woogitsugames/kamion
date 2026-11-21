@@ -154,5 +154,5 @@ def test_king_cloak_has_continuous_profile_and_crowned_head():
     hem,shoulder,neck=vertices[:16],vertices[16*7:16*8],vertices[16*11:16*12]
     # broad cloak: wider than deep, tapering to the shoulders, a neck much narrower than the head band above it
     assert 1.2 <= width(hem) <= 1.3 and 1.0 <= depth(hem) <= 1.1
-    assert width(hem) > width(shoulder) > 3*width(neck)
+    assert width(hem) > width(shoulder) > 2*width(neck)
     assert width(vertices[-16:]) > width(neck)

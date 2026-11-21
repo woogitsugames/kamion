@@ -39,23 +39,20 @@ overrides:
   # diagonal lattice is not reproduced (open item in ADR 0320).
   - id: tykocin-rynek-plaza-0320
     kind: paved_area
-    park_flush: true
     material: yard_paving
     polygon_epsg2180: [[751786.7, 600245.5], [751826.5, 600253.9], [751829.8, 600223.9], [751789.5, 600217.7]]
     reason: 'ESTIMATED: paved plaza of Plac Czarnieckiego traced on the GUGiK orthophoto 2024; Commons cs202183366 (CC BY 4.0, reference only).'
     confidence: medium
   - id: tykocin-rynek-walk-east-0320
     kind: paved_area
-    park_flush: true
     material: yard_paving
-    polygon_epsg2180: [[751826.9, 600249.4], [751876.4, 600259.9], [751880.8, 600257.1], [751881.5, 600230.2], [751878.0, 600223.5], [751830.0, 600218.0], [751829.9, 600223.8]]
+    polygon_epsg2180: [[751825.4, 600249.6], [751876.4, 600259.9], [751880.8, 600257.1], [751881.5, 600230.2], [751878.0, 600223.5], [751830.0, 600218.0], [751828.0, 600224.0]]
     holes_epsg2180:
       - [[751828.6, 600245.9], [751865.1, 600254.9], [751872.0, 600255.2], [751875.4, 600251.5], [751876.1, 600235.2], [751873.2, 600232.1], [751830.1, 600226.5], [751828.9, 600244.0]]
     reason: 'ESTIMATED: paved walk around the east lawn (orthophoto 2024); the hole is the lawn with the low frame, the square basin and the octagonal bed.'
     confidence: medium
   - id: tykocin-rynek-walk-west-0320
     kind: paved_area
-    park_flush: true
     material: yard_paving
     polygon_epsg2180: [[751749.9, 600238.1], [751786.1, 600245.1], [751786.6, 600245.4], [751789.4, 600217.8], [751789.2, 600214.5], [751753.9, 600210.6]]
     holes_epsg2180:

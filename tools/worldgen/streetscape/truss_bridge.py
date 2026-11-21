@@ -31,7 +31,7 @@ from . import hero_bridge as HB
 
 KIND = "truss_bridge"
 LAYERS = ("buildings", "buildings_low")
-STEEL, RAIL, PICKET, CONC, BOARD = "truss_steel", "truss_rail_blue", "truss_picket", "viaduct_concrete", "hazard_stripes"
+STEEL, RAIL, PICKET, CONC, BOARD = "truss_steel", "truss_rail_blue", "truss_picket", "truss_concrete", "hazard_stripes"
 
 # Metres. WORKING_VALUE unless the override says otherwise (proportions read off the Commons photos against the
 # generated deck; no drawings of the object are available).
@@ -39,7 +39,7 @@ DEFAULTS = {
     "panel_m": 4.25,            # target panel length (main span: 12 panels on photo 05)
     "rise_ratio": 0.153,        # top chord rise / span (photo 05: about 1 : 6.5)
     "truss_out_m": 0.30,        # truss centre line outside the outer edge of the cap
-    "chord_w_m": 0.46, "chord_d_m": 0.44,          # top chord box
+    "chord_w_m": 0.56, "chord_d_m": 0.50,          # top chord box
     "bottom_w_m": 0.36, "bottom_top_m": 0.12, "bottom_d_m": 0.95,
     "web_w_m": 0.30, "web_d_m": 0.36, "flange_m": 0.07, "lace_w_m": 0.05,
     "end_gap_m": 0.35,          # truss end short of the pier centre line
