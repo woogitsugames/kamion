@@ -38,3 +38,8 @@
 - Build #3 knyszyn-w: road_consistency 3 (= baseline, było 35 w #1), terrain walls 74 vs 61 (max 0,662 bez zmian, worst-15 identyczne).
 - Library: robocopy z worktree win-build (Win64) do game/Library, żeby import -BuildTarget Win64 nie robił pełnego reimportu.
 - NASTĘPNY KROK: po build.exit → pwsh -File artifacts/seam-knw-s24/run-import-vqa.ps1 (tło), potem obejrzeć vqa-knyszyn/*.png
+
+## krok 8
+- Polecenie lidera: merge origin/main (water-tykocin, ADR 0318: woda w knyszyn) → 5e6d50759; konflikty generated knyszyn = main. Przerwany build #3 knyszyn (bez wody), slot zwolniony.
+- Build #4 tylko knyszyn (z wodą) w tle: run-build.ps1 -Regions knyszyn → build.log/build.exit. knyszyn-w z #3 (woda tam nie włączona). Import knyszyn-w Win64 w toku (import.log).
+- NASTĘPNY KROK: po build.exit: pwsh -File artifacts/seam-knw-s24/run-import-vqa.ps1 -Regions knyszyn
