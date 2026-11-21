@@ -2343,9 +2343,9 @@
     2
    ],
    "length_m": 388.2,
-   "max_grade": 0.0274,
+   "max_grade": 0.0283,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.04,
+   "profile_rms_vs_nmt_m": 0.041,
    "sidewalk_frac": 0.0,
    "width_m": [
     6.5
@@ -5574,11 +5574,11 @@
     2
    ],
    "length_m": 533.8,
-   "max_grade": 0.0528,
+   "max_grade": 0.0531,
    "overrides": [
     "dk8-seam-kerb-od005"
    ],
-   "profile_rms_vs_nmt_m": 1.456,
+   "profile_rms_vs_nmt_m": 1.458,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0,
@@ -6344,12 +6344,12 @@
     3
    ],
    "length_m": 313.0,
-   "max_grade": 0.0136,
+   "max_grade": 0.0137,
    "overrides": [
     "ortho-lanes-w257355879:2357583390-5749430006",
     "ortho-lanes-w693614875:131612936-2357583403"
    ],
-   "profile_rms_vs_nmt_m": 0.059,
+   "profile_rms_vs_nmt_m": 0.06,
    "sidewalk_frac": 0.0,
    "width_m": [
     8.37,
@@ -14672,7 +14672,7 @@
    "patches": 775
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 1005250,
+  "footprint_nodes": 1005252,
   "fork_abreast": [
    {
     "beside": "c:w257355878:12962166397-2357583390",
@@ -16123,13 +16123,13 @@
    },
    "rejected": [
     {
-     "area_m2": 266.4,
+     "area_m2": 264.9,
      "reason": "carriageways at different heights",
-     "step_m": 0.57,
+     "step_m": 0.54,
      "why": "merge",
      "xy": [
-      -919.6,
-      -676.2
+      -919.8,
+      -676.3
      ]
     },
     {
@@ -16165,7 +16165,7 @@
     {
      "area_m2": 56.4,
      "reason": "carriageways at different heights",
-     "step_m": 0.59,
+     "step_m": 0.58,
      "why": "merge",
      "xy": [
       -653.8,
@@ -16354,15 +16354,15 @@
    "P-13": 24,
    "P-14": 14,
    "P-4 double centre line": 3,
-   "P-7b edge line": 77,
+   "P-7b edge line": 111,
    "P-8 arrow": 53,
    "P-8 skipped (lane too narrow)": 13,
    "P-8 skipped (lanes continue)": 9,
    "P-8 skipped (off carriageway)": 59
   },
-  "markings_overlap_removed_tris": 231,
+  "markings_overlap_removed_tris": 536,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 1775,
+  "nmt_nodes_replaced_under_decks": 1815,
   "overrides_applied": [
    {
     "id": "ortho-lanes-w249740774:2563060454-131612937",
@@ -16446,12 +16446,34 @@
     "width_other": 4.5,
     "width_own": 5.5,
     "width_seam": 5.0
+   },
+   {
+    "chain": "c:w242987870:2504239836-2927425559",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-knyszynska",
+    "step_m": 0.25,
+    "width_other": 8.5,
+    "width_own": 8.0,
+    "width_seam": 8.25
+   },
+   {
+    "chain": "c:w301702365:2504239824-3626955270",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-knyszynska",
+    "step_m": 0.25,
+    "width_other": 6.25,
+    "width_own": 5.75,
+    "width_seam": 6.0
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 7752,
-   "parts": 816,
-   "side_tris": 970
+   "kerb_tris": 7778,
+   "parts": 822,
+   "side_tris": 979
   },
   "signalised_junctions": 4,
   "through_lines": {
@@ -16459,8 +16481,8 @@
    "junctions": 64,
    "lines": {
     "P-4": 5,
-    "P-7a": 2,
-    "P-7b": 17,
+    "P-7a": 3,
+    "P-7b": 28,
     "lane": 96
    },
    "pairs": 307,
@@ -16468,7 +16490,7 @@
   },
   "verge_strips": {
    "chunks": 58,
-   "tris": 89702
+   "tris": 89932
   },
   "walled_ramps": [
    {
@@ -16483,7 +16505,7 @@
     "confidence": "medium",
     "max_wall_h_m": 4.23,
     "nmt_fill_max_m": 0.49,
-    "walled_m": 101.5
+    "walled_m": 102.0
    }
   ]
  }
