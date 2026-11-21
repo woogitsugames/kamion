@@ -1,4 +1,4 @@
-param([Parameter(Mandatory)][string]$Round, [switch]$Build, [switch]$SkipImport, [string]$Regions = 'tykocin,dk65-07,knyszyn-w', [string]$Tiers = 'High', [switch]$LowStats, [switch]$Tests)
+param([Parameter(Mandatory)][string]$Round, [switch]$Build, [switch]$SkipImport, [string]$Regions = 'tykocin,dk65-07,knyszyn-w', [string]$Tiers = 'High', [switch]$LowStats, [switch]$Tests, [switch]$BuildOnly, [switch]$VqaOnly, [string]$Lightings = 'clear,overcast')
 $ErrorActionPreference = 'Continue'
 $main = 'C:\Users\matma\Documents\Claude\kamion'
 $wt = "$main\.claude\worktrees\banks-verges-s24"
@@ -6,7 +6,7 @@ Set-Location $wt
 $a = "$wt\artifacts\banks-verges-s24"
 $log = "$a\logs"; New-Item -ItemType Directory -Force $log | Out-Null
 $st = "$log\$Round.status"
-"START $(Get-Date -f s)" | Set-Content $st
+"START $(Get-Date -f s) build=$Build buildOnly=$BuildOnly vqaOnly=$VqaOnly" | Add-Content $st
 $regs = $Regions -split ','
 $owner = 'banks-verges-s24'
 if ($Build) {
@@ -21,9 +21,10 @@ if ($Build) {
   }
   pwsh -NoProfile -File $main\scripts\unity-slot.ps1 -Release -Pool heavy -Owner $owner
 }
+if ($BuildOnly) { "BUILD DONE $(Get-Date -f s)" | Add-Content $st; exit 0 }
 while (Test-Path $main\artifacts\locks\PHONE_RUN) { Start-Sleep 60 }
 pwsh -NoProfile -File $main\scripts\unity-slot.ps1 -Acquire -Owner $owner
-if (-not $SkipImport) {
+if (-not $SkipImport -and -not $VqaOnly) {
   foreach ($r in $regs) {
     pwsh -NoProfile -File scripts/import-region.ps1 -Region $r -Tiers $Tiers -BuildTarget Win64 *> "$log\$Round-import-$r.log"
     "import $r exit=$LASTEXITCODE $(Get-Date -f s)" | Add-Content $st
@@ -35,7 +36,7 @@ $cams = @{
   'knyszyn-w' = 'dk65_fields_nw,dk65_north_edge_in,dk65_polna,dk65_goniadzka,goniadzka_above,bv_side_ditch,bv_ditch_close,bv_cab_s1701,bv_air_fields'
 }
 foreach ($r in $regs) {
-  foreach ($l in 'clear','overcast') {
+  foreach ($l in ($Lightings -split ',')) {
     pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene "World_${r}_High" -Tier High -Lighting $l -Width 1920 -Height 1080 -Cameras $cams[$r] -Gate3 "$a\cams-$r.json" -BuildTarget Win64 -OutputDir "$a\$Round\$r-High-$l" *> "$log\$Round-vqa-$r-$l.log"
     "vqa $r $l exit=$LASTEXITCODE $(Get-Date -f s)" | Add-Content $st
   }

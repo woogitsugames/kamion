@@ -1,7 +1,10 @@
 # STATUS banks-verges-s24 (krytyk s24 wave 6 pkt 2 i 4: Narew, trzcina, pobocza/rowy/U-1a, skraj lasu; ADR 0324)
 - 2026-11-21 20:15 start: worktree z main 3fba5b3b7, derived = prywatna kopia (-CopyDerived). Runner rund: `artifacts/banks-verges-s24/run.ps1 -Round rN [-Build] [-Tiers 'Low,High'] [-LowStats] [-Tests]` (sloty heavy/unity, import Win64, VQA High clear+overcast, kamery dodatkowe `cams-<kafel>.json` przez -Gate3).
 - r0 (stan przed, bez build_world) w tle: `artifacts/banks-verges-s24/logs/r0.status`.
-- NASTĘPNY KROK: `Get-Content artifacts/banks-verges-s24/logs/r0.status`; potem kod (reeds.py, WorldWater.shader, water.py, pobocza, U-1a, skraj lasu) i `pwsh artifacts/banks-verges-s24/run.ps1 -Round r1 -Build`.
+- 20:53 r0 (stan przed) OK: `artifacts/banks-verges-s24/r0/<kafel>-{High-clear,High-overcast,Low-clear}/` (+ stats.txt). Import wymagał kopii `art-source/truck/interior/export/SM_CabInterior_LOD0.fbx` z main.
+- Kod r1 (commity 9c9363f0f…a23ad7b99): reeds.py (kępy 3 kart / 1 m, 1,5–2,5 m, paleta lato), water.py (zatoki/łachy brzegu, pas mułu, łaty tafli), WorldWater.shader (płycizna Beer-Lambert, podmuchy, 3. oktawa), verge_flora.py (karty trawy przy krawędzi pobocza / skarpy / dno rowu; rów scalony z terenem `:vg` + maski wilgoci), guide_posts.py (U-1a co 100 m, GDDKiA; łuki WORKING_VALUE), forest_hlod.py (szum górnej krawędzi, druga ściana, opadanie koron, narożniki), vegetation MANTLE_BAND_KEEP 0,40/0,75, shoulder_gravel 0,135/0,120/0,095. Testy: tests/gis/test_banks_verges_0324.py 7/7, test_water_0210/0213 zielone (reguły brzegu dopasowane).
+- 21:03 r1 build w kolejce heavy (3 sloty zajęte przez regen-wave-6): `artifacts/banks-verges-s24/logs/r1.status`. Podgląd shadera wody na scenie r0: runda `r0s`.
+- NASTĘPNY KROK: po `BUILD DONE` w r1.status: `pwsh artifacts/banks-verges-s24/run.ps1 -Round r1` (import + VQA), obejrzeć `artifacts/banks-verges-s24/r1/`, poprawki → r2.
 
 # STATUS world-fix-b3-s24 (błędy świata z buildu #3)
 - krok 0 OK: worktree gotowy (derived skopiowane). Kafle łat: t=2541 -> dw671-tykocin-01 (13 km do celu), t=3221 -> dw671-tykocin-07 (4,0 km).
