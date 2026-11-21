@@ -43,3 +43,9 @@
 - Polecenie lidera: merge origin/main (water-tykocin, ADR 0318: woda w knyszyn) → 5e6d50759; konflikty generated knyszyn = main. Przerwany build #3 knyszyn (bez wody), slot zwolniony.
 - Build #4 tylko knyszyn (z wodą) w tle: run-build.ps1 -Regions knyszyn → build.log/build.exit. knyszyn-w z #3 (woda tam nie włączona). Import knyszyn-w Win64 w toku (import.log).
 - NASTĘPNY KROK: po build.exit: pwsh -File artifacts/seam-knw-s24/run-import-vqa.ps1 -Regions knyszyn
+
+## krok 9
+- Build #4 knyszyn (z wodą, po merge): road_consistency 8 = 3 blind/5 obstacle (= D95), szew Tykocka: oba kafle road_asphalt_new, krawężniki+chodniki ciągłe; DK65 ciągła; 0 zawiniętych trójkątów (folds_after.txt).
+- combo #4: DK65→DW671 W 0/0/0, DK65→DK65 W 0/0/0, knyszyn-w-dw671 0/0/0, razem 67/0/0 (D95 68/13/0). seams.py 0 FAIL / 0 UWAGA.
+- Import knyszyn-w Win64 OK; import knyszyn + VQA w toku (import.log). pytest czeka w kolejce heavy (pytest.log).
+- NASTĘPNY KROK: obejrzeć artifacts/seam-knw-s24/vqa-knyszyn/*.png

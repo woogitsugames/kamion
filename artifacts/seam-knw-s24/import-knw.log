@@ -1,0 +1,14 @@
+acquired slot seam-knw-s24 (1/2)
+=== import knyszyn-w 2026-11-21T07:33:58
+14 assets, 70 files, 0 problems
+PBR Medium: 209 produced files, 0 missing, 0 older than _src, 0 sets not built; 2 files skipped (not produced by build_all with current inputs: asphalt_detail_photo)
+[cab-lod0] OK C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\art-source\truck\interior\export\SM_CabInterior_LOD0.fbx
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\logs\import-region-knyszyn-w-20261121-073402.log -buildTarget Win64 -quit -executeMethod Game.World.Import.RegionImporter.ImportBatch -region knyszyn-w -tiers Low,High -materialTier Medium
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 8204)
+IMPORT_RESULT: OK region=knyszyn-w chunks=64 corridor=27 tiers=Low+High
+WORLD_MEMORY: tier=Low render_meshes=41.4 MB instances=5.4 MB collision_src=11.4 MB total=58.2 MB [terrain 24,2, road 2,9, markings 0,3, buildings 6,2, wires 0,8, furniture 0,5, plot_ground 1,0, plots 2,7, paved 0,0, far_field 2,8]
+WORLD_MEMORY: tier=High render_meshes=118.9 MB instances=5.4 MB collision_src=11.4 MB total=135.6 MB [terrain 97,0, road 2,9, markings 0,3, buildings 8,0, wires 0,8, furniture 0,5, plot_ground 1,0, plots 3,5, paved 0,0, far_field 4,9]
+WORLD_TERRAIN_BAND: fine fraction Low 13 % High 16 %
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\logs\import-region-knyszyn-w-20261121-073402.log
+released seam-knw-s24
+DONE code 0 2026-11-21T07:41:14
