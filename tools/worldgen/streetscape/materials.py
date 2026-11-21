@@ -486,7 +486,7 @@ M = {
     # scaled by set_metal); mesh UV0 = metres round the figure / up it (knyszyn_king_0325.build).
     "monument_bronze": {"color": [0.105, 0.098, 0.088], "rough": 0.48, "metal": 0.85,
                         "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.85},
-    "monument_bronze_patina": {"color": [0.078, 0.084, 0.074], "rough": 0.78, "metal": 0.40,
+    "monument_bronze_patina": {"color": [0.070, 0.076, 0.066], "rough": 0.78, "metal": 0.40,
                                "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.40},
     "monument_bronze_rubbed": {"color": [0.200, 0.155, 0.105], "rough": 0.40, "metal": 0.90,
                                "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.95},

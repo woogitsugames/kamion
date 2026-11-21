@@ -18,6 +18,10 @@ from streetscape import materials as MAT                   # noqa: E402
 from streetscape.buildings_mesh import Acc                 # noqa: E402
 
 
+SPEC = __import__("json").loads((Path(__file__).resolve().parents[3] / "art-source/world/materials/materials_spec.json")
+                                .read_text(encoding="utf-8"))["sets"]
+
+
 def main():
     out = Path(sys.argv[1])
     layer = "buildings_low" if "--low" in sys.argv else "buildings"
@@ -30,12 +34,16 @@ def main():
         m = MAT.M.get(mat, {"color": [0.05, 0.05, 0.05], "rough": 0.6})
         mtl += [f"newmtl {mat}", "Kd {:.4f} {:.4f} {:.4f}".format(*m["color"]),
                 f"Pr {m.get('rough', 0.9)}", f"Pm {m.get('metal', 0.0)}"]
-        for k, (V, T, *_rest) in enumerate(items):
+        if m.get("texture_set") in SPEC:          # custom keys read by the Blender preview script only
+            tile = SPEC[m["texture_set"]]["tile_m"]
+            mtl += [f"#set {m['texture_set']} {tile[0]} {tile[1]} {m.get('set_metal', 0.0)}"]
+        for k, (V, T, UV, *_rest) in enumerate(items):
             lines += [f"o {mat}_{k}", f"usemtl {mat}", "s 1"]
             V = np.asarray(V, float)
             L = np.column_stack([V[:, :2] @ t, V[:, :2] @ f, V[:, 2]])
             lines += ["v {:.5f} {:.5f} {:.5f}".format(*p) for p in L]
-            lines += ["f {} {} {}".format(*(np.asarray(tri) + base)) for tri in T]
+            lines += ["vt {:.5f} {:.5f}".format(*uv) for uv in np.asarray(UV, float)]
+            lines += ["f {0}/{0} {1}/{1} {2}/{2}".format(*(np.asarray(tri) + base)) for tri in T]
             base += len(V)
     out.write_text("\n".join(lines) + "\n", encoding="ascii")
     out.with_suffix(".mtl").write_text("\n".join(mtl) + "\n", encoding="ascii")

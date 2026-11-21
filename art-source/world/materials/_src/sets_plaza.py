@@ -196,7 +196,7 @@ def bronze_cast(n=1024):
     tilt = (hash01(i1, 4) - 0.5)
     lumps = noise(c, 5, 0.02, 0.25, beta=1.6)
     grain = noise(c, 6, c.px * 2, 0.004, beta=0.3)
-    h = (0.0016 * lumps + 0.0012 * tilt * facet - 0.0006 * (1 - facet) + 0.00006 * grain).astype(np.float32)
+    h = (0.0011 * lumps + 0.0010 * tilt * facet - 0.0006 * (1 - facet) + 0.00006 * grain).astype(np.float32)
     hollow = sstep(0.2, 1.4, -lumps)                              # low spots keep the oxide and the dirt
     streak = sstep(0.5, 1.8, noise(c, 7, 0.01, 0.6, beta=1.2, aniso=14.0).T)      # runs down the figure
     spots = sstep(1.4, 2.2, noise(c, 8, 0.004, 0.03, beta=0.6))                   # bird lime / mineral spots, pale
