@@ -48,6 +48,36 @@ def test_traced_rail_cannot_be_fitted_into_median_narrower_than_hardware():
     assert not q
 
 
+def test_pinned_separator_joint_follows_matching_deck_instead_of_other_traced_rail():
+    traced = _authored(0.)
+    traced["nojoin"] = {-1}
+    traced["term"] = (True, False)
+    other_trace = _authored(.25)  # nearer than the deck; historically the wrong join
+    deck = dict(P=np.column_stack([np.arange(29.64, 50.64), np.full(21, -1.05)]),
+                Z=np.full(21, -.22), key="c:deck:L:bridge", tall=np.ones(21, bool), term=(True, True))
+    original = traced["P"].copy()
+    FU._join_authored_deck_ends([traced, other_trace, deck])
+    np.testing.assert_allclose(traced["P"][-1], deck["P"][0])
+    assert traced["Z"][-1] == pytest.approx(deck["Z"][0])
+    np.testing.assert_allclose(traced["P"][:-8], original[:-8])
+    assert traced["term"] == (True, False) and deck["term"] == (False, True)
+    np.testing.assert_allclose(other_trace["P"][:, 1], .25)
+
+
+@pytest.mark.parametrize("height,reverse", [(2., False), (0., True)])
+def test_pinned_joint_rejects_deck_at_wrong_level_or_direction(height, reverse):
+    traced = _authored(0.)
+    traced["nojoin"] = {-1}
+    x = np.arange(30., 51.)
+    if reverse:
+        x = 60. - x
+    deck = dict(P=np.column_stack([x, np.full(21, -.5)]), Z=np.full(21, height),
+                key="c:deck:L:bridge", tall=np.ones(21, bool), term=(True, True))
+    before = traced["P"].copy()
+    FU._join_authored_deck_ends([traced, deck])
+    np.testing.assert_allclose(traced["P"], before)
+
+
 @pytest.mark.parametrize("cap_width", [.30, .40])
 def test_narrowing_cap_keeps_barrier_connected_to_ground_approaches(monkeypatch, cap_width):
     stations = np.arange(60.)

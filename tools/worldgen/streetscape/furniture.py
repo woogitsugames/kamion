@@ -2133,6 +2133,7 @@ def _clip_rails_to_pavement(queue, parts, m=None):
 def _flush_rails(lin, m=None):
     queue = getattr(lin, "rail_queue", None) or []
     _fit_authored_rails_to_pavement(queue, lin.buf.parts, m)
+    _join_authored_deck_ends(queue, m)
     if queue and m is not None:
         _join_free_ends(queue, m)
     _drop_doubled_rows(queue, m)
@@ -2146,6 +2147,53 @@ def _flush_rails(lin, m=None):
                       "tall": np.zeros(len(it["P"]), bool) if it["tall"] is None else np.asarray(it["tall"], bool),
                       "term": tuple(it["term"]), "term_tall": tuple(it.get("term_tall", (False, False)))} for it in queue]
     return [bool(np.all(it["tall"])) for it in queue]
+
+
+def _join_authored_deck_ends(queue, m=None):
+    """Adapt pinned expansion joints to the final deck cap, never to another traced rail.
+
+    ``nojoin`` prevents the two rails of a separator being swung onto one another.
+    A continued deck endpoint is different: widening or the bridge asphalt buffer
+    can move it away from the original trace. Match its level and outgoing tangent
+    before blending the traced end onto it. The final pavement pass still checks
+    every resulting segment.
+    """
+    joined = 0
+    for it in queue:
+        if not str(it["key"]).startswith("authored:") or len(it["P"]) < GUARDRAIL_JOIN_BLEND + 2:
+            continue
+        for end in it.get("nojoin", ()):
+            p = it["P"][end]
+            incoming = p - it["P"][1 if end == 0 else -2]
+            incoming /= max(np.linalg.norm(incoming), 1e-9)
+            candidates = []
+            for other in queue:
+                if other is it or str(other["key"]).startswith("authored:") or other.get("tall") is None:
+                    continue
+                for e in (0, -1):
+                    if not other["tall"][e]:
+                        continue
+                    q = other["P"][e]
+                    d = float(np.linalg.norm(q - p))
+                    outgoing = other["P"][1 if e == 0 else -2] - q
+                    outgoing /= max(np.linalg.norm(outgoing), 1e-9)
+                    if (d <= RAIL_CONTINUE_M and abs(float(other["Z"][e] - it["Z"][end])) <= RAIL_CONTINUE_DZ
+                            and float(incoming @ outgoing) >= 0.5 and float((q - p) @ incoming) >= -0.1):
+                        candidates.append((d, other, e))
+            if not candidates:
+                continue
+            _, other, e = min(candidates, key=lambda x: x[0])
+            idx = np.arange(GUARDRAIL_JOIN_BLEND) if end == 0 else len(it["P"]) - 1 - np.arange(GUARDRAIL_JOIN_BLEND)
+            u = np.linspace(1., 0., GUARDRAIL_JOIN_BLEND + 1)[:-1]
+            weight = u * u * (3 - 2 * u)
+            it["P"][idx] += (other["P"][e] - p)[None, :] * weight[:, None]
+            it["Z"][idx] += (other["Z"][e] - it["Z"][end]) * weight
+            terms = list(other["term"])
+            terms[0 if e == 0 else 1] = False
+            other["term"] = tuple(terms)
+            joined += 1
+    if m is not None:
+        m["authored_deck_joins"] = joined
 
 
 PARAPET_BARRIER_MIN_M = 1.0   # ADR 0144: no generic deck balustrade within this of a road barrier (W-beam + upper beam)
