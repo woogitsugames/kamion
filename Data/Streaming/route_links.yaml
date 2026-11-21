@@ -147,6 +147,7 @@ links:
     destination: s8
     start_epsg2180: [769340.8, 595199.0]  # boundary node of way 305447699 (south edge, seam with dk8-s8-jeroniki)
     end_epsg2180: [768779.0, 595332.7]    # boundary node of way 305447699 (west edge) = s8-01 route entry
+    head_from: link:jeroniki-dk8-to-s8  # D94 widens the Jeroniki side; share its exact lane point across the seam
     tail_to: route:s8-01
     note: "S8 westbound across the south-west corner of dk65-01 to the seam with s8-01"
   # ADR 0288: the cross-section of way 536205568 is the same on both sides of the s8-03 | s8-04 seam (3 x 3.50 m,

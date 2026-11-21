@@ -6,6 +6,7 @@ the override survives a regeneration only when the asset was built from exactly 
 import hashlib
 import json
 import struct
+import math
 from pathlib import Path
 
 import pytest
@@ -63,6 +64,7 @@ def test_override_applied_not_stale(qa):
 
 
 def test_spec_follows_the_generated_road(spec):
+    from roads import standards as S
     assert spec["osm_ways"] == ["175157461", "177895177"]
     assert len(spec["decks"]) == 2
     for dk in spec["decks"]:
@@ -72,7 +74,15 @@ def test_spec_follows_the_generated_road(spec):
         assert ss == sorted(ss) and max(b - a for a, b in zip(ss, ss[1:])) <= spec["params"]["station_step_m"] * 1.25  # chain vertices are kept, measured max 4.565 m
         for s in dk["stations"][1:-1]:                                 # chain end stations taper to the road (9.95 m)
             w = ((s["l"][0] - s["r"][0]) ** 2 + (s["l"][1] - s["r"][1]) ** 2) ** 0.5
-            assert 10.0 < w < 10.6, w                                  # 8.0 m carriageway + 2 x (0.15 + 1.00) m (ADR 0117 cap_w)
+            # D94 widens the carriageway; bridge-kerb-cli adds the explicit
+            # asphalt safety buffer. Verify the cap against the saved road
+            # edges rather than the pre-D94 fixed total width.
+            carriageway = math.dist(s['lg'][:2], s['rg'][:2])
+            extensions = [math.dist(s[k][:2], s[k + 'g'][:2]) for k in ('l', 'r')]
+            cap_limit = S.BRIDGE_CLEAR_M + S.KERB_TOP_W + 1.0  # authored ADR 0117 cap_w
+            assert all(0.0 <= v <= cap_limit + 0.002 for v in extensions), s
+            assert w == pytest.approx(carriageway + sum(extensions), abs=0.003), s
+            assert carriageway >= 8.0 - 0.002 and w > carriageway, s
             if s["open"] and so[0] + 45 < s["s"] < so[1] - 45:
                 # middle of the open range (ring + island); the ends run down to the abutments. Measured 3.27-4.99 m:
                 # 4.5 m + margin over the ring carriageways, less over the island mound of the generated terrain.

@@ -97,11 +97,11 @@ def yards(region_id: str, origin, bounds):
 
 def _footprint(q, t, prm):
     from shapely.geometry import Polygon
-    t = np.asarray(t, float)
-    n = np.array([-t[1], t[0]])
     hl, hw = prm["col_len_m"] / 2, prm["col_wid_m"] / 2
     q = np.asarray(q, float)[:2]
-    return Polygon([q + t * a * hl + n * b * hw for a, b in ((1, 1), (-1, 1), (-1, -1), (1, -1))])
+    # This QA audits the in-process underdeck branch, whose collision is the
+    # same chamfered prism as the visible column (not the boxed hero assets).
+    return Polygon(H.prism_footprint(q, t, hl, hw, prm["col_chamfer_m"]))
 
 
 def _rows(w, cfg, c, rows, blocked, car, yard):

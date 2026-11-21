@@ -56,7 +56,7 @@ class SurfaceIndex:
     """2D triangle index of the ground surfaces with their material class and mean height."""
 
     def __init__(self, parts):
-        polys, cls, zs = [], [], []
+        polys, cls, zs, planes = [], [], [], []
         for p in parts:
             if p.layer not in ("road", "bridge", "paved") or len(p.T) == 0:
                 continue
@@ -83,9 +83,13 @@ class SurfaceIndex:
             polys.append(shapely.polygons(ring))
             cls += [k] * len(tri)
             zs.append(tri[:, :, 2].mean(1))
+            normal = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0])
+            slope = -normal[:, :2] / normal[:, 2, None]
+            planes.append(np.column_stack([slope, tri[:, 0, 2] - np.sum(slope * tri[:, 0, :2], axis=1)]))
         self.polys = np.concatenate(polys)
         self.cls = np.array(cls)
         self.z = np.concatenate(zs)
+        self.planes = np.concatenate(planes)
         self.tree = shapely.STRtree(self.polys)
 
     def carriageway_levels(self, P):
@@ -111,22 +115,27 @@ class SurfaceIndex:
 
     def classify(self, P):
         """Per point (E, N, U): 'carriageway', an obstacle class, or 'none' (no surface = island / terrain).
-        An obstacle triangle covering the point wins over carriageway (it is drawn on top of it)."""
+        An obstacle wins only at or above the carriageway at this point; a neighbouring road's lower grass
+        skirt must not hide asphalt above it. The height window still separates bridge levels."""
         P = np.asarray(P, float).reshape(-1, 3)
         out = np.full(len(P), "none", dtype=object)
         if not len(P):
             return out
         hit = self.tree.query(shapely.points(P[:, :2]), predicate="intersects")
         pi, ti = hit
-        ok = np.abs(self.z[ti] - P[pi, 2]) < DZ_M
-        pi, ti = pi[ok], ti[ok]
+        z = np.sum(self.planes[ti, :2] * P[pi, :2], axis=1) + self.planes[ti, 2]
+        ok = np.abs(z - P[pi, 2]) < DZ_M
+        pi, ti, z = pi[ok], ti[ok], z[ok]
         has_cw = np.zeros(len(P), bool)
+        carriageway_z = np.full(len(P), -np.inf)
+        cw = self.cls[ti] == "carriageway"
+        np.maximum.at(carriageway_z, pi[cw], z[cw])
         obst = {}
-        for a, b in zip(pi.tolist(), ti.tolist()):
+        for a, b, height in zip(pi.tolist(), ti.tolist(), z.tolist()):
             k = self.cls[b]
             if k == "carriageway":
                 has_cw[a] = True
-            elif k not in ("apron",):
+            elif k not in ("apron",) and height >= carriageway_z[a] - 1e-4:
                 obst.setdefault(a, k)
         out[has_cw] = "carriageway"
         for a, k in obst.items():

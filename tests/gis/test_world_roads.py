@@ -65,6 +65,9 @@ def _restore(before, after_build):
         print("[test_world_roads] changed by another process during the session, left as is:", *kept, sep="\n  ")
 
 
+PROFILE_KMAX_TOL = 1.002   # = roads.profile.bounded_curvature_fit acceptance (k > kmax * 1.002 is 'bad')
+
+
 @pytest.fixture(scope="session")
 def world(tmp_path_factory):
     if not HEIGHTMAP.exists():
@@ -76,7 +79,13 @@ def world(tmp_path_factory):
     before = json.loads(mp.read_text(encoding="utf-8")) if mp.exists() else None
     snap = _snapshot()
     try:
-        w, manifest, qa = build_world.build(REGION_ID, out_root=out, verbose=False)
+        # Session fixtures run before module-level generated_world selection.
+        # Compare the CLI build with the same D94 cross-sections, regardless
+        # of the measured baseline used by unrelated session fixtures.
+        from roads import standards as S
+        with pytest.MonkeyPatch.context() as patch:
+            patch.setattr(S, "GAMEPLAY_LANE_WIDEN_M", S.GAMEPLAY_LANE_WIDEN_DEFAULT_M)
+            w, manifest, qa = build_world.build(REGION_ID, out_root=out, verbose=False)
     except BaseException:
         _restore(snap, _snapshot())
         raise
@@ -193,7 +202,10 @@ def test_profile_follows_nmt_without_noise(world):
         assert st["rms_vs_nmt_m"] < 0.35, (c.id, st)
         # no NMT noise: second differences bounded by the class vertical curvature limit
         k = np.abs(np.diff(c.z, 2)) / 0.5 ** 2
-        assert k.max() <= 1 / 150 + 1e-6, (c.id, k.max())
+        # c-regress-cli: the fixture builds the CLI (D94) geometry since d7e2912fc; roads.profile.bounded_curvature_fit
+        # accepts its bound with a 0.2 % convergence tolerance (kmax * 1.002), the test now uses the same one
+        # (w759383150: 0.0066765 vs 1/150 = 0.0066667, converged fit)
+        assert k.max() <= (1 / 150) * PROFILE_KMAX_TOL + 1e-6, (c.id, k.max())
 
 
 # ------------------------------------------------------------------------------------------ alignment
@@ -288,7 +300,10 @@ def test_overrides_applied_and_not_stale(world):
     assert m["overrides_stale"] == []
     w = world["w"]
     sec = w.net.sections["w1090234575:8722811971-9986085571"]
-    assert sec.width == pytest.approx(7.0) and sec.width_src.startswith("authored_override")
+    # c-regress-cli: D94 / ADR 0306 widens the authored 7.0 m once (provenance gameplay_widen_m) - the fixture builds the
+    # CLI geometry since d7e2912fc; the authored base width stays 7.0 m
+    widen = float(sec.provenance.get("gameplay_widen_m", 0.0))
+    assert sec.width - widen == pytest.approx(7.0) and sec.width_src.startswith("authored_override")
 
 
 # ------------------------------------------------------------------------------------------ standards

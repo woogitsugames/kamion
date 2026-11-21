@@ -141,6 +141,29 @@ CLOSURE_POST_M = 1.5       # m between the steel posts of a closure line (a car 
 SCUFF_M = 2.2              # m of kerb round each nose of an island that carries tyre rub (WORKING_VALUE)
 
 
+REST_FOOT_CLEAR_M = 0.20    # WORKING_VALUE (c-regress-cli): rest post foot behind the outer kerb top
+
+
+def _boom_rest(c, s, m):
+    """(base, rest) of the boom over lane chain c at station s, hinge on the median side whose centre is m (as build())."""
+    p_c = c.line.offset_point(s, 0.0)
+    across = p_c - m
+    across /= max(np.hypot(*across), 1e-9)
+    base = p_c - across * (float(c.hw_at(s)) + S.KERB_TOP_W + 0.3)
+    yaw_b = math.atan2(across[1], across[0])
+    side_y = np.array([-math.sin(yaw_b), math.cos(yaw_b)])
+    return base, base + across * (LP.BOOM_L - 0.25) + side_y * LP.BOOM_SIDE
+
+
+def _rest_clear(c, s, m):
+    """The rest post of the boom stands behind the outer kerb of its lane (on the side strip), measured at its own
+    station: |lateral| >= hw + kerb top + REST_FOOT_CLEAR_M."""
+    _base, rest = _boom_rest(c, s, m)
+    sq, lat = c.line.project(rest)
+    sq = float(np.clip(sq, 0.0, c.length))
+    return abs(float(lat)) >= float(c.hw_at(sq)) + S.KERB_TOP_W + REST_FOOT_CLEAR_M
+
+
 def _side_strip(lin, c, s_k, g, lat_sign, cfg, roads_poly, keep_pt, src):
     """Raised kerbed strip along the outer edge of lane chain `c` at the housing station s_k (r12). g = sign of the
     direction away from the split node (toward the public road), lat_sign = outer side in the chain frame. Returns
@@ -383,7 +406,20 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report, pav
         if not len(ok):
             rep["stale"].append(o["id"] + ":median")
             continue
-        k = min(ok[0] + int(o.get("barrier_past_nose_m", 3.0) / 0.5), len(dd) - 1)
+        preferred = min(ok[0] + int(o.get("barrier_past_nose_m", 3.0) / 0.5), len(dd) - 1)
+        # The housing and rest are a fixed-length prototype. D94 can move the
+        # median nose into the exit's widening: a later station then leaves
+        # the rest on the lane/kerb instead of its raised side strip. Fit the
+        # actual hardware, keeping 0.20 m behind the outer kerb for its foot.
+        # c-regress-cli: the width estimate above (2 hw <= reach) ignored the lane widening between the housing and the
+        # rest station, the skew of the boom to the lane and the kerb top in roads_poly: the exit rest stood 0.03 m
+        # short of the strip (rest lat 2.691 m, strip interior from 2.72 m). Check the actual rest point instead.
+        fitting = np.array([j for j in ok if all(_rest_clear(c_, s_ + g_ * dd[j], 0.5 * (pe[j] + px[j]))
+                                                 for c_, s_, g_ in ((ce, se, ge), (cx, sx, gx)))], int)
+        if not len(fitting):
+            rep["stale"].append(o["id"] + ":boom_span")
+            continue
+        k = int(fitting[np.argmin(np.abs(dd[fitting] - dd[preferred]))])
         m = 0.5 * (pe[k] + px[k])
         free = shapely.union_all([roads_poly.buffer(0.3), bpoly.buffer(0.8)])
         # --- raised kerbed island under the two housings (r11): the median between the kerb backs, ISLAND_BEFORE_M
@@ -392,7 +428,10 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report, pav
         isl_poly = None
         if o.get("island", True):
             j0 = max(int(ok[0]), k - int(ISLAND_BEFORE_M / 0.5))
-            j1 = min(len(dd) - 1, k + int(ISLAND_AFTER_M / 0.5))
+            # c-regress-cli: when the boom fit moves the housing line towards the nose (C exit after D94: 0.5 m of
+            # median before it instead of 2.5 m), the island keeps its length by growing towards the depot
+            short = int(ISLAND_BEFORE_M / 0.5) - (k - j0)
+            j1 = min(len(dd) - 1, k + int(ISLAND_AFTER_M / 0.5) + short)
             u = px[j0:j1 + 1] - pe[j0:j1 + 1]
             u /= np.maximum(np.hypot(*u.T), 1e-9)[:, None]
             P_e = pe[j0:j1 + 1] + u * (hwe[j0:j1 + 1] + S.KERB_TOP_W - 0.03)[:, None]

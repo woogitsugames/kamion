@@ -88,6 +88,23 @@ def test_verge_strip_runs_out_over_two_metres_without_steep_faces():
     assert np.isclose(w_at(19.0), 0.0, atol=1e-6) and np.isclose(w_at(21.0), 1.0, atol=1e-6)   # 1 m per 2 m
 
 
+def test_verge_radius_transition_keeps_the_skirt_sloped_on_inside_of_bend():
+    """D94: an independently clipped radius envelope made a nominal 1:2 skirt almost vertical."""
+    s = np.arange(-12.0, 12.01, 0.15)
+    theta = (np.pi / 4) * (1 + np.tanh(s / 3))
+    out = np.column_stack([-np.sin(theta), np.cos(theta)])
+    centre = np.cumsum(np.column_stack([np.cos(theta), np.sin(theta)]) * 0.15, axis=0)
+    hw = np.full(len(s), 2.75)
+    curvature = (np.pi / 12) / np.cosh(s / 3) ** 2
+    buf = MeshBuf()
+    _emit_verge(buf, centre + out * hw[:, None], out, np.zeros(len(s)), np.full(len(s), S.KERB_HEIGHT),
+                np.ones(len(s)), curvature, hw, False, "c:radius-transition:L:vg")
+    assert len(buf.parts) == 2
+    for p in buf.parts:
+        ext = np.ptp(p.V[p.T][:, :, 2], axis=1)
+        assert not ((_slopes(p) < 0.80) & (ext > 0.15)).any()
+
+
 def test_verge_strip_on_the_inside_of_a_curve_keeps_its_slope():
     buf = _verge(np.full(60, 3.0), kap=np.full(60, 1.0 / 5.0))      # R = 5 m, carriageway half width 3.5 m
     for p in buf.parts:

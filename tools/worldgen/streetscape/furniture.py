@@ -1834,6 +1834,44 @@ GUARDRAIL_JOIN_M = 4.0      # ADR 0117: a run cut by the dedup is led onto the r
 GUARDRAIL_JOIN_BLEND = 8    # points (1 m) over which the cut end swings onto the other rail
 
 
+GUARDRAIL_DEDUP_DZ = 0.8     # c-regress-cli (= roads.barrier_audit.FREE_END_DZ): a rail this much higher / lower is
+                             # another level (deck beside a deck), not a duplicate of the run
+
+
+def _keep_other_level(P, Z, tall, built, keep, allb):
+    """c-regress-cli: the dedup was plan-only. Where two decks run side by side at different levels (C, decks
+    w177895177 / w175157461 at E 426 N -649: 1.0 m apart in height, the cap edges 0.02 m apart in plan after the
+    ADR 0317 cap buffer) the lower deck barrier was cut and swung onto the upper one: a beam end in the air 1 m
+    below it. A point is a duplicate only of a rail at a similar level; rails built without heights (pier pass on
+    net.guardrail_built) keep the plan-only rule. Returns (keep, the rails a cut end may join)."""
+    from shapely.geometry import Point
+    Z = np.asarray(Z, float)
+    lvl = [b for b in built if b.has_z]
+    if not lvl or keep.all():
+        return keep, allb
+    keep = keep.copy()
+    rad = np.where(tall, GUARDRAIL_DEDUP_M, GUARDRAIL_DEDUP_GROUND_M)
+    for i in np.where(~keep)[0]:
+        if not np.isfinite(Z[i]):
+            continue
+        pt = Point(P[i])
+        same = False
+        for b in built:
+            if b.distance(pt) >= rad[i]:
+                continue
+            if not b.has_z or abs(b.interpolate(b.project(pt)).z - Z[i]) <= GUARDRAIL_DEDUP_DZ:
+                same = True
+                break
+        keep[i] = not same
+    zr = Z[np.isfinite(Z)]
+    if len(zr):
+        near = [b for b in built if not b.has_z or
+                (min(c[2] for c in b.coords) <= zr.max() + GUARDRAIL_DEDUP_DZ and
+                 max(c[2] for c in b.coords) >= zr.min() - GUARDRAIL_DEDUP_DZ)]
+        allb = shapely.union_all(near) if near else allb
+    return keep, allb
+
+
 def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), dense=None, dark=None):
     """Build the parts of run P that are not within the dedup distance of a rail built before (two chains / a chain
     and an authored rail on the same separator crossed and overlapped at E -782 and on the viaduct approaches).
@@ -1855,6 +1893,7 @@ def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), den
         shapely.prepare(near)
         shapely.prepare(far)
         keep = ~np.where(tall, shapely.contains_xy(near, P[:, 0], P[:, 1]), shapely.contains_xy(far, P[:, 0], P[:, 1]))
+        keep, allb = _keep_other_level(P, Z, tall, built, keep, allb)
     queue = getattr(lin, "rail_queue", None)
 
     def join(Ps, end):
@@ -1906,9 +1945,9 @@ def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), den
                 for safe in direct:
                     guardrail(lin, safe["P"], safe["Z"], key, safe["tall"], safe["term"],
                               dense=safe["dense"], dark=safe["dark"])
-                    built.append(LineString(safe["P"]))
+                    built.append(LineString(np.column_stack([safe["P"], safe["Z"]])))
             if queue is not None:
-                built.append(LineString(Ps))
+                built.append(LineString(np.column_stack([Ps, Z[k:kk + 1]])))
         else:
             m["dedup_dropped_pts"] = m.get("dedup_dropped_pts", 0) + (kk - k + 1)
         k = kk + 1
@@ -2052,6 +2091,51 @@ def _drop_doubled_rows(queue, m=None):
 # WORKING_VALUE: clear pavement + hardware envelope + beam simplification tolerance.
 GUARDRAIL_PAVEMENT_CLEAR_M = 0.25
 GUARDRAIL_ENVELOPE_M = 0.20 + RAIL_DP_M
+AUTHORED_RAIL_FIT_MAX_M = 0.75  # bounded adaptation of traced posts to the final generated carriageway
+RULE_RAIL_FIT_MAX_M = 0.25      # WORKING_VALUE (c-regress-cli): ... of rule runs (offset rules, not traced posts)
+
+
+def _fit_authored_rails_to_pavement(queue, parts, m=None, rule=False):
+    """Keep traced rails behind the final road edge after width/placement changes.
+
+    A small lateral correction is preferable to deleting a whole median rail.
+    Only move to the exterior of the complete road clearance envelope; a narrow
+    median with no room remains blocked and is cut by the segment safety pass.
+    """
+    from shapely.ops import nearest_points
+    from roads.surface_safety import SurfaceIndex, carriageway, island, own_shoulder
+    # rule=True (c-regress-cli): rule runs too, by at most RULE_RAIL_FIT_MAX_M and with their own flush shoulder
+    # exempt as in _clip_rails_to_pavement. C, w173956078 R deck->approach transition at E -731 N 49: the twin
+    # carriageway w173956079 widened by D94 left the post line 0.41 m from its lanes (0.47 m needed) and 5 m of
+    # the transition were cut, leaving the deck barrier end in the air; 0.06 m towards its own road clears both.
+    if rule:
+        authored = [it for it in queue if own_shoulder(it["key"]) is not None]
+        fit_max = RULE_RAIL_FIT_MAX_M
+    else:
+        authored = [it for it in queue if str(it["key"]).startswith("authored:")]
+        fit_max = AUTHORED_RAIL_FIT_MAX_M
+    if not authored:
+        return
+    road, islands = SurfaceIndex(parts, carriageway), SurfaceIndex(parts, island)
+    radius = GUARDRAIL_PAVEMENT_CLEAR_M + GUARDRAIL_ENVELOPE_M
+    moved = 0
+    for it in authored:
+        P, Z = np.asarray(it["P"], float).copy(), np.asarray(it["Z"], float)
+        excl = own_shoulder(it["key"]) if rule else None
+        for k, (p, z) in enumerate(zip(P, Z)):
+            point = Point(p)
+            zone = point.buffer(radius + fit_max + 0.02)
+            driven = road.near(zone, z, z, exclude=excl).difference(islands.near(zone, z, z))
+            blocked = driven.buffer(radius + 0.01)
+            if blocked.is_empty or not blocked.covers(point):
+                continue
+            q = np.asarray(nearest_points(point, blocked.boundary)[1].coords[0])
+            if np.linalg.norm(q - p) <= fit_max:
+                P[k] = q
+                moved += 1
+        it["P"] = P
+    if m is not None:
+        m["rule_pavement_fit_pts" if rule else "authored_pavement_fit_pts"] = moved
 
 
 def _clip_rails_to_pavement(queue, parts, m=None):
@@ -2060,18 +2144,22 @@ def _clip_rails_to_pavement(queue, parts, m=None):
     Height filtering preserves rails above underpasses. Raised islands are refuges,
     including where an underlying carriageway ribbon has not been cut out.
     """
-    from roads.surface_safety import SurfaceIndex, carriageway, island
+    from roads.surface_safety import SurfaceIndex, carriageway, island, own_shoulder
     road, islands = SurfaceIndex(parts, carriageway), SurfaceIndex(parts, island)
     out, removed = [], 0
     radius = GUARDRAIL_PAVEMENT_CLEAR_M + GUARDRAIL_ENVELOPE_M
     for it in queue:
         P, Z = np.asarray(it["P"]), np.asarray(it["Z"])
+        # c-regress-cli: a rule run is checked against every surface except the flush asphalt shoulder of the side
+        # profile it was laid out from (posts on the gravel shoulder 0.25 m behind it, ADR 0272): with it, the
+        # deck->approach transitions of all seven C deck ends were cut and the deck barriers ended in the air
+        excl = own_shoulder(it["key"])
         safe = []
         for k in range(len(P) - 1):
             seg = shapely.LineString(P[k:k + 2])
             zone = seg.buffer(radius)
             lo, hi = float(min(Z[k:k + 2])), float(max(Z[k:k + 2]))
-            driven = road.near(zone, lo, hi).difference(islands.near(zone, lo, hi))
+            driven = road.near(zone, lo, hi, exclude=excl).difference(islands.near(zone, lo, hi))
             safe.append(driven.is_empty or not seg.intersects(driven.buffer(radius)))
         k = 0
         while k < len(safe):
@@ -2098,6 +2186,9 @@ def _clip_rails_to_pavement(queue, parts, m=None):
 
 def _flush_rails(lin, m=None):
     queue = getattr(lin, "rail_queue", None) or []
+    _fit_authored_rails_to_pavement(queue, lin.buf.parts, m)
+    _fit_authored_rails_to_pavement(queue, lin.buf.parts, m, rule=True)
+    _join_authored_deck_ends(queue, m)
     if queue and m is not None:
         _join_free_ends(queue, m)
     _drop_doubled_rows(queue, m)
@@ -2111,6 +2202,53 @@ def _flush_rails(lin, m=None):
                       "tall": np.zeros(len(it["P"]), bool) if it["tall"] is None else np.asarray(it["tall"], bool),
                       "term": tuple(it["term"]), "term_tall": tuple(it.get("term_tall", (False, False)))} for it in queue]
     return [bool(np.all(it["tall"])) for it in queue]
+
+
+def _join_authored_deck_ends(queue, m=None):
+    """Adapt pinned expansion joints to the final deck cap, never to another traced rail.
+
+    ``nojoin`` prevents the two rails of a separator being swung onto one another.
+    A continued deck endpoint is different: widening or the bridge asphalt buffer
+    can move it away from the original trace. Match its level and outgoing tangent
+    before blending the traced end onto it. The final pavement pass still checks
+    every resulting segment.
+    """
+    joined = 0
+    for it in queue:
+        if not str(it["key"]).startswith("authored:") or len(it["P"]) < GUARDRAIL_JOIN_BLEND + 2:
+            continue
+        for end in it.get("nojoin", ()):
+            p = it["P"][end]
+            incoming = p - it["P"][1 if end == 0 else -2]
+            incoming /= max(np.linalg.norm(incoming), 1e-9)
+            candidates = []
+            for other in queue:
+                if other is it or str(other["key"]).startswith("authored:") or other.get("tall") is None:
+                    continue
+                for e in (0, -1):
+                    if not other["tall"][e]:
+                        continue
+                    q = other["P"][e]
+                    d = float(np.linalg.norm(q - p))
+                    outgoing = other["P"][1 if e == 0 else -2] - q
+                    outgoing /= max(np.linalg.norm(outgoing), 1e-9)
+                    if (d <= RAIL_CONTINUE_M and abs(float(other["Z"][e] - it["Z"][end])) <= RAIL_CONTINUE_DZ
+                            and float(incoming @ outgoing) >= 0.5 and float((q - p) @ incoming) >= -0.1):
+                        candidates.append((d, other, e))
+            if not candidates:
+                continue
+            _, other, e = min(candidates, key=lambda x: x[0])
+            idx = np.arange(GUARDRAIL_JOIN_BLEND) if end == 0 else len(it["P"]) - 1 - np.arange(GUARDRAIL_JOIN_BLEND)
+            u = np.linspace(1., 0., GUARDRAIL_JOIN_BLEND + 1)[:-1]
+            weight = u * u * (3 - 2 * u)
+            it["P"][idx] += (other["P"][e] - p)[None, :] * weight[:, None]
+            it["Z"][idx] += (other["Z"][e] - it["Z"][end]) * weight
+            terms = list(other["term"])
+            terms[0 if e == 0 else 1] = False
+            other["term"] = tuple(terms)
+            joined += 1
+    if m is not None:
+        m["authored_deck_joins"] = joined
 
 
 PARAPET_BARRIER_MIN_M = 1.0   # ADR 0144: no generic deck balustrade within this of a road barrier (W-beam + upper beam)
@@ -2362,7 +2500,10 @@ def guardrails(lin, net, zground, report):
             zb = zg.copy()
             # bridges: barrier-railing on the cap, BRIDGE_BARRIER_EDGE_M in from its outer edge (ADR 0110: the
             # orthophoto of the Biezenstwa decks has it 0.2-0.4 m from the deck edge, 0.8-1.0 m behind the kerb)
-            deck_edge = br & (kmat != MAT_FLUSH_ROAD) & (kw >= 0.90)
+            # Match the active cap used by build_bridge_extras. A smoothed cap
+            # narrows below 0.90 m near the abutment: dropping it there left a
+            # several-metre gap before the ground approach barrier.
+            deck_edge = br & (kmat != MAT_FLUSH_ROAD) & (kw >= 0.30)
             want[deck_edge] = 1
             # ADR 0117: the post line keeps BRIDGE_BARRIER_EDGE_M to the cap edge on a 1.5 m cap; on a narrower cap
             # (bridge_style cap_w, Biezenstwa 1.0 m) the beam face stands BRIDGE_BARRIER_FACE_M behind the kerb face
@@ -2592,7 +2733,7 @@ def pier_guardrails(lin, net, piers, parts, report):
             got = sum(b_.length for b_ in built[n0:])
             total += got
             for b_ in built[n0:]:              # ADR 0144: QA list of every built run (tests/gis/test_guardrail_overlap.py)
-                C_ = np.asarray(b_.coords)
+                C_ = np.asarray(b_.coords)[:, :2]      # c-regress-cli: built runs carry Z
                 kz = np.argmin(np.hypot(E[None, :, 0] - C_[:, None, 0], E[None, :, 1] - C_[:, None, 1]), axis=1)
                 report.setdefault("guardrail_runs", []).append({
                     "key": f"pier{i}:structure", "term": [True, True], "term_tall": [False, False],

@@ -99,6 +99,40 @@ def test_sector_builder_and_building_modes():
     assert {p["mat"] for p in north_prims} == {"far_field_buildings", "forest_edge_mixed"}
 
 
+@pytest.mark.parametrize("east,height,low_visible", [(1300., 10., True), (3000., 10., False), (3000., 40., True)])
+def test_low_prunes_only_small_distant_rendered_envelopes(east, height, low_visible):
+    from streetscape import far_field as FF
+    elev = FF.BorderElevation(1024., [100.] * 2, [100.] * 2, [100.] * 2, [100.] * 2)
+    b = {"id": "small-block", "typ": "block", "area": 480., "h": height, "storeys": 4,
+         "rect": [[east, -6.], [east + 40., -6.], [east + 40., 6.], [east, 6.]]}
+    for tier in ("Low", "High"):
+        sectors = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+        FF._add_building(sectors, b, elev, 1024., tier)
+        prims = sectors["far_east"].primitives()
+        assert bool(prims) == (low_visible or tier == "High")
+        if prims:
+            # Every retained envelope still has a closed, windowless roof.
+            p = prims[0]
+            flat_top = np.all(np.isclose(p["V"][p["T"]][:, :, 2], p["V"][:, 2].max()), axis=1)
+            assert flat_top.any()
+            assert np.all(p["COL"][p["T"]][flat_top, :, 3] == 0.)
+
+
+def test_low_retains_closed_block_roof_without_penthouse():
+    from streetscape import far_field as FF
+    elev = FF.BorderElevation(1024., [100.] * 2, [100.] * 2, [100.] * 2, [100.] * 2)
+    b = {"id": "tall-block", "typ": "block", "area": 720., "h": 31., "storeys": 10,
+         "rect": [[-500., -1150.], [-440., -1150.], [-440., -1138.], [-500., -1138.]]}
+    tops = {}
+    for tier in ("Low", "High"):
+        sectors = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+        FF._add_building(sectors, b, elev, 1024., tier)
+        tops[tier] = sectors["far_south"].primitives()[0]["V"][:, 2].max()
+    _, scale_h = FF.foreshorten_scales(120.)
+    assert tops["Low"] == pytest.approx(elev.z_at_eff(-470., -1144.) + 31. * scale_h)
+    assert tops["High"] > tops["Low"]
+
+
 def test_generated_far_field_qa_and_manifests():
     qa_path = REGION_DIR / "generated" / "far_field_qa.json"
     src_manifest_path = REPO / "Data" / "SourceManifests" / f"{REGION_ID}-far-field.manifest.json"

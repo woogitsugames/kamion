@@ -404,6 +404,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     # ADR 0132: grown garden trees of the house plots (orthophoto crowns) join the tree instances - same prototypes,
     # LODs and impostors as every street tree; none closer than 2.5 m to a tree the region already has there
     ptrees = plots.get("trees") or []
+    lib = []
     if ptrees and trees:
         from scipy.spatial import cKDTree
         kd = cKDTree(np.array([[t_["e"], t_["n"]] for t_ in trees]))
@@ -422,7 +423,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     if any(o.get("kind") == "tree_groups" and o.get("form") == "kit" for o in overrides or []):     # ADR 0186
         PT.authored_trees(w.buf, overrides, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2)
         log("authored trees", {k: v for k, v in rep["authored_trees"].items() if k != "list"})
-    rep["plots"]["inst_trees_kept"] = len(ptrees)
+    # ADR 0163 counts legacy plot instances; ADR 0308 library crowns have
+    # their own garden_trees counter and must not masquerade as old pines.
+    rep["plots"]["inst_trees_kept"] = len(ptrees) - len(lib)
     for t_ in ptrees:
         vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
     wtrees = []

@@ -127,15 +127,17 @@ def test_tile_rails_clear_all_carriageways(tile, monkeypatch):
         original(queue, parts, m)
     monkeypatch.setattr(FU, '_clip_rails_to_pavement', capture)
     FU.guardrails(lin, w.net, w.hf.sample, rep)
-    from roads.surface_safety import SurfaceIndex, carriageway, island
+    from roads.surface_safety import SurfaceIndex, carriageway, island, own_shoulder
     road, islands = SurfaceIndex(w.buf.parts, carriageway), SurfaceIndex(w.buf.parts, island)
     segments = 0
     for r in lin.rail_runs:
+        # c-regress-cli: the flush asphalt shoulder of the side profile a rule run was laid out from is not a lane
+        excl = own_shoulder(r['key'])
         for k in range(len(r['P'])-1):
             seg = LineString(r['P'][k:k+2])
             lo, hi = min(r['Z'][k:k+2]), max(r['Z'][k:k+2])
             near = seg.buffer(1.)
-            asphalt = road.near(near, lo, hi).difference(islands.near(near, lo, hi))
+            asphalt = road.near(near, lo, hi, exclude=excl).difference(islands.near(near, lo, hi))
             assert asphalt.is_empty or seg.distance(asphalt) >= FU.GUARDRAIL_PAVEMENT_CLEAR_M + FU.GUARDRAIL_ENVELOPE_M - 1e-7, (rid, r['key'])
             segments += 1
     if rid == 'bialystok-kleeberga':

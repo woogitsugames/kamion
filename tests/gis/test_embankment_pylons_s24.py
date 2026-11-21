@@ -111,7 +111,7 @@ def test_pylon_has_open_lattice_and_crossarms_in_every_tier(tier, yaw):
     v, t = p["V"], p["T"]
     assert np.isfinite(v).all()
     assert t.max() < len(v) < 65536
-    assert 100 < len(t) <= 224  # bounded lightweight geometry, also with hundreds of towers
+    assert len(t) == (32 if tier == "Low" else 204)  # ribbons on Low, triangular members on High
     assert set(p["COL"][:, 3]) == {0.0}
     assert p["mat"] == "far_field_buildings"
     # Look from both cardinal directions: solid fins filled the whole shaft;
@@ -133,3 +133,39 @@ def test_pylon_has_open_lattice_and_crossarms_in_every_tier(tier, yaw):
     assert np.ptp(local) > 8.0
     n = np.cross(v[t[:, 1]] - v[t[:, 0]], v[t[:, 2]] - v[t[:, 0]])
     assert (np.linalg.norm(n, axis=1) > 1e-10).all()
+
+
+@pytest.mark.parametrize("yaw", [0., 0.4, np.pi / 4, np.pi / 2])
+@pytest.mark.parametrize("east,north", [(1100., 0.), (-1100., 0.), (0., 1100.), (0., -1100.),
+                                      (1100., 1100.), (-1100., 1100.),
+                                      (1100., -1100.), (-1100., -1100.)])
+def test_low_mast_remains_visible_from_every_owner_tile_corner(east, north, yaw):
+    elev = FF.BorderElevation(1024., [100.] * 2, [100.] * 2, [100.] * 2, [100.] * 2)
+    sectors = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    FF._add_pylon(sectors, {"e": east, "n": north, "h": 28.}, elev, 1024., "Low", yaw=yaw)
+    p = next(s.primitives()[0] for s in sectors.values() if s.primitives())
+    ce, cn, _, _ = FF.foreshorten_point(east, north, 1024.)
+    vertices, triangles = p["V"], p["T"]
+    # First four ribbons are the legs. Test these separately so visible
+    # crossarms cannot conceal a mast disappearing at a grazing view.
+    legs = triangles[:8]
+    centre = np.array([ce, cn])
+    frontal = -centre / np.linalg.norm(centre)
+
+    def projected_area(view):
+        horizontal = np.array([-view[1], view[0]])
+        xy = np.column_stack([(vertices[:, :2] - centre) @ horizontal, vertices[:, 2]])
+        projected = xy[legs]
+        edges = projected[:, 1:] - projected[:, :1]
+        areas = np.abs(edges[:, 0, 0] * edges[:, 1, 1] - edges[:, 0, 1] * edges[:, 1, 0]) / 2.
+        return float(areas.sum())
+
+    frontal_area = projected_area(frontal)
+    assert frontal_area > 1.
+    for corner in ((-1024., -1024.), (-1024., 1024.), (1024., -1024.), (1024., 1024.)):
+        view = np.asarray(corner) - centre
+        view /= np.linalg.norm(view)
+        cosine = float(view @ frontal)
+        assert cosine > 0.  # The actual observer remains in the owning tile.
+        # Area may narrow at a corner, but every leg survives projection.
+        assert projected_area(view) >= frontal_area * cosine * .9
