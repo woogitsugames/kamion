@@ -383,7 +383,17 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report, pav
         if not len(ok):
             rep["stale"].append(o["id"] + ":median")
             continue
-        k = min(ok[0] + int(o.get("barrier_past_nose_m", 3.0) / 0.5), len(dd) - 1)
+        preferred = min(ok[0] + int(o.get("barrier_past_nose_m", 3.0) / 0.5), len(dd) - 1)
+        # The housing and rest are a fixed-length prototype. D94 can move the
+        # median nose into the exit's widening: a later station then leaves
+        # the rest on the lane/kerb instead of its raised side strip. Fit the
+        # actual hardware, keeping 0.20 m behind the outer kerb for its foot.
+        reach_width = LP.BOOM_L - 0.25 - 2 * S.KERB_TOP_W - 0.3 - 0.20
+        fitting = ok[(2 * hwe[ok] <= reach_width) & (2 * hwx[ok] <= reach_width)]
+        if not len(fitting):
+            rep["stale"].append(o["id"] + ":boom_span")
+            continue
+        k = int(fitting[np.argmin(np.abs(dd[fitting] - dd[preferred]))])
         m = 0.5 * (pe[k] + px[k])
         free = shapely.union_all([roads_poly.buffer(0.3), bpoly.buffer(0.8)])
         # --- raised kerbed island under the two housings (r11): the median between the kerb backs, ISLAND_BEFORE_M

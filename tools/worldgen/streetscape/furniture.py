@@ -2052,6 +2052,40 @@ def _drop_doubled_rows(queue, m=None):
 # WORKING_VALUE: clear pavement + hardware envelope + beam simplification tolerance.
 GUARDRAIL_PAVEMENT_CLEAR_M = 0.25
 GUARDRAIL_ENVELOPE_M = 0.20 + RAIL_DP_M
+AUTHORED_RAIL_FIT_MAX_M = 0.75  # bounded adaptation of traced posts to the final generated carriageway
+
+
+def _fit_authored_rails_to_pavement(queue, parts, m=None):
+    """Keep traced rails behind the final road edge after width/placement changes.
+
+    A small lateral correction is preferable to deleting a whole median rail.
+    Only move to the exterior of the complete road clearance envelope; a narrow
+    median with no room remains blocked and is cut by the segment safety pass.
+    """
+    from shapely.ops import nearest_points
+    from roads.surface_safety import SurfaceIndex, carriageway, island
+    authored = [it for it in queue if str(it["key"]).startswith("authored:")]
+    if not authored:
+        return
+    road, islands = SurfaceIndex(parts, carriageway), SurfaceIndex(parts, island)
+    radius = GUARDRAIL_PAVEMENT_CLEAR_M + GUARDRAIL_ENVELOPE_M
+    moved = 0
+    for it in authored:
+        P, Z = np.asarray(it["P"], float).copy(), np.asarray(it["Z"], float)
+        for k, (p, z) in enumerate(zip(P, Z)):
+            point = Point(p)
+            zone = point.buffer(radius + AUTHORED_RAIL_FIT_MAX_M + 0.02)
+            driven = road.near(zone, z, z).difference(islands.near(zone, z, z))
+            blocked = driven.buffer(radius + 0.01)
+            if blocked.is_empty or not blocked.covers(point):
+                continue
+            q = np.asarray(nearest_points(point, blocked.boundary)[1].coords[0])
+            if np.linalg.norm(q - p) <= AUTHORED_RAIL_FIT_MAX_M:
+                P[k] = q
+                moved += 1
+        it["P"] = P
+    if m is not None:
+        m["authored_pavement_fit_pts"] = moved
 
 
 def _clip_rails_to_pavement(queue, parts, m=None):
@@ -2098,6 +2132,7 @@ def _clip_rails_to_pavement(queue, parts, m=None):
 
 def _flush_rails(lin, m=None):
     queue = getattr(lin, "rail_queue", None) or []
+    _fit_authored_rails_to_pavement(queue, lin.buf.parts, m)
     if queue and m is not None:
         _join_free_ends(queue, m)
     _drop_doubled_rows(queue, m)
@@ -2362,7 +2397,10 @@ def guardrails(lin, net, zground, report):
             zb = zg.copy()
             # bridges: barrier-railing on the cap, BRIDGE_BARRIER_EDGE_M in from its outer edge (ADR 0110: the
             # orthophoto of the Biezenstwa decks has it 0.2-0.4 m from the deck edge, 0.8-1.0 m behind the kerb)
-            deck_edge = br & (kmat != MAT_FLUSH_ROAD) & (kw >= 0.90)
+            # Match the active cap used by build_bridge_extras. A smoothed cap
+            # narrows below 0.90 m near the abutment: dropping it there left a
+            # several-metre gap before the ground approach barrier.
+            deck_edge = br & (kmat != MAT_FLUSH_ROAD) & (kw >= 0.30)
             want[deck_edge] = 1
             # ADR 0117: the post line keeps BRIDGE_BARRIER_EDGE_M to the cap edge on a 1.5 m cap; on a narrower cap
             # (bridge_style cap_w, Biezenstwa 1.0 m) the beam face stands BRIDGE_BARRIER_FACE_M behind the kerb face
