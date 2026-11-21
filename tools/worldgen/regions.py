@@ -463,6 +463,7 @@ REGIONS: dict[str, Region] = {
         # 2026-11-17) - its BDOT10k / LoD1/LoD2 are read too (ADR 0208), as for dw671-tykocin-08/-09
         teryt_powiat_extra=('2008',),
         status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,2) of the ADR 0203 plan)",
+        water=True,      # water-tykocin-s24: the Narew + oxbows under the DW671 bridge (ul. Puchalskiego), Nereśl
     ),
     "dw671-jasionowka-01": Region(
         id="dw671-jasionowka-01",
