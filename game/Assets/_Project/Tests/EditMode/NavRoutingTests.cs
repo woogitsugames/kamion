@@ -96,6 +96,52 @@ namespace Game.Tests
             }
         }
 
+        /// <summary>Build #3 P2 (gps-dk8-s24): a trip re-route from a junction node. Every edge at the node is 0 m away and the
+        /// nearest-edge tie went to a one-way slip road leaving at ~63 deg off the heading, so the re-plan started on it and
+        /// asked for a U-turn. Leg 1 of trip tykocin (C start -> Maczka seam, nav_trips.json join with the 3 m inset), walked
+        /// as a driver following the GPS: every re-plan keeps the route - no U-turn, no re-route request, no detour.
+        /// Mirror of tools/nav-runner NavTripDk8MaczkaTests.</summary>
+        [Test]
+        public void Tysiaclecia_TripLeg1Reroute_JunctionNodeSnapFollowsHeading()
+        {
+            var g = Region_();
+            var exit = new Vector2(-1021.17f, 58.056f);
+            var planner = new RoutePlanner(g) { AllowTileExit = true };   // as NavTrip.PlanLeg
+            var leg = RoutePath.For(g);
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(new Vector2(729.5f, -395.7f), -152f, exit, leg));
+            Assert.Less(leg.Length, 2300f, "west at the DK8/DK19 junction, no loop to the north seam");
+
+            // The junction node of the build #3 diagnosis: nearest edge (tie) is badly aligned with the WNW heading.
+            var node = new Vector2(81.178f, -454.167f);
+            float heading = -62f;
+            var hv = new Vector2(Mathf.Sin(heading * Mathf.Deg2Rad), Mathf.Cos(heading * Mathf.Deg2Rad));
+            int nearest = g.Snap(node, RoutePlanner.SnapStartM, out float along, out _, out _);
+            Assert.Less(Vector2.Dot(g.DirectionAt(nearest * 2, along, 8f), hv), RoutePlanner.SnapHeadingMinCos,
+                "distance alone picks the slip road at the node");
+            var q = RoutePath.For(g);
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(node, heading, exit, q));
+            Assert.GreaterOrEqual(Vector2.Dot(g.DirectionAt(q.Directed[0], 0f, 8f), hv), RoutePlanner.SnapHeadingMinCos,
+                "the re-plan starts on the edge along the heading");
+            for (int k = 0; k < q.ManCount; k++) Assert.AreNotEqual(Maneuver.UTurn, q.ManType[k], "no false U-turn");
+
+            var tracker = new RouteTracker();
+            var gd = new NavGuidance();
+            float last = float.MaxValue;
+            for (int i = 0; i < leg.Count - 2 && leg.Length - leg.S[i] > 10f; i += 2)
+            {
+                int j = i + 1;
+                while (j < leg.Count - 1 && leg.S[j] - leg.S[i] < 8f) j++;   // truck heading: chord over >= 8 m
+                Vector2 d = leg.Points[j] - leg.Points[i];
+                float hd = Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg;
+                tracker.Update(leg, leg.Points[i], hd, 13f, 0.5f, ref gd);
+                Assert.IsFalse(gd.NeedsReroute, "no re-route at point " + i);
+                Assert.AreEqual(PlanStatus.Ok, planner.Plan(leg.Points[i], hd, exit, q));
+                for (int k = 0; k < q.ManCount; k++) Assert.AreNotEqual(Maneuver.UTurn, q.ManType[k], "re-plan at point " + i);
+                Assert.LessOrEqual(q.Length, last + 5f, "re-plan at point " + i + ": no detour");
+                last = q.Length;
+            }
+        }
+
         static RouteGraph Region_() { var g = RouteGraph.Load(Region); Assert.NotNull(g, "Resources/CabDisplay/Nav/" + Region + "_route.bytes"); return g; }
 
         static void AssertValid(RouteGraph g, RoutePath p)

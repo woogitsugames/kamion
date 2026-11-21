@@ -130,7 +130,7 @@ namespace Game.Tests
         // ------------------------------------------------------------------ ADR 0267 (follow-up of the #104 review)
 
         [Test]
-        public void ShippedCatalog_D67Full_IsD67PlusTheD71Regions()
+        public void ShippedCatalog_D67Full_IsEveryCatalogRegion()
         {
             var catalog = RegionCatalog.Load();
             Assert.IsNotNull(catalog, "Resources/Regions/region_catalog.json");
@@ -139,15 +139,21 @@ namespace Game.Tests
             var full = catalog.Resolve("d67-full", errors);
             CollectionAssert.IsEmpty(errors);
             Assert.AreEqual(17, d67.Count, "d67 stays the lighter main-route variant (ADR 0229)");
-            Assert.AreEqual(39, full.Count, "d67 (17) + Dojlidy, Knyszyn-W, Monki, Tykocin + the 18 ring tiles of ADR 0231 (owner decision 2026-11-16)");
+            // Owner decision 2026-11-19 (set note, scripts/export-region-catalog.py): d67-full = every catalog region, so
+            // `-Regions d67-full` needs no hand-written list. The count follows the catalog (54 at build #3, s24).
+            var all = new List<string>();
+            foreach (var r in catalog.regions) all.Add(r.id);
+            Assert.AreEqual(all.Count, full.Count, "d67-full carries every catalog region");
+            CollectionAssert.AreEquivalent(all, full, "d67-full = the catalog regions (order: d67 first, then the extras)");
             CollectionAssert.AreEqual(d67, full.GetRange(0, d67.Count), "d67-full starts with d67");
-            CollectionAssert.AreEqual(new[] { "bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01" }, full.GetRange(17, 4));
+            CollectionAssert.AreEqual(new[] { "bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01" }, full.GetRange(17, 4),
+                "then the D71 extras");
             CollectionAssert.AreEqual(new[]
             {
                 "dk65-monki-02", "dk65-monki-03", "dk65-monki-04", "dk65-monki-05", "dk65-monki-06", "dk65-monki-07", "monki-e", "monki",
                 "dw671-tykocin-02", "dw671-tykocin-03", "dw671-tykocin-04", "dw671-tykocin-05", "dw671-tykocin-06",
                 "dw671-tykocin-07", "dw671-tykocin-08", "dw671-tykocin-09", "tykocin", "dw671-jasionowka-01",
-            }, full.GetRange(21, 18));
+            }, full.GetRange(21, 18), "then the 18 ring tiles of ADR 0231 (owner decision 2026-11-16)");
             CollectionAssert.AllItemsAreUnique(full);
         }
 
