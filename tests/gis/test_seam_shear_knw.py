@@ -39,15 +39,32 @@ def test_end_row_lies_on_the_seam_and_keeps_square_widths(monkeypatch):
     c, st, T, N = _chain(221.0)                      # running SW into a vertical seam, like Tykocka in knyszyn
     net = SimpleNamespace(nodes={"j": {"boundary": False}, "seam": {"boundary": True, "seam_u": np.array([0.0, 1.0])}})
     hw = np.full(len(st), 5.875)
-    N2 = M.seam_shear(net, c, st, T, N, hw)
-    assert abs(N2[-1, 0]) < 1e-9                     # end row parallel to the seam line (x = const)
-    assert np.allclose(np.einsum("ij,ij->i", N2, N), 1.0)     # lateral offsets square to the axis unchanged
-    assert np.allclose(N2[0], N[0])                  # junction end untouched
-    # no row overtakes the next one at the outer edge (no folded triangles)
+    NL, NR, clip = M.seam_shear(net, c, st, T, N, hw)
+    assert not clip
     P = st[:, None] * T[0]
-    for lat in (-(5.875 + 3.0), 5.875 + 3.0):
-        along = ((P + lat * N2) @ T[0])
-        assert np.all(np.diff(along) > 0)
+    for N2, lat in ((NL, 5.875 + 3.0), (NR, -(5.875 + 3.0))):
+        assert abs(N2[-1, 0]) < 1e-9                 # end row parallel to the seam line (x = const)
+        assert np.allclose(np.einsum("ij,ij->i", N2, N), 1.0)     # lateral offsets square to the axis unchanged
+        assert np.allclose(N2[0], N[0])              # junction end untouched
+        assert np.all(np.diff((P + lat * N2) @ T[0]) > 0)    # no row overtakes the next one (no folded triangles)
+
+
+def test_short_stub_limits_the_pulled_back_side_and_asks_for_a_clip(monkeypatch):
+    monkeypatch.setattr(M, "side_params", lambda c, sd, s: ())
+    monkeypatch.setattr(M, "side_extent", lambda *a: 2.75)
+    c, st, T, N = _chain(221.0, L=6.6)                # Knyszyn W arm: 6.6 m from the splitter node to the seam
+    st = np.linspace(0.0, 6.6, 5)
+    T, N = np.repeat(T[:1], 5, 0), np.repeat(N[:1], 5, 0)
+    net = SimpleNamespace(nodes={"j": {"boundary": False}, "seam": {"boundary": True, "seam_u": np.array([0.0, 1.0])}})
+    NL, NR, clip = M.seam_shear(net, c, st, T, N, np.full(len(st), 5.875))
+    assert clip
+    P = st[:, None] * T[0]
+    ext = 5.875 + 2.75
+    for N2, lat in ((NL, ext), (NR, -ext)):
+        assert np.all(np.diff((P + lat * N2) @ T[0]) > 0)    # still no fold on either side
+    xs = [float((P[-1] + l * N2[-1])[0] - P[-1][0]) for N2, l in ((NL, ext), (NR, -ext))]
+    assert min(abs(x) for x in xs) < 1e-9            # one side exactly on the seam line
+    assert max(xs) > 0 or min(xs) < 0                 # the other side reaches past it (clipped by build_world)
 
 
 def test_square_crossing_and_inner_end_unchanged(monkeypatch):
@@ -55,10 +72,12 @@ def test_square_crossing_and_inner_end_unchanged(monkeypatch):
     monkeypatch.setattr(M, "side_extent", lambda *a: 3.0)
     c, st, T, N = _chain(180.0)
     net = SimpleNamespace(nodes={"j": {"boundary": False}, "seam": {"boundary": True, "seam_u": np.array([0.0, 1.0])}})
-    assert M.seam_shear(net, c, st, T, N, np.full(len(st), 3.0)) is N
+    nl, nr, clip = M.seam_shear(net, c, st, T, N, np.full(len(st), 3.0))
+    assert nl is N and nr is N and not clip
     c, st, T, N = _chain(221.0)
     net = SimpleNamespace(nodes={"j": {"boundary": False}, "seam": {"boundary": False}})
-    assert M.seam_shear(net, c, st, T, N, np.full(len(st), 3.0)) is N
+    nl, nr, clip = M.seam_shear(net, c, st, T, N, np.full(len(st), 3.0))
+    assert nl is N and nr is N and not clip
 
 
 def test_markings_clipped_to_the_tile_box():

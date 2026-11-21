@@ -96,15 +96,20 @@ def seam_shear(net, c, st, T, N, hw):
     where the road crosses the edge obliquely (Tykocka / DW671 west arm of the Knyszyn roundabout at 41 deg, DK65 at
     the same seam) each tile left a triangle of bare terrain on one side of the axis and pushed asphalt into the
     neighbour on the other - the neighbour's terrain covered it: grass triangles, a stepped asphalt edge and a cut
-    footway on render rings-w-arm-top. Here the end row is laid along the seam line, N' = u / (u . N) (unit lateral
-    distance kept: N' . N = 1, so widths square to the axis are unchanged and both tiles put every lateral offset on
-    the same point of the shared edge), blended in linearly over a ramp long enough that no row overtakes the next
-    one (ramp >= outer extent x |k|, k = N' . T). The height of a row stays that of its station (crossfall_z), the
-    same value the neighbour gives at the seam point. Returns N (n,2), the input array untouched when nothing applies."""
+    footway on render rings-w-arm-top. Here the end row is laid along the seam line, N' = u / (u . N) (N' . N = 1:
+    widths square to the axis are unchanged and both tiles put every lateral offset on the same point of the shared
+    edge), blended in linearly over a ramp of >= SAFETY x outer extent x |k| (k = N' . T). On the side where the end row
+    is pulled back into the tile the ramp must also keep each row behind the next one; a stub shorter than that
+    (Knyszyn W arm: 6.6 m between the splitter node and the seam) gets only the shear that does not fold, its outer
+    part reaches past the seam and the caller clips it on the tile edge (clip_parts_to_box). The height of a row stays
+    that of its station (crossfall_z), the value the neighbour gives at the seam point.
+    Returns (N_left, N_right, clip): directions for lat > 0 / lat < 0 (the input array itself when nothing applies)
+    and whether a part of this chain may reach past the tile edge."""
     if len(st) < 2:
-        return N
+        return N, N, False
     s0, s1 = float(st[0]), float(st[-1])
-    out = None
+    add = {1.0: None, -1.0: None}
+    clip = False
     for end, node, i in (("a", c.node_a, 0), ("b", c.node_b, len(st) - 1)):
         nd = net.nodes.get(node) or {}
         u = nd.get("seam_u")
@@ -117,19 +122,29 @@ def seam_shear(net, c, st, T, N, hw):
         k = float(m @ T[i])
         if abs(k) < 1e-3 or abs(k) > SEAM_SHEAR_MAX_K:
             continue
-        ext = float(hw[i]) + max(side_extent(*side_params(c, sd, float(st[i]))) for sd in ("L", "R"))
         other = c.node_b if end == "a" else c.node_a
         on = net.nodes.get(other) or {}
         span = s1 - s0
         if on.get("boundary") and on.get("seam_u") is not None:
             span *= 0.5                         # both ends on a seam: each ramp gets half the chain
-        ramp = min(max(SEAM_SHEAR_RAMP_SAFETY * ext * abs(k), SEAM_SHEAR_MIN_RAMP_M), span)
         d = (st - s0) if end == "a" else (s1 - st)
-        f = np.clip(1.0 - d / max(ramp, 1e-6), 0.0, 1.0)
-        if out is None:
-            out = N.copy()
-        out += (f * k)[:, None] * T
-    return N if out is None else out
+        for sgn, sd in ((1.0, "L"), (-1.0, "R")):
+            ext = float(hw[i]) + side_extent(*side_params(c, sd, float(st[i])))
+            need = SEAM_SHEAR_RAMP_SAFETY * ext * abs(k)
+            ramp = min(max(need, SEAM_SHEAR_MIN_RAMP_M), span)
+            # rows pulled back towards the chain interior (end b: lat * k < 0, end a: lat * k > 0) fold when the ramp
+            # is shorter than ext * |k|: limit the end shear there; the remainder overhangs the seam and is clipped
+            back = (sgn * k < 0) if end == "b" else (sgn * k > 0)
+            f_end = 1.0 if (not back or ramp >= need) else ramp / need
+            if f_end < 1.0:
+                clip = True
+            f = f_end * np.clip(1.0 - d / max(ramp, 1e-6), 0.0, 1.0)
+            if add[sgn] is None:
+                add[sgn] = np.zeros_like(N)
+            add[sgn] += (f * k)[:, None] * T
+    nl = N if add[1.0] is None else N + add[1.0]
+    nr = N if add[-1.0] is None else N + add[-1.0]
+    return nl, nr, clip
 
 
 def _clip_poly(poly, axis, val, keep_below):
@@ -149,6 +164,21 @@ def _clip_poly(poly, axis, val, keep_below):
 
 
 def clip_layer_to_box(buf: MeshBuf, layer: str, box, tol=1e-3) -> dict:
+    """All parts of one layer (markings), see clip_parts_to_box."""
+    return clip_parts_to_box(buf, box, lambda p: p.layer == layer, tol)
+
+
+def seam_clip_pred(net):
+    """Parts of the chains seam_shear could not shear fully onto the seam line (Chain.meta["seam_clip"]): ribbon,
+    side strips, collision; src = chain id or chain id + ':' + suffix."""
+    ids = tuple(c.id for c in net.chains if c.meta.get("seam_clip"))
+    if not ids:
+        return None
+    return lambda p: p.layer in ("road", "bridge", "collision") and any(
+        p.src == i or p.src.startswith(i + ":") for i in ids)
+
+
+def clip_parts_to_box(buf: MeshBuf, box, pred, tol=1e-3) -> dict:
     """seam-knw-s24: cut the triangles of `layer` at the tile box (xmin, ymin, xmax, ymax, local metres). Paint that a
     chain lays square to its axis at a seam point overhung the tile edge once the asphalt ends ON the seam line
     (seam_shear): the decal floated past this tile's surface (road_consistency marking_off_carriageway) and doubled
@@ -157,7 +187,7 @@ def clip_layer_to_box(buf: MeshBuf, layer: str, box, tol=1e-3) -> dict:
     x0, y0, x1, y1 = box
     rep = {"clipped": 0, "dropped": 0}
     for p in buf.parts:
-        if p.layer != layer or not len(p.T):
+        if not len(p.T) or not pred(p):
             continue
         V = p.V
         out_x = (V[:, 0] < x0 - tol) | (V[:, 0] > x1 + tol) | (V[:, 1] < y0 - tol) | (V[:, 1] > y1 + tol)
@@ -211,11 +241,14 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
     P = c.line.point(st)
     Tn, N = c.line.frame(st)
     hw = c.hw_at(st)
-    N = seam_shear(net, c, st, Tn, N, hw)
+    NL, NR, seam_clip = seam_shear(net, c, st, Tn, N, hw)
+    if seam_clip:
+        c.meta["seam_clip"] = True              # seam-knw-s24: build_world clips this chain's parts on the tile edge
     br = c.interp(c.bridge.astype(float), st) > 0.5
     q = lat_fracs(c, coarse)
     lat = hw[:, None] * q[None, :]
-    XY = P[:, None, :] + N[:, None, :] * lat[..., None]
+    NQ = np.where((q >= 0.0)[None, :, None], NL[:, None, :], NR[:, None, :])
+    XY = P[:, None, :] + NQ * lat[..., None]
     Z = c.crossfall_z(np.repeat(st, len(q)), lat.ravel()).reshape(len(st), len(q))
     V = np.concatenate([XY, Z[..., None]], axis=2).reshape(-1, 3)
     UV = V[:, :2].copy()
@@ -251,7 +284,7 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
     buf.add("collision" if coarse else "bridge", mat, V, UV, T[on_bridge], footprint=False, src=c.id, UV1=UV1)
     # sides
     for side, sgn in (("L", 1.0), ("R", -1.0)):
-        build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse)
+        build_side_strip(buf, c, st, side, sgn, P, NL if sgn > 0 else NR, hw, br, coarse)
     if not coarse:
         build_bridge_extras(buf, c, st, P, N, hw, br)
     # dead-end skirts (not at tile-boundary cuts)

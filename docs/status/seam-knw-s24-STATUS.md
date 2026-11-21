@@ -28,3 +28,8 @@
 - Poprawka authored route_links.yaml: 2 swingi -2 m (±9 m / ±8 m) + cut_at_tile (koniec dokładnie na x=760587). combo: DK65→DW671 W 0/0/0, DK65→DK65 W 0/0/0, knyszyn-w-dw671 0/0/0, razem 67/0/0 (D95: 68/13/0).
 - asphalt_new: materiał per łańcuch → override też na krawędzi w70329870:3047667183-4898928970 (do skrzyżowania).
 - NASTĘPNY KROK: rm artifacts/seam-knw-s24/build.exit; pwsh -File artifacts/seam-knw-s24/run-build.ps1 (build #2)
+
+## krok 6
+- Build #1 knyszyn: szew ciągły (asfalt/krawężniki/chodniki obu stron, DK65 też), ale 3 odwrócone trójkąty chodnika N na krótkim kikucie W (6,6 m < potrzebne 8,6 m rampy).
+- Poprawka: seam_shear per strona (NL/NR); strona cofana na za krótkim kikucie dostaje tylko ścinanie bez zawinięcia, nadmiar za szwem przycina build_world (clip_parts_to_box, chain.meta seam_clip). Test 5 passed.
+- NASTĘPNY KROK: build #3 (run-build.ps1)

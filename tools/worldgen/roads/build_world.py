@@ -957,6 +957,12 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         w.buf, "markings", (_bb["xmin"] - w.origin[0], _bb["ymin"] - w.origin[1],
                             _bb["xmax"] - w.origin[0], _bb["ymax"] - w.origin[1]))
     log("markings clipped to the tile box", mk_report["markings_seam_clip"])
+    _pred = M.seam_clip_pred(w.net)            # stubs too short to shear fully onto the seam (meshing.seam_shear)
+    if _pred is not None:
+        w.stats["seam_clip_chains"] = M.clip_parts_to_box(
+            w.buf, (_bb["xmin"] - w.origin[0], _bb["ymin"] - w.origin[1],
+                    _bb["xmax"] - w.origin[0], _bb["ymax"] - w.origin[1]), _pred)
+        log("seam-end chains clipped to the tile box", w.stats["seam_clip_chains"])
 
     # terrain conform (roads + paved areas) + streetscape (buildings, yards, furniture, vegetation)
     road_z, rmask = CF.rasterise([p for p in w.buf.parts if p.layer == "road"], w.hf)
