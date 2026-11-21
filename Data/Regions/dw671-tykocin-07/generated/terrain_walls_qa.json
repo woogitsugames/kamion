@@ -7,10 +7,15 @@
  "thin_steep_faces_skipped": 4,
  "thresh_m": 0.15,
  "verge_strips": {
-  "max_m": 0.0,
+  "max_m": 0.5,
   "skirt": 0,
-  "steep_grass": 0,
-  "worst": []
+  "steep_grass": 1,
+  "worst": [
+   "steep_grass",
+   "c:w407016985:1134847100-1123402409:R:vg",
+   494.8,
+   -1025.5
+  ]
  },
  "worst": []
 }
