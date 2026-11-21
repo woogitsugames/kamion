@@ -414,6 +414,18 @@ namespace Game.World.Import
                 }
             List<Vector2> Points(Dictionary<string, object> e) =>
                 Arr(e.Get("geometry")).Select(p => new Vector2((float)(Num(Arr(p)[0]) - anchorX), (float)(Num(Arr(p)[1]) - anchorY))).ToList();
+            // ADR 0321: decks of other roads (bridge / layer >= 1). A closure under a viaduct took the deck height from
+            // RoadY and stood on the deck along its lanes (dk8-wasilkow-01: the tertiary road under DK8, w1220009817).
+            var decks = new List<(Dictionary<string, object> e, List<Vector2> pts, float halfW)>();
+            foreach (var e in edgeList)
+            {
+                var a = e.Get("attrs") as Dictionary<string, object>;
+                string br = AttrStr(a, "bridge");
+                if ((br == null || br == "no") && AttrNum(a, "layer") < 1f) continue;
+                float w = AttrNum(a, "width");
+                if (w <= 0f) w = Mathf.Max(1f, AttrNum(a, "lanes")) * 3.5f;
+                decks.Add((e, Points(e), 0.5f * w));
+            }
             foreach (var e in edgeList)
             {
                 bool fromB = boundaryNodes.Contains(Str(e.Get("from"))), toB = boundaryNodes.Contains(Str(e.Get("to")));
@@ -424,6 +436,7 @@ namespace Game.World.Import
                 float have = 0f;
                 for (int i = 1; i < pts.Count; i++) have += Vector2.Distance(pts[i - 1], pts[i]);
                 var cur = e;
+                var chain = new HashSet<Dictionary<string, object>> { e };
                 string inner = Str(e.Get(fromB ? "to" : "from"));
                 for (int guard = 0; guard < 16 && have < ClosureSetbackM / 0.8f; guard++)
                 {
@@ -439,6 +452,7 @@ namespace Game.World.Import
                     pts.InsertRange(0, np);
                     inner = Str(next.Get(endsHere ? "from" : "to"));
                     cur = next;
+                    chain.Add(next);
                 }
                 var attrs = e.Get("attrs") as Dictionary<string, object>;
                 float width = AttrNum(attrs, "width");
@@ -452,25 +466,73 @@ namespace Game.World.Import
                 // Walk back along the polyline by the setback (short edges: 80 % of their length).
                 float total = 0f;
                 for (int i = 1; i < pts.Count; i++) total += Vector2.Distance(pts[i - 1], pts[i]);
-                float back = Mathf.Min(SetbackFor(setbacks, edgePt), total * 0.8f), acc = 0f;
-                Vector2 cp = edgePt, cd = edgeDir;
-                for (int i = pts.Count - 1; i > 0; i--)
+                float back = Mathf.Min(SetbackFor(setbacks, edgePt), total * 0.8f);
+                float clamped = Mathf.Clamp(width, 3f, 16f);
+                var (cp, cd) = PointBack(pts, edgePt, edgeDir, back);
+                // ADR 0321: not under a deck of another road - slide towards the edge (then inwards) in 2 m steps
+                // until the whole barrier row clears the deck (half deck + half row + 2 m, WORKING_VALUE)
+                bool Under(float b) { var q = PointBack(pts, edgePt, edgeDir, b); return UnderDeck(q.p, q.d, decks, chain, ClosureSpan(clamped)); }
+                if (Under(back))
                 {
-                    float seg = Vector2.Distance(pts[i - 1], pts[i]);
-                    if (acc + seg >= back && seg > 1e-3f)
-                    {
-                        float t = (back - acc) / seg;
-                        cp = Vector2.Lerp(pts[i], pts[i - 1], t);
-                        cd = (pts[i] - pts[i - 1]).normalized;
-                        break;
-                    }
-                    acc += seg;
+                    float best = -1f;
+                    for (float b = back - 2f; b >= MinClosureSetbackM && best < 0f; b -= 2f)
+                        if (!Under(b)) best = b;
+                    for (float b = back + 2f; b <= total * 0.8f && best < 0f; b += 2f)
+                        if (!Under(b)) best = b;
+                    if (best >= 0f) (cp, cd) = PointBack(pts, edgePt, edgeDir, best);
                 }
                 exits.Add(new RoadExit { edgeEN = edgePt, edgeDir = edgeDir, closureEN = cp, closureDir = cd,
                     exitSide = Streaming.EdgeSides.NearestSide(edgePt.x, edgePt.y, min.x, min.y, max.x, max.y),
-                    width = Mathf.Clamp(width, 3f, 16f), road = Sanitize(nm ?? hw) });
+                    width = clamped, road = Sanitize(nm ?? hw) });
             }
             return exits;
+        }
+
+        /// <summary>Point and road direction (towards the edge) <paramref name="back"/> m before the edge end of
+        /// <paramref name="pts"/> (the last point is on the edge).</summary>
+        static (Vector2 p, Vector2 d) PointBack(List<Vector2> pts, Vector2 edgePt, Vector2 edgeDir, float back)
+        {
+            float acc = 0f;
+            for (int i = pts.Count - 1; i > 0; i--)
+            {
+                float seg = Vector2.Distance(pts[i - 1], pts[i]);
+                if (acc + seg >= back && seg > 1e-3f)
+                {
+                    float t = (back - acc) / seg;
+                    return (Vector2.Lerp(pts[i], pts[i - 1], t), (pts[i] - pts[i - 1]).normalized);
+                }
+                acc += seg;
+            }
+            return (edgePt, edgeDir);
+        }
+
+        /// <summary>ADR 0321: true when a closure row of <paramref name="span"/> m centred at <paramref name="p"/> would
+        /// stand under (or on) the deck of a bridge edge that is not part of its own road chain and CROSSES its road
+        /// (more than 30 deg to <paramref name="dir"/>): the bridge of the twin carriageway alongside is not a deck
+        /// over the road (bialystok-industrial-c, Maczka west edge: w262140922 12 m beside w23982184).</summary>
+        static bool UnderDeck(Vector2 p, Vector2 dir, List<(Dictionary<string, object> e, List<Vector2> pts, float halfW)> decks,
+            HashSet<Dictionary<string, object>> chain, float span)
+        {
+            foreach (var (e, dp, halfW) in decks)
+            {
+                if (chain.Contains(e) || dp.Count < 2) continue;
+                float clear = halfW + 0.5f * span + 2f;
+                for (int i = 1; i < dp.Count; i++)
+                {
+                    Vector2 sd = dp[i] - dp[i - 1];
+                    if (sd.sqrMagnitude < 1e-6f || Mathf.Abs(Vector2.Dot(sd.normalized, dir)) > 0.866f) continue;
+                    if (PointSegmentDistance(p, dp[i - 1], dp[i]) < clear) return true;
+                }
+            }
+            return false;
+        }
+
+        static float PointSegmentDistance(Vector2 p, Vector2 a, Vector2 b)
+        {
+            Vector2 ab = b - a;
+            float l2 = ab.sqrMagnitude;
+            float t = l2 < 1e-9f ? 0f : Mathf.Clamp01(Vector2.Dot(p - a, ab) / l2);
+            return Vector2.Distance(p, a + t * ab);
         }
 
         /// <summary>Authored closure setbacks of a region, next to its roads.graph.json (ADR 0295, review 2026-11-18 P1-3).</summary>

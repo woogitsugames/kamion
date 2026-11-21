@@ -190,7 +190,11 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     _, hmask = CF.rasterise([p for p in road_parts if p.mat != "verge_grass"], hf)
     soft = vmask & ~hmask & ~pmask
     surface_outline = shapely.union_all([roads_poly] + [p["poly"] for p in paved + plot_paved])
-    zc, dist = CF.conform(hf, zjoin, mask, soft=soft, footprint=surface_outline)
+    # ADR 0321: soft nodes also stay under the lowest verge surface in their cells (rural ditch creases)
+    soft_floor = CF.rasterise_floor([p for p in road_parts if p.mat == "verge_grass"], hf) if soft.any() else None
+    zc, dist = CF.conform(hf, zjoin, mask, soft=soft, footprint=surface_outline, soft_floor=soft_floor)
+    if soft_floor is not None:
+        rep["terrain_soft_floor_lowered_nodes"] = int((soft & (soft_floor - CF.SOFT_UNDER < zjoin - CF.SOFT_UNDER - 0.01)).sum())
     rep["terrain_soft_nodes"] = int(soft.sum())
     # c-p1-s23 (REVIEW s20 gate3-phone P1-2): a walled ramp is a fill, not a span - the ground beside it is not
     # pushed under a soffit (the clamp dug a 1.5 m pit beside the wall end at the ramp toe, g3b_ext34_s1482)
@@ -432,7 +436,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
     wtrees = []
     if getattr(w, "water", None) is not None:      # ADR 0213: reed belt ribbons + willow / alder scrub on the banks
-        bank_keep = shapely.union_all([roads_poly, bpoly] + [p_["poly"] for p_ in paved]).buffer(1.0)
+        from . import water_banks as WB      # ADR 0321: + footways / promenades (no reed card over a walk)
+        bank_keep = shapely.union_all([shapely.union_all([roads_poly, bpoly] + [p_["poly"] for p_ in paved]).buffer(1.0),
+                                       WB.walk_polys(rid, w.origin)])
         wtrees = w.water.bank_vegetation(w.buf, zground, bank_keep, trees + ptrees, blocked, rep, log)
         for t_ in wtrees:
             vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
