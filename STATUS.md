@@ -227,3 +227,5 @@ NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/
 - NASTĘPNY KROK: przebudowa C w tle `pwsh -NoProfile -File artifacts/c-regress-cli/build-c.ps1`, potem export-route, fidelity, pytest gis.
 - 06:20 przebudowa C padła (pier_guardrails: built z Z, poprawione w fe4c25a38). Restart build-c2.ps1 (czeka na slot heavy).
 - NASTĘPNY KROK: `Get-Content artifacts/c-regress-cli/build-c2.log -Tail 3; Get-Content artifacts/c-regress-cli/build-c2.exit`
+- C przebudowany na 80718647d (exit 0; far_field Low 29161; wolne końce 1). Dane ad4062d25. Pełny pytest gis w tle -> artifacts/c-regress-cli/pytest-after.log.
+- NASTĘPNY KROK: `Get-Content artifacts/c-regress-cli/pytest-after.log -Tail 40`
