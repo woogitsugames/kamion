@@ -127,7 +127,7 @@ def place(pl, net, zone, report, rails=()):
             t = np.asarray(t, float)
             for letter, sgn in (("R", -1.0), ("L", 1.0)):
                 sh = NW.side_shoulder(c, letter, s)
-                if sh is None or bool(c.bridge[c.idx(s)]):
+                if sh is None or (c.bridge is not None and bool(c.bridge[c.idx(s)])):
                     skipped["kerb_or_bridge"] += 1
                     continue
                 off = max(float(sh[0]) + float(sh[1]) - POST_INSIDE_EDGE_M, MIN_FROM_CARRIAGEWAY_M)
@@ -140,11 +140,12 @@ def place(pl, net, zone, report, rails=()):
                     continue
                 # the driver the post belongs to: travelling +s on the right-hand side of +s, -s on the other
                 dn = 1.0 if letter == "R" else -1.0
-                two_way = not ((c.dirn > 0).mean() >= 0.99 or (c.dirn < 0).mean() >= 0.99)
+                dirn = np.zeros(1) if c.dirn is None else np.asarray(c.dirn)
+                two_way = not ((dirn > 0).mean() >= 0.99 or (dirn < 0).mean() >= 0.99)
                 if two_way:
                     side = "right"
                 else:                                   # one-way carriageway: the far side is a left-hand post
-                    fwd = (c.dirn > 0).mean() >= 0.5
+                    fwd = (dirn > 0).mean() >= 0.5
                     side = "right" if (letter == "R") == fwd else "left"
                     dn = 1.0 if fwd else -1.0
                 name = "guide_u1a_pl_" + side[0]
