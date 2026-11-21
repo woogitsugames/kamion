@@ -184,7 +184,7 @@ def test_king_cloak_has_continuous_profile_and_crowned_head():
     width=lambda rows: np.ptp(rows[:,:2]@props.KING_TANGENT)
     depth=lambda rows: np.ptp(rows[:,:2]@props.KING_FORWARD)
     ring=lambda k: vertices[m*k:m*(k+1)]
-    hem,shoulder,neck=ring(1),ring(KF.RINGS0.index(2.30)),ring(n-1)
+    hem,shoulder,neck=ring(1),ring(KF.RINGS0.index(2.30)),ring(n-1)  # noqa
     # broad cloak: wider than deep, tapering to the shoulders, a neck much narrower than the shoulders
     assert 1.1 <= width(hem) <= 1.3 and 0.85 <= depth(hem) <= 1.1
     assert width(hem) > width(shoulder) > 2*width(neck)

@@ -22,7 +22,7 @@ import math
 import numpy as np
 
 BRONZE, PATINA, RUBBED = "monument_bronze", "monument_bronze_patina", "monument_bronze_rubbed"
-H_SHOULDER = 2.36            # top of the straight part of the cloak
+H_SHOULDER = 2.40            # top of the straight part of the cloak
 H_NECK = 2.54                # cloak closes under the ruff
 H_BAND0, H_BAND1 = 2.865, 2.935     # crown band
 H_TOP = 3.05                 # tips of the tall fleurons
@@ -31,13 +31,13 @@ HEAD_Y = 0.045               # the head sits forward of the cloak axis (side pho
 # Plan of the cloak: a faceted bell. Corners (ridges of the broad folds) at these angles (deg from +x, front = 90) stand
 # proud of the base outline by `amp` (fraction of the radius at the hem); the planes between them are flat, so the hem
 # is a polygon with a prow at the front seam. The facets fade into a rounded section at the shoulders.
-CORNERS = ((-8, .075), (38, .060), (90, .105), (142, .060), (188, .075), (232, .055), (270, .020), (308, .055))
-FACET_AT_SHOULDER = 0.30     # share of the faceting left at shoulder height
-COLS0 = (-8, -2, 15, 32, 38, 44, 64, 82, 86, 90, 94, 98, 116, 136, 142, 148, 165, 182, 188, 194, 210, 226, 232, 238,
-         251, 270, 289, 302, 308, 314, 330, 346)
-COLS1 = (-8, 38, 82, 90, 98, 142, 188, 232, 270, 308)
-RINGS0 = (0.0, .04, .30, .62, .95, 1.28, 1.60, 1.90, 2.15, 2.30, 2.38, 2.44, 2.50, H_NECK)
-RINGS1 = (0.0, .62, 1.60, 2.30, 2.44, H_NECK)
+CORNERS = ((-8, .080), (38, .060), (90, .105), (142, .060), (188, .080), (236, .095), (270, -.035), (304, .095))
+FACET_AT_SHOULDER = 0.55     # share of the faceting left at shoulder height
+COLS0 = (-8, -2, 15, 32, 38, 44, 64, 82, 86, 90, 94, 98, 116, 136, 142, 148, 165, 182, 188, 194, 212, 230, 236, 242,
+         256, 266, 270, 274, 284, 298, 304, 310, 328, 346)
+COLS1 = (-8, 38, 82, 90, 98, 142, 188, 236, 270, 304)
+RINGS0 = (0.0, .04, .30, .62, .95, 1.28, 1.60, 1.90, 2.15, 2.30, H_SHOULDER, 2.45, 2.50, H_NECK)
+RINGS1 = (0.0, .62, 1.60, 2.30, H_SHOULDER, H_NECK)
 
 
 def _base_radius(theta_deg, z):
@@ -47,7 +47,7 @@ def _base_radius(theta_deg, z):
     bb = 0.225 + 0.215 * (1 - t)
     if z > H_SHOULDER:                                   # shoulders slope up to the neck
         s = min((z - H_SHOULDER) / (H_NECK - H_SHOULDER), 1.0)
-        k = 1.0 - s ** 1.5
+        k = 1.0 - s ** 1.1
         a = 0.150 + (a - 0.150) * k
         bf = 0.150 + (bf - 0.150) * k
         bb = 0.140 + (bb - 0.140) * k
@@ -240,20 +240,20 @@ def _head(sc, low):
         sc.add(BRONZE, V, [(0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)], orient="centre")
     # hair: a thick cap from temple to temple round the back, below the crown band
     hair_cols = (196, 212, 230, 250, 270, 290, 310, 328, 344)
-    sc.loft(PATINA, [[_on_head(th, z, lift) for th in hair_cols] for z, lift in
+    sc.loft(BRONZE, [[_on_head(th, z, lift) for th in hair_cols] for z, lift in
                      ((2.640, 0.002), (2.690, 0.016), (2.790, 0.018), (2.866, 0.008))], closed=False, orient="axis")
     # beard: from the sideburns round the jaw, thick over the chin, ending in a point over the ruff; moustache
-    jaw_cols = (10, 35, 58, 76, 90, 104, 122, 145, 170)
+    jaw_cols = (28, 46, 62, 78, 90, 102, 118, 134, 152)
     def jz(th):          # the beard line climbs to the ears at the sides
-        return 2.672 + 0.085 * (abs(th - 90) / 80.0) ** 1.6
+        return 2.668 + 0.075 * (abs(th - 90) / 62.0) ** 1.6
     top = [_on_head(th, jz(th), 0.002) for th in jaw_cols]
-    bulge = [_on_head(th, jz(th) - 0.030, 0.020) for th in jaw_cols]
-    low_ = [[x * 0.62, HEAD_Y + (y - HEAD_Y) * 0.90 + 0.012, 2.598 + 0.03 * abs(x) / 0.11] for x, y, _ in bulge]
+    bulge = [_on_head(th, jz(th) - 0.034, 0.016 + 0.012 * (1 - abs(th - 90) / 62.0)) for th in jaw_cols]
+    low_ = [[x * 0.52, HEAD_Y + (y - HEAD_Y) * 0.92 + 0.010, 2.592 + 0.05 * abs(x) / 0.11] for x, y, _ in bulge]
     tip = [[x * 0.14, HEAD_Y + 0.112, 2.530] for x, _, _ in bulge]
-    sc.loft(PATINA, [tip, low_, bulge, top], closed=False, orient="axis")
+    sc.loft(BRONZE, [tip, low_, bulge, top], closed=False, orient="axis")
     m = [[-0.052, f - 0.018, 2.694], [-0.026, f + 0.008, 2.712], [0, f + 0.012, 2.708], [0.026, f + 0.008, 2.712],
          [0.052, f - 0.018, 2.694], [0.026, f + 0.006, 2.692], [0, f + 0.010, 2.696], [-0.026, f + 0.006, 2.692]]
-    sc.add(PATINA, m, [(0, 7, 1), (7, 6, 1), (1, 6, 2), (6, 3, 2), (6, 5, 3), (5, 4, 3)], orient="axis")
+    sc.add(BRONZE, m, [(0, 7, 1), (7, 6, 1), (1, 6, 2), (6, 3, 2), (6, 5, 3), (5, 4, 3)], orient="axis")
     lip = [[-0.022, f + 0.003, 2.684], [0, f + 0.012, 2.686], [0.022, f + 0.003, 2.684], [0, f + 0.010, 2.674]]
     sc.add(BRONZE, lip, [(0, 3, 1), (1, 3, 2)], orient="axis")
 
@@ -308,16 +308,22 @@ LAPEL = ((2.500, 36, .135), (2.40, 31, .150), (2.25, 25, .150), (2.08, 19, .135)
 
 
 def _lapels(sc, low):
-    rows = LAPEL[::3] + (LAPEL[-1],) if low else LAPEL
+    if low:
+        rows = LAPEL[::3] + (LAPEL[-1],)
+    else:          # a row between every two: tufts of the fur every ~8 cm
+        rows = []
+        for a, b in zip(LAPEL[:-1], LAPEL[1:]):
+            rows += [a, tuple(0.5 * (u + v) for u, v in zip(a, b))]
+        rows.append(LAPEL[-1])
     for sx in (-1, 1):
         inner, crest, outer = [], [], []
         for k, (z, off, w) in enumerate(rows):
             r_here = float(np.hypot(*cloak_point(90, z)[:2]))
             dw = math.degrees(w / max(r_here, 0.1))                     # width in degrees at this height
-            jag = 0.0 if low else (0.012 if k % 2 else -0.008)          # tufts of the fur along the outer edge
+            jag = 0.0 if low else (0.020 if k % 2 else -0.010)          # tufts of the fur along the outer edge
             th_in, th_out = 90 + sx * off, 90 + sx * (off + dw + math.degrees(jag / r_here))
             inner.append(cloak_point(th_in, z, 0.004))
-            crest.append(cloak_point(0.5 * (th_in + th_out), z, 0.040 if k % 2 else 0.030))
+            crest.append(cloak_point(0.5 * (th_in + th_out), z, 0.050 if k % 2 or low else 0.030))
             outer.append(cloak_point(th_out, z, 0.004))
         sc.loft(PATINA, [inner, crest, outer], closed=False, orient="axis")
 

@@ -483,7 +483,7 @@ M = {
     # the ruff and the hollows, and a lighter rubbed tone for the crown, the chains and the face. Grey speckled granite
     # of the plinth, honed (not mirror). WORKING_VALUE: no reflectance measurement.
     "monument_bronze": {"color": [0.105, 0.098, 0.088], "rough": 0.48, "metal": 0.85},
-    "monument_bronze_patina": {"color": [0.070, 0.082, 0.072], "rough": 0.78, "metal": 0.30},
+    "monument_bronze_patina": {"color": [0.078, 0.084, 0.074], "rough": 0.78, "metal": 0.40},
     "monument_bronze_rubbed": {"color": [0.200, 0.155, 0.105], "rough": 0.40, "metal": 0.90},
     "monument_granite": {"color": [0.215, 0.215, 0.22], "rough": 0.38, "texture_set": "granite_honed_tint",
                          "set_tile": True, "splash_h": 0.25},
