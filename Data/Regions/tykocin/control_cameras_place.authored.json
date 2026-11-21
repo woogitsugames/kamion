@@ -2,19 +2,209 @@
  "schema": "truck-sim-pl/place-cameras/1",
  "provenance": "authored_override (ADR 0316): control cameras at named places of Tykocin. Position region-local E/N (origin 751371, 600319), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions from the road graph (Plac Stefana Czarnieckiego, +-5 m). No owner photo.",
  "cameras": [
-  {"id": "look_tykocin_rynek_n", "pos_en": [452, -92], "heading_deg": 345, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 6, "note": "ADR 0316 QA: pedestrian eye on Plac Czarnieckiego looking at the north frontage - tile roofs of the market houses"},
-  {"id": "look_tykocin_rynek_s", "pos_en": [452, -68], "heading_deg": 170, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 6, "note": "ADR 0316 QA: pedestrian eye on Plac Czarnieckiego looking at the south frontage - tile roofs of the market houses"},
-  {"id": "look_tykocin_roofs_above", "pos_en": [452, -230], "heading_deg": 0, "eye_m": 32.0, "fov_deg": 50, "pitch_deg": -22, "note": "ADR 0316 QA only: 32 m above the blocks south of the market looking north and down - roof coverings at 40-200 m (tile grid / moire check)"},
-  {"id": "look_tykocin_zlota", "pos_en": [300, -128], "heading_deg": 80, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 4, "note": "ADR 0316 QA: pedestrian eye on Zlota looking east towards the market - house roofs and plot fences along a street"},
-  {"id": "top_water_bridge", "pos_en": [506, 42], "heading_deg": 0, "eye_m": 150, "fov_deg": 50, "pitch_deg": -89.9, "note": "water-tykocin-s24 QA: top view (north up) of the Narew under the DW671 bridge (ul. Puchalskiego); the river spans N 15..70 m at E 506 (BDOT OT_PTWP_A); pair = GUGiK orto 2024 crop"},
-  {"id": "water_bank_bridge_se", "pos_en": [548, 6], "heading_deg": 290, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 4, "note": "water-tykocin-s24 QA: pedestrian eye on the south bank 40 m east of the bridge looking WNW across the Narew and under the deck (like Commons Tykocin_Most_drogowy_05); r1 at [585, 4] stood behind a building"},
-  {"id": "water_oblique_bridge", "pos_en": [660, -70], "heading_deg": 305, "eye_m": 45, "fov_deg": 55, "pitch_deg": -18, "note": "water-tykocin-s24 QA: oblique view from SE, 45 m up, of the Narew, the bridge and the oxbows north of it"},
-  {"id": "water_boat_under_bridge", "pos_en": [440, 42], "heading_deg": 90, "eye_m": 1.0, "fov_deg": 60, "pitch_deg": 1, "note": "water-tykocin-s24 QA: 1 m above the Narew 66 m west (upstream side) of the bridge looking east under the deck - soffit clearance over the water sheet"},
-  {"id": "look_narew_portal_s", "pos_en": [512.3, -12], "heading_deg": 357, "eye_m": 1.7, "fov_deg": 55, "pitch_deg": 6, "note": "ADR 0320 QA: pedestrian eye on the south approach of the Narew bridge looking at the first truss portal (pair = Commons Tykocin_Most_drogowy_08 / 09)"},
-  {"id": "look_narew_truss_side", "pos_en": [566, 4], "heading_deg": 295, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 6, "note": "ADR 0320 QA: south bank 65 m east of the bridge looking WNW at the main span in elevation (pair = Commons Tykocin_Most_drogowy_05)"},
-  {"id": "look_narew_truss_close", "pos_en": [531, 0], "heading_deg": 322, "eye_m": 1.6, "fov_deg": 60, "pitch_deg": 16, "note": "ADR 0320 QA: below the east footway at the south pier looking along the truss (pair = Commons Tykocin_Most_drogowy_02)"},
-  {"id": "look_tykocin_czarniecki", "pos_en": [441, -104], "heading_deg": 350, "eye_m": 1.7, "fov_deg": 50, "pitch_deg": 11, "note": "ADR 0320 QA: pedestrian eye on the south edge of the plaza looking at the front of the Czarniecki monument (pair = Commons 'Tykocin pomnik Stefana Czarnieckiego 01')"},
-  {"id": "look_tykocin_plaza_se", "pos_en": [474, -97], "heading_deg": 287, "eye_m": 1.7, "fov_deg": 60, "pitch_deg": 5, "note": "ADR 0320 QA: pedestrian eye at the south-east corner of the plaza looking west across the paving, monument and benches"},
-  {"id": "top_tykocin_rynek", "pos_en": [448, -84], "heading_deg": 0, "eye_m": 110, "fov_deg": 50, "pitch_deg": -89.9, "note": "ADR 0320 QA: top view (north up) of Plac Czarnieckiego; pair = GUGiK orthophoto 2024 crop"}
+  {
+   "id": "look_tykocin_rynek_n",
+   "pos_en": [
+    452,
+    -92
+   ],
+   "heading_deg": 345,
+   "eye_m": 1.7,
+   "fov_deg": 60,
+   "pitch_deg": 6,
+   "note": "ADR 0316 QA: pedestrian eye on Plac Czarnieckiego looking at the north frontage - tile roofs of the market houses"
+  },
+  {
+   "id": "look_tykocin_rynek_s",
+   "pos_en": [
+    452,
+    -68
+   ],
+   "heading_deg": 170,
+   "eye_m": 1.7,
+   "fov_deg": 60,
+   "pitch_deg": 6,
+   "note": "ADR 0316 QA: pedestrian eye on Plac Czarnieckiego looking at the south frontage - tile roofs of the market houses"
+  },
+  {
+   "id": "look_tykocin_roofs_above",
+   "pos_en": [
+    452,
+    -230
+   ],
+   "heading_deg": 0,
+   "eye_m": 32.0,
+   "fov_deg": 50,
+   "pitch_deg": -22,
+   "note": "ADR 0316 QA only: 32 m above the blocks south of the market looking north and down - roof coverings at 40-200 m (tile grid / moire check)"
+  },
+  {
+   "id": "look_tykocin_zlota",
+   "pos_en": [
+    300,
+    -128
+   ],
+   "heading_deg": 80,
+   "eye_m": 1.7,
+   "fov_deg": 60,
+   "pitch_deg": 4,
+   "note": "ADR 0316 QA: pedestrian eye on Zlota looking east towards the market - house roofs and plot fences along a street"
+  },
+  {
+   "id": "top_water_bridge",
+   "pos_en": [
+    506,
+    42
+   ],
+   "heading_deg": 0,
+   "eye_m": 150,
+   "fov_deg": 50,
+   "pitch_deg": -89.9,
+   "note": "water-tykocin-s24 QA: top view (north up) of the Narew under the DW671 bridge (ul. Puchalskiego); the river spans N 15..70 m at E 506 (BDOT OT_PTWP_A); pair = GUGiK orto 2024 crop"
+  },
+  {
+   "id": "water_bank_bridge_se",
+   "pos_en": [
+    548,
+    6
+   ],
+   "heading_deg": 290,
+   "eye_m": 1.7,
+   "fov_deg": 60,
+   "pitch_deg": 4,
+   "note": "water-tykocin-s24 QA: pedestrian eye on the south bank 40 m east of the bridge looking WNW across the Narew and under the deck (like Commons Tykocin_Most_drogowy_05); r1 at [585, 4] stood behind a building"
+  },
+  {
+   "id": "water_oblique_bridge",
+   "pos_en": [
+    660,
+    -70
+   ],
+   "heading_deg": 305,
+   "eye_m": 45,
+   "fov_deg": 55,
+   "pitch_deg": -18,
+   "note": "water-tykocin-s24 QA: oblique view from SE, 45 m up, of the Narew, the bridge and the oxbows north of it"
+  },
+  {
+   "id": "water_boat_under_bridge",
+   "pos_en": [
+    440,
+    42
+   ],
+   "heading_deg": 90,
+   "eye_m": 1.0,
+   "fov_deg": 60,
+   "pitch_deg": 1,
+   "note": "water-tykocin-s24 QA: 1 m above the Narew 66 m west (upstream side) of the bridge looking east under the deck - soffit clearance over the water sheet"
+  },
+  {
+   "id": "look_narew_portal_s",
+   "pos_en": [
+    512.3,
+    -12
+   ],
+   "heading_deg": 357,
+   "eye_m": 1.7,
+   "fov_deg": 55,
+   "pitch_deg": 6,
+   "note": "ADR 0320 QA: pedestrian eye on the south approach of the Narew bridge looking at the first truss portal (pair = Commons Tykocin_Most_drogowy_08 / 09)"
+  },
+  {
+   "id": "look_narew_truss_side",
+   "pos_en": [
+    566,
+    4
+   ],
+   "heading_deg": 295,
+   "eye_m": 1.7,
+   "fov_deg": 60,
+   "pitch_deg": 6,
+   "note": "ADR 0320 QA: south bank 65 m east of the bridge looking WNW at the main span in elevation (pair = Commons Tykocin_Most_drogowy_05)"
+  },
+  {
+   "id": "look_narew_truss_close",
+   "pos_en": [
+    531,
+    0
+   ],
+   "heading_deg": 322,
+   "eye_m": 1.6,
+   "fov_deg": 60,
+   "pitch_deg": 16,
+   "note": "ADR 0320 QA: below the east footway at the south pier looking along the truss (pair = Commons Tykocin_Most_drogowy_02)"
+  },
+  {
+   "id": "look_tykocin_czarniecki",
+   "pos_en": [
+    441,
+    -104
+   ],
+   "heading_deg": 350,
+   "eye_m": 1.7,
+   "fov_deg": 50,
+   "pitch_deg": 11,
+   "note": "ADR 0320 QA: pedestrian eye on the south edge of the plaza looking at the front of the Czarniecki monument (pair = Commons 'Tykocin pomnik Stefana Czarnieckiego 01')"
+  },
+  {
+   "id": "look_tykocin_plaza_se",
+   "pos_en": [
+    474,
+    -97
+   ],
+   "heading_deg": 287,
+   "eye_m": 1.7,
+   "fov_deg": 60,
+   "pitch_deg": 5,
+   "note": "ADR 0320 QA: pedestrian eye at the south-east corner of the plaza looking west across the paving, monument and benches"
+  },
+  {
+   "id": "top_tykocin_rynek",
+   "pos_en": [
+    448,
+    -84
+   ],
+   "heading_deg": 0,
+   "eye_m": 110,
+   "fov_deg": 50,
+   "pitch_deg": -89.9,
+   "note": "ADR 0320 QA: top view (north up) of Plac Czarnieckiego; pair = GUGiK orthophoto 2024 crop"
+  },
+  {
+   "id": "limit_b16_bridge_n_025m",
+   "pos_en": [
+    495.5,
+    229.3
+   ],
+   "heading_deg": 175.8,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "world-fix-b3-s24 QA: truck driver eye on ul. Puchalskiego, right lane, 25 m before the B-16 3,7 m / B-18 12 t post (rule:limit w96942026 bwd, E 494.3 N 203.9, 15 m before the DW671 bridge over the Narew)"
+  },
+  {
+   "id": "limit_b16_bridge_n_060m",
+   "pos_en": [
+    492.4,
+    263.9
+   ],
+   "heading_deg": 168.3,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "world-fix-b3-s24 QA: truck driver eye on ul. Puchalskiego, right lane, 60 m before the B-16 3,7 m / B-18 12 t post (rule:limit w96942026 bwd, E 494.3 N 203.9, 15 m before the DW671 bridge over the Narew)"
+  },
+  {
+   "id": "limit_b16_bridge_n_100m",
+   "pos_en": [
+    478.6,
+    300.1
+   ],
+   "heading_deg": 143.3,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "world-fix-b3-s24 QA: truck driver eye on ul. Puchalskiego, right lane, 100 m before the B-16 3,7 m / B-18 12 t post (rule:limit w96942026 bwd, E 494.3 N 203.9, 15 m before the DW671 bridge over the Narew)"
+  }
  ]
 }
