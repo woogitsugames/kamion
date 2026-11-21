@@ -14,3 +14,9 @@
   keep_out kart (stage.py). Dalej: nieregularne kępy w reeds.py.
 - NASTĘPNY KROK: edycja reeds.py (losowe kąty/rozmiary/odstępy kart High, losowy zygzak Low), potem
   `uv run --project tools/worldgen python tools/worldgen/streetscape/water_banks.py --region tykocin`.
+- [3b] reeds.py: kępy nieregularne (gęstość kępy 0,55-1, przesunięcie +-0,9/0,5 m, dowolny kąt pary, szer. 0,6-1,15x;
+  Low: losowa amplituda zygzaka). Commit 568b45f26.
+- [4] Woda: ref Commons Tykocin_Most_drogowy_03 tafla sRGB ~98/115/121 (niebieskoszara, odbicie nieba, kąt mały);
+  nasz render tyk_narew_side 62/65/66 (neutralna szarość, ciało 0,12/0,12/0,115). Materiał wody globalny (strojony na
+  Supraśl ADR 0213) -> plan: nadpisanie per region `region.yaml water.material` (tykocin: chłodniejsze ciało
+  ~0.10/0.125/0.13, shallow zielonkawe), bez zmiany Supraśla.
