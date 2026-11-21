@@ -9,3 +9,6 @@ Po wszystkich przesunięciach i łączeniach barier kontrolujemy całe odcinki w
 Po oznakowaniu generowanym i authored P-10 przycinamy jego trójkąty do nawierzchni, odejmujemy wysepki z buforem 0,05 m (WORKING_VALUE) i wcześniej położone P-10 na tym samym poziomie, niezależnie od łańcucha. Triangulacja ograniczona zachowuje pole; interpolacja barycentryczna zachowuje Z, UV, UV1 i COL. Nieprzycięte siatki pozostają bez zmian.
 
 Indeks STRtree filtruje zakresy wysokości trójkątów z tolerancją 1 m, dzięki czemu typowy przejazd pod wiaduktem pozostaje rozdzielony. Jest to konserwatywna kontrola planu z filtrem wysokości, a nie dokładne przecięcie brył 3D; na dużym pochyłym trójkącie może usunąć nadmiar bariery. Przycinanie nie zmienia osi ani szerokości dróg. Koszt występuje w generatorze offline. Pełna przebudowa i wizualna bramka playera pozostają osobnym krokiem.
+
+## Uzupełnienie (21.11.2026, c-regress-cli)
+Wyjątek `own_shoulder` (`tools/worldgen/roads/surface_safety.py`): przy przycinaniu barier z reguły asfaltowe pobocze **tej samej strony tej samej drogi** nie jest traktowane jak jezdnia (bariera stoi 0,25 m za nim). Pasy ruchu, inne drogi i bariery authored zachowują pełny bufor 0,47 m. Bez wyjątku ucinało przejścia most→dojazd (wolne końce barier mostowych).
