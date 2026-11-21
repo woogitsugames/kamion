@@ -1,7 +1,8 @@
 {
  "by_kind": {
   "arrow_no_exit": 11,
-  "lane_blind_end": 42
+  "lane_blind_end": 44,
+  "obstacle_in_lane": 3
  },
  "cases": [
   {
@@ -19,6 +20,26 @@
    ],
    "turn_lanes": "right",
    "what": "right"
+  },
+  {
+   "chain": "c:w278213208:2826290829-1883101785",
+   "dist_from_stop_m": 0.0,
+   "e": -919.94,
+   "junction": "j:n1883101785",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 3,
+   "lanes_out": 3,
+   "lat": 53.1487673,
+   "lon": 23.1758142,
+   "n": -1025.08,
+   "on_route": true,
+   "osm_ways": [
+    278213208
+   ],
+   "to_chain": "c:w278213211:1883101785-1883483212",
+   "turn_lanes": "through",
+   "what": "none"
   },
   {
    "chain": "c:w249819593:498072264-3037267056",
@@ -492,26 +513,6 @@
    "what": "verge_grass"
   },
   {
-   "chain": "c:w208212131:2185359242-13084243030",
-   "dist_from_stop_m": 0.0,
-   "e": -42.37,
-   "junction": "j:n13084243030",
-   "kind": "lane_blind_end",
-   "lane": 0,
-   "lanes_in": 1,
-   "lanes_out": 1,
-   "lat": 53.1483176,
-   "lon": 23.1889057,
-   "n": -1023.89,
-   "on_route": false,
-   "osm_ways": [
-    208212131
-   ],
-   "to_chain": "c:w208212131:13084243030-2185359283",
-   "turn_lanes": null,
-   "what": "none"
-  },
-  {
    "chain": "c:w643894715:6058327810-6058327809",
    "dist_from_stop_m": 19.6,
    "e": -37.81,
@@ -530,6 +531,46 @@
    "to_chain": "c:w463644887:2205845273-4589008963",
    "turn_lanes": null,
    "what": "kerb"
+  },
+  {
+   "chain": "c:w264218021:3045762119-2177245834",
+   "dist_from_stop_m": 15.5,
+   "e": -5.23,
+   "junction": "j:n2177245834",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1666731,
+   "lon": 23.1912522,
+   "n": 1025.11,
+   "on_route": false,
+   "osm_ways": [
+    264218021
+   ],
+   "to_chain": "c:w264218021:2177245834-322526657",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w319619514:322526719-2177245834",
+   "dist_from_stop_m": 0.0,
+   "e": -3.5,
+   "junction": "j:n2177245834",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1666762,
+   "lon": 23.1912783,
+   "n": 1025.55,
+   "on_route": false,
+   "osm_ways": [
+    319619514
+   ],
+   "to_chain": "c:w319619514:2177245834-2206439870",
+   "turn_lanes": null,
+   "what": "none"
   },
   {
    "chain": "c:w207641094:4589005998-2178928380",
@@ -1030,12 +1071,62 @@
    "to_chain": "c:w759214378:7091433601-7091433602",
    "turn_lanes": null,
    "what": "kerb"
+  },
+  {
+   "chain": "c:w634965587:391997400-2256003599",
+   "e": -321.63,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1668292,
+   "lon": 23.1865295,
+   "n": 1023.98,
+   "on_route": false,
+   "osm_ways": [
+    634965587
+   ],
+   "s": 0.5,
+   "what": "none"
+  },
+  {
+   "chain": "c:w188440103:1990070446-1990673911",
+   "e": -263.46,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.148433,
+   "lon": 23.1856077,
+   "n": -1023.97,
+   "on_route": false,
+   "osm_ways": [
+    188440103
+   ],
+   "s": 0.5,
+   "what": "none"
+  },
+  {
+   "chain": "c:w1225165147:11361595592-12254822599",
+   "e": 964.07,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1661509,
+   "lon": 23.2057157,
+   "n": 1023.83,
+   "on_route": false,
+   "osm_ways": [
+    1225165147,
+    1230259240
+   ],
+   "s": 0.5,
+   "what": "none"
   }
  ],
- "count": 53,
+ "count": 58,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
-  "arrow_no_exit": 1
+  "arrow_no_exit": 1,
+  "lane_blind_end": 1
  },
  "params": {
   "dz_m": 0.8,
@@ -1058,10 +1149,11 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 1035,
-  "kerb_tris": 125335,
+  "kerb_tris": 125327,
   "lane_samples": 127524,
+  "lane_samples_beyond_tile": 122,
   "lane_samples_in_taper": 168,
-  "marking_tris": 7863,
-  "props_checked": 1970
+  "marking_tris": 7783,
+  "props_checked": 1968
  }
 }

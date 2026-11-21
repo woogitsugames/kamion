@@ -1,12 +1,12 @@
 {
  "by_source": {
-  "skirt:j:road_asphalt": 1,
   "skirt:path_asphalt": 1,
-  "skirt:yard_asphalt": 3
+  "skirt:yard_asphalt": 3,
+  "steep_grass:verge_grass": 2
  },
- "count": 5,
- "max_m": 0.382,
- "p99_m": 0.382,
+ "count": 6,
+ "max_m": 0.5,
+ "p99_m": 0.5,
  "skirt_area": [
   {
    "e": -226.6,
@@ -17,17 +17,6 @@
    "points": 1,
    "run_m": 1.821,
    "src": "osm:way/189041476:0#0:edge",
-   "visible": true
-  },
-  {
-   "e": 637.9,
-   "exposed_m2": 0.104,
-   "mat": "road_asphalt",
-   "max_h": 0.348,
-   "n": 549.9,
-   "points": 1,
-   "run_m": 1.368,
-   "src": "j:n12291691363",
    "visible": true
   },
   {
@@ -65,12 +54,12 @@
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 130,
+ "thin_steep_faces_skipped": 87,
  "thresh_m": 0.15,
  "verge_strips": {
   "max_m": 1.671,
-  "skirt": 19,
-  "steep_grass": 190,
+  "skirt": 3,
+  "steep_grass": 50,
   "worst": [
    "steep_grass",
    "j:n4861898636:corner1:vg",
@@ -79,6 +68,22 @@
   ]
  },
  "worst": [
+  {
+   "e": -112.9,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 1024.0,
+   "src": "c:w1174569458:9706906600-2562640077:L:0"
+  },
+  {
+   "e": -112.9,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 1023.9,
+   "src": "c:w1174569458:9706906600-2562640077:L:0"
+  },
   {
    "e": -131.0,
    "h": 0.382,
@@ -94,14 +99,6 @@
    "mat": "yard_asphalt",
    "n": 300.1,
    "src": "osm:way/299675936:0#0:edge"
-  },
-  {
-   "e": 637.9,
-   "h": 0.348,
-   "kind": "skirt",
-   "mat": "road_asphalt",
-   "n": 549.9,
-   "src": "j:n12291691363"
   },
   {
    "e": -420.1,
