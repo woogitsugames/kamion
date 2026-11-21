@@ -53,4 +53,15 @@ Przebudowa C na `ba7332f8d` (Codex) dała `deck_run_ends_free` 7 (było 12): pop
 
 Replay po trzech zmianach: 7 → **1** wolny koniec. Pozostały: w173956078 R, E −749,2 N 50,7 — 12-metrowy pomost, którego kapa zwęża się do 0,145 m przez odstęp kapy od bliźniaczej jezdni (`BRIDGE_CLEAR_M`); między jezdniami po D94 zostaje 1,15–1,65 m, więc bariera nie mieści się w buforze ADR 0310 po żadnej stronie. To nie jest błąd kodu do załatania progiem — **decyzja lidera**: wspólna bariera środkowa między bliźniaczymi pomostami (jedna linia dla obu jezdni) albo świadome zakończenie barier przed obiektem. Nie podnosiłem progów ani nie wyłączałem audytu.
 
+### Pytest po przebudowie C na 80718647d (dane ad4062d25)
+
+`uv run --project tools/worldgen pytest tests/gis -q`: **5 failed, 2857 passed, 6 skipped, 2 xfailed** w 3879 s (przed: 28 failed / 2779 passed, `pytest-wave5.log`). Log: `artifacts/c-regress-cli/pytest-after.log`.
+
+| Porażka | Przyczyna | Działanie |
+|---|---|---|
+| `test_barrier_ends.py:102`, `test_barriers_0159.py:113` | 1 wolny koniec w173956078 R (E −749,2 N 50,7), brak miejsca po D94 — opis wyżej | decyzja lidera, bez zmiany progu |
+| `test_depot_yard.py:150` rest_on_strip exit | poprawka Codexa `gate.py:386` szacowała zasięg ramienia wzorem 2·hw ≤ 4,8 m; pominięte: poszerzanie wyjazdu między obudową a podporą (2,38 → 2,42 m), skos ramienia (lat 2,691 zamiast 2,77 m) i krawężnik w roads_poly; podpora 0,03 m przed wnętrzem pasa | `gate.py` `_boom_rest`/`_rest_clear`: wybór stacji po faktycznym punkcie podpory (|lat| ≥ hw(s podpory) + krawężnik + 0,20 m, WORKING_VALUE). Replay: stacja 18,0 → 17,0 m, lat 2,741 m przy wymaganych 2,716 m |
+| `test_world_roads.py:202` krzywizna profilu 0,0066765 > 1/150 | fixture `world` od `d7e2912fc` (Codex, dla determinizmu) buduje geometrię CLI z D94, a test miał tolerancję 1e-6 zamiast akceptacji generatora `roads/profile.py:111` (k > kmax·1,002) | test używa tej samej tolerancji 1,002 (`PROFILE_KMAX_TOL`) — zmiana zamierzona, generator nie zmieniony |
+| `test_world_roads.py:212` szerokość 7,5 ≠ 7,0 | ta sama zmiana fixture: D94 dodaje do authored 7,0 m raz `gameplay_widen_m` = 0,5 m | test sprawdza bazową szerokość authored (`width − gameplay_widen_m` = 7,0) |
+
 Pełny wynik po przebudowie będzie uzupełniony po zakończeniu pytest.
