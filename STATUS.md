@@ -46,3 +46,6 @@
 - VQA knyszyn-w (pairs/knyszyn-w.jpg, góra przed / dół po): zęby zniknęły na dk65-fields-nw i dk65-goniadzka; rów
   ciągły, granica trawa rowu/teren = prosta krawędź korony skarpy (ciemniejsze albedo verge_grass vs teren —
   zostaje jako otwarte P3, ew. mieszanie materiału).
+- 19:38 unity r2: import 4 kafli OK, VQA OK, EditMode 1525 / 1410 pass / 0 fail. Pary przed/po:
+  artifacts/world-fix2-s24/pairs/*.jpg (kopia w main artifacts/world-fix2-s24/). ADR 0321 z wynikami.
+- GOTOWE do przeglądu (visual-critic do zlecenia przez lidera). Nie scalone.
