@@ -1,7 +1,9 @@
 # STATUS world-fix-b3-s24 (błędy świata z buildu #3)
 - krok 0 OK: worktree gotowy (derived skopiowane). Kafle łat: t=2541 -> dw671-tykocin-01 (13 km do celu), t=3221 -> dw671-tykocin-07 (4,0 km).
 - Przyczyna P2: roads/decals.py patch() = ostry prostokąt, materiał decal_patch nieprzezroczysty, aged_tone 1.08 bez _ROADWEAR (droga ciemniejsza o koleiny/drip) -> jasne łaty.
-- NASTĘPNY KROK: shader WorldPBR _DECAL_PATCH: zaokrąglone, poszarpane krawędzie (szum proceduralny) + alpha blend; ton aged ~0.95.
+- krok 1 (kod) OK: WorldPBR _DECAL_PATCH zaokrąglone + poszarpane krawędzie (value noise w przestrzeni obiektu) + alpha blend (queue +12); ton łat fresh 0,72 / aged 0,76 (było 0,88/1,08; zmierzone 1,47x jaśniej niż droga). P3: na płytach skrzyżowań koleiny łamane szumem 1-6 m i kontrast /2.
+- krok 2: kamery limit_b16_bridge_n_{025,060,100}m w tykocin (authored). Bariera C: debug clip w tle (artifacts/world-fix-b3-s24/dbg_clip.log), przebudowa dw671-01/-07 w tle (builds.status).
+- NASTĘPNY KROK: po dbg_clip naprawa bariery w furniture.py; potem pwsh scripts/import-region.ps1 -Region dw671-tykocin-01 -Tiers High -BuildTarget Win64 (slot unity) + visual-qa.
 
 # qa-d94-cli — zakończone
 
@@ -164,7 +166,30 @@ NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/
 - 2026-11-20 18:46: zrobione (4/34): bialystok-dojlidy, bialystok-knyszynska, bialystok-porosly, bialystok-kleeberga. Błędy build: . Pozostałe: bialystok-maczka, dk65-01, dk65-02, dk65-03, dk65-04, dk65-05, dk65-06, dk65-07, dk65-08, dk65-09, dk65-10, dk65-11, dk65-monki-01, dk65-monki-02, dk65-monki-03, dk65-monki-04, dk65-monki-05, dk65-monki-06, dk65-monki-07, dk8-s8-jeroniki, dw671-tykocin-01, dw671-tykocin-02, knyszyn-s, monki-e, monki, s8-01, s8-02, s8-03, s8-04, s8-05.
 - 2026-11-20 18:54: zrobione (7/34): bialystok-dojlidy, bialystok-knyszynska, bialystok-porosly, bialystok-kleeberga, dk65-02, bialystok-maczka, dk65-01. Błędy build: . Pozostałe: dk65-03, dk65-04, dk65-05, dk65-06, dk65-07, dk65-08, dk65-09, dk65-10, dk65-11, dk65-monki-01, dk65-monki-02, dk65-monki-03, dk65-monki-04, dk65-monki-05, dk65-monki-06, dk65-monki-07, dk8-s8-jeroniki, dw671-tykocin-01, dw671-tykocin-02, knyszyn-s, monki-e, monki, s8-01, s8-02, s8-03, s8-04, s8-05.
 - 2026-11-20 19:00: merge origin/main (roof-tiles ADR 0316 — zmiana generatora streetscape: dachy/działki; s8-north ADR 0315) -> a6e55a069. Konflikt tykocin generated: zostawiony nasz (derived w main z 14:07 = nasz build), route_links.json = main (final.ps1 przeliczy). d67-full = 54 (+dk8-wasilkow-01..03, dk8-korycin-01), katalog --check OK.
-- BEZ dachów ADR 0316 (zbudowane przed merge, 23 kafle, lista artifacts/regen-wave-2-s24/redo-0316.txt): bialystok-porosly bialystok-maczka bialystok-kleeberga bialystok-knyszynska dk65-01 dk65-02 dk65-03 dk65-04 dk65-05 dk65-06 bialystok-dojlidy dw671-tykocin-03 dw671-tykocin-04 dw671-tykocin-05 dw671-tykocin-06 dw671-tykocin-07 dw671-tykocin-08 dw671-tykocin-09 tykocin dw671-jasionowka-01 bialystok-bojary bialystok-mickiewicza bialystok-wygoda — nie przebudowuję automatycznie (decyzja lidera; DK19 ~2,5 h/kafel). Komenda: skopiuj redo-0316.txt do queue.txt po DONE fali 4 i uruchom chain.ps1 A/B/C.
+- BEZ dachów ADR 0316 (zbudowane przed merge, 23 kafle, lista artifacts/regen-wave-2-s24/redo-0316.txt): bialystok-porosly
+ bialystok-maczka
+ bialystok-kleeberga
+ bialystok-knyszynska
+ dk65-01
+ dk65-02
+ dk65-03
+ dk65-04
+ dk65-05
+ dk65-06
+ bialystok-dojlidy
+ dw671-tykocin-03
+ dw671-tykocin-04
+ dw671-tykocin-05
+ dw671-tykocin-06
+ dw671-tykocin-07
+ dw671-tykocin-08
+ dw671-tykocin-09
+ tykocin
+ dw671-jasionowka-01
+ bialystok-bojary
+ bialystok-mickiewicza
+ bialystok-wygoda
+ — nie przebudowuję automatycznie (decyzja lidera; DK19 ~2,5 h/kafel). Komenda: skopiuj redo-0316.txt do queue.txt po DONE fali 4 i uruchom chain.ps1 A/B/C.
 - 2026-11-20 19:01: zrobione (8/34): bialystok-dojlidy, bialystok-knyszynska, bialystok-porosly, bialystok-kleeberga, dk65-02, bialystok-maczka, dk65-01, dk65-03. Błędy build: dk65-06. Pozostałe: dk65-04, dk65-05, dk65-06, dk65-07, dk65-08, dk65-09, dk65-10, dk65-11, dk65-monki-01, dk65-monki-02, dk65-monki-03, dk65-monki-04, dk65-monki-05, dk65-monki-06, dk65-monki-07, dk8-s8-jeroniki, dw671-tykocin-01, dw671-tykocin-02, knyszyn-s, monki-e, monki, s8-01, s8-02, s8-03, s8-04, s8-05.
 - 2026-11-20 19:09: zrobione (14/34): bialystok-dojlidy, bialystok-knyszynska, bialystok-porosly, bialystok-kleeberga, dk65-02, bialystok-maczka, dk65-01, dk65-03, dk65-05, dk65-04, dk65-07, dk65-08, dk65-09, dk65-10. Błędy build: dk65-06. Pozostałe: dk65-06, dk65-11, dk65-monki-01, dk65-monki-02, dk65-monki-03, dk65-monki-04, dk65-monki-05, dk65-monki-06, dk65-monki-07, dk8-s8-jeroniki, dw671-tykocin-01, dw671-tykocin-02, knyszyn-s, monki-e, monki, s8-01, s8-02, s8-03, s8-04, s8-05.
 - 2026-11-20 19:16: zrobione (21/34): bialystok-dojlidy, bialystok-knyszynska, bialystok-porosly, bialystok-kleeberga, dk65-02, bialystok-maczka, dk65-01, dk65-03, dk65-05, dk65-04, dk65-07, dk65-08, dk65-09, dk65-10, dk65-11, dk65-monki-01, dk65-monki-03, dk65-monki-02, dk65-monki-04, dk65-monki-05, dk65-monki-06. Błędy build: dk65-06. Pozostałe: dk65-06, dk65-monki-07, dk8-s8-jeroniki, dw671-tykocin-01, dw671-tykocin-02, knyszyn-s, monki-e, monki, s8-01, s8-02, s8-03, s8-04, s8-05.
