@@ -34,7 +34,7 @@ sources:
   license: ODbL 1.0
   attribution: © OpenStreetMap contributors
   manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
-  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
+  manifest_sha256: 3a63ebb442f2e09904c18a62cbf1eec9bce2fccf8c8d0dfd6264bef37843b3c0
 - id: gugik-nmt-2022-dw671-tykocin-08
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
@@ -52,37 +52,41 @@ sources:
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-bdot10k-2008.json
-  manifest_sha256: 01acef7cb475ce9d1e17b10219528ba38a238d239b19ed0c1f421a58fb2c3342
+  manifest_sha256: 613ecb72f3b468d59604b3f8252430d1d219785825c0456b605fcf2df52f0d9c
 - id: gugik-lod1-2024-2008
   license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
     bezpłatnie i możliwe do dowolnego wykorzystania'''
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod1-2024-2008.json
-  manifest_sha256: 9de6f83074f3c1dd0bbf0bf17bf6586627a5cb6f5d1c69c2e7fbd51281f8f50a
+  manifest_sha256: f1fe2da30b4f907b9e0ef1c0b4ec394ca22725aab4fa4cf93387711ce699de8f
 - id: gugik-lod2-2017-2008
   license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
     bezpłatnie i możliwe do dowolnego wykorzystania'''
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod2-2017-2008.json
-  manifest_sha256: 59067604e5b413363678e77bdde143aa1a871b088fc9dcaee792aec53295d7ef
+  manifest_sha256: 91ea1bc66967fc49eb8127efe46fcedb56d6d53c7fc7d3386f12d2ba17eae2b8
 - id: gugik-bdot10k-2002
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-bdot10k-2002.json
-  manifest_sha256: 0530d930aa45984c5024b8c55911969caa517cfad911cbea6d2efa158bd48151
+  manifest_sha256: 550a4ca928a47b0cdd25282a46ee71f8973fcb1f3fedca850a48508253edf143
 - id: gugik-lod1-2024-2002
   license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
     bezpłatnie i możliwe do dowolnego wykorzystania'''
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod1-2024-2002.json
-  manifest_sha256: 208717117ca8ef4ee81ecfb500ad0f36b31ea36d02c8c8873f488d3a625d4133
+  manifest_sha256: f1e73b0d1556eba660c75c3fe6340b8674b78b7d9f22d7495a9f3d12d441098d
 - id: gugik-lod2-2017-2002
   license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
     bezpłatnie i możliwe do dowolnego wykorzystania'''
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod2-2017-2002.json
-  manifest_sha256: 57606993ad174e3b804cd0353a8dd45cc5ef661f81f6d8d2cb3cfb52c2575d1c
+  manifest_sha256: e6805b9986e80e66df4a55d0173e1cf65f002614bb49daece804d913421a9842
 rebuild:
 - uv run --project tools/worldgen tools/worldgen/ingest.py --region dw671-tykocin-08
 - uv run --project tools/worldgen tools/worldgen/build_region.py --region dw671-tykocin-08
+water:
+  enabled: true
+  sources: Data/Regions/dw671-tykocin-08/generated/water_sources.json
+  note: BDOT10k OT_PTWP_A / OT_SWRS_L + OSM waterway / natural=water (ADR 0210)
