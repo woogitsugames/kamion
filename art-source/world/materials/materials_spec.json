@@ -5141,6 +5141,209 @@
       "hf_ratio_albedo": 0.0353,
       "ao_mean": 0.991
     },
+    "sett_lattice_tykocin": {
+      "tile_m": [
+        3.1891,
+        3.1891
+      ],
+      "target": null,
+      "kind": "tiling_set",
+      "uv": "mesh_uv0_metres (plaza frame: paved_area uv_frame, lattice crossing at the origin)",
+      "slots": [
+        "plaza_sett_lattice"
+      ],
+      "note": "ADR 0325: Plac Czarnieckiego, Tykocin. Light grey granite setts in segmental arcs inside a diagonal lattice (period 2.255 m, measured on the GUGiK orthophoto 2024) of 0.48 m bands of small red setts. Procedural; band width, sett sizes and colours WORKING_VALUE (Commons photo as reference only).",
+      "albedo_target_mean_lum_linear": null,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 1.56,
+          "dir": "sett_lattice_tykocin/High",
+          "png_bytes": 29025309,
+          "files": [
+            "T_sett_lattice_tykocin_BaseColor.png",
+            "T_sett_lattice_tykocin_MaskMap.png",
+            "T_sett_lattice_tykocin_Normal.png",
+            "T_sett_lattice_tykocin_Var.png"
+          ],
+          "smoothness_mean": 0.139,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 3.11,
+          "dir": "sett_lattice_tykocin/Medium",
+          "png_bytes": 8758278,
+          "files": [
+            "T_sett_lattice_tykocin_BaseColor.png",
+            "T_sett_lattice_tykocin_MaskMap.png",
+            "T_sett_lattice_tykocin_Normal.png",
+            "T_sett_lattice_tykocin_Var.png"
+          ],
+          "smoothness_mean": 0.11,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 6.23,
+          "dir": "sett_lattice_tykocin/Low",
+          "png_bytes": 2406697,
+          "files": [
+            "T_sett_lattice_tykocin_BaseColor.png",
+            "T_sett_lattice_tykocin_MaskMap.png",
+            "T_sett_lattice_tykocin_Normal.png",
+            "T_sett_lattice_tykocin_Var.png"
+          ],
+          "smoothness_mean": 0.076,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.01546,
+        0.00836
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.172,
+        "p05": 0.0564,
+        "p95": 0.3582,
+        "mean_rgb_linear": [
+          0.1935,
+          0.1666,
+          0.1593
+        ]
+      },
+      "hf_ratio_albedo": 0.0228,
+      "ao_mean": 0.887
+    },
+    "sett_rows_tint": {
+      "tile_m": [
+        1.92,
+        1.92
+      ],
+      "target": 0.5,
+      "kind": "modulation_set",
+      "uv": "mesh_uv0_metres (u along the rows)",
+      "slots": [
+        "plaza_sett_red",
+        "plaza_sett_grey"
+      ],
+      "note": "ADR 0325: small setts in straight staggered rows, neutral modulation map (mean 0.5); colour from the manifest (red border band of the plaza, grey granite walks).",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.88,
+          "dir": "sett_rows_tint/High",
+          "png_bytes": 6267494,
+          "files": [
+            "T_sett_rows_tint_BaseColor.png",
+            "T_sett_rows_tint_MaskMap.png",
+            "T_sett_rows_tint_Normal.png",
+            "T_sett_rows_tint_Var.png"
+          ],
+          "smoothness_mean": 0.145,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.75,
+          "dir": "sett_rows_tint/Medium",
+          "png_bytes": 1868432,
+          "files": [
+            "T_sett_rows_tint_BaseColor.png",
+            "T_sett_rows_tint_MaskMap.png",
+            "T_sett_rows_tint_Normal.png",
+            "T_sett_rows_tint_Var.png"
+          ],
+          "smoothness_mean": 0.118,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.5,
+          "dir": "sett_rows_tint/Low",
+          "png_bytes": 502127,
+          "files": [
+            "T_sett_rows_tint_BaseColor.png",
+            "T_sett_rows_tint_MaskMap.png",
+            "T_sett_rows_tint_Normal.png",
+            "T_sett_rows_tint_Var.png"
+          ],
+          "smoothness_mean": 0.083,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.01508,
+        0.00807
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4996,
+        "p05": 0.1037,
+        "p95": 0.7871,
+        "mean_rgb_linear": [
+          0.4996,
+          0.4996,
+          0.4996
+        ]
+      },
+      "hf_ratio_albedo": 0.0465,
+      "ao_mean": 0.892
+    },
     "sidewalk_slab_35": {
       "tile_m": [
         2.158,
