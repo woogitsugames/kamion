@@ -126,6 +126,7 @@ REGIONS: dict[str, Region] = {
         origin=(761611.0, 612607.0),
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0204, owner D64; tile = lattice (-8,8) of the ADR 0203 plan)",
+        water=True,      # water-tykocin-s24: the Jaskrzanka (2.4 km) and the Zalew Miejski ponds
     ),
     "knyszyn-s": Region(
         id="knyszyn-s",
@@ -135,6 +136,7 @@ REGIONS: dict[str, Region] = {
         origin=(761611.0, 610559.0),
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0204, owner D64; tile = lattice (-8,7) of the ADR 0203 plan)",
+        water=True,      # water-tykocin-s24: the Jaskrzanka under the DK65 bridge and ponds (BDOT 87 500 m²)
     ),
     # ADR 0209 (owner D64): west part of Knyszyn, lattice (-9,8) (shares its east edge x = 760587 with `knyszyn`, 37 m
     # west of the DK65/DW671 roundabout). DK65 outlet towards Monki, DW671 towards Tykocin, west streets of the town.
@@ -170,6 +172,7 @@ REGIONS: dict[str, Region] = {
         origin=(759563.0, 610559.0),
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,7) of the ADR 0203 plan)",
+        water=True,      # water-tykocin-s24: fish ponds SW of Knyszyn (BDOT 0.83 km²) and the Jaskrzanka
         rail=True,          # ADR 0217: line 38 + the DW671 level crossing (first and only region with the stage)
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
@@ -386,6 +389,7 @@ REGIONS: dict[str, Region] = {
         origin=(759563.0, 608511.0),
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-9,6) of the ADR 0203 plan)",
+        water=True,      # water-tykocin-s24: the Jaskrzanka (2.1 km) and ponds
     ),
     "dw671-tykocin-03": Region(
         id="dw671-tykocin-03",
@@ -441,6 +445,7 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2008",
         teryt_powiat_extra=('2002',),
         status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,3) of the ADR 0203 plan)",
+        water=True,      # water-tykocin-s24: the Stara Narew oxbows and ponds (BDOT 32 900 m²), canals
     ),
     "dw671-tykocin-09": Region(
         id="dw671-tykocin-09",
@@ -451,6 +456,7 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2002",
         teryt_powiat_extra=('2008',),
         status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,3) of the ADR 0203 plan)",
+        water=True,      # water-tykocin-s24: the Nereśl (BDOT 24 400 m², 2.8 km axis) flowing to the Narew in tykocin (level continuous at the seam)
     ),
     "tykocin": Region(
         id="tykocin",
