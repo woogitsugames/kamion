@@ -54,6 +54,16 @@ LEVEL_PCT = 30.0
 MIN_AREA_M2 = 30.0
 FLOW_SMOOTH_M = 6.0      # gaussian sigma of the flow direction field (m)
 SEAM_BLEND_M = 120.0     # ADR 0213: water crossing a tile edge is pulled to the shared edge level over this distance
+# ADR 0324 (critic s24 wave 6 # 3.2: "the grass / water boundary is ruler-straight, no scarp, no mud"). WORKING_VALUE.
+# The shore of a lowland river is not the BDOT outline: bays, mud spits and a wet margin. A smooth noise (SHORE_NOISE_M
+# correlation, deterministic per absolute EPSG:2180 node) moves the ground in the first metre either side of the outline
+# through the water level, so the visible water line wanders by up to ~1 m; behind it lies a band of wet mud / sand
+# MUD_BAND_M wide (ground mask A = bare soil, shader: darker, no sward) that the same noise breaks up.
+SHORE_NOISE_M = 3.0      # gaussian sigma of the shore noise (m)
+SHORE_DIP_M = 0.10       # land nodes within 1 m of the outline may dip this far below the level (bays; sheet overlap 1 m)
+SHORE_BAR_M = 0.07       # bed nodes within 2 m of the outline may rise this far above the level (mud spits)
+MUD_BAND_M = (0.6, 2.6)  # width range of the wet mud / sand margin outside the water line
+MUD_A = 0.85             # bare-soil mask in the margin
 
 
 # ------------------------------------------------------------------------------------------------ extraction
@@ -452,6 +462,15 @@ class Plan:
         lip = ~W & (d_out <= LIP_M) & ~keep
         raised = lip & (z < L + LIP_Z_M)
         z[lip] = np.maximum(z[lip], L[lip] + LIP_Z_M)
+        # ADR 0324: irregular water line (see SHORE_NOISE_M). Only nodes the sheet covers (overlap 1 m) may dip.
+        nz = self._shore_noise()
+        self.shore_nz = nz
+        bay = ~W & (d_out <= 1.0) & ~keep & (nz < 0.0)
+        z[bay] = np.minimum(z[bay], L[bay] + LIP_Z_M + np.clip(nz[bay] * 2.0, -1.0, 0.0) * (SHORE_DIP_M + LIP_Z_M))
+        bar = inw & (d_in <= 2.0) & (nz > 0.25)
+        z[bar] = np.maximum(z[bar], np.minimum(L[bar] + np.clip((nz[bar] - 0.25) * 4.0, 0.0, 1.0) * SHORE_BAR_M
+                                                 - 0.03 * (d_in[bar] - 1.0), L[bar] + SHORE_BAR_M))
+        self.report["shore"] = {"bay_nodes": int(bay.sum()), "bar_nodes": int((bar & (z > L)).sum())}
         self.lfill = np.where(d_out <= BANK_M + 4.0, L, np.nan)
         self.d_in, self.d_out = d_in, d_out
         self.report["carve"] = {"bed_nodes": int(inw.sum()), "bed_lowered_m_max": round(float((zc - z)[inw].max()), 2),
@@ -459,6 +478,27 @@ class Plan:
                                 "water_nodes_kept_by_road": int((W & keep).sum())}
         log("water carve", self.report["carve"])
         return z
+
+    def _shore_noise(self):
+        """Smooth deterministic noise in [-1, 1] per terrain node (hash of the local node), 0 at the tile edge."""
+        H, W_ = self.mask.shape
+        hf = self.hf
+        e0 = int(round(getattr(hf, "x0", 0.0)))
+        n0 = int(round(getattr(hf, "y1", 0.0)))
+        ee = (np.arange(W_, dtype=np.int64) + e0)[None, :]
+        nn = (n0 - np.arange(H, dtype=np.int64))[:, None]
+        hsh = (ee * 73856093) ^ (nn * 19349663) ^ 0x5F3759DF
+        hsh = (hsh ^ (hsh >> 13)) * 1274126177
+        r = ((hsh ^ (hsh >> 16)) & 0xFFFF).astype(np.float64) / 65535.0 - 0.5
+        g = ndimage.gaussian_filter(r, SHORE_NOISE_M, mode="reflect")
+        g = np.clip(g / max(float(np.std(g)), 1e-9) / 2.0, -1.0, 1.0)
+        # no shore relief within 8 m of the tile edge: the neighbour tile computes its own noise (local node
+        # indices), the terrain of the seam column must stay the plain ADR 0210 bank on both
+        x0, y0, x1, y1 = self.tile.bounds
+        E = hf.x0 + np.arange(W_)[None, :]
+        N = hf.y1 - np.arange(H)[:, None]
+        edge = np.minimum(np.minimum(E - x0, x1 - E), np.minimum(N - y0, y1 - N))
+        return g * np.clip(edge / 8.0, 0.0, 1.0)
 
     def blocked(self):
         return ndimage.binary_dilation(self.mask, iterations=1)
@@ -479,6 +519,15 @@ class Plan:
         c[..., 1] = c[..., 1] * (1.0 - bank)
         mud = np.clip(1.0 - d / 0.8, 0.0, 1.0) * 0.15      # thin wet line only: the orthophoto banks are green
         c[..., 3] = np.maximum(c[..., 3], mud)
+        # ADR 0324: wet mud / sand margin, MUD_BAND_M wide by the shore noise (0 where the reed belt will hide it anyway
+        # is not known here: the belt stands ON it, like on the Narew), fading over its outer 40 %
+        nz = getattr(self, "shore_nz", None)
+        if nz is not None:
+            wband = MUD_BAND_M[0] + (MUD_BAND_M[1] - MUD_BAND_M[0]) * np.clip(nz * 0.5 + 0.5, 0.0, 1.0)
+            m2 = np.clip((wband - d) / np.maximum(0.4 * wband, 0.2), 0.0, 1.0) * MUD_A
+            m2 = np.where(self.mask, 0.0, m2)
+            c[..., 3] = np.maximum(c[..., 3], m2)
+            c[..., 2] = np.where(m2 > 0.3, c[..., 2] * (1.0 - 0.6 * m2), c[..., 2])
         c[..., 3] = np.where(self.mask, 0.7, c[..., 3])
         return c.astype(np.float32)
 

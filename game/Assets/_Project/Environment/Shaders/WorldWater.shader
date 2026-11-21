@@ -11,6 +11,11 @@
 //   ADR 0213: reflected rays that leave the water close to the horizon hit the far bank (reed belt, willows, alders),
 //   not the sky: the environment is blended to _BankTint below _BankHorizon (one lerp, both tiers). Low: no broad
 //   sheen blob any more (a flat normal made it a fake light smear), a small sun disc only.
+//   ADR 0324 (critic s24 wave 6 # 3.2): shallows - the bed (wet sand / mud, _BedColor) shows through the first
+//   decimetres of water (Beer-Lambert over the depth implied by the shore distance: bed 0.12 m + 0.35 m / m, as carved
+//   by streetscape.water) instead of one flat tone up to the bank; High: gusts - a 30-60 m noise drifting with the wind
+//   scales the ripple slope (glassy lanes between ruffled patches, like any open reach) + a fine third octave near
+//   the camera. Both tiers stay opaque, no extra texture.
 // All constants WORKING_VALUE (ADR 0210 / 0213), tuned on the dk65-02 / dk65-03 control frames against the median
 // water colour of the 2024 orthophoto (artifacts/water2-0213/tools/water_rgb.py).
 Shader "Kamion/World Water"
@@ -28,6 +33,10 @@ Shader "Kamion/World Water"
         _Smoothness ("Smoothness of the sun glint", Range(0.5, 1)) = 0.93
         _BankTint ("Far-bank reflection near the horizon (linear albedo)", Color) = (0.050, 0.065, 0.035, 1)
         _BankHorizon ("Reflected-ray elevation (sin) below which the far bank is seen", Range(0.01, 0.5)) = 0.12
+        _BedColor ("Bed seen through the shallows: wet sand / mud (linear albedo)", Color) = (0.105, 0.090, 0.062, 1)
+        _Extinction ("Extinction of the turbid water (1 / m)", Range(0.2, 8)) = 2.4
+        _GustScale ("Gust patch size (m)", Float) = 42.0
+        _GustAmount ("Gust contrast of the ripple slope", Range(0, 1)) = 0.7
     }
     SubShader
     {
@@ -52,8 +61,9 @@ Shader "Kamion/World Water"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
-                float4 _BaseColor, _ShallowColor, _BankTint;
+                float4 _BaseColor, _ShallowColor, _BankTint, _BedColor;
                 float _Reflect, _ReflectLow, _FlowSpeed, _FlowCycle, _RippleScale, _RippleStrength, _Smoothness, _BankHorizon;
+                float _Extinction, _GustScale, _GustAmount;
             CBUFFER_END
 
             struct Attributes
@@ -102,6 +112,12 @@ Shader "Kamion/World Water"
                 float a = Hash2(i).x, b = Hash2(i + float2(1, 0)).x, c = Hash2(i + float2(0, 1)).x, d = Hash2(i + float2(1, 1)).x;
                 return du * float2(b - a + (a - b - c + d) * u.y, c - a + (a - b - c + d) * u.x);
             }
+            float ValueNoise(float2 p)
+            {
+                float2 i = floor(p), f = frac(p);
+                float2 u = f * f * (3.0 - 2.0 * f);
+                return lerp(lerp(Hash2(i).x, Hash2(i + float2(1, 0)).x, u.x), lerp(Hash2(i + float2(0, 1)).x, Hash2(i + float2(1, 1)).x, u.x), u.y);
+            }
             #endif
 
             half4 frag(Varyings i) : SV_Target
@@ -137,6 +153,17 @@ Shader "Kamion/World Water"
                 float2 g = g0 * w0 + g1 * (1.0h - w0);
                 float dist = length(GetCameraPositionWS() - pw);
                 half amp = _RippleStrength * (1.0 - smoothstep(25.0, 140.0, dist)) * lerp(0.45, 1.0, saturate(shore * 2.0));
+                // ADR 0324: gusts (two octaves of value noise drifting downwind) - calm lanes x (1 - _GustAmount), ruffled
+                // patches x 1.5; kept at distance as a tone difference of the reflection (no sub-pixel shimmer: the
+                // gust only scales the slope, which the distance fade above already removes)
+                float2 gp = i.uv / _GustScale + float2(0.031, 0.017) * _Time.y;
+                half gust = (half)(ValueNoise(gp) * 0.65 + ValueNoise(gp * 2.9 + 7.3) * 0.35);
+                gust = smoothstep(0.30h, 0.72h, gust);
+                amp *= lerp(1.0h - (half)_GustAmount, 1.5h, gust);
+                // fine third octave near the camera (wavelets of 0.2-0.4 m), gone by 45 m
+                half nearK = 1.0h - smoothstep(12.0, 45.0, dist);
+                if (nearK > 0.0h)
+                    g += (0.6h * nearK) * NoiseGrad(p * 6.3 + float2(5.9, 2.2) - off * ph0 * (2.2 / _RippleScale) + _Time.y * float2(0.21, 0.13));
                 n = normalize(half3(-g.x * amp, 1.0, -g.y * amp));    // world XZ = (E, N)
             #endif
                 half NdotV = saturate(dot(n, V));
@@ -155,6 +182,9 @@ Shader "Kamion/World Water"
                 // sky + sun irradiance as the ground (ADR 0213: the 0.55 sun factor of ADR 0210 made the body ~13x
                 // darker than the meadow next to it; orthophoto 2024: water / meadow luminance ~0.4)
                 half3 body = lerp(_ShallowColor.rgb, _BaseColor.rgb, saturate(shore));
+                // ADR 0324: the bed through the shallows (depth from the carved profile: 0.12 m + 0.35 m per m inside)
+                half depthM = min(0.02h + 2.8h * shore, max(i.data.y * 1.5h, 0.05h));
+                body = lerp(body, _BedColor.rgb, exp(-(half)_Extinction * depthM));
                 half3 col = body * (amb0 + L.color * (saturate(L.direction.y) * sh));
                 col = lerp(col, env, fres);
 
