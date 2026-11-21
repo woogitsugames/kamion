@@ -279,3 +279,23 @@ def test_parallel_edges_keep_the_shorter_0303():
         assert g["a"]["b"]["id"] == "dw" and g["b"]["a"]["id"] == "dw"
     rs = json.loads((ROOT / "Data/Regions/dw671-tykocin-03/route_start.json").read_text(encoding="utf-8"))
     assert not any(e.startswith("w553605081:") for e in rs["edge"])
+
+
+def test_c_maczka_link_replaces_the_c_route_and_turns_west_at_dk8_dk19():
+    """route-start-s24 (build #3 P2 GPS "zawroc"): c-dk8-to-maczka replaces the C control route from its first point and
+    turns west at the DK8/DK19 junction (N ~50 m local), instead of continuing the control route north and turning round
+    over the DK8 median crossover at (-821, 861) (+1.5 km). Every link of C starts at the same point (the route start),
+    so the streamer can pick the link of the trip destination there, also when the game starts in C."""
+    links = _links()["links"]
+    c = [L for L in links if L["tile"] == "bialystok-industrial-c"]
+    L = next(x for x in c if x["id"] == "c-dk8-to-maczka")
+    assert L["replacesRoute"] == "bialystok-industrial-c" and not L["afterRoute"] and L["destination"] == "any"
+    assert max(L["n"]) < 150.0, "never north of the DK8/DK19 junction"
+    assert L["lengthM"] < 2300.0, L["lengthM"]
+    rs = json.loads((ROOT / "Data/Regions/bialystok-industrial-c/route_start.json").read_text(encoding="utf-8"))
+    e0, n0 = rs["points_en"][0]
+    for x in c:
+        assert x["replacesRoute"] == "bialystok-industrial-c" and not x["afterRoute"], x["id"]
+        assert abs(x["e"][0] - e0) < 0.05 and abs(x["n"][0] - n0) < 0.05, x["id"]
+    # one `any` link, every other C link names its destination (the streamer prefers those)
+    assert [x["id"] for x in c if x["destination"] == "any"] == ["c-dk8-to-maczka"]

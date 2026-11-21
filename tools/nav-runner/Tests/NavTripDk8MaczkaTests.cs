@@ -41,20 +41,36 @@ namespace NavRunner.Tests
             return Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg;
         }
 
-        /// <summary>Autopilot path of build #3 in C: route_start.json points + link c-dk8-to-maczka (route_links.json).</summary>
-        static List<Vector2> ControlPath()
+        /// <summary>Autopilot path of a trip started in C (WorldStreamer.ReplaceStartRoute / ContinueRoute, route-start-s24):
+        /// the C link of <paramref name="destination"/> (a link naming it wins over `any`); a `replacesRoute` link IS the
+        /// path, an `afterRoute` one is appended to route_start.json (build #3: route + after_route c-dk8-to-maczka).</summary>
+        static List<Vector2> ControlPath(string destination = "tykocin") => ControlPath(destination, out _);
+
+        static List<Vector2> ControlPath(string destination, out string linkId)
         {
-            var pts = new List<Vector2>();
+            var route = new List<Vector2>();
             using (var d = JsonDocument.Parse(File.ReadAllText(Path.Combine(Root, "Data", "Regions", Region, "route_start.json"))))
-                foreach (var p in d.RootElement.GetProperty("points_en").EnumerateArray()) pts.Add(new Vector2(p[0].GetSingle(), p[1].GetSingle()));
+                foreach (var p in d.RootElement.GetProperty("points_en").EnumerateArray()) route.Add(new Vector2(p[0].GetSingle(), p[1].GetSingle()));
             string links = Path.Combine(Root, "game", "Assets", "_Project", "World", "Runtime", "Streaming", "Resources", "WorldStreaming", "route_links.json");
-            using (var d = JsonDocument.Parse(File.ReadAllText(links)))
-                foreach (var l in d.RootElement.GetProperty("links").EnumerateArray())
-                {
-                    if (l.GetProperty("id").GetString() != "c-dk8-to-maczka") continue;
-                    var e = l.GetProperty("e"); var n = l.GetProperty("n");
-                    for (int i = 0; i < e.GetArrayLength(); i++) pts.Add(new Vector2(e[i].GetSingle(), n[i].GetSingle()));
-                }
+            JsonElement? best = null;
+            using var doc = JsonDocument.Parse(File.ReadAllText(links));
+            foreach (var l in doc.RootElement.GetProperty("links").EnumerateArray())
+            {
+                if (l.GetProperty("tile").GetString() != Region) continue;
+                string dest = l.GetProperty("destination").GetString();
+                bool any = string.IsNullOrEmpty(dest) || dest == "any";
+                if (!any && dest != destination) continue;
+                if (!any) { best = l; break; }
+                best ??= l;
+            }
+            linkId = best?.GetProperty("id").GetString();
+            var pts = new List<Vector2>();
+            if (best == null || string.IsNullOrEmpty(best.Value.GetProperty("replacesRoute").GetString())) pts.AddRange(route);
+            if (best != null)
+            {
+                var e = best.Value.GetProperty("e"); var n = best.Value.GetProperty("n");
+                for (int i = 0; i < e.GetArrayLength(); i++) pts.Add(new Vector2(e[i].GetSingle(), n[i].GetSingle()));
+            }
             return pts;
         }
 
@@ -119,7 +135,7 @@ namespace NavRunner.Tests
             var planner = new RoutePlanner(g) { AllowTileExit = true };
             var q = RoutePath.For(g);
             var pts = ControlPath();
-            Assert.True(pts.Count > 1500, "route_start + link loaded");
+            Assert.True(pts.Count > 1000, "C link of trip tykocin loaded");
             for (int i = 0; i + 1 < pts.Count && pts[i].y < 30f; i += 5)
             {
                 Vector2 d = pts[i + 1] - pts[i];
@@ -129,10 +145,9 @@ namespace NavRunner.Tests
             }
         }
 
-        [Fact(Skip = "Known data defect (build #3 P2, gps-dk8-s24): the C control route + after_route link c-dk8-to-maczka " +
-                     "drive north past the DK8/DK19 junction and turn round over the median at (-821, 861), ~1.5 km more than " +
-                     "the GPS leg. Needs a branching / replacing link from the C route start (route_links.yaml + WorldStreamer " +
-                     "start-tile replace). Un-skip when fixed.")]
+        // build #3 P2 (gps-dk8-s24) fixed by route-start-s24: c-dk8-to-maczka replaces the C route from its first node and
+        // turns west at the DK8/DK19 junction (was: after_route, north past the junction, U-turn over the median at (-821, 861))
+        [Fact]
         public void ControlPath_ForTripTykocin_HasNoUTurnAndNoDetour()
         {
             var g = RouteGraph.Load(Region);
@@ -150,6 +165,38 @@ namespace NavRunner.Tests
                 if (d.sqrMagnitude < 1e-4f) continue;
                 Assert.Equal(PlanStatus.Ok, planner.Plan(pts[i], Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg, k_Exit, q));
                 Assert.False(HasUTurn(q), $"point {i} {pts[i]}: no U-turn");
+            }
+        }
+
+        /// <summary>route-start-s24 (3): every trip started in C drives its C link without a U-turn or a detour against
+        /// the GPS leg from the depot to the end of that link (4 m before the seam point; maczka / s8 / monki = `any`).</summary>
+        [Theory]
+        [InlineData("tykocin", "c-dk8-to-maczka")]
+        [InlineData("maczka", "c-dk8-to-maczka")]
+        [InlineData("s8", "c-dk8-to-maczka")]
+        [InlineData("monki", "c-dk8-to-maczka")]
+        [InlineData("wasilkow", "c-dk8-north-to-wasilkow")]
+        [InlineData("dojlidy", "c-andersa-to-wygoda")]
+        public void ControlPath_EveryTripFromC_TakesItsLink_NoUTurnNoDetour(string destination, string expectedLink)
+        {
+            var g = RouteGraph.Load(Region);
+            var planner = new RoutePlanner(g) { AllowTileExit = true };
+            var pts = ControlPath(destination, out string link);
+            Assert.Equal(expectedLink, link);
+            Vector2 exit = pts[pts.Count - 3];
+            float len = 0f;
+            for (int i = 0; i + 1 < pts.Count; i++) len += Vector2.Distance(pts[i], pts[i + 1]);
+            var leg = RoutePath.For(g);
+            Assert.Equal(PlanStatus.Ok, planner.Plan(k_Start, -152f, exit, leg));
+            Assert.False(HasUTurn(leg), $"{destination}: GPS leg has no U-turn");
+            Assert.True(len < leg.Length + 300f, $"{destination}: control path {len:F0} m vs GPS leg {leg.Length:F0} m");
+            var q = RoutePath.For(g);
+            for (int i = 0; i + 1 < pts.Count - 20; i += 10)
+            {
+                Vector2 d = pts[i + 1] - pts[i];
+                if (d.sqrMagnitude < 1e-4f) continue;
+                Assert.Equal(PlanStatus.Ok, planner.Plan(pts[i], Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg, exit, q));
+                Assert.False(HasUTurn(q), $"{destination}: point {i} {pts[i]}: no U-turn");
             }
         }
     }

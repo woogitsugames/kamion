@@ -9,13 +9,25 @@
 # the region catalog keep using each tile's own start route.
 schema: truck-sim-pl/route-links/1
 links:
+  # route-start-s24 (build #3 P2 GPS "zawroc"): this link used to be `after_route` of the C control route, which ends on
+  # the DK8 northbound carriageway ~330 m before the north seam; the shortest way on to Maczka from there was a U-turn
+  # over the median crossover at (-821, 861) and back south (~1.5 km more than the GPS leg, which turns west at the
+  # DK8/DK19 junction). Now it REPLACES the C route from its first node (as c-andersa-to-wygoda): depot -> rondo
+  # Pamieci Biezenstwa -> Andersa -> west at the DK8/DK19 junction -> DK8 Maczka westbound to the seam. Destination
+  # `any` = every trip out of C that has no link of its own (tykocin, s8, maczka); WorldStreamer prefers a link of the
+  # chosen destination (dojlidy, wasilkow) over this one, also when the game starts in C.
   - id: c-dk8-to-maczka
     tile: bialystok-industrial-c
-    destination: any            # every trip out of C: the C start route ends on DK8/DK19 ~700 m before the Maczka seam
-    after_route: bialystok-industrial-c   # starts at the end of this tile's start route
+    destination: any
+    replaces_route: bialystok-industrial-c
     end_epsg2180: [776971.0, 596279.2]    # Maczka route entry on the C | Maczka seam (Data/Regions/bialystok-maczka/route_endpoints.json)
     tail_to: route:bialystok-maczka       # last BLEND_M m shifted onto the Maczka route start (lane offset of the next tile)
-    note: "C start route end (DK8/DK19) -> DK8 Maczka westbound to the seam with bialystok-maczka"
+    # same first ~400 m as c-andersa-to-wygoda (rondo Pamieci Biezenstwa): qa/link_swept_check.py without the swing =
+    # 3 tyre points off the hard surface (10 off the carriageway) at s 363-367 m, trailer, inside of the turn; the swing
+    # of that link reused
+    swing:
+      - {near_epsg2180: [778546.8, 595529.6], left_m: 2.0, half_m: 30.0}
+    note: "C route start -> rondo Pamieci Biezenstwa -> Andersa -> DK8/DK19 junction west -> DK8 Maczka westbound to the seam with bialystok-maczka"
   # The knyszyn control route ends at Rynek, a dead end for the corridor (the next road out is behind the truck: a U-turn
   # of the articulated vehicle). For a trip through Knyszyn the link REPLACES that route: same entry (seam with
   # knyszyn-s), same DK65 approach, then the roundabout DK65/DW671 and the exit arm of the destination.

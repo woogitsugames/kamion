@@ -90,6 +90,10 @@ namespace Game.World.Streaming
         /// <summary>Route links bound to <see cref="Graph"/> (set in <see cref="Init"/>; empty when the json is missing).</summary>
         public RouteLinks Links { get; private set; }
         bool[] m_LinkChained;
+        /// <summary>route-start-s24: the start tile's control route was checked once for a replacing link.</summary>
+        bool m_StartRouteChecked;
+        [Tooltip("Max distance of the autopilot's current route point from a link replacing the start route [m]; farther = already past the fork, the control route stays")]
+        public float routeReplaceMaxOffsetM = 3f;
 
         public TileGraph Graph { get; private set; }
         public StreamingPolicy Policy { get; private set; }
@@ -374,6 +378,7 @@ namespace Game.World.Streaming
         {
             Links = links;
             m_LinkChained = new bool[links != null ? links.Count : 0];
+            m_StartRouteChecked = false;
         }
 
         /// <summary>Static visual QA: adopt an already loaded tile and apply the player's seam rules.
@@ -512,11 +517,18 @@ namespace Game.World.Streaming
         /// (<see cref="routeDestination"/>) whose tile is Ready and whose first point meets the path end. A link with
         /// <c>replacesRoute</c> = tile X is appended instead of X's start route (same first point; e.g. the knyszyn control
         /// route ends at Rynek, the Tykocin link leaves the roundabout on DW671). No allocation unless a route is appended.
+        /// route-start-s24: the same holds for the START tile (<see cref="ReplaceStartRoute"/>, once, before anything is
+        /// appended), and a link of the chosen destination wins over a link for <c>any</c> destination.
         /// </summary>
         void ContinueRoute()
         {
             if (routePath == null || !routePath.TryGetPathEnd(out Vector3 end)) return;
             float join2 = routeJoinM * routeJoinM;
+            if (!m_StartRouteChecked)
+            {
+                m_StartRouteChecked = true;
+                if (ReplaceStartRoute(join2) && !routePath.TryGetPathEnd(out end)) return;
+            }
             for (int guard = 0; guard < m_Tiles.Length + (Links != null ? Links.Count : 0); guard++)
             {
                 int link = FindLinkAt(end, join2);
@@ -553,20 +565,60 @@ namespace Game.World.Streaming
         }
 
         /// <summary>First not yet appended link of the chosen destination whose tile is Ready and whose first point is within
-        /// sqrt(<paramref name="join2"/>) of <paramref name="end"/>; -1 = none. No allocation.</summary>
-        int FindLinkAt(Vector3 end, float join2)
+        /// sqrt(<paramref name="join2"/>) of <paramref name="end"/>; -1 = none. A link naming the chosen destination wins
+        /// over one for <c>any</c> destination (route-start-s24: C has c-dk8-to-maczka for every trip and
+        /// c-andersa-to-wygoda / c-dk8-north-to-wasilkow from the same first point). No allocation.</summary>
+        int FindLinkAt(Vector3 end, float join2) => FindLink(end, join2, -1);
+
+        /// <summary><see cref="FindLinkAt"/>, limited to links replacing the start route of <paramref name="replacesTile"/>
+        /// when it is >= 0. No allocation.</summary>
+        int FindLink(Vector3 end, float join2, int replacesTile)
         {
             if (Links == null || m_LinkChained == null) return -1;
+            int fallback = -1;
             for (int i = 0; i < Links.Count; i++)
             {
                 int ti = Links.TileOf[i];
                 if (m_LinkChained[i] || ti < 0 || Links.Links[i].e.Length < 2 || !Links.Applies(i, routeDestination)) continue;
+                if (replacesTile >= 0 && Links.ReplacesTile[i] != replacesTile) continue;
                 if (Policy.StateOf(ti) != TileState.Ready) continue;
                 Vector3 a = Links.WorldPoint(i, 0, Graph, m_Wx, m_Wy);
                 float dx = a.x - end.x, dz = a.z - end.z;
-                if (dx * dx + dz * dz <= join2) return i;
+                if (dx * dx + dz * dz > join2) continue;
+                if (!RouteLinks.IsAnyDestination(Links.Links[i].destination)) return i;
+                if (fallback < 0) fallback = i;
             }
-            return -1;
+            return fallback;
+        }
+
+        /// <summary>
+        /// route-start-s24 (build #3 P2 GPS "zawroc"): the game started in a tile whose control route is replaced for the
+        /// chosen destination (`replaces_route`, e.g. C: c-dk8-to-maczka turns west at the DK8/DK19 junction instead of the
+        /// control route's run north to the DK8 median crossover). The autopilot path already IS that control route
+        /// (bootstrap), so it is swapped for the link - same first point - as long as the truck has not passed the fork
+        /// (<see cref="routeReplaceMaxOffsetM"/>). Without an <see cref="IReplaceableStreamedRoute"/> nothing changes.
+        /// Once per start (a tile event; allocates the link points).
+        /// </summary>
+        bool ReplaceStartRoute(float join2)
+        {
+            if (StartTile < 0 || Links == null || !(routePath is IReplaceableStreamedRoute rp)) return false;
+            var st = m_Tiles[StartTile];
+            if (st.routeComp == null || st.route == null || st.routeComp.points == null || st.routeComp.points.Length < 2) return false;
+            Vector3 first = st.route.TransformPoint(st.routeComp.points[0]);
+            int link = FindLink(first, join2, StartTile);
+            if (link < 0) return false;
+            var pts = Links.WorldPoints(link, Graph, m_Wx, m_Wy);
+            if (!rp.TryReplacePath(pts, Links.Links[link].maxspeedKmh, routeReplaceMaxOffsetM))
+            {
+                Debug.LogWarning(string.Format(CultureInfo.InvariantCulture,
+                    "[STREAM] start route of {0} kept: link {1} (to {2}) not taken (truck past the fork or route_end set)",
+                    Graph.Tiles[StartTile].id, Links.Links[link].id, routeDestination));
+                return false;
+            }
+            m_LinkChained[link] = true;
+            Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] start route of {0} replaced by link {1} (to {2}): {3:F0} m",
+                Graph.Tiles[StartTile].id, Links.Links[link].id, routeDestination, Links.Links[link].lengthM));
+            return true;
         }
 
         int m_LoggedPin = -2;

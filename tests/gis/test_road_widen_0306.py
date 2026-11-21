@@ -125,7 +125,7 @@ def test_corridor_pieces_follow_the_links():
     pieces = {t: k for t, k, _L in CL.corridor_pieces(cor, d["links"])}
     assert pieces["knyszyn"] == "link:knyszyn-dk65-to-dw671-w"
     assert pieces["knyszyn-w"] == "link:knyszyn-w-dw671"               # start_epsg2180 link replaces the route
-    assert pieces["bialystok-industrial-c"] == "route+link:c-dk8-to-maczka"
+    assert pieces["bialystok-industrial-c"] == "link:c-dk8-to-maczka"         # route-start-s24: replaces the C route
     assert pieces["dk65-05"] == "route"
 
 
