@@ -16,3 +16,8 @@
 - test_seam_shear_knw.py 3 passed; route_links odświeżone (tylko knyszyn-w-dw671, max 0,33 m).
 - Przebudowa w tle: artifacts/seam-knw-s24/run-build.ps1 → build.log / build.exit (knyszyn-w, knyszyn, export-route, route_links, probe, combo).
 - NASTĘPNY KROK: `Get-Content artifacts/seam-knw-s24/build.log -Tail 20`; po exit 0 import Win64 obu kafli + visual-qa knyszyn.
+
+## krok 4
+- Pierwsza przebudowa knyszyn-w (3,4 min): road_consistency 3→35 (marking_off_carriageway 6, obstacle_in_lane 26) — wszystkie na krawędziach kafla: farba i próbki pasów prostopadłe przy punkcie szwu wychodzą poza kafel, gdy asfalt kończy się na linii szwu.
+- Poprawka: meshing.clip_layer_to_box (markings przycięte do bbox kafla, build_world po decals) + consistency: próbki pasa poza kaflem = teren sąsiada. Test 4 passed.
+- NASTĘPNY KROK: ponowny run-build.ps1 po zakończeniu bieżącego (build.exit).

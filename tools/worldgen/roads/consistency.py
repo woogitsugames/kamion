@@ -241,6 +241,9 @@ def check(w, instances, region_id, pipeline, report_extra=None):
     cases = _Cases(w.origin, route)
     chains = [c for c in w.net.chains if not c.meta.get("absorbed") and len(c.line.p) >= 2]
     stats = {"marking_tris": 0, "lane_samples": 0, "approach_lanes": 0, "props_checked": 0}
+    _bb = (getattr(w, "region", None) or {}).get("bbox")
+    tile_box = None if not _bb else (_bb["xmin"] - w.origin[0] + 0.01, _bb["ymin"] - w.origin[1] + 0.01,
+                                     _bb["xmax"] - w.origin[0] - 0.01, _bb["ymax"] - w.origin[1] - 0.01)
 
     # ---- 1. markings on something that is not carriageway
     for p in w.buf.parts:
@@ -283,6 +286,12 @@ def check(w, instances, region_id, pipeline, report_extra=None):
         P = np.array(P)
         stats["lane_samples"] += len(P)
         lab = idx.classify(P)
+        if tile_box is not None:
+            # seam-knw-s24: a lane sample square to the axis near a seam point can lie beyond the tile edge (the asphalt
+            # now ends ON the seam line, meshing.seam_shear): that surface is the neighbour's, not an obstacle here
+            outside = ((P[:, 0] < tile_box[0]) | (P[:, 0] > tile_box[2]) | (P[:, 1] < tile_box[1]) | (P[:, 1] > tile_box[3]))
+            stats["lane_samples_beyond_tile"] = stats.get("lane_samples_beyond_tile", 0) + int(outside.sum())
+            lab = np.where(outside, "carriageway", lab)
         for b in np.nonzero(~np.isin(lab, DRIVABLE))[0].tolist():
             s, li, trav = meta[b]
             cases.add("obstacle_in_lane", P[b], {"what": str(lab[b]), "lane": li, "s": round(float(s), 1)},

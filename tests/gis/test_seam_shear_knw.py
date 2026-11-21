@@ -59,3 +59,19 @@ def test_square_crossing_and_inner_end_unchanged(monkeypatch):
     c, st, T, N = _chain(221.0)
     net = SimpleNamespace(nodes={"j": {"boundary": False}, "seam": {"boundary": False}})
     assert M.seam_shear(net, c, st, T, N, np.full(len(st), 3.0)) is N
+
+
+def test_markings_clipped_to_the_tile_box():
+    buf = M.MeshBuf()
+    V = np.array([[-2.0, 0.0, 1.0], [2.0, 0.0, 1.0], [2.0, 0.2, 1.0], [-2.0, 0.2, 1.0]])
+    buf.add("markings", "marking_white", V, V[:, :2] * 10.0, np.array([(0, 1, 2), (0, 2, 3)]), UV1=V[:, :2])
+    V2 = V + [5.0, 5.0, 0.0]
+    buf.add("markings", "marking_white", V2, V2[:, :2], np.array([(0, 1, 2), (0, 2, 3)]))
+    rep = M.clip_layer_to_box(buf, "markings", (-10.0, -10.0, 0.0, 10.0))
+    p, q = buf.parts
+    used = np.unique(p.T)
+    assert p.V[used, 0].max() <= 1e-9 and p.V[used, 0].min() == -2.0
+    area = sum(0.5 * abs(np.cross(p.V[b] - p.V[a], p.V[c] - p.V[a])[2]) for a, b, c in p.T)
+    assert abs(area - 0.4) < 1e-9                      # half of the 4 x 0.2 m stripe
+    assert np.allclose(p.UV[used], p.V[used, :2] * 10.0) and np.allclose(p.UV1[used], p.V[used, :2])
+    assert len(q.T) == 0 and rep["dropped"] == 2 and rep["clipped"] == 2

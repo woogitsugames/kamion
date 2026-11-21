@@ -951,6 +951,12 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     log("markings", mk_report.get("markings"))
     DC.build(w.buf, w.net, w.junctions, mk_report)
     log("decals", mk_report.get("decals"))
+    # seam-knw-s24: paint laid square to the axis at a seam point must not overhang the tile edge (meshing.seam_shear)
+    _bb = w.region["bbox"]
+    mk_report["markings_seam_clip"] = M.clip_layer_to_box(
+        w.buf, "markings", (_bb["xmin"] - w.origin[0], _bb["ymin"] - w.origin[1],
+                            _bb["xmax"] - w.origin[0], _bb["ymax"] - w.origin[1]))
+    log("markings clipped to the tile box", mk_report["markings_seam_clip"])
 
     # terrain conform (roads + paved areas) + streetscape (buildings, yards, furniture, vegetation)
     road_z, rmask = CF.rasterise([p for p in w.buf.parts if p.layer == "road"], w.hf)

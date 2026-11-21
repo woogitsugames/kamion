@@ -132,6 +132,73 @@ def seam_shear(net, c, st, T, N, hw):
     return N if out is None else out
 
 
+def _clip_poly(poly, axis, val, keep_below):
+    """Sutherland-Hodgman against x[axis] <= val (keep_below) / >= val; poly = list of (V(3), attrs(k)) vertices."""
+    out = []
+    n = len(poly)
+    for i in range(n):
+        a, b = poly[i], poly[(i + 1) % n]
+        da = (a[0][axis] - val) * (1 if keep_below else -1)
+        db = (b[0][axis] - val) * (1 if keep_below else -1)
+        if da <= 0:
+            out.append(a)
+        if (da < 0 < db) or (db < 0 < da):
+            t = da / (da - db)
+            out.append((a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])))
+    return out
+
+
+def clip_layer_to_box(buf: MeshBuf, layer: str, box, tol=1e-3) -> dict:
+    """seam-knw-s24: cut the triangles of `layer` at the tile box (xmin, ymin, xmax, ymax, local metres). Paint that a
+    chain lays square to its axis at a seam point overhung the tile edge once the asphalt ends ON the seam line
+    (seam_shear): the decal floated past this tile's surface (road_consistency marking_off_carriageway) and doubled
+    the neighbour's own paint. Triangles inside stay untouched; crossing ones are clipped (V, UV, UV1, COL
+    interpolated) and fan-triangulated; outside ones are dropped."""
+    x0, y0, x1, y1 = box
+    rep = {"clipped": 0, "dropped": 0}
+    for p in buf.parts:
+        if p.layer != layer or not len(p.T):
+            continue
+        V = p.V
+        out_x = (V[:, 0] < x0 - tol) | (V[:, 0] > x1 + tol) | (V[:, 1] < y0 - tol) | (V[:, 1] > y1 + tol)
+        bad = out_x[p.T].any(1)
+        if not bad.any():
+            continue
+        attrs = [a for a in (p.UV, p.UV1, p.COL) if a is not None]
+        widths = [a.shape[1] for a in attrs]
+        A = np.concatenate(attrs, axis=1) if attrs else np.zeros((len(V), 0))
+        newV, newA, newT = [], [], []
+        base = len(V)
+        for t in p.T[bad]:
+            poly = [(V[k].astype(float), A[k].astype(float)) for k in t]
+            for axis, val, below in ((0, x1, True), (0, x0, False), (1, y1, True), (1, y0, False)):
+                if not poly:
+                    break
+                poly = _clip_poly(poly, axis, val, below)
+            if len(poly) < 3:
+                rep["dropped"] += 1
+                continue
+            rep["clipped"] += 1
+            i0 = base + len(newV)
+            for v, a in poly:
+                newV.append(v); newA.append(a)
+            for k in range(1, len(poly) - 1):
+                newT.append((i0, i0 + k, i0 + k + 1))
+        T = p.T[~bad]
+        if newV:
+            V = np.concatenate([V, np.array(newV)])
+            A = np.concatenate([A, np.array(newA).reshape(len(newV), -1)])
+            T = np.concatenate([T, np.array(newT, np.int64)]) if newT else T
+        p.V, p.T = V, T
+        k = wi = 0
+        for name in ("UV", "UV1", "COL"):
+            if getattr(p, name) is not None:
+                setattr(p, name, A[:, k:k + widths[wi]])
+                k += widths[wi]
+                wi += 1
+    return rep
+
+
 # ---------------------------------------------------------------------------------------------
 def build_ribbon(buf: MeshBuf, net, c, coarse=False):
     if c.meta.get("absorbed"):
