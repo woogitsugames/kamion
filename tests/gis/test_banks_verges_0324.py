@@ -144,3 +144,47 @@ def test_shore_constants_keep_the_sheet_overlap_rule():
     # a land node may dip only where the sheet (outline + SHEET_OVERLAP_M) covers it, and never deeper than the bed
     assert WT.SHEET_OVERLAP_M >= 1.0 and WT.SHORE_DIP_M <= WT.BED0_M and WT.SHORE_BAR_M < WT.FREEBOARD_M
     assert WT.MUD_BAND_M[0] < WT.MUD_BAND_M[1] <= WT.BANK_M
+
+
+def test_real_network_dk65_07_gets_sward_and_guide_posts():
+    """dk65-07 (old DK65 between fields and a wood) on a flat heightfield: every kerbless side gets grass cards, the
+    ditch parts go to the terrain, U-1a posts stand in pairs outside the built-up area and off the carriageway."""
+    import json
+    import pytest
+    from roads import pipeline
+    from roads.profile import Heightfield
+    from streetscape import built_up as BU
+    rid = "dk65-07"
+    rdir = pipeline.REGIONS / rid
+    if not (rdir / "generated" / "streetscape_sources.json").exists():
+        pytest.skip("dk65-07 sources not generated")
+    region = pipeline.load_region(rid)
+    origin = (region["origin"]["x"], region["origin"]["y"])
+    tm = json.loads((rdir / "terrain.json").read_text(encoding="utf-8"))
+    w_, h_ = tm["samples"]
+    wd = pipeline.build(rid, hf=Heightfield(np.full((h_, w_), float(region["origin"]["z"])), tm["bbox"], origin))
+    secs = VF.sections(wd.buf.parts)
+    assert len(secs) >= 8 and all(s["ditch"] for s in secs)
+    rep = {}
+    assert VF.build(wd.buf, secs, rep) > 4000 and rep["verge_flora"]["triangles"] < 40000        # budget guard
+    assert VF.tag_for_terrain(secs) == 3 * len(secs)
+
+    class PL:
+        surf = None
+
+        def __init__(self):
+            self.items = []
+
+        def add(self, name, p, yaw, z=None, sz=1.0, src="", group=None):
+            self.items.append({"p": name, "e": float(p[0]), "n": float(p[1]), "src": src})
+            return 0.0
+    pl = PL()
+    src = json.loads((rdir / "generated" / "streetscape_sources.json").read_text(encoding="utf-8"))
+    frep = {}
+    n = GP.place(pl, wd.net, BU.zone_for(wd.net, src, origin), frep)
+    assert n >= 4 and n % 2 == 0 and frep["guide_posts_u1a"]["skipped"]["built_up"] > 0
+    chains = {c.id: c for c in wd.net.chains}
+    for it in pl.items:
+        c = chains[it["src"].split(":", 2)[2].rsplit(":", 2)[0]]
+        s, lat = c.line.project(np.array([it["e"], it["n"]]))
+        assert abs(lat) - float(c.hw_at(s)) >= GP.MIN_FROM_CARRIAGEWAY_M - 1e-6        # never on the carriageway
