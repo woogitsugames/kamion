@@ -1,4 +1,4 @@
-# ADR (DRAFT, numer nada lider) — koniec łańcucha drogi wzdłuż szwu kafla (seam-knw-s24)
+# ADR 0319 — Skośny koniec łańcucha drogi na szwie kafla
 
 Status: Proposed (seam-knw-s24, 2026-11-21). Powiązane: 0224 (seams.py), 0233 (seam_section), 0275 (seam_taper),
 0306 (D94), 0274 / D95 (rondo Knyszyn).
