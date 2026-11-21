@@ -467,6 +467,10 @@ def build(buf, net, juncs, report):
                 elif kind < 0.7:             # wheel-path patch (ADR 0194: in a wheel path of a lane)
                     width = 0.8 + hf(*key, i, "w") * 0.6
                     length = 2.0 + hf(*key, i, "l") * 5.0
+                    if hf(*key, i, "strip") < 0.3:
+                        # ADR 0323: long strip overlay along a rutted wheel path (Commons cs7403215, DW671: dark
+                        # strips of 10-30 m along the lane); follows the chain on the 2.5 m grid of patch()
+                        length = 8.0 + hf(*key, i, "l") * 17.0
                     lat = wheel_path_lat(c, sec, hw, key + (i,))
                 else:                        # small square pothole repair (ADR 0194: 60 % in a wheel path)
                     width = 0.6 + hf(*key, i, "w") * 0.9

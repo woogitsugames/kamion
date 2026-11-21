@@ -172,8 +172,13 @@ MATERIALS = {
     # (bare zinc 1, road film / rust 0), roughness 0.56 from the set. WORKING_VALUE, matched in the same frames on an
     # overcast photo (454716650857984: beam / asphalt 1.4-1.5) and sunny ones (2948595898752384: sunlit beam 1.5 x
     # asphalt, shaded 0.6 x; 500263111404933 from below: beam / grass 3-4).
-    "barrier_steel": {"color": [0.50, 0.505, 0.51], "rough": 0.56, "metal": 1.0, "surface": "steel",
-                      "texture_set": "barrier_galv", "set_tile": True, "set_metal": 0.9, "shadow_low": False,
+    # ADR 0323 (critic wave 6 pkt 2.4 / 2.8 "chromowo biale z lustrzanym odblaskiem"): at albedo 0.50 / metal 0.9 /
+    # set roughness 0.56 the curved beam mirrored the sky probe in bright streaks (route_s1121 clear and overcast).
+    # Weathered hot-dip zinc is a matt grey: the zinc carbonate patina scatters diffusely. Albedo 0.42, metal scale
+    # 0.55, smoothness scale 0.6 (set roughness 0.56 -> ~0.74). WORKING_VALUE, judged in the same frames.
+    "barrier_steel": {"color": [0.42, 0.425, 0.43], "rough": 0.74, "metal": 1.0, "surface": "steel",
+                      "texture_set": "barrier_galv", "set_tile": True, "set_metal": 0.55, "set_smooth": 0.6,
+                      "shadow_low": False,
                       # horizon occlusion of the environment term: a beam face reflects the road and the far bank, not
                       # the sky. Iterated on the generated .mat (artifacts/junctions-r6 t1 / t2 / b2, lum_set.sh):
                       # metal 0.9 + 0 -> beam / asphalt 1.43-1.48 sun, 1.51-1.64 overcast, 0.98 in shade (photo 0.58);
