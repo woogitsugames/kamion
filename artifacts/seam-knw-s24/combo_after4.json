@@ -1,0 +1,427 @@
+{
+ "widen_m": 0.25,
+ "corridors": {
+  "bialystok-tykocin": [
+   {
+    "tile": "bialystok-industrial-c",
+    "piece": "route+link:c-dk8-to-maczka",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-maczka",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-kleeberga",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-knyszynska",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-01",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-02",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-03",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-04",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-05",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-06",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-07",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-08",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-09",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-10",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-11",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "knyszyn-s",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tyre_points": 6050,
+    "opposite": 0,
+    "kerb": 0,
+    "apron": 95,
+    "off_hard": 0,
+    "seam_skipped": 39,
+    "events": [],
+    "tile": "knyszyn",
+    "piece": "link:knyszyn-dk65-to-dw671-w",
+    "lead_m": 44.0
+   },
+   {
+    "tyre_points": 5878,
+    "opposite": 0,
+    "kerb": 0,
+    "apron": 0,
+    "off_hard": 0,
+    "seam_skipped": 38,
+    "events": [],
+    "tile": "knyszyn-w",
+    "piece": "link:knyszyn-w-dw671",
+    "lead_m": 44.8
+   },
+   {
+    "tile": "dw671-tykocin-01",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dw671-tykocin-02",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dw671-tykocin-03",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dw671-tykocin-04",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dw671-tykocin-05",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dw671-tykocin-06",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dw671-tykocin-07",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dw671-tykocin-08",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dw671-tykocin-09",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "tykocin",
+    "piece": "link:tykocin-dw671-to-rynek",
+    "skipped": "filtered"
+   }
+  ],
+  "bialystok-s8": [
+   {
+    "tile": "bialystok-industrial-c",
+    "piece": "route+link:c-dk8-to-maczka",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-maczka",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-kleeberga",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-knyszynska",
+    "piece": "link:knyszynska-kleeberga-s",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-porosly",
+    "piece": "link:porosly-dk8-w",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk8-s8-jeroniki",
+    "piece": "link:jeroniki-dk8-to-s8",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk65-01",
+    "piece": "link:dk65-01-s8-corner",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "s8-01",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "s8-02",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "s8-03",
+    "piece": "link:s8-03-to-s8-04",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "s8-04",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "s8-05",
+    "piece": "route",
+    "skipped": "filtered"
+   }
+  ],
+  "bialystok-dojlidy-dk19": [
+   {
+    "tile": "bialystok-industrial-c",
+    "piece": "link:c-andersa-to-wygoda",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-wygoda",
+    "piece": "link:wygoda-andersa-to-bojary",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-bojary",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-mickiewicza",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-dojlidy",
+    "piece": "link:dojlidy-ciolkowskiego-corner-to-krywlany",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-krywlany",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "bialystok-dojlidy",
+    "piece": "link:dojlidy-ciolkowskiego-corner-to-krywlany",
+    "skipped": "filtered"
+   }
+  ],
+  "s8-loop": [
+   {
+    "tile": "dk65-01",
+    "piece": "link:dk65-01-s8-corner",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "s8-01",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "s8-02",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "s8-03",
+    "piece": "link:s8-03-to-s8-04",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "s8-04",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "s8-05",
+    "piece": "route",
+    "skipped": "filtered"
+   }
+  ],
+  "bialystok-wasilkow": [
+   {
+    "tile": "bialystok-industrial-c",
+    "piece": "link:c-dk8-north-to-wasilkow",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk8-wasilkow-01",
+    "piece": "link:wasilkow-01-to-02",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk8-wasilkow-02",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk8-wasilkow-03",
+    "piece": "route",
+    "skipped": "filtered"
+   },
+   {
+    "tile": "dk8-korycin-01",
+    "piece": "route",
+    "skipped": "filtered"
+   }
+  ]
+ },
+ "links": {
+  "knyszyn-dk65-to-dk65-w": {
+   "tyre_points": 6225,
+   "opposite": 0,
+   "kerb": 0,
+   "apron": 20,
+   "off_hard": 0,
+   "seam_skipped": 5,
+   "events": [],
+   "tile": "knyszyn",
+   "piece": "link:knyszyn-dk65-to-dk65-w",
+   "lead_m": 0.0
+  },
+  "knyszyn-rynek-to-dw671-w": {
+   "tyre_points": 7854,
+   "opposite": 32,
+   "kerb": 0,
+   "apron": 26,
+   "off_hard": 0,
+   "seam_skipped": 5,
+   "events": [
+    {
+     "kind": "opposite",
+     "s0": 26.0,
+     "s1": 36.0,
+     "n": 26,
+     "axles": [
+      "trailer1:left",
+      "trailer2:left",
+      "trailer3:left"
+     ],
+     "en": [
+      -539.6,
+      -197.5
+     ]
+    },
+    {
+     "kind": "opposite",
+     "s0": 112.0,
+     "s1": 116.0,
+     "n": 6,
+     "axles": [
+      "trailer1:left",
+      "trailer2:left",
+      "trailer3:left"
+     ],
+     "en": [
+      -604.0,
+      -175.5
+     ]
+    }
+   ],
+   "tile": "knyszyn",
+   "piece": "link:knyszyn-rynek-to-dw671-w",
+   "lead_m": 44.0
+  },
+  "knyszyn-rynek-to-dk65-w": {
+   "tyre_points": 8095,
+   "opposite": 35,
+   "kerb": 0,
+   "apron": 0,
+   "off_hard": 0,
+   "seam_skipped": 5,
+   "events": [
+    {
+     "kind": "opposite",
+     "s0": 26.0,
+     "s1": 37.0,
+     "n": 29,
+     "axles": [
+      "trailer1:left",
+      "trailer2:left",
+      "trailer3:left"
+     ],
+     "en": [
+      -539.7,
+      -197.5
+     ]
+    },
+    {
+     "kind": "opposite",
+     "s0": 112.0,
+     "s1": 116.0,
+     "n": 6,
+     "axles": [
+      "trailer1:left",
+      "trailer2:left",
+      "trailer3:left"
+     ],
+     "en": [
+      -603.9,
+      -175.5
+     ]
+    }
+   ],
+   "tile": "knyszyn",
+   "piece": "link:knyszyn-rynek-to-dk65-w",
+   "lead_m": 44.0
+  }
+ },
+ "total": {
+  "tyre_points": 34102,
+  "opposite": 67,
+  "kerb": 0,
+  "apron": 141,
+  "off_hard": 0,
+  "seam_skipped": 92
+ }
+}

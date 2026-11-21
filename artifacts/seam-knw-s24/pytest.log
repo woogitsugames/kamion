@@ -1,0 +1,67 @@
+acquired slot seam-knw-s24-pytest (1/3)
+........................................................................ [ 32%]
+........................................................................ [ 64%]
+..................................................ss.........FF......F.. [ 96%]
+........                                                                 [100%]
+================================== FAILURES ===================================
+___________________ test_knyszyn_start_drives_on_from_rynek ___________________
+
+    def test_knyszyn_start_drives_on_from_rynek():
+        """seams-fix-s23: a drive started in knyszyn (`-scene knyszyn`) has the control route to Rynek as its path; a link
+        `after_route: knyszyn` per destination continues it from the route end WITHOUT turning round (the first edge is not
+        the one the route came in on), through the roundabout, to the same seam point as the corridor link of that
+        destination (so knyszyn-w-dw671 / the knyszyn-w route join it), with the head blended exactly onto the route end."""
+        rs = json.loads((ROOT / "Data/Regions/knyszyn/route_start.json").read_text(encoding="utf-8"))
+        reg = {t["id"]: t for t in _graph()["tiles"]}["knyszyn"]
+        links = _links()["links"]
+        after = {L["destination"]: L for L in links if L["afterRoute"] == "knyszyn"}
+        assert set(after) == {"tykocin", "monki"}
+        g = json.loads((ROOT / "Data/Regions/knyszyn/roads.graph.json").read_text(encoding="utf-8"))
+        ring = {e["from"] for e in g["edges"] if (e["attrs"].get("junction") or {}).get("v") == "roundabout"}
+        ex, ey = rs["points_en"][-1]
+        for dest, L in after.items():
+            assert L["tile"] == "knyszyn" and L["replacesRoute"] == ""
+            assert L["graphNodes"][0] == rs["graph_nodes"][-1], L["id"]
+            assert L["graphNodes"][1] != rs["graph_nodes"][-2], L["id"]           # no U-turn onto the arrival edge
+            assert abs(L["e"][0] - ex) < 0.01 and abs(L["n"][0] - ey) < 0.01, L["id"]
+            assert any(n.rstrip("s") in ring or n in ring for n in L["graphNodes"]), L["id"]
+            twin = next(x for x in links if x["replacesRoute"] == "knyszyn" and x["destination"] == dest)
+>           assert abs(L["endX"] - twin["endX"]) < 0.05 and abs(L["endY"] - twin["endY"]) < 0.05, L["id"]
+E           AssertionError: knyszyn-rynek-to-dw671-w
+E           assert (0.0 < 0.05 and 0.0639999998966232 < 0.05)
+E            +  where 0.0 = abs((760587.0 - 760587.0))
+E            +  and   0.0639999998966232 = abs((611968.403 - 611968.467))
+
+tests\gis\test_route_links_s23.py:162: AssertionError
+_________________ test_link_seams_route_and_height_continuous _________________
+
+seams = [{'corridor': 'bialystok-tykocin', 'a': 'bialystok-industrial-c', 'b': 'bialystok-maczka', 'exit': 'link:c-dk8-to-macz...or': 'bialystok-s8', 'a': 'bialystok-industrial-c', 'b': 'bialystok-maczka', 'exit': 'link:c-dk8-to-maczka', ...}, ...]
+
+    def test_link_seams_route_and_height_continuous(seams):
+        assert {(r["a"], r["b"]) for r in seams} >= {("knyszyn", "knyszyn-w"), ("knyszyn-w", "dw671-tykocin-01")}
+        for r in seams:
+>           assert abs(r["delta_route_lat"]) <= 0.1, r          # autopilot polyline does not step sideways
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: {'corridor': 'bialystok-s8', 'a': 'dk8-s8-jeroniki', 'b': 'dk65-01', 'exit': 'link:jeroniki-dk8-to-s8', ...}
+E           assert 0.375 <= 0.1
+E            +  where 0.375 = abs(0.375)
+
+tests\gis\test_route_links_s23.py:185: AssertionError
+______________________________ test_tile_ratchet ______________________________
+
+    def test_tile_ratchet():
+        q = _qa()
+        for kind, n in q["by_kind"].items():
+            assert kind in RATCHET, f"new consistency category {kind} ({n})"
+>           assert n <= RATCHET[kind], f"{kind}: {n} > ratchet {RATCHET[kind]}"
+E           AssertionError: marking_off_carriageway: 4 > ratchet 3
+E           assert 4 <= 3
+
+tests\gis\test_road_consistency.py:47: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_route_links_s23.py::test_knyszyn_start_drives_on_from_rynek
+FAILED tests/gis/test_route_links_s23.py::test_link_seams_route_and_height_continuous
+FAILED tests/gis/test_road_consistency.py::test_tile_ratchet - AssertionError...
+3 failed, 219 passed, 2 skipped in 582.05s (0:09:42)
+pytest exit 1
+released seam-knw-s24-pytest

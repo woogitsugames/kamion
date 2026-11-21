@@ -1162,3 +1162,15 @@ overrides:
     at_en: [-930, -685]
     proto: lamp_arc_9m
     arm_bearing_deg: 270
+
+  # seam-knw-s24: service road way 300808749 (and tertiary 98072226, 8.1 m stub in knyszyn: 0.25 m, UWAGA) crosses the knyszyn | knyszyn-w seam (EPSG:2180 760587, 613324). D94
+  # gameplay_widen (ADR 0306) runs per tile on that tile's neighbours: knyszyn-w (88.7 m of the way, a parallel road on
+  # its right) grows the +0.5 m to the left = centre offset +0.25 m; knyszyn (30.4 m, no neighbour) grows symmetrically
+  # = 0. The axis jumped 0.25 m on the seam (qa/seams.py FAIL). The same +0.25 m here: one axis on both sides; the
+  # knyszyn part has no neighbour that the shift could close on (D94 clearance unchanged). GAMEPLAY / WORKING_VALUE.
+  - id: knyszyn-service-300808749-seam-offset
+    target: {osm_way: [300808749, 98072226]}
+    reason: "seam-knw-s24: same D94 lateral placement as knyszyn-w on the shared seam (axis step 0.25 m -> 0)."
+    confidence: medium
+    verify: qa/seams.py knyszyn,knyszyn-w
+    set: {center_offset: 0.25}

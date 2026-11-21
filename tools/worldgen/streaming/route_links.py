@@ -167,6 +167,33 @@ def _swing(pts: list[list[float]], near, left_m: float, half_m: float) -> float:
     return float(s[k])
 
 
+def _cut_tail_at_tile(pts: list[list[float]], maxspeed: list[float], t: dict, eps: float = 1e-3):
+    """seam-knw-s24: drop the tail points beyond the tile box (tile_graph xmin..ymax, EPSG:2180) and end the path on
+    the box edge (linear interpolation of the segment that leaves it). Returns (pts, maxspeed, metres cut)."""
+    def inside(q):
+        return t["xmin"] - eps <= q[0] <= t["xmax"] + eps and t["ymin"] - eps <= q[1] <= t["ymax"] + eps
+    if inside(pts[-1]):
+        return pts, maxspeed, 0.0
+    k = len(pts) - 1
+    while k > 0 and not inside(pts[k]):
+        k -= 1
+    if k == 0:
+        return pts, maxspeed, 0.0
+    a, b = np.asarray(pts[k], float), np.asarray(pts[k + 1], float)
+    f = 1.0
+    for ax, lo, hi in ((0, t["xmin"], t["xmax"]), (1, t["ymin"], t["ymax"])):
+        for lim in (lo, hi):
+            d = b[ax] - a[ax]
+            if abs(d) > 1e-12:
+                u = (lim - a[ax]) / d
+                if 0.0 <= u < f and ((b[ax] < lo and lim == lo) or (b[ax] > hi and lim == hi)):
+                    f = u
+    q = a + f * (b - a)
+    cut = float(np.sum(np.hypot(*np.diff(np.asarray(pts[k:], float), axis=0).T))) - float(np.hypot(*(q - a)))
+    out = [list(p) for p in pts[:k + 1]] + [[float(q[0]), float(q[1])]]
+    return out, list(maxspeed[:k + 1]) + [maxspeed[k + 1]], round(cut, 3)
+
+
 def _stop(pts: list[list[float]], maxspeed: list[float], stop_xy):
     """ADR 0303: cut the link at the lane point nearest to stop_xy (EPSG:2180): the route autopilot stops at the path
     end, the GPS goal of the trip is the same point. The stop must lie on the link (<= STOP_TOL_M from its lane), and
@@ -230,7 +257,7 @@ def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
                 src = next(x for x in links if x["id"] == ref)
                 src_xy = [src["endX"], src["endY"]]
             blend["head"] = _blend(pts, src_xy, head=True)
-        if L.get("tail_to"):
+        if L.get("tail_to") and not L["tail_to"].startswith("link:"):
             r2 = _route(L["tail_to"].split(":", 1)[1], regions)
             reg2 = _region(L["tail_to"].split(":", 1)[1], regions)
             tgt = [r2["points_en"][0][0] + reg2["origin"]["x"], r2["points_en"][0][1] + reg2["origin"]["y"]]
@@ -241,6 +268,18 @@ def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
                 _swing(pts, sw["near_epsg2180"], float(sw["left_m"]), float(sw["half_m"]))
                 blend["swing_left"] = float(sw["left_m"])
             pts, maxspeed, length = _resample(pts, maxspeed)
+        if L.get("cut_at_tile"):
+            # seam-knw-s24 (opt-in per link): a sideways shift at the link end moves the end point square to the path, off an oblique
+            # seam (DW671 Tykocka 41 deg: 2.3 m into knyszyn-w). A link lies inside ONE tile: cut the tail at the edge.
+            pts, maxspeed, cut = _cut_tail_at_tile(pts, maxspeed, t)
+            if cut:
+                blend["tail_cut_m"] = cut
+                length = float(np.sum(np.hypot(*np.diff(np.asarray(pts, float), axis=0).T)))
+        if str(L.get("tail_to", "")).startswith("link:"):
+            # seam-knw-s24: end exactly on the end of an earlier link of the same tile (two links that leave by the same
+            # seam point must hand over to the same neighbour link head)
+            src = next(x for x in links if x["id"] == L["tail_to"].split(":", 1)[1])
+            blend["tail"] = _blend(pts, [src["endX"], src["endY"]], head=False)
         if L.get("stop_epsg2180"):    # ADR 0303: the trip ends here (parking spot), not at the end graph node
             pts, maxspeed, length, blend["stop_offset"] = _stop(pts, maxspeed, L["stop_epsg2180"])
         loc = [[round(x - ox, 3), round(y - oy, 3)] for x, y in pts]

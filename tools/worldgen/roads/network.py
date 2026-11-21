@@ -305,6 +305,24 @@ class Network:
     overrides_stale: list = field(default_factory=list)
 
 
+SEAM_DIR_EPS_M = 0.05      # seam-knw-s24: a boundary node lies on a bbox edge within this distance
+
+
+def _seam_dir(n: dict, bbox) -> np.ndarray | None:
+    """seam-knw-s24: unit vector along the tile edge a boundary node lies on (graph bbox [xmin, ymin, xmax, ymax],
+    EPSG:2180; same direction in local coordinates), None for an inner node / no bbox / a bbox corner. The mesher
+    lays the end cross-section of a chain cut at the seam along this line instead of square to the axis, so both
+    tiles end their asphalt / kerb / footway exactly on the shared edge (meshing.seam_shear)."""
+    if not n.get("boundary") or not bbox:
+        return None
+    x, y = float(n["x"]), float(n["y"])
+    on_v = min(abs(x - bbox[0]), abs(x - bbox[2])) <= SEAM_DIR_EPS_M
+    on_h = min(abs(y - bbox[1]), abs(y - bbox[3])) <= SEAM_DIR_EPS_M
+    if on_v == on_h:
+        return None
+    return np.array([0.0, 1.0]) if on_v else np.array([1.0, 0.0])
+
+
 def load(graph: dict, origin, overrides: list | None = None) -> Network:
     ox, oy = origin
     from . import carriageway_split as CS            # ADR 0274: authored split of a two-way road before a node
@@ -314,7 +332,8 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     for n in graph["nodes"]:
         nodes[n["id"]] = {"id": n["id"], "xy": np.array([n["x"] - ox, n["y"] - oy]), "deg": 0,
                           "feature": n.get("feature"), "signals": bool(n.get("signals_nearby")),
-                          "boundary": bool(n.get("boundary")), "z_terrain": n.get("z_terrain")}
+                          "boundary": bool(n.get("boundary")), "z_terrain": n.get("z_terrain"),
+                          "seam_u": _seam_dir(n, graph.get("bbox"))}
     edges = {}
     for e in sorted(graph["edges"], key=lambda e: e["id"]):
         g = np.array(e["geometry"], float) - np.array([ox, oy])

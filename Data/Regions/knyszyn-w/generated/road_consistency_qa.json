@@ -46,15 +46,15 @@
   {
    "chain": "c:w98072526:1134839334-1134842485",
    "dist_from_stop_m": 0.0,
-   "e": 1024.23,
+   "e": 1024.91,
    "junction": "j:n1134839334",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.3131316,
-   "lon": 22.9133663,
-   "n": -133.92,
+   "lat": 53.3131462,
+   "lon": 22.9133778,
+   "n": -132.26,
    "on_route": false,
    "osm_ways": [
     98072526
@@ -88,10 +88,11 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 63,
-  "kerb_tris": 14594,
-  "lane_samples": 23515,
-  "lane_samples_in_taper": 5,
-  "marking_tris": 4962,
-  "props_checked": 507
+  "kerb_tris": 14591,
+  "lane_samples": 23456,
+  "lane_samples_beyond_tile": 51,
+  "lane_samples_in_taper": 4,
+  "marking_tris": 4932,
+  "props_checked": 506
  }
 }

@@ -1,0 +1,163 @@
+acquired slot seam-knw-s24 (1/3)
+=== build_world knyszyn 2026-11-21T07:28:15
+[world   33.4s] pass 1: deck nodes 168, NMT nodes replaced under decks 144
+[world  510.0s] plots planned: 668, kerb drops 493
+[world  524.6s] house-street kerbs 0.1 m: 57 chains, 21012 m of kerb
+[world  524.6s] cycle track kerb drops: 0
+[world  551.8s] kerb drops applied: 493
+[world  551.8s] network: 158 chains, 67 junctions
+[world  554.5s] markings {'P-10 crossing': 35, 'P-10 crossing in junction': 27, 'P-1 centre line': 35, 'P-7b edge line': 6, 'P-12': 6, 'P-13': 7, 'P-10 at compact roundabout': 4, 'P-13 at compact roundabout': 4}
+[world  555.0s] decals {'patches': 227, 'oil': 103, 'gullies': 746}
+[world  555.0s] markings clipped to the tile box {'clipped': 11, 'dropped': 10}
+[world  555.0s] seam-end chains clipped to the tile box {'clipped': 41, 'dropped': 45}
+[world  570.7s] water plan: 19 bodies, 42306 nodes, 5 centre lines
+[world  570.8s] streetscape: road footprint polygon 168708 m2
+[world  611.0s] buildings {'shed': 1034, 'house': 767, 'office': 60, 'hall': 32, 'block': 3, 'hero_asset': 7} docks 0
+[world  628.7s] cycleways {'ways': 0, 'built': 0, 'skipped': {'shared': 0, 'unpaved': 0, 'override': 0}, 'planned_m2': 0, 'by_kind': {'ddr': 0, 'segregated': 0}, 'length_m': 0, 'overrides_stale': [], 'overrides_applied': []}
+[world  641.2s] paved 67 areas {'yard_paving': 7524, 'yard_concrete': 1203, 'sidewalk_paving_red': 562, 'apron_paving_light': 2639, 'yard_gravel': 12239, 'yard_asphalt': 4290, 'yard_behaton': 769, 'sidewalk_paving': 321, 'sidewalk_slabs': 656}
+[world  675.3s] water carve {'bed_nodes': 41956, 'bed_lowered_m_max': 2.18, 'bank_nodes_lowered': 16500, 'lip_nodes_raised': 493, 'water_nodes_kept_by_road': 350}
+[world  689.7s] furniture {'signal_approaches': 0, 'speed_signs': 5, 'crossing_signs': 74, 'direction_boards': 0, 'osm_signs': {'placed': {'B-33_70': 1, 'B-2': 1, 'B-33_40': 1, 'B-33_30': 2}, 'unknown': {'B-18': 2, 'A-11': 1, 'A-17': 2}, 'skipped_far': 0, 'give_way_stop': 0, 'needs_value': [{'osm_node': 3047681870, 'code': 'B-18', 'tag': 'maxweight'}, {'osm_node': 3048936912, 'code': 'B-18', 'tag': 'maxweight'}]}, 'built_up': {'placed': {'D-42': 1, 'D-43': 1}, 'boundaries': [{'chain': 'c:w286990127:1134813637-4898926854', 's': 257.5, 'e': -897.0, 'n': -731.9, 'signs': ['D-42', 'D-43'], 'basis': 'ESTIMATED BDOT10k OT_PTZB_A'}], 'osm_boundary_nodes': 0, 'advance': [], 'advance_dropped': [{'junction': 'j:n1134813637', 'code': 'B-20', 'arm_m': 148.9, 'v_kmh': 90.0, 'why': 'approach shorter than 150 m or no clear post'}], 'classification': 'ADR 0279 D33: D-42..D-43 (OSM, else BDOT10k rule); kerb not used'}, 'limit_signs': {'placed': {}, 'structures': [], 'rule': 'ADR 0307: B-16 / B-18 15 m before a bridge / tunnel with maxheight / maxweight in roads.graph.json'}, 'roundabout_signs': {'c9_islands': 0, 'exit_boards': 3, 'diagrams': 0, 'diagram_at': [], 'moved_before_barrier': 0, 'a8': [{'junction': 'j:n13115969575', 'entry': 'c:w286990127:1134813637-4898926854', 'why': 'built-up, approach 90 km/h > 50 (visibility not verified)', 'placed': True, 'd_m': 250.0, 'v_kmh': 90.0}, {'junction': 'j:n13115969575', 'entry': 'c:w1464342641:3047667218-13114267776', 'why': 'built-up, <= 50 km/h: assumed visible (UNVERIFIED, no sight-distance data)', 'placed': False}, {'junction': 'j:n13115969575', 'entry': 'c:w232511646:3047667219-1134814357', 'why': 'built-up, approach 70 km/h > 50 (visibility not verified); dropped: approach 29 m < 150 m', 'placed': False}], 'diagrams_replaced': []}, 'landmarks': {'gantries': [], 'landmarks': [], 'stale': []}, 'bus_stop_wear_candidates': [{'osm_node': 3047617089, 'ref': None, 'bus': 'yes', 'local_en': [-616.0400000000373, -210.19999999995343], 'half_m': 1024.0}, {'osm_node': 3048936911, 'ref': None, 'bus': 'yes', 'local_en': [-257.85999999998603, -384.38000000000466], 'half_m': 1024.0}], 'points': {'bus_shelter': 2, 'bus_stop': 5, 'bus_shelter_black': 3, 'pylon': 10, 'sliding_gate': 7, 'bench': 6}, 'lamps': {'osm': 6, 'rule': 458, 'policy': 'led', 'support_adjustments': [{'p': 'lamp_old_steel_led_8m', 'from': [-710.4263254477416, -717.0414217709816], 'to': [-710.1788380743263, -716.7939343975663], 'before_m': 0.433, 'after_m': 0.003}, {'p': 'lamp_8m', 'from': [635.1884885025149, 421.92181718442623], 'to': [634.7866708985316, 420.9517436752894], 'before_m': 0.23, 'after_m': 0.13}, {'p': 'lamp_8m', 'from': [-676.0282054063996, -284.71578298581466], 'to': [-676.2756927798149, -284.46829561239934], 'before_m': 0.451, 'after_m': 0.012}, {'p': 'lamp_arc_9m', 'from': [-1010.0, -601.0], 'to': [-1010.0, -600.65], 'before_m': 0.448, 'after_m': 0.007}, {'p': 'lamp_arc_9m', 'from': [-953.0, -654.0], 'to': [-952.65, -654.0], 'before_m': 0.941, 'after_m': 0.02}, {'p': 'lamp_arc_9m', 'from': [-930.0, -685.0], 'to': [-929.5050252531694, -684.5050252531694], 'before_m': 0.284, 'after_m': 0.016}], 'by_family': {'lamp_10m': 54, 'lamp_8m': 161, 'lamp_9m': 33, 'lamp_old_concrete_led_9m': 137, 'lamp_old_steel_led_8m': 79}}, 'bridge_median_lamps': {'removed': 0, 'placed': 0}, 'fences': {'panel_m': 665, 'concrete_m': 0, 'retaining_m': 0, 'retaining_on_ramp_wall_m': 0}, 'guardrails_m': {'bridge': 26, 'median': 0, 'embankment': 0, 'structure': 0, 'approach': 48, 'authored': 0, 'no_guardrail': 0, 'dedup_skipped_pts': 0, 'pavement_cut_segments': 0, 'deck_free_ends': 0, 'parapet_tris_dropped': 364}, 'embankment_check': {'rural_sides': 6, 'max_drop_m': 1.7, 'p95_drop_m': 1.57, 'threshold_m': 2.0, 'runs': [], 'ground': 'NMT (decks removed) at the profile end + 5 / 7 / 9 m'}, 'noise_barriers_m': 0, 'noise_barriers': {'m_by_source': {'bdot': 0, 'osm': 0, 'override': 0}, 'm_by_style': {}, 'zones_stale': [], 'style_rule_m': {}, 'on_screened_deck_m': 0.0, 'cut_on_deck_carriageway_m': 0.0, 'signs_moved_off_wall': []}, 'wire_max_turn_deg': 2.293, 'wire_max_seg_m': 4.997, 'power_lines': 37, 'power_supports_added': 162, 'gates': {'applied': [], 'stale': [], 'replaced_osm': 0, 'closure_lines': []}, 'depot_yards': {'applied': [], 'stale': []}, 'life': {'dock_trailers': 0, 'tyre_scrub_tracks': 0, 'tyre_scrub_shapes': {}, 'parking': {'bays': 196, 'cars': 72, 'vans': 11, 'oil_stains': 86, 'body_share': {'estate': 0.205, 'hatch': 0.253, 'sedan': 0.157, 'suv': 0.253, 'van': 0.133}, 'reversed_share': 0.108}, 'yard_trailers': 9, 'coupled': 4, 'solo_tractors': 3, 'containers': 0, 'pallets': 0, 'bins': 5, 'skips': 0, 'cones': 0, 'stall_lines': 44, 'yard_drains': 11, 'bus_stop_oil': {'applied': [], 'rejected': [{'osm_node': 3047617089, 'reason': 'no_reviewed_bay_photo'}, {'osm_node': 3048936911, 'reason': 'no_reviewed_bay_photo'}]}, 'start_view_vehicles_skipped': 0}, 'frontage_cars': {'placed': 0, 'skipped': 0}, 'yard_wear': {'applied': [], 'stale': [], 'asphalt_patch_uv': {'normalised': 227, 'invalid_uv': 0}, 'paint_surface': {'fresh_parts': 62, 'fresh_vertices': 1066, 'old_or_unknown_parts': 871}, 'traffic_oil_parts': 189}, 'megascans': {'available': ['birch-tree-trunk', 'boxwood', 'elderberry', 'granite-rock', 'grass-clumps', 'linden-branch', 'metal-manhole-cover', 'modular-curb', 'round-drain-cover', 'silver-birch-bark', 'small-granite-rock', 'square-rusty-drain', 'street-curbs', 'trash-bag-pack', 'wild-grass'], 'placement_status': 'WORKING_VALUE', 'gully_replacements': 745, 'yard_drain_replacements': 11, 'manholes': 135, 'drainage_atlas': True, 'drainage_source_counts': {'square-rusty-drain': 353, 'round-drain-cover': 403, 'metal-manhole-cover': 135}, 'manholes_skipped_ground_shoulder': 5, 'drainage_replacements': 756, 'added_drainage_triangles': 270, 'props': {'trash-bag-pack': 6, 'boxwood': 2, 'grass-clumps': 144, 'small-granite-rock': 25, 'wild-grass': 58, 'elderberry': 60, 'granite-rock': 25}, 'added_props': 320, 'region_prop_cap_WORKING_VALUE': 320, 'placed_source_counts': {'boxwood': 2, 'elderberry': 60, 'granite-rock': 25, 'grass-clumps': 144, 'metal-manhole-cover': 135, 'round-drain-cover': 403, 'small-granite-rock': 25, 'square-rusty-drain': 353, 'trash-bag-pack': 6, 'wild-grass': 58}, 'placed_sources': ['boxwood', 'elderberry', 'granite-rock', 'grass-clumps', 'metal-manhole-cover', 'round-drain-cover', 'small-granite-rock', 'square-rusty-drain', 'trash-bag-pack', 'wild-grass'], 'placed_source_count': 10}, 'gate3_landmarks': {'signs': [{'id': 'knyszyn-roundabout-sign-1464342634-d95', 'proto': 'sign_g3_G3207410c5', 'at': [-1004.0, -595.0], 'z': 122.62, 'faces': ['A-7', 'C-12'], 'top_m': 3.48, 'snapped_m': 0.0, 'under_deck': False, 'travel_bearing_deg': 150.0, 'mapillary': []}, {'id': 'knyszyn-roundabout-sign-1464342635-d95', 'proto': 'sign_g3_G3207410c5', 'at': [-969.0, -627.0], 'z': 121.33, 'faces': ['A-7', 'C-12'], 'top_m': 3.48, 'snapped_m': 0.0, 'under_deck': False, 'travel_bearing_deg': 330.0, 'mapillary': []}, {'id': 'knyszyn-roundabout-sign-1464342636-d95', 'proto': 'sign_g3_G3207410c5', 'at': [-970.6, -591.0], 'z': 122.7, 'faces': ['A-7', 'C-12'], 'top_m': 3.48, 'snapped_m': 1.15, 'under_deck': False, 'travel_bearing_deg': 240.0, 'mapillary': []}, {'id': 'knyszyn-roundabout-sign-1464342639-d95', 'proto': 'sign_g3_G3207410c5', 'at': [-1001.4, -631.9], 'z': 121.61, 'faces': ['A-7', 'C-12'], 'top_m': 3.48, 'snapped_m': 3.35, 'under_deck': False, 'travel_bearing_deg': 60.0, 'mapillary': []}], 'stale': [], 'lamps': [{'id': 'knyszyn-roundabout-lamp-0-d95', 'proto': 'lamp_arc_9m', 'at': [-1010.0, -601.0], 'z': 122.2, 'snapped_m': 0.0}, {'id': 'knyszyn-roundabout-lamp-1-d95', 'proto': 'lamp_arc_9m', 'at': [-977.0, -589.0], 'z': 122.23, 'snapped_m': 0.0}, {'id': 'knyszyn-roundabout-lamp-2-d95', 'proto': 'lamp_arc_9m', 'at': [-966.0, -620.0], 'z': 121.04, 'snapped_m': 0.0}, {'id': 'knyszyn-roundabout-lamp-3-d95', 'proto': 'lamp_arc_9m', 'at': [-998.0, -635.0], 'z': 120.95, 'snapped_m': 0.0}, {'id': 'knyszyn-roundabout-lamp-4-d95', 'proto': 'lamp_arc_9m', 'at': [-953.0, -654.0], 'z': 120.07, 'snapped_m': 0.0}, {'id': 'knyszyn-roundabout-lamp-5-d95', 'proto': 'lamp_arc_9m', 'at': [-930.0, -685.0], 'z': 119.35, 'snapped_m': 0.0}]}, 'props_off_carriageway': {'moved': 12, 'still_on_road': 0, 'removed': [{'p': 'sign_post', 'at': [-604.5, -153.6], 'src': 'osm:node/3047471615'}, {'p': 'sign_post', 'at': [-562.4, 742.6], 'src': 'osm:node/11514850808'}]}, 'lamps_on_narrow_islands': {'moved': 0, 'removed': 0, 'radius_m': 1.0, 'items': []}, 'poles_under_decks': {'removed': 0, 'items': []}, 'props_on_level_carriageway': {'removed': 0, 'items': []}, 'poles_reseated': 0, 'pole_footing_steps': {'count': 27, 'max_m': 0.397, 'worst': [{'p': 'sign_post', 'e': -1004.1, 'n': -138.4, 'step_m': 0.397}, {'p': 'power_pole', 'e': -785.1, 'n': 648.1, 'step_m': 0.25}, {'p': 'lamp_arc_9m', 'e': -966.0, 'n': -620.0, 'step_m': 0.143}, {'p': 'lamp_8m', 'e': 634.8, 'n': 421.0, 'step_m': 0.13}, {'p': 'lamp_8m', 'e': 7.1, 'n': 478.8, 'step_m': 0.113}, {'p': 'lamp_8m', 'e': -833.8, 'n': 691.9, 'step_m': 0.111}, {'p': 'lamp_8m', 'e': -22.8, 'n': 481.8, 'step_m': 0.105}, {'p': 'lamp_old_concrete_led_9m', 'e': -838.3, 'n': -125.3, 'step_m': 0.086}, {'p': 'power_pole', 'e': -52.9, 'n': 475.5, 'step_m': 0.082}, {'p': 'lamp_8m', 'e': -875.5, 'n': 585.3, 'step_m': 0.081}, {'p': 'lamp_8m', 'e': 544.9, 'n': 431.0, 'step_m': 0.08}, {'p': 'lamp_8m', 'e': 515.0, 'n': 433.6, 'step_m': 0.075}, {'p': 'lamp_10m', 'e': -107.7, 'n': -710.8, 'step_m': 0.072}, {'p': 'lamp_8m', 'e': -843.2, 'n': 674.5, 'step_m': 0.072}, {'p': 'lamp_8m', 'e': -563.8, 'n': -448.0, 'step_m': 0.061}, {'p': 'lamp_8m', 'e': -252.6, 'n': -664.9, 'step_m': 0.061}, {'p': 'lamp_8m', 'e': -506.5, 'n': -409.9, 'step_m': 0.06}, {'p': 'power_pole', 'e': -965.2, 'n': -618.3, 'step_m': 0.059}, {'p': 'lamp_old_steel_led_8m', 'e': -984.6, 'n': 824.8, 'step_m': 0.058}, {'p': 'lamp_8m', 'e': 14.1, 'n': -696.5, 'step_m': 0.057}]}, 'route_signs': [{'s_m': 30.0, 'code': 'B-33_90', 'offset_m': 7.9, 'faces_route_driver': True, 'src': 'rule:maxspeed:c:w286990127:2906549567-1134813637', 'e': -639.891, 'n': -996.674}, {'s_m': 100.1, 'code': 'B-33_90', 'offset_m': 7.9, 'faces_route_driver': False, 'src': 'rule:maxspeed:c:w286990127:2906549567-1134813637', 'e': -699.137, 'n': -956.113}, {'s_m': 127.1, 'code': 'D-1', 'offset_m': 7.9, 'faces_route_driver': True, 'src': 'rule:major:j:n1134813637', 'e': -706.003, 'n': -925.621}, {'s_m': 156.1, 'code': 'D-1', 'offset_m': 7.9, 'faces_route_driver': False, 'src': 'rule:major:j:n1134813637', 'e': -737.287, 'n': -915.089}, {'s_m': 183.1, 'code': 'B-33_90', 'offset_m': 7.9, 'faces_route_driver': True, 'src': 'rule:maxspeed:c:w286990127:1134813637-4898926854', 'e': -744.122, 'n': -884.59}, {'s_m': 249.6, 'code': 'A-8', 'offset_m': 7.9, 'faces_route_driver': True, 'src': 'rule:roundabout_a8:j:n13115969575', 'e': -789.426, 'n': -835.8}, {'s_m': 398.9, 'code': 'D-42', 'offset_m': 7.9, 'faces_route_driver': True, 'src': 'rule:built_up:c:w286990127:1134813637-4898926854:258', 'e': -891.193, 'n': -726.609}, {'s_m': 398.9, 'code': 'D-43', 'offset_m': 7.9, 'faces_route_driver': False, 'src': 'rule:built_up:c:w286990127:1134813637-4898926854:258', 'e': -902.775, 'n': -737.274}, {'s_m': 469.7, 'code': 'B-33_90', 'offset_m': 7.9, 'faces_route_driver': False, 'src': 'rule:maxspeed:c:w286990127:1134813637-4898926854', 'e': -949.728, 'n': -683.696}, {'s_m': 493.8, 'code': 'E-2a_19575', 'offset_m': 7.3, 'faces_route_driver': False, 'src': 'rule:roundabout_exit:j:n13115969575', 'e': -964.168, 'n': -663.831}, {'s_m': 496.7, 'code': 'C-12', 'offset_m': 7.9, 'faces_route_driver': True, 'src': 'rule:roundabout:j:n13115969575', 'e': -953.206, 'n': -652.877}, {'s_m': 496.7, 'code': 'A-7', 'offset_m': 7.9, 'faces_route_driver': True, 'src': 'rule:roundabout:j:n13115969575', 'e': -953.206, 'n': -652.877}, {'s_m': 570.4, 'code': 'D-6', 'offset_m': 3.1, 'faces_route_driver': True, 'src': 'osm:node/3047667218', 'e': -959.714, 'n': -597.775}, {'s_m': 589.2, 'code': 'C-12', 'offset_m': 4.8, 'faces_route_driver': False, 'src': 'rule:roundabout:j:n13115969575', 'e': -952.898, 'n': -577.56}, {'s_m': 589.2, 'code': 'A-7', 'offset_m': 4.8, 'faces_route_driver': False, 'src': 'rule:roundabout:j:n13115969575', 'e': -952.898, 'n': -577.56}, {'s_m': 592.2, 'code': 'E-2a_31494', 'offset_m': 5.2, 'faces_route_driver': True, 'src': 'rule:roundabout_exit:j:n13115969575', 'e': -944.091, 'n': -583.297}, {'s_m': 987.0, 'code': 'D-1', 'offset_m': 4.6, 'faces_route_driver': True, 'src': 'rule:major:j:n1842392533', 'e': -658.675, 'n': -310.956}, {'s_m': 988.4, 'code': 'D-6', 'offset_m': 4.6, 'faces_route_driver': True, 'src': 'osm:node/3047587472', 'e': -657.737, 'n': -309.857}, {'s_m': 993.4, 'code': 'D-6', 'offset_m': 4.7, 'faces_route_driver': False, 'src': 'osm:node/3047587472', 'e': -661.702, 'n': -300.071}, {'s_m': 997.1, 'code': 'D-6', 'offset_m': 9.2, 'faces_route_driver': False, 'src': 'osm:node/3047587473', 'e': -648.591, 'n': -305.866}, {'s_m': 1008.3, 'code': 'D-6', 'offset_m': 8.9, 'faces_route_driver': False, 'src': 'osm:node/3047587489', 'e': -656.705, 'n': -286.395}, {'s_m': 1056.5, 'code': 'B-20', 'offset_m': 4.2, 'faces_route_driver': False, 'src': 'rule:minor:j:n1842392533', 'e': -613.305, 'n': -259.438}, {'s_m': 1065.8, 'code': 'D-6', 'offset_m': 4.1, 'faces_route_driver': True, 'src': 'osm:node/11514832011', 'e': -600.86, 'n': -260.482}, {'s_m': 1070.8, 'code': 'D-6', 'offset_m': 4.1, 'faces_route_driver': False, 'src': 'osm:node/11514832011', 'e': -601.836, 'n': -250.842}, {'s_m': 1139.0, 'code': 'D-6', 'offset_m': 4.1, 'faces_route_driver': True, 'src': 'osm:node/1134813711', 'e': -540.592, 'n': -219.463}, {'s_m': 1144.0, 'code': 'D-6', 'offset_m': 4.2, 'faces_route_driver': False, 'src': 'osm:node/1134813711', 'e': -541.42, 'n': -209.811}], 'route_checks': [{'junction': 'j:n13115969575', 's_m': 545.9, 'A-7': True, 'C-12': True, 'E-1': False}]}
+[world  764.3s] garden fronts {'source': 'research/g7-street-greenery/README.md (G7 # 15-21); positions are rule, not survey', 'plots': {'thuja': 143, 'broadleaf': 63, 'low': 130}, 'segments': 379, 'm': {'thuja': 1470.6, 'broadleaf': 651.7}, 'front_m': 4227.3, 'shrubs': 562, 'tris_high': 42692, 'tris_low': 23584, 'heights_m': [1.22, 3.09, 2.51, 2.52, 3.54, 1.34, 3.15, 1.22, 1.42, 3.41, 1.42, 3.28, 2.69, 1.27, 2.6, 2.55, 3.24, 3.33, 3.05, 1.43, 3.52, 1.23, 1.4, 2.84, 3.43, 2.69, 2.42, 2.82, 3.48, 1.42, 1.23, 2.87, 3.08, 2.73, 2.9, 2.77, 2.47, 1.3, 3.42, 2.88, 1.25, 1.42, 1.24, 2.94, 2.69, 2.5, 3.28, 2.51, 3.48, 3.08, 3.48, 2.46, 3.53, 3.32, 3.01, 1.34, 3.01, 1.37, 2.65, 3.48, 2.41, 2.45, 3.23, 1.41, 2.66, 3.06, 1.37, 3.19, 3.36, 2.56, 2.42, 2.86, 3.31, 2.64, 2.99, 3.24, 1.22, 1.46, 3.46, 3.51, 1.42, 3.02, 1.36, 1.41, 3.09, 1.3, 1.22, 2.62, 3.51, 2.89, 2.69, 1.26, 3.06, 2.85, 1.34, 2.93, 3.24, 3.16, 1.48, 1.47, 2.87, 3.01, 2.53, 1.22, 2.85, 3.4, 1.26, 2.77, 2.62, 1.29, 1.49, 1.21, 1.41, 2.87, 2.83, 3.14, 1.24, 3.52, 2.73, 3.26, 1.41, 1.37, 3.16, 1.31, 3.03, 1.21, 3.52, 3.45, 2.45, 2.49, 3.47, 1.23, 2.49, 2.79, 2.87, 2.8, 3.34, 1.24, 3.37, 3.08, 3.49, 2.78, 2.4, 1.44, 3.02, 3.16, 2.78, 3.37, 3.37, 2.44, 2.96, 3.27, 3.14, 1.49, 2.42, 1.4, 3.23, 2.73, 3.2, 1.42, 3.39, 3.42, 3.59, 2.99, 3.38, 1.49, 3.28, 3.23, 3.4, 3.46, 2.46, 1.26, 2.91, 1.34, 3.51, 3.09, 3.12, 1.22, 2.87, 2.77, 1.21, 1.4, 3.07, 2.59, 2.88, 3.01, 2.93, 1.24, 1.3, 1.23, 1.39, 2.47, 1.32, 3.5, 1.28, 3.04, 3.18, 1.29, 3.32, 2.77, 1.49, 1.22, 3.55, 1.21, 3.58, 2.41], 'widths_m': [0.64, 1.07, 0.91, 0.94, 1.14, 0.78, 0.94, 0.56, 0.68, 1.18, 0.74, 0.93, 1.13, 0.7, 1.04, 1.13, 0.81, 0.86, 0.83, 0.78, 0.84, 0.67, 0.55, 0.9, 0.95, 0.99, 1.05, 1.05, 1.03, 0.66, 0.59, 0.87, 0.94, 0.83, 1.07, 1.0, 0.85, 0.61, 1.04, 1.15, 0.57, 0.52, 0.55, 1.1, 0.82, 1.11, 1.15, 0.95, 0.98, 1.05, 0.92, 1.04, 0.91, 0.99, 0.81, 0.66, 1.15, 0.59, 1.2, 1.04, 0.97, 1.18, 1.13, 0.75, 0.94, 0.88, 0.63, 0.94, 1.12, 1.17, 1.01, 0.84, 1.09, 0.97, 0.93, 1.11, 0.68, 0.57, 1.1, 0.97, 0.65, 1.01, 0.79, 0.77, 1.16, 0.71, 0.59, 1.04, 0.85, 0.84, 1.18, 0.55, 1.17, 0.83, 0.79, 1.07, 0.83, 1.0, 0.65, 0.71, 1.17, 1.0, 0.8, 0.65, 1.09, 0.85, 0.6, 1.06, 0.82, 0.63, 0.54, 0.68, 0.56, 0.83, 0.89, 0.89, 0.62, 0.82, 1.14, 1.19, 0.73, 0.54, 0.91, 0.51, 0.96, 0.61, 1.04, 0.91, 1.16, 1.14, 1.07, 0.67, 1.08, 0.88, 1.05, 0.9, 0.91, 0.79, 1.13, 1.06, 0.91, 1.0, 1.05, 0.78, 0.83, 1.02, 0.94, 1.16, 1.06, 1.13, 1.02, 0.9, 0.99, 0.79, 0.94, 0.55, 0.86, 0.96, 0.95, 0.71, 0.94, 0.93, 0.93, 0.96, 1.02, 0.59, 1.04, 0.92, 0.86, 0.8, 1.13, 0.68, 1.17, 0.7, 0.93, 1.08, 1.13, 0.58, 1.19, 1.07, 0.56, 0.53, 1.19, 0.9, 1.15, 0.82, 1.1, 0.64, 0.63, 0.66, 0.64, 1.14, 0.71, 1.04, 0.57, 1.0, 0.83, 0.52, 1.02, 1.03, 0.77, 0.55, 1.14, 0.79, 1.13, 0.8], 'skipped': {'outside_plot': 1}}
+[world  764.3s] plots {'plots': 668, 'fence_m': {'bars': 1812, 'boards_brown': 2659, 'boards_grey': 2790, 'boards_rust': 626, 'brick_bars': 194, 'brick_boards': 437, 'brick_picket': 828, 'chainlink': 9737, 'chainlink_galv': 7632, 'concrete': 8133, 'lamella': 1455, 'picket': 2348, 'picket_paint': 823, 'picket_wood': 1487, 'wall': 1593}, 'gates': 477, 'sliding_gates': 92, 'wickets': 547, 'drives': 477, 'kerb_drops': 477, 'crossing_kerb_drops': 16, 'verge_overlays': 477, 'thujas': 3712, 'spruces': 60, 'fruit_trees': 0, 'big_trees': 0, 'shrubs': 1503, 'hedge_m': 0, 'flower_cards': 2891, 'bins': 265, 'tris': 269860, 'tris_low': 208390, 'tris_by': {'fence': 86336, 'gate': 65636, 'thuja_row': 52172, 'flowers': 6742, 'bush': 19108, 'overgrowth': 11296, 'shrub': 19192, 'bins': 4770, 'thuja_single': 3408, 'spruce': 1200}, 'tris_by_low': {'fence': 86336, 'gate': 65636, 'thuja_row': 49840, 'bins': 4770, 'thuja_single': 608, 'spruce': 1200}, 'instances': 0, 'plot_m2_median': 424.0, 'age': {'old': 232, 'prl': 353, 'new': 83}, 'styles_front': {'chainlink_galv': 39, 'bars': 85, 'boards_brown': 57, 'brick_picket': 74, 'concrete': 81, 'wall': 16, 'picket_wood': 59, 'brick_boards': 36, 'picket': 43, 'picket_paint': 33, 'chainlink': 60, 'boards_rust': 23, 'boards_grey': 30, 'brick_bars': 14, 'lamella': 18}, 'styles_side': {'boards_brown': 38, 'concrete': 138, 'chainlink': 178, 'lamella': 18, 'chainlink_galv': 141, 'boards_grey': 55, 'picket': 33, 'bars': 12, 'boards_rust': 9, 'wall': 22, 'picket_wood': 15, 'picket_paint': 9}, 'access': {'moved': 41, 'removed': 50, 'removed_no_carriageway': 25, 'removed_junction': 25}, 'crossing_kerb': {'crossings': 39, 'dropped': 8, 'shortened': 0, 'skipped_near_junction': 27, 'skipped_bridge': 0, 'skipped_off_chain': 4}, 'fence_step_zone_hits': 0, 'track_drives': 141, 'inst_trees': 0, 'inst_trees_street': 0, 'bushes': 1417, 'overgrowth': 760, 'canopy': True, 'fence_stubs_dropped': 162, 'street_wires': {'chains': 54, 'spans': 187, 'span_m': 5712, 'drops': 407, 'tris': 5730, 'chains_without_lamps': 4}}
+[world  765.4s] trees {'tree_pine': 785, 'tree_birch': 476, 'tree_maple': 576, 'tree_linden': 422, 'tree_alder': 176, 'tree_spruce': 483, 'tree_shrub': 2808, 'tree_birchyoung': 612, 'tree_pineyoung': 286, 'tree_floor': 147}
+[world  767.2s] forest hlod {'cells': 28, 'cell_m': 64.0, 'triangles': 2935, 'trees_replaced_far': 2648, 'forest_trees': 2868}
+[world  820.1s] garden trees {'source': 'crowns: GUGiK orthophoto 2024 (plot_canopy.json); habit / height: G7 # 6-7, 11-14', 'trees': 3232, 'street_strip': 629, 'species': {'ash': 491, 'maple': 812, 'birch': 666, 'fruit': 661, 'linden': 454, 'chestnut': 148}, 'tris_high': 68623, 'tris_low': 59102, 'skipped': {'no_room_behind_fence': 301, 'stem_too_close': 62, 'crown_over_carriageway': 16, 'no_free_ground': 47, 'region_tree_within_2.5m': 20, 'group_bounds_growth': 105}, 'conifers_converted': 1026, 'claimed_crowns': 952, 'moved_behind_fence': 1022}
+[world  821.5s] authored trees {'trees': 15, 'tris_high': 3400, 'tris_low': 240, 'skipped': {}, 'crown_shapes': {'rynek-lindens-r8-trial-0227:linden': 1.75, 'rynek-near-lindens-kit-0227:linden': 1.75}}
+[world  823.7s] water banks {'banks': {'ribbons': 915, 'triangles': 30292}, 'banks_low': {'ribbons': 74, 'triangles': 1924}, 'bank_shrubs': {'tree_shrub': 107, 'tree_alder': 34, 'skipped': {'near_tree': 61, 'blocked': 32}}}
+[world  824.7s] road clearance {'checked': 5613, 'lowered': 37, 'removed': 6, 'clear_h_m': 4.7, 'overhang_m': 0.3}
+[world  824.9s] terrain conformed: footprint 168716 road + 304059 paved nodes
+[world  825.0s] pier guardrails {'piers': 0, 'gap_m': 4.5, 'built_m': 0.0, 'runs': []}
+[world  825.0s] kerb triangles inside paved gore fills: 0
+[world  825.0s] hero bridges {'applied': [], 'stale': []}
+[world  825.2s] sidewalk surfaces (ADR 0237): {'sidewalk_paving': 41541.6} stale []
+[world  825.3s] back-of-sidewalk batters {'parts': 343, 'stations': 14227, 'stations_battered': 11037, 'batter_tris': 20356}
+[world  826.6s] terrain chunks 64
+[world  826.8s] verge strips in terrain {'tris': 27774, 'chunks': 39}
+[world  828.0s] water sheet {'area_m2': 44602, 'triangles': 9465}
+[world  837.3s] road chunks 57
+[world  905.5s] exported 64 GLB, 552 MiB (High),  235 MiB (Low)
+graph overrides applied (ADR 0274 carriageway_split): knyszyn-roundabout-dk65-split-s, knyszyn-roundabout-dk65-split-n, knyszyn-roundabout-split-e-d95, knyszyn-roundabout-split-w-d95
+WARNING: no turn_restrictions.json - all turns treated as allowed (UNVERIFIED)
+KRTG v2 C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\game\Assets\_Project\UI\Resources\CabDisplay\Nav\knyszyn_route.bytes: 15.2 KB, nodes 138, edges 168 (oneway 16, skipped 0, carriageway-axis geometry 168), names 34, restrictions 0 (OSM relations 0, unmapped 0), limit-tagged edges 0, hgv=destination 0, lane blocks 9 (with turn directions 1)
+reachability: 2 strongly connected components (directed, one-way respected); main component 136 nodes / 167 edges; off-reach (not drivable to from the main component) 2 nodes / 1 edges (sizes: 136, 2)
+[world  906.8s] route graph: rebuilt (KRTG, reachability flags) -> game/Assets/_Project/UI/Resources/CabDisplay/Nav/
+[world  909.9s] terrain walls > 0.15 m: 24 max 0.698
+[world  917.8s] road consistency: 8 {'lane_blind_end': 3, 'obstacle_in_lane': 5} on route {}
+[world  927.5s] far_field: {'High': 99207, 'Low': 45882}
+[world  927.5s] done
+=== export-route knyszyn 2026-11-21T07:43:46
+route knyszyn: 580 points, 1159 m -> Data\Regions\knyszyn\route_start.json
+=== route_links 2026-11-21T07:43:50
+link c-dk8-to-maczka: bialystok-industrial-c 1510 m, 756 pts
+link knyszyn-dk65-to-dw671-w: knyszyn 614 m, 309 pts
+link knyszyn-dk65-to-dk65-w: knyszyn 639 m, 320 pts
+link knyszyn-rynek-to-dw671-w: knyszyn 743 m, 373 pts
+link knyszyn-rynek-to-dk65-w: knyszyn 765 m, 383 pts
+link knyszyn-w-dw671: knyszyn-w 596 m, 298 pts
+link c-andersa-to-wygoda: bialystok-industrial-c 963 m, 483 pts
+link wygoda-andersa-to-bojary: bialystok-wygoda 91 m, 46 pts
+link knyszynska-kleeberga-s: bialystok-knyszynska 667 m, 334 pts
+link porosly-dk8-w: bialystok-porosly 1560 m, 781 pts
+link jeroniki-dk8-to-s8: dk8-s8-jeroniki 1527 m, 764 pts
+link dk65-01-s8-corner: dk65-01 578 m, 289 pts
+link s8-03-to-s8-04: s8-03 2050 m, 1025 pts
+link tykocin-dw671-to-rynek: tykocin 1309 m, 656 pts
+link dojlidy-ciolkowskiego-corner-to-krywlany: bialystok-dojlidy 87 m, 44 pts
+link c-dk8-north-to-wasilkow: bialystok-industrial-c 2755 m, 1379 pts
+link wasilkow-01-to-02: dk8-wasilkow-01 2071 m, 1036 pts
+corridor bialystok-tykocin: 28 tiles, missing 0, bad joins []
+corridor bialystok-s8: 12 tiles, missing 7, bad joins []
+corridor bialystok-dojlidy-dk19: 7 tiles, missing 0, bad joins []
+corridor s8-loop: 6 tiles, missing 7, bad joins []
+corridor bialystok-wasilkow: 5 tiles, missing 0, bad joins []
+-> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\game\Assets\_Project\World\Runtime\Streaming\Resources\WorldStreaming\route_links.json
+=== probe 2026-11-21T07:45:10
+== knyszyn-w x=760586.70 (d=0.3)
+   markings:marking_white                   [(611964.2, 611964.3)]
+   road:curb_concrete                       [(611956.3, 611956.45), (611972.0, 611972.15)]
+   road:road_asphalt_new                    [(611956.5, 611971.95)]
+   road:sidewalk_paving                     [(611953.7, 611956.25), (611972.2, 611974.8)]
+== knyszyn x=760587.30 (d=0.3)
+   markings:marking_white                   [(611964.7, 611964.8)]
+   road:curb_concrete                       [(611956.85, 611957.0), (611972.55, 611972.7)]
+   road:road_asphalt_new                    [(611957.05, 611972.5)]
+   road:sidewalk_paving                     [(611954.2, 611956.8), (611972.75, 611975.35)]
+== knyszyn-w x=760586.00 (d=1.0)
+   markings:marking_white                   [(611963.55, 611963.7)]
+   road:curb_concrete                       [(611955.7, 611955.85), (611971.4, 611971.55)]
+   road:road_asphalt_new                    [(611955.9, 611971.35)]
+   road:sidewalk_paving                     [(611953.05, 611955.65), (611971.6, 611974.2)]
+== knyszyn x=760588.00 (d=1.0)
+   markings:marking_white                   [(611965.3, 611965.4)]
+   road:curb_concrete                       [(611957.45, 611957.6), (611973.15, 611973.3)]
+   road:road_asphalt_new                    [(611957.65, 611973.1)]
+   road:sidewalk_paving                     [(611954.8, 611957.4), (611973.35, 611975.95)]
+== knyszyn-w x=760584.00 (d=3.0)
+   markings:marking_white                   [(611961.85, 611961.95)]
+   road:curb_concrete                       [(611954.0, 611954.15), (611969.7, 611969.85)]
+   road:road_asphalt_new                    [(611954.2, 611969.65)]
+   road:sidewalk_paving                     [(611951.35, 611953.95), (611969.9, 611972.5)]
+== knyszyn x=760590.00 (d=3.0)
+   markings:marking_white                   [(611967.05, 611967.15)]
+   road:curb_concrete                       [(611959.15, 611959.3), (611974.9, 611975.05)]
+   road:road_asphalt_new                    [(611959.35, 611974.85)]
+   road:sidewalk_paving                     [(611956.5, 611959.1), (611975.1, 611977.7)]
+== knyszyn-w x=760581.00 (d=6.0)
+   markings:marking_white                   [(611959.25, 611959.4)]
+   road:curb_concrete                       [(611951.4, 611951.55), (611967.1, 611967.25)]
+   road:road_asphalt_new                    [(611951.6, 611967.05)]
+   road:sidewalk_paving                     [(611948.75, 611951.35), (611967.3, 611969.9)]
+== knyszyn x=760593.00 (d=6.0)
+   road:curb_concrete                       [(611961.75, 611961.9), (611977.5, 611977.65)]
+   road:road_asphalt_new                    [(611961.95, 611977.45)]
+   road:sidewalk_paving                     [(611959.1, 611961.7), (611977.7, 611980.25)]
+== knyszyn-w x=760586.70 (d=0.3)
+   markings:marking_white                   [(612082.65, 612082.85)]
+   road:road_asphalt                        [(612064.95, 612083.7)]
+   road:shoulder_gravel                     [(612062.65, 612064.9), (612083.75, 612086.05)]
+   road:verge_grass                         [(612055.6, 612062.6), (612086.1, 612093.05)]
+== knyszyn x=760587.30 (d=0.3)
+   markings:marking_white                   [(612064.55, 612064.75)]
+   road:road_asphalt                        [(612063.7, 612082.45)]
+   road:shoulder_gravel                     [(612061.4, 612063.65), (612082.5, 612084.8)]
+   road:verge_grass                         [(612054.35, 612061.35), (612084.85, 612091.8)]
+== knyszyn-w x=760586.00 (d=1.0)
+   markings:marking_white                   [(612075.65, 612075.9), (612084.1, 612084.3)]
+   road:road_asphalt                        [(612066.4, 612085.15)]
+   road:shoulder_gravel                     [(612064.1, 612066.35), (612085.2, 612087.5)]
+   road:verge_grass                         [(612057.05, 612064.05), (612087.55, 612094.5)]
+== knyszyn x=760588.00 (d=1.0)
+   markings:marking_white                   [(612063.1, 612063.3), (612071.5, 612071.75)]
+   road:road_asphalt                        [(612062.25, 612081.0)]
+   road:shoulder_gravel                     [(612059.9, 612062.2), (612081.05, 612083.3)]
+   road:verge_grass                         [(612052.9, 612059.85), (612083.35, 612090.35)]
+== knyszyn-w x=760584.00 (d=3.0)
+   markings:marking_white                   [(612088.25, 612088.5)]
+   road:road_asphalt                        [(612070.55, 612089.35)]
+   road:shoulder_gravel                     [(612068.25, 612070.5), (612089.4, 612091.65)]
+   road:verge_grass                         [(612061.2, 612068.2), (612091.7, 612098.65)]
+== knyszyn x=760590.00 (d=3.0)
+   markings:marking_white                   [(612058.95, 612059.15)]
+   road:road_asphalt                        [(612058.05, 612076.85)]
+   road:shoulder_gravel                     [(612055.75, 612058.0), (612076.9, 612079.15)]
+   road:verge_grass                         [(612050.0, 612055.7), (612079.2, 612086.2)]
+== knyszyn-w x=760581.00 (d=6.0)
+   markings:marking_white                   [(612077.65, 612077.85), (612094.5, 612094.7)]
+   road:road_asphalt                        [(612076.8, 612095.55)]
+   road:shoulder_gravel                     [(612074.5, 612076.75), (612095.6, 612097.9)]
+   road:verge_grass                         [(612067.45, 612074.45), (612097.95, 612100.0)]
+== knyszyn x=760593.00 (d=6.0)
+   markings:marking_white                   [(612052.7, 612052.9), (612069.55, 612069.75)]
+   road:road_asphalt                        [(612051.85, 612070.6)]
+   road:shoulder_gravel                     [(612050.0, 612051.8), (612070.65, 612072.9)]
+   road:verge_grass                         [(612072.95, 612079.95)]
+=== combo 2026-11-21T07:45:16
+bialystok-tykocin        knyszyn                  link:knyszyn-dk65-to-dw671-w         opp    0 kerb    0 apron   95 off    0 / 6050
+bialystok-tykocin        knyszyn-w                link:knyszyn-w-dw671                 opp    0 kerb    0 apron    0 off    0 / 5878
+(free link)              knyszyn                  knyszyn-dk65-to-dk65-w               opp    0 kerb    0 apron   20 off    0 / 6225
+(free link)              knyszyn                  knyszyn-rynek-to-dw671-w             opp   32 kerb    0 apron   26 off    0 / 7854
+(free link)              knyszyn                  knyszyn-rynek-to-dk65-w              opp   35 kerb    0 apron    0 off    0 / 8095
+TOTAL {'tyre_points': 34102, 'opposite': 67, 'kerb': 0, 'apron': 141, 'off_hard': 0, 'seam_skipped': 92}
+combo exit 1
+released seam-knw-s24
+DONE code 0 2026-11-21T07:45:35

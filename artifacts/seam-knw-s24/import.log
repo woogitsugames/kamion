@@ -1,0 +1,97 @@
+acquired slot seam-knw-s24 (1/2)
+=== import knyszyn 2026-11-21T07:44:09
+14 assets, 70 files, 0 problems
+PBR Medium: 209 produced files, 0 missing, 0 older than _src, 0 sets not built; 2 files skipped (not produced by build_all with current inputs: asphalt_detail_photo)
+[cab-lod0] OK C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\art-source\truck\interior\export\SM_CabInterior_LOD0.fbx
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\logs\import-region-knyszyn-20261121-074413.log -buildTarget Win64 -quit -executeMethod Game.World.Import.RegionImporter.ImportBatch -region knyszyn -tiers Low,High -materialTier Medium
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 27324)
+IMPORT_RESULT: OK region=knyszyn chunks=64 corridor=17 tiers=Low+High
+WORLD_MEMORY: tier=Low render_meshes=75.6 MB instances=8.7 MB collision_src=15.8 MB total=100.1 MB [terrain 28,6, road 6,5, markings 0,4, paved 0,2, plot_ground 5,0, buildings 17,9, plots 13,0, wires 0,8, furniture 0,3, water 0,2, banks 0,1, bridge 0,0, far_field 2,6]
+WORLD_MEMORY: tier=High render_meshes=201.1 MB instances=8.7 MB collision_src=15.8 MB total=225.6 MB [terrain 120,7, road 6,5, markings 0,4, paved 0,2, plot_ground 5,0, buildings 43,8, plots 16,7, wires 0,8, furniture 0,3, water 0,2, banks 1,2, bridge 0,0, far_field 5,2]
+WORLD_TERRAIN_BAND: fine fraction Low 31 % High 36 %
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\logs\import-region-knyszyn-20261121-074413.log
+=== vqa knyszyn 2026-11-21T07:47:42
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\logs\visual-qa-World_knyszyn_High-20261121-074742.log -buildTarget Win64 -quit -executeMethod Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras -qaScene World_knyszyn_High -qaWidth 2340 -qaHeight 1080 -qaTier High -qaOutput C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn -qaLighting clear -qaCameras rings_w_arm_top,rondo_dk65_top,seam_w_top,seam_w_above,rondo_owner_09,dk65_outlet_nw,rondo_dk65_above
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 19496)
+VISUALQA_RESULT: OK rendered=7 dir=C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn\dk65-outlet-nw.png  4 678 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn\rings-w-arm-top.png  5 096 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn\rondo-dk65-above.png  5 407 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn\rondo-dk65-top.png  5 311 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn\rondo-owner-09.png  5 419 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn\seam-w-above.png  5 299 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn\seam-w-top.png  5 370 KB
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\logs\visual-qa-World_knyszyn_High-20261121-074742.log
+vqa knyszyn exit 0
+=== vqa knyszyn-w 2026-11-21T07:48:09
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\logs\visual-qa-World_knyszyn-w_High-20261121-074809.log -buildTarget Win64 -quit -executeMethod Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras -qaScene World_knyszyn-w_High -qaWidth 2340 -qaHeight 1080 -qaTier High -qaOutput C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w -qaLighting clear
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 5316)
+VISUALQA_RESULT: OK rendered=64 dir=C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-apillar.png  3 479 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-dash.png  4 190 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-driver-ab10.png  4 101 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-driver.png  3 874 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-gate.png  4 068 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-grain.png  3 421 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-hub.png  3 373 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-left.png  4 006 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-materials.png  3 649 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-mirror-front.png  3 532 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-mirrors-left.png  4 243 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-mirrors-right.png  4 678 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-right.png  4 184 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-seat-entry.png  3 784 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-seat.png  3 556 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-switches.png  2 981 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-trays.png  4 106 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-view-0-fov55-hud.png  4 078 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-view-0-fov55.png  4 113 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-view-a-fov62-hud.png  3 994 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-view-a-fov62.png  4 001 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-view-b-fov70-hud.png  3 873 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-view-b-fov70.png  3 874 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-view-c-fov75-hud.png  3 813 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-view-c-fov75.png  3 832 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-view-d-fov70-p10-hud.png  3 975 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\cab-view-d-fov70-p10.png  3 986 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\chase-hud.png  4 747 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\chase.png  4 810 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\dk65-fields-nw.png  3 813 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\dk65-goniadzka.png  4 275 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\dk65-inbound-to-rondo.png  4 344 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\dk65-koscielna.png  4 599 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\dk65-north-edge-in.png  4 286 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\dk65-polna.png  3 142 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\dk65-seam-east-out.png  4 683 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\dw671-seam-east-lines.png  4 356 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\edge-east.png  3 864 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\edge-north.png  4 093 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\edge-south.png  3 742 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\edge-west.png  4 134 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\goniadzka-above.png  5 392 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\lamp-trailer.png  3 362 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\lamp-truck.png  2 486 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\plate-trailer.png  4 166 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\plate-truck-bobtail.png  3 913 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\route-s0142.png  4 649 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\route-s0426.png  4 447 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\route-s0710.png  4 942 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\route-s0994.png  4 476 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\route-s1278.png  4 041 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\route-s1562.png  4 937 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\route-s1846.png  3 880 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\seam-east-above.png  5 572 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\trailer-34.png  4 033 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\trailer-side.png  3 824 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\trailer-wheels.png  2 934 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\truck-34.png  4 044 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\truck-34r.png  2 929 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\truck-at-gate.png  4 040 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\truck-front.png  3 428 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\truck-rear34.png  3 157 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\truck-side.png  3 457 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\seam-knw-s24\vqa-knyszyn-w\tykocka-dw671-out.png  4 059 KB
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\seam-knw-s24\artifacts\logs\visual-qa-World_knyszyn-w_High-20261121-074809.log
+vqa knyszyn-w exit 0
+released seam-knw-s24
+DONE code 0 2026-11-21T07:48:48
