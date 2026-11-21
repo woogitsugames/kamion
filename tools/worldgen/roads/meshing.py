@@ -1668,6 +1668,12 @@ def _patch_uv1(net, j, V, poly=None):
         edge[better_any] = e_arm[better_any]
         flare_d[better_any] = np.maximum(dist - hw, 0.0)[better_any]
         score[better_any] = dnear[better_any]
+    if getattr(j, "compact", None) is not None:
+        # ADR 0323 (critic wave 6 pkt 2.3): the arm-axis lane coordinate drew straight parallel wheel paths across the
+        # curved mouths and under the splitter islands of a compact roundabout. No shader wheel paths / drip band on
+        # this plate (integer lane coordinate); the tracks are decal bands along the designed lanes
+        # (decals.compact_wheel_paths). The edge distance (gutter grime) stays.
+        lane[:] = 0.0
     if poly is not None:
         import shapely
         ring = shapely.LinearRing(np.asarray(poly, float)[:, :2])
