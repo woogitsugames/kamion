@@ -87,3 +87,10 @@ def sphere(acc, layer, mat, centre, radius, sides=8, stacks=5, squash=1.0):
         rings.append((-radius * squash * math.cos(a), rr, rr))
     c = np.asarray(centre, float)
     return lathe(acc, layer, mat, c, (0.0, 1.0), rings, sides=sides, cap=True, bottom=True)
+
+
+def thin(rings):
+    """Every second ring plus the last one (LOD1 profile)."""
+    rings = tuple(rings)
+    out = rings[::2]
+    return out if (len(rings) - 1) % 2 == 0 else out + (rings[-1],)

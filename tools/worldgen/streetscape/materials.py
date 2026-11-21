@@ -475,6 +475,13 @@ M = {
     # ADR 0320 (truss_bridge, Tykocin): aluminium-grey paint of the trusses, blue of the footway edge beam and the
     # railing frame, off-white pickets. WORKING_VALUE read off Commons "Tykocin Most drogowy 02 / 05 / 09" (Zala,
     # CC BY-SA 4.0, reference only; photos are not reflectance measurements). Old brushed paint: rough, barely metallic.
+    # ADR 0320 monuments: patinated bronze (dark brown-green, satin), grey granite block (flamed, not mirror-polished),
+    # weathered sandstone of the Czarniecki monument in Tykocin (Commons cs152250554 / cs35733636, reference only).
+    # WORKING_VALUE: no reflectance measurement.
+    "monument_bronze": {"color": [0.060, 0.070, 0.058], "rough": 0.52, "metal": 0.6},
+    "monument_granite": {"color": [0.21, 0.21, 0.215], "rough": 0.45, "texture_set": "plaster", "splash_h": 0.25},
+    "monument_sandstone": {"color": [0.36, 0.32, 0.26], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.6},
+    "monument_gilt": {"color": [0.55, 0.40, 0.10], "rough": 0.4, "metal": 0.8},
     "truss_steel": {"color": [0.46, 0.47, 0.47], "rough": 0.62, "metal": 0.15},
     "truss_rail_blue": {"color": [0.035, 0.16, 0.42], "rough": 0.55, "metal": 0.1},
     "truss_picket": {"color": [0.58, 0.59, 0.58], "rough": 0.6, "cast_shadows": False},
