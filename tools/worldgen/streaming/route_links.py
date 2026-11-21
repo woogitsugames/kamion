@@ -257,7 +257,7 @@ def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
                 src = next(x for x in links if x["id"] == ref)
                 src_xy = [src["endX"], src["endY"]]
             blend["head"] = _blend(pts, src_xy, head=True)
-        if L.get("tail_to"):
+        if L.get("tail_to") and not L["tail_to"].startswith("link:"):
             r2 = _route(L["tail_to"].split(":", 1)[1], regions)
             reg2 = _region(L["tail_to"].split(":", 1)[1], regions)
             tgt = [r2["points_en"][0][0] + reg2["origin"]["x"], r2["points_en"][0][1] + reg2["origin"]["y"]]
@@ -275,6 +275,11 @@ def build(src: Path = SRC, regions: Path = REGIONS) -> dict:
             if cut:
                 blend["tail_cut_m"] = cut
                 length = float(np.sum(np.hypot(*np.diff(np.asarray(pts, float), axis=0).T)))
+        if str(L.get("tail_to", "")).startswith("link:"):
+            # seam-knw-s24: end exactly on the end of an earlier link of the same tile (two links that leave by the same
+            # seam point must hand over to the same neighbour link head)
+            src = next(x for x in links if x["id"] == L["tail_to"].split(":", 1)[1])
+            blend["tail"] = _blend(pts, [src["endX"], src["endY"]], head=False)
         if L.get("stop_epsg2180"):    # ADR 0303: the trip ends here (parking spot), not at the end graph node
             pts, maxspeed, length, blend["stop_offset"] = _stop(pts, maxspeed, L["stop_epsg2180"])
         loc = [[round(x - ox, 3), round(y - oy, 3)] for x, y in pts]

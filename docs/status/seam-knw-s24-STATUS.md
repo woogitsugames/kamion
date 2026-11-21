@@ -49,3 +49,9 @@
 - combo #4: DK65→DW671 W 0/0/0, DK65→DK65 W 0/0/0, knyszyn-w-dw671 0/0/0, razem 67/0/0 (D95 68/13/0). seams.py 0 FAIL / 0 UWAGA.
 - Import knyszyn-w Win64 OK; import knyszyn + VQA w toku (import.log). pytest czeka w kolejce heavy (pytest.log).
 - NASTĘPNY KROK: obejrzeć artifacts/seam-knw-s24/vqa-knyszyn/*.png
+
+## krok 10 — koniec
+- VQA knyszyn High Win64 z sąsiadem: rings_w_arm_top/rondo_dk65_top: szew niewidoczny; visual-critic PASS szwu (ciągłość 9, oznakowanie 7: linia środkowa kończy się kilka m przed nosem wyspy W — z D95, poza zakresem).
+- pytest 13 modułów: 219 passed, 2 skipped, 3 failed → po tail_to link: 2 failed, oba też na main 54f071923 (test_tile_ratchet innego kafla, seam jeroniki|dk65-01 dlat 0,375). Szwy knyszyn: dlat 0,006 / dz -0,035 / kink 0,008.
+- rynek-to-dw671 tail_to link:knyszyn-dk65-to-dw671-w (koniec = ten sam punkt szwu). combo final: 0/0/0, 0/0/0, knyszyn-w-dw671 0/0/0, razem 67/0/0.
+- Dowody skopiowane do main artifacts/seam-knw-s24/. NIE scalono do main.

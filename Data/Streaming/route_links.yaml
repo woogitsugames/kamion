@@ -54,10 +54,11 @@ links:
     after_route: knyszyn                  # starts at the end of the knyszyn control route (Rynek, graph node n2979322319)
     end_epsg2180: [760587.0, 611964.5]    # = end of knyszyn-dk65-to-dw671-w (DW671 Tykocka, knyszyn | knyszyn-w seam)
     # seam-knw-s24: same exit of the W splitter as knyszyn-dk65-to-dw671-w -> the same two right shifts, so both links
-    # end on the same seam point (the head of knyszyn-w-dw671).
+    # end on the same seam point (the head of knyszyn-w-dw671); the cut ends 0.06 m apart, so the tail is blended onto it.
     swing: [{near_epsg2180: [760591.35, 611968.55], left_m: -2.0, half_m: 9.0},
             {near_epsg2180: [760586.69, 611964.78], left_m: -2.0, half_m: 8.0}]
     cut_at_tile: true                     # seam-knw-s24: the shifted end is cut back onto the seam line (x = 760587)
+    tail_to: link:knyszyn-dk65-to-dw671-w
     note: "Rynek (end of the knyszyn control route) -> Grodzienska -> DW671 Tykocka west -> seam with knyszyn-w"
   - id: knyszyn-rynek-to-dk65-w
     tile: knyszyn
