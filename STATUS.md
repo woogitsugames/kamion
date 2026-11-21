@@ -31,3 +31,7 @@
   1,05/1,64 m, max 1,99 = na ścieżce); przy promenadzie śr. szer. pasa 7,41 -> 5,47 m. Trzcina MIĘDZY promenadą a
   wodą zostaje — zgodne z Commons Tykocin_Most_drogowy_03/05 (szuwar za balustradą promenady).
 - build_world tykocin exit 0: trzcina High 139 168 -> 116 752 tris (-16 %), wstęgi 4193 -> 4050; reszta diffu QA = dryf main.
+- knyszyn-w zbudowany (pierwsza wersja): soft nodes 8 596, obniżone floor 7 560; sonda E122 N787: teren 0,6 m pod
+  skarpą tylną (było 0,04), steep_grass 18 -> 5. Ale za krawędzią rowu dołek 0,4-0,6 m -> dodany limit
+  FLOOR_OUTSIDE_DROP_M 0,20 m poza obrysem (test: przebicie <= 0,4 cm). Wymaga ponownego build_world knyszyn-w,
+  dk65-07, tykocin (rebuild2.ps1).

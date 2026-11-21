@@ -72,7 +72,8 @@ def test_soft_floor_keeps_terrain_under_ditch():
     poke_old = _max_poke(old, hf, d, n)
     poke_new = _max_poke(new, hf, d, n)
     assert poke_old > 0.05, poke_old           # the node-only rule cuts through the ditch (the reported sawtooth)
-    assert poke_new <= 0.0, poke_new
+    assert poke_new <= 0.005, poke_new          # outside nodes drop at most FLOOR_OUTSIDE_DROP_M
+    assert (old - new)[~mask].max() <= CF.FLOOR_OUTSIDE_DROP_M + 1e-9
     # flat verge: the floor changes nothing under it (urban verges / islands keep SOFT_UNDER, ADR 0110)
     flat = types.SimpleNamespace(V=part.V * [1, 1, 0] + [0, 0, 100.0], T=part.T, footprint=True, mat="verge_grass")
     r2, m2 = CF.rasterise([flat], hf)

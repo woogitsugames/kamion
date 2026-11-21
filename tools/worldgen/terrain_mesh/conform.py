@@ -171,6 +171,7 @@ def tidy(z, road, mask, dist, close_m=7, iters=150, smooth_slopes=True):
 SOFT_UNDER = 0.04          # m: terrain just under grass verges / island grass (WORKING_VALUE)
 SOFT_CLEAR_CELLS = 2       # ... only where no hard surface (carriageway, kerb, paving) is within this many nodes
 FLOOR_STEP_M = 0.2         # ADR 0321: sample spacing on the verge triangles for the cell floor (WORKING_VALUE)
+FLOOR_OUTSIDE_DROP_M = 0.20  # ADR 0321: max lowering of a node outside the footprint by the floor (WORKING_VALUE)
 
 
 def rasterise_floor(parts, hf, step=FLOOR_STEP_M):
@@ -275,8 +276,11 @@ def conform(hf, road, mask, soft=None, footprint=None, soft_floor=None):
     if soft_floor is not None:
         # ADR 0321: no node (soft, hard or just outside the footprint) above the lowest verge surface in the four
         # cells around it: the terrain triangles stay under the ditch creases. Outside the footprint this reaches
-        # one cell beyond the back slope only, where the battered skirt of the strip (FLANGE_DEPTH) covers the dip.
-        out = np.minimum(out, soft_floor - SOFT_UNDER)
+        # one cell beyond the back slope only, where the battered skirt of the strip (FLANGE_DEPTH) covers the dip;
+        # there the drop is capped at FLOOR_OUTSIDE_DROP_M (an uncapped 0.4-0.6 m trough showed beyond the ditch top
+        # edge, knyszyn-w E 122 N 787; residual poke <= 0.4 cm in tests/gis/test_ditch_floor_0321.py)
+        low = np.minimum(out, soft_floor - SOFT_UNDER)
+        out = np.where(mask, low, np.maximum(low, out - FLOOR_OUTSIDE_DROP_M))
     return out, d
 
 
