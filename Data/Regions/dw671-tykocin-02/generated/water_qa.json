@@ -1,0 +1,336 @@
+{
+ "banks": {
+  "bank_shrubs": {
+   "skipped": {
+    "blocked": 4,
+    "near_tree": 5
+   },
+   "tree_alder": 10,
+   "tree_shrub": 45
+  },
+  "banks": {
+   "ribbons": 480,
+   "triangles": 15860
+  },
+  "banks_low": {
+   "ribbons": 56,
+   "triangles": 992
+  }
+ },
+ "bodies": [
+  {
+   "area_m2": 439,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-BE24-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 612,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-BE5D-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 306,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-BED5-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 1540,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-BEFF-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 149,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-BF04-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 393,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2c7211c8-a8b5-4491-8320-6ef591815ad4:0"
+  },
+  {
+   "area_m2": 297,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2ed38820-43a2-44ef-8686-7034682f4a6f:0"
+  },
+  {
+   "area_m2": 349,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:4c35d500-d9e7-45bc-be3e-52b276cc3998:0"
+  },
+  {
+   "area_m2": 1140,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:71d43232-7ae6-4dbf-a206-6cb6b8904aab:0"
+  },
+  {
+   "area_m2": 2215,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:8c24f0e4-f63a-49b9-b9d9-967a32d086e8:0"
+  },
+  {
+   "area_m2": 651,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:8cc4fcbd-2024-412d-b5d4-d838c5f10a4f:0"
+  },
+  {
+   "area_m2": 1129,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:b066f8ee-d59a-4c27-8e2e-e24f5f38c1ce:0"
+  },
+  {
+   "area_m2": 126,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:b4ec9b5f-328f-4132-9120-056e6ee2af0a:0"
+  },
+  {
+   "area_m2": 627,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/412524496:0"
+  },
+  {
+   "area_m2": 566,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/1333537813:0"
+  },
+  {
+   "area_m2": 422,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/1333537814:0"
+  },
+  {
+   "area_m2": 1106,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/1335056998:0"
+  },
+  {
+   "area_m2": 388,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/1336471344:0"
+  },
+  {
+   "area_m2": 1038,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/1337804772:0"
+  },
+  {
+   "area_m2": 416,
+   "kind": "basin",
+   "name": null,
+   "src": "osm:way/1359387226:0"
+  },
+  {
+   "area_m2": 2423,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/1489748647:0"
+  }
+ ],
+ "carve": {
+  "bank_nodes_lowered": 12561,
+  "bed_lowered_m_max": 2.96,
+  "bed_nodes": 28522,
+  "lip_nodes_raised": 374,
+  "water_nodes_kept_by_road": 1741
+ },
+ "profiles": [
+  {
+   "kind": "river",
+   "len_m": 2233,
+   "level_first_m": 112.21,
+   "level_last_m": 110.06,
+   "name": "Jaskranka",
+   "raw_min_max_m": [
+    110.03,
+    112.3
+   ],
+   "reversed": false,
+   "src": "osm:way/300786687:0",
+   "stations": 447
+  },
+  {
+   "kind": "river",
+   "len_m": 2235,
+   "level_first_m": 112.21,
+   "level_last_m": 110.08,
+   "name": "Jaskrzanka",
+   "raw_min_max_m": [
+    110.04,
+    112.31
+   ],
+   "reversed": false,
+   "src": "bdot10k:OT_SWRS_L:8203da38-bdef-4939-bc07-a293306cc8dd:0",
+   "stations": 448
+  }
+ ],
+ "region": "dw671-tykocin-02",
+ "schema": "truck-sim-pl/water-qa/1",
+ "seams": [
+  {
+   "edge": "W",
+   "level_m": 113.939,
+   "nodes": 22,
+   "own_m": [
+    113.83,
+    113.83
+   ]
+  },
+  {
+   "edge": "N",
+   "level_m": 112.222,
+   "nodes": 9,
+   "own_m": [
+    112.208,
+    112.21
+   ]
+  },
+  {
+   "edge": "S",
+   "level_m": 110.076,
+   "nodes": 9,
+   "own_m": [
+    110.074,
+    110.078
+   ]
+  }
+ ],
+ "sheet": {
+  "area_m2": 32239,
+  "triangles": 7923
+ },
+ "skipped": [],
+ "still_levels": [
+  {
+   "at_local_en": [
+    -180.8,
+    813.5
+   ],
+   "level_m": 111.86,
+   "nodes": 397
+  },
+  {
+   "at_local_en": [
+    -192.5,
+    737.3
+   ],
+   "level_m": 111.95,
+   "nodes": 485
+  },
+  {
+   "at_local_en": [
+    -226.0,
+    671.1
+   ],
+   "level_m": 111.77,
+   "nodes": 1649
+  },
+  {
+   "at_local_en": [
+    349.4,
+    597.8
+   ],
+   "level_m": 110.99,
+   "nodes": 2657
+  },
+  {
+   "at_local_en": [
+    29.8,
+    533.5
+   ],
+   "level_m": 110.01,
+   "nodes": 463
+  },
+  {
+   "at_local_en": [
+    -200.6,
+    484.8
+   ],
+   "level_m": 111.4,
+   "nodes": 181
+  },
+  {
+   "at_local_en": [
+    701.5,
+    393.0
+   ],
+   "level_m": 112.08,
+   "nodes": 160
+  },
+  {
+   "at_local_en": [
+    -945.0,
+    329.8
+   ],
+   "level_m": 113.11,
+   "nodes": 482
+  },
+  {
+   "at_local_en": [
+    -1016.6,
+    310.2
+   ],
+   "level_m": 113.83,
+   "nodes": 351
+  },
+  {
+   "at_local_en": [
+    -392.2,
+    294.6
+   ],
+   "level_m": 111.25,
+   "nodes": 351
+  },
+  {
+   "at_local_en": [
+    341.5,
+    206.7
+   ],
+   "level_m": 109.72,
+   "nodes": 1251
+  },
+  {
+   "at_local_en": [
+    35.1,
+    -13.4
+   ],
+   "level_m": 111.03,
+   "nodes": 1317
+  },
+  {
+   "at_local_en": [
+    -811.2,
+    -24.8
+   ],
+   "level_m": 110.43,
+   "nodes": 717
+  },
+  {
+   "at_local_en": [
+    -707.1,
+    -705.4
+   ],
+   "level_m": 110.03,
+   "nodes": 473
+  }
+ ],
+ "water_nodes": 30263
+}
