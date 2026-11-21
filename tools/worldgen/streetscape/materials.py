@@ -704,8 +704,11 @@ M["road_asphalt"] = {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "as
                                       "low_photo_detail": 0.75}}
 # WORKING_VALUE: a 25 mm bituminous saw-cut seal, fresh darker fill and aged lighter aggregate.
 # UV0 is normalised by yard_wear before chunking; base/normal textures still use world metres.
+# build #3 P2 (DW671 t=2541/3221): aged patches measured 1.47x the surrounding road in linear luminance (sRGB 128 vs
+# 107) - the road carries _ROADWEAR darkening (tone 0.90, wheel paths, drip band) that the decal does not. Tones
+# lowered so an old repair sits within a few % of the road and a fresh one reads darker. WORKING_VALUE.
 M["decal_patch"]["asphalt_patch_seam"] = {"width_m": 0.025, "darkening": 0.65,
-                                         "fresh_tone": 0.88, "aged_tone": 1.08}
+                                         "fresh_tone": 0.72, "aged_tone": 0.76}
 M["decal_patch"]["asphalt_wear"] = {"low_photo_detail": 0.75}
 # Restore authored wheel wear (0099 halved it in C#). Keep all coefficients visible here.
 # Glyphs share the transverse encoding: their readability is an explicit visual control, not a claimed fix.
