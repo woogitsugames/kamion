@@ -5,6 +5,7 @@
 - krok 2: kamery limit_b16_bridge_n_{025,060,100}m w tykocin (authored). Bariera C: debug clip w tle (artifacts/world-fix-b3-s24/dbg_clip.log), przebudowa dw671-01/-07 w tle (builds.status).
 - krok 3: przyczyna wolnego końca C w173956078 R: stacje pomostu z kapą 0,145 m (< 0,30) dostają want=0 (deck_edge) - nie dedup/clip (dbg_clip2.log). Naprawa furniture.py: TWIN_SHARED_* - jedna wspólna bariera w środku szczeliny 1,0-2,5 m między bliźniaczymi jezdniami + płyta przykrycia szczeliny (bridge_concrete). Przebudowa C w tle (build_C.log). Import dw671-01: 1. próba exit 2 (brak SM_CabInterior_LOD0.fbx w worktree - skopiowany z main), ponowiony (import_dw671-01b.log).
 - krok 4 (render): dw671-01 po: łata route_s1141 lin 0,190 vs droga 0,173/0,223 (było 1,47x), miękka zaokrąglona krawędź. Tykocin: B-16 3,7 m + B-18 12t stoją i są czytelne z oka kierowcy (limit_b16_bridge_n_*); w buildzie niewidoczne tylko przez próbkowanie co 10 s (t=3501 ~80 m, t=3511 już na moście) - bez zmian w świecie. P3: diagnoza (wp=0 na płytach bez zmiany) -> smugi to koleiny na wstęgach jednokierunkowych przy wyspie, nie płyta; łamanie szumem 1-6 m na wszystkich drogach (keep 0,55-1,25), płyty x0,5. Rendery: artifacts/world-fix-b3-s24/vqa/. Knyszyn vqa wymaga sąsiada (pominięty). TruckPose w dk65-06: brak kolizji w scenie edytora.
+- 18:40 build_C z 16:21 zmarł bez kodu wyjścia (log urwany w furniture) - ponowiony z python -u.
 - NASTĘPNY KROK: po build_C (w tle) pytest tests/gis/test_barrier_ends.py tests/gis/test_barriers_0159.py; visual-critic.
 
 # qa-d94-cli — zakończone
