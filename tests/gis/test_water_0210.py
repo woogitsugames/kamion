@@ -19,7 +19,8 @@ def test_stage_is_opt_in():
     import regions
     from streetscape import water as WT
     on = sorted(r.id for r in regions.REGIONS.values() if r.water)
-    assert on == ["dk65-02", "dk65-03"]      # ADR 0213: + dk65-03
+    # ADR 0213: + dk65-03; water-tykocin-s24: + tykocin (Narew), DW671 corridor and Knyszyn tiles with water in BDOT/OSM
+    assert on == ["dk65-02", "dk65-03", "dw671-tykocin-01", "dw671-tykocin-02", "dw671-tykocin-08", "dw671-tykocin-09", "knyszyn", "knyszyn-s", "tykocin"]
     for rid in ("bialystok-industrial-c", "bialystok-dojlidy"):
         ry = yaml.safe_load((REGIONS_DIR / rid / "region.yaml").read_text(encoding="utf-8"))
         assert "water" not in ry and not WT.enabled(ry)
