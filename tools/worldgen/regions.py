@@ -475,7 +475,12 @@ REGIONS: dict[str, Region] = {
         water=True,      # water-tykocin-s24: the Narew + oxbows under the DW671 bridge (ul. Puchalskiego), Nereśl
         # ADR 0321: the Narew on Commons Tykocin_Most_drogowy_03 reads blue-grey (sRGB ~98/115/121 at a low angle), not
         # the brown-olive humic Supraśl the default body was tuned on - cooler, slightly clearer body (WORKING_VALUE)
-        water_material=(("color", (0.095, 0.118, 0.128)), ("shallow", (0.120, 0.135, 0.115))),
+        # ADR 0324: the Narew at Tykocin is ~48 m wide between low banks (reed belt 2 m, meadows): from the bridge
+        # deck and the promenade the sheet mirrors the sky down to a few degrees above the far shore (Commons 03 / 05:
+        # pale blue-grey water right under the spans) - the default far-bank horizon 0.10 (narrow wooded Supraśl)
+        # turned most of the visible reach into the dark bank tint (WORKING_VALUE)
+        water_material=(("color", (0.095, 0.118, 0.128)), ("shallow", (0.120, 0.135, 0.115)),
+                        ("bank_horizon", 0.04), ("reflect", 0.92)),
     ),
     "dw671-jasionowka-01": Region(
         id="dw671-jasionowka-01",
