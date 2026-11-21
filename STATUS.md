@@ -43,3 +43,6 @@
 - unity r1: import padł (brak SM_CabInterior_LOD0.fbx w worktree -> skopiowany z main). EditMode 1525: 1388 pass,
   1 fail WorldEdgeClosureDuplicateTests (Maczka, industrial-c) = fałszywy pomost bliźniaczej jezdni -> poprawka:
   tylko pomosty krzyżujące drogę (>30 st.). WorldEdgeClosureDeckTests PASS. Ponowny unity.ps1 w tle.
+- VQA knyszyn-w (pairs/knyszyn-w.jpg, góra przed / dół po): zęby zniknęły na dk65-fields-nw i dk65-goniadzka; rów
+  ciągły, granica trawa rowu/teren = prosta krawędź korony skarpy (ciemniejsze albedo verge_grass vs teren —
+  zostaje jako otwarte P3, ew. mieszanie materiału).
