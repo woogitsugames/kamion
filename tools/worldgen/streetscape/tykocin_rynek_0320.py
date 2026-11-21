@@ -44,10 +44,11 @@ STONE, SAND, IRON, GILT = "plinth_grey", "monument_sandstone", "fence_anthracite
 PEDESTAL = ((0.00, .80), (0.10, .86), (0.45, .93), (0.85, .86), (1.30, .68), (1.75, .60), (2.15, .60), (2.15, .74),
             (2.30, .78), (2.30, .68), (2.42, .62))
 # Figure: (z, half width, half depth, right offset, forward offset). Long coat to the ground, belted, fur cap.
-FIGURE = ((0.00, .34, .28, 0, 0), (0.10, .30, .25, 0, 0), (0.50, .37, .28, 0, 0), (1.00, .34, .26, 0, 0),
-          (1.32, .28, .21, 0, 0), (1.45, .30, .22, 0, 0), (1.72, .35, .24, 0, 0), (1.90, .37, .22, 0, 0),
-          (1.98, .22, .17, 0, 0), (2.04, .10, .10, 0, .02), (2.10, .115, .125, 0, .03), (2.24, .125, .135, 0, .03),
-          (2.34, .115, .12, 0, .02), (2.42, .07, .07, 0, .01))
+FIGURE = ((0.00, .24, .26, 0, 0), (0.06, .22, .25, 0, .01), (0.52, .23, .23, 0, 0), (0.56, .41, .31, 0, 0),
+          (1.02, .35, .27, 0, 0), (1.30, .27, .20, 0, 0), (1.36, .29, .215, 0, 0), (1.45, .30, .22, 0, 0),
+          (1.72, .35, .24, 0, 0), (1.90, .37, .22, 0, 0), (1.98, .22, .17, 0, 0), (2.04, .10, .10, 0, .02),
+          (2.10, .115, .125, 0, .03), (2.24, .125, .135, 0, .03), (2.27, .15, .155, 0, .03), (2.38, .15, .155, 0, .02),
+          (2.46, .09, .09, 0, .01))
 CLOAK = ((0.30, .40, .27, -.16, -.10), (1.00, .42, .28, -.17, -.10), (1.60, .38, .25, -.14, -.09),
          (1.88, .26, .18, -.10, -.07), (1.96, .10, .08, -.06, -.05))
 
@@ -91,12 +92,12 @@ def _monument(acc, layer, at, z):
         return o + r * right + f * fwd + up * h
     ls = 4 if low else 6
     # right arm stretched out with the mace (gilt), left arm on the hip under the cloak
-    MK.limb(acc, layer, SAND, [q(.30, .02, 1.86), q(.56, .12, 1.93), q(.86, .24, 2.06)], [.095, .085, .07], sides=ls)
-    MK.limb(acc, layer, GILT, [q(.88, .25, 1.92), q(.90, .27, 2.50)], [.022, .026], sides=4)
-    MK.sphere(acc, layer, GILT, q(.90, .27, 2.60), .11, sides=6 if low else 8, stacks=3 if low else 5)
+    MK.limb(acc, layer, SAND, [q(.30, .02, 1.86), q(.58, .12, 1.90), q(.88, .24, 1.98)], [.095, .085, .07], sides=ls)
+    MK.limb(acc, layer, GILT, [q(.90, .25, 1.82), q(.91, .26, 2.42)], [.022, .026], sides=4)
+    MK.sphere(acc, layer, GILT, q(.91, .26, 2.52), .11, sides=6 if low else 8, stacks=3 if low else 5)
     MK.limb(acc, layer, SAND, [q(-.30, .02, 1.84), q(-.50, .06, 1.48), q(-.30, .20, 1.28)], [.09, .08, .07], sides=ls)
     if low:
-        return zf + 2.71 - z
+        return zf + 2.63 - z
     # cartouche block at the foot of the figure (blank) and the two volutes of the cornice
     _box(acc, layer, SAND, at + f[:2] * .60, zf - .30, zf + .16, .26, .08, ax, skip=())
     for sg in (-1., 1.):
@@ -112,13 +113,13 @@ def _monument(acc, layer, at, z):
         for i in range(npk + 1):
             p = c + n * (-half + 2 * half * i / npk)
             b = len(V)
-            V += [p - n * .012 + up * h0, p + n * .012 + up * h0, p + n * .012 + up * h1, p - n * .012 + up * h1]
+            V += [p - n * .015 + up * h0, p + n * .015 + up * h0, p + n * .015 + up * h1, p - n * .015 + up * h1]
             T += [[b, b + 1, b + 2], [b, b + 2, b + 3], [b, b + 2, b + 1], [b, b + 3, b + 2]]
         acc.add(layer, IRON, np.array(V), T)
     for sx in (-1., 1.):
         for sy in (-1., 1.):
             _box(acc, layer, STONE, at + r[:2] * sx * 3.1 + f[:2] * sy * 3.1, z, z + .72, .13, .13, ax)
-    return zf + 2.71 - z
+    return zf + 2.63 - z
 
 
 def _well(acc, layer, at, z):
