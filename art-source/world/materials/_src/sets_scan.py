@@ -467,6 +467,8 @@ HUE_ASPHALT_PATCH = [0.0624, 0.0619, 0.0614]
 HUE_BEHATON = [0.2237, 0.2222, 0.2141]
 HUE_PAVING = [0.2567, 0.2547, 0.2455]
 HUE_GRAVEL = [0.2172, 0.1982, 0.1681]
+HUE_SETT = [0.203, 0.200, 0.193]        # weathered grey granite, slightly warm (road film); WORKING_VALUE
+HUE_COBBLE = [0.228, 0.218, 0.204]      # mixed field granite in sand; WORKING_VALUE
 NEUTRAL = [1.0, 1.0, 1.0]
 
 
@@ -534,6 +536,20 @@ SCAN_SETS = {
         "sidewalk_slab_35", "concrete_pavement_02", target=0.27, hue=HUE_PAVING, out_L=1.8, out_n=1024, seed=6317,
         flat_m=1.5, flat_k=0.4, hue_keep=0.6, segment={"joint_quantile": 0.16},
         period_fix=[{"axis": 0, "search_m": (0.2, 0.45), "period_m": 0.353}])),
+    # road-surface-s24 (ADR 0323): stone carriageways. Critic wave 6 pkt 2.1: road_sett / apron_sett had no set and fell
+    # back to the legacy procedural Voronoi "Sett" texture at a 1.6 m tile (beige-pink cells of 0.3-0.6 m).
+    # sett_granite: split-granite setts in rows; the scan's pitch (measured by course_period, ~77 mm) is scaled to
+    # 95 mm = sett 8/10 with a ~10 mm joint (PN-EN 1342 nominal 80-100 mm; the Tykocin photos cs153250600 /
+    # cs202183436 show setts of that class laid in fans - the fan layout is NOT reproduced, rows only). WORKING_VALUE.
+    "sett_granite": (["cobblestone_03"], lambda: tiling_from_scan(
+        "sett_granite", "cobblestone_03", target=0.20, hue=HUE_SETT, out_L=2.0, out_n=1024, seed=6331,
+        flat_m=1.2, flat_k=0.5, hue_keep=0.5, segment={"joint_quantile": 0.24},
+        period_fix=[{"axis": 0, "search_m": (0.05, 0.12), "period_m": 0.095}])),
+    # cobble_fieldstone: worn mixed-colour stones in sand joints (bruk / 'kocie lby' of the side streets: OSM
+    # cobblestone, unhewn_cobblestone, BDOT10k "bruk"); physical size of the scan kept (stones 0.12-0.22 m).
+    "cobble_fieldstone": (["cobblestone_floor_08"], lambda: tiling_from_scan(
+        "cobble_fieldstone", "cobblestone_floor_08", target=0.22, hue=HUE_COBBLE, out_L=2.0, out_n=1024, seed=6332,
+        flat_m=1.5, flat_k=0.4, hue_keep=0.85, segment={"joint_quantile": 0.22})),
     # modulation sets (engine albedo = 2 x manifest colour x map)
     # ADR 0188: asphalt_worn's scan and parameters with the hue removed -> coloured asphalt (red cycle tracks and
     # crossings) keeps the grey asphalt's normal / roughness / AO; 1024 px: a 2-3 m strip seen from the cab
@@ -595,6 +611,15 @@ SCAN_ONLY_META = {
                              slots=["sidewalk_slabs"],
                              note="Square concrete sidewalk slabs (plyty chodnikowe 35x35x5), scan scaled from ~0.30 m "
                                   "to 0.35 m slabs (WORKING_VALUE). Var.G = slab id from the scan's displacement."),
+    "sett_granite": dict(kind="tiling_set", target=0.20, uv="world_xy_planar",
+                         slots=["road_sett", "apron_sett"],
+                         note="ADR 0323: grey split-granite setts in rows (kostka granitowa 8/10), CC0 scan "
+                              "cobblestone_03 scaled to a 95 mm pitch (WORKING_VALUE). Var.G = sett id from the scan's "
+                              "displacement."),
+    "cobble_fieldstone": dict(kind="tiling_set", target=0.22, uv="world_xy_planar",
+                              slots=["road_cobble"],
+                              note="ADR 0323: worn mixed-colour stones in sand joints (bruk, 'kocie lby'), CC0 scan "
+                                   "cobblestone_floor_08 at its physical size (2.0 m). Var.G = stone id."),
     "asphalt_tint": dict(kind="modulation_set", target=0.5, uv="world_xy_planar", tile_m=[4.04, 4.04],
                          slots=["cycle_asphalt_red", "cycle_crossing_red"],
                          note="ADR 0188: the asphalt_worn scan (asphalt_04) as a neutral modulation map (mean 0.5 per "

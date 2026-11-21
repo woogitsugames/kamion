@@ -103,7 +103,12 @@ MATERIALS = {
                       "texture_set": "concrete_cast_5m_joints", "uv1": "along_m"},
     "road_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones",
                     "texture_set": "paving_20x10_grey"},
-    "road_sett": {"color": [0.24, 0.22, 0.20], "rough": 0.9, "surface": "sett"},
+    # ADR 0323 (critic wave 6 pkt 2.1): stone carriageways get generated sets from CC0 scans. Without a set they fell
+    # back to the legacy procedural "Sett" texture at a 1.6 m tile: beige-pink cells of 0.3-0.6 m on every sett street
+    # of Tykocin. road_sett = OSM surface=sett (split-granite setts, 95 mm pitch); road_cobble = cobblestone /
+    # unhewn_cobblestone (BDOT10k "bruk": worn field stones in sand). Colours = the sets' calibrated means (tint 1).
+    "road_sett": {"color": [0.203, 0.200, 0.193], "rough": 0.9, "surface": "sett", "texture_set": "sett_granite"},
+    "road_cobble": {"color": [0.228, 0.218, 0.204], "rough": 0.9, "surface": "sett", "texture_set": "cobble_fieldstone"},
     "road_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "curb_concrete": {"color": [0.28, 0.278, 0.27], "rough": 0.85, "surface": "concrete_kerb",
                       "texture_set": "kerb_concrete_1m"},
@@ -114,7 +119,7 @@ MATERIALS = {
     # (0.28) read 1.6. WORKING_VALUE, matched in the frames r4_deck_bz_eye / _eye2.
     "bridge_kerb": {"color": [0.19, 0.186, 0.176], "rough": 0.9, "surface": "concrete_kerb",
                     "texture_set": "kerb_concrete_1m"},
-    "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett"},
+    "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett", "texture_set": "sett_granite"},
     # ADR 0218 / owner D71 + D75: truck apron of the Knyszyn roundabout = light concrete block paving, clearly lighter
     # than the asphalt. Block pattern = the generated set paving_20x10_grey (ADR 0022; the engine tint is
     # color / set mean = 1.6, like bridge_kerb re-tints kerb_concrete_1m); albedo 0.42 WORKING_VALUE: new concrete
@@ -245,7 +250,7 @@ def glb_materials(region=None):
 
 
 RAIL_ZONE_EXCLUDE_MATS = {"shoulder_gravel", "verge_grass"}    # ADR 0272: not part of the road a level crossing spans
-WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
+WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_cobble", "road_gravel", "collision_asphalt",
         "sidewalk_paving", "apron_sett", "apron_paving_light", "sidewalk_paving_red", "sidewalk_slabs"}      # + ADR 0237 footway types
 
 

@@ -22,7 +22,7 @@ from .geom import Polyline, cumlen, smooth_1d, smooth_open
 DENSE = 0.5          # m, dense polyline spacing used for evaluation
 SURFACE_MAT = {"asphalt": "road_asphalt", "asphalt_new": "road_asphalt_new", "paved": "road_asphalt", "concrete": "road_concrete",
                "concrete:plates": "road_concrete", "paving_stones": "road_paving", "sett": "road_sett",
-               "cobblestone": "road_sett", "unhewn_cobblestone": "road_sett", "compacted": "road_gravel",
+               "cobblestone": "road_cobble", "unhewn_cobblestone": "road_cobble", "compacted": "road_gravel",
                "gravel": "road_gravel", "fine_gravel": "road_gravel", "unpaved": "road_gravel",
                "ground": "road_gravel", "dirt": "road_gravel"}
 

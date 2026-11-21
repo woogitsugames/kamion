@@ -35,7 +35,7 @@ THROUGH_DEG = 35.0          # = consistency.JUNCTION_THROUGH_DEG
 RING_DEG = 80.0             # consecutive ring arms (the ring bends inside the patch)
 MATCH_MAX_M = 1.9           # WORKING_VALUE: a line continues in the nearest line within just over half a lane
 STEP_M = 0.5
-CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
+CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_cobble", "road_gravel"}
 P21_STRIPE_W_M = 0.5        # WORKING_VALUE: read off the 0.08 m orthophoto (ADR 0077)
 P21_STRIPE_GAP_M = 1.0
 P21_BORDER_W_M = 0.24       # = S.LINE_W_WIDE

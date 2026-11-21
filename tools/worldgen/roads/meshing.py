@@ -1890,7 +1890,7 @@ def _corner_gaps(net, j, G, OUT, Z):
 
 
 # ---------------------------------------------------------------------------------------------
-CULL_CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
+CULL_CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_cobble", "road_gravel"}
 CULL_KERB = {"curb_concrete", "collision_curb"}
 CULL_SIDE = {"sidewalk_paving", "verge_grass", "shoulder_gravel", "collision_paving", "collision_grass"}
 CULL_RING_M = 0.30          # = consistency.KERB_RING_M: carriageway under the kerb and all around it at this radius

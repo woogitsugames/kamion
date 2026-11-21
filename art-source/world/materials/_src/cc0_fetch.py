@@ -50,6 +50,9 @@ SELECTION = {
     "pine_bark": (["bark_pine"], "Scots-pine-like plated bark (processed only; trees are another agent's scope)"),
     # owner decision D-17.11: weathered horizontal plank wall for the wooden houses of Knyszyn (ADR 0287)
     "raw_plank_wall": (["wood_siding"], "weathered raw pine planks, horizontal boards (wooden houses, Dom Klattow)"),
+    # road-surface-s24 (ADR 0323): stone carriageways of Tykocin (OSM surface=sett / cobblestone / unhewn_cobblestone)
+    "cobblestone_03": (["sett_granite"], "grey split-granite setts ~10 cm in rows, dark joints (kostka granitowa)"),
+    "cobblestone_floor_08": (["cobble_fieldstone"], "worn rounded stones in sand joints (bruk z kamienia polnego, 'kocie lby')"),
 }
 MAPS = ["Diffuse", "nor_gl", "Rough", "AO", "Displacement"]
 RES = "2k"

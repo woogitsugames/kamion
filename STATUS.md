@@ -1,3 +1,9 @@
+# STATUS road-surface-s24 (krytyk fala 6 pkt 1 + 2.4/2.8: nawierzchnia z życiem; ADR 0323)
+- krok 0 OK: worktree (derived = prywatna kopia), zestawy PBR skopiowane z win-build, cab LOD0 FBX z main. Baseline: artifacts/road-surface-s24/vqa/before/ (High, clear + overcast, 3 kafle), łańcuch artifacts/road-surface-s24/chain.sh <tag>.
+- Przyczyna 2.1: road_sett / apron_sett bez texture_set -> legacy "Kamion/World Surface" + proceduralny Voronoi "Sett" na kaflu 1,6 m (komórki 0,3-0,6 m). OSM Tykocin: sett 2,4 km (Złota, Sokołowska, Puchalskiego, pl. Czarnieckiego), cobblestone/unhewn 3,5 km.
+- krok 1 (kod, bez renderu): skany CC0 Poly Haven cobblestone_03 -> sett_granite (podziałka 95 mm), cobblestone_floor_08 -> cobble_fieldstone; nowy materiał road_cobble (cobblestone, unhewn_cobblestone); road_sett/apron_sett z zestawem.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only sett_granite,cobble_fieldstone` (slot heavy), potem przebudowa tykocin.
+
 # STATUS world-fix-b3-s24 (błędy świata z buildu #3)
 - krok 0 OK: worktree gotowy (derived skopiowane). Kafle łat: t=2541 -> dw671-tykocin-01 (13 km do celu), t=3221 -> dw671-tykocin-07 (4,0 km).
 - Przyczyna P2: roads/decals.py patch() = ostry prostokąt, materiał decal_patch nieprzezroczysty, aged_tone 1.08 bez _ROADWEAR (droga ciemniejsza o koleiny/drip) -> jasne łaty.

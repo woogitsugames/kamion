@@ -57,7 +57,7 @@ GORE_KERB_DROP_M = 0.06        # kerb top this far below the surface along a pav
 GORE_OVERLAP_M = 0.06          # fill reaches this far under the neighbouring carriageways (no cracks)
 GORE_VISUAL_DZ = -0.004        # fill this much below the carriageway where they overlap (no z-fighting)
 GORE_SURFACES = {"sett": "road_sett", "paving": "road_paving", "concrete": "road_concrete"}   # paved_gore `surface:`
-CARRIAGEWAY_MATS = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
+CARRIAGEWAY_MATS = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_cobble", "road_gravel"}
 
 
 @dataclass

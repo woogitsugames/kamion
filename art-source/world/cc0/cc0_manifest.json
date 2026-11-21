@@ -5,7 +5,7 @@
   "polyhaven": {
    "license": "CC0 1.0 Universal",
    "page": "https://polyhaven.com/license",
-   "checked_utc": "2026-11-17T16:28Z"
+   "checked_utc": "2026-11-21T19:22Z"
   }
  },
  "assets": [
@@ -909,6 +909,134 @@
      "bytes": 813999,
      "sha256": "e41abc9107f920fb0fb7000d40592963a3e84b92c67bff4411882275c13c10a9",
      "fetched_utc": "2026-11-17T16:28:30Z"
+    }
+   ]
+  },
+  {
+   "id": "cobblestone_03",
+   "source": "polyhaven",
+   "name": "Cobblestone 03",
+   "page": "https://polyhaven.com/a/cobblestone_03",
+   "authors": {
+    "Charlotte Baglioni": "All"
+   },
+   "dimensions_mm": [
+    2000.0,
+    2000.0
+   ],
+   "date_published_unix": 1697673600,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "sett_granite"
+   ],
+   "why": "grey split-granite setts ~10 cm in rows, dark joints (kostka granitowa)",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_03/cobblestone_03_diff_2k.jpg",
+     "md5_api": "a268c3ea9da318921759f21bca3ea477",
+     "bytes": 3931466,
+     "sha256": "a68cc3efd25b6fb5550d893ccf3315e60efd6491f440fb6ba5c02482928d08ee",
+     "fetched_utc": "2026-11-21T19:22:19Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_03/cobblestone_03_nor_gl_2k.jpg",
+     "md5_api": "9dc17d8dfff542fc2ec196ce8e586e4e",
+     "bytes": 4729066,
+     "sha256": "ed4904450de544b0766b2186fb1e9fdd8671cddd93943679df703c68b5188097",
+     "fetched_utc": "2026-11-21T19:22:19Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_03/cobblestone_03_rough_2k.jpg",
+     "md5_api": "3a2cabf88dfeb66a927603fa552d5896",
+     "bytes": 1718970,
+     "sha256": "72e393baf4d0b8e384a7720d30fe05046aebfb1363355b92a01d6d14de544174",
+     "fetched_utc": "2026-11-21T19:22:19Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_03/cobblestone_03_ao_2k.jpg",
+     "md5_api": "37fdebeba6c202433da4fc3ea50f9f1f",
+     "bytes": 3198685,
+     "sha256": "f8dcbce4445e42747f4af6cf8dda7e8a54b50752702ecc516ad74bf61e1b5a23",
+     "fetched_utc": "2026-11-21T19:22:20Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_03/cobblestone_03_disp_2k.jpg",
+     "md5_api": "28e77b106a9298c7d6592f95666d0d64",
+     "bytes": 1624259,
+     "sha256": "66e47808bb5815065b796236f0837f1b6d650e423f52bdd03d935d713c2280bf",
+     "fetched_utc": "2026-11-21T19:22:21Z"
+    }
+   ]
+  },
+  {
+   "id": "cobblestone_floor_08",
+   "source": "polyhaven",
+   "name": "Cobblestone Floor 08",
+   "page": "https://polyhaven.com/a/cobblestone_floor_08",
+   "authors": {
+    "Rob Tuytel": "All"
+   },
+   "dimensions_mm": [
+    2000,
+    2000
+   ],
+   "date_published_unix": 1595315950,
+   "license": "CC0 1.0",
+   "license_page": "https://polyhaven.com/license",
+   "sets": [
+    "cobble_fieldstone"
+   ],
+   "why": "worn rounded stones in sand joints (bruk z kamienia polnego, 'kocie lby')",
+   "resolution": "2k",
+   "format": "jpg",
+   "files": [
+    {
+     "map": "Diffuse",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_floor_08/cobblestone_floor_08_diff_2k.jpg",
+     "md5_api": "56404e8a3cdf04c8697dbbc7f9ddd65c",
+     "bytes": 2289909,
+     "sha256": "9aaf7db7f660f03d0c5c129c11e83caa828fb8bca63f8cd5154d450ffc4c340f",
+     "fetched_utc": "2026-11-21T19:22:21Z"
+    },
+    {
+     "map": "nor_gl",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_floor_08/cobblestone_floor_08_nor_gl_2k.jpg",
+     "md5_api": "3d1c34ed083de54949e8375d69033b0b",
+     "bytes": 3948187,
+     "sha256": "42dd5fc2da4a858f9c076c9ac5002857a1c064f8f4c4ffb12fafecffb84e96cc",
+     "fetched_utc": "2026-11-21T19:22:23Z"
+    },
+    {
+     "map": "Rough",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_floor_08/cobblestone_floor_08_rough_2k.jpg",
+     "md5_api": "caae39f3ea47e2c09ca897d8dffa00ea",
+     "bytes": 1657928,
+     "sha256": "3bc645ec45543c704fe1042f7b81f9bad4f88a8567760c4898c82bc2a134e093",
+     "fetched_utc": "2026-11-21T19:22:30Z"
+    },
+    {
+     "map": "AO",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_floor_08/cobblestone_floor_08_ao_2k.jpg",
+     "md5_api": "22be5ed5c2565da14cfe18c45487912d",
+     "bytes": 947118,
+     "sha256": "f409fa52dceac782dcb625af914fd592105595749651f396547e8355867b6a5c",
+     "fetched_utc": "2026-11-21T19:22:30Z"
+    },
+    {
+     "map": "Displacement",
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_floor_08/cobblestone_floor_08_disp_2k.jpg",
+     "md5_api": "956f21bf0f92dcab336b955b9334c7d6",
+     "bytes": 537774,
+     "sha256": "503cf1444d98526e4105b065112c36258c0063e0fa0a86c573c29f45eecebe88",
+     "fetched_utc": "2026-11-21T19:22:31Z"
     }
    ]
   }
