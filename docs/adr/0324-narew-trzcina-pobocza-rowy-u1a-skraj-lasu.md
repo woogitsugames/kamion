@@ -74,7 +74,29 @@ kolider 0,2 m za poboczem zaczepiałby naczepę).
 - Tło dali (`far_field.py`) bez zmian (ma własną falę koron i zwężanie końców) — otwarte.
 
 ## Wyniki
-(uzupełniane po rundach — patrz sekcja na końcu)
+### Bez przebudowy kafli (zmierzone 2026-11-21)
+- pytest: `tests/gis/test_banks_verges_0324.py` 7/7; `test_water_0210.py` + `test_water_0213.py` 14/14 (reguły brzegu
+  dopasowane do ADR 0324; przy okazji poprawiony nieaktualny od ADR 0321 napis w `test_stage_hooks_guarded`);
+  `test_forest_0187`, `test_ditch_floor_0321`, `test_rural_xsec_0272` zielone.
+- EditMode Win64 (kod gałęzi, sceny r0): 1525 testów, 1416 zaliczonych, 0 błędów, 109 pominiętych
+  (`artifacts/tests/editmode-20261121-213618.xml`).
+- Próba na sucho na prawdziwych sieciach (`roads.pipeline.build`, płaski NMT, bez `build_world`): knyszyn-w —
+  23 strony bezkrawężnikowe, 12 201 kart trawy = 24 402 trójkąty (krawędź 4 030, skarpy 2 393, dno 5 778), 69 części
+  rowu do terenu, 16 słupków U-1a (8 par; 18 stacji w obszarze zabudowanym pominiętych); dk65-07 — 16 stron,
+  8 516 trójkątów, 6 słupków. Trzcina Tykocin (`water_banks.json`, bez wykluczeń): ≤ 145 218 trójkątów High
+  (ADR 0321: 116 752), Low 8 532.
+- Podgląd shadera wody na scenie sprzed przebudowy: `artifacts/banks-verges-s24/r0s/`, `r0s2/`.
+
+### Po przebudowie tykocin / dk65-07 / knyszyn-w
+(do uzupełnienia: rundy r1…, budżet r0 → rN, SBS `artifacts/banks-verges-s24/sbs/`)
 
 ## Otwarte
-(uzupełniane po rundach)
+- Przebudowa trzech kafli czekała > 1,5 h na pulę `heavy` (3/3 zajęte przez regen-wave-6) — patrz STATUS.md.
+- Dz.U. 2019 poz. 2311 zał. 4 nieprzeczytany: rozstaw U-1a na łukach, odsunięcie od krawędzi korony i wymiary słupka
+  to `WORKING_VALUE`; brak pikietażu (km / hm) na słupku i słupków U-1b na barierach.
+- Wiatr trzciny / trawy, pałka i kałuże w rowach, wilgotność łąk z NMT i wierzby (krytyk 3.4), tło dali lasu
+  (`far_field.py`, krytyk 3.6) — nie zrobione.
+- `shoulder_gravel` i albedo dna to `WORKING_VALUE` bez pomiaru ze zdjęcia; `_BaseColor` / `_BedColor` wody są
+  wartościami właściwości Color (kodowanie sRGB), nie liniowym albedo, jak sugerują komentarze ADR 0210 / 0213.
+- Po scaleniu: przebudować wszystkie kafle z drogami zamiejskimi (trawa, U-1a, rów w terenie, płaszcz lasu) i z wodą;
+  `visual-critic` do zlecenia przez lidera (agent nie tworzy subagentów).
