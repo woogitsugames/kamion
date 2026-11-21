@@ -368,5 +368,34 @@ def build(acc, layer, base, forward, low=False, remap=None):
     o = np.asarray(base, float)
     for mat, parts in sc.parts.items():
         for V, T in parts:
-            acc.add(layer, (remap or {}).get(mat, mat), o + V @ M, T)
+            V, T, UV = _unwrap(V, T)
+            acc.add(layer, (remap or {}).get(mat, mat), o + V @ M, T, UV)
     return sc.tris()
+
+
+UV_RADIUS_M = 0.40           # mean radius of the cloak: u = metres round the figure at that radius
+UV_SEAM_RAD = math.radians(6.0)
+
+
+def _unwrap(V, T):
+    """Cylindrical UV0 in metres (u round the figure, v up) for the bronze set, whose rain streaks run along v. The
+    seam is at the back; triangles across it get their own copies of the vertices one turn further."""
+    # 0 near the front, the +-pi seam 6 degrees off the back centre (between two columns of the cloak, so no vertex
+    # sits on it and round-off cannot flip its side)
+    ang = (np.arctan2(V[:, 0], V[:, 1]) - UV_SEAM_RAD + math.pi) % (2 * math.pi) - math.pi
+    V2, A2, T2 = [V], [ang], T.copy()
+    extra = {}
+    for k, tri in enumerate(T):
+        a = ang[tri]
+        if a.max() - a.min() > math.pi:                  # crosses the back seam
+            for j, vi in enumerate(tri):
+                if ang[vi] < 0:
+                    if vi not in extra:
+                        extra[vi] = len(V) + len(extra)
+                    T2[k, j] = extra[vi]
+    if extra:
+        idx = np.array(sorted(extra, key=extra.get))
+        V2.append(V[idx])
+        A2.append(ang[idx] + 2 * math.pi)
+    Vn, An = np.concatenate(V2), np.concatenate(A2)
+    return Vn, T2, np.column_stack([An * UV_RADIUS_M, Vn[:, 2]])

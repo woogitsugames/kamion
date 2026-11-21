@@ -1272,6 +1272,109 @@
       "hf_ratio_albedo": 0.0215,
       "ao_mean": 0.916
     },
+    "bronze_cast_tint": {
+      "tile_m": [
+        1.2,
+        1.2
+      ],
+      "target": 0.5,
+      "kind": "modulation_set",
+      "uv": "mesh_uv0_metres (u around, v up)",
+      "slots": [
+        "monument_bronze",
+        "monument_bronze_patina",
+        "monument_bronze_rubbed"
+      ],
+      "note": "ADR 0325: weathered cast bronze (modelled planes, casting grain, rain streaks along v, oxide in the hollows), neutral modulation map (mean 0.5); MaskMap.r = metal mask (manifest set_metal scales it), colour from the manifest.",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.17,
+          "dir": "bronze_cast_tint/High",
+          "png_bytes": 5896500,
+          "files": [
+            "T_bronze_cast_tint_BaseColor.png",
+            "T_bronze_cast_tint_MaskMap.png",
+            "T_bronze_cast_tint_Normal.png",
+            "T_bronze_cast_tint_Var.png"
+          ],
+          "smoothness_mean": 0.561,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 2.34,
+          "dir": "bronze_cast_tint/Medium",
+          "png_bytes": 1596854,
+          "files": [
+            "T_bronze_cast_tint_BaseColor.png",
+            "T_bronze_cast_tint_MaskMap.png",
+            "T_bronze_cast_tint_Normal.png",
+            "T_bronze_cast_tint_Var.png"
+          ],
+          "smoothness_mean": 0.554,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 4.69,
+          "dir": "bronze_cast_tint/Low",
+          "png_bytes": 463699,
+          "files": [
+            "T_bronze_cast_tint_BaseColor.png",
+            "T_bronze_cast_tint_MaskMap.png",
+            "T_bronze_cast_tint_Normal.png",
+            "T_bronze_cast_tint_Var.png"
+          ],
+          "smoothness_mean": 0.547,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00641,
+        0.0055
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3872,
+        "p95": 0.5754,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.0525,
+      "ao_mean": 0.978
+    },
     "car_grime": {
       "tile_m": [
         5.0,

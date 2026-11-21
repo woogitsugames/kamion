@@ -176,9 +176,14 @@ def test_king_cloak_has_continuous_profile_and_crowned_head():
     acc=Acc(); props._king(acc,"buildings",[0.,0.],0.)
     pieces=acc.d[("buildings","monument_bronze")]
     n,m=len(KF.RINGS0),len(KF.COLS0)
-    body=[(v,t) for v,t,*_ in pieces if len(v)==n*m]
-    assert len(body)==1
-    vertices,faces=body[0]
+    z0_uv=props.KING_PLINTH_H+props.KING_CAP_M
+    # the cloak loft + copies of the vertices along the UV seam at the back (ADR 0325: cylindrical UV0 in metres)
+    vertices,faces,uv=max(((v,t,uv) for v,t,uv,*_ in pieces), key=lambda p: len(p[0]))
+    assert n*m+n <= len(vertices) <= n*m+2*n and np.ptp(uv[:,0]) > 2*np.pi*KF.UV_RADIUS_M*.95
+    # no wall triangle is stretched across the seam (the cap under the ruff is a fan and does not count)
+    wall=faces[(vertices[faces][:,:,2].min(axis=1) < vertices[:,2].max()-1e-6)]
+    assert (np.ptp(uv[wall][:,:,0],axis=1) < 1.0).all() and np.allclose(uv[:,1],vertices[:,2]-z0_uv)
+    vertices=vertices[:n*m]
     z0=props.KING_PLINTH_H+props.KING_CAP_M
     assert np.allclose(np.unique(np.round(vertices[:,2]-z0,6)),sorted(KF.RINGS0))
     width=lambda rows: np.ptp(rows[:,:2]@props.KING_TANGENT)

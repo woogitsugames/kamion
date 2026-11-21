@@ -482,9 +482,14 @@ M = {
     # under the sky and brown in the shade - dark metallic base, a rougher, greener, less metallic patina for the fur,
     # the ruff and the hollows, and a lighter rubbed tone for the crown, the chains and the face. Grey speckled granite
     # of the plinth, honed (not mirror). WORKING_VALUE: no reflectance measurement.
-    "monument_bronze": {"color": [0.105, 0.098, 0.088], "rough": 0.48, "metal": 0.85},
-    "monument_bronze_patina": {"color": [0.078, 0.084, 0.074], "rough": 0.78, "metal": 0.40},
-    "monument_bronze_rubbed": {"color": [0.200, 0.155, 0.105], "rough": 0.40, "metal": 0.90},
+    # Set bronze_cast_tint: modelled planes, grain, rain streaks and oxide (roughness 0.3-0.8, metal mask in MaskMap.r
+    # scaled by set_metal); mesh UV0 = metres round the figure / up it (knyszyn_king_0325.build).
+    "monument_bronze": {"color": [0.105, 0.098, 0.088], "rough": 0.48, "metal": 0.85,
+                        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.85},
+    "monument_bronze_patina": {"color": [0.078, 0.084, 0.074], "rough": 0.78, "metal": 0.40,
+                               "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.40},
+    "monument_bronze_rubbed": {"color": [0.200, 0.155, 0.105], "rough": 0.40, "metal": 0.90,
+                               "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.95},
     "monument_granite": {"color": [0.215, 0.215, 0.22], "rough": 0.38, "texture_set": "granite_honed_tint",
                          "set_tile": True, "splash_h": 0.25},
     # ADR 0325: stone setts of Plac Czarnieckiego in Tykocin (art-source/world/materials/_src/sets_plaza.py). The lattice

@@ -10,6 +10,7 @@ tile, period LATTICE_M (2.255 m measured, residuals < 0.10 m). Band width, sett 
   sett_rows_tint         straight rows of small setts, neutral modulation map (mean 0.5): colour from the manifest
                          (red border band of the plaza, grey walks around the lawns)
   granite_honed_tint     honed grey granite of a monument plinth (Knyszyn), neutral modulation map
+  bronze_cast_tint       weathered cast bronze of the figure, neutral modulation map + metal mask
 """
 from __future__ import annotations
 
@@ -184,6 +185,31 @@ def granite_honed(n=1024):
                       ao_scales=(0.002, 0.006, 0.02), ao_k=0.2)
 
 
+def bronze_cast(n=1024):
+    """Weathered cast bronze of an outdoor statue: hammered / modelled planes, casting grain, rain streaks running down
+    (v = up), oxide in the hollows. Neutral modulation map (mean 0.5), metal mask in MaskMap.r (bare metal on the rubbed
+    ridges, oxide in hollows and streaks), tile 1.2 m."""
+    L = 1.2
+    c = Ctx(n, n, L, L, seed=3254)
+    d1, d2, i1, _, _ = voronoi(c, 1, 0.035, jitter=1.0, warp=(0.006 * noise(c, 2, 0.03, 0.2), 0.006 * noise(c, 3, 0.03, 0.2)))
+    facet = sstep(0.0, 0.012, 0.5 * (d2 - d1))                    # 1 inside a modelling plane, 0 on its ridge line
+    tilt = (hash01(i1, 4) - 0.5)
+    lumps = noise(c, 5, 0.02, 0.25, beta=1.6)
+    grain = noise(c, 6, c.px * 2, 0.004, beta=0.3)
+    h = (0.0016 * lumps + 0.0012 * tilt * facet - 0.0006 * (1 - facet) + 0.00006 * grain).astype(np.float32)
+    hollow = sstep(0.2, 1.4, -lumps)                              # low spots keep the oxide and the dirt
+    streak = sstep(0.5, 1.8, noise(c, 7, 0.01, 0.6, beta=1.2, aniso=14.0).T)      # runs down the figure
+    spots = sstep(1.4, 2.2, noise(c, 8, 0.004, 0.03, beta=0.6))                   # bird lime / mineral spots, pale
+    oxide = np.clip(0.75 * hollow + 0.55 * streak, 0, 1)
+    tone = 0.56 * (1 - 0.34 * oxide) * (1 + 0.10 * (1 - facet)) * (1 + 0.05 * grain) + 0.20 * spots
+    alb = np.repeat(tone[..., None], 3, -1).astype(np.float32)
+    alb, _ = calibrate(alb, 0.5)
+    rough = np.clip(0.40 + 0.34 * oxide - 0.08 * (1 - facet) + 0.25 * spots + 0.04 * grain, 0.22, 0.95).astype(np.float32)
+    metal = np.clip(1.0 - 0.55 * oxide - 0.8 * spots, 0.0, 1.0).astype(np.float32)
+    return SurfaceSet("bronze_cast_tint", c, alb, h, rough, hash01(i1, 9).astype(np.float32), oxide.astype(np.float32),
+                      detail_mask=(1 - oxide).astype(np.float32), metal=metal, ao_scales=(0.004, 0.015, 0.05), ao_k=0.5)
+
+
 PLAZA_SETS = {
     "sett_lattice_tykocin": dict(
         fn=sett_lattice, tile_m=[round(TILE_M, 4), round(TILE_M, 4)], target=None, kind="tiling_set",
@@ -203,4 +229,10 @@ PLAZA_SETS = {
         slots=["monument_granite"],
         note="ADR 0325: honed grey granite (feldspar / quartz / biotite grains 3-11 mm), neutral modulation map "
              "(mean 0.5); colour from the manifest. Plinth of the king's monument in Knyszyn."),
+    "bronze_cast_tint": dict(
+        fn=bronze_cast, tile_m=[1.2, 1.2], target=0.5, kind="modulation_set", uv="mesh_uv0_metres (u around, v up)",
+        slots=["monument_bronze", "monument_bronze_patina", "monument_bronze_rubbed"],
+        note="ADR 0325: weathered cast bronze (modelled planes, casting grain, rain streaks along v, oxide in the "
+             "hollows), neutral modulation map (mean 0.5); MaskMap.r = metal mask (manifest set_metal scales it), "
+             "colour from the manifest."),
 }
