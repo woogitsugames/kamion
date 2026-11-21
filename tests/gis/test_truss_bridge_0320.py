@@ -171,7 +171,8 @@ def test_square_paving_overrides_are_valid_polygons_around_the_monument():
     ovs = yaml.safe_load((REGION / "overrides.yaml").read_text(encoding="utf8"))["overrides"]
     areas = {o["id"]: o for o in ovs if o.get("kind") == "paved_area"}
     border = {f"tykocin-rynek-plaza-border-{k}-0325" for k in "nesw"}          # ADR 0325: red sett band round the plaza
-    assert set(areas) == {"tykocin-rynek-plaza-0320", "tykocin-rynek-walk-east-0320", "tykocin-rynek-walk-west-0320"} | border
+    aprons = {"tykocin-rynek-apron-n-0325", "tykocin-rynek-apron-s-0325"}           # setts between the plaza and the streets
+    assert set(areas) == {"tykocin-rynek-plaza-0320", "tykocin-rynek-walk-east-0320", "tykocin-rynek-walk-west-0320"} | border | aprons
     origin = np.array([751371.0, 600319.0])
     polys = {}
     for k, o in areas.items():

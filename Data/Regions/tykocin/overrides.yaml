@@ -91,6 +91,24 @@ overrides:
     polygon_epsg2180: [[751789.20, 600218.00], [751786.00, 600245.70], [751786.82, 600245.12], [751789.86, 600218.83]]
     reason: 'ESTIMATED: red sett band along the west side of the plaza (orthophoto 2024, Commons cs202183366); width 0.75 m WORKING_VALUE.'
     confidence: medium
+  - id: tykocin-rynek-apron-n-0325
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: plaza_sett_grey
+    polygon_epsg2180: [[751786.00, 600245.70], [751785.34, 600248.63], [751825.54, 600257.73], [751826.20, 600254.80]]
+    reason: 'ESTIMATED: paved strip between the north side of the plaza and the carriageway (orthophoto 2024: setts with planters / benches, no lawn); 3 m, the road footprint cuts the rest.'
+    confidence: medium
+  - id: tykocin-rynek-apron-s-0325
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: plaza_sett_grey
+    polygon_epsg2180: [[751829.80, 600222.50], [751830.30, 600218.03], [751789.70, 600213.53], [751789.20, 600218.00]]
+    reason: 'ESTIMATED: paved strip between the south side of the plaza and the carriageway (orthophoto 2024: setts with planters / benches, no lawn); 4.5 m, the road footprint cuts the rest.'
+    confidence: medium
   - id: tykocin-rynek-walk-east-0320
     kind: paved_area
     target: {area: Plac Stefana Czarnieckiego}
