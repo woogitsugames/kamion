@@ -50,6 +50,13 @@ GAP_P = 0.20                       # chance of a one-sample gap after a clump (r
 PIECE_OFF_M = 0.6                  # clump offset from its row (+-)
 OCC = (0.55, 0.90)                 # foliage occlusion at the foot / top of a ribbon (PlotKit: albedo factor)
 SHRUB_MAX_R = 2.2
+# ADR 0321 (High cards, WORKING_VALUE): clump density 0.55-1.0 of the samples, pair moved +-0.9 m along / +-0.5 m across,
+# card width 0.6-1.15 x CARD_W, the pair turned freely (second card 70-110 deg to the first)
+CLUMP_DENS = (0.55, 1.0)
+JIT_ALONG_M = 0.9
+JIT_ACROSS_M = 0.5
+CARD_W_VAR = (0.6, 1.15)
+ZZ_AMP_LOW = (0.35, 1.0)           # Low: zig-zag amplitude per sample x ZIGZAG_LOW_M (was a constant: regular teeth)
 TREE_KEEP_M = 2.5
 
 
@@ -208,7 +215,8 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                     pk = (key0, row, int(sp[0]))
                     k = np.arange(len(sp))
                     jit = np.array([_h(key0, row, int(i), "z") for i in sp]) - 0.5
-                    zz = np.where((k + row) % 2 == 0, 1.0, -1.0) * (ZIGZAG_LOW_M if low else ZIGZAG_M) + jit * 0.25 + (_h(*pk, "off") - 0.5) * 2 * PIECE_OFF_M
+                    amp = np.array([ZZ_AMP_LOW[0] + (ZZ_AMP_LOW[1] - ZZ_AMP_LOW[0]) * _h(key0, row, int(i), "za") for i in sp])                         if low else 1.0
+                    zz = np.where((k + row) % 2 == 0, 1.0, -1.0) * amp * (ZIGZAG_LOW_M if low else ZIGZAG_M) + jit * 0.25 + (_h(*pk, "off") - 0.5) * 2 * PIECE_OFF_M
                     Q = P[sp] + Nm[sp] * (dist + zz)[:, None] + T_[sp] * ((np.array([_h(key0, row, int(i), "t") for i in sp]) - 0.5) * 0.4)[:, None]
                     inside = shapely.contains_xy(keep_out, Q[:, 0], Q[:, 1])
                     if inside.all():
@@ -235,30 +243,42 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                         # r5 (High): crossed cards per sample (+-CROSS_DEG to the bank) instead of a ribbon - a
                         # ribbon seen along the bank turned into dark fins; crossed cards keep volume from every side
                         Vc, UVc, Cc, Tc = [], [], [], []
+                        dens = CLUMP_DENS[0] + (CLUMP_DENS[1] - CLUMP_DENS[0]) * _h(*pk, "dn")
                         for i_ in range(len(sp)):
                             if h[i_] <= 0.05:
                                 continue
+                            kk = (key0, row, int(sp[i_]))
+                            # ADR 0321: irregular clumps - a sample is skipped by the clump density, the pair is moved
+                            # off its lattice point and turned freely (+-40 deg pairs at every 2 m sample read from
+                            # above as a regular herringbone, vqa top_water_bridge)
+                            if 0 < i_ < len(sp) - 1 and _h(*kk, "sk") > dens:
+                                continue
+                            t_ = T_[sp[i_]]
+                            M0 = Q[i_] + t_ * (_h(*kk, "ja") - 0.5) * 2 * JIT_ALONG_M                                 + Nm[sp[i_]] * (_h(*kk, "jc") - 0.5) * 2 * JIT_ACROSS_M
+                            if shapely.contains_xy(keep_out, M0[0], M0[1]):
+                                M0 = Q[i_]
                             hc = max(h[i_], 0.6 * hm) * H_GEOM
+                            a0 = _h(*kk, "a0") * math.pi
                             for sgn in (-1.0, 1.0):
-                                ang = sgn * math.radians(CROSS_DEG) + (_h(key0, row, int(sp[i_]), "ca", sgn) - 0.5) * 0.5
-                                t_ = T_[sp[i_]]
+                                ang = a0 if sgn < 0 else a0 + math.radians(70.0 + 40.0 * _h(*kk, "a1"))
+                                cw = CARD_W * (CARD_W_VAR[0] + (CARD_W_VAR[1] - CARD_W_VAR[0]) * _h(*kk, "cw", sgn))
                                 dv = np.array([t_[0] * math.cos(ang) - t_[1] * math.sin(ang),
-                                               t_[0] * math.sin(ang) + t_[1] * math.cos(ang)]) * (CARD_W / 2)
-                                A, B = Q[i_] - dv, Q[i_] + dv
+                                               t_[0] * math.sin(ang) + t_[1] * math.cos(ang)]) * (cw / 2)
+                                A, B = M0 - dv, M0 + dv
                                 if shapely.contains_xy(keep_out, [A[0], B[0], A[0] + lean[i_][0], B[0] + lean[i_][0]],
                                                        [A[1], B[1], A[1] + lean[i_][1], B[1] + lean[i_][1]]).any():
                                     continue
                                 u0 = _h(key0, row, int(sp[i_]), "cu", sgn)
-                                um = u0 + CARD_W / TEX_M / 2
+                                um = u0 + cw / TEX_M / 2
                                 n0 = len(Vc)
-                                M_ = Q[i_]
+                                M_ = M0
                                 # r6: a tent card - full height in the middle, EDGE_H at the sides: no vertical cut edge
                                 # and no flat top where neighbouring cards end (close-up review of r5 High)
                                 Vc += [[*A, foot[i_]], [*M_, foot[i_]], [*B, foot[i_]],
                                        [*(A + lean[i_]), foot[i_] + hc * EDGE_H], [*(M_ + lean[i_]), foot[i_] + hc],
                                        [*(B + lean[i_]), foot[i_] + hc * EDGE_H]]
-                                UVc += [[u0, 0.0], [um, 0.0], [u0 + CARD_W / TEX_M, 0.0],
-                                        [u0, V_TOP], [um, V_TOP], [u0 + CARD_W / TEX_M, V_TOP]]
+                                UVc += [[u0, 0.0], [um, 0.0], [u0 + cw / TEX_M, 0.0],
+                                        [u0, V_TOP], [um, V_TOP], [u0 + cw / TEX_M, V_TOP]]
                                 Cc += [_fol(nrm[i_], OCC[0])] * 3 + [_fol(nrm[i_], OCC[1] * 0.92), _fol(nrm[i_], OCC[1]),
                                                                     _fol(nrm[i_], OCC[1] * 0.92)]
                                 Tc += [(n0, n0 + 1, n0 + 4), (n0, n0 + 4, n0 + 3), (n0 + 1, n0 + 2, n0 + 5), (n0 + 1, n0 + 5, n0 + 4)]
