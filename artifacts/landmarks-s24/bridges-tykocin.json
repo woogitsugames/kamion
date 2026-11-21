@@ -1,0 +1,83 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "tykocin",
+ "cameras": [
+  {
+   "id": "tyk_narew_eye_ab",
+   "kind": "driver_eye",
+   "pos": [
+    498.15733193245006,
+    219.94335609768603,
+    114
+   ],
+   "look_at": [
+    506.0,
+    92.5,
+    114
+   ],
+   "fov_deg": 60
+  },
+  {
+   "id": "tyk_narew_eye_ba",
+   "kind": "driver_eye",
+   "pos": [
+    513.8426680675499,
+    -34.94335609768604,
+    114
+   ],
+   "look_at": [
+    506.0,
+    92.5,
+    114
+   ],
+   "fov_deg": 60
+  },
+  {
+   "id": "tyk_narew_on_deck",
+   "kind": "driver_eye",
+   "pos": [
+    505.3857773108167,
+    102.48111869922869,
+    114
+   ],
+   "look_at": [
+    507.84266806754994,
+    62.55664390231396,
+    114
+   ],
+   "fov_deg": 60
+  },
+  {
+   "id": "tyk_narew_side",
+   "kind": "rondo_above",
+   "seat": "file",
+   "pos": [
+    575.8678308946007,
+    96.79955882428312,
+    131
+   ],
+   "look_at": [
+    506.0,
+    92.5,
+    108
+   ],
+   "fov_deg": 55
+  },
+  {
+   "id": "tyk_narew_top",
+   "kind": "rondo_above",
+   "seat": "file",
+   "pos": [
+    503.54310924326677,
+    132.42447479691472,
+    166
+   ],
+   "look_at": [
+    506.0,
+    92.5,
+    106
+   ],
+   "fov_deg": 55
+  }
+ ]
+}

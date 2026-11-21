@@ -3157,13 +3157,6 @@
     "span_m": 11.5
    },
    {
-    "chain": "c:w220328689:2294606568-1123401563",
-    "confidence": "low",
-    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 6,
-    "span_m": 194.4
-   },
-   {
     "chain": "c:w274454638:2791676481-2791676483",
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
@@ -3183,6 +3176,13 @@
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
     "piers": 0,
     "span_m": 8.0
+   },
+   {
+    "chain": "c:w220328689:2294606568-1123401563",
+    "confidence": "medium",
+    "note": "truss_bridge override tykocin-narew-truss-0320: spans from the orthophoto, piers at span joints",
+    "piers": 5,
+    "span_m": 194.4
    }
   ],
   "chains": 135,
@@ -3213,7 +3213,7 @@
    "patches": 189
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 274372,
+  "footprint_nodes": 277270,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3555,7 +3555,14 @@
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 594,
-  "overrides_applied": [],
+  "overrides_applied": [
+   {
+    "id": "tykocin-narew-truss-0320",
+    "targets": [
+     "w96942026"
+    ]
+   }
+  ],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -3584,7 +3591,7 @@
   },
   "verge_strips": {
    "chunks": 34,
-   "tris": 23700
+   "tris": 24846
   },
   "walled_ramps": []
  }
