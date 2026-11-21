@@ -63,7 +63,7 @@ SHORE_NOISE_M = 3.0      # gaussian sigma of the shore noise (m)
 SHORE_DIP_M = 0.10       # land nodes within 1 m of the outline may dip this far below the level (bays; sheet overlap 1 m)
 SHORE_BAR_M = 0.07       # bed nodes within 2 m of the outline may rise this far above the level (mud spits)
 MUD_BAND_M = (0.6, 2.6)  # width range of the wet mud / sand margin outside the water line
-MUD_A = 0.85             # bare-soil mask in the margin
+MUD_A = 0.70             # bare-soil mask in the margin (r2: 0.85 read as a beige road along the shore)
 BAY_SHEET_M = 1.3        # half size of the sheet patch around a bay node (crossing <= 0.72 x 1.41 m from the node)
 
 
@@ -528,6 +528,8 @@ class Plan:
             wband = MUD_BAND_M[0] + (MUD_BAND_M[1] - MUD_BAND_M[0]) * np.clip(nz * 0.5 + 0.5, 0.0, 1.0)
             m2 = np.clip((wband - d) / np.maximum(0.4 * wband, 0.2), 0.0, 1.0) * MUD_A
             m2 = np.where(self.mask, 0.0, m2)
+            # r2: softened (sigma 1 node) - per-node steps of the mask drew triangle "stairs" along the bank (r1)
+            m2 = np.where(self.mask, 0.0, ndimage.gaussian_filter(m2, 1.0))
             c[..., 3] = np.maximum(c[..., 3], m2)
             c[..., 2] = np.where(m2 > 0.3, c[..., 2] * (1.0 - 0.6 * m2), c[..., 2])
         c[..., 3] = np.where(self.mask, 0.7, c[..., 3])

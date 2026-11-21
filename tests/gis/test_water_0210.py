@@ -173,7 +173,7 @@ def test_bank_colours(plan):
     near = ~p.mask & (p.d_out <= 2.0)
     # ADR 0324: the bank next to the water is long grass OR the wet mud / sand margin
     assert np.maximum(c[..., 2], c[..., 3])[near].min() > 0.4 and c[..., 3][p.mask].min() > 0.5
-    assert (c[..., 3][near] > 0.5).mean() > 0.2
+    assert (c[..., 3][near] > 0.3).mean() > 0.2
 
 
 @pytest.mark.skipif(not (REGIONS_DIR / "dk65-02" / "generated" / "water_qa.json").exists(), reason="dk65-02 not built")

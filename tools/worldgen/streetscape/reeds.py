@@ -67,6 +67,7 @@ CLUMP_CARDS = (3, 3, 2, 2)         # cards per clump of row 0 / 1 / 2 / 3
 CLUMP_W = (1.5, 2.3)
 CLUMP_LEAN_DEG = 11.0
 CLUMP_DENS = (0.82, 1.0)
+CLUMP_FOOT = (0.35, 0.7)           # foot width / top width of a card (fan)
 REED_H = (1.5, 2.5)
 HERB_H = (0.9, 1.9)
 
@@ -294,7 +295,13 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                                         continue
                                     u0 = _h(*kk, "cu", c_)
                                     n0 = len(Vc)
-                                    Vc += [[*A, ft], [*B, ft], [*(A + ln_), ft + hk], [*(B + ln_), ft + hk]]
+                                    # r2: a fan - the foot is CLUMP_FOOT of the top width (stems of a tuft spread
+                                    # upwards); a rectangular card showed its side as a 2 m vertical cut wherever a
+                                    # clump stood alone (r1 bv_bank_n)
+                                    fa = CLUMP_FOOT[0] + (CLUMP_FOOT[1] - CLUMP_FOOT[0]) * _h(*kk, "fa", c_)
+                                    fb = CLUMP_FOOT[0] + (CLUMP_FOOT[1] - CLUMP_FOOT[0]) * _h(*kk, "fb", c_)
+                                    Af, Bf = ctr - dv * (cw / 2 * fa), ctr + dv * (cw / 2 * fb)
+                                    Vc += [[*Af, ft], [*Bf, ft], [*(A + ln_), ft + hk], [*(B + ln_), ft + hk]]
                                     UVc += [[u0, 0.0], [u0 + cw / TEX_M, 0.0], [u0, V_TOP], [u0 + cw / TEX_M, V_TOP]]
                                     Cc += [_fol(nrm[i_], OCC[0])] * 2 + [_fol(nrm[i_], OCC[1])] * 2
                                     Tc += [(n0, n0 + 1, n0 + 3), (n0, n0 + 3, n0 + 2)]
