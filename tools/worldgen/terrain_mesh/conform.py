@@ -170,6 +170,45 @@ def tidy(z, road, mask, dist, close_m=7, iters=150, smooth_slopes=True):
 
 SOFT_UNDER = 0.04          # m: terrain just under grass verges / island grass (WORKING_VALUE)
 SOFT_CLEAR_CELLS = 2       # ... only where no hard surface (carriageway, kerb, paving) is within this many nodes
+FLOOR_STEP_M = 0.2         # ADR 0321: sample spacing on the verge triangles for the cell floor (WORKING_VALUE)
+
+
+def rasterise_floor(parts, hf, step=FLOOR_STEP_M):
+    """ADR 0321: lowest surface height of the footprint parts within the four grid cells around every terrain node
+    (+inf where none). A terrain triangle lies in the cells around each of its three nodes, so terrain nodes kept at
+    floor - SOFT_UNDER can never interpolate above the surface between the nodes. `road - SOFT_UNDER` on the node
+    alone did not hold in a rural ditch (1 : 1.5 slopes, 0.4 m flat bottom): a 1.41 m grid diagonal across the
+    concave creases sat up to 0.24 m above the bottom, and the terrain cut through the back slope in a sawtooth of
+    lighter grass (vqa-wave5 dk65-fields-nw, dk65-goniadzka). Samples: triangle vertices + a barycentric lattice at
+    `step` m (min error on a 1 : 1.5 face ~0.1 m, inside the SOFT_UNDER + lattice slack)."""
+    H, W = hf.z.shape
+    floor = np.full((H, W), np.inf)
+    tris = [p.V[p.T] for p in parts if p.footprint and len(p.T)]
+    if not tris:
+        return floor
+    T = np.concatenate(tris)
+    ext = np.max(np.linalg.norm(T[:, [1, 2, 0], :2] - T[:, :, :2], axis=2), axis=1)
+    nseg = np.clip(np.ceil(ext / step).astype(int), 1, 400)
+    for k in np.unique(nseg):
+        sel = T[nseg == k]
+        a, b = np.meshgrid(np.arange(k + 1), np.arange(k + 1), indexing="ij")
+        keep = (a + b) <= k
+        wa, wb = a[keep] / k, b[keep] / k
+        wc = 1.0 - wa - wb
+        for c0 in range(0, len(sel), max(1, 400000 // len(wa))):
+            S_ = sel[c0:c0 + max(1, 400000 // len(wa))]
+            P = (wa[None, :, None] * S_[:, None, 0, :] + wb[None, :, None] * S_[:, None, 1, :]
+                 + wc[None, :, None] * S_[:, None, 2, :]).reshape(-1, 3)
+            fi = P[:, 0] - hf.x0
+            fj = hf.y1 - P[:, 1]
+            i0 = np.floor(fi).astype(int)
+            j0 = np.floor(fj).astype(int)
+            for di in (0, 1):
+                for dj in (0, 1):
+                    ii, jj = i0 + di, j0 + dj
+                    ok = (ii >= 0) & (jj >= 0) & (ii < W) & (jj < H)
+                    np.minimum.at(floor, (jj[ok], ii[ok]), P[ok, 2])
+    return floor
 
 
 def edge_distances(hf, mask, raster_dist, footprint, band_m=16.0):
@@ -205,7 +244,7 @@ def edge_distances(hf, mask, raster_dist, footprint, band_m=16.0):
     return out
 
 
-def conform(hf, road, mask, soft=None, footprint=None):
+def conform(hf, road, mask, soft=None, footprint=None, soft_floor=None):
     """soft (optional bool grid): footprint nodes covered only by grass verge strips. Those that are at least
     SOFT_CLEAR_CELLS nodes from any hard surface get the terrain SOFT_UNDER under the grass instead of
     TERRAIN_UNDER_ROAD: the coarse terrain grid (1-2 m) used to dip 0.35 m inside narrow kerbed islands and behind
@@ -233,6 +272,11 @@ def conform(hf, road, mask, soft=None, footprint=None):
         hard = mask & ~soft
         relax = soft & ~ndimage.binary_dilation(hard, iterations=SOFT_CLEAR_CELLS)
         out[relax] = road[relax] - SOFT_UNDER
+    if soft_floor is not None:
+        # ADR 0321: no node (soft, hard or just outside the footprint) above the lowest verge surface in the four
+        # cells around it: the terrain triangles stay under the ditch creases. Outside the footprint this reaches
+        # one cell beyond the back slope only, where the battered skirt of the strip (FLANGE_DEPTH) covers the dip.
+        out = np.minimum(out, soft_floor - SOFT_UNDER)
     return out, d
 
 
