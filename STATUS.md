@@ -1,3 +1,8 @@
+# STATUS banks-verges-s24 (krytyk s24 wave 6 pkt 2 i 4: Narew, trzcina, pobocza/rowy/U-1a, skraj lasu; ADR 0324)
+- 2026-11-21 20:15 start: worktree z main 3fba5b3b7, derived = prywatna kopia (-CopyDerived). Runner rund: `artifacts/banks-verges-s24/run.ps1 -Round rN [-Build] [-Tiers 'Low,High'] [-LowStats] [-Tests]` (sloty heavy/unity, import Win64, VQA High clear+overcast, kamery dodatkowe `cams-<kafel>.json` przez -Gate3).
+- r0 (stan przed, bez build_world) w tle: `artifacts/banks-verges-s24/logs/r0.status`.
+- NASTĘPNY KROK: `Get-Content artifacts/banks-verges-s24/logs/r0.status`; potem kod (reeds.py, WorldWater.shader, water.py, pobocza, U-1a, skraj lasu) i `pwsh artifacts/banks-verges-s24/run.ps1 -Round r1 -Build`.
+
 # STATUS world-fix-b3-s24 (błędy świata z buildu #3)
 - krok 0 OK: worktree gotowy (derived skopiowane). Kafle łat: t=2541 -> dw671-tykocin-01 (13 km do celu), t=3221 -> dw671-tykocin-07 (4,0 km).
 - Przyczyna P2: roads/decals.py patch() = ostry prostokąt, materiał decal_patch nieprzezroczysty, aged_tone 1.08 bez _ROADWEAR (droga ciemniejsza o koleiny/drip) -> jasne łaty.
