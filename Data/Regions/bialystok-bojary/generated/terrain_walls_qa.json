@@ -8,9 +8,9 @@
   "skirt:yard_concrete": 2,
   "skirt:yard_gravel": 1,
   "steep_grass:j:verge_grass": 6,
-  "steep_grass:verge_grass": 5
+  "steep_grass:verge_grass": 8
  },
- "count": 38,
+ "count": 41,
  "max_m": 0.5,
  "p99_m": 0.5,
  "skirt_area": [
@@ -60,7 +60,7 @@
   },
   {
    "e": 408.4,
-   "exposed_m2": 0.385,
+   "exposed_m2": 0.387,
    "mat": "verge_grass",
    "max_h": 0.324,
    "n": 388.3,
@@ -84,10 +84,10 @@
    "e": -626.1,
    "exposed_m2": 0.101,
    "mat": "yard_asphalt",
-   "max_h": 0.321,
+   "max_h": 0.32,
    "n": 418.0,
    "points": 1,
-   "run_m": 1.82,
+   "run_m": 1.817,
    "src": "osm:way/894395243:0#0:edge",
    "visible": true
   },
@@ -125,17 +125,6 @@
    "visible": true
   },
   {
-   "e": 775.2,
-   "exposed_m2": 0.07,
-   "mat": "yard_gravel",
-   "max_h": 0.323,
-   "n": 351.5,
-   "points": 1,
-   "run_m": 1.088,
-   "src": "bdot:2BE4B432-6DF6-1BF0-E053-CC2BA8C0D140:0#0:edge",
-   "visible": true
-  },
-  {
    "e": -191.9,
    "exposed_m2": 0.069,
    "mat": "yard_concrete",
@@ -144,6 +133,17 @@
    "points": 2,
    "run_m": 0.98,
    "src": "bdot:b4a12701-1894-11ed-8b0e-b8ca3aa2e5c2:0#1:edge",
+   "visible": true
+  },
+  {
+   "e": 775.2,
+   "exposed_m2": 0.068,
+   "mat": "yard_gravel",
+   "max_h": 0.322,
+   "n": 351.5,
+   "points": 1,
+   "run_m": 1.073,
+   "src": "bdot:2BE4B432-6DF6-1BF0-E053-CC2BA8C0D140:0#0:edge",
    "visible": true
   },
   {
@@ -214,20 +214,44 @@
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 426,
+ "thin_steep_faces_skipped": 301,
  "thresh_m": 0.15,
  "verge_strips": {
-  "max_m": 1.032,
-  "skirt": 23,
-  "steep_grass": 551,
+  "max_m": 0.658,
+  "skirt": 2,
+  "steep_grass": 79,
   "worst": [
    "steep_grass",
-   "j:n2600622987:corner1:vg",
-   -649.0,
-   440.6
+   "j:n7603515288:corner2:vg",
+   -738.9,
+   470.7
   ]
  },
  "worst": [
+  {
+   "e": -895.6,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 1024.1,
+   "src": "c:w249640396:1857964359-2826290829:L:0"
+  },
+  {
+   "e": -895.5,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 1024.0,
+   "src": "c:w249640396:1857964359-2826290829:L:0"
+  },
+  {
+   "e": -895.3,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 1023.9,
+   "src": "c:w249640396:1857964359-2826290829:L:0"
+  },
   {
    "e": 409.1,
    "h": 0.5,
@@ -310,7 +334,7 @@
   },
   {
    "e": 775.2,
-   "h": 0.323,
+   "h": 0.322,
    "kind": "skirt",
    "mat": "yard_gravel",
    "n": 351.5,
@@ -318,7 +342,7 @@
   },
   {
    "e": -626.1,
-   "h": 0.321,
+   "h": 0.32,
    "kind": "skirt",
    "mat": "yard_asphalt",
    "n": 418.0,
@@ -365,6 +389,22 @@
    "src": "osm:way/519574038:0#0:edge"
   },
   {
+   "e": 409.4,
+   "h": 0.302,
+   "kind": "skirt",
+   "mat": "verge_grass",
+   "n": 389.7,
+   "src": "c:w267388107:2728481584-4679914894:R"
+  },
+  {
+   "e": 409.4,
+   "h": 0.302,
+   "kind": "skirt",
+   "mat": "verge_grass",
+   "n": 389.7,
+   "src": "c:w267388107:2728481584-4679914894:R"
+  },
+  {
    "e": 408.8,
    "h": 0.299,
    "kind": "steep_grass",
@@ -378,22 +418,6 @@
    "kind": "steep_grass",
    "mat": "verge_grass",
    "n": 389.0,
-   "src": "c:w267388107:2728481584-4679914894:R"
-  },
-  {
-   "e": 409.4,
-   "h": 0.298,
-   "kind": "skirt",
-   "mat": "verge_grass",
-   "n": 389.7,
-   "src": "c:w267388107:2728481584-4679914894:R"
-  },
-  {
-   "e": 409.4,
-   "h": 0.298,
-   "kind": "skirt",
-   "mat": "verge_grass",
-   "n": 389.7,
    "src": "c:w267388107:2728481584-4679914894:R"
   },
   {
@@ -443,30 +467,6 @@
    "mat": "yard_concrete",
    "n": 1024.0,
    "src": "bdot:b4a12701-1894-11ed-8b0e-b8ca3aa2e5c2:0#1:edge"
-  },
-  {
-   "e": -920.9,
-   "h": 0.235,
-   "kind": "skirt",
-   "mat": "yard_asphalt",
-   "n": -658.3,
-   "src": "osm:way/235751134:0#0:edge"
-  },
-  {
-   "e": 418.4,
-   "h": 0.231,
-   "kind": "skirt",
-   "mat": "road_asphalt",
-   "n": -346.1,
-   "src": "j:n2206837039"
-  },
-  {
-   "e": 408.4,
-   "h": 0.227,
-   "kind": "skirt",
-   "mat": "verge_grass",
-   "n": 388.3,
-   "src": "c:w267388107:2728481584-4679914894:R"
   }
  ]
 }
