@@ -1,0 +1,346 @@
+{
+ "banks": {
+  "bank_shrubs": {
+   "skipped": {
+    "blocked": 32,
+    "near_tree": 61
+   },
+   "tree_alder": 34,
+   "tree_shrub": 107
+  },
+  "banks": {
+   "ribbons": 915,
+   "triangles": 30292
+  },
+  "banks_low": {
+   "ribbons": 74,
+   "triangles": 1924
+  }
+ },
+ "bodies": [
+  {
+   "area_m2": 13238,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:1e7c6a4b-1a30-4f60-bacc-2663c3194296:0"
+  },
+  {
+   "area_m2": 4713,
+   "kind": "woda płynąca",
+   "name": "Jaskrzanka",
+   "src": "bdot10k:OT_PTWP_A:20029180-BA5E-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 582,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-BE10-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 1155,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-BE66-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 612,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-C013-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 206,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-C03B-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 963,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-C03D-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 506,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-C067-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 217,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-C069-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 337,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:20029180-C06D-5C99-E053-CC2BA8C01CFC:0"
+  },
+  {
+   "area_m2": 215,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:ae149161-def8-4228-a956-0d5d67b852d7:0"
+  },
+  {
+   "area_m2": 920,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:ae3fd88e-cf25-4062-9e1e-fbf1de8660a6:0"
+  },
+  {
+   "area_m2": 95,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:bf26bbc1-d083-11e8-9684-f01faf546c5e:0"
+  },
+  {
+   "area_m2": 449,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/300676114:0"
+  },
+  {
+   "area_m2": 490,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/300811202:0"
+  },
+  {
+   "area_m2": 657,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/874459180:0"
+  },
+  {
+   "area_m2": 305,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/874459217:0"
+  },
+  {
+   "area_m2": 272,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/874459220:0"
+  },
+  {
+   "area_m2": 1028,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/874921451:0"
+  }
+ ],
+ "carve": {
+  "bank_nodes_lowered": 16500,
+  "bed_lowered_m_max": 2.18,
+  "bed_nodes": 41956,
+  "lip_nodes_raised": 493,
+  "water_nodes_kept_by_road": 350
+ },
+ "profiles": [
+  {
+   "kind": "river",
+   "len_m": 1908,
+   "level_first_m": 116.69,
+   "level_last_m": 115.31,
+   "name": "Jaskranka",
+   "raw_min_max_m": [
+    115.3,
+    116.88
+   ],
+   "reversed": false,
+   "src": "osm:way/300786687:0",
+   "stations": 382
+  },
+  {
+   "kind": "river",
+   "len_m": 681,
+   "level_first_m": 117.18,
+   "level_last_m": 116.82,
+   "name": "Jaskranka",
+   "raw_min_max_m": [
+    116.8,
+    117.36
+   ],
+   "reversed": false,
+   "src": "osm:way/750267064:0",
+   "stations": 137
+  },
+  {
+   "kind": "river",
+   "len_m": 696,
+   "level_first_m": 115.94,
+   "level_last_m": 115.3,
+   "name": "Jaskrzanka",
+   "raw_min_max_m": [
+    115.3,
+    115.94
+   ],
+   "reversed": false,
+   "src": "bdot10k:OT_SWRS_L:20029181-7FB4-5C99-E053-CC2BA8C01CFC:0",
+   "stations": 140
+  },
+  {
+   "kind": "river",
+   "len_m": 965,
+   "level_first_m": 117.18,
+   "level_last_m": 116.45,
+   "name": "Jaskrzanka",
+   "raw_min_max_m": [
+    116.44,
+    117.35
+   ],
+   "reversed": false,
+   "src": "bdot10k:OT_SWRS_L:20029181-8097-5C99-E053-CC2BA8C01CFC:0",
+   "stations": 194
+  },
+  {
+   "kind": "river",
+   "len_m": 939,
+   "level_first_m": 116.47,
+   "level_last_m": 115.94,
+   "name": "Jaskrzanka",
+   "raw_min_max_m": [
+    115.94,
+    116.63
+   ],
+   "reversed": false,
+   "src": "bdot10k:OT_SWRS_L:cb62b949-4a77-41e7-979e-d78f54129cfd:0",
+   "stations": 188
+  }
+ ],
+ "region": "knyszyn",
+ "schema": "truck-sim-pl/water-qa/1",
+ "seams": [
+  {
+   "edge": "N",
+   "level_m": 117.192,
+   "nodes": 9,
+   "own_m": [
+    117.18,
+    117.18
+   ]
+  },
+  {
+   "edge": "S",
+   "level_m": 115.31,
+   "nodes": 14,
+   "own_m": [
+    115.302,
+    115.307
+   ]
+  }
+ ],
+ "sheet": {
+  "area_m2": 44602,
+  "triangles": 9465
+ },
+ "skipped": [
+  {
+   "src": "osm:way/1424802462:0",
+   "why": "intermittent=yes"
+  }
+ ],
+ "still_levels": [
+  {
+   "at_local_en": [
+    983.5,
+    -122.0
+   ],
+   "level_m": 119.97,
+   "nodes": 1271
+  },
+  {
+   "at_local_en": [
+    -360.7,
+    -206.4
+   ],
+   "level_m": 122.5,
+   "nodes": 119
+  },
+  {
+   "at_local_en": [
+    7.4,
+    -286.7
+   ],
+   "level_m": 118.32,
+   "nodes": 737
+  },
+  {
+   "at_local_en": [
+    1007.2,
+    -396.8
+   ],
+   "level_m": 123.34,
+   "nodes": 257
+  },
+  {
+   "at_local_en": [
+    -265.7,
+    -612.0
+   ],
+   "level_m": 119.0,
+   "nodes": 372
+  },
+  {
+   "at_local_en": [
+    -324.1,
+    -624.7
+   ],
+   "level_m": 118.39,
+   "nodes": 709
+  },
+  {
+   "at_local_en": [
+    -600.2,
+    -634.6
+   ],
+   "level_m": 117.84,
+   "nodes": 1046
+  },
+  {
+   "at_local_en": [
+    -869.5,
+    -659.5
+   ],
+   "level_m": 119.2,
+   "nodes": 688
+  },
+  {
+   "at_local_en": [
+    -615.7,
+    -652.7
+   ],
+   "level_m": 117.82,
+   "nodes": 248
+  },
+  {
+   "at_local_en": [
+    -174.1,
+    -655.5
+   ],
+   "level_m": 117.37,
+   "nodes": 383
+  },
+  {
+   "at_local_en": [
+    -117.5,
+    -773.9
+   ],
+   "level_m": 115.57,
+   "nodes": 1031
+  },
+  {
+   "at_local_en": [
+    -111.2,
+    -826.4
+   ],
+   "level_m": 115.45,
+   "nodes": 13564
+  }
+ ],
+ "water_nodes": 42306
+}

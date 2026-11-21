@@ -32,7 +32,7 @@ sources:
   license: ODbL 1.0
   attribution: © OpenStreetMap contributors
   manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
-  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
+  manifest_sha256: 3a63ebb442f2e09904c18a62cbf1eec9bce2fccf8c8d0dfd6264bef37843b3c0
 - id: gugik-nmt-2022-knyszyn-s
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
@@ -66,3 +66,7 @@ sources:
 rebuild:
 - uv run --project tools/worldgen tools/worldgen/ingest.py --region knyszyn-s
 - uv run --project tools/worldgen tools/worldgen/build_region.py --region knyszyn-s
+water:
+  enabled: true
+  sources: Data/Regions/knyszyn-s/generated/water_sources.json
+  note: BDOT10k OT_PTWP_A / OT_SWRS_L + OSM waterway / natural=water (ADR 0210)
