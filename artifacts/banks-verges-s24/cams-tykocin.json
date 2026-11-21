@@ -1,9 +1,122 @@
-{"schema":"truck-sim-pl/gate3-cameras/1","region":"tykocin","cameras":[
-{"id":"bv_cab_bridge_n","kind":"driver_eye","pos":[500.0,160.0,110],"look_at":[503.9,98.0,109.4],"fov_deg":60,"note":"ADR 0324: driver eye on the Narew bridge, north part"},
-{"id":"bv_cab_bridge_river","kind":"driver_eye","pos":[504.5,88.0,110],"look_at":[507.6,38.0,109.2],"fov_deg":60,"note":"ADR 0324: driver eye above the river"},
-{"id":"bv_cab_bridge_side","kind":"driver_eye","pos":[505.5,72.0,110],"look_at":[455.0,40.0,103.0],"fov_deg":60,"note":"ADR 0324: driver eye looking west over the railing at the river and the banks"},
-{"id":"bv_bank_se","kind":"photo_match","seat":"file","pos":[548.0,6.0,106.3],"look_at":[480.0,45.0,105.6],"fov_deg":60,"note":"ADR 0324: south bank east of the bridge, across the river under the deck"},
-{"id":"bv_bank_sw","kind":"photo_match","seat":"file","pos":[468.0,8.0,106.3],"look_at":[520.0,50.0,105.8],"fov_deg":60,"note":"ADR 0324: south bank west of the bridge looking NE"},
-{"id":"bv_bank_close","kind":"photo_match","seat":"file","pos":[556.0,9.0,106.1],"look_at":[530.0,20.0,105.2],"fov_deg":55,"note":"ADR 0324: shore zone and reeds from 3-10 m"},
-{"id":"bv_bank_n","kind":"photo_match","seat":"file","pos":[545.0,78.0,106.3],"look_at":[495.0,45.0,105.6],"fov_deg":60,"note":"ADR 0324: north bank looking SW at the bridge and the town shore"}
-]}
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "tykocin",
+ "cameras": [
+  {
+   "id": "bv_cab_bridge_n",
+   "kind": "driver_eye",
+   "pos": [
+    500.0,
+    160.0,
+    110
+   ],
+   "look_at": [
+    503.9,
+    98.0,
+    109.4
+   ],
+   "fov_deg": 60,
+   "note": "ADR 0324: driver eye on the Narew bridge, north part"
+  },
+  {
+   "id": "bv_cab_bridge_river",
+   "kind": "driver_eye",
+   "pos": [
+    504.5,
+    88.0,
+    110
+   ],
+   "look_at": [
+    507.6,
+    38.0,
+    109.2
+   ],
+   "fov_deg": 60,
+   "note": "ADR 0324: driver eye above the river"
+  },
+  {
+   "id": "bv_cab_bridge_side",
+   "kind": "driver_eye",
+   "pos": [
+    505.5,
+    72.0,
+    110
+   ],
+   "look_at": [
+    455.0,
+    40.0,
+    103.0
+   ],
+   "fov_deg": 60,
+   "note": "ADR 0324: driver eye looking west over the railing at the river and the banks"
+  },
+  {
+   "id": "bv_bank_se",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    572.0,
+    16.0,
+    112
+   ],
+   "look_at": [
+    505.0,
+    48.0,
+    111.0
+   ],
+   "fov_deg": 60,
+   "note": "ADR 0324: south bank east of the bridge, across the river under the deck"
+  },
+  {
+   "id": "bv_bank_sw",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    452.0,
+    -6.0,
+    112
+   ],
+   "look_at": [
+    506.0,
+    40.0,
+    111.2
+   ],
+   "fov_deg": 60,
+   "note": "ADR 0324: south bank west of the bridge looking NE"
+  },
+  {
+   "id": "bv_bank_close",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    556.0,
+    9.0,
+    106.1
+   ],
+   "look_at": [
+    530.0,
+    20.0,
+    105.2
+   ],
+   "fov_deg": 55,
+   "note": "ADR 0324: shore zone and reeds from 3-10 m"
+  },
+  {
+   "id": "bv_bank_n",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    545.0,
+    78.0,
+    106.3
+   ],
+   "look_at": [
+    495.0,
+    45.0,
+    105.6
+   ],
+   "fov_deg": 60,
+   "note": "ADR 0324: north bank looking SW at the bridge and the town shore"
+  }
+ ]
+}

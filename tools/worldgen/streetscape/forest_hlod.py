@@ -65,6 +65,8 @@ TOP_VAR = (0.82, 1.14)
 TOP_NOISE_M = 16.0
 BACK_OFF_M = 6.0
 BACK_H = (1.04, 1.22)
+CANOPY_EDGE_M = 5.0        # canopy vertices this close to an outer stand edge are lowered ...
+CANOPY_EDGE_DROP = (0.62, 0.86)   # ... to this share of the crown height at the edge itself
 SKIRT_SEG_M = 18.0
 
 
@@ -218,6 +220,18 @@ def build(trees, forests, no_forest, zground, half, report):
         T2 = np.concatenate(T2)
         XY, inv = np.unique(np.round(T2.reshape(-1, 2), 3), axis=0, return_inverse=True)
         Z = canopy_z(XY)
+        # ADR 0324: the canopy surface rolls off at a real stand edge (not at a cell border: the neighbour cell
+        # continues it) - a cell seen from the side or from above was a box with a flat lid and vertical faces
+        outer_b = piece.boundary.difference(cb.exterior.buffer(0.1))
+        if not outer_b.is_empty:
+            d_edge = shapely.distance(shapely.points(XY), outer_b)
+            near = d_edge < CANOPY_EDGE_M
+            if near.any():
+                zg_c = np.asarray(zground(XY[near, 0], XY[near, 1]), float)
+                k_ = np.array([CANOPY_EDGE_DROP[0] + (CANOPY_EDGE_DROP[1] - CANOPY_EDGE_DROP[0])
+                               * _vnoise2(q_[0], q_[1], TOP_NOISE_M, "c") for q_ in XY[near]])
+                k_ = 1.0 - (1.0 - k_) * (1.0 - d_edge[near] / CANOPY_EDGE_M)
+                Z[near] = zg_c + (Z[near] - zg_c) * k_
         V = np.column_stack([XY, Z])
         prims.append({"V": V, "T": inv.reshape(-1, 3), "UV": XY / Wt, "mat": f"forest_canopy_{mix}",
                       "N": np.tile([0.0, 0.0, 1.0], (len(V), 1))})
