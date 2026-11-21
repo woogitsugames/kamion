@@ -12,3 +12,9 @@
 - r1 król: korona za „kolczasta”, szyja za cienka → szersza głowa, niska korona, bez cienkich rurek. Tykocin: bruk nie-flush (teren przebijał).
 - NASTĘPNY KROK: po rundzie 2 (`artifacts/landmarks-s24/r2-*`) SBS → ewentualna runda 3 → pytest + EditMode:
   `uv run --project tools/worldgen python -m pytest tests/gis/test_truss_bridge_0320.py tests/gis/test_knyszyn_park_props_0227.py -q`
+
+## Krok 3 — runda 2 obejrzana, testy
+- r2 SBS: `sbs/r2-bridge-sheet.jpg`, `sbs/r2-bridge-portal.jpg`, `sbs/r2-rynek-sheet.jpg`, `sbs/r2-king-sheet.jpg`; rendery 960 px w `renders-r2/`.
+- pytest (14 plików tests/gis): 295 passed + ring_0231 naprawiony (override'y dostały target/set/verify) → 41 passed; EditMode Win64 1524: 1413 passed, 0 failed, 111 skipped.
+- Otwarte: ocena visual-critic (nie zatwierdzam sam), krata bruku, latarnie Rynku, tekstury stali/kamienia (ADR 0320 §4).
+- NASTĘPNY KROK (lider): `git merge landmarks-s24` → regeneracja kafli tykocin + knyszyn → `pwsh scripts/import-region.ps1 -Region tykocin -BuildTarget Win64`.

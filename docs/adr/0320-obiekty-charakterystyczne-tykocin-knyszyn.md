@@ -87,3 +87,21 @@ Czarnieckiego 01 / 05 / 08” (CC BY-SA 4.0), „…, 1762 01” (CC BY-SA 3.0 p
    przęsła.
 4. Materiały mostu i pomników są jednolite (kolor + chropowatość); zacieki rdzy, nity i spękania kamienia wymagają
    własnych zestawów tekstur.
+
+## 5. Liczby (build_world + render kontrolny High / clear, Win64, 2026-11-21)
+
+| Obiekt | LOD0 (tris) | LOD1 (tris) | Uwagi |
+|---|---|---|---|
+| most kratownicowy (`truss_bridges`) | 26 154 | 5 302 | 4 przęsła kratowe, 5 filarów, 2 przyczółki; usunięte 92 tris generycznej balustrady + filary z reguły |
+| Rynek w Tykocinie (`tykocin_rynek_0320`) | 2 870 | 1 562 | pomnik, ogrodzenie, 10 ławek, basen, rabata, rama; 120 tris kolizji |
+| król w Knyszynie (figura + cokół + zegar) | 682 | 196 | było 180 / 180 |
+
+Kamery mostu, przed (`artifacts/vqa-wave5/tykocin-bridges/stats.txt`, worktree win-build) → po (`artifacts/landmarks-s24/r2-bridge/stats.txt`);
+szacunek edytora przed batchingiem SRP, inne worktree i stan main, więc różnica zawiera też cudze zmiany:
+`tyk_narew_on_deck` 1 116 523 → 1 170 767 tris, draws 571 → 604; `tyk_narew_side` 1 011 482 → 1 124 176, draws 390 → 443;
+`tyk_narew_eye_ab` 1 119 672 → 1 173 652, draws 616 → 648. Nowe materiały: 4 (most) + 4 (pomniki) w LOD0;
+LOD1 pomników używa materiałów już obecnych w kaflu. Pomiaru FPS w playerze nie robiono (bramka = build, CLAUDE.md pkt 2).
+
+Rundy render → SBS → poprawka: 2 (r1: czerwona farba z `viaduct_concrete` na filarach i chodniku → `truss_concrete`;
+bruk `park_flush` przebijany przez teren → zwykły `paved_area`; korona króla zbyt „kolczasta”, szyja za cienka →
+szersza głowa, niska korona). Arkusze: `artifacts/landmarks-s24/sbs/r2-*.jpg`.

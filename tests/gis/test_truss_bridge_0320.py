@@ -56,7 +56,7 @@ def _volume(v, t):
 def test_override_spans_follow_the_orthophoto_and_fill_the_osm_length():
     ovs = yaml.safe_load((REGION / "overrides.yaml").read_text(encoding="utf8"))["overrides"]
     o = next(x for x in ovs if x.get("kind") == TB.KIND)
-    assert o["osm_ways"] == [96942026] and o["first_span_at"] == "south"
+    assert o["target"] == {"osm_way": [96942026]} and o["first_span_at"] == "south"
     lengths = [s["length_m"] for s in o["spans"]]
     assert abs(sum(lengths) - 194.8) < 1.0                       # OSM way w96942026: 194.8 m
     assert [bool(s.get("truss", True)) for s in o["spans"]] == [False, True, True, True, True, False]

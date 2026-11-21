@@ -10,10 +10,13 @@ overrides:
   # top chords, not the generic beam viaduct of the generator.
   - id: tykocin-narew-truss-0320
     kind: truss_bridge
-    osm_ways: [96942026]
+    target: {osm_way: [96942026]}
+    set: {}
+    verify: control cameras look_narew_portal_s / look_narew_truss_side / tyk_narew_side against Commons 05 / 08
     first_span_at: south
     upstream: east
-    confidence: 'type, member pattern, colours: Commons photos (ESTIMATED); span lengths: orthophoto (+-1 m); sections, rise, headroom: WORKING_VALUE'
+    confidence: medium
+    status_note: 'type, member pattern, colours: Commons photos (ESTIMATED); span lengths: orthophoto (+-1 m); sections, rise, headroom: WORKING_VALUE'
     reason: >-
       Wikimedia Commons "Tykocin Most drogowy 01-09" (Zala, 2025-09-20, CC BY-SA 4.0; reference only, see
       Data/raw/refs/tykocin-bridge-commons/LICENSES.json): four steel bowstring through trusses (laced verticals and
@@ -39,12 +42,18 @@ overrides:
   # diagonal lattice is not reproduced (open item in ADR 0320).
   - id: tykocin-rynek-plaza-0320
     kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
     material: yard_paving
     polygon_epsg2180: [[751786.7, 600245.5], [751826.5, 600253.9], [751829.8, 600223.9], [751789.5, 600217.7]]
     reason: 'ESTIMATED: paved plaza of Plac Czarnieckiego traced on the GUGiK orthophoto 2024; Commons cs202183366 (CC BY 4.0, reference only).'
     confidence: medium
   - id: tykocin-rynek-walk-east-0320
     kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
     material: yard_paving
     polygon_epsg2180: [[751825.4, 600249.6], [751876.4, 600259.9], [751880.8, 600257.1], [751881.5, 600230.2], [751878.0, 600223.5], [751830.0, 600218.0], [751828.0, 600224.0]]
     holes_epsg2180:
@@ -53,6 +62,9 @@ overrides:
     confidence: medium
   - id: tykocin-rynek-walk-west-0320
     kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
     material: yard_paving
     polygon_epsg2180: [[751749.9, 600238.1], [751786.1, 600245.1], [751786.6, 600245.4], [751789.4, 600217.8], [751789.2, 600214.5], [751753.9, 600210.6]]
     holes_epsg2180:

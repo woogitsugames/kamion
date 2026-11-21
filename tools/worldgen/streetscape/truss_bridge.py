@@ -147,13 +147,17 @@ class _Deck:
         return p
 
 
+def _ways(o):
+    return (o.get("target") or {}).get("osm_way") or o.get("osm_ways", [])
+
+
 def chains_for(net, overrides) -> dict:
     """{chain id: override} of the elevated chains a truss_bridge override targets."""
     out = {}
     for o in overrides:
         if o.get("kind") != KIND:
             continue
-        ways = {str(x) for x in o.get("osm_ways", [])}
+        ways = {str(x) for x in _ways(o)}
         for c in HB._chains(net, ways):
             out[c.id] = o
     return out
@@ -445,11 +449,11 @@ def apply(w, overrides, zground, log=lambda *a: None) -> dict:
             for (layer, mat), items in acc.d.items():
                 tris[layer] = tris.get(layer, 0) + int(sum(len(it[1]) for it in items))
             acc.flush(w.buf, src)
-            w.net.overrides_applied.append({"id": o["id"], "targets": [f"w{x}" for x in o.get("osm_ways", [])]})
+            w.net.overrides_applied.append({"id": o["id"], "targets": [f"w{x}" for x in _ways(o)]})
             w.bridges.append({"chain": c.id, "span_m": round(dk.L, 1), "piers": len(piers) - 2, "confidence": "medium",
                               "note": f"truss_bridge override {o['id']}: spans from the orthophoto, piers at span joints"})
             rep.append({"id": o["id"], "status": "applied", "chain": c.id, "run_m": round(dk.L, 2),
                         "span_scale": round(scale, 4), "spans": info, "piers": piers, "tris": tris,
-                        "generic_parapet_tris_removed": removed, "confidence": o.get("confidence", "WORKING_VALUE")})
+                        "generic_parapet_tris_removed": removed, "confidence": o.get("status_note") or o.get("confidence", "WORKING_VALUE")})
             log("truss bridge", o["id"], "chain", c.id, "run", round(dk.L, 1), "tris", tris)
     return {"truss_bridges": rep}
