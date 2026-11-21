@@ -471,13 +471,14 @@ namespace Game.World.Import
                 var (cp, cd) = PointBack(pts, edgePt, edgeDir, back);
                 // ADR 0321: not under a deck of another road - slide towards the edge (then inwards) in 2 m steps
                 // until the whole barrier row clears the deck (half deck + half row + 2 m, WORKING_VALUE)
-                if (UnderDeck(cp, decks, chain, ClosureSpan(clamped)))
+                bool Under(float b) { var q = PointBack(pts, edgePt, edgeDir, b); return UnderDeck(q.p, q.d, decks, chain, ClosureSpan(clamped)); }
+                if (Under(back))
                 {
                     float best = -1f;
                     for (float b = back - 2f; b >= MinClosureSetbackM && best < 0f; b -= 2f)
-                        if (!UnderDeck(PointBack(pts, edgePt, edgeDir, b).p, decks, chain, ClosureSpan(clamped))) best = b;
+                        if (!Under(b)) best = b;
                     for (float b = back + 2f; b <= total * 0.8f && best < 0f; b += 2f)
-                        if (!UnderDeck(PointBack(pts, edgePt, edgeDir, b).p, decks, chain, ClosureSpan(clamped))) best = b;
+                        if (!Under(b)) best = b;
                     if (best >= 0f) (cp, cd) = PointBack(pts, edgePt, edgeDir, best);
                 }
                 exits.Add(new RoadExit { edgeEN = edgePt, edgeDir = edgeDir, closureEN = cp, closureDir = cd,
@@ -506,8 +507,10 @@ namespace Game.World.Import
         }
 
         /// <summary>ADR 0321: true when a closure row of <paramref name="span"/> m centred at <paramref name="p"/> would
-        /// stand under (or on) the deck of a bridge edge that is not part of its own road chain.</summary>
-        static bool UnderDeck(Vector2 p, List<(Dictionary<string, object> e, List<Vector2> pts, float halfW)> decks,
+        /// stand under (or on) the deck of a bridge edge that is not part of its own road chain and CROSSES its road
+        /// (more than 30 deg to <paramref name="dir"/>): the bridge of the twin carriageway alongside is not a deck
+        /// over the road (bialystok-industrial-c, Maczka west edge: w262140922 12 m beside w23982184).</summary>
+        static bool UnderDeck(Vector2 p, Vector2 dir, List<(Dictionary<string, object> e, List<Vector2> pts, float halfW)> decks,
             HashSet<Dictionary<string, object>> chain, float span)
         {
             foreach (var (e, dp, halfW) in decks)
@@ -515,7 +518,11 @@ namespace Game.World.Import
                 if (chain.Contains(e) || dp.Count < 2) continue;
                 float clear = halfW + 0.5f * span + 2f;
                 for (int i = 1; i < dp.Count; i++)
+                {
+                    Vector2 sd = dp[i] - dp[i - 1];
+                    if (sd.sqrMagnitude < 1e-6f || Mathf.Abs(Vector2.Dot(sd.normalized, dir)) > 0.866f) continue;
                     if (PointSegmentDistance(p, dp[i - 1], dp[i]) < clear) return true;
+                }
             }
             return false;
         }
