@@ -311,7 +311,12 @@ def test_triangle_budget_is_not_above_the_baseline(budget):
     rid, base, res, cams = budget
     for layer in ("buildings", "buildings_low"):
         assert res["total"][layer] <= base["total"][layer], (rid, layer)
-        assert res["materials"][layer] <= base["materials"][layer], (rid, layer)
+        # ADR 0316 deliberately adds a ceramic covering on LOD0 only. Permit
+        # that named material; triangle/camera budgets remain the earlier ones.
+        approved = set(base.get("approved_material_additions", {}).get(layer, []))
+        material_names = set(res["material_names"][layer])
+        assert material_names <= set(base["material_names"][layer]) | approved, (rid, layer)
+        assert res["materials"][layer] <= base["materials"][layer] + len(approved & material_names), (rid, layer)
     assert cams and all(c["delta_high"] <= 0 and c["delta_low"] <= 0 for c in cams), [
         (c["camera"], c["delta_high"], c["delta_low"]) for c in cams if c["delta_high"] > 0 or c["delta_low"] > 0]
     # The estimate is the committed frame_estimate (read from generated/streetscape_qa.json at test time - never a

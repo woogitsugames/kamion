@@ -1348,6 +1348,13 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
 
     ce, cn, _, _ = foreshorten_point(cx_raw, cy_raw, half)
     s_xy, s_h = foreshorten_scales(d_raw)
+    # ADR 0318: keep nearby buildings and the skyline; omit small distant
+    # envelopes on Low according to their rendered size, rather than source IDs.
+    # WORKING_VALUE: below 20 x 10 m after compression these repeated envelopes
+    # contribute little to the silhouette, while roofs/fascias remain closed.
+    longest_eff = max(np.linalg.norm(rc[(i + 1) % 4] - rc[i]) for i in range(4)) * s_xy
+    if tier == "Low" and d_raw > 900.0 and longest_eff < 20.0 and max(h_raw * s_h, 3.2) < 10.0:
+        return
     pts = np.array([[ce + (p[0] - cx_raw) * s_xy, cn + (p[1] - cy_raw) * s_xy] for p in rc[:4]], dtype=np.float64)
     if not building_outside_region(Polygon(pts), half, exclusion):
         return
@@ -1402,7 +1409,7 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
                       (*COL_ROOF_FLAT, 0.0), normal=[0.0, 0.0, 1.0])
 
         # Elevator / stairwell penthouse on taller wielka-płyta blocks
-        if storeys >= 6 and (tier == "High" or (d_raw < 900.0 and storeys >= 8)):
+        if storeys >= 6 and tier == "High":
             u_vec = pts[(long_idx + 1) % 4] - pts[long_idx]
             v_vec = pts[(long_idx + 3) % 4] - pts[long_idx]
             lu = max(float(np.linalg.norm(u_vec)), 1.0)
@@ -1563,7 +1570,10 @@ def _add_chimney(sectors: dict[str, SectorBuilder], ch: dict, elev: BorderElevat
             p10 = [ce + r0 * c1, cn + r0 * s1, z0]
             p11 = [ce + r1 * c1, cn + r1 * s1, z1]
             p01 = [ce + r1 * c0, cn + r1 * s0, z1]
-            sec.add_quad0(p00, p10, p11, p01, (*col, 0.0))
+            # A backdrop is observed from inside its owning tile. As with
+            # building walls, omit faces hidden from every point of that tile.
+            if _wall_visible_from_tile(np.asarray(p00[:2]), np.asarray(p10[:2]), half):
+                sec.add_quad0(p00, p10, p11, p01, (*col, 0.0))
 
 
 def region_landmark_stacks(region_id: str, ox: float, oy: float) -> list[dict]:
@@ -1667,6 +1677,50 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             [ce + ux * w + vx * w, cn + uy * w + vy * w, z],
             [ce - ux * w + vx * w, cn - uy * w + vy * w, z],
         ]
+
+    if tier == "Low":
+        # ADR 0318: open lattice remains visible at every distance. At Low's
+        # angular size, ribbons retain its holes without 3-sided member tubes.
+        # All ribbon normals face the owning tile; no new material/submesh.
+        view = np.array([-ce, -cn, 0.0])
+        view /= np.linalg.norm(view)
+
+        def ribbon(a, b, radius):
+            a, b = np.asarray(a, float), np.asarray(b, float)
+            axis = b - a
+            axis /= np.linalg.norm(axis)
+            width = np.cross(axis, view)
+            if np.linalg.norm(width) < 1e-8:
+                width = np.cross(axis, np.array([0.0, 0.0, 1.0]))
+            width *= radius / np.linalg.norm(width)
+            sec.add_quad0(a - width, a + width, b + width, b - width, col)
+
+        scale = max(s_h, 0.65)
+        rb, rt = ring_pts(w_bot, z_bot), ring_pts(w_top, z_top)
+        for a, b in zip(rb, rt):
+            ribbon(a, b, 0.13 * scale)
+        # Two adjoining mast faces show the lattice in both perpendicular
+        # views. The other faces coincide in the distant silhouette.
+        facing = sorted(range(4), key=lambda k: float(np.dot(
+            np.array([(rb[(k + 1) % 4][1] - rb[k][1]),
+                      -(rb[(k + 1) % 4][0] - rb[k][0]), 0.0]), view)), reverse=True)[:2]
+        rings = [ring_pts(w_bot + (w_top - w_bot) * f, z_bot + (z_top - z_bot) * f)
+                 for f in np.linspace(0.0, 1.0, 4)]
+        for panel, (lower, upper) in enumerate(zip(rings[:-1], rings[1:])):
+            for k in facing:
+                q = (k + 1) % 4
+                a, b = (k, q) if (panel + k) % 2 == 0 else (q, k)
+                ribbon(lower[a], upper[b], 0.075 * scale)
+        for frac, span in ((0.70, 5.2), (0.88, 3.8)):
+            za = z_ref + h_eff * frac
+            sp = span * scale
+            left = [ce - vx * sp, cn - vy * sp, za]
+            right = [ce + vx * sp, cn + vy * sp, za]
+            top = [ce, cn, za + max(0.75 * s_h, 0.45)]
+            ribbon(left, right, 0.13 * scale)
+            ribbon(left, top, 0.09 * scale)
+            ribbon(top, right, 0.09 * scale)
+        return
 
     # Open lattice, including in Low: solid crossed fins read as grey cones
     # against the sky (drive-review-s24 #15). Uncapped triangular members keep

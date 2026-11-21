@@ -111,7 +111,7 @@ def test_pylon_has_open_lattice_and_crossarms_in_every_tier(tier, yaw):
     v, t = p["V"], p["T"]
     assert np.isfinite(v).all()
     assert t.max() < len(v) < 65536
-    assert 100 < len(t) <= 224  # bounded lightweight geometry, also with hundreds of towers
+    assert len(t) == (32 if tier == "Low" else 204)  # ribbons on Low, triangular members on High
     assert set(p["COL"][:, 3]) == {0.0}
     assert p["mat"] == "far_field_buildings"
     # Look from both cardinal directions: solid fins filled the whole shaft;

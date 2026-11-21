@@ -119,7 +119,8 @@ def build(rid):
     return {"region": rid, "typologies": rep["typologies"], "subtypes": rep.get("subtypes"),
             "roofs_other": rep.get("roofs_other"), "pavilion_fronts": rep.get("pavilion_fronts"),
             "house_roofs": rep.get("house_roofs"), "total": tot,
-            "materials": {lay: len(mats[lay]) for lay in LAYERS}, "per_chunk": dict(sorted(per.items())),
+            "materials": {lay: len(mats[lay]) for lay in LAYERS},
+            "material_names": {lay: sorted(mats[lay]) for lay in LAYERS}, "per_chunk": dict(sorted(per.items())),
             "per_building": per_b}, man
 
 
