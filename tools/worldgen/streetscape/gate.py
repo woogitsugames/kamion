@@ -428,7 +428,10 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report, pav
         isl_poly = None
         if o.get("island", True):
             j0 = max(int(ok[0]), k - int(ISLAND_BEFORE_M / 0.5))
-            j1 = min(len(dd) - 1, k + int(ISLAND_AFTER_M / 0.5))
+            # c-regress-cli: when the boom fit moves the housing line towards the nose (C exit after D94: 0.5 m of
+            # median before it instead of 2.5 m), the island keeps its length by growing towards the depot
+            short = int(ISLAND_BEFORE_M / 0.5) - (k - j0)
+            j1 = min(len(dd) - 1, k + int(ISLAND_AFTER_M / 0.5) + short)
             u = px[j0:j1 + 1] - pe[j0:j1 + 1]
             u /= np.maximum(np.hypot(*u.T), 1e-9)[:, None]
             P_e = pe[j0:j1 + 1] + u * (hwe[j0:j1 + 1] + S.KERB_TOP_W - 0.03)[:, None]
