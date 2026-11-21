@@ -1048,10 +1048,14 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         return float(zc[j, i])
     heroes = HB.plan(w, region_id, pipeline.load_overrides(region_id), zc_at, on_ground_road, log)
     hero_chains = HB.chain_ids(heroes)
+    from streetscape import truss_bridge as TB      # ADR 0320: override kind truss_bridge (own piers / abutments)
+    truss_chains = TB.chains_for(w.net, pipeline.load_overrides(region_id))
     for c in w.net.chains:
-        if c.id not in hero_chains:
+        if c.id not in hero_chains and c.id not in truss_chains:
             M.build_bridge_supports(w.buf, c, w.hf, on_ground_road, w.bridges)
     hero_tris = HB.apply(w, heroes, st["instances"], log)
+    if truss_chains:
+        st["report"].update(TB.apply(w, pipeline.load_overrides(region_id), zc_at, log))
     # ADR 0117: W-beam where a ground carriageway passes a viaduct pier (hero columns + generic cylinders exist now)
     from streetscape import furniture as _FU
     _FU.pier_guardrails(_FU.Lin(w.buf, None), w.net, HB.pier_points(heroes, w.buf.parts), w.buf.parts,

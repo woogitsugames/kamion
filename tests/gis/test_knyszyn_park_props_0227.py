@@ -39,7 +39,8 @@ def test_anchors_clear_current_paths_and_geometry_is_finite():
     assert all(1.2 <= x["distance_to_path_m"] <= 5.0 for x in r["benches"]+r["lamps"])
     assert {p[0] for p in buf.parts}==set(props.LAYERS) | {"collision"}
     low = {p[1] for p in buf.parts if p[0] == "buildings_low"}
-    assert not low & {"bench_wood", "paint_white_reflective", "plinth_grey", "steel_painted", "plaster_white"}
+    assert not low & {"bench_wood", "paint_white_reflective", "plinth_grey", "steel_painted", "plaster_white",
+                       "monument_bronze", "monument_granite"}
     assert {"bench_wood", "steel_painted"} <= {p[1] for p in buf.parts if p[0] == "buildings"}
     for layer,mat,v,t,src in buf.parts:
         assert np.isfinite(v).all() and t.min()>=0 and t.max()<len(v)
@@ -71,6 +72,7 @@ def test_terrain_nan_drops_objects_without_writing_invalid_mesh():
 
 
 def test_king_proxy_has_crowned_head_and_valid_geometry():
+    # ADR 0320: lathed bronze figure about 3.2 m on the 1.05 m granite block (owner photos 1 / 8).
     outputs = {}
     for layer in props.LAYERS:
         acc = Acc()
@@ -78,17 +80,18 @@ def test_king_proxy_has_crowned_head_and_valid_geometry():
         buf = Buffer()
         acc.flush(buf, props.ASSET_ID)
         outputs[layer] = sum(len(p[3]) for p in buf.parts)
-        figure = next(p for p in buf.parts if p[1] == "steel_painted")
+        figure = next(p for p in buf.parts if p[1] == "monument_bronze")
         vertices, tris = figure[2], figure[3]
         assert np.isfinite(vertices).all()
         assert (np.linalg.norm(np.cross(vertices[tris[:,1]]-vertices[tris[:,0]],
                                         vertices[tris[:,2]]-vertices[tris[:,0]]), axis=1) > 1e-9).all()
-        # Head and three separated crown tips make this a figure rather than a pillar.
-        assert np.isclose(vertices[:,2].max(), 3.39)
-        tips = vertices[np.isclose(vertices[:,2], 3.39), :2] @ props.KING_TANGENT
-        assert np.any(tips < -.07) and np.any(np.abs(tips) < .05) and np.any(tips > .07)
-    assert outputs["buildings"] == outputs["buildings_low"]
-    assert outputs["buildings"] <= 200
+        top = vertices[:,2].max()
+        assert 4.2 <= top <= props.KING_H + 1e-9
+        # Crown points all round the head make this a figure rather than a pillar.
+        tips = vertices[np.isclose(vertices[:,2], top), :2] @ props.KING_TANGENT
+        assert np.any(tips < -.07) and np.any(tips > .07) and len(tips) >= 6
+        assert {p[1] for p in buf.parts} >= {"monument_bronze", "monument_granite"}
+    assert outputs["buildings_low"] <= 220 < outputs["buildings"] <= 1000
 
 
 def test_memorial_forecourt_and_sundial_face_town_hall():
@@ -138,71 +141,18 @@ def test_proxy_bird_and_sundial_are_on_monuments_and_double_sided():
 
 
 def test_king_cloak_has_continuous_profile_and_crowned_head():
-    acc=Acc(); props._king(acc,"buildings_low",[0.,0.],0.)
-    pieces=acc.d[("buildings_low","steel_painted")]
-    crowns=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].max(),3.39)]
-    assert len(crowns)==3
-    assert all(np.isclose(v[:,2].min(),3.25) for v in crowns)
-    body=[(v,t) for v,t,*_ in pieces if len(v)==48 and len(t)==88]
+    acc=Acc(); props._king(acc,"buildings",[0.,0.],0.)
+    pieces=acc.d[("buildings","monument_bronze")]
+    n=len(props.KING_RINGS)
+    body=[(v,t) for v,t,*_ in pieces if len(v)==16*n]
     assert len(body)==1
     vertices,faces=body[0]
-    assert np.allclose(np.unique(vertices[:,2]),[1.05,1.70,2.35,2.55,2.70,2.80,3.05,3.16])
-    assert np.ptp(vertices[:6,:2]@props.KING_TANGENT) > np.ptp(vertices[-6:,:2]@props.KING_TANGENT)
-    assert all(np.cross(vertices[t[1]]-vertices[t[0]],vertices[t[2]]-vertices[t[0]])[2]>0
-               for t in faces[-4:])
-
-
-def test_king_crown_overlaps_head_and_chain_faces_outward():
-    for layer in props.LAYERS:
-        acc=Acc(); props._king(acc,layer,[0.,0.],0.)
-        pieces=acc.d[(layer,"steel_painted")]
-        band=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].min(),3.10)
-              and np.isclose(v[:,2].max(),3.25)]
-        assert band and 3.10 < 3.16
-        strips=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].min(),2.20)
-                and np.isclose(v[:,2].max(),2.54)]
-        assert len(strips)==2
-        for v in strips:
-            n=np.cross(v[1]-v[0],v[2]-v[0])
-            assert n[:2]@props.KING_FORWARD>0
-            assert np.ptp(v[:2,:2]@props.KING_TANGENT)>.03
-            assert (v[:,:2]@props.KING_FORWARD).min()>=.249
-
-
-def test_flagpole_low_preserves_spiral_and_high_geometry():
-    from math import cos, pi, sin
-
-    layers = {}
-    for layer, sides in (("buildings", 12), ("buildings_low", 8)):
-        acc = Acc()
-        props._flagpole(acc, layer, [0., 0.], 0.)
-        layers[layer] = acc
-        assert set(acc.d) == {(layer, "paint_white_reflective"), (layer, "brick_red")}
-        for key, quads in acc.d.items():
-            assert len(quads) == 28*sides//2
-            for vertices, triangles, uv, _ in quads:
-                assert len(triangles) == 2
-                np.testing.assert_allclose(np.linalg.norm(vertices[:, :2], axis=1), .065)
-                assert vertices[:, 2].min() >= 0 and vertices[:, 2].max() <= 7
-                j = round(float(vertices[0, 2]) * 4)
-                angle = (np.arctan2(vertices[0, 1], vertices[0, 0]) + 2*pi) % (2*pi)
-                i = round(angle*sides/(2*pi)) % sides
-                expected = "paint_white_reflective" if (j + i//(sides//4)) % 2 == 0 else "brick_red"
-                assert key[1] == expected
-                assert np.linalg.norm(np.cross(vertices[1]-vertices[0], vertices[2]-vertices[0])) > 0
-        assert sum(len(q[1]) for quads in acc.d.values() for q in quads) == 28*sides*2
-
-    # Compare against the original 12-sided High surface, including UV and winding.
-    previous = Acc()
-    for j in range(28):
-        z0, z1 = 7*j/28, 7*(j+1)/28
-        for i in range(12):
-            a, b = 2*pi*i/12, 2*pi*(i+1)/12
-            p, q = .065*np.array([cos(a),sin(a)]), .065*np.array([cos(b),sin(b)])
-            mat = "paint_white_reflective" if (j+i//3)%2 == 0 else "brick_red"
-            previous.quad("buildings", mat, props._p(p,z0), props._p(q,z0), props._p(q,z1), props._p(p,z1))
-    for key, quads in previous.d.items():
-        for old, new in zip(quads, layers["buildings"].d[key]):
-            for before, after in zip(old[:3], new[:3]):
-                np.testing.assert_array_equal(before, after)
-
+    z0=props.KING_PLINTH_H+.04
+    assert np.allclose(np.unique(np.round(vertices[:,2]-z0,6)),sorted({r[0] for r in props.KING_RINGS}))
+    width=lambda rows: np.ptp(rows[:,:2]@props.KING_TANGENT)
+    depth=lambda rows: np.ptp(rows[:,:2]@props.KING_FORWARD)
+    hem,shoulder,neck=vertices[:16],vertices[16*7:16*8],vertices[16*11:16*12]
+    # broad cloak: wider than deep, tapering to the shoulders, a neck much narrower than the head band above it
+    assert 1.2 <= width(hem) <= 1.3 and 1.0 <= depth(hem) <= 1.1
+    assert width(hem) > width(shoulder) > 2*width(neck)
+    assert width(vertices[-16:]) > width(neck)

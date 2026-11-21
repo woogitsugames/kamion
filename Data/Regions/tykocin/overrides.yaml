@@ -5,4 +5,70 @@
 # that is missing there shows up as overrides_stale in build_world. No lettering, no brands.
 # DW671 keeps the BDOT10k width and gets no edge lines, as in dw671-tykocin-01 (ADR 0212, measured there).
 # Nothing was checked on the orthophoto of this tile: add overrides after the ingest.
-overrides: []
+overrides:
+  # ADR 0320: the DW671 bridge over the Narew (ul. Puchalskiego) is a multi-span steel through truss with parabolic
+  # top chords, not the generic beam viaduct of the generator.
+  - id: tykocin-narew-truss-0320
+    kind: truss_bridge
+    target: {osm_way: [96942026]}
+    set: {}
+    verify: control cameras look_narew_portal_s / look_narew_truss_side / tyk_narew_side against Commons 05 / 08
+    first_span_at: south
+    upstream: east
+    confidence: medium
+    status_note: 'type, member pattern, colours: Commons photos (ESTIMATED); span lengths: orthophoto (+-1 m); sections, rise, headroom: WORKING_VALUE'
+    reason: >-
+      Wikimedia Commons "Tykocin Most drogowy 01-09" (Zala, 2025-09-20, CC BY-SA 4.0; reference only, see
+      Data/raw/refs/tykocin-bridge-commons/LICENSES.json): four steel bowstring through trusses (laced verticals and
+      diagonals, lattice top bracing, striped boards on the end portals), aluminium-grey paint, footways cantilevered
+      outside the trusses with a blue edge beam and blue / white picket railing, concrete piers with an ice-breaker.
+      Span lengths measured on the GUGiK orthophoto 2024 (0.25 m, relief displacement of the chords included, +-1 m):
+      from the south abutment 15 m beam approach, 51 m main span over the river, 39 / 38 / 37 m, 15 m beam approach
+      (sum 195 m = the OSM way, 194.8 m). Panel counts: 12 on photo 05 (main span); 9 for the short spans is a
+      WORKING_VALUE (same panel length). Rise 1 : 6.5 read off photo 05 (WORKING_VALUE). upstream: east - the Narew
+      runs east to west here (BDOT OT_SWRS_L direction not checked: UNVERIFIED; photos 04 / 06, taken from the east,
+      show the ice-breakers on that side).
+    spans:
+      - {length_m: 15.0, truss: false}
+      - {length_m: 51.0, panels: 12}
+      - {length_m: 39.0, panels: 9}
+      - {length_m: 38.0, panels: 9}
+      - {length_m: 37.0, panels: 9}
+      - {length_m: 15.0, truss: false}
+  # ---------------------------------------------------------------- Plac Stefana Czarnieckiego (ADR 0320)
+  # GUGiK orthophoto 2024 (0.25 m): after the renewal the square is a sett-paved plaza (grey fields in a diagonal
+  # lattice of darker bands) with the monument, a paved walk around two lawns and no trees. Outlines traced on the
+  # orthophoto, +-1 m (ESTIMATED). material: the generator has no sett set (paved.py maps sett -> yard_paving); the
+  # diagonal lattice is not reproduced (open item in ADR 0320).
+  - id: tykocin-rynek-plaza-0320
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: yard_paving
+    polygon_epsg2180: [[751786.7, 600245.5], [751826.5, 600253.9], [751829.8, 600223.9], [751789.5, 600217.7]]
+    reason: 'ESTIMATED: paved plaza of Plac Czarnieckiego traced on the GUGiK orthophoto 2024; Commons cs202183366 (CC BY 4.0, reference only).'
+    confidence: medium
+  - id: tykocin-rynek-walk-east-0320
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: yard_paving
+    polygon_epsg2180: [[751825.4, 600249.6], [751876.4, 600259.9], [751880.8, 600257.1], [751881.5, 600230.2], [751878.0, 600223.5], [751830.0, 600218.0], [751828.0, 600224.0]]
+    holes_epsg2180:
+      - [[751828.6, 600245.9], [751865.1, 600254.9], [751872.0, 600255.2], [751875.4, 600251.5], [751876.1, 600235.2], [751873.2, 600232.1], [751830.1, 600226.5], [751828.9, 600244.0]]
+    reason: 'ESTIMATED: paved walk around the east lawn (orthophoto 2024); the hole is the lawn with the low frame, the square basin and the octagonal bed.'
+    confidence: medium
+  - id: tykocin-rynek-walk-west-0320
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: yard_paving
+    polygon_epsg2180: [[751749.9, 600238.1], [751786.1, 600245.1], [751786.6, 600245.4], [751789.4, 600217.8], [751789.2, 600214.5], [751753.9, 600210.6]]
+    holes_epsg2180:
+      - [[751755.1, 600227.1], [751785.2, 600234.5], [751786.6, 600220.8], [751757.0, 600217.6]]
+      - [[751751.5, 600236.5], [751785.0, 600243.4], [751785.3, 600239.7], [751752.0, 600233.6]]
+    reason: 'ESTIMATED: paved walk around the west lawn and the narrow north-west lawn strip (orthophoto 2024).'
+    confidence: medium

@@ -33,6 +33,7 @@ from . import knyszyn_park_props_0227 as KP
 from . import knyszyn_market_0227 as KM
 from . import knyszyn_market_buildings_0227 as KMB
 from . import knyszyn_fountain_0227 as KF
+from . import tykocin_rynek_0320 as TYR
 from . import hero_depot as HD
 from . import landmarks as LM
 from . import chain_bollards as CB
@@ -248,6 +249,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     KP.build(w.buf, rid, w.origin, overrides, zsurf, rep)
     KM.build(w.buf, rid, w.origin, overrides, zsurf, rep)
     KF.build(w.buf, rid, w.origin, overrides, zsurf, rep)
+    TYR.build(w.buf, rid, w.origin, overrides, zsurf, rep)   # ADR 0320: Plac Czarnieckiego, Tykocin
 
     def zground(e, n):
         return PV.bilinear(zc, hf, np.asarray(e, float), np.asarray(n, float))
