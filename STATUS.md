@@ -30,3 +30,4 @@
 - water_banks tykocin v2: pas 9 132 m (było 9 134), koniec pasa wchodzi w bufor chodnika p50/p90 0,23/0,47 m (było
   1,05/1,64 m, max 1,99 = na ścieżce); przy promenadzie śr. szer. pasa 7,41 -> 5,47 m. Trzcina MIĘDZY promenadą a
   wodą zostaje — zgodne z Commons Tykocin_Most_drogowy_03/05 (szuwar za balustradą promenady).
+- build_world tykocin exit 0: trzcina High 139 168 -> 116 752 tris (-16 %), wstęgi 4193 -> 4050; reszta diffu QA = dryf main.
