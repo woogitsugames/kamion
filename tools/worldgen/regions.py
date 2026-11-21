@@ -36,6 +36,9 @@ class Region:
     teryt_powiat_extra: tuple[str, ...] = ()
     water: bool = False                     # ADR 0210: surface-water stage (rivers, ponds) opt-in per region
     rail: bool = False                      # ADR 0217: railway track bed + level crossings, opt-in per region
+    # ADR 0321: per-region water material overrides ((key, value) pairs, keys of build_world.WATER_OVERRIDE_KEYS),
+    # written by build_region into region.yaml `water.material`; () = the default ADR 0213 body
+    water_material: tuple = ()
 
     @property
     def powiaty(self) -> tuple[str, ...]:
@@ -470,6 +473,9 @@ REGIONS: dict[str, Region] = {
         teryt_powiat_extra=('2008',),
         status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,2) of the ADR 0203 plan)",
         water=True,      # water-tykocin-s24: the Narew + oxbows under the DW671 bridge (ul. Puchalskiego), Nereśl
+        # ADR 0321: the Narew on Commons Tykocin_Most_drogowy_03 reads blue-grey (sRGB ~98/115/121 at a low angle), not
+        # the brown-olive humic Supraśl the default body was tuned on - cooler, slightly clearer body (WORKING_VALUE)
+        water_material=(("color", (0.095, 0.118, 0.128)), ("shallow", (0.120, 0.135, 0.115))),
     ),
     "dw671-jasionowka-01": Region(
         id="dw671-jasionowka-01",

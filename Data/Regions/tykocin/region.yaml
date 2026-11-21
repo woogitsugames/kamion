@@ -90,3 +90,12 @@ water:
   enabled: true
   sources: Data/Regions/tykocin/generated/water_sources.json
   note: BDOT10k OT_PTWP_A / OT_SWRS_L + OSM waterway / natural=water (ADR 0210)
+  material:
+    color:
+    - 0.095
+    - 0.118
+    - 0.128
+    shallow:
+    - 0.12
+    - 0.135
+    - 0.115

@@ -217,8 +217,26 @@ WATER_MATERIALS = {
 }
 
 
-def glb_materials():
+WATER_OVERRIDE_KEYS = ("color", "shallow", "reflect", "reflect_low", "bank_tint", "bank_horizon", "smoothness")
+
+
+def region_water_materials(region):
+    """ADR 0321: WATER_MATERIALS with the per-region `water.material` block of region.yaml (only the keys of
+    WATER_OVERRIDE_KEYS; the default body was tuned on the humic Supraśl / Biała, ADR 0213 - the Narew at Tykocin on
+    the Commons photos reads blue-grey)."""
+    ov = ((region or {}).get("water") or {}).get("material") or {}
+    if not ov:
+        return WATER_MATERIALS
+    m = dict(WATER_MATERIALS["water"])
+    m.update({k: v for k, v in ov.items() if k in WATER_OVERRIDE_KEYS})
+    return {**WATER_MATERIALS, "water": m}
+
+
+def glb_materials(region=None):
     global _GLB_MATS
+    if region is not None and ((region.get("water") or {}).get("material")):
+        from streetscape import rail as _RL
+        return {**MATERIALS, **PR.glb_materials(), **region_water_materials(region), **_RL.RAIL_MATERIALS}
     if _GLB_MATS is None:
         from streetscape import rail as _RL
         _GLB_MATS = {**MATERIALS, **PR.glb_materials(), **WATER_MATERIALS, **_RL.RAIL_MATERIALS}
@@ -1114,7 +1132,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     chunks_meta = []
     for key in sorted(terrain):
         ci, cj = key
-        glb = GLB(glb_materials())
+        glb = GLB(glb_materials(w.region))
         tri = {}
         for li, prims in sorted(terrain[key].items()):
             glb.add_mesh(f"terrain_lod{li}", prims, {"lod": li, "spacing_m": CH.LODS[li]})
@@ -1143,7 +1161,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         fn = f"chunk_{ci}_{cj}.glb"
         (out_root / fn).write_bytes(data)
         # Low/Medium variant: no 1 m terrain LOD, no detailed buildings (LOD1 prisms only)
-        glb_lo = GLB(glb_materials(), compact=True)
+        glb_lo = GLB(glb_materials(w.region), compact=True)
         for li, prims in sorted(terrain[key].items()):
             if li >= 1:
                 glb_lo.add_mesh(f"terrain_lod{li}", prims, {"lod": li, "spacing_m": CH.LODS[li]})
@@ -1224,7 +1242,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                      "yaw [, sz scale z][, h/v/lean for trees]} of art-source/world/props/street_props.glb and "
                      "art-source/world/vegetation/trees.glb (+ trees_lod2.glb impostors)",
         "lod_policy": LOD_POLICY,
-        "materials": MATERIALS if w.water is None else {**MATERIALS, **WATER_MATERIALS},
+        "materials": MATERIALS if w.water is None else {**MATERIALS, **region_water_materials(w.region)},
         "chunks": chunks_meta, "sources_sha256": srcs,
         "overrides_applied": w.net.overrides_applied, "overrides_stale": w.net.overrides_stale,
     }

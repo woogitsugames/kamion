@@ -313,6 +313,8 @@ def main() -> None:
         # ADR 0210: opt-in surface-water stage; the key (and the sources file) exist only in regions that enable it
         ry["water"] = {"enabled": True, "sources": f"Data/Regions/{region.id}/generated/water_sources.json",
                        "note": "BDOT10k OT_PTWP_A / OT_SWRS_L + OSM waterway / natural=water (ADR 0210)"}
+        if getattr(region, "water_material", ()):
+            ry["water"]["material"] = {k: list(v) if isinstance(v, (tuple, list)) else v for k, v in region.water_material}
         import sys
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         from streetscape import water as WT
