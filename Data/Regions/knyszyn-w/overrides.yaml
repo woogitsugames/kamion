@@ -87,3 +87,23 @@ overrides:
       not measured: WORKING_VALUE.
     confidence: medium
     verify: owner check of Jagiełły / Kościelna; widths on the GUGiK orthophoto 0.1 m 2025 of this tile
+  # seam-knw-s24: the part of DW671 Tykocka way 1478765548 west of the knyszyn | knyszyn-w seam (39.8 m, up to node
+  # 3047667183) carries the same D95 cross-section as its 12.6 m east of the seam (knyszyn overrides
+  # knyszyn-roundabout-west-two-lanes-d95 / -fresh-d95). Before, knyszyn built 2 lanes on new asphalt and knyszyn-w the
+  # OSM lanes=3 (2 + 1, turn:lanes:forward none|right) on the generic worn asphalt: two lane lines started out of the
+  # centre line on the seam and the surface changed shade there (render vqa-wave5 rings-w-arm-top). The way id is the
+  # 2025 reconstruction (new roundabout), so the fresh wearing course covers the whole way. Asphalt width unchanged
+  # (11.25 + 2 x 0.25 m = 11.75 m both sides, D94). The OSM right-turn lane towards node 3047667183 is not built:
+  # WORKING_VALUE until an orthophoto taken after 2025 or an owner photo shows where it starts.
+  - id: knyszyn-w-dw671-west-two-lanes-seam
+    target: {osm_way: [1478765548]}
+    reason: "seam-knw-s24: same D95 lanes and asphalt width as the knyszyn side of the seam (photo 9: one entry, one exit)."
+    confidence: medium
+    verify: orthophoto after 2025 / owner photo of Tykocka west of the roundabout (right-turn lane start)
+    set: {lanes: 2, width: 11.25}
+  - id: knyszyn-w-dw671-west-fresh-seam
+    target: {osm_way: [1478765548]}
+    reason: "seam-knw-s24: D95 fresh roundabout wearing course continues across the seam (no shade step on the tile edge)."
+    confidence: medium
+    verify: owner camera 09 / render rings-w-arm-top
+    set: {surface: asphalt_new}

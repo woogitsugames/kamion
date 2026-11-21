@@ -85,6 +85,53 @@ def lat_fracs(c, coarse=False):
     return np.linspace(-1.0, 1.0, c.m_lat + 1)
 
 
+SEAM_SHEAR_MAX_K = 2.5       # seam-knw-s24: |tan| of the seam cut against the square cut (68 deg); steeper = left square
+SEAM_SHEAR_RAMP_SAFETY = 1.15  # ramp length >= this x (outer side extent x |k|), so no station row overtakes the next
+SEAM_SHEAR_MIN_RAMP_M = 4.0
+
+
+def seam_shear(net, c, st, T, N, hw):
+    """seam-knw-s24: cross-section directions of a chain whose end lies on a tile seam (graph boundary node with a
+    `seam_u`, network._seam_dir). A chain cut by the tile edge used to end with a cross-section square to its axis;
+    where the road crosses the edge obliquely (Tykocka / DW671 west arm of the Knyszyn roundabout at 41 deg, DK65 at
+    the same seam) each tile left a triangle of bare terrain on one side of the axis and pushed asphalt into the
+    neighbour on the other - the neighbour's terrain covered it: grass triangles, a stepped asphalt edge and a cut
+    footway on render rings-w-arm-top. Here the end row is laid along the seam line, N' = u / (u . N) (unit lateral
+    distance kept: N' . N = 1, so widths square to the axis are unchanged and both tiles put every lateral offset on
+    the same point of the shared edge), blended in linearly over a ramp long enough that no row overtakes the next
+    one (ramp >= outer extent x |k|, k = N' . T). The height of a row stays that of its station (crossfall_z), the
+    same value the neighbour gives at the seam point. Returns N (n,2), the input array untouched when nothing applies."""
+    if len(st) < 2:
+        return N
+    s0, s1 = float(st[0]), float(st[-1])
+    out = None
+    for end, node, i in (("a", c.node_a, 0), ("b", c.node_b, len(st) - 1)):
+        nd = net.nodes.get(node) or {}
+        u = nd.get("seam_u")
+        if u is None or not nd.get("boundary") or abs((s0 if end == "a" else c.length - s1)) > 0.05:
+            continue
+        un = float(u @ N[i])
+        if abs(un) < 1e-6:
+            continue
+        m = u / un                              # along the seam, m . N = 1
+        k = float(m @ T[i])
+        if abs(k) < 1e-3 or abs(k) > SEAM_SHEAR_MAX_K:
+            continue
+        ext = float(hw[i]) + max(side_extent(*side_params(c, sd, float(st[i]))) for sd in ("L", "R"))
+        other = c.node_b if end == "a" else c.node_a
+        on = net.nodes.get(other) or {}
+        span = s1 - s0
+        if on.get("boundary") and on.get("seam_u") is not None:
+            span *= 0.5                         # both ends on a seam: each ramp gets half the chain
+        ramp = min(max(SEAM_SHEAR_RAMP_SAFETY * ext * abs(k), SEAM_SHEAR_MIN_RAMP_M), span)
+        d = (st - s0) if end == "a" else (s1 - st)
+        f = np.clip(1.0 - d / max(ramp, 1e-6), 0.0, 1.0)
+        if out is None:
+            out = N.copy()
+        out += (f * k)[:, None] * T
+    return N if out is None else out
+
+
 # ---------------------------------------------------------------------------------------------
 def build_ribbon(buf: MeshBuf, net, c, coarse=False):
     if c.meta.get("absorbed"):
@@ -95,8 +142,9 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
         return
     layer = "collision" if coarse else "road"
     P = c.line.point(st)
-    _, N = c.line.frame(st)
+    Tn, N = c.line.frame(st)
     hw = c.hw_at(st)
+    N = seam_shear(net, c, st, Tn, N, hw)
     br = c.interp(c.bridge.astype(float), st) > 0.5
     q = lat_fracs(c, coarse)
     lat = hw[:, None] * q[None, :]
