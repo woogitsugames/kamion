@@ -20,3 +20,8 @@
   nasz render tyk_narew_side 62/65/66 (neutralna szarość, ciało 0,12/0,12/0,115). Materiał wody globalny (strojony na
   Supraśl ADR 0213) -> plan: nadpisanie per region `region.yaml water.material` (tykocin: chłodniejsze ciało
   ~0.10/0.125/0.13, shallow zielonkawe), bez zmiany Supraśla.
+- [4b] Woda: `regions.py water_material` -> build_region -> region.yaml `water.material` -> build_world
+  `region_water_materials` (manifest + GLB). tykocin: color 0.095/0.118/0.128, shallow 0.12/0.135/0.115. Commit 72a48d6c1.
+- W TLE: artifacts/world-fix2-s24/rebuild.ps1 (slot heavy; water_banks tykocin + build_world tykocin, knyszyn-w,
+  dk65-07, dk8-wasilkow-01), status artifacts/world-fix2-s24/logs/rebuild.status.
+- NASTĘPNY KROK po DONE: import-region.ps1 -Region <r> -SkipCopy? (sprawdzić), visual-qa WorldC High, porównanie z vqa-wave5.
