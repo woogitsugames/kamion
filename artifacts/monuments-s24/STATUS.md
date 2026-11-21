@@ -23,3 +23,18 @@
 - pytest: `tests/gis/test_knyszyn_park_props_0227.py` 9 passed; `test_truss_bridge_0320.py -k "square or plaza"` 3 passed.
 - NASTĘPNY KROK: po zwolnieniu slotu heavy `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn`, potem
   `pwsh artifacts/monuments-s24/run-unity.ps1 -Region knyszyn -Out artifacts/monuments-s24/r1-knyszyn -Cameras "king_front_0325,king_34_0325,king_head_0325,king_side_0325,king_square_0325,rynek_owner_01,rynek_owner_08"`
+
+## Krok 2 — runda 1 Tykocin obejrzana; look-dev króla w Blenderze; EditMode
+- Tykocin r1 (import + VQA High/clear): krata leży jak na ortofoto (`sbs/r1-plaza-sheet.jpg`). Poprawki r2 już w kodzie: czerwień jaśniejsza
+  i mniej nasycona (orto: pasy w słońcu ~150/125/105 sRGB), jaśniejsza fuga, plamy zadeptanego brudu, szare obejścia ciemniejsze.
+- Król: look-dev Cycles (`tools/worldgen/qa/king_preview_0325.py` → `tools/blender/world/king_preview_0325.py`), arkusz
+  `sbs/lookdev-blender-king-sheet.jpg`; r2 rzeźby: proste ramiona, graniasty tył ze szwem, broda/włosy w brązie, postrzępione futro.
+  Zestawy `granite_honed_tint` (cokół) i `bronze_cast_tint` (patyna, zacieki, maska metalu) + UV walcowe figury.
+- EditMode Win64: 1525 total, 1412 passed, 0 failed, 113 skipped (`artifacts/tests/editmode-20261121-215915.xml`).
+- BLOKADA: pula `heavy` (3 sloty) od 19:47 w całości u `regen-wave-6-s24`; kolejka FIFO: banks-verges, road-surface, ja. build_world knyszyn czeka.
+  Jedno build_world tykocin (r1) poszło przed zajęciem slotu — moja pomyłka, bez skutków (41 GB RAM wolne).
+- Uwaga: Blender zapisał pierwsze rendery do `C:\artifacts\monuments-s24\blender\r1` (ścieżka względna); skopiowane do worktree, pusty katalog
+  `C:\artifacts` został (usuwanie zablokowane przez zabezpieczenie) — do skasowania ręcznie.
+- NASTĘPNY KROK (po slocie): `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn` i `--region tykocin`, potem
+  `pwsh artifacts/monuments-s24/run-unity.ps1 -Region knyszyn -Out artifacts/monuments-s24/r2-knyszyn -Cameras "king_front_0325,king_34_0325,king_head_0325,king_side_0325,king_square_0325,rynek_owner_01,rynek_owner_08"`
+  i `... -Region tykocin -Out artifacts/monuments-s24/r2-tykocin -Cameras "look_tykocin_plaza_photo_0325,look_tykocin_plaza_setts_0325,look_tykocin_plaza_cab_0325,look_tykocin_czarniecki,top_tykocin_rynek"`.
