@@ -16,7 +16,7 @@ materiał `verge_grass` (inny shader niż łąka za nim), komórki HLOD lasu z p
 
 ### 1. Woda (`Kamion/World Water`, `streetscape/water.py`, nadpisanie regionu)
 - **Płycizna:** dno (mokry piasek / muł, `_BedColor` 0,36/0,33/0,26 — wartość właściwości Color, czyli kodowana sRGB jak `_BaseColor`; liniowo ≈ 0,11/0,09/0,06) prześwituje przez pierwsze decymetry
-  wody — Beer-Lambert (`_Extinction` 2,4 1/m) po głębokości wynikającej z odległości od brzegu (profil koryta ADR 0210:
+  wody — Beer-Lambert (`_Extinction` 1,6 1/m) po głębokości wynikającej z odległości od brzegu (profil koryta ADR 0210:
   0,12 m + 0,35 m/m). Oba tiery, bez tekstur, tafla nadal nieprzezroczysta.
 - **Podmuchy (High):** szum 30–60 m dryfujący z wiatrem skaluje nachylenie zmarszczek (pasy gładkiej wody × 0,3,
   zmarszczone × 1,5) + trzecia, drobna oktawa do 45 m od kamery. Fresnel i sonda nieba bez zmian (były od ADR 0210).

@@ -34,7 +34,7 @@ Shader "Kamion/World Water"
         _BankTint ("Far-bank reflection near the horizon (linear albedo)", Color) = (0.050, 0.065, 0.035, 1)
         _BankHorizon ("Reflected-ray elevation (sin) below which the far bank is seen", Range(0.01, 0.5)) = 0.12
         _BedColor ("Bed seen through the shallows: wet sand / mud (colour property: sRGB-coded like _BaseColor)", Color) = (0.36, 0.33, 0.26, 1)
-        _Extinction ("Extinction of the turbid water (1 / m)", Range(0.2, 8)) = 2.4
+        _Extinction ("Extinction of the turbid water (1 / m)", Range(0.2, 8)) = 1.6
         _GustScale ("Gust patch size (m)", Float) = 42.0
         _GustAmount ("Gust contrast of the ripple slope", Range(0, 1)) = 0.7
     }
