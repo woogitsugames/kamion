@@ -40,7 +40,7 @@ REPO = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO / "tools" / "worldgen"))
 from streetscape import plot_canopy as PC  # noqa: E402
 
-VERSION = 1
+VERSION = 2              # ADR 0321: footways / paths of osm_context.json are kept free of the belt
 SHORE_STEP_M = 1.0
 BELT_MAX_M = 24.0
 BELT_START_M = 2.5
@@ -56,6 +56,29 @@ CROWN_R_MIN = 1.0       # bank crowns smaller than this are the dark shore line,
 WOODY_LUMA = 72.0      # local mean luma (3.25 m) of a self-shadowed woody crown
 CROWN_REACH_M = 18.0
 BLOCK_PX = 1024
+WALK_HALF_M = {"footway": 1.25, "pedestrian": 2.0, "cycleway": 1.25, "path": 1.0, "steps": 1.25, "bridleway": 1.0}
+WALK_CLEAR_M = 0.75     # ADR 0321: reed stands no closer than this to the edge of a footway / path (WORKING_VALUE)
+
+
+def walk_polys(region_id, origin):
+    """ADR 0321: footways / paths / promenades of osm_context.json (region-local polygons, half width + WALK_CLEAR_M).
+    The S bank of the Narew in Tykocin is a hard promenade (OSM 1132985888 / 1132988375); the ortho classifier read
+    its planted edge as tall herb and the belt stood on the walk."""
+    f = REPO / "Data" / "Regions" / region_id / "generated" / "osm_context.json"
+    if not f.exists():
+        return shapely.Polygon()
+    ctx = json.loads(f.read_text(encoding="utf-8"))
+    out = []
+    for w in ctx.get("footways", []):
+        hw = w.get("highway")
+        if hw not in WALK_HALF_M:
+            continue
+        g = w["geometry"]
+        c = np.asarray(g["coordinates"] if isinstance(g, dict) else g, float)
+        if c.ndim != 2 or len(c) < 2:
+            continue
+        out.append(shapely.LineString(c[:, :2] - np.asarray(origin, float)[:2]).buffer(WALK_HALF_M[hw] + WALK_CLEAR_M))
+    return shapely.union_all(out) if out else shapely.Polygon()
 PAD_PX = 24
 
 
@@ -165,6 +188,9 @@ def build(region_id):
             wv = 6.0
         rp.append(shapely.LineString(np.asarray(e_["geometry"], float) - origin).buffer(wv / 2 + ROAD_CLEAR_M))
     roads = shapely.union_all(rp) if rp else shapely.Polygon()
+    walks = walk_polys(region_id, origin)
+    if not walks.is_empty:
+        roads = shapely.union_all([roads, walks])
     rmask = RF.rasterize([(roads, 1)], out_shape=(n1, n1), transform=tr1, fill=0, dtype="uint8").astype(bool)         if not roads.is_empty else np.zeros((n1, n1), bool)
     herb_c = (herb_f >= HERB_FRAC) & ~rmask
     crown_c = crown_f >= CROWN_FRAC

@@ -434,7 +434,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
     wtrees = []
     if getattr(w, "water", None) is not None:      # ADR 0213: reed belt ribbons + willow / alder scrub on the banks
-        bank_keep = shapely.union_all([roads_poly, bpoly] + [p_["poly"] for p_ in paved]).buffer(1.0)
+        from . import water_banks as WB      # ADR 0321: + footways / promenades (no reed card over a walk)
+        bank_keep = shapely.union_all([shapely.union_all([roads_poly, bpoly] + [p_["poly"] for p_ in paved]).buffer(1.0),
+                                       WB.walk_polys(rid, w.origin)])
         wtrees = w.water.bank_vegetation(w.buf, zground, bank_keep, trees + ptrees, blocked, rep, log)
         for t_ in wtrees:
             vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1

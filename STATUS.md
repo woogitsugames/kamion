@@ -6,3 +6,11 @@
   powierzchni trawy w 4 komórkach wokół węzła) + `conform(..., soft_floor=)` -> żaden węzeł nad floor - 0,04.
   Test syntetyczny tests/gis/test_ditch_floor_0321.py zielony (stara reguła: przebicie > 5 cm, nowa <= 0).
 - NASTĘPNY KROK: zadanie 2 (zapora B-1 dk8-wasilkow-01), potem przebudowa kafli.
+- [2] Zapora B-1 dk8-wasilkow-01: zamknięcie krawędzi drogi w1220009817 (pod wiaduktem DK8) wypadało 60 m od krawędzi
+  dokładnie pod pomostem; RoadY brało wysokość pomostu -> rząd stał na DK8 wzdłuż pasa. Poprawka w
+  WorldEdgeBuilder.ReadExits: zamknięcie przesuwa się (2 m kroki, najpierw ku krawędzi) aż cały rząd omija pomost
+  innej drogi (bridge/layer>=1). Test EditMode WorldEdgeClosureDeckTests (do uruchomienia).
+- [3] Szuwary: water_banks.walk_polys (chodniki/ścieżki z osm_context.json, pół szer. + 0,75 m) wyłączone z pasa i z
+  keep_out kart (stage.py). Dalej: nieregularne kępy w reeds.py.
+- NASTĘPNY KROK: edycja reeds.py (losowe kąty/rozmiary/odstępy kart High, losowy zygzak Low), potem
+  `uv run --project tools/worldgen python tools/worldgen/streetscape/water_banks.py --region tykocin`.
