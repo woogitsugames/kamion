@@ -484,6 +484,13 @@ namespace Game.World.Import
                     if (worn != null && set != null && worn.Get("albedo") is Dictionary<string, object> wa && set.Get("albedo") is Dictionary<string, object> pa)
                         ratio = (float)(Num(wa.Get("mean_lum_linear")) / Math.Max(1e-3, Num(pa.Get("mean_lum_linear"))));
                     mat.SetFloat("_AgeTint", ratio);
+                    // build #3 P2: ragged, alpha-blended outline (WorldPBR _DECAL_PATCH); after the opaque paint
+                    // (+10, depth-tested, so paint over a repair stays on top) and before oil (+20)
+                    if (def.Get("asphalt_patch_seam") is Dictionary<string, object>)
+                    {
+                        SetBlend(mat, true);
+                        mat.renderQueue = (int)RenderQueue.Geometry + 12;
+                    }
                 }
                 else if (id == "decal_oil")
                 {

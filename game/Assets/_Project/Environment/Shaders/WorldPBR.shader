@@ -274,6 +274,15 @@ Shader "Kamion/World PBR"
                 return frac((p3.x + p3.y) * p3.z);
             }
 
+            // Value noise 0..1 (ALU only, no texture fetch): broken outline of hand-laid asphalt repairs (build #3 P2).
+            float ValueNoise12(float2 p)
+            {
+                float2 i = floor(p), f = frac(p);
+                float2 u = f * f * (3.0 - 2.0 * f);
+                return lerp(lerp(Hash12(i), Hash12(i + float2(1, 0)), u.x),
+                            lerp(Hash12(i + float2(0, 1)), Hash12(i + float2(1, 1)), u.x), u.y);
+            }
+
             // Tangent frame of a mesh UV set from screen derivatives (no tangents in the compact world meshes).
             void CotangentFrame(float3 N, float3 p, float2 uv, out float3 T, out float3 B)
             {
@@ -574,6 +583,7 @@ Shader "Kamion/World PBR"
             #if defined(_ROADWEAR)
                 {
                     float2 w = i.uv.zw;
+                    half onPlate = (half)step(15.0, w.y);    // junction plate vertices (roads.meshing._patch_uv1)
                     half plate = KamionPlateWear(w);          // ADR 0194: junction box, wheel paths smeared by turning
                     albedo *= lerp(_AsphaltWear.x, _PaintFreshWear.w, paintFresh);
                     if (w.x > -0.5)        // (-1, 5) = no road data (junction patches, kerbs)
@@ -582,6 +592,16 @@ Shader "Kamion/World PBR"
                         float lc = frac(w.x);
                         half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11);
                         wp *= lerp(1.0h, (half)KAMION_PLATE_WHEEL_KEEP, plate);
+                        // build #3 P3 (DK65 / Knyszyn roundabout mouths): on a plate the lane coordinate is interpolated
+                        // linearly over a few large triangles, so continuous wheel paths bent into dark wavy stripes
+                        // repeated at every mouth. On plates the polish is broken into 1-6 m patches (object-space
+                        // value noise, stable across origin rebases) and its contrast halved. WORKING_VALUE.
+                        if (onPlate > 0.5)
+                        {
+                            float2 po = TransformWorldToObject(pw).xz;
+                            half brk = (half)(ValueNoise12(po / 4.3) * 0.65 + ValueNoise12(po / 1.3 + 17.0) * 0.35);
+                            wp *= 0.5h * smoothstep(0.38h, 0.72h, brk);
+                        }
                         // ADR0118: traffic polish darkens binder; existing macro breaks continuous bands.
                         // Traffic accumulation varies over metres (G: 2-16 m), not the sub-metre A noise.
                         // Keep the original mean modulation 0.825 while avoiding a fine grid in wheel paths.
@@ -665,8 +685,20 @@ Shader "Kamion/World PBR"
                         float2 sizeM = float2(length((px * uy.y - py * ux.y) * inv),
                                               length((py * ux.x - px * uy.x) * inv));
                         float2 borderM = min(i.uv.xy, 1.0 - i.uv.xy) * sizeM;
-                        float edgeM = min(borderM.x, borderM.y);
+                        // build #3 P2 (anti-slop): no ruler-straight rectangles. Rounded corners (radius 0.10-0.45 m
+                        // from the patch seed, capped by the patch size) and a ragged outline from two octaves of value
+                        // noise in object space (stable across floating-origin rebases); amplitude 0.05-0.14 m.
+                        // The outer few cm blend into the road (alpha), so the outline reads as a worn joint.
+                        // WORKING_VALUE, judged against the DW671 frames of build #3.
+                        float seed = i.uv.w;
+                        float rc = min(0.10 + 0.35 * frac(seed * 7.13), 0.45 * min(sizeM.x, sizeM.y));
+                        float edgeM = min(min(borderM.x, borderM.y), rc - length(max(rc - borderM, 0.0)));
+                        float2 on = TransformWorldToObject(pw).xz + seed * 97.0;
+                        float n = ValueNoise12(on / 0.55) * 0.65 + ValueNoise12(on / 0.17) * 0.35;
+                        float amp = 0.05 + 0.09 * frac(seed * 3.71);
+                        edgeM -= amp * n;
                         float aa = max(fwidth(edgeM), 0.002);
+                        alpha = smoothstep(0.0, 0.03 + aa, edgeM);
                         half seam = 1.0 - smoothstep(_PatchSeam.x - aa, _PatchSeam.x + aa, edgeM);
                         albedo *= lerp(_PatchSeam.z, _PatchSeam.w, age) * (1.0 - seam * _PatchSeam.y);
                         smooth = lerp(smooth, 0.42, seam);
