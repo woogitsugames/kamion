@@ -26,3 +26,4 @@
   dk65-07, dk8-wasilkow-01), status artifacts/world-fix2-s24/logs/rebuild.status.
 - NASTĘPNY KROK po DONE: import-region.ps1 -Region <r> -SkipCopy? (sprawdzić), visual-qa WorldC High, porównanie z vqa-wave5.
 - pytest ditch_floor + water_0213 + embankment_pylons: 58 pass (przed przebudową). Czekam na slot heavy (3/3 zajęte).
+- Przygotowany łańcuch Unity: artifacts/world-fix2-s24/unity.ps1 (import High 4 kafli, VQA after/, EditMode). Start po DONE w rebuild.status: pwsh -File artifacts/world-fix2-s24/unity.ps1
