@@ -223,3 +223,5 @@ NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/
 ## 2026-11-21 (Claude, przejęcie po Codex)
 - C dane z ba7332f8d zacommitowane (export-route 0, fidelity 0). Wolne końce barier mostu 7: przyczyna a207f2cd4 (ADR 0310) — przycinanie liczy własne utwardzone pobocze (road_asphalt side part) jako jezdnię i tnie przejścia deck->approach. WIP: wyjątek own_shoulder w surface_safety; replay 7 -> 2.
 - NASTĘPNY KROK: zbadać 2 pozostałe końce (w177895177 L start, w173956078 R approach), potem przebudowa C: `pwsh -File artifacts/c-regress-cli/build-c.ps1`
+- Dedup barier z poziomem (GUARDRAIL_DEDUP_DZ 0,8) i ograniczone dopasowanie runów reguły (0,25 m). Replay: 7 -> 1 wolny koniec (w173956078 R przy E-749: kapa 0,145 m między bliźniaczymi jezdniami po D94 — brak miejsca, do decyzji lidera).
+- NASTĘPNY KROK: przebudowa C w tle `pwsh -NoProfile -File artifacts/c-regress-cli/build-c.ps1`, potem export-route, fidelity, pytest gis.

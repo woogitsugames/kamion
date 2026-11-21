@@ -2092,9 +2092,10 @@ def _drop_doubled_rows(queue, m=None):
 GUARDRAIL_PAVEMENT_CLEAR_M = 0.25
 GUARDRAIL_ENVELOPE_M = 0.20 + RAIL_DP_M
 AUTHORED_RAIL_FIT_MAX_M = 0.75  # bounded adaptation of traced posts to the final generated carriageway
+RULE_RAIL_FIT_MAX_M = 0.25      # WORKING_VALUE (c-regress-cli): ... of rule runs (offset rules, not traced posts)
 
 
-def _fit_authored_rails_to_pavement(queue, parts, m=None):
+def _fit_authored_rails_to_pavement(queue, parts, m=None, rule=False):
     """Keep traced rails behind the final road edge after width/placement changes.
 
     A small lateral correction is preferable to deleting a whole median rail.
@@ -2102,8 +2103,17 @@ def _fit_authored_rails_to_pavement(queue, parts, m=None):
     median with no room remains blocked and is cut by the segment safety pass.
     """
     from shapely.ops import nearest_points
-    from roads.surface_safety import SurfaceIndex, carriageway, island
-    authored = [it for it in queue if str(it["key"]).startswith("authored:")]
+    from roads.surface_safety import SurfaceIndex, carriageway, island, own_shoulder
+    # rule=True (c-regress-cli): rule runs too, by at most RULE_RAIL_FIT_MAX_M and with their own flush shoulder
+    # exempt as in _clip_rails_to_pavement. C, w173956078 R deck->approach transition at E -731 N 49: the twin
+    # carriageway w173956079 widened by D94 left the post line 0.41 m from its lanes (0.47 m needed) and 5 m of
+    # the transition were cut, leaving the deck barrier end in the air; 0.06 m towards its own road clears both.
+    if rule:
+        authored = [it for it in queue if own_shoulder(it["key"]) is not None]
+        fit_max = RULE_RAIL_FIT_MAX_M
+    else:
+        authored = [it for it in queue if str(it["key"]).startswith("authored:")]
+        fit_max = AUTHORED_RAIL_FIT_MAX_M
     if not authored:
         return
     road, islands = SurfaceIndex(parts, carriageway), SurfaceIndex(parts, island)
@@ -2111,20 +2121,21 @@ def _fit_authored_rails_to_pavement(queue, parts, m=None):
     moved = 0
     for it in authored:
         P, Z = np.asarray(it["P"], float).copy(), np.asarray(it["Z"], float)
+        excl = own_shoulder(it["key"]) if rule else None
         for k, (p, z) in enumerate(zip(P, Z)):
             point = Point(p)
-            zone = point.buffer(radius + AUTHORED_RAIL_FIT_MAX_M + 0.02)
-            driven = road.near(zone, z, z).difference(islands.near(zone, z, z))
+            zone = point.buffer(radius + fit_max + 0.02)
+            driven = road.near(zone, z, z, exclude=excl).difference(islands.near(zone, z, z))
             blocked = driven.buffer(radius + 0.01)
             if blocked.is_empty or not blocked.covers(point):
                 continue
             q = np.asarray(nearest_points(point, blocked.boundary)[1].coords[0])
-            if np.linalg.norm(q - p) <= AUTHORED_RAIL_FIT_MAX_M:
+            if np.linalg.norm(q - p) <= fit_max:
                 P[k] = q
                 moved += 1
         it["P"] = P
     if m is not None:
-        m["authored_pavement_fit_pts"] = moved
+        m["rule_pavement_fit_pts" if rule else "authored_pavement_fit_pts"] = moved
 
 
 def _clip_rails_to_pavement(queue, parts, m=None):
@@ -2176,6 +2187,7 @@ def _clip_rails_to_pavement(queue, parts, m=None):
 def _flush_rails(lin, m=None):
     queue = getattr(lin, "rail_queue", None) or []
     _fit_authored_rails_to_pavement(queue, lin.buf.parts, m)
+    _fit_authored_rails_to_pavement(queue, lin.buf.parts, m, rule=True)
     _join_authored_deck_ends(queue, m)
     if queue and m is not None:
         _join_free_ends(queue, m)
