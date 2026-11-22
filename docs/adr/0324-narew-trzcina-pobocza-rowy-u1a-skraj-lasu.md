@@ -87,8 +87,38 @@ kolider 0,2 m za poboczem zaczepiałby naczepę).
   (ADR 0321: 116 752), Low 8 532.
 - Podgląd shadera wody na scenie sprzed przebudowy: `artifacts/banks-verges-s24/r0s/`, `r0s2/`.
 
-### Po przebudowie tykocin / dk65-07 / knyszyn-w
-(do uzupełnienia: rundy r1…, budżet r0 → rN, SBS `artifacts/banks-verges-s24/sbs/`)
+### Po przebudowie tykocin / dk65-07 / knyszyn-w (prywatna kopia derived, import Win64, edytor)
+Rundy: r0 = stan przed (kod main `3fba5b3b7`), r1 → r2 → r3 (maks. 3). Każda: `build_world` × 3, import Low + High,
+visual-qa 1920 × 1080 High clear + High overcast + Low clear, kamery z kabiny (driver eye 2,5 m) i z boku
+(`artifacts/banks-verges-s24/cams-<kafel>.json` przez `-Gate3`). Arkusze przed | po i referencja | gra:
+`artifacts/banks-verges-s24/sbs/r{1,2,3}/` (referencje: Commons „Tykocin Most drogowy 03 / 05 / 06”, Zala, CC BY-SA 4.0).
+- r1 → r2: karty trzciny prostokątne pokazywały pionowe cięcie boku → wachlarz (stopa 0,35–0,7 szerokości);
+  maska mułu rysowała trójkątne „schodki” → wygładzona, A 0,85 → 0,70; karty trawy czytały się jako prostokąty
+  i „jodełka” → atlas 4 osobnych kęp w rzędzie, karta = 1–2 całe kępy (boki karty w przezroczystych tekselach);
+  dno rowu za ciemne → maska wilgoci G ≤ 0,38, wygładzona.
+- r2 → r3: zatoki tylko w sąsiadach osiowych dawały schodki terenu 1 m na skośnym brzegu → także sąsiedzi po
+  przekątnej (d ≤ 1,5 m), próg `LIP_M` 1,5 → 2,5 m; ciemny pas za koroną rowu = fartuch skarpy tylnej, został w
+  `verge_grass` → też do terenu.
+- Generator (r2): tykocin — trzcina High 139 486 trójkątów (ADR 0321: 116 752; +19 %), Low 8 414; tafla 46 096
+  trójkątów (było 32 175: łaty zatok); U-1a 0 (cały odcinek w obszarze zabudowanym), trawa 0 (brak stron z poboczem
+  gruntowym). dk65-07 — trawa 8 112 trójkątów (16 stron), 48 części rowu do terenu, U-1a 5 (1 pominięty przy
+  barierze), HLOD lasu 110 768 trójkątów w kaflu (na kamerach +40–48 %, np. 11,7 → 16,2 tys.). knyszyn-w — trawa
+  23 002 trójkąty (23 strony), 69 części rowu do terenu, U-1a 16 (8 par).
+- Budżet kamer r0 → r2 (`budget-r2.md`; stats.txt edytora, szacunek przed SRP batching; 30 kamer, w tym 4 przestawione
+  między rundami): High — suma draws 7 800 → 7 779, trójkąty 21,11 → 21,02 M (−0,5 %); kamery z kabiny: most Narew
+  +0…+1,3 % trójkątów i +0 draws, dk65-07 +0,8 % / +4 draws, knyszyn-w +0,5…+1,0 % / +2 draws. Low — draws
+  5 012 → 4 989, trójkąty 4,12 → 4,15 M (+0,7 %); na drogach zamiejskich −2,7…−5,0 % (rów w terenie tylko do LOD1).
+  Czas klatki, pamięć i `WORLD_MEMORY`: **nie mierzone** (pomiar tylko w buildzie na bezczynnej maszynie —
+  `pc-metrics.ps1`, lider).
+- EditMode Win64 na scenach r2: 1525 / 1416 zaliczonych / 0 błędów / 109 pominiętych
+  (`artifacts/tests/editmode-20261122-015956.xml`). pytest: `test_banks_verges_0324.py` 8/8 (w tym test na prawdziwej
+  sieci dk65-07), `test_water_0210/0213` 14/14, podzbiór roślinność / przejazdy / plamy / tunel / drzewa 63/63.
+  Pełny `pytest tests/gis` nie uruchamiany (pula heavy zajęta przez regenerację fali 6).
+- Ocena własna (nie zastępuje `visual-critic`): trzcina to zwarta zielona ściana z wiechami, z góry ciągły pas zamiast
+  krzyżyków; linia wody nieregularna z płatami mułu; z pomostu mostu tafla jasna, niebieskoszara, z pasami gładkiej i
+  zmarszczonej wody; rów ma ruń łąki obok, kępy trawy przy krawędzi pobocza i w dnie; słupki U-1a widoczne z kabiny;
+  bloki lasu w dali mają nierówny wierzch i zejście na skraju, ale nadal czytają się jako ciemne bryły (poprawa
+  umiarkowana). Z góry tafla pozostaje ciemna (~48/53/54 sRGB) — zgodnie ze strojeniem ADR 0213 na ortofoto.
 
 ## Otwarte
 - Przebudowa trzech kafli czekała > 1,5 h na pulę `heavy` (3/3 zajęte przez regen-wave-6) — patrz STATUS.md.
