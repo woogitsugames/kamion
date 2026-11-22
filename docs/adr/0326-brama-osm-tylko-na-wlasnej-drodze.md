@@ -59,3 +59,8 @@ i stawiał każdą bramę na osi tego łańcucha, obróconą w poprzek. Polna dr
 `test_terrain_walls` (5 punktów steep_grass przy e=1024,2 n=-955,5): json C w repo pochodził z 16e3a5aea; build tego
 samego kafla na kodzie main 1c0596b94 (i z tą gałęzią) daje 0 punktów steep_grass — ratchet 0 bez zmian, json
 odświeżony przebudową C.
+
+Sprawdzenie bez pełnego builda (`artifacts/fix-b4-s24/gate_check.py`, sieć z `pipeline.build_network`):
+`bialystok-mickiewicza` osm:node/6002495021 leży na modelowanej drodze service=emergency_access (hw 2,75 m), ale
+8,4 m przęsła wchodzi na jezdnię trasy — brama pominięta. Otwarte: dopasowanie szerokości bramy do szerokości
+jej drogi (prototyp ma stałe 8 m), wtedy taka brama mogłaby zostać.
