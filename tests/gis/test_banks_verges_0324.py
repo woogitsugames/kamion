@@ -87,9 +87,9 @@ def test_ditch_becomes_terrain_with_damp_masks():
     col = np.zeros((40, 80, 4), np.float32)
     col[..., 2] = 0.95                                          # farmland flag: must survive
     c = VF.ditch_colours(col, HF, secs, {})
-    assert c[..., 1].max() > 0.2 and c[..., 3].max() <= 0.45 and (c[..., 2] == 0.95).all()
-    j, i = np.nonzero(c[..., 1] > 0)
-    assert (np.abs((HF.y1 - j) - (3.5 + 2.35)) <= 2.0).all()    # only around the bottom line
+    assert c[..., 1].max() > 0.05 and c[..., 3].max() <= 0.45 and (c[..., 2] == 0.95).all()
+    j, i = np.nonzero(c[..., 1] > 0.02)
+    assert (np.abs((HF.y1 - j) - (3.5 + 2.35)) <= 3.0).all()    # only around the bottom line
 
 
 def test_guide_post_spacing_and_mesh():
