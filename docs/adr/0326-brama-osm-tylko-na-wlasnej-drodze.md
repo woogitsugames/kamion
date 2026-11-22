@@ -37,3 +37,25 @@ i stawiał każdą bramę na osi tego łańcucha, obróconą w poprzek. Polna dr
 - Orientacja bramy poza siecią jest przybliżona (równolegle do najbliższej drogi), bo źródła streetscape nie
   zawierają geometrii dróg `highway=track/service` spoza sieci. Dokładniej: dodać te drogi do
   `streetscape/sources.py` i obracać bramę w poprzek jej własnej drogi (otwarte).
+
+## Dodatek (ta sama gałąź fix-b4-s24): szwy kafla przy przyciętym kikucie
+
+`test_world_roads::test_junction_seams_are_watertight` (5 otwartych szwów na C) i
+`::test_mesh_matches_generated_centreline` (3,55 m) zaczęły padać po seam-knw-s24 (`meshing.seam_shear`,
+`clip_parts_to_box`). Diagnoza (build C w procesie, `artifacts/fix-b4-s24/diag_c.py`):
+
+- **szwy** — wszystkie 5 to skrzyżowania 2–12 m od krawędzi kafla, których krótki łańcuch do szwu ma
+  `meta["seam_clip"]`: ribbon był przycinany do kafla, patch skrzyżowania nie. Wspólna krawędź końca ramienia
+  przecinała krawędź kafla, więc w ribbonie została rozcięta (wierzchołek T), a patch wystawał do sąsiada (podwójna
+  nawierzchnia). **Poprawka generatora:** `seam_clip_pred(net, junctions)` przycina też patche tych skrzyżowań tym
+  samym prostokątem — oba wycinki mają ten sam punkt cięcia. Test porównuje dla tych skrzyżowań odcinki końca
+  ramienia przycięte do kafla (Liang–Barsky, ta sama interpolacja liniowa co `_clip_poly`).
+- **centreline** — wiersz końcowy łańcucha kończącego się na szwie leży wzdłuż linii szwu (N' = N + kT, N'·N = 1),
+  czyli za końcem łańcucha; `Polyline.project` przycina stację do końca i zwraca odległość radialną (3,55 m przy
+  k ≈ 1,7). Geometria jest poprawna (szerokość mierzona prostopadle do osi zachowana) — **błędny był pomiar testu**:
+  dla wierzchołków rzutowanych na koniec łańcucha offset boczny jest teraz mierzony na normalnej końca.
+  Granica 0,2 m bez zmian.
+
+`test_terrain_walls` (5 punktów steep_grass przy e=1024,2 n=-955,5): json C w repo pochodził z 16e3a5aea; build tego
+samego kafla na kodzie main 1c0596b94 (i z tą gałęzią) daje 0 punktów steep_grass — ratchet 0 bez zmian, json
+odświeżony przebudową C.
