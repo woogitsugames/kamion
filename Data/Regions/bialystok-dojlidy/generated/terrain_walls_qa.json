@@ -1,13 +1,12 @@
 {
  "by_source": {
   "skirt:path_asphalt": 3,
-  "skirt:yard_asphalt": 8,
-  "skirt:yard_slabs": 1,
-  "steep_grass:verge_grass": 5
+  "skirt:yard_asphalt": 9,
+  "skirt:yard_slabs": 1
  },
- "count": 17,
- "max_m": 0.5,
- "p99_m": 0.5,
+ "count": 13,
+ "max_m": 0.349,
+ "p99_m": 0.349,
  "skirt_area": [
   {
    "e": -200.1,
@@ -96,6 +95,17 @@
    "run_m": 1.096,
    "src": "bdot:2BE4B432-F844-1BF0-E053-CC2BA8C0D140:0#1:edge",
    "visible": true
+  },
+  {
+   "e": 849.3,
+   "exposed_m2": 0.045,
+   "mat": "yard_asphalt",
+   "max_h": 0.332,
+   "n": 784.1,
+   "points": 1,
+   "run_m": 1.204,
+   "src": "osm:way/276822005:0#0:edge",
+   "visible": true
   }
  ],
  "sliver_m2": 0.02,
@@ -104,7 +114,7 @@
  "verge_strips": {
   "max_m": 0.516,
   "skirt": 5,
-  "steep_grass": 15,
+  "steep_grass": 20,
   "worst": [
    "steep_grass",
    "j:n11896581796:corner2:vg",
@@ -113,46 +123,6 @@
   ]
  },
  "worst": [
-  {
-   "e": -964.8,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": 1024.2,
-   "src": "c:w279881972:2134212210-2984420403:R"
-  },
-  {
-   "e": -964.9,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": 1024.1,
-   "src": "c:w279881972:2134212210-2984420403:R"
-  },
-  {
-   "e": -965.0,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": 1024.0,
-   "src": "c:w279881972:2134212210-2984420403:R"
-  },
-  {
-   "e": -965.1,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": 1024.0,
-   "src": "c:w279881972:2134212210-2984420403:R"
-  },
-  {
-   "e": -965.3,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": 1023.9,
-   "src": "c:w279881972:2134212210-2984420403:R"
-  },
   {
    "e": 269.0,
    "h": 0.349,
@@ -176,6 +146,14 @@
    "mat": "path_asphalt",
    "n": 819.0,
    "src": "bdot:ee5ea8a7-195c-11ed-a9a5-b8ca3aa2e5c2:0#0:edge"
+  },
+  {
+   "e": 849.3,
+   "h": 0.332,
+   "kind": "skirt",
+   "mat": "yard_asphalt",
+   "n": 784.1,
+   "src": "osm:way/276822005:0#0:edge"
   },
   {
    "e": -200.1,
