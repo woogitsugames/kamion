@@ -125,12 +125,70 @@ def _meander(n, step, key, amp):
     return out * amp
 
 
+# ADR 0327 (budget wave 7): the crack polylines are sampled every 0.35 / 0.6 m so the meander can be evaluated, but most
+# of those vertices carry no shape (the meander is three sines of wavelength >= 1.2 m plus <= 3 mm of jitter). Douglas-
+# Peucker in the chain frame (s along, lat across) with a tolerance of a quarter of the band width (3-5 cm for a sealed
+# band, 1.5 cm for a hairline: the lateral path of an invented crack, read against a 12-20 cm band with a soft profile),
+# at most SEAL_MAX_SEG_M between kept vertices (the surface height is re-evaluated per kept vertex; the 3 mm lift
+# survives the sag of a 3 m chord on a vertical curve of R >= 400 m, UNVERIFIED: 2.8 mm) and always a vertex on the crown (lat = 0)
+# of a band that crosses it (the crossfall kinks there). Measured on 4 x 900 m of synthetic class-L road: -58 % tris.
+SEAL_TOL_FRAC = 0.25
+SEAL_MAX_SEG_M = 3.0
+
+
+def _decimate_polyline(s, lat, tol, max_seg):
+    """Indices of the vertices of the (s, lat) polyline kept by Douglas-Peucker(tol) with chord <= max_seg and a vertex
+    at the crown crossing. Endpoints are always kept."""
+    n = len(s)
+    if n <= 2:
+        return np.arange(n)
+    P = np.column_stack([s, lat])
+    forced = set()
+    sg = np.sign(lat)
+    cross = np.where(sg[:-1] * sg[1:] < 0)[0]
+    for i in cross:                                   # the vertex nearest to the crown on a crossing segment
+        forced.add(int(i if abs(lat[i]) <= abs(lat[i + 1]) else i + 1))
+    keep = {0, n - 1} | forced
+    stack = [(0, n - 1)]
+    while stack:
+        i, j = stack.pop()
+        if j - i < 2:
+            continue
+        inner = [k for k in forced if i < k < j]
+        if inner:
+            k = inner[0]
+            keep.add(k)
+            stack += [(i, k), (k, j)]
+            continue
+        a, b = P[i], P[j]
+        d = b - a
+        L = float(np.hypot(*d))
+        seg = P[i + 1:j]
+        if L < 1e-9:
+            dist = np.hypot(*(seg - a).T)
+        else:
+            dist = np.abs(d[0] * (seg[:, 1] - a[1]) - d[1] * (seg[:, 0] - a[0])) / L
+        k = int(np.argmax(dist))
+        if float(dist[k]) > tol:
+            k += i + 1
+        elif L > max_seg:
+            k = (i + j) // 2
+        else:
+            continue
+        keep.add(k)
+        stack += [(i, k), (k, j)]
+    return np.array(sorted(keep))
+
+
 def seal_band(buf, c, s, lat, width, strength, src):
     """Soft band along the chain-frame polyline (s, lat): vertices on the road surface (crossfall + profile)."""
     s = np.asarray(s, float)
     lat = np.asarray(lat, float)
     if len(s) < 2:
         return 0
+    if len(s) > 2:                                      # ADR 0327: drop vertices that carry no shape
+        k = _decimate_polyline(s, lat, SEAL_TOL_FRAC * float(np.max(width)), SEAL_MAX_SEG_M)
+        s, lat = s[k], lat[k]
     C = c.line.offset_point(s, lat)
     t = np.gradient(C, axis=0)
     t /= np.maximum(np.linalg.norm(t, axis=1, keepdims=True), 1e-9)

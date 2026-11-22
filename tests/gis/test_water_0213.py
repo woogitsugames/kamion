@@ -117,7 +117,11 @@ def test_regions_and_isolation():
     assert "if w.water is not None:            # ADR 0213" in bw
     for rid in ("bialystok-industrial-c", "bialystok-dojlidy"):
         man = json.loads((REGIONS_DIR / rid / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
-        assert "water_reeds" not in man["materials"] and "banks" not in man["nodes"]
+        # ADR 0324 reuses the `banks` node name for the roadside grass cards (material verge_tufts, High GLB only) of
+        # every region with kerbless road sides: in a region without water it may exist, but never as the reed belt.
+        assert "water_reeds" not in man["materials"] and "water" not in man and "water" not in man["nodes"]
+        if "banks" in man["nodes"]:
+            assert "verge_tufts" in man["nodes"]["banks"] and "reed" not in man["nodes"]["banks"], rid
         assert not (REGIONS_DIR / rid / "water_banks.json").exists()
 
 
