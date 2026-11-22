@@ -7,3 +7,5 @@
 - krok 3 (zad. 5): NavTrip.StepPlan: noga tykocin = NoPath przy limitach -> plan z RelaxTruckLimits. Korytarz bialystok-tykocin wchodzi do kafla tykocin od północy (DW671), Rynek leży na południe od Narwi, jedyne przejście w danych = most 12 t/3,7 m (link tykocin-dw671-to-rynek). Objazdu w zbudowanych kaflach brak -> bez zmian, opis w raporcie.
 - w toku: bw.ps1 (maczka, mickiewicza, tykocin) + diag_c.py (C, scratchpad/diag0) w tle.
 - NASTĘPNY KROK: `cat artifacts/fix-b4-s24/bw.status; tail artifacts/fix-b4-s24/diag0.log`
+- ADR 0326 (szkic) + kamera kontrolna maczka_gate_0326 (control_cameras_place.authored.json; maczka trzeba przebudować po jej dodaniu, jeśli generated/control_cameras jej nie ma).
+- NASTĘPNY KROK: czekać na bw.status / diag0.log; potem `uv run --project tools/worldgen python -m pytest tests/gis/test_gate_pose_0326.py -q`
