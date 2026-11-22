@@ -26,3 +26,5 @@
 - NASTĘPNY KROK: `cat artifacts/fix-b4-s24/bw.status artifacts/fix-b4-s24/after.status`
 - krok 11: tykocin przebudowany (6,6 min, exit 0): brama osm:node/3052214622 (8.6,-807.1, yaw -0.15) -> (16.9,-808.4, yaw -1.72), test bram dla kafli tykocin PASS. Commit data(tykocin). after.ps1 (C) w toku.
 - NASTĘPNY KROK: `cat artifacts/fix-b4-s24/after.status`
+- krok 12: C przebudowany ponownie (art-source furniture_*/street_props bit w bit jak w 1. buildzie -> commit data(art-source)); pytest test_world_roads + test_terrain_walls + test_gate_pose_0326: 64 pass / 1 fail (tylko gate mickiewicza — kafel nieprzebudowany). Determinism C PASS. Start mickiewicza (~3 h) w tle; import+VQA C w toku.
+- NASTĘPNY KROK: `cat artifacts/fix-b4-s24/bw.status artifacts/fix-b4-s24/unity.status`
