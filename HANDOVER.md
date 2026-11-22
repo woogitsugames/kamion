@@ -529,6 +529,7 @@ aw\derived\<kafel> /MIR` dla każdego przebudowanego kafla; przed reimportem spr
 - 22.11 01:2x (s24) :17 — 4 agentów wznowionych po limicie pracuje.
 - 22.11 :xx (s24) **Scalony monuments-s24 (ADR 0325)**: figura Zygmunta Augusta (2380 tris, kryza/korona/łańcuchy/płaszcz bez rąk — jak rzeźba; twarz toporna, w cieniu ciemna), bruk Placu Czarnieckiego: granit w romby z czerwonymi pasami (krata 2,255 m / 53,75° z ortofoto), tekstury +16,6 MB High; EditMode 1412/0. Kafle NIE synchronizowane (fala 6 przebudowuje bez tego kodu → knyszyn/tykocin do przebudowy po fali). Do usunięcia ręcznie: C:\artifacts\monuments-s24 (rendery Blendera poza repo, blokada zabezpieczeń). Pozostali: regen-wave-6, road-surface, banks-verges.
 - 22.11 :17 (s24) — 3 agentów w toku (fala 6/build #4, road-surface, banks-verges).
+- 22.11 :17 (~15:17): C OK, fala 7: 11/51 kafli gotowe (exit 0). Brak gałęzi do scalenia.
 - 22.11 :17 (~14:37): C 512 GB, RAM 44 GB. Fala 7: wygoda i bojary gotowe (exit 0), mickiewicza się kończy, kleeberga/krywlany w budowie (51 kafli w kolejce). Brak gałęzi do scalenia.
 - 22.11 :17 (~13:17): C OK, fala 7: 3 duże kafle Białegostoku (mickiewicza/bojary/wygoda) wciąż w budowie (~2,5 h, CPU aktywne). Brak gałęzi do scalenia.
 - 22.11 :17 (~11:17): C OK, 1 agent regen-wave-7-s24 (łańcuchy A/B/C w tle; świeże kafle industrial-c/maczka/tykocin zaimportowane do build/win exit 0). Brak gałęzi do scalenia.
