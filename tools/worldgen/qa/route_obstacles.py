@@ -186,6 +186,35 @@ def tile_routes(tile, links):
     return out
 
 
+# ADR 0326: OSM gates are prop instances (street_props.glb), not chunk triangles, so the chunk sweep above never
+# saw the closed sliding gate standing across gen. Maczka (build #4 P1). Their span (local x, props.sliding_gate /
+# lift_gate, = streetscape.furniture.GATE_SPAN_M) is checked in plan against the same envelope.
+GATE_SPAN_M = {"sliding_gate": (-4.2, 4.2), "lift_gate": (0.0, 5.2)}
+
+
+def gate_instances(tile, derived=None):
+    """[(proto, src, LineString span)] of the gate instances of a built tile."""
+    derived = Path(derived or REPO / "Data/raw/derived")
+    out = []
+    for f in sorted(glob.glob(str(derived / tile / "world" / "instances_*_*.json"))):
+        for it in json.loads(Path(f).read_text(encoding="utf-8"))["instances"]:
+            if it["p"] not in GATE_SPAN_M:
+                continue
+            x0, x1 = GATE_SPAN_M[it["p"]]
+            d = np.array([np.cos(it.get("yaw", 0.0)), np.sin(it.get("yaw", 0.0))])
+            p = np.array([it["e"], it["n"]])
+            out.append((it["p"], it.get("src", ""), shapely.LineString([p + x0 * d, p + x1 * d])))
+    return out
+
+
+def gate_hits(route, gates):
+    """[(proto, src, s_first)] of gates whose span enters the envelope of route (n,2)."""
+    line = shapely.LineString(np.asarray(route, float))
+    env = line.buffer(ENVELOPE_HALF_W_M, cap_style="flat")
+    return [(proto, src, round(float(line.project(span.centroid)), 1))
+            for proto, src, span in gates if span.intersects(env)]
+
+
 def run_tile(tile, links, derived=None):
     derived = Path(derived or REPO / "Data/raw/derived")
     files = sorted(f for f in glob.glob(str(derived / tile / "world" / "chunk_*_*.glb")) if not f.endswith(".low.glb"))
@@ -193,9 +222,12 @@ def run_tile(tile, links, derived=None):
         return {"tile": tile, "built": False}
     prims = [p for f in files for p in read_glb(f)]
     S, obst = classify(prims)
+    gates = gate_instances(tile, derived)
     rep = {"tile": tile, "built": True, "routes": []}
     for name, pts in tile_routes(tile, links):
         hits, miss = sweep(pts, S, obst)
+        for proto, src, s in gate_hits(pts, gates):
+            hits.append(("collider", f"prop|{proto}|{src}", s, 0.0, 0.0, 0.0, 0.0))
         groups = {}
         for kind, label, s, e, n, d0, d1 in hits:
             g = groups.setdefault((kind, label), {"kind": kind, "label": label, "s": [s, s], "first_en": [e, n],

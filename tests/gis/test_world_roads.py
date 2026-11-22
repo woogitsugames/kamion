@@ -125,20 +125,53 @@ def test_junction_seams_are_watertight(world):
     checked = 0
     failures = []
     from roads.meshing import PatchHeight
+    # fix-b4-s24: a junction a few metres from the seam whose stub chain is clipped on the tile edge
+    # (Chain.meta["seam_clip"], meshing.seam_clip_pred) is clipped by the same box: its arm-end row is compared
+    # inside the tile, the edge crossing the tile edge ending at the cut point on it
+    bb = w.region["bbox"]
+    box = (bb["xmin"] - w.origin[0], bb["ymin"] - w.origin[1], bb["xmax"] - w.origin[0], bb["ymax"] - w.origin[1])
+
+    def clip_seg(a, b):
+        """Liang-Barsky of segment a-b (3D, plan box) -> (a', b') or None, interpolated like _clip_poly."""
+        a, b = np.asarray(a, float), np.asarray(b, float)
+        t0, t1 = 0.0, 1.0
+        for axis, lo, hi in ((0, box[0], box[2]), (1, box[1], box[3])):
+            d = b[axis] - a[axis]
+            for pnum, qv in ((-d, a[axis] - lo), (d, hi - a[axis])):
+                if abs(pnum) < 1e-12:
+                    if qv < -1e-3:
+                        return None
+                    continue
+                r = qv / pnum
+                if pnum < 0:
+                    t0 = max(t0, r)
+                else:
+                    t1 = min(t1, r)
+        if t0 > t1:
+            return None
+        return a + t0 * (b - a), a + t1 * (b - a)
+
     for j in w.junctions:
         if j.id in repaired or j.id not in by_src:
             continue
         pe = edge_set(by_src[j.id])
         ph = PatchHeight(j)
+        clipped = any(a.chain.meta.get("seam_clip") for a in j.arms)
         for i, a in enumerate(j.arms):
             c = a.chain
             if c.meta.get("absorbed") or c.length - c.t_a - c.t_b <= 0.05 or c.id not in by_src:
                 continue
             pts = [(p, tag) for p, tag in j.boundary if tag[0] == "end" and tag[1] == i]
             pts.sort(key=lambda x: x[1][2])
-            keys = [q([p[0], p[1], ph.boundary_z(j, p, tag)]) for p, tag in pts]
+            P3 = [np.array([p[0], p[1], ph.boundary_z(j, p, tag)]) for p, tag in pts]
+            segs = list(zip(P3, P3[1:]))
+            if clipped:
+                segs = [s_ for s_ in (clip_seg(pa, pb) for pa, pb in segs) if s_ is not None]
             re = edge_set(by_src[c.id])
-            for ka, kb in zip(keys, keys[1:]):
+            for pa, pb in segs:
+                ka, kb = q(pa), q(pb)
+                if ka == kb:
+                    continue
                 e = (min(ka, kb), max(ka, kb))
                 if e not in pe or e not in re:
                     failures.append((j.id, c.id, i))
@@ -223,6 +256,12 @@ def test_mesh_matches_generated_centreline(world):
         c = chains[p.src]
         for v in p.V[:: max(1, len(p.V) // 60)]:
             s, lat = c.line.project(v[:2])
+            if s <= 1e-6 or s >= c.length - 1e-6:
+                # fix-b4-s24: the end row of a chain ending on a seam is laid along the seam line (meshing.seam_shear,
+                # N' = N + kT, N'.N = 1): its vertices lie beyond the chain end, where project() clamps to the end
+                # point and returns the radial distance. The lateral offset is measured on the end normal.
+                t_, n_ = c.line.frame(s)
+                lat = float(np.dot(v[:2] - c.line.point(s), n_))
             excess = abs(lat) - float(c.hw_at(s))
             worst = max(worst, excess)
             n += 1

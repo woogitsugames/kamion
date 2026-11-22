@@ -168,12 +168,19 @@ def clip_layer_to_box(buf: MeshBuf, layer: str, box, tol=1e-3) -> dict:
     return clip_parts_to_box(buf, box, lambda p: p.layer == layer, tol)
 
 
-def seam_clip_pred(net):
+def seam_clip_pred(net, junctions=()):
     """Parts of the chains seam_shear could not shear fully onto the seam line (Chain.meta["seam_clip"]): ribbon,
-    side strips, collision; src = chain id or chain id + ':' + suffix."""
-    ids = tuple(c.id for c in net.chains if c.meta.get("seam_clip"))
-    if not ids:
+    side strips, collision; src = chain id or chain id + ':' + suffix.
+    fix-b4-s24: also the patches of the junctions those stubs end at (src = junction id [+ ':' suffix]). The stub
+    is short because its junction lies a few metres from the seam, so the patch's arm-end row crosses the tile edge
+    too; clipping only the ribbon left the patch overhanging into the neighbour and split the shared arm-end edge on
+    the tile edge (T-junction: test_world_roads::test_junction_seams_are_watertight, 5 open seams on C). Both sides
+    are now cut by the same box, so the cut vertex on the shared edge is the same point."""
+    cids = {c.id for c in net.chains if c.meta.get("seam_clip")}
+    if not cids:
         return None
+    jids = [j.id for j in junctions if any(a.chain.id in cids for a in j.arms)]
+    ids = tuple(sorted(cids)) + tuple(jids)
     return lambda p: p.layer in ("road", "bridge", "collision") and any(
         p.src == i or p.src.startswith(i + ":") for i in ids)
 

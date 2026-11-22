@@ -2,6 +2,8 @@
  "schema": "truck-sim-pl/place-cameras/1",
  "provenance": "authored_override (ADR 0203): driver-eye control cameras on roads of the junction that the control route (mainline on the viaduct) does not pass. Position region-local E/N (origin 775947, 596223), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical.",
  "cameras": [
+  {"id": "maczka_gate_0326", "pos_en": [432.0, 7.7], "heading_deg": 265.0, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
+   "note": "ADR 0326: driver eye on the westbound (north) carriageway of Gen. Maczka, ~55 m before osm:node/13072640312 (barrier=gate on track way/1422488642, right side): build #4 P1 showed the gate across this carriageway (frame t=250)"},
   {"id": "slip_ne_to_rondo", "pos_en": [905.0, 56.5], "heading_deg": 263.0, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
    "note": "driver eye 2.5 m on the north slip road (way 261467997), westbound, ~80 m before rondo Nowaka-Jezioranskiego: three approach lanes, roundabout and the Maczka viaduct on the left"},
   {"id": "swietokrzyska_to_rondo", "pos_en": [800.0, -95.0], "heading_deg": 8.0, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
