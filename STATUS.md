@@ -13,7 +13,7 @@
 - r2 DONE 01:59 (`sbs/r2/`, `budget-r2.md`: High suma −0,5 % tris / −21 draws, Low +0,7 % / −23). Obejrzane: trzcina w wachlarz OK, kępy trawy czytelne jako kępy, muł miękki. Wady r2: schodki 1 m terenu przy linii wody (zatoki tylko w sąsiadach osiowych), ciemny pas `verge_grass` = fartuch skarpy tylnej rowu.
 - r3 (01:59, w tle, OSTATNIA runda): zatoki także po przekątnej (d ≤ 1,5; próg LIP 2,5 m), fartuch skarpy tylnej do terenu. EditMode Win64 na scenach r2 w tle (`logs/editmode-r2.status`).
 - r3 DONE 02:58 (ostatnia runda): `sbs/r3/` (64 arkusze), `budget-r3.md` (High −0,5 % tris / −84 draws, Low +0,4 % / −72). Ciemny pas za rowem zniknął; schodki skarpy przy brzegu w `bv_bank_n` ZOSTAŁY (przyczyna w carve ADR 0210, otwarte w ADR 0324). EditMode Win64: r2 1525/1416/0 fail; r3 w tle (`logs/editmode-r3.status`).
-- NASTĘPNY KROK (lider): `visual-critic` na `artifacts/banks-verges-s24/sbs/r3/`; scalenie `git merge banks-verges-s24`; przebudowa kafli z drogami zamiejskimi i wodą; derived trzech kafli jest w prywatnej kopii worktree (`robocopy .claude\worktreesanks-verges-s24\Dataaw\derived\<kafel> Dataaw\derived\<kafel> /E /MT:16` albo przebudowa w main).
+- NASTĘPNY KROK (lider): `visual-critic` na `artifacts/banks-verges-s24/sbs/r3/`; scalenie `git merge banks-verges-s24`; przebudowa kafli z drogami zamiejskimi i wodą; derived trzech kafli jest w prywatnej kopii worktree (`robocopy .claude/worktrees/banks-verges-s24/Data/raw/derived/<kafel> Data/raw/derived/<kafel> /E /MT:16` albo przebudowa w main).
 
 # STATUS world-fix-b3-s24 (błędy świata z buildu #3)
 - krok 0 OK: worktree gotowy (derived skopiowane). Kafle łat: t=2541 -> dw671-tykocin-01 (13 km do celu), t=3221 -> dw671-tykocin-07 (4,0 km).
