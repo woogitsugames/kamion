@@ -167,7 +167,7 @@ def test_real_network_dk65_07_gets_sward_and_guide_posts():
     assert len(secs) >= 8 and all(s["ditch"] for s in secs)
     rep = {}
     assert VF.build(wd.buf, secs, rep) > 4000 and rep["verge_flora"]["triangles"] < 40000        # budget guard
-    assert VF.tag_for_terrain(secs) == 3 * len(secs)
+    assert 3 * len(secs) <= VF.tag_for_terrain(secs) <= 4 * len(secs)      # + the skirt of the back slope where meshed
 
     class PL:
         surf = None

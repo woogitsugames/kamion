@@ -179,6 +179,13 @@ def sections(parts):
                 break
             cols.append(q.V[1::2])
             grass.append(q)
+        # r3: the outer skirt / flange of the back slope (4th verge part of the strip) goes to the terrain with the
+        # ditch - left as `verge_grass` it stayed a dark band behind the ditch crown (r2 bv_side_ditch)
+        skirt = []
+        if len(grass) == 3 and i + 4 < n_parts:
+            q = parts[i + 4]
+            if q.layer == "road" and q.mat == "verge_grass" and q.src.split(":vg")[0] == p.src and len(q.V) == len(p.V):
+                skirt = [q]
         seg = np.zeros(max(n - 1, 0), bool)
         if len(p.T):
             seg[np.clip(np.asarray(p.T).min(1) // 2, 0, n - 2)] = True
@@ -190,7 +197,7 @@ def sections(parts):
         else:
             seg_b = np.zeros(n - 1, bool)
         out.append({"src": p.src, "X": np.stack(cols, axis=1), "seg": seg, "seg_bottom": seg_b, "ditch": ditch,
-                    "grass": grass if ditch else []})
+                    "grass": (grass + skirt) if ditch else []})
     return out
 
 
