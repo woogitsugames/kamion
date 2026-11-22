@@ -16,7 +16,7 @@ import numpy as np
 import shapely
 from shapely.geometry import LineString, Polygon
 
-CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
+CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_cobble", "road_gravel"}
 SURFACES = {"sett": "road_sett", "paving": "road_paving", "concrete": "road_concrete", "asphalt": "road_asphalt"}
 
 

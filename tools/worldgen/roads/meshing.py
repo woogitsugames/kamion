@@ -1592,6 +1592,7 @@ def _patch_uv1(net, j, V, poly=None):
     edge = np.full(len(P), 5.0)
     score = np.full(len(P), np.inf)
     flare_d = np.zeros(len(P))
+    fork = False
     if not j.arms:
         return np.column_stack([lane, np.full(len(P), PLATE_EDGE_FLAG + 1.0)])
     hws = [float(a.chain.hw_at(float(a.s(j.trims[i])))) for i, a in enumerate(j.arms)]
@@ -1612,6 +1613,19 @@ def _patch_uv1(net, j, V, poly=None):
         # pair fell to the flare ramp (integer lane) and their wheel paths ended in zigzags at the barrier of DK65 W.
         # Every arm references its own lanes; past the chain end they fade (PLATE_END_FADE_M).
         ref = list(range(len(j.arms)))
+    else:
+        # ADR 0323 (critic wave 6 pkt 2.3, dk65-06 roundabout_02_above): a carriageway split (two-way road -> entry +
+        # exit lane round a splitter island; start of a dual carriageway) took the lanes of the two-way arm and of ONE
+        # one-way arm: straight parallel wheel paths ran on across the mouth and under the island. Each of the three
+        # arms references its own lanes; outside an arm's width the coordinate ramps to an integer (no wheel path)
+        # and it fades past the chain ends, so the wedge between the two one-way arms stays clean.
+        ow = []
+        for i, a in enumerate(j.arms):
+            sec_a = a.chain.section(float(a.s(float(j.trims[i]))), net.sec_list)
+            ow.append(bool(getattr(sec_a, "oneway", False)))
+        if len(j.arms) == 3 and sum(ow) == 2:
+            ref = [0, 1, 2]
+            fork = True
 
     def _lane_coord(sec, lat_arr, hw_val, dir_val):
         if getattr(sec, "lane_edges", None):
@@ -1668,6 +1682,18 @@ def _patch_uv1(net, j, V, poly=None):
         edge[better_any] = e_arm[better_any]
         flare_d[better_any] = np.maximum(dist - hw, 0.0)[better_any]
         score[better_any] = dnear[better_any]
+    if fork:
+        # r3 (render r1 of dk65-06 roundabout_02_above): with every arm referencing its own lanes the mouth still
+        # showed a fan of straight stripes (lane coordinates of three frames interpolated over 2.5 m triangles).
+        # A wrong rut is worse than none: no shader wheel paths on a carriageway-split plate; the ribbons' paths end
+        # at the plate edge. Tracks as decal bands (like the compact roundabout) are an open point.
+        lane[:] = 0.0
+    if getattr(j, "compact", None) is not None:
+        # ADR 0323 (critic wave 6 pkt 2.3): the arm-axis lane coordinate drew straight parallel wheel paths across the
+        # curved mouths and under the splitter islands of a compact roundabout. No shader wheel paths / drip band on
+        # this plate (integer lane coordinate); the tracks are decal bands along the designed lanes
+        # (decals.compact_wheel_paths). The edge distance (gutter grime) stays.
+        lane[:] = 0.0
     if poly is not None:
         import shapely
         ring = shapely.LinearRing(np.asarray(poly, float)[:, :2])
@@ -1890,7 +1916,7 @@ def _corner_gaps(net, j, G, OUT, Z):
 
 
 # ---------------------------------------------------------------------------------------------
-CULL_CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
+CULL_CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_cobble", "road_gravel"}
 CULL_KERB = {"curb_concrete", "collision_curb"}
 CULL_SIDE = {"sidewalk_paving", "verge_grass", "shoulder_gravel", "collision_paving", "collision_grass"}
 CULL_RING_M = 0.30          # = consistency.KERB_RING_M: carriageway under the kerb and all around it at this radius

@@ -137,7 +137,11 @@ def cracks_layer(n=2048):
     sealed = keep < 0.34
     # partial edges: a slow noise along the network cuts edges into 2-12 m runs
     run = noise(c, 6, 1.5, 10.0) > -0.35
-    width = 1.2e-3 + 4.0e-3 * sstep(-1.2, 1.5, noise(c, 7, 0.15, 2.0))
+    # ADR 0323 (critic wave 6 pkt 2.2 "ani jednego spekania"): the physical 1-5 mm opening is below one texel on every
+    # tier (High 7.8 mm, Medium 15.6 mm) and the cracks never showed from the cab. Widths are now the APPARENT width
+    # of an old crack - opening + spalled, dirt-filled edges (8-16 mm long cracks, 5-9 mm branches, 6-10 mm alligator
+    # cells; cracks > 10 mm = "severe" class). WORKING_VALUE, judged in the DW671 frames.
+    width = 4.0e-3 + 4.0e-3 * sstep(-1.2, 1.5, noise(c, 7, 0.15, 2.0))
     open_long = long_on & run & ~sealed
     cov_long = open_long * np.clip((width - e) / px + 0.5, 0, 1)
     # sealant: 2.5-4 cm band, hand-poured edges
@@ -148,17 +152,17 @@ def cracks_layer(n=2048):
     eb = edge_dist(d1b, d2b)
     near = blur(cov_long, 0.25 / px) > 0.01
     br_on = (hash01(np.minimum(j1, j2), np.maximum(j1, j2), 2) < 0.35) & near
-    wb = 0.8e-3 + 1.5e-3 * sstep(-1, 1, noise(c, 11, 0.1, 1.0))
+    wb = 2.5e-3 + 2.0e-3 * sstep(-1, 1, noise(c, 11, 0.1, 1.0))
     cov_br = br_on * np.clip((wb - eb) / px + 0.5, 0, 1)
     # alligator zones: 2-4 blobs, fine polygon network 12-25 cm
-    zone = sstep(1.3, 1.9, noise(c, 12, 1.0, 6.0, beta=1.5))
+    zone = sstep(1.0, 1.6, noise(c, 12, 1.0, 6.0, beta=1.5))      # ADR 0323: was 1.3-1.9 (2-4 small blobs)
     d1a, d2a, k1, k2, _ = voronoi(c, 13, 0.17, warp=(wx * 0.15, wy * 0.15))
     ea = edge_dist(d1a, d2a)
-    wa = 0.8e-3 + 1.6e-3 * sstep(-1, 1, noise(c, 14, 0.05, 0.5))
+    wa = 3.0e-3 + 2.0e-3 * sstep(-1, 1, noise(c, 14, 0.05, 0.5))
     cov_al = zone * (hash01(np.minimum(k1, k2), np.maximum(k1, k2), 3) < 0.85) * np.clip((wa - ea) / px + 0.5, 0, 1)
     crack = np.clip(cov_long + cov_br + cov_al, 0, 1)
     crack *= (1 - seal)
-    halo = np.clip(blur(crack, 0.012 / px) * 6, 0, 1) * (1 - crack)
+    halo = np.clip(blur(crack, 0.02 / px) * 5, 0, 1) * (1 - crack)
     height = -6e-3 * crack - 0.4e-3 * halo + 0.6e-3 * seal
     # the layer carries its own albedo multipliers for preview; the engine uses the mask channels
     mask = np.dstack([crack, seal, zone, halo]).astype(np.float32)

@@ -351,6 +351,13 @@ namespace Game.World.Import
                 mat.SetFloat("_MetallicScale", Mathf.Clamp01((float)Num(m.Get("set_metal"))));
                 EditorUtility.SetDirty(mat);
             }
+            // ADR 0323: manifest "set_smooth" (0..2) = smoothness scale of a generated PBR set (weathered zinc of the
+            // barriers: the set's bare-zinc smoothness read as chrome under the sky probe). Absent = the set as built.
+            if (mat != null && mat.HasProperty("_SmoothnessScale") && m.Get("set_smooth") != null)
+            {
+                mat.SetFloat("_SmoothnessScale", Mathf.Clamp((float)Num(m.Get("set_smooth")), 0f, 2f));
+                EditorUtility.SetDirty(mat);
+            }
             return WorldMaterialValidation.Require(mat, $"{r.Region}/material {id}");
         }
 

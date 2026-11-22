@@ -540,9 +540,24 @@ Shader "Kamion/World PBR"
                     float2 uc = pw.xz / _Tile.z;
                     half4 cm = SAMPLE_TEXTURE2D(_CrackMap, sampler_CrackMap, uc);
                     half amount = _CrackStrength * saturate(0.25 + (macro.b - 0.35) * 2.2) * (1.0 - paintFresh);
+                #if defined(_ROADWEAR)
+                    {
+                        // ADR 0323 (critic wave 6 pkt 2.2): edge distress. The outer 0.6-1.8 m of a carriageway (unsupported
+                        // edge, water in the shoulder) cracks first: the crack layer is at full strength there in 5-20 m
+                        // stretches (object-space value noise, stable across origin rebases) and the ravelled surface
+                        // is a little lighter. Ribbons only (TEXCOORD_1.y = distance to the edge; plates carry >= 20).
+                        float ed = i.uv.w;
+                        half eb = (half)((1.0 - smoothstep(0.6, 1.8, ed)) * step(-0.5, i.uv.z) * step(ed, 15.0));
+                        float2 pe = TransformWorldToObject(pw).xz;
+                        eb *= (half)smoothstep(0.42, 0.62, ValueNoise12(pe / 11.0) * 0.7 + ValueNoise12(pe / 3.1 + 5.0) * 0.3);
+                        eb *= 1.0 - paintFresh;
+                        amount = saturate(amount + _CrackStrength * eb);
+                        albedo *= 1.0 + 0.07 * eb;
+                    }
+                #endif
                     albedo *= lerp(1.0, 0.35, cm.r * amount);
                     albedo = lerp(albedo, half3(0.03, 0.03, 0.03), cm.g * amount);
-                    albedo *= 1.0 - cm.a * amount * 0.12;
+                    albedo *= 1.0 - cm.a * amount * 0.22;
                     // ADR 0131: aged, dust-filmed bitumen sealant - a dark band only slightly smoother than the asphalt
                     // around it (+0.06, WORKING_VALUE). At 0.55 the env term at grazing NoV (grazing = smooth)
                     // out-reflected the 0.03 albedo and the sealant read as white chalk, also under an overcast sky;
@@ -693,17 +708,26 @@ Shader "Kamion/World PBR"
                         // noise in object space (stable across floating-origin rebases); amplitude 0.05-0.14 m.
                         // The outer few cm blend into the road (alpha), so the outline reads as a worn joint.
                         // WORKING_VALUE, judged against the DW671 frames of build #3.
+                        // ADR 0323 (critic wave 6 pkt 2.2 "nadal prostokatne"): two kinds of repair from the patch seed.
+                        // Spray-injection / hand-laid blob (55 %): stadium outline eaten by 0.3-0.9 m noise up to
+                        // 0.4 x the patch size, soft feathered edge. Saw-cut patch (45 %): nearly straight cuts with a
+                        // hand-poured bitumen overband along them. The overband (_PatchSeam.x = mean width) varies
+                        // 0.5-1.5 x in width and is missing in stretches; 40 % of the blobs have one too.
                         float seed = i.uv.w;
-                        float rc = min(0.10 + 0.35 * frac(seed * 7.13), 0.45 * min(sizeM.x, sizeM.y));
+                        float mn = min(sizeM.x, sizeM.y);
+                        half blob = (half)step(frac(seed * 5.31), 0.55);
+                        float rc = lerp(min(0.06 + 0.10 * frac(seed * 7.13), 0.45 * mn), 0.5 * mn, blob);
                         float edgeM = min(min(borderM.x, borderM.y), rc - length(max(rc - borderM, 0.0)));
                         float2 on = TransformWorldToObject(pw).xz + seed * 97.0;
-                        float n = ValueNoise12(on / 0.55) * 0.65 + ValueNoise12(on / 0.17) * 0.35;
-                        float amp = 0.05 + 0.09 * frac(seed * 3.71);
-                        edgeM -= amp * n;
+                        float n1 = ValueNoise12(on / 0.9), n2 = ValueNoise12(on / 0.28), n3 = ValueNoise12(on / 0.07);
+                        float amp = lerp(0.03 + 0.04 * frac(seed * 3.71), min(0.18 + 0.20 * frac(seed * 3.71), 0.4 * mn), blob);
+                        edgeM -= amp * (n1 * 0.6 + n2 * 0.4) + 0.012 * n3;
                         float aa = max(fwidth(edgeM), 0.002);
-                        alpha = smoothstep(0.0, 0.03 + aa, edgeM);
-                        half seam = 1.0 - smoothstep(_PatchSeam.x - aa, _PatchSeam.x + aa, edgeM);
-                        albedo *= lerp(_PatchSeam.z, _PatchSeam.w, age) * (1.0 - seam * _PatchSeam.y);
+                        alpha = smoothstep(0.0, lerp(0.02, 0.06, blob) + aa, edgeM);
+                        half hasSeal = max(1.0 - blob, (half)step(frac(seed * 11.7), 0.4));
+                        float sw = _PatchSeam.x * (0.5 + n2) * hasSeal * smoothstep(0.88, 0.72, n1);
+                        half seam = (1.0 - smoothstep(sw - aa, sw + aa, edgeM)) * step(0.001, sw);
+                        albedo *= lerp(_PatchSeam.z, _PatchSeam.w, age) * (0.9 + 0.2 * frac(seed * 13.3)) * (1.0 - seam * _PatchSeam.y);
                         smooth = lerp(smooth, 0.42, seam);
                     }
                 }
@@ -765,8 +789,14 @@ Shader "Kamion/World PBR"
                     half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.085) * known;
                     half peaks = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb).r;     // aggregate tops wear first
                     half mott = (macro.a - 0.5) * 2.0;
+                    // ADR 0323 (critic wave 6 pkt 2.2 "wytarte linie"): a longitudinal line is not worn evenly - where
+                    // traffic crosses or rides it (curves, overtaking, field accesses) 3-12 m of it are chipped on the aggregate peaks - speckled, not erased (1.3 erased the line: it read as a dashed edge line; 0.8 still erased 5-10 m; 0.6). Chipped towards
+                    // the asphalt. No crossing data per line: stretches from object-space value noise. WORKING_VALUE.
+                    float2 pp = TransformWorldToObject(pw).xz;
+                    half stretch = (half)smoothstep(0.52, 0.76, ValueNoise12(pp / 6.5) * 0.75 + ValueNoise12(pp / 1.7 + 3.0) * 0.25);
                     half worn = _PaintWear.x * wp * transverse * (0.55 + 0.9 * age) * lerp(1.0, _PaintFreshWear.x, paintFresh)
                               + _PaintWear.y * (0.35 + age) * (0.6 + 0.4 * wp) * lerp(1.0, _PaintFreshWear.y, paintFresh)
+                              + _PaintWear.y * 0.6 * (0.5 + age) * stretch * (1.0 - transverse) * (1.0 - paintFresh)
                               + 0.10 * mott;
                     // chipped, not faded: a narrow threshold on the peak-weighted wear gives sharp-edged bare spots
                     half cover = 1.0 - smoothstep(0.42, 0.58, saturate(worn) * (0.35 + 1.3 * peaks));

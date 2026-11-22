@@ -38,7 +38,7 @@
             "T_asphalt_cracks_layer_Mask.png",
             "T_asphalt_cracks_layer_Normal.png"
           ],
-          "png_bytes": 1336187,
+          "png_bytes": 2193254,
           "astc": {
             "Mask": "6x6",
             "Normal": "5x5"
@@ -56,7 +56,7 @@
             "T_asphalt_cracks_layer_Mask.png",
             "T_asphalt_cracks_layer_Normal.png"
           ],
-          "png_bytes": 447107,
+          "png_bytes": 724034,
           "astc": {
             "Mask": "8x8",
             "Normal": "6x6"
@@ -74,7 +74,7 @@
             "T_asphalt_cracks_layer_Mask.png",
             "T_asphalt_cracks_layer_Normal.png"
           ],
-          "png_bytes": 142375,
+          "png_bytes": 220133,
           "astc": {
             "Mask": "8x8",
             "Normal": "8x8"
@@ -83,9 +83,9 @@
         }
       },
       "coverage": {
-        "open_crack": 0.00366,
+        "open_crack": 0.0118,
         "sealant": 0.00764,
-        "alligator_zone": 0.0541
+        "alligator_zone": 0.0997
       }
     },
     "asphalt_detail_photo": {
@@ -6218,6 +6218,250 @@
       },
       "hf_ratio_albedo": 0.0604,
       "ao_mean": 0.954
+    },
+    "cobble_fieldstone": {
+      "tile_m": [
+        2.0,
+        2.0
+      ],
+      "slots": [
+        "road_cobble"
+      ],
+      "note": "ADR 0323: worn mixed-colour stones in sand joints (bruk, 'kocie lby'), CC0 scan cobblestone_floor_08 at its physical size (2.0 m). Var.G = stone id.",
+      "uv": "world_xy_planar",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.22,
+      "source": {
+        "source": "cobblestone_floor_08",
+        "source_dimensions_m": [
+          2.0,
+          2.0
+        ],
+        "elements_per_tile": 178,
+        "assets": [
+          {
+            "id": "cobblestone_floor_08",
+            "page": "https://polyhaven.com/a/cobblestone_floor_08",
+            "authors": {
+              "Rob Tuytel": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.95,
+          "dir": "cobble_fieldstone/High",
+          "png_bytes": 6084183,
+          "files": [
+            "T_cobble_fieldstone_BaseColor.png",
+            "T_cobble_fieldstone_MaskMap.png",
+            "T_cobble_fieldstone_Normal.png",
+            "T_cobble_fieldstone_Var.png"
+          ],
+          "smoothness_mean": 0.422,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.91,
+          "dir": "cobble_fieldstone/Medium",
+          "png_bytes": 1720945,
+          "files": [
+            "T_cobble_fieldstone_BaseColor.png",
+            "T_cobble_fieldstone_MaskMap.png",
+            "T_cobble_fieldstone_Normal.png",
+            "T_cobble_fieldstone_Var.png"
+          ],
+          "smoothness_mean": 0.401,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.81,
+          "dir": "cobble_fieldstone/Low",
+          "png_bytes": 466746,
+          "files": [
+            "T_cobble_fieldstone_BaseColor.png",
+            "T_cobble_fieldstone_MaskMap.png",
+            "T_cobble_fieldstone_Normal.png",
+            "T_cobble_fieldstone_Var.png"
+          ],
+          "smoothness_mean": 0.368,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.02855,
+        0.0261
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.22,
+        "p05": 0.0844,
+        "p95": 0.3413,
+        "mean_rgb_linear": [
+          0.2271,
+          0.2191,
+          0.2084
+        ]
+      },
+      "hf_ratio_albedo": 0.0194,
+      "ao_mean": 0.842
+    },
+    "sett_granite": {
+      "tile_m": [
+        2.1148,
+        2.1148
+      ],
+      "slots": [
+        "road_sett",
+        "apron_sett"
+      ],
+      "note": "ADR 0323: grey split-granite setts in rows (kostka granitowa 8/10), CC0 scan cobblestone_03 scaled to a 95 mm pitch (WORKING_VALUE). Var.G = sett id from the scan's displacement.",
+      "uv": "world_xy_planar",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.2,
+      "source": {
+        "source": "cobblestone_03",
+        "source_dimensions_m": [
+          2.0,
+          2.0
+        ],
+        "measured_period_m": [
+          0.0898
+        ],
+        "scale_to_standard_xy": [
+          1.0574,
+          1.0574
+        ],
+        "elements_per_tile": 150,
+        "assets": [
+          {
+            "id": "cobblestone_03",
+            "page": "https://polyhaven.com/a/cobblestone_03",
+            "authors": {
+              "Charlotte Baglioni": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 2.07,
+          "dir": "sett_granite/High",
+          "png_bytes": 6433390,
+          "files": [
+            "T_sett_granite_BaseColor.png",
+            "T_sett_granite_MaskMap.png",
+            "T_sett_granite_Normal.png",
+            "T_sett_granite_Var.png"
+          ],
+          "smoothness_mean": 0.078,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 4.13,
+          "dir": "sett_granite/Medium",
+          "png_bytes": 1802489,
+          "files": [
+            "T_sett_granite_BaseColor.png",
+            "T_sett_granite_MaskMap.png",
+            "T_sett_granite_Normal.png",
+            "T_sett_granite_Var.png"
+          ],
+          "smoothness_mean": 0.075,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 8.26,
+          "dir": "sett_granite/Low",
+          "png_bytes": 479681,
+          "files": [
+            "T_sett_granite_BaseColor.png",
+            "T_sett_granite_MaskMap.png",
+            "T_sett_granite_Normal.png",
+            "T_sett_granite_Var.png"
+          ],
+          "smoothness_mean": 0.068,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00971,
+        0.00879
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.2,
+        "p05": 0.0824,
+        "p95": 0.3433,
+        "mean_rgb_linear": [
+          0.2018,
+          0.2,
+          0.1952
+        ]
+      },
+      "hf_ratio_albedo": 0.043,
+      "ao_mean": 0.884
     }
   }
 }

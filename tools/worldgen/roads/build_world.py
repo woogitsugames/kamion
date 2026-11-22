@@ -103,7 +103,12 @@ MATERIALS = {
                       "texture_set": "concrete_cast_5m_joints", "uv1": "along_m"},
     "road_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones",
                     "texture_set": "paving_20x10_grey"},
-    "road_sett": {"color": [0.24, 0.22, 0.20], "rough": 0.9, "surface": "sett"},
+    # ADR 0323 (critic wave 6 pkt 2.1): stone carriageways get generated sets from CC0 scans. Without a set they fell
+    # back to the legacy procedural "Sett" texture at a 1.6 m tile: beige-pink cells of 0.3-0.6 m on every sett street
+    # of Tykocin. road_sett = OSM surface=sett (split-granite setts, 95 mm pitch); road_cobble = cobblestone /
+    # unhewn_cobblestone (BDOT10k "bruk": worn field stones in sand). Colours = the sets' calibrated means (tint 1).
+    "road_sett": {"color": [0.203, 0.200, 0.193], "rough": 0.9, "surface": "sett", "texture_set": "sett_granite"},
+    "road_cobble": {"color": [0.228, 0.218, 0.204], "rough": 0.9, "surface": "sett", "texture_set": "cobble_fieldstone"},
     "road_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "curb_concrete": {"color": [0.28, 0.278, 0.27], "rough": 0.85, "surface": "concrete_kerb",
                       "texture_set": "kerb_concrete_1m"},
@@ -114,7 +119,7 @@ MATERIALS = {
     # (0.28) read 1.6. WORKING_VALUE, matched in the frames r4_deck_bz_eye / _eye2.
     "bridge_kerb": {"color": [0.19, 0.186, 0.176], "rough": 0.9, "surface": "concrete_kerb",
                     "texture_set": "kerb_concrete_1m"},
-    "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett"},
+    "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett", "texture_set": "sett_granite"},
     # ADR 0218 / owner D71 + D75: truck apron of the Knyszyn roundabout = light concrete block paving, clearly lighter
     # than the asphalt. Block pattern = the generated set paving_20x10_grey (ADR 0022; the engine tint is
     # color / set mean = 1.6, like bridge_kerb re-tints kerb_concrete_1m); albedo 0.42 WORKING_VALUE: new concrete
@@ -167,8 +172,13 @@ MATERIALS = {
     # (bare zinc 1, road film / rust 0), roughness 0.56 from the set. WORKING_VALUE, matched in the same frames on an
     # overcast photo (454716650857984: beam / asphalt 1.4-1.5) and sunny ones (2948595898752384: sunlit beam 1.5 x
     # asphalt, shaded 0.6 x; 500263111404933 from below: beam / grass 3-4).
-    "barrier_steel": {"color": [0.50, 0.505, 0.51], "rough": 0.56, "metal": 1.0, "surface": "steel",
-                      "texture_set": "barrier_galv", "set_tile": True, "set_metal": 0.9, "shadow_low": False,
+    # ADR 0323 (critic wave 6 pkt 2.4 / 2.8 "chromowo biale z lustrzanym odblaskiem"): at albedo 0.50 / metal 0.9 /
+    # set roughness 0.56 the curved beam mirrored the sky probe in bright streaks (route_s1121 clear and overcast).
+    # Weathered hot-dip zinc is a matt grey: the zinc carbonate patina scatters diffusely. Albedo 0.42, metal scale
+    # 0.55, smoothness scale 0.6 (set roughness 0.56 -> ~0.74). WORKING_VALUE, judged in the same frames.
+    "barrier_steel": {"color": [0.42, 0.425, 0.43], "rough": 0.74, "metal": 1.0, "surface": "steel",
+                      "texture_set": "barrier_galv", "set_tile": True, "set_metal": 0.55, "set_smooth": 0.6,
+                      "shadow_low": False,
                       # horizon occlusion of the environment term: a beam face reflects the road and the far bank, not
                       # the sky. Iterated on the generated .mat (artifacts/junctions-r6 t1 / t2 / b2, lum_set.sh):
                       # metal 0.9 + 0 -> beam / asphalt 1.43-1.48 sun, 1.51-1.64 overcast, 0.98 in shade (photo 0.58);
@@ -245,7 +255,7 @@ def glb_materials(region=None):
 
 
 RAIL_ZONE_EXCLUDE_MATS = {"shoulder_gravel", "verge_grass"}    # ADR 0272: not part of the road a level crossing spans
-WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
+WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_cobble", "road_gravel", "collision_asphalt",
         "sidewalk_paving", "apron_sett", "apron_paving_light", "sidewalk_paving_red", "sidewalk_slabs"}      # + ADR 0237 footway types
 
 

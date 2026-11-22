@@ -34,7 +34,7 @@ from . import standards as S
 from .markings import _lanes_continue, lane_layout
 from .network import lane_w_of
 
-CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
+CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_cobble", "road_gravel"}
 OBSTACLE = {"curb_concrete": "kerb", "sidewalk_paving": "sidewalk", "verge_grass": "verge_grass",
             "shoulder_gravel": "shoulder", "bridge_concrete": "bridge_kerb", "bridge_cap_red": "bridge_kerb"}
 DRIVABLE = ["carriageway", "yard", "apron"]     # a lane may run onto a flush yard or a roundabout apron
