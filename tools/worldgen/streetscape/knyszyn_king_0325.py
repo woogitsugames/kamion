@@ -87,9 +87,11 @@ class Sculpt:
     def __init__(self):
         self.parts = {}
 
-    def add(self, mat, V, T, orient=None):
+    def add(self, mat, V, T, orient=None, flat=False):
         """orient: None = as wound; "centre" = away from the piece's centroid (small convex pieces); "axis" = away
-        from the vertical axis of the figure (pieces lying on the cloak)."""
+        from the vertical axis of the figure (pieces lying on the cloak). flat: every triangle gets its own vertices -
+        the chunk writer smooths normals over shared vertices, which on a sharp little prism (nose, brow) or on the
+        two sides of a plate gives normals that point nowhere near the faces (r3 render: white nose and fleurons)."""
         V, T = np.asarray(V, float).reshape(-1, 3), np.asarray(T, int).reshape(-1, 3)
         if orient:
             n = np.cross(V[T[:, 1]] - V[T[:, 0]], V[T[:, 2]] - V[T[:, 0]])
@@ -97,6 +99,8 @@ class Sculpt:
             if orient == "axis":
                 d[:, 2] = 0.0
             T = np.where((np.einsum("ij,ij->i", n, d) < 0)[:, None], T[:, ::-1], T)
+        if flat:
+            V, T = V[T].reshape(-1, 3), np.arange(3 * len(T)).reshape(-1, 3)
         self.parts.setdefault(mat, []).append((V, T))
 
     def loft(self, mat, rings, cap_top=False, cap_bottom=False, closed=True, orient=None):
@@ -134,7 +138,8 @@ class Sculpt:
         """Flat polygon (fan from vertex 0), both sides."""
         V = np.asarray(outline, float)
         T = [(0, i, i + 1) for i in range(1, len(V) - 1)]
-        self.add(mat, V, T + [(a, c, b) for a, b, c in T])
+        self.add(mat, V, T)                                   # the back gets its own vertices (own normals)
+        self.add(mat, V, [(a, c, b) for a, b, c in T])
 
     def tris(self):
         return sum(len(t) for parts in self.parts.values() for _, t in parts)
@@ -217,7 +222,7 @@ def _head(sc, low):
     nose = [[0, f - 0.004, 2.832], [-0.011, f - 0.012, 2.808], [0.011, f - 0.012, 2.808], [0, f + 0.046, 2.740],
             [-0.025, f - 0.002, 2.728], [0.025, f - 0.002, 2.728], [0, f + 0.016, 2.720], [0, f + 0.022, 2.790]]
     sc.add(BRONZE, nose, [(0, 1, 7), (0, 7, 2), (1, 4, 7), (7, 4, 3), (2, 7, 5), (7, 3, 5), (4, 6, 3), (6, 5, 3),
-                          (1, 2, 5), (1, 5, 4), (4, 5, 6)], orient="centre")
+                          (1, 2, 5), (1, 5, 4), (4, 5, 6)], orient="centre", flat=True)
     for sx in (-1, 1):
         # brow: a bar sloping to the temple, overhanging the socket
         a = np.array([sx * 0.010, f + 0.006, 2.822])
@@ -225,19 +230,19 @@ def _head(sc, low):
         up, out = np.array([0, 0, 0.020]), np.array([0, 0.016, 0])
         V = [a, b, b + up, a + up, a + out, b + out + [0, 0.006, 0], b + up + out, a + up + out]
         T = [(4, 5, 6), (4, 6, 7), (3, 7, 6), (3, 6, 2), (0, 5, 4), (0, 1, 5), (1, 6, 5), (1, 2, 6), (0, 4, 7), (0, 7, 3)]
-        sc.add(BRONZE, V, T, orient="centre")
+        sc.add(BRONZE, V, T, orient="centre", flat=True)
         # eye: lids as a shallow lens in the socket, the dark slit between them in patina
         ex = sx * 0.046
         ey = f - 0.021
         lid = [[ex - 0.024, ey - 0.004, 2.792], [ex, ey + 0.010, 2.803], [ex + 0.024, ey - 0.004, 2.792], [ex, ey + 0.010, 2.781]]
-        sc.add(BRONZE, lid + [[ex, ey + 0.016, 2.792]], [(0, 4, 1), (1, 4, 2), (2, 4, 3), (3, 4, 0)], orient="centre")
+        sc.add(BRONZE, lid + [[ex, ey + 0.016, 2.792]], [(0, 4, 1), (1, 4, 2), (2, 4, 3), (3, 4, 0)], orient="centre", flat=True)
         slit = [[ex - 0.019, ey + 0.0105, 2.7915], [ex, ey + 0.0185, 2.7955], [ex + 0.019, ey + 0.0105, 2.7915], [ex, ey + 0.0185, 2.7885]]
         sc.add(PATINA, slit, [(0, 1, 3), (1, 2, 3)], orient="axis")
         # ear, half hidden by the hair
         c = np.array([sx * 0.124, HEAD_Y - 0.004, 2.760])
         V = [c + [0, 0.016, -0.030], c + [0, 0.020, 0.026], c + [0, -0.012, 0.030], c + [0, -0.010, -0.026],
              c + [sx * 0.020, -0.014, 0.004]]
-        sc.add(BRONZE, V, [(0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)], orient="centre")
+        sc.add(BRONZE, V, [(0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)], orient="centre", flat=True)
     # hair: a thick cap from temple to temple round the back, below the crown band
     hair_cols = (196, 212, 230, 250, 270, 290, 310, 328, 344)
     sc.loft(BRONZE, [[_on_head(th, z, lift) for th in hair_cols] for z, lift in
@@ -341,7 +346,7 @@ def _chains(sc):
     c = cloak_point(90, 1.93, 0.030)
     ring = [[c[0] + 0.045 * math.cos(2 * math.pi * i / 8), c[1] - 0.012, c[2] + 0.050 * math.sin(2 * math.pi * i / 8)] for i in range(8)]
     V = [c + [0, 0.012, 0]] + ring
-    sc.add(RUBBED, V, [(0, 1 + (i + 1) % 8, 1 + i) for i in range(8)], orient="axis")
+    sc.add(RUBBED, V, [(0, 1 + (i + 1) % 8, 1 + i) for i in range(8)], orient="axis", flat=True)
 
 
 def sculpt(low=False):
