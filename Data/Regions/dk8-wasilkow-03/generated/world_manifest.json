@@ -443,7 +443,7 @@
    "low": {
     "bytes": 906108,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_0_1.low.glb",
-    "sha256": "8b6abeb97ca8831b412c5de9cc724ca92cdf128800a146b174d0a72306801d9d"
+    "sha256": "c1f21c1ee7bc0658c58008db714af1dc7656e58893b9b688f0e400eb5ca3a48f"
    },
    "materials": [
     "collision_asphalt",
@@ -455,7 +455,7 @@
     "road_asphalt",
     "terrain_grass"
    ],
-   "sha256": "1d26bdcd415879ec789ad4eea5f58178855aa64b851f584670c6e9fe56400e6a",
+   "sha256": "ef3de718550f31ea26c16bd1cc77f9c6a19633f847d293615e72ad23e9d6d73f",
    "triangles": {
     "forest_hlod": 2480,
     "markings": 114,
@@ -645,7 +645,7 @@
    "low": {
     "bytes": 1174872,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_0_2.low.glb",
-    "sha256": "205311d6caec6fec2292ecb1c0477f03fe74cba3b77ef1c37e27068db7dd4dba"
+    "sha256": "02a56695cf82b78bb520bbcd8f3652e53141504056433cf452ca4aa2179e0021"
    },
    "materials": [
     "collision_asphalt",
@@ -657,7 +657,7 @@
     "road_asphalt",
     "terrain_grass"
    ],
-   "sha256": "8a40440452fbb5e7d4a44044239a3e17f6c4786efdfbaadcb47d43c77973848e",
+   "sha256": "a57ce3deaf459744239816a0256c9b4d58562cac157789c71bfb46991d7206ac",
    "triangles": {
     "forest_hlod": 2063,
     "markings": 550,
@@ -883,7 +883,7 @@
    "low": {
     "bytes": 839216,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_0_3.low.glb",
-    "sha256": "6772b4b2ca701c26cea3ce96888934562a017b702537da49b3773732abbea65b"
+    "sha256": "1bbd32b07fa3683d29b2cac38cb2ba5bf464ee7cd9830a44681d0d4801277308"
    },
    "materials": [
     "collision_asphalt",
@@ -892,7 +892,7 @@
     "road_asphalt",
     "terrain_grass"
    ],
-   "sha256": "0db97a3905a3ef3cba39f81a437b45ff1add7cf4d567ac7148457f0cd9d5fb8e",
+   "sha256": "d1eccc9680835cfc0ac95f730e377e0fce61c489a0ac0ece1e1bd314abc5fb92",
    "triangles": {
     "forest_hlod": 2580,
     "road": 61,
@@ -1117,7 +1117,7 @@
    "low": {
     "bytes": 876116,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_0_4.low.glb",
-    "sha256": "a5e5690558451e6b13cb55e15ae8476a4b922540f6af7f8e7c1368cd535d73e3"
+    "sha256": "f62b89912bd69ab9b3c2e594b9f8a5c14857df3b8d735626a35d0523ea5fc316"
    },
    "materials": [
     "collision_asphalt",
@@ -1128,7 +1128,7 @@
     "road_asphalt",
     "terrain_grass"
    ],
-   "sha256": "1be799325c55c1495d1c5a159f3fe28eb19b1de08292d32a182f9ede81974bad",
+   "sha256": "dd6044e18335f2bb65c5957018fc4e76d59359ebfea3049e34707c5372d9c55e",
    "triangles": {
     "forest_hlod": 2554,
     "markings": 22,
@@ -1149,7 +1149,7 @@
     "z_max_evrf2007": 148.99,
     "z_min_evrf2007": 133.51
    },
-   "bytes": 5025036,
+   "bytes": 5030844,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_0_5.glb",
    "forest_cells": [
     {
@@ -1352,14 +1352,16 @@
     "sha256": "1ad4f736fa81e2b890376e198ec30ab43e260804e857302c38c81203df8d047c"
    },
    "low": {
-    "bytes": 951596,
+    "bytes": 956660,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_0_5.low.glb",
-    "sha256": "e84fe730bcb1db32bfe1b75d011eb5799946ee1864a783dd578300d2f275faf5"
+    "sha256": "9b45ff091018408e62bb31fd687d07aa3e1d141469faa11027c798e6774f47c3"
    },
    "materials": [
+    "barrier_steel",
     "collision_asphalt",
     "collision_curb",
     "collision_paving",
+    "collision_steel",
     "curb_concrete",
     "decal_patch",
     "fab_drainage",
@@ -1367,12 +1369,13 @@
     "sidewalk_paving",
     "terrain_grass"
    ],
-   "sha256": "faf9f7f6b8f7aa5e1b8e94872bff5d9aeab22105e45aa6216c7e21c6e95ad541",
+   "sha256": "f1ab66ecdbdd80e125e58304fd274d7245abc5ef079ac1e9b58725935db3199a",
    "triangles": {
+    "bridge": 52,
     "forest_hlod": 2431,
     "markings": 40,
     "road": 2728,
-    "road_collision": 1185,
+    "road_collision": 1235,
     "terrain_lod0": 135441,
     "terrain_lod1": 34065,
     "terrain_lod2": 8704,
@@ -1388,7 +1391,7 @@
     "z_max_evrf2007": 157.13,
     "z_min_evrf2007": 139.68
    },
-   "bytes": 9942252,
+   "bytes": 9999704,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_0_6.glb",
    "forest_cells": [
     {
@@ -1591,9 +1594,9 @@
     "sha256": "1926ea7a01f61fae0d20053ec9addf7a612d54660a1e24c94dcd812154d5cf9d"
    },
    "low": {
-    "bytes": 5710224,
+    "bytes": 5767676,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_0_6.low.glb",
-    "sha256": "6f25759e88b97f2d885e2e2f53b955c6248fc16566a7f8c12b9edb336ddd2cef"
+    "sha256": "dd5c64ba5ac4af2f9880958e111ddaf65e7b397af0d6c718b8f166bf2bb2006a"
    },
    "materials": [
     "chimney_brick",
@@ -1621,7 +1624,7 @@
     "terrain_grass",
     "window_sill"
    ],
-   "sha256": "43cbfe4d8eac0a2839ddf115fcc46fecfedca1241a9e6a93a79cc86d09c0d178",
+   "sha256": "8c8f1dcfa4561c0b1847bed03271dabf0f1c9942f5d8dbf30f8e0c025bef08b2",
    "triangles": {
     "buildings": 1466,
     "buildings_lod1": 251,
@@ -1647,7 +1650,7 @@
     "z_max_evrf2007": 167.29,
     "z_min_evrf2007": 136.53
    },
-   "bytes": 12593172,
+   "bytes": 12653340,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_0_7.glb",
    "forest_cells": [
     {
@@ -1799,12 +1802,12 @@
    "instances": {
     "count": 3872,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_0_7.json",
-    "sha256": "db5c54baa347173d6c1433fc4d5140b9798f24fea29126b4bdfc3badac76384f"
+    "sha256": "7d1fd5f0e4fa29e9832a7178bc7787c4826fbb4c796a95445dcb4889a33efa41"
    },
    "low": {
-    "bytes": 6858748,
+    "bytes": 6916848,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_0_7.low.glb",
-    "sha256": "39714795938483644109c2dd1a7ebd9d003427501abe464f3d5c13ee4e01803e"
+    "sha256": "e169b935178bc00704f795f3938ec81aaa1758789dd20f66055bae5412af8acd"
    },
    "materials": [
     "canopy_steel",
@@ -1844,19 +1847,19 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "fcd5e801c2d94c164892be723c613e941e2d73f6ffa149871130f459c5eeb1ee",
+   "sha256": "f4b23b06daf7cdabb5f0d543db1f98fecdf71a7f43e535242864ddaede59c130",
    "triangles": {
     "buildings": 13700,
     "buildings_lod1": 2384,
     "forest_hlod": 1530,
     "markings": 70,
-    "plot_ground": 7528,
+    "plot_ground": 7526,
     "plots": 14056,
     "plots_low": 10884,
     "road": 5450,
     "road_collision": 6529,
-    "terrain_lod0": 136316,
-    "terrain_lod1": 34940,
+    "terrain_lod0": 136348,
+    "terrain_lod1": 34972,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 202
@@ -1871,7 +1874,7 @@
     "z_max_evrf2007": 143.47,
     "z_min_evrf2007": 130.0
    },
-   "bytes": 5439012,
+   "bytes": 5438592,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_0.glb",
    "forest_cells": [
     {
@@ -2071,12 +2074,12 @@
    "instances": {
     "count": 5043,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_1_0.json",
-    "sha256": "e0e6466814200fdc10a96bd72a7d83643c66f859f4746a736dd1788e96322f12"
+    "sha256": "16a33f9587305be27531b40d8b5fbb842b5da690111796b9812a59687e0ae35c"
    },
    "low": {
-    "bytes": 1301700,
+    "bytes": 1301336,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_0.low.glb",
-    "sha256": "588a3c4efb3db04533bb3c4f4899b96e85dd66389dce95501769d0f5c223897b"
+    "sha256": "fea51086ef01692d9fff0490d5dfae47d6c67a2503cc2a065e79251bb0f9c731"
    },
    "materials": [
     "barrier_steel",
@@ -2093,13 +2096,13 @@
     "terrain_grass",
     "verge_grass"
    ],
-   "sha256": "b24b99bf2e789da2e0513401b8eb9ff0903f29d7c3aa534247f057a2871b4522",
+   "sha256": "555af5e5b165d0cfc4c020bf4c74629806c0f6ed2cec6c1d97d13860a9faa558",
    "triangles": {
     "forest_hlod": 2121,
-    "furniture": 844,
-    "markings": 1162,
+    "furniture": 828,
+    "markings": 1164,
     "road": 10127,
-    "road_collision": 3364,
+    "road_collision": 3344,
     "terrain_lod0": 135399,
     "terrain_lod1": 34023,
     "terrain_lod2": 8704,
@@ -2115,7 +2118,7 @@
     "z_max_evrf2007": 147.92,
     "z_min_evrf2007": 131.22
    },
-   "bytes": 5781636,
+   "bytes": 5780828,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_1.glb",
    "forest_cells": [
     {
@@ -2222,9 +2225,9 @@
     "sha256": "7f6a1298f9c25932c1438186ae9e77a64ff1e48d8964644cdc64bad7c50df754"
    },
    "low": {
-    "bytes": 1524796,
+    "bytes": 1524120,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_1.low.glb",
-    "sha256": "2dee20644f6c0fe1170bd3f1e4d29864baf5885ef84de0edaf1d213adfa6e590"
+    "sha256": "fb3f8695f89c0200a853f2f5d8b88d6c52e88ee972521a50eccd537aded68eb6"
    },
    "materials": [
     "barrier_steel",
@@ -2243,13 +2246,13 @@
     "terrain_grass",
     "verge_grass"
    ],
-   "sha256": "b67d9c0bc284e9f0b05a81046601ea61bb84fd223556a7e159d49a342c7dd2d4",
+   "sha256": "8df50c15764fb458c7a8b906dc244d6800b59fc975754d12e2d76405abdfc814",
    "triangles": {
+    "bridge": 384,
     "forest_hlod": 1006,
-    "furniture": 400,
     "markings": 2217,
     "road": 16039,
-    "road_collision": 5419,
+    "road_collision": 5399,
     "terrain_lod0": 136682,
     "terrain_lod1": 35306,
     "terrain_lod2": 8704,
@@ -2265,7 +2268,7 @@
     "z_max_evrf2007": 141.18,
     "z_min_evrf2007": 128.0
    },
-   "bytes": 6390988,
+   "bytes": 6375828,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_2.glb",
    "forest_cells": [
     {
@@ -2285,12 +2288,12 @@
    "instances": {
     "count": 491,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_1_2.json",
-    "sha256": "46b139dc3b9e69681f90e8f3a9e90b1f6c355936673194817ac47c1497c7b784"
+    "sha256": "83bb30c55e156e0b8081a6fa82771703443f3e68801711deddad8b3673052922"
    },
    "low": {
-    "bytes": 1980404,
+    "bytes": 1964748,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_2.low.glb",
-    "sha256": "d7c1bd5984f77ba96b5f664e3ac1ec471635233ef73b85dc448a6ea8c0960825"
+    "sha256": "7e812a4d6f36ce174a1c7f710374b097ad005c34b2d1ae6c749a660076da8da4"
    },
    "materials": [
     "barrier_steel",
@@ -2313,16 +2316,15 @@
     "terrain_grass",
     "verge_grass"
    ],
-   "sha256": "deaf2e6bafa07342029437acd987d725fbd03d26dca2229771aa2ad3ebfcfb16",
+   "sha256": "ce1a05a43749d1ba32e8eef8a4cacd4b9ff36dd6e3a640ebd059d0067d3e8cd7",
    "triangles": {
-    "bridge": 5474,
+    "bridge": 6094,
     "forest_hlod": 139,
-    "furniture": 912,
     "markings": 3460,
-    "road": 20637,
-    "road_collision": 8596,
-    "terrain_lod0": 137563,
-    "terrain_lod1": 36187,
+    "road": 20605,
+    "road_collision": 8276,
+    "terrain_lod0": 137619,
+    "terrain_lod1": 36243,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304
    }
@@ -2336,7 +2338,7 @@
     "z_max_evrf2007": 148.05,
     "z_min_evrf2007": 133.08
    },
-   "bytes": 10580876,
+   "bytes": 10638328,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_3.glb",
    "forest_cells": [
     {
@@ -2536,12 +2538,12 @@
    "instances": {
     "count": 4975,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_1_3.json",
-    "sha256": "0c91ddf12ce6df895049ab4a0683037ae228c6e2930a41da9f32fa506b2157ed"
+    "sha256": "845322c0317bc7b4764820b0974842ae88e03fb1894dd57f67d3c3da41010013"
    },
    "low": {
-    "bytes": 6249708,
+    "bytes": 6307160,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_3.low.glb",
-    "sha256": "1f0a99b66838fcfc346ae0938bc9c50790725a0d730d419ec980cb0bc9c50bca"
+    "sha256": "e5c1d127d16d0b14f984195e0aca712e133b1a972363e44930e332e10f6b1581"
    },
    "materials": [
     "brick_red",
@@ -2578,7 +2580,7 @@
     "window_sill",
     "yard_paving"
    ],
-   "sha256": "acf150c8f2b66b5d6c585cd5e6bf80f57ea2794dfb7a04450aff8e4ffec0f6d2",
+   "sha256": "3f7fcc7b58583648498d36e055414829555119b7ac7948b429de8d337c8b4c08",
    "triangles": {
     "buildings": 915,
     "buildings_lod1": 147,
@@ -2792,12 +2794,12 @@
    "instances": {
     "count": 5590,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_1_4.json",
-    "sha256": "5cc32f7aee6c84fb62322165f9e24cdad0adff659190a9f7742bb66662a560d4"
+    "sha256": "25f308ade644374a0d4496080e9cee7310c097ca5248116963e3a95c4f410109"
    },
    "low": {
     "bytes": 1472468,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_4.low.glb",
-    "sha256": "940ba910760ef202af62508741619e919b04d310e5d7e9023dd1b9f84648aa97"
+    "sha256": "e7ef8d2d327d6852e592cf9c5c06ac6a000fef10f0cc556f7a6bf5d471dcbd9c"
    },
    "materials": [
     "barrier_steel",
@@ -2817,7 +2819,7 @@
     "terrain_grass",
     "verge_grass"
    ],
-   "sha256": "c403ef3fb80c6e0a3f07f1e1ecd6681b0a59a96cbb915c0691af710941c565ed",
+   "sha256": "b2b0eed11ea156d0d48eb3411fb9d57e730413c9f9eda682085c64323e36e570",
    "triangles": {
     "forest_hlod": 1959,
     "furniture": 1044,
@@ -2839,7 +2841,7 @@
     "z_max_evrf2007": 142.73,
     "z_min_evrf2007": 129.73
    },
-   "bytes": 6208880,
+   "bytes": 6232212,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_5.glb",
    "forest_cells": [
     {
@@ -2991,12 +2993,12 @@
    "instances": {
     "count": 4571,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_1_5.json",
-    "sha256": "5d63983f1a73f1a15a6a1777429acdd1aad1cae18611fc061d2aea4cef164e78"
+    "sha256": "3b28084bae32c17510ae81840ccee1a705513ff9b4b181d0e247603d4783fb79"
    },
    "low": {
-    "bytes": 1875724,
+    "bytes": 1894156,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_5.low.glb",
-    "sha256": "3862cf7fb6a3da2f56ab10ab4d426989dd84d8b795c875d76ca543f13014e99f"
+    "sha256": "ce5cd36019e7d0450d0164f5de01e386471f891bc06eca82b5502ac91c6af6f8"
    },
    "materials": [
     "barrier_steel",
@@ -3031,16 +3033,16 @@
     "terrain_grass",
     "verge_grass"
    ],
-   "sha256": "c388602a6074bfed8016256fa43390cf6efe438b42aac6810fe5e7606104e9e5",
+   "sha256": "b793988b171178c4b4d2d0dac30ecc0a7461cc90c518bf8bf86e9742896d179c",
    "triangles": {
-    "bridge": 6838,
+    "bridge": 7218,
     "buildings": 62,
     "buildings_lod1": 10,
     "forest_hlod": 1602,
     "furniture": 2768,
     "markings": 1377,
     "road": 14706,
-    "road_collision": 8688,
+    "road_collision": 8838,
     "terrain_lod0": 136359,
     "terrain_lod1": 34983,
     "terrain_lod2": 8704,
@@ -3208,12 +3210,12 @@
    "instances": {
     "count": 4207,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_1_6.json",
-    "sha256": "36ad56da0062d9f67490370ce5b53f6ab31c99c639b57f0efec4c3331bb4ccc2"
+    "sha256": "28a61a4d304a0cfbc676b286048b80fc57e315cb45c4096203502a14e89ba7de"
    },
    "low": {
     "bytes": 1348236,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_6.low.glb",
-    "sha256": "e8f4176c6e16f48bcc88cb4f18c04a89caaeffba4cdb74970351ab0f7b247601"
+    "sha256": "3a415744d77ebc58912f8eebf4dac4fea91ad9c53c583793c57c9a44ef49aa61"
    },
    "materials": [
     "barrier_steel",
@@ -3231,7 +3233,7 @@
     "terrain_grass",
     "verge_grass"
    ],
-   "sha256": "5ab0361f105374da0763bf407a9314344b7eb83ecc70af8222a5772f13d03cb2",
+   "sha256": "37baafc88a15e35ca604981c15d4c92eda9707fae41f7eabb44ef100abbdef97",
    "triangles": {
     "forest_hlod": 1897,
     "furniture": 1136,
@@ -3253,14 +3255,14 @@
     "z_max_evrf2007": 147.14,
     "z_min_evrf2007": 132.02
    },
-   "bytes": 5557432,
+   "bytes": 5558208,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_7.glb",
    "forest_cells": [
     {
      "bbox_local_m": [
       -768.0,
       -1024.0,
-      -758.82,
+      -758.81,
       -960.0
      ],
      "id": "4_31",
@@ -3393,12 +3395,12 @@
    "instances": {
     "count": 1796,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_1_7.json",
-    "sha256": "c1c627b5879ce914a9c8b44dbb8a86e1a5928415175a6d3902a485591d85d108"
+    "sha256": "8fadcb80a6e774670947e2639e2c6a978da4ae3f8540297963d69f02f1223583"
    },
    "low": {
-    "bytes": 1396876,
+    "bytes": 1397304,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_1_7.low.glb",
-    "sha256": "e28a6ce86d9ef399346f1bfdbc7a34e1e9ce5f4560ff27de2821e2f3cfd219a4"
+    "sha256": "a3bd7ac8208160b3270d0f4514b2ef3707e4d8c481abaa4712741c6da98d67e6"
    },
    "materials": [
     "barrier_steel",
@@ -3421,15 +3423,15 @@
     "terrain_grass",
     "verge_grass"
    ],
-   "sha256": "c04cdda4813c1583669167d446a132a51c7ae088ad4571a225eae4e033ada95a",
+   "sha256": "51880b111acb2d4038151cf0d6cc779058504d2f4d0fa3a1a79e76421633ac3c",
    "triangles": {
     "forest_hlod": 1229,
     "furniture": 1736,
-    "markings": 1309,
+    "markings": 1311,
     "road": 12283,
     "road_collision": 4519,
-    "terrain_lod0": 135492,
-    "terrain_lod1": 34116,
+    "terrain_lod0": 135496,
+    "terrain_lod1": 34120,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304
    }
@@ -3443,7 +3445,7 @@
     "z_max_evrf2007": 141.76,
     "z_min_evrf2007": 124.34
    },
-   "bytes": 5208824,
+   "bytes": 5209908,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_0.glb",
    "forest_cells": [
     {
@@ -3527,7 +3529,7 @@
      ],
      "id": "8_0",
      "mix": "conifer",
-     "trees": 251,
+     "trees": 249,
      "tris": 161
     },
     {
@@ -3617,14 +3619,14 @@
    ],
    "id": "2_0",
    "instances": {
-    "count": 4714,
+    "count": 4722,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_2_0.json",
-    "sha256": "8ce7a52afb85138d3bd5016e83f3f0cbcc7bfdb9bd1d96ca6ca6939a4f5acf36"
+    "sha256": "aee8b4268a6efef2f583e4bce4ea4d580ee787637261fe69e06968396461f773"
    },
    "low": {
-    "bytes": 923536,
+    "bytes": 923828,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_0.low.glb",
-    "sha256": "ada64549c72b5e7829df18c3612a7727341f7e6f6ad6343d13e8392690787d01"
+    "sha256": "a7a0627ec4ac03d0d7b3cbe63e9c913a4ff0c22bde5abb49a273393b45bfb548"
    },
    "materials": [
     "collision_asphalt",
@@ -3645,7 +3647,7 @@
     "terrain_grass",
     "window_sill"
    ],
-   "sha256": "bb19c27593eaa92f48f14a1f8eb2803f2cee18fc7adcaf7726aea4413dfadf46",
+   "sha256": "7c3089ddb6f97ae4a60b37dc6140a2887d2e123a6859e126ff062eafcde326dd",
    "triangles": {
     "buildings": 2861,
     "buildings_lod1": 98,
@@ -3653,8 +3655,8 @@
     "markings": 38,
     "road": 2025,
     "road_collision": 771,
-    "terrain_lod0": 135284,
-    "terrain_lod1": 33908,
+    "terrain_lod0": 135296,
+    "terrain_lod1": 33920,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304
    }
@@ -3849,7 +3851,7 @@
    "low": {
     "bytes": 1121784,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_1.low.glb",
-    "sha256": "8ad50b5a91bff60013cb9166ac337fccfb9275e3fe026c83b2a0eb57569e83a7"
+    "sha256": "dd8da82d0bd3cf04cfc6417db87ed198a03c4d367307848cb5afaba1573eb6fc"
    },
    "materials": [
     "collision_asphalt",
@@ -3862,7 +3864,7 @@
     "road_asphalt_new",
     "terrain_grass"
    ],
-   "sha256": "883e10f221894820cd2d1ee68a26bc161e90feb544f242d291291797c88c77c6",
+   "sha256": "b3a2e7105fd06b9b8a8c58aaf989b2f8952f705f548d4faa40e4cc8ae40ac38d",
    "triangles": {
     "forest_hlod": 1938,
     "markings": 1458,
@@ -3883,7 +3885,7 @@
     "z_max_evrf2007": 141.84,
     "z_min_evrf2007": 130.72
    },
-   "bytes": 10081632,
+   "bytes": 10139168,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_2.glb",
    "forest_cells": [
     {
@@ -4074,9 +4076,9 @@
     "sha256": "012c6d3883837a34e56ec1409d59032d2f4b0256b5e2050e384f3fb1a99850d7"
    },
    "low": {
-    "bytes": 5853740,
+    "bytes": 5911192,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_2.low.glb",
-    "sha256": "ac9d6ebe93e55efbb400c8376f11b2eb5cedda156fcb8a32b2bb5e6ae3fcf722"
+    "sha256": "d33158dace3a0df77e478e53fbb00c65d2037464aa3dfa1c5da42a2dbabadf29"
    },
    "materials": [
     "canopy_steel",
@@ -4106,7 +4108,7 @@
     "window_sill",
     "yard_paving"
    ],
-   "sha256": "28083a764751e30214cacdd1d828796545b6468155c1ead442b32451ba745251",
+   "sha256": "6bfbcc978cd75c6c3290675fd90e9c4aac98167b3da92beac3d620a509afef95",
    "triangles": {
     "buildings": 1093,
     "buildings_lod1": 150,
@@ -4132,7 +4134,7 @@
     "z_max_evrf2007": 151.1,
     "z_min_evrf2007": 128.37
    },
-   "bytes": 10529860,
+   "bytes": 10591048,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_3.glb",
    "forest_cells": [
     {
@@ -4323,9 +4325,9 @@
     "sha256": "24a8c8ad29eaa7e5407f593d93b918017efae5bb2790e35e74dbe4ab326308ff"
    },
    "low": {
-    "bytes": 5906088,
+    "bytes": 5963644,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_3.low.glb",
-    "sha256": "a82a1b47c758a5ae9495800d4d300c203d69f655e55d1efb8844cabc36a98197"
+    "sha256": "044a72c45d6d9c1d31ea28066fddc9ee822d220ef454ccabb30801924e88676a"
    },
    "materials": [
     "brick_red",
@@ -4365,19 +4367,19 @@
     "window_sill",
     "yard_paving"
    ],
-   "sha256": "c7cdd5b3615aef3860131ccc3d0b2cabf84191f8ced258b21e8bce28682aca3e",
+   "sha256": "65746b446973c3b83426ec8e6712f3d0b715faecab591092668693cf07fcaf07",
    "triangles": {
     "buildings": 5521,
     "buildings_lod1": 813,
     "forest_hlod": 1813,
     "markings": 67,
-    "plot_ground": 1536,
+    "plot_ground": 1532,
     "plots": 2478,
     "plots_low": 1736,
-    "road": 3106,
+    "road": 3074,
     "road_collision": 2283,
-    "terrain_lod0": 135448,
-    "terrain_lod1": 34072,
+    "terrain_lod0": 135504,
+    "terrain_lod1": 34128,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304
    }
@@ -4391,7 +4393,7 @@
     "z_max_evrf2007": 138.01,
     "z_min_evrf2007": 125.6
    },
-   "bytes": 9579200,
+   "bytes": 9636652,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_4.glb",
    "forest_cells": [
     {
@@ -4594,9 +4596,9 @@
     "sha256": "c3ed578bfc6c343ce20bd7497f63d6bfb603c2eb6020c28a111e090f9b1dfa88"
    },
    "low": {
-    "bytes": 5543756,
+    "bytes": 5601208,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_4.low.glb",
-    "sha256": "209a24cb3409f3021de4aa9833512e2cc3ed0e02f7035e434ac38e687ed5902f"
+    "sha256": "63cccced2bc8e479d2c9460dbb5afaf8076e046bf04c81acda7a524052d94f56"
    },
    "materials": [
     "collision_fence",
@@ -4605,7 +4607,7 @@
     "plot_lawn",
     "terrain_grass"
    ],
-   "sha256": "a339721ddc9a0de5b81a542022cc5a8c0c246d59601370b485292ec80a621b7e",
+   "sha256": "7d07842349eaae8ae0187a1df4d840b0c1d6b864bd4827ca5cbfad1dc6f69818",
    "triangles": {
     "forest_hlod": 2202,
     "plot_ground": 13,
@@ -4627,7 +4629,7 @@
     "z_max_evrf2007": 146.55,
     "z_min_evrf2007": 128.08
    },
-   "bytes": 9919636,
+   "bytes": 9977088,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_5.glb",
    "forest_cells": [
     {
@@ -4818,9 +4820,9 @@
     "sha256": "ac50530a6efb8d7b7b304673b7b52efe4e8a87e6eec00fee843ac0b37f08503a"
    },
    "low": {
-    "bytes": 5703028,
+    "bytes": 5760480,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_5.low.glb",
-    "sha256": "83714b6414410b54fa30fc0def67ab48775836287b861706df2a35a7cb87b2e7"
+    "sha256": "53529a282c3562a482f7bed127f5a6bfea7b7d3904ed318138fb02cbea5dbd54"
    },
    "materials": [
     "canopy_steel",
@@ -4856,7 +4858,7 @@
     "window_sill",
     "yard_paving"
    ],
-   "sha256": "b44886a44ae474d1b82d600b89d626c7bc12a5179d6de8ce803dc77af2cc39fb",
+   "sha256": "e8de63e9fd7200312cf139099e96ee6ea01d7f4d07a88dcff953fe40083f4012",
    "triangles": {
     "buildings": 1558,
     "buildings_lod1": 264,
@@ -5110,7 +5112,7 @@
     "z_max_evrf2007": 153.29,
     "z_min_evrf2007": 131.71
    },
-   "bytes": 9945976,
+   "bytes": 10003336,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_7.glb",
    "forest_cells": [
     {
@@ -5301,9 +5303,9 @@
     "sha256": "a45d5723e40ef03105e10566c35d0a01024b1e128b7e45fb790009c9f961971c"
    },
    "low": {
-    "bytes": 5681536,
+    "bytes": 5738908,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_2_7.low.glb",
-    "sha256": "94fbc0af70e033811cc7a8c88b25e101c8762ac6501f5fa610bbff14ab6e0c8a"
+    "sha256": "443915595e7d5dfc1ae458bdcd8ad23e94ccc32f698bd2beb78a1dda50f85635"
    },
    "materials": [
     "chimney_brick",
@@ -5329,7 +5331,7 @@
     "terrain_grass",
     "window_sill"
    ],
-   "sha256": "5c053c6481a6a44aa72b079e94d9f76329051dfb5adc5008434927f6c3d8eac2",
+   "sha256": "2d7754e12cb90a3454869e57084254f683f508609535043716c7c858190e0847",
    "triangles": {
     "buildings": 1858,
     "buildings_lod1": 288,
@@ -5354,7 +5356,7 @@
     "z_max_evrf2007": 137.26,
     "z_min_evrf2007": 122.32
    },
-   "bytes": 11510264,
+   "bytes": 11576996,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_0.glb",
    "forest_cells": [
     {
@@ -5461,9 +5463,9 @@
     "sha256": "f0e5038bd014ce88b14fa280d5ff967c95ce226500b080e8f5f410a9885e9ded"
    },
    "low": {
-    "bytes": 6043432,
+    "bytes": 6101588,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_0.low.glb",
-    "sha256": "db3583909f33791362afd644bedc009283a83fdcb6090774a07f5e23af19b6f5"
+    "sha256": "805f6f8b7deeee9eb09d12d2d49936a920d6b22f3af6f01f0655b1d0992f900d"
    },
    "materials": [
     "canopy_steel",
@@ -5500,7 +5502,7 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "7816aca7e088dce51a0d4f4a1fc4dec57abd6bcb796fac2e88e76877a564e492",
+   "sha256": "3680a07d5b97cefb59a25ab132b73fe98e5cf66cce205c16113f661ac880ef51",
    "triangles": {
     "buildings": 15839,
     "buildings_lod1": 815,
@@ -5509,10 +5511,10 @@
     "plot_ground": 47,
     "plots": 30,
     "plots_low": 30,
-    "road": 11060,
+    "road": 10988,
     "road_collision": 4505,
-    "terrain_lod0": 137196,
-    "terrain_lod1": 35820,
+    "terrain_lod0": 137324,
+    "terrain_lod1": 35948,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 54
@@ -6013,7 +6015,7 @@
     "z_max_evrf2007": 153.7,
     "z_min_evrf2007": 125.7
    },
-   "bytes": 12167600,
+   "bytes": 12225052,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_3.glb",
    "forest_cells": [
     {
@@ -6180,9 +6182,9 @@
     "sha256": "f06168bfd18bc8cbfc2656e22f7ef31b3e89c610ad0d23517c6c778aef8aa50a"
    },
    "low": {
-    "bytes": 6704896,
+    "bytes": 6762348,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_3.low.glb",
-    "sha256": "05808f85978acfcc512a4a96ede129429636206d51f446340490d47da5a9929a"
+    "sha256": "4d2a6ae7f6a5d72959f176a577023ef80f8960996f722c8d93b9446e39a95f06"
    },
    "materials": [
     "chimney_brick",
@@ -6220,7 +6222,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "ccf912e01c1f45f07ee9197751b41894865edb047a57be9883901ffc994e52ed",
+   "sha256": "1fad4dcedb32f77ff3dcf095d90643c1c538cc3d0801acfbf10c0f760385572b",
    "triangles": {
     "buildings": 12112,
     "buildings_lod1": 2149,
@@ -6247,7 +6249,7 @@
     "z_max_evrf2007": 141.29,
     "z_min_evrf2007": 123.96
    },
-   "bytes": 11948020,
+   "bytes": 12005472,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_4.glb",
    "forest_cells": [
     {
@@ -6306,9 +6308,9 @@
     "sha256": "2776e33c39cef024e1ec4be3ba040b6693c53bf48312c64678aff654ee794129"
    },
    "low": {
-    "bytes": 6447108,
+    "bytes": 6504560,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_4.low.glb",
-    "sha256": "26a946d7f11fa88cdfe8c65fc7decb2441e409aba7b3a1474f935863bd13fd1d"
+    "sha256": "fbe8b076e374da6af725a49f549a4555ca258a0c4e9710b6009cd778c01e3c32"
    },
    "materials": [
     "brick_red",
@@ -6347,7 +6349,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "7d5f70fd4d13255e5a45bbf60f73e77befae42f25e05b393e6b87c208c59afcb",
+   "sha256": "86e35bd1a9a40fb3d76a1049ba6dd135f58e72d8182d6476eeb3e6e5d093613c",
    "triangles": {
     "buildings": 13510,
     "buildings_lod1": 2406,
@@ -6374,7 +6376,7 @@
     "z_max_evrf2007": 144.81,
     "z_min_evrf2007": 126.11
    },
-   "bytes": 10481152,
+   "bytes": 10544640,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_5.glb",
    "forest_cells": [
     {
@@ -6538,12 +6540,12 @@
    "instances": {
     "count": 3609,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_3_5.json",
-    "sha256": "102a515cb0c891ef40a4bc4ad4d6b32c6d2ee3e1cd94fdf84ac9aaa385a66468"
+    "sha256": "e1efc3fd9ecc3be6eeae5a6bbab9ff44c0dbd92ce17faaeaa59af4275e3ce4dc"
    },
    "low": {
-    "bytes": 5842780,
+    "bytes": 5900836,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_5.low.glb",
-    "sha256": "6f07003fdb88a7c35fd1db5944c4f93f4c7c44948afbadb53ac3b14fd599051f"
+    "sha256": "71a172c49187e0b2e112fd507e08779d3d4aeb1183f97456c51e6965008b60fb"
    },
    "materials": [
     "brick_red",
@@ -6589,7 +6591,7 @@
     "window_sill",
     "yard_paving"
    ],
-   "sha256": "bdad0e7aa0d5c61d2cd75419a9899ff18531898cb7027c9176d037f46c9c7e67",
+   "sha256": "19affeca47bf96a3920aba535dc23a76d4904a9dbb296c4092581b9cbc079b37",
    "triangles": {
     "buildings": 6496,
     "buildings_lod1": 939,
@@ -6598,10 +6600,10 @@
     "plot_ground": 201,
     "plots": 817,
     "plots_low": 598,
-    "road": 4303,
+    "road": 4261,
     "road_collision": 2106,
-    "terrain_lod0": 135669,
-    "terrain_lod1": 34293,
+    "terrain_lod0": 135753,
+    "terrain_lod1": 34377,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304
    }
@@ -6615,7 +6617,7 @@
     "z_max_evrf2007": 153.38,
     "z_min_evrf2007": 129.63
    },
-   "bytes": 10451472,
+   "bytes": 10508924,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_6.glb",
    "forest_cells": [
     {
@@ -6782,9 +6784,9 @@
     "sha256": "b06b45e14d42617d6eba1b4f36489b8d18bec3b4305942b522fcab17f364a55e"
    },
    "low": {
-    "bytes": 5957868,
+    "bytes": 6015320,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_6.low.glb",
-    "sha256": "deb679cb75be39a4001d4a8fcd674d86a5030ca8f1170a519dee60eeaf29c1ff"
+    "sha256": "cb4c7eb07ba6059bed241ee9856ce7650b414a7e767e5521c4a67d0f48112e8d"
    },
    "materials": [
     "brick_red",
@@ -6825,7 +6827,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "4f5edca1d2f6d0a628a1d53b1640eee5d171fb9078d0900036e107615cd78a08",
+   "sha256": "d6b2366c52594419fa05d25a77e2c1b62c40409dcd10e5f31e280abd1669eb3d",
    "triangles": {
     "buildings": 3286,
     "buildings_lod1": 573,
@@ -6852,7 +6854,7 @@
     "z_max_evrf2007": 153.85,
     "z_min_evrf2007": 136.95
    },
-   "bytes": 10692184,
+   "bytes": 10754384,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_7.glb",
    "forest_cells": [
     {
@@ -7043,9 +7045,9 @@
     "sha256": "7a710f6e961ee3531f86282d8cb4673af3c0e209a1fa62f6ba0aa4a2a2eb53d9"
    },
    "low": {
-    "bytes": 6010048,
+    "bytes": 6068040,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_3_7.low.glb",
-    "sha256": "410fe97a6af3044af1b7f3c1e5324144aff4b2fcfa626e049155be4f4c61bc12"
+    "sha256": "861083d5385a52afe1263b759adcddca53344ac9769cecfb6e85890ddbd70c45"
    },
    "materials": [
     "brick_red",
@@ -7086,7 +7088,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "fd300e28e104a4e83e371aa5f094a27b61c92c76ab76272bc7578f60703796c2",
+   "sha256": "85fa2fbf1c2ed18389d23de7c78c26a744115bdb212f78d3805667327909d558",
    "triangles": {
     "buildings": 5984,
     "buildings_lod1": 882,
@@ -7095,10 +7097,10 @@
     "plot_ground": 1974,
     "plots": 2678,
     "plots_low": 2256,
-    "road": 4124,
+    "road": 4094,
     "road_collision": 2931,
-    "terrain_lod0": 135800,
-    "terrain_lod1": 34424,
+    "terrain_lod0": 135864,
+    "terrain_lod1": 34488,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 48
@@ -7113,7 +7115,7 @@
     "z_max_evrf2007": 141.14,
     "z_min_evrf2007": 120.85
    },
-   "bytes": 12110648,
+   "bytes": 12176912,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_0.glb",
    "forest_cells": [
     {
@@ -7184,9 +7186,9 @@
     "sha256": "9b2b1b6f24361c782f5886f8f9d3b558ccbf97e83ca6f1337e43ae8531a4deba"
    },
    "low": {
-    "bytes": 6450488,
+    "bytes": 6508444,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_0.low.glb",
-    "sha256": "2aa4016442fddfcfe0d6a009c48a295195be4f56ad10556e714814cb89376317"
+    "sha256": "59975b782d63c8a17dd38a8dbc25f03d9d592a7c11c1015eacd109d15a593f34"
    },
    "materials": [
     "brick_red",
@@ -7250,7 +7252,7 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "a18cbee71d1d22a2bfdc196420e88fbe2cf13c9aec4ec2e23177f9216d35201c",
+   "sha256": "00b3d1c8f27a2b28506696d8c082c0c16e854f8f7207d18408670226f32b986c",
    "triangles": {
     "buildings": 17208,
     "buildings_lod1": 2568,
@@ -7260,10 +7262,10 @@
     "plot_ground": 1267,
     "plots": 1239,
     "plots_low": 940,
-    "road": 13870,
+    "road": 13796,
     "road_collision": 6914,
-    "terrain_lod0": 136632,
-    "terrain_lod1": 35256,
+    "terrain_lod0": 136760,
+    "terrain_lod1": 35384,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 74
@@ -7278,7 +7280,7 @@
     "z_max_evrf2007": 145.03,
     "z_min_evrf2007": 125.24
    },
-   "bytes": 5459944,
+   "bytes": 5460804,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_1.glb",
    "forest_cells": [
     {
@@ -7469,9 +7471,9 @@
     "sha256": "81e94d30e416c926aa7e48610fd5d0e954341029ce695814aaeedf44fd4ecb3b"
    },
    "low": {
-    "bytes": 1290808,
+    "bytes": 1291556,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_1.low.glb",
-    "sha256": "01152bd3e80a05d3964e81e25877785168cbcdff1c61f99857efee4ecee17d7e"
+    "sha256": "3064fcd279d4e97f2d7dade06639cf6aebd9a7d0ca57892b5358174b020fc215"
    },
    "materials": [
     "barrier_steel",
@@ -7503,16 +7505,17 @@
     "yard_concrete",
     "yard_gravel"
    ],
-   "sha256": "651983b9292899cf3276b4a263d57b9ce97ac923066fa0baa68f4079742471ac",
+   "sha256": "cd0b4041208904950530e6846eded71b73028e4957f94294477daf66cae53f0b",
    "triangles": {
+    "bridge": 1260,
     "buildings": 172,
     "buildings_lod1": 17,
     "forest_hlod": 2062,
-    "furniture": 5444,
+    "furniture": 4200,
     "markings": 868,
     "paved": 533,
     "road": 5283,
-    "road_collision": 2650,
+    "road_collision": 2670,
     "terrain_lod0": 135498,
     "terrain_lod1": 34122,
     "terrain_lod2": 8704,
@@ -7733,7 +7736,7 @@
    "low": {
     "bytes": 843164,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_2.low.glb",
-    "sha256": "6a8a9b091bbd4566e6f7835b80aecdc6642451a3fdfc5e717b2c35f994a37f90"
+    "sha256": "c5e1692d1cb3a86ae4197aca03d592e7f1aeb9b69720db2d99937757b923e2e7"
    },
    "materials": [
     "collision_asphalt",
@@ -7744,7 +7747,7 @@
     "road_gravel",
     "terrain_grass"
    ],
-   "sha256": "ada1ca6bc185e18786dea0f80db773d9826507c7c6925e33c201c9fa6ef9e894",
+   "sha256": "6114714b9d4b7429968ff3604cf1b8bb3239e7b6942baa3be8ded26d5f1fae39",
    "triangles": {
     "forest_hlod": 2474,
     "markings": 8,
@@ -7765,7 +7768,7 @@
     "z_max_evrf2007": 147.65,
     "z_min_evrf2007": 124.53
    },
-   "bytes": 12931252,
+   "bytes": 12992624,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_3.glb",
    "forest_cells": [
     {
@@ -7896,9 +7899,9 @@
     "sha256": "22fd1d5f7e238c0e9e96025575ffe06408d11a4622722bbece420bdb3c18b2ad"
    },
    "low": {
-    "bytes": 6944772,
+    "bytes": 7002480,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_3.low.glb",
-    "sha256": "1fdb9b2d0f305f517437fc59251032fa3b9d56de24bdbc78d07a6c0f1eade08a"
+    "sha256": "28ff10208a783862458f32188c1acd13ef5f98056f10a7da26e06efdb07b14a6"
    },
    "materials": [
     "brick_red",
@@ -7942,7 +7945,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "657f804927982a8c6237e7e2abd61acbc9a540f9b4669c0f308c3b22f4fb8e1d",
+   "sha256": "84e250843512d6a8e079ed96f2ae8b522b2cd0898e398a5135f9fa57933e370e",
    "triangles": {
     "buildings": 17121,
     "buildings_lod1": 2894,
@@ -7951,10 +7954,10 @@
     "plot_ground": 8175,
     "plots": 10451,
     "plots_low": 8088,
-    "road": 9103,
+    "road": 9071,
     "road_collision": 8544,
-    "terrain_lod0": 136620,
-    "terrain_lod1": 35244,
+    "terrain_lod0": 136676,
+    "terrain_lod1": 35300,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 267
@@ -7969,7 +7972,7 @@
     "z_max_evrf2007": 137.94,
     "z_min_evrf2007": 122.1
    },
-   "bytes": 9541420,
+   "bytes": 9598872,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_4.glb",
    "forest_cells": [
     {
@@ -8052,9 +8055,9 @@
     "sha256": "afa49a39f2516d81cadcbb16ed33e9b59f9c037df8ac2dd65ee3e8e86b37c966"
    },
    "low": {
-    "bytes": 5505624,
+    "bytes": 5563076,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_4.low.glb",
-    "sha256": "42b11947f78cb25ab447c71303f8717036ff98579bec05fa5bf46c273b017186"
+    "sha256": "46e1dade662156948779df6dd775899d02f8962b78598792b988a41edb7270a6"
    },
    "materials": [
     "collision_building",
@@ -8067,7 +8070,7 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "a09869aee4e1911e5d36267068c2945085bc9b9323a418e2dab24a69b4467c3c",
+   "sha256": "4306db038023ff07878b5a61a4aa74f0f59afc414b0086f082823a79f58abb67",
    "triangles": {
     "buildings": 8,
     "buildings_lod1": 2,
@@ -8092,7 +8095,7 @@
     "z_max_evrf2007": 149.12,
     "z_min_evrf2007": 123.37
    },
-   "bytes": 11852052,
+   "bytes": 11913332,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_5.glb",
    "forest_cells": [
     {
@@ -8151,9 +8154,9 @@
     "sha256": "6e3491237187c4404d86f4dc6d83c7e025ba1bb432963728332d1ca4f824507d"
    },
    "low": {
-    "bytes": 6479584,
+    "bytes": 6537216,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_5.low.glb",
-    "sha256": "63263af4e11f4066430fa1a2ff6f0f4946454abc788df7bcbddd03f0642039c4"
+    "sha256": "f86a8e8de980657696600796dd84aa8ab55c17b65dc6a96f578e674d8d3d6367"
    },
    "materials": [
     "brick_red",
@@ -8197,7 +8200,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "31de6b39f9ff69412cb32fbcb56fb4c06417c58b34310d576874b9cba30f491b",
+   "sha256": "89487ae57a8d19c1860722ee5259c8da44120ff0887ab5a5190dd901789f3a5a",
    "triangles": {
     "buildings": 11978,
     "buildings_lod1": 1946,
@@ -8206,10 +8209,10 @@
     "plot_ground": 5516,
     "plots": 8206,
     "plots_low": 6907,
-    "road": 5737,
+    "road": 5703,
     "road_collision": 5522,
-    "terrain_lod0": 136249,
-    "terrain_lod1": 34873,
+    "terrain_lod0": 136305,
+    "terrain_lod1": 34929,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 167
@@ -8224,7 +8227,7 @@
     "z_max_evrf2007": 149.51,
     "z_min_evrf2007": 125.68
    },
-   "bytes": 12440580,
+   "bytes": 12498032,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_6.glb",
    "forest_cells": [
     {
@@ -8343,9 +8346,9 @@
     "sha256": "08f52d9aa4ddf5b11c9e89a064e26a2a547f1403b23e657db4ede51371990b6b"
    },
    "low": {
-    "bytes": 6689912,
+    "bytes": 6747364,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_6.low.glb",
-    "sha256": "f96a7c50943a837bb7dd83a6fd10046f066f7ecd5b8f44ae0453cfdcf1257726"
+    "sha256": "bab6f6c63e9a2c5f9449f1e6d6da17152612f463d4cf5cb27eac8baba5b396a4"
    },
    "materials": [
     "brick_red",
@@ -8388,7 +8391,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "25d0a861c9eb9344cefa12e7fa1530b3dfee316d16dd0ed7ac68e9e4b7506c38",
+   "sha256": "9c8f1d2f549262db17463faa34c6e3ff76a529c774c10fe68db79884289e172b",
    "triangles": {
     "buildings": 15465,
     "buildings_lod1": 2631,
@@ -8415,7 +8418,7 @@
     "z_max_evrf2007": 153.0,
     "z_min_evrf2007": 128.11
    },
-   "bytes": 10469276,
+   "bytes": 10525992,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_7.glb",
    "forest_cells": [
     {
@@ -8570,9 +8573,9 @@
     "sha256": "8af1d1cea1222322e409f5d4366395efc19fa96835bf37ca3aa076b644556f71"
    },
    "low": {
-    "bytes": 5980772,
+    "bytes": 6038016,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_4_7.low.glb",
-    "sha256": "fe1ccbf7caf54b17548e2c293b79f7993c7f50827b8f38b37a6916eb6f46fa44"
+    "sha256": "ac335720572a813236fb5e5ed3913286199021f941d48d84173b7d2ec67c4e57"
    },
    "materials": [
     "chimney_brick",
@@ -8606,7 +8609,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "f6daa3b7420f168fa2838d6cd40cee8c1a68b22e50ba874a86c9812b543ec529",
+   "sha256": "646f9303e3dc8bcddf848cef89eec7ca7dc321a4012fa8a8a7e93b4f3df36f39",
    "triangles": {
     "buildings": 3522,
     "buildings_lod1": 695,
@@ -8617,8 +8620,8 @@
     "plots_low": 4005,
     "road": 1920,
     "road_collision": 1974,
-    "terrain_lod0": 135536,
-    "terrain_lod1": 34160,
+    "terrain_lod0": 135528,
+    "terrain_lod1": 34152,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 68
@@ -8630,10 +8633,10 @@
     "e_min": 256.0,
     "n_max": 1024.0,
     "n_min": 768.0,
-    "z_max_evrf2007": 137.0,
+    "z_max_evrf2007": 136.93,
     "z_min_evrf2007": 119.01
    },
-   "bytes": 5748332,
+   "bytes": 5752364,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_0.glb",
    "forest_cells": [
     {
@@ -8752,9 +8755,9 @@
     "sha256": "17b3f2682f86460b31d00ca681edcc3bce463b3be863b606ae96b75078db7999"
    },
    "low": {
-    "bytes": 1346524,
+    "bytes": 1349484,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_0.low.glb",
-    "sha256": "46a13c04d0d6fb16db3200763465c8e330165c288e87ee04473c15d3f992e8d8"
+    "sha256": "0f851d4a905c09dbf35d9ce67c28dbddc1035c4b7a6da02d09644623e84d4faf"
    },
    "materials": [
     "barrier_steel",
@@ -8794,16 +8797,16 @@
     "verge_grass",
     "window_sill"
    ],
-   "sha256": "67ef7e80f16cb9d0de8a42425bfc4d45534705e311a18e2d497da830eb8fc436",
+   "sha256": "87fd9d5bc81e9b4327a4de7979c41dcfb9944a20c66bfbb29fb1948005894db9",
    "triangles": {
-    "bridge": 2563,
+    "bridge": 3545,
     "buildings": 3025,
     "buildings_lod1": 361,
     "forest_hlod": 994,
-    "furniture": 4101,
+    "furniture": 3229,
     "markings": 512,
     "road": 5474,
-    "road_collision": 3188,
+    "road_collision": 3198,
     "terrain_lod0": 135484,
     "terrain_lod1": 34108,
     "terrain_lod2": 8704,
@@ -8819,7 +8822,7 @@
     "z_max_evrf2007": 144.73,
     "z_min_evrf2007": 121.01
    },
-   "bytes": 5116808,
+   "bytes": 5120808,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_1.glb",
    "forest_cells": [
     {
@@ -9022,9 +9025,9 @@
     "sha256": "9917f3a791ddfd929b0f91619c5db08f3493f68f89175500ed26157b87845aee"
    },
    "low": {
-    "bytes": 1034868,
+    "bytes": 1037820,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_1.low.glb",
-    "sha256": "681c2c36303470b627d13a4301fbd5a62529e58120561855dea9c78e6a4d8d42"
+    "sha256": "5218fc284110adf38ba36e85c802f244e5093ab4e350336b99fb437c70ecf436"
    },
    "materials": [
     "barrier_steel",
@@ -9049,14 +9052,14 @@
     "terrain_grass",
     "verge_grass"
    ],
-   "sha256": "fbece4bbfa258d6e12990ad15e18006e1fb8aa51af2f4d3e45c39ec5721a505e",
+   "sha256": "e1e07190f9a91a96ed0c885711aa06e05b6a4918740580aba47ed18cb4639eef",
    "triangles": {
-    "bridge": 868,
+    "bridge": 1379,
     "forest_hlod": 2466,
-    "furniture": 993,
+    "furniture": 573,
     "markings": 208,
     "road": 2154,
-    "road_collision": 1219,
+    "road_collision": 1249,
     "terrain_lod0": 135280,
     "terrain_lod1": 33904,
     "terrain_lod2": 8704,
@@ -9310,7 +9313,7 @@
     "z_max_evrf2007": 145.83,
     "z_min_evrf2007": 123.79
    },
-   "bytes": 11251616,
+   "bytes": 11309068,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_3.glb",
    "forest_cells": [
     {
@@ -9489,9 +9492,9 @@
     "sha256": "ac2c0b213525ba4be4e8b5e2371b3620314f7194d3d33ebf0af689328108b0b8"
    },
    "low": {
-    "bytes": 6307068,
+    "bytes": 6364520,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_3.low.glb",
-    "sha256": "5ae4ca97dadcee7d79526c85bd3c7b4f08f976f0e835ec21cb2451769108be65"
+    "sha256": "3c4ef802fe5a5654bcdc20a58420d9fa6773d94110c5135951427b35498f3e08"
    },
    "materials": [
     "brick_red",
@@ -9539,7 +9542,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "0c9c40976525fd9b23b82481e824932e3424abbd4b19329f5858532fd85ff08c",
+   "sha256": "fc23710f699ce25e779346dfae0f59129559e48e0a2f7fae89c39f9de9a44a45",
    "triangles": {
     "buildings": 7105,
     "buildings_lod1": 1098,
@@ -9566,7 +9569,7 @@
     "z_max_evrf2007": 145.29,
     "z_min_evrf2007": 120.2
    },
-   "bytes": 12791372,
+   "bytes": 12848824,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_4.glb",
    "forest_cells": [
     {
@@ -9637,9 +9640,9 @@
     "sha256": "72d271ba60d1339d9d1ecdcac0b8d8b852324179beb848680b719e2cf4e1659c"
    },
    "low": {
-    "bytes": 6886336,
+    "bytes": 6943788,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_4.low.glb",
-    "sha256": "99c58d7e041942f1daf46df7d8f3e181384812e6c199c2a04285aa0f91d65af5"
+    "sha256": "6ea2e3c1b50f5ed518aa6598dc040113a381404dd94052eb07f8fd229f78e718"
    },
    "materials": [
     "brick_red",
@@ -9690,7 +9693,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "e8f5d9f7e88afb7c47378aebbf99996c9a332d056e999c503c952fec5a8b3e8b",
+   "sha256": "7b3c72f64e894dce21ddcb6b3f731699fabe6a3c2e9fb74d2110916d843e1c46",
    "triangles": {
     "buildings": 15985,
     "buildings_lod1": 2714,
@@ -9717,7 +9720,7 @@
     "z_max_evrf2007": 147.12,
     "z_min_evrf2007": 121.35
    },
-   "bytes": 13403820,
+   "bytes": 13466296,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_5.glb",
    "forest_cells": [
     {
@@ -9848,9 +9851,9 @@
     "sha256": "a4fad93d377c9f863766768d46293ebb708a51c8660e91541115ab5371a23278"
    },
    "low": {
-    "bytes": 7168632,
+    "bytes": 7226452,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_5.low.glb",
-    "sha256": "1f36345fc9bbf654827ae458c3caf1a3197467837b56c1fa692270d38c5cf0ee"
+    "sha256": "3b9a1184f96b789e7d077cabce2ec534fe3d14d406fc43a3c44ca9d6bce186a6"
    },
    "materials": [
     "brick_red",
@@ -9895,7 +9898,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "c799d16ba5eef94702a302b3edde17c53f0a6511d535c525a4bea6c995237e46",
+   "sha256": "409d6dc87a344e7d395c27c053f77368d39028ea08bf11f574fb3dc4ea0848ff",
    "triangles": {
     "buildings": 18661,
     "buildings_lod1": 3154,
@@ -9904,10 +9907,10 @@
     "plot_ground": 9730,
     "plots": 13843,
     "plots_low": 10405,
-    "road": 9600,
+    "road": 9560,
     "road_collision": 8614,
-    "terrain_lod0": 136790,
-    "terrain_lod1": 35414,
+    "terrain_lod0": 136862,
+    "terrain_lod1": 35486,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 606
@@ -9922,7 +9925,7 @@
     "z_max_evrf2007": 147.85,
     "z_min_evrf2007": 125.4
    },
-   "bytes": 12930828,
+   "bytes": 12995900,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_6.glb",
    "forest_cells": [
     {
@@ -10002,12 +10005,12 @@
    "instances": {
     "count": 1722,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_5_6.json",
-    "sha256": "7ba28074259366257b61bf2ec4f945c43c04724fb52a50cb7936056ccc0a04d1"
+    "sha256": "9c4447618c6d4dea1e28301f4c5787ca0f06ba5d5bd63e6809a4c75d997ff38a"
    },
    "low": {
-    "bytes": 6906016,
+    "bytes": 6964004,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_6.low.glb",
-    "sha256": "2e83800fbcc3bd41590a32190f0682f6cfcca44f6fdbd6f3959938b5b58aa255"
+    "sha256": "1db10c5b6c2f1f642cd6c7bf6f8dd07b52a2af1f5714f5950641de3076eaaa5d"
    },
    "materials": [
     "brick_red",
@@ -10056,7 +10059,7 @@
     "wood_trim_white",
     "yard_paving"
    ],
-   "sha256": "ee2f5e08b9ba217f43978e7c8a06baafb1f3d58e41a3e9984c585896432e57d2",
+   "sha256": "4e204d82e045b8bc89350c0b6a8ab91eab56eb35160e71db29fb0ffce38a8900",
    "triangles": {
     "buildings": 18421,
     "buildings_lod1": 3097,
@@ -10065,10 +10068,10 @@
     "plot_ground": 7011,
     "plots": 9698,
     "plots_low": 7768,
-    "road": 10217,
+    "road": 10157,
     "road_collision": 8346,
-    "terrain_lod0": 136637,
-    "terrain_lod1": 35261,
+    "terrain_lod0": 136741,
+    "terrain_lod1": 35365,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 359
@@ -10083,7 +10086,7 @@
     "z_max_evrf2007": 150.21,
     "z_min_evrf2007": 125.98
    },
-   "bytes": 16178524,
+   "bytes": 16235932,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_7.glb",
    "forest_cells": [
     {
@@ -10202,9 +10205,9 @@
     "sha256": "954b6884489d0d63e0cf75a54f495bcc439487ab0cc792e7a6590d507529f1c9"
    },
    "low": {
-    "bytes": 8187364,
+    "bytes": 8244772,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_5_7.low.glb",
-    "sha256": "2605a01446003df6986f652a00de8207e4a5956152791942e8c5676618138a7a"
+    "sha256": "397111b2cf94416bbfe78e90bcb1bb5175b2b4d85aa2e6d6fd14220f711b3ff8"
    },
    "materials": [
     "canopy_steel",
@@ -10245,7 +10248,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "5b9124a241df302da5d0e8b8349f96b3560061f80709efa18694907177438878",
+   "sha256": "997b9d1457182ba3c88831360090fe2ce773dfd265313279696c74badf6d7a32",
    "triangles": {
     "buildings": 35135,
     "buildings_lod1": 6283,
@@ -10272,7 +10275,7 @@
     "z_max_evrf2007": 132.91,
     "z_min_evrf2007": 117.8
    },
-   "bytes": 5342636,
+   "bytes": 5339456,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_0.glb",
    "forest_cells": [
     {
@@ -10379,9 +10382,9 @@
     "sha256": "d913ef6e109411d0bd84f6f7bd6381721caa0dce238b1b213f8b8ec98d820f8a"
    },
    "low": {
-    "bytes": 1218792,
+    "bytes": 1215932,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_0.low.glb",
-    "sha256": "11ae11d5e2e687793b169cd0ed2544c90e6ecd3d3163ee8018c1f8910e4a1be3"
+    "sha256": "91aa0c773993d18c3e2c032ed31332f9df1040ce70cac3373a2493bb0aca4490"
    },
    "materials": [
     "barrier_steel",
@@ -10407,14 +10410,14 @@
     "verge_grass",
     "wire"
    ],
-   "sha256": "b4a99ab1a4b41f246c6930c4942210fffa4b66962dc73cb6ea81950ae274a68f",
+   "sha256": "d45e8214ab9b27f667a3925bda66da01129788e0178311823ca655bdce7c086e",
    "triangles": {
-    "bridge": 431,
+    "bridge": 2329,
     "forest_hlod": 831,
-    "furniture": 3109,
+    "furniture": 1173,
     "markings": 633,
     "road": 5595,
-    "road_collision": 2725,
+    "road_collision": 2635,
     "terrain_lod0": 135292,
     "terrain_lod1": 33916,
     "terrain_lod2": 8704,
@@ -10431,7 +10434,7 @@
     "z_max_evrf2007": 147.09,
     "z_min_evrf2007": 118.01
    },
-   "bytes": 10931560,
+   "bytes": 10992656,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_1.glb",
    "forest_cells": [
     {
@@ -10550,9 +10553,9 @@
     "sha256": "b4b9c1410693cfc70bb1e4e48fe63c3f1ab1aa05bf403cae52135e20bcc94b3a"
    },
    "low": {
-    "bytes": 6099264,
+    "bytes": 6156944,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_1.low.glb",
-    "sha256": "b5e7fb0895024af6d83ae0e5471e57b1f68b18b94681f495b139bec8c926f87b"
+    "sha256": "c95fd6ac169ce8d5cabede53290cd19120ca952dd0f6a3259e9c2e4b9594e67f"
    },
    "materials": [
     "canopy_steel",
@@ -10597,7 +10600,7 @@
     "wood_trim_white",
     "yard_paving"
    ],
-   "sha256": "e63955a1e6a540e2d8a893a91d8e225aba4ae34affe535ec2ada391f7b6d5d2f",
+   "sha256": "5c54c414cf7ba1b69a0b7985ea2b174d9735965a4ee505a5b20b8a2def621d3f",
    "triangles": {
     "buildings": 6606,
     "buildings_lod1": 1048,
@@ -10606,10 +10609,10 @@
     "plot_ground": 2476,
     "plots": 4606,
     "plots_low": 3276,
-    "road": 4603,
+    "road": 4573,
     "road_collision": 3217,
-    "terrain_lod0": 136231,
-    "terrain_lod1": 34855,
+    "terrain_lod0": 136283,
+    "terrain_lod1": 34907,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 227
@@ -10624,7 +10627,7 @@
     "z_max_evrf2007": 145.49,
     "z_min_evrf2007": 120.05
    },
-   "bytes": 13055788,
+   "bytes": 13121896,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_2.glb",
    "forest_cells": [
     {
@@ -10719,9 +10722,9 @@
     "sha256": "5b9aa927b5bc5c37654a84d06d2cfc40154c646a5a0d2ab87874329c12712a8e"
    },
    "low": {
-    "bytes": 7151028,
+    "bytes": 7209076,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_2.low.glb",
-    "sha256": "daef91964f7785e9f9f1082bf8dab3d46a6d08ed671979f5c982574d9d06a3af"
+    "sha256": "177ccb9862d104a129a57b6131087a7857a44be500965213a6c83242a2fcb513"
    },
    "materials": [
     "brick_red",
@@ -10765,7 +10768,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "6da8df86b2d2e1f1cdb58cd9ef149b1d8f22eaa466f1e6c3f36dfe8b4c69af9c",
+   "sha256": "a475f5480864348ce94170fead7e3bd02f8dace07f7071b5ed2f3598e7267e88",
    "triangles": {
     "buildings": 14470,
     "buildings_lod1": 2561,
@@ -10775,10 +10778,10 @@
     "plot_ground": 9949,
     "plots": 14216,
     "plots_low": 10647,
-    "road": 8898,
+    "road": 8830,
     "road_collision": 8889,
-    "terrain_lod0": 136443,
-    "terrain_lod1": 35067,
+    "terrain_lod0": 136563,
+    "terrain_lod1": 35187,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 301
@@ -10793,7 +10796,7 @@
     "z_max_evrf2007": 145.56,
     "z_min_evrf2007": 119.47
    },
-   "bytes": 12472568,
+   "bytes": 12534032,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_3.glb",
    "forest_cells": [
     {
@@ -10816,9 +10819,9 @@
     "sha256": "b34d2f1d05d89e5b3f6a6bc2ad62f4119497ee765aca7170b0dc3187b6be0a97"
    },
    "low": {
-    "bytes": 6652828,
+    "bytes": 6710612,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_3.low.glb",
-    "sha256": "5c4333b5181f94f5f7c26243524b585ca83d9646b155dece89498d727ca15ad9"
+    "sha256": "4fe8c51e8d22722d2df44b91527c86c5d55abd4f5bfd88454fdf773cfd2e341e"
    },
    "materials": [
     "brick_red",
@@ -10864,7 +10867,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "61cb4e087d325623b6c5bc5152a78fdf2ded871451106aeb788a925395e82c6f",
+   "sha256": "f3547e092091eddbd3af9f182c251cea21d7e4c7b9c9b8fe7fbe3b850f1a71a4",
    "triangles": {
     "buildings": 16202,
     "buildings_lod1": 2801,
@@ -10873,10 +10876,10 @@
     "plot_ground": 7451,
     "plots": 11801,
     "plots_low": 9401,
-    "road": 2989,
+    "road": 2959,
     "road_collision": 5560,
-    "terrain_lod0": 135737,
-    "terrain_lod1": 34361,
+    "terrain_lod0": 135793,
+    "terrain_lod1": 34417,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 447
@@ -10891,7 +10894,7 @@
     "z_max_evrf2007": 133.84,
     "z_min_evrf2007": 118.28
    },
-   "bytes": 9686012,
+   "bytes": 9743464,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_4.glb",
    "forest_cells": [],
    "id": "6_4",
@@ -10901,9 +10904,9 @@
     "sha256": "1a384bf8f23b1b217b03e5399edac43b1e3b3dc1cb4377a09b315eb3b0625a8d"
    },
    "low": {
-    "bytes": 5531036,
+    "bytes": 5588488,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_4.low.glb",
-    "sha256": "9668ddc5dcfc26096152dba7e513d9f6bd21e3723f5d2765a1163f3245e1e8ca"
+    "sha256": "c59226c2ca5757db979e9806246b3894b04f2605fed5a6aee4136ba4c6f2cb09"
    },
    "materials": [
     "brick_red",
@@ -10933,7 +10936,7 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "7175ef8becd4578ce15fea2b7fea218e87b42dfa9c9c0c94e48056ca351be056",
+   "sha256": "d053bce4f49482c17093f8e2ac927df05a8e418c359aff7e3fb68d13b7807616",
    "triangles": {
     "buildings": 983,
     "buildings_lod1": 179,
@@ -10957,7 +10960,7 @@
     "z_max_evrf2007": 143.48,
     "z_min_evrf2007": 119.8
    },
-   "bytes": 12303512,
+   "bytes": 12362692,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_5.glb",
    "forest_cells": [],
    "id": "6_5",
@@ -10967,9 +10970,9 @@
     "sha256": "178411ccdf32611445fcb49cfb74cffcfd4db164c4a189ae24351ce6d965796e"
    },
    "low": {
-    "bytes": 6565736,
+    "bytes": 6623692,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_5.low.glb",
-    "sha256": "bc7572756926f24990ea424fc4e3fdff5606a779d59fd8daaedc8b4b3aee3143"
+    "sha256": "1ec4f9f49a620d4b6004b34ec9eee6117355d11f2981d8c7dd40b64946801da2"
    },
    "materials": [
     "brick_red",
@@ -11021,7 +11024,7 @@
     "wood_trim_white",
     "yard_paving"
    ],
-   "sha256": "5c8db2b5be06cb6ebadf1edd3cc78c4c14371d67c3f3771a313061100fbddd86",
+   "sha256": "5399af85ff9023e607482fe9bc0d1c364d00364bb4fd8f9af4dedb669ce1e811",
    "triangles": {
     "buildings": 15863,
     "buildings_lod1": 2653,
@@ -11031,8 +11034,8 @@
     "plots_low": 7247,
     "road": 4174,
     "road_collision": 5383,
-    "terrain_lod0": 136088,
-    "terrain_lod1": 34712,
+    "terrain_lod0": 136112,
+    "terrain_lod1": 34736,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 500
@@ -11047,7 +11050,7 @@
     "z_max_evrf2007": 144.39,
     "z_min_evrf2007": 118.83
    },
-   "bytes": 12442124,
+   "bytes": 12499576,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_6.glb",
    "forest_cells": [],
    "id": "6_6",
@@ -11057,9 +11060,9 @@
     "sha256": "0bae783d6b4c9a51ff18fdc19514e2d410124da760c57d30b7f75731988af8e4"
    },
    "low": {
-    "bytes": 6711144,
+    "bytes": 6768596,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_6.low.glb",
-    "sha256": "f081bb2809e49393368e66143164ff4ed4e8c0cc4ba4892897e0645045d96dca"
+    "sha256": "65e2c02720bd8a2f00ac4bf39f478d441a97db6788ed9cd18b01b2f09acb4510"
    },
    "materials": [
     "brick_red",
@@ -11102,7 +11105,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "bda53f3a1bc240f4fb1c96e559bf21832705d757a8c3285be7eb8f4a877197e0",
+   "sha256": "8c46509bc0e8c366906dcef658a8026469fc910ce10888fd245501080d014245",
    "triangles": {
     "buildings": 14288,
     "buildings_lod1": 2455,
@@ -11128,7 +11131,7 @@
     "z_max_evrf2007": 145.22,
     "z_min_evrf2007": 118.65
    },
-   "bytes": 11673460,
+   "bytes": 11734764,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_7.glb",
    "forest_cells": [],
    "id": "6_7",
@@ -11138,9 +11141,9 @@
     "sha256": "9f95148d8990b6a015dda43a199ebfa0caa6c26b1d806af0c6e8861ca3280f05"
    },
    "low": {
-    "bytes": 6331160,
+    "bytes": 6388808,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_6_7.low.glb",
-    "sha256": "0a26e0f3af47802d2e4d96cc07d06ef85c139a6dc7d4002bdb2305fe54ebe904"
+    "sha256": "d4ef57946cf2ad59fe9d238152f599f870871cb9792cb8cdda7e4023e030d1d2"
    },
    "materials": [
     "brick_red",
@@ -11187,18 +11190,18 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "427fc2d60ac229a2861137db8d5b6fc1eb1ae1bd21e671462faf2c89302f4534",
+   "sha256": "e5ec67c315196ebde754e7077e4e22faa1b711cdbc7ddc4894fb837175dca6bd",
    "triangles": {
     "buildings": 12265,
     "buildings_lod1": 2222,
     "markings": 110,
-    "plot_ground": 3320,
+    "plot_ground": 3322,
     "plots": 5802,
     "plots_low": 4319,
-    "road": 6538,
+    "road": 6504,
     "road_collision": 4952,
-    "terrain_lod0": 135889,
-    "terrain_lod1": 34513,
+    "terrain_lod0": 135945,
+    "terrain_lod1": 34569,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 711
@@ -11210,22 +11213,22 @@
     "e_min": 768.0,
     "n_max": 1024.0,
     "n_min": 768.0,
-    "z_max_evrf2007": 127.32,
+    "z_max_evrf2007": 127.31,
     "z_min_evrf2007": 117.78
    },
-   "bytes": 5250716,
+   "bytes": 5250148,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_0.glb",
    "forest_cells": [],
    "id": "7_0",
    "instances": {
     "count": 26,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/instances_7_0.json",
-    "sha256": "7ceb0e10f6bb89cbefe79af4d4d905f7be9b1fba14930cf69c1cc14a1748a7cb"
+    "sha256": "30b54ba46e696da84ebce76093b7028d02b925da48bc4c3dc6726d439c5df60f"
    },
    "low": {
-    "bytes": 1144984,
+    "bytes": 1144252,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_0.low.glb",
-    "sha256": "96a4d85c6023b7b02aeb181196df08515b6fdb07935d1e9e3d989c8a5da230aa"
+    "sha256": "4fc075902f00fa1a0c6adc028dd121fd139a6d2f23f5f348e3bcd721e7e90551"
    },
    "materials": [
     "barrier_steel",
@@ -11249,13 +11252,13 @@
     "terrain_grass",
     "verge_grass"
    ],
-   "sha256": "d881ec9600f4abe5d6bde8d0809628075af408a010b1037aaed6a8342c798a49",
+   "sha256": "6c647c7083b89da26adfa2f041e68d5efa464152f045db7eb02d64e79cf42e44",
    "triangles": {
-    "bridge": 680,
-    "furniture": 4271,
-    "markings": 614,
+    "bridge": 2465,
+    "furniture": 2499,
+    "markings": 615,
     "road": 4221,
-    "road_collision": 2229,
+    "road_collision": 2199,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -11271,7 +11274,7 @@
     "z_max_evrf2007": 132.63,
     "z_min_evrf2007": 117.67
    },
-   "bytes": 4836308,
+   "bytes": 4836384,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_1.glb",
    "forest_cells": [],
    "id": "7_1",
@@ -11281,9 +11284,9 @@
     "sha256": "761df015fb366fe7dd08dca201f6b5fc9048fd2dca55664b4cd76180267d7c78"
    },
    "low": {
-    "bytes": 781844,
+    "bytes": 781916,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_1.low.glb",
-    "sha256": "e71ecffd29c7c06a8639aced73e17c23594dc95a964f06c3bd791391e915b2f8"
+    "sha256": "ce644946c2ed458d726dd65f8188093ebdbdac30ec0f420b8b3965e85d2a5335"
    },
    "materials": [
     "barrier_steel",
@@ -11309,11 +11312,12 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "51e60eb9ddbdf664042917266d944462fbe1933edf15e9db77782800ff9c1dd8",
+   "sha256": "40a3bb28886500b245775f8ca5e568bc8d754217dbed7641f72db26e164584d2",
    "triangles": {
+    "bridge": 68,
     "buildings": 272,
     "buildings_lod1": 60,
-    "furniture": 624,
+    "furniture": 556,
     "road": 99,
     "road_collision": 111,
     "terrain_lod0": 135168,
@@ -11332,7 +11336,7 @@
     "z_max_evrf2007": 134.75,
     "z_min_evrf2007": 117.35
    },
-   "bytes": 10127376,
+   "bytes": 10183260,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_2.glb",
    "forest_cells": [],
    "id": "7_2",
@@ -11342,9 +11346,9 @@
     "sha256": "a8d0e7daf8432f1c81a65a1a7e99e759cdd3b0f5c7d8b7ea2002ac6ab2aa7b01"
    },
    "low": {
-    "bytes": 5940200,
+    "bytes": 5996036,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_2.low.glb",
-    "sha256": "54bb88858094c49056aef810b8d9ffe546f6a6b7b2b7baf72778efd85d983f0d"
+    "sha256": "e1955ee31b61c13705502500f428f4303381d74f4bf44c007014814e2a23f16f"
    },
    "materials": [
     "barrier_steel",
@@ -11383,20 +11387,20 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "57eb4fe2395918b397a25c564bdc8f4d41d3cd468783d0fb6a5126051e8219d2",
+   "sha256": "05eb7203c7993701d073331c84130683965966b04a70c7bbcb7f8f1319fd4919",
    "triangles": {
-    "bridge": 1546,
+    "bridge": 1766,
     "buildings": 153,
     "buildings_lod1": 27,
-    "furniture": 5572,
+    "furniture": 5364,
     "markings": 40,
     "plot_ground": 136,
     "plots": 275,
     "plots_low": 261,
     "road": 2050,
-    "road_collision": 2815,
-    "terrain_lod0": 135448,
-    "terrain_lod1": 34072,
+    "road_collision": 2875,
+    "terrain_lod0": 135456,
+    "terrain_lod1": 34080,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 353
@@ -11411,7 +11415,7 @@
     "z_max_evrf2007": 135.35,
     "z_min_evrf2007": 117.33
    },
-   "bytes": 9638904,
+   "bytes": 9696356,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_3.glb",
    "forest_cells": [
     {
@@ -11494,9 +11498,9 @@
     "sha256": "94abb2810f74c667e85168aa6578af2fb94acdadcb9b077c7ed79860825bdca5"
    },
    "low": {
-    "bytes": 5534292,
+    "bytes": 5591744,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_3.low.glb",
-    "sha256": "e0365d0475607a4712410e359ec88bd2a541f5084c0c09ed6c847c15563dfc1b"
+    "sha256": "4e463d15e55797d4e8d3851e6166f2f0b4a90a42d603499721c11f0df6369253"
    },
    "materials": [
     "chimney_brick",
@@ -11519,7 +11523,7 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "34004d720cf37b2bb5962fc66a805c1adef9574cf5ae28cfbcdaac6289c230aa",
+   "sha256": "5c65bc138408e3a87894481ebb8e65ed8e29376a814ec924f50e8793a306c17f",
    "triangles": {
     "buildings": 578,
     "buildings_lod1": 94,
@@ -11578,7 +11582,7 @@
     "z_max_evrf2007": 126.73,
     "z_min_evrf2007": 116.66
    },
-   "bytes": 9526964,
+   "bytes": 9584416,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_5.glb",
    "forest_cells": [],
    "id": "7_5",
@@ -11588,9 +11592,9 @@
     "sha256": "db48c4e7a33c81321b1593de63110dec1faee29b027b3ddf7b24014187e914a5"
    },
    "low": {
-    "bytes": 5464636,
+    "bytes": 5522088,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_5.low.glb",
-    "sha256": "12a1250556edb99b495ec34c326b59b9ee87c0a5ff40604d5e2455b7abb0ac33"
+    "sha256": "37bfd9b034634dde651ebd96b708e5ebf675cbfc79734146c595a3cfbe50aefb"
    },
    "materials": [
     "brick_red",
@@ -11610,7 +11614,7 @@
     "terrain_grass",
     "window_sill"
    ],
-   "sha256": "5395c6d102a9b0b28552d7d135277e0ab206e6250fe31557f53ef781caa94af1",
+   "sha256": "357918518e1fa910d465be77fb90efff7cbdd719310d033409d423237c8b4483",
    "triangles": {
     "buildings": 407,
     "buildings_lod1": 54,
@@ -11633,7 +11637,7 @@
     "z_max_evrf2007": 135.16,
     "z_min_evrf2007": 117.12
    },
-   "bytes": 10335904,
+   "bytes": 10393356,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_6.glb",
    "forest_cells": [],
    "id": "7_6",
@@ -11643,9 +11647,9 @@
     "sha256": "3b2f598e275b62f2bf97da0ed32c6818f650a13c4df668f9d0abd4e35cc1cf5d"
    },
    "low": {
-    "bytes": 5791592,
+    "bytes": 5849044,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_6.low.glb",
-    "sha256": "b49a72b2c52de0b0b109c96e9bac57ec643bb956b98b31449bce0b86a2ea270a"
+    "sha256": "7a131411819a31d6dc1eabcd435c4ae4c4d6dd64adf6ecf349477908032f13f1"
    },
    "materials": [
     "brick_red",
@@ -11687,7 +11691,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "b0f51ae5bffcad78c4c61be3c967226ac003ffdb8503d68b3fcac3bef126f419",
+   "sha256": "6b0c20893d6f9652f87273fe3c9908db807cdb2cd067029d83adc2bb634e0156",
    "triangles": {
     "buildings": 4995,
     "buildings_lod1": 712,
@@ -11725,7 +11729,7 @@
    "low": {
     "bytes": 766532,
     "file": "Data/raw/derived/dk8-wasilkow-03/world/chunk_7_7.low.glb",
-    "sha256": "9b5a26319c7fdef40d88a94d18bac76e68f3dbaa99482a9a0726366e80945987"
+    "sha256": "c4c19ee41446863a3602571544bd08e018746a1c707592bcdca0d07e96cea201"
    },
    "materials": [
     "collision_asphalt",
@@ -11738,7 +11742,7 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "5dd57b60f5d4033f7302e74646fe6526c252a3d0685150a4f9ef1208f57b1811",
+   "sha256": "ba35962429814979b83946d31cf4e6dea235509f8859af62ebf76b71e57c7239",
    "triangles": {
     "markings": 14,
     "road": 604,
@@ -11753,17 +11757,17 @@
  ],
  "far_field": {
   "High": {
-   "bytes": 8541632,
+   "bytes": 8536412,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/far_field.glb",
    "sectors": {
     "far_east": {
      "by_material": {
-      "far_field_buildings": 33572,
+      "far_field_buildings": 33552,
       "forest_edge_mixed": 8060
      },
      "submeshes": 2,
-     "triangles": 41632,
-     "vertices": 76060
+     "triangles": 41612,
+     "vertices": 76020
     },
     "far_north": {
      "by_material": {
@@ -11793,48 +11797,48 @@
      "vertices": 15292
     }
    },
-   "sha256": "fb5b21968ae3f8b63e4b3024b36b9ecfb852de41e8c1ae046aaa0b42b8968d43",
+   "sha256": "e37f283f08f09208db149d105d080ec55ccf7054acf53d2c09521add3507997d",
    "skyline": {
     "landmark_stack_proxies": [],
     "min_building_h_m": 24.0,
     "min_chimney_h_m": 40.0,
     "node": "far_skyline",
     "submeshes": 1,
-    "triangles": 160
+    "triangles": 130
    },
-   "total_triangles": 107553,
-   "total_vertices": 175945
+   "total_triangles": 107503,
+   "total_vertices": 175845
   },
   "Low": {
-   "bytes": 2355856,
+   "bytes": 792356,
    "file": "Data/raw/derived/dk8-wasilkow-03/world/far_field.low.glb",
    "sectors": {
     "far_east": {
      "by_material": {
-      "far_field_buildings": 10191,
+      "far_field_buildings": 2231,
       "forest_edge_mixed": 1940
      },
      "submeshes": 2,
-     "triangles": 12131,
-     "vertices": 22807
+     "triangles": 4171,
+     "vertices": 6887
     },
     "far_north": {
      "by_material": {
-      "far_field_buildings": 4603,
+      "far_field_buildings": 991,
       "forest_edge_mixed": 3206
      },
      "submeshes": 2,
-     "triangles": 7809,
-     "vertices": 13463
+     "triangles": 4197,
+     "vertices": 6239
     },
     "far_south": {
      "by_material": {
-      "far_field_buildings": 10173,
+      "far_field_buildings": 1731,
       "forest_edge_mixed": 1652
      },
      "submeshes": 2,
-     "triangles": 11825,
-     "vertices": 22589
+     "triangles": 3383,
+     "vertices": 5705
     },
     "far_west": {
      "by_material": {
@@ -11846,17 +11850,17 @@
      "vertices": 4048
     }
    },
-   "sha256": "d9649ce0dd115359802b51e996a8dbc3ea2800d36a6fab0f565fe3730115e76c",
+   "sha256": "b0fd476eebdfcf6eb1c93202d1a72e7fe215b8e6efd9745e5cdfdd2dbf9d458b",
    "skyline": {
     "landmark_stack_proxies": [],
     "min_building_h_m": 24.0,
     "min_chimney_h_m": 40.0,
     "node": "far_skyline",
     "submeshes": 1,
-    "triangles": 120
+    "triangles": 90
    },
-   "total_triangles": 34997,
-   "total_vertices": 63147
+   "total_triangles": 14953,
+   "total_vertices": 23059
   }
  },
  "generator": "world-c/1",
@@ -13184,9 +13188,9 @@
   },
   "decal_patch": {
    "asphalt_patch_seam": {
-    "aged_tone": 1.08,
+    "aged_tone": 0.76,
     "darkening": 0.65,
-    "fresh_tone": 0.88,
+    "fresh_tone": 0.72,
     "width_m": 0.025
    },
    "asphalt_wear": {
@@ -14426,6 +14430,62 @@
    "decal": true,
    "rough": 0.7,
    "surface": "paint"
+  },
+  "monument_bronze": {
+   "color": [
+    0.06,
+    0.07,
+    0.058
+   ],
+   "metal": 0.6,
+   "rough": 0.52,
+   "sky_occ": [
+    0.5,
+    0.0
+   ]
+  },
+  "monument_gilt": {
+   "color": [
+    0.55,
+    0.4,
+    0.1
+   ],
+   "metal": 0.8,
+   "rough": 0.4,
+   "sky_occ": [
+    0.5,
+    0.0
+   ]
+  },
+  "monument_granite": {
+   "color": [
+    0.17,
+    0.17,
+    0.175
+   ],
+   "rough": 0.45,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "splash_h": 0.25,
+   "texture_set": "plaster"
+  },
+  "monument_sandstone": {
+   "color": [
+    0.3,
+    0.275,
+    0.235
+   ],
+   "rough": 0.9,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "splash_h": 0.6,
+   "texture_set": "plaster"
   },
   "noise_glass": {
    "alpha": 0.1,
@@ -16319,6 +16379,60 @@
    ],
    "metal": 0.4,
    "rough": 0.6
+  },
+  "truss_concrete": {
+   "color": [
+    0.27,
+    0.265,
+    0.25
+   ],
+   "rough": 0.88,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "surface": "concrete",
+   "texture_set": "concrete_precast",
+   "uv": "planar"
+  },
+  "truss_picket": {
+   "cast_shadows": false,
+   "color": [
+    0.58,
+    0.59,
+    0.58
+   ],
+   "rough": 0.6,
+   "sky_occ": [
+    0.5,
+    0.0
+   ]
+  },
+  "truss_rail_blue": {
+   "color": [
+    0.035,
+    0.16,
+    0.42
+   ],
+   "metal": 0.1,
+   "rough": 0.55,
+   "sky_occ": [
+    0.5,
+    0.0
+   ]
+  },
+  "truss_steel": {
+   "color": [
+    0.4,
+    0.41,
+    0.41
+   ],
+   "metal": 0.15,
+   "rough": 0.62,
+   "sky_occ": [
+    0.5,
+    0.0
+   ]
   },
   "tyre": {
    "color": [
