@@ -340,4 +340,71 @@ namespace Game.Core.Navigation
             return enq;
         }
     }
+    /// <summary>
+    /// Announcement hub of the GPS voice: <see cref="NavVoiceDriver"/> + <see cref="NavVoiceQueue"/> + evidence log. Every
+    /// ordered announcement (rare: at most 3 per manoeuvre) is drained from the queue and, when <see cref="LogEnabled"/>
+    /// (launch argument <c>-nav_log &lt;s&gt;</c>, off by default), written as ONE line
+    /// <c>NAVVOICE t=123.4 band=300 clips=B07#2,B14#1 man=Roundabout ring="Rondo ..."</c> to <see cref="Sink"/> (Debug.Log), so a
+    /// verification drive of a build can confirm what the voice said. <see cref="Spoken"/> is the hook for the future audio
+    /// player. Strings are built only at announcement time; the per-frame path allocates nothing.
+    /// </summary>
+    public sealed class NavVoiceAnnouncer
+    {
+        public bool LogEnabled;
+        /// <summary>Receives the log line; defaults to Debug.Log (tests replace it).</summary>
+        public System.Action<string> Sink = Debug.Log;
+        /// <summary>Called once per announcement with the clips in order (the buffer is reused - copy if kept).</summary>
+        public System.Action<VoiceClip[], int> Spoken;
+        public int Announcements { get; private set; }
+
+        readonly NavVoiceDriver m_Driver = new NavVoiceDriver();
+        readonly NavVoiceQueue m_Queue = new NavVoiceQueue();
+        readonly VoiceClip[] m_Out = new VoiceClip[NavVoiceQueue.Capacity];
+
+        public bool Active => LogEnabled || Spoken != null;
+        public void Reset() { m_Driver.Reset(); m_Queue.Clear(); }
+
+        /// <summary>Per-frame step; <paramref name="timeS"/> only goes into the log line.</summary>
+        public void Update(RouteGraph g, RoutePath p, ref NavGuidance gd, float speedMs, float timeS)
+        {
+            if (!Active || g == null || p == null) return;
+            if (m_Driver.Update(g, p, ref gd, speedMs, m_Queue) == 0) return;
+            int n = 0;
+            while (n < m_Out.Length && m_Queue.TryDequeue(out VoiceClip c)) m_Out[n++] = c;
+            if (n == 0) return;
+            Announcements++;
+            Spoken?.Invoke(m_Out, n);
+            if (LogEnabled && Sink != null) Sink(Format(g, p, ref gd, timeS, m_Driver.LastTier, m_Out, n));
+        }
+
+        /// <summary>The log line of one announcement (allocates - only called when logging).</summary>
+        public static string Format(RouteGraph g, RoutePath p, ref NavGuidance gd, float timeS, int tier, VoiceClip[] clips, int n)
+        {
+            var sb = new System.Text.StringBuilder(96);
+            sb.Append("NAVVOICE t=").Append(timeS.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture));
+            int band = NavVoiceDriver.BandForTier(tier, gd.NextM);
+            sb.Append(" band=");
+            if (band < 0) sb.Append('-');
+            else if (band >= NavVoice.BandM.Length) sb.Append("now");
+            else sb.Append((int)NavVoice.BandM[band]);
+            sb.Append(" clips=");
+            for (int i = 0; i < n; i++)
+            {
+                if (i > 0) sb.Append(',');
+                sb.Append('B').Append(clips[i].Block.ToString("00")).Append('#').Append(clips[i].Index);
+            }
+            if (gd.Next >= 0 && gd.Next < p.ManCount)
+            {
+                sb.Append(" man=").Append(p.ManType[gd.Next]);
+                if (p.ManType[gd.Next] == Maneuver.Roundabout)
+                {
+                    string ring = NavVoice.RingName(g, p, gd.Next);
+                    if (!string.IsNullOrEmpty(ring)) sb.Append(" ring=\"").Append(ring).Append('"');
+                }
+                string street = g.Names[p.ManName[gd.Next]];
+                if (!string.IsNullOrEmpty(street)) sb.Append(" street=\"").Append(street).Append('"');
+            }
+            return sb.ToString();
+        }
+    }
 }

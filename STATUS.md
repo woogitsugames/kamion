@@ -33,3 +33,8 @@
 - 10:48 krok 1-2: worktree regen-wave-7-s24 (derived=junction). Fala 7: 51 kafli (C/Maczka/Tykocin pominięte: zbudowane 22.08:18-10:05 po ostatnim commicie generatora 8cc4a0916 07:53). Łańcuchy A/B/C + final.ps1 + autocommit.ps1 uruchomione.
 - NASTĘPNY KROK: `cat artifacts/regen-wave-7-s24/chain.status artifacts/regen-wave-7-s24/final.status`
 - 2026-11-22 16:22: zrobione (51/51): bialystok-wygoda, bialystok-bojary, bialystok-mickiewicza, bialystok-krywlany, bialystok-dojlidy, bialystok-porosly, bialystok-kleeberga, knyszyn, bialystok-knyszynska, knyszyn-s, monki, knyszyn-w, monki-e, dk8-s8-jeroniki, dk65-01, dk65-03, dk65-02, dk65-06, dk65-04, dk65-05, dk65-08, dk65-07, dk65-09, dk65-11, dk65-10, dk65-monki-01, dk65-monki-03, dk65-monki-02, dk65-monki-04, dk65-monki-05, dk65-monki-06, dw671-tykocin-01, dk65-monki-07, dw671-tykocin-02, dw671-tykocin-05, dw671-tykocin-04, dw671-tykocin-03, dw671-tykocin-06, dw671-tykocin-07, dw671-tykocin-08, dw671-tykocin-09, dw671-jasionowka-01, s8-02, s8-03, s8-01, s8-05, s8-04, dk8-wasilkow-01, dk8-korycin-01, dk8-wasilkow-02, dk8-wasilkow-03. Błędy build: . Pozostałe: .
+
+## navlog-s24 (gameplay-ui)
+- NavVoiceAnnouncer (Core/Navigation/NavVoice.cs) + NavigationService.Voice: linia `NAVVOICE t= band= clips=Bxx#n,... man= ring= street=` per ogłoszenie, tylko z `-nav_log <s>` (s>0). Uwaga: NavVoiceDriver wcześniej NIE był podpięty w playerze (tylko testy) — teraz działa w NavigationService.Update gdy Voice.Active; odtwarzania audio nadal brak (hook `Voice.Spoken`).
+- Testy: nav-runner NavVoiceTests.Announcer_*, EditMode Nav0168Tests.VoiceAnnouncer_*.
+- NASTĘPNY KROK: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64; cd tools/nav-runner; dotnet test
