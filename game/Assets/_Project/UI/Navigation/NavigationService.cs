@@ -32,6 +32,8 @@ namespace Game.UI.Navigation
         RoutePath m_Path;
         readonly RouteTracker m_Tracker = new RouteTracker();
         NavGuidance m_Guide;
+        /// <summary>GPS voice announcements + the NAVVOICE evidence log (on with launch argument <c>-nav_log &lt;s&gt;</c>).</summary>
+        public readonly NavVoiceAnnouncer Voice = new NavVoiceAnnouncer();
         NavMapData m_Map;
         readonly System.Collections.Generic.List<NavMapData> m_Drawn = new System.Collections.Generic.List<NavMapData>();
         NavMapData[] m_Neighbours = System.Array.Empty<NavMapData>();
@@ -118,6 +120,7 @@ namespace Game.UI.Navigation
 
         public void Init()
         {
+            Voice.LogEnabled = NavLogRequested();
             m_Graph = RouteGraph.Load(regionId);
             m_Map = NavMapData.Load(regionId);
             if (m_Graph == null) { Debug.LogWarning("[NAV] no routing graph for region '" + regionId + "'"); return; }
@@ -128,6 +131,16 @@ namespace Game.UI.Navigation
             // Restore the saved destination once the truck stands at its spawn (the bootstrap places it in Start).
             if (TryLoadDestination(out Vector2 goal)) { m_RestoreGoal = goal; m_RestoreAt = 0.5f; }
             Debug.Log($"[NAV] ready region={regionId} nodes={m_Graph.NodeCount} edges={m_Graph.EdgeCount} restrictions={m_Graph.RestrFrom.Length} map={(m_Map != null)}");
+        }
+
+        /// <summary>True when the player was started with <c>-nav_log &lt;s&gt;</c>, s &gt; 0 (same argument as the GPS state log).</summary>
+        public static bool NavLogRequested()
+        {
+            var args = System.Environment.GetCommandLineArgs();
+            for (int i = 0; i + 1 < args.Length; i++)
+                if (args[i] == "-nav_log" && float.TryParse(args[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out float s) && s > 0f)
+                    return true;
+            return false;
         }
 
         void OnDestroy()
@@ -242,6 +255,7 @@ namespace Game.UI.Navigation
                 if (m_Trip != null) ReplanTripLeg(); else Replan(true);
                 m_Tracker.ClearOffRoute();
             }
+            if (Voice.Active && m_Guide.HasRoute && m_Guide.OnRoute) Voice.Update(m_Graph, Path, ref m_Guide, SpeedMs, Time.unscaledTime);
             UpdateRestriction(Time.unscaledDeltaTime);
             m_StreetT -= Time.unscaledDeltaTime;
             if (m_StreetT <= 0f && HasPosition)

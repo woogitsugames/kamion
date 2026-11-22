@@ -157,6 +157,38 @@ namespace NavRunner.Tests
         }
 
         [Fact]
+        public void Announcer_LogsRoundaboutLineWithRingName_OnlyWhenEnabled()
+        {
+            // G03: Andersa -> Kombatantów enters Rondo Putry. NAVVOICE log (-nav_log): one line per announcement, only when enabled.
+            var g = RouteGraph.Load(Region);
+            var p = RoutePath.For(g);
+            Assert.Equal(PlanStatus.Ok, new RoutePlanner(g).Plan(new Vector2(-225.64f, -239.35f), float.NaN, new Vector2(-205.02f, -854.88f), p));
+            float speed = 50f / 3.6f;
+            List<string> Drive(bool enabled)
+            {
+                var lines = new List<string>();
+                var ann = new NavVoiceAnnouncer { LogEnabled = enabled, Sink = lines.Add, Spoken = (c, n) => { } };
+                var tr = new RouteTracker();
+                var gd = new NavGuidance();
+                float t = 0f;
+                for (int i = 0; i < p.Count; i++)
+                {
+                    Vector2 pos = p.Points[i];
+                    Vector2 d = p.Points[System.Math.Min(i + 1, p.Count - 1)] - pos;
+                    float heading = d.sqrMagnitude > 1e-6f ? Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg : 0f;
+                    tr.Update(p, pos, heading, speed, 0.1f, ref gd);
+                    ann.Update(g, p, ref gd, speed, t += 0.1f);
+                }
+                return lines;
+            }
+            var on = Drive(true);
+            Assert.NotEmpty(on);
+            Assert.All(on, l => Assert.StartsWith("NAVVOICE t=", l));
+            Assert.Contains(on, l => l.Contains("B07#2") && l.Contains("B14#1") && l.Contains("ring=\"Rondo Krzysztofa Jakuba Putry"));
+            Assert.Empty(Drive(false));   // flag off: Spoken still fires, but nothing is logged
+        }
+
+        [Fact]
         public void RingName_SkipsUnnamedEntryLink()
         {
             // Regression (graph after wave 6): the path segment at the roundabout manoeuvre point is an unnamed entry link;

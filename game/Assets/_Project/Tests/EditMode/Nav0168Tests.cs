@@ -247,6 +247,35 @@ namespace Game.Tests
             GcAllocCounter.AssertZero(Drive, warmup: Drive, message: "tracker (1 Hz ETA) + 3-tier voice driver allocate nothing");
         }
 
+        [Test]
+        public void VoiceAnnouncer_LogsRoundaboutLineWithRingName_OnlyWhenEnabled()
+        {
+            // -nav_log: one NAVVOICE line per announcement (G03: Rondo Putry), nothing when the flag is off.
+            var g = RouteGraph.Load(Region);
+            var p = RoutePath.For(g);
+            Assert.AreEqual(PlanStatus.Ok, new RoutePlanner(g).Plan(new Vector2(-225.64f, -239.35f), float.NaN, new Vector2(-205.02f, -854.88f), p));
+            float v = 50f / 3.6f;
+            List<string> Drive(bool enabled)
+            {
+                var lines = new List<string>();
+                var ann = new NavVoiceAnnouncer { LogEnabled = enabled, Sink = lines.Add, Spoken = (c, n) => { } };
+                var tr = new RouteTracker(); var gd = new NavGuidance();
+                float t = 0f;
+                for (float s = 0f; s <= p.Length; s += 2f)
+                {
+                    Pose(p, s, out Vector2 pos, out float hdg);
+                    tr.Update(p, pos, hdg, v, 2f / v, ref gd);
+                    ann.Update(g, p, ref gd, v, t += 2f / v);
+                }
+                return lines;
+            }
+            var on = Drive(true);
+            Assert.IsNotEmpty(on);
+            foreach (var l in on) StringAssert.StartsWith("NAVVOICE t=", l);
+            Assert.IsTrue(on.Exists(l => l.Contains("B07#2") && l.Contains("B14#1") && l.Contains("ring=\"Rondo Krzysztofa Jakuba Putry")), string.Join("\n", on));
+            Assert.IsEmpty(Drive(false));
+        }
+
         // ------------------------------------------------------------------ ETA throttling
 
         [Test]
