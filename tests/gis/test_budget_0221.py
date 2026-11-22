@@ -114,4 +114,5 @@ def _plane_hf():
 def test_region_c_frame_budget_has_margin():
     qa = json.loads((REPO / "Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json").read_text(encoding="utf-8"))
     worst = max(qa["mesh_budget"]["frame_estimate"], key=lambda f: f["tris_high"])
-    assert worst["tris_high"] <= 1_990_000, (worst["camera"], worst["tris_high"])
+    # ADR 0327: 1_990_000 -> 2_000_000 after the player measurement of build #5 (GPU p95 7.8 ms of 16.7 ms, High/60)
+    assert worst["tris_high"] <= 2_000_000, (worst["camera"], worst["tris_high"])
