@@ -80,6 +80,37 @@ pola z jasnoszarej kostki granitowej układanej w łuki, pasy i opaska z drobnej
 3. Donice z kwiatami, tablice przy ogrodzeniu pomnika Czarnieckiego, latarnie (CRITIC 1.5, ADR 0320 §4.2) — poza zakresem.
 4. Ulice wokół placu (CRITIC 2.1, „mozaika”) należą do agenta road-surface-s24; `sett_rows_tint` nadaje się tam jako baza.
 
-## 4. Liczby
+## 4. Liczby (build_world + render kontrolny High / clear, Win64, 2026-11-21/22)
 
-Uzupełniane po rundach renderu — patrz niżej.
+| Pozycja | Przed (ADR 0320) | Po | Uwagi |
+|---|---|---|---|
+| król + cokół + zegar, LOD0 | 682 tris, 2 materiały | 2 380 tris, 4 materiały | figura z tablicą 2 320 (brąz 1 390 / patyna 282 / wytarty 648), granit 40, zegar 20 |
+| król + cokół + zegar, LOD1 | 196 tris | 326 tris | jedna barwa `plinth_dark`, bez nowych materiałów |
+| płyta Rynku w Tykocinie | 3 `paved_area`, `yard_paving` | 9 `paved_area`: krata 1 128 m², opaska 103 m², szara kostka 1 333 m² + 2 pasy przy jezdniach | liczba trójkątów nawierzchni bez istotnej zmiany (siatka 4 m); kadr `look-tykocin-czarniecki` 939 072 → 939 234 tris po dodaniu pasów |
+| materiały w manifeście | 367 | 372 | `plaza_sett_lattice/red/grey`, `monument_bronze_patina/rubbed` |
+| tekstury (szac. ASTC z mipami) | — | High +16,6 MB, Medium +3,2 MB, Low +0,6 MB | 4 zestawy: krata 2048² (9,5 MB High), rzędy / granit / brąz po 1024² (2,4 MB High); ładowane tylko w kaflach, które ich używają |
+
+Liczby trójkątów obiektów: `knyszyn_park_props_0227._king` (skrypt w STATUS). Statystyki kamer to szacunek edytora przed
+batchingiem SRP (`artifacts/monuments-s24/r*-*/stats.txt`); statystyk „przed” dla tych samych kamer w repo nie było,
+więc porównanie kadrów ograniczono do rund tego zadania. **Pomiaru FPS w playerze nie robiono** (bramka = build,
+CLAUDE.md pkt 2) — do wykonania przez lidera w buildzie #4.
+
+Testy: `tests/gis/test_knyszyn_park_props_0227.py` (9), `tests/gis/test_truss_bridge_0320.py` (10, w tym rama UV kraty),
+zestaw celowany 10 plików — wynik w `artifacts/monuments-s24/logs/pytest-gis-targeted.log`; EditMode Win64 1525 / 1412 passed /
+0 failed / 113 skipped (C# bez zmian). Pełne `pytest tests/gis` przerwano po 12 % (20 min przy obciążonej maszynie,
+bez błędów do tego miejsca) — do puszczenia przez lidera przy scalaniu.
+
+Rundy render → SBS → poprawka. Bruk: 2 (r1 → czerwień za ciemna i nasycona względem ortofoto, fuga za czarna → r2:
+jaśniejsze pasy, piaskowa fuga, plamy zadeptanego brudu, pasy kostki przy jezdniach). Król: look-dev w Blenderze (Cycles,
+2 iteracje bryły) + 3 rundy w Unity (r2 → brąz jak czarno-niebieskie lustro, białe łańcuchy → r3: mniej metalu, jaśniejsza
+baza → nos i fleurony świecą przez wygładzone normalne na współdzielonych wierzchołkach → ostatnia runda: własne wierzchołki
+drobnych części). Arkusze: `artifacts/monuments-s24/sbs/`.
+
+## 5. Znane słabości po ostatniej rundzie (do oceny visual-critic)
+
+- Figura stoi w cieniu lip i frontem na północny wschód: w świetle `clear` przód jest ciemny, twarz i wyłogi czyta się
+  słabo (na zdjęciu właściciela 1 rzeźba w cieniu też jest czarna, ale zdjęcia Commons robione są w słońcu).
+- Twarz jest geometryczna (nos-klin, brwi-belki); z 4–6 m czyta się jako głowa w koronie z brodą, z bliska jako maska.
+- Zestaw brązu ma jedną chropowatość dla trzech materiałów (różnią się barwą i udziałem metalu), bo ścieżka zestawów
+  modulacyjnych importera nie skaluje gładkości per materiał.
+- Kostka: pola jaśniejsze i czystsze niż na zdjęciu we mgle; brak kałuż, ubytków i donic.

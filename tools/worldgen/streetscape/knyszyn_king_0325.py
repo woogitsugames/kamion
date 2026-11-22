@@ -12,7 +12,7 @@ A stylised low-poly sculpt, not a scan or a copy of the artwork: proportions rea
 ADR 0320 (0.75 of the plinth top). All sizes WORKING_VALUE. Local frame: x right, y forward (front of the figure),
 z up from the top of the plinth; `build()` places it in the world.
 
-LOD0 ~2.9 k triangles in three bronze materials (base, patina for fur / ruff / beard, rubbed for crown and chains);
+LOD0 ~2.3 k triangles in three bronze materials (base, patina for fur / ruff / beard, rubbed for crown and chains);
 LOD1 ~0.3 k (cloak, head, crown, ruff, lapels) in one.
 """
 from __future__ import annotations
