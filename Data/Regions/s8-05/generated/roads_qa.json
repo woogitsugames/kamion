@@ -1158,7 +1158,7 @@
    "patches": 186
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 132706,
+  "footprint_nodes": 132768,
   "fork_abreast": [
    {
     "alongside_run_m": 20.5,
@@ -1554,7 +1554,20 @@
    "in_chain_ramps": 0,
    "seam_sides": 0
   },
-  "seam_tapers": [],
+  "seam_tapers": [
+   {
+    "chain": "c:w251431118:4165907524-7658870561",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "s8-04",
+    "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
+    "step_m": 0.0,
+    "width_other": 9.95,
+    "width_own": 10.45,
+    "width_seam": 10.45
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 2540,
    "parts": 29,
@@ -1573,7 +1586,7 @@
   },
   "verge_strips": {
    "chunks": 41,
-   "tris": 11674
+   "tris": 12122
   },
   "walled_ramps": []
  }

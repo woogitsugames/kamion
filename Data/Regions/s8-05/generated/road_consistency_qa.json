@@ -1,9 +1,66 @@
 {
- "by_kind": {},
- "cases": [],
- "count": 0,
+ "by_kind": {
+  "marking_off_carriageway": 1,
+  "obstacle_in_lane": 2
+ },
+ "cases": [
+  {
+   "chain": "c:w100133887:5194994824-2104266222",
+   "e": 1023.78,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1604612,
+   "lon": 22.8994389,
+   "n": -768.43,
+   "on_route": true,
+   "osm_ways": [
+    100133887,
+    536211832
+   ],
+   "surface": "none",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w100133887:5194994824-2104266222",
+   "e": 1023.82,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1604891,
+   "lon": 22.8994419,
+   "n": -765.32,
+   "on_route": true,
+   "osm_ways": [
+    100133887,
+    536211832
+   ],
+   "s": 0.5,
+   "what": "none"
+  },
+  {
+   "chain": "c:w1195261771:11093550970-5195036913",
+   "e": 1023.96,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.16072,
+   "lon": 22.899465,
+   "n": -739.57,
+   "on_route": true,
+   "osm_ways": [
+    536211840,
+    1195261771
+   ],
+   "s": 0.5,
+   "what": "none"
+  }
+ ],
+ "count": 3,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
- "on_route": {},
+ "on_route": {
+  "marking_off_carriageway": 1,
+  "obstacle_in_lane": 2
+ },
  "params": {
   "dz_m": 0.8,
   "kerb_ring_m": 0.3,
@@ -27,7 +84,8 @@
   "approach_lanes": 58,
   "kerb_tris": 27515,
   "lane_samples": 39102,
-  "marking_tris": 4166,
+  "lane_samples_beyond_tile": 162,
+  "marking_tris": 4150,
   "props_checked": 465
  }
 }

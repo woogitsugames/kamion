@@ -2032,7 +2032,7 @@
     "s8-xsec-w536222206",
     "s8-xsec-w536222207"
    ],
-   "profile_rms_vs_nmt_m": 0.052,
+   "profile_rms_vs_nmt_m": 0.053,
    "sidewalk_frac": 0.0,
    "width_m": [
     9.95,
@@ -5553,6 +5553,7 @@
   "crossings_in_junction": [
    3890212539,
    3890212539,
+   2248465406,
    3012480710,
    3012480710,
    3890212538,
@@ -5570,7 +5571,7 @@
    "patches": 329
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 348522,
+  "footprint_nodes": 348640,
   "fork_abreast": [
    {
     "alongside_run_m": 37.5,
@@ -6566,11 +6567,11 @@
    "P-1 centre line": 47,
    "P-1 lane line": 47,
    "P-10 crossing": 13,
-   "P-10 crossing in junction": 4,
+   "P-10 crossing in junction": 5,
    "P-11 cycle crossing": 7,
    "P-11 cycle crossing in junction": 4,
    "P-13": 8,
-   "P-7b edge line": 52,
+   "P-7b edge line": 72,
    "P-8 arrow": 20,
    "P-8 skipped (lane too narrow)": 4,
    "P-8 skipped (lanes continue)": 17,
@@ -6578,7 +6579,7 @@
   },
   "markings_overlap_removed_tris": 80,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 885,
+  "nmt_nodes_replaced_under_decks": 892,
   "overrides_applied": [
    {
     "id": "s8-xsec-w183639790",
@@ -6713,24 +6714,24 @@
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 7174,
-   "parts": 419,
-   "side_tris": 291
+   "kerb_tris": 7169,
+   "parts": 416,
+   "side_tris": 290
   },
   "signalised_junctions": 0,
   "through_lines": {
    "crossing_pairs_skipped": 19,
-   "junctions": 58,
+   "junctions": 59,
    "lines": {
-    "P-7b": 14,
-    "lane": 68
+    "P-7b": 25,
+    "lane": 69
    },
    "pairs": 139,
-   "unmatched": 17
+   "unmatched": 15
   },
   "verge_strips": {
    "chunks": 44,
-   "tris": 37473
+   "tris": 38685
   },
   "walled_ramps": []
  }
