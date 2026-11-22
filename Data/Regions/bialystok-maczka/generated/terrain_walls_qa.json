@@ -1,19 +1,19 @@
 {
  "by_source": {
-  "skirt:j:road_asphalt": 2,
+  "skirt:j:road_asphalt": 3,
   "skirt:path_asphalt": 2,
   "skirt:yard_asphalt": 4,
   "skirt:yard_gravel": 3
  },
- "count": 11,
- "max_m": 0.746,
- "p99_m": 0.707,
+ "count": 12,
+ "max_m": 0.747,
+ "p99_m": 0.705,
  "skirt_area": [
   {
    "e": 581.2,
-   "exposed_m2": 4.939,
+   "exposed_m2": 4.941,
    "mat": "road_asphalt",
-   "max_h": 0.746,
+   "max_h": 0.747,
    "n": 0.9,
    "points": 1,
    "run_m": 26.465,
@@ -32,6 +32,17 @@
    "visible": true
   },
   {
+   "e": 105.6,
+   "exposed_m2": 0.247,
+   "mat": "road_asphalt",
+   "max_h": 0.363,
+   "n": -453.3,
+   "points": 2,
+   "run_m": 3.086,
+   "src": "j:n934954661",
+   "visible": true
+  },
+  {
    "e": -98.3,
    "exposed_m2": 0.161,
    "mat": "path_asphalt",
@@ -40,17 +51,6 @@
    "points": 1,
    "run_m": 1.386,
    "src": "bdot:3835acf3-7d26-4ab3-8885-dec605b30207:0#0:edge",
-   "visible": true
-  },
-  {
-   "e": 105.6,
-   "exposed_m2": 0.133,
-   "mat": "road_asphalt",
-   "max_h": 0.355,
-   "n": -453.3,
-   "points": 1,
-   "run_m": 1.579,
-   "src": "j:n934954661",
    "visible": true
   },
   {
@@ -110,23 +110,23 @@
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 148,
+ "thin_steep_faces_skipped": 78,
  "thresh_m": 0.15,
  "verge_strips": {
-  "max_m": 0.907,
-  "skirt": 14,
-  "steep_grass": 272,
+  "max_m": 0.663,
+  "skirt": 0,
+  "steep_grass": 33,
   "worst": [
    "steep_grass",
-   "j:n7366611274:corner1:vg",
-   -917.4,
-   -12.1
+   "c:w25899411:282520527-282520529:R:vg",
+   -759.7,
+   -1024.4
   ]
  },
  "worst": [
   {
    "e": 581.2,
-   "h": 0.746,
+   "h": 0.747,
    "kind": "skirt",
    "mat": "road_asphalt",
    "n": 0.9,
@@ -134,7 +134,7 @@
   },
   {
    "e": 105.6,
-   "h": 0.355,
+   "h": 0.363,
    "kind": "skirt",
    "mat": "road_asphalt",
    "n": -453.3,
@@ -195,6 +195,14 @@
    "mat": "yard_gravel",
    "n": -556.1,
    "src": "bdot:ec03b3d0-91b3-4ab7-8ccb-5106c43b52bd:0#1:edge"
+  },
+  {
+   "e": 104.7,
+   "h": 0.275,
+   "kind": "skirt",
+   "mat": "road_asphalt",
+   "n": -452.9,
+   "src": "j:n934954661"
   },
   {
    "e": 343.7,
