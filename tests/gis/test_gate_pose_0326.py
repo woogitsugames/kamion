@@ -52,3 +52,27 @@ def test_gate_that_would_close_another_road_is_dropped():
     # a gate whose span enters the main carriageway is not
     assert FU.gate_pose(net, "sliding_gate", (0.0, 9.0)) is not None
     assert FU.gate_on_foreign_carriageway(net, "sliding_gate", (0.0, 1.0), 0.0, host=lane)
+
+
+# ------------------------------------------------------------------------------- data: built corridor tiles
+def _corridor_tiles():
+    import json
+    from qa import route_obstacles as RO
+    if not RO.LINKS.exists():
+        return [], []
+    L = json.loads(RO.LINKS.read_text(encoding="utf-8"))
+    tiles = sorted({t for c in L["corridors"] for t in c["tiles"]})
+    return tiles, L["links"]
+
+
+@pytest.mark.parametrize("tile", _corridor_tiles()[0] or ["bialystok-maczka"])
+def test_no_gate_across_a_route_lane(tile):
+    """No OSM gate instance (sliding / lift gate) spans the truck envelope of a route lying in the tile (start
+    route + corridor links). Build #4 P1: osm:node/13072640312 across gen. Maczka at (377, 2)."""
+    from qa import route_obstacles as RO
+    gates = RO.gate_instances(tile)
+    if not gates and not (RO.REPO / "Data/raw/derived" / tile / "world").exists():
+        pytest.skip(f"{tile} not built")
+    _, links = _corridor_tiles()
+    bad = [(name, h) for name, pts in RO.tile_routes(tile, links) for h in RO.gate_hits(pts, gates)]
+    assert not bad, bad
