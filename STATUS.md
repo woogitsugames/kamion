@@ -7,7 +7,7 @@
 - r1/r2/r3 zbudowane, zaimportowane i wyrenderowane (High, clear + overcast): tykocin, dw671-tykocin-01, knyszyn (+ sąsiad knyszyn-w tylko import), dk65-06 (to stąd pochodzi rb_ab2 krytyka). Stan końcowy = r3; opis rund i liczby: docs/adr/0323-nawierzchnia-z-zyciem.md. SBS: artifacts/road-surface-s24/sbs/r3, budżet: budget_r3.txt.
 - Wynik: mozaika Tykocina usunięta (sett_granite 81 mm, cobble_fieldstone), bariery matowe, zalewki/spękania/wytarte linie widoczne, koleiny Knyszyna po torze, pasy pod wysepką dk65-06 usunięte. OTWARTE: łaty słabo czytelne z kabiny; jasna łata-pas na dk65-06; brak oceny visual-critic; brak pomiaru w playerze.
 - Testy: tests/gis/test_road_surface_0323.py 11/11; EditMode Win64 1525 = 1410 pass / 0 fail / 115 skip (2 przebiegi, ostatni po zmianach C#/shadera r2; zmiany r3 w C# = 2 linie importera, nie powtarzane); szerszy pytest: artifacts/road-surface-s24/logs/pytest_r3.log (kolejka heavy).
-- Derived tych 4 kafli jest TYLKO w prywatnej kopii worktree - przed usunięciem worktree: `robocopy .claude\worktreesoad-surface-s24\Dataaw\derived\<kafel> Dataaw\derived\<kafel> /E /MT:16` albo przebudowa w main po scaleniu.
+- Derived tych 4 kafli jest TYLKO w prywatnej kopii worktree - przed usunięciem worktree: `robocopy .claude/worktrees/road-surface-s24/Data/raw/derived/<kafel> Data/raw/derived/<kafel> /E /MT:16` (ścieżki z ukośnikami Windows) albo przebudowa w main po scaleniu.
 - NASTĘPNY KROK (lider): visual-critic na artifacts/road-surface-s24/sbs/r3; po scaleniu reimport wszystkich regionów (shader, materiały) i przebudowa regionów (decale, road_cobble); `git -C .claude/worktrees/road-surface-s24 log --oneline main..HEAD`.
 
 # STATUS world-fix-b3-s24 (błędy świata z buildu #3)
