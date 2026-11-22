@@ -18,3 +18,5 @@
 - krok 7: C przebudowany CLI (exit 0, 14,8 min): terrain_walls {'skirt:yard_concrete': 1, 'skirt:yard_slabs': 1} — steep_grass:verge_grass 0 (w buildzie diag na kodzie main też 0 => json z 16e3a5aea był nieaktualny względem późniejszych zmian main, ratchet 0 bez zmian). Commity data(c) + osobno data(art-source) (street_props.glb, tekstury furniture/plot_kit przegenerowane).
 - w toku: pytest podzbiór (pytest-c.log), import+VQA maczka.
 - NASTĘPNY KROK: `tail artifacts/fix-b4-s24/pytest-c.log; cat artifacts/fix-b4-s24/unity.status`
+- krok 8: pierwszy import maczka exit 2 (brak SM_CabInterior_LOD0.fbx poza gitem — skopiowany z main; build_all przebudował PBR 18 min, zmiany art-source cofnięte). Ponowny import + VQA w toku.
+- NASTĘPNY KROK: `cat artifacts/fix-b4-s24/unity.status; tail artifacts/fix-b4-s24/pytest-c.log`
