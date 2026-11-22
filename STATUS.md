@@ -15,3 +15,6 @@
 - NASTĘPNY KROK: po bwc.status DONE: `uv run --project tools/worldgen python -m pytest tests/gis/test_terrain_walls.py tests/gis/test_world_roads.py -q`
 - krok 6: maczka przebudowana (exit 0, commit data(maczka)); brama osm:node/13072640312 teraz (375.4, 13.2), yaw -3.02 (równolegle do jezdni, przy torze polnym); test_no_gate_across_a_route_lane[maczka] PASS. Unity: import maczka Win64 + VQA High (unity.ps1, unity.status) w toku; mickiewicza/tykocin/C build w toku.
 - NASTĘPNY KROK: `cat artifacts/fix-b4-s24/unity.status artifacts/fix-b4-s24/bw.status artifacts/fix-b4-s24/bwc.status`
+- krok 7: C przebudowany CLI (exit 0, 14,8 min): terrain_walls {'skirt:yard_concrete': 1, 'skirt:yard_slabs': 1} — steep_grass:verge_grass 0 (w buildzie diag na kodzie main też 0 => json z 16e3a5aea był nieaktualny względem późniejszych zmian main, ratchet 0 bez zmian). Commity data(c) + osobno data(art-source) (street_props.glb, tekstury furniture/plot_kit przegenerowane).
+- w toku: pytest podzbiór (pytest-c.log), import+VQA maczka.
+- NASTĘPNY KROK: `tail artifacts/fix-b4-s24/pytest-c.log; cat artifacts/fix-b4-s24/unity.status`
