@@ -1,6 +1,6 @@
 # ADR 0324 — Narew jako rzeka, trzcina w kępach, pobocza i rowy z życiem, słupki U-1a, skraj lasu
 
-Status: Proposed (agent banks-verges-s24, gałąź `banks-verges-s24`), 2026-11-21. Do scalenia przez lidera.
+Status: Proposed (agent banks-verges-s24, gałąź `banks-verges-s24`), 2026-11-22. Do scalenia przez lidera.
 Powiązane: krytyk `artifacts/critic-s24-wave6/CRITIC.md` (top-5 pkt 2 i 4; wiersze 1.1, 2.5, 3.1, 3.2, 3.3, 3.5, 4.3),
 ADR 0210 / 0213 / 0318 / 0321 (woda, szuwary, rowy), 0110 (pasy trawy w siatce terenu), 0272 (pobocza), 0187 / 0015
 (płaszcz lasu, HLOD), 0308 (drzewa), 0279 (obszar zabudowany), 0268 (U-1a przy przejazdach).
@@ -99,17 +99,17 @@ visual-qa 1920 × 1080 High clear + High overcast + Low clear, kamery z kabiny (
 - r2 → r3: zatoki tylko w sąsiadach osiowych dawały schodki terenu 1 m na skośnym brzegu → także sąsiedzi po
   przekątnej (d ≤ 1,5 m), próg `LIP_M` 1,5 → 2,5 m; ciemny pas za koroną rowu = fartuch skarpy tylnej, został w
   `verge_grass` → też do terenu.
-- Generator (r2): tykocin — trzcina High 139 486 trójkątów (ADR 0321: 116 752; +19 %), Low 8 414; tafla 46 096
-  trójkątów (było 32 175: łaty zatok); U-1a 0 (cały odcinek w obszarze zabudowanym), trawa 0 (brak stron z poboczem
-  gruntowym). dk65-07 — trawa 8 112 trójkątów (16 stron), 48 części rowu do terenu, U-1a 5 (1 pominięty przy
+- Generator (r3): tykocin — trzcina High 139 486 trójkątów (ADR 0321: 116 752; +19 %), Low 8 414; tafla 47 433
+  trójkąty (było 32 175: łaty zatok); U-1a 0 (cały odcinek w obszarze zabudowanym), trawa 0 (brak stron z poboczem
+  gruntowym). dk65-07 — trawa 8 112 trójkątów (16 stron), 64 części rowu do terenu, U-1a 5 (1 pominięty przy
   barierze), HLOD lasu 110 768 trójkątów w kaflu (na kamerach +40–48 %, np. 11,7 → 16,2 tys.). knyszyn-w — trawa
-  23 002 trójkąty (23 strony), 69 części rowu do terenu, U-1a 16 (8 par).
-- Budżet kamer r0 → r2 (`budget-r2.md`; stats.txt edytora, szacunek przed SRP batching; 30 kamer, w tym 4 przestawione
-  między rundami): High — suma draws 7 800 → 7 779, trójkąty 21,11 → 21,02 M (−0,5 %); kamery z kabiny: most Narew
-  +0…+1,3 % trójkątów i +0 draws, dk65-07 +0,8 % / +4 draws, knyszyn-w +0,5…+1,0 % / +2 draws. Low — draws
-  5 012 → 4 989, trójkąty 4,12 → 4,15 M (+0,7 %); na drogach zamiejskich −2,7…−5,0 % (rów w terenie tylko do LOD1).
-  Czas klatki, pamięć i `WORLD_MEMORY`: **nie mierzone** (pomiar tylko w buildzie na bezczynnej maszynie —
-  `pc-metrics.ps1`, lider).
+  23 002 trójkąty (23 strony), 91 części rowu do terenu, U-1a 16 (8 par).
+- Budżet kamer r0 → r3 (`artifacts/banks-verges-s24/budget-r3.md`; stats.txt edytora, szacunek przed SRP batching;
+  30 kamer, w tym 4 przestawione między rundami): High — suma draws 7 800 → 7 716 (−84), trójkąty 21,11 → 21,00 M
+  (−0,5 %); kamery z kabiny: most Narew +0 draws / +0,4…+1,4 % trójkątów, dk65-07 `drive-wood` +0 / +0,6 %,
+  knyszyn-w +0…−3 draws / −0,4…+0,7 %. Low — draws 5 012 → 4 940 (−72), trójkąty 4,12 → 4,14 M (+0,4 %); most
+  +0,8…+2,6 %, drogi zamiejskie −3,8…−9,2 % (rów w terenie tylko do LOD1). Czas klatki, pamięć i `WORLD_MEMORY`:
+  **nie mierzone** (pomiar tylko w buildzie na bezczynnej maszynie — `pc-metrics.ps1`, lider).
 - EditMode Win64 na scenach r2: 1525 / 1416 zaliczonych / 0 błędów / 109 pominiętych
   (`artifacts/tests/editmode-20261122-015956.xml`). pytest: `test_banks_verges_0324.py` 8/8 (w tym test na prawdziwej
   sieci dk65-07), `test_water_0210/0213` 14/14, podzbiór roślinność / przejazdy / plamy / tunel / drzewa 63/63.
@@ -121,7 +121,15 @@ visual-qa 1920 × 1080 High clear + High overcast + Low clear, kamery z kabiny (
   umiarkowana). Z góry tafla pozostaje ciemna (~48/53/54 sRGB) — zgodnie ze strojeniem ADR 0213 na ortofoto.
 
 ## Otwarte
-- Przebudowa trzech kafli czekała > 1,5 h na pulę `heavy` (3/3 zajęte przez regen-wave-6) — patrz STATUS.md.
+- **Schodkowa krawędź skarpy przy brzegu** (kamera `bv_bank_n`, pierwszy plan): teren przycięty do profilu brzegu
+  ADR 0210 schodzi po węzłach 1 m wzdłuż skośnego brzegu; poprawka r3 (zatoki po przekątnej) tego nie usunęła —
+  przyczyna jest w `carve` (cap brzegu), nie w szumie. Do osobnej poprawki (wygładzenie pasa brzegu).
+- Kępy trawy na stromych skarpach stoją pochylone razem ze skarpą (stopy karty idą po przekroju) — z boku część
+  wygląda na przewrócone; karty na skarpach powinny mieć stopę poziomą.
+- Bloki lasu (HLOD) w dali nadal ciemne i zwarte; poprawa sylwetki umiarkowana.
+- `water_reeds.png` kafla wspólnej biblioteki (C nie ma wody) i `verge_tufts.png` (zacommitowany w
+  `art-source/world/textures/`) — po przebudowie C sprawdzić, czy plik się nie zmienił.
+- Przebudowa trzech kafli czekała łącznie ok. 2,5 h na pulę `heavy` (regeneracja fali 6) — patrz STATUS.md.
 - Dz.U. 2019 poz. 2311 zał. 4 nieprzeczytany: rozstaw U-1a na łukach, odsunięcie od krawędzi korony i wymiary słupka
   to `WORKING_VALUE`; brak pikietażu (km / hm) na słupku i słupków U-1b na barierach.
 - Wiatr trzciny / trawy, pałka i kałuże w rowach, wilgotność łąk z NMT i wierzby (krytyk 3.4), tło dali lasu
