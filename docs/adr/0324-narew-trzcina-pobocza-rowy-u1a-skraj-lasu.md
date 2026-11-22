@@ -110,7 +110,7 @@ visual-qa 1920 × 1080 High clear + High overcast + Low clear, kamery z kabiny (
   knyszyn-w +0…−3 draws / −0,4…+0,7 %. Low — draws 5 012 → 4 940 (−72), trójkąty 4,12 → 4,14 M (+0,4 %); most
   +0,8…+2,6 %, drogi zamiejskie −3,8…−9,2 % (rów w terenie tylko do LOD1). Czas klatki, pamięć i `WORLD_MEMORY`:
   **nie mierzone** (pomiar tylko w buildzie na bezczynnej maszynie — `pc-metrics.ps1`, lider).
-- EditMode Win64 na scenach r2: 1525 / 1416 zaliczonych / 0 błędów / 109 pominiętych
+- EditMode Win64 na scenach r3: 1525 / 1416 zaliczonych / 0 błędów / 109 pominiętych (artifacts/tests/editmode-20261122-025708.xml; na r2 ten sam wynik)
   (`artifacts/tests/editmode-20261122-015956.xml`). pytest: `test_banks_verges_0324.py` 8/8 (w tym test na prawdziwej
   sieci dk65-07), `test_water_0210/0213` 14/14, podzbiór roślinność / przejazdy / plamy / tunel / drzewa 63/63.
   Pełny `pytest tests/gis` nie uruchamiany (pula heavy zajęta przez regenerację fali 6).
