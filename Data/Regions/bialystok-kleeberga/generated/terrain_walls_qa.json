@@ -20,6 +20,17 @@
    "visible": true
   },
   {
+   "e": -897.4,
+   "exposed_m2": 0.236,
+   "mat": "yard_asphalt",
+   "max_h": 0.219,
+   "n": -1024.0,
+   "points": 1,
+   "run_m": 3.473,
+   "src": "osm:way/546339535:0#0:edge",
+   "visible": true
+  },
+  {
    "e": -22.6,
    "exposed_m2": 0.183,
    "mat": "yard_asphalt",
@@ -64,17 +75,6 @@
    "visible": true
   },
   {
-   "e": -897.4,
-   "exposed_m2": 0.064,
-   "mat": "yard_asphalt",
-   "max_h": 0.207,
-   "n": -1024.0,
-   "points": 1,
-   "run_m": 1.817,
-   "src": "osm:way/546339535:0#0:edge",
-   "visible": true
-  },
-  {
    "e": -502.0,
    "exposed_m2": 0.055,
    "mat": "yard_asphalt",
@@ -109,17 +109,17 @@
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 173,
+ "thin_steep_faces_skipped": 124,
  "thresh_m": 0.15,
  "verge_strips": {
-  "max_m": 0.69,
-  "skirt": 9,
-  "steep_grass": 207,
+  "max_m": 0.656,
+  "skirt": 2,
+  "steep_grass": 55,
   "worst": [
    "steep_grass",
-   "j:n2239535164:corner1:vg",
-   1012.7,
-   -14.0
+   "j:n7564014720:corner1:vg",
+   -624.0,
+   -876.7
   ]
  },
  "worst": [
@@ -173,7 +173,7 @@
   },
   {
    "e": -897.4,
-   "h": 0.207,
+   "h": 0.219,
    "kind": "skirt",
    "mat": "yard_asphalt",
    "n": -1024.0,

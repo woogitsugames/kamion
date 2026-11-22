@@ -56,7 +56,7 @@ jobs:
       # ~18 MB of ~2.4 GB in LFS. Cached by object ids, so LFS bandwidth is spent only when one of them changes.
       # The same list goes to KAMION_LFS_REQUIRED: a pointer left in it fails the test (tests/gis/conftest.py).
       LFS_GIS: >-
-        art-source/world/vegetation/forest_edge_*.png,art-source/world/vegetation/impostor_*.png,art-source/world/landmarks/viaduct_biezenstwa/*.glb,art-source/world/landmarks/kwadrat_park/*.glb,art-source/world/landmarks/fire_station_jrg2/*.glb
+        art-source/world/vegetation/forest_edge_*.png,art-source/world/vegetation/impostor_*.png,art-source/world/vegetation/leaves_*.png,art-source/world/landmarks/viaduct_biezenstwa/*.glb,art-source/world/landmarks/kwadrat_park/*.glb,art-source/world/landmarks/fire_station_jrg2/*.glb
     steps:
       - uses: actions/checkout@v4
         with: { lfs: false }

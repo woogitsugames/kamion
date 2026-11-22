@@ -63,7 +63,7 @@
       "Data/Regions/bialystok-bojary/route_start.json": "79dfeda03efeae6645633a686496935eece3174ca093fcba46b86c4f6c5070c5",
       "Data/Regions/bialystok-dojlidy/route_start.json": "b1a4cda462bfd6b2c21449ce38166bf59e68c874e341d4bd2d9316cf0e445c20",
       "Data/Regions/bialystok-industrial-c/route_start.json": "02d8f65178aaed2949e60436f0f8ed7690415ac5b8c6239b58efe3e20467cf7f",
-      "Data/Regions/bialystok-kleeberga/route_start.json": "dbb371139b68fe6c3c895114ef1277d6faffb2e149efcd36daa617bac1c62c96",
+      "Data/Regions/bialystok-kleeberga/route_start.json": "ab584544bd2fc3a7125c3caf3ff08f64c8719d76ba0bdd9750ad5a0d6bf71d85",
       "Data/Regions/bialystok-knyszynska/route_start.json": "50a9ed7a64cdc57e206160b792cac837961b15b0023ccc7197eb440307c982ae",
       "Data/Regions/bialystok-krywlany/route_start.json": "6420c28323be659c9560549230be9724905f9c87cf5dfa19f53b5f59d749eea6",
       "Data/Regions/bialystok-maczka/route_start.json": "56d9accc8580d45768ac8e75a0a96467a39699c7e7623b51aacf2ce2ca54babc",
@@ -114,7 +114,7 @@
       "Data/Regions/s8-04/route_start.json": "c7c974f85614dcc5858608fed51da3968dfc6e8c450396cd8b13bbc65476049d",
       "Data/Regions/s8-05/route_start.json": "b18e078f3d94148c2d1a88c5c3f5cac80c83d1d65b367381e48e8c3360af05a1",
       "Data/Regions/tykocin/route_start.json": "c7253bc26d6eededfb0a94e43af0c207a3a4f6cb1b8b726ad9045ef80f306ee8",
-      "tools/worldgen/regions.py": "40b165ac98e5f9c39ab122234159cb9e7b69150d310a22065dadb0c130a785e7"
+      "tools/worldgen/regions.py": "18f5d62757b2698a4a7c2fc354b3b7d33728670b7c40ad3ee7892af8054ca7af"
     },
     "reserve_all_registered_tiles": true,
     "retained_buildings": 383,
@@ -165,7 +165,7 @@
           "vertices": 29227
         }
       },
-      "sha256": "c7977974456b46f4d1123611e569e274fe29fb25cc2640745d8660827b1df624",
+      "sha256": "22281e1fcadafcac1b722ca89b3d5c952b94b40b24494d7e1747b8a7eb7cd1f8",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -178,47 +178,47 @@
       "total_vertices": 130015
     },
     "Low": {
-      "bytes": 2062360,
+      "bytes": 479208,
       "file": "Data/raw/derived/dw671-tykocin-04/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 3617,
+            "far_field_buildings": 693,
             "forest_edge_mixed": 1172
           },
           "submeshes": 2,
-          "triangles": 4789,
-          "vertices": 8813
+          "triangles": 1865,
+          "vertices": 2965
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 9635,
+            "far_field_buildings": 1551,
             "forest_edge_mixed": 638
           },
           "submeshes": 2,
-          "triangles": 10273,
-          "vertices": 20095
+          "triangles": 2189,
+          "vertices": 3927
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 7768,
+            "far_field_buildings": 1404,
             "forest_edge_mixed": 968
           },
           "submeshes": 2,
-          "triangles": 8736,
-          "vertices": 16834
+          "triangles": 2372,
+          "vertices": 4106
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 3547,
+            "far_field_buildings": 623,
             "forest_edge_mixed": 782
           },
           "submeshes": 2,
-          "triangles": 4329,
-          "vertices": 8071
+          "triangles": 1405,
+          "vertices": 2223
         }
       },
-      "sha256": "84e121ae87304b67a3d3d2df139ce6353a0efb7d5b9c976cf8271e7fdd5b6d7a",
+      "sha256": "94f3c16ab10133624e78b0cb3dc763b9cdc0c17d490a1dcc50bd371a3345b306",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -227,8 +227,8 @@
         "submeshes": 0,
         "triangles": 0
       },
-      "total_triangles": 28127,
-      "total_vertices": 53813
+      "total_triangles": 7831,
+      "total_vertices": 13221
     }
   }
 }

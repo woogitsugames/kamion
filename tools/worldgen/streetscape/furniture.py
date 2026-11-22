@@ -2734,7 +2734,9 @@ def guardrails(lin, net, zground, report):
          if zcnt[0] else net.overrides_stale.append(zid))
     _flush_rails(lin, m)
     drop_parapets_at_barriers(lin.buf, lin.rail_runs, m, extra=par_extra)
-    report["guardrails_m"] = {k: round(v) for k, v in m.items()}
+    # m also carries "doubled_rows_keys" (list of dropped run keys, _drop_doubled_rows): round only the numbers
+    # (regen-wave-6-s24: bialystok-maczka failed with TypeError once a doubled row was dropped there)
+    report["guardrails_m"] = {k: (round(v) if isinstance(v, (int, float)) else v) for k, v in m.items()}
     # ADR 0144: every built run (1 m points: E, N, foot z, deck flag) for tests/gis/test_guardrail_overlap.py
     report["guardrail_runs"] = [{"key": r["key"], "term": [bool(x) for x in r["term"]],
                                  "term_tall": [bool(x) for x in r["term_tall"]],
