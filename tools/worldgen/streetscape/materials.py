@@ -484,12 +484,14 @@ M = {
     # of the plinth, honed (not mirror). WORKING_VALUE: no reflectance measurement.
     # Set bronze_cast_tint: modelled planes, grain, rain streaks and oxide (roughness 0.3-0.8, metal mask in MaskMap.r
     # scaled by set_metal); mesh UV0 = metres round the figure / up it (knyszyn_king_0325.build).
-    "monument_bronze": {"color": [0.105, 0.098, 0.088], "rough": 0.48, "metal": 0.85,
-                        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.85},
-    "monument_bronze_patina": {"color": [0.070, 0.076, 0.066], "rough": 0.78, "metal": 0.40,
-                               "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.40},
-    "monument_bronze_rubbed": {"color": [0.200, 0.155, 0.105], "rough": 0.40, "metal": 0.90,
-                               "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.95},
+    # r3 (Unity High / clear, figure in the shade of the park limes): at metal 0.85 the bronze was a blue-black mirror of
+    # the sky with white chains; an old outdoor bronze is mostly oxide - lower metal share, lighter base.
+    "monument_bronze": {"color": [0.160, 0.145, 0.125], "rough": 0.48, "metal": 0.45,
+                        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.45},
+    "monument_bronze_patina": {"color": [0.105, 0.120, 0.100], "rough": 0.78, "metal": 0.15,
+                               "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.15},
+    "monument_bronze_rubbed": {"color": [0.250, 0.195, 0.125], "rough": 0.40, "metal": 0.55,
+                               "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.55},
     "monument_granite": {"color": [0.215, 0.215, 0.22], "rough": 0.38, "texture_set": "granite_honed_tint",
                          "set_tile": True, "splash_h": 0.25},
     # ADR 0325: stone setts of Plac Czarnieckiego in Tykocin (art-source/world/materials/_src/sets_plaza.py). The lattice

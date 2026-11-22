@@ -335,7 +335,7 @@ def _chains(sc):
             t = -1 + 2 * i / (n - 1)
             z = z_low + (z_top - z_low) * abs(t) ** 1.7
             pts.append(cloak_point(90 + t * half_deg, z, lift))
-            rad.append(0.018 if i % 2 else 0.008)                      # links
+            rad.append(0.015 if i % 2 else 0.009)                      # links
         sc.tube(RUBBED, pts, rad, 4)
     # jewel under the long chain
     c = cloak_point(90, 1.93, 0.030)
