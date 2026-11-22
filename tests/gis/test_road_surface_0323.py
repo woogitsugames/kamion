@@ -158,6 +158,32 @@ def test_compact_plate_has_no_arm_axis_wheel_paths():
     assert np.allclose(comp[:, 1], plain[:, 1])
 
 
+def test_fork_plate_has_no_wheel_paths():
+    """r3: carriageway split (two-way arm + two one-way arms): no shader wheel paths on the plate."""
+    from roads import meshing as MS
+
+    def chain(pts, oneway, hw):
+        line = Polyline(pts)
+        sec = SimpleNamespace(lane_edges=None, oneway=oneway, roundabout=False, edge_strip=0.0, lane_w=3.5)
+        return SimpleNamespace(line=line, length=float(line.length), dirn=np.ones(len(line.p), int),
+                               idx=lambda s: int(np.argmin(np.abs(line.s - float(s)))), hw_at=lambda s: float(hw),
+                               section=lambda s, sec_list: sec)
+
+    def arm(c, d):
+        return SimpleNamespace(chain=c, end="a", s=lambda x: float(x), direction=lambda x: np.array(d, float))
+
+    two = chain(np.column_stack([np.linspace(0.0, -30.0, 61), np.zeros(61)]), False, 3.5)
+    ent = chain(np.column_stack([np.linspace(0.0, 30.0, 61), np.linspace(0.0, -6.0, 61)]), True, 2.25)
+    ext = chain(np.column_stack([np.linspace(0.0, 30.0, 61), np.linspace(0.0, 6.0, 61)]), True, 2.25)
+    j = SimpleNamespace(arms=[arm(two, [-1, 0]), arm(ent, [1, -0.2]), arm(ext, [1, 0.2])], trims={0: 3.0, 1: 12.0, 2: 12.0})
+    V = np.array([[-2.0, 1.7, 0.0], [5.0, -1.9, 0.0], [8.0, 0.0, 0.0], [9.0, 2.6, 0.0]])
+    uv1 = MS._patch_uv1(SimpleNamespace(sec_list=[]), j, V, None)
+    assert np.allclose(uv1[:, 0], 0.0)
+    j.arms = j.arms[:2]
+    j.trims = {0: 3.0, 1: 12.0}
+    assert not np.allclose(MS._patch_uv1(SimpleNamespace(sec_list=[]), j, V, None)[:, 0], 0.0)
+
+
 def test_wheel_path_band_geometry():
     """Tracks of the compact roundabout: two bands a wheel gauge apart, draped, dropped off the carriageway."""
     Q = np.column_stack([np.linspace(0.0, 20.0, 41), np.zeros(41)])

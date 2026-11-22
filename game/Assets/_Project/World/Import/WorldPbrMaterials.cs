@@ -529,6 +529,8 @@ namespace Game.World.Import
                     mat.EnableKeyword("_DECAL_TYRE");
                     SetLinearTint(mat, col);
                     mat.SetFloat("_DecalAlpha", def.Get("decal_alpha") != null ? Mathf.Clamp01((float)Num(def.Get("decal_alpha"))) : 0.45f);
+                    if (id == "decal_seal" && def.Get("rough") != null)   // matt aged bitumen: strip smoothness = 1 - rough
+                        mat.SetFloat("_SmoothnessScale", Mathf.Clamp((1f - (float)Num(def.Get("rough"))) / 0.42f, 0.05f, 1f));
                     SetBlend(mat, true);
                     mat.renderQueue = (int)RenderQueue.Geometry + 20;
                 }

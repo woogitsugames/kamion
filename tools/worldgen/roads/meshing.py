@@ -1592,6 +1592,7 @@ def _patch_uv1(net, j, V, poly=None):
     edge = np.full(len(P), 5.0)
     score = np.full(len(P), np.inf)
     flare_d = np.zeros(len(P))
+    fork = False
     if not j.arms:
         return np.column_stack([lane, np.full(len(P), PLATE_EDGE_FLAG + 1.0)])
     hws = [float(a.chain.hw_at(float(a.s(j.trims[i])))) for i, a in enumerate(j.arms)]
@@ -1624,6 +1625,7 @@ def _patch_uv1(net, j, V, poly=None):
             ow.append(bool(getattr(sec_a, "oneway", False)))
         if len(j.arms) == 3 and sum(ow) == 2:
             ref = [0, 1, 2]
+            fork = True
 
     def _lane_coord(sec, lat_arr, hw_val, dir_val):
         if getattr(sec, "lane_edges", None):
@@ -1680,6 +1682,12 @@ def _patch_uv1(net, j, V, poly=None):
         edge[better_any] = e_arm[better_any]
         flare_d[better_any] = np.maximum(dist - hw, 0.0)[better_any]
         score[better_any] = dnear[better_any]
+    if fork:
+        # r3 (render r1 of dk65-06 roundabout_02_above): with every arm referencing its own lanes the mouth still
+        # showed a fan of straight stripes (lane coordinates of three frames interpolated over 2.5 m triangles).
+        # A wrong rut is worse than none: no shader wheel paths on a carriageway-split plate; the ribbons' paths end
+        # at the plate edge. Tracks as decal bands (like the compact roundabout) are an open point.
+        lane[:] = 0.0
     if getattr(j, "compact", None) is not None:
         # ADR 0323 (critic wave 6 pkt 2.3): the arm-axis lane coordinate drew straight parallel wheel paths across the
         # curved mouths and under the splitter islands of a compact roundabout. No shader wheel paths / drip band on

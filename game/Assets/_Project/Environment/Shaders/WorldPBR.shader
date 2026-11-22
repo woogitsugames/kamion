@@ -790,13 +790,13 @@ Shader "Kamion/World PBR"
                     half peaks = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb).r;     // aggregate tops wear first
                     half mott = (macro.a - 0.5) * 2.0;
                     // ADR 0323 (critic wave 6 pkt 2.2 "wytarte linie"): a longitudinal line is not worn evenly - where
-                    // traffic crosses or rides it (curves, overtaking, field accesses) 3-12 m of it are chipped on the aggregate peaks - speckled, not erased (1.3 erased the line: it read as a dashed edge line; 0.8). Chipped towards
+                    // traffic crosses or rides it (curves, overtaking, field accesses) 3-12 m of it are chipped on the aggregate peaks - speckled, not erased (1.3 erased the line: it read as a dashed edge line; 0.8 still erased 5-10 m; 0.6). Chipped towards
                     // the asphalt. No crossing data per line: stretches from object-space value noise. WORKING_VALUE.
                     float2 pp = TransformWorldToObject(pw).xz;
                     half stretch = (half)smoothstep(0.52, 0.76, ValueNoise12(pp / 6.5) * 0.75 + ValueNoise12(pp / 1.7 + 3.0) * 0.25);
                     half worn = _PaintWear.x * wp * transverse * (0.55 + 0.9 * age) * lerp(1.0, _PaintFreshWear.x, paintFresh)
                               + _PaintWear.y * (0.35 + age) * (0.6 + 0.4 * wp) * lerp(1.0, _PaintFreshWear.y, paintFresh)
-                              + _PaintWear.y * 0.8 * (0.5 + age) * stretch * (1.0 - transverse) * (1.0 - paintFresh)
+                              + _PaintWear.y * 0.6 * (0.5 + age) * stretch * (1.0 - transverse) * (1.0 - paintFresh)
                               + 0.10 * mott;
                     // chipped, not faded: a narrow threshold on the peak-weighted wear gives sharp-edged bare spots
                     half cover = 1.0 - smoothstep(0.42, 0.58, saturate(worn) * (0.35 + 1.3 * peaks));

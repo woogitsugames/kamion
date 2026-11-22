@@ -416,7 +416,9 @@ M = {
     "decal_tyre": {"color": [0.018, 0.018, 0.017], "rough": 0.55, "decal": True, "texture_set": "tyre_scrub_alpha"},
     # ADR 0323: bitumen crack sealant (roads.decals.seal_cracks): the tyre-band strip material, nearly opaque
     # (0.62 x 1.5 at strength >= 1.5). r1 used decal_tyre itself (alpha <= 0.675): the bands read as hairlines.
-    "decal_seal": {"color": [0.022, 0.022, 0.021], "rough": 0.6, "decal": True, "decal_alpha": 0.62},
+    # r3: rough 0.9 -> strip smoothness 0.10 (importer: (1 - rough) / 0.42 x the 0.42 of the tyre strip). At the tyre
+    # strip's 0.42 the bands mirrored the sun / sky and read LIGHTER than the asphalt (render r2, route_s1141).
+    "decal_seal": {"color": [0.022, 0.022, 0.021], "rough": 0.9, "decal": True, "decal_alpha": 0.62},
     "marking_yard": {"color": [0.46, 0.46, 0.45], "rough": 0.7, "surface": "paint", "decal": True},   # worn yard paint on light pavers; 0.36 (r7) dropped line/paver contrast 1.54 -> 1.14 (review r7 part 2), back to 0.46
     "drain_grate": {"color": [0.035, 0.033, 0.03], "rough": 0.6, "decal": True, "procedural": "grate"},  # cast iron
     "decal_patch": {"color": [0.062, 0.062, 0.06], "rough": 0.85, "decal": True, "texture_set": "asphalt_patch"},
@@ -729,8 +731,10 @@ M["road_asphalt"] = {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "as
 # lowered so an old repair sits within a few % of the road and a fresh one reads darker. WORKING_VALUE.
 # ADR 0323 (critic wave 6 pkt 2.2): overband 25 -> 60 mm mean (hand-poured, 30-90 mm in the shader), darker; a fresh
 # repair clearly darker than the road (0.60), an old one near it (0.82). WORKING_VALUE.
+# r3: aged 0.82 x the importer's age tint 1.29 put an old repair exactly on the road tone (render r2: 273 patches in
+# the tile, none readable); 0.55 / 0.68 -> old repair ~0.75 x the road, fresh ~0.47 x.
 M["decal_patch"]["asphalt_patch_seam"] = {"width_m": 0.06, "darkening": 0.75,
-                                         "fresh_tone": 0.60, "aged_tone": 0.82}
+                                         "fresh_tone": 0.55, "aged_tone": 0.68}
 M["decal_patch"]["asphalt_wear"] = {"low_photo_detail": 0.75}
 # Restore authored wheel wear (0099 halved it in C#). Keep all coefficients visible here.
 # Glyphs share the transverse encoding: their readability is an explicit visual control, not a claimed fix.
