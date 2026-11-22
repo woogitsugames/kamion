@@ -1,8 +1,28 @@
 {
  "by_kind": {
-  "lane_blind_end": 2
+  "lane_blind_end": 3
  },
  "cases": [
+  {
+   "chain": "c:w176912717:12337637782-11261246586",
+   "dist_from_stop_m": 0.0,
+   "e": -1024.71,
+   "junction": "j:n12337637782",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.2720921,
+   "lon": 22.8788578,
+   "n": -724.54,
+   "on_route": false,
+   "osm_ways": [
+    176912717
+   ],
+   "to_chain": "c:w176912717:12337637781-12337637782",
+   "turn_lanes": null,
+   "what": "none"
+  },
   {
    "chain": "c:w203371086:12337637720-1134847269",
    "dist_from_stop_m": 18.0,
@@ -47,7 +67,7 @@
    "what": "kerb"
   }
  ],
- "count": 2,
+ "count": 3,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {},
  "params": {
@@ -71,10 +91,11 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 83,
-  "kerb_tris": 37360,
+  "kerb_tris": 37358,
   "lane_samples": 46978,
+  "lane_samples_beyond_tile": 38,
   "lane_samples_in_taper": 2,
-  "marking_tris": 701,
+  "marking_tris": 693,
   "props_checked": 619
  }
 }
