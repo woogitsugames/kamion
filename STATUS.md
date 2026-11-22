@@ -22,3 +22,5 @@
 - NASTĘPNY KROK: `cat artifacts/fix-b4-s24/unity.status; tail artifacts/fix-b4-s24/pytest-c.log`
 - krok 9: import maczka Win64 OK, VQA High 64 kamer (vqa-bialystok-maczka-High/); maczka-gate-0326: jezdnia wolna (przed: shot_t0250 brama w poprzek). pytest podzbiór: 112 pass / 3 fail (gate mickiewicza+tykocin — kafle jeszcze nieprzebudowane; determinism C chunk 0_1 — różni się tylko osadzony atlas plot_kit.png: build CLI C czytał/pisał art-source w trakcie build_all z importu Unity i równoległych buildów; commit art-source cofnięty (e8074d088), C do ponownej przebudowy po końcu bw.ps1).
 - NASTĘPNY KROK: po CHAIN END w bw.status: `pwsh -File artifacts/fix-b4-s24/bwc.ps1 -RegionList bialystok-industrial-c` i pytest test_world_roads + test_gate_pose_0326
+- krok 10: mickiewicza zatrzymana po 1 h 41 min (fala 6: build_s 10 660 s ≈ 3 h — za długo w tej sesji); tykocin w toku, po nim after.ps1: C ponownie, pytest world_roads/terrain_walls/gate, import+VQA C. Mickiewicza do przebudowy osobno: `pwsh -File artifacts/fix-b4-s24/bw.ps1 -RegionList bialystok-mickiewicza` (~3 h).
+- NASTĘPNY KROK: `cat artifacts/fix-b4-s24/bw.status artifacts/fix-b4-s24/after.status`
