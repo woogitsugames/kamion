@@ -816,6 +816,64 @@ def nearest_chain(net, p, maxd=25.0):
     return best
 
 
+# ADR 0326: an OSM gate node belongs to the way it sits on. Only a node that lies on a modelled carriageway
+# (|lat| <= hw + GATE_ON_CARRIAGEWAY_TOL_M) is turned across that carriageway; a node beside it is on a side way
+# that is not in the road net (track / driveway / service, e.g. Maczka osm:node/13072640312 on track
+# way/1422488642, ~5 m outside the edge) and stays at its own position, spanning the side way, which meets the
+# road roughly at a right angle, i.e. parallel to the road. Before ADR 0326 any gate within 6 m of the EDGE was
+# snapped onto the centreline of the nearest road and closed it (build #4, P1).
+GATE_ON_CARRIAGEWAY_TOL_M = 1.0
+GATE_SPAN_M = {"sliding_gate": (-4.2, 4.2), "lift_gate": (0.0, 5.2)}   # local x extent of props.sliding_gate/lift_gate
+GATE_CLEAR_M = 0.3
+
+
+def _gate_span_points(proto, p, yaw, step=0.5):
+    x0, x1 = GATE_SPAN_M[proto]
+    xs = np.linspace(x0, x1, max(2, int(math.ceil((x1 - x0) / step)) + 1))
+    d = np.array([math.cos(yaw), math.sin(yaw)])
+    return np.asarray(p, float)[None, :] + xs[:, None] * d[None, :]
+
+
+def gate_on_foreign_carriageway(net, proto, p, yaw, host=None):
+    """True when the gate's span enters a carriageway (+GATE_CLEAR_M) of any chain other than its host."""
+    for P in _gate_span_points(proto, p, yaw):
+        for c in net.chains:
+            if c is host:
+                continue
+            lo, hi = c.line.p.min(0) - 30.0, c.line.p.max(0) + 30.0
+            if not (lo[0] <= P[0] <= hi[0] and lo[1] <= P[1] <= hi[1]):
+                continue
+            s, lat = c.line.project(P)
+            if 0.0 < s < c.length and abs(lat) < float(c.hw_at(s)) + GATE_CLEAR_M:
+                return True
+    return False
+
+
+def gate_pose(net, proto, q):
+    """(p, yaw) of an OSM gate node, or None when it cannot stand without closing a road (ADR 0326)."""
+    q = np.asarray(q, float)
+    hit = nearest_chain(net, q, 6.0)
+    host = None
+    if hit is None:
+        p, yaw = q, 0.0
+    else:
+        _, c, s, lat = hit
+        tt, nn = c.line.frame(s)
+        hw = float(c.hw_at(s))
+        if abs(lat) <= hw + GATE_ON_CARRIAGEWAY_TOL_M:          # the gate is on this carriageway's own way
+            host = c
+            yaw = math.atan2(nn[1], nn[0])                      # local +x -> chain left normal (across)
+            p = c.line.offset_point(s, -(hw + 0.5)) if proto == "lift_gate" else c.line.offset_point(s, 0.0)
+        else:                                                    # side way: keep the node, span parallel to road
+            p = q
+            yaw = math.atan2(tt[1], tt[0])
+            if proto == "lift_gate":                             # boom (x 0..5.2 m) centred on the node
+                p = q - 2.6 * np.array([math.cos(yaw), math.sin(yaw)])
+    if gate_on_foreign_carriageway(net, proto, p, yaw, host):
+        return None
+    return p, yaw
+
+
 def crossing_signs(pl, net, ctx_points, report, codes):
     n = 0
     for q in ctx_points:
@@ -1025,17 +1083,11 @@ def misc_points(pl, net, src, origin, report, codes):
         yaw = 0.0
         p = q
         if proto in ("lift_gate", "sliding_gate"):
-            hit = nearest_chain(net, q, 6.0)
-            if hit:
-                _, c, s, lat = hit
-                tt, nn = c.line.frame(s)
-                hw = float(c.hw_at(s))
-                if proto == "lift_gate":
-                    p = c.line.offset_point(s, -(hw + 0.5))           # post at the right edge, boom across
-                    yaw = math.atan2(nn[1], nn[0])                    # local +x -> chain left normal
-                else:
-                    p = c.line.offset_point(s, 0.0)
-                    yaw = math.atan2(nn[1], nn[0])
+            pose = gate_pose(net, proto, q)
+            if pose is None:
+                report.setdefault("gates_dropped_on_carriageway", []).append(nd["osm_node"])
+                continue
+            p, yaw = pose
         if pl.near(proto, p, 3.0):
             continue
         pl.add(proto, p, yaw, src=f"osm:node/{nd['osm_node']}", group=proto)
