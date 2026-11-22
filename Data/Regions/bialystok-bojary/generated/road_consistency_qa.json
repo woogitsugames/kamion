@@ -1,6 +1,7 @@
 {
  "by_kind": {
   "arrow_no_exit": 20,
+  "kerb_on_carriageway": 1,
   "lane_blind_end": 82,
   "marking_off_carriageway": 20,
   "obstacle_in_lane": 63
@@ -1648,6 +1649,19 @@
    "what": "left"
   },
   {
+   "chain": null,
+   "e": -989.49,
+   "junction": "j:n2676895268:corner2",
+   "kind": "kerb_on_carriageway",
+   "lat": 53.148807,
+   "lon": 23.174777,
+   "n": 1023.28,
+   "on_route": false,
+   "osm_ways": [],
+   "src": "j:n2676895268:corner2",
+   "what": "kerb"
+  },
+  {
    "chain": "c:w178218020:2203821981-527835112",
    "dist_from_stop_m": 0.0,
    "e": -1025.99,
@@ -2357,16 +2371,16 @@
   },
   {
    "chain": "c:w174386625:2291285759-1850821437",
-   "dist_from_stop_m": 12.5,
-   "e": -412.4,
+   "dist_from_stop_m": 12.0,
+   "e": -412.7,
    "junction": "j:n2291285759",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.130139,
-   "lon": 23.1815985,
-   "n": -1024.62,
+   "lat": 53.1301427,
+   "lon": 23.1815942,
+   "n": -1024.22,
    "on_route": false,
    "osm_ways": [
     174386625
@@ -3320,7 +3334,7 @@
    "what": "sidewalk"
   }
  ],
- "count": 185,
+ "count": 186,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "arrow_no_exit": 8,
@@ -3349,11 +3363,11 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 1703,
-  "kerb_tris": 192635,
+  "kerb_tris": 192597,
   "lane_samples": 176875,
   "lane_samples_beyond_tile": 180,
   "lane_samples_in_taper": 221,
   "marking_tris": 22067,
-  "props_checked": 2839
+  "props_checked": 2840
  }
 }

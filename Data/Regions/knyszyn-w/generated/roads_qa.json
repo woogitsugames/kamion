@@ -1035,10 +1035,15 @@
   "decals": {
    "gullies": 326,
    "oil": 31,
-   "patches": 84
+   "patches": 181,
+   "seal_cracks": {
+    "longitudinal": 92,
+    "transverse": 180,
+    "tris": 13134
+   }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 141205,
+  "footprint_nodes": 141206,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1197,7 +1202,7 @@
   },
   "verge_strips": {
    "chunks": 29,
-   "tris": 24456
+   "tris": 24444
   },
   "walled_ramps": []
  }

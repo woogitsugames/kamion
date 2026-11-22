@@ -158,7 +158,12 @@
   "decals": {
    "gullies": 138,
    "oil": 4,
-   "patches": 35
+   "patches": 66,
+   "seal_cracks": {
+    "longitudinal": 32,
+    "transverse": 62,
+    "tris": 4756
+   }
   },
   "emergency_signal_junctions": [],
   "footprint_nodes": 66010,
@@ -251,8 +256,8 @@
    "unmatched": 0
   },
   "verge_strips": {
-   "chunks": 13,
-   "tris": 1712
+   "chunks": 22,
+   "tris": 15704
   },
   "walled_ramps": []
  }

@@ -1,9 +1,9 @@
 {
  "by_source": {
   "skirt:yard_gravel": 1,
-  "steep_grass:verge_grass": 10
+  "steep_grass:verge_grass": 8
  },
- "count": 11,
+ "count": 9,
  "max_m": 0.74,
  "p99_m": 0.74,
  "skirt_area": [
@@ -23,10 +23,15 @@
  "thin_steep_faces_skipped": 1,
  "thresh_m": 0.15,
  "verge_strips": {
-  "max_m": 0.0,
+  "max_m": 0.658,
   "skirt": 0,
-  "steep_grass": 0,
-  "worst": []
+  "steep_grass": 2,
+  "worst": [
+   "steep_grass",
+   "c:w27718745:897574813-1134817563:R:vg",
+   1023.7,
+   -737.9
+  ]
  },
  "worst": [
   {
@@ -52,22 +57,6 @@
    "mat": "verge_grass",
    "n": 82.7,
    "src": "c:w1111506750:1134839226-10168944517:R:2"
-  },
-  {
-   "e": 1023.7,
-   "h": 0.658,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": -737.9,
-   "src": "c:w27718745:897574813-1134817563:R"
-  },
-  {
-   "e": 1023.9,
-   "h": 0.657,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": -738.2,
-   "src": "c:w27718745:897574813-1134817563:R"
   },
   {
    "e": 236.9,
