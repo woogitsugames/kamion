@@ -987,4 +987,6 @@ def build_all(sign_codes, boards):
     P.update(MG.prototypes())
     from . import rail_props as RP              # ADR 0217: level-crossing devices, only in regions with the rail stage
     P.update(RP.prototypes())
+    from . import guide_posts as GP             # ADR 0324: U-1a guide posts of rural numbered roads
+    P.update(GP.prototypes())
     return P

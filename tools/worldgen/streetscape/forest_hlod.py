@@ -53,8 +53,34 @@ CROWN_R = 4.5
 # primitive and material as the wall (no extra draw). A stand seen from the side then steps down shrub - young
 # trees - canopy instead of ending in one vertical plane.
 SKIRT_OFF_M = 3.5
-SKIRT_KEEP = 0.18          # M68: outer shrub skirt on ~15-20% of outer edges, not 100%
+SKIRT_KEEP = 0.45          # M68 had 0.18 (shrub skirt on ~15-20 % of outer edges); ADR 0324: the far stand read as a
+#                            flat curtain with a ruler foot (critic s24 wave 6 # 4.3) - nearly half of the outer edge
+#                            carries the skirt, its height varies along the edge (SKIRT_H_VAR)
+SKIRT_H_VAR = (0.55, 1.25)
+# ADR 0324 (WORKING_VALUE): the wall top follows a smooth noise (TOP_VAR x the stand height over TOP_NOISE_M) instead
+# of one height per 12 trees = a ruler line; a second wall BACK_OFF_M behind every outer wall, taller by BACK_H and
+# with another part of the edge texture, shows through the gaps of the first one and breaks its silhouette (depth
+# parallax when driving past); corners step down further and over two segments.
+TOP_VAR = (0.82, 1.14)
+TOP_NOISE_M = 16.0
+BACK_OFF_M = 6.0
+BACK_H = (1.04, 1.22)
+CANOPY_EDGE_M = 5.0        # canopy vertices this close to an outer stand edge are lowered ...
+CANOPY_EDGE_DROP = (0.62, 0.86)   # ... to this share of the crown height at the edge itself
 SKIRT_SEG_M = 18.0
+
+
+def _vnoise2(x, y, period, salt=""):
+    """Smooth value noise in 0..1 on a hash lattice (deterministic, the same in every tile: absolute local metres)."""
+    fx, fy = x / period, y / period
+    ix, iy = math.floor(fx), math.floor(fy)
+    tx, ty = fx - ix, fy - iy
+    tx, ty = tx * tx * (3 - 2 * tx), ty * ty * (3 - 2 * ty)
+
+    def h(i, j):
+        return int(hashlib.sha1(f"fh:{salt}:{i}:{j}".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
+    return ((h(ix, iy) * (1 - tx) + h(ix + 1, iy) * tx) * (1 - ty)
+            + (h(ix, iy + 1) * (1 - tx) + h(ix + 1, iy + 1) * tx) * ty)
 
 
 def _skirt_keep(a, b):
@@ -63,7 +89,7 @@ def _skirt_keep(a, b):
     key = f"skirt:{int(round(mx / SKIRT_SEG_M))}:{int(round(my / SKIRT_SEG_M))}"
     return (int(hashlib.sha1(key.encode()).hexdigest()[:8], 16) % 1000) < int(round(SKIRT_KEEP * 1000))
 CORNER_COS = 0.72          # outer edge turning by more than ~44 degrees at a point = a stand corner
-CORNER_DROP = 0.80         # wall height factor at the corner (0.90 one point either side)
+CORNER_DROP = 0.62         # wall height factor at the corner (ADR 0324: was 0.80; 0.81 one point either side)
 EDGE_ROW_M = 9.5          # + the 2.5 m clearance in no_forest = trees within 12 m of a road / yard stay individual
 MIX_OF_CATEGORY = {"iglasty": "conifer", "liściasty": "broadleaf", "mieszany": "mixed", None: "mixed"}
 TEX_REF = "art-source/world/vegetation/{}.png"
@@ -194,6 +220,18 @@ def build(trees, forests, no_forest, zground, half, report):
         T2 = np.concatenate(T2)
         XY, inv = np.unique(np.round(T2.reshape(-1, 2), 3), axis=0, return_inverse=True)
         Z = canopy_z(XY)
+        # ADR 0324: the canopy surface rolls off at a real stand edge (not at a cell border: the neighbour cell
+        # continues it) - a cell seen from the side or from above was a box with a flat lid and vertical faces
+        outer_b = piece.boundary.difference(cb.exterior.buffer(0.1))
+        if not outer_b.is_empty:
+            d_edge = shapely.distance(shapely.points(XY), outer_b)
+            near = d_edge < CANOPY_EDGE_M
+            if near.any():
+                zg_c = np.asarray(zground(XY[near, 0], XY[near, 1]), float)
+                k_ = np.array([CANOPY_EDGE_DROP[0] + (CANOPY_EDGE_DROP[1] - CANOPY_EDGE_DROP[0])
+                               * _vnoise2(q_[0], q_[1], TOP_NOISE_M, "c") for q_ in XY[near]])
+                k_ = 1.0 - (1.0 - k_) * (1.0 - d_edge[near] / CANOPY_EDGE_M)
+                Z[near] = zg_c + (Z[near] - zg_c) * k_
         V = np.column_stack([XY, Z])
         prims.append({"V": V, "T": inv.reshape(-1, 3), "UV": XY / Wt, "mat": f"forest_canopy_{mix}",
                       "N": np.tile([0.0, 0.0, 1.0], (len(V), 1))})
@@ -236,6 +274,7 @@ def build(trees, forests, no_forest, zground, half, report):
                     nb = cell_of(q[0], q[1], half)
                     inner[i] = nb in hlod and nb != (ci, cj)          # tile border: outer wall
             hw = np.array([edge_info["h_m"] * h_local(p) / edge_info["h_median_m"] for p in pts])
+            hw *= np.array([TOP_VAR[0] + (TOP_VAR[1] - TOP_VAR[0]) * _vnoise2(p[0], p[1], TOP_NOISE_M) for p in pts])
             # ADR 0187: where the outer stand edge turns sharply (end of a belt, corner of a block) the wall steps
             # down, so a stand seen end-on does not finish in a full-height vertical cut ("theatre flat")
             if nseg >= 2:
@@ -251,7 +290,8 @@ def build(trees, forests, no_forest, zground, half, report):
                     if inner[a_] or inner[b_]:
                         continue
                     if float(dv[a_] @ dv[b_]) < CORNER_COS:
-                        for q, k_ in ((p, CORNER_DROP), (p - 1, 0.5 + 0.5 * CORNER_DROP), (p + 1, 0.5 + 0.5 * CORNER_DROP)):
+                        for q, k_ in ((p, CORNER_DROP), (p - 1, 0.5 + 0.5 * CORNER_DROP), (p + 1, 0.5 + 0.5 * CORNER_DROP),
+                                      (p - 2, 0.2 + 0.8 * CORNER_DROP + 0.12), (p + 2, 0.2 + 0.8 * CORNER_DROP + 0.12)):
                             if 0 <= q < len(pts):
                                 hw[q] = min(hw[q], k_ * edge_info["h_m"] * h_local(pts[q]) / edge_info["h_median_m"])
                 if closed:
@@ -286,12 +326,31 @@ def build(trees, forests, no_forest, zground, half, report):
                         Tw += [[b0, b1, t1], [b0, t1, t0]]
                     else:
                         Tw += [[b0, t1, b1], [b0, t0, t1]]
+                if not inner[i] and k >= 2:
+                    # ADR 0324: back wall (see BACK_OFF_M)
+                    qb = pts[idx] - nrm * BACK_OFF_M
+                    zb_ = zground(qb[:, 0], qb[:, 1]) + edge_info["z0_m"]
+                    hb_ = hw[idx] * np.array([BACK_H[0] + (BACK_H[1] - BACK_H[0]) * _vnoise2(a[0], a[1], TOP_NOISE_M * 0.6, "b")
+                                              for a in qb])
+                    base = len(Vw)
+                    Vw += [[a[0], a[1], z_] for a, z_ in zip(qb, zb_)] + [[a[0], a[1], z_ + h_] for a, z_, h_ in zip(qb, zb_, hb_)]
+                    usb = us + 0.53
+                    UVw += [[u, 0.0] for u in usb] + [[u, vm] for u in usb]
+                    Nw += list(n3) + list(n3)
+                    for m_ in range(k - 1):
+                        b0, b1, t0, t1 = base + m_, base + m_ + 1, base + k + m_, base + k + m_ + 1
+                        if face[i] > 0:
+                            Tw += [[b0, b1, t1], [b0, t1, t0]]
+                        else:
+                            Tw += [[b0, t1, b1], [b0, t0, t1]]
                 mantle = edge_info.get("mantle")
                 if mantle and not inner[i]:
                     # skirt: the strip moved SKIRT_OFF_M out of the stand on ~18% of segments, mantle height scaled like the wall
                     q = pts[idx] + nrm * SKIRT_OFF_M
                     zq = zground(q[:, 0], q[:, 1]) + edge_info["z0_m"]
                     hq = mantle["h_m"] * np.clip(hw[idx] / edge_info["h_m"], 0.5, 1.15)
+                    hq = hq * np.array([SKIRT_H_VAR[0] + (SKIRT_H_VAR[1] - SKIRT_H_VAR[0]) * _vnoise2(a[0], a[1], 9.0, "s")
+                                        for a in q])
                     base = len(Vw)
                     Vw += [[a[0], a[1], z_] for a, z_ in zip(q, zq)] + [[a[0], a[1], z_ + h_] for a, z_, h_ in zip(q, zq, hq)]
                     us2 = us + 0.37
