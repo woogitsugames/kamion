@@ -30,3 +30,5 @@
 - NASTĘPNY KROK: `cat artifacts/fix-b4-s24/bw.status artifacts/fix-b4-s24/unity.status`
 - krok 13: VQA C High (70 kamer, import Win64 exit 0) — krawędzie i trasa bez dziur (c-sheet.jpg). mickiewicza: pełny build zatrzymany (~3 h); gate_check.py na sieci: osm:node/6002495021 na drodze emergency_access, przęsło wchodzi na trasę -> pominięta (pose None). UWAGA: derived/bialystok-mickiewicza w tym worktree może być niespójny (przerwany build) — NIE kopiować do main.
 - NASTĘPNY KROK (lider): przebudować mickiewicza w main po scaleniu: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-mickiewicza` (~3 h), potem `pytest tests/gis/test_gate_pose_0326.py`.
+- 10:48 krok 1-2: worktree regen-wave-7-s24 (derived=junction). Fala 7: 51 kafli (C/Maczka/Tykocin pominięte: zbudowane 22.08:18-10:05 po ostatnim commicie generatora 8cc4a0916 07:53). Łańcuchy A/B/C + final.ps1 + autocommit.ps1 uruchomione.
+- NASTĘPNY KROK: `cat artifacts/regen-wave-7-s24/chain.status artifacts/regen-wave-7-s24/final.status`
