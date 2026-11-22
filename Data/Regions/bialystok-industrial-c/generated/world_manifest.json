@@ -10,7 +10,7 @@
     "z_max_evrf2007": 164.9,
     "z_min_evrf2007": 141.91
    },
-   "bytes": 7020848,
+   "bytes": 7374864,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.glb",
    "forest_cells": [
     {
@@ -22,8 +22,8 @@
      ],
      "id": "0_0",
      "mix": "mixed",
-     "trees": 161,
-     "tris": 135
+     "trees": 163,
+     "tris": 209
     },
     {
      "bbox_local_m": [
@@ -34,8 +34,8 @@
      ],
      "id": "0_3",
      "mix": "mixed",
-     "trees": 269,
-     "tris": 174
+     "trees": 272,
+     "tris": 232
     },
     {
      "bbox_local_m": [
@@ -46,8 +46,8 @@
      ],
      "id": "1_0",
      "mix": "mixed",
-     "trees": 213,
-     "tris": 248
+     "trees": 247,
+     "tris": 354
     },
     {
      "bbox_local_m": [
@@ -58,8 +58,8 @@
      ],
      "id": "1_2",
      "mix": "mixed",
-     "trees": 34,
-     "tris": 78
+     "trees": 42,
+     "tris": 142
     },
     {
      "bbox_local_m": [
@@ -70,8 +70,8 @@
      ],
      "id": "1_3",
      "mix": "mixed",
-     "trees": 245,
-     "tris": 171
+     "trees": 241,
+     "tris": 221
     },
     {
      "bbox_local_m": [
@@ -82,8 +82,8 @@
      ],
      "id": "2_0",
      "mix": "mixed",
-     "trees": 57,
-     "tris": 95
+     "trees": 63,
+     "tris": 125
     },
     {
      "bbox_local_m": [
@@ -94,8 +94,8 @@
      ],
      "id": "2_1",
      "mix": "mixed",
-     "trees": 76,
-     "tris": 121
+     "trees": 73,
+     "tris": 189
     },
     {
      "bbox_local_m": [
@@ -106,8 +106,8 @@
      ],
      "id": "2_2",
      "mix": "mixed",
-     "trees": 47,
-     "tris": 113
+     "trees": 46,
+     "tris": 187
     },
     {
      "bbox_local_m": [
@@ -118,20 +118,20 @@
      ],
      "id": "2_3",
      "mix": "mixed",
-     "trees": 263,
-     "tris": 171
+     "trees": 258,
+     "tris": 221
     },
     {
      "bbox_local_m": [
-      -830.57,
+      -830.53,
       967.32,
       -768.0,
       1024.0
      ],
      "id": "3_0",
      "mix": "mixed",
-     "trees": 194,
-     "tris": 140
+     "trees": 195,
+     "tris": 230
     },
     {
      "bbox_local_m": [
@@ -143,7 +143,7 @@
      "id": "3_1",
      "mix": "mixed",
      "trees": 123,
-     "tris": 111
+     "tris": 147
     },
     {
      "bbox_local_m": [
@@ -155,7 +155,7 @@
      "id": "3_2",
      "mix": "mixed",
      "trees": 117,
-     "tris": 101
+     "tris": 131
     },
     {
      "bbox_local_m": [
@@ -167,19 +167,19 @@
      "id": "3_3",
      "mix": "mixed",
      "trees": 42,
-     "tris": 105
+     "tris": 149
     }
    ],
    "id": "0_0",
    "instances": {
-    "count": 4706,
+    "count": 4809,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_0.json",
-    "sha256": "ff90324c6d3ca94c83f3d13ed27ac65fd15f6477c722c8b165abd6051dccdb48"
+    "sha256": "233c71a6ecc2fb371fe16ca8eb6c72ac4a40df5e2784360d3e70b3821c9b1dc2"
    },
    "low": {
-    "bytes": 1991992,
+    "bytes": 2042472,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.low.glb",
-    "sha256": "0850f00b3840d2ba635e4d30d472c3e7f8bfe7d955f70d2357880a16abf7b742"
+    "sha256": "914db82024f5a43ec2c7d31787438da522c40697b145bdaed31ccbc8be5c8d6a"
    },
    "materials": [
     "barrier_steel",
@@ -197,6 +197,7 @@
     "cycle_asphalt",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -224,23 +225,26 @@
     "skylight",
     "terrain_grass",
     "verge_grass",
+    "verge_tufts",
     "window_sill",
     "wire",
     "yard_behaton"
    ],
-   "sha256": "1abcdb06d358e2b886c26d8919150a64da2eaf4650dfdcab0f652645378409cb",
+   "sha256": "535ec1c99e5bd86647d7938b911106d31033f7f07e586946ab5eccd480df3ec9",
    "triangles": {
+    "banks": 2126,
+    "banks_low": 0,
     "bridge": 480,
     "buildings": 8605,
     "buildings_lod1": 769,
-    "forest_hlod": 1763,
+    "forest_hlod": 2537,
     "furniture": 5242,
-    "markings": 2558,
-    "paved": 2544,
-    "road": 15183,
-    "road_collision": 7210,
-    "terrain_lod0": 136560,
-    "terrain_lod1": 35184,
+    "markings": 3775,
+    "paved": 2555,
+    "road": 13457,
+    "road_collision": 7209,
+    "terrain_lod0": 138286,
+    "terrain_lod1": 36910,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 456
@@ -255,7 +259,7 @@
     "z_max_evrf2007": 156.2,
     "z_min_evrf2007": 133.86
    },
-   "bytes": 10779004,
+   "bytes": 10845816,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_1.glb",
    "forest_cells": [
     {
@@ -267,8 +271,8 @@
      ],
      "id": "0_4",
      "mix": "mixed",
-     "trees": 287,
-     "tris": 162
+     "trees": 294,
+     "tris": 192
     },
     {
      "bbox_local_m": [
@@ -279,8 +283,8 @@
      ],
      "id": "0_5",
      "mix": "mixed",
-     "trees": 285,
-     "tris": 166
+     "trees": 294,
+     "tris": 192
     },
     {
      "bbox_local_m": [
@@ -291,8 +295,8 @@
      ],
      "id": "0_6",
      "mix": "mixed",
-     "trees": 281,
-     "tris": 184
+     "trees": 313,
+     "tris": 252
     },
     {
      "bbox_local_m": [
@@ -303,8 +307,8 @@
      ],
      "id": "0_7",
      "mix": "mixed",
-     "trees": 77,
-     "tris": 122
+     "trees": 86,
+     "tris": 190
     },
     {
      "bbox_local_m": [
@@ -339,8 +343,8 @@
      ],
      "id": "1_6",
      "mix": "mixed",
-     "trees": 160,
-     "tris": 167
+     "trees": 158,
+     "tris": 211
     },
     {
      "bbox_local_m": [
@@ -376,7 +380,7 @@
      "id": "2_6",
      "mix": "mixed",
      "trees": 247,
-     "tris": 168
+     "tris": 194
     },
     {
      "bbox_local_m": [
@@ -387,8 +391,8 @@
      ],
      "id": "2_7",
      "mix": "mixed",
-     "trees": 64,
-     "tris": 125
+     "trees": 67,
+     "tris": 225
     },
     {
      "bbox_local_m": [
@@ -399,8 +403,8 @@
      ],
      "id": "3_4",
      "mix": "mixed",
-     "trees": 125,
-     "tris": 125
+     "trees": 132,
+     "tris": 165
     },
     {
      "bbox_local_m": [
@@ -411,8 +415,8 @@
      ],
      "id": "3_5",
      "mix": "mixed",
-     "trees": 212,
-     "tris": 204
+     "trees": 258,
+     "tris": 280
     },
     {
      "bbox_local_m": [
@@ -423,8 +427,8 @@
      ],
      "id": "3_6",
      "mix": "mixed",
-     "trees": 125,
-     "tris": 152
+     "trees": 148,
+     "tris": 214
     },
     {
      "bbox_local_m": [
@@ -435,20 +439,20 @@
      ],
      "id": "3_7",
      "mix": "mixed",
-     "trees": 64,
-     "tris": 171
+     "trees": 92,
+     "tris": 273
     }
    ],
    "id": "0_1",
    "instances": {
-    "count": 4886,
+    "count": 5108,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_1.json",
-    "sha256": "714a322296006b3e629baa6a06a9eeec675bd797a1b1db4425e9a5393c713d3d"
+    "sha256": "dd9a0e523a80862229cb7e8fbb4bf2677828797042cb74cc28d9a0954f95fba9"
    },
    "low": {
-    "bytes": 6044744,
+    "bytes": 6078744,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_1.low.glb",
-    "sha256": "44ae35b17bf5370a719c2c24f9ff1efc642c8b2becd1ee786648ed80f8ec0c07"
+    "sha256": "c4a24ce366a15712d3174d7f31b90effecd6edfd2624c6831d54eeca1085f2a6"
    },
    "materials": [
     "balcony_slab",
@@ -465,6 +469,7 @@
     "curb_concrete",
     "cycle_asphalt",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "drain_grate",
     "fab_drainage",
@@ -493,25 +498,28 @@
     "sidewalk_paving",
     "terrain_grass",
     "verge_grass",
+    "verge_tufts",
     "window_sill",
     "wire"
    ],
-   "sha256": "7ba4e1e31ab745ef89fe8ff7bb38df069b9311b9d220bec791547275dc2d5248",
+   "sha256": "decfd877ca757944fc8d01cc87b301671dca94b97a73bbca7e3aa710499e4ad2",
    "triangles": {
+    "banks": 187,
+    "banks_low": 0,
     "bridge": 232,
     "buildings": 7045,
     "buildings_lod1": 689,
-    "forest_hlod": 2386,
+    "forest_hlod": 3028,
     "furniture": 100,
-    "markings": 279,
+    "markings": 689,
     "paved": 56,
     "plot_ground": 29,
     "plots": 32,
     "plots_low": 30,
-    "road": 7002,
+    "road": 6890,
     "road_collision": 3586,
-    "terrain_lod0": 136317,
-    "terrain_lod1": 34941,
+    "terrain_lod0": 136429,
+    "terrain_lod1": 35053,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 351
@@ -526,7 +534,7 @@
     "z_max_evrf2007": 156.2,
     "z_min_evrf2007": 129.16
    },
-   "bytes": 12191660,
+   "bytes": 12213840,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_2.glb",
    "forest_cells": [
     {
@@ -538,20 +546,20 @@
      ],
      "id": "0_11",
      "mix": "mixed",
-     "trees": 111,
-     "tris": 106
+     "trees": 137,
+     "tris": 192
     }
    ],
    "id": "0_2",
    "instances": {
-    "count": 1110,
+    "count": 1141,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_2.json",
-    "sha256": "7b392f3d20ae9534bb2a0bb0e89e3cdbb00f8366ab838439a3641c71d5bd3235"
+    "sha256": "7015b0a9113f0bc06251c9a082faa9b328f254a5ce80704b070ece949c093dfa"
    },
    "low": {
-    "bytes": 6175400,
+    "bytes": 6193860,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_2.low.glb",
-    "sha256": "70de4ac819dc51eb3f4f406f94de86fdaab1950ccc2bb6070e82c3b117743001"
+    "sha256": "e1c3c4cafe0da0a3ab96a69063ea2c3beb81c6045c0700e26e7bb23146f7ee92"
    },
    "materials": [
     "balcony_slab",
@@ -565,6 +573,7 @@
     "concrete_plinth",
     "curb_concrete",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -603,13 +612,13 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "52d8c469e926a2cb2dbd377dc7ed60ec9ba4deacc64b4afbfdd019d2f6b7e8c6",
+   "sha256": "d896e3cdf058507c3cad0849386556a65fbdfb41a2ae9447033bda2764c499fa",
    "triangles": {
     "buildings": 23374,
     "buildings_lod1": 1116,
-    "forest_hlod": 106,
+    "forest_hlod": 192,
     "furniture": 3354,
-    "markings": 52,
+    "markings": 432,
     "plot_ground": 425,
     "plots": 1453,
     "plots_low": 1142,
@@ -631,7 +640,7 @@
     "z_max_evrf2007": 145.2,
     "z_min_evrf2007": 125.71
    },
-   "bytes": 11195952,
+   "bytes": 11329372,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_3.glb",
    "forest_cells": [
     {
@@ -644,7 +653,7 @@
      "id": "0_12",
      "mix": "mixed",
      "trees": 130,
-     "tris": 106
+     "tris": 142
     },
     {
      "bbox_local_m": [
@@ -655,8 +664,8 @@
      ],
      "id": "0_13",
      "mix": "mixed",
-     "trees": 248,
-     "tris": 161
+     "trees": 269,
+     "tris": 219
     },
     {
      "bbox_local_m": [
@@ -667,8 +676,8 @@
      ],
      "id": "0_14",
      "mix": "mixed",
-     "trees": 122,
-     "tris": 110
+     "trees": 131,
+     "tris": 166
     },
     {
      "bbox_local_m": [
@@ -679,8 +688,8 @@
      ],
      "id": "0_15",
      "mix": "conifer",
-     "trees": 86,
-     "tris": 97
+     "trees": 106,
+     "tris": 135
     },
     {
      "bbox_local_m": [
@@ -691,8 +700,8 @@
      ],
      "id": "1_12",
      "mix": "mixed",
-     "trees": 45,
-     "tris": 55
+     "trees": 54,
+     "tris": 83
     },
     {
      "bbox_local_m": [
@@ -703,8 +712,8 @@
      ],
      "id": "1_13",
      "mix": "mixed",
-     "trees": 10,
-     "tris": 39
+     "trees": 16,
+     "tris": 53
     },
     {
      "bbox_local_m": [
@@ -715,20 +724,20 @@
      ],
      "id": "1_15",
      "mix": "conifer",
-     "trees": 116,
-     "tris": 114
+     "trees": 128,
+     "tris": 168
     }
    ],
    "id": "0_3",
    "instances": {
-    "count": 1318,
+    "count": 1417,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_3.json",
-    "sha256": "20b7bf2409090833afe6349c733f41fc8e2d184a1c0a8b76e24c3e1f49350214"
+    "sha256": "b5d6da28af152200c3aa47a0f82a186e48d25f9b04a574f5508e9ee27096e249"
    },
    "low": {
-    "bytes": 6822904,
+    "bytes": 6847412,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_3.low.glb",
-    "sha256": "98eaa4b70ce4820410e65d10e1713cac195e1831dd7b78c7923ef95dc611dc81"
+    "sha256": "72fc176c79c33210ac3f74951cad56c3885fff4a72f4f92b1b6911c0819f97eb"
    },
    "materials": [
     "barrier_steel",
@@ -744,6 +753,7 @@
     "curb_concrete",
     "cycle_asphalt",
     "decal_patch",
+    "decal_seal",
     "fab_drainage",
     "facade_atlas",
     "fence_galv",
@@ -768,23 +778,26 @@
     "steel_galv",
     "terrain_grass",
     "verge_grass",
+    "verge_tufts",
     "wire"
    ],
-   "sha256": "47ab3d1669c1111a416a9bc680fa732698565623df3cc86919a8eeb34fa1e6c8",
+   "sha256": "8d001ca6bb8ffc8707f07b1847b1e168c260fad59dc87b8d3816cfc524d451a1",
    "triangles": {
+    "banks": 668,
+    "banks_low": 0,
     "buildings": 60,
     "buildings_lod1": 10,
-    "forest_hlod": 682,
+    "forest_hlod": 966,
     "furniture": 15590,
-    "markings": 3973,
+    "markings": 4563,
     "paved": 1263,
     "plot_ground": 8,
     "plots": 153,
     "plots_low": 118,
-    "road": 9970,
+    "road": 9258,
     "road_collision": 6861,
-    "terrain_lod0": 135742,
-    "terrain_lod1": 34366,
+    "terrain_lod0": 136454,
+    "terrain_lod1": 35078,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 180
@@ -799,7 +812,7 @@
     "z_max_evrf2007": 158.53,
     "z_min_evrf2007": 122.81
    },
-   "bytes": 5081656,
+   "bytes": 5085672,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_4.glb",
    "forest_cells": [
     {
@@ -811,8 +824,8 @@
      ],
      "id": "0_16",
      "mix": "conifer",
-     "trees": 281,
-     "tris": 159
+     "trees": 290,
+     "tris": 195
     },
     {
      "bbox_local_m": [
@@ -823,8 +836,8 @@
      ],
      "id": "0_17",
      "mix": "conifer",
-     "trees": 61,
-     "tris": 101
+     "trees": 81,
+     "tris": 153
     },
     {
      "bbox_local_m": [
@@ -835,20 +848,20 @@
      ],
      "id": "1_16",
      "mix": "conifer",
-     "trees": 67,
-     "tris": 75
+     "trees": 75,
+     "tris": 105
     }
    ],
    "id": "0_4",
    "instances": {
-    "count": 727,
+    "count": 769,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_4.json",
-    "sha256": "15941b046e9092638cd1a749a2efadb0d5c01dc3d7de021ab5beca7de64f289a"
+    "sha256": "95ab44ae24a2a3e563cec8bfa5d130808539252979c0a16a244ada8c311ed4de"
    },
    "low": {
-    "bytes": 989312,
+    "bytes": 992512,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_4.low.glb",
-    "sha256": "e375c92e6ab455bc61f084f8eb7cd1e8a2b3dd0674f2733916a3af97638b9931"
+    "sha256": "2d5dd43f0af728efc10d1fb5768aad4935f624968b4878c57a31efc324ff990e"
    },
    "materials": [
     "collision_fence",
@@ -860,9 +873,9 @@
     "wire",
     "yard_gravel"
    ],
-   "sha256": "cfb08594131ff81394c7906edae1527c82e5527f950876f896b1a9fffd5648aa",
+   "sha256": "d05c2e57d0b3f548fd537d0a54bb62127fa7005aa8e17d3808dafcdb09c47e89",
    "triangles": {
-    "forest_hlod": 335,
+    "forest_hlod": 453,
     "furniture": 4302,
     "paved": 278,
     "road_collision": 1038,
@@ -945,7 +958,7 @@
     "z_max_evrf2007": 143.15,
     "z_min_evrf2007": 120.28
    },
-   "bytes": 5201192,
+   "bytes": 5201984,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_6.glb",
    "forest_cells": [],
    "id": "0_6",
@@ -955,9 +968,9 @@
     "sha256": "43890b5da0f8a423ee574f39f715343435ad401001df3a742c5cf99bce3e496b"
    },
    "low": {
-    "bytes": 1053864,
+    "bytes": 1054512,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_6.low.glb",
-    "sha256": "bb370adc8bb219facad0ec0914975246f8ae128d00940088cbf4adb2e3253ac9"
+    "sha256": "ad44b73e02a6a754b56621cadcc49b83ec91297b16e7cfe64356a8308cb6c3e8"
    },
    "materials": [
     "brick_red",
@@ -982,12 +995,12 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "db06d07aa01dd501bd6c9876a89bedbfa8f04592d5712a3c9063ddc639c122fb",
+   "sha256": "5ebdb6cca60f848eb1702249c80a440e5a739e04ad9318f81a66dd8204b4200d",
    "triangles": {
     "buildings": 258,
     "buildings_lod1": 43,
     "furniture": 5227,
-    "markings": 26,
+    "markings": 38,
     "road": 634,
     "road_collision": 1397,
     "terrain_lod0": 135328,
@@ -1006,7 +1019,7 @@
     "z_max_evrf2007": 147.45,
     "z_min_evrf2007": 126.45
    },
-   "bytes": 10717420,
+   "bytes": 10723660,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_7.glb",
    "forest_cells": [],
    "id": "0_7",
@@ -1016,9 +1029,9 @@
     "sha256": "4764489b803a4ba288ea8d8760ec54870ca989cf2e931d199ba612db38eaa0f7"
    },
    "low": {
-    "bytes": 6055872,
+    "bytes": 6061228,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_7.low.glb",
-    "sha256": "dc120731f5761c7d97f0266715d5bd71b2e64c1ad6e3886efc8e66f4dcc94ca1"
+    "sha256": "4fb48004377e37b099f669dad08ef7221bc437fa5270cb0275ab3302c7bb861c"
    },
    "materials": [
     "brick_red",
@@ -1034,6 +1047,7 @@
     "curb_concrete",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -1070,12 +1084,12 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "19c0da63fefeda0f07f146f050925af80779ad552a7cd96032adb53b4289d691",
+   "sha256": "22bd4969455c6f782f0649a0bdd3951eb036de5915df74a5eaa61507654fcae4",
    "triangles": {
     "buildings": 5108,
     "buildings_lod1": 809,
     "furniture": 2936,
-    "markings": 58,
+    "markings": 158,
     "paved": 93,
     "plot_ground": 1830,
     "plots": 2962,
@@ -1098,7 +1112,7 @@
     "z_max_evrf2007": 173.45,
     "z_min_evrf2007": 134.97
    },
-   "bytes": 9907792,
+   "bytes": 9923324,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_0.glb",
    "forest_cells": [
     {
@@ -1110,8 +1124,8 @@
      ],
      "id": "4_0",
      "mix": "mixed",
-     "trees": 257,
-     "tris": 173
+     "trees": 288,
+     "tris": 245
     },
     {
      "bbox_local_m": [
@@ -1122,8 +1136,8 @@
      ],
      "id": "4_1",
      "mix": "mixed",
-     "trees": 100,
-     "tris": 139
+     "trees": 95,
+     "tris": 197
     },
     {
      "bbox_local_m": [
@@ -1134,8 +1148,8 @@
      ],
      "id": "4_2",
      "mix": "mixed",
-     "trees": 106,
-     "tris": 123
+     "trees": 123,
+     "tris": 173
     },
     {
      "bbox_local_m": [
@@ -1146,8 +1160,8 @@
      ],
      "id": "4_3",
      "mix": "mixed",
-     "trees": 272,
-     "tris": 168
+     "trees": 279,
+     "tris": 198
     },
     {
      "bbox_local_m": [
@@ -1158,8 +1172,8 @@
      ],
      "id": "5_0",
      "mix": "conifer",
-     "trees": 63,
-     "tris": 78
+     "trees": 76,
+     "tris": 110
     },
     {
      "bbox_local_m": [
@@ -1170,8 +1184,8 @@
      ],
      "id": "5_1",
      "mix": "conifer",
-     "trees": 127,
-     "tris": 151
+     "trees": 135,
+     "tris": 211
     },
     {
      "bbox_local_m": [
@@ -1182,8 +1196,8 @@
      ],
      "id": "5_2",
      "mix": "conifer",
-     "trees": 99,
-     "tris": 104
+     "trees": 103,
+     "tris": 126
     },
     {
      "bbox_local_m": [
@@ -1194,8 +1208,8 @@
      ],
      "id": "5_3",
      "mix": "conifer",
-     "trees": 177,
-     "tris": 175
+     "trees": 209,
+     "tris": 233
     },
     {
      "bbox_local_m": [
@@ -1206,8 +1220,8 @@
      ],
      "id": "6_0",
      "mix": "conifer",
-     "trees": 287,
-     "tris": 172
+     "trees": 299,
+     "tris": 200
     },
     {
      "bbox_local_m": [
@@ -1230,7 +1244,7 @@
      ],
      "id": "6_2",
      "mix": "conifer",
-     "trees": 279,
+     "trees": 284,
      "tris": 160
     },
     {
@@ -1242,7 +1256,7 @@
      ],
      "id": "6_3",
      "mix": "conifer",
-     "trees": 335,
+     "trees": 354,
      "tris": 160
     },
     {
@@ -1254,8 +1268,8 @@
      ],
      "id": "7_0",
      "mix": "conifer",
-     "trees": 293,
-     "tris": 160
+     "trees": 312,
+     "tris": 182
     },
     {
      "bbox_local_m": [
@@ -1266,7 +1280,7 @@
      ],
      "id": "7_1",
      "mix": "conifer",
-     "trees": 353,
+     "trees": 365,
      "tris": 160
     },
     {
@@ -1278,7 +1292,7 @@
      ],
      "id": "7_2",
      "mix": "conifer",
-     "trees": 329,
+     "trees": 332,
      "tris": 160
     },
     {
@@ -1290,20 +1304,20 @@
      ],
      "id": "7_3",
      "mix": "conifer",
-     "trees": 357,
+     "trees": 366,
      "tris": 160
     }
    ],
    "id": "1_0",
    "instances": {
-    "count": 4493,
+    "count": 4678,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_0.json",
-    "sha256": "0ede8c37319993ad70fe1e848ca151b89eddc2cd4496d9401ce2b259af67a0fe"
+    "sha256": "3165467b8b9ee12fdebf8a11cf8ef01fe4f7fd651c3fda13c570b5b6fa4ee166"
    },
    "low": {
-    "bytes": 5738632,
+    "bytes": 5750944,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_0.low.glb",
-    "sha256": "01d9a4a544744e3a06f5bd49defc2042ab2f7ff11046aac926fb1f50cd3703af"
+    "sha256": "4a7f5694773644ba35e86559fe3f78f206672e746414506818e22c6409e35f39"
    },
    "materials": [
     "chimney_brick",
@@ -1332,11 +1346,11 @@
     "window_sill",
     "yard_paving"
    ],
-   "sha256": "df98774b2139f6efd4a2ac1bf0b3594e79ebcb09bfa6a03183d0432229d2e59e",
+   "sha256": "ce827926400ef74c78ceab9b37c470c1da939bad7e50a04999c5be69878a2a23",
    "triangles": {
     "buildings": 896,
     "buildings_lod1": 168,
-    "forest_hlod": 2403,
+    "forest_hlod": 2835,
     "markings": 10,
     "plot_ground": 403,
     "plots": 681,
@@ -1358,7 +1372,7 @@
     "z_max_evrf2007": 147.26,
     "z_min_evrf2007": 134.05
    },
-   "bytes": 5755996,
+   "bytes": 6065564,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_1.glb",
    "forest_cells": [
     {
@@ -1371,7 +1385,7 @@
      "id": "4_4",
      "mix": "mixed",
      "trees": 135,
-     "tris": 123
+     "tris": 157
     },
     {
      "bbox_local_m": [
@@ -1382,8 +1396,8 @@
      ],
      "id": "4_5",
      "mix": "mixed",
-     "trees": 52,
-     "tris": 98
+     "trees": 53,
+     "tris": 136
     },
     {
      "bbox_local_m": [
@@ -1394,8 +1408,8 @@
      ],
      "id": "4_6",
      "mix": "mixed",
-     "trees": 228,
-     "tris": 170
+     "trees": 234,
+     "tris": 242
     },
     {
      "bbox_local_m": [
@@ -1406,8 +1420,8 @@
      ],
      "id": "4_7",
      "mix": "mixed",
-     "trees": 243,
-     "tris": 167
+     "trees": 239,
+     "tris": 210
     },
     {
      "bbox_local_m": [
@@ -1418,8 +1432,8 @@
      ],
      "id": "5_4",
      "mix": "conifer",
-     "trees": 203,
-     "tris": 200
+     "trees": 202,
+     "tris": 252
     },
     {
      "bbox_local_m": [
@@ -1431,7 +1445,7 @@
      "id": "5_5",
      "mix": "conifer",
      "trees": 175,
-     "tris": 167
+     "tris": 215
     },
     {
      "bbox_local_m": [
@@ -1442,8 +1456,8 @@
      ],
      "id": "5_6",
      "mix": "conifer",
-     "trees": 28,
-     "tris": 69
+     "trees": 29,
+     "tris": 109
     },
     {
      "bbox_local_m": [
@@ -1454,8 +1468,8 @@
      ],
      "id": "5_7",
      "mix": "conifer",
-     "trees": 184,
-     "tris": 144
+     "trees": 199,
+     "tris": 204
     },
     {
      "bbox_local_m": [
@@ -1466,7 +1480,7 @@
      ],
      "id": "6_4",
      "mix": "conifer",
-     "trees": 276,
+     "trees": 277,
      "tris": 160
     },
     {
@@ -1478,7 +1492,7 @@
      ],
      "id": "6_5",
      "mix": "conifer",
-     "trees": 283,
+     "trees": 282,
      "tris": 160
     },
     {
@@ -1491,7 +1505,7 @@
      "id": "6_6",
      "mix": "conifer",
      "trees": 235,
-     "tris": 160
+     "tris": 178
     },
     {
      "bbox_local_m": [
@@ -1502,8 +1516,8 @@
      ],
      "id": "6_7",
      "mix": "conifer",
-     "trees": 61,
-     "tris": 96
+     "trees": 60,
+     "tris": 138
     },
     {
      "bbox_local_m": [
@@ -1514,7 +1528,7 @@
      ],
      "id": "7_4",
      "mix": "conifer",
-     "trees": 343,
+     "trees": 347,
      "tris": 160
     },
     {
@@ -1526,7 +1540,7 @@
      ],
      "id": "7_5",
      "mix": "conifer",
-     "trees": 358,
+     "trees": 361,
      "tris": 160
     },
     {
@@ -1538,7 +1552,7 @@
      ],
      "id": "7_6",
      "mix": "conifer",
-     "trees": 293,
+     "trees": 300,
      "tris": 160
     },
     {
@@ -1550,20 +1564,20 @@
      ],
      "id": "7_7",
      "mix": "conifer",
-     "trees": 297,
-     "tris": 161
+     "trees": 296,
+     "tris": 165
     }
    ],
    "id": "1_1",
    "instances": {
-    "count": 5820,
+    "count": 5865,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_1.json",
-    "sha256": "fc67d32f72d2d20e819b185f2a1041157f1d40ee9380cd881109a108c5de929f"
+    "sha256": "4c48f595721f600840d81f00231dda60f0e49a69d1389127d244d60e83deaf3b"
    },
    "low": {
-    "bytes": 1556828,
+    "bytes": 1641536,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_1.low.glb",
-    "sha256": "e538146ead92a849782a9e279216e630104607c28b48b19e1fbffbf2cf4995e8"
+    "sha256": "d01d3a1190ce43ad75c4a7d20c072bfe5d75a8cb128ab332a73a900d8ea5d0b2"
    },
    "materials": [
     "barrier_steel",
@@ -1578,25 +1592,29 @@
     "curb_concrete",
     "cycle_asphalt",
     "decal_patch",
+    "decal_seal",
     "fab_drainage",
     "marking_white",
     "road_asphalt",
     "shoulder_gravel",
     "sidewalk_paving",
     "terrain_grass",
-    "verge_grass"
+    "verge_grass",
+    "verge_tufts"
    ],
-   "sha256": "a698d79a1d49c83a3cf8365cb34606f0bab180f30860e32ec6115fb643e3b5cc",
+   "sha256": "cedda21f1267dbd42d5b2077cdb2aff5d688389cf75ec391b4caaeceba6e01f7",
    "triangles": {
+    "banks": 1625,
+    "banks_low": 0,
     "bridge": 5262,
-    "forest_hlod": 2355,
+    "forest_hlod": 2806,
     "furniture": 1028,
-    "markings": 1774,
+    "markings": 3915,
     "paved": 1670,
-    "road": 6794,
+    "road": 5744,
     "road_collision": 5337,
-    "terrain_lod0": 135362,
-    "terrain_lod1": 33986,
+    "terrain_lod0": 136412,
+    "terrain_lod1": 35036,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304
    }
@@ -1610,7 +1628,7 @@
     "z_max_evrf2007": 143.2,
     "z_min_evrf2007": 131.86
    },
-   "bytes": 5819168,
+   "bytes": 6128440,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_2.glb",
    "forest_cells": [
     {
@@ -1622,8 +1640,8 @@
      ],
      "id": "4_10",
      "mix": "broadleaf",
-     "trees": 62,
-     "tris": 78
+     "trees": 59,
+     "tris": 112
     },
     {
      "bbox_local_m": [
@@ -1634,8 +1652,8 @@
      ],
      "id": "4_11",
      "mix": "broadleaf",
-     "trees": 109,
-     "tris": 88
+     "trees": 111,
+     "tris": 112
     },
     {
      "bbox_local_m": [
@@ -1646,8 +1664,8 @@
      ],
      "id": "4_8",
      "mix": "mixed",
-     "trees": 35,
-     "tris": 77
+     "trees": 45,
+     "tris": 119
     },
     {
      "bbox_local_m": [
@@ -1658,8 +1676,8 @@
      ],
      "id": "4_9",
      "mix": "broadleaf",
-     "trees": 13,
-     "tris": 63
+     "trees": 21,
+     "tris": 91
     },
     {
      "bbox_local_m": [
@@ -1670,7 +1688,7 @@
      ],
      "id": "5_10",
      "mix": "broadleaf",
-     "trees": 309,
+     "trees": 313,
      "tris": 160
     },
     {
@@ -1682,7 +1700,7 @@
      ],
      "id": "5_11",
      "mix": "broadleaf",
-     "trees": 309,
+     "trees": 314,
      "tris": 160
     },
     {
@@ -1694,8 +1712,8 @@
      ],
      "id": "5_8",
      "mix": "conifer",
-     "trees": 304,
-     "tris": 167
+     "trees": 329,
+     "tris": 191
     },
     {
      "bbox_local_m": [
@@ -1706,20 +1724,20 @@
      ],
      "id": "5_9",
      "mix": "broadleaf",
-     "trees": 372,
-     "tris": 160
+     "trees": 373,
+     "tris": 184
     },
     {
      "bbox_local_m": [
       -640.0,
       320.0,
-      -591.21,
+      -591.2,
       384.0
      ],
      "id": "6_10",
      "mix": "broadleaf",
      "trees": 194,
-     "tris": 142
+     "tris": 164
     },
     {
      "bbox_local_m": [
@@ -1730,8 +1748,8 @@
      ],
      "id": "6_11",
      "mix": "broadleaf",
-     "trees": 157,
-     "tris": 145
+     "trees": 156,
+     "tris": 189
     },
     {
      "bbox_local_m": [
@@ -1742,20 +1760,20 @@
      ],
      "id": "6_8",
      "mix": "broadleaf",
-     "trees": 114,
-     "tris": 107
+     "trees": 116,
+     "tris": 139
     },
     {
      "bbox_local_m": [
       -640.0,
       384.0,
-      -589.08,
+      -589.07,
       448.0
      ],
      "id": "6_9",
      "mix": "broadleaf",
-     "trees": 218,
-     "tris": 141
+     "trees": 236,
+     "tris": 167
     },
     {
      "bbox_local_m": [
@@ -1767,7 +1785,7 @@
      "id": "7_10",
      "mix": "broadleaf",
      "trees": 42,
-     "tris": 79
+     "tris": 117
     },
     {
      "bbox_local_m": [
@@ -1778,8 +1796,8 @@
      ],
      "id": "7_11",
      "mix": "broadleaf",
-     "trees": 21,
-     "tris": 85
+     "trees": 20,
+     "tris": 123
     },
     {
      "bbox_local_m": [
@@ -1790,8 +1808,8 @@
      ],
      "id": "7_8",
      "mix": "broadleaf",
-     "trees": 234,
-     "tris": 147
+     "trees": 238,
+     "tris": 177
     },
     {
      "bbox_local_m": [
@@ -1803,19 +1821,19 @@
      "id": "7_9",
      "mix": "broadleaf",
      "trees": 85,
-     "tris": 106
+     "tris": 136
     }
    ],
    "id": "1_2",
    "instances": {
-    "count": 4384,
+    "count": 4476,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_2.json",
-    "sha256": "ab0e7e7f08d8af4d090431a7467e2a261b5ddd4174b8bc9ba4d5ad60b230e3a9"
+    "sha256": "7ab14ab445fae96b484dcd90530db220c7c94408e29c626b2ccdc3890be5441f"
    },
    "low": {
-    "bytes": 1570344,
+    "bytes": 1619796,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_2.low.glb",
-    "sha256": "b953b841707c3c9e68a96732289fbc7884dd8e5aa1797f7db3a617f318810054"
+    "sha256": "313e3fccdc3ad79a131096726c2b42807534273b4c6c4944275c1347ae9d754b"
    },
    "materials": [
     "barrier_steel",
@@ -1832,6 +1850,7 @@
     "cycle_asphalt",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -1851,21 +1870,24 @@
     "sidewalk_paving",
     "terrain_grass",
     "verge_grass",
+    "verge_tufts",
     "yard_asphalt"
    ],
-   "sha256": "6998df82db0d2fd05002accc485471ee292e426c83312d7da147c33e6d0dac53",
+   "sha256": "7816ede714ae1a8d1b14afc20be2f61b302f7f71f86f60c891e2ee50faa45f6d",
    "triangles": {
+    "banks": 1982,
+    "banks_low": 0,
     "bridge": 796,
     "buildings": 452,
     "buildings_lod1": 84,
-    "forest_hlod": 1905,
+    "forest_hlod": 2341,
     "furniture": 3480,
-    "markings": 1935,
-    "paved": 2265,
-    "road": 8667,
-    "road_collision": 5516,
-    "terrain_lod0": 135485,
-    "terrain_lod1": 34109,
+    "markings": 3245,
+    "paved": 2262,
+    "road": 7411,
+    "road_collision": 5517,
+    "terrain_lod0": 136741,
+    "terrain_lod1": 35365,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304
    }
@@ -1879,7 +1901,7 @@
     "z_max_evrf2007": 157.0,
     "z_min_evrf2007": 129.91
    },
-   "bytes": 13987848,
+   "bytes": 14163648,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_3.glb",
    "forest_cells": [
     {
@@ -1891,8 +1913,8 @@
      ],
      "id": "4_12",
      "mix": "broadleaf",
-     "trees": 126,
-     "tris": 104
+     "trees": 129,
+     "tris": 130
     },
     {
      "bbox_local_m": [
@@ -1903,8 +1925,8 @@
      ],
      "id": "4_13",
      "mix": "broadleaf",
-     "trees": 130,
-     "tris": 143
+     "trees": 157,
+     "tris": 193
     },
     {
      "bbox_local_m": [
@@ -1915,8 +1937,8 @@
      ],
      "id": "4_14",
      "mix": "broadleaf",
-     "trees": 98,
-     "tris": 82
+     "trees": 97,
+     "tris": 120
     },
     {
      "bbox_local_m": [
@@ -1927,8 +1949,8 @@
      ],
      "id": "5_12",
      "mix": "broadleaf",
-     "trees": 285,
-     "tris": 203
+     "trees": 312,
+     "tris": 247
     },
     {
      "bbox_local_m": [
@@ -1939,8 +1961,8 @@
      ],
      "id": "5_13",
      "mix": "broadleaf",
-     "trees": 165,
-     "tris": 178
+     "trees": 182,
+     "tris": 236
     },
     {
      "bbox_local_m": [
@@ -1951,8 +1973,8 @@
      ],
      "id": "5_14",
      "mix": "broadleaf",
-     "trees": 143,
-     "tris": 111
+     "trees": 151,
+     "tris": 149
     },
     {
      "bbox_local_m": [
@@ -1964,7 +1986,7 @@
      "id": "6_12",
      "mix": "broadleaf",
      "trees": 193,
-     "tris": 136
+     "tris": 164
     },
     {
      "bbox_local_m": [
@@ -1975,20 +1997,20 @@
      ],
      "id": "6_13",
      "mix": "broadleaf",
-     "trees": 138,
-     "tris": 127
+     "trees": 152,
+     "tris": 177
     }
    ],
    "id": "1_3",
    "instances": {
-    "count": 2106,
+    "count": 2217,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_3.json",
-    "sha256": "a6bf382ee0bfe8e318a0ff8dde36afdf1b7f75fdcf2d780fa09033cb034f3a0d"
+    "sha256": "a7acec31a6be7d755d1bea563a275d04f2e66866deeeb0b4cf1f261466582507"
    },
    "low": {
-    "bytes": 8706328,
+    "bytes": 8780612,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_3.low.glb",
-    "sha256": "36cdd9faf10f4c0f3e9a0b7f1f3638acab875191bcb6b8d1be842a9070358075"
+    "sha256": "d4c6d706cb7673c22b291c18448a3c7abacd4c0e1d2355dab30bc0df1a22ebaf"
    },
    "materials": [
     "barrier_steel",
@@ -2015,6 +2037,7 @@
     "cycle_asphalt_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -2056,27 +2079,30 @@
     "steel_galv",
     "terrain_grass",
     "verge_grass",
+    "verge_tufts",
     "window_sill",
     "wood_planks",
     "wood_trim_white",
     "yard_paving"
    ],
-   "sha256": "d6216247dbda979e62e55e76712c01004ea7bf650b6d5603934926507a693019",
+   "sha256": "5c12554a817c65811b9ebb37a3131d2432c2add61a773b2322a39bbc21bf8824",
    "triangles": {
+    "banks": 556,
+    "banks_low": 0,
     "bridge": 25896,
     "buildings": 4053,
     "buildings_lod1": 554,
-    "forest_hlod": 1084,
+    "forest_hlod": 1416,
     "furniture": 15442,
-    "markings": 5467,
-    "paved": 1313,
+    "markings": 7251,
+    "paved": 1312,
     "plot_ground": 1287,
     "plots": 2127,
     "plots_low": 1393,
-    "road": 24114,
-    "road_collision": 17873,
-    "terrain_lod0": 137740,
-    "terrain_lod1": 36364,
+    "road": 23534,
+    "road_collision": 17872,
+    "terrain_lod0": 138320,
+    "terrain_lod1": 36944,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304
    }
@@ -2090,7 +2116,7 @@
     "z_max_evrf2007": 159.2,
     "z_min_evrf2007": 123.86
    },
-   "bytes": 14601020,
+   "bytes": 14636772,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_4.glb",
    "forest_cells": [],
    "id": "1_4",
@@ -2100,9 +2126,9 @@
     "sha256": "5ee2b1384b40cde6ef24cdbc4d1a9edec772ed4f2f5f42a477de1d3baff41472"
    },
    "low": {
-    "bytes": 7965204,
+    "bytes": 7994892,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_4.low.glb",
-    "sha256": "3fe1670ae474f7f64a08c05ecc43ab6cef569be5281dd8f27d303a632aa8b78d"
+    "sha256": "02afcde82d12864729de5a394b21cc1d97f5144fa46c736c186ae677fe30789d"
    },
    "materials": [
     "balcony_slab",
@@ -2133,6 +2159,7 @@
     "cycle_asphalt_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "drain_grate",
     "fab_drainage",
@@ -2190,19 +2217,19 @@
     "yard_paving",
     "yard_slabs"
    ],
-   "sha256": "90cf96c87fef4fbe27b3139f018184197096f5dac8fd40c65e49b88999c900a7",
+   "sha256": "7d3be98f700404efacc3ed05d87ac41a0046fd1a297a5490c8a41b3499cc3918",
    "triangles": {
     "bridge": 4141,
     "buildings": 21900,
     "buildings_lod1": 3626,
     "furniture": 5370,
-    "markings": 3703,
-    "paved": 2877,
+    "markings": 4413,
+    "paved": 2867,
     "plot_ground": 5301,
     "plots": 8785,
     "plots_low": 6670,
     "road": 19009,
-    "road_collision": 13867,
+    "road_collision": 13863,
     "terrain_lod0": 138148,
     "terrain_lod1": 36772,
     "terrain_lod2": 8704,
@@ -2219,7 +2246,7 @@
     "z_max_evrf2007": 158.2,
     "z_min_evrf2007": 121.71
    },
-   "bytes": 17188576,
+   "bytes": 17250756,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_5.glb",
    "forest_cells": [
     {
@@ -2231,8 +2258,8 @@
      ],
      "id": "4_21",
      "mix": "broadleaf",
-     "trees": 48,
-     "tris": 101
+     "trees": 56,
+     "tris": 161
     },
     {
      "bbox_local_m": [
@@ -2243,8 +2270,8 @@
      ],
      "id": "4_22",
      "mix": "broadleaf",
-     "trees": 132,
-     "tris": 162
+     "trees": 145,
+     "tris": 188
     },
     {
      "bbox_local_m": [
@@ -2255,8 +2282,8 @@
      ],
      "id": "4_23",
      "mix": "broadleaf",
-     "trees": 141,
-     "tris": 154
+     "trees": 151,
+     "tris": 186
     },
     {
      "bbox_local_m": [
@@ -2267,8 +2294,8 @@
      ],
      "id": "5_21",
      "mix": "broadleaf",
-     "trees": 28,
-     "tris": 41
+     "trees": 27,
+     "tris": 63
     },
     {
      "bbox_local_m": [
@@ -2279,8 +2306,8 @@
      ],
      "id": "5_22",
      "mix": "broadleaf",
-     "trees": 52,
-     "tris": 139
+     "trees": 50,
+     "tris": 179
     },
     {
      "bbox_local_m": [
@@ -2291,20 +2318,20 @@
      ],
      "id": "5_23",
      "mix": "broadleaf",
-     "trees": 77,
-     "tris": 128
+     "trees": 95,
+     "tris": 174
     }
    ],
    "id": "1_5",
    "instances": {
-    "count": 657,
+    "count": 708,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_5.json",
-    "sha256": "302002bea6af8fc4d7f3f589557299fdf8e03bd4088dc9c7a8f7b62d84195a68"
+    "sha256": "921d113354e37c0cd6f4466454424c11fe2a498b1872d21cb50c13311eab01fa"
    },
    "low": {
-    "bytes": 8161240,
+    "bytes": 8211896,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_5.low.glb",
-    "sha256": "f9a10a9becc3066f1e77d0d4fb8414988230ce6df4293189bf3f36b414d86b44"
+    "sha256": "cc7e0c0a89c6b702abe1758ac4f46c7f05e73463dc160668017a0b10b40cc843"
    },
    "materials": [
     "brick_red",
@@ -2321,6 +2348,7 @@
     "cycle_asphalt",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -2368,17 +2396,17 @@
     "yard_behaton",
     "yard_paving"
    ],
-   "sha256": "e83006336a3b650eb024a74c2785371a33ae73973cca4bb9f410fda8ae47a8f2",
+   "sha256": "0b8894a3ddf367c2e68e13c9f2911059005e3d72d0d23ad26f26f40ec059ac11",
    "triangles": {
     "buildings": 52175,
     "buildings_lod1": 8687,
-    "forest_hlod": 725,
+    "forest_hlod": 951,
     "furniture": 5061,
-    "markings": 413,
+    "markings": 1501,
     "paved": 675,
     "plot_ground": 8670,
     "plots": 11375,
-    "plots_low": 9878,
+    "plots_low": 9868,
     "road": 16938,
     "road_collision": 15513,
     "terrain_lod0": 138136,
@@ -2397,7 +2425,7 @@
     "z_max_evrf2007": 142.45,
     "z_min_evrf2007": 120.9
    },
-   "bytes": 15079172,
+   "bytes": 15125020,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_6.glb",
    "forest_cells": [
     {
@@ -2409,8 +2437,8 @@
      ],
      "id": "4_24",
      "mix": "broadleaf",
-     "trees": 123,
-     "tris": 172
+     "trees": 144,
+     "tris": 230
     },
     {
      "bbox_local_m": [
@@ -2421,8 +2449,8 @@
      ],
      "id": "5_24",
      "mix": "broadleaf",
-     "trees": 132,
-     "tris": 156
+     "trees": 140,
+     "tris": 174
     },
     {
      "bbox_local_m": [
@@ -2433,8 +2461,8 @@
      ],
      "id": "5_25",
      "mix": "broadleaf",
-     "trees": 91,
-     "tris": 107
+     "trees": 87,
+     "tris": 143
     },
     {
      "bbox_local_m": [
@@ -2445,8 +2473,8 @@
      ],
      "id": "6_24",
      "mix": "broadleaf",
-     "trees": 17,
-     "tris": 60
+     "trees": 16,
+     "tris": 84
     },
     {
      "bbox_local_m": [
@@ -2457,20 +2485,20 @@
      ],
      "id": "6_25",
      "mix": "broadleaf",
-     "trees": 12,
-     "tris": 33
+     "trees": 17,
+     "tris": 43
     }
    ],
    "id": "1_6",
    "instances": {
-    "count": 490,
+    "count": 520,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_6.json",
-    "sha256": "70d42e6b919352d6a1a4e8f127529a96c4ef57a36e0394a245b654b852b6c74c"
+    "sha256": "4c0648152faaa4264af73c0a5973879fd96c5dcc139b0f861c3bd862757e2179"
    },
    "low": {
-    "bytes": 6973380,
+    "bytes": 7011204,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_6.low.glb",
-    "sha256": "c69bde9b46b25f23d4aac035d8e9bf25523a70a27c9b8173e68899af1d689b2c"
+    "sha256": "4174ab4c9ecccceaa9c57cbe0602ee7401955c71a87abf4d9b69d724d56846dc"
    },
    "materials": [
     "balcony_slab",
@@ -2485,6 +2513,7 @@
     "curb_concrete",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -2521,12 +2550,12 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "7530434acc7986e52b3e54336e27ce663169f8c14666db3e5ebc9d1ec2efb256",
+   "sha256": "a98beb2b33eb2e3283cfde3dad2e7d602970a2f39c74f067a00c336d382e1a9a",
    "triangles": {
     "buildings": 46560,
     "buildings_lod1": 5444,
-    "forest_hlod": 528,
-    "markings": 94,
+    "forest_hlod": 674,
+    "markings": 891,
     "paved": 1101,
     "plot_ground": 3810,
     "plots": 6063,
@@ -2549,7 +2578,7 @@
     "z_max_evrf2007": 149.31,
     "z_min_evrf2007": 121.18
    },
-   "bytes": 21661964,
+   "bytes": 21777440,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_7.glb",
    "forest_cells": [],
    "id": "1_7",
@@ -2559,9 +2588,9 @@
     "sha256": "17b0a6f1deef8cdebfa463d802ffacc86401cf7d5081867ab5fbfcaf0f0320a4"
    },
    "low": {
-    "bytes": 8410512,
+    "bytes": 8505960,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_7.low.glb",
-    "sha256": "9300b2ef28a4d5c647a830fed82595504ee14039809233208b534aaefa44e5f9"
+    "sha256": "29187fc25531fa025ab65ee03df7fa61f3d7abd22fd3186337ed48de0e814c90"
    },
    "materials": [
     "balcony_slab",
@@ -2576,6 +2605,7 @@
     "curb_concrete",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -2616,11 +2646,11 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "7c336b6e3c2cb4eed37a9ded916f04528b6ae6e33997c8389fbb065918c8bce4",
+   "sha256": "c40ae5545d9990b256e6f4c81ddd0fe35871ff02d27a5ee43d9ea50a4fdcb015",
    "triangles": {
     "buildings": 107564,
     "buildings_lod1": 11201,
-    "markings": 326,
+    "markings": 2677,
     "paved": 7308,
     "plot_ground": 8077,
     "plots": 12812,
@@ -2642,7 +2672,7 @@
     "z_max_evrf2007": 153.47,
     "z_min_evrf2007": 140.93
    },
-   "bytes": 4863204,
+   "bytes": 4866924,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_0.glb",
    "forest_cells": [
     {
@@ -2654,8 +2684,8 @@
      ],
      "id": "10_0",
      "mix": "conifer",
-     "trees": 331,
-     "tris": 166
+     "trees": 351,
+     "tris": 194
     },
     {
      "bbox_local_m": [
@@ -2666,7 +2696,7 @@
      ],
      "id": "10_1",
      "mix": "conifer",
-     "trees": 344,
+     "trees": 350,
      "tris": 160
     },
     {
@@ -2678,7 +2708,7 @@
      ],
      "id": "10_2",
      "mix": "conifer",
-     "trees": 321,
+     "trees": 340,
      "tris": 160
     },
     {
@@ -2690,7 +2720,7 @@
      ],
      "id": "10_3",
      "mix": "conifer",
-     "trees": 337,
+     "trees": 342,
      "tris": 160
     },
     {
@@ -2702,8 +2732,8 @@
      ],
      "id": "11_0",
      "mix": "conifer",
-     "trees": 295,
-     "tris": 160
+     "trees": 308,
+     "tris": 188
     },
     {
      "bbox_local_m": [
@@ -2714,7 +2744,7 @@
      ],
      "id": "11_1",
      "mix": "conifer",
-     "trees": 301,
+     "trees": 313,
      "tris": 160
     },
     {
@@ -2738,7 +2768,7 @@
      ],
      "id": "11_3",
      "mix": "conifer",
-     "trees": 266,
+     "trees": 265,
      "tris": 160
     },
     {
@@ -2751,7 +2781,7 @@
      "id": "8_0",
      "mix": "conifer",
      "trees": 283,
-     "tris": 160
+     "tris": 186
     },
     {
      "bbox_local_m": [
@@ -2762,7 +2792,7 @@
      ],
      "id": "8_1",
      "mix": "conifer",
-     "trees": 303,
+     "trees": 297,
      "tris": 160
     },
     {
@@ -2774,7 +2804,7 @@
      ],
      "id": "8_2",
      "mix": "conifer",
-     "trees": 268,
+     "trees": 274,
      "tris": 160
     },
     {
@@ -2786,7 +2816,7 @@
      ],
      "id": "8_3",
      "mix": "conifer",
-     "trees": 295,
+     "trees": 300,
      "tris": 160
     },
     {
@@ -2798,8 +2828,8 @@
      ],
      "id": "9_0",
      "mix": "conifer",
-     "trees": 285,
-     "tris": 160
+     "trees": 288,
+     "tris": 184
     },
     {
      "bbox_local_m": [
@@ -2810,7 +2840,7 @@
      ],
      "id": "9_1",
      "mix": "conifer",
-     "trees": 311,
+     "trees": 337,
      "tris": 160
     },
     {
@@ -2822,7 +2852,7 @@
      ],
      "id": "9_2",
      "mix": "conifer",
-     "trees": 282,
+     "trees": 291,
      "tris": 160
     },
     {
@@ -2834,27 +2864,27 @@
      ],
      "id": "9_3",
      "mix": "conifer",
-     "trees": 361,
+     "trees": 370,
      "tris": 160
     }
    ],
    "id": "2_0",
    "instances": {
-    "count": 4848,
+    "count": 4974,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_0.json",
-    "sha256": "5aa3161d43a91fc509d5440837e485cd879f7c57767d29af20d7eb7e001140bf"
+    "sha256": "9c317b5b0b9622ce16c76beabcfa63209eec8c02c0496075517d34a4b14d6646"
    },
    "low": {
-    "bytes": 828088,
+    "bytes": 831036,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_0.low.glb",
-    "sha256": "fdbc7c066cf546a402787aa7bb15b09bc94b514e8a9426f5b981fca4f84f6243"
+    "sha256": "811b6154b7b46a06316ddc4a77b39ca461d040cfd28349d771f29457e66a74cc"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "1fd0d1c8030b047ae0acf8fef555e754fb23bd590a1f5ac9978fa1c43fc6f816",
+   "sha256": "f4b091e668ec5ea427014bcf30ece77e7613f336d05ae707dd3a9bb5ad3cd4ec",
    "triangles": {
-    "forest_hlod": 2566,
+    "forest_hlod": 2672,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -2906,7 +2936,7 @@
      ],
      "id": "10_6",
      "mix": "conifer",
-     "trees": 303,
+     "trees": 314,
      "tris": 160
     },
     {
@@ -2918,7 +2948,7 @@
      ],
      "id": "10_7",
      "mix": "broadleaf",
-     "trees": 329,
+     "trees": 338,
      "tris": 160
     },
     {
@@ -2954,7 +2984,7 @@
      ],
      "id": "11_6",
      "mix": "conifer",
-     "trees": 328,
+     "trees": 326,
      "tris": 160
     },
     {
@@ -2966,7 +2996,7 @@
      ],
      "id": "11_7",
      "mix": "broadleaf",
-     "trees": 310,
+     "trees": 322,
      "tris": 160
     },
     {
@@ -2978,7 +3008,7 @@
      ],
      "id": "8_4",
      "mix": "conifer",
-     "trees": 325,
+     "trees": 329,
      "tris": 160
     },
     {
@@ -2990,7 +3020,7 @@
      ],
      "id": "8_5",
      "mix": "conifer",
-     "trees": 302,
+     "trees": 311,
      "tris": 160
     },
     {
@@ -3014,7 +3044,7 @@
      ],
      "id": "8_7",
      "mix": "mixed",
-     "trees": 346,
+     "trees": 365,
      "tris": 160
     },
     {
@@ -3026,7 +3056,7 @@
      ],
      "id": "9_4",
      "mix": "conifer",
-     "trees": 314,
+     "trees": 307,
      "tris": 160
     },
     {
@@ -3050,7 +3080,7 @@
      ],
      "id": "9_6",
      "mix": "conifer",
-     "trees": 273,
+     "trees": 274,
      "tris": 160
     },
     {
@@ -3062,25 +3092,25 @@
      ],
      "id": "9_7",
      "mix": "mixed",
-     "trees": 376,
+     "trees": 383,
      "tris": 160
     }
    ],
    "id": "2_1",
    "instances": {
-    "count": 4793,
+    "count": 4856,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_1.json",
-    "sha256": "ee7d6dc6123d1ac3682953e22ebf27baa5d727b3f06851e85097e09551f51825"
+    "sha256": "acbb37423e1b2a779b4fb3fbbfc8cbb89df24e1113b0faec2aab01dbf639a97a"
    },
    "low": {
     "bytes": 826544,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_1.low.glb",
-    "sha256": "547cf5d5bbe08d4511502349a12d11d7548392f74f99110cce38e85181f8885c"
+    "sha256": "a39c76d5a9cb5923f043c6420153e7590e897fbace4e5315bca81d19f4a7d91e"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "ea6aee7d5b4bbc19dbcc48b4968709bd6aa7d65ec8c0b1f5743c1989924ce24b",
+   "sha256": "0e689b894e31de4495e545c035d4c9f733dc3c4a203fa4565b206dfcedb4bbfb",
    "triangles": {
     "forest_hlod": 2560,
     "terrain_lod0": 135168,
@@ -3098,7 +3128,7 @@
     "z_max_evrf2007": 145.98,
     "z_min_evrf2007": 135.58
    },
-   "bytes": 4860480,
+   "bytes": 4860944,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_2.glb",
    "forest_cells": [
     {
@@ -3218,8 +3248,8 @@
      ],
      "id": "8_11",
      "mix": "broadleaf",
-     "trees": 280,
-     "tris": 171
+     "trees": 283,
+     "tris": 185
     },
     {
      "bbox_local_m": [
@@ -3230,7 +3260,7 @@
      ],
      "id": "8_8",
      "mix": "broadleaf",
-     "trees": 279,
+     "trees": 280,
      "tris": 160
     },
     {
@@ -3296,21 +3326,21 @@
    ],
    "id": "2_2",
    "instances": {
-    "count": 4668,
+    "count": 4672,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_2.json",
-    "sha256": "5d576af4ea6a5882e2dd7516ccf1d4287c2eb535b08069fb2ab4217f9d2ab82a"
+    "sha256": "b215641f9abb7e1d435400d45403dd7a061eb874d0dbc2d634f13a65ecbc5ec4"
    },
    "low": {
-    "bytes": 826060,
+    "bytes": 826428,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_2.low.glb",
-    "sha256": "d059ab0c1e38526cca5d19f7854e8bbc07e742674dfbe114bf7b50e26611e006"
+    "sha256": "c610dd36a150cc441e7f56e060f12edd7ed54d9482fd9b49b3dfaa6adbc98dcb"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "b62d772aeb289adca2c10d8a0dcc505b8e915e119346aac3e8e0dfc09510f38e",
+   "sha256": "e8e2514166c47e265b233a4a32659f7ee082bc2ce3da397d6200aa6d7fdee13d",
    "triangles": {
-    "forest_hlod": 2571,
+    "forest_hlod": 2585,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -3326,7 +3356,7 @@
     "z_max_evrf2007": 161.55,
     "z_min_evrf2007": 129.98
    },
-   "bytes": 11151560,
+   "bytes": 11161856,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_3.glb",
    "forest_cells": [
     {
@@ -3350,7 +3380,7 @@
      ],
      "id": "10_13",
      "mix": "broadleaf",
-     "trees": 271,
+     "trees": 273,
      "tris": 160
     },
     {
@@ -3362,8 +3392,8 @@
      ],
      "id": "10_14",
      "mix": "broadleaf",
-     "trees": 268,
-     "tris": 167
+     "trees": 270,
+     "tris": 185
     },
     {
      "bbox_local_m": [
@@ -3374,8 +3404,8 @@
      ],
      "id": "10_15",
      "mix": "broadleaf",
-     "trees": 111,
-     "tris": 138
+     "trees": 133,
+     "tris": 182
     },
     {
      "bbox_local_m": [
@@ -3410,7 +3440,7 @@
      ],
      "id": "11_14",
      "mix": "broadleaf",
-     "trees": 266,
+     "trees": 265,
      "tris": 160
     },
     {
@@ -3422,8 +3452,8 @@
      ],
      "id": "11_15",
      "mix": "broadleaf",
-     "trees": 196,
-     "tris": 187
+     "trees": 216,
+     "tris": 265
     },
     {
      "bbox_local_m": [
@@ -3434,8 +3464,8 @@
      ],
      "id": "8_12",
      "mix": "broadleaf",
-     "trees": 65,
-     "tris": 111
+     "trees": 70,
+     "tris": 145
     },
     {
      "bbox_local_m": [
@@ -3446,8 +3476,8 @@
      ],
      "id": "8_14",
      "mix": "broadleaf",
-     "trees": 12,
-     "tris": 45
+     "trees": 11,
+     "tris": 73
     },
     {
      "bbox_local_m": [
@@ -3458,8 +3488,8 @@
      ],
      "id": "9_12",
      "mix": "broadleaf",
-     "trees": 263,
-     "tris": 168
+     "trees": 269,
+     "tris": 182
     },
     {
      "bbox_local_m": [
@@ -3470,8 +3500,8 @@
      ],
      "id": "9_13",
      "mix": "broadleaf",
-     "trees": 111,
-     "tris": 131
+     "trees": 106,
+     "tris": 177
     },
     {
      "bbox_local_m": [
@@ -3482,20 +3512,20 @@
      ],
      "id": "9_14",
      "mix": "broadleaf",
-     "trees": 127,
-     "tris": 136
+     "trees": 145,
+     "tris": 194
     }
    ],
    "id": "2_3",
    "instances": {
-    "count": 3123,
+    "count": 3192,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_3.json",
-    "sha256": "e2549ba7e349af132adaa8aae874b14c1a7175411203bc01aeea533a3026a675"
+    "sha256": "27ccdcf8d4cd21f7985f16959c6e0a61282224576b53581c805fb46589f48dbd"
    },
    "low": {
-    "bytes": 6172912,
+    "bytes": 6180784,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_3.low.glb",
-    "sha256": "ac09692d844435a3531eb8b023aceae9b9517e4416eff4ef67c0cf9c6195b0f6"
+    "sha256": "431224107f4a35bf758303fee5e038e41c5fe016c7e6109548bbad856fb61e20"
    },
    "materials": [
     "brick_red",
@@ -3510,7 +3540,6 @@
     "concrete_plinth",
     "curb_concrete",
     "decal_oil",
-    "decal_patch",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -3552,13 +3581,13 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "2d894f391cf202df5b6946349c2173d3362a41b54402b63e95509cbbea66d5d5",
+   "sha256": "361c464a75e6bd5c155f671698a45febcde418394d6a1d86f805d95b2cf53aba",
    "triangles": {
     "buildings": 8758,
     "buildings_lod1": 1636,
-    "forest_hlod": 1883,
+    "forest_hlod": 2203,
     "furniture": 835,
-    "markings": 348,
+    "markings": 342,
     "plot_ground": 2244,
     "plots": 4517,
     "plots_low": 3211,
@@ -3580,7 +3609,7 @@
     "z_max_evrf2007": 163.43,
     "z_min_evrf2007": 123.95
    },
-   "bytes": 13597896,
+   "bytes": 13781364,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.glb",
    "forest_cells": [
     {
@@ -3592,8 +3621,8 @@
      ],
      "id": "10_16",
      "mix": "broadleaf",
-     "trees": 115,
-     "tris": 148
+     "trees": 129,
+     "tris": 204
     },
     {
      "bbox_local_m": [
@@ -3604,8 +3633,8 @@
      ],
      "id": "10_17",
      "mix": "broadleaf",
-     "trees": 87,
-     "tris": 108
+     "trees": 86,
+     "tris": 146
     },
     {
      "bbox_local_m": [
@@ -3617,7 +3646,7 @@
      "id": "10_18",
      "mix": "broadleaf",
      "trees": 34,
-     "tris": 49
+     "tris": 63
     },
     {
      "bbox_local_m": [
@@ -3628,8 +3657,8 @@
      ],
      "id": "10_19",
      "mix": "broadleaf",
-     "trees": 83,
-     "tris": 106
+     "trees": 84,
+     "tris": 152
     },
     {
      "bbox_local_m": [
@@ -3640,8 +3669,8 @@
      ],
      "id": "11_16",
      "mix": "broadleaf",
-     "trees": 206,
-     "tris": 220
+     "trees": 233,
+     "tris": 288
     },
     {
      "bbox_local_m": [
@@ -3653,7 +3682,7 @@
      "id": "11_17",
      "mix": "broadleaf",
      "trees": 170,
-     "tris": 180
+     "tris": 252
     },
     {
      "bbox_local_m": [
@@ -3664,8 +3693,8 @@
      ],
      "id": "8_19",
      "mix": "broadleaf",
-     "trees": 77,
-     "tris": 115
+     "trees": 79,
+     "tris": 153
     },
     {
      "bbox_local_m": [
@@ -3676,8 +3705,8 @@
      ],
      "id": "9_18",
      "mix": "broadleaf",
-     "trees": 86,
-     "tris": 86
+     "trees": 102,
+     "tris": 128
     },
     {
      "bbox_local_m": [
@@ -3689,19 +3718,19 @@
      "id": "9_19",
      "mix": "broadleaf",
      "trees": 222,
-     "tris": 184
+     "tris": 252
     }
    ],
    "id": "2_4",
    "instances": {
-    "count": 2494,
+    "count": 2551,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_4.json",
-    "sha256": "a8079df98de02b9c4489d8405665d685752842681776e04ab7368dd61a5107ed"
+    "sha256": "e2fcd4079c9902bd721b7f0f83c927ad3e50c347d6ef6c18954c40edf65fc84b"
    },
    "low": {
-    "bytes": 8252172,
+    "bytes": 8313352,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.low.glb",
-    "sha256": "6745975ff3eb167e1c8b419bbfa1c69d869edc2d0dac3d5bde0dc7874a36a7a3"
+    "sha256": "ff75f8f2c6b2101f5226ffa97a3420c345de9b23491dafe4d41e0890c454ffa2"
    },
    "materials": [
     "balcony_slab",
@@ -3728,6 +3757,7 @@
     "cycle_asphalt_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -3772,28 +3802,31 @@
     "steel_painted",
     "terrain_grass",
     "verge_grass",
+    "verge_tufts",
     "window_sill",
     "wire",
     "yard_behaton",
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "157f83742b26d32a1570ae2a5c43a15d28aed4e1a38a7beeedc926ee5d448d2a",
+   "sha256": "fcc221c18039d2d069e440446f8053ba51dd7cb7052ce17c753dd1c5746c80e9",
    "triangles": {
+    "banks": 679,
+    "banks_low": 0,
     "bridge": 16529,
     "buildings": 7131,
     "buildings_lod1": 880,
-    "forest_hlod": 1196,
+    "forest_hlod": 1638,
     "furniture": 11638,
-    "markings": 7477,
-    "paved": 2930,
+    "markings": 8921,
+    "paved": 2931,
     "plot_ground": 396,
     "plots": 622,
     "plots_low": 482,
-    "road": 19364,
-    "road_collision": 14855,
-    "terrain_lod0": 137263,
-    "terrain_lod1": 35887,
+    "road": 18586,
+    "road_collision": 14854,
+    "terrain_lod0": 138041,
+    "terrain_lod1": 36665,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 1197
@@ -3808,7 +3841,7 @@
     "z_max_evrf2007": 162.58,
     "z_min_evrf2007": 124.59
    },
-   "bytes": 21876464,
+   "bytes": 21936368,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_5.glb",
    "forest_cells": [
     {
@@ -3820,20 +3853,20 @@
      ],
      "id": "8_20",
      "mix": "broadleaf",
-     "trees": 78,
-     "tris": 125
+     "trees": 85,
+     "tris": 177
     }
    ],
    "id": "2_5",
    "instances": {
-    "count": 346,
+    "count": 353,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_5.json",
-    "sha256": "0c9a9b30cf2a75b0a359e873dd764e8bd6e2f0b08192692c1e765f8964fa0d11"
+    "sha256": "fe43fe7e4d55a7c1926a38941923d650d73625710044359a267fa09de57a9adf"
    },
    "low": {
-    "bytes": 7912088,
+    "bytes": 7961660,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_5.low.glb",
-    "sha256": "bf225abba7dec0bf7e8166b2ef88aedbf3ee52a395a888411280bf77711216e1"
+    "sha256": "618834fdca765ec7449823444a74b928c3790119250c2962ba177c2a5636437f"
    },
    "materials": [
     "balcony_slab",
@@ -3853,6 +3886,7 @@
     "cycle_crossing_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -3901,14 +3935,14 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "130f97e239d3fece1ad79ba555399feb310f4df942861743d9c434eb9eb2ef4b",
+   "sha256": "9483bbac3622b197a61714683d47ae2ffe26c76e28aec1d7ea0cb5c799841e04",
    "triangles": {
     "buildings": 123029,
     "buildings_lod1": 5314,
-    "forest_hlod": 125,
+    "forest_hlod": 177,
     "furniture": 5048,
-    "markings": 3727,
-    "paved": 11874,
+    "markings": 4912,
+    "paved": 11866,
     "plot_ground": 2341,
     "plots": 2750,
     "plots_low": 2417,
@@ -3930,19 +3964,19 @@
     "z_max_evrf2007": 185.39,
     "z_min_evrf2007": 121.2
    },
-   "bytes": 17652140,
+   "bytes": 17845976,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_6.glb",
    "forest_cells": [],
    "id": "2_6",
    "instances": {
-    "count": 203,
+    "count": 205,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_6.json",
-    "sha256": "6e77073e17b8abf1953b0efd9294c99e311ee8ff8975832e376706e0e9c90d43"
+    "sha256": "7932896a5f3fde6715c0be5f7ee2b43635edffedfeeec7579609f618d2379d0c"
    },
    "low": {
-    "bytes": 8294776,
+    "bytes": 8454912,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_6.low.glb",
-    "sha256": "61966f6e22831fcf77801ec41a3f9f098b1bddc57e65f4bc458d9640a8c34bb3"
+    "sha256": "75e50d6212882a2bfd48643e2ccfa925157eb5ea71cd17505f58efe2edc7c81a"
    },
    "materials": [
     "balcony_slab",
@@ -3961,6 +3995,7 @@
     "cycle_asphalt",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -4015,18 +4050,18 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "c13361b6ee500bb3bd799605158bc2dbaa8fc466b3661b56e3e0877fcfefddf6",
+   "sha256": "838c51acf88823aa8f925a9eaefd8dc0a7882692caf85e38dc6f4c9f5301e3a6",
    "triangles": {
     "buildings": 56769,
     "buildings_lod1": 6118,
     "furniture": 7762,
-    "markings": 1787,
-    "paved": 5758,
+    "markings": 5798,
+    "paved": 5759,
     "plot_ground": 8531,
     "plots": 12202,
     "plots_low": 9644,
     "road": 17818,
-    "road_collision": 16248,
+    "road_collision": 16249,
     "terrain_lod0": 137687,
     "terrain_lod1": 36311,
     "terrain_lod2": 8704,
@@ -4043,7 +4078,7 @@
     "z_max_evrf2007": 179.65,
     "z_min_evrf2007": 121.19
    },
-   "bytes": 15014392,
+   "bytes": 15107816,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_7.glb",
    "forest_cells": [],
    "id": "2_7",
@@ -4053,9 +4088,9 @@
     "sha256": "9f897be34379b2f76f56809fe938db2aaefc74f5c1b46ff766ef7aba616fcbf6"
    },
    "low": {
-    "bytes": 7503644,
+    "bytes": 7580932,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_7.low.glb",
-    "sha256": "6737aedd186f887ab5bea1462b14486291d3d11ff295784958331d7f737bfe37"
+    "sha256": "248ad67171c3c35d41880c87075a6a9d59ee0bb35a2256a382d8f3a7990a9dbf"
    },
    "materials": [
     "balcony_slab",
@@ -4080,6 +4115,7 @@
     "cycle_crossing_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "drain_grate",
     "fab_drainage",
@@ -4127,19 +4163,19 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "60b4553a7fd0df11a656e6b4512eb2ab4310a9f047bb7a64f20037cbd7269737",
+   "sha256": "203d67bdaaf69c87a25c6459b23a4c7717ca372d7248bebec1ab23df13e4c30c",
    "triangles": {
     "bridge": 1100,
     "buildings": 37066,
     "buildings_lod1": 2149,
     "furniture": 8120,
-    "markings": 4218,
-    "paved": 7939,
+    "markings": 6140,
+    "paved": 7936,
     "plot_ground": 1615,
     "plots": 3708,
     "plots_low": 2626,
     "road": 17844,
-    "road_collision": 11967,
+    "road_collision": 11964,
     "terrain_lod0": 137958,
     "terrain_lod1": 36582,
     "terrain_lod2": 8704,
@@ -4156,7 +4192,7 @@
     "z_max_evrf2007": 155.25,
     "z_min_evrf2007": 145.49
    },
-   "bytes": 4863280,
+   "bytes": 4867056,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_0.glb",
    "forest_cells": [
     {
@@ -4168,8 +4204,8 @@
      ],
      "id": "12_0",
      "mix": "conifer",
-     "trees": 275,
-     "tris": 166
+     "trees": 276,
+     "tris": 188
     },
     {
      "bbox_local_m": [
@@ -4216,8 +4252,8 @@
      ],
      "id": "13_0",
      "mix": "conifer",
-     "trees": 279,
-     "tris": 162
+     "trees": 284,
+     "tris": 192
     },
     {
      "bbox_local_m": [
@@ -4252,7 +4288,7 @@
      ],
      "id": "13_3",
      "mix": "conifer",
-     "trees": 283,
+     "trees": 299,
      "tris": 160
     },
     {
@@ -4264,8 +4300,8 @@
      ],
      "id": "14_0",
      "mix": "conifer",
-     "trees": 292,
-     "tris": 172
+     "trees": 303,
+     "tris": 198
     },
     {
      "bbox_local_m": [
@@ -4312,8 +4348,8 @@
      ],
      "id": "15_0",
      "mix": "conifer",
-     "trees": 306,
-     "tris": 166
+     "trees": 311,
+     "tris": 204
     },
     {
      "bbox_local_m": [
@@ -4324,7 +4360,7 @@
      ],
      "id": "15_1",
      "mix": "conifer",
-     "trees": 304,
+     "trees": 327,
      "tris": 160
     },
     {
@@ -4336,7 +4372,7 @@
      ],
      "id": "15_2",
      "mix": "conifer",
-     "trees": 322,
+     "trees": 347,
      "tris": 160
     },
     {
@@ -4348,27 +4384,27 @@
      ],
      "id": "15_3",
      "mix": "conifer",
-     "trees": 330,
+     "trees": 334,
      "tris": 160
     }
    ],
    "id": "3_0",
    "instances": {
-    "count": 4550,
+    "count": 4640,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_0.json",
-    "sha256": "b87d76db12463451e950b33bb6bdb2bfada9fc5b21338e2dbba6f48b14a51bac"
+    "sha256": "941ea23d5bb1660ee015975d4363614042fbef4a2fed8f9c725a3534cef1b1e7"
    },
    "low": {
-    "bytes": 828176,
+    "bytes": 831184,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_0.low.glb",
-    "sha256": "8d6d9d4d34bfe9075a681a5d15d1f85ea3798d21417fad739a7b21d7da91dffd"
+    "sha256": "9a37ec941a01bb051afbb9588bf56d443c3b5ce5e1fff30e0032a3f8024f8675"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "7c3924f58e18d71ef64200ac764e0f3632575e96aaee3450a872b94900260942",
+   "sha256": "819b1af9500ca77f7d7c1768bae31cee3300acc7756ec7059369df765e1bc793",
    "triangles": {
-    "forest_hlod": 2586,
+    "forest_hlod": 2702,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -4384,7 +4420,7 @@
     "z_max_evrf2007": 158.81,
     "z_min_evrf2007": 144.08
    },
-   "bytes": 4860700,
+   "bytes": 4860708,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_1.glb",
    "forest_cells": [
     {
@@ -4420,7 +4456,7 @@
      ],
      "id": "12_6",
      "mix": "mixed",
-     "trees": 354,
+     "trees": 363,
      "tris": 160
     },
     {
@@ -4432,7 +4468,7 @@
      ],
      "id": "12_7",
      "mix": "broadleaf",
-     "trees": 270,
+     "trees": 272,
      "tris": 160
     },
     {
@@ -4444,7 +4480,7 @@
      ],
      "id": "13_4",
      "mix": "conifer",
-     "trees": 289,
+     "trees": 297,
      "tris": 160
     },
     {
@@ -4456,7 +4492,7 @@
      ],
      "id": "13_5",
      "mix": "conifer",
-     "trees": 263,
+     "trees": 267,
      "tris": 160
     },
     {
@@ -4468,7 +4504,7 @@
      ],
      "id": "13_6",
      "mix": "mixed",
-     "trees": 348,
+     "trees": 363,
      "tris": 160
     },
     {
@@ -4492,7 +4528,7 @@
      ],
      "id": "14_4",
      "mix": "conifer",
-     "trees": 300,
+     "trees": 299,
      "tris": 160
     },
     {
@@ -4504,7 +4540,7 @@
      ],
      "id": "14_5",
      "mix": "conifer",
-     "trees": 316,
+     "trees": 320,
      "tris": 160
     },
     {
@@ -4516,7 +4552,7 @@
      ],
      "id": "14_6",
      "mix": "broadleaf",
-     "trees": 328,
+     "trees": 348,
      "tris": 160
     },
     {
@@ -4552,7 +4588,7 @@
      ],
      "id": "15_5",
      "mix": "conifer",
-     "trees": 323,
+     "trees": 337,
      "tris": 160
     },
     {
@@ -4564,7 +4600,7 @@
      ],
      "id": "15_6",
      "mix": "broadleaf",
-     "trees": 289,
+     "trees": 294,
      "tris": 160
     },
     {
@@ -4582,19 +4618,19 @@
    ],
    "id": "3_1",
    "instances": {
-    "count": 4676,
+    "count": 4756,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_1.json",
-    "sha256": "15858c4341106ef22d7bc0b71618d973a9bf406328d32c11926d2d85648287e4"
+    "sha256": "eadff354f366139d5150cb97b6917fb7aa03ed5098c20fd78f9e4f834dc11edd"
    },
    "low": {
-    "bytes": 826480,
+    "bytes": 826488,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_1.low.glb",
-    "sha256": "ec7bb3f8250bfefa60d539ef3299174effb7a61a3c37588584d515cd99b9570a"
+    "sha256": "01b966d3370897ec8a4d6e6ffc2e9e3ca097baf5423d66295137c78141cbf5e9"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "5aeebb36438110d2a4376e2f2b0a9084a342a2096dc9ab91d8dd91f7a4453e10",
+   "sha256": "2e0b51e1506f72f50d96ff0fab44812478212bc75a5f11a5b0cc7aaa77ae2fe1",
    "triangles": {
     "forest_hlod": 2560,
     "terrain_lod0": 135168,
@@ -4612,7 +4648,7 @@
     "z_max_evrf2007": 154.88,
     "z_min_evrf2007": 136.75
    },
-   "bytes": 4858620,
+   "bytes": 4864116,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_2.glb",
    "forest_cells": [
     {
@@ -4684,8 +4720,8 @@
      ],
      "id": "13_11",
      "mix": "broadleaf",
-     "trees": 243,
-     "tris": 149
+     "trees": 249,
+     "tris": 165
     },
     {
      "bbox_local_m": [
@@ -4720,8 +4756,8 @@
      ],
      "id": "14_10",
      "mix": "broadleaf",
-     "trees": 236,
-     "tris": 149
+     "trees": 237,
+     "tris": 171
     },
     {
      "bbox_local_m": [
@@ -4732,8 +4768,8 @@
      ],
      "id": "14_11",
      "mix": "broadleaf",
-     "trees": 30,
-     "tris": 68
+     "trees": 44,
+     "tris": 94
     },
     {
      "bbox_local_m": [
@@ -4768,8 +4804,8 @@
      ],
      "id": "15_10",
      "mix": "broadleaf",
-     "trees": 40,
-     "tris": 88
+     "trees": 55,
+     "tris": 112
     },
     {
      "bbox_local_m": [
@@ -4780,8 +4816,8 @@
      ],
      "id": "15_11",
      "mix": "broadleaf",
-     "trees": 216,
-     "tris": 138
+     "trees": 224,
+     "tris": 176
     },
     {
      "bbox_local_m": [
@@ -4804,27 +4840,27 @@
      ],
      "id": "15_9",
      "mix": "broadleaf",
-     "trees": 236,
-     "tris": 157
+     "trees": 242,
+     "tris": 179
     }
    ],
    "id": "3_2",
    "instances": {
-    "count": 3638,
+    "count": 3688,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_2.json",
-    "sha256": "0f7d872af9bf69b64a34df27ea6222dbfdc06505757380412076a27fd578b776"
+    "sha256": "c04b8e9cbd1ea7411c5f25a8d45d04cdd3bad5bcb910dfde72666d0cc74db7ff"
    },
    "low": {
-    "bytes": 824348,
+    "bytes": 828724,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_2.low.glb",
-    "sha256": "db01d32bda8daf9b9cb43662cbc42a25965e84509b4f5f9fdb40ca46a9e6407d"
+    "sha256": "387d20c1f447f6e792ca1e40596e45438177d8c97872ee8116b516c19f41d6ae"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "78be63138df2a6ef84cdc0fbf43aa7e6bbd0f9958ee879c30299325cb4bc9f20",
+   "sha256": "71567fc4e02d4acd753b513498067a27994fe6ab7e946916a8e39e2460f2f5a0",
    "triangles": {
-    "forest_hlod": 2349,
+    "forest_hlod": 2497,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -4840,7 +4876,7 @@
     "z_max_evrf2007": 172.47,
     "z_min_evrf2007": 129.58
    },
-   "bytes": 5004708,
+   "bytes": 5027564,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_3.glb",
    "forest_cells": [
     {
@@ -4865,7 +4901,7 @@
      "id": "12_13",
      "mix": "broadleaf",
      "trees": 265,
-     "tris": 161
+     "tris": 169
     },
     {
      "bbox_local_m": [
@@ -4876,8 +4912,8 @@
      ],
      "id": "12_14",
      "mix": "broadleaf",
-     "trees": 139,
-     "tris": 133
+     "trees": 146,
+     "tris": 167
     },
     {
      "bbox_local_m": [
@@ -4888,8 +4924,8 @@
      ],
      "id": "12_15",
      "mix": "broadleaf",
-     "trees": 175,
-     "tris": 149
+     "trees": 195,
+     "tris": 197
     },
     {
      "bbox_local_m": [
@@ -4900,8 +4936,8 @@
      ],
      "id": "13_12",
      "mix": "broadleaf",
-     "trees": 164,
-     "tris": 142
+     "trees": 178,
+     "tris": 174
     },
     {
      "bbox_local_m": [
@@ -4912,8 +4948,8 @@
      ],
      "id": "13_13",
      "mix": "broadleaf",
-     "trees": 149,
-     "tris": 135
+     "trees": 187,
+     "tris": 177
     },
     {
      "bbox_local_m": [
@@ -4924,8 +4960,8 @@
      ],
      "id": "13_14",
      "mix": "broadleaf",
-     "trees": 114,
-     "tris": 111
+     "trees": 138,
+     "tris": 161
     },
     {
      "bbox_local_m": [
@@ -4936,8 +4972,8 @@
      ],
      "id": "13_15",
      "mix": "broadleaf",
-     "trees": 265,
-     "tris": 175
+     "trees": 285,
+     "tris": 227
     },
     {
      "bbox_local_m": [
@@ -4948,8 +4984,8 @@
      ],
      "id": "14_12",
      "mix": "broadleaf",
-     "trees": 148,
-     "tris": 199
+     "trees": 153,
+     "tris": 275
     },
     {
      "bbox_local_m": [
@@ -4960,8 +4996,8 @@
      ],
      "id": "14_13",
      "mix": "broadleaf",
-     "trees": 145,
-     "tris": 183
+     "trees": 157,
+     "tris": 263
     },
     {
      "bbox_local_m": [
@@ -4972,8 +5008,8 @@
      ],
      "id": "14_14",
      "mix": "broadleaf",
-     "trees": 267,
-     "tris": 161
+     "trees": 273,
+     "tris": 193
     },
     {
      "bbox_local_m": [
@@ -4984,8 +5020,8 @@
      ],
      "id": "14_15",
      "mix": "broadleaf",
-     "trees": 65,
-     "tris": 108
+     "trees": 73,
+     "tris": 158
     },
     {
      "bbox_local_m": [
@@ -4996,8 +5032,8 @@
      ],
      "id": "15_12",
      "mix": "broadleaf",
-     "trees": 182,
-     "tris": 162
+     "trees": 209,
+     "tris": 234
     },
     {
      "bbox_local_m": [
@@ -5008,8 +5044,8 @@
      ],
      "id": "15_13",
      "mix": "broadleaf",
-     "trees": 211,
-     "tris": 155
+     "trees": 215,
+     "tris": 223
     },
     {
      "bbox_local_m": [
@@ -5020,20 +5056,20 @@
      ],
      "id": "15_14",
      "mix": "broadleaf",
-     "trees": 31,
-     "tris": 55
+     "trees": 30,
+     "tris": 77
     }
    ],
    "id": "3_3",
    "instances": {
-    "count": 2701,
+    "count": 2877,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_3.json",
-    "sha256": "ac1003983b40c2554bcaab3942a9b002aefa26b1c457b59667364ddf01c82875"
+    "sha256": "ea9addcad6783597d127a2325e8536e97ffbf5d7b795ec824273964059b85b2d"
    },
    "low": {
-    "bytes": 935820,
+    "bytes": 954024,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_3.low.glb",
-    "sha256": "5f06f76e292363d68bc09dab1d935ac98e5befae947d9755f11414e2609fdaed"
+    "sha256": "559844a1cd8e92b53641bf1b28558a138fec2b82e5aef896e6c0ac6b67a63ef2"
    },
    "materials": [
     "collision_fence",
@@ -5043,9 +5079,9 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "d73f9f74762bab03de9bcb389548441e15209b6ef93b4606c0689f3ec8ab834d",
+   "sha256": "b3b3de04edd2b2590377332a3c045979726a2a2a80ee1a33e859e7ecd23caa42",
    "triangles": {
-    "forest_hlod": 2189,
+    "forest_hlod": 2855,
     "furniture": 1354,
     "road_collision": 278,
     "terrain_lod0": 135168,
@@ -5064,7 +5100,7 @@
     "z_max_evrf2007": 149.4,
     "z_min_evrf2007": 127.81
    },
-   "bytes": 6853612,
+   "bytes": 6925164,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_4.glb",
    "forest_cells": [
     {
@@ -5076,8 +5112,8 @@
      ],
      "id": "12_16",
      "mix": "broadleaf",
-     "trees": 71,
-     "tris": 90
+     "trees": 67,
+     "tris": 122
     },
     {
      "bbox_local_m": [
@@ -5088,8 +5124,8 @@
      ],
      "id": "13_16",
      "mix": "broadleaf",
-     "trees": 60,
-     "tris": 77
+     "trees": 57,
+     "tris": 117
     },
     {
      "bbox_local_m": [
@@ -5100,20 +5136,20 @@
      ],
      "id": "14_16",
      "mix": "broadleaf",
-     "trees": 33,
-     "tris": 57
+     "trees": 31,
+     "tris": 79
     }
    ],
    "id": "3_4",
    "instances": {
-    "count": 717,
+    "count": 709,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_4.json",
-    "sha256": "cb75ea35c322d543da4f975ff4e2aabcae8a4ef806fa15e2b29e2d259e67ca3f"
+    "sha256": "81be076097fbf04622d6d59b18f7fde36e9b6869fdb286fc9a1415801aa42a59"
    },
    "low": {
-    "bytes": 2082328,
+    "bytes": 2109372,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_4.low.glb",
-    "sha256": "fd9ac49bf3e25490be5533fa1cb15b5964476da1bebedfc2d41d2ba56e02b664"
+    "sha256": "d392e976b513d2addd2886f80ab184a9e4ecbb773f2a3170fcce13c54d7a9bc3"
    },
    "materials": [
     "canopy_steel",
@@ -5127,6 +5163,7 @@
     "curb_concrete",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -5153,23 +5190,25 @@
     "sidewalk_paving",
     "skylight",
     "terrain_grass",
-    "verge_grass",
+    "verge_tufts",
     "yard_behaton",
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "ccedd988bfbfeea6f1f6b3386cf2c6af94bff4dc6f59090a7fdd3bf8e1b7e738",
+   "sha256": "585b437bd0e08ac73d0a5e112a99ed5d9e8d9a24fe2a9ed7fb99304d05848552",
    "triangles": {
+    "banks": 209,
+    "banks_low": 0,
     "buildings": 4033,
     "buildings_lod1": 368,
-    "forest_hlod": 224,
+    "forest_hlod": 318,
     "furniture": 9630,
-    "markings": 1922,
-    "paved": 3549,
-    "road": 14529,
-    "road_collision": 9286,
-    "terrain_lod0": 137587,
-    "terrain_lod1": 36211,
+    "markings": 2622,
+    "paved": 3550,
+    "road": 14231,
+    "road_collision": 9287,
+    "terrain_lod0": 137885,
+    "terrain_lod1": 36509,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304
    }
@@ -5183,7 +5222,7 @@
     "z_max_evrf2007": 171.0,
     "z_min_evrf2007": 128.36
    },
-   "bytes": 7252652,
+   "bytes": 7546244,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_5.glb",
    "forest_cells": [
     {
@@ -5195,8 +5234,8 @@
      ],
      "id": "14_23",
      "mix": "broadleaf",
-     "trees": 116,
-     "tris": 151
+     "trees": 151,
+     "tris": 231
     },
     {
      "bbox_local_m": [
@@ -5207,20 +5246,20 @@
      ],
      "id": "15_23",
      "mix": "broadleaf",
-     "trees": 117,
-     "tris": 113
+     "trees": 123,
+     "tris": 151
     }
    ],
    "id": "3_5",
    "instances": {
-    "count": 358,
+    "count": 411,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_5.json",
-    "sha256": "87fdef127bfc2876e712d0eb948e149243d5522eafa6e278ecb318abdacd028b"
+    "sha256": "1b2f265cf5b332b30d959573e3bafd0c9b82c70d5f9bb97821a935309f48a80b"
    },
    "low": {
-    "bytes": 2422232,
+    "bytes": 2515372,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_5.low.glb",
-    "sha256": "0dd3b657a72e505b0cf0289e5da9ae0450a56af08f252aa2c2029f7ed7229514"
+    "sha256": "6cbc12966ddc9619925e68edb91ee6d2e60e26805d99f6fc8cdd93b982fc72d2"
    },
    "materials": [
     "balcony_slab",
@@ -5238,6 +5277,7 @@
     "cycle_asphalt_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -5271,6 +5311,7 @@
     "sidewalk_paving",
     "terrain_grass",
     "verge_grass",
+    "verge_tufts",
     "window_frame",
     "window_sill",
     "wire",
@@ -5278,18 +5319,20 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "b04a720efb835c51e325e207a4a5d5c1bb9b4b8868a0427e2d6ecdb905e067a3",
+   "sha256": "3df25ef3a93b1a37534f9fd341eb5b10178a03d1dd32d21419640e9ca4c84cc5",
    "triangles": {
+    "banks": 1016,
+    "banks_low": 0,
     "buildings": 4041,
     "buildings_lod1": 1468,
-    "forest_hlod": 264,
+    "forest_hlod": 382,
     "furniture": 10354,
-    "markings": 2503,
-    "paved": 3542,
-    "road": 18708,
-    "road_collision": 10363,
-    "terrain_lod0": 136917,
-    "terrain_lod1": 35541,
+    "markings": 5199,
+    "paved": 3540,
+    "road": 17257,
+    "road_collision": 10361,
+    "terrain_lod0": 138368,
+    "terrain_lod1": 36992,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 963
@@ -5304,7 +5347,7 @@
     "z_max_evrf2007": 189.84,
     "z_min_evrf2007": 128.96
    },
-   "bytes": 16134712,
+   "bytes": 16163780,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_6.glb",
    "forest_cells": [
     {
@@ -5316,8 +5359,8 @@
      ],
      "id": "14_24",
      "mix": "broadleaf",
-     "trees": 16,
-     "tris": 34
+     "trees": 20,
+     "tris": 52
     },
     {
      "bbox_local_m": [
@@ -5328,20 +5371,20 @@
      ],
      "id": "15_24",
      "mix": "broadleaf",
-     "trees": 127,
-     "tris": 121
+     "trees": 123,
+     "tris": 159
     }
    ],
    "id": "3_6",
    "instances": {
-    "count": 248,
+    "count": 249,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_6.json",
-    "sha256": "566ce90e8f681fa2eded9649d4380289562ac6db441d8b350777a2d7ca6b69d9"
+    "sha256": "3921ccc5ae291343a7414fe6b3cb2236bad008e9c46006e6092e61d2ec94a2c5"
    },
    "low": {
-    "bytes": 2315224,
+    "bytes": 2339364,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_6.low.glb",
-    "sha256": "f18f9534b542c78ad375f977c310d2bf5120f35bbe3e8ab471e501f6f0c25815"
+    "sha256": "5bc7e336c938196ccd76d691f908831cfe992402318ca5cff37ac77474c6752b"
    },
    "materials": [
     "balcony_slab",
@@ -5357,6 +5400,7 @@
     "curb_concrete",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "decal_tyre",
     "dock_digits",
     "dock_door",
@@ -5418,16 +5462,16 @@
     "yard_paving",
     "yard_slabs"
    ],
-   "sha256": "e585877266682fbc74f5a415077fb3a448f931430d7446d58bcfcb33df6661e2",
+   "sha256": "98b89b2760382f2e8c40ca01c2d4300340b428e22881cf80563b1a5ab3ff789e",
    "triangles": {
     "buildings": 125604,
     "buildings_lod1": 3846,
-    "forest_hlod": 155,
+    "forest_hlod": 211,
     "furniture": 5300,
-    "markings": 1404,
-    "paved": 11166,
+    "markings": 1948,
+    "paved": 11154,
     "road": 13765,
-    "road_collision": 11643,
+    "road_collision": 11639,
     "terrain_lod0": 137185,
     "terrain_lod1": 35809,
     "terrain_lod2": 8704,
@@ -5444,19 +5488,19 @@
     "z_max_evrf2007": 191.24,
     "z_min_evrf2007": 124.33
    },
-   "bytes": 12035776,
+   "bytes": 12155960,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_7.glb",
    "forest_cells": [],
    "id": "3_7",
    "instances": {
-    "count": 194,
+    "count": 203,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_7.json",
-    "sha256": "cab80d0a0137efef2725ef0fe2370472c64210a7fa020bf9c16164cc035336cd"
+    "sha256": "88aea96550b7987f9bd6bd8515830a22ef0608b51df37f0a1272b9d571bc9723"
    },
    "low": {
-    "bytes": 2766396,
+    "bytes": 2865980,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_7.low.glb",
-    "sha256": "f12601fde5c046c61b4aa4ed09b8cc9f3bf9c1b8a7d5e85b7fbf07094efef98e"
+    "sha256": "f6ff67b2961a9fc7405991aff8328cca20a1847a3b68232f75263597566021aa"
    },
    "materials": [
     "balcony_slab",
@@ -5474,6 +5518,7 @@
     "cycle_asphalt",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "decal_tyre",
     "dock_digits",
     "dock_door",
@@ -5538,15 +5583,15 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "1df054967fca135082003cf5f1bdeec947015e5d50abf994d558c2f728e1cd1e",
+   "sha256": "4d8e373f995bfbf194d44997df6e0a82aaa456123a80518175aec31a30b53372",
    "triangles": {
     "buildings": 62563,
     "buildings_lod1": 3617,
     "furniture": 6088,
-    "markings": 5114,
-    "paved": 9544,
-    "road": 22500,
-    "road_collision": 15093,
+    "markings": 7497,
+    "paved": 9563,
+    "road": 22506,
+    "road_collision": 15091,
     "terrain_lod0": 137508,
     "terrain_lod1": 36132,
     "terrain_lod2": 8704,
@@ -5562,7 +5607,7 @@
     "z_max_evrf2007": 154.76,
     "z_min_evrf2007": 146.76
    },
-   "bytes": 4863784,
+   "bytes": 4867528,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_0.glb",
    "forest_cells": [
     {
@@ -5574,8 +5619,8 @@
      ],
      "id": "16_0",
      "mix": "conifer",
-     "trees": 369,
-     "tris": 160
+     "trees": 386,
+     "tris": 186
     },
     {
      "bbox_local_m": [
@@ -5586,7 +5631,7 @@
      ],
      "id": "16_1",
      "mix": "conifer",
-     "trees": 338,
+     "trees": 335,
      "tris": 160
     },
     {
@@ -5598,7 +5643,7 @@
      ],
      "id": "16_2",
      "mix": "conifer",
-     "trees": 335,
+     "trees": 336,
      "tris": 160
     },
     {
@@ -5610,7 +5655,7 @@
      ],
      "id": "16_3",
      "mix": "conifer",
-     "trees": 336,
+     "trees": 351,
      "tris": 160
     },
     {
@@ -5622,8 +5667,8 @@
      ],
      "id": "17_0",
      "mix": "conifer",
-     "trees": 350,
-     "tris": 160
+     "trees": 372,
+     "tris": 182
     },
     {
      "bbox_local_m": [
@@ -5634,7 +5679,7 @@
      ],
      "id": "17_1",
      "mix": "conifer",
-     "trees": 338,
+     "trees": 340,
      "tris": 160
     },
     {
@@ -5658,7 +5703,7 @@
      ],
      "id": "17_3",
      "mix": "conifer",
-     "trees": 333,
+     "trees": 338,
      "tris": 160
     },
     {
@@ -5670,8 +5715,8 @@
      ],
      "id": "18_0",
      "mix": "mixed",
-     "trees": 299,
-     "tris": 166
+     "trees": 303,
+     "tris": 200
     },
     {
      "bbox_local_m": [
@@ -5682,7 +5727,7 @@
      ],
      "id": "18_1",
      "mix": "mixed",
-     "trees": 307,
+     "trees": 321,
      "tris": 160
     },
     {
@@ -5694,7 +5739,7 @@
      ],
      "id": "18_2",
      "mix": "conifer",
-     "trees": 339,
+     "trees": 344,
      "tris": 160
     },
     {
@@ -5706,7 +5751,7 @@
      ],
      "id": "18_3",
      "mix": "conifer",
-     "trees": 318,
+     "trees": 325,
      "tris": 160
     },
     {
@@ -5718,8 +5763,8 @@
      ],
      "id": "19_0",
      "mix": "mixed",
-     "trees": 279,
-     "tris": 160
+     "trees": 293,
+     "tris": 188
     },
     {
      "bbox_local_m": [
@@ -5742,7 +5787,7 @@
      ],
      "id": "19_2",
      "mix": "mixed",
-     "trees": 296,
+     "trees": 298,
      "tris": 160
     },
     {
@@ -5754,27 +5799,27 @@
      ],
      "id": "19_3",
      "mix": "conifer",
-     "trees": 296,
+     "trees": 302,
      "tris": 160
     }
    ],
    "id": "4_0",
    "instances": {
-    "count": 5127,
+    "count": 5238,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_0.json",
-    "sha256": "884d95c659e2e40f82e6145b6d4737b07f1177f516bf0d837d87e1266c643d85"
+    "sha256": "5f74bf96873401627164b10ebaeddc047edebcb1f71a5a38422e5121ce893459"
    },
    "low": {
-    "bytes": 828660,
+    "bytes": 831636,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_0.low.glb",
-    "sha256": "9d3e7a60980919796d3986598e01b48aa0f883627750944456ef8aeb3639ca06"
+    "sha256": "965d51feafe9ec33d76502fbf626a11f2325ed76e89ac463021388894e0f488e"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "bb62270edae86d3636fbf609d4e0fabb0a7041e226b0156cef5c94a7cf952780",
+   "sha256": "4e064fd4827d5a1ea274d8f20f1de1ea49d593a6860d1b8a99978b9292d773d8",
    "triangles": {
-    "forest_hlod": 2566,
+    "forest_hlod": 2676,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -5790,7 +5835,7 @@
     "z_max_evrf2007": 156.39,
     "z_min_evrf2007": 144.08
    },
-   "bytes": 4860764,
+   "bytes": 4860772,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_1.glb",
    "forest_cells": [
     {
@@ -5814,7 +5859,7 @@
      ],
      "id": "16_5",
      "mix": "mixed",
-     "trees": 343,
+     "trees": 377,
      "tris": 160
     },
     {
@@ -5850,7 +5895,7 @@
      ],
      "id": "17_4",
      "mix": "conifer",
-     "trees": 280,
+     "trees": 284,
      "tris": 160
     },
     {
@@ -5862,7 +5907,7 @@
      ],
      "id": "17_5",
      "mix": "mixed",
-     "trees": 362,
+     "trees": 354,
      "tris": 160
     },
     {
@@ -5898,7 +5943,7 @@
      ],
      "id": "18_4",
      "mix": "conifer",
-     "trees": 301,
+     "trees": 315,
      "tris": 160
     },
     {
@@ -5910,7 +5955,7 @@
      ],
      "id": "18_5",
      "mix": "broadleaf",
-     "trees": 320,
+     "trees": 330,
      "tris": 160
     },
     {
@@ -5946,7 +5991,7 @@
      ],
      "id": "19_4",
      "mix": "conifer",
-     "trees": 331,
+     "trees": 341,
      "tris": 160
     },
     {
@@ -5958,7 +6003,7 @@
      ],
      "id": "19_5",
      "mix": "broadleaf",
-     "trees": 306,
+     "trees": 307,
      "tris": 160
     },
     {
@@ -5988,19 +6033,19 @@
    ],
    "id": "4_1",
    "instances": {
-    "count": 4650,
+    "count": 4715,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_1.json",
-    "sha256": "5b354b36e8d6eb57ce83569768967220fd4574b592f74571d69661db2a73ab2a"
+    "sha256": "ce003731df43092dba8d8ae93d79327616831986d436b62ef2e60c2d52643d7c"
    },
    "low": {
-    "bytes": 826540,
+    "bytes": 826544,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_1.low.glb",
-    "sha256": "6cd63e3d454dd5fdf2a01f03fe60d75218d1b2ebf963752cade85a7bfc78f85e"
+    "sha256": "b6043f7e8ce8151ca2546c08a3459a2fe604c52f21edda593d460b95214b6c99"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "b492392305b33ac80dad9209c944f4810ef5a1bed0a5c9661dbc54e8befbc513",
+   "sha256": "2f64b71a668318c08f2bbb1dce67ce64b195db4feebe10329180ab2476f9a32c",
    "triangles": {
     "forest_hlod": 2560,
     "terrain_lod0": 135168,
@@ -6018,7 +6063,7 @@
     "z_max_evrf2007": 174.74,
     "z_min_evrf2007": 134.77
    },
-   "bytes": 4886880,
+   "bytes": 4894276,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_2.glb",
    "forest_cells": [
     {
@@ -6030,8 +6075,8 @@
      ],
      "id": "16_10",
      "mix": "broadleaf",
-     "trees": 251,
-     "tris": 151
+     "trees": 248,
+     "tris": 173
     },
     {
      "bbox_local_m": [
@@ -6042,8 +6087,8 @@
      ],
      "id": "16_11",
      "mix": "broadleaf",
-     "trees": 264,
-     "tris": 177
+     "trees": 266,
+     "tris": 207
     },
     {
      "bbox_local_m": [
@@ -6066,8 +6111,8 @@
      ],
      "id": "16_9",
      "mix": "broadleaf",
-     "trees": 252,
-     "tris": 165
+     "trees": 255,
+     "tris": 203
     },
     {
      "bbox_local_m": [
@@ -6078,8 +6123,8 @@
      ],
      "id": "17_10",
      "mix": "broadleaf",
-     "trees": 261,
-     "tris": 159
+     "trees": 264,
+     "tris": 169
     },
     {
      "bbox_local_m": [
@@ -6090,8 +6135,8 @@
      ],
      "id": "17_11",
      "mix": "broadleaf",
-     "trees": 57,
-     "tris": 112
+     "trees": 62,
+     "tris": 142
     },
     {
      "bbox_local_m": [
@@ -6126,8 +6171,8 @@
      ],
      "id": "18_10",
      "mix": "broadleaf",
-     "trees": 168,
-     "tris": 133
+     "trees": 175,
+     "tris": 167
     },
     {
      "bbox_local_m": [
@@ -6162,8 +6207,8 @@
      ],
      "id": "19_10",
      "mix": "broadleaf",
-     "trees": 219,
-     "tris": 137
+     "trees": 236,
+     "tris": 169
     },
     {
      "bbox_local_m": [
@@ -6192,22 +6237,22 @@
    ],
    "id": "4_2",
    "instances": {
-    "count": 3352,
+    "count": 3386,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_2.json",
-    "sha256": "2fbccff151b398afd641c35380666930ee29fe2c2911c3fe76895d0c212f2f5a"
+    "sha256": "96bd5b3d9a782d682cc2692e02044d66a6746f00ffe65a69a7aa52771805f50a"
    },
    "low": {
-    "bytes": 844248,
+    "bytes": 850112,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_2.low.glb",
-    "sha256": "8c35485f29f80d48f466485f7729c78310e89e8ac402ac4be4d4aa51afcf074a"
+    "sha256": "ae17cb6c27d5f14efd1321923656d04666aa8e10daf42537fc2055149dbf991a"
    },
    "materials": [
     "terrain_grass",
     "wire"
    ],
-   "sha256": "1cbc84462d91a73f25bfee1a6bd9cd4b549ac6e049815ae75d064cbdac777f42",
+   "sha256": "15463777c007993b7f4830e16919357c91360bdb5fea147d59f70da7b67321f8",
    "triangles": {
-    "forest_hlod": 2154,
+    "forest_hlod": 2350,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -6224,7 +6269,7 @@
     "z_max_evrf2007": 175.07,
     "z_min_evrf2007": 129.58
    },
-   "bytes": 4987932,
+   "bytes": 4991264,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_3.glb",
    "forest_cells": [
     {
@@ -6236,8 +6281,8 @@
      ],
      "id": "16_12",
      "mix": "broadleaf",
-     "trees": 179,
-     "tris": 175
+     "trees": 214,
+     "tris": 255
     },
     {
      "bbox_local_m": [
@@ -6248,20 +6293,20 @@
      ],
      "id": "16_13",
      "mix": "broadleaf",
-     "trees": 9,
-     "tris": 29
+     "trees": 18,
+     "tris": 41
     }
    ],
    "id": "4_3",
    "instances": {
-    "count": 211,
+    "count": 255,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_3.json",
-    "sha256": "1bfa9ea2fbfe6d9aec2e97dfa116404844d2623b05c0a3f08e04576f23a457fc"
+    "sha256": "a41c4dc241d96c6a68630ca68098823eaa0553c4a90fc10096d9532593c378a0"
    },
    "low": {
-    "bytes": 784108,
+    "bytes": 786752,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_3.low.glb",
-    "sha256": "f9bf5fc3020da6f1704cb911a63ffdcfb58efae0cc97a8a03de84bb2276023de"
+    "sha256": "474fa1c3d9e9da741c5ce20e6b6d62e25288ea69adb44dd44f98d46e708e0402"
    },
    "materials": [
     "canopy_steel",
@@ -6280,11 +6325,11 @@
     "wire",
     "yard_gravel"
    ],
-   "sha256": "043985437ea0b9fecf1e7e3444ec7118db01a778767a7b9af3542d3c5be0a5c8",
+   "sha256": "0475209bac0cb66c440e45feaa62efd0069072d689f1b49c318b4723533aab61",
    "triangles": {
     "buildings": 2356,
     "buildings_lod1": 167,
-    "forest_hlod": 204,
+    "forest_hlod": 296,
     "paved": 424,
     "road_collision": 363,
     "terrain_lod0": 135168,
@@ -6303,19 +6348,19 @@
     "z_max_evrf2007": 148.68,
     "z_min_evrf2007": 129.12
    },
-   "bytes": 6140444,
+   "bytes": 6143388,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_4.glb",
    "forest_cells": [],
    "id": "4_4",
    "instances": {
-    "count": 76,
+    "count": 77,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_4.json",
-    "sha256": "69060f17859f58d586261332f355beb13a55ff3fcb743ce074a77b328c73d4c2"
+    "sha256": "dd0399cc925efe2f9259e7ac08e24a69a79e491f115511ec4470b8a8d08f0b99"
    },
    "low": {
-    "bytes": 1234232,
+    "bytes": 1236640,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_4.low.glb",
-    "sha256": "ae37577d1b7c10ff94d88d01b28a912d70b4f82ab7cfe5c8e63bdbf50bdae62d"
+    "sha256": "29de192af9ed2c4621e960eae89ef8e1a80d4bc8088582d4295039c2648f21a9"
    },
    "materials": [
     "canopy_steel",
@@ -6358,11 +6403,11 @@
     "yard_behaton",
     "yard_concrete"
    ],
-   "sha256": "168bbb16c81a1e38b1829519bb6415fbfd373256aa722ca55f7e1a5031e08782",
+   "sha256": "3763d3d34d0f6d3802e247c5ab7ba990ffe695d74b279293a95aad2858e0ed75",
    "triangles": {
     "buildings": 10288,
     "buildings_lod1": 1638,
-    "markings": 2453,
+    "markings": 2496,
     "paved": 1993,
     "road": 5754,
     "road_collision": 3307,
@@ -6381,7 +6426,7 @@
     "z_max_evrf2007": 171.43,
     "z_min_evrf2007": 130.92
    },
-   "bytes": 7737220,
+   "bytes": 7943236,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.glb",
    "forest_cells": [
     {
@@ -6393,20 +6438,20 @@
      ],
      "id": "16_23",
      "mix": "broadleaf",
-     "trees": 13,
-     "tris": 23
+     "trees": 18,
+     "tris": 39
     }
    ],
    "id": "4_5",
    "instances": {
-    "count": 429,
+    "count": 433,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_5.json",
-    "sha256": "cfc4d80f82f2522ceb3709e670fdc2c53b9dcb3d4a9871c14d28205f18580725"
+    "sha256": "1af2b82b7cd26e032c7e440309f62db8920d90f8319529c255dc9e17465859df"
    },
    "low": {
-    "bytes": 2462660,
+    "bytes": 2498412,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.low.glb",
-    "sha256": "547fa6c7971369a829ac65292e6ca4af14b521c037b54aa099b348f3e00bb57e"
+    "sha256": "744ad636e61e425ffcac3eb9bc597559affeb06c7ad9482588383583d87602e0"
    },
    "materials": [
     "brick_red",
@@ -6423,6 +6468,7 @@
     "cycle_asphalt_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "decal_tyre",
     "dock_digits",
     "dock_door",
@@ -6470,7 +6516,7 @@
     "steel_galv",
     "steel_painted",
     "terrain_grass",
-    "verge_grass",
+    "verge_tufts",
     "window_sill",
     "wire",
     "yard_asphalt",
@@ -6479,18 +6525,20 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "09213479bf960bbb5ed7b2497ac1b2ffb16130a840ac49f61865a6a170d4bbab",
+   "sha256": "27d3878dfd4f861e959adf0401e5cfe109b6945d9d0d38afa8bf86acfd9e8be5",
    "triangles": {
+    "banks": 897,
+    "banks_low": 0,
     "buildings": 10962,
     "buildings_lod1": 2752,
-    "forest_hlod": 23,
+    "forest_hlod": 39,
     "furniture": 1893,
-    "markings": 6679,
-    "paved": 8320,
-    "road": 21770,
-    "road_collision": 13276,
-    "terrain_lod0": 136389,
-    "terrain_lod1": 35013,
+    "markings": 8019,
+    "paved": 8318,
+    "road": 20436,
+    "road_collision": 13274,
+    "terrain_lod0": 137723,
+    "terrain_lod1": 36347,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 117
@@ -6505,7 +6553,7 @@
     "z_max_evrf2007": 173.48,
     "z_min_evrf2007": 133.07
    },
-   "bytes": 6155088,
+   "bytes": 6277396,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_6.glb",
    "forest_cells": [
     {
@@ -6517,8 +6565,8 @@
      ],
      "id": "16_24",
      "mix": "broadleaf",
-     "trees": 97,
-     "tris": 150
+     "trees": 104,
+     "tris": 236
     },
     {
      "bbox_local_m": [
@@ -6529,8 +6577,8 @@
      ],
      "id": "17_24",
      "mix": "broadleaf",
-     "trees": 76,
-     "tris": 95
+     "trees": 91,
+     "tris": 131
     },
     {
      "bbox_local_m": [
@@ -6542,7 +6590,7 @@
      "id": "17_25",
      "mix": "broadleaf",
      "trees": 72,
-     "tris": 94
+     "tris": 136
     },
     {
      "bbox_local_m": [
@@ -6553,8 +6601,8 @@
      ],
      "id": "18_25",
      "mix": "broadleaf",
-     "trees": 184,
-     "tris": 154
+     "trees": 202,
+     "tris": 198
     },
     {
      "bbox_local_m": [
@@ -6565,8 +6613,8 @@
      ],
      "id": "18_26",
      "mix": "broadleaf",
-     "trees": 35,
-     "tris": 59
+     "trees": 49,
+     "tris": 87
     },
     {
      "bbox_local_m": [
@@ -6577,8 +6625,8 @@
      ],
      "id": "19_25",
      "mix": "broadleaf",
-     "trees": 66,
-     "tris": 83
+     "trees": 73,
+     "tris": 129
     },
     {
      "bbox_local_m": [
@@ -6589,20 +6637,20 @@
      ],
      "id": "19_26",
      "mix": "broadleaf",
-     "trees": 119,
-     "tris": 179
+     "trees": 123,
+     "tris": 279
     }
    ],
    "id": "4_6",
    "instances": {
-    "count": 887,
+    "count": 957,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_6.json",
-    "sha256": "dcc5c9b5b536ce259d1142697c059e7ec71a8bad9cc12ef2e224a5fa972c3b5c"
+    "sha256": "2e33e3ea37681c4d3eacace3c7d07cb7b9e2379433711deb1f0fab74b0e78522"
    },
    "low": {
-    "bytes": 1655360,
+    "bytes": 1685948,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_6.low.glb",
-    "sha256": "7139e1100f0b066b47542322eb8e3be411740b88cd4d0a833a43fec32fab1f2b"
+    "sha256": "35b38ee02606fe141bb1440a039b434aaf086d7643ef25f99619548262313ee3"
    },
    "materials": [
     "canopy_steel",
@@ -6616,6 +6664,8 @@
     "curb_concrete",
     "cycle_asphalt_red",
     "decal_oil",
+    "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -6644,25 +6694,27 @@
     "sidewalk_paving",
     "skylight",
     "terrain_grass",
-    "verge_grass",
+    "verge_tufts",
     "window_sill",
     "wire",
     "yard_asphalt",
     "yard_concrete",
     "yard_slabs"
    ],
-   "sha256": "8fb3195cb69284ce6578d3c829368d1045694c1fc3a0d4bc153e0210910d8a26",
+   "sha256": "cf4e588f7f7f729da5bdc935d17fac924849d23489fba044edc22c7fd2703b08",
    "triangles": {
+    "banks": 467,
+    "banks_low": 0,
     "buildings": 3033,
     "buildings_lod1": 402,
-    "forest_hlod": 814,
+    "forest_hlod": 1196,
     "furniture": 6349,
-    "markings": 773,
-    "paved": 3843,
-    "road": 7374,
-    "road_collision": 6063,
-    "terrain_lod0": 135721,
-    "terrain_lod1": 34345,
+    "markings": 1483,
+    "paved": 3847,
+    "road": 6668,
+    "road_collision": 6065,
+    "terrain_lod0": 136427,
+    "terrain_lod1": 35051,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 1064
@@ -6677,19 +6729,19 @@
     "z_max_evrf2007": 151.66,
     "z_min_evrf2007": 129.93
    },
-   "bytes": 8467928,
+   "bytes": 8578692,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_7.glb",
    "forest_cells": [],
    "id": "4_7",
    "instances": {
-    "count": 204,
+    "count": 203,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_7.json",
-    "sha256": "5f9da340f92ccc362c6b6dc83f593a486fa191955153def264e3a22be879e82f"
+    "sha256": "80ec10343adfca147aa155020cb50b9180f072fd8b5bf35bad31383e2f471e52"
    },
    "low": {
-    "bytes": 2146884,
+    "bytes": 2238224,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_7.low.glb",
-    "sha256": "328d269fd2797f89351dcaaddad74b3dfb68ecd53d335095a35b9732d2544fe1"
+    "sha256": "5ddc0b27f4e9cc40d682ad6462617e45d788a21a3a4be7152056aa1c8ac24707"
    },
    "materials": [
     "canopy_fascia",
@@ -6703,6 +6755,7 @@
     "curb_concrete",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "decal_tyre",
     "dock_digits",
     "dock_door",
@@ -6760,17 +6813,17 @@
     "yard_concrete",
     "yard_slabs"
    ],
-   "sha256": "05441a5f08e97efc18f592b362456adeb3c3954eb6a0ce0cd0deaa26d5284846",
+   "sha256": "96725ac7cc87fa72ba0078b5db49c0ca8aa65b832642f29243dade80c08d5506",
    "triangles": {
     "buildings": 24450,
     "buildings_lod1": 3039,
     "furniture": 7995,
-    "markings": 1197,
-    "paved": 2458,
-    "road": 14905,
-    "road_collision": 9854,
-    "terrain_lod0": 137192,
-    "terrain_lod1": 35816,
+    "markings": 3453,
+    "paved": 2456,
+    "road": 14907,
+    "road_collision": 9857,
+    "terrain_lod0": 137190,
+    "terrain_lod1": 35814,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304
    }
@@ -6784,7 +6837,7 @@
     "z_max_evrf2007": 153.4,
     "z_min_evrf2007": 141.66
    },
-   "bytes": 4863904,
+   "bytes": 4867580,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_0.glb",
    "forest_cells": [
     {
@@ -6796,8 +6849,8 @@
      ],
      "id": "20_0",
      "mix": "mixed",
-     "trees": 289,
-     "tris": 160
+     "trees": 303,
+     "tris": 182
     },
     {
      "bbox_local_m": [
@@ -6832,7 +6885,7 @@
      ],
      "id": "20_3",
      "mix": "mixed",
-     "trees": 284,
+     "trees": 283,
      "tris": 160
     },
     {
@@ -6844,8 +6897,8 @@
      ],
      "id": "21_0",
      "mix": "conifer",
-     "trees": 334,
-     "tris": 166
+     "trees": 350,
+     "tris": 188
     },
     {
      "bbox_local_m": [
@@ -6856,7 +6909,7 @@
      ],
      "id": "21_1",
      "mix": "mixed",
-     "trees": 262,
+     "trees": 263,
      "tris": 160
     },
     {
@@ -6880,7 +6933,7 @@
      ],
      "id": "21_3",
      "mix": "mixed",
-     "trees": 274,
+     "trees": 279,
      "tris": 160
     },
     {
@@ -6892,8 +6945,8 @@
      ],
      "id": "22_0",
      "mix": "mixed",
-     "trees": 314,
-     "tris": 166
+     "trees": 331,
+     "tris": 196
     },
     {
      "bbox_local_m": [
@@ -6928,7 +6981,7 @@
      ],
      "id": "22_3",
      "mix": "mixed",
-     "trees": 322,
+     "trees": 324,
      "tris": 160
     },
     {
@@ -6940,8 +6993,8 @@
      ],
      "id": "23_0",
      "mix": "conifer",
-     "trees": 389,
-     "tris": 160
+     "trees": 400,
+     "tris": 186
     },
     {
      "bbox_local_m": [
@@ -6952,7 +7005,7 @@
      ],
      "id": "23_1",
      "mix": "mixed",
-     "trees": 290,
+     "trees": 307,
      "tris": 160
     },
     {
@@ -6964,7 +7017,7 @@
      ],
      "id": "23_2",
      "mix": "mixed",
-     "trees": 289,
+     "trees": 297,
      "tris": 160
     },
     {
@@ -6976,27 +7029,27 @@
      ],
      "id": "23_3",
      "mix": "mixed",
-     "trees": 335,
+     "trees": 357,
      "tris": 160
     }
    ],
    "id": "5_0",
    "instances": {
-    "count": 4722,
+    "count": 4834,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_0.json",
-    "sha256": "a86d8cad0743e7c6241e8a697e87ced363a907949b6ea56ac3707d3a3cd43de8"
+    "sha256": "b3226396bbd0af3609ed0d1ee387a2578dec3bb836a88156da25e71abf8d7ce0"
    },
    "low": {
-    "bytes": 828780,
+    "bytes": 831684,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_0.low.glb",
-    "sha256": "edffde89d4cd75c259407eb838aacfe06c6e5a5dfc9a0a6a8a83fbf71a0bbb8e"
+    "sha256": "c7a9e3776c821431bfba670b59453508d26011715200d5dc545e139fbf31e26a"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "375e36738cbbf46667683a7ee0a19b80706c5351106140cf8e03dd9f073770ea",
+   "sha256": "69d0ebd7b532e02ea8f27672db250589e97b9389aa5eb7e72bf2398b63e6b584",
    "triangles": {
-    "forest_hlod": 2572,
+    "forest_hlod": 2672,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -7012,7 +7065,7 @@
     "z_max_evrf2007": 155.11,
     "z_min_evrf2007": 138.76
    },
-   "bytes": 4860236,
+   "bytes": 4860220,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_1.glb",
    "forest_cells": [
     {
@@ -7024,7 +7077,7 @@
      ],
      "id": "20_4",
      "mix": "mixed",
-     "trees": 378,
+     "trees": 380,
      "tris": 160
     },
     {
@@ -7036,7 +7089,7 @@
      ],
      "id": "20_5",
      "mix": "broadleaf",
-     "trees": 268,
+     "trees": 271,
      "tris": 160
     },
     {
@@ -7072,7 +7125,7 @@
      ],
      "id": "21_4",
      "mix": "mixed",
-     "trees": 330,
+     "trees": 339,
      "tris": 160
     },
     {
@@ -7096,7 +7149,7 @@
      ],
      "id": "21_6",
      "mix": "broadleaf",
-     "trees": 270,
+     "trees": 267,
      "tris": 160
     },
     {
@@ -7108,7 +7161,7 @@
      ],
      "id": "21_7",
      "mix": "broadleaf",
-     "trees": 318,
+     "trees": 326,
      "tris": 160
     },
     {
@@ -7120,7 +7173,7 @@
      ],
      "id": "22_4",
      "mix": "broadleaf",
-     "trees": 319,
+     "trees": 322,
      "tris": 160
     },
     {
@@ -7144,7 +7197,7 @@
      ],
      "id": "22_6",
      "mix": "broadleaf",
-     "trees": 340,
+     "trees": 341,
      "tris": 160
     },
     {
@@ -7156,7 +7209,7 @@
      ],
      "id": "22_7",
      "mix": "mixed",
-     "trees": 347,
+     "trees": 355,
      "tris": 160
     },
     {
@@ -7168,7 +7221,7 @@
      ],
      "id": "23_4",
      "mix": "broadleaf",
-     "trees": 292,
+     "trees": 294,
      "tris": 160
     },
     {
@@ -7180,7 +7233,7 @@
      ],
      "id": "23_5",
      "mix": "broadleaf",
-     "trees": 287,
+     "trees": 288,
      "tris": 160
     },
     {
@@ -7192,7 +7245,7 @@
      ],
      "id": "23_6",
      "mix": "mixed",
-     "trees": 328,
+     "trees": 329,
      "tris": 160
     },
     {
@@ -7204,25 +7257,25 @@
      ],
      "id": "23_7",
      "mix": "mixed",
-     "trees": 330,
+     "trees": 328,
      "tris": 160
     }
    ],
    "id": "5_1",
    "instances": {
-    "count": 4840,
+    "count": 4873,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_1.json",
-    "sha256": "8a179c6a1596769ea5e43f84360c29a8905fc17effea6d5cf4dc0b5597d924f6"
+    "sha256": "134e0f0d394fa0c6a5d53307c8485a73803f2ed5f11f805186d7c6ca7f72dfaa"
    },
    "low": {
-    "bytes": 826004,
+    "bytes": 825992,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_1.low.glb",
-    "sha256": "c45efbf33eeb9e6e9e598a24d2c386c7e7da4e69a03ca3cd7211362367df3784"
+    "sha256": "76759ece7ef53fb0a20134fb27fca02cd5f57fa9f8edbc3458b90211b4039faf"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "beba9eb92e4194f23989d57bde3e493526447bc76419e5be5fb11968455c0513",
+   "sha256": "046664b20a0b5940561f22420d809c4f45a57fa669d4d31d56c1a65e8b470459",
    "triangles": {
     "forest_hlod": 2560,
     "terrain_lod0": 135168,
@@ -7240,7 +7293,7 @@
     "z_max_evrf2007": 170.91,
     "z_min_evrf2007": 133.6
    },
-   "bytes": 4874336,
+   "bytes": 4876444,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_2.glb",
    "forest_cells": [
     {
@@ -7252,8 +7305,8 @@
      ],
      "id": "20_10",
      "mix": "broadleaf",
-     "trees": 273,
-     "tris": 161
+     "trees": 278,
+     "tris": 173
     },
     {
      "bbox_local_m": [
@@ -7264,8 +7317,8 @@
      ],
      "id": "20_11",
      "mix": "broadleaf",
-     "trees": 59,
-     "tris": 74
+     "trees": 61,
+     "tris": 110
     },
     {
      "bbox_local_m": [
@@ -7300,7 +7353,7 @@
      ],
      "id": "21_10",
      "mix": "broadleaf",
-     "trees": 292,
+     "trees": 287,
      "tris": 160
     },
     {
@@ -7312,8 +7365,8 @@
      ],
      "id": "21_11",
      "mix": "broadleaf",
-     "trees": 225,
-     "tris": 151
+     "trees": 229,
+     "tris": 179
     },
     {
      "bbox_local_m": [
@@ -7324,7 +7377,7 @@
      ],
      "id": "21_8",
      "mix": "broadleaf",
-     "trees": 309,
+     "trees": 306,
      "tris": 160
     },
     {
@@ -7336,7 +7389,7 @@
      ],
      "id": "21_9",
      "mix": "broadleaf",
-     "trees": 271,
+     "trees": 282,
      "tris": 160
     },
     {
@@ -7348,7 +7401,7 @@
      ],
      "id": "22_10",
      "mix": "mixed",
-     "trees": 292,
+     "trees": 298,
      "tris": 160
     },
     {
@@ -7360,7 +7413,7 @@
      ],
      "id": "22_11",
      "mix": "mixed",
-     "trees": 303,
+     "trees": 305,
      "tris": 160
     },
     {
@@ -7372,7 +7425,7 @@
      ],
      "id": "22_8",
      "mix": "mixed",
-     "trees": 307,
+     "trees": 304,
      "tris": 160
     },
     {
@@ -7384,7 +7437,7 @@
      ],
      "id": "22_9",
      "mix": "mixed",
-     "trees": 291,
+     "trees": 292,
      "tris": 160
     },
     {
@@ -7396,7 +7449,7 @@
      ],
      "id": "23_10",
      "mix": "mixed",
-     "trees": 302,
+     "trees": 303,
      "tris": 160
     },
     {
@@ -7408,7 +7461,7 @@
      ],
      "id": "23_11",
      "mix": "mixed",
-     "trees": 289,
+     "trees": 308,
      "tris": 160
     },
     {
@@ -7420,7 +7473,7 @@
      ],
      "id": "23_8",
      "mix": "mixed",
-     "trees": 314,
+     "trees": 322,
      "tris": 160
     },
     {
@@ -7438,22 +7491,22 @@
    ],
    "id": "5_2",
    "instances": {
-    "count": 4310,
+    "count": 4358,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_2.json",
-    "sha256": "4290d17495392090006ea8c7be17386f981f22290bda2774c2e04d960be5ebc8"
+    "sha256": "cab5ded6e852f8dbaa53a56047d45dfb6cf854b5fae595509ae348c3ff3b4ad5"
    },
    "low": {
-    "bytes": 836600,
+    "bytes": 838308,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_2.low.glb",
-    "sha256": "38396ff552a2d9653a9d4ead90f1c1cc5134f09a00980d1e1b0abd74a09a3e7b"
+    "sha256": "21bd68519f995db2d7bac2225c5c21aa76597286d8cd097b6819fddd1448dfa5"
    },
    "materials": [
     "terrain_grass",
     "wire"
    ],
-   "sha256": "1303353ace576e569b932a95b537cb74a7c4fef9c9623177ff8ea660429d2ae3",
+   "sha256": "95a1e6f76a32ebd8caac3327ea18c0195074b5fe3535a29abcc776eb7b1de99f",
    "triangles": {
-    "forest_hlod": 2466,
+    "forest_hlod": 2542,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -7470,9 +7523,21 @@
     "z_max_evrf2007": 168.49,
     "z_min_evrf2007": 129.36
    },
-   "bytes": 5638492,
+   "bytes": 5646264,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_3.glb",
    "forest_cells": [
+    {
+     "bbox_local_m": [
+      368.74,
+      246.46,
+      384.0,
+      256.0
+     ],
+     "id": "21_12",
+     "mix": "broadleaf",
+     "trees": 13,
+     "tris": 33
+    },
     {
      "bbox_local_m": [
       384.0,
@@ -7482,8 +7547,8 @@
      ],
      "id": "22_12",
      "mix": "mixed",
-     "trees": 118,
-     "tris": 118
+     "trees": 140,
+     "tris": 164
     },
     {
      "bbox_local_m": [
@@ -7494,8 +7559,8 @@
      ],
      "id": "23_12",
      "mix": "mixed",
-     "trees": 196,
-     "tris": 142
+     "trees": 217,
+     "tris": 166
     },
     {
      "bbox_local_m": [
@@ -7506,20 +7571,20 @@
      ],
      "id": "23_13",
      "mix": "broadleaf",
-     "trees": 44,
-     "tris": 54
+     "trees": 49,
+     "tris": 80
     }
    ],
    "id": "5_3",
    "instances": {
-    "count": 444,
+    "count": 501,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_3.json",
-    "sha256": "18523fa65b64af887f97457aebeea97cb5bb44630ab5539759296b3d319f23fd"
+    "sha256": "0d40271e2c0163b0b63dd54e641e8a7eb174cbae20e5f9499263d0698b8f7028"
    },
    "low": {
-    "bytes": 1251968,
+    "bytes": 1258588,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_3.low.glb",
-    "sha256": "e52fbee4ad255dd8ce86fb3bd112e2e62ebe0e039498cbab7827302b60be6e9c"
+    "sha256": "595ad32d34f3f7bac8c59f7b5591b17ac64f6e621ed09effa0817e614bbb8d32"
    },
    "materials": [
     "brick_red",
@@ -7571,16 +7636,16 @@
     "yard_behaton",
     "yard_concrete"
    ],
-   "sha256": "b36e2660a4cc80fe333898a01da4e7f193e2f16bf13b7b55781e103ee4bd286d",
+   "sha256": "811bfdba3e5f6c876a82a429c982555553fe190bbf4705d5f0bd608b8cb41440",
    "triangles": {
     "buildings": 2415,
     "buildings_lod1": 592,
-    "forest_hlod": 314,
+    "forest_hlod": 443,
     "furniture": 5892,
-    "markings": 391,
-    "paved": 1078,
+    "markings": 412,
+    "paved": 1079,
     "road": 1696,
-    "road_collision": 2465,
+    "road_collision": 2466,
     "terrain_lod0": 135437,
     "terrain_lod1": 34061,
     "terrain_lod2": 8704,
@@ -7597,19 +7662,19 @@
     "z_max_evrf2007": 144.22,
     "z_min_evrf2007": 131.25
    },
-   "bytes": 6759760,
+   "bytes": 6762316,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.glb",
    "forest_cells": [],
    "id": "5_4",
    "instances": {
-    "count": 101,
+    "count": 100,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_4.json",
-    "sha256": "2f02030334799e59048f2f0c296218e0abfba016a617e1e1800acb97e4e5b926"
+    "sha256": "edffe98a352118e27dfd96424881b82a9232bc88bf530c9daa877f67550ba1d5"
    },
    "low": {
-    "bytes": 1771384,
+    "bytes": 1773492,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.low.glb",
-    "sha256": "abb54f99cf3e42e826fc2f6fe40b58347b9f97e48a6fb020d1139a776950c842"
+    "sha256": "750c3b63a816d3f31eedeba71db3fbaa1d20f9423928cb7a190403bcc3f55338"
    },
    "materials": [
     "canopy_steel",
@@ -7668,15 +7733,15 @@
     "yard_behaton",
     "yard_concrete"
    ],
-   "sha256": "c44db363167d5b35e282680b0e82c54e432c46ec5615b7325b9e81c0fdb6d20e",
+   "sha256": "b5687632b418f403bcc7e9fabff385b715c47585b53e9511c604ee978f476609",
    "triangles": {
     "buildings": 8761,
     "buildings_lod1": 2170,
     "furniture": 5479,
-    "markings": 3111,
-    "paved": 2643,
+    "markings": 3151,
+    "paved": 2646,
     "road": 9451,
-    "road_collision": 6173,
+    "road_collision": 6176,
     "terrain_lod0": 136205,
     "terrain_lod1": 34829,
     "terrain_lod2": 8704,
@@ -7692,19 +7757,19 @@
     "z_max_evrf2007": 156.16,
     "z_min_evrf2007": 132.74
    },
-   "bytes": 7349712,
+   "bytes": 7395104,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.glb",
    "forest_cells": [],
    "id": "5_5",
    "instances": {
-    "count": 395,
+    "count": 426,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_5.json",
-    "sha256": "89daec4f084992e7956759965f72d08863b45461ac5a2867d666bea3c04b870e"
+    "sha256": "7817f06c0e55f4893bea93d344346cc00bdfef415bcf9ed07d3393d05591ca17"
    },
    "low": {
-    "bytes": 1722444,
+    "bytes": 1760228,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.low.glb",
-    "sha256": "ab934f7666ade42b617599133a26759de3d03629ac4b652a030fbcfb85f54ceb"
+    "sha256": "67468f42ad5cbded6644e97f08ecf972c073b53e2d75f96a2f2d00e3aa8813e6"
    },
    "materials": [
     "brick_red",
@@ -7719,6 +7784,7 @@
     "curb_concrete",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "decal_tyre",
     "dock_digits",
     "dock_door",
@@ -7777,15 +7843,15 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "14b6871d9f37fe6ba5a687450e614e7f179912fb21d98e06db409011cde2d560",
+   "sha256": "ac0a37248945dd38ccce7967bf3f0e14fab4703e9758f126a60c72437b5e33f2",
    "triangles": {
     "buildings": 17867,
     "buildings_lod1": 2106,
     "furniture": 3718,
-    "markings": 3552,
-    "paved": 3000,
+    "markings": 4444,
+    "paved": 2995,
     "road": 9258,
-    "road_collision": 7175,
+    "road_collision": 7172,
     "terrain_lod0": 136132,
     "terrain_lod1": 34756,
     "terrain_lod2": 8704,
@@ -7801,7 +7867,7 @@
     "z_max_evrf2007": 168.77,
     "z_min_evrf2007": 134.15
    },
-   "bytes": 7443468,
+   "bytes": 7694056,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.glb",
    "forest_cells": [
     {
@@ -7813,20 +7879,20 @@
      ],
      "id": "20_26",
      "mix": "broadleaf",
-     "trees": 55,
-     "tris": 176
+     "trees": 66,
+     "tris": 288
     }
    ],
    "id": "5_6",
    "instances": {
-    "count": 235,
+    "count": 249,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_6.json",
-    "sha256": "8268edda0618b16890ff7e6aedb1079c0a55b6c344e4eb137b20fe17ac9fd790"
+    "sha256": "16d353ea4447ce4cc9541b0a99b6c1e7a415ba14f228a5f03bebf38984927b19"
    },
    "low": {
-    "bytes": 2680144,
+    "bytes": 2804200,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
-    "sha256": "5564b7345dbe826e090f565ddebf77577fa0726d630ac2b8b30d01fca4d8dcfe"
+    "sha256": "5681ec291942980bf89ac59a9408f08e0f654b7a0081936d9ad8743168801bf0"
    },
    "materials": [
     "barrier_steel",
@@ -7846,6 +7912,7 @@
     "cycle_asphalt_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -7881,25 +7948,28 @@
     "steel_painted",
     "terrain_grass",
     "verge_grass",
+    "verge_tufts",
     "window_sill",
     "wire",
     "yard_asphalt",
     "yard_concrete",
     "yard_slabs"
    ],
-   "sha256": "5b40e2b6c6b0c067fb871996ff7e06b1b601d921ab67dc25130ff2b7d5b0e12a",
+   "sha256": "99c3d58f16efa8f6d8ada5b55665599566302fe143f95b0518f0b52786c206b0",
    "triangles": {
+    "banks": 602,
+    "banks_low": 0,
     "bridge": 8695,
     "buildings": 2722,
     "buildings_lod1": 377,
-    "forest_hlod": 176,
+    "forest_hlod": 288,
     "furniture": 6412,
-    "markings": 6587,
+    "markings": 9827,
     "paved": 4523,
-    "road": 16791,
+    "road": 16045,
     "road_collision": 11808,
-    "terrain_lod0": 136678,
-    "terrain_lod1": 35302,
+    "terrain_lod0": 137424,
+    "terrain_lod1": 36048,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 1072
@@ -7914,19 +7984,19 @@
     "z_max_evrf2007": 158.3,
     "z_min_evrf2007": 134.08
    },
-   "bytes": 10325596,
+   "bytes": 10381800,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_7.glb",
    "forest_cells": [],
    "id": "5_7",
    "instances": {
     "count": 92,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_7.json",
-    "sha256": "4e1858a2afa98ebbf128984dda538b3129517f0d84a8193c8590cbd945ce25eb"
+    "sha256": "71cafa317b53aabcd5f4428290df7394c2148181b145899ed0c2cfa2abd2fa97"
    },
    "low": {
-    "bytes": 2545888,
+    "bytes": 2591980,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_7.low.glb",
-    "sha256": "4d08df6ce4476e3d4002d8e8a8d702568e7603230701da56b6d2407b9f127c73"
+    "sha256": "198777a1579d85f50d1a52317e5145f0cba49fb0891de555df628804480991bc"
    },
    "materials": [
     "balcony_slab",
@@ -7943,6 +8013,7 @@
     "cycle_asphalt",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "decal_tyre",
     "dock_digits",
     "dock_door",
@@ -8006,17 +8077,17 @@
     "yard_concrete",
     "yard_slabs"
    ],
-   "sha256": "d10bfbae339cac5b945ae994b3cb11f5f77d8365d62b1e095e349c0523a95313",
+   "sha256": "44c7acfaababa7509a7b2b767c6f660f2c5d54d79cf0b65bfbc95dc19a28d9d0",
    "triangles": {
     "buildings": 43069,
     "buildings_lod1": 4747,
     "furniture": 5712,
-    "markings": 4029,
-    "paved": 6755,
-    "road": 17471,
-    "road_collision": 13598,
-    "terrain_lod0": 137306,
-    "terrain_lod1": 35930,
+    "markings": 5114,
+    "paved": 6758,
+    "road": 17477,
+    "road_collision": 13604,
+    "terrain_lod0": 137308,
+    "terrain_lod1": 35932,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 107
@@ -8031,7 +8102,7 @@
     "z_max_evrf2007": 157.06,
     "z_min_evrf2007": 141.84
    },
-   "bytes": 4864524,
+   "bytes": 4868396,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_0.glb",
    "forest_cells": [
     {
@@ -8043,8 +8114,8 @@
      ],
      "id": "24_0",
      "mix": "mixed",
-     "trees": 348,
-     "tris": 160
+     "trees": 379,
+     "tris": 192
     },
     {
      "bbox_local_m": [
@@ -8055,7 +8126,7 @@
      ],
      "id": "24_1",
      "mix": "mixed",
-     "trees": 312,
+     "trees": 320,
      "tris": 160
     },
     {
@@ -8067,7 +8138,7 @@
      ],
      "id": "24_2",
      "mix": "mixed",
-     "trees": 329,
+     "trees": 335,
      "tris": 160
     },
     {
@@ -8079,7 +8150,7 @@
      ],
      "id": "24_3",
      "mix": "mixed",
-     "trees": 387,
+     "trees": 411,
      "tris": 160
     },
     {
@@ -8091,8 +8162,8 @@
      ],
      "id": "25_0",
      "mix": "conifer",
-     "trees": 366,
-     "tris": 166
+     "trees": 375,
+     "tris": 204
     },
     {
      "bbox_local_m": [
@@ -8103,7 +8174,7 @@
      ],
      "id": "25_1",
      "mix": "mixed",
-     "trees": 366,
+     "trees": 385,
      "tris": 160
     },
     {
@@ -8115,7 +8186,7 @@
      ],
      "id": "25_2",
      "mix": "mixed",
-     "trees": 375,
+     "trees": 377,
      "tris": 160
     },
     {
@@ -8127,7 +8198,7 @@
      ],
      "id": "25_3",
      "mix": "mixed",
-     "trees": 357,
+     "trees": 372,
      "tris": 160
     },
     {
@@ -8139,8 +8210,8 @@
      ],
      "id": "26_0",
      "mix": "mixed",
-     "trees": 312,
-     "tris": 166
+     "trees": 337,
+     "tris": 200
     },
     {
      "bbox_local_m": [
@@ -8151,7 +8222,7 @@
      ],
      "id": "26_1",
      "mix": "conifer",
-     "trees": 347,
+     "trees": 356,
      "tris": 160
     },
     {
@@ -8163,7 +8234,7 @@
      ],
      "id": "26_2",
      "mix": "mixed",
-     "trees": 361,
+     "trees": 366,
      "tris": 160
     },
     {
@@ -8175,7 +8246,7 @@
      ],
      "id": "26_3",
      "mix": "broadleaf",
-     "trees": 333,
+     "trees": 358,
      "tris": 160
     },
     {
@@ -8187,8 +8258,8 @@
      ],
      "id": "27_0",
      "mix": "conifer",
-     "trees": 367,
-     "tris": 160
+     "trees": 389,
+     "tris": 188
     },
     {
      "bbox_local_m": [
@@ -8199,7 +8270,7 @@
      ],
      "id": "27_1",
      "mix": "mixed",
-     "trees": 302,
+     "trees": 300,
      "tris": 160
     },
     {
@@ -8211,7 +8282,7 @@
      ],
      "id": "27_2",
      "mix": "mixed",
-     "trees": 359,
+     "trees": 357,
      "tris": 160
     },
     {
@@ -8223,27 +8294,27 @@
      ],
      "id": "27_3",
      "mix": "mixed",
-     "trees": 313,
+     "trees": 321,
      "tris": 160
     }
    ],
    "id": "6_0",
    "instances": {
-    "count": 5534,
+    "count": 5738,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_0.json",
-    "sha256": "bb5ecb980a7214b1114b7165c7382bc960ac98e714724166fc233a6db14db5f8"
+    "sha256": "7525bc51475c42a4a676c5285d666a63847fdbc701a4c2c37e8d4b1c03d52e3e"
    },
    "low": {
-    "bytes": 829396,
+    "bytes": 832500,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_0.low.glb",
-    "sha256": "912b431462c95112030fed6a48f115bd5118bdaa126178ec4f8fee62e1621687"
+    "sha256": "869e14c2fc0804d46d41a46fe7906bfb2600d1eacbd48c66a83a79c07e72b26e"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "b6245c346cc748f28bb62b673cfa7d9f73190c33d323bf013edd3ed7c50faffa",
+   "sha256": "005c54f1694aa05fddccc7725c4b20cb7942cafe0626f64bbfb9d3cd328bb25a",
    "triangles": {
-    "forest_hlod": 2572,
+    "forest_hlod": 2704,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -8271,7 +8342,7 @@
      ],
      "id": "24_4",
      "mix": "broadleaf",
-     "trees": 266,
+     "trees": 268,
      "tris": 160
     },
     {
@@ -8283,7 +8354,7 @@
      ],
      "id": "24_5",
      "mix": "mixed",
-     "trees": 351,
+     "trees": 362,
      "tris": 160
     },
     {
@@ -8295,7 +8366,7 @@
      ],
      "id": "24_6",
      "mix": "mixed",
-     "trees": 294,
+     "trees": 302,
      "tris": 160
     },
     {
@@ -8319,7 +8390,7 @@
      ],
      "id": "25_4",
      "mix": "broadleaf",
-     "trees": 305,
+     "trees": 310,
      "tris": 160
     },
     {
@@ -8331,7 +8402,7 @@
      ],
      "id": "25_5",
      "mix": "mixed",
-     "trees": 297,
+     "trees": 303,
      "tris": 160
     },
     {
@@ -8343,7 +8414,7 @@
      ],
      "id": "25_6",
      "mix": "mixed",
-     "trees": 365,
+     "trees": 372,
      "tris": 160
     },
     {
@@ -8367,7 +8438,7 @@
      ],
      "id": "26_4",
      "mix": "mixed",
-     "trees": 285,
+     "trees": 283,
      "tris": 160
     },
     {
@@ -8391,7 +8462,7 @@
      ],
      "id": "26_6",
      "mix": "mixed",
-     "trees": 259,
+     "trees": 254,
      "tris": 160
     },
     {
@@ -8403,7 +8474,7 @@
      ],
      "id": "26_7",
      "mix": "mixed",
-     "trees": 267,
+     "trees": 273,
      "tris": 160
     },
     {
@@ -8451,25 +8522,25 @@
      ],
      "id": "27_7",
      "mix": "mixed",
-     "trees": 292,
+     "trees": 303,
      "tris": 160
     }
    ],
    "id": "6_1",
    "instances": {
-    "count": 4599,
+    "count": 4648,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_1.json",
-    "sha256": "d1690b85eb856b594408677500c153cfa1e4d263671ab2462324557482bfe7b4"
+    "sha256": "4ddd4fd13e59fb6b85ddd99c93f176e75b1410dee2bc84ac4187263fdd4adb86"
    },
    "low": {
     "bytes": 826004,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_1.low.glb",
-    "sha256": "3443fab8db14758c0a7f215e8c9d8c18b58f03571b959df784f88a59326dc12c"
+    "sha256": "6c45b18d644faa5b330336a73b69214a7efb50e0682354aa55f55b39b2124974"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "ffc25a83fd2618ec68f42c007120535dc0c844a10c577e99dc050eee57157e2c",
+   "sha256": "201feb61219b3c19ea7eb506cd50ff597386241aa28e082b9ea7501e8f51f179",
    "triangles": {
     "forest_hlod": 2560,
     "terrain_lod0": 135168,
@@ -8487,7 +8558,7 @@
     "z_max_evrf2007": 151.76,
     "z_min_evrf2007": 134.44
    },
-   "bytes": 4859612,
+   "bytes": 4859604,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_2.glb",
    "forest_cells": [
     {
@@ -8499,7 +8570,7 @@
      ],
      "id": "24_10",
      "mix": "mixed",
-     "trees": 277,
+     "trees": 287,
      "tris": 160
     },
     {
@@ -8523,7 +8594,7 @@
      ],
      "id": "24_8",
      "mix": "mixed",
-     "trees": 268,
+     "trees": 272,
      "tris": 160
     },
     {
@@ -8535,7 +8606,7 @@
      ],
      "id": "24_9",
      "mix": "mixed",
-     "trees": 298,
+     "trees": 312,
      "tris": 160
     },
     {
@@ -8571,7 +8642,7 @@
      ],
      "id": "25_8",
      "mix": "mixed",
-     "trees": 303,
+     "trees": 314,
      "tris": 160
     },
     {
@@ -8619,7 +8690,7 @@
      ],
      "id": "26_8",
      "mix": "mixed",
-     "trees": 287,
+     "trees": 285,
      "tris": 160
     },
     {
@@ -8643,7 +8714,7 @@
      ],
      "id": "27_10",
      "mix": "mixed",
-     "trees": 314,
+     "trees": 317,
      "tris": 160
     },
     {
@@ -8667,7 +8738,7 @@
      ],
      "id": "27_8",
      "mix": "mixed",
-     "trees": 318,
+     "trees": 319,
      "tris": 160
     },
     {
@@ -8679,25 +8750,25 @@
      ],
      "id": "27_9",
      "mix": "mixed",
-     "trees": 308,
+     "trees": 312,
      "tris": 160
     }
    ],
    "id": "6_2",
    "instances": {
-    "count": 4515,
+    "count": 4560,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_2.json",
-    "sha256": "32e6234a7c47845b0ee4a1758c653cb8d48678607c726c15bd14facf5a167a67"
+    "sha256": "1b9b2f7d858d17dabe67aa3108f7da5c73703372661b879ca5307c944365406e"
    },
    "low": {
-    "bytes": 825380,
+    "bytes": 825376,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_2.low.glb",
-    "sha256": "6aabed2ecf1b7553f45a437cb1438caf0054ca52768a52e886fa5f9a3ba3f38e"
+    "sha256": "6006727ca5c8b1c5dbfe0d5fdfc56621fab753292c796f4dcef72cf13151bd70"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "d46e635aa10bbb104bb558192a7a4ee80f391798808352cb763ef9404aefee1f",
+   "sha256": "b488ae918d36ed6f7baaa86ee49905a06b45872aa534667f908f204768758ade",
    "triangles": {
     "forest_hlod": 2560,
     "terrain_lod0": 135168,
@@ -8715,7 +8786,7 @@
     "z_max_evrf2007": 180.27,
     "z_min_evrf2007": 135.58
    },
-   "bytes": 6175412,
+   "bytes": 6191776,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_3.glb",
    "forest_cells": [
     {
@@ -8727,8 +8798,8 @@
      ],
      "id": "24_12",
      "mix": "mixed",
-     "trees": 206,
-     "tris": 153
+     "trees": 225,
+     "tris": 181
     },
     {
      "bbox_local_m": [
@@ -8739,8 +8810,8 @@
      ],
      "id": "24_13",
      "mix": "broadleaf",
-     "trees": 168,
-     "tris": 133
+     "trees": 191,
+     "tris": 233
     },
     {
      "bbox_local_m": [
@@ -8751,8 +8822,8 @@
      ],
      "id": "25_12",
      "mix": "mixed",
-     "trees": 232,
-     "tris": 153
+     "trees": 242,
+     "tris": 199
     },
     {
      "bbox_local_m": [
@@ -8763,8 +8834,20 @@
      ],
      "id": "26_12",
      "mix": "mixed",
-     "trees": 267,
-     "tris": 170
+     "trees": 274,
+     "tris": 174
+    },
+    {
+     "bbox_local_m": [
+      643.53,
+      188.85,
+      696.54,
+      192.0
+     ],
+     "id": "26_13",
+     "mix": "mixed",
+     "trees": 16,
+     "tris": 96
     },
     {
      "bbox_local_m": [
@@ -8776,7 +8859,7 @@
      "id": "26_15",
      "mix": "broadleaf",
      "trees": 111,
-     "tris": 103
+     "tris": 133
     },
     {
      "bbox_local_m": [
@@ -8788,7 +8871,7 @@
      "id": "27_12",
      "mix": "mixed",
      "trees": 232,
-     "tris": 153
+     "tris": 183
     },
     {
      "bbox_local_m": [
@@ -8799,8 +8882,8 @@
      ],
      "id": "27_13",
      "mix": "broadleaf",
-     "trees": 33,
-     "tris": 59
+     "trees": 39,
+     "tris": 81
     },
     {
      "bbox_local_m": [
@@ -8811,8 +8894,8 @@
      ],
      "id": "27_14",
      "mix": "broadleaf",
-     "trees": 254,
-     "tris": 177
+     "trees": 256,
+     "tris": 229
     },
     {
      "bbox_local_m": [
@@ -8823,20 +8906,20 @@
      ],
      "id": "27_15",
      "mix": "broadleaf",
-     "trees": 268,
+     "trees": 269,
      "tris": 160
     }
    ],
    "id": "6_3",
    "instances": {
-    "count": 2594,
+    "count": 2674,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_3.json",
-    "sha256": "355521bc1eb555cb9df244ce9f4ec8e6921196c2c5bd899378b90526bb684f9a"
+    "sha256": "f84b3e23993380e4e28350ebf2fb169c442baac000aabe97f837100a77539338"
    },
    "low": {
-    "bytes": 1369144,
+    "bytes": 1382548,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_3.low.glb",
-    "sha256": "5b87b2aad05b6f9ab8b2a44560c7827bf7efacf3594cc51fa7c63381d7fc5c9b"
+    "sha256": "e9a0f0cdea3d1e96f9a9fa55fe6a62840bb2f1e8e3bd090c9d520b536f254c4f"
    },
    "materials": [
     "canopy_steel",
@@ -8881,11 +8964,11 @@
     "yard_asphalt",
     "yard_concrete"
    ],
-   "sha256": "cc69a2f4232f215cb347cdd30de5f036324ec08580177af2674e1379c65a2618",
+   "sha256": "1a73a69141449d49c03b4af5af3864dc52cc1fadbb83a53e63519cb7085e9ca7",
    "triangles": {
     "buildings": 8100,
     "buildings_lod1": 1589,
-    "forest_hlod": 1261,
+    "forest_hlod": 1669,
     "furniture": 6472,
     "markings": 1741,
     "paved": 1335,
@@ -8906,7 +8989,7 @@
     "z_max_evrf2007": 168.46,
     "z_min_evrf2007": 133.94
    },
-   "bytes": 6507416,
+   "bytes": 6552764,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_4.glb",
    "forest_cells": [
     {
@@ -8919,7 +9002,7 @@
      "id": "24_18",
      "mix": "broadleaf",
      "trees": 20,
-     "tris": 43
+     "tris": 63
     },
     {
      "bbox_local_m": [
@@ -8930,8 +9013,8 @@
      ],
      "id": "25_17",
      "mix": "broadleaf",
-     "trees": 122,
-     "tris": 135
+     "trees": 125,
+     "tris": 181
     },
     {
      "bbox_local_m": [
@@ -8942,8 +9025,8 @@
      ],
      "id": "25_18",
      "mix": "broadleaf",
-     "trees": 186,
-     "tris": 142
+     "trees": 207,
+     "tris": 188
     },
     {
      "bbox_local_m": [
@@ -8954,8 +9037,8 @@
      ],
      "id": "25_19",
      "mix": "broadleaf",
-     "trees": 42,
-     "tris": 60
+     "trees": 45,
+     "tris": 92
     },
     {
      "bbox_local_m": [
@@ -8967,7 +9050,7 @@
      "id": "26_16",
      "mix": "broadleaf",
      "trees": 235,
-     "tris": 151
+     "tris": 189
     },
     {
      "bbox_local_m": [
@@ -8978,20 +9061,20 @@
      ],
      "id": "26_17",
      "mix": "broadleaf",
-     "trees": 266,
-     "tris": 161
+     "trees": 273,
+     "tris": 213
     },
     {
      "bbox_local_m": [
-      669.17,
+      669.19,
       -251.88,
       704.0,
       -204.92
      ],
      "id": "26_19",
      "mix": "broadleaf",
-     "trees": 74,
-     "tris": 97
+     "trees": 76,
+     "tris": 147
     },
     {
      "bbox_local_m": [
@@ -9002,8 +9085,8 @@
      ],
      "id": "27_16",
      "mix": "broadleaf",
-     "trees": 235,
-     "tris": 196
+     "trees": 231,
+     "tris": 234
     },
     {
      "bbox_local_m": [
@@ -9014,8 +9097,8 @@
      ],
      "id": "27_17",
      "mix": "broadleaf",
-     "trees": 171,
-     "tris": 157
+     "trees": 182,
+     "tris": 191
     },
     {
      "bbox_local_m": [
@@ -9026,8 +9109,8 @@
      ],
      "id": "27_18",
      "mix": "broadleaf",
-     "trees": 87,
-     "tris": 86
+     "trees": 98,
+     "tris": 118
     },
     {
      "bbox_local_m": [
@@ -9038,20 +9121,20 @@
      ],
      "id": "27_19",
      "mix": "broadleaf",
-     "trees": 187,
-     "tris": 155
+     "trees": 197,
+     "tris": 205
     }
    ],
    "id": "6_4",
    "instances": {
-    "count": 3146,
+    "count": 3213,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_4.json",
-    "sha256": "f61f3c1c42722cba26eba28b3c137095eb23335869f83868d30cdbe470833a0b"
+    "sha256": "e9c5a1a7b63886ebdc476a08e995672af44e84cee9bcdc65c0ef2101fcc1b81f"
    },
    "low": {
-    "bytes": 1663760,
+    "bytes": 1701024,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_4.low.glb",
-    "sha256": "0a88301c1441485977dceff68abfb0421540db684ca3808191a167cf687cca47"
+    "sha256": "da679287e4225f97ea58a3edfe0d40604c75f067bbb20636e268339c3eeb7272"
    },
    "materials": [
     "brick_red",
@@ -9065,6 +9148,7 @@
     "curb_concrete",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "decal_tyre",
     "dock_digits",
     "dock_door",
@@ -9115,16 +9199,16 @@
     "yard_behaton",
     "yard_concrete"
    ],
-   "sha256": "d08b9ad8d2683603d2f06702f9c3f333382a6c0eaebe0da424228187e0c2ff0f",
+   "sha256": "b4ec416b76091ff01eb0348db2f13c6dbac69af31a754ecc378f71ec74c6bbea",
    "triangles": {
     "buildings": 7113,
     "buildings_lod1": 1474,
-    "forest_hlod": 1383,
+    "forest_hlod": 1821,
     "furniture": 6836,
-    "markings": 2475,
-    "paved": 2171,
+    "markings": 3061,
+    "paved": 2169,
     "road": 4938,
-    "road_collision": 5188,
+    "road_collision": 5186,
     "terrain_lod0": 135819,
     "terrain_lod1": 34443,
     "terrain_lod2": 8704,
@@ -9140,7 +9224,7 @@
     "z_max_evrf2007": 155.73,
     "z_min_evrf2007": 134.35
    },
-   "bytes": 6396416,
+   "bytes": 6449860,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_5.glb",
    "forest_cells": [
     {
@@ -9152,20 +9236,20 @@
      ],
      "id": "27_20",
      "mix": "broadleaf",
-     "trees": 67,
-     "tris": 88
+     "trees": 64,
+     "tris": 122
     }
    ],
    "id": "6_5",
    "instances": {
     "count": 334,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_5.json",
-    "sha256": "39f8e18c75966f052fc1843a1179551158749f1cd7577250e132b2544c6afcc2"
+    "sha256": "aa37e4fa0a0a814971ed23c6e20656982d9fae2b6a78f1394a6f726df7dc3668"
    },
    "low": {
-    "bytes": 1372220,
+    "bytes": 1416168,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_5.low.glb",
-    "sha256": "1d49cc6c8f3bba1c7728f528dd005c980592522318bf6c7b8414e2421704eb0e"
+    "sha256": "94823d6a8235ccae9b8d2d43f489175e5bdc81a32079f1e0be0f7d9de10d1769"
    },
    "materials": [
     "canopy_steel",
@@ -9179,6 +9263,7 @@
     "curb_concrete",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "decal_tyre",
     "decal_yard_patch_dark",
     "decal_yard_patch_light",
@@ -9223,13 +9308,13 @@
     "yard_concrete",
     "yard_concrete_worn"
    ],
-   "sha256": "c0d28538575c55229f4a474ec331fbc542484f0bf05f1744eac2185040e80994",
+   "sha256": "fd20b42e92e2f3052cdac79cf3c72dce71732283bb7d18f832a425632143cfa6",
    "triangles": {
     "buildings": 11527,
     "buildings_lod1": 1043,
-    "forest_hlod": 88,
+    "forest_hlod": 122,
     "furniture": 2649,
-    "markings": 4243,
+    "markings": 5346,
     "paved": 2721,
     "road": 4053,
     "road_collision": 4169,
@@ -9248,19 +9333,19 @@
     "z_max_evrf2007": 195.19,
     "z_min_evrf2007": 137.09
    },
-   "bytes": 10382588,
+   "bytes": 10474616,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
    "forest_cells": [],
    "id": "6_6",
    "instances": {
-    "count": 328,
+    "count": 333,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_6.json",
-    "sha256": "df30cae45ba53e97d24f8e8da003e46413dc3b8c9307daf30ef25234ebcfbffc"
+    "sha256": "6fe1c1246773ee94acbba5e2dea2c1837c5b6d80e881abc6948ec2daedac8877"
    },
    "low": {
-    "bytes": 4033840,
+    "bytes": 4109940,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.low.glb",
-    "sha256": "abd1542a258d00bf8151c14aeacefed7b1d82ddcc25d6bae7657b48285e9e520"
+    "sha256": "98b5ad61eded8ad6709c2816338b6599aaad975f00001f2803e6e78a388be2a9"
    },
    "materials": [
     "barrier_steel",
@@ -9282,6 +9367,7 @@
     "cycle_crossing_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "decal_sealant",
     "decal_tyre",
     "decal_yard_patch_dark",
@@ -9346,16 +9432,16 @@
     "yard_concrete",
     "yard_concrete_worn"
    ],
-   "sha256": "25ff40057ab76762b56f875737164751e7c57d08f03244a7f7b80c200c13d917",
+   "sha256": "22c825317dd41eb37780cf48044b000800552c6a6acdbe9560233617c92b5905",
    "triangles": {
     "bridge": 10191,
     "buildings": 21075,
     "buildings_lod1": 4539,
     "furniture": 23025,
-    "markings": 7838,
-    "paved": 11004,
+    "markings": 9695,
+    "paved": 11001,
     "road": 17726,
-    "road_collision": 14917,
+    "road_collision": 14914,
     "terrain_lod0": 136685,
     "terrain_lod1": 35309,
     "terrain_lod2": 8704,
@@ -9372,7 +9458,7 @@
     "z_max_evrf2007": 176.46,
     "z_min_evrf2007": 133.2
    },
-   "bytes": 9797136,
+   "bytes": 10083624,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_7.glb",
    "forest_cells": [],
    "id": "6_7",
@@ -9382,9 +9468,9 @@
     "sha256": "218fabe96ed724a9a1fea93822670548249cf83ccc04d518347d2bc1391a656d"
    },
    "low": {
-    "bytes": 2620220,
+    "bytes": 2786320,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_7.low.glb",
-    "sha256": "05b06fac9a62c822356fd7589da8b92d9a847983c364e287e359566370b5c847"
+    "sha256": "69994c9fc1a24033d822921573cb27ca0f5ac32dd427443b4c6013f4edbd670c"
    },
    "materials": [
     "barrier_steel",
@@ -9405,6 +9491,7 @@
     "cycle_asphalt_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -9445,23 +9532,26 @@
     "skylight",
     "terrain_grass",
     "verge_grass",
+    "verge_tufts",
     "window_frame",
     "window_sill",
     "wire",
     "yard_asphalt"
    ],
-   "sha256": "1d147d597d652e9dfae34d30f1ceebe7803d53db2cffd3f1e86283163eec3413",
+   "sha256": "5b765b1d7d171a0015acb1a4c1f8b545c92306b5982630da8278c4ec95748c97",
    "triangles": {
+    "banks": 508,
+    "banks_low": 0,
     "bridge": 2958,
     "buildings": 33710,
     "buildings_lod1": 6393,
     "furniture": 3908,
-    "markings": 1972,
+    "markings": 6267,
     "paved": 1911,
-    "road": 20626,
+    "road": 19972,
     "road_collision": 12678,
-    "terrain_lod0": 138247,
-    "terrain_lod1": 36871,
+    "terrain_lod0": 138901,
+    "terrain_lod1": 37525,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 481
@@ -9476,7 +9566,7 @@
     "z_max_evrf2007": 155.76,
     "z_min_evrf2007": 146.8
    },
-   "bytes": 4867472,
+   "bytes": 4874972,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_0.glb",
    "forest_cells": [
     {
@@ -9488,8 +9578,8 @@
      ],
      "id": "28_0",
      "mix": "mixed",
-     "trees": 320,
-     "tris": 166
+     "trees": 359,
+     "tris": 192
     },
     {
      "bbox_local_m": [
@@ -9500,7 +9590,7 @@
      ],
      "id": "28_1",
      "mix": "mixed",
-     "trees": 264,
+     "trees": 265,
      "tris": 160
     },
     {
@@ -9512,7 +9602,7 @@
      ],
      "id": "28_2",
      "mix": "mixed",
-     "trees": 369,
+     "trees": 384,
      "tris": 160
     },
     {
@@ -9536,8 +9626,8 @@
      ],
      "id": "29_0",
      "mix": "conifer",
-     "trees": 324,
-     "tris": 166
+     "trees": 335,
+     "tris": 190
     },
     {
      "bbox_local_m": [
@@ -9548,7 +9638,7 @@
      ],
      "id": "29_1",
      "mix": "mixed",
-     "trees": 310,
+     "trees": 314,
      "tris": 160
     },
     {
@@ -9560,7 +9650,7 @@
      ],
      "id": "29_2",
      "mix": "mixed",
-     "trees": 360,
+     "trees": 366,
      "tris": 160
     },
     {
@@ -9584,8 +9674,8 @@
      ],
      "id": "30_0",
      "mix": "conifer",
-     "trees": 301,
-     "tris": 160
+     "trees": 300,
+     "tris": 188
     },
     {
      "bbox_local_m": [
@@ -9596,7 +9686,7 @@
      ],
      "id": "30_1",
      "mix": "conifer",
-     "trees": 346,
+     "trees": 358,
      "tris": 160
     },
     {
@@ -9608,7 +9698,7 @@
      ],
      "id": "30_2",
      "mix": "mixed",
-     "trees": 303,
+     "trees": 318,
      "tris": 160
     },
     {
@@ -9632,8 +9722,8 @@
      ],
      "id": "31_0",
      "mix": "conifer",
-     "trees": 291,
-     "tris": 176
+     "trees": 308,
+     "tris": 244
     },
     {
      "bbox_local_m": [
@@ -9644,8 +9734,8 @@
      ],
      "id": "31_1",
      "mix": "conifer",
-     "trees": 355,
-     "tris": 170
+     "trees": 364,
+     "tris": 192
     },
     {
      "bbox_local_m": [
@@ -9656,8 +9746,8 @@
      ],
      "id": "31_2",
      "mix": "mixed",
-     "trees": 310,
-     "tris": 162
+     "trees": 317,
+     "tris": 196
     },
     {
      "bbox_local_m": [
@@ -9668,27 +9758,27 @@
      ],
      "id": "31_3",
      "mix": "mixed",
-     "trees": 279,
-     "tris": 160
+     "trees": 298,
+     "tris": 194
     }
    ],
    "id": "7_0",
    "instances": {
-    "count": 4932,
+    "count": 5086,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_0.json",
-    "sha256": "6302459889cb7db9ddf78f3ca16eb02a4e1c3ab688630bf66ca783905e30a872"
+    "sha256": "6de7d02ffef768dba5d2679fd699d1a653e2c8493ed2ff9da5fce521af65b381"
    },
    "low": {
-    "bytes": 831520,
+    "bytes": 837500,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_0.low.glb",
-    "sha256": "064b03727f6151b13c1ac32f9c356a6b3ee77a1b49cbb73d98ce00c3c05e35ee"
+    "sha256": "679b7448e20c8d5a7c5253441129646b25c2aae8eda057dd05691777a89425e0"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "9950ad59d9a44950f644aa70bb4fed09e5919696a2fd2e42fc428b16a7a44156",
+   "sha256": "9d81a939ab5646b3fce85212f50a58604a9656ca1fed872786cf10de8f6f9346",
    "triangles": {
-    "forest_hlod": 2600,
+    "forest_hlod": 2836,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -9704,7 +9794,7 @@
     "z_max_evrf2007": 154.96,
     "z_min_evrf2007": 138.54
    },
-   "bytes": 4864548,
+   "bytes": 4868432,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_1.glb",
    "forest_cells": [
     {
@@ -9740,7 +9830,7 @@
      ],
      "id": "28_6",
      "mix": "mixed",
-     "trees": 275,
+     "trees": 282,
      "tris": 160
     },
     {
@@ -9752,7 +9842,7 @@
      ],
      "id": "28_7",
      "mix": "broadleaf",
-     "trees": 303,
+     "trees": 313,
      "tris": 160
     },
     {
@@ -9776,7 +9866,7 @@
      ],
      "id": "29_5",
      "mix": "mixed",
-     "trees": 300,
+     "trees": 306,
      "tris": 160
     },
     {
@@ -9788,7 +9878,7 @@
      ],
      "id": "29_6",
      "mix": "broadleaf",
-     "trees": 351,
+     "trees": 366,
      "tris": 160
     },
     {
@@ -9800,7 +9890,7 @@
      ],
      "id": "29_7",
      "mix": "broadleaf",
-     "trees": 281,
+     "trees": 295,
      "tris": 160
     },
     {
@@ -9824,7 +9914,7 @@
      ],
      "id": "30_5",
      "mix": "mixed",
-     "trees": 318,
+     "trees": 328,
      "tris": 160
     },
     {
@@ -9836,7 +9926,7 @@
      ],
      "id": "30_6",
      "mix": "broadleaf",
-     "trees": 333,
+     "trees": 352,
      "tris": 160
     },
     {
@@ -9848,7 +9938,7 @@
      ],
      "id": "30_7",
      "mix": "broadleaf",
-     "trees": 301,
+     "trees": 321,
      "tris": 160
     },
     {
@@ -9860,8 +9950,8 @@
      ],
      "id": "31_4",
      "mix": "mixed",
-     "trees": 281,
-     "tris": 160
+     "trees": 285,
+     "tris": 190
     },
     {
      "bbox_local_m": [
@@ -9872,8 +9962,8 @@
      ],
      "id": "31_5",
      "mix": "mixed",
-     "trees": 325,
-     "tris": 160
+     "trees": 346,
+     "tris": 194
     },
     {
      "bbox_local_m": [
@@ -9884,8 +9974,8 @@
      ],
      "id": "31_6",
      "mix": "broadleaf",
-     "trees": 318,
-     "tris": 172
+     "trees": 314,
+     "tris": 204
     },
     {
      "bbox_local_m": [
@@ -9896,27 +9986,27 @@
      ],
      "id": "31_7",
      "mix": "conifer",
-     "trees": 319,
-     "tris": 166
+     "trees": 330,
+     "tris": 204
     }
    ],
    "id": "7_1",
    "instances": {
-    "count": 4764,
+    "count": 4897,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_1.json",
-    "sha256": "8626d050117144b0ae41953d9cd7930d747f606f69bd168f52c2d1a89ff60f45"
+    "sha256": "b421a3c7672a63572698bed7a5148d5555cdf908d41c33db22cc3c1c3a0a8c15"
    },
    "low": {
-    "bytes": 829424,
+    "bytes": 832540,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_1.low.glb",
-    "sha256": "40ead1e4a8f9ce8d8165e2a4a8ce6c1d140c9097d6ce44b1ba30bd67700c37b8"
+    "sha256": "a3dcc3ab224b7edd9e3de198b3c42280b06fb8ac0070eddc2c8868f624731582"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "bcfcc201ff6aba60e3a971e000dc44c8bb30dfe1b2525620cc4df6778e88d823",
+   "sha256": "126cf20193fab719e103eb78f308e81cf06212a3f59a01072df81bd81cce5a24",
    "triangles": {
-    "forest_hlod": 2578,
+    "forest_hlod": 2712,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -9932,7 +10022,7 @@
     "z_max_evrf2007": 162.48,
     "z_min_evrf2007": 139.77
    },
-   "bytes": 4865000,
+   "bytes": 4869772,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_2.glb",
    "forest_cells": [
     {
@@ -9956,8 +10046,8 @@
      ],
      "id": "28_11",
      "mix": "conifer",
-     "trees": 284,
-     "tris": 168
+     "trees": 305,
+     "tris": 186
     },
     {
      "bbox_local_m": [
@@ -9968,7 +10058,7 @@
      ],
      "id": "28_8",
      "mix": "conifer",
-     "trees": 325,
+     "trees": 337,
      "tris": 160
     },
     {
@@ -10004,8 +10094,8 @@
      ],
      "id": "29_11",
      "mix": "conifer",
-     "trees": 275,
-     "tris": 164
+     "trees": 272,
+     "tris": 172
     },
     {
      "bbox_local_m": [
@@ -10016,7 +10106,7 @@
      ],
      "id": "29_8",
      "mix": "conifer",
-     "trees": 283,
+     "trees": 286,
      "tris": 160
     },
     {
@@ -10088,8 +10178,8 @@
      ],
      "id": "31_10",
      "mix": "conifer",
-     "trees": 271,
-     "tris": 166
+     "trees": 298,
+     "tris": 194
     },
     {
      "bbox_local_m": [
@@ -10100,8 +10190,8 @@
      ],
      "id": "31_11",
      "mix": "conifer",
-     "trees": 281,
-     "tris": 160
+     "trees": 299,
+     "tris": 188
     },
     {
      "bbox_local_m": [
@@ -10112,8 +10202,8 @@
      ],
      "id": "31_8",
      "mix": "conifer",
-     "trees": 274,
-     "tris": 170
+     "trees": 279,
+     "tris": 198
     },
     {
      "bbox_local_m": [
@@ -10124,27 +10214,27 @@
      ],
      "id": "31_9",
      "mix": "conifer",
-     "trees": 295,
-     "tris": 174
+     "trees": 288,
+     "tris": 202
     }
    ],
    "id": "7_2",
    "instances": {
-    "count": 4383,
+    "count": 4459,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_2.json",
-    "sha256": "97879643d9e822b78b4e8c299a77534ddf2ee0ca2ef76ef4269f28ce4f301c33"
+    "sha256": "110c8c3a8bc07e41e0b3a717f4043086a71a35c559c4a03a4f82ec6d4dad8265"
    },
    "low": {
-    "bytes": 829508,
+    "bytes": 833304,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_2.low.glb",
-    "sha256": "c650d22af0465df154010778a0ea8b2a0509d3f01c355e37b2a28bcbbc288f31"
+    "sha256": "b4f604eb112b395b16a0ab8168c49e12db9fe136031b53a23330990ba0ff2f80"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "ca8aed0365de26cda736dd904a1e34f206b69dfb596d1c8700b3f9c8679a2edb",
+   "sha256": "d0bd595bff184d6e3b212362268c88028a3000274eae4bef72bdd31499ddf9ba",
    "triangles": {
-    "forest_hlod": 2602,
+    "forest_hlod": 2740,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -10160,7 +10250,7 @@
     "z_max_evrf2007": 192.28,
     "z_min_evrf2007": 141.79
    },
-   "bytes": 4914696,
+   "bytes": 4941772,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_3.glb",
    "forest_cells": [
     {
@@ -10172,8 +10262,8 @@
      ],
      "id": "28_12",
      "mix": "broadleaf",
-     "trees": 139,
-     "tris": 202
+     "trees": 182,
+     "tris": 322
     },
     {
      "bbox_local_m": [
@@ -10184,8 +10274,8 @@
      ],
      "id": "28_13",
      "mix": "broadleaf",
-     "trees": 139,
-     "tris": 176
+     "trees": 169,
+     "tris": 242
     },
     {
      "bbox_local_m": [
@@ -10197,7 +10287,7 @@
      "id": "28_14",
      "mix": "broadleaf",
      "trees": 264,
-     "tris": 164
+     "tris": 170
     },
     {
      "bbox_local_m": [
@@ -10208,7 +10298,7 @@
      ],
      "id": "28_15",
      "mix": "broadleaf",
-     "trees": 272,
+     "trees": 271,
      "tris": 160
     },
     {
@@ -10220,8 +10310,8 @@
      ],
      "id": "29_12",
      "mix": "conifer",
-     "trees": 144,
-     "tris": 141
+     "trees": 156,
+     "tris": 199
     },
     {
      "bbox_local_m": [
@@ -10232,8 +10322,8 @@
      ],
      "id": "29_13",
      "mix": "broadleaf",
-     "trees": 149,
-     "tris": 155
+     "trees": 170,
+     "tris": 211
     },
     {
      "bbox_local_m": [
@@ -10244,8 +10334,8 @@
      ],
      "id": "29_14",
      "mix": "broadleaf",
-     "trees": 249,
-     "tris": 188
+     "trees": 265,
+     "tris": 250
     },
     {
      "bbox_local_m": [
@@ -10256,8 +10346,8 @@
      ],
      "id": "29_15",
      "mix": "broadleaf",
-     "trees": 195,
-     "tris": 155
+     "trees": 212,
+     "tris": 189
     },
     {
      "bbox_local_m": [
@@ -10268,8 +10358,8 @@
      ],
      "id": "30_12",
      "mix": "conifer",
-     "trees": 235,
-     "tris": 177
+     "trees": 240,
+     "tris": 223
     },
     {
      "bbox_local_m": [
@@ -10280,8 +10370,8 @@
      ],
      "id": "30_13",
      "mix": "conifer",
-     "trees": 75,
-     "tris": 74
+     "trees": 71,
+     "tris": 106
     },
     {
      "bbox_local_m": [
@@ -10292,8 +10382,8 @@
      ],
      "id": "30_15",
      "mix": "conifer",
-     "trees": 144,
-     "tris": 108
+     "trees": 149,
+     "tris": 154
     },
     {
      "bbox_local_m": [
@@ -10304,8 +10394,8 @@
      ],
      "id": "31_12",
      "mix": "conifer",
-     "trees": 297,
-     "tris": 166
+     "trees": 299,
+     "tris": 188
     },
     {
      "bbox_local_m": [
@@ -10316,8 +10406,8 @@
      ],
      "id": "31_13",
      "mix": "conifer",
-     "trees": 125,
-     "tris": 173
+     "trees": 148,
+     "tris": 261
     },
     {
      "bbox_local_m": [
@@ -10328,8 +10418,8 @@
      ],
      "id": "31_14",
      "mix": "conifer",
-     "trees": 125,
-     "tris": 133
+     "trees": 148,
+     "tris": 223
     },
     {
      "bbox_local_m": [
@@ -10340,28 +10430,28 @@
      ],
      "id": "31_15",
      "mix": "conifer",
-     "trees": 314,
-     "tris": 172
+     "trees": 345,
+     "tris": 232
     }
    ],
    "id": "7_3",
    "instances": {
-    "count": 2900,
+    "count": 3127,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_3.json",
-    "sha256": "0834623bda0c97bd05cf1726196a22fa7dd1b68331b287b9df15fcf61d563ca3"
+    "sha256": "9c838e1598d658a1b58b2b03fed8e2abe7f159216e806b309582e722096bab1c"
    },
    "low": {
-    "bytes": 866080,
+    "bytes": 887624,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_3.low.glb",
-    "sha256": "a5ea5448df5ff89b1f5f9188be15be4bdfd3535db2dfc08945643ea289815808"
+    "sha256": "22f60daa52c2a8182efaa53c8c2e88f3e035f0251d92a99503ff61a7c09695c4"
    },
    "materials": [
     "terrain_grass",
     "wire"
    ],
-   "sha256": "edf661a0ba3a3a78621347d062200459746047dd9b48683635490d8836e13a1b",
+   "sha256": "8cd31d620b77ce6077c80274d01fd528277f511179a40f70d09e0d92894b7cc5",
    "triangles": {
-    "forest_hlod": 2344,
+    "forest_hlod": 3130,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -10378,7 +10468,7 @@
     "z_max_evrf2007": 161.19,
     "z_min_evrf2007": 140.06
    },
-   "bytes": 4888824,
+   "bytes": 4911464,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_4.glb",
    "forest_cells": [
     {
@@ -10390,8 +10480,8 @@
      ],
      "id": "28_16",
      "mix": "broadleaf",
-     "trees": 179,
-     "tris": 168
+     "trees": 183,
+     "tris": 228
     },
     {
      "bbox_local_m": [
@@ -10402,8 +10492,8 @@
      ],
      "id": "28_17",
      "mix": "broadleaf",
-     "trees": 194,
-     "tris": 169
+     "trees": 216,
+     "tris": 239
     },
     {
      "bbox_local_m": [
@@ -10414,8 +10504,8 @@
      ],
      "id": "28_18",
      "mix": "broadleaf",
-     "trees": 180,
-     "tris": 208
+     "trees": 211,
+     "tris": 294
     },
     {
      "bbox_local_m": [
@@ -10426,7 +10516,7 @@
      ],
      "id": "28_19",
      "mix": "broadleaf",
-     "trees": 268,
+     "trees": 269,
      "tris": 160
     },
     {
@@ -10438,8 +10528,8 @@
      ],
      "id": "29_16",
      "mix": "broadleaf",
-     "trees": 287,
-     "tris": 163
+     "trees": 285,
+     "tris": 165
     },
     {
      "bbox_local_m": [
@@ -10450,8 +10540,8 @@
      ],
      "id": "29_17",
      "mix": "broadleaf",
-     "trees": 184,
-     "tris": 196
+     "trees": 188,
+     "tris": 264
     },
     {
      "bbox_local_m": [
@@ -10462,8 +10552,8 @@
      ],
      "id": "29_18",
      "mix": "broadleaf",
-     "trees": 158,
-     "tris": 167
+     "trees": 180,
+     "tris": 227
     },
     {
      "bbox_local_m": [
@@ -10486,8 +10576,8 @@
      ],
      "id": "30_16",
      "mix": "mixed",
-     "trees": 288,
-     "tris": 179
+     "trees": 305,
+     "tris": 203
     },
     {
      "bbox_local_m": [
@@ -10498,8 +10588,8 @@
      ],
      "id": "30_17",
      "mix": "broadleaf",
-     "trees": 277,
-     "tris": 164
+     "trees": 300,
+     "tris": 180
     },
     {
      "bbox_local_m": [
@@ -10510,8 +10600,8 @@
      ],
      "id": "30_18",
      "mix": "broadleaf",
-     "trees": 115,
-     "tris": 130
+     "trees": 127,
+     "tris": 192
     },
     {
      "bbox_local_m": [
@@ -10522,8 +10612,8 @@
      ],
      "id": "30_19",
      "mix": "broadleaf",
-     "trees": 261,
-     "tris": 164
+     "trees": 263,
+     "tris": 182
     },
     {
      "bbox_local_m": [
@@ -10534,8 +10624,8 @@
      ],
      "id": "31_16",
      "mix": "mixed",
-     "trees": 301,
-     "tris": 176
+     "trees": 344,
+     "tris": 204
     },
     {
      "bbox_local_m": [
@@ -10546,8 +10636,8 @@
      ],
      "id": "31_17",
      "mix": "conifer",
-     "trees": 327,
-     "tris": 160
+     "trees": 348,
+     "tris": 194
     },
     {
      "bbox_local_m": [
@@ -10558,8 +10648,8 @@
      ],
      "id": "31_18",
      "mix": "conifer",
-     "trees": 220,
-     "tris": 168
+     "trees": 238,
+     "tris": 222
     },
     {
      "bbox_local_m": [
@@ -10570,27 +10660,27 @@
      ],
      "id": "31_19",
      "mix": "broadleaf",
-     "trees": 98,
-     "tris": 160
+     "trees": 126,
+     "tris": 236
     }
    ],
    "id": "7_4",
    "instances": {
-    "count": 3611,
+    "count": 3856,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_4.json",
-    "sha256": "72cf72b179d13dbdc3f9d859102bdea4a908a925cc62c61e1d2fcfc0c4a8e93e"
+    "sha256": "e70765d3a8ab678c1d8a8bd738985be2587e378d4f67851ab101727cf12fb2d8"
    },
    "low": {
-    "bytes": 847892,
+    "bytes": 865908,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_4.low.glb",
-    "sha256": "29f8894db8cec582eb133dff21ecf018ceb1c402b19cd568e85a0fd9a78f2ac1"
+    "sha256": "7af958feef6274919cb595e4c9d72282fcc36b4789af13c7d6560104a4814991"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "0dffd7a12bfa4d739aaa10324f2ba2807ec383dac446c0300d4d7a04dd3d901b",
+   "sha256": "ae35e9e9ee1c42a333412d2a82473e90290e233a54107e061c609aab9533ffcf",
    "triangles": {
-    "forest_hlod": 2692,
+    "forest_hlod": 3350,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -10606,7 +10696,7 @@
     "z_max_evrf2007": 154.07,
     "z_min_evrf2007": 139.83
    },
-   "bytes": 5007452,
+   "bytes": 5027836,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_5.glb",
    "forest_cells": [
     {
@@ -10618,8 +10708,8 @@
      ],
      "id": "28_20",
      "mix": "broadleaf",
-     "trees": 209,
-     "tris": 146
+     "trees": 218,
+     "tris": 182
     },
     {
      "bbox_local_m": [
@@ -10630,8 +10720,8 @@
      ],
      "id": "28_21",
      "mix": "broadleaf",
-     "trees": 11,
-     "tris": 42
+     "trees": 26,
+     "tris": 60
     },
     {
      "bbox_local_m": [
@@ -10642,8 +10732,8 @@
      ],
      "id": "28_22",
      "mix": "broadleaf",
-     "trees": 55,
-     "tris": 110
+     "trees": 65,
+     "tris": 154
     },
     {
      "bbox_local_m": [
@@ -10654,8 +10744,8 @@
      ],
      "id": "28_23",
      "mix": "broadleaf",
-     "trees": 130,
-     "tris": 120
+     "trees": 135,
+     "tris": 166
     },
     {
      "bbox_local_m": [
@@ -10666,8 +10756,8 @@
      ],
      "id": "29_20",
      "mix": "broadleaf",
-     "trees": 270,
-     "tris": 161
+     "trees": 267,
+     "tris": 167
     },
     {
      "bbox_local_m": [
@@ -10678,8 +10768,8 @@
      ],
      "id": "29_21",
      "mix": "broadleaf",
-     "trees": 156,
-     "tris": 185
+     "trees": 175,
+     "tris": 271
     },
     {
      "bbox_local_m": [
@@ -10690,8 +10780,8 @@
      ],
      "id": "29_22",
      "mix": "broadleaf",
-     "trees": 269,
-     "tris": 182
+     "trees": 262,
+     "tris": 216
     },
     {
      "bbox_local_m": [
@@ -10702,8 +10792,8 @@
      ],
      "id": "29_23",
      "mix": "broadleaf",
-     "trees": 230,
-     "tris": 159
+     "trees": 232,
+     "tris": 187
     },
     {
      "bbox_local_m": [
@@ -10714,8 +10804,8 @@
      ],
      "id": "30_20",
      "mix": "broadleaf",
-     "trees": 266,
-     "tris": 170
+     "trees": 273,
+     "tris": 184
     },
     {
      "bbox_local_m": [
@@ -10726,8 +10816,8 @@
      ],
      "id": "30_21",
      "mix": "broadleaf",
-     "trees": 27,
-     "tris": 67
+     "trees": 34,
+     "tris": 91
     },
     {
      "bbox_local_m": [
@@ -10738,8 +10828,8 @@
      ],
      "id": "30_22",
      "mix": "broadleaf",
-     "trees": 258,
-     "tris": 165
+     "trees": 277,
+     "tris": 197
     },
     {
      "bbox_local_m": [
@@ -10762,8 +10852,8 @@
      ],
      "id": "31_20",
      "mix": "broadleaf",
-     "trees": 235,
-     "tris": 158
+     "trees": 240,
+     "tris": 198
     },
     {
      "bbox_local_m": [
@@ -10774,8 +10864,8 @@
      ],
      "id": "31_21",
      "mix": "broadleaf",
-     "trees": 238,
-     "tris": 150
+     "trees": 258,
+     "tris": 214
     },
     {
      "bbox_local_m": [
@@ -10786,8 +10876,8 @@
      ],
      "id": "31_22",
      "mix": "broadleaf",
-     "trees": 252,
-     "tris": 177
+     "trees": 286,
+     "tris": 233
     },
     {
      "bbox_local_m": [
@@ -10799,19 +10889,19 @@
      "id": "31_23",
      "mix": "broadleaf",
      "trees": 281,
-     "tris": 166
+     "tris": 194
     }
    ],
    "id": "7_5",
    "instances": {
-    "count": 3710,
+    "count": 3850,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_5.json",
-    "sha256": "74bf31e5f1bd3426bf1d564ad372d8c2969558b8b9bae1ac80e7be54c115cf48"
+    "sha256": "5fe9e1e9cf49062b29088e57b43a7ca3226aa1d9ff45f6fd63465f277c55d63d"
    },
    "low": {
-    "bytes": 897452,
+    "bytes": 913628,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_5.low.glb",
-    "sha256": "150f65978326436fec95cfa00a0e60d052ca32856852a2ef47911b04a7c3accb"
+    "sha256": "22f2233dac06188202e01d4ca310c0156545de6688b596c14fc5e2950b933ae8"
    },
    "materials": [
     "collision_building",
@@ -10834,11 +10924,11 @@
     "window_sill",
     "yard_behaton"
    ],
-   "sha256": "c6ceef7aeb9e00e391a9df44768c3a86cef9346d7856ad75b96d7df015e04bb1",
+   "sha256": "8941ec5a937e348dd711937941e57bc07a1a343faf823f9ff7f77af59f78b016",
    "triangles": {
     "buildings": 721,
     "buildings_lod1": 49,
-    "forest_hlod": 2318,
+    "forest_hlod": 2874,
     "furniture": 351,
     "markings": 335,
     "paved": 758,
@@ -10858,7 +10948,7 @@
     "z_max_evrf2007": 181.89,
     "z_min_evrf2007": 141.56
    },
-   "bytes": 5902696,
+   "bytes": 5917344,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_6.glb",
    "forest_cells": [
     {
@@ -10870,8 +10960,8 @@
      ],
      "id": "29_24",
      "mix": "broadleaf",
-     "trees": 116,
-     "tris": 106
+     "trees": 136,
+     "tris": 146
     },
     {
      "bbox_local_m": [
@@ -10882,8 +10972,8 @@
      ],
      "id": "30_24",
      "mix": "broadleaf",
-     "trees": 258,
-     "tris": 166
+     "trees": 263,
+     "tris": 178
     },
     {
      "bbox_local_m": [
@@ -10894,8 +10984,8 @@
      ],
      "id": "30_25",
      "mix": "broadleaf",
-     "trees": 155,
-     "tris": 127
+     "trees": 167,
+     "tris": 169
     },
     {
      "bbox_local_m": [
@@ -10906,8 +10996,8 @@
      ],
      "id": "30_26",
      "mix": "broadleaf",
-     "trees": 149,
-     "tris": 116
+     "trees": 166,
+     "tris": 152
     },
     {
      "bbox_local_m": [
@@ -10918,8 +11008,8 @@
      ],
      "id": "31_24",
      "mix": "broadleaf",
-     "trees": 237,
-     "tris": 194
+     "trees": 238,
+     "tris": 276
     },
     {
      "bbox_local_m": [
@@ -10930,8 +11020,8 @@
      ],
      "id": "31_25",
      "mix": "broadleaf",
-     "trees": 210,
-     "tris": 195
+     "trees": 228,
+     "tris": 289
     },
     {
      "bbox_local_m": [
@@ -10942,8 +11032,8 @@
      ],
      "id": "31_26",
      "mix": "broadleaf",
-     "trees": 209,
-     "tris": 201
+     "trees": 266,
+     "tris": 281
     },
     {
      "bbox_local_m": [
@@ -10954,20 +11044,20 @@
      ],
      "id": "31_27",
      "mix": "broadleaf",
-     "trees": 34,
-     "tris": 87
+     "trees": 51,
+     "tris": 129
     }
    ],
    "id": "7_6",
    "instances": {
-    "count": 1761,
+    "count": 1915,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_6.json",
-    "sha256": "904fee55e321d11b478f7c54618695049a6a7477a04b59b59f813d14316bdf95"
+    "sha256": "aa0a9631ca53b4ed9c07040dc9e175d56d63a8b5ac9e1facb5bcfed972c0e377"
    },
    "low": {
-    "bytes": 1066688,
+    "bytes": 1078352,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_6.low.glb",
-    "sha256": "03879a20d4b31c909227b4df7bb87f600a98f49873637d14acf2fa63efcf56b9"
+    "sha256": "74539fed753ca919f58f79d7b7c331678549285d654f4d072f25399b1f7dbb78"
    },
    "materials": [
     "canopy_steel",
@@ -11014,11 +11104,11 @@
     "yard_behaton",
     "yard_concrete"
    ],
-   "sha256": "853414ffcf81adf20e2bddcad4ac0f22ec405e8bdbf1684148a827976460e322",
+   "sha256": "bf8e26c06f3ea45b20bcd3b1507c20f4c9fb425457a735442da70ce4623ec343",
    "triangles": {
     "buildings": 9730,
     "buildings_lod1": 2111,
-    "forest_hlod": 1192,
+    "forest_hlod": 1620,
     "markings": 1624,
     "paved": 1333,
     "road_collision": 684,
@@ -11038,7 +11128,7 @@
     "z_max_evrf2007": 176.16,
     "z_min_evrf2007": 131.43
    },
-   "bytes": 7484728,
+   "bytes": 7865276,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_7.glb",
    "forest_cells": [
     {
@@ -11050,8 +11140,8 @@
      ],
      "id": "30_28",
      "mix": "broadleaf",
-     "trees": 93,
-     "tris": 105
+     "trees": 96,
+     "tris": 155
     },
     {
      "bbox_local_m": [
@@ -11062,8 +11152,8 @@
      ],
      "id": "31_28",
      "mix": "broadleaf",
-     "trees": 205,
-     "tris": 184
+     "trees": 218,
+     "tris": 278
     },
     {
      "bbox_local_m": [
@@ -11074,20 +11164,20 @@
      ],
      "id": "31_29",
      "mix": "broadleaf",
-     "trees": 150,
-     "tris": 135
+     "trees": 153,
+     "tris": 207
     }
    ],
    "id": "7_7",
    "instances": {
-    "count": 820,
+    "count": 843,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_7.json",
-    "sha256": "a1fe43995046e938abbe454ca3c997636ae8b8b977d5c3d5ff254e14e39bbfd4"
+    "sha256": "1858467a771a35fbcef0687c19636592bf31b03758ce4f6aa42b542b2a441d38"
    },
    "low": {
-    "bytes": 2088080,
+    "bytes": 2233724,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_7.low.glb",
-    "sha256": "d5b7adad00fbf75eb835f8a83ec60e7d516c6b9651c8aee5e1c24eb087b9cb67"
+    "sha256": "7a3afe061fd33c19c7d185db0d24b37f3606eaf368863ffd4afba73dacdfcac4"
    },
    "materials": [
     "brick_red",
@@ -11104,6 +11194,7 @@
     "cycle_red",
     "decal_oil",
     "decal_patch",
+    "decal_seal",
     "downpipe",
     "fab_drainage",
     "facade_atlas",
@@ -11134,23 +11225,26 @@
     "skylight",
     "terrain_grass",
     "verge_grass",
+    "verge_tufts",
     "window_sill",
     "wire",
     "yard_asphalt",
     "yard_paving"
    ],
-   "sha256": "3aebb691083dca546d5821d12ce1a3722e5317cf2c02c80d69b11de00641270f",
+   "sha256": "8d2ce80e1fec4a16d91bb8015cced58f40cb85c4e4daadbe15ff3b8ec050d6d7",
    "triangles": {
+    "banks": 1076,
+    "banks_low": 0,
     "buildings": 13227,
     "buildings_lod1": 1071,
-    "forest_hlod": 424,
+    "forest_hlod": 640,
     "furniture": 4299,
-    "markings": 2444,
+    "markings": 6443,
     "paved": 2348,
-    "road": 18910,
-    "road_collision": 8987,
-    "terrain_lod0": 136926,
-    "terrain_lod1": 35550,
+    "road": 17179,
+    "road_collision": 8993,
+    "terrain_lod0": 138663,
+    "terrain_lod1": 37287,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 1501
@@ -11366,7 +11460,8 @@
     0.21
    ],
    "rough": 0.9,
-   "surface": "sett"
+   "surface": "sett",
+   "texture_set": "sett_granite"
   },
   "balcony_panel": {
    "color": [
@@ -11423,13 +11518,14 @@
   },
   "barrier_steel": {
    "color": [
-    0.5,
-    0.505,
-    0.51
+    0.42,
+    0.425,
+    0.43
    ],
    "metal": 1.0,
-   "rough": 0.56,
-   "set_metal": 0.9,
+   "rough": 0.74,
+   "set_metal": 0.55,
+   "set_smooth": 0.6,
    "set_tile": true,
    "shadow_low": false,
    "sky_occ": [
@@ -12596,10 +12692,10 @@
   },
   "decal_patch": {
    "asphalt_patch_seam": {
-    "aged_tone": 0.76,
-    "darkening": 0.65,
-    "fresh_tone": 0.72,
-    "width_m": 0.025
+    "aged_tone": 0.68,
+    "darkening": 0.75,
+    "fresh_tone": 0.55,
+    "width_m": 0.06
    },
    "asphalt_wear": {
     "low_photo_detail": 0.75
@@ -12612,6 +12708,16 @@
    "decal": true,
    "rough": 0.85,
    "texture_set": "asphalt_patch"
+  },
+  "decal_seal": {
+   "color": [
+    0.022,
+    0.022,
+    0.021
+   ],
+   "decal": true,
+   "decal_alpha": 0.62,
+   "rough": 0.9
   },
   "decal_sealant": {
    "color": [
@@ -13841,16 +13947,51 @@
   },
   "monument_bronze": {
    "color": [
-    0.06,
-    0.07,
-    0.058
+    0.16,
+    0.145,
+    0.125
    ],
-   "metal": 0.6,
-   "rough": 0.52,
+   "metal": 0.45,
+   "rough": 0.48,
+   "set_metal": 0.45,
+   "set_tile": true,
    "sky_occ": [
     0.5,
     0.0
-   ]
+   ],
+   "texture_set": "bronze_cast_tint"
+  },
+  "monument_bronze_patina": {
+   "color": [
+    0.105,
+    0.12,
+    0.1
+   ],
+   "metal": 0.15,
+   "rough": 0.78,
+   "set_metal": 0.15,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "bronze_cast_tint"
+  },
+  "monument_bronze_rubbed": {
+   "color": [
+    0.25,
+    0.195,
+    0.125
+   ],
+   "metal": 0.55,
+   "rough": 0.4,
+   "set_metal": 0.55,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "bronze_cast_tint"
   },
   "monument_gilt": {
    "color": [
@@ -13867,18 +14008,18 @@
   },
   "monument_granite": {
    "color": [
-    0.17,
-    0.17,
-    0.175
+    0.215,
+    0.215,
+    0.22
    ],
-   "rough": 0.45,
+   "rough": 0.38,
    "set_tile": true,
    "sky_occ": [
     0.5,
     0.0
    ],
    "splash_h": 0.25,
-   "texture_set": "plaster"
+   "texture_set": "granite_honed_tint"
   },
   "monument_sandstone": {
    "color": [
@@ -14770,6 +14911,39 @@
     0.0
    ]
   },
+  "plaza_sett_grey": {
+   "color": [
+    0.285,
+    0.282,
+    0.272
+   ],
+   "rough": 0.85,
+   "set_tile": true,
+   "surface": "paving_stones",
+   "texture_set": "sett_rows_tint"
+  },
+  "plaza_sett_lattice": {
+   "color": [
+    0.208,
+    0.18,
+    0.169
+   ],
+   "rough": 0.85,
+   "set_tile": true,
+   "surface": "paving_stones",
+   "texture_set": "sett_lattice_tykocin"
+  },
+  "plaza_sett_red": {
+   "color": [
+    0.205,
+    0.114,
+    0.088
+   ],
+   "rough": 0.85,
+   "set_tile": true,
+   "surface": "paving_stones",
+   "texture_set": "sett_rows_tint"
+  },
   "plinth_dark": {
    "color": [
     0.24,
@@ -14988,6 +15162,16 @@
    "surface": "asphalt",
    "texture_set": "asphalt_sma_fresh"
   },
+  "road_cobble": {
+   "color": [
+    0.228,
+    0.218,
+    0.204
+   ],
+   "rough": 0.9,
+   "surface": "sett",
+   "texture_set": "cobble_fieldstone"
+  },
   "road_concrete": {
    "color": [
     0.3,
@@ -15021,12 +15205,13 @@
   },
   "road_sett": {
    "color": [
-    0.24,
-    0.22,
-    0.2
+    0.203,
+    0.2,
+    0.193
    ],
    "rough": 0.9,
-   "surface": "sett"
+   "surface": "sett",
+   "texture_set": "sett_granite"
   },
   "roof_cement_grey": {
    "color": [
@@ -15278,9 +15463,9 @@
   },
   "shoulder_gravel": {
    "color": [
-    0.2,
-    0.19,
-    0.17
+    0.135,
+    0.12,
+    0.095
    ],
    "rough": 0.95,
    "surface": "gravel",
@@ -15886,6 +16071,18 @@
    "surface": "grass",
    "texture_set": "grass_verge"
   },
+  "verge_tufts": {
+   "alpha_cutoff": 0.5,
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rough": 0.9,
+   "shader": "Kamion/World PlotKit",
+   "texture": "verge_tufts",
+   "vertex_color": true
+  },
   "viaduct_concrete": {
    "color": [
     0.374,
@@ -16228,6 +16425,7 @@
   }
  },
  "nodes": {
+  "banks": "roadside grass cards of kerbless road sides (ADR 0324, material verge_tufts, Kamion/World PlotKit, COLOR_0 = foliage normal); High GLB only",
   "bridge": "bridge decks, soffits, parapets, abutments, piers (low confidence)",
   "buildings": "LOD0 buildings with openings, docks, roofs",
   "buildings_lod1": "LOD1 prisms with the same wall materials",
@@ -17052,5 +17250,16 @@
    "suggested_switch_m": 700
   }
  ],
- "units": "metres; local E = x - origin.x, N = y - origin.y; heights absolute PL-EVRF2007-NH"
+ "units": "metres; local E = x - origin.x, N = y - origin.y; heights absolute PL-EVRF2007-NH",
+ "verge_flora": {
+  "cards": {
+   "bottom": 311,
+   "edge": 4858,
+   "slope": 1130
+  },
+  "ditch_mask_samples": 479,
+  "ditch_parts_to_terrain": 138,
+  "sections": 46,
+  "triangles": 12598
+ }
 }
