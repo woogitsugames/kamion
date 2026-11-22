@@ -24,3 +24,5 @@
 - NASTĘPNY KROK: po CHAIN END w bw.status: `pwsh -File artifacts/fix-b4-s24/bwc.ps1 -RegionList bialystok-industrial-c` i pytest test_world_roads + test_gate_pose_0326
 - krok 10: mickiewicza zatrzymana po 1 h 41 min (fala 6: build_s 10 660 s ≈ 3 h — za długo w tej sesji); tykocin w toku, po nim after.ps1: C ponownie, pytest world_roads/terrain_walls/gate, import+VQA C. Mickiewicza do przebudowy osobno: `pwsh -File artifacts/fix-b4-s24/bw.ps1 -RegionList bialystok-mickiewicza` (~3 h).
 - NASTĘPNY KROK: `cat artifacts/fix-b4-s24/bw.status artifacts/fix-b4-s24/after.status`
+- krok 11: tykocin przebudowany (6,6 min, exit 0): brama osm:node/3052214622 (8.6,-807.1, yaw -0.15) -> (16.9,-808.4, yaw -1.72), test bram dla kafli tykocin PASS. Commit data(tykocin). after.ps1 (C) w toku.
+- NASTĘPNY KROK: `cat artifacts/fix-b4-s24/after.status`
