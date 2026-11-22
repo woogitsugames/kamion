@@ -51,3 +51,12 @@ props +1 449, water +1 069 (kępy trawy `verge_tufts`). Limity: 2 000 000 (`test
   (`artifacts/budget-w7-s24/vqa`).
 - Otwarte: cięcie drugiej ściany lasu / kęp trawy (~1,5 tys.) nie zrobione; pomiar `stretch_04` w playerze (kamera trasy
   kafla C) poza zakresem.
+
+## Ocena wzrokowa (visual-qa, kafel C, High 1920x1080, clear; edytor, nie player)
+
+Przed = dane fali 7 (spękania bez decymacji), po = ta gałąź; ten sam import, te same kamery
+(`artifacts/budget-w7-s24/vqa/crack-before|crack-after`, kamery `crack_*` ustawione na pasach `decal_seal`, wysokość oka 1,1 i 2,5 m).
+Pary `crack_a_low` i `crack_c_low`: spękania (poprzeczne, podłużne, łata) wyglądają tak samo; różnicy nie widać gołym
+okiem. Kamery standardowe (`stretch_01..04`, `route_putry_approach`, `driver_andersa_to_putry`, `.../vqa/after`): w kabinie
+spękań prawie nie widać (kafel C = drogi klasy A/S/GP, niska stawka) — bez zmian względem „przed". Brak oceny visual-critic
+(subagent nie uruchamia subagentów); ocena własna agenta.
