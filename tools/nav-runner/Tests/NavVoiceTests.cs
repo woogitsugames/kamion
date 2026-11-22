@@ -157,6 +157,21 @@ namespace NavRunner.Tests
         }
 
         [Fact]
+        public void RingName_SkipsUnnamedEntryLink()
+        {
+            // Regression (graph after wave 6): the path segment at the roundabout manoeuvre point is an unnamed entry link;
+            // the ring name must come from the first named segment after it.
+            var g = RouteGraph.Load(Region);
+            var planner = new RoutePlanner(g);
+            var p = RoutePath.For(g);
+            Assert.Equal(PlanStatus.Ok, planner.Plan(new Vector2(-225.64f, -239.35f), float.NaN, new Vector2(-205.02f, -854.88f), p));
+            int rb = -1;
+            for (int k = 0; k < p.ManCount; k++) if (p.ManType[k] == Maneuver.Roundabout) rb = k;
+            Assert.True(rb >= 0);
+            Assert.Equal(new VoiceClip(14, 1), NavVoice.RoundaboutNameClip(NavVoice.RingName(g, p, rb)));
+        }
+
+        [Fact]
         public void VoiceLoop_ZeroAllocation()
         {
             var g = RouteGraph.Load(Region);

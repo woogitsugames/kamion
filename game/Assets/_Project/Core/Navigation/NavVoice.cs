@@ -155,6 +155,21 @@ namespace Game.Core.Navigation
         public static int Plan(RouteGraph g, RoutePath p, ref NavGuidance gd, float speedMs, VoiceClip[] buf) =>
             PlanBand(g, p, ref gd, BandFor(gd.NextM, speedMs), buf);
 
+        /// <summary>Name of the ring of roundabout manoeuvre <paramref name="man"/>: the first non-empty segment name from the
+        /// manoeuvre point up to the next manoeuvre (the entry link at the point can be unnamed). null when none. No allocation.</summary>
+        public static string RingName(RouteGraph g, RoutePath p, int man)
+        {
+            int from = p.ManPoint[man];
+            int to = man + 1 < p.ManCount ? p.ManPoint[man + 1] : p.Count - 1;
+            if (to > from + 12) to = from + 12;   // the ring is a few edges long; never scan the following road
+            for (int i = from; i <= to && i < p.Count; i++)
+            {
+                string n = g.Names[p.Name[i]];
+                if (!string.IsNullOrEmpty(n)) return n;
+            }
+            return null;
+        }
+
         /// <summary>As <see cref="Plan"/>, with the distance band chosen by the caller (<see cref="NavVoiceDriver"/> tiers;
         /// -1 = no distance sentence). No allocation.</summary>
         public static int PlanBand(RouteGraph g, RoutePath p, ref NavGuidance gd, int band, VoiceClip[] buf)
@@ -178,10 +193,9 @@ namespace Game.Core.Navigation
                 if (m == Maneuver.Roundabout && n < buf.Length)
                 {
                     buf[n++] = RoundaboutExitClip(p.ManTurn[gd.Next], gd.NextExit);
-                    // ManName of a roundabout manoeuvre is the exit street; the ring's name is on the path segment that
-                    // starts at the manoeuvre point (the first ring edge).
-                    string ring = g.Names[p.Name[p.ManPoint[gd.Next]]];
-                    VoiceClip rc = RoundaboutNameClip(ring);
+                    // ManName of a roundabout manoeuvre is the exit street; the ring's name is on the first NAMED path
+                    // segment from the manoeuvre point (the entry link at the point itself may be unnamed in the graph).
+                    VoiceClip rc = RoundaboutNameClip(RingName(g, p, gd.Next));
                     if (rc.Block != 0 && n < buf.Length) buf[n++] = rc;
                 }
             }
