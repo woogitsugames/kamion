@@ -117,13 +117,13 @@ def test_carve_bed_bank_lip(plan):
     assert np.all(zc[deep] <= p.level[deep] - 0.1 + 1e-6)        # bed below the water everywhere off the road
     assert np.all(zc[W] <= p.level[W] + WT.SHORE_BAR_M + 1e-6)
     assert (p.level[W] - zc[W]).max() <= max(WT_DEPTHS()) + 1e-6
-    lip = ~p.mask & (p.d_out <= 1.0) & ~np.isnan(p.lfill) & ~keep
+    lip = ~p.mask & (p.d_out <= 1.5) & ~np.isnan(p.lfill) & ~keep
     # the sheet edge is always under the bank; ADR 0324: bay nodes (next to the water) dip at most SHORE_DIP_M and
     # the sheet gets a patch around each of them (test_sheet)
     dry = lip & ~p.bay_mask
     assert np.all(zc[dry] >= p.lfill[dry] + 0.03)
     assert p.bay_mask.any() and np.all(zc[p.bay_mask] >= p.lfill[p.bay_mask] - WT.SHORE_DIP_M - 1e-6)
-    ring = ~p.mask & (p.d_out > 1.0) & (p.d_out <= 1.5) & ~np.isnan(p.lfill) & ~keep
+    ring = ~p.mask & (p.d_out > 1.5) & (p.d_out <= 2.4) & ~np.isnan(p.lfill) & ~keep
     assert np.all(zc[ring] >= p.lfill[ring] + 0.03)
     assert np.array_equal(zc[mask], z[mask])                     # roads untouched
 

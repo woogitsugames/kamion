@@ -45,7 +45,7 @@ BED_SLOPE = 0.35         # m per m inside the shore (about 1:3)
 BANK_M = 10.0            # bank band outside the shore that may be lowered
 FREEBOARD_M = 0.18       # bank top at the shore above the level
 BANK_SLOPE = 1.0 / 3.0   # shallow bank
-LIP_M = 1.5              # within this band outside the shore the ground is at least level + LIP_Z_M
+LIP_M = 2.5              # within this band outside the shore the ground is at least level + LIP_Z_M (ADR 0324: 1.5 -> 2.5, bays reach 1.5)
 LIP_Z_M = 0.04
 SHEET_OVERLAP_M = 1.0    # the water sheet extends this far under the bank (hidden by the lip)
 ROAD_KEEP_M = 2.0        # terrain this close to a road / paved node is not lowered (conformed embankments stay)
@@ -466,7 +466,7 @@ class Plan:
         # ADR 0324: irregular water line (see SHORE_NOISE_M). Only nodes the sheet covers (overlap 1 m) may dip.
         nz = self._shore_noise()
         self.shore_nz = nz
-        bay = ~W & (d_out <= 1.0) & ~keep & (nz < 0.0)
+        bay = ~W & (d_out <= 1.5) & ~keep & (nz < 0.0)      # r3: + diagonal neighbours (<= 1.0 dipped every other node of a diagonal shore = 1 m stairs)
         z[bay] = np.minimum(z[bay], L[bay] + LIP_Z_M + np.clip(nz[bay] * 2.0, -1.0, 0.0) * (SHORE_DIP_M + LIP_Z_M))
         bar = inw & (d_in <= 2.0) & (nz > 0.25)
         z[bar] = np.maximum(z[bar], np.minimum(L[bar] + np.clip((nz[bar] - 0.25) * 4.0, 0.0, 1.0) * SHORE_BAR_M
