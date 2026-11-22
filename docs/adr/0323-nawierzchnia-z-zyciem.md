@@ -22,6 +22,8 @@ Status: propozycja (gałąź `road-surface-s24`, nie scalone). Źródło: krytyk
 
 ## Decyzja
 
+(Liczby w punktach 1–3 i 5 to stan r1; wartości końcowe — sekcja „Poprawki po rundach”.)
+
 1. **Kostka.** Dwa zestawy ze skanów CC0 Poly Haven (ADR 0063, D40): `sett_granite` (`cobblestone_03`, podziałka
    mierzona autokorelacją i skalowana do 95 mm — kostka 8/10 ze spoiną; `road_sett`, `apron_sett`) oraz
    `cobble_fieldstone` (`cobblestone_floor_08`, rozmiar fizyczny skanu 2,0 m; nowy materiał `road_cobble` dla
@@ -60,6 +62,49 @@ Status: propozycja (gałąź `road-surface-s24`, nie scalone). Źródło: krytyk
 - Zwykłe (niekompaktowe) ronda i wysepki dzielące na wstęgach nadal mają koleiny z UV1 osi — nie ruszane.
 - Koszt: patrz „Wyniki”.
 
-## Wyniki
+## Poprawki po rundach (stan końcowy = r3)
 
-(uzupełniane po renderach)
+- Kostka: pomiar podziałki autokorelacją jest na tym skanie niestabilny (89,8 / 101,6 mm zależnie od okna; policzone
+  26 kostek na 2,0 m = 77 mm). Wynikowy kafel 2,115 m = podziałka **81 mm** (dolny koniec klasy 8/10), nie 95 mm.
+- Zalewki: własny materiał `decal_seal` (shader pasa `_DECAL_TYRE`, `decal_alpha` 0,62, `rough` 0,9 → gładkość 0,10).
+  r1 na `decal_tyre` (alfa ≤ 0,675) czytało się jak włos; r2 przy gładkości 0,42 pasy odbijały słońce i niebo i były
+  JAŚNIEJSZE od asfaltu. Geometria 12–20 cm, stawki 2,0 poprzecznych i 1,0 podłużnych na 50 m × klasa × stan.
+- Łaty: mnożnik gęstości 1,8; ton 0,55 / 0,68 (r2: stara łata 0,82 × odcień wieku 1,29 = dokładnie ton drogi).
+- Wytarte linie: współczynnik 1,3 → 0,8 → 0,6 (1,3 wymazywało linię krawędziową w „przerywaną”).
+- Koleiny z rb_ab2 krytyka to **nie Knyszyn, tylko rondo w `dk65-06`** (zwykłe rondo, trawiasta wysepka): płyta
+  rozwidlenia jezdni (ramię dwukierunkowe + dwa jednokierunkowe) brała pasy ramienia dwukierunkowego. r1 (każde ramię
+  swoje pasy) dawało wachlarz prostych smug; r3: płyta rozwidlenia nie ma kolein z shadera (UV1.x całkowite).
+- Zestaw PBR: edycja `_src/*.py` powoduje pełną przebudowę wszystkich zestawów przy `import-region.ps1` (zmierzone
+  ok. 20 min pod obciążeniem); `build_all.py --only` + odświeżenie dat PNG omija to.
+
+## Wyniki (r3; High, 1920×1080, clear + overcast; edytor, nie player)
+
+Dowody: `artifacts/road-surface-s24/` (`vqa/{before,r1,r2,r3}`, `sbs/r3` lewo = przed, prawo = po, `budget_r3.txt`,
+`logs/`). „Przed” dla `dk65-06` = kadry world-fix-b3 (tylko clear). „Przed” Knyszyna zawiera już nową teksturę spękań
+(przebudowa zestawów wypadła przed jego importem) — porównanie kolein nie jest tym dotknięte.
+
+- Tykocin: mozaika zniknęła na wszystkich kamerach trasy; kostka w skali (ok. 9–10 na metr krawężnika), bruk ul.
+  Koziej czytelny. Bariera matowa, bez jasnych smug w clear i overcast.
+- DW671: spękania (siatka, krawędź) i wytarte linie widoczne z 4,5 m i z kabiny w pierwszych 20–30 m; zalewki
+  ciemne, matowe, meandrujące; z kabiny w kadrach trasy widać 0–2 naraz. **Łaty nadal słabo czytelne z kabiny** —
+  punkt 2.2 krytyka zamknięty tylko częściowo.
+- Knyszyn: ślady kół biegną łukiem wlotów i dookoła pierścienia, nic pod wysepkami.
+- dk65-06: równoległe pasy pod wysepką zniknęły; zostają krótkie ślady na wstędze wlotu. Długa łata-pas na wylocie
+  jest tam jaśniejsza od jezdni (nie poprawione).
+- Liczby (build_world r3): zalewki/spękania tykocin 272+130 (16 906 trójkątów), dw671-tykocin-01 254+123 (16 896),
+  knyszyn 605+305 (38 390) + 9 torów ronda (3 176), dk65-06 258+132 (16 876); łaty 389 / 273 / 409 / 135.
+- Budżet (zmierzone, edytor): +1…+8 drawsEst i +0,6…+6,9 tys. trójkątów na kamerę; siatki `High/markings`
+  +0,56 MB (dw671-tykocin-01), +0,57 MB (tykocin), +1,35 MB (knyszyn); `High/road` bez zmian; tekstury PBR ASTC
+  48 012 435 → 48 984 115 B (+0,97 MB, dwa zestawy kostki 1024 px). Koszt shadera: asfalt +2 szumy wartości
+  (krawędź), łata +1, farba +2, bez nowych odczytów tekstur i bez nowych wariantów — czas GPU **UNVERIFIED**
+  (brak pomiaru w playerze; maszyna dewelopera ≠ referencja).
+- Testy: `tests/gis/test_road_surface_0323.py` 11/11; EditMode Win64 1525: 1410 passed, 0 failed, 115 skipped
+  (brak wygenerowanego prefabu ciężarówki w worktree).
+
+## Otwarte
+
+- Łaty czytelne z kabiny (kontrast / wielkość / gęstość na DW671), jasna łata-pas na dk65-06.
+- Układ wachlarzowy kostki; pl. Czarnieckiego (wiersz 1.4 krytyka) poza zakresem.
+- Tory kół jako pasy na płytach rozwidleń zwykłych rond (dziś puste); wysepki na wstęgach.
+- Spękania z warstwy 16 m mają kształt „robaczków” (mocno wygięty Voronoi) — do oceny krytyka.
+- Ocena visual-critic (subagent nie uruchamia subagentów) i potwierdzenie w buildzie playera.
