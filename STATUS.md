@@ -37,4 +37,4 @@
 ## navlog-s24 (gameplay-ui)
 - NavVoiceAnnouncer (Core/Navigation/NavVoice.cs) + NavigationService.Voice: linia `NAVVOICE t= band= clips=Bxx#n,... man= ring= street=` per ogłoszenie, tylko z `-nav_log <s>` (s>0). Uwaga: NavVoiceDriver wcześniej NIE był podpięty w playerze (tylko testy) — teraz działa w NavigationService.Update gdy Voice.Active; odtwarzania audio nadal brak (hook `Voice.Spoken`).
 - Testy: nav-runner NavVoiceTests.Announcer_*, EditMode Nav0168Tests.VoiceAnnouncer_*.
-- NASTĘPNY KROK: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64; cd tools/nav-runner; dotnet test
+- Dowody: EditMode 1526 total, 1384 passed, 0 failed (142 ignored); nav-runner 110/110. NASTĘPNY KROK: build -Development + przejazd z -nav_log 5, grep NAVVOICE w Player.log.
