@@ -13,3 +13,5 @@
 - NASTĘPNY KROK: czekać na artifacts/fix-b4-s24/pytest-world-roads.log; potem przebudowa C CLI: `pwsh -File artifacts/fix-b4-s24/bw.ps1 -RegionList bialystok-industrial-c`
 - krok 5: pytest tests/gis/test_world_roads.py: 14 pass / 1 fail (test_export_is_deterministic — oczekiwane po zmianie generatora, wymaga regen C). Szwy i centreline PASS. Przebudowa C CLI w toku (bwc.status).
 - NASTĘPNY KROK: po bwc.status DONE: `uv run --project tools/worldgen python -m pytest tests/gis/test_terrain_walls.py tests/gis/test_world_roads.py -q`
+- krok 6: maczka przebudowana (exit 0, commit data(maczka)); brama osm:node/13072640312 teraz (375.4, 13.2), yaw -3.02 (równolegle do jezdni, przy torze polnym); test_no_gate_across_a_route_lane[maczka] PASS. Unity: import maczka Win64 + VQA High (unity.ps1, unity.status) w toku; mickiewicza/tykocin/C build w toku.
+- NASTĘPNY KROK: `cat artifacts/fix-b4-s24/unity.status artifacts/fix-b4-s24/bw.status artifacts/fix-b4-s24/bwc.status`
