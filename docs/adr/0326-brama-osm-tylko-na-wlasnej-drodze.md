@@ -1,6 +1,6 @@
 # ADR 0326 — brama z OSM stoi na własnej drodze, nie w poprzek sąsiedniej jezdni
 
-Status: Proposed (agent fix-b4-s24, 2026-11-22). Numer nadany przez lidera.
+Status: Accepted (agent fix-b4-s24, 2026-11-22). Numer nadany przez lidera.
 Powiązane: build #4 (`artifacts/full-build-4-s24/STATUS.md`, P1, klatka t=250 s), ADR 0300 (przeszkody na trasie
 autopilota), ADR 0302 (podróż przez kafle).
 
