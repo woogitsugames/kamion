@@ -38,3 +38,16 @@
 - NASTĘPNY KROK (po slocie): `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn` i `--region tykocin`, potem
   `pwsh artifacts/monuments-s24/run-unity.ps1 -Region knyszyn -Out artifacts/monuments-s24/r2-knyszyn -Cameras "king_front_0325,king_34_0325,king_head_0325,king_side_0325,king_square_0325,rynek_owner_01,rynek_owner_08"`
   i `... -Region tykocin -Out artifacts/monuments-s24/r2-tykocin -Cameras "look_tykocin_plaza_photo_0325,look_tykocin_plaza_setts_0325,look_tykocin_plaza_cab_0325,look_tykocin_czarniecki,top_tykocin_rynek"`.
+
+## Krok 3 — rundy w Unity zakończone (bruk 2, król 3), testy, ADR
+- Tykocin r2 (`sbs/r2-plaza-sheet.jpg`): krata, opaska, szare obejścia i pasy przy jezdniach — zgodne z ortofoto; kostka z bliska `renders/r2-tykocin-look-tykocin-plaza-setts-0325.jpg`.
+- Knyszyn r2 → r3 → r4 (`sbs/r4-king-sheet.jpg`): r2 brąz czarno-niebieski + białe łańcuchy → r3 mniej metalu, jaśniejsza baza, cieńsze ogniwa →
+  r4 własne wierzchołki drobnych części i rewersów fleuronów (wygładzone normalne dawały białe plamy). Limit 3 rund wyczerpany.
+- Znane: figura w cieniu lip, front ciemny; nos i łańcuchy odbijają jasne otoczenie mocniej niż bryła (nawinięcie ścian sprawdzone liczbowo — poprawne).
+- pytest celowany (10 plików tests/gis): 122 passed (`logs/pytest-gis-targeted.log`); pełne tests/gis przerwane po 12 % (20 min, bez błędów) — maszyna obciążona.
+- EditMode Win64: 1525 / 1412 passed / 0 failed / 113 skipped. C# bez zmian.
+- Wymagany sąsiad do VQA knyszyn: `pwsh scripts/import-region.ps1 -Region knyszyn-w -BuildTarget Win64 -MaterialTier High`.
+- Dowody skopiowane do `C:\Users\matma\Documents\Claude\kamion\artifacts\monuments-s24\` (sbs, renders, view, logs, STATUS).
+- NASTĘPNY KROK (lider): ocena `visual-critic` arkuszy `sbs/r4-king-sheet.jpg` i `sbs/r2-plaza-sheet.jpg`; scalenie:
+  `git merge monuments-s24` → `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn` i `--region tykocin` →
+  `pwsh scripts/import-region.ps1 -Region knyszyn -BuildTarget Win64` (build_all sam dobuduje 4 nowe zestawy tekstur).
