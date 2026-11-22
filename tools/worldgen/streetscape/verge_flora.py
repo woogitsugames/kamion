@@ -37,6 +37,8 @@ MATERIALS = {MAT: {"color": [1.0, 1.0, 1.0], "rough": 0.9, "texture": MAT, "alph
                    "vertex_color": True, "shader": "Kamion/World PlotKit"}}
 TEX_W, TEX_H = 1024, 512
 TEX_M = 2.0                      # metres of sward one texture width stands for
+NT = 4                           # tufts per atlas row (r2); a card maps 1 or 2 whole tufts
+TUFT_H = (1.0, 0.72, 0.9, 0.6)   # relative height of the tufts of a row
 V_SHORT = (0.0, 0.5)             # atlas rows (v from the image bottom): short turf / tall grass with seed heads
 V_TALL = (0.5, 1.0)
 V_PAD = 0.012
@@ -93,11 +95,21 @@ def texture(seed=324):
                 d.line([q[i], q[i + 1]], fill=c, width=max(1, int(round(w))))
 
     def blades(y_foot, row_h, n, hmin, hmax, w0, base_share, heads):
+        # r2: NT discrete tufts per row with clear gaps between them - a card spans whole tufts (build: u on the
+        # tuft grid), so its side edges lie in transparent texels and the silhouette is the tuft, not a rectangle
+        cw = W / NT
         for _ in range(n):
-            x = rng.uniform(0, W)
-            h = (hmin + (hmax - hmin) * rng.random() ** 1.6) * row_h
-            lean = rng.normal(0, 0.16)
-            bend = rng.normal(0, 0.22)
+            k = int(rng.integers(0, NT))
+            off = float(np.clip(rng.normal(0, 0.14), -0.30, 0.30))          # foot offset in the cell (x cell width)
+            x = (k + 0.5 + off) * cw
+            env = max(0.25, 1.0 - (abs(off) / 0.32) ** 2 * 0.55) * TUFT_H[k % len(TUFT_H)]
+            h = (hmin + (hmax - hmin) * rng.random() ** 1.6) * row_h * env
+            lean = off * 1.6 + rng.normal(0, 0.10)                           # blades fan out of the tuft
+            bend = rng.normal(0, 0.16)
+            reach = abs(lean) * h + abs(bend) * h
+            if abs(off) * cw + reach > 0.47 * cw:                             # keep the blade inside its cell
+                sc = max(0.25, (0.47 * cw - abs(off) * cw) / max(reach, 1e-6))
+                lean, bend = lean * sc, bend * sc
             c = dry if rng.random() < 0.10 else greens[int(rng.integers(0, len(greens)))]
             if rng.random() < base_share:
                 c = dark * rng.uniform(0.9, 1.6)
@@ -115,11 +127,13 @@ def texture(seed=324):
 
     rh = H // 2
     # tall row: image rows 0 .. rh (v 0.5 .. 1), foot at y = rh
-    blades(rh - 2, rh, 2600, 0.08, 0.34, 4.5, 0.55, 0.0)
-    blades(rh - 2, rh, 900, 0.30, 0.97, 3.2, 0.05, 0.22)
+    blades(rh - 2, rh, 900, 0.06, 0.26, 4.5, 0.55, 0.0)
+    blades(rh - 2, rh, 1100, 0.22, 0.70, 3.6, 0.12, 0.0)
+    blades(rh - 2, rh, 520, 0.50, 0.99, 3.0, 0.03, 0.30)
     # short row: image rows rh .. H (v 0 .. 0.5), foot at y = H
-    blades(H - 2, rh, 3200, 0.10, 0.45, 4.5, 0.45, 0.0)
-    blades(H - 2, rh, 700, 0.35, 0.95, 3.0, 0.05, 0.05)
+    blades(H - 2, rh, 1100, 0.08, 0.34, 4.5, 0.45, 0.0)
+    blades(H - 2, rh, 1100, 0.25, 0.75, 3.8, 0.10, 0.0)
+    blades(H - 2, rh, 380, 0.55, 0.99, 3.0, 0.03, 0.06)
     im = im.resize((TEX_W, TEX_H), Image.LANCZOS)
     a = np.asarray(im).astype(np.float32)
     m = a[..., 3] > 8
@@ -228,10 +242,12 @@ def ditch_colours(col, hf, secs, report=None):
                         if r > NODE_R_M + 0.6:
                             continue
                         w = max(0.0, 1.0 - r / (NODE_R_M + 0.6))
-                        damp[j, i] = max(damp[j, i], w * (0.25 + 0.45 * max(0.0, dv - 0.25) / 0.75))
+                        damp[j, i] = max(damp[j, i], w * (0.10 + 0.28 * max(0.0, dv - 0.25) / 0.75))
                         soil[j, i] = max(soil[j, i], w * (0.42 if sv > 0.72 else 0.0))
                         rank[j, i] = max(rank[j, i], w * 0.55)
                 npts += 1
+    damp = ndimage.gaussian_filter(damp, 0.8)        # r2: no per-node triangles of dark ground
+    soil = ndimage.gaussian_filter(soil, 0.6)
     c[..., 1] = np.maximum(c[..., 1], damp)
     c[..., 3] = np.maximum(c[..., 3], soil)
     c[..., 2] = np.where(c[..., 2] <= 0.80, np.maximum(c[..., 2], rank * 0.9), c[..., 2])     # > 0.8 = field flag
@@ -292,12 +308,15 @@ def _card(sec, k, t, lat, ang, w, h, vrow, key, V, UV, C, T):
         xy = ctr[:2] + (o * ca + a * sa) * (sg * w / 2)
         feet.append([xy[0], xy[1], p[2] - SINK_M])
     lean = (o * (-sa) + a * ca) * (h * 0.18 * (2.0 * _h(*key, "ln") - 1.0))
-    u0 = _h(*key, "u")
+    nt = 2 if w > 0.8 else 1
+    u0 = int(_h(*key, "u") * NT) / NT
+    if _h(*key, "um") < 0.5:         # mirrored
+        u0, nt = u0 + nt / NT, -nt
     n0 = len(V)
     V += [feet[0], feet[1], [feet[0][0] + lean[0], feet[0][1] + lean[1], feet[0][2] + h + SINK_M],
           [feet[1][0] + lean[0], feet[1][1] + lean[1], feet[1][2] + h + SINK_M]]
     v0, v1 = vrow[0] + V_PAD, vrow[1] - V_PAD
-    UV += [[u0, v0], [u0 + w / TEX_M, v0], [u0, v1], [u0 + w / TEX_M, v1]]
+    UV += [[u0, v0], [u0 + nt / NT, v0], [u0, v1], [u0 + nt / NT, v1]]
     nrm = (o[0] * 0.25, o[1] * 0.25, 1.0)
     C += [_fol(nrm, OCC[0])] * 2 + [_fol(nrm, OCC[1])] * 2
     T += [(n0, n0 + 1, n0 + 3), (n0, n0 + 3, n0 + 2)]
@@ -331,7 +350,7 @@ def build(buf, secs, report=None, layer=LAYER):
                 if _h(*key, "k") < 0.30 + 0.65 * dens and ug > 0.15:
                     reach = EDGE_REACH_M * (0.3 + 0.7 * _vnoise(src + ":r", sc, 6.0))
                     lat = ug + (_h(*key, "l") ** 1.5) * 0.30 - _h(*key, "g") * min(reach, 0.6 * ug)
-                    across = _h(*key, "o") < 0.72
+                    across = _h(*key, "o") < 0.88
                     ang = ((_h(*key, "a") - 0.5) * 1.1) if across else (math.pi / 2 + (_h(*key, "a") - 0.5) * 0.7)
                     w = W_CARD[0] + (W_CARD[1] - W_CARD[0]) * _h(*key, "w")
                     if across:
@@ -377,7 +396,7 @@ def build(buf, secs, report=None, layer=LAYER):
                     w = W_CARD[0] + (W_CARD[1] - W_CARD[0]) * _h(*key, "w")
                     _card(sec, k, x / L, lat, (_h(*key, "a") - 0.5) * 0.9, w, h, V_TALL, key, V, UV, C, T)
                     ncard["bottom"] += 1
-                    if _h(*key, "x") < 0.45:              # a second card along the ditch: volume from the side
+                    if _h(*key, "x") < 0.30:              # a second card along the ditch: volume from the side
                         _card(sec, k, x / L, lat, math.pi / 2 + (_h(*key, "b") - 0.5) * 0.8, w, h * 0.9, V_TALL,
                               key + ("x",), V, UV, C, T)
                         ncard["bottom"] += 1
