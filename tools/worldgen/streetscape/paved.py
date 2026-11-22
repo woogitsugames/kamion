@@ -43,6 +43,8 @@ OSM_SURFACE = {"asphalt": "yard_asphalt", "paving_stones": "yard_paving", "concr
 PATH_SURFACE = {"kostka prefabrykowana": "sidewalk_paving", "masa bitumiczna": "path_asphalt", "beton": "yard_concrete",
                 "płyty betonowe": "sidewalk_slabs"}
 # paving blocks need an edging restraint; asphalt paths and cycle tracks are laid between concrete edgings too (ADR 0188)
+# ADR 0325: stone setts of authored squares (physics surface of block paving; laid flush, no concrete edging)
+SETT_SURFACE = {"plaza_sett_lattice": "paving", "plaza_sett_red": "paving", "plaza_sett_grey": "paving"}
 EDGED = {"yard_paving", "yard_behaton", "sidewalk_paving", "cycle_red", "cycle_asphalt", "cycle_asphalt_red",
          "sidewalk_paving_red", "sidewalk_slabs"}
 CELL = 4.0
@@ -70,6 +72,17 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
     come right after the dock aprons (a mapped track is a precise line, a yard is a blob) and the BDOT10k path lines
     that describe the same paths are not laid a second time."""
     cand = []
+    # ADR 0325: `uv_frame: {origin_epsg2180: [E, N], angle_deg: a}` on an authored paved_area = UV0 in metres in that
+    # frame (u along `angle_deg` from east), for a set whose pattern has a place in the world (lattice of a square)
+    uv_frames = {}
+    for o in overrides:
+        if o.get("kind") == "paved_area" and isinstance(o.get("uv_frame"), dict):
+            fr = o["uv_frame"]
+            oe, on = (float(x) for x in fr["origin_epsg2180"])
+            ang = float(fr.get("angle_deg", 0.0))
+            if not all(math.isfinite(x) for x in (oe, on, ang)):
+                raise ValueError(f"paved_area {o['id']}: uv_frame is not finite")
+            uv_frames[o["id"]] = (oe - float(origin[0]), on - float(origin[1]), math.radians(ang))
     # An explicit authored opt-in: park paths and plazas meet lawn without
     # the concrete restraint and deep yard flange. Existing surfaces are unchanged.
     flush_ids = {o["id"] for o in overrides if o.get("kind") == "paved_area" and o.get("park_flush") is True}
@@ -163,6 +176,8 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
             item = {"id": f"{cid}#{k}", "poly": p, "mat": mat, "source": srcname, "parking": is_parking}
             if srcname == "authored_override" and cid in flush_ids:
                 item["park_flush"] = True
+            if srcname == "authored_override" and cid in uv_frames:
+                item["uv_frame"] = uv_frames[cid]
             out.append(item)
             kept += p.area
         if kept:
@@ -350,15 +365,20 @@ def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
         Z = bilinear(zfill, hf, P[:, 0], P[:, 1])
         V = np.column_stack([P, Z + S.PAVED_LIFT])
         T = inv.ravel().reshape(-1, 3)
-        a = dominant_angle(poly)
+        if item.get("uv_frame") is not None:           # ADR 0325: authored frame (pattern anchored in the world)
+            ox, oy, a = item["uv_frame"]
+            Q = P - [ox, oy]
+        else:
+            a = dominant_angle(poly)
+            Q = P
         ca, sa = math.cos(-a), math.sin(-a)
-        UV = np.column_stack([P[:, 0] * ca - P[:, 1] * sa, P[:, 0] * sa + P[:, 1] * ca])
+        UV = np.column_stack([Q[:, 0] * ca - Q[:, 1] * sa, Q[:, 0] * sa + Q[:, 1] * ca])
         pts = shapely.points(P)
         dedge = shapely.distance(pts, poly.exterior)
         dwall = shapely.distance(pts, walls) if walls is not None and not walls.is_empty else np.full(len(P), 50.0)
         UV1 = np.column_stack([np.minimum(dedge, 50.0), np.minimum(dwall, 50.0)])
         buf.add(item.get("layer", "paved"), mat, V, UV, T, footprint=True, src=item["id"], UV1=UV1)      # layer: ADR 0114
-        buf.add("collision", "collision_" + S.SURFACE_OF.get(mat, "asphalt"), V, UV, T, src=item["id"])
+        buf.add("collision", "collision_" + (SETT_SURFACE.get(mat) or S.SURFACE_OF.get(mat, "asphalt")), V, UV, T, src=item["id"])
         if zf0 is None:
             zf0 = np.nan_to_num(zgrid, nan=0.0)
         _edges(buf, item, zgrid, hf, roads_poly, zf=zf0)

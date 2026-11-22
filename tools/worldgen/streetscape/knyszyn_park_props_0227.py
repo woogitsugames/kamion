@@ -7,8 +7,8 @@ ESTIMATED). The king, flagpole, benches and lamps are ESTIMATED from owner
 photographs and GUGiK orthophoto. Sizes and individual details are WORKING_VALUE.
 
 These are deliberately simple low-cost meshes, not scans or derived textures.
-ADR 0320: the king is a lathed figure (proportions from owner photos 1 / 8) in
-patinated bronze on a granite block instead of the six-sided grey proxy.
+ADR 0320 / 0325: the king is a sculpted bronze figure (knyszyn_king_0325; Commons
+and owner photos as reference) on a granite block instead of the six-sided grey proxy.
 The statue and the bird on the obelisk are PROXY shapes requiring visual review;
 the wording on both plaques is omitted. Lamps do not yet emit dynamic light.
 Collision uses simple low-detail boxes, separate from the visual LOD layers.
@@ -24,7 +24,7 @@ from shapely.geometry import Point, Polygon
 from shapely.ops import nearest_points
 
 from . import buildings_mesh as BM
-from . import monument_kit as MK
+from . import knyszyn_king_0325 as KF
 
 REGION = "knyszyn"
 ASSET_ID = "knyszyn_park_props_0227"
@@ -89,50 +89,34 @@ def _obelisk(acc, layer, at, z):
     acc.add(layer,"steel_painted",v2,[[0,1,2],[2,1,3],[2,1,0],[3,1,2]])
 
 
-# ADR 0320: figure sizes read off owner photos 1 and 8 against the people / the plinth (no survey): figure about
-# 3.2 m on a 1.05 m plinth, 1.25 m wide and 1.05 m deep at the hem, a broad cloak hanging from the shoulders, small
-# head with a crown. WORKING_VALUE. (z above the plinth top, half width, half depth, 0, forward offset, section power)
+# ADR 0325: the figure itself is the sculpt of knyszyn_king_0325 (faceted cloak, head, ruff, crown, fur lapels, chains;
+# Commons photos as reference). Plinth as in ADR 0320: 1.05 m block on a base course, sizes read off owner photos 1 / 8
+# against the people (no survey), WORKING_VALUE.
 KING_PLINTH_H = 1.05
-KING_RINGS = ((0.00, .625, .525, 0., .00, 3.2), (0.06, .630, .530, 0., .00, 3.2), (0.60, .605, .500, 0., .00, 3.0),
-              (1.20, .570, .455, 0., -.01, 2.8), (1.80, .530, .400, 0., -.02, 2.6), (2.20, .505, .350, 0., -.03, 2.5),
-              (2.42, .500, .335, 0., -.03, 2.4), (2.55, .455, .300, 0., -.03, 2.3), (2.66, .360, .260, 0., -.03, 2.2),
-              (2.74, .255, .220, 0., -.02, 2.0), (2.80, .200, .190, 0., -.01, 2.0), (2.86, .200, .200, 0., .00, 2.0),
-              (2.95, .215, .220, 0., .01, 2.0), (3.05, .220, .220, 0., .01, 2.0), (3.10, .210, .210, 0., .00, 2.0),
-              (3.10, .240, .240, 0., .00, 2.0), (3.17, .245, .245, 0., .00, 2.0))
-KING_CROWN_M = 0.07
-KING_H = KING_PLINTH_H + 0.04 + KING_RINGS[-1][0] + KING_CROWN_M          # top of the crown points (LOD0)
+KING_CAP_M = 0.04                                    # set-back top course under the figure (LOD0)
+KING_H = KING_PLINTH_H + KING_CAP_M + KF.H_TOP       # top of the tall crown fleurons (LOD0)
+KING_LOW_REMAP = {KF.BRONZE: "plinth_dark", KF.PATINA: "plinth_dark", KF.RUBBED: "plinth_dark"}
 
 
 def _king(acc, layer, at, z):
-    # Stylised figure, not a scan or a reconstruction of the artwork: silhouette and proportions only (owner photos
-    # 1 / 8, ADR 0320). The front faces the separate sundial block towards the town hall (ESTIMATED).
+    # Stylised figure, not a scan or a reconstruction of the artwork (ADR 0325). The front faces the separate sundial
+    # block towards the town hall (ESTIMATED).
     low = layer == "buildings_low"
     stone = "monument_granite"
     _box(acc,layer,stone,at,z,z+.18,1.05,.9,KING_TANGENT)
     _box(acc,layer,stone,at,z+.18,z+KING_PLINTH_H,.86,.73,KING_TANGENT)
-    if not low:      # chamfered top course of the block: a 4 cm set-back line under the figure
-        _box(acc,layer,stone,at,z+KING_PLINTH_H,z+KING_PLINTH_H+.04,.80,.67,KING_TANGENT)
     body = np.asarray(at, float)
-    def pos(x, forward): return body + KING_TANGENT*x + KING_FORWARD*forward
-    bronze = "monument_bronze"
-    base = [body[0], body[1], z + KING_PLINTH_H + (0. if low else .04)]
-    rings = MK.thin(KING_RINGS) if low else KING_RINGS
-    MK.lathe(acc, layer, bronze, base, KING_FORWARD, rings, sides=8 if low else 16)
-    top = base[2] + KING_RINGS[-1][0]
-    # crown: points on the band (flat, both sides) and the low cap inside it
-    npts = 6 if low else 10
-    tip = top + KING_CROWN_M
-    for i in range(npts):
-        a = 2*math.pi*(i+.5)/npts
-        c, s = math.cos(a), math.sin(a)
-        p0 = pos(.243*math.cos(a-.2), .243*math.sin(a-.2)); p1 = pos(.243*math.cos(a+.2), .243*math.sin(a+.2))
-        p2 = pos(.25*c, .25*s)
-        tri = [_p(p0, top-.01), _p(p1, top-.01), _p(p2, tip)]
-        acc.add(layer, bronze, tri, [[0,1,2],[2,1,0]])
     if not low:
-        MK.sphere(acc, layer, bronze, [base[0], base[1], top-.005], .21, sides=8, stacks=4, squash=.25)
-    # Separate sundial/plaque block on paving in front of figure, blank.
+        # chamfered top course of the block: a 4 cm set-back line under the figure
+        _box(acc,layer,stone,at,z+KING_PLINTH_H,z+KING_PLINTH_H+KING_CAP_M,.80,.67,KING_TANGENT)
+        # dark plaque with a raised frame on the front of the block (Commons cs7518515); no lettering
+        front = body + KING_FORWARD*.73
+        _box(acc,layer,KF.PATINA,front+KING_FORWARD*.012,z+.36,z+.86,.25,.012,KING_TANGENT)
+        _box(acc,layer,KF.BRONZE,front+KING_FORWARD*.020,z+.40,z+.82,.21,.012,KING_TANGENT)
+    base = [body[0], body[1], z + KING_PLINTH_H + (0. if low else KING_CAP_M)]
+    KF.build(acc, layer, base, KING_FORWARD, low=low)
     p=body+KING_FORWARD*KING_BLOCK_DISTANCE_M
+    # Separate sundial/plaque block on paving in front of figure, blank.
     _box(acc,layer,"monument_granite",p,z,z+.75,.65,.40,KING_TANGENT)
     _box(acc,layer,"steel_painted",p+KING_FORWARD*.406,z+.22,z+.55,.45,.012,KING_TANGENT)
     # WORKING_VALUE: blank octagonal sundial and small gnomon, not text or an emblem.
@@ -267,7 +251,7 @@ def build(buf, region, origin, overrides, zsmooth, report):
     for old, new in {"bench_wood": "wood_planks", "paint_white_reflective": "plaster_light",
                      "plaster_white": "plaster_light",
                      "plinth_grey": "plaster_grey", "steel_painted": "plinth_dark",
-                     "monument_granite": "plaster_grey", "monument_bronze": "plinth_dark"}.items():
+                     "monument_granite": "plaster_grey", **KING_LOW_REMAP}.items():
         parts = acc.d.pop(("buildings_low", old), [])
         if parts:
             acc.d.setdefault(("buildings_low", new), []).extend(parts)

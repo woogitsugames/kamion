@@ -2,6 +2,11 @@
   "schema": "truck-sim-pl/place-cameras/1",
   "provenance": "authored_override (ADR 0204): control cameras at named places of Knyszyn. Position region-local E/N (origin 761611, 612607), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions traced on the GUGiK orthophoto 0.1 m 2025-05-27 (+-2 m).",
   "cameras": [
+    {"id": "king_front_0325", "pos_en": [-648.52, -175.11], "heading_deg": 215.4, "eye_m": 1.6, "fov_deg": 40, "pitch_deg": 13, "note": "ADR 0325 QA: 6 m in front of the king, pedestrian eye (pair = Commons 'Pomnik krola Zygmunta Augusta w Knyszynie, zdj. 18 lipca 2019 r')"},
+    {"id": "king_34_0325", "pos_en": [-647.22, -177.28], "heading_deg": 240.4, "eye_m": 1.6, "fov_deg": 40, "pitch_deg": 13, "note": "ADR 0325 QA: 5.5 m from the king, 25 deg off its front (pair = Commons 'Podlaskie - Knyszyn - Knyszyn - pomnik')"},
+    {"id": "king_head_0325", "pos_en": [-649.39, -176.33], "heading_deg": 215.4, "eye_m": 1.7, "fov_deg": 16, "pitch_deg": 27, "note": "ADR 0325 QA: head, ruff, crown and chains from 4.5 m (pair = Commons 'Knyszyn Zygmunt II August')"},
+    {"id": "king_side_0325", "pos_en": [-656.89, -176.52], "heading_deg": 125.4, "eye_m": 1.6, "fov_deg": 40, "pitch_deg": 13, "note": "ADR 0325 QA: profile of the king from 6 m (pair = owner photo 8)"},
+    {"id": "king_square_0325", "pos_en": [-643.3, -167.78], "heading_deg": 215.4, "eye_m": 2.5, "fov_deg": 50, "pitch_deg": 4, "note": "ADR 0325 QA: driver eye height 15 m in front of the king, from the town-hall side: the figure as seen from the square"},
     {
       "id": "dk65_inlet_south",
       "pos_en": [

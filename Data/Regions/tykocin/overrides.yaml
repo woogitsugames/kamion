@@ -38,23 +38,83 @@ overrides:
   # ---------------------------------------------------------------- Plac Stefana Czarnieckiego (ADR 0320)
   # GUGiK orthophoto 2024 (0.25 m): after the renewal the square is a sett-paved plaza (grey fields in a diagonal
   # lattice of darker bands) with the monument, a paved walk around two lawns and no trees. Outlines traced on the
-  # orthophoto, +-1 m (ESTIMATED). material: the generator has no sett set (paved.py maps sett -> yard_paving); the
-  # diagonal lattice is not reproduced (open item in ADR 0320).
+  # orthophoto, +-1 m (ESTIMATED).
+  # ADR 0325: the lattice measured on the orthophoto WMS crop (0.033 m/px resample of the 0.25 m sheet) in EPSG:2180:
+  # two orthogonal band families with normals at 53.75 / 143.75 deg from east, period 2.255 m (17 / 16 bands, residuals
+  # < 0.10 m), one crossing at 751807.72 / 600235.65. The plaza is laid with `plaza_sett_lattice` (set
+  # sett_lattice_tykocin: tile = period * sqrt 2, bands on the tile diagonals) through `uv_frame` = that crossing and
+  # the lattice diagonal (8.75 deg); a 0.75 m band of red setts along the four sides (WORKING_VALUE: the photo shows it
+  # about 1.5 lattice bands wide), rows along each side. Plaza corners re-measured on the same crop (+-0.3 m).
   - id: tykocin-rynek-plaza-0320
     kind: paved_area
     target: {area: Plac Stefana Czarnieckiego}
     set: {}
     verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
-    material: yard_paving
-    polygon_epsg2180: [[751786.7, 600245.5], [751826.5, 600253.9], [751829.8, 600223.9], [751789.5, 600217.7]]
-    reason: 'ESTIMATED: paved plaza of Plac Czarnieckiego traced on the GUGiK orthophoto 2024; Commons cs202183366 (CC BY 4.0, reference only).'
+    material: plaza_sett_lattice
+    polygon_epsg2180: [[751786.82, 600245.12], [751825.55, 600253.88], [751828.97, 600223.16], [751789.86, 600218.83]]
+    uv_frame: {origin_epsg2180: [751807.72, 600235.65], angle_deg: 8.75}
+    reason: 'ESTIMATED: paved plaza of Plac Czarnieckiego traced on the GUGiK orthophoto 2024; lattice measured on it (ADR 0325); Commons cs202183366 (CC BY 4.0, reference only).'
+    confidence: medium
+  - id: tykocin-rynek-plaza-border-n-0325
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: plaza_sett_red
+    polygon_epsg2180: [[751786.00, 600245.70], [751826.20, 600254.80], [751825.55, 600253.88], [751786.82, 600245.12]]
+    reason: 'ESTIMATED: red sett band along the north side of the plaza (orthophoto 2024, Commons cs202183366); width 0.75 m WORKING_VALUE.'
+    confidence: medium
+  - id: tykocin-rynek-plaza-border-e-0325
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: plaza_sett_red
+    polygon_epsg2180: [[751826.20, 600254.80], [751829.80, 600222.50], [751828.97, 600223.16], [751825.55, 600253.88]]
+    reason: 'ESTIMATED: red sett band along the east side of the plaza (orthophoto 2024, Commons cs202183366); width 0.75 m WORKING_VALUE.'
+    confidence: medium
+  - id: tykocin-rynek-plaza-border-s-0325
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: plaza_sett_red
+    polygon_epsg2180: [[751829.80, 600222.50], [751789.20, 600218.00], [751789.86, 600218.83], [751828.97, 600223.16]]
+    reason: 'ESTIMATED: red sett band along the south side of the plaza (orthophoto 2024, Commons cs202183366); width 0.75 m WORKING_VALUE.'
+    confidence: medium
+  - id: tykocin-rynek-plaza-border-w-0325
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: plaza_sett_red
+    polygon_epsg2180: [[751789.20, 600218.00], [751786.00, 600245.70], [751786.82, 600245.12], [751789.86, 600218.83]]
+    reason: 'ESTIMATED: red sett band along the west side of the plaza (orthophoto 2024, Commons cs202183366); width 0.75 m WORKING_VALUE.'
+    confidence: medium
+  - id: tykocin-rynek-apron-n-0325
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: plaza_sett_grey
+    polygon_epsg2180: [[751786.00, 600245.70], [751785.34, 600248.63], [751825.54, 600257.73], [751826.20, 600254.80]]
+    reason: 'ESTIMATED: paved strip between the north side of the plaza and the carriageway (orthophoto 2024: setts with planters / benches, no lawn); 3 m, the road footprint cuts the rest.'
+    confidence: medium
+  - id: tykocin-rynek-apron-s-0325
+    kind: paved_area
+    target: {area: Plac Stefana Czarnieckiego}
+    set: {}
+    verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
+    material: plaza_sett_grey
+    polygon_epsg2180: [[751829.80, 600222.50], [751830.30, 600218.03], [751789.70, 600213.53], [751789.20, 600218.00]]
+    reason: 'ESTIMATED: paved strip between the south side of the plaza and the carriageway (orthophoto 2024: setts with planters / benches, no lawn); 4.5 m, the road footprint cuts the rest.'
     confidence: medium
   - id: tykocin-rynek-walk-east-0320
     kind: paved_area
     target: {area: Plac Stefana Czarnieckiego}
     set: {}
     verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
-    material: yard_paving
+    material: plaza_sett_grey
     polygon_epsg2180: [[751825.4, 600249.6], [751876.4, 600259.9], [751880.8, 600257.1], [751881.5, 600230.2], [751878.0, 600223.5], [751830.0, 600218.0], [751828.0, 600224.0]]
     holes_epsg2180:
       - [[751828.6, 600245.9], [751865.1, 600254.9], [751872.0, 600255.2], [751875.4, 600251.5], [751876.1, 600235.2], [751873.2, 600232.1], [751830.1, 600226.5], [751828.9, 600244.0]]
@@ -65,7 +125,7 @@ overrides:
     target: {area: Plac Stefana Czarnieckiego}
     set: {}
     verify: control camera top_tykocin_rynek against the GUGiK orthophoto 2024
-    material: yard_paving
+    material: plaza_sett_grey
     polygon_epsg2180: [[751749.9, 600238.1], [751786.1, 600245.1], [751786.6, 600245.4], [751789.4, 600217.8], [751789.2, 600214.5], [751753.9, 600210.6]]
     holes_epsg2180:
       - [[751755.1, 600227.1], [751785.2, 600234.5], [751786.6, 600220.8], [751757.0, 600217.6]]

@@ -28,6 +28,7 @@ import sets_scan as SC  # noqa: E402
 import sets_viaduct as V  # noqa: E402
 import sets_buildings as B  # noqa: E402
 import sets_fire_station as FS  # noqa: E402
+import sets_plaza as PZ  # noqa: E402
 
 OUT = HERE.parent
 REPO = OUT.parents[2]
@@ -97,6 +98,7 @@ SETS = {
 
 SETS.update(V.VIADUCT_SETS)      # hero viaduct strip atlas (ADR 0067)
 SETS.update(FS.FIRE_STATION_SETS)      # hero fire station atlas (ADR 0070)
+B.BUILDING_SETS.update(PZ.PLAZA_SETS)  # stone setts of authored squares (ADR 0325); explicit `kind` like the building sets
 # Hero atlases on external CC0 scans (ADR 0067 / 0070): set name -> (module with write_layout(), spec key of the
 # clean-material mean). One table for every authored landmark atlas; add new hero sets here.
 HERO_ATLASES = {**{n: (V, "concrete_mean_rgb_linear") for n in V.VIADUCT_SETS},

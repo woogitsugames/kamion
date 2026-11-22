@@ -478,8 +478,31 @@ M = {
     # ADR 0320 monuments: patinated bronze (dark brown-green, satin), grey granite block (flamed, not mirror-polished),
     # weathered sandstone of the Czarniecki monument in Tykocin (Commons cs152250554 / cs35733636, reference only).
     # WORKING_VALUE: no reflectance measurement.
-    "monument_bronze": {"color": [0.060, 0.070, 0.058], "rough": 0.52, "metal": 0.6},
-    "monument_granite": {"color": [0.17, 0.17, 0.175], "rough": 0.45, "texture_set": "plaster", "splash_h": 0.25},
+    # ADR 0325 (Knyszyn king, Commons cs128805425 / cs7518515 / cs20127375, reference only): the bronze reads blue-grey
+    # under the sky and brown in the shade - dark metallic base, a rougher, greener, less metallic patina for the fur,
+    # the ruff and the hollows, and a lighter rubbed tone for the crown, the chains and the face. Grey speckled granite
+    # of the plinth, honed (not mirror). WORKING_VALUE: no reflectance measurement.
+    # Set bronze_cast_tint: modelled planes, grain, rain streaks and oxide (roughness 0.3-0.8, metal mask in MaskMap.r
+    # scaled by set_metal); mesh UV0 = metres round the figure / up it (knyszyn_king_0325.build).
+    # r3 (Unity High / clear, figure in the shade of the park limes): at metal 0.85 the bronze was a blue-black mirror of
+    # the sky with white chains; an old outdoor bronze is mostly oxide - lower metal share, lighter base.
+    "monument_bronze": {"color": [0.160, 0.145, 0.125], "rough": 0.48, "metal": 0.45,
+                        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.45},
+    "monument_bronze_patina": {"color": [0.105, 0.120, 0.100], "rough": 0.78, "metal": 0.15,
+                               "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.15},
+    "monument_bronze_rubbed": {"color": [0.250, 0.195, 0.125], "rough": 0.40, "metal": 0.55,
+                               "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.55},
+    "monument_granite": {"color": [0.215, 0.215, 0.22], "rough": 0.38, "texture_set": "granite_honed_tint",
+                         "set_tile": True, "splash_h": 0.25},
+    # ADR 0325: stone setts of Plac Czarnieckiego in Tykocin (art-source/world/materials/_src/sets_plaza.py). The lattice
+    # set carries its own colours (tint 1 at the set mean); the neutral row set is tinted red (border band) or granite
+    # grey (walks around the lawns). Mesh UV0 in metres (paved.py: plaza `uv_frame` / dominant axis of the strip).
+    "plaza_sett_lattice": {"color": _set_mean("sett_lattice_tykocin", [0.245, 0.215, 0.205]), "rough": 0.85,
+                           "surface": "paving_stones", "texture_set": "sett_lattice_tykocin", "set_tile": True},
+    "plaza_sett_red": {"color": [0.205, 0.114, 0.088], "rough": 0.85, "surface": "paving_stones",
+                       "texture_set": "sett_rows_tint", "set_tile": True},
+    "plaza_sett_grey": {"color": [0.285, 0.282, 0.272], "rough": 0.85, "surface": "paving_stones",
+                        "texture_set": "sett_rows_tint", "set_tile": True},
     "monument_sandstone": {"color": [0.30, 0.275, 0.235], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.6},
     "monument_gilt": {"color": [0.55, 0.40, 0.10], "rough": 0.4, "metal": 0.8},
     "truss_steel": {"color": [0.40, 0.41, 0.41], "rough": 0.62, "metal": 0.15},

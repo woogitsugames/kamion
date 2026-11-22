@@ -1272,6 +1272,109 @@
       "hf_ratio_albedo": 0.0215,
       "ao_mean": 0.916
     },
+    "bronze_cast_tint": {
+      "tile_m": [
+        1.2,
+        1.2
+      ],
+      "target": 0.5,
+      "kind": "modulation_set",
+      "uv": "mesh_uv0_metres (u around, v up)",
+      "slots": [
+        "monument_bronze",
+        "monument_bronze_patina",
+        "monument_bronze_rubbed"
+      ],
+      "note": "ADR 0325: weathered cast bronze (modelled planes, casting grain, rain streaks along v, oxide in the hollows), neutral modulation map (mean 0.5); MaskMap.r = metal mask (manifest set_metal scales it), colour from the manifest.",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.17,
+          "dir": "bronze_cast_tint/High",
+          "png_bytes": 5966751,
+          "files": [
+            "T_bronze_cast_tint_BaseColor.png",
+            "T_bronze_cast_tint_MaskMap.png",
+            "T_bronze_cast_tint_Normal.png",
+            "T_bronze_cast_tint_Var.png"
+          ],
+          "smoothness_mean": 0.561,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 2.34,
+          "dir": "bronze_cast_tint/Medium",
+          "png_bytes": 1592435,
+          "files": [
+            "T_bronze_cast_tint_BaseColor.png",
+            "T_bronze_cast_tint_MaskMap.png",
+            "T_bronze_cast_tint_Normal.png",
+            "T_bronze_cast_tint_Var.png"
+          ],
+          "smoothness_mean": 0.555,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 4.69,
+          "dir": "bronze_cast_tint/Low",
+          "png_bytes": 456989,
+          "files": [
+            "T_bronze_cast_tint_BaseColor.png",
+            "T_bronze_cast_tint_MaskMap.png",
+            "T_bronze_cast_tint_Normal.png",
+            "T_bronze_cast_tint_Var.png"
+          ],
+          "smoothness_mean": 0.549,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00461,
+        0.00375
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3872,
+        "p95": 0.5754,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.0525,
+      "ao_mean": 0.984
+    },
     "car_grime": {
       "tile_m": [
         5.0,
@@ -2972,6 +3075,107 @@
         0.2973,
         0.4167
       ]
+    },
+    "granite_honed_tint": {
+      "tile_m": [
+        0.8,
+        0.8
+      ],
+      "target": 0.5,
+      "kind": "modulation_set",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "slots": [
+        "monument_granite"
+      ],
+      "note": "ADR 0325: honed grey granite (feldspar / quartz / biotite grains 3-11 mm), neutral modulation map (mean 0.5); colour from the manifest. Plinth of the king's monument in Knyszyn.",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 0.78,
+          "dir": "granite_honed_tint/High",
+          "png_bytes": 5753056,
+          "files": [
+            "T_granite_honed_tint_BaseColor.png",
+            "T_granite_honed_tint_MaskMap.png",
+            "T_granite_honed_tint_Normal.png",
+            "T_granite_honed_tint_Var.png"
+          ],
+          "smoothness_mean": 0.633,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 1.56,
+          "dir": "granite_honed_tint/Medium",
+          "png_bytes": 1735751,
+          "files": [
+            "T_granite_honed_tint_BaseColor.png",
+            "T_granite_honed_tint_MaskMap.png",
+            "T_granite_honed_tint_Normal.png",
+            "T_granite_honed_tint_Var.png"
+          ],
+          "smoothness_mean": 0.622,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 3.12,
+          "dir": "granite_honed_tint/Low",
+          "png_bytes": 472351,
+          "files": [
+            "T_granite_honed_tint_BaseColor.png",
+            "T_granite_honed_tint_MaskMap.png",
+            "T_granite_honed_tint_Normal.png",
+            "T_granite_honed_tint_Var.png"
+          ],
+          "smoothness_mean": 0.614,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00025,
+        0.00012
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.153,
+        "p95": 0.6723,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.049,
+      "ao_mean": 0.998
     },
     "grass_verge": {
       "tile_m": [
@@ -5140,6 +5344,209 @@
       },
       "hf_ratio_albedo": 0.0353,
       "ao_mean": 0.991
+    },
+    "sett_lattice_tykocin": {
+      "tile_m": [
+        3.1891,
+        3.1891
+      ],
+      "target": null,
+      "kind": "tiling_set",
+      "uv": "mesh_uv0_metres (plaza frame: paved_area uv_frame, lattice crossing at the origin)",
+      "slots": [
+        "plaza_sett_lattice"
+      ],
+      "note": "ADR 0325: Plac Czarnieckiego, Tykocin. Light grey granite setts in segmental arcs inside a diagonal lattice (period 2.255 m, measured on the GUGiK orthophoto 2024) of 0.48 m bands of small red setts. Procedural; band width, sett sizes and colours WORKING_VALUE (Commons photo as reference only).",
+      "albedo_target_mean_lum_linear": null,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 1.56,
+          "dir": "sett_lattice_tykocin/High",
+          "png_bytes": 29016145,
+          "files": [
+            "T_sett_lattice_tykocin_BaseColor.png",
+            "T_sett_lattice_tykocin_MaskMap.png",
+            "T_sett_lattice_tykocin_Normal.png",
+            "T_sett_lattice_tykocin_Var.png"
+          ],
+          "smoothness_mean": 0.139,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 3.11,
+          "dir": "sett_lattice_tykocin/Medium",
+          "png_bytes": 8736226,
+          "files": [
+            "T_sett_lattice_tykocin_BaseColor.png",
+            "T_sett_lattice_tykocin_MaskMap.png",
+            "T_sett_lattice_tykocin_Normal.png",
+            "T_sett_lattice_tykocin_Var.png"
+          ],
+          "smoothness_mean": 0.11,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 6.23,
+          "dir": "sett_lattice_tykocin/Low",
+          "png_bytes": 2390398,
+          "files": [
+            "T_sett_lattice_tykocin_BaseColor.png",
+            "T_sett_lattice_tykocin_MaskMap.png",
+            "T_sett_lattice_tykocin_Normal.png",
+            "T_sett_lattice_tykocin_Var.png"
+          ],
+          "smoothness_mean": 0.076,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.01546,
+        0.00836
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.1856,
+        "p05": 0.08,
+        "p95": 0.3455,
+        "mean_rgb_linear": [
+          0.208,
+          0.1805,
+          0.1685
+        ]
+      },
+      "hf_ratio_albedo": 0.0333,
+      "ao_mean": 0.887
+    },
+    "sett_rows_tint": {
+      "tile_m": [
+        1.92,
+        1.92
+      ],
+      "target": 0.5,
+      "kind": "modulation_set",
+      "uv": "mesh_uv0_metres (u along the rows)",
+      "slots": [
+        "plaza_sett_red",
+        "plaza_sett_grey"
+      ],
+      "note": "ADR 0325: small setts in straight staggered rows, neutral modulation map (mean 0.5); colour from the manifest (red border band of the plaza, grey granite walks).",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.88,
+          "dir": "sett_rows_tint/High",
+          "png_bytes": 6263476,
+          "files": [
+            "T_sett_rows_tint_BaseColor.png",
+            "T_sett_rows_tint_MaskMap.png",
+            "T_sett_rows_tint_Normal.png",
+            "T_sett_rows_tint_Var.png"
+          ],
+          "smoothness_mean": 0.145,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.75,
+          "dir": "sett_rows_tint/Medium",
+          "png_bytes": 1866504,
+          "files": [
+            "T_sett_rows_tint_BaseColor.png",
+            "T_sett_rows_tint_MaskMap.png",
+            "T_sett_rows_tint_Normal.png",
+            "T_sett_rows_tint_Var.png"
+          ],
+          "smoothness_mean": 0.118,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.5,
+          "dir": "sett_rows_tint/Low",
+          "png_bytes": 500330,
+          "files": [
+            "T_sett_rows_tint_BaseColor.png",
+            "T_sett_rows_tint_MaskMap.png",
+            "T_sett_rows_tint_Normal.png",
+            "T_sett_rows_tint_Var.png"
+          ],
+          "smoothness_mean": 0.083,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.01508,
+        0.00807
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4997,
+        "p05": 0.1481,
+        "p95": 0.7716,
+        "mean_rgb_linear": [
+          0.4997,
+          0.4997,
+          0.4997
+        ]
+      },
+      "hf_ratio_albedo": 0.055,
+      "ao_mean": 0.892
     },
     "sidewalk_slab_35": {
       "tile_m": [

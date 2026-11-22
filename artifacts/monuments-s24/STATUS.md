@@ -1,0 +1,53 @@
+# STATUS monuments-s24 (ADR 0325) — CRITIC s24 wave 6 pkt 1.3 (król w Knyszynie) i 1.4 (bruk Pl. Czarnieckiego)
+
+## Krok 0 — rozpoznanie (bez zmian w kodzie)
+- Worktree `.claude/worktrees/monuments-s24`, gałąź `monuments-s24` z main 3fba5b3b7; `Data/raw/derived` = kopia (-CopyDerived).
+  W worktree nie ma `game/Assets/_Generated/World` ani tekstur `art-source/world/materials/<set>` → pierwszy import = build_all (~8 min) + pełny import regionu.
+- Referencje (poza gitem): Commons `Data/raw/refs/knyszyn-king-commons` (cs128805425 CC BY-SA 4.0, cs7518515 CC BY-SA 4.0, cs20127375 CC BY-SA 3.0)
+  + ortofoto GUGiK WMS `Data/raw/refs/tykocin-rynek-ortho/plaza_0.05.png`.
+- Pomnik naprawdę: graniasty płaszcz-dzwon bez widocznych rąk, głowa z brodą, kreza, korona z fleuronami, dwa łańcuchy z klejnotem,
+  futrzane wyłogi, szew z przodu; cokół z szarego granitu z ciemną tablicą. Rąk NIE dodawać (nie ma ich na rzeźbie).
+- Bruk (pomiar na ortofoto, układ EPSG:2180): krata kwadratowa, normalne pasów 53,75° i 143,75° od wschodu, okres 2,255 m (reszty < 0,10 m),
+  faza −18,488 m / −18,020 m względem E751808 N600236; pas ~0,5 m (FWHM 0,57 m przy rozmyciu orto), opaska obwodowa.
+  Naroża płyty: NW 751786.0/600245.7, NE 751826.2/600254.8, SE 751829.8/600222.5, SW 751789.2/600218.0.
+- Plan: (1) `art-source/world/materials/_src/sets_plaza.py` (kostka granitowa w wachlarze + krata czerwona; zestaw modulacyjny kostki),
+  (2) `paved.py`: opcjonalna rama UV (`uv_frame`) z override, (3) figura króla w nowym module `streetscape/knyszyn_king_0325.py`,
+  (4) build_world knyszyn + tykocin, import, visual-qa, SBS.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only <nowe zestawy>`
+
+## Krok 1 — kod rundy 1 (commit abc84990c + następny)
+- Tekstury: `sets_plaza.py` → `sett_lattice_tykocin` (kafel 3,189 m, krata na przekątnych) i `sett_rows_tint` (modulacyjny); `build_all.py --only ...` 33 s.
+- `paved.py`: `uv_frame` (override) → UV0 w ramie placu; materiały `plaza_sett_lattice/red/grey`; override'y Tykocina: płyta + 4 trapezy opaski 0,75 m + obejścia w szarej kostce.
+- Król: `streetscape/knyszyn_king_0325.py` — LOD0 2 214 tris (figura), LOD1 288; 3 materiały brązu; cokół + tablica bez napisu. Rąk brak (zgodnie z rzeźbą).
+- build_world tykocin: exit 0 (7 min 54 s; log `artifacts/monuments-s24/logs/build_world-tykocin-r1.log`); import + VQA tykocin w tle (`run-unity.ps1`).
+- pytest: `tests/gis/test_knyszyn_park_props_0227.py` 9 passed; `test_truss_bridge_0320.py -k "square or plaza"` 3 passed.
+- NASTĘPNY KROK: po zwolnieniu slotu heavy `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn`, potem
+  `pwsh artifacts/monuments-s24/run-unity.ps1 -Region knyszyn -Out artifacts/monuments-s24/r1-knyszyn -Cameras "king_front_0325,king_34_0325,king_head_0325,king_side_0325,king_square_0325,rynek_owner_01,rynek_owner_08"`
+
+## Krok 2 — runda 1 Tykocin obejrzana; look-dev króla w Blenderze; EditMode
+- Tykocin r1 (import + VQA High/clear): krata leży jak na ortofoto (`sbs/r1-plaza-sheet.jpg`). Poprawki r2 już w kodzie: czerwień jaśniejsza
+  i mniej nasycona (orto: pasy w słońcu ~150/125/105 sRGB), jaśniejsza fuga, plamy zadeptanego brudu, szare obejścia ciemniejsze.
+- Król: look-dev Cycles (`tools/worldgen/qa/king_preview_0325.py` → `tools/blender/world/king_preview_0325.py`), arkusz
+  `sbs/lookdev-blender-king-sheet.jpg`; r2 rzeźby: proste ramiona, graniasty tył ze szwem, broda/włosy w brązie, postrzępione futro.
+  Zestawy `granite_honed_tint` (cokół) i `bronze_cast_tint` (patyna, zacieki, maska metalu) + UV walcowe figury.
+- EditMode Win64: 1525 total, 1412 passed, 0 failed, 113 skipped (`artifacts/tests/editmode-20261121-215915.xml`).
+- BLOKADA: pula `heavy` (3 sloty) od 19:47 w całości u `regen-wave-6-s24`; kolejka FIFO: banks-verges, road-surface, ja. build_world knyszyn czeka.
+  Jedno build_world tykocin (r1) poszło przed zajęciem slotu — moja pomyłka, bez skutków (41 GB RAM wolne).
+- Uwaga: Blender zapisał pierwsze rendery do `C:\artifacts\monuments-s24\blender\r1` (ścieżka względna); skopiowane do worktree, pusty katalog
+  `C:\artifacts` został (usuwanie zablokowane przez zabezpieczenie) — do skasowania ręcznie.
+- NASTĘPNY KROK (po slocie): `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn` i `--region tykocin`, potem
+  `pwsh artifacts/monuments-s24/run-unity.ps1 -Region knyszyn -Out artifacts/monuments-s24/r2-knyszyn -Cameras "king_front_0325,king_34_0325,king_head_0325,king_side_0325,king_square_0325,rynek_owner_01,rynek_owner_08"`
+  i `... -Region tykocin -Out artifacts/monuments-s24/r2-tykocin -Cameras "look_tykocin_plaza_photo_0325,look_tykocin_plaza_setts_0325,look_tykocin_plaza_cab_0325,look_tykocin_czarniecki,top_tykocin_rynek"`.
+
+## Krok 3 — rundy w Unity zakończone (bruk 2, król 3), testy, ADR
+- Tykocin r2 (`sbs/r2-plaza-sheet.jpg`): krata, opaska, szare obejścia i pasy przy jezdniach — zgodne z ortofoto; kostka z bliska `renders/r2-tykocin-look-tykocin-plaza-setts-0325.jpg`.
+- Knyszyn r2 → r3 → r4 (`sbs/r4-king-sheet.jpg`): r2 brąz czarno-niebieski + białe łańcuchy → r3 mniej metalu, jaśniejsza baza, cieńsze ogniwa →
+  r4 własne wierzchołki drobnych części i rewersów fleuronów (wygładzone normalne dawały białe plamy). Limit 3 rund wyczerpany.
+- Znane: figura w cieniu lip, front ciemny; nos i łańcuchy odbijają jasne otoczenie mocniej niż bryła (nawinięcie ścian sprawdzone liczbowo — poprawne).
+- pytest celowany (10 plików tests/gis): 122 passed (`logs/pytest-gis-targeted.log`); pełne tests/gis przerwane po 12 % (20 min, bez błędów) — maszyna obciążona.
+- EditMode Win64: 1525 / 1412 passed / 0 failed / 113 skipped. C# bez zmian.
+- Wymagany sąsiad do VQA knyszyn: `pwsh scripts/import-region.ps1 -Region knyszyn-w -BuildTarget Win64 -MaterialTier High`.
+- Dowody skopiowane do `C:\Users\matma\Documents\Claude\kamion\artifacts\monuments-s24\` (sbs, renders, view, logs, STATUS).
+- NASTĘPNY KROK (lider): ocena `visual-critic` arkuszy `sbs/r4-king-sheet.jpg` i `sbs/r2-plaza-sheet.jpg`; scalenie:
+  `git merge monuments-s24` → `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn` i `--region tykocin` →
+  `pwsh scripts/import-region.ps1 -Region knyszyn -BuildTarget Win64` (build_all sam dobuduje 4 nowe zestawy tekstur).
