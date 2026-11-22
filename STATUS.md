@@ -20,3 +20,5 @@
 - NASTĘPNY KROK: `tail artifacts/fix-b4-s24/pytest-c.log; cat artifacts/fix-b4-s24/unity.status`
 - krok 8: pierwszy import maczka exit 2 (brak SM_CabInterior_LOD0.fbx poza gitem — skopiowany z main; build_all przebudował PBR 18 min, zmiany art-source cofnięte). Ponowny import + VQA w toku.
 - NASTĘPNY KROK: `cat artifacts/fix-b4-s24/unity.status; tail artifacts/fix-b4-s24/pytest-c.log`
+- krok 9: import maczka Win64 OK, VQA High 64 kamer (vqa-bialystok-maczka-High/); maczka-gate-0326: jezdnia wolna (przed: shot_t0250 brama w poprzek). pytest podzbiór: 112 pass / 3 fail (gate mickiewicza+tykocin — kafle jeszcze nieprzebudowane; determinism C chunk 0_1 — różni się tylko osadzony atlas plot_kit.png: build CLI C czytał/pisał art-source w trakcie build_all z importu Unity i równoległych buildów; commit art-source cofnięty (e8074d088), C do ponownej przebudowy po końcu bw.ps1).
+- NASTĘPNY KROK: po CHAIN END w bw.status: `pwsh -File artifacts/fix-b4-s24/bwc.ps1 -RegionList bialystok-industrial-c` i pytest test_world_roads + test_gate_pose_0326
