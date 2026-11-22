@@ -295,3 +295,60 @@ NASTĘPNY KROK: `Get-Content artifacts/regen-wave-2-s24/chain.status, artifacts/
 - 2026-11-22 03:37: zrobione (50/54): bialystok-industrial-c, bialystok-bojary, bialystok-mickiewicza, bialystok-wygoda, bialystok-krywlany, bialystok-dojlidy, bialystok-porosly, tykocin, bialystok-knyszynska, knyszyn, monki, knyszyn-s, knyszyn-w, bialystok-kleeberga, dk65-01, dk8-s8-jeroniki, monki-e, dk65-03, dk65-02, dk65-04, dk65-06, dk65-05, dk65-07, dk65-08, bialystok-maczka, dk65-09, dk65-10, dk65-11, dk65-monki-01, dk65-monki-03, dk65-monki-02, dk65-monki-04, dk65-monki-05, dk65-monki-06, dw671-tykocin-01, dk65-monki-07, dw671-tykocin-02, dw671-tykocin-05, dw671-tykocin-04, dw671-tykocin-03, dw671-tykocin-06, dw671-tykocin-07, dw671-tykocin-08, dw671-tykocin-09, dw671-jasionowka-01, s8-02, s8-03, s8-01, s8-05, s8-04. Błędy build: bialystok-maczka. Pozostałe: dk8-wasilkow-01, dk8-wasilkow-02, dk8-wasilkow-03, dk8-korycin-01.
 - 2026-11-22 03:51: zrobione (54/54): bialystok-industrial-c, bialystok-bojary, bialystok-mickiewicza, bialystok-wygoda, bialystok-krywlany, bialystok-dojlidy, bialystok-porosly, tykocin, bialystok-knyszynska, knyszyn, monki, knyszyn-s, knyszyn-w, bialystok-kleeberga, dk65-01, dk8-s8-jeroniki, monki-e, dk65-03, dk65-02, dk65-04, dk65-06, dk65-05, dk65-07, dk65-08, bialystok-maczka, dk65-09, dk65-10, dk65-11, dk65-monki-01, dk65-monki-03, dk65-monki-02, dk65-monki-04, dk65-monki-05, dk65-monki-06, dw671-tykocin-01, dk65-monki-07, dw671-tykocin-02, dw671-tykocin-05, dw671-tykocin-04, dw671-tykocin-03, dw671-tykocin-06, dw671-tykocin-07, dw671-tykocin-08, dw671-tykocin-09, dw671-jasionowka-01, s8-02, s8-03, s8-01, s8-05, s8-04, dk8-wasilkow-01, dk8-korycin-01, dk8-wasilkow-03, dk8-wasilkow-02. Błędy build: bialystok-maczka. Pozostałe: .
 - 2026-11-22 03:53: zrobione (54/54): bialystok-industrial-c, bialystok-bojary, bialystok-mickiewicza, bialystok-wygoda, bialystok-krywlany, bialystok-dojlidy, bialystok-porosly, tykocin, bialystok-knyszynska, knyszyn, monki, knyszyn-s, knyszyn-w, bialystok-kleeberga, dk65-01, dk8-s8-jeroniki, monki-e, dk65-03, dk65-02, dk65-04, dk65-06, dk65-05, dk65-07, dk65-08, bialystok-maczka, dk65-09, dk65-10, dk65-11, dk65-monki-01, dk65-monki-03, dk65-monki-02, dk65-monki-04, dk65-monki-05, dk65-monki-06, dw671-tykocin-01, dk65-monki-07, dw671-tykocin-02, dw671-tykocin-05, dw671-tykocin-04, dw671-tykocin-03, dw671-tykocin-06, dw671-tykocin-07, dw671-tykocin-08, dw671-tykocin-09, dw671-jasionowka-01, s8-02, s8-03, s8-01, s8-05, s8-04, dk8-wasilkow-01, dk8-korycin-01, dk8-wasilkow-03, dk8-wasilkow-02. Błędy build: bialystok-maczka. Pozostałe: .
+- 2026-11-22 05:07 FALA 6 GOTOWA, commit danych 261cba69a (origin/regen-wave-6-s24, do scalenia przez lidera; bez ADR 0323-0325). 54/54 kafli build/route/fidelity exit 0 (maczka po redo z poprawką furniture.py 4b... commit fix(streetscape)). route_links/tile_graph/katalog/--check/seams/route_obstacles exit 0 (route_obstacles colliders_total 0; szwy w tabeli podsumowania FAIL 18 / UWAGA 11 / PRZEJŚCIE 17 vs fala 2: 19/13/17).
+- pytest tests/gis: 2871 passed / 4 failed / 6 skipped / 2 xfailed (1:04:09). Zielone teraz: test_road_fidelity::test_report_not_stale, test_route_links_s23::test_links_json_fresh. Czerwone: test_terrain_walls (C steep_grass:verge_grass 5 > ratchet 0, e=1024,2 n=-955,5, od 16e3a5aea), test_water_0210::test_stage_hooks_guarded (test szuka starej linii materiałów wody w build_world.py — kod ADR 0321), test_world_roads::test_junction_seams_are_watertight (C, 5 otwartych szwów, m.in. j:n14130837660) i ::test_mesh_matches_generated_centreline (C, 3,55 m > 0,2) — oba budują świat w fixture (kod, nie dane; w CI pomijane bez heightmapy). Do world-buildera.
+- Kafle fali 6 (sha256 world_manifest.json, 12 zn.; commit 261cba69a):
+  - bialystok-industrial-c 33c5a806002e chain=A 
+  - bialystok-bojary 154bdd20d832 chain=B 
+  - bialystok-mickiewicza 7816c150f70e chain=C 
+  - bialystok-wygoda e5322b7674b9 chain=A 
+  - bialystok-krywlany 674f9225265c chain=B 
+  - bialystok-porosly 38eed43651b3 chain=C 
+  - bialystok-dojlidy 4ec96b358595 chain=A 
+  - bialystok-maczka e63d23935501 chain=R 
+  - bialystok-kleeberga 53ab15f332ea chain=A 
+  - bialystok-knyszynska 73a299102538 chain=C 
+  - tykocin f38efc7daa15 chain=B 
+  - knyszyn 256295a20c6d chain=B 
+  - monki ca4a1e652d3a chain=C 
+  - knyszyn-s 5edbeb4471c1 chain=B 
+  - knyszyn-w 6eeff24a15fe chain=C 
+  - monki-e 662cae01becb chain=B 
+  - dk8-s8-jeroniki 019fa8cc6345 chain=C 
+  - dk65-01 d4d2087b4a3e chain=A 
+  - dk65-02 48e06821d895 chain=A 
+  - dk65-03 b334beb01121 chain=C 
+  - dk65-04 378324e02beb chain=B 
+  - dk65-05 5638deac70bb chain=C 
+  - dk65-06 78d3fb502105 chain=A 
+  - dk65-07 8e1b7332d0c7 chain=B 
+  - dk65-08 ec1684e51206 chain=A 
+  - dk65-09 55d19e97d8d0 chain=C 
+  - dk65-10 fe2f1964ade6 chain=B 
+  - dk65-11 1e807a013df9 chain=A 
+  - dk65-monki-01 eeaf3b8cf51f chain=C 
+  - dk65-monki-02 7c3f88ae3c06 chain=B 
+  - dk65-monki-03 ba2310e279b8 chain=A 
+  - dk65-monki-04 57ad225015a6 chain=C 
+  - dk65-monki-05 b63f7b19f8c6 chain=A 
+  - dk65-monki-06 923a47696784 chain=B 
+  - dk65-monki-07 62a9ceae6b60 chain=C 
+  - dw671-tykocin-01 2b395b86072b chain=A 
+  - dw671-tykocin-02 48ae8dbb8c56 chain=B 
+  - dw671-tykocin-03 6e4f5b088bdd chain=A 
+  - dw671-tykocin-04 831a7b0548eb chain=C 
+  - dw671-tykocin-05 6be33294cf7d chain=B 
+  - dw671-tykocin-06 73a61813914c chain=B 
+  - dw671-tykocin-07 780681762a3f chain=C 
+  - dw671-tykocin-08 6cec43da7c3a chain=A 
+  - dw671-tykocin-09 c92dea81a5bd chain=B 
+  - dw671-jasionowka-01 dedd7916b0d4 chain=C 
+  - s8-01 d55470f9353f chain=A 
+  - s8-02 2be0493ba3be chain=B 
+  - s8-03 b0126e6a033b chain=C 
+  - s8-04 3166865c1c09 chain=B 
+  - s8-05 8e9704c3e696 chain=C 
+  - dk8-wasilkow-01 95cfed0d116d chain=A 
+  - dk8-wasilkow-02 3aade3315d3c chain=C 
+  - dk8-wasilkow-03 2d43829ff2d7 chain=B 
+  - dk8-korycin-01 fa3ea8838a8b chain=A 
