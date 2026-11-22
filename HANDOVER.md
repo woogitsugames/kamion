@@ -529,6 +529,7 @@ aw\derived\<kafel> /MIR` dla każdego przebudowanego kafla; przed reimportem spr
 - 22.11 01:2x (s24) :17 — 4 agentów wznowionych po limicie pracuje.
 - 22.11 :xx (s24) **Scalony monuments-s24 (ADR 0325)**: figura Zygmunta Augusta (2380 tris, kryza/korona/łańcuchy/płaszcz bez rąk — jak rzeźba; twarz toporna, w cieniu ciemna), bruk Placu Czarnieckiego: granit w romby z czerwonymi pasami (krata 2,255 m / 53,75° z ortofoto), tekstury +16,6 MB High; EditMode 1412/0. Kafle NIE synchronizowane (fala 6 przebudowuje bez tego kodu → knyszyn/tykocin do przebudowy po fali). Do usunięcia ręcznie: C:\artifacts\monuments-s24 (rendery Blendera poza repo, blokada zabezpieczeń). Pozostali: regen-wave-6, road-surface, banks-verges.
 - 22.11 :17 (s24) — 3 agentów w toku (fala 6/build #4, road-surface, banks-verges).
+- 22.11 :17 (~06:37): C: 518 GB, RAM 48 GB, Unity 0. Fala 6: build #4 zbudowany (artifacts/full-build-4-s24: exe, runs, video), agent kończy przejazd/raport. Brak gałęzi do scalenia.
 - 22.11 :17 (~05:20): C: 519 GB, RAM 47 GB, Unity 0, działa Kamion.exe (fala 6: przejazd/pomiar buildu #4). Agentów 1, brak gałęzi do scalenia.
 - 22.11 :17 (~04:20): C: 545 GB, RAM 42 GB, 1× Unity. Fala 6: łańcuchy kafli skończone (55 wpisów, ostatni dk8-wasilkow-02 exit 0) → import/build #4. Agentów 1, brak gałęzi do scalenia.
 - 22.11 :17 (~03:40): C: 532 GB, RAM wolne 40 GB, 1× Unity. Fala 6 przebudowuje kafle S8 (łańcuchy A/B/C, exit 0), potem build #4. Agentów: 1 (oszczędnie, tydzień 73 %). Brak gałęzi do scalenia.
