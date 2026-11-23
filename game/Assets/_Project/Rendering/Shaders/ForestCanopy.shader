@@ -8,7 +8,7 @@
 // How: the same BRDF as URP Lit for a dielectric (metallic 0, specular highlights and environment reflections on, so the
 // image matches the Lit material it replaces) with the terms that vary slowly over the smooth crown shell moved to the
 // vertex: SH ambient (as URP's per-vertex SH mode), the glossy environment fetch at roughness 0.95 (mip ~6 of the sky
-// cube: nearly constant over a crown) and Unity fog (URP Lit computes its fog factor per vertex too). Per pixel: albedo,
+// cube: nearly constant over a crown) and the fog optical depth (KamionFogTau, per vertex like URP Lit's fog factor; ADR 0332). Per pixel: albedo,
 // Lambert + the GGX lobe of the sun, the Fresnel weight of the environment term. No realtime shadow (the HLOD is always
 // past the shadow fade: forestHlodM 70 m > shadowDistance 35 / 60 m) and no additional lights (street lamps are emission
 // only at the HLOD distance on Low; ADR 0113 notes).
@@ -44,9 +44,9 @@ Shader "Kamion/Forest Canopy"
             #pragma target 3.0
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile_fog
             #pragma multi_compile_instancing
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // terrain fog (haze-s24, ADR 0332)
             struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct V
             {
@@ -55,7 +55,7 @@ Shader "Kamion/Forest Canopy"
                 float3 positionWS : TEXCOORD1;
                 half3 normalWS : TEXCOORD2;
                 half3 ambient : TEXCOORD3;       // SH(n) (URP bakedGI)
-                half4 envFog : TEXCOORD4;        // rgb glossy environment radiance, a fog factor
+                half4 envFog : TEXCOORD4;        // rgb glossy environment radiance, a KamionFogTau (optical depth)
                 UNITY_VERTEX_OUTPUT_STEREO
             };
             V vert(A v)
@@ -72,7 +72,9 @@ Shader "Kamion/Forest Canopy"
                 half3 vd = (half3)GetWorldSpaceNormalizeViewDir(o.positionWS);
                 half3 r = reflect(-vd, n);
                 o.envFog.rgb = GlossyEnvironmentReflection(r, 1.0h - _Smoothness, 1.0h);
-                o.envFog.a = ComputeFogFactor(o.positionCS.z);
+                // haze-s24 (ADR 0332): the terrain's aerial perspective (Koschmieder + ground haze layer) instead of
+                // Unity exponential fog, which lacks the layer: distant forest was darker than the field behind it.
+                o.envFog.a = KamionFogTau(o.positionWS, o.positionCS.w);
                 return o;
             }
             half4 frag(V i) : SV_Target
@@ -106,7 +108,7 @@ Shader "Kamion/Forest Canopy"
                 specTerm = clamp(specTerm - HALF_MIN, 0.0, 1000.0);
             #endif
                 color += (diffuse + specular * specTerm) * (L.color * (L.distanceAttenuation * NdotL));
-                color = MixFog(color, i.envFog.a);
+                color = KamionMixFog(color, i.envFog.a);
                 return half4(color, 1.0h);
             }
             ENDHLSL
