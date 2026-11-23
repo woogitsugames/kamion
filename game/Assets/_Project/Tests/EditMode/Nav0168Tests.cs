@@ -274,6 +274,8 @@ namespace Game.Tests
             foreach (var l in on) StringAssert.StartsWith("NAVVOICE t=", l);
             Assert.IsFalse(on.Exists(l => l.Contains("B14#")), "no double na rondzie (ADR 0329)");
             Assert.IsTrue(on.Exists(l => l.Contains("B07#2") && l.Contains("ring=\"Rondo Krzysztofa Jakuba Putry")), string.Join("\n", on));
+            // ADR 0329 addendum: the ring name follows "Na rondzie zjedz ..." as its own nominative sentence (B15 #1 "Rondo Putry.").
+            Assert.IsTrue(on.Exists(l => l.Contains("B07#2,B15#1")), string.Join("\n", on));
             Assert.IsEmpty(Drive(false));
         }
 

@@ -62,12 +62,15 @@ TAKE_OVERRIDES = {
     "GPS_B12_07": ("GPS_B12_07 (2).mp3", "IKva5MZdRWmcDh08Khhu", 0, 1),
     "GPS_B12_08": ("GPS_B12_08 (2).mp3", "5m7piXRxu5cupugTUwY3", 0, 1),
     "GPS_B12_09": ("GPS_B12_09 (2).mp3", "tTPFsHn6QG4PJtN1P7iV", 0, 1),
+    # B15 (ADR 0329 addendum): ring names in the nominative, two single-sentence takes, voice Kamion GPS, eleven_multilingual_v2
+    "GPS_B15_01": ("GPS_B15_01 (1).mp3", "zu1PKMApKUX6yqBbZket", 0, 1),
+    "GPS_B15_02": ("GPS_B15_02 (1).mp3", "nZI6TQI6g5gkDrDd5yUb", 0, 1),
 }
 
 DEMO_GAP_S = 0.08   # = NavVoicePlayer.ClipGapS
 DEMOS = [
     ("demo1_300m_prawo_andersa", ["GPS_B04_01", "GPS_B12_01"]),
-    ("demo2_200m_rondo_2zjazd_putry", ["GPS_B03_08", "GPS_B07_02", "GPS_B14_01"]),
+    ("demo2_200m_rondo_2zjazd_putry", ["GPS_B03_08", "GPS_B07_02", "GPS_B15_01"]),
     ("demo3_teraz_lewo_nastepnie_prawo_pas", ["GPS_B01_02", "GPS_B08_01", "GPS_B09_01"]),
     ("demo4_1km_prawo_wilenska", ["GPS_B06_01", "GPS_B12_10"]),
     ("demo5_500m_lewo_cel", ["GPS_B05_02", "GPS_B13_05", "GPS_B08_07"]),
@@ -111,6 +114,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--raw", default=str(MAIN_RAW))
     ap.add_argument("--demo")
+    ap.add_argument("--only", type=int, nargs="*", help="process only these blocks and merge them into the existing manifest")
     a = ap.parse_args()
     raw = Path(a.raw)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -124,8 +128,13 @@ def main() -> int:
 
     clips, errors = [], []
     for b in sorted(PACK):
-        fname, gen = TAKES[b]
-        x, segs = segments(fname)
+        if a.only and b not in a.only:
+            continue
+        if b in TAKES:
+            fname, gen = TAKES[b]
+            x, segs = segments(fname)
+        else:   # every clip of the block comes from TAKE_OVERRIDES
+            fname, gen, x, segs = None, None, None, [None] * len(PACK[b])
         if len(segs) != len(PACK[b]):
             errors.append(f"B{b:02d}: {len(segs)} segments, want {len(PACK[b])}")
             continue
@@ -163,6 +172,10 @@ def main() -> int:
             })
     if errors:
         print("ERRORS:\n  " + "\n  ".join(errors))
+    if a.only:
+        old = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        keep = [c for c in old["clips"] if c["block"] not in a.only]
+        clips = sorted(keep + clips, key=lambda c: (c["block"], c["index"]))
     manifest = {
         "generator": "tools/audio/gps/process_pack.py (ADR 0328)", "pack": "docs/owner/ELEVENLABS-GPS-VOICE.md",
         "voice": VOICE, "target_lufs": TARGET_LUFS, "peak_ceiling_dbfs": PEAK_CEIL_DBFS, "sample_rate": SR,
