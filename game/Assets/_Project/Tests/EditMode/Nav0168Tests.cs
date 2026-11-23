@@ -272,7 +272,7 @@ namespace Game.Tests
             var on = Drive(true);
             Assert.IsNotEmpty(on);
             foreach (var l in on) StringAssert.StartsWith("NAVVOICE t=", l);
-            Assert.IsFalse(on.Exists(l => l.Contains("B14#")), "no double "na rondzie" (ADR 0329)");
+            Assert.IsFalse(on.Exists(l => l.Contains("B14#")), "no double na rondzie (ADR 0329)");
             Assert.IsTrue(on.Exists(l => l.Contains("B07#2") && l.Contains("ring=\"Rondo Krzysztofa Jakuba Putry")), string.Join("\n", on));
             Assert.IsEmpty(Drive(false));
         }
