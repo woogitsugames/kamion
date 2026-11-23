@@ -2620,6 +2620,9 @@ def guardrails(lin, net, zground, report):
         br = c.bridge[c.idx(ss)]
         # ADR 0159: bridge_style `barrier: dark_rails` - painted deck barrier with rails under the W-beam
         dark_style = bridge_style(c).get("barrier") == "dark_rails"
+        # ADR 0330: bridge_style `barrier: wbeam` - a plain W-beam on posts on the deck, no upper box beam (Tykocin DW671
+        # truss bridge: Commons "Tykocin Most drogowy 08 / 09", single W-beam at the truss line)
+        wbeam_style = bridge_style(c).get("barrier") == "wbeam"
         for side, sgn in (("L", 1.0), ("R", -1.0)):
             prm = [side_params(c, side, s) for s in ss]
             kinds = np.array([p[0] for p in prm])
@@ -2767,6 +2770,9 @@ def guardrails(lin, net, zground, report):
                     P = c.line.offset_point(ss[sl], sgn * o_)
                     tall = (want[sl] == 1) & ~gnd[sl]
                     dn = gnd[sl].copy()
+                    if wbeam_style:              # ADR 0330: deck rail as a ground W-beam, posts at the deck spacing
+                        dn |= tall
+                        tall = np.zeros_like(tall)
                     dk = tall & dark_style
                     if sgn > 0:                          # beam faces the road: road is on the right of travel
                         P, z_, tall, dn, dk = P[::-1], z_[::-1], tall[::-1], dn[::-1], dk[::-1]
