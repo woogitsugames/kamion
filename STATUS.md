@@ -38,3 +38,4 @@
 - krok 1-4 (kod, NIE uruchomione w Unity): ducking (AudioMixLevels.VoiceDuck01/DuckGain, NavVoicePlayer 150/400 ms, TruckAudioController mnoży engine/ambient), wyłącznik (PcVolumeSettings.gpsVoice, panel Audio, AudioMixLevels.GpsVoice), "Jesteś u celu" tylko w paśmie now i samo (PlanBand), B14 pominięte (podwójne "na rondzie"). Testy dopisane: Nav0168Tests (EditMode) + tools/nav-runner NavVoiceTests (Arrive, brak B14).
 - NASTĘPNY KROK: test ducking/wyłącznika w NavVoicePlayer0328Tests, potem `dotnet test tools/nav-runner` i `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` (w tle), ADR 0329.
 - nav-runner: 20/20 zielone (Sim.csproj wyklucza NavVoicePlayer/Bank). NASTEPNY KROK: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 (w tle), ADR 0329.
+- EditMode 1393 pass / 0 fail / 142 skip. ADR 0329 napisany. GOTOWE do przeglądu lidera.
