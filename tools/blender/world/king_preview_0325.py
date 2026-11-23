@@ -133,3 +133,8 @@ shot("back", (1.5, -6.0, 1.6), (0, 0, 2.45), 40)
 shot("head", (0.0, 4.5, 1.7), (0, 0.03, 3.72), 16, (1000, 1000))
 shot("head_34", (2.6, 3.7, 1.7), (0, 0.03, 3.72), 16, (1000, 1000))
 shot("square", (2.0, 25.0, 2.5), (0, 0, 2.6), 30, (1280, 720))
+# ADR 0331 (monument2-s24): close views of the face, from below like the Commons close-up (H. Borawski) and in profile
+if "--face" in sys.argv:
+    shot("face_close", (0.25, 2.3, 2.6), (0, 0.06, 3.80), 13, (900, 1000))
+    shot("face_34", (1.7, 1.9, 2.6), (0, 0.06, 3.80), 13, (900, 1000))
+    shot("face_side", (-2.8, 0.15, 2.9), (0, 0.04, 3.80), 13, (900, 1000))
