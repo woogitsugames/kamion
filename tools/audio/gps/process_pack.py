@@ -70,7 +70,7 @@ TAKE_OVERRIDES = {
 DEMO_GAP_S = 0.08   # = NavVoicePlayer.ClipGapS
 DEMOS = [
     ("demo1_300m_prawo_andersa", ["GPS_B04_01", "GPS_B12_01"]),
-    ("demo2_200m_rondo_2zjazd_putry", ["GPS_B03_08", "GPS_B07_02", "GPS_B14_01"]),
+    ("demo2_200m_rondo_2zjazd_putry", ["GPS_B03_08", "GPS_B07_02", "GPS_B15_01"]),
     ("demo3_teraz_lewo_nastepnie_prawo_pas", ["GPS_B01_02", "GPS_B08_01", "GPS_B09_01"]),
     ("demo4_1km_prawo_wilenska", ["GPS_B06_01", "GPS_B12_10"]),
     ("demo5_500m_lewo_cel", ["GPS_B05_02", "GPS_B13_05", "GPS_B08_07"]),
