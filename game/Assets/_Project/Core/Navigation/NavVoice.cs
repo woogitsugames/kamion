@@ -111,6 +111,15 @@ namespace Game.Core.Navigation
             return new VoiceClip(0, 0);
         }
 
+        /// <summary>Roundabout-name clip in the nominative (B15 "Rondo Putry.", ADR 0329 addendum), said after B07 "Na rondzie zjedź ..."
+        /// without a second "na rondzie"; (0,0) when the ring is not one of the named roundabouts of the region.</summary>
+        public static VoiceClip RoundaboutNominativeClip(string ringName)
+        {
+            if (ringName != null && ringName.StartsWith("Rondo Krzysztofa Jakuba Putry", System.StringComparison.Ordinal)) return new VoiceClip(15, 1);
+            if (ringName != null && ringName.StartsWith("Rondo Pamięci Bieżeństwa", System.StringComparison.Ordinal)) return new VoiceClip(15, 2);
+            return new VoiceClip(0, 0);
+        }
+
         /// <summary>B07 clip for a roundabout manoeuvre: #1..#5 = N-th exit, #6 = turn round on the roundabout, #7 = straight through.</summary>
         public static VoiceClip RoundaboutExitClip(float turnDeg, byte exit)
         {
@@ -201,8 +210,13 @@ namespace Game.Core.Navigation
                 if (m == Maneuver.Roundabout && n < buf.Length)
                 {
                     buf[n++] = RoundaboutExitClip(p.ManTurn[gd.Next], gd.NextExit);
-                    // The ring name (B14 "na rondzie Putry.") is NOT added (ADR 0329): it follows "Na rondzie zjedz ..." (B07) and says
-                    // "na rondzie" twice. Needs a nominative clip ("Rondo Putry.") - see RoundaboutNameClip, kept for it.
+                    // The ring name goes in the nominative (B15 "Rondo Putry."), a separate sentence after B07 "Na rondzie zjedz ...":
+                    // B14 "na rondzie Putry." would say "na rondzie" twice (ADR 0329). Only in the manoeuvre bands where B07 is spoken.
+                    if (n < buf.Length)
+                    {
+                        VoiceClip rc = RoundaboutNominativeClip(RingName(g, p, gd.Next));
+                        if (rc.Block != 0) buf[n++] = rc;
+                    }
                 }
             }
             if (n < buf.Length)

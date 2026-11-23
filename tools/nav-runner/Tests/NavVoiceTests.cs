@@ -48,6 +48,10 @@ namespace NavRunner.Tests
             Assert.Equal(new VoiceClip(0, 0), NavVoice.StreetClip("coś nie z packa"));
             Assert.Equal(new VoiceClip(14, 1), NavVoice.RoundaboutNameClip("Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"));
             Assert.Equal(new VoiceClip(14, 2), NavVoice.RoundaboutNameClip("Rondo Pamięci Bieżeństwa 1915 roku"));
+            Assert.Equal(new VoiceClip(15, 1), NavVoice.RoundaboutNominativeClip("Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"));
+            Assert.Equal(new VoiceClip(15, 2), NavVoice.RoundaboutNominativeClip("Rondo Pamięci Bieżeństwa 1915 roku"));
+            Assert.Equal(new VoiceClip(0, 0), NavVoice.RoundaboutNominativeClip("Rondo Radosława"));
+            Assert.Equal(new VoiceClip(0, 0), NavVoice.RoundaboutNominativeClip(null));
             Assert.Equal(new VoiceClip(7, 4), NavVoice.RoundaboutExitClip(-100f, 4));
             Assert.Equal(new VoiceClip(7, 6), NavVoice.RoundaboutExitClip(-178f, 4));   // turn round on the roundabout
             Assert.Equal(new VoiceClip(8, 7), NavVoice.ThenClip(Maneuver.Arrive));
@@ -137,7 +141,8 @@ namespace NavRunner.Tests
             var queue = new NavVoiceQueue();
             var gd = new NavGuidance();
             float speed = 50f / 3.6f;
-            bool sawB07_2 = false, sawB14 = false;
+            bool sawB07_2 = false, sawB14 = false, sawB15_1 = false, b15AfterB07 = false;
+            VoiceClip prev = default;
             for (int i = 0; i < p.Count; i++)
             {
                 Vector2 pos = p.Points[i];
@@ -150,9 +155,13 @@ namespace NavRunner.Tests
                 {
                     if (c == new VoiceClip(7, 2)) sawB07_2 = true;    // "Na rondzie zjedź drugim zjazdem"
                     if (c.Block == 14) sawB14 = true;   // "na rondzie Putry" - would repeat "na rondzie" (ADR 0329)
+                    if (c == new VoiceClip(15, 1)) { sawB15_1 = true; if (prev == new VoiceClip(7, 2)) b15AfterB07 = true; }   // "Rondo Putry." (nominative)
+                    prev = c;
                 }
             }
             Assert.True(sawB07_2, "B07 #2 (second exit) announced");
+            Assert.True(sawB15_1, "B15 #1 (Rondo Putry, nominative) announced");
+            Assert.True(b15AfterB07, "B15 #1 directly after B07 #2 (Na rondzie zjedz drugim zjazdem. Rondo Putry.)");
             Assert.False(sawB14, "B14 (na rondzie X) is not announced after B07 (Na rondzie zjedz ...): double na rondzie, ADR 0329");
         }
 
@@ -185,6 +194,7 @@ namespace NavRunner.Tests
             Assert.NotEmpty(on);
             Assert.All(on, l => Assert.StartsWith("NAVVOICE t=", l));
             Assert.DoesNotContain(on, l => l.Contains("B14#"));
+            Assert.Contains(on, l => l.Contains("B07#2,B15#1"));   // ADR 0329 addendum: nominative ring name after the exit sentence
             Assert.Contains(on, l => l.Contains("B07#2") && l.Contains("ring=\"Rondo Krzysztofa Jakuba Putry"));
             Assert.Empty(Drive(false));   // flag off: Spoken still fires, but nothing is logged
         }

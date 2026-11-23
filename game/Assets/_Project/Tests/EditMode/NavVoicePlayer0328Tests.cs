@@ -59,14 +59,16 @@ namespace Game.Tests
             foreach (var n in Streets) { var c = NavVoice.StreetClip(n); Assert.AreNotEqual(0, c.Block, n); s.Add(c); }
             s.Add(NavVoice.RoundaboutNameClip("Rondo Krzysztofa Jakuba Putry"));
             s.Add(NavVoice.RoundaboutNameClip("Rondo Pamięci Bieżeństwa"));
+            s.Add(NavVoice.RoundaboutNominativeClip("Rondo Krzysztofa Jakuba Putry"));
+            s.Add(NavVoice.RoundaboutNominativeClip("Rondo Pamięci Bieżeństwa"));
             return s;
         }
 
         [Test]
-        public void Orderable_Keys_Count_Is_96()
+        public void Orderable_Keys_Count_Is_98()
         {
-            // B01..B05 x 8, B06 x 10, B07 x 7, B08 x 7, B09 x 5, B10 #5 #11, B12 x 12, B13 x 11, B14 x 2 (tools/audio/gps/pack.py)
-            Assert.AreEqual(96, OrderableKeys().Count);
+            // B01..B05 x 8, B06 x 10, B07 x 7, B08 x 7, B09 x 5, B10 #5 #11, B12 x 12, B13 x 11, B14 x 2, B15 x 2 (tools/audio/gps/pack.py)
+            Assert.AreEqual(98, OrderableKeys().Count);
         }
 
         [Test]
