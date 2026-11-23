@@ -27,6 +27,7 @@ namespace Game.Gameplay
             // ADR 0307 (D91): road limits are compared with the real mass of the combination (tractor + trailer + cargo)
             nav.WeightKgSource = () => vehicle.Model != null ? vehicle.Model.TotalMass : RoutePlanner.TruckMaxWeightCt * 10.0;
             hud.Nav = nav;
+            NavVoicePlayer.Install(host, nav.Voice);   // ADR 0328: GPS voice "Kamion GPS" (silent + warning without the bank)
             var screens = vehicle.GetComponent<CabScreens>();
             NavStreamFollower.Install(host, nav, screens, vehicle.transform);   // ADR 0300: GPS follows the streamed tile
             if (!nav.Ready) return nav;
