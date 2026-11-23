@@ -103,6 +103,7 @@ namespace Game.Tests
             Assert.IsTrue(GpsVoiceImporter.Import());
             var bank = AssetDatabase.LoadAssetAtPath<NavVoiceBank>(GpsVoiceImporter.BankPath);
             Assert.IsNotNull(bank);
+            Assert.IsNotNull(MonoScript.FromScriptableObject(bank), "NavVoiceBank must live in NavVoiceBank.cs (player serialisation)");
             bank.Build();
             foreach (var k in OrderableKeys())
             {
