@@ -201,9 +201,9 @@ Shader "Kamion/Sky"
                     // fog colour (that ramp erased every cloud shape in the lowest 10 deg: a featureless grey "fog wall").
                     // Beer-Lambert with the terrain's own Koschmieder beta (_KamionHaze.x) over the slant path through a
                     // ground haze veil of height kCloudVeilM: T = exp(-beta * h / sin(el)). The photograph already holds
-                    // the haze of its capture day, so only this residual veil is added (WORKING_VALUE 150 m: clouds keep
+                    // the haze of its capture day, so only this residual veil is added (WORKING_VALUE 300 m: clouds keep
                     // their shape down to ~2 deg, the last ~1 deg melts into the horizon colour of the terrain fog).
-                    const float kCloudVeilM = 150.0;
+                    const float kCloudVeilM = 300.0;
                     float cloudT = exp(-_KamionHaze.x * kCloudVeilM / max(d.y, 1e-3));
                     float3 cloud = lerp(_SkyFogColor.rgb, cloudY.xxx, cloudT);
                     sky = lerp(sky, cloud, clearCloud.x * (1.0 - _SkyMisc.x));
