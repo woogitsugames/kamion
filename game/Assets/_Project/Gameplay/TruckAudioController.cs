@@ -286,14 +286,18 @@ namespace Game.Gameplay
             Debug.Log($"[AUDIO] engine source switched to {m_Engine.Source}");
         }
 
-        /// <summary>Player channel volumes (ADR 0270 settings, <see cref="AudioMixLevels"/>): one int compare per frame.</summary>
+        /// <summary>Player channel volumes (ADR 0270 settings, <see cref="AudioMixLevels"/>) times the GPS voice ducking (ADR 0329):
+        /// two compares per frame, gains are written only when the mix version or the duck changed.</summary>
         void ApplyMixLevelsIfChanged()
         {
-            if (m_MixVersion == AudioMixLevels.Version) return;
+            float duck = AudioMixLevels.DuckGain;
+            if (m_MixVersion == AudioMixLevels.Version && Mathf.Approximately(duck, m_AppliedDuck)) return;
             m_MixVersion = AudioMixLevels.Version;
-            m_Engine.ChannelGain = AudioMixLevels.Engine;
-            if (m_Ambient != null) m_Ambient.ChannelGain = AudioMixLevels.Ambient;
+            m_AppliedDuck = duck;
+            m_Engine.ChannelGain = AudioMixLevels.Engine * duck;
+            if (m_Ambient != null) m_Ambient.ChannelGain = AudioMixLevels.Ambient * duck;
         }
+        float m_AppliedDuck = 1f;
 
         AudioSource Source(string name, AudioClip clip, bool loop, Vector3 local, int priority)
         {

@@ -20,6 +20,7 @@ namespace Game.UI.Settings
         public const string SectionInterface = "INTERFEJS";
         public const string SectionHud = "HUD NA MONITORZE";
         public const string SectionAudio = "GŁOŚNOŚĆ";
+        public const string SectionNavigation = "NAWIGACJA";
         public const string SectionControls = "STEROWANIE";
         public const string SectionMirrorWindows = "OKIENKA LUSTEREK";
         public const string SectionMirrorAdjust = "REGULACJA LUSTEREK";
@@ -43,6 +44,9 @@ namespace Game.UI.Settings
         public const string VolumeEngine = "Silnik";
         public const string VolumeAmbient = "Otoczenie";
         public const string VolumeUi = "Sygnały kabiny";
+        public static readonly string[] OffOnMasc = { "wyłączony", "włączony" };
+        public const string GpsVoice = "Głos nawigacji GPS";
+        public const string GpsVoiceNote = "Zapowiedzi skrętów mówione przez nawigację. Podczas komunikatu silnik i otoczenie są ściszane.";
 
         // ---- gameplay / HUD
         public const string HudDetail = "Szczegóły HUD";

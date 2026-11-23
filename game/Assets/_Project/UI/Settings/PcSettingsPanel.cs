@@ -405,6 +405,10 @@ namespace Game.UI.Settings
             VolumeRow(c, ref y, T.VolumeEngine, () => Pending.volumes.engine, v => Pending.volumes.engine = v);
             VolumeRow(c, ref y, T.VolumeAmbient, () => Pending.volumes.ambient, v => Pending.volumes.ambient = v);
             VolumeRow(c, ref y, T.VolumeUi, () => Pending.volumes.ui, v => Pending.volumes.ui = v);
+            y += 18f;
+            Header(c, T.SectionNavigation, ref y);
+            Segments(c, ref y, T.GpsVoice, T.OffOnMasc, () => Pending.volumes.gpsVoice ? 1 : 0, i => Pending.volumes.gpsVoice = i == 1);
+            Note(c, ref y, T.GpsVoiceNote);
         }
 
         void BuildGameplay(ref float y)

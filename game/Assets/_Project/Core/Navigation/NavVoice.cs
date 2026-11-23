@@ -177,6 +177,15 @@ namespace Game.Core.Navigation
             int n = 0;
             if (buf == null || buf.Length == 0 || g == null || p == null || gd.Next < 0 || gd.Next >= p.ManCount) return 0;
             Maneuver m = p.ManType[gd.Next];
+            // Arrival (ADR 0329): the pack has no "za X metrow cel" sentence, so "Jestes u celu" is said only AT the destination
+            // (the now band) - never in a far / near announcement (it used to be said 500 m before the end) - and alone: a street
+            // suffix, "a nastepnie" or lane guidance after it make no sense.
+            if (m == Maneuver.Arrive)
+            {
+                if (band != NowBand) return 0;
+                buf[0] = new VoiceClip(10, 11);
+                return 1;
+            }
             if (band >= 0 && n < buf.Length)
             {
                 byte blk = BandBlock[band];
@@ -187,16 +196,13 @@ namespace Game.Core.Navigation
                     if (idx == 0) { blk = 5; idx = ManIndex(m); }   // no km variant (sharp / U-turn): fall back to the 500 m block
                 }
                 else idx = ManIndex(m);
-                if (m == Maneuver.Arrive) { buf[n++] = new VoiceClip(10, 11); }
-                else if (m == Maneuver.Continue) { buf[n++] = new VoiceClip(10, 5); }
+                if (m == Maneuver.Continue) { buf[n++] = new VoiceClip(10, 5); }
                 else if (idx > 0) buf[n++] = new VoiceClip(blk, (byte)idx);
                 if (m == Maneuver.Roundabout && n < buf.Length)
                 {
                     buf[n++] = RoundaboutExitClip(p.ManTurn[gd.Next], gd.NextExit);
-                    // ManName of a roundabout manoeuvre is the exit street; the ring's name is on the first NAMED path
-                    // segment from the manoeuvre point (the entry link at the point itself may be unnamed in the graph).
-                    VoiceClip rc = RoundaboutNameClip(RingName(g, p, gd.Next));
-                    if (rc.Block != 0 && n < buf.Length) buf[n++] = rc;
+                    // The ring name (B14 "na rondzie Putry.") is NOT added (ADR 0329): it follows "Na rondzie zjedz ..." (B07) and says
+                    // "na rondzie" twice. Needs a nominative clip ("Rondo Putry.") - see RoundaboutNameClip, kept for it.
                 }
             }
             if (n < buf.Length)

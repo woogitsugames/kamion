@@ -79,6 +79,8 @@ namespace Game.Core.Settings
         public float engine = 1f;
         public float ambient = 1f;
         public float ui = 1f;
+        /// <summary>GPS voice ("Kamion GPS", ADR 0328) on / off. A field missing in an older file keeps true (schema 1 unchanged).</summary>
+        public bool gpsVoice = true;
 
         public PcVolumeSettings Clone() => (PcVolumeSettings)MemberwiseClone();
     }
@@ -130,7 +132,7 @@ namespace Game.Core.Settings
             return (display ?? new PcDisplaySettings()).SameAs(o.display ?? new PcDisplaySettings()) && vsync == o.vsync && fpsCap == o.fpsCap &&
                    graphicsTier == o.graphicsTier && Mathf.Approximately(hudScale, o.hudScale) && speedUnits == o.speedUnits &&
                    Mathf.Approximately(a.master, b.master) && Mathf.Approximately(a.engine, b.engine) &&
-                   Mathf.Approximately(a.ambient, b.ambient) && Mathf.Approximately(a.ui, b.ui);
+                   Mathf.Approximately(a.ambient, b.ambient) && Mathf.Approximately(a.ui, b.ui) && a.gpsVoice == b.gpsVoice;
         }
 
         public static bool IsAllowedFpsCap(int cap) => Array.IndexOf(FpsCaps, cap) >= 0;

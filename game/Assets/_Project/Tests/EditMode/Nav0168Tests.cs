@@ -272,8 +272,49 @@ namespace Game.Tests
             var on = Drive(true);
             Assert.IsNotEmpty(on);
             foreach (var l in on) StringAssert.StartsWith("NAVVOICE t=", l);
-            Assert.IsTrue(on.Exists(l => l.Contains("B07#2") && l.Contains("B14#1") && l.Contains("ring=\"Rondo Krzysztofa Jakuba Putry")), string.Join("\n", on));
+            Assert.IsFalse(on.Exists(l => l.Contains("B14#")), "no double "na rondzie" (ADR 0329)");
+            Assert.IsTrue(on.Exists(l => l.Contains("B07#2") && l.Contains("ring=\"Rondo Krzysztofa Jakuba Putry")), string.Join("\n", on));
             Assert.IsEmpty(Drive(false));
+        }
+
+        [Test]
+        public void Arrive_IsSpokenOnlyAtTheDestination_AndAlone()
+        {
+            // ADR 0329: the pack has no "za X metrow cel" - "Jestes u celu" (B10 #11) only in the now band, as the only clip.
+            var g = RouteGraph.Load(Region);
+            var p = RoutePath.For(g);
+            Assert.AreEqual(PlanStatus.Ok, new RoutePlanner(g).Plan(new Vector2(-225.64f, -239.35f), float.NaN, new Vector2(-205.02f, -854.88f), p));
+            int last = p.ManCount - 1;
+            Assert.AreEqual(Maneuver.Arrive, p.ManType[last]);
+            var buf = new VoiceClip[6];
+            var gd = new NavGuidance { Next = last, Then = -1, NextM = 450f, NextLaneCount = 3, NextLanesRec = 1u };
+            for (int band = -1; band < NavVoice.NowBand; band++)
+                Assert.AreEqual(0, NavVoice.PlanBand(g, p, ref gd, band, buf));
+            Assert.AreEqual(1, NavVoice.PlanBand(g, p, ref gd, NavVoice.NowBand, buf));
+            Assert.AreEqual(new VoiceClip(10, 11), buf[0]);
+            // Whole drive at 80 km/h and 50 km/h: B10 #11 is announced at most once, alone, and only within the now distance.
+            foreach (float kmh in new[] { 80f, 50f })
+            {
+                float v = kmh / 3.6f;
+                var ann = new NavVoiceAnnouncer { Spoken = (c, n) => { } };
+                var drv = new NavVoiceDriver(); var q = new NavVoiceQueue(); var tr = new RouteTracker(); var g2 = new NavGuidance();
+                int arrive = 0;
+                for (int i = 0; i < p.Count; i++)
+                {
+                    Vector2 pos = p.Points[i];
+                    Vector2 d = p.Points[System.Math.Min(i + 1, p.Count - 1)] - pos;
+                    float heading = d.sqrMagnitude > 1e-6f ? Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg : 0f;
+                    tr.Update(p, pos, heading, v, 0.1f, ref g2);
+                    int n = drv.Update(g, p, ref g2, v, q);
+                    int cnt = 0; bool has = false;
+                    while (q.TryDequeue(out var c)) { cnt++; if (c == new VoiceClip(10, 11)) has = true; }
+                    if (!has) continue;
+                    arrive++;
+                    Assert.AreEqual(1, cnt);
+                    Assert.IsTrue(g2.NextM <= NavVoiceDriver.NowM(v) + 1f, "B10 #11 only at the destination, NextM=" + g2.NextM);
+                }
+                Assert.AreEqual(1, arrive);
+            }
         }
 
         // ------------------------------------------------------------------ ETA throttling
