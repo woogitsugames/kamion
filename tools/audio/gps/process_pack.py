@@ -5,8 +5,8 @@
 Input: art-source/audio/elevenlabs/gps/raw (gitignored; files "<take> (n).mp3" as downloaded from the owner's ElevenLabs
 account). Batch takes are split per sentence (split_take.py), the sentence count must match pack.py. Clips whose batch take
 was rejected (speech rate check) come from the single-sentence takes in TAKE_OVERRIDES.
-Output: game/Assets/_Project/Audio/ElevenLabs/Clips/gps/GPS_Bxx_ii.wav (44.1 kHz mono PCM16) and
-game/Assets/_Project/Audio/ElevenLabs/gps_manifest.json. Loudness: every clip at TARGET_LUFS (BS.1770 integrated, own
+Output: game/Assets/_Project/Audio/Voice/Gps/GPS_Bxx_ii.wav (44.1 kHz mono PCM16) and
+game/Assets/_Project/Audio/Voice/gps_manifest.json (read by Game.Editor.Audio.GpsVoiceImporter). Loudness: every clip at TARGET_LUFS (BS.1770 integrated, own
 implementation in voice_qa.py); plosive peaks above PEAK_CEIL_DBFS go through a 3 ms look-ahead limiter (gain reduction per clip in the manifest).
 """
 from __future__ import annotations
@@ -28,8 +28,8 @@ from voice_qa import SR, decode, integrated_lufs  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[3]
 MAIN_RAW = Path(r"C:\Users\matma\Documents\Claude\kamion\art-source\audio\elevenlabs\gps\raw")
-OUT_DIR = REPO / "game/Assets/_Project/Audio/ElevenLabs/Clips/gps"
-MANIFEST = REPO / "game/Assets/_Project/Audio/ElevenLabs/gps_manifest.json"
+OUT_DIR = REPO / "game/Assets/_Project/Audio/Voice/Gps"
+MANIFEST = REPO / "game/Assets/_Project/Audio/Voice/gps_manifest.json"
 
 TARGET_LUFS = -16.0      # docs/08 (mobile) + prompt pack; WORKING_VALUE
 PEAK_CEIL_DBFS = -1.0
@@ -155,7 +155,7 @@ def main() -> int:
             out = OUT_DIR / f"{k}.wav"
             sf.write(out, y, SR, subtype="PCM_16")
             clips.append({
-                "key": k, "block": b, "index": idx, "text": text, "file": f"Clips/gps/{k}.wav", "sha256": sha256(out),
+                "key": k, "block": b, "index": idx, "text": text, "file": f"Gps/{k}.wav", "sha256": sha256(out),
                 "duration_s": round(len(y) / SR, 3), "lufs": round(integrated_lufs(y, SR), 2),
                 "peak_dbfs": round(float(20 * np.log10(np.max(np.abs(y)) + 1e-12)), 2), "gain_db": round(gain_db, 2), "limiter_gr_db": round(gr_db, 2),
                 "syllables_per_s": round(rate, 2), "source_take": src, "source_segment": si,
