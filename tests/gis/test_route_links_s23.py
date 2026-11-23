@@ -41,8 +41,27 @@ def test_links_use_generator_cross_sections(measured_session_allowance):
     assert S.GAMEPLAY_LANE_WIDEN_M == S.GAMEPLAY_LANE_WIDEN_DEFAULT_M
 
 
+FRESH_TOL_M = 0.01  # Linux CI vs Windows generator differ by a few mm in lane-path floats (libm); structure must match
+
+
+def _same(a, b, path="$"):
+    if isinstance(a, float) or isinstance(b, float):
+        assert isinstance(a, (int, float)) and isinstance(b, (int, float)) and abs(a - b) <= FRESH_TOL_M, \
+            f"{path}: {a} != {b} - run tools/worldgen/streaming/route_links.py"
+    elif isinstance(a, dict):
+        assert isinstance(b, dict) and a.keys() == b.keys(), f"{path}: keys differ - run tools/worldgen/streaming/route_links.py"
+        for k in a:
+            _same(a[k], b[k], f"{path}.{k}")
+    elif isinstance(a, list):
+        assert isinstance(b, list) and len(a) == len(b), f"{path}: length differs - run tools/worldgen/streaming/route_links.py"
+        for i, (x, y) in enumerate(zip(a, b)):
+            _same(x, y, f"{path}[{i}]")
+    else:
+        assert a == b, f"{path}: {a!r} != {b!r} - run tools/worldgen/streaming/route_links.py"
+
+
 def test_links_json_fresh():
-    assert RL.OUT.read_text(encoding="utf-8") == RL.dumps(RL.build()), "run tools/worldgen/streaming/route_links.py"
+    _same(json.loads(RL.OUT.read_text(encoding="utf-8")), json.loads(RL.dumps(RL.build())))
 
 
 def test_corridor_reaches_tykocin_tile_by_tile():
