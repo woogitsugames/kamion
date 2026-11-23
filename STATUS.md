@@ -1,14 +1,14 @@
-# STATUS haze-s24 (rendering-perf)
-Zadanie: krytyk build #5 pkt 2 — biały pas mgły na horyzoncie -> perspektywa powietrzna zależna od odległości.
-## Kroki
-- [x] worktree utworzony (2026-11-23)
-- [x] diagnoza: Sky.shader tryb fotograficznych chmur (Clear) — chmury w dolnych ~10° (smoothstep(0,0.18,d.y)) gaszone do płaskiego
-      _SkyFogColor (szary ~132 sRGB), chmury nad nim na poziomie display-cap (~196-250) => bezstrukturalny pas, odwrócony gradient.
-      Teren: KamionFogTau (Koschmieder z visibilityKm 20, Clear bez warstwy przyziemnej) — sam w sobie spójny.
-- [x] region knyszyn-w skopiowany z win-build do _Generated/World (poza gitem)
-- [x] baseline visual-qa: artifacts/haze-s24/before/ (High/Low x clear/overcast)
-- [x] Sky.shader: perspektywa powietrzna chmur (beta terenu, welon 150 m); ForestCanopy: KamionFogTau
-- [ ] visual-qa po, EditMode Win64, ADR 0332, raport
+# STATUS haze-s24 (rendering-perf) — GOTOWE do przeglądu lidera (nie scalone)
+Zadanie: krytyk build #5 pkt 2 — biały pas mgły na horyzoncie -> perspektywa powietrzna zależna od odległości. ADR 0332.
+## Zrobione
+- Sky.shader: chmury fotograficzne (Clear) — perspektywa powietrzna T = exp(-beta*300 m/sin el) z beta terenu zamiast
+  rampy 0..10° do płaskiego koloru mgły; krycie gaśnie tylko w ostatnich ~0,7°.
+- KamionAtmosphere.hlsl / WorldAtmosphere.cs: _KamionFarFade — teren dociągany do koloru horyzontu w ostatnich 25 % far clip.
+- ForestCanopy.shader: KamionFogTau + KamionMixFog zamiast mgły Unity.
+- Test EditMode HazeFarFadeTests; EditMode Win64 1396/0 fail (artifacts/haze-s24/editmode-20261124-002629.xml).
+- Visual-qa knyszyn-w High/Low x clear/overcast: artifacts/haze-s24/{before,after150,after300,after2}, arkusze sheet-*-before-after.jpg.
+## Otwarte (dla lidera)
+- URP Lit las HLOD na PC Medium+ nadal z mgłą Unity (bez warstwy przyziemnej i far fade) — propozycja w ADR 0332.
+- Pomiar GPU: UNMEASURED; potwierdzić w buildzie (pc-metrics) i obejrzeć przejazd C->Tykocin (t0950-t1020).
 ## Następny krok
-Puścić `pwsh C:SERSMATMADOCUMENTSCLAUDEKAMIONRTIFACTSHAZE-S24UN-QA.PS1 -TAG AFTER` I PORóWNAć SHEET.PY/CROP.PY.
-`pwsh C:\Users\matma\Documents\Claude\kamion\artifacts\haze-s24\run-qa.ps1 -Tag after`.
+Lider: przegląd + build Windows z regionami i przejazd, potem `pwsh scripts/pc-metrics.ps1 ... -Tier High` vs build #5.
