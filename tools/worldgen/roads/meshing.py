@@ -286,9 +286,25 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
     # split carriageway into ground / bridge parts so bridges are not rasterised into the terrain
     tri_station = np.minimum(T.min(1) // len(q), len(st) - 2)      # station row of each quad
     on_bridge = br[tri_station] | br[np.minimum(tri_station + 1, len(st) - 1)]
-    mat = "collision_asphalt" if coarse else secmat
-    buf.add(layer, mat, V, UV, T[~on_bridge], footprint=not coarse, src=c.id, UV1=UV1)
-    buf.add("collision" if coarse else "bridge", mat, V, UV, T[on_bridge], footprint=False, src=c.id, UV1=UV1)
+    # ADR 0330 (banks2-s24): the surface follows the section of every station, not the chain's middle one. A chain
+    # merged over several OSM ways (Tykocin: sett street - asphalt bridge - sett street, 565 m, middle on the setts)
+    # laid granite setts over the whole DW671 bridge (OSM surface=asphalt; Commons "Tykocin Most drogowy 08").
+    if coarse:
+        tri_mat = np.full(len(T), "collision_asphalt", dtype=object)
+    else:
+        st_mat = np.array([S.surface_material(c, c.section(float(x), net.sec_list)) for x in st], dtype=object)
+        tri_mat = st_mat[tri_station]
+    for mat in sorted(set(tri_mat.tolist())):
+        sel = tri_mat == mat
+        uv1 = UV1
+        if not coarse and mat == "road_concrete" and secmat != "road_concrete":
+            uv1 = np.column_stack([np.repeat(st, len(q)), (lat.ravel() + np.repeat(hw, len(q)) - sec_mid.edge_strip)
+                                   / max(sec_mid.lane_w, 2.0) * 5.0])
+        elif not coarse and mat != "road_concrete" and secmat == "road_concrete":
+            latv, hwv = lat.ravel(), np.repeat(hw, len(q))
+            uv1 = np.column_stack([np.abs(latv) / max(sec_mid.lane_w, 2.0), hwv - np.abs(latv)])
+        buf.add(layer, mat, V, UV, T[sel & ~on_bridge], footprint=not coarse, src=c.id, UV1=uv1)
+        buf.add("collision" if coarse else "bridge", mat, V, UV, T[sel & on_bridge], footprint=False, src=c.id, UV1=uv1)
     # sides
     for side, sgn in (("L", 1.0), ("R", -1.0)):
         build_side_strip(buf, c, st, side, sgn, P, NL if sgn > 0 else NR, hw, br, coarse)
