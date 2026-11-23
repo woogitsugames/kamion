@@ -6,3 +6,5 @@
 - NASTEPNY KROK: odtwarzacz NavVoicePlayer + importer edytora + testy EditMode
 - NavVoicePlayer/NavVoiceBank/NavVoiceClipQueue (Core/Navigation/NavVoicePlayer.cs), GpsVoiceImporter (+postprocessor, wywolany z VehicleAudioImporter.ImportIfNeeded), podpiecie w NavigationInstaller, testy NavVoicePlayer0328Tests.
 - NASTEPNY KROK: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64
+- EditMode Win64: 1532 / 1390 passed / 0 failed / 142 skipped (2x; 6 nowych testow 0328 zielone). ADR 0328 + LICENSES. Dowody w main artifacts/gps-voice-s24 (demo/*.wav, spektrogramy).
+- NASTEPNY KROK (lider): odsluch demo przez wlasciciela; scalenie; potem ducking silnika (Duck01) i wylacznik w ustawieniach
