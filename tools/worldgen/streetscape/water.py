@@ -65,6 +65,15 @@ SHORE_BAR_M = 0.07       # bed nodes within 2 m of the outline may rise this far
 MUD_BAND_M = (0.6, 2.6)  # width range of the wet mud / sand margin outside the water line
 MUD_A = 0.70             # bare-soil mask in the margin (r2: 0.85 read as a beige road along the shore)
 BAY_SHEET_M = 1.3        # half size of the sheet patch around a bay node (crossing <= 0.72 x 1.41 m from the node)
+# ADR 0330 (banks2-s24): the bank profile is a continuous function of the SIGNED distance to the true outline (vector
+# BDOT / OSM, not the 1 m raster). With the raster distance every node was either "bed" (level - 0.30 m) or "bank"
+# (>= level + 0.04 m): a 0.3 m step that followed the node staircase of a diagonal shore (bv_bank_n, ADR 0324 open).
+# Now the ground crosses the level on the outline itself and the 1 m grid interpolates a straight shore. WORKING_VALUE.
+SHORE_RAMP_IN_M = 0.6    # inside the outline: level + LIP_Z_M at the outline -> level - BED0_M at this distance
+SHORE_RAMP_OUT_M = 0.5   # outside: level + LIP_Z_M at the outline -> level + FREEBOARD_M at this distance, then 1 : 3
+SHORE_BAND_IN_M = 6.0    # continuous distances inside the water up to here (deeper: the bed is at full depth anyway)
+BAY_REACH_M = 1.4        # bays dip only within this distance outside the outline (sheet overlap 1 m + bay patches)
+BAR_REACH_M = 1.5        # mud spits rise only within this distance inside the outline
 
 
 # ------------------------------------------------------------------------------------------------ extraction
@@ -308,6 +317,17 @@ class Plan:
         self.flow = flow_u.intersection(clip) if not flow_u.is_empty else flow_u
         sp = [p for p in _parts(still_u.intersection(clip)) if p.area >= MIN_AREA_M2] if not still_u.is_empty else []
         self.still = shapely.union_all(sp) if sp else shapely.Polygon()
+        # ADR 0330: outline for the continuous shore distance - the same bodies over a wider area (a shore that leaves
+        # the tile keeps its true distance on both sides of the seam); still water only where it is kept in the tile
+        big = tile_local.buffer(BANK_M + 4.0, join_style="mitre")
+        ob = [flow_u.intersection(big)] if not flow_u.is_empty else []
+        if not still_u.is_empty:
+            ob += [q for q in _parts(still_u.intersection(big))
+                   if q.geom_type == "Polygon" and q.intersection(clip).area >= MIN_AREA_M2]
+        ob = [g for g in ob if not g.is_empty]
+        # (a body cut exactly at the tile edge - synthetic tiles - is not a shore there either)
+        cut = shapely.union_all([big.exterior.buffer(0.05), tile_local.exterior.buffer(0.05)])
+        self._outline = shapely.union_all(ob).boundary.difference(cut) if ob else None
         self.lines = [ln for ln in lines if ln["g"].length >= STATION_M]
         self.road_poly = road_poly
         self.tile = tile_local
@@ -439,6 +459,50 @@ class Plan:
         return rep
 
     # -------------------------------------------------------------------------------------------- terrain
+    def _signed_distance(self, d_in, d_out):
+        """ADR 0330: signed distance (m) of every node to the true outline: > 0 on land, < 0 in the water (node centre
+        inside a kept body). Continuous (vector) in the shore band, the raster EDT - 0.5 beyond it."""
+        hf = self.hf
+        H, W_ = self.mask.shape
+        polys = [q for g in (self.flow, self.still) if not g.is_empty for q in _parts(g) if q.geom_type == "Polygon"]
+        inside = np.zeros((H, W_), bool)
+        if polys:          # node centre in (or on the edge of) a body; only raster water nodes can be
+            g = shapely.union_all(polys).buffer(1e-6)
+            shapely.prepare(g)
+            jw, iw = np.nonzero(self.mask)
+            inside[jw, iw] = shapely.intersects_xy(g, hf.x0 + iw, hf.y1 - jw)
+        sd = np.where(inside, -(d_in - 0.5), np.maximum(d_out - 0.5, 0.0))
+        outline = getattr(self, "_outline", None)
+        if outline is None or outline.is_empty:
+            return sd, inside
+        segs = []
+        for ln in shapely.get_parts(outline):
+            xy = shapely.get_coordinates(ln)
+            if len(xy) >= 2:
+                segs.append(np.stack([xy[:-1], xy[1:]], axis=1))
+        if not segs:
+            return sd, inside
+        tree = shapely.STRtree(shapely.linestrings(np.concatenate(segs)))
+        band = (self.mask & (d_in <= SHORE_BAND_IN_M + 1.0)) | (~self.mask & (d_out <= BANK_M + 2.0))
+        jj, ii = np.nonzero(band)
+        for k in range(0, len(jj), 65536):
+            j, i = jj[k:k + 65536], ii[k:k + 65536]
+            _, dist = tree.query_nearest(shapely.points(hf.x0 + i, hf.y1 - j), all_matches=False, return_distance=True)
+            sd[j, i] = np.where(inside[j, i], -dist, dist)
+        return sd, inside
+
+    @staticmethod
+    def _bed(L, Dp, t):
+        """Ground inside the outline at distance t >= 0 from it (continuous at t = 0 with the bank)."""
+        return np.maximum(L - Dp, L + LIP_Z_M - (LIP_Z_M + BED0_M) * np.minimum(t / SHORE_RAMP_IN_M, 1.0)
+                          - BED_SLOPE * np.maximum(t - SHORE_RAMP_IN_M, 0.0))
+
+    @staticmethod
+    def _cap(L, s):
+        """Highest bank top outside the outline at distance s >= 0 (continuous at s = 0 with the bed)."""
+        return (L + LIP_Z_M + (FREEBOARD_M - LIP_Z_M) * np.minimum(s / SHORE_RAMP_OUT_M, 1.0)
+                + BANK_SLOPE * np.maximum(s - SHORE_RAMP_OUT_M, 0.0))
+
     def carve(self, zc, mask, log=print):
         """Bed inside the water, a shallow bank outside, a lip at the shore; roads / paved nodes untouched."""
         W = self.mask
@@ -452,30 +516,43 @@ class Plan:
         d_out, (jn, in_) = ndimage.distance_transform_edt(~W, return_indices=True)
         L = self.level[jn, in_]
         Dp = self.depth[jn, in_]
-        bed = L - np.minimum(Dp, BED0_M + BED_SLOPE * np.maximum(d_in - 0.5, 0.0))
+        sd, inside = self._signed_distance(d_in, d_out)     # ADR 0330: continuous, < 0 in the water
+        self.sd = sd
         z = zc.copy()
-        inw = W & ~keep
+        # bed: nodes whose centre lies in the water (a raster node only touched by the outline is bank now)
+        inw = inside & ~keep
+        bed = self._bed(L, Dp, np.maximum(-sd, 0.0))
         z[inw] = np.minimum(z[inw], bed[inw])
-        band = ~W & (d_out <= BANK_M) & ~keep
-        cap = L + FREEBOARD_M + BANK_SLOPE * np.maximum(d_out - 1.0, 0.0)
-        lowered = band & (z > cap)
+        land = ~inside
+        so = np.maximum(sd, 0.0)
+        band = land & (sd <= BANK_M) & ~keep
+        cap = self._cap(L, so)
+        lowered = band & (z > cap + 1e-6)
         z[band] = np.minimum(z[band], cap[band])
-        lip = ~W & (d_out <= LIP_M) & ~keep
-        raised = lip & (z < L + LIP_Z_M)
-        z[lip] = np.maximum(z[lip], L[lip] + LIP_Z_M)
-        # ADR 0324: irregular water line (see SHORE_NOISE_M). Only nodes the sheet covers (overlap 1 m) may dip.
+        # lip: the sheet (outline + SHEET_OVERLAP_M) stays hidden; ADR 0330: beyond LIP_M the floor falls away at
+        # 1 : 3 instead of ending in a step
+        floor = L + LIP_Z_M - BANK_SLOPE * np.maximum(so - LIP_M, 0.0)
+        raised = band & (z < floor - 1e-6)
+        z[band] = np.maximum(z[band], floor[band])
+        # ADR 0324: irregular water line (see SHORE_NOISE_M). Only nodes the sheet covers (overlap 1 m) may dip; ADR 0330:
+        # the dip and the spit fade with the distance to the outline (no step at the edge of their bands)
         nz = self._shore_noise()
         self.shore_nz = nz
-        bay = ~W & (d_out <= 1.5) & ~keep & (nz < 0.0)      # r3: + diagonal neighbours (<= 1.0 dipped every other node of a diagonal shore = 1 m stairs)
-        z[bay] = np.minimum(z[bay], L[bay] + LIP_Z_M + np.clip(nz[bay] * 2.0, -1.0, 0.0) * (SHORE_DIP_M + LIP_Z_M))
-        bar = inw & (d_in <= 2.0) & (nz > 0.25)
-        z[bar] = np.maximum(z[bar], np.minimum(L[bar] + np.clip((nz[bar] - 0.25) * 4.0, 0.0, 1.0) * SHORE_BAR_M
-                                                 - 0.03 * (d_in[bar] - 1.0), L[bar] + SHORE_BAR_M))
+        fade_out = np.clip((BAY_REACH_M - so) / 0.5, 0.0, 1.0)
+        bay = land & (sd < BAY_REACH_M) & ~keep & (nz < 0.0)
+        tgt = L + LIP_Z_M + np.clip(nz * 2.0, -1.0, 0.0) * (SHORE_DIP_M + LIP_Z_M) * fade_out
+        z[bay] = np.minimum(z[bay], tgt[bay])
+        t_in = np.maximum(-sd, 0.0)
+        bar = inw & (t_in < BAR_REACH_M) & (nz > 0.25)
+        f = np.clip((nz - 0.25) * 4.0, 0.0, 1.0) * np.clip((BAR_REACH_M - t_in) / 0.7, 0.0, 1.0)
+        top = np.minimum(L + SHORE_BAR_M - 0.03 * np.maximum(t_in - 0.5, 0.0), L + SHORE_BAR_M)
+        zb = z + f * (np.maximum(top, z) - z)
+        z[bar] = zb[bar]
         self.bay_mask = bay & (z < L + LIP_Z_M - 1e-6)
         self.report["shore"] = {"bay_nodes": int(self.bay_mask.sum()), "bar_nodes": int((bar & (z > L)).sum())}
         self.lfill = np.where(d_out <= BANK_M + 4.0, L, np.nan)
         self.d_in, self.d_out = d_in, d_out
-        self.report["carve"] = {"bed_nodes": int(inw.sum()), "bed_lowered_m_max": round(float((zc - z)[inw].max()), 2),
+        self.report["carve"] = {"bed_nodes": int(inw.sum()), "bed_lowered_m_max": round(float((zc - z)[inw].max()), 2) if inw.any() else 0.0,
                                 "bank_nodes_lowered": int(lowered.sum()), "lip_nodes_raised": int(raised.sum()),
                                 "water_nodes_kept_by_road": int((W & keep).sum())}
         log("water carve", self.report["carve"])
@@ -515,7 +592,8 @@ class Plan:
         if not self.mask.any():
             return col
         c = col.copy()
-        d = self.d_out
+        sd = getattr(self, "sd", None)          # ADR 0330: continuous shore distance (raster EDT before)
+        d = self.d_out if sd is None else np.maximum(sd, 0.0)
         bank = np.clip(1.0 - d / 6.0, 0.0, 1.0)
         c[..., 2] = np.maximum(c[..., 2], 0.85 * bank)
         c[..., 1] = c[..., 1] * (1.0 - bank)
@@ -558,7 +636,8 @@ class Plan:
         sheet = sheet.intersection(self.tile)
         x0, y0, x1, y1 = self.tile.bounds
         lf = np.where(np.isfinite(self.lfill), self.lfill, np.nanmean(self.level[self.mask]))
-        dsh = np.where(self.mask, self.d_in, -self.d_out)
+        sd = getattr(self, "sd", None)          # ADR 0330: continuous shore distance
+        dsh = np.where(self.mask, self.d_in, -self.d_out) if sd is None else -sd
         flow_e, flow_n = self._flow_field()
         ntri = 0
         for cy in np.arange(y0, y1, chunk_m):
