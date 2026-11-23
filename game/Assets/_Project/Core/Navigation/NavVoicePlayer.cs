@@ -70,7 +70,8 @@ namespace Game.Core.Navigation
     /// 2D AudioSource in the cab (no mixer in the project, ADR 0270: level = <see cref="Volume"/> x the UI channel of the
     /// player settings, <see cref="AudioMixLevels.Ui"/>). Clips of an announcement follow each other with
     /// <see cref="ClipGapS"/>, announcements with at least <see cref="AnnouncementGapS"/>; nothing overlaps
-    /// (<see cref="NavVoiceClipQueue"/>). <see cref="Duck01"/> rises while speaking, for ducking the engine (not wired yet).
+    /// (<see cref="NavVoiceClipQueue"/>). <see cref="Duck01"/> rises while speaking and is published to <see cref="AudioMixLevels.VoiceDuck01"/>: TruckAudioController
+    /// ducks the engine and ambient loops by it (ADR 0329). The voice can be switched off in the settings (<see cref="AudioMixLevels.GpsVoice"/>).
     /// No allocation per frame.
     /// </summary>
     [DisallowMultipleComponent]
@@ -82,6 +83,7 @@ namespace Game.Core.Navigation
         public const float AnnouncementGapS = 0.6f;
 
         [Range(0f, 1f)] public float Volume = 0.9f;
+        public const float DuckAttackS = 0.15f, DuckReleaseS = 0.4f;   // WORKING_VALUES (ADR 0329)
         public bool Muted;
 
         public NavVoiceBank Bank { get; private set; }
@@ -94,7 +96,7 @@ namespace Game.Core.Navigation
         public AudioSource Source => m_Src;
         /// <summary>Clip taken from the queue, waiting for its gap; null = none.</summary>
         public AudioClip Pending => m_Pending;
-        /// <summary>0..1, follows "speaking or about to speak" with 50 ms attack / 400 ms release.</summary>
+        /// <summary>0..1, follows "speaking or about to speak" with <see cref="DuckAttackS"/> / <see cref="DuckReleaseS"/>.</summary>
         public float Duck01 { get; private set; }
 
         AudioSource m_Src;
@@ -142,7 +144,7 @@ namespace Game.Core.Navigation
         /// <summary>One announcement (the buffer of <see cref="NavVoiceAnnouncer.Spoken"/>, copied into the queue).</summary>
         public void Enqueue(VoiceClip[] clips, int n)
         {
-            if (Muted || clips == null) return;
+            if (Muted || clips == null || !AudioMixLevels.GpsVoice) return;
             Queue.Begin();
             for (int i = 0; i < n && i < clips.Length; i++) Queue.Add(clips[i]);
         }
@@ -157,6 +159,7 @@ namespace Game.Core.Navigation
         void OnDestroy()
         {
             if (m_Announcer != null && m_Handler != null) m_Announcer.Spoken -= m_Handler;
+            AudioMixLevels.SetVoiceDuck(0f);
         }
 
         void Update() => Step(Time.unscaledDeltaTime);
@@ -165,10 +168,12 @@ namespace Game.Core.Navigation
         public void Step(float dt)
         {
             if (m_Src == null) return;
+            if (!AudioMixLevels.GpsVoice && (m_Src.isPlaying || m_Pending != null || Queue.Count > 0)) Stop();   // switched off while speaking
             m_Src.volume = Muted ? 0f : Volume * AudioMixLevels.Ui;
             bool busy = m_Src.isPlaying;
             float duckTarget = busy || m_Pending != null || Queue.Count > 0 ? 1f : 0f;
-            Duck01 = Mathf.MoveTowards(Duck01, duckTarget, dt / (duckTarget > Duck01 ? 0.05f : 0.4f));
+            Duck01 = Mathf.MoveTowards(Duck01, duckTarget, dt / (duckTarget > Duck01 ? DuckAttackS : DuckReleaseS));
+            AudioMixLevels.SetVoiceDuck(Duck01);
             if (busy) { m_Idle = 0f; return; }
             m_Idle += dt;
             while (m_Pending == null && Queue.TryNext(out VoiceClip c, out bool newAnn))

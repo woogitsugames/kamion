@@ -196,6 +196,7 @@ namespace Game.UI.Settings
         public static void ApplyAudio(PcVolumeSettings v)
         {
             AudioMixLevels.Set(v.master, v.engine, v.ambient, v.ui);
+            AudioMixLevels.SetGpsVoice(v.gpsVoice);
             AudioListener.volume = AudioMixLevels.Master;
         }
 
@@ -222,7 +223,7 @@ namespace Game.UI.Settings
             return "mode=" + s.display.mode + " size=" + s.display.width + "x" + s.display.height + " vsync=" + s.vsync + " cap=" + s.fpsCap +
                    " tier=" + s.graphicsTier + " hud=" + s.hudScale.ToString("0.##", ci) + " units=" + s.speedUnits +
                    " vol=" + s.volumes.master.ToString("0.##", ci) + "/" + s.volumes.engine.ToString("0.##", ci) + "/" +
-                   s.volumes.ambient.ToString("0.##", ci) + "/" + s.volumes.ui.ToString("0.##", ci);
+                   s.volumes.ambient.ToString("0.##", ci) + "/" + s.volumes.ui.ToString("0.##", ci) + " gps=" + s.volumes.gpsVoice;
         }
     }
 }

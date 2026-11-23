@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using Game.Core;
 using Game.Core.Navigation;
 using Game.Editor.Audio;
 using Game.Editor.Build;
@@ -183,6 +184,65 @@ namespace Game.Tests
                 Object.DestroyImmediate(bank);
                 Object.DestroyImmediate(a); Object.DestroyImmediate(b);
             }
+        }
+
+        [Test]
+        public void Duck_Rises_In_150ms_Falls_In_400ms_And_Is_Published_To_The_Mix()
+        {
+            var bank = ScriptableObject.CreateInstance<NavVoiceBank>();
+            var a = AudioClip.Create("a", 4410, 1, 44100, false);
+            bank.blocks = new byte[] { 4 }; bank.indices = new byte[] { 1 }; bank.clips = new[] { a };
+            var go = new GameObject("navvoice-duck");
+            try
+            {
+                var p = NavVoicePlayer.Install(go, new NavVoiceAnnouncer(), bank);
+                Assert.AreEqual(1f, AudioMixLevels.DuckGain, 1e-5f, "silent GPS: no ducking");
+                p.Enqueue(new[] { new VoiceClip(4, 1) }, 1);
+                p.Step(NavVoicePlayer.DuckAttackS * 0.5f);
+                Assert.AreEqual(0.5f, p.Duck01, 0.01f, "half-way after half of the attack");
+                p.Step(NavVoicePlayer.DuckAttackS);
+                Assert.AreEqual(1f, p.Duck01, 1e-4f);
+                Assert.AreEqual(1f - AudioMixLevels.DuckDepth, AudioMixLevels.DuckGain, 1e-4f, "engine / ambient gain at full duck");
+                p.Stop();
+                p.Step(NavVoicePlayer.DuckReleaseS * 0.5f);
+                Assert.AreEqual(0.5f, p.Duck01, 0.01f);
+                p.Step(NavVoicePlayer.DuckReleaseS);
+                Assert.AreEqual(0f, p.Duck01, 1e-4f);
+                Assert.AreEqual(1f, AudioMixLevels.DuckGain, 1e-4f);
+            }
+            finally { Object.DestroyImmediate(go); Object.DestroyImmediate(bank); Object.DestroyImmediate(a); AudioMixLevels.SetVoiceDuck(0f); }
+        }
+
+        [Test]
+        public void GpsVoice_Switch_Silences_Player_And_Is_Saved_With_The_Settings()
+        {
+            var bank = ScriptableObject.CreateInstance<NavVoiceBank>();
+            var a = AudioClip.Create("a", 4410, 1, 44100, false);
+            bank.blocks = new byte[] { 4 }; bank.indices = new byte[] { 1 }; bank.clips = new[] { a };
+            var go = new GameObject("navvoice-switch");
+            try
+            {
+                var p = NavVoicePlayer.Install(go, new NavVoiceAnnouncer(), bank);
+                AudioMixLevels.SetGpsVoice(false);
+                p.Enqueue(new[] { new VoiceClip(4, 1) }, 1);
+                Assert.AreEqual(0, p.Queue.Count, "switched off: nothing is queued");
+                AudioMixLevels.SetGpsVoice(true);
+                p.Enqueue(new[] { new VoiceClip(4, 1) }, 1);
+                Assert.AreEqual(1, p.Queue.Count);
+                AudioMixLevels.SetGpsVoice(false);
+                p.Step(0.02f);
+                Assert.AreEqual(0, p.Queue.Count, "switched off while queued: queue cleared");
+            }
+            finally { AudioMixLevels.SetGpsVoice(true); Object.DestroyImmediate(go); Object.DestroyImmediate(bank); Object.DestroyImmediate(a); }
+            // Settings: default on, round trip through JSON, older file without the field keeps on, SameAs sees the change.
+            var d = Game.Core.Settings.PcSettingsData.Defaults();
+            Assert.IsTrue(d.volumes.gpsVoice);
+            var off = d.Clone(); off.volumes.gpsVoice = false;
+            Assert.IsFalse(off.SameAs(d));
+            var back = JsonUtility.FromJson<Game.Core.Settings.PcSettingsData>(JsonUtility.ToJson(off));
+            Assert.IsFalse(back.volumes.gpsVoice);
+            var old = JsonUtility.FromJson<Game.Core.Settings.PcSettingsData>("{\"volumes\":{\"master\":0.5}}");
+            Assert.IsTrue(old.volumes.gpsVoice, "file from before the switch: voice stays on");
         }
     }
 }
