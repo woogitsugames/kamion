@@ -59,6 +59,18 @@ FORESHORTEN_TAU_M = 950.0
 STREAMING_ROUTE_CLEARANCE_M = 400.0
 
 SECTORS = ("far_north", "far_east", "far_south", "far_west")
+# ADR 0330 (banks2-s24, critic: far forest = "dark blocks"). The ring is foreshortened into <= ~660 m beyond the border,
+# so the scene haze (KamionFogTau, per rendered distance) saw a 3 km stand as ~1 km away: dark, saturated, crisp. The
+# missing extinction over the extra distance (true - rendered) is baked into the backdrop instead (no shader change):
+# vertex albedo of submesh 0 per vertex, the forest curtain textures in distance bands (forest_hlod.haze_materials).
+# k = 1 - exp(-HAZE_BETA * (d_true - d_eff)); albedo -> lerp(albedo, HAZE_ALBEDO, k). WORKING_VALUE.
+HAZE_BETA = 3.912 / 20000.0        # 1/m: Koschmieder for the clear preset's 20 km visibility (LightingPreset); the
+#                                    overcast preset (8 km) adds its own, stronger scene haze on top
+HAZE_ALBEDO = FH.HAZE_ALBEDO       # (0.36, 0.42, 0.50) linear albedo that renders about as bright as the horizon haze (sky ~ sRGB 200-215
+#                                    over lit grass ~ sRGB 120 in the clear control renders), slightly blue
+# curtain material bands by the stand's true distance outside the border: suffix, haze share baked into the texture
+HAZE_BANDS = ((0.0, ""), (900.0, "_haze1"), (2000.0, "_haze2"))
+MOUND_COL = {"conifer": (0.028, 0.044, 0.019), "mixed": (0.034, 0.052, 0.022), "broadleaf": (0.044, 0.062, 0.026)}
 # ADR 0141 skyline node: the tall ring objects (and far stand-ins of landmark stacks that the region itself draws) live
 # in one extra mesh whose vertices carry a flag in TEXCOORD_1.x. Kamion/World Surface (_FAR_FACADE) keeps flagged
 # vertices just in front of the camera far plane instead of clipping them, so the Low tier (far clip 900 m) still shows
@@ -144,6 +156,40 @@ def foreshorten_dist(d: float) -> float:
     if d <= FORESHORTEN_FREE_M:
         return float(d)
     return FORESHORTEN_FREE_M + FORESHORTEN_SPAN_M * (1.0 - math.exp(-(d - FORESHORTEN_FREE_M) / FORESHORTEN_TAU_M))
+
+
+def unforeshorten_dist(deff):
+    """Inverse of foreshorten_dist (array or scalar); d_eff at / beyond the asymptote maps to RING_MAX_M."""
+    deff = np.asarray(deff, dtype=np.float64)
+    x = np.clip((deff - FORESHORTEN_FREE_M) / FORESHORTEN_SPAN_M, 0.0, 1.0 - 1e-9)
+    d = FORESHORTEN_FREE_M - FORESHORTEN_TAU_M * np.log(1.0 - x)
+    return np.where(deff <= FORESHORTEN_FREE_M, deff, np.minimum(d, RING_MAX_M))
+
+
+def haze_share_eff(e, n, half: float = 1024.0):
+    """ADR 0330: haze share k of the extra (true - rendered) distance for foreshortened positions (arrays)."""
+    e = np.asarray(e, dtype=np.float64)
+    n = np.asarray(n, dtype=np.float64)
+    de = e - np.clip(e, -half, half)
+    dn = n - np.clip(n, -half, half)
+    deff = np.hypot(de, dn)
+    return 1.0 - np.exp(-HAZE_BETA * np.maximum(unforeshorten_dist(deff) - deff, 0.0))
+
+
+def haze_band(d_true: float) -> str:
+    """Curtain material suffix of a stand at true distance d_true outside the border (ADR 0330)."""
+    suf = ""
+    for d0, sx in HAZE_BANDS:
+        if d_true >= d0:
+            suf = sx
+    return suf
+
+
+def _stand_rng(coords) -> np.random.Generator:
+    """Deterministic per-stand generator (first vertex, rounded) - variation that survives a rebuild."""
+    c = np.round(np.asarray(coords, dtype=np.float64)[0], 0)
+    h = hashlib.sha1(f"{c[0]:.0f},{c[1]:.0f}".encode()).hexdigest()
+    return np.random.default_rng(int(h[:12], 16))
 
 
 def foreshorten_scales(d: float) -> tuple[float, float]:
@@ -952,6 +998,7 @@ class SectorBuilder:
         self.count0 = 0
         self.v1, self.n1, self.uv1, self.t1 = [], [], [], []
         self.count1 = 0
+        self.mat1 = []         # ADR 0330: curtain material per strip (forest_edge_<mix><haze band>)
 
     def add_quad0(self, a, b, c, d, col_rgba, uv1=None, normal=None):
         """CCW quad a-b-c-d seen from outside."""
@@ -1007,14 +1054,16 @@ class SectorBuilder:
         self.t0.append(np.array([[base, base + 1, base + 2]], dtype=np.int64))
         self.count0 += 3
 
-    def add_curtain1(self, pts_xy: np.ndarray, z_bot: np.ndarray, z_top: np.ndarray, face_sign: float = 1.0, u_scale: float = 48.0):
-        """Add an alpha-tested forest_edge_mixed curtain strip along pts_xy."""
+    def add_curtain1(self, pts_xy: np.ndarray, z_bot: np.ndarray, z_top: np.ndarray, face_sign: float = 1.0, u_scale: float = 48.0,
+                     mat: str = "forest_edge_mixed", u_shift: float = 0.0):
+        """Add an alpha-tested forest_edge_<mix> curtain strip along pts_xy (ADR 0330: material per stand / haze band,
+        u_shift = per-stand offset of the texture so neighbouring stands do not repeat the same crowns)."""
         k = len(pts_xy)
         if k < 2:
             return
         ds = np.hypot(*np.diff(pts_xy, axis=0).T)
         s = np.concatenate([[0.0], np.cumsum(ds)])
-        u0 = ((pts_xy[0, 0] + pts_xy[0, 1]) % u_scale) / u_scale
+        u0 = ((pts_xy[0, 0] + pts_xy[0, 1]) % u_scale) / u_scale + u_shift
         us = u0 + s / u_scale
 
         # Compute outward normal in XY + upward tilt 0.48
@@ -1051,6 +1100,7 @@ class SectorBuilder:
         self.n1.append(N)
         self.uv1.append(UV)
         self.t1.append(np.asarray(tris, dtype=np.int64))
+        self.mat1.append(mat)
         self.count1 += 2 * k
 
     def sort_far_to_near(self):
@@ -1068,26 +1118,38 @@ class SectorBuilder:
             setattr(self, name, [getattr(self, name)[i] for i in order])
         self.t0 = tris
 
-    def primitives(self) -> list[dict]:
+    def primitives(self, half: float = 1024.0) -> list[dict]:
         prims = []
         if self.count0 > 0:
+            V0 = np.vstack(self.v0)
+            col = np.vstack(self.col0).copy()
+            # ADR 0330: aerial perspective of the extra (true - rendered) distance, per vertex; alpha (window mode) kept
+            k = haze_share_eff(V0[:, 0], V0[:, 1], half)[:, None]
+            col[:, :3] = col[:, :3] * (1.0 - k) + np.asarray(HAZE_ALBEDO)[None, :] * k
             prims.append({
                 "mat": "far_field_buildings",
-                "V": np.vstack(self.v0),
+                "V": V0,
                 "N": np.vstack(self.n0),
                 "UV": np.vstack(self.uv0),
                 "UV1": np.vstack(self.uv1_0),
-                "COL": np.vstack(self.col0),
+                "COL": col,
                 "T": np.vstack(self.t0),
             })
         if self.count1 > 0:
-            prims.append({
-                "mat": "forest_edge_mixed",
-                "V": np.vstack(self.v1),
-                "N": np.vstack(self.n1),
-                "UV": np.vstack(self.uv1),
-                "T": np.vstack(self.t1),
-            })
+            # ADR 0330: one primitive per curtain material (mix x haze band), in name order (deterministic)
+            for m in sorted(set(self.mat1)):
+                idx = [i for i, mm in enumerate(self.mat1) if mm == m]
+                base, tris = 0, []
+                for i in idx:
+                    tris.append(self.t1[i] - int(self.t1[i].min()) + base)
+                    base += len(self.v1[i])
+                prims.append({
+                    "mat": m,
+                    "V": np.vstack([self.v1[i] for i in idx]),
+                    "N": np.vstack([self.n1[i] for i in idx]),
+                    "UV": np.vstack([self.uv1[i] for i in idx]),
+                    "T": np.vstack(tris),
+                })
         return prims
 
 
@@ -1118,15 +1180,27 @@ def _corridor_taper(e: np.ndarray, n: np.ndarray, half: float = 1024.0) -> np.nd
     return taper
 
 
-def _crown_height_wave(e: np.ndarray, n: np.ndarray, h_base: float, half: float = 1024.0) -> np.ndarray:
-    """Natural non-repeating tree-crown height modulation along a stand edge with road-corridor taper."""
+def _crown_height_wave(e: np.ndarray, n: np.ndarray, h_base: float, half: float = 1024.0,
+                       rng: np.random.Generator | None = None) -> np.ndarray:
+    """Natural non-repeating tree-crown height modulation along a stand edge with road-corridor taper.
+    ADR 0330: with a per-stand `rng` the three waves get their own phases and an irregular term is added - a smoothed
+    random walk along the run (groups of taller / shorter crowns) and single emergent crowns (old pines over the
+    canopy, ~7 % of the vertices) - the skyline was a regular sine on every stand."""
+    ph = rng.uniform(0.0, 2.0 * np.pi, 3) if rng is not None else np.zeros(3)
     w = (
         1.0
-        + 0.16 * np.sin(0.085 * e + 0.065 * n)
-        + 0.11 * np.cos(0.21 * e - 0.17 * n)
-        + 0.07 * np.sin(0.43 * e + 0.31 * n)
+        + 0.16 * np.sin(0.085 * e + 0.065 * n + ph[0])
+        + 0.11 * np.cos(0.21 * e - 0.17 * n + ph[1])
+        + 0.07 * np.sin(0.43 * e + 0.31 * n + ph[2])
     )
-    return h_base * np.clip(w, 0.72, 1.28) * _corridor_taper(e, n, half)
+    lo, hi = 0.72, 1.28
+    if rng is not None and len(e) >= 3:
+        r = rng.normal(0.0, 1.0, len(e))
+        r = np.convolve(np.pad(r, 2, mode="edge"), np.array([0.1, 0.2, 0.4, 0.2, 0.1]), mode="valid")
+        w = w + 0.11 * r / max(float(np.std(r)), 1e-6)
+        w = w + np.where(rng.uniform(0.0, 1.0, len(e)) < 0.07, rng.uniform(0.12, 0.26, len(e)), 0.0)
+        lo, hi = 0.64, 1.42
+    return h_base * np.clip(w, lo, hi) * _corridor_taper(e, n, half)
 
 
 def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str, elev: BorderElevation, half: float, tier: str):
@@ -1161,13 +1235,23 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
 
     _, s_h = foreshorten_scales(d_cen)
     h_base = (21.5 if mix == "conifer" else 19.5 if mix == "mixed" else 18.0) * s_h
-    h_base = max(h_base, 8.5)
+    # ADR 0330: stands differ in age / site - height x 0.86-1.12 per stand (WORKING_VALUE)
+    rng = _stand_rng(coords)
+    h_base = max(h_base * float(rng.uniform(0.86, 1.12)), 8.5)
+    mix_ = mix if mix in MOUND_COL else "mixed"
+    look = {"mat": f"forest_edge_{mix_}{haze_band(d_cen)}", "u_shift": float(rng.uniform(0.0, 1.0)),
+            "u_scale": float(rng.uniform(42.0, 54.0)), "rng": rng,
+            "mound": tuple(float(c) * float(rng.uniform(0.88, 1.14)) for c in MOUND_COL[mix_])}
     for name, part in split_by_sector(poly_eff, half):          # ADR 0308: every piece in the sector it lies in
-        _stand_geometry(sectors[name], part, mix, elev, half, tier, h_base)
+        _stand_geometry(sectors[name], part, mix, elev, half, tier, h_base, look)
 
 
-def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevation, half: float, tier: str, h_base: float):
-    """Curtains and under-canopy mound of one stand piece (foreshortened coordinates) into sector builder sec."""
+def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevation, half: float, tier: str, h_base: float,
+                    look: dict | None = None):
+    """Curtains and under-canopy mound of one stand piece (foreshortened coordinates) into sector builder sec.
+    look (ADR 0330): curtain material / texture offset / height noise / mound colour of the stand."""
+    look = look or {"mat": "forest_edge_mixed", "u_shift": 0.0, "u_scale": 48.0, "rng": None, "mound": None}
+    curtain = {"mat": look["mat"], "u_shift": look["u_shift"], "u_scale": look["u_scale"]}
     ce, cn = float(poly_eff.centroid.x), float(poly_eff.centroid.y)
 
     seg_step = 9.0 if tier == "High" else 28.0
@@ -1189,12 +1273,12 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
         if total_s < 8.0:
             return
         zg = np.array([elev.z_at_eff(p[0], p[1]) for p in P])
-        ht = _crown_height_wave(P[:, 0], P[:, 1], h_base, half)
+        ht = _crown_height_wave(P[:, 0], P[:, 1], h_base, half, rng=look["rng"])
         # Taper ends of open runs so stand edges step down gently at margins instead of ending in a vertical wall
         if np.hypot(*(P[0] - P[-1])) > 2.0:
             end_taper = np.minimum(np.clip(s / 32.0, 0.30, 1.0), np.clip((total_s - s) / 32.0, 0.30, 1.0))
             ht = ht * end_taper
-        sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0)
+        sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **curtain)
 
     for a, b in zip(ext[:-1], ext[1:]):
         L = float(np.hypot(b[0] - a[0], b[1] - a[1]))
@@ -1243,8 +1327,9 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                     s = np.linspace(0.0, L, ks + 1)
                     end_taper = np.minimum(np.clip(s / 30.0, 0.30, 1.0), np.clip((L - s) / 30.0, 0.30, 1.0))
                     zg = np.array([elev.z_at_eff(p[0], p[1]) for p in P])
-                    ht = _crown_height_wave(P[:, 0] + ri * 17.3, P[:, 1] - ri * 11.7, h_base * 1.08, half) * end_taper
-                    sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0)
+                    ht = _crown_height_wave(P[:, 0] + ri * 17.3, P[:, 1] - ri * 11.7, h_base * 1.08, half,
+                                            rng=look["rng"]) * end_taper
+                    sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **curtain)
 
     # 3. Sloping dark conifer/mixed under-canopy mound tucked 10 m inside, split into <= 320 m convex-ish cells so
     #    triangle fans never bridge concave bays or road corridors
@@ -1274,6 +1359,8 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
         z_c = elev.z_at_eff(c_xy[0], c_xy[1])
         h_cap = max(h_base * 0.38, 3.5)
         col_top = (0.028, 0.044, 0.019, 0.0) if mix == "conifer" else (0.034, 0.052, 0.022, 0.0)
+        if look.get("mound") is not None:      # ADR 0330: per mix (+ broadleaf) and per stand x 0.88-1.14
+            col_top = (*look["mound"], 0.0)
         p_apex = [c_xy[0], c_xy[1], z_c + h_cap]
         m = len(ring)
         for i in range(m):
@@ -1867,6 +1954,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
                 existing_py.append((pt.x, pt.y))
 
     all_materials = {**SM.M, **FH.materials()}
+    FH.haze_textures()                 # ADR 0330: hazed curtain textures of the bands (no-op when up to date)
     qa_tiers = {}
     landmark_stacks = region_landmark_stacks(region_id, ox, oy)
 
@@ -1898,7 +1986,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         total_tris = 0
         total_verts = 0
         for name in SECTORS:
-            prims = sectors[name].primitives()
+            prims = sectors[name].primitives(half)
             tris = int(sum(len(p["T"]) for p in prims))
             verts = int(sum(len(p["V"]) for p in prims))
             total_tris += tris
@@ -1910,7 +1998,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
                 "by_material": {p["mat"]: int(len(p["T"])) for p in prims},
             }
             glb.add_mesh(name, prims, {"layer": "far_field", "sector": name, "tier": tier})
-        sky_prims = skyline.primitives()
+        sky_prims = skyline.primitives(half)
         sky_tris = int(sum(len(p["T"]) for p in sky_prims))
         total_tris += sky_tris
         total_verts += int(sum(len(p["V"]) for p in sky_prims))
