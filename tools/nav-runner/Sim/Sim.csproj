@@ -18,7 +18,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="../../../game/Assets/_Project/Core/Navigation/*.cs" LinkBase="Navigation" />
+    <!-- NavVoicePlayer / NavVoiceBank use UnityEngine.Audio (ADR 0328): covered by the Unity EditMode tests, not by this host. -->
+    <Compile Include="../../../game/Assets/_Project/Core/Navigation/*.cs" Exclude="../../../game/Assets/_Project/Core/Navigation/NavVoicePlayer.cs;../../../game/Assets/_Project/Core/Navigation/NavVoiceBank.cs" LinkBase="Navigation" />
     <Compile Include="../../../game/Assets/_Project/UI/Navigation/NavTrip.cs" Link="Navigation/NavTrip.cs" />
     <Compile Include="*.cs" />
   </ItemGroup>

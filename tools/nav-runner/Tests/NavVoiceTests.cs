@@ -153,7 +153,7 @@ namespace NavRunner.Tests
                 }
             }
             Assert.True(sawB07_2, "B07 #2 (second exit) announced");
-            Assert.False(sawB14, "B14 ("na rondzie X") is not announced after B07 "Na rondzie zjedz ..." (double "na rondzie", ADR 0329)");
+            Assert.False(sawB14, "B14 (na rondzie X) is not announced after B07 (Na rondzie zjedz ...): double na rondzie, ADR 0329");
         }
 
         [Fact]
