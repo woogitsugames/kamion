@@ -50,6 +50,7 @@ namespace Game.Editor.Audio
         /// <summary>Imports when the library asset is missing or older than the manifest. Returns true when the library exists afterwards.</summary>
         public static bool ImportIfNeeded()
         {
+            GpsVoiceImporter.ImportIfNeeded();   // ADR 0328: GPS voice bank (independent of the vehicle library)
             string lib = Path.Combine(EditorTools.ProjectRoot, ResourcesDir, "VehicleAudioLibrary.asset");
             if (!File.Exists(ManifestPath)) return File.Exists(lib);
             if (File.Exists(lib) && File.GetLastWriteTimeUtc(lib) >= File.GetLastWriteTimeUtc(ManifestPath)
