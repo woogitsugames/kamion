@@ -172,8 +172,8 @@ Z_MOUTH = 2.716
 Z_BEARD_TIP = 2.578
 
 # rows of the head profile: z, half width, front depth, back depth (superellipse 2.4)
-HEAD_PROFILE = ((2.560, .052, .052, .058), (2.620, .058, .060, .064), (2.660, .074, .080, .080),
-                (2.700, .085, .092, .094), (2.740, .091, .098, .102), (2.780, .095, .100, .107),
+HEAD_PROFILE = ((2.560, .052, .052, .058), (2.620, .058, .060, .064), (2.660, .067, .080, .080),
+                (2.700, .080, .092, .094), (2.740, .091, .098, .102), (2.780, .095, .100, .107),
                 (2.820, .096, .099, .111), (2.860, .097, .101, .113), (2.900, .095, .097, .112),
                 (2.935, .088, .088, .105), (2.962, .064, .066, .086), (2.976, .034, .034, .046), (2.984, .008, .008, .010))
 # columns (degrees off the front) and rows: dense over the face, sparse behind the ears and under the crown
@@ -237,10 +237,10 @@ def _face(d, z, sx_eye=0.0):
     r += 0.004 * _g(u, 0, .008, z, Z_NOSE + .002, .007)                        # ball of the tip
     # mouth: lips and the slit between them; moustache over the upper lip, drooping at the ends
     r += 0.004 * _g(u, 0, .020, z, Z_MOUTH + .006, .005)
-    r -= 0.009 * _g(u, 0, .018, z, Z_MOUTH, .0035)
+    r -= 0.006 * _g(u, 0, .016, z, Z_MOUTH, .003)
     r += 0.006 * _g(u, 0, .014, z, Z_MOUTH - .009, .005)
-    zm = Z_MOUTH + 0.012 - 11.0 * u * u
-    r += 0.014 * math.exp(-((z - zm) / 0.0065) ** 2) * (1 - _smoothstep(0.040, 0.056, au)) * (1 - 0.35 * math.exp(-(u / .006) ** 2))
+    zm = Z_MOUTH + 0.011 - 4.5 * u * u          # ends droop only a little: a level mouth, not a frown
+    r += 0.011 * math.exp(-((z - zm) / 0.006) ** 2) * (1 - _smoothstep(0.034, 0.048, au)) * (1 - 0.35 * math.exp(-(u / .006) ** 2))
     r += 0.012 * _g(u, 0, .026, z, Z_CHIN + .010, .016)                       # chin
     return r
 
@@ -265,8 +265,8 @@ def _beard(d, z, base):
         s = (z - Z_BEARD_TIP) / (Z_CHIN + 0.02 - Z_BEARD_TIP)
         if s >= 0:
             s = min(s, 1.0)
-            reach = 0.124 + 0.012 * s ** 0.5
-            half = 3.0 + 64.0 * s ** 1.25
+            reach = 0.126 + 0.012 * s ** 0.5
+            half = 3.0 + 58.0 * s ** 1.4
             if a < half:
                 rb = max(rb, reach * (1 - (a / half) ** 2) ** 0.45)
     return rb
