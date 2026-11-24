@@ -77,8 +77,27 @@ def _surf(c, s, lat, lift):
     return np.column_stack([p, z])
 
 
-def patch(buf, c, s_c, lat_c, length, width, rot, age, src):
-    """Rectangle in the chain frame (s along, lat across) rotated by `rot`, subdivided on a 2.5 x 2 m grid."""
+# ADR 0335 (critic build #5 pkt 4: "laty wciaz prostokatne"): the outline is a pixel mask in WorldPBR _DECAL_PATCH, not
+# geometry - the quad stays the same (same triangles, ADR 0327 budget untouched); the KIND of repair is encoded in the
+# integer part of UV1.y (kind + 0.02 + 0.96 * seed, so interpolation noise never flips floor()); kind 0 / UV1.y < 1 =
+# the legacy mask (yard patches, old data).
+PATCH_MILLED, PATCH_TRENCH, PATCH_HOT, PATCH_RUT = 1, 2, 3, 4
+PATCH_KIND_NAMES = {PATCH_MILLED: "milled", PATCH_TRENCH: "trench", PATCH_HOT: "hot", PATCH_RUT: "rut"}
+
+
+def patch_age(u):
+    """Age (UV1.x: 0 fresh black .. 1 old grey) from a uniform draw: a road carries repairs of every generation, so the
+    distribution is three-modal instead of uniform (WORKING_VALUE): 35 % fresh, 35 % mid, 30 % faded."""
+    if u < 0.35:
+        return 0.30 * (u / 0.35)
+    if u < 0.70:
+        return 0.30 + 0.40 * ((u - 0.35) / 0.35)
+    return 0.70 + 0.30 * ((u - 0.70) / 0.30)
+
+
+def patch(buf, c, s_c, lat_c, length, width, rot, age, src, kind=0):
+    """Rectangle in the chain frame (s along, lat across) rotated by `rot`, subdivided on a 2.5 x 2 m grid.
+    `kind` (PATCH_*) selects the outline / seal of the pixel mask (UV1.y integer part); 0 = legacy mask."""
     hw = float(c.hw_at(s_c))
     nu = max(1, int(math.ceil(length / 2.5)))       # surface is planar across a side; vertical curve is slight
     nv = max(1, int(math.ceil(width / 2.0)))
@@ -98,7 +117,10 @@ def patch(buf, c, s_c, lat_c, length, width, rot, age, src):
     T = np.array(T)
     # winding: chain frame (s, lat) is right-handed seen from above -> CCW faces up
     uv = np.column_stack([U.ravel() + length / 2, Vv.ravel() + width / 2])
-    uv1 = np.column_stack([np.full(len(P), age), np.full(len(P), hf(src, "seed"))])
+    seed = hf(src, "seed")
+    if kind:
+        seed = float(kind) + 0.02 + 0.96 * min(seed, 0.9999)
+    uv1 = np.column_stack([np.full(len(P), age), np.full(len(P), seed)])
     buf.add("markings", "decal_patch", P, uv, T, src=src, UV1=uv1)
 
 
@@ -499,6 +521,7 @@ def build(buf, net, juncs, report):
         if s1 - s0 < 8.0:
             continue
         cls_rate = PATCH_RATE_CLASS.get(c.section(0.5 * (s0 + s1), secs).cls, 1.0)
+        placed = []                      # ADR 0335: (s, lat, length, width) of this chain's patches - no nested repairs
         for w0 in np.arange(s0, s1, 50.0):
             w1 = min(w0 + 50.0, s1)
             key = (c.id, round(float(w0), 1))
@@ -518,14 +541,31 @@ def build(buf, net, juncs, report):
                 sec = c.section(sc, secs)
                 if getattr(sec, "construction", False):
                     continue             # ADR 0215: never opened to traffic - no repair patches
+                if S.surface_material(c, sec) not in SEAL_SURFACES:
+                    continue             # ADR 0335: asphalt repairs only on worn asphalt - render r1 showed a 24 m rut
+                                         # fill on the Tykocin setts; stone streets are re-laid, not patched
                 hw = float(c.hw_at(sc))
                 kind = hf(*key, i, "kind")
+                fits_lane = False
+                pk = PATCH_TRENCH
                 if kind < 0.35:              # full-lane trench / overlay patch
                     width = min(float(lane_w_of(sec, hw)) * (0.9 + 0.2 * hf(*key, i, "w")), 2 * hw - 0.2)
                     length = 1.2 + hf(*key, i, "l") * 5.8
+                    if hf(*key, i, "sub") < 0.5:
+                        # ADR 0335: milled-and-overlaid lane section - straight transverse cuts, ragged ends
+                        pk = PATCH_MILLED
+                        length = 3.0 + hf(*key, i, "l") * 5.0
                     nl = max(1, sec.lanes)
                     lane = int(hf(*key, i, "lane") * nl)
                     lat = -hw + sec.edge_strip + (lane + 0.5) * float(lane_w_of(sec, hw))
+                    fits_lane = True
+                    if not sec.oneway:
+                        # ADR 0335: a two-way lane patch must fit between the crown and the edge strip. Before, a full-
+                        # lane width (3.25 m) pushed off the crown by 0.4 m ran past the kerb and was dropped by the
+                        # edge test below - on a 2-lane road a full-lane repair was never generated (render r3).
+                        width = min(width, 2.0 * (abs(lat) - 0.08), 2.0 * (hw - 0.05 - abs(lat)))
+                        if width < 1.6:
+                            continue
                 elif kind < 0.7:             # wheel-path patch (ADR 0194: in a wheel path of a lane)
                     width = 0.8 + hf(*key, i, "w") * 0.6
                     length = 2.0 + hf(*key, i, "l") * 5.0
@@ -533,10 +573,15 @@ def build(buf, net, juncs, report):
                         # ADR 0323: long strip overlay along a rutted wheel path (Commons cs7403215, DW671: dark
                         # strips of 10-30 m along the lane); follows the chain on the 2.5 m grid of patch()
                         length = 8.0 + hf(*key, i, "l") * 17.0
+                        pk = PATCH_RUT
+                    elif hf(*key, i, "sub") < 0.5:
+                        pk = PATCH_RUT          # ADR 0335: short rut fill, tapered ends
                     lat = wheel_path_lat(c, sec, hw, key + (i,))
                 else:                        # small square pothole repair (ADR 0194: 60 % in a wheel path)
                     width = 0.6 + hf(*key, i, "w") * 0.9
                     length = width * (0.8 + hf(*key, i, "l") * 0.8)
+                    # ADR 0335: pothole repair with hot mix = irregular oval blob; 20 % square utility-cut backfill
+                    pk = PATCH_TRENCH if hf(*key, i, "sub") < 0.2 else PATCH_HOT
                     if hf(*key, i, "inwp") < 0.6:
                         lat = wheel_path_lat(c, sec, hw, key + (i,))
                     else:
@@ -545,12 +590,19 @@ def build(buf, net, juncs, report):
                     lat = math.copysign(max(hw - 0.05 - width / 2, 0.0), lat)
                 if width > 2 * hw - 0.1:
                     continue
-                if not sec.oneway and abs(lat) < width / 2 + 0.4:   # keep two-way patches off the crown
+                if not sec.oneway and not fits_lane and abs(lat) < width / 2 + 0.4:   # keep two-way patches off the crown
                     lat = math.copysign(width / 2 + 0.4, lat if lat != 0 else 1.0)
                     if abs(lat) + width / 2 > hw - 0.05:
                         continue
                 rot = (hf(*key, i, "rot") - 0.5) * math.radians(12)
-                patch(buf, c, sc, lat, length, width, rot, hf(*key, i, "age"), f"patch:{c.id}:{w0:.0f}:{i}")
+                if any(abs(sc - ps) < 0.5 * (length + pl) + 0.4 and abs(lat - pla) < 0.5 * (width + pw) + 0.25
+                       for ps, pla, pl, pw in placed):
+                    continue                     # ADR 0335 (critic: rectangle inside a rectangle): never overlap a repair
+                placed.append((sc, lat, length, width))
+                if pk == PATCH_MILLED:
+                    rot *= 0.35                  # cuts are made across the lane: nearly square to the axis
+                patch(buf, c, sc, lat, length, width, rot, patch_age(hf(*key, i, "age")),
+                      f"patch:{c.id}:{w0:.0f}:{i}", kind=pk)
                 cnt["patches"] += 1
     # oil at stop positions
     for j in juncs:
