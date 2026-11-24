@@ -42,6 +42,7 @@ namespace Game.Gameplay
         public bool autoTrip = true;
         bool m_TripTried;
         float m_LogT = -1f;
+        bool m_ArrivedLogged;
         /// <summary>ADR 0302 evidence: launch argument <c>-nav_log &lt;s&gt;</c> logs the GPS state every s seconds
         /// ([NAV] status: tile, leg, remaining, ETA, on route) - allocates a log line, so only when asked.</summary>
         public float logEveryS = -1f;
@@ -67,6 +68,13 @@ namespace Game.Gameplay
             m_T = intervalS;
             var ws = WorldStreamer.Active;
             if (ws != null && ws.Graph != null && nav != null && vehicle != null) Step(ws);
+            if (logEveryS > 0f && nav != null && !m_ArrivedLogged && nav.Guidance.Arrived && nav.Trip != null && nav.Trip.Current + 1 == nav.Trip.Legs.Length)
+            {
+                // ADR 0345: one line when the last leg reports "Cel osiągnięty" (scripts/record-drive.ps1 stops the recording on it)
+                m_ArrivedLogged = true;
+                Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[NAV] arrived t={0:F1}s tile={1} trip={2} text='{3}'",
+                    Time.unscaledTime, nav.regionId, nav.Trip.Id, NavText.Arrived));
+            }
             if (logEveryS > 0f && nav != null && Time.unscaledTime >= m_LogT)
             {
                 m_LogT = Time.unscaledTime + logEveryS;

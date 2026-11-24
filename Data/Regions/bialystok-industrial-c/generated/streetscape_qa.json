@@ -36289,6 +36289,11 @@
     "invalid_uv": 0,
     "normalised": 564
    },
+   "milled_patch_paint": {
+    "renewed_parts": 40,
+    "renewed_tris": 368,
+    "split_parts": 15
+   },
    "paint_surface": {
     "fresh_parts": 89,
     "fresh_vertices": 365,
@@ -51888,9 +51893,9 @@
  "terrain_walled_fill_lowered_nodes": 3427,
  "vegetation": {
   "farmland": {
-   "b_mean_after": 0.3331,
+   "b_mean_after": 0.3655,
    "b_mean_before": 0.6269,
-   "b_std_after": 0.2478,
+   "b_std_after": 0.2647,
    "b_std_before": 0.262,
    "cells_m2": 683288,
    "encoding": "COLOR_0.b flag (0.90 grassland, 1.00 arable), mosaic per pixel (ADR 0298)",
@@ -51901,6 +51906,10 @@
    "garden_cells_m2": 109449,
    "layout": "ESTIMATED strips (no cadastral parcels in the repo)",
    "share": 0.1627
+  },
+  "field_plants": {
+   "baulk": 0,
+   "fallow": 0
   },
   "forest_clearings": {
    "applied": [

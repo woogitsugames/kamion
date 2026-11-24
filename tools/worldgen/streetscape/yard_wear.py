@@ -228,6 +228,97 @@ def mark_fresh_road_paint(buf, enabled=None):
     return counts
 
 
+def _compact_part_tris(part, T_sub):
+    """Compact vertices of `part` referenced by triangle subset `T_sub` (zero extra triangles, deterministic)."""
+    used, inv = np.unique(T_sub.ravel(), return_inverse=True)
+    V = part.V[used]
+    UV = part.UV[used]
+    UV1 = part.UV1[used].copy() if part.UV1 is not None else None
+    COL = part.COL[used].copy() if getattr(part, "COL", None) is not None else None
+    T = inv.reshape(-1, 3)
+    return V, UV, UV1, COL, T
+
+
+def mark_milled_patch_paint(buf):
+    """ADR 0335 P2 (critic round 4): road markings over a milled-and-overlaid patch (`PATCH_MILLED`, kind 1) are
+    repainted after the overlay — encode renewed/brighter paint in `marking_white` UV1.y (+8: [8,9) longitudinal,
+    [10,11) transverse), preserving fractional age, lane coordinate and exact triangle count (0 extra triangles).
+
+    Short marks (transverse glyphs/bars or dashes <= 5.5 m) are renewed as a whole; long continuous strips (> 5.5 m,
+    already subdivided every 2 m) partition their existing triangles into renewed (inside patch) and original (outside)
+    so UV1.y never interpolates across integer bands. Overpasses / underpasses are disambiguated by Z (+/-0.25 m).
+    """
+    counts = {"renewed_parts": 0, "renewed_tris": 0, "split_parts": 0}
+    milled_polys = []
+    milled_z = []
+    for part in buf.parts:
+        if part.layer != "markings" or part.mat != "decal_patch" or part.UV1 is None or not len(part.UV1):
+            continue
+        w0 = float(part.UV1[0, 1])
+        if not (1.0 <= w0 < 2.0):
+            continue
+        tris = part.V[part.T]
+        if not len(tris):
+            continue
+        poly = shapely.union_all([Polygon(t[:, :2]) for t in tris]).buffer(0)
+        if poly.is_empty or not poly.is_valid:
+            continue
+        milled_polys.append(poly)
+        milled_z.append((float(part.V[:, 2].min()), float(part.V[:, 2].max())))
+    if not milled_polys:
+        return counts
+
+    tree = shapely.STRtree(milled_polys)
+    for part in list(buf.parts):
+        if part.layer != "markings" or part.mat != "marking_white" or part.UV1 is None or not len(part.T):
+            continue
+        ex = part.UV1[:, 1]
+        # Only normal aged markings ([0,1) or [2,3)): skip sentinel (-1,5), fresh SMA ([4,7)), or already renewed ([8,11))
+        if not np.all(((ex >= 0.0) & (ex < 1.0)) | ((ex >= 2.0) & (ex < 3.0))):
+            continue
+        V = part.V
+        pbox = shapely.box(float(V[:, 0].min()), float(V[:, 1].min()), float(V[:, 0].max()), float(V[:, 1].max()))
+        cand_idx = tree.query(pbox, predicate="intersects")
+        if not len(cand_idx):
+            continue
+        pz0, pz1 = float(V[:, 2].min()), float(V[:, 2].max())
+        cands = [(milled_polys[i], milled_z[i][0], milled_z[i][1]) for i in cand_idx
+                 if milled_z[i][0] <= pz1 + 0.25 and milled_z[i][1] >= pz0 - 0.25]
+        if not cands:
+            continue
+        tris = V[part.T]
+        hit = np.zeros(len(tris), bool)
+        for ti, tri in enumerate(tris):
+            tz = float(tri[:, 2].mean())
+            tp = Polygon(tri[:, :2])
+            for poly, mz0, mz1 in cands:
+                if mz0 - 0.25 <= tz <= mz1 + 0.25 and tp.intersects(poly):
+                    hit[ti] = True
+                    break
+        if not hit.any():
+            continue
+        span = float(math.hypot(float(np.ptp(V[:, 0])), float(np.ptp(V[:, 1]))))
+        whole_mark = bool(ex[0] >= 1.5 or span <= 5.5)
+        if whole_mark or hit.all():
+            part.UV1 = part.UV1.copy()
+            part.UV1[:, 1] = ex + 8.0
+            counts["renewed_parts"] += 1
+            counts["renewed_tris"] += int(len(part.T))
+        else:
+            V_out, UV_out, UV1_out, COL_out, T_out = _compact_part_tris(part, part.T[~hit])
+            V_in, UV_in, UV1_in, COL_in, T_in = _compact_part_tris(part, part.T[hit])
+            UV1_in[:, 1] += 8.0
+            part.V, part.UV, part.UV1, part.T = V_out, UV_out, UV1_out, T_out
+            if hasattr(part, "COL"):
+                part.COL = COL_out
+            buf.add("markings", "marking_white", V_in, UV_in, T_in,
+                    src=f"{part.src}:milled", UV1=UV1_in, COL=COL_in)
+            counts["renewed_parts"] += 1
+            counts["renewed_tris"] += int(len(T_in))
+            counts["split_parts"] += 1
+    return counts
+
+
 def mark_traffic_oil_strength(buf, scale=None):
     """Oil UV1.x was unused. Positive values scale only the traffic-stop stains, not yard/gate/bus oil."""
     if scale is None:
@@ -402,6 +493,9 @@ def apply(buf, overrides, origin, docks, paved, roads_poly, zsurf, report):
     paint_surface = mark_fresh_road_paint(buf)
     if paint_surface["fresh_parts"] or paint_surface["old_or_unknown_parts"]:
         rep["paint_surface"] = paint_surface
+    milled_paint = mark_milled_patch_paint(buf)
+    if milled_paint["renewed_parts"]:
+        rep["milled_patch_paint"] = milled_paint
     traffic_oil = mark_traffic_oil_strength(buf)
     if traffic_oil:
         rep["traffic_oil_parts"] = traffic_oil
