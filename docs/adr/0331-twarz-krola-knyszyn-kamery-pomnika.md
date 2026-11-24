@@ -54,14 +54,27 @@ czyli E ≈ 0,185 m (figura ~1,6 × naturalnej wielkości). Wszystko `WORKING_VA
 |---|---|---|---|
 | figura LOD0 | 2 214 | 5 478 | głowa 2 462, uszy 2 × 82, kreza 480, korona ~700 |
 | figura LOD1 | 288 | 372 | głowa 7 × 10, kreza 8, korona: opaska + 8 trójkątów |
-| pomnik z cokołem i zegarem LOD0 / LOD1 | 2 380 / 326 | patrz §Wyniki | test: LOD0 ≤ 6 000, LOD1 ≤ 480 |
+| pomnik z cokołem i zegarem LOD0 / LOD1 | 2 380 / 326 | 5 558 / 422 | test: LOD0 ≤ 6 000, LOD1 ≤ 480 |
 
 Uzasadnienie: obiekt charakterystyczny rynku, LOD0 tylko z bliska (warstwa `buildings`), +3,1 k trójkątów to < 0,1 %
 budżetu klatki knyszyn-w (3,17 M p95, ADR 0327). Materiały bez zmian (3 brązy, 0 nowych tekstur).
 
 ## Wyniki
 
-(uzupełniane — render Unity High/clear przed | po, ref-vs-game)
+Pętla: look-dev Blender (Cycles) r1–r7 (`artifacts/monument2-s24/lookdev/`, przed: `before-face.jpg`), potem Unity
+High / clear, Win64, kafel knyszyn przebudowany w kopii derived worktree (`build_world` exit 0, 1 047–1 068 s), dwie rundy:
+
+- przed: `vqa-before/` (derived z main), po r1: `vqa-after/`, po r2: `vqa-after2/`; arkusze ref-vs-game
+  `sbs/before-ref-vs-game.jpg`, `sbs/after2-ref-vs-game.jpg`, zbliżenie `sbs/head-crop-ref-before-after2.jpg`
+  (zdjęcie Commons | przed | po).
+- r1 w Unity: twarz czyta się z 4,5 m (nos, oczodoły, broda w szpic leżąca na krezie, uszy, niższa korona z liśćmi
+  i perłami); wada: usta z wąsami dawały grymas, szeroka żuchwa → r2: poziome usta, węższa żuchwa, dłuższy szpic brody.
+- Kadr `king_head_0325`: trisExact 429 862 → 431 797 (szacunek edytora przed batchingiem SRP). FPS w playerze nie mierzony.
+- Kamery ulicy: render „przed” zrobiony w pozie −616,5 / −187,5 (skraj wjazdu na parking), „po” w docelowej
+  −612,5 / −187,5. Z 40 m przez szybę kierowcy figura jest widoczna między lipami i za zaparkowanymi autami;
+  w 12° widać koronę i sylwetkę, twarzy w cieniu lip nie (ADR 0325 §5).
+- pytest: `tests/gis/test_knyszyn_park_props_0227.py`, `test_region_knyszyn_0204.py`, `test_truss_bridge_0320.py` —
+  32 passed (`artifacts/monument2-s24/logs/pytest-targeted.log`). C# bez zmian (EditMode nie puszczane).
 
 ## Otwarte
 
