@@ -255,6 +255,110 @@ namespace NavRunner.Tests
         }
 
         [Fact]
+        public void RingName_NamedIncomingRoadWithAxisGap_StillResolvesRingAndB15()
+        {
+            // Regression (ADR 0329 addendum): shifted carriageway axes can leave a >1 cm gap between a named incoming road
+            // and the first ring edge; ManPoint must point to the ring, not the incoming road (G05 Putry, G18 Biezenstwa).
+            var g = RouteGraph.Load(Region);
+            var planner = new RoutePlanner(g);
+            var p = RoutePath.For(g);
+
+            // G05: Al. Tysiaclecia -> Rondo Putry (0.375 m entry axis gap; used to return "Aleja Tysiaclecia..." and drop B15#1).
+            Assert.Equal(PlanStatus.Ok, planner.Plan(new Vector2(-289.19f, -883.86f), float.NaN, new Vector2(-555.60f, -10.18f), p));
+            int rb = -1;
+            for (int k = 0; k < p.ManCount; k++) if (p.ManType[k] == Maneuver.Roundabout) rb = k;
+            Assert.True(rb >= 0);
+            string ring = NavVoice.RingName(g, p, rb);
+            Assert.StartsWith("Rondo Krzysztofa Jakuba Putry", ring);
+            Assert.Equal(new VoiceClip(15, 1), NavVoice.RoundaboutNominativeClip(ring));
+
+            // G18: Bitwy Bialostockiej -> Andersa via Rondo Pamieci Biezenstwa (0.251 m entry axis gap; used to drop B15#2).
+            Assert.Equal(PlanStatus.Ok, planner.Plan(new Vector2(507.36f, -810.43f), float.NaN, new Vector2(-225.64f, -239.35f), p));
+            rb = -1;
+            for (int k = 0; k < p.ManCount; k++) if (p.ManType[k] == Maneuver.Roundabout) rb = k;
+            Assert.True(rb >= 0);
+            ring = NavVoice.RingName(g, p, rb);
+            Assert.StartsWith("Rondo Pamięci Bieżeństwa", ring);
+            Assert.Equal(new VoiceClip(15, 2), NavVoice.RoundaboutNominativeClip(ring));
+        }
+
+        [Fact]
+        public void RingName_UnnamedRoundabouts_ReturnNullAndNeverLeakAdjacentRoads()
+        {
+            // Build #7 audit (ADR 0329 addendum):
+            // 1) dk65-06 DK65 roundabout (announced from dk65-05 at t~1326-1367 s) is genuinely unnamed in OSM/BDOT10k -> null.
+            var gDk65 = RouteGraph.Load("dk65-06");
+            var pDk65 = RoutePath.For(gDk65);
+            var plDk65 = new RoutePlanner(gDk65) { AllowTileExit = true, RelaxTruckLimits = true };
+            Assert.Equal(PlanStatus.Ok, plDk65.Plan(new Vector2(-94.1f, -1016f), float.NaN, new Vector2(-1016f, 306.5f), pDk65));
+            int rb = -1;
+            for (int k = 0; k < pDk65.ManCount; k++) if (pDk65.ManType[k] == Maneuver.Roundabout) rb = k;
+            Assert.True(rb >= 0);
+            Assert.Null(NavVoice.RingName(gDk65, pDk65, rb));
+            Assert.Equal(new VoiceClip(0, 0), NavVoice.RoundaboutNominativeClip(NavVoice.RingName(gDk65, pDk65, rb)));
+
+            // 2) knyszyn DK65/DW671 roundabout (t~2173-2211 s) is unnamed in OSM between named "Obozowa" and "Tykocka";
+            //    RingName must return null and never leak incoming "Obozowa" or exit "Tykocka".
+            var gKny = RouteGraph.Load("knyszyn");
+            var pKny = RoutePath.For(gKny);
+            var plKny = new RoutePlanner(gKny) { AllowTileExit = true, RelaxTruckLimits = true };
+            Assert.Equal(PlanStatus.Ok, plKny.Plan(new Vector2(-623.9f, -1019.8f), 0f, new Vector2(-1021f, -638.5f), pKny));
+            rb = -1;
+            for (int k = 0; k < pKny.ManCount; k++) if (pKny.ManType[k] == Maneuver.Roundabout) rb = k;
+            Assert.True(rb >= 0);
+            Assert.Equal("Tykocka", gKny.Names[pKny.ManName[rb]]);
+            Assert.Null(NavVoice.RingName(gKny, pKny, rb));
+        }
+
+        [Fact]
+        public void RingName_SyntheticUnnamedRing_DoesNotLeakExitNameWhenNoGap()
+        {
+            // Zero-gap synthetic ring: unnamed ring between named "Wjazdowa" and "Wyjazdowa" must yield RingName == null.
+            float r = 30f;
+            var g = new RouteGraph
+            {
+                Names = new[] { "", "Wjazdowa", "Wyjazdowa" },
+                NodePos = new[]
+                {
+                    new Vector2(-r, 0), new Vector2(0, -r), new Vector2(r, 0), new Vector2(0, r),
+                    new Vector2(-200, 0), new Vector2(0, 200),
+                },
+                NodeFlags = new byte[6],
+                EdgeFrom = new[] { 0, 1, 2, 3, 4, 3 },
+                EdgeTo = new[] { 1, 2, 3, 0, 0, 5 },
+                EdgeClass = new byte[] { 2, 2, 2, 2, 2, 2 },
+                EdgeFlags = new byte[]
+                {
+                    RouteGraph.FlagRoundabout | RouteGraph.FlagOneway,
+                    RouteGraph.FlagRoundabout | RouteGraph.FlagOneway,
+                    RouteGraph.FlagRoundabout | RouteGraph.FlagOneway,
+                    RouteGraph.FlagRoundabout | RouteGraph.FlagOneway,
+                    0, 0,
+                },
+                EdgeName = new ushort[] { 0, 0, 0, 0, 1, 2 },
+                EdgeMaxSpeed = new byte[6],
+                EdgeMaxSpeedOsm = new bool[6],
+                EdgeStart = new[] { 0, 2, 4, 6, 8, 10, 12 },
+                Points = new[]
+                {
+                    new Vector2(-r, 0), new Vector2(0, -r),
+                    new Vector2(0, -r), new Vector2(r, 0),
+                    new Vector2(r, 0), new Vector2(0, r),
+                    new Vector2(0, r), new Vector2(-r, 0),
+                    new Vector2(-200, 0), new Vector2(-r, 0),
+                    new Vector2(0, r), new Vector2(0, 200),
+                },
+                EdgeLength = new[] { 42.4f, 42.4f, 42.4f, 42.4f, 170f, 170f },
+            };
+            g.BuildAdjacency();
+            var p = RoutePath.For(g);
+            Assert.Equal(PlanStatus.Ok, new RoutePlanner(g).Plan(new Vector2(-150, 0), 90f, new Vector2(0, 150), p));
+            Assert.Equal(Maneuver.Roundabout, p.ManType[0]);
+            Assert.Equal("Wyjazdowa", g.Names[p.ManName[0]]);
+            Assert.Null(NavVoice.RingName(g, p, 0));
+        }
+
+        [Fact]
         public void Voice_NeverThrows_WhenPathNamesBelongToAnotherGraph()
         {
             // Regression (build #6): a multi-tile trip's Combined path carries TRIP name indices; voice used the start region's
