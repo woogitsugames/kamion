@@ -15,8 +15,8 @@
  "target_lufs": -16.0,
  "peak_ceiling_dbfs": -1.0,
  "sample_rate": 44100,
- "processed": "2026-11-23",
- "clip_count": 98,
+ "processed": "2026-11-24",
+ "clip_count": 100,
  "clips": [
   {
    "key": "GPS_B01_01",
@@ -1683,6 +1683,40 @@
    "source_take": "GPS_B15_02 (1).mp3",
    "source_segment": 0,
    "elevenlabs_generation_id": "nZI6TQI6g5gkDrDd5yUb"
+  },
+  {
+   "key": "GPS_B15_03",
+   "block": 15,
+   "index": 3,
+   "text": "Rondo Jana Nowaka-Jeziorańskiego.",
+   "file": "Gps/GPS_B15_03.wav",
+   "sha256": "a0f0cb97ceffe6a36ea5f7fedf3a37c55db60696bea2f12adee263d63e236956",
+   "duration_s": 1.83,
+   "lufs": -16.0,
+   "peak_dbfs": -1.15,
+   "gain_db": 0.91,
+   "limiter_gr_db": -0.0,
+   "syllables_per_s": 6.86,
+   "source_take": "GPS_B15_03 (1).mp3",
+   "source_segment": 0,
+   "elevenlabs_generation_id": "fEc10YgtpHptsewVlKur"
+  },
+  {
+   "key": "GPS_B15_04",
+   "block": 15,
+   "index": 4,
+   "text": "Rondo Pamięci Męczeństwa Kresowian.",
+   "file": "Gps/GPS_B15_04.wav",
+   "sha256": "17b14c1d03193fbc834788768326ff9491cf311842404b37cb13a67d206b23c3",
+   "duration_s": 1.86,
+   "lufs": -16.09,
+   "peak_dbfs": -1.0,
+   "gain_db": 2.14,
+   "limiter_gr_db": 1.04,
+   "syllables_per_s": 6.18,
+   "source_take": "GPS_B15_04 (1).mp3",
+   "source_segment": 0,
+   "elevenlabs_generation_id": "ebsm0Yus1QCBR8zGNVHM"
   }
  ]
 }

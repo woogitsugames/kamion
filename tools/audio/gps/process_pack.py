@@ -65,6 +65,8 @@ TAKE_OVERRIDES = {
     # B15 (ADR 0329 addendum): ring names in the nominative, two single-sentence takes, voice Kamion GPS, eleven_multilingual_v2
     "GPS_B15_01": ("GPS_B15_01 (1).mp3", "zu1PKMApKUX6yqBbZket", 0, 1),
     "GPS_B15_02": ("GPS_B15_02 (1).mp3", "nZI6TQI6g5gkDrDd5yUb", 0, 1),
+    "GPS_B15_03": ("GPS_B15_03 (1).mp3", "fEc10YgtpHptsewVlKur", 0, 1),
+    "GPS_B15_04": ("GPS_B15_04 (1).mp3", "ebsm0Yus1QCBR8zGNVHM", 0, 1),
 }
 
 DEMO_GAP_S = 0.08   # = NavVoicePlayer.ClipGapS
