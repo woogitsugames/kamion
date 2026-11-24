@@ -15,7 +15,7 @@ ORIGIN = [761611, 612607]
 
 class Buffer:
     def __init__(self): self.parts=[]
-    def add(self, layer, mat, vertices, uv, triangles, src, UV1=None):
+    def add(self, layer, mat, vertices, uv, triangles, src, UV1=None, COL=None):
         self.parts.append((layer,mat,np.asarray(vertices),np.asarray(triangles),src))
 
 
@@ -209,3 +209,49 @@ def test_king_cloak_has_continuous_profile_and_crowned_head():
         rel=ring(k)[:,:2]-ring(k)[:,:2].mean(0)
         ang=np.unwrap(np.arctan2(rel@props.KING_FORWARD,rel@props.KING_TANGENT))
         assert (np.diff(ang)>0).all() and ang[-1]-ang[0] < 2*np.pi
+
+
+def test_king_bronze_patina_and_wear_vertex_colors():
+    # ADR 0331 ("Brąz i patyna"): LOD0 bronze carries COLOR_0 = (patina, wear, ao, 1.0) with rubbed convexities
+    # (nose, forehead, crown) and patinated / occluded cavities (eye sockets, ruff pleats, drips under ruff).
+    from streetscape import knyszyn_king_0325 as KF
+    from streetscape import materials as MAT
+
+    for mat in (KF.BRONZE, KF.PATINA, KF.RUBBED):
+        m = MAT.M[mat]
+        assert m["texture_set"] == "bronze_cast_tint"
+        assert m["set_metal"] >= 0.45
+        assert m["color"][0] > m["color"][1] > m["color"][2], mat          # warm bronze hue (R > G > B)
+        bp = m["bronze_patina"]
+        assert bp["patina_color"][1] > bp["patina_color"][0]               # greenish copper patina (G > R)
+        assert bp["rubbed_color"][0] > m["color"][0]                       # brighter rubbed convexities
+
+    acc = Acc()
+    props._king(acc, "buildings", [0., 0.], 0.)
+    for mat in (KF.BRONZE, KF.PATINA, KF.RUBBED):
+        for v, t, uv, uv1, col in acc.d[("buildings", mat)]:
+            assert col is not None and col.shape == (len(v), 4)
+            assert np.isfinite(col).all()
+            assert (col >= 0.0).all() and (col <= 1.0).all()
+            assert np.allclose(col[:, 3], 1.0)
+
+    # Check anatomical contrast on the head: nose tip has more rubbed wear and less patina than eye sockets
+    z0 = props.KING_PLINTH_H + props.KING_CAP_M
+    head_v, _, _, _, head_c = max(acc.d[("buildings", KF.BRONZE)], key=lambda it: len(it[0]) if it[0][:, 2].min() > z0 + 2.0 else 0)
+    piv, k = KF.HEAD_PIVOT_Z, KF.HEAD_SCALE
+    z_eye = z0 + piv + (KF.Z_EYE - piv) * k
+    z_nose = z0 + piv + (KF.Z_NOSE - piv) * k
+    fwd = head_v[:, :2] @ props.KING_FORWARD
+    lat = head_v[:, :2] @ props.KING_TANGENT
+    nose = (np.abs(head_v[:, 2] - z_nose) < 0.015) & (np.abs(lat) < 0.018) & (fwd > fwd.max() - 0.03)
+    sockets = (np.abs(head_v[:, 2] - z_eye) < 0.015) & (np.abs(np.abs(lat) - 0.038) < 0.016) & (fwd > 0.05)
+    assert nose.any() and sockets.any()
+    assert head_c[nose, 1].mean() > head_c[sockets, 1].mean() + 0.20       # nose more rubbed than eye sockets
+    assert head_c[sockets, 0].mean() > head_c[nose, 0].mean() + 0.15       # sockets more patinated than nose
+    assert head_c[sockets, 2].mean() < head_c[nose, 2].mean()              # sockets more occluded (lower AO)
+
+    # Check drips under the ruff on the cloak (higher patina near the neck than mid-cloak)
+    cloak_v, _, _, _, cloak_c = next(it for it in acc.d[("buildings", KF.BRONZE)] if abs(it[0][:, 2].min() - z0) < 1e-6 and len(it[0]) > 100)
+    top_cloak = cloak_v[:, 2] > z0 + 2.20
+    mid_cloak = (cloak_v[:, 2] > z0 + 0.80) & (cloak_v[:, 2] < z0 + 1.50)
+    assert cloak_c[top_cloak, 0].mean() > cloak_c[mid_cloak, 0].mean() + 0.10

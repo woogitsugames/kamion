@@ -321,6 +321,40 @@ namespace Game.World.Import
                 else mat.DisableKeyword("_VERTEX_GRIME");
                 EditorUtility.SetDirty(mat);
             }
+            // ADR 0331 ("Brąz i patyna"): manifest "bronze_patina" = cavity patina, convex rubbed wear and baked AO
+            // from COLOR_0 (Kamion/World PBR _BRONZE_PATINA). Linear colours as Vector properties (no sRGB conversion).
+            if (mat != null && mat.HasProperty("_BronzePatina"))
+            {
+                if (m.Get("bronze_patina") is Dictionary<string, object> bp)
+                {
+                    var pc = Arr(bp.Get("patina_color"));
+                    var rc = Arr(bp.Get("rubbed_color"));
+                    float B(string k, float d) => bp.Get(k) != null ? (float)Num(bp.Get(k)) : d;
+                    mat.EnableKeyword("_BRONZE_PATINA");
+                    mat.SetVector("_BronzePatina", new Vector4(
+                        pc.Count >= 3 ? (float)Num(pc[0]) : 0.065f,
+                        pc.Count >= 3 ? (float)Num(pc[1]) : 0.130f,
+                        pc.Count >= 3 ? (float)Num(pc[2]) : 0.088f,
+                        Mathf.Clamp01(B("patina_strength", 0.85f))));
+                    mat.SetVector("_BronzeRubbed", new Vector4(
+                        rc.Count >= 3 ? (float)Num(rc[0]) : 0.66f,
+                        rc.Count >= 3 ? (float)Num(rc[1]) : 0.46f,
+                        rc.Count >= 3 ? (float)Num(rc[2]) : 0.20f,
+                        Mathf.Clamp01(B("rubbed_strength", 0.85f))));
+                    mat.SetVector("_BronzeParams", new Vector4(
+                        Mathf.Clamp01(B("patina_smooth", 0.18f)),
+                        Mathf.Clamp01(B("rubbed_smooth", 0.62f)),
+                        Mathf.Clamp01(B("rubbed_metal", 0.88f)),
+                        Mathf.Clamp01(B("ao_strength", 0.65f))));
+                }
+                else
+                {
+                    mat.DisableKeyword("_BRONZE_PATINA");
+                    mat.SetVector("_BronzePatina", Vector4.zero);
+                    mat.SetVector("_BronzeRubbed", Vector4.zero);
+                }
+                EditorUtility.SetDirty(mat);
+            }
             // ADR 0144: manifest "vertex_weed": [r, g, b] = weed albedo where the mesh carries COLOR_0.g (needs vertex_grime:
             // same keyword); "ground_bounce": [r, g, b] = ground albedo x form factor for down-facing normals (soffits);
             // "set_tile_m": [x, y] = sampling size of the texture set for this material (larger = coarser grain).

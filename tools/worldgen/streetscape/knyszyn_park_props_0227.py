@@ -53,11 +53,18 @@ def _p(xy, z):
     return [float(xy[0]), float(xy[1]), float(z)]
 
 
-def _box(acc, layer, mat, xy, z0, z1, hx, hy, axis=(1., 0.)):
+def _box(acc, layer, mat, xy, z0, z1, hx, hy, axis=(1., 0.), col=None):
     a = np.asarray(axis, float); a /= np.linalg.norm(a)
     n = np.array([-a[1], a[0]])
+    before = len(acc.d.get((layer, mat), []))
     acc.box(layer, mat, _p(xy, (z0+z1)/2), np.r_[a*hx, 0.], np.r_[n*hy, 0.],
             [0., 0., (z1-z0)/2], skip=(0,))
+    if col is not None:
+        items = acc.d[(layer, mat)]
+        c = np.asarray(col, float)
+        for idx in range(before, len(items)):
+            v, t, uv, uv1, *_ = items[idx]
+            items[idx] = (v, t, uv, uv1, np.broadcast_to(c, (len(v), 4)).copy())
 
 
 def _frustum(acc, layer, mat, center, z0, z1, bottom, top):
@@ -111,8 +118,8 @@ def _king(acc, layer, at, z):
         _box(acc,layer,stone,at,z+KING_PLINTH_H,z+KING_PLINTH_H+KING_CAP_M,.80,.67,KING_TANGENT)
         # dark plaque with a raised frame on the front of the block (Commons cs7518515); no lettering
         front = body + KING_FORWARD*.73
-        _box(acc,layer,KF.PATINA,front+KING_FORWARD*.012,z+.36,z+.86,.25,.012,KING_TANGENT)
-        _box(acc,layer,KF.BRONZE,front+KING_FORWARD*.020,z+.40,z+.82,.21,.012,KING_TANGENT)
+        _box(acc,layer,KF.PATINA,front+KING_FORWARD*.012,z+.36,z+.86,.25,.012,KING_TANGENT,col=(0.50, 0.30, 0.72, 1.0))
+        _box(acc,layer,KF.BRONZE,front+KING_FORWARD*.020,z+.40,z+.82,.21,.012,KING_TANGENT,col=(0.28, 0.18, 0.85, 1.0))
     base = [body[0], body[1], z + KING_PLINTH_H + (0. if low else KING_CAP_M)]
     KF.build(acc, layer, base, KING_FORWARD, low=low)
     p=body+KING_FORWARD*KING_BLOCK_DISTANCE_M

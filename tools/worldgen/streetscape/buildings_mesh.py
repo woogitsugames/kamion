@@ -270,13 +270,14 @@ class Acc:
     def __init__(self):
         self.d = {}
 
-    def add(self, layer, mat, V, T, UV=None, UV1=None):
+    def add(self, layer, mat, V, T, UV=None, UV1=None, COL=None):
         V = np.asarray(V, float)
         if UV is None:
             UV = V[:, :2]
         lst = self.d.setdefault((layer, mat), [])
         lst.append((V, np.asarray(T, np.int64).reshape(-1, 3), np.asarray(UV, float),
-                    None if UV1 is None else np.asarray(UV1, float)))
+                    None if UV1 is None else np.asarray(UV1, float),
+                    None if COL is None else np.asarray(COL, float)))
 
     def quad(self, layer, mat, a, b, c, d, uv=None, uv1=None):
         """CCW quad a-b-c-d (seen from the front)."""
@@ -312,9 +313,15 @@ class Acc:
             UV = np.concatenate([it[2] for it in items])
             UV1 = (np.concatenate([it[3] if it[3] is not None else np.zeros((len(it[0]), 2)) for it in items])
                    if any(it[3] is not None for it in items) else None)
+            has_col = any(len(it) > 4 and it[4] is not None for it in items)
+            COL = (np.concatenate([it[4] if (len(it) > 4 and it[4] is not None) else np.zeros((len(it[0]), 4))
+                                   for it in items]) if has_col else None)
             off = np.cumsum([0] + [len(it[0]) for it in items[:-1]])
             T = np.concatenate([it[1] + o for it, o in zip(items, off)])
-            buf.add(layer, mat, V, UV, T, src=src, UV1=UV1)
+            if COL is not None:
+                buf.add(layer, mat, V, UV, T, src=src, UV1=UV1, COL=COL)
+            else:
+                buf.add(layer, mat, V, UV, T, src=src, UV1=UV1)
 
 
 class _L0Only(Acc):

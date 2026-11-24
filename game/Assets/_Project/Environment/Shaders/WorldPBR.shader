@@ -68,6 +68,9 @@ Shader "Kamion/World PBR"
         _LowNoShadow ("No shadow casting below the world-detail tier (Low; ADR 0123)", Float) = 0
         _VertexGrime ("Vertex grime (_VERTEX_GRIME, COLOR_0.r): rgb grime albedo (linear), w roughness gain (ADR 0123)", Vector) = (0.1, 0.1, 0.09, 0.3)
         _VertexWeed ("Vertex weeds (_VERTEX_GRIME, COLOR_0.g): rgb weed albedo (linear), w = 1 on (ADR 0144)", Vector) = (0.07, 0.09, 0.035, 0)
+        _BronzePatina ("Bronze patina (_BRONZE_PATINA, COLOR_0.r): rgb linear patina albedo, w strength (ADR 0331)", Vector) = (0.065, 0.130, 0.088, 0)
+        _BronzeRubbed ("Bronze rubbed (_BRONZE_PATINA, COLOR_0.g): rgb linear rubbed albedo, w strength (ADR 0331)", Vector) = (0.66, 0.46, 0.20, 0)
+        _BronzeParams ("Bronze params (_BRONZE_PATINA): x patina smooth, y rubbed smooth, z rubbed metal, w vertex AO strength", Vector) = (0.18, 0.62, 0.88, 0.65)
         _GroundBounce ("Ground bounce on down-facing normals: rgb = ground albedo x form factor (linear), w = 1 on (ADR 0144)", Vector) = (0, 0, 0, 0)
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _PatchSeam ("Repair: seam width m, darkening, fresh tone, aged tone (ADR0118)", Vector) = (0, 0, 1, 1)
@@ -126,6 +129,7 @@ Shader "Kamion/World PBR"
             float4 _PatchSeam;
             float4 _Grime, _SkyOcc, _VertexWeed, _GroundBounce;
             float4 _VertexGrime;
+            float4 _BronzePatina, _BronzeRubbed, _BronzeParams;   // ADR 0331 weathered cast bronze + patina
             float _LowNoShadow;
             float4 _KerbWear;
             float4 _GroundWearExclude, _GroundGrimeBase;
@@ -170,6 +174,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _STRIPES
             #pragma shader_feature_local _GRIME
             #pragma shader_feature_local _VERTEX_GRIME
+            #pragma shader_feature_local _BRONZE_PATINA
             #pragma shader_feature_local _CARPAINT
             #pragma shader_feature_local _PANELTONE
             #pragma shader_feature_local _NIGHTWIN
@@ -1177,8 +1182,40 @@ Shader "Kamion/World PBR"
                     }
                 }
             #endif
+            #if defined(_BRONZE_PATINA)
+                {
+                    // ADR 0331 ("Brąz i patyna"): COLOR_0 = (R patina cavity/drip, G convex wear, B baked AO, A enabled).
+                    // Keep flat cloak planes unified aged bronze (no camo blotches): threshold geometric cavity/wear
+                    // masks and use bronze_cast_tint oxide/grain only as subtle micro-breakup (zero extra fetches).
+                    half bEn = i.masks.a;
+                    half texOxide = saturate(1.0h - mask.b);
+                    half grain = saturate(base.r * _AlbedoScale);
+                    half grainDev = clamp(grain - 1.0h, -0.5h, 0.5h);
+                    // Calm base cast-bronze modulation around _Tint (linear) with subtle warm/cool facet drift
+                    half3 baseBronze = _Tint.rgb * (1.0h + 0.28h * grainDev);
+                    baseBronze *= lerp(half3(0.95h, 0.98h, 1.01h), half3(1.05h, 1.01h, 0.95h), saturate(1.0h - texOxide));
+                    albedo = lerp(albedo, baseBronze, bEn);
+                    // Cavity / drip patina (concentrated in hollows, ruff pleats, seam & drips under the ruff)
+                    half patMask = smoothstep(0.22h, 0.85h, i.masks.r);
+                    half pat = saturate(patMask * (0.82h + 0.36h * texOxide)) * _BronzePatina.w * bEn;
+                    // Rubbed warm bronze highlights on convex ridges (nose, brow, beard, crown rims, cloak fold ridges)
+                    half rubMask = smoothstep(0.16h, 0.82h, i.masks.g);
+                    half rub = saturate(rubMask * (0.85h + 0.30h * (1.0h - texOxide))) * (1.0h - 0.75h * pat) * _BronzeRubbed.w * bEn;
+                    albedo = lerp(albedo, _BronzeRubbed.rgb * (1.0h + 0.20h * grainDev), rub);
+                    smooth = lerp(smooth, _BronzeParams.y, rub);
+                    metal = lerp(metal, _BronzeParams.z, rub);
+                    // Matte greenish copper-carbonate/sulphate patina in crevices & drips under the ruff
+                    albedo = lerp(albedo, _BronzePatina.rgb * (1.0h + 0.24h * grainDev), pat);
+                    smooth = lerp(smooth, _BronzeParams.x, pat);
+                    metal = lerp(metal, 0.14h, pat);
+                    // Baked geometric AO deepens eye sockets, under-nose/mouth, beard grooves & ruff pleats
+                    ao *= lerp(1.0h, lerp(1.0h, i.masks.b, _BronzeParams.w), bEn);
+                }
+            #endif
                 albedo = saturate(albedo);
                 smooth = saturate(smooth);
+                metal = saturate(metal);
+                ao = saturate(ao);
                 half3 nw = normalize(tn.x * T + tn.y * B + tn.z * n);
 
                 // ---- lighting (same model as Kamion/World Surface: Lambert + GGX sun, SH ambient, env reflection)
