@@ -167,7 +167,7 @@ def test_shader_0335_p2_invariants():
     distance/footprint wheel-path compensation, and widened sand strip."""
     from pathlib import Path
     shader = (Path(__file__).resolve().parents[2] / "game/Assets/_Project/Environment/Shaders/WorldPBR.shader").read_text(encoding="utf-8")
-    assert "cross(Eu, Ev)" in shader
+    assert "sinTheta" in shader and "cross(Eu0" in shader
     assert "float baseSw = _PatchSeam.x * (0.70 + 0.30 * n2);" in shader
     assert "half sealMask;" in shader
     assert "endD * 0.5" not in shader

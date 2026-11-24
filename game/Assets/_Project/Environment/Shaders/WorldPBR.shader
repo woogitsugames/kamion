@@ -770,12 +770,12 @@ Shader "Kamion/World PBR"
                         float2 ux = ddx(i.uv.xy), uy = ddy(i.uv.xy);
                         float3 px = ddx(pw), py = ddy(pw);
                         float det = ux.x * uy.y - ux.y * uy.x;
-                        float inv = (det < 0.0 ? -1.0 : 1.0) / max(abs(det), 1e-10);
-                        float3 Eu = (px * uy.y - py * ux.y) * inv;
-                        float3 Ev = (py * ux.x - px * uy.x) * inv;
-                        float patchArea = length(cross(Eu, Ev));
-                        float2 sizeM = float2(patchArea / max(length(Ev), 1e-5),
-                                              patchArea / max(length(Eu), 1e-5));
+                        float invAbs = 1.0 / max(abs(det), 1e-10);
+                        float3 Eu0 = px * uy.y - py * ux.y;
+                        float3 Ev0 = py * ux.x - px * uy.x;
+                        float lenEu = length(Eu0), lenEv = length(Ev0);
+                        float sinTheta = length(cross(Eu0 / max(lenEu, 1e-12), Ev0 / max(lenEv, 1e-12)));
+                        float2 sizeM = float2(lenEu, lenEv) * (invAbs * max(sinTheta, 0.25));
                         float2 borderM = min(i.uv.xy, 1.0 - i.uv.xy) * sizeM;
                         // build #3 P2 (anti-slop): no ruler-straight rectangles. Rounded corners (radius 0.10-0.45 m
                         // from the patch seed, capped by the patch size) and a ragged outline from two octaves of value
