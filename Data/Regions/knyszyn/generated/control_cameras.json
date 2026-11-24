@@ -229,6 +229,38 @@
    "type": "persp"
   },
   {
+   "fov_deg": 40.0,
+   "id": "king_street_driver_0331",
+   "look_at": [
+    -710.729,
+    -168.762,
+    130.911
+   ],
+   "note": "place camera: ADR 0331 QA: driver eye in the southbound lane of DW671 Grodzienska east of Rynek (GUGiK ortho 0.25 m, +-1 m), turned to the king 40 m west: the figure as a passing driver sees it",
+   "pos": [
+    -612.5,
+    -187.5,
+    129.34
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 12.0,
+   "id": "king_street_tele_0331",
+   "look_at": [
+    -710.729,
+    -168.762,
+    130.911
+   ],
+   "note": "place camera: ADR 0331 QA: same pose as king_street_driver_0331 at a 12 deg lens: is the face and the crown readable from the street (40 m)",
+   "pos": [
+    -612.5,
+    -187.5,
+    129.34
+   ],
+   "type": "persp"
+  },
+  {
    "fov_deg": 50.0,
    "id": "king_square_0325",
    "look_at": [
