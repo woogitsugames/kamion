@@ -17,3 +17,12 @@
   z kamieniem i kulą + 4 perły na trzonkach, kamienie na opasce; UV głowy w skali twarzy.
 - Trójkąty: LOD0 5 478 (było 2 214 figury), LOD1 372 (było 288). Arkusze: `artifacts/monument2-s24/lookdev/r6-face.jpg`, `r5-sheet.jpg`.
 - NASTĘPNY KROK: kamera kierowcy z ulicy przy Rynku w `Data/Regions/knyszyn/control_cameras_place.authored.json`, potem build_world knyszyn (tło).
+
+## Krok 2 — kamery, testy, ADR (commity b1b1e832a .. )
+- Kamery `king_street_driver_0331` / `king_street_tele_0331` (DW671 Grodzieńska, pas południowy, 36 m od pomnika, oko 2,5 m) w
+  `Data/Regions/knyszyn/control_cameras_place.authored.json`; do renderu „przed” wstrzyknięte tymczasowo do generated/control_cameras.json (nie commitowane).
+- `tests/gis/test_knyszyn_park_props_0227.py`: 9 passed (nowe asercje nosa/brody, LOD0 ≤ 6000, LOD1 ≤ 480).
+- ADR szkic `docs/adr/0331-twarz-krola-knyszyn-kamery-pomnika.md`.
+- W toku (tło): `pwsh artifacts/monument2-s24/before.ps1` → `artifacts/monument2-s24/vqa-before/` (import knyszyn-w + knyszyn, VQA High).
+- NASTĘPNY KROK: po „przed”: slot heavy + `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn`, potem
+  `pwsh artifacts/monument2-s24/run-unity.ps1 -Region knyszyn -Out artifacts/monument2-s24/vqa-after -Cameras <jak w before.ps1>` i `make-sbs.sh`.
