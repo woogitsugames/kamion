@@ -177,25 +177,31 @@ lipy i 1,85 × od igieł sosny (zieleń liniowo 0,120 / 0,083 / 0,065, średnia 
   miejskich) po następnym imporcie kafla. Tekstury ściany HLOD i czaszy (wypiek) — bez zmian.
 
 ### 2. Skala prototypu (`vegetation.chm_fit`, `chm_cap_m`)
-- Żadne drzewo okapu nie jest rysowane w skali > `CHM_MAX_SCALE` = 1,45 × `href_m` swojego wariantu. Drzewo, którego
-  wylosowany wariant by ją przekroczył, bierze wariant, który się mieści (skrót pozycji; świerk: formy drzewostanowe
-  0 / 1 i forma otwarta 2 osobno); gdy żaden — najwyższy wariant na granicy. Granice: brzoza 21,8 m, olsza 20,2,
-  lipa 20,9, klon 18,7, sosna 29,6, świerk 30,9 (31,7 forma otwarta).
+- Żadne drzewo okapu nie jest rysowane w skali > `CHM_MAX_SCALE` = 1,45 × `href_m` swojego wariantu (w drzewostanie
+  „liściasty” `CHM_MAX_SCALE_BROADLEAF` = 1,6 — patrz niżej). Drzewo, którego wylosowany wariant by ją przekroczył,
+  bierze wariant, który się mieści (skrót pozycji; świerk: formy drzewostanowe 0 / 1 i forma otwarta 2 osobno); gdy
+  żaden — najwyższy wariant na granicy. Granice: brzoza 21,8 m (w lesie liściastym 24,0), olsza 20,2 (22,3),
+  lipa 20,9 (23,1), klon 18,7 (20,7), sosna 29,6, świerk 30,9 (31,7 forma otwarta).
 - Drzewostan wyższy, niż gatunek da się narysować (wysokość drzewostanu `Chm.stand` > granica): wysokości × (granica /
   wysokość drzewostanu) — zostaje struktura (górujące / współpanujące / opanowane), nie linijka koron uciętych na
-  granicy. W borze brzoza i olsza stoją więc pod okapem sosny jako piętro współpanujące (zgodnie z naturą);
-  **las liściasty wyższy niż ~22 m jest niższy niż w pomiarze** (`dw671-tykocin-03`: p50 19,2 → 17,2 m, p90 23,5 →
-  20,0 m, max 33,2 → 21,8 m) — do czasu wysokich wariantów leśnych w bibliotece (otwarte).
+  granicy. W borze brzoza i olsza stoją więc pod okapem sosny jako piętro współpanujące (zgodnie z naturą).
+- **Las liściasty:** pierwszy build tej rundy (granica 1,45 wszędzie) obniżył `dw671-tykocin-03` do p50 17,2 / p90
+  20,0 / max 21,8 m wobec zmierzonych 19,2 / 23,5 / 33,2 — krytyk: „przystrzyżony żywopłot”, regresja P1. W
+  drzewostanie „liściasty” granica to 1,6 (zwarty okap z koron tego samego gatunku — większe karty liści rażą mniej niż
+  na pojedynczej brzozie wśród sosen). **Las liściasty wyższy niż ~24 m jest nadal niższy niż w pomiarze** — do czasu
+  wysokich wariantów leśnych w bibliotece (otwarte).
 - HLOD skaluje linię koron drzewostanu danej kategorii tak samo (ściany, żebra, czasza), więc przy przełączeniu
   instancje ↔ HLOD nie ma skoku.
 
 ### 3. Linia koron HLOD (`forest_hlod.build`, `Chm.cell_top`)
 - Wierzch ścian i żeber: wierzch koron **pojedynczej komórki 4 m** pod punktem (lokalne maksima jak w pomiarze), nie
-  niżej niż `CHM_LINE_FLOOR` = 0,70 × wysokość górująca (dołek między koronami, nie dziura do ziemi, która
+  niżej niż `CHM_LINE_FLOOR` = 0,82 × wysokość górująca (dołek między koronami, nie dziura do ziemi, która
   spłaszczyłaby obraz). Runda 1 brała maksimum z okna 12 m: każde wysokie drzewo dawało 12-metrowy płaskowyż.
-- Czasza na 0,64 × wysokości górującej (było 0,80) — pod najniższymi koronami żeber.
+  Pierwszy build tej rundy miał 0,70: punkty ściany co 6 m na przemian 0,7 / 1,0 rysowały piłę równych stożków
+  (krytyk: „kikuty po wycince”) — stąd 0,82.
+- Czasza na 0,74 × wysokości górującej (było 0,80) — pod najniższymi koronami żeber.
 - **Okrajek z gradientu modelu:** punkt ściany ZEWNĘTRZNEJ schodzi za koronami do `CHM_EDGE_FLOOR` = 0,45 × wysokości
-  drzewostanu za nim; druga ściana 6 m w głąb trzyma 0,70. Gdzie pomiar ma niższe drzewa skraju, las kończy się
+  drzewostanu za nim; druga ściana 6 m w głąb trzyma 0,82. Gdzie pomiar ma niższe drzewa skraju, las kończy się
   stopniem; gdzie sosny stoją do samego obrysu — ścianą, jak w terenie.
 
 ### 4. Boki bloków i ton (`forest_hlod.build`)
