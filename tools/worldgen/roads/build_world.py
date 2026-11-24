@@ -1412,6 +1412,8 @@ def instance_ends(proto, nlods):
         e = [25.0, 85.0, VEHICLE_CULL_M]
     elif proto.startswith(("tractor_", "trailer_")):
         e = [40.0, VEHICLE_CULL_M]
+    elif proto.startswith("bale_"):                   # ADR 0346: rural field bales (High: 52.5 / 510 m; Low: 17.5 / 170 m)
+        e = [35.0, 340.0]
     else:
         e = [30.0, 120.0]
     if len(e) > nlods:

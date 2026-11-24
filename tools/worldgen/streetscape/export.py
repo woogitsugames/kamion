@@ -24,6 +24,7 @@ from . import vehicle_lod_atlas as VLA
 from . import signs as SG
 from . import hedge_textures as HT
 from . import chain_bollards as CB
+from . import field_bales as FB
 from . import furniture_textures as FT
 from . import plot_kit as PKT
 from .materials import M
@@ -146,7 +147,8 @@ def _generated_textures():
     tail = {**{k: SG.png_bytes(im) for k, im in HT.textures().items()},
             # house plot kit (ADR 0114): one alpha atlas for fences / gates / garden plants (streetscape.plot_kit)
             **{k: SG.png_bytes(im) for k, im in PKT.textures().items()},
-            **{k: SG.png_bytes(im) for k, im in CB.textures().items()}}      # ADR 0183
+            **{k: SG.png_bytes(im) for k, im in CB.textures().items()},      # ADR 0183
+            **{k: SG.png_bytes(im) for k, im in FB.textures().items()}}      # ADR 0346
     return tuple(head.items()), tuple(tail.items())
 
 

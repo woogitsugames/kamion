@@ -1037,4 +1037,6 @@ def build_all(sign_codes, boards):
     P.update(RP.prototypes())
     from . import guide_posts as GP             # ADR 0324: U-1a guide posts of rural numbered roads
     P.update(GP.prototypes())
+    from . import field_bales as FB             # ADR 0346: round straw / silage bales on rural fields
+    P.update(FB.prototypes())
     return P

@@ -131,6 +131,7 @@ namespace Game.World.Import
             // frame estimate under 2.0 M (build_world.mesh_budget).
             else if (proto.StartsWith("car_") || proto.StartsWith("van_")) e = new[] { 25f, 85f, WorldInstances.VehicleCullM };
             else if (proto.StartsWith("tractor_") || proto.StartsWith("trailer_")) e = new[] { 40f, WorldInstances.VehicleCullM };
+            else if (proto.StartsWith("bale_")) e = new[] { 35f, 340f };   // ADR 0346: rural field bales (High: 52.5 / 510 m; Low: 17.5 / 170 m)
             else e = new[] { 30f, 120f };   // bench, bollard, waste bin, street cabinet, pallets, containers
             // Mirror: tools/worldgen/roads/build_world.py instance_ends() (frame estimate) - keep the two in sync.
             if (e.Length > lodCount) e = new[] { e[0] }.Concat(e.Skip(e.Length - lodCount + 1)).ToArray();
