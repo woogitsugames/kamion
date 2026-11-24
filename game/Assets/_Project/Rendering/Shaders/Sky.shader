@@ -126,7 +126,9 @@ Shader "Kamion/Sky"
                     float2 dx = ddx(uv), dy = ddy(uv);
                     dx.x -= round(dx.x); dy.x -= round(dy.x);
                     half2 source = SAMPLE_TEXTURE2D_GRAD(_KamionClearCloudTex, sampler_KamionClearCloudTex, uv, dx, dy).rg;
-                    clearCloud = half2(source.r * (half)_KamionClearCloudCover * smoothstep(0.0, 0.06, d.y), source.g);
+                    // haze-s24 (ADR 0332): only the last ~0.7 deg drops the opacity (hides the extended source row);
+                    // the fade toward the horizon is the aerial perspective in frag, not an opacity ramp.
+                    clearCloud = half2(source.r * (half)_KamionClearCloudCover * smoothstep(0.0, 0.012, d.y), source.g);
                     if (_KamionCloud.x <= 0.0) return 1.0; // Clear: one photographic fetch, no noise deck.
                 }
                 float2 p = d.xz / (max(d.y, 0.0) + 0.14);          // plane at height 1; +0.14: finite at the horizon
@@ -195,7 +197,15 @@ Shader "Kamion/Sky"
                     // Reflection captures explicitly bypass display compression, as the analytic dome does.
                     if (_KamionSkyCapOff > 0.5)
                         cloudY = _SkyZenith.w * (1.0 + 2.0 * max(d.y, 0.0)) / 3.0 * clearCloud.y;
-                    float3 cloud = lerp(_SkyFogColor.rgb, cloudY.xxx, smoothstep(0.0, 0.18, d.y));
+                    // haze-s24 (ADR 0332): aerial perspective of the cloud instead of a linear 0..10 deg ramp to the flat
+                    // fog colour (that ramp erased every cloud shape in the lowest 10 deg: a featureless grey "fog wall").
+                    // Beer-Lambert with the terrain's own Koschmieder beta (_KamionHaze.x) over the slant path through a
+                    // ground haze veil of height kCloudVeilM: T = exp(-beta * h / sin(el)). The photograph already holds
+                    // the haze of its capture day, so only this residual veil is added (WORKING_VALUE 300 m: clouds keep
+                    // their shape down to ~2 deg, the last ~1 deg melts into the horizon colour of the terrain fog).
+                    const float kCloudVeilM = 300.0;
+                    float cloudT = exp(-_KamionHaze.x * kCloudVeilM / max(d.y, 1e-3));
+                    float3 cloud = lerp(_SkyFogColor.rgb, cloudY.xxx, cloudT);
                     sky = lerp(sky, cloud, clearCloud.x * (1.0 - _SkyMisc.x));
                 }
                 // Sun disc (0.53° nominal, slightly enlarged so it survives render scale), with limb darkening.

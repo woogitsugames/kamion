@@ -72,7 +72,16 @@ namespace Game.Rendering
             k_ClearCloudTex = Shader.PropertyToID("_KamionClearCloudTex"),
             k_ClearCloudRotation = Shader.PropertyToID("_KamionClearCloudRotation"),
             k_ClearCloudSourceLimits = Shader.PropertyToID("_KamionClearCloudSourceLimits"),
-            k_LeafAmb = Shader.PropertyToID("_KamionLeafAmbient");
+            k_LeafAmb = Shader.PropertyToID("_KamionLeafAmbient"),
+            k_FarFade = Shader.PropertyToID("_KamionFarFade");
+
+        /// <summary>ADR 0332: share of the main camera's far clip over which the terrain fog ramps to the horizon colour
+        /// (stand-in for the land past the clip). WORKING_VALUE, chosen on the knyszyn-w edge cameras.</summary>
+        public const float FarFadeShare = 0.25f;
+
+        /// <summary>Uniform of the far-clip fade: x start, y 1 / length; zero (off) without a tier or far clip.</summary>
+        public static Vector4 FarFade(float farClip) =>
+            farClip > 1f ? new Vector4(farClip * (1f - FarFadeShare), 1f / (farClip * FarFadeShare), 0f, 0f) : Vector4.zero;
 
         /// <summary>Ground haze: extinction at height y = beta (1 + a exp(-(y - y0) / H)). Mirror of KamionFogTau.</summary>
         public static float FogTau(float beta, float a, float scaleHeightM, float y0, float cameraY, float pointY, float viewDepth)
@@ -125,6 +134,7 @@ namespace Game.Rendering
             // r11: diffuse sky light transmitted through the leaves (Kamion/Vegetation; per vertex, no fragment cost)
             float leaf = Mathf.Clamp01(LeafAmbientOverride ?? 1f);
             Shader.SetGlobalVector(k_LeafAmb, new Vector4(leaf, leaf * LeafSheen, 0f, 0f));
+            Shader.SetGlobalVector(k_FarFade, FarFade(hasTier ? t.cameraFarClip : 0f));
             var displayFog = DisplaySkyFog(p, fogExposed);
             Shader.SetGlobalVector(k_HazeColor, new Vector4(Mathf.Min(displayFog.r, 1f), Mathf.Min(displayFog.g, 1f), Mathf.Min(displayFog.b, 1f), 1f));
 
