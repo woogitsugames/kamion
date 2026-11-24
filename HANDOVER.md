@@ -529,6 +529,7 @@ aw\derived\<kafel> /MIR` dla każdego przebudowanego kafla; przed reimportem spr
 - 22.11 01:2x (s24) :17 — 4 agentów wznowionych po limicie pracuje.
 - 22.11 :xx (s24) **Scalony monuments-s24 (ADR 0325)**: figura Zygmunta Augusta (2380 tris, kryza/korona/łańcuchy/płaszcz bez rąk — jak rzeźba; twarz toporna, w cieniu ciemna), bruk Placu Czarnieckiego: granit w romby z czerwonymi pasami (krata 2,255 m / 53,75° z ortofoto), tekstury +16,6 MB High; EditMode 1412/0. Kafle NIE synchronizowane (fala 6 przebudowuje bez tego kodu → knyszyn/tykocin do przebudowy po fali). Do usunięcia ręcznie: C:\artifacts\monuments-s24 (rendery Blendera poza repo, blokada zabezpieczeń). Pozostali: regen-wave-6, road-surface, banks-verges.
 - 22.11 :17 (s24) — 3 agentów w toku (fala 6/build #4, road-surface, banks-verges).
+- 24.11 ~17:45: właściciel odsłuchał B15 #3/#4 — „brzmi dobrze”, klik w #4 nie występuje; klipy zostają.
 - 24.11 ~17:25: **scalone gps-ringnames2-s24** → c898b3e13: B15 #3/#4 (Nowaka-Jeziorańskiego, Męczeństwa Kresowian), łącznie 4040 kredytów ElevenLabs na głos GPS; 100 klipów. W #4 impuls przy 0,27 s — do odsłuchu przez właściciela.
 - 24.11 ~17:15: **scalone mirror-res-s24 (ADR 0342)**: MSAA 4× lusterek na PC (koszt ~0 w edytorze), RT od pikseli okienka (Ultra ×1,5), cienie w lusterkach wyłączone (+0,66 ms). Pomiar w playerze przy buildzie #8 (rq_mirror_msaa).
 - 24.11 ~17:00: CLI: + neon-dash-items-s24 (0344: jasne przedmioty na desce + bake odbicia), + neon-patches-p2-s24 (dopisek 0335: zalewka, znakowanie przez łatę, koleiny w dali, piasek).
