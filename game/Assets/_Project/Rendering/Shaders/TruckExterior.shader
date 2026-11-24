@@ -55,7 +55,7 @@ Shader "Kamion/Truck Exterior"
         _DecalMetallic ("Decal metallic", Range(0, 1)) = 1
         _DecalRoughness ("Decal roughness", Range(0, 1)) = 0.3
         _DirtColor ("Dirt colour (linear)", Color) = (0.15, 0.135, 0.11, 1)
-        _GrazingDust ("Grazing dust film (ADR 0340): optical depth of the dust layer at _Dirt = 1, seen along the normal; 0 = off", Range(0, 0.6)) = 0.16
+        _GrazingDust ("Grazing dust film (ADR 0340): optical depth of the dust layer at _Dirt = 1, seen along the normal; 0 = off", Range(0, 0.6)) = 0.12
         _Dirt ("Dirt amount (0 washed, 0.5 fleet, 1 very dirty)", Range(0, 1)) = 0.5
         _CoatedBaseRoughness ("Base roughness under a full clear coat", Range(0, 1)) = 0.6
         _OrangePeel ("Orange peel slope (coat normal)", Range(0, 0.05)) = 0.012
@@ -545,15 +545,17 @@ Shader "Kamion/Truck Exterior"
                 // ADR 0340 (critic s24 build #5 p. 5: "biala plyta" in the mirror windows = the cab side wall and the trailer
                 // front post seen 3-15 deg off the surface, where the clear coat's Fresnel term reaches 0.5-0.8 and the panel
                 // became a chrome mirror of the horizon). A body that carries road dust (_Dirt) is not a clean mirror at
-                // grazing angles: the dust grains cover the surface in proportion to the path through the layer, 1 / cos, so
-                // the share of the lacquer still seen is exp(-tau (1 / NoV - 1)) (Beer-Lambert through a thin particle layer;
-                // 0 along the normal, so the look of panels facing the camera is unchanged). The covered share is matte dust:
-                // no coat, no metallic lobe, wide base lobe, a little of the dust colour. tau = _Dirt * _GrazingDust,
-                // WORKING_VALUE 0.16 (fleet _Dirt 0.5: 7 % at 60 deg off the normal, 32 % at 80 deg, 78 % at 87 deg).
+                // grazing angles: the dust grains cover the surface in proportion to the path through the layer, x = 1 / NoV - 1
+                // (0 along the normal, so panels facing the camera are unchanged). Share still seen as lacquer:
+                // exp(-tau x^1.5) - Beer-Lambert through a thin particle layer would be x^1; the exponent 1.5 is empirical
+                // (keeps 3/4 views glossy: 6 % at 60 deg off the normal, and closes the mirror where it was wrong: 48 % at
+                // 80 deg, 80 % at 84 deg, fleet _Dirt 0.5). The covered share is matte dust: no coat, no metallic lobe, wide
+                // base lobe, a little of the dust colour. tau = _Dirt * _GrazingDust, WORKING_VALUE 0.12.
                 if (_GrazingDust > 0.0 && isTyre < 0.5)
                 {
                     half NoVg = saturate(dot(normalize(i.normalWS), GetWorldSpaceNormalizeViewDir(i.positionWS)));
-                    half film = (1.0 - exp(-_Dirt * _GrazingDust * (1.0 / max(NoVg, 0.03) - 1.0))) * (1.0 - outerLens);
+                    half gx = 1.0 / max(NoVg, 0.03) - 1.0;
+                    half film = (1.0 - exp(-_Dirt * _GrazingDust * gx * sqrt(gx))) * (1.0 - outerLens);
                     coat *= 1.0 - film;
                     metal *= 1.0 - 0.7 * film;
                     rough = lerp(rough, max(rough, (half)0.85), film);
