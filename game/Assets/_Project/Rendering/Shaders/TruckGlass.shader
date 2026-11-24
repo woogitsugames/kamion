@@ -80,6 +80,7 @@ Shader "Kamion/Truck Glass"
             float _KamionCamOutside;    // CabInteriorLighting: 1 = view camera outside the cab, 0 = cab view or no cab lighting
             half4 _CabFill;             // CabInteriorLighting: rgb first-bounce fill per unit albedo (exposed), w sun transmittance
             half _CabEnclosure;         // CabInteriorLighting: share of the open-sky SH the closed cab blocks
+            half _KamionWindscreenOff;  // ADR 0341 quality switch (QualityProfile.windscreenLayersOff): 1 = no dirt, analytic interior
             float4 _KamionGrimeUp[4];   // vehicle frames (ContactShadowCaster): height above the wheel-contact plane
 
             CBUFFER_START(UnityPerMaterial)
@@ -97,6 +98,7 @@ Shader "Kamion/Truck Glass"
             // ADR 0341: dirt layers at this point of the pane (R dust, G arcs, B insects), scaled by _GrimeLayers.
             half3 WindscreenDirt(float3 positionOS)
             {
+                [branch] if (_KamionWindscreenOff > 0.5) return half3(0, 0, 0);   // uniform: skips the sample
                 float2 uv = (positionOS.xy - _GrimeRect.xy) * _GrimeRect.zw;
                 return SAMPLE_TEXTURE2D(_GrimeMask, sampler_GrimeMask, uv).rgb * (half3)_GrimeLayers.xyz;
             }
@@ -308,7 +310,7 @@ Shader "Kamion/Truck Glass"
                 bool hasFrame = slot >= 1u && slot <= 4u;
                 float h = hasFrame ? dot(i.positionWS, _KamionGrimeUp[slot - 1u].xyz) + _KamionGrimeUp[slot - 1u].w : 2.0;
                 half3 env;
-                if (i.inside > 0.5 && _CabReflectionGain > 0.0)
+                if (i.inside > 0.5 && _CabReflectionGain > 0.0 && _KamionWindscreenOff < 0.5)
                 {
                     env = CabReflectionEnv(R, L);    // ADR 0341: baked cab image (albedo x AO), relit
                 }

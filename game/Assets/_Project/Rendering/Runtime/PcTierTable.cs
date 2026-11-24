@@ -80,6 +80,7 @@ namespace Game.Rendering
         public bool simpleFoliage;
         public bool forestFast;
         public bool glassFast;
+        public bool windscreenLayersOff;   // ADR 0341 (all PC tiers on)
         // Vehicle look / lights / sky
         public int envCaptureSize;
         public int envCaptureInterval;
