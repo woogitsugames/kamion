@@ -144,18 +144,65 @@ def _flagpole(acc, layer, at, z):
             acc.quad(layer,mat,_p(p,z0),_p(q,z0),_p(q,z1),_p(p,z1))
 
 
-def _bench(acc, layer, at, z, tangent, toward):
-    # Five brown wooden slats and dark legs, back and armrests; dimensions WORKING_VALUE.
-    t=np.asarray(tangent,float); n=np.asarray(toward,float); c=np.asarray(at,float)
-    for i in range(4):
-        xy=c+n*(-.24+i*.15)
-        _box(acc,layer,"bench_wood",xy,z+.42,z+.47,.91,.055,t)
-    for i in range(3):
-        xy=c-n*.28
-        _box(acc,layer,"bench_wood",xy,z+.56+i*.14,z+.64+i*.14,.91,.04,t)
-    for side in (-1,1):
-        xy=c+t*(side*.72)
-        _box(acc,layer,"steel_painted",xy,z,z+.9,.035,.30,t)
+def _bench(acc, layer, at, z, tangent, toward, z_at=None):
+    """Open 4-leg Polish park bench with per-leg terrain seating (ADR 0337, critic build #5 pkt 10).
+
+    Replaces the previous solid dark end-slabs (0.60 x 0.90 m monoliths) with an open steel frame: front leg +
+    armrest post, rear leg + backrest upright, horizontal seat support rail, armrest bar, longitudinal under-seat
+    tie-rail, and 3 seat + 2 slightly reclined backrest wooden slats. When `z_at` is provided, each of the 4 leg
+    feet samples the local ground height and extends 6 cm into the paving/terrain so no leg floats on slopes.
+    LOD1 (`buildings_low`) uses 1 seat slab + 1 backrest slab + 4 grounded legs (60 tris vs 140 tris LOD0).
+    Dimensions WORKING_VALUE.
+    """
+    t = np.asarray(tangent, float)
+    t = t / np.linalg.norm(t)
+    n = np.asarray(toward, float)
+    n = n / np.linalg.norm(n)
+    c = np.asarray(at, float)
+    low = layer == "buildings_low"
+
+    def foot_z(xy):
+        if z_at is None:
+            return float(z)
+        zf = float(z_at(xy))
+        return zf if math.isfinite(zf) else float(z)
+
+    # Sample terrain at each of the 4 leg feet
+    feet = {}
+    for side in (-1, 1):
+        for role, off_n in (("front", 0.17), ("back", -0.22)):
+            xy = c + t * (side * 0.72) + n * off_n
+            feet[(side, role)] = (xy, foot_z(xy))
+    # Keep the seat level at a comfortable ~0.44 m above the mean/highest local support
+    z_ref = max(float(z), max(zf for _, zf in feet.values()) - 0.04)
+
+    if low:
+        # 1 seat slab + 1 backrest slab + 4 grounded legs (60 tris)
+        _box(acc, layer, "bench_wood", c + n * 0.01, z_ref + 0.42, z_ref + 0.46, 0.91, 0.20, t)
+        _box(acc, layer, "bench_wood", c - n * 0.24, z_ref + 0.59, z_ref + 0.85, 0.91, 0.022, t)
+        for side in (-1, 1):
+            xy_f, zf = feet[(side, "front")]
+            xy_b, zb = feet[(side, "back")]
+            _box(acc, layer, "steel_painted", xy_f, min(zf, z_ref) - 0.06, z_ref + 0.45, 0.028, 0.028, t)
+            _box(acc, layer, "steel_painted", xy_b, min(zb, z_ref) - 0.06, z_ref + 0.86, 0.028, 0.028, t)
+        return
+
+    # LOD0 wooden slats: 3 seat slats + 2 slightly reclined backrest slats (50 tris)
+    for off_n in (-0.14, 0.01, 0.16):
+        _box(acc, layer, "bench_wood", c + n * off_n, z_ref + 0.42, z_ref + 0.456, 0.91, 0.0525, t)
+    _box(acc, layer, "bench_wood", c - n * 0.23, z_ref + 0.59, z_ref + 0.695, 0.91, 0.018, t)
+    _box(acc, layer, "bench_wood", c - n * 0.25, z_ref + 0.745, z_ref + 0.85, 0.91, 0.018, t)
+
+    # LOD0 left & right open steel leg frames (80 tris) + longitudinal under-seat tie-rail (10 tris)
+    for side in (-1, 1):
+        xy_f, zf = feet[(side, "front")]
+        xy_b, zb = feet[(side, "back")]
+        xy_mid = c + t * (side * 0.72) - n * 0.025
+        _box(acc, layer, "steel_painted", xy_f, min(zf, z_ref) - 0.06, z_ref + 0.60, 0.0275, 0.0275, t)
+        _box(acc, layer, "steel_painted", xy_b, min(zb, z_ref) - 0.06, z_ref + 0.87, 0.0275, 0.0275, t)
+        _box(acc, layer, "steel_painted", xy_mid, z_ref + 0.375, z_ref + 0.42, 0.0225, 0.215, t)
+        _box(acc, layer, "steel_painted", xy_mid, z_ref + 0.575, z_ref + 0.607, 0.0275, 0.215, t)
+    _box(acc, layer, "steel_painted", c - n * 0.02, z_ref + 0.36, z_ref + 0.41, 0.72, 0.022, t)
 
 
 def _lamp(acc, layer, at, z):
@@ -240,7 +287,7 @@ def build(buf, region, origin, overrides, zsmooth, report):
             if not math.isfinite(z):
                 result["refused"].append({"at":list(xy),"reason":"non-finite terrain"}); continue
             for layer in LAYERS:
-                if kind=="benches": _bench(acc,layer,p,z,tangent,toward)
+                if kind=="benches": _bench(acc,layer,p,z,tangent,toward,z_at=ground)
                 else: _lamp(acc,layer,p,z)
             if kind=="benches":
                 _box(acc,"collision","collision_steel",p,z-.1,z+.9,.91,.30,tangent)
