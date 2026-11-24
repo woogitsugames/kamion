@@ -164,13 +164,14 @@ namespace Game.Core.Navigation
         public static int Plan(RouteGraph g, RoutePath p, ref NavGuidance gd, float speedMs, VoiceClip[] buf) =>
             PlanBand(g, p, ref gd, BandFor(gd.NextM, speedMs), buf);
 
-        /// <summary>Name of the ring of roundabout manoeuvre <paramref name="man"/>: the first non-empty segment name from the
-        /// manoeuvre point up to the next manoeuvre (the entry link at the point can be unnamed). null when none. No allocation.</summary>
+        /// <summary>Name of the ring of roundabout manoeuvre <paramref name="man"/>: the first non-empty segment name along
+        /// the ring itself (<c>ManPoint[man] .. ManEndPoint[man] - 1</c>; never scanning onto the incoming or exit road).
+        /// null when the ring is unnamed. No allocation.</summary>
         public static string RingName(RouteGraph g, RoutePath p, int man)
         {
             int from = p.ManPoint[man];
-            int to = man + 1 < p.ManCount ? p.ManPoint[man + 1] : p.Count - 1;
-            if (to > from + 12) to = from + 12;   // the ring is a few edges long; never scan the following road
+            int end = p.ManEndPoint[man];
+            int to = end > from ? end - 1 : from;
             for (int i = from; i <= to && i < p.Count; i++)
             {
                 int ni = p.Name[i];
