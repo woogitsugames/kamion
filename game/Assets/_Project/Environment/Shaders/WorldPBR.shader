@@ -604,14 +604,15 @@ Shader "Kamion/World PBR"
                     // ADR 0335 (critic build #5 pkt 4: "asfalt jednolity na prostych"): the pavement is not one tone for
                     // kilometres. Two octaves of object-space noise (stable across origin rebases, identical on ribbons,
                     // plates and junction patches, so no seams): 90 m = resurfaced / sun-bleached stretches, 23 m = patched
-                    // binder; +-9..12 % lightness and a +-2 % warm / cool shift (tar-rich brown vs. weathered grey).
+                    // binder; +-9..12 % lightness (r2: x1.7, +-6 % at 7 m) and a +-2.5 % warm / cool shift (tar-rich brown vs. weathered grey).
                     // Fresh asphalt stays uniform. WORKING_VALUE, judged against Commons DW671 (cs11749508).
                     {
                         float2 pt = TransformWorldToObject(pw).xz;
                         half tv = (half)(ValueNoise12(pt / 90.0) * 0.55 + ValueNoise12(pt / 23.0 + 11.0) * 0.45);
                         half hue = (half)(ValueNoise12(pt / 140.0 + 41.0) - 0.5);
-                        half3 tint = half3(1.0 + 0.04 * hue, 1.0, 1.0 - 0.04 * hue);
-                        albedo *= lerp(half3(1, 1, 1), (1.0 + 0.5 * (tv - 0.5)) * tint, 1.0 - paintFresh);
+                        half3 tint = half3(1.0 + 0.05 * hue, 1.0, 1.0 - 0.05 * hue);
+                        half mid = (half)(ValueNoise12(pt / 7.0 + 83.0) - 0.5);       // 7 m: re-surfaced / patched-over stretches
+                        albedo *= lerp(half3(1, 1, 1), (1.0 + 0.85 * (tv - 0.5) + 0.3 * mid) * tint, 1.0 - paintFresh);
                     }
                     if (w.x > -0.5)        // (-1, 5) = no road data (junction patches, kerbs)
                     {
@@ -840,11 +841,11 @@ Shader "Kamion/World PBR"
                             // value noise, the fine one fades with the pixel footprint) and macro mottling; an old repair
                             // ravels along its edge (lighter 0-6 cm rim). WORKING_VALUE.
                             float fpx = max(length(fwidth(pw.xz)), 1e-4);
-                            half grain = (half)((ValueNoise12(on / 0.035) - 0.5) * 0.8 * saturate(0.05 / fpx)
-                                               + (ValueNoise12(on / 0.13 + 7.0) - 0.5) * 0.5);
+                            half grain = (half)((ValueNoise12(on / 0.035) - 0.5) * 0.45 * saturate(0.05 / fpx)
+                                               + (ValueNoise12(on / 0.13 + 7.0) - 0.5) * 0.4);
                             // light aggregate flecks in the (dark) binder, fading with distance
                             half fleck = (half)step(0.84, Hash12(floor(on / 0.018))) * (half)saturate(0.04 / fpx);
-                            albedo += fleck * 0.035h * (1.0h - 0.5h * age);
+                            albedo += fleck * 0.018h * (1.0h - 0.5h * age);
                             albedo *= (1.0 + grain) * (0.88 + 0.24 * macro.a);
                             albedo *= 1.0 + 0.30 * age * (1.0 - smoothstep(0.0, 0.06, edgeM));
                         }
