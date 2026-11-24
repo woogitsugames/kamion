@@ -96,7 +96,8 @@ def test_sector_builder_and_building_modes():
     assert 1.0 in alphas and 0.0 in alphas
 
     north_prims = sectors["far_north"].primitives()
-    assert {p["mat"] for p in north_prims} == {"far_field_buildings", "forest_edge_mixed"}
+    # ADR 0330: the curtain material follows the stand mix (+ haze band by true distance; 126 m out = no band)
+    assert {p["mat"] for p in north_prims} == {"far_field_buildings", "forest_edge_conifer"}
 
 
 @pytest.mark.parametrize("east,height,low_visible", [(1300., 10., True), (3000., 10., False), (3000., 40., True)])

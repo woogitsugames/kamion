@@ -35,6 +35,21 @@ overrides:
       - {length_m: 38.0, panels: 9}
       - {length_m: 37.0, panels: 9}
       - {length_m: 15.0, truss: false}
+  # ADR 0330 (banks2-s24): the deck barrier of the DW671 bridge is a single W-beam on posts along the truss line, no
+  # upper box beam (the generic deck barrier of the Andersa viaducts, BRIDGE_BARRIER_H 0.98 m, stood in the driver's
+  # view of the river as a second rail).
+  - id: tykocin-narew-deck-barrier-0330
+    kind: bridge_style
+    target: {osm_way: [96942026]}
+    set:
+      barrier: wbeam
+    verify: control cameras bv2_cab_main_fwd / bv2_cab_main_w against Commons "Tykocin Most drogowy 08 / 09"
+    confidence: high
+    reason: >-
+      Wikimedia Commons "Tykocin Most drogowy 08" (carriageway towards the south portal) and "09" (the barrier end on
+      the south approach), Zala, 2025-09-20, CC BY-SA 4.0, reference only: one galvanised W-beam on C posts with
+      spacers at the edge of the carriageway on both sides of the deck, no second beam above it; height not measured
+      (the generic ground W-beam, GUARDRAIL_H, WORKING_VALUE).
   # ---------------------------------------------------------------- Plac Stefana Czarnieckiego (ADR 0320)
   # GUGiK orthophoto 2024 (0.25 m): after the renewal the square is a sett-paved plaza (grey fields in a diagonal
   # lattice of darker bands) with the monument, a paved walk around two lawns and no trees. Outlines traced on the

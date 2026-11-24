@@ -172,6 +172,16 @@ SOFT_UNDER = 0.04          # m: terrain just under grass verges / island grass (
 SOFT_CLEAR_CELLS = 2       # ... only where no hard surface (carriageway, kerb, paving) is within this many nodes
 FLOOR_STEP_M = 0.2         # ADR 0321: sample spacing on the verge triangles for the cell floor (WORKING_VALUE)
 FLOOR_OUTSIDE_DROP_M = 0.20  # ADR 0321: max lowering of a node outside the footprint by the floor (WORKING_VALUE)
+FLOOR_SKIRT_NZ = 0.35      # ADR 0330: faces steeper than ~70 deg (the buried skirt of a strip) are not a floor
+# ADR 0330 (banks2-s24): behind a generated rural ditch the NMT still carries the REAL ditch (LIDAR, 1 m grid), usually
+# 1-3 m further out than the rule profile (knyszyn-w E 120 N 795: generated ditch at 1-3 m from the shoulder, NMT trench
+# 0.5-0.9 m deep at 4-6 m). Sampled on the diagonal 1 m grid that second trench reads as a row of hummocks / a sawtooth
+# behind the back slope (bv_side_ditch). The generated ditch stands for the real one: in a band behind it the NMT
+# trenches narrower than DITCH_RELIEF_CLOSE_M are filled (grey closing) and the micro-relief smoothed. WORKING_VALUE.
+DITCH_RELIEF_DEPTH_M = 0.25     # seed: soft nodes whose verge floor lies this far below the road join height (a ditch)
+DITCH_RELIEF_CLOSE_M = 5        # closing window (nodes = m): trenches narrower than this are filled
+DITCH_RELIEF_SIGMA_M = 1.0      # gaussian smoothing of the filled surface
+DITCH_RELIEF_BAND_M = (5.0, 9.0)  # full weight to 5 m from the ditch nodes, faded out at 9 m
 
 
 def rasterise_floor(parts, hf, step=FLOOR_STEP_M):
@@ -188,6 +198,13 @@ def rasterise_floor(parts, hf, step=FLOOR_STEP_M):
     if not tris:
         return floor
     T = np.concatenate(tris)
+    # ADR 0330: the vertical skirt under the outer edge of a strip is buried by design; as a floor it pulled every node
+    # beside the ditch crown down by FLOOR_OUTSIDE_DROP_M (trough + exposed skirt = a ridge along the back slope)
+    cr = np.cross(T[:, 1] - T[:, 0], T[:, 2] - T[:, 0])
+    nz = np.abs(cr[:, 2]) / np.maximum(np.linalg.norm(cr, axis=1), 1e-12)
+    T = T[nz >= FLOOR_SKIRT_NZ]
+    if not len(T):
+        return floor
     ext = np.max(np.linalg.norm(T[:, [1, 2, 0], :2] - T[:, :, :2], axis=2), axis=1)
     nseg = np.clip(np.ceil(ext / step).astype(int), 1, 400)
     for k in np.unique(nseg):
@@ -210,6 +227,27 @@ def rasterise_floor(parts, hf, step=FLOOR_STEP_M):
                     ok = (ii >= 0) & (jj >= 0) & (ii < W) & (jj < H)
                     np.minimum.at(floor, (jj[ok], ii[ok]), P[ok, 2])
     return floor
+
+
+def ditch_relief(nmt, mask, soft, road, soft_floor):
+    """ADR 0330: NMT with the trenches behind generated rural ditches filled and smoothed (see DITCH_RELIEF_*).
+    Seeds are the soft (verge-only) nodes whose verge floor lies DITCH_RELIEF_DEPTH_M below the road join height; the
+    surface is replaced within DITCH_RELIEF_BAND_M of them. A grey closing only fills concave features narrower than
+    the window (an embankment toe or a field edge step is unchanged). Returns (nmt, nodes changed > 5 cm)."""
+    if soft is None or soft_floor is None:
+        return nmt, 0
+    with np.errstate(invalid="ignore"):
+        seed = soft & np.isfinite(soft_floor) & np.isfinite(road) & (road - soft_floor > DITCH_RELIEF_DEPTH_M)
+    if not seed.any():
+        return nmt, 0
+    b0, b1 = DITCH_RELIEF_BAND_M
+    d = ndimage.distance_transform_edt(~seed)
+    w = np.clip((b1 - d) / (b1 - b0), 0.0, 1.0)
+    w[mask] = 0.0          # under the footprint the road / verge height wins anyway (conform)
+    sm = ndimage.gaussian_filter(ndimage.grey_closing(nmt, size=(DITCH_RELIEF_CLOSE_M, DITCH_RELIEF_CLOSE_M)),
+                                 DITCH_RELIEF_SIGMA_M)
+    out = nmt + w * (sm - nmt)
+    return out, int((np.abs(out - nmt) > 0.05).sum())
 
 
 def edge_distances(hf, mask, raster_dist, footprint, band_m=16.0):
@@ -254,6 +292,9 @@ def conform(hf, road, mask, soft=None, footprint=None, soft_floor=None):
     out = nmt.copy()
     if not mask.any():
         return out, np.zeros_like(nmt)
+    # ADR 0330: one ditch per side - the NMT trench behind the generated ditch is filled (only with a floor, i.e. the
+    # world build; tests / previews without soft_floor see the bare NMT as before)
+    nmt, _ = ditch_relief(nmt, mask, soft, road, soft_floor)
     d, (jj, ii) = ndimage.distance_transform_edt(~mask, return_indices=True)
     zedge = road[jj, ii]
     if footprint is not None and not footprint.is_empty:

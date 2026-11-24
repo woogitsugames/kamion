@@ -95,12 +95,72 @@ MIX_OF_CATEGORY = {"iglasty": "conifer", "liściasty": "broadleaf", "mieszany": 
 TEX_REF = "art-source/world/vegetation/{}.png"
 
 
+# ADR 0330: hazed copies of the edge textures for the far-field ring (streetscape.far_field.HAZE_BANDS). The ring is
+# foreshortened, so the scene haze sees a 1.5-4 km stand at <= ~1.7 km; the missing extinction of the band is baked
+# into the albedo: linear rgb -> lerp(rgb, HAZE_ALBEDO, k), alpha and the normal / visibility map unchanged.
+# k = 1 - exp(-beta * (d_true - d_eff)) at the band's typical stand (1.4 km: 0.16, 3.0 km: 0.37; beta = 3.912 / 20 km).
+HAZE_ALBEDO = (0.36, 0.42, 0.50)       # WORKING_VALUE (see far_field.HAZE_ALBEDO)
+HAZE_SUFFIX_K = {"_haze1": 0.16, "_haze2": 0.37}
+HAZE_MIXES = ("conifer", "mixed", "broadleaf")
+
+
+def _srgb_to_lin(c):
+    return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+
+
+def _lin_to_srgb(c):
+    return np.where(c <= 0.0031308, c * 12.92, 1.055 * np.power(np.maximum(c, 0.0), 1.0 / 2.4) - 0.055)
+
+
+def haze_textures(root=None, log=print) -> dict:
+    """ADR 0330: write art-source/world/vegetation/forest_edge_<mix><suffix>.png from the baked edge textures (only
+    when missing or out of date: the source sha256 is kept in forest_edge_haze.json). Deterministic."""
+    from PIL import Image
+    root = root or pipeline.REPO
+    vdir = root / "art-source" / "world" / "vegetation"
+    meta_p = vdir / "forest_edge_haze.json"
+    meta = json.loads(meta_p.read_text(encoding="utf-8")) if meta_p.exists() else {}
+    want = {"schema": "truck-sim-pl/forest-edge-haze/1", "adr": "0330", "haze_albedo_linear": list(HAZE_ALBEDO),
+            "k": HAZE_SUFFIX_K, "sources": {}}
+    wrote = []
+    for mix in HAZE_MIXES:
+        src = vdir / f"forest_edge_{mix}.png"
+        if not src.exists():
+            continue
+        sha = hashlib.sha256(src.read_bytes()).hexdigest()
+        want["sources"][src.name] = sha
+        stale = (meta.get("sources", {}).get(src.name) != sha or meta.get("k") != HAZE_SUFFIX_K
+                 or meta.get("haze_albedo_linear") != list(HAZE_ALBEDO))
+        im = None
+        for suf, k in HAZE_SUFFIX_K.items():
+            dst = vdir / f"forest_edge_{mix}{suf}.png"
+            if dst.exists() and not stale:
+                continue
+            if im is None:
+                im = np.asarray(Image.open(src).convert("RGBA"), dtype=np.float64) / 255.0
+            out = im.copy()
+            lin = _srgb_to_lin(im[..., :3])
+            lin = lin * (1.0 - k) + np.asarray(HAZE_ALBEDO)[None, None, :] * k
+            out[..., :3] = _lin_to_srgb(lin)
+            Image.fromarray(np.clip(np.round(out * 255.0), 0, 255).astype(np.uint8), "RGBA").save(dst, optimize=True)
+            wrote.append(dst.name)
+    if meta != want:
+        meta_p.write_text(json.dumps(want, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+    if wrote:
+        log("forest edge haze textures", wrote)
+    return {"wrote": wrote}
+
+
 def materials():
     out = {}
     for mix in ("conifer", "mixed", "broadleaf"):
         out[f"forest_edge_{mix}"] = {"color": [1, 1, 1], "rough": 0.95, "alpha_cutoff": 0.5, "hlod": True,
                                      "texture_ref": TEX_REF.format(f"forest_edge_{mix}"),
                                      "normal_ref": TEX_REF.format(f"forest_edge_{mix}_n")}
+        for suf in HAZE_SUFFIX_K:      # ADR 0330: far-field bands (same normal / visibility map)
+            out[f"forest_edge_{mix}{suf}"] = {"color": [1, 1, 1], "rough": 0.95, "alpha_cutoff": 0.5, "hlod": True,
+                                              "texture_ref": TEX_REF.format(f"forest_edge_{mix}{suf}"),
+                                              "normal_ref": TEX_REF.format(f"forest_edge_{mix}_n")}
         out[f"forest_canopy_{mix}"] = {"color": [1, 1, 1], "rough": 0.95, "hlod": True,
                                        "texture_ref": TEX_REF.format(f"forest_canopy_{mix}")}
     return out
