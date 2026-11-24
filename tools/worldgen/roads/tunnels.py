@@ -50,7 +50,9 @@ FLOOR_DROP_M = 0.35     # terrain under the cut / slab: road - this (as ADR 0206
 GROUP_M = 40.0          # tunnel runs whose middles are this close form one structure
 RAIL_H = 1.10           # railing on the coping / portal edge (bridge parapet height class) WORKING_VALUE
 STEP_M = 2.0
-WALL_MAT = "ramp_wall_panels"
+WALL_MAT = "retaining_wall"    # ADR 0338: cast-in-place cutting wall (dylatacje, zacieki, cokół) instead of the
+                                # precast ramp panels; the material reads TEXCOORD_1 for the _RUNOFF layer
+WALL_UV1 = True                 # ADR 0338: wall face carries TEXCOORD_1 = (s m, 1 + m below the top) for _RUNOFF
 
 
 # --------------------------------------------------------------------------------------------- plan
@@ -501,14 +503,20 @@ def _build_wall(buf, g, c, side, sgn, ss, P, N, hw, u_end, lat_w, zfoot, bank, i
     A = np.column_stack([face, bot])
     B = np.column_stack([face, top])
 
-    def strip(layer, mat, A_, B_, suffix):
+    def strip(layer, mat, A_, B_, suffix, uv1=False):
         # meshing._strip faces right of the station direction (-N); a face looking at the road (-N * sgn) is
         # reversed on the right side
         M._strip(buf, layer, mat, A_, B_, src + suffix, both=False)
         if sgn < 0:
             buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
+        if uv1:
+            # ADR 0338: TEXCOORD_1 = (s m along, 1 + metres below the top edge) - the _RUNOFF layer of the
+            # retaining_wall material draws the zacieki under the coping / slab edge from this (0 triangles added)
+            s_ = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(A_[:, :2], axis=0).T))])
+            buf.parts[-1].UV1 = np.column_stack([np.tile(s_, 2),
+                                                 np.concatenate([1.0 + (B_[:, 2] - A_[:, 2]), np.ones(len(s_))])])
 
-    strip("bridge", WALL_MAT, A, B, "")
+    strip("bridge", WALL_MAT, A, B, "", uv1=WALL_UV1)
     # back face (0.3 m behind, hidden in the ground): the wall casts its realtime shadow onto the road when the sun is
     # behind it (single-sided faces are culled in the shadow pass) - the banks are terrain, which casts none
     back = np.column_stack([P + N * sgn * (lat_w + 0.3)[:, None], bot])

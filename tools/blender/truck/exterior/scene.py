@@ -494,6 +494,10 @@ CAMS = {
     "zbl_naroznik": dict(loc=(-3.6, 4.5, 1.92), target=(-1.02, 1.30, 1.70), lens=80, fig=None),
     "zbl_soczewka": dict(loc=(-1.75, 2.85, 1.74), target=(-1.06, 1.42, 1.668), lens=85, fig=None),
     "zbl_stopnie": dict(loc=(-4.4, 1.6, 1.15), target=(-1.2, -0.30, 0.78), lens=45, fig=None),
+    # cab-side-s24 (ADR 0343): the cab side square on, along the skin as the class II mirror sees it, and from the rear
+    "zbl_bok": dict(loc=(-8.2, 0.05, 2.15), target=(-1.2, 0.05, 2.15), lens=50, fig=None),
+    "lusterko": dict(loc=(-1.80, 1.20, 2.55), target=(-1.42, -6.0, 1.70), lens=24, fig=None),
+    "bok_tyl": dict(loc=(-3.6, -4.2, 2.3), target=(-1.2, 0.0, 2.2), lens=45, fig=None),
     "zbl_tyl": dict(loc=(-3.4, -7.6, 3.4), target=(0.0, -2.5, 1.25), lens=38, fig=None),
     "zbl_kolo": dict(loc=(4.2, -2.6, 0.95), target=(1.2, -3.7, 0.55), lens=50, fig=None),
     # B2.1: right (passenger) side - vertical exhaust stack behind the cab, arch marker, steps, corner lamps

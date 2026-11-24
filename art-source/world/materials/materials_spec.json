@@ -4657,6 +4657,121 @@
       "hf_ratio_albedo": 0.3063,
       "ao_mean": 0.995
     },
+    "retaining_wall_cast": {
+      "tile_m": [
+        12.0,
+        8.0
+      ],
+      "slots": [
+        "retaining_wall"
+      ],
+      "note": "ADR 0338: cast-in-place cutting retaining wall (roads/tunnels.py): dylatacje every 6 m, weep-hole stains, damp foot band, formwork seams + tie holes, chips. Tile 12 x 8 m; run-off streaks from the top come from the shader _RUNOFF layer (TEXCOORD_1), not from this map.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "concrete_floor_worn_001",
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "concrete_floor_worn_001",
+            "page": "https://polyhaven.com/a/concrete_floor_worn_001",
+            "authors": {
+              "Dimitrios Savva": "Photography",
+              "Rico Cilliers": "Processing"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            1364
+          ],
+          "texel_mm": 5.86,
+          "dir": "retaining_wall_cast/High",
+          "png_bytes": 12855457,
+          "files": [
+            "T_retaining_wall_cast_BaseColor.png",
+            "T_retaining_wall_cast_MaskMap.png",
+            "T_retaining_wall_cast_Normal.png",
+            "T_retaining_wall_cast_Var.png"
+          ],
+          "smoothness_mean": 0.137,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 6629840
+        },
+        "Medium": {
+          "res": [
+            1024,
+            682
+          ],
+          "texel_mm": 11.72,
+          "dir": "retaining_wall_cast/Medium",
+          "png_bytes": 2521925,
+          "files": [
+            "T_retaining_wall_cast_BaseColor.png",
+            "T_retaining_wall_cast_MaskMap.png",
+            "T_retaining_wall_cast_Normal.png",
+            "T_retaining_wall_cast_Var.png"
+          ],
+          "smoothness_mean": 0.136,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1294308
+        },
+        "Low": {
+          "res": [
+            512,
+            341
+          ],
+          "texel_mm": 23.44,
+          "dir": "retaining_wall_cast/Low",
+          "png_bytes": 526883,
+          "files": [
+            "T_retaining_wall_cast_BaseColor.png",
+            "T_retaining_wall_cast_MaskMap.png",
+            "T_retaining_wall_cast_Normal.png",
+            "T_retaining_wall_cast_Var.png"
+          ],
+          "smoothness_mean": 0.136,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 232789
+        }
+      },
+      "height_range_m": [
+        -0.01702,
+        0.00256
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4998,
+        "p05": 0.4214,
+        "p95": 0.5685,
+        "mean_rgb_linear": [
+          0.4994,
+          0.4994,
+          0.4994
+        ]
+      },
+      "hf_ratio_albedo": 0.0523,
+      "ao_mean": 0.986
+    },
     "roof_karpiowka": {
       "tile_m": [
         4.2,

@@ -1655,4 +1655,112 @@ def interior_proxies():
 
 
 
+# ---------------------------------------------------------------- cab side detail (cab-side-s24, ADR 0343)
+# The cab side seen along its own skin in the class II mirrors (ADR 0340: ~18 % of the mirror picture) was one flat
+# sheet with shut lines. What a real long-haul cab carries there, all WORKING_VALUE sizes read off the class (no maker's
+# shapes): a pressed character line through the door and the fixed panels, a stiffening swage in the high roof side, a
+# drip rail over the door, a cab vent in the sleeper panel over the grab handle, a side direction indicator in the
+# corner panel in line with the headlamp, pressed ribs in the side extender, seal lips beside the shut lines.
+# Proud geometry (it reads at 3-15 deg from the skin where a normal map cannot); bake-only pieces are named 'bk_*'.
+SWAGE_Z = 1.845          # top crease of the door character line (between the handle, 1.665, and the kink, 1.90)
+SWAGE_H = 0.011          # m proud
+SWAGE_PROF = ((0.0, 0.0), (-0.012, 1.0), (-0.050, 0.55), (-0.100, 0.15), (-0.140, 0.0))   # (dz from the crease, share of h)
+ROOF_SWAGE_Z = 3.365     # roof-side stiffening swage: over the roof joint (3.30), under the roof radius (from 3.45)
+VENT = (-0.832, -0.652, 2.455, 2.735)    # sleeper-panel vent (y0, y1, z0, z1): over the grab-handle recess (top 2.32)
+SIDE_IND = (0.850, 0.995, 1.370, 1.425)  # side indicator lens (y0, y1, z0, z1): flat corner panel over the sill cladding; R48 6.5.4 cat. 5: <= 1.5 m high, <= 1.8 m from the front (per regs_check.py; regulation text not re-read: UNVERIFIED)
+
+
+def relief(name, m, side, y0, y1, prof, zc, h, taper0=0.0, taper1=0.0, eps=0.0012):
+    """Pressed feature as a skin overlay: an open sheet following the cab side, offset h * profile(z) * taper(y); its
+    border lies eps above the skin. prof = ((dz, k), ...) from zc. taper = run-out length at the y0 / y1 end."""
+    ys = [y0]
+    for t in (0.15, 0.3, 0.45, 0.6, 0.8, 1.0):
+        if taper0 > 0:
+            ys.append(y0 + taper0 * t)
+    n_mid = max(1, int(round((y1 - taper1 - y0 - taper0) / 0.45)))
+    for i in range(1, n_mid):
+        ys.append(y0 + taper0 + (y1 - taper1 - y0 - taper0) * i / n_mid)
+    for t in (1.0, 0.8, 0.6, 0.45, 0.3, 0.15):
+        if taper1 > 0:
+            ys.append(y1 - taper1 * t)
+    ys.append(y1)
+
+    def ty(y):
+        k = 1.0
+        if taper0 > 0:
+            k = min(k, G.smoothstep(0.0, 1.0, (y - y0) / taper0))
+        if taper1 > 0:
+            k = min(k, G.smoothstep(0.0, 1.0, (y1 - y) / taper1))
+        return k
+    bm = bmesh.new()
+    grid = [[bm.verts.new(CAB.side_pt(zc + dz, y, side, eps + h * k * ty(y))) for y in ys] for dz, k in prof]
+    for a, b in zip(grid, grid[1:]):
+        for j in range(len(ys) - 1):
+            bm.faces.new((a[j], a[j + 1], b[j + 1], b[j]))
+    ob = G.obj_from_bm(name, bm, m, sharp=22)
+    # recalc_face_normals on an open sheet may pick the inward side: face it away from the centreline
+    if sum(p.normal.x for p in ob.data.polygons) * side < 0:
+        ob.data.flip_normals()
+    return ob
+
+
+def side_detail():
+    set_group("cab")
+    rb_y = CAB_BACK_Y + CFG["rb"]             # the flat side ends here, the back corner radius begins
+    for s in (-1, 1):
+        # 1. character line: door (moves with the door), sleeper-panel stub up to the grab-handle recess, corner panel
+        relief(f"door_swage_{s}", "paint", s, DOOR_REAR + 0.010, DOOR_FRONT_LOW - 0.010, SWAGE_PROF, SWAGE_Z, SWAGE_H)
+        relief(f"cab_swage_r_{s}", "paint", s, HANDLE_Y[1] + 0.006, DOOR_REAR - 0.010, SWAGE_PROF, SWAGE_Z, SWAGE_H,
+               taper0=0.03)
+        relief(f"cab_swage_f_{s}", "paint", s, DOOR_FRONT_LOW + 0.010, 1.20, SWAGE_PROF, SWAGE_Z, SWAGE_H, taper1=0.26)
+        # 2. roof side: one long swage, sharper lower crease (mirrored profile), run-out at both ends
+        prof = tuple((-dz * 0.6, k) for dz, k in SWAGE_PROF)
+        relief(f"roof_swage_{s}", "paint", s, rb_y + 0.03, CAB.plan(ROOF_SWAGE_Z)[6] + 0.04, prof, ROOF_SWAGE_Z, 0.008,
+               taper0=0.22, taper1=0.30)
+        # 3. drip rail over the door aperture (fixed roof-side panel), rubber lip under it
+        y0, y1 = rb_y + 0.02, CAB.plan(3.04)[6] + 0.05      # ends where the flat side runs into the A-pillar radius
+        CAB.patch(f"drip_rail_{s}", "plastic_satin", "side", 3.034, 3.050, y0, y1, off=0.0, side=s, nz=1, npar=30,
+                  thick=0.011)
+        CAB.patch(f"bk_drip_lip_{s}", "rubber", "side", 3.026, 3.034, y0 + 0.01, y1 - 0.01, off=0.0012, side=s, nz=1, npar=30,
+                  thick=0.003)
+        # 4. sleeper-panel vent: dark tray, frame, six louvres raked down and outwards
+        vy0, vy1, vz0, vz1 = VENT
+        CAB.patch(f"side_vent_tray_{s}", "plastic", "side", vz0, vz1, vy0, vy1, off=0.0008, side=s, nz=1, npar=1,
+                  thick=0.003)
+        fw = 0.014
+        for nm, (a0, a1, b0, b1) in (("b", (vy0, vy1, vz0, vz0 + fw)), ("t", (vy0, vy1, vz1 - fw, vz1)),
+                                     ("r", (vy0, vy0 + fw, vz0 + fw, vz1 - fw)), ("f", (vy1 - fw, vy1, vz0 + fw, vz1 - fw))):
+            CAB.patch(f"side_vent_frame_{nm}_{s}", "plastic_satin", "side", b0, b1, a0, a1, off=0.003, side=s, nz=1,
+                      npar=1, thick=0.009)
+        n_l = 6
+        pitch = (vz1 - vz0 - 2 * fw) / n_l
+        xw = CAB.sec((vz0 + vz1) / 2)[2]
+        rot = Matrix.Rotation(math.radians(-s * 32.0), 3, "Y")
+        for k in range(n_l):
+            zc = vz0 + fw + pitch * (k + 0.5)
+            box(f"side_vent_louvre_{s}_{k}", (s * (CAB.sec(zc)[2] + 0.0075), (vy0 + vy1) / 2, zc),
+                (0.004, vy1 - vy0 - 2 * fw, pitch * 0.92), "plastic_satin", rot=rot)
+        # 5. side direction indicator on the fixed corner panel, continuing the T-bar band: gasket, base, crowned lens
+        iy0, iy1, iz0, iz1 = SIDE_IND
+        CAB.patch(f"bk_ind_gasket_{s}", "rubber", "side", iz0 - 0.008, iz1 + 0.008, iy0 - 0.008, iy1 + 0.008, off=0.0008,
+                  side=s, nz=1, npar=1, thick=0.002)
+        xw = CAB.sec((iz0 + iz1) / 2)[2]
+        c = ((iy0 + iy1) / 2, (iz0 + iz1) / 2)
+        box(f"indicator_side_base_{s}", (s * (xw + 0.0025), *c), (0.005, iy1 - iy0 + 0.008, iz1 - iz0 + 0.008),
+            "plastic_satin", bev=0.002)
+        box(f"indicator_side_{s}", (s * (xw + 0.0085), *c), (0.009, iy1 - iy0, iz1 - iz0), "lens_amber", bev=0.004, seg=2)
+        # 6. side extender: three pressed ribs on the exposed part behind the back corner
+        xo = s * (CAB_HALF_W - 0.015)
+        for k, z in enumerate((2.02, 2.68, 3.12)):
+            box_mm(f"extender_rib_{s}_{k}", xo - s * 0.002, xo + s * 0.006, CAB_BACK_Y - 0.31, CAB_BACK_Y + 0.02,
+                   z - 0.017, z + 0.017, "paint", bev=0.0045, seg=2)
+        # 7. bake-only: seal lips beside the door shut lines (normal + colour maps)
+        CAB.patch(f"bk_seal_r_{s}", "rubber", "side", CAB_Z0 + 0.02, 2.99, DOOR_REAR - 0.0125, DOOR_REAR - 0.0065,
+                  off=0.0010, side=s, nz=12, npar=1, thick=0.0025)
+        CAB.patch(f"bk_seal_t_{s}", "rubber", "side", 3.0065, 3.0125, DOOR_REAR, win_front(3.0) + 0.04, off=0.0010,
+                  side=s, nz=1, npar=12, thick=0.0025)
+        CAB.patch(f"bk_seal_f_{s}", "rubber", "side", CAB_Z0 + 0.02, DOOR_KINK_Z[0] - 0.01, DOOR_FRONT_LOW + 0.0065,
+                  DOOR_FRONT_LOW + 0.0125, off=0.0010, side=s, nz=6, npar=1, thick=0.0025)
+
+
 set_shape(DEFAULT_SHAPE)
