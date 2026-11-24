@@ -154,10 +154,10 @@ def _bale_mesh(diameter, length, kind, lod):
             ]
     else:
         seg = 10
-        r_end = 0.90 if is_silage else 0.95
+        r_end = 0.97 if is_silage else 0.985
         profile = [
             (-1.00, r_end, 0.00),
-            (0.00, 1.015, 0.50),
+            (0.00, 1.008, 0.50),
             (1.00, r_end, 1.00),
         ]
 
@@ -281,9 +281,9 @@ def _straw_side_tile(n, rng):
     # Taut baling twine / net-wrap circumferential bands (5 narrow recessed grooves + pale cord)
     for tv in (0.13, 0.31, 0.50, 0.69, 0.87):
         d = np.abs(v - tv)
-        groove = np.exp(-((d / 0.014) ** 2))
-        cord = np.exp(-((d / 0.0045) ** 2))
-        rgb = rgb * (1.0 - 0.16 * groove[..., None]) + np.array([204.0, 194.0, 162.0])[None, None, :] * (0.28 * cord[..., None])
+        groove = np.exp(-((d / 0.015) ** 2))
+        cord = np.exp(-((d / 0.005) ** 2))
+        rgb = rgb * (1.0 - 0.24 * groove[..., None]) + np.array([212.0, 202.0, 168.0])[None, None, :] * (0.34 * cord[..., None])
 
     # Subtle diagonal net-wrap threads (low contrast: visible close up, zero moire at distance)
     net = 0.5 + 0.5 * np.sin((u * 32.0 + v * 10.0) * 2.0 * math.pi)
