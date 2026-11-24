@@ -189,8 +189,14 @@ def test_hlod_top_line_is_the_measured_one():
 
     wo, wp = wall_tops(30, 100), wall_tops(320, 380)
     assert len(wo) and len(wp)
-    assert np.median(wo) * FH.CHM_WALL_CROWN_LINE == pytest.approx(27.0, rel=0.12)
-    assert np.median(wp) * FH.CHM_WALL_CROWN_LINE == pytest.approx(16.0, rel=0.12)
+    k = FH.CHM_WALL_TOP_FRAC["conifer"]
+    assert np.median(wo) * k == pytest.approx(27.0, rel=0.08)
+    assert np.median(wp) * k == pytest.approx(16.0, rel=0.08)
+    # ... and of the second wall 6 m further in: no crown line above the tallest measured crown + 10 %
+    for c in cells.values():
+        for pr in c["prims"][1:]:
+            top = pr["V"][np.abs(pr["UV"][:, 1] - 0.75) < 1e-6]
+            assert (top[:, 2] * k <= 33.0 * 1.1).all(), float(top[:, 2].max())
     # no canopy sheet over the opening
     for c in cells.values():
         V, T = c["prims"][0]["V"], c["prims"][0]["T"]
@@ -198,6 +204,19 @@ def test_hlod_top_line_is_the_measured_one():
         assert not ((abs(cen[:, 0] - 200) < 12) & (abs(cen[:, 1] - 100) < 12)).any()
     # triangle cost: the walls around openings and stand steps stay within 1.6 x of the class rule
     assert rep["forest_hlod"]["triangles"] <= 1.6 * rep0["forest_hlod"]["triangles"], (rep, rep0)
+
+
+def test_wall_top_fraction_matches_the_baked_edge_pictures():
+    from PIL import Image
+    from conftest import require_lfs
+    veg = REPO / "art-source" / "world" / "vegetation"
+    for mix, frac in FH.CHM_WALL_TOP_FRAC.items():
+        f = veg / f"forest_edge_{mix}.png"
+        require_lfs(f)
+        a = np.asarray(Image.open(f).convert("RGBA"))[..., 3]
+        main = a[int(round(a.shape[0] * (1.0 - FH.edge_v_main(FH.bake_info()[mix]["edge"])))):] > 127
+        tops = np.array([(main.shape[0] - np.argmax(main[:, c])) / main.shape[0] for c in range(main.shape[1]) if main[:, c].any()])
+        assert np.percentile(tops, 90) == pytest.approx(frac, abs=0.02), (mix, np.percentile(tops, 90))
 
 
 def test_reduce_and_gaps():

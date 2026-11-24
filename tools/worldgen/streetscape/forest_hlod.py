@@ -75,7 +75,13 @@ SKIRT_SEG_M = 18.0
 # hole) and the tree-based value is used.
 CHM_TOP_VAR = (0.94, 1.05)
 CHM_TRUST_M = 3.0
-CHM_WALL_CROWN_LINE = 0.78  # crown line of the baked edge picture / height of the picture (spruce tips above it)
+# top of the crowns in the baked edge picture / height of the picture (90th percentile of the topmost opaque texel
+# per column of forest_edge_<mix>.png, v 0 .. v_main; measured 2026-11-24, test_forest_chm_0339): the wall quad is
+# sized so that these crowns stand at the measured dominant height. The class rule sizes the quad by the median
+# height of ALL plants of the picture (h_median_m 10.9-13.9 m incl. the understorey), which puts the crown line of a
+# broadleaf stand at ~1.5 x the height of its trees - tiles with a height model no longer have that step.
+CHM_WALL_TOP_FRAC = {"conifer": 0.888, "mixed": 0.833, "broadleaf": 0.766}
+CHM_BACK_VAR = (0.97, 1.06)   # second wall: the measured tops 6 m further in x this (class rule: BACK_H x the front)
 CHM_CANOPY_K = 0.93        # canopy sheet under the crown tops (the sheet is the closed crown layer, not the tips)
 
 
@@ -295,13 +301,13 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
         ii = ii[np.isfinite(dd)]
         return float(np.median(H[ii])) if len(ii) else float(np.median(H))
 
-    def wall_h(q, edge_info):
+    def wall_h(q, edge_info, mix, measured_only=False):
         """Height of the wall quad at q: the trees of the edge picture stand as high as the stand does there."""
         if chm is not None:                 # ADR 0339: the measured crown tops at the wall, else the stand behind it
             dom, stand, _, ins = chm.sample(q)
             if ins[0] and max(dom[0], stand[0]) >= CHM_TRUST_M:
-                return float(dom[0] if dom[0] >= CHM_TRUST_M else stand[0]) / CHM_WALL_CROWN_LINE
-        return edge_info["h_m"] * h_local(q) / edge_info["h_median_m"]
+                return float(dom[0] if dom[0] >= CHM_TRUST_M else stand[0]) / CHM_WALL_TOP_FRAC.get(mix, 0.83)
+        return None if measured_only else edge_info["h_m"] * h_local(q) / edge_info["h_median_m"]
 
     # forest union per mix (each cell takes the mix with the largest area in it)
     fu = {}
@@ -385,7 +391,7 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                     q = mid - nl * 1.0 if left_in else mid + nl * 1.0
                     nb = cell_of(q[0], q[1], half)
                     inner[i] = nb in hlod and nb != (ci, cj)          # tile border: outer wall
-            hw = np.array([wall_h(p, edge_info) for p in pts])
+            hw = np.array([wall_h(p, edge_info, mix) for p in pts])
             tv = CHM_TOP_VAR if chm is not None else TOP_VAR
             hw *= np.array([tv[0] + (tv[1] - tv[0]) * _vnoise2(p[0], p[1], TOP_NOISE_M) for p in pts])
             # ADR 0187: where the outer stand edge turns sharply (end of a belt, corner of a block) the wall steps
@@ -406,7 +412,7 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                         for q, k_ in ((p, CORNER_DROP), (p - 1, 0.5 + 0.5 * CORNER_DROP), (p + 1, 0.5 + 0.5 * CORNER_DROP),
                                       (p - 2, 0.2 + 0.8 * CORNER_DROP + 0.12), (p + 2, 0.2 + 0.8 * CORNER_DROP + 0.12)):
                             if 0 <= q < len(pts):
-                                hw[q] = min(hw[q], k_ * wall_h(pts[q], edge_info))
+                                hw[q] = min(hw[q], k_ * wall_h(pts[q], edge_info, mix))
                 if closed:
                     hw[-1] = hw[0] = min(hw[0], hw[-1])
 
@@ -445,6 +451,13 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                     zb_ = zground(qb[:, 0], qb[:, 1]) + edge_info["z0_m"]
                     hb_ = hw[idx] * np.array([BACK_H[0] + (BACK_H[1] - BACK_H[0]) * _vnoise2(a[0], a[1], TOP_NOISE_M * 0.6, "b")
                                               for a in qb])
+                    if chm is not None:     # ADR 0339: the back wall has the measured tops of its own line
+                        for kb, a in enumerate(qb):
+                            hm = wall_h(a, edge_info, mix, measured_only=True)
+                            if hm is not None:
+                                hb_[kb] = min(hm * (CHM_BACK_VAR[0] + (CHM_BACK_VAR[1] - CHM_BACK_VAR[0])
+                                                    * _vnoise2(a[0], a[1], TOP_NOISE_M * 0.6, "b")),
+                                              max(hw[idx[kb]] * BACK_H[1], hm * CHM_BACK_VAR[0]))
                     base = len(Vw)
                     Vw += [[a[0], a[1], z_] for a, z_ in zip(qb, zb_)] + [[a[0], a[1], z_ + h_] for a, z_, h_ in zip(qb, zb_, hb_)]
                     usb = us + 0.53
