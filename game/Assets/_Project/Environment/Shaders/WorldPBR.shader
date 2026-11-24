@@ -843,10 +843,14 @@ Shader "Kamion/World PBR"
                             // value noise, the fine one fades with the pixel footprint) and macro mottling; an old repair
                             // ravels along its edge (lighter 0-6 cm rim). WORKING_VALUE.
                             float fpx = max(length(fwidth(pw.xz)), 1e-4);
-                            half grain = (half)((ValueNoise12(on / 0.035) - 0.5) * 0.45 * saturate(0.05 / fpx)
-                                               + (ValueNoise12(on / 0.13 + 7.0) - 0.5) * 0.4);
+                            // The lattice hash (Hash12) loses precision at cell indices of 1e4-1e5 and turns into 0.5-1 m
+                            // blotches (render r5: translucent-looking clouds in a trench patch): wrap the object-space
+                            // coordinate to a 45 m period first - the break of a wrap line is invisible in random grain.
+                            float2 gp = on - 45.0 * floor(on / 45.0);
+                            half grain = (half)((ValueNoise12(gp / 0.035) - 0.5) * 0.45 * saturate(0.05 / fpx)
+                                               + (ValueNoise12(gp / 0.13 + 7.0) - 0.5) * 0.4);
                             // light aggregate flecks in the (dark) binder, fading with distance
-                            half fleck = (half)smoothstep(0.70, 0.86, ValueNoise12(on / 0.011 + 3.0)) * (half)saturate(0.04 / fpx);
+                            half fleck = (half)smoothstep(0.70, 0.86, ValueNoise12(gp / 0.011 + 3.0)) * (half)saturate(0.04 / fpx);
                             albedo += fleck * 0.018h * (1.0h - 0.5h * age);
                             albedo *= (1.0 + grain) * (0.88 + 0.24 * macro.a);
                             albedo *= 1.0 + 0.30 * age * (1.0 - smoothstep(0.0, 0.06, edgeM));
