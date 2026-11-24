@@ -271,7 +271,7 @@ def park_replacements(overrides):
             if o.get("kind") == "park_replacement"}
 
 
-def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_rows=None):
+def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_rows=None, field_plants_on=True):
     """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list.
     hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems.
     tree_rows (ADR 0222, opt-in): streetscape.tree_rows.region_plan() - the rows it took over are laid out by it
@@ -645,6 +645,13 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
                 P = P[u < 0.45]
             sp = pick(rng, [0.2, 0.35, 0.05, 0.05, 0.0, 0.35], len(P))
             emit(P, [SELF_SEEDED[k] for k in sp], rng, f"bdot:{f['id']}:self", 1.0)
+    # ADR 0334: scrub and lone trees on the baulks between the strips of the field mosaic, samosiew on fallow strips
+    # (positions and species from the layout hash - the same plant whichever tile builds it; one rng per plant)
+    n0 = len(out)
+    for P, sp, key, tag in (field_plants(src, origin, hf, road_dist) if field_plants_on else ()):
+        emit(P[None], [sp], np.random.default_rng(key), f"field:{tag}", 1.0)
+    report["field_plants"] = {"baulk": sum(1 for t in out[n0:] if t["src"] == "field:baulk"),
+                              "fallow": sum(1 for t in out[n0:] if t["src"] == "field:fallow")}
     # ADR 0179: authored open ground (override `kind: open_ground`, `polygons_en`: region-local E/N rings) - land the
     # orthophoto / photos show mown or bare (an airfield meadow) where the BDOT grass layers self-seed trees. Rule
     # trees inside are dropped after generation (the random streams of the features are untouched, ADR 0173);
@@ -695,6 +702,133 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
     return out, forests
 
 
+# ADR 0334: plants of the field mosaic. WORKING_VALUE (orthophoto of Knyszyn / Tykocin read by eye: scrub stands on
+# some baulks in runs of a few dozen metres, most baulks are bare grass; a lone pear / willow / birch every few hundred
+# metres; fallow strips green over with birch / pine seedlings in patches). Review fields-s24 r1: evenly scattered
+# lone saplings read as a sprinkle, so runs are rarer and denser, lone plants rarer, samosiew clustered.
+BAULK_CELL_M = 7.0              # one candidate per this length of a strip edge
+BAULK_SEG_M = 50.0              # scrub runs: a segment of a baulk is either a run or bare
+BAULK_SEG_SHARE = 0.09          # share of segments that carry a run of scrub
+BAULK_RUN_KEEP = 0.85           # candidates kept inside a run
+BAULK_LONE_KEEP = 0.004         # candidates kept on bare segments (lone shrub / tree)
+BAULK_SPECIES = (("shrub", 0.76), ("birchyoung", 0.12), ("pineyoung", 0.05), ("birch", 0.04), ("alder", 0.03))
+FALLOW_SPACING_M = 12.0
+FALLOW_KEEP = 0.30
+FALLOW_PATCH_M = 36.0           # samosiew in patches (seed trees nearby, wet hollows), not an even scatter
+FALLOW_PATCH_SHARE = 0.25
+FALLOW_SPECIES = (("birchyoung", 0.45), ("pineyoung", 0.35), ("shrub", 0.20))
+FIELD_PLANT_ROAD_M = 8.0
+FIELD_PLANT_MIN_M2 = 20000.0     # strip farms only on a BDOT polygon >= 2 ha (small grass patches are not fields)
+
+
+def _pick_species(table, u):
+    names = [n for n, _ in table]
+    c = np.cumsum([w for _, w in table])
+    return [names[min(int(np.searchsorted(c, v * c[-1], side="right")), len(names) - 1)] for v in u]
+
+
+def field_plants(src, origin, hf, road_dist=None):
+    """[(P (2,) region-local, species, rng key, tag)] for the baulks and fallow strips of the field mosaic inside
+    BDOT10k OT_PTTR_A, SELF_SEED_EDGE_M off the polygon border (the margin rule plants there) and FIELD_PLANT_ROAD_M
+    off roads / yards (road_dist: metres, 1 m grid of hf; None = no test). Deterministic: hash of the layout."""
+    feats = (src.get("bdot10k") or {}).get("OT_PTTR_A") or []
+    if not feats:
+        return []
+    polys = {r: [] for r in FIELD_FLAG_B}
+    for f in feats:
+        r = (f.get("props") or {}).get("rodzaj")
+        if r in polys:
+            g = shapely.make_valid(PV._poly_local(f["geometry"]["coordinates"], origin))
+            if g.area >= FIELD_PLANT_MIN_M2:
+                polys[r].append(g)
+    areas = {r: shapely.union_all(p) if p else shapely.Polygon() for r, p in polys.items()}
+    arable_area = areas["uprawa na gruntach ornych"]
+    all_area = shapely.union_all(list(areas.values()))
+    if all_area.is_empty:
+        return []
+    inner = all_area.buffer(-SELF_SEED_EDGE_M)
+    if inner.is_empty:
+        return []
+    shapely.prepare(inner)
+    shapely.prepare(arable_area)
+    H, W = hf.z.shape
+    x0, y1 = hf.x0, hf.y1
+    ox, oy = origin
+
+    def keep_ok(Q):
+        ins = shapely.contains_xy(inner, Q[:, 0], Q[:, 1])
+        ins &= (Q[:, 0] >= x0) & (Q[:, 0] < x0 + W - 1) & (Q[:, 1] <= y1) & (Q[:, 1] > y1 - H + 1)
+        if road_dist is not None and ins.any():
+            i = np.clip(np.rint(Q[:, 0] - x0).astype(int), 0, W - 1)
+            j = np.clip(np.rint(y1 - Q[:, 1]).astype(int), 0, H - 1)
+            ins &= road_dist[j, i] > FIELD_PLANT_ROAD_M
+        return ins
+
+    out = []
+    # --- baulks: candidates on a coarse grid snapped to the nearest strip edge, one per BAULK_CELL_M of edge
+    # (4 m grid: every 7 m x >= 22 m catchment of an edge cell holds a node at any rotation, so a cell is found by
+    # whichever tile owns its plant; the grid overhangs the tile by 25 m for the cells whose catchment crosses the seam)
+    gx, gy = np.meshgrid(np.arange(x0 - 25.0, x0 + W + 25.0, 4.0), np.arange(y1 - H - 25.0, y1 + 25.0, 4.0))
+    G = np.column_stack([gx.ravel(), gy.ravel()])
+    G = G[shapely.contains_xy(all_area, G[:, 0], G[:, 1])]
+    if len(G):
+        L = field_layout(G[:, 0] + ox, G[:, 1] + oy)
+        up = L["across"] >= 0.5 * L["w"]
+        kE = L["k"] + up
+        cell = np.floor(L["along"] / BAULK_CELL_M)
+        key = np.unique(np.column_stack([L["bid"].astype(np.float64), kE, cell]), axis=0)
+        bid, kE, cell = key[:, 0], key[:, 1], key[:, 2]
+        # edge geometry of each key from one representative point of its block (seed, th, w)
+        rep = {}
+        for b, i in zip(L["bid"], range(len(G))):
+            rep.setdefault(int(b), i)
+        ri = np.array([rep[int(b)] for b in bid])
+        th, w, sx, sy = L["th"][ri], L["w"][ri], L["sx"][ri], L["sy"][ri]
+        jit = (_u01(_h32(bid, kE * 4099 + cell, 959)) - 0.5) * 0.7 * BAULK_CELL_M
+        lat = (_u01(_h32(bid, kE * 4099 + cell, 960)) - 0.5) * 0.6
+        s_c = (cell + 0.5) * BAULK_CELL_M + jit
+        n = kE * w + lat
+        qx = sx + n * np.cos(th) - s_c * np.sin(th)
+        qy = sy + n * np.sin(th) + s_c * np.cos(th)
+        Lq = field_layout(qx, qy)
+        same = (Lq["bid"] == bid.astype(np.uint32)) & (Lq["block_edge"] > 3.0)
+        seg = np.floor(s_c / BAULK_SEG_M)
+        run = _u01(_h32(bid, kE * 4099 + seg, 961)) < BAULK_SEG_SHARE
+        u = _u01(_h32(bid, kE * 4099 + cell, 963))
+        sel = same & (u < np.where(run, BAULK_RUN_KEEP, BAULK_LONE_KEEP))
+        Q = np.column_stack([qx - ox, qy - oy])[sel]
+        ok = keep_ok(Q)
+        hs = _h32(bid[sel], kE[sel] * 4099 + cell[sel], 965)
+        sp = _pick_species(BAULK_SPECIES, _u01(hs))
+        for q, s_, h, g in zip(Q, sp, hs, ok):
+            if g:
+                out.append((q, s_, int(h), "baulk"))
+    # --- fallow strips: samosiew
+    sp_ = FALLOW_SPACING_M          # lattice in EPSG:2180 (the same nodes for every tile)
+    fx, fy = np.meshgrid(np.arange(np.floor((x0 + ox) / sp_) * sp_ - ox, x0 + W, sp_),
+                         np.arange(np.floor((y1 - H + oy) / sp_) * sp_ - oy, y1 + sp_, sp_))
+    F = np.column_stack([fx.ravel(), fy.ravel()])
+    F = F[shapely.contains_xy(arable_area, F[:, 0], F[:, 1])] if not arable_area.is_empty else F[:0]
+    if len(F):
+        ax, ay = F[:, 0] + ox, F[:, 1] + oy
+        hj = _h32(np.floor(ax), np.floor(ay), 967)
+        F = F + (np.column_stack([_u01(hj), _u01(_h32(np.floor(ax), np.floor(ay), 968))]) - 0.5) * FALLOW_SPACING_M * 0.8
+        L = field_layout(F[:, 0] + ox, F[:, 1] + oy)
+        use = field_use(L, True)
+        u = _u01(_h32(np.floor(F[:, 0] + ox), np.floor(F[:, 1] + oy), 969))
+        patch = _u01(_h32(np.floor((F[:, 0] + ox) / FALLOW_PATCH_M), np.floor((F[:, 1] + oy) / FALLOW_PATCH_M), 979))
+        sel = (use == FIELD_USES.index("fallow")) & (u < FALLOW_KEEP) & (patch < FALLOW_PATCH_SHARE) & (L["block_edge"] > 3.0)
+        sel &= np.minimum(L["across"], L["w"] - L["across"]) > 2.0
+        Q = F[sel]
+        ok = keep_ok(Q) & shapely.contains_xy(arable_area, Q[:, 0], Q[:, 1])
+        hs = _h32(np.floor(Q[:, 0] + ox), np.floor(Q[:, 1] + oy), 971)
+        sp = _pick_species(FALLOW_SPECIES, _u01(hs))
+        for q, s_, h, g in zip(Q, sp, hs, ok):
+            if g:
+                out.append((q, s_, int(h), "fallow"))
+    return out
+
+
 # ADR 0298: self-seeded trees on BDOT10k OT_PTTR_A (land in agricultural use) - margins only. WORKING_VALUE.
 SELF_SEED_EDGE_M = 8.0
 SELF_SEED_EDGE_KEEP = 0.35
@@ -711,7 +845,7 @@ SELF_SEED_FIELD_KEEP = 0.02
 # as a function of the EPSG:2180 position only (same pattern on both sides of a tile seam). Sizes WORKING_VALUE, read
 # off the orthophoto of Knyszyn (strips 20-45 m wide, blocks 200-400 m).
 FIELD_BLOCK_M = 300.0           # mean size of a block of parallel strips, m
-FIELD_STRIP_M = (22.0, 46.0)    # strip width range per block, m
+FIELD_STRIP_M = (16.0, 40.0)    # strip width range per block, m (ADR 0334: narrower Podlasie strips)
 FIELD_BAULK_M = 1.0             # half-width of the rough baulk line between two fields, m (mask grid = 1 m)
 FIELD_BAULK_B = 0.78
 FIELD_ROAD_M = 4.0              # the verge rule keeps the first metres beside a road
@@ -750,28 +884,118 @@ def _u01(h):
     return (h & np.uint32(0xFFFFFF)).astype(np.float64) / float(0xFFFFFF)
 
 
-def field_ids(x, y):
-    """(field id, block id), uint32, at EPSG:2180 positions x, y (arrays of one shape): the nearest jittered block seed
-    (one per FIELD_BLOCK_M cell) gives the strip direction and width, the strip index inside the block the field. A
-    pure function of the position, so two tiles agree along their seam."""
-    x, y = np.asarray(x, np.float64), np.asarray(y, np.float64)
-    cx, cy = np.floor(x / FIELD_BLOCK_M), np.floor(y / FIELD_BLOCK_M)
-    best = np.full(x.shape, np.inf)
+# ADR 0334 (fields-s24, critic build #5 pt 3): the shader draws a USE per strip (KamionFieldMosaic.hlsl KFUse); the
+# generator mirrors it to put plants where the use / layout calls for them (baulk scrub, samosiew on fallow).
+# (name, cumulative share) in shader order; arable 0..10, grassland 11..15. Shares WORKING_VALUE (see the shader).
+FIELD_USES_ARABLE = (("cereal_ripe", 0.18), ("cereal_pale", 0.26), ("stubble", 0.44), ("stubble_baled", 0.50),
+                     ("rape_stubble", 0.54), ("maize", 0.74), ("roots", 0.78), ("disked", 0.86), ("catch_crop", 0.90),
+                     ("grass_ley", 0.96), ("fallow", 1.0))
+FIELD_USES_GRASS = (("meadow_regrowth", 0.30), ("pasture", 0.50), ("meadow_mown", 0.62), ("meadow_hay", 0.72),
+                    ("meadow_uncut", 1.0))
+FIELD_USES = tuple(n for n, _ in FIELD_USES_ARABLE + FIELD_USES_GRASS)
+FIELD_OWN_SHARE_SHADER = 0.55   # KF_OWN_SHARE
+FIELD_BAULK_W = (1.0, 1.6)      # KF_BAULK_MIN_M, KF_BAULK_SPAN_M
+
+
+def _h32s(a, b, salt):
+    """_h32 with a per-element salt (uint32 array)."""
+    h = (a.astype(np.int64).astype(np.uint32) * np.uint32(1597334677)
+         ^ b.astype(np.int64).astype(np.uint32) * np.uint32(3812015801) ^ salt.astype(np.uint32))
+    h ^= h >> np.uint32(16)
+    h *= np.uint32(2246822519)
+    h ^= h >> np.uint32(13)
+    return h
+
+
+def _nearest2(x, y, cell, seed_fn):
+    """Nearest and second-nearest jittered lattice seed (3 x 3 search) - the shader's loop. seed_fn(i, j) -> (sx, sy).
+    Returns (i, j, s1x, s1y, s2x, s2y, d1, d2) arrays (squared distances)."""
+    cx, cy = np.floor(x / cell), np.floor(y / cell)
+    d1, d2 = np.full(x.shape, np.inf), np.full(x.shape, np.inf)
+    s1x, s1y, s2x, s2y = (np.zeros(x.shape) for _ in range(4))
     bi, bj = np.zeros(x.shape), np.zeros(x.shape)
     for dj in (-1, 0, 1):
         for di in (-1, 0, 1):
             i, j = cx + di, cy + dj
-            sx = (i + 0.15 + 0.7 * _u01(_h32(i, j, 911))) * FIELD_BLOCK_M
-            sy = (j + 0.15 + 0.7 * _u01(_h32(i, j, 913))) * FIELD_BLOCK_M
+            sx, sy = seed_fn(i, j)
             dd = (x - sx) ** 2 + (y - sy) ** 2
-            m = dd < best
-            best = np.where(m, dd, best)
-            bi, bj = np.where(m, i, bi), np.where(m, j, bj)
-    th = np.pi * _u01(_h32(bi, bj, 917))
-    w = FIELD_STRIP_M[0] + (FIELD_STRIP_M[1] - FIELD_STRIP_M[0]) * _u01(_h32(bi, bj, 919))
-    k = np.floor((x * np.cos(th) + y * np.sin(th)) / w)
-    bid = _h32(bi, bj, 923)
-    return _h32(bid.astype(np.float64), k, 929), bid
+            m1 = dd < d1
+            m2 = ~m1 & (dd < d2)
+            d2 = np.where(m1, d1, np.where(m2, dd, d2))
+            s2x = np.where(m1, s1x, np.where(m2, sx, s2x))
+            s2y = np.where(m1, s1y, np.where(m2, sy, s2y))
+            d1 = np.where(m1, dd, d1)
+            s1x, s1y = np.where(m1, sx, s1x), np.where(m1, sy, s1y)
+            bi, bj = np.where(m1, i, bi), np.where(m1, j, bj)
+    return bi, bj, s1x, s1y, s2x, s2y, d1, d2
+
+
+FIELD_DISTRICT_M = 1600.0       # KF_DISTRICT_M: one strip direction per district (a village's fields)
+FIELD_BLOCK_HASH_OFS = 4096     # KF_BLOCK_HASH_OFS: _h32(i, j) == _h32(-i, -j), so signed block indices are offset
+FIELD_STRETCH = 3.0             # KF_STRETCH: blocks 3x longer along the strips than across
+
+
+def field_layout(x, y):
+    """Strip layout of the farmland mosaic at EPSG:2180 positions x, y (arrays of one shape) - the exact mirror of
+    KamionFieldMosaic.hlsl (ADR 0334): district (FIELD_DISTRICT_M lattice) -> long axis of the strips; blocks = Voronoi
+    cells of the FIELD_BLOCK_M lattice in the frame stretched FIELD_STRETCH x along that axis; strip normal th (+-5.7 deg
+    per block), width w; across = projection of (P - block seed) on the normal, modulo w. Returns a dict of arrays: fid,
+    bid (uint32), k (strip index), across (m from the strip's lower edge), along (m), w, th, block_edge (m to the block
+    / district border), sx, sy (block seed, EPSG:2180)."""
+    x, y = np.asarray(x, np.float64), np.asarray(y, np.float64)
+    DM = FIELD_DISTRICT_M
+    di_, dj_, sdx, sdy, sdx2, sdy2, e1, e2 = _nearest2(
+        x, y, DM, lambda i, j: ((i + 0.15 + 0.7 * _u01(_h32(i, j, 971))) * DM, (j + 0.15 + 0.7 * _u01(_h32(i, j, 973))) * DM))
+    district_edge = (e2 - e1) / np.maximum(2.0 * np.hypot(sdx2 - sdx, sdy2 - sdy), 1e-3)
+    dsalt = _h32(di_, dj_, 977)
+    thD = np.pi * _u01(_h32(di_, dj_, 975))
+    ax, ay = np.cos(thD), np.sin(thD)
+    nx, ny = -ay, ax
+    r0x, r0y = x - sdx, y - sdy
+    qx = (r0x * ax + r0y * ay) / FIELD_STRETCH
+    qy = r0x * nx + r0y * ny
+    BM = FIELD_BLOCK_M
+    HO = FIELD_BLOCK_HASH_OFS
+    bi, bj, s1x, s1y, s2x, s2y, d1, d2 = _nearest2(
+        qx, qy, BM, lambda i, j: ((i + 0.15 + 0.7 * _u01(_h32s(i + HO, j + HO, np.uint32(911) ^ dsalt))) * BM,
+                                  (j + 0.15 + 0.7 * _u01(_h32s(i + HO, j + HO, np.uint32(913) ^ dsalt))) * BM))
+    bi, bj = bi + HO, bj + HO           # hashed indices (the shader's hb)
+    L = np.maximum(np.hypot(s2x - s1x, s2y - s1y), 1e-3)
+    nqx, nqy = (s2x - s1x) / L, (s2y - s1y) / L
+    block_edge = (d2 - d1) / np.maximum(2.0 * L, 1e-3) / np.hypot(nqx / FIELD_STRETCH, nqy)
+    block_edge = np.minimum(block_edge, district_edge)
+    th = thD + 0.5 * np.pi + (_u01(_h32s(bi, bj, np.uint32(917) ^ dsalt)) - 0.5) * 0.2
+    w = FIELD_STRIP_M[0] + (FIELD_STRIP_M[1] - FIELD_STRIP_M[0]) * _u01(_h32s(bi, bj, np.uint32(919) ^ dsalt))
+    sx = sdx + ax * (s1x * FIELD_STRETCH) + nx * s1y
+    sy = sdy + ay * (s1x * FIELD_STRETCH) + ny * s1y
+    rx, ry = x - sx, y - sy
+    t = (rx * np.cos(th) + ry * np.sin(th)) / w
+    k = np.floor(t)
+    bid = _h32s(bi, bj, np.uint32(923) ^ dsalt)
+    fid = _h32(bid.astype(np.float64), k, 929)
+    return {"fid": fid, "bid": bid, "k": k, "across": (t - k) * w, "along": -rx * np.sin(th) + ry * np.cos(th),
+            "w": w, "th": th, "block_edge": block_edge, "sx": sx, "sy": sy}
+
+
+def field_ids(x, y):
+    """(field id, block id), uint32, at EPSG:2180 positions x, y: the strip of the mosaic block (field_layout). A pure
+    function of the position, so two tiles agree along their seam."""
+    L = field_layout(x, y)
+    return L["fid"], L["bid"]
+
+
+def field_use(L, arable):
+    """Use index (FIELD_USES) of the strips of layout L (field_layout); arable: bool array / scalar (BDOT rodzaj)."""
+    fid = L["fid"].astype(np.float64)
+    bid = L["bid"].astype(np.float64)
+    zero = np.zeros(fid.shape)
+    own = _u01(_h32(fid, zero, 931)) < FIELD_OWN_SHARE_SHADER
+    r = np.where(own, _u01(_h32(fid, zero, 937)), _u01(_h32(bid, zero, 939)))
+    ca = np.array([c for _, c in FIELD_USES_ARABLE])
+    cg = np.array([c for _, c in FIELD_USES_GRASS])
+    ua = np.minimum(np.searchsorted(ca, r, side="right"), len(ca) - 1)
+    ug = len(ca) + np.minimum(np.searchsorted(cg, r, side="right"), len(cg) - 1)
+    return np.where(np.asarray(arable, bool), ua, ug)
 
 
 def field_mosaic(src, origin, hf, with_kind=False):
