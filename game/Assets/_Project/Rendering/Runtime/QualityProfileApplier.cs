@@ -56,6 +56,7 @@ namespace Game.Rendering
         public const string GlassFastKeyword = "_KAMION_GLASS_FAST";   // ADR 0106
         static readonly int k_ClearCoatOff = Shader.PropertyToID("_KamionClearCoatOff");
         static readonly int k_GrimeDetailOff = Shader.PropertyToID("_KamionGrimeDetailOff");
+        static readonly int k_WindscreenOff = Shader.PropertyToID("_KamionWindscreenOff");   // ADR 0341 (unset global = layers on)
         static readonly int k_SkyDitherOff = Shader.PropertyToID("_KamionSkyDitherOff");
         static readonly int k_GlassShadowBias = Shader.PropertyToID("_KamionGlassShadowBias");
 
@@ -185,6 +186,7 @@ namespace Game.Rendering
                     if (m.name == "M_kp_glass_block") Debug.Log($"[RQ_GLASS] name={m.name} shader={m.shader.name} flag={m.GetFloat("_ArchitecturalGlass")} receive={m.GetFloat("_ReceiveShadows")}");
 #endif
             if (t.glassFast) Shader.EnableKeyword(GlassFastKeyword); else Shader.DisableKeyword(GlassFastKeyword);
+            Shader.SetGlobalFloat(k_WindscreenOff, t.windscreenLayersOff ? 1f : 0f);   // ADR 0341
             ForestFastPath.Apply(t.forestFast);   // ADR 0113
             // A8: truck paint clear coat switch (Kamion/Truck Exterior reads 0 = on, so an unset global keeps it on).
             Shader.SetGlobalFloat(k_ClearCoatOff, t.clearCoat ? 0f : 1f);

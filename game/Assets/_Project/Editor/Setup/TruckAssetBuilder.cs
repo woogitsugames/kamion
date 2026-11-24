@@ -331,6 +331,10 @@ namespace Game.Editor.Setup
 
         // ------------------------------------------------------------------ 3. materials
 
+        /// <summary>ADR 0341: windscreen dirt mask and cab reflection (generated, committed; Rendering owns them).</summary>
+        public const string WindscreenGrimePath = "Assets/_Project/Rendering/Textures/Truck/T_Windscreen_Grime.png";
+        public const string WindscreenReflectionPath = "Assets/_Project/Rendering/Textures/Truck/T_CabWindscreenReflection.png";
+
         static T Tex<T>(string path) where T : UnityEngine.Object
         {
             var t = AssetDatabase.LoadAssetAtPath<T>(path);
@@ -416,6 +420,14 @@ namespace Game.Editor.Setup
                 // clutter0.35 and door calibration. Reject visually if the old empty-cab aquarium returns.
                 g.SetFloat("_ExteriorTransmission", ExtTransmission);
                 g.SetFloat("_SeeThroughClutter", 0.35f);
+                // ADR 0341 (windscreen-s24): dirt mask (tools/rendering/windscreen_grime.py) and the baked cab image seen in the
+                // windscreen (tools/blender/truck/interior/bake_windscreen_reflection.py). Missing textures = layers off.
+                var grimeMask = AssetDatabase.LoadAssetAtPath<Texture2D>(WindscreenGrimePath);
+                var cabRefl = AssetDatabase.LoadAssetAtPath<Texture2D>(WindscreenReflectionPath);
+                g.SetTexture("_GrimeMask", grimeMask);
+                g.SetVector("_GrimeLayers", grimeMask != null ? new Vector4(1f, 1f, 1f, 0f) : Vector4.zero);
+                g.SetTexture("_CabReflection", cabRefl);
+                g.SetFloat("_CabReflectionGain", cabRefl != null ? 1f : 0f);
                 g.renderQueue = (int)RenderQueue.Transparent;
                 Add("MI_Ext_Glass", g);
                 // ADR 0059 (r7 N-3): door glass = toughened side glass, no wiper film (the windscreen film made the door
@@ -431,6 +443,9 @@ namespace Game.Editor.Setup
                     var dg = Mat(dir, "MI_Ext_DoorGlass" + side, glass);
                     dg.CopyPropertiesFromMaterial(g);
                     dg.SetFloat("_Wiper", 0f); dg.SetFloat("_Opacity", 0.12f);
+                    // ADR 0341: the dirt mask and the mirrored-eye cab image are windscreen-plane data
+                    dg.SetTexture("_GrimeMask", null); dg.SetVector("_GrimeLayers", Vector4.zero);
+                    dg.SetTexture("_CabReflection", null); dg.SetFloat("_CabReflectionGain", 0f);
                     dg.SetFloat("_ExteriorTransmission", 0.42f); // keep ADR0059 side/far-pane clutter calibration
                     dg.renderQueue = (int)RenderQueue.Transparent;
                     Add("MI_Ext_DoorGlass" + side, dg);
