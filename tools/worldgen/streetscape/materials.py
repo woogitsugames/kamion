@@ -498,30 +498,30 @@ M = {
     # greenish copper-carbonate/sulphate patina in cavities and drips under the ruff (COLOR_0 -> _BRONZE_PATINA).
     # All values WORKING_VALUE calibrated visually against Commons cs20127375 / cs7518515.
     "monument_bronze": {
-        "color": [0.38, 0.28, 0.145], "rough": 0.48, "metal": 0.78,
-        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.78, "set_smooth": 0.90,
+        "color": [0.26, 0.21, 0.140], "rough": 0.48, "metal": 0.72,
+        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.72, "set_smooth": 0.88,
         "bronze_patina": {
-            "patina_color": [0.065, 0.130, 0.088], "patina_strength": 0.88,
-            "rubbed_color": [0.66, 0.46, 0.20], "rubbed_strength": 0.85,
-            "patina_smooth": 0.18, "rubbed_smooth": 0.62, "rubbed_metal": 0.88, "ao_strength": 0.65,
+            "patina_color": [0.065, 0.125, 0.090], "patina_strength": 0.85,
+            "rubbed_color": [0.44, 0.34, 0.205], "rubbed_strength": 0.78,
+            "patina_smooth": 0.18, "rubbed_smooth": 0.56, "rubbed_metal": 0.85, "ao_strength": 0.46,
         },
     },
     "monument_bronze_patina": {
-        "color": [0.26, 0.22, 0.135], "rough": 0.65, "metal": 0.48,
-        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.48, "set_smooth": 0.68,
+        "color": [0.195, 0.172, 0.122], "rough": 0.65, "metal": 0.46,
+        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.46, "set_smooth": 0.70,
         "bronze_patina": {
-            "patina_color": [0.060, 0.135, 0.090], "patina_strength": 0.92,
-            "rubbed_color": [0.56, 0.40, 0.18], "rubbed_strength": 0.65,
-            "patina_smooth": 0.15, "rubbed_smooth": 0.52, "rubbed_metal": 0.78, "ao_strength": 0.70,
+            "patina_color": [0.060, 0.132, 0.092], "patina_strength": 0.90,
+            "rubbed_color": [0.36, 0.285, 0.180], "rubbed_strength": 0.58,
+            "patina_smooth": 0.16, "rubbed_smooth": 0.48, "rubbed_metal": 0.75, "ao_strength": 0.50,
         },
     },
     "monument_bronze_rubbed": {
-        "color": [0.48, 0.34, 0.16], "rough": 0.38, "metal": 0.86,
-        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.86, "set_smooth": 1.05,
+        "color": [0.28, 0.225, 0.150], "rough": 0.40, "metal": 0.78,
+        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.78, "set_smooth": 0.88,
         "bronze_patina": {
-            "patina_color": [0.070, 0.130, 0.088], "patina_strength": 0.70,
-            "rubbed_color": [0.74, 0.54, 0.24], "rubbed_strength": 0.90,
-            "patina_smooth": 0.20, "rubbed_smooth": 0.68, "rubbed_metal": 0.92, "ao_strength": 0.60,
+            "patina_color": [0.065, 0.125, 0.090], "patina_strength": 0.68,
+            "rubbed_color": [0.42, 0.325, 0.200], "rubbed_strength": 0.75,
+            "patina_smooth": 0.20, "rubbed_smooth": 0.56, "rubbed_metal": 0.86, "ao_strength": 0.44,
         },
     },
     "monument_granite": {"color": [0.215, 0.215, 0.22], "rough": 0.38, "texture_set": "granite_honed_tint",

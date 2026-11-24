@@ -1007,23 +1007,29 @@ Shader "Kamion/World PBR"
             #if defined(_BRONZE_PATINA)
                 {
                     // ADR 0331 ("Brąz i patyna"): COLOR_0 = (R patina cavity/drip, G convex wear, B baked AO, A enabled).
-                    // Modulated by the bronze_cast_tint oxide/streak mask (1 - mask.b) and cast grain (base.r) with zero
-                    // extra texture fetches so cavity patina and rubbed convexities break organically at millimetre scale.
+                    // Keep flat cloak planes unified aged bronze (no camo blotches): threshold geometric cavity/wear
+                    // masks and use bronze_cast_tint oxide/grain only as subtle micro-breakup (zero extra fetches).
                     half bEn = i.masks.a;
                     half texOxide = saturate(1.0h - mask.b);
-                    half grain = saturate(base.r * 2.0h);
-                    half pat = saturate(i.masks.r * (0.55h + 0.90h * texOxide) + texOxide * 0.22h * i.masks.r) * _BronzePatina.w * bEn;
-                    half rub = saturate(i.masks.g * (0.65h + 0.70h * (1.0h - texOxide)) * (0.85h + 0.30h * grain)) * (1.0h - 0.75h * pat) * _BronzeRubbed.w * bEn;
-                    // Subtle warm/olive cast variation across facets
-                    albedo *= lerp(half3(0.88h, 0.93h, 0.96h), half3(1.12h, 1.05h, 0.92h), saturate(grain * 0.65h));
-                    // Rubbed warm bronze highlights on convexities (higher metal, smoother)
-                    albedo = lerp(albedo, _BronzeRubbed.rgb * (0.82h + 0.36h * grain), rub);
+                    half grain = saturate(base.r * _AlbedoScale);
+                    half grainDev = clamp(grain - 1.0h, -0.5h, 0.5h);
+                    // Calm base cast-bronze modulation around _Tint (linear) with subtle warm/cool facet drift
+                    half3 baseBronze = _Tint.rgb * (1.0h + 0.28h * grainDev);
+                    baseBronze *= lerp(half3(0.95h, 0.98h, 1.01h), half3(1.05h, 1.01h, 0.95h), saturate(1.0h - texOxide));
+                    albedo = lerp(albedo, baseBronze, bEn);
+                    // Cavity / drip patina (concentrated in hollows, ruff pleats, seam & drips under the ruff)
+                    half patMask = smoothstep(0.22h, 0.85h, i.masks.r);
+                    half pat = saturate(patMask * (0.82h + 0.36h * texOxide)) * _BronzePatina.w * bEn;
+                    // Rubbed warm bronze highlights on convex ridges (nose, brow, beard, crown rims, cloak fold ridges)
+                    half rubMask = smoothstep(0.16h, 0.82h, i.masks.g);
+                    half rub = saturate(rubMask * (0.85h + 0.30h * (1.0h - texOxide))) * (1.0h - 0.75h * pat) * _BronzeRubbed.w * bEn;
+                    albedo = lerp(albedo, _BronzeRubbed.rgb * (1.0h + 0.20h * grainDev), rub);
                     smooth = lerp(smooth, _BronzeParams.y, rub);
                     metal = lerp(metal, _BronzeParams.z, rub);
                     // Matte greenish copper-carbonate/sulphate patina in crevices & drips under the ruff
-                    albedo = lerp(albedo, _BronzePatina.rgb * (0.70h + 0.60h * grain), pat);
+                    albedo = lerp(albedo, _BronzePatina.rgb * (1.0h + 0.24h * grainDev), pat);
                     smooth = lerp(smooth, _BronzeParams.x, pat);
-                    metal = lerp(metal, 0.08h, pat);
+                    metal = lerp(metal, 0.14h, pat);
                     // Baked geometric AO deepens eye sockets, under-nose/mouth, beard grooves & ruff pleats
                     ao *= lerp(1.0h, lerp(1.0h, i.masks.b, _BronzeParams.w), bEn);
                 }
