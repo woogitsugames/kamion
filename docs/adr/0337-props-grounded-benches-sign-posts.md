@@ -34,25 +34,44 @@ Przegląd klatek `artifacts/full-build-5-s24/runs/20261122-181152/shot_t3441.png
 
 ## 3. Liczby i budżet (PRZED → PO)
 
-- **Geometria `tykocin_rynek_0320`** (10 ławek + pomnik + mała architektura):
+- **Geometria autorska `tykocin_rynek_0320`** (10 ławek + pomnik + mała architektura):
   - `buildings` (LOD0): `2 870 → 3 370` tris (+500 tris, +50/ławkę za pełne 4 nogi, podłokietniki i belkę wiążącą)
   - `buildings_low` (LOD1): `1 562 → 1 262` tris (**−300 tris**, −30/ławkę)
   - `collision`: `120 → 120` tris (bez zmian)
-- **Znak `sign_post`**: nadal dokładnie 1 slot materiałowy (`sign_post_galv`, +0 draws).
+- **Prototypy (`props_meta.json`, `street_props.glb`)**:
+  - `bench`: LOD0 `48 → 168` tris, LOD1 `48 → 72` tris, materiały `['bench_wood', 'steel_painted']` (+0 slotów)
+  - `waste_bin`: LOD0 `54 → 144` tris, LOD1 `54 → 36` tris (−18 tris LOD1), materiały `['steel_galv', 'steel_painted']` (+0 slotów)
+  - `sign_post`: LOD0 `30 → 60` tris, LOD1 `12 → 18` tris, materiały `['steel_galv'] → ['sign_post_galv']` (1 slot = **+0 draw calls**)
+- **Budżet klatek `mesh_budget` (`streetscape_qa.json`, 120° klin)**:
+  - `tykocin`: max `tris_high` `1 577 064 → 1 578 400` (+1 336 = +0,085 %, limit 2 000 000), max `tris_low` `512 692 → 512 530` (**−162** tris, limit 600 000)
+  - `bialystok-knyszynska`: max `tris_high` `1 987 722 → 1 974 071` (−13 651), max `tris_low` `727 198 → 713 458` (−13 740)
 - **Audyt kontaktu z terenem (`terrain_conformed.npy`)** w przebudowanych kaflach:
-  - `tykocin`: `bench` n=15 (`dz ∈ [-0,601, 0,000]` m, med `-0,011 m`), `waste_bin` n=5 (`dz ∈ [-0,381, +0,351]` m), `sign_post` n=104 (każda tarcza ma słupek).
-  - `bialystok-knyszynska`: `waste_bin` n=19 (`dz ∈ [-0,518, +0,351]` m), `sign_post` n=182 (każda tarcza ma słupek).
-  - `dk65-01`: w trakcie przebudowy (liczby do uzupełnienia po zakończeniu).
-- **SceneStats High (edytor, przed SRP batchingiem)** — do uzupełnienia po zakończeniu renderów PO.
+  - `tykocin`: `bench` n=15 (`dz ∈ [-0,601, 0,000]` m, med `-0,011 m`), `waste_bin` n=5 (`dz ∈ [-0,381, +0,351]` m), `sign_post` n=104 (100 % tarcz ma słupek).
+  - `bialystok-knyszynska`: `waste_bin` n=19 (`dz ∈ [-0,518, +0,351]` m), `sign_post` n=182 (100 % tarcz ma słupek).
+- **SceneStats High (edytor Win64, przed SRP batchingiem; clear i overcast identyczne geometrycznie; uwaga: delty tła zawierają też scalony wcześniej w `main` ADR 0334 `fields-s24`)**:
+  - `tykocin / props_tyk_bench_close`: `drawsEst 230 → 215` (−15), `instanced draws 91 → 90` (−1), `trisExact 1 313 957 → 1 314 457` (+500 tris)
+  - `tykocin / props_tyk_benches_row`: `drawsEst 372 → 364` (−8), `instanced draws 170 → 170` (0), `trisExact 1 211 008 → 1 211 508` (+500 tris)
+  - `tykocin / props_tyk_osm_bench`: `drawsEst 91 → 78` (−13), `instanced draws 97 → 99` (+2), `trisExact 797 049 → 797 049` (0)
+  - `tykocin / props_tyk_sign_d1`: `drawsEst 310 → 303` (−7), `instanced draws 135 → 136` (+1), `trisExact 987 017 → 987 517` (+500 tris)
+  - `bialystok-knyszynska / props_kny_t0670_close`: `drawsEst 460 → 460` (0), `instanced draws 88 → 89` (+1), `trisExact 1 314 510 → 1 308 865` (−5 645)
+  - `bialystok-knyszynska / props_kny_t0670_d1`: `drawsEst 441 → 441` (0), `instanced draws 86 → 87` (+1), `trisExact 1 194 509 → 1 189 638` (−4 871)
+  - `bialystok-knyszynska / props_kny_t0650_d1`: `drawsEst 634 → 634` (0), `instanced draws 213 → 215` (+2), `trisExact 1 327 420 → 1 324 124` (−3 296)
+  - `bialystok-knyszynska / props_kny_rural_d1`: `drawsEst 283 → 283` (0), `instanced draws 98 → 97` (−1), `trisExact 971 117 → 967 527` (−3 590)
 
 ## 4. Testy i dowody
 
-- Nowy test regresji: `tests/gis/test_props_grounding_0337.py` (17 testów: otwarte 4 nogi i kontakt każdej nogi na skarpie w `_bench`, uziemienie i oparcie prototypów `bench`/`waste_bin`, `SEATED_POLES`, średnica/kontrast/kołnierz/LOD1 `sign_post`, wysokość słupka i obejmy dla D-1/A-7/A-8/B-33/D-6, pokrycie wszystkich znaków słupkami i kontakt propów z terenem w `tykocin`, `bialystok-knyszynska`, `dk65-01`, QA `tykocin_rynek_0320`).
-- Testy budżetowe: `test_budget_0221.py`, `test_typology_0238.py`, `test_hero_bridge.py` (41 passed), `test_world_v31.py` (21 passed).
-- Dowody wizualne (High clear + overcast, 16 PNG przed + 16 PNG po + porównanie SBS): `artifacts/neon-props-s24/`.
+- Nowy test regresji: `tests/gis/test_props_grounding_0337.py` (17 passed: otwarte 4 nogi i kontakt każdej nogi na skarpie w `_bench`, uziemienie i oparcie prototypów `bench`/`waste_bin`, `SEATED_POLES`, średnica/kontrast/kołnierz/LOD1 `sign_post`, wysokość słupka i obejmy dla D-1/A-7/A-8/B-33/D-6, pokrycie wszystkich znaków słupkami i kontakt propów z terenem w `tykocin`, `bialystok-knyszynska`, `dk65-01`, QA `tykocin_rynek_0320`).
+- Testy budżetowe i streetscape:
+  - `test_budget_0221.py` + `test_typology_0238.py` + `test_hero_bridge.py`: **41 passed**
+  - `test_world_v31.py`: **21 passed**
+  - `test_streetscape.py` + `test_streetscape_r6.py` + `test_street_r9.py` + `test_fab_details.py` + `test_g3b_lowread.py` + `test_knyszyn_qa_gate_0227.py`: **113 passed**
+- Dowody wizualne (obejrzane osobiście — PASS): `artifacts/neon-props-s24/` (`before/` 16 PNG, `after/` 16 PNG, `before_view/` i `after_view/` ≤ 960 px JPG, `sbs/sbs_{tykocin,knyszynska}-High-{clear,overcast}.jpg`).
+  - Rynek w Tykocinie (`props_tyk_benches_row`, `props_tyk_bench_close`, clear & overcast): zniknęły ciężkie monolity boczne; wszystkie 10 ławek ma otwartą 4-nożną ramę z podłokietnikami i każda noga pewnie styka się z kostką granitową.
+  - Ławka OSM (`props_tyk_osm_bench`): pełna 4-nożna rama z pionowymi wspornikami oparcia i kontaktem z trawą.
+  - Znaki D-1 (`props_tyk_sign_d1`, `props_kny_t0650_d1`, `props_kny_t0670_d1`, `props_kny_t0670_close`, `props_kny_rural_d1`, clear & overcast): brak sterczącej nad wierzchołek rombu rury, matowy ocynk `sign_post_galv` zachowuje wyraźny kontrast cienia/światła na tle trawy i zachmurzonego nieba, kołnierz u stopy wizualnie osadza słupek w poboczu, LOD1 czytelny z dystansu.
 
 ## 5. Otwarte / dla lidera
 
-- Przebudowano w tym zadaniu kafle `tykocin`, `bialystok-knyszynska` i `dk65-01` (lokalne `Data/raw/derived/` w worktree to kopia — skopiować do `main` lub przebudować w kolejnej fali regenu, a wspólne `art-source/world/props/street_props.glb` odświeży przebudowa kafla referencyjnego `bialystok-industrial-c`).
-- Pozostałe kafle (w tym `knyszyn` z `_bench`) dostaną nowe ławki i słupki automatycznie przy kolejnej fali regenu.
-- Zużycie/rdza/odblaski pasów na słupkach oraz bardziej szczegółowy wariant kosza betonowego (z kruszywem) pozostają otwarte jako osobny temat tekstur PBR.
+- Przebudowano w tym zadaniu kafle `tykocin` i `bialystok-knyszynska` (zawierający obie klatki wiejskie `t0650` i `t0670`). `Data/raw/derived/` w tym worktree to kopia (`-CopyDerived`), więc po scaleniu gałęzi `neon-props-s24` skopiować `Data/raw/derived/{tykocin,bialystok-knyszynska}` do `main` (lub przebudować w kolejnej fali regenu); wspólna biblioteka `art-source/world/props/street_props.glb` odświeży się przy przebudowie kafla referencyjnego `bialystok-industrial-c`.
+- Pozostałe kafle (`dk65-01`, `knyszyn` z `_bench` itp.) dostaną nowe ławki i słupki automatycznie przy kolejnej fali regenu.
+- Zużycie/rdza/pasy odblaskowe na słupkach oraz osobny wariant kosza betonowego z kruszywem pozostają otwarte jako osobny temat tekstur PBR.
