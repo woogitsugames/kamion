@@ -271,7 +271,7 @@ def park_replacements(overrides):
             if o.get("kind") == "park_replacement"}
 
 
-def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_rows=None):
+def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_rows=None, field_plants_on=True):
     """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list.
     hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems.
     tree_rows (ADR 0222, opt-in): streetscape.tree_rows.region_plan() - the rows it took over are laid out by it
@@ -648,7 +648,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
     # ADR 0334: scrub and lone trees on the baulks between the strips of the field mosaic, samosiew on fallow strips
     # (positions and species from the layout hash - the same plant whichever tile builds it; one rng per plant)
     n0 = len(out)
-    for P, sp, key, tag in field_plants(src, origin, hf, road_dist):
+    for P, sp, key, tag in (field_plants(src, origin, hf, road_dist) if field_plants_on else ()):
         emit(P[None], [sp], np.random.default_rng(key), f"field:{tag}", 1.0)
     report["field_plants"] = {"baulk": sum(1 for t in out[n0:] if t["src"] == "field:baulk"),
                               "fallow": sum(1 for t in out[n0:] if t["src"] == "field:fallow")}
@@ -710,11 +710,12 @@ BAULK_SEG_M = 50.0              # scrub runs: a segment of a baulk is either a r
 BAULK_SEG_SHARE = 0.12          # share of segments that carry a run of scrub
 BAULK_RUN_KEEP = 0.50           # candidates kept inside a run
 BAULK_LONE_KEEP = 0.015         # candidates kept on bare segments (lone shrub / tree)
-BAULK_SPECIES = (("shrub", 0.62), ("birchyoung", 0.18), ("pineyoung", 0.06), ("birch", 0.08), ("alder", 0.06))
+BAULK_SPECIES = (("shrub", 0.70), ("birchyoung", 0.17), ("pineyoung", 0.06), ("birch", 0.04), ("alder", 0.03))
 FALLOW_SPACING_M = 12.0
 FALLOW_KEEP = 0.10
 FALLOW_SPECIES = (("birchyoung", 0.45), ("pineyoung", 0.35), ("shrub", 0.20))
 FIELD_PLANT_ROAD_M = 8.0
+FIELD_PLANT_MIN_M2 = 20000.0     # strip farms only on a BDOT polygon >= 2 ha (small grass patches are not fields)
 
 
 def _pick_species(table, u):
@@ -734,7 +735,9 @@ def field_plants(src, origin, hf, road_dist=None):
     for f in feats:
         r = (f.get("props") or {}).get("rodzaj")
         if r in polys:
-            polys[r].append(shapely.make_valid(PV._poly_local(f["geometry"]["coordinates"], origin)))
+            g = shapely.make_valid(PV._poly_local(f["geometry"]["coordinates"], origin))
+            if g.area >= FIELD_PLANT_MIN_M2:
+                polys[r].append(g)
     areas = {r: shapely.union_all(p) if p else shapely.Polygon() for r, p in polys.items()}
     arable_area = areas["uprawa na gruntach ornych"]
     all_area = shapely.union_all(list(areas.values()))
