@@ -68,6 +68,42 @@ BACK_H = (1.04, 1.22)
 CANOPY_EDGE_M = 5.0        # canopy vertices this close to an outer stand edge are lowered ...
 CANOPY_EDGE_DROP = (0.62, 0.86)   # ... to this share of the crown height at the edge itself
 SKIRT_SEG_M = 18.0
+# ADR 0339: on a tile with a canopy height model (streetscape.forest_chm) the canopy sheet and the wall tops take the
+# measured crown tops instead of the heights of the generated trees: the top line of a stand is the surveyed one (old
+# stand next to a pole stand, veterans, sagging edges). The model already carries the variation, so the wall-top
+# noise of ADR 0324 shrinks to CHM_TOP_VAR; under CHM_TRUST_M the model has no crowns (cell outside its mask, small
+# hole) and the tree-based value is used.
+CHM_TOP_VAR = (0.94, 1.05)
+CHM_TRUST_M = 3.0
+# top of the crowns in the baked edge picture / height of the picture (90th percentile of the topmost opaque texel
+# per column of forest_edge_<mix>.png, v 0 .. v_main; measured 2026-11-24, test_forest_chm_0339): the wall quad is
+# sized so that these crowns stand at the measured dominant height. The class rule sizes the quad by the median
+# height of ALL plants of the picture (h_median_m 10.9-13.9 m incl. the understorey), which puts the crown line of a
+# broadleaf stand at ~1.5 x the height of its trees - tiles with a height model no longer have that step.
+CHM_WALL_TOP_FRAC = {"conifer": 0.888, "mixed": 0.833, "broadleaf": 0.766}
+CHM_BACK_VAR = (0.97, 1.06)   # second wall: the measured tops 6 m further in x this (class rule: BACK_H x the front)
+CHM_CANOPY_K = 0.80        # canopy sheet under the crown tops: it only closes the stand from above, the ribs carry the tops
+# Ribs: with measured heights a stand is no longer level - taller parts stand behind lower ones, and from the road the
+# canopy sheet of the taller part showed over the front wall as a smooth green hill (render r1, dk65-04
+# fh_cab_approach). Alpha-tested walls of the same edge picture cross the stand every RIB_M in both directions (lines
+# of the absolute metre grid, so they continue from cell to cell), tops at the measured crowns: every height step
+# of the stand has a ragged crown line. Same primitive and material as the walls (no extra draw).
+RIB_M = 16.0
+RIB_SEG_M = 8.0
+RIB_MIN_LEN_M = 8.0
+RIB_WAVE_M = 40.0
+RIB_WAVE_AMP_M = 4.5
+# render r2 (dk65-05 fh_side_a): (1) sloping parts of the canopy sheet - the ADR 0324 roll-off at the stand edge and
+# every height step of the model - showed from the road as pale flat shards (a smooth surface with one up normal,
+# seen at a grazing angle, mirrors the sky): with a model the sheet has no artificial roll-off and triangles steeper
+# than CHM_SHEET_MAX_SLOPE are left out (walls and ribs stand there); (2) a wall quad taller than the baked picture
+# stretched its trees into poles: the picture is scaled by the same factor along the wall (taller stand = larger
+# trees, a thicket = small ones); (3) every wall top of one stand ended in the same comb of spruce tips: the top
+# of every wall point also moves by +- CHM_TOP_JITTER (position hash).
+CHM_SHEET_MAX_SLOPE = 0.62     # tan of the steepest canopy triangle kept (~32 deg)
+CHM_SHEET_INSET_M = 1.5        # canopy triangles touching the real stand outline are left out
+CHM_U_SCALE = (0.45, 1.7)      # limits of the picture scale along the wall
+CHM_TOP_JITTER = 0.06
 
 
 def _vnoise2(x, y, period, salt=""):
@@ -81,6 +117,10 @@ def _vnoise2(x, y, period, salt=""):
         return int(hashlib.sha1(f"fh:{salt}:{i}:{j}".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
     return ((h(ix, iy) * (1 - tx) + h(ix + 1, iy) * tx) * (1 - ty)
             + (h(ix, iy + 1) * (1 - tx) + h(ix + 1, iy + 1) * tx) * ty)
+
+
+def _hash01(key):
+    return int(hashlib.sha1(key.encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
 
 
 def _skirt_keep(a, b):
@@ -221,11 +261,11 @@ def cell_box(ci, cj, half):
     return box(e0, n1 - CELL_M, e0 + CELL_M, n1)
 
 
-def build(trees, forests, no_forest, zground, half, report):
+def build(trees, forests, no_forest, zground, half, report, chm=None):
     """trees: instance dicts (forest trees carry "fk": mix); forests: [(polygon, mix)];
     no_forest: geometry where no stand can be (roads, yards, buildings + clearance); zground(e, n) -> ground z.
     Returns {cell id: {"chunk": (ci, cj), "bbox": [e0, n0, e1, n1], "prims": [...], "tris": int, "trees": int}}
-    and tags the trees of every HLOD cell with "fc"."""
+    and tags the trees of every HLOD cell with "fc". chm (ADR 0339): streetscape.forest_chm.Chm or None."""
     fh = bake_info()
     ft = [t for t in trees if t.get("fk")]
     if not ft or not forests:
@@ -262,7 +302,14 @@ def build(trees, forests, no_forest, zground, half, report):
     def canopy_z(Q):
         Q = np.asarray(Q, float).reshape(-1, 2)
         out = np.empty(len(Q))
+        measured = np.zeros(len(Q), bool)
+        if chm is not None and len(Q):
+            dom, _, _, ins = chm.sample(Q)
+            measured = ins & (dom >= CHM_TRUST_M)
+            out[measured] = np.asarray(zground(Q[measured, 0], Q[measured, 1]), float) + CHM_CANOPY_K * dom[measured]
         for k, q in enumerate(Q):
+            if measured[k]:
+                continue
             idx = kd.query_ball_point(q, CROWN_R)
             if idx:
                 d = np.hypot(*(Pc[idx] - q).T)
@@ -278,6 +325,22 @@ def build(trees, forests, no_forest, zground, half, report):
         dd, ii = kd.query(q, k=12, distance_upper_bound=15.0)
         ii = ii[np.isfinite(dd)]
         return float(np.median(H[ii])) if len(ii) else float(np.median(H))
+
+    def wall_h(q, edge_info, mix, measured_only=False):
+        """Height of the wall quad at q: the trees of the edge picture stand as high as the stand does there."""
+        if chm is not None:                 # ADR 0339: the measured crown tops at the wall, else the stand behind it
+            dom, stand, _, ins = chm.sample(q)
+            if ins[0] and max(dom[0], stand[0]) >= CHM_TRUST_M:
+                return float(dom[0] if dom[0] >= CHM_TRUST_M else stand[0]) / CHM_WALL_TOP_FRAC.get(mix, 0.83)
+            if measured_only:
+                return None
+            # no crowns measured here (a small hole, a cell outside the mask of the model): the generated trees
+            # around the point in the same scale, and a low wall where none stands within 15 m (the class formula
+            # below takes the median of the whole tile there - a 40 m spike in a gap)
+            dd, ii = kd.query(np.asarray(q, float).reshape(2), k=12, distance_upper_bound=15.0)
+            ii = ii[np.isfinite(dd)]
+            return (float(np.percentile(H[ii], 90)) if len(ii) else CHM_TRUST_M) / CHM_WALL_TOP_FRAC.get(mix, 0.83)
+        return None if measured_only else edge_info["h_m"] * h_local(q) / edge_info["h_median_m"]
 
     # forest union per mix (each cell takes the mix with the largest area in it)
     fu = {}
@@ -311,7 +374,7 @@ def build(trees, forests, no_forest, zground, half, report):
         # ADR 0324: the canopy surface rolls off at a real stand edge (not at a cell border: the neighbour cell
         # continues it) - a cell seen from the side or from above was a box with a flat lid and vertical faces
         outer_b = piece.boundary.difference(cb.exterior.buffer(0.1))
-        if not outer_b.is_empty:
+        if not outer_b.is_empty and chm is None:
             d_edge = shapely.distance(shapely.points(XY), outer_b)
             near = d_edge < CANOPY_EDGE_M
             if near.any():
@@ -321,8 +384,21 @@ def build(trees, forests, no_forest, zground, half, report):
                 k_ = 1.0 - (1.0 - k_) * (1.0 - d_edge[near] / CANOPY_EDGE_M)
                 Z[near] = zg_c + (Z[near] - zg_c) * k_
         V = np.column_stack([XY, Z])
-        prims.append({"V": V, "T": inv.reshape(-1, 3), "UV": XY / Wt, "mat": f"forest_canopy_{mix}",
-                      "N": np.tile([0.0, 0.0, 1.0], (len(V), 1))})
+        Tc = inv.reshape(-1, 3)
+        if chm is not None:                 # ADR 0339: no steep canopy triangles (see CHM_SHEET_MAX_SLOPE)
+            tv = V[Tc]
+            nrm_t = np.cross(tv[:, 1] - tv[:, 0], tv[:, 2] - tv[:, 0])
+            flat = np.hypot(nrm_t[:, 0], nrm_t[:, 1]) <= CHM_SHEET_MAX_SLOPE * np.abs(nrm_t[:, 2])
+            if not outer_b.is_empty:        # r3 (tykocin-03 fh_side_b): the sheet ended ON the stand outline and its
+                on_edge = shapely.distance(shapely.points(XY), outer_b) < CHM_SHEET_INSET_M     # last triangles stuck
+                flat &= ~on_edge[Tc].any(axis=1)                    # out past the lower wall crowns as flat blades
+            if not flat.all():
+                Tc = Tc[flat]
+                used, new = np.unique(Tc, return_inverse=True)
+                V, XY, Tc = V[used], XY[used], new.reshape(-1, 3)
+        if len(Tc):                         # (a narrow strip of a stand can lose its whole sheet: walls and ribs only)
+            prims.append({"V": V, "T": Tc, "UV": XY / Wt, "mat": f"forest_canopy_{mix}",
+                          "N": np.tile([0.0, 0.0, 1.0], (len(V), 1))})
         # walls
         Vw, Tw, UVw, Nw = [], [], [], []
         bnd = piece.boundary
@@ -361,8 +437,11 @@ def build(trees, forests, no_forest, zground, half, report):
                     q = mid - nl * 1.0 if left_in else mid + nl * 1.0
                     nb = cell_of(q[0], q[1], half)
                     inner[i] = nb in hlod and nb != (ci, cj)          # tile border: outer wall
-            hw = np.array([edge_info["h_m"] * h_local(p) / edge_info["h_median_m"] for p in pts])
-            hw *= np.array([TOP_VAR[0] + (TOP_VAR[1] - TOP_VAR[0]) * _vnoise2(p[0], p[1], TOP_NOISE_M) for p in pts])
+            hw = np.array([wall_h(p, edge_info, mix) for p in pts])
+            tv = CHM_TOP_VAR if chm is not None else TOP_VAR
+            hw *= np.array([tv[0] + (tv[1] - tv[0]) * _vnoise2(p[0], p[1], TOP_NOISE_M) for p in pts])
+            if chm is not None:
+                hw *= np.array([1.0 + CHM_TOP_JITTER * (2.0 * _hash01(f"tj:{p[0]:.1f}:{p[1]:.1f}") - 1.0) for p in pts])
             # ADR 0187: where the outer stand edge turns sharply (end of a belt, corner of a block) the wall steps
             # down, so a stand seen end-on does not finish in a full-height vertical cut ("theatre flat")
             if nseg >= 2:
@@ -381,7 +460,7 @@ def build(trees, forests, no_forest, zground, half, report):
                         for q, k_ in ((p, CORNER_DROP), (p - 1, 0.5 + 0.5 * CORNER_DROP), (p + 1, 0.5 + 0.5 * CORNER_DROP),
                                       (p - 2, 0.2 + 0.8 * CORNER_DROP + 0.12), (p + 2, 0.2 + 0.8 * CORNER_DROP + 0.12)):
                             if 0 <= q < len(pts):
-                                hw[q] = min(hw[q], k_ * edge_info["h_m"] * h_local(pts[q]) / edge_info["h_median_m"])
+                                hw[q] = min(hw[q], k_ * wall_h(pts[q], edge_info, mix))
                 if closed:
                     hw[-1] = hw[0] = min(hw[0], hw[-1])
 
@@ -405,6 +484,8 @@ def build(trees, forests, no_forest, zground, half, report):
                 k = len(idx)
                 Vw += [[pts[p][0], pts[p][1], zg[p]] for p in idx] + [[pts[p][0], pts[p][1], t] for p, t in zip(idx, wtop)]
                 us = u0 + s[idx] / Wt
+                if chm is not None:         # ADR 0339: the picture keeps its proportions (see CHM_U_SCALE)
+                    us = u0 + s[idx] / (Wt * float(np.clip(np.median(hw[idx]) / edge_info["h_m"], *CHM_U_SCALE)))
                 vm = edge_v_main(edge_info)
                 UVw += [[u, 0.0] for u in us] + [[u, vm * (t - zg[p]) / hw[p]] for u, p, t in zip(us, idx, wtop)]
                 Nw += list(n3) + list(n3)
@@ -420,6 +501,13 @@ def build(trees, forests, no_forest, zground, half, report):
                     zb_ = zground(qb[:, 0], qb[:, 1]) + edge_info["z0_m"]
                     hb_ = hw[idx] * np.array([BACK_H[0] + (BACK_H[1] - BACK_H[0]) * _vnoise2(a[0], a[1], TOP_NOISE_M * 0.6, "b")
                                               for a in qb])
+                    if chm is not None:     # ADR 0339: the back wall has the measured tops of its own line
+                        for kb, a in enumerate(qb):
+                            hm = wall_h(a, edge_info, mix, measured_only=True)
+                            if hm is not None:
+                                hb_[kb] = min(hm * (CHM_BACK_VAR[0] + (CHM_BACK_VAR[1] - CHM_BACK_VAR[0])
+                                                    * _vnoise2(a[0], a[1], TOP_NOISE_M * 0.6, "b")),
+                                              max(hw[idx[kb]] * BACK_H[1], hm * CHM_BACK_VAR[0]))
                     base = len(Vw)
                     Vw += [[a[0], a[1], z_] for a, z_ in zip(qb, zb_)] + [[a[0], a[1], z_ + h_] for a, z_, h_ in zip(qb, zb_, hb_)]
                     usb = us + 0.53
@@ -453,9 +541,50 @@ def build(trees, forests, no_forest, zground, half, report):
                         else:
                             Tw += [[b0, t1, b1], [b0, t0, t1]]
                 i = j + 1
+        if chm is not None:                 # ADR 0339: ribs (see RIB_M)
+            ce0, cn0, ce1, cn1 = cb.bounds
+            vm = edge_v_main(edge_info)
+            for axis in (0, 1):
+                lo, hi = (ce0, ce1) if axis == 0 else (cn0, cn1)
+                for c0 in np.arange(math.floor(lo / RIB_M) * RIB_M + RIB_M, hi - 1e-6, RIB_M):
+                    if c0 - lo < 1e-6:
+                        continue                          # the cell border has its own (inner) wall
+                    ln = (shapely.LineString([(c0, cn0), (c0, cn1)]) if axis == 0
+                          else shapely.LineString([(ce0, c0), (ce1, c0)]))
+                    inter = shapely.intersection(piece, ln)
+                    for seg in getattr(inter, "geoms", [inter]):
+                        if seg.geom_type != "LineString" or seg.length < RIB_MIN_LEN_M:
+                            continue
+                        k = max(1, int(math.ceil(seg.length / RIB_SEG_M)))
+                        sc = np.asarray(seg.coords)
+                        rp = sc[0][None, :] + (sc[-1] - sc[0])[None, :] * (np.arange(k + 1) / k)[:, None]
+                        # the ribs meander (smooth noise of the absolute position): from a bridge or a hill straight
+                        # lines every 16 m would read as a waffle of hedges
+                        rp[:, axis] += np.array([(_vnoise2(q_[0], q_[1], RIB_WAVE_M, f"w{axis}") - 0.5) * 2.0 * RIB_WAVE_AMP_M
+                                                 for q_ in rp])
+                        hr_ = np.array([wall_h(q_, edge_info, mix, measured_only=True) or 0.0 for q_ in rp])
+                        if hr_.max() <= 0.0:
+                            continue
+                        hr_ *= np.array([CHM_TOP_VAR[0] + (CHM_TOP_VAR[1] - CHM_TOP_VAR[0])
+                                         * _vnoise2(q_[0], q_[1], TOP_NOISE_M, "r") for q_ in rp])
+                        hr_ *= np.array([1.0 + CHM_TOP_JITTER * (2.0 * _hash01(f"tj:{q_[0]:.1f}:{q_[1]:.1f}") - 1.0) for q_ in rp])
+                        hr_ = np.maximum(hr_, 2.0)        # no crowns measured at this point: the rib runs out low
+                        zr = zground(rp[:, 0], rp[:, 1]) + edge_info["z0_m"]
+                        along = rp[:, 1 - axis]
+                        us = (along / (Wt * float(np.clip(np.median(hr_) / edge_info["h_m"], *CHM_U_SCALE)))
+                              + (int(hashlib.sha1(f"rib:{axis}:{c0:.0f}".encode()).hexdigest()[:6], 16) % 997) / 997.0)
+                        base = len(Vw)
+                        Vw += [[q_[0], q_[1], z_] for q_, z_ in zip(rp, zr)] + [[q_[0], q_[1], z_ + h_] for q_, z_, h_ in zip(rp, zr, hr_)]
+                        UVw += [[u, 0.0] for u in us] + [[u, vm] for u in us]
+                        Nw += [[0.0, 0.0, 1.0]] * (2 * (k + 1))
+                        for m_ in range(k):
+                            b0, b1, t0, t1 = base + m_, base + m_ + 1, base + k + 1 + m_, base + k + 2 + m_
+                            Tw += [[b0, b1, t1], [b0, t1, t0]]
         if Tw:
             prims.append({"V": np.array(Vw), "T": np.array(Tw), "UV": np.array(UVw), "N": np.array(Nw),
                           "mat": f"forest_edge_{mix}"})
+        if not prims:
+            continue
         cid = f"{ci}_{cj}"
         tris = int(sum(len(p["T"]) for p in prims))
         n_tris += tris
