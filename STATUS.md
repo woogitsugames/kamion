@@ -12,3 +12,5 @@
 - CHM pobrany dla 24 kafli trasy Białystok–Knyszyn–Tykocin (Data/Regions/*/forest_chm.*, razem 2,3 MB) — w drzewie roboczym, commit po akceptacji wizualnej.
 - w toku: r3 = `run-build.ps1 -Regions dk65-05,dw671-tykocin-03,dk65-04 -Round r3-after -Tests` (slot heavy trzymany) + `run-imports.ps1 -Round r3-after` (import + kamery po każdym kaflu).
 - NASTĘPNY KROK: `Get-Content artifacts/forest-height-s24/build-r3-after.status; Get-Content artifacts/forest-height-s24/chain-r3-after.log -Tail 5`, potem `bash artifacts/forest-height-s24/tools/pairs.sh r3-after` i ocena par.
+- krok 6 (koniec): r5 zbudowane, zaimportowane i wyrenderowane dla 3 kafli (24 pary `artifacts/forest-height-s24/pairs-r5-after/`); visual-critic r5: PASS dla zmiany, lista wad w ADR 0339 „Ocena wizualna”. Model koron w gicie dla 24 kafli trasy. ADR 0339 uzupełniony liczbami (`numbers.txt`).
+- NASTĘPNY KROK (lider): scalić gałąź, przebudować 24 kafle z listy w ADR 0339 (prototypy: `robocopy .claude\worktrees\forest-height-s24\Data\raw\derived\<kafel> Data\raw\derived\<kafel> /E /MT:16` albo build w main), potem następna runda wg krytyka.

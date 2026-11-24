@@ -1,4 +1,4 @@
-# ADR 0339 — liczby prototypu (runda r2-after)
+# ADR 0339 — liczby prototypu (runda r5-after)
 
 ## Model koron (NMPT − NMT) i drzewostany
 
@@ -6,7 +6,7 @@
 |---|---|---|---|---|---|
 | `dk65-04` | 6.8 / 14.5 / 26.5 / 28.8 | 13 | 2390 | 71 / 326 / 145 / 4279 | 10.0 / 19.1 / 26.1 / 29.6 |
 | `dk65-05` | 10.2 / 22.2 / 27.5 / 30.8 | 26 | 41857 | 1471 / 2817 / 1864 / 52238 | 13.2 / 21.8 / 26.8 / 35.1 |
-| `dw671-tykocin-03` | (brak przebudowy) | | | | |
+| `dw671-tykocin-03` | 8.0 / 18.5 / 24.0 / 27.2 | 15 | 300 | 17 / 332 / 81 / 4741 | 13.0 / 19.2 / 23.5 / 33.2 |
 
 ## Budżet generatora (`streetscape_qa.json`)
 
@@ -14,22 +14,47 @@
 
 | Kafel | drzewa (instancje) przed → po | HLOD lasu: komórki, trójkąty przed → po | najgorsza klatka High przed → po | najgorsza klatka Low przed → po |
 |---|---|---|---|---|
-| `dk65-04` | 14102 → 14880 | 67, 10067 → 67, 10436 | `drive_village` 1430520 → `drive_village` 1331294 | `rail_x1_top` 469941 → `rail_x1_top` 460002 |
-| `dk65-05` | 104059 → 101899 | 390, 63085 → 388, 88736 | `route_s0472` 1572567 → `route_s0472` 1529843 | `route_s0472` 484170 → `route_s0157` 469402 |
+| `dk65-04` | 14102 → 14880 | 67, 10067 → 67, 11650 | `drive_village` 1430520 → `drive_village` 1331698 | `rail_x1_top` 469941 → `rail_x1_top` 460228 |
+| `dk65-05` | 104059 → 101899 | 390, 63085 → 388, 82757 | `route_s0472` 1572567 → `route_s0472` 1525548 | `route_s0472` 484170 → `route_s0157` 467417 |
+| `dw671-tykocin-03` | 12061 → 13201 | 73, 9987 → 73, 11272 | `route_s0157` 1371971 → `route_s0157` 1319129 | `route_s0470` 407097 → `route_s0470` 398470 |
 
 ### Czysta ablacja `dk65-05`: ten sam kod, `KAMION_FOREST_CHM=0` → model koron
 
 | | reguła klasowa | model koron | Δ |
 |---|---|---|---|
 | instancje drzew / krzewów / runa | 104776 | 101899 | -2877 (-2.7 %) |
-| HLOD lasu — trójkąty w kaflu | 63085 | 88736 | +25651 (+40.7 %) |
-| najgorsza klatka High (szacunek generatora) | `route_s0472` 1562135 | `route_s0472` 1529843 | -32292 |
-| Δ High po kamerach: min / max / suma (22 kamer) | | | -235913 (`top_site_seam`) / +24729 (`route_s0786`) / -595467 |
-| najgorsza klatka Low (szacunek generatora) | `route_s0472` 472434 | `route_s0157` 469402 | -3032 |
-| Δ Low po kamerach: min / max / suma (22 kamer) | | | -58603 (`top_site_seam`) / +9534 (`route_s1729`) / -52302 |
+| HLOD lasu — trójkąty w kaflu | 63085 | 82757 | +19672 (+31.2 %) |
+| najgorsza klatka High (szacunek generatora) | `route_s0472` 1562135 | `route_s0472` 1525548 | -36587 |
+| Δ High po kamerach: min / max / suma (22 kamer) | | | -236172 (`top_site_seam`) / +22482 (`route_s1415`) / -636464 |
+| najgorsza klatka Low (szacunek generatora) | `route_s0472` 472434 | `route_s0157` 467417 | -5017 |
+| Δ Low po kamerach: min / max / suma (22 kamer) | | | -58928 (`top_site_seam`) / +8639 (`route_s1729`) / -78238 |
 | gatunki okapu + podszyt (instancje) | {"tree_alder": 2299, "tree_birch": 7714, "tree_birchyoung": 6085, "tree_floor": 20937, "tree_linden": 2220, "tree_maple": 4211, "tree_pine": 32286, "tree_pineyoung": 1775, "tree_shrub": 13055, "tree_spruce": 14194} | {"tree_alder": 3180, "tree_birch": 7430, "tree_birchyoung": 6965, "tree_floor": 20937, "tree_linden": 1881, "tree_maple": 3939, "tree_pine": 25707, "tree_pineyoung": 2388, "tree_shrub": 13433, "tree_spruce": 16039} | |
 
 ## Kamery kontrolne lasu (edytor, tier High, 1920 × 1080; `stats.txt`: szacunek przed batchingiem SRP)
 
 | Kafel | Kamera | światło | trójkąty przed → po | draws (szac.) przed → po | instancje: draws / trójkąty przed → po | komórki HLOD w kadrze |
 |---|---|---|---|---|---|---|
+| `dk65-04` | `fh_cab_approach` | clear | 421320 → 418540 (-0.7 %) | 430 → 430 | 138 / 28595 → 138 / 29602 | 37 → 38 |
+| `dk65-04` | `fh_cab_corridor` | clear | 383031 → 379685 (-0.9 %) | 324 → 324 | 100 / 38338 → 96 / 33935 | 17 → 16 |
+| `dk65-04` | `fh_side_a` | clear | 153298 → 152502 (-0.5 %) | 75 → 75 | 58 / 7450 → 56 / 8013 | 11 → 11 |
+| `dk65-04` | `fh_side_b` | clear | 558439 → 555832 (-0.5 %) | 466 → 466 | 153 / 28869 → 152 / 29761 | 19 → 19 |
+| `dk65-04` | `fh_cab_approach` | overcast | 421320 → 418540 (-0.7 %) | 430 → 430 | 138 / 28595 → 138 / 29602 | 37 → 38 |
+| `dk65-04` | `fh_cab_corridor` | overcast | 383031 → 379685 (-0.9 %) | 324 → 324 | 100 / 38338 → 96 / 33935 | 17 → 16 |
+| `dk65-04` | `fh_side_a` | overcast | 153298 → 152502 (-0.5 %) | 75 → 75 | 58 / 7450 → 56 / 8013 | 11 → 11 |
+| `dk65-04` | `fh_side_b` | overcast | 558439 → 555832 (-0.5 %) | 466 → 466 | 153 / 28869 → 152 / 29761 | 19 → 19 |
+| `dk65-05` | `fh_air` | clear | 83745 → 82768 (-1.2 %) | 34 → 34 | 91 / 44886 → 89 / 47077 | 52 → 52 |
+| `dk65-05` | `fh_cab_approach` | clear | 490111 → 487557 (-0.5 %) | 308 → 307 | 142 / 68406 → 134 / 72052 | 160 → 158 |
+| `dk65-05` | `fh_cab_corridor` | clear | 235839 → 232047 (-1.6 %) | 138 → 137 | 131 / 114988 → 129 / 120219 | 75 → 75 |
+| `dk65-05` | `fh_side_a` | clear | 445902 → 443947 (-0.4 %) | 350 → 351 | 100 / 43605 → 99 / 55590 | 184 → 186 |
+| `dk65-05` | `fh_side_b` | clear | 239292 → 238717 (-0.2 %) | 160 → 160 | 112 / 43532 → 109 / 43736 | 13 → 13 |
+| `dk65-05` | `fh_air` | overcast | 83745 → 82768 (-1.2 %) | 34 → 34 | 91 / 44886 → 89 / 47077 | 52 → 52 |
+| `dk65-05` | `fh_cab_approach` | overcast | 490111 → 487557 (-0.5 %) | 308 → 307 | 142 / 68406 → 134 / 72052 | 160 → 158 |
+| `dk65-05` | `fh_cab_corridor` | overcast | 235839 → 232047 (-1.6 %) | 138 → 137 | 131 / 114988 → 129 / 120219 | 75 → 75 |
+| `dk65-05` | `fh_side_a` | overcast | 445902 → 443947 (-0.4 %) | 350 → 351 | 100 / 43605 → 99 / 55590 | 184 → 186 |
+| `dk65-05` | `fh_side_b` | overcast | 239292 → 238717 (-0.2 %) | 160 → 160 | 112 / 43532 → 109 / 43736 | 13 → 13 |
+| `dw671-tykocin-03` | `fh_cab_corridor` | clear | 430739 → 428246 (-0.6 %) | 486 → 487 | 102 / 64399 → 103 / 57208 | 23 → 23 |
+| `dw671-tykocin-03` | `fh_side_a` | clear | 199755 → 199207 (-0.3 %) | 50 → 50 | 83 / 45869 → 79 / 41673 | 26 → 27 |
+| `dw671-tykocin-03` | `fh_side_b` | clear | 158159 → 157611 (-0.3 %) | 36 → 36 | 40 / 6367 → 40 / 7637 | 32 → 32 |
+| `dw671-tykocin-03` | `fh_cab_corridor` | overcast | 430739 → 428246 (-0.6 %) | 486 → 487 | 102 / 64399 → 103 / 57208 | 23 → 23 |
+| `dw671-tykocin-03` | `fh_side_a` | overcast | 199755 → 199207 (-0.3 %) | 50 → 50 | 83 / 45869 → 79 / 41673 | 26 → 27 |
+| `dw671-tykocin-03` | `fh_side_b` | overcast | 158159 → 157611 (-0.3 %) | 36 → 36 | 40 / 6367 → 40 / 7637 | 32 → 32 |

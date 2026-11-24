@@ -77,9 +77,62 @@ w dali i skok wysokości przy przełączeniu instancje → HLOD. Kafle z modelem
 
 ## Zmierzone (prototyp: `dk65-04`, `dk65-05` — Puszcza Knyszyńska, `dw671-tykocin-03`)
 
-WYNIKI_TABELA
+Pełne tabele: `artifacts/forest-height-s24/numbers.txt` (generuje `tools/summary.py`); runda końcowa r5.
+
+| Kafel | wierzch koron modelu p10 / p50 / p90 / p99 [m] | luki [m²] | drzewa okapu: w lukach / przerzedzone / młode / dojrzałe | wysokość drzew okapu p10 / p50 / p90 / max [m] |
+|---|---|---|---|---|
+| `dk65-04` | 6,8 / 14,5 / 26,5 / 28,8 | 2 390 | 71 / 326 / 145 / 4 279 | 10,0 / 19,1 / 26,1 / 29,6 |
+| `dk65-05` | 10,2 / 22,2 / 27,5 / 30,8 | 41 857 | 1 471 / 2 817 / 1 864 / 52 238 | 13,2 / 21,8 / 26,8 / 35,1 |
+| `dw671-tykocin-03` | 8,0 / 18,5 / 24,0 / 27,2 | 300 | 17 / 332 / 81 / 4 741 | 13,0 / 19,2 / 23,5 / 33,2 |
+
+Reguła klasowa dawała na każdym kaflu p10 / p50 / p90 ≈ 11 / 17 / 23 m (max 25), a w Tykocinie 9 / 13 / 17 m (`zagajnik`
+× 0,7) wobec zmierzonych 13 / 19 / 23,5 m. Pozostałe 21 kafli trasy: mediana wierzchu koron 12–23,5 m, p99 27–33 m.
+
+**Budżet — czysta ablacja `dk65-05`** (ten sam kod, `KAMION_FOREST_CHM=0` → model koron; szacunek klatki generatora):
+
+| | reguła klasowa | model koron | Δ |
+|---|---|---|---|
+| instancje drzew / krzewów / runa | 104 776 | 101 899 | −2 877 (−2,7 %) |
+| HLOD lasu, trójkąty w kaflu | 63 085 | 82 757 | +19 672 (+31,2 %) |
+| najgorsza klatka High (`route_s0472`) | 1 562 135 | 1 525 548 | −36 587 |
+| Δ High po 22 kamerach: min / max / suma | | | −236 172 / +22 482 / −636 464 |
+| najgorsza klatka Low | 472 434 | 467 417 | −5 017 |
+| Δ Low po 22 kamerach: min / max / suma | | | −58 928 / +8 639 / −78 238 |
+
+Kamery lasu w edytorze (High, 12 kamer × 2 światła, `stats.txt`): trójkąty −0,2 … −1,6 %, draws ± 1 — ale „przed” to
+starszy build main (różnice także spoza tego ADR). Region C (2 M na `stretch_04`): **nie przebudowany**; przebieg na
+sucho bez dróg i budynków (`dry_run_bialystok-industrial-c.json`, wersja sprzed żeber): mediana koron 14,6 → 22,9 m,
+drzew −5,4 %, HLOD +9 % (z żebrami spodziewane ok. +30–40 % z 92 tys. trójkątów w kaflu) — margines C do sprawdzenia
+`build_world.py` przed włączeniem (produkt czeka w `artifacts/forest-height-s24/candidate-c/`).
+
+## Ocena wizualna
+Rundy: r0 = przed (derived = kopia main), r1 = wysokości z modelu (dk65-04: wyższa część drzewostanu jako gładkie
+wzgórze czaszy), r2 = żebra (dk65-05: jasne odłamki stromej czaszy, pnie rozciągnięte w tyczki), r3 = bez stromych
+trójkątów, obraz w proporcji, jitter wierzchu (tykocin-03: ostrza czaszy na obrysie), r5 = czasza odsunięta od obrysu.
+Pary przed | po: `artifacts/forest-height-s24/pairs-r5-after/` (24), przekroje HLOD `hlod_profile_*.png`, mapy modelu
+i kamer `cams/*_map.png`.
+`visual-critic` (r5, dk65-05 + tykocin-03, 16 par): **PASS dla samej zmiany** („po” lepsze w 5 z 8 par z lasem, gorszej
+brak, bez P0), las jako całość nadal poniżej `docs/06`. Sylweta i zróżnicowanie wysokości 3 → 5 / 10. Wskazane wady:
+- nowe P1: z lotu ptaka jasnozielone skupiska brzozy / młodych liściastych w borze (`dk65-05 fh_air`) — płaty brzozy i
+  prototyp `birchyoung` za jasne i za liczne; miejscami linia koron HLOD płaska na długim odcinku (okno 3 × 3 komórki
+  wygładza); rozmyte korony drzew przeskalowanych do 28–30 m (`fh_cab_approach`) — do potwierdzenia w powiększeniu;
+- nowe P2: skraj boru przy drodze bardziej ażurowy (wyższe pnie, podszyt bez zmian);
+- istniejące, nietknięte: pionowo ucięte boki bloków lasu, ciemna równa wstęga lasu na horyzoncie z kabiny (tło dali),
+  płaskie turkusowe karty świerka, las w pochmurny dzień jako płaska plama.
+
+## Kafle do przebudowy po scaleniu
+Model koron jest w gicie dla 24 kafli trasy Białystok – Knyszyn – Tykocin; każdy z nich zmienia się przy następnej
+przebudowie (`build_world.py` → `import-region.ps1`): `dk65-01` … `dk65-11`, `knyszyn`, `knyszyn-s`, `knyszyn-w`,
+`dw671-tykocin-01` … `dw671-tykocin-09`, `tykocin`. Prototypy (`dk65-04`, `dk65-05`, `dw671-tykocin-03`) są zbudowane w
+kopii `derived` worktree (r5) — do skopiowania albo przebudowy w main. Bez modelu (bez zmian): kafle `bialystok-*`,
+`dk65-monki-*`, `monki*`, `dk8-*`, `s8-*`, `dw671-jasionowka-01`, `dw671-jezewo-*` — dociągnięcie:
+`forest_chm.py --region <id>` (~2–3 min / kafel), C dopiero po sprawdzeniu marginesu.
 
 ## Otwarte / WORKING_VALUE
+- Następna runda wg krytyka: (1) udział i kolor brzozy / `birchyoung` w borze (płaty, młodniki sosnowe ciemne),
+  (2) linia koron HLOD z pojedynczej komórki modelu zamiast okna 3 × 3 + zachowane lokalne maksima, (3) okrajek z
+  gradientu wysokości modelu przy obrysie (pionowe boki bloków), (4) wariant prototypu zamiast skali > ~1,3,
+  (5) rytm koron i perspektywa powietrzna pasa lasu na horyzoncie.
 - Progi (3 m, 9 m, 300 m², 0,72), klasy biosocjalne, udziały płatów, próg obniżenia — `WORKING_VALUE`.
 - Gatunek panujący i wiek z Banku Danych o Lasach (jak dla Dojlid w 0187) — nieużyte: licencja BDL ma
   `LEGAL_REVIEW_REQUIRED` (cz. V lit. b regulaminu); kategoria BDOT bywa sprzeczna z BDL (M68: „liściasty” = 7SO).
