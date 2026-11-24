@@ -637,7 +637,7 @@ Shader "Kamion/World PBR"
                         // Traffic accumulation varies over metres (G: 2-16 m), not the sub-metre A noise.
                         // Keep the original mean modulation 0.825 while avoiding a fine grid in wheel paths.
                         half traffic = _AsphaltWear.y * (0.70 + 0.25 * macro.g);
-                        albedo *= 1.0 - wp * (0.10 * _WheelPolish + traffic) * (1.0 - paintFresh);
+                        albedo *= 1.0 - wp * 1.25 * (0.10 * _WheelPolish + traffic) * (1.0 - paintFresh);
                         smooth = lerp(smooth, smooth + 0.12, wp * _WheelPolish);
                     #if !defined(_DECAL_PAINT)
                         // gutter: grit, leaves and soot within ~0.6 m of the kerb
@@ -655,10 +655,10 @@ Shader "Kamion/World PBR"
                         {
                             float2 pg = TransformWorldToObject(pw).xz;
                             half ev = (half)smoothstep(0.38, 0.62, ValueNoise12(pg / 7.0 + 29.0) * 0.75 + ValueNoise12(pg / 1.9 + 5.0) * 0.25);
-                            half eband = (half)(1.0 - smoothstep(0.15, 1.1, w.y)) * (half)step(w.y, 15.0) * (half)(1.0 - paintFresh);
+                            half eband = (half)(1.0 - smoothstep(0.15, 1.4, w.y)) * (half)step(w.y, 15.0) * (half)(1.0 - paintFresh);
                             half sandy = (half)smoothstep(0.55, 0.40, ValueNoise12(pg / 9.0 + 61.0));
                             albedo *= 1.0 - 0.17 * eband * ev * (0.6 + 0.4 * macro.b);
-                            albedo *= 1.0 + 0.09 * eband * (1.0 - ev) * sandy;
+                            albedo *= half3(1.0 + 0.16 * eband * (1.0 - ev) * sandy, 1.0 + 0.14 * eband * (1.0 - ev) * sandy, 1.0 + 0.09 * eband * (1.0 - ev) * sandy);
                         }
                     #endif
                         // oil / soot drip band between the wheel paths (lane centre 0.5 +- ~0.12), mottled, strongest where
@@ -671,9 +671,9 @@ Shader "Kamion/World PBR"
                         half present = (half)smoothstep(0.30, 0.55, ValueNoise12(pdr / 17.0 + 7.0));
                         half drops = (half)lerp(0.45, 1.0, smoothstep(0.35, 0.65, ValueNoise12(pdr / 0.9 + 19.0)));
                         half drip = saturate(1.0 - abs(lc - 0.5 - wander) / 0.12) * saturate(0.45 + (macro.a - 0.5) * 2.2 + (macro.g - 0.5) * 0.8);
-                        drip *= present * drops * 1.5h;
+                        drip *= present * drops * 1.9h;
                         half blot = (half)smoothstep(0.80, 0.88, ValueNoise12(pdr / 0.55 + 23.0)) * saturate(1.0 - abs(lc - 0.5 - wander) / 0.2) * present;
-                        drip = max(drip, blot * 1.4h);
+                        drip = max(drip, blot * 1.8h);
                         drip *= lerp(1.0h, (half)KAMION_PLATE_DRIP_KEEP, plate);
                         albedo *= 1.0 - _DripBand * drip * (1.0 - paintFresh);
                         smooth = lerp(smooth, smooth + 0.12h, blot * (1.0 - paintFresh));
@@ -794,12 +794,14 @@ Shader "Kamion/World PBR"
                             // TRENCH backfill (wykop pod instalacje): rounded rectangle r 0.12-0.40 m, nearly straight
                             // sides (1-2 cm waviness), a continuous hand-poured bitumen overband all round: 2.5-8 cm,
                             // width varying along the perimeter, rare gaps. WORKING_VALUE.
-                            float rc = min(0.12 + 0.28 * frac(seed * 7.13), 0.45 * mn);
+                            // half of the trenches are saw-cut (corner radius 2-6 cm), half dug with a bucket (12-40 cm)
+                            float rc = min(frac(seed * 3.3) < 0.5 ? 0.02 + 0.04 * frac(seed * 7.13) : 0.12 + 0.28 * frac(seed * 7.13), 0.45 * mn);
                             edgeM = min(min(borderM.x, borderM.y), rc - length(max(rc - borderM, 0.0)));
-                            edgeM -= 0.014 * (n1 * 0.5 + n2 * 0.5) + 0.004 * n3;
+                            edgeM -= 0.028 * (n1 * 0.6 + n2 * 0.4) + 0.006 * n3;      // 2-4 cm unevenness over 0.3-1 m
                             fth = 0.012;
                             hasSeal = 1.0;
-                            sw = _PatchSeam.x * (0.55 + 1.0 * n2 + 0.35 * frac(seed * 5.3)) * smoothstep(0.97, 0.88, n1);
+                            // hand-poured overband 2.5-8 cm, thinner / missing along ~25 % of the perimeter
+                            sw = _PatchSeam.x * (0.45 + 0.8 * n2 + 0.25 * frac(seed * 5.3)) * smoothstep(0.80, 0.66, n1);
                         }
                         else if (kindF < 3.5)
                         {
@@ -844,13 +846,15 @@ Shader "Kamion/World PBR"
                             half grain = (half)((ValueNoise12(on / 0.035) - 0.5) * 0.45 * saturate(0.05 / fpx)
                                                + (ValueNoise12(on / 0.13 + 7.0) - 0.5) * 0.4);
                             // light aggregate flecks in the (dark) binder, fading with distance
-                            half fleck = (half)step(0.84, Hash12(floor(on / 0.018))) * (half)saturate(0.04 / fpx);
+                            half fleck = (half)smoothstep(0.70, 0.86, ValueNoise12(on / 0.011 + 3.0)) * (half)saturate(0.04 / fpx);
                             albedo += fleck * 0.018h * (1.0h - 0.5h * age);
                             albedo *= (1.0 + grain) * (0.88 + 0.24 * macro.a);
                             albedo *= 1.0 + 0.30 * age * (1.0 - smoothstep(0.0, 0.06, edgeM));
                         }
-                        smooth = lerp(smooth, 0.42, seam);
+                        smooth = lerp(smooth, lerp(0.55, 0.32, age), seam);
                         if (kindF > 0.5) smooth *= lerp(1.12, 0.9, age);
+                        // fresh hot-mix is warm black, not blue-grey (critic r3)
+                        albedo *= lerp(half3(1.06, 1.0, 0.93), half3(1, 1, 1), (half)saturate(age * 1.6));
                     }
                 }
             #endif

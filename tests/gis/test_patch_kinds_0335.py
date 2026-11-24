@@ -71,3 +71,13 @@ def test_no_asphalt_repairs_on_stone_concrete_gravel():
     for surface in ("road_sett", "road_cobble", "road_concrete", "road_gravel", "road_asphalt_new"):
         _, parts = _patches(length=1500.0, surface=surface)
         assert parts == [], surface
+
+
+def test_repairs_never_overlap_each_other():
+    _, parts = _patches(length=3000.0)
+    boxes = [(p.V[:, 0].min(), p.V[:, 0].max(), p.V[:, 1].min(), p.V[:, 1].max()) for p in parts]
+    for i, a in enumerate(boxes):
+        for b in boxes[i + 1:]:
+            # chain along +x, rotation <= 6 deg: boxes grow by < 0.4 m; the generator keeps >= 0.25-0.4 m of clearance
+            ox = min(a[1], b[1]) - max(a[0], b[0]); oy = min(a[3], b[3]) - max(a[2], b[2])
+            assert not (ox > 0.6 and oy > 0.6), (a, b)

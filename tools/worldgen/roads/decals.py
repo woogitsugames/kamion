@@ -521,6 +521,7 @@ def build(buf, net, juncs, report):
         if s1 - s0 < 8.0:
             continue
         cls_rate = PATCH_RATE_CLASS.get(c.section(0.5 * (s0 + s1), secs).cls, 1.0)
+        placed = []                      # ADR 0335: (s, lat, length, width) of this chain's patches - no nested repairs
         for w0 in np.arange(s0, s1, 50.0):
             w1 = min(w0 + 50.0, s1)
             key = (c.id, round(float(w0), 1))
@@ -594,6 +595,10 @@ def build(buf, net, juncs, report):
                     if abs(lat) + width / 2 > hw - 0.05:
                         continue
                 rot = (hf(*key, i, "rot") - 0.5) * math.radians(12)
+                if any(abs(sc - ps) < 0.5 * (length + pl) + 0.4 and abs(lat - pla) < 0.5 * (width + pw) + 0.25
+                       for ps, pla, pl, pw in placed):
+                    continue                     # ADR 0335 (critic: rectangle inside a rectangle): never overlap a repair
+                placed.append((sc, lat, length, width))
                 if pk == PATCH_MILLED:
                     rot *= 0.35                  # cuts are made across the lane: nearly square to the axis
                 patch(buf, c, sc, lat, length, width, rot, patch_age(hf(*key, i, "age")),
