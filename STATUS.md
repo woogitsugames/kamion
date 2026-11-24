@@ -26,3 +26,11 @@
 - W toku (tło): `pwsh artifacts/monument2-s24/before.ps1` → `artifacts/monument2-s24/vqa-before/` (import knyszyn-w + knyszyn, VQA High).
 - NASTĘPNY KROK: po „przed”: slot heavy + `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn`, potem
   `pwsh artifacts/monument2-s24/run-unity.ps1 -Region knyszyn -Out artifacts/monument2-s24/vqa-after -Cameras <jak w before.ps1>` i `make-sbs.sh`.
+
+## Krok 3 — Unity przed | po (runda 1), runda 2 w toku
+- Przed: `artifacts/monument2-s24/vqa-before/` (import knyszyn-w + knyszyn z kopii derived main; wymagało skopiowania `art-source/truck/interior/export` z main).
+- build_world knyszyn exit 0 (1047 s). Po r1: `vqa-after/`, arkusze `sbs/after-ref-vs-game.jpg`, `sbs/head-crop-ref-before-after.jpg`, `sbs/before-ref-vs-game.jpg`.
+- r1 w Unity: twarz czyta się (nos, broda w szpic na krezie, uszy, korona z liśćmi); wada: usta+wąsy jak grymas, żuchwa szeroka → r2 (commit „runda 2”).
+- Kamera `king_head_0325` trisExact 429 862 → 431 797. pytest celowany 32 passed (`logs/pytest-targeted.log`).
+- Uwaga: commit „runda 2” zawiera też przegenerowane `generated/{roads_qa,streetscape_qa,world_manifest}.json` (build_world na kodzie main + ADR 0331).
+- W toku: `after.ps1 -Out artifacts/monument2-s24/vqa-after2`. NASTĘPNY KROK: `artifacts/monument2-s24/make-sbs.sh vqa-after2 after2`, ADR wyniki, kopia dowodów do main/artifacts.
