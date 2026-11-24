@@ -25,7 +25,10 @@ if (Test-Path $wt) { throw "worktree exists: $wt" }
 git -C $root worktree add -q $wt -b $Name $Base
 if ($LASTEXITCODE) { throw "git worktree add failed" }
 
-$copies = @('Data/raw/cc0', 'art-source/world/cc0/_raw', 'art-source/world/megascans', 'game/Assets/_Generated')
+# art-source/truck/interior/export: SM_CabInterior_LOD0.fbx is gitignored (size) but TruckAssetBuilder/build-lab and
+# region imports need it - s24 agents (fields, monument2, mirror-res) each failed until copying it by hand.
+$copies = @('Data/raw/cc0', 'art-source/world/cc0/_raw', 'art-source/world/megascans', 'game/Assets/_Generated',
+            'art-source/truck/interior/export')
 if (-not $NoLibrary) { $copies += 'game/Library' }
 if ($CopyDerived) { $copies += 'Data/raw/derived' }
 $junctions = @('gugik', 'osm', 'refs', 'mapillary', 'fab')

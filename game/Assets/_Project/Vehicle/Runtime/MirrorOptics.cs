@@ -15,6 +15,22 @@ namespace Game.Vehicle.Runtime
         public static float NearClipFor(int mirrorClass, float eyeToGlassDistance, bool legacy = false) =>
             !legacy && (mirrorClass == 5 || mirrorClass == 6) ? 0.1f : Mathf.Max(0.1f, eyeToGlassDistance * 0.98f);
 
+        /// <summary>
+        /// ADR 0340: near clip of a class II / IV mirror camera that lies just beyond its own glass and glass rim. The camera
+        /// is the eye's image behind the head, so with the near plane 2 % in front of the glass centre
+        /// (<see cref="NearClipFor"/>) the tilted glass rim (MirrorGlassBezel, 9 mm deep) crossed the plane and its far
+        /// inner wall was drawn into the picture as a thin dark rounded outline (every cab frame of build #7). Returns the
+        /// largest depth of the glass bounds along the view axis plus <paramref name="margin"/>; never below
+        /// <paramref name="floor"/>. Pure, no allocation.
+        /// </summary>
+        public static float NearClipBeyondGlass(Vector3 cameraPosition, Vector3 cameraForward, Bounds glassWorldBounds, float margin = 0.02f, float floor = 0.1f)
+        {
+            Vector3 c = glassWorldBounds.center - cameraPosition, e = glassWorldBounds.extents;
+            float depth = Vector3.Dot(c, cameraForward)
+                + Mathf.Abs(cameraForward.x) * e.x + Mathf.Abs(cameraForward.y) * e.y + Mathf.Abs(cameraForward.z) * e.z;
+            return Mathf.Max(floor, depth + margin);
+        }
+
         public struct View
         {
             public Vector3 position, forward, up, right;

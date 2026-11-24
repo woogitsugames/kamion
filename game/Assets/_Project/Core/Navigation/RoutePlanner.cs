@@ -104,6 +104,7 @@ namespace Game.Core.Navigation
             int cap = n * 8 + 64;
             m_HeapItem = new int[cap]; m_HeapKey = new float[cap];
             m_EdgeFirstPoint = new int[2 * g.EdgeCount + 8];
+            m_EdgeLastPoint = new int[2 * g.EdgeCount + 8];
             m_Scratch = RoutePath.For(g);
         }
 
@@ -370,8 +371,8 @@ namespace Game.Core.Navigation
             p.Add(g.PointAlong(d, b), name, lim, cls);
         }
 
-        // Path index where each directed edge of the route begins (filled by BuildGeometry, read by BuildManeuvers).
-        readonly int[] m_EdgeFirstPoint;
+        // Path index where each directed edge of the route begins / ends (filled by BuildGeometry, read by BuildManeuvers).
+        readonly int[] m_EdgeFirstPoint, m_EdgeLastPoint;
 
         void BuildGeometry(RouteGraph g, RoutePath p, float sAlong, float gAlong, Vector2 sPt, Vector2 gPt)
         {
@@ -383,10 +384,15 @@ namespace Game.Core.Navigation
                 float a = 0f, b = len;
                 if (i == 0) a = RouteGraph.Reversed(d) ? len - sAlong : sAlong;
                 if (i == m - 1) b = RouteGraph.Reversed(d) ? len - gAlong : gAlong;
-                m_EdgeFirstPoint[i] = Mathf.Max(0, p.Count - 1);
+                int before = p.Count;
                 if (b < a) b = a;
-                float s0 = p.Count > 0 ? p.S[p.Count - 1] : 0f;
+                float s0 = before > 0 ? p.S[before - 1] : 0f;
+                // First point of edge i: reuses before-1 only when AppendRange deduplicates it (< 1 cm); when shifted
+                // carriageway axes leave a larger gap at a junction, edge i starts at `before` (ADR 0329 addendum).
+                bool dedup = before > 0 && (g.PointAlong(d, a) - p.Points[before - 1]).sqrMagnitude < 1e-4f;
                 AppendRange(g, p, d, a, b);
+                m_EdgeFirstPoint[i] = before == 0 ? 0 : dedup ? before - 1 : Mathf.Min(before, p.Count - 1);
+                m_EdgeLastPoint[i] = Mathf.Max(0, p.Count - 1);
                 LimitKind over = Truck.Exceeded(g, e);
                 if (over != LimitKind.None && p.Count > 0)   // ADR 0307: only a relaxed plan gets here
                 {
@@ -430,7 +436,7 @@ namespace Game.Core.Navigation
                         nm = NameFrom(g, p, j);
                     }
                     p.AddManeuver(m_EdgeFirstPoint[i], Maneuver.Roundabout, turn, exits, nm, prev);
-                    p.ManEndPoint[p.ManCount - 1] = j < m ? m_EdgeFirstPoint[j] : p.Count - 1;
+                    p.ManEndPoint[p.ManCount - 1] = m_EdgeLastPoint[j - 1];
                     p.SetLaneGuidance(g, p.ManCount - 1, prev, turn);
                     i = j;   // the exit transition belongs to this manoeuvre
                     continue;

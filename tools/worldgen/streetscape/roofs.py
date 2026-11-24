@@ -26,6 +26,9 @@ from shapely.geometry import Point, Polygon
 K_LOD1 = 0.55                   # (LoD1 height - eave) / (ridge - eave), measured (module docstring)
 PITCH_DEFAULT = {"gable": 40.0, "hip": 30.0, "mono": 25.0}      # deg, WORKING_VALUE (gable: between the two medians)
 PITCH_RANGE = {"gable": (22.0, 50.0), "hip": (18.0, 40.0), "mono": (8.0, 45.0)}
+# ADR 0336 (small-town Podlasie): deterministic pitch spread when LoD2 heights are absent, deg (WORKING_VALUE; spans
+# historic steep ~45 deg Tykocin roofs to shallower ~33 deg post-war gables without exceeding PITCH_RANGE).
+SMALL_TOWN_PITCH = {"gable": (33.0, 47.0), "hip": (24.0, 36.0), "mono": (14.0, 24.0)}
 OVERHANG = 0.5                  # eaves / verge overhang, m (WORKING_VALUE: 0.4-0.7 m is the usual Polish house eave)
 T_TOP = 0.14                    # covering + battens above the structural plane (= wall top), m
 T_SOFFIT = 0.04                 # soffit below the structural plane, m -> fascia board 0.18 m
@@ -732,12 +735,13 @@ def _party_side(poly, c, eu, hu, hv, others):
     return best
 
 
-def plan(poly, props, h, zref, key_float, others=(), wooden=False, shape=None, max_area=400.0):
+def plan(poly, props, h, zref, key_float, others=(), wooden=False, shape=None, max_area=400.0, pitch_var=False):
     """Roof of a house footprint, or None = flat roof (LoD2 type 1000, footprints with courtyards or far from
     their rectangle). props: buildings.geojson properties; h: LoD1 height; key_float(salt) -> [0, 1) per building;
     others: neighbouring footprints (party-wall test of mono-pitch halves).
     shape (ADR 0238): flat / gable / hip / mono from an authored override or OSM roof:shape (streetscape.typology
-    .roof_shape) - it replaces the LoD2 roof TYPE; the LoD2 eave / ridge heights are still used when present."""
+    .roof_shape) - it replaces the LoD2 roof TYPE; the LoD2 eave / ridge heights are still used when present.
+    pitch_var (ADR 0336): deterministic per-building default pitch spread for small-town LoD1 roofs."""
     rt = props.get("roof_type_lod2")
     if shape is not None:
         if shape == "flat":
@@ -772,7 +776,11 @@ def plan(poly, props, h, zref, key_float, others=(), wooden=False, shape=None, m
         kind = "hip"                             # squarish 'kostka' with an envelope roof (share WORKING_VALUE)
     hr, he0 = props.get("height_lod2_2017_m"), props.get("lod2_eave_rel_m")
     lo, hi = (math.tan(math.radians(x)) for x in PITCH_RANGE[kind])
-    s0 = math.tan(math.radians(PITCH_DEFAULT[kind]))
+    if pitch_var:
+        plo, phi = SMALL_TOWN_PITCH[kind]
+        s0 = math.tan(math.radians(plo + (phi - plo) * key_float("pitch")))
+    else:
+        s0 = math.tan(math.radians(PITCH_DEFAULT[kind]))
 
     def heights(span):
         he = he0
@@ -1001,4 +1009,73 @@ def chimney_spots(roof, poly, key_float, n):
         p = roof.c + roof.eu * u + roof.ev * v
         if inner.contains(Point(*p)) and all(np.hypot(*(p - q)) > 2.0 for q in out):
             out.append(p)
+    return out
+
+
+# ADR 0336 (Podlasie small-town dormers / lukarny dwuspadowe): WORKING_VALUE sizes read from Commons Tykocin photos
+# (cs21721113.jpg: small gabled attic dormers breaking long pitched slopes).
+DORMER_W = 1.40                 # front width, m
+DORMER_H = 1.35                 # front cheek height above slope contact, m
+DORMER_PEAK = 0.45              # mini-gable apex above dormer eave, m
+DORMER_INSET = 0.65             # front face setback behind the wall eave line, m
+DORMER_MIN_SLOPE = math.tan(math.radians(32.0))
+DORMER_MIN_RISE = 2.25          # minimum main roof rise (ridge - eave), m
+DORMER_MIN_RIDGE = 8.5          # minimum main ridge length (2 * hu), m
+DORMER_SHARE = 0.48             # deterministic share of qualifying pitched buildings that get dormers
+
+
+def dormer_spots(roof, poly, key_float, chimneys=(), prefer_dir=None, max_n=2):
+    """Dormer placements on the main gable slope(s) of `roof` (ADR 0336). Returns list of dicts:
+    {p: front-centre xy, out: outward unit xy, along: right-hand unit xy (out = (along[1], -along[0])),
+     w, h, peak, z_slope, depth, slope}. Strictly inside the footprint, clear of chimneys and MultiRoof wings."""
+    m = roof.parts[0] if isinstance(roof, MultiRoof) else roof
+    if m.kind != "gable" or m.s < DORMER_MIN_SLOPE or (m.zridge - m.zeave) < DORMER_MIN_RISE:
+        return []
+    if 2.0 * m.hu < DORMER_MIN_RIDGE or m.hv < 3.2:
+        return []
+    if key_float("dormer") >= DORMER_SHARE:
+        return []
+    inner = poly.buffer(-0.35)
+    if inner.is_empty:
+        return []
+    # Street-facing slope first (aligned with prefer_dir when given, else hashed side)
+    if prefer_dir is not None and float(np.hypot(*prefer_dir)) > 1e-6:
+        sg0 = 1 if float(m.ev @ prefer_dir) >= 0.0 else -1
+    else:
+        sg0 = 1 if key_float("dside") < 0.5 else -1
+    sides = [sg0]
+    if 2.0 * m.hu >= 14.0 and key_float("dormer2") < 0.45:
+        sides.append(-sg0)
+    n_per = min(max_n, 2 if 2.0 * m.hu >= 12.5 else 1)
+    if n_per == 1:
+        us = [0.0]
+    else:
+        off = min(0.26 * (2.0 * m.hu), m.hu - 1.9)
+        us = [-off, off] if off >= 1.8 else [0.0]
+    depth = DORMER_H / m.s + 0.25
+    out = []
+    for sg in sides:
+        nout = sg * m.ev
+        along = np.array([-nout[1], nout[0]])           # CCW wall convention: nout = (along[1], -along[0])
+        v_front = sg * (m.hv - DORMER_INSET)
+        z_slope = float(m.zeave + m.s * DORMER_INSET + T_TOP)
+        if z_slope + DORMER_H + DORMER_PEAK > m.zridge - 0.30:
+            continue
+        if DORMER_INSET + depth > m.hv - 0.15:
+            continue
+        for u in us:
+            p = m.c + m.eu * u + m.ev * v_front
+            # All 4 footprint corners of the dormer must sit inside the footprint and on the main gable face
+            corners = [p + along * (sx * (DORMER_W * 0.5 + 0.1)) - nout * dd
+                       for sx in (-1.0, 1.0) for dd in (0.0, depth)]
+            if not all(inner.contains(Point(*q)) for q in corners):
+                continue
+            if isinstance(roof, MultiRoof):
+                if not all(bool(roof._inside(0, q)) and abs(float(roof.z(q)) - float(m.z(q))) < 0.02 for q in corners):
+                    continue
+            mid = p - nout * (0.5 * depth)
+            if any(np.hypot(*(mid - ch)) < 1.7 for ch in chimneys):
+                continue
+            out.append({"p": p, "out": nout, "along": along, "w": DORMER_W, "h": DORMER_H, "peak": DORMER_PEAK,
+                        "z_slope": z_slope, "depth": depth, "slope": m.s})
     return out

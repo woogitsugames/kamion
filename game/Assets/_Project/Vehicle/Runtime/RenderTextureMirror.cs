@@ -307,6 +307,9 @@ namespace Game.Vehicle.Runtime
             if ((cls == 5 || cls == 6) && glass != null)
                 cam.nearClipPlane = MirrorOptics.NearClipFor(cls,
                     Vector3.Distance(cam.transform.position, glass.bounds.center), MirrorOverrides.Legacy);
+            else if (glass != null && !MirrorOverrides.Legacy)
+                // ADR 0340: past the own glass rim (it showed as a dark rounded outline in the picture).
+                cam.nearClipPlane = MirrorOptics.NearClipBeyondGlass(cam.transform.position, cam.transform.forward, glass.bounds);
             // Far clip every time (cheap): the A/B toggler (rq_ab mirrorcfg) switches configurations at run time.
             cam.farClipPlane = VehicleCameraBudget.MirrorFarClip * (main ? 1f : VehicleCameraBudget.ConvexFarClipScale);
             if (m_Rt != null && m_Height == h) return;

@@ -175,6 +175,95 @@ def plinth_drip(acc, a, d, nout, L, z, ops, mat="hall_flashing"):
         acc.box(L0, mat, c, d3 * ((u1 - u0) / 2), n3 * 0.0175, [0, 0, 0.015], skip=(1, 2, 4, 5))
 
 
+def window_trim(acc, a, d, nout, L, o, ztop, mat="reveal_plaster", surround=False):
+    """ADR 0336 (Podlasie small-town masonry facades): projecting window lintel (nadproże) and optional plaster jamb
+    surround (opaska). LOD0 only, 6 triangles (lintel: front + top + underside) + 4 triangles (jamb strips when
+    surround=True), reusing `reveal_plaster` (0 extra draw calls). Dimensions WORKING_VALUE."""
+    if o[5] != "window":
+        return 0
+    u0, u1, z0, z1 = o[:4]
+    if u1 - u0 < 0.45 or z1 - z0 < 0.45:
+        return 0
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    tris = 0
+    lh = 0.13
+    if z1 + lh + 0.02 <= ztop:
+        lu0, lu1 = max(0.02, u0 - 0.08), min(L - 0.02, u1 + 0.08)
+        if lu1 - lu0 > 0.3:
+            c = v3(a + d * (0.5 * (lu0 + lu1)) + nout * 0.018, z1 + 0.5 * lh)
+            acc.box(L0, mat, c, d3 * (0.5 * (lu1 - lu0)), n3 * 0.018, [0, 0, 0.5 * lh], skip=(2, 4, 5))
+            tris += 6
+    if surround:
+        sw = 0.075
+        pr = n3 * 0.020
+        for ju0, ju1 in ((u0 - sw, u0), (u1, u1 + sw)):
+            if ju0 >= 0.02 and ju1 <= L - 0.02:
+                A = v3(a + d * ju0, z0) + pr
+                B = v3(a + d * ju1, z0) + pr
+                acc.quad(L0, mat, A, B, B + [0, 0, z1 - z0], A + [0, 0, z1 - z0])
+                tris += 2
+    return tris
+
+
+def dormer(acc, spot, wall_mat, roof_mat, trim_mat, win_variant, fascia_mat="soffit_boards"):
+    """ADR 0336 (Podlasie small-town gable dormer / lukarna dwuspadowa). LOD0 only, ~34 triangles, 0 new materials:
+    front wall + recessed facade_atlas house window + sill + lintel, two cheek walls penetrating the main slope,
+    and a small pitched roof with verge boards. Dimensions WORKING_VALUE."""
+    p = np.asarray(spot["p"], float)
+    out = np.asarray(spot["out"], float)
+    along = np.asarray(spot["along"], float)
+    w, h, peak = float(spot["w"]), float(spot["h"]), float(spot["peak"])
+    z0 = float(spot["z_slope"]) - 0.15              # sunk 15 cm below covering surface so zero gap on slope
+    ze = float(spot["z_slope"]) + h
+    zr = ze + peak
+    dep = float(spot["depth"])
+    d3, n3 = np.append(along, 0.0), np.append(out, 0.0)
+    hw = 0.5 * w
+    # Front wall: rectangular lower zone around a centred window + triangular gable peak
+    ww, wh = min(0.84, w - 0.32), min(0.92, h - 0.28)
+    wz0 = ze - 0.14 - wh
+    wz1 = ze - 0.14
+    hw_w = 0.5 * ww
+    P = lambda su, sn, z: v3(p, z) + d3 * su + n3 * sn
+    # 4 wall strips around window on front face (sn = 0)
+    acc.quad(L0, wall_mat, P(-hw, 0, z0), P(hw, 0, z0), P(hw, 0, wz0), P(-hw, 0, wz0))
+    acc.quad(L0, wall_mat, P(-hw, 0, wz1), P(hw, 0, wz1), P(hw, 0, ze), P(-hw, 0, ze))
+    acc.quad(L0, wall_mat, P(-hw, 0, wz0), P(-hw_w, 0, wz0), P(-hw_w, 0, wz1), P(-hw, 0, wz1))
+    acc.quad(L0, wall_mat, P(hw_w, 0, wz0), P(hw, 0, wz0), P(hw, 0, wz1), P(hw_w, 0, wz1))
+    # Front gable triangle
+    acc.add(L0, wall_mat, [P(-hw, 0, ze), P(hw, 0, ze), P(0, 0, zr)], [[0, 1, 2]],
+            [[0.0, 0.0], [w, 0.0], [hw, peak]])
+    # Window glass/frame quad (slightly recessed 6 cm) + sill + lintel
+    acc.quad(L0, "facade_atlas", P(-hw_w, -0.06, wz0), P(hw_w, -0.06, wz0), P(hw_w, -0.06, wz1), P(-hw_w, -0.06, wz1),
+             uv=FA.uv_rect("house", win_variant))
+    acc.box(L0, "window_sill", P(0, 0.01, wz0), d3 * (hw_w + 0.05), n3 * 0.06, [0, 0, 0.022], skip=(0, 2, 4, 5))
+    acc.quad(L0, trim_mat, P(-hw_w - 0.05, 0.02, wz1), P(hw_w + 0.05, 0.02, wz1),
+             P(hw_w + 0.05, 0.02, wz1 + 0.09), P(-hw_w - 0.05, 0.02, wz1 + 0.09))
+    # Two cheek walls (left faces -along, right faces +along), bottom sits below slope
+    acc.quad(L0, wall_mat, P(-hw, -dep, z0), P(-hw, 0, z0), P(-hw, 0, ze), P(-hw, -dep, ze))
+    acc.quad(L0, wall_mat, P(hw, 0, z0), P(hw, -dep, z0), P(hw, -dep, ze), P(hw, 0, ze))
+    # Mini-gable roof slopes (0.14 m front & side overhang, extending back into main slope)
+    ov_s, ov_f = 0.14, 0.16
+    sl_d = peak / hw
+    z_ov = ze - sl_d * ov_s
+    dep_r = dep + peak / float(spot["slope"]) + 0.15
+    # Right slope (+along): normal points +along & +z
+    acc.quad(L0, roof_mat, P(hw + ov_s, ov_f, z_ov), P(hw + ov_s, -dep, z_ov),
+             P(0, -dep_r, zr + 0.05), P(0, ov_f, zr + 0.05),
+             uv=[[0.0, 0.0], [dep + ov_f, 0.0], [dep_r + ov_f, hw + ov_s], [0.0, hw + ov_s]])
+    # Left slope (-along): normal points -along & +z
+    acc.quad(L0, roof_mat, P(-hw - ov_s, -dep, z_ov), P(-hw - ov_s, ov_f, z_ov),
+             P(0, ov_f, zr + 0.05), P(0, -dep_r, zr + 0.05),
+             uv=[[0.0, 0.0], [dep + ov_f, 0.0], [dep + ov_f, hw + ov_s], [dep - dep_r, hw + ov_s]])
+    # Front verge fascia strips (2 quads)
+    tf = 0.10
+    acc.quad(L0, fascia_mat, P(-hw - ov_s, ov_f, z_ov - tf), P(0, ov_f, zr + 0.05 - tf),
+             P(0, ov_f, zr + 0.05), P(-hw - ov_s, ov_f, z_ov))
+    acc.quad(L0, fascia_mat, P(0, ov_f, zr + 0.05 - tf), P(hw + ov_s, ov_f, z_ov - tf),
+             P(hw + ov_s, ov_f, z_ov), P(0, ov_f, zr + 0.05))
+    return 36
+
+
 def door_steps(acc, a, d, nout, u, zd, zg, mat="plinth_dark", w=1.4):
     """ADR 0097 (review 0094 P2-b "drzwi bez stopnia i progu"): landing 1.0 m deep at the door sill (2 cm below it),
     steps of <= 0.18 m rise / 0.30 m going down to the ground in front (WT par. 69: rise <= 0.175 m outdoors is the

@@ -80,6 +80,7 @@ namespace Game.Rendering
         public static bool? Props;       // rq_props
         public static bool? Hud;         // rq_hud
         public static bool? GlassFast;   // rq_glassfast (tier override, ADR 0106)
+        public static bool? WindscreenLayers;   // rq_wslayers (tier override, ADR 0341: windscreen dirt + cab reflection)
         public static bool? ForestFast;  // rq_forestfast (tier override, ADR 0113)
         public static bool? Grime;        // rq_grime (vehicle grime detail, tier override; ADR 0136 r2)
         public static float? VehicleCull; // rq_vehcull (m, tier override; 0 = common 300 m; ADR 0136 r2)
@@ -110,7 +111,7 @@ namespace Game.Rendering
                                   Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue ||
                                   Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue || CabSoft.HasValue || CabSpill.HasValue ||
-                                  LodBias.HasValue || FarClip.HasValue || VehicleCull.HasValue || Grime.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || ForestFast.HasValue ||
+                                  LodBias.HasValue || FarClip.HasValue || VehicleCull.HasValue || Grime.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || WindscreenLayers.HasValue || ForestFast.HasValue ||
                                   GpuAbOverrides.Any;   // ADR 0241
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
@@ -153,6 +154,7 @@ namespace Game.Rendering
             WorldAtmosphere.WetOverride = wet;
             WorldAtmosphere.GrassOverride = gvar;
             LodBias = F(arg("rq_lod")); FarClip = F(arg("rq_far")); CullMask = I(arg("rq_mask")); Props = B(arg("rq_props")); Hud = B(arg("rq_hud")); GlassDebug = I(arg("rq_glassdbg")); GlassFast = B(arg("rq_glassfast"));   // ADR 0106
+            WindscreenLayers = B(arg("rq_wslayers"));   // ADR 0341
             ForestFast = B(arg("rq_forestfast"));   // ADR 0113
             VehicleCull = F(arg("rq_vehcull"));      // ADR 0136 r2
             Grime = B(arg("rq_grime"));
@@ -161,6 +163,9 @@ namespace Game.Rendering
             PsoWarmup.Init(arg);   // ADR 0113: PSO warm-up / trace, spike probe (player only)
             string ab = arg("rq_ab");
             Ab = string.IsNullOrEmpty(ab) ? null : ab.ToLowerInvariant();
+            // ADR 0341: rq_glassdbg alone (no rq_ab) sets the Kamion/Truck Glass debug level for the whole run (2 = cab
+            // reflection x8, 3 = windscreen dirt mask), e.g. visual-qa -Rq rq_glassdbg=3.
+            if (GlassDebug.HasValue && Ab == null) UnityEngine.Shader.SetGlobalFloat("_KamionGlassDebug", GlassDebug.Value);
             AbPeriod = F(arg("rq_ab_period"));
             Game.Core.MirrorOverrides.Cap = I(arg("rq_mirror_cap"));
             Game.Core.MirrorOverrides.LodScale = F(arg("rq_mirror_lod"));
@@ -236,6 +241,7 @@ namespace Game.Rendering
             if (LodBias.HasValue) t.lodBias = LodBias.Value;
             if (FarClip.HasValue) t.cameraFarClip = FarClip.Value;
             if (GlassFast.HasValue) t.glassFast = GlassFast.Value;
+            if (WindscreenLayers.HasValue) t.windscreenLayersOff = !WindscreenLayers.Value;   // ADR 0341
             if (ForestFast.HasValue) t.forestFast = ForestFast.Value;
             return t;
         }

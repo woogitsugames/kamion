@@ -280,6 +280,36 @@ namespace Game.Tests
         }
 
         [Test]
+        public void RingName_HandlesEntryAxisGapAndUnnamedRings()
+        {
+            // ADR 0329 addendum: named incoming road with shifted-axis gap (G05 Putry, G18 Biezenstwa) must still yield the
+            // ring name + B15; unnamed rings (dk65-06, knyszyn) must return null without leaking incoming/exit street names.
+            var g = RouteGraph.Load(Region);
+            var pl = new RoutePlanner(g);
+            var p = RoutePath.For(g);
+            Assert.AreEqual(PlanStatus.Ok, pl.Plan(new Vector2(-289.19f, -883.86f), float.NaN, new Vector2(-555.60f, -10.18f), p));
+            int rb = -1;
+            for (int k = 0; k < p.ManCount; k++) if (p.ManType[k] == Maneuver.Roundabout) rb = k;
+            Assert.IsTrue(rb >= 0);
+            Assert.AreEqual(new VoiceClip(15, 1), NavVoice.RoundaboutNominativeClip(NavVoice.RingName(g, p, rb)));
+
+            Assert.AreEqual(PlanStatus.Ok, pl.Plan(new Vector2(507.36f, -810.43f), float.NaN, new Vector2(-225.64f, -239.35f), p));
+            rb = -1;
+            for (int k = 0; k < p.ManCount; k++) if (p.ManType[k] == Maneuver.Roundabout) rb = k;
+            Assert.IsTrue(rb >= 0);
+            Assert.AreEqual(new VoiceClip(15, 2), NavVoice.RoundaboutNominativeClip(NavVoice.RingName(g, p, rb)));
+
+            var gKny = RouteGraph.Load("knyszyn");
+            var pKny = RoutePath.For(gKny);
+            var plKny = new RoutePlanner(gKny) { AllowTileExit = true, RelaxTruckLimits = true };
+            Assert.AreEqual(PlanStatus.Ok, plKny.Plan(new Vector2(-623.9f, -1019.8f), 0f, new Vector2(-1021f, -638.5f), pKny));
+            rb = -1;
+            for (int k = 0; k < pKny.ManCount; k++) if (pKny.ManType[k] == Maneuver.Roundabout) rb = k;
+            Assert.IsTrue(rb >= 0);
+            Assert.IsNull(NavVoice.RingName(gKny, pKny, rb));
+        }
+
+        [Test]
         public void Arrive_IsSpokenOnlyAtTheDestination_AndAlone()
         {
             // ADR 0329: the pack has no "za X metrow cel" - "Jestes u celu" (B10 #11) only in the now band, as the only clip.

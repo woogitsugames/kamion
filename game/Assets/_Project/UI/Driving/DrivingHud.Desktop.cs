@@ -21,7 +21,7 @@ namespace Game.UI.Driving
     /// alt-ui-polish-s23 (int-ui-s23 §7 p.4-6): the telltale row is the top row of the same panel (arrows inside it, a
     /// hairline between the rows), the "Panel" button hangs on the block's right edge in the same matte colour; in the
     /// cab with live instruments the extended detail shows only its own row, right of the wheel (no second speed);
-    /// mirror frames are a thin housing edge (<see cref="DesktopHudLayout.MirrorBezel"/>, <see cref="UiPalette.MirrorBezel"/>).
+    /// mirror windows are convex glass in a housing ring (ADR 0340: <see cref="MirrorWindowArt"/>, <see cref="UiPalette.MirrorBezel"/>).
     /// </summary>
     public sealed partial class DrivingHud
     {
@@ -277,19 +277,10 @@ namespace Game.UI.Driving
             if (m_DStrip != null) m_DStrip.gameObject.SetActive(desktop && m_D.ShowStrip);
             if (m_DTell != null) m_DTell.gameObject.SetActive(desktop);
             if (!desktop && !m_DevToggleRt.gameObject.activeSelf) m_DevToggleRt.gameObject.SetActive(true);
-            float bezel = desktop ? DesktopHudLayout.MirrorBezel : 5f;
-            MirrorBezelStyle(m_MirrorLGo, bezel, desktop);
-            MirrorBezelStyle(m_MirrorRGo, bezel, desktop);
+            MirrorHousingStyle(m_MirrorLGo, desktop);
+            MirrorHousingStyle(m_MirrorRGo, desktop);
             m_DValid = false;
             m_LayoutValid = false;
-        }
-
-        static void MirrorBezelStyle(GameObject go, float bezel, bool desktop)
-        {
-            var frame = go.GetComponent<Image>();
-            if (frame != null) frame.color = desktop ? P.MirrorBezel : new Color(0.03f, 0.03f, 0.035f, 0.95f);
-            var img = go.transform.childCount > 0 ? go.transform.GetChild(0) as RectTransform : null;
-            if (img != null) { img.offsetMin = new Vector2(bezel, bezel); img.offsetMax = new Vector2(-bezel, -bezel); }
         }
 
         // ------------------------------------------------------------------ values

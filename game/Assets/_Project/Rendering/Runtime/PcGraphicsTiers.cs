@@ -210,6 +210,7 @@ namespace Game.Rendering
             t.leafAlphaToCoverage = s.msaa > 1;
             t.forestFast = s.forestFast;
             t.glassFast = s.glassFast;
+            t.windscreenLayersOff = s.windscreenLayersOff;   // ADR 0341
             t.envCaptureSize = s.envCaptureSize;
             t.envCaptureInterval = s.envCaptureInterval;
             t.streetLights = s.streetLights;

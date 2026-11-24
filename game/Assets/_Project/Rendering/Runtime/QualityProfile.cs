@@ -108,6 +108,9 @@ namespace Game.Rendering
             [Tooltip("Kamion/Truck Glass fast path (_KAMION_GLASS_FAST): Fresnel, body absorption, film phase, ambient and fog per vertex, " +
                      "wiper sweeps in half precision. A16 Low: the windscreen covers ~80 % of the cab view and cost 3.6-4.3 ms GPU")]
             public bool glassFast;
+            [Tooltip("ADR 0341: windscreen dirt mask and baked cab reflection off (analytic interior, clean pane). Inverted so " +
+                     "tiers saved before ADR 0341 get the layers. Cost: 1-2 texture samples + ~40 ALU per windscreen pixel")]
+            public bool windscreenLayersOff;
             [Header("Forest fast path (ADR 0113)")]
             [Tooltip("Forest HLOD and impostors on the cheap path: HLOD canopy on Kamion/Forest Canopy instead of URP Lit, HLOD edge " +
                      "walls in one pass (ZWrite + alpha-to-coverage, no depth pre-pass), L2 SH per vertex on the walls and no shadow-map " +
