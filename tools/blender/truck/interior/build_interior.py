@@ -465,6 +465,12 @@ def build_materials(a):
     M.decal("icons", "icons_atlas.png", (0.80, 0.80, 0.76), rough=0.4, alpha_from="mask")
     M.decal("grille", "grille_mask.png", (0.02, 0.02, 0.02), rough=0.6, alpha_from="mask")
     M.decal("grille_dash", "grille_mask.png", (0.040, 0.041, 0.043), rough=0.65, alpha_from="mask")
+    # ADR 0344 (neon-dash-items-s24): driver items on the dash top (documents, tachograph printout, microfibre cloth)
+    # Physical linear albedos (WORKING_VALUE): warm office paper ~0.82, cooler thermal paper ~0.86, muted blue-grey cloth ~0.48
+    M.simple("paper_doc", (0.84, 0.81, 0.75), rough=0.86, spec=0.25)
+    M.simple("paper_tacho", (0.86, 0.87, 0.85), rough=0.60, spec=0.35)
+    M.pbr("folder_cover", (0.085, 0.105, 0.145), "hardgrain", 0.08, nstr=0.5, rough_add=0.14, spec=0.30)
+    M.pbr("dash_cloth", (0.42, 0.49, 0.54), "fabric", 0.04, nstr=0.85, rough_add=0.16, spec=0.15, sheen=0.35)
     M.grass("grass")
     M.line_paint("line_paint")
     M.blind("blind")
@@ -1076,7 +1082,10 @@ def build_dash():
         for (x, y) in ([(tx0 + (tx1 - tx0) * i / 10, ty0) for i in range(11)] + [(tx1, ty0 + (ty1 - ty0) * j / 4) for j in range(1, 5)] +
                        [(tx1 - (tx1 - tx0) * i / 10, ty1) for i in range(1, 11)] + [(tx0, ty1 - (ty1 - ty0) * j / 4) for j in range(1, 5)]):
             lip.append(drape(x, y, 0.0055))
-        tube(f"dash_tray_lip_{ti}", lip, 0.0075, "dash_mid", seg=8)
+        lip_ob = tube(f"dash_tray_lip_{ti}", lip, 0.0075, "dash_mid", seg=8)
+        # ADR 0344: INHERIT_AO takes one sample at the lip's geometric centre (middle of the tray), which sits under the
+        # dash items' contact shadow (AO ~ 0 -> black rim). Probe open dash skin 20 mm ahead of the front lip instead.
+        lip_ob["ao_probe"] = tuple(drape((tx0 + tx1) * 0.5, ty0 - 0.020, 0.002))
         # D84 polish (review P2 "flat stripes without depth"): the mat ribs were only a normal map, which the ambient-lit
         # cab view flattens. Real moulded ribs (11 mm wide, 5 mm proud, 22 mm pitch: the 4096 AO atlas resolves them; a
         # 12.5 mm pitch baked as blotches) take the baked AO and the sun.
@@ -1169,6 +1178,186 @@ def build_dash():
     build_centre_stack()
     build_vents()
     build_dash_switches()
+    build_dash_items()
+
+
+def build_dash_items():
+    """ADR 0344 (neon-dash-items-s24): everyday driver items on the dash top so the windscreen reflection (ADR 0341)
+    carries real bright shapes without faking the dark dash albedo. Brand-free (fictional TRAKT):
+      1. Document clipboard + two slightly skewed, subtly wavy CMR/waybill sheets in the centre tray;
+      2. Narrow curled thermal-paper tachograph printout on the flat dash between binnacle and centre tray;
+      3. Low-profile phone mount with a black landscape phone on the left dash corner by the A-pillar;
+      4. Folded muted blue-grey microfibre cloth in the passenger tray.
+    Clear of cluster / infotainment sightlines, windscreen wipers, defroster grilles and tray lips."""
+    lod0 = G.STATE["q"] > 0.75
+    tray_lift = 0.0066 if G.STATE["q"] > 0.5 else 0.0018   # sits on tray ribs on LOD0, on mat floor on LOD1/2
+
+    def make_draped_sheet(name, cx, cy, w, h, yaw_deg, thick, nx, ny, mat, base_lift, wave_fn, tint_fn=None):
+        """Closed thin draped mesh following dash_surface_z(x, y) + base_lift + wave_fn(u, v), u,v in [-1, 1]."""
+        ang = math.radians(yaw_deg)
+        ca, sa = math.cos(ang), math.sin(ang)
+        bm = bmesh.new()
+        top_grid, bot_grid = [], []
+        for i in range(nx + 1):
+            u = -1.0 + 2.0 * i / nx
+            tr, br = [], []
+            for j in range(ny + 1):
+                v = -1.0 + 2.0 * j / ny
+                lx, ly = u * (w * 0.5), v * (h * 0.5)
+                wx = cx + lx * ca - ly * sa
+                wy = cy + lx * sa + ly * ca
+                z0 = dash_surface_z(wx, wy) + base_lift + wave_fn(u, v)
+                tr.append(bm.verts.new(V(wx, wy, z0 + thick)))
+                br.append(bm.verts.new(V(wx, wy, z0)))
+            top_grid.append(tr)
+            bot_grid.append(br)
+        # top & bottom faces
+        for i in range(nx):
+            for j in range(ny):
+                bm.faces.new((top_grid[i][j], top_grid[i + 1][j], top_grid[i + 1][j + 1], top_grid[i][j + 1]))
+                bm.faces.new((bot_grid[i][j], bot_grid[i][j + 1], bot_grid[i + 1][j + 1], bot_grid[i + 1][j]))
+        # perimeter rims (no open edges)
+        for i in range(nx):
+            bm.faces.new((bot_grid[i][0], bot_grid[i + 1][0], top_grid[i + 1][0], top_grid[i][0]))
+            bm.faces.new((bot_grid[i + 1][ny], bot_grid[i][ny], top_grid[i][ny], top_grid[i + 1][ny]))
+        for j in range(ny):
+            bm.faces.new((bot_grid[0][j + 1], bot_grid[0][j], top_grid[0][j], top_grid[0][j + 1]))
+            bm.faces.new((bot_grid[nx][j], bot_grid[nx][j + 1], top_grid[nx][j + 1], top_grid[nx][j]))
+        ob = G.finish(name, bm, mat, smooth=True, sharp=42.0)
+        if tint_fn is not None:
+            def _t(co, nr):
+                dx, dy = co.x - cx, co.y - cy
+                lu = (dx * ca + dy * sa) / (w * 0.5)
+                lv = (-dx * sa + dy * ca) / (h * 0.5)
+                return tint_fn(lu, lv)
+            set_attr_w(ob, "tint_add", _t, add=False)
+        return ob
+
+    # ---- 1. Document clipboard / folder + 2 slightly crumpled waybill sheets in centre tray (x in [0.00, 0.38]) ----
+    dcx, dcy, dyaw = 0.190, 1.165, -2.5
+    make_draped_sheet(
+        "dash_item_doc_board", dcx, dcy, 0.270, 0.124, dyaw, 0.0032,
+        G.Q(4, 2), G.Q(3, 2), "folder_cover", tray_lift,
+        lambda u, v: 0.0,
+        lambda u, v: -0.05 * (0.5 - 0.5 * vnoise(u * 3.0 + 1.0, v * 3.0 + 2.0)),
+    )
+    # Bottom sheet (slightly skewed +2.0 deg, subtle dog-ear lift on front-right corner)
+    make_draped_sheet(
+        "dash_item_doc_sheet_0", dcx + 0.002, dcy + 0.001, 0.252, 0.114, dyaw + 2.0, 0.0011,
+        G.Q(8, 3), G.Q(5, 2), "paper_doc", tray_lift + 0.0033,
+        lambda u, v: (0.0018 * math.sin(u * 2.4 + 0.4) * (0.5 + 0.5 * v)
+                      + 0.0032 * max(0.0, u - 0.45) * max(0.0, v - 0.2)),
+        lambda u, v: (-0.06 * smooth(0.45, 0.65, math.sin(v * 14.0)) * smooth(0.0, 0.25, 0.82 - abs(u))
+                      * smooth(0.0, 0.25, 0.78 - abs(v)) - 0.03 * abs(u) * 0.3),
+    )
+    # Top sheet (slightly skewed -4.5 deg, softer curl on right edge; dropped on LOD2)
+    make_draped_sheet(
+        "dash_item_doc_sheet_1", dcx - 0.004, dcy - 0.002, 0.228, 0.106, dyaw - 4.5, 0.0010,
+        G.Q(7, 3), G.Q(4, 2), "paper_doc", tray_lift + 0.0052,
+        lambda u, v: (0.0014 * (1.0 - math.cos(u * 1.9)) * 0.6
+                      + 0.0055 * (max(0.0, u - 0.35) ** 1.5) * (0.35 + 0.65 * max(0.0, v + 0.2))
+                      + 0.0025 * max(0.0, -u - 0.55) * max(0.0, -v - 0.2)),
+        lambda u, v: (-0.07 * smooth(0.55, 0.75, math.sin(v * 16.0 + 0.7)) * smooth(0.0, 0.2, 0.80 - abs(u))
+                      * smooth(0.0, 0.2, 0.72 - abs(v)) - 0.04 * max(0.0, u - 0.5) * 0.5),
+    )
+    # Metal spring clip holding the left edge of the sheets
+    ca_d, sa_d = math.cos(math.radians(dyaw)), math.sin(math.radians(dyaw))
+    clx, cly = dcx - 0.122 * ca_d, dcy - 0.122 * sa_d
+    clz = dash_surface_z(clx, cly) + tray_lift + 0.0085
+    clip_ob = box("dash_item_doc_clip", (clx, cly, clz), (0.016, 0.064, 0.0055), "satin",
+                  bev=0.0015 if lod0 else 0.0, seg=1, rot=Matrix.Rotation(math.radians(dyaw), 3, "Z"))
+    clip_ob["ao_probe"] = (clx + 0.035, cly, clz)
+
+    # ---- 2. Thermal-paper tachograph printout between binnacle and centre tray (x in [-0.27, -0.07]) ----
+    tcx, tcy, tyaw = -0.172, 1.158, 11.5
+    make_draped_sheet(
+        "dash_item_tacho_strip", tcx, tcy, 0.196, 0.057, tyaw, 0.0009,
+        G.Q(14, 5), 2 if G.STATE["q"] > 0.4 else 1, "paper_tacho", 0.0008,
+        # Asymmetric thermal-roll curl (no artificial symmetry): left end curls up 13 mm, right end relaxes to 5 mm
+        lambda u, v: (0.013 * (max(0.0, -u - 0.18) / 0.82) ** 2.3
+                      + 0.0055 * (max(0.0, u - 0.35) / 0.65) ** 2.0
+                      + 0.0014 * math.sin(u * 4.2 + 0.5) * (0.65 + 0.35 * v)),
+        # Subtle grey thermal-print bands (header + activity bar, no illegible text)
+        lambda u, v: (-0.08 * smooth(0.55, 0.75, math.sin(u * 22.0)) * smooth(0.0, 0.15, 0.80 - abs(v))
+                      * smooth(0.0, 0.2, 0.85 - abs(u))),
+    )
+
+    # ---- 3. Low-profile phone mount + black phone on left dash corner (x = -0.89, y = 1.155) ----
+    # Faces the driver eye point; landscape mount stays low (~9.5 cm above dash) so road, mirrors & cluster stay 100% clear.
+    px, py = -0.89, 1.155
+    pz = dash_surface_z(px, py)
+    # Suction / adhesive base pad slightly sunk into sloped dash top so no edge floats
+    cyl("dash_item_phone_base", (px, py, pz + 0.003), 0.029, 0.011, "rubber", seg=G.Q(16, 6), bev=0.002 if lod0 else 0.0)
+    # Short stalk rising centrally from the base
+    p_top = V(px + 0.004, py - 0.012, pz + 0.044)
+    rod("dash_item_phone_arm", (px, py, pz + 0.007), p_top, 0.0075, "dash_dark", seg=G.Q(10, 6))
+    # Phone frame oriented towards driver eye
+    ph_c = p_top + V(0.003, -0.008, 0.022)
+    ph_n = (EYE - ph_c)
+    ph_n = V(ph_n.x, ph_n.y, ph_n.z * 0.45).normalized()   # angled gently upwards towards eye, stays compact
+    ph_up = V(0, 0, 1)
+    ph_u = ph_up.cross(ph_n).normalized()
+    ph_v = ph_n.cross(ph_u).normalized()
+    # Cradle backplate behind the phone
+    panel("dash_item_phone_cradle", rrect(0.088, 0.056, 0.008, G.Q(3, 1)), ph_c - ph_n * 0.009, ph_n, ph_up, 0.008,
+          "dash_dark", bev=0.002 if lod0 else 0.0, bseg=1)
+    # Two clamp jaws gripping the top/bottom edges of the landscape phone (dropped on LOD2)
+    for s_j in (-1, 1):
+        jc = ph_c + ph_v * (s_j * 0.039) - ph_n * 0.001
+        panel(f"dash_item_phone_jaw_{s_j}", rrect(0.042, 0.009, 0.0025, 1), jc + ph_n * 0.006, ph_n, ph_up, 0.016,
+              "dash_mid", bev=0.0012 if lod0 else 0.0, bseg=1)
+    # Black smartphone body (landscape 146 x 71 x 8.5 mm, brand-free, screen off)
+    panel("dash_item_phone_body", rrect(0.146, 0.071, 0.009, G.Q(4, 2)), ph_c + ph_n * 0.001, ph_n, ph_up, 0.0085,
+          "metal_dark", bev=0.0018 if lod0 else 0.0, bseg=1)
+    # Glossy black glass front screen (slightly inset inside the metal frame)
+    panel("dash_item_phone_screen", rrect(0.138, 0.064, 0.007, G.Q(3, 1)), ph_c + ph_n * 0.0018, ph_n, ph_up, 0.0012,
+          "piano", bev=0.0)
+
+    # ---- 4. Folded microfibre cloth in passenger tray (x in [0.45, 0.89]) ----
+    # Two overlapping folded layers (lower half + slightly offset top flap) so it reads as folded fabric, not a pillow.
+    ccx, ccy, cyaw = 0.570, 1.165, 6.5
+    ang_c = math.radians(cyaw)
+    ca_c, sa_c = math.cos(ang_c), math.sin(ang_c)
+    cw, ch = 0.196, 0.114
+    cnx, cny = G.Q(10, 3), G.Q(6, 2)
+    bm = bmesh.new()
+    top_g, bot_g = [], []
+    for i in range(cnx + 1):
+        u = -1.0 + 2.0 * i / cnx
+        tr, br = [], []
+        for j in range(cny + 1):
+            v = -1.0 + 2.0 * j / cny
+            # Soft irregular cloth edge (slight skew at the open corners, straighter along the folded spine at u = -1)
+            ew = 1.0 + 0.025 * math.sin(v * 2.8 + 0.4)
+            eh = 1.0 + 0.03 * math.cos(u * 2.3 - 0.5) - 0.04 * max(0.0, u - 0.2) * (v * v)
+            lx, ly = u * (cw * 0.5) * ew, v * (ch * 0.5) * eh
+            wx = ccx + lx * ca_c - ly * sa_c
+            wy = ccy + lx * sa_c + ly * ca_c
+            zb = dash_surface_z(wx, wy) + tray_lift
+            # Flat folded profile: two stacked plies (~5 mm each), top ply ends slightly before u=+1 (natural fold step),
+            # gentle soft crease across the middle, rounded spine at u=-1
+            spine = smooth(-1.0, -0.78, u)
+            step_top = 1.0 - smooth(0.62, 0.82, u + 0.08 * v)
+            edge_v = smooth(0.0, 0.18, 1.0 - abs(v))
+            crease = 0.0022 * math.sin(u * 4.5 + v * 2.6 + 0.3) + 0.0012 * math.cos(u * 7.5 - v * 3.5)
+            thick_c = 0.0042 + (0.0058 + 0.0048 * step_top + crease) * (0.45 + 0.55 * spine * edge_v)
+            tr.append(bm.verts.new(V(wx, wy, zb + thick_c)))
+            br.append(bm.verts.new(V(wx, wy, zb)))
+        top_g.append(tr)
+        bot_g.append(br)
+    for i in range(cnx):
+        for j in range(cny):
+            bm.faces.new((top_g[i][j], top_g[i + 1][j], top_g[i + 1][j + 1], top_g[i][j + 1]))
+            bm.faces.new((bot_g[i][j], bot_g[i][j + 1], bot_g[i + 1][j + 1], bot_g[i + 1][j]))
+    for i in range(cnx):
+        bm.faces.new((bot_g[i][0], bot_g[i + 1][0], top_g[i + 1][0], top_g[i][0]))
+        bm.faces.new((bot_g[i + 1][cny], bot_g[i][cny], top_g[i][cny], top_g[i + 1][cny]))
+    for j in range(cny):
+        bm.faces.new((bot_g[0][j + 1], bot_g[0][j], top_g[0][j], top_g[0][j + 1]))
+        bm.faces.new((bot_g[cnx][j], bot_g[cnx][j + 1], top_g[cnx][j + 1], top_g[cnx][j]))
+    cl = G.finish("dash_item_cloth", bm, "dash_cloth", smooth=True, sharp=55.0)
+    # Subtle fold shading & slightly dusty/worn variation in the weave
+    set_attr_w(cl, "tint_add", lambda co, nr: -0.07 * (1.0 - max(0.0, nr.z)) + 0.04 * (vnoise(co.x * 18.0, co.y * 18.0, 7.0) - 0.5), add=False)
 
 
 def dash_surface_z(x, y):
