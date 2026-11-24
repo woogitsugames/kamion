@@ -1,0 +1,56 @@
+{
+ "schema": "truck-sim-pl/forest-chm/1",
+ "adr": "0339",
+ "region": "dk65-08",
+ "bbox": [
+  764683.0,
+  605439.0,
+  766731.0,
+  607487.0
+ ],
+ "crs": "EPSG:2180",
+ "vertical": "height above the NMT of the tile, both PL-EVRF2007-NH",
+ "cell_m": 4.0,
+ "step_m": 0.25,
+ "cover_min_m": 5.0,
+ "size": [
+  512,
+  512
+ ],
+ "layout": "row 0 = north edge; cell (j, i) covers x = xmin + i * cell_m .., y = ymax - j * cell_m ..",
+ "channels": {
+  "L": "top of the crowns [step_m]",
+  "A": "share of 1 m samples >= cover_min_m [1/255]"
+ },
+ "mask": "BDOT10k OT_PTLZ_A + 40 m",
+ "source": {
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "NMPT (DSM) 0.5 m, WCS",
+  "service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMPT/GRID1/WCS/DigitalSurfaceModel?SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=DSM_PL-EVRF2007-NH&FORMAT=image/x-aaigrid",
+  "request_cell_m": 1.0,
+  "fetched": "2026-11-24",
+  "survey_date": "UNVERIFIED",
+  "reply_sha256": [
+   "2be018f346e74ecc3502900b9a54dcd830ac45dc5280263dff4f606d9af502e4",
+   "45ac1870813c137b4b15c7b55a6fcc2c6632e73c43198f430e3f5881ff5c85df",
+   "230ecccbb12c7ccaf8f0cd721f0de7d99adc451d87cac6cb19aa307dd0b7762a",
+   "4c1edbd194ea1832574fc8ee474441326e9365b40bcb03ee6a99e46b07956847"
+  ],
+  "missing_share": 0.0,
+  "ground": "gugik-nmt-2025-dk65-08",
+  "ground_sha256_r16": "5d65f537b9c7404510105666790684714a539590c1f6fe6b2028de12ae6678de",
+  "license": "GUGiK open data (Pgik art. 40a ust. 2 pkt 1)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)"
+ },
+ "stats": {
+  "forest_cells": 214346,
+  "cells_ge_cover_min": 156410,
+  "top_m": {
+   "p10": 10.0,
+   "p50": 23.5,
+   "p90": 28.8,
+   "p99": 32.2
+  }
+ },
+ "sha256_png": "e3af0e552fb11070e56aa4be5b3da2837aaac7f33cd306ab543b1045626f9446"
+}
