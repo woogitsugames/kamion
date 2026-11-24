@@ -117,6 +117,8 @@ namespace Game.Core.Navigation
         {
             if (ringName != null && ringName.StartsWith("Rondo Krzysztofa Jakuba Putry", System.StringComparison.Ordinal)) return new VoiceClip(15, 1);
             if (ringName != null && ringName.StartsWith("Rondo Pamięci Bieżeństwa", System.StringComparison.Ordinal)) return new VoiceClip(15, 2);
+            if (ringName != null && ringName.StartsWith("Rondo Jana Nowaka-Jeziorańskiego", System.StringComparison.Ordinal)) return new VoiceClip(15, 3);
+            if (ringName != null && ringName.StartsWith("Rondo Pamięci Męczeństwa Kresowian", System.StringComparison.Ordinal)) return new VoiceClip(15, 4);
             return new VoiceClip(0, 0);
         }
 

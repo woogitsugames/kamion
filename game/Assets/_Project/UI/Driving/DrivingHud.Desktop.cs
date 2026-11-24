@@ -207,6 +207,12 @@ namespace Game.UI.Driving
             if (!screenChanged && m_DValid && m_DesktopApplied && d.SameAs(m_DIn) && m_DPrefsVersion == HudPreferences.Version) return;
             m_DIn = d; m_DValid = true; m_DPrefsVersion = HudPreferences.Version;
             DesktopHudLayout.Solve(d, out m_D);
+            // ADR 0342: the class II texture follows the window (PC High / Ultra: rows per window pixel row); 0 = no window shown.
+            {
+                Rect mw = m_D.ShowMirrorLeft ? m_D.MirrorLeft : m_D.ShowMirrorRight ? m_D.MirrorRight : default;
+                Game.Core.MirrorOverrides.WindowPixelHeight = mw.height > 0f
+                    ? Mathf.Max(0f, mw.height - 2f * DesktopHudLayout.MirrorBezel) * m_View.PixelsPerUnit : 0f;
+            }
 
             if (!m_DesktopApplied) ApplyFormFactor(true);
             SetRect(m_DStrip, m_D.Strip);

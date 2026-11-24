@@ -45,9 +45,9 @@ from roads.meshing import bridge_cap_w, bridge_style
 from . import facade_atlas as FA
 from . import props as PP
 
-# ADR 0102: contact follows the pole axis rather than the lowest point around the footing. Keep collision/terrain
-# level selection: overlapping elevated ribbons and small visual holes must not move poles between road levels.
-SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole", "bollard")
+# ADR 0102 / ADR 0337: contact follows the prop axis on SurfaceTop/collision rather than raw smoothed zsurf.
+# Benches and waste bins added in ADR 0337 so OSM benches and bus-stop bins never float above sidewalks/verges.
+SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole", "bollard", "bench", "waste_bin")
 SEAT_R = 0.35                 # m, footing radius probed (WORKING_VALUE)
 SEAT_TOL = 0.30              # m, an explicit z this far below the local ground is raised to it (gate 3 tolerance)
 
@@ -122,9 +122,10 @@ class SurfaceTop:
         return float(z.max())
 
 
-# footing radius per pole family (m): the part of the footprint that must stand on the surface
+# footing radius per pole/prop family (m): the part of the footprint that must stand on the surface
 FOOT_R = {"lamp_arc_": 0.28, "lamp_old_concrete_": 0.15, "lamp_old_steel_": 0.20, "lamp_": 0.25,
-          "signal_mast": 0.30, "signal_pole": 0.10, "sign_post": 0.04, "power_pole": 0.15, "bollard": 0.06}
+          "signal_mast": 0.30, "signal_pole": 0.10, "sign_post": 0.04, "power_pole": 0.15, "bollard": 0.06,
+          "bench": 0.75, "waste_bin": 0.22}
 
 
 class Placer:
@@ -694,12 +695,21 @@ def bridge_median_lamps(pl, net, report):
 
 # ------------------------------------------------------------------------------------------- signs
 def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
-    """Post + plates stacked from the lower edge (Table 1.11: >= 2.00 m, 2.20 m on a sidewalk)."""
+    """Post + plates stacked from the lower edge ([ZNAKI-Z1] Tabela 1.11, Dz.U. 2019 poz. 2311 / 2022 poz. 2377:
+    >= 2.00 m off-sidewalk, >= 2.20 m on/over a sidewalk).
+
+    ADR 0337: post top terminates cleanly behind the upper clamp of the topmost plate instead of poking 10 cm above
+    diamond (D-1) / upright-triangle (A-8) tips, while staying above the upper clamp (+0.22 * hh + 0.04 m).
+    """
     import streetscape.signs as SG
     yaw = yaw_of(face)
     zb = pl.add("sign_post", p, yaw, z=z, sz=1.0, src=src)
+    post_item = pl.items[-1]
     zc = zb + (S.SIGN_H_SIDEWALK if sidewalk else S.SIGN_H_MIN)
     centres = []
+    top_plate_top = zc
+    top_clamp_min = zc
+    top_shape = None
     for code in reversed(plates):              # plates listed top first
         shape, _ = SG.face(code)
         if shape == "rect":                    # ADR 0279: D-42 / D-43 boards, T-1 plates under a warning sign
@@ -707,16 +717,22 @@ def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
         else:
             size = S.SIGN_SIZE["triangle" if shape == "triangle_up" else shape] * (
                 math.sqrt(3) / 2 if shape in ("triangle", "triangle_up") else 1.0)
-        centres.append((code, zc + size / 2, shape))
+        zcen = zc + size / 2
+        if shape == "triangle":                # inverted triangle: centroid 1/3 from the top edge
+            zcen = zc + 2 * size / 3
+        elif shape == "triangle_up":           # upright triangle (A-8): centroid 1/3 from the bottom edge
+            zcen = zc + size / 3
+        centres.append((code, zcen, shape))
+        top_plate_top = zc + size
+        top_clamp_min = zcen + 0.22 * size + 0.04
+        top_shape = shape
         zc += size + 0.05
-    pl.items[-1]["sz"] = round(zc - zb + 0.05, 3)
-    for code, zcen, shape in centres:
-        if shape == "triangle":                  # inverted triangle: centroid 1/3 from the top edge
-            h = S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2
-            zcen = zcen - h / 2 + 2 * h / 3
-        elif shape == "triangle_up":             # upright triangle (A-8): centroid 1/3 from the bottom edge
-            h = S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2
-            zcen = zcen - h / 2 + h / 3
+    # Pointed tops (diamond D-1, upright triangle A-8/A-9/A-10) narrow to a vertex: inset 14 cm so the Ø60 mm tube
+    # never sticks out past the edges; flat/round tops inset 4 cm flush behind the plate rim.
+    top_inset = 0.14 if top_shape in ("diamond", "triangle_up") else 0.04
+    post_top = max(top_clamp_min, top_plate_top - top_inset)
+    post_item["sz"] = round(max(post_top - zb, 0.5), 3)
+    for code, zcen, _shape in centres:
         pl.add(f"plate_{code}", p, yaw, z=zcen, src=src)
     return [c for c, _, _ in centres]
 

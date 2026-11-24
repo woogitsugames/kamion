@@ -1,6 +1,6 @@
 """GPS voice pack: every sentence NavVoice (game/Assets/_Project/Core/Navigation/NavVoice.cs) can order, keyed GPS_Bxx #i
 exactly as docs/owner/ELEVENLABS-GPS-VOICE.md numbers them (ADR 0328). Only the sentences the code can play are listed:
-B01..B05 #1..8, B06 #1..10, B07 #1..7, B08 #1..7, B09 #1..5, B10 #5 and #11, B12 #1..12, B13 #1..11, B14 #1..2, B15 #1..2 (ring names in the nominative, ADR 0329).
+B01..B05 #1..8, B06 #1..10, B07 #1..7, B08 #1..7, B09 #1..5, B10 #5 and #11, B12 #1..12, B13 #1..11, B14 #1..2, B15 #1..4 (ring names in the nominative, ADR 0329).
 Unused sentences of the prompt pack (B01 #9, B10 others, B11) are not generated until code orders them.
 """
 from __future__ import annotations
@@ -40,7 +40,8 @@ PACK: dict[int, list[tuple[int, str]]] = {
     13: list(enumerate(["w Brzeską.", "w Buską.", "w Kowieńską.", "w Lidzką.", "w Olsztyńską.", "w Racławicką.",
                         "w Sitarską.", "w Skidelską.", "w Wołkowyską.", "w Łańcucką.", "w Świsłocką."], 1)),
     14: [(1, "na rondzie Putry."), (2, "na rondzie Pamięci Bieżeństwa.")],
-    15: [(1, "Rondo Krzysztofa Jakuba Putry."), (2, "Rondo Pamięci Bieżeństwa.")],
+    15: [(1, "Rondo Krzysztofa Jakuba Putry."), (2, "Rondo Pamięci Bieżeństwa."),
+         (3, "Rondo Jana Nowaka-Jeziorańskiego."), (4, "Rondo Pamięci Męczeństwa Kresowian.")],
 }
 
 
