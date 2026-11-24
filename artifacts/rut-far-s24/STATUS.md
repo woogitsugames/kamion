@@ -1,0 +1,6 @@
+# STATUS rut-far-s24 (koleiny w dali, dopisek ADR 0335)
+- krok 0: worktree z main 5f92daa1c. Hipoteza: pomiar `med-p15` z ADR 0335 P2 wpadał na ciemną łatę wykopu i barierkę w polu "far" (q_far) -> nie mierzył kolein. Sonda: define KAMION_RUT_PROBE_OFF (wp=0) w WorldPBR.shader; kontrast koleiny = render(on) - render(off).
+- w toku: run1.ps1 (before + before-off, clear/overcast, q_far,q_far2). NASTĘPNY KROK: `cat artifacts/rut-far-s24/run1.status`
+- krok 1: import exit 1 NIE przez SM_CabInterior (fbx jest) tylko: WorldPbrMaterials.FurnitureSignFronts brał materiały `sign_post`/`sign_post_galv` (ADR 0337, props_meta z 24.11 17:58) za tablice -> "Invalid explicitly flagged furniture sign face". Poprawka: pominąć prefiks `sign_post` (osobny commit, poza moją własnością — do scalenia przez lidera; ten sam błąd zablokuje import tykocin na main).
+- NASTĘPNY KROK: `pwsh -NoProfile -File artifacts/rut-far-s24/run1.ps1` (before + before-off)
+- KONIEC: P2b gotowe (patrz dopisek w ADR 0335), 32/32 EditMode Win64, dowody skopiowane do main artifacts/rut-far-s24. Do scalenia: gałąź rut-far-s24 (shader + fix WorldPbrMaterials sign_post + ADR). NASTĘPNY KROK dla lidera: `git merge rut-far-s24`; visual-critic na arkuszach.

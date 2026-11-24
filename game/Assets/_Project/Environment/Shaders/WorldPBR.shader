@@ -643,12 +643,21 @@ Shader "Kamion/World PBR"
                         // wheel paths read darker than near the camera. Pre-filter the analytical stripe and high-freq
                         // noise by pixel footprint, and attenuate contrast gently with distance (1.0 <= 25 m -> 0.50 >= 130 m).
                         // WORKING_VALUE.
-                        half rwDistAtten = (half)(1.0 - 0.50 * smoothstep(25.0, 130.0, rwDist));
+                        // P2b (rut-far-s24): same-ground measurement showed the 0.50 / 25-130 m ramp left the final-pixel rut
+                        // depth flat to 120 m (near albedo texture hides the stripes, far texture mips away and leaves them as the
+                        // only dark lines to the horizon), so: 1.0 <= 20 m -> 0.40 >= 120 m.
+                        half rwDistAtten = (half)(1.0 - 0.60 * smoothstep(20.0, 120.0, rwDist));
                         // wheel paths at ~0.25 / 0.75 of a lane: darker binder-rich, smoother
                         float lc = frac(w.x);
-                        half wpMip = (half)saturate(0.11 / max(rwFwx, 0.11));
-                        half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11) * wpMip;
+                        // P2b: area-preserving prefilter (box ~ pixel footprint): the stripe widens to >= 1.2 px and its amplitude
+                        // drops by the same ratio, so far away it converges to the track's mean darkening instead of aliasing
+                        // (the old `* saturate(0.11 / fwx)` shrank the area and never engaged below ~300 m).
+                        half rwW = (half)max(0.11, 1.2 * rwFwx);
+                        half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / rwW) * (0.11h / rwW);
                         wp *= lerp(1.0h, (half)KAMION_PLATE_WHEEL_KEEP, plate);
+                    #if defined(KAMION_RUT_PROBE_OFF)
+                        wp = 0;     // measurement probe only (ADR 0335 P2b): final-pixel rut contrast = render(on) - render(off)
+                    #endif
                         // build #3 P3 (DK65 / Knyszyn roundabout mouths): the wheel paths ran as continuous dark stripes of
                         // one strength along every lane (3 per lane: 2 paths + drip band), bending with the flared
                         // single-lane ribbons around the splitter islands - the same stripe pattern at every mouth.
