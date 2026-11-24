@@ -167,6 +167,20 @@ def test_hlod_top_line_is_the_measured_one():
     assert np.percentile(flat, 90) - np.percentile(flat, 10) < 8.0, "class rule: one crown level over the whole stand"
     allz = canopy_tops(cells, 20, 380)
     assert np.percentile(allz, 90) - np.percentile(allz, 10) > 15.0
+    # walls: the crown line of the edge picture sits at the measured tops (old stand 27 m, pole stand 16 m)
+    def wall_tops(e0, e1):
+        z = []
+        for c in cells.values():
+            for pr in c["prims"][1:]:
+                V, UV = pr["V"], pr["UV"]
+                m = (V[:, 0] > e0) & (V[:, 0] < e1) & (np.abs(UV[:, 1] - 0.75) < 1e-6) & (np.abs(V[:, 1] - 201) < 0.8)  # north edge (+ 1 m), main wall
+                z += list(V[m, 2])
+        return np.array(z)
+
+    wo, wp = wall_tops(30, 100), wall_tops(320, 380)
+    assert len(wo) and len(wp)
+    assert np.median(wo) * FH.CHM_WALL_CROWN_LINE == pytest.approx(27.0, rel=0.12)
+    assert np.median(wp) * FH.CHM_WALL_CROWN_LINE == pytest.approx(16.0, rel=0.12)
     # no canopy sheet over the opening
     for c in cells.values():
         V, T = c["prims"][0]["V"], c["prims"][0]["T"]

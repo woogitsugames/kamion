@@ -75,6 +75,7 @@ SKIRT_SEG_M = 18.0
 # hole) and the tree-based value is used.
 CHM_TOP_VAR = (0.94, 1.05)
 CHM_TRUST_M = 3.0
+CHM_WALL_CROWN_LINE = 0.78  # crown line of the baked edge picture / height of the picture (spruce tips above it)
 CHM_CANOPY_K = 0.93        # canopy sheet under the crown tops (the sheet is the closed crown layer, not the tips)
 
 
@@ -290,13 +291,17 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
         return out
 
     def h_local(q):
-        if chm is not None:                 # ADR 0339: the measured crown tops at the wall, else the stand behind it
-            dom, stand, _, ins = chm.sample(q)
-            if ins[0] and max(dom[0], stand[0]) >= CHM_TRUST_M:
-                return float(dom[0] if dom[0] >= CHM_TRUST_M else stand[0])
         dd, ii = kd.query(q, k=12, distance_upper_bound=15.0)
         ii = ii[np.isfinite(dd)]
         return float(np.median(H[ii])) if len(ii) else float(np.median(H))
+
+    def wall_h(q, edge_info):
+        """Height of the wall quad at q: the trees of the edge picture stand as high as the stand does there."""
+        if chm is not None:                 # ADR 0339: the measured crown tops at the wall, else the stand behind it
+            dom, stand, _, ins = chm.sample(q)
+            if ins[0] and max(dom[0], stand[0]) >= CHM_TRUST_M:
+                return float(dom[0] if dom[0] >= CHM_TRUST_M else stand[0]) / CHM_WALL_CROWN_LINE
+        return edge_info["h_m"] * h_local(q) / edge_info["h_median_m"]
 
     # forest union per mix (each cell takes the mix with the largest area in it)
     fu = {}
@@ -380,7 +385,7 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                     q = mid - nl * 1.0 if left_in else mid + nl * 1.0
                     nb = cell_of(q[0], q[1], half)
                     inner[i] = nb in hlod and nb != (ci, cj)          # tile border: outer wall
-            hw = np.array([edge_info["h_m"] * h_local(p) / edge_info["h_median_m"] for p in pts])
+            hw = np.array([wall_h(p, edge_info) for p in pts])
             tv = CHM_TOP_VAR if chm is not None else TOP_VAR
             hw *= np.array([tv[0] + (tv[1] - tv[0]) * _vnoise2(p[0], p[1], TOP_NOISE_M) for p in pts])
             # ADR 0187: where the outer stand edge turns sharply (end of a belt, corner of a block) the wall steps
@@ -401,7 +406,7 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                         for q, k_ in ((p, CORNER_DROP), (p - 1, 0.5 + 0.5 * CORNER_DROP), (p + 1, 0.5 + 0.5 * CORNER_DROP),
                                       (p - 2, 0.2 + 0.8 * CORNER_DROP + 0.12), (p + 2, 0.2 + 0.8 * CORNER_DROP + 0.12)):
                             if 0 <= q < len(pts):
-                                hw[q] = min(hw[q], k_ * edge_info["h_m"] * h_local(pts[q]) / edge_info["h_median_m"])
+                                hw[q] = min(hw[q], k_ * wall_h(pts[q], edge_info))
                 if closed:
                     hw[-1] = hw[0] = min(hw[0], hw[-1])
 
