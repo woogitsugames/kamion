@@ -46,6 +46,7 @@ param(
     [int]$SampleSeconds = 1,
     [switch]$NoNvidiaSmi,
     [switch]$NoParse,
+    [switch]$NoSysload,           # ADR 0333: skip scripts/sysload-sampler.ps1 (-> sysload.csv, pacing.json)
     [string]$OutDir = ''
 )
 $ErrorActionPreference = 'Stop'
@@ -106,6 +107,11 @@ if (-not $NoNvidiaSmi) { $nvsmi = Get-Command nvidia-smi -ErrorAction SilentlyCo
 $argLine = ($argv | ForEach-Object { if ($_ -match '\s') { '"' + $_ + '"' } else { $_ } }) -join ' '
 Write-Host "start: $exePath $argLine"
 $p = Start-Process -FilePath $exePath -ArgumentList $argLine -PassThru
+$probe = $null
+if (-not $NoSysload) {
+    $probe = Start-Process pwsh -ArgumentList @('-NoProfile', '-File', (Join-Path $PSScriptRoot 'sysload-sampler.ps1'),
+        '-GamePid', "$($p.Id)", '-OutDir', $OutDir) -PassThru -WindowStyle Hidden
+}
 $t0 = Get-Date
 $deadline = $t0.AddSeconds($DurationSeconds + $StartupTimeoutSeconds + 60)
 $rows = [System.Collections.Generic.List[string]]::new()
@@ -142,6 +148,7 @@ while (-not $p.HasExited) {
     Start-Sleep -Seconds $SampleSeconds
 }
 $p.WaitForExit()
+if ($probe) { $null = $probe.WaitForExit(15000) }
 $playerExit = if ($timedOut) { -1 } else { $p.ExitCode }
 $rows | Set-Content (Join-Path $OutDir 'process.csv') -Encoding utf8NoBOM
 $meta.playerExitCode = $playerExit
@@ -164,5 +171,9 @@ if ($Class) { $pargs += @('--class', $Class) }
 if ($AllowContextMismatch) { $pargs += '--allow-context-mismatch' }
 & uv @pargs
 $code = $LASTEXITCODE
+if (Test-Path (Join-Path $OutDir 'sysload.csv')) {
+    # ADR 0333: slow frames split into clean / contended seconds (informational, does not change the exit code).
+    & uv run --no-project python (Join-Path $RepoRoot 'tools/pcperf/pacing_attribution.py') $OutDir --json (Join-Path $OutDir 'pacing.json')
+}
 Write-Host "report: $(Join-Path $OutDir 'pc-report.md') (exit $($code): 0 in budget / 1 over budget / 2 invalid)"
 exit $code

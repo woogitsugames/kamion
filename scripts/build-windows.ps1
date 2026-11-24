@@ -43,10 +43,14 @@ param(
     [string]$Autopilot = '',      # route = follow the region start route
     [string]$Speed = '',
     [int]$Width = 1600,
+    # ADR 0333: 'borderless' (= -screen-fullscreen 1 -window-mode borderless) for gate trips; windowed + another window on
+    # top (no focus) gets Windows power throttling and 9x more frames > 40 ms under the same background load (A/B E7/E8).
+    [ValidateSet('windowed', 'borderless')] [string]$WindowMode = 'windowed',
     [int]$Height = 900,
     [int]$RunSeconds = 60,
     [int]$ShotSeconds = 30,
-    [string[]]$ExtraPlayerArgs = @()
+    [string[]]$ExtraPlayerArgs = @(),
+    [switch]$NoSysload            # ADR 0333: skip scripts/sysload-sampler.ps1 (system CPU/GPU/foreground probe -> sysload.csv)
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -181,8 +185,10 @@ $runDir = Join-Path $winDir "runs/$ts"
 New-Item -ItemType Directory -Force $runDir | Out-Null
 $playerLog = Join-Path $LogsDir "win-run-$ts.log"
 $shot = Join-Path $runDir 'shot.png'
-$playerArgs = @('-screen-fullscreen', '0', '-screen-width', "$Width", '-screen-height', "$Height", '-logFile', $playerLog,
+$fs = if ($WindowMode -eq 'borderless') { '1' } else { '0' }
+$playerArgs = @('-screen-fullscreen', $fs, '-screen-width', "$Width", '-screen-height', "$Height", '-logFile', $playerLog,
     '-shot', $shot, '-shot_t', "$ShotSeconds", '-quit_t', "$RunSeconds")
+if ($WindowMode -eq 'borderless') { $playerArgs += @('-window-mode', 'borderless') }
 if ($Tier) { $playerArgs += @('-tier', $Tier) }
 if ($Fps -gt 0) { $playerArgs += @('-fps', "$Fps") }
 if ($Scene) { $playerArgs += @('-scene', $Scene) }
@@ -192,11 +198,18 @@ if ($ExtraPlayerArgs) { $playerArgs += $ExtraPlayerArgs }
 Write-Host "run: $exePath $($playerArgs -join ' ')"
 $p = Start-Process -FilePath $exePath -ArgumentList $playerArgs -PassThru
 $null = $p.Handle
+$probe = $null
+if (-not $NoSysload) {
+    # ADR 0333: background probe (BelowNormal, ~21 ms CPU/s) -> <runDir>/sysload.csv; analysed by tools/pcperf/pacing_attribution.py.
+    $probe = Start-Process pwsh -ArgumentList @('-NoProfile', '-File', (Join-Path $PSScriptRoot 'sysload-sampler.ps1'),
+        '-GamePid', "$($p.Id)", '-OutDir', $runDir) -PassThru -WindowStyle Hidden
+}
 if (-not $p.WaitForExit(($RunSeconds + 120) * 1000)) {
     Write-Host "player did not quit within $($RunSeconds + 120) s - killed" -ForegroundColor Red
     $p.Kill(); $p.WaitForExit(); $hung = $true
 }
 Copy-Item $playerLog (Join-Path $runDir 'player.log') -ErrorAction SilentlyContinue
+if ($probe) { $null = $probe.WaitForExit(15000) }
 $diagDir = Join-Path $env:USERPROFILE 'AppData\LocalLow'
 $summary = Get-ChildItem $diagDir -Recurse -Filter summary.json -ErrorAction SilentlyContinue |
     Where-Object { $_.DirectoryName -match 'diag$' -and $_.LastWriteTime -gt (Get-Date).AddSeconds(-($RunSeconds + 300)) } |
@@ -206,6 +219,10 @@ if ($summary) {
     Copy-Item (Join-Path $summary.DirectoryName 'frametimes.csv') (Join-Path $runDir 'frametimes.csv') -ErrorAction SilentlyContinue
 }
 Select-String -Path $playerLog -Pattern '^\[BOOT\] Kamion|\[START\] region|\[LAB\] DrivingLab ready|\[AUTOSHOT\] screenshot' -ErrorAction SilentlyContinue | ForEach-Object { Write-Host "  $($_.Line.Trim())" }
+if ((Test-Path (Join-Path $runDir 'sysload.csv')) -and (Test-Path (Join-Path $runDir 'frametimes.csv'))) {
+    $pa = Invoke-RepoPython @("$RepoRoot/tools/pcperf/pacing_attribution.py", $runDir, '--json', (Join-Path $runDir 'pacing.json'))
+    @($pa.Out) | Select-Object -First 4 | ForEach-Object { Write-Host "  [PACING] $_" }
+}
 Select-String -Path $playerLog -Pattern '^\[DIAG\] t=' -ErrorAction SilentlyContinue | Select-Object -Last 3 | ForEach-Object { Write-Host "  $($_.Line.Trim())" }
 $bad = Select-String -Path $playerLog -Pattern 'Exception|Crash!!!|NullReference|Shader error|ArgumentException' -ErrorAction SilentlyContinue
 $exit = if ($hung) { -1 } else { $p.ExitCode }
