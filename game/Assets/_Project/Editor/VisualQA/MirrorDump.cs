@@ -17,6 +17,7 @@ namespace Game.Editor.VisualQA
     /// <item><c>KAMION_MIRROR_DUMP=&lt;dir&gt;</c> (environment): before every view-camera render, each main mirror's texture is saved as
     /// <c>&lt;dir&gt;/mirror_&lt;L|R&gt;.png</c> (overwritten: the last render wins), flipped left-right like the glass shows it.</item>
     /// <item><c>KAMION_MIRROR_RES=&lt;x&gt;</c>: render-texture height multiplier for that run (diagnostic super-sampling, e.g. 3).</item>
+    /// <item><c>KAMION_MIRROR_MSAA=&lt;1|2|4|8&gt;</c>, <c>KAMION_MIRROR_SHADOWS=&lt;0|1&gt;</c> (ADR 0342): A/B of the mirror camera quality.</item>
     /// <item><c>KAMION_MIRROR_LOD=&lt;x&gt;</c>: LOD scale of the mirror cameras for that run (1 = main-view LOD).</item>
     /// </list>
     /// </summary>
@@ -32,6 +33,10 @@ namespace Game.Editor.VisualQA
                 MirrorOverrides.Resolution = res;
             if (float.TryParse(Environment.GetEnvironmentVariable("KAMION_MIRROR_LOD"), NumberStyles.Float, CultureInfo.InvariantCulture, out float lod) && lod > 0.01f)
                 MirrorOverrides.LodScale = lod;
+            if (int.TryParse(Environment.GetEnvironmentVariable("KAMION_MIRROR_MSAA"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int msaa) && msaa >= 1)
+                MirrorOverrides.Msaa = msaa;
+            string sh = Environment.GetEnvironmentVariable("KAMION_MIRROR_SHADOWS");
+            if (!string.IsNullOrEmpty(sh)) MirrorOverrides.Shadows = sh == "1";
             if (string.IsNullOrEmpty(s_Dir)) return;
             Directory.CreateDirectory(s_Dir);
             RenderPipelineManager.beginCameraRendering -= OnBegin;

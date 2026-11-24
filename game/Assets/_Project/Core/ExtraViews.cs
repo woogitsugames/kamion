@@ -94,6 +94,19 @@ namespace Game.Core
         /// <summary>ADR 0136 r2: the active quality tier's mirror texture height multiplier (QualityProfile.Tier.mirrorResolutionScale,
         /// set by QualityProfileApplier; Low 0.75 = the Low main-view render scale). rq_mirror_res replaces it.</summary>
         public static float TierResolution = 1f;
+        /// <summary>ADR 0342 rq/env A/B: MSAA samples of the mirror render textures (1, 2, 4, 8). null = tier value.</summary>
+        public static int? Msaa;
+        /// <summary>ADR 0342 A/B: shadows in the mirror cameras. null = tier value.</summary>
+        public static bool? Shadows;
+        /// <summary>ADR 0342: the active tier's mirror MSAA (QualityProfile.Tier.mirrorMsaa; 1 = none, the pre-0342 behaviour).</summary>
+        public static int TierMsaa = 1;
+        /// <summary>ADR 0342: the active tier's shadows in the mirror cameras (false = pre-0342).</summary>
+        public static bool TierShadows;
+        /// <summary>ADR 0342: render-texture rows per screen pixel row of the class II window; the texture is never smaller than the
+        /// tier height (0 = off, pre-0342). Needs <see cref="WindowPixelHeight"/>.</summary>
+        public static float TierWindowTexelsPerPixel;
+        /// <summary>ADR 0342: glass height of the on-screen class II mirror window in screen pixels (set by the HUD layout; 0 = unknown).</summary>
+        public static float WindowPixelHeight;
         /// <summary>rq_mirror_rate 0: the ADR 0046 fill-the-cap schedule instead of the due-based one on High.</summary>
         public static bool? DueSchedule;
         /// <summary>rq_mirror_legacy 1 (or the A/B toggler): the complete pre-ADR 0068 mirror configuration.</summary>
@@ -101,7 +114,7 @@ namespace Game.Core
         /// <summary>rq_mirror_off 1 (or the A/B toggler): no mirror renders at all (cost of the mirrors as a whole).</summary>
         public static bool Suspended;
 
-        public static bool Any => Cap.HasValue || LodScale.HasValue || FarClip.HasValue || Resolution.HasValue || DueSchedule.HasValue || Legacy || Suspended;
+        public static bool Any => Cap.HasValue || LodScale.HasValue || FarClip.HasValue || Resolution.HasValue || Msaa.HasValue || Shadows.HasValue || DueSchedule.HasValue || Legacy || Suspended;
     }
 
     /// <summary>
