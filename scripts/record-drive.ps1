@@ -196,9 +196,10 @@ $ffArgs = @('-hide_banner', '-y', '-use_wallclock_as_timestamps', '1', '-f', 'la
     @('-fps_mode', 'cfr', '-r', "$Fps", '-metadata', "title=$Name", '-f', 'matroska', $video)
 $psi = [Diagnostics.ProcessStartInfo]::new($FFmpeg)
 foreach ($x in $ffArgs) { $psi.ArgumentList.Add($x) }
-$psi.UseShellExecute = $false; $psi.RedirectStandardInput = $true; $psi.CreateNoWindow = $true; $psi.WorkingDirectory = $Out
+$psi.UseShellExecute = $false; $psi.RedirectStandardInput = $true; $psi.RedirectStandardError = $true; $psi.CreateNoWindow = $true; $psi.WorkingDirectory = $Out
 $psi.Environment['FFREPORT'] = 'file=ffmpeg.log:level=32'
 $ff = [Diagnostics.Process]::Start($psi)
+$null = $ff.StandardError.BaseStream.CopyToAsync([IO.Stream]::Null)   # progress lines: the full log is FFREPORT ffmpeg.log
 $recStartUtc = [DateTime]::UtcNow
 Log "ffmpeg pid $($ff.Id) started (report $Out\ffmpeg.log)"
 $recSw = [Diagnostics.Stopwatch]::StartNew()
@@ -270,7 +271,7 @@ if ($LegacyAudioCapture) {
     $syncNote = "record_audio: firstBlockUtc $($sj.firstBlockUtc), frames $($sj.framesWritten), dropped $($sj.droppedSamples), zeroFilled $($sj.zeroFilledSamples), closed $($sj.closed)"
 }
 $offset = $aStart - $vStart          # > 0: audio starts after the first video frame
-Log ("sync: video first frame {0:F3}, audio sample 0 {1:F3} (unix s) -> offset {2:+0.000;-0.000} s; drift {3:F1} ppm; {4}" -f $vStart, $aStart, $offset, $drift, $syncNote)
+Log ([string]::Format($ci, "sync: video first frame {0:F3}, audio sample 0 {1:F3} (unix s) -> offset {2:+0.000;-0.000} s; drift {3:F1} ppm; {4}", $vStart, $aStart, $offset, $drift, $syncNote))
 
 # ---------------------------------------------------------------- mux
 $af = @()
@@ -290,9 +291,11 @@ if ($r.Code -ne 0 -or -not (Test-Path $mp4)) { Log "FAIL: mux exit $($r.Code) (m
 $pr = Invoke-FF $FFprobe @('-v', 'error', '-show_entries', 'format=duration,size,bit_rate:stream=codec_name,width,height,r_frame_rate,sample_rate,channels', '-of', 'json', $mp4)
 $info = $pr.Out | ConvertFrom-Json
 $vs = $info.streams | Where-Object { $_.codec_name -eq 'h264' } | Select-Object -First 1
-Log ("MP4 {0}: {1:F1} s, {2:F0} MB, {3:F1} Mb/s, video {4}x{5} {6}, audio {7}" -f $mp4, [double]$info.format.duration,
-    [double]$info.format.size / 1MB, [double]$info.format.bit_rate / 1e6, $vs.width, $vs.height, $vs.r_frame_rate,
-    (($info.streams | Where-Object { $_.codec_name -eq 'aac' } | ForEach-Object { "aac $($_.sample_rate) Hz $($_.channels) ch" }) -join ''))
+# (comma binds tighter than / in PowerShell: every computed argument is precomputed)
+$durS = [double]$info.format.duration; $sizeMB = [double]$info.format.size / 1MB; $mbps = [double]$info.format.bit_rate / 1e6
+$aDesc = (($info.streams | Where-Object { $_.codec_name -eq 'aac' } | ForEach-Object { "aac $($_.sample_rate) Hz $($_.channels) ch" }) -join '')
+Log ([string]::Format($ci, 'MP4 {0}: {1:F1} s, {2:F0} MB, {3:F1} Mb/s, video {4}x{5} {6}, audio {7}', $mp4, $durS, $sizeMB, $mbps,
+    $vs.width, $vs.height, $vs.r_frame_rate, $aDesc))
 [ordered]@{
     exe = $exePath; scene = $Scene; routeTo = $RouteTo; tier = $Tier; fps = $Fps; encoder = $enc; monitor = $Monitor
     reason = $reason; arrived = $arrived; notInFrontWarnings = $notFront
