@@ -10,7 +10,7 @@ if (-not (Test-Path $wt)) {
     $a = @('-NoProfile','-File','scripts/new-agent-worktree.ps1','-Name',$Name); if ($CopyDerived) { $a += '-CopyDerived' }
     pwsh @a *> "$o\worktree.log"
 }
-$prompt = "Worktree: $wt (gałąź $Name). Nazwa zadania: $Name.`n`n" + (Get-Content "$R\artifacts\cli-jobs\RULES.md" -Raw) + "`n`n" + (Get-Content "$o\task.md" -Raw)
+$prompt = "Worktree: $wt (gałąź $Name). Nazwa zadania: $Name.`n`n" + (Get-Content "$R\scripts\cli-jobs\RULES.md" -Raw) + "`n`n" + (Get-Content "$o\task.md" -Raw)
 Set-Content "$o\prompt.full.md" $prompt -Encoding utf8
 $runner = "$o\run.ps1"
 if ($Tool -eq 'neon') {
