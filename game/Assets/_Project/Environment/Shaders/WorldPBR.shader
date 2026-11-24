@@ -418,10 +418,11 @@ Shader "Kamion/World PBR"
                 // the 8-64 m tone clouds - a meadow is one sward, a field one crop. Dry unmown ground (B high) and
                 // the verge beside the road keep every patch. No fetch, no keyword; strength = _GroundTint.
                 // ---- ADR 0298: farmland mosaic per pixel (flag in COLOR_0.b), before anything reads the masks
-                half3 fieldTint = half3(1.0h, 1.0h, 1.0h);
+                // ADR 0334: the use of the strip replaces the grass colour by a cover weight (fieldAlb.a), not a tint
+                half4 fieldAlb = half4(0.0h, 0.0h, 0.0h, 0.0h);
             #if defined(_GROUNDMASKS)
                 if (_RegionOriginEN.z > 0.5)
-                    KamionFieldMosaic(i.posEN + _RegionOriginEN.xy, footprint, macro.g, i.masks, fieldTint);
+                    KamionFieldMosaic(i.posEN, _RegionOriginEN.xy, footprint, macro.g, i.masks, fieldAlb);
             #endif
                 half swardCalm = 0.0;
             #if defined(_GRASS_DETILE) && defined(_GROUNDMASKS)
@@ -860,7 +861,10 @@ Shader "Kamion/World PBR"
                     albedo = lerp(albedo, albedo * half3(1.22, 1.10, 0.92), k.b * 0.8 * _GroundTint);
                     // ADR0109: additive ground-only dry matter, behind the existing data keyword.
                     albedo = KamionGrassDryMatter(albedo, k, _GroundTint);
-                    albedo *= fieldTint;          // ADR 0298: crop / stubble / meadow tone of the field mosaic
+                    // ADR 0334: crop / stubble / meadow colour of the field mosaic over the grass; the grass texture
+                    // keeps its luminance detail (blades, gaps) around the field colour, 0.0976 = luminance of _GrassFill
+                    half fdet = lerp(1.0h, clamp(lum / 0.0976h, 0.6h, 1.4h), 0.7h);
+                    albedo = lerp(albedo, fieldAlb.rgb * fdet, fieldAlb.a);
                     // Pine-forest floor (bór sosnowy): needle litter in patches with feather moss and bilberry, not a
                     // uniform beige (review r3 W2 / r4 W-H8). Linear albedo: litter 0.045/0.035/0.021, moss + bilberry
                     // 0.034/0.049/0.019 (WORKING_VALUE, judged against the CC0 Tysiąclecia photos); patches from the
