@@ -67,7 +67,8 @@ CLUMP_CARDS = (3, 3, 2, 2)         # cards per clump of row 0 / 1 / 2 / 3
 CLUMP_W = (1.5, 2.3)
 CLUMP_LEAN_DEG = 11.0
 CLUMP_DENS = (0.82, 1.0)
-CLUMP_FOOT = (0.35, 0.7)           # foot width / top width of a card (fan)
+CLUMP_FOOT = (0.12, 0.30)          # foot width / top width of a card (fan); ADR 0330: 0.35-0.7 -> 0.12-0.30, the near-vertical
+#                                    card sides at the foot read as a staircase along the mud margin (bv_bank_n)
 REED_H = (1.5, 2.5)
 HERB_H = (0.9, 1.9)
 
