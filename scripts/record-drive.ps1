@@ -23,7 +23,7 @@
   sync.log / sync.json. Exit 0 = arrived and MP4 written, 2 = MP4 written without arrival (max time), 3 = failed.
 #>
 param(
-    [Parameter(Mandatory)][string]$Exe,
+    [string]$Exe = '',                 # required unless -MuxOnly
     [string]$Scene = 'bialystok-industrial-c',
     [string]$RouteTo = 'tykocin',
     [string]$Speed = '50',
@@ -50,6 +50,7 @@ param(
     [int]$FinalCrf = 18,
     [switch]$LegacyAudioCapture,        # builds before ADR 0345: -audio_capture (whole buffer in RAM, written at quit, sync +-0.5 s)
     [switch]$NoRefocus,
+    [switch]$MuxOnly,
     [switch]$NoPowerThrottlingOptOut,
     [string]$FFmpeg = '',
     [string[]]$ExtraPlayerArgs = @()
@@ -61,7 +62,7 @@ $ts = Get-Timestamp
 if (-not $Out) { $Out = Join-Path $ArtifactsDir "record/$ts" }
 New-Item -ItemType Directory -Force $Out | Out-Null
 $Out = (Resolve-Path $Out).Path
-$exePath = (Resolve-Path $Exe).Path
+$exePath = if ($Exe) { (Resolve-Path $Exe).Path } elseif ($MuxOnly) { '' } else { throw '-Exe is required' }
 $syncLog = Join-Path $Out 'sync.log'
 function Log([string]$m) { $l = "$((Get-Date).ToString('HH:mm:ss')) $m"; Write-Host $l; Add-Content -LiteralPath $syncLog -Value $l -Encoding utf8 }
 
@@ -94,6 +95,17 @@ $encoders = [ordered]@{
     libx264    = @('-vf', 'hwdownload,format=bgra,format=yuv420p', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', "$Cq",
                    '-profile:v', 'high', '-g', '120')
 }
+if ($MuxOnly) {
+    # redo sync + mux from an existing -Out folder (video.mkv, audio.wav(.sync.json), ffmpeg.log), e.g. another -FinalVideo
+    $wav = Join-Path $Out 'audio.wav'; $video = Join-Path $Out 'video.mkv'; $playerLog = Join-Path $Out 'player.log'
+    $old = if (Test-Path (Join-Path $Out 'sync.json')) { Get-Content (Join-Path $Out 'sync.json') -Raw | ConvertFrom-Json } else { $null }
+    $enc = if ($old -and $old.encoder) { "$($old.encoder)" } else { 'unknown' }
+    $arrived = [bool]($old -and $old.arrived); $reason = if ($old -and $old.reason) { "$($old.reason)" } else { 'mux-only' }
+    $notFront = 0; $playerStartUtc = $recStartUtc = [DateTime]::UtcNow
+    if ($LegacyAudioCapture) { throw '-MuxOnly needs a -record_audio recording (legacy capture needs the live process start time)' }
+    if (-not (Test-Path $video)) { throw "-MuxOnly: no $video" }
+    Log "mux only: $Out (capture encoder $enc)"
+} else {
 $order = if ($Encoder -eq 'auto') { @($encoders.Keys) } else { @($Encoder) }
 $enc = $null
 foreach ($e in $order) {
@@ -245,6 +257,7 @@ if (-not $p.HasExited) {
 Log "player exit $($p.ExitCode)"
 foreach ($l in (Read-NewLog)) { if ($l -match '^\[RECORD\]|\[AUDIO-PC\] capture') { Log "  player: $($l.Trim())" } }
 
+}   # -MuxOnly
 # ---------------------------------------------------------------- sync
 $ffLog = Join-Path $Out 'ffmpeg.log'
 $vStart = $null
@@ -263,17 +276,26 @@ if ($LegacyAudioCapture) {
     $aStart = $p0 + $rt
     $syncNote = 'legacy -audio_capture: audio start = process start + realtime of [AUDIO-PC] capture start (approximate, +-0.5 s)'
 } else {
-    $sj = Get-Content -LiteralPath "$wav.sync.json" -Raw | ConvertFrom-Json
+    # raw strings: ConvertFrom-Json turns ISO dates into DateTime and "$()" would drop the milliseconds (test 24.11: offset off by 0.9 s)
+    $raw = Get-Content -LiteralPath "$wav.sync.json" -Raw
+    $sj = $raw | ConvertFrom-Json
+    function Get-JsonUtc([string]$key) {
+        $m = [regex]::Match($raw, '"' + $key + '":\s*"([^"]+)"')
+        if (-not $m.Success) { return $null }
+        return [DateTimeOffset]::Parse($m.Groups[1].Value, $ci, [Globalization.DateTimeStyles]::AssumeUniversal -bor [Globalization.DateTimeStyles]::AdjustToUniversal)
+    }
+    function Get-Unix([DateTimeOffset]$d) { return ($d.UtcTicks - 621355968000000000L) / 1e7 }
     $rate = [int]$sj.sampleRate
-    $fb = [DateTimeOffset]::Parse("$($sj.firstBlockUtc)", $ci, [Globalization.DateTimeStyles]::AssumeUniversal)
-    $aStart = $fb.ToUnixTimeMilliseconds() / 1000.0 + ($fb.Ticks % 10000) / 1e7
-    $lp = [DateTimeOffset]::Parse("$($sj.lastPushUtc)", $ci, [Globalization.DateTimeStyles]::AssumeUniversal)
-    $span = ($lp - $fb).TotalSeconds
+    $fb = Get-JsonUtc 'firstBlockUtc'
+    if (-not $fb) { Log "FAIL: no firstBlockUtc in $wav.sync.json"; exit 3 }
+    $aStart = Get-Unix $fb
+    $lp = Get-JsonUtc 'lastPushUtc'
+    $span = if ($lp) { ($lp - $fb).TotalSeconds } else { 0 }
     if ($span -ge 600) {
         $measured = [double]$sj.lastPushFramesStart / $span
         $drift = ($measured / $rate - 1.0) * 1e6
     }
-    $syncNote = "record_audio: firstBlockUtc $($sj.firstBlockUtc), frames $($sj.framesWritten), dropped $($sj.droppedSamples), zeroFilled $($sj.zeroFilledSamples), closed $($sj.closed)"
+    $syncNote = "record_audio: firstBlockUtc $($fb.ToString('o', $ci)), frames $($sj.framesWritten), dropped $($sj.droppedSamples), zeroFilled $($sj.zeroFilledSamples), gaps $($sj.gaps) ($($sj.gapFrames) frames), closed $($sj.closed)"
 }
 $offset = $aStart - $vStart          # > 0: audio starts after the first video frame
 Log ([string]::Format($ci, "sync: video first frame {0:F3}, audio sample 0 {1:F3} (unix s) -> offset {2:+0.000;-0.000} s; drift {3:F1} ppm; {4}", $vStart, $aStart, $offset, $drift, $syncNote))
