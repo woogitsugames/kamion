@@ -124,13 +124,13 @@
   },
   "tiers": {
     "High": {
-      "bytes": 7790272,
+      "bytes": 7790304,
       "file": "Data/raw/derived/dw671-jasionowka-01/world/far_field.glb",
       "sectors": {
         "far_east": {
           "by_material": {
             "far_field_buildings": 11488,
-            "forest_edge_mixed": 4192
+            "forest_edge_mixed_far_atlas": 4192
           },
           "submeshes": 2,
           "triangles": 15680,
@@ -139,7 +139,7 @@
         "far_north": {
           "by_material": {
             "far_field_buildings": 15542,
-            "forest_edge_mixed": 7000
+            "forest_edge_mixed_far_atlas": 7000
           },
           "submeshes": 2,
           "triangles": 22542,
@@ -148,7 +148,7 @@
         "far_south": {
           "by_material": {
             "far_field_buildings": 28764,
-            "forest_edge_mixed": 1834
+            "forest_edge_mixed_far_atlas": 1834
           },
           "submeshes": 2,
           "triangles": 30598,
@@ -157,14 +157,14 @@
         "far_west": {
           "by_material": {
             "far_field_buildings": 12248,
-            "forest_edge_mixed": 7082
+            "forest_edge_mixed_far_atlas": 7082
           },
           "submeshes": 2,
           "triangles": 19330,
           "vertices": 32156
         }
       },
-      "sha256": "ea17e9a8df6c4803b5bfb89e6feb742830fc8a68b68d184f30b61e6405a8a94c",
+      "sha256": "3363240521fb54558fa1fe514d8747f3459bd870e3c402c8fe768f3dbe2a36c9",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -177,13 +177,13 @@
       "total_vertices": 158370
     },
     "Low": {
-      "bytes": 670128,
+      "bytes": 670160,
       "file": "Data/raw/derived/dw671-jasionowka-01/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
             "far_field_buildings": 1140,
-            "forest_edge_mixed": 1032
+            "forest_edge_mixed_far_atlas": 1032
           },
           "submeshes": 2,
           "triangles": 2172,
@@ -192,7 +192,7 @@
         "far_north": {
           "by_material": {
             "far_field_buildings": 1057,
-            "forest_edge_mixed": 1398
+            "forest_edge_mixed_far_atlas": 1398
           },
           "submeshes": 2,
           "triangles": 2455,
@@ -201,7 +201,7 @@
         "far_south": {
           "by_material": {
             "far_field_buildings": 3232,
-            "forest_edge_mixed": 458
+            "forest_edge_mixed_far_atlas": 458
           },
           "submeshes": 2,
           "triangles": 3690,
@@ -210,14 +210,14 @@
         "far_west": {
           "by_material": {
             "far_field_buildings": 976,
-            "forest_edge_mixed": 1400
+            "forest_edge_mixed_far_atlas": 1400
           },
           "submeshes": 2,
           "triangles": 2376,
           "vertices": 3678
         }
       },
-      "sha256": "fff466af4ba9db19251a4567f38948597601dfa632a1bf59d7caadade79e25d7",
+      "sha256": "72ff0d153c54a80c969322751b2c37fc4f6ec562e2eaa699d41855e1420e1144",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
