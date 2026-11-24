@@ -68,6 +68,14 @@ BACK_H = (1.04, 1.22)
 CANOPY_EDGE_M = 5.0        # canopy vertices this close to an outer stand edge are lowered ...
 CANOPY_EDGE_DROP = (0.62, 0.86)   # ... to this share of the crown height at the edge itself
 SKIRT_SEG_M = 18.0
+# ADR 0339: on a tile with a canopy height model (streetscape.forest_chm) the canopy sheet and the wall tops take the
+# measured crown tops instead of the heights of the generated trees: the top line of a stand is the surveyed one (old
+# stand next to a pole stand, veterans, sagging edges). The model already carries the variation, so the wall-top
+# noise of ADR 0324 shrinks to CHM_TOP_VAR; under CHM_TRUST_M the model has no crowns (cell outside its mask, small
+# hole) and the tree-based value is used.
+CHM_TOP_VAR = (0.94, 1.05)
+CHM_TRUST_M = 3.0
+CHM_CANOPY_K = 0.93        # canopy sheet under the crown tops (the sheet is the closed crown layer, not the tips)
 
 
 def _vnoise2(x, y, period, salt=""):
@@ -221,11 +229,11 @@ def cell_box(ci, cj, half):
     return box(e0, n1 - CELL_M, e0 + CELL_M, n1)
 
 
-def build(trees, forests, no_forest, zground, half, report):
+def build(trees, forests, no_forest, zground, half, report, chm=None):
     """trees: instance dicts (forest trees carry "fk": mix); forests: [(polygon, mix)];
     no_forest: geometry where no stand can be (roads, yards, buildings + clearance); zground(e, n) -> ground z.
     Returns {cell id: {"chunk": (ci, cj), "bbox": [e0, n0, e1, n1], "prims": [...], "tris": int, "trees": int}}
-    and tags the trees of every HLOD cell with "fc"."""
+    and tags the trees of every HLOD cell with "fc". chm (ADR 0339): streetscape.forest_chm.Chm or None."""
     fh = bake_info()
     ft = [t for t in trees if t.get("fk")]
     if not ft or not forests:
@@ -262,7 +270,14 @@ def build(trees, forests, no_forest, zground, half, report):
     def canopy_z(Q):
         Q = np.asarray(Q, float).reshape(-1, 2)
         out = np.empty(len(Q))
+        measured = np.zeros(len(Q), bool)
+        if chm is not None and len(Q):
+            dom, _, _, ins = chm.sample(Q)
+            measured = ins & (dom >= CHM_TRUST_M)
+            out[measured] = np.asarray(zground(Q[measured, 0], Q[measured, 1]), float) + CHM_CANOPY_K * dom[measured]
         for k, q in enumerate(Q):
+            if measured[k]:
+                continue
             idx = kd.query_ball_point(q, CROWN_R)
             if idx:
                 d = np.hypot(*(Pc[idx] - q).T)
@@ -275,6 +290,10 @@ def build(trees, forests, no_forest, zground, half, report):
         return out
 
     def h_local(q):
+        if chm is not None:                 # ADR 0339: the measured crown tops at the wall, else the stand behind it
+            dom, stand, _, ins = chm.sample(q)
+            if ins[0] and max(dom[0], stand[0]) >= CHM_TRUST_M:
+                return float(dom[0] if dom[0] >= CHM_TRUST_M else stand[0])
         dd, ii = kd.query(q, k=12, distance_upper_bound=15.0)
         ii = ii[np.isfinite(dd)]
         return float(np.median(H[ii])) if len(ii) else float(np.median(H))
@@ -362,7 +381,8 @@ def build(trees, forests, no_forest, zground, half, report):
                     nb = cell_of(q[0], q[1], half)
                     inner[i] = nb in hlod and nb != (ci, cj)          # tile border: outer wall
             hw = np.array([edge_info["h_m"] * h_local(p) / edge_info["h_median_m"] for p in pts])
-            hw *= np.array([TOP_VAR[0] + (TOP_VAR[1] - TOP_VAR[0]) * _vnoise2(p[0], p[1], TOP_NOISE_M) for p in pts])
+            tv = CHM_TOP_VAR if chm is not None else TOP_VAR
+            hw *= np.array([tv[0] + (tv[1] - tv[0]) * _vnoise2(p[0], p[1], TOP_NOISE_M) for p in pts])
             # ADR 0187: where the outer stand edge turns sharply (end of a belt, corner of a block) the wall steps
             # down, so a stand seen end-on does not finish in a full-height vertical cut ("theatre flat")
             if nseg >= 2:
