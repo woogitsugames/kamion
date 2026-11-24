@@ -83,7 +83,7 @@ CHM_TRUST_M = 3.0
 # broadleaf stand at ~1.5 x the height of its trees - tiles with a height model no longer have that step.
 CHM_WALL_TOP_FRAC = {"conifer": 0.888, "mixed": 0.833, "broadleaf": 0.766}
 CHM_BACK_VAR = (0.97, 1.06)   # second wall: the measured tops 6 m further in x this (class rule: BACK_H x the front)
-CHM_CANOPY_K = 0.64        # canopy sheet under the crown tops: it only closes the stand from above, the ribs carry the tops
+CHM_CANOPY_K = 0.74        # canopy sheet under the crown tops: it only closes the stand from above, the ribs carry the tops
 #                            (0.80 until round 2: the rib crowns now dip to CHM_LINE_FLOOR x the dominant height and the
 #                            sheet showed between them as a smooth lid)
 # Ribs: with measured heights a stand is no longer level - taller parts stand behind lower ones, and from the road the
@@ -111,7 +111,8 @@ CHM_TOP_JITTER = 0.06
 # 12 m window: every tall tree made a 12 m plateau and a mature stand a ruler line. They now take the crown top of the
 # single 4 m cell under the wall point (local maxima kept as measured), not lower than CHM_LINE_FLOOR x the dominant
 # height (a dip between two crowns, not a hole to the ground that would squeeze the picture flat).
-CHM_LINE_FLOOR = 0.70
+CHM_LINE_FLOOR = 0.82      # 0.70 in the first build of round 2: wall points 6 m apart alternating 0.7 / 1.0 drew a
+#                            saw of equal cones (critic: "stumps after a felling", dw671-tykocin-03 fh_side_b)
 # (b) Edge from the height gradient of the model: where the crowns come down towards the stand outline the OUTER wall
 # follows them down to CHM_EDGE_FLOOR x the height of the stand behind it (Chm.stand, ~28 m window), the second wall
 # 6 m further in keeps CHM_LINE_FLOOR - a stand ends in a step of lower edge trees where the survey has one, in a wall

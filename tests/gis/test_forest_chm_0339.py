@@ -304,7 +304,8 @@ def test_r2_no_prototype_scaled_beyond_the_limit():
         trees, _, rep = _place(_chm(), kat=kat)
         can = _canopy(trees)
         sc = np.array([t["h"] / href[t["p"][5:]][t["v"]] for t in can])
-        assert sc.max() <= VG.CHM_MAX_SCALE + 0.01, (kat, float(sc.max()))
+        lim = VG.CHM_MAX_SCALE_BROADLEAF if kat == "liściasty" else VG.CHM_MAX_SCALE
+        assert sc.max() <= lim + 0.01, (kat, float(sc.max()))
         if kat == "liściasty":          # 27 m measured, the tallest broadleaf prototype reaches ~ 21.8 m
             old = np.array([t["h"] for t in can if 20 < t["e"] < 110])
             cap = VG.chm_cap_m("broadleaf")
@@ -313,6 +314,10 @@ def test_r2_no_prototype_scaled_beyond_the_limit():
             assert np.percentile(old, 90) - np.percentile(old, 10) > 0.15 * cap, np.percentile(old, [10, 50, 90])
     t = {"p": "tree_birch", "v": 1, "h": 20.5, "e": 1.0, "n": 2.0}
     assert VG.chm_fit(t, href) is False and t["v"] == 0 and t["h"] == 20.5, "a taller variant instead of a larger scale"
+    t = {"p": "tree_birch", "v": 1, "h": 23.0, "e": 1.0, "n": 2.0, "fk": "broadleaf"}
+    assert VG.chm_fit(t, href) is False and t["v"] in (0, 2) and t["h"] == 23.0, "broadleaf stand: limit 1.6"
+    t = {"p": "tree_birch", "v": 1, "h": 23.0, "e": 1.0, "n": 2.0, "fk": "conifer"}
+    assert VG.chm_fit(t, href) is True and t["h"] <= VG.CHM_MAX_SCALE * 15.03 + 0.05, "among pines: limit 1.45"
     t = {"p": "tree_spruce", "v": 2, "h": 40.0, "e": 1.0, "n": 2.0}
     assert VG.chm_fit(t, href) is True and t["v"] == 2, "the open spruce form keeps its variant"
 
@@ -345,9 +350,9 @@ def test_r2_crown_line_from_the_single_cell_and_tone():
     tops = np.array(tops)
     assert len(tops) > 100
     # ribs: both levels of the model show (the dominant height alone gave 27 m everywhere), none above the measured top
-    assert np.percentile(tops, 15) < 23.5 and np.percentile(tops, 85) > 25.0, np.percentile(tops, [15, 50, 85])
+    assert np.percentile(tops, 15) < 24.5 and np.percentile(tops, 85) > 25.0, np.percentile(tops, [15, 50, 85])
     assert tops.max() <= 27.0 * FH.CHM_TOP_VAR[1] * (1 + FH.CHM_TOP_JITTER) + 0.05
-    assert tops.min() >= 27.0 * FH.CHM_LINE_FLOOR * FH.CHM_TOP_VAR[0] * (1 - FH.CHM_TOP_JITTER) - 0.05
+    assert tops.min() >= 27.0 * FH.CHM_LINE_FLOOR * FH.CHM_TOP_VAR[0] * (1 - FH.CHM_TOP_JITTER) - 0.35   # wall foot 0.3 m under the ground
     # walls: crown row lit from above, bole row nearly horizontal
     assert len(nz_top) and len(nz_bot) and min(nz_top) > 0.8 and max(nz_bot) < 0.3
 

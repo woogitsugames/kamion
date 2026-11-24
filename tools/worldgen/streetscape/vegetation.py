@@ -136,6 +136,10 @@ CHM_MANTLE_BIRCH = (60.0, 0.50)     # mantle of a pine stand: birch only where t
 # a stand of that category the same way (chm_cap_m), so walls and trees agree at the HLOD switch. The tall
 # broadleaf stands are lower than surveyed until the library has forest-grown tall variants (open point).
 CHM_MAX_SCALE = 1.45
+# critic of round 2 r1 (dw671-tykocin-03): a broadleaf wood held to 1.45 (birch 21.8 m) stood 3-4 m under its survey
+# and read as a clipped hedge. Inside a "lisciasty" stand the limit is 1.6 (birch 24.0 m, alder 22.3 m): there the
+# crowns close into one canopy, so the larger cards read less than on a lone birch among pines.
+CHM_MAX_SCALE_BROADLEAF = 1.6
 HREF_DEFAULT = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "spruce": 21.0,
                 "pineyoung": 5.0, "birchyoung": 6.0}     # make_trees.py HREF (library without trees_meta.json)
 _HREF_CACHE = {}
@@ -169,24 +173,29 @@ def _variants(sp, v):
     return tuple(range(NVAR.get(sp, 3)))
 
 
+def chm_scale(fk):
+    return CHM_MAX_SCALE_BROADLEAF if fk == "broadleaf" else CHM_MAX_SCALE
+
+
 def chm_fit(t, href=None):
-    """ADR 0339 r2: variant / height of tree t so that h / href_m <= CHM_MAX_SCALE. Returns True when the height had
-    to be cut. Position hash only."""
+    """ADR 0339 r2: variant / height of tree t so that h / href_m <= the scale limit of its stand category (t["fk"]).
+    Returns True when the height had to be cut. Position hash only."""
     if not chm_r2():
         return False
+    k = chm_scale(t.get("fk"))
     sp = t["p"][5:]
     hs = (href if href is not None else proto_href()).get(sp) or [HREF_DEFAULT.get(sp, 0.0)] * NVAR.get(sp, 3)
     if not hs or hs[0] <= 0.0:
         return False
     vs = [v for v in _variants(sp, t["v"]) if v < len(hs)]
-    if not vs or (t["v"] in vs and t["h"] <= CHM_MAX_SCALE * hs[t["v"]]):
+    if not vs or (t["v"] in vs and t["h"] <= k * hs[t["v"]]):
         return False
-    fit = [v for v in vs if t["h"] <= CHM_MAX_SCALE * hs[v]]
+    fit = [v for v in vs if t["h"] <= k * hs[v]]
     if fit:
         t["v"] = fit[int(_hash01(f"fv:{t['e']},{t['n']}") * len(fit)) % len(fit)]
         return False
     t["v"] = max(vs, key=lambda v: hs[v])
-    t["h"] = round(CHM_MAX_SCALE * hs[t["v"]] * (0.93 + 0.07 * _hash01(f"fh:{t['e']},{t['n']}")), 1)
+    t["h"] = round(k * hs[t["v"]] * (0.93 + 0.07 * _hash01(f"fh:{t['e']},{t['n']}")), 1)
     return True
 
 
@@ -194,7 +203,7 @@ def chm_cap_m(mix, href=None):
     """Tallest crown a stand of HLOD mix `mix` can show with the tree library (see CHM_MAX_SCALE)."""
     hs = href if href is not None else proto_href()
     sps = ("birch", "alder", "linden", "maple") if mix == "broadleaf" else ("pine", "spruce")
-    return CHM_MAX_SCALE * max(max(hs.get(sp) or [HREF_DEFAULT[sp]]) for sp in sps)
+    return chm_scale(mix) * max(max(hs.get(sp) or [HREF_DEFAULT[sp]]) for sp in sps)
 
 
 def _hash01(key):
@@ -295,7 +304,7 @@ def chm_canopy(trees, chm):
         if r2:
             # r2: a stand taller than the library can show for this species keeps its STRUCTURE - every height x
             # (limit / stand height) - instead of all its trees cut at the limit (a ruler line of capped crowns)
-            cap = CHM_MAX_SCALE * max((href.get(sp) or [HREF_DEFAULT.get(sp, 99.0)])[v_] for v_ in _variants(sp, t["v"])
+            cap = chm_scale(t.get("fk")) * max((href.get(sp) or [HREF_DEFAULT.get(sp, 99.0)])[v_] for v_ in _variants(sp, t["v"])
                                       if v_ < len(href.get(sp) or [0.0] * 3))
             if sh > cap:
                 d = d * cap / sh

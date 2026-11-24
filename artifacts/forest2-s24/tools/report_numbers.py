@@ -1,6 +1,6 @@
 """forest2-s24: numbers of round 2 (ADR 0339 addendum) -> artifacts/forest2-s24/numbers.txt
 
-    uv run --project tools/worldgen python artifacts/forest2-s24/tools/numbers.py <round> [ablation-dir]
+    uv run --project tools/worldgen python artifacts/forest2-s24/tools/report_numbers.py <round> [ablation-dir]
 
 before = artifacts/forest-height-s24/r5-after-qa/<id>.streetscape_qa.json + r5-after/<id>/High-*/stats.txt (round 1 as
 merged, built 2026-11-24 from main before later merges); after = <round>/<id>/streetscape_qa.json + stats.txt.
@@ -97,4 +97,4 @@ for r in TILES:
             L.append(f"| `{r}` | `{c}` | {x['tris']} → {y['tris']} ({(y['tris'] / x['tris'] - 1) * 100:+.1f} %) | {x['draws']} → {y['draws']} "
                      f"| {x.get('idraws')} / {x.get('itris')} → {y.get('idraws')} / {y.get('itris')} |")
 (A / "numbers.txt").write_text("\n".join(L) + "\n", encoding="utf-8", newline="\n")
-print("\n".join(L))
+sys.stdout.buffer.write(("\n".join(L) + "\n").encode("utf-8"))
