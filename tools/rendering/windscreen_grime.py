@@ -153,8 +153,8 @@ def build(seed: int):
         breaks = (value_noise(rng, 0.03, x, y) > 0.35).astype(np.float32)
         wob = (value_noise(rng, 0.08, x, y) - 0.5) * 3.0           # +-1.5 deg wobble
         # no reversal line at the end of the stroke: a near-vertical ridge read as a column in the sky (ADR 0080 r11)
-        outer_arc = np.exp(-((rk - (R_OUT + 0.012 + wob * 0.004)) / 0.006) ** 2) * (ak > SWEEP[0]) * (ak < SWEEP[1])
-        ridge = np.maximum(ridge, (0.15 * outer_arc) * breaks * (0.5 + 0.5 * fine))
+        outer_arc = np.exp(-((rk - (R_OUT + 0.012 + wob * 0.004)) / 0.0045) ** 2) * (ak > SWEEP[0]) * (ak < SWEEP[1])
+        ridge = np.maximum(ridge, (0.08 * outer_arc) * breaks * (0.5 + 0.5 * fine))
     wiped_film = wiped * 0.03 * speck                                # the blade never leaves the glass perfectly clean
     R = np.clip(edge * 0.55 + unwiped + ridge + wiped_film, 0, 1) * on_glass
 
@@ -164,12 +164,12 @@ def build(seed: int):
         dx, dy = x - px, y - py
         rk = np.hypot(dx, dy)
         ak = np.degrees(np.arctan2(dy, dx))
-        for _ in range(14):
+        for _ in range(10):
             rad = rng.uniform(R_IN + 0.05, R_OUT - 0.02)
             width = rng.uniform(0.0006, 0.0012)
             a0 = rng.uniform(SWEEP[0], SWEEP[1] - 20)
             a1 = min(a0 + rng.uniform(25, 105), SWEEP[1])
-            amp = rng.uniform(0.2, 0.55)
+            amp = rng.uniform(0.12, 0.4)
             line = np.exp(-((rk - rad) / width) ** 2)
             span = np.clip((ak - a0) / 6, 0, 1) * np.clip((a1 - ak) / 6, 0, 1)
             G = np.maximum(G, amp * line * span)
@@ -192,11 +192,11 @@ def build(seed: int):
         size = rng.uniform(0.0012, 0.0032)
         if inside:
             # smeared by the blade: long thin streak along the arc, faint (most of it wiped off)
-            if rng.random() < 0.6:
+            if rng.random() < 0.8:
                 continue
             px, py = PIVOTS[int(which[min(jy, H - 1), min(jx, W - 1)])]
             tang = math.atan2(cy - py, cx - px) + math.pi / 2
-            splat(B, cx, cy, size * rng.uniform(4, 9), size * 0.7, tang, rng.uniform(0.15, 0.3))
+            splat(B, cx, cy, size * rng.uniform(3, 6), size * 0.7, tang, rng.uniform(0.1, 0.2))
         else:
             # air flow drives the remains upward: a short tail above the core
             splat(B, cx, cy, size, size * rng.uniform(0.8, 1.2), rng.uniform(0, math.pi), rng.uniform(0.7, 0.95), halo=0.25)

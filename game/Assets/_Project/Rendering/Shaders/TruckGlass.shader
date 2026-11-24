@@ -108,7 +108,7 @@ Shader "Kamion/Truck Glass"
             // Insects: dark, nearly opaque bodies (albedo ~0.08, translucent rims catch the sun a little).
             void DirtShade(half3 d, half3 amb, half3 glare, half phase, out half3 add, out half keep)
             {
-                add = d.r * (amb * 0.10 + glare * 0.30) + d.g * glare * phase * 0.12 + d.b * (amb * 0.04 + glare * 0.08);
+                add = d.r * (amb * 0.10 + glare * 0.30) + d.g * glare * phase * 0.08 + d.b * (amb * 0.04 + glare * 0.08);
                 keep = (1.0 - 0.08 * d.r) * (1.0 - 0.03 * d.g) * (1.0 - 0.65 * d.b);
             }
 
