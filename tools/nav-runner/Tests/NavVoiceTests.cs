@@ -50,6 +50,9 @@ namespace NavRunner.Tests
             Assert.Equal(new VoiceClip(14, 2), NavVoice.RoundaboutNameClip("Rondo Pamięci Bieżeństwa 1915 roku"));
             Assert.Equal(new VoiceClip(15, 1), NavVoice.RoundaboutNominativeClip("Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"));
             Assert.Equal(new VoiceClip(15, 2), NavVoice.RoundaboutNominativeClip("Rondo Pamięci Bieżeństwa 1915 roku"));
+            Assert.Equal(new VoiceClip(15, 3), NavVoice.RoundaboutNominativeClip("Rondo Jana Nowaka-Jeziorańskiego"));
+            Assert.Equal(new VoiceClip(15, 4), NavVoice.RoundaboutNominativeClip("Rondo Pamięci Męczeństwa Kresowian"));
+            Assert.Equal(new VoiceClip(0, 0), NavVoice.RoundaboutNominativeClip("Rondo Nieznane"));
             Assert.Equal(new VoiceClip(0, 0), NavVoice.RoundaboutNominativeClip("Rondo Radosława"));
             Assert.Equal(new VoiceClip(0, 0), NavVoice.RoundaboutNominativeClip(null));
             Assert.Equal(new VoiceClip(7, 4), NavVoice.RoundaboutExitClip(-100f, 4));
