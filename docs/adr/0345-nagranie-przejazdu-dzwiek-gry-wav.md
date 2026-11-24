@@ -89,8 +89,8 @@ Dowody: `artifacts/recorder-s24/` (kopie w main).
 | EditMode `AudioRecorderTests` | — | 10/10 (nagłówki PCM16/float, pierścień: zawijanie, wątki 4 096 000 próbek bez straty, writer z punktami kontrolnymi i odczytem w trakcie, cisza za odrzucone bloki, szyna vs tap, przerwy) |
 | upadek gry | dev `02aed4c673` (bez ciężarówki w worktree → brak świata) | proces zabity po 600 s: WAV float 582,7 s poprawny do ostatniego punktu kontrolnego (`closed: false`), 0 odrzuconych |
 | pipeline na buildzie #7 | `a8352917be` + `-LegacyAudioCapture` | 151 s wideo, ddagrab + h264_mf High 60 kl./s, ~39 Mb/s, 9 080 klatek (558 duplikatów = 6 %, 2 odrzucone), audio −17,1 dB średnio / −1,4 dB szczyt; zgranie przybliżone (−19,5 s). Na obrazie okno zapory Windows z testu dev buildu (patrz niżej) |
-| **pełny tor `-record_audio`** | release `d2933ca96a` (tylko kafel C) | gra na pierwszym planie, 151 s wideo; WAV 160,0 s, 0 odrzuconych, 1 przerwa 1,56 s (zmiana sceny przed startem wideo); offset −8,738 s (audio zaczyna się przed wideo, przycięte); x264 slow CRF 18: 277 s na 151 s materiału (1,83× czasu nagrania), MP4 248 MB, 13,8 Mb/s |
-Szacunek dla pełnego przejazdu ~3 500 s (WORKING_VALUE): MKV ~17 GB, WAV ~1,3 GB, MP4 ~6 GB, kodowanie x264 slow ~1 h 45 min
+| **pełny tor `-record_audio`** | release `d2933ca96a` (tylko kafel C) | gra na pierwszym planie, 151 s wideo (9 072 klatek, 179 duplikatów = 2 %, 4 odrzucone); WAV 160,0 s, 0 odrzuconych, 1 przerwa 1,56 s (zmiana sceny przed startem wideo); offset −8,738 s (audio zaczyna się przed wideo, przycięte); x264 slow CRF 18: 277–301 s na 151 s materiału (1,8–2,0× czasu nagrania), MP4 249 MB, 13,8 Mb/s, audio −19,6 dB średnio / −2,7 dB szczyt; klatki obejrzane (kabina, droga, HUD, bez obcych okien) |
+Szacunek dla pełnego przejazdu ~3 500 s (WORKING_VALUE): MKV ~17 GB, WAV ~1,3 GB, MP4 ~6 GB, kodowanie x264 slow ~1 h 45 min – 2 h
 po przejeździe (preset `medium` ~2× szybciej).
 Okno „Zabezpieczenia Windows — zezwolić sieciom na dostęp?” pojawiło się po starcie **buildu development** (połączenie z
 profilerem nasłuchuje w sieci) i zostało nad grą; buildy release go nie otwierają. Agent nie klikał (ustawienie
