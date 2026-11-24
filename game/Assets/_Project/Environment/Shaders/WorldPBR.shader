@@ -644,6 +644,9 @@ Shader "Kamion/World PBR"
                         half wpMip = (half)saturate(0.11 / max(rwFwx, 0.11));
                         half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11) * wpMip;
                         wp *= lerp(1.0h, (half)KAMION_PLATE_WHEEL_KEEP, plate);
+                    #if defined(KAMION_RUT_PROBE_OFF)
+                        wp = 0;     // measurement probe only (ADR 0335 P2b): final-pixel rut contrast = render(on) - render(off)
+                    #endif
                         // build #3 P3 (DK65 / Knyszyn roundabout mouths): the wheel paths ran as continuous dark stripes of
                         // one strength along every lane (3 per lane: 2 paths + drip band), bending with the flared
                         // single-lane ribbons around the splitter islands - the same stripe pattern at every mouth.
