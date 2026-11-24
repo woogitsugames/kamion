@@ -73,7 +73,7 @@ namespace Game.Tests
             Assert.That(b.min.y, Is.GreaterThan(rect.y - 0.05f), "y min (5 cm frit margin)");
             Assert.That(b.max.y, Is.LessThan(y1), "y max");
             // The cab image is in the cab frame (x right, y up, z forward): the glass object axes must match the cab interior.
-            var interior = m_Go.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name.StartsWith("CabInterior_LOD"));
+            var interior = m_Go.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CAB_Interior_LOD0");
             Assume.That(interior, Is.Not.Null, "cab interior in the prefab");
             Quaternion rel = Quaternion.Inverse(interior.rotation) * ws.transform.rotation;
             Assert.That(Quaternion.Angle(rel, Quaternion.identity), Is.LessThan(0.5f), "windscreen object axes = cab frame");

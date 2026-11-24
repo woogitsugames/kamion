@@ -40,9 +40,9 @@ Dwie tanie warstwy na przedniej szybie (`Kamion/Truck Glass`, materiał `MI_Ext_
    B owady (rdzeń 1–3 mm, ogon w górę od opływu; w polach rozmazane wzdłuż łuku). Geometria pól = kontrakt materiału
    (`_WiperPivotA/B`, `_WiperSweep`; sprawdzone w kadrze `truck-front` z zaparkowanymi piórami). **Tylko wysokie
    częstotliwości** (mm–cm), bez szerokich gładkich pól (lekcja s24 #11) i bez linii nawrotu pióra (pionowa linia na
-   niebie, ADR 0080 r11). Pokrycie (próg 0,1): łącznie 5,1 % szyby (kurz 3,8 %, łuki 0,6 %, owady 0,7 %) — w paśmie
+   niebie, ADR 0080 r11). Pokrycie (próg 0,1): łącznie 3,9 % szyby (kurz 3,4 %, łuki 0,35 %, owady 0,2 %) — w paśmie
    3–6 % z krytyka.
-   - Cieniowanie (`DirtShade`): kurz = `R × (SH × 0,10 + olśnienie × 0,30)`, łuki = `G × olśnienie × faza × 0,12`
+   - Cieniowanie (`DirtShade`): kurz = `R × (SH × 0,10 + olśnienie × 0,30)`, łuki = `G × olśnienie × faza × 0,08`
      (węższy płat, widoczne tylko pod słońce), owady = ciemne ciała, przepuszczają `1 − 0,65 B`; olśnienie = słońce na
      zewnętrznej powierzchni × faza Henyeya-Greensteina g 0,5 (ADR 0059). W świetle rozproszonym warstwa jest ledwo
      widoczna, pod niskie słońce świeci jak prawdziwy brud. Kurz podnosi szorstkość odbicia (+0,2 R).
@@ -51,21 +51,51 @@ Dwie tanie warstwy na przedniej szybie (`Kamion/Truck Glass`, materiał `MI_Ext_
    `_KamionWindscreenOff`; nadpisanie pomiarowe `rq_wslayers=0|1`. Diagnostyka `rq_glassdbg=2` (odbicie ×8) i `=3`
    (maska RGB) bez `rq_ab`.
 4. **Wycieraczki:** geometria zaparkowanych piór istnieje (A6.1, `body.py wipers()`, pióra 16 mm nad dolnym nadrukiem).
-   Z punktu oczu (`cab-driver`) zasłania je górna krawędź deski — zostawiamy (bez przesuwania geometrii wbrew
-   wymiarom); szczegóły w sekcji „Zmierzone”.
+   Z punktu oczu (`cab-driver`) widać je jako wąski ciemny pasek tuż nad krawędzią deski (pomiar niżej) — bez zmian.
 
 ## Zmierzone
-(edytor, DrivingLab, 2340×1080, tiery PC `-Pc`; przed = main 6605f50, po = ta gałąź; `tools/rendering/windscreen_measure.py`)
+(edytor, DrivingLab, 2340×1080, tiery PC `-Pc` High i Low, kamery `cab-driver` i `cab-dash`; przed = main 6605f50,
+po = ta gałąź; `tools/rendering/windscreen_measure.py`, liczby `artifacts/windscreen-s24/compare3/measure.txt`)
 
-TBD
+- **Czytelność drogi zachowana:** kontrast wysokich częstotliwości drogi przez dolną szybę (σ górnoprzepustowe, okno 7 px)
+  ×1,00–1,01 we wszystkich 12 kadrach; średnia luma drogi −0,2…+0,1 pkt %. Bez mlecznej zasłony: mediana światła
+  dodanego na szybie 0,00 (clear, overcast, lowsun).
+- **Brud widać tam, gdzie w kabinie:** clear/overcast — p99 światła dodanego 0,00–0,13 % (pojedyncze owady na tle nieba,
+  σ nieba ×1,01–1,21); lowsun pod słońce — p95 0,36–0,43 %, p99 1,5–2,3 % (łuki piór, kurz przy prawym słupku, owady),
+  cienkie łuki widoczne w wycinku 1:1 (`after3/lowsun_driver_crop_1to1.jpg`), bez linii nawrotu i bez „słupów”.
+  Trzy rundy strojenia (pokrycie 5,6 → 5,1 → 4,1 → 3,9 %): usunięta linia nawrotu, osłabione łuki (G 0,12 → 0,08 w
+  shaderze) i grzbiet granicy pola (0,15 → 0,08), przerzedzone owady w górnym klinie między polami (w overcast czytały
+  się jak kropkowana kolumna).
+- **Odbicie kabiny działa i jest zorientowane poprawnie** (`rq_glassdbg=2`, ×8: deska u dołu szyby, kierownica,
+  fotele i tylna ściana lustrzanie, `dbg2/`), ale **przy zatwierdzonej desce jest fizycznie niewidoczne na tle drogi**:
+  mediana dodanego światła w pasie nad deską 0,0000 (poniżej 1 kodu sRGB; tło 0,036–0,087 liniowo). Rachunek: deska
+  albedo 0,035–0,045 × AO ~0,6, natężenie w kabinie ~0,1–0,2 na jednostkę albedo (eksponowane) × F1 0,045 ⇒ ~0,0001–0,0005,
+  czyli 0,2–1 % jasności asfaltu i 1–3 % ciemnego drzewa w cieniu. Tak wygląda prawdziwa czarna deska w dzień: widoczne
+  odbicia dają jasne przedmioty (dokumenty, wydruki tachografu, uchwyt telefonu) i deska w słońcu. Nie podbijamy
+  wzmocnienia ponad fizykę (docs/06: bez „HDR look”); warstwa zadziała sama, gdy na desce pojawią się jasne elementy
+  (ponowny wypiek ~10 s).
+- **Wycieraczki:** zaparkowane pióra są w kadrze `cab-driver` — maska `WIPER_L_LOD0;WIPER_R_LOD0` 4306 px (x 847–1673,
+  y 790–847 z 1080: wąski ciemny pasek tuż nad krawędzią deski, po obu stronach kierownicy), `cab-dash` 4447 px.
+  Geometria bez zmian.
+- **Mapowanie maski** sprawdzone w kadrze `truck-front` (`rq_glassdbg=3`): łuki pól zaczynają się na zaparkowanych
+  piórach, granice zgodne z geometrią.
 
 ## Koszt
-TBD
+- **Pełna ścieżka (PC Medium–Ultra):** +2 próbki (maska 2048×1024 BC1, panorama 1024×512 BC1, razem ~1,9 MB z
+  mipami) i ~40 ALU (atan2, asin, 2 × przekształcenie kierunku, SH) na piksel przedniej szyby; bez nowych przebiegów,
+  draw calli, wariantów shadera i alokacji. **Szybka ścieżka (Low/Medium mobile):** +1 próbka maski i ~15 ALU.
+- Pomiar w edytorze (informacyjnie, `-TimeFrames 300`, `cab-driver` High clear 2340×1080 MSAA 4, karta zgłoszona przez
+  Unity: GTX 1070, równolegle pracowały inne procesy Unity): włączone 2,13 / 2,32 / 2,40 ms, wyłączone (`rq_wslayers=0`)
+  2,15 / 2,59 / 2,01 ms — różnica median +0,17 ms przy rozrzucie 0,6 ms, czyli **poniżej szumu pomiaru**. Build Windows
+  i telefon: **niezmierzone** (`UNVERIFIED`); A/B w playerze: `-Rq rq_wslayers=0` przez `pc-metrics.ps1`.
 
 ## Odrzucone / otwarte
 - Krople deszczu na szybie — poza zakresem (pogoda/deszcz nie istnieje jeszcze w grze).
 - Emisja ekranów w odbiciu nocą (zegary i nawigacja odbite w szybie po zmroku) — panorama ma ekrany wyłączone;
   następny krok: osobny kanał emisji × podświetlenie z `CabInteriorLighting`.
+- **Jasne przedmioty na desce** (dokumenty w uchwycie, wydruk tachografu, uchwyt telefonu, jaśniejsza mata na
+  desce) — truck-artist; dopiero one dadzą czytelny „refleks deski” z punktu 6 krytyka. Po zmianie wnętrza:
+  `blender -b --factory-startup --python tools/blender/truck/interior/bake_windscreen_reflection.py` i przebudowa TRAKT.
 - Kierowca w odbiciu (brak modelu kierowcy) — górna część szyby odbija pusty fotel i tylną ścianę; przy normalnym
   wzmocnieniu prawie niewidoczne.
 - Telefon (szybka ścieżka Low): +1 próbka maski na piksel szyby (~80 % kadru z kabiny na A16) — `UNVERIFIED`, do
