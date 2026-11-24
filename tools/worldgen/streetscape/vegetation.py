@@ -588,6 +588,9 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
                 for t, h_, in_ in zip(out[n0:], st_h, ins):
                     if in_ and t["p"] != "tree_shrub":
                         t["h"] = round(min(t["h"], max(2.0, float(h_) * (0.45 + 0.2 * bi))), 1)
+                # no stand behind this part of the BDOT outline (the wood ends further in, a clear-cut reaches the
+                # outline): no mantle either - a line of shrubs in the open marked the map outline, not a stand edge
+                out[n0:] = [t for t, h_, in_ in zip(out[n0:], st_h, ins) if not in_ or h_ >= CHM_GAP_H]
         if cut is not None and len(out) > n_stand:
             Q = np.array([[t["e"], t["n"]] for t in out[n_stand:]])
             gone = shapely.contains_xy(cut, Q[:, 0], Q[:, 1])

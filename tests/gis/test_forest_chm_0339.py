@@ -109,6 +109,16 @@ def test_mantle_stays_under_the_measured_stand():
     assert edge and max(t["h"] for t in edge) <= 5.0 * 0.85 + 1e-6, max(t["h"] for t in edge)
 
 
+def test_no_mantle_where_no_stand_stands():
+    chm = _chm()
+    chm2 = FCH.Chm(np.where(np.arange(120)[None, :] < 43, 0.0, chm.top), np.where(np.arange(120)[None, :] < 43, 0.0, chm.cover),
+                   -40.0, 240.0, 4.0, chm.meta)                      # the west third of the BDOT polygon is open land
+    trees, _, _ = _place(chm2)
+    west = [t for t in trees if t["src"].endswith(":edge") and t["e"] < 100]
+    east = [t for t in trees if t["src"].endswith(":edge") and t["e"] > 300]
+    assert not west and len(east) > 50
+
+
 def test_authored_stand_wins():
     ov = [{"kind": "forest_stand", "id": "s1", "target": {"bdot": "F1"}, "height_m": [20.0, 21.0]}]
     trees, forests, rep = _place(_chm(), ov)
