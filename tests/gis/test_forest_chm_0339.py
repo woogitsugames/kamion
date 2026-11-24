@@ -164,6 +164,8 @@ def test_hlod_top_line_is_the_measured_one():
     def canopy_tops(cs, e0, e1):
         z = []
         for c in cs.values():
+            if not c["prims"][0]["mat"].startswith("forest_canopy"):
+                continue
             V = c["prims"][0]["V"]
             m = (V[:, 0] > e0) & (V[:, 0] < e1) & (V[:, 1] > 30) & (V[:, 1] < 170)
             z += list(V[m, 2])
@@ -181,7 +183,7 @@ def test_hlod_top_line_is_the_measured_one():
     def wall_tops(e0, e1):
         z = []
         for c in cells.values():
-            for pr in c["prims"][1:]:
+            for pr in [q for q in c["prims"] if q["mat"].startswith("forest_edge")]:
                 V, UV = pr["V"], pr["UV"]
                 m = (V[:, 0] > e0) & (V[:, 0] < e1) & (np.abs(UV[:, 1] - 0.75) < 1e-6) & (np.abs(V[:, 1] - 201) < 0.8)  # north edge (+ 1 m), main wall
                 z += list(V[m, 2])
@@ -194,22 +196,26 @@ def test_hlod_top_line_is_the_measured_one():
     assert np.median(wp) * k == pytest.approx(16.0, rel=0.08)
     # ... and of the second wall 6 m further in: no crown line above the tallest measured crown + 10 %
     for c in cells.values():
-        for pr in c["prims"][1:]:
+        for pr in [q for q in c["prims"] if q["mat"].startswith("forest_edge")]:
             top = pr["V"][np.abs(pr["UV"][:, 1] - 0.75) < 1e-6]
             assert (top[:, 2] * k <= 33.0 * 1.1).all(), float(top[:, 2].max())
     # no canopy sheet over the opening
     for c in cells.values():
+        if not c["prims"][0]["mat"].startswith("forest_canopy"):
+            continue
         V, T = c["prims"][0]["V"], c["prims"][0]["T"]
         cen = V[T].mean(axis=1)
         assert not ((abs(cen[:, 0] - 200) < 12) & (abs(cen[:, 1] - 100) < 12)).any()
     # no steep canopy triangle (from the road a sloping sheet is a pale shard), ribs every RIB_M carry the crowns there
     for c in cells.values():
+        if not c["prims"][0]["mat"].startswith("forest_canopy"):
+            continue
         tv = c["prims"][0]["V"][c["prims"][0]["T"]]
         n = np.cross(tv[:, 1] - tv[:, 0], tv[:, 2] - tv[:, 0])
         assert (np.hypot(n[:, 0], n[:, 1]) <= FH.CHM_SHEET_MAX_SLOPE * np.abs(n[:, 2]) + 1e-9).all()
     ribs = 0
     for c in cells.values():
-        for pr in c["prims"][1:]:
+        for pr in [q for q in c["prims"] if q["mat"].startswith("forest_edge")]:
             V = pr["V"]
             ribs += int(((V[:, 0] > 40) & (V[:, 0] < 100) & (V[:, 1] > 40) & (V[:, 1] < 160)).sum())    # deep inside the stand
     assert ribs > 100, "walls cross the stand, not only its outline"

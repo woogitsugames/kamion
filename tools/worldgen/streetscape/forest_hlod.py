@@ -392,12 +392,13 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
             if not outer_b.is_empty:        # r3 (tykocin-03 fh_side_b): the sheet ended ON the stand outline and its
                 on_edge = shapely.distance(shapely.points(XY), outer_b) < CHM_SHEET_INSET_M     # last triangles stuck
                 flat &= ~on_edge[Tc].any(axis=1)                    # out past the lower wall crowns as flat blades
-            if flat.any() and not flat.all():
+            if not flat.all():
                 Tc = Tc[flat]
                 used, new = np.unique(Tc, return_inverse=True)
                 V, XY, Tc = V[used], XY[used], new.reshape(-1, 3)
-        prims.append({"V": V, "T": Tc, "UV": XY / Wt, "mat": f"forest_canopy_{mix}",
-                      "N": np.tile([0.0, 0.0, 1.0], (len(V), 1))})
+        if len(Tc):                         # (a narrow strip of a stand can lose its whole sheet: walls and ribs only)
+            prims.append({"V": V, "T": Tc, "UV": XY / Wt, "mat": f"forest_canopy_{mix}",
+                          "N": np.tile([0.0, 0.0, 1.0], (len(V), 1))})
         # walls
         Vw, Tw, UVw, Nw = [], [], [], []
         bnd = piece.boundary
@@ -582,6 +583,8 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
         if Tw:
             prims.append({"V": np.array(Vw), "T": np.array(Tw), "UV": np.array(UVw), "N": np.array(Nw),
                           "mat": f"forest_edge_{mix}"})
+        if not prims:
+            continue
         cid = f"{ci}_{cj}"
         tris = int(sum(len(p["T"]) for p in prims))
         n_tris += tris
