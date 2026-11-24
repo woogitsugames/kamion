@@ -48,3 +48,10 @@ NASTĘPNY KROK: pwsh artifacts/pacing-s24/run-experiments.ps1 -Only E6  (po koń
   zasłoniętego okna procesu w tle. Test: scripts/set-power-throttling.ps1 (SetProcessInformation ProcessPowerThrottling
   wyłączone z zewnątrz, bez buildu) -> E7/E9 (okno + opt-out) vs E8 (okno domyślnie), przeplatane.
 NASTĘPNY KROK: pwsh artifacts/pacing-s24/run-experiments.ps1 -Only E7,E8,E9 (slot heavy)
+
+## Krok 5 — runda 3: power throttling (24.11 09:56–10:02), tło agentów 25–40 % CPU, okno 1600x900 bez fokusu
+- E8 okno domyślnie: 147 kl. > 40 ms, p99 52,9, CPU główny p95 30,5 ms.
+- E7 okno + opt-out throttlingu (z zewnątrz): 16 kl. > 40, p99 24,5, CPU główny p95 8,7. E9 (tło 40 %): 64.
+- Poprawka w grze: Rendering/Runtime/WindowsPowerThrottling.cs (+ test EditMode), furtka -power_throttling default.
+- build-windows.ps1 -Run: nowy -WindowMode borderless (domyślnie windowed). ADR 0333 uzupełniony (tabela A/B).
+NASTĘPNY KROK: kompilacja + EditMode (slot unity): pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 ; potem raport.
