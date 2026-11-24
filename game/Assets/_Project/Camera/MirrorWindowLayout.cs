@@ -79,6 +79,41 @@ namespace Game.Cameras
         public static float TexelsPerPixel(int textureHeight, float pixelsPerUnit) =>
             pixelsPerUnit > 1e-4f ? textureHeight / (TouchImageSize.y * pixelsPerUnit) : 0f;
 
+        // ------------------------------------------------------------------ glass look (ADR 0340)
+
+        /// <summary>Barrel strength k of the window glass. WORKING_VALUE: a class II main mirror is only slightly convex
+        /// (UN R46 minimum radius of curvature for class II: UNVERIFIED here), so straight edges (kerb line, trailer side)
+        /// bend just visibly near the rim - not a fisheye. Centre magnification = 1 + k (1 + aspect^2) ~ 1.09 at 0.55.</summary>
+        public const float GlassCurvature = 0.07f;
+        /// <summary>Darkening at the glass corners (0 = none). WORKING_VALUE.</summary>
+        public const float GlassVignette = 0.26f;
+
+        /// <summary>
+        /// Barrel map of a glass point: <paramref name="s"/>, <paramref name="t"/> in 0..1 across / along the glass,
+        /// <paramref name="aspect"/> = glass width / height. Returns the 0..1 texture coordinate. Scale about the centre
+        /// = (1 + k r^2) / (1 + k r_corner^2) with r in half-heights: the corners map to the texture corners for every
+        /// k >= 0 (nothing outside the texture is sampled, nothing is cropped), the centre is magnified; k = 0 = identity.
+        /// </summary>
+        public static Vector2 Barrel(float s, float t, float aspect, float k)
+        {
+            float cx = (s - 0.5f) * 2f, cy = (t - 0.5f) * 2f;
+            float ax = cx * aspect;
+            float r2 = ax * ax + cy * cy, rc2 = aspect * aspect + 1f;
+            float f = (1f + k * r2) / (1f + k * rc2);
+            return new Vector2(0.5f + 0.5f * cx * f, 0.5f + 0.5f * cy * f);
+        }
+
+        /// <summary>Brightness factor of the glass at a point: 1 over the middle (out to 45 % of the corner distance),
+        /// falling smoothly to 1 - <paramref name="strength"/> in the corners (a recessed glass under a housing lip).</summary>
+        public static float GlassShade(float s, float t, float strength)
+        {
+            float cx = (s - 0.5f) * 2f, cy = (t - 0.5f) * 2f;
+            float d = Mathf.Sqrt(0.5f * (cx * cx + cy * cy));
+            float e = Mathf.Clamp01((d - 0.45f) / 0.55f);
+            e = e * e * (3f - 2f * e);
+            return 1f - Mathf.Clamp01(strength) * e;
+        }
+
         public static void Solve(in MirrorWindowInput s, out MirrorWindowResult r)
         {
             r = default;

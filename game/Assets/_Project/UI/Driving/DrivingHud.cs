@@ -512,20 +512,50 @@ namespace Game.UI.Driving
             m_Coupling.gameObject.SetActive(false);   // shown with the telemetry panel, developer mode only
         }
 
-        /// <summary>Mirror inset (main mirror, portrait) beside the cluster; image flipped like a mirror.</summary>
+        /// <summary>Mirror window (main mirror, portrait; D70): convex glass + film + housing ring (ADR 0340,
+        /// <see cref="MirrorGlassImage"/>, <see cref="MirrorWindowArt"/>); image flipped like a mirror. Children in draw
+        /// order: 0 = glass (render texture), 1 = film (dust on the glass), 2 = housing ring.</summary>
         RawImage MirrorInset(string name, out GameObject go)
         {
             var rt = Zone(name, HudLayout.MirrorSize);
-            var frame = rt.gameObject.AddComponent<Image>();
-            frame.color = new Color(0.03f, 0.03f, 0.035f, 0.95f); frame.raycastTarget = false;
+            var backing = rt.gameObject.AddComponent<Image>();   // kept for callers that tint the frame; not drawn (the ring is rounded)
+            backing.raycastTarget = false; backing.enabled = false;
             var img = Rect("Image", rt);
-            img.anchorMin = Vector2.zero; img.anchorMax = Vector2.one; img.offsetMin = new Vector2(5f, 5f); img.offsetMax = new Vector2(-5f, -5f);
-            var ri = img.gameObject.AddComponent<RawImage>();
+            img.anchorMin = Vector2.zero; img.anchorMax = Vector2.one;
+            var ri = img.gameObject.AddComponent<MirrorGlassImage>();
+            bool right = name.EndsWith("R", StringComparison.Ordinal);
             ri.uvRect = new Rect(1f, 0f, -1f, 1f); // mirror image
             ri.raycastTarget = false;
+            var film = Rect("Film", rt);
+            film.anchorMin = Vector2.zero; film.anchorMax = Vector2.one;
+            var fi = film.gameObject.AddComponent<RawImage>();
+            fi.texture = MirrorWindowArt.Film();
+            fi.uvRect = right ? new Rect(1f, 0f, -1f, 1f) : new Rect(0f, 0f, 1f, 1f);   // not the same smear twice
+            fi.raycastTarget = false;
+            var ring = Rect("Housing", rt);
+            ring.anchorMin = Vector2.zero; ring.anchorMax = Vector2.one; ring.offsetMin = ring.offsetMax = Vector2.zero;
+            var hi = ring.gameObject.AddComponent<Image>();
+            hi.type = Image.Type.Sliced; hi.fillCenter = true; hi.raycastTarget = false;
             go = rt.gameObject;
+            MirrorHousingStyle(go, false);
             go.SetActive(false);
             return ri;
+        }
+
+        /// <summary>Housing ring and glass inset of a mirror window for the monitor / touch layout (ADR 0340).</summary>
+        static void MirrorHousingStyle(GameObject go, bool desktop)
+        {
+            float housing = desktop ? MirrorWindowArt.HousingDesktop : MirrorWindowArt.HousingTouch;
+            float inset = desktop ? Game.Controls.DesktopHudLayout.MirrorBezel : MirrorWindowLayout.TouchFrame;   // glass under the ring's lip
+            var t = go.transform;
+            for (int k = 0; k < 2 && k < t.childCount; k++)
+            {
+                var g = (RectTransform)t.GetChild(k);
+                g.offsetMin = new Vector2(inset, inset); g.offsetMax = new Vector2(-inset, -inset);
+            }
+            var ring = t.childCount > 2 ? t.GetChild(2).GetComponent<Image>() : null;
+            if (ring != null) { ring.sprite = MirrorWindowArt.Ring(desktop); ring.color = Color.white; }
+            _ = housing;
         }
 
         // ------------------------------------------------------------------ layout

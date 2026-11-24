@@ -297,7 +297,8 @@ namespace Game.Tests
                 Assert.IsFalse(DesktopHudLayout.Intersects(r.MirrorRight, r.ClearView), "inset " + inset);
                 Assert.GreaterOrEqual(r.ClearView.width, DesktopHudLayout.ClearViewFraction * b.x - 0.01f);
             }
-            Assert.AreEqual(3f, DesktopHudLayout.MirrorBezel, "thin housing edge, not a picture-in-picture frame");
+            // ADR 0340: the glass sits under a 7-unit rounded housing ring (was a 3-unit flat edge, ADR 0283).
+            Assert.That(DesktopHudLayout.MirrorBezel, Is.InRange(4f, 8f), "a housing lip, not a thick picture frame");
         }
 
         // ================================================================== visibility / warnings / texts

@@ -113,9 +113,11 @@ namespace Game.Controls
         public const float DefaultMirrorAspect = 0.55f;
         /// <summary>Smallest useful mirror window height; below it the windows are hidden (never drawn squashed). WORKING_VALUE.</summary>
         public const float MirrorMinHeight = 200f;
-        /// <summary>Frame around the mirror image [units] (the image is inset by this much). 3 (was 6): a thin housing edge,
-        /// not a picture-in-picture window (§7 p.6).</summary>
-        public const float MirrorBezel = 3f;
+        /// <summary>Inset of the mirror glass inside its window [units]. ADR 0340: 6 - the glass sits under the lip of a
+        /// 7-unit housing ring with rounded corners (Game.UI.Driving.MirrorWindowArt); it was 3 (ADR 0283: "a thin
+        /// housing edge", which read as a raw picture-in-picture rectangle on the build, critic s24 build #5 p. 5). The
+        /// window rect itself is unchanged. WORKING_VALUE (owner to judge on the build).</summary>
+        public const float MirrorBezel = 6f;
 
         public static float StripHeight(bool extended) => StripSize.y + (extended ? ExtendedRowHeight : 0f);
 
