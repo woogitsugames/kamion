@@ -46,20 +46,47 @@ płaszczyzna” (klatki `t0950–t0970` = kafel dk65-03, `t3231–t3261` = dw671
 
 ### 3. Rośliny mozaiki (`vegetation.field_plants`, wywołanie w `vegetation.place`)
 - Miedze: kandydat co 7 m krawędzi pasa (siatka 4 m rzutowana na najbliższą krawędź — każda komórka znaleziona przy
-  dowolnym obrocie), odcinki 50 m: 12 % to ciągi krzewów (50 % kandydatów), reszta pojedyncze (1,5 %). Gatunki: krzew,
-  brzoza młoda, sosna młoda, rzadko brzoza / olsza (wierzba, grusza — brak prototypów).
-- Ugory: samosiew 10 % węzłów siatki 12 m EPSG:2180 (brzoza młoda, sosna młoda, krzew).
-- Tylko w OT_PTTR_A, ≥ 8 m od granicy wieloboku (tam reguła marginesu ADR 0298) i ≥ 8 m od drogi / podwórza. Pozycja,
+  dowolnym obrocie), odcinki 50 m: 9 % to ciągi krzewów (85 % kandydatów), poza nimi 0,4 %. Gatunki: krzew 76 %, brzoza
+  młoda 12 %, sosna młoda 5 %, brzoza 4 %, olsza 3 % (wierzba, grusza — brak prototypów).
+- Ugory: samosiew 30 % węzłów siatki 12 m EPSG:2180 w 25 % płatów 36 m (brzoza młoda, sosna młoda, krzew).
+- Tylko w kaflach wiejskich (nie `bialystok-*`: trawiaste BDOT w mieście to trawniki i nieużytki), w wielobokach
+  OT_PTTR_A ≥ 2 ha, ≥ 8 m od granicy wieloboku (tam reguła marginesu ADR 0298) i ≥ 8 m od drogi / podwórza. Pozycja,
   gatunek i ziarno rng z hasha układu — ta sama roślina, który kafel by jej nie budował.
 
-## Pomiary
-(uzupełniane — patrz niżej)
+## Pomiary (edytor, visual-qa High 1920×1080, `-Pc`, Win64; nie build playera)
+Przed = dane i shader z main (chunki z kopii `before-world`), po = ta gałąź po przebudowie kafli (r2). Dowody:
+`artifacts/fields-s24/vqa/{before,after,after-r1}/<kafel>-<clear|overcast>/`, zestawienia `sbs_knyszyn-w_clear.jpg`,
+`sbs_dk65-07_clear.jpg`, `after_knyszyn-w_overcast.jpg`, podgląd palety z góry `preview/palette_topdown{,2,3}.png`.
+
+| | przed | po | źródło |
+|---|---|---|---|
+| knyszyn-w: rośliny mozaiki (miedze / ugory) | 0 / 0 | 1 414 / 27 (krzew 1 023, brzoza młoda 199, sosna młoda 99, brzoza 62, olsza 50) | `streetscape_qa.json`, `instances_*.json` |
+| dk65-07: rośliny mozaiki | 0 / 0 | 462 / 4 | jw. |
+| knyszyn-w, 6 kamer: instancje / draw calle / trójkąty instancji | 106–357 / 35–95 / 4,2–48,4 tys. | +30…+81 / +0…+3 / +0,4…+1,2 tys. (max +11 %, `dk65-fields-nw`) | `stats.txt` |
+| dk65-07, 6 kamer | 596–1 672 / 48–162 / 11–145 tys. | +0…+32 / 0 / +0…+0,4 tys. | `stats.txt` |
+| trójkąty siatek (teren, drogi) na kamerach | — | bez zmian (shader: tylko ALU, 0 fetchy) | `stats.txt` trisExact |
+| pytest (`test_fields_0334` + 7 plików roślinności / determinizmu) | — | 120 passed | lokalnie |
+
+Ocena wzrokowa (własna, porównanie z 4 zdjęciami CC BY ściernisk z sierpnia — `Data/raw/refs/commons-fields-summer` — i
+zdjęciami właściciela 10/11 dla układu): knyszyn-w — pola czytają się jako mozaika pasów: złote ścierniska z wałami
+słomy, zboże stojące, brunatne talerzowane, ciemna kukurydza, łąki w kilku tonach, z kabiny i z góry, w clear i overcast;
+miedza z pojedynczą brzozą przy drodze. dk65-07 — kamery patrzą głównie na łąki przy szpalerze DK65: zmiana tonu łąk
+(oliwkowe / siano / świeży odrost), z kabiny mała. r1 → r2: rozsiane równomiernie samotne sadzonki (wrażenie „posypki”)
+zastąpione ciągami krzewów na rzadkich odcinkach miedz i płatami samosiewu na ugorach.
+Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagentów).
 
 ## Skutki dla innych kafli
-Shader działa od razu na wszystkich kaflach z flagą (każdy przebudowany po ADR 0298) — bez przebudowy. Rośliny miedz /
-ugorów wymagają przebudowy kafli wiejskich (lista w raporcie agenta).
+- Shader działa od razu na każdym kaflu z flagą pól (wszystkie kafle trasy są po ADR 0298) — wystarczy build; w kaflach
+  `bialystok-*` trawiaste BDOT (poza OSM `landuse=grass` / parki) też dostaje odmiany łąk, jak od ADR 0298.
+- Rośliny miedz / ugorów wymagają przebudowy kafli wiejskich (`build_world.py` + import). Przebudowane tu: `knyszyn-w`,
+  `dk65-07`. Do przebudowy (51 kafli z polami, szacunek miedze/ugory bez testu drogi: `artifacts/fields-s24/tile_survey.json`):
+  dk65-01…11, dk65-monki-01…07, dk8-korycin-01, dk8-s8-jeroniki, dk8-wasilkow-01…03, dw671-jasionowka-01,
+  dw671-tykocin-01…09, knyszyn, knyszyn-s, monki, monki-e, s8-01…05, tykocin. Kafle `bialystok-*` (w tym C) — bez
+  zmian danych (`test_export_is_deterministic` C nienaruszony).
+- `KamionFieldMosaic(...)` ma nową sygnaturę (local, origin, …, out half4) — jedyne wywołanie w `WorldPBR.shader`.
 
 ## Otwarte
+- Pomiar playera (build Windows, pc-metrics) na kaflu wiejskim z miedzami — lider przy buildzie #7/#8.
 - Bele słomy na ściernisku po prasowaniu (krytyk) — brak modelu; osobne zadanie (Blender, LOD, instancje).
 - Prawdziwe granice działek (EGiB / ULDK) i kierunek pasów prostopadły do ulicy wsi — brak danych w repo.
 - Gatunki miedz: grusza polna, wierzba, dzika róża, tarnina — brak prototypów (dziś krzew / brzoza / olsza).
