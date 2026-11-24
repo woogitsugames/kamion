@@ -192,14 +192,19 @@ def build(seed: int):
         size = rng.uniform(0.0012, 0.0032)
         if inside:
             # smeared by the blade: long thin streak along the arc, faint (most of it wiped off)
-            if rng.random() < 0.8:
+            if rng.random() < 0.65:
                 continue
             px, py = PIVOTS[int(which[min(jy, H - 1), min(jx, W - 1)])]
             tang = math.atan2(cy - py, cx - px) + math.pi / 2
             splat(B, cx, cy, size * rng.uniform(3, 6), size * 0.7, tang, rng.uniform(0.1, 0.2))
         else:
+            # Outside the sweeps, but thinned in the upper wedge between the two sweeps: a dense patch there read as a
+            # dotted column against the overcast sky (after2 review); real remains thin out above the roof deflector line.
+            if rng.random() < 0.35 + 0.5 * (cy - GLASS_Y[0]) / (GLASS_Y[1] - GLASS_Y[0]):
+                continue
+            size *= 0.8
             # air flow drives the remains upward: a short tail above the core
-            splat(B, cx, cy, size, size * rng.uniform(0.8, 1.2), rng.uniform(0, math.pi), rng.uniform(0.7, 0.95), halo=0.25)
+            splat(B, cx, cy, size, size * rng.uniform(0.8, 1.2), rng.uniform(0, math.pi), rng.uniform(0.7, 0.95), halo=0.15)
             if rng.random() < 0.5:
                 splat(B, cx, cy + size * 1.8, size * 0.45, size * rng.uniform(1.5, 2.6), math.pi / 2 + rng.uniform(-0.3, 0.3),
                       rng.uniform(0.3, 0.55))
