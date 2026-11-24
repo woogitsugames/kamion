@@ -33,7 +33,71 @@
    "note": "cab view opposite"
   },
   {
-   "id": "rf_0",
+   "id": "rg_0",
+   "type": "persp",
+   "fov_deg": 60,
+   "pos": [
+    -880.948341967357,
+    415.77320511535464,
+    135.7882274280895
+   ],
+   "look_at": [
+    -791.3177679330994,
+    371.4295449338871,
+    133.2882274280895
+   ],
+   "note": "base 100 m ahead of q_far2, cam 0 m behind it (rut contrast vs distance, same ground)"
+  },
+  {
+   "id": "rg_20",
+   "type": "persp",
+   "fov_deg": 60,
+   "pos": [
+    -898.8744567742085,
+    424.64193715164816,
+    135.7882274280895
+   ],
+   "look_at": [
+    -809.243882739951,
+    380.2982769701806,
+    133.2882274280895
+   ],
+   "note": "base 100 m ahead of q_far2, cam 20 m behind it (rut contrast vs distance, same ground)"
+  },
+  {
+   "id": "rg_40",
+   "type": "persp",
+   "fov_deg": 60,
+   "pos": [
+    -916.8005715810601,
+    433.5106691879417,
+    135.7882274280895
+   ],
+   "look_at": [
+    -827.1699975468025,
+    389.16700900647413,
+    133.2882274280895
+   ],
+   "note": "base 100 m ahead of q_far2, cam 40 m behind it (rut contrast vs distance, same ground)"
+  },
+  {
+   "id": "rg_70",
+   "type": "persp",
+   "fov_deg": 60,
+   "pos": [
+    -943.6897437913374,
+    446.8137672423819,
+    135.7882274280895
+   ],
+   "look_at": [
+    -854.0591697570798,
+    402.47010706091436,
+    133.2882274280895
+   ],
+   "note": "base 100 m ahead of q_far2, cam 70 m behind it (rut contrast vs distance, same ground)"
+  },
+  {
+   "id": "rg_100",
    "type": "persp",
    "fov_deg": 60,
    "pos": [
@@ -46,71 +110,7 @@
     415.77320511535464,
     133.2882274280895
    ],
-   "note": "q_far2 shifted back 0 m along the road (rut contrast vs distance, same ground)"
-  },
-  {
-   "id": "rf_20",
-   "type": "persp",
-   "fov_deg": 60,
-   "pos": [
-    -988.5050308084661,
-    468.9855973331157,
-    135.7882274280895
-   ],
-   "look_at": [
-    -898.8744567742085,
-    424.64193715164816,
-    133.2882274280895
-   ],
-   "note": "q_far2 shifted back 20 m along the road (rut contrast vs distance, same ground)"
-  },
-  {
-   "id": "rf_40",
-   "type": "persp",
-   "fov_deg": 60,
-   "pos": [
-    -1006.4311456153176,
-    477.85432936940924,
-    135.7882274280895
-   ],
-   "look_at": [
-    -916.80057158106,
-    433.51066918794163,
-    133.2882274280895
-   ],
-   "note": "q_far2 shifted back 40 m along the road (rut contrast vs distance, same ground)"
-  },
-  {
-   "id": "rf_70",
-   "type": "persp",
-   "fov_deg": 60,
-   "pos": [
-    -1033.3203178255949,
-    491.15742742384947,
-    135.7882274280895
-   ],
-   "look_at": [
-    -943.6897437913373,
-    446.8137672423819,
-    133.2882274280895
-   ],
-   "note": "q_far2 shifted back 70 m along the road (rut contrast vs distance, same ground)"
-  },
-  {
-   "id": "rf_100",
-   "type": "persp",
-   "fov_deg": 60,
-   "pos": [
-    -1060.2094900358722,
-    504.46052547828975,
-    135.7882274280895
-   ],
-   "look_at": [
-    -970.5789160016146,
-    460.1168652968222,
-    133.2882274280895
-   ],
-   "note": "q_far2 shifted back 100 m along the road (rut contrast vs distance, same ground)"
+   "note": "base 100 m ahead of q_far2, cam 100 m behind it (rut contrast vs distance, same ground)"
   }
  ]
 }
