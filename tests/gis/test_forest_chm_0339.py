@@ -202,8 +202,19 @@ def test_hlod_top_line_is_the_measured_one():
         V, T = c["prims"][0]["V"], c["prims"][0]["T"]
         cen = V[T].mean(axis=1)
         assert not ((abs(cen[:, 0] - 200) < 12) & (abs(cen[:, 1] - 100) < 12)).any()
-    # triangle cost: the walls around openings and stand steps stay within 1.6 x of the class rule
-    assert rep["forest_hlod"]["triangles"] <= 1.6 * rep0["forest_hlod"]["triangles"], (rep, rep0)
+    # no steep canopy triangle (from the road a sloping sheet is a pale shard), ribs every RIB_M carry the crowns there
+    for c in cells.values():
+        tv = c["prims"][0]["V"][c["prims"][0]["T"]]
+        n = np.cross(tv[:, 1] - tv[:, 0], tv[:, 2] - tv[:, 0])
+        assert (np.hypot(n[:, 0], n[:, 1]) <= FH.CHM_SHEET_MAX_SLOPE * np.abs(n[:, 2]) + 1e-9).all()
+    ribs = 0
+    for c in cells.values():
+        for pr in c["prims"][1:]:
+            V = pr["V"]
+            ribs += int(((V[:, 0] > 40) & (V[:, 0] < 100) & (V[:, 1] > 40) & (V[:, 1] < 160)).sum())    # deep inside the stand
+    assert ribs > 100, "walls cross the stand, not only its outline"
+    # triangle cost: walls around openings, stand steps and the ribs stay within 2.2 x of the class rule
+    assert rep["forest_hlod"]["triangles"] <= 2.2 * rep0["forest_hlod"]["triangles"], (rep, rep0)
 
 
 def test_wall_top_fraction_matches_the_baked_edge_pictures():

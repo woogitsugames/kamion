@@ -82,7 +82,7 @@ CHM_TRUST_M = 3.0
 # broadleaf stand at ~1.5 x the height of its trees - tiles with a height model no longer have that step.
 CHM_WALL_TOP_FRAC = {"conifer": 0.888, "mixed": 0.833, "broadleaf": 0.766}
 CHM_BACK_VAR = (0.97, 1.06)   # second wall: the measured tops 6 m further in x this (class rule: BACK_H x the front)
-CHM_CANOPY_K = 0.84        # canopy sheet under the crown tops: it only closes the stand from above, the ribs carry the tops
+CHM_CANOPY_K = 0.80        # canopy sheet under the crown tops: it only closes the stand from above, the ribs carry the tops
 # Ribs: with measured heights a stand is no longer level - taller parts stand behind lower ones, and from the road the
 # canopy sheet of the taller part showed over the front wall as a smooth green hill (render r1, dk65-04
 # fh_cab_approach). Alpha-tested walls of the same edge picture cross the stand every RIB_M in both directions (lines
@@ -93,6 +93,16 @@ RIB_SEG_M = 8.0
 RIB_MIN_LEN_M = 8.0
 RIB_WAVE_M = 40.0
 RIB_WAVE_AMP_M = 4.5
+# render r2 (dk65-05 fh_side_a): (1) sloping parts of the canopy sheet - the ADR 0324 roll-off at the stand edge and
+# every height step of the model - showed from the road as pale flat shards (a smooth surface with one up normal,
+# seen at a grazing angle, mirrors the sky): with a model the sheet has no artificial roll-off and triangles steeper
+# than CHM_SHEET_MAX_SLOPE are left out (walls and ribs stand there); (2) a wall quad taller than the baked picture
+# stretched its trees into poles: the picture is scaled by the same factor along the wall (taller stand = larger
+# trees, a thicket = small ones); (3) every wall top of one stand ended in the same comb of spruce tips: the top
+# of every wall point also moves by +- CHM_TOP_JITTER (position hash).
+CHM_SHEET_MAX_SLOPE = 0.62     # tan of the steepest canopy triangle kept (~32 deg)
+CHM_U_SCALE = (0.45, 1.7)      # limits of the picture scale along the wall
+CHM_TOP_JITTER = 0.06
 
 
 def _vnoise2(x, y, period, salt=""):
@@ -106,6 +116,10 @@ def _vnoise2(x, y, period, salt=""):
         return int(hashlib.sha1(f"fh:{salt}:{i}:{j}".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
     return ((h(ix, iy) * (1 - tx) + h(ix + 1, iy) * tx) * (1 - ty)
             + (h(ix, iy + 1) * (1 - tx) + h(ix + 1, iy + 1) * tx) * ty)
+
+
+def _hash01(key):
+    return int(hashlib.sha1(key.encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
 
 
 def _skirt_keep(a, b):
@@ -359,7 +373,7 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
         # ADR 0324: the canopy surface rolls off at a real stand edge (not at a cell border: the neighbour cell
         # continues it) - a cell seen from the side or from above was a box with a flat lid and vertical faces
         outer_b = piece.boundary.difference(cb.exterior.buffer(0.1))
-        if not outer_b.is_empty:
+        if not outer_b.is_empty and chm is None:
             d_edge = shapely.distance(shapely.points(XY), outer_b)
             near = d_edge < CANOPY_EDGE_M
             if near.any():
@@ -369,7 +383,16 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                 k_ = 1.0 - (1.0 - k_) * (1.0 - d_edge[near] / CANOPY_EDGE_M)
                 Z[near] = zg_c + (Z[near] - zg_c) * k_
         V = np.column_stack([XY, Z])
-        prims.append({"V": V, "T": inv.reshape(-1, 3), "UV": XY / Wt, "mat": f"forest_canopy_{mix}",
+        Tc = inv.reshape(-1, 3)
+        if chm is not None:                 # ADR 0339: no steep canopy triangles (see CHM_SHEET_MAX_SLOPE)
+            tv = V[Tc]
+            nrm_t = np.cross(tv[:, 1] - tv[:, 0], tv[:, 2] - tv[:, 0])
+            flat = np.hypot(nrm_t[:, 0], nrm_t[:, 1]) <= CHM_SHEET_MAX_SLOPE * np.abs(nrm_t[:, 2])
+            if flat.any() and not flat.all():
+                Tc = Tc[flat]
+                used, new = np.unique(Tc, return_inverse=True)
+                V, XY, Tc = V[used], XY[used], new.reshape(-1, 3)
+        prims.append({"V": V, "T": Tc, "UV": XY / Wt, "mat": f"forest_canopy_{mix}",
                       "N": np.tile([0.0, 0.0, 1.0], (len(V), 1))})
         # walls
         Vw, Tw, UVw, Nw = [], [], [], []
@@ -412,6 +435,8 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
             hw = np.array([wall_h(p, edge_info, mix) for p in pts])
             tv = CHM_TOP_VAR if chm is not None else TOP_VAR
             hw *= np.array([tv[0] + (tv[1] - tv[0]) * _vnoise2(p[0], p[1], TOP_NOISE_M) for p in pts])
+            if chm is not None:
+                hw *= np.array([1.0 + CHM_TOP_JITTER * (2.0 * _hash01(f"tj:{p[0]:.1f}:{p[1]:.1f}") - 1.0) for p in pts])
             # ADR 0187: where the outer stand edge turns sharply (end of a belt, corner of a block) the wall steps
             # down, so a stand seen end-on does not finish in a full-height vertical cut ("theatre flat")
             if nseg >= 2:
@@ -454,6 +479,8 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                 k = len(idx)
                 Vw += [[pts[p][0], pts[p][1], zg[p]] for p in idx] + [[pts[p][0], pts[p][1], t] for p, t in zip(idx, wtop)]
                 us = u0 + s[idx] / Wt
+                if chm is not None:         # ADR 0339: the picture keeps its proportions (see CHM_U_SCALE)
+                    us = u0 + s[idx] / (Wt * float(np.clip(np.median(hw[idx]) / edge_info["h_m"], *CHM_U_SCALE)))
                 vm = edge_v_main(edge_info)
                 UVw += [[u, 0.0] for u in us] + [[u, vm * (t - zg[p]) / hw[p]] for u, p, t in zip(us, idx, wtop)]
                 Nw += list(n3) + list(n3)
@@ -535,10 +562,12 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                             continue
                         hr_ *= np.array([CHM_TOP_VAR[0] + (CHM_TOP_VAR[1] - CHM_TOP_VAR[0])
                                          * _vnoise2(q_[0], q_[1], TOP_NOISE_M, "r") for q_ in rp])
+                        hr_ *= np.array([1.0 + CHM_TOP_JITTER * (2.0 * _hash01(f"tj:{q_[0]:.1f}:{q_[1]:.1f}") - 1.0) for q_ in rp])
                         hr_ = np.maximum(hr_, 2.0)        # no crowns measured at this point: the rib runs out low
                         zr = zground(rp[:, 0], rp[:, 1]) + edge_info["z0_m"]
                         along = rp[:, 1 - axis]
-                        us = along / Wt + (int(hashlib.sha1(f"rib:{axis}:{c0:.0f}".encode()).hexdigest()[:6], 16) % 997) / 997.0
+                        us = (along / (Wt * float(np.clip(np.median(hr_) / edge_info["h_m"], *CHM_U_SCALE)))
+                              + (int(hashlib.sha1(f"rib:{axis}:{c0:.0f}".encode()).hexdigest()[:6], 16) % 997) / 997.0)
                         base = len(Vw)
                         Vw += [[q_[0], q_[1], z_] for q_, z_ in zip(rp, zr)] + [[q_[0], q_[1], z_ + h_] for q_, z_, h_ in zip(rp, zr, hr_)]
                         UVw += [[u, 0.0] for u in us] + [[u, vm] for u in us]
