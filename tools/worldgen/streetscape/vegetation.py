@@ -130,8 +130,11 @@ CHM_MANTLE_BIRCH = (60.0, 0.50)     # mantle of a pine stand: birch only where t
 # (2) No prototype is drawn larger than CHM_MAX_SCALE x its modelled height: a 14 m birch scaled to 28-30 m had leaf
 # cards of twice the size (blurred crowns, crown area x 4). A tree whose drawn variant would exceed the limit takes a
 # variant that fits (the variants are 12-15 m / 18-22 m tall, trees_meta.json href_m), else the tallest variant at the
-# limit: broadleaves stay under a tall pine canopy as the co-dominant storey they are. forest_hlod caps the crown line
-# of a stand of that category at the same height (chm_cap_m), so walls and trees agree at the HLOD switch.
+# limit: broadleaves stay under a tall pine canopy as the co-dominant storey they are. Where the whole stand is
+# taller than the species can be drawn (stand height Chm.stand > limit: a 27 m alder wood, limit 21.8 m) the heights
+# are scaled by limit / stand height, so the stand keeps its relative structure; forest_hlod scales the crown line of
+# a stand of that category the same way (chm_cap_m), so walls and trees agree at the HLOD switch. The tall
+# broadleaf stands are lower than surveyed until the library has forest-grown tall variants (open point).
 CHM_MAX_SCALE = 1.45
 HREF_DEFAULT = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "spruce": 21.0,
                 "pineyoung": 5.0, "birchyoung": 6.0}     # make_trees.py HREF (library without trees_meta.json)
@@ -259,9 +262,10 @@ def chm_canopy(trees, chm):
         return trees, n
     href = proto_href()
     P = np.array([[t["e"], t["n"]] for t in trees])
-    dom, _stand, cov, inside = chm.sample(P)
+    dom, stand, cov, inside = chm.sample(P)
     keep = []
-    for t, d, c, ins in zip(trees, dom, cov, inside):
+    r2 = chm_r2()
+    for t, d, c, ins, sh in zip(trees, dom, cov, inside, stand):
         sp = t["p"][5:]
         if not ins or sp not in CANOPY_SPECIES:
             keep.append(t)
@@ -288,6 +292,13 @@ def chm_canopy(trees, chm):
                 break
         if (lo, hi) == CHM_CLASSES[-1][1:] and sp in CHM_NO_SUPPRESSED:
             lo, hi = CHM_CLASSES[1][1:]
+        if r2:
+            # r2: a stand taller than the library can show for this species keeps its STRUCTURE - every height x
+            # (limit / stand height) - instead of all its trees cut at the limit (a ruler line of capped crowns)
+            cap = CHM_MAX_SCALE * max((href.get(sp) or [HREF_DEFAULT.get(sp, 99.0)])[v_] for v_ in _variants(sp, t["v"])
+                                      if v_ < len(href.get(sp) or [0.0] * 3))
+            if sh > cap:
+                d = d * cap / sh
         t["h"] = round(float(max(CHM_MIN_TREE_H, d * (lo + (hi - lo) * _hash01("ch:" + key)))), 1)
         n["scale_capped"] += chm_fit(t, href)
         n["mature"] += 1

@@ -306,9 +306,11 @@ def test_r2_no_prototype_scaled_beyond_the_limit():
         sc = np.array([t["h"] / href[t["p"][5:]][t["v"]] for t in can])
         assert sc.max() <= VG.CHM_MAX_SCALE + 0.01, (kat, float(sc.max()))
         if kat == "liściasty":          # 27 m measured, the tallest broadleaf prototype reaches ~ 21.8 m
-            assert rep["forest_chm"]["scale_capped"] > 0
-            old = [t["h"] for t in can if t["e"] < 120]
-            assert max(old) <= VG.chm_cap_m("broadleaf") + 0.05
+            old = np.array([t["h"] for t in can if 20 < t["e"] < 110])
+            cap = VG.chm_cap_m("broadleaf")
+            assert old.max() <= cap + 0.05
+            # ... and the stand keeps its structure: heights x (limit / stand height), not a ruler line at the limit
+            assert np.percentile(old, 90) - np.percentile(old, 10) > 0.15 * cap, np.percentile(old, [10, 50, 90])
     t = {"p": "tree_birch", "v": 1, "h": 20.5, "e": 1.0, "n": 2.0}
     assert VG.chm_fit(t, href) is False and t["v"] == 0 and t["h"] == 20.5, "a taller variant instead of a larger scale"
     t = {"p": "tree_spruce", "v": 2, "h": 40.0, "e": 1.0, "n": 2.0}

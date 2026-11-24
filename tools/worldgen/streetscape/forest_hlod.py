@@ -329,15 +329,15 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
     H = np.array([t["h"] for t in ft])[tall]
     kd = cKDTree(Pc)
 
-    def canopy_z(Q):
+    def canopy_z(Q, mix=None):
         Q = np.asarray(Q, float).reshape(-1, 2)
         out = np.empty(len(Q))
         measured = np.zeros(len(Q), bool)
         if chm is not None and len(Q):
-            dom, _, _, ins = chm.sample(Q)
+            dom, st_, _, ins = chm.sample(Q)
             measured = ins & (dom >= CHM_TRUST_M)
-            out[measured] = (np.asarray(zground(Q[measured, 0], Q[measured, 1]), float)
-                             + canopy_k * np.minimum(dom[measured], cap_all))
+            out[measured] = (np.asarray(zground(Q[measured, 0], Q[measured, 1]), float) + canopy_k * dom[measured]
+                             * np.minimum(1.0, cap_of.get(mix, cap_all) / np.maximum(st_[measured], 1e-6)))
         for k, q in enumerate(Q):
             if measured[k]:
                 continue
@@ -370,7 +370,10 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                     h_ = max(float(chm.cell_top(q)[0][0]), floor * h_)
                 if r2 and floor < CHM_LINE_FLOOR:   # outer wall: not lower than CHM_EDGE_FLOOR x the stand behind it
                     h_ = max(h_, floor * float(stand[0]))
-                return min(h_, cap_of.get(mix, cap_all)) / CHM_WALL_TOP_FRAC.get(mix, 0.83)
+                cap_ = cap_of.get(mix, cap_all)     # r2: a stand taller than the library shows, see vegetation
+                if stand[0] > cap_:
+                    h_ *= cap_ / float(stand[0])
+                return min(h_, cap_ * 1.12) / CHM_WALL_TOP_FRAC.get(mix, 0.83)
             if measured_only:
                 return None
             # no crowns measured here (a small hole, a cell outside the mask of the model): the generated trees
@@ -409,7 +412,7 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
             continue
         T2 = np.concatenate(T2)
         XY, inv = np.unique(np.round(T2.reshape(-1, 2), 3), axis=0, return_inverse=True)
-        Z = canopy_z(XY)
+        Z = canopy_z(XY, mix)
         # ADR 0324: the canopy surface rolls off at a real stand edge (not at a cell border: the neighbour cell
         # continues it) - a cell seen from the side or from above was a box with a flat lid and vertical faces
         outer_b = piece.boundary.difference(cb.exterior.buffer(0.1))
