@@ -43,6 +43,11 @@ param(
     [int]$Cq = 19,                      # h264_nvenc constant quality / libx264 crf
     [ValidateSet('float', 'pcm16')] [string]$AudioFormat = 'float',
     [string]$AudioBitrate = '320k',
+    # Final MP4 video: 'auto' = copy when the capture already used h264_nvenc (CQ), else re-encode offline with libx264
+    # (-FinalPreset/-FinalCrf, CPU after the drive, nothing competes with the game); 'copy' / 'x264' force one.
+    [ValidateSet('auto', 'copy', 'x264')] [string]$FinalVideo = 'auto',
+    [string]$FinalPreset = 'slow',
+    [int]$FinalCrf = 18,
     [switch]$LegacyAudioCapture,        # builds before ADR 0345: -audio_capture (whole buffer in RAM, written at quit, sync +-0.5 s)
     [switch]$NoRefocus,
     [switch]$NoPowerThrottlingOptOut,
@@ -281,13 +286,21 @@ if ($offset -gt 0.0005) { $af += ("adelay=delays={0}:all=1" -f [Math]::Round($of
 elseif ($offset -lt -0.0005) { $af += ("atrim=start={0},asetpts=PTS-STARTPTS" -f (-$offset).ToString('F4', $ci)) }
 $af += 'apad'
 $mp4 = Join-Path $Out "$Name.mp4"
+$finalMode = if ($FinalVideo -ne 'auto') { $FinalVideo } elseif ($enc -eq 'h264_nvenc') { 'copy' } else { 'x264' }
+$vOut = if ($finalMode -eq 'copy') { @('-c:v', 'copy') } else {
+    @('-c:v', 'libx264', '-preset', $FinalPreset, '-crf', "$FinalCrf", '-profile:v', 'high', '-pix_fmt', 'yuv420p',
+      '-g', "$($Fps * 2)", '-bf', '2', '-x264-params', 'keyint_min=30', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709')
+}
+Log "final video: $finalMode$(if ($finalMode -eq 'x264') { " (libx264 $FinalPreset crf $FinalCrf, offline)" })"
+$muxSw = [Diagnostics.Stopwatch]::StartNew()
 $muxArgs = @('-hide_banner', '-y', '-i', $video, '-i', $wav, '-filter_complex', "[1:a]$($af -join ',')[a]",
-    '-map', '0:v:0', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', $AudioBitrate, '-ar', '48000', '-shortest',
+    '-map', '0:v:0', '-map', '[a]') + $vOut + @('-c:a', 'aac', '-b:a', $AudioBitrate, '-ar', '48000', '-shortest',
     '-movflags', '+faststart', '-metadata', "title=$Name", $mp4)
 Log "mux: ffmpeg $($muxArgs -join ' ')"
 $r = Invoke-FF $FFmpeg $muxArgs
 $r.Err | Set-Content (Join-Path $Out 'mux.log') -Encoding utf8
 if ($r.Code -ne 0 -or -not (Test-Path $mp4)) { Log "FAIL: mux exit $($r.Code) (mux.log)"; exit 3 }
+Log ("mux took {0:F0} s" -f $muxSw.Elapsed.TotalSeconds)
 $pr = Invoke-FF $FFprobe @('-v', 'error', '-show_entries', 'format=duration,size,bit_rate:stream=codec_name,width,height,r_frame_rate,sample_rate,channels', '-of', 'json', $mp4)
 $info = $pr.Out | ConvertFrom-Json
 $vs = $info.streams | Where-Object { $_.codec_name -eq 'h264' } | Select-Object -First 1
@@ -301,7 +314,7 @@ Log ([string]::Format($ci, 'MP4 {0}: {1:F1} s, {2:F0} MB, {3:F1} Mb/s, video {4}
     reason = $reason; arrived = $arrived; notInFrontWarnings = $notFront
     playerStartUtc = $playerStartUtc.ToString('o'); recordStartUtc = $recStartUtc.ToString('o')
     videoFirstFrameUnix = $vStart; audioSample0Unix = $aStart; offsetSeconds = [Math]::Round($offset, 4); driftPpm = [Math]::Round($drift, 1)
-    audioFilter = ($af -join ','); syncNote = $syncNote; legacyAudio = [bool]$LegacyAudioCapture
+    audioFilter = ($af -join ','); syncNote = $syncNote; legacyAudio = [bool]$LegacyAudioCapture; finalVideo = $finalMode; muxSeconds = [int]$muxSw.Elapsed.TotalSeconds
     mp4 = $mp4; durationSeconds = [double]$info.format.duration; sizeBytes = [long]$info.format.size
 } | ConvertTo-Json | Set-Content (Join-Path $Out 'sync.json') -Encoding utf8
 if ($reason -eq 'arrived') { Log 'OK: arrived, MP4 written'; exit 0 }
