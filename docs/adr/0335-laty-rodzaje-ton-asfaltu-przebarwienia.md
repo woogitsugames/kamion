@@ -120,4 +120,12 @@ Rozwiązanie czterech uwag P2 z rundy 4 bez dodawania trójkątów (budżet `str
   `test_fab_details.py` + `test_stains_0194.py` + `test_world_pbr_tint_contract.py` (102/102).
 - Unity EditMode (`AsphaltScopeTests|RoadPaintLaneFieldTests|RoadWearUvContractTests|WorldPbrTintTests`, Android):
   32/32 PASS, 0 błędów i 0 ostrzeżeń kompilacji `WorldPBR.shader`.
-- Przebudowa `dw671-tykocin-01` i `bialystok-industrial-c` + visual-qa przed|po (High, clear i overcast): UNVERIFIED (w toku — oczekiwanie na slot `heavy`).
+- Pytest po przebudowie (24.11): `test_budget_0221` + `test_typology_0238` + `test_world_v31` + `test_hero_bridge` + `test_patch_kinds_0335` + `test_road_surface_0323` = **82/82 PASS** (limit 2 M trójkątów High na najcięższej kamerze nie przekroczony; zmiany P2 = 0 nowych trójkątów).
+- Przebudowa: `dw671-tykocin-01` 455 s, `bialystok-industrial-c` 1133 s (exit 0, pod slotem `heavy`); PBR Medium aktualne (233 pliki, 0 braków).
+- Visual-QA przed|po (High 1920x1080, arkusze `artifacts/neon-patches-p2-s24/sheets/*.jpg`): ocena lidera-agenta, NIE visual-critic:
+  1. Zalewka: szerokość wyrównana i bez przerw tylko nieznacznie widoczna w skali arkusza (zoom `zoom_C_trench0_seam.jpg`: krawędź jednolitej grubości, brak rozjazdu na skos) — poprawa subtelna.
+  2. Znakowanie vs łata: potwierdzone — na `C q_trench0_close` strzałka P-8 jest teraz przerwana przez łatę wykopu (przed: namalowana na łacie); na `C q_milled0_close` linia nad łatą frezowaną jaśniejsza (odnowiona farba).
+  3. Koleiny w dali: luminancja (`med − p15`, overcast, `make_sheets.py`) `tykocin q_far` blisko 10,6 / dal 18,0 vs wcześniej 11,3 / 22,4 sRGB (clear); w clear kontrast dali nadal zauważalny, ale słabszy. Pomiar overcast PRZED niemożliwy (patrz niżej).
+  4. Piasek przy krawędzi: pas szerszy, miękki (`tykocin p_trench1_close`), nie odtwarza jeszcze pełnej szerokości `cs11749508.jpg` — do oceny visual-critic.
+- Ograniczenie: render „przed” w overcast (shader z `71336ba56` podstawiony tymczasowo) wyszedł magenta (błąd kompilacji/niezgodność z nowym UV1) — porównanie przed|po tylko w clear (przed = runda 4 `after8`); overcast tylko „po”.
+- Nieweryfikowane: ocena `visual-critic` (nie uruchomiona w tym przebiegu), build gracza Windows.
