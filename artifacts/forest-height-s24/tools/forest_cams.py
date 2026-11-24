@@ -16,6 +16,8 @@ from pathlib import Path
 
 import numpy as np
 import shapely
+import shapely.affinity
+import shapely.geometry
 import yaml
 
 REPO = Path(__file__).resolve().parents[3]
@@ -26,13 +28,44 @@ from streetscape import forest_chm as FCH  # noqa: E402
 OUT = REPO / "artifacts" / "forest-height-s24" / "cams"
 
 
+# stands away from the road: (id, a point inside the stand E/N, distance from the stand edge m, note). The camera
+# stands in the open at that distance, on the bearing (tried from the side of the route first) with a free line of
+# sight: no building of buildings.geojson and no other stand between the camera and the stand.
 EXTRAS = {
     "dw671-tykocin-03": [
-        ("fh_side_a", (600, 80), (860, -40), "shelter belt 250-300 m east of the road, side on"),
-        ("fh_side_b", (760, 440), (380, 800), "the wood north-west of the road, 500 m away (far stand line)"),
-        ("fh_side_c", (330, -330), (500, -410), "small clump 170 m east of the road (the dark box of frame t3271)"),
+        ("fh_side_a", (165, 340), 170.0, "clump 300 m west of the road, side on"),
+        ("fh_side_b", (420, 850), 260.0, "the wood in the north of the tile (far stand line)"),
+        ("fh_side_c", (880, -45), 150.0, "shelter belt east of the road"),
     ],
 }
+
+
+def ring_camera(target, dist, forest, blds, route, half):
+    """Camera point `dist` from the edge of the stand around `target` with a free sight line, or None."""
+    tp = shapely.Point(*target)
+    stand = min(getattr(forest, "geoms", [forest]), key=lambda g: g.distance(tp))
+    c = np.array(stand.centroid.coords[0])
+    r0 = math.sqrt(stand.area / math.pi)
+    i = int(np.argmin(np.hypot(*(route - c).T)))
+    base = math.atan2(*(route[i] - c)[::-1])
+    for k in range(36):
+        ang = base + math.radians(10.0 * ((k + 1) // 2) * (1 if k % 2 else -1))
+        v = np.array([math.cos(ang), math.sin(ang)])
+        ray = shapely.LineString([c, c + v * (r0 * 3 + dist + 50)])
+        hit = ray.intersection(stand.exterior)
+        if hit.is_empty:
+            continue
+        far = max(shapely.get_coordinates(hit), key=lambda q: float(np.hypot(*(q - c))))
+        cam = np.asarray(far) + v * dist
+        if (np.abs(cam) > half - 20).any():
+            continue
+        sight = shapely.LineString([cam, np.asarray(far) + v * 2.0])
+        if sight.intersects(blds) or sight.buffer(15.0).intersects(blds) or forest.difference(stand).intersects(sight):
+            continue
+        if blds.distance(shapely.Point(*cam)) < 25.0:
+            continue
+        return cam, c
+    return None
 
 
 def main(rid):
@@ -69,8 +102,8 @@ def main(rid):
     ahead = {i: first_hit(route[i], d[i], 20, 700, 10.0) for i in idx}
     cams = []
 
-    def zg(p):
-        return float(hf.sample(p[0], p[1])) - oz
+    def zg(p):                                  # U of the gate3 camera files is absolute (EVRF2007), not region-local
+        return float(hf.sample(p[0], p[1]))
 
     def add(cid, kind, p, look, fov, note, eye=2.5, seat=None):
         p = np.asarray(p, float)
@@ -160,10 +193,18 @@ def main(rid):
              "look_at": [round(p[0] + d[i][0] * 150, 2), round(p[1] + d[i][1] * 150, 2), round(zg(p) + 60.0 - 55.0, 2)],
              "fov_deg": 60, "note": f"60 m above route point {i}, 20 deg down along the road: canopy structure"}
         cams.append(e)
-    # hand-picked views where the picker finds none (stands far from the road): (id, route point near E/N, look at E/N)
-    for cid, near, look, note in EXTRAS.get(rid, []):
-        i = int(np.argmin(np.hypot(*(route - np.asarray(near, float)).T)))
-        add(cid, "photo_match", route[i], np.asarray(look, float), 40, f"eye 2.5 m on the route at point {i}: {note}", seat="file")
+    # stands away from the road (EXTRAS)
+    if EXTRAS.get(rid):
+        bf = json.loads((rdir / "buildings.geojson").read_text(encoding="utf-8"))["features"]
+        blds = shapely.affinity.translate(shapely.union_all([shapely.geometry.shape(f["geometry"]).buffer(0) for f in bf]),
+                                          -org[0], -org[1])
+        for cid, target, dist, note in EXTRAS[rid]:
+            rc = ring_camera(target, dist, forest, blds, route, half)
+            if rc is None:
+                print(f"{rid} {cid}: no free sight line")
+                continue
+            cam, c = rc
+            add(cid, "photo_match", cam, c, 45, f"eye 2.5 m in the open, {dist:.0f} m from the stand edge: {note}", seat="file")
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / f"{rid}.json").write_text(json.dumps({"schema": "truck-sim-pl/gate3-cameras/1", "region": rid,
                                                  "provenance": "artifacts/forest-height-s24/tools/forest_cams.py",
