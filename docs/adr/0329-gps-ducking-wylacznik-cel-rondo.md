@@ -56,3 +56,14 @@ Testy: `NavVoiceTests` (nav-runner) i `Nav0168Tests`/`NavVoicePlayer0328Tests` (
    - `bialystok-maczka` (`t≈198–215 s`, `ring="Rondo Jana Nowaka-Jeziorańskiego"`): proponowany tekst B15 — `Rondo Jana Nowaka-Jeziorańskiego.`
    - `bialystok-knyszynska` (`t≈540–558 s`, `ring="Rondo Pamięci Męczeństwa Kresowian"`): proponowany tekst B15 — `Rondo Pamięci Męczeństwa Kresowian.`
 4. **Testy:** `NavVoiceTests` (nav-runner) i `Nav0168Tests` (EditMode) — regresje dla `dk65-06` (`RingName == null`), `knyszyn` (`RingName == null`, bez wycieku `"Obozowa"`/`"Tykocka"`), wjazdu z nazwanej ulicy z przerwą osi (`G05` Putry → `B15 #1`, `G18` Bieżeństwa → `B15 #2`) oraz syntetycznego ronda bez nazwy między nazwanymi drogami.
+
+## Dopisek (s24, agent `gps-ringnames2-s24`): B15 #3 i #4 — rondo Nowaka-Jeziorańskiego i Męczeństwa Kresowian
+
+Zamknięcie punktu 3 powyżej (zgoda właściciela D96 na generowanie komunikatów głosem „Kamion GPS”). Wygenerowano dokładnie dwa klipy, po jednej próbie, tym samym głosem (`QsH1g7itRvwZbnuW1zc5`) i modelem (`eleven_multilingual_v2`, ustawienia domyślne głosu) co paczka:
+
+| Klip | Tekst | generation id | Kredyty | Po obróbce | Tempo |
+|---|---|---|---|---|---|
+| `GPS_B15_03` | „Rondo Jana Nowaka-Jeziorańskiego.” | `fEc10YgtpHptsewVlKur` | 33 | −16,0 LUFS / −1,15 dBFS, 1,83 s | 6,9 sylab/s |
+| `GPS_B15_04` | „Rondo Pamięci Męczeństwa Kresowian.” | `ebsm0Yus1QCBR8zGNVHM` | 35 | −16,1 LUFS / −1,0 dBFS, 1,86 s (limiter 1,0 dB) | 6,2 sylab/s |
+
+Razem 68 kredytów. Obróbka: `process_pack.py --only 15` (−16 LUFS, szczyt ≤ −1 dBFS, cisza przycięta, kontrola tempa; limit 8 sylab/s). Pozostałe klipy bez zmian (sha256 jak wcześniej). Spektrogram: `artifacts/gps-ringnames2-s24/spec.png` (brak oczywistych kliknięć; w #4 pojedynczy szerokopasmowy wybuch ok. 0,27 s, zgodny z zwarto-wybuchową „d” w „Rondo” — do oceny na ucho). `NavVoice.RoundaboutNominativeClip`: prefiksy „Rondo Jana Nowaka-Jeziorańskiego” → B15 #3, „Rondo Pamięci Męczeństwa Kresowian” → B15 #4 (prefiks „Rondo Pamięci Bieżeństwa” jest rozłączny). Liczba kluczy do nagrania: 100. Testy: nav-runner (`RoundaboutNominativeClip` #3/#4 i nieznane = (0,0)), EditMode `NavVoicePlayer0328Tests` (100 kluczy, manifest pokrywa wszystkie). Ocena na ucho — właściciel.
