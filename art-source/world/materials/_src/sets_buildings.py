@@ -276,22 +276,24 @@ def _resid(p, i, kind):
                 p.put(p.rect(xb - 0.007, xb + 0.007, 0.03, p.h - 0.03), [0.035, 0.03, 0.028], h=0.01, r=0.6)
     elif kind == "house":
         # ADR 0336 (Podlasie small-town joinery): pairs (0, 2) bright white painted wood/PVC and (1, 3) warm medium
-        # stained timber, all with bold frames + readable cross muntins (szprosy) and lived-in curtains/plants so
-        # windows never collapse to black squares or blank roller shutters at 30-60 m.
+        # stained timber, all with bold frames + readable muntins/transoms (4-pane cross on 0/1, classic Polish T-bar
+        # transom at 0.68 on 2/3) and lived-in curtains/plants so windows never collapse to black squares at 30-60 m.
         HOUSE_WHITE = (0.76, 0.76, 0.73)
         HOUSE_WOOD_A = (0.26, 0.145, 0.08)
         HOUSE_WOOD_B = (0.22, 0.12, 0.065)
         v = [("net", {}), ("drapes", dict(col=lin(222, 206, 178), frac=0.45)),
-             ("roller", dict(col=lin(232, 226, 212), frac=0.45, plants=2)),
-             ("cafe", dict(plants=2))][i]
+             ("net_gap", dict(plants=2)), ("cafe", dict(plants=2))][i]
         interior(p, G, v[0], k=i, **v[1])
-        # Subtle daytime sky bounce on upper glass of open panes (prevents pitch-black top half on cafe/half-blind)
-        if i in (2, 3):
-            up = p.rect(G[0], G[1], G[2] + 0.48 * (G[3] - G[2]), G[3])
+        # Subtle daytime sky bounce on open glass panes (prevents pitch-black void behind net_gap / cafe top half)
+        if i == 2:
+            p.put(p.rect(*G) * 0.14, [0.16, 0.20, 0.24])
+        elif i == 3:
+            up = p.rect(G[0], G[1], G[2] + 0.50 * (G[3] - G[2]), G[3])
             p.put(up * 0.22, [0.16, 0.20, 0.24])
         fr = [HOUSE_WHITE, HOUSE_WOOD_A, HOUSE_WHITE, HOUSE_WOOD_B][i]
         window(p, R, 2, frame=fr, fw=0.072, sw=0.058,
-               transom=0.70 if i in (2, 3) else None, muntins=(1, 2), mw=0.024, dirt=0.18)
+               transom=0.68 if i in (2, 3) else None,
+               muntins=(1, 2) if i in (0, 1) else None, mw=0.024, dirt=0.18)
 
 
 def _office(p, i, kind):
