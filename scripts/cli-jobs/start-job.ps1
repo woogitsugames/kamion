@@ -19,12 +19,14 @@ Set-Location '$wt'
 `$p = Get-Content '$o\prompt.full.md' -Raw
 & 'C:\Users\matma\AppData\Local\agy\bin\agy.exe' -p `$p --model $Model --dangerously-skip-permissions --add-dir '$wt' *> '$o\cli.log'
 "exit=`$LASTEXITCODE `$(Get-Date -Format s)" | Out-File '$o\cli.status'
+Get-ChildItem '$R\artifacts\locks\heavy-slots' -Filter '$Name*.slot' -EA SilentlyContinue | Remove-Item -Force
 "@ | Set-Content $runner -Encoding utf8
 } else {
 @"
 Set-Location '$wt'
 & 'C:\Users\matma\.local\bin\vibe.exe' --prompt-file '$o\prompt.full.md' --workdir '$wt' --max-price $MaxPrice --time-limit $TimeLimit --output-dir '$o\vibe-out' --auto-approve *> '$o\cli.log'
 "exit=`$LASTEXITCODE `$(Get-Date -Format s)" | Out-File '$o\cli.status'
+Get-ChildItem '$R\artifacts\locks\heavy-slots' -Filter '$Name*.slot' -EA SilentlyContinue | Remove-Item -Force
 "@ | Set-Content $runner -Encoding utf8
 }
 $p = Start-Process pwsh -ArgumentList '-NoProfile','-File',$runner -WindowStyle Hidden -PassThru
