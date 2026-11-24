@@ -44,7 +44,7 @@ czyli E ≈ 0,185 m (figura ~1,6 × naturalnej wielkości). Wszystko `WORKING_VA
 5. **UV głowy** cylindryczne w skali twarzy (r = 0,10 m wokół osi głowy) — zacieki zestawu `bronze_cast_tint` mają
    na twarzy tę samą skalę co na płaszczu (wcześniej ×4 ściśnięte w pionowe prążki).
 6. **Kamery**: nowe `king_street_driver_0331` (oko kierowcy 2,5 m na prawym pasie DW671 Grodzieńskiej w kierunku
-   południowym, 36 m na wschód od pomnika, ortofoto 0,25 m ±1 m, obrót na pomnik, 40°) i `king_street_tele_0331` (ta
+   południowym, 40 m na wschód od pomnika, ortofoto 0,25 m ±1 m, obrót na pomnik, 40°) i `king_street_tele_0331` (ta
    sama poza, 12°: czy twarz i korona czytają się z ulicy). Kamery ADR 0325 (`king_front/34/head/side/square_0325`)
    zostają; `king_head_0325` jest parą dla zbliżenia `cs20127375`.
 
