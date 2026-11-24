@@ -54,4 +54,5 @@ NASTĘPNY KROK: pwsh artifacts/pacing-s24/run-experiments.ps1 -Only E7,E8,E9 (sl
 - E7 okno + opt-out throttlingu (z zewnątrz): 16 kl. > 40, p99 24,5, CPU główny p95 8,7. E9 (tło 40 %): 64.
 - Poprawka w grze: Rendering/Runtime/WindowsPowerThrottling.cs (+ test EditMode), furtka -power_throttling default.
 - build-windows.ps1 -Run: nowy -WindowMode borderless (domyślnie windowed). ADR 0333 uzupełniony (tabela A/B).
-NASTĘPNY KROK: kompilacja + EditMode (slot unity): pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 ; potem raport.
+- EditMode Win64 (WindowsPowerThrottlingTests|PcAutoTierTests): 12/12 zielone (artifacts/pacing-s24/editmode-20261124-100609.xml); pytest tools/pcperf 58/58.
+NASTĘPNY KROK (lider): scalić pacing-s24; build #7+ i przejazd bramkowy: pwsh scripts/build-windows.ps1 -SkipBuild -Run -WindowMode borderless ... (sonda automatycznie).
