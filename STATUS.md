@@ -1,3 +1,8 @@
+# STATUS windscreen-s24 (ADR 0341) — warstwa szyby w widoku z kabiny
+- Worktree gotowy, DrivingLab + TRAKT zbudowane (build-lab Win64 OK). Runner: tools/qa/windscreen_s24.ps1.
+- Plan: odbicie deski = wypalona w Blenderze sonda kabiny (albedo x AO, equirect, box projection, relit w shaderze), maska brudu proceduralna (Python), tier Low uproszczony.
+- NASTEPNY KROK: pwsh -NoProfile -File tools/qa/windscreen_s24.ps1 -Phase vqa -Tag before
+
 # STATUS fix-b4-s24 (błędy buildu #4: brama Maczka, terrain_walls C, water_0210, world_roads, most 12 t)
 - krok 0: worktree z main 1c0596b94, derived = kopia (-CopyDerived). Brama widoczna w shot_t0250 (ciężarówka pos (404,5) jedzie na zachód, brama ~20 m przed nią).
 - NASTĘPNY KROK: zlokalizować mesh bramy w chunkach bialystok-maczka: `cd tools/worldgen; uv run --with trimesh python <scratch>/glbnodes.py <chunk>.glb 370 -2 15`
