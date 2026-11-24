@@ -239,4 +239,37 @@ main sprzed kilku późniejszych scaleń, więc różnice po kamerach nie pochod
 
 ### Ocena wizualna rundy 2
 Pary przed (runda 1) nad po: `artifacts/forest2-s24/pairs-r2/` (24; pierwszy build: `pairs-r1/`), przekrój HLOD
-`hlod_profile_*.png`. KRYTYK_R2
+`hlod_profile_*.png`. „Przed” to rendery r5 poprzednika (te same kamery, main sprzed kilku scaleń).
+
+`visual-critic`, dwa przebiegi (pierwszy build tej rundy, potem build końcowy r2): **PASS dla samej zmiany**, bez P0;
+sylweta lasu 5 → 6 / 10, skład gatunkowy 4 → 6 / 10; las jako całość nadal poniżej `docs/06`.
+- (1) brzoza w borze i jej kolor — **poprawione** (`dk65-05 fh_air`, `dk65-04 fh_side_b`: czytelny bór, świerki nad okapem);
+- (2) płaska linia koron HLOD — **częściowo**: płaskowyże zniknęły, lokalne maksima zostały; wierzch jest jeszcze
+  schodkowy (odcinki proste między punktami ściany co 6 m), nie zaokrąglony koronami;
+- (3) rozmyte przeskalowane korony — **poprawione / częściowo** (rozmycie kart liści jako materiału zostaje, P2);
+- (4) pionowe boki bloków — **częściowo** (pojedyncze skosy na narożnikach; gdzie pomiar ma równe drzewa do samego
+  obrysu, bok zostaje pionowy); ciemna wstęga na horyzoncie — **bez zmian** (`far_field`, poza zakresem);
+- przejście tonalne ściany (normalne) — w pochmurny dzień praktycznie niewidoczne (P2);
+- `dw671-tykocin-03` po poprawce 1,6: regresja pierwszego buildu zdjęta **częściowo** — lasek odzyskał większość
+  wysokości, ale nie całą (p90 21,5 m wobec 23,5 m).
+
+### Otwarte po rundzie 2 (kolejność wg krytyka)
+1. Ponowny wypiek tekstur ściany i czaszy HLOD: igliwie szarozielone zamiast brązowego (z lotu ptaka bór wygląda na
+   uschnięty — po usunięciu brzozy ta tekstura dominuje kadr), bez pionowych smug rozciągniętych pni; przy okazji
+   wtopić `foliage_tint` brzozy w atlas.
+2. Wysokie warianty leśne liściastych (olsza, brzoza, dąb 22–30 m, wąska korona, długa strzała) — wtedy limit skali
+   lasu liściastego wraca do 1,45, a `dw671-tykocin-03` do pomiaru.
+3. Wierzch ścian HLOD zaokrąglony koronami (gęstszy podział wierzchu albo półeliptyczne czapy 4–8 m) zamiast łamanej.
+4. Wymuszony płaszcz 0,3–0,6 wysokości przez 6–10 m na bokach bloków widocznych z pola, gdzie pomiar nie ma okrajka.
+5. Tło dali (`far_field`): zgrubny model koron pierścienia + perspektywa powietrzna.
+- Zauważone, nietknięte: rzadkie sosny nad gołym żwirem / piaskiem po prawej stronie `dk65-05 fh_air` (przerzedzenie
+  wg pokrycia modelu nad maską gruntu placu — wcześniej zasłonięte przeskalowanymi koronami liściastych) — do
+  sprawdzenia maska gruntu pod `OT_PTLZ_A`; płaskie turkusowe karty świerka (P2, bez zmian).
+- Nowe stałe rundy 2 (`CHM_EDGE_ZONE_M`, `CHM_CONIFER_*`, `CHM_MANTLE_BIRCH`, `CHM_MAX_SCALE(_BROADLEAF)`,
+  `CHM_LINE_FLOOR`, `CHM_EDGE_FLOOR`, `CHM_EDGE_WOBBLE_*`, `CHM_CORNER`, `CHM_NORMAL_UP`, `FOLIAGE_TINT`) — `WORKING_VALUE`.
+
+### Do zrobienia po scaleniu (lider)
+- Przebudowa 24 kafli z modelem koron (lista w „Kafle do przebudowy po scaleniu”) — runda 2 zmienia każdy z nich;
+  prototypy (`dk65-04`, `dk65-05`, `dw671-tykocin-03`) są zbudowane w kopii `derived` worktree `forest2-s24` (build r2).
+- `foliage_tint` brzozy działa po imporcie kafla (`import-region.ps1`) — także na kaflach bez modelu koron (brzozy
+  miejskie będą o ok. 20 % ciemniejsze w zieleni); kafle niezaimportowane ponownie zostają przy starym kolorze.
