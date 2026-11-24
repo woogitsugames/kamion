@@ -1,0 +1,10 @@
+16 assets, 80 files, 0 problems
+PBR Medium: 237 produced files, 0 missing, 0 older than _src, 0 sets not built; 2 files skipped (not produced by build_all with current inputs: asphalt_detail_photo)
+[cab-lod0] OK C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\art-source\truck\interior\export\SM_CabInterior_LOD0.fbx
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\logs\import-region-dk65-05-20261124-224452.log -buildTarget Android -quit -executeMethod Game.World.Import.RegionImporter.ImportBatch -region dk65-05 -tiers Low,High -materialTier Medium
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 27048)
+IMPORT_RESULT: OK region=dk65-05 chunks=64 corridor=32 tiers=Low+High
+WORLD_MEMORY: tier=Low render_meshes=47.7 MB instances=17.4 MB collision_src=13.0 MB total=78.2 MB [terrain 28,3, road 5,3, markings 0,9, plot_ground 2,1, buildings 4,4, plots 5,3, wires 0,3, paved 0,1, furniture 0,2, bridge 0,1, far_field 0,8]
+WORLD_MEMORY: tier=High render_meshes=155.4 MB instances=17.4 MB collision_src=13.0 MB total=185.9 MB [terrain 119,5, road 5,3, markings 0,9, plot_ground 2,1, buildings 13,1, plots 6,6, wires 0,3, paved 0,1, furniture 0,2, banks 1,2, bridge 0,1, far_field 6,0]
+WORLD_TERRAIN_BAND: fine fraction Low 30 % High 38 %
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\logs\import-region-dk65-05-20261124-224452.log

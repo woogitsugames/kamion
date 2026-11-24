@@ -1,0 +1,263 @@
+{
+ "region": "dk65-05",
+ "seconds": {
+  "place": 7.9,
+  "hlod": 5.9
+ },
+ "trees": 81090,
+ "hlod": {
+  "cells": 404,
+  "cell_m": 64.0,
+  "triangles": 87781,
+  "trees_replaced_far": 80869,
+  "forest_trees": 81090
+ },
+ "forest_chm": {
+  "stands": 26,
+  "gap": 2438,
+  "thinned": 3182,
+  "young": 1948,
+  "mature": 53200,
+  "scale_capped": 0,
+  "openings_m2": 41857.1,
+  "canopy_h_m": {
+   "p10": 13.2,
+   "p50": 21.8,
+   "p90": 26.7,
+   "max": 35.1
+  },
+  "source": {
+   "product": "NMPT (DSM) 0.5 m, WCS",
+   "fetched": "2026-11-24",
+   "survey_date": "UNVERIFIED"
+  }
+ },
+ "by_category": {
+  "conifer": {
+   "canopy_trees": 46908,
+   "canopy_share": {
+    "pine": 0.543,
+    "spruce": 0.248,
+    "birch": 0.112,
+    "alder": 0.041,
+    "linden": 0.02,
+    "maple": 0.019,
+    "pineyoung": 0.011,
+    "birchyoung": 0.006
+   },
+   "edge_share": {
+    "shrub": 0.271,
+    "birchyoung": 0.204,
+    "pineyoung": 0.203,
+    "spruce": 0.202,
+    "birch": 0.074,
+    "pine": 0.045
+   },
+   "under_share": {
+    "shrub": 0.543,
+    "birchyoung": 0.203,
+    "spruce": 0.153,
+    "maple": 0.101
+   },
+   "canopy_scale": {
+    "pineyoung": {
+     "p50": 0.98,
+     "p99": 1.7,
+     "max": 1.78,
+     "share_gt_1.45": 0.078
+    },
+    "spruce": {
+     "p50": 1.02,
+     "p99": 1.42,
+     "max": 1.59,
+     "share_gt_1.45": 0.007
+    },
+    "birchyoung": {
+     "p50": 0.75,
+     "p99": 1.29,
+     "max": 1.36,
+     "share_gt_1.45": 0.0
+    },
+    "pine": {
+     "p50": 1.16,
+     "p99": 1.62,
+     "max": 1.96,
+     "share_gt_1.45": 0.074
+    },
+    "birch": {
+     "p50": 1.57,
+     "p99": 2.16,
+     "max": 2.49,
+     "share_gt_1.45": 0.668
+    },
+    "alder": {
+     "p50": 1.72,
+     "p99": 2.29,
+     "max": 2.53,
+     "share_gt_1.45": 0.818
+    },
+    "maple": {
+     "p50": 1.76,
+     "p99": 2.46,
+     "max": 2.58,
+     "share_gt_1.45": 0.756
+    },
+    "linden": {
+     "p50": 1.64,
+     "p99": 2.36,
+     "max": 2.48,
+     "share_gt_1.45": 0.681
+    }
+   },
+   "canopy_h_m": {
+    "p10": 14.9,
+    "p50": 22.2,
+    "p90": 26.9,
+    "max": 35.1
+   }
+  },
+  "mixed": {
+   "canopy_trees": 1273,
+   "canopy_share": {
+    "pine": 0.269,
+    "spruce": 0.189,
+    "birch": 0.13,
+    "birchyoung": 0.13,
+    "pineyoung": 0.108,
+    "alder": 0.069,
+    "linden": 0.053,
+    "maple": 0.053
+   },
+   "edge_share": {
+    "shrub": 0.296,
+    "pineyoung": 0.238,
+    "birchyoung": 0.179,
+    "spruce": 0.178,
+    "birch": 0.072,
+    "pine": 0.038
+   },
+   "under_share": {
+    "shrub": 0.5,
+    "birchyoung": 0.194,
+    "spruce": 0.165,
+    "maple": 0.14
+   },
+   "canopy_scale": {
+    "pine": {
+     "p50": 0.87,
+     "p99": 1.41,
+     "max": 1.55,
+     "share_gt_1.45": 0.006
+    },
+    "spruce": {
+     "p50": 0.42,
+     "p99": 1.28,
+     "max": 1.35,
+     "share_gt_1.45": 0.0
+    },
+    "alder": {
+     "p50": 1.11,
+     "p99": 2.01,
+     "max": 2.14,
+     "share_gt_1.45": 0.17
+    },
+    "linden": {
+     "p50": 1.2,
+     "p99": 2.04,
+     "max": 2.11,
+     "share_gt_1.45": 0.328
+    },
+    "birch": {
+     "p50": 1.11,
+     "p99": 1.9,
+     "max": 1.95,
+     "share_gt_1.45": 0.145
+    },
+    "maple": {
+     "p50": 1.19,
+     "p99": 2.24,
+     "max": 2.37,
+     "share_gt_1.45": 0.284
+    },
+    "birchyoung": {
+     "p50": 0.91,
+     "p99": 1.31,
+     "max": 1.36,
+     "share_gt_1.45": 0.0
+    },
+    "pineyoung": {
+     "p50": 1.17,
+     "p99": 1.6,
+     "max": 1.62,
+     "share_gt_1.45": 0.146
+    }
+   },
+   "canopy_h_m": {
+    "p10": 4.8,
+    "p50": 13.1,
+    "p90": 21.2,
+    "max": 29.3
+   }
+  },
+  "broadleaf": {
+   "canopy_trees": 3345,
+   "canopy_share": {
+    "birch": 0.314,
+    "alder": 0.297,
+    "maple": 0.18,
+    "linden": 0.131,
+    "birchyoung": 0.079
+   },
+   "edge_share": {
+    "shrub": 0.384,
+    "birchyoung": 0.298,
+    "maple": 0.112,
+    "birch": 0.104,
+    "alder": 0.102
+   },
+   "under_share": {
+    "shrub": 0.568,
+    "birchyoung": 0.338,
+    "maple": 0.094
+   },
+   "canopy_scale": {
+    "linden": {
+     "p50": 1.11,
+     "p99": 2.14,
+     "max": 2.59,
+     "share_gt_1.45": 0.286
+    },
+    "maple": {
+     "p50": 1.26,
+     "p99": 2.29,
+     "max": 2.7,
+     "share_gt_1.45": 0.348
+    },
+    "birch": {
+     "p50": 1.12,
+     "p99": 1.99,
+     "max": 2.31,
+     "share_gt_1.45": 0.219
+    },
+    "alder": {
+     "p50": 1.22,
+     "p99": 2.09,
+     "max": 2.26,
+     "share_gt_1.45": 0.305
+    },
+    "birchyoung": {
+     "p50": 1.03,
+     "p99": 1.41,
+     "max": 1.43,
+     "share_gt_1.45": 0.0
+    }
+   },
+   "canopy_h_m": {
+    "p10": 8.3,
+    "p50": 14.9,
+    "p90": 23.0,
+    "max": 32.5
+   }
+  }
+ }
+}

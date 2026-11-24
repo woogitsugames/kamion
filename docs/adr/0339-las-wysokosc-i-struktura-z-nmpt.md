@@ -142,3 +142,134 @@ kopii `derived` worktree (r5) — do skopiowania albo przebudowy w main. Bez mod
   równy ± 9 %); ponowny wypiek z większą zmiennością wysokości i poprawionym kolorem igliwia — osobne zadanie.
 - `tree_stand` (ogrody działkowe) i drzewa poza `OT_PTLZ_A` nie korzystają z modelu (maska).
 - Data nalotu NMPT `UNVERIFIED`; zręby młodsze niż nalot będą w grze lasem (i odwrotnie).
+
+---
+
+## Dopisek — runda 2 wg krytyka r5 (agent world-builder, gałąź `forest2-s24`, 2026-11-24)
+
+Zakres: cztery uwagi P1 z „Oceny wizualnej” powyżej. Wszystko nadal tylko na kaflach z modelem koron; kafel bez
+`forest_chm.png` generuje się bajt w bajt jak dotąd (`test_no_model_no_change`). Stałe — `WORKING_VALUE`.
+`KAMION_FOREST_CHM_R2=0` — przełącznik ablacji (runda 1 na tym samym kodzie; tylko do porównań i budżetu).
+
+### Ustalenie (pomiar, `artifacts/forest2-s24/base_dk65-05.json`)
+„Jasna brzoza w borze” i „rozmyte korony” to jedna przyczyna. Prototypy liściaste mają 12–15 m (`trees_meta.json`
+`href_m`: brzoza 13,4–15,0, olsza 12,5–14,0, lipa 12,6–14,4, klon 11,8–12,9; sosna 17,9–20,4, świerk 21,0–21,9), a runda 1
+stawiała je na zmierzonej wysokości górującej: w borze `dk65-05` 67 % brzóz, 82 % olsz i 76 % klonów okapu miało skalę
+> 1,45 (mediana 1,57–1,76, max 2,5–2,7). Korona w skali 2 zajmuje 4 × większą powierzchnię i ma karty liści 2 × większe —
+19 % drzew liściastych okapu boru (reguła klasowa: 10 % brzozy + 6 % olszy / klonu / lipy, do tego 45 % sosen w płatach
+brzozy) przykrywało z lotu ptaka dużą część koron sosen. Tekstura liścia brzozy jest przy tym 1,45 × jaśniejsza od
+lipy i 1,85 × od igieł sosny (zieleń liniowo 0,120 / 0,083 / 0,065, średnia pokrytych tekseli).
+
+### 1. Brzoza w borze (`vegetation.chm_species`, podszyt, płaszcz)
+- **Wnętrze drzewostanu „iglasty”** (dalej niż `CHM_EDGE_ZONE_M` = 30 m od obrysu lasu i od drogi / placu / budynku):
+  poza płatem brzozy zostaje 12 % brzóz reguły klasowej, olsza / klon / lipa → sosna (olsza zostaje w obniżeniach
+  terenu); w płacie brzozy 20 % sosen staje się brzozą (było 45 %). W strefie skraju brzoza jak w rundzie 1 (kępy),
+  klon / lipa 30 %. Przebieg na sucho `dk65-05` (bez dróg): wnętrze — brzoza 4,4 %, olsza 3,0 %, klon / lipa 0;
+  strefa skraju — brzoza 10,8 %, olsza 2,9 %, klon + lipa 1,1 %.
+- **Podszyt wnętrza boru:** 70 % siewek brzozy → odnowienie świerka / leszczyna (te same pozycje, skrót pozycji).
+- **Płaszcz boru:** brzoza i brzoza młoda tylko tam, gdzie szum (okres 60 m) > 0,5 — kępy zamiast równej jasnej lamówki;
+  poza nimi sosna młoda / sosna.
+- Drzewostany „mieszany” i „liściasty” — bez zmian składu. Uprawy i młodniki boru są przez to prawie w całości
+  `pineyoung` (ciemne).
+- **Kolor:** `trees_meta.json` → `foliage_tint` (`make_trees.py` `FOLIAGE_TINT`): mnożnik liniowy albedo liści i
+  impostorów gatunku, stosowany przez `InstanceImporter.FoliageTint` przy imporcie (bez ponownego wypieku). Brzoza i
+  brzoza młoda (0,74; 0,80; 0,85): zieleń 0,120 → 0,096 (lipa 0,083), mniej żółta. Dotyczy każdej brzozy w grze (także
+  miejskich) po następnym imporcie kafla. Tekstury ściany HLOD i czaszy (wypiek) — bez zmian.
+
+### 2. Skala prototypu (`vegetation.chm_fit`, `chm_cap_m`)
+- Żadne drzewo okapu nie jest rysowane w skali > `CHM_MAX_SCALE` = 1,45 × `href_m` swojego wariantu (w drzewostanie
+  „liściasty” `CHM_MAX_SCALE_BROADLEAF` = 1,6 — patrz niżej). Drzewo, którego wylosowany wariant by ją przekroczył,
+  bierze wariant, który się mieści (skrót pozycji; świerk: formy drzewostanowe 0 / 1 i forma otwarta 2 osobno); gdy
+  żaden — najwyższy wariant na granicy. Granice: brzoza 21,8 m (w lesie liściastym 24,0), olsza 20,2 (22,3),
+  lipa 20,9 (23,1), klon 18,7 (20,7), sosna 29,6, świerk 30,9 (31,7 forma otwarta).
+- Drzewostan wyższy, niż gatunek da się narysować (wysokość drzewostanu `Chm.stand` > granica): wysokości × (granica /
+  wysokość drzewostanu) — zostaje struktura (górujące / współpanujące / opanowane), nie linijka koron uciętych na
+  granicy. W borze brzoza i olsza stoją więc pod okapem sosny jako piętro współpanujące (zgodnie z naturą).
+- **Las liściasty:** pierwszy build tej rundy (granica 1,45 wszędzie) obniżył `dw671-tykocin-03` do p50 17,2 / p90
+  20,0 / max 21,8 m wobec zmierzonych 19,2 / 23,5 / 33,2 — krytyk: „przystrzyżony żywopłot”, regresja P1. W
+  drzewostanie „liściasty” granica to 1,6 (zwarty okap z koron tego samego gatunku — większe karty liści rażą mniej niż
+  na pojedynczej brzozie wśród sosen). **Las liściasty wyższy niż ~24 m jest nadal niższy niż w pomiarze** — do czasu
+  wysokich wariantów leśnych w bibliotece (otwarte).
+- HLOD skaluje linię koron drzewostanu danej kategorii tak samo (ściany, żebra, czasza), więc przy przełączeniu
+  instancje ↔ HLOD nie ma skoku.
+
+### 3. Linia koron HLOD (`forest_hlod.build`, `Chm.cell_top`)
+- Wierzch ścian i żeber: wierzch koron **pojedynczej komórki 4 m** pod punktem (lokalne maksima jak w pomiarze), nie
+  niżej niż `CHM_LINE_FLOOR` = 0,82 × wysokość górująca (dołek między koronami, nie dziura do ziemi, która
+  spłaszczyłaby obraz). Runda 1 brała maksimum z okna 12 m: każde wysokie drzewo dawało 12-metrowy płaskowyż.
+  Pierwszy build tej rundy miał 0,70: punkty ściany co 6 m na przemian 0,7 / 1,0 rysowały piłę równych stożków
+  (krytyk: „kikuty po wycince”) — stąd 0,82.
+- Czasza na 0,74 × wysokości górującej (było 0,80) — pod najniższymi koronami żeber.
+- **Okrajek z gradientu modelu:** punkt ściany ZEWNĘTRZNEJ schodzi za koronami do `CHM_EDGE_FLOOR` = 0,45 × wysokości
+  drzewostanu za nim; druga ściana 6 m w głąb trzyma 0,82. Gdzie pomiar ma niższe drzewa skraju, las kończy się
+  stopniem; gdzie sosny stoją do samego obrysu — ścianą, jak w terenie.
+
+### 4. Boki bloków i ton (`forest_hlod.build`)
+- **Nieregularny obrys:** punkty ściany zewnętrznej przesunięte w głąb drzewostanu o 0–3,5 m (szum położenia, okres
+  22 m; 0 na granicy komórki, żeby sąsiad kontynuował linię); wysokość mierzona tam, gdzie ściana stoi.
+- **Narożniki:** zejście przez 3 punkty po każdej stronie (0,50 / 0,66 / 0,82 / 0,93; było 0,62 i 2 punkty).
+- **Przejście tonalne:** normalna dolnego rzędu ściany prawie pozioma (z = 0,25), górnego odchylona ku niebu
+  (z = 1,6 przy poziomej 1): korony biorą światło nieba i słońca, pnie zostają w cieniu drzewostanu. Było jedno
+  odchylenie 27° na całej wysokości = jeden ciemny ton od pni po wierzchołki.
+- **Poza zakresem tej rundy:** pas lasu w tle dali (`far_field`, pierścień 1–4 km poza kaflem, ADR 0330) — nie ma tam
+  modelu koron; bez zmian. Ściana HLOD nadal korzysta z tego samego wypieku obrazu (ciemne, brązowawe korony sosny).
+
+### Zmierzone (prototyp, build końcowy r2 tej gałęzi; `artifacts/forest2-s24/numbers.txt`)
+„Przed” = runda 1 jak scalona (QA i rendery r5 poprzednika z 2026-11-24, `artifacts/forest-height-s24/r5-after*` —
+main sprzed kilku późniejszych scaleń, więc różnice po kamerach nie pochodzą wyłącznie z tej rundy).
+
+| Kafel | instancje roślin | brzoza + brzoza młoda | sosna + świerk + sosna młoda | HLOD lasu, trójkąty | wys. okapu p10 / p50 / p90 / max [m] | cięcia skali | najgorsza klatka High (szac. generatora) | najgorsza klatka Low |
+|---|---|---|---|---|---|---|---|---|
+| `dk65-05` | 101 899 → 101 899 | 14 395 → 9 963 (−31 %) | 44 134 → 49 896 | 82 757 → 82 807 (+0,1 %) | 13,2 / 21,8 / 26,8 / 35,1 → 13,2 / 21,1 / 26,4 / 30,9 | 491 z 54 102 | 1 525 548 → 1 525 782 (+234) | 467 417 → 467 612 (+195) |
+| `dk65-04` | 14 880 → 14 880 | 2 772 → 2 540 | 4 003 → 4 347 | 11 650 → 11 696 (+0,4 %) | 10,0 / 19,1 / 26,1 / 29,6 → 10,1 / 18,6 / 25,8 / 29,4 | 22 z 4 424 | 1 331 698 → 1 332 398 (+700) | 460 228 → 459 471 (−757) |
+| `dw671-tykocin-03` | 13 201 → 13 201 | 3 885 → 3 885 | 705 → 706 | 11 272 → 11 273 | 13,0 / 19,2 / 23,5 / 33,2 → 12,7 / 18,4 / 21,5 / 24,0 | 81 z 4 822 | 1 319 129 → 1 318 825 (−304) | 398 470 → 398 358 (−112) |
+
+- Liczba instancji i komórek HLOD bez zmian; trójkąty HLOD + 0,0–0,4 % (inne trójkąty czaszy odpadają na teście
+  nachylenia); najgorsze klatki ± 0,05 %. Kamery lasu w edytorze (High, 12 kamer): trójkąty −0,1 … +0,1 %, draws 0 … −3.
+- Czysta ablacja masy trójkątów drzew (ten sam kod, `KAMION_FOREST_CHM_R2=0` → runda 2, przebieg na sucho bez dróg,
+  `tri_mass.json`, stan r1 gałęzi): `dk65-05` suma LOD0 wszystkich roślin lasu −3,4 %, suma LOD1 **+3,7 %** (LOD1 sosny
+  ma 838–1 408 trójkątów, brzozy 690–744 — zamiana brzoza → sosna kosztuje w średniej odległości); `dk65-04` −1,4 % /
+  +1,7 %; `dw671-tykocin-03` 0 / −0,1 %. Stąd w szacunku generatora pojedyncze kamery z góry w `dk65-05` do +14 850
+  trójkątów High (`top_seam_north`), przy najgorszej klatce bez zmian.
+- Testy: `tests/gis/test_forest_chm_0339.py` 19/19 (6 nowych: udział brzozy we wnętrzu boru, granica skali, linia z
+  komórki + ton, okrajek, przełącznik ablacji; 2 poprawione pod rundę 2); zestaw lasu + budżet (`test_forest_0187`,
+  `test_world_v31/v34`, `test_house_greenery_0163`, `test_budget_0221`, `test_trees_0308`, `test_streetscape`,
+  `test_dense_lod_0282`) 195/195 na kodzie końcowym (`pytest-forest-r2.log`). Pełne `pytest tests/gis` (65 min pod
+  slotem heavy) nie było uruchamiane w tej rundzie.
+
+### Ocena wizualna rundy 2
+Pary przed (runda 1) nad po: `artifacts/forest2-s24/pairs-r2/` (24; pierwszy build: `pairs-r1/`), przekrój HLOD
+`hlod_profile_*.png`. „Przed” to rendery r5 poprzednika (te same kamery, main sprzed kilku scaleń).
+
+`visual-critic`, dwa przebiegi (pierwszy build tej rundy, potem build końcowy r2): **PASS dla samej zmiany**, bez P0;
+sylweta lasu 5 → 6 / 10, skład gatunkowy 4 → 6 / 10; las jako całość nadal poniżej `docs/06`.
+- (1) brzoza w borze i jej kolor — **poprawione** (`dk65-05 fh_air`, `dk65-04 fh_side_b`: czytelny bór, świerki nad okapem);
+- (2) płaska linia koron HLOD — **częściowo**: płaskowyże zniknęły, lokalne maksima zostały; wierzch jest jeszcze
+  schodkowy (odcinki proste między punktami ściany co 6 m), nie zaokrąglony koronami;
+- (3) rozmyte przeskalowane korony — **poprawione / częściowo** (rozmycie kart liści jako materiału zostaje, P2);
+- (4) pionowe boki bloków — **częściowo** (pojedyncze skosy na narożnikach; gdzie pomiar ma równe drzewa do samego
+  obrysu, bok zostaje pionowy); ciemna wstęga na horyzoncie — **bez zmian** (`far_field`, poza zakresem);
+- przejście tonalne ściany (normalne) — w pochmurny dzień praktycznie niewidoczne (P2);
+- `dw671-tykocin-03` po poprawce 1,6: regresja pierwszego buildu zdjęta **częściowo** — lasek odzyskał większość
+  wysokości, ale nie całą (p90 21,5 m wobec 23,5 m).
+
+### Otwarte po rundzie 2 (kolejność wg krytyka)
+1. Ponowny wypiek tekstur ściany i czaszy HLOD: igliwie szarozielone zamiast brązowego (z lotu ptaka bór wygląda na
+   uschnięty — po usunięciu brzozy ta tekstura dominuje kadr), bez pionowych smug rozciągniętych pni; przy okazji
+   wtopić `foliage_tint` brzozy w atlas.
+2. Wysokie warianty leśne liściastych (olsza, brzoza, dąb 22–30 m, wąska korona, długa strzała) — wtedy limit skali
+   lasu liściastego wraca do 1,45, a `dw671-tykocin-03` do pomiaru.
+3. Wierzch ścian HLOD zaokrąglony koronami (gęstszy podział wierzchu albo półeliptyczne czapy 4–8 m) zamiast łamanej.
+4. Wymuszony płaszcz 0,3–0,6 wysokości przez 6–10 m na bokach bloków widocznych z pola, gdzie pomiar nie ma okrajka.
+5. Tło dali (`far_field`): zgrubny model koron pierścienia + perspektywa powietrzna.
+- Zauważone, nietknięte: rzadkie sosny nad gołym żwirem / piaskiem po prawej stronie `dk65-05 fh_air` (przerzedzenie
+  wg pokrycia modelu nad maską gruntu placu — wcześniej zasłonięte przeskalowanymi koronami liściastych) — do
+  sprawdzenia maska gruntu pod `OT_PTLZ_A`; płaskie turkusowe karty świerka (P2, bez zmian).
+- Nowe stałe rundy 2 (`CHM_EDGE_ZONE_M`, `CHM_CONIFER_*`, `CHM_MANTLE_BIRCH`, `CHM_MAX_SCALE(_BROADLEAF)`,
+  `CHM_LINE_FLOOR`, `CHM_EDGE_FLOOR`, `CHM_EDGE_WOBBLE_*`, `CHM_CORNER`, `CHM_NORMAL_UP`, `FOLIAGE_TINT`) — `WORKING_VALUE`.
+
+### Do zrobienia po scaleniu (lider)
+- Przebudowa 24 kafli z modelem koron (lista w „Kafle do przebudowy po scaleniu”) — runda 2 zmienia każdy z nich;
+  prototypy (`dk65-04`, `dk65-05`, `dw671-tykocin-03`) są zbudowane w kopii `derived` worktree `forest2-s24` (build r2).
+- `foliage_tint` brzozy działa po imporcie kafla (`import-region.ps1`) — także na kaflach bez modelu koron (brzozy
+  miejskie będą o ok. 20 % ciemniejsze w zieleni); kafle niezaimportowane ponownie zostają przy starym kolorze.

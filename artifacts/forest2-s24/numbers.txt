@@ -1,0 +1,32 @@
+# ADR 0339 runda 2 — liczby prototypu (runda r2)
+
+## Generator (`streetscape_qa.json`): przed = runda 1 (r5, jak scalona) → po = runda 2
+
+| Kafel | instancje roślin | brzoza + brzoza młoda | klon + lipa + olsza | sosna + świerk | HLOD lasu: komórki, trójkąty | wys. okapu p10 / p50 / p90 / max [m] | cięcia skali | najgorsza klatka High | najgorsza klatka Low |
+|---|---|---|---|---|---|---|---|---|---|
+| `dk65-05` | 101899 → 101899 | 14395 → 9963 | 9000 → 6922 | 44134 → 49896 | 388, 82757 → 388, 82807 (+0.1 %) | 13.2 / 21.8 / 26.8 / 35.1 → 13.2 / 21.1 / 26.4 / 30.9 | 491 z 54102 | `route_s0472` 1525548 → `route_s0472` 1525782 | `route_s0157` 467417 → `route_s0157` 467612 |
+|  | Δ tris_high po 22 kamerach: min -65 (`roundabout_01_above`), max +14850 (`top_seam_north`), suma +52997 | | | | | | | | |
+|  | Δ tris_low po 22 kamerach: min -404 (`rev_mid`), max +6545 (`site_seam_oblique`), suma +12475 | | | | | | | | |
+| `dk65-04` | 14880 → 14880 | 2772 → 2540 | 2095 → 1969 | 4003 → 4347 | 67, 11650 → 67, 11696 (+0.4 %) | 10.0 / 19.1 / 26.1 / 29.6 → 10.1 / 18.6 / 25.8 / 29.4 | 22 z 4424 | `drive_village` 1331698 → `drive_village` 1332398 | `rail_x1_top` 460228 → `rail_x1_top` 459471 |
+|  | Δ tris_high po 26 kamerach: min -644 (`rail_x1_top`), max +700 (`drive_village`), suma -3751 | | | | | | | | |
+|  | Δ tris_low po 26 kamerach: min -757 (`rail_x1_top`), max +143 (`drive_village`), suma -6184 | | | | | | | | |
+| `dw671-tykocin-03` | 13201 → 13201 | 3885 → 3885 | 4102 → 4101 | 705 → 706 | 73, 11272 → 73, 11273 (+0.0 %) | 13.0 / 19.2 / 23.5 / 33.2 → 12.7 / 18.4 / 21.5 / 24.0 | 81 z 4822 | `route_s0157` 1319129 → `route_s0157` 1318825 | `route_s0470` 398470 → `route_s0470` 398358 |
+|  | Δ tris_high po 7 kamerach: min -304 (`route_s0157`), max +42 (`route_s2035`), suma -690 | | | | | | | | |
+|  | Δ tris_low po 7 kamerach: min -262 (`route_s0157`), max -6 (`route_s2035`), suma -804 | | | | | | | | |
+
+## Kamery kontrolne lasu (edytor, High, 1920 × 1080; `stats.txt`, szacunek przed batchingiem SRP)
+
+| Kafel | Kamera | trójkąty przed → po | draws (szac.) przed → po | instancje: draws / trójkąty przed → po |
+|---|---|---|---|---|
+| `dk65-05` | `fh_air` | 82768 → 82804 (+0.0 %) | 34 → 34 | 89 / 47077 → 89 / 47012 |
+| `dk65-05` | `fh_cab_approach` | 487557 → 487445 (-0.0 %) | 307 → 305 | 134 / 72052 → 134 / 72266 |
+| `dk65-05` | `fh_cab_corridor` | 232047 → 232272 (+0.1 %) | 137 → 136 | 129 / 120219 → 125 / 121330 |
+| `dk65-05` | `fh_side_a` | 443947 → 443921 (-0.0 %) | 351 → 350 | 99 / 55590 → 98 / 55867 |
+| `dk65-05` | `fh_side_b` | 238717 → 238565 (-0.1 %) | 160 → 157 | 109 / 43736 → 109 / 43760 |
+| `dk65-04` | `fh_cab_approach` | 418540 → 418238 (-0.1 %) | 430 → 428 | 138 / 29602 → 138 / 29685 |
+| `dk65-04` | `fh_cab_corridor` | 379685 → 379637 (-0.0 %) | 324 → 323 | 96 / 33935 → 96 / 33849 |
+| `dk65-04` | `fh_side_a` | 152502 → 152446 (-0.0 %) | 75 → 74 | 56 / 8013 → 55 / 8087 |
+| `dk65-04` | `fh_side_b` | 555832 → 555554 (-0.1 %) | 466 → 465 | 152 / 29761 → 151 / 29889 |
+| `dw671-tykocin-03` | `fh_cab_corridor` | 428246 → 428288 (+0.0 %) | 487 → 486 | 103 / 57208 → 103 / 57176 |
+| `dw671-tykocin-03` | `fh_side_a` | 199207 → 199215 (+0.0 %) | 50 → 50 | 79 / 41673 → 79 / 41687 |
+| `dw671-tykocin-03` | `fh_side_b` | 157611 → 157619 (+0.0 %) | 36 → 36 | 40 / 7637 → 40 / 7631 |

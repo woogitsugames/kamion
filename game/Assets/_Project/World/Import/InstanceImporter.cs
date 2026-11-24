@@ -604,6 +604,7 @@ namespace Game.World.Import
                 {
                     var vm = VegetationMaterial($"{r.Dir}/Materials/Proto/M_{name}.mat", tex, ImportTexture(r, npng, clamp: true, linear: true),
                         "_IMPOSTOR", new Vector4(views, ImpostorVisibility.x, ImpostorVisibility.y, 0f), info != null ? info.AlphaCutoff : 0.5f);
+                    vm.SetColor("_BaseColor", FoliageTint(name).gamma);   // colour properties are sRGB
                     s_ProtoMats[name] = vm;
                     return vm;
                 }
@@ -614,10 +615,38 @@ namespace Game.World.Import
             bool twoSided = foliage || name == "bark_twig";
             float rough = foliage ? 0.75f : sign ? 0.45f : 0.9f;
             var baseCol = info != null ? info.BaseColorFactor.linear : Color.white;   // glTF factors are linear
+            if (foliage) baseCol *= FoliageTint(name);
             var mat = RegionImporter.LitMaterial($"{r.Dir}/Materials/Proto/M_{name}.mat", new Color(baseCol.r, baseCol.g, baseCol.b), rough, 0f, tex, clip,
                 info != null ? info.AlphaCutoff : 0.5f, twoSided, null);
             s_ProtoMats[name] = mat;
             return mat;
+        }
+
+        static Dictionary<string, object> s_FoliageTint;
+
+        /// <summary>
+        /// ADR 0339 r2: linear albedo multiplier of a species' leaf cards ("leaves_&lt;species&gt;") and impostors
+        /// ("impostor_tree_&lt;species&gt;_&lt;variant&gt;") from trees_meta.json "foliage_tint" (make_trees.py
+        /// FOLIAGE_TINT); white when the library has none. Both LODs take the same factor, so the switch stays seamless.
+        /// </summary>
+        static Color FoliageTint(string name)
+        {
+            if (s_FoliageTint == null)
+            {
+                string meta = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "vegetation", "trees_meta.json");
+                s_FoliageTint = File.Exists(meta) && Obj(Parse(File.ReadAllText(meta))).Get("foliage_tint") is Dictionary<string, object> d
+                    ? d : new Dictionary<string, object>();
+            }
+            string sp = null;
+            if (name.StartsWith("leaves_")) sp = name.Substring("leaves_".Length);
+            else if (name.StartsWith("impostor_tree_"))
+            {
+                sp = name.Substring("impostor_tree_".Length);
+                int us = sp.LastIndexOf('_');
+                if (us > 0) sp = sp.Substring(0, us);
+            }
+            if (sp == null || !(s_FoliageTint.Get(sp) is List<object> c) || c.Count < 3) return Color.white;
+            return new Color((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]), 1f);
         }
 
         /// <summary>

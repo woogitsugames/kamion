@@ -1,0 +1,8 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\logs\visual-qa-World_dk65-04-20261124-230204.log -buildTarget Android -quit -executeMethod Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras -qaScene World_dk65-04 -qaWidth 1920 -qaHeight 1080 -qaTier High -qaOutput C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\forest2-s24\r2\dk65-04\High-overcast -qaLighting overcast -qaCameras fh_cab_corridor,fh_cab_approach,fh_side_a,fh_side_b -qaGate3 C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\forest2-s24\cams\dk65-04.json
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 19292)
+VISUALQA_RESULT: OK rendered=4 dir=C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\forest2-s24\r2\dk65-04\High-overcast
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\forest2-s24\r2\dk65-04\High-overcast\fh_cab_approach.png  2 926 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\forest2-s24\r2\dk65-04\High-overcast\fh_cab_corridor.png  3 362 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\forest2-s24\r2\dk65-04\High-overcast\fh_side_a.png  2 839 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\forest2-s24\r2\dk65-04\High-overcast\fh_side_b.png  2 875 KB
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\logs\visual-qa-World_dk65-04-20261124-230204.log

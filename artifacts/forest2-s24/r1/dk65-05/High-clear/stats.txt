@@ -1,0 +1,11 @@
+tier=High lighting=clear msaa=2 renderScale=1
+fh_air: objects=15 drawsEst=34 shadowDrawsEst=9 trisK=82 trisExact=82804 (estimate, before SRP batching)
+  fh_air instanced (props+trees): draws 89, instances 2691, triangles 47k, cells 87, forest HLOD cells 52, trianglesExact 47032, shadowCasterDraws 4, shadowCasterTriangles 184
+fh_cab_approach: objects=101 drawsEst=305 shadowDrawsEst=66 trisK=487 trisExact=487445 (estimate, before SRP batching)
+  fh_cab_approach instanced (props+trees): draws 134, instances 1633, triangles 72k, cells 586, forest HLOD cells 158, trianglesExact 72351, shadowCasterDraws 8, shadowCasterTriangles 420
+fh_cab_corridor: objects=47 drawsEst=136 shadowDrawsEst=6 trisK=232 trisExact=232272 (estimate, before SRP batching)
+  fh_cab_corridor instanced (props+trees): draws 125, instances 1422, triangles 121k, cells 211, forest HLOD cells 75, trianglesExact 121361, shadowCasterDraws 14, shadowCasterTriangles 632
+fh_side_a: objects=102 drawsEst=350 shadowDrawsEst=72 trisK=443 trisExact=443921 (estimate, before SRP batching)
+  fh_side_a instanced (props+trees): draws 98, instances 471, triangles 55k, cells 535, forest HLOD cells 182, trianglesExact 55931, shadowCasterDraws 0, shadowCasterTriangles 0
+fh_side_b: objects=40 drawsEst=157 shadowDrawsEst=240 trisK=238 trisExact=238565 (estimate, before SRP batching)
+  fh_side_b instanced (props+trees): draws 109, instances 1451, triangles 43k, cells 110, forest HLOD cells 13, trianglesExact 43764, shadowCasterDraws 15, shadowCasterTriangles 3878

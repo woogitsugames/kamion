@@ -1,0 +1,57 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "dw671-tykocin-03",
+ "provenance": "artifacts/forest-height-s24/tools/forest_cams.py",
+ "cameras": [
+  {
+   "id": "fh_cab_corridor",
+   "kind": "driver_eye",
+   "pos": [
+    955.04,
+    794.25,
+    119.37
+   ],
+   "look_at": [
+    928.1,
+    740.64,
+    119.37
+   ],
+   "fov_deg": 60,
+   "note": "driver eye, route point 75: nearest stand beside the road 8 m"
+  },
+  {
+   "id": "fh_side_a",
+   "kind": "photo_match",
+   "pos": [
+    320.36,
+    243.27,
+    125.37
+   ],
+   "look_at": [
+    167.49,
+    378.19,
+    125.37
+   ],
+   "fov_deg": 45,
+   "note": "eye 2.5 m in the open, 170 m from the stand edge: clump 300 m west of the road, side on",
+   "seat": "file"
+  },
+  {
+   "id": "fh_side_b",
+   "kind": "photo_match",
+   "pos": [
+    545.18,
+    736.26,
+    121.26
+   ],
+   "look_at": [
+    245.97,
+    884.82,
+    121.26
+   ],
+   "fov_deg": 45,
+   "note": "eye 2.5 m in the open, 260 m from the stand edge: the wood in the north of the tile (far stand line)",
+   "seat": "file"
+  }
+ ]
+}

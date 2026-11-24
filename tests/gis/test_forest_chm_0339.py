@@ -91,14 +91,25 @@ def test_openings_and_thinning():
 
 
 def test_untouched_stream_outside_the_stand_rule():
-    """Only the canopy trees of the stand change: understorey, floor and their positions are the same trees."""
+    """Only the canopy trees of the stand change: understorey, floor and their positions are the same trees. Round 2:
+    inside a pine stand most understorey birch saplings become spruce regeneration / hazel (same positions)."""
     a, _, _ = _place(_chm())
     b, _, _ = _place(None)
     key = lambda t: (t["src"], t["e"], t["n"])  # noqa: E731
     ua = {key(t): t for t in a if t["src"].endswith((":under", ":floor"))}
     ub = {key(t): t for t in b if t["src"].endswith((":under", ":floor"))}
-    same = [k for k, v in ub.items() if ua.get(k) == v]
-    assert len(same) >= 0.95 * len(ub) and len(ua) >= len(ub), "the same plants (the final thinning keeps more of them)"
+    assert len(ua) >= len(ub), "the final thinning keeps more of them"
+    rest = {k: v for k, v in ub.items() if v["p"] != "tree_birchyoung"}
+    same = [k for k, v in rest.items() if ua.get(k) == v]
+    assert len(same) >= 0.95 * len(rest), "plants other than the birch saplings are untouched"
+    nb = sum(v["p"] == "tree_birchyoung" for v in ub.values())
+    na = sum(v["p"] == "tree_birchyoung" for v in ua.values())
+    assert 0.25 * nb < na < 0.75 * nb, "birch saplings stay in the edge zone, a third of them inside"
+    c, _, _ = _place(_chm(), kat="mieszany")
+    uc = {key(t): t for t in c if t["src"].endswith((":under", ":floor"))}
+    d, _, _ = _place(None, kat="mieszany")
+    ud = {key(t): t for t in d if t["src"].endswith((":under", ":floor"))}
+    assert len([k for k, v in ud.items() if uc.get(k) == v]) >= 0.95 * len(ud), "mixed stands: understorey unchanged"
     pa, pb = {key(t) for t in _canopy(a)}, {key(t) for t in _canopy(b)}
     assert len(pa - pb) <= 0.02 * len(pa) and len(pa) < len(pb), "canopy trees are dropped, not moved"
 
@@ -178,14 +189,14 @@ def test_hlod_top_line_is_the_measured_one():
     flat = canopy_tops(cells0, 20, 380)
     assert np.percentile(flat, 90) - np.percentile(flat, 10) < 8.0, "class rule: one crown level over the whole stand"
     allz = canopy_tops(cells, 20, 380)
-    assert np.percentile(allz, 90) - np.percentile(allz, 10) > 15.0
+    assert np.percentile(allz, 90) - np.percentile(allz, 10) > FH.CHM_CANOPY_K * 20.0
     # walls: the crown line of the edge picture sits at the measured tops (old stand 27 m, pole stand 16 m)
     def wall_tops(e0, e1):
         z = []
         for c in cells.values():
             for pr in [q for q in c["prims"] if q["mat"].startswith("forest_edge")]:
                 V, UV = pr["V"], pr["UV"]
-                m = (V[:, 0] > e0) & (V[:, 0] < e1) & (np.abs(UV[:, 1] - 0.75) < 1e-6) & (np.abs(V[:, 1] - 201) < 0.8)  # north edge (+ 1 m), main wall
+                m = (V[:, 0] > e0) & (V[:, 0] < e1) & (np.abs(UV[:, 1] - 0.75) < 1e-6) & (V[:, 1] > 201 - 0.8 - FH.CHM_EDGE_WOBBLE_M) & (V[:, 1] < 201.8)  # north edge (+ 1 m, r2: moved in by up to CHM_EDGE_WOBBLE_M), main wall
                 z += list(V[m, 2])
         return np.array(z)
 
@@ -265,3 +276,121 @@ def test_shipped_products(rid):
     assert chm.top.shape == (512, 512) and chm.top.max() <= 63.75
     t = meta["stats"]["top_m"]
     assert 8.0 < t["p50"] < 32.0 and t["p90"] < 40.0 and t["p90"] - t["p10"] > 6.0, t      # real stands are not level
+
+
+# ---- round 2 (critic r5): birch share of pine stands, prototype scale, crown line from the single cell, edge ----
+
+def test_r2_pine_stand_keeps_a_few_per_cent_of_birch_inside():
+    trees, _, _ = _place(_chm())
+    can = [t for t in _canopy(trees) if t["h"] >= 9.0]
+    inside = [t for t in can if 35 < t["e"] < 365 and 35 < t["n"] < 165]
+    edge = [t for t in can if not (30 < t["e"] < 370 and 30 < t["n"] < 170)]
+    broad = ("tree_birch", "tree_alder", "tree_maple", "tree_linden")
+    share = lambda ts: sum(t["p"] in broad for t in ts) / len(ts)  # noqa: E731
+    assert len(inside) > 500 and len(edge) > 300
+    assert share(inside) < 0.08, share(inside)
+    assert not [t for t in inside if t["p"] in ("tree_maple", "tree_linden")], "no maple / linden inside a pine stand"
+    assert share(edge) > 1.5 * share(inside), "birch stands at the stand edge"
+    # a mixed stand keeps its broadleaves
+    mixed, _, _ = _place(_chm(), kat="mieszany")
+    mi = [t for t in _canopy(mixed) if t["h"] >= 9.0 and 35 < t["e"] < 365 and 35 < t["n"] < 165]
+    assert share(mi) > 0.30
+
+
+def test_r2_no_prototype_scaled_beyond_the_limit():
+    href = VG.proto_href()
+    assert href.get("birch") and href.get("pine"), "tree library meta"
+    for kat in ("iglasty", "mieszany", "liściasty"):
+        trees, _, rep = _place(_chm(), kat=kat)
+        can = _canopy(trees)
+        sc = np.array([t["h"] / href[t["p"][5:]][t["v"]] for t in can])
+        lim = VG.CHM_MAX_SCALE_BROADLEAF if kat == "liściasty" else VG.CHM_MAX_SCALE
+        assert sc.max() <= lim + 0.01, (kat, float(sc.max()))
+        if kat == "liściasty":          # 27 m measured, the tallest broadleaf prototype reaches ~ 21.8 m
+            old = np.array([t["h"] for t in can if 20 < t["e"] < 110])
+            cap = VG.chm_cap_m("broadleaf")
+            assert old.max() <= cap + 0.05
+            # ... and the stand keeps its structure: heights x (limit / stand height), not a ruler line at the limit
+            assert np.percentile(old, 90) - np.percentile(old, 10) > 0.15 * cap, np.percentile(old, [10, 50, 90])
+    t = {"p": "tree_birch", "v": 1, "h": 20.5, "e": 1.0, "n": 2.0}
+    assert VG.chm_fit(t, href) is False and t["v"] == 0 and t["h"] == 20.5, "a taller variant instead of a larger scale"
+    t = {"p": "tree_birch", "v": 1, "h": 23.0, "e": 1.0, "n": 2.0, "fk": "broadleaf"}
+    assert VG.chm_fit(t, href) is False and t["v"] in (0, 2) and t["h"] == 23.0, "broadleaf stand: limit 1.6"
+    t = {"p": "tree_birch", "v": 1, "h": 23.0, "e": 1.0, "n": 2.0, "fk": "conifer"}
+    assert VG.chm_fit(t, href) is True and t["h"] <= VG.CHM_MAX_SCALE * 15.03 + 0.05, "among pines: limit 1.45"
+    t = {"p": "tree_spruce", "v": 2, "h": 40.0, "e": 1.0, "n": 2.0}
+    assert VG.chm_fit(t, href) is True and t["v"] == 2, "the open spruce form keeps its variant"
+
+
+def _rough_chm():
+    """200 x 200 m old stand whose single cells alternate 27 / 21 m (crown tops and the dips between crowns)."""
+    top = np.full((70, 70), 21.0)
+    top[::2, ::2] = 27.0
+    top[:10], top[60:], top[:, :10], top[:, 60:] = 0.0, 0.0, 0.0, 0.0
+    return FCH.Chm(top, np.where(top > 0, 0.9, 0.0), -40.0, 240.0, 4.0, {"source": {}, "stats": {}})
+
+
+def test_r2_crown_line_from_the_single_cell_and_tone():
+    chm = _rough_chm()
+    src = _forest_src("F1:0", [[0, 0], [200, 0], [200, 200], [0, 200]])
+    src["bdot10k"]["OT_PTLZ_A"][0]["props"]["kategoria"] = "iglasty"
+    zc = np.zeros((241, 241))
+    trees, forests = VG.place(src, (0.0, 0.0), SimpleNamespace(x0=-20.0, y1=220.0), zc, np.zeros_like(zc, bool), {}, [], chm=chm)
+    cells = FH.build(trees, [(forests[0], "conifer")], shapely.Polygon(), lambda e, n: np.zeros(np.shape(e)), 512.0, {}, chm=chm)
+    k = FH.CHM_WALL_TOP_FRAC["conifer"]
+    tops, nz_top, nz_bot = [], [], []
+    for c in cells.values():
+        for pr in [q for q in c["prims"] if q["mat"].startswith("forest_edge")]:
+            V, UV, N = pr["V"], pr["UV"], pr["N"]
+            deep = (V[:, 0] > 30) & (V[:, 0] < 170) & (V[:, 1] > 30) & (V[:, 1] < 170)
+            tops += list(V[deep & (np.abs(UV[:, 1] - 0.75) < 1e-6), 2] * k)
+            out = ~deep & (N[:, 2] < 0.999)
+            nz_top += list(N[out & (np.abs(UV[:, 1] - 0.75) < 1e-6), 2])
+            nz_bot += list(N[out & (UV[:, 1] == 0.0), 2])
+    tops = np.array(tops)
+    assert len(tops) > 100
+    # ribs: both levels of the model show (the dominant height alone gave 27 m everywhere), none above the measured top
+    assert np.percentile(tops, 15) < 24.5 and np.percentile(tops, 85) > 25.0, np.percentile(tops, [15, 50, 85])
+    assert tops.max() <= 27.0 * FH.CHM_TOP_VAR[1] * (1 + FH.CHM_TOP_JITTER) + 0.05
+    assert tops.min() >= 27.0 * FH.CHM_LINE_FLOOR * FH.CHM_TOP_VAR[0] * (1 - FH.CHM_TOP_JITTER) - 0.35   # wall foot 0.3 m under the ground
+    # walls: crown row lit from above, bole row nearly horizontal
+    assert len(nz_top) and len(nz_bot) and min(nz_top) > 0.8 and max(nz_bot) < 0.3
+
+
+def test_r2_edge_follows_the_falling_crowns():
+    """Crowns come down to 10 m in the last 8 m before the north outline: the outer wall follows them (not below
+    CHM_EDGE_FLOOR x the dominant height), the stand 20 m inside keeps its 27 m line."""
+    top = np.zeros((70, 70))
+    top[10:60, 10:60] = 27.0
+    top[10:12, 10:60] = 10.0
+    chm = FCH.Chm(top, np.where(top > 0, 0.9, 0.0), -40.0, 240.0, 4.0, {"source": {}, "stats": {}})
+    src = _forest_src("F1:0", [[0, 0], [200, 0], [200, 200], [0, 200]])
+    src["bdot10k"]["OT_PTLZ_A"][0]["props"]["kategoria"] = "iglasty"
+    zc = np.zeros((241, 241))
+    trees, forests = VG.place(src, (0.0, 0.0), SimpleNamespace(x0=-20.0, y1=220.0), zc, np.zeros_like(zc, bool), {}, [], chm=chm)
+    cells = FH.build(trees, [(forests[0], "conifer")], shapely.Polygon(), lambda e, n: np.zeros(np.shape(e)), 512.0, {}, chm=chm)
+    k = FH.CHM_WALL_TOP_FRAC["conifer"]
+    north, inside = [], []
+    for c in cells.values():
+        for pr in [q for q in c["prims"] if q["mat"].startswith("forest_edge")]:
+            V, UV = pr["V"], pr["UV"]
+            t = (np.abs(UV[:, 1] - 0.75) < 1e-6) & (V[:, 0] > 40) & (V[:, 0] < 160)
+            north += list(V[t & (V[:, 1] > 196.5), 2] * k)
+            inside += list(V[t & (V[:, 1] > 100) & (V[:, 1] < 180), 2] * k)
+    assert len(north) > 10 and len(inside) > 50
+    north = np.array(north)
+    lo = 27.0 * FH.CHM_EDGE_FLOOR * FH.CHM_TOP_VAR[0] * (1 - FH.CHM_TOP_JITTER) - 0.05
+    wall = north[north >= lo]               # (the low mantle skirt in front of the wall has the same v)
+    assert len(wall) > 10 and np.percentile(wall, 75) < 0.62 * 27.0, np.percentile(north, [0, 25, 50, 75, 100])
+    assert np.median(inside) > 24.0
+
+
+def test_r2_ablation_switch(monkeypatch):
+    """KAMION_FOREST_CHM_R2=0: the round 1 rules (no scale limit, class mix of the pine stand, sheet at 0.80)."""
+    monkeypatch.setenv("KAMION_FOREST_CHM_R2", "0")
+    trees, forests, rep = _place(_chm(), kat="liściasty")
+    assert rep["forest_chm"]["scale_capped"] == 0
+    assert max(t["h"] for t in _canopy(trees)) > VG.chm_cap_m("broadleaf") + 2.0
+    cells = FH.build(trees, [(forests[0], "conifer")], shapely.Polygon(), lambda e, n: np.zeros(np.shape(e)), 512.0, {}, chm=_chm())
+    z = np.concatenate([c["prims"][0]["V"][:, 2] for c in cells.values() if c["prims"][0]["mat"].startswith("forest_canopy")])
+    assert z.max() == pytest.approx(0.80 * 33.0, abs=0.5)
