@@ -807,7 +807,8 @@ Shader "Kamion/World PBR"
                             float2 q = i.uv.xy * 2.0 - 1.0;
                             float r = length(q) * (1.0 + 0.55 * n1 + 0.45 * n2 + 0.08 * n3);
                             edgeM = min((1.2 - r) * 0.42 * mn, min(borderM.x, borderM.y));
-                            fth = 0.04 + 0.05 * frac(seed * 9.1);
+                            edgeM -= 0.035 * (n3 - 0.3) + 0.02 * (n2 - 0.5);          // chipped, uneven rim
+                            fth = 0.015 + 0.02 * frac(seed * 9.1);
                             hasSeal = 0.0;
                             sw = 0.0;
                         }
@@ -839,8 +840,11 @@ Shader "Kamion/World PBR"
                             // value noise, the fine one fades with the pixel footprint) and macro mottling; an old repair
                             // ravels along its edge (lighter 0-6 cm rim). WORKING_VALUE.
                             float fpx = max(length(fwidth(pw.xz)), 1e-4);
-                            half grain = (half)((ValueNoise12(on / 0.035) - 0.5) * 0.55 * saturate(0.05 / fpx)
-                                               + (ValueNoise12(on / 0.13 + 7.0) - 0.5) * 0.35);
+                            half grain = (half)((ValueNoise12(on / 0.035) - 0.5) * 0.8 * saturate(0.05 / fpx)
+                                               + (ValueNoise12(on / 0.13 + 7.0) - 0.5) * 0.5);
+                            // light aggregate flecks in the (dark) binder, fading with distance
+                            half fleck = (half)step(0.84, Hash12(floor(on / 0.018))) * (half)saturate(0.04 / fpx);
+                            albedo += fleck * 0.035h * (1.0h - 0.5h * age);
                             albedo *= (1.0 + grain) * (0.88 + 0.24 * macro.a);
                             albedo *= 1.0 + 0.30 * age * (1.0 - smoothstep(0.0, 0.06, edgeM));
                         }
