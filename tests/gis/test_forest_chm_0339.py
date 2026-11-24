@@ -376,3 +376,14 @@ def test_r2_edge_follows_the_falling_crowns():
     wall = north[north >= lo]               # (the low mantle skirt in front of the wall has the same v)
     assert len(wall) > 10 and np.percentile(wall, 75) < 0.62 * 27.0, np.percentile(north, [0, 25, 50, 75, 100])
     assert np.median(inside) > 24.0
+
+
+def test_r2_ablation_switch(monkeypatch):
+    """KAMION_FOREST_CHM_R2=0: the round 1 rules (no scale limit, class mix of the pine stand, sheet at 0.80)."""
+    monkeypatch.setenv("KAMION_FOREST_CHM_R2", "0")
+    trees, forests, rep = _place(_chm(), kat="liściasty")
+    assert rep["forest_chm"]["scale_capped"] == 0
+    assert max(t["h"] for t in _canopy(trees)) > VG.chm_cap_m("broadleaf") + 2.0
+    cells = FH.build(trees, [(forests[0], "conifer")], shapely.Polygon(), lambda e, n: np.zeros(np.shape(e)), 512.0, {}, chm=_chm())
+    z = np.concatenate([c["prims"][0]["V"][:, 2] for c in cells.values() if c["prims"][0]["mat"].startswith("forest_canopy")])
+    assert z.max() == pytest.approx(0.80 * 33.0, abs=0.5)

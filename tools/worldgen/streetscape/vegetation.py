@@ -23,6 +23,7 @@ Ground-cover masks per terrain node -> COLOR_0 of the terrain mesh:
 from __future__ import annotations
 
 import hashlib
+import os
 
 import numpy as np
 import shapely
@@ -137,6 +138,11 @@ HREF_DEFAULT = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "lind
 _HREF_CACHE = {}
 
 
+def chm_r2():
+    """KAMION_FOREST_CHM_R2=0: round 1 (r5) rules on a tile with a height model - ablation for renders / budgets."""
+    return os.environ.get("KAMION_FOREST_CHM_R2", "1") != "0"
+
+
 def proto_href(root=None):
     """{species: [modelled height of variant 0, 1, ..]} from art-source/world/vegetation/trees_meta.json."""
     key = str(root or "")
@@ -163,6 +169,8 @@ def _variants(sp, v):
 def chm_fit(t, href=None):
     """ADR 0339 r2: variant / height of tree t so that h / href_m <= CHM_MAX_SCALE. Returns True when the height had
     to be cut. Position hash only."""
+    if not chm_r2():
+        return False
     sp = t["p"][5:]
     hs = (href if href is not None else proto_href()).get(sp) or [HREF_DEFAULT.get(sp, 0.0)] * NVAR.get(sp, 3)
     if not hs or hs[0] <= 0.0:
@@ -486,7 +494,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
         wet_grid = (zf - ndimage.uniform_filter(zf, CHM_WET_WINDOW_M, mode="nearest")) < CHM_WET_TPI_M
     chm_rep = {"stands": 0, "gap": 0, "thinned": 0, "young": 0, "mature": 0, "scale_capped": 0, "openings_m2": 0.0}
     chm_inner = None                        # r2: the inside of the forests (see CHM_EDGE_ZONE_M), prepared geometry
-    if chm is not None:
+    if chm is not None and chm_r2():
         polys = []
         for f in src["bdot10k"]["OT_PTLZ_A"]:
             g = PV._poly_local(f["geometry"]["coordinates"], origin)
@@ -682,7 +690,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
             names = list(table)
             w = np.array([table[k][0] for k in names])
             sp = rng.choice(names, size=len(P), p=w / w.sum()) if len(P) else []
-            if use_chm and fk == "conifer" and len(P):
+            if use_chm and fk == "conifer" and chm_inner is not None and len(P):
                 # r2: birch stands at the edge of a pine stand in groups, not as an even pale hem
                 sp = np.array(sp, dtype=object)
                 swap = {"birchyoung": "pineyoung" if "pineyoung" in table else "spruce", "birch": "pine"}

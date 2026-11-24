@@ -32,6 +32,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 
 import numpy as np
 import shapely
@@ -126,6 +127,11 @@ CHM_CORNER = (0.50, 0.66, 0.82, 0.93)
 # boles to the tips. The top row leans CHM_NORMAL_UP[1] (crowns take sky and sun light), the bottom row
 # CHM_NORMAL_UP[0] (boles in the shade of the stand): z component against a unit horizontal normal.
 CHM_NORMAL_UP = (0.25, 1.6)
+
+
+def _r2():
+    """KAMION_FOREST_CHM_R2=0: round 1 (r5) geometry on a tile with a height model - ablation for renders / budgets."""
+    return os.environ.get("KAMION_FOREST_CHM_R2", "1") != "0"
 
 
 def _vnoise2(x, y, period, salt=""):
@@ -289,6 +295,8 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
     Returns {cell id: {"chunk": (ci, cj), "bbox": [e0, n0, e1, n1], "prims": [...], "tris": int, "trees": int}}
     and tags the trees of every HLOD cell with "fc". chm (ADR 0339): streetscape.forest_chm.Chm or None."""
     fh = bake_info()
+    r2 = chm is not None and _r2()
+    canopy_k = CHM_CANOPY_K if r2 else 0.80
     ft = [t for t in trees if t.get("fk")]
     if not ft or not forests:
         report["forest_hlod"] = {"cells": 0}
@@ -329,7 +337,7 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
             dom, _, _, ins = chm.sample(Q)
             measured = ins & (dom >= CHM_TRUST_M)
             out[measured] = (np.asarray(zground(Q[measured, 0], Q[measured, 1]), float)
-                             + CHM_CANOPY_K * np.minimum(dom[measured], cap_all))
+                             + canopy_k * np.minimum(dom[measured], cap_all))
         for k, q in enumerate(Q):
             if measured[k]:
                 continue
@@ -349,8 +357,8 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
         ii = ii[np.isfinite(dd)]
         return float(np.median(H[ii])) if len(ii) else float(np.median(H))
 
-    cap_of = {m: chm_cap_m(m) for m in ("conifer", "mixed", "broadleaf")} if chm is not None else {}
-    cap_all = max(cap_of.values()) if cap_of else 0.0
+    cap_of = {m: chm_cap_m(m) for m in ("conifer", "mixed", "broadleaf")} if r2 else {}
+    cap_all = max(cap_of.values()) if cap_of else 1e9
 
     def wall_h(q, edge_info, mix, measured_only=False, floor=CHM_LINE_FLOOR):
         """Height of the wall quad at q: the trees of the edge picture stand as high as the stand does there."""
@@ -358,9 +366,9 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
             dom, stand, _, ins = chm.sample(q)
             if ins[0] and max(dom[0], stand[0]) >= CHM_TRUST_M:
                 h_ = float(dom[0] if dom[0] >= CHM_TRUST_M else stand[0])
-                if dom[0] >= CHM_TRUST_M:   # r2: the single cell under the point, see CHM_LINE_FLOOR
+                if r2 and dom[0] >= CHM_TRUST_M:    # r2: the single cell under the point, see CHM_LINE_FLOOR
                     h_ = max(float(chm.cell_top(q)[0][0]), floor * h_)
-                if floor < CHM_LINE_FLOOR:  # outer wall: not lower than CHM_EDGE_FLOOR x the stand behind it
+                if r2 and floor < CHM_LINE_FLOOR:   # outer wall: not lower than CHM_EDGE_FLOOR x the stand behind it
                     h_ = max(h_, floor * float(stand[0]))
                 return min(h_, cap_of.get(mix, cap_all)) / CHM_WALL_TOP_FRAC.get(mix, 0.83)
             if measured_only:
@@ -469,7 +477,7 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                     nb = cell_of(q[0], q[1], half)
                     inner[i] = nb in hlod and nb != (ci, cj)          # tile border: outer wall
             hw = np.array([wall_h(p, edge_info, mix) for p in pts])
-            if chm is not None:             # r2: outer wall points follow the crowns down to the edge, and move in
+            if r2:                          # r2: outer wall points follow the crowns down to the edge, and move in
                 outer_pt = np.ones(len(pts), bool)
                 outer_pt[:-1] &= ~inner
                 outer_pt[1:] &= ~inner
@@ -508,7 +516,7 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                     if float(dv[a_] @ dv[b_]) < CORNER_COS:
                         steps = ((p, CORNER_DROP), (p - 1, 0.5 + 0.5 * CORNER_DROP), (p + 1, 0.5 + 0.5 * CORNER_DROP),
                                  (p - 2, 0.2 + 0.8 * CORNER_DROP + 0.12), (p + 2, 0.2 + 0.8 * CORNER_DROP + 0.12))
-                        if chm is not None:     # r2: a longer, lower step (see CHM_CORNER)
+                        if r2:                  # r2: a longer, lower step (see CHM_CORNER)
                             steps = tuple((p + sg * d_, k_) for d_, k_ in enumerate(CHM_CORNER) for sg in (-1, 1)
                                           if d_ or sg > 0)
                         for q, k_ in steps:
@@ -534,7 +542,7 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                 n3 = np.column_stack([nrm, np.full(len(idx), 0.5)])
                 n3 /= np.linalg.norm(n3, axis=1)[:, None]
                 n3b = n3t = n3
-                if chm is not None:         # r2: tone from the boles to the crown tips (see CHM_NORMAL_UP)
+                if r2:                      # r2: tone from the boles to the crown tips (see CHM_NORMAL_UP)
                     n3b = np.column_stack([nrm, np.full(len(idx), CHM_NORMAL_UP[0])])
                     n3t = np.column_stack([nrm, np.full(len(idx), CHM_NORMAL_UP[1])])
                     n3b /= np.linalg.norm(n3b, axis=1)[:, None]
