@@ -230,6 +230,12 @@ class Chm:
         j, i, inside = self._ij(P)
         return self.dom[j, i], self.stand[j, i], self.cov3[j, i], inside
 
+    def cell_top(self, P):
+        """(crown top of the single 4 m cell, dominant height, inside the grid) at points P [k, 2] - the unsmoothed
+        model: crown flanks and the dips between crowns (ADR 0339 r2, crown line of the forest HLOD)."""
+        j, i, inside = self._ij(P)
+        return self.top[j, i], self.dom[j, i], inside
+
     def gaps(self, poly, min_h, min_area):
         """Openings of a stand: parts of `poly` (region-local shapely geometry) where no crown reaches min_h within
         one cell either side, each at least min_area. Cell-aligned polygons, None when there is none."""

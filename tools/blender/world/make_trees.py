@@ -59,6 +59,11 @@ HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.
 # leaves_shrub); the only new texture is leaves_spruce.png (streetscape/leaf_textures.py spruce_spray).
 NEW_SPECIES = ("spruce", "pineyoung", "birchyoung", "floor")
 ADDED_0308 = ("poplar",)
+# ADR 0339 r2 (critic r5: pale birch crowns among the pines): linear multiplier of the leaf-card and impostor albedo
+# of a species, applied by the Unity importer (InstanceImporter.FoliageTint) - no re-bake. leaves_birch.png is 1.45 x
+# the linden leaf and 1.85 x the pine needle in linear green (0.120 / 0.083 / 0.065, measured 2026-11-24); x 0.80
+# puts it at 0.096, a little less yellow. WORKING_VALUE; a re-bake of the birch atlas should fold it into the texture.
+FOLIAGE_TINT = {"birch": [0.74, 0.80, 0.85], "birchyoung": [0.74, 0.80, 0.85]}
 # Variants: one per young species (a thicket is uniform; yaw and height vary per instance) - every variant costs the
 # Low tier up to three instanced draws (LOD1 bark + foliage, impostor). Build 1 with 2 + 2 young variants raised the
 # instanced draws of the forest cameras by 8-30 (artifacts/forest-0187/compare1-dojlidy-Low.tsv).
@@ -1720,7 +1725,8 @@ def main():
         bpy.ops.export_scene.gltf(filepath=str(VEG / fn), export_format="GLB", use_selection=True,
                                   export_apply=False, export_yup=True)
     (VEG / "trees_meta.json").write_text(json.dumps({"note": "built at href_m; instance scale = h / href_m",
-                                                      "trees": meta, "forest_hlod": forest},
+                                                      "trees": meta, "forest_hlod": forest,
+                                                      "foliage_tint": FOLIAGE_TINT},
                                                      indent=1, sort_keys=True) + "\n", encoding="utf-8")
     print("[trees] wrote", VEG / "trees.glb")
 

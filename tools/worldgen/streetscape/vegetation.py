@@ -114,6 +114,76 @@ CHM_PATCH_OUT = (0.45, 0.55)               # noise below [0]: this share of the 
 CHM_WET_WINDOW_M = 121
 CHM_WET_TPI_M = -1.5
 CHM_WET_ALDER = 0.70
+# Round 2 (critic r5, ADR 0339 addendum). WORKING_VALUE unless noted.
+# (1) Pine stands ("iglasty" = bor): the class mix put 10 % birch + 6 % alder / maple / linden everywhere and the patch
+# rule another 45 % of the pines of a birch patch - from the air the bor was dotted with pale broadleaf crowns. Birch is
+# an admixture of a few per cent there, in groups at the stand edge and along roads and rides; maple / linden do not
+# grow in a pine stand at all. Inside a stand (further than CHM_EDGE_ZONE_M from the forest outline and from a road /
+# yard) broadleaves outside a birch patch turn into pine and the patches are thinner.
+CHM_EDGE_ZONE_M = 30.0
+CHM_CONIFER_KEEP = {"birch": 0.12, "alder": 0.0, "maple": 0.0, "linden": 0.0}   # share kept inside, outside patches
+CHM_CONIFER_EDGE_KEEP = {"maple": 0.30, "linden": 0.30}     # share kept in the edge zone of a pine stand
+CHM_CONIFER_PATCH_SHARE = 0.20      # share of the pines of a birch patch inside a pine stand (CHM_BIRCH_PATCH: 0.45)
+CHM_CONIFER_UNDER_BIRCH = 0.30      # share of the understorey birch saplings kept inside a pine stand
+CHM_MANTLE_BIRCH = (60.0, 0.50)     # mantle of a pine stand: birch only where this noise (period m) is above [1]
+# (2) No prototype is drawn larger than CHM_MAX_SCALE x its modelled height: a 14 m birch scaled to 28-30 m had leaf
+# cards of twice the size (blurred crowns, crown area x 4). A tree whose drawn variant would exceed the limit takes a
+# variant that fits (the variants are 12-15 m / 18-22 m tall, trees_meta.json href_m), else the tallest variant at the
+# limit: broadleaves stay under a tall pine canopy as the co-dominant storey they are. forest_hlod caps the crown line
+# of a stand of that category at the same height (chm_cap_m), so walls and trees agree at the HLOD switch.
+CHM_MAX_SCALE = 1.45
+HREF_DEFAULT = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "spruce": 21.0,
+                "pineyoung": 5.0, "birchyoung": 6.0}     # make_trees.py HREF (library without trees_meta.json)
+_HREF_CACHE = {}
+
+
+def proto_href(root=None):
+    """{species: [modelled height of variant 0, 1, ..]} from art-source/world/vegetation/trees_meta.json."""
+    key = str(root or "")
+    if key not in _HREF_CACHE:
+        import json
+        from roads import pipeline
+        p = (root or pipeline.REPO) / "art-source" / "world" / "vegetation" / "trees_meta.json"
+        out = {}
+        if p.exists():
+            for m in json.loads(p.read_text(encoding="utf-8")).get("trees", {}).values():
+                if "href_m" in m and "species" in m:
+                    out.setdefault(m["species"], {})[int(m["variant"])] = float(m["href_m"])
+        _HREF_CACHE[key] = {sp: [v[k] for k in sorted(v)] for sp, v in out.items()}
+    return _HREF_CACHE[key]
+
+
+def _variants(sp, v):
+    """Variants a tree of species sp drawn with variant v may take (spruce: stand forms / open form stay apart)."""
+    if sp == "spruce":
+        return (SPRUCE_OPEN,) if v == SPRUCE_OPEN else (0, 1)
+    return tuple(range(NVAR.get(sp, 3)))
+
+
+def chm_fit(t, href=None):
+    """ADR 0339 r2: variant / height of tree t so that h / href_m <= CHM_MAX_SCALE. Returns True when the height had
+    to be cut. Position hash only."""
+    sp = t["p"][5:]
+    hs = (href if href is not None else proto_href()).get(sp) or [HREF_DEFAULT.get(sp, 0.0)] * NVAR.get(sp, 3)
+    if not hs or hs[0] <= 0.0:
+        return False
+    vs = [v for v in _variants(sp, t["v"]) if v < len(hs)]
+    if not vs or (t["v"] in vs and t["h"] <= CHM_MAX_SCALE * hs[t["v"]]):
+        return False
+    fit = [v for v in vs if t["h"] <= CHM_MAX_SCALE * hs[v]]
+    if fit:
+        t["v"] = fit[int(_hash01(f"fv:{t['e']},{t['n']}") * len(fit)) % len(fit)]
+        return False
+    t["v"] = max(vs, key=lambda v: hs[v])
+    t["h"] = round(CHM_MAX_SCALE * hs[t["v"]] * (0.93 + 0.07 * _hash01(f"fh:{t['e']},{t['n']}")), 1)
+    return True
+
+
+def chm_cap_m(mix, href=None):
+    """Tallest crown a stand of HLOD mix `mix` can show with the tree library (see CHM_MAX_SCALE)."""
+    hs = href if href is not None else proto_href()
+    sps = ("birch", "alder", "linden", "maple") if mix == "broadleaf" else ("pine", "spruce")
+    return CHM_MAX_SCALE * max(max(hs.get(sp) or [HREF_DEFAULT[sp]]) for sp in sps)
 
 
 def _hash01(key):
@@ -131,12 +201,15 @@ def _vnoise(x, y, period, salt):
             + (h(ix, iy + 1) * (1 - tx) + h(ix + 1, iy + 1) * tx) * ty)
 
 
-def chm_species(P, sp, fk, wet):
+def chm_species(P, sp, fk, wet, inner=None):
     """ADR 0339: species of the canopy candidates P regrouped into clumps (see CHM_*_PATCH) and alder in the wet
-    hollows (`wet`: bool per point). Position hashes only - the random stream of the stand is not touched."""
+    hollows (`wet`: bool per point). Position hashes only - the random stream of the stand is not touched.
+    inner (r2): bool per point, inside a stand (not within CHM_EDGE_ZONE_M of its outline or of a road) - there a
+    pine stand keeps only a few per cent of birch, in patches (CHM_CONIFER_*)."""
     sp = np.array(sp, dtype=object)
     for k, (x, y) in enumerate(np.round(P, 2)):
         key = f"{x},{y}"
+        bor = fk == "conifer" and inner is not None and bool(inner[k])
         if wet is not None and wet[k]:
             u = _hash01("wet:" + key)
             if u < CHM_WET_ALDER:
@@ -144,12 +217,23 @@ def chm_species(P, sp, fk, wet):
             elif u < CHM_WET_ALDER + 0.15 and sp[k] != "spruce":
                 sp[k] = "birch"
             continue
+        if (fk == "conifer" and inner is not None and not bor and sp[k] in CHM_CONIFER_EDGE_KEEP
+                and _hash01("bor:" + key) >= CHM_CONIFER_EDGE_KEEP[sp[k]]):
+            sp[k] = "pine"
+            continue
+        if bor and sp[k] in CHM_CONIFER_KEEP:
+            in_patch = sp[k] == "birch" and _vnoise(x, y, CHM_BIRCH_PATCH[0], "bi") > CHM_BIRCH_PATCH[1]
+            if not in_patch and _hash01("bor:" + key) >= CHM_CONIFER_KEEP[sp[k]]:
+                sp[k] = "pine"
+                continue
         if fk == "broadleaf" or sp[k] not in ("pine", "spruce", "birch"):
             continue
         # inside a patch pines turn into the patch species, outside the patches that species gives way to pine:
         # groups instead of an even sprinkle, the shares of the class mix stay about the same
         for other, (per, thr, share), salt in (("spruce", CHM_SPRUCE_PATCH, "sp"), ("birch", CHM_BIRCH_PATCH, "bi")):
             v = _vnoise(x, y, per, salt)
+            if bor and other == "birch":
+                share = CHM_CONIFER_PATCH_SHARE
             if sp[k] == "pine" and v > thr and _hash01(salt + ":" + key) < share:
                 sp[k] = other
                 break
@@ -162,9 +246,10 @@ def chm_species(P, sp, fk, wet):
 def chm_canopy(trees, chm):
     """ADR 0339: heights / prototypes of the canopy trees of one stand from the canopy height model; returns the
     trees left standing (openings and thinned cells drop theirs) and counters. Trees outside the grid are kept."""
-    n = {"gap": 0, "thinned": 0, "young": 0, "mature": 0}
+    n = {"gap": 0, "thinned": 0, "young": 0, "mature": 0, "scale_capped": 0}
     if not trees:
         return trees, n
+    href = proto_href()
     P = np.array([[t["e"], t["n"]] for t in trees])
     dom, _stand, cov, inside = chm.sample(P)
     keep = []
@@ -181,6 +266,7 @@ def chm_canopy(trees, chm):
             t["h"] = round(float(d * (0.72 + 0.28 * _hash01("yh:" + key))), 1)
             t["p"] = f"tree_{CHM_YOUNG_PROTO[sp]}"
             t["v"] = SPRUCE_OPEN if sp == "spruce" else 0
+            n["scale_capped"] += chm_fit(t, href)
             n["young"] += 1
             keep.append(t)
             continue
@@ -195,6 +281,7 @@ def chm_canopy(trees, chm):
         if (lo, hi) == CHM_CLASSES[-1][1:] and sp in CHM_NO_SUPPRESSED:
             lo, hi = CHM_CLASSES[1][1:]
         t["h"] = round(float(max(CHM_MIN_TREE_H, d * (lo + (hi - lo) * _hash01("ch:" + key)))), 1)
+        n["scale_capped"] += chm_fit(t, href)
         n["mature"] += 1
         keep.append(t)
     return keep, n
@@ -397,7 +484,16 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
     if chm is not None:                     # ground lower than its surroundings (alder hollows, ADR 0339)
         zf = np.asarray(zc, np.float64)
         wet_grid = (zf - ndimage.uniform_filter(zf, CHM_WET_WINDOW_M, mode="nearest")) < CHM_WET_TPI_M
-    chm_rep = {"stands": 0, "gap": 0, "thinned": 0, "young": 0, "mature": 0, "openings_m2": 0.0}
+    chm_rep = {"stands": 0, "gap": 0, "thinned": 0, "young": 0, "mature": 0, "scale_capped": 0, "openings_m2": 0.0}
+    chm_inner = None                        # r2: the inside of the forests (see CHM_EDGE_ZONE_M), prepared geometry
+    if chm is not None:
+        polys = []
+        for f in src["bdot10k"]["OT_PTLZ_A"]:
+            g = PV._poly_local(f["geometry"]["coordinates"], origin)
+            polys.append(g if g.is_valid else shapely.make_valid(g))
+        if polys:
+            chm_inner = shapely.union_all(polys).buffer(-CHM_EDGE_ZONE_M)
+            shapely.prepare(chm_inner)
 
     def ok(P):
         i = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, W - 1)
@@ -507,7 +603,10 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
         if use_chm and len(P):
             wi = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, W - 1)
             wj = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
-            sp = chm_species(P, sp, fk, wet_grid[wj, wi])
+            inner = None
+            if chm_inner is not None and fk == "conifer":
+                inner = shapely.contains_xy(chm_inner, P[:, 0], P[:, 1]) & ~near_road(P, CHM_EDGE_ZONE_M)
+            sp = chm_species(P, sp, fk, wet_grid[wj, wi], inner)
         emit(P, sp, rng, f"bdot:{f['id']}", 1.0 if hr else (0.7 if rodzaj == "zagajnik" else 1.0), fk=fk, hrange=hr)
         if use_chm:
             out[n_stand:], cn = chm_canopy(out[n_stand:], chm)
@@ -551,6 +650,14 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
             sp = rng.choice(names, size=len(P), p=w / w.sum())
             if fk == "broadleaf":           # no conifer regeneration under a broadleaf stand
                 sp = np.array([{"spruce": "birchyoung", "pineyoung": "shrub"}.get(k, k) for k in sp])
+            if use_chm and fk == "conifer" and chm_inner is not None and len(P):
+                # r2: inside a pine stand the second storey is spruce regeneration and hazel, birch saplings are few
+                inn = shapely.contains_xy(chm_inner, P[:, 0], P[:, 1]) & ~near_road(P, CHM_EDGE_ZONE_M)
+                sp = np.array(sp, dtype=object)
+                for k_ in np.nonzero(inn & (sp == "birchyoung"))[0]:
+                    u_ = _hash01(f"ub:{round(float(P[k_, 0]), 2)},{round(float(P[k_, 1]), 2)}")
+                    if u_ >= CHM_CONIFER_UNDER_BIRCH:
+                        sp[k_] = "spruce" if u_ < 0.5 * (1.0 + CHM_CONIFER_UNDER_BIRCH) else "shrub"
             n0 = len(out)
             emit(P, sp, rng, f"bdot:{f['id']}:under", 1.0, fk=fk, spruce_v="open")
             ranged(n0, {k: v[:2] for k, v in UNDERSTOREY.items()})
@@ -575,6 +682,14 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
             names = list(table)
             w = np.array([table[k][0] for k in names])
             sp = rng.choice(names, size=len(P), p=w / w.sum()) if len(P) else []
+            if use_chm and fk == "conifer" and len(P):
+                # r2: birch stands at the edge of a pine stand in groups, not as an even pale hem
+                sp = np.array(sp, dtype=object)
+                swap = {"birchyoung": "pineyoung" if "pineyoung" in table else "spruce", "birch": "pine"}
+                for k_ in range(len(P)):
+                    if sp[k_] in swap and swap[sp[k_]] in table and _vnoise(
+                            float(P[k_, 0]), float(P[k_, 1]), CHM_MANTLE_BIRCH[0], "mb") < CHM_MANTLE_BIRCH[1]:
+                        sp[k_] = swap[sp[k_]]
             n0 = len(out)
             emit(P, sp, rng, f"bdot:{f['id']}:edge", 1.0, fk=fk, spruce_v="open")
             ranged(n0, table)
