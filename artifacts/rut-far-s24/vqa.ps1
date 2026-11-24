@@ -1,5 +1,5 @@
 # vqa.ps1 -Label <name> [-Probe off] [-SkipImport]   renders cams.json (q_far, q_far2) clear+overcast High 1920x1080 Win64
-param([Parameter(Mandatory)][string]$Label,[ValidateSet('','off')][string]$Probe='',[switch]$SkipImport)
+param([Parameter(Mandatory)][string]$Label,[ValidateSet('','off')][string]$Probe='',[switch]$SkipImport,[string]$Cams='q_far,q_far2',[string[]]$Lights=@('clear','overcast'))
 $ErrorActionPreference='Stop'
 $env:PYTHONUTF8='1'
 $wt='C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\rut-far-s24'
@@ -22,8 +22,8 @@ try {
     Set-Content $shader $t -NoNewline -Encoding UTF8
   }
   try {
-    foreach ($lt in 'clear','overcast') {
-      & pwsh -NoProfile -File "$wt\scripts\visual-qa.ps1" -Scene $scene -Tier High -Width 1920 -Height 1080 -Lighting $lt -Gate3 "$a\cams.json" -Cameras 'q_far,q_far2' -OutputDir "$a\vqa\$Label-$lt" -BuildTarget Win64
+    foreach ($lt in $Lights) {
+      & pwsh -NoProfile -File "$wt\scripts\visual-qa.ps1" -Scene $scene -Tier High -Width 1920 -Height 1080 -Lighting $lt -Gate3 "$a\cams.json" -Cameras $Cams -OutputDir "$a\vqa\$Label-$lt" -BuildTarget Win64
       if ($LASTEXITCODE -ne 0) { "visual-qa exit $LASTEXITCODE"; exit $LASTEXITCODE }
     }
   } finally { if (Test-Path $bak) { Copy-Item $bak $shader -Force; Remove-Item $bak -Force } }
