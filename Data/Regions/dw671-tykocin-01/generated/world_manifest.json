@@ -4096,6 +4096,114 @@
    }
   }
  ],
+ "far_field": {
+  "High": {
+   "bytes": 8385184,
+   "file": "Data/raw/derived/dw671-tykocin-01/world/far_field.glb",
+   "sectors": {
+    "far_east": {
+     "by_material": {
+      "far_field_buildings": 8628,
+      "forest_edge_mixed_far_atlas": 7542
+     },
+     "submeshes": 2,
+     "triangles": 16170,
+     "vertices": 25598
+    },
+    "far_north": {
+     "by_material": {
+      "far_field_buildings": 36524,
+      "forest_edge_mixed_far_atlas": 4864
+     },
+     "submeshes": 2,
+     "triangles": 41388,
+     "vertices": 78404
+    },
+    "far_south": {
+     "by_material": {
+      "far_field_buildings": 15333,
+      "forest_edge_mixed_far_atlas": 2714
+     },
+     "submeshes": 2,
+     "triangles": 18047,
+     "vertices": 33809
+    },
+    "far_west": {
+     "by_material": {
+      "far_field_buildings": 11572,
+      "forest_edge_mixed_far_atlas": 4094
+     },
+     "submeshes": 2,
+     "triangles": 15666,
+     "vertices": 27772
+    }
+   },
+   "sha256": "56447c5362fd2783a692ee74a61856e0808c946d8c95ac85c72d384657a7cfad",
+   "skyline": {
+    "landmark_stack_proxies": [],
+    "min_building_h_m": 24.0,
+    "min_chimney_h_m": 40.0,
+    "node": "far_skyline",
+    "submeshes": 0,
+    "triangles": 0
+   },
+   "total_triangles": 91271,
+   "total_vertices": 165583
+  },
+  "Low": {
+   "bytes": 729272,
+   "file": "Data/raw/derived/dw671-tykocin-01/world/far_field.low.glb",
+   "sectors": {
+    "far_east": {
+     "by_material": {
+      "far_field_buildings": 829,
+      "forest_edge_mixed_far_atlas": 1646
+     },
+     "submeshes": 2,
+     "triangles": 2475,
+     "vertices": 3719
+    },
+    "far_north": {
+     "by_material": {
+      "far_field_buildings": 3639,
+      "forest_edge_mixed_far_atlas": 1146
+     },
+     "submeshes": 2,
+     "triangles": 4785,
+     "vertices": 8669
+    },
+    "far_south": {
+     "by_material": {
+      "far_field_buildings": 1503,
+      "forest_edge_mixed_far_atlas": 528
+     },
+     "submeshes": 2,
+     "triangles": 2031,
+     "vertices": 3721
+    },
+    "far_west": {
+     "by_material": {
+      "far_field_buildings": 1271,
+      "forest_edge_mixed_far_atlas": 852
+     },
+     "submeshes": 2,
+     "triangles": 2123,
+     "vertices": 3675
+    }
+   },
+   "sha256": "e32c7d59c5523dd80c0e600efdcab69f26be21858de35984fe87d928fcee0651",
+   "skyline": {
+    "landmark_stack_proxies": [],
+    "min_building_h_m": 24.0,
+    "min_chimney_h_m": 40.0,
+    "node": "far_skyline",
+    "submeshes": 0,
+    "triangles": 0
+   },
+   "total_triangles": 11414,
+   "total_vertices": 19784
+  }
+ },
  "generator": "world-c/1",
  "gltf_axes": "glTF(x,y,z) = (-E, U, N); Unity import (x negated) -> (E, U, N)",
  "instances": "Data/raw/derived/<id>/world/instances_<ci>_<cj>.json: point instances {p: prototype, e, n, z, yaw [, sz scale z][, h/v/lean for trees]} of art-source/world/props/street_props.glb and art-source/world/vegetation/trees.glb (+ trees_lod2.glb impostors)",
