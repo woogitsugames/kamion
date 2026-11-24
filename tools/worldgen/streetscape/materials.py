@@ -491,12 +491,39 @@ M = {
     # scaled by set_metal); mesh UV0 = metres round the figure / up it (knyszyn_king_0325.build).
     # r3 (Unity High / clear, figure in the shade of the park limes): at metal 0.85 the bronze was a blue-black mirror of
     # the sky with white chains; an old outdoor bronze is mostly oxide - lower metal share, lighter base.
-    "monument_bronze": {"color": [0.160, 0.145, 0.125], "rough": 0.48, "metal": 0.45,
-                        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.45},
-    "monument_bronze_patina": {"color": [0.105, 0.120, 0.100], "rough": 0.78, "metal": 0.15,
-                               "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.15},
-    "monument_bronze_rubbed": {"color": [0.250, 0.195, 0.125], "rough": 0.40, "metal": 0.55,
-                               "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.55},
+    # ADR 0331 ("Brąz i patyna"): the ADR 0325 r3 bronze ([0.16, 0.145, 0.125], metal 0.45) rendered nearly uniform
+    # charcoal-black under the park limes: linear F0 was too dark and neutral, so cool sky ambient washed out the warm
+    # bronze hue. Real aged outdoor cast bronze has warm olive-brown metallic reflectance (high metal, medium smoothness),
+    # brighter warm rubbed bronze on convexities (nose, forehead, beard, crown rims, fold ridges) and dark matte
+    # greenish copper-carbonate/sulphate patina in cavities and drips under the ruff (COLOR_0 -> _BRONZE_PATINA).
+    # All values WORKING_VALUE calibrated visually against Commons cs20127375 / cs7518515.
+    "monument_bronze": {
+        "color": [0.38, 0.28, 0.145], "rough": 0.48, "metal": 0.78,
+        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.78, "set_smooth": 0.90,
+        "bronze_patina": {
+            "patina_color": [0.065, 0.130, 0.088], "patina_strength": 0.88,
+            "rubbed_color": [0.66, 0.46, 0.20], "rubbed_strength": 0.85,
+            "patina_smooth": 0.18, "rubbed_smooth": 0.62, "rubbed_metal": 0.88, "ao_strength": 0.65,
+        },
+    },
+    "monument_bronze_patina": {
+        "color": [0.26, 0.22, 0.135], "rough": 0.65, "metal": 0.48,
+        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.48, "set_smooth": 0.68,
+        "bronze_patina": {
+            "patina_color": [0.060, 0.135, 0.090], "patina_strength": 0.92,
+            "rubbed_color": [0.56, 0.40, 0.18], "rubbed_strength": 0.65,
+            "patina_smooth": 0.15, "rubbed_smooth": 0.52, "rubbed_metal": 0.78, "ao_strength": 0.70,
+        },
+    },
+    "monument_bronze_rubbed": {
+        "color": [0.48, 0.34, 0.16], "rough": 0.38, "metal": 0.86,
+        "texture_set": "bronze_cast_tint", "set_tile": True, "set_metal": 0.86, "set_smooth": 1.05,
+        "bronze_patina": {
+            "patina_color": [0.070, 0.130, 0.088], "patina_strength": 0.70,
+            "rubbed_color": [0.74, 0.54, 0.24], "rubbed_strength": 0.90,
+            "patina_smooth": 0.20, "rubbed_smooth": 0.68, "rubbed_metal": 0.92, "ao_strength": 0.60,
+        },
+    },
     "monument_granite": {"color": [0.215, 0.215, 0.22], "rough": 0.38, "texture_set": "granite_honed_tint",
                          "set_tile": True, "splash_h": 0.25},
     # ADR 0325: stone setts of Plac Czarnieckiego in Tykocin (art-source/world/materials/_src/sets_plaza.py). The lattice
