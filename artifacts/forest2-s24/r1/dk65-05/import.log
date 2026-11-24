@@ -1,0 +1,146 @@
+  got art-source\world\cc0\_raw\cobblestone_03\cobblestone_03_diff_2k.jpg 3931466
+  got art-source\world\cc0\_raw\cobblestone_03\cobblestone_03_nor_gl_2k.jpg 4729066
+  got art-source\world\cc0\_raw\cobblestone_03\cobblestone_03_rough_2k.jpg 1718970
+  got art-source\world\cc0\_raw\cobblestone_03\cobblestone_03_ao_2k.jpg 3198685
+  got art-source\world\cc0\_raw\cobblestone_03\cobblestone_03_disp_2k.jpg 1624259
+  got art-source\world\cc0\_raw\cobblestone_floor_08\cobblestone_floor_08_diff_2k.jpg 2289909
+  got art-source\world\cc0\_raw\cobblestone_floor_08\cobblestone_floor_08_nor_gl_2k.jpg 3948187
+  got art-source\world\cc0\_raw\cobblestone_floor_08\cobblestone_floor_08_rough_2k.jpg 1657928
+  got art-source\world\cc0\_raw\cobblestone_floor_08\cobblestone_floor_08_ao_2k.jpg 947118
+  got art-source\world\cc0\_raw\cobblestone_floor_08\cobblestone_floor_08_disp_2k.jpg 537774
+16 assets, 80 files, 0 problems
+PBR Medium: 237 produced files, 237 missing, 0 older than _src, 0 sets not built; 2 files skipped (not produced by build_all with current inputs: asphalt_detail_photo)
+  missing: asphalt_cracks_layer/Medium/T_asphalt_cracks_layer_Mask.png
+  missing: asphalt_cracks_layer/Medium/T_asphalt_cracks_layer_Normal.png
+  missing: asphalt_patch/Medium/T_asphalt_patch_BaseColor.png
+  missing: asphalt_patch/Medium/T_asphalt_patch_MaskMap.png
+  missing: asphalt_patch/Medium/T_asphalt_patch_Normal.png
+  missing: asphalt_patch/Medium/T_asphalt_patch_Var.png
+  missing: asphalt_sma_fresh/Medium/T_asphalt_sma_fresh_BaseColor.png
+  missing: asphalt_sma_fresh/Medium/T_asphalt_sma_fresh_MaskMap.png
+  missing: asphalt_sma_fresh/Medium/T_asphalt_sma_fresh_Normal.png
+  missing: asphalt_sma_fresh/Medium/T_asphalt_sma_fresh_Var.png
+PBR sets stale for Medium - running art-source/world/materials/_src/build_all.py
+set asphalt_sma_fresh
+  43.4 s
+set asphalt_worn
+  17.2 s
+set asphalt_patch
+  41.8 s
+set concrete_cast_5m_joints
+  65.6 s
+set concrete_slab_3x1.5
+  46.5 s
+set kerb_concrete_1m
+  26.9 s
+set behaton_i_grey
+  58.4 s
+set paving_20x10_grey
+  40.9 s
+set grass_verge
+  43.4 s
+set gravel_compacted
+  41.5 s
+set oil_stain_alpha
+  15.7 s
+set viaduct_concrete
+  58.1 s
+set fire_station
+  51.7 s
+facade set sandwich_ribbed
+  10.6 s
+facade set sandwich_smooth
+  1.7 s
+facade set cladding_vertical
+  1.6 s
+facade set trapezoid_sheet
+  20.0 s
+facade set concrete_precast
+  26.8 s
+facade set sectional_door
+  3.6 s
+facade set plaster
+  6.5 s
+facade set large_panel_joints
+  34.7 s
+facade set brick
+  25.6 s
+facade set concrete_blocks_split
+  1.6 s
+facade set concrete_panels_wall
+  3.3 s
+facade set retaining_wall_cast
+  36.8 s
+facade set roof_metal_tile
+  0.9 s
+facade set curtain_folds
+  7.7 s
+facade set container_corrugation
+  2.9 s
+facade set barrier_galv
+  0.6 s
+facade set noise_cassette
+  4.0 s
+facade set concrete_fence_panel
+  2.1 s
+facade set hedge_foliage
+  0.7 s
+facade set soil_bed
+  0.7 s
+facade set car_grime_clean
+  1.9 s
+facade set car_grime
+  1.7 s
+facade set box_panel
+  1.5 s
+facade set log_whitewash
+  3.1 s
+facade set fieldstone
+  1.1 s
+facade set wood_shingles
+  4.1 s
+facade set boards_painted
+  7.0 s
+facade set roof_tiles
+  8.7 s
+facade set roof_tiles_old
+  8.3 s
+facade set roof_karpiowka
+  7.3 s
+facade set roof_zakladkowa
+  6.1 s
+building set facade_atlas
+  37.4 s
+building set facade_far
+  12.5 s
+building set fence_concrete
+  26.9 s
+building set sett_lattice_tykocin
+  23.4 s
+building set sett_rows_tint
+  4.9 s
+building set granite_honed_tint
+  4.0 s
+building set bronze_cast_tint
+  5.6 s
+scan-only set sidewalk_slab_35
+scan-only set sett_granite
+scan-only set cobble_fieldstone
+scan-only set asphalt_tint
+scan-only set paving_20x10_tint
+scan-only set wood_siding
+scan-only set bark_pine
+layer asphalt_cracks_layer
+layer macro_variation
+layer parapet_runoff
+layer asphalt_detail_photo
+  SKIP asphalt_detail_photo: source photo not found (C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\Data\photos\nowe\Worn_cracked_asphalt_pavement.jpg); pass --photo
+wrote C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\art-source\world\materials\materials_spec.json total 1226 s
+[cab-lod0] OK C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\art-source\truck\interior\export\SM_CabInterior_LOD0.fbx
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\logs\import-region-dk65-05-20261124-220333.log -buildTarget Android -quit -executeMethod Game.World.Import.RegionImporter.ImportBatch -region dk65-05 -tiers Low,High -materialTier Medium
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 24988)
+IMPORT_RESULT: OK region=dk65-05 chunks=64 corridor=32 tiers=Low+High
+WORLD_MEMORY: tier=Low render_meshes=47.7 MB instances=17.4 MB collision_src=13.0 MB total=78.2 MB [terrain 28,3, road 5,3, markings 0,9, plot_ground 2,1, buildings 4,4, plots 5,3, wires 0,3, paved 0,1, furniture 0,2, bridge 0,1, far_field 0,8]
+WORLD_MEMORY: tier=High render_meshes=155.4 MB instances=17.4 MB collision_src=13.0 MB total=185.9 MB [terrain 119,5, road 5,3, markings 0,9, plot_ground 2,1, buildings 13,1, plots 6,6, wires 0,3, paved 0,1, furniture 0,2, banks 1,2, bridge 0,1, far_field 6,0]
+WORLD_TERRAIN_BAND: fine fraction Low 30 % High 38 %
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest2-s24\artifacts\logs\import-region-dk65-05-20261124-220333.log

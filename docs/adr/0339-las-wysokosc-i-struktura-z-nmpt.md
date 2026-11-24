@@ -214,14 +214,29 @@ lipy i 1,85 × od igieł sosny (zieleń liniowo 0,120 / 0,083 / 0,065, średnia 
 - **Poza zakresem tej rundy:** pas lasu w tle dali (`far_field`, pierścień 1–4 km poza kaflem, ADR 0330) — nie ma tam
   modelu koron; bez zmian. Ściana HLOD nadal korzysta z tego samego wypieku obrazu (ciemne, brązowawe korony sosny).
 
-### Zmierzone (prototyp, runda r1 tej gałęzi; `artifacts/forest2-s24/numbers.txt`)
-„Przed” = runda 1 jak scalona (QA i rendery r5 poprzednika z 2026-11-24, `artifacts/forest-height-s24/r5-after*`).
+### Zmierzone (prototyp, build końcowy r2 tej gałęzi; `artifacts/forest2-s24/numbers.txt`)
+„Przed” = runda 1 jak scalona (QA i rendery r5 poprzednika z 2026-11-24, `artifacts/forest-height-s24/r5-after*` —
+main sprzed kilku późniejszych scaleń, więc różnice po kamerach nie pochodzą wyłącznie z tej rundy).
 
-| Kafel | instancje roślin | brzoza + brzoza młoda | sosna + świerk + sosna młoda | HLOD lasu, trójkąty | cięcia skali | najgorsza klatka High (szac. generatora) | najgorsza klatka Low |
-|---|---|---|---|---|---|---|---|
-| `dk65-05` | 101 899 → 101 899 | 14 395 → 9 963 (−31 %) | 44 134 → 49 896 | 82 757 → 82 919 (+0,2 %) | 515 | 1 525 548 → 1 525 761 (+213) | 467 417 → 467 651 (+234) |
-| `dk65-04` | 14 880 → 14 880 | 2 772 → 2 540 | 4 003 → 4 347 | 11 650 → 11 681 (+0,3 %) | 30 | 1 331 698 → 1 332 394 (+696) | 460 228 → 459 471 (−757) |
-| `dw671-tykocin-03` | 13 201 → 13 201 | 3 885 → 3 885 | 705 → 706 | 11 272 → 11 272 | 114 | 1 319 129 → 1 318 800 (−329) | 398 470 → 398 357 (−113) |
+| Kafel | instancje roślin | brzoza + brzoza młoda | sosna + świerk + sosna młoda | HLOD lasu, trójkąty | wys. okapu p10 / p50 / p90 / max [m] | cięcia skali | najgorsza klatka High (szac. generatora) | najgorsza klatka Low |
+|---|---|---|---|---|---|---|---|---|
+| `dk65-05` | 101 899 → 101 899 | 14 395 → 9 963 (−31 %) | 44 134 → 49 896 | 82 757 → 82 807 (+0,1 %) | 13,2 / 21,8 / 26,8 / 35,1 → 13,2 / 21,1 / 26,4 / 30,9 | 491 z 54 102 | 1 525 548 → 1 525 782 (+234) | 467 417 → 467 612 (+195) |
+| `dk65-04` | 14 880 → 14 880 | 2 772 → 2 540 | 4 003 → 4 347 | 11 650 → 11 696 (+0,4 %) | 10,0 / 19,1 / 26,1 / 29,6 → 10,1 / 18,6 / 25,8 / 29,4 | 22 z 4 424 | 1 331 698 → 1 332 398 (+700) | 460 228 → 459 471 (−757) |
+| `dw671-tykocin-03` | 13 201 → 13 201 | 3 885 → 3 885 | 705 → 706 | 11 272 → 11 273 | 13,0 / 19,2 / 23,5 / 33,2 → 12,7 / 18,4 / 21,5 / 24,0 | 81 z 4 822 | 1 319 129 → 1 318 825 (−304) | 398 470 → 398 358 (−112) |
 
-Liczba instancji, komórek HLOD i draw calli bez zmian; trójkąty HLOD + 0–0,3 % (inne trójkąty czaszy odpadają na
-teście nachylenia). Kamery lasu w edytorze: patrz `numbers.txt`.
+- Liczba instancji i komórek HLOD bez zmian; trójkąty HLOD + 0,0–0,4 % (inne trójkąty czaszy odpadają na teście
+  nachylenia); najgorsze klatki ± 0,05 %. Kamery lasu w edytorze (High, 12 kamer): trójkąty −0,1 … +0,1 %, draws 0 … −3.
+- Czysta ablacja masy trójkątów drzew (ten sam kod, `KAMION_FOREST_CHM_R2=0` → runda 2, przebieg na sucho bez dróg,
+  `tri_mass.json`, stan r1 gałęzi): `dk65-05` suma LOD0 wszystkich roślin lasu −3,4 %, suma LOD1 **+3,7 %** (LOD1 sosny
+  ma 838–1 408 trójkątów, brzozy 690–744 — zamiana brzoza → sosna kosztuje w średniej odległości); `dk65-04` −1,4 % /
+  +1,7 %; `dw671-tykocin-03` 0 / −0,1 %. Stąd w szacunku generatora pojedyncze kamery z góry w `dk65-05` do +14 850
+  trójkątów High (`top_seam_north`), przy najgorszej klatce bez zmian.
+- Testy: `tests/gis/test_forest_chm_0339.py` 19/19 (6 nowych: udział brzozy we wnętrzu boru, granica skali, linia z
+  komórki + ton, okrajek, przełącznik ablacji; 2 poprawione pod rundę 2); zestaw lasu + budżet (`test_forest_0187`,
+  `test_world_v31/v34`, `test_house_greenery_0163`, `test_budget_0221`, `test_trees_0308`, `test_streetscape`,
+  `test_dense_lod_0282`) 195/195 na kodzie końcowym (`pytest-forest-r2.log`). Pełne `pytest tests/gis` (65 min pod
+  slotem heavy) nie było uruchamiane w tej rundzie.
+
+### Ocena wizualna rundy 2
+Pary przed (runda 1) nad po: `artifacts/forest2-s24/pairs-r2/` (24; pierwszy build: `pairs-r1/`), przekrój HLOD
+`hlod_profile_*.png`. KRYTYK_R2
