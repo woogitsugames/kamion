@@ -37,3 +37,8 @@
 ## patches2-s24 (ADR 0335)
 - r0: decals.py koduje rodzaj lat w UV1.y (1 frez, 2 wykop, 3 na goraco, 4 koleina), WorldPBR _DECAL_PATCH maski wg rodzaju, ton asfaltu 90/23 m, przerywany slad oleju, przebarwienia krawedzi.
 - NASTEPNY KROK: pytest tests/gis (decals/budget), przebudowa dw671-tykocin-* i bialystok-industrial-c, visual-qa.
+- r1-r8 (13:00): ADR 0335 gotowy (docs/adr/0335-*.md). Kod: tools/worldgen/roads/decals.py (rodzaje lat, patch_age, fits_lane, tylko road_asphalt, bez nakladania), WorldPBR.shader (_DECAL_PATCH 4 rodzaje + RoundedInset, _ROADWEAR: ton 90/23/7 m, slady kol x1.35, olej, piasek). Testy: tests/gis/test_patch_kinds_0335.py (6). Budzet stretch_04 C: 1 996 244 -> 1 995 509.
+- Przebudowane i skomitowane: bialystok-industrial-c, dw671-tykocin-01. Reszta regionow do przebudowy przez lidera po scaleniu.
+- visual-critic: runda 4 PASS z 3 uwagami P2 (zalewka: zmiennosc szerokosci, znakowanie nad lata wykopu, koleiny w oddali).
+- Dowody: C:\Users\matma\Documents\Claude\kamion\artifacts\patches2-s24\{sheets,frames,scripts,refs}
+- NASTEPNY KROK: pelny pytest (artifacts/patches2-s24/logs/pytest-full.log), potem scalenie przez lidera i przebudowa pozostalych regionow.
