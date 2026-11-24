@@ -41,3 +41,10 @@ NASTĘPNY KROK: pwsh artifacts/pacing-s24/run-experiments.ps1 -Only E6  (po koń
   (inne procesy 10–45 %), więc zakłócone. E5 VSync 1: narastające zacięcia 157→791 ms w pierwszych 35 s (przyczyna
   UNVERIFIED), domyślnie gra ma VSync 0 — nie zmieniać. Atrybucja: frames.csv przesuwane o windowStartRealtime_s.
 - Runda 2 w toku (E1 powtórka, E4 powtórka, E6 drugi player na GPU) -> artifacts/pacing-s24/experiments2.log.
+- Runda 2 (inne agenty aktywne: Unity 6912 + 2x python worldgen, inne procesy ~25–30 % CPU):
+  E1 bez ramki: 3 kl. > 40 ms (p99 17,0); E4 OKNO 1600x900: 73 kl. > 40 ms, p95 28 / p99 46 ms, CPU główny p95 25 ms (!).
+  → okno + obciążenie = katastrofa, bez ramki + to samo obciążenie = prawie czysto. Przejazdy #5/#6 szły przez
+  build-windows.ps1 -Run = OKNO 1600x900 bez fokusu. Hipoteza: Windows 11 power throttling (EcoQoS) / brak boostu dla
+  zasłoniętego okna procesu w tle. Test: scripts/set-power-throttling.ps1 (SetProcessInformation ProcessPowerThrottling
+  wyłączone z zewnątrz, bez buildu) -> E7/E9 (okno + opt-out) vs E8 (okno domyślnie), przeplatane.
+NASTĘPNY KROK: pwsh artifacts/pacing-s24/run-experiments.ps1 -Only E7,E8,E9 (slot heavy)
