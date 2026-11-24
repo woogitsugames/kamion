@@ -629,10 +629,11 @@ Shader "Kamion/World PBR"
                         half mid = (half)(ValueNoise12(pt / 7.0 + 83.0) - 0.5);       // 7 m: re-surfaced / patched-over stretches
                         albedo *= lerp(half3(1, 1, 1), (1.0 + 1.4 * (tv - 0.5) + 0.3 * mid) * tint, 1.0 - paintFresh);
                     }
+                    float rwFpx = max(length(fwidth(pw.xz)), 1e-4);
+                    float rwFwx = fwidth(w.x);
                     if (w.x > -0.5)        // (-1, 5) = no road data (junction patches, kerbs)
                     {
                         float rwDist = length(GetCameraPositionWS() - pw);
-                        float rwFpx = max(length(fwidth(pw.xz)), 1e-4);
                         // ADR 0335 P2: perspective foreshortening + loss of close-range normal/detail relief made distant
                         // wheel paths read darker than near the camera. Pre-filter the analytical stripe and high-freq
                         // noise by pixel footprint, and attenuate contrast gently with distance (1.0 <= 25 m -> 0.50 >= 130 m).
@@ -640,7 +641,7 @@ Shader "Kamion/World PBR"
                         half rwDistAtten = (half)(1.0 - 0.50 * smoothstep(25.0, 130.0, rwDist));
                         // wheel paths at ~0.25 / 0.75 of a lane: darker binder-rich, smoother
                         float lc = frac(w.x);
-                        half wpMip = (half)saturate(0.11 / max(fwidth(w.x), 0.11));
+                        half wpMip = (half)saturate(0.11 / max(rwFwx, 0.11));
                         half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11) * wpMip;
                         wp *= lerp(1.0h, (half)KAMION_PLATE_WHEEL_KEEP, plate);
                         // build #3 P3 (DK65 / Knyszyn roundabout mouths): the wheel paths ran as continuous dark stripes of
