@@ -82,7 +82,15 @@ CHM_TRUST_M = 3.0
 # broadleaf stand at ~1.5 x the height of its trees - tiles with a height model no longer have that step.
 CHM_WALL_TOP_FRAC = {"conifer": 0.888, "mixed": 0.833, "broadleaf": 0.766}
 CHM_BACK_VAR = (0.97, 1.06)   # second wall: the measured tops 6 m further in x this (class rule: BACK_H x the front)
-CHM_CANOPY_K = 0.93        # canopy sheet under the crown tops (the sheet is the closed crown layer, not the tips)
+CHM_CANOPY_K = 0.80        # canopy sheet under the crown tops: it only closes the stand from above, the ribs carry the tops
+# Ribs: with measured heights a stand is no longer level - taller parts stand behind lower ones, and from the road the
+# canopy sheet of the taller part showed over the front wall as a smooth green hill (render r1, dk65-04
+# fh_cab_approach). Alpha-tested walls of the same edge picture cross the stand every RIB_M in both directions (lines
+# of the absolute metre grid, so they continue from cell to cell), tops at the measured crowns: every height step
+# of the stand has a ragged crown line. Same primitive and material as the walls (no extra draw).
+RIB_M = 16.0
+RIB_SEG_M = 8.0
+RIB_MIN_LEN_M = 8.0
 
 
 def _vnoise2(x, y, period, salt=""):
@@ -491,6 +499,39 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                         else:
                             Tw += [[b0, t1, b1], [b0, t0, t1]]
                 i = j + 1
+        if chm is not None:                 # ADR 0339: ribs (see RIB_M)
+            ce0, cn0, ce1, cn1 = cb.bounds
+            vm = edge_v_main(edge_info)
+            for axis in (0, 1):
+                lo, hi = (ce0, ce1) if axis == 0 else (cn0, cn1)
+                for c0 in np.arange(math.floor(lo / RIB_M) * RIB_M + RIB_M, hi - 1e-6, RIB_M):
+                    if c0 - lo < 1e-6:
+                        continue                          # the cell border has its own (inner) wall
+                    ln = (shapely.LineString([(c0, cn0), (c0, cn1)]) if axis == 0
+                          else shapely.LineString([(ce0, c0), (ce1, c0)]))
+                    inter = shapely.intersection(piece, ln)
+                    for seg in getattr(inter, "geoms", [inter]):
+                        if seg.geom_type != "LineString" or seg.length < RIB_MIN_LEN_M:
+                            continue
+                        k = max(1, int(math.ceil(seg.length / RIB_SEG_M)))
+                        sc = np.asarray(seg.coords)
+                        rp = sc[0][None, :] + (sc[-1] - sc[0])[None, :] * (np.arange(k + 1) / k)[:, None]
+                        hr_ = np.array([wall_h(q_, edge_info, mix, measured_only=True) or 0.0 for q_ in rp])
+                        if hr_.max() <= 0.0:
+                            continue
+                        hr_ *= np.array([CHM_TOP_VAR[0] + (CHM_TOP_VAR[1] - CHM_TOP_VAR[0])
+                                         * _vnoise2(q_[0], q_[1], TOP_NOISE_M, "r") for q_ in rp])
+                        hr_ = np.maximum(hr_, 2.0)        # no crowns measured at this point: the rib runs out low
+                        zr = zground(rp[:, 0], rp[:, 1]) + edge_info["z0_m"]
+                        along = rp[:, 1 - axis]
+                        us = along / Wt + (int(hashlib.sha1(f"rib:{axis}:{c0:.0f}".encode()).hexdigest()[:6], 16) % 997) / 997.0
+                        base = len(Vw)
+                        Vw += [[q_[0], q_[1], z_] for q_, z_ in zip(rp, zr)] + [[q_[0], q_[1], z_ + h_] for q_, z_, h_ in zip(rp, zr, hr_)]
+                        UVw += [[u, 0.0] for u in us] + [[u, vm] for u in us]
+                        Nw += [[0.0, 0.0, 1.0]] * (2 * (k + 1))
+                        for m_ in range(k):
+                            b0, b1, t0, t1 = base + m_, base + m_ + 1, base + k + 1 + m_, base + k + 2 + m_
+                            Tw += [[b0, b1, t1], [b0, t1, t0]]
         if Tw:
             prims.append({"V": np.array(Vw), "T": np.array(Tw), "UV": np.array(UVw), "N": np.array(Nw),
                           "mat": f"forest_edge_{mix}"})
