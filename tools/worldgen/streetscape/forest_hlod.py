@@ -101,6 +101,7 @@ RIB_WAVE_AMP_M = 4.5
 # trees, a thicket = small ones); (3) every wall top of one stand ended in the same comb of spruce tips: the top
 # of every wall point also moves by +- CHM_TOP_JITTER (position hash).
 CHM_SHEET_MAX_SLOPE = 0.62     # tan of the steepest canopy triangle kept (~32 deg)
+CHM_SHEET_INSET_M = 1.5        # canopy triangles touching the real stand outline are left out
 CHM_U_SCALE = (0.45, 1.7)      # limits of the picture scale along the wall
 CHM_TOP_JITTER = 0.06
 
@@ -388,6 +389,9 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
             tv = V[Tc]
             nrm_t = np.cross(tv[:, 1] - tv[:, 0], tv[:, 2] - tv[:, 0])
             flat = np.hypot(nrm_t[:, 0], nrm_t[:, 1]) <= CHM_SHEET_MAX_SLOPE * np.abs(nrm_t[:, 2])
+            if not outer_b.is_empty:        # r3 (tykocin-03 fh_side_b): the sheet ended ON the stand outline and its
+                on_edge = shapely.distance(shapely.points(XY), outer_b) < CHM_SHEET_INSET_M     # last triangles stuck
+                flat &= ~on_edge[Tc].any(axis=1)                    # out past the lower wall crowns as flat blades
             if flat.any() and not flat.all():
                 Tc = Tc[flat]
                 used, new = np.unique(Tc, return_inverse=True)
