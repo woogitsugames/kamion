@@ -112,11 +112,11 @@ void KFLook(int u, out half4 alb, out half b)
         case KF_CATCH:         alb = half4(0.085h, 0.150h, 0.034h, 0.80h); break;              // catch crop on stubble
         case KF_LEY:           alb = half4(0.068h, 0.132h, 0.030h, 0.70h); break;              // grass / clover ley
         case KF_FALLOW:        alb = half4(0.120h, 0.128h, 0.050h, 0.80h); b = 0.35h; break;   // fallow, weeds and seedlings
-        case KF_REGROWTH:      alb = half4(0.070h, 0.140h, 0.030h, 0.65h); break;              // meadow regrowth after a cut
-        case KF_PASTURE:       alb = half4(0.060h, 0.108h, 0.027h, 0.70h); break;              // pasture, grazed
-        case KF_MOWN:          alb = half4(0.125h, 0.160h, 0.050h, 0.80h); b = 0.25h; break;   // freshly mown, windrows
-        case KF_HAY:           alb = half4(0.190h, 0.178h, 0.078h, 0.85h); b = 0.35h; break;   // hay drying on the ground
-        default:               alb = half4(0.112h, 0.126h, 0.052h, 0.75h); b = 0.30h; break;   // uncut, seed heads
+        case KF_REGROWTH:      alb = half4(0.068h, 0.148h, 0.030h, 0.72h); break;              // meadow regrowth after a cut
+        case KF_PASTURE:       alb = half4(0.054h, 0.098h, 0.025h, 0.78h); break;              // pasture, grazed
+        case KF_MOWN:          alb = half4(0.150h, 0.172h, 0.060h, 0.86h); b = 0.25h; break;   // freshly mown, windrows
+        case KF_HAY:           alb = half4(0.225h, 0.195h, 0.085h, 0.90h); b = 0.35h; break;   // hay drying on the ground
+        default:               alb = half4(0.128h, 0.124h, 0.060h, 0.84h); b = 0.30h; break;   // uncut, seed heads
     }
 }
 

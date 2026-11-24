@@ -704,15 +704,18 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
 
 # ADR 0334: plants of the field mosaic. WORKING_VALUE (orthophoto of Knyszyn / Tykocin read by eye: scrub stands on
 # some baulks in runs of a few dozen metres, most baulks are bare grass; a lone pear / willow / birch every few hundred
-# metres; fallow strips green over with birch / pine seedlings).
+# metres; fallow strips green over with birch / pine seedlings in patches). Review fields-s24 r1: evenly scattered
+# lone saplings read as a sprinkle, so runs are rarer and denser, lone plants rarer, samosiew clustered.
 BAULK_CELL_M = 7.0              # one candidate per this length of a strip edge
 BAULK_SEG_M = 50.0              # scrub runs: a segment of a baulk is either a run or bare
-BAULK_SEG_SHARE = 0.12          # share of segments that carry a run of scrub
-BAULK_RUN_KEEP = 0.50           # candidates kept inside a run
-BAULK_LONE_KEEP = 0.015         # candidates kept on bare segments (lone shrub / tree)
-BAULK_SPECIES = (("shrub", 0.70), ("birchyoung", 0.17), ("pineyoung", 0.06), ("birch", 0.04), ("alder", 0.03))
+BAULK_SEG_SHARE = 0.09          # share of segments that carry a run of scrub
+BAULK_RUN_KEEP = 0.85           # candidates kept inside a run
+BAULK_LONE_KEEP = 0.004         # candidates kept on bare segments (lone shrub / tree)
+BAULK_SPECIES = (("shrub", 0.76), ("birchyoung", 0.12), ("pineyoung", 0.05), ("birch", 0.04), ("alder", 0.03))
 FALLOW_SPACING_M = 12.0
-FALLOW_KEEP = 0.10
+FALLOW_KEEP = 0.30
+FALLOW_PATCH_M = 36.0           # samosiew in patches (seed trees nearby, wet hollows), not an even scatter
+FALLOW_PATCH_SHARE = 0.25
 FALLOW_SPECIES = (("birchyoung", 0.45), ("pineyoung", 0.35), ("shrub", 0.20))
 FIELD_PLANT_ROAD_M = 8.0
 FIELD_PLANT_MIN_M2 = 20000.0     # strip farms only on a BDOT polygon >= 2 ha (small grass patches are not fields)
@@ -813,7 +816,8 @@ def field_plants(src, origin, hf, road_dist=None):
         L = field_layout(F[:, 0] + ox, F[:, 1] + oy)
         use = field_use(L, True)
         u = _u01(_h32(np.floor(F[:, 0] + ox), np.floor(F[:, 1] + oy), 969))
-        sel = (use == FIELD_USES.index("fallow")) & (u < FALLOW_KEEP) & (L["block_edge"] > 3.0)
+        patch = _u01(_h32(np.floor((F[:, 0] + ox) / FALLOW_PATCH_M), np.floor((F[:, 1] + oy) / FALLOW_PATCH_M), 979))
+        sel = (use == FIELD_USES.index("fallow")) & (u < FALLOW_KEEP) & (patch < FALLOW_PATCH_SHARE) & (L["block_edge"] > 3.0)
         sel &= np.minimum(L["across"], L["w"] - L["across"]) > 2.0
         Q = F[sel]
         ok = keep_ok(Q) & shapely.contains_xy(arable_area, Q[:, 0], Q[:, 1])
