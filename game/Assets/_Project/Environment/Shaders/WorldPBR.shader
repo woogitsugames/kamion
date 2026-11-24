@@ -283,6 +283,16 @@ Shader "Kamion/World PBR"
                             lerp(Hash12(i + float2(0, 1)), Hash12(i + float2(1, 1)), u.x), u.y);
             }
 
+            // Inward distance (m) to a rounded rectangle from the distances b = (to the x edges, to the y edges): the straight
+            // sides away from the corners, an arc of radius rc inside a corner box. (The older mask used
+            // min(b, rc - |max(rc - b, 0)|), which caps the interior at rc: fine for rc >= 6 cm with the 3-7 cm noise of
+            // that mask, but a hole-ridden patch for saw-cut corners of 2 cm - ADR 0335, render r5.)
+            float RoundedInset(float2 b, float rc)
+            {
+                float2 d = max(rc - b, 0.0);
+                return (d.x > 0.0 && d.y > 0.0) ? rc - length(d) : min(b.x, b.y);
+            }
+
             // Tangent frame of a mesh UV set from screen derivatives (no tangents in the compact world meshes).
             void CotangentFrame(float3 N, float3 p, float2 uv, out float3 T, out float3 B)
             {
@@ -782,8 +792,7 @@ Shader "Kamion/World PBR"
                             float endD = borderM.x - 0.004 * (n3 - 0.5);
                             float latD = borderM.y - (0.03 + 0.09 * frac(seed * 3.71)) * (n2 * 0.7 + n1 * 0.5);
                             float rcn = min((0.14 + 0.40 * frac(seed * 7.13)) * (0.3 + 1.4 * n1), 0.4 * mn);
-                            float cornD = rcn - length(max(rcn - float2(endD, latD), 0.0));
-                            edgeM = min(min(endD, latD), cornD) - 0.006 * n3;
+                            edgeM = RoundedInset(float2(endD, latD), rcn) - 0.006 * n3;
                             fth = 0.012;
                             hasSeal = 1.0;
                             sw = _PatchSeam.x * (0.45 + 0.7 * n2) * smoothstep(0.92, 0.78, n1) * smoothstep(0.0, 0.01, endD + 0.002);
@@ -796,7 +805,7 @@ Shader "Kamion/World PBR"
                             // width varying along the perimeter, rare gaps. WORKING_VALUE.
                             // half of the trenches are saw-cut (corner radius 2-6 cm), half dug with a bucket (12-40 cm)
                             float rc = min(frac(seed * 3.3) < 0.5 ? 0.02 + 0.04 * frac(seed * 7.13) : 0.12 + 0.28 * frac(seed * 7.13), 0.45 * mn);
-                            edgeM = min(min(borderM.x, borderM.y), rc - length(max(rc - borderM, 0.0)));
+                            edgeM = RoundedInset(borderM, rc);
                             edgeM -= 0.028 * (n1 * 0.6 + n2 * 0.4) + 0.006 * n3;      // 2-4 cm unevenness over 0.3-1 m
                             fth = 0.012;
                             hasSeal = 1.0;
