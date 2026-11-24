@@ -18,6 +18,16 @@
 // Drive review s24 #11: the analytic unwiped regions read as upright smoke columns from the driver's eye.
 // Keep this stylised road film for exterior views only (including the far pane seen through the cab).
 // Cab views retain absorption, Fresnel, interior reflections and optional authored grime, without the sweep-shaped veil.
+// ADR 0341 (windscreen-s24, critic s24 build5 #6 "sterile glass"): two cheap layers on the windscreen, both faces.
+// - _GrimeMask (tools/rendering/windscreen_grime.py, glass object xy through _GrimeRect): R dust that scatters (edge
+//   accumulation, speckle where the blades do not reach, ragged sweep border), G worn-blade arcs inside the sweeps, B insect
+//   remains. High-frequency only (mm..cm, 5 % of the pane): no broad veil, the s24 #11 "smoke columns" stay gone. The
+//   dust and the arcs light up through the Henyey-Greenstein phase against the sun; in diffuse light they are faint.
+// - _CabReflection (tools/blender/truck/interior/bake_windscreen_reflection.py): the cab interior as albedo x AO seen
+//   from the driver's eye mirrored in the windscreen plane (equirect, cab frame). For a plane the reflected ray continues
+//   along E' -> P, so one texture lookup with R gives the dash image (exact for the driver's eye, centimetre parallax for
+//   other heads), relit here by the sky SH, the cab fill (_CabFill) and the sun on the dash. Full path only; the Low /
+//   Medium fast path keeps the analytic interior (one sample less) and gets the dirt mask.
 Shader "Kamion/Truck Glass"
 {
     Properties
@@ -37,6 +47,11 @@ Shader "Kamion/Truck Glass"
         _WindscreenMinZ ("Windscreen: object z above this (front face of the cab)", Float) = 0.95
         _ExteriorTransmission ("Seen from outside: share of the cab behind the pane that reaches the eye (0.7 x cab occlusion)", Range(0, 1)) = 0.42
         _SeeThroughClutter ("Seen from outside: share of the far pane (path through the cab) not blocked by seats / curtains (ADR 0059)", Range(0, 1)) = 0.35
+        [NoScaleOffset] _GrimeMask ("ADR 0341 windscreen dirt (R dust, G wiper arcs, B insects), glass object xy", 2D) = "black" {}
+        _GrimeRect ("ADR 0341 dirt mask rectangle: object x0, y0, 1 / width, 1 / height", Vector) = (-1.3, 0.75, 0.384615, 0.769231)
+        _GrimeLayers ("ADR 0341 dust, arcs, insects strength (0 = off)", Vector) = (1, 1, 1, 0)
+        [NoScaleOffset] _CabReflection ("ADR 0341 cab interior seen in the windscreen (equirect, cab frame, albedo x AO)", 2D) = "black" {}
+        _CabReflectionGain ("ADR 0341 cab reflection gain (0 = analytic interior)", Range(0, 2)) = 0
     }
     SubShader
     {
@@ -63,6 +78,8 @@ Shader "Kamion/Truck Glass"
             #include "KamionVehicleEnv.hlsl"
             float _KamionGlassDebug;    // ADR 0106 diagnostics (rq_ab glassdbg rq_glassdbg 1): 1 = constant colour (raster + blend floor of the pane)
             float _KamionCamOutside;    // CabInteriorLighting: 1 = view camera outside the cab, 0 = cab view or no cab lighting
+            half4 _CabFill;             // CabInteriorLighting: rgb first-bounce fill per unit albedo (exposed), w sun transmittance
+            half _CabEnclosure;         // CabInteriorLighting: share of the open-sky SH the closed cab blocks
             float4 _KamionGrimeUp[4];   // vehicle frames (ContactShadowCaster): height above the wheel-contact plane
 
             CBUFFER_START(UnityPerMaterial)
@@ -70,8 +87,41 @@ Shader "Kamion/Truck Glass"
                 float4 _GrimeMap_ST;
                 float4 _CabCentreOS, _InteriorAlbedo, _WiperPivotA, _WiperPivotB, _WiperSweep;
                 float _Opacity, _Smoothness, _Grime, _UseVertexColor, _Wiper, _WindscreenMinZ, _ExteriorTransmission, _SeeThroughClutter;
+                float4 _GrimeRect, _GrimeLayers;
+                float _CabReflectionGain;
             CBUFFER_END
             TEXTURE2D(_GrimeMap); SAMPLER(sampler_GrimeMap);
+            TEXTURE2D(_GrimeMask); SAMPLER(sampler_GrimeMask);
+            TEXTURE2D(_CabReflection); SAMPLER(sampler_CabReflection);
+
+            // ADR 0341: dirt layers at this point of the pane (R dust, G arcs, B insects), scaled by _GrimeLayers.
+            half3 WindscreenDirt(float3 positionOS)
+            {
+                float2 uv = (positionOS.xy - _GrimeRect.xy) * _GrimeRect.zw;
+                return SAMPLE_TEXTURE2D(_GrimeMask, sampler_GrimeMask, uv).rgb * (half3)_GrimeLayers.xyz;
+            }
+
+            // ADR 0341: light the dirt adds (premultiplied) and the share of the transmitted scene it keeps.
+            // Dust: veiling glare through the film phase, faint grey in diffuse light. Arcs: glare only, narrower lobe (phase^2).
+            // Insects: dark, nearly opaque bodies (albedo ~0.08, translucent rims catch the sun a little).
+            void DirtShade(half3 d, half3 amb, half3 glare, half phase, out half3 add, out half keep)
+            {
+                add = d.r * (amb * 0.10 + glare * 0.30) + d.g * glare * phase * 0.12 + d.b * (amb * 0.04 + glare * 0.08);
+                keep = (1.0 - 0.08 * d.r) * (1.0 - 0.03 * d.g) * (1.0 - 0.65 * d.b);
+            }
+
+            // ADR 0341: cab interior reflected in the windscreen (inside face), relit for the current sky / sun.
+            half3 CabReflectionEnv(half3 R, Light L)
+            {
+                float3 r = normalize(TransformWorldToObjectDir(float3(R)));
+                float2 uv = float2(0.5 - atan2(r.z, r.x) * (0.5 * INV_PI), 0.5 + asin(clamp(r.y, -1.0, 1.0)) * INV_PI);
+                half3 a = SAMPLE_TEXTURE2D_LOD(_CabReflection, sampler_CabReflection, uv, 0).rgb;    // albedo x AO
+                half3 skyE = SampleSH(half3(0, 1, 0)) * (1.0 - _CabEnclosure);
+                // Sun through the windscreen onto the dash top: sun ahead of the cab and above the horizon, dash directions only.
+                float3 lo = TransformWorldToObjectDir(float3(L.direction));
+                half sunDash = saturate(lo.y) * saturate(lo.z * 2.0) * smoothstep(-0.05, -0.25, r.y) * (_CabFill.w > 0.0 ? _CabFill.w : 0.75);
+                return a * (skyE + _CabFill.rgb + L.color * sunDash) * _CabReflectionGain;
+            }
 
             struct Attributes { float4 positionOS : POSITION; float3 normalOS : NORMAL; half4 color : COLOR; float2 uv0 : TEXCOORD0; };
             struct Varyings
@@ -173,7 +223,8 @@ Shader "Kamion/Truck Glass"
                     film = (1.0h - wiped) * (0.35h + 0.65h * (1.0h - hh) * (1.0h - hh)) * (half)_Wiper * onScreen;
                 }
                 half grime = SAMPLE_TEXTURE2D(_GrimeMap, sampler_GrimeMap, i.uv).r * _Grime + film;
-                half pr = saturate(1.0 - _Smoothness + film * 0.25);
+                half3 dirt = WindscreenDirt(i.positionOS);
+                half pr = saturate(1.0 - _Smoothness + film * 0.25 + dirt.r * 0.2);
                 half3 R = reflect(-V, n);
                 uint slot = unity_RendererUserValue;
                 bool hasFrame = slot >= 1u && slot <= 4u;
@@ -195,9 +246,14 @@ Shader "Kamion/Truck Glass"
                 half glazing = hasFrame ? step(1.6, h) * step(h, 3.2) : 0.0;
                 trans *= lerp(1.0, saturate(_ExteriorTransmission), glazing * (1.0 - i.inside));
                 trans *= lerp(1.0, saturate(_SeeThroughClutter), glazing * i.inside * saturate(_KamionCamOutside));
+                half3 glare = L.color * saturate(dot(nOut, L.direction)) * phase;
+                half3 dirtAdd; half dirtKeep;
+                DirtShade(dirt, amb, glare, phase, dirtAdd, dirtKeep);    // ADR 0341
+                trans *= dirtKeep;
                 half3 body = i.tint * amb * (1.0 - tAbs) * 0.25 * (1.0 - i.inside)
-                           + (grime * amb + grime * L.color * saturate(dot(nOut, L.direction)) * phase) * 0.18;
+                           + (grime * amb + grime * glare) * 0.18 + dirtAdd;
                 half3 col = body + env * lerp(F, F1, i.inside) + L.color * spec * (1.0 - i.inside * 0.7);
+                [branch] if (_KamionGlassDebug == 3.0) return half4(dirt, 1);
                 // ADR 0115: premultiplied glass contributes only its coverage share of atmospheric in-scatter.
                 // The vertex already supplied exp(-tau); keep the fast path's transmittance and sampling policy.
                 half4 pane = half4(col, saturate(1.0 - trans));
@@ -244,14 +300,19 @@ Shader "Kamion/Truck Glass"
                 }
 
                 half grime = SAMPLE_TEXTURE2D(_GrimeMap, sampler_GrimeMap, i.uv).r * _Grime + film;
-                half pr = saturate(1.0 - _Smoothness + film * 0.25);
+                half3 dirt = WindscreenDirt(i.positionOS);
+                half pr = saturate(1.0 - _Smoothness + film * 0.25 + dirt.r * 0.2);
                 half3 R = reflect(-V, n);
                 // Height above the wheel-contact plane (vehicle frame of ContactShadowCaster; 2 m when the renderer has none).
                 uint slot = unity_RendererUserValue;
                 bool hasFrame = slot >= 1u && slot <= 4u;
                 float h = hasFrame ? dot(i.positionWS, _KamionGrimeUp[slot - 1u].xyz) + _KamionGrimeUp[slot - 1u].w : 2.0;
                 half3 env;
-                if (i.inside > 0.5)
+                if (i.inside > 0.5 && _CabReflectionGain > 0.0)
+                {
+                    env = CabReflectionEnv(R, L);    // ADR 0341: baked cab image (albedo x AO), relit
+                }
+                else if (i.inside > 0.5)
                 {
                     // Cab interior in the reflection: dash below (lit by the sky through the glass and by the sun on its
                     // top), headliner and back wall above (sky light only). Exposed units like the SH ambient.
@@ -302,8 +363,14 @@ Shader "Kamion/Truck Glass"
                 // phase (g 0.5, relative to isotropic, capped): bright veiling glare only against the sun, as in a real cab.
                 half cosScatter = dot(-L.direction, V);   // light travels along -L, leaves towards the eye along V
                 half phase = min(0.75 / pow(max(1.25 - cosScatter, 0.05), 1.5), 2.0);
+                half3 glare = L.color * saturate(dot(nOut, L.direction)) * phase;
+                half3 dirtAdd; half dirtKeep;
+                DirtShade(dirt, amb, glare, phase, dirtAdd, dirtKeep);    // ADR 0341
+                trans *= dirtKeep;
                 half3 body = i.tint * amb * (1.0 - tAbs) * 0.25 * (1.0 - i.inside)
-                           + (grime * amb + grime * L.color * saturate(dot(nOut, L.direction)) * phase) * 0.18;
+                           + (grime * amb + grime * glare) * 0.18 + dirtAdd;
+                [branch] if (_KamionGlassDebug == 2.0) return half4(i.inside > 0.5 ? env * 8.0 : half3(0, 0, 0), 1);
+                [branch] if (_KamionGlassDebug == 3.0) return half4(dirt, 1);
                 // From the cab only the first surface carries the dash reflection (no ghost from the outer face: docs/06,
                 // r4 E2 "no double reflection"); from outside both surfaces mirror the sky.
                 half3 col = body + env * lerp(F, F1, i.inside) + L.color * spec * (1.0 - i.inside * 0.7);

@@ -161,6 +161,9 @@ namespace Game.Rendering
             PsoWarmup.Init(arg);   // ADR 0113: PSO warm-up / trace, spike probe (player only)
             string ab = arg("rq_ab");
             Ab = string.IsNullOrEmpty(ab) ? null : ab.ToLowerInvariant();
+            // ADR 0341: rq_glassdbg alone (no rq_ab) sets the Kamion/Truck Glass debug level for the whole run (2 = cab
+            // reflection x8, 3 = windscreen dirt mask), e.g. visual-qa -Rq rq_glassdbg=3.
+            if (GlassDebug.HasValue && Ab == null) UnityEngine.Shader.SetGlobalFloat("_KamionGlassDebug", GlassDebug.Value);
             AbPeriod = F(arg("rq_ab_period"));
             Game.Core.MirrorOverrides.Cap = I(arg("rq_mirror_cap"));
             Game.Core.MirrorOverrides.LodScale = F(arg("rq_mirror_lod"));
