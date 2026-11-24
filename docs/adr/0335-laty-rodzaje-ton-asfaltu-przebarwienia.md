@@ -77,3 +77,47 @@ Wszystkie progi: WORKING_VALUE, oceniane wzrokowo wobec Commons DW671; brak dany
 - Region zbudowany starym kodem + nowy shader: łaty z `UV1.y < 1` dostają starą maskę (poprawnie), ale tracą dziury /
   zalewkę nowego rodzaju; efekt tonu / śladów kół / piasku działa na każdym regionie od razu.
 - Ślady kół x1,35 i ton +65 % zmieniają wygląd wszystkich dróg asfaltowych (nieoglądane poza DW671, Tykocin i kafel C).
+
+## Dopisek P2 (runda 4 krytyka, gałąź `neon-patches-p2-s24`)
+
+Rozwiązanie czterech uwag P2 z rundy 4 bez dodawania trójkątów (budżet `stretch_04` ≤ 2 000 000, ADR 0327):
+
+1. **Stała szerokość zalewki bitumicznej w metrach** (`WorldPBR.shader`, `_DECAL_PATCH`):
+   - Odległość prostopadła do krawędzi liczona z pełnego Jakobianu powierzchni (`sinTheta = length(cross(Eu0/lenEu, Ev0/lenEv))`,
+     `sizeM = float2(lenEu, lenEv) * (invAbs * max(sinTheta, 0.25))`), odpornego na ścinanie UV przy przycięciu do
+     krawężnika, łuki i obrót łaty oraz na przepełnienie fp32.
+   - Szerokość zalewki ograniczona do stałego pasma fizycznego `baseSw = _PatchSeam.x * (0.70 + 0.30 * n2)` (4,2–6,0 cm
+     przy `_PatchSeam.x = 0,06 m`, stosunek ≤ 1,43× zamiast 3–5×); przerwy wzdłuż obwodu sterują wyłącznie kryciem
+     (`sealMask`), nie zwężają szerokości.
+   - Usunięto mnożnik `endD * 0.5` w rodzaju 4 (`rut`), który podwajał szerokość zalewki na końcach pasa.
+2. **Znakowanie poziome na łatach (0 dodatkowych trójkątów)**:
+   - **Wykop (`PATCH_TRENCH`, 2) i na gorąco (`PATCH_HOT`, 3)** (`roads/decals.py`): podniesienie siatki na
+     `LIFT_PATCH_OVER_PAINT = 0.009 m` (+3 mm ponad `MARKING_LIFT = 0.006 m`), przy zachowaniu `LIFT_PATCH = 0.002 m`
+     dla `milled` (1), `rut` (4) i starych łat (0) oraz niezmienionego porządku kolejek (`marking_white` Geometry+10,
+     `ZWrite On` → `decal_patch` Geometry+12, alpha-blend, `ZWrite Off`). Dzięki temu łata wykopu / na gorąco przerywa
+     znakowanie (strzałki P-8, linie) dokładnie wzdłuż maski pikselowej i zalewki, bez nowych trójkątów.
+   - **Frezowanie + nakładka (`PATCH_MILLED`, 1)** (`streetscape/yard_wear.py: mark_milled_patch_paint`, `WorldPBR.shader`
+     `_DECAL_PAINT`): znakowanie nad łatą frezowaną dostaje pasmo odnowionej farby `UV1.y += 8` (`[8,9)` podłużne,
+     `[10,11)` poprzeczne; zgodne z kwantyzacją FP16 i wstecznie kompatybilne z nieprzebudowanymi kaflami oraz sentinelem
+     `(-1, 5)`). Krótkie znaki (strzałki, pasy poprzeczne, kreski ≤ 5,5 m) odnawiane w całości; długie linie ciągłe dzielą
+     istniejące trójkąty siatki 2 m na część odnowioną i zwykłą (dokładnie +0 trójkątów). W shaderze `paintRenewed`:
+     zużycie ×0,12, brud ×0,15, albedo farby ×1,22 (WORKING_VALUE, świeża biała farba EN 1436), gładkość +0,08.
+3. **Koleiny i smuga oleju w dali** (`WorldPBR.shader`, `_ROADWEAR`):
+   - Prefiltrowanie analitycznego paska koleiny śladem piksela (`wpMip = saturate(0.11 / max(rwFwx, 0.11))`, pochodne
+     wyciągnięte przed niejednorodny warunek `w.x > -0.5`), wygaszanie szumów wysokoczęstotliwościowych poniżej śladu piksela
+     (`brk` 1,3 m, `drops` 0,9 m, `blot` 0,55 m) oraz łagodne tłumienie z odległością
+     `rwDistAtten = 1.0 - 0.50 * smoothstep(25.0, 130.0, rwDist)` (WORKING_VALUE; na `dw671-tykocin-01 q_far` przed
+     zmianą kontrast `med − p15` wynosił 11,3 sRGB blisko vs 22,4 sRGB w dali).
+4. **Poszerzony pas piasku przy krawędzi** (`WorldPBR.shader`, `_ROADWEAR`, WORKING_VALUE):
+   - Rozdzielono ciemny osad (`eband`, 0,2–0,9 m bez zmian) od języka piasku (`sandTongue = 0.35 + 1.05 * (0.65 * n1.5m + 0.35 * n4.3m)`
+     = 0,35–1,40 m, `sandy` ~55 % długości, krycie 0,62, zmatowienie `smooth *= 1 - 0.35 * sandW`) dla zbliżenia do
+     referencji `cs11749508.jpg`.
+
+### Weryfikacja P2
+- Testy jednostkowe Python: `test_patch_kinds_0335.py` (9/9, w tym 3 nowe testy dla P2), `test_road_surface_0323.py` (10/10),
+  `test_asphalt_patch_uv.py` (4/4), `test_asphalt_paint_surface.py` (6/6), `test_budget_0221.py` (8/8),
+  `test_typology_0238.py` + `test_world_v31.py` + `test_hero_bridge.py` (55/55), `test_streetscape.py` +
+  `test_fab_details.py` + `test_stains_0194.py` + `test_world_pbr_tint_contract.py` (102/102).
+- Unity EditMode (`AsphaltScopeTests|RoadPaintLaneFieldTests|RoadWearUvContractTests|WorldPbrTintTests`, Android):
+  32/32 PASS, 0 błędów i 0 ostrzeżeń kompilacji `WorldPBR.shader`.
+- Przebudowa `dw671-tykocin-01` i `bialystok-industrial-c` + visual-qa przed|po (High, clear i overcast): UNVERIFIED (w toku — oczekiwanie na slot `heavy`).
