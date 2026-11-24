@@ -1,5 +1,5 @@
-param([Parameter(Mandatory)][string]$Region, [Parameter(Mandatory)][string]$Round, [string]$Cams = '', [switch]$Build)
-# forest-height-s24: one region at a time (visual-qa picks the scene by name): [build_world] -> import -> High clear + overcast
+param([Parameter(Mandatory)][string]$Region, [Parameter(Mandatory)][string]$Round, [string]$Cams = "", [switch]$Build, [switch]$SkipImport)
+# forest-height-s24: [build_world] -> import -> control cameras High clear + overcast (scene World_<region>)
 $ErrorActionPreference = 'Continue'
 $wt = 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest-height-s24'
 Set-Location $wt
@@ -14,13 +14,11 @@ if ($Build) {
 }
 pwsh scripts/unity-slot.ps1 -Acquire -Owner $owner
 try {
-    Get-ChildItem game/Assets/_Generated/World -Directory -ErrorAction SilentlyContinue | Where-Object Name -ne $Region | ForEach-Object {
-        Remove-Item $_.FullName -Recurse -Force; Remove-Item ($_.FullName + '.meta') -Force -ErrorAction SilentlyContinue }
-    pwsh scripts/import-region.ps1 -Region $Region *> (Join-Path $out 'import.log')
+    if ($SkipImport) { $global:LASTEXITCODE = 0 } else { pwsh scripts/import-region.ps1 -Region $Region *> (Join-Path $out "import.log") }
     "import exit $LASTEXITCODE"
     if ($LASTEXITCODE -eq 0 -and $Cams) {
         foreach ($l in 'clear', 'overcast') {
-            pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting $l -Width 1920 -Height 1080 -Gate3 $Cams -Cameras ((Get-Content $Cams -Raw | ConvertFrom-Json).cameras.id -join ',') -OutputDir (Join-Path $out "High-$l") *> (Join-Path $out "vqa-$l.log")
+            pwsh scripts/visual-qa.ps1 -Scene "World_$Region" -Tier High -Lighting $l -Width 1920 -Height 1080 -Gate3 $Cams -Cameras ((Get-Content $Cams -Raw | ConvertFrom-Json).cameras.id -join ',') -OutputDir (Join-Path $out "High-$l") *> (Join-Path $out "vqa-$l.log")
             "vqa $l exit $LASTEXITCODE"
         }
     }

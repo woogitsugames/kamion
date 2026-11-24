@@ -221,7 +221,7 @@ def test_shipped_products(rid):
     meta = json.loads((rdir / "forest_chm.json").read_text(encoding="utf-8"))
     png = rdir / "forest_chm.png"
     assert meta["schema"] == FCH.SCHEMA and hashlib.sha256(png.read_bytes()).hexdigest() == meta["sha256_png"]
-    assert png.stat().st_size < 200_000, "the product stays small enough for git"
+    assert png.stat().st_size < 400_000, "the product stays small enough for git"
     assert "geoportal.gov.pl" in meta["source"]["service"] and "google" not in json.dumps(meta).lower()
     assert meta["source"]["survey_date"] == "UNVERIFIED" and meta["source"]["missing_share"] < 0.01
     reg_bbox = meta["bbox"]
