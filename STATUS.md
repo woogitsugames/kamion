@@ -1,7 +1,8 @@
 # STATUS windscreen-s24 (ADR 0341) — warstwa szyby w widoku z kabiny
 - Worktree gotowy, DrivingLab + TRAKT zbudowane (build-lab Win64 OK). Runner: tools/qa/windscreen_s24.ps1.
 - Plan: odbicie deski = wypalona w Blenderze sonda kabiny (albedo x AO, equirect, box projection, relit w shaderze), maska brudu proceduralna (Python), tier Low uproszczony.
-- NASTEPNY KROK: pwsh -NoProfile -File tools/qa/windscreen_s24.ps1 -Phase vqa -Tag before
+- krok 2: baseline before/ (High+Low x clear/overcast/lowsun, cab-driver+cab-dash): szyba niewidoczna, wycieraczki zasloniete deska w cab-driver. Maska brudu `tools/rendering/windscreen_grime.py` (pokrycie 5,1 %: kurz 3,8, luki 0,6, owady 0,7 %), odbicie kabiny `bake_windscreen_reflection.py` (Blender, oko lustrzane E'=(-0.55,1.398,2.053) cab). Shader + builder + QualityProfile.windscreenLayersOff + rq_wslayers + rq_glassdbg (2 odbicie x8, 3 maska). Debug maski: zgodna z wycieraczkami (truck-front).
+- NASTEPNY KROK: pwsh -NoProfile -File tools/qa/windscreen_s24.ps1 -Phase vqa -Tag after
 
 # STATUS fix-b4-s24 (błędy buildu #4: brama Maczka, terrain_walls C, water_0210, world_roads, most 12 t)
 - krok 0: worktree z main 1c0596b94, derived = kopia (-CopyDerived). Brama widoczna w shot_t0250 (ciężarówka pos (404,5) jedzie na zachód, brama ~20 m przed nią).
