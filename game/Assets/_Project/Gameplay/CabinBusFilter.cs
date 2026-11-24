@@ -54,6 +54,7 @@ namespace Game.Gameplay
             m_Current = CabinLoudness.Apply(data, channels, m_Current, m_Target);
             m_Limiter.Process(data, channels, m_Rate);
             AudioOutputCapture.Push(data, channels);
+            GameAudioRecorder.PushFromBus(data, channels);   // ADR 0345: -record_audio (one volatile check when off)
         }
     }
 }
