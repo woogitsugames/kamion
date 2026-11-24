@@ -21,3 +21,11 @@
 NASTĘPNY KROK: gdy PC wolny (brak Unity/Kamion, slot heavy) —
   pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner pacing-s24
   pwsh scripts/pc-metrics.ps1 -Exe <win-build>/artifacts/win/kamion-0.1.0-770ea8d900-regions/Kamion.exe -Scene dw671-tykocin-06 -Tier High -Fps 60 -DurationSeconds 90 -Extra autopilot=route,speed=50,stream=1
+
+## Krok 3 — build #6 + start pomiarów (24.11 ~00:35)
+- #6 (artifacts/full-build-6-s24/run): ten sam wzór — pojedyncze skoki ~1/kafel (40–80 ms) + skupiska t 1020–1080
+  (20 kl. > 40) i 2340–2520 (100 kl.) przy CPU tła 36–47 % (dane lidera) → zgodne z hipotezą rywalizacji o CPU/GPU.
+- PC wolny (0 slotów, 0 Unity) → slot heavy pacing-s24 zajęty; w tle artifacts/pacing-s24/run-experiments.ps1
+  (E1 D3D11 bez ramki czysto, E2 + syntetyczne obciążenie robocopy Library + 4 pętle CPU, E3 D3D12, E4 okno 1600x900,
+  E5 VSync 1), log artifacts/pacing-s24/experiments.log, wyniki artifacts/pacing-s24/runs/*/ (pc-report.md, pacing.json).
+NASTĘPNY KROK: Get-Content artifacts/pacing-s24/experiments.log -Tail 30 ; po końcu slot zwalnia się sam.
