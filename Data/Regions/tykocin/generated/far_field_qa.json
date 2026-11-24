@@ -124,47 +124,73 @@
   },
   "tiers": {
     "High": {
-      "bytes": 5435892,
+      "bytes": 5458432,
       "file": "Data/raw/derived/tykocin/world/far_field.glb",
       "sectors": {
         "far_east": {
           "by_material": {
             "far_field_buildings": 12825,
-            "forest_edge_mixed": 1482
+            "forest_edge_broadleaf_haze1": 80,
+            "forest_edge_broadleaf_haze2": 50,
+            "forest_edge_conifer": 44,
+            "forest_edge_conifer_haze1": 186,
+            "forest_edge_conifer_haze2": 18,
+            "forest_edge_mixed": 10,
+            "forest_edge_mixed_haze1": 122,
+            "forest_edge_mixed_haze2": 972
           },
-          "submeshes": 2,
+          "submeshes": 9,
           "triangles": 14307,
           "vertices": 27479
         },
         "far_north": {
           "by_material": {
             "far_field_buildings": 12926,
-            "forest_edge_mixed": 10226
+            "forest_edge_broadleaf": 188,
+            "forest_edge_broadleaf_haze1": 56,
+            "forest_edge_broadleaf_haze2": 1992,
+            "forest_edge_conifer": 4118,
+            "forest_edge_conifer_haze1": 988,
+            "forest_edge_conifer_haze2": 960,
+            "forest_edge_mixed": 828,
+            "forest_edge_mixed_haze1": 826,
+            "forest_edge_mixed_haze2": 270
           },
-          "submeshes": 2,
+          "submeshes": 10,
           "triangles": 23152,
           "vertices": 36990
         },
         "far_south": {
           "by_material": {
             "far_field_buildings": 15378,
-            "forest_edge_mixed": 2762
+            "forest_edge_broadleaf_haze1": 28,
+            "forest_edge_broadleaf_haze2": 8,
+            "forest_edge_conifer_haze1": 70,
+            "forest_edge_conifer_haze2": 998,
+            "forest_edge_mixed": 110,
+            "forest_edge_mixed_haze1": 1098,
+            "forest_edge_mixed_haze2": 450
           },
-          "submeshes": 2,
+          "submeshes": 8,
           "triangles": 18140,
           "vertices": 33896
         },
         "far_west": {
           "by_material": {
             "far_field_buildings": 4063,
-            "forest_edge_mixed": 4994
+            "forest_edge_conifer": 1450,
+            "forest_edge_conifer_haze1": 180,
+            "forest_edge_conifer_haze2": 2248,
+            "forest_edge_mixed": 628,
+            "forest_edge_mixed_haze1": 276,
+            "forest_edge_mixed_haze2": 212
           },
-          "submeshes": 2,
+          "submeshes": 7,
           "triangles": 9057,
           "vertices": 13631
         }
       },
-      "sha256": "b3c11abbd4450d20f00bd2b0491afbdffc1facf65a68fb0dc83a63d67b11d724",
+      "sha256": "ff3178047c7609d78cc508a44e21fdf7470d08a5f614470b93e2b749ad7aa83b",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -177,47 +203,70 @@
       "total_vertices": 111996
     },
     "Low": {
-      "bytes": 496252,
+      "bytes": 517072,
       "file": "Data/raw/derived/tykocin/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
             "far_field_buildings": 1369,
-            "forest_edge_mixed": 254
+            "forest_edge_conifer": 12,
+            "forest_edge_conifer_haze1": 36,
+            "forest_edge_conifer_haze2": 4,
+            "forest_edge_mixed_haze1": 20,
+            "forest_edge_mixed_haze2": 182
           },
-          "submeshes": 2,
+          "submeshes": 6,
           "triangles": 1623,
           "vertices": 3081
         },
         "far_north": {
           "by_material": {
             "far_field_buildings": 1181,
-            "forest_edge_mixed": 2296
+            "forest_edge_broadleaf": 48,
+            "forest_edge_broadleaf_haze1": 16,
+            "forest_edge_broadleaf_haze2": 444,
+            "forest_edge_conifer": 736,
+            "forest_edge_conifer_haze1": 236,
+            "forest_edge_conifer_haze2": 292,
+            "forest_edge_mixed": 240,
+            "forest_edge_mixed_haze1": 232,
+            "forest_edge_mixed_haze2": 52
           },
-          "submeshes": 2,
+          "submeshes": 10,
           "triangles": 3477,
           "vertices": 5195
         },
         "far_south": {
           "by_material": {
             "far_field_buildings": 1303,
-            "forest_edge_mixed": 702
+            "forest_edge_broadleaf_haze1": 16,
+            "forest_edge_broadleaf_haze2": 4,
+            "forest_edge_conifer_haze1": 24,
+            "forest_edge_conifer_haze2": 276,
+            "forest_edge_mixed": 30,
+            "forest_edge_mixed_haze1": 180,
+            "forest_edge_mixed_haze2": 172
           },
-          "submeshes": 2,
+          "submeshes": 8,
           "triangles": 2005,
           "vertices": 3461
         },
         "far_west": {
           "by_material": {
             "far_field_buildings": 409,
-            "forest_edge_mixed": 932
+            "forest_edge_conifer": 278,
+            "forest_edge_conifer_haze1": 32,
+            "forest_edge_conifer_haze2": 448,
+            "forest_edge_mixed": 126,
+            "forest_edge_mixed_haze1": 42,
+            "forest_edge_mixed_haze2": 6
           },
-          "submeshes": 2,
+          "submeshes": 7,
           "triangles": 1341,
           "vertices": 2021
         }
       },
-      "sha256": "cb1e687f10dc40fbf74f549fb9e078acb09e5d6ca8294823f56068e84a10138a",
+      "sha256": "5a47030e21b9741d175b0d5d13e516bad1803705795354640bc13e7ec9ee0908",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,

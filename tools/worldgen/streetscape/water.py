@@ -604,12 +604,25 @@ class Plan:
         nz = getattr(self, "shore_nz", None)
         if nz is not None:
             wband = MUD_BAND_M[0] + (MUD_BAND_M[1] - MUD_BAND_M[0]) * np.clip(nz * 0.5 + 0.5, 0.0, 1.0)
-            m2 = np.clip((wband - d) / np.maximum(0.4 * wband, 0.2), 0.0, 1.0) * MUD_A
-            m2 = np.where(self.mask, 0.0, m2)
-            # r2: softened (sigma 1 node) - per-node steps of the mask drew triangle "stairs" along the bank (r1)
-            m2 = np.where(self.mask, 0.0, ndimage.gaussian_filter(m2, 1.0))
-            c[..., 3] = np.maximum(c[..., 3], m2)
-            c[..., 2] = np.where(m2 > 0.3, c[..., 2] * (1.0 - 0.6 * m2), c[..., 2])
+            if sd is None:
+                m2 = np.clip((wband - d) / np.maximum(0.4 * wband, 0.2), 0.0, 1.0) * MUD_A
+                m2 = np.where(self.mask, 0.0, m2)
+                # r2: softened (sigma 1 node) - per-node steps of the mask drew triangle "stairs" along the bank (r1)
+                m2 = np.where(self.mask, 0.0, ndimage.gaussian_filter(m2, 1.0))
+                c[..., 3] = np.maximum(c[..., 3], m2)
+                c[..., 2] = np.where(m2 > 0.3, c[..., 2] * (1.0 - 0.6 * m2), c[..., 2])
+            else:
+                # ADR 0330: no raster water mask and no threshold in the margin - both drew the 1 m node staircase as a
+                # light mud band with stepped edges between the reeds (bv_bank_n). The margin fades over >= 1.5 m
+                # (>= 1.5 vertex spacings, so the interpolated mask has no visible corners) and continues smoothly
+                # into the bed value (0.7) across the outline.
+                m2 = np.clip((wband - d) / np.maximum(0.6 * wband, 1.5), 0.0, 1.0) * MUD_A
+                m2 = ndimage.gaussian_filter(m2, 1.2)
+                c[..., 3] = np.maximum(c[..., 3], m2)
+                c[..., 2] = c[..., 2] * (1.0 - 0.6 * m2 * np.clip((m2 - 0.15) / 0.3, 0.0, 1.0))
+                w_in = np.clip((0.3 - sd) / 0.8, 0.0, 1.0)
+                c[..., 3] = c[..., 3] * (1.0 - w_in) + 0.7 * w_in
+                return c.astype(np.float32)
         c[..., 3] = np.where(self.mask, 0.7, c[..., 3])
         return c.astype(np.float32)
 

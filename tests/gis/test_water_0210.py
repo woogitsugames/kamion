@@ -172,7 +172,9 @@ def test_bank_colours(plan):
     c = p.bank_colours(col)
     near = ~p.mask & (p.d_out <= 2.0)
     # ADR 0324: the bank next to the water is long grass OR the wet mud / sand margin
-    assert np.maximum(c[..., 2], c[..., 3])[near].min() > 0.4 and c[..., 3][p.mask].min() > 0.5
+    # ADR 0330: the bed value follows the continuous outline (sd < 0), not the 1 m raster (which reaches 0.7 m out)
+    wet = p.sd < -0.3
+    assert np.maximum(c[..., 2], c[..., 3])[near].min() > 0.4 and c[..., 3][wet].min() > 0.5
     assert c[..., 3][near].mean() > 0.1
 
 
