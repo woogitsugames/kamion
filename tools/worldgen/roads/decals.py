@@ -542,6 +542,7 @@ def build(buf, net, juncs, report):
                     continue             # ADR 0215: never opened to traffic - no repair patches
                 hw = float(c.hw_at(sc))
                 kind = hf(*key, i, "kind")
+                fits_lane = False
                 pk = PATCH_TRENCH
                 if kind < 0.35:              # full-lane trench / overlay patch
                     width = min(float(lane_w_of(sec, hw)) * (0.9 + 0.2 * hf(*key, i, "w")), 2 * hw - 0.2)
@@ -553,6 +554,14 @@ def build(buf, net, juncs, report):
                     nl = max(1, sec.lanes)
                     lane = int(hf(*key, i, "lane") * nl)
                     lat = -hw + sec.edge_strip + (lane + 0.5) * float(lane_w_of(sec, hw))
+                    fits_lane = True
+                    if not sec.oneway:
+                        # ADR 0335: a two-way lane patch must fit between the crown and the edge strip. Before, a full-
+                        # lane width (3.25 m) pushed off the crown by 0.4 m ran past the kerb and was dropped by the
+                        # edge test below - on a 2-lane road a full-lane repair was never generated (render r3).
+                        width = min(width, 2.0 * (abs(lat) - 0.08), 2.0 * (hw - 0.05 - abs(lat)))
+                        if width < 1.6:
+                            continue
                 elif kind < 0.7:             # wheel-path patch (ADR 0194: in a wheel path of a lane)
                     width = 0.8 + hf(*key, i, "w") * 0.6
                     length = 2.0 + hf(*key, i, "l") * 5.0
@@ -577,7 +586,7 @@ def build(buf, net, juncs, report):
                     lat = math.copysign(max(hw - 0.05 - width / 2, 0.0), lat)
                 if width > 2 * hw - 0.1:
                     continue
-                if not sec.oneway and abs(lat) < width / 2 + 0.4:   # keep two-way patches off the crown
+                if not sec.oneway and not fits_lane and abs(lat) < width / 2 + 0.4:   # keep two-way patches off the crown
                     lat = math.copysign(width / 2 + 0.4, lat if lat != 0 else 1.0)
                     if abs(lat) + width / 2 > hw - 0.05:
                         continue
