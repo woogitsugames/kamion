@@ -123,6 +123,12 @@ namespace Game.Rendering
             [Tooltip("ADR 0136 r2: mirror render-texture height multiplier on this tier (0 = 1). Low 0.75 follows the Low main-view " +
                      "render scale (224 -> 168 px class II); A16 G3-A A/B: mirrors 1.46 ms GPU, x0.75 saves 0.47 ms")]
             public float mirrorResolutionScale;
+            [Tooltip("ADR 0342: MSAA samples of the mirror render textures (0/1 = none; PC High 4). The mirror cameras were MSAA-less (stair-stepped pillars and curtain straps).")]
+            public int mirrorMsaa;
+            [Tooltip("ADR 0342: shadows in the mirror cameras (a second shadow pass per mirror render; PC only when measured cheap).")]
+            public bool mirrorShadows;
+            [Tooltip("ADR 0342: class II mirror texture rows per screen pixel row of its window (0 = off; the tier height stays the floor).")]
+            public float mirrorWindowTexelsPerPixel;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;

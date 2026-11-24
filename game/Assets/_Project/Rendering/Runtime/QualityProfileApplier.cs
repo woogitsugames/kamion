@@ -192,6 +192,9 @@ namespace Game.Rendering
             Shader.SetGlobalFloat(k_ClearCoatOff, t.clearCoat ? 0f : 1f);
             Shader.SetGlobalFloat(k_GrimeDetailOff, t.vehicleGrimeDetail ? 0f : 1f);   // ADR 0038
             Game.Core.MirrorOverrides.TierResolution = t.mirrorResolutionScale > 0f ? t.mirrorResolutionScale : 1f;   // ADR 0136 r2
+            Game.Core.MirrorOverrides.TierMsaa = Mathf.Max(1, t.mirrorMsaa);                                // ADR 0342
+            Game.Core.MirrorOverrides.TierShadows = t.mirrorShadows;
+            Game.Core.MirrorOverrides.TierWindowTexelsPerPixel = Mathf.Max(0f, t.mirrorWindowTexelsPerPixel);
             if (worldTextures != null)
                 foreach (var tex in worldTextures)
                 {

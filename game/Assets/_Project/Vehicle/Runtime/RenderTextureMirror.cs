@@ -16,7 +16,32 @@ namespace Game.Vehicle.Runtime
         /// <summary>ADR 0068: the complete pre-0068 configuration (launch argument rq_mirror_legacy / pass A/B toggler).</summary>
         static bool Legacy => MirrorOverrides.Legacy;
         /// <summary>Main-mirror render-texture height in pixels (width follows the glass aspect; convex mirrors scale it).</summary>
-        public static int MirrorHeight => Mathf.RoundToInt(MirrorHeightFor(Level) * (Legacy ? 1f : MirrorOverrides.Resolution ?? MirrorOverrides.TierResolution));
+        public static int MirrorHeight
+        {
+            get
+            {
+                int h = Mathf.RoundToInt(MirrorHeightFor(Level) * (Legacy ? 1f : MirrorOverrides.Resolution ?? MirrorOverrides.TierResolution));
+                if (Legacy || MirrorOverrides.Resolution.HasValue) return h;
+                return HeightForWindow(h, MirrorOverrides.WindowPixelHeight, MirrorOverrides.TierWindowTexelsPerPixel);
+            }
+        }
+        /// <summary>Largest class II mirror texture height [px] (ADR 0342: a 4K window x 1.5 stays inside it).</summary>
+        public const int MaxMirrorHeight = 1024;
+        /// <summary>
+        /// ADR 0342: texture height following the on-screen window. <paramref name="tierHeight"/> is the floor (never below the tier);
+        /// <paramref name="windowPx"/> x <paramref name="texelsPerPixel"/> raises it so the glass is not magnified on a large monitor
+        /// (1 = 1:1, 1.5 = supersampled). Off (returns the tier height) when either is 0. Pure.
+        /// </summary>
+        public static int HeightForWindow(int tierHeight, float windowPx, float texelsPerPixel)
+        {
+            if (windowPx <= 0f || texelsPerPixel <= 0f) return tierHeight;
+            return Mathf.Clamp(Mathf.Max(tierHeight, Mathf.RoundToInt(windowPx * texelsPerPixel)), tierHeight, Mathf.Max(tierHeight, MaxMirrorHeight));
+        }
+        /// <summary>ADR 0342: MSAA samples of the mirror textures (1 = none).</summary>
+        public static int MirrorMsaa => Legacy ? 1 : NormalizeMsaa(MirrorOverrides.Msaa ?? MirrorOverrides.TierMsaa);
+        public static int NormalizeMsaa(int v) => v >= 8 ? 8 : v >= 4 ? 4 : v >= 2 ? 2 : 1;
+        /// <summary>ADR 0342: shadows in the mirror cameras.</summary>
+        public static bool MirrorShadows => !Legacy && (MirrorOverrides.Shadows ?? MirrorOverrides.TierShadows);
         public static int MirrorHeightFor(int level) => level switch { 0 => 224, 1 => 288, 2 => 384, _ => 512 };
         /// <summary>
         /// Hard cap of mirror camera renders per frame (ADR 0042). All mirrors share it through a weighted round-robin:
@@ -207,7 +232,7 @@ namespace Game.Vehicle.Runtime
         Camera m_Cam;
         RenderTexture m_Rt;
         Material m_Mat;
-        int m_Height;
+        int m_Height, m_Msaa;
 
         public RenderTexture Texture => m_Rt;
         public ExtraViewKind Kind => ExtraViewKind.Mirror;
@@ -312,11 +337,16 @@ namespace Game.Vehicle.Runtime
                 cam.nearClipPlane = MirrorOptics.NearClipBeyondGlass(cam.transform.position, cam.transform.forward, glass.bounds);
             // Far clip every time (cheap): the A/B toggler (rq_ab mirrorcfg) switches configurations at run time.
             cam.farClipPlane = VehicleCameraBudget.MirrorFarClip * (main ? 1f : VehicleCameraBudget.ConvexFarClipScale);
-            if (m_Rt != null && m_Height == h) return;
+            // ADR 0342: MSAA and shadows of the mirror camera follow the tier (PC High / Ultra); Low / Medium and phones stay 1 / off.
+            int msaa = VehicleCameraBudget.MirrorMsaa;
+            cam.allowMSAA = msaa > 1;
+            var urpData = cam.GetComponent<UniversalAdditionalCameraData>();
+            if (urpData != null) urpData.renderShadows = VehicleCameraBudget.MirrorShadows;
+            if (m_Rt != null && m_Height == h && m_Msaa == msaa) return;
             Release();
-            m_Height = h;
+            m_Height = h; m_Msaa = msaa;
             int w = Mathf.Max(16, Mathf.RoundToInt(h * aspect));
-            m_Rt = new RenderTexture(w, h, 16, RenderTextureFormat.ARGB32) { name = "Mirror_" + name, antiAliasing = 1, useMipMap = false };
+            m_Rt = new RenderTexture(w, h, 16, RenderTextureFormat.ARGB32) { name = "Mirror_" + name, antiAliasing = msaa, useMipMap = false };
             m_Rt.Create();
             cam.targetTexture = m_Rt;
             if (fovAspect > 0f) cam.aspect = fovAspect; else cam.ResetAspect();
@@ -424,7 +454,7 @@ namespace Game.Vehicle.Runtime
             if (m_Mat != null) { if (Application.isPlaying) Destroy(m_Mat); else DestroyImmediate(m_Mat); }
         }
 
-        /// <summary>Camera settings for a cheap extra view (no shadows, no post, no MSAA, no depth/opaque copies).</summary>
+        /// <summary>Camera settings for a cheap extra view (no shadows, no post, no MSAA, no depth/opaque copies; ADR 0342: EnsureTarget turns MSAA / shadows on per tier).</summary>
         public static void ConfigureCheapCamera(Camera cam, float fov, float near, float far)
         {
             cam.enabled = false;

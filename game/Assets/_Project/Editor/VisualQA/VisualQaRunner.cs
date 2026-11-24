@@ -208,6 +208,7 @@ namespace Game.Editor.VisualQA
 
                 // Vehicle mirrors and reversing cameras render into their textures first (LateUpdate does not run here).
                 foreach (var m in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None)) m.RenderNow();
+                MirrorDump.BenchOnce();   // ADR 0342: KAMION_MIRROR_BENCH=1 - GPU cost of the mirror configurations (interleaved, synced)
                 // Art truck (A7): tier binding, lamp state and the cab fill for this camera (LateUpdate does not run here).
                 foreach (var rig in UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)) rig.Apply();
                 // ADR 0175 evidence: -qaTruckLamps rearfog,hazard,low forces lamp groups on for the render (default: solver state).

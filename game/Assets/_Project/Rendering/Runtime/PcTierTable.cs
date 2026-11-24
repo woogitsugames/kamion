@@ -88,6 +88,12 @@ namespace Game.Rendering
         public int lampPools;
         public int cloudQuality;
         public float mirrorResolutionScale;
+        /// <summary>ADR 0342: MSAA of the mirror render textures (1 = none).</summary>
+        public int mirrorMsaa;
+        /// <summary>ADR 0342: shadows in the mirror cameras.</summary>
+        public bool mirrorShadows;
+        /// <summary>ADR 0342: class II texture rows per window pixel row (0 = off; the tier height is the floor).</summary>
+        public float mirrorWindowTexelsPerPixel;
         // Budget (WORKING_VALUE, D74)
         public int targetFps;
         public string status;
@@ -203,7 +209,7 @@ namespace Game.Rendering
                 cameraFarClip = 1500f, additionalLightsPerObject = 4, ssao = false,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, forestHlodM = 70f, forestHlodCullM = 1500f,
                 vehicleCullM = 200f, simpleFoliage = true, forestFast = true, glassFast = true,
-                envCaptureSize = 64, envCaptureInterval = 6, streetLights = 0, lampPools = 6, cloudQuality = 1, mirrorResolutionScale = 1f,
+                envCaptureSize = 64, envCaptureInterval = 6, streetLights = 0, lampPools = 6, cloudQuality = 1, mirrorResolutionScale = 1f, mirrorMsaa = 1, mirrorShadows = false, mirrorWindowTexelsPerPixel = 0f,
                 targetFps = 30, status = "WORKING_VALUE (D74 minimum: GTX 660 2 GB / i5-6400 / 8 GB, 1080p 30 fps) - UNMEASURED",
             },
             new PcTierSettings
@@ -217,7 +223,7 @@ namespace Game.Rendering
                 cameraFarClip = 2000f, additionalLightsPerObject = 4, ssao = false,
                 treeCardLodScale = 0.5f, treeThinStartM = 120f, treeCullM = 800f, treeShadowLodMask = 3, forestHlodM = 90f, forestHlodCullM = 0f,
                 vehicleCullM = 300f, simpleFoliage = true, forestFast = false, glassFast = false,
-                envCaptureSize = 128, envCaptureInterval = 4, streetLights = 2, lampPools = 8, cloudQuality = 1, mirrorResolutionScale = 1f,
+                envCaptureSize = 128, envCaptureInterval = 4, streetLights = 2, lampPools = 8, cloudQuality = 1, mirrorResolutionScale = 1f, mirrorMsaa = 1, mirrorShadows = false, mirrorWindowTexelsPerPixel = 0f,
                 targetFps = 60, status = "WORKING_VALUE (between D74 classes, 4 GB VRAM) - UNMEASURED",
             },
             new PcTierSettings
@@ -231,7 +237,7 @@ namespace Game.Rendering
                 cameraFarClip = 3000f, additionalLightsPerObject = 8, ssao = false,
                 treeCardLodScale = 1.0f, treeThinStartM = 150f, treeCullM = 1000f, treeShadowLodMask = 3, forestHlodM = 150f, forestHlodCullM = 0f,
                 vehicleCullM = 400f, simpleFoliage = true, forestFast = false, glassFast = false,
-                envCaptureSize = 256, envCaptureInterval = 1, streetLights = 6, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f,
+                envCaptureSize = 256, envCaptureInterval = 1, streetLights = 6, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f, mirrorMsaa = 4, mirrorShadows = false, mirrorWindowTexelsPerPixel = 1f,
                 targetFps = 60, status = "WORKING_VALUE (D74 recommended: GTX 1660 / i5-9600 / 12 GB, 1080p 60 fps) - UNMEASURED",
             },
             new PcTierSettings
@@ -245,7 +251,7 @@ namespace Game.Rendering
                 cameraFarClip = 4000f, additionalLightsPerObject = 8, ssao = false,
                 treeCardLodScale = 1.5f, treeThinStartM = 200f, treeCullM = 1500f, treeShadowLodMask = 3, forestHlodM = 200f, forestHlodCullM = 0f,
                 vehicleCullM = 600f, simpleFoliage = true, forestFast = false, glassFast = false,
-                envCaptureSize = 256, envCaptureInterval = 1, streetLights = 8, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f,
+                envCaptureSize = 256, envCaptureInterval = 1, streetLights = 8, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f, mirrorMsaa = 4, mirrorShadows = false, mirrorWindowTexelsPerPixel = 1.5f,
                 targetFps = 60, status = "WORKING_VALUE (above D74 recommended; opt-in, never auto-selected) - UNMEASURED",
             },
         };
@@ -286,6 +292,8 @@ namespace Game.Rendering
                 if (t.forestHlodM <= 0f) e.Add($"{n}: forestHlodM");
                 if (t.forestHlodCullM != 0f && t.forestHlodCullM <= t.forestHlodM) e.Add($"{n}: forestHlodCullM ≤ forestHlodM");
                 if (t.mirrorResolutionScale < 1f) e.Add($"{n}: mirrors below the tier resolution (mirrors always usable, docs/06)");
+                if (t.mirrorMsaa != 1 && t.mirrorMsaa != 2 && t.mirrorMsaa != 4 && t.mirrorMsaa != 8) e.Add($"{n}: mirrorMsaa {t.mirrorMsaa}");
+                if (t.mirrorWindowTexelsPerPixel < 0f || t.mirrorWindowTexelsPerPixel > 2f) e.Add($"{n}: mirrorWindowTexelsPerPixel {t.mirrorWindowTexelsPerPixel}");
                 if (!Pow2(t.envCaptureSize)) e.Add($"{n}: envCaptureSize {t.envCaptureSize}");
                 if (t.envCaptureInterval < 1) e.Add($"{n}: envCaptureInterval");
                 if (t.lampPools < 0 || t.lampPools > 8) e.Add($"{n}: lampPools");
@@ -319,6 +327,8 @@ namespace Game.Rendering
                 Ge(a.lampPools, b.lampPools, "lampPools");
                 Ge(a.cloudQuality, b.cloudQuality, "cloudQuality");
                 Ge(a.mirrorResolutionScale, b.mirrorResolutionScale, "mirrorResolutionScale");
+                Ge(a.mirrorMsaa, b.mirrorMsaa, "mirrorMsaa");
+                Ge(a.mirrorWindowTexelsPerPixel, b.mirrorWindowTexelsPerPixel, "mirrorWindowTexelsPerPixel");
                 Ge(-a.textureMipmapLimit, -b.textureMipmapLimit, "texture resolution (mipmap limit increases)");
                 Ge(-a.maximumLodLevel, -b.maximumLodLevel, "maximum LOD (maximumLodLevel increases)");
                 Ge(-a.envCaptureInterval, -b.envCaptureInterval, "capture refresh (interval increases)");
