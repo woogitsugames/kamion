@@ -1674,13 +1674,13 @@ def relief(name, m, side, y0, y1, prof, zc, h, taper0=0.0, taper1=0.0, eps=0.001
     """Pressed feature as a skin overlay: an open sheet following the cab side, offset h * profile(z) * taper(y); its
     border lies eps above the skin. prof = ((dz, k), ...) from zc. taper = run-out length at the y0 / y1 end."""
     ys = [y0]
-    for t in (0.3, 0.65, 1.0):
+    for t in (0.15, 0.3, 0.45, 0.6, 0.8, 1.0):
         if taper0 > 0:
             ys.append(y0 + taper0 * t)
     n_mid = max(1, int(round((y1 - taper1 - y0 - taper0) / 0.45)))
     for i in range(1, n_mid):
         ys.append(y0 + taper0 + (y1 - taper1 - y0 - taper0) * i / n_mid)
-    for t in (1.0, 0.65, 0.3):
+    for t in (1.0, 0.8, 0.6, 0.45, 0.3, 0.15):
         if taper1 > 0:
             ys.append(y1 - taper1 * t)
     ys.append(y1)
@@ -1715,7 +1715,7 @@ def side_detail():
         relief(f"cab_swage_f_{s}", "paint", s, DOOR_FRONT_LOW + 0.010, 1.20, SWAGE_PROF, SWAGE_Z, SWAGE_H, taper1=0.26)
         # 2. roof side: one long swage, sharper lower crease (mirrored profile), run-out at both ends
         prof = tuple((-dz * 0.6, k) for dz, k in SWAGE_PROF)
-        relief(f"roof_swage_{s}", "paint", s, rb_y + 0.03, win_front(ROOF_SWAGE_Z) - 0.02, prof, ROOF_SWAGE_Z, 0.008,
+        relief(f"roof_swage_{s}", "paint", s, rb_y + 0.03, CAB.plan(ROOF_SWAGE_Z)[6] + 0.04, prof, ROOF_SWAGE_Z, 0.008,
                taper0=0.22, taper1=0.30)
         # 3. drip rail over the door aperture (fixed roof-side panel), rubber lip under it
         y0, y1 = rb_y + 0.02, CAB.plan(3.04)[6] + 0.05      # ends where the flat side runs into the A-pillar radius
