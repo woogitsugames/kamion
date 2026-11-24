@@ -27,6 +27,10 @@ from .network import lane_w_of
 
 LIFT_PATCH = 0.002
 LIFT_OIL = 0.0035
+# ADR 0335 P2 (critic round 4): trench backfills and hot-mix pothole repairs cut through / cover existing paint;
+# lifting them above MARKING_LIFT (6 mm) while decal_patch renders in queue Geometry+12 (after opaque paint at +10,
+# ZWrite Off) interrupts the paint along the exact pixel mask of the patch with zero extra triangles.
+LIFT_PATCH_OVER_PAINT = 0.009
 
 # ADR 0194 (REVIEW s19-0179 P2 "ten sam brud wszędzie"): repairs follow the traffic, not a uniform rate.
 # Expected-count multiplier per Polish road class (A/S/GP: younger, heavier pavement and frequent resurfacing; Z/L/D:
@@ -83,6 +87,7 @@ def _surf(c, s, lat, lift):
 # the legacy mask (yard patches, old data).
 PATCH_MILLED, PATCH_TRENCH, PATCH_HOT, PATCH_RUT = 1, 2, 3, 4
 PATCH_KIND_NAMES = {PATCH_MILLED: "milled", PATCH_TRENCH: "trench", PATCH_HOT: "hot", PATCH_RUT: "rut"}
+PATCH_INTERRUPTS_PAINT = (PATCH_TRENCH, PATCH_HOT)
 
 
 def patch_age(u):
@@ -107,7 +112,8 @@ def patch(buf, c, s_c, lat_c, length, width, rot, age, src, kind=0):
     dl = U * sr + Vv * cr
     s = s_c + ds
     lat = np.clip(lat_c + dl, -hw + 0.05, hw - 0.05)
-    P = _surf(c, s.ravel(), lat.ravel(), LIFT_PATCH)
+    lift = LIFT_PATCH_OVER_PAINT if kind in PATCH_INTERRUPTS_PAINT else LIFT_PATCH
+    P = _surf(c, s.ravel(), lat.ravel(), lift)
     T = []
     for j in range(nv):
         for i in range(nu):
