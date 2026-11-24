@@ -1,0 +1,90 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "dk65-05",
+ "provenance": "artifacts/forest-height-s24/tools/forest_cams.py",
+ "cameras": [
+  {
+   "id": "fh_cab_corridor",
+   "kind": "driver_eye",
+   "pos": [
+    339.27,
+    345.34,
+    18.35
+   ],
+   "look_at": [
+    328.96,
+    404.45,
+    18.35
+   ],
+   "fov_deg": 60,
+   "note": "driver eye, route point 695: stand 14 m left / 14 m right"
+  },
+  {
+   "id": "fh_cab_approach",
+   "kind": "driver_eye",
+   "pos": [
+    500.2,
+    -560.68,
+    19.99
+   ],
+   "look_at": [
+    489.77,
+    -501.6,
+    19.99
+   ],
+   "fov_deg": 60,
+   "note": "driver eye, route point 235: stand 280 m ahead, silhouette against the sky"
+  },
+  {
+   "id": "fh_side_a",
+   "kind": "photo_match",
+   "pos": [
+    248.07,
+    541.64,
+    12.07
+   ],
+   "look_at": [
+    201.32,
+    509.03,
+    12.07
+   ],
+   "fov_deg": 50,
+   "note": "eye 2.5 m beside the road at route point 805, square at a stand edge 164 m away; crown tops of the model 0-30 m along the view",
+   "seat": "file"
+  },
+  {
+   "id": "fh_side_b",
+   "kind": "photo_match",
+   "pos": [
+    450.64,
+    -264.72,
+    18.59
+   ],
+   "look_at": [
+    506.76,
+    -254.72,
+    18.59
+   ],
+   "fov_deg": 50,
+   "note": "eye 2.5 m beside the road at route point 385, square at a stand edge 98 m away; crown tops of the model 0-24 m along the view",
+   "seat": "file"
+  },
+  {
+   "id": "fh_air",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    89.93,
+    772.51,
+    69.24
+   ],
+   "look_at": [
+    3.77,
+    895.3,
+    14.24
+   ],
+   "fov_deg": 60,
+   "note": "60 m above route point 945, 20 deg down along the road: canopy structure"
+  }
+ ]
+}

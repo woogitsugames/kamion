@@ -1,0 +1,74 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "dw671-tykocin-03",
+ "provenance": "artifacts/forest-height-s24/tools/forest_cams.py",
+ "cameras": [
+  {
+   "id": "fh_cab_corridor",
+   "kind": "driver_eye",
+   "pos": [
+    955.04,
+    794.25,
+    -1.0
+   ],
+   "look_at": [
+    928.1,
+    740.64,
+    -1.0
+   ],
+   "fov_deg": 60,
+   "note": "driver eye, route point 75: nearest stand beside the road 8 m"
+  },
+  {
+   "id": "fh_side_a",
+   "kind": "photo_match",
+   "pos": [
+    593.2,
+    83.1,
+    5.21
+   ],
+   "look_at": [
+    860.0,
+    -40.0,
+    5.21
+   ],
+   "fov_deg": 40,
+   "note": "eye 2.5 m on the route at point 474: shelter belt 250-300 m east of the road, side on",
+   "seat": "file"
+  },
+  {
+   "id": "fh_side_b",
+   "kind": "photo_match",
+   "pos": [
+    774.76,
+    432.3,
+    3.75
+   ],
+   "look_at": [
+    380.0,
+    800.0,
+    3.75
+   ],
+   "fov_deg": 40,
+   "note": "eye 2.5 m on the route at point 277: the wood north-west of the road, 500 m away (far stand line)",
+   "seat": "file"
+  },
+  {
+   "id": "fh_side_c",
+   "kind": "photo_match",
+   "pos": [
+    335.78,
+    -334.06,
+    4.54
+   ],
+   "look_at": [
+    500.0,
+    -410.0,
+    4.54
+   ],
+   "fov_deg": 40,
+   "note": "eye 2.5 m on the route at point 719: small clump 170 m east of the road (the dark box of frame t3271)",
+   "seat": "file"
+  }
+ ]
+}
