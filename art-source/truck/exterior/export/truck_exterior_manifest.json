@@ -10,7 +10,7 @@
      "role": "CHASSIS",
      "rig_parent": "TruckExterior_LOD0",
      "fbx_parent": "TruckExterior_LOD0",
-     "tris": 28968,
+     "tris": 28964,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Metal",
@@ -33,12 +33,12 @@
      "role": "CAB_Body",
      "rig_parent": "TruckExterior_LOD0",
      "fbx_parent": "TruckExterior_LOD0",
-     "tris": 36974,
+     "tris": 38717,
      "materials": [
       "MI_Ext_Trim",
-      "MI_Ext_Metal",
       "MI_Ext_Paint",
       "MI_Ext_Lights",
+      "MI_Ext_Metal",
       "MI_Ext_Glass"
      ],
      "pivot_unity_vehicle": [
@@ -56,7 +56,7 @@
      "role": "DOOR_L",
      "rig_parent": "CAB_Body_LOD0",
      "fbx_parent": "TruckExterior_LOD0",
-     "tris": 2253,
+     "tris": 2269,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Metal",
@@ -89,7 +89,7 @@
      "role": "DOOR_R",
      "rig_parent": "CAB_Body_LOD0",
      "fbx_parent": "TruckExterior_LOD0",
-     "tris": 2250,
+     "tris": 2266,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Metal",
@@ -1116,11 +1116,11 @@
      "parent": "TruckExterior_LOD0"
     }
    },
-   "tris_total": 105356,
-   "tris_before_decimation": 105356,
+   "tris_total": 107127,
+   "tris_before_decimation": 107127,
    "decimate_area_budget_k": 1.0,
-   "file_bytes": 8797548,
-   "build_s": 2.8
+   "file_bytes": 11918924,
+   "build_s": 3.1
   },
   "LOD1": {
    "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD1.fbx",
@@ -1130,7 +1130,7 @@
      "role": "CHASSIS",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 13431,
+     "tris": 13297,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Metal",
@@ -1147,36 +1147,13 @@
       0.0,
       0.0,
       0.0
-     ]
-    },
-    "CAB_Body_LOD1": {
-     "role": "CAB_Body",
-     "rig_parent": "TruckExterior_LOD1",
-     "fbx_parent": "TruckExterior_LOD1",
-     "tris": 17714,
-     "materials": [
-      "MI_Ext_Metal",
-      "MI_Ext_Trim",
-      "MI_Ext_Paint",
-      "MI_Ext_Lights",
-      "MI_Ext_Glass"
-     ],
-     "pivot_unity_vehicle": [
-      0.0,
-      1.15,
-      3.925
-     ],
-     "rig_local_position_unity": [
-      0.0,
-      1.15,
-      3.925
      ]
     },
     "DOOR_L_LOD1": {
      "role": "DOOR_L",
      "rig_parent": "CAB_Body_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 778,
+     "tris": 800,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Paint"
@@ -1208,7 +1185,7 @@
      "role": "DOOR_R",
      "rig_parent": "CAB_Body_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 777,
+     "tris": 798,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Paint"
@@ -1240,7 +1217,7 @@
      "role": "WHEEL_FL",
      "rig_parent": "STEER_FL_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 1661,
+     "tris": 1582,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1267,14 +1244,14 @@
        "convention": "forward roll = positive angle about local +X"
       }
      },
-     "tyre_outer_radius_m": 0.5424,
+     "tyre_outer_radius_m": 0.5433,
      "width_m": 0.3846
     },
     "WHEEL_FR_LOD1": {
      "role": "WHEEL_FR",
      "rig_parent": "STEER_FR_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 1659,
+     "tris": 1585,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1303,6 +1280,29 @@
      },
      "tyre_outer_radius_m": 0.5433,
      "width_m": 0.3829
+    },
+    "CAB_Body_LOD1": {
+     "role": "CAB_Body",
+     "rig_parent": "TruckExterior_LOD1",
+     "fbx_parent": "TruckExterior_LOD1",
+     "tris": 18279,
+     "materials": [
+      "MI_Ext_Trim",
+      "MI_Ext_Paint",
+      "MI_Ext_Lights",
+      "MI_Ext_Metal",
+      "MI_Ext_Glass"
+     ],
+     "pivot_unity_vehicle": [
+      0.0,
+      1.15,
+      3.925
+     ],
+     "rig_local_position_unity": [
+      0.0,
+      1.15,
+      3.925
+     ]
     },
     "STEER_FL_LOD1": {
      "role": "STEER_FL",
@@ -1370,7 +1370,7 @@
      "role": "MUDFLAP_FL",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 66,
+     "tris": 62,
      "materials": [
       "MI_Ext_Trim"
      ],
@@ -1401,7 +1401,7 @@
      "role": "MUDFLAP_FR",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 66,
+     "tris": 62,
      "materials": [
       "MI_Ext_Trim"
      ],
@@ -1532,7 +1532,7 @@
      "role": "WHEEL_RL",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 2843,
+     "tris": 2694,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1559,14 +1559,14 @@
        "convention": "forward roll = positive angle about local +X"
       }
      },
-     "tyre_outer_radius_m": 0.5433,
+     "tyre_outer_radius_m": 0.5434,
      "width_m": 0.6556
     },
     "WHEEL_RR_LOD1": {
      "role": "WHEEL_RR",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 2843,
+     "tris": 2691,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1593,14 +1593,14 @@
        "convention": "forward roll = positive angle about local +X"
       }
      },
-     "tyre_outer_radius_m": 0.5433,
-     "width_m": 0.6572
+     "tyre_outer_radius_m": 0.5434,
+     "width_m": 0.6585
     },
     "GLASS_Windscreen_LOD1": {
      "role": "GLASS_Windscreen",
      "rig_parent": "CAB_Body_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 244,
+     "tris": 232,
      "materials": [
       "MI_Ext_Glass"
      ],
@@ -2210,10 +2210,10 @@
    },
    "collision": {},
    "tris_total": 42999,
-   "tris_before_decimation": 99219,
-   "decimate_area_budget_k": 128.73,
-   "file_bytes": 4095404,
-   "build_s": 3.9
+   "tris_before_decimation": 100894,
+   "decimate_area_budget_k": 121.95,
+   "file_bytes": 5303260,
+   "build_s": 5.0
   },
   "LOD2": {
    "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD2.fbx",
@@ -2246,12 +2246,12 @@
      "role": "CAB_Body",
      "rig_parent": "TruckExterior_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 6150,
+     "tris": 6017,
      "materials": [
-      "MI_Ext_Metal",
       "MI_Ext_Trim",
       "MI_Ext_Paint",
       "MI_Ext_Lights",
+      "MI_Ext_Metal",
       "MI_Ext_Glass"
      ],
      "pivot_unity_vehicle": [
@@ -2269,7 +2269,7 @@
      "role": "DOOR_L",
      "rig_parent": "CAB_Body_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 694,
+     "tris": 692,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Paint"
@@ -2301,7 +2301,7 @@
      "role": "DOOR_R",
      "rig_parent": "CAB_Body_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 693,
+     "tris": 690,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Paint"
@@ -3028,11 +3028,11 @@
     }
    },
    "collision": {},
-   "tris_total": 17838,
-   "tris_before_decimation": 84431,
+   "tris_total": 17700,
+   "tris_before_decimation": 84854,
    "decimate_area_budget_k": 0.01,
-   "file_bytes": 1813196,
-   "build_s": 4.2
+   "file_bytes": 2309756,
+   "build_s": 4.0
   }
  },
  "tri_budget": {
@@ -3081,9 +3081,9 @@
   "cull": 0.006
  },
  "hidden_faces": {
-  "removed": 12189,
-  "tested": 58108,
-  "tris_before_cleanup": 131368,
+  "removed": 12297,
+  "tested": 59006,
+  "tris_before_cleanup": 133438,
   "method": "ray visibility from ~400 exterior points (3 rings x 24 azimuths, 0.3-8 m high, top views) + in-cab eye points; moving parts (doors, wheels, steering, wipers, mudflaps) tested only against themselves; glass treated as transparent"
  },
  "slots": {
@@ -3511,7 +3511,9 @@
    "12": "WORK",
    "13": "PLATE",
    "14": "FOG_REAR",
-   "15": "REFLEX"
+   "15": "REFLEX",
+   "16": "TAIL",
+   "17": "STOP"
   },
   "lens_styles": {
    "0": "NONE",
@@ -3539,18 +3541,18 @@
    ],
    "IND_L": [
     1.0,
-    0.42,
-    0.02
+    0.22,
+    0.0
    ],
    "IND_R": [
     1.0,
-    0.42,
-    0.02
+    0.22,
+    0.0
    ],
    "TAIL_BRAKE": [
     1.0,
-    0.03,
-    0.01
+    0.0,
+    0.0
    ],
    "REVERSE": [
     1.0,
@@ -3564,13 +3566,13 @@
    ],
    "MARKER_SIDE": [
     1.0,
-    0.42,
-    0.02
+    0.22,
+    0.0
    ],
    "MARKER_REAR": [
     1.0,
-    0.03,
-    0.01
+    0.0,
+    0.0
    ],
    "FOG": [
     1.0,
@@ -3589,28 +3591,38 @@
    ],
    "FOG_REAR": [
     1.0,
-    0.03,
-    0.01
+    0.0,
+    0.0
    ],
    "REFLEX": [
     0.0,
+    0.0,
+    0.0
+   ],
+   "TAIL": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "STOP": [
+    1.0,
     0.0,
     0.0
    ]
   },
   "texel_density": {
    "Paint": {
-    "area_m2": 35.01,
-    "uv_coverage": 0.641,
+    "area_m2": 35.89,
+    "uv_coverage": 0.65,
     "px_per_m": {
-     "High": 554,
-     "Medium": 139,
+     "High": 551,
+     "Medium": 138,
      "Low": 69
     }
    },
    "Trim": {
-    "area_m2": 101.04,
-    "uv_coverage": 0.466,
+    "area_m2": 101.67,
+    "uv_coverage": 0.469,
     "px_per_m": {
      "High": 278,
      "Medium": 70,
@@ -3618,8 +3630,8 @@
     }
    },
    "Metal": {
-    "area_m2": 12.42,
-    "uv_coverage": 0.565,
+    "area_m2": 12.36,
+    "uv_coverage": 0.562,
     "px_per_m": {
      "High": 874,
      "Medium": 218,
@@ -3627,12 +3639,12 @@
     }
    },
    "Lights": {
-    "area_m2": 1.43,
-    "uv_coverage": 0.573,
+    "area_m2": 1.45,
+    "uv_coverage": 0.564,
     "px_per_m": {
-     "High": 1295,
-     "Medium": 324,
-     "Low": 162
+     "High": 1276,
+     "Medium": 319,
+     "Low": 159
     }
    }
   }
@@ -3758,5 +3770,29 @@
    }
   ]
  },
- "dims_reference": "art-source/truck/dims.json"
+ "dims_reference": "art-source/truck/dims.json",
+ "qa_renders": [
+  "artifacts/cab-side-s24/a6_qa/34przod_white_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/34przod_dark_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/zbl_reflektor_white_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/zbl_drzwi_white_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/bok_white_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/34tyl_white_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/zbl_kolo_white_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/zbl_tyl_white_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/34przod_p_white_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/zbl_wydech_white_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/przod_white_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/zbl_reflektor_dark_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/34przod_white_lowsun_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/zbl_reflektor_white_lowsun_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/34przod_dark_lowsun_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/zbl_reflektor_dark_lowsun_lod0.jpg",
+  "artifacts/cab-side-s24/a6_qa/34przod_white_lod0_urp.jpg",
+  "artifacts/cab-side-s24/a6_qa/lod0_34przod.jpg",
+  "artifacts/cab-side-s24/a6_qa/lod1_34przod.jpg",
+  "artifacts/cab-side-s24/a6_qa/lod2_34przod.jpg",
+  "artifacts/cab-side-s24/a6_qa/pivoty_34.jpg",
+  "artifacts/cab-side-s24/a6_qa/pivoty_gora.jpg"
+ ]
 }

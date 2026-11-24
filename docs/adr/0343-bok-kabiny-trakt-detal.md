@@ -46,13 +46,13 @@ LOD1 traci żaluzje kratki (`side_vent_louvre`, rama i tacka zostają); LOD2 tra
 i podstawę kierunkowskazu (soczewka i rynienka zostają). Cele decymacji bez zmian (`TRI_TARGET`).
 
 ## Skutki (zmierzone)
-- Trójkąty (manifest, z bryłami kolizji; limity 140 000 / 45 000 / 17 900): LOD0 105 898 → 107 493, LOD1 42 999 → 43 000,
-  LOD2 17 838 → 17 702.
-- Texel density High bez istotnej zmiany: Paint 554 → 556 px/m, Trim 278 → 278 px/m. Rozmiary atlasów bez zmian.
+- Trójkąty (manifest, z bryłami kolizji; limity 140 000 / 45 000 / 17 900): LOD0 105 898 → 107 669, LOD1 42 999 → 42 999,
+  LOD2 17 838 → 17 700.
+- Texel density High bez istotnej zmiany: Paint 554 → 551 px/m, Trim 278 → 278 px/m. Rozmiary atlasów bez zmian.
 - Walidatory: `check_export.py` PASS, `check_fit.py` PASS (0 wierzchołków wnętrza poza poszyciem), `test_truck_regs.py` 5 passed.
 - Szerokość: najdalej wystają żaluzje kratki (+18 mm od poszycia na wysokości 2,6 m, gdzie kabina jest już węższa) i
   soczewka kierunkowskazu (+13 mm → 2,516 m); limit 2,55 m zachowany (`regs_check`: szerokość nadwozia).
-- Czas eksportu z bake'iem: 1374 s i 1264 s (dwa przebiegi na PC s24).
+- Czas eksportu z bake'iem: 1163–1374 s (trzy przebiegi na PC s24).
 - W lusterku (edytor, PC High, clear, RT ×3 — `artifacts/cab-side-s24/compare/`): w pasie kabiny widać kratkę, rynienkę,
   półkę przetłoczenia na dolnej połaci drzwi i żebra owiewki. Środkowe pole pasa to nadal szyba drzwi odbijająca niebo —
   tego ta zmiana nie dotyka (i nie powinna: to szkło).
@@ -63,3 +63,6 @@ i podstawę kierunkowskazu (soczewka i rynienka zostają). Cele decymacji bez zm
 3. Klamka pozostaje wpuszczona (płaska); wystający pałąk czytałby się w lusterku lepiej, ale zmienia charakter drzwi —
    decyzja właściciela.
 4. Aliasing RT lusterek (ADR 0340, otwarte 1) ogranicza czytelność drobnego detalu przy skali 1×.
+5. Przednia część rynienki w widoku `truck-side` (edytor, słońce) jest jaśniejsza niż tylna
+   (`artifacts/cab-side-s24/compare/bok_kabiny_zoom_przed_po.jpg`) — przyczyna nie zdiagnozowana (połysk tworzywa albo
+   wypalone AO); do sprawdzenia przy rundzie krytyka.
