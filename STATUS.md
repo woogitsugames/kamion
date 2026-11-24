@@ -34,3 +34,11 @@
 - Kamera `king_head_0325` trisExact 429 862 → 431 797. pytest celowany 32 passed (`logs/pytest-targeted.log`).
 - Uwaga: commit „runda 2” zawiera też przegenerowane `generated/{roads_qa,streetscape_qa,world_manifest}.json` (build_world na kodzie main + ADR 0331).
 - W toku: `after.ps1 -Out artifacts/monument2-s24/vqa-after2`. NASTĘPNY KROK: `artifacts/monument2-s24/make-sbs.sh vqa-after2 after2`, ADR wyniki, kopia dowodów do main/artifacts.
+
+## Krok 4 — koniec (runda 2 Unity, ADR, dowody)
+- r2: `vqa-after2/`, `sbs/after2-ref-vs-game.jpg`, `sbs/head-crop-ref-before-after2.jpg`; look-dev `lookdev/r7-face.jpg` (usta bez grymasu).
+- Pomnik LOD0 5 558 / LOD1 422 tris (figura 5 478 / 372). ADR 0331 z wynikami. pytest 32 passed.
+- Dowody skopiowane do `C:\Users\matma\Documents\Claude\kamion\artifacts\monument2-s24\`.
+- NASTĘPNY KROK (lider): visual-critic na `artifacts/monument2-s24/sbs/after2-ref-vs-game.jpg` + `head-crop-ref-before-after2.jpg`;
+  scalenie `git merge monument2-s24` → `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region knyszyn` →
+  `pwsh scripts/import-region.ps1 -Region knyszyn -BuildTarget Win64`; kamery w VQA: `king_street_driver_0331,king_street_tele_0331,king_head_0325`.
