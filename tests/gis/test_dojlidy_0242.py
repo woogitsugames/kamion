@@ -141,8 +141,10 @@ def test_kuronia3_cassette_and_three_storeys():
 def test_runoff_strength_is_per_material():
     from streetscape import materials as MT
     with_key = {k for k, m in MT.M.items() if "runoff_strength" in m}
-    assert with_key == {"hall_wall_smooth", "cladding_cassette_grey"}
+    # ADR 0242: hall_wall_smooth (0.25), cladding_cassette_grey (0.5); ADR 0338: retaining_wall (1.3, cutting walls)
+    assert with_key == {"hall_wall_smooth", "cladding_cassette_grey", "retaining_wall"}
     assert MT.M["hall_wall_smooth"]["runoff_strength"] == 0.25
+    assert MT.M["retaining_wall"]["runoff_strength"] == 1.3
     src = (REPO / "game/Assets/_Project/World/Import/WorldPbrMaterials.cs").read_text(encoding="utf-8")
     assert 'def.Get("runoff_strength")' in src and "* RunoffStrengthScale(def));" in src
     c_manifest = json.loads((REGIONS / "bialystok-industrial-c/generated/world_manifest.json").read_text(encoding="utf-8"))

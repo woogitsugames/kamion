@@ -105,7 +105,7 @@ def test_board_takes_one_row_of_the_set():
     n = BM.wood_board(acc, "wood_planks", np.zeros(2), np.array([1.0, 0.0]), np.array([0.0, -1.0]), 0.0, 0.14, 0.5, 3.0,
                       0.03, "k")
     assert n == 8
-    V, _, UV, _ = acc.d[("buildings", "wood_planks")][0]            # the face quad
+    V, _, UV, *_ = acc.d[("buildings", "wood_planks")][0]            # the face quad
     v = UV[:, 1] / BM.WOOD_TILE_M[1]
     j = np.asarray(BM.WOOD_JOINT_V + (BM.WOOD_JOINT_V[0] + 1.0,))
     assert not np.any((j > v.min() + 1e-9) & (j < v.max() - 1e-9))   # no joint line runs along the board face

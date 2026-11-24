@@ -215,8 +215,16 @@ def test_authored_files_present_and_consistent(rid):
     assert rt["start_epsg2180"] == [e["x"], e["y"]] and rt["end_epsg2180"] == [ends[0]["x"], ends[0]["y"]]
     ov = yaml.safe_load((d / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
     built = (d / "region.yaml").exists()
+    # Region-wide rule overrides (e.g. ADR 0196/0336 facade_rules, ADR 0185 building_rules, ADR 0216 lamp_policy)
+    # apply to the whole tile via explicit rule flags instead of per-feature `target` + `set`.
+    region_rule_kinds = {"facade_rules", "building_rules", "lamp_policy"}
+    meta_keys = {"id", "kind", "reason", "confidence", "verify", "sources", "status_note"}
     for o in ov:
-        assert {"id", "target", "reason", "confidence", "verify", "set"} <= set(o), (rid, o.get("id"))
+        if o.get("kind") in region_rule_kinds:
+            assert {"id", "kind", "reason", "confidence", "verify"} <= set(o), (rid, o.get("id"))
+            assert set(o) - meta_keys, (rid, o.get("id"))
+        else:
+            assert {"id", "target", "reason", "confidence", "verify", "set"} <= set(o), (rid, o.get("id"))
         if o["id"] in SEED_OVERRIDE_IDS and not built:
             assert o["confidence"] == "low"                       # nothing measured in these tiles before the ingest
         assert o["confidence"] in ("low", "medium", "high")

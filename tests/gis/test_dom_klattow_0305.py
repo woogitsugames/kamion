@@ -220,7 +220,9 @@ def test_materials_and_sets():
     assert MT.M["roof_tiles_old"]["texture_set"] == "roof_tiles_old" and MT.M["wood_planks_white"]["texture_set"] == "boards_painted"
     assert MT.M["wood_planks_stain"]["texture_set"] == "wood_siding"
     assert "texture_set" not in MT.M["wood_trim_brown"]
-    assert "roof_tiles_old" not in BM.ROOF_OVERRIDES and "log_wall_white" not in BM.HOUSE_WALL_OVERRIDES   # authored asset only
+    # ADR 0305 §3: log_wall_white stays authored-asset only (tile height = 1-storey wall);
+    # ADR 0316 / ADR 0336: roof_tiles_old was promoted to a 4.2x4.2 m roof set used by rules and small-town overrides
+    assert "roof_tiles_old" in BM.ROOF_OVERRIDES and "log_wall_white" not in BM.HOUSE_WALL_OVERRIDES
     sys.path.insert(0, str(ROOT / "art-source/world/materials/_src"))
     import sets_facade as F
     assert F.FACADE_SETS["log_whitewash"]["tile_m"] == [4.0, 2.2] and F.FACADE_SETS["fieldstone"]["tile_m"] == [2.4, 0.6]

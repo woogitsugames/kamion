@@ -139,6 +139,6 @@ def test_roof_diversity_pitch_and_dormers(tyk_blds, tyk_built):
         assert 20 <= tris <= 48
         # Every triangle must have positive area (non-degenerate)
         for (_, _), items in acc.d.items():
-            for V, T, _, _ in items:
+            for V, T, *_ in items:
                 cross = np.cross(V[T[:, 1]] - V[T[:, 0]], V[T[:, 2]] - V[T[:, 0]])
                 assert np.all(np.linalg.norm(cross, axis=1) > 1e-6)
