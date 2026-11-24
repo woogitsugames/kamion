@@ -28,7 +28,8 @@ import scene as S  # noqa: E402
 LABEL = {
     "34przod": "3/4 przód", "bok": "bok lewy (ortho)", "przod": "przód (ortho)", "34tyl": "3/4 tył (prawa strona)",
     "zbl_reflektor": "zbliżenie: reflektor", "zbl_stopnie": "zbliżenie: nadkole i stopnie",
-    "zbl_tyl": "zbliżenie: tył kabiny, siodło, przewody", "zbl_kolo": "zbliżenie: koła tylne, błotnik",
+    "zbl_tyl": "zbliżenie: tył kabiny, siodło, przewody",
+    "zbl_bok": "bok kabiny z bliska", "lusterko": "wzdłuż boku kabiny (jak lusterko klasy II)", "bok_tyl": "bok kabiny od tyłu", "zbl_kolo": "zbliżenie: koła tylne, błotnik",
     "top": "widok z góry", "top_kabina": "kabina z góry (ortho)", "tilt": "test uchylania kabiny 50° (ortho)",
     "oko_przod": "z punktu oczu: na wprost", "oko_lewo": "z punktu oczu: szyba lewa",
     "oko_prawo": "z punktu oczu: szyba prawa i lusterka",
@@ -77,6 +78,7 @@ def build(a):
     B.cab_shell()
     B.glazing()
     B.doors_and_gaps()
+    B.side_detail()
     B.front_face(subpaths, strokes)
     B.headlamps()
     B.corners_roof_rear()
