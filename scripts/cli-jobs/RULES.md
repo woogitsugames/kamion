@@ -9,3 +9,4 @@
 - Budżety: testy budżetowe (`tests/gis/test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py`) muszą zostać zielone.
 - Pętla wizualna: visual-qa przed|po (High, clear i overcast) i obejrzenie PNG. Dowody do `C:\Users\matma\Documents\Claude\kamion\artifacts\<nazwa-zadania>\`.
 - Na koniec wypisz raport: wynik, zmienione pliki, liczby przed/po, dowody, czego nie zrobiłeś, następny krok dla lidera.
+- **Antigravity/Neon: NIE uruchamiaj zadań w tle (background tasks / task-NNN).** Po powrocie z zadania w tle agy pada błędem `unknown model key MODEL_PLACEHOLDER_M532`. Każdą długą komendę (build_world, import, visual-qa, testy) uruchamiaj na pierwszym planie i czekaj na jej koniec (dłuższy timeout), nawet jeśli trwa 20–40 min.
