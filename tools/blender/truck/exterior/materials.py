@@ -118,13 +118,113 @@ def thin_glass(name, slot, tint, rough=0.0, ior=1.52):
     return m
 
 
+# cab-side-s24 (ADR 0343), A2 frame (y forward, front axle at y = 0, z up). All WORKING_VALUE, judged on renders.
+# (y centre, z top, length, half width, strength driver side, strength passenger side)
+SIDE_DRIPS = (
+    (-0.785, 1.385, 0.30, 0.035, 0.55, 0.40),    # under the grab-handle recess
+    (-0.742, 2.455, 0.55, 0.085, 0.45, 0.60),    # under the sleeper vent
+    (-0.830, 3.030, 0.75, 0.022, 0.60, 0.45),    # rear end of the drip rail
+    (-0.450, 1.580, 0.26, 0.075, 0.30, 0.22),    # under the door handle recess
+    (0.922, 1.585, 0.24, 0.065, 0.35, 0.45),     # under the side indicator
+    (-0.600, 3.000, 2.00, 0.012, 0.22, 0.30),    # door rear shut line (water follows the seal)
+)
+HANDLE_ZONE = (-0.45, 1.63, 0.24, 0.15)          # scratches round the door handle: y, z, half extents
+SCUFF_ZONE = (-0.36, 1.33, 0.30, 0.12)           # boot / bag scuffs on the door bottom over the steps
+
+
+def side_grime(nt, geo, sep, splash, wear):
+    """Position-driven grime of the cab / fairing sides, both sides (|n.x| picks the outward faces)."""
+    mn = lambda op, a, b=None, clamp=False: math_node(nt, op, a, b, clamp)   # noqa: E731
+    nrm = N(nt, "ShaderNodeSeparateXYZ")
+    L(nt, geo.outputs["Normal"], nrm.inputs[0])
+    out = mn("MULTIPLY", mn("SUBTRACT", mn("ABSOLUTE", nrm.outputs[0]), 0.5), 2.0, clamp=True)
+    x, y, z = sep.outputs[0], sep.outputs[1], sep.outputs[2]
+    total = None
+
+    def add(v):
+        nonlocal total
+        total = v if total is None else mn("ADD", total, v)
+
+    def tent(v, c, hw):
+        return mn("SUBTRACT", 1.0, mn("DIVIDE", mn("ABSOLUTE", mn("SUBTRACT", v, c)), hw), clamp=True)
+    if splash > 0:
+        # the tyre throws the film rearwards and up: onset behind the wheel, densest at step height, gone by ~1.95 m
+        # and ~2.9 m behind the axle; streaks along the throw direction plus loose spatter round the fan
+        on = mn("DIVIDE", mn("SUBTRACT", -0.34, y), 0.30, clamp=True)
+        far = mn("DIVIDE", mn("ADD", y, 2.9), 1.6, clamp=True)
+        hi = mn("DIVIDE", mn("SUBTRACT", 2.05, z), 1.05, clamp=True)
+        hi = mn("POWER", hi, 1.6)
+        u = mn("ADD", mn("MULTIPLY", y, -0.8), mn("MULTIPLY", z, 0.6))
+        v = mn("ADD", mn("MULTIPLY", y, 0.6), mn("MULTIPLY", z, 0.8))
+        cv = N(nt, "ShaderNodeCombineXYZ")
+        L(nt, mn("MULTIPLY", u, 1.3), cv.inputs[0])
+        L(nt, mn("MULTIPLY", v, 7.0), cv.inputs[1])
+        L(nt, mn("MULTIPLY", x, 0.5), cv.inputs[2])
+        n1 = N(nt, "ShaderNodeTexNoise", Scale=1.0, Detail=7.0, Roughness=0.72, Distortion=1.4)
+        L(nt, cv.outputs[0], n1.inputs["Vector"])
+        m1 = N(nt, "ShaderNodeMapRange", **{"From Min": 0.38, "From Max": 0.70, "To Min": 0.10})
+        L(nt, n1.outputs["Fac"], m1.inputs["Value"])
+        n2 = N(nt, "ShaderNodeTexNoise", Scale=75.0, Detail=3.0, Roughness=0.5)
+        L(nt, geo.outputs["Position"], n2.inputs["Vector"])
+        m2 = N(nt, "ShaderNodeMapRange", **{"From Min": 0.63, "From Max": 0.70})
+        L(nt, n2.outputs["Fac"], m2.inputs["Value"])
+        fan = mn("MULTIPLY", mn("MULTIPLY", on, far), hi)
+        body = mn("ADD", mn("MULTIPLY", m1.outputs[0], 0.85), mn("MULTIPLY", m2.outputs[0], 0.45))
+        add(mn("MULTIPLY", mn("MULTIPLY", fan, body), splash))
+    if wear > 0:
+        sgn = mn("SIGN", x)
+        nd = N(nt, "ShaderNodeTexNoise", Scale=1.0, Detail=3.0, Roughness=0.55)
+        sv = N(nt, "ShaderNodeVectorMath", _operation="MULTIPLY")
+        sv.inputs[1].default_value = (3.0, 55.0, 2.2)
+        L(nt, geo.outputs["Position"], sv.inputs[0])
+        L(nt, sv.outputs[0], nd.inputs["Vector"])
+        md = N(nt, "ShaderNodeMapRange", **{"From Min": 0.36, "From Max": 0.66, "To Min": 0.30})
+        L(nt, nd.outputs["Fac"], md.inputs["Value"])
+        drips = None
+        for yc, zt, ln, hw, kl, kr in SIDE_DRIPS:
+            below = mn("SUBTRACT", zt, z)
+            d = mn("MULTIPLY", tent(y, yc, hw), mn("DIVIDE", below, 0.015, clamp=True))
+            d = mn("MULTIPLY", d, mn("SUBTRACT", 1.0, mn("DIVIDE", below, ln), clamp=True))
+            k = mn("ADD", (kl + kr) / 2, mn("MULTIPLY", sgn, (kr - kl) / 2))
+            d = mn("MULTIPLY", d, k)
+            drips = d if drips is None else mn("MAXIMUM", drips, d)
+        add(mn("MULTIPLY", mn("MULTIPLY", drips, md.outputs[0]), wear))
+        # fine scratches round the handle (rings, keys): two families of thin lines at different angles
+        hy, hz, ey, ez = HANDLE_ZONE
+        zone = mn("MULTIPLY", tent(y, hy, ey), tent(z, hz, ez))
+        lines = None
+        for ang, sc in ((0.30, 300.0), (-0.85, 380.0)):
+            ca, sa = math.cos(ang), math.sin(ang)
+            a = mn("ADD", mn("MULTIPLY", y, ca), mn("MULTIPLY", z, sa))
+            b = mn("ADD", mn("MULTIPLY", y, -sa), mn("MULTIPLY", z, ca))
+            cv = N(nt, "ShaderNodeCombineXYZ")
+            L(nt, mn("MULTIPLY", a, sc * 0.045), cv.inputs[0])
+            L(nt, mn("MULTIPLY", b, sc), cv.inputs[1])
+            L(nt, x, cv.inputs[2])
+            ns = N(nt, "ShaderNodeTexNoise", Scale=1.0, Detail=1.0, Roughness=0.4)
+            L(nt, cv.outputs[0], ns.inputs["Vector"])
+            ms = N(nt, "ShaderNodeMapRange", **{"From Min": 0.615, "From Max": 0.66})
+            L(nt, ns.outputs["Fac"], ms.inputs["Value"])
+            lines = ms.outputs[0] if lines is None else mn("MAXIMUM", lines, ms.outputs[0])
+        add(mn("MULTIPLY", mn("MULTIPLY", zone, lines), 0.55 * wear))
+        sy, sz, ey, ez = SCUFF_ZONE
+        nsf = N(nt, "ShaderNodeTexNoise", Scale=16.0, Detail=5.0, Roughness=0.65)
+        L(nt, geo.outputs["Position"], nsf.inputs["Vector"])
+        msf = N(nt, "ShaderNodeMapRange", **{"From Min": 0.50, "From Max": 0.68})
+        L(nt, nsf.outputs["Fac"], msf.inputs["Value"])
+        add(mn("MULTIPLY", mn("MULTIPLY", mn("MULTIPLY", tent(y, sy, ey), tent(z, sz, ez)), msf.outputs[0]), 0.5 * wear))
+    return mn("MULTIPLY", total, out)
+
+
 # ---------------------------------------------------------------- grime (subtle, height + cavity driven)
 def grime(nt, b, rgb_sock_default, rough_default, h0=1.0, amount=0.5, cavity=True, dust=(0.16, 0.145, 0.12),
-          film=0.0, streak=0.0, back=0.0, cav=0.8):
+          film=0.0, streak=0.0, back=0.0, cav=0.8, splash=0.0, side_wear=0.0):
     """Mix road dust into base colour/roughness: stronger near the ground, in cavities (AO), broken by noise.
     film: extra road-film gradient on the lowest 0.6 m (spray from the own wheels; R2 #11).
     streak: vertical run-down streaks (noise stretched in z) on vertical faces.
-    back: rear-wheel spray on rear-facing faces (cab back wall), fading upwards to ~2.2 m."""
+    back: rear-wheel spray on rear-facing faces (cab back wall), fading upwards to ~2.2 m.
+    splash: front-wheel spray fan on the outward faces behind the front wheel (step boxes, door bottom, sill, skirt).
+    side_wear: cab-side run-off streaks under the fittings and fine scratches / scuffs round the door handle (ADR 0343)."""
     geo = N(nt, "ShaderNodeNewGeometry")
     sep = N(nt, "ShaderNodeSeparateXYZ")
     L(nt, geo.outputs["Position"], sep.inputs[0])
@@ -168,6 +268,8 @@ def grime(nt, b, rgb_sock_default, rough_default, h0=1.0, amount=0.5, cavity=Tru
         L(nt, n4.outputs["Fac"], m4.inputs["Value"])
         f = math_node(nt, "ADD", f, math_node(nt, "MULTIPLY", math_node(nt, "MULTIPLY", rear, hb),
                                               math_node(nt, "MULTIPLY", m4.outputs[0], back)))
+    if splash > 0 or side_wear > 0:
+        f = math_node(nt, "ADD", f, side_grime(nt, geo, sep, splash, side_wear))
     if cavity:
         ao = N(nt, "ShaderNodeAmbientOcclusion", Distance=0.12, _samples=8)
         inv = math_node(nt, "SUBTRACT", 1.0, ao.outputs["AO"])
@@ -495,7 +597,7 @@ def build_paint(livery, clay=False):
         # fleet truck a few days after washing: road film low down, run-down streaks, rear-wheel spray on
         # the cab back wall (R2 #5/#11)
         grime(nt, b, lv[0], lv[1], h0=1.6, amount=0.55, film=1.6, streak=0.35, back=3.2,
-              dust=(0.15, 0.135, 0.11), cav=1.8)
+              dust=(0.15, 0.135, 0.11), cav=1.8, splash=1.5, side_wear=2.0)
     # wordmark: dark satin on light liveries, satin silver on dark ones (R2 #9: it vanished on bottle green)
     if livery == "dark" and not clay:
         principled("wordmark", "METAL", (0.62, 0.63, 0.64), 0.32, metal=1.0)
@@ -596,7 +698,7 @@ def build_library(livery="white", clay=False):
     m, nt, b = principled("plastic", "TRIM", trim_rgb, 0.62, spec=0.45)
     if not clay:
         micro_bump(nt, b, 900.0, 0.25, 0.0003)
-        grime(nt, b, trim_rgb, 0.62, h0=1.4, amount=0.9, film=1.2, streak=0.3)
+        grime(nt, b, trim_rgb, 0.62, h0=1.4, amount=0.9, film=1.2, streak=0.3, splash=0.9)
     principled("mask_gloss", "TRIM", (0.018, 0.018, 0.019) if not clay else (0.2, 0.2, 0.2), 0.09, coat=0.5)   # modern front: gloss-black mask (r6: albedo 0.010 -> 0.018, piano-black plastic is not a black hole; WORKING_VALUE)
     m, nt, b = principled("plastic_satin", "TRIM", (0.028, 0.029, 0.03) if not clay else (0.25, 0.25, 0.25), 0.36)
     principled("rubber", "TRIM", (0.018, 0.018, 0.018), 0.82, spec=0.3)

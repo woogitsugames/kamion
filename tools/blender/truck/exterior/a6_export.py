@@ -109,8 +109,8 @@ LIVERIES = {   # game material variants of MI_Ext_Paint (linear colours, same as
 DUST = (0.15, 0.135, 0.11)
 URP_LIT_DIRT = 0.5          # _Dirt baked into the stock-URP-Lit fallback BaseMap/MaskMap
 
-DOOR_PIECES = ("door_skirt_", "door_handle_", "door_lock_", "win_frame_", "belt_seal_", "door_shell_")
-LOD1_DROP = ("_nut", "_washer", "_hubbolt", "battery_latch", "door_lock_", "emblem_dash", "extender_hinge",
+DOOR_PIECES = ("door_skirt_", "door_handle_", "door_lock_", "win_frame_", "belt_seal_", "door_shell_", "door_swage_")
+LOD1_DROP = ("side_vent_louvre", "_nut", "_washer", "_hubbolt", "battery_latch", "door_lock_", "emblem_dash", "extender_hinge",
              "washer_nozzle", "antenna_base", "fifth_pin", "fifth_grease", "fifth_handle_grip", "catwalk_ladder", "exhaust_clamp_bolt", "exhaust_stack_band",
              "catwalk_brk", "rear_lamp_brk", "trailer_socket_brk", "fairing_brk", "spring_hanger", "tank_saddle",
              "mudflap_rib", "socket_lid", "proj_shroud", "air_tank_strap", "tank_bead", "fuel_neck", "exhaust_tip",
@@ -128,7 +128,8 @@ LOD2_DROP = LOD1_DROP + ("coil", "damper_", "brake_chamber", "caliper_", "tie_ro
                          "marker_front_led", "catwalk_grab", "coupling_panel",
                          "exhaust_flex", "exhaust_clamp", "exhaust_stay_arm", "proj_bezel", "pos_gasket",
                          "marker_front_gasket", "side_repeater_base", "lane_dash", "proj_shroud", "hb_led", "roof_hatch_glass",
-                         "skirt_swage", "skirt_vent", "skirt_flange", "skirt_gap")
+                         "skirt_swage", "skirt_vent", "skirt_flange", "skirt_gap",
+                         "door_swage", "cab_swage", "roof_swage", "side_vent_", "extender_rib", "indicator_side_base")   # ADR 0343
 # ADR 0175 (review s17 P0 Low): the side retro-reflectors stay down to LOD2 - Low is the phone tier and R48 6.17 /
 # R3 parts are what a following driver reads at distance (24 triangles in all)
 LOD3_KEEP = ("cab_shell", "door_shell_", "door_skirt", "side_glass", "windscreen", "lower_fairing", "arch_flare",
@@ -230,6 +231,7 @@ def build_source():
     B.cab_shell()
     B.glazing()
     B.doors_and_gaps()
+    B.side_detail()
     B.front_face(subpaths, strokes)
     B.headlamps()
     B.corners_roof_rear()
@@ -325,7 +327,7 @@ def bake_only(o):
     mats = {s.material.name for s in o.material_slots if s.material}
     if mats == {"gap"}:
         return True
-    return o.name.startswith(("frame_bolt_", "wordmark_", "mirror_main_glass", "mirror_wide_glass",
+    return o.name.startswith(("bk_", "frame_bolt_", "wordmark_", "mirror_main_glass", "mirror_wide_glass",
                               "mirror_kerb_glass", "front_mirror_glass"))
 
 
