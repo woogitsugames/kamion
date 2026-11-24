@@ -66,8 +66,36 @@ koronie rowu o 0,20 m w dół (koryto + odsłonięty fartuch). Test `test_ditch_
   nie powtarzają tych samych koron). **Ta sama liczba wierzchołków i trójkątów** (zmieniają się tylko wysokości / UV /
   kolory / materiały); + do 8 prymitywów na sektor (3 mixy × 3 pasma), budżet draw calls D74: 2000 / 4000.
 
+### 5. Schodki przy trzcinie — prawdziwa przyczyna (`bv_bank_n`)
+Teren po (2) jest gładki (LOD0 w `chunk_6_3.glb` sprawdzony węzeł po węźle: spadek ~0,35 m/m bez uskoków), a schodki
+na kamerze zostały. Źródło: (a) maska mułu A liczona z rastra wody (`np.where(self.mask, ...)`) i z progiem
+(`m2 > 0.3`) — interpolacja po trójkątach 1 m rysowała jasny pas mułu o schodkowych brzegach; teraz z ciągłej
+odległości, przejście ≥ 1,5 m, bez progu, płynnie w wartość dna; (b) boki kart trzciny przy stopie prawie pionowe
+(stopa 0,35–0,7 szerokości) — rząd kart czytał się jak schody; stopa 0,12–0,30 (kępa z wąskiej nasady), każda stopa
+na własnym terenie.
+
 ## Wyniki
-(uzupełnione po rundach — patrz niżej / STATUS.md)
+Rundy: r0 = stan przed (derived = kopia main, kod main `80126cf83`), r1 = 4 kafle (brzeg, rów, dal lasu,
+nawierzchnia), r2 = tykocin (bariera, stopy trzciny), r3 = tykocin + dw671-tykocin-01 (maska mułu), r4 = tykocin
+(wąska stopa trzciny). Visual-qa High 1920 × 1080 clear + overcast + Low clear, edytor (nie player). Arkusze
+przed | po: `artifacts/banks2-s24/sbs/r{1,2,3,4}/`.
+- Most: nawierzchnia asfaltowa (było: kostka na całym moście), pojedynczy W-beam (było: W-beam + belka 0,98 m);
+  woda widoczna bokiem przez szczeble i nad poręczą (`bv2_cab_main_w`), na wprost — tylko brzeg S (zgodnie z ortofoto).
+- Brzeg: hillshade terenu przed / po (`artifacts/banks2-s24/hillshade/`) — schodki rastra zniknęły; na kamerze
+  `bv_bank_n` zamiast schodkowej ściany kart — kępy z wąskiej nasady, pas mułu bez schodków (resztkowe ząbki przy
+  pojedynczych kępach — do oceny krytyka).
+- Rów knyszyn-w: drugi (NMT) rów za rowem generatora wypełniony; garby / piła na `bv_side_ditch` zniknęły (clear i
+  overcast).
+- Dal lasu: kurtyny w kolorze rodzaju drzewostanu, sylweta nieregularna, pasma ≥ 900 m jaśniejsze i bardziej
+  niebieskoszare; bloki lasu wewnątrz kafla (HLOD ADR 0187) bez zmian.
+- Budżet kamer (stats.txt edytora, szacunek przed SRP batching): r0 → r1 High 44 kamery: draws 10 301 → 10 759 (+458,
+  +3…+24 na kamerę: prymitywy kurtyn per mix × pasmo, podział jezdni wg nawierzchni), trójkąty 28,14 → 28,07 M
+  (−0,2 %); Low draws 6 575 → 6 736 (+161), trójkąty −0,4 %. r4 tykocin High +154 draws / −0,1 % trójkątów, Low −1 /
+  +0,3 %. Budżety D74 draw calls 4 000 / 2 000 (build #5 p95 1 462 / 775). Pamięć / czas klatki: nie mierzone (lider,
+  `pc-metrics.ps1` w buildzie).
+- pytest: woda / brzeg / rów 23/23 (`test_water_0210` — bank_colours: wartość dna wg ciągłej odległości), far field /
+  las / v34 124/124 (`test_far_field` — materiał kurtyny wg mixu), nawierzchnie / ronda / mosty 177/177, most / bariery /
+  szuwary / xsec 128/128, budżet trójkątów (0221, hero_bridge, typology_0238, world_v31) 62/62. Pełny `tests/gis`: STATUS.md.
 
 ## Otwarte
 - Pomiar wysokości pomostu nad wodą (`UNVERIFIED`; zdjęcia sugerują ~0,5 m niżej niż model).
