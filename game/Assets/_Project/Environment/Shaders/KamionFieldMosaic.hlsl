@@ -30,8 +30,11 @@
 #ifndef KAMION_FIELD_MOSAIC_INCLUDED
 #define KAMION_FIELD_MOSAIC_INCLUDED
 
+#define KF_DISTRICT_M 1600.0  // WORKING_VALUE: area of one strip direction (a village's fields)
+#define KF_STRETCH 3.0        // WORKING_VALUE: blocks 3x longer along the strips than across
 #define KF_BLOCK_M 300.0
-#define KF_STRIP_MIN_M 22.0
+#define KF_BLOCK_HASH_OFS 4096  // block indices in the district frame are signed; hashed as index + this
+#define KF_STRIP_MIN_M 16.0
 #define KF_STRIP_SPAN_M 24.0
 #define KF_TRAM_M 18.0          // WORKING_VALUE: tramline spacing (sprayer boom 18 m), two wheel tracks 1.8 m apart
 #define KF_OWN_SHARE 0.55      // Podlasie strip farms: neighbouring strips are separate holdings (own crop)
@@ -148,9 +151,37 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, half driftN
     if (farm <= 0.0h) return;
     bool arable = m.b > 0.95h;
 
-    // block of parallel strips: nearest jittered seed of the 300 m lattice, distance to the block border (bisector);
-    // seed positions relative to the origin (exact integers + jitter) so v = local - seed keeps full precision
-    float2 c = floor((local + origin) / KF_BLOCK_M);
+    // ADR 0334 layout. District (KF_DISTRICT_M jittered lattice): one long-axis direction for all its strips (a Podlasie
+    // village's strips run side by side, all the same way). Inside it, blocks are the Voronoi cells of a KF_BLOCK_M
+    // lattice in a frame stretched KF_STRETCH times along that axis, so a block is ~3x longer than wide and holds a run
+    // of narrow parallel strips (wąskie, podłużne działki). Every lattice point is formed relative to the origin /
+    // district seed, so the strip coordinate keeps cm precision in fp32.
+    float2 cD = floor((local + origin) / KF_DISTRICT_M);
+    float e1 = 1e20, e2 = 1e20;
+    float2 sD = 0, sD2 = 0;
+    int2 dIJ = 0;
+    [unroll] for (int dj0 = -1; dj0 <= 1; dj0++)
+    [unroll] for (int di0 = -1; di0 <= 1; di0++)
+    {
+        int2 ij = int2(cD) + int2(di0, dj0);
+        float2 s = float2(ij) * KF_DISTRICT_M - origin
+                 + (0.15 + 0.7 * float2(KFU01(KFHash(ij.x, ij.y, 971u)), KFU01(KFHash(ij.x, ij.y, 973u)))) * KF_DISTRICT_M;
+        float2 v = local - s;
+        float dd = dot(v, v);
+        if (dd < e1) { e2 = e1; sD2 = sD; e1 = dd; sD = s; dIJ = ij; }
+        else if (dd < e2) { e2 = dd; sD2 = s; }
+    }
+    float districtEdge = (e2 - e1) / max(2.0 * length(sD2 - sD), 1e-3);
+    uint dsalt = KFHash(dIJ.x, dIJ.y, 977u);
+    float thD = PI * KFU01(KFHash(dIJ.x, dIJ.y, 975u));
+    float2 aD = float2(cos(thD), sin(thD));       // long axis of the strips
+    float2 nD = float2(-aD.y, aD.x);
+    float2 r0 = local - sD;
+    float2 q = float2(dot(r0, aD) / KF_STRETCH, dot(r0, nD));
+
+    // block of parallel strips: nearest jittered seed of the KF_BLOCK_M lattice in the stretched frame, distance to the
+    // block border measured in metres (the bisector of the affine Voronoi mapped back to the ground)
+    float2 c = floor(q / KF_BLOCK_M);
     float d1 = 1e20, d2 = 1e20;
     float2 s1 = 0, s2 = 0;
     int2 b1 = 0;
@@ -158,23 +189,26 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, half driftN
     [unroll] for (int di = -1; di <= 1; di++)
     {
         int2 ij = int2(c) + int2(di, dj);
-        float2 s = float2(ij) * KF_BLOCK_M - origin
-                 + (0.15 + 0.7 * float2(KFU01(KFHash(ij.x, ij.y, 911u)), KFU01(KFHash(ij.x, ij.y, 913u)))) * KF_BLOCK_M;
-        float2 v = local - s;
+        int2 hb = ij + KF_BLOCK_HASH_OFS;     // KFHash(i, j) == KFHash(-i, -j): keep the hashed indices positive
+        float2 s = (float2(ij) + 0.15 + 0.7 * float2(KFU01(KFHash(hb.x, hb.y, 911u ^ dsalt)), KFU01(KFHash(hb.x, hb.y, 913u ^ dsalt)))) * KF_BLOCK_M;
+        float2 v = q - s;
         float dd = dot(v, v);
-        if (dd < d1) { d2 = d1; s2 = s1; d1 = dd; s1 = s; b1 = ij; }
+        if (dd < d1) { d2 = d1; s2 = s1; d1 = dd; s1 = s; b1 = hb; }
         else if (dd < d2) { d2 = dd; s2 = s; }
     }
-    float blockEdge = (d2 - d1) / max(2.0 * length(s2 - s1), 1e-3);
-    float th = PI * KFU01(KFHash(b1.x, b1.y, 917u));
-    float w = KF_STRIP_MIN_M + KF_STRIP_SPAN_M * KFU01(KFHash(b1.x, b1.y, 919u));
+    float2 nq = (s2 - s1) / max(length(s2 - s1), 1e-3);
+    float blockEdge = (d2 - d1) / max(2.0 * length(s2 - s1), 1e-3) / length(float2(nq.x / KF_STRETCH, nq.y));
+    blockEdge = min(blockEdge, districtEdge);
+    float th = thD + 0.5 * PI + (KFU01(KFHash(b1.x, b1.y, 917u ^ dsalt)) - 0.5) * 0.2;   // strip normal, +-5.7 deg per block
+    float w = KF_STRIP_MIN_M + KF_STRIP_SPAN_M * KFU01(KFHash(b1.x, b1.y, 919u ^ dsalt));
     float2 dir = float2(cos(th), sin(th));
-    float2 rel = local - s1;
-    float t = dot(rel, dir) / w;                  // across the strips, relative to the seed (fp32-safe)
+    float2 seed = sD + aD * (s1.x * KF_STRETCH) + nD * s1.y;
+    float2 rel = local - seed;
+    float t = dot(rel, dir) / w;                  // across the strips, relative to the block seed (fp32-safe)
     float along = dot(rel, float2(-dir.y, dir.x)); // along the strip (m)
     float k = floor(t);
     float across = (t - k) * w;                   // metres from the strip's lower edge
-    uint bid = KFHash(b1.x, b1.y, 923u);
+    uint bid = KFHash(b1.x, b1.y, 923u ^ dsalt);
     uint fid = KFHash((int)bid, (int)k, 929u);
     bool own = KFU01(KFHash((int)fid, 0, 931u)) < KF_OWN_SHARE;
     float r = own ? KFU01(KFHash((int)fid, 0, 937u)) : KFU01(KFHash((int)bid, 0, 939u));

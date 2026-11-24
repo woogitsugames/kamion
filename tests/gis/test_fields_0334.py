@@ -45,8 +45,11 @@ def test_shader_use_thresholds_match_the_python_mirror():
     assert f"#define KF_BAULK_MIN_M {VG.FIELD_BAULK_W[0]}" in HLSL and f"#define KF_BAULK_SPAN_M {VG.FIELD_BAULK_W[1]}" in HLSL
     for salt in ("911u", "913u", "917u", "919u", "923u", "929u", "931u", "937u", "939u", "943u", "947u"):
         assert salt in HLSL, salt
+    for salt in ("971u", "973u", "975u", "977u"):                       # ADR 0334 districts
+        assert salt in HLSL, salt
+    assert f"#define KF_DISTRICT_M {VG.FIELD_DISTRICT_M:.1f}" in HLSL and f"#define KF_STRETCH {VG.FIELD_STRETCH:.1f}" in HLSL
     # the layout is relative to the block seed in both (precision 700 km from the CRS origin)
-    assert "float2 rel = local - s1;" in HLSL
+    assert "float2 rel = local - seed;" in HLSL and "float2 r0 = local - sD;" in HLSL
 
 
 def test_field_layout_is_a_function_of_the_position():
@@ -105,3 +108,16 @@ def test_grassland_has_no_fallow_samosiew_and_no_fields_no_plants():
     pl = VG.field_plants(_src("roślinność trawiasta", 300.0), ORIGIN, hf)
     assert all(t == "baulk" for _, _, _, t in pl)
     assert VG.field_plants({"bdot10k": {"OT_PTTR_A": []}, "osm": {"areas": []}}, ORIGIN, hf) == []
+
+
+def test_blocks_of_a_district_have_distinct_ids():
+    """_h32(i, j) == _h32(-i, -j) (odd multipliers): the signed block indices of the district frame are offset before
+    hashing (KF_BLOCK_HASH_OFS), else mirror blocks shared one id - one crop, one baulk plant set, two places."""
+    assert f"#define KF_BLOCK_HASH_OFS {VG.FIELD_BLOCK_HASH_OFS}" in HLSL
+    x = np.arange(755000.0, 768000.0, 25.0)
+    X, Y = np.meshgrid(x, np.arange(605000.0, 618000.0, 25.0))
+    L = VG.field_layout(X.ravel(), Y.ravel())
+    seeds = {}
+    for b, sx, sy in zip(L["bid"], np.round(L["sx"], 3), np.round(L["sy"], 3)):
+        seeds.setdefault(int(b), set()).add((sx, sy))
+    assert all(len(v) == 1 for v in seeds.values())

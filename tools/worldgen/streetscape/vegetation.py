@@ -707,8 +707,8 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
 # metres; fallow strips green over with birch / pine seedlings).
 BAULK_CELL_M = 7.0              # one candidate per this length of a strip edge
 BAULK_SEG_M = 50.0              # scrub runs: a segment of a baulk is either a run or bare
-BAULK_SEG_SHARE = 0.22          # share of segments that carry a run of scrub
-BAULK_RUN_KEEP = 0.55           # candidates kept inside a run
+BAULK_SEG_SHARE = 0.12          # share of segments that carry a run of scrub
+BAULK_RUN_KEEP = 0.50           # candidates kept inside a run
 BAULK_LONE_KEEP = 0.015         # candidates kept on bare segments (lone shrub / tree)
 BAULK_SPECIES = (("shrub", 0.62), ("birchyoung", 0.18), ("pineyoung", 0.06), ("birch", 0.08), ("alder", 0.06))
 FALLOW_SPACING_M = 12.0
@@ -838,7 +838,7 @@ SELF_SEED_FIELD_KEEP = 0.02
 # as a function of the EPSG:2180 position only (same pattern on both sides of a tile seam). Sizes WORKING_VALUE, read
 # off the orthophoto of Knyszyn (strips 20-45 m wide, blocks 200-400 m).
 FIELD_BLOCK_M = 300.0           # mean size of a block of parallel strips, m
-FIELD_STRIP_M = (22.0, 46.0)    # strip width range per block, m
+FIELD_STRIP_M = (16.0, 40.0)    # strip width range per block, m (ADR 0334: narrower Podlasie strips)
 FIELD_BAULK_M = 1.0             # half-width of the rough baulk line between two fields, m (mask grid = 1 m)
 FIELD_BAULK_B = 0.78
 FIELD_ROAD_M = 4.0              # the verge rule keeps the first metres beside a road
@@ -890,22 +890,27 @@ FIELD_OWN_SHARE_SHADER = 0.55   # KF_OWN_SHARE
 FIELD_BAULK_W = (1.0, 1.6)      # KF_BAULK_MIN_M, KF_BAULK_SPAN_M
 
 
-def field_layout(x, y):
-    """Strip layout of the farmland mosaic at EPSG:2180 positions x, y (arrays of one shape) - the exact mirror of
-    KamionFieldMosaic.hlsl: nearest jittered seed of the FIELD_BLOCK_M lattice -> block (bi, bj), strip direction th and
-    width w; t = projection of (P - seed) on the strip normal / w (relative to the seed, as the shader). Returns a dict
-    of arrays: fid, bid (uint32), k (strip index), across (m from the strip's lower edge), along (m), w, th,
-    block_edge (m to the block border), sx, sy (seed)."""
-    x, y = np.asarray(x, np.float64), np.asarray(y, np.float64)
-    cx, cy = np.floor(x / FIELD_BLOCK_M), np.floor(y / FIELD_BLOCK_M)
+def _h32s(a, b, salt):
+    """_h32 with a per-element salt (uint32 array)."""
+    h = (a.astype(np.int64).astype(np.uint32) * np.uint32(1597334677)
+         ^ b.astype(np.int64).astype(np.uint32) * np.uint32(3812015801) ^ salt.astype(np.uint32))
+    h ^= h >> np.uint32(16)
+    h *= np.uint32(2246822519)
+    h ^= h >> np.uint32(13)
+    return h
+
+
+def _nearest2(x, y, cell, seed_fn):
+    """Nearest and second-nearest jittered lattice seed (3 x 3 search) - the shader's loop. seed_fn(i, j) -> (sx, sy).
+    Returns (i, j, s1x, s1y, s2x, s2y, d1, d2) arrays (squared distances)."""
+    cx, cy = np.floor(x / cell), np.floor(y / cell)
     d1, d2 = np.full(x.shape, np.inf), np.full(x.shape, np.inf)
     s1x, s1y, s2x, s2y = (np.zeros(x.shape) for _ in range(4))
     bi, bj = np.zeros(x.shape), np.zeros(x.shape)
     for dj in (-1, 0, 1):
         for di in (-1, 0, 1):
             i, j = cx + di, cy + dj
-            sx = (i + 0.15 + 0.7 * _u01(_h32(i, j, 911))) * FIELD_BLOCK_M
-            sy = (j + 0.15 + 0.7 * _u01(_h32(i, j, 913))) * FIELD_BLOCK_M
+            sx, sy = seed_fn(i, j)
             dd = (x - sx) ** 2 + (y - sy) ** 2
             m1 = dd < d1
             m2 = ~m1 & (dd < d2)
@@ -915,16 +920,54 @@ def field_layout(x, y):
             d1 = np.where(m1, dd, d1)
             s1x, s1y = np.where(m1, sx, s1x), np.where(m1, sy, s1y)
             bi, bj = np.where(m1, i, bi), np.where(m1, j, bj)
-    block_edge = (d2 - d1) / np.maximum(2.0 * np.hypot(s2x - s1x, s2y - s1y), 1e-3)
-    th = np.pi * _u01(_h32(bi, bj, 917))
-    w = FIELD_STRIP_M[0] + (FIELD_STRIP_M[1] - FIELD_STRIP_M[0]) * _u01(_h32(bi, bj, 919))
-    rx, ry = x - s1x, y - s1y
+    return bi, bj, s1x, s1y, s2x, s2y, d1, d2
+
+
+FIELD_DISTRICT_M = 1600.0       # KF_DISTRICT_M: one strip direction per district (a village's fields)
+FIELD_BLOCK_HASH_OFS = 4096     # KF_BLOCK_HASH_OFS: _h32(i, j) == _h32(-i, -j), so signed block indices are offset
+FIELD_STRETCH = 3.0             # KF_STRETCH: blocks 3x longer along the strips than across
+
+
+def field_layout(x, y):
+    """Strip layout of the farmland mosaic at EPSG:2180 positions x, y (arrays of one shape) - the exact mirror of
+    KamionFieldMosaic.hlsl (ADR 0334): district (FIELD_DISTRICT_M lattice) -> long axis of the strips; blocks = Voronoi
+    cells of the FIELD_BLOCK_M lattice in the frame stretched FIELD_STRETCH x along that axis; strip normal th (+-5.7 deg
+    per block), width w; across = projection of (P - block seed) on the normal, modulo w. Returns a dict of arrays: fid,
+    bid (uint32), k (strip index), across (m from the strip's lower edge), along (m), w, th, block_edge (m to the block
+    / district border), sx, sy (block seed, EPSG:2180)."""
+    x, y = np.asarray(x, np.float64), np.asarray(y, np.float64)
+    DM = FIELD_DISTRICT_M
+    di_, dj_, sdx, sdy, sdx2, sdy2, e1, e2 = _nearest2(
+        x, y, DM, lambda i, j: ((i + 0.15 + 0.7 * _u01(_h32(i, j, 971))) * DM, (j + 0.15 + 0.7 * _u01(_h32(i, j, 973))) * DM))
+    district_edge = (e2 - e1) / np.maximum(2.0 * np.hypot(sdx2 - sdx, sdy2 - sdy), 1e-3)
+    dsalt = _h32(di_, dj_, 977)
+    thD = np.pi * _u01(_h32(di_, dj_, 975))
+    ax, ay = np.cos(thD), np.sin(thD)
+    nx, ny = -ay, ax
+    r0x, r0y = x - sdx, y - sdy
+    qx = (r0x * ax + r0y * ay) / FIELD_STRETCH
+    qy = r0x * nx + r0y * ny
+    BM = FIELD_BLOCK_M
+    HO = FIELD_BLOCK_HASH_OFS
+    bi, bj, s1x, s1y, s2x, s2y, d1, d2 = _nearest2(
+        qx, qy, BM, lambda i, j: ((i + 0.15 + 0.7 * _u01(_h32s(i + HO, j + HO, np.uint32(911) ^ dsalt))) * BM,
+                                  (j + 0.15 + 0.7 * _u01(_h32s(i + HO, j + HO, np.uint32(913) ^ dsalt))) * BM))
+    bi, bj = bi + HO, bj + HO           # hashed indices (the shader's hb)
+    L = np.maximum(np.hypot(s2x - s1x, s2y - s1y), 1e-3)
+    nqx, nqy = (s2x - s1x) / L, (s2y - s1y) / L
+    block_edge = (d2 - d1) / np.maximum(2.0 * L, 1e-3) / np.hypot(nqx / FIELD_STRETCH, nqy)
+    block_edge = np.minimum(block_edge, district_edge)
+    th = thD + 0.5 * np.pi + (_u01(_h32s(bi, bj, np.uint32(917) ^ dsalt)) - 0.5) * 0.2
+    w = FIELD_STRIP_M[0] + (FIELD_STRIP_M[1] - FIELD_STRIP_M[0]) * _u01(_h32s(bi, bj, np.uint32(919) ^ dsalt))
+    sx = sdx + ax * (s1x * FIELD_STRETCH) + nx * s1y
+    sy = sdy + ay * (s1x * FIELD_STRETCH) + ny * s1y
+    rx, ry = x - sx, y - sy
     t = (rx * np.cos(th) + ry * np.sin(th)) / w
     k = np.floor(t)
-    bid = _h32(bi, bj, 923)
+    bid = _h32s(bi, bj, np.uint32(923) ^ dsalt)
     fid = _h32(bid.astype(np.float64), k, 929)
     return {"fid": fid, "bid": bid, "k": k, "across": (t - k) * w, "along": -rx * np.sin(th) + ry * np.cos(th),
-            "w": w, "th": th, "block_edge": block_edge, "sx": s1x, "sy": s1y}
+            "w": w, "th": th, "block_edge": block_edge, "sx": sx, "sy": sy}
 
 
 def field_ids(x, y):
