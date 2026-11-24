@@ -37,3 +37,7 @@ NASTĘPNY KROK: Get-Content artifacts/pacing-s24/experiments.log -Tail 30 ; po k
 - E3 D3D12: 4 kl. > 40 ms (zgodne z ADR 0291: D3D12 gorszy).
 - W toku: E4 okno 1600x900, E5 VSync 1; dodany E6 = drugi player na GPU (zastępstwo renderu innego agenta).
 NASTĘPNY KROK: pwsh artifacts/pacing-s24/run-experiments.ps1 -Only E6  (po końcu E5, slot heavy)
+- E4 okno 1600x900: > 16,7 ms 6,5 % (bez ramki 0,6 %), 4 kl. > 33 ms — ALE w tym czasie robocopy+python innych agentów
+  (inne procesy 10–45 %), więc zakłócone. E5 VSync 1: narastające zacięcia 157→791 ms w pierwszych 35 s (przyczyna
+  UNVERIFIED), domyślnie gra ma VSync 0 — nie zmieniać. Atrybucja: frames.csv przesuwane o windowStartRealtime_s.
+- Runda 2 w toku (E1 powtórka, E4 powtórka, E6 drugi player na GPU) -> artifacts/pacing-s24/experiments2.log.
