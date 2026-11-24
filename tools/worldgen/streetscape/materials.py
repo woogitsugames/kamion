@@ -589,6 +589,12 @@ M = {
     # ADR 0159 after4: reinforced-earth facing panels of the Biezenstwa ramps (bridge_style `wall_mat`): smooth light
     # precast concrete (Mapillary 751431972202262, sunlit: lighter than the split blocks). Colour WORKING_VALUE.
     "ramp_wall_panels": {"color": [0.42, 0.42, 0.40], "rough": 0.85, "texture_set": "concrete_panels_wall", "set_tile": True},
+    # ADR 0338: cast-in-place retaining walls of road cuttings / cut-and-cover tunnels (roads/tunnels.py WALL_MAT).
+    # UV0 = metres (u along, v up from the footing): the set carries dylatacje co 6 m, weep stains, the damp foot
+    # band; TEXCOORD_1 = (u m, 1 + m below the wall top) feeds _RUNOFF (zacieki pod krawędzią / pod płytą),
+    # `splash_h` the shader's extra soil band at the foot. Colour WORKING_VALUE (same class as ramp_wall_panels).
+    "retaining_wall": {"color": [0.42, 0.415, 0.395], "rough": 0.88, "texture_set": "retaining_wall_cast",
+                       "set_tile": True, "splash_h": 0.55, "runoff": True, "runoff_strength": 1.3},
     # far-field backdrop beyond the 2x2 km region border (ADR 0085, streetscape.far_field): one merged submesh per
     # cardinal sector with linear albedo in COLOR_0.rgb, window-mode flag in COLOR_0.a (1 = block/office grid,
     # 0.75 = ribbon windows, 0 = windowless wall/roof/plinth/chimney/pylon), and bay x storey coordinates in TEXCOORD_1.
