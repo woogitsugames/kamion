@@ -1,0 +1,35 @@
+# ADR 0339 — liczby prototypu (runda r2-after)
+
+## Model koron (NMPT − NMT) i drzewostany
+
+| Kafel | wierzch koron p10 / p50 / p90 / p99 [m] | drzewostany | luki [m²] | drzewa: w lukach / przerzedzone / młode / dojrzałe | wys. drzew okapu p10 / p50 / p90 / max [m] |
+|---|---|---|---|---|---|
+| `dk65-04` | 6.8 / 14.5 / 26.5 / 28.8 | 13 | 2390 | 71 / 326 / 145 / 4279 | 10.0 / 19.1 / 26.1 / 29.6 |
+| `dk65-05` | 10.2 / 22.2 / 27.5 / 30.8 | 26 | 41857 | 1471 / 2817 / 1864 / 52238 | 13.2 / 21.8 / 26.8 / 35.1 |
+| `dw671-tykocin-03` | (brak przebudowy) | | | | |
+
+## Budżet generatora (`streetscape_qa.json`)
+
+„Przed” = plik QA z main sprzed przebudowy (starszy build main, inny kod niż HEAD — różnice nie pochodzą tylko z tego ADR).
+
+| Kafel | drzewa (instancje) przed → po | HLOD lasu: komórki, trójkąty przed → po | najgorsza klatka High przed → po | najgorsza klatka Low przed → po |
+|---|---|---|---|---|
+| `dk65-04` | 14102 → 14880 | 67, 10067 → 67, 10436 | `drive_village` 1430520 → `drive_village` 1331294 | `rail_x1_top` 469941 → `rail_x1_top` 460002 |
+| `dk65-05` | 104059 → 101899 | 390, 63085 → 388, 88736 | `route_s0472` 1572567 → `route_s0472` 1529843 | `route_s0472` 484170 → `route_s0157` 469402 |
+
+### Czysta ablacja `dk65-05`: ten sam kod, `KAMION_FOREST_CHM=0` → model koron
+
+| | reguła klasowa | model koron | Δ |
+|---|---|---|---|
+| instancje drzew / krzewów / runa | 104776 | 101899 | -2877 (-2.7 %) |
+| HLOD lasu — trójkąty w kaflu | 63085 | 88736 | +25651 (+40.7 %) |
+| najgorsza klatka High (szacunek generatora) | `route_s0472` 1562135 | `route_s0472` 1529843 | -32292 |
+| Δ High po kamerach: min / max / suma (22 kamer) | | | -235913 (`top_site_seam`) / +24729 (`route_s0786`) / -595467 |
+| najgorsza klatka Low (szacunek generatora) | `route_s0472` 472434 | `route_s0157` 469402 | -3032 |
+| Δ Low po kamerach: min / max / suma (22 kamer) | | | -58603 (`top_site_seam`) / +9534 (`route_s1729`) / -52302 |
+| gatunki okapu + podszyt (instancje) | {"tree_alder": 2299, "tree_birch": 7714, "tree_birchyoung": 6085, "tree_floor": 20937, "tree_linden": 2220, "tree_maple": 4211, "tree_pine": 32286, "tree_pineyoung": 1775, "tree_shrub": 13055, "tree_spruce": 14194} | {"tree_alder": 3180, "tree_birch": 7430, "tree_birchyoung": 6965, "tree_floor": 20937, "tree_linden": 1881, "tree_maple": 3939, "tree_pine": 25707, "tree_pineyoung": 2388, "tree_shrub": 13433, "tree_spruce": 16039} | |
+
+## Kamery kontrolne lasu (edytor, tier High, 1920 × 1080; `stats.txt`: szacunek przed batchingiem SRP)
+
+| Kafel | Kamera | światło | trójkąty przed → po | draws (szac.) przed → po | instancje: draws / trójkąty przed → po | komórki HLOD w kadrze |
+|---|---|---|---|---|---|---|
