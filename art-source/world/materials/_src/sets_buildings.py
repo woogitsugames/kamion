@@ -183,10 +183,10 @@ def interior(p, R, kind, col=None, frac=1.0, plants=0, k=0):
 
 
 def window(p, R, sashes=2, frame=WHITE_PVC, fw=0.062, sw=0.052, handle=True, transom=None, muntins=None, dirt=0.25,
-           bottom=None):
+           bottom=None, mw=0.012):
     """Frame, sashes and glass state over an interior already painted in R. sashes: number or list of relative widths.
-    transom: relative height of a horizontal bar; muntins: (nx, ny) glazing bars per sash; bottom: height of a solid
-    lower panel (doors)."""
+    transom: relative height of a horizontal bar; muntins: (nx, ny) glazing bars per sash (mw = half-width m);
+    bottom: height of a solid lower panel (doors)."""
     x0, x1, y0, y1 = R
     frame = np.asarray(frame, F32)
     m = p.rect(x0, x1, y0, y1)
@@ -209,10 +209,10 @@ def window(p, R, sashes=2, frame=WHITE_PVC, fw=0.062, sw=0.052, handle=True, tra
         if muntins:
             for i in range(1, muntins[0]):
                 xm = a + (b - a) * i / muntins[0]
-                sm = np.maximum(sm, p.rect(xm - 0.012, xm + 0.012, y0 + fw, y1 - fw))
+                sm = np.maximum(sm, p.rect(xm - mw, xm + mw, y0 + fw, y1 - fw))
             for j in range(1, muntins[1]):
                 ym = y0 + fw + (y1 - y0 - 2 * fw) * j / muntins[1]
-                sm = np.maximum(sm, p.rect(a, b, ym - 0.012, ym + 0.012))
+                sm = np.maximum(sm, p.rect(a, b, ym - mw, ym + mw))
         if transom:
             yt = y0 + (y1 - y0) * transom
             sm = np.maximum(sm, p.rect(a, b, yt - 0.035, yt + 0.035))
@@ -275,17 +275,23 @@ def _resid(p, i, kind):
             for xb in np.arange(0.12, p.w - 0.08, 0.11):
                 p.put(p.rect(xb - 0.007, xb + 0.007, 0.03, p.h - 0.03), [0.035, 0.03, 0.028], h=0.01, r=0.6)
     elif kind == "house":
-        v = [("net", {}), ("drapes", dict(col=DRAPE[5], frac=0.5)), ("roller", dict(col=lin(205, 205, 200), frac=1.0)),
+        # ADR 0336 (Podlasie small-town joinery): pairs (0, 2) bright white painted wood/PVC and (1, 3) warm medium
+        # stained timber, all with bold frames + readable cross muntins (szprosy) and lived-in curtains/plants so
+        # windows never collapse to black squares or blank roller shutters at 30-60 m.
+        HOUSE_WHITE = (0.76, 0.76, 0.73)
+        HOUSE_WOOD_A = (0.26, 0.145, 0.08)
+        HOUSE_WOOD_B = (0.22, 0.12, 0.065)
+        v = [("net", {}), ("drapes", dict(col=lin(222, 206, 178), frac=0.45)),
+             ("roller", dict(col=lin(232, 226, 212), frac=0.45, plants=2)),
              ("cafe", dict(plants=2))][i]
         interior(p, G, v[0], k=i, **v[1])
-        if i == 2:                       # external roller shutter, closed: slats 40 mm in guide rails
-            st = np.abs(((p.Y / 0.04) % 1.0) - 0.5) * 2
-            m = p.rect(0.07, p.w - 0.07, 0.07, p.h - 0.07)
-            p.put(m, lin(205, 205, 200) * (0.8 + 0.2 * st)[..., None], h=-0.01, r=0.5)
-            p.put(p.ring(0, p.w, 0, p.h, 0.07), WHITE_PVC, h=0.0, r=0.45)
-            p.put(p.rect(0, p.w, p.h - 0.16, p.h), WHITE_PVC, h=0.02)
-        else:
-            window(p, R, 2, frame=[WHITE_PVC, BROWN_PVC, WHITE_PVC, lin(52, 84, 62)][i], muntins=(1, 2) if i in (0, 3) else None)
+        # Subtle daytime sky bounce on upper glass of open panes (prevents pitch-black top half on cafe/half-blind)
+        if i in (2, 3):
+            up = p.rect(G[0], G[1], G[2] + 0.48 * (G[3] - G[2]), G[3])
+            p.put(up * 0.22, [0.16, 0.20, 0.24])
+        fr = [HOUSE_WHITE, HOUSE_WOOD_A, HOUSE_WHITE, HOUSE_WOOD_B][i]
+        window(p, R, 2, frame=fr, fw=0.072, sw=0.058,
+               transom=0.70 if i in (2, 3) else None, muntins=(1, 2), mw=0.024, dirt=0.18)
 
 
 def _office(p, i, kind):
