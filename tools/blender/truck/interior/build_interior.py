@@ -466,9 +466,9 @@ def build_materials(a):
     M.decal("grille", "grille_mask.png", (0.02, 0.02, 0.02), rough=0.6, alpha_from="mask")
     M.decal("grille_dash", "grille_mask.png", (0.040, 0.041, 0.043), rough=0.65, alpha_from="mask")
     # ADR 0344 (neon-dash-items-s24): driver items on the dash top (documents, tachograph printout, microfibre cloth)
-    # Physical linear albedos (WORKING_VALUE): warm off-white paper ~0.72, cooler thermal paper ~0.80, muted blue-grey cloth ~0.48
-    M.simple("paper_doc", (0.76, 0.72, 0.65), rough=0.86, spec=0.25)
-    M.simple("paper_tacho", (0.80, 0.81, 0.79), rough=0.60, spec=0.35)
+    # Physical linear albedos (WORKING_VALUE): warm office paper ~0.82, cooler thermal paper ~0.86, muted blue-grey cloth ~0.48
+    M.simple("paper_doc", (0.84, 0.81, 0.75), rough=0.86, spec=0.25)
+    M.simple("paper_tacho", (0.86, 0.87, 0.85), rough=0.60, spec=0.35)
     M.pbr("folder_cover", (0.085, 0.105, 0.145), "hardgrain", 0.08, nstr=0.5, rough_add=0.14, spec=0.30)
     M.pbr("dash_cloth", (0.42, 0.49, 0.54), "fabric", 0.04, nstr=0.85, rough_add=0.16, spec=0.15, sheen=0.35)
     M.grass("grass")
@@ -1082,7 +1082,10 @@ def build_dash():
         for (x, y) in ([(tx0 + (tx1 - tx0) * i / 10, ty0) for i in range(11)] + [(tx1, ty0 + (ty1 - ty0) * j / 4) for j in range(1, 5)] +
                        [(tx1 - (tx1 - tx0) * i / 10, ty1) for i in range(1, 11)] + [(tx0, ty1 - (ty1 - ty0) * j / 4) for j in range(1, 5)]):
             lip.append(drape(x, y, 0.0055))
-        tube(f"dash_tray_lip_{ti}", lip, 0.0075, "dash_mid", seg=8)
+        lip_ob = tube(f"dash_tray_lip_{ti}", lip, 0.0075, "dash_mid", seg=8)
+        # ADR 0344: INHERIT_AO takes one sample at the lip's geometric centre (middle of the tray), which sits under the
+        # dash items' contact shadow (AO ~ 0 -> black rim). Probe open dash skin 20 mm ahead of the front lip instead.
+        lip_ob["ao_probe"] = tuple(drape((tx0 + tx1) * 0.5, ty0 - 0.020, 0.002))
         # D84 polish (review P2 "flat stripes without depth"): the mat ribs were only a normal map, which the ambient-lit
         # cab view flattens. Real moulded ribs (11 mm wide, 5 mm proud, 22 mm pitch: the 4096 AO atlas resolves them; a
         # 12.5 mm pitch baked as blotches) take the baked AO and the sun.
@@ -1261,8 +1264,9 @@ def build_dash_items():
     ca_d, sa_d = math.cos(math.radians(dyaw)), math.sin(math.radians(dyaw))
     clx, cly = dcx - 0.122 * ca_d, dcy - 0.122 * sa_d
     clz = dash_surface_z(clx, cly) + tray_lift + 0.0085
-    box("dash_item_doc_clip", (clx, cly, clz), (0.016, 0.064, 0.0055), "satin",
-        bev=0.0015 if lod0 else 0.0, seg=1, rot=Matrix.Rotation(math.radians(dyaw), 3, "Z"))
+    clip_ob = box("dash_item_doc_clip", (clx, cly, clz), (0.016, 0.064, 0.0055), "satin",
+                  bev=0.0015 if lod0 else 0.0, seg=1, rot=Matrix.Rotation(math.radians(dyaw), 3, "Z"))
+    clip_ob["ao_probe"] = (clx + 0.035, cly, clz)
 
     # ---- 2. Thermal-paper tachograph printout between binnacle and centre tray (x in [-0.27, -0.07]) ----
     tcx, tcy, tyaw = -0.172, 1.158, 11.5
