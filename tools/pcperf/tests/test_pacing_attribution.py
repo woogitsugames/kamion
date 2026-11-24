@@ -24,7 +24,7 @@ def test_clean_vs_contended(tmp_path):
     rows[10] = (20.5, 35.0, 1)          # other process busy -> covers frame at 20.2
     rows[15] = (25.5, 1.0, 0)           # game not in foreground -> covers 25.2
     _write(tmp_path, frames, rows)
-    r = pa.attribute(pa.read_frames(tmp_path), pa.read_sysload(tmp_path / "sysload.csv", 0.0))
+    r = pa.attribute(pa.read_frames(tmp_path), pa.read_sysload(tmp_path / "sysload.csv", 0.0), require_fg=True)
     assert r.slow == 3
     assert r.slow_clean == 1 and r.clean_slow_list[0][0] == 12.2
     assert r.slow_contended == 2
@@ -38,3 +38,9 @@ def test_unsampled_and_exit_codes(tmp_path):
     assert r.slow_unsampled == 1
     assert pa.main([str(tmp_path)]) == 0
     assert pa.main([str(tmp_path / "nope")]) == 2
+
+
+def test_frames_csv_shifted_by_window_start(tmp_path):
+    (tmp_path / "frames.csv").write_text("frame,t_s,frame_ms\n1,1.0,50\n", encoding="utf-8")
+    (tmp_path / "run.json").write_text('{"recording": {"windowStartRealtime_s": 12.5}}', encoding="utf-8")
+    assert pa.read_frames(tmp_path) == [(13.5, 50.0)]

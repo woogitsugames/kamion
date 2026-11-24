@@ -4,7 +4,7 @@ Joins the player's per-frame CSV (frametimes.csv v1 from -shot/-quit_t runs, or 
 sysload.csv written next to it by scripts/sysload-sampler.ps1 (CPU of the game / everything else, foreground window,
 GPU P-state). A frame is "contended" when the sysload sample covering it shows other processes above --other-cpu
 (% of the whole machine), the game window not in the foreground, or (with --gpu-util-margin) GPU utilisation far above
-what the game's own GPU time explains. Gate 3 (D69: <= 12 frames > 40 ms per trip) should be judged on the clean part;
+what the game's own GPU time explains. The foreground rule is opt-in (--require-foreground). Gate 3 (D69: <= 12 frames > 40 ms per trip) should be judged on the clean part;
 the contended part says the measurement was disturbed, not that the game hitched.
 
 Usage:
@@ -51,7 +51,20 @@ class Result:
     clean_slow_list: list = field(default_factory=list)
 
 
+def window_start_s(run: Path) -> float:
+    """frames.csv (-metrics) counts t_s from the start of the recording window; run.json gives that start in
+    realtimeSinceStartup. frametimes.csv (Boot diagnostics) already counts from the player start -> 0."""
+    p = run / "run.json"
+    if (run / "frames.csv").exists() and p.exists():
+        try:
+            return float(json.loads(p.read_text(encoding="utf-8"))["recording"]["windowStartRealtime_s"])
+        except (KeyError, ValueError, TypeError):
+            return 0.0
+    return 0.0
+
+
 def read_frames(run: Path) -> list[tuple[float, float]]:
+    shift = window_start_s(run)
     for name in ("frames.csv", "frametimes.csv"):
         p = run / name
         if p.exists():
@@ -59,7 +72,7 @@ def read_frames(run: Path) -> list[tuple[float, float]]:
             with p.open(newline="", encoding="utf-8") as f:
                 for row in csv.DictReader(f):
                     try:
-                        out.append((float(row["t_s"]), float(row["frame_ms"])))
+                        out.append((float(row["t_s"]) + shift, float(row["frame_ms"])))
                     except (KeyError, ValueError):
                         continue
             return out
@@ -106,7 +119,7 @@ def contention_reasons(s: Sample, other_cpu: float, require_fg: bool) -> list[st
 
 
 def attribute(frames, samples, threshold_ms=40.0, other_cpu=10.0, t_min=10.0, t_max=float("inf"),
-              require_fg=True, max_gap_s=2.5) -> Result:
+              require_fg=False, max_gap_s=2.5) -> Result:
     res = Result()
     ts = [s.t for s in samples]
     contended_secs = set()
@@ -152,7 +165,8 @@ def main(argv=None) -> int:
                     help="process start -> Unity realtimeSinceStartup (UNVERIFIED, ~0.3-1 s)")
     ap.add_argument("--t-min", type=float, default=10.0)
     ap.add_argument("--t-max", type=float, default=float("inf"))
-    ap.add_argument("--no-foreground-rule", action="store_true")
+    ap.add_argument("--require-foreground", action="store_true",
+                    help="count 'game not in foreground' as contention (s24 A/B E1/E2: no effect on its own, so off by default)")
     ap.add_argument("--json", type=Path, default=None)
     a = ap.parse_args(argv)
     frames = read_frames(a.run_dir)
@@ -161,7 +175,7 @@ def main(argv=None) -> int:
         print(f"missing frames.csv/frametimes.csv or {sl}", file=sys.stderr)
         return 2
     samples = read_sysload(sl, a.offset_s)
-    r = attribute(frames, samples, a.threshold_ms, a.other_cpu, a.t_min, a.t_max, not a.no_foreground_rule)
+    r = attribute(frames, samples, a.threshold_ms, a.other_cpu, a.t_min, a.t_max, a.require_foreground)
     print(f"frames {r.frames}  > {a.threshold_ms:g} ms: {r.slow}  clean {r.slow_clean}  contended {r.slow_contended}"
           f"  unsampled {r.slow_unsampled}")
     print(f"sysload seconds {r.seconds_sampled}, contended {r.seconds_contended}")
