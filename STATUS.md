@@ -36,4 +36,5 @@
 
 # STATUS neon-bronze-s24 (ADR 0331 — brąz i patyna pomnika Zygmunta Augusta w Knyszynie)
 - krok 1 (implementacja brązu i patyny): dodano wypiekanie krzywizny (wklęsłość/wypukłość), lokalnego AO i zacieków spod krezy do `COLOR_0` w `knyszyn_king_0325.py` (+ przekazanie `COL` w `buildings_mesh.Acc`, tablica cokołu w `knyszyn_park_props_0227.py`), nowe parametry ciepłego brązu/patyny/wytarć (`WORKING_VALUE`) w `materials.py`, oraz opt-in `_BRONZE_PATINA` w `WorldPBR.shader` / `WorldPbrMaterials.cs` / `RegionImporter.cs` (0 nowych draw calli, LOD0 5 478 / 5 558 tris bez zmian). `pytest tests/gis -k "knyszyn or king or 0325 or 0331" -q`: 303 passed, 2 skipped, 1 xfailed.
-- NASTĘPNY KROK: `pwsh artifacts/neon-bronze-s24/build_heavy.ps1` (slot heavy: `build_all.py` + `build_world.py --region knyszyn --context`).
+- krok 2 (przebudowa PBR + kafla knyszyn): `build_all.py` (18,6 min) + `build_world.py --region knyszyn --context` (20,6 min, exit 0) w kopii `Data/raw/derived/knyszyn`. W `chunk_1_4.glb`: `monument_bronze` 3 552, `monument_bronze_patina` 602, `monument_bronze_rubbed` 1 344 tris (razem 5 498), wszystkie z `COLOR_0`.
+- NASTĘPNY KROK: `pwsh -File artifacts/neon-bronze-s24/run_unity.ps1` (import knyszyn Win64 + VQA High clear).
