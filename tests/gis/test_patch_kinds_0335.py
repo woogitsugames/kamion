@@ -65,3 +65,9 @@ def test_deterministic_and_triangle_count_unchanged_by_kinds():
         L = np.ptp(p.UV[:, 0]); W = np.ptp(p.UV[:, 1])
         cells = int(np.ceil(L / 2.5 - 1e-9)) * int(np.ceil(W / 2.0 - 1e-9))
         assert len(p.T) == 2 * cells
+
+
+def test_no_asphalt_repairs_on_stone_concrete_gravel():
+    for surface in ("road_sett", "road_cobble", "road_concrete", "road_gravel", "road_asphalt_new"):
+        _, parts = _patches(length=1500.0, surface=surface)
+        assert parts == [], surface

@@ -540,6 +540,9 @@ def build(buf, net, juncs, report):
                 sec = c.section(sc, secs)
                 if getattr(sec, "construction", False):
                     continue             # ADR 0215: never opened to traffic - no repair patches
+                if S.surface_material(c, sec) not in SEAL_SURFACES:
+                    continue             # ADR 0335: asphalt repairs only on worn asphalt - render r1 showed a 24 m rut
+                                         # fill on the Tykocin setts; stone streets are re-laid, not patched
                 hw = float(c.hw_at(sc))
                 kind = hf(*key, i, "kind")
                 fits_lane = False

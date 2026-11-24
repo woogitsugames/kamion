@@ -779,8 +779,8 @@ Shader "Kamion/World PBR"
                             // crumbled irregularly (r 0.06-0.35 m, modulated per corner by the noise); the joint is sealed
                             // along the two transverse cuts only (bitumen tape). WORKING_VALUE.
                             float endD = borderM.x - 0.004 * (n3 - 0.5);
-                            float latD = borderM.y - (0.02 + 0.05 * frac(seed * 3.71)) * (n2 * 0.7 + n1 * 0.5);
-                            float rcn = min((0.06 + 0.22 * frac(seed * 7.13)) * (0.35 + 1.3 * n1), 0.4 * mn);
+                            float latD = borderM.y - (0.03 + 0.09 * frac(seed * 3.71)) * (n2 * 0.7 + n1 * 0.5);
+                            float rcn = min((0.14 + 0.40 * frac(seed * 7.13)) * (0.3 + 1.4 * n1), 0.4 * mn);
                             float cornD = rcn - length(max(rcn - float2(endD, latD), 0.0));
                             edgeM = min(min(endD, latD), cornD) - 0.006 * n3;
                             fth = 0.012;
@@ -805,7 +805,7 @@ Shader "Kamion/World PBR"
                             // HOT-MIX pothole (lata "na goraco"): an irregular oval, lobed by two octaves of noise, soft
                             // smeared rim (4-9 cm), no overband. Distance field of an ellipse in the UV square.
                             float2 q = i.uv.xy * 2.0 - 1.0;
-                            float r = length(q) * (1.0 + 0.42 * n1 + 0.30 * n2 + 0.05 * n3);
+                            float r = length(q) * (1.0 + 0.55 * n1 + 0.45 * n2 + 0.08 * n3);
                             edgeM = min((1.2 - r) * 0.42 * mn, min(borderM.x, borderM.y));
                             fth = 0.04 + 0.05 * frac(seed * 9.1);
                             hasSeal = 0.0;
@@ -833,6 +833,17 @@ Shader "Kamion/World PBR"
                         // the 0.9 m noise (+-7 %); fresh hot mix is smoother, an old repair rougher (aggregate showing)
                         half tone = (half)((0.82 + 0.36 * frac(seed * 13.3)) * (0.93 + 0.14 * n1) * (kindF > 0.5 ? (0.97 + 0.06 * n3) : 1.0));
                         albedo *= lerp(_PatchSeam.z, _PatchSeam.w, age) * tone * (1.0 - seam * _PatchSeam.y);
+                        if (kindF > 0.5)
+                        {
+                            // ADR 0335 (render r1: patches read as flat dark plates): aggregate grain (3.5 cm and 13 cm
+                            // value noise, the fine one fades with the pixel footprint) and macro mottling; an old repair
+                            // ravels along its edge (lighter 0-6 cm rim). WORKING_VALUE.
+                            float fpx = max(length(fwidth(pw.xz)), 1e-4);
+                            half grain = (half)((ValueNoise12(on / 0.035) - 0.5) * 0.55 * saturate(0.05 / fpx)
+                                               + (ValueNoise12(on / 0.13 + 7.0) - 0.5) * 0.35);
+                            albedo *= (1.0 + grain) * (0.88 + 0.24 * macro.a);
+                            albedo *= 1.0 + 0.30 * age * (1.0 - smoothstep(0.0, 0.06, edgeM));
+                        }
                         smooth = lerp(smooth, 0.42, seam);
                         if (kindF > 0.5) smooth *= lerp(1.12, 0.9, age);
                     }
