@@ -125,7 +125,7 @@ SIDE_DRIPS = (
     (-0.742, 2.455, 0.55, 0.085, 0.45, 0.60),    # under the sleeper vent
     (-0.830, 3.030, 0.75, 0.022, 0.60, 0.45),    # rear end of the drip rail
     (-0.450, 1.580, 0.26, 0.075, 0.30, 0.22),    # under the door handle recess
-    (0.922, 1.585, 0.24, 0.065, 0.35, 0.45),     # under the side indicator
+    (0.922, 1.370, 0.10, 0.065, 0.35, 0.45),     # under the side indicator
     (-0.600, 3.000, 2.00, 0.012, 0.22, 0.30),    # door rear shut line (water follows the seal)
 )
 HANDLE_ZONE = (-0.45, 1.63, 0.24, 0.15)          # scratches round the door handle: y, z, half extents

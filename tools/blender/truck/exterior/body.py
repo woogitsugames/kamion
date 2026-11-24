@@ -1667,7 +1667,7 @@ SWAGE_H = 0.011          # m proud
 SWAGE_PROF = ((0.0, 0.0), (-0.012, 1.0), (-0.050, 0.55), (-0.100, 0.15), (-0.140, 0.0))   # (dz from the crease, share of h)
 ROOF_SWAGE_Z = 3.365     # roof-side stiffening swage: over the roof joint (3.30), under the roof radius (from 3.45)
 VENT = (-0.832, -0.652, 2.455, 2.735)    # sleeper-panel vent (y0, y1, z0, z1): over the grab-handle recess (top 2.32)
-SIDE_IND = (0.850, 0.995, 1.585, 1.640)  # side indicator lens (y0, y1, z0, z1): flat corner panel, beside the headlamp top / T-bar bottom
+SIDE_IND = (0.850, 0.995, 1.370, 1.425)  # side indicator lens (y0, y1, z0, z1): flat corner panel over the sill cladding; R48 6.5.4 cat. 5: <= 1.5 m high, <= 1.8 m from the front (per regs_check.py; regulation text not re-read: UNVERIFIED)
 
 
 def relief(name, m, side, y0, y1, prof, zc, h, taper0=0.0, taper1=0.0, eps=0.0012):
