@@ -82,7 +82,7 @@ CHM_TRUST_M = 3.0
 # broadleaf stand at ~1.5 x the height of its trees - tiles with a height model no longer have that step.
 CHM_WALL_TOP_FRAC = {"conifer": 0.888, "mixed": 0.833, "broadleaf": 0.766}
 CHM_BACK_VAR = (0.97, 1.06)   # second wall: the measured tops 6 m further in x this (class rule: BACK_H x the front)
-CHM_CANOPY_K = 0.80        # canopy sheet under the crown tops: it only closes the stand from above, the ribs carry the tops
+CHM_CANOPY_K = 0.84        # canopy sheet under the crown tops: it only closes the stand from above, the ribs carry the tops
 # Ribs: with measured heights a stand is no longer level - taller parts stand behind lower ones, and from the road the
 # canopy sheet of the taller part showed over the front wall as a smooth green hill (render r1, dk65-04
 # fh_cab_approach). Alpha-tested walls of the same edge picture cross the stand every RIB_M in both directions (lines
@@ -91,6 +91,8 @@ CHM_CANOPY_K = 0.80        # canopy sheet under the crown tops: it only closes t
 RIB_M = 16.0
 RIB_SEG_M = 8.0
 RIB_MIN_LEN_M = 8.0
+RIB_WAVE_M = 40.0
+RIB_WAVE_AMP_M = 4.5
 
 
 def _vnoise2(x, y, period, salt=""):
@@ -524,6 +526,10 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
                         k = max(1, int(math.ceil(seg.length / RIB_SEG_M)))
                         sc = np.asarray(seg.coords)
                         rp = sc[0][None, :] + (sc[-1] - sc[0])[None, :] * (np.arange(k + 1) / k)[:, None]
+                        # the ribs meander (smooth noise of the absolute position): from a bridge or a hill straight
+                        # lines every 16 m would read as a waffle of hedges
+                        rp[:, axis] += np.array([(_vnoise2(q_[0], q_[1], RIB_WAVE_M, f"w{axis}") - 0.5) * 2.0 * RIB_WAVE_AMP_M
+                                                 for q_ in rp])
                         hr_ = np.array([wall_h(q_, edge_info, mix, measured_only=True) or 0.0 for q_ in rp])
                         if hr_.max() <= 0.0:
                             continue
