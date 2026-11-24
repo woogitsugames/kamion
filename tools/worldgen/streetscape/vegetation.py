@@ -107,11 +107,12 @@ CHM_THIN_MIN = 0.25
 CHM_MIN_TREE_H = 6.0
 # species in clumps instead of salt and pepper (position hash on smooth noise; the shares of MIX stay the class
 # means only roughly): Norway spruce and birch come in groups in the pine stands of Podlasie, black alder takes the
-# wet hollows and ditch lines (ols / leg) - read off the NMT as ground lower than its 80 m surroundings.
-CHM_SPRUCE_PATCH = (90.0, 0.60, 0.55)      # noise period m, threshold, share of the pines of a patch that turn spruce
-CHM_BIRCH_PATCH = (60.0, 0.68, 0.50)
-CHM_WET_WINDOW_M = 81
-CHM_WET_TPI_M = -0.75
+# wet hollows and ditch lines (ols / leg) - read off the NMT as ground lower than its 120 m surroundings.
+CHM_SPRUCE_PATCH = (90.0, 0.66, 0.50)      # noise period m, threshold, share of the pines of a patch that turn spruce
+CHM_BIRCH_PATCH = (60.0, 0.72, 0.45)
+CHM_PATCH_OUT = (0.45, 0.55)               # noise below [0]: this share of the patch species is pine instead
+CHM_WET_WINDOW_M = 121
+CHM_WET_TPI_M = -1.5
 CHM_WET_ALDER = 0.70
 
 
@@ -143,15 +144,18 @@ def chm_species(P, sp, fk, wet):
             elif u < CHM_WET_ALDER + 0.15 and sp[k] != "spruce":
                 sp[k] = "birch"
             continue
-        if fk == "broadleaf" or sp[k] != "pine":
+        if fk == "broadleaf" or sp[k] not in ("pine", "spruce", "birch"):
             continue
-        per, thr, share = CHM_SPRUCE_PATCH
-        if _vnoise(x, y, per, "sp") > thr and _hash01("sp:" + key) < share:
-            sp[k] = "spruce"
-            continue
-        per, thr, share = CHM_BIRCH_PATCH
-        if _vnoise(x, y, per, "bi") > thr and _hash01("bi:" + key) < share:
-            sp[k] = "birch"
+        # inside a patch pines turn into the patch species, outside the patches that species gives way to pine:
+        # groups instead of an even sprinkle, the shares of the class mix stay about the same
+        for other, (per, thr, share), salt in (("spruce", CHM_SPRUCE_PATCH, "sp"), ("birch", CHM_BIRCH_PATCH, "bi")):
+            v = _vnoise(x, y, per, salt)
+            if sp[k] == "pine" and v > thr and _hash01(salt + ":" + key) < share:
+                sp[k] = other
+                break
+            if sp[k] == other and v < CHM_PATCH_OUT[0] and _hash01(salt + "o:" + key) < CHM_PATCH_OUT[1]:
+                sp[k] = "pine"
+                break
     return sp
 
 
