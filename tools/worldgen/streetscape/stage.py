@@ -402,7 +402,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     # ADR 0334: baulk / fallow plants of the field mosaic on rural tiles only (BDOT grassland inside Białystok = lawns
     # and waste ground, not strip farms)
     # ADR 0339: canopy height model of the tile (GUGiK NMPT - NMT, Data/Regions/<id>/forest_chm.png); None without it
-    chm = FCH.load(rid, origin)
+    # (KAMION_FOREST_CHM=0: the class rule on such a tile - baseline for before / after renders and budgets only)
+    chm = FCH.load(rid, origin) if os.environ.get("KAMION_FOREST_CHM", "1") != "0" else None
     if chm is not None:
         log("forest chm", chm.meta["stats"])
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides, hard=mask | bmask, tree_rows=tree_rows,

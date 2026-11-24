@@ -64,7 +64,7 @@ def parse_aaigrid(raw: bytes):
     return hdr, np.loadtxt(io.BytesIO(body), dtype=np.float32, ndmin=2)
 
 
-def fetch_dsm(bbox, log=print, tries=4):
+def fetch_dsm(bbox, log=print, tries=6):
     """1 m surface model of bbox (xmin, ymin, xmax, ymax; EPSG:2180), rows north -> south, cell centres at
     xmin + 0.5 + i. Returns (z float32 with NaN where the service has no data, [sha256 of every reply])."""
     x0, y0, x1, y1 = (float(v) for v in bbox)
@@ -86,7 +86,7 @@ def fetch_dsm(bbox, log=print, tries=4):
                     if k == tries - 1:
                         raise
                     log(f"  retry {k + 1}: {type(ex_).__name__}")
-                    time.sleep(5 * (k + 1))
+                    time.sleep(10 * (k + 1))
             nod = hdr.get("nodata_value")
             if nod is not None:
                 g = np.where(g == np.float32(nod), np.nan, g)
