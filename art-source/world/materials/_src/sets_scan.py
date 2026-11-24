@@ -498,6 +498,13 @@ def _panel():
     return hybrid(F.large_panel_joints(), "concrete_floor_worn_001", 6307, alb_k=1.6, h_k=0.8)
 
 
+def _retaining_wall():
+    # ADR 0338: cast-in-place cutting wall - the procedural layout owns the dylatacje / weep stains / foot band,
+    # the CC0 scan only adds the micro grain (alb_k 1.0: the wall must not go blotchy like a worn floor)
+    import sets_facade as F
+    return hybrid(F.retaining_wall_cast(), "concrete_floor_worn_001", 6338, alb_k=1.0, h_k=0.6, rough_k=0.4)
+
+
 def _trapezoid():
     import sets_facade as F
     return hybrid(F.trapezoid_sheet(), "corrugated_iron_03", 6308, alb_k=1.0, h_k=0.25, rough_k=0.5, notch_ribs=True,
@@ -604,6 +611,7 @@ SCAN_SETS = {
     "kerb_concrete_1m": (["concrete_floor_worn_001"], _kerb),
     "concrete_precast": (["concrete_floor_worn_001"], _precast),
     "large_panel_joints": (["concrete_floor_worn_001"], _panel),
+    "retaining_wall_cast": (["concrete_floor_worn_001"], _retaining_wall),   # ADR 0338
     "trapezoid_sheet": (["corrugated_iron_03"], _trapezoid),
 }
 

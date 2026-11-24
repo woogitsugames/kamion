@@ -283,6 +283,63 @@ def concrete_panels_wall(n=1024):
     return _finish("concrete_panels_wall", c, lum, h, rough, tone, joint)
 
 
+def retaining_wall_cast(n=2048):
+    """ADR 0338: cast-in-place reinforced-concrete retaining wall of a road cutting (mur oporowy żelbetowy,
+    roads/tunnels.py WALL_MAT; critic s24 build #5 pkt 8: the ~150 m of the DK8 cutting under rondo Szymańskiego
+    read as one clean plate). Smooth formwork face with faint panel seams and tie holes; expansion joints
+    (dylatacje) every 6.0 m, 30 mm wide, recessed 10 mm with dark elastic sealant; weep holes (odwodnienie)
+    at mid-bay 0.35 m above the footing with a wet stain running down; damp dirty band at the foot; scattered
+    chips and stains. Run-off streaks from the top edge are NOT baked (the wall top height varies along the
+    cutting) - the shader's _RUNOFF layer draws them from TEXCOORD_1 = (u m, 1 + metres below the top).
+    Tile 12 x 8 m: two dylatacje per tile, and 8 m in v covers the tallest cutting wall (measured 6.7 m,
+    chunk_3_4 of bialystok-kleeberga) so v never wraps. u along the wall, v up from the footing (UV0 metres)."""
+    Lx, Ly = 12.0, 8.0
+    c = Ctx(n, int(n * Ly / Lx) // 4 * 4, Lx, Ly, seed=1638)
+    X, Y = c.xy()
+    v = Ly - Y                                   # metres up from the footing
+    # dylatacje every 6 m (u = 0 and 6 in the 12 m tile), 30 mm wide, recessed, dark sealant
+    du6 = np.minimum(X % 6.0, 6.0 - X % 6.0)
+    dil = sstep(0.015, 0.006, du6)
+    # formwork panel seams (vertical every 2.4 m, horizontal every 2.0 m), very faint; tie holes on a
+    # 1.2 x 2.0 m grid, 24 mm, some with a rust halo
+    fu = np.minimum(X % 2.4, 2.4 - X % 2.4)
+    fh = np.minimum(v % 2.0, 2.0 - v % 2.0)
+    form = np.maximum(sstep(0.004, 0.0015, fu) * 0.45, sstep(0.004, 0.0015, fh) * 0.30)
+    dtx = np.minimum(X % 1.2, 1.2 - X % 1.2)
+    dty = np.minimum(v % 2.0, 2.0 - v % 2.0)
+    tie = sstep(0.012, 0.005, np.hypot(dtx, dty))
+    rust = sstep(0.05, 0.012, np.hypot(dtx, dty)) * (1 - tie) * hash01(np.floor(X / 1.2).astype(int) * 3 +
+                                                                        np.floor(v / 2.0).astype(int), 9)
+    joint = np.maximum(np.maximum(dil, form), tie)
+    # weep holes at mid-bay (u = 3 and 9), 0.35 m above the footing, with a wet stain running down to the foot
+    du_w = np.minimum((X - 3.0) % 12.0, (3.0 - X) % 12.0)
+    du_w = np.minimum(du_w, np.minimum((X - 9.0) % 12.0, (9.0 - X) % 12.0))
+    weep = sstep(0.030, 0.012, np.hypot(du_w, v - 0.35))
+    wet = (1 - sstep(0.06, 0.22, du_w)) * sstep(0.42, 0.05, v)          # damp halo + streak under the weep
+    # damp dirty band at the foot (also drawn by the shader _SPLASH on top of this)
+    foot = sstep(0.75, 0.03, v) * (0.7 + 0.3 * noise(c, 7, 0.15, 1.2, beta=1.0))
+    # chips / ubytki: a few Voronoi cells per tile, dark, slightly deep
+    d1, d2, idx, _, _ = voronoi(c, 5, 0.45, jitter=1.0)
+    chip_cell = (hash01(idx, 6) < 0.10) & (d1 < 0.055)
+    chip = chip_cell.astype(np.float32)
+    # per-6 m bay tone (between dylatacje) - the pour lot reads as a bay
+    bay = hash01(np.floor(X / 6.0).astype(int), 8)
+    grain = noise(c, 1, c.px * 2, 0.012, beta=0.4)
+    cloud = noise(c, 2, 0.25, 2.5, beta=1.1)
+    pores_n = noise(c, 3, c.px * 1.5, 0.005, beta=0.2)
+    pores = sstep(np.quantile(pores_n, 0.997), np.quantile(pores_n, 0.997) + 0.5, pores_n)
+    lum = (1 + 0.05 * (bay - 0.5) + 0.035 * grain + 0.05 * cloud) * (1 - 0.55 * joint) \
+        * (1 - 0.35 * dil) * (1 - 0.5 * tie) * (1 - 0.30 * chip) * (1 - 0.55 * pores)
+    lum *= 1 - 0.30 * wet - 0.42 * foot * (0.6 + 0.4 * wet)
+    lum *= 1 - 0.12 * rust
+    lum *= _streaks(c, 4, 0.06)
+    h = (-10e-3 * dil - 3e-3 * form - 5e-3 * tie - 6e-3 * chip - 1.5e-3 * pores - 4e-3 * wet
+         + 0.25e-3 * grain + 0.4e-3 * cloud)
+    rough = 0.86 + 0.05 * joint + 0.10 * wet + 0.08 * foot + 0.06 * chip + 0.03 * grain
+    eid = (np.floor(X / 6.0) % 8).astype(np.float32) / 8.0
+    return _finish("retaining_wall_cast", c, lum, h, rough, eid, joint, ao_k=0.7)
+
+
 def roof_metal_tile(n=512):
     """Pressed metal tile sheet (blachodachowka, module 350 mm; ADR 0091): roll pitch 0.20 m, course step 0.35 m
     (dimensions WORKING_VALUE inside the product ranges). u along the eave, v up the slope. Tile 1.4 x 1.4 m
@@ -916,6 +973,10 @@ FACADE_SETS = {
         note="Split-face concrete blocks 1.0 x 0.5 m, half-bond, dark recessed joints (ramp retaining walls, ADR 0159)."),
     "concrete_panels_wall": dict(fn=concrete_panels_wall, tile_m=[3.0, 3.0], slots=["ramp_wall_panels"],
         note="Precast facing panels 1.5 x 1.5 m in columns shifted by half a panel, open joints (Biezenstwa ramp walls, ADR 0159)."),
+    "retaining_wall_cast": dict(fn=retaining_wall_cast, tile_m=[12.0, 8.0], slots=["retaining_wall"],
+        note="ADR 0338: cast-in-place cutting retaining wall (roads/tunnels.py): dylatacje every 6 m, weep-hole stains, "
+             "damp foot band, formwork seams + tie holes, chips. Tile 12 x 8 m; run-off streaks from the top come from "
+             "the shader _RUNOFF layer (TEXCOORD_1), not from this map."),
     "roof_metal_tile": dict(fn=roof_metal_tile, tile_m=[1.4, 1.4], slots=["roof_metal_*"],
         note="Pressed metal tile sheet, roll pitch 0.20 m, course step 0.35 m (u along the eave, v up the slope)."),
     "curtain_folds": dict(fn=curtain_folds, tile_m=[4.8, 2.7], slots=["trailer_curtain_*"],
