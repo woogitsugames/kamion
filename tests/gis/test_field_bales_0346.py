@@ -168,3 +168,12 @@ def test_clearance_from_roads_trees_and_steep_slopes():
         assert abs(b["n"]) >= 50.0 + FB.ROAD_CLEAR_M - 1.5      # clear of road band
         assert math.hypot(b["e"] - 100.0, b["n"] - 100.0) >= FB.TREE_CLEAR_M - 0.1
     FB.PROTOS.clear()
+
+
+def test_lod_policy_matches_unity_importer():
+    from roads import build_world as BW
+    cs = (ROOT / "game/Assets/_Project/World/Import/InstanceImporter.cs").read_text(encoding="utf-8")
+    for name in (FB.PROTO_STRAW, FB.PROTO_SILAGE):
+        ends, fixed = BW.instance_ends(name, 2)
+        assert ends == [35.0, 340.0] and not fixed
+    assert 'proto.StartsWith("bale_")' in cs and "new[] { 35f, 340f }" in cs

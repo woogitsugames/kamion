@@ -36,9 +36,40 @@ ADR 0334 wprowadził w shaderze terenu 16 letnich użyć pasów pól (m.in. `stu
   - **Rzędy wzdłuż ścieżek/przejazdów prasy** (65 % dla słomy, 45 % dla sianokiszonki): aktywne segmenty 140 m (48 % segmentów), co 34 m (±4,5 m jitter, losowe luki 25 %), oś cylindra poprzecznie do kierunku jazdy prasy (jak na `cs157787294.jpg`).
   - **Grupy przy krawędzi pola** (35 % dla słomy, 55 % dla sianokiszonki): zwarte szeregi 3–5 bel z odstępem 0,55 m wzdłuż jednej krawędzi działki.
 
-## Pomiary (prototyp `knyszyn-w`, edytor Win64, visual-qa High 1920×1080 `-Pc`)
+## Pomiary (prototyp `knyszyn-w`, edytor Win64, visual-qa High 1920×1080 `-Pc`, `lodBias = 1,5`)
 
-*Sekcja zostanie uzupełniona twardymi pomiarami przed|po po zakończeniu przebudowy `knyszyn-w`, importu Win64 i visual-qa High (clear i overcast).*
+### Przebudowa i pamięć kafla `knyszyn-w` (4 km², kafel wiejski)
+- `build_world.py --region knyszyn-w --context`: `281,7 s`, `terrain walls > 0,15 m: 0 (max 0,0)`.
+- Wygenerowane bele: **244** łącznie (`bale_straw`: **155**, `bale_silage`: **89**; układ `row`: **180**, układ `edge`: **64**; średnio ~61 bel/km²; 0 bel na jezdni w `artifacts/world/knyszyn-w-props-on-road.txt`).
+- Metadane `props_meta.json`: `bale_straw` i `bale_silage` — oba `materials: ['field_bale']`, `tris_lod0: 224`, `tris_lod1: 60`.
+- `import-region.ps1 -Region knyszyn-w -BuildTarget Win64 -MaterialTier High`: `IMPORT_RESULT: OK`, `sha256 mismatches: 0`, instancje `13 315 → 13 559` (`+244`), prototypy `78 → 80` (`+2`).
+- Pamięć świata (`WORLD_MEMORY`, ten sam build `knyszyn-w` bez bel → z belami):
+  - `Low`: `56,0 → 56,1 MB` (`+0,1 MB`, `instances 5,7 MB`),
+  - `High`: `137,3 → 137,3 MB` (`+0,0 MB`, `instances 5,7 MB`).
+
+### Visual QA High (`-Pc`, 1920×1080, czyste A/B na tym samym buildzie `knyszyn-w`, `clear` i `overcast`)
+Pomiar z `stats.txt` (`before_clean` bez bel → `after` z 244 belami; wartości identyczne dla `clear` i `overcast`):
+
+| Kamera | Instanced draws (raw przed→po) | Δ draws samych bel (L0/L1) | Δ instancji (bele / przerzedz. drzew*) | Δ trójkątów exact | Δ shadowCasterDraws |
+|---|---:|---:|---:|---:|---:|
+| `dk65-fields-nw` | 35 → 36 (`+1`) | **`+1`** (6× `straw` L1) | `-3` (`+6` / `-9`) | `+252` | `+0` |
+| `dk65-polna` | 85 → 86 (`+1`) | **`+1`** (3× `straw` L1) | `-4` (`+3` / `-7`) | `+96` | `+0` |
+| `tykocka-dw671-out` | 96 → 99 (`+3`*) | **`+2`** (5× `silage` L1 + 1× `straw` L1) | `+11` (`+6` / `+5`) | `+420` | `+0` |
+| `dk65-koscielna` | 130 → 130 (`+0`) | **`+2`** (3× `silage` L1 + 7× `straw` L1) | `+4` (`+10` / `-6`) | `+528` | `+0` |
+| `dk65-seam-east-out` | 123 → 124 (`+1`) | **`+2`** (3× `silage` L1 + 14× `straw` L1) | `+11` (`+17` / `-6`) | `+948` | `+0` |
+| `route-s1846` | 44 → 45 (`+1`) | **`+1`** (14× `straw` L1) | `+13` (`+14` / `-1`) | `+846` | `+0` |
+| `route-s0710` | 96 → 96 (`+0`) | **`+1`** (3× `straw` L1) | `-2` (`+3` / `-5`) | `+120` | `+0` |
+| `goniadzka-above` | 55 → 54 (`-1`) | **`+0`** (0 bel w kadrze) | `+3` (`0` / `+3`) | `+36` | `+0` |
+
+\* Uwaga pomiarowa: `WorldInstances.cs` (linie 447/456) przerzedza odległe impostory drzew (`12` tris/szt.) testem `(i & (stride - 1)) == 0` po globalnym indeksie w tablicy `matrices[]`. Dopisanie 244 instancji bel przesuwa parzystość indeksów części komórek drzew, wprowadzając szum `±1..2` draw calli impostorów drzew (np. `tykocka-dw671-out`: `+6×60 + 5×12 = +420` tris = **`+2` draw calle bel** + `+1` draw call impostora drzew; `goniadzka-above` z 0 bel: `+3×12 = +36` tris, `-1` draw). **Wkład samych bel mieści się w budżecie `+≤ 2` draw calle na wszystkich 18 kamerach perspektywicznych `knyszyn-w` (maks. `+2`, śr. `+1,25` na 8 kamerach QA, `+0` shadowCasterDraws).**
+
+### Ocena wizualna (`clear` i `overcast`) i testy
+- Podgląd 3D w Blender 4.2 Cycles (`preview/bales_blender_preview.png`): czytelna faktura słomy ze sznurkiem i matowo-półmatowej białej folii stretch bez przesycenia, gładki profil `LOD0` i `LOD1`.
+- Visual QA Unity High (`sbs_knyszyn-w_{clear,overcast}_part{1,2}.jpg`, zbliżenia `bales_closeup_2x.jpg`):
+  - `dk65-koscielna`: białe bele sianokiszonki na skoszonej zielonej łące (60 m i 305–324 m) stabilnie osadzone na gruncie, bez przepalenia bieli w słońcu i bez nadmiernego kontrastu w `overcast`.
+  - `route-s1846`: rząd jasnozłotych bel słomy wzdłuż ścieżki na ściernisku (246–413 m) spójny z referencją `cs157787294.jpg` w obu warunkach oświetlenia.
+- Zestaw `pytest`: **141 passed** (`test_field_bales_0346.py`, `test_fields_0334.py`, `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py`, `test_cc0_scans.py`, `test_streetscape.py`).
+- Dowody zarchiwizowane w `artifacts/neon-bales-s24/` (zestawienia `sbs_knyszyn-w_{clear,overcast}_part{1,2}.jpg`, zbliżenia `bales_closeup_2x.jpg`, podgląd Blendera `preview/bales_blender_preview.png`, surowe klatki i `stats.txt` w `vqa/{before,before_clean,after}/`).
 
 ## Licencje i źródła
 - Geometria i atlas `field_bale_atlas.png` w 100 % proceduralne (własny generator Python, brak marek, brak zewnętrznych pikseli w buildzie).
