@@ -63,16 +63,18 @@ LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hv
                          "hvac_lcd_bezel", "stack_cubby", "socket_12v", "sun_visor_hinge_", "spoke_trim_",
                          "emblem_wm_", "sun_visor_clip_", "visor_centre_bracket", "_vane",
                          "wheel_stitch", "rear_lid_", "curtain_bunk_-1", "dash_top_stitch_",
-                         "glove_handle", "column_parting_", "column_adj_")   # modern cab (ADR 0047): larger glazing hides fewer faces, keeps LOD2 <= 22k
+                         "glove_handle", "column_parting_", "column_adj_",
+                         "dash_item_doc_clip", "dash_item_doc_sheet_1", "dash_item_phone_jaw_", "dash_item_phone_arm")   # modern cab (ADR 0047): larger glazing hides fewer faces, keeps LOD2 <= 22k
 # (glove_handle: r7c, the crowned header fit left LOD2 at 22 001 against the limit 22 000)
 
 # ---------------------------------------------------------------- slots (game materials)
 SLOT_OF = {
     "MI_Cab_Plastic": ("dash_soft", "dash_lower", "dash_mid", "dash_dark", "trim_insert", "trim_light", "metal_dark",
                        "piano", "grab_dark", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic", "frit", "emboss",
-                       "hazard_red"),
+                       "hazard_red", "paper_doc", "paper_tacho", "folder_cover"),
     "MI_Cab_Leather": ("leather", "leather_wheel", "leather_wheel_perf", "leather_centre", "leather_trim"),
-    "MI_Cab_Fabric": ("headliner", "wall_fabric", "mattress", "curtain", "seat_fabric", "blind", "webbing", "thread_wheel"),
+    "MI_Cab_Fabric": ("headliner", "wall_fabric", "mattress", "curtain", "seat_fabric", "blind", "webbing", "thread_wheel",
+                      "dash_cloth"),
     "MI_Cab_Rubber": ("floor_mat", "rubber"),
     "MI_Cab_Metal": ("satin", "scuff_plate", "chrome", "paint"),
     "MI_Cab_Decal": ("stitch", "stitch_dark", "stitch_wheel", "icons", "grille", "grille_dash"),
@@ -404,7 +406,7 @@ BI_UVK = 1.0  # UVMap scale: build_interior writes UVMap in metres (k from auto_
 # ---------------------------------------------------------------- UV1 (AO atlas) layout
 def texel_weight(name):
     hi = ("dash_main", "binnacle", "wheel_", "spoke_", "door_trim", "door_sill", "door_armrest", "apillar_trim",
-          "drv_", "stack_", "door_insert", "dash_insert", "dash_tray", "column_shroud")
+          "drv_", "stack_", "door_insert", "dash_insert", "dash_tray", "column_shroud", "dash_item_")
     lo = ("bunk_base", "drawer_", "rear_oh", "rear_lid", "upper_bunk", "floor_slab", "back_wall", "side_rear",
           "footwell_wall", "_bellows", "_base", "_rail", "_pan", "skin", "roof_", "mirror_", "kerb_", "front_")
     if name.startswith("dash_tray_ribs_"):   # D84 / ADR 0296: 6 mm flanks need ~1 mm texels (0.09 m2 in total)
