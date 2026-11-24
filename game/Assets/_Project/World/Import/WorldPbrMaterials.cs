@@ -674,7 +674,8 @@ namespace Game.World.Import
             foreach (var proto in prototypes.Values)
                 foreach (var material in Arr(Obj(proto).Get("materials")))
                     if (material is string name && name.StartsWith("sign_", StringComparison.Ordinal)
-                        && !name.StartsWith("sign_facade_", StringComparison.Ordinal)) faces.Add(name);
+                        && !name.StartsWith("sign_facade_", StringComparison.Ordinal)
+                        && !name.StartsWith("sign_post", StringComparison.Ordinal)) faces.Add(name);   // sign_post / sign_post_galv = pole materials (ADR 0337), not plate faces
             foreach (string name in faces.OrderBy(x => x, StringComparer.Ordinal))
             {
                 // An explicitly authored material definition from another domain retains ownership.
