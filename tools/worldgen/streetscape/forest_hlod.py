@@ -315,6 +315,14 @@ def build(trees, forests, no_forest, zground, half, report, chm=None):
             dom, stand, _, ins = chm.sample(q)
             if ins[0] and max(dom[0], stand[0]) >= CHM_TRUST_M:
                 return float(dom[0] if dom[0] >= CHM_TRUST_M else stand[0]) / CHM_WALL_TOP_FRAC.get(mix, 0.83)
+            if measured_only:
+                return None
+            # no crowns measured here (a small hole, a cell outside the mask of the model): the generated trees
+            # around the point in the same scale, and a low wall where none stands within 15 m (the class formula
+            # below takes the median of the whole tile there - a 40 m spike in a gap)
+            dd, ii = kd.query(np.asarray(q, float).reshape(2), k=12, distance_upper_bound=15.0)
+            ii = ii[np.isfinite(dd)]
+            return (float(np.percentile(H[ii], 90)) if len(ii) else CHM_TRUST_M) / CHM_WALL_TOP_FRAC.get(mix, 0.83)
         return None if measured_only else edge_info["h_m"] * h_local(q) / edge_info["h_median_m"]
 
     # forest union per mix (each cell takes the mix with the largest area in it)
