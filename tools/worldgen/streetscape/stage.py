@@ -459,7 +459,13 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     # ADR 0308: no crown below cab height over the carriageway (rule trees, rows, garden and bank trees alike)
     cleared = VG.road_clearance(trees + ptrees + wtrees, carriage, rep)
     log("road clearance", rep["road_clearance"])
-    instances = pl.items + cleared
+    # ADR 0346: round straw / silage bales on rural fields of the ADR 0334 mosaic (deterministic, rural tiles only)
+    from . import field_bales as FB
+    bales = FB.place(src, origin, hf, zc, blocked, rep, trees=cleared,
+                     enabled=not str(rid).startswith("bialystok-"))
+    if bales:
+        log("field bales", rep["field_bales"])
+    instances = pl.items + cleared + bales
     hero_tris = {**hero_tris, **HBD.apply(w.buf, heroes, instances, rep, log)}      # depot halls + hero buildings
     if heroes or rep.get("hero_buildings", {}).get("stale"):
         log("hero buildings", {k: [x["id"] for x in v] for k, v in rep["hero_buildings"].items()})

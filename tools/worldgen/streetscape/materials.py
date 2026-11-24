@@ -997,3 +997,8 @@ for _k in ("office", "ribbon"):
 # texture for subtle zinc grain and ground-line splash (no new texture, 1 slot on sign_post = +0 draws).
 M["sign_post_galv"] = {"color": [0.36, 0.37, 0.38], "rough": 0.62, "metal": 0.42,
                        "texture": "furniture_galv", "sky_occ": SKY_OCC_STRUCT}
+
+# ADR 0346: round straw and wrapped silage bales on rural fields of the ADR 0334 mosaic (streetscape.field_bales).
+# Single opaque atlas (`field_bale_atlas`) shared by both prototypes and both LODs (1 material = 0 extra materials
+# between variants). Rough 0.80: matt straw without specular glare and soft field-dusted stretch film. WORKING_VALUE.
+M["field_bale"] = {"color": [1.0, 1.0, 1.0], "rough": 0.80, "texture": "field_bale_atlas"}
