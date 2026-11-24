@@ -101,10 +101,10 @@ void KFLook(int u, out half4 alb, out half b)
     b = 0.15h;
     switch (u)
     {
-        case KF_CEREAL_RIPE:   alb = half4(0.330h, 0.240h, 0.095h, 0.92h); b = 0.20h; break;   // wheat / triticale, golden
-        case KF_CEREAL_PALE:   alb = half4(0.290h, 0.262h, 0.130h, 0.92h); b = 0.20h; break;   // barley / rye / oats, pale
-        case KF_STUBBLE:       alb = half4(0.285h, 0.228h, 0.125h, 0.92h); b = 0.25h; break;   // cereal stubble, straw left
-        case KF_STUBBLE_BALED: alb = half4(0.250h, 0.212h, 0.135h, 0.92h); b = 0.25h; break;   // stubble, straw baled off
+        case KF_CEREAL_RIPE:   alb = half4(0.350h, 0.240h, 0.085h, 0.92h); b = 0.20h; break;   // wheat / triticale, golden
+        case KF_CEREAL_PALE:   alb = half4(0.315h, 0.262h, 0.120h, 0.92h); b = 0.20h; break;   // barley / rye / oats, pale
+        case KF_STUBBLE:       alb = half4(0.300h, 0.212h, 0.095h, 0.92h); b = 0.25h; break;   // cereal stubble, straw left
+        case KF_STUBBLE_BALED: alb = half4(0.265h, 0.205h, 0.110h, 0.92h); b = 0.25h; break;   // stubble, straw baled off
         case KF_RAPE_STUBBLE:  alb = half4(0.165h, 0.145h, 0.095h, 0.92h); b = 0.25h; break;   // rape stubble, grey-brown
         case KF_MAIZE:         alb = half4(0.036h, 0.078h, 0.020h, 0.88h); break;              // fodder maize, dark
         case KF_ROOTS:         alb = half4(0.050h, 0.096h, 0.026h, 0.88h); break;              // potatoes / beet
@@ -242,7 +242,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, half driftN
         // keeps the paler ghosts of the swaths; fine stubble rows near the cab
         float wp = u == KF_RAPE_STUBBLE ? 6.0 : 7.5;
         half row = KFBand(across + 1.7, wp, u == KF_STUBBLE ? 1.5 : 2.6, fp);
-        half3 straw = u == KF_RAPE_STUBBLE ? half3(0.210h, 0.185h, 0.120h) : half3(0.400h, 0.345h, 0.215h);
+        half3 straw = u == KF_RAPE_STUBBLE ? half3(0.210h, 0.185h, 0.120h) : half3(0.420h, 0.315h, 0.150h);
         col = lerp(col, straw, row * (u == KF_STUBBLE ? 0.85h : 0.35h));
         half fine = KFBand(across, 0.16, 0.06, fp);
         col *= 1.0h - 0.16h * fine;
