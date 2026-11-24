@@ -198,3 +198,47 @@ def test_generated_region_every_sign_has_post_and_props_finite(region):
         elif p.startswith("board_") and not p.startswith("board_OB_"):
             near = [s for s in posts if (s["e"] - it["e"]) ** 2 + (s["n"] - it["n"]) ** 2 < 2.5 ** 2]
             assert near, f"{region}: ground board {p} at ({it['e']}, {it['n']}) has no supporting sign_post"
+
+
+@pytest.mark.parametrize("region", ["tykocin", "bialystok-knyszynska", "dk65-01"])
+def test_generated_region_props_ground_contact(region):
+    """Every bench, waste_bin and sign_post sits on local terrain/surface (no floating props)."""
+    from roads.profile import Heightfield
+
+    wdir = REPO / "Data" / "raw" / "derived" / region / "world"
+    tpath = wdir / "terrain_conformed.npy"
+    files = sorted(wdir.glob("instances_*.json"))
+    if not tpath.exists() or not files:
+        pytest.skip(f"{region} terrain/instances not generated")
+    rdir = REPO / "Data" / "Regions" / region
+    tmeta = json.loads((rdir / "terrain.json").read_text(encoding="utf-8"))
+    man = json.loads((rdir / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
+    orig = man["origin_epsg2180"]
+    ox = float(orig.get("e", orig.get("E", orig.get("x"))) if isinstance(orig, dict) else orig[0])
+    oy = float(orig.get("n", orig.get("N", orig.get("y"))) if isinstance(orig, dict) else orig[1])
+    hf = Heightfield(np.load(tpath), tmeta["bbox"], (ox, oy))
+
+    items = [it for f in files for it in json.loads(f.read_text(encoding="utf-8")).get("instances", [])]
+    # Road/sidewalk meshes sit up to ~0.35 m above pushed-down terrain_conformed; roadside ditches can dip ~1.5 m below.
+    for kind, lo, hi in (("bench", -1.0, 0.45), ("waste_bin", -1.0, 0.45), ("sign_post", -2.0, 0.65)):
+        sub = [it for it in items if it["p"] == kind]
+        if not sub:
+            continue
+        es = np.array([it["e"] for it in sub], dtype=float)
+        ns = np.array([it["n"] for it in sub], dtype=float)
+        zs = np.array([it["z"] for it in sub], dtype=float)
+        dz = zs - hf.sample(es, ns)
+        assert float(dz.max()) <= hi, f"{region}: floating {kind}, max dz={dz.max():.3f} m"
+        assert float(dz.min()) >= lo, f"{region}: sunk {kind}, min dz={dz.min():.3f} m"
+
+
+def test_tykocin_rynek_authored_benches_qa():
+    qa_path = REPO / "Data" / "Regions" / "tykocin" / "generated" / "streetscape_qa.json"
+    if not qa_path.exists():
+        pytest.skip("tykocin streetscape_qa.json not generated")
+    qa = json.loads(qa_path.read_text(encoding="utf-8"))
+    rynek = qa["tykocin_rynek_0320"]
+    assert rynek["status"] == "applied"
+    assert rynek["refused"] == []
+    assert len(rynek["benches"]) == 10
+    assert rynek["tris"]["buildings_low"] < rynek["tris"]["buildings"]
