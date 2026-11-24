@@ -6,6 +6,21 @@
 # DW671 keeps the BDOT10k width and gets no edge lines, as in dw671-tykocin-01 (ADR 0212, measured there).
 # Nothing was checked on the orthophoto of this tile: add overrides after the ingest.
 overrides:
+  # ADR 0336 (neon-tykocin-facades-s24, critic build #5 pkt 9): Podlasie small-town facades for Tykocin -
+  # consistent white / warm-brown muntined window joinery (no corporate anthracite black squares on town buildings),
+  # projecting lintels / surrounds and bolder sills, slope-safe 38-60 cm plinths (dark plaster + fieldstone),
+  # wider deterministic roof palette (tiles, aged tile, cement grey, graphite/grey sheet) with pitch spread and dormers.
+  - id: tykocin-small-town-facades-0336
+    kind: facade_rules
+    small_town: true
+    reason: >-
+      Critic build #5 pkt 9 (frames t3441, t3371): Tykocin Rynek and street houses showed flat dark square windows
+      (anthracite office_d on Urzad Miasta / Biblioteka, dark green/brown house variants in 22 cm shadow reveals,
+      closed roller shutters), buried or faint plinths, and repetitive 2-colour roofs. References: local Wikimedia
+      Commons CC BY / CC BY-SA photos Data/raw/refs/tykocin-rynek-commons/ (cs153250600, cs202183366, cs202183436,
+      cs21721113; no pixels used, no Google). Opt-in per region so Białystok tiles keep bit-identical baselines (ADR 0238).
+    confidence: medium
+    verify: visual-qa High clear+overcast on look_tykocin_rynek_n, look_tykocin_rynek_s, look_tykocin_zlota, look_tykocin_plaza_se, look_tykocin_roofs_above
   # ADR 0320: the DW671 bridge over the Narew (ul. Puchalskiego) is a multi-span steel through truss with parabolic
   # top chords, not the generic beam viaduct of the generator.
   - id: tykocin-narew-truss-0320

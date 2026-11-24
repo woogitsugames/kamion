@@ -141,6 +141,9 @@ OSM_ROOF_SHAPE = {"flat": "flat", "gabled": "gable", "hipped": "hip", "half-hipp
                   "skillion": "mono", "lean_to": "mono"}
 LOD2_PITCHED = {"1030": "gable", "1040": "hip", "1070": "hip"}       # as streetscape.roofs.plan reads them (UNVERIFIED
 #                                                                     codes: no dictionary quoted, R4 README "Luki")
+# ADR 0336 (small-town Podlasie): BDOT10k / LoD2 2017 codes many pitched-roof town shops and public buildings as 1130
+# (generic pitched / compound gable); with a measured rise >= ROOF_MIN_RISE_M they get a gable roof instead of a flat box.
+LOD2_PITCHED_SMALL_TOWN = {**LOD2_PITCHED, "1130": "gable"}
 ROOF_MIN_RISE_M = 1.5          # ridge - eave of the LoD2 model below which a "pitched" code is a low-slope roof
 ROOF_MIN_EAVE_SHARE = 0.5      # LoD2 eave below this share of the LoD1 height = a porch roof, not the eave
 
@@ -171,7 +174,7 @@ def lod2_rise(p):
     return float(hr) - float(he)
 
 
-def roof_shape(typ, p, ovr):
+def roof_shape(typ, p, ovr, small_town=False):
     """(shape, source): shape in ROOF_SHAPES, or None = the generator's own rule (houses: streetscape.roofs.plan from
     the LoD2 type; everything else: flat). source: override / osm / lod2_rise / None."""
     o = (ovr or {}).get("roof_shape")
@@ -183,14 +186,15 @@ def roof_shape(typ, p, ovr):
     if osm:
         return osm, "osm"
     if typ in ("block", "office"):
-        kind = LOD2_PITCHED.get(p.get("roof_type_lod2"))
+        table = LOD2_PITCHED_SMALL_TOWN if small_town else LOD2_PITCHED
+        kind = table.get(p.get("roof_type_lod2"))
         rise = lod2_rise(p)
         if kind and rise is not None and rise >= ROOF_MIN_RISE_M:
             return kind, "lod2_rise"
     return None, None
 
 
-def subtype(typ, p, area, ovr=None):
+def subtype(typ, p, area, ovr=None, small_town=False):
     """Subtype of a building of render class typ (see the module docstring for the order of the sources)."""
     ovr = ovr or {}
     name = ovr.get("typology")
@@ -203,7 +207,7 @@ def subtype(typ, p, area, ovr=None):
     f = p.get("function")
     osm = p.get("osm_building")
     if typ == "block":
-        shape, _ = roof_shape(typ, p, ovr)
+        shape, _ = roof_shape(typ, p, ovr, small_town=small_town)
         if (shape in ("gable", "hip", "mono") and (st or 99) <= KAMIENICA_MAX_STOREYS and area <= KAMIENICA_MAX_AREA
                 and f != "hotel"):
             return "kamienica"
