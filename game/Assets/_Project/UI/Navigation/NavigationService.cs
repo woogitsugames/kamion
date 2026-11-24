@@ -255,7 +255,7 @@ namespace Game.UI.Navigation
                 if (m_Trip != null) ReplanTripLeg(); else Replan(true);
                 m_Tracker.ClearOffRoute();
             }
-            if (Voice.Active && m_Guide.HasRoute && m_Guide.OnRoute) Voice.Update(m_Graph, Path, ref m_Guide, SpeedMs, Time.unscaledTime);
+            if (Voice.Active && m_Guide.HasRoute && m_Guide.OnRoute) Voice.Update(m_Trip != null && m_Trip.Combined != null ? m_Trip.NamesGraph : m_Graph, Path, ref m_Guide, SpeedMs, Time.unscaledTime);
             UpdateRestriction(Time.unscaledDeltaTime);
             m_StreetT -= Time.unscaledDeltaTime;
             if (m_StreetT <= 0f && HasPosition)

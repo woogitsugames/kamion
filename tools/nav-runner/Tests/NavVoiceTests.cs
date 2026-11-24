@@ -255,6 +255,26 @@ namespace NavRunner.Tests
         }
 
         [Fact]
+        public void Voice_NeverThrows_WhenPathNamesBelongToAnotherGraph()
+        {
+            // Regression (build #6): a multi-tile trip's Combined path carries TRIP name indices; voice used the start region's
+            // graph and threw IndexOutOfRange in RingName after the first region change (22x, then silence). The service now
+            // passes NavTrip.NamesGraph; NavVoice itself must also tolerate a foreign index.
+            var g = RouteGraph.Load(Region);
+            var planner = new RoutePlanner(g);
+            var p = RoutePath.For(g);
+            Assert.Equal(PlanStatus.Ok, planner.Plan(new Vector2(-225.64f, -239.35f), float.NaN, new Vector2(-205.02f, -854.88f), p));
+            var small = new RouteGraph { Names = new[] { "" } };   // every path name index >= 1 is foreign here
+            int rb = -1;
+            for (int k = 0; k < p.ManCount; k++) if (p.ManType[k] == Maneuver.Roundabout) rb = k;
+            Assert.True(rb >= 0);
+            Assert.Null(NavVoice.RingName(small, p, rb));
+            var gd = new NavGuidance { Next = rb, Then = -1, HasRoute = true, OnRoute = true };
+            var buf = new VoiceClip[8];
+            for (int band = -1; band <= NavVoice.NowBand; band++) NavVoice.PlanBand(small, p, ref gd, band, buf);
+        }
+
+        [Fact]
         public void VoiceLoop_ZeroAllocation()
         {
             var g = RouteGraph.Load(Region);

@@ -173,7 +173,9 @@ namespace Game.Core.Navigation
             if (to > from + 12) to = from + 12;   // the ring is a few edges long; never scan the following road
             for (int i = from; i <= to && i < p.Count; i++)
             {
-                string n = g.Names[p.Name[i]];
+                int ni = p.Name[i];
+                if (ni >= g.Names.Length) continue;   // a path from another graph (trip vs region names) must never throw
+                string n = g.Names[ni];
                 if (!string.IsNullOrEmpty(n)) return n;
             }
             return null;
@@ -221,7 +223,8 @@ namespace Game.Core.Navigation
             }
             if (n < buf.Length)
             {
-                VoiceClip sc = StreetClip(g.Names[p.ManName[gd.Next]]);
+                int si = p.ManName[gd.Next];
+                VoiceClip sc = StreetClip(si < g.Names.Length ? g.Names[si] : null);
                 if (sc.Block != 0) buf[n++] = sc;
             }
             if (gd.Then >= 0 && gd.Then < p.ManCount && n < buf.Length)
@@ -421,7 +424,8 @@ namespace Game.Core.Navigation
                     string ring = NavVoice.RingName(g, p, gd.Next);
                     if (!string.IsNullOrEmpty(ring)) sb.Append(" ring=\"").Append(ring).Append('"');
                 }
-                string street = g.Names[p.ManName[gd.Next]];
+                int si = p.ManName[gd.Next];
+                string street = si < g.Names.Length ? g.Names[si] : null;
                 if (!string.IsNullOrEmpty(street)) sb.Append(" street=\"").Append(street).Append('"');
             }
             return sb.ToString();

@@ -243,6 +243,19 @@ namespace Game.UI.Navigation
         public string NameOf(ushort i) => i < m_Names.Count ? m_Names[i] : "";
         public int NameCount => m_Names.Count;
 
+        /// <summary>Trip street names as a graph-shaped lookup for <see cref="Game.Core.Navigation.NavVoice"/> (it reads only
+        /// <c>Names</c>): the Combined path's name indices are TRIP indices, not the start region graph's (build #6: voice
+        /// threw IndexOutOfRange in RingName after the first region change). Rebuilt only when new names were interned.</summary>
+        public RouteGraph NamesGraph
+        {
+            get
+            {
+                if (m_NamesGraph.Names.Length != m_Names.Count) m_NamesGraph.Names = m_Names.ToArray();
+                return m_NamesGraph;
+            }
+        }
+        readonly RouteGraph m_NamesGraph = new RouteGraph();
+
         /// <summary>Trip street index of a street index of the current leg's graph (the street under the truck).</summary>
         public ushort MapCurrentName(ushort graphName)
         {
