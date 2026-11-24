@@ -96,7 +96,8 @@ def test_king_proxy_has_crowned_head_and_valid_geometry():
         assert np.any(tips < -.07) and np.any(tips > .07)
         assert max(p[2][:,2].max() for p in bronze if p[1] != KF.RUBBED) < top - .05
         assert {p[1] for p in buf.parts} >= {"monument_granite"}
-    assert outputs["buildings_low"] <= 420 < 1800 <= outputs["buildings"] <= 3200
+    # ADR 0331: sculpted head (~2.5 k) - LOD0 of the monument stays under 6 k, LOD1 under 0.5 k
+    assert outputs["buildings_low"] <= 480 < 4000 <= outputs["buildings"] <= 6000
 
 
 def test_king_figure_is_a_person_not_a_lathe():
@@ -112,9 +113,18 @@ def test_king_figure_is_a_person_not_a_lathe():
     assert np.ptp(hem[:, 0]) > 1.15 * np.ptp(hem[:, 1])             # wider than deep
     head = sc.parts[KF.BRONZE][1][0]
     assert 0.20 < np.ptp(head[:, 0]) < 0.30 and head[:, 2].min() >= 2.49
-    # nose stands proud of the face; the beard hangs below the chin in front only
-    nose = sc.parts[KF.BRONZE][2][0]
-    assert nose[:, 1].max() > head[:, 1].max() + 0.03
+    # ADR 0331: one carved sheet - the nose stands proud of the eyes, the beard ends in a point under the chin
+    piv, k = KF.HEAD_PIVOT_Z, KF.HEAD_SCALE
+    z_eye, z_nose, z_chin = (piv + (z - piv) * k for z in (KF.Z_EYE, KF.Z_NOSE, KF.Z_CHIN))
+    face = head[np.abs(head[:, 2] - z_nose) < 0.006]
+    tip = face[np.argmax(face[:, 1])]
+    assert abs(tip[0]) < 0.02
+    eyes = head[(np.abs(head[:, 2] - z_eye) < 0.006) & (np.abs(np.abs(head[:, 0]) - 0.038) < 0.012)]
+    assert tip[1] > eyes[:, 1].max() + 0.03
+    beard = head[head[:, 2] < z_chin - 0.06]
+    front = beard[beard[:, 1] > beard[:, 1].max() - 0.02]
+    assert np.ptp(front[:, 0]) < 0.06 and beard[:, 1].max() > KF.HEAD_Y + 0.10
+    assert len(sc.parts[KF.BRONZE]) >= 4                            # cloak, head, two ears
     pat = np.concatenate([v for v, _ in sc.parts[KF.PATINA]])
     assert pat[:, 2].min() < 1.6                                    # fur lapels run down the chest
     # no arms: nothing of the figure reaches outside the cloak outline below the shoulders
@@ -178,7 +188,8 @@ def test_king_cloak_has_continuous_profile_and_crowned_head():
     n,m=len(KF.RINGS0),len(KF.COLS0)
     z0_uv=props.KING_PLINTH_H+props.KING_CAP_M
     # the cloak loft + copies of the vertices along the UV seam at the back (ADR 0325: cylindrical UV0 in metres)
-    vertices,faces,uv=max(((v,t,uv) for v,t,uv,*_ in pieces), key=lambda p: len(p[0]))
+    # the cloak: the big piece standing on the plinth (ADR 0331: the head sheet is now bigger)
+    vertices,faces,uv=next((v,t,uv) for v,t,uv,*_ in pieces if len(v) > 100 and abs(v[:,2].min()-(props.KING_PLINTH_H+props.KING_CAP_M)) < 1e-6)
     assert n*m+n <= len(vertices) <= n*m+2*n and np.ptp(uv[:,0]) > 2*np.pi*KF.UV_RADIUS_M*.95
     # no wall triangle is stretched across the seam (the cap under the ruff is a fan and does not count)
     wall=faces[(vertices[faces][:,:,2].min(axis=1) < vertices[:,2].max()-1e-6)]

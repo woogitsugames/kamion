@@ -24,8 +24,6 @@ import numpy as np
 BRONZE, PATINA, RUBBED = "monument_bronze", "monument_bronze_patina", "monument_bronze_rubbed"
 H_SHOULDER = 2.40            # top of the straight part of the cloak
 H_NECK = 2.54                # cloak closes under the ruff
-H_BAND0, H_BAND1 = 2.865, 2.935     # crown band
-H_TOP = 3.05                 # tips of the tall fleurons
 HEAD_Y = 0.045               # the head sits forward of the cloak axis (side photo)
 
 # Plan of the cloak: a faceted bell. Corners (ridges of the broad folds) at these angles (deg from +x, front = 90) stand
@@ -86,6 +84,7 @@ class Sculpt:
 
     def __init__(self):
         self.parts = {}
+        self.uv = {}          # (material, index of the part) -> (radius m, y of the axis) of its cylindrical UV
 
     def add(self, mat, V, T, orient=None, flat=False):
         """orient: None = as wound; "centre" = away from the piece's centroid (small convex pieces); "axis" = away
@@ -162,150 +161,298 @@ def _cloak(sc, low):
     sc.loft(BRONZE, rings, cap_top=True)
 
 
-def _ellipse_ring(z, w, f, b, angles, y0=HEAD_Y, pinch=None):
-    """Head section: half width w, front depth f, back depth b; pinch = {angle: radial offset}."""
-    ring = []
-    for th in angles:
-        a = math.radians(th)
-        c, s = math.cos(a), math.sin(a)
-        d = f if s >= 0 else b
-        r = (abs(c / w) ** 2.3 + abs(s / d) ** 2.3) ** (-1 / 2.3) + (pinch or {}).get(th, 0.0)
-        ring.append([r * c, r * s + y0, z])
-    return ring
+# --- head (ADR 0331): one smooth sheet sampled on a (theta, z) grid, the face carved by displacements -------------------
+# Proportions read off the two Commons close-ups (cs20127375, cs7518515), in units of E = eyes -> chin: crown band
+# 0.38 E above the eyes, tips of the fleurons 1.27 E, point of the beard 0.7 E under the chin, face 1.35 E wide with
+# the hair. E = 0.165 m (heroic scale, the figure is ~1.6 x life size). All WORKING_VALUE.
+Z_EYE = 2.835
+Z_CHIN = 2.672
+Z_NOSE = 2.766              # tip of the nose
+Z_MOUTH = 2.716
+Z_BEARD_TIP = 2.578
+
+# rows of the head profile: z, half width, front depth, back depth (superellipse 2.4)
+HEAD_PROFILE = ((2.560, .052, .052, .058), (2.620, .058, .060, .064), (2.660, .067, .080, .080),
+                (2.700, .080, .092, .094), (2.740, .091, .098, .102), (2.780, .095, .100, .107),
+                (2.820, .096, .099, .111), (2.860, .097, .101, .113), (2.900, .095, .097, .112),
+                (2.935, .088, .088, .105), (2.962, .064, .066, .086), (2.976, .034, .034, .046), (2.984, .008, .008, .010))
+# columns (degrees off the front) and rows: dense over the face, sparse behind the ears and under the crown
+HEAD_D0 = (0, 3, 6, 9, 13, 17, 22, 28, 35, 43, 52, 62, 74, 88, 108, 145)
+HEAD_Z0 = (2.579, 2.598, 2.615, 2.636, 2.652, 2.664, 2.675, 2.686, 2.696, 2.704, 2.710, 2.716, 2.722, 2.729,
+           2.737, 2.746, 2.755, 2.762, 2.769, 2.777, 2.786, 2.795, 2.804, 2.812, 2.818, 2.824, 2.830, 2.836, 2.842,
+           2.848, 2.854, 2.861, 2.870, 2.884, 2.900, 2.922, 2.950, 2.970, 2.983)
+HEAD_D1 = (0, 25, 55, 90, 135)
+HEAD_Z1 = (2.570, 2.640, 2.700, 2.760, 2.830, 2.900, 2.970)
+ROLL_DEG = 1.6              # the head leans a little to its left (a cast, not a mirror)
 
 
-HEAD_COLS0 = (0, 30, 55, 72, 82, 90, 98, 108, 125, 150, 180, 215, 250, 290, 325)
-HEAD_COLS1 = (0, 60, 90, 120, 180, 270)
-# z, half width, front depth, back depth, pinch {angle: radial offset}: eye sockets, bridge of the nose, mouth
-HEAD_RINGS = ((2.50, .074, .074, .076, None), (2.585, .078, .080, .082, None),
-              (2.615, .096, .104, .094, None),                                    # jaw under the beard
-              (2.655, .110, .120, .104, {90: .004}),                              # chin
-              (2.700, .117, .123, .114, {72: -.003, 108: -.003}),                 # mouth, cheeks
-              (2.745, .121, .121, .123, {55: .004, 125: .004, 82: -.004, 98: -.004}),             # cheekbones
-              (2.790, .122, .114, .128, {55: -.008, 72: -.020, 82: -.014, 98: -.014, 108: -.020, 125: -.008, 90: .002}),  # sockets
-              (2.828, .124, .127, .131, {72: .004, 108: .004}),                   # brow ridge
-              (2.870, .123, .121, .131, None),                                    # forehead, under the band
-              (2.930, .112, .108, .120, None), (2.965, .070, .066, .080, None))
+def _g(u, u0, su, z, z0, sz):
+    return math.exp(-((u - u0) / su) ** 2 - ((z - z0) / sz) ** 2)
 
 
-def _head_r(th, z):
-    """Radius of the head loft at an angle / height (linear between the rings), for pieces lying on it."""
-    rows = HEAD_RINGS
-    k = max(i for i, r in enumerate(rows) if r[0] <= z + 1e-9)
-    k = min(k, len(rows) - 2)
-    u = (z - rows[k][0]) / (rows[k + 1][0] - rows[k][0])
-    def rad(row):
-        _, w, f, b, _ = row
-        a = math.radians(th)
-        c, s_ = math.cos(a), math.sin(a)
-        d = f if s_ >= 0 else b
-        return (abs(c / w) ** 2.3 + abs(s_ / d) ** 2.3) ** (-1 / 2.3)
-    return rad(rows[k]) * (1 - u) + rad(rows[k + 1]) * u
+def _smoothstep(e0, e1, x):
+    t = min(max((x - e0) / (e1 - e0), 0.0), 1.0)
+    return t * t * (3 - 2 * t)
 
 
-def _on_head(th, z, lift=0.0):
-    r = _head_r(th, z) + lift
-    a = math.radians(th)
-    return [r * math.cos(a), r * math.sin(a) + HEAD_Y, z]
+def _profile(d, z):
+    """Base radius of the skull at `d` degrees off the front (signed) and height z (from the head axis)."""
+    rows = HEAD_PROFILE
+    zs = [r[0] for r in rows]
+    w = float(np.interp(z, zs, [r[1] for r in rows]))
+    f = float(np.interp(z, zs, [r[2] for r in rows]))
+    b = float(np.interp(z, zs, [r[3] for r in rows]))
+    a = math.radians(90 + d)
+    c, s = math.cos(a), math.sin(a)
+    dd = f if s >= 0 else b
+    p = 2.4
+    return (abs(c / w) ** p + abs(s / dd) ** p) ** (-1 / p)
+
+
+def _face(d, z, sx_eye=0.0):
+    """Radial displacement of the face: brow, sockets and lids, nose, cheekbones, mouth (metres). `u` ~ metres across."""
+    u = 0.095 * math.sin(math.radians(max(-90.0, min(90.0, d))))
+    if abs(d) > 95:
+        return 0.0
+    e = Z_EYE + sx_eye * (1 if u > 0 else -1)
+    au = abs(u)
+    r = 0.004 * _g(u, 0, .05, z, 2.885, .022)                                   # forehead
+    r += 0.010 * _g(au, .033, .024, z, e + .020, .008)                         # brow ridge
+    r += 0.004 * _g(u, 0, .011, z, e + .012, .010)                             # glabella
+    r -= 0.022 * _g(au, .035, .018, z, e + .003, .011)                         # eye socket
+    r += 0.016 * _g(au, .034, .012, z, e + .001, .006)                         # eyeball
+    r -= 0.004 * _g(au, .033, .014, z, e + .010, .003)                         # crease over the upper lid
+    r -= 0.005 * _g(au, .033, .0055, z, e - .001, .0045)                      # carved iris
+    r += 0.003 * _g(au, .037, .014, z, e - .014, .005)                         # lower lid
+    r -= 0.006 * _g(au, .080, .016, z, 2.855, .022)                            # temple
+    r += 0.008 * _g(au, .058, .020, z, e - .030, .015)                         # cheekbone
+    r -= 0.006 * _g(au, .056, .020, z, 2.748, .018)                            # hollow under it
+    # nose: a ridge growing from the bridge to the tip, wings at the base
+    if Z_NOSE - 0.012 < z <= e + 0.012:
+        prot = 0.004 + 0.034 * (1 - (z - Z_NOSE) / (e + 0.012 - Z_NOSE)) ** 1.15 if z >= Z_NOSE else \
+            0.038 * (1 - (Z_NOSE - z) / 0.012) ** 0.6
+        su = 0.0065 + 0.0045 * (1 - (z - Z_NOSE) / (e + 0.012 - Z_NOSE)) if z >= Z_NOSE else 0.011
+        r += prot * math.exp(-(u / su) ** 2)
+    r += 0.006 * _g(au, .014, .006, z, Z_NOSE - .003, .006)                    # nostril wings
+    r += 0.004 * _g(u, 0, .008, z, Z_NOSE + .002, .007)                        # ball of the tip
+    # mouth: lips and the slit between them; moustache over the upper lip, drooping at the ends
+    r += 0.004 * _g(u, 0, .020, z, Z_MOUTH + .006, .005)
+    r -= 0.006 * _g(u, 0, .016, z, Z_MOUTH, .003)
+    r += 0.006 * _g(u, 0, .014, z, Z_MOUTH - .009, .005)
+    zm = Z_MOUTH + 0.011 - 4.5 * u * u          # ends droop only a little: a level mouth, not a frown
+    r += 0.011 * math.exp(-((z - zm) / 0.006) ** 2) * (1 - _smoothstep(0.034, 0.048, au)) * (1 - 0.35 * math.exp(-(u / .006) ** 2))
+    r += 0.012 * _g(u, 0, .026, z, Z_CHIN + .010, .016)                       # chin
+    return r
+
+
+def _beard_line(d):
+    """Upper edge of the beard (z) at d degrees off the front: under the lip, up past the mouth to the sideburns."""
+    a = abs(d)
+    return float(np.interp(a, (0, 12, 22, 70, 84, 92), (2.700, 2.704, 2.712, 2.800, 2.812, 2.760)))
+
+
+def _beard(d, z, base):
+    """Outer radius of the beard (0 = none): a thickness over the jaw and a pointed lobe under the chin."""
+    a = abs(d)
+    if a > 92:
+        return 0.0
+    rb = 0.0
+    top = _beard_line(d)
+    if z < top:
+        thick = 0.007 + 0.017 * _smoothstep(top, Z_CHIN, z) * (1 - 0.5 * _smoothstep(40, 85, a))
+        rb = base + thick * _smoothstep(top + 0.002, top - 0.012, z)
+    if z < Z_CHIN + 0.02:       # the pointed lobe: front reach and half angle shrink to the tip
+        s = (z - Z_BEARD_TIP) / (Z_CHIN + 0.02 - Z_BEARD_TIP)
+        if s >= 0:
+            s = min(s, 1.0)
+            reach = 0.126 + 0.012 * s ** 0.5
+            half = 3.0 + 58.0 * s ** 1.4
+            if a < half:
+                rb = max(rb, reach * (1 - (a / half) ** 2) ** 0.45)
+    return rb
+
+
+def _strands(d, z):
+    """Wavy grooves of the cast hair / beard: a few millimetres, no two the same."""
+    return 0.0028 * math.sin(math.radians(d) * 23.0 + 9.0 * z + 1.3 * math.sin(z * 61.0)) \
+        + 0.0015 * math.sin(math.radians(d) * 41.0 - 30.0 * z)
+
+
+def _hair(d, z):
+    """Thickness of the hair: a short bob of curls behind the ears and on the temples, under the crown band."""
+    a = abs(d)
+    if z < 2.688 or a < 72:
+        return 0.0
+    edge = _smoothstep(72, 88, a) if z > 2.835 else _smoothstep(92, 104, a)
+    curls = 0.0035 * math.sin(math.radians(d) * 14.0) * math.sin(z * 170.0) + 0.003 * math.sin(z * 95.0 + d * 0.11)
+    return edge * _smoothstep(2.688, 2.715, z) * (0.013 + curls)
+
+
+def head_point(d, z, low=False):
+    """Local point of the head surface at d degrees off the front (+ = figure's left, -x) and height z."""
+    base = _profile(d, z)
+    sx = 0.0015                                       # one eye a little higher than the other
+    r = base + (0.0 if low else _face(d, z, sx))
+    beard = _beard(d, z, r)
+    if beard > 0:
+        bead = beard + (0.0 if low else _strands(d, z))
+        k = 260.0                                     # smooth max over ~5 mm: the beard grows out of the face
+        r = math.log(math.exp(k * r) + math.exp(k * bead)) / k
+    h = _hair(d, z)
+    if h > 0:
+        r += h + (0.0 if low else 0.5 * _strands(d, z + 0.3))
+    a = math.radians(90 + d)
+    x, y = r * math.cos(a), r * math.sin(a) + HEAD_Y
+    if z < Z_CHIN + 0.02 and abs(d) < 30:             # the point of the beard swings a little to one side
+        x += 0.006 * _smoothstep(Z_CHIN + 0.02, Z_BEARD_TIP, z)
+    # roll about the forward axis through the neck
+    rr = math.radians(ROLL_DEG)
+    zc = 2.60
+    x, z2 = x * math.cos(rr) - (z - zc) * math.sin(rr), x * math.sin(rr) + (z - zc) * math.cos(rr) + zc
+    return [x, y, z2]
 
 
 def _head(sc, low):
-    cols = HEAD_COLS1 if low else HEAD_COLS0
-    rows = HEAD_RINGS[::2] if low else HEAD_RINGS          # 11 rings: every second one keeps the first and the last
-    sc.loft(BRONZE, [_ellipse_ring(z, w, f, b, cols, pinch=None if low else pc) for z, w, f, b, pc in rows], cap_top=True)
-    if low:      # beard and hair as one dark collar so the head keeps its two tones far away
-        sc.loft(PATINA, [[_on_head(th, z, 0.012) for th in (20, 60, 90, 120, 160)] for z in (2.56, 2.69)], closed=False,
-                orient="axis")
+    ds = HEAD_D1 if low else HEAD_D0
+    cols = sorted({-d for d in ds} | set(ds)) + [180]
+    cols = [c for c in cols if c != -180]
+    zs = HEAD_Z1 if low else HEAD_Z0
+    # ring order counter-clockwise seen from above: theta = 90 + d grows with d
+    rings = [[head_point(d, z, low) for d in cols] for z in zs]
+    sc.loft(BRONZE, rings, cap_top=True)
+    sc.uv[(BRONZE, len(sc.parts[BRONZE]) - 1)] = (0.10, HEAD_Y)      # streaks of the cast at the scale of the face
+    if low:
         return
-    f = HEAD_Y + 0.121
-    # nose: narrow bridge between the eyes, broad tip, nostril wings
-    nose = [[0, f - 0.004, 2.832], [-0.011, f - 0.012, 2.808], [0.011, f - 0.012, 2.808], [0, f + 0.046, 2.740],
-            [-0.025, f - 0.002, 2.728], [0.025, f - 0.002, 2.728], [0, f + 0.016, 2.720], [0, f + 0.022, 2.790]]
-    sc.add(BRONZE, nose, [(0, 1, 7), (0, 7, 2), (1, 4, 7), (7, 4, 3), (2, 7, 5), (7, 3, 5), (4, 6, 3), (6, 5, 3),
-                          (1, 2, 5), (1, 5, 4), (4, 5, 6)], orient="centre", flat=True)
     for sx in (-1, 1):
-        # brow: a bar sloping to the temple, overhanging the socket
-        a = np.array([sx * 0.010, f + 0.006, 2.822])
-        b = np.array([sx * 0.088, f - 0.036, 2.812])
-        up, out = np.array([0, 0, 0.020]), np.array([0, 0.016, 0])
-        V = [a, b, b + up, a + up, a + out, b + out + [0, 0.006, 0], b + up + out, a + up + out]
-        T = [(4, 5, 6), (4, 6, 7), (3, 7, 6), (3, 6, 2), (0, 5, 4), (0, 1, 5), (1, 6, 5), (1, 2, 6), (0, 4, 7), (0, 7, 3)]
-        sc.add(BRONZE, V, T, orient="centre", flat=True)
-        # eye: lids as a shallow lens in the socket, the dark slit between them in patina
-        ex = sx * 0.046
-        ey = f - 0.021
-        lid = [[ex - 0.024, ey - 0.004, 2.792], [ex, ey + 0.010, 2.803], [ex + 0.024, ey - 0.004, 2.792], [ex, ey + 0.010, 2.781]]
-        sc.add(BRONZE, lid + [[ex, ey + 0.016, 2.792]], [(0, 4, 1), (1, 4, 2), (2, 4, 3), (3, 4, 0)], orient="centre", flat=True)
-        slit = [[ex - 0.019, ey + 0.0105, 2.7915], [ex, ey + 0.0185, 2.7955], [ex + 0.019, ey + 0.0105, 2.7915], [ex, ey + 0.0185, 2.7885]]
-        sc.add(PATINA, slit, [(0, 1, 3), (1, 2, 3)], orient="axis")
-        # ear, half hidden by the hair
-        c = np.array([sx * 0.124, HEAD_Y - 0.004, 2.760])
-        V = [c + [0, 0.016, -0.030], c + [0, 0.020, 0.026], c + [0, -0.012, 0.030], c + [0, -0.010, -0.026],
-             c + [sx * 0.020, -0.014, 0.004]]
-        sc.add(BRONZE, V, [(0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)], orient="centre", flat=True)
-    # hair: a thick cap from temple to temple round the back, below the crown band
-    hair_cols = (196, 212, 230, 250, 270, 290, 310, 328, 344)
-    sc.loft(BRONZE, [[_on_head(th, z, lift) for th in hair_cols] for z, lift in
-                     ((2.640, 0.002), (2.690, 0.016), (2.790, 0.018), (2.866, 0.008))], closed=False, orient="axis")
-    # beard: from the sideburns round the jaw, thick over the chin, ending in a point over the ruff; moustache
-    jaw_cols = (28, 46, 62, 78, 90, 102, 118, 134, 152)
-    def jz(th):          # the beard line climbs to the ears at the sides
-        return 2.668 + 0.075 * (abs(th - 90) / 62.0) ** 1.6
-    top = [_on_head(th, jz(th), 0.002) for th in jaw_cols]
-    bulge = [_on_head(th, jz(th) - 0.034, 0.016 + 0.012 * (1 - abs(th - 90) / 62.0)) for th in jaw_cols]
-    low_ = [[x * 0.52, HEAD_Y + (y - HEAD_Y) * 0.92 + 0.010, 2.592 + 0.05 * abs(x) / 0.11] for x, y, _ in bulge]
-    tip = [[x * 0.14, HEAD_Y + 0.112, 2.530] for x, _, _ in bulge]
-    sc.loft(BRONZE, [tip, low_, bulge, top], closed=False, orient="axis")
-    m = [[-0.052, f - 0.018, 2.694], [-0.026, f + 0.008, 2.712], [0, f + 0.012, 2.708], [0.026, f + 0.008, 2.712],
-         [0.052, f - 0.018, 2.694], [0.026, f + 0.006, 2.692], [0, f + 0.010, 2.696], [-0.026, f + 0.006, 2.692]]
-    sc.add(BRONZE, m, [(0, 7, 1), (7, 6, 1), (1, 6, 2), (6, 3, 2), (6, 5, 3), (5, 4, 3)], orient="axis")
-    lip = [[-0.022, f + 0.003, 2.684], [0, f + 0.012, 2.686], [0.022, f + 0.003, 2.684], [0, f + 0.010, 2.674]]
-    sc.add(BRONZE, lip, [(0, 3, 1), (1, 3, 2)], orient="axis")
+        _ear(sc, sx)
+
+
+def _ear(sc, sx):
+    """Ear: a shell with a rolled rim and a hollow bowl, its back edge standing ~1.5 cm off the head (prominent on the
+    photos, at the height of the eyes to the nose). sx = +1: the figure's right (+x)."""
+    zc = 2.796
+    root = np.array(head_point(sx * -84.0, zc))       # front edge, grown into the cheek behind the sideburn
+    out = np.array([sx, 0.0, 0.0])
+    back = np.array([0.0, -1.0, 0.0])
+    up = np.array([0.0, 0.0, 1.0])
+    n = 12
+    # (scale of the outline, offset along `out`): back of the rim, crest of the rim, inner slope, bowl
+    rings = []
+    for scale, off in ((0.92, -0.006), (1.0, 0.003), (0.72, 0.001), (0.34, -0.006)):
+        ring = []
+        for i in range(n):
+            a = 2 * math.pi * i / n
+            s_, c_ = math.sin(a), math.cos(a)
+            hz = 0.036 * s_ * (1.0 if s_ > 0 else 0.80)          # lobe smaller than the top
+            along = 0.022 + 0.020 * c_                           # 0.2 .. 4.2 cm behind the root
+            p = root + back * (0.022 + (along - 0.022) * scale) + up * hz * scale
+            p = p + out * (0.004 + 0.30 * (along - 0.002) * max(scale, 0.6) + off)
+            ring.append(p)
+        rings.append(ring)
+    sc.loft(BRONZE, rings, cap_top=True, orient="centre")
 
 
 def _ruff(sc, low):
-    n = 8 if low else 26
-    R, zc = 0.168, 2.560
-    rings = [[], [], [], []]
+    """Pleated ruff: figure-of-eight pleats, chunky (the close-up: as tall as the chin-to-mouth distance), up to the
+    jaw at the sides, tucked under the beard at the front; its underside runs down into the neck of the cloak."""
+    n = 8 if low else 48
+    R, zc = 0.158, 2.632
+    prof = ((-0.040, -(zc - H_NECK) - 0.010), (-0.050, -0.030), (0.004, -0.034), (0.030, 0.004), (-0.010, 0.040),
+            (-0.064, 0.020))
+    rings = [[] for _ in prof]
     for i in range(n):
         a = 2 * math.pi * i / n
-        wob = 0.0 if low else (0.010 if i % 2 else -0.010)
+        wob = 0.0 if low else math.sin(math.pi * i / 2) * (1.0 + 0.25 * math.sin(i * 1.7))     # rounded lobes, 4 vertices each
         c, s = math.cos(a), math.sin(a)
-        for k, (dr, dz) in enumerate(((-0.060, 0.012), (0.0, 0.034 + wob), (0.022, 0.0), (0.0, -0.030 + wob))):
-            rings[k].append([(R + dr) * c, (R * 0.96 + dr) * s + HEAD_Y * 0.7, zc + dz + (0.012 if s > 0 else 0) * (-s)])
-    sc.loft(PATINA, [rings[3], rings[2], rings[1], rings[0]])
+        fr = max(s, 0.0) ** 3                             # dips and tucks in under the beard at the front
+        for k, (dr, dz) in enumerate(prof):
+            rr = R + dr + (0.0 if low else 0.015 * wob * (1 if k in (2, 4) else 0.4 if k == 3 else 0.0))
+            zz = zc + dz + (0.0 if low else 0.006 * wob * (1 if k == 4 else -1 if k == 2 else 0.0))
+            if k > 0:
+                zz -= 0.050 * fr
+                rr -= 0.058 * fr
+            rings[k].append([rr * c, rr * 0.96 * s + HEAD_Y * 0.7, zz])
+    sc.loft(PATINA, rings)
+
+
+# crown: band hugging the hair, 4 tall and 4 low fleurons (the tall one at the front), stones on the band
+H_BAND0 = 2.896
+H_BAND1 = 2.944
+H_TOP_DRAWN = 3.035
+# The head, ruff and crown are drawn round E = 0.165 m and then scaled about the neck: the frontal Commons photo
+# (cs7518515) gives crown-to-beard 0.18 of the figure height (~0.55 m), the drawn head is 0.46 m.
+HEAD_SCALE = 1.12
+HEAD_PIVOT_Z = 2.55
+H_TOP = HEAD_PIVOT_Z + (H_TOP_DRAWN - HEAD_PIVOT_Z) * HEAD_SCALE        # tips of the tall fleurons, as built
+FLEURON_TALL = ((0.00, 0.00), (0.50, 0.00), (0.58, 0.24), (1.00, 0.46), (0.86, 0.70), (0.52, 0.58), (0.40, 0.82),
+                (0.16, 0.92))
+FLEURON_LOW = ((0.00, 0.00), (0.70, 0.00), (0.40, 0.30), (0.30, 0.80))
+
+
+def _crown_r(th, z, grow=0.0):
+    """Point on the band: an oval round the hair, flaring 9 mm towards the rim."""
+    t = (z - H_BAND0) / (H_BAND1 - H_BAND0)
+    a = math.radians(th)
+    w, f, b = 0.113 + 0.009 * t + grow, 0.112 + 0.009 * t + grow, 0.130 + 0.009 * t + grow
+    c, s = math.cos(a), math.sin(a)
+    dd = f if s >= 0 else b
+    r = (abs(c / w) ** 2.2 + abs(s / dd) ** 2.2) ** (-1 / 2.2)
+    return np.array([r * c, r * s + HEAD_Y - 0.004, z])
+
+
+def _fleuron(sc, th, tall, low):
+    base = _crown_r(th, H_BAND1 - 0.004)
+    a = math.radians(th)
+    out = np.array([math.cos(a), math.sin(a), 0.0])
+    t = np.array([-math.sin(a), math.cos(a), 0.0])
+    h = (H_TOP_DRAWN - H_BAND1 + 0.004 - 0.020) if tall else 0.058      # + the ball: 2 x 9 mm
+    w = 0.050 if tall else 0.014
+    shape = FLEURON_TALL if tall else FLEURON_LOW
+    if low:
+        sc.plate(RUBBED, [base - t * w, base + t * w, base + out * 0.010 + [0, 0, h + (0.018 if tall else 0.0)]])      # no ball on LOD1
+        return
+    half = [(u, v) for u, v in shape[1:]]
+    outline = [(u, v) for u, v in half] + [(0.0, 1.0)] + [(-u, v) for u, v in reversed(half)]
+
+    def pt(u, v, off):
+        lean = 0.014 * v ** 1.6                       # the tips lean out
+        return base + t * (u * w) + np.array([0, 0, v * h]) + out * (lean + off)
+    front = [pt(u, v, 0.0045) for u, v in outline]
+    backf = [pt(u, v, -0.0045) for u, v in outline]
+    c_front, c_back = pt(0.0, 0.42, 0.0060), pt(0.0, 0.42, -0.0060)
+    n = len(outline)
+    V = front + backf + [c_front, c_back]
+    T = [(2 * n, i, (i + 1) % n) for i in range(n - 1)] + [(2 * n + 1, n + (i + 1) % n, n + i) for i in range(n - 1)]
+    T += [(2 * n, n - 1, 0), (2 * n + 1, n, 2 * n - 1)]
+    for i in range(n):
+        j = (i + 1) % n
+        T += [(i, n + i, n + j), (i, n + j, j)]
+    sc.add(RUBBED, V, T, orient="centre", flat=True)
+    top = pt(0.0, 1.0, 0.0)          # ball on the tip (the low points are pearls on stalks)
+    rb = 0.009 if tall else 0.010
+    sc.tube(RUBBED, [top + [0, 0, -0.002], top + [0, 0, rb], top + [0, 0, 2 * rb]], [0.6 * rb, rb, 0.3 * rb], 4)
+    if tall:          # oval stone in the heart of the leaf
+        c = pt(0.0, 0.40, 0.0)
+        sc.tube(RUBBED, [c, c + out * 0.008, c + out * 0.011], [0.010, 0.008, 0.002], 4)
 
 
 def _crown(sc, low):
-    n = 6 if low else 12
-    def ring(z, grow):
-        return [[(0.128 + grow) * math.cos(2 * math.pi * i / n), (0.136 + grow) * math.sin(2 * math.pi * i / n) + HEAD_Y - 0.004, z]
-                for i in range(n)]
+    n = 8 if low else 16
+    ths = [360.0 * i / n + 90.0 for i in range(n)]
     if low:
-        sc.loft(RUBBED, [ring(H_BAND0, 0.0), ring(H_BAND1, 0.006)])
-    else:        # band with a rolled lower edge, rim and inner face
-        sc.loft(RUBBED, [ring(H_BAND0 - 0.004, -0.004), ring(H_BAND0 + 0.008, 0.006), ring(H_BAND0 + 0.018, 0.0),
-                         ring(H_BAND1, 0.007), ring(H_BAND1 + 0.004, -0.004), ring(H_BAND1 - 0.03, -0.014)])
-    k = 6 if low else 8
-    for i in range(k):
-        a = 2 * math.pi * (i + 0.5) / k + (0 if low else math.pi / 8 - math.pi / 8)
-        c, s = math.cos(a), math.sin(a)
-        base = np.array([0.134 * c, 0.142 * s + HEAD_Y - 0.004, H_BAND1 - 0.004])
-        t = np.array([-s, c, 0.0])
-        out = np.array([c, s, 0.0])
-        tall = i % 2 == 0
-        h = (H_TOP - H_BAND1) if tall else 0.072
-        if low:
-            sc.plate(RUBBED, [base - t * 0.04, base + t * 0.04, base + out * 0.012 + [0, 0, h]])
-            continue
-        w = 0.040 if tall else 0.030
-        pts = [(-w, 0.0), (w, 0.0), (w * 0.5, h * 0.26), (w * 1.05, h * 0.58), (w * 0.42, h * 0.80), (0.0, h),
-               (-w * 0.42, h * 0.80), (-w * 1.05, h * 0.58), (-w * 0.5, h * 0.26)]
-        sc.plate(RUBBED, [base + t * u + np.array([0, 0, v]) + out * (0.016 * (v / h) ** 1.5) for u, v in pts])
-        if tall:     # pearl between the fleurons, on the rim
-            b2 = 2 * math.pi * (i + 1.0) / k
-            sc.tube(RUBBED, [[0.132 * math.cos(b2), 0.140 * math.sin(b2) + HEAD_Y - 0.004, H_BAND1 - 0.01],
-                             [0.132 * math.cos(b2), 0.140 * math.sin(b2) + HEAD_Y - 0.004, H_BAND1 + 0.022]], [0.011, 0.007], 4)
+        sc.loft(RUBBED, [[_crown_r(th, H_BAND0) for th in ths], [_crown_r(th, H_BAND1, 0.004) for th in ths]])
+    else:        # rolled lower edge, a raised moulding with the stones, the rim, the inner face
+        rows = ((H_BAND0 - 0.003, -0.003), (H_BAND0 + 0.006, 0.006), (H_BAND0 + 0.014, 0.002), (H_BAND0 + 0.024, 0.008),
+                (H_BAND0 + 0.034, 0.002), (H_BAND1, 0.008), (H_BAND1 + 0.004, -0.002), (H_BAND1 - 0.03, -0.010))
+        sc.loft(RUBBED, [[_crown_r(th, z, g) for th in ths] for z, g in rows])
+        for i in range(8):     # oval stones between the fleurons, on the moulding
+            th = 90.0 + 45.0 * i + 22.5
+            p = _crown_r(th, H_BAND0 + 0.024, 0.008)
+            a = math.radians(th)
+            out = np.array([math.cos(a), math.sin(a), 0.0])
+            sc.tube(RUBBED, [p - out * 0.002, p + out * 0.006, p + out * 0.009], [0.009, 0.007, 0.002], 4)
+    for i in range(8):
+        _fleuron(sc, 90.0 + 45.0 * i, i % 2 == 0, low)
 
 
 LAPEL = ((2.500, 36, .135), (2.40, 31, .150), (2.25, 25, .150), (2.08, 19, .135), (1.90, 13.5, .115), (1.74, 9, .095),
@@ -353,9 +500,15 @@ def sculpt(low=False):
     """Local-space figure; z = 0 on the plinth."""
     sc = Sculpt()
     _cloak(sc, low)
+    before = {m: len(p) for m, p in sc.parts.items()}
     _head(sc, low)
     _ruff(sc, low)
     _crown(sc, low)
+    piv = np.array([0.0, HEAD_Y, HEAD_PIVOT_Z])
+    for m, parts in sc.parts.items():          # head, ruff and crown were drawn at 1 : HEAD_SCALE
+        for k in range(before.get(m, 0), len(parts)):
+            V, T = parts[k]
+            parts[k] = (piv + (V - piv) * HEAD_SCALE, T)
     _lapels(sc, low)
     if not low:
         _chains(sc)
@@ -372,8 +525,8 @@ def build(acc, layer, base, forward, low=False, remap=None):
     sc = sculpt(low)
     o = np.asarray(base, float)
     for mat, parts in sc.parts.items():
-        for V, T in parts:
-            V, T, UV = _unwrap(V, T)
+        for k, (V, T) in enumerate(parts):
+            V, T, UV = _unwrap(V, T, *sc.uv.get((mat, k), (UV_RADIUS_M, 0.0)))
             acc.add(layer, (remap or {}).get(mat, mat), o + V @ M, T, UV)
     return sc.tris()
 
@@ -382,12 +535,12 @@ UV_RADIUS_M = 0.40           # mean radius of the cloak: u = metres round the fi
 UV_SEAM_RAD = math.radians(6.0)
 
 
-def _unwrap(V, T):
+def _unwrap(V, T, radius=UV_RADIUS_M, y0=0.0):
     """Cylindrical UV0 in metres (u round the figure, v up) for the bronze set, whose rain streaks run along v. The
     seam is at the back; triangles across it get their own copies of the vertices one turn further."""
     # 0 near the front, the +-pi seam 6 degrees off the back centre (between two columns of the cloak, so no vertex
     # sits on it and round-off cannot flip its side)
-    ang = (np.arctan2(V[:, 0], V[:, 1]) - UV_SEAM_RAD + math.pi) % (2 * math.pi) - math.pi
+    ang = (np.arctan2(V[:, 0], V[:, 1] - y0) - UV_SEAM_RAD + math.pi) % (2 * math.pi) - math.pi
     V2, A2, T2 = [V], [ang], T.copy()
     extra = {}
     for k, tri in enumerate(T):
@@ -403,4 +556,4 @@ def _unwrap(V, T):
         V2.append(V[idx])
         A2.append(ang[idx] + 2 * math.pi)
     Vn, An = np.concatenate(V2), np.concatenate(A2)
-    return Vn, T2, np.column_stack([An * UV_RADIUS_M, Vn[:, 2]])
+    return Vn, T2, np.column_stack([An * radius, Vn[:, 2]])
