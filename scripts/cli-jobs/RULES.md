@@ -1,0 +1,11 @@
+## Zasady bezwzględne (wspólne dla zleceń CLI — Neon / Mistral)
+- Pracujesz WYŁĄCZNIE w swoim worktree (ścieżka podana w zadaniu), na jego gałęzi. NIE pushuj, NIE scalaj, NIE ruszaj main ani innych worktree.
+- Najpierw przeczytaj `CLAUDE.md`, `docs/owner/AGENT-RULES.md`, plik `docs/06*` (anti-slop) i ADR-y wskazane w zadaniu.
+- NIE zmieniaj `game/ProjectSettings/`, `game/Packages/`, `.asmdef`. Jeśli Unity zmieni `game/ProjectSettings/QualitySettings.asset` — cofnij przed commitem (`git checkout -- game/ProjectSettings/QualitySettings.asset`).
+- Nie kasuj `.meta`. Zakaz Google Maps/Street View/Earth. Bez cudzych marek. Nie zmyślaj liczb — mierz albo oznacz `WORKING_VALUE`/`UNVERIFIED`.
+- Po każdym kroku: commit WIP + dopisz `STATUS.md` (co zrobione, następny krok jako komenda).
+- Przed Unity / build_world zajmij slot: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner <nazwa-zadania>`, po skończeniu `-Release`. Jeden proces Unity na katalog.
+- Generatory zamiast ręcznego klikania; ręczne poprawki jako jawne `authored_overrides`.
+- Budżety: testy budżetowe (`tests/gis/test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py`) muszą zostać zielone.
+- Pętla wizualna: visual-qa przed|po (High, clear i overcast) i obejrzenie PNG. Dowody do `C:\Users\matma\Documents\Claude\kamion\artifacts\<nazwa-zadania>\`.
+- Na koniec wypisz raport: wynik, zmienione pliki, liczby przed/po, dowody, czego nie zrobiłeś, następny krok dla lidera.
