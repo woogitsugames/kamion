@@ -55,10 +55,25 @@ Pozycje i strumień losowy bez zmian (ADR 0173); zmiany tylko skrótem pozycji, 
 - Raport: `streetscape_qa.json` → `vegetation.forest_chm` (drzewostany, luki, przerzedzenia, młode, percentyle wysokości).
 
 ### 3. HLOD lasu (`forest_hlod.build(chm=)`)
-- Czasza: wierzchołki siatki 12 m na 0,93 × wysokości górującej z modelu (zamiast maksimum z wygenerowanych drzew).
-- Ściany: linia koron obrazu ściany (0,78 wysokości obrazu) na zmierzonym wierzchu w punkcie ściany; szum wierzchu z
-  0324 zmniejszony do 0,94–1,05 (zmienność niesie pomiar). Ściany powstają też wokół wyciętych luk.
-- Gdzie model nie ma koron (< 3 m: komórka poza maską, mała dziura) zostaje dotychczasowa reguła z drzew.
+Ustalenie przy okazji (przekroje `artifacts/forest-height-s24/hlod_profile_*.png`): reguła klasowa skaluje quad ściany
+medianą wysokości WSZYSTKICH roślin wypieczonego obrazu (`h_median_m` 10,9–13,9 m razem z podszytem), więc linia koron
+ściany lasu liściastego stoi ok. 1,5× wyżej niż jego drzewa (drzewa 5–19 m, ściana do 30–40 m) — stąd „ciemne pudła”
+w dali i skok wysokości przy przełączeniu instancje → HLOD. Kafle z modelem koron tego błędu nie mają.
+- **Czasza:** wierzchołki siatki 12 m na 0,80 × wysokości górującej z modelu; bez sztucznego opadu skraju z 0324 i bez
+  trójkątów bardziej stromych niż ~32° (gładka czasza o jednej normalnej, widziana z drogi pod kątem ślizgowym, lśni
+  niebem — jasne odłamki nad ścianą; runda r2).
+- **Ściany zewnętrzne i druga ściana:** quad tak wysoki, żeby wierzchołki koron obrazu (p90 najwyższego
+  nieprzezroczystego teksela w kolumnie: 0,888 iglasty / 0,833 mieszany / 0,766 liściasty — zmierzone, test) stały na
+  zmierzonej wysokości górującej w punkcie ściany; druga ściana (6 m w głąb) z pomiaru na własnej linii; szum wierzchu
+  0,94–1,05 + ± 6 % na punkt; obraz skalowany tak samo wzdłuż ściany (wyższy drzewostan = większe drzewa, młodnik =
+  małe; bez rozciągania pni w tyczki).
+- **Żebra (nowe):** ściany alfa tego samego obrazu co 16 m w obu kierunkach (linie siatki metrów kafla, meandrujące
+  ± 4,5 m, ciągłe między komórkami), wierzch z pomiaru. Każdy uskok wysokości drzewostanu ma poszarpaną linię koron —
+  bez nich wyższa część drzewostanu wystawała nad niższą jako gładkie zielone wzgórze (runda r1). Ten sam prymityw i
+  materiał co ściany (0 dodatkowych draw calli).
+- Gdzie model nie ma koron (< 3 m: dziura, komórka poza maską) — drzewa wygenerowane wokół punktu w tej samej skali,
+  a gdy żadnego w 15 m: niska ściana (reguła klasowa brała tam medianę całego kafla = 40 m szpilka w luce).
+- `KAMION_FOREST_CHM=0` — przełącznik ablacji (reguła klasowa na kaflu z modelem; tylko do porównań).
 
 ## Zmierzone (prototyp: `dk65-04`, `dk65-05` — Puszcza Knyszyńska, `dw671-tykocin-03`)
 
