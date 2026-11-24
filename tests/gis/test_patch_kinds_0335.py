@@ -81,3 +81,96 @@ def test_repairs_never_overlap_each_other():
             # chain along +x, rotation <= 6 deg: boxes grow by < 0.4 m; the generator keeps >= 0.25-0.4 m of clearance
             ox = min(a[1], b[1]) - max(a[0], b[0]); oy = min(a[3], b[3]) - max(a[2], b[2])
             assert not (ox > 0.6 and oy > 0.6), (a, b)
+
+
+def test_trench_and_hot_lift_interrupts_paint_while_milled_and_rut_stay_under():
+    """ADR 0335 P2: trench/hot patches sit above MARKING_LIFT so their pixel mask interrupts markings with 0 extra tris;
+    milled/rut stay at LIFT_PATCH below the paint."""
+    from roads import standards as S
+    assert 0 < DC.LIFT_PATCH < DC.LIFT_OIL < S.MARKING_LIFT < DC.LIFT_PATCH_OVER_PAINT
+    _, parts = _patches(length=4000.0)
+    seen = set()
+    for p in parts:
+        k = int(np.floor(p.UV1[0, 1]))
+        seen.add(k)
+        z_surf = 100.0 - 0.02 * np.abs(p.V[:, 1])
+        lift = p.V[:, 2] - z_surf
+        want = DC.LIFT_PATCH_OVER_PAINT if k in DC.PATCH_INTERRUPTS_PAINT else DC.LIFT_PATCH
+        assert np.allclose(lift, want, atol=1e-6), (k, lift.min(), lift.max(), want)
+    assert seen == {DC.PATCH_MILLED, DC.PATCH_TRENCH, DC.PATCH_HOT, DC.PATCH_RUT}
+
+
+def test_milled_patch_renews_overlapping_markings_with_zero_extra_tris():
+    """ADR 0335 P2: markings over a milled overlay get UV1.y += 8 (renewed/brighter), preserving fractional age,
+    lane coordinate, and exact triangle count (0 extra tris); non-milled patches, overpasses, and sentinels stay untouched."""
+    from roads.meshing import MeshBuf
+    from streetscape.yard_wear import mark_milled_patch_paint
+
+    buf = MeshBuf()
+    # Milled patch at x in [10, 16], y in [0, 3], z = 0.002
+    mp = np.array([[10, 0, 0.002], [16, 0, 0.002], [16, 3, 0.002], [10, 3, 0.002]], float)
+    buf.add("markings", "decal_patch", mp, np.array([[0, 0], [1, 0], [1, 1], [0, 1]], float),
+            [[0, 1, 2], [0, 2, 3]], src="patch:milled", UV1=np.tile([0.2, DC.PATCH_MILLED + 0.35], (4, 1)))
+    # Trench patch at x in [30, 36], y in [0, 3], z = 0.009 (must NOT renew paint)
+    tp = mp + np.array([20, 0, 0.007])
+    buf.add("markings", "decal_patch", tp, np.array([[0, 0], [1, 0], [1, 1], [0, 1]], float),
+            [[0, 1, 2], [0, 2, 3]], src="patch:trench", UV1=np.tile([0.1, DC.PATCH_TRENCH + 0.42], (4, 1)))
+    # Overpass milled patch at x in [50, 56], z = 5.002 (must NOT renew ground paint at z = 0.006)
+    op = mp + np.array([40, 0, 5.0])
+    buf.add("markings", "decal_patch", op, np.array([[0, 0], [1, 0], [1, 1], [0, 1]], float),
+            [[0, 1, 2], [0, 2, 3]], src="patch:overpass", UV1=np.tile([0.2, DC.PATCH_MILLED + 0.5], (4, 1)))
+
+    # 1. Transverse arrow (P-8) partially overlapping milled patch -> renewed as a whole ([2,3) -> [10,11))
+    arr_v = np.array([[14, 1, 0.006], [19, 1, 0.006], [19, 2, 0.006], [14, 2, 0.006]], float)
+    buf.add("markings", "marking_white", arr_v, np.zeros((4, 2)), [[0, 1, 2], [0, 2, 3]],
+            src="P-8@c1", UV1=np.tile([0.5, 2.45], (4, 1)))
+    # 2. Long continuous solid strip (0..26 m, 2 m quads = 26 tris) crossing milled patch [10, 16] -> split, 0 extra tris
+    xs = np.linspace(0.0, 26.0, 14)
+    sv = np.vstack([np.column_stack([xs, np.full_like(xs, 2.8), np.full_like(xs, 0.006)]),
+                    np.column_stack([xs, np.full_like(xs, 2.92), np.full_like(xs, 0.006)])])
+    n = len(xs)
+    st = np.array([(i, i + 1, n + i + 1) for i in range(n - 1)] + [(i, n + i + 1, n + i) for i in range(n - 1)])
+    buf.add("markings", "marking_white", sv, np.zeros((len(sv), 2)), st,
+            src="P-7b@c1", UV1=np.tile([0.9, 0.33], (len(sv), 1)))
+    # 3. Dash over trench patch -> untouched
+    buf.add("markings", "marking_white", arr_v + np.array([18, 0, 0]), np.zeros((4, 2)), [[0, 1, 2], [0, 2, 3]],
+            src="P-1a@trench", UV1=np.tile([0.0, 0.4], (4, 1)))
+    # 4. Dash under overpass milled patch -> untouched
+    buf.add("markings", "marking_white", arr_v + np.array([38, 0, 0]), np.zeros((4, 2)), [[0, 1, 2], [0, 2, 3]],
+            src="P-1a@underpass", UV1=np.tile([0.0, 0.4], (4, 1)))
+    # 5. Sentinel (-1, 5) and fresh SMA [4,5) over milled patch -> untouched
+    buf.add("markings", "marking_white", arr_v, np.zeros((4, 2)), [[0, 1, 2], [0, 2, 3]],
+            src="sentinel", UV1=np.tile([-1.0, 5.0], (4, 1)))
+    buf.add("markings", "marking_white", arr_v, np.zeros((4, 2)), [[0, 1, 2], [0, 2, 3]],
+            src="fresh_sma", UV1=np.tile([0.5, 4.3], (4, 1)))
+
+    tris_before = sum(len(p.T) for p in buf.parts if p.mat == "marking_white")
+    rep = mark_milled_patch_paint(buf)
+    tris_after = sum(len(p.T) for p in buf.parts if p.mat == "marking_white")
+    assert tris_after == tris_before                        # strictly zero extra triangles
+    assert rep["renewed_parts"] == 2 and rep["split_parts"] == 1
+
+    by_src = {p.src: p for p in buf.parts if p.mat == "marking_white"}
+    assert np.allclose(by_src["P-8@c1"].UV1[:, 1], 10.45)   # transverse renewed, fractional age kept
+    assert np.allclose(by_src["P-7b@c1"].UV1[:, 1], 0.33)   # outside milled stays normal
+    assert np.allclose(by_src["P-7b@c1:milled"].UV1[:, 1], 8.33)
+    assert np.allclose(by_src["P-1a@trench"].UV1[:, 1], 0.4)
+    assert np.allclose(by_src["P-1a@underpass"].UV1[:, 1], 0.4)
+    assert np.allclose(by_src["sentinel"].UV1[:, 1], 5.0)
+    assert np.allclose(by_src["fresh_sma"].UV1[:, 1], 4.3)
+    # Idempotent on second pass
+    assert mark_milled_patch_paint(buf)["renewed_parts"] == 0
+
+
+def test_shader_0335_p2_invariants():
+    """ADR 0335 P2 shader contracts: perpendicular Jacobian seam width, separated sealMask, renewed paint band,
+    distance/footprint wheel-path compensation, and widened sand strip."""
+    from pathlib import Path
+    shader = (Path(__file__).resolve().parents[2] / "game/Assets/_Project/Environment/Shaders/WorldPBR.shader").read_text(encoding="utf-8")
+    assert "cross(Eu, Ev)" in shader
+    assert "float baseSw = _PatchSeam.x * (0.70 + 0.30 * n2);" in shader
+    assert "half sealMask;" in shader
+    assert "endD * 0.5" not in shader
+    assert "paintRenewed" in shader and "8.0 * paintRenewed" in shader
+    assert "rwDistAtten" in shader and "wpMip" in shader
+    assert "sandTongue" in shader and "sband" in shader

@@ -313,10 +313,14 @@ Shader "Kamion/World PBR"
                 n *= IS_FRONT_VFACE(isFront, 1.0, -1.0);
                 float3 pw = i.positionWS;
                 half paintFresh = 0.0;
+                half paintRenewed = 0.0;
             #if defined(_DECAL_PAINT)
-                // Fresh longitudinal [4,5), transverse [6,7). Preserve legacy no-data (-1,5).
+                // Fresh longitudinal [4,5), transverse [6,7). Renewed over milled overlay (ADR 0335 P2):
+                // [8,9) longitudinal, [10,11) transverse. Preserve legacy no-data (-1,5).
                 paintFresh = step(4.0, i.uv.w) * (1.0 - step(5.0, i.uv.w))
                            + step(6.0, i.uv.w) * (1.0 - step(7.0, i.uv.w));
+                paintRenewed = step(8.0, i.uv.w) * (1.0 - step(9.0, i.uv.w))
+                             + step(10.0, i.uv.w) * (1.0 - step(11.0, i.uv.w));
             #endif
 
                 // ---- UV (metres) and tangent frame
@@ -627,9 +631,17 @@ Shader "Kamion/World PBR"
                     }
                     if (w.x > -0.5)        // (-1, 5) = no road data (junction patches, kerbs)
                     {
+                        float rwDist = length(GetCameraPositionWS() - pw);
+                        float rwFpx = max(length(fwidth(pw.xz)), 1e-4);
+                        // ADR 0335 P2: perspective foreshortening + loss of close-range normal/detail relief made distant
+                        // wheel paths read darker than near the camera. Pre-filter the analytical stripe and high-freq
+                        // noise by pixel footprint, and attenuate contrast gently with distance (1.0 <= 25 m -> 0.50 >= 130 m).
+                        // WORKING_VALUE.
+                        half rwDistAtten = (half)(1.0 - 0.50 * smoothstep(25.0, 130.0, rwDist));
                         // wheel paths at ~0.25 / 0.75 of a lane: darker binder-rich, smoother
                         float lc = frac(w.x);
-                        half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11);
+                        half wpMip = (half)saturate(0.11 / max(fwidth(w.x), 0.11));
+                        half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11) * wpMip;
                         wp *= lerp(1.0h, (half)KAMION_PLATE_WHEEL_KEEP, plate);
                         // build #3 P3 (DK65 / Knyszyn roundabout mouths): the wheel paths ran as continuous dark stripes of
                         // one strength along every lane (3 per lane: 2 paths + drip band), bending with the flared
@@ -640,7 +652,8 @@ Shader "Kamion/World PBR"
                         // of that. WORKING_VALUE, judged against the build #3 frame t=1530.
                         {
                             float2 po = TransformWorldToObject(pw).xz;
-                            half brk = (half)(ValueNoise12(po / 4.3) * 0.65 + ValueNoise12(po / 1.3 + 17.0) * 0.35);
+                            half brkHi = lerp(0.5h, (half)ValueNoise12(po / 1.3 + 17.0), (half)saturate(0.5 / rwFpx));
+                            half brk = (half)(ValueNoise12(po / 4.3) * 0.65) + brkHi * 0.35h;
                             half keep = lerp(0.55h, 1.25h, smoothstep(0.32h, 0.72h, brk));
                             wp *= keep * lerp(1.0h, 0.5h, onPlate);
                         }
@@ -651,8 +664,8 @@ Shader "Kamion/World PBR"
                         // ADR 0335: x1.35 (r1 x1.25 was invisible from the cab, r2 x2.0 read as rails - critic round 3), and the
                         // contrast of a track fades to 35-100 % over 20-60 m stretches (object-space noise)
                         half trackFade = (half)lerp(0.35, 1.0, smoothstep(0.30, 0.60, ValueNoise12(TransformWorldToObject(pw).xz / 38.0 + 53.0)));
-                        albedo *= 1.0 - wp * 1.35 * trackFade * (0.10 * _WheelPolish + traffic) * (1.0 - paintFresh);
-                        smooth = lerp(smooth, smooth + 0.12, wp * _WheelPolish);
+                        albedo *= 1.0 - wp * 1.35 * trackFade * rwDistAtten * (0.10 * _WheelPolish + traffic) * (1.0 - paintFresh);
+                        smooth = lerp(smooth, smooth + 0.12, wp * _WheelPolish * rwDistAtten);
                     #if !defined(_DECAL_PAINT)
                         // gutter: grit, leaves and soot within ~0.6 m of the kerb
                         half g = (1.0 - smoothstep(0.05, 0.65, w.y)) * _GutterDirt;
@@ -664,18 +677,21 @@ Shader "Kamion/World PBR"
                         albedo *= 1.0 - 0.5 * damp;
                         smooth = lerp(smooth, 0.55, damp);
                         // ADR 0335: edge discolouration of the carriageway (ribbons only: plates carry w.y >= 15) in 3-14 m
-                        // stretches: dark run-off / exhaust film (up to -17 %) or pale sand-and-dust residue (+9 %), over the
-                        // outer 0.15-1.1 m. WORKING_VALUE.
+                        // stretches: dark run-off / exhaust film (up to -17 %, outer 0.1-0.9 m) or pale sand-and-dust residue
+                        // (ADR 0335 P2: widened gently to 0.35-1.40 m with multi-scale tongues toward ref cs11749508). WORKING_VALUE.
                         {
                             float2 pg = TransformWorldToObject(pw).xz;
                             half ev = (half)smoothstep(0.38, 0.62, ValueNoise12(pg / 7.0 + 29.0) * 0.75 + ValueNoise12(pg / 1.9 + 5.0) * 0.25);
-                            // tongues: the band is 0.3-1.9 m wide, ragged with 0.9 m noise (reference cs11749508: a sandy
-                            // strip with irregular tongues reaching onto the asphalt)
+                            half onRibbon = (half)step(w.y, 15.0) * (half)(1.0 - paintFresh);
                             half tongue = (half)(0.2 + 0.7 * ValueNoise12(pg / 1.3 + 71.0));
-                            half eband = (half)(1.0 - smoothstep(0.1, tongue, w.y)) * (half)step(w.y, 15.0) * (half)(1.0 - paintFresh);
-                            half sandy = (half)smoothstep(0.62, 0.42, ValueNoise12(pg / 13.0 + 61.0));   // ~45 % of the length
+                            half eband = (half)(1.0 - smoothstep(0.1, tongue, w.y)) * onRibbon;
+                            half sandTongue = (half)(0.35 + 1.05 * (ValueNoise12(pg / 1.5 + 71.0) * 0.65 + ValueNoise12(pg / 4.3 + 19.0) * 0.35));
+                            half sband = (half)(1.0 - smoothstep(0.12, sandTongue, w.y)) * onRibbon;
+                            half sandy = (half)smoothstep(0.66, 0.42, ValueNoise12(pg / 13.0 + 61.0));   // ~55 % of the length
                             albedo *= 1.0 - 0.17 * eband * ev * (0.6 + 0.4 * macro.b);
-                            albedo = lerp(albedo, half3(0.17, 0.145, 0.11), 0.6 * eband * (1.0 - ev) * sandy);
+                            half sandW = 0.62h * sband * (1.0h - ev) * sandy;
+                            albedo = lerp(albedo, half3(0.17, 0.145, 0.11), sandW);
+                            smooth *= 1.0h - 0.35h * sandW;
                         }
                     #endif
                         // oil / soot drip band between the wheel paths (lane centre 0.5 +- ~0.12), mottled, strongest where
@@ -686,13 +702,14 @@ Shader "Kamion/World PBR"
                         float2 pdr = TransformWorldToObject(pw).xz;
                         half wander = (half)((ValueNoise12(pdr / 5.0 + 3.0) - 0.5) * 0.16);
                         half present = (half)smoothstep(0.30, 0.55, ValueNoise12(pdr / 17.0 + 7.0));
-                        half drops = (half)lerp(0.45, 1.0, smoothstep(0.35, 0.65, ValueNoise12(pdr / 0.9 + 19.0)));
+                        half dropNoise = lerp(0.5h, (half)ValueNoise12(pdr / 0.9 + 19.0), (half)saturate(0.45 / rwFpx));
+                        half drops = (half)lerp(0.45, 1.0, smoothstep(0.35, 0.65, dropNoise));
                         half drip = saturate(1.0 - abs(lc - 0.5 - wander) / 0.12) * saturate(0.45 + (macro.a - 0.5) * 2.2 + (macro.g - 0.5) * 0.8);
                         drip *= present * drops * 1.9h;
-                        half blot = (half)smoothstep(0.80, 0.88, ValueNoise12(pdr / 0.55 + 23.0)) * saturate(1.0 - abs(lc - 0.5 - wander) / 0.2) * present;
+                        half blot = (half)smoothstep(0.80, 0.88, ValueNoise12(pdr / 0.55 + 23.0)) * (half)saturate(0.35 / rwFpx) * saturate(1.0 - abs(lc - 0.5 - wander) / 0.2) * present;
                         drip = max(drip, blot * 1.8h);
                         drip *= lerp(1.0h, (half)KAMION_PLATE_DRIP_KEEP, plate);
-                        albedo *= 1.0 - _DripBand * drip * (1.0 - paintFresh);
+                        albedo *= 1.0 - _DripBand * drip * rwDistAtten * (1.0 - paintFresh);
                         smooth = lerp(smooth, smooth + 0.12h, blot * (1.0 - paintFresh));
                     }
                 }
@@ -747,13 +764,17 @@ Shader "Kamion/World PBR"
                     if (_PatchSeam.x > 0.0)
                     {
                         // UV0 is normalised once per complete repair before chunk clipping (yard_wear.py).
-                        // Recover metres from the surface Jacobian: seal width stays physical on every patch size.
+                        // Recover perpendicular metres from the surface Jacobian: seal width stays physical on every
+                        // patch size, orientation, or kerb-clipped shear (ADR 0335 P2).
                         float2 ux = ddx(i.uv.xy), uy = ddy(i.uv.xy);
                         float3 px = ddx(pw), py = ddy(pw);
                         float det = ux.x * uy.y - ux.y * uy.x;
                         float inv = (det < 0.0 ? -1.0 : 1.0) / max(abs(det), 1e-10);
-                        float2 sizeM = float2(length((px * uy.y - py * ux.y) * inv),
-                                              length((py * ux.x - px * uy.x) * inv));
+                        float3 Eu = (px * uy.y - py * ux.y) * inv;
+                        float3 Ev = (py * ux.x - px * uy.x) * inv;
+                        float patchArea = length(cross(Eu, Ev));
+                        float2 sizeM = float2(patchArea / max(length(Ev), 1e-5),
+                                              patchArea / max(length(Eu), 1e-5));
                         float2 borderM = min(i.uv.xy, 1.0 - i.uv.xy) * sizeM;
                         // build #3 P2 (anti-slop): no ruler-straight rectangles. Rounded corners (radius 0.10-0.45 m
                         // from the patch seed, capped by the patch size) and a ragged outline from two octaves of value
@@ -763,8 +784,9 @@ Shader "Kamion/World PBR"
                         // ADR 0323 (critic wave 6 pkt 2.2 "nadal prostokatne"): two kinds of repair from the patch seed.
                         // Spray-injection / hand-laid blob (55 %): stadium outline eaten by 0.3-0.9 m noise up to
                         // 0.4 x the patch size, soft feathered edge. Saw-cut patch (45 %): nearly straight cuts with a
-                        // hand-poured bitumen overband along them. The overband (_PatchSeam.x = mean width) varies
-                        // 0.5-1.5 x in width and is missing in stretches; 40 % of the blobs have one too.
+                        // hand-poured bitumen overband along them.
+                        // ADR 0335 P2: keep bitumen overband width physical and even across opposite edges (0.70-1.00 x
+                        // _PatchSeam.x, i.e. 4.2-6.0 cm); perimeter gaps modulate opacity (`sealMask`), not width.
                         float wRaw = i.uv.w;
                         // ADR 0335: roads.decals encodes the repair KIND in the integer part of TEXCOORD_1.y
                         // (kind + 0.02 + 0.96 * seed): 1 milled overlay, 2 trench backfill, 3 hot-mix pothole blob,
@@ -775,9 +797,11 @@ Shader "Kamion/World PBR"
                         float2 on = TransformWorldToObject(pw).xz + seed * 97.0;
                         float n1 = ValueNoise12(on / 0.9), n2 = ValueNoise12(on / 0.28), n3 = ValueNoise12(on / 0.07);
                         float aa;
+                        float baseSw = _PatchSeam.x * (0.70 + 0.30 * n2);
                         float sw;
                         float edgeM;
                         half hasSeal;
+                        half sealMask;
                         float fth;
                         if (kindF < 0.5)
                         {
@@ -788,7 +812,8 @@ Shader "Kamion/World PBR"
                         edgeM -= amp * (n1 * 0.6 + n2 * 0.4) + 0.012 * n3;
                         fth = lerp(0.02, 0.06, blob);
                         hasSeal = max(1.0 - blob, (half)step(frac(seed * 11.7), 0.4));
-                        sw = _PatchSeam.x * (0.5 + n2) * hasSeal * smoothstep(0.88, 0.72, n1);
+                        sw = baseSw * hasSeal;
+                        sealMask = hasSeal * (half)smoothstep(0.88, 0.72, n1);
                         }
                         else if (kindF < 1.5)
                         {
@@ -802,22 +827,22 @@ Shader "Kamion/World PBR"
                             edgeM = RoundedInset(float2(endD, latD), rcn) - 0.006 * n3;
                             fth = 0.012;
                             hasSeal = 1.0;
-                            sw = _PatchSeam.x * (0.45 + 0.9 * n2) * smoothstep(0.52, 0.40, n1) * smoothstep(0.0, 0.01, endD + 0.002);
-                            sw *= step(endD, latD + sw);    // seal only where the transverse cut is the nearer edge
+                            sw = baseSw;
+                            sealMask = (half)(smoothstep(0.56, 0.42, n1) * smoothstep(0.0, 0.01, endD + 0.002) * step(endD, latD + sw));
                         }
                         else if (kindF < 2.5)
                         {
                             // TRENCH backfill (wykop pod instalacje): rounded rectangle r 0.12-0.40 m, nearly straight
-                            // sides (1-2 cm waviness), a continuous hand-poured bitumen overband all round: 2.5-8 cm,
-                            // width varying along the perimeter, rare gaps. WORKING_VALUE.
+                            // sides (1-2 cm waviness), a continuous hand-poured bitumen overband all round: uniform
+                            // ~4.2-6.0 cm physical width, worn/missing in stretches via opacity mask. WORKING_VALUE.
                             // half of the trenches are saw-cut (corner radius 2-6 cm), half dug with a bucket (12-40 cm)
                             float rc = min(frac(seed * 3.3) < 0.5 ? 0.02 + 0.04 * frac(seed * 7.13) : 0.12 + 0.28 * frac(seed * 7.13), 0.45 * mn);
                             edgeM = RoundedInset(borderM, rc);
                             edgeM -= 0.028 * (n1 * 0.6 + n2 * 0.4) + 0.006 * n3;      // 2-4 cm unevenness over 0.3-1 m
                             fth = 0.012;
                             hasSeal = 1.0;
-                            // hand-poured overband 2.5-8 cm, thinner / missing along ~25 % of the perimeter
-                            sw = _PatchSeam.x * (0.45 + 1.1 * n2 + 0.25 * frac(seed * 5.3)) * smoothstep(0.52, 0.40, n1);
+                            sw = baseSw;
+                            sealMask = (half)smoothstep(0.58, 0.44, n1);
                         }
                         else if (kindF < 3.5)
                         {
@@ -830,6 +855,7 @@ Shader "Kamion/World PBR"
                             fth = 0.015 + 0.02 * frac(seed * 9.1);
                             hasSeal = 0.0;
                             sw = 0.0;
+                            sealMask = 0.0;
                         }
                         else
                         {
@@ -841,14 +867,15 @@ Shader "Kamion/World PBR"
                             float wv = 0.6 + 0.55 * ValueNoise12(ro / 3.2 + seed * 31.0);
                             float latD = (0.5 - abs(i.uv.y - 0.5)) * sizeM.y - 0.5 * sizeM.y * (1.0 - wv * lerp(0.15, 1.0, taper));
                             float endD = borderM.x - 0.25 * ValueNoise12(ro / 0.5 + seed * 7.0) - 0.02;
-                            edgeM = min(latD - 0.045 * (n2 * 0.7 + n1 * 0.5), endD * 0.5);
+                            edgeM = min(latD - 0.045 * (n2 * 0.7 + n1 * 0.5), endD);
                             fth = 0.035;
                             hasSeal = step(frac(seed * 11.7), 0.3);
-                            sw = _PatchSeam.x * (0.5 + n2) * hasSeal * smoothstep(0.88, 0.72, n1);
+                            sw = baseSw * hasSeal;
+                            sealMask = hasSeal * (half)smoothstep(0.88, 0.72, n1);
                         }
                         aa = max(fwidth(edgeM), 0.002);
                         alpha = smoothstep(0.0, fth + aa, edgeM);
-                        half seam = (1.0 - smoothstep(sw - aa, sw + aa, edgeM)) * step(0.001, sw);
+                        half seam = (1.0 - smoothstep(sw - aa, sw + aa, edgeM)) * step(0.001, sw) * sealMask;
                         // per-patch tone: 0.82-1.18 x (fresh bitumen vs. old, sun-bleached repairs), mottled inside by
                         // the 0.9 m noise (+-7 %); fresh hot mix is smoother, an old repair rougher (aggregate showing)
                         half tone = (half)((0.82 + 0.36 * frac(seed * 13.3)) * (kindF > 0.5 ? (0.985 + 0.03 * n1) * (0.97 + 0.06 * n3) : (0.93 + 0.14 * n1)));
@@ -927,7 +954,7 @@ Shader "Kamion/World PBR"
             #if defined(_DECAL_PAINT)
                 {
                     // road paint over the asphalt beneath (albedo / smooth / tn hold that asphalt here)
-                    float ex = i.uv.w - 4.0 * paintFresh; // [0,1) longitudinal, [2,3) transverse; frac = age
+                    float ex = i.uv.w - 4.0 * paintFresh - 8.0 * paintRenewed; // [0,1) longitudinal, [2,3) transverse; frac = age
                     half transverse = step(1.5, ex);
                     half age = (half)frac(ex);
                     half known = step(-0.5, i.uv.z);                     // (-1, 5) = no wear data
@@ -945,19 +972,23 @@ Shader "Kamion/World PBR"
                               + _PaintWear.y * (0.35 + age) * (0.6 + 0.4 * wp) * lerp(1.0, _PaintFreshWear.y, paintFresh)
                               + _PaintWear.y * 0.6 * (0.5 + age) * stretch * (1.0 - transverse) * (1.0 - paintFresh)
                               + 0.10 * mott;
+                    // ADR 0335 P2: markings repainted over a milled-and-overlaid patch are crisp, cleaner and visibly
+                    // brighter than surrounding weathered paint (low wear, low traffic film, fresh white albedo). WORKING_VALUE.
+                    worn *= lerp(1.0h, 0.12h, paintRenewed);
                     // chipped, not faded: a narrow threshold on the peak-weighted wear gives sharp-edged bare spots
                     half cover = 1.0 - smoothstep(0.42, 0.58, saturate(worn) * (0.35 + 1.3 * peaks));
                     // traffic film: tyre soot and road dust, grey-brown, heavier on old marks and soiled patches
                     half dirt = saturate(_PaintWear.z * (0.75 + 0.5 * age) * (0.85 + 0.3 * macro.b) * (1.0 + 0.4 * wp * transverse));
-                    dirt *= lerp(1.0, _PaintFreshWear.z, paintFresh);
-                    half3 film = _PaintColor.rgb * (1.0 - dirt * half3(1.0, 1.0, 1.03));   // neutral grey film (r6 critic: beige read as concrete)
+                    dirt *= lerp(1.0, _PaintFreshWear.z, paintFresh) * lerp(1.0h, 0.15h, paintRenewed);
+                    half3 paintCol = _PaintColor.rgb * lerp(1.0h, 1.22h, paintRenewed);
+                    half3 film = paintCol * (1.0 - dirt * half3(1.0, 1.0, 1.03));   // neutral grey film (r6 critic: beige read as concrete)
                     half3 asph = albedo;
                     albedo = lerp(asph, film, cover);
                     // pre-filter: a 0.12 m line (0.4 m for transverse marks) under a pixel blends to the asphalt beneath
                     float fp = max(length(fwidth(pw.xz)), 1e-4);
                     half lw = lerp(_PaintWear.w, 0.4, transverse);
                     albedo = lerp(asph, albedo, saturate(lw * 1.5 / fp));
-                    smooth = lerp(smooth, _PaintColor.a * (1.0 - 0.3 * dirt), cover);
+                    smooth = lerp(smooth, _PaintColor.a * (1.0 - 0.3 * dirt) + 0.08h * paintRenewed, cover);
                     tn = normalize(lerp(tn, half3(0, 0, 1), cover * 0.75));   // the film fills the fine texture
                 }
             #endif
