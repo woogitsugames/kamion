@@ -29,3 +29,11 @@ NASTĘPNY KROK: gdy PC wolny (brak Unity/Kamion, slot heavy) —
   (E1 D3D11 bez ramki czysto, E2 + syntetyczne obciążenie robocopy Library + 4 pętle CPU, E3 D3D12, E4 okno 1600x900,
   E5 VSync 1), log artifacts/pacing-s24/experiments.log, wyniki artifacts/pacing-s24/runs/*/ (pc-report.md, pacing.json).
 NASTĘPNY KROK: Get-Content artifacts/pacing-s24/experiments.log -Tail 30 ; po końcu slot zwalnia się sam.
+
+## Krok 4 — pomiary A/B (24.11 09:24–, build #5, dw671-tykocin-06, High60, 1920x1080 bez ramki, autopilot 50, 80 s)
+- E1 D3D11 czysto: 0 kl. > 33,3 ms, p99 16,67, max ≤ 33 (inne procesy śr. 6,6 % CPU).
+- E2 D3D11 + robocopy Library + 4 pętle CPU (inne procesy 44 % CPU maszyny, jak tło #6): 0 kl. > 33,3 ms, max 23,3 ms.
+  → samo obciążenie CPU/dysku 44 % NIE wywołuje skoków. Gra nie była na pierwszym planie w E1/E2 (fg=claude) — też bez skutku.
+- E3 D3D12: 4 kl. > 40 ms (zgodne z ADR 0291: D3D12 gorszy).
+- W toku: E4 okno 1600x900, E5 VSync 1; dodany E6 = drugi player na GPU (zastępstwo renderu innego agenta).
+NASTĘPNY KROK: pwsh artifacts/pacing-s24/run-experiments.ps1 -Only E6  (po końcu E5, slot heavy)
