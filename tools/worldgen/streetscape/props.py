@@ -249,12 +249,32 @@ def lamp_arc(h=9.0, reach=2.2, double=False):
     return m, l1, col
 
 
+SIGN_POST_LOD1_SCALE = 1.20     # WORKING_VALUE (ADR 0337): LOD1 tube radius boost so a Ø60 mm post stays legible at 50-250 m
+
+
 def sign_post():
+    """Ø60.3 mm galvanised road-sign post (ADR 0337, critic build #5 pkt 10).
+
+    Local z runs 0..1 and is scaled per instance by `sz` (~2.7-3.5 m). Uses a single material slot (`sign_post_galv`,
+    weathered matte hot-dip zinc reusing `furniture_galv` grain + foot splash: +0 draws). The buried end (-0.04 in
+    unit scale = ~11-14 cm embedded at typical sign heights) stays inside the 15 cm contact-audit window (ADR 0102),
+    and a subtle ground collar anchors the post visually into verges and paving. LOD1 uses a 6-sided tube scaled by
+    `SIGN_POST_LOD1_SCALE` so posts do not sub-pixel away against rural fields.
+    """
     m, l1, col = Mesh(), Mesh(), Mesh()
-    # Render only a short buried end: the instance scales z by its height (sz up to ~5). Real underground
-    # foundation depth is not a render-mesh dimension; long hidden ends confuse lowest-point contact audits.
-    m.tube("steel_galv", [0, 0, -0.03], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 10)
-    l1.tube("steel_galv", [0, 0, -0.03], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 4)
+    r = S.SIGN_POST_D / 2
+    # LOD0: shaft + subtle ground collar (same single material slot, UV v maps foot splash to the bottom)
+    m.tube("sign_post_galv", [0, 0, -0.04], [0, 0, 1.0], r, None, 10)
+    m.tube("sign_post_galv", [0, 0, -0.025], [0, 0, 0.022], r * 1.85, r * 1.18, 10)
+    # Remap vertical UVs on LOD0 to the lower 35 % of furniture_galv (foot splash at z <= 0.06, clean zinc above)
+    for Vs, _, UVs in [m.prims["sign_post_galv"]]:
+        for V, UV in zip(Vs, UVs):
+            UV[:, 1] = np.clip((V[:, 2] + 0.02) * 0.35, 0.002, 0.38)
+    # LOD1: 6-sided tube (was 4-sided 42.6 mm across diagonal) with slight anti-alias boost
+    l1.tube("sign_post_galv", [0, 0, -0.04], [0, 0, 1.0], r * SIGN_POST_LOD1_SCALE, None, 6)
+    for Vs, _, UVs in [l1.prims["sign_post_galv"]]:
+        for V, UV in zip(Vs, UVs):
+            UV[:, 1] = np.clip((V[:, 2] + 0.02) * 0.35, 0.002, 0.38)
     col.tube("collision_steel", [0, 0, 0], [0, 0, 1.0], 0.05, None, 4)
     return m, l1, col
 
@@ -913,19 +933,47 @@ def pylon(h=32.0):
 
 
 def bench():
-    m = Mesh()
-    m.box("bench_wood", [0, 0, 0.45], 0.9, 0.22, 0.025)
-    m.box("bench_wood", [0, -0.2, 0.75], 0.9, 0.02, 0.12)
-    for x in (-0.75, 0.75):
-        m.box("steel_painted", [x, 0, 0.22], 0.03, 0.2, 0.22)
-    return m, m, None
+    """Polish municipal park bench (ADR 0337, critic build #5 pkt 10): open 4-leg dark steel frame with backrest
+    uprights, seat support rails, armrests, under-seat tie-rail and wooden slats (3 seat + 2 reclined back).
+    Legs extend 10 cm below origin (within the 15 cm ADR 0102 contact-audit window) so slopes never leave a floating
+    foot. Same 2 materials (`bench_wood`, `steel_painted`); lighter LOD1 keeps all 4 grounded legs. WORKING_VALUE."""
+    m, l1 = Mesh(), Mesh()
+    # LOD0 wooden slats: 3 seat planks + 2 backrest planks (ergonomically stepped back)
+    for y in (-0.14, 0.01, 0.16):
+        m.box("bench_wood", [0.0, y, 0.438], 0.91, 0.0525, 0.018)
+    m.box("bench_wood", [0.0, -0.23, 0.642], 0.91, 0.018, 0.0525)
+    m.box("bench_wood", [0.0, -0.25, 0.798], 0.91, 0.018, 0.0525)
+    # LOD0 open steel leg frames (left & right): front leg, rear leg/upright, seat rail, armrest + tie beam
+    for x in (-0.72, 0.72):
+        m.box("steel_painted", [x, 0.17, 0.25], 0.0275, 0.0275, 0.35)          # front leg + armrest post: z -0.10..0.60
+        m.box("steel_painted", [x, -0.22, 0.385], 0.0275, 0.0275, 0.485)      # rear leg + backrest upright: z -0.10..0.87
+        m.box("steel_painted", [x, -0.025, 0.398], 0.0225, 0.215, 0.0225)     # seat support cross-rail: y -0.24..+0.19
+        m.box("steel_painted", [x, -0.025, 0.591], 0.0275, 0.215, 0.016)      # armrest bar: y -0.24..+0.19
+    m.box("steel_painted", [0.0, -0.02, 0.385], 0.72, 0.022, 0.025)           # longitudinal under-seat tie-rail
+    # LOD1: 1 seat slab + 1 backrest slab + 4 grounded legs (no floating backrest, 72 tris)
+    l1.box("bench_wood", [0.0, 0.01, 0.438], 0.91, 0.20, 0.022)
+    l1.box("bench_wood", [0.0, -0.24, 0.72], 0.91, 0.022, 0.13)
+    for x in (-0.72, 0.72):
+        l1.box("steel_painted", [x, 0.17, 0.175], 0.028, 0.028, 0.275)        # front leg: z -0.10..0.45
+        l1.box("steel_painted", [x, -0.22, 0.38], 0.028, 0.028, 0.48)         # rear leg + upright: z -0.10..0.86
+    return m, l1, None
 
 
 def waste_bin():
-    m = Mesh()
-    m.tube("steel_painted", [0, 0, 0.0], [0, 0, 0.75], 0.2, 0.22, 12)
-    m.tube("steel_galv", [0, 0, -0.3], [0, 0, 0.9], 0.03, None, 6)
-    return m, m, None
+    """Grounded Polish street waste bin (ADR 0337): dark base plinth buried 10 cm, tapered bin body, side straps and
+    rain hood. Reuses existing 2 material slots (`steel_painted`, `steel_galv`). Dimensions WORKING_VALUE."""
+    m, l1 = Mesh(), Mesh()
+    # LOD0
+    m.tube("steel_painted", [0, 0, -0.10], [0, 0, 0.12], 0.21, 0.19, 10)      # buried pedestal plinth
+    m.tube("steel_painted", [0, 0, 0.12], [0, 0, 0.72], 0.18, 0.21, 10)       # main bin drum
+    m.tube("steel_galv", [0, 0, 0.71], [0, 0, 0.745], 0.22, 0.22, 10)         # metal rim collar
+    for sx in (-1, 1):
+        m.box("steel_galv", [sx * 0.20, 0.0, 0.81], 0.015, 0.022, 0.09)       # hood support struts
+    m.tube("steel_painted", [0, 0, 0.88], [0, 0, 0.94], 0.22, 0.16, 10)       # rain hood cap
+    # LOD1
+    l1.tube("steel_painted", [0, 0, -0.10], [0, 0, 0.74], 0.20, 0.21, 6)
+    l1.tube("steel_galv", [0, 0, 0.72], [0, 0, 0.92], 0.22, 0.17, 6)
+    return m, l1, None
 
 
 def street_cabinet():

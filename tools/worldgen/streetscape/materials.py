@@ -956,3 +956,11 @@ for _k in ("office", "ribbon"):
     M[f"cladding_cassette_grey__far_{_k}"] = {
         "color": M["cladding_cassette_grey"]["color"], "rough": 0.45, "base": "cladding_cassette_grey",
         "texture_set": "facade_far", "set_tile": True, "tint_linear": True, "sky_occ": [SKY_OCC_STRUCT_X, 0.9]}
+
+# ADR 0337 (critic build #5 pkt 10): weathered matte hot-dip galvanised steel for road sign posts (Ø60.3 mm).
+# Raw `steel_galv` (metal 0.9) mirrors the sky/horizon and drops diffuse shading to 10 %, making a 60 mm post
+# lose contrast against rural green fields and overcast skies. Oxidised hot-dip zinc (metal 0.42, rough 0.62,
+# WORKING_VALUE) keeps a sunlit metallic edge and a clear shaded side, reusing the existing `furniture_galv`
+# texture for subtle zinc grain and ground-line splash (no new texture, 1 slot on sign_post = +0 draws).
+M["sign_post_galv"] = {"color": [0.36, 0.37, 0.38], "rough": 0.62, "metal": 0.42,
+                       "texture": "furniture_galv", "sky_occ": SKY_OCC_STRUCT}

@@ -193,7 +193,7 @@ def build(buf, region, origin, overrides, zsurf, report):
             result["refused"].append({"at": list(xy), "reason": "non-finite terrain"})
             continue
         for layer in LAYERS:
-            KP._bench(acc, layer, np.asarray(xy, float), z, row, toward)
+            KP._bench(acc, layer, np.asarray(xy, float), z, row, toward, z_at=ground)
         KP._box(acc, "collision", "collision_steel", np.asarray(xy, float), z - .1, z + .9, .91, .30, row)
         result["benches"].append({"at_en": list(xy), "confidence": "ESTIMATED (orthophoto mark)"})
     # LOD1 reuses materials that the chunk already has
