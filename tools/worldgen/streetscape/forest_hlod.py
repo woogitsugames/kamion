@@ -112,43 +112,73 @@ def _lin_to_srgb(c):
     return np.where(c <= 0.0031308, c * 12.92, 1.055 * np.power(np.maximum(c, 0.0), 1.0 / 2.4) - 0.055)
 
 
-def haze_textures(root=None, log=print) -> dict:
-    """ADR 0330: write art-source/world/vegetation/forest_edge_<mix><suffix>.png from the baked edge textures (only
-    when missing or out of date: the source sha256 is kept in forest_edge_haze.json). Deterministic."""
+# farfield-low-s24 (ADR 0330 addendum): the far-field sectors keep ONE curtain primitive on both tiers
+# (test_far_field: <= 2 submeshes per sector) - the 3 mixes x 3 haze bands live in one atlas, slots stacked in v
+# (v measured from the bottom of the PNG, as the edge textures), each slot = the whole edge texture squeezed to
+# 1/9 of the height minus FAR_ATLAS_PAD transparent rows above and below (no mip bleed between slots at the far
+# distances). Normal / visibility atlas with the same fractional layout. Deterministic, rebuilt only when a source
+# changes (sha256 in forest_edge_far_atlas.json).
+FAR_ATLAS_SLOTS = tuple((mix, suf) for mix in HAZE_MIXES for suf in ("",) + tuple(HAZE_SUFFIX_K))
+FAR_ATLAS_SIZE = (1024, 2048)          # albedo w x h; the normal atlas is half of it
+FAR_ATLAS_PAD = 4                      # transparent rows above / below each slot (albedo atlas)
+FAR_ATLAS_MAT = "forest_edge_mixed_far_atlas"   # name keeps "forest_edge_mixed": canopy policy, runtime swap
+
+
+def far_atlas_slot_v(mix: str, suf: str) -> tuple[float, float]:
+    """(v0, v1) of a slot, v from the bottom of the atlas."""
+    k = FAR_ATLAS_SLOTS.index((mix if mix in HAZE_MIXES else "mixed", suf))
+    h = FAR_ATLAS_SIZE[1]
+    r0 = round(k * h / len(FAR_ATLAS_SLOTS)) + FAR_ATLAS_PAD
+    r1 = round((k + 1) * h / len(FAR_ATLAS_SLOTS)) - FAR_ATLAS_PAD
+    return r0 / h, r1 / h
+
+
+def _haze(im, k):
+    out = im.copy()
+    lin = _srgb_to_lin(im[..., :3])
+    out[..., :3] = _lin_to_srgb(lin * (1.0 - k) + np.asarray(HAZE_ALBEDO)[None, None, :] * k)
+    return out
+
+
+def far_atlas(root=None, log=print) -> dict:
+    """Write art-source/world/vegetation/forest_edge_mixed_far_atlas.png (+ _n) from the baked edge textures."""
     from PIL import Image
     root = root or pipeline.REPO
     vdir = root / "art-source" / "world" / "vegetation"
-    meta_p = vdir / "forest_edge_haze.json"
+    meta_p = vdir / "forest_edge_far_atlas.json"
     meta = json.loads(meta_p.read_text(encoding="utf-8")) if meta_p.exists() else {}
-    want = {"schema": "truck-sim-pl/forest-edge-haze/1", "adr": "0330", "haze_albedo_linear": list(HAZE_ALBEDO),
-            "k": HAZE_SUFFIX_K, "sources": {}}
-    wrote = []
+    srcs = {}
     for mix in HAZE_MIXES:
-        src = vdir / f"forest_edge_{mix}.png"
-        if not src.exists():
-            continue
-        sha = hashlib.sha256(src.read_bytes()).hexdigest()
-        want["sources"][src.name] = sha
-        stale = (meta.get("sources", {}).get(src.name) != sha or meta.get("k") != HAZE_SUFFIX_K
-                 or meta.get("haze_albedo_linear") != list(HAZE_ALBEDO))
-        im = None
-        for suf, k in HAZE_SUFFIX_K.items():
-            dst = vdir / f"forest_edge_{mix}{suf}.png"
-            if dst.exists() and not stale:
+        for f in (f"forest_edge_{mix}.png", f"forest_edge_{mix}_n.png"):
+            if (vdir / f).exists():
+                srcs[f] = hashlib.sha256((vdir / f).read_bytes()).hexdigest()
+    want = {"schema": "truck-sim-pl/forest-edge-far-atlas/1", "adr": "0330", "haze_albedo_linear": list(HAZE_ALBEDO),
+            "k": HAZE_SUFFIX_K, "slots": [list(x) for x in FAR_ATLAS_SLOTS], "size": list(FAR_ATLAS_SIZE),
+            "pad": FAR_ATLAS_PAD, "sources": srcs}
+    out_a, out_n = vdir / f"{FAR_ATLAS_MAT}.png", vdir / f"{FAR_ATLAS_MAT}_n.png"
+    if meta == want and out_a.exists() and out_n.exists():
+        return {"wrote": []}
+    W, H = FAR_ATLAS_SIZE
+    for dst, scale, normal in ((out_a, 1, False), (out_n, 2, True)):
+        w, h = W // scale, H // scale
+        atlas = np.zeros((h, w, 4), np.float64)
+        if normal:
+            atlas[..., :] = (0.5, 0.5, 1.0, 1.0)      # flat normal, full visibility in the pads
+        for mix, suf in FAR_ATLAS_SLOTS:
+            f = vdir / (f"forest_edge_{mix}_n.png" if normal else f"forest_edge_{mix}.png")
+            if not f.exists():
                 continue
-            if im is None:
-                im = np.asarray(Image.open(src).convert("RGBA"), dtype=np.float64) / 255.0
-            out = im.copy()
-            lin = _srgb_to_lin(im[..., :3])
-            lin = lin * (1.0 - k) + np.asarray(HAZE_ALBEDO)[None, None, :] * k
-            out[..., :3] = _lin_to_srgb(lin)
-            Image.fromarray(np.clip(np.round(out * 255.0), 0, 255).astype(np.uint8), "RGBA").save(dst, optimize=True)
-            wrote.append(dst.name)
-    if meta != want:
-        meta_p.write_text(json.dumps(want, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
-    if wrote:
-        log("forest edge haze textures", wrote)
-    return {"wrote": wrote}
+            v0, v1 = far_atlas_slot_v(mix, suf)
+            r0, r1 = int(round(v0 * h)), int(round(v1 * h))       # rows from the bottom
+            im = Image.open(f).convert("RGBA").resize((w, r1 - r0), Image.LANCZOS)
+            a = np.asarray(im, np.float64) / 255.0
+            if not normal and suf:
+                a = _haze(a, HAZE_SUFFIX_K[suf])
+            atlas[h - r1:h - r0] = a                               # image rows run from the top
+        Image.fromarray(np.clip(np.round(atlas * 255.0), 0, 255).astype(np.uint8), "RGBA").save(dst, optimize=True)
+    meta_p.write_text(json.dumps(want, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+    log("forest edge far atlas", [out_a.name, out_n.name])
+    return {"wrote": [out_a.name, out_n.name]}
 
 
 def materials():
@@ -157,12 +187,10 @@ def materials():
         out[f"forest_edge_{mix}"] = {"color": [1, 1, 1], "rough": 0.95, "alpha_cutoff": 0.5, "hlod": True,
                                      "texture_ref": TEX_REF.format(f"forest_edge_{mix}"),
                                      "normal_ref": TEX_REF.format(f"forest_edge_{mix}_n")}
-        for suf in HAZE_SUFFIX_K:      # ADR 0330: far-field bands (same normal / visibility map)
-            out[f"forest_edge_{mix}{suf}"] = {"color": [1, 1, 1], "rough": 0.95, "alpha_cutoff": 0.5, "hlod": True,
-                                              "texture_ref": TEX_REF.format(f"forest_edge_{mix}{suf}"),
-                                              "normal_ref": TEX_REF.format(f"forest_edge_{mix}_n")}
         out[f"forest_canopy_{mix}"] = {"color": [1, 1, 1], "rough": 0.95, "hlod": True,
                                        "texture_ref": TEX_REF.format(f"forest_canopy_{mix}")}
+    out[FAR_ATLAS_MAT] = {"color": [1, 1, 1], "rough": 0.95, "alpha_cutoff": 0.5, "hlod": True,
+                          "texture_ref": TEX_REF.format(FAR_ATLAS_MAT), "normal_ref": TEX_REF.format(f"{FAR_ATLAS_MAT}_n")}
     return out
 
 
