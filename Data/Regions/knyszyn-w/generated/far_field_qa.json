@@ -124,78 +124,47 @@
   },
   "tiers": {
     "High": {
-      "bytes": 8058616,
+      "bytes": 8032384,
       "file": "Data/raw/derived/knyszyn-w/world/far_field.glb",
       "sectors": {
         "far_east": {
           "by_material": {
             "far_field_buildings": 18795,
-            "forest_edge_broadleaf": 114,
-            "forest_edge_broadleaf_haze1": 240,
-            "forest_edge_broadleaf_haze2": 98,
-            "forest_edge_conifer": 22,
-            "forest_edge_conifer_haze1": 138,
-            "forest_edge_conifer_haze2": 2342,
-            "forest_edge_mixed": 178,
-            "forest_edge_mixed_haze1": 184,
-            "forest_edge_mixed_haze2": 872
+            "forest_edge_mixed_far_atlas": 4188
           },
-          "submeshes": 10,
+          "submeshes": 2,
           "triangles": 22983,
           "vertices": 42301
         },
         "far_north": {
           "by_material": {
             "far_field_buildings": 19770,
-            "forest_edge_broadleaf": 56,
-            "forest_edge_broadleaf_haze1": 40,
-            "forest_edge_broadleaf_haze2": 24,
-            "forest_edge_conifer": 1938,
-            "forest_edge_conifer_haze1": 5246,
-            "forest_edge_conifer_haze2": 660,
-            "forest_edge_mixed": 216,
-            "forest_edge_mixed_haze1": 586,
-            "forest_edge_mixed_haze2": 82
+            "forest_edge_mixed_far_atlas": 8848
           },
-          "submeshes": 10,
+          "submeshes": 2,
           "triangles": 28618,
           "vertices": 49218
         },
         "far_south": {
           "by_material": {
             "far_field_buildings": 21604,
-            "forest_edge_broadleaf": 298,
-            "forest_edge_broadleaf_haze1": 470,
-            "forest_edge_broadleaf_haze2": 296,
-            "forest_edge_conifer": 6,
-            "forest_edge_conifer_haze2": 50,
-            "forest_edge_mixed": 478,
-            "forest_edge_mixed_haze1": 252,
-            "forest_edge_mixed_haze2": 286
+            "forest_edge_mixed_far_atlas": 2136
           },
-          "submeshes": 9,
+          "submeshes": 2,
           "triangles": 23740,
           "vertices": 45670
         },
         "far_west": {
           "by_material": {
             "far_field_buildings": 8519,
-            "forest_edge_broadleaf": 62,
-            "forest_edge_broadleaf_haze1": 454,
-            "forest_edge_broadleaf_haze2": 450,
-            "forest_edge_conifer": 1474,
-            "forest_edge_conifer_haze1": 2750,
-            "forest_edge_conifer_haze2": 2356,
-            "forest_edge_mixed": 778,
-            "forest_edge_mixed_haze1": 496,
-            "forest_edge_mixed_haze2": 372
+            "forest_edge_mixed_far_atlas": 9192
           },
-          "submeshes": 10,
+          "submeshes": 2,
           "triangles": 17711,
           "vertices": 27197
         }
       },
-      "sha256": "08894d5de09696f4c3f74a398ba7d181a7e6636637375f7041757d43462a0202",
+      "sha256": "12643303ee5c385284926e4ac49356c362e57cf382494593c764adb6b019c256",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -208,75 +177,47 @@
       "total_vertices": 164386
     },
     "Low": {
-      "bytes": 794720,
+      "bytes": 770092,
       "file": "Data/raw/derived/knyszyn-w/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
             "far_field_buildings": 1972,
-            "forest_edge_broadleaf": 34,
-            "forest_edge_broadleaf_haze1": 56,
-            "forest_edge_broadleaf_haze2": 24,
-            "forest_edge_conifer": 8,
-            "forest_edge_conifer_haze1": 42,
-            "forest_edge_conifer_haze2": 446,
-            "forest_edge_mixed": 42,
-            "forest_edge_mixed_haze1": 12,
-            "forest_edge_mixed_haze2": 124
+            "forest_edge_mixed_far_atlas": 788
           },
-          "submeshes": 10,
+          "submeshes": 2,
           "triangles": 2760,
           "vertices": 4928
         },
         "far_north": {
           "by_material": {
             "far_field_buildings": 2363,
-            "forest_edge_broadleaf": 18,
-            "forest_edge_conifer": 350,
-            "forest_edge_conifer_haze1": 1168,
-            "forest_edge_conifer_haze2": 156,
-            "forest_edge_mixed": 46,
-            "forest_edge_mixed_haze1": 44,
-            "forest_edge_mixed_haze2": 12
+            "forest_edge_mixed_far_atlas": 1794
           },
-          "submeshes": 8,
+          "submeshes": 2,
           "triangles": 4157,
           "vertices": 7003
         },
         "far_south": {
           "by_material": {
             "far_field_buildings": 2124,
-            "forest_edge_broadleaf": 84,
-            "forest_edge_broadleaf_haze1": 128,
-            "forest_edge_broadleaf_haze2": 38,
-            "forest_edge_conifer": 2,
-            "forest_edge_mixed": 132,
-            "forest_edge_mixed_haze1": 44,
-            "forest_edge_mixed_haze2": 20
+            "forest_edge_mixed_far_atlas": 448
           },
-          "submeshes": 8,
+          "submeshes": 2,
           "triangles": 2572,
           "vertices": 4864
         },
         "far_west": {
           "by_material": {
             "far_field_buildings": 900,
-            "forest_edge_broadleaf": 22,
-            "forest_edge_broadleaf_haze1": 142,
-            "forest_edge_broadleaf_haze2": 94,
-            "forest_edge_conifer": 320,
-            "forest_edge_conifer_haze1": 560,
-            "forest_edge_conifer_haze2": 574,
-            "forest_edge_mixed": 166,
-            "forest_edge_mixed_haze1": 38,
-            "forest_edge_mixed_haze2": 54
+            "forest_edge_mixed_far_atlas": 1970
           },
-          "submeshes": 10,
+          "submeshes": 2,
           "triangles": 2870,
           "vertices": 4288
         }
       },
-      "sha256": "0ce6e35e8b1d711cb6b7c9f82d75cbf5401dbbeb3525b172083bf37d0dcdf221",
+      "sha256": "ec13203c704c4e02779dd67b5a7408cbc447fb215ea9a050c47030dba87535e6",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,

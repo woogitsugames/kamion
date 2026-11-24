@@ -1136,20 +1136,26 @@ class SectorBuilder:
                 "T": np.vstack(self.t0),
             })
         if self.count1 > 0:
-            # ADR 0330: one primitive per curtain material (mix x haze band), in name order (deterministic)
-            for m in sorted(set(self.mat1)):
-                idx = [i for i, mm in enumerate(self.mat1) if mm == m]
-                base, tris = 0, []
-                for i in idx:
-                    tris.append(self.t1[i] - int(self.t1[i].min()) + base)
-                    base += len(self.v1[i])
-                prims.append({
-                    "mat": m,
-                    "V": np.vstack([self.v1[i] for i in idx]),
-                    "N": np.vstack([self.n1[i] for i in idx]),
-                    "UV": np.vstack([self.uv1[i] for i in idx]),
-                    "T": np.vstack(tris),
-                })
+            # farfield-low-s24: ONE curtain primitive (<= 2 submeshes per sector on both tiers); the stand's mix and
+            # haze band select a slot of the far atlas (forest_hlod.far_atlas) - v is squeezed into the slot
+            base, tris, uvs = 0, [], []
+            for i in range(len(self.v1)):
+                tris.append(self.t1[i] - int(self.t1[i].min()) + base)
+                base += len(self.v1[i])
+                mat = self.mat1[i]
+                rest = mat[len("forest_edge_"):] if mat.startswith("forest_edge_") else "mixed"
+                mix, suf = (rest.split("_", 1) + [""])[:2]
+                v0, v1 = FH.far_atlas_slot_v(mix, f"_{suf}" if suf else "")
+                uv = self.uv1[i].copy()
+                uv[:, 1] = v0 + np.clip(uv[:, 1], 0.0, 1.0) * (v1 - v0)
+                uvs.append(uv)
+            prims.append({
+                "mat": FH.FAR_ATLAS_MAT,
+                "V": np.vstack(self.v1),
+                "N": np.vstack(self.n1),
+                "UV": np.vstack(uvs),
+                "T": np.vstack(tris),
+            })
         return prims
 
 
@@ -1954,7 +1960,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
                 existing_py.append((pt.x, pt.y))
 
     all_materials = {**SM.M, **FH.materials()}
-    FH.haze_textures()                 # ADR 0330: hazed curtain textures of the bands (no-op when up to date)
+    FH.far_atlas()                     # ADR 0330 / farfield-low-s24: curtain atlas (no-op when up to date)
     qa_tiers = {}
     landmark_stacks = region_landmark_stacks(region_id, ox, oy)
 
@@ -2136,6 +2142,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
     if wm_path.exists():
         wm = json.loads(wm_path.read_text(encoding="utf-8"))
         wm.setdefault("materials", {})["far_field_buildings"] = SM.M["far_field_buildings"]
+        wm["materials"][FH.FAR_ATLAS_MAT] = FH.materials()[FH.FAR_ATLAS_MAT]      # farfield-low-s24
         wm["far_field"] = qa_tiers
         wm_text = json.dumps(wm, ensure_ascii=False, indent=1, sort_keys=True, allow_nan=False) + "\n"
         if wm_path.read_text(encoding="utf-8") != wm_text:

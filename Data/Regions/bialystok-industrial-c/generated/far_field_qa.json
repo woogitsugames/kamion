@@ -125,75 +125,47 @@
   },
   "tiers": {
     "High": {
-      "bytes": 15727872,
+      "bytes": 15703848,
       "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.glb",
       "sectors": {
         "far_east": {
           "by_material": {
             "far_field_buildings": 23698,
-            "forest_edge_broadleaf": 638,
-            "forest_edge_broadleaf_haze1": 920,
-            "forest_edge_broadleaf_haze2": 592,
-            "forest_edge_conifer": 2338,
-            "forest_edge_conifer_haze1": 128,
-            "forest_edge_conifer_haze2": 184,
-            "forest_edge_mixed": 526,
-            "forest_edge_mixed_haze1": 346,
-            "forest_edge_mixed_haze2": 886
+            "forest_edge_mixed_far_atlas": 6558
           },
-          "submeshes": 10,
+          "submeshes": 2,
           "triangles": 30256,
           "vertices": 54718
         },
         "far_north": {
           "by_material": {
             "far_field_buildings": 33535,
-            "forest_edge_broadleaf_haze1": 714,
-            "forest_edge_broadleaf_haze2": 1324,
-            "forest_edge_conifer": 5062,
-            "forest_edge_conifer_haze1": 728,
-            "forest_edge_conifer_haze2": 326,
-            "forest_edge_mixed": 6046,
-            "forest_edge_mixed_haze1": 3062,
-            "forest_edge_mixed_haze2": 1030
+            "forest_edge_mixed_far_atlas": 18292
           },
-          "submeshes": 9,
+          "submeshes": 2,
           "triangles": 51827,
           "vertices": 87113
         },
         "far_south": {
           "by_material": {
             "far_field_buildings": 51537,
-            "forest_edge_broadleaf": 104,
-            "forest_edge_broadleaf_haze1": 250,
-            "forest_edge_broadleaf_haze2": 1590,
-            "forest_edge_conifer_haze1": 26,
-            "forest_edge_mixed_haze1": 68,
-            "forest_edge_mixed_haze2": 130
+            "forest_edge_mixed_far_atlas": 2168
           },
-          "submeshes": 7,
+          "submeshes": 2,
           "triangles": 53705,
           "vertices": 105649
         },
         "far_west": {
           "by_material": {
             "far_field_buildings": 21690,
-            "forest_edge_broadleaf": 124,
-            "forest_edge_broadleaf_haze1": 326,
-            "forest_edge_broadleaf_haze2": 312,
-            "forest_edge_conifer": 1046,
-            "forest_edge_conifer_haze1": 664,
-            "forest_edge_conifer_haze2": 186,
-            "forest_edge_mixed": 4344,
-            "forest_edge_mixed_haze1": 602,
-            "forest_edge_mixed_haze2": 58
+            "forest_edge_mixed_far_atlas": 7662
           },
-          "submeshes": 10,
+          "submeshes": 2,
           "triangles": 29352,
           "vertices": 51844
         }
       },
-      "sha256": "930c7b48b9fbcdbacbe5cc30615c1bf183344f33cfce3a48fd3b3486a66cc046",
+      "sha256": "d659bd324dcf8325fe4389dedbf7354b05741d259804b58b91b8d30559b9b293",
       "skyline": {
         "landmark_stack_proxies": [
           "ec-bialystok-chimney-1",
@@ -209,74 +181,47 @@
       "total_vertices": 307680
     },
     "Low": {
-      "bytes": 2043456,
+      "bytes": 2019580,
       "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
             "far_field_buildings": 2252,
-            "forest_edge_broadleaf": 140,
-            "forest_edge_broadleaf_haze1": 200,
-            "forest_edge_broadleaf_haze2": 154,
-            "forest_edge_conifer": 386,
-            "forest_edge_conifer_haze1": 28,
-            "forest_edge_conifer_haze2": 46,
-            "forest_edge_mixed": 130,
-            "forest_edge_mixed_haze1": 76,
-            "forest_edge_mixed_haze2": 192
+            "forest_edge_mixed_far_atlas": 1352
           },
-          "submeshes": 10,
+          "submeshes": 2,
           "triangles": 3604,
           "vertices": 6270
         },
         "far_north": {
           "by_material": {
             "far_field_buildings": 2259,
-            "forest_edge_broadleaf_haze1": 204,
-            "forest_edge_broadleaf_haze2": 286,
-            "forest_edge_conifer": 886,
-            "forest_edge_conifer_haze1": 190,
-            "forest_edge_conifer_haze2": 118,
-            "forest_edge_mixed": 1100,
-            "forest_edge_mixed_haze1": 632,
-            "forest_edge_mixed_haze2": 94
+            "forest_edge_mixed_far_atlas": 3510
           },
-          "submeshes": 9,
+          "submeshes": 2,
           "triangles": 5769,
           "vertices": 9011
         },
         "far_south": {
           "by_material": {
             "far_field_buildings": 12785,
-            "forest_edge_broadleaf": 36,
-            "forest_edge_broadleaf_haze1": 60,
-            "forest_edge_broadleaf_haze2": 278,
-            "forest_edge_mixed_haze1": 6,
-            "forest_edge_mixed_haze2": 6
+            "forest_edge_mixed_far_atlas": 386
           },
-          "submeshes": 6,
+          "submeshes": 2,
           "triangles": 13171,
           "vertices": 26069
         },
         "far_west": {
           "by_material": {
             "far_field_buildings": 2223,
-            "forest_edge_broadleaf": 26,
-            "forest_edge_broadleaf_haze1": 62,
-            "forest_edge_broadleaf_haze2": 22,
-            "forest_edge_conifer": 190,
-            "forest_edge_conifer_haze1": 150,
-            "forest_edge_conifer_haze2": 46,
-            "forest_edge_mixed": 768,
-            "forest_edge_mixed_haze1": 156,
-            "forest_edge_mixed_haze2": 8
+            "forest_edge_mixed_far_atlas": 1428
           },
-          "submeshes": 10,
+          "submeshes": 2,
           "triangles": 3651,
           "vertices": 6347
         }
       },
-      "sha256": "9270b5f5ae4b6b9770eccdd71a6ce209aa507be14af8f9c179e811d6c8785c6f",
+      "sha256": "af19ab698d0f5276fd5c483c257683fec1f02b9a32104f070201c76735151eca",
       "skyline": {
         "landmark_stack_proxies": [
           "ec-bialystok-chimney-1",
