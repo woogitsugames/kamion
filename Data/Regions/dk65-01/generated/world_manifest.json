@@ -10,7 +10,7 @@
     "z_max_evrf2007": 152.07,
     "z_min_evrf2007": 119.48
    },
-   "bytes": 10377144,
+   "bytes": 10380936,
    "file": "Data/raw/derived/dk65-01/world/chunk_0_0.glb",
    "forest_cells": [
     {
@@ -23,7 +23,7 @@
      "id": "0_0",
      "mix": "broadleaf",
      "trees": 67,
-     "tris": 128
+     "tris": 115
     },
     {
      "bbox_local_m": [
@@ -34,8 +34,8 @@
      ],
      "id": "0_1",
      "mix": "broadleaf",
-     "trees": 208,
-     "tris": 211
+     "trees": 201,
+     "tris": 245
     },
     {
      "bbox_local_m": [
@@ -47,7 +47,7 @@
      "id": "1_0",
      "mix": "broadleaf",
      "trees": 140,
-     "tris": 175
+     "tris": 198
     },
     {
      "bbox_local_m": [
@@ -58,8 +58,8 @@
      ],
      "id": "1_1",
      "mix": "broadleaf",
-     "trees": 74,
-     "tris": 106
+     "trees": 73,
+     "tris": 114
     },
     {
      "bbox_local_m": [
@@ -70,20 +70,20 @@
      ],
      "id": "2_0",
      "mix": "broadleaf",
-     "trees": 51,
-     "tris": 90
+     "trees": 50,
+     "tris": 88
     }
    ],
    "id": "0_0",
    "instances": {
-    "count": 1122,
+    "count": 1113,
     "file": "Data/raw/derived/dk65-01/world/instances_0_0.json",
-    "sha256": "5ae0e795b87f789becad6531564e003c56a42385af7d270535207037f7936b5e"
+    "sha256": "fe8db4250af2c0f163e5ba9e695bb1303be89fcb2695c2c6e100243f95996f45"
    },
    "low": {
-    "bytes": 5856124,
+    "bytes": 5859016,
     "file": "Data/raw/derived/dk65-01/world/chunk_0_0.low.glb",
-    "sha256": "868491fd890683394d896c394b71847510252832e4e4d3679124cb6ebe95f015"
+    "sha256": "217d380f4b1647b7d62e3b365bc6341788c772b883768278b0e77ef48cdaef5b"
    },
    "materials": [
     "brick_red",
@@ -123,11 +123,11 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "660c22c84dc095fa227df1f233803ff0c7cb8736906263340d07467f3cb54559",
+   "sha256": "c2e2bfa7d781f41c792e7970990bbb1395a1e7d057ed351dc72a9eb02a024281",
    "triangles": {
     "buildings": 4287,
     "buildings_lod1": 705,
-    "forest_hlod": 710,
+    "forest_hlod": 760,
     "markings": 18,
     "plot_ground": 1633,
     "plots": 2680,
@@ -150,7 +150,7 @@
     "z_max_evrf2007": 155.94,
     "z_min_evrf2007": 129.14
    },
-   "bytes": 5044628,
+   "bytes": 5043628,
    "file": "Data/raw/derived/dk65-01/world/chunk_0_1.glb",
    "forest_cells": [
     {
@@ -163,7 +163,7 @@
      "id": "0_6",
      "mix": "conifer",
      "trees": 69,
-     "tris": 97
+     "tris": 96
     },
     {
      "bbox_local_m": [
@@ -175,7 +175,7 @@
      "id": "0_7",
      "mix": "conifer",
      "trees": 133,
-     "tris": 194
+     "tris": 201
     },
     {
      "bbox_local_m": [
@@ -187,19 +187,19 @@
      "id": "2_7",
      "mix": "conifer",
      "trees": 18,
-     "tris": 64
+     "tris": 52
     }
    ],
    "id": "0_1",
    "instances": {
     "count": 292,
     "file": "Data/raw/derived/dk65-01/world/instances_0_1.json",
-    "sha256": "cedafaec805fce8564ae90219c9e94fc35d76310733d654aca02edd4c2cd78b9"
+    "sha256": "03d29dc604ada4f896d6f11d69e435c8e7d7f8f7b91ecc253fefff9c4dad1fe0"
    },
    "low": {
-    "bytes": 941636,
+    "bytes": 940452,
     "file": "Data/raw/derived/dk65-01/world/chunk_0_1.low.glb",
-    "sha256": "0628b4640b4e100c3076355706ba7740eb31792bc075fa5736cc01ab37b3bc44"
+    "sha256": "7f7ac67dc6b193d1164d0de46c76911153f0bbfe46876090bdf942de660b8060"
    },
    "materials": [
     "canopy_steel",
@@ -227,11 +227,11 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "17fe899a551559546633ffa28fe30c9f64bf7114cd11f6802c73b027d155ef00",
+   "sha256": "0c9cef5b2afa64eb7230ad9f2e0e924a732884b6bff91236334de95dc8e126ba",
    "triangles": {
     "buildings": 212,
     "buildings_lod1": 60,
-    "forest_hlod": 355,
+    "forest_hlod": 349,
     "markings": 325,
     "road": 3448,
     "road_collision": 1464,
@@ -251,7 +251,7 @@
     "z_max_evrf2007": 146.97,
     "z_min_evrf2007": 140.05
    },
-   "bytes": 4855384,
+   "bytes": 4879340,
    "file": "Data/raw/derived/dk65-01/world/chunk_0_2.glb",
    "forest_cells": [
     {
@@ -263,8 +263,8 @@
      ],
      "id": "0_10",
      "mix": "conifer",
-     "trees": 302,
-     "tris": 198
+     "trees": 300,
+     "tris": 290
     },
     {
      "bbox_local_m": [
@@ -276,7 +276,7 @@
      "id": "0_11",
      "mix": "conifer",
      "trees": 309,
-     "tris": 196
+     "tris": 292
     },
     {
      "bbox_local_m": [
@@ -287,8 +287,8 @@
      ],
      "id": "0_8",
      "mix": "conifer",
-     "trees": 250,
-     "tris": 222
+     "trees": 249,
+     "tris": 279
     },
     {
      "bbox_local_m": [
@@ -300,7 +300,7 @@
      "id": "0_9",
      "mix": "conifer",
      "trees": 284,
-     "tris": 190
+     "tris": 282
     },
     {
      "bbox_local_m": [
@@ -311,8 +311,8 @@
      ],
      "id": "1_10",
      "mix": "conifer",
-     "trees": 138,
-     "tris": 209
+     "trees": 134,
+     "tris": 214
     },
     {
      "bbox_local_m": [
@@ -323,8 +323,8 @@
      ],
      "id": "1_11",
      "mix": "conifer",
-     "trees": 261,
-     "tris": 201
+     "trees": 262,
+     "tris": 264
     },
     {
      "bbox_local_m": [
@@ -335,8 +335,8 @@
      ],
      "id": "1_8",
      "mix": "conifer",
-     "trees": 154,
-     "tris": 175
+     "trees": 153,
+     "tris": 179
     },
     {
      "bbox_local_m": [
@@ -347,8 +347,8 @@
      ],
      "id": "1_9",
      "mix": "conifer",
-     "trees": 215,
-     "tris": 178
+     "trees": 206,
+     "tris": 230
     },
     {
      "bbox_local_m": [
@@ -359,8 +359,8 @@
      ],
      "id": "2_10",
      "mix": "mixed",
-     "trees": 71,
-     "tris": 127
+     "trees": 69,
+     "tris": 139
     },
     {
      "bbox_local_m": [
@@ -372,7 +372,7 @@
      "id": "2_11",
      "mix": "conifer",
      "trees": 9,
-     "tris": 33
+     "tris": 28
     },
     {
      "bbox_local_m": [
@@ -384,7 +384,7 @@
      "id": "2_8",
      "mix": "conifer",
      "trees": 126,
-     "tris": 178
+     "tris": 186
     },
     {
      "bbox_local_m": [
@@ -395,27 +395,27 @@
      ],
      "id": "2_9",
      "mix": "mixed",
-     "trees": 146,
-     "tris": 197
+     "trees": 141,
+     "tris": 216
     }
    ],
    "id": "0_2",
    "instances": {
-    "count": 2305,
+    "count": 2282,
     "file": "Data/raw/derived/dk65-01/world/instances_0_2.json",
-    "sha256": "9c81e50c2f9628640998b871b4ea4010a7d83f98205b9b1cbf271b2bb04b3ca3"
+    "sha256": "b9f757afb22c3a4ce7b5c91fffd3d3a37936fef0e0e3e4448f23c1756a62d0a2"
    },
    "low": {
-    "bytes": 819940,
+    "bytes": 838420,
     "file": "Data/raw/derived/dk65-01/world/chunk_0_2.low.glb",
-    "sha256": "cd4370b01adeee98b688234ebc8462a0fb599f430df1568368e365189a130f24"
+    "sha256": "111455ca80aabc21d7f83cb1ce1bcbeea68c6c659578e95c6a98f45c633be13b"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "587cdd76bb91e0cb863867abf2452098f3e870d975dd239c6aeccfa7ae319f43",
+   "sha256": "16b1fd1d88685676832087f7b03d890bd9852984fa21e4f05196083d658fddd6",
    "triangles": {
-    "forest_hlod": 2104,
+    "forest_hlod": 2599,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -431,7 +431,7 @@
     "z_max_evrf2007": 173.61,
     "z_min_evrf2007": 136.33
    },
-   "bytes": 9891084,
+   "bytes": 9927016,
    "file": "Data/raw/derived/dk65-01/world/chunk_0_3.glb",
    "forest_cells": [
     {
@@ -443,8 +443,8 @@
      ],
      "id": "0_12",
      "mix": "conifer",
-     "trees": 268,
-     "tris": 204
+     "trees": 267,
+     "tris": 276
     },
     {
      "bbox_local_m": [
@@ -455,8 +455,8 @@
      ],
      "id": "0_13",
      "mix": "mixed",
-     "trees": 331,
-     "tris": 223
+     "trees": 329,
+     "tris": 301
     },
     {
      "bbox_local_m": [
@@ -467,8 +467,8 @@
      ],
      "id": "0_14",
      "mix": "mixed",
-     "trees": 270,
-     "tris": 194
+     "trees": 265,
+     "tris": 289
     },
     {
      "bbox_local_m": [
@@ -479,8 +479,8 @@
      ],
      "id": "0_15",
      "mix": "mixed",
-     "trees": 285,
-     "tris": 194
+     "trees": 284,
+     "tris": 290
     },
     {
      "bbox_local_m": [
@@ -491,8 +491,8 @@
      ],
      "id": "1_12",
      "mix": "conifer",
-     "trees": 260,
-     "tris": 243
+     "trees": 258,
+     "tris": 296
     },
     {
      "bbox_local_m": [
@@ -503,8 +503,8 @@
      ],
      "id": "1_13",
      "mix": "mixed",
-     "trees": 74,
-     "tris": 164
+     "trees": 73,
+     "tris": 153
     },
     {
      "bbox_local_m": [
@@ -516,7 +516,7 @@
      "id": "1_14",
      "mix": "mixed",
      "trees": 214,
-     "tris": 164
+     "tris": 218
     },
     {
      "bbox_local_m": [
@@ -527,8 +527,8 @@
      ],
      "id": "1_15",
      "mix": "mixed",
-     "trees": 254,
-     "tris": 255
+     "trees": 253,
+     "tris": 303
     },
     {
      "bbox_local_m": [
@@ -539,8 +539,8 @@
      ],
      "id": "2_12",
      "mix": "conifer",
-     "trees": 159,
-     "tris": 182
+     "trees": 158,
+     "tris": 202
     },
     {
      "bbox_local_m": [
@@ -551,8 +551,8 @@
      ],
      "id": "2_13",
      "mix": "mixed",
-     "trees": 93,
-     "tris": 158
+     "trees": 88,
+     "tris": 168
     },
     {
      "bbox_local_m": [
@@ -564,7 +564,7 @@
      "id": "2_15",
      "mix": "mixed",
      "trees": 217,
-     "tris": 189
+     "tris": 229
     },
     {
      "bbox_local_m": [
@@ -575,7 +575,7 @@
      ],
      "id": "3_12",
      "mix": "conifer",
-     "trees": 94,
+     "trees": 91,
      "tris": 122
     },
     {
@@ -587,8 +587,8 @@
      ],
      "id": "3_13",
      "mix": "mixed",
-     "trees": 209,
-     "tris": 257
+     "trees": 204,
+     "tris": 286
     },
     {
      "bbox_local_m": [
@@ -599,8 +599,8 @@
      ],
      "id": "3_14",
      "mix": "mixed",
-     "trees": 238,
-     "tris": 215
+     "trees": 233,
+     "tris": 271
     },
     {
      "bbox_local_m": [
@@ -612,19 +612,19 @@
      "id": "3_15",
      "mix": "mixed",
      "trees": 278,
-     "tris": 165
+     "tris": 258
     }
    ],
    "id": "0_3",
    "instances": {
-    "count": 3804,
+    "count": 3771,
     "file": "Data/raw/derived/dk65-01/world/instances_0_3.json",
-    "sha256": "0ccf03a1b9667fe120089bc7d0fb15679ffa2fcc6636c4381a0934bdcdb097a9"
+    "sha256": "d455fb1370fec492559cd01bec097b2826c963b5b0d546f29d24ebdb95efccfe"
    },
    "low": {
-    "bytes": 5719028,
+    "bytes": 5746824,
     "file": "Data/raw/derived/dk65-01/world/chunk_0_3.low.glb",
-    "sha256": "f68cf65effb05304ab9faae4bd2b2b9da3635bba465c5afb47690f23d46e98d0"
+    "sha256": "c931f8d23963ee473e13c8f57152f1ead948478a994a94a125563caa4f2301f3"
    },
    "materials": [
     "brick_red",
@@ -651,11 +651,11 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "54aee42127af757541f9f6ed24e31dd5593119e95c050678246622acf5da804c",
+   "sha256": "9b56e9b3452638dbfd4d50604c8470e3e8e37b838931957f23c2bfc888101d67",
    "triangles": {
     "buildings": 1192,
     "buildings_lod1": 199,
-    "forest_hlod": 2929,
+    "forest_hlod": 3662,
     "plot_ground": 266,
     "plots": 560,
     "plots_low": 528,
@@ -676,7 +676,7 @@
     "z_max_evrf2007": 140.57,
     "z_min_evrf2007": 134.1
    },
-   "bytes": 4914904,
+   "bytes": 4977072,
    "file": "Data/raw/derived/dk65-01/world/chunk_0_4.glb",
    "forest_cells": [
     {
@@ -689,7 +689,7 @@
      "id": "0_16",
      "mix": "mixed",
      "trees": 295,
-     "tris": 188
+     "tris": 284
     },
     {
      "bbox_local_m": [
@@ -701,7 +701,7 @@
      "id": "0_17",
      "mix": "mixed",
      "trees": 284,
-     "tris": 182
+     "tris": 278
     },
     {
      "bbox_local_m": [
@@ -713,7 +713,7 @@
      "id": "0_18",
      "mix": "mixed",
      "trees": 284,
-     "tris": 194
+     "tris": 290
     },
     {
      "bbox_local_m": [
@@ -725,7 +725,7 @@
      "id": "0_19",
      "mix": "mixed",
      "trees": 303,
-     "tris": 221
+     "tris": 301
     },
     {
      "bbox_local_m": [
@@ -737,7 +737,7 @@
      "id": "1_16",
      "mix": "mixed",
      "trees": 259,
-     "tris": 160
+     "tris": 256
     },
     {
      "bbox_local_m": [
@@ -749,7 +749,7 @@
      "id": "1_17",
      "mix": "mixed",
      "trees": 258,
-     "tris": 160
+     "tris": 256
     },
     {
      "bbox_local_m": [
@@ -760,8 +760,8 @@
      ],
      "id": "1_18",
      "mix": "mixed",
-     "trees": 269,
-     "tris": 160
+     "trees": 268,
+     "tris": 256
     },
     {
      "bbox_local_m": [
@@ -772,8 +772,8 @@
      ],
      "id": "1_19",
      "mix": "mixed",
-     "trees": 251,
-     "tris": 182
+     "trees": 248,
+     "tris": 256
     },
     {
      "bbox_local_m": [
@@ -784,8 +784,8 @@
      ],
      "id": "2_16",
      "mix": "mixed",
-     "trees": 281,
-     "tris": 160
+     "trees": 274,
+     "tris": 256
     },
     {
      "bbox_local_m": [
@@ -797,7 +797,7 @@
      "id": "2_17",
      "mix": "mixed",
      "trees": 265,
-     "tris": 160
+     "tris": 254
     },
     {
      "bbox_local_m": [
@@ -809,7 +809,7 @@
      "id": "2_18",
      "mix": "mixed",
      "trees": 265,
-     "tris": 160
+     "tris": 256
     },
     {
      "bbox_local_m": [
@@ -821,7 +821,7 @@
      "id": "2_19",
      "mix": "mixed",
      "trees": 267,
-     "tris": 160
+     "tris": 255
     },
     {
      "bbox_local_m": [
@@ -832,8 +832,8 @@
      ],
      "id": "3_16",
      "mix": "mixed",
-     "trees": 267,
-     "tris": 160
+     "trees": 250,
+     "tris": 256
     },
     {
      "bbox_local_m": [
@@ -845,7 +845,7 @@
      "id": "3_17",
      "mix": "mixed",
      "trees": 303,
-     "tris": 160
+     "tris": 256
     },
     {
      "bbox_local_m": [
@@ -856,8 +856,8 @@
      ],
      "id": "3_18",
      "mix": "mixed",
-     "trees": 273,
-     "tris": 198
+     "trees": 267,
+     "tris": 280
     },
     {
      "bbox_local_m": [
@@ -868,20 +868,20 @@
      ],
      "id": "3_19",
      "mix": "mixed",
-     "trees": 196,
-     "tris": 182
+     "trees": 189,
+     "tris": 248
     }
    ],
    "id": "0_4",
    "instances": {
-    "count": 4982,
+    "count": 4914,
     "file": "Data/raw/derived/dk65-01/world/instances_0_4.json",
-    "sha256": "31df6b2962dfc315f0766b5e0176388288cd7e5fa4648d1cbe0448a4194ef597"
+    "sha256": "34b8cc9a214bfb341bce2e09fa23210812bdfdb71b70fdccf7a74ac76ea29756"
    },
    "low": {
-    "bytes": 871036,
+    "bytes": 919852,
     "file": "Data/raw/derived/dk65-01/world/chunk_0_4.low.glb",
-    "sha256": "51e895b5b41444f8a8da43d44e6dae3982cb1f27f7444da28b4851871d93a645"
+    "sha256": "48565f9e1768942e40f28bb3337294a0a098eb0531acd5d15b0f0187c1598c75"
    },
    "materials": [
     "collision_asphalt",
@@ -897,9 +897,9 @@
     "road_asphalt",
     "terrain_grass"
    ],
-   "sha256": "fb44fd13338149a8137cb033b72c119edef07780bb4ed66c8092630fd1b30806",
+   "sha256": "bf4ecd4402e055e97eef18dae3589f0bf323c020d0b89e17eb2f0568051d60b4",
    "triangles": {
-    "forest_hlod": 2787,
+    "forest_hlod": 4238,
     "furniture": 186,
     "markings": 24,
     "road": 251,
@@ -919,7 +919,7 @@
     "z_max_evrf2007": 139.52,
     "z_min_evrf2007": 129.22
    },
-   "bytes": 5998668,
+   "bytes": 6032044,
    "file": "Data/raw/derived/dk65-01/world/chunk_0_5.glb",
    "forest_cells": [
     {
@@ -932,7 +932,7 @@
      "id": "0_20",
      "mix": "mixed",
      "trees": 16,
-     "tris": 39
+     "tris": 34
     },
     {
      "bbox_local_m": [
@@ -943,8 +943,8 @@
      ],
      "id": "0_21",
      "mix": "mixed",
-     "trees": 201,
-     "tris": 145
+     "trees": 183,
+     "tris": 177
     },
     {
      "bbox_local_m": [
@@ -955,8 +955,8 @@
      ],
      "id": "0_22",
      "mix": "mixed",
-     "trees": 214,
-     "tris": 154
+     "trees": 207,
+     "tris": 202
     },
     {
      "bbox_local_m": [
@@ -967,8 +967,8 @@
      ],
      "id": "0_23",
      "mix": "mixed",
-     "trees": 159,
-     "tris": 122
+     "trees": 144,
+     "tris": 146
     },
     {
      "bbox_local_m": [
@@ -980,7 +980,7 @@
      "id": "1_20",
      "mix": "mixed",
      "trees": 169,
-     "tris": 146
+     "tris": 192
     },
     {
      "bbox_local_m": [
@@ -991,8 +991,8 @@
      ],
      "id": "1_21",
      "mix": "mixed",
-     "trees": 312,
-     "tris": 172
+     "trees": 288,
+     "tris": 249
     },
     {
      "bbox_local_m": [
@@ -1003,8 +1003,8 @@
      ],
      "id": "1_22",
      "mix": "mixed",
-     "trees": 349,
-     "tris": 160
+     "trees": 324,
+     "tris": 249
     },
     {
      "bbox_local_m": [
@@ -1015,8 +1015,8 @@
      ],
      "id": "1_23",
      "mix": "mixed",
-     "trees": 340,
-     "tris": 205
+     "trees": 316,
+     "tris": 282
     },
     {
      "bbox_local_m": [
@@ -1027,8 +1027,8 @@
      ],
      "id": "2_20",
      "mix": "mixed",
-     "trees": 263,
-     "tris": 160
+     "trees": 260,
+     "tris": 253
     },
     {
      "bbox_local_m": [
@@ -1039,8 +1039,8 @@
      ],
      "id": "2_21",
      "mix": "mixed",
-     "trees": 258,
-     "tris": 188
+     "trees": 255,
+     "tris": 265
     },
     {
      "bbox_local_m": [
@@ -1051,8 +1051,8 @@
      ],
      "id": "2_22",
      "mix": "mixed",
-     "trees": 146,
-     "tris": 266
+     "trees": 114,
+     "tris": 293
     },
     {
      "bbox_local_m": [
@@ -1063,8 +1063,8 @@
      ],
      "id": "2_23",
      "mix": "mixed",
-     "trees": 178,
-     "tris": 200
+     "trees": 147,
+     "tris": 248
     },
     {
      "bbox_local_m": [
@@ -1076,7 +1076,7 @@
      "id": "3_20",
      "mix": "mixed",
      "trees": 151,
-     "tris": 146
+     "tris": 191
     },
     {
      "bbox_local_m": [
@@ -1088,7 +1088,7 @@
      "id": "3_21",
      "mix": "mixed",
      "trees": 80,
-     "tris": 136
+     "tris": 144
     },
     {
      "bbox_local_m": [
@@ -1099,8 +1099,8 @@
      ],
      "id": "3_22",
      "mix": "mixed",
-     "trees": 73,
-     "tris": 120
+     "trees": 64,
+     "tris": 117
     },
     {
      "bbox_local_m": [
@@ -1111,20 +1111,20 @@
      ],
      "id": "3_23",
      "mix": "mixed",
-     "trees": 53,
-     "tris": 130
+     "trees": 38,
+     "tris": 124
     }
    ],
    "id": "0_5",
    "instances": {
-    "count": 4626,
+    "count": 4175,
     "file": "Data/raw/derived/dk65-01/world/instances_0_5.json",
-    "sha256": "12950d6deb69b706a0c4af3f1fb34be8e627d8734dbc84a0312c648aa828dd7c"
+    "sha256": "ecd7f1867a193933ac264ac53f5f7db32486d9680130c474b23ee52001cdfb3f"
    },
    "low": {
-    "bytes": 1675040,
+    "bytes": 1700844,
     "file": "Data/raw/derived/dk65-01/world/chunk_0_5.low.glb",
-    "sha256": "468ebd79442a0e71e082296a80ce35af71f0653443d115f517327c41f7382523"
+    "sha256": "a8437659b2809ab9f96cc80c6b18422eefed391a76f82e4e81b09a5df5aa7eae"
    },
    "materials": [
     "barrier_steel",
@@ -1155,12 +1155,12 @@
     "verge_grass",
     "verge_tufts"
    ],
-   "sha256": "4a4f106a4725ad332d37993949f1abe00ff1e9bb6df90a20a4d21ef15f5494d0",
+   "sha256": "bfcf058e3dbccede93e85daa2f4db4c1aacb759bfc66103a134ae08eccacfa8f",
    "triangles": {
     "banks": 144,
     "banks_low": 0,
     "bridge": 1867,
-    "forest_hlod": 2489,
+    "forest_hlod": 3166,
     "furniture": 3744,
     "markings": 1749,
     "road": 10958,
@@ -1180,7 +1180,7 @@
     "z_max_evrf2007": 148.94,
     "z_min_evrf2007": 125.91
    },
-   "bytes": 7205512,
+   "bytes": 7191340,
    "file": "Data/raw/derived/dk65-01/world/chunk_0_6.glb",
    "forest_cells": [
     {
@@ -1192,8 +1192,8 @@
      ],
      "id": "0_24",
      "mix": "mixed",
-     "trees": 85,
-     "tris": 111
+     "trees": 78,
+     "tris": 118
     },
     {
      "bbox_local_m": [
@@ -1205,7 +1205,7 @@
      "id": "0_25",
      "mix": "mixed",
      "trees": 24,
-     "tris": 68
+     "tris": 60
     },
     {
      "bbox_local_m": [
@@ -1217,7 +1217,7 @@
      "id": "0_26",
      "mix": "mixed",
      "trees": 38,
-     "tris": 103
+     "tris": 98
     },
     {
      "bbox_local_m": [
@@ -1228,8 +1228,8 @@
      ],
      "id": "1_24",
      "mix": "mixed",
-     "trees": 330,
-     "tris": 192
+     "trees": 260,
+     "tris": 269
     },
     {
      "bbox_local_m": [
@@ -1240,8 +1240,8 @@
      ],
      "id": "1_25",
      "mix": "mixed",
-     "trees": 309,
-     "tris": 214
+     "trees": 275,
+     "tris": 278
     },
     {
      "bbox_local_m": [
@@ -1253,19 +1253,7 @@
      "id": "1_26",
      "mix": "mixed",
      "trees": 127,
-     "tris": 150
-    },
-    {
-     "bbox_local_m": [
-      -957.73,
-      -740.34,
-      -896.0,
-      -704.0
-     ],
-     "id": "1_27",
-     "mix": "mixed",
-     "trees": 32,
-     "tris": 108
+     "tris": 167
     },
     {
      "bbox_local_m": [
@@ -1276,56 +1264,32 @@
      ],
      "id": "2_24",
      "mix": "mixed",
-     "trees": 142,
-     "tris": 183
+     "trees": 90,
+     "tris": 195
     },
     {
      "bbox_local_m": [
       -896.0,
       -613.73,
-      -846.22,
+      -846.28,
       -576.0
      ],
      "id": "2_25",
      "mix": "mixed",
-     "trees": 22,
-     "tris": 118
-    },
-    {
-     "bbox_local_m": [
-      -885.52,
-      -704.0,
-      -860.26,
-      -641.28
-     ],
-     "id": "2_26",
-     "mix": "mixed",
-     "trees": 30,
-     "tris": 146
-    },
-    {
-     "bbox_local_m": [
-      -896.0,
-      -735.01,
-      -878.31,
-      -704.0
-     ],
-     "id": "2_27",
-     "mix": "mixed",
-     "trees": 20,
-     "tris": 84
+     "trees": 8,
+     "tris": 108
     }
    ],
    "id": "0_6",
    "instances": {
-    "count": 2269,
+    "count": 1645,
     "file": "Data/raw/derived/dk65-01/world/instances_0_6.json",
-    "sha256": "02260ef9a4299970c1a7bd6b3d1a4a3d6c87df5c7a59ffe1b977f64aae212d09"
+    "sha256": "8b475cdb8a0d4fffff72cccb7c07bdf192d8c29648ef9c95300fe7695c9d3f6d"
    },
    "low": {
-    "bytes": 2443672,
+    "bytes": 2430648,
     "file": "Data/raw/derived/dk65-01/world/chunk_0_6.low.glb",
-    "sha256": "c641fc7247d7d18545152dea04b99bb4bd49d6e5b668206c7ceda12a2c8db0bc"
+    "sha256": "ef7f339d880897cabb20c8a282fa55a6d5e41f9fa02cbe791f79605cc3ee1cd6"
    },
    "materials": [
     "barrier_steel",
@@ -1374,12 +1338,12 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "a307dee031d5bb402fa38e52e9754ca19f24cdf4a907f43f2c00ee0c50743faa",
+   "sha256": "ab263c16c0b01b0dbda0693ffaa732b50e850573a66defe33af811b4095151b1",
    "triangles": {
     "bridge": 8148,
     "buildings": 2512,
     "buildings_lod1": 278,
-    "forest_hlod": 1477,
+    "forest_hlod": 1293,
     "furniture": 5446,
     "markings": 3554,
     "paved": 2192,
@@ -1401,68 +1365,56 @@
     "z_max_evrf2007": 137.95,
     "z_min_evrf2007": 123.87
    },
-   "bytes": 8409244,
+   "bytes": 8398504,
    "file": "Data/raw/derived/dk65-01/world/chunk_0_7.glb",
    "forest_cells": [
     {
      "bbox_local_m": [
-      -1024.0,
+      -980.94,
       -960.0,
       -960.0,
-      -931.81
+      -955.0
      ],
      "id": "0_30",
      "mix": "mixed",
-     "trees": 44,
-     "tris": 126
+     "trees": 22,
+     "tris": 32
     },
     {
      "bbox_local_m": [
-      -1024.0,
-      -1024.0,
+      -991.66,
+      -1013.0,
       -960.0,
       -960.0
      ],
      "id": "0_31",
      "mix": "mixed",
-     "trees": 110,
-     "tris": 243
-    },
-    {
-     "bbox_local_m": [
-      -960.0,
-      -960.0,
-      -927.97,
-      -953.2
-     ],
-     "id": "1_30",
-     "mix": "mixed",
-     "trees": 8,
-     "tris": 55
+     "trees": 93,
+     "tris": 156
     },
     {
      "bbox_local_m": [
       -960.0,
       -1012.9,
-      -928.37,
+      -931.0,
       -960.0
      ],
      "id": "1_31",
      "mix": "mixed",
-     "trees": 76,
-     "tris": 140
+     "trees": 54,
+     "tris": 188
     }
    ],
    "id": "0_7",
    "instances": {
-    "count": 1308,
+    "count": 1058,
     "file": "Data/raw/derived/dk65-01/world/instances_0_7.json",
-    "sha256": "3f728a27a918875c59b1d3b96c2793960bbb7d7aeb46427ae544b5cd6ed4f1a0"
+    "sha256": "c00ae295ac9e13b28d310a83f5bef6c87719e2f750b02a5490bda3926a94802c"
    },
    "low": {
-    "bytes": 3390304,
+    "bytes": 3381300,
     "file": "Data/raw/derived/dk65-01/world/chunk_0_7.low.glb",
-    "sha256": "15e390cc71116751075b97d0915c4c4948f461acebe4f4af84b212854d41a4e0"
+    "sha256": "1d44167f20ffc82a0d1ccde7648268d8436340e33bf6869c7ea230986cef92fb"
    },
    "materials": [
     "barrier_steel",
@@ -1496,12 +1448,12 @@
     "verge_grass",
     "verge_tufts"
    ],
-   "sha256": "89af4188781dca5f747b961caace08aa4413832b562f30face313cf885be970d",
+   "sha256": "75eb4c021706113723f61ea40703d36d8beaaa17fbb18e51364afa43f1ebc64d",
    "triangles": {
     "banks": 1388,
     "banks_low": 0,
     "bridge": 11598,
-    "forest_hlod": 564,
+    "forest_hlod": 376,
     "furniture": 3094,
     "markings": 10180,
     "paved": 4,
@@ -1534,7 +1486,7 @@
    "low": {
     "bytes": 6201676,
     "file": "Data/raw/derived/dk65-01/world/chunk_1_0.low.glb",
-    "sha256": "1cca62f4efe5f69f29e27dcccc9d6905491291be62d1d31ca4d6f62e03f7ef35"
+    "sha256": "dbdef1f667104ca0c47290f33f7bae4d512b5a978be6712f3b887285f32593a7"
    },
    "materials": [
     "barrier_steel",
@@ -1583,7 +1535,7 @@
     "window_sill",
     "yard_paving"
    ],
-   "sha256": "6bb89390a6b5b43f7d2c3c578850892e3bdc0c7c3e5d4c9c95295f89bb36081b",
+   "sha256": "157913c1a517508ae90bb420e38a7fadcf5a4d9c8a1d4a73b2c140dc0daa259d",
    "triangles": {
     "banks": 2057,
     "banks_low": 0,
@@ -1624,7 +1576,7 @@
    "low": {
     "bytes": 2184800,
     "file": "Data/raw/derived/dk65-01/world/chunk_1_1.low.glb",
-    "sha256": "698bf80b75c246a46dc29f934099e5491e7c85d02cbcfd6607786ee1278d2387"
+    "sha256": "43ea0e28eb80da08615edb0c26b79618537802127ee1edbed1da1c3b1c70ec60"
    },
    "materials": [
     "barrier_steel",
@@ -1667,7 +1619,7 @@
     "verge_tufts",
     "wire"
    ],
-   "sha256": "319f97e4a98efd683fd74fc42322fea8ac7c9de5bb279cfcdc2ede441937b73f",
+   "sha256": "68b9226c41315941e6c5f3a8b44bbd3b508229fee5c2d472f47b96313632e662",
    "triangles": {
     "banks": 4254,
     "banks_low": 0,
@@ -1706,7 +1658,7 @@
    "low": {
     "bytes": 1578356,
     "file": "Data/raw/derived/dk65-01/world/chunk_1_2.low.glb",
-    "sha256": "eaad6f5eb4cae93ae2ad16500f637b45ea8f7f4e6e8fc5d0a5fb08225e70be25"
+    "sha256": "0f045b4881413a5a3c57f2343c4b68514cb212dac6a12d2c37920272bd7bac2c"
    },
    "materials": [
     "barrier_steel",
@@ -1729,7 +1681,7 @@
     "verge_grass",
     "verge_tufts"
    ],
-   "sha256": "bdc7f473b30810f987c658c4a21bbdafe6a1cec1a1bb0f8e73be5dece04e9f04",
+   "sha256": "ed6a0ca48f5967aa8bbc1cc64db12b3d9875eaf9b2db1099dee89b477d576027",
    "triangles": {
     "banks": 4320,
     "banks_low": 0,
@@ -1753,7 +1705,7 @@
     "z_max_evrf2007": 171.84,
     "z_min_evrf2007": 136.43
    },
-   "bytes": 6489600,
+   "bytes": 6503720,
    "file": "Data/raw/derived/dk65-01/world/chunk_1_3.glb",
    "forest_cells": [
     {
@@ -1765,8 +1717,8 @@
      ],
      "id": "4_13",
      "mix": "mixed",
-     "trees": 155,
-     "tris": 191
+     "trees": 154,
+     "tris": 205
     },
     {
      "bbox_local_m": [
@@ -1777,8 +1729,8 @@
      ],
      "id": "4_14",
      "mix": "mixed",
-     "trees": 260,
-     "tris": 176
+     "trees": 256,
+     "tris": 247
     },
     {
      "bbox_local_m": [
@@ -1789,32 +1741,32 @@
      ],
      "id": "4_15",
      "mix": "mixed",
-     "trees": 206,
-     "tris": 164
+     "trees": 197,
+     "tris": 215
     },
     {
      "bbox_local_m": [
-      -622.96,
+      -614.25,
       192.0,
       -576.0,
       238.15
      ],
      "id": "6_12",
      "mix": "mixed",
-     "trees": 44,
-     "tris": 164
+     "trees": 36,
+     "tris": 91
     },
     {
      "bbox_local_m": [
-      -629.25,
+      -605.42,
       128.0,
       -576.0,
       192.0
      ],
      "id": "6_13",
      "mix": "mixed",
-     "trees": 126,
-     "tris": 212
+     "trees": 79,
+     "tris": 166
     },
     {
      "bbox_local_m": [
@@ -1825,8 +1777,8 @@
      ],
      "id": "6_14",
      "mix": "mixed",
-     "trees": 186,
-     "tris": 176
+     "trees": 185,
+     "tris": 210
     },
     {
      "bbox_local_m": [
@@ -1838,19 +1790,19 @@
      "id": "6_15",
      "mix": "mixed",
      "trees": 168,
-     "tris": 192
+     "tris": 219
     },
     {
      "bbox_local_m": [
       -576.0,
       192.0,
-      -541.99,
+      -541.97,
       229.08
      ],
      "id": "7_12",
      "mix": "mixed",
-     "trees": 110,
-     "tris": 105
+     "trees": 95,
+     "tris": 176
     },
     {
      "bbox_local_m": [
@@ -1861,8 +1813,8 @@
      ],
      "id": "7_13",
      "mix": "mixed",
-     "trees": 119,
-     "tris": 117
+     "trees": 94,
+     "tris": 178
     },
     {
      "bbox_local_m": [
@@ -1874,19 +1826,19 @@
      "id": "7_14",
      "mix": "mixed",
      "trees": 74,
-     "tris": 102
+     "tris": 107
     }
    ],
    "id": "1_3",
    "instances": {
-    "count": 2627,
+    "count": 2049,
     "file": "Data/raw/derived/dk65-01/world/instances_1_3.json",
-    "sha256": "563d7a565e5dad95c64a38b598a0311836949fba15366c28ab0401cd9c6ee7dc"
+    "sha256": "1aabba2d79b5097faff88e326a7e6694cd9d52b715954b38abe6955d7644a435"
    },
    "low": {
-    "bytes": 1739820,
+    "bytes": 1750684,
     "file": "Data/raw/derived/dk65-01/world/chunk_1_3.low.glb",
-    "sha256": "1385b03e8e7883a0015db1124ea40bae85a5ce75d48db3fdbb8d8d171128129b"
+    "sha256": "14732bd7d78dff5d4316c5ba0e0b0555e467c1cd909cbcb5188288188e09e3da"
    },
    "materials": [
     "barrier_steel",
@@ -1910,12 +1862,12 @@
     "verge_tufts",
     "wire"
    ],
-   "sha256": "fe74b0fe5b0a66e5272e684ed46f71ba430d2de7c7581fc457b837977aeedd79",
+   "sha256": "28171c3a0910eefcbe6f28ec1f91aa51710fe26a73654053e90cc67eed51d47a",
    "triangles": {
     "banks": 4304,
     "banks_low": 0,
     "bridge": 1208,
-    "forest_hlod": 1599,
+    "forest_hlod": 1814,
     "furniture": 4572,
     "markings": 2739,
     "road": 11495,
@@ -1936,7 +1888,7 @@
     "z_max_evrf2007": 142.77,
     "z_min_evrf2007": 131.81
    },
-   "bytes": 6405996,
+   "bytes": 6398184,
    "file": "Data/raw/derived/dk65-01/world/chunk_1_4.glb",
    "forest_cells": [
     {
@@ -1948,8 +1900,8 @@
      ],
      "id": "4_16",
      "mix": "mixed",
-     "trees": 145,
-     "tris": 142
+     "trees": 138,
+     "tris": 171
     },
     {
      "bbox_local_m": [
@@ -1960,8 +1912,8 @@
      ],
      "id": "4_17",
      "mix": "mixed",
-     "trees": 100,
-     "tris": 117
+     "trees": 99,
+     "tris": 127
     },
     {
      "bbox_local_m": [
@@ -1972,8 +1924,8 @@
      ],
      "id": "4_18",
      "mix": "mixed",
-     "trees": 10,
-     "tris": 52
+     "trees": 11,
+     "tris": 46
     },
     {
      "bbox_local_m": [
@@ -1984,44 +1936,44 @@
      ],
      "id": "5_16",
      "mix": "mixed",
-     "trees": 23,
-     "tris": 96
+     "trees": 22,
+     "tris": 82
     },
     {
      "bbox_local_m": [
-      -685.98,
+      -650.5,
       -128.0,
       -640.0,
       -64.0
      ],
      "id": "5_17",
      "mix": "mixed",
-     "trees": 55,
-     "tris": 168
+     "trees": 51,
+     "tris": 113
     },
     {
      "bbox_local_m": [
-      -698.64,
-      -192.0,
+      -681.49,
+      -185.14,
       -640.0,
       -128.0
      ],
      "id": "5_18",
      "mix": "mixed",
-     "trees": 76,
-     "tris": 295
+     "trees": 48,
+     "tris": 124
     },
     {
      "bbox_local_m": [
       -704.0,
       -256.0,
-      -686.22,
-      -192.0
+      -687.02,
+      -199.0
      ],
      "id": "5_19",
      "mix": "mixed",
-     "trees": 46,
-     "tris": 169
+     "trees": 41,
+     "tris": 150
     },
     {
      "bbox_local_m": [
@@ -2032,8 +1984,8 @@
      ],
      "id": "6_16",
      "mix": "mixed",
-     "trees": 143,
-     "tris": 170
+     "trees": 135,
+     "tris": 182
     },
     {
      "bbox_local_m": [
@@ -2044,8 +1996,8 @@
      ],
      "id": "6_17",
      "mix": "mixed",
-     "trees": 138,
-     "tris": 138
+     "trees": 137,
+     "tris": 161
     },
     {
      "bbox_local_m": [
@@ -2057,19 +2009,19 @@
      "id": "6_18",
      "mix": "mixed",
      "trees": 14,
-     "tris": 44
+     "tris": 38
     }
    ],
    "id": "1_4",
    "instances": {
-    "count": 2246,
+    "count": 1821,
     "file": "Data/raw/derived/dk65-01/world/instances_1_4.json",
-    "sha256": "f078fe9f4ad02416de236685837da782c64d34383bd2c7f93e70db1302fb22d7"
+    "sha256": "b9b58c12b857716aaa0715bddd78d36285c6ae1e87edf7d28721b8240fd9bcc4"
    },
    "low": {
-    "bytes": 1782692,
+    "bytes": 1775872,
     "file": "Data/raw/derived/dk65-01/world/chunk_1_4.low.glb",
-    "sha256": "c3e2e95d414f6ee88de8d9cf866389519eb88662dea6abed2a3b9616e4cc38d6"
+    "sha256": "bf56355cb5c61be693910dbf70ddefee0823c2486e2dd66ec874f46a1fce8ff1"
    },
    "materials": [
     "barrier_steel",
@@ -2101,12 +2053,12 @@
     "verge_grass",
     "verge_tufts"
    ],
-   "sha256": "985a89b115320850dbb5652c84f0a239fc4b27f9037639bcecfe5a0d93b1835b",
+   "sha256": "b9d9ae6b9e0d678b5272fcb39881d5cb4d7857fec1b183b197275671e74d27a8",
    "triangles": {
     "banks": 3106,
     "banks_low": 0,
     "bridge": 4524,
-    "forest_hlod": 1391,
+    "forest_hlod": 1194,
     "furniture": 1994,
     "markings": 2465,
     "road": 12691,
@@ -2126,7 +2078,7 @@
     "z_max_evrf2007": 144.13,
     "z_min_evrf2007": 129.22
    },
-   "bytes": 5763364,
+   "bytes": 5762440,
    "file": "Data/raw/derived/dk65-01/world/chunk_1_5.glb",
    "forest_cells": [
     {
@@ -2138,20 +2090,20 @@
      ],
      "id": "4_20",
      "mix": "mixed",
-     "trees": 54,
-     "tris": 148
+     "trees": 43,
+     "tris": 159
     },
     {
      "bbox_local_m": [
-      -733.98,
-      -371.81,
+      -730.63,
+      -361.0,
       -707.21,
       -320.0
      ],
      "id": "4_21",
      "mix": "mixed",
-     "trees": 75,
-     "tris": 148
+     "trees": 58,
+     "tris": 118
     },
     {
      "bbox_local_m": [
@@ -2163,19 +2115,19 @@
      "id": "5_20",
      "mix": "mixed",
      "trees": 30,
-     "tris": 89
+     "tris": 80
     }
    ],
    "id": "1_5",
    "instances": {
-    "count": 628,
+    "count": 543,
     "file": "Data/raw/derived/dk65-01/world/instances_1_5.json",
-    "sha256": "eeee219a308913f382c7674c8baa3a09c546e8be1d1edb347b707b3af3143fa2"
+    "sha256": "8e0224af3793d5dcfe5070a919887aead106d203d6d4f693fb19e28b2eeea57f"
    },
    "low": {
-    "bytes": 1497556,
+    "bytes": 1496592,
     "file": "Data/raw/derived/dk65-01/world/chunk_1_5.low.glb",
-    "sha256": "3ff38bb8eb7c946439d059987251482e33c1a513e6ee9fac38e21d262674e668"
+    "sha256": "17534d1f647c859fcc458e309e6bac10b92a4a5dfadc75306d3e4f7e1a628745"
    },
    "materials": [
     "apron_sett",
@@ -2209,12 +2161,12 @@
     "verge_tufts",
     "wire"
    ],
-   "sha256": "747580b433efcf2bbbfe3c55ac3b0ad18c270e5f398bff8374b86111ff67cc69",
+   "sha256": "b1082ab072e39da5c1d877582c666a5ef356d02d44b143b5c237573e6888f4a0",
    "triangles": {
     "banks": 394,
     "banks_low": 0,
     "bridge": 1539,
-    "forest_hlod": 385,
+    "forest_hlod": 357,
     "furniture": 1728,
     "markings": 1658,
     "road": 11339,
@@ -2242,7 +2194,7 @@
    "instances": {
     "count": 47,
     "file": "Data/raw/derived/dk65-01/world/instances_1_6.json",
-    "sha256": "f042875fc1840149b0d7a8e76eb56487e8212f94c3fcd0464f20670f728bf97b"
+    "sha256": "ef434bd373449068540bbda5d9887bef92ed90c8903cd6df51f67814dc12d8c1"
    },
    "low": {
     "bytes": 970864,
@@ -2293,19 +2245,19 @@
     "z_max_evrf2007": 144.76,
     "z_min_evrf2007": 123.64
    },
-   "bytes": 8291696,
+   "bytes": 8291856,
    "file": "Data/raw/derived/dk65-01/world/chunk_1_7.glb",
    "forest_cells": [],
    "id": "1_7",
    "instances": {
-    "count": 151,
+    "count": 124,
     "file": "Data/raw/derived/dk65-01/world/instances_1_7.json",
-    "sha256": "3060367665ee7c26849228d928ddb5481018879bb42d37df567598c29fb8a0d1"
+    "sha256": "8c6467ac19bb270775417fe1116f7b9dc4f3fe1272ec268a1e67920a5130afe4"
    },
    "low": {
-    "bytes": 2695424,
+    "bytes": 2695556,
     "file": "Data/raw/derived/dk65-01/world/chunk_1_7.low.glb",
-    "sha256": "95a1ebcfea7cc03b38f7ec92739f65ed16402eeb9fac086d404720f879d4c505"
+    "sha256": "246f8b5f41c1f4bca60ce7ec38ecdaa6371bf6e4cee046daf2b5cf1723ba06d2"
    },
    "materials": [
     "balcony_slab",
@@ -2374,7 +2326,7 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "956a9167047b492ad5878b8bf2567b2bff4ee4072f3494150275c6d647516cbd",
+   "sha256": "eedb3d74835625786f2c1a848549ee53ccf75341753f0c2c7c5c5599a9918306",
    "triangles": {
     "banks": 1066,
     "banks_low": 0,
@@ -2402,19 +2354,19 @@
     "z_max_evrf2007": 141.24,
     "z_min_evrf2007": 119.79
    },
-   "bytes": 5690008,
+   "bytes": 5690004,
    "file": "Data/raw/derived/dk65-01/world/chunk_2_0.glb",
    "forest_cells": [],
    "id": "2_0",
    "instances": {
     "count": 56,
     "file": "Data/raw/derived/dk65-01/world/instances_2_0.json",
-    "sha256": "b1cb6d58673c28a034282f7739edba63344e8300627e6923159b6a82233a771e"
+    "sha256": "f078f11a1a1d0d1b53115760c0aa8d646e79c77c3e0f45ada8da93d169952428"
    },
    "low": {
     "bytes": 1275820,
     "file": "Data/raw/derived/dk65-01/world/chunk_2_0.low.glb",
-    "sha256": "13cc185a1561fb8036a44203a1afd7236b9a425200683b15c98d57b642c03f59"
+    "sha256": "4346ab0f5e34fdc74b252f45a10441bf1b533b66c46166df6c326bb4ad988ca2"
    },
    "materials": [
     "barrier_steel",
@@ -2444,7 +2396,7 @@
     "verge_grass",
     "verge_tufts"
    ],
-   "sha256": "284f22c128485856b1f0f01729eca01b808cad0ca8374f9e46cbb38fd377dcff",
+   "sha256": "9a21fbe701159c8445100ddbb05f451255ba92804f53916832427d8a5dce9030",
    "triangles": {
     "banks": 2135,
     "banks_low": 0,
@@ -2470,7 +2422,7 @@
     "z_max_evrf2007": 152.38,
     "z_min_evrf2007": 131.86
    },
-   "bytes": 10039444,
+   "bytes": 10050960,
    "file": "Data/raw/derived/dk65-01/world/chunk_2_1.glb",
    "forest_cells": [
     {
@@ -2483,7 +2435,7 @@
      "id": "10_5",
      "mix": "conifer",
      "trees": 173,
-     "tris": 170
+     "tris": 193
     },
     {
      "bbox_local_m": [
@@ -2494,8 +2446,8 @@
      ],
      "id": "10_6",
      "mix": "conifer",
-     "trees": 121,
-     "tris": 128
+     "trees": 120,
+     "tris": 146
     },
     {
      "bbox_local_m": [
@@ -2507,7 +2459,7 @@
      "id": "10_7",
      "mix": "conifer",
      "trees": 13,
-     "tris": 46
+     "tris": 40
     },
     {
      "bbox_local_m": [
@@ -2519,7 +2471,7 @@
      "id": "8_6",
      "mix": "conifer",
      "trees": 40,
-     "tris": 118
+     "tris": 114
     },
     {
      "bbox_local_m": [
@@ -2530,8 +2482,8 @@
      ],
      "id": "9_4",
      "mix": "conifer",
-     "trees": 63,
-     "tris": 117
+     "trees": 60,
+     "tris": 120
     },
     {
      "bbox_local_m": [
@@ -2542,8 +2494,8 @@
      ],
      "id": "9_5",
      "mix": "conifer",
-     "trees": 170,
-     "tris": 228
+     "trees": 167,
+     "tris": 282
     },
     {
      "bbox_local_m": [
@@ -2554,32 +2506,32 @@
      ],
      "id": "9_6",
      "mix": "conifer",
-     "trees": 258,
-     "tris": 247
+     "trees": 217,
+     "tris": 367
     },
     {
      "bbox_local_m": [
-      -426.67,
+      -422.0,
       564.32,
       -384.0,
       576.0
      ],
      "id": "9_7",
      "mix": "conifer",
-     "trees": 21,
-     "tris": 62
+     "trees": 22,
+     "tris": 52
     }
    ],
    "id": "2_1",
    "instances": {
-    "count": 1684,
+    "count": 1621,
     "file": "Data/raw/derived/dk65-01/world/instances_2_1.json",
-    "sha256": "18d544ddc95989b3efff9c36b95a5ab43f3691cc6aacc787771a3f07e6fbbf71"
+    "sha256": "5b56c653c46b856dfbafb858af68933608f6b447f3ed5ac72b45cc551e4ac508"
    },
    "low": {
-    "bytes": 5853524,
+    "bytes": 5861996,
     "file": "Data/raw/derived/dk65-01/world/chunk_2_1.low.glb",
-    "sha256": "da4b0326310a397765006c5c539571cdc9b16ccb2ea13f10489dfedf2052e0c6"
+    "sha256": "846d673fa48e106bdd982513710af88ffacf5337fe881e8a242cb538bb36d90f"
    },
    "materials": [
     "brick_red",
@@ -2614,11 +2566,11 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "2f3cf3eaf9f0a50c7620f26c686cd32009f357990200578d0c97f5f38d3c0ffa",
+   "sha256": "cfd61fc6bdf4adf7a26a330e8c0b5aa8433ef5fc1587778e07bcfc78e5996d35",
    "triangles": {
     "buildings": 576,
     "buildings_lod1": 84,
-    "forest_hlod": 1116,
+    "forest_hlod": 1314,
     "furniture": 384,
     "markings": 514,
     "plot_ground": 214,
@@ -2686,7 +2638,7 @@
     "z_max_evrf2007": 171.9,
     "z_min_evrf2007": 133.62
    },
-   "bytes": 4825384,
+   "bytes": 4825492,
    "file": "Data/raw/derived/dk65-01/world/chunk_2_3.glb",
    "forest_cells": [
     {
@@ -2699,7 +2651,7 @@
      "id": "10_15",
      "mix": "broadleaf",
      "trees": 39,
-     "tris": 78
+     "tris": 75
     },
     {
      "bbox_local_m": [
@@ -2710,20 +2662,20 @@
      ],
      "id": "11_15",
      "mix": "broadleaf",
-     "trees": 76,
-     "tris": 124
+     "trees": 75,
+     "tris": 118
     }
    ],
    "id": "2_3",
    "instances": {
-    "count": 195,
+    "count": 194,
     "file": "Data/raw/derived/dk65-01/world/instances_2_3.json",
-    "sha256": "5beb57d1b3acb31346de8b98f4d5f38dd965fd4d757dcf1e0d81c32012a01c3f"
+    "sha256": "19f2f39c8725ad9e2171e89e084ec36cdb18f0081b0aba19d96f61f9a2f902ef"
    },
    "low": {
-    "bytes": 773520,
+    "bytes": 773576,
     "file": "Data/raw/derived/dk65-01/world/chunk_2_3.low.glb",
-    "sha256": "03b444738aa8266e45ebf83f9d4f40f095992f263cac4baf28147182cfc9b131"
+    "sha256": "6004e3fec78eb9fd06659d10a73b6c967b73886413f18064069977d999d20c0e"
    },
    "materials": [
     "brick_red",
@@ -2738,11 +2690,11 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "63b2c1351a8f678c3f2c76582ab804bc0aab7c1e817e55dcfc918f6e6d905ce2",
+   "sha256": "f43f9de2ecb148bca104d06355c7bc4e30a2d135d58370a4a336ef86fcff82a5",
    "triangles": {
     "buildings": 208,
     "buildings_lod1": 20,
-    "forest_hlod": 202,
+    "forest_hlod": 193,
     "road_collision": 20,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
@@ -2760,7 +2712,7 @@
     "z_max_evrf2007": 139.63,
     "z_min_evrf2007": 129.56
    },
-   "bytes": 4773760,
+   "bytes": 4773236,
    "file": "Data/raw/derived/dk65-01/world/chunk_2_4.glb",
    "forest_cells": [
     {
@@ -2772,8 +2724,8 @@
      ],
      "id": "10_16",
      "mix": "broadleaf",
-     "trees": 21,
-     "tris": 60
+     "trees": 19,
+     "tris": 51
     },
     {
      "bbox_local_m": [
@@ -2784,8 +2736,8 @@
      ],
      "id": "11_16",
      "mix": "broadleaf",
-     "trees": 171,
-     "tris": 227
+     "trees": 168,
+     "tris": 242
     },
     {
      "bbox_local_m": [
@@ -2797,7 +2749,7 @@
      "id": "11_17",
      "mix": "broadleaf",
      "trees": 33,
-     "tris": 60
+     "tris": 56
     },
     {
      "bbox_local_m": [
@@ -2809,26 +2761,26 @@
      "id": "11_18",
      "mix": "broadleaf",
      "trees": 24,
-     "tris": 86
+     "tris": 82
     }
    ],
    "id": "2_4",
    "instances": {
-    "count": 318,
+    "count": 313,
     "file": "Data/raw/derived/dk65-01/world/instances_2_4.json",
-    "sha256": "ffecf886cafc1300f08af0b5d9d7dd157f09e404bdc65a3e924319f17d7d06c8"
+    "sha256": "f88c54a61b75e8d003cbc8a9a64e45430fc1c632df6554056188b437611d524d"
    },
    "low": {
-    "bytes": 752388,
+    "bytes": 751564,
     "file": "Data/raw/derived/dk65-01/world/chunk_2_4.low.glb",
-    "sha256": "8a83f4ff66876462d2b5fb74906ed248c6d7337680ded17fa31b0a2bb771b73e"
+    "sha256": "4cdc06c53a8e123b081d9bb2f989724758dca7466f56923c25b18ccce8aecb7a"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "bffb3cd5cd53a8d2be73a9701884d66c041b3d05e6f0e1d688dd4f4000251cc8",
+   "sha256": "18c5e82875480683beedde76df5f1afb429f7248371843e52e82baff22866e8d",
    "triangles": {
-    "forest_hlod": 433,
+    "forest_hlod": 431,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -2913,7 +2865,7 @@
     "wire",
     "yard_gravel"
    ],
-   "sha256": "991ba63aeb0db308f46e33e1108a07773dfbd7abb4f63ad9555f6f957236c18b",
+   "sha256": "026669c3db50d600cbfac5308f114b9833f5d5b2c2554f6cc45b901886f8e712",
    "triangles": {
     "buildings": 218,
     "buildings_lod1": 16,
@@ -2937,7 +2889,7 @@
     "z_max_evrf2007": 143.75,
     "z_min_evrf2007": 121.65
    },
-   "bytes": 6498092,
+   "bytes": 6499220,
    "file": "Data/raw/derived/dk65-01/world/chunk_2_7.glb",
    "forest_cells": [
     {
@@ -2950,19 +2902,19 @@
      "id": "11_31",
      "mix": "broadleaf",
      "trees": 135,
-     "tris": 196
+     "tris": 208
     }
    ],
    "id": "2_7",
    "instances": {
     "count": 337,
     "file": "Data/raw/derived/dk65-01/world/instances_2_7.json",
-    "sha256": "ca2e1dd556583abd904041054581cf92a1a3fe0107b6cac807a34b57c2d959cc"
+    "sha256": "a4ba075caf2737fa5fa5a270c0cdb26daa93a321b3396e5d48eec2302fe3bc08"
    },
    "low": {
-    "bytes": 1455300,
+    "bytes": 1456156,
     "file": "Data/raw/derived/dk65-01/world/chunk_2_7.low.glb",
-    "sha256": "e9b07d1021c7e7bece5e7828ab1b6703596b446a291f8c4446573eecfe47891d"
+    "sha256": "add3d0996f7e2f04c9765c041d4b8ca4ad32a236cb53cf6fa434b58bdd7050f7"
    },
    "materials": [
     "barrier_steel",
@@ -3023,13 +2975,13 @@
     "wire",
     "yard_gravel"
    ],
-   "sha256": "cdcdf3bf4dc1ca0c9f89f5129bdf984cf2225d87e544d16fb77d3c2cfd825f9e",
+   "sha256": "9c65afe601e90f79bbc70a477adc52dafc365e54fc6ad98438f83a16486fe224",
    "triangles": {
     "banks": 292,
     "banks_low": 0,
     "buildings": 10479,
     "buildings_lod1": 1169,
-    "forest_hlod": 196,
+    "forest_hlod": 208,
     "furniture": 1324,
     "markings": 1735,
     "paved": 1050,
@@ -3051,7 +3003,7 @@
     "z_max_evrf2007": 141.44,
     "z_min_evrf2007": 118.37
    },
-   "bytes": 10238096,
+   "bytes": 10236628,
    "file": "Data/raw/derived/dk65-01/world/chunk_3_0.glb",
    "forest_cells": [
     {
@@ -3063,8 +3015,8 @@
      ],
      "id": "14_1",
      "mix": "broadleaf",
-     "trees": 17,
-     "tris": 57
+     "trees": 15,
+     "tris": 52
     },
     {
      "bbox_local_m": [
@@ -3075,8 +3027,8 @@
      ],
      "id": "14_2",
      "mix": "broadleaf",
-     "trees": 60,
-     "tris": 156
+     "trees": 58,
+     "tris": 142
     },
     {
      "bbox_local_m": [
@@ -3088,7 +3040,7 @@
      "id": "15_1",
      "mix": "broadleaf",
      "trees": 29,
-     "tris": 71
+     "tris": 62
     },
     {
      "bbox_local_m": [
@@ -3099,20 +3051,20 @@
      ],
      "id": "15_2",
      "mix": "broadleaf",
-     "trees": 94,
-     "tris": 158
+     "trees": 92,
+     "tris": 156
     }
    ],
    "id": "3_0",
    "instances": {
-    "count": 340,
+    "count": 334,
     "file": "Data/raw/derived/dk65-01/world/instances_3_0.json",
-    "sha256": "109e76984cce884e3b8cb7bc47877a69ab3a42545fc37d94a026f5ac030b3111"
+    "sha256": "f290b5dba98fc4ca3da622cfb312445eff3d7730bdf7fd085ba97f1c242c9138"
    },
    "low": {
-    "bytes": 5823080,
+    "bytes": 5821500,
     "file": "Data/raw/derived/dk65-01/world/chunk_3_0.low.glb",
-    "sha256": "2132775bc61140c5b10d1560c7ce618a4ccf865ef1e06c5eaa203464283c1598"
+    "sha256": "3575f7570fabb8076c52eab5accf63daaac56606c802ce86535b6e2fd38fb7da"
    },
    "materials": [
     "chimney_brick",
@@ -3147,11 +3099,11 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "21bf8e370f7c7ee34a9a2cae3f1b179b0c83da541d705fe8e6f2bb69267e5005",
+   "sha256": "4379cf17eac8403b5746d7788ea113cad0c7ee8cd83fd26c1890f0160b1f06df",
    "triangles": {
     "buildings": 3332,
     "buildings_lod1": 631,
-    "forest_hlod": 442,
+    "forest_hlod": 412,
     "markings": 188,
     "plot_ground": 1417,
     "plots": 2807,
@@ -3228,7 +3180,7 @@
    "low": {
     "bytes": 851832,
     "file": "Data/raw/derived/dk65-01/world/chunk_3_2.low.glb",
-    "sha256": "ac29009a215e09800852de57fb651e2e375e6420549f55a5a4b1efd7b439cdf8"
+    "sha256": "046a1e7b19dc4fb5f70f6b4bebff34df92ceb4d33301af36381a6741bbd1d30c"
    },
    "materials": [
     "collision_asphalt",
@@ -3243,7 +3195,7 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "c2622af8b1e0b01b78e08218474d5e7c99243a9f437b974ed1a627003378805e",
+   "sha256": "921ae76218718cf36afd7ac5f903215d9a814561e536b3c10e28817fe2450141",
    "triangles": {
     "markings": 192,
     "road": 2198,
@@ -3264,7 +3216,7 @@
     "z_max_evrf2007": 172.85,
     "z_min_evrf2007": 134.46
    },
-   "bytes": 4788620,
+   "bytes": 4787700,
    "file": "Data/raw/derived/dk65-01/world/chunk_3_3.glb",
    "forest_cells": [
     {
@@ -3276,28 +3228,28 @@
      ],
      "id": "12_15",
      "mix": "broadleaf",
-     "trees": 56,
-     "tris": 97
+     "trees": 55,
+     "tris": 94
     }
    ],
    "id": "3_3",
    "instances": {
-    "count": 132,
+    "count": 131,
     "file": "Data/raw/derived/dk65-01/world/instances_3_3.json",
-    "sha256": "4e030432775452b09279ff1a66b6bee62fd7383fafe81ce44a9fdb4d1c88cc51"
+    "sha256": "d7329c443a30afdb08aea97c191dd310c3824a78e47fafd6b3b50acffaaea474"
    },
    "low": {
-    "bytes": 761508,
+    "bytes": 760540,
     "file": "Data/raw/derived/dk65-01/world/chunk_3_3.low.glb",
-    "sha256": "79100d4d579511fd6ff9066f4b841c5c59fd18142802d981f4a16a37f0393ad6"
+    "sha256": "fbf5d7ae9f73af9bb74547b3928cc0c7a9d6cae602bfdbeb67ef6441fb748c30"
    },
    "materials": [
     "terrain_grass",
     "wire"
    ],
-   "sha256": "f7f9d710036ae8ccd830e347217906923b9e894ed2f733f76f64bc8c60f106b7",
+   "sha256": "dc6a359eb5e30dc90d4aa6d1e11397b12142c088d28627e634714af4f470124d",
    "triangles": {
-    "forest_hlod": 97,
+    "forest_hlod": 94,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -3314,7 +3266,7 @@
     "z_max_evrf2007": 138.7,
     "z_min_evrf2007": 127.26
    },
-   "bytes": 4826448,
+   "bytes": 4838588,
    "file": "Data/raw/derived/dk65-01/world/chunk_3_4.glb",
    "forest_cells": [
     {
@@ -3326,8 +3278,8 @@
      ],
      "id": "12_16",
      "mix": "broadleaf",
-     "trees": 277,
-     "tris": 218
+     "trees": 270,
+     "tris": 275
     },
     {
      "bbox_local_m": [
@@ -3338,8 +3290,8 @@
      ],
      "id": "12_17",
      "mix": "broadleaf",
-     "trees": 275,
-     "tris": 209
+     "trees": 274,
+     "tris": 269
     },
     {
      "bbox_local_m": [
@@ -3350,8 +3302,8 @@
      ],
      "id": "12_18",
      "mix": "broadleaf",
-     "trees": 259,
-     "tris": 246
+     "trees": 254,
+     "tris": 299
     },
     {
      "bbox_local_m": [
@@ -3363,7 +3315,7 @@
      "id": "12_19",
      "mix": "broadleaf",
      "trees": 138,
-     "tris": 169
+     "tris": 177
     },
     {
      "bbox_local_m": [
@@ -3374,8 +3326,8 @@
      ],
      "id": "13_16",
      "mix": "broadleaf",
-     "trees": 61,
-     "tris": 112
+     "trees": 62,
+     "tris": 102
     },
     {
      "bbox_local_m": [
@@ -3386,8 +3338,8 @@
      ],
      "id": "13_17",
      "mix": "broadleaf",
-     "trees": 248,
-     "tris": 232
+     "trees": 246,
+     "tris": 280
     },
     {
      "bbox_local_m": [
@@ -3398,8 +3350,8 @@
      ],
      "id": "13_18",
      "mix": "broadleaf",
-     "trees": 81,
-     "tris": 232
+     "trees": 80,
+     "tris": 228
     },
     {
      "bbox_local_m": [
@@ -3411,26 +3363,26 @@
      "id": "14_17",
      "mix": "broadleaf",
      "trees": 24,
-     "tris": 85
+     "tris": 80
     }
    ],
    "id": "3_4",
    "instances": {
-    "count": 1434,
+    "count": 1419,
     "file": "Data/raw/derived/dk65-01/world/instances_3_4.json",
-    "sha256": "532618655179b9f7382dd6b7fc805f3ddedaba47dc73b07ec208137883114cfd"
+    "sha256": "fccb4df4dc428fdb5a7db17f133f34d22bb60543d68271e6fdc358f7401ec8ec"
    },
    "low": {
-    "bytes": 795400,
+    "bytes": 804792,
     "file": "Data/raw/derived/dk65-01/world/chunk_3_4.low.glb",
-    "sha256": "a093b409f3146444f965aeef978ec01ce436519d6083c9f8085979a0e2ac2b29"
+    "sha256": "0a58671e1b713a7885f3498dce4c650dce21e01be715037133fed2cec994c0dc"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "fd12c24a8807ad1ee9d11899a3ab62bd224c319eac7b9ec737ec6aa332ef69e4",
+   "sha256": "390a15f34e0fe35381998bb693164d20ca02ab397f315ceea34ff76f1b73fcd3",
    "triangles": {
-    "forest_hlod": 1503,
+    "forest_hlod": 1710,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -3446,7 +3398,7 @@
     "z_max_evrf2007": 142.38,
     "z_min_evrf2007": 124.57
    },
-   "bytes": 4801512,
+   "bytes": 4803848,
    "file": "Data/raw/derived/dk65-01/world/chunk_3_5.glb",
    "forest_cells": [
     {
@@ -3458,8 +3410,8 @@
      ],
      "id": "12_20",
      "mix": "broadleaf",
-     "trees": 130,
-     "tris": 162
+     "trees": 129,
+     "tris": 177
     },
     {
      "bbox_local_m": [
@@ -3471,7 +3423,7 @@
      "id": "12_21",
      "mix": "broadleaf",
      "trees": 48,
-     "tris": 113
+     "tris": 111
     },
     {
      "bbox_local_m": [
@@ -3482,8 +3434,8 @@
      ],
      "id": "12_23",
      "mix": "broadleaf",
-     "trees": 15,
-     "tris": 40
+     "trees": 14,
+     "tris": 36
     },
     {
      "bbox_local_m": [
@@ -3506,28 +3458,28 @@
      ],
      "id": "14_23",
      "mix": "broadleaf",
-     "trees": 154,
-     "tris": 227
+     "trees": 153,
+     "tris": 248
     }
    ],
    "id": "3_5",
    "instances": {
-    "count": 479,
+    "count": 476,
     "file": "Data/raw/derived/dk65-01/world/instances_3_5.json",
-    "sha256": "28850b04f09df75149c27c0339712f35bd51f48013743225913309a00d7336fe"
+    "sha256": "c7d99001637be1a8cbd618997d18eaee1cefeedd9de55b1f29fe0ce1276ea4d4"
    },
    "low": {
-    "bytes": 774120,
+    "bytes": 775672,
     "file": "Data/raw/derived/dk65-01/world/chunk_3_5.low.glb",
-    "sha256": "e0df9d051bbfefde80d008a1c5e7fff998d3289684dec24362387b6e791a46c3"
+    "sha256": "455f4d4dc7c484b008bf32f19eb92e1f77ee141c4780d7289a111df3859b5400"
    },
    "materials": [
     "terrain_grass",
     "wire"
    ],
-   "sha256": "23c39704290608d8a058e3348667e82452bc9dc974ecc63816bcc13d9936b9da",
+   "sha256": "6e63f2bb0ca183ba6e6a79c1f294394a02668e6a214a0bef627f085e8bfacb78",
    "triangles": {
-    "forest_hlod": 645,
+    "forest_hlod": 675,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -3544,7 +3496,7 @@
     "z_max_evrf2007": 131.85,
     "z_min_evrf2007": 122.93
    },
-   "bytes": 4865080,
+   "bytes": 4872924,
    "file": "Data/raw/derived/dk65-01/world/chunk_3_6.glb",
    "forest_cells": [
     {
@@ -3557,7 +3509,7 @@
      "id": "12_24",
      "mix": "broadleaf",
      "trees": 268,
-     "tris": 198
+     "tris": 266
     },
     {
      "bbox_local_m": [
@@ -3568,8 +3520,8 @@
      ],
      "id": "12_25",
      "mix": "broadleaf",
-     "trees": 117,
-     "tris": 133
+     "trees": 116,
+     "tris": 148
     },
     {
      "bbox_local_m": [
@@ -3581,7 +3533,7 @@
      "id": "13_24",
      "mix": "broadleaf",
      "trees": 163,
-     "tris": 258
+     "tris": 253
     },
     {
      "bbox_local_m": [
@@ -3593,7 +3545,7 @@
      "id": "13_25",
      "mix": "broadleaf",
      "trees": 84,
-     "tris": 189
+     "tris": 201
     },
     {
      "bbox_local_m": [
@@ -3604,8 +3556,8 @@
      ],
      "id": "13_26",
      "mix": "broadleaf",
-     "trees": 45,
-     "tris": 87
+     "trees": 44,
+     "tris": 84
     },
     {
      "bbox_local_m": [
@@ -3617,7 +3569,7 @@
      "id": "14_24",
      "mix": "broadleaf",
      "trees": 106,
-     "tris": 180
+     "tris": 176
     },
     {
      "bbox_local_m": [
@@ -3628,20 +3580,20 @@
      ],
      "id": "14_25",
      "mix": "broadleaf",
-     "trees": 127,
-     "tris": 209
+     "trees": 126,
+     "tris": 225
     }
    ],
    "id": "3_6",
    "instances": {
-    "count": 985,
+    "count": 982,
     "file": "Data/raw/derived/dk65-01/world/instances_3_6.json",
-    "sha256": "82028ca060e285dc53158d659df54c419c7a1f85c279700a056902834cb570cd"
+    "sha256": "5b5e9aa84125234452e6f34fe00e1c0a11a2561ef66cf61f4da85069d43427ba"
    },
    "low": {
-    "bytes": 829460,
+    "bytes": 835460,
     "file": "Data/raw/derived/dk65-01/world/chunk_3_6.low.glb",
-    "sha256": "61322bd805215b3e05b5bce8a531c1d5353d6e3008aa590b5413ea24483ed0f8"
+    "sha256": "d7b2db3996e1edf44952d648613b3c104960bc71dc491592b706bb39a184970a"
    },
    "materials": [
     "collision_asphalt",
@@ -3652,9 +3604,9 @@
     "terrain_grass",
     "yard_gravel"
    ],
-   "sha256": "88386e3752ec4f50be9a0247c0cf233b19dee8101f1e384109eb68eb26e3779a",
+   "sha256": "d02d4b9f788e83b2c5c9c68c72fb5e576f9e73c93f5b775670c67aea4a8dd33d",
    "triangles": {
-    "forest_hlod": 1254,
+    "forest_hlod": 1353,
     "paved": 520,
     "road": 431,
     "road_collision": 509,
@@ -3673,7 +3625,7 @@
     "z_max_evrf2007": 145.29,
     "z_min_evrf2007": 121.65
    },
-   "bytes": 10593868,
+   "bytes": 10597364,
    "file": "Data/raw/derived/dk65-01/world/chunk_3_7.glb",
    "forest_cells": [
     {
@@ -3686,7 +3638,7 @@
      "id": "12_31",
      "mix": "broadleaf",
      "trees": 11,
-     "tris": 59
+     "tris": 51
     },
     {
      "bbox_local_m": [
@@ -3698,7 +3650,7 @@
      "id": "13_30",
      "mix": "broadleaf",
      "trees": 40,
-     "tris": 99
+     "tris": 90
     },
     {
      "bbox_local_m": [
@@ -3709,8 +3661,8 @@
      ],
      "id": "13_31",
      "mix": "broadleaf",
-     "trees": 90,
-     "tris": 154
+     "trees": 89,
+     "tris": 150
     },
     {
      "bbox_local_m": [
@@ -3722,7 +3674,7 @@
      "id": "15_28",
      "mix": "mixed",
      "trees": 11,
-     "tris": 98
+     "tris": 86
     },
     {
      "bbox_local_m": [
@@ -3733,8 +3685,8 @@
      ],
      "id": "15_29",
      "mix": "mixed",
-     "trees": 88,
-     "tris": 158
+     "trees": 87,
+     "tris": 178
     },
     {
      "bbox_local_m": [
@@ -3745,8 +3697,8 @@
      ],
      "id": "15_30",
      "mix": "mixed",
-     "trees": 133,
-     "tris": 164
+     "trees": 127,
+     "tris": 220
     },
     {
      "bbox_local_m": [
@@ -3757,20 +3709,20 @@
      ],
      "id": "15_31",
      "mix": "mixed",
-     "trees": 156,
-     "tris": 206
+     "trees": 152,
+     "tris": 255
     }
    ],
    "id": "3_7",
    "instances": {
-    "count": 876,
+    "count": 859,
     "file": "Data/raw/derived/dk65-01/world/instances_3_7.json",
-    "sha256": "2984db40d75f4b8fde8085fa01eb93cf3fd522f3dc3c8189486e77674875bf70"
+    "sha256": "27e92f95dad42ee2c07a307160e059c947ab5d889851b0d1e1b70e751215ef31"
    },
    "low": {
-    "bytes": 5993432,
+    "bytes": 5995544,
     "file": "Data/raw/derived/dk65-01/world/chunk_3_7.low.glb",
-    "sha256": "d82af264ab2beac6c39570558dce0e52fa76e7024d9b737f44abc90542b3683d"
+    "sha256": "3f2c2a75819f5f159085bea82494f3ce74f68f707ac661bbb50341c62b9df240"
    },
    "materials": [
     "brick_red",
@@ -3806,11 +3758,11 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "8681787068c5cd42e691866b603510d2818f0308fcb1137b21fa6a16a35761c4",
+   "sha256": "3b5d932115df4908455b055a84c12849773eddda32eb2cfd936b82b2c88d6603",
    "triangles": {
     "buildings": 4600,
     "buildings_lod1": 750,
-    "forest_hlod": 938,
+    "forest_hlod": 1030,
     "markings": 24,
     "plot_ground": 2241,
     "plots": 4383,
@@ -3880,7 +3832,7 @@
     "window_sill",
     "yard_paving"
    ],
-   "sha256": "1fa7e8492e362870fedbc192ebe26ae087f1016700580f578fd3e5a978b39c00",
+   "sha256": "7b9581f6a5515662a2084c59cbb33de965bb6a8aac0bcf474c04c21458adf553",
    "triangles": {
     "buildings": 2739,
     "buildings_lod1": 427,
@@ -3951,7 +3903,7 @@
    "low": {
     "bytes": 881248,
     "file": "Data/raw/derived/dk65-01/world/chunk_4_2.low.glb",
-    "sha256": "5905e9295787b663b5367a932ce8fa167747c3917cd9c97d26bd802a82b22fe3"
+    "sha256": "0ace76dd718530bd52edd6a0f00612d906515c71222846f33118b5e57b6dc275"
    },
    "materials": [
     "collision_asphalt",
@@ -3964,7 +3916,7 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "0e2e80fb1d6dc193b95f79b4e23f7d9643fbb037d18a01be432e7d41fbb0b0f6",
+   "sha256": "bfeb762cc8feb47f37671c1a38d424e1811f91eaa09ef49a386188fc0d675a34",
    "triangles": {
     "markings": 988,
     "road": 2216,
@@ -4041,7 +3993,7 @@
    "low": {
     "bytes": 838856,
     "file": "Data/raw/derived/dk65-01/world/chunk_4_4.low.glb",
-    "sha256": "e84045c9adfdb6d7eb9955b040a4fa332fc0031abb31980062680656fbcb29cc"
+    "sha256": "96eac81d2fb28aa9e67319886f54ba6b861e0669e86e21b5f17ec62cf2bb42bf"
    },
    "materials": [
     "collision_asphalt",
@@ -4054,7 +4006,7 @@
     "road_gravel",
     "terrain_grass"
    ],
-   "sha256": "37304e9fe60f2b36b0a4f0065bc3cd21ba634e02a53fafae79cdab277343af69",
+   "sha256": "b966aec47dc0c08e9ffe10af78551393003c840e083b9851dbd003c76a6b31a0",
    "triangles": {
     "markings": 458,
     "road": 2049,
@@ -4107,7 +4059,7 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "e31cb30662ee2d3347e20e658fb799e113bf49602a43c08b235b092e334251b4",
+   "sha256": "5e7debe3d053c783bd6fadf815a9004174939cd6e66726d102c12a6d7cf5655e",
    "triangles": {
     "buildings": 296,
     "buildings_lod1": 58,
@@ -4131,7 +4083,7 @@
     "z_max_evrf2007": 157.07,
     "z_min_evrf2007": 124.64
    },
-   "bytes": 10855244,
+   "bytes": 10854096,
    "file": "Data/raw/derived/dk65-01/world/chunk_4_6.glb",
    "forest_cells": [
     {
@@ -4143,20 +4095,20 @@
      ],
      "id": "16_27",
      "mix": "mixed",
-     "trees": 17,
-     "tris": 73
+     "trees": 16,
+     "tris": 68
     }
    ],
    "id": "4_6",
    "instances": {
-    "count": 133,
+    "count": 131,
     "file": "Data/raw/derived/dk65-01/world/instances_4_6.json",
-    "sha256": "103fcde3733f171caffb3744d329db261fa401921655f4c10c41f7174983ecc4"
+    "sha256": "5f3df378a1e757a28d0d4f6420479bcabf58081c61cd2dd7a717481e70e4d5ed"
    },
    "low": {
-    "bytes": 6090160,
+    "bytes": 6089028,
     "file": "Data/raw/derived/dk65-01/world/chunk_4_6.low.glb",
-    "sha256": "4b22b7d8694474dd4b51a210e392be7529c9ae64c6992235c7a33bc3b137a1a5"
+    "sha256": "a14514e564618a91c74edc86709f9f8bb289151064f98f2d92ce3f44a727313d"
    },
    "materials": [
     "canopy_steel",
@@ -4197,11 +4149,11 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "dbdcf69ad90aca49732d96cc4e7e5037ac99fc8affd3fbd3597914b08b215dd3",
+   "sha256": "2c78b0742fe14ec57150e1c00c9b834be504dd0143286669412be29b15756808",
    "triangles": {
     "buildings": 6699,
     "buildings_lod1": 1251,
-    "forest_hlod": 73,
+    "forest_hlod": 68,
     "markings": 62,
     "paved": 287,
     "plot_ground": 2345,
@@ -4225,7 +4177,7 @@
     "z_max_evrf2007": 152.01,
     "z_min_evrf2007": 125.45
    },
-   "bytes": 11050608,
+   "bytes": 11058024,
    "file": "Data/raw/derived/dk65-01/world/chunk_4_7.glb",
    "forest_cells": [
     {
@@ -4237,8 +4189,8 @@
      ],
      "id": "16_28",
      "mix": "mixed",
-     "trees": 113,
-     "tris": 150
+     "trees": 112,
+     "tris": 204
     },
     {
      "bbox_local_m": [
@@ -4250,7 +4202,7 @@
      "id": "16_29",
      "mix": "mixed",
      "trees": 126,
-     "tris": 134
+     "tris": 179
     },
     {
      "bbox_local_m": [
@@ -4261,8 +4213,8 @@
      ],
      "id": "16_30",
      "mix": "mixed",
-     "trees": 98,
-     "tris": 136
+     "trees": 93,
+     "tris": 163
     },
     {
      "bbox_local_m": [
@@ -4274,7 +4226,7 @@
      "id": "16_31",
      "mix": "mixed",
      "trees": 62,
-     "tris": 121
+     "tris": 132
     },
     {
      "bbox_local_m": [
@@ -4285,8 +4237,8 @@
      ],
      "id": "19_29",
      "mix": "broadleaf",
-     "trees": 31,
-     "tris": 85
+     "trees": 28,
+     "tris": 82
     },
     {
      "bbox_local_m": [
@@ -4297,8 +4249,8 @@
      ],
      "id": "19_30",
      "mix": "broadleaf",
-     "trees": 119,
-     "tris": 144
+     "trees": 117,
+     "tris": 154
     },
     {
      "bbox_local_m": [
@@ -4310,19 +4262,19 @@
      "id": "19_31",
      "mix": "broadleaf",
      "trees": 43,
-     "tris": 104
+     "tris": 88
     }
    ],
    "id": "4_7",
    "instances": {
-    "count": 837,
+    "count": 826,
     "file": "Data/raw/derived/dk65-01/world/instances_4_7.json",
-    "sha256": "d35e92a52cfb483cbff59b83112fceca5f9eea8f533ba334a82806ea3ab0ff13"
+    "sha256": "94710af2a34821f136b1e490db95bcca8a5e65e4772b71ad497f6185355cf3bb"
    },
    "low": {
-    "bytes": 6277400,
+    "bytes": 6283124,
     "file": "Data/raw/derived/dk65-01/world/chunk_4_7.low.glb",
-    "sha256": "3e8580fcda1b3fec512b7b6d5f821760c82ff3faa9ef3aa82cb195accd7bd1b9"
+    "sha256": "9a585ea13652884542f747d52c84438c07b22e3baefc3e9281827cf86acb2194"
    },
    "materials": [
     "brick_red",
@@ -4362,11 +4314,11 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "230742b573434cde6ff14f9708b0328851a750fb73bda69370938798af3c4efb",
+   "sha256": "7d0a506866efd6e87faed11c308ba59cef2d2ad05790431be8401389e059c9f4",
    "triangles": {
     "buildings": 5435,
     "buildings_lod1": 993,
-    "forest_hlod": 874,
+    "forest_hlod": 1002,
     "markings": 32,
     "plot_ground": 4409,
     "plots": 6268,
@@ -4389,7 +4341,7 @@
     "z_max_evrf2007": 143.37,
     "z_min_evrf2007": 121.05
    },
-   "bytes": 10744548,
+   "bytes": 10744544,
    "file": "Data/raw/derived/dk65-01/world/chunk_5_0.glb",
    "forest_cells": [],
    "id": "5_0",
@@ -4401,7 +4353,7 @@
    "low": {
     "bytes": 6049576,
     "file": "Data/raw/derived/dk65-01/world/chunk_5_0.low.glb",
-    "sha256": "6be124f32798c13cb4ee67b2829d36221541d7d106b2fa4ee68d5594e75e7064"
+    "sha256": "4ae41e9757015f02a4e56fd4379a6ab812a26dc672bb029c30e9b34e0251dd04"
    },
    "materials": [
     "chimney_brick",
@@ -4445,7 +4397,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "8d3c7b190f9259701aee95485df1c930b475b590eba917f28c9a0a8eca54b1d8",
+   "sha256": "b4c4035348e59f8e61b1c503dd94df288ebf71f975a81a5a82a2a7b30c91fbfd",
    "triangles": {
     "banks": 780,
     "banks_low": 0,
@@ -4515,7 +4467,7 @@
     "window_sill",
     "yard_paving"
    ],
-   "sha256": "dd1a6ebc05d2701868f33ff162f4155bf69865ab6d534b9f5e17409ea7fc7334",
+   "sha256": "2ea09736adc7b2e75068bbfa95b4dfc4f9237d75e8c941ba8e9e414e4ddaeddb",
    "triangles": {
     "buildings": 511,
     "buildings_lod1": 91,
@@ -4552,7 +4504,7 @@
    "low": {
     "bytes": 937396,
     "file": "Data/raw/derived/dk65-01/world/chunk_5_2.low.glb",
-    "sha256": "01896c17ddb3a3f6642bf545a3b24d20145b4b2106f9f8ecee9b07782a9083dc"
+    "sha256": "089a4b3cdad4d5a08db5698d807ab784050b2f918bb4df0ca383190d3d6d35c7"
    },
    "materials": [
     "collision_asphalt",
@@ -4566,7 +4518,7 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "1a8261d1174c53e910fc7e3f0e602d001eda0f8cdb177330756397a38ed50055",
+   "sha256": "7100305828a3c981f6cd8d23409a63c9edcaeacdb973703f179e0b1827b8b1c4",
    "triangles": {
     "markings": 228,
     "road": 4431,
@@ -4599,7 +4551,7 @@
    "low": {
     "bytes": 934448,
     "file": "Data/raw/derived/dk65-01/world/chunk_5_3.low.glb",
-    "sha256": "0097f2c2f482bb0d103c0c7b081671f863c23dda7dde336669da740d31268db5"
+    "sha256": "6f29442c654a0edbb169eade4b7ccd176430122650a56ea0b62c751be288953e"
    },
    "materials": [
     "collision_asphalt",
@@ -4612,7 +4564,7 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "2b65b99569af034394ed8dca2446567ba0c1175e00dd33858ce41781be197b14",
+   "sha256": "d32f05202b4eb5066a12a08a9191fef9cbeed34587b3d906f9bd41553a43fdc3",
    "triangles": {
     "markings": 937,
     "road": 3057,
@@ -4710,7 +4662,7 @@
     "z_max_evrf2007": 136.38,
     "z_min_evrf2007": 127.64
    },
-   "bytes": 4755948,
+   "bytes": 4757236,
    "file": "Data/raw/derived/dk65-01/world/chunk_5_6.glb",
    "forest_cells": [
     {
@@ -4722,27 +4674,27 @@
      ],
      "id": "23_25",
      "mix": "mixed",
-     "trees": 111,
-     "tris": 162
+     "trees": 110,
+     "tris": 182
     }
    ],
    "id": "5_6",
    "instances": {
-    "count": 151,
+    "count": 150,
     "file": "Data/raw/derived/dk65-01/world/instances_5_6.json",
-    "sha256": "4f2f017ebb98a1db70ccbf242be2d20f6c9b9079b08062657b38c17145170622"
+    "sha256": "ac55eff312c18179c1b003efe956de3812c3f848507435e94cfea69abc288b26"
    },
    "low": {
-    "bytes": 737176,
+    "bytes": 738160,
     "file": "Data/raw/derived/dk65-01/world/chunk_5_6.low.glb",
-    "sha256": "607cc018b1878734ab398f70369dc7e6c5fb989bc7a25c5306ed12ed7f68712c"
+    "sha256": "703e80db4245181932ca57525d93eb8cca8e384169c6bb38d0b85d91d4c64d15"
    },
    "materials": [
     "terrain_grass"
    ],
-   "sha256": "1737f89eb8802346416b90efc85bd863018fc412318e6438c7693536a4619406",
+   "sha256": "a4a13f04adebae846197834bd724b2833bd19f78365e8bffdf1c44c435e9de22",
    "triangles": {
-    "forest_hlod": 162,
+    "forest_hlod": 182,
     "terrain_lod0": 135168,
     "terrain_lod1": 33792,
     "terrain_lod2": 8704,
@@ -4758,7 +4710,7 @@
     "z_max_evrf2007": 150.09,
     "z_min_evrf2007": 129.03
    },
-   "bytes": 11527564,
+   "bytes": 11532016,
    "file": "Data/raw/derived/dk65-01/world/chunk_5_7.glb",
    "forest_cells": [
     {
@@ -4770,8 +4722,8 @@
      ],
      "id": "20_30",
      "mix": "broadleaf",
-     "trees": 115,
-     "tris": 174
+     "trees": 116,
+     "tris": 179
     },
     {
      "bbox_local_m": [
@@ -4783,7 +4735,7 @@
      "id": "20_31",
      "mix": "broadleaf",
      "trees": 193,
-     "tris": 168
+     "tris": 220
     },
     {
      "bbox_local_m": [
@@ -4794,8 +4746,8 @@
      ],
      "id": "21_31",
      "mix": "conifer",
-     "trees": 144,
-     "tris": 162
+     "trees": 140,
+     "tris": 183
     },
     {
      "bbox_local_m": [
@@ -4806,20 +4758,20 @@
      ],
      "id": "22_31",
      "mix": "conifer",
-     "trees": 62,
-     "tris": 123
+     "trees": 61,
+     "tris": 120
     }
    ],
    "id": "5_7",
    "instances": {
-    "count": 1356,
+    "count": 1349,
     "file": "Data/raw/derived/dk65-01/world/instances_5_7.json",
-    "sha256": "dacc68cb42b8a042734bb60abd033008d116bd6b9eaa4470d2a4b636d53d7a83"
+    "sha256": "a6f8e55e422dc8a004ce0055913fae33ca0770d5b282f2a1caa2dfbba4865d28"
    },
    "low": {
-    "bytes": 6349224,
+    "bytes": 6352656,
     "file": "Data/raw/derived/dk65-01/world/chunk_5_7.low.glb",
-    "sha256": "2c7eeea3a8b4a483ec1864e71e5c7e818b9db659184150330cbf2bebdaa14ca3"
+    "sha256": "197dd304e737a4d4c01480fa99d243721db83df9f41fa00d63672a4157fb7824"
    },
    "materials": [
     "brick_red",
@@ -4884,11 +4836,11 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "c6a1533bb056d4b65728c6a9adacc7231cf5e6b89f04bdcbad89701fa8f40160",
+   "sha256": "2a794c69d2331d34bae3c3b832f3b7cba6922c46218f43ec6d246cc651086e94",
    "triangles": {
     "buildings": 10434,
     "buildings_lod1": 1984,
-    "forest_hlod": 627,
+    "forest_hlod": 702,
     "markings": 636,
     "paved": 849,
     "plot_ground": 3007,
@@ -4919,12 +4871,12 @@
    "instances": {
     "count": 154,
     "file": "Data/raw/derived/dk65-01/world/instances_6_0.json",
-    "sha256": "45d58d90c2c38cc2040accbfa16e547e91dc776ce5064120bd4c6d27a606abf6"
+    "sha256": "f22266672cfa2330d644b4dba67a4bb289992041aeb990af7fadc29ba5c687d9"
    },
    "low": {
-    "bytes": 6676056,
+    "bytes": 6676052,
     "file": "Data/raw/derived/dk65-01/world/chunk_6_0.low.glb",
-    "sha256": "9aa0af9993f25055800b396a53a4299a63a9e19f99df1ef95ef3c41f659be029"
+    "sha256": "314f63f700b35b319d7311c35e04a9fa8270392d3e34c0196a97c57367277072"
    },
    "materials": [
     "brick_red",
@@ -4977,7 +4929,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "40a1ba35700609c8aab268164513af726b43e6a4287feb075ae9fd14b80f7112",
+   "sha256": "cb25d731244149eea73f296ac354d5ae5157acfdfc212e100e03184511e15228",
    "triangles": {
     "banks": 2790,
     "banks_low": 0,
@@ -5059,7 +5011,7 @@
     "window_sill",
     "yard_paving"
    ],
-   "sha256": "383f356bb9bbe546e6f6c207828f70ec9a0a65a2e632f26b5e9386827e2411f1",
+   "sha256": "e30b4c6a312e8a0a34cf1ffaf3010ec67ea5afcb82263f3721c566e6e16d99fb",
    "triangles": {
     "buildings": 1953,
     "buildings_lod1": 366,
@@ -5121,7 +5073,7 @@
     "z_max_evrf2007": 175.41,
     "z_min_evrf2007": 134.21
    },
-   "bytes": 10025272,
+   "bytes": 10028012,
    "file": "Data/raw/derived/dk65-01/world/chunk_6_3.glb",
    "forest_cells": [
     {
@@ -5145,20 +5097,20 @@
      ],
      "id": "27_15",
      "mix": "broadleaf",
-     "trees": 200,
-     "tris": 191
+     "trees": 199,
+     "tris": 238
     }
    ],
    "id": "6_3",
    "instances": {
-    "count": 384,
+    "count": 383,
     "file": "Data/raw/derived/dk65-01/world/instances_6_3.json",
-    "sha256": "c7195f87f6c84b5b5e32d5c370e502ea6d45180fb540f49f598e479898b77b81"
+    "sha256": "bc9b395bf8c623980b6d6ee2aefc1f81209a562e8802789e618ee3a4d73814ef"
    },
    "low": {
-    "bytes": 5806360,
+    "bytes": 5808468,
     "file": "Data/raw/derived/dk65-01/world/chunk_6_3.low.glb",
-    "sha256": "df72bb2279d55d75b0b7aeb27fed190f7498088081a37c6bda8ded649bd0a7b3"
+    "sha256": "4778cda639c2039ad96c90af9d79e085d8946fac81dae3cfd18ec21da53cf479"
    },
    "materials": [
     "chimney_brick",
@@ -5193,11 +5145,11 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "9fb4302047c1d0f880623712cc015863518278c4f28c06721e6a8ced3f8d9af8",
+   "sha256": "88c2323a879f505af7de625de86d854bae691bf68adde244b1b4d4bcf5b48ad5",
    "triangles": {
     "buildings": 1247,
     "buildings_lod1": 248,
-    "forest_hlod": 297,
+    "forest_hlod": 344,
     "markings": 459,
     "plot_ground": 746,
     "plots": 782,
@@ -5277,7 +5229,7 @@
    "low": {
     "bytes": 6289392,
     "file": "Data/raw/derived/dk65-01/world/chunk_6_5.low.glb",
-    "sha256": "dfdff634e8271bb6e1e65ca57253713bfcc537c75c2441fc9e0d4c5faf1fcdb0"
+    "sha256": "8cffed569cf58a4b7e4c38323f643aeed75186b4170534ef3c68cd9155a8f34c"
    },
    "materials": [
     "brick_red",
@@ -5329,7 +5281,7 @@
     "wood_trim_white",
     "yard_paving"
    ],
-   "sha256": "1624c07ca1f036ad715c0eab7765eb6b0ef6dfc9b88a74eb6e8de47541410093",
+   "sha256": "404ccf505c79dd2ca9d65d765610df0fea9fff9244b5003c719fc3ff6ebee026",
    "triangles": {
     "buildings": 16546,
     "buildings_lod1": 2647,
@@ -5355,7 +5307,7 @@
     "z_max_evrf2007": 153.45,
     "z_min_evrf2007": 129.62
    },
-   "bytes": 16643492,
+   "bytes": 16644916,
    "file": "Data/raw/derived/dk65-01/world/chunk_6_6.glb",
    "forest_cells": [
     {
@@ -5368,7 +5320,7 @@
      "id": "24_24",
      "mix": "mixed",
      "trees": 17,
-     "tris": 73
+     "tris": 74
     },
     {
      "bbox_local_m": [
@@ -5379,8 +5331,8 @@
      ],
      "id": "24_25",
      "mix": "mixed",
-     "trees": 145,
-     "tris": 253
+     "trees": 143,
+     "tris": 274
     },
     {
      "bbox_local_m": [
@@ -5392,19 +5344,19 @@
      "id": "25_25",
      "mix": "mixed",
      "trees": 73,
-     "tris": 143
+     "tris": 146
     }
    ],
    "id": "6_6",
    "instances": {
-    "count": 363,
+    "count": 361,
     "file": "Data/raw/derived/dk65-01/world/instances_6_6.json",
-    "sha256": "5d42f1b14b507dc1fcbff0b0995719ffa54fd4febc678839c058e4477e03f662"
+    "sha256": "66ff8aeeb959dff900d7759e49855f31a9d35302e5ca3bbd15c969465bd8efba"
    },
    "low": {
-    "bytes": 7410888,
+    "bytes": 7411760,
     "file": "Data/raw/derived/dk65-01/world/chunk_6_6.low.glb",
-    "sha256": "910881de21ccb86c252a61d07fb53ed9f5681c4b58a5e5277002cdb38dca2170"
+    "sha256": "671d07dedca2cb9b54334ff38b36da8c316c3bea66da2d66f386487beb5c871e"
    },
    "materials": [
     "brick_red",
@@ -5467,11 +5419,11 @@
     "wood_trim_white",
     "yard_paving"
    ],
-   "sha256": "a937429b8f815ea28c19905245507d371e134d4a9c71a22dafe5dc547ebb75a0",
+   "sha256": "1d4f07056027271420657ff571817cb296b835e772cb924363fd1ad5e763d039",
    "triangles": {
     "buildings": 58283,
     "buildings_lod1": 9163,
-    "forest_hlod": 469,
+    "forest_hlod": 494,
     "markings": 367,
     "plot_ground": 6444,
     "plots": 10684,
@@ -5494,7 +5446,7 @@
     "z_max_evrf2007": 155.87,
     "z_min_evrf2007": 131.46
    },
-   "bytes": 12275020,
+   "bytes": 12280324,
    "file": "Data/raw/derived/dk65-01/world/chunk_6_7.glb",
    "forest_cells": [
     {
@@ -5506,8 +5458,8 @@
      ],
      "id": "24_30",
      "mix": "conifer",
-     "trees": 32,
-     "tris": 63
+     "trees": 30,
+     "tris": 67
     },
     {
      "bbox_local_m": [
@@ -5519,7 +5471,7 @@
      "id": "24_31",
      "mix": "conifer",
      "trees": 54,
-     "tris": 104
+     "tris": 108
     },
     {
      "bbox_local_m": [
@@ -5530,8 +5482,8 @@
      ],
      "id": "25_30",
      "mix": "conifer",
-     "trees": 78,
-     "tris": 156
+     "trees": 75,
+     "tris": 161
     },
     {
      "bbox_local_m": [
@@ -5543,7 +5495,7 @@
      "id": "25_31",
      "mix": "conifer",
      "trees": 272,
-     "tris": 225
+     "tris": 290
     },
     {
      "bbox_local_m": [
@@ -5554,8 +5506,8 @@
      ],
      "id": "26_31",
      "mix": "conifer",
-     "trees": 123,
-     "tris": 265
+     "trees": 116,
+     "tris": 257
     },
     {
      "bbox_local_m": [
@@ -5567,19 +5519,19 @@
      "id": "27_31",
      "mix": "conifer",
      "trees": 154,
-     "tris": 195
+     "tris": 200
     }
    ],
    "id": "6_7",
    "instances": {
-    "count": 2561,
+    "count": 2545,
     "file": "Data/raw/derived/dk65-01/world/instances_6_7.json",
-    "sha256": "24e555f55845b9e532fe454496a3a4fd97e2b60a9e3c66d0f9f0a11feb03db07"
+    "sha256": "d30e0def945322f2f4563c5e7f7a80d02fbf47766f1cacbde5a67b7a66d1a560"
    },
    "low": {
-    "bytes": 6646376,
+    "bytes": 6650440,
     "file": "Data/raw/derived/dk65-01/world/chunk_6_7.low.glb",
-    "sha256": "030dbea0f768b5f7c8df7318a9a2fbd45d01c204bc87554712753d807f64853f"
+    "sha256": "d4efb1b991b362faa971577a8e4b3332c1af947b18af334d8e42d1e7d9cb7120"
    },
    "materials": [
     "brick_red",
@@ -5628,11 +5580,11 @@
     "wood_trim_white",
     "yard_paving"
    ],
-   "sha256": "255ddaa7e416c6cf56b37bce059757a40d28fc21b8bfde5038584410dd09111e",
+   "sha256": "927f6231f4a059b6117f6b3dfae266c71164f4bacb61a85f17eabb3624cccaf3",
    "triangles": {
     "buildings": 14127,
     "buildings_lod1": 2587,
-    "forest_hlod": 1008,
+    "forest_hlod": 1083,
     "markings": 261,
     "plot_ground": 5914,
     "plots": 10062,
@@ -5655,19 +5607,19 @@
     "z_max_evrf2007": 139.16,
     "z_min_evrf2007": 112.8
    },
-   "bytes": 14727540,
+   "bytes": 14727536,
    "file": "Data/raw/derived/dk65-01/world/chunk_7_0.glb",
    "forest_cells": [],
    "id": "7_0",
    "instances": {
     "count": 145,
     "file": "Data/raw/derived/dk65-01/world/instances_7_0.json",
-    "sha256": "45e51071ecffc306fec2d5bd969d039de383a8a1601a328f707020d9a519f01d"
+    "sha256": "df86e1a76c5934bbd87682e82671d8f5d546c7a3655ebe7cdb617b7b253bd6b1"
    },
    "low": {
     "bytes": 7488184,
     "file": "Data/raw/derived/dk65-01/world/chunk_7_0.low.glb",
-    "sha256": "990bf3345dc953cd0d2b9e5c990b999fcaee3fb76281bfcfaea0c2c6024928b6"
+    "sha256": "fe32a0b2f2be9c024e524db448150dfcfa061f2cfd5e13ddb01cc5b3b96d7120"
    },
    "materials": [
     "brick_red",
@@ -5716,7 +5668,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "8c6ee5f1cfe7a6e8d28806b07ed919c132bd436353efe03b091e2d1d396f166a",
+   "sha256": "bd9d77b31fdbe2f17002e6a4bdd85e1da364d5354e9ce8fd41033d9b517bb9f3",
    "triangles": {
     "banks": 3318,
     "banks_low": 0,
@@ -5787,7 +5739,7 @@
     "terrain_grass",
     "window_sill"
    ],
-   "sha256": "e520201c54cf51fe46645b4c48e6c58a6b0482cc1f8e2b6a33be941934ea1f61",
+   "sha256": "0bbf7d4efca811da2d7e405a66ab525575c253b4c513c9f65b3e4beb363b6d5e",
    "triangles": {
     "buildings": 1338,
     "buildings_lod1": 209,
@@ -5827,7 +5779,7 @@
    "low": {
     "bytes": 5931660,
     "file": "Data/raw/derived/dk65-01/world/chunk_7_2.low.glb",
-    "sha256": "e59934fa61a5aa29082b095cdd1abda4ed465e266e7bb1d46779fa05a1eb8082"
+    "sha256": "61c70eed25776b185ed68bf83b70bd239ab0ee671b377ae16a61e13f20e35a46"
    },
    "materials": [
     "chimney_brick",
@@ -5870,7 +5822,7 @@
     "wood_trim_white",
     "yard_paving"
    ],
-   "sha256": "92f5d99498869266bd4f16fb19ee27055ba19696b41d5ceeac37df0691faf7e1",
+   "sha256": "aa6fea2ae3257988bf1721f27354b990b7b09cd23a0ff056d485b2d1e03588f6",
    "triangles": {
     "buildings": 5276,
     "buildings_lod1": 794,
@@ -5895,7 +5847,7 @@
     "z_max_evrf2007": 175.09,
     "z_min_evrf2007": 132.64
    },
-   "bytes": 11942996,
+   "bytes": 11943532,
    "file": "Data/raw/derived/dk65-01/world/chunk_7_3.glb",
    "forest_cells": [
     {
@@ -5908,7 +5860,7 @@
      "id": "28_15",
      "mix": "broadleaf",
      "trees": 39,
-     "tris": 94
+     "tris": 93
     },
     {
      "bbox_local_m": [
@@ -5919,8 +5871,8 @@
      ],
      "id": "31_13",
      "mix": "broadleaf",
-     "trees": 49,
-     "tris": 82
+     "trees": 47,
+     "tris": 78
     },
     {
      "bbox_local_m": [
@@ -5932,19 +5884,19 @@
      "id": "31_14",
      "mix": "broadleaf",
      "trees": 65,
-     "tris": 150
+     "tris": 149
     }
    ],
    "id": "7_3",
    "instances": {
-    "count": 303,
+    "count": 301,
     "file": "Data/raw/derived/dk65-01/world/instances_7_3.json",
-    "sha256": "dce54182ae83d91f9164308bce1a60a50867d62c2f2d97676d01bd6e937d3daa"
+    "sha256": "e619a95decbbe2a89cb6847b7ae1f1d5ef5babb29d42dc7d73618905757b6d5e"
    },
    "low": {
-    "bytes": 6630072,
+    "bytes": 6630444,
     "file": "Data/raw/derived/dk65-01/world/chunk_7_3.low.glb",
-    "sha256": "d46aa6afdcbbfb6dfdcb4963fd195db8f3a8018008ee3ad918cf1356de3ec4ae"
+    "sha256": "abf125b853089c39c25c85a09cc9771b5537706eead695771984fefde7efa409"
    },
    "materials": [
     "brick_red",
@@ -5986,11 +5938,11 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "ededd77730340ffb9db3bdb059867f0e9274f6500cc8e7217a29c03e1ec2659b",
+   "sha256": "b25a6726929c48093a2246452c6f9d216856265b95bfab0af5eb9d9ce8bb0b40",
    "triangles": {
     "buildings": 10457,
     "buildings_lod1": 1904,
-    "forest_hlod": 326,
+    "forest_hlod": 320,
     "markings": 674,
     "plot_ground": 4527,
     "plots": 7162,
@@ -6013,7 +5965,7 @@
     "z_max_evrf2007": 156.38,
     "z_min_evrf2007": 135.33
    },
-   "bytes": 10139916,
+   "bytes": 10139912,
    "file": "Data/raw/derived/dk65-01/world/chunk_7_4.glb",
    "forest_cells": [],
    "id": "7_4",
@@ -6023,9 +5975,9 @@
     "sha256": "dc8a8d7c5820402b1ba1d345c94af4049227eef958249719da4d5b30003852d5"
    },
    "low": {
-    "bytes": 5846528,
+    "bytes": 5846524,
     "file": "Data/raw/derived/dk65-01/world/chunk_7_4.low.glb",
-    "sha256": "91004ec4db32f6782e6d12d5fb417fbf27471d0270f0d0d58fa0109fc6798d1d"
+    "sha256": "e8d3e3227e9fd6ae0203b93952883ce7eed0b69cd10275a2eaf57f7fd5740726"
    },
    "materials": [
     "chimney_brick",
@@ -6058,7 +6010,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "df6f43649f5dc970d47e54864a77e06106322ee0addf98bd10febc09fffa65cd",
+   "sha256": "8e7bbd0b88e54c751b4f41ffbb1aefe1c4aa2c41ecdecdb498bad205ad241b8c",
    "triangles": {
     "buildings": 1527,
     "buildings_lod1": 299,
@@ -6137,7 +6089,7 @@
     "wire",
     "yard_paving"
    ],
-   "sha256": "c5f92dcb38bbc02f75efdde5fadbca655f12a6277eda26488c38ed6f72eb329c",
+   "sha256": "059e2e7ffbbde0fff8f0083845ebd9ed8a665b68807cf2490bfb1bba065b15b5",
    "triangles": {
     "buildings": 5007,
     "buildings_lod1": 819,
@@ -6163,7 +6115,7 @@
     "z_max_evrf2007": 148.55,
     "z_min_evrf2007": 130.93
    },
-   "bytes": 9749528,
+   "bytes": 9749524,
    "file": "Data/raw/derived/dk65-01/world/chunk_7_6.glb",
    "forest_cells": [],
    "id": "7_6",
@@ -6205,7 +6157,7 @@
     "window_sill",
     "wire"
    ],
-   "sha256": "3206dbb7ee85d59cad029ff7bf8193023bb178e4841676756891b4bc7f7d5133",
+   "sha256": "10fec3b835367de624913cd2f095d1fdf40f6569ea51c3faba718bbcfed89369",
    "triangles": {
     "buildings": 1919,
     "buildings_lod1": 291,
@@ -6231,7 +6183,7 @@
     "z_max_evrf2007": 159.29,
     "z_min_evrf2007": 131.52
    },
-   "bytes": 12068636,
+   "bytes": 12068676,
    "file": "Data/raw/derived/dk65-01/world/chunk_7_7.glb",
    "forest_cells": [
     {
@@ -6244,19 +6196,19 @@
      "id": "28_31",
      "mix": "conifer",
      "trees": 47,
-     "tris": 93
+     "tris": 89
     }
    ],
    "id": "7_7",
    "instances": {
     "count": 348,
     "file": "Data/raw/derived/dk65-01/world/instances_7_7.json",
-    "sha256": "6730d8faba6d0276b9f5b4b5fe94a59cb03b79ace19aeecfcb195a0d8c866592"
+    "sha256": "9d155ad927d1e27e7f0e97f672afa730783de65b0796d9e71dd3ec1187fa041f"
    },
    "low": {
-    "bytes": 6536464,
+    "bytes": 6536484,
     "file": "Data/raw/derived/dk65-01/world/chunk_7_7.low.glb",
-    "sha256": "3abcb34d10e72f6f74432bdf49b00e350775476f5ec89428f6ad75da35576942"
+    "sha256": "e910e3d1f85a1e77222be4fc87cd112b66e9c57ed6fbb1dd14f20e7877cd0bec"
    },
    "materials": [
     "brick_red",
@@ -6302,11 +6254,11 @@
     "wood_trim_white",
     "yard_paving"
    ],
-   "sha256": "50cdefb6c4649d807f4b9f395b6ba36cb228ad67f8e99a74b47008dafdfbddd7",
+   "sha256": "4d8a47a2ff67acd622d78cd8f684e619d99aa71e636c563fe843fafdcb17ea2e",
    "triangles": {
     "buildings": 12865,
     "buildings_lod1": 1976,
-    "forest_hlod": 93,
+    "forest_hlod": 89,
     "markings": 32,
     "plot_ground": 6095,
     "plots": 11163,
@@ -8099,9 +8051,9 @@
   },
   "facade_atlas": {
    "color": [
-    0.243,
+    0.245,
     0.237,
-    0.229
+    0.23
    ],
    "rough": 0.5,
    "set_tile": true,
@@ -9022,14 +8974,33 @@
    "surface": "paint"
   },
   "monument_bronze": {
+   "bronze_patina": {
+    "ao_strength": 0.46,
+    "patina_color": [
+     0.065,
+     0.125,
+     0.09
+    ],
+    "patina_smooth": 0.18,
+    "patina_strength": 0.85,
+    "rubbed_color": [
+     0.44,
+     0.34,
+     0.205
+    ],
+    "rubbed_metal": 0.85,
+    "rubbed_smooth": 0.56,
+    "rubbed_strength": 0.78
+   },
    "color": [
-    0.16,
-    0.145,
-    0.125
+    0.26,
+    0.21,
+    0.14
    ],
-   "metal": 0.45,
+   "metal": 0.72,
    "rough": 0.48,
-   "set_metal": 0.45,
+   "set_metal": 0.72,
+   "set_smooth": 0.88,
    "set_tile": true,
    "sky_occ": [
     0.5,
@@ -9038,14 +9009,33 @@
    "texture_set": "bronze_cast_tint"
   },
   "monument_bronze_patina": {
+   "bronze_patina": {
+    "ao_strength": 0.5,
+    "patina_color": [
+     0.06,
+     0.132,
+     0.092
+    ],
+    "patina_smooth": 0.16,
+    "patina_strength": 0.9,
+    "rubbed_color": [
+     0.36,
+     0.285,
+     0.18
+    ],
+    "rubbed_metal": 0.75,
+    "rubbed_smooth": 0.48,
+    "rubbed_strength": 0.58
+   },
    "color": [
-    0.105,
-    0.12,
-    0.1
+    0.195,
+    0.172,
+    0.122
    ],
-   "metal": 0.15,
-   "rough": 0.78,
-   "set_metal": 0.15,
+   "metal": 0.46,
+   "rough": 0.65,
+   "set_metal": 0.46,
+   "set_smooth": 0.7,
    "set_tile": true,
    "sky_occ": [
     0.5,
@@ -9054,14 +9044,33 @@
    "texture_set": "bronze_cast_tint"
   },
   "monument_bronze_rubbed": {
+   "bronze_patina": {
+    "ao_strength": 0.44,
+    "patina_color": [
+     0.065,
+     0.125,
+     0.09
+    ],
+    "patina_smooth": 0.2,
+    "patina_strength": 0.68,
+    "rubbed_color": [
+     0.42,
+     0.325,
+     0.2
+    ],
+    "rubbed_metal": 0.86,
+    "rubbed_smooth": 0.56,
+    "rubbed_strength": 0.75
+   },
    "color": [
-    0.25,
-    0.195,
-    0.125
+    0.28,
+    0.225,
+    0.15
    ],
-   "metal": 0.55,
+   "metal": 0.78,
    "rough": 0.4,
-   "set_metal": 0.55,
+   "set_metal": 0.78,
+   "set_smooth": 0.88,
    "set_tile": true,
    "sky_occ": [
     0.5,
@@ -10174,6 +10183,23 @@
     0.0
    ]
   },
+  "retaining_wall": {
+   "color": [
+    0.42,
+    0.415,
+    0.395
+   ],
+   "rough": 0.88,
+   "runoff": true,
+   "runoff_strength": 1.3,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "splash_h": 0.55,
+   "texture_set": "retaining_wall_cast"
+  },
   "reveal_hall": {
    "color": [
     0.3,
@@ -10635,6 +10661,20 @@
    "rough": 0.85,
    "surface": "paving_stones",
    "texture_set": "sidewalk_slab_35"
+  },
+  "sign_post_galv": {
+   "color": [
+    0.36,
+    0.37,
+    0.38
+   ],
+   "metal": 0.42,
+   "rough": 0.62,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture": "furniture_galv"
   },
   "signal_backplate": {
    "color": [
