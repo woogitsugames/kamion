@@ -125,7 +125,7 @@ Rozwiązanie czterech uwag P2 z rundy 4 bez dodawania trójkątów (budżet `str
 - Visual-QA przed|po (High 1920x1080, arkusze `artifacts/neon-patches-p2-s24/sheets/*.jpg`): ocena lidera-agenta, NIE visual-critic:
   1. Zalewka: szerokość wyrównana i bez przerw tylko nieznacznie widoczna w skali arkusza (zoom `zoom_C_trench0_seam.jpg`: krawędź jednolitej grubości, brak rozjazdu na skos) — poprawa subtelna.
   2. Znakowanie vs łata: potwierdzone — na `C q_trench0_close` strzałka P-8 jest teraz przerwana przez łatę wykopu (przed: namalowana na łacie); na `C q_milled0_close` linia nad łatą frezowaną jaśniejsza (odnowiona farba).
-  3. Koleiny w dali: luminancja (`med − p15`, overcast, `make_sheets.py`) `tykocin q_far` blisko 10,6 / dal 18,0 vs wcześniej 11,3 / 22,4 sRGB (clear); w clear kontrast dali nadal zauważalny, ale słabszy. Pomiar overcast PRZED niemożliwy (patrz niżej).
+  3. Koleiny w dali: pomiar `med − p15` (`make_sheets.py`, `tykocin q_far`, clear): przed blisko 11,3 / dal 22,4 sRGB, po blisko 11,2 / dal 22,6 — w clear BEZ zmiany mierzalnej; w overcast po: blisko 10,6 / dal 18,0 (przed niemierzalne, patrz niżej). Poprawka UNVERIFIED jako skuteczna w clear — do oceny visual-critic/lidera.
   4. Piasek przy krawędzi: pas szerszy, miękki (`tykocin p_trench1_close`), nie odtwarza jeszcze pełnej szerokości `cs11749508.jpg` — do oceny visual-critic.
 - Ograniczenie: render „przed” w overcast (shader z `71336ba56` podstawiony tymczasowo) wyszedł magenta (błąd kompilacji/niezgodność z nowym UV1) — porównanie przed|po tylko w clear (przed = runda 4 `after8`); overcast tylko „po”.
 - Nieweryfikowane: ocena `visual-critic` (nie uruchomiona w tym przebiegu), build gracza Windows.
