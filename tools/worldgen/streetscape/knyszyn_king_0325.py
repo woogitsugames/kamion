@@ -175,12 +175,12 @@ Z_BEARD_TIP = 2.578
 HEAD_PROFILE = ((2.560, .052, .052, .058), (2.620, .058, .060, .064), (2.660, .074, .080, .080),
                 (2.700, .085, .092, .094), (2.740, .091, .098, .102), (2.780, .095, .100, .107),
                 (2.820, .096, .099, .111), (2.860, .097, .101, .113), (2.900, .095, .097, .112),
-                (2.935, .088, .088, .105), (2.962, .064, .066, .086), (2.982, .034, .034, .046), (2.990, .008, .008, .010))
+                (2.935, .088, .088, .105), (2.962, .064, .066, .086), (2.976, .034, .034, .046), (2.984, .008, .008, .010))
 # columns (degrees off the front) and rows: dense over the face, sparse behind the ears and under the crown
 HEAD_D0 = (0, 3, 6, 9, 13, 17, 22, 28, 35, 43, 52, 62, 74, 88, 108, 145)
 HEAD_Z0 = (2.579, 2.598, 2.615, 2.636, 2.652, 2.664, 2.675, 2.686, 2.696, 2.704, 2.710, 2.716, 2.722, 2.729,
            2.737, 2.746, 2.755, 2.762, 2.769, 2.777, 2.786, 2.795, 2.804, 2.812, 2.818, 2.824, 2.830, 2.836, 2.842,
-           2.848, 2.854, 2.861, 2.870, 2.884, 2.900, 2.922, 2.950, 2.975, 2.989)
+           2.848, 2.854, 2.861, 2.870, 2.884, 2.900, 2.922, 2.950, 2.970, 2.983)
 HEAD_D1 = (0, 25, 55, 90, 135)
 HEAD_Z1 = (2.570, 2.640, 2.700, 2.760, 2.830, 2.900, 2.970)
 ROLL_DEG = 1.6              # the head leans a little to its left (a cast, not a mirror)
@@ -405,11 +405,11 @@ def _fleuron(sc, th, tall, low):
     a = math.radians(th)
     out = np.array([math.cos(a), math.sin(a), 0.0])
     t = np.array([-math.sin(a), math.cos(a), 0.0])
-    h = (H_TOP_DRAWN - H_BAND1 + 0.004) if tall else 0.058
+    h = (H_TOP_DRAWN - H_BAND1 + 0.004 - 0.020) if tall else 0.058      # + the ball: 2 x 9 mm
     w = 0.050 if tall else 0.014
     shape = FLEURON_TALL if tall else FLEURON_LOW
     if low:
-        sc.plate(RUBBED, [base - t * w, base + t * w, base + out * 0.010 + [0, 0, h]])
+        sc.plate(RUBBED, [base - t * w, base + t * w, base + out * 0.010 + [0, 0, h + (0.018 if tall else 0.0)]])      # no ball on LOD1
         return
     half = [(u, v) for u, v in shape[1:]]
     outline = [(u, v) for u, v in half] + [(0.0, 1.0)] + [(-u, v) for u, v in reversed(half)]
