@@ -255,6 +255,25 @@ namespace Game.Tests
         }
 
         [Test]
+        public void Recorder_FillsPausesLongerThanGapSeconds_WithSilence()
+        {
+            GameAudioRecorder.Begin(Path.Combine(m_Dir, "e.wav"), 48000, 2, WavSampleFormat.Float32, 0.0);
+            long f = System.Diagnostics.Stopwatch.Frequency, t0 = 1_000_000;
+            var block = new float[1024];                                   // 512 frames = 10.67 ms
+            GameAudioRecorder.PushFromBusAt(block, 2, t0);
+            GameAudioRecorder.PushFromBusAt(block, 2, t0 + f * 512 / 48000);
+            GameAudioRecorder.PushFromBusAt(block, 2, t0 + f * 1024 / 48000 + f / 10);   // 100 ms late: jitter/drift, no fill
+            Assert.AreEqual(0, GameAudioRecorder.Gaps);
+            Assert.AreEqual(1536, GameAudioRecorder.FramesPushed);
+            long late = t0 + f * 2;                                         // next block 2 s after the first: scene change
+            GameAudioRecorder.PushFromBusAt(block, 2, late);
+            Assert.AreEqual(1, GameAudioRecorder.Gaps);
+            Assert.AreEqual(96000 - 1536, GameAudioRecorder.GapFrames, 1);
+            Assert.AreEqual(96000 + 512, GameAudioRecorder.FramesPushed, 1);   // sample index = time since the first block
+            Assert.AreEqual(GameAudioRecorder.FramesPushed * 2, GameAudioRecorder.Ring.Available);
+        }
+
+        [Test]
         public void Recorder_Arguments()
         {
             var args = new[] { "Kamion.exe", "-scene", "x", "-record_audio", "C:/rec/a.wav", "-record_audio_format", "pcm16" };

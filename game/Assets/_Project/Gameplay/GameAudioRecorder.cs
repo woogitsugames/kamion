@@ -28,10 +28,14 @@ namespace Game.Gameplay
         public const string FormatArg = "-record_audio_format";
         /// <summary>Ring capacity in seconds of audio (power of two samples above this).</summary>
         public const float RingSeconds = 20f;
+        /// <summary>A pause longer than this between blocks is filled with silence (WORKING_VALUE; one DSP block is ~10.7 ms).</summary>
+        public const float GapSeconds = 0.25f;
 
         static volatile bool s_On;
         static AudioRingBuffer s_Ring;
-        static int s_Channels;
+        static int s_Channels, s_Rate;
+        static float[] s_Zero;
+        static long s_GapFrames, s_Gaps;
         static long s_Ts0, s_FirstTicks, s_LastTicks, s_LastFramesStart, s_FramesPushed, s_BusTicks, s_ChannelMismatch;
         static DateTime s_Utc0;
         static double s_Rt0;
@@ -116,7 +120,9 @@ namespace Game.Gameplay
             s_On = false;
             s_Channels = Math.Max(1, channels);
             s_Ring = new AudioRingBuffer((int)(RingSeconds * rate * s_Channels));
-            s_FirstTicks = s_LastTicks = s_LastFramesStart = s_FramesPushed = s_BusTicks = s_ChannelMismatch = 0;
+            s_Rate = Math.Max(1, rate);
+            s_Zero = new float[4096 * s_Channels];
+            s_FirstTicks = s_LastTicks = s_LastFramesStart = s_FramesPushed = s_BusTicks = s_ChannelMismatch = s_GapFrames = s_Gaps = 0;
             s_Ts0 = Stopwatch.GetTimestamp();
             s_Utc0 = DateTime.UtcNow;
             s_Rt0 = realtimeNow;
@@ -129,6 +135,16 @@ namespace Game.Gameplay
         public static AudioRingBuffer Ring => s_Ring;
         public static long FramesPushed => Interlocked.Read(ref s_FramesPushed);
         public static long ChannelMismatchBlocks => Interlocked.Read(ref s_ChannelMismatch);
+        public static long GapFrames => Interlocked.Read(ref s_GapFrames);
+        public static long Gaps => Interlocked.Read(ref s_Gaps);
+
+        /// <summary>Tests: a bus push at an explicit Stopwatch timestamp.</summary>
+        public static void PushFromBusAt(float[] data, int channels, long stopwatchTicks)
+        {
+            if (!s_On) return;
+            Volatile.Write(ref s_BusTicks, stopwatchTicks);
+            Accept(data, channels, stopwatchTicks);
+        }
 
         /// <summary>Audio thread, from <see cref="CabinBusFilter"/> after gain + limiter.</summary>
         public static void PushFromBus(float[] data, int channels)
@@ -156,9 +172,30 @@ namespace Game.Gameplay
                 Interlocked.Increment(ref s_ChannelMismatch);
                 return;
             }
-            Interlocked.CompareExchange(ref s_FirstTicks, now, 0);
-            s_Ring.Write(data, 0, data.Length);
+            long first = Interlocked.CompareExchange(ref s_FirstTicks, now, 0);
             long f = s_FramesPushed;
+            if (first != 0)
+            {
+                // Gap: no block for > GapSeconds (scene change before the tap moved to the new listener, audio thread stall).
+                // Silence for the missing wall time keeps sample index = time since the first block (sync with the video);
+                // smaller differences are clock drift, corrected in the mux (scripts/record-drive.ps1).
+                long expected = (long)((now - first) * (double)s_Rate / Stopwatch.Frequency);
+                long behind = expected - f;
+                if (behind > (long)(GapSeconds * s_Rate))
+                {
+                    long samples = behind * channels;
+                    while (samples > 0)
+                    {
+                        int n = (int)Math.Min(samples, s_Zero.Length);
+                        s_Ring.Write(s_Zero, 0, n);
+                        samples -= n;
+                    }
+                    f += behind;
+                    Interlocked.Add(ref s_GapFrames, behind);
+                    Interlocked.Increment(ref s_Gaps);
+                }
+            }
+            s_Ring.Write(data, 0, data.Length);
             Volatile.Write(ref s_LastFramesStart, f);
             Volatile.Write(ref s_LastTicks, now);
             Volatile.Write(ref s_FramesPushed, f + data.Length / channels);
@@ -171,7 +208,8 @@ namespace Game.Gameplay
         {
             if (!s_On) return;
             float t = Time.realtimeSinceStartup;
-            if (t >= m_NextFollow)
+            // no listener (it died with its scene): look every frame, so the gap (filled with silence) stays short
+            if (t >= m_NextFollow || m_Listener == null)
             {
                 m_NextFollow = t + 0.5f;
                 FollowListener();
@@ -186,9 +224,9 @@ namespace Game.Gameplay
             if (t >= m_NextStatus && m_Writer != null)
             {
                 m_NextStatus = t + 60f;
-                Debug.Log(string.Format(CultureInfo.InvariantCulture, "[RECORD] t={0:F0}s written={1:F1}s dropped={2} zeroFilled={3} mismatch={4}{5}",
+                Debug.Log(string.Format(CultureInfo.InvariantCulture, "[RECORD] t={0:F0}s written={1:F1}s dropped={2} zeroFilled={3} mismatch={4} gaps={6} ({7:F2} s){5}",
                     t, m_Writer.SecondsWritten, s_Ring.DroppedSamples, m_Writer.ZeroFilledSamples, ChannelMismatchBlocks,
-                    m_Writer.LastError != null ? " error=" + m_Writer.LastError : ""));
+                    m_Writer.LastError != null ? " error=" + m_Writer.LastError : "", Gaps, (double)GapFrames / m_Rate));
             }
         }
 
@@ -232,6 +270,8 @@ namespace Game.Gameplay
             sb.Append("  \"droppedSamples\": ").Append(s_Ring.DroppedSamples.ToString(ci)).Append(",\n");
             sb.Append("  \"zeroFilledSamples\": ").Append(w.ZeroFilledSamples.ToString(ci)).Append(",\n");
             sb.Append("  \"channelMismatchBlocks\": ").Append(ChannelMismatchBlocks.ToString(ci)).Append(",\n");
+            sb.Append("  \"gaps\": ").Append(Gaps.ToString(ci)).Append(",\n");
+            sb.Append("  \"gapFrames\": ").Append(GapFrames.ToString(ci)).Append(",\n");
             sb.Append("  \"full\": ").Append(w.Full ? "true" : "false").Append(",\n");
             sb.Append("  \"checkpointUtc\": \"").Append(DateTime.UtcNow.ToString("o", ci)).Append("\",\n");
             sb.Append("  \"closed\": ").Append(closed ? "true" : "false").Append('\n');
@@ -255,9 +295,9 @@ namespace Game.Gameplay
                 m_Writer.Stop();
                 WriteSync(m_Writer, true);
                 Debug.Log(string.Format(CultureInfo.InvariantCulture,
-                    "[RECORD] closed ({0}): '{1}' {2:F1} s, frames={3} dropped={4} zeroFilled={5} mismatch={6} full={7}{8}",
+                    "[RECORD] closed ({0}): '{1}' {2:F1} s, frames={3} dropped={4} zeroFilled={5} mismatch={6} full={7} gaps={9} ({10:F2} s){8}",
                     why, m_Path, m_Writer.SecondsWritten, m_Writer.FramesWritten, s_Ring.DroppedSamples, m_Writer.ZeroFilledSamples,
-                    ChannelMismatchBlocks, m_Writer.Full, m_Writer.LastError != null ? " error=" + m_Writer.LastError : ""));
+                    ChannelMismatchBlocks, m_Writer.Full, m_Writer.LastError != null ? " error=" + m_Writer.LastError : "", Gaps, (double)GapFrames / m_Rate));
             }
             catch (Exception e) { Debug.LogWarning("[RECORD] close failed: " + e.Message); }
         }
