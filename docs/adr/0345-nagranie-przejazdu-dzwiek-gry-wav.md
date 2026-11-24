@@ -69,5 +69,29 @@ Sprawdzone na tej maszynie (24.11, GTX 1070, sterownik 582.78):
   (decyzja właściciela, zmiana systemowa).
 - Nie zmieniono ProjectSettings, Packages ani asmdef (logika czysta w Game.Core, komponent w Game.Gameplay).
 
-## Wyniki
-(uzupełniane po teście — sekcja niżej)
+## Uzupełnienia po teście (24.11, ta sama gałąź)
+- **Przerwy w strumieniu wypełniane ciszą.** Test 1 (dev build) pokazał 0,7 s brakujących próbek przy zmianie sceny (Boot →
+  WorldC: stary AudioListener ginie, tap wraca dopiero przy następnym sprawdzeniu). Bez poprawki dźwięk po wczytaniu świata
+  byłby przesunięty względem wideo o tę przerwę. Teraz: gdy blok przychodzi > 0,25 s (WORKING_VALUE) później, niż wynika z
+  liczby próbek od pierwszego bloku, przed nim idzie cisza o długości brakującego czasu (`gaps`, `gapFrames` w logu i
+  `sync.json`); bez słuchacza recorder szuka nowego co klatkę. Mniejsze różnice = dryf zegara, korygowany w muksie.
+- **Wideo końcowe.** NVENC niedostępny (sterownik), więc `-FinalVideo auto` = przechwycenie h264_mf 40 Mb/s jako materiał
+  pośredni + **ponowne kodowanie offline libx264 `slow` CRF 18** (High, yuv420p, BT.709, GOP 2 s) po przejeździe — CPU nie
+  konkuruje z grą. Z h264_nvenc (sterownik ≥ 610) `auto` kopiuje strumień CQ 19. `-FinalVideo copy|x264`,
+  `-FinalPreset`, `-FinalCrf`; `-MuxOnly -Out <katalog>` powtarza zgranie i mux bez ponownego przejazdu.
+- Czasy z `sync.json` czytane jako surowy tekst: `ConvertFrom-Json` zamienia daty ISO na DateTime i obcinał milisekundy
+  (pierwszy mux testu 3 miał offset błędny o 0,925 s — naprawione, mux powtórzony `-MuxOnly`).
+
+## Wyniki (maszyna dewelopera i5-10400F / GTX 1070 / sterownik 582.78, monitor 1920x1080)
+Dowody: `artifacts/recorder-s24/` (kopie w main).
+| test | build | wynik |
+|---|---|---|
+| EditMode `AudioRecorderTests` | — | 10/10 (nagłówki PCM16/float, pierścień: zawijanie, wątki 4 096 000 próbek bez straty, writer z punktami kontrolnymi i odczytem w trakcie, cisza za odrzucone bloki, szyna vs tap, przerwy) |
+| upadek gry | dev `02aed4c673` (bez ciężarówki w worktree → brak świata) | proces zabity po 600 s: WAV float 582,7 s poprawny do ostatniego punktu kontrolnego (`closed: false`), 0 odrzuconych |
+| pipeline na buildzie #7 | `a8352917be` + `-LegacyAudioCapture` | 151 s wideo, ddagrab + h264_mf High 60 kl./s, ~39 Mb/s, 9 080 klatek (558 duplikatów = 6 %, 2 odrzucone), audio −17,1 dB średnio / −1,4 dB szczyt; zgranie przybliżone (−19,5 s). Na obrazie okno zapory Windows z testu dev buildu (patrz niżej) |
+| **pełny tor `-record_audio`** | release `d2933ca96a` (tylko kafel C) | gra na pierwszym planie, 151 s wideo; WAV 160,0 s, 0 odrzuconych, 1 przerwa 1,56 s (zmiana sceny przed startem wideo); offset −8,738 s (audio zaczyna się przed wideo, przycięte); x264 slow CRF 18: 277 s na 151 s materiału (1,83× czasu nagrania), MP4 248 MB, 13,8 Mb/s |
+Szacunek dla pełnego przejazdu ~3 500 s (WORKING_VALUE): MKV ~17 GB, WAV ~1,3 GB, MP4 ~6 GB, kodowanie x264 slow ~1 h 45 min
+po przejeździe (preset `medium` ~2× szybciej).
+Okno „Zabezpieczenia Windows — zezwolić sieciom na dostęp?” pojawiło się po starcie **buildu development** (połączenie z
+profilerem nasłuchuje w sieci) i zostało nad grą; buildy release go nie otwierają. Agent nie klikał (ustawienie
+bezpieczeństwa należy do właściciela). Pełne nagranie robić na buildzie release.
