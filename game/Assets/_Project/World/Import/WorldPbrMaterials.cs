@@ -125,6 +125,7 @@ namespace Game.World.Import
             if (def.Get("procedural") as string == "grate" || Stripes(def) != null) uv0 = true;
             if (id == "terrain_grass") colors = true;
             if (def.Get("vertex_grime") != null) colors = true;                          // _VERTEX_GRIME (ADR 0123)
+            if (def.Get("bronze_patina") != null) colors = true;                         // _BRONZE_PATINA (ADR 0331)
         }
 
         /// <summary>ADR 0071 r11: manifest "weather": true = wall material of an authored asset that carries the splash
@@ -674,7 +675,8 @@ namespace Game.World.Import
             foreach (var proto in prototypes.Values)
                 foreach (var material in Arr(Obj(proto).Get("materials")))
                     if (material is string name && name.StartsWith("sign_", StringComparison.Ordinal)
-                        && !name.StartsWith("sign_facade_", StringComparison.Ordinal)) faces.Add(name);
+                        && !name.StartsWith("sign_facade_", StringComparison.Ordinal)
+                        && !name.StartsWith("sign_post", StringComparison.Ordinal)) faces.Add(name);   // sign_post / sign_post_galv = pole materials (ADR 0337), not plate faces
             foreach (string name in faces.OrderBy(x => x, StringComparer.Ordinal))
             {
                 // An explicitly authored material definition from another domain retains ownership.

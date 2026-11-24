@@ -1,0 +1,76 @@
+{
+ "class_rule": {
+  "trees": 84895,
+  "canopy_trees": 56513,
+  "canopy_h_m": {
+   "p10": 11.2,
+   "p50": 17.1,
+   "p90": 22.7,
+   "max": 25.0
+  },
+  "canopy_species": {
+   "pine": 33196,
+   "spruce": 10450,
+   "birch": 6923,
+   "alder": 2183,
+   "maple": 1952,
+   "linden": 1809
+  },
+  "forest_area_ha": 113.99,
+  "hlod": {
+   "cells": 407,
+   "cell_m": 64.0,
+   "triangles": 65391,
+   "trees_replaced_far": 84799,
+   "forest_trees": 84895
+  },
+  "forest_chm": null
+ },
+ "chm": {
+  "trees": 81948,
+  "canopy_trees": 51526,
+  "canopy_h_m": {
+   "p10": 13.4,
+   "p50": 21.8,
+   "p90": 26.8,
+   "max": 35.1
+  },
+  "canopy_species": {
+   "pine": 25814,
+   "spruce": 11872,
+   "birch": 6483,
+   "alder": 3024,
+   "maple": 1568,
+   "linden": 1431,
+   "birchyoung": 686,
+   "pineyoung": 648
+  },
+  "forest_area_ha": 109.8,
+  "hlod": {
+   "cells": 404,
+   "cell_m": 64.0,
+   "triangles": 67117,
+   "trees_replaced_far": 81569,
+   "forest_trees": 81948
+  },
+  "forest_chm": {
+   "stands": 26,
+   "gap": 2438,
+   "thinned": 3182,
+   "young": 1948,
+   "mature": 53200,
+   "openings_m2": 41857.1,
+   "canopy_h_m": {
+    "p10": 13.2,
+    "p50": 21.8,
+    "p90": 26.7,
+    "max": 35.1
+   },
+   "source": {
+    "product": "NMPT (DSM) 0.5 m, WCS",
+    "fetched": "2026-11-24",
+    "survey_date": "UNVERIFIED"
+   }
+  }
+ }
+}

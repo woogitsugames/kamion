@@ -24,3 +24,6 @@ Data/Admin/*.geojson -text
 Data/Plans/** text eol=lf
 # ADR 0231: the Overpass extract is hashed in its manifest (tests/gis/test_ring_0231.py); keep bytes identical on Windows
 Data/Plans/ring-0231/osm_ring_extract.json -text
+# ADR 0339: the canopy height model is a 20-130 kB data grid read by the world build (sha256 in forest_chm.json);
+# plain git, so a checkout without LFS (CI) builds the same world
+Data/Regions/*/forest_chm.png -filter -diff -merge binary

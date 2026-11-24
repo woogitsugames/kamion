@@ -1,0 +1,56 @@
+{
+ "schema": "truck-sim-pl/forest-chm/1",
+ "adr": "0339",
+ "region": "knyszyn-w",
+ "bbox": [
+  758539.0,
+  611583.0,
+  760587.0,
+  613631.0
+ ],
+ "crs": "EPSG:2180",
+ "vertical": "height above the NMT of the tile, both PL-EVRF2007-NH",
+ "cell_m": 4.0,
+ "step_m": 0.25,
+ "cover_min_m": 5.0,
+ "size": [
+  512,
+  512
+ ],
+ "layout": "row 0 = north edge; cell (j, i) covers x = xmin + i * cell_m .., y = ymax - j * cell_m ..",
+ "channels": {
+  "L": "top of the crowns [step_m]",
+  "A": "share of 1 m samples >= cover_min_m [1/255]"
+ },
+ "mask": "BDOT10k OT_PTLZ_A + 40 m",
+ "source": {
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "NMPT (DSM) 0.5 m, WCS",
+  "service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMPT/GRID1/WCS/DigitalSurfaceModel?SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=DSM_PL-EVRF2007-NH&FORMAT=image/x-aaigrid",
+  "request_cell_m": 1.0,
+  "fetched": "2026-11-24",
+  "survey_date": "UNVERIFIED",
+  "reply_sha256": [
+   "f1dccfcb55b68709c1a48ed5c0732ac4334a103ba03604a5d7c8b9f53bf0ba99",
+   "09696e14de27a8e6cd01e33e18473ca4568b68494ee290bc018f08909012faac",
+   "b576a128e1a8f3a3c3969a0b8e2993fe805a60b3fd4861a9ecacbdfe8f86a6cf",
+   "44ea4f04cdbc06d5ef5f811d358f15f4a767a679c833ecbb697dac0081fd76cc"
+  ],
+  "missing_share": 0.0,
+  "ground": "gugik-nmt-2022-knyszyn-w",
+  "ground_sha256_r16": "861cf0933601737545f63ad6d59059d538a843ce208e6e9704aaf0a942c08b32",
+  "license": "GUGiK open data (Pgik art. 40a ust. 2 pkt 1)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)"
+ },
+ "stats": {
+  "forest_cells": 14018,
+  "cells_ge_cover_min": 6521,
+  "top_m": {
+   "p10": 8.0,
+   "p50": 20.5,
+   "p90": 25.5,
+   "p99": 28.0
+  }
+ },
+ "sha256_png": "089019052f2b7a198c73a3b72cd0bb7287348dd8e83d28f15ec09fedd184cdaa"
+}

@@ -35,6 +35,12 @@ Zbiory pobrane 2026-11-09 przez `tools/worldgen/ingest.py --region bialystok-ind
 
 Sprawdzone, ale **niepobrane** (opcje `ingest.py --with nmpt|trees|lidar`): NMPT 0,5 m 2025, modele 3D drzew LoD1 2023 (CC BY 4.0, 1,07 GB), LiDAR LAZ 2025 (12 pkt/m², ~4,8 GB).
 
+## Model wysokości koron lasów (ADR 0339)
+
+| ID | Zbiór | URL | Pobrano | Licencja | Atrybucja | W gicie? | Użycie |
+|---|---|---|---|---|---|---|---|
+| `gugik-nmpt-wcs-<kafel>` (bez manifestu; usługa WCS, źródło i sha256 odpowiedzi w `Data/Regions/<kafel>/forest_chm.json`) | NMPT 0,5 m (numeryczny model pokrycia terenu, skaning laserowy), PL-EVRF2007-NH, pobrany w siatce 1 m dla bbox kafla; data nalotu niepodana przez usługę (`UNVERIFIED`) | `https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMPT/GRID1/WCS/DigitalSurfaceModel` (`DSM_PL-EVRF2007-NH`, `SCALEFACTOR=0.5`) | 2026-11-24: `dk65-04`, `dk65-05`, `dw671-tykocin-03` | dane otwarte GUGiK, Pgik art. 40a ust. 2 pkt 1; `LEGAL_REVIEW_REQUIRED` (jak NMT) | „Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)” | surowy model nie (`Data/raw/gugik/gugik-nmpt-wcs-<kafel>/dsm_1m.npz`, 6–8 MB); produkt pochodny tak: `Data/Regions/<kafel>/forest_chm.png` (siatka 4 m: wierzch koron nad NMT kafla i pokrycie ≥ 5 m, tylko lasy BDOT10k + 40 m; 21–133 kB, poza LFS) | wysokości drzew, luki, młodniki i linia koron HLOD lasów kafla (`tools/worldgen/streetscape/forest_chm.py`, `vegetation.py`, `forest_hlod.py`) |
+
 ## Bank Danych o Lasach (BDL)
 
 | ID | Źródło | URL | Pobrano | Licencja / warunki | Atrybucja | W gicie? | Użycie |

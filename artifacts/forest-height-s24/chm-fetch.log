@@ -1,0 +1,25 @@
+Using CPython 3.12.16
+Creating virtual environment at: tools\worldgen\.venv
+Installed 34 packages in 1.74s
+dk65-04: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 766731 y 599295: 1024 x 1024, 21.5 MB
+  dsm block x 766731 y 600319: 1024 x 1024, 21.3 MB
+  dsm block x 767755 y 599295: 1024 x 1024, 21.4 MB
+  dsm block x 767755 y 600319: 1024 x 1024, 20.6 MB
+dk65-04: Data/Regions/dk65-04/forest_chm.png 22 kB, {'forest_cells': 22004, 'cells_ge_cover_min': 10060, 'top_m': {'p10': 6.8, 'p50': 14.5, 'p90': 26.5, 'p99': 28.8}}
+dk65-05: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 766731 y 601343: 1024 x 1024, 20.6 MB
+  dsm block x 766731 y 602367: 1024 x 1024, 20.5 MB
+  dsm block x 767755 y 601343: 1024 x 1024, 20.5 MB
+  dsm block x 767755 y 602367: 1024 x 1024, 20.5 MB
+dk65-05: Data/Regions/dk65-05/forest_chm.png 130 kB, {'forest_cells': 110726, 'cells_ge_cover_min': 74592, 'top_m': {'p10': 10.2, 'p50': 22.2, 'p90': 27.5, 'p99': 30.8}}
+dw671-tykocin-03: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 756491 y 607487: 1024 x 1024, 20.9 MB
+  dsm block x 756491 y 608511: 1024 x 1024, 20.8 MB
+  retry 1: RemoteDisconnected
+  dsm block x 757515 y 607487: 1024 x 1024, 21.5 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  retry 3: RemoteDisconnected
+  dsm block x 757515 y 608511: 1024 x 1024, 21.5 MB
+dw671-tykocin-03: Data/Regions/dw671-tykocin-03/forest_chm.png 21 kB, {'forest_cells': 21826, 'cells_ge_cover_min': 8545, 'top_m': {'p10': 8.0, 'p50': 18.5, 'p90': 24.0, 'p99': 27.2}}

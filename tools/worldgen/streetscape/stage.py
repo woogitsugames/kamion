@@ -16,6 +16,7 @@ from roads import standards as S
 from terrain_mesh import conform as CF
 
 from . import buildings_mesh as BM
+from . import forest_chm as FCH
 from . import forest_hlod as FH
 from . import frontage as FR
 from . import furniture as FU
@@ -400,8 +401,13 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     tree_rows = TRW.region_plan(rid, overrides, src, graph, origin)     # ADR 0222: None unless the region opts in
     # ADR 0334: baulk / fallow plants of the field mosaic on rural tiles only (BDOT grassland inside Białystok = lawns
     # and waste ground, not strip farms)
+    # ADR 0339: canopy height model of the tile (GUGiK NMPT - NMT, Data/Regions/<id>/forest_chm.png); None without it
+    # (KAMION_FOREST_CHM=0: the class rule on such a tile - baseline for before / after renders and budgets only)
+    chm = FCH.load(rid, origin) if os.environ.get("KAMION_FOREST_CHM", "1") != "0" else None
+    if chm is not None:
+        log("forest chm", chm.meta["stats"])
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides, hard=mask | bmask, tree_rows=tree_rows,
-                              field_plants_on=not str(rid).startswith("bialystok-"))
+                              field_plants_on=not str(rid).startswith("bialystok-"), chm=chm)
     forest_mix = vrep.pop("_forest_mix")
     forest_cleared = vrep.pop("_forest_cleared", [])
     rep["vegetation"] = vrep
@@ -409,7 +415,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     # forest HLOD cells (canopy + edge walls) replacing far stands
     no_forest = shapely.union_all([roads_poly, bpoly] + [p["poly"] for p in paved] + [s_["poly"] for s_ in sites]).buffer(2.5)
     half = w.region["bbox"]["width_m"] / 2
-    hlod = FH.build(trees, forest_mix, no_forest, zground, half, vrep)
+    hlod = FH.build(trees, forest_mix, no_forest, zground, half, vrep, chm=chm)
     log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests, forest_cleared, report=vrep)
     col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # no grit strip around the lawns (ADR 0114)

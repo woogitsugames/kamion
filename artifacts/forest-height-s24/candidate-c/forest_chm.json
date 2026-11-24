@@ -1,0 +1,56 @@
+{
+ "schema": "truck-sim-pl/forest-chm/1",
+ "adr": "0339",
+ "region": "bialystok-industrial-c",
+ "bbox": [
+  776971.0,
+  595199.0,
+  779019.0,
+  597247.0
+ ],
+ "crs": "EPSG:2180",
+ "vertical": "height above the NMT of the tile, both PL-EVRF2007-NH",
+ "cell_m": 4.0,
+ "step_m": 0.25,
+ "cover_min_m": 5.0,
+ "size": [
+  512,
+  512
+ ],
+ "layout": "row 0 = north edge; cell (j, i) covers x = xmin + i * cell_m .., y = ymax - j * cell_m ..",
+ "channels": {
+  "L": "top of the crowns [step_m]",
+  "A": "share of 1 m samples >= cover_min_m [1/255]"
+ },
+ "mask": "BDOT10k OT_PTLZ_A + 40 m",
+ "source": {
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "NMPT (DSM) 0.5 m, WCS",
+  "service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMPT/GRID1/WCS/DigitalSurfaceModel?SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=DSM_PL-EVRF2007-NH&FORMAT=image/x-aaigrid",
+  "request_cell_m": 1.0,
+  "fetched": "2026-11-24",
+  "survey_date": "UNVERIFIED",
+  "reply_sha256": [
+   "2af84b646903404e49ed10fbf1b6d08b787d593454672794ca2495dbc17a94c9",
+   "39d498f29ee5411e741378cdb0eb542c26d1b2d32ac26e6cc21f10f6db13dd95",
+   "c4ecbcc96cc06e7a89cc0cbb9a11ba1a5d92608dced08433b58d02a5dd71e4c7",
+   "c077ba39a0a161e7751a7b63c9d681ff042651d4c50fac3299d4b689d8b3c630"
+  ],
+  "missing_share": 0.0,
+  "ground": "gugik-nmt-2025-bialystok-industrial-c",
+  "ground_sha256_r16": "37b2d3c033a215e4ba17361ffe571088f8181feef6078ac316e75d683bcca091",
+  "license": "GUGiK open data (Pgik art. 40a ust. 2 pkt 1)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)"
+ },
+ "stats": {
+  "forest_cells": 143682,
+  "cells_ge_cover_min": 112525,
+  "top_m": {
+   "p10": 8.2,
+   "p50": 22.8,
+   "p90": 28.8,
+   "p99": 31.5
+  }
+ },
+ "sha256_png": "60517eda8b89c7fb99232442e2ae48c6c3c27f21de7a7c1304fb6108e3545efd"
+}

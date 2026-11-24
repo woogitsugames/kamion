@@ -88,6 +88,118 @@ SELF_SEEDED = {"pine": "pineyoung", "birch": "birchyoung", "alder": "birchyoung"
                "shrub": "shrub", "spruce": "pineyoung"}
 
 
+# ADR 0339: stands of a tile with a canopy height model (Data/Regions/<id>/forest_chm.png, streetscape.forest_chm:
+# GUGiK NMPT - NMT) take their heights, openings and young growth from the laser data instead of one class range per
+# species - a stand of U(14, 24) m trees is a wall of crowns of one height (critic s24 build 5 # 7). Tiles without the
+# file keep the class rule unchanged. Authored `forest_stand` overrides win over the model. WORKING_VALUE unless noted.
+CHM_GAP_H = 3.0           # no crown this high within one 4 m cell either side: an opening (clear-cut, glade, ride)
+CHM_GAP_AREA = 300.0      # openings at least this large are cut out of the stand (HLOD, forest-floor mask)
+CHM_YOUNG_H = 9.0         # below: plantation / thicket (uprawa, mlodnik) = the young prototypes at the measured height
+CHM_YOUNG_PROTO = {"pine": "pineyoung", "spruce": "spruce", "birch": "birchyoung", "alder": "birchyoung",
+                   "maple": "birchyoung", "linden": "birchyoung"}
+# social position of a tree in the stand by a position hash: (share, height / dominant height lo, hi). The dominant
+# height is the tallest crown within ~6 m (Chm.dom), so the tallest trees of the model reach the measured tops and
+# single veterans standing above a stand (przestoje) are where the survey has them.
+CHM_CLASSES = ((0.50, 0.90, 1.00), (0.32, 0.76, 0.90), (0.18, 0.50, 0.74))
+CHM_NO_SUPPRESSED = ("pine", "birch", "alder")     # light-demanding species do not live under a closed canopy
+CHM_COVER_FULL = 0.72     # share of 1 m samples >= 5 m above ground of a closed stand; sparser cells lose trees
+CHM_THIN_MIN = 0.25
+CHM_MIN_TREE_H = 6.0
+# species in clumps instead of salt and pepper (position hash on smooth noise; the shares of MIX stay the class
+# means only roughly): Norway spruce and birch come in groups in the pine stands of Podlasie, black alder takes the
+# wet hollows and ditch lines (ols / leg) - read off the NMT as ground lower than its 120 m surroundings.
+CHM_SPRUCE_PATCH = (90.0, 0.66, 0.50)      # noise period m, threshold, share of the pines of a patch that turn spruce
+CHM_BIRCH_PATCH = (60.0, 0.72, 0.45)
+CHM_PATCH_OUT = (0.45, 0.55)               # noise below [0]: this share of the patch species is pine instead
+CHM_WET_WINDOW_M = 121
+CHM_WET_TPI_M = -1.5
+CHM_WET_ALDER = 0.70
+
+
+def _hash01(key):
+    return (_seed(key) % 100000) / 99999.0
+
+
+def _vnoise(x, y, period, salt):
+    """Smooth value noise 0..1 on a hash lattice of absolute region-local metres (deterministic)."""
+    fx, fy = x / period, y / period
+    ix, iy = int(np.floor(fx)), int(np.floor(fy))
+    tx, ty = fx - ix, fy - iy
+    tx, ty = tx * tx * (3 - 2 * tx), ty * ty * (3 - 2 * ty)
+    h = lambda i, j: _hash01(f"vn:{salt}:{i}:{j}")  # noqa: E731
+    return ((h(ix, iy) * (1 - tx) + h(ix + 1, iy) * tx) * (1 - ty)
+            + (h(ix, iy + 1) * (1 - tx) + h(ix + 1, iy + 1) * tx) * ty)
+
+
+def chm_species(P, sp, fk, wet):
+    """ADR 0339: species of the canopy candidates P regrouped into clumps (see CHM_*_PATCH) and alder in the wet
+    hollows (`wet`: bool per point). Position hashes only - the random stream of the stand is not touched."""
+    sp = np.array(sp, dtype=object)
+    for k, (x, y) in enumerate(np.round(P, 2)):
+        key = f"{x},{y}"
+        if wet is not None and wet[k]:
+            u = _hash01("wet:" + key)
+            if u < CHM_WET_ALDER:
+                sp[k] = "alder"
+            elif u < CHM_WET_ALDER + 0.15 and sp[k] != "spruce":
+                sp[k] = "birch"
+            continue
+        if fk == "broadleaf" or sp[k] not in ("pine", "spruce", "birch"):
+            continue
+        # inside a patch pines turn into the patch species, outside the patches that species gives way to pine:
+        # groups instead of an even sprinkle, the shares of the class mix stay about the same
+        for other, (per, thr, share), salt in (("spruce", CHM_SPRUCE_PATCH, "sp"), ("birch", CHM_BIRCH_PATCH, "bi")):
+            v = _vnoise(x, y, per, salt)
+            if sp[k] == "pine" and v > thr and _hash01(salt + ":" + key) < share:
+                sp[k] = other
+                break
+            if sp[k] == other and v < CHM_PATCH_OUT[0] and _hash01(salt + "o:" + key) < CHM_PATCH_OUT[1]:
+                sp[k] = "pine"
+                break
+    return sp
+
+
+def chm_canopy(trees, chm):
+    """ADR 0339: heights / prototypes of the canopy trees of one stand from the canopy height model; returns the
+    trees left standing (openings and thinned cells drop theirs) and counters. Trees outside the grid are kept."""
+    n = {"gap": 0, "thinned": 0, "young": 0, "mature": 0}
+    if not trees:
+        return trees, n
+    P = np.array([[t["e"], t["n"]] for t in trees])
+    dom, _stand, cov, inside = chm.sample(P)
+    keep = []
+    for t, d, c, ins in zip(trees, dom, cov, inside):
+        sp = t["p"][5:]
+        if not ins or sp not in CANOPY_SPECIES:
+            keep.append(t)
+            continue
+        key = f"{t['e']},{t['n']}"
+        if d < CHM_GAP_H:
+            n["gap"] += 1
+            continue
+        if d < CHM_YOUNG_H:
+            t["h"] = round(float(d * (0.72 + 0.28 * _hash01("yh:" + key))), 1)
+            t["p"] = f"tree_{CHM_YOUNG_PROTO[sp]}"
+            t["v"] = SPRUCE_OPEN if sp == "spruce" else 0
+            n["young"] += 1
+            keep.append(t)
+            continue
+        if c < CHM_COVER_FULL and _hash01("th:" + key) > max(CHM_THIN_MIN, c / CHM_COVER_FULL):
+            n["thinned"] += 1
+            continue
+        u, acc = _hash01("cl:" + key), 0.0
+        for share, lo, hi in CHM_CLASSES:
+            acc += share
+            if u <= acc:
+                break
+        if (lo, hi) == CHM_CLASSES[-1][1:] and sp in CHM_NO_SUPPRESSED:
+            lo, hi = CHM_CLASSES[1][1:]
+        t["h"] = round(float(max(CHM_MIN_TREE_H, d * (lo + (hi - lo) * _hash01("ch:" + key)))), 1)
+        n["mature"] += 1
+        keep.append(t)
+    return keep, n
+
+
 def _seed(key):
     return int(hashlib.sha1(key.encode()).hexdigest()[:8], 16)
 
@@ -271,13 +383,21 @@ def park_replacements(overrides):
             if o.get("kind") == "park_replacement"}
 
 
-def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_rows=None, field_plants_on=True):
+def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_rows=None, field_plants_on=True,
+          chm=None):
     """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list.
     hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems.
     tree_rows (ADR 0222, opt-in): streetscape.tree_rows.region_plan() - the rows it took over are laid out by it
-    (rhythm, set-back, sight cuts) instead of the 8 m BDOT row rule below; None = the rule unchanged."""
+    (rhythm, set-back, sight cuts) instead of the 8 m BDOT row rule below; None = the rule unchanged.
+    chm (ADR 0339, opt-in by data): streetscape.forest_chm.Chm of the tile - stand heights, openings, young growth
+    and species clumps of the BDOT forests from the canopy height model; None = the class rule unchanged."""
     out = []
     H, W = zc.shape
+    wet_grid = None
+    if chm is not None:                     # ground lower than its surroundings (alder hollows, ADR 0339)
+        zf = np.asarray(zc, np.float64)
+        wet_grid = (zf - ndimage.uniform_filter(zf, CHM_WET_WINDOW_M, mode="nearest")) < CHM_WET_TPI_M
+    chm_rep = {"stands": 0, "gap": 0, "thinned": 0, "young": 0, "mature": 0, "openings_m2": 0.0}
 
     def ok(P):
         i = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, W - 1)
@@ -367,8 +487,6 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
         n_stand = len(out)
         kat = f["props"].get("kategoria")
         fk = {"iglasty": "conifer", "liściasty": "broadleaf"}.get(kat, "mixed")
-        forests.append(poly)
-        forest_mix.append((poly, fk))
         rng = np.random.default_rng(_seed(f["id"]))
         rodzaj = f["props"].get("rodzaj", "las")
         sk = f["id"] if f["id"] in stands else str(f["id"]).split(":")[0]
@@ -376,9 +494,26 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
         hr = st["height_m"] if st else None
         if st:
             shit.add(sk)
+        use_chm = chm is not None and not st            # ADR 0339: an authored stand wins over the height model
+        if use_chm:                         # openings of the model are no stand: no HLOD, no forest-floor mask
+            gaps = None if poly.is_empty else chm.gaps(poly, CHM_GAP_H, CHM_GAP_AREA)
+            if gaps is not None:
+                chm_rep["openings_m2"] += float(gaps.area)
+                poly = shapely.make_valid(poly.difference(gaps))
+        forests.append(poly)
+        forest_mix.append((poly, fk))
         P = _scatter(full, st.get("spacing_m", SPACING.get(rodzaj, 4.5)) if st else SPACING.get(rodzaj, 4.5), rng)
         sp = pick(rng, st.get("mix", MIX.get(kat, MIX[None])) if st else MIX.get(kat, MIX[None]), len(P))
+        if use_chm and len(P):
+            wi = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, W - 1)
+            wj = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
+            sp = chm_species(P, sp, fk, wet_grid[wj, wi])
         emit(P, sp, rng, f"bdot:{f['id']}", 1.0 if hr else (0.7 if rodzaj == "zagajnik" else 1.0), fk=fk, hrange=hr)
+        if use_chm:
+            out[n_stand:], cn = chm_canopy(out[n_stand:], chm)
+            chm_rep["stands"] += 1
+            for k_, v_ in cn.items():
+                chm_rep[k_] += v_
         if st:
             ye_mask = np.zeros(len(out) - n_stand, bool)
             if "young_edge" in st and len(out) > n_stand:
@@ -447,6 +582,15 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
                 for t in out[n0:]:
                     if t["p"] != "tree_shrub":
                         t["h"] = round(min(t["h"], hr[1] * 0.6 * (0.5 + 0.25 * bi)), 1)
+            if use_chm and len(out) > n0:   # ADR 0339: the mantle stays under the measured stand behind it (a 12 m
+                Q = np.array([[t["e"], t["n"]] for t in out[n0:]])      # mantle before a 4 m plantation was a hedge)
+                _, st_h, _, ins = chm.sample(Q)
+                for t, h_, in_ in zip(out[n0:], st_h, ins):
+                    if in_ and t["p"] != "tree_shrub":
+                        t["h"] = round(min(t["h"], max(2.0, float(h_) * (0.45 + 0.2 * bi))), 1)
+                # no stand behind this part of the BDOT outline (the wood ends further in, a clear-cut reaches the
+                # outline): no mantle either - a line of shrubs in the open marked the map outline, not a stand edge
+                out[n0:] = [t for t, h_, in_ in zip(out[n0:], st_h, ins) if not in_ or h_ >= CHM_GAP_H]
         if cut is not None and len(out) > n_stand:
             Q = np.array([[t["e"], t["n"]] for t in out[n_stand:]])
             gone = shapely.contains_xy(cut, Q[:, 0], Q[:, 1])
@@ -475,6 +619,15 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
     report["forest_clearings"] = crep
     srep["stale"] = [{"id": st["id"], "bdot": bid} for bid, st in stands.items() if bid not in shit]
     report["forest_stands"] = srep
+    if chm is not None:                     # ADR 0339: key only on tiles with a canopy height model
+        chm_rep["openings_m2"] = round(chm_rep["openings_m2"], 1)
+        hs = [t["h"] for t in out if t.get("fk") and str(t["src"]).startswith("bdot:")
+              and not str(t["src"]).endswith((":edge", ":under", ":floor"))]
+        if hs:
+            chm_rep["canopy_h_m"] = {k_: round(float(np.percentile(hs, q_)), 1)
+                                     for k_, q_ in (("p10", 10), ("p50", 50), ("p90", 90), ("max", 100))}
+        chm_rep["source"] = {k_: chm.meta.get("source", {}).get(k_) for k_ in ("product", "fetched", "survey_date")}
+        report["forest_chm"] = chm_rep
     if parks:  # ADR 0227: key only where `kind: park_replacement` is authored (no QA diff in other regions)
         report["park_replacements"] = {"applied": sorted(parks[k] for k in park_hits),
                                        "stale": sorted(v for k, v in parks.items() if k not in park_hits)}

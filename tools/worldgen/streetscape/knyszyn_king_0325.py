@@ -515,6 +515,148 @@ def sculpt(low=False):
     return sc
 
 
+def _smooth_normals_local(V, T):
+    """Area-weighted vertex normals in local space."""
+    e1 = V[T[:, 1]] - V[T[:, 0]]
+    e2 = V[T[:, 2]] - V[T[:, 0]]
+    fn = np.cross(e1, e2)
+    N = np.zeros_like(V)
+    for k in range(3):
+        np.add.at(N, T[:, k], fn)
+    ln = np.linalg.norm(N, axis=1, keepdims=True)
+    return N / np.maximum(ln, 1e-12)
+
+
+def _curvature_and_ao(sc):
+    """Bake per-vertex weathering masks COLOR_0 = (patina, wear, ao, 1.0) in local figure space (ADR 0331).
+
+    - R (patina): copper carbonate/sulphate patina in concave hollows (eye sockets, under nose/mouth, beard/hair grooves,
+      ruff pleats, cloak folds, front seam), undersides, base moisture, and vertical rain drips below the ruff.
+    - G (wear): rubbed warm bronze highlights on convex ridges (nose, brow, forehead, cheekbones, chin/beard tip, cloak
+      fold ridges, ruff crests, crown fleurons/beads, chain links).
+    - B (ao): geometric ambient occlusion from the whole figure (hemispherical proximity) + micro concavity.
+    - A (enabled): 1.0 so untagged chunk primitives (default a=0) stay untouched.
+    All weights WORKING_VALUE judged against Wikimedia Commons photos cs20127375 / cs7518515.
+    """
+    # Collect all welded positions + normals across the entire figure for cross-part AO (e.g. beard over ruff, ruff over chest)
+    all_pts = []
+    all_nrm = []
+    part_meta = {}
+    for mat, parts in sc.parts.items():
+        for k, (V, T) in enumerate(parts):
+            # Weld coincident vertices (0.5 mm) so flat-shaded pieces (crown fleurons, jewel) still get smooth neighbourhood curvature
+            q = np.round(V * 2000.0).astype(np.int64)
+            _, first, inv = np.unique(q, axis=0, return_index=True, return_inverse=True)
+            inv = inv.ravel()
+            Vw = V[first]
+            Tw = inv[T]
+            good = (Tw[:, 0] != Tw[:, 1]) & (Tw[:, 1] != Tw[:, 2]) & (Tw[:, 0] != Tw[:, 2])
+            Nw = _smooth_normals_local(Vw, Tw[good]) if np.any(good) else np.tile([0.0, 1.0, 0.0], (len(Vw), 1))
+            # Scale-invariant Laplacian curvature: dot(mean_neighbour - v, N) / mean_edge_len
+            # Positive = concave hollow (patina), negative = convex ridge (rubbed wear)
+            n_sum = np.zeros_like(Vw)
+            e_len = np.zeros(len(Vw))
+            deg = np.zeros(len(Vw))
+            if np.any(good):
+                tg = Tw[good]
+                for a, b in ((0, 1), (1, 2), (2, 0)):
+                    ia, ib = tg[:, a], tg[:, b]
+                    d = np.linalg.norm(Vw[ib] - Vw[ia], axis=1)
+                    np.add.at(n_sum, ia, Vw[ib])
+                    np.add.at(n_sum, ib, Vw[ia])
+                    np.add.at(e_len, ia, d)
+                    np.add.at(e_len, ib, d)
+                    np.add.at(deg, ia, 1.0)
+                    np.add.at(deg, ib, 1.0)
+            valid = deg > 0
+            lap = np.zeros_like(Vw)
+            lap[valid] = n_sum[valid] / deg[valid, None] - Vw[valid]
+            mel = np.maximum(e_len / np.maximum(deg, 1.0), 1e-4)
+            curv = np.einsum("ij,ij->i", lap, Nw) / mel
+            part_meta[(mat, k)] = (Vw, Nw, inv, curv)
+            # Subsample dense parts slightly for AO caster cloud while keeping full figure coverage
+            step = 1 if len(Vw) <= 600 else 2
+            all_pts.append(Vw[::step])
+            all_nrm.append(Nw[::step])
+
+    cloud = np.concatenate(all_pts, axis=0)
+    # Precompute cross-part occlusion per unique vertex
+    colors = {}
+    z_ruff = HEAD_PIVOT_Z + (2.632 - HEAD_PIVOT_Z) * HEAD_SCALE
+    z_eye_w = HEAD_PIVOT_Z + (Z_EYE - HEAD_PIVOT_Z) * HEAD_SCALE
+    z_nose_w = HEAD_PIVOT_Z + (Z_NOSE - HEAD_PIVOT_Z) * HEAD_SCALE
+    z_beard_w = HEAD_PIVOT_Z + (Z_BEARD_TIP - HEAD_PIVOT_Z) * HEAD_SCALE
+    z_crown_w = HEAD_PIVOT_Z + (H_BAND0 - HEAD_PIVOT_Z) * HEAD_SCALE
+
+    for (mat, k), (Vw, Nw, inv, curv) in part_meta.items():
+        # Hemispherical proximity AO against the figure point cloud (chunked to keep memory tiny)
+        occ = np.zeros(len(Vw), dtype=float)
+        bs = 256
+        for i0 in range(0, len(Vw), bs):
+            p = Vw[i0:i0 + bs]                      # (b, 3)
+            n = Nw[i0:i0 + bs]                      # (b, 3)
+            diff = cloud[None, :, :] - p[:, None, :] # (b, M, 3)
+            dist2 = np.einsum("ijk,ijk->ij", diff, diff)
+            # Neighbours in [1.5 cm .. 38 cm] in front of the tangent plane occlude the hemisphere
+            mask = (dist2 > 0.015 ** 2) & (dist2 < 0.38 ** 2)
+            inv_d = np.where(mask, 1.0 / np.sqrt(np.maximum(dist2, 1e-8)), 0.0)
+            cos_t = np.einsum("ijk,ik->ij", diff, n) * inv_d
+            # Weight closer occluders more; only points clearly in front of the plane (cos > 0.12)
+            w = np.where(mask & (cos_t > 0.12), (cos_t - 0.12) * np.exp(-np.sqrt(np.maximum(dist2, 1e-8)) / 0.14), 0.0)
+            occ[i0:i0 + bs] = np.clip(w.sum(axis=1) / 38.0, 0.0, 1.0)
+
+        conc = np.clip(curv * 4.2, 0.0, 1.0)
+        conv = np.clip(-curv * 3.8, 0.0, 1.0)
+        x, y, z = Vw[:, 0], Vw[:, 1], Vw[:, 2]
+        nz = Nw[:, 2]
+        ang = np.arctan2(x, y - HEAD_Y * 0.5)
+
+        # Rain/mineral drip streaks running down from beneath the ruff onto chest, lapels and cloak
+        drip_wave = (0.50 + 0.28 * np.sin(ang * 7.0 + 0.4) + 0.15 * np.sin(ang * 17.0 - 1.1)
+                     + 0.10 * np.sin(ang * 29.0 + 2.3))
+        under_ruff = np.clip((z - 1.72) / (H_NECK - 1.72), 0.0, 1.0) ** 1.7 * (z <= H_NECK + 0.06)
+        # Front chest & under-beard collects heavier copper-salt drips
+        front_bias = 0.65 + 0.35 * np.clip(y / np.maximum(np.hypot(x, y), 1e-4), 0.0, 1.0)
+        ruff_drips = np.clip(under_ruff * drip_wave * front_bias * 0.95, 0.0, 0.85)
+        # Undersides (under nose, chin, ruff lobes, crown rim) retain moisture & patina
+        underside = np.clip((-nz - 0.12) / 0.75, 0.0, 1.0)
+        # Plinth base dampness on the lowest 35 cm of the cloak
+        base_damp = np.clip((0.36 - z) / 0.36, 0.0, 1.0) * (0.45 + 0.40 * drip_wave)
+        # Front cloak seam crevice (x near 0, y > 0, z < 1.65)
+        seam_crevice = np.exp(-((x / 0.045) ** 2)) * (y > 0.15) * (z < 1.65) * 0.45
+
+        if mat == BRONZE:
+            # Head / face (z >= z_beard_w - 0.03): crisp hollows in eye sockets, under nose/lip, beard grooves
+            is_head = z >= z_beard_w - 0.03
+            patina = np.clip(0.10 + 0.72 * conc + 0.42 * occ + 0.32 * underside + ruff_drips
+                             + 0.35 * base_damp + seam_crevice, 0.0, 1.0)
+            # Rubbed warm bronze on convex highlights: nose, brow, forehead, cheekbones, beard tip, cloak fold ridges
+            up_exp = np.clip(nz * 0.5 + 0.5, 0.0, 1.0)
+            wear = np.clip(0.88 * conv + 0.18 * up_exp * (1.0 - occ) - 0.55 * conc, 0.0, 1.0)
+            # Subtle warm rub boost on prominent facial planes (nose, forehead, cheekbones, chin/beard ridge)
+            face_front = is_head & (y > HEAD_Y + 0.05) & (z < z_crown_w + 0.02)
+            nose_boost = np.exp(-((x / 0.028) ** 2) - ((z - z_nose_w - 0.015) / 0.055) ** 2) * (y > HEAD_Y + 0.09)
+            brow_forehead = np.exp(-((x / 0.065) ** 2) - ((z - (z_eye_w + 0.045)) / 0.038) ** 2) * (y > HEAD_Y + 0.07)
+            cheek_boost = np.exp(-(((np.abs(x) - 0.052) / 0.032) ** 2) - ((z - (z_eye_w - 0.042)) / 0.034) ** 2) * (y > HEAD_Y + 0.06)
+            wear = np.where(face_front, np.clip(wear + 0.42 * nose_boost + 0.30 * brow_forehead + 0.24 * cheek_boost, 0.0, 1.0), wear)
+            # Keep nose tip & brow clear of green patina
+            patina = np.where(face_front, patina * (1.0 - 0.65 * np.clip(nose_boost + 0.6 * brow_forehead, 0.0, 1.0)), patina)
+        elif mat == PATINA:
+            # Ruff pleats & fur lapels: rich patina in hollows, rubbed edges on outer crests
+            patina = np.clip(0.32 + 0.62 * conc + 0.38 * occ + 0.30 * underside + 0.45 * ruff_drips, 0.0, 1.0)
+            wear = np.clip(0.70 * conv + 0.20 * np.clip(nz, 0.0, 1.0) * (1.0 - occ) - 0.40 * conc, 0.0, 1.0)
+        else:
+            # RUBBED (crown, chains, jewel): prominent rubbed bronze on rims/tips/links, dark patina in band recesses
+            patina = np.clip(0.10 + 0.60 * conc + 0.35 * occ + 0.25 * underside, 0.0, 0.85)
+            crown_top = np.clip((z - z_crown_w) / 0.14, 0.0, 1.0) * (z > z_crown_w - 0.02)
+            wear = np.clip(0.28 + 0.65 * conv + 0.32 * crown_top + 0.18 * np.clip(nz, 0.0, 1.0) - 0.45 * conc, 0.0, 1.0)
+
+        ao = np.clip(1.0 - 0.58 * occ - 0.32 * conc - 0.15 * underside, 0.22, 1.0)
+        Cw = np.column_stack([patina, wear, ao, np.ones(len(Vw))])
+        colors[(mat, k)] = Cw[inv]
+    return colors
+
+
 def build(acc, layer, base, forward, low=False, remap=None):
     """Add the figure to a buildings_mesh.Acc: `base` = (x, y, z) of the plinth top centre, `forward` = horizontal unit
     vector of the figure's front. Returns the triangle count."""
@@ -523,11 +665,13 @@ def build(acc, layer, base, forward, low=False, remap=None):
     r = np.array([f[1], -f[0], 0.0])
     M = np.stack([r, f, np.array([0.0, 0.0, 1.0])])          # rows: local x, y, z axes in world
     sc = sculpt(low)
+    vcols = None if low else _curvature_and_ao(sc)
     o = np.asarray(base, float)
     for mat, parts in sc.parts.items():
         for k, (V, T) in enumerate(parts):
-            V, T, UV = _unwrap(V, T, *sc.uv.get((mat, k), (UV_RADIUS_M, 0.0)))
-            acc.add(layer, (remap or {}).get(mat, mat), o + V @ M, T, UV)
+            C = None if vcols is None else vcols[(mat, k)]
+            V, T, UV, C = _unwrap(V, T, *sc.uv.get((mat, k), (UV_RADIUS_M, 0.0)), COL=C)
+            acc.add(layer, (remap or {}).get(mat, mat), o + V @ M, T, UV, COL=C)
     return sc.tris()
 
 
@@ -535,7 +679,7 @@ UV_RADIUS_M = 0.40           # mean radius of the cloak: u = metres round the fi
 UV_SEAM_RAD = math.radians(6.0)
 
 
-def _unwrap(V, T, radius=UV_RADIUS_M, y0=0.0):
+def _unwrap(V, T, radius=UV_RADIUS_M, y0=0.0, COL=None):
     """Cylindrical UV0 in metres (u round the figure, v up) for the bronze set, whose rain streaks run along v. The
     seam is at the back; triangles across it get their own copies of the vertices one turn further."""
     # 0 near the front, the +-pi seam 6 degrees off the back centre (between two columns of the cloak, so no vertex
@@ -555,5 +699,8 @@ def _unwrap(V, T, radius=UV_RADIUS_M, y0=0.0):
         idx = np.array(sorted(extra, key=extra.get))
         V2.append(V[idx])
         A2.append(ang[idx] + 2 * math.pi)
+        C2 = np.concatenate([COL, COL[idx]]) if COL is not None else None
+    else:
+        C2 = COL
     Vn, An = np.concatenate(V2), np.concatenate(A2)
-    return Vn, T2, np.column_stack([An * radius, Vn[:, 2]])
+    return Vn, T2, np.column_stack([An * radius, Vn[:, 2]]), C2

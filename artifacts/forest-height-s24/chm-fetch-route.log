@@ -1,0 +1,243 @@
+dk65-01: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 768779 y 595199: 1024 x 1024, 20.7 MB
+  dsm block x 768779 y 596223: 1024 x 1024, 20.6 MB
+  retry 1: RemoteDisconnected
+  dsm block x 769803 y 595199: 1024 x 1024, 20.6 MB
+  retry 1: RemoteDisconnected
+  dsm block x 769803 y 596223: 1024 x 1024, 20.8 MB
+dk65-01: Data/Regions/dk65-01/forest_chm.png 56 kB, {'forest_cells': 53857, 'cells_ge_cover_min': 27195, 'top_m': {'p10': 7.0, 'p50': 16.2, 'p90': 27.8, 'p99': 31.5}}
+dk65-02: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 768779 y 597247: 1024 x 1024, 21.5 MB
+  dsm block x 768779 y 598271: 1024 x 1024, 21.6 MB
+  retry 1: RemoteDisconnected
+  dsm block x 769803 y 597247: 1024 x 1024, 21.6 MB
+  dsm block x 769803 y 598271: 1024 x 1024, 21.5 MB
+dk65-02: Data/Regions/dk65-02/forest_chm.png 15 kB, {'forest_cells': 13520, 'cells_ge_cover_min': 5423, 'top_m': {'p10': 6.0, 'p50': 12.2, 'p90': 21.8, 'p99': 29.2}}
+dk65-03: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 766731 y 597247: 1024 x 1024, 21.2 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  retry 3: RemoteDisconnected
+Traceback (most recent call last):
+  File "C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest-height-s24\tools\worldgen\streetscape\forest_chm.py", line 294, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest-height-s24\tools\worldgen\streetscape\forest_chm.py", line 289, in main
+    build(rid, a.refetch)
+  File "C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest-height-s24\tools\worldgen\streetscape\forest_chm.py", line 162, in build
+    dsm, shas = fetch_dsm(bbox, log)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest-height-s24\tools\worldgen\streetscape\forest_chm.py", line 82, in fetch_dsm
+    raw = urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=300).read()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 1405, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 1361, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 1478, in getresponse
+    response.begin()
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+dk65-06: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 766731 y 603391: 1024 x 1024, 20.6 MB
+  dsm block x 766731 y 604415: 1024 x 1024, 20.5 MB
+  dsm block x 767755 y 603391: 1024 x 1024, 20.5 MB
+  dsm block x 767755 y 604415: 1024 x 1024, 20.6 MB
+dk65-06: Data/Regions/dk65-06/forest_chm.png 256 kB, {'forest_cells': 199367, 'cells_ge_cover_min': 164057, 'top_m': {'p10': 11.5, 'p50': 22.0, 'p90': 27.2, 'p99': 30.2}}
+dk65-07: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 764683 y 603391: 1024 x 1024, 20.6 MB
+  dsm block x 764683 y 604415: 1024 x 1024, 20.6 MB
+  dsm block x 765707 y 603391: 1024 x 1024, 20.6 MB
+  dsm block x 765707 y 604415: 1024 x 1024, 20.5 MB
+dk65-07: Data/Regions/dk65-07/forest_chm.png 226 kB, {'forest_cells': 183669, 'cells_ge_cover_min': 142736, 'top_m': {'p10': 11.8, 'p50': 21.8, 'p90': 26.5, 'p99': 29.8}}
+dk65-08: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 764683 y 605439: 1024 x 1024, 20.5 MB
+  retry 1: RemoteDisconnected
+  dsm block x 764683 y 606463: 1024 x 1024, 20.6 MB
+  dsm block x 765707 y 605439: 1024 x 1024, 20.5 MB
+  dsm block x 765707 y 606463: 1024 x 1024, 20.6 MB
+dk65-08: Data/Regions/dk65-08/forest_chm.png 267 kB, {'forest_cells': 214346, 'cells_ge_cover_min': 156410, 'top_m': {'p10': 10.0, 'p50': 23.5, 'p90': 28.8, 'p99': 32.2}}
+dk65-09: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 762635 y 605439: 1024 x 1024, 21.0 MB
+  retry 1: RemoteDisconnected
+  dsm block x 762635 y 606463: 1024 x 1024, 21.1 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  retry 3: RemoteDisconnected
+  dsm block x 763659 y 605439: 1024 x 1024, 20.8 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  retry 3: RemoteDisconnected
+  dsm block x 763659 y 606463: 1024 x 1024, 20.7 MB
+dk65-09: Data/Regions/dk65-09/forest_chm.png 220 kB, {'forest_cells': 173877, 'cells_ge_cover_min': 139842, 'top_m': {'p10': 13.5, 'p50': 22.5, 'p90': 28.8, 'p99': 31.8}}
+dk65-10: fetching the surface model (GUGiK WCS, 1.0 m)
+  retry 1: RemoteDisconnected
+  dsm block x 762635 y 607487: 1024 x 1024, 21.3 MB
+  dsm block x 762635 y 608511: 1024 x 1024, 20.8 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  retry 3: RemoteDisconnected
+  dsm block x 763659 y 607487: 1024 x 1024, 20.8 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  retry 3: RemoteDisconnected
+  dsm block x 763659 y 608511: 1024 x 1024, 20.8 MB
+dk65-10: Data/Regions/dk65-10/forest_chm.png 178 kB, {'forest_cells': 136254, 'cells_ge_cover_min': 104693, 'top_m': {'p10': 11.2, 'p50': 22.8, 'p90': 29.5, 'p99': 33.0}}
+dk65-11: fetching the surface model (GUGiK WCS, 1.0 m)
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  retry 3: RemoteDisconnected
+  dsm block x 762635 y 609535: 1024 x 1024, 20.6 MB
+  dsm block x 762635 y 610559: 1024 x 1024, 20.5 MB
+  dsm block x 763659 y 609535: 1024 x 1024, 20.5 MB
+  retry 1: RemoteDisconnected
+  dsm block x 763659 y 610559: 1024 x 1024, 20.6 MB
+dk65-11: Data/Regions/dk65-11/forest_chm.png 196 kB, {'forest_cells': 163420, 'cells_ge_cover_min': 128213, 'top_m': {'p10': 11.5, 'p50': 19.5, 'p90': 24.8, 'p99': 28.2}}
+knyszyn: fetching the surface model (GUGiK WCS, 1.0 m)
+  retry 1: RemoteDisconnected
+  dsm block x 760587 y 611583: 1024 x 1024, 21.4 MB
+  dsm block x 760587 y 612607: 1024 x 1024, 21.2 MB
+  dsm block x 761611 y 611583: 1024 x 1024, 21.5 MB
+  dsm block x 761611 y 612607: 1024 x 1024, 21.6 MB
+knyszyn: Data/Regions/knyszyn/forest_chm.png 13 kB, {'forest_cells': 11220, 'cells_ge_cover_min': 4455, 'top_m': {'p10': 6.5, 'p50': 13.0, 'p90': 22.5, 'p99': 28.5}}
+knyszyn-s: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 760587 y 609535: 1024 x 1024, 21.5 MB
+  dsm block x 760587 y 610559: 1024 x 1024, 21.6 MB
+  retry 1: RemoteDisconnected
+  dsm block x 761611 y 609535: 1024 x 1024, 20.7 MB
+  retry 1: RemoteDisconnected
+  dsm block x 761611 y 610559: 1024 x 1024, 20.9 MB
+knyszyn-s: Data/Regions/knyszyn-s/forest_chm.png 61 kB, {'forest_cells': 53087, 'cells_ge_cover_min': 34591, 'top_m': {'p10': 10.2, 'p50': 20.0, 'p90': 26.5, 'p99': 29.8}}
+knyszyn-w: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 758539 y 611583: 1024 x 1024, 21.2 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  dsm block x 758539 y 612607: 1024 x 1024, 21.3 MB
+  dsm block x 759563 y 611583: 1024 x 1024, 21.5 MB
+  dsm block x 759563 y 612607: 1024 x 1024, 21.5 MB
+knyszyn-w: Data/Regions/knyszyn-w/forest_chm.png 14 kB, {'forest_cells': 14018, 'cells_ge_cover_min': 6521, 'top_m': {'p10': 8.0, 'p50': 20.5, 'p90': 25.5, 'p99': 28.0}}
+dw671-tykocin-01: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 758539 y 609535: 1024 x 1024, 21.5 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  dsm block x 758539 y 610559: 1024 x 1024, 20.7 MB
+  dsm block x 759563 y 609535: 1024 x 1024, 21.5 MB
+  retry 1: RemoteDisconnected
+  dsm block x 759563 y 610559: 1024 x 1024, 21.4 MB
+dw671-tykocin-01: Data/Regions/dw671-tykocin-01/forest_chm.png 20 kB, {'forest_cells': 20097, 'cells_ge_cover_min': 7344, 'top_m': {'p10': 7.0, 'p50': 14.2, 'p90': 22.2, 'p99': 29.2}}
+dw671-tykocin-02: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 758539 y 607487: 1024 x 1024, 21.6 MB
+  dsm block x 758539 y 608511: 1024 x 1024, 21.6 MB
+  dsm block x 759563 y 607487: 1024 x 1024, 21.5 MB
+  dsm block x 759563 y 608511: 1024 x 1024, 21.5 MB
+dw671-tykocin-02: Data/Regions/dw671-tykocin-02/forest_chm.png 24 kB, {'forest_cells': 23169, 'cells_ge_cover_min': 7917, 'top_m': {'p10': 6.5, 'p50': 14.0, 'p90': 21.0, 'p99': 26.5}}
+dw671-tykocin-04: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 756491 y 605439: 1024 x 1024, 21.4 MB
+  dsm block x 756491 y 606463: 1024 x 1024, 21.3 MB
+  dsm block x 757515 y 605439: 1024 x 1024, 21.4 MB
+  dsm block x 757515 y 606463: 1024 x 1024, 21.5 MB
+dw671-tykocin-04: Data/Regions/dw671-tykocin-04/forest_chm.png 88 kB, {'forest_cells': 79572, 'cells_ge_cover_min': 50135, 'top_m': {'p10': 12.0, 'p50': 20.8, 'p90': 25.5, 'p99': 28.2}}
+dw671-tykocin-05: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 754443 y 605439: 1024 x 1024, 21.5 MB
+  dsm block x 754443 y 606463: 1024 x 1024, 21.0 MB
+  dsm block x 755467 y 605439: 1024 x 1024, 21.4 MB
+  dsm block x 755467 y 606463: 1024 x 1024, 21.0 MB
+dw671-tykocin-05: Data/Regions/dw671-tykocin-05/forest_chm.png 37 kB, {'forest_cells': 35352, 'cells_ge_cover_min': 18588, 'top_m': {'p10': 10.0, 'p50': 21.2, 'p90': 26.5, 'p99': 28.5}}
+dw671-tykocin-06: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 754443 y 603391: 1024 x 1024, 21.5 MB
+  dsm block x 754443 y 604415: 1024 x 1024, 21.5 MB
+  dsm block x 755467 y 603391: 1024 x 1024, 21.5 MB
+  dsm block x 755467 y 604415: 1024 x 1024, 21.5 MB
+dw671-tykocin-06: Data/Regions/dw671-tykocin-06/forest_chm.png 98 kB, {'forest_cells': 98453, 'cells_ge_cover_min': 52222, 'top_m': {'p10': 9.5, 'p50': 17.8, 'p90': 24.8, 'p99': 30.2}}
+dw671-tykocin-07: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 752395 y 603391: 1024 x 1024, 21.1 MB
+  dsm block x 752395 y 604415: 1024 x 1024, 21.5 MB
+  dsm block x 753419 y 603391: 1024 x 1024, 21.0 MB
+  dsm block x 753419 y 604415: 1024 x 1024, 21.3 MB
+dw671-tykocin-07: Data/Regions/dw671-tykocin-07/forest_chm.png 197 kB, {'forest_cells': 160214, 'cells_ge_cover_min': 127788, 'top_m': {'p10': 13.8, 'p50': 22.8, 'p90': 28.0, 'p99': 31.2}}
+dw671-tykocin-08: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 752395 y 601343: 1024 x 1024, 21.5 MB
+  dsm block x 752395 y 602367: 1024 x 1024, 21.3 MB
+  dsm block x 753419 y 601343: 1024 x 1024, 21.5 MB
+  dsm block x 753419 y 602367: 1024 x 1024, 21.6 MB
+dw671-tykocin-08: Data/Regions/dw671-tykocin-08/forest_chm.png 72 kB, {'forest_cells': 63517, 'cells_ge_cover_min': 43574, 'top_m': {'p10': 11.8, 'p50': 21.5, 'p90': 26.0, 'p99': 29.0}}
+dw671-tykocin-09: fetching the surface model (GUGiK WCS, 1.0 m)
+  dsm block x 750347 y 601343: 1024 x 1024, 21.5 MB
+  dsm block x 750347 y 602367: 1024 x 1024, 21.6 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  dsm block x 751371 y 601343: 1024 x 1024, 21.5 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  retry 3: RemoteDisconnected
+  retry 4: RemoteDisconnected
+  retry 5: RemoteDisconnected
+Traceback (most recent call last):
+  File "C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest-height-s24\tools\worldgen\streetscape\forest_chm.py", line 294, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest-height-s24\tools\worldgen\streetscape\forest_chm.py", line 289, in main
+    build(rid, a.refetch)
+  File "C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest-height-s24\tools\worldgen\streetscape\forest_chm.py", line 162, in build
+    dsm, shas = fetch_dsm(bbox, log)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\forest-height-s24\tools\worldgen\streetscape\forest_chm.py", line 82, in fetch_dsm
+    raw = urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=300).read()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 1405, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\urllib\request.py", line 1361, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 1478, in getresponse
+    response.begin()
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matma\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+tykocin: fetching the surface model (GUGiK WCS, 1.0 m)
+  retry 1: RemoteDisconnected
+  dsm block x 750347 y 599295: 1024 x 1024, 21.6 MB
+  retry 1: RemoteDisconnected
+  dsm block x 750347 y 600319: 1024 x 1024, 21.6 MB
+  retry 1: RemoteDisconnected
+  retry 2: RemoteDisconnected
+  retry 3: RemoteDisconnected
+  retry 4: RemoteDisconnected
+  retry 5: RemoteDisconnected
+  dsm block x 751371 y 599295: 1024 x 1024, 21.6 MB
+  dsm block x 751371 y 600319: 1024 x 1024, 21.6 MB
+tykocin: Data/Regions/tykocin/forest_chm.png 8 kB, {'forest_cells': 7487, 'cells_ge_cover_min': 3041, 'top_m': {'p10': 6.2, 'p50': 15.2, 'p90': 21.2, 'p99': 23.2}}

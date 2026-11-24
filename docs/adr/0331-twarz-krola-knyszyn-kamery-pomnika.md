@@ -81,3 +81,66 @@ High / clear, Win64, kafel knyszyn przebudowany w kopii derived worktree (`build
 - Pomnik stoi w cieniu lip frontem na NE; w `clear` twarz jest ciemna (bez zmian względem ADR 0325 §5).
 - Brak napisu na płaszczu i tekstury patyny we wnękach twarzy (jeden materiał na głowie).
 - Pozycja `KING` (ESTIMATED z ADR 0227) nie była przez to zadanie weryfikowana.
+
+## Brąz i patyna (neon-bronze-s24, 2026-11-24)
+
+Zamyka punkt otwarty wyżej („jednolita czerń figury w cieniu lip, brak patyny we wnękach”).
+
+### Problem
+Po ADR 0325 / 0331 baza trzech materiałów brązu (`monument_bronze` liniowe `[0.160, 0.145, 0.125]`, `metal 0.45`) dawała
+w cieniu lip niemal jednolitą ciemną szarość/czerń bez ciepłego koloru brązu, bez jaśniejszych wytarć na wypukłościach
+i bez zielonkawej patyny we wnękach i zaciekach pod krezą.
+
+### Rozwiązanie (0 dodatkowych draw calli, 0 nowych tekstur, budżet trójkątów bez zmian)
+1. **Wypiekanie masek do `COLOR_0` w Pythonie** (`tools/worldgen/streetscape/knyszyn_king_0325.py::_curvature_and_ao`,
+   przekazanie `COL` w `buildings_mesh.Acc` oraz dla tablicy cokołu w `knyszyn_park_props_0227.py`):
+   - `R` — patyna (wklęsła krzywizna laplasjanowa, lokalna okluzja między częściami, spody, bruzda szwu płaszcza,
+     wilgoć u podstawy i pionowe zacieki spod krezy na klatce/płaszczu);
+   - `G` — wytarcia wypukłości (grzbiet nosa, czoło, łuki brwiowe, kości policzkowe, czubek brody, krawędzie korony,
+     grzbiety fałd płaszcza, ogniwa łańcuchów);
+   - `B` — lokalne AO z półsferycznej bliskości całej bryły figury;
+   - `A = 1.0` — znacznik aktywacji (pozostałe prymitywy chunka bez `COLOR_0` mają `A = 0` i pozostają nietknięte).
+2. **Parametry materiałów** (`tools/worldgen/streetscape/materials.py`, wszystkie `WORKING_VALUE` skalibrowane wizualnie
+   do zdjęć Wikimedia Commons `cs20127375` i `cs7518515`, bez użycia pikseli zdjęć):
+   - `monument_bronze`: liniowe albedo `[0.26, 0.21, 0.140]`, `metal 0.72`, `set_smooth 0.88`, `bronze_patina`
+     (`patina_color [0.065, 0.125, 0.090]`, `rubbed_color [0.44, 0.34, 0.205]`, `patina_smooth 0.18`,
+     `rubbed_smooth 0.56`, `rubbed_metal 0.85`, `ao_strength 0.46`);
+   - `monument_bronze_patina` (kreza, futrzane wyłogi, rama tablicy): `[0.195, 0.172, 0.122]`, `metal 0.46`,
+     mocniejsza matowa patyna (`patina_strength 0.90`, `patina_smooth 0.16`);
+   - `monument_bronze_rubbed` (korona, łańcuchy, klejnot): `[0.28, 0.225, 0.150]`, `metal 0.78`, wyraźniejsze wytarcia.
+3. **Shader i importer Unity** (`WorldPBR.shader`, `RegionImporter.cs`, `WorldPbrMaterials.cs`):
+   - opt-in keyword `#pragma shader_feature_local _BRONZE_PATINA` sterowany blokiem `bronze_patina` z manifestu
+     (i flagą `colors = true` w `WorldPbrMaterials.MeshUsage`);
+   - spokojna modulacja bazy wokół `_Tint` z mikro-ziarnem `bronze_cast_tint` (bez plam „moro” na płaskich płaszczyznach
+     płaszcza), progowe `smoothstep` dla wytarć (ciepły połyskliwy brąz, wysoki metal) i patyny (ciemna matowa
+     zielonkawa warstwa węglanów/siarczanów miedzi, `metal → 0.14`) oraz przemnożenie AO przez `COLOR_0.b`.
+
+### Pętla wizualna i wyniki (High, Win64, `clear` + `overcast`)
+- 3 rundy kalibracji (`r1` → `r2` → `r3`) + pełna odtwarzalna przebudowa kafla `knyszyn`
+  (`build_world.py --region knyszyn --context`, 1 258,6 s, exit 0, `terrain walls > 0.15 m: 0`, `on route {}`),
+  reimport `knyszyn` (`Win64`, `High`) oraz finalny VQA `clear` i `overcast` (8 kamer).
+- r1: płaszcz zbyt żółto-mosiężny i plamy „moro” z kontrastu mapy `bronze_cast_tint`; r2: uspokojona modulacja bazy
+  wokół `_Tint`, progi `smoothstep`, stonowany stary brąz; r3: szlif czytelności ciepłego brązu i patyny pod krezą
+  w cieniu (`clear`) oraz uspokojony połysk łańcuchów w `overcast`.
+- Dowody: `artifacts/neon-bronze-s24/vqa-final/`, `vqa-final-overcast/`, `sbs-final/`, `sbs-final-overcast/`
+  (zestawienia `ref | przed (ADR 0331) | po` dla `king_head_0325`, `king_front_0325`, `king_34_0325`,
+  `king_street_driver_0331`, `king_street_tele_0331`).
+
+### Liczby przed / po (zmierzone)
+
+| Pozycja | Przed (ADR 0331) | Po (r3 final) | Uwagi |
+|---|---|---|---|
+| figura LOD0 / pomnik z cokołem i zegarem | 5 478 / 5 558 tris | 5 478 / 5 558 tris | bez zmian (test: LOD0 ≤ 6 000, LOD1 ≤ 480) |
+| brąz w `chunk_1_4.glb` | 3 materiały, bez `COLOR_0` | 3 materiały (`3 552 + 602 + 1 344 = 5 498` tris), wszystkie z `COLOR_0` | figura + tablica na cokole |
+| `king_head_0325` (`drawsEst` / `trisExact`, High) | `111` / `431 797` | `111` / `431 797` | +0 draw calli, +0 tris (szacunek edytora przed SRP) |
+| `king_front_0325` (`drawsEst`, High) | `484` | `484` | +0 draw calli |
+| `king_street_driver_0331` (`drawsEst`, High) | `556` | `556` | +0 draw calli |
+| testy Python (`knyszyn/king/0325/0331`) | — | 303 passed, 2 skipped, 1 xfailed | w tym nowy `test_king_bronze_patina_and_wear_vertex_colors` |
+| testy budżetowe (`0221`, `0238`, `v31`, `hero_bridge`) | — | 62 passed | `artifacts/neon-bronze-s24/logs/pytest-budget.log` |
+| Unity EditMode Win64 | — | 1 429 passed, 0 failed, 111 skipped | `artifacts/neon-bronze-s24/logs/editmode-win64.log` |
+
+### Otwarte po dopisku
+- Pomiar FPS w zbudowanym playerze Windows nie był wykonywany w tym zadaniu (do weryfikacji przy buildzie lidera).
+- Napis na płaszczu nadal celowo pominięty (ADR 0325).
+- Kafel `Data/raw/derived/knyszyn` przebudowany w prywatnej kopii derived worktree — do skopiowania do main przed
+  usunięciem worktree.
