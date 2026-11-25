@@ -155,11 +155,13 @@ def build(seed: int):
         dx, dy = x - px, y - py
         rk = np.hypot(dx, dy)
         ak = np.degrees(np.arctan2(dy, dx))
-        breaks = (value_noise(rng, 0.03, x, y) > 0.35).astype(np.float32)
+        # glass-sky-s24: a continuous 4.5 mm ridge drew a long thin diagonal line across the sky against the sun (critic
+        # s24 build #8 "skośne smugi"): now a broken, soft deposit 1-2 cm wide, half as strong, gaps over ~half the arc
+        breaks = smooth01(value_noise(rng, 0.06, x, y), 0.45, 0.70)
         wob = (value_noise(rng, 0.08, x, y) - 0.5) * 3.0           # +-1.5 deg wobble
         # no reversal line at the end of the stroke: a near-vertical ridge read as a column in the sky (ADR 0080 r11)
-        outer_arc = np.exp(-((rk - (R_OUT + 0.012 + wob * 0.004)) / 0.0045) ** 2) * (ak > SWEEP[0]) * (ak < SWEEP[1])
-        ridge = np.maximum(ridge, (0.08 * outer_arc) * breaks * (0.5 + 0.5 * fine))
+        outer_arc = np.exp(-((rk - (R_OUT + 0.014 + wob * 0.006)) / 0.010) ** 2) * (ak > SWEEP[0]) * (ak < SWEEP[1])
+        ridge = np.maximum(ridge, (0.04 * outer_arc) * breaks * (0.5 + 0.5 * fine))
     wiped_film = wiped * 0.03 * speck                                # the blade never leaves the glass perfectly clean
     R = np.clip(edge * 0.55 + unwiped + ridge + wiped_film, 0, 1) * on_glass
 
