@@ -1,0 +1,60 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "dw671-tykocin-04",
+ "cameras": [
+  {
+   "id": "vs_cab_seam_03",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    27.1,
+    1001.03,
+    125.77
+   ],
+   "look_at": [
+    2.55,
+    935.46,
+    124.47
+   ],
+   "fov_deg": 60.0,
+   "note": "just south of the seam with dw671-tykocin-03",
+   "heading_deg": 201.5
+  },
+  {
+   "id": "vs_cab_village_end",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -13.36,
+    920.12,
+    126.46
+   ],
+   "look_at": [
+    -50.12,
+    860.54,
+    125.16
+   ],
+   "fov_deg": 60.0,
+   "note": "end of the sidewalks (node 1123401728)",
+   "heading_deg": 212.6
+  },
+  {
+   "id": "vs_above_village_end",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    -25.66,
+    897.37,
+    168.82
+   ],
+   "look_at": [
+    -40.75,
+    873.78,
+    123.82
+   ],
+   "fov_deg": 60.0,
+   "note": "end of the sidewalks from 45 m",
+   "heading_deg": 212.6
+  }
+ ]
+}

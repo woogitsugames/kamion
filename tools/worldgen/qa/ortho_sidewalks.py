@@ -413,7 +413,8 @@ def main(argv=None):
     for rid, rep in zip(a.region, reports):
         out = REPO / a.out
         out.mkdir(parents=True, exist_ok=True)
-        (out / f"{rid}.json").write_text(json.dumps(rep, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        (out / f"{rid}.json").write_text(json.dumps(rep, indent=1, ensure_ascii=False) + "\n", encoding="utf-8",
+                                         newline="\n")
         for ed in rep["edges"]:
             print(f"{rid} {ed['edge']:44s} L {ed['length_m']:6.1f} bu {ed['built_up_share']} paved {ed['paved_total_median_m']} "
                   f"cw {ed['carriageway_m']} | left {ed['left']['valid']}/{ed['left']['share']} -> {ed['left']['sidewalk_w']} "
@@ -426,7 +427,7 @@ def main(argv=None):
                 print(f"{rid}: {len(ovs)} entries (dry run)")
             elif ovs:
                 f.write_text(json.dumps({"schema": SCHEMA, "generated_by": "tools/worldgen/qa/ortho_sidewalks.py fit",
-                                         "overrides": ovs}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+                                         "overrides": ovs}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
                 print(f"{rid}: wrote {len(ovs)} entries -> {f.relative_to(REPO)}")
             elif f.exists():
                 f.unlink()
