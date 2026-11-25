@@ -443,8 +443,9 @@ Shader "Kamion/World PBR"
             #if defined(_GROUNDMASKS)
                 {
                     float2 enDx = ddx(i.posEN), enDy = ddy(i.posEN);     // outside the branch (gradients)
+                    half2 mbD = half2(ddx(i.masks.b), ddy(i.masks.b));
                     if (_RegionOriginEN.z > 0.5)
-                        KamionFieldMosaic(i.posEN, _RegionOriginEN.xy, footprint, enDx, enDy, macro.g, i.masks, fieldAlb, fieldSlope);
+                        KamionFieldMosaic(i.posEN, _RegionOriginEN.xy, footprint, enDx, enDy, mbD, macro.g, i.masks, fieldAlb, fieldSlope);
                 }
             #endif
                 half swardCalm = 0.0;

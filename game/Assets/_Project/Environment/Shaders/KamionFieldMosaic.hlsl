@@ -163,17 +163,23 @@ half KFNoiseSF(float a, float l, float sa, float sl, uint salt)
 // local: region-local E/N (m); origin: EPSG:2180 of the region origin (whole metres); footprint: metres per pixel;
 // enDx / enDy: screen-space derivatives of `local` (ddx, ddy - taken by the caller outside any branch): the row
 // patterns are filtered by the footprint ACROSS the rows, so rows seen end-on stay visible far down the field.
+// mbD: (ddx, ddy) of the farmland flag m.b - with enDx / enDy it gives the flag's ground gradient: the ramp between a
+// field polygon and its neighbour (1 m of mesh beside the roads, 8 m elsewhere) becomes a ragged rough-grass margin.
 // driftN: 0..1 low-frequency noise (macro map). m: terrain masks (in/out). field: linear albedo of the field (rgb)
 // and its cover weight over the grass (a), applied after the ground-mask colouring. slopeEN: ground slope of the
 // furrows / rows (dE, dN), added to the world normal by the caller.
-void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx, float2 enDy, half driftN,
+void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx, float2 enDy, half2 mbD, half driftN,
                        inout half4 m, out half4 field, out half2 slopeEN)
 {
     field = half4(0.0h, 0.0h, 0.0h, 0.0h);
     slopeEN = half2(0.0h, 0.0h);
     half farm = smoothstep(0.84h, 0.88h, m.b);
     if (farm <= 0.0h) return;
-    bool arable = m.b > 0.95h;
+    // r2: ground gradient of the flag (1 / m); > 0 only on the mesh cells that straddle a polygon border
+    float det = enDx.x * enDy.y - enDx.y * enDy.x;
+    float2 gB = abs(det) > 1e-12 ? float2(enDy.y * mbD.x - enDx.y * mbD.y, enDx.x * mbD.y - enDy.x * mbD.x) / det : float2(0.0, 0.0);
+    float gl = length(gB);
+    bool ramp = gl > 0.002;
 
     // ADR 0334 layout. District (KF_DISTRICT_M jittered lattice): one long-axis direction for all its strips (a Podlasie
     // village's strips run side by side, all the same way). Inside it, blocks are the Voronoi cells of a KF_BLOCK_M
@@ -251,6 +257,13 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
 #endif
     // r2: the strip edge is not a ruled line - the strip coordinate meanders by up to +-1.2 m (gentle 71 m bows, a little
     // 17 m and 5 m wiggle - seen end-on from the cab the furrows must stay near-straight, r2 render review), so the colour seam, the baulk and every row parallel to the edge follow one ploughed-by-eye line
+    // r2 polygon border: the flag passes 0.90 (the grassland code) on its way from arable 1.00 to the verge - that used
+    // to draw a ruler-straight band of vivid meadow green around every arable polygon. Now the ramp below the arable
+    // threshold is a margin of rough grass, and the threshold wanders by ~+-0.5 m of ground (ragged crop edge).
+    float thA = 0.95 + (ramp ? clamp(((n1 - 0.5) + (n5 - 0.5) * 0.8) * 1.6 * gl, -0.04, 0.04) : 0.0);
+    bool arable = m.b > thA;
+    float dA = max(0.3 * gl, 0.004);
+    half margin = ramp ? (half)saturate((thA + dA - m.b) / (2.0 * dA)) : 0.0h;
     float wob = (nL - 0.5) * KF_WOB_AL + (n17 - 0.5) * KF_WOB_A17 + (n5 - 0.5) * KF_WOB_A5;
     float t = (dot(rel, dir) + wob) / w;          // across the strips, relative to the block seed (fp32-safe)
     float along = dot(rel, float2(-dir.y, dir.x)); // along the strip (m)
@@ -426,18 +439,20 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     float hbw = (fieldTrack ? 1.9 : 1.2) + (n17 - 0.5) * 1.2 + (n5 - 0.5) * 0.5 + (n1 - 0.5) * 0.3;
     half bblock = (half)(saturate((hbw - blockEdge) / fpe + 0.5) * saturate(2.0 * hbw / fp));
     thin = max(thin, (half)saturate(1.0 - (blockEdge - hbw) / (0.6 + 2.2 * n17)));
-    baulk = max(baulk, bblock);
+    baulk = max(baulk, max(bblock, margin));
+    if (ramp && arable) thin = max(thin, (half)saturate(1.0 - (m.b - thA) / max(2.5 * gl, 1e-3)));
     half3 bc = lerp(half3(0.072h, 0.112h, 0.036h), half3(0.150h, 0.140h, 0.072h), smoothstep(0.45h, 0.8h, n5));
     bc *= 0.85h + 0.30h * n1;
     col = lerp(col, lerp(col, bc, 0.55h), thin * thin * (0.25h + 0.70h * n5));
-    col = lerp(col, bc, baulk * (arable ? 0.92h : 0.60h));     // between two meadows the baulk is only rougher grass
+    half bstr = lerp(arable ? 0.92h : 0.35h, 0.92h, margin);     // between two meadows the baulk is only rougher grass
+    col = lerp(col, bc, baulk * bstr);
     if (fieldTrack)
     {
         half rut = (half)(saturate((0.26 - abs(blockEdge - 0.8)) / fp + 0.5) * saturate(0.52 / fp));
         col = lerp(col, half3(0.215h, 0.180h, 0.120h) * (0.85h + 0.30h * n5), rut * (0.55h + 0.40h * n17));
     }
     slopeEN *= (1.0h - baulk) * farm * alb.a;
-    fb = lerp(fb, 0.50h, baulk);
+    fb = lerp(fb, 0.50h, baulk * bstr);
 
     m.b = lerp(m.b, fb, farm);
     m.a = lerp(m.a, fa, farm);
