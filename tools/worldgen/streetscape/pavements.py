@@ -85,6 +85,15 @@ CROSSING_MIN_HALF_M = 0.5    # WORKING_VALUE: a flat part shorter than 1 m is no
 CROSSING_SNAP_M = 0.5        # node this far outside the carriageway edge still belongs to it (= roads.markings)
 SKIP_CROSSING = ("unmarked", "no", "informal")     # = roads.markings: no zebra is painted there either
 
+# ADR 0349 (dopisek neon-paving-s24): pas płytek ostrzegawczych na dojściu do przejścia dla pieszych
+# (Dz.U. 2022 poz. 1518 § 36 ust. 3 / R6-005 — dostosowanie do potrzeb osób z niepełnosprawnościami wzroku;
+# szerokość 0,50 m = 2 rzędy płyt 25 x 25 cm i odsunięcie 0,05 m za krawężnikiem 0,15 m: WORKING_VALUE).
+TACTILE_SETBACK_M = 0.05
+TACTILE_WIDTH_M = 0.50
+TACTILE_LIFT_M = 0.008
+TACTILE_MIN_WALK_M = 0.80
+TACTILE_MAT = "sidewalk_tactile"
+
 # ------------------------------------------------------------------------------------------------ sidewalk types
 DEFAULT = "paving_grey"
 MATERIAL = {
@@ -493,6 +502,73 @@ def retype_sidewalks(parts: list, zones: Zones | None) -> dict:
     return rep
 
 
+def crossing_tactile_strips(w, overrides) -> dict:
+    """ADR 0349 (dopisek neon-paving-s24): tactile warning strips (`pas płytek ostrzegawczych`) behind lowered kerbs
+    at marked pedestrian crossings. Opt-in via `pavement_rules.crossing_tactile: true`. Draped at TACTILE_LIFT_M over
+    the meshed road/sidewalk surface (SurfaceTop) in layer `markings`, material `sidewalk_tactile`."""
+    from roads import meshing as M
+    from roads import network as NW
+    from roads import standards as S
+    from streetscape import furniture as FU
+
+    r = rules_of(overrides)
+    if not r or not r.get("crossing_tactile"):
+        return {"strips": 0, "tris": 0}
+    drops = [d for d in (getattr(w, "plot_plan", None) or {}).get("drops", [])
+             if d.get("kerb_only") and str(d.get("src", "")).startswith("crossing:")]
+    if not drops:
+        return {"strips": 0, "tris": 0}
+    chains = {c.id: c for c in w.net.chains}
+    surf_top = FU.SurfaceTop([p for p in w.buf.parts if p.layer == "road"])
+    strips, tris_tot = 0, 0
+    at: list = []
+    for dr in drops:
+        c = chains.get(dr["chain"])
+        if c is None or c.line is None:
+            continue
+        sd = dr["side"]
+        sgn = 1.0 if sd == "L" else -1.0
+        s_mid, half = float(dr["s"]), float(dr["half"])
+        kind, h0, w0, _, mat0 = NW.side_params(c, sd, s_mid)
+        if kind != NW.URBAN or mat0 != 1 or w0 < TACTILE_MIN_WALK_M:
+            continue
+        u0 = S.KERB_TOP_W + TACTILE_SETBACK_M
+        u1 = min(u0 + TACTILE_WIDTH_M, S.KERB_TOP_W + w0 - 0.05)
+        if u1 - u0 < 0.25:
+            continue
+        n_st = max(2, int(round(2.0 * half / 0.5)) + 1)
+        ss = np.linspace(s_mid - half, s_mid + half, n_st)
+        us = np.array([u0, 0.5 * (u0 + u1), u1])
+        _, N_v = c.line.frame(ss)
+        P_c = c.line.point(ss)
+        hw = np.array([float(c.hw_at(s_)) for s_ in ss])
+        zc = np.interp(ss, c.line.s, c.z) if getattr(c, "z", None) is not None else np.zeros(n_st)
+        rows, uvs = [], []
+        for k in range(n_st):
+            g = P_c[k] + N_v[k] * sgn * hw[k]
+            out = N_v[k] * sgn
+            _, hk, _, _, _ = NW.side_params(c, sd, float(ss[k]))
+            z_gutter = float(zc[k]) - hw[k] * S.CROSSFALL
+            row, urow = [], []
+            for u in us:
+                xy = g + out * u
+                zt = surf_top.top(float(xy[0]), float(xy[1]))
+                if not np.isfinite(zt):
+                    zt = z_gutter + hk + (u - S.KERB_TOP_W) * S.CROSSFALL
+                row.append([float(xy[0]), float(xy[1]), float(zt) + TACTILE_LIFT_M])
+                urow.append([float(ss[k] - ss[0]), float(u - u0)])
+            rows.append(row)
+            uvs.append(urow)
+        V = np.asarray(rows, float).reshape(-1, 3)
+        UV = np.asarray(uvs, float).reshape(-1, 2)
+        T = M.grid_tris(n_st, len(us), flip=(sgn < 0))
+        w.buf.add("markings", TACTILE_MAT, V, UV, T, footprint=False, src=f"{dr['src']}:tactile:{sd}")
+        strips += 1
+        tris_tot += len(T)
+        at.append([round(float(P_c[n_st // 2][0]), 1), round(float(P_c[n_st // 2][1]), 1), sd])
+    return {"strips": strips, "tris": tris_tot, "at_en": at}
+
+
 def run(w, region_id: str, log=lambda *a: None) -> dict:
     """build_world hook: plan the zones of the region from its git data and retype the footways of w.buf."""
     import json
@@ -500,7 +576,8 @@ def run(w, region_id: str, log=lambda *a: None) -> dict:
     from roads import pipeline
     from streetscape import sources as SRC
     overrides = pipeline.load_overrides(region_id)
-    if rules_of(overrides) is None:
+    rules = rules_of(overrides)
+    if rules is None:
         return {"enabled": False}
     rdir = pipeline.REGIONS / region_id
 
@@ -509,6 +586,9 @@ def run(w, region_id: str, log=lambda *a: None) -> dict:
     zones = plan(overrides, w.origin, SRC.load(region_id), _json(rdir / "generated" / "osm_context.json"),
                  _json(rdir / "buildings.geojson"), _json(rdir / "roads.graph.json"))
     rep = retype_sidewalks(w.buf.parts, zones)
+    if rules.get("crossing_tactile"):
+        rep["tactile"] = crossing_tactile_strips(w, overrides)
+        log("crossing tactile strips (ADR 0349):", rep["tactile"])
     log("sidewalk surfaces (ADR 0237):", rep["m2_by_material"], "stale", rep["overrides_stale"])
     if rep["tris_in"] != rep["tris_out"]:
         raise RuntimeError(f"sidewalk retype changed the triangle count: {rep['tris_in']} -> {rep['tris_out']}")

@@ -61,6 +61,9 @@ Shader "Kamion/World PBR"
         _GutterDirt ("Gutter grime (_ROADWEAR)", Range(0, 1)) = 0.5
         _DripBand ("Lane-centre oil / soot drip band between the wheel paths (_ROADWEAR)", Range(0, 1)) = 0
         _Grime ("Ground grime (_GRIME): x damp darkening, y damp threshold (macro pool), z joint dirt, w damp gloss", Vector) = (0.45, 0.62, 0.3, 0.5)
+        _PavingVar ("Sidewalk paving variation (ADR 0349): x batch, y stains, z joint boost, w repair patches", Vector) = (0, 0, 0, 0)
+        _PavingWeed ("Sidewalk edge weeds (ADR 0349): x weed strength, y kerb band m, z block jitter, w enabled", Vector) = (0, 0, 0, 0)
+        _Tactile ("Tactile warning slabs (ADR 0349): x tile m, y dome pitch m, z dome radius m, w relief", Vector) = (0, 0, 0, 0)
         _KerbWear ("Kerb wear: joint dirt, mineral film, film threshold, enabled (ADR0118)", Vector) = (0, 0, 0.55, 0)
         _GroundWearExclude ("Ground wear exclusion: object-local E/N bounds, min/max (ADR0118)", Vector) = (0, 0, 0, 0)
         _GroundGrimeBase ("Ground grime inside exclusion: original coefficients (ADR0118)", Vector) = (0.45, 0.62, 0.3, 0.5)
@@ -128,6 +131,7 @@ Shader "Kamion/World PBR"
             float4 _AsphaltWear;
             float4 _PatchSeam;
             float4 _Grime, _SkyOcc, _VertexWeed, _GroundBounce;
+            float4 _PavingVar, _PavingWeed, _Tactile;   // ADR 0349 sidewalk paving variation + tactile warning domes
             float4 _VertexGrime;
             float4 _BronzePatina, _BronzeRubbed, _BronzeParams;   // ADR 0331 weathered cast bronze + patina
             float _LowNoShadow;
@@ -554,6 +558,12 @@ Shader "Kamion/World PBR"
                     half j = (Hash12(float2(id * 97.0, 3.1)) - 0.5) * 2.0;
                     half fade = saturate(_ElementSize / (footprint * 2.5) - 0.5);
                     albedo *= 1.0 + _ElementJitter * j * fade;
+                    if (_PavingWeed.w > 0.5)
+                    {
+                        // Subtle per-block warm/cool cement hue drift (ADR 0349)
+                        half h2 = (Hash12(float2(id * 53.0, 9.7)) - 0.5) * 2.0;
+                        albedo *= half3(1.0 + 0.038 * h2 * fade, 1.0 + 0.008 * h2 * fade, 1.0 - 0.044 * h2 * fade);
+                    }
                     // joints collect dirt / moss (Var.B)
                     albedo = lerp(albedo, albedo * half3(0.78, 0.8, 0.72), var.b * 0.5 * fade);
                 }
@@ -766,6 +776,84 @@ Shader "Kamion/World PBR"
                     half wet = smoothstep(thr, thr + 0.025, pool);
                     albedo *= 1.0 - grime.x * wet;
                     smooth = lerp(smooth, max(smooth, 0.62), wet * grime.w);
+
+                    // ---- ADR 0349 (dopisek neon-paving-s24): concrete block variation mask (zero extra draws / fetches).
+                    // Deterministic from object-space E/N (survives floating-origin rebases); multiplied by groundWear so
+                    // Kwadrat Park stays protected.
+                    if (_PavingWeed.w > 0.5 && groundWear > 0.001)
+                    {
+                        float2 po = TransformWorldToObject(pw).xz;
+                        float2 p45 = po - 45.0 * floor(po / 45.0);
+                        half gw = groundWear;
+
+                        // (a) 3 concrete pallet / batch tones stepped along 0.20 m paver courses
+                        float2 pq = floor(p45 / 0.20) * 0.20;
+                        float bv = ValueNoise12(pq / 5.5 + 13.7) * 0.65 + ValueNoise12(pq / 2.4 + 31.1) * 0.35;
+                        half bCool = (half)(1.0 - smoothstep(0.34, 0.40, bv));
+                        half bWarm = (half)smoothstep(0.60, 0.66, bv);
+                        half3 batchMul = half3(1.0h, 1.0h, 0.99h);
+                        batchMul = lerp(batchMul, half3(0.95h, 0.99h, 1.05h) * (1.0h + _PavingVar.x * 0.85h), bCool);
+                        batchMul = lerp(batchMul, half3(1.07h, 1.01h, 0.91h) * (1.0h - _PavingVar.x * 0.95h), bWarm);
+                        albedo *= lerp(half3(1.0h, 1.0h, 1.0h), batchMul, gw);
+
+                        // (b) Sparse utility-trench / repair patches of different paving (~30 % of 8.5 m cells)
+                        if (_PavingVar.w > 0.01)
+                        {
+                            float2 cell = floor(po / 8.5);
+                            float h0 = Hash12(cell + 19.3);
+                            if (h0 > 0.70)
+                            {
+                                float2 ctr = (cell + 0.25 + 0.50 * float2(Hash12(cell + 4.1), Hash12(cell + 8.7))) * 8.5;
+                                float2 hsz = float2(0.55 + 0.85 * Hash12(cell + 12.3), 0.45 + 0.65 * Hash12(cell + 27.9));
+                                float2 dp = abs(floor(po / 0.20 + 0.5) * 0.20 - ctr) - hsz;
+                                float pDist = max(dp.x, dp.y);
+                                half pMask = (half)(1.0 - smoothstep(-0.04, 0.04, pDist)) * _PavingVar.w * gw;
+                                half pRim = (half)(1.0 - smoothstep(0.0, 0.09, abs(pDist))) * _PavingVar.w * gw;
+                                float kindP = Hash12(cell + 43.2);
+                                half3 pTone = kindP > 0.5
+                                    ? half3(1.22h, 1.23h, 1.25h)   // newer pale-cool replacement pavers
+                                    : half3(0.76h, 0.72h, 0.68h);  // darker warm-charcoal relaid blocks
+                                albedo *= lerp(half3(1.0h, 1.0h, 1.0h), pTone, pMask);
+                                // pale bedding-sand seam around the cut border
+                                albedo = lerp(albedo, albedo * half3(1.14h, 1.11h, 1.02h) + half3(0.012h, 0.010h, 0.006h), pRim * 0.45h);
+                                smooth = lerp(smooth, smooth * (kindP > 0.5 ? 1.15h : 0.82h), pMask);
+                            }
+                        }
+
+                        // (c) Organic dark stains / leaf tannin + pale dusty efflorescence blotches
+                        float stD = ValueNoise12(p45 / 2.2 + 5.3) * 0.60 + ValueNoise12(p45 / 0.65 + 17.9) * 0.40;
+                        half darkStain = (half)smoothstep(0.58, 0.78, stD) * _PavingVar.y * gw;
+                        albedo *= lerp(half3(1.0h, 1.0h, 1.0h), half3(0.64h, 0.62h, 0.56h), darkStain);
+                        smooth *= 1.0h - 0.35h * darkStain;
+
+                        float stL = ValueNoise12(p45 / 3.1 + 41.2) * 0.55 + ValueNoise12(p45 / 0.85 + 63.7) * 0.45;
+                        half paleStain = (half)smoothstep(0.66, 0.85, stL) * (1.0h - darkStain) * _PavingVar.y * 0.65h * gw;
+                        albedo = lerp(albedo, albedo * half3(1.16h, 1.15h, 1.10h) + half3(0.014h, 0.013h, 0.010h), paleStain);
+
+                        // (d) Darker earthy joints (Var.B + Mask.G AO, mip-friendly)
+                        half jointM = max(gv.b, saturate((0.88h - mask.g) * 3.0h));
+                        half pjFade = (half)saturate(0.035 / max(footprint, 1e-4));
+                        half jAmt = jointM * _PavingVar.z * lerp(0.45h, 1.0h, pjFade) * gw;
+                        albedo = lerp(albedo, albedo * half3(0.56h, 0.53h, 0.46h), jAmt);
+                        smooth *= 1.0h - 0.50h * jAmt;
+
+                        // (e) Sparse muted weeds / moss in joints near kerb (u ~ 0.15 m) and back edge (u >= 1.5 m)
+                        // Guarded against legacy (0, 0) and (-1, 5) missing UV1.
+                        if (_PavingWeed.x > 0.01 && i.uv.z >= -0.5 && i.uv.w > 0.08 && i.uv.w < 10.0)
+                        {
+                            half nearKerb = 1.0h - (half)smoothstep(0.08, _PavingWeed.y, abs(i.uv.w - 0.15));
+                            half nearBack = (half)smoothstep(1.45, 2.05, i.uv.w);
+                            half edgeZone = max(nearKerb, nearBack);
+                            float wn = ValueNoise12(p45 / 2.6 + 73.1) * 0.55 + ValueNoise12(p45 / 0.48 + 11.4) * 0.45;
+                            float wFine = ValueNoise12(p45 / 0.14 + 29.7);
+                            half tuft = (half)smoothstep(0.55, 0.73, wn) * (0.55h + 0.45h * (half)wFine);
+                            half jCrack = saturate(jointM * 1.55h + saturate((0.90h - mask.g) * 2.5h) * 0.45h);
+                            half weedM = jCrack * edgeZone * tuft * _PavingWeed.x * gw * lerp(0.35h, 1.0h, pjFade);
+                            half3 weedCol = lerp(half3(0.055h, 0.078h, 0.028h), half3(0.095h, 0.092h, 0.038h), (half)wFine);
+                            albedo = lerp(albedo, weedCol, weedM);
+                            smooth = lerp(smooth, 0.08h, weedM);
+                        }
+                    }
                 }
             #endif
 
@@ -1236,6 +1324,42 @@ Shader "Kamion/World PBR"
                     ao *= lerp(1.0h, lerp(1.0h, i.masks.b, _BronzeParams.w), bEn);
                 }
             #endif
+                // ---- ADR 0349 (dopisek neon-paving-s24): procedural tactile warning slabs (25x25 cm, 5x5 blister domes)
+                // Uniform branch (_Tactile.w) -> zero extra keywords, zero extra texture memory.
+                if (_Tactile.w > 0.5)
+                {
+                    float2 tu = i.uv.xy;
+                    float fw = max(length(fwidth(tu)), 1e-4);
+                    float2 p45t = TransformWorldToObject(pw).xz;
+                    p45t = p45t - 45.0 * floor(p45t / 45.0);
+                    // 25 x 25 cm tile grid + subtle per-tile batch variation
+                    float2 tileId = floor(tu / _Tactile.x);
+                    float2 tileF = frac(tu / _Tactile.x);
+                    float2 tileEdge = min(tileF, 1.0 - tileF) * _Tactile.x;
+                    half tJoint = (1.0h - (half)smoothstep(0.002, 0.005 + fw, min(tileEdge.x, tileEdge.y))) * (half)saturate(0.025 / fw);
+                    half tileVar = (half)((Hash12(tileId + 7.3) - 0.5) * 0.10);
+                    // 5 x 5 truncated-cone blister domes per tile (pitch = 50 mm, r = 14 mm)
+                    float2 dCell = (frac(tu / _Tactile.y) - 0.5) * _Tactile.y;
+                    float dR = length(dCell);
+                    float r0 = _Tactile.z;
+                    half domeFade = (half)saturate(0.016 / fw);
+                    half domeTop = (1.0h - (half)smoothstep(r0 * 0.85, r0 + fw, dR)) * domeFade;
+                    half domeRim = (half)(smoothstep(r0 * 0.45, r0 * 0.72, dR) * (1.0 - smoothstep(r0 * 0.85, r0 + fw, dR))) * domeFade;
+                    half domeRing = (half)(smoothstep(r0 * 0.88, r0 * 1.05, dR) * (1.0 - smoothstep(r0 * 1.15, r0 * 1.55 + fw, dR))) * domeFade;
+                    // Fine weathered concrete grain + mild soiling (no ghost 20x10 brick lines from _BaseMap)
+                    half grain = (half)((ValueNoise12(p45t / 0.03) - 0.5) * 0.08 * saturate(0.04 / fw));
+                    half mott = (macro.a - 0.5h) * 0.14h + (macro.b - 0.5h) * 0.10h;
+                    albedo = _Tint.rgb * (1.0h + tileVar + mott + grain);
+                    albedo *= 1.0h - 0.42h * tJoint;
+                    albedo *= 1.0h - 0.32h * domeRing;
+                    albedo *= 1.0h + 0.12h * domeTop;
+                    ao = (1.0h - 0.35h * tJoint) * (1.0h - 0.25h * domeRing);
+                    smooth = lerp(0.14h, 0.24h, domeTop) * (1.0h - 0.4h * tJoint);
+                    float2 dir = dCell / max(dR, 1e-5);
+                    half2 dNorm = (half2)(-dir * (domeRim * _Tactile.w * 0.80));
+                    tn = normalize(half3(dNorm, 1.0h));
+                }
+
                 albedo = saturate(albedo);
                 smooth = saturate(smooth);
                 metal = saturate(metal);
