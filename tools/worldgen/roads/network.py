@@ -1304,8 +1304,10 @@ def abreast_forks(net: Network, report: list | None = None):
 
 # --------------------------------------------------------------------------------------------
 def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: list | None = None,
-                 yards=None, trims: bool = False):
-    """Per-station side profile parameters for every chain (left 'L' and right 'R' of chain direction)."""
+                 yards=None, trims: bool = False, only: set | None = None):
+    """Per-station side profile parameters for every chain (left 'L' and right 'R' of chain direction). `only`: chain
+    ids to assign (seam_taper nominal sides at the seam ends); the others keep what they have. A chain's profile depends
+    on the geometry of the others, never on their profiles, so a subset gives the same values as the full pass."""
     # one-way carriageways (for median detection)
     ow_lines, ow_meta = [], []
     for c in net.chains:
@@ -1322,6 +1324,8 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
     implied_m = 0.0
 
     for c in net.chains:
+        if only is not None and c.id not in only:
+            continue
         n = len(c.line.s)
         step = max(1, int(4.0 / DENSE))
         idx = np.arange(0, n, step)
@@ -1515,6 +1519,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                             h[m], mat[m] = ta["height_m"], ta["code"]
             # a parallel carriageway right next to this edge (on-ramp beside the Andersa ramp at Rondo Bieżeństwa):
             # the verge / ditch / sidewalk would lie on the other road, so the edge is a plain kerb
+            tight_d = np.zeros(n, bool)
             if not (c.roundabout and kind[0] == ISLAND):
                 tight, flush, gap = _tight_side(c, sgn, idx, kind, h, w, depth, mat, all_tree, all_chains, trims)
                 kind[tight], h[tight], w[tight], mat[tight] = URBAN, S.KERB_HEIGHT, 0.0, 0
@@ -1523,6 +1528,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 # ... and the flush asphalt strip reaches the other carriageway: the 0.15 m strips of the two edges
                 # left a 0.3-0.9 m slot down to the terrain where the gap opens (j:n10015785253, terrain_walls QA)
                 w[flush] = np.clip(gap[flush], 0.0, FLUSH_FILL_MAX_M)
+                tight_d = tight | flush               # seams-side-s24: the seam agreement never overrides these
                 c.meta.setdefault("tight_m", {})[side] = round(float(tight.sum() * DENSE), 1)
                 c.meta.setdefault("flush_m", {})[side] = round(float(flush.sum() * DENSE), 1)
             # ADR 0110 (REVIEW s10-0100 P1-1): grass behind a kerb that has no sidewalk, at the kerb crown. The kerb
@@ -1545,7 +1551,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             mat = mat.astype(np.int64)
             mat[ssel] = sh_code[side][ssel]
             c.side[side] = {"kind": kind, "walk": walk_d, "median": med_d, "raw": {"h": h, "w": w, "depth": depth},
-                            "mat": mat, "verge": verge}
+                            "mat": mat, "verge": verge, "tight": tight_d}
         structure_sides(c, c.bridge, net, (all_tree, all_chains))
     if implied is not None:
         net.implied_sidewalk_m = round(implied_m, 1)     # ADR 0237 D38: metres of sidewalk added by the rule
