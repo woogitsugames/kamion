@@ -1265,6 +1265,13 @@ GROUND_B_MIN = 0.07             # shader: grassland flag below KF_MEADOW_B0 .. K
 # its own - between an arable field and a meadow a wavy strip of rough grass is left. WORKING_VALUE.
 FIELD_MARGIN_M = (6.0, 2.0)
 FIELD_MARGIN_CELL_M = (64.0, 19.0)
+# r3, the P0 itself (critic wave10-pre: "idealnie prostokątna zielona łatka", dk65-07 f2_obl_maize): a strip of the
+# layout that the BDOT polygon outline cuts down to a stub - there a 25 x 50 m piece of a fallow strip in a 30 m wide
+# arm of an arable polygon, between ripe cereal and a copse - is drawn by the shader as a ruler-edged rectangle of
+# another crop. Nobody works a separate crop on 0.1 ha in a field corner: a connected piece of one strip smaller than
+# FIELD_STUB_M2 (and not cut by the tile edge, where it goes on in the neighbour) is open rough ground - the unworked
+# corner by the wood - and the margin rule then frays the crop edge beside it. WORKING_VALUE.
+FIELD_STUB_M2 = 2500.0
 
 
 def _h32(a, b, salt):
@@ -1439,7 +1446,7 @@ def field_use(L, arable):
     return np.where(np.asarray(arable, bool), ua, ug)
 
 
-def field_mosaic(src, origin, hf, with_kind=False):
+def field_mosaic(src, origin, hf, with_kind=False, with_fid=False):
     """(level, inside[, kind]): dryness level (H, W) of the farmland mosaic and its mask - the cells inside BDOT10k
     OT_PTTR_A; kind = 1-based index into sorted(FIELD_LEVELS). level carries the baulks and the in-field drift (QA
     reference of the per-pixel shader since ADR 0298; the mesh gets the flag only)."""
@@ -1454,7 +1461,8 @@ def field_mosaic(src, origin, hf, with_kind=False):
         kind[m] = n
         inside |= m
     if not inside.any():
-        return (np.zeros((H, W), np.float32), inside) + ((kind,) if with_kind else ())
+        return (np.zeros((H, W), np.float32), inside) + ((kind,) if with_kind else ()) \
+            + ((np.zeros((H, W), np.uint32),) if with_fid else ())
     X = origin[0] + hf.x0 + np.arange(W)[None, :] + np.zeros((H, 1))
     Y = origin[1] + hf.y1 - np.arange(H)[:, None] + np.zeros((1, W))
     fid, bid = field_ids(X, Y)
@@ -1476,7 +1484,8 @@ def field_mosaic(src, origin, hf, with_kind=False):
     edge[1:, :] |= key[1:, :] != key[:-1, :]
     baulk = ndimage.distance_transform_edt(~edge) <= FIELD_BAULK_M
     level = np.where(baulk, FIELD_BAULK_B, level)
-    return (np.clip(level, 0.0, 1.0).astype(np.float32), inside) + ((kind,) if with_kind else ())
+    return (np.clip(level, 0.0, 1.0).astype(np.float32), inside) + ((kind,) if with_kind else ()) \
+        + ((fid,) if with_fid else ())
 
 
 def ground_masks(src, origin, hf, dist_road, forests, cleared=(), report=None):
@@ -1500,8 +1509,34 @@ def ground_masks(src, origin, hf, dist_road, forests, cleared=(), report=None):
     B = np.where(mapped_lawn, .06 + dry * .40,
                  np.where(dist_road < 4.0, .08 + dry * .84, .25 + dry * .75))
     # ADR 0295 (review 2026-11-18 P1-4): farmland = a mosaic of fields, not the patch noise
-    flevel, finside, fkind = field_mosaic(src, origin, hf, with_kind=True)
+    flevel, finside, fkind, ffid = field_mosaic(src, origin, hf, with_kind=True, with_fid=True)
     fields = finside & ~mapped_lawn & (dist_road >= FIELD_ROAD_M) & ~G.astype(bool)
+    n_stub = 0
+    if fields.any():
+        # r3 strip stubs (FIELD_STUB_M2): connected pieces of one strip and one kind, split along the strip seams
+        key = ffid.astype(np.int64) * 4 + fkind
+        seam = np.zeros((H, W), bool)
+        seam[:, 1:] |= key[:, 1:] != key[:, :-1]
+        seam[1:, :] |= key[1:, :] != key[:-1, :]
+        lab, nlab = ndimage.label(fields & ~seam)
+        if nlab:
+            area = np.bincount(lab.ravel(), minlength=nlab + 1)
+            edge_lab = np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))
+            tiny = area < FIELD_STUB_M2
+            tiny[0] = False
+            tiny[edge_lab] = False
+            # only pieces cut by the OUTLINE of the farmland (short strips at a block corner inside a field stay)
+            cut = np.zeros(nlab + 1, bool)
+            cut[np.unique(lab[ndimage.binary_dilation(~fields, iterations=2)])] = True
+            tiny &= cut
+            stub = tiny[lab]
+            if stub.any():
+                # the seam cells around a stub go with it (a seam between a stub and a kept strip stays with the strip)
+                grown = ndimage.binary_dilation(stub, iterations=1) & fields & seam
+                kept = ndimage.binary_dilation((lab > 0) & ~stub, iterations=1)
+                stub |= grown & ~kept
+                n_stub = int(tiny.sum())
+                fields &= ~stub
     if fields.any():
         # r3 ragged margin (FIELD_MARGIN_M): distance to the edge of the own kind, compared with a smooth noise
         ex, ny = np.meshgrid(origin[0] + east, origin[1] + north)
@@ -1521,7 +1556,8 @@ def ground_masks(src, origin, hf, dist_road, forests, cleared=(), report=None):
                               "b_std_after": round(float(flevel[fields].std()), 4) if fields.any() else None,
                               "b_mean_before": round(float(B[fields].mean()), 4) if fields.any() else None,
                               "b_mean_after": round(float(flevel[fields].mean()), 4) if fields.any() else None,
-                              "layout": "ESTIMATED strips (no cadastral parcels in the repo)"}
+                              "layout": "ESTIMATED strips (no cadastral parcels in the repo)",
+                              "strip_stubs_removed": n_stub}
     gardens = PV.rasterize_polys([PV._poly_local(f["geometry"]["coordinates"], origin)
                                   for f in (src.get("bdot10k") or {}).get("OT_PTZB_A") or []
                                   if str((f.get("props") or {}).get("rodzaj", "")).strip() in GARDEN_RODZAJ], hf)

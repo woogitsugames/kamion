@@ -843,8 +843,10 @@ namespace Game.World.Import
                     if (s_BorderMask != null && s_BorderMask(basePt[i]) is Color32 bc)
                     {
                         // ADR 0298: a field crossing the edge keeps its BDOT kind (grassland 0.90 / arable 1.00 flag) out
-                        // into the apron, so the mosaic palette does not switch at the seam
-                        if (s_FarmApron && bc.b >= 219) mc.b = bc.b;
+                        // into the apron, so the mosaic palette does not switch at the seam.
+                        // ADR 0334 r3: tiles rebuilt with the new contract flag grassland as 0.00 (<= 8 / 255 here;
+                        // every other ground keeps >= 0.07 = 18 / 255)
+                        if (s_FarmApron && (bc.b >= 219 || bc.b <= 8)) mc.b = bc.b;
                         if (d <= BorderBlendM) mc = Color32.Lerp(bc, mc, Mathf.Clamp01(d / BorderBlendM));   // the terrain's own masks at the edge
                     }
                     col.Add(mc);

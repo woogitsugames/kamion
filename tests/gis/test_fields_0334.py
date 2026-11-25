@@ -49,7 +49,7 @@ def test_shader_use_thresholds_match_the_python_mirror():
         assert salt in HLSL, salt
     assert f"#define KF_DISTRICT_M {VG.FIELD_DISTRICT_M:.1f}" in HLSL and f"#define KF_STRETCH {VG.FIELD_STRETCH:.1f}" in HLSL
     # the layout is relative to the block seed in both (precision 700 km from the CRS origin)
-    assert "float2 rel = local - seed;" in HLSL and "float2 r0 = local - sD;" in HLSL
+    assert "float2 rel = lw - seed;" in HLSL and "float2 r0 = lw - sD;" in HLSL and "float2 relR = local - seed;" in HLSL  # r3: lw = warped layout position
 
 
 def test_field_layout_is_a_function_of_the_position():

@@ -49,7 +49,8 @@ def test_layout_warp_bows_the_edges_by_metres_and_inverts():
     assert np.abs(x - P[:, 0]).max() < 0.01 and np.abs(y - P[:, 1]).max() < 0.01
 
 
-def test_grassland_flag_is_the_low_code_and_margins_are_ragged():
+def test_grassland_flag_is_the_low_code_and_margins_are_ragged(monkeypatch):
+    monkeypatch.setattr(VG, "FIELD_STUB_M2", 0.0)                   # the margin rule alone (stubs: next test)
     assert VG.FIELD_FLAG_B["roślinność trawiasta"] == 0.0 and VG.FIELD_FLAG_B["uprawa na gruntach ornych"] == 1.0
     m0, m1 = (float(re.search(rf"#define {n} ([0-9.]+)", HLSL).group(1)) for n in ("KF_MEADOW_B0", "KF_MEADOW_B1"))
     assert 0.0 < m0 < m1 < VG.GROUND_B_MIN                          # open ground never reads as a meadow
@@ -71,6 +72,40 @@ def test_grassland_flag_is_the_low_code_and_margins_are_ragged():
     assert VG.GROUND_B_MIN - 1e-6 <= B[:90, :90].min() and B[:90, :90].max() <= VG.GROUND_B_MAX + 1e-6
     M = masks("roślinność trawiasta")
     assert np.allclose(M[300:400, 300:400], 0.0, atol=1e-4) and M[:90, :90].min() >= VG.GROUND_B_MIN - 1e-6
+
+
+def test_strip_stubs_cut_by_the_outline_are_open_ground():
+    """The P0 of critic wave10-pre: a 25 x 50 m piece of a strip in a narrow arm of an arable polygon."""
+    from scipy import ndimage
+    hf = _Hf(n=700, x0=-350.0, y1=350.0)
+    far = np.full(hf.z.shape, 100.0)
+    ox, oy = ORIGIN
+    # an L: a 30 m wide arm and a wide body (EPSG:2180 ring; _poly_local subtracts the origin)
+    ring = [[ox - 300, oy - 300], [ox + 300, oy - 300], [ox + 300, oy], [ox - 270, oy], [ox - 270, oy + 300],
+            [ox - 300, oy + 300], [ox - 300, oy - 300]]
+    src = {"bdot10k": {"OT_PTTR_A": [{"id": "t", "geometry": {"type": "Polygon", "coordinates": [ring]},
+                                       "props": {"rodzaj": "uprawa na gruntach ornych"}}], "OT_PTNZ_A": []}, "osm": {"areas": []}}
+    X = ox + hf.x0 + np.arange(700)[None, :] + np.zeros((700, 1))
+    Y = oy + hf.y1 - np.arange(700)[:, None] + np.zeros((1, 700))
+    fid = VG.field_ids(X, Y)[0].astype(np.int64)
+    seam = np.zeros(fid.shape, bool)
+    seam[:, 1:] |= fid[:, 1:] != fid[:, :-1]
+    seam[1:, :] |= fid[1:, :] != fid[:-1, :]
+
+    def pieces(stub_m2):
+        VG_stub, VG.FIELD_STUB_M2 = VG.FIELD_STUB_M2, stub_m2
+        try:
+            rep = {}
+            field = VG.ground_masks(src, ORIGIN, hf, far, [], report=rep)[..., 2] > 0.985
+        finally:
+            VG.FIELD_STUB_M2 = VG_stub
+        lab, n = ndimage.label(field & ~seam)
+        area = np.bincount(lab.ravel())[1:]
+        return field, int(((area >= 150) & (area < 1200)).sum()), rep["farmland"]["strip_stubs_removed"]
+    f0, small0, n0 = pieces(0.0)
+    f1, small1, n1 = pieces(VG.FIELD_STUB_M2)
+    assert n0 == 0 and n1 > 0 and small0 >= 3 and small1 <= small0 // 3      # the small pieces of other crops are gone
+    assert not (f1 & ~f0).any() and f1[380:650, 80:620].mean() > 0.8          # nothing added; the body is still a field
 
 
 def _crop_world(n=500):
