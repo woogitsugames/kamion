@@ -243,7 +243,14 @@ Shader "Kamion/Vegetation"
                 return 1.0h;
             #endif
             }
-            struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            struct A
+            {
+                float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0;
+            #if defined(_HLOD_EDGE)
+                float2 uv1 : TEXCOORD1;          // ADR 0330 addendum: x = extra foreshortened distance [m] on far_field (0 on tile HLOD)
+            #endif
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
             struct V
             {
                 float4 positionCS : SV_POSITION;
@@ -292,7 +299,11 @@ Shader "Kamion/Vegetation"
             #endif
                 o.positionWS = TransformObjectToWorld(pOS);
                 o.positionCS = TransformWorldToHClip(o.positionWS);
+            #if defined(_HLOD_EDGE)
+                o.fogFactor = KamionFogTauExtra(o.positionWS, o.positionCS.w, max(v.uv1.x, 0.0));
+            #else
                 o.fogFactor = KamionFogTau(o.positionWS, o.positionCS.w);
+            #endif
                 return o;
             }
             half4 frag(V i, bool front : SV_IsFrontFace) : SV_Target

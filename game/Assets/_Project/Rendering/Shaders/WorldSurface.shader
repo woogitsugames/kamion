@@ -135,6 +135,19 @@ Shader "Kamion/World Surface"
             }
             return cs;
         }
+        // ADR 0330 addendum: inverse of far_field.py radial foreshortening (free 140 m, span 520 m, tau 950 m, ring 4200 m).
+        // Gives foreshortened far-field mounds/buildings/skyline the same true-distance extinction as terrain/sky (ADR 0332).
+        // Everything inside the tile or within 140 m of its border, plus true-distance BEYOND skyline stand-ins, gets 0.
+        float KamionFarExtraDist(float2 posOS_xz, float flagU)
+        {
+            if (flagU <= -4000.0) return 0.0;
+            float2 d = posOS_xz - clamp(posOS_xz, -1024.0, 1024.0);
+            float deff = length(d);
+            if (deff <= 140.0) return 0.0;
+            float x = clamp((deff - 140.0) / 520.0, 0.0, 0.9999);
+            float dtrue = min(140.0 - 950.0 * log(1.0 - x), 4200.0);
+            return max(dtrue - deff, 0.0);
+        }
         ENDHLSL
 
         Pass
@@ -199,7 +212,11 @@ Shader "Kamion/World Surface"
                 o.positionCS = p.positionCS;
                 o.positionWS = p.positionWS;
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
+            #if defined(_FAR_FACADE)
+                o.fogFactor = KamionFogTauExtra(p.positionWS, p.positionCS.w, KamionFarExtraDist(v.positionOS.xz, v.uv1.x));
+            #else
                 o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
+            #endif
                 o.masks = v.color;
             #if defined(_FAR_FACADE)
                 o.uv1 = v.uv1;

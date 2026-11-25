@@ -19,8 +19,11 @@ float4 _KamionTone;        // x toe strength s (0 = off), y p, z g - 1
 float4 _KamionWet;         // x wetness, y puddle share, z grass variation strength (ADR 0080), w unused
 float4 _KamionFarFade;     // x fade start (view depth, m), y 1 / (end - start); 0 = off (ADR 0332)
 
-// Optical depth from the camera to a world position; viewDepth = positionCS.w of a perspective camera.
-half KamionFogTau(float3 pw, float viewDepth)
+// Optical depth from the camera to a world position with an optional extra foreshortened distance
+// (ADR 0330 addendum, far_field 1-4 km): uses the exact same Koschmieder + ground-haze extinction (_KamionHaze)
+// as terrain and sky (ADR 0332), while FarFade stays tied to rendered viewDepth so Low far-clip does not erase
+// mid-ring stands. For extraDist == 0 this is bit-identical to the baseline KamionFogTau.
+half KamionFogTauExtra(float3 pw, float viewDepth, float extraDist)
 {
     float hc = max((_WorldSpaceCameraPos.y - _KamionHaze.w) * _KamionHaze.z, -1.0);
     float hp = max((pw.y - _KamionHaze.w) * _KamionHaze.z, -1.0);
@@ -28,13 +31,19 @@ half KamionFogTau(float3 pw, float viewDepth)
     float ec = exp(-hc);
     // mean of exp(-h) along the ray: (e^-hc - e^-hp) / (hp - hc)
     float m = abs(dh) > 0.02 ? (ec - exp(-hp)) / dh : ec;
-    float tau = _KamionHaze.x * max(viewDepth, 0.0) * (1.0 + _KamionHaze.y * m);
+    float tau = _KamionHaze.x * max(viewDepth + max(extraDist, 0.0), 0.0) * (1.0 + _KamionHaze.y * m);
     // ADR 0332 (haze-s24): the terrain stops at the main camera's far clip (900-4000 m per tier), where the physical
     // haze is only 25-55 % (V 20 km), so a crisp field met the full fog colour of the sky below the horizon (= ground
     // at infinity): a hard field/haze line. Over the last 25 % of the far clip the optical depth ramps up by 4
     // (smoothstep), standing in for the 3-20 km of land past the clip. Unset (0) = off, mirrors are inside the start.
     float f = saturate((viewDepth - _KamionFarFade.x) * _KamionFarFade.y);
     return (half)(tau + 4.0 * f * f * (3.0 - 2.0 * f));
+}
+
+// Optical depth from the camera to a world position; viewDepth = positionCS.w of a perspective camera.
+half KamionFogTau(float3 pw, float viewDepth)
+{
+    return KamionFogTauExtra(pw, viewDepth, 0.0);
 }
 
 float _KamionDimColourDesaturation;
