@@ -446,7 +446,7 @@ Shader "Kamion/World PBR"
                     float2 enDx = ddx(i.posEN), enDy = ddy(i.posEN);     // outside the branch (gradients)
                     half2 mbD = half2(ddx(i.masks.b), ddy(i.masks.b));
                     if (_RegionOriginEN.z > 0.5)
-                        KamionFieldMosaic(i.posEN, _RegionOriginEN.xy, footprint, enDx, enDy, mbD, macro.g, i.masks, fieldAlb, fieldSlope);
+                        KamionFieldMosaic(i.posEN, _RegionOriginEN.xy, footprint, enDx, enDy, mbD, macro.g, macro.a, i.masks, fieldAlb, fieldSlope);
                 }
             #endif
                 half swardCalm = 0.0;
@@ -513,6 +513,9 @@ Shader "Kamion/World PBR"
                     }
                 }
             #endif
+                // ADR 0334 r3: luminance of the DE-TILED grass (after the rotated second sample) - the field mosaic used the
+                // raw first sample for its blade detail, so the 3 m tile showed through every meadow and crop
+                half grassLum = dot(albedo, half3(0.2126, 0.7152, 0.0722));
                 half tone = ((macro.r - 0.5) * 1.4 + (macro.g - 0.5) * 0.6 + (macro.a - 0.5) * 0.4) * (1.0 - 0.5 * swardCalm);
             #if defined(_PANELTONE)
                 {
@@ -1061,7 +1064,7 @@ Shader "Kamion/World PBR"
                     albedo = KamionGrassDryMatter(albedo, k, _GroundTint);
                     // ADR 0334: crop / stubble / meadow colour of the field mosaic over the grass; the grass texture
                     // keeps its luminance detail (blades, gaps) around the field colour, 0.0976 = luminance of _GrassFill
-                    half fdet = lerp(1.0h, clamp(lum / 0.0976h, 0.6h, 1.4h), 0.7h);
+                    half fdet = lerp(1.0h, clamp(grassLum / 0.0976h, 0.6h, 1.4h), 0.7h);
                     albedo = lerp(albedo, fieldAlb.rgb * fdet, fieldAlb.a);
                     // Pine-forest floor (bór sosnowy): needle litter in patches with feather moss and bilberry, not a
                     // uniform beige (review r3 W2 / r4 W-H8). Linear albedo: litter 0.045/0.035/0.021, moss + bilberry

@@ -47,6 +47,23 @@
 #define KF_WOB_AL 1.8
 #define KF_WOB_A17 0.5
 #define KF_WOB_A5 0.12
+// ADR 0334 r3 (fields3-s24, critic wave10-pre 1): the whole LAYOUT (districts, blocks, strip seams) is looked up at a
+// warped position - two octaves of 2D value noise, metres peak-to-peak per axis - so a field edge bows by several
+// metres over 50-250 m and stops being a ruled line 300 m away, where the r2 wobble (+-1.2 m) is under a pixel. The
+// ROWS keep the unwarped coordinate (r2 render review: rows that bend read as wood grain), so they run out obliquely
+// at a bowed edge like drill rows at a real field margin. Python mirror: vegetation.field_warp (salts 1011..1017).
+#define KF_WARP_L_M 230.0
+#define KF_WARP_AL 10.0
+#define KF_WARP_S_M 53.0
+#define KF_WARP_AS 3.0
+// r3 flag contract: grassland = COLOR_0.b <= KF_MEADOW_B0 (new tiles write 0.00), arable = 1.00, every other ground
+// keeps 0.07 .. 0.80. With the r2 codes (grassland 0.90) the mesh ramp from arable 1.00 to a meadow could not be told
+// from the ramp to a verge, and the margin rule (flag gradient, constant per triangle) painted the straddling terrain
+// cells of the stair-stepped border as rough grass - hard-edged green rectangles of a few metres in the crop (critic
+// P0, dk65-07 f2_obl_maize; cell-sized at the coarser terrain LODs). Now every ramp below the arable code leaves the
+// farmland; tiles not rebuilt yet (grassland 0.90) keep the r2 behaviour.
+#define KF_MEADOW_B0 0.020
+#define KF_MEADOW_B1 0.050
 
 // uses: arable 0..10, grassland 11..15 (vegetation.FIELD_USES)
 #define KF_CEREAL_RIPE 0
@@ -168,13 +185,18 @@ half KFNoiseSF(float a, float l, float sa, float sl, uint salt)
 // driftN: 0..1 low-frequency noise (macro map). m: terrain masks (in/out). field: linear albedo of the field (rgb)
 // and its cover weight over the grass (a), applied after the ground-mask colouring. slopeEN: ground slope of the
 // furrows / rows (dE, dN), added to the world normal by the caller.
+// mott: 0..1 mottling of 0.5-4 m (macro map A) - r3: tone / hue patches inside one use (a sward is not one flat green).
 void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx, float2 enDy, half2 mbD, half driftN,
-                       inout half4 m, out half4 field, out half2 slopeEN)
+                       half mott, inout half4 m, out half4 field, out half2 slopeEN)
 {
     field = half4(0.0h, 0.0h, 0.0h, 0.0h);
     slopeEN = half2(0.0h, 0.0h);
-    half farm = smoothstep(0.84h, 0.88h, m.b);
+    half farmHi = smoothstep(0.84h, 0.88h, m.b);                               // arable 1.00 (r2 tiles: + grassland 0.90)
+    half farm = max(farmHi, 1.0h - smoothstep(KF_MEADOW_B0, KF_MEADOW_B1, m.b));   // r3: grassland code 0.00
     if (farm <= 0.0h) return;
+    // r3 layout warp (see KF_WARP_*): lw is used for the district / block / strip lookup only
+    float2 lw = local + (float2(KFNoise(local, origin, KF_WARP_L_M, 1011u), KFNoise(local, origin, KF_WARP_L_M, 1013u)) - 0.5) * KF_WARP_AL
+                      + (float2(KFNoise(local, origin, KF_WARP_S_M, 1015u), KFNoise(local, origin, KF_WARP_S_M, 1017u)) - 0.5) * KF_WARP_AS;
     // r2: ground gradient of the flag (1 / m); > 0 only on the mesh cells that straddle a polygon border
     float det = enDx.x * enDy.y - enDx.y * enDy.x;
     float2 gB = abs(det) > 1e-12 ? float2(enDy.y * mbD.x - enDx.y * mbD.y, enDx.x * mbD.y - enDy.x * mbD.x) / det : float2(0.0, 0.0);
@@ -186,7 +208,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     // lattice in a frame stretched KF_STRETCH times along that axis, so a block is ~3x longer than wide and holds a run
     // of narrow parallel strips (wąskie, podłużne działki). Every lattice point is formed relative to the origin /
     // district seed, so the strip coordinate keeps cm precision in fp32.
-    float2 cD = floor((local + origin) / KF_DISTRICT_M);
+    float2 cD = floor((lw + origin) / KF_DISTRICT_M);
     float e1 = 1e20, e2 = 1e20;
     float2 sD = 0, sD2 = 0;
     int2 dIJ = 0, dIJ2 = 0;
@@ -196,7 +218,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         int2 ij = int2(cD) + int2(di0, dj0);
         float2 s = float2(ij) * KF_DISTRICT_M - origin
                  + (0.15 + 0.7 * float2(KFU01(KFHash(ij.x, ij.y, 971u)), KFU01(KFHash(ij.x, ij.y, 973u)))) * KF_DISTRICT_M;
-        float2 v = local - s;
+        float2 v = lw - s;
         float dd = dot(v, v);
         if (dd < e1) { e2 = e1; sD2 = sD; dIJ2 = dIJ; e1 = dd; sD = s; dIJ = ij; }
         else if (dd < e2) { e2 = dd; sD2 = s; dIJ2 = ij; }
@@ -206,7 +228,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     float thD = PI * KFU01(KFHash(dIJ.x, dIJ.y, 975u));
     float2 aD = float2(cos(thD), sin(thD));       // long axis of the strips
     float2 nD = float2(-aD.y, aD.x);
-    float2 r0 = local - sD;
+    float2 r0 = lw - sD;
     float2 q = float2(dot(r0, aD) / KF_STRETCH, dot(r0, nD));
 
     // block of parallel strips: nearest jittered seed of the KF_BLOCK_M lattice in the stretched frame, distance to the
@@ -244,7 +266,8 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     float w = KF_STRIP_MIN_M + KF_STRIP_SPAN_M * KFU01(KFHash(b1.x, b1.y, 919u ^ dsalt));
     float2 dir = float2(cos(th), sin(th));
     float2 seed = sD + aD * (s1.x * KF_STRETCH) + nD * s1.y;
-    float2 rel = local - seed;
+    float2 rel = lw - seed;           // layout frame (warped): strip index, seam and baulk distances
+    float2 relR = local - seed;       // row frame (unwarped): rows, windrows, tramlines stay straight
 
     float fp = max(footprint, 1e-3);
     half n5 = KFNoise(local, origin, 5.0, 951u);
@@ -255,6 +278,11 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
 #else
     half n1 = 0.5h;
 #endif
+    float wob = (nL - 0.5) * KF_WOB_AL + (n17 - 0.5) * KF_WOB_A17 + (n5 - 0.5) * KF_WOB_A5;
+    // r3: the small noises fade to their mean once their cell is under ~2 px (they drive widths and thresholds; left
+    // alone they shimmer on the far fields seen at a grazing angle)
+    n1 = lerp(0.5h, n1, (half)saturate(1.7 / (2.0 * fp) - 0.5));
+    n5 = lerp(0.5h, n5, (half)saturate(5.0 / (2.0 * fp) - 0.5));
     // r2: the strip edge is not a ruled line - the strip coordinate meanders by up to +-1.2 m (gentle 71 m bows, a little
     // 17 m and 5 m wiggle - seen end-on from the cab the furrows must stay near-straight, r2 render review), so the colour seam, the baulk and every row parallel to the edge follow one ploughed-by-eye line
     // r2 polygon border: the flag passes 0.90 (the grassland code) on its way from arable 1.00 to the verge - that used
@@ -263,10 +291,11 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     float thA = 0.95 + (ramp ? clamp(((n1 - 0.5) + (n5 - 0.5) * 0.8) * 1.6 * gl, -0.04, 0.04) : 0.0);
     bool arable = m.b > thA;
     float dA = max(0.3 * gl, 0.004);
-    half margin = ramp ? (half)saturate((thA + dA - m.b) / (2.0 * dA)) : 0.0h;
-    float wob = (nL - 0.5) * KF_WOB_AL + (n17 - 0.5) * KF_WOB_A17 + (n5 - 0.5) * KF_WOB_A5;
+    // r3: only on the high side - the grassland code 0.00 has no margin of its own (its ramp IS open ground)
+    half margin = ramp ? (half)saturate((thA + dA - m.b) / (2.0 * dA)) * farmHi : 0.0h;
     float t = (dot(rel, dir) + wob) / w;          // across the strips, relative to the block seed (fp32-safe)
-    float along = dot(rel, float2(-dir.y, dir.x)); // along the strip (m)
+    float along = dot(relR, float2(-dir.y, dir.x)); // along the rows (m)
+    float rowc = dot(relR, dir) + wob;            // r3: across the rows (m), continuous over the strips of a block
     float k = floor(t);
     float across = (t - k) * w;                   // metres from the strip's lower edge
     uint bid = KFHash(b1.x, b1.y, 923u ^ dsalt);
@@ -289,14 +318,19 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     // block, wobbling) are worked ALONG the border - every row / windrow / furrow of the use turns by 90 deg there
     float Hd = KF_HEADLAND_M * (0.65 + 0.7 * KFU01(KFHash(b1.x, b1.y, 949u ^ dsalt))) + (n17 - 0.5) * 2.0;
     bool hrow = arable && crossK > 0.5h && blockEdge < Hd;
-    float rc = hrow ? blockEdge : across;                 // coordinate across the rows (m)
+    float rc = hrow ? blockEdge : rowc;                   // coordinate across the rows (m)
     float rl = hrow ? t * w : along;                      // coordinate along the rows (m)
     float2 rdir = hrow ? gW : dir;
     float fpr = max(abs(dot(enDx, rdir)) + abs(dot(enDy, rdir)), 1e-4);   // footprint across the rows
     fpr = min(fpr, fp * 1.5);
 
     // streaks along the rows: every pass of a machine leaves its own tone (pass-wide) and fine drill / chaff lines
-    half sf2 = KFNoiseSF(rc, rl, 2.6, 60.0, 987u) - 0.5h;
+    // r3 (critic wave10-pre "pasy jak boisko golfowe", f2_obl_headland): value noise on ONE 2.6 m lattice across the
+    // rows is a quasi-periodic light / dark alternation - from above every meadow was evenly striped. Now a broad
+    // 7.3 m octave carries most of the tone and the pass-wide streaks come and go in patches (17 m / 71 m noise)
+    half sfA = KFNoiseSF(rc, rl, 7.3, 90.0, 1029u) - 0.5h;
+    half sfB = KFNoiseSF(rc, rl, 2.6, 60.0, 987u) - 0.5h;
+    half sf2 = sfA * 0.8h + sfB * lerp(0.15h, 1.0h, smoothstep(0.42h, 0.70h, n17 * 0.5h + nL * 0.5h));
 #if defined(_KAMION_WORLD_DETAIL)
     half sf1 = (KFNoiseSF(rc, rl, 0.55, 18.0, 989u) - 0.5h) * (half)saturate(0.55 / (1.5 * fpr) - 0.5);
 #else
@@ -375,16 +409,38 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     }
     else if (u == KF_MOWN || u == KF_HAY)
     {
-        // windrows of cut grass every 6 m (tedder / rake), lighter and yellower than the cut sward between them
-        half row = KFBand(rc + 2.0, 6.0, 1.3, fpr);
-        col = lerp(col, u == KF_MOWN ? half3(0.170h, 0.185h, 0.070h) : half3(0.250h, 0.225h, 0.105h), row * 0.8h);
-        stA1 = 0.12h; stA2 = 0.14h;
+        // windrows of cut grass (tedder / rake), lighter and yellower than the cut sward between them.
+        // r3 (critic wave10-pre: "pasy jak boisko golfowe"): no two windrows alike - every row sits off its 6 m line
+        // by up to +-1.1 m, has its own width and strength, thins out and breaks along its length (already raked up,
+        // blown apart), and a third of the rows are missing altogether (WORKING_VALUE)
+        float wi = floor(rc / 6.0);
+        uint hw0 = KFHash((int)wi + KF_BLOCK_HASH_OFS * 4, (int)(fid & 0xFFFFu), 1021u);
+        float wj = (KFU01(hw0) - 0.5) * 2.2;
+        float wd = abs(rc - (wi + 0.5) * 6.0 - wj);
+        half wwid = (half)(0.35 + 0.9 * KFU01(KFHash((int)hw0, 1, 1027u))) * (0.6h + 0.8h * n5);
+        // box filter that keeps the energy: a 0.8 m windrow under a 3 m footprint is a faint tone, not a 3 m band
+        // (the r2 bands kept full strength while they widened - the far meadow turned into even stripes)
+        float fw = max(fpr, 0.25);
+        half row = (half)(saturate((0.5 * wwid - wd) / fw + 0.5) * min(1.0, wwid / fw) * saturate(6.0 / (3.0 * fpr) - 0.5));
+        row *= (KFU01(KFHash((int)hw0, 3, 1027u)) < 0.6 ? 1.0h : 0.0h) * smoothstep(0.38h, 0.60h, KFNoiseSF(rc, rl, 6.0, 23.0, 1023u));
+        col = lerp(col, u == KF_MOWN ? half3(0.170h, 0.185h, 0.070h) : half3(0.250h, 0.225h, 0.105h), row * (0.45h + 0.4h * n17));
+        stA1 = 0.12h; stA2 = 0.07h;
     }
     else
     {
-        // ley / meadow regrowth: mower passes 2.8 m laid alternately (light / dark stripes of the swath direction)
-        col *= 1.0h + 0.07h * (KFBand(rc, 5.6, 2.8, fpr) - 0.5h);
-        stA1 = 0.06h; stA2 = 0.10h;
+        // ley / meadow regrowth. r3: the r2 mower passes (alternate 2.8 m light / dark bands) read as a football
+        // pitch from above; a meadow three weeks after the cut shows no swath direction - only the pass-wide tone
+        // streaks (sf2, irregular) and the lusher / drier patches below stay
+        stA1 = 0.06h; stA2 = 0.05h;
+    }
+    if (u >= KF_LEY && u != KF_FALLOW)
+    {
+        // r3 sward variation (critic: "kafelek wzoru w trawie"): lusher clover / dung patches and drier knolls of
+        // 1-17 m, a hue shift and not only a tone - breaks the 3 m grass tile that showed through the flat use colour
+        half lush = smoothstep(0.52h, 0.80h, mott * 0.55h + n5 * 0.45h);
+        half dryp = smoothstep(0.55h, 0.85h, (1.0h - mott) * 0.5h + n17 * 0.5h);
+        col = lerp(col, col * half3(0.80h, 0.94h, 0.78h), lush * 0.55h);
+        col = lerp(col, col * half3(1.22h, 1.10h, 0.90h), dryp * 0.45h);
     }
     col *= 1.0h + stA1 * sf1 + stA2 * sf2;
     if (rowP > 0.0)
@@ -433,7 +489,11 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     float e = min(across, w - across);
     float hw = max(0.5 * bw * (0.55 + 0.9 * n5) + (n1 - 0.5) * 0.60, 0.12);
     float fpe = max(fp, 0.30);     // a grass edge is never sharper than a few blades
-    half baulk = hasBaulk ? (half)(saturate((hw - e) / fpe + 0.5) * saturate(2.0 * hw / fp)) : 0.0h;
+    // r3 (critic: "pola bez miedz z kabiny"): the baulk is filtered by the footprint ACROSS it, like the rows - seen
+    // along its length from the cab it stays a crisp line to the horizon instead of dissolving 40 m out, where the
+    // isotropic footprint of a grazing view is already metres
+    float fpb = clamp(abs(dot(enDx, dir)) + abs(dot(enDy, dir)), 1e-4, fp * 1.5);
+    half baulk = hasBaulk ? (half)(saturate((hw - e) / max(fpb, 0.30) + 0.5) * saturate(2.0 * hw / fpb)) : 0.0h;
     half thin = hasBaulk ? (half)saturate(1.0 - (e - hw) / (0.6 + 2.2 * n17)) : 0.0h;
     // block border: a wider grass strip, on some borders a field track (two sandy ruts 1.6 m apart in the grass)
     float hbw = (fieldTrack ? 1.9 : 1.2) + (n17 - 0.5) * 1.2 + (n5 - 0.5) * 0.5 + (n1 - 0.5) * 0.3;
@@ -446,12 +506,29 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     col = lerp(col, lerp(col, bc, 0.55h), thin * thin * (0.25h + 0.70h * n5));
     half bstr = lerp(arable ? 0.92h : 0.35h, 0.92h, margin);     // between two meadows the baulk is only rougher grass
     col = lerp(col, bc, baulk * bstr);
+    slopeEN *= (1.0h - baulk) * farm * alb.a;
     if (fieldTrack)
     {
-        half rut = (half)(saturate((0.26 - abs(blockEdge - 0.8)) / fp + 0.5) * saturate(0.52 / fp));
-        col = lerp(col, half3(0.215h, 0.180h, 0.120h) * (0.85h + 0.30h * n5), rut * (0.55h + 0.40h * n17));
+        // r3 (critic wave10-pre: "dwa proste pasy o stałej szerokości, jak namalowane"): a field track is two ruts
+        // that live - each wanders +-0.25 m, swells from a hand-wide thread to 0.6 m and back (1.7 m / 5 m noise),
+        // grows over for metres where nobody drove this year (17 m / 5 m noise under a threshold), has a soft ragged
+        // grass edge, a darker damp bottom with a pale dry rim, and it is DOWN: the rut profile tilts the normal.
+        // Between the ruts the middle strip is taller, rougher grass. All WORKING_VALUE.
+        float rcen = 0.8 + (n17 - 0.5) * 0.5 + (n1 - 0.5) * 0.12;
+        float rhw = max(0.08 + 0.17 * n5 + (n1 - 0.5) * 0.10, 0.05);
+        half live = smoothstep(0.34h, 0.52h, n17 * 0.55h + KFNoise(local, origin, 9.0, 1025u) * 0.45h);
+        float sr = (blockEdge - rcen) / rhw;
+        float fpt = max(fp, 0.10);
+        half rut = (half)(saturate((rhw - abs(blockEdge - rcen)) / fpt + 0.5) * saturate(2.0 * rhw / fp)) * live;
+        rut *= 0.55h + 0.45h * smoothstep(0.25h, 0.6h, n1);                       // grass creeping into the rut
+        half3 soil = half3(0.215h, 0.180h, 0.120h) * (0.80h + 0.35h * n5);
+        soil = lerp(soil * 0.62h, soil, (half)saturate(abs(sr)));               // damp, packed bottom; dry crumbled rim
+        col = lerp(col, soil, rut * (0.50h + 0.40h * n17));
+        half hump = (half)saturate(1.0 - blockEdge / max(rcen - rhw, 0.05)) * live;
+        col = lerp(col, col * half3(0.82h, 0.90h, 0.78h), hump * 0.5h);
+        half rk = (half)saturate(0.5 / fp - 0.5);                                // the dent is gone under ~1 px
+        slopeEN += (half2)gW * (half)(clamp(sr, -1.0, 1.0) * 0.45) * rut * rk;
     }
-    slopeEN *= (1.0h - baulk) * farm * alb.a;
     fb = lerp(fb, 0.32h, baulk * bstr);     // r2: 0.50 browned the baulk into a dirt track beside a green crop
 
     m.b = lerp(m.b, fb, farm);

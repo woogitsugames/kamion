@@ -1121,12 +1121,27 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         from streetscape import verge_flora as VF
         _vsecs = VF.sections(w.buf.parts)
         _vrep = {}
-        if VF.build(w.buf, _vsecs, _vrep):
+        from streetscape import paved as _PVz
+
+        def _zfn(e, n):      # r5: terrain height behind the gravel (shoulder-edge plants of a flat verge)
+            return float(_PVz.bilinear(st["zc"], w.hf, np.atleast_1d(np.asarray(e, float)), np.atleast_1d(np.asarray(n, float)))[0])
+        if VF.build(w.buf, _vsecs, _vrep, zfn=_zfn):
             w.verge_flora = True
         _vrep["verge_flora"]["ditch_parts_to_terrain"] = VF.tag_for_terrain(_vsecs)
         st["col"] = VF.ditch_colours(st["col"], w.hf, _vsecs, _vrep["verge_flora"])
         w.stats["verge_flora"] = _vrep["verge_flora"]
         log("verge flora (ADR 0324)", w.stats["verge_flora"])
+    # ADR 0334 r3: maize rows and baulk sward as cards (streetscape.field_crops; material verge_tufts, layer banks).
+    # Rural tiles only (as the field plants and bales). WORLDGEN_NO_FIELD_CROPS=1: debug A/B only.
+    if not os.environ.get("WORLDGEN_NO_FIELD_CROPS") and not str(region_id).startswith("bialystok-"):
+        from streetscape import field_crops as FC
+        _crep = {}
+        _half = w.region["bbox"]["width_m"] / 2
+        if FC.build(w.buf, st["col"], w.hf, st["zc"], w.origin, st["dist"], st["mask"], _crep,
+                    chunk_fn=lambda e_, n_: chunk_of(e_, n_, _half)):
+            w.verge_flora = True
+        w.stats["field_crops"] = _crep["field_crops"]
+        log("field crops (ADR 0334 r3)", w.stats["field_crops"])
     terrain = CH.build_chunks(zc, _lod_mask, e0, n0, w.region["bbox"]["width_m"], col=st["col"], low_cut=low_cut)
     log("terrain chunks", len(terrain))
     w.stats["verge_strips"] = merge_verge_into_terrain(terrain, w.buf.parts, half, st["col"], e0, n0)
@@ -1310,6 +1325,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         manifest["nodes"].setdefault("banks", "roadside grass cards of kerbless road sides (ADR 0324, material "
                                               "verge_tufts, Kamion/World PlotKit, COLOR_0 = foliage normal); High GLB only")
         manifest["verge_flora"] = w.stats.get("verge_flora")
+        if w.stats.get("field_crops"):      # ADR 0334 r3
+            manifest["field_crops"] = w.stats["field_crops"]
     if region_id == "knyszyn":
         # D95: photo 9, fresh pale blocks with readable joints. Visual WORKING_VALUE;
         # keep the mountable 4 cm lip and every collision vertex from D94 unchanged.
