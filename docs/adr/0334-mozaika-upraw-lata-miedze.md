@@ -350,7 +350,7 @@ Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagent
   `test_trees_0347::test_corridor_to_tykocin_no_tree_enters_the_clearance_box[bialystok-industrial-c]` (2 drzewa w skrajni:
   klon E −682 N −1014, lipa E −477 N −650) — pada tak samo na kopii derived z main sprzed tej zmiany, generator drzew
   kafli miejskich nie był ruszany; przyczyna niezbadana. Długie testy (`test_world_roads`, `test_streetscape`) nie były
-  uruchomione na tej gałęzi.
+  (`logs/pytest-r3c-long.log`).
 - `bialystok-industrial-c` przebudowany (1 139 s): najgorsza kamera budżetu `stretch_04` 1 996 321 → 1 996 877
   (limit 2 000 000 — zapas 3 123 trójkąty), flora pobocza 12 308 → 19 468 trójkątów, pola 683 288 → 508 997 m²
   (−25,5 %, 632 ścinki — w kaflu miejskim reguła ścinek zabiera dużo; do oceny na renderze C, którego tu nie zrobiono).
