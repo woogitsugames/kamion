@@ -46,6 +46,12 @@
     "power_lines": 151,
     "pylons": 324
   },
+  "forest_chm_ring": {
+    "chm_share": 0.0,
+    "chm_tiles": [],
+    "chm_vertices": 0,
+    "total_curtain_vertices": 16090
+  },
   "lod1_height_audit": {
     "buildings": 133679,
     "conflicting_ids": 0,
@@ -125,7 +131,7 @@
   },
   "tiers": {
     "High": {
-      "bytes": 15478144,
+      "bytes": 15736184,
       "file": "Data/raw/derived/bialystok-mickiewicza/world/far_field.glb",
       "sectors": {
         "far_east": {
@@ -165,7 +171,7 @@
           "vertices": 88642
         }
       },
-      "sha256": "46dfdf0c97656eaf25355246c35b41136324ebf2c0531cf9b07436b037bd016e",
+      "sha256": "442fd79822d3ae8c0db41f4da9688283be0ed840d0f890c2dc6ddb45893180d1",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -178,7 +184,7 @@
       "total_vertices": 297422
     },
     "Low": {
-      "bytes": 2318876,
+      "bytes": 2382148,
       "file": "Data/raw/derived/bialystok-mickiewicza/world/far_field.low.glb",
       "sectors": {
         "far_east": {
@@ -218,7 +224,7 @@
           "vertices": 25324
         }
       },
-      "sha256": "70a2d92d6df3087ef336d6225067c6dae525e6c8e80d737dd7e39c80d63907f9",
+      "sha256": "0b2c60e1517795aa5ccc13d22179d1950a932731f1d6fd4b911866c6e043b362",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
