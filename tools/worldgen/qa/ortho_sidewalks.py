@@ -14,18 +14,20 @@ Method. Source: Data/raw/derived/<region>/ortho_0p25m.tif (GUGiK open data, 0.25
 Two-way edges of the chosen highway classes, no roundabout / bridge / tunnel. Stations every --step m, END_SKIP_M
 from the edge ends. Per station a profile across the graph axis (+-HALF_M, 0.125 m cells, bilinear), median over
 +-ALONG_M along the axis. "Paved" cell: brightness not more than DARK below the +-1.5 m core, saturation not more
-than SAT above the core's, R - B not more than WARM above the core's (dry grass, sand), not green. The paved run through the axis (GAP_CELLS of noise tolerated) gives the left /
-right extent; the centre line (brightest cell within +-1.5 m, >= core + LINE_MIN) is the lateral origin where it shows,
-else the graph axis. extra = extent - half of the nominal carriageway width (roads.network.edge_section: BDOT10k
-SZEROKOSCNAWIERZCHNI clamped to PTB2022 § 17, before the D94 gameplay widening). A station is valid when the run
-covers >= 0.8 of the carriageway and its lane core is not darker than the sunlit asphalt of its OSM way (p85 of the cores) by SHADOW. Side with a sidewalk: extra >= MIN_EXTRA_M
-at >= SHARE of the valid stations (>= MIN_STATIONS) of an edge lying in the BDOT10k built-up area
+than SAT above the core's, R - B not more than WARM above the core's (dry grass, sand), not green. The paved run
+through the axis (GAP_CELLS of noise tolerated) gives the left / right extent; the centre line (brightest cell within
++-1.5 m, >= core + LINE_MIN) is the lateral origin where it shows, else the graph axis. extra = extent - half of the
+nominal carriageway width (roads.network.edge_section: BDOT10k SZEROKOSCNAWIERZCHNI clamped to PTB2022 § 17, before
+the D94 gameplay widening). A station is valid when the run covers >= 0.8 of the carriageway and its lane core is not
+darker than the sunlit asphalt of its OSM way (p85 of the cores) by SHADOW. Side with a sidewalk: extra >=
+MIN_EXTRA_M at >= SHARE of the valid stations (>= MIN_STATIONS) of an edge lying in the BDOT10k built-up area
 (streetscape.pavements.built_up_area); width = median extra - kerb, rounded to 0.25 m, clamped to WIDTH_RANGE.
 A short edge with fewer valid stations takes the pooled result of its OSM way in the tile when its own stations do
 not contradict it, else the sidewalk the measured edges at both its ends share (fill_from_neighbours).
 A connected run of edges gets one width per side (even_runs: weighted median of the per-edge widths). Pass the
-tiles of one road together (--region a --region b ...): a run cut by a tile seam gets one width on both sides of it. Reading accuracy at 0.25 m: about +-0.4 m per extent (ESTIMATED; one tile checked by eye on the
-straightened strips). Asphalt and old concrete paving have the same brightness, so the carriageway edge itself is NOT
+tiles of one road together (--region a --region b ...): a run cut by a tile seam gets one width on both sides of it.
+Reading accuracy at 0.25 m: about +-0.4 m per extent (ESTIMATED; two tiles checked by eye on the straightened
+strips). Asphalt and old concrete paving have the same brightness, so the carriageway edge itself is NOT
 measured here: the split paved-run -> carriageway + sidewalk rests on the BDOT10k width. A paved bus bay or a wide
 asphalt shoulder would read as a sidewalk - check the strips (--strips) before committing a fit. All thresholds
 WORKING_VALUE.
