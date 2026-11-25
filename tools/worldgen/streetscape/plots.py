@@ -74,6 +74,8 @@ DRIVE_W_M = 3.0
 # One driveway material for every plot (budget, ADR 0114): gravel driveways (ref P20) and the concrete edging strip
 # each added a submesh to the chunk's paved mesh (+5 / +3 chunks); block paving is the common case.
 DRIVE_MAT = "yard_paving"
+DRIVE_CROSS_MAT = "driveway_paving_red"   # ADR 0349 (dopisek neon-paving-s24): kontrastowy zjazd przez chodnik (opt-in)
+DRIVE_CROSS_LIFT_M = 0.008                # 8 mm nad powierzchnią chodnika / wjazdu (+ offset w shaderze, brak z-fightingu)
 # Chunk layer of the plot ground (lawn, driveway, path): like `paved`, but shown only with the chunk's LOD0 / LOD1 (as
 # `furniture` is) - in r1 the lawns sat in `paved` (drawn to LOD2, ~700 m) and cost draws in every distant view.
 GROUND_LAYER = "plot_ground"
@@ -1959,7 +1961,11 @@ def build(buf, rp, zf, surf_top, report, items=None):
         keepout += hard
         if plot.get("drive") is not None and lay["gate"] is not None:
             rep["drives"] += 1
-            rep["verge_overlays"] += _verge_overlay(buf, plot, surf_top, src_id, zf, rp.get("roads_poly"), rp.get("carriage"))
+            dcol = bool(rp.get("driveway_paving_color"))
+            vo = _verge_overlay(buf, plot, surf_top, src_id, zf, rp.get("roads_poly"), rp.get("carriage"), driveway_color=dcol)
+            rep["verge_overlays"] += vo
+            if dcol and vo and plot.get("access") and plot["access"].get("walk") == "sidewalk_paving" and plot["access"].get("kind") == 0:
+                rep["driveway_crossings"] = rep.get("driveway_crossings", 0) + 1
         # ---- garden
         poly = plot["poly"]
         foot = plot["foot"]
@@ -2304,14 +2310,16 @@ def build(buf, rp, zf, surf_top, report, items=None):
     return {"keepout": keepout, "lawns": [p["lawn"] for p in plots if p.get("lawn") is not None], "plots": plots, "trees": trees}
 
 
-def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carriage=None):
+def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carriage=None, driveway_color=False):
     """Between the gate apron (a paved item, cut at the road footprint) and the carriageway the driveway crosses
-    whatever the road profile has there: a footway (stays as it is, lowered with the kerb), a grass verge / gravel
-    shoulder, or the battered edge of the footprint with no surface at all. Pave that stretch.
+    whatever the road profile has there: a footway (stays as it is, lowered with the kerb — or paved in contrasting
+    `driveway_paving_red` from the gate line to the kerb when `driveway_color` is enabled via `pavement_rules`),
+    a grass verge / gravel shoulder, or the battered edge of the footprint with no surface at all. Pave that stretch.
     ADR 0124 (review 0114 P1-r8-a / b): the strip is a POLYGON - the driveway width clipped to the road footprint
     (+0.35 m of overlap onto the apron: no line of grass between the two) MINUS the carriageway and the kerb stone,
     so no paver lies on the asphalt, the lowered kerb stays a kerb, and the edge along the kerb is its true line
     instead of a staircase of grid cells. Draped 2 cm over the road-side surface, on the apron surface outside it."""
+    from roads import standards as S
     from . import paved as PV
     acc = plot.get("access")
     if acc is None or surf_top is None or roads_poly is None or carriage is None:
@@ -2320,9 +2328,16 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
     g = plot["lay"]["gate"]
     m, n = g["m"], g["n"]
     L = acc["d_cw"]
-    strip = LineString([m + n * 0.02, m + n * (L + 1.0)]).buffer(g["w"] / 2, cap_style="flat")
     band = KERB_BAND_M if acc.get("kerbed") else 0.02
-    zone = strip.intersection(roads_poly.buffer(0.35)).difference(carriage.buffer(band))
+    cross_drive = bool(driveway_color and footway)
+    if cross_drive:
+        strip = LineString([m - n * 0.05, m + n * (L + 1.0)]).buffer(g["w"] / 2, cap_style="flat")
+        drv = plot.get("drive")
+        allowed = roads_poly.buffer(0.10).union(drv.buffer(0.05)) if drv is not None and not drv.is_empty else roads_poly.buffer(0.35)
+        zone = strip.intersection(allowed).difference(carriage.buffer(band))
+    else:
+        strip = LineString([m + n * 0.02, m + n * (L + 1.0)]).buffer(g["w"] / 2, cap_style="flat")
+        zone = strip.intersection(roads_poly.buffer(0.35)).difference(carriage.buffer(band))
     polys = [q for q in _polys(zone, 0.15, simplify=0.01) if q.distance(Point(*m)) < L]
     done = 0
     for poly in polys:
@@ -2337,12 +2352,16 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
         top = np.array([surf_top.top(float(x), float(y)) for x, y in P])
         inside = shapely.contains(roads_poly, shapely.points(P))
         on_road = np.isfinite(top) & inside
-        if footway:                                          # the footway is paved already: only the part without it
+        if footway and not cross_drive:                      # the footway is paved already: only the part without it
             tri_ok = ~(on_road[T].all(1))
             T = T[tri_ok]
             if not len(T):
                 continue
-        Z = np.array([top[i] if on_road[i] else zf(P[i]) for i in range(len(P))]) + 0.02
+        if cross_drive:
+            Z = np.array([top[i] + DRIVE_CROSS_LIFT_M if on_road[i] else zf(P[i]) + S.PAVED_LIFT + DRIVE_CROSS_LIFT_M
+                          for i in range(len(P))])
+        else:
+            Z = np.array([top[i] if on_road[i] else zf(P[i]) for i in range(len(P))]) + 0.02
         # ADR 0124 r2 (r1: a wedge of grass between this strip and the apron on driveways oblique to the road,
         # `r16_kerb_0`): outside the road surfaces the strip lay 2 cm over the INTERPOLATED ground, and the terrain
         # mesh (1 m / 2 m grid, other triangle split) came through it on the batter of the footprint edge. There the
@@ -2354,17 +2373,20 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
             u_in = float(un[on_road].max())                      # last vertex on a road surface, along the driveway
             u_out = float(un.max())
             tt = np.array([-n[1], n[0]])
+            pad = (S.PAVED_LIFT + DRIVE_CROSS_LIFT_M + 0.01) if cross_drive else 0.03
             for i in np.nonzero(free)[0]:
                 s_ = float((P[i] - m) @ tt)
                 near_i = on_road & (np.abs((P - m) @ tt - s_) < 0.6)
                 za = float(Z[near_i][np.argmax(un[near_i])]) if near_i.any() else Z[i]
                 ua = float(un[near_i].max()) if near_i.any() else u_in
-                zb = zf(m + tt * s_ + n * u_out) + 0.03
+                zb = zf(m + tt * s_ + n * u_out) + pad
                 f = min(max((un[i] - ua) / max(u_out - ua, 0.05), 0.0), 1.0)
                 ring = max(zf(P[i] + d_ * 0.8) for d_ in (n, -n, tt, -tt, 0 * n))
-                Z[i] = max(za + (zb - za) * f, ring + 0.03)
+                Z[i] = max(za + (zb - za) * f, ring + pad)
         V = np.column_stack([P, Z])
-        buf.add(GROUND_LAYER, DRIVE_MAT, V, P.copy(), T, src=src_id + ":verge", UV1=np.tile([25.0, 25.0], (len(V), 1)))
+        mat = DRIVE_CROSS_MAT if cross_drive else DRIVE_MAT
+        tag = ":drive_cross" if cross_drive else ":verge"
+        buf.add(GROUND_LAYER, mat, V, P.copy(), T, src=src_id + tag, UV1=np.tile([25.0, 25.0], (len(V), 1)))
         done = 1
     return done
 

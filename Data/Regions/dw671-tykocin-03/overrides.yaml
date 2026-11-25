@@ -44,3 +44,20 @@ overrides:
     confidence: medium
     verify: owner photo of DW671 in Krypno Kościelne or the 0.05 m orthophoto WMS
     set: {shoulder: kerb, edge_lines: none}
+  # ADR 0349 (dopisek neon-paving-s24, krytyk wave10-pre §3): obniżenie krawężników do 2 cm na przejściach dla
+  # pieszych (Dz.U. 2016 poz. 124 § 127 ust. 10 / R6-004; Dz.U. 2022 poz. 1518 § 36 ust. 3 / R6-005), pas płytek
+  # ostrzegawczych z wypustkami (0,50 m za krawężnikiem, WORKING_VALUE) oraz kontrastowa kostka na zjazdach do posesji
+  # przecinających chodnik (`driveway_paving_red`, WORKING_VALUE).
+  - id: krypno-pavement-rules-0349
+    kind: pavement_rules
+    source: "ADR 0237 / ADR 0349 (dopisek neon-paving-s24); Dz.U. 2016 poz. 124 § 127 ust. 10 (R6-004); Dz.U. 2022 poz. 1518 § 36 ust. 3 (R6-005)"
+    reason: >-
+      Krytyk wave10-pre §3: brak obniżonego krawężnika i płytek ostrzegawczych na przejściach dla pieszych oraz brak
+      wyróżnienia materiałowego zjazdów do posesji przez chodnik z kostki w Krypnie.
+    confidence: medium
+    verify: owner photo of pedestrian crossings and residential driveways along DW671 in Krypno
+    sidewalk_bdot: false
+    estate_slabs: false
+    crossing_kerb_drops: true
+    crossing_tactile: true
+    driveway_paving_color: true

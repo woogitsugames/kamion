@@ -127,6 +127,8 @@ namespace Game.World.Import
             if (def.Get("vertex_grime") != null) colors = true;                          // _VERTEX_GRIME (ADR 0123)
             if (def.Get("bronze_patina") != null) colors = true;                         // _BRONZE_PATINA (ADR 0331)
             if (def.Get("facade_tint") is bool ft && ft) colors = true;                  // _FACADE_TINT (ADR 0348)
+            if (id == "sidewalk_paving" || id == "sidewalk_paving_red" || id == "sidewalk_slabs" || def.Get("paving_variation") != null) uv1 = true; // ADR 0349: kerb/edge distance
+            if (def.Get("tactile") != null) uv0 = true;                                  // ADR 0349: tactile warning strip metres
         }
 
         /// <summary>ADR 0071 r11: manifest "weather": true = wall material of an authored asset that carries the splash
@@ -335,6 +337,9 @@ namespace Game.World.Import
             mat.SetVector("_GroundWearExclude", Vector4.zero);
             mat.SetVector("_GroundGrimeBase", Vector4.zero);
             mat.SetVector("_GrimeTraffic", GrimeTraffic(def));   // ADR 0194: reset/applied every import
+            mat.SetVector("_PavingVar", Vector4.zero);           // ADR 0349: reset every import (idempotent)
+            mat.SetVector("_PavingWeed", Vector4.zero);
+            mat.SetVector("_Tactile", Vector4.zero);
             if (def.Get("ground_wear_exclude_local_en") is List<object> bounds && bounds.Count == 4)
                 mat.SetVector("_GroundWearExclude", new Vector4((float)Num(bounds[0]), (float)Num(bounds[1]),
                     (float)Num(bounds[2]), (float)Num(bounds[3])));
@@ -373,6 +378,39 @@ namespace Game.World.Import
                     mat.SetVector("_Grime", new Vector4(G("damp_darkening", defaults.x), G("damp_threshold", defaults.y),
                         G("joint_dirt", defaults.z), G("damp_gloss", defaults.w)));
                 }
+            }
+            // ADR 0349 (dopisek neon-paving-s24): deterministic sidewalk concrete block variation (batches, stains,
+            // darker joints, utility patches, sparse edge weeds) with zero new draw calls or keywords. Built-in defaults
+            // for sidewalk materials keep existing chunk GLB extras byte-identical; manifest `paving_variation` overrides.
+            var pvDef = def.Get("paving_variation") as Dictionary<string, object>;
+            bool isSidewalkPaving = id == "sidewalk_paving" || id == "sidewalk_paving_red" || id == "sidewalk_slabs";
+            if (pvDef != null || isSidewalkPaving)
+            {
+                float PV(string key, float fallback) => pvDef != null && pvDef.Get(key) != null ? (float)Num(pvDef.Get(key)) : fallback;
+                bool isSlab = id == "sidewalk_slabs";
+                float batch = Mathf.Clamp(PV("batch_strength", isSlab ? 0.11f : 0.15f), 0f, 0.5f);
+                float stain = Mathf.Clamp(PV("stain_strength", 0.24f), 0f, 0.8f);
+                float joint = Mathf.Clamp(PV("joint_boost", isSlab ? 0.26f : 0.36f), 0f, 1f);
+                float patch = Mathf.Clamp(PV("patch_strength", isSlab ? 0.35f : 0.90f), 0f, 1f);
+                float weed = Mathf.Clamp(PV("weed_strength", isSlab ? 0.45f : 0.72f), 0f, 1f);
+                float edgeM = Mathf.Clamp(PV("weed_edge_m", 0.45f), 0.1f, 1.5f);
+                float bjit = Mathf.Clamp(PV("block_jitter", 0.13f), 0f, 0.35f);
+                mat.SetVector("_PavingVar", new Vector4(batch, stain, joint, patch));
+                mat.SetVector("_PavingWeed", new Vector4(weed, edgeM, bjit, 1f));
+                if (bjit > mat.GetFloat("_ElementJitter")) mat.SetFloat("_ElementJitter", bjit);
+            }
+            // ADR 0349 (dopisek neon-paving-s24): procedural tactile warning slabs (25x25 cm, 5x5 blister domes)
+            if (def.Get("tactile") is Dictionary<string, object> tac)
+            {
+                float TC(string key, float fallback) => tac.Get(key) != null ? (float)Num(tac.Get(key)) : fallback;
+                mat.SetVector("_Tactile", new Vector4(
+                    Mathf.Max(0.05f, TC("tile_m", 0.25f)),
+                    Mathf.Max(0.01f, TC("pitch_m", 0.05f)),
+                    Mathf.Max(0.004f, TC("dome_r_m", 0.014f)),
+                    Mathf.Clamp01(TC("relief", 0.85f))));
+                mat.SetFloat("_ElementJitter", 0f);
+                mat.DisableKeyword("_GRIME");
+                mat.EnableKeyword("_UV_MESH0");
             }
             // ADR 0071 r11: manifest "cracks": strength = the 16 m crack layer on a non-asphalt set (worn dock apron)
             if (wornAsphalt || def.Get("cracks") != null)

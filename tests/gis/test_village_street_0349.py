@@ -249,3 +249,99 @@ def test_open_road_of_tile_04_is_unchanged(net04):
             n += 2
             walk += sum(float(c.side[sd]["raw"]["w"][i]) > 0.05 and int(c.side[sd]["mat"][i]) == 1 for sd in "LR")
     assert n > 5000 and walk == 0, (n, walk)
+
+
+# ------------------------------------------------------------------------------------------------ addendum neon-paving-s24
+def test_paving_addendum_materials_reuse_existing_sets_and_preserve_sidewalk_glb():
+    """ADR 0349 addendum: tactile warning strip and contrasting driveway paving reuse `paving_20x10_tint` (0 new
+    texture sets); `sidewalk_paving` extras stay untouched so untouched regions stay byte-identical."""
+    from streetscape import materials as MT
+    spec = json.loads((REPO / "art-source" / "world" / "materials" / "materials_spec.json").read_text(encoding="utf-8"))["sets"]
+    assert "paving_variation" not in MT.M["sidewalk_paving"]
+    assert MT.PAVING_VARIATION_DEFAULT["batch_strength"] > 0 and MT.PAVING_VARIATION_DEFAULT["weed_strength"] > 0
+    tac = MT.M["sidewalk_tactile"]
+    assert tac["texture_set"] in spec and tac["decal"] is True
+    assert tac["tactile"]["tile_m"] == pytest.approx(0.25) and tac["tactile"]["pitch_m"] == pytest.approx(0.05)
+    assert tac["color"][0] > tac["color"][1] > tac["color"][2] and tac["color"][0] <= 0.55   # ochre, not neon
+    drv = MT.M["driveway_paving_red"]
+    assert drv["texture_set"] in spec and drv["decal"] is True and drv["uv"] == "planar"
+    assert drv["color"][0] > 1.5 * drv["color"][1] and drv["paving_variation"]["patch_strength"] == 0.0
+
+
+def test_tile03_pavement_rules_opt_in_and_region_c_unchanged():
+    from streetscape import pavements as PVM
+    ov03 = yaml.safe_load((pipeline.REGIONS / T03 / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+    r03 = PVM.rules_of(ov03)
+    assert r03 and r03["id"] == "krypno-pavement-rules-0349"
+    assert r03["crossing_kerb_drops"] is True and r03["crossing_tactile"] is True and r03["driveway_paving_color"] is True
+    ov_c = yaml.safe_load((pipeline.REGIONS / "bialystok-industrial-c" / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+    rc = PVM.rules_of(ov_c)
+    assert rc and not rc.get("crossing_tactile") and not rc.get("driveway_paving_color")
+
+
+def test_crossing_tactile_strips_geometry_and_opt_in():
+    """Synthetic crossing drop: tactile warning strips on both sidewalks, +Z normals, metric UV0, opt-in only."""
+    from types import SimpleNamespace
+    from roads import geom as G
+    from roads import meshing as M
+    from streetscape import pavements as PVM
+
+    s = np.arange(81) * 0.5
+    line = G.Polyline(np.column_stack([s, np.zeros(len(s))]))
+    side_walk = {"kind": np.full(len(s), Nw.URBAN), "h": np.full(len(s), 0.02),
+                 "w": np.full(len(s), 2.0), "depth": np.full(len(s), 0.3), "mat": np.full(len(s), 1)}
+    side_none = {**side_walk, "w": np.zeros(len(s)), "mat": np.zeros(len(s), int)}
+    c = SimpleNamespace(id="c1", line=line, z=np.full(len(s), 120.0), hw_at=lambda _s: 3.5,
+                        idx=lambda x: int(np.clip(round(x / 0.5), 0, len(s) - 1)),
+                        interp=lambda a, x: float(np.interp(x, s, a)),
+                        side={"L": side_walk, "R": side_none})
+    # flat sidewalk surface under L strip at z=120.10
+    sw_v = np.array([[10.0, 3.5, 120.10], [30.0, 3.5, 120.10], [30.0, 6.0, 120.10], [10.0, 6.0, 120.10]])
+    buf = M.MeshBuf()
+    buf.add("road", "sidewalk_paving", sw_v, sw_v[:, :2], [(0, 1, 2), (0, 2, 3)], footprint=True, src="c1")
+    drops = [{"chain": "c1", "side": sd, "s": 20.0, "half": 2.0, "h": 0.02, "ramp": 1.0,
+              "kerb_only": True, "src": "crossing:n1"} for sd in "LR"]
+    w = SimpleNamespace(net=SimpleNamespace(chains=[c]), buf=buf, plot_plan={"drops": drops})
+
+    assert PVM.crossing_tactile_strips(w, [{"kind": "pavement_rules", "crossing_tactile": False}]) == {"strips": 0, "tris": 0}
+    rep = PVM.crossing_tactile_strips(w, [{"kind": "pavement_rules", "crossing_tactile": True}])
+    assert rep["strips"] == 1 and rep["tris"] == 32   # L has sidewalk, R (w=0) skipped
+    tp = [p for p in buf.parts if p.mat == PVM.TACTILE_MAT]
+    assert len(tp) == 1 and tp[0].layer == "markings"
+    a, b, cc = tp[0].V[tp[0].T[:, 0]], tp[0].V[tp[0].T[:, 1]], tp[0].V[tp[0].T[:, 2]]
+    assert np.all(np.cross(b - a, cc - a)[:, 2] > 0)
+    assert np.allclose(tp[0].V[:, 2], 120.10 + PVM.TACTILE_LIFT_M)
+    assert tp[0].UV[:, 0].max() == pytest.approx(4.0) and tp[0].UV[:, 1].max() == pytest.approx(PVM.TACTILE_WIDTH_M)
+
+
+def test_driveway_paving_color_opt_in_on_sidewalk():
+    """plots._verge_overlay leaves footways untouched when driveway_color=False and drapes driveway_paving_red when True."""
+    from shapely.geometry import Polygon
+    from roads import meshing as M
+    from streetscape import furniture as FU
+    from streetscape import plots as PLT
+
+    carriage = Polygon([(0, -3.5), (20, -3.5), (20, 3.5), (0, 3.5)])
+    roads_poly = Polygon([(0, -3.5), (20, -3.5), (20, 6.0), (0, 6.0)])
+    sw_v = np.array([[0.0, 3.5, 100.1], [20.0, 3.5, 100.1], [20.0, 6.0, 100.1], [0.0, 6.0, 100.1]])
+    rbuf = M.MeshBuf()
+    rbuf.add("road", "sidewalk_paving", sw_v, sw_v[:, :2], [(0, 1, 2), (0, 2, 3)], footprint=True, src="r")
+    surf_top = FU.SurfaceTop(rbuf.parts)
+    plot = {
+        "lay": {"gate": {"m": np.array([10.0, 7.5]), "n": np.array([0.0, -1.0]), "w": 3.5}},
+        "access": {"d_cw": 4.0, "walk": "sidewalk_paving", "kind": 0, "kerbed": True},
+        "drive": Polygon([(8.25, 5.8), (11.75, 5.8), (11.75, 10.0), (8.25, 10.0)]),
+    }
+    zf = lambda _p: 100.15  # noqa: E731
+
+    buf_off = M.MeshBuf()
+    PLT._verge_overlay(buf_off, plot, surf_top, "plot:1", zf, roads_poly, carriage, driveway_color=False)
+    assert all(p.mat != PLT.DRIVE_CROSS_MAT for p in buf_off.parts)
+
+    buf_on = M.MeshBuf()
+    done = PLT._verge_overlay(buf_on, plot, surf_top, "plot:1", zf, roads_poly, carriage, driveway_color=True)
+    assert done == 1
+    dc = [p for p in buf_on.parts if p.mat == PLT.DRIVE_CROSS_MAT]
+    assert len(dc) == 1 and dc[0].layer == PLT.GROUND_LAYER and dc[0].src == "plot:1:drive_cross"
+    assert dc[0].V[:, 1].min() >= 3.5 + PLT.KERB_BAND_M - 0.02   # stops cleanly behind kerb
+    assert dc[0].V[:, 1].max() >= 7.4                            # reaches gate line

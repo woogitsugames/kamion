@@ -909,6 +909,26 @@ M["sidewalk_paving_red"] = {"color": [0.26, 0.125, 0.11], "rough": 0.85, "surfac
 M["cycle_red"] = {"color": [0.26, 0.125, 0.11], "rough": 0.85, "surface": "asphalt",
                   "texture_set": "paving_20x10_tint", "uv": "planar", "ground_grime": dict(_FOOTWAY_GRIME)}
 
+# ADR 0349 (dopisek neon-paving-s24): maska zmienności kostki chodnikowej (domyślne parametry stosowane w
+# WorldPbrMaterials.cs dla sidewalk_paving / sidewalk_paving_red / sidewalk_slabs bez modyfikacji extras w GLB
+# istniejących kafli), pas płytek ostrzegawczych przy przejściach oraz kontrastowa kostka na zjazdach do posesji.
+# Kolory i wagi efektów: WORKING_VALUE (oceniane w renderach clear/overcast High przed|po).
+PAVING_VARIATION_DEFAULT = {
+    "batch_strength": 0.15, "stain_strength": 0.24, "joint_boost": 0.36,
+    "patch_strength": 0.90, "weed_strength": 0.72, "weed_edge_m": 0.45, "block_jitter": 0.13,
+}
+M["sidewalk_tactile"] = {
+    "color": [0.44, 0.32, 0.06], "rough": 0.88, "surface": "paving_stones",
+    "texture_set": "paving_20x10_tint", "decal": True, "depth_offset_m": _ASPHALT_PAINT_LIFT,
+    "tactile": {"tile_m": 0.25, "pitch_m": 0.05, "dome_r_m": 0.014, "relief": 0.85},
+}
+M["driveway_paving_red"] = {
+    "color": [0.21, 0.095, 0.085], "rough": 0.85, "surface": "paving_stones",
+    "texture_set": "paving_20x10_tint", "uv": "planar", "decal": True, "depth_offset_m": 0.006,
+    "ground_grime": dict(_FOOTWAY_GRIME),
+    "paving_variation": {**PAVING_VARIATION_DEFAULT, "patch_strength": 0.0, "weed_strength": 0.35},
+}
+
 
 # ADR 0129 (G3-B frontage round 2, review 0126 P2; additive block, parameters of the existing Kamion/World PBR
 # material - no shader change, no new pass):
