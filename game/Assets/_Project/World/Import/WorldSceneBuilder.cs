@@ -97,8 +97,16 @@ namespace Game.World.Import
             var routeGo = new GameObject("Route_start");
             var route = routeGo.AddComponent<WorldRoute>();
             var pts = new Vector3[r.RouteEN.Length];
+            // ADR 0350: road surface (top ground mesh), never the terrain under the road; points outside the tile (no hit)
+            // are unknown and take their neighbours' height instead of y = 0 (which used to seed the lowest layer).
             float prevY = float.NaN;
-            for (int i = 0; i < pts.Length; i++) { pts[i] = Ground(new Vector3(r.RouteEN[i].x, 0f, r.RouteEN[i].y), prevY); prevY = pts[i].y; }
+            for (int i = 0; i < pts.Length; i++)
+            {
+                pts[i] = new Vector3(r.RouteEN[i].x, RouteHeight(r.RouteEN[i].x, r.RouteEN[i].y, prevY), r.RouteEN[i].y);
+                if (!float.IsNaN(pts[i].y)) prevY = pts[i].y;
+            }
+            int unknown = Game.World.RouteGround.FillMissing(pts);
+            if (unknown > 0) Debug.Log($"[IMPORT] route: {unknown} of {pts.Length} points without ground (outside the tile), heights from the neighbours (ADR 0350)");
             route.points = pts;
             route.distances = new float[pts.Length];
             for (int i = 1; i < pts.Length; i++)
@@ -302,7 +310,21 @@ namespace Game.World.Import
             return r.PropColliders.Count - onRoad;
         }
 
-        /// <summary>Ground under a route point; under viaducts the hit closest to the previous point's height wins.</summary>
+        static readonly float[] s_RouteHitY = new float[64];
+
+        /// <summary>Road surface height under a route point from the tile's ground meshes (MeshCollider: road surfaces,
+        /// kerbs, bridges, terrain; prop boxes and closures are obstacles, not ground). NaN = no ground (outside the tile).
+        /// Picking rule: <see cref="Game.World.RouteGround.Pick"/> (ADR 0350).</summary>
+        static float RouteHeight(float x, float z, float prevY)
+        {
+            var hits = Physics.RaycastAll(new Vector3(x, 400f, z), Vector3.down, 800f, ~0, QueryTriggerInteraction.Ignore);
+            int n = 0;
+            foreach (var h in hits)
+                if (h.collider is MeshCollider && n < s_RouteHitY.Length) s_RouteHitY[n++] = h.point.y;
+            return Game.World.RouteGround.Pick(s_RouteHitY, n, prevY);
+        }
+
+        /// <summary>Ground under a point (QA cameras); under viaducts the hit closest to the previous point's height wins.</summary>
         static Vector3 Ground(Vector3 p, float prevY)
         {
             var hits = Physics.RaycastAll(new Vector3(p.x, 400f, p.z), Vector3.down, 800f);

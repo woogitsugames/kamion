@@ -1,3 +1,10 @@
+# STATUS — agent spawn-flip (build #9: dk65-07 bez startu, dk65-06 wywrotka)
+
+- [22:40] Bug 1 przyczyna: trasa dk65-07 zapisana na col_terrain 0.4–0.8 m POD col_asphalt (importer: 2 pierwsze punkty poza kaflem → y=0 → reguła „najbliżej poprzedniego” wybrała najniższą warstwę). Dowód: colprobe na World_dk65-07_High.unity (s=90: asphalt 14.946, terrain 14.191 = route y). Poprawka: RouteGround (Pick/FillMissing), importer RouteHeight, SpawnSafety.Pose/RoadY (wysokość jezdni). Testy EditMode RouteGroundTests.
+- Bug 2: dk65-06 trasa OK (route y = top asphalt), wywrotka odtworzona BEZ streamingu (route autopilot, start z punktu spawnu s=340). Telemetria (artifacts/spawn-flip-s24/dk65-06-b9-drive.csv): route_s utknął na 102.06 m, skręt 0.46°, zjazd w prawo t=12 s, wywrotka t=19 s. Przyczyna: StartRouteDriver robił SeekTo tylko dla route_s; follower startował od 0 m, okno 20 segmentów utknęło w lokalnym minimum. Poprawka: SeekRouteDriverToStart (punkt spawnu) + re-akwizycja w przód przy CTE>12 m. Test EditMode PathFollowerStartTests.
+- [23:00] Testy: EditMode 145/145 (StartClearance z włączoną kolizją chunków: dk65-07 CZERWONY na starym SpawnSafety, zielony po; RouteGroundTests na prawdziwej scenie dk65-07 — reguła importera daje col_asphalt ±0.02 m, stara trasa do 0.83 m pod nią). PlayMode StartSafety+RouteSpawn 10/10. Skan 53 scen buildu #9: 21 kafli z trasą >0.3 m pod jezdnią (artifacts/spawn-flip-s24/route-vs-road-b9.txt). ADR 0350. Dowody skopiowane do main artifacts/spawn-flip-s24.
+- Uwaga dla lidera: TruckGlass.shader:261 `cosScatter` niezadeklarowany w wariancie _KAMION_GLASS_FAST (błąd kompilacji shadera w PlayMode, poza zakresem).
+- NASTĘPNY KROK (lider): przegląd + scalenie gałęzi; build Windows; `-scene dk65-07` i `-scene dk65-06 -autopilot route -speed 50 -telemetry 1` na nowym buildzie; reimport kafli z listy route-vs-road-b9.txt (po fali 11) daje poprawne wysokości tras.
 # STATUS village-street-s24 (ADR 0349: ulica wiejska DW671 — chodniki z ortofoto, krytyk build #8 pkt 10 / klatka t2590)
 - krok 5 (KONIEC): scalone na main (b9b99dabd).
 
