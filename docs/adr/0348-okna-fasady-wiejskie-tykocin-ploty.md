@@ -42,12 +42,12 @@ Referencje (wyłącznie otwarte źródła lokalne, zero pikseli w zasobach, zaka
 - **Aktywacja dla korytarza wiejskiego DW671:** `Data/Regions/dw671-tykocin-09/overrides.yaml` otrzymuje jawny wpis `dw671-tykocin-09-rural-facades-0348` (`kind: facade_rules`, `small_town: true`). Kafle Białegostoku pozostają bez zmian (bit-identyczne z ADR 0238).
 
 ### 3. Płoty: ≥4 warianty deterministyczne z ziarna działki, bez powtarzalnego żółtego płotka (+0 draw calli)
-- **Usunięcie żółtego płotka:** w `plots.py` `PICKET_PAINTS` zastąpiono 6 zgaszonymi barwami podlaskimi (leśna zieleń, ciemny orzech, surowe szare drewno, wyblakły błękit łupkowy, tlenkowy brąz/czerwień, zgaszona złamana biel; zero nasyconej żółci/ochry); w `plot_kit.py` `picket_wood` przyciemniono z `(132, 86, 54)` na `(122, 78, 44)`. Układ pasm atlasu `plot_kit` (`2048×2048`) pozostaje bez zmian (zgodność z `test_roof_tiles_0316.py`).
+- **Usunięcie żółtego płotka:** w `plots.py` `PICKET_PAINTS` zastąpiono 6 zgaszonymi barwami podlaskimi (leśna zieleń, przygaszony błękit, głęboki orzech, tlenkowy brąz/czerwień, szaro-niebieski, ciepły popiel; zero nasyconej żółci/ochry, max składowa `0,42`); w `plot_kit.py` `picket_wood` przyciemniono z `(132, 86, 54)` na `(122, 78, 44)`. Układ pasm atlasu `plot_kit` (`2048×2048`) pozostaje bez zmian (zgodność z `test_roof_tiles_0316.py`).
 - **≥4 wyraźne rodziny ogrodzeń w jednym atlasie `plot_kit` (+0 draw calli):**
   1. **Sztachety drewniane w kilku kolorach / surowe:** `picket`, `picket_wood`, `picket_paint` (6 barw), nowy `picket_raw` (surowe szarzejące deski z szarymi słupkami `wood_grey`) + deski pełne `boards_*`;
   2. **Siatka na słupkach:** `chainlink` (zielona PVC) i `chainlink_galv` (ocynk) ze słupkami stalowymi 3D na każdym podziale przęsła (`5,12 m`);
-  3. **Panel ogrodzeniowy:** `lamella`, `concrete` oraz nowe `panel_graphite` i `panel_green` (sztywny panel na betonowej podmurówce `0,24 m` ze słupkami stalowymi 3D);
-  4. **Murek z cegły / kamienia + przęsła:** `brick_picket`, `brick_boards`, `brick_bars` oraz nowe `stone_picket` i `stone_bars` (murek kamienny `0,38 m` + słupki kamienne `0,38×0,38 m` z betonowymi daszkami z tekstury łupanego kamienia/betonu pod ciepłym kamiennym tintem + przęsła sztachetowe/prętowe).
+  3. **Panel ogrodzeniowy:** `lamella`, `concrete` oraz nowe `panel_graphite` i `panel_green` (sztywny panel na betonowej podmurówce `0,22 m` ze słupkami stalowymi 3D);
+  4. **Murek z cegły / kamienia + przęsła:** `brick_picket`, `brick_boards`, `brick_bars` oraz nowe `stone_picket` i `stone_bars` (murek kamienny `0,42 m` + słupki kamienne `0,38×0,38 m` z betonowymi daszkami z tekstury łupanego kamienia/betonu pod ciepłym kamiennym tintem + przęsła sztachetowe/prętowe).
 - **Deterministyczne unikanie powtórzeń u sąsiadów (`plots.plan()`):** kara dla identycznego stylu i tej samej rodziny w promieniu `45 m` (2 najbliższe działki), liczona przed nadpisaniami `plot_fence` (pełna zgodność z `test_dom_klattow_0305.py`).
 
 ## Wyniki i budżety (zmierzone)

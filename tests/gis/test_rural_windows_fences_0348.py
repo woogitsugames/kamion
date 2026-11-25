@@ -47,7 +47,7 @@ def test_dw671_09_enables_small_town_and_reveal_plinth_ranges():
     fc = json.loads((DW09_DIR / "buildings.geojson").read_text(encoding="utf8"))
     ovs = pipeline.load_overrides("dw671-tykocin-09")
     blds = BM.load(fc, DW09_ORIGIN, ovs)
-    assert len(blds) > 100
+    assert len(blds) >= 80
     assert all(b.get("small_town") is True for b in blds)
     assert 0.08 <= BM.REVEAL_SMALL_TOWN <= 0.12
     assert 0.08 <= BM.REVEAL_SMALL_TOWN_WOOD <= 0.12

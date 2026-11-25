@@ -108,7 +108,7 @@ def wall_pieces(wwo, acc, a, d, nout, L, zb, zt, ops, u_acc, vref, zsplits, uspl
                     pc.append((ua - u0, ub - u0, va, vb, o[4], o[5], m))
             if col_fn is not None:
                 wwo(acc, layer, mat, a + d * u0, d, nout, u1 - u0, z0, z1, pc, u0=u_acc + u0, vref=vref,
-                    col=col_fn(u0, u1, z0, z1), **kw)
+                    col=col_fn(u0, u1, z0, z1, mat), **kw)
             else:
                 wwo(acc, layer, mat, a + d * u0, d, nout, u1 - u0, z0, z1, pc, u0=u_acc + u0, vref=vref, **kw)
 
