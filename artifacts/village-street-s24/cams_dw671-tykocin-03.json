@@ -1,0 +1,132 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "dw671-tykocin-03",
+ "cameras": [
+  {
+   "id": "vs_cab_t2590",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    205.99,
+    -600.21,
+    126.06
+   ],
+   "look_at": [
+    180.92,
+    -665.58,
+    124.76
+   ],
+   "fov_deg": 60.0,
+   "note": "frame t2590 of build #8 (Krypno Wielkie), right lane",
+   "heading_deg": 201.9
+  },
+  {
+   "id": "vs_street_left_t2590",
+   "type": "persp",
+   "kind": "exterior_3q",
+   "pos": [
+    220.78,
+    -577.07,
+    125.68
+   ],
+   "look_at": [
+    203.61,
+    -618.67,
+    124.68
+   ],
+   "fov_deg": 60.0,
+   "note": "left kerb, along the street",
+   "heading_deg": 201.9
+  },
+  {
+   "id": "vs_street_right_t2590",
+   "type": "persp",
+   "kind": "exterior_3q",
+   "pos": [
+    214.84,
+    -574.69,
+    125.68
+   ],
+   "look_at": [
+    198.45,
+    -616.6,
+    124.68
+   ],
+   "fov_deg": 60.0,
+   "note": "right kerb, along the street",
+   "heading_deg": 201.9
+  },
+  {
+   "id": "vs_above_t2590",
+   "type": "persp",
+   "kind": "rondo_above",
+   "pos": [
+    217.81,
+    -575.88,
+    168.48
+   ],
+   "look_at": [
+    207.37,
+    -601.86,
+    123.48
+   ],
+   "fov_deg": 60.0,
+   "note": "cross-section from 45 m",
+   "heading_deg": 201.9
+  },
+  {
+   "id": "vs_cab_koscielne",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    798.67,
+    480.67,
+    123.75
+   ],
+   "look_at": [
+    768.49,
+    417.5,
+    122.45
+   ],
+   "fov_deg": 60.0,
+   "note": "Krypno Koscielne, way 145989268 (was ground shoulder)",
+   "heading_deg": 206.5
+  },
+  {
+   "id": "vs_cab_village_start",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    923.53,
+    730.98,
+    119.88
+   ],
+   "look_at": [
+    893.15,
+    667.91,
+    118.58
+   ],
+   "fov_deg": 60.0,
+   "note": "ground shoulder -> kerbed street at node 2133817368",
+   "heading_deg": 206.6
+  },
+  {
+   "id": "vs_cab_seam_04",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    73.37,
+    -929.35,
+    124.35
+   ],
+   "look_at": [
+    48.35,
+    -994.73,
+    123.05
+   ],
+   "fov_deg": 60.0,
+   "note": "towards the seam with dw671-tykocin-04",
+   "heading_deg": 201.9
+  }
+ ]
+}

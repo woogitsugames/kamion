@@ -531,7 +531,9 @@ def apply_edge_overrides(net: Network, edges, overrides):
         if "building" in tgt or ov.get("kind"):
             continue                       # streetscape overrides (buildings, paved areas): streetscape.stage
         if "edge" in tgt:
-            ids = [tgt["edge"]] if tgt["edge"] in net.sections else []
+            # one edge id or a list of them (ADR 0349: the village part of an OSM way); all must exist, else stale
+            want = tgt["edge"] if isinstance(tgt["edge"], list) else [tgt["edge"]]
+            ids = sorted(want) if all(e in net.sections for e in want) else []
         elif "osm_way" in tgt:
             ways = tgt["osm_way"] if isinstance(tgt["osm_way"], list) else [tgt["osm_way"]]
             ways = {int(w) for w in ways}
