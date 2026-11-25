@@ -127,7 +127,7 @@ namespace Game.Gameplay
         /// <summary>As above; <paramref name="overflow"/> = the buffer was full (some colliders may not have been seen).</summary>
         public static Collider FirstOverlap(WorldRoute route, float s, IList<Transform> ignore, float rearM, float marginM, out bool overflow)
         {
-            Pose(route, s, rearM, marginM, out Vector3 centre, out Vector3 half, out Quaternion rot);
+            Pose(route, s, rearM, marginM, ignore, out Vector3 centre, out Vector3 half, out Quaternion rot);
             int n = Physics.OverlapBoxNonAlloc(centre, half, s_Hits, rot, ~0, QueryTriggerInteraction.Ignore);
             overflow = n >= s_Hits.Length;
             Collider found = null;
@@ -144,13 +144,20 @@ namespace Game.Gameplay
         /// <summary>
         /// Box of the combination standing at route distance s as the spawn places it: tractor origin on the route point,
         /// heading = route tangent, trailer straight behind (CombinationPlacement.Coupled, articulation 0); pitched along
-        /// the road between the route heights at the rear end and the front face.
+        /// the road between the road heights at the rear end and the front face. Heights = the road surface under the route
+        /// point (<see cref="RoadY"/>, ADR 0350), the same ground the spawn stands the wheels on - not the stored route
+        /// height, which older imports took from the terrain under the road (dk65-07: 0.4-0.8 m low, every place "taken" by
+        /// col_asphalt).
         /// </summary>
-        public static void Pose(WorldRoute route, float s, float rearM, float marginM, out Vector3 centre, out Vector3 halfExtents, out Quaternion rotation)
+        public static void Pose(WorldRoute route, float s, float rearM, float marginM, out Vector3 centre, out Vector3 halfExtents, out Quaternion rotation) =>
+            Pose(route, s, rearM, marginM, null, out centre, out halfExtents, out rotation);
+
+        /// <summary>As above; colliders under <paramref name="ignore"/> (the combination itself) are not ground.</summary>
+        public static void Pose(WorldRoute route, float s, float rearM, float marginM, IList<Transform> ignore, out Vector3 centre, out Vector3 halfExtents, out Quaternion rotation)
         {
             Vector3 p = route.PointAt(s);
             Vector3 fwd = route.TangentAt(s);
-            float yRear = route.PointAt(s - rearM).y, yFront = route.PointAt(s + StartClearance.FrontM).y;
+            float yRear = RoadY(route.PointAt(s - rearM), ignore), yFront = RoadY(route.PointAt(s + StartClearance.FrontM), ignore);
             float len = StartClearance.FrontM + rearM;
             Vector3 dir = (fwd * len + Vector3.up * (yFront - yRear)).normalized;
             rotation = Quaternion.LookRotation(dir, Vector3.up);
@@ -158,6 +165,30 @@ namespace Game.Gameplay
             float yMid = Mathf.Lerp(yRear, yFront, 0.5f);
             centre = new Vector3(p.x, yMid, p.z) + fwd * mid + rotation * Vector3.up * ((BoxBottomM + BoxTopM) * 0.5f);
             halfExtents = new Vector3(StartClearance.HalfWidthM + marginM, (BoxTopM - BoxBottomM) * 0.5f, len * 0.5f + marginM);
+        }
+
+        static readonly RaycastHit[] s_RoadHits = new RaycastHit[16];
+        static readonly float[] s_RoadY = new float[16];
+
+        /// <summary>
+        /// Road surface height under a route point (world): the highest ground mesh (MeshCollider - road surfaces, bridges,
+        /// terrain; prop boxes, closures and barriers are obstacles the box must find, not ground) within
+        /// <see cref="RouteGround.WindowM"/> of the stored route height (<see cref="RouteGround.Pick"/>); the stored height
+        /// when there is none. No allocation (non-alloc raycast, static buffers); once per probe, never in the driving loop.
+        /// </summary>
+        public static float RoadY(Vector3 routePoint, IList<Transform> ignore)
+        {
+            float w = RouteGround.WindowM;
+            int n = Physics.RaycastNonAlloc(routePoint + Vector3.up * (w + 0.05f), Vector3.down, s_RoadHits, 2f * w + 0.1f, ~0, QueryTriggerInteraction.Ignore);
+            int m = 0;
+            for (int i = 0; i < n; i++)
+            {
+                var c = s_RoadHits[i].collider;
+                if (c is MeshCollider && !IsUnder(c.transform, ignore) && m < s_RoadY.Length) s_RoadY[m++] = s_RoadHits[i].point.y;
+                s_RoadHits[i] = default;
+            }
+            float y = RouteGround.Pick(s_RoadY, m, routePoint.y);
+            return float.IsNaN(y) ? routePoint.y : y;
         }
 
         static bool IsUnder(Transform t, IList<Transform> roots)
