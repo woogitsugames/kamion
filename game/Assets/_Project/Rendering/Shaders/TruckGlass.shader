@@ -258,6 +258,7 @@ Shader "Kamion/Truck Glass"
                 trans *= lerp(1.0, saturate(_SeeThroughClutter), glazing * i.inside * saturate(_KamionCamOutside));
                 half3 glare = L.color * saturate(dot(nOut, L.direction)) * phase;
                 half3 dirtAdd; half dirtKeep;
+                half cosScatter = dot(-L.direction, V);   // fast path: phase comes from the vertex stage, the dirt cone needs it here
                 DirtShade(dirt, amb, glare, cosScatter, dirtAdd, dirtKeep);    // ADR 0341, glass-sky-s24
                 trans *= dirtKeep;
                 half3 body = i.tint * amb * (1.0 - tAbs) * 0.25 * (1.0 - i.inside)
