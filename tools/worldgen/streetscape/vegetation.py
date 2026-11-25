@@ -1766,7 +1766,15 @@ def road_clearance(trees, carriage, report, free_fn=None):
             out[i] = dict(t, h=h2, e=e2, n=n2)
             rep[kind] += 1
     res = [t for i, t in enumerate(out) if i not in drop]
-    rep["violations_after"] = len(clearance_violations(res, carriage, tol=0.011))   # 1 cm = position rounding
+    # final sweep (fala 10, s24): a shift away from the NEAREST edge can bring a tree within reach of another edge of the
+    # carriageway (bends, junctions, parallel roads); such leftovers are removed so the final list has 0 violations
+    left = clearance_violations(res, carriage, tol=0.011)                              # 1 cm = position rounding
+    rep["removed_final"] = len(left)
+    if left:
+        gone = {i for i, _, _ in left}
+        res = [t for i, t in enumerate(res) if i not in gone]
+        rep["removed"] += len(left)
+    rep["violations_after"] = len(clearance_violations(res, carriage, tol=0.011))
     return res
 
 
