@@ -10,4 +10,9 @@
   - `build_world.py --region knyszyn-w --context`: `far_field` High `93 052 → 100 267`, Low `12 359 → 11 830` (podsiatki `2/sektor`).
   - `build_world.py --region dk65-05 --context`: `far_field` High `111 935 → 123 694`, Low `15 120 → 14 585` (podsiatki `2/sektor`).
   - `far_field.py --region bialystok-industrial-c`: High `169 318 → 182 126`, Low `29 161 → 29 139` (`≤ 30 000`, `test_far_field.py` 19/19 zielone).
-- **NASTĘPNY KROK:** zająć slot `unity` → `import-region.ps1 -Region knyszyn-w -Tiers High -BuildTarget Win64`, `visual-qa` High clear+overcast `after`, to samo `dk65-05`, `make_sheets.py`, oględziny PNG + crop 1:1.
+- **krok 4 (visual-qa po + polerka podszytu/impostorów + ADR 0330 r2):**
+  - Import Win64 High + visual-qa **po** (`1600×900`, PC High, clear + overcast) dla `knyszyn-w` i `dk65-05`, druga iteracja polerki (chłodne zamglenie impostorów `k=0,16 / vis=0,68`, gęstszy podszyt/krzewy przy podstawie i narożnikach, smoothstep końców `0,52`), reimport + ponowny render + oględziny wszystkich 6 arkuszy (`sbs-*`, `crop-1to1-*`).
+  - Finalne liczby `far_field`: `knyszyn-w` High `93 052 → 104 569`, Low `12 359 → 11 830`; `dk65-05` High `111 935 → 130 148`, Low `15 120 → 14 585`; C High `169 318 → 188 322`, Low `29 161 → 29 139` (`≤ 30 000`); podsiatki `2/sektor`, **Δ `drawsEst` = 0** na wszystkich kamerach.
+  - Dowody skopiowane do `C:\Users\matma\Documents\Claude\kamion\artifacts\neon-farfield2-s24\sheets\`.
+  - Dopisek rundy 2 dodany do `docs/adr/0330-brzeg-ciagly-row-jeden-most-tykocin-dal-lasu.md`.
+- **NASTĘPNY KROK (dla lidera po scaleniu):** przebudować `far_field` dla pozostałych kafli (`uv run --project tools/worldgen tools/worldgen/streetscape/far_field.py --region <id>` — wymagane ze względu na 11-slotowy atlas `1024×4096`) i reimportować.

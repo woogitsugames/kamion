@@ -1495,12 +1495,12 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
     run = []
 
     def _smooth_end_taper(s: np.ndarray, total_s: float) -> np.ndarray:
-        taper_len = min(18.0, total_s * 0.28)
+        taper_len = min(16.0, total_s * 0.28)
         if taper_len < 1.0:
             return np.ones_like(s)
         t = np.minimum(np.clip(s / taper_len, 0.0, 1.0), np.clip((total_s - s) / taper_len, 0.0, 1.0))
         sm = t * t * (3.0 - 2.0 * t)
-        return 0.72 + 0.28 * sm
+        return 0.52 + 0.48 * sm
 
     def flush_run(r_pts):
         if len(r_pts) < 2:
@@ -1546,15 +1546,15 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
         # ADR 0330 r2 (High tier): patchy undulating undergrowth / shrub mantle skirt in front of outer stand edge
         d_min_run = float(d_true.min())
         if tier == "High" and d_min_run <= FAR_SKIRT_MAX_D_M and k >= 2:
-            # Push skirt 3.5..9.5 m * s_xy in front of outer curtain with irregular wave + patchy gaps (~68% kept)
+            # Push skirt 2.5..9.5 m * s_xy in front of outer curtain with irregular wave + patchy gaps (~76% kept)
             sk_off = np.array([
-                (3.5 + 6.0 * FH._vnoise2(x, y, 28.0, "ff_skoff")) * sxy
+                (2.5 + 7.0 * FH._vnoise2(x, y, 26.0, "ff_skoff")) * sxy
                 for x, y, sxy in zip(e_raw, n_raw, s_xy_arr)
             ], dtype=np.float64)
             Ps = P + out_n * sk_off[:, None]
             # Keep skirt strictly outside the tile border (d_eff >= 9.0 m)
             sk_keep = np.array([
-                outside_dist(p[0], p[1], half)[4] >= 9.0 and FH._vnoise2(x, y, 36.0, "ff_skkeep") > 0.30
+                outside_dist(p[0], p[1], half)[4] >= 9.0 and FH._vnoise2(x, y, 34.0, "ff_skkeep") > 0.22
                 for p, x, y in zip(Ps, e_raw, n_raw)
             ], dtype=bool)
             # Emit contiguous kept sub-runs of the undergrowth skirt
@@ -1571,29 +1571,36 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                 sub_sh = s_h_arr[i0:i1 + 1]
                 sub_zg = np.array([elev.z_at_eff(p[0], p[1]) for p in sub_p])
                 sub_h = np.array([
-                    (3.2 + 5.2 * FH._vnoise2(x, y, 22.0, "ff_skh") * (0.75 + 0.5 * FH._vnoise2(x, y, 9.0, "ff_skh2"))) * sh
+                    (3.6 + 5.8 * FH._vnoise2(x, y, 20.0, "ff_skh") * (0.72 + 0.56 * FH._vnoise2(x, y, 9.0, "ff_skh2"))) * sh
                     for x, y, sh in zip(sub_er, sub_nr, sub_sh)
                 ], dtype=np.float64)
-                sub_h = np.minimum(sub_h, ht[i0:i1 + 1] * 0.52)
+                sub_h = np.minimum(sub_h, ht[i0:i1 + 1] * 0.56)
                 # Slightly varying ground sink breaks horizontal shadow seam at base
-                sub_sink = np.array([0.35 + 0.45 * FH._vnoise2(x, y, 14.0, "ff_skz") for x, y in zip(sub_er, sub_nr)])
-                sub_h = _limit_top_slope(sub_p, sub_zg - sub_sink, sub_h, max_slope=0.30, min_h=1.8)
+                sub_sink = np.array([0.35 + 0.50 * FH._vnoise2(x, y, 14.0, "ff_skz") for x, y in zip(sub_er, sub_nr)])
+                sub_h = _limit_top_slope(sub_p, sub_zg - sub_sink, sub_h, max_slope=0.30, min_h=2.0)
                 sec.add_curtain1(sub_p, sub_zg - sub_sink, sub_zg + sub_h, face_sign=1.0,
                                  mat=look["mat"], u_shift=look["u_shift"] + 0.37, u_scale=look["u_scale"],
                                  half=half, v_bot=1.0, v_top=vm_edge)
                 i0 = i1 + 1
 
-        # ADR 0330 r2 (High tier): individual crossed-card tree impostors in front of forest edges (0..1500 m ring,
-        # i.e. 300..1500 m from tile cameras) — packed in the same far atlas (0 extra draw calls).
-        if tier == "High" and d_min_run <= FAR_IMPOSTOR_MAX_D_M and total_s >= 14.0:
+        # ADR 0330 r2 (High tier): individual crossed-card tree & shrub impostors in front of forest edges (0..1500 m
+        # ring, i.e. 300..1500 m from tile cameras) — packed in the same far atlas (0 extra draw calls).
+        if tier == "High" and d_min_run <= FAR_IMPOSTOR_MAX_D_M and total_s >= 12.0:
             species_pool = FAR_IMPOSTOR_SPECIES.get(mix, FAR_IMPOSTOR_SPECIES["mixed"])
-            # Deterministic irregular spacing (~28..44 m in foreshortened run length, denser near border)
-            s_cur = 8.0 + 14.0 * _hfloat(f"{P[0, 0]:.0f},{P[0, 1]:.0f}", "imp_s0")
-            while s_cur < total_s - 6.0:
-                idx = int(np.searchsorted(s, s_cur, side="right")) - 1
+            bush_pool = ("tree_shrub_0", "tree_shrub_0", "tree_alder_0", "tree_linden_0", "tree_birch_0")
+            # Sample positions: irregular spacing along the edge + soft shrubby corners near open run ends
+            sample_s = []
+            if np.hypot(*(P[0] - P[-1])) > 2.0:
+                sample_s.extend([min(3.5, total_s * 0.15), max(total_s - 3.5, total_s * 0.85)])
+            s_cur = 7.0 + 12.0 * _hfloat(f"{P[0, 0]:.0f},{P[0, 1]:.0f}", "imp_s0")
+            while s_cur < total_s - 5.0:
+                sample_s.append(s_cur)
+                s_cur += (18.0 + 16.0 * _hfloat(f"{P[0, 0]:.0f},{P[0, 1]:.0f},{s_cur:.0f}", "imp_step"))
+            for s_pos in sample_s:
+                idx = int(np.searchsorted(s, s_pos, side="right")) - 1
                 idx = min(max(idx, 0), k - 2)
                 seg_l = max(float(ds[idx]), 1e-6)
-                frac = float(np.clip((s_cur - s[idx]) / seg_l, 0.0, 1.0))
+                frac = float(np.clip((s_pos - s[idx]) / seg_l, 0.0, 1.0))
                 pt = P[idx] * (1.0 - frac) + P[idx + 1] * frac
                 nrm = out_n[idx] * (1.0 - frac) + out_n[idx + 1] * frac
                 nlen = float(np.hypot(nrm[0], nrm[1]))
@@ -1603,27 +1610,36 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                 sxy_pt, sh_pt = foreshorten_scales(dt_pt)
                 if dt_pt <= FAR_IMPOSTOR_MAX_D_M:
                     tkey = f"{pt[0]:.1f},{pt[1]:.1f}"
-                    # 1 primary edge tree + occasional 2nd pioneer/shrub stepping slightly further into the field
-                    n_clump = 2 if _hfloat(tkey, "imp_clump") < 0.38 else 1
-                    for ci in range(n_clump):
-                        ck = f"{tkey}:{ci}"
-                        out_d = (4.5 + 16.0 * _hfloat(ck, "out")) * sxy_pt if ci == 0 else (12.0 + 18.0 * _hfloat(ck, "out")) * sxy_pt
+                    h_loc = float(ht[idx] * (1.0 - frac) + ht[idx + 1] * frac)
+                    # Always place a low bushy shrub/sapling hugging the forest base (breaks the straight lower edge),
+                    # plus an occasional taller pioneer tree stepping further into the field
+                    is_end = (s_pos < 5.0 or s_pos > total_s - 5.0)
+                    bname = _hpick(tkey, list(bush_pool), "bush")
+                    b_out = (1.5 + 6.5 * _hfloat(tkey, "bout")) * sxy_pt
+                    b_lat = (2.0 * _hfloat(tkey, "blat") - 1.0) * 6.0 * sxy_pt
+                    be = float(pt[0] + nrm[0] * b_out - nrm[1] * b_lat)
+                    bn = float(pt[1] + nrm[1] * b_out + nrm[0] * b_lat)
+                    if outside_dist(be, bn, half)[4] >= 9.5:
+                        if bname == "tree_shrub_0":
+                            bh = (2.8 + 3.4 * _hfloat(tkey, "bh")) * sh_pt
+                        else:
+                            bh = max(min(h_loc * (0.36 + 0.28 * _hfloat(tkey, "bh")), 11.0 * sh_pt), 3.8 * sh_pt)
+                        sec.add_tree_impostor1(be, bn, elev.z_at_eff(be, bn), bh, bname,
+                                               yaw=_hfloat(tkey, "byaw") * math.pi, half=half)
+                    if (not is_end) and _hfloat(tkey, "imp_tall") < 0.42:
+                        ck = f"{tkey}:tall"
+                        out_d = (5.0 + 15.0 * _hfloat(ck, "out")) * sxy_pt
                         lat_d = (2.0 * _hfloat(ck, "lat") - 1.0) * 8.0 * sxy_pt
                         tx_e = float(pt[0] + nrm[0] * out_d - nrm[1] * lat_d)
                         tx_n = float(pt[1] + nrm[1] * out_d + nrm[0] * lat_d)
-                        if outside_dist(tx_e, tx_n, half)[4] < 10.0:
-                            continue
-                        tname = _hpick(ck, list(species_pool), "sp")
-                        h_loc = float(ht[idx] * (1.0 - frac) + ht[idx + 1] * frac)
-                        if tname == "tree_shrub_0":
-                            th = (2.8 + 2.8 * _hfloat(ck, "h")) * sh_pt
-                        else:
-                            # Pioneer / edge trees range 50%..95% of wall height so they frame and break the curtain
-                            th = max(h_loc * (0.50 + 0.45 * _hfloat(ck, "h")), 4.5 * sh_pt)
-                        yaw = _hfloat(ck, "yaw") * math.pi
-                        sec.add_tree_impostor1(tx_e, tx_n, elev.z_at_eff(tx_e, tx_n), th, tname, yaw=yaw, half=half)
-                step_m = (24.0 + 20.0 * _hfloat(f"{pt[0]:.0f},{pt[1]:.0f},{s_cur:.0f}", "imp_step"))
-                s_cur += step_m
+                        if outside_dist(tx_e, tx_n, half)[4] >= 10.0:
+                            tname = _hpick(ck, list(species_pool), "sp")
+                            if tname == "tree_shrub_0":
+                                th = (3.0 + 3.2 * _hfloat(ck, "h")) * sh_pt
+                            else:
+                                th = max(h_loc * (0.54 + 0.36 * _hfloat(ck, "h")), 5.0 * sh_pt)
+                            sec.add_tree_impostor1(tx_e, tx_n, elev.z_at_eff(tx_e, tx_n), th, tname,
+                                                   yaw=_hfloat(ck, "yaw") * math.pi, half=half)
 
     for a, b in zip(ext[:-1], ext[1:]):
         L = float(np.hypot(b[0] - a[0], b[1] - a[1]))

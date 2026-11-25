@@ -269,6 +269,7 @@ def far_atlas(root=None, log=print) -> dict:
                     srcs[f] = hashlib.sha256((vdir / f).read_bytes()).hexdigest()
     want = {"schema": "truck-sim-pl/forest-edge-far-atlas/2", "adr": "0330", "haze_albedo_linear": list(HAZE_ALBEDO),
             "k": FAR_ATLAS_HAZE_K, "vis_lift": FAR_ATLAS_VIS_LIFT, "nrm_flat": FAR_ATLAS_NRM_FLAT,
+            "impostor_haze": [0.16, 0.68, 0.45],
             "slots": [list(x) for x in FAR_ATLAS_SLOTS], "impostor_rows": [list(r) for r in FAR_IMPOSTOR_ROWS],
             "size": list(FAR_ATLAS_SIZE), "pad": FAR_ATLAS_PAD, "sources": srcs}
     out_a, out_n = vdir / f"{FAR_ATLAS_MAT}.png", vdir / f"{FAR_ATLAS_MAT}_n.png"
@@ -288,9 +289,12 @@ def far_atlas(root=None, log=print) -> dict:
                 ri = int(suf[3:])
                 row_trees = FAR_IMPOSTOR_ROWS[ri]
                 cell_w = w // len(row_trees)
-                kv = FAR_ATLAS_VIS_LIFT.get("", 0.55)
-                kn = FAR_ATLAS_NRM_FLAT.get("", 0.35)
-                k_h = FAR_ATLAS_HAZE_K.get("", 0.08)
+                # ADR 0330 r2: edge impostors stand at 300-1500 m in front of mid/far stands; blend their albedo
+                # and sky visibility slightly toward the cool Rayleigh band so they sit naturally in front of the
+                # wall instead of popping dark against hazy stands behind them.
+                kv = 0.68
+                kn = 0.45
+                k_h = 0.16
                 for ci, tname in enumerate(row_trees):
                     f = vdir / (f"impostor_{tname}_n.png" if normal else f"impostor_{tname}.png")
                     if not f.exists():
