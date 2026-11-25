@@ -106,9 +106,17 @@ Shader "Kamion/Truck Glass"
             // ADR 0341: light the dirt adds (premultiplied) and the share of the transmitted scene it keeps.
             // Dust: veiling glare through the film phase, faint grey in diffuse light. Arcs: glare only, narrower lobe (phase^2).
             // Insects: dark, nearly opaque bodies (albedo ~0.08, translucent rims catch the sun a little).
-            void DirtShade(half3 d, half3 amb, half3 glare, half phase, out half3 add, out half keep)
+            // glass-sky-s24 (critic s24 build #8 P0#2): the arcs drew a fan of bright thin lines over the whole sky ("cracks /
+            // power lines"): glare x phase (both broad, up to 2 x 2 x sun) made them shine at any angle within ~90 deg of the
+            // sun. Now a smear only lights up close to the sun (smoothstep cone cos 0.80 = ~37 deg, squared), and its added
+            // light is capped by the sky ambient on the outer face (stand-in for the background luminance the premultiplied
+            // pane cannot read): <= 0.6 x amb x G, i.e. a soft band of at most ~13 % of the sky behind it. The dust glare is
+            // capped the same way (<= 1.2 x amb x R) so specks do not sparkle against the sky when the sun is far brighter.
+            void DirtShade(half3 d, half3 amb, half3 glare, half cosScatter, out half3 add, out half keep)
             {
-                add = d.r * (amb * 0.10 + glare * 0.30) + d.g * glare * phase * 0.08 + d.b * (amb * 0.04 + glare * 0.08);
+                half cone = smoothstep(0.80h, 1.0h, cosScatter);
+                half3 arcs = min(glare * (cone * cone * 0.15h), amb * 0.6h);
+                add = d.r * (amb * 0.10 + min(glare * 0.30, amb * 1.2h)) + d.g * arcs + d.b * (amb * 0.04 + glare * 0.08);
                 keep = (1.0 - 0.08 * d.r) * (1.0 - 0.03 * d.g) * (1.0 - 0.65 * d.b);
             }
 
@@ -250,7 +258,7 @@ Shader "Kamion/Truck Glass"
                 trans *= lerp(1.0, saturate(_SeeThroughClutter), glazing * i.inside * saturate(_KamionCamOutside));
                 half3 glare = L.color * saturate(dot(nOut, L.direction)) * phase;
                 half3 dirtAdd; half dirtKeep;
-                DirtShade(dirt, amb, glare, phase, dirtAdd, dirtKeep);    // ADR 0341
+                DirtShade(dirt, amb, glare, cosScatter, dirtAdd, dirtKeep);    // ADR 0341, glass-sky-s24
                 trans *= dirtKeep;
                 half3 body = i.tint * amb * (1.0 - tAbs) * 0.25 * (1.0 - i.inside)
                            + (grime * amb + grime * glare) * 0.18 + dirtAdd;
@@ -367,7 +375,7 @@ Shader "Kamion/Truck Glass"
                 half phase = min(0.75 / pow(max(1.25 - cosScatter, 0.05), 1.5), 2.0);
                 half3 glare = L.color * saturate(dot(nOut, L.direction)) * phase;
                 half3 dirtAdd; half dirtKeep;
-                DirtShade(dirt, amb, glare, phase, dirtAdd, dirtKeep);    // ADR 0341
+                DirtShade(dirt, amb, glare, cosScatter, dirtAdd, dirtKeep);    // ADR 0341, glass-sky-s24
                 trans *= dirtKeep;
                 half3 body = i.tint * amb * (1.0 - tAbs) * 0.25 * (1.0 - i.inside)
                            + (grime * amb + grime * glare) * 0.18 + dirtAdd;

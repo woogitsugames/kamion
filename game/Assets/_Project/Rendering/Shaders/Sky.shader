@@ -205,7 +205,14 @@ Shader "Kamion/Sky"
                     // their shape down to ~2 deg, the last ~1 deg melts into the horizon colour of the terrain fog).
                     const float kCloudVeilM = 300.0;
                     float cloudT = exp(-_KamionHaze.x * kCloudVeilM / max(d.y, 1e-3));
-                    float3 cloud = lerp(_SkyFogColor.rgb, cloudY.xxx, cloudT);
+                    // glass-sky-s24 (critic s24 build #8 P2, t0720 / t0830): the veil target was the flat _SkyFogColor, the
+                    // AZIMUTH MEAN of the horizon radiance (SkyModel.HorizonColorExposed). Toward the sun the local horizon
+                    // is brighter than that mean (clouds melt in fine: DW671, heading ~ sun azimuth); away from the sun it
+                    // is darker, so every low cloud ended in a pale flat band brighter than the blue sky beside and below
+                    // it (Szosa Knyszynska, heading W with the sun at 200 deg). The in-scattered light of the veil in front
+                    // of a cloud is the light of the clear sky in that same direction (the dome IS the single-scattering
+                    // in-scatter of the full path), so the veil fades a cloud into the sky right behind it.
+                    float3 cloud = lerp(sky, cloudY.xxx, cloudT);
                     sky = lerp(sky, cloud, clearCloud.x * (1.0 - _SkyMisc.x));
                 }
                 // Sun disc (0.53° nominal, slightly enlarged so it survives render scale), with limb darkening.

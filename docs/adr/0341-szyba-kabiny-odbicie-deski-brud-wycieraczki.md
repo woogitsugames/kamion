@@ -100,3 +100,34 @@ po = ta gałąź; `tools/rendering/windscreen_measure.py`, liczby `artifacts/win
   wzmocnieniu prawie niewidoczne.
 - Telefon (szybka ścieżka Low): +1 próbka maski na piksel szyby (~80 % kadru z kabiny na A16) — `UNVERIFIED`, do
   pomiaru `device-metrics.ps1` przed/po z `rq_wslayers`; jeśli > 0,2 ms, wyłączyć warstwy na Low profilem.
+
+## Dopisek glass-sky-s24 (2026-11-25): łuki jak „pęknięcia / linie energetyczne” (krytyk build #8 P0#2)
+**Diagnoza.** Klatki 1080p z nagrania build #8 (`artifacts/glass-sky-s24/full/t2480*.jpg`): cienkie białe łuki biegną
+nieprzerwanie przez niebo, domy, drzewa i jezdnię — to szyba, nie przewody. Potwierdzone A/B `rq_wslayers=0`
+(dw671-tykocin-02, Clear, kurs ~SSW = azymut słońca 200°): łuki, plamki i skośna smuga znikają w całości
+(`cmp_t02_clear_ws_on_off.jpg`); maska `rq_glassdbg=3` (`dbg3_crop.jpg`) pokazała dwa źródła: kanał G (10 linii po 0,6–1,2 mm
+na pole) i ciągły grzbiet końca pióra w R (σ 4,5 mm, R_OUT + 12 mm) — ten drugi to „skośna smuga” na niebie.
+Przyczyna jasności: `d.g × glare × phase × 0,08`, a `glare` ma już fazę, więc łuk świecił z fazą² (≤ 4) × słońce w całym
+stożku ~90° od słońca — przy słońcu z przodu (DW671 latem po południu) prawie zawsze.
+
+**Zmiany.**
+1. `windscreen_grime.py` G: 3 miękkie pasy smugi na pole (gauss σ 6–14 mm, amplituda 0,10–0,22, łuk 35–80°, przerwy
+   z szumu 12 cm) zamiast 10 linii 1 mm; grzbiet końca pióra σ 10 mm, amplituda 0,04 (było 0,08), przerwany na ~połowie
+   długości. Pokrycie > 0,1: łącznie 3,8 % (kurz 3,4 %, pasy 0,25 %, owady 0,23 %) — nadal w paśmie 3–6 %.
+2. `TruckGlass.shader` `DirtShade`: pasy świecą tylko w stożku ~37° od słońca (`smoothstep(0,80; 1; cosScatter)²`) i są
+   ograniczone `≤ 0,6 × amb` (SH zewnętrznej strony jako zastępstwo luminancji tła, którego szyba premultiplied nie czyta);
+   olśnienie kurzu ograniczone `≤ 1,2 × amb` (plamki nie iskrzą na niebie). Koszt: +1 smoothstep, 2 min na piksel szyby,
+   bez nowych próbek i wariantów.
+
+**Zmierzone** (edytor, `-Pc` High 1920×1080, `cab-driver`; `tools/glassdiff.py`: luma dodana przez warstwy = render −
+render `rq_wslayers=0`, okno szyby x 380–1500, y 0–700, poziomy sRGB):
+
+| dw671-tykocin-02 Clear, pod słońce | p95 | p99 | p99,9 | > 8 poziomów |
+|---|---|---|---|---|
+| przed (main ada09fa1c) | 5,2 | 20,4 | 42,6 | 3,18 % |
+| po | 2,2 | 9,2 | 20,1 | 1,25 % |
+
+LowSun prosto w słońce (knyszyn-w, kurs 60°): wachlarz kilkunastu cienkich łuków przez całą szybę → zostają rozmazane owady, kurz przy
+krawędziach i jeden miękki pas przy słońcu (`cmp_lowsun.jpg`, `lowsun_after2_crop.jpg`). Overcast: różnica przed/po
+średnio 0,04–0,10 poziomu (warstwy w świetle rozproszonym bez zmian). Dowody: `artifacts/glass-sky-s24/`
+(`before*/`, `after2/`, `dbg3*/`). Telefon i build Windows: niezmierzone (`UNVERIFIED`).

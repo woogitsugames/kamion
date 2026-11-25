@@ -50,3 +50,32 @@ na wierzchołek. Pomiar GPU: **UNMEASURED** (edytor nie jest dowodem; do sprawdz
 - `kCloudVeilM` 300 m i `FarFadeShare` 0,25 to wartości robocze dobrane na kamerach knyszyn-w; do potwierdzenia
   zdjęciem referencyjnym horyzontu Podlasia latem (brak `art-source/**/refs/` horyzontu).
 - Dowody: `artifacts/haze-s24/` (before / after150 / after300 / after2, arkusze `sheet-*-before-after.jpg`).
+
+## Dopisek glass-sky-s24 (2026-11-25): aureola i „dziura” przy słońcu, biały pas t0720/t0830 (krytyk build #8 P1#4, P2)
+**1. Aureola, dziura w chmurze (t2370–t3140).** Nie shader, tylko mapa `T_ClearClouds.png` (ADR 0108): generator wyzerował
+krycie w 1,5° od fotografowanego słońca („dziura”), a jasne, prawie neutralne niebo okołosłoneczne nie ma nadwyżki
+niebieskiego, więc matowanie zostawiło je jako półprzezroczystą „chmurę” z nasyconą luminancją G = 1 („aureola”, 28 %
+pikseli w 9° półprzezroczystych). `WorldAtmosphere` obraca mapę tak, że fotografowane słońce leży na słońcu gry — defekt
+jest więc zawsze przy słońcu, a widać go jadąc pod słońce (DW671 na SSW, słońce Clear 200°). Naprawa danych, bez kosztu
+GPU: `tools/rendering/clear_clouds_sun_repair.py` (na oryginale z hashem ADR 0108) — wypełnienie Laplace krycia w 3° (2594
+teksele, gdzie R < 0,9) i luminancji tarczy do mediany pierścienia, ostry re-matte (smoothstep 0,30–0,60 + szum kłębów
+0,4–3°) otoczki w 9°, przejście do 11,5°; poza tym mapa bajt w bajt bez zmian. Półprzezroczyste w 9°: 31 % → 5 %.
+Skutek uboczny: tarcza słońca Clear chowa się za krawędzią tej chmury (cienie zostają ostre — jak słońce za cienką krawędzią
+cumulusa). Test: `ClearCloudsSunTests` (brak dziury w 2°, < 10 % półprzezroczystych w 9°). Nowy hash w
+`ClearCloudsSource.json` (`texture_sha256`; stary w `texture_sha256_adr0108`).
+
+**2. Skośne smugi na niebie** — to szyba (grzbiet końca pióra), patrz dopisek glass-sky-s24 w ADR 0341.
+
+**3. Biały pas (t0720 bialystok-knyszynska, t0830 dk65-02; Szosa Knyszyńska, kurs ~W–NW).** Welon chmur blendował do
+`_SkyFogColor` = **średniej po azymucie** jasności horyzontu (`SkyModel.HorizonColorExposed`). Pod słońce lokalny horyzont
+jest jaśniejszy od średniej (DW671: działa), z dala od słońca ciemniejszy i bardziej niebieski — dolne części chmur kończyły
+się płaskim, neutralnym pasem jaśniejszym od nieba obok. Pomiar (knyszyn-w, Clear, kurs 20° = słońce za plecami, profil
+pionowy x 1000–1100, `tools/profile.py`): przed 5 wierszy po 20 px 187/189/189 → 180/182/181 sRGB, B−R 1–2 (płaski szary
+pas ~5°); po: 179/185/191 → 171/176/179, B−R 9–11 (gradient nieba). Zmiana: `cloud = lerp(sky, cloudY, T)` — światło
+rozproszone welonu przed chmurą to światło czystego nieba w tym samym kierunku (kopuła = in-scatter całej drogi), więc
+chmura gaśnie w niebo za nią. Koszt: 0 (ten sam `lerp`, inna wartość). Sprawdzone i odrzucone: `kCloudVeilM` 150 m z nowym
+celem (pas znów jaśniejszy i płaski: 188/191/193, B−R 5) — zostaje 300 m. Overcast bez zmian (różnica 0,04–0,10 poziomu).
+Teren przy far clip nadal blenduje do średniej (`_KamionHazeColor`) — na ten kurs nie widać tego jako pasa nad polem w
+kadrach knyszyn-w; otwarte do sprawdzenia w buildzie na Szosie Knyszyńskiej (kafel bialystok-knyszynska, `UNVERIFIED`).
+Dowody: `artifacts/glass-sky-s24/` (`cmp_away_3.jpg`: przed / po / welon 150 m, `cloudtex/repair_preview.jpg`,
+`crop_t02_sky_after2.jpg`).
