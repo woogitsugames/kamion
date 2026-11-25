@@ -31,8 +31,11 @@ test znał tylko „k·h”, a nie siatkę.
    aktualności (sha256 GLB + meta). Gatunki bez siatki (wierzba) zostają przy `CROWN_FORM`; `tree_floor` (pokrywa gruntu) jest pomijany.
 2. **Reguła** (`vegetation.road_clearance`, `WORKING_VALUE`): od wysokości 0 do `CLEAR_H_M` = 4,7 m (skrajnia 4,50 m wg rozp. MI z
    24.06.2022, Dz.U. 2022 poz. 1518, § 80 ust. 1 pkt 2, + 0,2 m zapasu; § 113 ust. 2 pkt 2 — zarządca usuwa ingerencję roślinności
-   w skrajnię) żadna część drzewa (pień ani liść; wszystkie azymuty) nie może być bliżej niż `CLEAR_EDGE_MARGIN_M` = 0,5 m od
-   krawędzi jezdni (asfalt, `road_footprint_polygon`). Pień ≥ 3,0 m od krawędzi (§ 53 ust. 3 rozp. MTiGM, Dz.U. 2016 poz. 124)
+   w skrajnię) żadna część drzewa (pień ani liść; wszystkie azymuty) nie może być bliżej niż `CLEAR_EDGE_MARGIN_M` = 1,5 m od
+   krawędzi jezdni (asfalt, `road_footprint_polygon`; `WORKING_VALUE`: ciężarówka jedzie ~0,5 m od linii krawędziowej pasa 3,5 m, korpus
+   2,55 m, lusterka +0,25 m, więc 1,5 m zostawia liście ~0,75 m od lusterka). Pierwsza wersja z marginesem 0,5 m zostawiała w klatce kabiny
+   lipę 6 m stojącą 3,3 m od krawędzi (liście dokładnie 0,5 m od asfaltu) i nadal wypełniała prawą ćwiartkę szyby — render kabiny
+   `cab-after-margin0p5`, odrzucony. Pień ≥ 3,0 m od krawędzi (§ 53 ust. 3 rozp. MTiGM, Dz.U. 2016 poz. 124)
    zostaje regułą szpalerów ADR 0222 — tu dochodzi korona.
 3. **Naprawa w kolejności** (deterministycznie, ta sama lista kolejnością): (a) przesunięcie od jezdni po normalnej ≤ 1,2 m, tylko na
    komórkę niezablokowaną (maska `blocked` etapu: jezdnie, chodniki, budynki); (b) zmniejszenie wysokości do ≥ 75 % (krok 2 %);
@@ -41,17 +44,21 @@ test znał tylko „k·h”, a nie siatkę.
 4. **Dowód na końcu etapu**: `report["road_clearance"]["violations_after"]` (ma być 0), plus `road_carriage.wkt` (prosty obrys jezdni,
    `Data/raw/derived/<id>/world/`) dla testu regresji korytarza.
 
-## Wynik (przebudowane kafle)
-Naruszenia skrajni 4,7 m / 0,5 m w instancjach przed → po: `knyszyn-w` 64 → 0 (najgorsze wejście w margines 2,28 m),
-`dw671-tykocin-01` 136 → 0 (2,37 m), `dk65-05` (aleja, 101 894 drzew) 159 → 0 (2,31 m). Zmiany: knyszyn-w 66 z 12 412 sprawdzonych
-(21 przesuniętych, 11 zmniejszonych, 27 przesuniętych i zmniejszonych, 7 usuniętych), dw671-tykocin-01 145 z 10 816
-(90/9/36/10), dk65-05 166 z 80 962 (95/16/38/17). Liczby w `artifacts/tree-clearance-s24/violations_before_after.json`.
+## Wynik (przebudowane kafle, margines 1,5 m)
+Naruszenia skrajni 4,7 m / 1,5 m w instancjach przed (main) → po: `knyszyn-w` 122 → 0 (najgorsze wejście w margines 3,28 m),
+`dw671-tykocin-01` 213 → 0 (3,37 m), `dk65-05` (aleja, 101 894 drzew) 330 → 0 (3,31 m). Zmiany generatora (`road_clearance`):
+knyszyn-w 126 z 12 412 sprawdzonych (53 przesuniętych, 8 zmniejszonych, 30 przesuniętych i zmniejszonych, 35 usuniętych),
+dw671-tykocin-01 220 z 10 816 (83/14/92/31), dk65-05 344 z 80 962 (177/17/84/66). Poza tymi instancjami zbiór jest bit-w-bit ten sam
+(`only_before` 125/217/339 vs zmiany 126/220/344: różnica to przesunięcia o < 1 cm) — zmiana jest lokalna, nic nie zostało
+przelosowane. Liczby: `artifacts/tree-clearance-s24/violations_before_after.json`. Render kabiny z miejsca klatki t=2260
+(start trasy kafla dw671-tykocin-01, `startS` 90 m, kamera `cab-view-b-fov70`): `artifacts/tree-clearance-s24/sbs-cab-seam-final.jpg`
+(przed | po) — korona po prawej cofnięta od krawędzi jezdni, prawa ćwiartka szyby otwarta.
 
 ## Testy
 `tests/gis/test_trees_0347.py`: tabela = GLB; zmierzony zasięg > nominalny × 1,15 (przyczyna); drzewo daleko bez zmian; przesunięcie,
 odmowa przesunięcia (maska) → zmniejszenie / usunięcie; drzewo na asfalcie usunięte; sosna (liście od ~5 m) liczy się pniem;
 deterministyczność; gatunek bez siatki; **korytarz C → Tykocin** (28 kafli z `nav_trips.json`): żadna instancja `tree_*` nie wchodzi
-w graniastosłup „jezdnia + 0,5 m, 0–4,7 m” (kafel bez `road_carriage.wkt` = skip do przebudowy).
+w graniastosłup „jezdnia + 1,5 m, 0–4,7 m” (kafel bez `road_carriage.wkt` = skip do przebudowy).
 
 ## Do przebudowy (kafle korytarza, lista dla lidera)
 Wszystkie kafle korytarza `tykocin` (trip `tykocin` w `nav_trips.json`), pilnie `knyszyn-w`, `dw671-tykocin-01` (miejsce klatki t=2260),
