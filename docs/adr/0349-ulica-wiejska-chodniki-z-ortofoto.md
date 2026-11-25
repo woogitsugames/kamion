@@ -98,3 +98,11 @@ poz. 1518 § 17 ust. 1 — pas ruchu klasy G 3,50 m (3,00 m w trudnych warunkach
   nadpisania / regułę D38 i wymagają obejrzenia pasków.
 - Wsie bez wykrytych chodników (Zygmunty 06, Morusy 07, Tatary 09): wynik „brak” nie był sprawdzany okiem.
 - Inne drogi przez wsie (DK65, drogi powiatowe `tertiary`): narzędzie działa bez `--ref`, nie uruchamiano.
+
+## Dopisek neon-paving-s24 (2026-11-25): zmienność kostki, obniżenia i płytki przy przejściach, zjazdy
+
+Odpowiedź na krytyka wave10-pre §3 (kostka sterylna, brak obniżonego krawężnika i płytek, brak wyróżnienia zjazdów). Wszystko opt-in przez `pavement_rules` (tylko `dw671-tykocin-03`); inne regiony bez zmian w geometrii.
+- **Zmienność kostki** (`WorldPBR.shader`, 0 nowych draw calli i keywordów; deterministyczna z E/N w przestrzeni obiektu, zależna od `groundWear`): 3 tony partii co kurs 0,20 m, łaty po wykopach (~30 % komórek 8,5 m), plamy ciemne i jasne, ciemniejsze fugi, rzadkie chwasty przy krawężniku i tylnej krawędzi (UV1). Parametry domyślne dla `sidewalk_paving*`/`sidewalk_slabs` w `WorldPbrMaterials.cs`. Wszystkie wagi WORKING_VALUE (stain_strength obniżone do 0,18 po ocenie renderu).
+- **Obniżenie krawężnika** do 2 cm na przejściach (Dz.U. 2016 poz. 124 § 127 ust. 10; Dz.U. 2022 poz. 1518 § 36 ust. 3) plus pas płytek z wypustkami 0,50 m (WORKING_VALUE), proceduralnie w shaderze (płyty 25 cm, kopułki co 5 cm).
+- **Zjazdy**: kontrastowa kostka `driveway_paving_red` (stonowana, kolor 0,15/0,094/0,084), szerokość = brama 3-4,5 m (WORKING_VALUE), tylko na chodniku (kerb -> tył nawierzchni drogi), ~35 % bram (hash `drvcross`), reszta = ta sama szara kostka; pierwsza wersja kładła pas od bramy do jezdni (do 10 m) i była zbyt nasycona.
+- Ryzyko: `test_world_roads::test_export_is_deterministic` (region C) czerwony także na kodzie main (manifest C nieodświeżony po fields3) — niezwiązany z dopiskiem.

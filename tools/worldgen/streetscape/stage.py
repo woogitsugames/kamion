@@ -99,6 +99,7 @@ def plan_plots(w, rid, blds=None):
     from . import pavements as PVM
     rp["crossing_drops"] = {}
     rp["drops"] = list(rp["drops"]) + PVM.crossing_drops(w.net, w.ctx["points"], overrides, rp["crossing_drops"])
+    rp["driveway_paving_color"] = bool((PVM.rules_of(overrides) or {}).get("driveway_paving_color"))
     return rp
 
 
