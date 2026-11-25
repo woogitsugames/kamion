@@ -87,7 +87,7 @@ def safe_u(u, ops, L):
     return u if 0.3 < u < L - 0.3 else None
 
 
-def wall_pieces(wwo, acc, a, d, nout, L, zb, zt, ops, u_acc, vref, zsplits, usplits, mat_fn, layer=L0, **kw):
+def wall_pieces(wwo, acc, a, d, nout, L, zb, zt, ops, u_acc, vref, zsplits, usplits, mat_fn, layer=L0, col_fn=None, **kw):
     """Wall split into rectangles (u ranges x z ranges) of different materials; openings are clipped to every
     piece (splits are moved off the openings beforehand, so no fake jambs or sills appear)."""
     zs = [zb] + sorted({z for z in zsplits if z is not None and zb + 0.05 < z < zt - 0.05}) + [zt]
@@ -106,7 +106,11 @@ def wall_pieces(wwo, acc, a, d, nout, L, zb, zt, ops, u_acc, vref, zsplits, uspl
                         fv = lambda v, m=m, o=o: m[4] + (m[5] - m[4]) * (v - o[2]) / (o[3] - o[2])
                         m = (m[0], m[1], fu(ua), fu(ub), fv(va), fv(vb))
                     pc.append((ua - u0, ub - u0, va, vb, o[4], o[5], m))
-            wwo(acc, layer, mat, a + d * u0, d, nout, u1 - u0, z0, z1, pc, u0=u_acc + u0, vref=vref, **kw)
+            if col_fn is not None:
+                wwo(acc, layer, mat, a + d * u0, d, nout, u1 - u0, z0, z1, pc, u0=u_acc + u0, vref=vref,
+                    col=col_fn(u0, u1, z0, z1, mat), **kw)
+            else:
+                wwo(acc, layer, mat, a + d * u0, d, nout, u1 - u0, z0, z1, pc, u0=u_acc + u0, vref=vref, **kw)
 
 
 # ------------------------------------------------------------------------------------------- details
@@ -233,10 +237,10 @@ def dormer(acc, spot, wall_mat, roof_mat, trim_mat, win_variant, fascia_mat="sof
     # Front gable triangle
     acc.add(L0, wall_mat, [P(-hw, 0, ze), P(hw, 0, ze), P(0, 0, zr)], [[0, 1, 2]],
             [[0.0, 0.0], [w, 0.0], [hw, peak]])
-    # Window glass/frame quad (slightly recessed 6 cm) + sill + lintel
-    acc.quad(L0, "facade_atlas", P(-hw_w, -0.06, wz0), P(hw_w, -0.06, wz0), P(hw_w, -0.06, wz1), P(-hw_w, -0.06, wz1),
+    # Window glass/frame quad (recessed 8 cm, ADR 0348) + bright exterior sill + lintel
+    acc.quad(L0, "facade_atlas", P(-hw_w, -0.08, wz0), P(hw_w, -0.08, wz0), P(hw_w, -0.08, wz1), P(-hw_w, -0.08, wz1),
              uv=FA.uv_rect("house", win_variant))
-    acc.box(L0, "window_sill", P(0, 0.01, wz0), d3 * (hw_w + 0.05), n3 * 0.06, [0, 0, 0.022], skip=(0, 2, 4, 5))
+    acc.box(L0, trim_mat, P(0, 0.005, wz0), d3 * (hw_w + 0.06), n3 * 0.075, [0, 0, 0.024], skip=(2, 4, 5))
     acc.quad(L0, trim_mat, P(-hw_w - 0.05, 0.02, wz1), P(hw_w + 0.05, 0.02, wz1),
              P(hw_w + 0.05, 0.02, wz1 + 0.09), P(-hw_w - 0.05, 0.02, wz1 + 0.09))
     # Two cheek walls (left faces -along, right faces +along), bottom sits below slope

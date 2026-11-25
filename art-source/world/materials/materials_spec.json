@@ -2669,14 +2669,14 @@
           ],
           "texel_mm": 3.91,
           "dir": "facade_atlas/High",
-          "png_bytes": 4424440,
+          "png_bytes": 4461593,
           "files": [
             "T_facade_atlas_BaseColor.png",
             "T_facade_atlas_MaskMap.png",
             "T_facade_atlas_Normal.png",
             "T_facade_atlas_Var.png"
           ],
-          "smoothness_mean": 0.572,
+          "smoothness_mean": 0.571,
           "aux_res": [
             2048,
             2048
@@ -2696,7 +2696,7 @@
           ],
           "texel_mm": 7.81,
           "dir": "facade_atlas/Medium",
-          "png_bytes": 1731741,
+          "png_bytes": 1745592,
           "files": [
             "T_facade_atlas_BaseColor.png",
             "T_facade_atlas_MaskMap.png",
@@ -2723,7 +2723,7 @@
           ],
           "texel_mm": 15.62,
           "dir": "facade_atlas/Low",
-          "png_bytes": 660002,
+          "png_bytes": 663433,
           "files": [
             "T_facade_atlas_BaseColor.png",
             "T_facade_atlas_MaskMap.png",
@@ -2745,21 +2745,21 @@
         }
       },
       "height_range_m": [
-        -0.04,
+        -0.058,
         0.03
       ],
       "albedo": {
-        "mean_lum_linear": 0.2509,
+        "mean_lum_linear": 0.2513,
         "p05": 0.0241,
         "p95": 0.6578,
         "mean_rgb_linear": [
-          0.2447,
-          0.2374,
-          0.2295
+          0.2451,
+          0.2378,
+          0.23
         ]
       },
       "hf_ratio_albedo": 0.0029,
-      "ao_mean": 0.977
+      "ao_mean": 0.976
     },
     "facade_far": {
       "tile_m": [
@@ -5587,7 +5587,7 @@
         "road_sett",
         "apron_sett"
       ],
-      "note": "ADR 0323: grey split-granite setts in rows (kostka granitowa 8/10), CC0 scan cobblestone_03 scaled to a 95 mm pitch (WORKING_VALUE). Var.G = sett id from the scan's displacement.",
+      "note": "ADR 0323: grey split-granite setts in rows (kostka granitowa 8/10), CC0 scan cobblestone_03, resulting pitch 81 mm (WORKING_VALUE). Var.G = sett id from the scan's displacement.",
       "uv": "world_xy_planar",
       "kind": "tiling_set",
       "albedo_target_mean_lum_linear": 0.2,

@@ -87,9 +87,11 @@ SMALL_TOWN_ROOFS = [
 ]
 SMALL_TOWN_ROOFS_PITCHED = ["roof_tiles_red", "roof_tiles_brown", "roof_cement_grey",
                             "roof_metal_graphite", "roof_sheet_grey", "roof_tiles_old"]
-REVEAL_SMALL_TOWN = 0.13        # ADR 0336: historic non-ETICS masonry reveal depth, m (WORKING_VALUE)
-SMALL_TOWN_PLINTH_HS = (0.38, 0.45, 0.52, 0.60)   # ADR 0336: 38-60 cm plinth band (WORKING_VALUE)
+REVEAL_SMALL_TOWN = 0.10        # ADR 0336/0348: rural / small-town masonry window reveal 10 cm (8-12 cm WORKING_VALUE)
+REVEAL_SMALL_TOWN_WOOD = 0.08   # ADR 0348: wooden house window reveal 8 cm (8-12 cm WORKING_VALUE)
+SMALL_TOWN_PLINTH_HS = (0.35, 0.42, 0.50, 0.58)   # ADR 0336/0348: 0.35-0.58 m plinth band (0.3-0.6 m WORKING_VALUE)
 SMALL_TOWN_LOD1_FRAME_M = 0.10  # ADR 0336: thin LOD1 house window frame on small-town tiles (0 extra draws)
+SMALL_TOWN_SILL_CLEAN = 0.22    # ADR 0348: subtle sill runoff on ~78 % of rural/small-town house windows (WORKING_VALUE)
 # ADR 0316: coverings of the ceramic tile roofs. The palette (house_palette) still deals red tile / brown tile / metal
 # sheet, so the neighbour rule and every earlier choice hold; a red tile roof is then, by the house's own hash,
 #   - on a wooden house mostly the old hand-laid S-tile with moss and lichen (`roof_tiles_old`, owner photos of Dom
@@ -279,7 +281,7 @@ class Acc:
                     None if UV1 is None else np.asarray(UV1, float),
                     None if COL is None else np.asarray(COL, float)))
 
-    def quad(self, layer, mat, a, b, c, d, uv=None, uv1=None):
+    def quad(self, layer, mat, a, b, c, d, uv=None, uv1=None, col=None):
         """CCW quad a-b-c-d (seen from the front)."""
         V = np.array([a, b, c, d], float)
         if uv is None:
@@ -287,7 +289,11 @@ class Acc:
             L = np.linalg.norm(e1)
             H = np.linalg.norm(V[3] - V[0])
             uv = [[0, 0], [L, 0], [L, H], [0, H]]
-        self.add(layer, mat, V, [[0, 1, 2], [0, 2, 3]], uv, uv1)
+        COL = None
+        if col is not None:
+            ca = np.asarray(col, float)
+            COL = np.tile(ca, (4, 1)) if ca.ndim == 1 else ca
+        self.add(layer, mat, V, [[0, 1, 2], [0, 2, 3]], uv, uv1, COL)
 
     def box(self, layer, mat, c, ax, ay, az, skip=()):
         """Box centred at c with half-axis vectors ax, ay, az (all 6 faces, outward). skip: face indices left out
@@ -439,9 +445,10 @@ SILL_CLEAN = 0.40              # ADR 0107: share of windows whose sill left no m
 
 def _sill_code(sills, za, zb, oa, zfrac):
     """(rnd 0-7, length scale m) of the mark of one window sill, or None (a clean sill: SILL_CLEAN of the windows)."""
-    uo, ls = sills
+    uo, ls = sills[0], sills[1]
+    clean = sills[2] if len(sills) > 2 else SILL_CLEAN
     wk = f"{uo:.3f}:{oa:.2f}:{zb:.2f}"
-    if FK.hfloat(wk, "sill_clean") < SILL_CLEAN:
+    if FK.hfloat(wk, "sill_clean") < clean:
         return None
     rnd = int(FK.hfloat(wk, "sill_rnd") * 8) % 8
     lsw = max(ls * (1.3 - 0.6 * min(max(zfrac, 0.0), 1.0)) * (0.8 + 0.4 * FK.hfloat(wk, "sill_len")), (zb - za) / 6.5)
@@ -495,8 +502,70 @@ def sill_strip_uv1(sills, za, zb, oa, ob, zfrac, side):
     return [[sg * e0, kb], [sg * e1, kb], [sg * e1, v0], [sg * e0, v0]]
 
 
+_HOUSE_CELLS = tuple((k, FA.cell("house", k)) for k in range(FA.KINDS["house"][2]))
+
+
+def _house_shades(key):
+    """ADR 0348: 2-3 deterministic plaster shades + plinth shade per house from seed (COLOR_0 = rgb*0.5, a=1.0 ->
+    WorldPBR _FACADE_TINT multiplies albedo by rgb*2). Subtle realistic Podlasie shifts (+0 draws / +0 materials)."""
+    def _c(lum, warm):
+        r = max(0.72, min(1.22, lum * (1.0 + warm)))
+        g = max(0.72, min(1.22, lum))
+        b = max(0.72, min(1.22, lum * (1.0 - warm)))
+        return [round(r * 0.5, 4), round(g * 0.5, 4), round(b * 0.5, 4), 1.0]
+    lum_m = 0.92 + 0.16 * FK.hfloat(key, "sh_m")
+    warm_m = (FK.hfloat(key, "sh_mw") - 0.5) * 0.06
+    g_dir = 1.0 if FK.hfloat(key, "sh_gd") < 0.62 else -1.0
+    lum_g = max(0.76, min(1.18, lum_m + g_dir * (0.09 + 0.07 * FK.hfloat(key, "sh_g"))))
+    warm_g = (FK.hfloat(key, "sh_gw") - 0.5) * 0.07
+    lum_s = max(0.78, min(1.16, lum_m - g_dir * (0.07 + 0.06 * FK.hfloat(key, "sh_s"))))
+    warm_s = (FK.hfloat(key, "sh_sw") - 0.5) * 0.05
+    lum_p = 0.78 + 0.24 * FK.hfloat(key, "sh_p")
+    return _c(lum_m, warm_m), _c(lum_g, warm_g), _c(lum_s, warm_s), [round(lum_p * 0.5, 4)] * 3 + [1.0]
+
+
+def _house_frame_3d(acc, layer, A, B, C, D, back, d3, n3, w, h, rect):
+    """ADR 0348: 3D recessed window frame + central mullion (slupek) + transom/muntin (slemie) inside the 8-12 cm
+    reveal, mapped to facade_atlas swatches (4-vertex quads only -> +0 draw calls, compatible with UV cell checks)."""
+    hv = next((k for k, r_ in _HOUSE_CELLS if r_ == rect), None)
+    if hv is None or w < 0.55 or h < 0.55:
+        return
+    sw = ("pvc_white", "pvc_brown", "pvc_white", "wood")[hv]
+    uv = FA.swatch_uv(sw)
+    dep = min(0.026, float(np.linalg.norm(back)) * 0.45)
+    fr = back + n3 * dep
+    fw = min(0.068, w * 0.14, h * 0.14)
+    Ao, Bo, Co, Do = A + fr, B + fr, C + fr, D + fr
+    Ai, Bi = Ao + d3 * fw + [0, 0, fw], Bo - d3 * fw + [0, 0, fw]
+    Ci, Di = Co - d3 * fw - [0, 0, fw], Do + d3 * fw - [0, 0, fw]
+    acc.quad(layer, "facade_atlas", Ao, Bo, Bi, Ai, uv=uv)
+    acc.quad(layer, "facade_atlas", Bo, Co, Ci, Bi, uv=uv)
+    acc.quad(layer, "facade_atlas", Co, Do, Di, Ci, uv=uv)
+    acc.quad(layer, "facade_atlas", Do, Ao, Ai, Di, uv=uv)
+    bk = -n3 * dep
+    if w >= 0.85:                                             # central vertical mullion (slupek) + depth cheeks
+        mw = 0.026
+        M0 = 0.5 * (Ai + Bi)
+        M1 = 0.5 * (Di + Ci)
+        Ml0, Mr0 = M0 - d3 * mw, M0 + d3 * mw
+        Ml1, Mr1 = M1 - d3 * mw, M1 + d3 * mw
+        acc.quad(layer, "facade_atlas", Ml0, Mr0, Mr1, Ml1, uv=uv)
+        acc.quad(layer, "facade_atlas", Ml0 + bk, Ml0, Ml1, Ml1 + bk, uv=uv)
+        acc.quad(layer, "facade_atlas", Mr0, Mr0 + bk, Mr1 + bk, Mr1, uv=uv)
+    if h >= 0.85:                                             # horizontal transom / muntin (slemie / szpros)
+        th = 0.024
+        t_frac = 0.68 if hv in (2, 3) else 0.50
+        T0 = Ai + (Di - Ai) * t_frac
+        T1 = Bi + (Ci - Bi) * t_frac
+        Tb0, Tt0 = T0 - [0, 0, th], T0 + [0, 0, th]
+        Tb1, Tt1 = T1 - [0, 0, th], T1 + [0, 0, th]
+        acc.quad(layer, "facade_atlas", Tb0, Tb1, Tt1, Tt0, uv=uv)
+        acc.quad(layer, "facade_atlas", Tb0 + bk, Tb1 + bk, Tb1, Tb0, uv=uv)
+        acc.quad(layer, "facade_atlas", Tt0, Tt1, Tt1 + bk, Tt0 + bk, uv=uv)
+
+
 def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0, vref=0.0, runoff=None, reveal=None,
-                       ground=None, sills=None, bold_sill=False):
+                       ground=None, sills=None, bold_sill=False, col=None, frame_3d=False, sill_mat=None):
     """Wall rectangle [0, L] x [zb, zt] in the vertical plane through p0 along d, minus rectangular
     openings [(ua, ub, va, vb, depth, kind, mat_in)]. Adds reveals and the recessed infill.
     runoff = (z_top, u_offset, length_scale): the wall face gets TEXCOORD_1 = (u_offset + u, 1 + (z_top - z) /
@@ -559,7 +628,7 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
                 va_, vb_ = (gnd(u0 + ua), gnd(u0 + ub)) if gnd else (vref, vref)
                 acc.quad(layer, mat, P(ua, za), P(ub, za), P(ub, zb2), P(ua, zb2),
                          uv=[[u0 + ua, za - va_], [u0 + ub, za - vb_], [u0 + ub, zb2 - vb_], [u0 + ua, zb2 - va_]],
-                         uv1=uv1 if uv1 is not None else runoff_uv1(runoff, u0 + ua, u0 + ub, za, zb2))
+                         uv1=uv1 if uv1 is not None else runoff_uv1(runoff, u0 + ua, u0 + ub, za, zb2), col=col)
             continue
         for za, zb2, kd, oa, ob in segs:
             # the wall under a window sill is marked from the sill (ADR 0097 / 0107); elsewhere the parapet run-off
@@ -577,7 +646,8 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
                 z0_, z1_ = zz if zz else (za, zb2)
                 va_, vb_ = (gnd(u0 + c0), gnd(u0 + c1)) if gnd else (vref, vref)
                 acc.quad(layer, mat, P(c0, z0_), P(c1, z0_), P(c1, z1_), P(c0, z1_),
-                         uv=[[u0 + c0, z0_ - va_], [u0 + c1, z0_ - vb_], [u0 + c1, z1_ - vb_], [u0 + c0, z1_ - va_]], uv1=uv1)
+                         uv=[[u0 + c0, z0_ - va_], [u0 + c1, z0_ - vb_], [u0 + c1, z1_ - vb_], [u0 + c0, z1_ - va_]],
+                         uv1=uv1, col=col)
     n3 = np.append(nout[:2], 0.0)
     d3 = np.append(d[:2], 0.0)
     for (ua, ub, va, vb, depth, kind, mat_in) in [o[:7] for o in ops]:
@@ -607,7 +677,8 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
         else:
             acc.quad(layer, mat_in, A + back, B + back, C + back, D + back, uv=[[0, 0], [w, 0], [w, h], [0, h]])
         if atlas:
-            pass
+            if frame_3d and kind in ("window", "ribbon") and len(rects) == 1 and fb - fa > 0.9 and gb - ga > 0.9:
+                _house_frame_3d(acc, layer, A, B, C, D, back, d3, n3, w, h, rects[0])
         elif kind in ("window", "balcony", "ribbon"):         # frame around the glass (PVC/alu profile, 7 cm face)
             fw = min(0.07, w / 5, h / 5)
             fr = back + n3 * 0.035
@@ -632,13 +703,15 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
             acc.box(layer, "window_frame", c, d3 * (w / 2), n3 * 0.03, [0, 0, 0.025])
         if kind in ("window", "ribbon"):                     # transom + sill flashing
             # sheet sill over the whole reveal bottom with a 5 cm drip nose (r11: was a 10 cm strip at the wall face);
-            # ADR 0336 (bold_sill): slightly thicker / wider sill on small-town masonry facades (same 4 tris, 0 draws)
-            s_ext = 0.06 if bold_sill else 0.04
-            s_nose = 0.0325 if bold_sill else 0.025
-            s_hh = 0.024 if bold_sill else 0.02
+            # ADR 0336/0348 (bold_sill): bright exterior sill (reveal_plaster, +0 draws) projecting 4.2 cm proud with
+            # top, front nose and underside drip shadow on small-town / rural houses (WORKING_VALUE).
+            s_ext = 0.065 if bold_sill else 0.04
+            s_nose = 0.042 if bold_sill else 0.025
+            s_hh = 0.026 if bold_sill else 0.02
+            s_mat = sill_mat or ("hall_flashing" if mat.startswith("hall") else ("reveal_plaster" if bold_sill else "window_sill"))
             c = np.array(P(0.5 * (ua + ub), va)) + n3 * (s_nose - depth / 2)
-            acc.box(layer, "hall_flashing" if mat.startswith("hall") else "window_sill", c, d3 * (w / 2 + s_ext),
-                    n3 * (depth / 2 + s_nose), [0, 0, s_hh], skip=(0, 2, 4, 5))   # top + nose only (Low budget)
+            acc.box(layer, s_mat, c, d3 * (w / 2 + s_ext),
+                    n3 * (depth / 2 + s_nose), [0, 0, s_hh], skip=(2, 4, 5) if bold_sill else (0, 2, 4, 5))
 
 # ---------------------------------------------------------------- boarded wooden house of Podlasie (ADR 0295, P1-1/P1-2)
 # Review 2026-11-18 (docs/reports/REVIEW-2026-11-18-s24-knyszyn.md): a wooden house was "a wood texture on a box" and
@@ -678,11 +751,11 @@ class _WoodUV:
         uv = np.asarray(uv, float) + self.off
         return uv[:, ::-1] if self.swap else uv
 
-    def add(self, layer, mat, V, T, UV=None, UV1=None):
-        self.acc.add(layer, mat, V, T, self._uv(mat, UV), UV1)
+    def add(self, layer, mat, V, T, UV=None, UV1=None, COL=None):
+        self.acc.add(layer, mat, V, T, self._uv(mat, UV), UV1, COL)
 
-    def quad(self, layer, mat, a, b, c, d, uv=None, uv1=None):
-        self.acc.quad(layer, mat, a, b, c, d, self._uv(mat, uv), uv1)
+    def quad(self, layer, mat, a, b, c, d, uv=None, uv1=None, col=None):
+        self.acc.quad(layer, mat, a, b, c, d, self._uv(mat, uv), uv1, col)
 
     def box(self, *a, **k):
         self.acc.box(*a, **k)
@@ -773,7 +846,7 @@ def wood_surround(acc, a, d, nout, L, o, ztop, key, mat=WOOD_TRIM_MAT):
 
 
 def wood_wall(acc, wall, plinth, a, d, nout, L, zbot, zpl, zt, zref, u_acc, ops, prof, aw, ground, key, corners,
-              runs_out=None):
+              runs_out=None, bold_sill=False, frame_3d=False):
     """LOD0 wall of a boarded house on one outline edge (ADR 0295, review 2026-11-18 P1-1 / P1-2).
     Boarding: horizontal boards up to the eave line zt in runs between clamp battens, every run with its own UV phase
     (wood_phase), so no two runs - and no two houses - show the same boards; above the eave line of a gable end the
@@ -783,13 +856,14 @@ def wood_wall(acc, wall, plinth, a, d, nout, L, zbot, zpl, zt, zref, u_acc, ops,
     prof: roof profile over the edge [(u, z)] or None (flat top). Returns the triangle count of the boards on top."""
     n = 0
     mat_fn = lambda u0, u1, z0, z1: plinth if z1 <= zpl + 1e-6 else wall
+    sill_m = WOOD_TRIM_MAT if bold_sill else None
     bat = wood_runs(L, ops, key)
     us = [0.0] + bat + [L]
     for j, (s0, s1) in enumerate(zip(us, us[1:])):
         du, dv = wood_phase(key, j)
         FK.wall_pieces(wall_with_openings, _WoodUV(acc, du, dv), a + d * s0, d, nout, s1 - s0, zbot, zt,
                        [(o[0] - s0, o[1] - s0, *o[2:]) for o in ops], u_acc + s0, zref, [zpl], [], mat_fn,
-                       ground=ground)
+                       ground=ground, bold_sill=bold_sill, frame_3d=frame_3d, sill_mat=sill_m)
         if runs_out is not None:
             runs_out.append(float(s1 - s0))
     gable = (prof is not None and len(prof) == 3 and abs(prof[0][1] - prof[2][1]) < 0.3
@@ -803,7 +877,7 @@ def wood_wall(acc, wall, plinth, a, d, nout, L, zbot, zpl, zt, zref, u_acc, ops,
             o = aw["op"]
             FK.wall_pieces(wall_with_openings, g, a + d * aw["u0"], d, nout, aw["u1"] - aw["u0"], zt, aw["zband"],
                            [(o[0] - aw["u0"], o[1] - aw["u0"], *o[2:])], u_acc + aw["u0"], zref, [], [],
-                           lambda *_: wall)
+                           lambda *_: wall, bold_sill=bold_sill, frame_3d=frame_3d, sill_mat=sill_m)
             n += wood_surround(acc, a, d, nout, L, o, aw["zband"] + 0.4, f"{key}:aw")
         wall_top_fill(g, "buildings", wall, a, d, pr, base_z, u_acc, zref)
     ztop = lambda u: _prof_z(prof, min(max(u, 0.0), L)) if prof is not None else zt
@@ -962,7 +1036,7 @@ def _prof_z(prof, u):
     return prof[-1][1]
 
 
-def wall_top_fill(acc, layer, mat, a, d, prof, base, u_acc, zref):
+def wall_top_fill(acc, layer, mat, a, d, prof, base, u_acc, zref, col=None):
     """Wall between a stepped base line and a sloping top (gable ends, walls under a hip / mono-pitch roof):
     prof = [(u, z_top)] linear between entries, base(u) = z of the rectangle below (constant between entries).
     Same UV0 as wall_with_openings (u along the wall, v above the reference ground)."""
@@ -973,10 +1047,11 @@ def wall_top_fill(acc, layer, mat, a, d, prof, base, u_acc, zref):
             continue
         V = [[a[0] + d[0] * u, a[1] + d[1] * u, z] for u, z in pts]
         UV = [[u_acc + u, z - zref] for u, z in pts]
-        acc.add(layer, mat, V, [[0, 1, 2]] if len(pts) == 3 else [[0, 1, 2], [0, 2, 3]], UV)
+        COL = np.tile(col, (len(V), 1)) if col is not None else None
+        acc.add(layer, mat, V, [[0, 1, 2]] if len(pts) == 3 else [[0, 1, 2], [0, 2, 3]], UV, COL=COL)
 
 
-def attic_window(prof, zmin, zref, zbase, sh, storeys, key, small_town=False, joinery=None):
+def attic_window(prof, zmin, zref, zbase, sh, storeys, key, small_town=False, joinery=None, wooden=False):
     """Window in a gable end above the eave line (ADR 0091): the attic storey of a house whose BDOT10k storey count
     does not fit under the eave gets a full window, a cold loft a small light (60 %). Returns None or
     {"op": opening, "u0", "u1": the wall column that rises to "zband" as a rectangle (the opening sits in it)}."""
@@ -987,7 +1062,7 @@ def attic_window(prof, zmin, zref, zbase, sh, storeys, key, small_town=False, jo
     attic = storeys > ns
     if not attic and (zm - zmin < 2.3 or FA.hint(key, "loft") % 5 >= 3):
         return None
-    rv = REVEAL_SMALL_TOWN if small_town else REVEAL_ETICS
+    rv = REVEAL_SMALL_TOWN_WOOD if (small_town and wooden) else REVEAL_SMALL_TOWN if small_town else REVEAL_ETICS
     wv = joinery[FA.hint(key, "aw") % len(joinery)] if joinery else FA.hint(key, "aw")
     for w, hgt in (((1.2, 1.4), (0.9, 1.1)) if attic else ((0.6, 0.6),)):
         sill = zref + zbase + ns * sh + 0.9 if attic else zmin + 0.42 * (zm - zmin)
@@ -1000,6 +1075,19 @@ def attic_window(prof, zmin, zref, zbase, sh, storeys, key, small_town=False, jo
 
 
 # ------------------------------------------------------------------------------------------- facades
+def _house_rows(zref, zbase, sh, storeys, ztop):
+    """Window rows of a house wall that fit under ztop - the same rule as facade_openings (ADR 0348)."""
+    n = 0
+    for s in range(storeys):
+        z0 = zref + zbase + s * sh
+        head = min(z0 + 2.3, ztop - 0.22)
+        sill = max(z0 + 0.9 - max(0.0, 1.15 - (head - z0 - 0.9)), z0 + 0.6)
+        if head - sill < 0.9:
+            break
+        n += 1
+    return n
+
+
 def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, variant=None, sh=None, zbase=0.3):
     """Openings for one wall edge (u along the edge from its start), in absolute z:
     (ua, ub, va, vb, depth, kind, infill[, meta]). infill: a material name or atlas cells (cells()).
@@ -1054,7 +1142,8 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
     um0 = (L - (n - 1) * pitch) / 2
     door_i = n // 2 if is_main else -1
     if typ == "house":
-        rv = REVEAL_SMALL_TOWN if variant.get("small_town") else REVEAL_ETICS
+        rv = (REVEAL_SMALL_TOWN_WOOD if (variant.get("small_town") and variant.get("wooden"))
+              else REVEAL_SMALL_TOWN if variant.get("small_town") else REVEAL_ETICS)
         jn = variant.get("joinery")
         for s in range(storeys):
             z0 = zref + zbase + s * sh
@@ -1290,7 +1379,9 @@ def load(fc, origin, overrides, hero=None):
     ox, oy = origin
     ovr = target_sets(overrides)
     datum = lod1_base_datum(overrides)
-    small_town = any(o.get("kind") == "facade_rules" and o.get("small_town") for o in overrides)
+    small_town_ov = next((o for o in overrides if o.get("kind") == "facade_rules" and o.get("small_town")), None)
+    small_town = small_town_ov is not None
+    small_town_roofs = bool(small_town_ov.get("small_town_roofs", True)) if small_town else False
     out = []
     for f in fc["features"]:
         p = f["properties"]
@@ -1334,6 +1425,8 @@ def load(fc, origin, overrides, hero=None):
     if small_town:                                # ADR 0336, opt-in per region
         for b in out:
             b["small_town"] = True
+            if not small_town_roofs:
+                b["small_town_roofs"] = False
     return out
 
 
@@ -1496,7 +1589,7 @@ def building_parts(blds, overrides, target=None, datum=False):
 
 def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase, kind, pitched, zone_wall=None,
               runoff=None, pieces=None, fkey="", balcony=False, plinth="plinth_dark", ground=None, authored=None,
-              small_town=False, zpl_override=None, town_windows=False):
+              small_town=False, zpl_override=None, town_windows=False, col=None, col_plinth=None):
     """LOD1 wall edge: cheap (8-14 triangles) but not a box face - plinth, window zone (office / block: far facade
     material, UV1 = (bay, storey) grid), wall above, projecting coping at the attic. runoff: as wall_with_openings
     (hall_wall_* bands get the same wall-top TEXCOORD_1 as LOD0, so the streaks do not pop at the LOD switch).
@@ -1507,13 +1600,14 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
     def P(q, z):
         return [float(q[0]), float(q[1]), float(z)]
 
-    def band(z0, z1, mat, uv1=None):
+    def band(z0, z1, mat, uv1=None, bcol=None):
         if z1 - z0 < 0.02:
             return
         if uv1 is None and str(mat).startswith("hall_wall"):
             uv1 = runoff_uv1(runoff, u_acc, u_acc + L, z0, z1)
         acc.quad(lay, mat, P(a, z0), P(c_, z0), P(c_, z1), P(a, z1),
-                 uv=[[u_acc, z0 - zref], [u_acc + L, z0 - zref], [u_acc + L, z1 - zref], [u_acc, z1 - zref]], uv1=uv1)
+                 uv=[[u_acc, z0 - zref], [u_acc + L, z0 - zref], [u_acc + L, z1 - zref], [u_acc, z1 - zref]],
+                 uv1=uv1, col=bcol)
     # ADR 0238: a pitched block / office (kamienica) keeps the window rows of the far set on LOD1 - only the coping
     # ledge goes (the roof closes the wall top). ADR 0336 (small_town): pitched houses keep a plinth band on LOD1 too.
     if (pitched and typ == "house") or typ not in ("hall", "office", "block") or L < 3.0:     # short jogs: plain
@@ -1521,12 +1615,13 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
             if ground is not None:
                 ga, gb = ground(u_acc), ground(u_acc + L)
                 acc.quad(lay, "plinth_dark", P(a, zbot), P(c_, zbot), P(c_, zpl_override), P(a, zpl_override),
-                         uv=[[u_acc, zbot - ga], [u_acc + L, zbot - gb], [u_acc + L, zpl_override - gb], [u_acc, zpl_override - ga]])
+                         uv=[[u_acc, zbot - ga], [u_acc + L, zbot - gb], [u_acc + L, zpl_override - gb], [u_acc, zpl_override - ga]],
+                         col=col_plinth)
             else:
-                band(zbot, zpl_override, "plinth_dark")
-            band(zpl_override, zt, wall)
+                band(zbot, zpl_override, "plinth_dark", bcol=col_plinth)
+            band(zpl_override, zt, wall, bcol=col)
             return
-        band(zbot, zt, wall)
+        band(zbot, zt, wall, bcol=col)
         return
     zpl = (zpl_override if zpl_override is not None
            else zref + (0.6 if typ == "hall" else zbase - 0.1 if typ == "block" else PLINTH_H.get(typ, 0.35)))
@@ -1618,9 +1713,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     roof_masts_report = []
     btree = shapely.STRtree([b["poly"] for b in blds])
     any_st = any(b.get("small_town") for b in blds)
+    any_st_roofs = any(b.get("small_town") and b.get("small_town_roofs", True) for b in blds)
     st_stats = {"buildings": 0, "stone_plinths": 0, "dormers": 0, "window_trim_tris": 0,
                 "joinery_white": 0, "joinery_brown": 0, "roof_materials": {}}
-    house_pal = house_palette(blds, roofs=SMALL_TOWN_ROOFS if any_st else None)
+    house_pal = house_palette(blds, roofs=SMALL_TOWN_ROOFS if any_st_roofs else None)
     Acc.runoff_tris = {"with_uv1": 0, "without_uv1": 0}
     signs = []
     for b in blds:
@@ -1789,6 +1885,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             st_joinery = (1, 3) if is_brown else (0, 2)
             st_surround = (not wooden) and (FK.hfloat(key, "surround") < 0.55)
             variant["small_town"] = True
+            variant["wooden"] = wooden
             variant["joinery"] = st_joinery
             if typ == "office" and not pav and (pitched or storeys <= 2) and b["ovr"].get("ribbon") is None:
                 variant["ribbon"] = False
@@ -1827,10 +1924,21 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 plinth = "fieldstone_plinth"
                 st_stats["stone_plinths"] += 1
             if typ == "house":
-                zbase = max(zbase, st_zpl - zref)
+                # ADR 0348: the slope-safe plinth raises the floor line only while every window row still fits under
+                # the eave - otherwise the top row went and left a blank 1-1.5 m band under the roof (dw09_house_close)
+                zb_st = max(zbase, st_zpl - zref)
+                if _house_rows(zref, zb_st, sh, storeys, zeave) >= _house_rows(zref, zbase, sh, storeys, zeave):
+                    zbase = zb_st
+                else:
+                    st_stats["rows_kept"] = st_stats.get("rows_kept", 0) + 1
         if wooden:
             wall = (b["ovr"]["wall_material"] if str(b["ovr"].get("wall_material", "")).startswith("wood_planks")
                     else wood_paint(key))
+        # ADR 0348: 2-3 deterministic plaster shades + plinth shade per rural / small-town plaster house (+0 draws via COLOR_0)
+        shades = (_house_shades(key)
+                  if (st_mode and typ in ("house", "office") and not wooden and not front and not facades
+                      and str(wall).startswith("plaster_"))
+                  else None)
         u_acc = 0.0
         ro_blocks = (runoff_blocks(key, float(sum(lens)) + 1.0)
                      if b.get("runoff_shuffle") and typ == "hall" and not front else None)
@@ -1854,6 +1962,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             lod1_wins = None
             lod1_pieces = None
             lod1_gfn = None
+            edge_col = col_plinth = None
             dk = dock_edges.get(tuple(np.round(a, 2)))
             zt = zeave
             prof = None
@@ -2047,24 +2156,35 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                     if any(b0 <= zm <= b1 for b0, b1 in band_z):
                         return band_mat
                     return wall
-                # ADR 0097: sill streaks on rendered / panel walls of blocks, offices and houses (not wooden boarding)
-                sills_ = ((RUNOFF_PERIOD_M * FK.hfloat(key, "sill_u"), 0.55 + 0.35 * FK.hfloat(key, "sill_l"))
+                # ADR 0097 + ADR 0348: sill streaks on rendered / panel walls (small_town: subtle streaks under ~78 % of sills)
+                sills_ = (((RUNOFF_PERIOD_M * FK.hfloat(key, "sill_u"),
+                            0.46 + 0.30 * FK.hfloat(key, "sill_l"), SMALL_TOWN_SILL_CLEAN) if st_mode
+                           else (RUNOFF_PERIOD_M * FK.hfloat(key, "sill_u"), 0.55 + 0.35 * FK.hfloat(key, "sill_l")))
                           if SILL_RUNOFF and typ in ("block", "office", "house") and not wooden else None)
 
                 def gfn(uabs, a=a, d=d, ua0=u_acc):
                     q_ = a + d * (uabs - ua0)
                     return float(hf.sample(np.array([q_[0]]), np.array([q_[1]]))[0])
                 lod1_gfn = gfn
+                # ADR 0348: 2-3 subtle plaster shades per small_town plaster house (main wall, side/frieze, gable, plinth)
+                edge_col = col_gable = col_sec = col_plinth = col_fn = None
+                z_frieze = None
+                if shades is not None and str(wall_e).startswith("plaster_"):
+                    col_main, col_gable, col_sec, col_plinth = shades
+                    edge_col = col_sec if (ei != main and (ei % 2 == 1 or FK.hfloat(key, "sh_side") < 0.72)) else col_main
+                    if typ == "house" and FK.hfloat(key, "sh_frieze") < 0.65 and zt - zpl > 2.6:
+                        z_frieze = FK.safe_z(zt - 0.52, ops, zpl + 1.4, zt - 0.18)
                 cols = [(0.0, L, zt)]
                 aw = None
                 if wooden:
                     aw = attic_window(prof, zt, zref, zbase, sh, storeys, f"{key}:{ei}",
-                                      small_town=st_mode, joinery=st_joinery) if pitched else None
+                                      small_town=st_mode, joinery=st_joinery, wooden=True) if pitched else None
                     if aw and aw["op"][2] < zt + 0.12:       # a window across the eave line: no gable window
                         aw = None
                     wood_stats["tris"] += wood_wall(acc, wall, plinth, a, d, nout, L, zbot, zpl, zt, zref, u_acc, ops,
                                                     prof if pitched else None, aw, gfn, f"{key}:{ei}",
-                                                    (convex[ei], convex[(ei + 1) % len(edges)]), wood_stats["runs"])
+                                                    (convex[ei], convex[(ei + 1) % len(edges)]), wood_stats["runs"],
+                                                    bold_sill=st_mode, frame_3d=st_mode)
                     if aw:
                         ops.append(aw["op"])
                     if pitched:
@@ -2072,7 +2192,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                     cols = []
                 elif pitched:
                     aw = attic_window(prof, zt, zref, zbase, sh, storeys, f"{key}:{ei}",
-                                      small_town=st_mode, joinery=st_joinery)
+                                      small_town=st_mode, joinery=st_joinery, wooden=False)
                     base_z = lambda u, zt=zt: zt
                     pr = prof
                     if aw:                      # gable end: the column under the ridge rises as a rectangle with the window
@@ -2080,16 +2200,35 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                         cols = [(0.0, aw["u0"], zt), (aw["u0"], aw["u1"], aw["zband"]), (aw["u1"], L, zt)]
                         base_z = lambda u, zt=zt, aw=aw: aw["zband"] if aw["u0"] < u < aw["u1"] else zt
                         pr = sorted(set(prof) | {(u, _prof_z(prof, u)) for u in (aw["u0"], aw["u1"])})
-                    wall_top_fill(acc, "buildings", wall, a, d, pr, base_z, u_acc, zref)
-                    wall_top_fill(acc, "buildings_low", wall, a, d, prof, lambda u, zt=zt: zt, u_acc, zref)
+                        # ADR 0348: if an opening straddles eave zt we cannot split at zt; match gable to wall to avoid a vertical seam
+                        if col_gable is not None and not all(o[3] <= zt - 0.02 or o[2] >= zt + 0.02 for o in ops):
+                            col_gable = edge_col
+                            z_frieze = None
+                    wall_top_fill(acc, "buildings", wall, a, d, pr, base_z, u_acc, zref, col=col_gable)
+                    wall_top_fill(acc, "buildings_low", wall, a, d, prof, lambda u, zt=zt: zt, u_acc, zref, col=col_gable)
+                if edge_col is not None:
+                    def col_fn(u0, u1, z0, z1, mat_, ec=edge_col, cg=col_gable, cs=col_sec, cp=col_plinth, zt_=zt, zf_=z_frieze):
+                        if mat_ == "plinth_dark":
+                            return cp
+                        if not str(mat_).startswith("plaster_"):
+                            return None
+                        if z0 >= zt_ - 1e-4:
+                            return cg
+                        if zf_ is not None and z0 >= zf_ - 1e-4:
+                            return cs
+                        return ec
                 bold_sill_ = st_mode and (typ == "house" or st_town_win) and not wooden
+                zsplits_ = [zpl] + [z for b in band_z for z in b] + ([z_frieze] if z_frieze is not None else [])
+                # ADR 0348: split the middle attic-window column at eave height zt only when _FACADE_TINT col_fn is active
+                if col_fn is not None and aw and all(o[3] <= zt - 0.02 or o[2] >= zt + 0.02 for o in ops):
+                    zsplits_.append(zt)
                 for cu0, cu1, czt in cols:
                     FK.wall_pieces(wall_with_openings, acc, a + d * cu0, d, nout, cu1 - cu0, zbot, czt,
                                    ops if cu0 == 0.0 else [(o[0] - cu0, o[1] - cu0, *o[2:]) for o in ops], u_acc + cu0, zref,
-                                   [zpl] + [z for b in band_z for z in b],
+                                   zsplits_,
                                    [u for u in usplits if u is not None] if None not in usplits else [], plaster_mat,
                                    runoff=lod0_ro, ground=gfn,   # sheds / small halls clad in sheet; plaster of blocks / offices
-                                   sills=sills_, bold_sill=bold_sill_)
+                                   sills=sills_, bold_sill=bold_sill_, col_fn=col_fn, frame_3d=bold_sill_)
                 if bold_sill_:
                     for o in ops:
                         if o[5] == "window":
@@ -2163,7 +2302,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                           "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone, runoff=lod1_ro,
                           pieces=lod1_pieces, fkey=f"{key}:{ei}", balcony=bal_group if ei in bal_edges else False,
                           plinth=plinth_lod1, ground=lod1_gfn, authored=(rule, lod1_wins) if rule else None,
-                          small_town=st_mode, zpl_override=st_zpl, town_windows=st_town_win)
+                          small_town=st_mode, zpl_override=st_zpl, town_windows=st_town_win,
+                          col=edge_col if typ != "hall" else None, col_plinth=col_plinth if typ != "hall" else None)
             if typ == "house" and LOD1_HOUSE_OPENINGS:
                 # ADR 0124 r2: the LOD1 prism of a house carries its windows and door as dark quads 5 cm proud of the
                 # wall, in a material the LOD1 of a house chunk already has (no new draw). The Low scene shows LOD1
@@ -2198,11 +2338,12 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                          uv1=runoff_uv1(hole_ro, uh, uh + L, zbot, zeave))
                 uh += L
         if pitched:
+            st_roofs = st_mode and b.get("small_town_roofs", True)
             default_rmat = (house_pal[key][1] if typ == "house"
-                            else hpick(key, SMALL_TOWN_ROOFS_PITCHED if st_mode else ROOFS_PITCHED, "roof"))
+                            else hpick(key, SMALL_TOWN_ROOFS_PITCHED if st_roofs else ROOFS_PITCHED, "roof"))
             rmat = house_roof_material(b, default_rmat)
             if typ == "house":      # ADR 0316; also over an orthophoto-read colour (it says red tile, not which tile)
-                rmat = roof_variant(key, rmat, wooden, small_town=st_mode)
+                rmat = roof_variant(key, rmat, wooden, small_town=st_roofs)
             if st_mode:
                 st_stats["roof_materials"][rmat] = st_stats["roof_materials"].get(rmat, 0) + 1
             # ADR 0094 (review s9 P1-4): the soffit is light boarding (`soffit_boards`), not the graphite flashing
@@ -2213,7 +2354,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # which now share the downpipe material (same colour) on LOD0 as they already did on LOD1.
             # fascia / verge board: white boards with a tile roof, sheet flashing in the roof tone with a metal roof
             # (review s9 P2-3 "thick black verge board")
-            roof_l1_map = ROOF_LOD1_SMALL_TOWN if st_mode else ROOF_LOD1
+            roof_l1_map = ROOF_LOD1_SMALL_TOWN if st_roofs else ROOF_LOD1
             eaves = RF.build(acc, roof, poly, rmat, soffit_mat="soffit_boards",
                              fascia_mat=(wall if wooden else "hall_flashing" if rmat.startswith("roof_metal")
                                          else "soffit_boards"),

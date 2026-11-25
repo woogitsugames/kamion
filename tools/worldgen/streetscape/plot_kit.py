@@ -918,8 +918,8 @@ def atlas():
              # sunlit; reference only), and NEUTRAL painted pickets with dog-eared tops - the paint colour is the run
              # tint (plots.PICKET_PAINTS: green, blue, ochre, cream ... oil paint of the Podlasie villages), so no bare
              # wood is drawn into this row (a tinted grey picket was the olive picket of ADR 0305)
-             "picket_wood": lambda r, h, w: _picket_low(r, h, w, "picket_wood", (132, 86, 54), 0.17, 0.12, 0.0, True,
-                                                        (84, 56, 40)),
+             "picket_wood": lambda r, h, w: _picket_low(r, h, w, "picket_wood", (122, 78, 44), 0.17, 0.12, 0.0, True,
+                                                        (74, 48, 34)),
              "picket_paint": lambda r, h, w: _picket_low(r, h, w, "picket_paint", (198, 198, 192), 0.07, 0.0, 0.11, False,
                                                          (150, 150, 146))}
     k = 0

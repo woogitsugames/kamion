@@ -126,6 +126,7 @@ namespace Game.World.Import
             if (id == "terrain_grass") colors = true;
             if (def.Get("vertex_grime") != null) colors = true;                          // _VERTEX_GRIME (ADR 0123)
             if (def.Get("bronze_patina") != null) colors = true;                         // _BRONZE_PATINA (ADR 0331)
+            if (def.Get("facade_tint") is bool ft && ft) colors = true;                  // _FACADE_TINT (ADR 0348)
         }
 
         /// <summary>ADR 0071 r11: manifest "weather": true = wall material of an authored asset that carries the splash
@@ -418,6 +419,7 @@ namespace Game.World.Import
                 mat.EnableKeyword("_SPLASH");
                 mat.SetFloat("_SplashHeight", splashH ? (float)Num(def.Get("splash_h")) : id == "hall_plinth" ? 0.35f : 0.6f);
             }
+            if (def.Get("facade_tint") is bool facadeTint && facadeTint) mat.EnableKeyword("_FACADE_TINT"); // ADR 0348
             if (Runoff(def)) mat.SetFloat("_MacroStrength", 0.12f);   // panel-to-panel tone drift of a 600 m facade (0071)
             // ADR 0091: manifest "macro": [size m, strength] overrides the macro tone drift (brick: firing lots)
             if (def.Get("macro") is List<object> mc && mc.Count >= 2)
