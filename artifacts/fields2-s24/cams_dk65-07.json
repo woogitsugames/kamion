@@ -1,0 +1,329 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "dk65-07",
+ "cameras": [
+  {
+   "id": "f2_cab_route_s0144_meadow_mown",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    941.93,
+    425.85,
+    154.305
+   ],
+   "look_at": [
+    947.13,
+    442.25,
+    151.13
+   ],
+   "fov_deg": 60.0,
+   "note": "cab eye, field of use meadow_mown 14 m beside the route; strip edge 7.5 m, block edge 129 m"
+  },
+  {
+   "id": "f2_side_route_s0144_meadow_mown",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    947.67,
+    436.28,
+    152.83
+   ],
+   "look_at": [
+    945.87,
+    456.2,
+    151.13
+   ],
+   "fov_deg": 60.0,
+   "note": "standing in a meadow_mown strip, looking along its rows"
+  },
+  {
+   "id": "f2_cab_route_s0721_meadow_mown",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    617.7,
+    902.94,
+    149.492
+   ],
+   "look_at": [
+    600.5,
+    903.44,
+    146.37
+   ],
+   "fov_deg": 60.0,
+   "note": "cab eye, field of use meadow_mown 14 m beside the route; strip edge 5.7 m, block edge 37 m"
+  },
+  {
+   "id": "f2_side_route_s0721_meadow_mown",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    606.2,
+    901.55,
+    148.07
+   ],
+   "look_at": [
+    587.22,
+    907.86,
+    146.37
+   ],
+   "fov_deg": 60.0,
+   "note": "standing in a meadow_mown strip, looking along its rows"
+  },
+  {
+   "id": "f2_cab_drive_wood_meadow_mown",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    967.4,
+    389.9,
+    155.959
+   ],
+   "look_at": [
+    950.2,
+    389.94,
+    153.41
+   ],
+   "fov_deg": 60.0,
+   "note": "cab eye, field of use meadow_mown 14 m beside the route; strip edge 11.0 m, block edge 141 m"
+  },
+  {
+   "id": "f2_side_drive_wood_meadow_mown",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    950.74,
+    383.97,
+    155.11
+   ],
+   "look_at": [
+    948.93,
+    403.88,
+    153.41
+   ],
+   "fov_deg": 60.0,
+   "note": "standing in a meadow_mown strip, looking along its rows"
+  },
+  {
+   "id": "f2_rows_ploughed",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    -341.66,
+    -274.23,
+    145.26
+   ],
+   "look_at": [
+    -336.12,
+    -293.45,
+    143.56
+   ],
+   "fov_deg": 60.0,
+   "note": "standing in a ploughed strip, along its rows"
+  },
+  {
+   "id": "f2_cross_ploughed",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    -321.63,
+    -264.3,
+    145.23
+   ],
+   "look_at": [
+    -349.61,
+    -282.77,
+    143.56
+   ],
+   "fov_deg": 60.0,
+   "note": "cab height 2.5 m, looking across the strips towards a ploughed strip 22 m away"
+  },
+  {
+   "id": "f2_obl_ploughed",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    -309.22,
+    -224.3,
+    181.56
+   ],
+   "look_at": [
+    -340.0,
+    -280.0,
+    143.56
+   ],
+   "fov_deg": 60.0,
+   "note": "oblique 38 m above a ploughed strip"
+  },
+  {
+   "id": "f2_rows_disked",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    607.23,
+    49.95,
+    153.98
+   ],
+   "look_at": [
+    609.81,
+    30.12,
+    152.31
+   ],
+   "fov_deg": 60.0,
+   "note": "standing in a disked strip, along its rows"
+  },
+  {
+   "id": "f2_cross_disked",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    628.52,
+    56.76,
+    154.99
+   ],
+   "look_at": [
+    598.08,
+    42.71,
+    152.31
+   ],
+   "fov_deg": 60.0,
+   "note": "cab height 2.5 m, looking across the strips towards a disked strip 22 m away"
+  },
+  {
+   "id": "f2_obl_disked",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    646.81,
+    94.43,
+    190.31
+   ],
+   "look_at": [
+    608.0,
+    44.0,
+    152.31
+   ],
+   "fov_deg": 60.0,
+   "note": "oblique 38 m above a disked strip"
+  },
+  {
+   "id": "f2_rows_stubble",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    -653.46,
+    -322.18,
+    134.26
+   ],
+   "look_at": [
+    -648.6,
+    -341.58,
+    132.62
+   ],
+   "fov_deg": 60.0,
+   "note": "standing in a stubble strip, along its rows"
+  },
+  {
+   "id": "f2_cross_stubble",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    -633.09,
+    -312.95,
+    135.36
+   ],
+   "look_at": [
+    -661.7,
+    -330.43,
+    132.62
+   ],
+   "fov_deg": 60.0,
+   "note": "cab height 2.5 m, looking across the strips towards a stubble strip 22 m away"
+  },
+  {
+   "id": "f2_obl_stubble",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    -619.29,
+    -273.41,
+    170.62
+   ],
+   "look_at": [
+    -652.0,
+    -328.0,
+    132.62
+   ],
+   "fov_deg": 60.0,
+   "note": "oblique 38 m above a stubble strip"
+  },
+  {
+   "id": "f2_rows_maize",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    86.21,
+    489.56,
+    139.74
+   ],
+   "look_at": [
+    105.52,
+    484.35,
+    138.27
+   ],
+   "fov_deg": 60.0,
+   "note": "standing in a maize strip, along its rows"
+  },
+  {
+   "id": "f2_cross_maize",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    88.08,
+    511.85,
+    139.79
+   ],
+   "look_at": [
+    89.39,
+    478.35,
+    138.27
+   ],
+   "fov_deg": 60.0,
+   "note": "cab height 2.5 m, looking across the strips towards a maize strip 22 m away"
+  },
+  {
+   "id": "f2_obl_maize",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    60.28,
+    543.17,
+    176.27
+   ],
+   "look_at": [
+    92.0,
+    488.0,
+    138.27
+   ],
+   "fov_deg": 60.0,
+   "note": "oblique 38 m above a maize strip"
+  },
+  {
+   "id": "f2_obl_headland",
+   "type": "persp",
+   "kind": "field_side",
+   "pos": [
+    -766.0,
+    -130.0,
+    161.67
+   ],
+   "look_at": [
+    -736.0,
+    -100.0,
+    131.67
+   ],
+   "fov_deg": 60.0,
+   "note": "oblique 30 m above a block border (headland / field track)"
+  }
+ ]
+}

@@ -72,7 +72,7 @@ def test_use_shares_follow_the_table():
         prev = 0.0
         for i, (name, c) in enumerate(table):
             share = float(np.mean(u == off + i))
-            assert abs(share - (c - prev)) < 0.05, (name, share, c - prev)     # area shares, strips of unequal size
+            assert abs(share - (c - prev)) < 0.06, (name, share, c - prev)     # area shares, strips of unequal size (r2: 0.050 with the wobbling edges)
             prev = c
 
 
@@ -100,13 +100,13 @@ def test_field_plants_stand_on_baulks_and_fallow_and_do_not_depend_on_the_tile()
     b = sorted((round(float(p[0]), 3), round(float(p[1]), 3), s) for p, s, _, t in pl2 if t == "baulk" and inner(p))
     assert a and a == b
     sp = {s for _, s, _, _ in pl}
-    assert sp <= {n for n, _ in VG.BAULK_SPECIES} | {n for n, _ in VG.FALLOW_SPECIES}
+    assert sp <= {n for n, _ in VG.BAULK_SPECIES} | {n for n, _ in VG.FALLOW_SPECIES} | {n for n, _ in VG.CLUMP_SPECIES}
 
 
 def test_grassland_has_no_fallow_samosiew_and_no_fields_no_plants():
     hf = _Hf(n=600, x0=-300.0, y1=300.0)
     pl = VG.field_plants(_src("roślinność trawiasta", 300.0), ORIGIN, hf)
-    assert all(t == "baulk" for _, _, _, t in pl)
+    assert all(t in ("baulk", "clump") for _, _, _, t in pl)
     assert VG.field_plants({"bdot10k": {"OT_PTTR_A": []}, "osm": {"areas": []}}, ORIGIN, hf) == []
 
 
@@ -121,3 +121,55 @@ def test_blocks_of_a_district_have_distinct_ids():
     for b, sx, sy in zip(L["bid"], np.round(L["sx"], 3), np.round(L["sy"], 3)):
         seeds.setdefault(int(b), set()).add((sx, sy))
     assert all(len(v) == 1 for v in seeds.values())
+
+
+# ---------------------------------------------------------------- r2 (fields2-s24, critic build #8 P1#6 / P1#7)
+def test_r2_wobble_constants_match_the_shader():
+    for cell, amp, salt in VG.FIELD_WOBBLE:
+        assert f"{salt}u" in HLSL
+    (cL, aL, _), (_, a17, _), (_, a5, _) = VG.FIELD_WOBBLE
+    assert f"#define KF_WOB_L_M {cL:.1f}" in HLSL
+    for name, a in (("KF_WOB_AL", aL), ("KF_WOB_A17", a17), ("KF_WOB_A5", a5)):
+        assert f"#define {name} {a}" in HLSL
+    assert "float t = (dot(rel, dir) + wob) / w;" in HLSL
+    assert "(nL - 0.5) * KF_WOB_AL + (n17 - 0.5) * KF_WOB_A17 + (n5 - 0.5) * KF_WOB_A5" in HLSL
+
+
+def test_r2_strip_edges_meander_within_the_amplitude():
+    rng = np.random.default_rng(3)
+    P = rng.uniform(0, 6000, (40000, 2)) + np.array([758000.0, 609000.0])
+    wob = VG.field_wobble(P[:, 0], P[:, 1])
+    lim = 0.5 * sum(a for _, a, _ in VG.FIELD_WOBBLE)
+    assert np.abs(wob).max() <= lim and np.abs(wob).max() > 0.5 * lim
+    assert 0.15 < np.std(wob) < 0.6                       # an edge that visibly bows, not a ruled line, not a zigzag
+    L = VG.field_layout(P[:, 0], P[:, 1])
+    assert np.array_equal(L["wob"], wob)
+    # the edge moves smoothly: 1 m along the strip changes the wobble by a few cm
+    th = L["th"]
+    w2 = VG.field_wobble(P[:, 0] - np.sin(th), P[:, 1] + np.cos(th))
+    assert np.abs(w2 - wob).max() < 0.25
+
+
+def test_r2_no_scrub_between_two_strips_of_one_holding_and_clumps_are_clumps():
+    hf = _Hf()
+    pl = VG.field_plants(_src("uprawa na gruntach ornych"), ORIGIN, hf)
+    baulk = np.array([p for p, _, _, t in pl if t == "baulk"])
+    L = VG.field_layout(baulk[:, 0] + ORIGIN[0], baulk[:, 1] + ORIGIN[1])
+    kE = L["k"] + (L["across"] >= 0.5 * L["w"])
+    zero = np.zeros(len(kE))
+    own = lambda k: VG._u01(VG._h32(VG._h32(L["bid"].astype(np.float64), k, 929).astype(np.float64), zero, 931)) < VG.FIELD_OWN_SHARE_SHADER
+    assert (own(kE - 1) | own(kE)).all()
+    clump = np.array([p for p, _, _, t in pl if t == "clump"])
+    assert len(clump) >= VG.CLUMP_SIZE[0]
+    from scipy.spatial import cKDTree
+    d, _ = cKDTree(clump).query(clump, k=2)
+    assert np.median(d[:, 1]) < 6.0 and d[:, 1].max() < 25.0           # every clump plant has company
+    # trees of the open field are few: clumps per km2 follow the lattice share
+    n_cl = len(clump) / np.mean(VG.CLUMP_SIZE)
+    assert n_cl / 1.44 < 1.6 * VG.CLUMP_SHARE * 1e6 / VG.CLUMP_CELL_M ** 2 + 3
+
+
+def test_r2_no_lone_self_seeded_sapling_inside_a_strip_farm_polygon():
+    import inspect
+    src = inspect.getsource(VG.place)
+    assert "if field_plants_on and poly.area >= FIELD_PLANT_MIN_M2:" in src and "inside = 0.0" in src
