@@ -1699,6 +1699,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     frontage_props = []
     roof_masts_report = []
     btree = shapely.STRtree([b["poly"] for b in blds])
+    any_st = any(b.get("small_town") for b in blds)
     any_st_roofs = any(b.get("small_town") and b.get("small_town_roofs", True) for b in blds)
     st_stats = {"buildings": 0, "stone_plinths": 0, "dormers": 0, "window_trim_tris": 0,
                 "joinery_white": 0, "joinery_brown": 0, "roof_materials": {}}
