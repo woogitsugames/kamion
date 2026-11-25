@@ -45,6 +45,18 @@
     "power_lines": 104,
     "pylons": 318
   },
+  "forest_chm_ring": {
+    "chm_share": 0.0878,
+    "chm_tiles": [
+      "dk65-11",
+      "dw671-tykocin-01",
+      "knyszyn",
+      "knyszyn-s",
+      "knyszyn-w"
+    ],
+    "chm_vertices": 958,
+    "total_curtain_vertices": 10916
+  },
   "lod1_height_audit": {
     "buildings": 132928,
     "conflicting_ids": 0,
@@ -124,7 +136,7 @@
   },
   "tiers": {
     "High": {
-      "bytes": 7790304,
+      "bytes": 7965560,
       "file": "Data/raw/derived/dw671-jasionowka-01/world/far_field.glb",
       "sectors": {
         "far_east": {
@@ -164,7 +176,7 @@
           "vertices": 32156
         }
       },
-      "sha256": "3363240521fb54558fa1fe514d8747f3459bd870e3c402c8fe768f3dbe2a36c9",
+      "sha256": "d9453c8858469f2da3d8c154bf975e8bf65bb434e326c5ead709443ea03d1ea2",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -177,7 +189,7 @@
       "total_vertices": 158370
     },
     "Low": {
-      "bytes": 670160,
+      "bytes": 711748,
       "file": "Data/raw/derived/dw671-jasionowka-01/world/far_field.low.glb",
       "sectors": {
         "far_east": {
@@ -217,7 +229,7 @@
           "vertices": 3678
         }
       },
-      "sha256": "72ff0d153c54a80c969322751b2c37fc4f6ec562e2eaa699d41855e1420e1144",
+      "sha256": "1f079ef9d788fe4450c5dc80ac8f9649b9b35014ecb31f2670b5bcb444a79509",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
