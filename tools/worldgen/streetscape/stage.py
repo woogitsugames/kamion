@@ -458,7 +458,11 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         for t_ in wtrees:
             vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
     # ADR 0308: no crown below cab height over the carriageway (rule trees, rows, garden and bank trees alike)
-    cleared = VG.road_clearance(trees + ptrees + wtrees, carriage, rep)
+    def _free(P):       # ADR 0347: a shifted tree may only land on a cell that is not road / paved / building
+        i_ = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, blocked.shape[1] - 1)
+        j_ = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, blocked.shape[0] - 1)
+        return ~blocked[j_, i_]
+    cleared = VG.road_clearance(trees + ptrees + wtrees, carriage, rep, free_fn=_free)
     log("road clearance", rep["road_clearance"])
     # ADR 0346: round straw / silage bales on rural fields of the ADR 0334 mosaic (deterministic, rural tiles only)
     from . import field_bales as FB
@@ -471,4 +475,4 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     if heroes or rep.get("hero_buildings", {}).get("stale"):
         log("hero buildings", {k: [x["id"] for x in v] for k, v in rep["hero_buildings"].items()})
     return {"zc": zc, "dist": dist, "mask": mask, "rmask": rmask, "col": col, "instances": instances,
-            "codes": codes, "boards": boards, "report": rep, "docks": docks, "paved": paved, "forest_hlod": hlod, "hero_tris": hero_tris}
+            "codes": codes, "boards": boards, "report": rep, "docks": docks, "carriage": carriage, "paved": paved, "forest_hlod": hlod, "hero_tris": hero_tris}

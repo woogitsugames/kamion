@@ -50,7 +50,7 @@ LOD0 / LOD1 / impostor): wysokość taka, żeby korona modelu miała promień z 
 z G7 i pułapu gatunku. Jesion → model lipy, kasztanowiec → model klonu (`WORKING_VALUE`: brak własnych modeli).
 Poziom Low zachowuje lekkie drzewo z kart (budżety A16, ADR 0163 bez zmian). Drzewa owocowe i iglaki ogrodowe bez zmian.
 
-### 4. Skrajnia jezdni (`vegetation.road_clearance`)
+### 4. Skrajnia jezdni (`vegetation.road_clearance`) — zastąpione przez ADR 0347 (zasięg z siatki, margines 0,5 m, przesunięcie)
 Po złożeniu wszystkich drzew kafla (reguły, szpalery, ogrody, brzegi wód): drzewo, którego korona ma podstawę poniżej
 4,7 m (`CLEAR_H_M`, `WORKING_VALUE`: skrajnia 4,5 m + 0,2 m) i sięgałaby nad jezdnię dalej niż 0,3 m, jest obniżane
 tak, żeby promień korony = odległość pnia od krawędzi jezdni + 0,3 m; gdyby musiało zmaleć poniżej 65 % wysokości —

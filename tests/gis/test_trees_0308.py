@@ -120,28 +120,7 @@ def test_garden_tree_becomes_a_library_instance_on_high():
     assert PT.library_instance({**t, "r": 1.7}, "maple", 12.0, 0.0, "k")["h"] == pytest.approx(9.6)
 
 
-def test_road_clearance_keeps_low_crowns_off_the_carriageway():
-    from shapely.geometry import box
-    road = box(-7.0, -50.0, 0.0, 50.0)
-
-    def tree(p, e, h, v=0):
-        return {"p": p, "v": v, "e": e, "n": 0.0, "h": h}
-    T = [tree("tree_linden", 5.0, 15.0),         # crown 4.95 m, trunk 5 m off: clear
-         tree("tree_linden", 1.0, 15.0),         # would have to shrink to 3.9 m: removed
-         tree("tree_pine", 1.0, 18.0),           # crown base 8.6 m: above the gauge
-         tree("tree_shrub", 0.5, 3.0),           # not a canopy tree: untouched
-         tree("tree_linden", 3.6, 15.0),         # lowered to (3.6 + 0.3) / 0.33
-         tree("tree_spruce", 1.5, 20.0, v=0),    # stand spruce: live crown from 7.2 m
-         tree("tree_spruce", 1.5, 12.0, v=VG.SPRUCE_OPEN)]      # boughs to the ground, r 2.2 m > 1.8 m: lowered
-    rep = {}
-    out = VG.road_clearance(T, road, rep)
-    assert [t["p"] for t in out] == ["tree_linden", "tree_pine", "tree_shrub", "tree_linden", "tree_spruce", "tree_spruce"]
-    assert out[3]["h"] == pytest.approx(11.8) and T[4]["h"] == 15.0, "changed records are copies"
-    assert out[5]["h"] == pytest.approx(9.7)
-    assert rep["road_clearance"]["removed"] == 1 and rep["road_clearance"]["lowered"] == 2
-    for t in out:
-        if t["p"][5:] in VG.CROWN_FORM and not (t["p"] == "tree_spruce" and t["v"] != VG.SPRUCE_OPEN):
-            k, bole = VG.CROWN_FORM[t["p"][5:]]
-            assert bole * t["h"] >= VG.CLEAR_H_M or k * t["h"] <= t["e"] + VG.CLEAR_OVERHANG_M + 0.05
-    assert VG.road_clearance(T, None, {}) is T
+def test_road_clearance_moved_to_adr_0347():
+    """ADR 0308 nominal-radius clearance was replaced by the measured-mesh one (tests/gis/test_trees_0347.py)."""
+    assert VG.road_clearance([], None, {}) == []
     assert {s: v[0] for s, v in VG.CROWN_FORM.items() if s in PT.LIB_CROWN_R_PER_H} == PT.LIB_CROWN_R_PER_H
