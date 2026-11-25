@@ -38,6 +38,9 @@ MAIZE_SEAM_CLEAR_M = 1.6         # off the strip seam (baulk half-width <= 1.3 m
 MAIZE_BLOCK_CLEAR_M = 2.8        # off the block border (grass strip / field track)
 MAIZE_ROAD_CLEAR_M = 5.0
 MAIZE_CROSS_SHARE = 0.34         # row cards with a cross card towards the next card row
+MAIZE_ZIGZAG_M = 0.40            # card ends this far off the row line, alternately: no card is edge-on to a view along
+                                 # the rows (render review r3: from 14 m up the edge-on rows vanished and only the
+                                 # cross cards showed - a hedge maze)
 MAIZE_OCC = (0.50, 1.0)          # foot (deep in the crop) .. top
 BAULK_ROAD_RANGE_M = 110.0
 BAULK_BAND_M = 0.5               # candidates this far from the seam line
@@ -154,8 +157,10 @@ def _maize(g, origin, rep):
         ok &= Lq["block_edge"] > MAIZE_BLOCK_CLEAR_M
         return ok, Lq
 
-    A = _row_point(L0, rc, sc - 0.5 * MAIZE_CARD_L, ox, oy)
-    B = _row_point(L0, rc, sc + 0.5 * MAIZE_CARD_L, ox, oy)
+    zz = np.where((s_idx + m_idx) % 2 == 0, MAIZE_ZIGZAG_M, -MAIZE_ZIGZAG_M)
+    half = float(np.sqrt((0.5 * MAIZE_CARD_L) ** 2 - MAIZE_ZIGZAG_M ** 2))
+    A = _row_point(L0, rc - zz, sc - half, ox, oy)
+    B = _row_point(L0, rc + zz, sc + half, ox, oy)
     okA, LA = valid(A)
     okB, LB = valid(B)
     ok = okA & okB

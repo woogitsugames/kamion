@@ -87,6 +87,8 @@ class _Cell:
             left.append(p + nrm * hw)
             right.append(p - nrm * hw)
         self.d.polygon(self._xy(left + right[::-1]), fill=c)
+        if width * n > 60 * S:        # broad leaves only: the half below the midrib is in its own shade
+            self.d.polygon(self._xy(list(mid) + right[::-1]), fill=tuple(int(v * 0.80) for v in c[:3]) + (255,))
         if rib is not None:
             self.stroke([tuple(p) for p in mid], 1.4 * S, 0.8 * S, rib)
         return mid[-1]
@@ -172,7 +174,7 @@ def _paint_tall(form, cell):
             c = cell.col(np.array([58, 86, 42]) * rng.uniform(0.85, 1.15))
             cell.leaf((0.5 * cw + rng.normal(0, 0.03) * cw, 0.0), ang, rng.uniform(0.26, 0.44) * rh,
                       rng.uniform(0.07, 0.11) * cw * 1.8, c, droop=rng.uniform(0.3, 0.9), rib=cell.col((96, 118, 66)))
-        rust = np.array([94, 56, 38])
+        rust = np.array([82, 54, 40])
         for tip, x, h, lean, bend in _stems(cell, 3, 0.70, 0.98, 3.4, np.array([104, 72, 44]), spread=0.07, lean_sd=0.06, bend_sd=0.04):
             for q in range(170):
                 t = rng.uniform(0.42, 1.0)
@@ -358,6 +360,10 @@ def _paint_maize(im, rng):
             left.append(p + nr * hw * py_m)
             right.append(p - nr * hw * py_m)
         poly([tuple(p) for p in left + right[::-1]], c)
+        # the blade is folded along the midrib: the lower half sits in its own shade, the tip third is lighter
+        poly([tuple(p) for p in mid] + [tuple(p) for p in right[::-1]], tuple(int(v * 0.78) for v in c[:3]) + (255,))
+        k3 = 2 * n // 3
+        poly([tuple(p) for p in left[k3:]] + [tuple(p) for p in mid[k3:][::-1]], tuple(min(int(v * 1.12), 255) for v in c[:3]) + (255,))
         line([tuple(p) for p in mid], 1.6 * S, 0.8 * S, rib)
 
     def plant(x, h, k):
