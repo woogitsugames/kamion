@@ -64,6 +64,11 @@ def value_noise(rng, cell_m, x, y):
     return (a * (1 - fx) + b * fx) * (1 - fy) + (c * (1 - fx) + d * fx) * fy
 
 
+def smooth01(v, e0, e1):
+    t = np.clip((v - e0) / (e1 - e0), 0, 1)
+    return t * t * (3 - 2 * t)
+
+
 def fbm(rng, x, y, cells):
     acc, wsum = 0.0, 0.0
     for i, c in enumerate(cells):
@@ -158,22 +163,28 @@ def build(seed: int):
     wiped_film = wiped * 0.03 * speck                                # the blade never leaves the glass perfectly clean
     R = np.clip(edge * 0.55 + unwiped + ridge + wiped_film, 0, 1) * on_glass
 
-    # ---- G: wiper arcs (residual film of a worn blade) ----
+    # ---- G: wiper smear bands (residual film of a worn blade) ----
+    # glass-sky-s24 (critic s24 build #8 P0#2): ten 1-2 mm lines per sweep read from the seat as a fan of cracks / power
+    # lines against the bright sky. A worn blade leaves a few SOFT bands of smeared film 1-3 cm wide (the rubber lip
+    # chatters over a strip, not a hairline), broken along the arc where the blade lifted. Three bands per sweep, Gaussian
+    # profile sigma 6-14 mm, amplitude 0.10-0.22, a faint fine streak texture inside (the band is not a flat ribbon).
     G = np.zeros_like(x)
     for k, (px, py) in enumerate(PIVOTS):
         dx, dy = x - px, y - py
         rk = np.hypot(dx, dy)
         ak = np.degrees(np.arctan2(dy, dx))
-        for _ in range(10):
-            rad = rng.uniform(R_IN + 0.05, R_OUT - 0.02)
-            width = rng.uniform(0.0006, 0.0012)
-            a0 = rng.uniform(SWEEP[0], SWEEP[1] - 20)
-            a1 = min(a0 + rng.uniform(25, 105), SWEEP[1])
-            amp = rng.uniform(0.12, 0.4)
-            line = np.exp(-((rk - rad) / width) ** 2)
-            span = np.clip((ak - a0) / 6, 0, 1) * np.clip((a1 - ak) / 6, 0, 1)
-            G = np.maximum(G, amp * line * span)
-    G *= (value_noise(rng, 0.04, x, y) > 0.3) * (0.6 + 0.4 * fine) * wiped * on_glass
+        for _ in range(3):
+            rad = rng.uniform(R_IN + 0.12, R_OUT - 0.06)
+            sigma = rng.uniform(0.006, 0.014)
+            a0 = rng.uniform(SWEEP[0], SWEEP[1] - 40)
+            a1 = min(a0 + rng.uniform(35, 80), SWEEP[1])
+            amp = rng.uniform(0.10, 0.22)
+            band = np.exp(-0.5 * ((rk - rad) / sigma) ** 2)
+            span = np.clip((ak - a0) / 12, 0, 1) * np.clip((a1 - ak) / 12, 0, 1)
+            G = np.maximum(G, amp * band * span)
+    # broken along the arc (blade lift, 8-20 cm patches, soft), fine streaks along the wiping direction inside the band
+    breaks = smooth01(value_noise(rng, 0.12, x, y), 0.30, 0.55)
+    G *= breaks * (0.7 + 0.3 * fine) * wiped * on_glass
 
     # ---- B: insects ----
     B = np.zeros_like(x)
