@@ -46,6 +46,15 @@
     "power_lines": 208,
     "pylons": 435
   },
+  "forest_chm_ring": {
+    "chm_share": 0.0202,
+    "chm_tiles": [
+      "dk65-01",
+      "dk65-02"
+    ],
+    "chm_vertices": 236,
+    "total_curtain_vertices": 11671
+  },
   "lod1_height_audit": {
     "buildings": 133679,
     "conflicting_ids": 0,
@@ -125,7 +134,7 @@
   },
   "tiers": {
     "High": {
-      "bytes": 15100256,
+      "bytes": 15287596,
       "file": "Data/raw/derived/bialystok-kleeberga/world/far_field.glb",
       "sectors": {
         "far_east": {
@@ -165,7 +174,7 @@
           "vertices": 52351
         }
       },
-      "sha256": "be61fca26bb2a195e95a60cd329d6e0083d3a962eb62e7fd719130d383e30cb6",
+      "sha256": "dd41b4e589632f3a40556dd19c741b652acf01ceeaf4f218d7595125f6b3045f",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -178,7 +187,7 @@
       "total_vertices": 292900
     },
     "Low": {
-      "bytes": 1788252,
+      "bytes": 1834284,
       "file": "Data/raw/derived/bialystok-kleeberga/world/far_field.low.glb",
       "sectors": {
         "far_east": {
@@ -218,7 +227,7 @@
           "vertices": 5311
         }
       },
-      "sha256": "c0de49b8376cb8412cb40789928e0857e4d3e0704400ae84cd530d0f49c1a3e4",
+      "sha256": "e8967eec34ea151968b4f33602085b2120157b3e5fb347fbd501073de9497107",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
