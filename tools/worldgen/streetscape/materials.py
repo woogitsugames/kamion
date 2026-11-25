@@ -914,7 +914,7 @@ M["cycle_red"] = {"color": [0.26, 0.125, 0.11], "rough": 0.85, "surface": "aspha
 # istniejących kafli), pas płytek ostrzegawczych przy przejściach oraz kontrastowa kostka na zjazdach do posesji.
 # Kolory i wagi efektów: WORKING_VALUE (oceniane w renderach clear/overcast High przed|po).
 PAVING_VARIATION_DEFAULT = {
-    "batch_strength": 0.15, "stain_strength": 0.24, "joint_boost": 0.36,
+    "batch_strength": 0.15, "stain_strength": 0.18, "joint_boost": 0.36,
     "patch_strength": 0.90, "weed_strength": 0.72, "weed_edge_m": 0.45, "block_jitter": 0.13,
 }
 M["sidewalk_tactile"] = {
@@ -923,7 +923,7 @@ M["sidewalk_tactile"] = {
     "tactile": {"tile_m": 0.25, "pitch_m": 0.05, "dome_r_m": 0.014, "relief": 0.85},
 }
 M["driveway_paving_red"] = {
-    "color": [0.21, 0.095, 0.085], "rough": 0.85, "surface": "paving_stones",
+    "color": [0.15, 0.094, 0.084], "rough": 0.86, "surface": "paving_stones",
     "texture_set": "paving_20x10_tint", "uv": "planar", "decal": True, "depth_offset_m": 0.006,
     "ground_grime": dict(_FOOTWAY_GRIME),
     "paving_variation": {**PAVING_VARIATION_DEFAULT, "patch_strength": 0.0, "weed_strength": 0.35},

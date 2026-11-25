@@ -389,7 +389,7 @@ namespace Game.World.Import
                 float PV(string key, float fallback) => pvDef != null && pvDef.Get(key) != null ? (float)Num(pvDef.Get(key)) : fallback;
                 bool isSlab = id == "sidewalk_slabs";
                 float batch = Mathf.Clamp(PV("batch_strength", isSlab ? 0.11f : 0.15f), 0f, 0.5f);
-                float stain = Mathf.Clamp(PV("stain_strength", 0.24f), 0f, 0.8f);
+                float stain = Mathf.Clamp(PV("stain_strength", 0.18f), 0f, 0.8f);
                 float joint = Mathf.Clamp(PV("joint_boost", isSlab ? 0.26f : 0.36f), 0f, 1f);
                 float patch = Mathf.Clamp(PV("patch_strength", isSlab ? 0.35f : 0.90f), 0f, 1f);
                 float weed = Mathf.Clamp(PV("weed_strength", isSlab ? 0.45f : 0.72f), 0f, 1f);
