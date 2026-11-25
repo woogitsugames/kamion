@@ -521,6 +521,7 @@ def crossing_tactile_strips(w, overrides) -> dict:
     chains = {c.id: c for c in w.net.chains}
     surf_top = FU.SurfaceTop([p for p in w.buf.parts if p.layer == "road"])
     strips, tris_tot = 0, 0
+    at: list = []
     for dr in drops:
         c = chains.get(dr["chain"])
         if c is None or c.line is None:
@@ -564,7 +565,8 @@ def crossing_tactile_strips(w, overrides) -> dict:
         w.buf.add("markings", TACTILE_MAT, V, UV, T, footprint=False, src=f"{dr['src']}:tactile:{sd}")
         strips += 1
         tris_tot += len(T)
-    return {"strips": strips, "tris": tris_tot}
+        at.append([round(float(P_c[n_st // 2][0]), 1), round(float(P_c[n_st // 2][1]), 1), sd])
+    return {"strips": strips, "tris": tris_tot, "at_en": at}
 
 
 def run(w, region_id: str, log=lambda *a: None) -> dict:

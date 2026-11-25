@@ -39,6 +39,7 @@ Does not touch streetscape.furniture (street fences / furniture: parallel work).
 """
 from __future__ import annotations
 
+import os
 import math
 
 import numpy as np
@@ -75,6 +76,7 @@ DRIVE_W_M = 3.0
 # each added a submesh to the chunk's paved mesh (+5 / +3 chunks); block paving is the common case.
 DRIVE_MAT = "yard_paving"
 DRIVE_CROSS_MAT = "driveway_paving_red"   # ADR 0349 (dopisek neon-paving-s24): kontrastowy zjazd przez chodnik (opt-in)
+DRIVE_CROSS_SHARE = 0.35                  # udzial zjazdow z kontrastowa kostka (WORKING_VALUE)
 DRIVE_CROSS_LIFT_M = 0.008                # 8 mm nad powierzchnią chodnika / wjazdu (+ offset w shaderze, brak z-fightingu)
 # Chunk layer of the plot ground (lawn, driveway, path): like `paved`, but shown only with the chunk's LOD0 / LOD1 (as
 # `furniture` is) - in r1 the lawns sat in `paved` (drawn to LOD2, ~700 m) and cost draws in every distant view.
@@ -2329,16 +2331,25 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
     m, n = g["m"], g["n"]
     L = acc["d_cw"]
     band = KERB_BAND_M if acc.get("kerbed") else 0.02
-    cross_drive = bool(driveway_color and footway)
+    # ADR 0349 (neon-paving-s24, uwaga lidera): kontrastowy zjazd tylko na ~DRIVE_CROSS_SHARE bram (reszta = ta sama szara
+    # kostka chodnika, z lekko obnizonym krawieznikiem), szerokosc = brama 3-4,5 m (WORKING_VALUE), nie szerzej.
+    cross_drive = bool(driveway_color and footway and hfloat(str(plot.get("key", src_id)), "drvcross") < DRIVE_CROSS_SHARE)
     if cross_drive:
-        strip = LineString([m - n * 0.05, m + n * (L + 1.0)]).buffer(g["w"] / 2, cap_style="flat")
+        w_eff = float(min(max(g["w"], 3.0), 4.5))
+        strip = LineString([m - n * 0.05, m + n * (L + 1.0)]).buffer(w_eff / 2, cap_style="flat")
         drv = plot.get("drive")
-        allowed = roads_poly.buffer(0.10).union(drv.buffer(0.05)) if drv is not None and not drv.is_empty else roads_poly.buffer(0.35)
-        zone = strip.intersection(allowed).difference(carriage.buffer(band))
+        # tylko chodnik/nawierzchnia drogi (kerb -> tylna krawedz chodnika), nie caly podjazd do bramy (diagnoza: pas
+        # mial dlugosc do ~10 m); dalej zostaje zwykly `yard_paving` podjazdu
+        zone = strip.intersection(roads_poly.buffer(0.10)).difference(carriage.buffer(band))
     else:
         strip = LineString([m + n * 0.02, m + n * (L + 1.0)]).buffer(g["w"] / 2, cap_style="flat")
         zone = strip.intersection(roads_poly.buffer(0.35)).difference(carriage.buffer(band))
     polys = [q for q in _polys(zone, 0.15, simplify=0.01) if q.distance(Point(*m)) < L]
+    if cross_drive and os.environ.get("KAMION_DBG_DRIVE"):
+        for q in polys:
+            r_ = q.minimum_rotated_rectangle.exterior.coords
+            d1, d2 = np.hypot(r_[1][0] - r_[0][0], r_[1][1] - r_[0][1]), np.hypot(r_[2][0] - r_[1][0], r_[2][1] - r_[1][1])
+            print("DBG_DRIVE", src_id, "gw", round(float(g["w"]), 2), "rect", round(float(d1), 2), round(float(d2), 2), flush=True)
     done = 0
     for poly in polys:
         T2 = PV.triangulate(poly, 0.5)
