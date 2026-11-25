@@ -5,6 +5,20 @@
   0.3,
   0.46
  ],
+ "impostor_rows": [
+  [
+   "tree_pine_0",
+   "tree_pine_1",
+   "tree_spruce_0",
+   "tree_birch_0"
+  ],
+  [
+   "tree_spruce_1",
+   "tree_alder_0",
+   "tree_linden_0",
+   "tree_shrub_0"
+  ]
+ ],
  "k": {
   "": 0.08,
   "_haze1": 0.24,
@@ -15,11 +29,11 @@
   "_haze1": 0.6,
   "_haze2": 0.8
  },
- "pad": 4,
+ "pad": 8,
  "schema": "truck-sim-pl/forest-edge-far-atlas/2",
  "size": [
   1024,
-  2048
+  4096
  ],
  "slots": [
   [
@@ -57,6 +71,14 @@
   [
    "broadleaf",
    "_haze2"
+  ],
+  [
+   "impostor",
+   "row0"
+  ],
+  [
+   "impostor",
+   "row1"
   ]
  ],
  "sources": {
@@ -65,7 +87,23 @@
   "forest_edge_conifer.png": "6b713e65489e4bdbc05cf3053a487a60c9cd98f6605cc931897456e99768d407",
   "forest_edge_conifer_n.png": "7ad6682cdd59313204e9d63c1f506ee710af0fa75712cac4a5005312a4bd06df",
   "forest_edge_mixed.png": "ee9f1b70501c8048f606a4263886026d77d649e95edff13b2b38dfdf2d0d10a4",
-  "forest_edge_mixed_n.png": "537fa5a5998a1535cb4c8d87b806a4513f5f8d729f010b215257f011670cad71"
+  "forest_edge_mixed_n.png": "537fa5a5998a1535cb4c8d87b806a4513f5f8d729f010b215257f011670cad71",
+  "impostor_tree_alder_0.png": "1c1b8bd69e32285c794b6744633450e6b1920e62b900ac34169963258243ff20",
+  "impostor_tree_alder_0_n.png": "6e68dd79771a2f97cd12a5f4d79ac88a4a6b7b18d00484ee6c6bd9fdda90c315",
+  "impostor_tree_birch_0.png": "5ea5fbcead1f8105a0e8198639dc0a8a1af2fe3179492f776a1c00bd3f1f1260",
+  "impostor_tree_birch_0_n.png": "c2f623b8b5df5d9d7535f8c39345195e818edf22053e10674367c1511eff32b9",
+  "impostor_tree_linden_0.png": "85fa8c004d524247fb3a6467ca24e2bb0c7edf549d4ebbc15ae30f14324c6db7",
+  "impostor_tree_linden_0_n.png": "ac427271829b8a928260cf35f6c236a325312a679388ac88a3e244f0c3682729",
+  "impostor_tree_pine_0.png": "9e3a87656fc0ba0545d4ee4df827792f76d44ae788d00cb963e5b48e055b5beb",
+  "impostor_tree_pine_0_n.png": "b66c71074fc2ccd8600277bef745637a1b78bc30f5a6ba4fc93ecdd9cd37e477",
+  "impostor_tree_pine_1.png": "e7f181f882f72c23248abf4fe95d5ac543a18939c9ba73673482b99776904e0c",
+  "impostor_tree_pine_1_n.png": "36442918288f1c6a2cc0aa181e203f6a65612bc3428103a473b28772922cd47e",
+  "impostor_tree_shrub_0.png": "095508543f546eb3f0095421ea3d5b759f8208da31697f601070a36f5ad47cff",
+  "impostor_tree_shrub_0_n.png": "11b86d503e8459af1b4578b9735ab7ccd9df8c0eef920e96d5438a30509d1cc7",
+  "impostor_tree_spruce_0.png": "a44a52427600e7d88aaec92fa7b97bf33a14725365b5baf9cbf194bdc7094f27",
+  "impostor_tree_spruce_0_n.png": "1aef5c02c088509740dddbf5e69cea123c9fe3987c589128ff695583683bd569",
+  "impostor_tree_spruce_1.png": "bcbf8348cfad219b52ad132920c8755b6f5669aa5daed8c0a6cc25b823da0d8c",
+  "impostor_tree_spruce_1_n.png": "765751d35f18ffd9069c0dc680c70379a04b73a24720c613d725080ec9791085"
  },
  "vis_lift": {
   "": 0.55,

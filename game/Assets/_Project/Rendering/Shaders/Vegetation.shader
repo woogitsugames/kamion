@@ -363,8 +363,11 @@ Shader "Kamion/Vegetation"
                     float3 dp2perp = cross(dp2, n), dp1perp = cross(n, dp1);
                     float3 T = dp2perp * duv1.x + dp1perp * duv2.x;
                     float3 B = dp2perp * duv1.y + dp1perp * duv2.y;
-                    float inv = rsqrt(max(max(dot(T, T), dot(B, B)), 1e-12));
-                    n = normalize(T * inv * nxy.x + B * inv * nxy.y + n * nz);
+                    // ADR 0330 r2: normalize T and B independently — in the stacked far atlas (v compressed ~11x),
+                    // sharing max(|T|, |B|) crushed vertical normal relief B by ~11x and skewed oblique quads.
+                    float invT = rsqrt(max(dot(T, T), 1e-12));
+                    float invB = rsqrt(max(dot(B, B), 1e-12));
+                    n = normalize(T * invT * nxy.x + B * invB * nxy.y + n * nz);
                 #if defined(_KAMION_VEG_FAST)
                     ambient = LeafAmbientL2(n, i.ambL2);
                 #else
