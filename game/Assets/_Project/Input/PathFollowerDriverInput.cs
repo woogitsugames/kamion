@@ -19,6 +19,9 @@ namespace Game.Controls
         public float MinLookAhead = 7f;
         public float LookAheadTime = 0.9f;
         public float StopDistance = 25f;
+        /// <summary>Cross-track distance above which the 20-segment window counts as lost and the rest of the path is
+        /// searched [m] (a lane is 3-3.5 m; a road edge 4-6 m from the route line). WORKING_VALUE (ADR 0350).</summary>
+        public float LostDistanceM = 12f;
 
         Vector3[] m_Points = System.Array.Empty<Vector3>();
         float[] m_S = System.Array.Empty<float>();
@@ -155,6 +158,22 @@ namespace Game.Controls
                 float t = Mathf.Clamp01(Vector3.Dot(p - a, ab) / Mathf.Max(ab.sqrMagnitude, 1e-6f));
                 float d = (a + ab * t - p).sqrMagnitude;
                 if (d < best) { best = d; bestSeg = i; bestT = t; }
+            }
+            // ADR 0350: the window found nothing near the vehicle (it stands farther along the path than the window reaches,
+            // e.g. a start in the middle of the route without SeekTo): a 20-segment window then locks on a local minimum
+            // behind the vehicle and pure pursuit aims ~240 m away = almost no steering (build #9 dk65-06: progress stuck at
+            // 102 m, the combination at 340 m drove straight off the bend and rolled over). Re-acquire on the rest of the
+            // path - forward only, so a route passing near itself never sends the driver back.
+            if (best > LostDistanceM * LostDistanceM)
+            {
+                for (int i = m_Seg; i < m_Points.Length - 1; i++)
+                {
+                    Vector3 a = Flat(m_Points[i]), b = Flat(m_Points[i + 1]);
+                    Vector3 ab = b - a;
+                    float t = Mathf.Clamp01(Vector3.Dot(p - a, ab) / Mathf.Max(ab.sqrMagnitude, 1e-6f));
+                    float d = (a + ab * t - p).sqrMagnitude;
+                    if (d < best) { best = d; bestSeg = i; bestT = t; }
+                }
             }
             m_Seg = bestSeg;
             Progress = Mathf.Lerp(m_S[m_Seg], m_S[m_Seg + 1], bestT);

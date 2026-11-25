@@ -16,6 +16,10 @@ What is blended:
   * the carriageway half-width `Chain.hw` (apply_widths, right after the fork passes of pipeline.build_network);
     lanes of the touched sections share the local width (`lane_follow`, ADR 0233), otherwise the centre line would
     leave the axis inside the transition;
+  * the axis position (seams-w10): the lateral placement of D94 (network.gameplay_widen, shift towards the greater
+    clearance) is decided per tile on that tile's piece of the edge, so the two halves of one road could meet with an
+    axis step of lanes x GAMEPLAY_LANE_WIDEN_M / 2; both tiles move their axis half of the offset along the same
+    S-curve (apply_widths). Ends are matched by the graph cut (`End.boundary_xy`), not by the shifted axis;
   * the paved and ground widths of the shoulder of a kerbless edge (ADR 0272, roads.xsec), carried per station in
     the side `mat` code (apply_shoulders, after every network.assign_sides). The same function turns a step of the
     shoulder widths between two sections of one chain (an override that ends inside the tile) into an S-curve
@@ -170,12 +174,17 @@ class Taper:
     other_chain: str | None = None
     step_m: float = 0.0               # the largest edge step that set the length
     skipped: str | None = None        # reason the carriageway width is not blended
+    shift_seam: tuple = (0.0, 0.0)    # seams-w10: move of the axis end on the seam (world frame, m) = half of the vector
+    #                                   between the two nominal axis ends: both tiles meet in the middle
+    axis_offset: float = 0.0          # seams-w10: distance of the two nominal axis ends (the same in both tiles)
 
     def report(self) -> dict:
         r = {"chain": self.chain, "end": "a" if self.end == 0 else "b", "neighbour": self.neighbour,
              "length_m": round(self.length, 2), "in_tile_m": round(self.length / 2, 2), "step_m": round(self.step_m, 3),
              "width_own": round(2 * self.hw_own, 3), "width_other": round(2 * self.hw_other, 3),
              "width_seam": round(2 * self.hw_seam, 3)}
+        if self.axis_offset:
+            r["axis_offset_m"] = round(self.axis_offset, 3)
         if self.shoulder:
             r["shoulder_cm"] = {k: {a: list(b) for a, b in v.items()} for k, v in sorted(self.shoulder.items())}
         if self.skipped:
@@ -187,14 +196,21 @@ def _mean_cm(a: int, b: int) -> int:
     return (a + b + 1) // 2           # symmetric in (a, b): both tiles get the same centimetre
 
 
+def _cut(e: End) -> tuple:
+    """The graph cut of the end (identical in both tiles: the same OSM way clipped by the same bbox edge); the built
+    axis may sit off it by the lateral placement (D94 / ADR 0077), differently in each tile."""
+    return e.boundary_xy if e.boundary_xy is not None else e.xy
+
+
 def match(own: list[End], other: list[End]) -> list[tuple[End, End]]:
-    """Mutually nearest ends of the same OSM way within MATCH_M (the same pairs whichever tile asks)."""
+    """Mutually nearest ends of the same OSM way within MATCH_M (the same pairs whichever tile asks). Distance between
+    the graph cuts (seams-w10): two halves whose D94 shifts go opposite ways (0.25 + 0.25 m) are still one road."""
     def near(e, cands):
         best = None
         for x in cands:
             if x.osm_way != e.osm_way:
                 continue
-            d = math.hypot(e.xy[0] - x.xy[0], e.xy[1] - x.xy[1])
+            d = math.hypot(_cut(e)[0] - _cut(x)[0], _cut(e)[1] - _cut(x)[1])
             if d <= MATCH_M and (best is None or (d, x.xy) < best[:2]):
                 best = (d, x.xy, x)
         return best[2] if best else None
@@ -227,12 +243,28 @@ def plan_pair(e: End, x: End, neighbour: str | None = None) -> Taper | None:
     skipped = None
     if not blend_hw and abs(dhw) >= MIN_STEP_M:
         skipped = "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)"
+    # seams-w10: lateral offset of the two nominal axes on the seam. D94 (network.gameplay_widen) shifts a carriageway
+    # towards its greater clearance, measured on this tile's piece of the edge only, so the two halves of one road can
+    # be shifted differently (0.125 / 0.25 / 0.375 m = lanes x GAMEPLAY_LANE_WIDEN_M / 2). Triggered by the offset
+    # across the common normal (the same bits in both tiles: a + b == b + a, a negated vector is exact); the end then
+    # moves by half of the whole vector, so both ends land on one point even where the two smoothed axes leave the
+    # seam at slightly different angles (a shift along each tile's own normal would leave a few centimetres).
+    xl = (x.left[0], x.left[1]) if same else (-x.left[0], -x.left[1])
+    nx, ny = e.left[0] + xl[0], e.left[1] + xl[1]
+    nn = math.hypot(nx, ny) or 1.0
+    vx, vy = x.xy[0] - e.xy[0], x.xy[1] - e.xy[1]
+    dlat = (vx * nx + vy * ny) / nn
+    shift, offset = (0.0, 0.0), 0.0
+    if abs(dlat) >= MIN_STEP_M:
+        offset = math.hypot(vx, vy)
+        shift = (0.5 * vx, 0.5 * vy)
+        step += offset               # both carriageway edges move with the axis: upper bound of the edge step
     if step < MIN_STEP_M and not skipped:
         return None
     length = min(max(RATIO * step, MIN_LEN_M), MAX_LEN_M, 2.0 * e.length, 2.0 * x.length)
     return Taper(chain=e.chain, end=e.end, length=float(length), hw_own=e.hw, hw_other=x.hw,
                  hw_seam=0.5 * (e.hw + x.hw) if blend_hw else e.hw, shoulder=sh, neighbour=neighbour,
-                 other_chain=x.chain, step_m=float(step), skipped=skipped)
+                 other_chain=x.chain, step_m=float(step), skipped=skipped, shift_seam=shift, axis_offset=float(offset))
 
 
 def plan(own: list[End], others: dict) -> list[Taper]:
@@ -320,15 +352,25 @@ def _chains(net):
 
 
 def apply_widths(net: Nw.Network, tapers: list[Taper]) -> list[dict]:
-    """Blend the carriageway half-width of the planned chain ends; returns the report rows."""
+    """Blend the carriageway half-width and the axis position (seams-w10) of the planned chain ends; returns the report
+    rows."""
     by = _chains(net)
     for t in tapers:
         c = by[t.chain]
+        d = c.line.s if t.end == 0 else c.line.s[-1] - c.line.s
+        k = weight(d, t.length)
+        if t.axis_offset:
+            # seams-w10: the axis follows the same S-curve to the middle of the two nominal axis ends (lateral
+            # placement like ADR 0077: its share across the axis goes to meta center_offset, so fidelity does not read
+            # it as a deviation from the OSM way)
+            mv = k[:, None] * np.asarray(t.shift_seam, float)[None, :]
+            lat = (mv * c.line.n).sum(axis=1)
+            c.line = Nw.Polyline(c.line.p + mv)
+            prev = c.meta.get("center_offset")
+            c.meta["center_offset"] = lat if prev is None or len(prev) != len(lat) else prev + lat
         dhw = t.hw_seam - t.hw_own
         if t.skipped or abs(dhw) < MIN_STEP_M / 2:
             continue
-        d = c.line.s if t.end == 0 else c.line.s[-1] - c.line.s
-        k = weight(d, t.length)
         c.hw = c.hw + dhw * k
         for i in np.unique(c.sec_idx[k > 0]):
             sec = net.sec_list[int(i)]

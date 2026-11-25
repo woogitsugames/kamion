@@ -218,6 +218,21 @@ namespace Game.Tests
         /// the scene stand there, and the runtime safety net leaves it as it is. Scenes are generated (not in git): a
         /// region that is not imported is skipped (the committed-data test above is never skipped).
         /// </summary>
+        /// <summary>
+        /// Opens an imported scene with its ground collision ON, as the player has it after <see cref="WorldCollisionCooker"/>
+        /// ran in Awake. The scene builder saves the chunk MeshColliders disabled (deferred cook), so without this the start
+        /// checks below saw no road, no terrain and no kerb at all - and passed on dk65-07, whose every start place was
+        /// inside col_asphalt in the player (build #9, ADR 0350).
+        /// </summary>
+        static void OpenWithCollision(string scenePath)
+        {
+            EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            foreach (var cooker in Object.FindObjectsByType<WorldCollisionCooker>(FindObjectsSortMode.None))
+                foreach (var c in cooker.colliders)
+                    if (c != null && c.sharedMesh != null) c.enabled = true;
+            Physics.SyncTransforms();
+        }
+
         [TestCaseSource(nameof(RegionIds)), Category("WorldScenes")]
         public void ImportedScene_BakedSpawnIsTheImportersStart(string region)
         {
@@ -225,7 +240,7 @@ namespace Game.Tests
             if (!File.Exists(Path.Combine(EditorTools.RepoRoot, "game", scenePath))) Assert.Ignore(region + ": scene not imported (" + scenePath + ")");
             var r = RegionCatalog.Load().Find(region);
             if (SkipCornerTile(r)) return;
-            EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            OpenWithCollision(scenePath);
             try
             {
                 var route = Object.FindAnyObjectByType<WorldRoute>();
@@ -272,7 +287,7 @@ namespace Game.Tests
             if (!File.Exists(Path.Combine(EditorTools.RepoRoot, "game", scenePath))) Assert.Ignore(region + ": scene not imported (" + scenePath + ")");
             var r = RegionCatalog.Load().Find(region);
             if (SkipCornerTile(r)) return;
-            EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            OpenWithCollision(scenePath);
             try
             {
                 var route = Object.FindAnyObjectByType<WorldRoute>();
