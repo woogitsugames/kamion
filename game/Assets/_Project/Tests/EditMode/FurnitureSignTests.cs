@@ -330,7 +330,8 @@ namespace Game.Tests
             var prototypes = (Dictionary<string,object>)parsed["prototypes"];
             foreach (var proto in prototypes.Values)
                 foreach (string name in (List<object>)((Dictionary<string,object>)proto)["materials"])
-                    if (name.StartsWith("sign_",StringComparison.Ordinal) && !name.StartsWith("sign_facade_",StringComparison.Ordinal)) expected.Add(name);
+                    if (name.StartsWith("sign_",StringComparison.Ordinal) && !name.StartsWith("sign_facade_",StringComparison.Ordinal)
+                        && !name.StartsWith("sign_post",StringComparison.Ordinal)) expected.Add(name);   // sign_post* = pole materials (ADR 0337), same filter as WorldPbrMaterials
             Assert.Greater(expected.Count,10,"Fixture must include direction boards, not just a single plate");
             Assert.AreEqual(expected.Count,defs.Count);
             Assert.AreSame(authored,defs["sign_B-33_70"]);
