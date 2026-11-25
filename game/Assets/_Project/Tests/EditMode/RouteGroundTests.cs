@@ -84,6 +84,11 @@ namespace Game.Tests
         [SetUp]
         public void EmptyScene() => EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
+        // The WorldRoute left in the scene would be picked up by later tests that search the scene (WorldStreamerHook0273Tests:
+        // the route continuation appended this 101-point route).
+        [TearDown]
+        public void LeaveEmptyScene() => EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
         static void Quad(string name, float y, float halfWidth, float length)
         {
             var mesh = new Mesh
