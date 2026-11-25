@@ -111,12 +111,15 @@ STYLES = {
     # ADR 0316: brown stained / natural pickets (owner photo klattow-01), painted pickets (colour = PICKET_PAINTS),
     # galvanised chain-link (`chainlink` = the same atlas row under the green coat of STYLE_TINT)
     "picket_wood": ("picket_wood", (1.2, 1.4), None, "wood_brown", False),
+    "picket_raw": ("picket_wood", (1.15, 1.35), None, "wood_grey", False),      # ADR 0348: weathered raw wood pickets
     "picket_paint": ("picket_paint", (1.1, 1.4), None, "galv", False),
     "chainlink_galv": ("chainlink", (1.2, 1.5), None, "galv", False),
     "boards_rust": ("boards_rust", (1.6, 1.9), None, "wood_rust", False),
     "boards_brown": ("boards_brown", (1.6, 2.0), None, "wood_brown", False),
     "boards_grey": ("boards_grey", (1.5, 1.8), None, "wood_grey", False),
     "chainlink": ("chainlink", (1.2, 1.5), None, "steel_green", False),
+    "panel_graphite": ("bars", (1.45, 1.65), ("concrete", 0.22), "steel_graphite", False),   # ADR 0348: 3D wire/steel panel
+    "panel_green": ("bars", (1.45, 1.65), ("concrete", 0.22), "steel_green", False),         # ADR 0348: green steel panel
     "concrete": ("concrete", (1.5, 1.8), None, "concrete", False),
     "bars": ("bars", (1.3, 1.5), ("brick", 0.32), "steel_black", False),
     "lamella": ("lamella", (1.6, 1.8), ("concrete", 0.22), "steel_graphite", False),
@@ -124,43 +127,79 @@ STYLES = {
     "brick_picket": ("picket", (1.5, 1.7), ("brick", 0.35), None, True),
     "brick_boards": ("boards_rust", (1.5, 1.8), ("brick", 0.35), None, True),
     "brick_bars": ("bars", (1.5, 1.8), ("brick", 0.35), None, True),
+    "stone_picket": ("picket_wood", (1.45, 1.65), ("stone", 0.42), None, True),              # ADR 0348: fieldstone low wall + pickets
+    "stone_bars": ("bars", (1.50, 1.75), ("stone", 0.42), None, True),                       # ADR 0348: fieldstone low wall + steel bars
 }
 # age class -> [(front style, weight)], [(side / back style or 'front', weight)]
 FRONT_BY_AGE = {
-    # ADR 0316 (Podlasie): the old plots have as many natural / stained and painted pickets as rust-red ones, and half
-    # of the chain-link is plain galvanised wire. Shares WORKING_VALUE (no survey).
-    "old": [("picket", 0.14), ("picket_wood", 0.16), ("picket_paint", 0.12), ("boards_rust", 0.08), ("boards_brown", 0.10),
-            ("boards_grey", 0.10), ("chainlink", 0.12), ("chainlink_galv", 0.10), ("brick_picket", 0.08)],
-    "prl": [("brick_picket", 0.18), ("brick_boards", 0.10), ("bars", 0.18), ("chainlink", 0.10), ("chainlink_galv", 0.06),
-            ("boards_brown", 0.10), ("picket", 0.05), ("picket_wood", 0.04), ("picket_paint", 0.03), ("concrete", 0.16)],
-    "new": [("brick_bars", 0.22), ("wall", 0.22), ("lamella", 0.22), ("brick_boards", 0.08), ("bars", 0.12),
-            ("concrete", 0.14)],
+    # ADR 0316 + ADR 0348 (Podlasie rural / small-town mix): 4+ distinct families (wooden pickets raw/stained/muted-paint,
+    # chain-link on posts, welded panels, brick/fieldstone low wall + spans). Shares WORKING_VALUE (no survey).
+    "old": [("picket", 0.08), ("picket_wood", 0.12), ("picket_raw", 0.10), ("picket_paint", 0.10),
+            ("boards_rust", 0.06), ("boards_brown", 0.06), ("boards_grey", 0.06),
+            ("chainlink", 0.10), ("chainlink_galv", 0.10),
+            ("panel_green", 0.06), ("panel_graphite", 0.04),
+            ("brick_picket", 0.06), ("stone_picket", 0.06)],
+    "prl": [("brick_picket", 0.12), ("stone_picket", 0.08), ("stone_bars", 0.08), ("brick_boards", 0.06),
+            ("panel_graphite", 0.12), ("panel_green", 0.08), ("bars", 0.08),
+            ("chainlink", 0.08), ("chainlink_galv", 0.08),
+            ("picket_wood", 0.06), ("picket_raw", 0.04), ("picket_paint", 0.04), ("boards_brown", 0.04), ("concrete", 0.04)],
+    "new": [("brick_bars", 0.16), ("stone_bars", 0.10), ("wall", 0.14), ("lamella", 0.18),
+            ("panel_graphite", 0.16), ("panel_green", 0.08), ("bars", 0.08), ("brick_boards", 0.04), ("concrete", 0.06)],
 }
 SIDE_BY_AGE = {
     "old": [("chainlink", 0.22), ("chainlink_galv", 0.23), ("boards_grey", 0.20), ("boards_brown", 0.10), ("front", 0.25)],
     "prl": [("chainlink", 0.25), ("chainlink_galv", 0.25), ("concrete", 0.25), ("front", 0.25)],
     "new": [("wall", 0.28), ("concrete", 0.26), ("chainlink", 0.26), ("lamella", 0.20)],
 }
-SIDE_OF_BRICK = {"brick_picket": "picket", "brick_boards": "boards_rust", "brick_bars": "bars"}
+SIDE_OF_BRICK = {"brick_picket": "picket", "brick_boards": "boards_rust", "brick_bars": "bars",
+                 "stone_picket": "picket_wood", "stone_bars": "bars"}
 GATE_FRAME = {"picket": "wood_brown", "boards_rust": "wood_rust", "boards_brown": "wood_brown", "boards_grey": "wood_grey",
               "chainlink": "steel_green", "bars": "steel_black", "lamella": "steel_graphite",
               "picket_wood": "wood_brown", "picket_paint": "galv"}
-GATE_FRAME_STYLE = {"chainlink_galv": "galv"}               # ADR 0316: by style where two styles share an atlas row
+GATE_FRAME_STYLE = {"chainlink_galv": "galv", "picket_raw": "wood_grey",
+                    "panel_graphite": "steel_graphite", "panel_green": "steel_green",
+                    "stone_picket": "wood_brown", "stone_bars": "steel_black"}
 UNFRAMED_ROWS = ("picket", "boards_rust", "boards_brown", "boards_grey", "picket_wood", "picket_paint")
-# ADR 0316: oil paints of the painted pickets (`picket_paint`: a neutral light row of the atlas). Linear multipliers
-# of the atlas colour -> about sRGB green 52/98/62, blue 70/110/150, ochre 190/150/70, cream 225/215/185, red-brown
-# 110/52/38, grey-blue 120/135/140 before the plot's ageing tint. One paint per plot. Shares WORKING_VALUE.
-PICKET_PAINTS = [((0.060, 0.216, 0.085), 0.34), ((0.108, 0.276, 0.540), 0.16), ((0.910, 0.540, 0.108), 0.16),
-                 ((1.330, 1.200, 0.860), 0.12), ((0.276, 0.060, 0.034), 0.12), ((0.330, 0.430, 0.460), 0.10)]
+# ADR 0316 + ADR 0348: muted Podlasie oil paints for `picket_paint` (forest green, dusty blue, walnut brown,
+# oxide red-brown, slate blue-grey, warm putty — loud yellow-ochre & bright cream removed per CRITIC pkt 9).
+# Linear multipliers of the neutral atlas row, one paint per plot. Shares WORKING_VALUE.
+PICKET_PAINTS = [((0.065, 0.205, 0.085), 0.28), ((0.115, 0.245, 0.420), 0.16), ((0.220, 0.115, 0.055), 0.18),
+                 ((0.265, 0.068, 0.042), 0.14), ((0.280, 0.355, 0.380), 0.14), ((0.420, 0.415, 0.385), 0.10)]
+_PANEL_GREEN_TINT = (0.45, 0.85, 0.55)
+_PANEL_GRAPHITE_TINT = (0.90, 0.92, 0.96)
+_PICKET_RAW_TINT = (0.74, 0.82, 0.95)
+_STONE_MASONRY_TINT = (0.82, 0.78, 0.70)
+
+
+def _fence_family(style):
+    """Broad visual family of a fence style for deterministic neighbour anti-repetition (ADR 0348)."""
+    if style in ("picket", "picket_wood", "picket_raw", "picket_paint"):
+        return "picket"
+    if style.startswith("boards_"):
+        return "boards"
+    if style.startswith("chainlink"):
+        return "chainlink"
+    if style in ("panel_graphite", "panel_green", "lamella", "bars"):
+        return "panel"
+    if style.startswith(("brick_", "stone_")) or style == "wall":
+        return "masonry"
+    return "concrete"
 
 
 def style_col(kit, style, key):
-    """COLOR_0 (r, g, b, 0) of a fence style that carries its own colour as a tint of a neutral atlas row (ADR 0316):
-    the paint of `picket_paint`, the green coat of `chainlink`; x the plot tint of the kit. None for the others."""
+    """COLOR_0 (r, g, b, 0) of a fence style that carries its own colour as a tint of a neutral / shared atlas row
+    (ADR 0316 / 0348): paint of `picket_paint`, weathered silvering of `picket_raw`, green coat of `chainlink` /
+    `panel_green`, graphite coat of `panel_graphite`; x the plot tint of the kit. None for the others."""
     if style == "picket_paint":
         m = _pick_w(PICKET_PAINTS, key[0] if isinstance(key, tuple) else key, "paint")
+    elif style == "picket_raw":
+        m = _PICKET_RAW_TINT
     elif style == "chainlink":
         m = PK.CHAINLINK_GREEN
+    elif style == "panel_green":
+        m = _PANEL_GREEN_TINT
+    elif style == "panel_graphite":
+        m = _PANEL_GRAPHITE_TINT
     else:
         return None
     return [min(2.0 * kit.tint[i] * m[i], 2.0) * 0.5 for i in range(3)] + [0.0]
@@ -291,7 +330,7 @@ def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
     static = [road_clear] + [o.buffer(1.0) for o in obstacles] + ([bar_u] if bar_u is not None else [])
     groups = _groups(houses)
     all_house = {h["id"]: h["poly"] for h in houses}
-    plots, laid = [], []
+    plots, laid, planned_pts = [], [], []
     for g in groups:
         key = f"{seed}{g[0]['id']}"
         foot = shapely.unary_union([h["poly"] for h in g])
@@ -365,6 +404,25 @@ def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
         props = g[0].get("props") or {}
         age = age_class(props, g[0]["poly"].area, key)
         fs = _pick_w(FRONT_BY_AGE[age], key, "ft")
+        # ADR 0348: deterministic neighbour anti-repetition across adjacent rural / town plots (within 45 m).
+        # Recorded BEFORE `ovr["plot_fence"]` so an authored override on one plot never shifts any neighbour's rule pick.
+        p_cen = np.asarray(poly.centroid.coords[0], float)
+        near_p = sorted(((float(np.hypot(*(q_ - p_cen))), s_) for q_, s_ in planned_pts
+                         if float(np.hypot(*(q_ - p_cen))) < 45.0))[:2]
+        if near_p:
+            near_styles = {s_ for _, s_ in near_p}
+            near_fams = {_fence_family(s_) for _, s_ in near_p}
+            if fs in near_styles:
+                for att in range(1, 9):
+                    cand = _pick_w(FRONT_BY_AGE[age], key, "ft_nr", att)
+                    if cand not in near_styles and (att > 4 or _fence_family(cand) not in near_fams):
+                        fs = cand
+                        break
+                if fs in near_styles:
+                    alt = [s_ for s_, _ in FRONT_BY_AGE[age] if s_ not in near_styles]
+                    if alt:
+                        fs = alt[int(hfloat(key, "ft_fb") * len(alt)) % len(alt)]
+        planned_pts.append((p_cen, fs))
         ss = _pick_w(SIDE_BY_AGE[age], key, "side")
         if ss == "front":
             ss = SIDE_OF_BRICK.get(fs, fs)
@@ -1126,7 +1184,26 @@ def brick_post(kit, p, t, z, h, key):
     kit.box(p, t, 0.23, 0.23, z + h, z + h + 0.07, PK.SWATCH["concrete"])
 
 
+def stone_post(kit, p, t, z, h, key):
+    """Fieldstone / split-block masonry post 0.38 m square with a concrete cap (ADR 0348, reuses `concrete` row)."""
+    v0, v1 = PK.row("concrete")
+    dv = (v1 - v0) * min((h + 0.12) / PK.ROW_H_M["concrete"], 1.0)
+    u0, u1 = PK.uspan("concrete", 0.2 + 1.5 * hfloat(key, "su"), 0.58 + 1.5 * hfloat(key, "su"))
+
+    def uv(k, j):
+        if k == 4:
+            return PK.SWATCH["concrete"]
+        return [(u0, v0), (u1, v0), (u1, v0 + dv), (u0, v0 + dv)][j]
+
+    keep = kit.tint
+    kit.tint = [min(2.0 * keep[i] * _STONE_MASONRY_TINT[i], 2.0) * 0.5 for i in range(3)] + [0.0]
+    kit.box(p, t, 0.19, 0.19, z - 0.12, z + h, uv, top=False)
+    kit.tint = keep
+    kit.box(p, t, 0.23, 0.23, z + h, z + h + 0.07, PK.SWATCH["concrete"])
+
+
 LEAN_DEG = {"old": 4.5, "prl": 1.5, "new": 0.0}     # largest lean of a fence post by age class (review 0114 P2-r8-e)
+_INTERMEDIATE_POST_STYLES = ("chainlink", "chainlink_galv", "panel_graphite", "panel_green")
 
 
 def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean_deg=0.0):
@@ -1134,8 +1211,12 @@ def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean
     follow the ground. col: list collecting collision quads. ADR 0124: ONE card per panel (the shader lights both
     faces; the two cards of ADR 0114 showed a ghost of every bar), and posts of old fences lean up to lean_deg."""
     rowname, _, plinth, post, brick = STYLES[style]
+    stone_pl = plinth is not None and plinth[0] == "stone"
+    post_fn = stone_post if stone_pl else brick_post
     tcol, keep_tint = style_col(kit, style, key), kit.tint
     qcol = None if tcol is None else np.tile(tcol, (4, 1))
+    stone_col = (np.tile([min(2.0 * keep_tint[i] * _STONE_MASONRY_TINT[i], 2.0) * 0.5 for i in range(3)] + [0.0], (4, 1))
+                 if stone_pl else None)
     if tcol is not None and style == "picket_paint":        # posts are painted with the pickets
         kit.tint = tcol
     L = float(np.hypot(*(b - a)))
@@ -1157,7 +1238,7 @@ def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean
     for k in range(nb):
         s0, s1 = cuts[k], cuts[k + 1]
         z0, z1 = Z[k], Z[k + 1]
-        i0, i1 = (s0 + 0.19, s1 - 0.19) if brick else (s0, s1)          # infill between the brick posts
+        i0, i1 = (s0 + 0.19, s1 - 0.19) if brick else (s0, s1)          # infill between the brick / stone posts
         if i1 - i0 > 0.05:
             if rowname not in PK.HALF_ROWS:                 # full-width rows tile (wall)
                 uo = int(hfloat(key, "uo", ax, ay) * 4) * PK.BAY_M
@@ -1181,29 +1262,38 @@ def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean
             kit.quad([[*A, za + lo], [*B, zb + lo], [*(B + n * lb), zb + h], [*(A + n * la), za + h]],
                      [[u0, v0], [u1, v0], [u1, v1], [u0, v1]], qcol)
             if plinth:
-                hw = 0.11 if plinth[0] == "brick" else 0.06
+                hw = 0.11 if plinth[0] in ("brick", "stone") else 0.06
                 bv0, bv1 = PK.row("brick")
+                cv0, cv1 = PK.row("concrete")
                 for sg in (1.0, -1.0):
                     o = n * (hw * sg)
                     A, B = a + t * i0 + o, a + t * i1 + o
                     P = [[*A, za - 0.15], [*B, zb - 0.15], [*B, zb + ph], [*A, za + ph]]
+                    pcol = None
                     if plinth[0] == "brick":
                         dv = (bv1 - bv0) * (ph + 0.15) / PK.ROW_H_M["brick"]
                         UV = [[i0 / PK.KIT_M, bv0], [i1 / PK.KIT_M, bv0], [i1 / PK.KIT_M, bv0 + dv], [i0 / PK.KIT_M, bv0 + dv]]
+                    elif plinth[0] == "stone":
+                        dv = (cv1 - cv0) * min((ph + 0.15) / PK.ROW_H_M["concrete"], 1.0)
+                        su0, su1 = PK.uspan("concrete", 0.0, min(i1 - i0, PK.HALF_M))
+                        UV = [[su0, cv0], [su1, cv0], [su1, cv0 + dv], [su0, cv0 + dv]]
+                        pcol = stone_col
                     else:
                         UV = [PK.SWATCH["concrete"]] * 4
                     if sg < 0:
                         P, UV = [P[1], P[0], P[3], P[2]], [UV[1], UV[0], UV[3], UV[2]]
-                    kit.quad(P, UV)
+                    kit.quad(P, UV, pcol)
                 A, B = a + t * i0, a + t * i1
                 kit.quad([[*(A + n * hw), za + ph], [*(B + n * hw), zb + ph], [*(B - n * hw), zb + ph], [*(A - n * hw), za + ph]],
                          [PK.SWATCH["concrete"]] * 4)
         if brick and (k > 0 or ends[0]):
-            brick_post(kit, a + t * s0, t, z0, h + 0.12, (key, k))
+            post_fn(kit, a + t * s0, t, z0, h + 0.12, (key, k))
         elif post and k == 0 and ends[0]:
             kit.box(a + t * s0, t, 0.045, 0.045, z0 - 0.1, z0 + h + 0.04, PK.SWATCH[post], top=False, shift=n * lean[0])
+        elif post and k > 0 and style in _INTERMEDIATE_POST_STYLES:
+            kit.box(a + t * s0, t, 0.025, 0.025, z0 - 0.1, z0 + h + 0.03, PK.SWATCH[post], top=False, shift=n * lean[k])
     if brick and ends[1]:
-        brick_post(kit, b, t, Z[-1], h + 0.12, (key, "e"))
+        post_fn(kit, b, t, Z[-1], h + 0.12, (key, "e"))
     elif post and ends[1]:
         kit.box(b, t, 0.045, 0.045, Z[-1] - 0.1, Z[-1] + h + 0.04, PK.SWATCH[post], top=False, shift=n * lean[-1])
     kit.tint = keep_tint
@@ -1214,7 +1304,8 @@ def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean
 def gate_geo(kit, g, style, h, z, key, col=None):
     """Gate / wicket in the fence line: posts, leaf frame of box section, infill from the atlas row of the fence.
     kind 'swing' (two leaves), 'slide' (one leaf on the inside, running past the opening), 'wicket' (one leaf)."""
-    rowname, _, _, _, brick = STYLES[style]
+    rowname, _, plinth, _, brick = STYLES[style]
+    post_fn = stone_post if (plinth is not None and plinth[0] == "stone") else brick_post
     rowname = GATE_ROW.get(rowname, rowname)
     frame_name = GATE_FRAME_STYLE.get(style) or GATE_FRAME.get(rowname, "steel_graphite")
     frame = PK.SWATCH[frame_name]
@@ -1228,7 +1319,7 @@ def gate_geo(kit, g, style, h, z, key, col=None):
     for sx in (-1, 1):
         p = m + t * (sx * (W / 2 + ph))
         if brick:
-            brick_post(kit, p, t, z, max(h, hg) + 0.14, (key, "gp", sx))
+            post_fn(kit, p, t, z, max(h, hg) + 0.14, (key, "gp", sx))
         else:
             kit.box(p, t, 0.05, 0.05, z - 0.1, z + hg + 0.10, frame, top=False)
     v0, v1 = PK.row(rowname)
@@ -1781,7 +1872,8 @@ def _lamp_h(proto):
 
 
 # ------------------------------------------------------------------------------------------------- build
-SEE_THROUGH = ("picket", "chainlink", "bars", "brick_picket", "brick_bars", "picket_wood", "picket_paint", "chainlink_galv")
+SEE_THROUGH = ("picket", "chainlink", "bars", "brick_picket", "brick_bars", "picket_wood", "picket_raw",
+               "picket_paint", "chainlink_galv", "panel_graphite", "panel_green", "stone_picket", "stone_bars")
 HEDGE_SHARE = {"old": 0.34, "prl": 0.36, "new": 0.22}
 BIG_TREE_SHARE = {"old": 0.6, "prl": 0.45, "new": 0.15}
 AGE_TINT = {"old": (0.72, 0.16), "prl": (0.90, 0.09), "new": (1.0, 0.04)}      # mean albedo factor, spread (ageing;

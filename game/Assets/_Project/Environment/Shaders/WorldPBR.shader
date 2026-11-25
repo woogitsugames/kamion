@@ -178,6 +178,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _CARPAINT
             #pragma shader_feature_local _PANELTONE
             #pragma shader_feature_local _NIGHTWIN
+            #pragma shader_feature_local _FACADE_TINT
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
@@ -1073,6 +1074,12 @@ Shader "Kamion/World PBR"
                     half grit = KamionGrassGrit(k, macro.a) * _GroundTint;
                     albedo = lerp(albedo, half3(0.19, 0.17, 0.14) * (0.7 + 0.6 * detl), grit);
                 }
+            #endif
+
+                // ---- ADR 0348: per-wall / per-gable plaster & plinth shade from COLOR_0 (rgb * 2 linear, a = mask).
+                // Vertices without COLOR_0 get Color32(255,0,0,0) in WorldMeshBake -> a = 0 -> exact no-op.
+            #if defined(_FACADE_TINT)
+                albedo *= lerp(half3(1.0h, 1.0h, 1.0h), i.masks.rgb * 2.0h, i.masks.a);
             #endif
 
                 // ---- walls: splash / soil zone above the ground (TEXCOORD_0.y = metres above ground)

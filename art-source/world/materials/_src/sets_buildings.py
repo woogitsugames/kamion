@@ -183,20 +183,32 @@ def interior(p, R, kind, col=None, frac=1.0, plants=0, k=0):
 
 
 def window(p, R, sashes=2, frame=WHITE_PVC, fw=0.062, sw=0.052, handle=True, transom=None, muntins=None, dirt=0.25,
-           bottom=None, mw=0.012):
+           bottom=None, mw=0.012, sky_refl=False, glass_h=-0.040, frame_r=0.42, wood_grain=False):
     """Frame, sashes and glass state over an interior already painted in R. sashes: number or list of relative widths.
     transom: relative height of a horizontal bar; muntins: (nx, ny) glazing bars per sash (mw = half-width m);
-    bottom: height of a solid lower panel (doors)."""
+    bottom: height of a solid lower panel (doors); sky_refl: outer-pane vertical sky reflection gradient (ADR 0348)."""
     x0, x1, y0, y1 = R
     frame = np.asarray(frame, F32)
     m = p.rect(x0, x1, y0, y1)
     # glass: tint, dust towards the bottom edge, depth
     p.alb *= 1 - m[..., None] * (1 - GLASS_T)
     v = np.clip((p.Y - y0) / (y1 - y0), 0, 1)
+    u = np.clip((p.X - x0) / (x1 - x0), 0, 1)
+    if sky_refl:
+        # ADR 0348: outer glass surface sky reflection (vertical sky gradient + subtle cloud variation),
+        # stronger over dark interior void and gentler over bright net curtains so firanki/plants stay legible.
+        sky_grad = (np.array([0.070, 0.098, 0.138], F32) * (1.0 - v)[..., None]
+                    + np.array([0.210, 0.275, 0.370], F32) * (v ** 0.78)[..., None])
+        cloud = 0.86 + 0.28 * np.clip(0.5 + 0.35 * p.noise(0.35, 31, (1.6, 0.8))
+                                      + 0.15 * np.sin((u * 1.4 + v) * 4.2 + p.seed * 0.13), 0, 1)
+        sky_col = sky_grad * cloud[..., None]
+        lum_in = p.alb[..., 0] * 0.2126 + p.alb[..., 1] * 0.7152 + p.alb[..., 2] * 0.0722
+        refl_k = np.clip(0.50 - 0.65 * lum_in, 0.16, 0.44) * (0.76 + 0.24 * v)
+        p.put(m * refl_k, sky_col, r=0.06)
     dust = dirt * (0.25 + 0.75 * np.clip(1 - v / 0.25, 0, 1) ** 2) * (0.7 + 0.3 * p.noise(0.08, 11))
     p.put(m * np.clip(dust, 0, 0.6) * 0.35, [0.20, 0.19, 0.17])
     p.rgh += m * (0.10 * np.clip(dust, 0, 1))
-    p.hgt = np.where(m > 0.5, -0.040, p.hgt)
+    p.hgt = np.where(m > 0.5, glass_h, p.hgt)
     wts = np.asarray(sashes if isinstance(sashes, (list, tuple)) else [1.0] * sashes, float)
     xs = x0 + fw + (x1 - x0 - 2 * fw) * np.concatenate([[0], np.cumsum(wts) / wts.sum()])
     fm = p.ring(x0, x1, y0, y1, fw)
@@ -219,9 +231,11 @@ def window(p, R, sashes=2, frame=WHITE_PVC, fw=0.062, sw=0.052, handle=True, tra
         if bottom:
             sm = np.maximum(sm, p.rect(a, b, y0 + fw, y0 + bottom))
     tone = 1 + 0.03 * p.noise(0.2, 12)
+    if wood_grain:
+        tone = tone * (1 + 0.10 * p.noise(0.03, 19, (0.25, 5.0)))
     grime = 1 - 0.18 * np.clip(1 - v / 0.12, 0, 1)                 # the bottom rail collects dirt
-    p.put(sm, frame * (tone * grime)[..., None], h=-0.012, r=0.42)
-    p.put(fm, frame * (tone * grime)[..., None] * 1.0, h=0.0, r=0.42)
+    p.put(sm, frame * (tone * grime)[..., None], h=-0.012, r=frame_r)
+    p.put(fm, frame * (tone * grime)[..., None] * 1.0, h=0.0, r=frame_r)
     p.put(gk * np.maximum(fm, sm), frame * 0.25 + 0.01)
     if handle:
         for a, b in zip(xs[1:-1], xs[2:]):        # handle on the meeting stile of every sash but the first
@@ -275,25 +289,21 @@ def _resid(p, i, kind):
             for xb in np.arange(0.12, p.w - 0.08, 0.11):
                 p.put(p.rect(xb - 0.007, xb + 0.007, 0.03, p.h - 0.03), [0.035, 0.03, 0.028], h=0.01, r=0.6)
     elif kind == "house":
-        # ADR 0336 (Podlasie small-town joinery): pairs (0, 2) bright white painted wood/PVC and (1, 3) warm medium
-        # stained timber, all with bold frames + readable muntins/transoms (4-pane cross on 0/1, classic Polish T-bar
-        # transom at 0.68 on 2/3) and lived-in curtains/plants so windows never collapse to black squares at 30-60 m.
-        HOUSE_WHITE = (0.76, 0.76, 0.73)
-        HOUSE_WOOD_A = (0.26, 0.145, 0.08)
-        HOUSE_WOOD_B = (0.22, 0.12, 0.065)
+        # ADR 0336 + ADR 0348 (Podlasie rural / small-town joinery): pairs (0, 2) bright white PVC/painted wood,
+        # (1) warm brown PVC/laminate, (3) weathered timber frame for older houses; bold frames + readable central
+        # mullion (slupek) + transom/muntins (slemie: 4-pane cross on 0/1, classic Polish T-bar at 0.68 on 2/3),
+        # outer-pane sky reflection gradient and crisp normal relief so windows never read as flat black patches.
+        HOUSE_WHITE = (0.78, 0.78, 0.75)
+        HOUSE_BROWN_PVC = (0.25, 0.138, 0.074)
+        HOUSE_WOOD_OLD = (0.27, 0.160, 0.090)
         v = [("net", {}), ("drapes", dict(col=lin(222, 206, 178), frac=0.45)),
              ("net_gap", dict(plants=2)), ("cafe", dict(plants=2))][i]
         interior(p, G, v[0], k=i, **v[1])
-        # Subtle daytime sky bounce on open glass panes (prevents pitch-black void behind net_gap / cafe top half)
-        if i == 2:
-            p.put(p.rect(*G) * 0.14, [0.16, 0.20, 0.24])
-        elif i == 3:
-            up = p.rect(G[0], G[1], G[2] + 0.50 * (G[3] - G[2]), G[3])
-            p.put(up * 0.22, [0.16, 0.20, 0.24])
-        fr = [HOUSE_WHITE, HOUSE_WOOD_A, HOUSE_WHITE, HOUSE_WOOD_B][i]
-        window(p, R, 2, frame=fr, fw=0.072, sw=0.058,
+        fr = [HOUSE_WHITE, HOUSE_BROWN_PVC, HOUSE_WHITE, HOUSE_WOOD_OLD][i]
+        window(p, R, 2, frame=fr, fw=0.076, sw=0.058,
                transom=0.68 if i in (2, 3) else None,
-               muntins=(1, 2) if i in (0, 1) else None, mw=0.024, dirt=0.18)
+               muntins=(1, 2) if i in (0, 1) else None, mw=0.026, dirt=0.14,
+               sky_refl=True, glass_h=-0.058, frame_r=0.58 if i == 3 else 0.40, wood_grain=(i == 3))
 
 
 def _office(p, i, kind):

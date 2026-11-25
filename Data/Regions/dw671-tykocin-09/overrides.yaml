@@ -5,4 +5,17 @@
 # that is missing there shows up as overrides_stale in build_world. No lettering, no brands.
 # DW671 keeps the BDOT10k width and gets no edge lines, as in dw671-tykocin-01 (ADR 0212, measured there).
 # Nothing was checked on the orthophoto of this tile: add overrides after the ingest.
-overrides: []
+overrides:
+  # ADR 0348 (neon-windows-s24, critic s24 build #8 pkt 9): rural Podlasie facades along DW671 (Tatary / Tykocin
+  # outskirts) - 8-12 cm recessed windows with white/brown PVC and wood frames + bright exterior sills + sky-reflecting
+  # glass, slope-safe 35-58 cm darker/fieldstone plinths, subtle sill runoff, and 2-3 deterministic plaster shades.
+  - id: dw671-tykocin-09-rural-facades-0348
+    kind: facade_rules
+    small_town: true
+    reason: >-
+      Critic s24 build #8 pkt 9 (frames t2480, t2590, t2700): rural houses along DW671 rendered with dark unframed
+      window patches in 22 cm tunnels, monochrome flat plaster walls without clear plinths, and repetitive yellow
+      picket fences. Opt-in per region so Białystok tiles keep bit-identical baselines (ADR 0238). WORKING_VALUE
+      dimensions from Polish rural housing typology (1.2x1.4 m window, 0.08-0.12 m reveal, 0.35-0.58 m plinth).
+    confidence: medium
+    verify: visual-qa High clear+overcast on route_s0398, dw09_cab_tatary, dw09_street_tatary_ns, dw09_street_tatary_ew, dw09_house_close, dw09_cab_street

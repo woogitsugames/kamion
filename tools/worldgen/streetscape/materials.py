@@ -180,9 +180,10 @@ M = {
     # posts and caps use the post strip of the same atlas (one draw)
     "concrete_fence": {"color": _set_mean("fence_concrete", [0.30, 0.29, 0.27]), "rough": 0.9,
                        "texture_set": "fence_concrete", "set_tile": True},
-    # building cell atlas (ADR 0081): windows with interiors, doors, garage doors, balustrades, facade equipment
+    # building cell atlas (ADR 0081; ADR 0348: sky_occ.y 0.9 -> 0.35 so smooth glass panes catch live sky reflection
+    # instead of killing 90 % of horizontal reflections into black squares; matte frames have rough >= 0.40)
     "facade_atlas": {"color": _set_mean("facade_atlas", [0.30, 0.30, 0.29]), "rough": 0.5, "texture_set": "facade_atlas",
-                     "set_tile": True, "sky_occ": [0.5, 0.9]},
+                     "set_tile": True, "sky_occ": [0.5, 0.35]},
     "concrete_wall": {"color": [0.30, 0.30, 0.28], "rough": 0.9},
     "barrier_post": {"color": [0.40, 0.41, 0.41], "rough": 0.55, "metal": 0.9},
     # ADR 0060 (r7 N-2, D42 Mapillary 2018-07 / 2024-07 at g3b_eye_s1482 / s1632, reference only): the absorbing
@@ -653,6 +654,11 @@ for _k, _v in M.items():
         # and from the run-off streaks, not from the plaster tile (review s9 P1-2). WORKING_VALUE.
         if _k.startswith("plaster_"):
             _v["splash_h"] = 1.2
+            # ADR 0348: opt-in per-face / per-gable plaster shade modulation via COLOR_0 (a=0 -> exact no-op on
+            # existing tiles without vertex colours, +0 draws / +0 materials).
+            _v["facade_tint"] = True
+        elif _k == "plinth_dark":
+            _v["facade_tint"] = True
 
 # ADR 0081 (r10 r2): run-off streaks under the attic coping also on the render / panel walls of flat-roofed blocks
 # and offices (LOD0 only; the wall-top TEXCOORD_1 comes from buildings_mesh, the importer enables _RUNOFF)
