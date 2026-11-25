@@ -330,7 +330,7 @@ def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
     static = [road_clear] + [o.buffer(1.0) for o in obstacles] + ([bar_u] if bar_u is not None else [])
     groups = _groups(houses)
     all_house = {h["id"]: h["poly"] for h in houses}
-    plots, laid, planned_pts = [], [], []
+    plots, laid, planned_pts = [], [], {}       # planned_pts: 45 m grid cell -> [(centre, front style)]
     for g in groups:
         key = f"{seed}{g[0]['id']}"
         foot = shapely.unary_union([h["poly"] for h in g])
@@ -407,8 +407,10 @@ def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
         # ADR 0348: deterministic neighbour anti-repetition across adjacent rural / town plots (within 45 m).
         # Recorded BEFORE `ovr["plot_fence"]` so an authored override on one plot never shifts any neighbour's rule pick.
         p_cen = np.asarray(poly.centroid.coords[0], float)
-        near_p = sorted(((float(np.hypot(*(q_ - p_cen))), s_) for q_, s_ in planned_pts
-                         if float(np.hypot(*(q_ - p_cen))) < 45.0))[:2]
+        gx, gy = int(np.floor(p_cen[0] / 45.0)), int(np.floor(p_cen[1] / 45.0))   # grid: O(n), same 2 nearest
+        near_p = sorted((dq, s_) for ix in (gx - 1, gx, gx + 1) for iy in (gy - 1, gy, gy + 1)
+                        for q_, s_ in planned_pts.get((ix, iy), ())
+                        for dq in (float(np.hypot(*(q_ - p_cen))),) if dq < 45.0)[:2]
         if near_p:
             near_styles = {s_ for _, s_ in near_p}
             near_fams = {_fence_family(s_) for _, s_ in near_p}
@@ -422,7 +424,7 @@ def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
                     alt = [s_ for s_, _ in FRONT_BY_AGE[age] if s_ not in near_styles]
                     if alt:
                         fs = alt[int(hfloat(key, "ft_fb") * len(alt)) % len(alt)]
-        planned_pts.append((p_cen, fs))
+        planned_pts.setdefault((gx, gy), []).append((p_cen, fs))
         ss = _pick_w(SIDE_BY_AGE[age], key, "side")
         if ss == "front":
             ss = SIDE_OF_BRICK.get(fs, fs)
