@@ -287,7 +287,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
 
     # furniture
     pl = FU.Placer(zsurf, zground_col, surf=FU.SurfaceTop(w.buf.parts),
-                   col=FU.SurfaceTop(w.buf.parts, collision=True))
+                   col=FU.SurfaceTop(w.buf.parts, collision=True), zvis=zground)
     codes, boards = set(), {}
     frep = {}
     graph = json.loads((pipeline.REGIONS / rid / "roads.graph.json").read_text(encoding="utf-8"))
@@ -360,6 +360,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.lamp_rows(pl, w.buf.parts, pipeline.REGIONS / rid / "lamp_rows.json", frep)   # ADR 0133: authored rows
     CB.apply(pl, overrides, origin, frep)                        # ADR 0183: authored rows of chain posts
     frep["poles_reseated"] = pl.reseated
+    frep["low_props_vis_ground"] = True
     frep["pole_footing_steps"] = {"count": len(pl.seat_log), "max_m": max([r["step_m"] for r in pl.seat_log], default=0.0),
                                   "worst": sorted(pl.seat_log, key=lambda r: -r["step_m"])[:20]}
     SR.route_audit(pl.items, route_P, w.net, w.junctions, frep)

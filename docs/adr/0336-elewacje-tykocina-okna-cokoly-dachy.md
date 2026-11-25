@@ -70,6 +70,7 @@ W `Data/Regions/tykocin/overrides.yaml` dodano wpis `tykocin-small-town-facades-
 ### Testy automatyczne (`pytest`)
 - `tests/gis/test_tykocin_facades_0336.py` (5 testów: override opt-in, dach `1130`, spójność stolarki i brak `office_d`, cokoły kamienne/LOD1/nadproża, 7 pokryć/kąty/lukarny bez zdegenerowanych trójkątów).
 - Testy budżetowe i typologii (`test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py`): zielone.
+- Poprawki po scaleniu fali 8 (`neon-testfix-s24`): `test_dom_klattow_0305.py::test_materials_and_sets` zaktualizowany pod obecność `roof_tiles_old` w `BM.ROOF_OVERRIDES` (wymagane przez `SMALL_TOWN_ROOFS` i `house_roof_material`; `log_wall_white` nadal poza `HOUSE_WALL_OVERRIDES`), `test_ring_0231.py::test_authored_files_present_and_consistent` rozszerzony o schemat reguł na poziomie regionu (`facade_rules`/`building_rules`/`lamp_policy` bez `target`/`set`), oraz `test_tykocin_facades_0336.py` i `test_wood_house_p1_s24.py` dostosowane do 5-krotki `Acc.d` (`V, T, UV, UV1, COL`) wprowadzonej przez `neon-bronze-s24`.
 
 ## Otwarte / UNVERIFIED
 - Wartości proporcji i udziałów (`SMALL_TOWN_PLINTH_HS`, `REVEAL_SMALL_TOWN`, `SMALL_TOWN_PITCH`, `DORMER_*`, udziały kolorów stolarki i dachów) są `WORKING_VALUE` — dobrane na podstawie zdjęć Commons, nie z inwentaryzacji każdego domu.

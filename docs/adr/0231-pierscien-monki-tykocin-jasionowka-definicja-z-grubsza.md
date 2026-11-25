@@ -65,6 +65,9 @@ Budowa (`highway=construction|proposed`) w kaflach pierścienia: 0 m.
   (Mońki/Tykocin w kaflach o tej nazwie), jedna ciągła droga na kafel, szwy wewnątrz pierścienia (ta sama way, ten sam
   punkt), szwy z kaflami zbudowanymi == węzeł brzegowy ich `roads.graph.json`, brak „zgubionych” przecięć DK65/DW671
   na jakiejkolwiek wspólnej krawędzi, pliki authored, NMT 2022, ten sam `set` przekroju po obu stronach każdego szwu.
+  *Dopisek po fali 8 (`neon-testfix-s24`):* `test_authored_files_present_and_consistent` akceptuje teraz schemat reguł
+  na poziomie całego regionu (`kind: facade_rules | building_rules | lamp_policy`, np. `tykocin-small-town-facades-0336`
+  z ADR 0336) bez pól `target`/`set` (z wymaganym co najmniej jednym polem reguły oprócz metadanych).
 - Render kontrolny: `docs/reports/map/ring_0231_plan.png` (obejrzany: kafle, szwy, przejazd w Mońkach, mosty).
 
 ## Otwarte

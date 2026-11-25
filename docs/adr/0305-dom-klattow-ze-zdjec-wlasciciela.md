@@ -101,7 +101,8 @@ z OSM (otwarte w ADR 0295). Masowa zmiana bez danych byłaby zgadywaniem. Zamias
 - `wood_planks_white` jest dozwoloną ścianą nadpisania (`HOUSE_WALL_OVERRIDES`) — każdy dom drewniany, który właściciel
   lub zdjęcie z otwartej licencji pokaże jako biały, dostaje wpis w `overrides.yaml` (deski, nie bale);
 - `log_wall_white` zostaje materiałem obiektów autorskich (kafel = wysokość ściany parterowej; reguła `wood_wall`
-  zakłada kafel desek 6,0 × 2,6 m);
+  zakłada kafel desek 6,0 × 2,6 m); natomiast `roof_tiles_old` został w ADR 0316 przepisany na pełny kafel 4,2 × 4,2 m
+  i w ADR 0336 dopuszczony w `BM.ROOF_OVERRIDES` (dopisek `neon-testfix-s24`, test `test_materials_and_sets`);
 - droga do reguły: przeniesienie `building:material` / `building:colour` z OSM do `buildings.geojson` + uzupełnienie
   znaczników w OSM dla Knyszyna i Tykocina (praca terenowa właściciela lub Mapillary) — osobne zadanie geo-worldgen.
 

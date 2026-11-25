@@ -49,6 +49,8 @@ Status: PROPOSED (2026-11-24, agent `mistral-wall-s24`, gałąź `mistral-wall-s
 ## Konsekwencje / pomiary (dopisane po przebudowie)
 - `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py` — zielone
   (ściana nie dodaje trójkątów; `stretch_04` C = 1 996 244 bez zmian).
+- Poprawka po scaleniu fali 8 (`neon-testfix-s24`): `tests/gis/test_dojlidy_0242.py::test_runoff_strength_is_per_material`
+  zaktualizowany o `retaining_wall` (`runoff_strength == 1.3`) obok materiałów z ADR 0242.
 - Visual-QA przed/po: kamery `underpass_wb_szymanskiego`, `cut_wall_oblique_sw`, `tunnel_eb/wb_inside`
   (istnieją w `control_cameras.json` kleeberga), High, clear i overcast — dowody w
   `artifacts/mistral-wall-s24/` (przed: `artifacts/full-build-5-s24/sheets/sheet_03.jpg` t0430–t0450).

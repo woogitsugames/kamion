@@ -48,6 +48,11 @@ from . import props as PP
 # ADR 0102 / ADR 0337: contact follows the prop axis on SurfaceTop/collision rather than raw smoothed zsurf.
 # Benches and waste bins added in ADR 0337 so OSM benches and bus-stop bins never float above sidewalks/verges.
 SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole", "bollard", "bench", "waste_bin")
+# Low non-collidable street props (< 1 m tall, visible within 30/120 m where terrain_lod0/lod1 is drawn):
+# outside road/sidewalk meshes (`surf.top` is NaN) seat on visible 1 m conformed terrain (`zvis`) rather than
+# the min-filtered 4 m `terrain_lod2` collider (`zground_col`), which can dip > 1 m on steep embankments and
+# bury a 0.94 m bin completely (ADR 0337 post-wave-8 fix, dk65-01).
+LOW_SURFACE_PROPS = ("bench", "waste_bin")
 SEAT_R = 0.35                 # m, footing radius probed (WORKING_VALUE)
 SEAT_TOL = 0.30              # m, an explicit z this far below the local ground is raised to it (gate 3 tolerance)
 
@@ -129,9 +134,10 @@ FOOT_R = {"lamp_arc_": 0.28, "lamp_old_concrete_": 0.15, "lamp_old_steel_": 0.20
 
 
 class Placer:
-    def __init__(self, zsurf, zground=None, surf=None, col=None):
+    def __init__(self, zsurf, zground=None, surf=None, col=None, zvis=None):
         self.col = col                  # SurfaceTop of the collision surfaces (coarser: may lie under the visual top)
-        self.zground = zground          # conformed terrain (= the collision under verges and footway edges)
+        self.zground = zground          # conformed terrain / 4 m terrain_lod2 collider (for tall poles)
+        self.zvis = zvis                # visible 1 m conformed terrain (for low street props outside road meshes)
         self.surf = surf                # SurfaceTop of the generated ground meshes (exact kerb / island tops)
         self.items = []
         self.zsurf = zsurf
@@ -139,6 +145,10 @@ class Placer:
         self.seat_log = []
         self.support_moves = []
         self.pts = {}
+
+    def _low_z(self, e, n):
+        zfn = self.zvis if self.zvis is not None else self.zsurf
+        return zfn(e, n)
 
     def seat(self, proto, p):
         """Visible axis contact and surrounding terrain relief (not a corrected/zeroed QA metric).
@@ -150,7 +160,10 @@ class Placer:
         r = next((v for k, v in FOOT_R.items() if proto.startswith(k)), SEAT_R)
         e = np.array([p[0], p[0] + r, p[0] - r, p[0], p[0]])
         n = np.array([p[1], p[1], p[1], p[1] + r, p[1] - r])
-        zt = self.zground(e, n) if self.zground is not None else self.zsurf(e, n)
+        if proto.startswith(LOW_SURFACE_PROPS):
+            zt = self._low_z(e, n)
+        else:
+            zt = self.zground(e, n) if self.zground is not None else self.zsurf(e, n)
         z = []
         for k in range(5):
             m = self.surf.top(float(e[k]), float(n[k])) if self.surf is not None else float("nan")
@@ -223,7 +236,10 @@ class Placer:
                     self.seat_log.append({"p": proto, "e": round(float(p[0]), 1), "n": round(float(p[1]), 1),
                                           "step_m": round(step, 3)})
             else:   # legacy raster seat (no meshes)
-                zg = self.ground_min(p, on_verge=not proto.startswith("sign_post"))
+                if proto.startswith(LOW_SURFACE_PROPS):
+                    zg = float(self._low_z(np.array([p[0]]), np.array([p[1]]))[0])
+                else:
+                    zg = self.ground_min(p, on_verge=not proto.startswith("sign_post"))
             if z is None or z < zg - SEAT_TOL:          # an explicit z above the ground is a bridge deck: kept
                 if z is not None:
                     self.reseated += 1
@@ -277,9 +293,15 @@ def clear_carriageway(pl, carriage, zsurf, report):
             left.append({"p": base[0]["p"], "at": [round(e, 1), round(n, 1)], "src": base[0].get("src", "")})
             drop.update(id(it) for it in items)      # a pole in the middle of a lane is worse than a missing one
             continue
-        z0 = (pl.seat(base[0]["p"], new)[0] if pl.surf is not None else pl.ground_min(new)) \
-            if base[0]["p"].startswith(SEATED_POLES) else \
-            float(zsurf(np.array([new[0]]), np.array([new[1]]))[0])
+        if base[0]["p"].startswith(SEATED_POLES):
+            if pl.surf is not None:
+                z0 = pl.seat(base[0]["p"], new)[0]
+            elif base[0]["p"].startswith(LOW_SURFACE_PROPS):
+                z0 = float(pl._low_z(np.array([new[0]]), np.array([new[1]]))[0])
+            else:
+                z0 = pl.ground_min(new)
+        else:
+            z0 = float(zsurf(np.array([new[0]]), np.array([new[1]]))[0])
         dz = z0 - base[0]["z"]
         for it in items:
             it["e"], it["n"] = round(float(new[0]), 3), round(float(new[1]), 3)
