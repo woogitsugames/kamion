@@ -525,6 +525,8 @@ def _compare_rows(a: Crossing, b: Crossing, tol: float):
             if not x:
                 return None
             s = f"jezdnia {x['width_own']:.2f} → {x['width_seam']:.2f} m na {x['in_tile_m']:.1f} m"
+            if x.get("axis_offset_m"):
+                s += f"; oś do środka między osiami nominalnymi (odsunięcie {x['axis_offset_m']:.3f} m, np. D94)"   # seams-w10
             for side, v in (x.get("shoulder_cm") or {}).items():
                 s += (f"; pobocze {side} utw./grunt {v['own'][0]}/{v['own'][1]} → {v['seam'][0]}/{v['seam'][1]} cm")
             return s + (f" [bez przejścia jezdni: {x['skipped']}]" if x.get("skipped") else "")
