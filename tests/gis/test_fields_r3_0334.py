@@ -231,3 +231,35 @@ def test_atlas_image_layout():
     mz = a[: VA.TEX_H // 2]
     assert mz[int(0.25 * mz.shape[0]):int(0.9 * mz.shape[0])].mean() > 0.6      # a dense wall of leaves
     assert mz[: int(0.03 * mz.shape[0])].mean() < 0.35                          # tassels against the sky at the top
+
+
+def test_a_chunk_gets_a_cards_primitive_only_for_a_real_amount_of_cards(monkeypatch):
+    """Draw-call budget (lead review r3): one `banks` primitive per chunk - not for a strip corner reaching into it."""
+    o = _maize_origin()
+    _, hf, col, dist = _crop_world()
+    monkeypatch.setattr(FC, "CHUNK_MIN_TRIS", 6000)                # between the fixture's chunks (4 891 .. 9 972)
+    cell = 250.0                                                  # 2 x 2 "chunks" over the 500 m square
+
+    def chunk_fn(e, n):
+        return (np.clip(np.floor((np.asarray(e) + 250.0) / cell), 0, 1).astype(int),
+                np.clip(np.floor((250.0 - np.asarray(n)) / cell), 0, 1).astype(int))
+    buf0, buf1, rep = MeshBuf(), MeshBuf(), {}
+    FC.build(buf0, col, hf, np.zeros(hf.z.shape), o, dist, None, {})
+    FC.build(buf1, col, hf, np.zeros(hf.z.shape), o, dist, None, rep, chunk_fn=chunk_fn)
+
+    def per_chunk(buf):
+        out = {}
+        for p in buf.parts:
+            cen = p.V[np.asarray(p.T)].mean(1)                    # per triangle, as the exporter splits
+            for k in zip(*(a.tolist() for a in chunk_fn(cen[:, 0], cen[:, 1]))):
+                out[k] = out.get(k, 0) + 1
+        return out
+    a, b = per_chunk(buf0), per_chunk(buf1)
+    assert min(a.values()) < FC.CHUNK_MIN_TRIS                     # the fixture has a sparse chunk to drop
+    assert b and all(v >= FC.CHUNK_MIN_TRIS * 0.9 for v in b.values())      # no crumbs: whole cards go
+    assert set(b) <= {k for k, v in a.items() if v >= FC.CHUNK_MIN_TRIS}
+    for p in buf1.parts:                                          # cards stay whole (two triangles each)
+        card = np.asarray(p.T).min(1) // 4
+        assert (np.unique(card, return_counts=True)[1] == 2).all()
+    assert rep["field_crops"]["chunks"]["with_cards"] == len(b)
+    assert FC.MAIZE_ROAD_RANGE_M <= 220.0 and FC.BAULK_ROAD_RANGE_M <= 90.0

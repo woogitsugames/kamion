@@ -354,3 +354,20 @@ Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagent
 - `bialystok-industrial-c` przebudowany (1 139 s): najgorsza kamera budżetu `stretch_04` 1 996 321 → 1 996 877
   (limit 2 000 000 — zapas 3 123 trójkąty), flora pobocza 12 308 → 19 468 trójkątów, pola 683 288 → 508 997 m²
   (−25,5 %, 632 ścinki — w kaflu miejskim reguła ścinek zabiera dużo; do oceny na renderze C, którego tu nie zrobiono).
+
+### r3b — budżet draw calli (uwaga lidera po r3: trasa / kabina ≤ +2, kamery polowe ≤ +4)
+- Wszystkie karty chunka (kępy pobocza, kukurydza, miedze) były już JEDNYM prymitywem (`assemble`: chunk × warstwa ×
+  materiał); koszt to 1 draw call na chunk, który wcześniej nie miał `banks`. Reguła (`field_crops.prune_sparse_chunks`,
+  liczona per trójkąt jak podział eksportera, usuwa całe karty): chunk dostaje prymityw, gdy jego pobocze ma ≥ 60
+  trójkątów albo wszystkie karty razem ≥ 4 000 (`CHUNK_MIN_TRIS`; 2 500 dawało +6 na jednej kamerze). Karta na granicy
+  chunka zostawiała wcześniej 1–8 trójkątów u sąsiada = osobny draw call. Zasięgi: kukurydza 300 → 220 m, miedze 110 → 90 m.
+- Wynik (`artifacts/fields3-s24/draw_table.py`, `stats_before_after4.txt`; draw calle siatek + instancji, przed → po):
+  kamery trasy / kabiny (30): maks. +5 (r3) → **+1**; kamery polowe (60): maks. +10 → **+5** na jednej
+  (`dk65-07 f2_cross_ploughed`: siatki +3, instancje +2 — instancje to inny rozkład roślin pól przy poszarpanym
+  marginesie, nie karty), pozostałe ≤ +4. Chunki z `banks`: knyszyn-w 12 → 17 (r3: 45), dk65-07 4 → 8 (r3: 34).
+- Koszt: karty upraw knyszyn-w 111 804 → 53 040 trójkątów (kukurydza 31 494 → 24 612 kart rzędów, ruń miedz 11 200 →
+  9 553 roślin przed regułą chunków; reguła zdejmuje 36 298 trójkątów w 23 chunkach), dk65-07 75 790 → 31 084
+  (zdjęte 29 434 w 24 chunkach) — kukurydza i miedze stoją tylko tam, gdzie jest ich dużo albo jest pobocze.
+- Budżet klatki High: knyszyn-w 1 102 754, dk65-07 1 013 995 (przed r3: 1 097 660 / 1 014 973). Low: karty są tylko w
+  warstwie `banks`, wariant Low kafla bierze `banks_low`, której te moduły nie zapisują — 340 237 / 233 577
+  (przed: 340 114 / 252 951), zasięgu na Low nie trzeba zmniejszać. Pamięć świata High: 140,2 / 150,2 MB.

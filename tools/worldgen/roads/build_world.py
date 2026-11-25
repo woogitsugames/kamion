@@ -1136,7 +1136,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     if not os.environ.get("WORLDGEN_NO_FIELD_CROPS") and not str(region_id).startswith("bialystok-"):
         from streetscape import field_crops as FC
         _crep = {}
-        if FC.build(w.buf, st["col"], w.hf, st["zc"], w.origin, st["dist"], st["mask"], _crep):
+        _half = w.region["bbox"]["width_m"] / 2
+        if FC.build(w.buf, st["col"], w.hf, st["zc"], w.origin, st["dist"], st["mask"], _crep,
+                    chunk_fn=lambda e_, n_: chunk_of(e_, n_, _half)):
             w.verge_flora = True
         w.stats["field_crops"] = _crep["field_crops"]
         log("field crops (ADR 0334 r3)", w.stats["field_crops"])

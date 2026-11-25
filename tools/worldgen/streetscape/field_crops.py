@@ -33,7 +33,7 @@ MAIZE_CARD_ROWS = 3              # a card row every 3rd crop row (2.25 m)
 MAIZE_CARD_L = 2 * VA.MAIZE_CELL_M
 MAIZE_H = (2.05, 2.40)           # WORKING_VALUE: fodder maize in mid-August, Podlasie
 MAIZE_SINK_M = 0.10
-MAIZE_ROAD_RANGE_M = 300.0
+MAIZE_ROAD_RANGE_M = 220.0
 MAIZE_SEAM_CLEAR_M = 1.6         # off the strip seam (baulk half-width <= 1.3 m + the thinning crop)
 MAIZE_BLOCK_CLEAR_M = 2.8        # off the block border (grass strip / field track)
 MAIZE_ROAD_CLEAR_M = 5.0
@@ -42,7 +42,7 @@ MAIZE_ZIGZAG_M = 0.40            # card ends this far off the row line, alternat
                                  # the rows (render review r3: from 14 m up the edge-on rows vanished and only the
                                  # cross cards showed - a hedge maze)
 MAIZE_OCC = (0.50, 1.0)          # foot (deep in the crop) .. top
-BAULK_ROAD_RANGE_M = 110.0
+BAULK_ROAD_RANGE_M = 90.0
 BAULK_BAND_M = 0.5               # candidates this far from the seam line
 BAULK_RATE = 1.6                 # plants per metre of baulk where the density is 1
 BAULK_BORDER_M = (1.4, 2.2)      # block border: the outer part of its grass strip (clear of a field track's ruts)
@@ -52,6 +52,11 @@ BAULK_DENS_T = (0.34, 0.66)
 BAULK_H = (0.45, 0.95)
 BAULK_COLONY_M = 30.0
 BAULK_CROSS_SHARE = 0.30
+# Draw-call budget (lead review r3: +3 on a route camera, up to +10 in a field): all cards of a chunk share ONE
+# primitive with the roadside sward (same layer, same material), so the cost is one draw per chunk that had no `banks`
+# primitive before. A chunk is given one only for at least CHUNK_MIN_TRIS triangles of cards (a wall of maize, a run
+# of baulks) - never for a corner of a strip that reaches into it.
+CHUNK_MIN_TRIS = 4000
 ARABLE_B = 0.985                 # terrain COLOR_0.b at / above this = inside an arable field (flag 1.00)
 
 
@@ -278,7 +283,7 @@ def _baulks(g, origin, rep):
     return out
 
 
-def build(buf, col, hf, zc, origin, dist_road, blocked, report=None, enabled=True, layer=LAYER):
+def build(buf, col, hf, zc, origin, dist_road, blocked, report=None, enabled=True, layer=LAYER, chunk_fn=None):
     """Maize row cards and baulk sward cards into `buf` (see the module docstring). col: (H, W, 4) terrain ground
     masks on the 1 m grid of hf (farmland flag in B), zc: terrain height, dist_road: metres to the nearest road /
     yard cell, blocked: bool grid (roads, buildings + margin) or None. Returns the triangle count."""
@@ -303,7 +308,46 @@ def build(buf, col, hf, zc, origin, dist_road, blocked, report=None, enabled=Tru
             T = np.concatenate(T)
             buf.add(layer, MAT, np.concatenate(V), np.concatenate(UV), T, src="field_crops:" + tag, COL=np.concatenate(C))
             ntri += len(T)
+    if chunk_fn is not None:
+        rep["chunks"] = prune_sparse_chunks(buf, chunk_fn, layer)
+        ntri = int(sum(len(q.T) for q in buf.parts if q.layer == layer and q.mat == MAT and q.src.startswith("field_crops:")))
     rep["triangles"] = ntri
     if report is not None:
         report["field_crops"] = rep
     return ntri
+
+
+SWARD_MIN_TRIS = 60              # roadside sward alone earns the chunk its primitive from this many triangles
+
+
+def prune_sparse_chunks(buf, chunk_fn, layer=LAYER):
+    """The draw-call rule (CHUNK_MIN_TRIS): the exporter gives every chunk ONE `banks` primitive of material
+    `verge_tufts`, split by triangle centroid. A chunk keeps it if its roadside sward has >= SWARD_MIN_TRIS triangles
+    or all its cards together >= CHUNK_MIN_TRIS; otherwise its triangles are removed - with the whole card (4
+    vertices), so no half card is left on the other side of a chunk border. Returns the tally."""
+    parts = [q for q in buf.parts if q.layer == layer and q.mat == MAT and len(q.T)]
+    keys, total, sward = [], {}, {}
+    for q in parts:
+        T = np.asarray(q.T)
+        cen = np.asarray(q.V)[T].mean(1)
+        ci, cj = chunk_fn(cen[:, 0], cen[:, 1])
+        k = np.asarray(ci).astype(np.int64) * 4096 + np.asarray(cj)
+        keys.append(k)
+        uk, cnt = np.unique(k, return_counts=True)
+        for kk, c in zip(uk.tolist(), cnt.tolist()):
+            total[kk] = total.get(kk, 0) + c
+            if q.src.startswith("verge_flora:"):
+                sward[kk] = sward.get(kk, 0) + c
+    keep = {k for k, c in total.items() if sward.get(k, 0) >= SWARD_MIN_TRIS or c >= CHUNK_MIN_TRIS}
+    dropped = 0
+    for q, k in zip(parts, keys):
+        T = np.asarray(q.T)
+        bad = ~np.isin(k, list(keep))
+        if not bad.any():
+            continue
+        card = T.min(1) // 4
+        gone = np.isin(card, np.unique(card[bad]))
+        dropped += int(gone.sum())
+        q.T = T[~gone]
+    return {"with_cards": len(keep), "dropped": len(total) - len(keep), "dropped_triangles": dropped,
+            "min_triangles": CHUNK_MIN_TRIS, "sward_min_triangles": SWARD_MIN_TRIS}
