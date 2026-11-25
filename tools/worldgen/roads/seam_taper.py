@@ -466,3 +466,256 @@ def shoulder_at(c, side: str, i: int):
         return None
     p, g = _decode(np.asarray([int(d["mat"][i])], dtype=np.int64))
     return float(p[0]) / 100.0, float(g[0]) / 100.0
+
+
+# --------------------------------------------------------------------------------------------- side kind (seams-side-s24)
+# The side profile at a seam end (kerb / kerb + sidewalk / flat edge / kerbless rural shoulder) is decided per tile by
+# network.assign_sides from data clipped to the tile bbox: footways of osm_context, BDOT10k OT_SKRP_L paths and the
+# OT_PTPL_A / parking yards stop at the bbox, the majority windows (+-20 m walk, +-12 m yard) run out at the seam and
+# the junction trims of the second pass (ADR 0304) only see the tile's own junctions. The two halves of one road then
+# met with a kerb against a flat edge, a sidewalk on one side only, or a kerb against a rural shoulder (qa.seams FAIL
+# "pobocze L/P", artifacts/seams-w10-s24). Like the widths above, both tiles now compute the NOMINAL side profile of
+# both seam ends with the same code from the same data in git (graph, overrides, generated/osm_context.json,
+# generated/streetscape_sources.json; plain network + junctions + the second assign_sides pass on the seam chains),
+# agree on one value per side with a symmetric rule and impose it on their own end:
+#
+#   rank: constrained (another carriageway at the edge: tight kerb / flush strip, never changed) > kerb + sidewalk >
+#         flat edge (yard, h = 0) > kerb > kerbless rural shoulder; equal kinds: the wider sidewalk.
+#
+# Clipping only ever REMOVES evidence (a footway or a yard that one tile still sees near the seam is real data), and a
+# narrower edge profile never reaches onto anything, so the higher rank wins. The imposed value covers the run of the
+# end's own kind from the seam inwards, at most SIDE_HOLD_M (WORKING_VALUE); the step of kinds then lies inside one
+# tile, where the mesh already joins profile changes along a chain.
+SIDE_HOLD_M = 25.0      # WORKING_VALUE: longest run of the end's kind replaced by the agreed seam profile
+CAT_RANK = {"rural": 1, "kerb": 2, "flat": 3, "sidewalk": 4, "constrained": 5}
+
+
+@dataclass(frozen=True)
+class SideVal:
+    """Side profile of one station, frame-free (kind / h / w / mat / walk / verge / depth as network.assign_sides)."""
+    cat: str                  # constrained | sidewalk | flat | kerb | rural | other
+    kind: int
+    h: float
+    w: float
+    depth: float
+    mat: int
+    walk: bool
+    verge: float
+
+
+def side_cat(d: dict, i: int) -> str:
+    kind = int(d["kind"][i])
+    if kind not in (Nw.URBAN, Nw.RURAL):
+        return "other"
+    tight = d.get("tight")
+    if int(d["mat"][i]) == Nw.MAT_FLUSH_ROAD or (tight is not None and bool(tight[i])):
+        return "constrained"
+    if kind == Nw.RURAL:
+        return "rural"
+    if bool(d["walk"][i]) and float(d["raw"]["w"][i]) > 0.05:
+        return "sidewalk"
+    return "flat" if float(d["raw"]["h"][i]) < 0.05 else "kerb"
+
+
+def side_val(c, side: str, i: int) -> SideVal | None:
+    d = (c.side or {}).get(side)
+    if not d:
+        return None
+    vg = d.get("verge")
+    return SideVal(cat=side_cat(d, i), kind=int(d["kind"][i]), h=float(d["raw"]["h"][i]), w=float(d["raw"]["w"][i]),
+                   depth=float(d["raw"]["depth"][i]), mat=int(d["mat"][i]), walk=bool(d["walk"][i]),
+                   verge=float(vg[i]) if vg is not None else 0.0)
+
+
+def side_inputs(ctx: dict | None, ss: dict | None, overrides: list, origin):
+    """(footways, walkways, yards) of network.assign_sides from osm_context + streetscape_sources: the inputs of
+    pipeline.build (one definition for the generator, the nominal seam sides and qa.seams)."""
+    import shapely
+    from shapely.geometry import LineString, Polygon
+    o = np.asarray(origin, float)
+    fw = [f for f in (ctx or {}).get("footways", []) if len(f["geometry"]) >= 2]
+    foot = [LineString(np.array(f["geometry"]) - o) for f in fw]
+    walk = [LineString(np.array(f["geometry"]) - o) for f in fw if f["highway"] != "path"]
+    yards = None
+    if ss is not None:
+        walk += [LineString(np.array(f["geometry"]["coordinates"]) - o) for f in ss["bdot10k"]["OT_SKRP_L"]
+                 if f["props"].get("materialnawierzchni") not in (None, "grunt naturalny")]
+        polys = [Polygon(np.array(f["geometry"]["coordinates"][0]) - o) for f in ss["bdot10k"]["OT_PTPL_A"]
+                 if f["props"].get("materialnawierzchni") != "grunt naturalny"]
+        polys += [Polygon(np.array(a["geometry"]["coordinates"][0]) - o) for a in ss["osm"]["areas"]
+                  if a["tags"].get("amenity") == "parking"]
+        polys += [Polygon(np.asarray(ov["polygon_epsg2180"], float) - o,
+                          [np.asarray(h, float) - o for h in ov.get("holes_epsg2180", [])])
+                  for ov in overrides if ov.get("kind") == "paved_area"]
+        yards = shapely.union_all([shapely.make_valid(p) for p in polys])
+        shapely.prepare(yards)
+    return foot, walk, yards
+
+
+def nominal_sides(graph: dict, origin, overrides: list, ctx: dict | None, ss: dict | None,
+                  region_id: str | None = None) -> tuple[list[End], dict]:
+    """([End], {(chain, end): {"L" / "R": SideVal | None}}) of a tile on its own: plain network (no seam transitions),
+    its junctions (trims) and the second assign_sides pass on the chains with a boundary end - what the tile's build
+    meshes at the seam before the agreement. The same call in every tile that asks (data in git only)."""
+    from . import junctions as J
+    net = plain_network(graph, origin, overrides)
+    own = ends(net)
+    if not own:
+        return [], {}
+    net.region_id, net.authored = region_id, overrides          # implied sidewalks (ADR 0237 D38) as pipeline.build
+    o = np.asarray(origin, float)
+    J.build_junctions(net, [dict(p, e=p["x"] - o[0], n=p["y"] - o[1]) for p in (ctx or {}).get("points", [])])
+    foot, walk, yards = side_inputs(ctx, ss, overrides, origin)
+    Nw.assign_sides(net, foot, built_up=True, walkways=walk, yards=yards, trims=True, only={e.chain for e in own})
+    by = _chains(net)
+    out = {}
+    for e in own:
+        c = by[e.chain]
+        i = 0 if e.end == 0 else len(c.line.s) - 1
+        out[(e.chain, e.end)] = {s: side_val(c, s, i) for s in ("L", "R")}
+    return own, out
+
+
+def _region_files(d: Path):
+    def rj(p):
+        return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
+    reg = yaml.safe_load((d / "region.yaml").read_text(encoding="utf-8"))
+    return ((reg["origin"]["x"], reg["origin"]["y"]), rj(d / "roads.graph.json"), _load_overrides(d),
+            rj(d / "generated" / "osm_context.json"), rj(d / "generated" / "streetscape_sources.json"))
+
+
+def region_nominal_sides(region_id: str, regions: Path | None = None) -> tuple[list[End], dict]:
+    d = (regions or REGIONS) / region_id
+    origin, graph, ov, ctx, ss = _region_files(d)
+    return nominal_sides(graph, origin, ov, ctx, ss, region_id)
+
+
+@dataclass
+class SideFix:
+    chain: str
+    end: int
+    side: str                 # own chain side "L" / "R"
+    want: SideVal             # the agreed seam profile
+    own: SideVal              # own nominal
+    other: SideVal            # neighbour's nominal (its side facing the same way)
+    neighbour: str | None = None
+    applied_m: float = 0.0
+    kept: str | None = None   # why the own end was not changed
+
+    def report(self) -> dict:
+        r = {"chain": self.chain, "end": "a" if self.end == 0 else "b", "side": self.side, "neighbour": self.neighbour,
+             "own": self.own.cat, "other": self.other.cat, "seam": self.want.cat, "applied_m": round(self.applied_m, 1)}
+        if self.want.cat == "sidewalk":
+            r["sidewalk_w"] = round(self.want.w, 2)
+        if self.kept:
+            r["kept"] = self.kept
+        return r
+
+
+def agree(a: SideVal | None, b: SideVal | None) -> SideVal | None:
+    """The seam profile of two nominal ends (symmetric: agree(a, b) == agree(b, a)); None = leave both as they are."""
+    if a is None or b is None or "other" in (a.cat, b.cat):
+        return None
+    if a.cat == b.cat:
+        if a.cat == "constrained":
+            return None
+        if a.cat == "sidewalk" and abs(a.w - b.w) > 1e-6:
+            return a if a.w > b.w else b
+        return a
+    if "constrained" in (a.cat, b.cat):
+        return a if a.cat == "constrained" else b
+    return a if CAT_RANK[a.cat] > CAT_RANK[b.cat] else b
+
+
+def plan_sides(own: list[End], own_sides: dict, others: dict) -> list[SideFix]:
+    """others: {neighbour id: ([End], {(chain, end): sides})} -> the agreed profile of every matched seam end side."""
+    out = []
+    for nb in sorted(others):
+        x_ends, x_sides = others[nb]
+        for e, x in match(own, x_ends):
+            same = (e.left[0] * x.left[0] + e.left[1] * x.left[1]) > 0
+            sa, sb = own_sides.get((e.chain, e.end)) or {}, x_sides.get((x.chain, x.end)) or {}
+            for side in ("L", "R"):
+                a, b = sa.get(side), sb.get(side if same else ("R" if side == "L" else "L"))
+                w = agree(a, b)
+                if w is not None:
+                    out.append(SideFix(chain=e.chain, end=e.end, side=side, want=w, own=a, other=b, neighbour=nb))
+    out.sort(key=lambda f: (f.chain, f.end, f.side))
+    return out
+
+
+def plan_sides_region(region_id: str, own: tuple | None = None, regions: Path | None = None) -> list[SideFix]:
+    """Agreed seam side profiles of a tile against the neighbours' data (all from git: no geometry, no derived)."""
+    regions = regions or REGIONS
+    own = own or region_nominal_sides(region_id, regions)
+    if not own[0]:
+        return []
+    others = {}
+    for nb, se in neighbours(region_id, regions):
+        if any(e.on_seam(se) for e in own[0]):
+            x_ends, x_sides = region_nominal_sides(nb, regions)
+            others[nb] = ([e for e in x_ends if e.on_seam(se)], x_sides)
+    return plan_sides(own[0], own[1], others)
+
+
+def apply_sides(net: Nw.Network, fixes: list[SideFix]) -> list[dict]:
+    """After the last network.assign_sides, before apply_shoulders: the own end takes the agreed seam profile over the
+    run of its own kind (<= SIDE_HOLD_M). Constrained stations, other kinds (median, island) and bridges are kept."""
+    by = _chains(net)
+    for f in fixes:
+        c = by.get(f.chain)
+        d = (c.side or {}).get(f.side) if c is not None else None
+        if d is None or c.meta.get("absorbed"):
+            f.kept = "no chain / side in the built network"
+            continue
+        n = len(c.line.s)
+        i0 = 0 if f.end == 0 else n - 1
+        cur = side_cat(d, i0)
+        if cur == f.want.cat and not (cur == "sidewalk" and abs(float(d["raw"]["w"][i0]) - f.want.w) > 1e-6):
+            continue
+        if cur in ("constrained", "other"):
+            f.kept = f"own end is {cur}"
+            continue
+        dist = c.line.s if f.end == 0 else c.line.s[-1] - c.line.s
+        sel = []
+        for i in (range(n) if f.end == 0 else range(n - 1, -1, -1)):
+            if dist[i] > SIDE_HOLD_M or side_cat(d, i) != cur or bool(c.bridge[i]):
+                break
+            sel.append(i)
+        if not sel:
+            f.kept = "seam station on a bridge"
+            continue
+        sel = np.asarray(sel)
+        w = f.want
+        mat = np.asarray(d["mat"]).astype(np.int64)
+        if w.cat == "rural":                     # own shoulder code of the section (ADR 0272), tapered by apply_shoulders
+            codes = []
+            for i in sel:
+                osm = {"L": "left", "R": "right"}[f.side]
+                if bool(c.meta["rev"][i]):
+                    osm = "right" if osm == "left" else "left"
+                codes.append(X.resolve(net.sec_list[int(c.sec_idx[i])], osm).code)
+            mat[sel] = np.asarray(codes, np.int64)
+        else:
+            mat[sel] = w.mat
+        kind = np.asarray(d["kind"]).copy()
+        kind[sel] = w.kind
+        d["kind"], d["mat"] = kind, mat
+        for k, v in (("h", w.h), ("w", w.w), ("depth", w.depth)):
+            a = np.asarray(d["raw"][k], float).copy()
+            a[sel] = v
+            d["raw"][k] = a
+        walk = np.asarray(d["walk"]).copy()
+        walk[sel] = w.walk
+        d["walk"] = walk
+        if d.get("verge") is not None:
+            vg = np.asarray(d["verge"], float).copy()
+            vg[sel] = w.verge
+            dv = 0.5 * np.diff(c.line.s)                # the clamp of assign_sides: <= 1 m of width per 2 m
+            for i in range(1, n):
+                vg[i] = min(vg[i], vg[i - 1] + dv[i - 1])
+            for i in range(n - 2, -1, -1):
+                vg[i] = min(vg[i], vg[i + 1] + dv[i])
+            d["verge"] = vg
+        f.applied_m = float(abs(c.line.s[sel[-1]] - c.line.s[sel[0]]))
+    return [f.report() for f in fixes]
