@@ -45,6 +45,12 @@
     "power_lines": 159,
     "pylons": 376
   },
+  "forest_chm_ring": {
+    "chm_share": 0.0,
+    "chm_tiles": [],
+    "chm_vertices": 0,
+    "total_curtain_vertices": 13624
+  },
   "lod1_height_audit": {
     "buildings": 36220,
     "conflicting_ids": 0,
@@ -124,7 +130,7 @@
   },
   "tiers": {
     "High": {
-      "bytes": 10353756,
+      "bytes": 10572340,
       "file": "Data/raw/derived/monki/world/far_field.glb",
       "sectors": {
         "far_east": {
@@ -164,7 +170,7 @@
           "vertices": 28756
         }
       },
-      "sha256": "eb7bf29f75afcae05922d8e3918e91c37ea7d64fcf3c0fd53e00af15e520c112",
+      "sha256": "dc2ca51ceed12841e05c87a7a508acd5a99c3a2c9e732df6e3263ee680d84177",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -177,7 +183,7 @@
       "total_vertices": 206240
     },
     "Low": {
-      "bytes": 1027372,
+      "bytes": 1081280,
       "file": "Data/raw/derived/monki/world/far_field.low.glb",
       "sectors": {
         "far_east": {
@@ -217,7 +223,7 @@
           "vertices": 4753
         }
       },
-      "sha256": "438d6eb520c1160ab09be4c0dbcf3cee8f18bfd94c34cd90d0dda0ed219b5137",
+      "sha256": "d73c0f97208bab9c16e9ba2949fc7ab7fac793aa7279de092693f8e1e7784cad",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
