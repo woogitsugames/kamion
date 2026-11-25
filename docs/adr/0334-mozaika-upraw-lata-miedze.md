@@ -184,6 +184,8 @@ margines trawy), orka czyta się jako orka (bruzdy z kabiny), pola bez „posypk
 kępy pobocza jaśniejsze, różne, w grupach z przerwami. Słabiej: bruzdy orki z kabiny pod niskim kątem są nadal dość
 regularne; miedza między pasami soczystej trawy w uprawie (widok z góry `f2_obl_headland`) pozostaje wyraźnym ciemniejszym
 pasem; dalekie krawędzie pól (> 300 m) są nadal proste — falowanie ±1,2 m ginie poniżej piksela.
+Tier Low (`vqa/after/knyszyn-w-clear-LOW`, ścieżka bez `_KAMION_WORLD_DETAIL`): mozaika, margines i bruzdy renderują się
+poprawnie. Kompilacja wariantu Android (GLES / Vulkan) **niesprawdzona** (`UNVERIFIED`; shader używa tylko ALU i `ddx/ddy`).
 Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagentów).
 
 ### Skutki dla innych kafli
@@ -193,8 +195,10 @@ Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagent
   dk8-wasilkow-01…03, dw671-jasionowka-01, dw671-tykocin-01…09, knyszyn, knyszyn-s, monki, monki-e, s8-01…05, tykocin.
 - Tylko kępy pobocza (odcinki bez krawężnika): 10 kafli miejskich — bialystok-bojary, -dojlidy, -industrial-c, -kleeberga,
   -knyszynska, -krywlany, -maczka, -mickiewicza, -porosly, -wygoda. Do przebudowy kafel zachowuje własny stary atlas
-  (`textures/verge_tufts.png` jest per region), więc nic się nie psuje; `test_world_roads::test_export_is_deterministic`
-  (kafel C) wymaga regeneracji C po zmianie generatora. Lista maszynowa: `artifacts/fields2-s24/tile_list.json`.
+  (`textures/verge_tufts.png` jest per region), więc nic się nie psuje. Kafel C przebudowany na tej gałęzi
+  (`test_world_roads::test_export_is_deterministic` porównuje z zapisanym manifestem): 26 z 64 chunków zmienionych, karty
+  kęp skarp 1 130 → 985, najgorsza kamera budżetu `stretch_04` 1 996 321 ≤ 2 000 000. Pozostałe 9 miejskich — do fali
+  przebudowy. Lista maszynowa: `artifacts/fields2-s24/tile_list.json`.
 - Bele (ADR 0346) czytają `field_layout` — po falowaniu krawędzi stoją nadal ≥ 3,5 m od miedzy (test 0346 zielony).
 
 ### Otwarte (r2)
