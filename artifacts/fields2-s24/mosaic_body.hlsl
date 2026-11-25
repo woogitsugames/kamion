@@ -87,8 +87,8 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
 #else
     half n1 = 0.5h;
 #endif
-    // r2: the strip edge is not a ruled line - the strip coordinate meanders by up to +-2.15 m (gentle 47 m bows, 17 m
-    // and 5 m wiggles), so the colour seam, the baulk and every row parallel to the edge follow one ploughed-by-eye line
+    // r2: the strip edge is not a ruled line - the strip coordinate meanders by up to +-1.9 m (gentle 47 m bows, a little
+    // 17 m and 5 m wiggle - furrows stay near-straight), so the colour seam, the baulk and every row parallel to the edge follow one ploughed-by-eye line
     float wob = (n47 - 0.5) * KF_WOB_A47 + (n17 - 0.5) * KF_WOB_A17 + (n5 - 0.5) * KF_WOB_A5;
     float t = (dot(rel, dir) + wob) / w;          // across the strips, relative to the block seed (fp32-safe)
     float along = dot(rel, float2(-dir.y, dir.x)); // along the strip (m)
@@ -121,11 +121,11 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     fpr = min(fpr, fp * 1.5);
 
     // streaks along the rows: every pass of a machine leaves its own tone (pass-wide) and fine drill / chaff lines
-    half s2 = KFNoiseSF(rc, rl, 2.6, 60.0, 987u) - 0.5h;
+    half sf2 = KFNoiseSF(rc, rl, 2.6, 60.0, 987u) - 0.5h;
 #if defined(_KAMION_WORLD_DETAIL)
-    half s1 = (KFNoiseSF(rc, rl, 0.55, 18.0, 989u) - 0.5h) * (half)saturate(0.55 / (1.5 * fpr) - 0.5);
+    half sf1 = (KFNoiseSF(rc, rl, 0.55, 18.0, 989u) - 0.5h) * (half)saturate(0.55 / (1.5 * fpr) - 0.5);
 #else
-    half s1 = 0.0h;
+    half sf1 = 0.0h;
 #endif
     half stA1 = 0.0h, stA2 = 0.0h;        // streak amplitudes (fine, pass-wide)
     float rowP = 0.0;                     // fine row / furrow period (m), 0 = none
@@ -141,7 +141,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         col = lerp(col, half3(0.150h, 0.112h, 0.072h), track * 0.75h);
         // lodged / thinner patches (wind, wet hollows): darker and duller
         col *= 1.0h - 0.12h * smoothstep(0.62h, 0.80h, n17);
-        stA1 = 0.10h; stA2 = 0.16h;
+        stA1 = 0.06h; stA2 = 0.16h;
     }
     else if (u <= KF_RAPE_STUBBLE)
     {
@@ -211,7 +211,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         col *= 1.0h + 0.07h * (KFBand(rc, 5.6, 2.8, fpr) - 0.5h);
         stA1 = 0.06h; stA2 = 0.10h;
     }
-    col *= 1.0h + stA1 * s1 + stA2 * s2;
+    col *= 1.0h + stA1 * sf1 + stA2 * sf2;
     if (rowP > 0.0)
     {
         // furrows / drill rows: darker bottoms (self-shadow, moist soil) and a slope for the light; once the period is
@@ -232,11 +232,14 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         half3 hc = u <= KF_RAPE_STUBBLE ? col * half3(0.86h, 0.90h, 0.98h) : lerp(col, half3(0.11h, 0.095h, 0.065h), 0.25h);
         col = lerp(col, hc, head * 0.8h);
         float P = (u <= KF_CEREAL_PALE || u == KF_CATCH) ? 9.0 : (u <= KF_RAPE_STUBBLE ? 7.5 : 6.0);
-        float am = frac(across / P) * P - 0.5 * P;
+        float ac = floor(across / P);
+        float am = (across / P - ac) * P - 0.5 * P;
+        float ua = KFU01(KFHash((int)fid, (int)ac, 997u));           // per loop: there or worked over, wider or tighter
         float dr = length(float2(am, blockEdge - (Hd - 0.6)));
-        float ring = abs(abs(dr - 0.4 * P) - 0.9);
-        half arc = (half)(saturate((0.22 - ring) / fp + 0.5) * saturate(0.9 / fp - 0.5)) * (blockEdge < Hd - 0.6 ? 1.0h : 0.0h);
-        col = lerp(col, lerp(col * 0.72h, half3(0.150h, 0.112h, 0.072h), 0.40h), arc * 0.7h);
+        float ring = abs(abs(dr - (0.30 + 0.12 * ua) * P) - 0.9);
+        half arc = (half)(saturate((0.22 - ring) / fp + 0.5) * saturate(0.9 / fp - 0.5)) * (blockEdge < Hd - 0.6 && ua < 0.7 ? 1.0h : 0.0h);
+        arc *= 0.35h + 0.65h * n5;
+        col = lerp(col, lerp(col * 0.72h, half3(0.150h, 0.112h, 0.072h), 0.40h), arc * 0.6h);
         slopeEN *= 1.0h - arc;
     }
 
@@ -253,15 +256,15 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     float e = min(across, w - across);
     float hw = max(0.5 * bw * (0.55 + 0.9 * n5) + (n1 - 0.5) * 0.35, 0.12);
     half baulk = hasBaulk ? (half)(saturate((hw - e) / fp + 0.5) * saturate(2.0 * hw / fp)) : 0.0h;
-    half thin = hasBaulk ? (half)saturate(1.0 - (e - hw) / (1.0 + 3.0 * n17)) : 0.0h;
+    half thin = hasBaulk ? (half)saturate(1.0 - (e - hw) / (0.6 + 2.2 * n17)) : 0.0h;
     // block border: a wider grass strip, on some borders a field track (two sandy ruts 1.6 m apart in the grass)
-    float hb = (fieldTrack ? 1.9 : 1.2) + (n17 - 0.5) * 1.2 + (n5 - 0.5) * 0.5 + (n1 - 0.5) * 0.3;
-    half bblock = (half)(saturate((hb - blockEdge) / fp + 0.5) * saturate(2.0 * hb / fp));
-    thin = max(thin, (half)saturate(1.0 - (blockEdge - hb) / (1.0 + 3.0 * n17)));
+    float hbw = (fieldTrack ? 1.9 : 1.2) + (n17 - 0.5) * 1.2 + (n5 - 0.5) * 0.5 + (n1 - 0.5) * 0.3;
+    half bblock = (half)(saturate((hbw - blockEdge) / fp + 0.5) * saturate(2.0 * hbw / fp));
+    thin = max(thin, (half)saturate(1.0 - (blockEdge - hbw) / (0.6 + 2.2 * n17)));
     baulk = max(baulk, bblock);
     half3 bc = lerp(half3(0.072h, 0.112h, 0.036h), half3(0.150h, 0.140h, 0.072h), smoothstep(0.45h, 0.8h, n5));
     bc *= 0.85h + 0.30h * n1;
-    col = lerp(col, lerp(col, bc, 0.55h), thin * thin * 0.75h);
+    col = lerp(col, lerp(col, bc, 0.55h), thin * thin * (0.25h + 0.70h * n5));
     col = lerp(col, bc, baulk * 0.92h);
     if (fieldTrack)
     {

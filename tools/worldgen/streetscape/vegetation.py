@@ -1303,7 +1303,7 @@ def _nearest2(x, y, cell, seed_fn):
 
 
 # ADR 0334 r2 (fields2-s24): KF_WOB_* - the strip coordinate meanders (cell m, amplitude m peak-to-peak, shader salt)
-FIELD_WOBBLE = ((47.0, 2.4, 983), (17.0, 1.4, 953), (5.0, 0.5, 951))
+FIELD_WOBBLE = ((47.0, 2.6, 983), (17.0, 1.0, 953), (5.0, 0.2, 951))
 
 
 def _kf_noise(x, y, s, salt):
