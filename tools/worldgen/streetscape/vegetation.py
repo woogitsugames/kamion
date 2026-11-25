@@ -1454,48 +1454,136 @@ def garden_canopies(trees, rp, report, parts=()):
     return result
 
 
-# ADR 0308: clearance of the carriageway (owner s24, DK65: crowns hang over the road at cab height). A tree whose crown
-# base is under CLEAR_H_M may reach at most CLEAR_OVERHANG_M over the carriageway edge. Crown radius / H and clear
-# stem / H of the library models (make_trees.CROWN; pine / stand spruce from their growers; the open-grown spruce
-# variant and the young forms carry boughs to the ground). Species not listed (shrub, floor) are left alone: they are
-# lower than the cab and already 2.5 m off the surface.
+# ADR 0308 / 0347: clearance of the carriageway (owner s24, DK65: crowns hang over the road at cab height; critic build #8
+# t=2260: a roadside crown filled a quarter of the windscreen). Gauge 4.5 m (Dz.U. 2022 poz. 1518 par. 80 ust. 1 pkt 2) +
+# 0.2 m; the reach of a tree below the gauge is MEASURED from the library mesh (tree_crown_profile.py), CROWN_FORM below is
+# only the nominal envelope (garden library instances, species without a mesh).
 CLEAR_H_M = 4.7            # WORKING_VALUE: 4.5 m clearance gauge of a rural road (Dz.U. 2022 poz. 1518) + 0.2 m
-CLEAR_OVERHANG_M = 0.3
-CLEAR_MIN_SCALE = 0.65     # a tree that would have to shrink below this share of its height is removed instead
+CLEAR_MIN_SCALE = 0.6      # ADR 0347: shifted + shrunk trees keep at least this share of their height (see below)
 CROWN_FORM = {"linden": (0.33, 0.17), "maple": (0.375, 0.18), "birch": (0.235, 0.27), "alder": (0.24, 0.22),
               "poplar": (0.195, 0.19), "pine": (0.22, 0.48), "spruce": (0.185, 0.05), "willow": (0.48, 0.20),
               "pineyoung": (0.34, 0.08), "birchyoung": (0.27, 0.16)}
 
 
-def road_clearance(trees, carriage, report):
-    """Shrink or drop the trees whose crown would hang into the carriageway below CLEAR_H_M. Returns the new list
-    (records are copied when changed); report["road_clearance"] = counts. Deterministic, order kept."""
-    rep = {"checked": 0, "lowered": 0, "removed": 0, "clear_h_m": CLEAR_H_M, "overhang_m": CLEAR_OVERHANG_M}
+CLEAR_EDGE_MARGIN_M = 0.5  # WORKING_VALUE (ADR 0347): foliage stays this far from the asphalt edge below CLEAR_H_M - a truck
+#                            rides the edge line with mirrors 0.25 m out of its 2.55 m body, a cab camera sees 1 m of leaf
+CLEAR_MAX_SHIFT_M = 1.2    # WORKING_VALUE: a tree is first moved this far away from the carriageway (ADR 0347)
+CLEAR_MIN_SHRINK = 0.75    # ... then shrunk to this share of its height; and shifted + shrunk down to CLEAR_MIN_SCALE
+CLEAR_STEP = 0.02
+
+
+def _tree_reach(t, h):
+    """Reach (m) of tree record t, height h, below CLEAR_H_M from its trunk axis; None = not a clearance subject.
+    Measured mesh silhouette (tree_crown_profile) where the library has the species, nominal CROWN_FORM otherwise."""
+    from . import tree_crown_profile as TCP
+    p = str(t.get("p", ""))
+    if not p.startswith("tree_"):
+        return None
+    sp = p[5:]
+    proto = TCP.proto_name(sp, t.get("v", 0)) if sp != "floor" else None
+    if proto is not None:
+        return TCP.low_radius(proto, TCP.scale_for(proto, h), CLEAR_H_M)
+    if sp in CROWN_FORM:
+        k, bole = CROWN_FORM[sp]
+        return 0.0 if bole * h >= CLEAR_H_M else k * h
+    return None
+
+
+def road_clearance(trees, carriage, report, free_fn=None):
+    """ADR 0347 (supersedes the nominal radii of ADR 0308): no leaf or stem below CLEAR_H_M (4.5 m gauge + 0.2 m) comes
+    nearer than CLEAR_EDGE_MARGIN_M to the carriageway. A tree that does is, in this order, moved away from the
+    asphalt by <= CLEAR_MAX_SHIFT_M (only onto a cell free_fn(e, n) accepts), shrunk to >= CLEAR_MIN_SHRINK of its height,
+    shifted and shrunk to >= CLEAR_MIN_SCALE, or removed. Returns the new list (records are copied when changed, order
+    kept); report["road_clearance"] = counts. Deterministic."""
+    rep = {"checked": 0, "shifted": 0, "lowered": 0, "shifted_lowered": 0, "removed": 0, "clear_h_m": CLEAR_H_M,
+           "edge_margin_m": CLEAR_EDGE_MARGIN_M, "max_shift_m": CLEAR_MAX_SHIFT_M}
     report["road_clearance"] = rep
     if carriage is None or carriage.is_empty or not trees:
         return trees
     import shapely
     shapely.prepare(carriage)
-    idx = [i for i, t in enumerate(trees) if str(t.get("p", "")).startswith("tree_") and t["p"][5:] in CROWN_FORM]
+    idx = [i for i, t in enumerate(trees) if _tree_reach(t, float(t["h"])) is not None]
     if not idx:
         return trees
-    d = shapely.distance(carriage, shapely.points([trees[i]["e"] for i in idx], [trees[i]["n"] for i in idx]))
+    pts = shapely.points([trees[i]["e"] for i in idx], [trees[i]["n"] for i in idx])
+    d = shapely.distance(carriage, pts)
+    near = shapely.shortest_line(carriage, pts)         # carriageway point -> tree
     out = list(trees)
     drop = set()
-    for i, dist in zip(idx, d):
+    for i, dist, ln in zip(idx, d, near):
         t = trees[i]
-        k, bole = CROWN_FORM[t["p"][5:]]
-        if t["p"] == "tree_spruce" and t.get("v") != SPRUCE_OPEN:
-            k, bole = 0.15, 0.36                # stand form: live crown from ~0.36 H
         h = float(t["h"])
         rep["checked"] += 1
-        if bole * h >= CLEAR_H_M or k * h <= dist + CLEAR_OVERHANG_M:
+        dist = float(dist)
+        if _tree_reach(t, h) + CLEAR_EDGE_MARGIN_M <= dist:
             continue
-        h2 = (float(dist) + CLEAR_OVERHANG_M) / k
-        if h2 < CLEAR_MIN_SCALE * h:
+        # unit vector away from the nearest carriageway point (a tree on the asphalt has none: removed)
+        (x0, y0), (x1, y1) = ln.coords[0][:2], ln.coords[-1][:2]
+        L = float(np.hypot(x1 - x0, y1 - y0)) if dist > 0 else 0.0
+        ux, uy = ((x1 - x0) / L, (y1 - y0) / L) if L > 1e-6 else (0.0, 0.0)
+
+        def spot(s):            # tree moved s metres away from the road, None when that cell is not free
+            if s <= 0:
+                return t["e"], t["n"]
+            e, n = round(t["e"] + ux * s, 2), round(t["n"] + uy * s, 2)
+            if free_fn is not None and not bool(np.asarray(free_fn(np.array([[e, n]])))[0]):
+                return None
+            return e, n
+
+        def fits(hh, s):
+            return _tree_reach(t, hh) + CLEAR_EDGE_MARGIN_M <= dist + s - 1e-6
+
+        done = None
+        if L > 1e-6:
+            need = _tree_reach(t, h) + CLEAR_EDGE_MARGIN_M - dist
+            if need <= CLEAR_MAX_SHIFT_M:                                  # 1. move away, size untouched
+                s = round(need + 0.05, 2)
+                if (p := spot(s)) is not None:
+                    done = ("shifted", h, p)
+        if done is None:                                                   # 2. shrink in place
+            f = 1.0 - CLEAR_STEP
+            while f >= CLEAR_MIN_SHRINK - 1e-9:
+                if fits(round(h * f, 1), 0.0):
+                    done = ("lowered", round(h * f, 1), (t["e"], t["n"]))
+                    break
+                f -= CLEAR_STEP
+        if done is None and L > 1e-6:                                      # 3. shift (<= max) and shrink
+            for s in (CLEAR_MAX_SHIFT_M, CLEAR_MAX_SHIFT_M * 0.5):
+                p = spot(s)
+                if p is None:
+                    continue
+                f = 1.0 - CLEAR_STEP
+                while f >= CLEAR_MIN_SCALE - 1e-9:
+                    if fits(round(h * f, 1), s):
+                        done = ("shifted_lowered", round(h * f, 1), p)
+                        break
+                    f -= CLEAR_STEP
+                if done:
+                    break
+        if done is None:
             drop.add(i)
             rep["removed"] += 1
         else:
-            out[i] = dict(t, h=round(h2, 1))
-            rep["lowered"] += 1
-    return [t for i, t in enumerate(out) if i not in drop]
+            kind, h2, (e2, n2) = done
+            out[i] = dict(t, h=h2, e=e2, n=n2)
+            rep[kind] += 1
+    res = [t for i, t in enumerate(out) if i not in drop]
+    rep["violations_after"] = len(clearance_violations(res, carriage, tol=0.011))   # 1 cm = position rounding
+    return res
+
+
+def clearance_violations(trees, carriage, tol=1e-6):
+    """Trees whose measured reach below CLEAR_H_M is nearer than CLEAR_EDGE_MARGIN_M to the carriageway (the check the
+    regression test and the stage run on the FINAL instance list). Returns [(index, distance_m, reach_m)]."""
+    if carriage is None or carriage.is_empty or not trees:
+        return []
+    idx = [i for i, t in enumerate(trees) if _tree_reach(t, float(t["h"])) is not None]
+    if not idx:
+        return []
+    d = shapely.distance(carriage, shapely.points([trees[i]["e"] for i in idx], [trees[i]["n"] for i in idx]))
+    bad = []
+    for i, dist in zip(idx, d):
+        r = _tree_reach(trees[i], float(trees[i]["h"]))
+        if r + CLEAR_EDGE_MARGIN_M > float(dist) + tol:
+            bad.append((i, float(dist), r))
+    return bad

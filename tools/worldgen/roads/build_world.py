@@ -1167,6 +1167,10 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     # hero depot halls (ADR 0071)
     props_meta = {**props_meta, **hero_tris, **st.get("hero_tris", {})}
     chunks_meta = []
+    if st.get("carriage") is not None:    # ADR 0347: carriageway polygon the clearance regression test reads
+        import shapely
+        out_root.mkdir(parents=True, exist_ok=True)
+        (out_root / "road_carriage.wkt").write_text(shapely.simplify(st["carriage"], 0.03).wkt, encoding="utf-8", newline="\n")
     for key in sorted(terrain):
         ci, cj = key
         glb = GLB(glb_materials(w.region))
