@@ -3,7 +3,7 @@ param([string]$Phase = 'after', [string]$Tiles = 'knyszyn-w,dk65-07', [string]$L
 $ErrorActionPreference = 'Continue'
 Set-Location C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\fields2-s24
 function Restore-Side { git checkout -q -- game/ProjectSettings game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat 2>$null
-    if (Test-Path game/Assets/Resources) { if (-not (Get-ChildItem game/Assets/Resources)) { Remove-Item game/Assets/Resources, game/Assets/Resources.meta -Force -ErrorAction SilentlyContinue } } }
+    git checkout -q -- game/Assets/Resources.meta 2>$null }
 while (Test-Path C:\Users\matma\Documents\Claude\kamion\artifacts\locks\PHONE_RUN) { Start-Sleep 60 }
 pwsh scripts/unity-slot.ps1 -Acquire -Owner fields2-s24
 try {

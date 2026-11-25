@@ -938,8 +938,15 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
                 # ADR 0334 r2 (critic build #8 P1#7): on the strip farms of a rural tile the open field keeps no
                 # scattered lone sapling at all - its trees are the clumps and baulk runs of field_plants
                 d_edge = shapely.distance(shapely.points(P), poly.boundary)
-                inside = 0.0 if field_plants_on and poly.area >= FIELD_PLANT_MIN_M2 else SELF_SEED_FIELD_KEEP
-                P = P[u < np.where(d_edge <= SELF_SEED_EDGE_M, SELF_SEED_EDGE_KEEP, inside)]
+                inside, edge = SELF_SEED_FIELD_KEEP, SELF_SEED_EDGE_KEEP
+                if field_plants_on and poly.area >= FIELD_PLANT_MIN_M2:
+                    # ... and the margin scrub stands in patches (SELF_SEED_PATCH_M cells of EPSG:2180), not one
+                    # sapling every 40 m of every polygon border
+                    inside = 0.0
+                    edge = np.where(_u01(_h32(np.floor((P[:, 0] + origin[0]) / SELF_SEED_PATCH_M),
+                                              np.floor((P[:, 1] + origin[1]) / SELF_SEED_PATCH_M), 1008)) < SELF_SEED_PATCH_SHARE,
+                                    SELF_SEED_PATCH_KEEP, 0.0)
+                P = P[u < np.where(d_edge <= SELF_SEED_EDGE_M, edge, inside)]
             else:
                 P = P[u < 0.45]
             sp = pick(rng, [0.2, 0.35, 0.05, 0.05, 0.0, 0.35], len(P))
@@ -1010,7 +1017,7 @@ BAULK_CELL_M = 7.0              # one candidate per this length of a strip edge
 BAULK_SEG_M = 50.0              # scrub runs: a segment of a baulk is either a run or bare
 BAULK_SEG_SHARE = 0.09          # share of segments that carry a run of scrub
 BAULK_RUN_KEEP = 0.85           # candidates kept inside a run
-BAULK_LONE_KEEP = 0.004         # candidates kept on bare segments (lone shrub / tree)
+BAULK_LONE_KEEP = 0.002         # candidates kept on bare segments (lone shrub / tree)
 BAULK_SPECIES = (("shrub", 0.76), ("birchyoung", 0.12), ("pineyoung", 0.05), ("birch", 0.04), ("alder", 0.03))
 # ADR 0334 r2 (fields2-s24, critic build #8 P1#7 "samotne drzewka równo rozsiane na polach"). WORKING_VALUE.
 # A run of scrub is not a row of evenly spaced bushes: thickets of ~3 cells with thin stretches between them, and a
@@ -1018,10 +1025,10 @@ BAULK_SPECIES = (("shrub", 0.76), ("birchyoung", 0.12), ("pineyoung", 0.05), ("b
 # śródpolne: a few birches / alders / a pine with scrub under them), not one sapling per hectare.
 BAULK_THICKET_CELLS = 3
 BAULK_THICKET_SHARE = 0.6       # share of the 3-cell groups of a run that are a thicket
-BAULK_THIN_KEEP = 0.35          # candidates kept in the thin stretches of a run
-BAULK_PAIR_SHARE = 0.40         # thicket plants with a companion shrub 1.2-2.6 m along the baulk
-CLUMP_CELL_M = 220.0            # EPSG:2180 lattice of the clump candidates
-CLUMP_SHARE = 0.30              # cells with a clump
+BAULK_THIN_KEEP = 0.12          # candidates kept in the thin stretches of a run
+BAULK_PAIR_SHARE = 0.50         # thicket plants with a companion shrub 1.2-2.6 m along the baulk
+CLUMP_CELL_M = 180.0            # EPSG:2180 lattice of the clump candidates
+CLUMP_SHARE = 0.45              # cells with a clump
 CLUMP_SIZE = (3, 8)             # plants per clump
 CLUMP_SIGMA_M = (5.0, 1.2)      # scatter along / across the baulk
 CLUMP_SPECIES = (("birch", 0.30), ("shrub", 0.30), ("birchyoung", 0.15), ("alder", 0.15), ("pine", 0.10))
@@ -1205,6 +1212,9 @@ def field_plants(src, origin, hf, road_dist=None):
 SELF_SEED_EDGE_M = 8.0
 SELF_SEED_EDGE_KEEP = 0.35
 SELF_SEED_FIELD_KEEP = 0.02
+SELF_SEED_PATCH_M = 60.0         # ADR 0334 r2 (rural strip farms): margin scrub in patches
+SELF_SEED_PATCH_SHARE = 0.25
+SELF_SEED_PATCH_KEEP = 0.90
 
 
 # ------------------------------------------------------------------------------------------- farmland (ADR 0295, P1-4)
@@ -1303,7 +1313,7 @@ def _nearest2(x, y, cell, seed_fn):
 
 
 # ADR 0334 r2 (fields2-s24): KF_WOB_* - the strip coordinate meanders (cell m, amplitude m peak-to-peak, shader salt)
-FIELD_WOBBLE = ((47.0, 2.6, 983), (17.0, 1.0, 953), (5.0, 0.2, 951))
+FIELD_WOBBLE = ((71.0, 1.8, 983), (17.0, 0.5, 953), (5.0, 0.12, 951))
 
 
 def _kf_noise(x, y, s, salt):

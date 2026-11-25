@@ -439,9 +439,13 @@ Shader "Kamion/World PBR"
                 // ---- ADR 0298: farmland mosaic per pixel (flag in COLOR_0.b), before anything reads the masks
                 // ADR 0334: the use of the strip replaces the grass colour by a cover weight (fieldAlb.a), not a tint
                 half4 fieldAlb = half4(0.0h, 0.0h, 0.0h, 0.0h);
+                half2 fieldSlope = half2(0.0h, 0.0h);     // ADR 0334 r2: furrows / rows of the field (dE, dN)
             #if defined(_GROUNDMASKS)
-                if (_RegionOriginEN.z > 0.5)
-                    KamionFieldMosaic(i.posEN, _RegionOriginEN.xy, footprint, macro.g, i.masks, fieldAlb);
+                {
+                    float2 enDx = ddx(i.posEN), enDy = ddy(i.posEN);     // outside the branch (gradients)
+                    if (_RegionOriginEN.z > 0.5)
+                        KamionFieldMosaic(i.posEN, _RegionOriginEN.xy, footprint, enDx, enDy, macro.g, i.masks, fieldAlb, fieldSlope);
+                }
             #endif
                 half swardCalm = 0.0;
             #if defined(_GRASS_DETILE) && defined(_GROUNDMASKS)
@@ -1226,6 +1230,10 @@ Shader "Kamion/World PBR"
                 metal = saturate(metal);
                 ao = saturate(ao);
                 half3 nw = normalize(tn.x * T + tn.y * B + tn.z * n);
+            #if defined(_GROUNDMASKS)
+                // ADR 0334 r2: furrows and drill rows tilt the ground normal (region-local E / N = world X / Z)
+                nw = normalize(nw + half3(fieldSlope.x, 0.0h, fieldSlope.y));
+            #endif
 
                 // ---- lighting (same model as Kamion/World Surface: Lambert + GGX sun, SH ambient, env reflection)
                 float3 V = GetWorldSpaceNormalizeViewDir(pw);
