@@ -110,6 +110,27 @@ def test_rural_house_3d_frame_bright_sill_and_multishade_plaster():
     assert MT.M["plaster_cream"].get("facade_tint") is True and MT.M["plinth_dark"].get("facade_tint") is True
 
 
+def test_gable_attic_window_has_uniform_gable_tint():
+    """ADR 0348 r2: splitting the attic-window column at eave zt prevents a vertical colour seam on gables."""
+    b = {"id": "test:gable-seam", "poly": box(0, 0, 10, 8),
+         "props": {"storeys": 2, "height_m": 7.4, "roof_shape": "gable"},
+         "ovr": {"wall": "plaster_cream"}, "typ": "house", "sub": "dom", "small_town": True, "small_town_roofs": False}
+    buf = _ColBuf()
+    BM.build(buf, [b], _HF, lambda e, n: 100.0, None, None, {})
+    # Above eave zt (~104.7 m) on each gable face (x ~ 0 or x ~ 10), all plaster vertices must carry one uniform shade
+    plaster = [p for p in buf.parts if p["layer"] == "buildings" and p["mat"] == "plaster_cream" and p["COL"] is not None]
+    assert plaster
+    for gx in (0.0, 10.0):
+        shades_above = set()
+        for p in plaster:
+            V, C = p["V"], p["COL"]
+            for tri in p["T"]:
+                pts = V[tri]
+                if np.all(np.abs(pts[:, 0] - gx) < 0.05) and pts[:, 2].min() > 105.0:
+                    shades_above.add(tuple(np.round(C[tri[0], :3], 3).tolist()))
+        assert len(shades_above) <= 1, f"vertical tint seam on gable x={gx}: {shades_above}"
+
+
 def test_rural_fences_four_variants_no_yellow_and_anti_repeat():
     # No loud yellow-ochre paint in PICKET_PAINTS (R >> B with high R and G)
     for rgb, _ in PL.PICKET_PAINTS:
