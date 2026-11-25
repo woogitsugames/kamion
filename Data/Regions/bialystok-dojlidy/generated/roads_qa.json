@@ -588,7 +588,7 @@
    "lanes": [
     2
    ],
-   "length_m": 101.2,
+   "length_m": 101.3,
    "max_grade": 0.0172,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.006,
@@ -1863,9 +1863,9 @@
     2
    ],
    "length_m": 179.0,
-   "max_grade": 0.0669,
+   "max_grade": 0.0667,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.143,
+   "profile_rms_vs_nmt_m": 0.142,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -7609,7 +7609,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 472003,
+  "footprint_nodes": 472001,
   "fork_abreast": [],
   "fork_shifts": [
    {
@@ -8157,6 +8157,42 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.25,
+    "chain": "c:w107760411:1237906236-1237908750",
+    "end": "b",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-mickiewicza",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w107760411:1237906236-1237908750",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-mickiewicza",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w1525885356:13907921967-13907921957",
+    "end": "a",
+    "in_tile_m": 10.75,
+    "length_m": 21.5,
+    "neighbour": "bialystok-mickiewicza",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
     "chain": "c:w552379027:1237908750-874174756",
     "end": "a",
     "in_tile_m": 2.77,
@@ -8168,12 +8204,13 @@
     "width_seam": 6.25
    },
    {
+    "axis_offset_m": 0.148,
     "chain": "c:w616184922:4235564522-2725108539",
     "end": "a",
-    "in_tile_m": 10.0,
-    "length_m": 20.0,
+    "in_tile_m": 14.8,
+    "length_m": 29.6,
     "neighbour": "bialystok-mickiewicza",
-    "step_m": 0.148,
+    "step_m": 0.296,
     "width_other": 10.75,
     "width_own": 10.454,
     "width_seam": 10.602
@@ -8198,7 +8235,7 @@
   },
   "verge_strips": {
    "chunks": 44,
-   "tris": 54854
+   "tris": 54818
   },
   "walled_ramps": []
  }
