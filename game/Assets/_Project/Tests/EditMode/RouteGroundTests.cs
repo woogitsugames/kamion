@@ -124,6 +124,54 @@ namespace Game.Tests
             Assert.That(b, Is.EqualTo(StartBlock.Free), "blocked by " + (hit != null ? hit.name : "-") + " (build #9 dk65-07: col_asphalt)");
         }
 
+        /// <summary>
+        /// Real data (skipped when the scene is not imported): the importer's route height rule (WorldSceneBuilder.RouteHeight
+        /// + FillMissing, called by reflection) on the dk65-07 ground collision gives the carriageway, not the terrain the old
+        /// import stored (14.19 m at the start vs asphalt 14.95 m).
+        /// </summary>
+        [Test]
+        public void Dk65_07_ImporterRouteHeights_LieOnTheCarriageway()
+        {
+            const string scene = "Assets/_Generated/World/dk65-07/World_dk65-07.unity";
+            if (!System.IO.File.Exists(System.IO.Path.Combine(Game.Editor.Build.EditorTools.RepoRoot, "game", scene))) Assert.Ignore("dk65-07 not imported");
+            EditorSceneManager.OpenScene(scene, OpenSceneMode.Single);
+            foreach (var cooker in Object.FindObjectsByType<WorldCollisionCooker>(FindObjectsSortMode.None))
+                foreach (var c in cooker.colliders) if (c != null && c.sharedMesh != null) c.enabled = true;
+            Physics.SyncTransforms();
+            var route = Object.FindAnyObjectByType<WorldRoute>();
+            var height = System.Type.GetType("Game.World.Import.WorldSceneBuilder, Game.World.Import.Editor", true)
+                .GetMethod("RouteHeight", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            var pts = new Vector3[route.points.Length];
+            float prev = float.NaN, oldBelow = 0f;
+            for (int i = 0; i < pts.Length; i++)
+            {
+                Vector3 w = route.transform.TransformPoint(route.points[i]);
+                float y = (float)height.Invoke(null, new object[] { w.x, w.z, prev });
+                pts[i] = new Vector3(w.x, y, w.z);
+                if (!float.IsNaN(y)) prev = y;
+            }
+            RouteGround.FillMissing(pts);
+            int checkedPts = 0;
+            for (int i = 0; i < pts.Length; i++)
+            {
+                if (route.distances[i] < 20f || route.distances[i] > 200f) continue;   // the catalog start (90 m) and the search ahead
+                Assert.IsTrue(AsphaltY(pts[i].x, pts[i].z, out float asphalt), "no col_asphalt under route point " + i);
+                Assert.That(pts[i].y, Is.EqualTo(asphalt).Within(0.02f), "route point " + i + " at s " + route.distances[i]);
+                oldBelow = Mathf.Max(oldBelow, asphalt - route.transform.TransformPoint(route.points[i]).y);
+                checkedPts++;
+            }
+            Assert.That(checkedPts, Is.GreaterThan(50));
+            TestContext.WriteLine($"dk65-07: {checkedPts} route points on col_asphalt; the stored (old import) route lay up to {oldBelow:F2} m under it");
+        }
+
+        static bool AsphaltY(float x, float z, out float y)
+        {
+            y = float.NegativeInfinity;
+            foreach (var h in Physics.RaycastAll(new Vector3(x, 400f, z), Vector3.down, 800f))
+                if (h.collider.name == "col_asphalt" && h.point.y > y) y = h.point.y;
+            return !float.IsNegativeInfinity(y);
+        }
+
         [Test]
         public void StartCheck_ObstacleOnTheRoad_IsStillFound()
         {
