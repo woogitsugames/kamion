@@ -209,6 +209,19 @@ namespace Game.Editor.VisualQA
                 // Vehicle mirrors and reversing cameras render into their textures first (LateUpdate does not run here).
                 foreach (var m in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None)) m.RenderNow();
                 MirrorDump.BenchOnce();   // ADR 0342: KAMION_MIRROR_BENCH=1 - GPU cost of the mirror configurations (interleaved, synced)
+                // Optional steering-wheel handwheel angle (deg, positive = clockwise / right turn, matching VehicleVisuals).
+                var savedSteer = new System.Collections.Generic.List<(Transform t, Quaternion rot)>();
+                string steerArg = EditorTools.Arg("-qaSteerDeg", null);
+                if (!string.IsNullOrEmpty(steerArg) && float.TryParse(steerArg, System.Globalization.NumberStyles.Float,
+                        System.Globalization.CultureInfo.InvariantCulture, out float steerDeg))
+                {
+                    foreach (var vv in UnityEngine.Object.FindObjectsByType<VehicleVisuals>(FindObjectsSortMode.None))
+                    {
+                        if (vv.steeringWheel == null) continue;
+                        savedSteer.Add((vv.steeringWheel, vv.steeringWheel.localRotation));
+                        vv.steeringWheel.localRotation = vv.steeringWheel.localRotation * Quaternion.AngleAxis(-steerDeg, Vector3.forward);
+                    }
+                }
                 // Art truck (A7): tier binding, lamp state and the cab fill for this camera (LateUpdate does not run here).
                 foreach (var rig in UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)) rig.Apply();
                 // ADR 0175 evidence: -qaTruckLamps rearfog,hazard,low forces lamp groups on for the render (default: solver state).
@@ -458,6 +471,7 @@ namespace Game.Editor.VisualQA
                 cam.targetTexture = prevTarget;
                 cam.enabled = wasEnabled;
                 foreach (var r in bobtailHidden) r.enabled = true;
+                foreach (var (t, rot) in savedSteer) if (t != null) t.localRotation = rot;
                 cam.cullingMask = prevMask;
                 if (uiCam != null) UnityEngine.Object.DestroyImmediate(uiCam.gameObject);
                 qa.gameObject.SetActive(wasActive);
