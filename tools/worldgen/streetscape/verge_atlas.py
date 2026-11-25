@@ -172,7 +172,7 @@ def _paint_tall(form, cell):
             c = cell.col(np.array([58, 86, 42]) * rng.uniform(0.85, 1.15))
             cell.leaf((0.5 * cw + rng.normal(0, 0.03) * cw, 0.0), ang, rng.uniform(0.26, 0.44) * rh,
                       rng.uniform(0.07, 0.11) * cw * 1.8, c, droop=rng.uniform(0.3, 0.9), rib=cell.col((96, 118, 66)))
-        rust = np.array([112, 58, 34])
+        rust = np.array([94, 56, 38])
         for tip, x, h, lean, bend in _stems(cell, 3, 0.70, 0.98, 3.4, np.array([104, 72, 44]), spread=0.07, lean_sd=0.06, bend_sd=0.04):
             for q in range(170):
                 t = rng.uniform(0.42, 1.0)
@@ -193,7 +193,7 @@ def _paint_tall(form, cell):
                 bx = tip[0] + rng.normal(0, 0.050) * cw
                 by = tip[1] + rng.uniform(-0.012, 0.022) * rh
                 cell.stroke([_at(x, h, lean, bend, 0.9), (bx, by)], 1.3 * S, 1.0 * S, cell.col((84, 100, 50)))
-                cell.dot(bx, by, rng.uniform(3.0, 4.2) * S, cell.col(np.array([190, 160, 40]) * rng.uniform(0.88, 1.08), 1.0))
+                cell.dot(bx, by, rng.uniform(3.0, 4.2) * S, cell.col(np.array([172, 148, 56]) * rng.uniform(0.88, 1.08), 1.0))
     elif form == "yarrow":
         # thin stems, feathery leaves, white flat umbels (Achillea / Daucus)
         _fan(cell, 25, 0.05, 0.20, 3.6, 0.10, 0.4, 0.0, spread=0.8)
@@ -208,7 +208,7 @@ def _paint_tall(form, cell):
                 a = rng.uniform(0, 2 * math.pi)
                 r = rw * math.sqrt(rng.random())
                 cell.dot(tip[0] + math.cos(a) * r, tip[1] + math.sin(a) * r * 0.22 + 0.006 * rh, rng.uniform(1.8, 2.8) * S,
-                         cell.col(np.array([214, 212, 196]) * rng.uniform(0.86, 1.04), 1.0))
+                         cell.col(np.array([196, 194, 180]) * rng.uniform(0.86, 1.04), 1.0))
             for q in range(7):
                 a = rng.uniform(-1.0, 1.0)
                 cell.stroke([_at(x, h, lean, bend, 0.88), (tip[0] + math.sin(a) * rw * 0.9, tip[1])], 1.2 * S, 1.0 * S,
@@ -245,7 +245,7 @@ def _paint_tall(form, cell):
                     if rng.random() < 0.6:
                         for a in np.linspace(0, 2 * math.pi, 9)[:-1]:
                             cell.dot(fx + math.cos(a) * 3.2 * S, fy + math.sin(a) * 3.2 * S, 2.3 * S,
-                                     cell.col(np.array([112, 142, 206]) * rng.uniform(0.9, 1.08), 1.0))
+                                     cell.col(np.array([110, 128, 176]) * rng.uniform(0.9, 1.08), 1.0))
 
 
 def _paint_short(form, cell):
@@ -282,7 +282,7 @@ def _paint_short(form, cell):
             cell.stroke([(x, 0.05 * rh), (x + rng.normal(0, 2 * S), y)], 1.6 * S, 1.2 * S, cell.col((76, 100, 52)))
             for k in range(9):
                 cell.dot(x + rng.normal(0, 3.0 * S), y + rng.normal(0, 3.0 * S), 2.2 * S,
-                         cell.col(np.array([208, 200, 190]) * rng.uniform(0.85, 1.03), 1.0))
+                         cell.col(np.array([192, 186, 176]) * rng.uniform(0.85, 1.03), 1.0))
     elif form == "flat_dead":
         # last year's grass pressed flat: bleached blades lying to one side
         sg = 1.0 if rng.random() < 0.5 else -1.0
@@ -305,9 +305,9 @@ def _paint_short(form, cell):
         for n_, (tip, x, h, lean, bend) in enumerate(_stems(cell, 5, 0.45, 0.92, 1.8, np.array([98, 110, 66]), spread=0.08, lean_sd=0.18)):
             if n_ % 3 == 2:
                 for a in np.linspace(0, 2 * math.pi, 15):
-                    cell.dot(tip[0] + math.cos(a) * 5.0 * S, tip[1] + math.sin(a) * 5.0 * S, 1.7 * S, cell.col((206, 204, 194), 1.0))
+                    cell.dot(tip[0] + math.cos(a) * 5.0 * S, tip[1] + math.sin(a) * 5.0 * S, 1.7 * S, cell.col((190, 188, 178), 1.0))
             else:
-                cell.dot(tip[0], tip[1], rng.uniform(5.0, 6.5) * S, cell.col(np.array([196, 164, 38]) * rng.uniform(0.9, 1.06), 1.0))
+                cell.dot(tip[0], tip[1], rng.uniform(5.0, 6.5) * S, cell.col(np.array([178, 152, 54]) * rng.uniform(0.9, 1.06), 1.0))
     elif form == "yarrow_low":
         _fan(cell, 35, 0.08, 0.34, 3.8, 0.10, 0.4, 0.0, spread=0.9)
         for tip, x, h, lean, bend in _stems(cell, 4, 0.55, 0.95, 2.2, np.array([86, 104, 60]), spread=0.12, lean_sd=0.14):
@@ -316,7 +316,7 @@ def _paint_short(form, cell):
                 a = rng.uniform(0, 2 * math.pi)
                 r = rw * math.sqrt(rng.random())
                 cell.dot(tip[0] + math.cos(a) * r, tip[1] + math.sin(a) * r * 0.25, rng.uniform(1.8, 2.6) * S,
-                         cell.col(np.array([212, 210, 194]) * rng.uniform(0.86, 1.04), 1.0))
+                         cell.col(np.array([196, 194, 180]) * rng.uniform(0.86, 1.04), 1.0))
 
 
 def _paint_maize(im, rng):
@@ -361,7 +361,7 @@ def _paint_maize(im, rng):
         line([tuple(p) for p in mid], 1.6 * S, 0.8 * S, rib)
 
     def plant(x, h, k):
-        green = np.array([70, 104, 46]) * rng.uniform(0.86, 1.14)
+        green = np.array([64, 98, 44]) * rng.uniform(0.86, 1.14)
         lean = rng.normal(0, 0.02)
         stalk = [(x + lean * t * h * px_m, t * h * py_m) for t in np.linspace(0, 1, 9)]
         line(stalk, 0.030 * px_m, 0.012 * px_m, col(np.array([104, 124, 62]), k))
@@ -371,7 +371,7 @@ def _paint_maize(im, rng):
             sg = 1.0 if (i + int(x)) % 2 else -1.0
             c = green
             if t < 0.26:                                     # the lowest leaves dry off in August
-                c = np.array([150, 132, 78]) * rng.uniform(0.85, 1.1) if rng.random() < 0.75 else green * 0.9
+                c = np.array([138, 126, 76]) * rng.uniform(0.85, 1.1) if rng.random() < 0.40 else green * 0.88
             elif t < 0.40 and rng.random() < 0.3:
                 c = np.array([112, 122, 60])
             L = rng.uniform(0.55, 0.85) * (0.75 + 0.5 * math.sin(math.pi * min(max(t, 0.0), 1.0)))

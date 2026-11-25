@@ -1251,9 +1251,11 @@ GARDEN_B = (0.12, 0.30)
 # edge). Farmland now carries a FLAG in COLOR_0.b and Kamion/World PBR draws the mosaic per pixel from the EPSG:2180
 # position (game/Assets/_Project/Environment/Shaders/KamionFieldMosaic.hlsl: same field on both sides of any seam). Every
 # other ground keeps B <= GROUND_B_MAX so it never reads as a flag.
-# ADR 0334 r3 (fields3-s24, critic wave10-pre P0 "prostokątna zielona łatka"): grassland was 0.90 - on the mesh ramp from
-# arable 1.00 down to a meadow the shader could not tell "meadow" from "leaving the farmland" and painted half of every
-# straddling terrain cell as a rough margin (a 40 m green rectangle at the far terrain LOD). Grassland is now the LOW
+# ADR 0334 r3 (fields3-s24, critic wave10-pre P0 "prostokątna zielona łatka", dk65-07 f2_obl_maize = E 58 N 526, the
+# border of a hay meadow and an arable field): grassland was 0.90 - on the mesh ramp from arable 1.00 down to a meadow
+# the shader could not tell "meadow" from "leaving the farmland"; its margin rule (per-triangle flag gradient) painted
+# the straddling 1 m terrain cells of the stair-stepped border as rough grass - hard-edged rectangles of a few metres
+# (and cell-sized ones at the coarser terrain LODs). Grassland is now the LOW
 # end of the channel: every ramp below the arable code leaves the farmland, and the cell between an arable field and a
 # meadow is open rough grass (a baulk). Every other ground keeps GROUND_B_MIN <= B <= GROUND_B_MAX.
 FIELD_FLAG_B = {"roślinność trawiasta": 0.00, "uprawa na gruntach ornych": 1.00}
@@ -1263,15 +1265,15 @@ GROUND_B_MIN = 0.07             # shader: grassland flag below KF_MEADOW_B0 .. K
 # of a stubble field 300 m away); the crop now stops 1 .. 1 + FIELD_MARGIN_M[0] + FIELD_MARGIN_M[1] m short of the
 # polygon / verge line, by a smooth EPSG:2180 noise of two scales (same on both sides of a tile seam), each BDOT kind on
 # its own - between an arable field and a meadow a wavy strip of rough grass is left. WORKING_VALUE.
-FIELD_MARGIN_M = (6.0, 2.0)
+FIELD_MARGIN_M = (3.5, 1.5)
 FIELD_MARGIN_CELL_M = (64.0, 19.0)
-# r3, the P0 itself (critic wave10-pre: "idealnie prostokątna zielona łatka", dk65-07 f2_obl_maize): a strip of the
-# layout that the BDOT polygon outline cuts down to a stub - there a 25 x 50 m piece of a fallow strip in a 30 m wide
-# arm of an arable polygon, between ripe cereal and a copse - is drawn by the shader as a ruler-edged rectangle of
-# another crop. Nobody works a separate crop on 0.1 ha in a field corner: a connected piece of one strip smaller than
-# FIELD_STUB_M2 (and not cut by the tile edge, where it goes on in the neighbour) is open rough ground - the unworked
-# corner by the wood - and the margin rule then frays the crop edge beside it. WORKING_VALUE.
-FIELD_STUB_M2 = 2500.0
+# r3 strip stubs: a strip of the layout that the outline of the farmland (BDOT polygon edge, road verge, wood) cuts
+# down to a sliver - a few hundred m2 of another crop wedged into a field corner - is drawn by the shader as a small
+# ruler-edged patch of its own colour. Nobody works a separate crop on 0.05 ha: a connected piece of one strip smaller
+# than FIELD_STUB_M2 that the outline cuts (and that is not cut by the tile edge, where it goes on in the neighbour)
+# is open rough ground - the unworked corner - and the margin rule then frays the crop edge beside it. First value
+# 2500 m2 took 41 % of the farmland of dk65-07 (roads and woods cut most strips there); 600 m2. WORKING_VALUE.
+FIELD_STUB_M2 = 600.0
 
 
 def _h32(a, b, salt):

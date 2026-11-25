@@ -58,8 +58,9 @@
 #define KF_WARP_AS 3.0
 // r3 flag contract: grassland = COLOR_0.b <= KF_MEADOW_B0 (new tiles write 0.00), arable = 1.00, every other ground
 // keeps 0.07 .. 0.80. With the r2 codes (grassland 0.90) the mesh ramp from arable 1.00 to a meadow could not be told
-// from the ramp to a verge, and the margin rule painted half of every straddling terrain cell as rough grass - at the
-// far terrain LOD a 40 m green rectangle (critic P0, f2_obl_maize). Now every ramp below the arable code leaves the
+// from the ramp to a verge, and the margin rule (flag gradient, constant per triangle) painted the straddling terrain
+// cells of the stair-stepped border as rough grass - hard-edged green rectangles of a few metres in the crop (critic
+// P0, dk65-07 f2_obl_maize; cell-sized at the coarser terrain LODs). Now every ramp below the arable code leaves the
 // farmland; tiles not rebuilt yet (grassland 0.90) keep the r2 behaviour.
 #define KF_MEADOW_B0 0.020
 #define KF_MEADOW_B1 0.050
@@ -324,7 +325,12 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     fpr = min(fpr, fp * 1.5);
 
     // streaks along the rows: every pass of a machine leaves its own tone (pass-wide) and fine drill / chaff lines
-    half sf2 = KFNoiseSF(rc, rl, 2.6, 60.0, 987u) - 0.5h;
+    // r3 (critic wave10-pre "pasy jak boisko golfowe", f2_obl_headland): value noise on ONE 2.6 m lattice across the
+    // rows is a quasi-periodic light / dark alternation - from above every meadow was evenly striped. Now a broad
+    // 7.3 m octave carries most of the tone and the pass-wide streaks come and go in patches (17 m / 71 m noise)
+    half sfA = KFNoiseSF(rc, rl, 7.3, 90.0, 1029u) - 0.5h;
+    half sfB = KFNoiseSF(rc, rl, 2.6, 60.0, 987u) - 0.5h;
+    half sf2 = sfA * 0.8h + sfB * lerp(0.15h, 1.0h, smoothstep(0.42h, 0.70h, n17 * 0.5h + nL * 0.5h));
 #if defined(_KAMION_WORLD_DETAIL)
     half sf1 = (KFNoiseSF(rc, rl, 0.55, 18.0, 989u) - 0.5h) * (half)saturate(0.55 / (1.5 * fpr) - 0.5);
 #else
@@ -411,18 +417,21 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         uint hw0 = KFHash((int)wi + KF_BLOCK_HASH_OFS * 4, (int)(fid & 0xFFFFu), 1021u);
         float wj = (KFU01(hw0) - 0.5) * 2.2;
         float wd = abs(rc - (wi + 0.5) * 6.0 - wj);
-        half wwid = (half)(0.35 + 0.9 * KFU01(hw0 >> 5)) * (0.6h + 0.8h * n5);
-        half row = (half)(saturate((0.5 * wwid - wd) / max(fpr, 0.25) + 0.5) * saturate(6.0 / (3.0 * fpr) - 0.5));
-        row *= (KFU01(hw0 >> 9) < 0.67 ? 1.0h : 0.0h) * smoothstep(0.30h, 0.55h, KFNoiseSF(rc, rl, 6.0, 23.0, 1023u));
+        half wwid = (half)(0.35 + 0.9 * KFU01(KFHash((int)hw0, 1, 1027u))) * (0.6h + 0.8h * n5);
+        // box filter that keeps the energy: a 0.8 m windrow under a 3 m footprint is a faint tone, not a 3 m band
+        // (the r2 bands kept full strength while they widened - the far meadow turned into even stripes)
+        float fw = max(fpr, 0.25);
+        half row = (half)(saturate((0.5 * wwid - wd) / fw + 0.5) * min(1.0, wwid / fw) * saturate(6.0 / (3.0 * fpr) - 0.5));
+        row *= (KFU01(KFHash((int)hw0, 3, 1027u)) < 0.6 ? 1.0h : 0.0h) * smoothstep(0.38h, 0.60h, KFNoiseSF(rc, rl, 6.0, 23.0, 1023u));
         col = lerp(col, u == KF_MOWN ? half3(0.170h, 0.185h, 0.070h) : half3(0.250h, 0.225h, 0.105h), row * (0.45h + 0.4h * n17));
-        stA1 = 0.12h; stA2 = 0.10h;
+        stA1 = 0.12h; stA2 = 0.07h;
     }
     else
     {
         // ley / meadow regrowth. r3: the r2 mower passes (alternate 2.8 m light / dark bands) read as a football
         // pitch from above; a meadow three weeks after the cut shows no swath direction - only the pass-wide tone
         // streaks (sf2, irregular) and the lusher / drier patches below stay
-        stA1 = 0.06h; stA2 = 0.07h;
+        stA1 = 0.06h; stA2 = 0.05h;
     }
     if (u >= KF_LEY && u != KF_FALLOW)
     {
@@ -506,7 +515,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         // grass edge, a darker damp bottom with a pale dry rim, and it is DOWN: the rut profile tilts the normal.
         // Between the ruts the middle strip is taller, rougher grass. All WORKING_VALUE.
         float rcen = 0.8 + (n17 - 0.5) * 0.5 + (n1 - 0.5) * 0.12;
-        float rhw = max(0.10 + 0.22 * n5 + (n1 - 0.5) * 0.12, 0.05);
+        float rhw = max(0.08 + 0.17 * n5 + (n1 - 0.5) * 0.10, 0.05);
         half live = smoothstep(0.34h, 0.52h, n17 * 0.55h + KFNoise(local, origin, 9.0, 1025u) * 0.45h);
         float sr = (blockEdge - rcen) / rhw;
         float fpt = max(fp, 0.10);

@@ -67,11 +67,11 @@ COLONY_T = 0.55                  # colony noise above this = a stand of one forb
 COLONY_BOOST = 10.0              # weight of the stand's forb inside it
 FORB_OUTSIDE = 0.20              # weight factor of every forb outside its stands
 SLOT_M = 0.15                    # candidate slots along the chainage
-RATE_EDGE = 2.6                  # plants per metre where the density is 1 (mean density ~0.35)
-RATE_SLOPE = 1.35
+RATE_EDGE = 3.4                  # plants per metre where the density is 1 (mean density ~0.35)
+RATE_SLOPE = 1.8 
 RATE_BOTTOM = 2.3
 DENS_M = (14.0, 47.0)            # the two noise periods of the density
-DENS_T = (0.36, 0.74)            # smoothstep of the mixed noise: below = bare stretch
+DENS_T = (0.32, 0.70)            # smoothstep of the mixed noise: below = bare stretch
 SCALE = (0.6, 1.4)               # per-card height scale
 EDGE_OUT_M = 0.9                 # shoulder-edge plants up to this far behind the gravel (needs the ground height)
 CROSS_SHARE = 0.25               # tall plants with a second card across the first (volume from the side)
