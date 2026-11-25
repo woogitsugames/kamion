@@ -19,3 +19,4 @@
 - NASTĘPNY KROK: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner neon-paving-s24; try { uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region dw671-tykocin-03 --context } finally { pwsh scripts/unity-slot.ps1 -Release -Pool heavy -Owner neon-paving-s24 }`.
 - KONIEC: kroki 1-8 gotowe (testy, import, sbs w artifacts/neon-paving-s24/sbs). Nie scalono do main.
 - 25.11 wieczor: poprawka zjazdow (szerokosc bramy, tylko chodnik, ~35 %), kamery np_cross_*; pytest: 6 czerwonych->1 region-C-niezwiazane (budzet C 2002411>2000000, determinism C) - patrz raport
+- 2026-11-25 22:41: GO2, main f1163525d zmergowany (0225ca0e3); lancuchy A-E + final.ps1 + autocommit.ps1 wystartowane. NASTEPNY KROK: po 'DONE' w artifacts/regen-wave-11-s24/final.status -> pytest.log, seams_after.md, route_obstacles.json, vqa.
