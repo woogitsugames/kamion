@@ -1366,7 +1366,9 @@ def load(fc, origin, overrides, hero=None):
     ox, oy = origin
     ovr = target_sets(overrides)
     datum = lod1_base_datum(overrides)
-    small_town = any(o.get("kind") == "facade_rules" and o.get("small_town") for o in overrides)
+    small_town_ov = next((o for o in overrides if o.get("kind") == "facade_rules" and o.get("small_town")), None)
+    small_town = small_town_ov is not None
+    small_town_roofs = bool(small_town_ov.get("small_town_roofs", True)) if small_town else False
     out = []
     for f in fc["features"]:
         p = f["properties"]
@@ -1410,6 +1412,8 @@ def load(fc, origin, overrides, hero=None):
     if small_town:                                # ADR 0336, opt-in per region
         for b in out:
             b["small_town"] = True
+            if not small_town_roofs:
+                b["small_town_roofs"] = False
     return out
 
 
@@ -1695,10 +1699,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     frontage_props = []
     roof_masts_report = []
     btree = shapely.STRtree([b["poly"] for b in blds])
-    any_st = any(b.get("small_town") for b in blds)
+    any_st_roofs = any(b.get("small_town") and b.get("small_town_roofs", True) for b in blds)
     st_stats = {"buildings": 0, "stone_plinths": 0, "dormers": 0, "window_trim_tris": 0,
                 "joinery_white": 0, "joinery_brown": 0, "roof_materials": {}}
-    house_pal = house_palette(blds, roofs=SMALL_TOWN_ROOFS if any_st else None)
+    house_pal = house_palette(blds, roofs=SMALL_TOWN_ROOFS if any_st_roofs else None)
     Acc.runoff_tris = {"with_uv1": 0, "without_uv1": 0}
     signs = []
     for b in blds:
@@ -2191,6 +2195,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                     wall_top_fill(acc, "buildings_low", wall, a, d, prof, lambda u, zt=zt: zt, u_acc, zref, col=col_gable)
                 bold_sill_ = st_mode and (typ == "house" or st_town_win) and not wooden
                 zsplits_ = [zpl] + [z for b in band_z for z in b] + ([z_frieze] if z_frieze is not None else [])
+                # ADR 0348: split the middle attic-window column at eave height zt so gable col_gable stays uniform
+                if aw and all(o[3] <= zt - 0.02 or o[2] >= zt + 0.02 for o in ops):
+                    zsplits_.append(zt)
                 for cu0, cu1, czt in cols:
                     FK.wall_pieces(wall_with_openings, acc, a + d * cu0, d, nout, cu1 - cu0, zbot, czt,
                                    ops if cu0 == 0.0 else [(o[0] - cu0, o[1] - cu0, *o[2:]) for o in ops], u_acc + cu0, zref,
@@ -2307,11 +2314,12 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                          uv1=runoff_uv1(hole_ro, uh, uh + L, zbot, zeave))
                 uh += L
         if pitched:
+            st_roofs = st_mode and b.get("small_town_roofs", True)
             default_rmat = (house_pal[key][1] if typ == "house"
-                            else hpick(key, SMALL_TOWN_ROOFS_PITCHED if st_mode else ROOFS_PITCHED, "roof"))
+                            else hpick(key, SMALL_TOWN_ROOFS_PITCHED if st_roofs else ROOFS_PITCHED, "roof"))
             rmat = house_roof_material(b, default_rmat)
             if typ == "house":      # ADR 0316; also over an orthophoto-read colour (it says red tile, not which tile)
-                rmat = roof_variant(key, rmat, wooden, small_town=st_mode)
+                rmat = roof_variant(key, rmat, wooden, small_town=st_roofs)
             if st_mode:
                 st_stats["roof_materials"][rmat] = st_stats["roof_materials"].get(rmat, 0) + 1
             # ADR 0094 (review s9 P1-4): the soffit is light boarding (`soffit_boards`), not the graphite flashing
@@ -2322,7 +2330,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # which now share the downpipe material (same colour) on LOD0 as they already did on LOD1.
             # fascia / verge board: white boards with a tile roof, sheet flashing in the roof tone with a metal roof
             # (review s9 P2-3 "thick black verge board")
-            roof_l1_map = ROOF_LOD1_SMALL_TOWN if st_mode else ROOF_LOD1
+            roof_l1_map = ROOF_LOD1_SMALL_TOWN if st_roofs else ROOF_LOD1
             eaves = RF.build(acc, roof, poly, rmat, soffit_mat="soffit_boards",
                              fascia_mat=(wall if wooden else "hall_flashing" if rmat.startswith("roof_metal")
                                          else "soffit_boards"),

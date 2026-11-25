@@ -49,6 +49,7 @@ def test_dw671_09_enables_small_town_and_reveal_plinth_ranges():
     blds = BM.load(fc, DW09_ORIGIN, ovs)
     assert len(blds) >= 80
     assert all(b.get("small_town") is True for b in blds)
+    assert all(b.get("small_town_roofs") is False for b in blds)
     assert 0.08 <= BM.REVEAL_SMALL_TOWN <= 0.12
     assert 0.08 <= BM.REVEAL_SMALL_TOWN_WOOD <= 0.12
     assert all(0.30 <= h <= 0.60 for h in BM.SMALL_TOWN_PLINTH_HS)
