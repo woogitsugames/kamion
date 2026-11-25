@@ -46,6 +46,12 @@
     "power_lines": 182,
     "pylons": 388
   },
+  "forest_chm_ring": {
+    "chm_share": 0.0,
+    "chm_tiles": [],
+    "chm_vertices": 0,
+    "total_curtain_vertices": 16138
+  },
   "lod1_height_audit": {
     "buildings": 133679,
     "conflicting_ids": 0,
@@ -125,7 +131,7 @@
   },
   "tiers": {
     "High": {
-      "bytes": 16231428,
+      "bytes": 16490240,
       "file": "Data/raw/derived/bialystok-maczka/world/far_field.glb",
       "sectors": {
         "far_east": {
@@ -165,7 +171,7 @@
           "vertices": 56249
         }
       },
-      "sha256": "86cd3ede747c3e00824e078d62f226bb62aaca72f39ba01101e491d94a8abde3",
+      "sha256": "309ca04d5af02d1375a5028564c65110e229dcd944c3b6b73ebfcc31cf0e3e54",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -178,7 +184,7 @@
       "total_vertices": 316466
     },
     "Low": {
-      "bytes": 2141344,
+      "bytes": 2202236,
       "file": "Data/raw/derived/bialystok-maczka/world/far_field.low.glb",
       "sectors": {
         "far_east": {
@@ -218,7 +224,7 @@
           "vertices": 5497
         }
       },
-      "sha256": "6c724c05979d054a44ef76df82bd9b6c9444798c1ffac98ea227da05bfc0ccba",
+      "sha256": "6d0c0ba1f06abea0988316bfb0d4c40d132e94667978689f6eebfa73aa2b191c",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
