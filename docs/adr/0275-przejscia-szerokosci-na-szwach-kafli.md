@@ -106,12 +106,45 @@ Czas `build_network` razem z wczytaniem grafów sąsiadów: 0,1–1,9 s na kafel
 2. Zmiana rodziny profilu na szwie (pobocze wiejskie ↔ krawężnik płaski): DK8 `w257367422` (`industrial-c` | `maczka`) i
    `w261104557` (`kleeberga` | `knyszynska`) — krawędź asfaltu różni się o 1,0 m (FAIL w raporcie). Wynika z reguły
    „fast” liczonej per łańcuch w `assign_sides`; poza zakresem (wymaga decyzji, która strona ma rację).
+   → seams-side-s24 (niżej): rodzaj boku uzgadniany na szwie regułą rang.
 3. Wysokość (niweleta) na szwie nie jest mieszana (ADR 0214 „Otwarte 4”, różne roczniki NMT).
 4. Przejście stoi w połowie w każdym kaflu — tam, gdzie kończy się override, a nie tam, gdzie w terenie zmienia się
    nawierzchnia (jak styk km 25,32 z ADR 0233, który jest autorskim profilem `width`). Znany styk w terenie → profil `width`.
 5. `generated/*` nieprzebudowane (zakaz rundy 5): kafle `dk65-06`, `dk65-11`, `knyszyn-s`, `dw671-tykocin-01`,
    `bialystok-kleeberga`, `bialystok-knyszynska`, `bialystok-maczka` wymagają `build_world`, żeby przejścia stanęły w
    geometrii; `roads_qa.json` nie ma jeszcze kluczy `seam_tapers` / `seam_shoulders`. Render szwów — lider.
+
+## Rozszerzenie seams-side-s24: rodzaj boku na szwie
+Po wyrównaniu osi (seams-w10) zostało 7 FAIL `pobocze L/P` (+ 1 `krawędź asfaltu`) na szwach `kleeberga` | `maczka`
+i `industrial-c` | `maczka` (`artifacts/seams-w10-s24/seams_after_fix.md`). Rodzaj boku liczy `network.assign_sides`
+osobno w każdym kaflu z danych przyciętych do bbox (chodniki `osm_context`, BDOT10k OT_SKRP_L, place OT_PTPL_A /
+parkingi; okna filtra ±20 m / ±12 m urywają się na szwie) i z przycięć skrzyżowań 2. przebiegu (ADR 0304), które widzą
+tylko skrzyżowania własnego kafla (kikut 17,7 m w `maczka` przy węźle 1889474201).
+
+Decyzja: uzgodnienie w `roads/seam_taper.py`, tak jak szerokości — bez marginesu danych (wymagałby przebudowy
+`generated/*` wszystkich kafli). Każdy kafel liczy NOMINALNY bok obu końców na szwie tym samym kodem z danych w gicie
+(`roads.graph.json`, overrides + `overrides.*.json`, `generated/osm_context.json`, `generated/streetscape_sources.json`):
+sieć bez przejść → `junctions.build_junctions` → 2. przebieg `assign_sides` tylko na łańcuchach z końcem na granicy
+(`only=`; profil łańcucha zależy od geometrii innych łańcuchów, nie od ich profili). Reguła symetryczna (`agree`):
+
+  constrained (inna jezdnia przy krawędzi: krawężnik `tight` / pas `flush`, nigdy nie zmieniany) > krawężnik + chodnik >
+  krawędź płaska (plac, h = 0) > krawężnik > pobocze wiejskie; ten sam rodzaj: szerszy chodnik.
+
+Przycięcie danych tylko USUWA dowody (chodnik / plac, który jeden kafel jeszcze widzi przy szwie, istnieje), a węższy
+profil niczego nie zachodzi, więc wygrywa wyższa ranga. Kafel narzuca uzgodniony profil na własny koniec na odcinku
+własnego rodzaju od szwu w głąb, najwyżej `SIDE_HOLD_M` = 25 m (WORKING_VALUE); stacje `tight`/`flush`, inne rodzaje
+(pas dzielący, wyspa) i mosty zostają. Kolejność w `pipeline.build`: 2. `assign_sides` → `apply_sides` →
+`apply_shoulders` (kod pobocza 0272 wiejskiego końca z reguły własnej sekcji, przejście jak wyżej). Wspólne wejścia
+`assign_sides` (`side_inputs`) dla generatora, nominału i `qa.seams`; `qa.seams` ustawia też `net.authored` /
+`region_id` jak `pipeline.build` (chodniki domniemane ADR 0237 D38 w kaflach knyszyn*).
+
+Koszt: nominał kafla miejskiego ~25–30 s (sieć + skrzyżowania), `plan_sides_region` z sąsiadami ~65–70 s na build
+kafla miejskiego (zmierzone na maszynie dewelopera, s24). Test: `tests/gis/test_seam_sides_s24.py`.
+
+Otwarte: krok rodzaju boku stoi teraz do 25 m w głąb jednego kafla (np. chodnik kończy się 25 m za szwem w kaflu, który
+go nie widział) — właściwa poprawka to `osm_context` / `streetscape_sources` z marginesem ~50 m za bbox przy następnym
+ingest (wtedy oba nominały się zgodzą i uzgodnienie nic nie zmieni). `qa.seams` czyta tylko `overrides.yaml`
+(bez `overrides.*.json` generatora) — rozbieżność sprzed tej zmiany.
 
 ## Odtworzenie
 ```
