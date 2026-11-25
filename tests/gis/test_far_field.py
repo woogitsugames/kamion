@@ -266,3 +266,96 @@ def test_stand_wrapping_a_tile_corner_is_split_by_sector_0308():
     assert sum(p.area for _, p in parts) == pytest.approx(L.area, rel=1e-6)
     for name, p in parts:
         assert reg[name].buffer(0.01).contains(p), name
+
+
+def test_far_field_extra_dist_and_curtain_uv1_0330():
+    """ADR 0330 addendum: inverse foreshortening recovers true ring coordinates, extra_dist_eff is 0 within 140 m of
+    the tile border, grows monotonically to ~3.55 km, and curtains carry it in TEXCOORD_1.x with sky-tilted normals."""
+    from streetscape import far_field as FF
+
+    for e_raw, n_raw in ((500.0, 1100.0), (500.0, 2500.0), (-3200.0, 1800.0), (4100.0, -400.0)):
+        ee, ne, d_raw, d_eff = FF.foreshorten_point(e_raw, n_raw, 1024.0)
+        er, nr, dt = FF.unforeshorten_xy(np.array([ee]), np.array([ne]), 1024.0)
+        assert er[0] == pytest.approx(e_raw, abs=0.5)
+        assert nr[0] == pytest.approx(n_raw, abs=0.5)
+        assert dt[0] == pytest.approx(d_raw, abs=0.5)
+        dex = FF.extra_dist_eff(np.array([ee]), np.array([ne]), 1024.0)[0]
+        if d_raw <= FF.FORESHORTEN_FREE_M:
+            assert dex == pytest.approx(0.0, abs=1e-6)
+        else:
+            assert dex == pytest.approx(d_raw - d_eff, abs=0.5)
+
+    elev = FF.BorderElevation(1024.0, [135.0, 135.0], [135.0, 135.0], [135.0, 135.0], [135.0, 135.0])
+    sectors = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    FF._add_forest_stand(
+        sectors,
+        [[200.0, 2600.0], [800.0, 2600.0], [800.0, 3200.0], [200.0, 3200.0], [200.0, 2600.0]],
+        "conifer", elev, 1024.0, "High",
+    )
+    prims = sectors["far_north"].primitives(1024.0)
+    assert len(prims) <= 2
+    curtain = next(p for p in prims if p["mat"] == "forest_edge_mixed_far_atlas")
+    assert "UV1" in curtain and len(curtain["UV1"]) == len(curtain["V"])
+    expected_extra = FF.extra_dist_eff(curtain["V"][:, 0], curtain["V"][:, 1], 1024.0)
+    assert np.allclose(curtain["UV1"][:, 0], expected_extra, atol=1e-3)
+    assert curtain["UV1"][:, 0].min() > 800.0
+    # Top row normals tilt further skyward than bottom row normals (CURTAIN_NORMAL_UP)
+    assert curtain["N"][:, 2].max() > 0.75
+    assert curtain["N"][:, 2].min() < curtain["N"][:, 2].max() - 0.20
+
+
+def test_far_field_chm_and_noise_silhouette_0330():
+    """ADR 0330 addendum: RingChm drives crown heights where forest_chm.png exists (without the legacy 8.5 m clamp at
+    3 km), and multi-scale seeded noise yields a varied, deterministic silhouette where CHM is absent."""
+    from streetscape import far_field as FF, forest_chm as FC
+
+    # Synthetic CHM covering east 0..1024, north 1024..2048: western half young (10 m), eastern half mature (28 m)
+    top = np.full((64, 64), 10.0, dtype=np.float64)
+    top[:, 32:] = 28.0
+    cov = np.full((64, 64), 0.9, dtype=np.float64)
+    chm = FC.Chm(top, cov, x0=0.0, y1=2048.0, cell_m=16.0)
+    ring_chm = FF.RingChm([("synth-tile", chm)])
+
+    e_raw = np.linspace(100.0, 900.0, 20)
+    n_raw = np.full_like(e_raw, 1600.0)
+    pts_eff = np.array([FF.foreshorten_point(x, y, 1024.0)[:2] for x, y in zip(e_raw, n_raw)])
+    ht_chm = FF._crown_height_wave(pts_eff[:, 0], pts_eff[:, 1], 15.0, 1024.0,
+                                   rng=np.random.default_rng(7), mix="conifer", ring_chm=ring_chm)
+    assert ring_chm.n_chm_verts == len(e_raw)
+    # Mature eastern half must stand noticeably taller than young western half
+    assert ht_chm[12:].mean() > ht_chm[:8].mean() * 2.0
+
+    # Far stand (d_true ~ 3000 m) without CHM: deterministic, varied, not clamped flat to 8.5 m
+    e_far_raw = np.linspace(-800.0, 800.0, 40)
+    n_far_raw = np.full_like(e_far_raw, 4000.0)
+    pts_far = np.array([FF.foreshorten_point(x, y, 1024.0)[:2] for x, y in zip(e_far_raw, n_far_raw)])
+    ht1 = FF._crown_height_wave(pts_far[:, 0], pts_far[:, 1], 8.5, 1024.0, rng=np.random.default_rng(42), mix="mixed")
+    ht2 = FF._crown_height_wave(pts_far[:, 0], pts_far[:, 1], 8.5, 1024.0, rng=np.random.default_rng(42), mix="mixed")
+    assert np.allclose(ht1, ht2)
+    assert ht1.min() < 7.5, "distant low/young parts must not clamp flat to legacy 8.5 m"
+    assert ht1.max() / ht1.min() > 1.7, "horizon silhouette must vary across compartments and clumps"
+
+
+def test_far_atlas_haze_and_visibility_0330():
+    """ADR 0330 addendum: far atlas v2 cools distant bands (higher B/R) and lifts sky visibility (B in _n.png)."""
+    from PIL import Image
+    from streetscape import forest_hlod as FH
+
+    vdir = REPO / "art-source" / "world" / "vegetation"
+    meta = json.loads((vdir / "forest_edge_far_atlas.json").read_text(encoding="utf-8"))
+    assert meta["schema"] == "truck-sim-pl/forest-edge-far-atlas/2"
+    a_im = np.asarray(Image.open(vdir / f"{FH.FAR_ATLAS_MAT}.png").convert("RGBA"), float) / 255.0
+    n_im = np.asarray(Image.open(vdir / f"{FH.FAR_ATLAS_MAT}_n.png").convert("RGBA"), float) / 255.0
+    H, Hn = a_im.shape[0], n_im.shape[0]
+    br_by_band, vis_by_band = [], []
+    for suf in ("", "_haze1", "_haze2"):
+        v0, v1 = FH.far_atlas_slot_v("conifer", suf)
+        sl = a_im[H - int(round(v1 * H)):H - int(round(v0 * H))]
+        m = sl[..., 3] > 0.5
+        lin = FH._srgb_to_lin(sl[m, :3]).mean(axis=0)
+        br_by_band.append(float(lin[2] / max(lin[0], 1e-6)))
+        sn = n_im[Hn - int(round(v1 * Hn)):Hn - int(round(v0 * Hn))]
+        vis_by_band.append(float(sn[..., 2].mean()))
+    assert br_by_band[0] < br_by_band[1] < br_by_band[2], f"expected cooler B/R with distance: {br_by_band}"
+    assert vis_by_band[0] < vis_by_band[1] < vis_by_band[2], f"expected higher sky vis_B with distance: {vis_by_band}"
+    assert vis_by_band[2] > 0.85

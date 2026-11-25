@@ -104,3 +104,42 @@ przed | po: `artifacts/banks2-s24/sbs/r{1,2,3,4}/`.
   (`Kamion/Vegetation`, `Kamion/World Surface` — poza własnością world-buildera, rendering-perf).
 - Skarpa tylna rowu nadal wraca do wysokości krawędzi jezdni (xsec), nawet gdy teren za nią niższy (nasyp) — lepiej
   kończyć ją na terenie (zmiana `roads/network.side_profile` + meshing, osobne zadanie).
+
+---
+
+## Dopisek — pas lasu na horyzoncie (`far_field`): prawdziwa głębia optyczna (ADR 0332), atlas v2 i sylweta z CHM (gałąź `neon-farfield-s24`, 2026-11-25)
+
+### Kontekst i przyczyna
+Po ADR 0330 i 0339 (sekcja otwartych) z kabiny na horyzoncie nadal widoczna była ciemna, równa wstęga lasu (`far_field`, pierścień 1–4,2 km):
+1. **Zbyt mała perspektywa powietrzna w shaderze:** `KamionFogTau` liczył ekstynkcję wyłącznie dla skróconej odległości renderu (`d_eff ≤ 660 m` za krawędzią), zamiast prawdziwej `d_true` (1–4,2 km). Wypieczone w ADR 0330 `HAZE_ALBEDO` w teksturze było mnożone przez oświetlenie — na ścianach odwróconych od słońca (`edge-west`, `edge-south`) dawało to zaledwie sRGB `45–75` (czarna wstęga), a w `Overcast` nie dawało właściwego szarego wygaszenia z warstwy przyziemnej (`hazeGroundFactor = 2,4`).
+2. **Tłumienie nieba przez okluzję pni (`vis_B`):** pomiar `forest_edge_{conifer,mixed,broadleaf}_n.png` wykazał średnie `vis_B = 0,135 / 0,159 / 0,204`; przy `VegetationCanopyPolicy` (`_Impostor.y = 0,85`) kurtyny dalekie traciły ~71 % światła kopuły nieba (`SampleSH`), a przy płaskiej normalnej (`z = 0,48`) czytały się jak ciemna pionowa ściana.
+3. **Równa wysokość w 2–4 km:** `far_field.py` przycinał bazową wysokość każdego drzewostanu przez `max(..., 8.5)`. Przy skali skrócenia `s_h ≈ 0,39` (2,5–4 km) wszystkie drzewostany (18–21,5 m × `s_h` = 7,0–8,4 m) wpadały w tę podłogę i dostawały jedną płaską wysokość `8,5 m`, bez użycia dostępnych modeli koron (`forest_chm.png`, ADR 0339).
+
+### Decyzja
+1. **Prawdziwa głębia optyczna w shaderze (spójna z ADR 0332, bez białego pasa):**
+   - `KamionAtmosphere.hlsl`: nowa funkcja `KamionFogTauExtra(pw, viewDepth, extraDist)` — stosuje dokładnie ten sam współczynnik ekstynkcji Koschmiedera i warstwy przyziemnej (`_KamionHaze`) co niebo i teren dla drogi `viewDepth + max(extraDist, 0)`, zostawiając `FarFade` przy `viewDepth` (żeby Low far clip 900–1500 m nie wycinał środka pierścienia). Dla `extraDist == 0` wynik jest identyczny z `KamionFogTau`.
+   - `Vegetation.shader` (`_HLOD_EDGE`): czyta `TEXCOORD1.x = d_extra` (`max(d_true - d_eff, 0)` zapisane w `far_field.py` na istniejącym kanale `UV1` z `WorldEdgeBuilder` — **0 B dodatkowej pamięci GPU**, **0 nowych wariantów**, **0 zmian na HLOD wewnątrz kafla**, który nie ma `UV1`).
+   - `WorldSurface.shader` (`_FAR_FACADE`): `KamionFarExtraDist(posOS.xz, uv1.x)` wylicza `max(d_true - d_eff, 0)` z odwrotności skrócenia radialnego dla obiektów > 140 m za granicą kafla (i 0 dla obiektów w kaflu oraz `SKYLINE_FLAG_BEYOND`). Usunięto wypiekanie `HAZE_ALBEDO` w `COL` submesh 0 (budynki/kominy nie są podwójnie zamglane ani niebieskie w pochmurny dzień / w nocy).
+2. **Chłodniejszy atlas daleki v2 i światło nieba (`forest_hlod.py`, `far_field.py`, `WORKING_VALUE`):**
+   - `forest_edge_mixed_far_atlas` (schemat `truck-sim-pl/forest-edge-far-atlas/2`): chłodniejszy cel Rayleigha `HAZE_ALBEDO = (0,20; 0,30; 0,46)` dla pasm `""` / `_haze1` / `_haze2` (`k = 0,08 / 0,24 / 0,40`); w `_n.png` podniesienie `vis_B` ku `1,0` (`0,55 / 0,78 / 0,92`) i wygładzenie normalnych XY (`0,35 / 0,60 / 0,80`). W `Overcast` silna szara mgła z `KamionFogTauExtra` przykrywa chłodny tint naturalnie.
+   - Normalne kurtyn `far_field`: gradient w pionie `CURTAIN_NORMAL_UP = (0,65; 1,65)` (jak w ADR 0339 r2 — korony biorą niebieskie światło nieba z góry).
+3. **Nieregularna sylweta z `forest_chm.png` i szumu z ziarna (`far_field.py`):**
+   - `RingChm`: ładuje `forest_chm.png` wszystkich sąsiednich kafli (spośród 24 kafli trasy z CHM), których bbox przecina pierścień ±4,2 km; w wierzchołkach kurtyn odwraca foreshortening (`unforeshorten_xy`) i pobiera zmierzoną wysokość koron (`max(top, 0,78 * dom) / CHM_WALL_TOP_FRAC[mix]`, ±7 % jittera). Kopiec pod okapem także dopasowuje wysokość do CHM.
+   - Poza 24 kaflami CHM: deterministyczny wieloskalowy szum gładki (`_vnoise2`: wydzielenia/wiek ~260 m, kępy ~65 m, korony ~22 m) + ziarno drzewostanu (przestoje ~12 %, wcięcia ~10 %, zakres 0,42–1,48× baza klasy), bez sztucznej podłogi `8,5 m` (zastąpiona `3,5 * s_h`).
+   - Topologia, `seg_step` i liczba podsiatek (`≤ 2` na sektor) bez zmian.
+
+### Zmierzone wyniki (prototypy `knyszyn-w` i `dk65-05`, Win64 High PC `1600×900`)
+- **Pokrycie CHM w pierścieniu:** `knyszyn-w` 1 536 / 13 294 wierzchołków kurtyn (11,6 %, 7 kafli CHM); `dk65-05` 6 565 / 18 242 wierzchołków kurtyn (36,0 %, 7 kafli CHM).
+- **Budżet geometrii i draw calli:**
+  - `knyszyn-w` `far_field`: High **93 052 → 93 052** (Δ 0), Low **12 359 → 12 359** (Δ 0), podsiatki **≤ 2 / sektor**.
+  - `dk65-05` `far_field`: High **111 935 → 111 935** (Δ 0), Low **15 120 → 15 120** (Δ 0), podsiatki **≤ 2 / sektor**.
+  - `stats.txt` (visual-qa High, wszystkie 21 kamer): `drawsEst` i `trisExact` **Δ 0** na każdej kamerze.
+- **Pomiar najciemniejszego wiersza pasma horyzontu (sRGB, High Clear przed → po):**
+  - `knyszyn-w edge-west`: `[45, 48, 39] → [69, 76, 65]` (Overcast `[70, 72, 70] → [86, 91, 87]`).
+  - `knyszyn-w edge-north`: `[74, 77, 54] → [101, 112, 88]` (Overcast `[64, 66, 60] → [82, 87, 79]`).
+  - `knyszyn-w edge-south`: `[75, 79, 71] → [91, 97, 94]`.
+  - `knyszyn-w dk65-fields-nw`: `[90, 95, 78] → [101, 114, 82]`.
+  - `dk65-05 edge-west`: `[58, 62, 55] → [72, 77, 68]`; `edge-east`: `[85, 87, 74] → [96, 100, 87]`.
+- **Dowody wizualne (przed | po + crop 1:1):** `artifacts/neon-farfield-s24/sheets/` (`sbs-knyszyn-w-High-{clear,overcast}.jpg`, `sbs-dk65-05-High-{clear,overcast}.jpg`, `crop-1to1-clear.jpg`).
+- **Testy:** `test_far_field*` (w tym 3 nowe testy regresyjne `*_0330`) + budżetowe (`test_budget_0221`, `test_typology_0238`, `test_world_v31`, `test_hero_bridge`) — wszystkie zielone.
+- **Do zrobienia po scaleniu (lider):** przebudowa `far_field` dla pozostałych kafli (szczególnie 24 kafli z CHM) i reimport, by nowe `UV1` (`d_extra`), normalne i sylwety CHM trafiły do buildu (same shadery `WorldSurface` i `Vegetation` działają wstecznie kompatybilnie także na starych GLB).
