@@ -431,7 +431,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     bool hasBaulk = own || KFU01(KFHash((int)fidN, 0, 931u)) < KF_OWN_SHARE;
     float bw = KF_BAULK_MIN_M + KF_BAULK_SPAN_M * KFU01(KFHash((int)bid, (int)kEdge, 947u));
     float e = min(across, w - across);
-    float hw = max(0.5 * bw * (0.55 + 0.9 * n5) + (n1 - 0.5) * 0.35, 0.12);
+    float hw = max(0.5 * bw * (0.55 + 0.9 * n5) + (n1 - 0.5) * 0.60, 0.12);
     float fpe = max(fp, 0.30);     // a grass edge is never sharper than a few blades
     half baulk = hasBaulk ? (half)(saturate((hw - e) / fpe + 0.5) * saturate(2.0 * hw / fp)) : 0.0h;
     half thin = hasBaulk ? (half)saturate(1.0 - (e - hw) / (0.6 + 2.2 * n17)) : 0.0h;
@@ -441,7 +441,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     thin = max(thin, (half)saturate(1.0 - (blockEdge - hbw) / (0.6 + 2.2 * n17)));
     baulk = max(baulk, max(bblock, margin));
     if (ramp && arable) thin = max(thin, (half)saturate(1.0 - (m.b - thA) / max(2.5 * gl, 1e-3)));
-    half3 bc = lerp(half3(0.072h, 0.112h, 0.036h), half3(0.150h, 0.140h, 0.072h), smoothstep(0.45h, 0.8h, n5));
+    half3 bc = lerp(half3(0.078h, 0.122h, 0.038h), half3(0.150h, 0.140h, 0.072h), smoothstep(0.50h, 0.85h, n5));
     bc *= 0.85h + 0.30h * n1;
     col = lerp(col, lerp(col, bc, 0.55h), thin * thin * (0.25h + 0.70h * n5));
     half bstr = lerp(arable ? 0.92h : 0.35h, 0.92h, margin);     // between two meadows the baulk is only rougher grass
@@ -452,7 +452,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         col = lerp(col, half3(0.215h, 0.180h, 0.120h) * (0.85h + 0.30h * n5), rut * (0.55h + 0.40h * n17));
     }
     slopeEN *= (1.0h - baulk) * farm * alb.a;
-    fb = lerp(fb, 0.50h, baulk * bstr);
+    fb = lerp(fb, 0.32h, baulk * bstr);     // r2: 0.50 browned the baulk into a dirt track beside a green crop
 
     m.b = lerp(m.b, fb, farm);
     m.a = lerp(m.a, fa, farm);
