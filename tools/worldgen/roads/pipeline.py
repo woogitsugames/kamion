@@ -52,7 +52,8 @@ def load_overrides(region_id: str) -> list:
 def generated_overrides(region_id: str) -> list[dict]:
     """Override entries written by a tool from data (knyszyn-look-s23), in the order of GENERATED_OVERRIDES:
     overrides.class_fixes.json (qa/class_fixes_data.py: class of OSM-only footprints, pitched roofs with a measured
-    LoD2 rise), overrides.ortho_roofs.json (qa/roof_tones_ortho.py: roof tones read off the orthophoto). They come
+    LoD2 rise), overrides.ortho_roofs.json (qa/roof_tones_ortho.py: roof tones read off the orthophoto),
+    overrides.ortho_lanes.json (ADR 0301), overrides.ortho_sidewalks.json (ADR 0349). They come
     BEFORE the hand-authored entries of overrides.yaml, so for the same target the authored `set` wins
     (buildings_mesh.target_sets merges in order). No file = no entries."""
     out = []
@@ -64,7 +65,8 @@ def generated_overrides(region_id: str) -> list[dict]:
 
 
 GENERATED_OVERRIDES = ("overrides.class_fixes.json", "overrides.ortho_roofs.json",
-                      "overrides.ortho_lanes.json")   # ADR 0301: qa/ortho_lane_fit.py (one-way lane layouts)
+                      "overrides.ortho_lanes.json",   # ADR 0301: qa/ortho_lane_fit.py (one-way lane layouts)
+                      "overrides.ortho_sidewalks.json")   # ADR 0349: qa/ortho_sidewalks.py (sidewalks at the kerb)
 
 
 def effective_graph(region_id: str, graph: dict | None = None, applied: list | None = None,

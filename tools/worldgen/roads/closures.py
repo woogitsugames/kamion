@@ -38,7 +38,8 @@ def target_edge_ids(override: dict, graph_edges) -> list:
     tgt = override.get("target") or {}
     if "edge" in tgt:
         ids = {e["id"] for e in graph_edges}
-        return [tgt["edge"]] if tgt["edge"] in ids else []
+        want = tgt["edge"] if isinstance(tgt["edge"], list) else [tgt["edge"]]      # ADR 0349: one id or a list
+        return sorted(want) if all(e in ids for e in want) else []
     if "osm_way" in tgt:
         ways = tgt["osm_way"] if isinstance(tgt["osm_way"], (list, tuple)) else [tgt["osm_way"]]
         ways = {int(w) for w in ways}

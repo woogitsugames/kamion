@@ -178,7 +178,7 @@ def collect(region, step=10.0):
             continue
         t = ov.get("target", {})
         if "edge" in t:
-            skip.add(t["edge"])
+            skip |= set(t["edge"] if isinstance(t["edge"], list) else [t["edge"]])      # ADR 0349: one id or a list
         for w in (t.get("osm_way") or []) if isinstance(t.get("osm_way"), list) else [t.get("osm_way")]:
             if w is not None:
                 skip |= {eid for eid, (_, _, _, e) in frames.items() if e["osm_way"] == int(w)}
