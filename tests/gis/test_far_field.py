@@ -359,3 +359,111 @@ def test_far_atlas_haze_and_visibility_0330():
     assert br_by_band[0] < br_by_band[1] < br_by_band[2], f"expected cooler B/R with distance: {br_by_band}"
     assert vis_by_band[0] < vis_by_band[1] < vis_by_band[2], f"expected higher sky vis_B with distance: {vis_by_band}"
     assert vis_by_band[2] > 0.85
+
+
+def test_corridor_treelines_scoped_to_region_c_0330_r2():
+    """ADR 0330 r2: Białystok-C's hardcoded corridor treelines and exit tapers must not leak into rural tiles."""
+    from streetscape import far_field as FF
+
+    assert len(FF._corridor_treelines(1024.0, "bialystok-industrial-c")) > 0
+    assert FF._corridor_treelines(1024.0, "knyszyn-w") == []
+    assert FF._corridor_treelines(1024.0, "dk65-05") == []
+
+    e = np.array([-1080.0, -856.0, 1080.0])
+    n = np.array([44.0, 1050.0, -980.0])
+    assert FF._corridor_taper(e, n, 1024.0, "bialystok-industrial-c").min() < 0.6
+    assert np.allclose(FF._corridor_taper(e, n, 1024.0, "knyszyn-w"), 1.0)
+    assert np.allclose(FF._corridor_taper(e, n, 1024.0, "dk65-05"), 1.0)
+
+
+def test_curtain_slope_cap_and_flat_mound_0330_r2():
+    """ADR 0330 r2: CHM outliers are capped to Podlasie canopy heights, curtain top slopes stay <= FAR_MAX_TOP_SLOPE,
+    and under-canopy mounds stay low (<= 3.6 m) so no forest reads as a conical hill."""
+    from streetscape import far_field as FF, forest_chm as FC
+
+    # Extreme 48 m CHM spike next to 8 m trees
+    top = np.full((64, 64), 8.0, dtype=np.float64)
+    top[:, 30:34] = 48.0
+    cov = np.full((64, 64), 0.9, dtype=np.float64)
+    chm = FC.Chm(top, cov, x0=0.0, y1=2048.0, cell_m=16.0)
+    ring_chm = FF.RingChm([("spike-tile", chm)])
+
+    elev = FF.BorderElevation(1024.0, [130.0, 130.0], [130.0, 130.0], [130.0, 130.0], [130.0, 130.0])
+    sectors = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    # Small 120x120 m stand right over the spike
+    FF._add_forest_stand(
+        sectors,
+        [[420.0, 1200.0], [560.0, 1200.0], [560.0, 1340.0], [420.0, 1340.0], [420.0, 1200.0]],
+        "conifer", elev, 1024.0, "High", ring_chm=ring_chm, region_id="knyszyn-w",
+    )
+    prims = sectors["far_north"].primitives(1024.0)
+    assert len(prims) <= 2
+    mound = next(p for p in prims if p["mat"] == "far_field_buildings")
+    zg_m = np.array([elev.z_at_eff(x, y) for x, y in mound["V"][:, :2]])
+    assert (mound["V"][:, 2] - zg_m).max() <= 2.3, "under-canopy mound must stay low and flat"
+
+    curtain = next(p for p in prims if p["mat"] == "forest_edge_mixed_far_atlas")
+    cap_quad = FF.FAR_CROWN_CAP_M["conifer"] / 0.888
+    zg_c = np.array([elev.z_at_eff(x, y) for x, y in curtain["V"][:, :2]])
+    assert (curtain["V"][:, 2] - zg_c).max() <= cap_quad + 1.0, "CHM spike must not exceed Podlasie canopy cap"
+
+    # Check _limit_top_slope directly enforces |dz_top / ds| <= FAR_MAX_TOP_SLOPE
+    P = np.column_stack([np.linspace(0.0, 90.0, 11), np.zeros(11)])
+    zb = np.full(11, 130.0)
+    ht = np.array([8.0, 8.0, 8.0, 35.0, 35.0, 8.0, 8.0, 30.0, 8.0, 8.0, 8.0])
+    ht_lim = FF._limit_top_slope(P, zb, ht)
+    ds = np.hypot(*np.diff(P, axis=0).T)
+    slopes = np.abs(np.diff(zb + ht_lim)) / ds
+    assert slopes.max() <= FF.FAR_MAX_TOP_SLOPE + 1e-6
+
+
+def test_irregular_base_skirt_and_edge_impostors_0330_r2():
+    """ADR 0330 r2: High tier emits undergrowth skirt and individual edge tree impostors in the single far-atlas
+    submesh (<= 2 submeshes/sector, strictly outside tile); Low tier keeps zero impostors for budget."""
+    from streetscape import far_field as FF, forest_hlod as FH
+
+    elev = FF.BorderElevation(1024.0, [135.0, 135.0], [135.0, 135.0], [135.0, 135.0], [135.0, 135.0])
+    stand = [[100.0, 1250.0], [600.0, 1250.0], [600.0, 1550.0], [100.0, 1550.0], [100.0, 1250.0]]
+
+    sec_hi = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    FF._add_forest_stand(sec_hi, stand, "mixed", elev, 1024.0, "High", region_id="knyszyn-w")
+    prims_hi = sec_hi["far_north"].primitives(1024.0)
+    assert len(prims_hi) <= 2
+    curtain_hi = next(p for p in prims_hi if p["mat"] == FH.FAR_ATLAS_MAT)
+    # Impostor rows occupy the top 2 slots of the far atlas
+    imp_v0, _ = FH.far_atlas_slot_v("impostor", "row0")
+    has_impostor_verts = (curtain_hi["UV"][:, 1] >= imp_v0 - 1e-4).any()
+    assert has_impostor_verts, "High tier near-edge stand must emit individual edge tree impostors"
+    # Every vertex stays outside the tile border
+    d_out = np.array([FF.outside_dist(x, y, 1024.0)[4] for x, y in curtain_hi["V"][:, :2]])
+    assert d_out.min() >= 8.5
+
+    sec_lo = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    FF._add_forest_stand(sec_lo, stand, "mixed", elev, 1024.0, "Low", region_id="knyszyn-w")
+    prims_lo = sec_lo["far_north"].primitives(1024.0)
+    assert len(prims_lo) <= 2
+    curtain_lo = next(p for p in prims_lo if p["mat"] == FH.FAR_ATLAS_MAT)
+    assert not (curtain_lo["UV"][:, 1] >= imp_v0 - 1e-4).any(), "Low tier must omit extra edge impostors"
+
+
+def test_far_atlas_impostor_rows_and_padding_0330_r2():
+    """ADR 0330 r2: far atlas is 1024x4096 with >= 8 px vertical pad and 8 crisp isolated tree impostors."""
+    from PIL import Image
+    from streetscape import forest_hlod as FH
+
+    vdir = REPO / "art-source" / "world" / "vegetation"
+    meta = json.loads((vdir / "forest_edge_far_atlas.json").read_text(encoding="utf-8"))
+    assert meta["size"] == [1024, 4096]
+    assert meta["pad"] >= 8
+    a_im = np.asarray(Image.open(vdir / f"{FH.FAR_ATLAS_MAT}.png").convert("RGBA"), float) / 255.0
+    H, W = a_im.shape[:2]
+    assert (W, H) == (1024, 4096)
+    for row in FH.FAR_IMPOSTOR_ROWS:
+        for tname in row:
+            u0, v0, u1, v1, asp, top_frac = FH.far_impostor_uv(tname)
+            x0, x1 = int(round(u0 * W)), int(round(u1 * W))
+            y0, y1 = H - int(round(v1 * H)), H - int(round(v0 * H))
+            cell = a_im[y0:y1, x0:x1]
+            assert (cell[..., 3] > 0.5).mean() > 0.05, f"impostor {tname} empty"
+            # Left and right borders of each impostor cell are transparent (no bleed between neighbours)
+            assert cell[:, :2, 3].max() < 0.05 and cell[:, -2:, 3].max() < 0.05, f"impostor {tname} bleeds horizontally"

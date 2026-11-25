@@ -730,10 +730,19 @@ namespace Game.World.Import
             // Forest HLOD edge walls tile along the edge (u) but not vertically: with v repeating, the filter / mips at the
             // wall top (v = 1) fetched the opaque bottom rows (trunks, floor) and drew dotted arcs along every wall top in
             // the sky (review r4 / v3.3 README "kropkowane łuki"; ADR 0023).
-            if (file.StartsWith("forest_edge")) { ti.wrapModeU = TextureWrapMode.Repeat; ti.wrapModeV = TextureWrapMode.Clamp; }
+            // ADR 0330 r2 (neon-farfield2-s24): 8x aniso + Kaiser mips eliminate grazing-angle painterly blur on far curtains;
+            // PC preserves full 1024x4096 height of forest_edge_mixed_far_atlas while Android keeps 1024/2048.
+            bool forestEdge = file.StartsWith("forest_edge");
+            bool farAtlas = file.StartsWith("forest_edge_mixed_far_atlas");
+            if (forestEdge)
+            {
+                ti.wrapModeU = TextureWrapMode.Repeat;
+                ti.wrapModeV = TextureWrapMode.Clamp;
+                if (!linear) ti.mipmapFilter = TextureImporterMipFilter.KaiserFilter;
+            }
             ti.filterMode = FilterMode.Trilinear;
-            ti.anisoLevel = text ? 4 : 2;
-            ti.maxTextureSize = 2048;
+            ti.anisoLevel = forestEdge ? 8 : (text ? 4 : 2);
+            ti.maxTextureSize = farAtlas && !linear ? 4096 : 2048;
             // explicit: NPOT impostor atlases (1536 x 384) with npotScale None are stored uncompressed (3 MB each; ADR 0025)
             ti.npotScale = TextureImporterNPOTScale.ToNearest;
             ti.textureCompression = TextureImporterCompression.Compressed;

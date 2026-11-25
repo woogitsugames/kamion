@@ -190,25 +190,54 @@ def _lin_to_srgb(c):
     return np.where(c <= 0.0031308, c * 12.92, 1.055 * np.power(np.maximum(c, 0.0), 1.0 / 2.4) - 0.055)
 
 
-# farfield-low-s24 (ADR 0330 addendum): the far-field sectors keep ONE curtain primitive on both tiers
-# (test_far_field: <= 2 submeshes per sector) - the 3 mixes x 3 haze bands live in one atlas, slots stacked in v
-# (v measured from the bottom of the PNG, as the edge textures), each slot = the whole edge texture squeezed to
-# 1/9 of the height minus FAR_ATLAS_PAD transparent rows above and below (no mip bleed between slots at the far
-# distances). Normal / visibility atlas with the same fractional layout. Deterministic, rebuilt only when a source
-# changes (sha256 in forest_edge_far_atlas.json).
-FAR_ATLAS_SLOTS = tuple((mix, suf) for mix in HAZE_MIXES for suf in ("",) + tuple(HAZE_SUFFIX_K))
-FAR_ATLAS_SIZE = (1024, 2048)          # albedo w x h; the normal atlas is half of it
-FAR_ATLAS_PAD = 4                      # transparent rows above / below each slot (albedo atlas)
+# farfield-low-s24 + neon-farfield2-s24 (ADR 0330 r2): the far-field sectors keep ONE curtain/impostor primitive on
+# both tiers (test_far_field: <= 2 submeshes per sector) - the 3 mixes x 3 haze bands + 2 individual-tree impostor rows
+# (8 baked trees: pine/spruce/birch/alder/linden/shrub) live in one 1024x4096 atlas, slots stacked in v (v measured
+# from the bottom of the PNG, as the edge textures), each slot with FAR_ATLAS_PAD transparent rows above and below
+# (zero mip bleed between slots even at mip 3). Normal / visibility atlas with the same fractional layout (half size).
+# Deterministic, rebuilt only when a source changes (sha256 in forest_edge_far_atlas.json).
+FAR_IMPOSTOR_ROWS = (
+    ("tree_pine_0", "tree_pine_1", "tree_spruce_0", "tree_birch_0"),
+    ("tree_spruce_1", "tree_alder_0", "tree_linden_0", "tree_shrub_0"),
+)
+# Measured opaque crown-top fraction (bbox_y_top / 384) of view 0 in impostor_tree_*.png (aspect = 0.6667):
+# quad_h = target_h / top_frac, quad_w = quad_h * 0.6667 so every edge tree matches real Podlasie proportions.
+FAR_IMPOSTOR_TOP_FRAC = {
+    "tree_pine_0": 0.91, "tree_pine_1": 0.81, "tree_spruce_0": 0.97, "tree_spruce_1": 0.97,
+    "tree_birch_0": 0.86, "tree_alder_0": 0.74, "tree_linden_0": 0.58, "tree_shrub_0": 0.47,
+}
+FAR_IMPOSTOR_ASPECT = 2.0 / 3.0
+FAR_ATLAS_SLOTS = (
+    tuple((mix, suf) for mix in HAZE_MIXES for suf in ("",) + tuple(HAZE_SUFFIX_K))
+    + tuple(("impostor", f"row{i}") for i in range(len(FAR_IMPOSTOR_ROWS)))
+)
+FAR_ATLAS_SIZE = (1024, 4096)          # albedo w x h (356 px/slot = near-native vs 512 px edge bake); normal is half
+FAR_ATLAS_PAD = 8                      # transparent rows above / below each slot (albedo atlas; safe through mip 3)
 FAR_ATLAS_MAT = "forest_edge_mixed_far_atlas"   # name keeps "forest_edge_mixed": canopy policy, runtime swap
 
 
 def far_atlas_slot_v(mix: str, suf: str) -> tuple[float, float]:
     """(v0, v1) of a slot, v from the bottom of the atlas."""
-    k = FAR_ATLAS_SLOTS.index((mix if mix in HAZE_MIXES else "mixed", suf))
+    key = (mix, suf) if (mix, suf) in FAR_ATLAS_SLOTS else (mix if mix in HAZE_MIXES else "mixed", suf)
+    k = FAR_ATLAS_SLOTS.index(key)
     h = FAR_ATLAS_SIZE[1]
     r0 = round(k * h / len(FAR_ATLAS_SLOTS)) + FAR_ATLAS_PAD
     r1 = round((k + 1) * h / len(FAR_ATLAS_SLOTS)) - FAR_ATLAS_PAD
     return r0 / h, r1 / h
+
+
+def far_impostor_uv(tree_name: str) -> tuple[float, float, float, float, float, float]:
+    """Return (u0, v0, u1, v1, aspect, top_frac) of an individual tree impostor packed into the far atlas."""
+    for ri, row in enumerate(FAR_IMPOSTOR_ROWS):
+        if tree_name in row:
+            ci = row.index(tree_name)
+            n = len(row)
+            margin = 0.015 / n
+            u0 = ci / n + margin
+            u1 = (ci + 1) / n - margin
+            v0, v1 = far_atlas_slot_v("impostor", f"row{ri}")
+            return u0, v0, u1, v1, FAR_IMPOSTOR_ASPECT, FAR_IMPOSTOR_TOP_FRAC.get(tree_name, 0.85)
+    return far_impostor_uv("tree_pine_0")
 
 
 def _haze(im, k):
@@ -219,21 +248,30 @@ def _haze(im, k):
 
 
 def far_atlas(root=None, log=print) -> dict:
-    """Write art-source/world/vegetation/forest_edge_mixed_far_atlas.png (+ _n) from the baked edge textures."""
+    """Write art-source/world/vegetation/forest_edge_mixed_far_atlas.png (+ _n) from the baked edge & impostor textures."""
     from PIL import Image
     root = root or pipeline.REPO
     vdir = root / "art-source" / "world" / "vegetation"
     meta_p = vdir / "forest_edge_far_atlas.json"
     meta = json.loads(meta_p.read_text(encoding="utf-8")) if meta_p.exists() else {}
+    tmeta_p = vdir / "trees_meta.json"
+    foliage_tint = (json.loads(tmeta_p.read_text(encoding="utf-8")).get("foliage_tint", {})
+                    if tmeta_p.exists() else {})
     srcs = {}
     for mix in HAZE_MIXES:
         for f in (f"forest_edge_{mix}.png", f"forest_edge_{mix}_n.png"):
             if (vdir / f).exists():
                 srcs[f] = hashlib.sha256((vdir / f).read_bytes()).hexdigest()
+    for row in FAR_IMPOSTOR_ROWS:
+        for tname in row:
+            for f in (f"impostor_{tname}.png", f"impostor_{tname}_n.png"):
+                if (vdir / f).exists():
+                    srcs[f] = hashlib.sha256((vdir / f).read_bytes()).hexdigest()
     want = {"schema": "truck-sim-pl/forest-edge-far-atlas/2", "adr": "0330", "haze_albedo_linear": list(HAZE_ALBEDO),
             "k": FAR_ATLAS_HAZE_K, "vis_lift": FAR_ATLAS_VIS_LIFT, "nrm_flat": FAR_ATLAS_NRM_FLAT,
-            "slots": [list(x) for x in FAR_ATLAS_SLOTS], "size": list(FAR_ATLAS_SIZE),
-            "pad": FAR_ATLAS_PAD, "sources": srcs}
+            "impostor_haze": [0.16, 0.68, 0.45],
+            "slots": [list(x) for x in FAR_ATLAS_SLOTS], "impostor_rows": [list(r) for r in FAR_IMPOSTOR_ROWS],
+            "size": list(FAR_ATLAS_SIZE), "pad": FAR_ATLAS_PAD, "sources": srcs}
     out_a, out_n = vdir / f"{FAR_ATLAS_MAT}.png", vdir / f"{FAR_ATLAS_MAT}_n.png"
     if meta == want and out_a.exists() and out_n.exists():
         return {"wrote": []}
@@ -244,12 +282,44 @@ def far_atlas(root=None, log=print) -> dict:
         if normal:
             atlas[..., :] = (0.5, 0.5, 1.0, 1.0)      # flat normal, full visibility in the pads
         for mix, suf in FAR_ATLAS_SLOTS:
+            v0, v1 = far_atlas_slot_v(mix, suf)
+            r0, r1 = int(round(v0 * h)), int(round(v1 * h))       # rows from the bottom
+            slot_h = r1 - r0
+            if mix == "impostor":
+                ri = int(suf[3:])
+                row_trees = FAR_IMPOSTOR_ROWS[ri]
+                cell_w = w // len(row_trees)
+                # ADR 0330 r2: edge impostors stand at 300-1500 m in front of mid/far stands; blend their albedo
+                # and sky visibility slightly toward the cool Rayleigh band so they sit naturally in front of the
+                # wall instead of popping dark against hazy stands behind them.
+                kv = 0.68
+                kn = 0.45
+                k_h = 0.16
+                for ci, tname in enumerate(row_trees):
+                    f = vdir / (f"impostor_{tname}_n.png" if normal else f"impostor_{tname}.png")
+                    if not f.exists():
+                        continue
+                    im_full = Image.open(f).convert("RGBA")
+                    vw = im_full.width // 6                       # view 0 (clean side silhouette)
+                    im_v0 = im_full.crop((0, 0, vw, im_full.height)).resize((cell_w, slot_h), Image.LANCZOS)
+                    a = np.asarray(im_v0, np.float64) / 255.0
+                    if not normal:
+                        sp = tname.split("_")[1] if "_" in tname else ""
+                        if sp in foliage_tint:
+                            tint = np.asarray(foliage_tint[sp][:3], np.float64)
+                            a[..., :3] = _lin_to_srgb(_srgb_to_lin(a[..., :3]) * tint[None, None, :])
+                        if k_h > 0.0:
+                            a = _haze(a, k_h)
+                    else:
+                        a[..., 0] = a[..., 0] * (1.0 - kn) + 0.5 * kn
+                        a[..., 1] = a[..., 1] * (1.0 - kn) + 0.5 * kn
+                        a[..., 2] = a[..., 2] * (1.0 - kv) + 1.0 * kv
+                    atlas[h - r1:h - r0, ci * cell_w:(ci + 1) * cell_w] = a
+                continue
             f = vdir / (f"forest_edge_{mix}_n.png" if normal else f"forest_edge_{mix}.png")
             if not f.exists():
                 continue
-            v0, v1 = far_atlas_slot_v(mix, suf)
-            r0, r1 = int(round(v0 * h)), int(round(v1 * h))       # rows from the bottom
-            im = Image.open(f).convert("RGBA").resize((w, r1 - r0), Image.LANCZOS)
+            im = Image.open(f).convert("RGBA").resize((w, slot_h), Image.LANCZOS)
             a = np.asarray(im, np.float64) / 255.0
             if not normal:
                 k_h = FAR_ATLAS_HAZE_K.get(suf, 0.0)

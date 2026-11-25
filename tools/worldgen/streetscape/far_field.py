@@ -74,9 +74,25 @@ MOUND_COL = {"conifer": (0.032, 0.050, 0.030), "mixed": (0.038, 0.058, 0.034), "
 # ADR 0330 addendum (WORKING_VALUE): vertical normal tilt on far-field curtains (bottom, top), as CHM_NORMAL_UP in
 # ADR 0339 r2 — distant crown tops take sky SH and sun from above instead of reading as dark vertical walls in shade.
 CURTAIN_NORMAL_UP = (0.65, 1.65)
-# Base curtain quad height [m] outside the 24 CHM tiles (with CHM_WALL_TOP_FRAC 0.888/0.833/0.766 -> ~20/17.5/15.3 m
-# median crowns before multi-scale age/clump noise; matches the CHM median ~19 m across Podlasie stands). WORKING_VALUE.
-FAR_BASE_H_M = {"conifer": 22.5, "mixed": 21.0, "broadleaf": 20.0}
+# Base curtain quad height [m] outside the 24 CHM tiles (with CHM_WALL_TOP_FRAC 0.888/0.833/0.766 -> ~18.2/16.2/14.2 m
+# median crowns before multi-scale age/clump noise; matches Podlasie CHM median without inflating into 40 m peaks). WORKING_VALUE.
+FAR_BASE_H_M = {"conifer": 20.5, "mixed": 19.5, "broadleaf": 18.5}
+# ADR 0330 r2 (neon-farfield2-s24): realistic Podlasie crown-top cap [m] (aligned with vegetation.chm_cap_m) so single
+# noisy CHM cells or stand multipliers never produce 40 m conical hills on flat terrain. WORKING_VALUE.
+FAR_CROWN_CAP_M = {"conifer": 25.5, "mixed": 24.0, "broadleaf": 22.5}
+# Max top-edge slope |dz_top / ds| along a curtain strip (~14.5 deg): prevents conical peaks AND trapezoidal UV shear
+# (diagonal painterly streaks in crop-1to1-clear). WORKING_VALUE.
+FAR_MAX_TOP_SLOPE = 0.26
+# High-tier irregular forest base (ADR 0330 r2): horizontal outline wobble [m], undergrowth mantle skirt & individual
+# crossed-card edge tree impostors (packed in forest_edge_mixed_far_atlas -> 0 extra draw calls). WORKING_VALUE.
+FAR_EDGE_WOBBLE_M = 5.0
+FAR_SKIRT_MAX_D_M = 2200.0
+FAR_IMPOSTOR_MAX_D_M = 1500.0
+FAR_IMPOSTOR_SPECIES = {
+    "conifer": ("tree_pine_0", "tree_pine_1", "tree_spruce_0", "tree_spruce_1", "tree_birch_0", "tree_shrub_0"),
+    "broadleaf": ("tree_birch_0", "tree_alder_0", "tree_linden_0", "tree_shrub_0", "tree_shrub_0"),
+    "mixed": ("tree_pine_0", "tree_spruce_0", "tree_birch_0", "tree_alder_0", "tree_linden_0", "tree_shrub_0"),
+}
 # ADR 0141 skyline node: the tall ring objects (and far stand-ins of landmark stacks that the region itself draws) live
 # in one extra mesh whose vertices carry a flag in TEXCOORD_1.x. Kamion/World Surface (_FAR_FACADE) keeps flagged
 # vertices just in front of the camera far plane instead of clipping them, so the Low tier (far clip 900 m) still shows
@@ -246,6 +262,7 @@ class RingChm:
             return h_out, has
         P = np.column_stack([e_raw, n_raw])
         top_frac = FH.CHM_WALL_TOP_FRAC.get(mix, 0.833)
+        cap_m = FAR_CROWN_CAP_M.get(mix, 24.0)
         for _, chm in self.entries:
             top, dom, ins = chm.cell_top(P)
             if not ins.any():
@@ -253,12 +270,13 @@ class RingChm:
             _, stand, _, _ = chm.sample(P)
             ok = ins & (~has) & (dom >= FH.CHM_TRUST_M)
             if ok.any():
-                h_crown = np.maximum(top[ok], 0.78 * dom[ok])
+                # ADR 0330 r2: 0.62*dom (was 0.78) preserves real +-30% CHM crown dips while capping LIDAR outliers
+                h_crown = np.clip(np.maximum(top[ok], 0.62 * dom[ok]), 4.5, cap_m)
                 h_out[ok] = h_crown / top_frac
                 has[ok] = True
             edge_ok = ins & (~has) & (stand >= FH.CHM_TRUST_M)
             if edge_ok.any():
-                h_crown = np.maximum(0.45 * stand[edge_ok], 4.0)
+                h_crown = np.clip(0.55 * stand[edge_ok], 4.5, cap_m)
                 h_out[edge_ok] = h_crown / top_frac
                 has[edge_ok] = True
         return h_out, has
@@ -1142,16 +1160,25 @@ class SectorBuilder:
         self.count0 += 3
 
     def add_curtain1(self, pts_xy: np.ndarray, z_bot: np.ndarray, z_top: np.ndarray, face_sign: float = 1.0, u_scale: float = 48.0,
-                     mat: str = "forest_edge_mixed", u_shift: float = 0.0, half: float = 1024.0):
-        """Add an alpha-tested forest_edge_<mix> curtain strip along pts_xy (ADR 0330 + addendum: material slot per stand /
-        haze band, upward-tilted crown normals, TEXCOORD_1.x = extra foreshortened distance for KamionFogTauExtra)."""
+                     mat: str = "forest_edge_mixed", u_shift: float = 0.0, half: float = 1024.0,
+                     v_bot: float = 0.0, v_top: float | None = None):
+        """Add an alpha-tested forest_edge_<mix> curtain strip along pts_xy (ADR 0330 + r2: material slot per stand /
+        haze band, height-proportional u_scale so distant trees keep natural proportions without horizontal smear,
+        optional mantle skirt v_bot=1.0->v_main, sky-tilted normals, TEXCOORD_1.x = d_extra for KamionFogTauExtra)."""
         k = len(pts_xy)
         if k < 2:
             return
         ds = np.hypot(*np.diff(pts_xy, axis=0).T)
         s = np.concatenate([[0.0], np.cumsum(ds)])
-        u0 = ((pts_xy[0, 0] + pts_xy[0, 1]) % u_scale) / u_scale + u_shift
-        us = u0 + s / u_scale
+        ht_med = float(np.median(np.maximum(z_top - z_bot, 1.0)))
+        if v_bot > 0.5:
+            # Undergrowth mantle strip (baked 8 m high across 48 m width)
+            u_eff = u_scale * float(np.clip(ht_med / 8.0, 0.45, 1.15))
+        else:
+            # Main forest wall (baked ~21 m high across 48 m width): scale u proportionally to local curtain height
+            u_eff = u_scale * float(np.clip(ht_med / 21.0, 0.38, 1.20))
+        u0 = ((pts_xy[0, 0] + pts_xy[0, 1]) % max(u_eff, 1.0)) / max(u_eff, 1.0) + u_shift
+        us = u0 + s / max(u_eff, 1.0)
 
         # Outward normal in XY with bottom->top upward tilt (CURTAIN_NORMAL_UP): crown tops take sky SH & sun from above
         tang = np.zeros((k, 2), dtype=np.float64)
@@ -1165,13 +1192,13 @@ class SectorBuilder:
         n3t = np.column_stack([nxy, np.full(k, CURTAIN_NORMAL_UP[1])])
         n3t /= np.linalg.norm(n3t, axis=1)[:, None]
 
-        v_bot = np.column_stack([pts_xy[:, 0], pts_xy[:, 1], z_bot])
-        v_top = np.column_stack([pts_xy[:, 0], pts_xy[:, 1], z_top])
-        V = np.vstack([v_bot, v_top])
+        v_bot_arr = np.column_stack([pts_xy[:, 0], pts_xy[:, 1], z_bot])
+        v_top_arr = np.column_stack([pts_xy[:, 0], pts_xy[:, 1], z_top])
+        V = np.vstack([v_bot_arr, v_top_arr])
         N = np.vstack([n3b, n3t])
-        uv_bot = np.column_stack([us, np.zeros(k)])
-        # ADR 0187: the wall picture ends at v_main of the edge texture (the mantle strip lies above it)
-        uv_top = np.column_stack([us, np.full(k, FH.edge_v_main(FH.bake_info()["mixed"]["edge"]))])
+        vt = FH.edge_v_main(FH.bake_info()["mixed"]["edge"]) if v_top is None else float(v_top)
+        uv_bot = np.column_stack([us, np.full(k, float(v_bot))])
+        uv_top = np.column_stack([us, np.full(k, vt)])
         UV = np.vstack([uv_bot, uv_top])
         # ADR 0330 addendum: extra foreshortened distance [m] in TEXCOORD_1.x for shader KamionFogTauExtra
         d_extra = extra_dist_eff(pts_xy[:, 0], pts_xy[:, 1], half)
@@ -1196,6 +1223,44 @@ class SectorBuilder:
         self.t1.append(np.asarray(tris, dtype=np.int64))
         self.mat1.append(mat)
         self.count1 += 2 * k
+
+    def add_tree_impostor1(self, e: float, n: float, z_bot: float, h_m: float, tree_name: str,
+                           yaw: float = 0.0, half: float = 1024.0):
+        """ADR 0330 r2: crossed two-quad (+) individual tree impostor packed into the same far atlas submesh
+        (0 extra draw calls, 4 tris per tree, true-distance KamionFogTauExtra via TEXCOORD_1.x)."""
+        u0, v0, u1, v1, aspect, top_frac = FH.far_impostor_uv(tree_name)
+        h_quad = max(float(h_m), 2.0) / max(top_frac, 0.35)
+        hw = 0.5 * h_quad * aspect
+        z0 = float(z_bot) - 0.35
+        z1 = z0 + h_quad
+        d_ex = float(extra_dist_eff(np.array([e]), np.array([n]), half)[0])
+        verts, norms, uvs, tris = [], [], [], []
+        base = self.count1
+        for qi, ang in enumerate((yaw, yaw + 0.5 * math.pi)):
+            ca, sa = math.cos(ang), math.sin(ang)
+            rx, ry = ca * hw, sa * hw
+            nx, ny = -sa, ca
+            nb = np.array([nx, ny, CURTAIN_NORMAL_UP[0]], dtype=np.float64)
+            nb /= np.linalg.norm(nb)
+            nt = np.array([nx, ny, CURTAIN_NORMAL_UP[1]], dtype=np.float64)
+            nt /= np.linalg.norm(nt)
+            verts.extend([
+                [e - rx, n - ry, z0],
+                [e + rx, n + ry, z0],
+                [e + rx, n + ry, z1],
+                [e - rx, n - ry, z1],
+            ])
+            norms.extend([nb, nb, nt, nt])
+            uvs.extend([[u0, v0], [u1, v0], [u1, v1], [u0, v1]])
+            b = base + qi * 4
+            tris.extend([[b, b + 1, b + 2], [b, b + 2, b + 3]])
+        self.v1.append(np.asarray(verts, dtype=np.float64))
+        self.n1.append(np.asarray(norms, dtype=np.float64))
+        self.uv1.append(np.asarray(uvs, dtype=np.float64))
+        self.uv1_1.append(np.tile([d_ex, 0.0], (8, 1)))
+        self.t1.append(np.asarray(tris, dtype=np.int64))
+        self.mat1.append("__atlas_raw__")
+        self.count1 += 8
 
     def sort_far_to_near(self):
         """ADR 0141: beyond the far plane the skyline shares (almost) one depth, so the index order decides what is
@@ -1237,11 +1302,12 @@ class SectorBuilder:
                 tris.append(self.t1[i] - int(self.t1[i].min()) + base)
                 base += len(self.v1[i])
                 mat = self.mat1[i]
-                rest = mat[len("forest_edge_"):] if mat.startswith("forest_edge_") else "mixed"
-                mix, suf = (rest.split("_", 1) + [""])[:2]
-                v0, v1 = FH.far_atlas_slot_v(mix, f"_{suf}" if suf else "")
                 uv = self.uv1[i].copy()
-                uv[:, 1] = v0 + np.clip(uv[:, 1], 0.0, 1.0) * (v1 - v0)
+                if mat != "__atlas_raw__":
+                    rest = mat[len("forest_edge_"):] if mat.startswith("forest_edge_") else "mixed"
+                    mix, suf = (rest.split("_", 1) + [""])[:2]
+                    v0, v1 = FH.far_atlas_slot_v(mix, f"_{suf}" if suf else "")
+                    uv[:, 1] = v0 + np.clip(uv[:, 1], 0.0, 1.0) * (v1 - v0)
                 uvs.append(uv)
             prims.append({
                 "mat": FH.FAR_ATLAS_MAT,
@@ -1255,9 +1321,13 @@ class SectorBuilder:
 
 
 # ------------------------------------------------------------------------------------------- feature meshing
-def _corridor_taper(e: np.ndarray, n: np.ndarray, half: float = 1024.0) -> np.ndarray:
-    """Smoothly taper tree curtain height near the 4 road exit axes so stand edges step down naturally."""
+def _corridor_taper(e: np.ndarray, n: np.ndarray, half: float = 1024.0,
+                    region_id: str = "bialystok-industrial-c") -> np.ndarray:
+    """Smoothly taper tree curtain height near the 4 Białystok-C road exit axes (ADR 0085).
+    Other regions (e.g. knyszyn-w, dk65-05) must not receive C's hardcoded exit valleys (ADR 0330 r2)."""
     taper = np.ones_like(e, dtype=np.float64)
+    if region_id != "bialystok-industrial-c":
+        return taper
     # East exit road axis (E > 1024, N ~ -980 - 0.54*(E-1024))
     mask_e = e > half - 10.0
     if np.any(mask_e):
@@ -1281,14 +1351,38 @@ def _corridor_taper(e: np.ndarray, n: np.ndarray, half: float = 1024.0) -> np.nd
     return taper
 
 
+def _limit_top_slope(pts_xy: np.ndarray, z_bot: np.ndarray, ht: np.ndarray,
+                     max_slope: float = FAR_MAX_TOP_SLOPE, min_h: float = 3.0) -> np.ndarray:
+    """ADR 0330 r2: clamp |dz_top / ds| along a curtain strip so no vertex jump forms a conical peak or
+    a sheared diagonal trapezoid (which caused diagonal painterly streaks at 1:1 in crop-1to1-clear)."""
+    k = len(pts_xy)
+    if k < 2:
+        return np.maximum(ht, min_h)
+    ds = np.hypot(*np.diff(pts_xy, axis=0).T)
+    z_top = z_bot + np.maximum(ht, min_h)
+    # Forward + backward envelope passes pull sudden spikes down gently without raising flat edges into peaks
+    for _ in range(2):
+        for i in range(k - 1):
+            lim = max_slope * max(float(ds[i]), 0.5)
+            if z_top[i + 1] > z_top[i] + lim:
+                z_top[i + 1] = z_top[i] + lim
+        for i in range(k - 2, -1, -1):
+            lim = max_slope * max(float(ds[i]), 0.5)
+            if z_top[i] > z_top[i + 1] + lim:
+                z_top[i] = z_top[i + 1] + lim
+    return np.maximum(z_top - z_bot, min_h)
+
+
 def _crown_height_wave(e: np.ndarray, n: np.ndarray, h_base: float, half: float = 1024.0,
                        rng: np.random.Generator | None = None, mix: str = "mixed",
-                       ring_chm: RingChm | None = None, height_mult: float = 1.0) -> np.ndarray:
-    """Irregular tree-crown silhouette along a far-field stand edge with road-corridor taper (ADR 0330 addendum).
+                       ring_chm: RingChm | None = None, height_mult: float = 1.0,
+                       region_id: str = "bialystok-industrial-c") -> np.ndarray:
+    """Irregular tree-crown silhouette along a far-field stand edge (ADR 0330 + r2).
     Where a neighbouring tile provides forest_chm.png (the 24 route tiles, ADR 0339), crown tops come from the
-    measured canopy height model at the true unforeshortened coordinates (e_raw, n_raw), plus a small local jitter.
-    Elsewhere, multi-scale deterministic value noise (age/compartment ~260 m, clumps ~65 m, crowns ~22 m) + seeded
-    stand walk, emergent veterans (~12%) and dips (~10%) break the ruler-flat horizon ribbon without adding geometry."""
+    measured canopy height model at the true unforeshortened coordinates (e_raw, n_raw), capped to Podlasie stand
+    heights (FAR_CROWN_CAP_M) and NOT re-inflated by stand_scale. Elsewhere, smooth multi-scale deterministic value
+    noise (~260 m compartments, ~70 m clumps, ~26 m crowns, +-30% variation) gives an organic skyline without
+    single-vertex spikes that caused conical peaks and diagonal UV shear."""
     e = np.asarray(e, dtype=np.float64)
     n = np.asarray(n, dtype=np.float64)
     k = len(e)
@@ -1296,41 +1390,41 @@ def _crown_height_wave(e: np.ndarray, n: np.ndarray, h_base: float, half: float 
         return np.zeros(0, dtype=np.float64)
     e_raw, n_raw, d_true = unforeshorten_xy(e, n, half)
     s_h = np.array([foreshorten_scales(float(d))[1] for d in d_true], dtype=np.float64)
+    top_frac = FH.CHM_WALL_TOP_FRAC.get(mix, 0.833)
+    cap_quad = FAR_CROWN_CAP_M.get(mix, 24.0) / top_frac
 
-    # Multi-scale deterministic value noise on true ring metres (stands divide naturally into young growth, mid-age, old pine)
-    n_age = np.array([0.58 + 0.70 * FH._vnoise2(x, y, 260.0, "ff_age") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
-    n_clump = np.array([0.78 + 0.44 * FH._vnoise2(x, y, 65.0, "ff_clump") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
-    n_fine = np.array([0.86 + 0.28 * FH._vnoise2(x, y, 22.0, "ff_fine") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
+    # Smooth multi-scale deterministic value noise on true ring metres (+-30% organic variation, no jagged 9 m spikes)
+    n_age = np.array([0.66 + 0.62 * FH._vnoise2(x, y, 260.0, "ff_age") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
+    n_clump = np.array([0.80 + 0.40 * FH._vnoise2(x, y, 70.0, "ff_clump") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
+    n_fine = np.array([0.88 + 0.24 * FH._vnoise2(x, y, 26.0, "ff_fine") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
     w = n_age * n_clump * n_fine
     if rng is not None and k >= 3:
         r = rng.normal(0.0, 1.0, k)
         r = np.convolve(np.pad(r, 2, mode="edge"), np.array([0.1, 0.2, 0.4, 0.2, 0.1]), mode="valid")
-        w = w + 0.14 * r / max(float(np.std(r)), 1e-6)
-        u_ev = rng.uniform(0.0, 1.0, k)
-        w = w + np.where(u_ev < 0.12, rng.uniform(0.12, 0.28, k), 0.0)
-        w = w - np.where((u_ev >= 0.12) & (u_ev < 0.22), rng.uniform(0.14, 0.28, k), 0.0)
-    # Use h_base scaled back to raw if caller passed a custom non-CHM base, else FAR_BASE_H_M[mix]
-    h_cls = FAR_BASE_H_M.get(mix, 21.0)
-    h_noise_raw = h_cls * np.clip(w, 0.42, 1.48)
+        w = w + 0.10 * r / max(float(np.std(r)), 1e-6)
+    h_cls = FAR_BASE_H_M.get(mix, 19.5)
+    h_noise_raw = np.minimum(h_cls * np.clip(w, 0.52, 1.32) * height_mult, cap_quad)
 
     if ring_chm is not None:
         h_chm_raw, has_chm = ring_chm.sample_heights(e_raw, n_raw, mix)
         ring_chm.n_total_verts += k
         ring_chm.n_chm_verts += int(has_chm.sum())
         if has_chm.any():
-            jitter = np.array([0.93 + 0.14 * FH._vnoise2(x, y, 18.0, "ff_chm") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
-            h_raw = np.where(has_chm, h_chm_raw * jitter, h_noise_raw)
+            # Measured CHM is already true stand height: apply only gentle local jitter, never stand_scale inflation
+            jitter = np.array([0.94 + 0.12 * FH._vnoise2(x, y, 22.0, "ff_chm") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
+            h_chm_cap = np.minimum(h_chm_raw * jitter, cap_quad)
+            h_raw = np.where(has_chm, h_chm_cap, h_noise_raw)
         else:
             h_raw = h_noise_raw
     else:
         h_raw = h_noise_raw
 
-    ht = h_raw * s_h * height_mult * _corridor_taper(e, n, half)
+    ht = h_raw * s_h * _corridor_taper(e, n, half, region_id)
     return np.maximum(ht, 3.5 * s_h)
 
 
 def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str, elev: BorderElevation, half: float, tier: str,
-                      ring_chm: RingChm | None = None):
+                      ring_chm: RingChm | None = None, region_id: str = "bialystok-industrial-c"):
     pts_raw = np.asarray(coords, dtype=np.float64)
     if len(pts_raw) < 4:
         return
@@ -1362,10 +1456,8 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
 
     _, s_h = foreshorten_scales(d_cen)
     rng = _stand_rng(coords)
-    # ADR 0330 addendum: remove the old max(..., 8.5) floor that clamped every distant stand (2.5-4 km) to one flat
-    # height; stand height now comes per vertex from RingChm (when available) or multi-scale age/clump noise.
-    stand_scale = float(rng.uniform(0.84, 1.16))
-    h_base = max(FAR_BASE_H_M.get(mix, 21.0) * s_h * stand_scale, 3.5 * s_h)
+    stand_scale = float(rng.uniform(0.86, 1.14))
+    h_base = max(FAR_BASE_H_M.get(mix, 19.5) * s_h * stand_scale, 3.5 * s_h)
     mix_ = mix if mix in MOUND_COL else "mixed"
     band = haze_band(d_cen)
     # Cool mound tint subtly aligned with the curtain band (true extinction is done in Kamion/World Surface shader)
@@ -1374,46 +1466,180 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
     mound_col = tuple(mound_raw[i] * (1.0 - k_mound) + HAZE_ALBEDO[i] * k_mound for i in range(3))
     look = {"mat": f"forest_edge_{mix_}{band}", "u_shift": float(rng.uniform(0.0, 1.0)),
             "u_scale": float(rng.uniform(42.0, 54.0)), "rng": rng, "stand_scale": stand_scale,
-            "mound": mound_col}
+            "mound": mound_col, "d_cen": d_cen}
     for name, part in split_by_sector(poly_eff, half):          # ADR 0308: every piece in the sector it lies in
-        _stand_geometry(sectors[name], part, mix, elev, half, tier, h_base, look, ring_chm=ring_chm)
+        _stand_geometry(sectors[name], part, mix, elev, half, tier, h_base, look,
+                        ring_chm=ring_chm, region_id=region_id)
 
 
 def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevation, half: float, tier: str, h_base: float,
-                    look: dict | None = None, ring_chm: RingChm | None = None):
-    """Curtains and under-canopy mound of one stand piece (foreshortened coordinates) into sector builder sec.
-    look (ADR 0330): curtain material / texture offset / height noise / mound colour of the stand."""
-    look = look or {"mat": "forest_edge_mixed", "u_shift": 0.0, "u_scale": 48.0, "rng": None, "stand_scale": 1.0, "mound": None}
+                    look: dict | None = None, ring_chm: RingChm | None = None,
+                    region_id: str = "bialystok-industrial-c"):
+    """Curtains, irregular undergrowth skirt, edge tree impostors and flat under-canopy shadow base of one stand
+    piece (foreshortened coordinates) into sector builder sec (ADR 0330 + r2)."""
+    look = look or {"mat": "forest_edge_mixed", "u_shift": 0.0, "u_scale": 48.0, "rng": None,
+                    "stand_scale": 1.0, "mound": None, "d_cen": 500.0}
     curtain = {"mat": look["mat"], "u_shift": look["u_shift"], "u_scale": look["u_scale"], "half": half}
     stand_scale = float(look.get("stand_scale", 1.0))
     ce, cn = float(poly_eff.centroid.x), float(poly_eff.centroid.y)
+    vm_edge = FH.edge_v_main(FH.bake_info()["mixed"]["edge"])
 
     seg_step = 9.0 if tier == "High" else 28.0
     ext = np.asarray(poly_eff.exterior.coords, dtype=np.float64)
     if not poly_eff.exterior.is_ccw:
         ext = ext[::-1]
 
-    # 1. Outer stand-edge curtain: only keep front-facing edges (dot(n_seg, -rad) >= 0.44) outside the 10.5 m border
-    #    band so radial corridor edges never appear at grazing angles as dark parallel walls (forest_hlod.py v3.1 r2).
+    # 1. Outer stand-edge curtain: front-facing edges (dot(n_seg, -rad) >= 0.48) outside the 10.5 m border band.
+    #    ADR 0330 r2: organic wavy outline, gentle smoothstep end roll-off (0.72, never a 0.30 cone), slope-limited
+    #    tops (|dz/ds| <= 0.26 -> zero diagonal UV shear), patchy shrub mantle skirt, and individual edge tree impostors.
     run = []
+
+    def _smooth_end_taper(s: np.ndarray, total_s: float) -> np.ndarray:
+        taper_len = min(16.0, total_s * 0.28)
+        if taper_len < 1.0:
+            return np.ones_like(s)
+        t = np.minimum(np.clip(s / taper_len, 0.0, 1.0), np.clip((total_s - s) / taper_len, 0.0, 1.0))
+        sm = t * t * (3.0 - 2.0 * t)
+        return 0.52 + 0.48 * sm
 
     def flush_run(r_pts):
         if len(r_pts) < 2:
             return
-        P = np.asarray(r_pts, dtype=np.float64)
+        P = np.asarray(r_pts, dtype=np.float64).copy()
         ds = np.hypot(*np.diff(P, axis=0).T)
         s = np.concatenate([[0.0], np.cumsum(ds)])
         total_s = float(s[-1])
         if total_s < 8.0:
             return
+        k = len(P)
+        # Outward unit normal along the run (CCW exterior -> right of travel is outward)
+        tang = np.zeros((k, 2), dtype=np.float64)
+        tang[:-1] += np.diff(P, axis=0)
+        tang[1:] += np.diff(P, axis=0)
+        out_n = np.column_stack([tang[:, 1], -tang[:, 0]])
+        out_n /= np.maximum(np.hypot(out_n[:, 0], out_n[:, 1]), 1e-9)[:, None]
+
+        # Organic horizontal outline wobble on High tier so long BDOT edges never read as ruler-straight lines
+        e_raw, n_raw, d_true = unforeshorten_xy(P[:, 0], P[:, 1], half)
+        s_xy_arr = np.array([foreshorten_scales(float(d))[0] for d in d_true], dtype=np.float64)
+        s_h_arr = np.array([foreshorten_scales(float(d))[1] for d in d_true], dtype=np.float64)
+        if tier == "High" and k >= 3:
+            end_env = np.minimum(np.clip(s / 18.0, 0.0, 1.0), np.clip((total_s - s) / 18.0, 0.0, 1.0))
+            wob = np.array([
+                (2.0 * FH._vnoise2(x, y, 42.0, "ff_wob1") - 1.0) * FAR_EDGE_WOBBLE_M
+                + (2.0 * FH._vnoise2(x, y, 16.0, "ff_wob2") - 1.0) * (0.45 * FAR_EDGE_WOBBLE_M)
+                for x, y in zip(e_raw, n_raw)
+            ], dtype=np.float64)
+            # Only push outward where safely outside the tile border (> 14 m)
+            d_eff_now = np.array([outside_dist(p[0], p[1], half)[4] for p in P], dtype=np.float64)
+            wob = np.where(d_eff_now > 16.0, wob, np.minimum(wob, 0.0))
+            P = P + out_n * (wob * s_xy_arr * end_env)[:, None]
+
         zg = np.array([elev.z_at_eff(p[0], p[1]) for p in P])
         ht = _crown_height_wave(P[:, 0], P[:, 1], h_base, half, rng=look["rng"], mix=mix,
-                                ring_chm=ring_chm, height_mult=stand_scale)
-        # Taper ends of open runs so stand edges step down gently at margins instead of ending in a vertical wall
+                                ring_chm=ring_chm, height_mult=stand_scale, region_id=region_id)
         if np.hypot(*(P[0] - P[-1])) > 2.0:
-            end_taper = np.minimum(np.clip(s / 32.0, 0.30, 1.0), np.clip((total_s - s) / 32.0, 0.30, 1.0))
-            ht = ht * end_taper
+            ht = ht * _smooth_end_taper(s, total_s)
+        ht = _limit_top_slope(P, zg - 0.5, ht, max_slope=FAR_MAX_TOP_SLOPE, min_h=3.0)
         sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **curtain)
+
+        # ADR 0330 r2 (High tier): patchy undulating undergrowth / shrub mantle skirt in front of outer stand edge
+        d_min_run = float(d_true.min())
+        if tier == "High" and d_min_run <= FAR_SKIRT_MAX_D_M and k >= 2:
+            # Push skirt 2.5..9.5 m * s_xy in front of outer curtain with irregular wave + patchy gaps (~76% kept)
+            sk_off = np.array([
+                (2.5 + 7.0 * FH._vnoise2(x, y, 26.0, "ff_skoff")) * sxy
+                for x, y, sxy in zip(e_raw, n_raw, s_xy_arr)
+            ], dtype=np.float64)
+            Ps = P + out_n * sk_off[:, None]
+            # Keep skirt strictly outside the tile border (d_eff >= 9.0 m)
+            sk_keep = np.array([
+                outside_dist(p[0], p[1], half)[4] >= 9.0 and FH._vnoise2(x, y, 34.0, "ff_skkeep") > 0.22
+                for p, x, y in zip(Ps, e_raw, n_raw)
+            ], dtype=bool)
+            # Emit contiguous kept sub-runs of the undergrowth skirt
+            i0 = 0
+            while i0 < k - 1:
+                if not (sk_keep[i0] and sk_keep[i0 + 1]):
+                    i0 += 1
+                    continue
+                i1 = i0 + 1
+                while i1 + 1 < k and sk_keep[i1 + 1]:
+                    i1 += 1
+                sub_p = Ps[i0:i1 + 1]
+                sub_er, sub_nr = e_raw[i0:i1 + 1], n_raw[i0:i1 + 1]
+                sub_sh = s_h_arr[i0:i1 + 1]
+                sub_zg = np.array([elev.z_at_eff(p[0], p[1]) for p in sub_p])
+                sub_h = np.array([
+                    (3.6 + 5.8 * FH._vnoise2(x, y, 20.0, "ff_skh") * (0.72 + 0.56 * FH._vnoise2(x, y, 9.0, "ff_skh2"))) * sh
+                    for x, y, sh in zip(sub_er, sub_nr, sub_sh)
+                ], dtype=np.float64)
+                sub_h = np.minimum(sub_h, ht[i0:i1 + 1] * 0.56)
+                # Slightly varying ground sink breaks horizontal shadow seam at base
+                sub_sink = np.array([0.35 + 0.50 * FH._vnoise2(x, y, 14.0, "ff_skz") for x, y in zip(sub_er, sub_nr)])
+                sub_h = _limit_top_slope(sub_p, sub_zg - sub_sink, sub_h, max_slope=0.30, min_h=2.0)
+                sec.add_curtain1(sub_p, sub_zg - sub_sink, sub_zg + sub_h, face_sign=1.0,
+                                 mat=look["mat"], u_shift=look["u_shift"] + 0.37, u_scale=look["u_scale"],
+                                 half=half, v_bot=1.0, v_top=vm_edge)
+                i0 = i1 + 1
+
+        # ADR 0330 r2 (High tier): individual crossed-card tree & shrub impostors in front of forest edges (0..1500 m
+        # ring, i.e. 300..1500 m from tile cameras) — packed in the same far atlas (0 extra draw calls).
+        if tier == "High" and d_min_run <= FAR_IMPOSTOR_MAX_D_M and total_s >= 12.0:
+            species_pool = FAR_IMPOSTOR_SPECIES.get(mix, FAR_IMPOSTOR_SPECIES["mixed"])
+            bush_pool = ("tree_shrub_0", "tree_shrub_0", "tree_alder_0", "tree_linden_0", "tree_birch_0")
+            # Sample positions: irregular spacing along the edge + soft shrubby corners near open run ends
+            sample_s = []
+            if np.hypot(*(P[0] - P[-1])) > 2.0:
+                sample_s.extend([min(3.5, total_s * 0.15), max(total_s - 3.5, total_s * 0.85)])
+            s_cur = 7.0 + 12.0 * _hfloat(f"{P[0, 0]:.0f},{P[0, 1]:.0f}", "imp_s0")
+            while s_cur < total_s - 5.0:
+                sample_s.append(s_cur)
+                s_cur += (18.0 + 16.0 * _hfloat(f"{P[0, 0]:.0f},{P[0, 1]:.0f},{s_cur:.0f}", "imp_step"))
+            for s_pos in sample_s:
+                idx = int(np.searchsorted(s, s_pos, side="right")) - 1
+                idx = min(max(idx, 0), k - 2)
+                seg_l = max(float(ds[idx]), 1e-6)
+                frac = float(np.clip((s_pos - s[idx]) / seg_l, 0.0, 1.0))
+                pt = P[idx] * (1.0 - frac) + P[idx + 1] * frac
+                nrm = out_n[idx] * (1.0 - frac) + out_n[idx + 1] * frac
+                nlen = float(np.hypot(nrm[0], nrm[1]))
+                if nlen > 1e-6:
+                    nrm /= nlen
+                dt_pt = float(d_true[idx] * (1.0 - frac) + d_true[idx + 1] * frac)
+                sxy_pt, sh_pt = foreshorten_scales(dt_pt)
+                if dt_pt <= FAR_IMPOSTOR_MAX_D_M:
+                    tkey = f"{pt[0]:.1f},{pt[1]:.1f}"
+                    h_loc = float(ht[idx] * (1.0 - frac) + ht[idx + 1] * frac)
+                    # Always place a low bushy shrub/sapling hugging the forest base (breaks the straight lower edge),
+                    # plus an occasional taller pioneer tree stepping further into the field
+                    is_end = (s_pos < 5.0 or s_pos > total_s - 5.0)
+                    bname = _hpick(tkey, list(bush_pool), "bush")
+                    b_out = (1.5 + 6.5 * _hfloat(tkey, "bout")) * sxy_pt
+                    b_lat = (2.0 * _hfloat(tkey, "blat") - 1.0) * 6.0 * sxy_pt
+                    be = float(pt[0] + nrm[0] * b_out - nrm[1] * b_lat)
+                    bn = float(pt[1] + nrm[1] * b_out + nrm[0] * b_lat)
+                    if outside_dist(be, bn, half)[4] >= 9.5:
+                        if bname == "tree_shrub_0":
+                            bh = (2.8 + 3.4 * _hfloat(tkey, "bh")) * sh_pt
+                        else:
+                            bh = max(min(h_loc * (0.36 + 0.28 * _hfloat(tkey, "bh")), 11.0 * sh_pt), 3.8 * sh_pt)
+                        sec.add_tree_impostor1(be, bn, elev.z_at_eff(be, bn), bh, bname,
+                                               yaw=_hfloat(tkey, "byaw") * math.pi, half=half)
+                    if (not is_end) and _hfloat(tkey, "imp_tall") < 0.42:
+                        ck = f"{tkey}:tall"
+                        out_d = (5.0 + 15.0 * _hfloat(ck, "out")) * sxy_pt
+                        lat_d = (2.0 * _hfloat(ck, "lat") - 1.0) * 8.0 * sxy_pt
+                        tx_e = float(pt[0] + nrm[0] * out_d - nrm[1] * lat_d)
+                        tx_n = float(pt[1] + nrm[1] * out_d + nrm[0] * lat_d)
+                        if outside_dist(tx_e, tx_n, half)[4] >= 10.0:
+                            tname = _hpick(ck, list(species_pool), "sp")
+                            if tname == "tree_shrub_0":
+                                th = (3.0 + 3.2 * _hfloat(ck, "h")) * sh_pt
+                            else:
+                                th = max(h_loc * (0.54 + 0.36 * _hfloat(ck, "h")), 5.0 * sh_pt)
+                            sec.add_tree_impostor1(tx_e, tx_n, elev.z_at_eff(tx_e, tx_n), th, tname,
+                                                   yaw=_hfloat(ck, "yaw") * math.pi, half=half)
 
     for a, b in zip(ext[:-1], ext[1:]):
         L = float(np.hypot(b[0] - a[0], b[1] - a[1]))
@@ -1424,7 +1650,7 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
         # Outward normal of CCW polygon edge a->b is (dy/L, -dx/L); radial vector from border is (de/dm, dn/dm)
         nx, ny = (b[1] - a[1]) / L, -(b[0] - a[0]) / L
         facing_tile = -(nx * de + ny * dn) / max(dm, 1e-6)
-        if dm < 10.5 or facing_tile < 0.44:
+        if dm < 10.5 or facing_tile < 0.48:
             flush_run(run)
             run = []
             continue
@@ -1460,14 +1686,16 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                     ks = max(2, int(math.ceil(L / seg_step)))
                     P = np.array([sc[0] + (sc[-1] - sc[0]) * (i / ks) for i in range(ks + 1)])
                     s = np.linspace(0.0, L, ks + 1)
-                    end_taper = np.minimum(np.clip(s / 30.0, 0.30, 1.0), np.clip((L - s) / 30.0, 0.30, 1.0))
+                    end_taper = _smooth_end_taper(s, L)
                     zg = np.array([elev.z_at_eff(p[0], p[1]) for p in P])
                     ht = _crown_height_wave(P[:, 0], P[:, 1], h_base, half, rng=look["rng"], mix=mix,
-                                            ring_chm=ring_chm, height_mult=stand_scale * 1.06) * end_taper
+                                            ring_chm=ring_chm, height_mult=stand_scale * 1.02,
+                                            region_id=region_id) * end_taper
+                    ht = _limit_top_slope(P, zg - 0.5, ht, max_slope=FAR_MAX_TOP_SLOPE, min_h=3.0)
                     sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **curtain)
 
-    # 3. Sloping dark conifer/mixed under-canopy mound tucked 10 m inside, split into <= 320 m convex-ish cells so
-    #    triangle fans never bridge concave bays or road corridors
+    # 3. Low flat under-canopy shadow base tucked 10 m inside (ADR 0330 r2: capped <= 3.6 m so it never reads as a
+    #    green conical hill between curtains)
     inset = poly_eff.buffer(-10.0)
     if inset.is_empty:
         return
@@ -1498,7 +1726,7 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
             hc, ok = ring_chm.sample_heights(cr_e, cr_n, mix)
             if ok[0]:
                 h_mound_ref = float(hc[0]) * foreshorten_scales(float(cr_d[0]))[1]
-        h_cap = max(h_mound_ref * 0.34, 2.2)
+        h_cap = min(max(h_mound_ref * 0.12, 0.8), 2.2)
         col_top = (0.032, 0.050, 0.030, 0.0) if mix == "conifer" else (0.038, 0.058, 0.034, 0.0)
         if look.get("mound") is not None:      # ADR 0330: per mix (+ broadleaf) and per stand x 0.88-1.14
             col_top = (*look["mound"], 0.0)
@@ -1996,8 +2224,11 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
         member(p_mid, p_r0, 0.09 * scale)
 
 
-def _corridor_treelines(half: float = 1024.0) -> list[dict]:
-    """Horizon pine stands closing the distant DK8 curve in Las Bacieczki/Pietrasze and framing the western exit."""
+def _corridor_treelines(half: float = 1024.0, region_id: str = "bialystok-industrial-c") -> list[dict]:
+    """Horizon pine stands closing the distant DK8 curve in Las Bacieczki/Pietrasze and framing the western exit
+    of bialystok-industrial-c ONLY (ADR 0085 / ADR 0330 r2: never injected into other regions)."""
+    if region_id != "bialystok-industrial-c":
+        return []
     return [
         # North exit (al. Tysiąclecia N, E ~ -857, N = +1024, dir = (-0.21, +0.98)): Las Bacieczki/Pietrasze flanks DK8 and closes the curve at N >= 1105 m
         {"coords": [[-1080, 1038], [-896, 1038], [-915, 1185], [-1100, 1185], [-1080, 1038]], "mix": "conifer"},
@@ -2013,10 +2244,11 @@ def _corridor_treelines(half: float = 1024.0) -> list[dict]:
     ]
 
 
-def build_apron_masks(gis: dict, elev: BorderElevation, half: float = 1024.0) -> dict:
+def build_apron_masks(gis: dict, elev: BorderElevation, half: float = 1024.0,
+                      region_id: str = "bialystok-industrial-c") -> dict:
     """Compute apron vertex ground-mask lookup + border height profile for WorldEdgeBuilder.BuildApron."""
     f_polys = []
-    for f in gis["forests"] + _corridor_treelines(half):
+    for f in gis["forests"] + _corridor_treelines(half, region_id):
         pts = [foreshorten_point(p[0], p[1], half)[:2] for p in f["coords"]]
         if len(pts) >= 3:
             p = shapely.make_valid(Polygon(pts))
@@ -2105,8 +2337,9 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         skyline = SectorBuilder(SKYLINE, uv1_flag=SKYLINE_FLAG_CLAMP)
         chm_arg = ring_chm if tier == "High" else RingChm(ring_chm.entries)
 
-        for f in gis["forests"] + _corridor_treelines(half):
-            _add_forest_stand(sectors, f["coords"], f.get("mix", "mixed"), elev, half, tier, ring_chm=chm_arg)
+        for f in gis["forests"] + _corridor_treelines(half, region_id):
+            _add_forest_stand(sectors, f["coords"], f.get("mix", "mixed"), elev, half, tier,
+                              ring_chm=chm_arg, region_id=region_id)
 
         for b in render_buildings:
             _add_building(sectors, b, elev, half, tier, exclusion=building_exclusion, skyline=skyline)
@@ -2176,7 +2409,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         }
 
     # Write apron JSON (border height profile for WorldEdgeBuilder)
-    apron_info = build_apron_masks({**gis, "buildings": render_buildings}, elev, half)
+    apron_info = build_apron_masks({**gis, "buildings": render_buildings}, elev, half, region_id)
     apron_json = {k: v for k, v in apron_info.items() if not k.startswith("_")}
     apron_path = out_root / "far_field_apron.json"
     apron_path.write_text(json.dumps(apron_json, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
