@@ -328,6 +328,7 @@ def test_driveway_paving_color_opt_in_on_sidewalk():
     rbuf.add("road", "sidewalk_paving", sw_v, sw_v[:, :2], [(0, 1, 2), (0, 2, 3)], footprint=True, src="r")
     surf_top = FU.SurfaceTop(rbuf.parts)
     plot = {
+        "key": "x1",   # hfloat("x1", "drvcross") = 0.05 < DRIVE_CROSS_SHARE: contrasting driveway chosen
         "lay": {"gate": {"m": np.array([10.0, 7.5]), "n": np.array([0.0, -1.0]), "w": 3.5}},
         "access": {"d_cw": 4.0, "walk": "sidewalk_paving", "kind": 0, "kerbed": True},
         "drive": Polygon([(8.25, 5.8), (11.75, 5.8), (11.75, 10.0), (8.25, 10.0)]),
@@ -344,4 +345,36 @@ def test_driveway_paving_color_opt_in_on_sidewalk():
     dc = [p for p in buf_on.parts if p.mat == PLT.DRIVE_CROSS_MAT]
     assert len(dc) == 1 and dc[0].layer == PLT.GROUND_LAYER and dc[0].src == "plot:1:drive_cross"
     assert dc[0].V[:, 1].min() >= 3.5 + PLT.KERB_BAND_M - 0.02   # stops cleanly behind kerb
-    assert dc[0].V[:, 1].max() >= 7.4                            # reaches gate line
+    assert 5.9 <= dc[0].V[:, 1].max() <= 6.2                     # footway only (to the road footprint edge), not the whole apron
+
+
+def test_driveway_paving_color_only_for_share_of_gates_and_gate_wide():
+    """Neon-paving-s24 (lider): ~35 % of gates get the contrasting block, width = gate (3-4.5 m), only on the footway."""
+    from shapely.geometry import Polygon
+    from roads import meshing as M
+    from streetscape import furniture as FU
+    from streetscape import plots as PLT
+    from streetscape.facade_kit import hfloat
+
+    carriage = Polygon([(0, -3.5), (30, -3.5), (30, 3.5), (0, 3.5)])
+    roads_poly = Polygon([(0, -3.5), (30, -3.5), (30, 6.0), (0, 6.0)])
+    sw_v = np.array([[0.0, 3.5, 100.1], [30.0, 3.5, 100.1], [30.0, 6.0, 100.1], [0.0, 6.0, 100.1]])
+    rbuf = M.MeshBuf()
+    rbuf.add("road", "sidewalk_paving", sw_v, sw_v[:, :2], [(0, 1, 2), (0, 2, 3)], footprint=True, src="r")
+    surf_top = FU.SurfaceTop(rbuf.parts)
+    n_on = 0
+    keys = [f"k{i}" for i in range(40)]
+    for key in keys:
+        plot = {"key": key,
+                "lay": {"gate": {"m": np.array([15.0, 10.0]), "n": np.array([0.0, -1.0]), "w": 4.0}},
+                "access": {"d_cw": 6.0, "walk": "sidewalk_paving", "kind": 0, "kerbed": True},
+                "drive": Polygon([(13.0, 5.8), (17.0, 5.8), (17.0, 12.0), (13.0, 12.0)])}
+        buf = M.MeshBuf()
+        PLT._verge_overlay(buf, plot, surf_top, "plot:" + key, lambda _p: 100.15, roads_poly, carriage, driveway_color=True)
+        dc = [p for p in buf.parts if p.mat == PLT.DRIVE_CROSS_MAT]
+        assert bool(dc) == (hfloat(key, "drvcross") < PLT.DRIVE_CROSS_SHARE)
+        for p in dc:
+            assert p.V[:, 0].max() - p.V[:, 0].min() <= 4.5 + 1e-6
+            assert p.V[:, 1].max() <= 6.0 + 0.11            # not beyond the footway / road footprint
+        n_on += bool(dc)
+    assert 0.15 * len(keys) <= n_on <= 0.55 * len(keys)
