@@ -8,3 +8,7 @@
 - NASTĘPNY KROK (w toku — `run_step4_final.ps1`): pytest budżetowe + 0336 + 0305 + 0348 + 0349 -> `build_world.py --region dw671-tykocin-09 --context` i `--region tykocin --context` -> re-import Win64 + VQA `after` runda 2 -> weryfikacja PNG + ADR 0348 + kopia dowodów do `C:\Users\matma\Documents\Claude\kamion\artifacts\neon-windows-s24\`.
 - krok 5 (Claude, po 429 Neona): zacommitowano przebudowę r2, merge main, test bit-identyczności buildings_mesh (Dojlidy, knyszyn-w: identyczne), fix `_house_rows` (górny rząd okien), siatka 45 m w płotach, przebudowa obu kafli, import Win64 + VQA po r3, zestawienia `sbs/` + `crop1to1_*`, ADR 0348 uzupełniony liczbami. pytest 134 zielone. Draw max +2.
 - NASTĘPNY KROK (lider): przegląd + scalenie; potem `build_world.py --region <id>` dla kafli z działkami/budynkami i reimport; visual-qa jednego kafla Białegostoku (zmiana `sky_occ` atlasu fasad).
+
+# STATUS regen-wave-11-s24 (fala 11: przebudowa 54 kafli po ADR 0348, 0330 r2 far_field 11 slotow, 0334 r3/r3b, 0349)
+- krok 0 (2026-11-25 18:18): worktree z main 9d22e7139 (derived = junction do main). Skrypty/kolejka w artifacts/regen-wave-11-s24/ (kopia fali 10; queue = 54 kafle, wszystkie derived z main pokryte). Czekam na koniec importu buildu #9 (win-build, full-build-9-s24 chain.status: 'import tykocin exit=0').
+- NASTEPNY KROK: po imporcie #9: `Start-Process pwsh -WindowStyle Hidden -ArgumentList '-NoProfile','-File','artifacts/regen-wave-11-s24/chain.ps1','-Chain','A'` (A..E) + final.ps1 + autocommit.ps1
