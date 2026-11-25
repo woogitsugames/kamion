@@ -400,7 +400,7 @@ def test_curtain_slope_cap_and_flat_mound_0330_r2():
     assert len(prims) <= 2
     mound = next(p for p in prims if p["mat"] == "far_field_buildings")
     zg_m = np.array([elev.z_at_eff(x, y) for x, y in mound["V"][:, :2]])
-    assert (mound["V"][:, 2] - zg_m).max() <= 3.7, "under-canopy mound must stay low and flat"
+    assert (mound["V"][:, 2] - zg_m).max() <= 2.3, "under-canopy mound must stay low and flat"
 
     curtain = next(p for p in prims if p["mat"] == "forest_edge_mixed_far_atlas")
     cap_quad = FF.FAR_CROWN_CAP_M["conifer"] / 0.888

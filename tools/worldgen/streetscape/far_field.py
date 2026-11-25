@@ -1710,7 +1710,7 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
             hc, ok = ring_chm.sample_heights(cr_e, cr_n, mix)
             if ok[0]:
                 h_mound_ref = float(hc[0]) * foreshorten_scales(float(cr_d[0]))[1]
-        h_cap = min(max(h_mound_ref * 0.16, 1.2), 3.6)
+        h_cap = min(max(h_mound_ref * 0.12, 0.8), 2.2)
         col_top = (0.032, 0.050, 0.030, 0.0) if mix == "conifer" else (0.038, 0.058, 0.034, 0.0)
         if look.get("mound") is not None:      # ADR 0330: per mix (+ broadleaf) and per stand x 0.88-1.14
             col_top = (*look["mound"], 0.0)
