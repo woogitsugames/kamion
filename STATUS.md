@@ -15,4 +15,5 @@
   - Finalne liczby `far_field`: `knyszyn-w` High `93 052 → 104 569`, Low `12 359 → 11 830`; `dk65-05` High `111 935 → 130 148`, Low `15 120 → 14 585`; C High `169 318 → 188 322`, Low `29 161 → 29 139` (`≤ 30 000`); podsiatki `2/sektor`, **Δ `drawsEst` = 0** na wszystkich kamerach.
   - Dowody skopiowane do `C:\Users\matma\Documents\Claude\kamion\artifacts\neon-farfield2-s24\sheets\`.
   - Dopisek rundy 2 dodany do `docs/adr/0330-brzeg-ciagly-row-jeden-most-tykocin-dal-lasu.md`.
+- **krok 5 (Claude, po 429 Neona):** merge main, pytest 160 zielonych, import Win64 + visual-qa po (finalna polerka), arkusze w `artifacts/neon-farfield2-s24/sheets/`, dopisek weryfikacji w ADR 0330. Δ draw = 0.
 - **NASTĘPNY KROK (dla lidera po scaleniu):** przebudować `far_field` dla pozostałych kafli (`uv run --project tools/worldgen tools/worldgen/streetscape/far_field.py --region <id>` — wymagane ze względu na 11-slotowy atlas `1024×4096`) i reimportować.
