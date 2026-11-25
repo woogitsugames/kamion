@@ -46,6 +46,12 @@
     "power_lines": 143,
     "pylons": 268
   },
+  "forest_chm_ring": {
+    "chm_share": 0.0,
+    "chm_tiles": [],
+    "chm_vertices": 0,
+    "total_curtain_vertices": 21775
+  },
   "lod1_height_audit": {
     "buildings": 133679,
     "conflicting_ids": 0,
@@ -125,7 +131,7 @@
   },
   "tiers": {
     "High": {
-      "bytes": 12053800,
+      "bytes": 12402804,
       "file": "Data/raw/derived/bialystok-dojlidy/world/far_field.glb",
       "sectors": {
         "far_east": {
@@ -165,7 +171,7 @@
           "vertices": 40275
         }
       },
-      "sha256": "c5ed5bcb93cadb3ffb2fe21b582aad6b0079debb340222d44453705b9d541114",
+      "sha256": "4d0059b90734c144b5b5570bf9d40afc59a5d8fe1ca58ca4cee52e951b36014d",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -178,7 +184,7 @@
       "total_vertices": 243386
     },
     "Low": {
-      "bytes": 1384504,
+      "bytes": 1466016,
       "file": "Data/raw/derived/bialystok-dojlidy/world/far_field.low.glb",
       "sectors": {
         "far_east": {
@@ -218,7 +224,7 @@
           "vertices": 11012
         }
       },
-      "sha256": "d88ba24e9a01ca4b67f58a154c14a62c37ff74a4f108888fb6720e31619296bf",
+      "sha256": "2b24b4b07e1b7c3ec9ecfa91db21de111660c1872fd1dc73963a0abc4bcfa11c",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
