@@ -28,43 +28,59 @@ import math
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw
 from scipy import ndimage
+
+from . import verge_atlas as VA
 
 LAYER = "banks"
 MAT = "verge_tufts"
 MATERIALS = {MAT: {"color": [1.0, 1.0, 1.0], "rough": 0.9, "texture": MAT, "alpha_cutoff": 0.5,
                    "vertex_color": True, "shader": "Kamion/World PlotKit"}}
-# r4 (fields2-s24, critic build #8 P1#7 "ta sama kępa co kilka metrów"): 8 tufts per row instead of 4 (16 shapes with
-# the two rows), each with its own character - density, share of dry blades, lean, spread, tone - so two neighbouring
-# cards are rarely the same plant. The atlas is twice as wide at the same texel density (an old card of a tile not yet
-# rebuilt maps two narrower tufts of the new atlas - still whole tufts).
-TEX_W, TEX_H = 2048, 512
+# r5 (fields3-s24, critic wave10-pre 1 / #7 "ten sam sprite w równym rytmie"): the r4 atlas had 16 tufts of ONE growth
+# form and the cards stood at a stepped spacing along two lines (gravel edge, slope). Now:
+#  - the atlas (streetscape.verge_atlas) holds 16 plants of different growth forms - grass tussocks, bleached stalks,
+#    dock, tansy, yarrow, mugwort, chicory, rosettes, clover, flattened dead grass - plus the maize rows of ADR 0334 r3;
+#  - a card maps ONE plant, picked by the zone (shoulder edge / slope / ditch bottom) from a weight table, with
+#    COLONIES: a forb dominates a stretch of 10-40 m and is rare elsewhere (tansy and mugwort grow in stands);
+#  - positions are a thinned Poisson process on the chainage (slots of SLOT_M, kept by a density that is the product
+#    of two noises and falls to zero for metres: clusters and real gaps, no step, no restart per mesh station);
+#  - shoulder-edge plants spread over a band (onto the gravel and, where the ground is known, up to EDGE_OUT_M
+#    behind it) instead of one line; every card has its own scale (SCALE), width, turn and tone.
+TEX_W, TEX_H = VA.TEX_W, VA.TEX_H
 TEX_M = 4.0                      # metres of sward one texture width stands for
-NT = 8                           # tufts per atlas row; a card maps 1 or 2 whole tufts
-TUFT_H = (1.0, 0.72, 0.9, 0.6, 0.82, 1.0, 0.66, 0.94)        # relative height of the tufts of a row
-TUFT_DENS = (1.0, 0.8, 1.2, 0.6, 0.45, 1.3, 0.9, 0.7)        # relative number of blades (lush clump .. thin wisp)
-TUFT_DRY = (0.08, 0.05, 0.12, 0.10, 0.55, 0.04, 0.25, 0.10)  # share of bleached blades (a dead tuft of last year)
-TUFT_LEAN = (0.0, 0.0, 0.0, 0.0, 0.25, -0.20, 0.0, 0.35)     # the whole tuft leans (wind, a wheel)
-TUFT_SPREAD = (1.0, 1.0, 1.0, 1.0, 1.3, 0.7, 1.1, 0.8)       # foot spread in the cell
-TUFT_TONE = (1.0, 0.94, 1.06, 0.90, 1.10, 0.88, 1.0, 1.05)
-V_SHORT = (0.0, 0.5)             # atlas rows (v from the image bottom): short turf / tall grass with seed heads
-V_TALL = (0.5, 1.0)
-V_PAD = 0.012
-STEP_EDGE_M = (0.40, 0.85)       # spacing of the shoulder-edge tufts along the road
-STEP_SLOPE_M = (1.1, 2.6)
-# r4: slope tufts stand in groups (a patch the mower left, a damp spot), not one every couple of metres
-CLUSTER_M = 9.0                  # correlation length of the groups along the road
-CLUSTER_T = 0.60                 # density noise above this = inside a group
-STEP_CLUSTER_M = (0.45, 1.20)    # spacing inside a group
-LONE_KEEP = 0.10                 # share of the regular candidates kept outside the groups
-CROSS_SHARE = 0.20               # group tufts with a second card along the road (volume from the side)
+NT = VA.NT                       # plants per atlas row; a card maps one
+V_SHORT = VA.V_SHORT             # atlas rows (v from the image bottom): shoulder-edge plants / tall plants
+V_TALL = VA.V_TALL
+V_PAD = 0.006
+GRASS = ("tuft", "tuft_dry", "wisp", "flat_dead", "tussock", "tussock_dry", "stalks")
+FORMS_EDGE = (("tuft", 0.34), ("tuft_dry", 0.16), ("rosette", 0.12), ("clover", 0.10), ("flat_dead", 0.10),
+              ("wisp", 0.10), ("hawkbit", 0.04), ("yarrow_low", 0.04))
+FORMS_SLOPE = (("tussock", 0.30), ("tussock_dry", 0.20), ("stalks", 0.18), ("mugwort", 0.09), ("dock", 0.07),
+               ("tansy", 0.06), ("yarrow", 0.06), ("chicory", 0.04))
+FORMS_BOTTOM = (("tussock", 0.45), ("stalks", 0.25), ("dock", 0.12), ("tussock_dry", 0.10), ("mugwort", 0.08))
+FORMS_BAULK = (("tussock_dry", 0.26), ("tussock", 0.24), ("stalks", 0.22), ("mugwort", 0.12), ("tansy", 0.08),
+               ("dock", 0.04), ("yarrow", 0.04))
+FORM_H = {"clover": 0.55, "rosette": 0.8, "flat_dead": 0.5, "hawkbit": 0.9, "stalks": 1.25, "mugwort": 1.3,
+          "tansy": 1.15, "dock": 1.1, "chicory": 1.2, "yarrow": 1.0}      # relative height of a form (grass = 1)
+COLONY_M = 23.0                  # correlation length of the forb colonies along the road
+COLONY_T = 0.55                  # colony noise above this = a stand of one forb
+COLONY_BOOST = 10.0              # weight of the stand's forb inside it
+FORB_OUTSIDE = 0.20              # weight factor of every forb outside its stands
+SLOT_M = 0.15                    # candidate slots along the chainage
+RATE_EDGE = 2.6                  # plants per metre where the density is 1 (mean density ~0.35)
+RATE_SLOPE = 1.35
+RATE_BOTTOM = 2.3
+DENS_M = (14.0, 47.0)            # the two noise periods of the density
+DENS_T = (0.36, 0.74)            # smoothstep of the mixed noise: below = bare stretch
+SCALE = (0.6, 1.4)               # per-card height scale
+EDGE_OUT_M = 0.9                 # shoulder-edge plants up to this far behind the gravel (needs the ground height)
+CROSS_SHARE = 0.25               # tall plants with a second card across the first (volume from the side)
 TONE = (0.78, 1.04)              # per-card brightness (foliage occlusion scale)
-STEP_BOTTOM_M = (0.45, 0.95)
 H_EDGE = (0.14, 0.38)
 H_SLOPE = (0.22, 0.50)
+H_SLOPE_MAX = 0.75               # cap of a slope plant (scale x form)
 H_BOTTOM = (0.45, 0.90)
-W_CARD = (0.55, 1.10)
+W_CARD = (0.50, 0.95)
 EDGE_REACH_M = 0.42              # how far a shoulder-edge tuft may stand on the gravel (from its outer edge)
 PATCH_M = 14.0                   # correlation length of the density patches along the road
 MIN_DITCH_M = 0.22               # shallower "ditches" (flat verges) get no tall bottom grass
@@ -86,83 +102,40 @@ def _vnoise(key, s, period):
     return _h(key, "vn", i) * (1.0 - f) + _h(key, "vn", i + 1) * f
 
 
+def _density(src, zone, sc):
+    v = 0.6 * _vnoise(src + ":d1" + zone, sc, DENS_M[0]) + 0.4 * _vnoise(src + ":d2" + zone, sc, DENS_M[1])
+    t = min(max((v - DENS_T[0]) / (DENS_T[1] - DENS_T[0]), 0.0), 1.0)
+    return t * t * (3.0 - 2.0 * t)
+
+
+def pick_form(table, src, sc, u):
+    """Growth form of a plant at chainage sc (u: its own uniform draw): the table weights, bent by the forb colonies."""
+    w = [x for _, x in table]
+    forbs = [i for i, (n, _) in enumerate(table) if n not in GRASS]
+    if forbs:
+        g = _vnoise(src + ":col", sc, COLONY_M)
+        dom = forbs[int(_h(src, "colf", math.floor(sc / COLONY_M + 0.5)) * len(forbs)) % len(forbs)] if g > COLONY_T else -1
+        w = [x * ((COLONY_BOOST if i == dom else FORB_OUTSIDE) if i in forbs else 1.0) for i, x in enumerate(w)]
+    c, tot = 0.0, sum(w)
+    for (n, _), x in zip(table, w):
+        c += x
+        if u * tot <= c:
+            return n
+    return table[-1][0]
+
+
+def form_uv(form):
+    """(u0, u1, v0, v1) of a growth form in the atlas."""
+    if form in VA.SHORT_FORMS:
+        k, vrow = VA.SHORT_FORMS.index(form), V_SHORT
+    else:
+        k, vrow = VA.TALL_FORMS.index(form), V_TALL
+    return k / NT, (k + 1) / NT, vrow[0] + V_PAD, vrow[1] - V_PAD
+
+
 # ------------------------------------------------------------------------------------------------ texture
-def texture(seed=324):
-    S = 2
-    W, H = TEX_W * S, TEX_H * S
-    rng = np.random.default_rng(seed)
-    im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    d = ImageDraw.Draw(im)
-    # sRGB, around the calibrated terrain grass (linear 0.08 / 0.105 / 0.038 = sRGB 80 / 91 / 55)
-    greens = [np.array(c) for c in ((84, 98, 52), (72, 90, 50), (98, 106, 58), (66, 84, 46))]
-    dry = np.array([142, 130, 86])
-    dark = np.array([42, 52, 30])
-    head = np.array([150, 138, 96])
-
-    def col(c, k=None):
-        k = rng.random() if k is None else k
-        return tuple(int(x) for x in np.clip(c * (0.82 + 0.34 * k), 0, 255)) + (255,)
-
-    def stroke(pts, w0, w1, c):
-        for xo in (-W, 0, W):
-            q = [(x + xo, y) for x, y in pts]
-            for i in range(len(q) - 1):
-                w = w0 + (w1 - w0) * i / max(len(q) - 2, 1)
-                d.line([q[i], q[i + 1]], fill=c, width=max(1, int(round(w))))
-
-    def blades(y_foot, row_h, n, hmin, hmax, w0, base_share, heads):
-        # r2: NT discrete tufts per row with clear gaps between them - a card spans whole tufts (build: u on the
-        # tuft grid), so its side edges lie in transparent texels and the silhouette is the tuft, not a rectangle
-        cw = W / NT
-        pk = np.asarray(TUFT_DENS, float) / sum(TUFT_DENS)
-        for _ in range(n * NT // 4):
-            k = int(rng.choice(NT, p=pk))
-            off = float(np.clip(rng.normal(0, 0.14 * TUFT_SPREAD[k]), -0.30, 0.30))   # foot offset in the cell (x cell width)
-            x = (k + 0.5 + off) * cw
-            env = max(0.25, 1.0 - (abs(off) / 0.32) ** 2 * 0.55) * TUFT_H[k % len(TUFT_H)]
-            h = (hmin + (hmax - hmin) * rng.random() ** 1.6) * row_h * env
-            lean = off * 1.6 + rng.normal(0, 0.10) + TUFT_LEAN[k]            # blades fan out of the tuft
-            bend = rng.normal(0, 0.16)
-            reach = abs(lean) * h + abs(bend) * h
-            if abs(off) * cw + reach > 0.47 * cw:                             # keep the blade inside its cell
-                sc = max(0.25, (0.47 * cw - abs(off) * cw) / max(reach, 1e-6))
-                lean, bend = lean * sc, bend * sc
-            c = dry if rng.random() < TUFT_DRY[k] else greens[int(rng.integers(0, len(greens)))]
-            if rng.random() < base_share:
-                c = dark * rng.uniform(0.9, 1.6)
-            c = c * TUFT_TONE[k]
-            pts = [(x + (lean * t + bend * t * t) * h, y_foot - h * t) for t in np.linspace(0, 1, 7)]
-            stroke(pts, w0 * S, 0.9 * S, col(c))
-            if heads and h > 0.62 * row_h and rng.random() < heads:
-                tx, ty = pts[-1]
-                L = rng.uniform(0.06, 0.12) * row_h
-                for q in range(14):                       # a loose panicle: short side strokes along the tip
-                    t = q / 13.0
-                    sx, sy = tx - (lean + 2 * bend) * L * t * 0.3, ty + L * t
-                    a = rng.uniform(-1.0, 1.0)
-                    stroke([(sx, sy), (sx + math.sin(a) * L * 0.22, sy - abs(math.cos(a)) * L * 0.10)],
-                           2.2 * S, 1.0 * S, col(head))
-
-    rh = H // 2
-    # tall row: image rows 0 .. rh (v 0.5 .. 1), foot at y = rh
-    blades(rh - 2, rh, 900, 0.06, 0.26, 4.5, 0.55, 0.0)
-    blades(rh - 2, rh, 1100, 0.22, 0.70, 3.6, 0.12, 0.0)
-    blades(rh - 2, rh, 520, 0.50, 0.99, 3.0, 0.03, 0.30)
-    # short row: image rows rh .. H (v 0 .. 0.5), foot at y = H
-    blades(H - 2, rh, 1100, 0.08, 0.34, 4.5, 0.45, 0.0)
-    blades(H - 2, rh, 1100, 0.25, 0.75, 3.8, 0.10, 0.0)
-    blades(H - 2, rh, 380, 0.55, 0.99, 3.0, 0.03, 0.06)
-    im = im.resize((TEX_W, TEX_H), Image.LANCZOS)
-    a = np.asarray(im).astype(np.float32)
-    m = a[..., 3] > 8
-    a[~m, :3] = a[m][:, :3].mean(0)
-    nz = ndimage.gaussian_filter(np.random.default_rng(seed + 1).random((TEX_H, TEX_W)), 0.8)
-    a[..., :3] *= (0.88 + 0.24 * (nz - nz.min()) / max(float(nz.max() - nz.min()), 1e-6))[..., None]
-    # the foot of each row is darker (inside the sward)
-    y = np.arange(TEX_H)
-    vrow = 1.0 - ((y % (TEX_H // 2)) + 0.5) / (TEX_H // 2)
-    a[..., :3] *= (0.76 + 0.24 * np.clip(vrow / 0.5, 0, 1))[:, None, None]
-    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
+def texture(seed=334):
+    return VA.texture(seed)
 
 
 def export_textures(tex_dir):
@@ -321,37 +294,67 @@ class _Sec:
         return a, o
 
 
-def _card(sec, k, t, lat, ang, w, h, vrow, key, V, UV, C, T):
+def _card(sec, k, t, lat, ang, w, h, form, key, V, UV, C, T, zfn=None):
     """One vertical card centred at (k + t, lat), turned `ang` rad from the outward direction, w wide, h high; its
-    two feet follow the cross-section."""
+    two feet follow the cross-section - or, behind its outer edge, the ground zfn(e, n) (r5)."""
     a, o = sec.frame(k)
     ca, sa = math.cos(ang), math.sin(ang)
+    umax = float(min(sec.u[k][-1], sec.u[k + 1][-1]))
+    out = max(lat - umax, 0.0) if zfn is not None else 0.0
     ctr = sec.at(k, t, lat)
+    cxy = ctr[:2] + o * out
     feet = []
     for sg in (-1.0, 1.0):
-        p = sec.at(k, t, lat + sg * ca * w / 2)
-        xy = ctr[:2] + (o * ca + a * sa) * (sg * w / 2)
-        feet.append([xy[0], xy[1], p[2] - SINK_M])
+        xy = cxy + (o * ca + a * sa) * (sg * w / 2)
+        if out > 0.0:
+            z = float(zfn(xy[0], xy[1]))
+        else:
+            z = sec.at(k, t, lat + sg * ca * w / 2)[2]
+        feet.append([xy[0], xy[1], z - SINK_M])
     lean = (o * (-sa) + a * ca) * (h * 0.18 * (2.0 * _h(*key, "ln") - 1.0))
-    nt = 2 if w > 0.8 else 1
-    u0 = int(_h(*key, "u") * NT) / NT
+    u0, u1, v0, v1 = form_uv(form)
     if _h(*key, "um") < 0.5:         # mirrored
-        u0, nt = u0 + nt / NT, -nt
+        u0, u1 = u1, u0
     n0 = len(V)
     V += [feet[0], feet[1], [feet[0][0] + lean[0], feet[0][1] + lean[1], feet[0][2] + h + SINK_M],
           [feet[1][0] + lean[0], feet[1][1] + lean[1], feet[1][2] + h + SINK_M]]
-    v0, v1 = vrow[0] + V_PAD, vrow[1] - V_PAD
-    UV += [[u0, v0], [u0 + nt / NT, v0], [u0, v1], [u0 + nt / NT, v1]]
+    UV += [[u0, v0], [u1, v0], [u0, v1], [u1, v1]]
     nrm = (o[0] * 0.25, o[1] * 0.25, 1.0)
     tone = TONE[0] + (TONE[1] - TONE[0]) * _h(*key, "tn")
     C += [_fol(nrm, OCC[0] * tone)] * 2 + [_fol(nrm, OCC[1] * tone)] * 2
     T += [(n0, n0 + 1, n0 + 3), (n0, n0 + 3, n0 + 2)]
 
 
-def build(buf, secs, report=None, layer=LAYER):
-    """Grass cards of every kerbless side strip (see the module docstring, 4.). Returns the triangle count."""
+def _slots(ch0, ch1, src, zone):
+    """Candidate positions (chainage, slot index) of one zone between two chainages: one jittered point per SLOT_M
+    slot of the GLOBAL chainage - the scatter does not know the mesh stations."""
+    q = int(math.floor(ch0 / SLOT_M))
+    while q * SLOT_M < ch1:
+        sc = (q + _h(src, zone, q, "j")) * SLOT_M
+        if ch0 <= sc < ch1:
+            yield sc, q
+        q += 1
+
+
+def _scale(key):
+    """Per-card height scale SCALE[0] .. SCALE[1], most plants near 1."""
+    u = _h(*key, "sc")
+    return SCALE[0] + (SCALE[1] - SCALE[0]) * (0.5 + 0.5 * math.copysign(abs(2.0 * u - 1.0) ** 1.4, u - 0.5))
+
+
+def _turn(key, spread):
+    """Card turn from the outward direction: mostly across the road (the driver sees faces), any angle for the rest."""
+    if _h(*key, "o") < 0.72:
+        return (_h(*key, "a") - 0.5) * 2.0 * spread
+    return _h(*key, "a") * math.pi
+
+
+def build(buf, secs, report=None, layer=LAYER, zfn=None):
+    """Grass / forb cards of every kerbless side strip (see the module docstring, 4.; scatter r5). zfn(e, n): terrain
+    height - lets the shoulder-edge plants of a flat verge stand behind the gravel. Returns the triangle count."""
     ntri = 0
     ncard = {"edge": 0, "slope": 0, "bottom": 0}
+    forms = {}
     for s in secs:
         X = s["X"]
         if len(X) < 2 or not s["seg"].any():
@@ -359,89 +362,84 @@ def build(buf, secs, report=None, layer=LAYER):
         sec = _Sec(X)
         V, UV, C, T = [], [], [], []
         src = s["src"]
+
+        def put(zone, k, x, L, lat, ang, w, h, form, key):
+            _card(sec, k, x / L, lat, ang, w, h, form, key, V, UV, C, T, zfn=zfn)
+            ncard[zone] += 1
+            forms[form] = forms.get(form, 0) + 1
+            if form in VA.TALL_FORMS and _h(*key, "x") < CROSS_SHARE:
+                _card(sec, k, x / L, lat, ang + math.pi / 2 + (_h(*key, "b") - 0.5) * 0.8, w, h * 0.92, form,
+                      key + ("x",), V, UV, C, T, zfn=zfn)
+                ncard[zone] += 1
+
         for k in range(len(X) - 1):
             if not s["seg"][k]:
                 continue
-            L = float(sec.ch[k + 1] - sec.ch[k])
+            ch0, ch1 = float(sec.ch[k]), float(sec.ch[k + 1])
+            L = ch1 - ch0
             if L < 0.2:
                 continue
             ug = float(min(sec.u[k][1], sec.u[k + 1][1]))               # gravel width
-            # ---- shoulder edge: short tufts, patchy, some standing on the gravel
-            x = _h(src, k, "e0") * STEP_EDGE_M[0]
-            q = 0
-            while x < L:
-                key = (src, k, "e", q)
-                sc = sec.ch[k] + x
-                dens = _vnoise(src + ":e", sc, PATCH_M)
-                if _h(*key, "k") < 0.30 + 0.65 * dens and ug > 0.15:
-                    reach = EDGE_REACH_M * (0.3 + 0.7 * _vnoise(src + ":r", sc, 6.0))
-                    lat = ug + (_h(*key, "l") ** 1.5) * 0.30 - _h(*key, "g") * min(reach, 0.6 * ug)
-                    across = _h(*key, "o") < 0.88
-                    ang = ((_h(*key, "a") - 0.5) * 1.1) if across else (math.pi / 2 + (_h(*key, "a") - 0.5) * 0.7)
-                    w = W_CARD[0] + (W_CARD[1] - W_CARD[0]) * _h(*key, "w")
-                    if across:
-                        w = min(w, 0.8)
-                    h = H_EDGE[0] + (H_EDGE[1] - H_EDGE[0]) * _h(*key, "h") * (0.5 + 0.5 * dens)
-                    _card(sec, k, x / L, lat, ang, w, h, V_SHORT, key, V, UV, C, T)
-                    ncard["edge"] += 1
-                x += STEP_EDGE_M[0] + (STEP_EDGE_M[1] - STEP_EDGE_M[0]) * _h(*key, "s")
-                q += 1
+            # ---- shoulder edge: low plants in a band over the gravel edge
+            if ug > 0.15:
+                behind = EDGE_OUT_M if (zfn is not None or s["ditch"]) else 0.0
+                if s["ditch"]:
+                    behind = min(behind, max(float(min(sec.u[k][2], sec.u[k + 1][2])) - ug - 0.1, 0.0))
+                for sc, q in _slots(ch0, ch1, src, "e"):
+                    key = (src, "e", q)
+                    dens = _density(src, "e", sc)
+                    if _h(*key, "k") >= dens * RATE_EDGE * SLOT_M:
+                        continue
+                    reach = min(EDGE_REACH_M * (0.3 + 0.7 * _vnoise(src + ":r", sc, 6.0)), 0.6 * ug)
+                    v = _h(*key, "l")
+                    lat = ug - reach * (1.0 - v / 0.4) if v < 0.4 else ug + behind * ((v - 0.4) / 0.6) ** 1.3
+                    form = pick_form(FORMS_EDGE, src, sc, _h(*key, "f"))
+                    sc_ = _scale(key)
+                    h = (H_EDGE[0] + (H_EDGE[1] - H_EDGE[0]) * _h(*key, "h") * (0.5 + 0.5 * dens)) * sc_ * FORM_H.get(form, 1.0)
+                    h = min(max(h, H_EDGE[0]), H_EDGE[1] * 1.15)
+                    w = (W_CARD[0] + (0.75 - W_CARD[0]) * _h(*key, "w")) * (0.8 + 0.25 * sc_)
+                    put("edge", k, sc - ch0, L, lat, _turn(key, 1.1), w, h, form, key)
             if not s["ditch"]:
                 continue
             ub0 = float(max(sec.u[k][2], sec.u[k + 1][2]))
             ub1 = float(min(sec.u[k][3], sec.u[k + 1][3]))
             uc = float(min(sec.u[k][4], sec.u[k + 1][4]))
             depth = float(min(X[k, 1, 2] - X[k, 2, 2], X[k + 1, 1, 2] - X[k + 1, 2, 2]))
-            # ---- slopes: medium tufts in groups (r4), a lone one now and then
-            x = _h(src, k, "s0") * STEP_SLOPE_M[0]
-            q = 0
-            while x < L:
-                key = (src, k, "s", q)
-                grp = _vnoise(src + ":s", sec.ch[k] + x, CLUSTER_M)
-                inside = grp > CLUSTER_T
+            # ---- slopes: medium plants in groups, stands of forbs
+            for sc, q in _slots(ch0, ch1, src, "s"):
+                key = (src, "s", q)
+                dens = _density(src, "s", sc)
+                if _h(*key, "k") >= dens * RATE_SLOPE * SLOT_M:
+                    continue
                 front = _h(*key, "f") < 0.5
                 lo, hi = (ug + 0.15, ub0) if front else (ub1, uc - 0.1)
-                if hi - lo > 0.25 and (inside or _h(*key, "k") < LONE_KEEP):
-                    lat = lo + (hi - lo) * _h(*key, "l")
-                    ang = (_h(*key, "a") - 0.5) * 1.6
-                    h = (H_SLOPE[0] + (H_SLOPE[1] - H_SLOPE[0]) * _h(*key, "h")) * (0.70 + 0.70 * _h(*key, "hv") ** 2)
-                    if inside:
-                        h *= 0.85 + 0.5 * (grp - CLUSTER_T) / (1.0 - CLUSTER_T)        # taller in the heart of a group
-                    w = W_CARD[0] + (min(W_CARD[1], 0.95) - W_CARD[0]) * _h(*key, "w")
-                    _card(sec, k, x / L, lat, ang, w, h, V_TALL, key, V, UV, C, T)
-                    ncard["slope"] += 1
-                    if inside and _h(*key, "x") < CROSS_SHARE:
-                        _card(sec, k, x / L, lat, math.pi / 2 + (_h(*key, "b") - 0.5) * 0.8, w, h * 0.9, V_TALL,
-                              key + ("x",), V, UV, C, T)
-                        ncard["slope"] += 1
-                st = STEP_CLUSTER_M if inside else STEP_SLOPE_M
-                x += st[0] + (st[1] - st[0]) * _h(*key, "s")
-                q += 1
-            # ---- bottom: tall grass / sedge in the damp patches
+                if hi - lo <= 0.25:
+                    continue
+                lat = lo + (hi - lo) * _h(*key, "l")
+                form = pick_form(FORMS_SLOPE, src, sc, _h(*key, "fm"))
+                sc_ = _scale(key)
+                h = (H_SLOPE[0] + (H_SLOPE[1] - H_SLOPE[0]) * _h(*key, "h")) * sc_ * (0.85 + 0.4 * dens) * FORM_H.get(form, 1.0)
+                h = min(max(h, H_SLOPE[0]), H_SLOPE_MAX)
+                w = (W_CARD[0] + (W_CARD[1] - W_CARD[0]) * _h(*key, "w")) * (0.8 + 0.25 * sc_)
+                put("slope", k, sc - ch0, L, lat, _turn(key, 0.8), w, h, form, key)
+            # ---- bottom: tall grass / sedge / dock in the damp patches
             if depth < MIN_DITCH_M or not s["seg_bottom"][k] or ub1 - ub0 < 0.05:
                 continue
-            x = _h(src, k, "b0") * STEP_BOTTOM_M[0]
-            q = 0
-            while x < L:
-                key = (src, k, "b", q)
-                sc = sec.ch[k] + x
-                dens = _vnoise(src, sc, PATCH_M)
-                if _h(*key, "k") < 0.35 + 0.65 * dens:
-                    lat = ub0 + (ub1 - ub0) * (0.2 + 0.6 * _h(*key, "l"))
-                    h = (H_BOTTOM[0] + (H_BOTTOM[1] - H_BOTTOM[0]) * _h(*key, "h")) * (0.75 + 0.35 * dens)
-                    w = W_CARD[0] + (W_CARD[1] - W_CARD[0]) * _h(*key, "w")
-                    _card(sec, k, x / L, lat, (_h(*key, "a") - 0.5) * 0.9, w, h, V_TALL, key, V, UV, C, T)
-                    ncard["bottom"] += 1
-                    if _h(*key, "x") < 0.30:              # a second card along the ditch: volume from the side
-                        _card(sec, k, x / L, lat, math.pi / 2 + (_h(*key, "b") - 0.5) * 0.8, w, h * 0.9, V_TALL,
-                              key + ("x",), V, UV, C, T)
-                        ncard["bottom"] += 1
-                x += STEP_BOTTOM_M[0] + (STEP_BOTTOM_M[1] - STEP_BOTTOM_M[0]) * _h(*key, "s")
-                q += 1
+            for sc, q in _slots(ch0, ch1, src, "b"):
+                key = (src, "b", q)
+                dens = 0.25 + 0.75 * _density(src, "b", sc)
+                if _h(*key, "k") >= dens * RATE_BOTTOM * SLOT_M * 0.6:
+                    continue
+                lat = ub0 + (ub1 - ub0) * (0.2 + 0.6 * _h(*key, "l"))
+                form = pick_form(FORMS_BOTTOM, src, sc, _h(*key, "fm"))
+                h = (H_BOTTOM[0] + (H_BOTTOM[1] - H_BOTTOM[0]) * _h(*key, "h")) * (0.75 + 0.35 * dens)
+                w = W_CARD[0] + (W_CARD[1] - W_CARD[0]) * _h(*key, "w")
+                put("bottom", k, sc - ch0, L, lat, _turn(key, 0.45), w, h, form, key)
         if T:
             buf.add(layer, MAT, np.asarray(V), np.asarray(UV), np.asarray(T), src="verge_flora:" + src,
                     COL=np.asarray(C))
             ntri += len(T)
     if report is not None:
-        report["verge_flora"] = {"sections": len(secs), "cards": ncard, "triangles": ntri}
+        report["verge_flora"] = {"sections": len(secs), "cards": ncard, "triangles": ntri,
+                                 "forms": dict(sorted(forms.items()))}
     return ntri
