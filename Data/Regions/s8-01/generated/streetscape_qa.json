@@ -93,6 +93,13 @@
   },
   "ways": 7
  },
+ "field_bales": {
+  "edge": 1,
+  "enabled": true,
+  "row": 14,
+  "silage": 14,
+  "straw": 1
+ },
  "furniture": {
   "bridge_median_lamps": {
    "placed": 0,
@@ -21231,6 +21238,7 @@
    "rule": "ADR 0307: B-16 / B-18 15 m before a bridge / tunnel with maxheight / maxweight in roads.graph.json",
    "structures": []
   },
+  "low_props_vis_ground": true,
   "megascans": {
    "added_drainage_triangles": 244,
    "added_props": 320,
@@ -21342,6 +21350,12 @@
      "step_m": 0.914
     },
     {
+     "e": 128.8,
+     "n": -686.3,
+     "p": "waste_bin",
+     "step_m": 0.435
+    },
+    {
      "e": 108.5,
      "n": -535.1,
      "p": "power_pole",
@@ -21382,12 +21396,6 @@
      "n": -182.8,
      "p": "lamp_8m",
      "step_m": 0.158
-    },
-    {
-     "e": 128.8,
-     "n": -686.3,
-     "p": "waste_bin",
-     "step_m": 0.151
     },
     {
      "e": 1015.9,
@@ -21655,6 +21663,11 @@
    "asphalt_patch_uv": {
     "invalid_uv": 0,
     "normalised": 462
+   },
+   "milled_patch_paint": {
+    "renewed_parts": 11,
+    "renewed_tris": 58,
+    "split_parts": 2
    },
    "paint_surface": {
     "fresh_parts": 404,
@@ -32562,7 +32575,7 @@
      "buildings": 36004,
      "forest_hlod": 43979,
      "furniture": 103247,
-     "props": 15234,
+     "props": 15474,
      "roads": 321379,
      "terrain": 743831,
      "trees_lod1": 153670,
@@ -32582,7 +32595,7 @@
     "camera": "route_s0150",
     "materials_high": 113,
     "materials_low": 113,
-    "tris_high": 1431160,
+    "tris_high": 1431400,
     "tris_low": 579278
    },
    {
@@ -32590,7 +32603,7 @@
      "buildings": 66481,
      "forest_hlod": 32798,
      "furniture": 115188,
-     "props": 25350,
+     "props": 25470,
      "roads": 363627,
      "terrain": 873544,
      "trees_lod0": 438,
@@ -32612,7 +32625,7 @@
     "camera": "route_s0450",
     "materials_high": 116,
     "materials_low": 116,
-    "tris_high": 1627073,
+    "tris_high": 1627193,
     "tris_low": 666196
    },
    {
@@ -32708,7 +32721,7 @@
      "buildings": 58675,
      "forest_hlod": 1135,
      "furniture": 25810,
-     "props": 34727,
+     "props": 34787,
      "roads": 137480,
      "terrain": 428205,
      "trees_lod0": 348,
@@ -32730,7 +32743,7 @@
     "camera": "route_s1651",
     "materials_high": 100,
     "materials_low": 100,
-    "tris_high": 706034,
+    "tris_high": 706094,
     "tris_low": 291901
    },
    {
@@ -33039,7 +33052,7 @@
    },
    {
     "chunk": "0_3",
-    "instances": 637,
+    "instances": 638,
     "materials": 23,
     "trees": 613,
     "tris_forest_hlod": 269,
@@ -33066,7 +33079,7 @@
    },
    {
     "chunk": "0_6",
-    "instances": 394,
+    "instances": 395,
     "materials": 59,
     "trees": 321,
     "tris_forest_hlod": 0,
@@ -33147,7 +33160,7 @@
    },
    {
     "chunk": "1_7",
-    "instances": 48,
+    "instances": 49,
     "materials": 40,
     "trees": 47,
     "tris_forest_hlod": 0,
@@ -33174,7 +33187,7 @@
    },
    {
     "chunk": "2_2",
-    "instances": 3975,
+    "instances": 3976,
     "materials": 9,
     "trees": 3974,
     "tris_forest_hlod": 2609,
@@ -33219,7 +33232,7 @@
    },
    {
     "chunk": "2_7",
-    "instances": 1103,
+    "instances": 1105,
     "materials": 36,
     "trees": 1096,
     "tris_forest_hlod": 1256,
@@ -33417,7 +33430,7 @@
    },
    {
     "chunk": "5_5",
-    "instances": 2814,
+    "instances": 2817,
     "materials": 43,
     "trees": 2780,
     "tris_forest_hlod": 1398,
@@ -33489,7 +33502,7 @@
    },
    {
     "chunk": "6_5",
-    "instances": 3762,
+    "instances": 3764,
     "materials": 38,
     "trees": 3755,
     "tris_forest_hlod": 2712,
@@ -33498,7 +33511,7 @@
    },
    {
     "chunk": "6_6",
-    "instances": 664,
+    "instances": 666,
     "materials": 55,
     "trees": 635,
     "tris_forest_hlod": 946,
@@ -33525,7 +33538,7 @@
    },
    {
     "chunk": "7_1",
-    "instances": 3790,
+    "instances": 3791,
     "materials": 11,
     "trees": 3771,
     "tris_forest_hlod": 2333,
@@ -33561,7 +33574,7 @@
    },
    {
     "chunk": "7_5",
-    "instances": 2701,
+    "instances": 2702,
     "materials": 2,
     "trees": 2699,
     "tris_forest_hlod": 2012,

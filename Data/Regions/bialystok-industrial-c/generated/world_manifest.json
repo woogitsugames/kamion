@@ -174,7 +174,7 @@
    "instances": {
     "count": 4809,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_0.json",
-    "sha256": "0a3855df71a417f24969fe0b39826c7b675c5df034ff5e4cc3e40afc07fb1e42"
+    "sha256": "275bc56b248b9ba597ee5890fc3fe70958163bd638619318c823d34fdd4d9295"
    },
    "low": {
     "bytes": 2015928,
@@ -2123,7 +2123,7 @@
    "instances": {
     "count": 176,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_4.json",
-    "sha256": "3bf59db0bd4ccda9a96c5a15bfb5a37298e46e832e4deb193267e4dc522d1006"
+    "sha256": "557d4b46fe56fe668f61aa4114680d461d545d027ff89e244179fe6865a630c6"
    },
    "low": {
     "bytes": 7980724,
@@ -2326,7 +2326,7 @@
    "instances": {
     "count": 708,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_5.json",
-    "sha256": "e0d3757f9fe1d4d63f2d716a5626a5c5f0c6a8e23c8d7916d5159159a913bfd5"
+    "sha256": "7d840fc13ff82a38639178c85141ec7b387c39799f6127da359fc3ac693006e2"
    },
    "low": {
     "bytes": 8188352,
@@ -3725,7 +3725,7 @@
    "instances": {
     "count": 2551,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_4.json",
-    "sha256": "0eea589cfe74fca5ef42743314631806df5cf3c86a0c8ac62776e580de51a5a6"
+    "sha256": "5dfd2408ad35cfa055a07c1045ab624d47bd2b71d45957529e1723f2cdde390f"
    },
    "low": {
     "bytes": 8280008,
@@ -4085,7 +4085,7 @@
    "instances": {
     "count": 164,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_7.json",
-    "sha256": "9ea7b813d9ece90b54ea0fdccb5c1b94823730a51e926d7ac4df969730b65751"
+    "sha256": "aa43162a93f2af64f9adaa57b794662b20377a1b829c297dd872569fb9f00533"
    },
    "low": {
     "bytes": 7538336,
@@ -6445,7 +6445,7 @@
    "instances": {
     "count": 433,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_5.json",
-    "sha256": "bc74b209de978d532edcec3a5a8b34cfac3cee8f3f6126581fb9062a446edcae"
+    "sha256": "74746e63a818f31ed93f997b1dbb0f91b92ee989f78287234eff07b9cf40d867"
    },
    "low": {
     "bytes": 2467496,
@@ -6735,7 +6735,7 @@
    "instances": {
     "count": 203,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_7.json",
-    "sha256": "ed8013c5048efb4e4e5ab09e7c06dfdcda5ceb8f797574c8d4110ce90cd87f6c"
+    "sha256": "4699815d899a0cae4bb5a37d51da6b44d1f3fe825ccfcb4afe8d718c4be6b281"
    },
    "low": {
     "bytes": 2192344,
@@ -7884,7 +7884,7 @@
    "instances": {
     "count": 248,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_6.json",
-    "sha256": "6b0b98fac4772120df7b6475c91fd8d752854abb58c9e06bd8fc8a2af39c8f8d"
+    "sha256": "402b6bef783df218dbd33df1c9746b36c407e63169927f00d0112f5224704f6a"
    },
    "low": {
     "bytes": 2736412,
@@ -9337,7 +9337,7 @@
    "instances": {
     "count": 333,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_6.json",
-    "sha256": "21ba402efd22ddae76f4864fa0c8577d37b605aaac4fe728149b21c8573b36ff"
+    "sha256": "b54933722bf48f9440b0e33bd1cfe07e6926d69a2e8dc5e90b4af39387eefd6a"
    },
    "low": {
     "bytes": 4070292,
@@ -9462,7 +9462,7 @@
    "instances": {
     "count": 158,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_7.json",
-    "sha256": "a356a7f18330e55f6ac298b6236b21846789dbc22ad7d1a1f1e19df6a49ebc13"
+    "sha256": "ff3d899db9e5f8d31ee7f700621792bf863cf8dc0cdbd0b978493b7d6c9e7c04"
    },
    "low": {
     "bytes": 2705264,
@@ -13150,6 +13150,15 @@
     0.0
    ],
    "texture": "fence_mesh"
+  },
+  "field_bale": {
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rough": 0.8,
+   "texture": "field_bale_atlas"
   },
   "fieldstone_plinth": {
    "color": [
