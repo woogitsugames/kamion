@@ -29,3 +29,4 @@
 - [krok 4] Poprawka w roads/seam_taper.py (+ etykieta w qa/seams.py), test tests/gis/test_seam_axis_w10.py. Testy: test_seam_axis_w10 + test_seam_taper_0275 28 passed; seams_0224/seams_fix_s23/dk65_seam_knyszyn_0233/dk8_seam_cli/effective_graph_readers/road_widen_0306 101 passed, 2 skipped.
 - [krok 5] Pełny seams (20 szwów): FAIL 18 → 7 (tylko pobocza), UWAGA 11 → 6. Dowód: artifacts/seams-w10-s24/seams_after_fix.{md,json} (też w main artifacts/).
 - Następny krok (lider): review + merge; po merge przebudowa kafli z szwami miejskimi i dk65-04/05/06 (`uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region <id>`), potem pass na pobocza (handshake boków na szwie).
+- 2026-11-25 23:48: merge main (D94 seam_taper) 28a591914; redo (chain=R) industrial-c, dk65-04/05/06 wystartowane (redo-all.ps1); maczka/kleeberga/knyszynska jeszcze nie budowane -> nowy kod. Po final: sprawdzic seams (FAIL<=7), ewentualnie redo s8-01..05 (start przed merge).
