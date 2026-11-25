@@ -46,3 +46,14 @@ ADR 0341 dodał w shaderze `Kamion/Truck Glass` (`MI_Ext_Glass`) warstwę odbici
 
 ## Dowody
 `artifacts/neon-dash-items-s24/`: `before/`, `after2/`, `after2-dbg2/`, `compare2/` (`measure.txt`, `pair_*`, `diff_*`), `inspect2/` (zrzuty 960 px + 1:1 wycinki strefy odbicia `refl_crop_*` + `T_CabWindscreenReflection_960.jpg`), `blender_check/`.
+
+## Dopisek (2026-11-25, `neon-wheel-s24`) — weryfikacja spójności przycisków kierownicy (`CRITIC.md` build #8 pkt 10)
+- **Diagnoza:** Raport `artifacts/critic-s24-build8/CRITIC.md` pkt 10 wskazał: „kierownica z przyciskami tylko w t1380 i t3330, w pozostałych klatkach gładka”. Analiza 31 klatek nagrania (`critic_wheel_sheet.jpg`), geometrii (`build_interior.py`, `a6_export.py`) oraz rigu (`TruckAssetBuilder.cs`, `TruckVisualRig.cs`) wykluczyła błąd LOD, osobny mesh przycisków lub culling:
+  - Wszystkie elementy kierownicy (wieniec `MI_Cab_Leather`, ramiona i przyciski `MI_Cab_Plastic`, piktogramy `MI_Cab_Decal`) są eksportowane w **jednym** meshu i rendererze `STEERING_WHEEL_LOD0` (14 302 tris, 5 submeshy; +0 dodatkowych draw calli).
+  - `TruckVisualRig.InteriorLodFor(tier)` używa `LOD0` na wszystkich tierach (`Low`..`Ultra`) z jednym poziomem w `interiorGroup` (`interiorCull = 0,12`).
+  - Przyczyną obserwacji z build #8 jest wyłącznie kąt skrętu kierownicy względem zatwierdzonego kadru `cab-driver` (ADR 0294: pionowe FOV `70°`, wzrok `6°` w dół): boczne ramiona z przyciskami są opuszczone o `SPOKE_ANG = -14°` (`r_c = 0,150 m`, by nie zasłaniać zegarów — `sightline_test.py = 0,0 %`), więc przy jeździe na wprost (`0°`, 29/31 klatek) środek piasty leży na `NDC_Y = -1,043`, a pody przycisków na `NDC_Y = -1,181` (górna krawędź `-1,095`, poniżej dolnej krawędzi kadru). Przy skręcie w prawo (`+35°`, jak w `t3330`) lewy panel obraca się w górę do kadru (`NDC_Y ≈ -0,86`), a na rondzie (`+180°`, jak w `t1380`) oba panele wchodzą w kadr (`NDC_Y ≈ -0,91`) wraz z dolnymi ramionami V u góry.
+- **Zmiany i weryfikacja (bez zmian geometrii/kadru ADR 0294 i bez zmian `ProjectSettings`):**
+  - Dodano parametr `-SteerDeg` (`-qaSteerDeg`) w `scripts/visual-qa.ps1` i `VisualQaRunner.cs` do deterministycznego renderowania kabiny pod zadanym kątem kierownicy.
+  - Dodano testy regresyjne EditMode `SteeringWheelVisibilityTests.cs` (jeden renderer z wieńcem/przyciskami/piktogramami, aktywność i brak cullingu dla kątów `-540°…+540°` i tierów `Low`..`Ultra` z zapasem `0,6×` `lodBias`, oraz projekcja podów przy `0°`, `+35°`, `+180°`): **16/16 passed** (z `TruckCabGlassTierTests`, `CabInteriorRimAoTests`, `CabInteriorWearTests`).
+  - Pętla `visual-qa` (`DrivingLab`, High PC, 1920×1080, `clear` i `overcast`, kamery `cab-driver` i `cab-hub`, kąty `0° / +35° / +180°`): identyczny budżet dla wszystkich kątów (`cab-driver`: `127` obiektów, `147` `drawsEst`, `173 847` tris; `cab-hub`: `21` obiektów, `42` `drawsEst`, `171 727` tris; `+0` draw calli). Dowody w `artifacts/neon-wheel-s24/`.
+
