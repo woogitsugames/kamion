@@ -46,6 +46,12 @@
     "power_lines": 175,
     "pylons": 406
   },
+  "forest_chm_ring": {
+    "chm_share": 0.0,
+    "chm_tiles": [],
+    "chm_vertices": 0,
+    "total_curtain_vertices": 18792
+  },
   "lod1_height_audit": {
     "buildings": 133679,
     "conflicting_ids": 0,
@@ -125,7 +131,7 @@
   },
   "tiers": {
     "High": {
-      "bytes": 15703848,
+      "bytes": 16005128,
       "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.glb",
       "sectors": {
         "far_east": {
@@ -165,7 +171,7 @@
           "vertices": 51844
         }
       },
-      "sha256": "d659bd324dcf8325fe4389dedbf7354b05741d259804b58b91b8d30559b9b293",
+      "sha256": "11f95f146bac5d379ab677cd68a5561def05701f826ca6f1770e42e6e05a911d",
       "skyline": {
         "landmark_stack_proxies": [
           "ec-bialystok-chimney-1",
@@ -181,7 +187,7 @@
       "total_vertices": 307680
     },
     "Low": {
-      "bytes": 2019580,
+      "bytes": 2084512,
       "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.low.glb",
       "sectors": {
         "far_east": {
@@ -221,7 +227,7 @@
           "vertices": 6347
         }
       },
-      "sha256": "af19ab698d0f5276fd5c483c257683fec1f02b9a32104f070201c76735151eca",
+      "sha256": "0b91d59a6b01ab86dc0873288e29ea710da03a47ae16b99f3dc64af8d4c40b3c",
       "skyline": {
         "landmark_stack_proxies": [
           "ec-bialystok-chimney-1",
