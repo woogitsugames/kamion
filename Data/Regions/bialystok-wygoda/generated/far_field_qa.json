@@ -46,6 +46,12 @@
     "power_lines": 192,
     "pylons": 383
   },
+  "forest_chm_ring": {
+    "chm_share": 0.0,
+    "chm_tiles": [],
+    "chm_vertices": 0,
+    "total_curtain_vertices": 20585
+  },
   "lod1_height_audit": {
     "buildings": 133679,
     "conflicting_ids": 0,
@@ -125,7 +131,7 @@
   },
   "tiers": {
     "High": {
-      "bytes": 16108548,
+      "bytes": 16438516,
       "file": "Data/raw/derived/bialystok-wygoda/world/far_field.glb",
       "sectors": {
         "far_east": {
@@ -165,7 +171,7 @@
           "vertices": 60448
         }
       },
-      "sha256": "2ffbf266aa91e66a2be5b78e837d42dba79c0ff07cf0fa1f811e9a938b584e50",
+      "sha256": "2be6444c9a4e6fe41c8330657b794b7bfa1d0c0d0939934da12f32821ca03230",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -178,7 +184,7 @@
       "total_vertices": 313848
     },
     "Low": {
-      "bytes": 1916884,
+      "bytes": 1999020,
       "file": "Data/raw/derived/bialystok-wygoda/world/far_field.low.glb",
       "sectors": {
         "far_east": {
@@ -218,7 +224,7 @@
           "vertices": 7473
         }
       },
-      "sha256": "e47ef2be184802e8416ec8ce7d14b0f654a02094e2af79172f5d4e6e564724d2",
+      "sha256": "bff2587ad9909de3031e46dcfaebfdecb20879cc5705aa76cc40206064bb539b",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
