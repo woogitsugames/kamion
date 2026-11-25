@@ -1075,6 +1075,19 @@ def attic_window(prof, zmin, zref, zbase, sh, storeys, key, small_town=False, jo
 
 
 # ------------------------------------------------------------------------------------------- facades
+def _house_rows(zref, zbase, sh, storeys, ztop):
+    """Window rows of a house wall that fit under ztop - the same rule as facade_openings (ADR 0348)."""
+    n = 0
+    for s in range(storeys):
+        z0 = zref + zbase + s * sh
+        head = min(z0 + 2.3, ztop - 0.22)
+        sill = max(z0 + 0.9 - max(0.0, 1.15 - (head - z0 - 0.9)), z0 + 0.6)
+        if head - sill < 0.9:
+            break
+        n += 1
+    return n
+
+
 def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, variant=None, sh=None, zbase=0.3):
     """Openings for one wall edge (u along the edge from its start), in absolute z:
     (ua, ub, va, vb, depth, kind, infill[, meta]). infill: a material name or atlas cells (cells()).
@@ -1911,7 +1924,13 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 plinth = "fieldstone_plinth"
                 st_stats["stone_plinths"] += 1
             if typ == "house":
-                zbase = max(zbase, st_zpl - zref)
+                # ADR 0348: the slope-safe plinth raises the floor line only while every window row still fits under
+                # the eave - otherwise the top row went and left a blank 1-1.5 m band under the roof (dw09_house_close)
+                zb_st = max(zbase, st_zpl - zref)
+                if _house_rows(zref, zb_st, sh, storeys, zeave) >= _house_rows(zref, zbase, sh, storeys, zeave):
+                    zbase = zb_st
+                else:
+                    st_stats["rows_kept"] = st_stats.get("rows_kept", 0) + 1
         if wooden:
             wall = (b["ovr"]["wall_material"] if str(b["ovr"].get("wall_material", "")).startswith("wood_planks")
                     else wood_paint(key))
