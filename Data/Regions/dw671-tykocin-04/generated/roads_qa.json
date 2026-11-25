@@ -13,9 +13,11 @@
    ],
    "length_m": 56.1,
    "max_grade": 0.0084,
-   "overrides": [],
+   "overrides": [
+    "ortho-sidewalk-w1111506762:2125744109-1123401728"
+   ],
    "profile_rms_vs_nmt_m": 0.006,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -36,9 +38,11 @@
    ],
    "length_m": 86.2,
    "max_grade": 0.0128,
-   "overrides": [],
+   "overrides": [
+    "ortho-sidewalk-w1111506762:5087871646-2125744109"
+   ],
    "profile_rms_vs_nmt_m": 0.009,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -706,7 +710,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 88540,
+  "footprint_nodes": 88948,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -746,7 +750,20 @@
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 0,
-  "overrides_applied": [],
+  "overrides_applied": [
+   {
+    "id": "ortho-sidewalk-w1111506762:2125744109-1123401728",
+    "targets": [
+     "w1111506762:2125744109-1123401728"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w1111506762:5087871646-2125744109",
+    "targets": [
+     "w1111506762:5087871646-2125744109"
+    ]
+   }
+  ],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -775,7 +792,7 @@
   },
   "verge_strips": {
    "chunks": 39,
-   "tris": 7728
+   "tris": 7614
   },
   "walled_ramps": []
  }

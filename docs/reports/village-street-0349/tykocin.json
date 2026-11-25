@@ -1,0 +1,2798 @@
+{
+ "schema": "truck-sim-pl/ortho-sidewalks/1",
+ "region": "tykocin",
+ "ortho": {
+  "file": "Data/raw/derived/tykocin/ortho_0p25m.tif",
+  "sha256": "bd84a38f4dd8f216800660d6793aeb99ece1a5cd5cef4a99b34d3514fa4d5974",
+  "res_m": 0.25,
+  "source_manifest": "gugik-orto-2024-rgb-0p25-tykocin"
+ },
+ "thresholds": {
+  "MIN_EXTRA_M": 1.3,
+  "SHARE": 0.6,
+  "MIN_STATIONS": 4,
+  "KERB_M": 0.15,
+  "WIDTH_RANGE": [
+   1.5,
+   3.0
+  ],
+  "DARK": 32.0,
+  "SAT": 8.0,
+  "WARM": 10.0,
+  "SHADOW": 25.0,
+  "status": "WORKING_VALUE"
+ },
+ "edges": [
+  {
+   "edge": "w1352199060:1123401724-3052234972",
+   "osm_way": 1352199060,
+   "from": "n1123401724",
+   "to": "n3052234972",
+   "length_m": 199.5,
+   "highway": "secondary",
+   "carriageway_m": 7.0,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 7.0,
+     "right_m": 9.62,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 146.3,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 3.12,
+     "right_m": 3.25,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 155.5,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 30.0,
+     "left_m": 3.38,
+     "right_m": 2.88,
+     "axis_off_m": -0.25,
+     "centre_line": true,
+     "core": 162.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 40.0,
+     "left_m": 3.25,
+     "right_m": 2.62,
+     "axis_off_m": -0.25,
+     "centre_line": true,
+     "core": 164.0,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 50.0,
+     "left_m": 3.12,
+     "right_m": 3.0,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 165.0,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 60.0,
+     "left_m": 3.25,
+     "right_m": 2.88,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 163.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 70.0,
+     "left_m": 3.12,
+     "right_m": 2.62,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 161.5,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 80.0,
+     "left_m": 3.25,
+     "right_m": 2.62,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 163.1,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 90.0,
+     "left_m": 3.12,
+     "right_m": 2.25,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 163.7,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 100.0,
+     "left_m": 3.12,
+     "right_m": 2.62,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 164.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 110.0,
+     "left_m": 3.38,
+     "right_m": 2.75,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 163.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 120.0,
+     "left_m": 3.0,
+     "right_m": 3.12,
+     "axis_off_m": 0.0,
+     "centre_line": true,
+     "core": 161.4,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 130.0,
+     "left_m": 2.88,
+     "right_m": 3.0,
+     "axis_off_m": 0.0,
+     "centre_line": true,
+     "core": 161.9,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 140.0,
+     "left_m": 6.5,
+     "right_m": 5.5,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 160.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 150.0,
+     "left_m": 11.62,
+     "right_m": 5.0,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 160.7,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 160.0,
+     "left_m": 3.0,
+     "right_m": 3.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 161.4,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 170.0,
+     "left_m": 3.0,
+     "right_m": 3.0,
+     "axis_off_m": 0.0,
+     "centre_line": true,
+     "core": 160.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 180.0,
+     "left_m": 1.75,
+     "right_m": 4.88,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 157.5,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 6.12,
+   "left": {
+    "valid": 17,
+    "share": 0.18,
+    "extra_median_m": -0.38,
+    "sidewalk_m": 3.35,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 17,
+    "share": 0.24,
+    "extra_median_m": -0.5,
+    "sidewalk_m": 1.6,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w1352199060:12450012512-3052214595",
+   "osm_way": 1352199060,
+   "from": "n12450012512",
+   "to": "n3052214595",
+   "length_m": 45.2,
+   "highway": "secondary",
+   "carriageway_m": 7.0,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 2.0,
+     "right_m": 4.25,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 162.3,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 20.0,
+     "left_m": 2.12,
+     "right_m": 4.5,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 164.1,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 30.0,
+     "left_m": 2.0,
+     "right_m": 4.38,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 164.0,
+     "valid": true,
+     "built_up": false
+    }
+   ],
+   "built_up_share": 0.0,
+   "paved_total_median_m": 6.38,
+   "left": {
+    "valid": 3,
+    "share": 0.0,
+    "extra_median_m": -1.5,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 3,
+    "share": 0.0,
+    "extra_median_m": 0.88,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w1352199060:3052214595-12510939618",
+   "osm_way": 1352199060,
+   "from": "n3052214595",
+   "to": "Bw1352199060:3052214595-12510939618:0e",
+   "length_m": 8.4,
+   "highway": "secondary",
+   "carriageway_m": 7.0,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [],
+   "built_up_share": null,
+   "paved_total_median_m": null,
+   "left": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w1352199060:3052234966-9655817122",
+   "osm_way": 1352199060,
+   "from": "n3052234966",
+   "to": "n9655817122",
+   "length_m": 132.1,
+   "highway": "secondary",
+   "carriageway_m": 7.0,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 2.0,
+     "right_m": 4.62,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 164.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 2.0,
+     "right_m": 4.25,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 165.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 30.0,
+     "left_m": 1.88,
+     "right_m": 4.25,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 164.9,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 40.0,
+     "left_m": 2.5,
+     "right_m": 4.12,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 166.8,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 50.0,
+     "left_m": 3.12,
+     "right_m": 3.0,
+     "axis_off_m": 0.0,
+     "centre_line": true,
+     "core": 168.1,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 60.0,
+     "left_m": 3.0,
+     "right_m": 3.38,
+     "axis_off_m": 0.0,
+     "centre_line": true,
+     "core": 170.9,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 70.0,
+     "left_m": 3.38,
+     "right_m": 12.88,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 167.7,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 80.0,
+     "left_m": 3.12,
+     "right_m": 3.25,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 168.8,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 90.0,
+     "left_m": 3.38,
+     "right_m": 2.88,
+     "axis_off_m": -0.25,
+     "centre_line": true,
+     "core": 170.7,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 100.0,
+     "left_m": 3.75,
+     "right_m": 2.88,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 164.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 110.0,
+     "left_m": 3.25,
+     "right_m": 3.12,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 161.7,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 120.0,
+     "left_m": 3.38,
+     "right_m": 3.38,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 157.0,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 6.38,
+   "left": {
+    "valid": 12,
+    "share": 0.0,
+    "extra_median_m": -0.38,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 12,
+    "share": 0.08,
+    "extra_median_m": -0.12,
+    "sidewalk_m": 9.23,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w1352199060:3052234972-3054265460",
+   "osm_way": 1352199060,
+   "from": "n3052234972",
+   "to": "n3054265460",
+   "length_m": 10.6,
+   "highway": "secondary",
+   "carriageway_m": 7.0,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [],
+   "built_up_share": null,
+   "paved_total_median_m": null,
+   "left": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w1352199060:3054265460-3052234966",
+   "osm_way": 1352199060,
+   "from": "n3054265460",
+   "to": "n3052234966",
+   "length_m": 18.4,
+   "highway": "secondary",
+   "carriageway_m": 7.0,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [],
+   "built_up_share": null,
+   "paved_total_median_m": null,
+   "left": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w1352199060:9655817122-12450012512",
+   "osm_way": 1352199060,
+   "from": "n9655817122",
+   "to": "n12450012512",
+   "length_m": 131.0,
+   "highway": "secondary",
+   "carriageway_m": 7.0,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 1.0,
+     "right_m": 4.25,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 62.6,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 2.5,
+     "right_m": 4.25,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 159.8,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 30.0,
+     "left_m": 5.12,
+     "right_m": 3.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 162.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 40.0,
+     "left_m": 6.62,
+     "right_m": 3.25,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 165.0,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 50.0,
+     "left_m": 6.38,
+     "right_m": 4.75,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 164.5,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 60.0,
+     "left_m": 7.62,
+     "right_m": 4.62,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 163.9,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 70.0,
+     "left_m": 11.62,
+     "right_m": 4.62,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 164.2,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 80.0,
+     "left_m": 11.62,
+     "right_m": 4.62,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 160.6,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 90.0,
+     "left_m": 10.25,
+     "right_m": 4.38,
+     "axis_off_m": -1.0,
+     "centre_line": true,
+     "core": 84.1,
+     "valid": false,
+     "built_up": false
+    },
+    {
+     "s": 100.0,
+     "left_m": 2.38,
+     "right_m": 1.25,
+     "axis_off_m": 0.88,
+     "centre_line": true,
+     "core": 74.2,
+     "valid": false,
+     "built_up": false
+    },
+    {
+     "s": 110.0,
+     "left_m": 6.25,
+     "right_m": 4.88,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 160.2,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 120.0,
+     "left_m": 4.75,
+     "right_m": 4.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 160.1,
+     "valid": true,
+     "built_up": false
+    }
+   ],
+   "built_up_share": 0.42,
+   "paved_total_median_m": 11.13,
+   "left": {
+    "valid": 9,
+    "share": 0.78,
+    "extra_median_m": 2.88,
+    "sidewalk_m": 2.97,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 9,
+    "share": 0.11,
+    "extra_median_m": 1.12,
+    "sidewalk_m": 1.23,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w204027402:4209207006-1123401676",
+   "osm_way": 204027402,
+   "from": "Bw204027402:4209207006-1123401676:0s",
+   "to": "n1123401676",
+   "length_m": 349.9,
+   "highway": "secondary",
+   "carriageway_m": 7.0,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 3.75,
+     "right_m": 3.5,
+     "axis_off_m": 0.25,
+     "centre_line": true,
+     "core": 158.2,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 20.0,
+     "left_m": 3.75,
+     "right_m": 3.5,
+     "axis_off_m": 0.25,
+     "centre_line": true,
+     "core": 155.9,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 30.0,
+     "left_m": 3.75,
+     "right_m": 3.62,
+     "axis_off_m": 0.12,
+     "centre_line": true,
+     "core": 157.5,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 40.0,
+     "left_m": 4.0,
+     "right_m": 3.62,
+     "axis_off_m": 0.12,
+     "centre_line": true,
+     "core": 156.4,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 50.0,
+     "left_m": 3.88,
+     "right_m": 3.38,
+     "axis_off_m": 0.12,
+     "centre_line": true,
+     "core": 156.1,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 60.0,
+     "left_m": 3.75,
+     "right_m": 3.5,
+     "axis_off_m": 0.12,
+     "centre_line": true,
+     "core": 153.6,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 70.0,
+     "left_m": 3.75,
+     "right_m": 5.5,
+     "axis_off_m": 0.12,
+     "centre_line": true,
+     "core": 153.0,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 80.0,
+     "left_m": 3.5,
+     "right_m": 3.5,
+     "axis_off_m": 0.12,
+     "centre_line": true,
+     "core": 156.2,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 90.0,
+     "left_m": 3.75,
+     "right_m": 3.38,
+     "axis_off_m": 0.12,
+     "centre_line": true,
+     "core": 157.8,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 100.0,
+     "left_m": 4.88,
+     "right_m": 3.5,
+     "axis_off_m": 0.25,
+     "centre_line": true,
+     "core": 156.9,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 110.0,
+     "left_m": 4.0,
+     "right_m": 4.0,
+     "axis_off_m": 0.38,
+     "centre_line": true,
+     "core": 157.4,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 120.0,
+     "left_m": 4.0,
+     "right_m": 4.38,
+     "axis_off_m": 0.38,
+     "centre_line": true,
+     "core": 158.6,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 130.0,
+     "left_m": 3.88,
+     "right_m": 4.38,
+     "axis_off_m": 0.5,
+     "centre_line": true,
+     "core": 158.1,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 140.0,
+     "left_m": 4.62,
+     "right_m": 6.25,
+     "axis_off_m": 0.62,
+     "centre_line": true,
+     "core": 157.7,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 150.0,
+     "left_m": 3.62,
+     "right_m": 3.75,
+     "axis_off_m": 0.62,
+     "centre_line": true,
+     "core": 157.4,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 160.0,
+     "left_m": 3.5,
+     "right_m": 3.5,
+     "axis_off_m": 0.75,
+     "centre_line": true,
+     "core": 158.3,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 170.0,
+     "left_m": 4.0,
+     "right_m": 3.5,
+     "axis_off_m": 0.75,
+     "centre_line": true,
+     "core": 156.6,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 180.0,
+     "left_m": 3.88,
+     "right_m": 3.5,
+     "axis_off_m": 0.88,
+     "centre_line": true,
+     "core": 156.8,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 190.0,
+     "left_m": 3.62,
+     "right_m": 3.62,
+     "axis_off_m": 0.88,
+     "centre_line": true,
+     "core": 158.3,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 200.0,
+     "left_m": 3.88,
+     "right_m": 3.62,
+     "axis_off_m": 0.88,
+     "centre_line": true,
+     "core": 158.6,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 210.0,
+     "left_m": 3.5,
+     "right_m": 3.5,
+     "axis_off_m": 0.75,
+     "centre_line": true,
+     "core": 154.5,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 220.0,
+     "left_m": 3.62,
+     "right_m": 3.5,
+     "axis_off_m": 0.62,
+     "centre_line": true,
+     "core": 154.4,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 230.0,
+     "left_m": 3.5,
+     "right_m": 3.75,
+     "axis_off_m": 0.62,
+     "centre_line": true,
+     "core": 154.9,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 240.0,
+     "left_m": 3.62,
+     "right_m": 3.62,
+     "axis_off_m": 0.5,
+     "centre_line": true,
+     "core": 154.5,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 250.0,
+     "left_m": 4.0,
+     "right_m": 3.62,
+     "axis_off_m": 0.38,
+     "centre_line": true,
+     "core": 153.3,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 260.0,
+     "left_m": 3.88,
+     "right_m": 3.75,
+     "axis_off_m": 0.25,
+     "centre_line": true,
+     "core": 151.9,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 270.0,
+     "left_m": 3.25,
+     "right_m": 3.75,
+     "axis_off_m": 0.12,
+     "centre_line": true,
+     "core": 151.3,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 280.0,
+     "left_m": 3.38,
+     "right_m": 3.88,
+     "axis_off_m": 0.12,
+     "centre_line": true,
+     "core": 150.6,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 290.0,
+     "left_m": 3.75,
+     "right_m": 6.88,
+     "axis_off_m": 0.12,
+     "centre_line": true,
+     "core": 150.5,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 300.0,
+     "left_m": 3.62,
+     "right_m": 4.12,
+     "axis_off_m": 0.0,
+     "centre_line": true,
+     "core": 148.1,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 310.0,
+     "left_m": 3.38,
+     "right_m": 3.75,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 147.6,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 320.0,
+     "left_m": 3.88,
+     "right_m": 4.75,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 145.4,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 330.0,
+     "left_m": 3.38,
+     "right_m": 4.0,
+     "axis_off_m": -0.12,
+     "centre_line": true,
+     "core": 146.9,
+     "valid": true,
+     "built_up": false
+    }
+   ],
+   "built_up_share": 0.0,
+   "paved_total_median_m": 7.37,
+   "left": {
+    "valid": 33,
+    "share": 0.03,
+    "extra_median_m": 0.25,
+    "sidewalk_m": 1.23,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 33,
+    "share": 0.09,
+    "extra_median_m": 0.12,
+    "sidewalk_m": 2.6,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w220328689:2294606568-1123401563",
+   "osm_way": 220328689,
+   "from": "n2294606568",
+   "to": "n1123401563",
+   "length_m": 20.7,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 1.75,
+     "right_m": 5.62,
+     "axis_off_m": -0.5,
+     "centre_line": true,
+     "core": 61.5,
+     "valid": false,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": null,
+   "left": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w220328689:5951735694-2294606568",
+   "osm_way": 220328689,
+   "from": "n5951735694",
+   "to": "n2294606568",
+   "length_m": 217.2,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 3.62,
+     "right_m": 3.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 165.7,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 20.0,
+     "left_m": 5.0,
+     "right_m": 2.5,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 157.3,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 30.0,
+     "left_m": 4.88,
+     "right_m": 3.38,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 158.6,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 40.0,
+     "left_m": 2.88,
+     "right_m": 4.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 160.9,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 50.0,
+     "left_m": 2.88,
+     "right_m": 5.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 162.7,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 60.0,
+     "left_m": 2.75,
+     "right_m": 4.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 165.7,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 70.0,
+     "left_m": 2.88,
+     "right_m": 7.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 166.4,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 80.0,
+     "left_m": 3.25,
+     "right_m": 6.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 168.9,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 90.0,
+     "left_m": 3.62,
+     "right_m": 5.62,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 169.6,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 100.0,
+     "left_m": 4.0,
+     "right_m": 5.25,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 170.9,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 110.0,
+     "left_m": 4.12,
+     "right_m": 4.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 170.4,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 120.0,
+     "left_m": 4.0,
+     "right_m": 4.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 170.7,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 130.0,
+     "left_m": 3.62,
+     "right_m": 4.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 170.3,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 140.0,
+     "left_m": 3.5,
+     "right_m": 4.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 169.3,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 150.0,
+     "left_m": 4.25,
+     "right_m": 3.88,
+     "axis_off_m": -0.88,
+     "centre_line": true,
+     "core": 166.1,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 160.0,
+     "left_m": 3.38,
+     "right_m": 5.0,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 168.7,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 170.0,
+     "left_m": 4.25,
+     "right_m": 4.38,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 160.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 180.0,
+     "left_m": 3.62,
+     "right_m": 5.5,
+     "axis_off_m": -1.12,
+     "centre_line": true,
+     "core": 159.1,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 190.0,
+     "left_m": 2.5,
+     "right_m": 6.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 162.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 200.0,
+     "left_m": 3.12,
+     "right_m": 6.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 162.8,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 0.2,
+   "paved_total_median_m": 8.56,
+   "left": {
+    "valid": 20,
+    "share": 0.0,
+    "extra_median_m": -0.13,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 20,
+    "share": 0.4,
+    "extra_median_m": 1.13,
+    "sidewalk_m": 1.97,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w274454649:2791676435-1123401807",
+   "osm_way": 274454649,
+   "from": "n2791676435",
+   "to": "n1123401807",
+   "length_m": 4.2,
+   "highway": "secondary",
+   "carriageway_m": 6.5,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [],
+   "built_up_share": null,
+   "paved_total_median_m": null,
+   "left": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w301338997:1123401563-1123400724",
+   "osm_way": 301338997,
+   "from": "n1123401563",
+   "to": "n1123400724",
+   "length_m": 307.9,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 4.12,
+     "right_m": 5.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 167.7,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 1.12,
+     "right_m": 4.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 52.0,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 30.0,
+     "left_m": 4.0,
+     "right_m": 0.5,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 50.7,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 40.0,
+     "left_m": 4.75,
+     "right_m": 6.25,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 166.4,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 50.0,
+     "left_m": 3.75,
+     "right_m": 5.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 164.4,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 60.0,
+     "left_m": 4.0,
+     "right_m": 4.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 165.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 70.0,
+     "left_m": 5.12,
+     "right_m": 2.25,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 166.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 80.0,
+     "left_m": 4.38,
+     "right_m": 0.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 163.5,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 90.0,
+     "left_m": 4.12,
+     "right_m": 4.25,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 175.5,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 100.0,
+     "left_m": -0.5,
+     "right_m": 11.12,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 62.5,
+     "valid": false,
+     "built_up": false
+    },
+    {
+     "s": 110.0,
+     "left_m": -0.5,
+     "right_m": 10.5,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 63.4,
+     "valid": false,
+     "built_up": false
+    },
+    {
+     "s": 120.0,
+     "left_m": 3.62,
+     "right_m": 0.62,
+     "axis_off_m": -0.88,
+     "centre_line": true,
+     "core": 166.3,
+     "valid": false,
+     "built_up": false
+    },
+    {
+     "s": 130.0,
+     "left_m": 2.5,
+     "right_m": 2.0,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 171.9,
+     "valid": false,
+     "built_up": false
+    },
+    {
+     "s": 140.0,
+     "left_m": 2.38,
+     "right_m": 9.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 172.4,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 150.0,
+     "left_m": 1.88,
+     "right_m": 5.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 173.7,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 160.0,
+     "left_m": 1.12,
+     "right_m": 10.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 63.6,
+     "valid": false,
+     "built_up": false
+    },
+    {
+     "s": 170.0,
+     "left_m": -1.25,
+     "right_m": 1.25,
+     "axis_off_m": 1.25,
+     "centre_line": true,
+     "core": 124.0,
+     "valid": false,
+     "built_up": false
+    },
+    {
+     "s": 180.0,
+     "left_m": 3.62,
+     "right_m": 5.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 165.8,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 190.0,
+     "left_m": 4.0,
+     "right_m": 5.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 157.1,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 200.0,
+     "left_m": 4.12,
+     "right_m": 5.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 156.9,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 210.0,
+     "left_m": 5.5,
+     "right_m": 4.25,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 156.1,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 220.0,
+     "left_m": 4.62,
+     "right_m": 5.38,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 162.8,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 230.0,
+     "left_m": 6.12,
+     "right_m": 4.0,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 161.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 240.0,
+     "left_m": 5.75,
+     "right_m": 4.0,
+     "axis_off_m": -1.25,
+     "centre_line": true,
+     "core": 160.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 250.0,
+     "left_m": 4.25,
+     "right_m": 5.0,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 160.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 260.0,
+     "left_m": 4.12,
+     "right_m": 4.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 154.1,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 270.0,
+     "left_m": 4.12,
+     "right_m": 4.38,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 153.0,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 280.0,
+     "left_m": 4.0,
+     "right_m": 4.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 152.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 290.0,
+     "left_m": 5.38,
+     "right_m": 4.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 150.9,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 0.69,
+   "paved_total_median_m": 9.62,
+   "left": {
+    "valid": 20,
+    "share": 0.25,
+    "extra_median_m": 0.37,
+    "sidewalk_m": 1.6,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 20,
+    "share": 0.45,
+    "extra_median_m": 1.19,
+    "sidewalk_m": 1.98,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w630270655:1123400983-13718175880",
+   "osm_way": 630270655,
+   "from": "n1123400983",
+   "to": "n13718175880",
+   "length_m": 39.0,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 7.25,
+     "right_m": 13.0,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 152.4,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 3.38,
+     "right_m": 10.38,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 148.8,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 17.01,
+   "left": {
+    "valid": 2,
+    "share": 0.5,
+    "extra_median_m": 1.56,
+    "sidewalk_m": 3.35,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 2,
+    "share": 1.0,
+    "extra_median_m": 7.94,
+    "sidewalk_m": 7.79,
+    "sidewalk_w": 3.0,
+    "decided_by": "way",
+    "sidewalk_edge_w": 3.0
+   }
+  },
+  {
+   "edge": "w630270655:13718175880-13718175884",
+   "osm_way": 630270655,
+   "from": "n13718175880",
+   "to": "n13718175884",
+   "length_m": 47.6,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 3.5,
+     "right_m": 10.62,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 154.0,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 3.38,
+     "right_m": 10.62,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 153.8,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 30.0,
+     "left_m": 4.88,
+     "right_m": 13.0,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 155.3,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 14.12,
+   "left": {
+    "valid": 3,
+    "share": 0.0,
+    "extra_median_m": -0.25,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 3,
+    "share": 1.0,
+    "extra_median_m": 6.87,
+    "sidewalk_m": 6.72,
+    "sidewalk_w": 3.0,
+    "decided_by": "way",
+    "sidewalk_edge_w": 3.0
+   }
+  },
+  {
+   "edge": "w630270655:13718175884-2791616137",
+   "osm_way": 630270655,
+   "from": "n13718175884",
+   "to": "n2791616137",
+   "length_m": 35.0,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 3.75,
+     "right_m": 13.0,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 155.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 3.5,
+     "right_m": 10.62,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 156.5,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 15.43,
+   "left": {
+    "valid": 2,
+    "share": 0.0,
+    "extra_median_m": -0.12,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 2,
+    "share": 1.0,
+    "extra_median_m": 8.06,
+    "sidewalk_m": 7.91,
+    "sidewalk_w": 3.0,
+    "decided_by": "way",
+    "sidewalk_edge_w": 3.0
+   }
+  },
+  {
+   "edge": "w630270657:1123401676-5951735694",
+   "osm_way": 630270657,
+   "from": "n1123401676",
+   "to": "n5951735694",
+   "length_m": 54.7,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 3.62,
+     "right_m": 3.25,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 166.9,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 20.0,
+     "left_m": 3.75,
+     "right_m": 3.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 169.0,
+     "valid": true,
+     "built_up": false
+    },
+    {
+     "s": 30.0,
+     "left_m": 3.25,
+     "right_m": 6.88,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 127.7,
+     "valid": false,
+     "built_up": false
+    },
+    {
+     "s": 40.0,
+     "left_m": 3.62,
+     "right_m": 2.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 166.2,
+     "valid": true,
+     "built_up": false
+    }
+   ],
+   "built_up_share": 0.0,
+   "paved_total_median_m": 6.87,
+   "left": {
+    "valid": 3,
+    "share": 0.0,
+    "extra_median_m": -0.13,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 3,
+    "share": 0.0,
+    "extra_median_m": -0.63,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w630270663:1123401807-1123402671",
+   "osm_way": 630270663,
+   "from": "n1123401807",
+   "to": "n1123402671",
+   "length_m": 106.8,
+   "highway": "secondary",
+   "carriageway_m": 7.0,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 5.25,
+     "right_m": 4.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 145.7,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": -0.75,
+     "right_m": 5.88,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 70.2,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 30.0,
+     "left_m": -0.25,
+     "right_m": 3.88,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 50.1,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 40.0,
+     "left_m": 3.12,
+     "right_m": 1.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 149.4,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 50.0,
+     "left_m": 3.62,
+     "right_m": 3.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 151.9,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 60.0,
+     "left_m": 4.12,
+     "right_m": 3.62,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 152.7,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 70.0,
+     "left_m": 4.0,
+     "right_m": 3.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 153.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 80.0,
+     "left_m": 3.75,
+     "right_m": 2.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 156.0,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 90.0,
+     "left_m": 3.25,
+     "right_m": 4.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 150.9,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 7.44,
+   "left": {
+    "valid": 6,
+    "share": 0.17,
+    "extra_median_m": 0.38,
+    "sidewalk_m": 1.6,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 6,
+    "share": 0.0,
+    "extra_median_m": 0.06,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w630270663:1123402671-5951735696",
+   "osm_way": 630270663,
+   "from": "n1123402671",
+   "to": "n5951735696",
+   "length_m": 186.2,
+   "highway": "secondary",
+   "carriageway_m": 7.0,
+   "width_src": "bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 8.38,
+     "right_m": 2.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 63.0,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 3.62,
+     "right_m": 1.62,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 135.7,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 30.0,
+     "left_m": 3.75,
+     "right_m": 2.5,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 149.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 40.0,
+     "left_m": 3.75,
+     "right_m": 1.62,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 154.8,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 50.0,
+     "left_m": 5.38,
+     "right_m": 4.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 163.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 60.0,
+     "left_m": 4.0,
+     "right_m": 1.38,
+     "axis_off_m": 0.38,
+     "centre_line": true,
+     "core": 55.5,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 70.0,
+     "left_m": 5.5,
+     "right_m": 5.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 166.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 80.0,
+     "left_m": 5.38,
+     "right_m": 5.62,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 169.5,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 90.0,
+     "left_m": 5.5,
+     "right_m": 5.38,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 170.3,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 100.0,
+     "left_m": 5.12,
+     "right_m": 5.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 170.4,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 110.0,
+     "left_m": 5.5,
+     "right_m": 7.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 168.3,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 120.0,
+     "left_m": 5.12,
+     "right_m": 5.5,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 167.1,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 130.0,
+     "left_m": 5.0,
+     "right_m": 6.12,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 162.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 140.0,
+     "left_m": 3.5,
+     "right_m": 2.0,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 159.3,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 150.0,
+     "left_m": -0.38,
+     "right_m": 8.75,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 67.8,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 160.0,
+     "left_m": 1.0,
+     "right_m": 5.88,
+     "axis_off_m": 0.0,
+     "centre_line": true,
+     "core": 82.1,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 170.0,
+     "left_m": 0.5,
+     "right_m": 8.0,
+     "axis_off_m": 1.38,
+     "centre_line": true,
+     "core": 79.4,
+     "valid": false,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 10.87,
+   "left": {
+    "valid": 9,
+    "share": 0.89,
+    "extra_median_m": 1.88,
+    "sidewalk_m": 1.73,
+    "sidewalk_w": 1.75,
+    "decided_by": "edge",
+    "sidewalk_edge_w": 1.75
+   },
+   "right": {
+    "valid": 9,
+    "share": 0.78,
+    "extra_median_m": 2.0,
+    "sidewalk_m": 1.97,
+    "sidewalk_w": 2.0,
+    "decided_by": "edge",
+    "sidewalk_edge_w": 2.0
+   }
+  },
+  {
+   "edge": "w631895410:1151882590-1123400983",
+   "osm_way": 631895410,
+   "from": "n1151882590",
+   "to": "n1123400983",
+   "length_m": 49.9,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 14.38,
+     "right_m": 6.25,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 153.4,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 14.25,
+     "right_m": 11.75,
+     "axis_off_m": -1.25,
+     "centre_line": true,
+     "core": 154.2,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 30.0,
+     "left_m": 8.62,
+     "right_m": 2.62,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 153.4,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 20.63,
+   "left": {
+    "valid": 3,
+    "share": 1.0,
+    "extra_median_m": 10.5,
+    "sidewalk_m": 10.35,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 3,
+    "share": 0.67,
+    "extra_median_m": 2.5,
+    "sidewalk_m": 5.1,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w634210352:1151882642-1842358780",
+   "osm_way": 634210352,
+   "from": "n1151882642",
+   "to": "n1842358780",
+   "length_m": 23.2,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 5.25,
+     "right_m": 0.25,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 151.0,
+     "valid": false,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": null,
+   "left": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w634210352:1151899717-1123401724",
+   "osm_way": 634210352,
+   "from": "n1151899717",
+   "to": "n1123401724",
+   "length_m": 30.8,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 6.25,
+     "right_m": 4.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 149.1,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 5.38,
+     "right_m": 6.38,
+     "axis_off_m": 0.38,
+     "centre_line": true,
+     "core": 149.2,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 11.38,
+   "left": {
+    "valid": 2,
+    "share": 1.0,
+    "extra_median_m": 2.06,
+    "sidewalk_m": 1.92,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 2,
+    "share": 0.5,
+    "extra_median_m": 1.81,
+    "sidewalk_m": 2.48,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w634210352:13110142645-1151899717",
+   "osm_way": 634210352,
+   "from": "n13110142645",
+   "to": "n1151899717",
+   "length_m": 38.3,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 8.25,
+     "right_m": 1.38,
+     "axis_off_m": 0.88,
+     "centre_line": true,
+     "core": 81.6,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 4.25,
+     "right_m": 4.5,
+     "axis_off_m": 0.62,
+     "centre_line": true,
+     "core": 151.1,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 8.75,
+   "left": {
+    "valid": 1,
+    "share": 0.0,
+    "extra_median_m": 0.5,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 1,
+    "share": 0.0,
+    "extra_median_m": 0.75,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w634210352:1842358780-13110142645",
+   "osm_way": 634210352,
+   "from": "n1842358780",
+   "to": "n13110142645",
+   "length_m": 34.8,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 1.88,
+     "right_m": 4.38,
+     "axis_off_m": 1.0,
+     "centre_line": true,
+     "core": 134.5,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 1.0,
+     "right_m": -0.12,
+     "axis_off_m": -0.75,
+     "centre_line": true,
+     "core": 107.3,
+     "valid": false,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 6.26,
+   "left": {
+    "valid": 1,
+    "share": 0.0,
+    "extra_median_m": -1.87,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 1,
+    "share": 0.0,
+    "extra_median_m": 0.63,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w634210352:5951735696-1151882642",
+   "osm_way": 634210352,
+   "from": "n5951735696",
+   "to": "n1151882642",
+   "length_m": 15.5,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [],
+   "built_up_share": null,
+   "paved_total_median_m": null,
+   "left": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 0,
+    "share": null,
+    "extra_median_m": null,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w96941956:1123401506-1151882590",
+   "osm_way": 96941956,
+   "from": "n1123401506",
+   "to": "n1151882590",
+   "length_m": 41.9,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 9.62,
+     "right_m": 5.38,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 125.4,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 13.0,
+     "right_m": 5.0,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 156.0,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 30.0,
+     "left_m": 9.0,
+     "right_m": 5.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 150.5,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 16.38,
+   "left": {
+    "valid": 2,
+    "share": 1.0,
+    "extra_median_m": 7.25,
+    "sidewalk_m": 7.1,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 2,
+    "share": 0.5,
+    "extra_median_m": 1.62,
+    "sidewalk_m": 1.85,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w99877202:2294599892-2791676438",
+   "osm_way": 99877202,
+   "from": "n2294599892",
+   "to": "n2791676438",
+   "length_m": 181.5,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 4.12,
+     "right_m": 5.38,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 158.3,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 20.0,
+     "left_m": 5.5,
+     "right_m": 3.88,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 155.9,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 30.0,
+     "left_m": 5.5,
+     "right_m": 4.0,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 156.8,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 40.0,
+     "left_m": 5.75,
+     "right_m": 6.0,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 157.7,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 50.0,
+     "left_m": 6.88,
+     "right_m": 5.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 156.0,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 60.0,
+     "left_m": 5.0,
+     "right_m": 4.62,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 156.0,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 70.0,
+     "left_m": 5.25,
+     "right_m": 6.0,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 154.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 80.0,
+     "left_m": 5.38,
+     "right_m": 3.5,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 156.1,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 90.0,
+     "left_m": 6.38,
+     "right_m": 3.38,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 159.0,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 100.0,
+     "left_m": 1.88,
+     "right_m": 3.38,
+     "axis_off_m": -1.38,
+     "centre_line": true,
+     "core": 160.2,
+     "valid": false,
+     "built_up": true
+    },
+    {
+     "s": 110.0,
+     "left_m": 3.38,
+     "right_m": 4.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 159.8,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 120.0,
+     "left_m": 5.5,
+     "right_m": 11.25,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 161.1,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 130.0,
+     "left_m": 5.62,
+     "right_m": 6.25,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 156.3,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 140.0,
+     "left_m": 11.75,
+     "right_m": 4.75,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 146.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 150.0,
+     "left_m": 10.12,
+     "right_m": 11.38,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 149.5,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 160.0,
+     "left_m": 13.0,
+     "right_m": 11.88,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 151.6,
+     "valid": true,
+     "built_up": true
+    },
+    {
+     "s": 170.0,
+     "left_m": 6.62,
+     "right_m": 6.0,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 147.7,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 11.5,
+   "left": {
+    "valid": 16,
+    "share": 0.81,
+    "extra_median_m": 1.81,
+    "sidewalk_m": 1.85,
+    "sidewalk_w": 1.75,
+    "decided_by": "edge",
+    "sidewalk_edge_w": 1.75
+   },
+   "right": {
+    "valid": 16,
+    "share": 0.56,
+    "extra_median_m": 1.81,
+    "sidewalk_m": 2.1,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  },
+  {
+   "edge": "w99877202:2791616137-2294599892",
+   "osm_way": 99877202,
+   "from": "n2791616137",
+   "to": "n2294599892",
+   "length_m": 29.0,
+   "highway": "secondary",
+   "carriageway_m": 7.5,
+   "width_src": "PTB2022 §17 ust.1 standard",
+   "stations": [
+    {
+     "s": 10.0,
+     "left_m": 1.62,
+     "right_m": 10.62,
+     "axis_off_m": 0.0,
+     "centre_line": false,
+     "core": 158.1,
+     "valid": true,
+     "built_up": true
+    }
+   ],
+   "built_up_share": 1.0,
+   "paved_total_median_m": 12.24,
+   "left": {
+    "valid": 1,
+    "share": 0.0,
+    "extra_median_m": -2.13,
+    "sidewalk_m": null,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   },
+   "right": {
+    "valid": 1,
+    "share": 1.0,
+    "extra_median_m": 6.87,
+    "sidewalk_m": 6.72,
+    "sidewalk_w": null,
+    "decided_by": "none"
+   }
+  }
+ ]
+}

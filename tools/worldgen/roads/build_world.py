@@ -1250,6 +1250,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         p = pipeline.REGIONS / region_id / k
         # ADR 0173: hash LF-normalised text, so a CRLF checkout (worktree) and an LF checkout (main) agree
         srcs[k] = sha(p.read_bytes().replace(b"\r\n", b"\n")) if p.exists() else None
+    p = pipeline.REGIONS / region_id / "overrides.ortho_sidewalks.json"     # ADR 0349: key only where the file exists,
+    if p.exists():                                                         # so the manifests of other tiles do not change
+        srcs["overrides.ortho_sidewalks.json"] = sha(p.read_bytes().replace(b"\r\n", b"\n"))
     tm = json.loads((pipeline.REGIONS / region_id / "terrain.json").read_text(encoding="utf-8"))
     srcs["heightmap.r16 (Data/raw)"] = tm["sha256_r16"]
     manifest = {

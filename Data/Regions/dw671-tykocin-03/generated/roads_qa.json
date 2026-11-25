@@ -243,9 +243,11 @@
    ],
    "length_m": 666.2,
    "max_grade": 0.0133,
-   "overrides": [],
+   "overrides": [
+    "ortho-sidewalk-w1111506762:1873962490-2125744109"
+   ],
    "profile_rms_vs_nmt_m": 0.008,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -266,9 +268,11 @@
    ],
    "length_m": 147.1,
    "max_grade": 0.0384,
-   "overrides": [],
+   "overrides": [
+    "ortho-sidewalk-w1111506762:5087871646-5343489004"
+   ],
    "profile_rms_vs_nmt_m": 0.007,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -289,9 +293,11 @@
    ],
    "length_m": 38.4,
    "max_grade": 0.0266,
-   "overrides": [],
+   "overrides": [
+    "ortho-sidewalk-w1111506762:5343488999-1849116229"
+   ],
    "profile_rms_vs_nmt_m": 0.011,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -312,9 +318,11 @@
    ],
    "length_m": 46.0,
    "max_grade": 0.0286,
-   "overrides": [],
+   "overrides": [
+    "ortho-sidewalk-w1111506762:5343489004-5343489009"
+   ],
    "profile_rms_vs_nmt_m": 0.009,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -542,9 +550,11 @@
    ],
    "length_m": 28.8,
    "max_grade": 0.005,
-   "overrides": [],
+   "overrides": [
+    "ortho-sidewalk-w1362040263:5087871641-5087871646"
+   ],
    "profile_rms_vs_nmt_m": 0.007,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -565,9 +575,11 @@
    ],
    "length_m": 58.2,
    "max_grade": 0.0125,
-   "overrides": [],
+   "overrides": [
+    "ortho-sidewalk-w1362040264:5087871636-5087871641"
+   ],
    "profile_rms_vs_nmt_m": 0.012,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -588,9 +600,11 @@
    ],
    "length_m": 152.9,
    "max_grade": 0.0283,
-   "overrides": [],
+   "overrides": [
+    "ortho-sidewalk-w1362040264:840039859-5087871636"
+   ],
    "profile_rms_vs_nmt_m": 0.007,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -681,10 +695,10 @@
    "length_m": 30.6,
    "max_grade": 0.0128,
    "overrides": [
-    "dw671-ground-shoulder"
+    "dw671-village-kerb"
    ],
    "profile_rms_vs_nmt_m": 0.016,
-   "sidewalk_frac": 0.5,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -706,10 +720,10 @@
    "length_m": 367.1,
    "max_grade": 0.023,
    "overrides": [
-    "dw671-ground-shoulder"
+    "dw671-village-kerb"
    ],
    "profile_rms_vs_nmt_m": 0.008,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -731,10 +745,10 @@
    "length_m": 97.8,
    "max_grade": 0.029,
    "overrides": [
-    "dw671-ground-shoulder"
+    "dw671-village-kerb"
    ],
    "profile_rms_vs_nmt_m": 0.008,
-   "sidewalk_frac": 0.5,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -781,10 +795,10 @@
    "length_m": 94.2,
    "max_grade": 0.006,
    "overrides": [
-    "dw671-ground-shoulder"
+    "dw671-village-kerb"
    ],
    "profile_rms_vs_nmt_m": 0.008,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -806,10 +820,10 @@
    "length_m": 147.3,
    "max_grade": 0.0162,
    "overrides": [
-    "dw671-ground-shoulder"
+    "dw671-village-kerb"
    ],
    "profile_rms_vs_nmt_m": 0.008,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 1.0,
    "width_m": [
     7.5
    ],
@@ -1452,7 +1466,7 @@
   "crossings_skipped": [],
   "crossings_snapped": 11,
   "decals": {
-   "gullies": 521,
+   "gullies": 546,
    "oil": 55,
    "patches": 161,
    "seal_cracks": {
@@ -1462,7 +1476,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 229933,
+  "footprint_nodes": 232078,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1528,12 +1542,102 @@
    "P-10 crossing": 11,
    "P-10 crossing in junction": 7,
    "P-13": 7,
-   "P-7b edge line": 12
+   "P-7b edge line": 2
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 0,
   "overrides_applied": [
+   {
+    "id": "ortho-sidewalk-w1111506762:1849116229-1873962490",
+    "targets": [
+     "w1111506762:1849116229-1873962490"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w1111506762:1873962490-2125744109",
+    "targets": [
+     "w1111506762:1873962490-2125744109"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w1111506762:5087871646-5343489004",
+    "targets": [
+     "w1111506762:5087871646-5343489004"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w1111506762:5343488999-1849116229",
+    "targets": [
+     "w1111506762:5343488999-1849116229"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w1111506762:5343489004-5343489009",
+    "targets": [
+     "w1111506762:5343489004-5343489009"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w1111506762:5343489009-5343488999",
+    "targets": [
+     "w1111506762:5343489009-5343488999"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w1362040263:5087871641-5087871646",
+    "targets": [
+     "w1362040263:5087871641-5087871646"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w1362040264:5087871636-5087871641",
+    "targets": [
+     "w1362040264:5087871636-5087871641"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w1362040264:840039859-5087871636",
+    "targets": [
+     "w1362040264:840039859-5087871636"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w145989268:1134847922-5343376180",
+    "targets": [
+     "w145989268:1134847922-5343376180"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w145989268:2133817368-9572860071",
+    "targets": [
+     "w145989268:2133817368-9572860071"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w145989268:5343376173-1134847922",
+    "targets": [
+     "w145989268:5343376173-1134847922"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w145989268:5343376180-840039859",
+    "targets": [
+     "w145989268:5343376180-840039859"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w145989268:9572860071-9572860074",
+    "targets": [
+     "w145989268:9572860071-9572860074"
+    ]
+   },
+   {
+    "id": "ortho-sidewalk-w145989268:9572860074-5343376173",
+    "targets": [
+     "w145989268:9572860074-5343376173"
+    ]
+   },
    {
     "id": "dw671-ground-shoulder",
     "targets": [
@@ -1542,6 +1646,17 @@
      "w145989268:5343376173-1134847922",
      "w145989268:5343376180-840039859",
      "w145989268:839431484-2133817368",
+     "w145989268:9572860071-9572860074",
+     "w145989268:9572860074-5343376173"
+    ]
+   },
+   {
+    "id": "dw671-village-kerb",
+    "targets": [
+     "w145989268:1134847922-5343376180",
+     "w145989268:2133817368-9572860071",
+     "w145989268:5343376173-1134847922",
+     "w145989268:5343376180-840039859",
      "w145989268:9572860071-9572860074",
      "w145989268:9572860074-5343376173"
     ]
@@ -1560,7 +1675,7 @@
   "seam_tapers": [],
   "sides_on_carriageway_culled": {
    "kerb_tris": 0,
-   "parts": 7,
+   "parts": 6,
    "side_tris": 16
   },
   "signalised_junctions": 0,
@@ -1568,16 +1683,14 @@
    "crossing_pairs_skipped": 13,
    "junctions": 10,
    "lines": {
-    "P-7a": 3,
-    "P-7b": 4,
     "lane": 10
    },
    "pairs": 25,
-   "unmatched": 9
+   "unmatched": 6
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 22362
+   "tris": 17914
   },
   "walled_ramps": []
  }
