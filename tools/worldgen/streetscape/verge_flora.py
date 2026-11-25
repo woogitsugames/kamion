@@ -69,7 +69,7 @@ EDGE_REACH_M = 0.42              # how far a shoulder-edge tuft may stand on the
 PATCH_M = 14.0                   # correlation length of the density patches along the road
 MIN_DITCH_M = 0.22               # shallower "ditches" (flat verges) get no tall bottom grass
 SINK_M = 0.05                    # card foot below the surface
-OCC = (0.62, 0.96)
+OCC = (0.76, 0.98)             # r4: 0.62 at the foot read as a dark clone on the lighter sward (critic build #8)
 NODE_R_M = 0.9                   # ground-mask nodes painted around the ditch bottom line
 
 
@@ -161,7 +161,7 @@ def texture(seed=324):
     # the foot of each row is darker (inside the sward)
     y = np.arange(TEX_H)
     vrow = 1.0 - ((y % (TEX_H // 2)) + 0.5) / (TEX_H // 2)
-    a[..., :3] *= (0.66 + 0.34 * np.clip(vrow / 0.5, 0, 1))[:, None, None]
+    a[..., :3] *= (0.76 + 0.24 * np.clip(vrow / 0.5, 0, 1))[:, None, None]
     return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
 
 
