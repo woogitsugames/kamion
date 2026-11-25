@@ -45,6 +45,17 @@
     "power_lines": 115,
     "pylons": 297
   },
+  "forest_chm_ring": {
+    "chm_share": 0.0127,
+    "chm_tiles": [
+      "dw671-tykocin-01",
+      "knyszyn",
+      "knyszyn-s",
+      "knyszyn-w"
+    ],
+    "chm_vertices": 203,
+    "total_curtain_vertices": 15965
+  },
   "lod1_height_audit": {
     "buildings": 36220,
     "conflicting_ids": 0,
@@ -124,7 +135,7 @@
   },
   "tiers": {
     "High": {
-      "bytes": 7770408,
+      "bytes": 8026448,
       "file": "Data/raw/derived/dk65-monki-02/world/far_field.glb",
       "sectors": {
         "far_east": {
@@ -164,7 +175,7 @@
           "vertices": 35156
         }
       },
-      "sha256": "35a3dec8efbefabb3a31e4f9f1f9ae3717008f4f21b307805cf10250cf1faad2",
+      "sha256": "9c47620fda8b40104b19b862e38b4c6c7745afd1825bc332e56a48fbedd33e1d",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -177,7 +188,7 @@
       "total_vertices": 160653
     },
     "Low": {
-      "bytes": 601928,
+      "bytes": 657464,
       "file": "Data/raw/derived/dk65-monki-02/world/far_field.low.glb",
       "sectors": {
         "far_east": {
@@ -217,7 +228,7 @@
           "vertices": 4373
         }
       },
-      "sha256": "e5fa08a802d6d264a0360106f6bbb0405483c02dae20d4036940cf1b5e9f169f",
+      "sha256": "f03b87c015fa81f1ac108fddda875d85e7db0d24428f54b3f9356e9b70d46ab0",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
