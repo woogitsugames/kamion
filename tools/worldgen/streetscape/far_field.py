@@ -45,6 +45,7 @@ from roads import profile as RP           # noqa: E402
 from terrain_mesh.gltf import GLB, GLTF_AXES  # noqa: E402
 
 import powiaty as PW                       # noqa: E402  (ADR 0219)
+from streetscape import forest_chm as FC   # noqa: E402  (ADR 0339 / 0330 addendum)
 from streetscape import forest_hlod as FH  # noqa: E402
 from streetscape import materials as SM    # noqa: E402
 
@@ -59,18 +60,23 @@ FORESHORTEN_TAU_M = 950.0
 STREAMING_ROUTE_CLEARANCE_M = 400.0
 
 SECTORS = ("far_north", "far_east", "far_south", "far_west")
-# ADR 0330 (banks2-s24, critic: far forest = "dark blocks"). The ring is foreshortened into <= ~660 m beyond the border,
-# so the scene haze (KamionFogTau, per rendered distance) saw a 3 km stand as ~1 km away: dark, saturated, crisp. The
-# missing extinction over the extra distance (true - rendered) is baked into the backdrop instead (no shader change):
-# vertex albedo of submesh 0 per vertex, the forest curtain textures in distance bands (forest_hlod.haze_materials).
-# k = 1 - exp(-HAZE_BETA * (d_true - d_eff)); albedo -> lerp(albedo, HAZE_ALBEDO, k). WORKING_VALUE.
-HAZE_BETA = 3.912 / 20000.0        # 1/m: Koschmieder for the clear preset's 20 km visibility (LightingPreset); the
-#                                    overcast preset (8 km) adds its own, stronger scene haze on top
-HAZE_ALBEDO = FH.HAZE_ALBEDO       # (0.36, 0.42, 0.50) linear albedo that renders about as bright as the horizon haze (sky ~ sRGB 200-215
-#                                    over lit grass ~ sRGB 120 in the clear control renders), slightly blue
-# curtain material bands by the stand's true distance outside the border: suffix, haze share baked into the texture
+# ADR 0330 + addendum (neon-farfield-s24): the ring is foreshortened into <= ~660 m beyond the border.
+# True Beer-Lambert extinction over the missing distance (d_true - d_eff) is evaluated per vertex in Kamion/Vegetation
+# (_HLOD_EDGE, TEXCOORD_1.x = d_extra) and Kamion/World Surface (_FAR_FACADE, inverse foreshortening) using the exact
+# same _KamionHaze parameters as terrain and sky (ADR 0332) for every lighting preset (Clear, Overcast, Dusk, Night).
+# The far atlas (forest_hlod.far_atlas) supplies a cool bluish-grey Rayleigh tint across distance bands and lifted sky
+# visibility (B channel of _n.png) so distant crowns receive sky SH instead of close-range trunk occlusion. WORKING_VALUE.
+HAZE_BETA = 3.912 / 20000.0        # 1/m: Koschmieder for the clear preset's 20 km visibility (LightingPreset)
+HAZE_ALBEDO = FH.HAZE_ALBEDO       # (0.20, 0.30, 0.46) cool bluish-grey Rayleigh target (linear)
+# curtain material bands by the stand's true distance outside the border: suffix in forest_edge_mixed_far_atlas
 HAZE_BANDS = ((0.0, ""), (900.0, "_haze1"), (2000.0, "_haze2"))
-MOUND_COL = {"conifer": (0.028, 0.044, 0.019), "mixed": (0.034, 0.052, 0.022), "broadleaf": (0.044, 0.062, 0.026)}
+MOUND_COL = {"conifer": (0.032, 0.050, 0.030), "mixed": (0.038, 0.058, 0.034), "broadleaf": (0.048, 0.068, 0.038)}
+# ADR 0330 addendum (WORKING_VALUE): vertical normal tilt on far-field curtains (bottom, top), as CHM_NORMAL_UP in
+# ADR 0339 r2 — distant crown tops take sky SH and sun from above instead of reading as dark vertical walls in shade.
+CURTAIN_NORMAL_UP = (0.65, 1.65)
+# Base curtain quad height [m] outside the 24 CHM tiles (with CHM_WALL_TOP_FRAC 0.888/0.833/0.766 -> ~20/17.5/15.3 m
+# median crowns before multi-scale age/clump noise; matches the CHM median ~19 m across Podlasie stands). WORKING_VALUE.
+FAR_BASE_H_M = {"conifer": 22.5, "mixed": 21.0, "broadleaf": 20.0}
 # ADR 0141 skyline node: the tall ring objects (and far stand-ins of landmark stacks that the region itself draws) live
 # in one extra mesh whose vertices carry a flag in TEXCOORD_1.x. Kamion/World Surface (_FAR_FACADE) keeps flagged
 # vertices just in front of the camera far plane instead of clipping them, so the Low tier (far clip 900 m) still shows
@@ -166,14 +172,33 @@ def unforeshorten_dist(deff):
     return np.where(deff <= FORESHORTEN_FREE_M, deff, np.minimum(d, RING_MAX_M))
 
 
-def haze_share_eff(e, n, half: float = 1024.0):
-    """ADR 0330: haze share k of the extra (true - rendered) distance for foreshortened positions (arrays)."""
+def unforeshorten_xy(e_eff, n_eff, half: float = 1024.0) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Inverse of foreshorten_point for arrays: returns (e_raw, n_raw, d_true)."""
+    e = np.asarray(e_eff, dtype=np.float64)
+    n = np.asarray(n_eff, dtype=np.float64)
+    eb = np.clip(e, -half, half)
+    nb = np.clip(n, -half, half)
+    de = e - eb
+    dn = n - nb
+    deff = np.hypot(de, dn)
+    dtrue = unforeshorten_dist(deff)
+    scale = np.where(deff > 1e-6, dtrue / np.maximum(deff, 1e-6), 1.0)
+    return eb + de * scale, nb + dn * scale, dtrue
+
+
+def extra_dist_eff(e, n, half: float = 1024.0) -> np.ndarray:
+    """ADR 0330 addendum: missing optical path (d_true - d_eff) [m] for foreshortened positions (arrays)."""
     e = np.asarray(e, dtype=np.float64)
     n = np.asarray(n, dtype=np.float64)
     de = e - np.clip(e, -half, half)
     dn = n - np.clip(n, -half, half)
     deff = np.hypot(de, dn)
-    return 1.0 - np.exp(-HAZE_BETA * np.maximum(unforeshorten_dist(deff) - deff, 0.0))
+    return np.maximum(unforeshorten_dist(deff) - deff, 0.0)
+
+
+def haze_share_eff(e, n, half: float = 1024.0):
+    """ADR 0330: haze share k of the extra (true - rendered) distance for foreshortened positions (arrays)."""
+    return 1.0 - np.exp(-HAZE_BETA * extra_dist_eff(e, n, half))
 
 
 def haze_band(d_true: float) -> str:
@@ -183,6 +208,68 @@ def haze_band(d_true: float) -> str:
         if d_true >= d0:
             suf = sx
     return suf
+
+
+class RingChm:
+    """ADR 0330 addendum / ADR 0339: canopy height models (forest_chm.png) of neighbouring tiles overlapping the
+    far-field ring (the 24 route tiles with committed CHMs). Deterministic, zero network, opt-in by existing files."""
+
+    def __init__(self, entries: list[tuple[str, FC.Chm]]):
+        self.entries = entries
+        self.tiles = [cid for cid, _ in entries]
+        self.n_chm_verts = 0
+        self.n_total_verts = 0
+
+    @classmethod
+    def for_region(cls, region_id: str, ox: float, oy: float, ring_max_m: float = RING_MAX_M,
+                   root: Path | None = None) -> "RingChm":
+        from regions import REGIONS
+        rbox = (ox - ring_max_m, oy - ring_max_m, ox + ring_max_m, oy + ring_max_m)
+        entries = []
+        for cid, reg in sorted(REGIONS.items()):
+            if cid == region_id:
+                continue
+            x0, y0, x1, y1 = reg.bbox
+            if x1 <= rbox[0] or x0 >= rbox[2] or y1 <= rbox[1] or y0 >= rbox[3]:
+                continue
+            chm = FC.load(cid, (ox, oy), root=root)
+            if chm is not None:
+                entries.append((cid, chm))
+        return cls(entries)
+
+    def sample_heights(self, e_raw: np.ndarray, n_raw: np.ndarray, mix: str) -> tuple[np.ndarray, np.ndarray]:
+        """Return (h_quad_raw [m], has_chm [bool]) at true ring coordinates (e_raw, n_raw)."""
+        k = len(e_raw)
+        h_out = np.zeros(k, dtype=np.float64)
+        has = np.zeros(k, dtype=bool)
+        if not self.entries or k == 0:
+            return h_out, has
+        P = np.column_stack([e_raw, n_raw])
+        top_frac = FH.CHM_WALL_TOP_FRAC.get(mix, 0.833)
+        for _, chm in self.entries:
+            top, dom, ins = chm.cell_top(P)
+            if not ins.any():
+                continue
+            _, stand, _, _ = chm.sample(P)
+            ok = ins & (~has) & (dom >= FH.CHM_TRUST_M)
+            if ok.any():
+                h_crown = np.maximum(top[ok], 0.78 * dom[ok])
+                h_out[ok] = h_crown / top_frac
+                has[ok] = True
+            edge_ok = ins & (~has) & (stand >= FH.CHM_TRUST_M)
+            if edge_ok.any():
+                h_crown = np.maximum(0.45 * stand[edge_ok], 4.0)
+                h_out[edge_ok] = h_crown / top_frac
+                has[edge_ok] = True
+        return h_out, has
+
+    def stats(self) -> dict:
+        return {
+            "chm_tiles": list(self.tiles),
+            "chm_vertices": int(self.n_chm_verts),
+            "total_curtain_vertices": int(self.n_total_verts),
+            "chm_share": round(self.n_chm_verts / max(self.n_total_verts, 1), 4),
+        }
 
 
 def _stand_rng(coords) -> np.random.Generator:
@@ -996,7 +1083,7 @@ class SectorBuilder:
         self.uv1_flag = float(uv1_flag)   # ADR 0141: TEXCOORD_1.x of submesh 0 becomes -(x + flag); 0 = ordinary geometry
         self.v0, self.n0, self.uv0, self.uv1_0, self.col0, self.t0 = [], [], [], [], [], []
         self.count0 = 0
-        self.v1, self.n1, self.uv1, self.t1 = [], [], [], []
+        self.v1, self.n1, self.uv1, self.uv1_1, self.t1 = [], [], [], [], []
         self.count1 = 0
         self.mat1 = []         # ADR 0330: curtain material per strip (forest_edge_<mix><haze band>)
 
@@ -1055,9 +1142,9 @@ class SectorBuilder:
         self.count0 += 3
 
     def add_curtain1(self, pts_xy: np.ndarray, z_bot: np.ndarray, z_top: np.ndarray, face_sign: float = 1.0, u_scale: float = 48.0,
-                     mat: str = "forest_edge_mixed", u_shift: float = 0.0):
-        """Add an alpha-tested forest_edge_<mix> curtain strip along pts_xy (ADR 0330: material per stand / haze band,
-        u_shift = per-stand offset of the texture so neighbouring stands do not repeat the same crowns)."""
+                     mat: str = "forest_edge_mixed", u_shift: float = 0.0, half: float = 1024.0):
+        """Add an alpha-tested forest_edge_<mix> curtain strip along pts_xy (ADR 0330 + addendum: material slot per stand /
+        haze band, upward-tilted crown normals, TEXCOORD_1.x = extra foreshortened distance for KamionFogTauExtra)."""
         k = len(pts_xy)
         if k < 2:
             return
@@ -1066,24 +1153,30 @@ class SectorBuilder:
         u0 = ((pts_xy[0, 0] + pts_xy[0, 1]) % u_scale) / u_scale + u_shift
         us = u0 + s / u_scale
 
-        # Compute outward normal in XY + upward tilt 0.48
+        # Outward normal in XY with bottom->top upward tilt (CURTAIN_NORMAL_UP): crown tops take sky SH & sun from above
         tang = np.zeros((k, 2), dtype=np.float64)
         tang[:-1] += np.diff(pts_xy, axis=0)
         tang[1:] += np.diff(pts_xy, axis=0)
         nxy = np.column_stack([tang[:, 1], -tang[:, 0]]) * face_sign
         ln = np.maximum(np.hypot(nxy[:, 0], nxy[:, 1]), 1e-9)
         nxy /= ln[:, None]
-        n3 = np.column_stack([nxy, np.full(k, 0.48)])
-        n3 /= np.linalg.norm(n3, axis=1)[:, None]
+        n3b = np.column_stack([nxy, np.full(k, CURTAIN_NORMAL_UP[0])])
+        n3b /= np.linalg.norm(n3b, axis=1)[:, None]
+        n3t = np.column_stack([nxy, np.full(k, CURTAIN_NORMAL_UP[1])])
+        n3t /= np.linalg.norm(n3t, axis=1)[:, None]
 
         v_bot = np.column_stack([pts_xy[:, 0], pts_xy[:, 1], z_bot])
         v_top = np.column_stack([pts_xy[:, 0], pts_xy[:, 1], z_top])
         V = np.vstack([v_bot, v_top])
-        N = np.vstack([n3, n3])
+        N = np.vstack([n3b, n3t])
         uv_bot = np.column_stack([us, np.zeros(k)])
         # ADR 0187: the wall picture ends at v_main of the edge texture (the mantle strip lies above it)
         uv_top = np.column_stack([us, np.full(k, FH.edge_v_main(FH.bake_info()["mixed"]["edge"]))])
         UV = np.vstack([uv_bot, uv_top])
+        # ADR 0330 addendum: extra foreshortened distance [m] in TEXCOORD_1.x for shader KamionFogTauExtra
+        d_extra = extra_dist_eff(pts_xy[:, 0], pts_xy[:, 1], half)
+        uv1_row = np.column_stack([d_extra, np.zeros(k)])
+        UV1 = np.vstack([uv1_row, uv1_row])
 
         base = self.count1
         tris = []
@@ -1099,6 +1192,7 @@ class SectorBuilder:
         self.v1.append(V)
         self.n1.append(N)
         self.uv1.append(UV)
+        self.uv1_1.append(UV1)
         self.t1.append(np.asarray(tris, dtype=np.int64))
         self.mat1.append(mat)
         self.count1 += 2 * k
@@ -1123,9 +1217,9 @@ class SectorBuilder:
         if self.count0 > 0:
             V0 = np.vstack(self.v0)
             col = np.vstack(self.col0).copy()
-            # ADR 0330: aerial perspective of the extra (true - rendered) distance, per vertex; alpha (window mode) kept
-            k = haze_share_eff(V0[:, 0], V0[:, 1], half)[:, None]
-            col[:, :3] = col[:, :3] * (1.0 - k) + np.asarray(HAZE_ALBEDO)[None, :] * k
+            # ADR 0330 addendum: true-distance aerial perspective for far_field_buildings (mounds, buildings, chimneys)
+            # is now applied per vertex in Kamion/World Surface (_FAR_FACADE -> KamionFogTauExtra), matching terrain & sky
+            # across Clear, Overcast, LowSun, Dusk and Night without double-hazing or baking clear sky into overcast/night.
             prims.append({
                 "mat": "far_field_buildings",
                 "V": V0,
@@ -1154,6 +1248,7 @@ class SectorBuilder:
                 "V": np.vstack(self.v1),
                 "N": np.vstack(self.n1),
                 "UV": np.vstack(uvs),
+                "UV1": np.vstack(self.uv1_1),
                 "T": np.vstack(tris),
             })
         return prims
@@ -1187,29 +1282,55 @@ def _corridor_taper(e: np.ndarray, n: np.ndarray, half: float = 1024.0) -> np.nd
 
 
 def _crown_height_wave(e: np.ndarray, n: np.ndarray, h_base: float, half: float = 1024.0,
-                       rng: np.random.Generator | None = None) -> np.ndarray:
-    """Natural non-repeating tree-crown height modulation along a stand edge with road-corridor taper.
-    ADR 0330: with a per-stand `rng` the three waves get their own phases and an irregular term is added - a smoothed
-    random walk along the run (groups of taller / shorter crowns) and single emergent crowns (old pines over the
-    canopy, ~7 % of the vertices) - the skyline was a regular sine on every stand."""
-    ph = rng.uniform(0.0, 2.0 * np.pi, 3) if rng is not None else np.zeros(3)
-    w = (
-        1.0
-        + 0.16 * np.sin(0.085 * e + 0.065 * n + ph[0])
-        + 0.11 * np.cos(0.21 * e - 0.17 * n + ph[1])
-        + 0.07 * np.sin(0.43 * e + 0.31 * n + ph[2])
-    )
-    lo, hi = 0.72, 1.28
-    if rng is not None and len(e) >= 3:
-        r = rng.normal(0.0, 1.0, len(e))
+                       rng: np.random.Generator | None = None, mix: str = "mixed",
+                       ring_chm: RingChm | None = None, height_mult: float = 1.0) -> np.ndarray:
+    """Irregular tree-crown silhouette along a far-field stand edge with road-corridor taper (ADR 0330 addendum).
+    Where a neighbouring tile provides forest_chm.png (the 24 route tiles, ADR 0339), crown tops come from the
+    measured canopy height model at the true unforeshortened coordinates (e_raw, n_raw), plus a small local jitter.
+    Elsewhere, multi-scale deterministic value noise (age/compartment ~260 m, clumps ~65 m, crowns ~22 m) + seeded
+    stand walk, emergent veterans (~12%) and dips (~10%) break the ruler-flat horizon ribbon without adding geometry."""
+    e = np.asarray(e, dtype=np.float64)
+    n = np.asarray(n, dtype=np.float64)
+    k = len(e)
+    if k == 0:
+        return np.zeros(0, dtype=np.float64)
+    e_raw, n_raw, d_true = unforeshorten_xy(e, n, half)
+    s_h = np.array([foreshorten_scales(float(d))[1] for d in d_true], dtype=np.float64)
+
+    # Multi-scale deterministic value noise on true ring metres (stands divide naturally into young growth, mid-age, old pine)
+    n_age = np.array([0.58 + 0.70 * FH._vnoise2(x, y, 260.0, "ff_age") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
+    n_clump = np.array([0.78 + 0.44 * FH._vnoise2(x, y, 65.0, "ff_clump") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
+    n_fine = np.array([0.86 + 0.28 * FH._vnoise2(x, y, 22.0, "ff_fine") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
+    w = n_age * n_clump * n_fine
+    if rng is not None and k >= 3:
+        r = rng.normal(0.0, 1.0, k)
         r = np.convolve(np.pad(r, 2, mode="edge"), np.array([0.1, 0.2, 0.4, 0.2, 0.1]), mode="valid")
-        w = w + 0.11 * r / max(float(np.std(r)), 1e-6)
-        w = w + np.where(rng.uniform(0.0, 1.0, len(e)) < 0.07, rng.uniform(0.12, 0.26, len(e)), 0.0)
-        lo, hi = 0.64, 1.42
-    return h_base * np.clip(w, lo, hi) * _corridor_taper(e, n, half)
+        w = w + 0.14 * r / max(float(np.std(r)), 1e-6)
+        u_ev = rng.uniform(0.0, 1.0, k)
+        w = w + np.where(u_ev < 0.12, rng.uniform(0.12, 0.28, k), 0.0)
+        w = w - np.where((u_ev >= 0.12) & (u_ev < 0.22), rng.uniform(0.14, 0.28, k), 0.0)
+    # Use h_base scaled back to raw if caller passed a custom non-CHM base, else FAR_BASE_H_M[mix]
+    h_cls = FAR_BASE_H_M.get(mix, 21.0)
+    h_noise_raw = h_cls * np.clip(w, 0.42, 1.48)
+
+    if ring_chm is not None:
+        h_chm_raw, has_chm = ring_chm.sample_heights(e_raw, n_raw, mix)
+        ring_chm.n_total_verts += k
+        ring_chm.n_chm_verts += int(has_chm.sum())
+        if has_chm.any():
+            jitter = np.array([0.93 + 0.14 * FH._vnoise2(x, y, 18.0, "ff_chm") for x, y in zip(e_raw, n_raw)], dtype=np.float64)
+            h_raw = np.where(has_chm, h_chm_raw * jitter, h_noise_raw)
+        else:
+            h_raw = h_noise_raw
+    else:
+        h_raw = h_noise_raw
+
+    ht = h_raw * s_h * height_mult * _corridor_taper(e, n, half)
+    return np.maximum(ht, 3.5 * s_h)
 
 
-def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str, elev: BorderElevation, half: float, tier: str):
+def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str, elev: BorderElevation, half: float, tier: str,
+                      ring_chm: RingChm | None = None):
     pts_raw = np.asarray(coords, dtype=np.float64)
     if len(pts_raw) < 4:
         return
@@ -1240,24 +1361,31 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
             return
 
     _, s_h = foreshorten_scales(d_cen)
-    h_base = (21.5 if mix == "conifer" else 19.5 if mix == "mixed" else 18.0) * s_h
-    # ADR 0330: stands differ in age / site - height x 0.86-1.12 per stand (WORKING_VALUE)
     rng = _stand_rng(coords)
-    h_base = max(h_base * float(rng.uniform(0.86, 1.12)), 8.5)
+    # ADR 0330 addendum: remove the old max(..., 8.5) floor that clamped every distant stand (2.5-4 km) to one flat
+    # height; stand height now comes per vertex from RingChm (when available) or multi-scale age/clump noise.
+    stand_scale = float(rng.uniform(0.84, 1.16))
+    h_base = max(FAR_BASE_H_M.get(mix, 21.0) * s_h * stand_scale, 3.5 * s_h)
     mix_ = mix if mix in MOUND_COL else "mixed"
-    look = {"mat": f"forest_edge_{mix_}{haze_band(d_cen)}", "u_shift": float(rng.uniform(0.0, 1.0)),
-            "u_scale": float(rng.uniform(42.0, 54.0)), "rng": rng,
-            "mound": tuple(float(c) * float(rng.uniform(0.88, 1.14)) for c in MOUND_COL[mix_])}
+    band = haze_band(d_cen)
+    # Cool mound tint subtly aligned with the curtain band (true extinction is done in Kamion/World Surface shader)
+    k_mound = 0.06 if band == "" else (0.16 if band == "_haze1" else 0.26)
+    mound_raw = tuple(float(c) * float(rng.uniform(0.88, 1.14)) for c in MOUND_COL[mix_])
+    mound_col = tuple(mound_raw[i] * (1.0 - k_mound) + HAZE_ALBEDO[i] * k_mound for i in range(3))
+    look = {"mat": f"forest_edge_{mix_}{band}", "u_shift": float(rng.uniform(0.0, 1.0)),
+            "u_scale": float(rng.uniform(42.0, 54.0)), "rng": rng, "stand_scale": stand_scale,
+            "mound": mound_col}
     for name, part in split_by_sector(poly_eff, half):          # ADR 0308: every piece in the sector it lies in
-        _stand_geometry(sectors[name], part, mix, elev, half, tier, h_base, look)
+        _stand_geometry(sectors[name], part, mix, elev, half, tier, h_base, look, ring_chm=ring_chm)
 
 
 def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevation, half: float, tier: str, h_base: float,
-                    look: dict | None = None):
+                    look: dict | None = None, ring_chm: RingChm | None = None):
     """Curtains and under-canopy mound of one stand piece (foreshortened coordinates) into sector builder sec.
     look (ADR 0330): curtain material / texture offset / height noise / mound colour of the stand."""
-    look = look or {"mat": "forest_edge_mixed", "u_shift": 0.0, "u_scale": 48.0, "rng": None, "mound": None}
-    curtain = {"mat": look["mat"], "u_shift": look["u_shift"], "u_scale": look["u_scale"]}
+    look = look or {"mat": "forest_edge_mixed", "u_shift": 0.0, "u_scale": 48.0, "rng": None, "stand_scale": 1.0, "mound": None}
+    curtain = {"mat": look["mat"], "u_shift": look["u_shift"], "u_scale": look["u_scale"], "half": half}
+    stand_scale = float(look.get("stand_scale", 1.0))
     ce, cn = float(poly_eff.centroid.x), float(poly_eff.centroid.y)
 
     seg_step = 9.0 if tier == "High" else 28.0
@@ -1279,7 +1407,8 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
         if total_s < 8.0:
             return
         zg = np.array([elev.z_at_eff(p[0], p[1]) for p in P])
-        ht = _crown_height_wave(P[:, 0], P[:, 1], h_base, half, rng=look["rng"])
+        ht = _crown_height_wave(P[:, 0], P[:, 1], h_base, half, rng=look["rng"], mix=mix,
+                                ring_chm=ring_chm, height_mult=stand_scale)
         # Taper ends of open runs so stand edges step down gently at margins instead of ending in a vertical wall
         if np.hypot(*(P[0] - P[-1])) > 2.0:
             end_taper = np.minimum(np.clip(s / 32.0, 0.30, 1.0), np.clip((total_s - s) / 32.0, 0.30, 1.0))
@@ -1333,8 +1462,8 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                     s = np.linspace(0.0, L, ks + 1)
                     end_taper = np.minimum(np.clip(s / 30.0, 0.30, 1.0), np.clip((L - s) / 30.0, 0.30, 1.0))
                     zg = np.array([elev.z_at_eff(p[0], p[1]) for p in P])
-                    ht = _crown_height_wave(P[:, 0] + ri * 17.3, P[:, 1] - ri * 11.7, h_base * 1.08, half,
-                                            rng=look["rng"]) * end_taper
+                    ht = _crown_height_wave(P[:, 0], P[:, 1], h_base, half, rng=look["rng"], mix=mix,
+                                            ring_chm=ring_chm, height_mult=stand_scale * 1.06) * end_taper
                     sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **curtain)
 
     # 3. Sloping dark conifer/mixed under-canopy mound tucked 10 m inside, split into <= 320 m convex-ish cells so
@@ -1363,8 +1492,14 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
             ring = ring[::-1]
         c_xy = ring.mean(axis=0)
         z_c = elev.z_at_eff(c_xy[0], c_xy[1])
-        h_cap = max(h_base * 0.38, 3.5)
-        col_top = (0.028, 0.044, 0.019, 0.0) if mix == "conifer" else (0.034, 0.052, 0.022, 0.0)
+        h_mound_ref = h_base
+        if ring_chm is not None:
+            cr_e, cr_n, cr_d = unforeshorten_xy(np.array([c_xy[0]]), np.array([c_xy[1]]), half)
+            hc, ok = ring_chm.sample_heights(cr_e, cr_n, mix)
+            if ok[0]:
+                h_mound_ref = float(hc[0]) * foreshorten_scales(float(cr_d[0]))[1]
+        h_cap = max(h_mound_ref * 0.34, 2.2)
+        col_top = (0.032, 0.050, 0.030, 0.0) if mix == "conifer" else (0.038, 0.058, 0.034, 0.0)
         if look.get("mound") is not None:      # ADR 0330: per mix (+ broadleaf) and per stand x 0.88-1.14
             col_top = (*look["mound"], 0.0)
         p_apex = [c_xy[0], c_xy[1], z_c + h_cap]
@@ -1961,15 +2096,17 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
 
     all_materials = {**SM.M, **FH.materials()}
     FH.far_atlas()                     # ADR 0330 / farfield-low-s24: curtain atlas (no-op when up to date)
+    ring_chm = RingChm.for_region(region_id, ox, oy, RING_MAX_M)
     qa_tiers = {}
     landmark_stacks = region_landmark_stacks(region_id, ox, oy)
 
     for tier, fn, compact in (("High", "far_field.glb", False), ("Low", "far_field.low.glb", True)):
         sectors = {name: SectorBuilder(name) for name in SECTORS}
         skyline = SectorBuilder(SKYLINE, uv1_flag=SKYLINE_FLAG_CLAMP)
+        chm_arg = ring_chm if tier == "High" else RingChm(ring_chm.entries)
 
         for f in gis["forests"] + _corridor_treelines(half):
-            _add_forest_stand(sectors, f["coords"], f.get("mix", "mixed"), elev, half, tier)
+            _add_forest_stand(sectors, f["coords"], f.get("mix", "mixed"), elev, half, tier, ring_chm=chm_arg)
 
         for b in render_buildings:
             _add_building(sectors, b, elev, half, tier, exclusion=building_exclusion, skyline=skyline)
@@ -2124,6 +2261,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         "schema": "truck-sim-pl/far-field-qa/1",
         "region": region_id,
         "feature_counts": src_manifest["feature_counts"],
+        "forest_chm_ring": ring_chm.stats(),
         "appearance_policy": appearance_policy,
         "streaming_building_policy": streaming_policy,
         "boundary_exclusions": gis["boundary_exclusions"],

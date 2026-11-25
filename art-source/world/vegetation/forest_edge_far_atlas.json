@@ -1,16 +1,22 @@
 {
  "adr": "0330",
  "haze_albedo_linear": [
-  0.36,
-  0.42,
-  0.5
+  0.2,
+  0.3,
+  0.46
  ],
  "k": {
-  "_haze1": 0.16,
-  "_haze2": 0.37
+  "": 0.08,
+  "_haze1": 0.24,
+  "_haze2": 0.4
+ },
+ "nrm_flat": {
+  "": 0.35,
+  "_haze1": 0.6,
+  "_haze2": 0.8
  },
  "pad": 4,
- "schema": "truck-sim-pl/forest-edge-far-atlas/1",
+ "schema": "truck-sim-pl/forest-edge-far-atlas/2",
  "size": [
   1024,
   2048
@@ -60,5 +66,10 @@
   "forest_edge_conifer_n.png": "7ad6682cdd59313204e9d63c1f506ee710af0fa75712cac4a5005312a4bd06df",
   "forest_edge_mixed.png": "ee9f1b70501c8048f606a4263886026d77d649e95edff13b2b38dfdf2d0d10a4",
   "forest_edge_mixed_n.png": "537fa5a5998a1535cb4c8d87b806a4513f5f8d729f010b215257f011670cad71"
+ },
+ "vis_lift": {
+  "": 0.55,
+  "_haze1": 0.78,
+  "_haze2": 0.92
  }
 }

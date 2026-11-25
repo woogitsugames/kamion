@@ -164,12 +164,21 @@ MIX_OF_CATEGORY = {"iglasty": "conifer", "liściasty": "broadleaf", "mieszany": 
 TEX_REF = "art-source/world/vegetation/{}.png"
 
 
-# ADR 0330: hazed copies of the edge textures for the far-field ring (streetscape.far_field.HAZE_BANDS). The ring is
-# foreshortened, so the scene haze sees a 1.5-4 km stand at <= ~1.7 km; the missing extinction of the band is baked
-# into the albedo: linear rgb -> lerp(rgb, HAZE_ALBEDO, k), alpha and the normal / visibility map unchanged.
-# k = 1 - exp(-beta * (d_true - d_eff)) at the band's typical stand (1.4 km: 0.16, 3.0 km: 0.37; beta = 3.912 / 20 km).
-HAZE_ALBEDO = (0.36, 0.42, 0.50)       # WORKING_VALUE (see far_field.HAZE_ALBEDO)
-HAZE_SUFFIX_K = {"_haze1": 0.16, "_haze2": 0.37}
+# ADR 0330 + addendum (neon-farfield-s24): cool Rayleigh tint and sky-visibility lift for the far-field ring atlas
+# (forest_edge_mixed_far_atlas). True Beer-Lambert extinction over the extra foreshortened distance (d_true - d_eff)
+# is now evaluated per vertex in Kamion/Vegetation (_HLOD_EDGE) and Kamion/World Surface (_FAR_FACADE) using the exact
+# same _KamionHaze parameters as terrain and sky (ADR 0332) for every lighting preset (Clear, Overcast, Dusk, Night).
+# The far atlas complements this with:
+#   (1) a cool, slightly bluish-grey Rayleigh tint across distance bands (summer 1-4 km conifer/mixed stands read cooler
+#       and less brown-olive in Clear; under Overcast the stronger KamionFogTau grey haze dominates naturally);
+#   (2) lifted sky visibility (B channel of _n.png) and softened micro-normals so distant stands receive full sky SH
+#       from above instead of losing ~70% of ambient light to close-range trunk occlusion (vis_B 0.135-0.204).
+# Constants: WORKING_VALUE.
+HAZE_ALBEDO = (0.20, 0.30, 0.46)       # cool bluish-grey Rayleigh target (linear; B > G > R)
+HAZE_SUFFIX_K = {"_haze1": 0.24, "_haze2": 0.40}
+FAR_ATLAS_HAZE_K = {"": 0.08, "_haze1": 0.24, "_haze2": 0.40}
+FAR_ATLAS_VIS_LIFT = {"": 0.55, "_haze1": 0.78, "_haze2": 0.92}
+FAR_ATLAS_NRM_FLAT = {"": 0.35, "_haze1": 0.60, "_haze2": 0.80}
 HAZE_MIXES = ("conifer", "mixed", "broadleaf")
 
 
@@ -221,8 +230,9 @@ def far_atlas(root=None, log=print) -> dict:
         for f in (f"forest_edge_{mix}.png", f"forest_edge_{mix}_n.png"):
             if (vdir / f).exists():
                 srcs[f] = hashlib.sha256((vdir / f).read_bytes()).hexdigest()
-    want = {"schema": "truck-sim-pl/forest-edge-far-atlas/1", "adr": "0330", "haze_albedo_linear": list(HAZE_ALBEDO),
-            "k": HAZE_SUFFIX_K, "slots": [list(x) for x in FAR_ATLAS_SLOTS], "size": list(FAR_ATLAS_SIZE),
+    want = {"schema": "truck-sim-pl/forest-edge-far-atlas/2", "adr": "0330", "haze_albedo_linear": list(HAZE_ALBEDO),
+            "k": FAR_ATLAS_HAZE_K, "vis_lift": FAR_ATLAS_VIS_LIFT, "nrm_flat": FAR_ATLAS_NRM_FLAT,
+            "slots": [list(x) for x in FAR_ATLAS_SLOTS], "size": list(FAR_ATLAS_SIZE),
             "pad": FAR_ATLAS_PAD, "sources": srcs}
     out_a, out_n = vdir / f"{FAR_ATLAS_MAT}.png", vdir / f"{FAR_ATLAS_MAT}_n.png"
     if meta == want and out_a.exists() and out_n.exists():
@@ -241,8 +251,18 @@ def far_atlas(root=None, log=print) -> dict:
             r0, r1 = int(round(v0 * h)), int(round(v1 * h))       # rows from the bottom
             im = Image.open(f).convert("RGBA").resize((w, r1 - r0), Image.LANCZOS)
             a = np.asarray(im, np.float64) / 255.0
-            if not normal and suf:
-                a = _haze(a, HAZE_SUFFIX_K[suf])
+            if not normal:
+                k_h = FAR_ATLAS_HAZE_K.get(suf, 0.0)
+                if k_h > 0.0:
+                    a = _haze(a, k_h)
+            else:
+                # ADR 0330 addendum: at 1-4 km we see the sunlit/sky-lit outer crown shell, not dark close-range
+                # under-canopy trunk occlusion; lift sky visibility (B) and soften normal XY with distance band.
+                kv = FAR_ATLAS_VIS_LIFT.get(suf, 0.0)
+                kn = FAR_ATLAS_NRM_FLAT.get(suf, 0.0)
+                a[..., 0] = a[..., 0] * (1.0 - kn) + 0.5 * kn
+                a[..., 1] = a[..., 1] * (1.0 - kn) + 0.5 * kn
+                a[..., 2] = a[..., 2] * (1.0 - kv) + 1.0 * kv
             atlas[h - r1:h - r0] = a                               # image rows run from the top
         Image.fromarray(np.clip(np.round(atlas * 255.0), 0, 255).astype(np.uint8), "RGBA").save(dst, optimize=True)
     meta_p.write_text(json.dumps(want, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
