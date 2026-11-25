@@ -2200,8 +2200,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                         return ec
                 bold_sill_ = st_mode and (typ == "house" or st_town_win) and not wooden
                 zsplits_ = [zpl] + [z for b in band_z for z in b] + ([z_frieze] if z_frieze is not None else [])
-                # ADR 0348: split the middle attic-window column at eave height zt so gable col_gable stays uniform
-                if aw and all(o[3] <= zt - 0.02 or o[2] >= zt + 0.02 for o in ops):
+                # ADR 0348: split the middle attic-window column at eave height zt only when _FACADE_TINT col_fn is active
+                if col_fn is not None and aw and all(o[3] <= zt - 0.02 or o[2] >= zt + 0.02 for o in ops):
                     zsplits_.append(zt)
                 for cu0, cu1, czt in cols:
                     FK.wall_pieces(wall_with_openings, acc, a + d * cu0, d, nout, cu1 - cu0, zbot, czt,

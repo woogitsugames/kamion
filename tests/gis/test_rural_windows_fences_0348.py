@@ -114,7 +114,7 @@ def test_gable_attic_window_has_uniform_gable_tint():
     """ADR 0348 r2: splitting the attic-window column at eave zt prevents a vertical colour seam on gables."""
     b = {"id": "test:gable-seam", "poly": box(0, 0, 10, 8),
          "props": {"storeys": 2, "height_m": 7.4, "roof_shape": "gable"},
-         "ovr": {"wall": "plaster_cream"}, "typ": "house", "sub": "dom", "small_town": True, "small_town_roofs": False}
+         "ovr": {"wall_material": "plaster_cream"}, "typ": "house", "sub": "dom", "small_town": True, "small_town_roofs": False}
     buf = _ColBuf()
     BM.build(buf, [b], _HF, lambda e, n: 100.0, None, None, {})
     # Above eave zt (~104.7 m) on each gable face (x ~ 0 or x ~ 10), all plaster vertices must carry one uniform shade
