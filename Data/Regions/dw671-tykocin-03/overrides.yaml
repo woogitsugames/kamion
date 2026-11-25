@@ -20,3 +20,27 @@ overrides:
     confidence: low
     verify: GUGiK orthophoto 0.25 m of this tile (after the ingest) or an owner photo of the DW671 cross-section
     set: {shoulder: {kind: ground, ditch_m: 0.2}, edge_lines: both}
+  # ADR 0349 (village-street-s24): measured on the orthophoto of this tile. From node 2133817368 (E 899, N 678) the way
+  # runs through Krypno Kościelne as a kerbed street with a sidewalk behind each kerb (paved run 11.5-12.8 m at 79
+  # stations, docs/reports/village-street-0349/dw671-tykocin-03.json; sidewalks themselves:
+  # overrides.ortho_sidewalks.json), not with ground shoulders. Only the 290 m from the seam with dw671-tykocin-02 to
+  # that node keep the entry above (set-back path on the left, tree row on the right, no kerb seen), so the seam test
+  # of tests/gis/test_ring_0231.py still compares the same way-level set. No edge line shows beside the kerbs.
+  - id: dw671-village-kerb
+    target:
+      edge:
+        - "w145989268:2133817368-9572860071"
+        - "w145989268:9572860071-9572860074"
+        - "w145989268:9572860074-5343376173"
+        - "w145989268:5343376173-1134847922"
+        - "w145989268:1134847922-5343376180"
+        - "w145989268:5343376180-840039859"
+    source: >-
+      GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), straightened strips and
+      tools/worldgen/qa/ortho_sidewalks.py (docs/reports/village-street-0349/dw671-tykocin-03.json)
+    reason: >-
+      Critic of build #8 (frame t2590): the village street read as a bare wide avenue. The ground shoulder + edge lines
+      of the open road were carried through the village by the way-level entry, unmeasured.
+    confidence: medium
+    verify: owner photo of DW671 in Krypno Kościelne or the 0.05 m orthophoto WMS
+    set: {shoulder: kerb, edge_lines: none}

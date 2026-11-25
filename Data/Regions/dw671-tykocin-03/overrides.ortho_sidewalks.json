@@ -1,0 +1,276 @@
+{
+ "schema": "truck-sim-pl/ortho-sidewalks/1",
+ "generated_by": "tools/worldgen/qa/ortho_sidewalks.py fit",
+ "overrides": [
+  {
+   "id": "ortho-sidewalk-w1111506762:1849116229-1873962490",
+   "target": {
+    "edge": "w1111506762:1849116229-1873962490"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run None m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left way 0 st. share None, right way 0 st. share None",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w1111506762:1873962490-2125744109",
+   "target": {
+    "edge": "w1111506762:1873962490-2125744109"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 12.12 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left edge 62 st. share 1.0, right edge 62 st. share 0.76",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w1111506762:5087871646-5343489004",
+   "target": {
+    "edge": "w1111506762:5087871646-5343489004"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 15.5 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left edge 13 st. share 1.0, right edge 13 st. share 0.69",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w1111506762:5343488999-1849116229",
+   "target": {
+    "edge": "w1111506762:5343488999-1849116229"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 11.94 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left way 2 st. share 1.0, right way 2 st. share 1.0",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w1111506762:5343489004-5343489009",
+   "target": {
+    "edge": "w1111506762:5343489004-5343489009"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 11.12 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left way 3 st. share 1.0, right way 3 st. share 1.0",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w1111506762:5343489009-5343488999",
+   "target": {
+    "edge": "w1111506762:5343489009-5343488999"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run None m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left way 0 st. share None, right way 0 st. share None",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w1362040263:5087871641-5087871646",
+   "target": {
+    "edge": "w1362040263:5087871641-5087871646"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 16.25 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left neighbours 1 st. share 1.0, right neighbours 1 st. share 1.0",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w1362040264:5087871636-5087871641",
+   "target": {
+    "edge": "w1362040264:5087871636-5087871641"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 13.2 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left edge 4 st. share 1.0, right edge 4 st. share 1.0",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w1362040264:840039859-5087871636",
+   "target": {
+    "edge": "w1362040264:840039859-5087871636"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 11.75 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left edge 14 st. share 1.0, right edge 14 st. share 0.71",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w145989268:1134847922-5343376180",
+   "target": {
+    "edge": "w145989268:1134847922-5343376180"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 11.25 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left way 2 st. share 1.0, right way 2 st. share 1.0",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w145989268:2133817368-9572860071",
+   "target": {
+    "edge": "w145989268:2133817368-9572860071"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 12.12 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left edge 35 st. share 1.0, right edge 35 st. share 0.83",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w145989268:5343376173-1134847922",
+   "target": {
+    "edge": "w145989268:5343376173-1134847922"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run None m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left way 0 st. share None, right way 0 st. share None",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w145989268:5343376180-840039859",
+   "target": {
+    "edge": "w145989268:5343376180-840039859"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 12.37 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left edge 8 st. share 1.0, right edge 8 st. share 0.75",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w145989268:9572860071-9572860074",
+   "target": {
+    "edge": "w145989268:9572860071-9572860074"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 12.75 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left edge 6 st. share 1.0, right edge 6 st. share 1.0",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  },
+  {
+   "id": "ortho-sidewalk-w145989268:9572860074-5343376173",
+   "target": {
+    "edge": "w145989268:9572860074-5343376173"
+   },
+   "source": "GUGiK orthophoto 0.25 m of the tile (gugik-orto-2024-rgb-0p25-dw671-tykocin-03), tools/worldgen/qa/ortho_sidewalks.py: paved run 11.5 m, carriageway 7.0 m (bdot10k (clamped to PTB2022 §17 ust.1 range, ADR 0301)); left edge 13 st. share 1.0, right edge 13 st. share 0.69",
+   "reason": "sidewalk attached to the kerb seen on the orthophoto; OSM has no sidewalk=* / footway here (ADR 0349)",
+   "confidence": "medium",
+   "verify": "owner photo of the street or the 0.05 m orthophoto WMS",
+   "set": {
+    "side_left": "sidewalk",
+    "sidewalk_w_left": 2.75,
+    "shoulder_left": "kerb",
+    "side_right": "sidewalk",
+    "sidewalk_w_right": 2.0,
+    "shoulder_right": "kerb"
+   }
+  }
+ ]
+}
