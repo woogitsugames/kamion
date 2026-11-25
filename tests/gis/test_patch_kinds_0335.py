@@ -172,5 +172,5 @@ def test_shader_0335_p2_invariants():
     assert "half sealMask;" in shader
     assert "endD * 0.5" not in shader
     assert "paintRenewed" in shader and "8.0 * paintRenewed" in shader
-    assert "rwDistAtten" in shader and "wpMip" in shader
+    assert "rwDistAtten" in shader and "rwFwx" in shader   # P2b (rut-far): pas koleiny filtrowany szerokością z fwidth zamiast wpMip
     assert "sandTongue" in shader and "sband" in shader
