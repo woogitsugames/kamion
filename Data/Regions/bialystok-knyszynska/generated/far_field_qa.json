@@ -46,6 +46,17 @@
     "power_lines": 187,
     "pylons": 413
   },
+  "forest_chm_ring": {
+    "chm_share": 0.1297,
+    "chm_tiles": [
+      "dk65-01",
+      "dk65-02",
+      "dk65-03",
+      "dk65-04"
+    ],
+    "chm_vertices": 1391,
+    "total_curtain_vertices": 10722
+  },
   "lod1_height_audit": {
     "buildings": 133679,
     "conflicting_ids": 0,
@@ -125,7 +136,7 @@
   },
   "tiers": {
     "High": {
-      "bytes": 11376616,
+      "bytes": 11548780,
       "file": "Data/raw/derived/bialystok-knyszynska/world/far_field.glb",
       "sectors": {
         "far_east": {
@@ -165,7 +176,7 @@
           "vertices": 36564
         }
       },
-      "sha256": "829d99c6beea92dbf6a9c39beb985b39d83d408c294f8ccea9678e90528eee41",
+      "sha256": "9abda9979dc64bf6a8d018c2c4d0a9e4c23df28c87faa42e19f635774f00f5cc",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -178,7 +189,7 @@
       "total_vertices": 224217
     },
     "Low": {
-      "bytes": 1138664,
+      "bytes": 1179144,
       "file": "Data/raw/derived/bialystok-knyszynska/world/far_field.low.glb",
       "sectors": {
         "far_east": {
@@ -218,7 +229,7 @@
           "vertices": 4684
         }
       },
-      "sha256": "38b6b5694090c820bdaf01d3633434f423b0c0757ad74eb4bc803d24454edf55",
+      "sha256": "ada1e38397e7fb3e621c573f7434e61118a1115f7d683faddb4bce13acdc1f83",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
