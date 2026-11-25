@@ -328,7 +328,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         half gap = KFBand(rc + 0.375, 0.75, 0.30, fpr);
         col = lerp(col, half3(0.120h, 0.095h, 0.062h), gap * 0.45h);
         col *= 1.0h + 0.10h * (n5 - 0.5h);
-        rowP = 0.75; rowD = 0.0h; rowS = 0.45h;
+        rowP = 0.75; rowD = 0.0h; rowS = 0.12h;      // closed canopy in August: a hint of the rows, not ridges
         stA1 = 0.10h; stA2 = 0.12h;
     }
     else if (u == KF_DISKED)
