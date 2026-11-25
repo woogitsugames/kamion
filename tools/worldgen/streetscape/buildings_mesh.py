@@ -2147,24 +2147,13 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                     return float(hf.sample(np.array([q_[0]]), np.array([q_[1]]))[0])
                 lod1_gfn = gfn
                 # ADR 0348: 2-3 subtle plaster shades per small_town plaster house (main wall, side/frieze, gable, plinth)
-                edge_col = col_gable = col_plinth = col_fn = None
+                edge_col = col_gable = col_sec = col_plinth = col_fn = None
                 z_frieze = None
                 if shades is not None and str(wall_e).startswith("plaster_"):
                     col_main, col_gable, col_sec, col_plinth = shades
                     edge_col = col_sec if (ei != main and (ei % 2 == 1 or FK.hfloat(key, "sh_side") < 0.72)) else col_main
                     if typ == "house" and FK.hfloat(key, "sh_frieze") < 0.65 and zt - zpl > 2.6:
                         z_frieze = FK.safe_z(zt - 0.52, ops, zpl + 1.4, zt - 0.18)
-
-                    def col_fn(u0, u1, z0, z1, mat_, ec=edge_col, cg=col_gable, cs=col_sec, cp=col_plinth, zt_=zt, zf_=z_frieze):
-                        if mat_ == "plinth_dark":
-                            return cp
-                        if not str(mat_).startswith("plaster_"):
-                            return None
-                        if z0 >= zt_ - 1e-4:
-                            return cg
-                        if zf_ is not None and z0 >= zf_ - 1e-4:
-                            return cs
-                        return ec
                 cols = [(0.0, L, zt)]
                 aw = None
                 if wooden:
@@ -2191,8 +2180,23 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                         cols = [(0.0, aw["u0"], zt), (aw["u0"], aw["u1"], aw["zband"]), (aw["u1"], L, zt)]
                         base_z = lambda u, zt=zt, aw=aw: aw["zband"] if aw["u0"] < u < aw["u1"] else zt
                         pr = sorted(set(prof) | {(u, _prof_z(prof, u)) for u in (aw["u0"], aw["u1"])})
+                        # ADR 0348: if an opening straddles eave zt we cannot split at zt; match gable to wall to avoid a vertical seam
+                        if col_gable is not None and not all(o[3] <= zt - 0.02 or o[2] >= zt + 0.02 for o in ops):
+                            col_gable = edge_col
+                            z_frieze = None
                     wall_top_fill(acc, "buildings", wall, a, d, pr, base_z, u_acc, zref, col=col_gable)
                     wall_top_fill(acc, "buildings_low", wall, a, d, prof, lambda u, zt=zt: zt, u_acc, zref, col=col_gable)
+                if edge_col is not None:
+                    def col_fn(u0, u1, z0, z1, mat_, ec=edge_col, cg=col_gable, cs=col_sec, cp=col_plinth, zt_=zt, zf_=z_frieze):
+                        if mat_ == "plinth_dark":
+                            return cp
+                        if not str(mat_).startswith("plaster_"):
+                            return None
+                        if z0 >= zt_ - 1e-4:
+                            return cg
+                        if zf_ is not None and z0 >= zf_ - 1e-4:
+                            return cs
+                        return ec
                 bold_sill_ = st_mode and (typ == "house" or st_town_win) and not wooden
                 zsplits_ = [zpl] + [z for b in band_z for z in b] + ([z_frieze] if z_frieze is not None else [])
                 # ADR 0348: split the middle attic-window column at eave height zt so gable col_gable stays uniform
