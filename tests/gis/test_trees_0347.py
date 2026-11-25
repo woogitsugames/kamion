@@ -42,7 +42,7 @@ def test_measured_reach_exceeds_the_nominal_envelope_of_adr_0308():
 
 
 def test_nothing_changes_when_the_tree_already_stands_clear():
-    T = [tree("tree_linden", 12.0, 12.5), tree("tree_pine", 2.0, 18.0), tree("tree_floor", 0.5, 0.6, n=3.0)]
+    T = [tree("tree_linden", 12.0, 12.5), tree("tree_pine", 3.0, 18.0), tree("tree_floor", 0.5, 0.6, n=3.0)]
     rep = {}
     out = VG.road_clearance(T, ROAD, rep)
     assert out == T
@@ -50,22 +50,22 @@ def test_nothing_changes_when_the_tree_already_stands_clear():
 
 
 def test_close_tree_is_moved_off_the_road_when_the_cell_is_free():
-    t = tree("tree_linden", 3.0, 6.0)               # reach ~2.9 m + 0.5: needs ~0.4 m more
+    t = tree("tree_linden", 3.6, 6.0)               # reach ~2.9 m + 1.5: needs ~0.8 m more
     rep = {}
     out = VG.road_clearance([t], ROAD, rep, free_fn=lambda P: [True] * len(P))
     assert rep["road_clearance"]["shifted"] == 1
-    assert out[0]["h"] == 6.0 and out[0]["e"] > 3.0 and out[0]["n"] == 0.0
+    assert out[0]["h"] == 6.0 and out[0]["e"] > 3.6 and out[0]["n"] == 0.0
     assert VG.clearance_violations(out, ROAD, tol=0.011) == []
-    assert t["e"] == 3.0, "records are copied"
+    assert t["e"] == 3.6, "records are copied"
 
 
 def test_shift_refused_by_a_blocked_cell_falls_back_to_shrinking_or_removal():
-    t = tree("tree_linden", 3.0, 6.0)
+    t = tree("tree_linden", 3.6, 6.0)
     rep = {}
     out = VG.road_clearance([t], ROAD, rep, free_fn=lambda P: [False] * len(P))
     r = rep["road_clearance"]
     assert r["shifted"] == 0 and r["violations_after"] == 0
-    assert (r["lowered"] == 1 and out[0]["e"] == 3.0 and out[0]["h"] < 6.0) or (r["removed"] == 1 and not out)
+    assert (r["lowered"] == 1 and out[0]["e"] == 3.6 and out[0]["h"] < 6.0) or (r["removed"] == 1 and not out)
 
 
 def test_tree_on_the_asphalt_or_hopeless_is_removed():
@@ -74,9 +74,9 @@ def test_tree_on_the_asphalt_or_hopeless_is_removed():
 
 
 def test_gauge_height_is_respected_not_the_whole_crown():
-    # tall pine: foliage from ~5 m: only the trunk counts below the gauge; reach below the gauge ~0.7 m: 1.5 m from the edge is fine
-    out = VG.road_clearance([tree("tree_pine", 1.5, 18.0)], ROAD, {})
-    assert len(out) == 1 and out[0]["e"] == 1.5 and out[0]["h"] == 18.0
+    # tall pine: foliage from ~5 m: only the trunk counts below the gauge; reach below the gauge ~0.7 m: 3 m from the edge is fine
+    out = VG.road_clearance([tree("tree_pine", 3.0, 18.0)], ROAD, {})
+    assert len(out) == 1 and out[0]["e"] == 3.0 and out[0]["h"] == 18.0
 
 
 def test_deterministic_and_order_kept():
@@ -100,7 +100,7 @@ def _corridor_tiles():
 
 @pytest.mark.parametrize("tile", _corridor_tiles())
 def test_corridor_to_tykocin_no_tree_enters_the_clearance_box(tile):
-    """Prism: asphalt polygon + 0.5 m, height 0..4.7 m. Every tree instance of every chunk stays out of it."""
+    """Prism: asphalt polygon + 1.5 m, height 0..4.7 m. Every tree instance of every chunk stays out of it."""
     world = REPO / "Data/raw/derived" / tile / "world"
     wkt = world / "road_carriage.wkt"
     if not wkt.exists():

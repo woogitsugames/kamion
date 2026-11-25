@@ -1465,8 +1465,10 @@ CROWN_FORM = {"linden": (0.33, 0.17), "maple": (0.375, 0.18), "birch": (0.235, 0
               "pineyoung": (0.34, 0.08), "birchyoung": (0.27, 0.16)}
 
 
-CLEAR_EDGE_MARGIN_M = 0.5  # WORKING_VALUE (ADR 0347): foliage stays this far from the asphalt edge below CLEAR_H_M - a truck
-#                            rides the edge line with mirrors 0.25 m out of its 2.55 m body, a cab camera sees 1 m of leaf
+CLEAR_EDGE_MARGIN_M = 1.5  # WORKING_VALUE (ADR 0347): foliage stays this far from the asphalt edge below CLEAR_H_M - a truck
+#                            rides 0.5 m inside the edge line of a 3.5 m lane (2.55 m body, mirrors 0.25 m out), so 1.5 m keeps
+#                            the foliage ~0.75 m from the mirror and out of the right quarter of the cab-view windscreen
+#                            (0.5 m left a linden 6 m / 3.3 m off the edge in the t=2260 frame, critic build #8)
 CLEAR_MAX_SHIFT_M = 1.2    # WORKING_VALUE: a tree is first moved this far away from the carriageway (ADR 0347)
 CLEAR_MIN_SHRINK = 0.75    # ... then shrunk to this share of its height; and shifted + shrunk down to CLEAR_MIN_SCALE
 CLEAR_STEP = 0.02
