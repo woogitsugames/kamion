@@ -366,11 +366,29 @@ namespace Game.Gameplay
             RouteDriver.SetPath(route.WorldPoints(), route.speedLimitsKmh);
             RouteDriver.TargetSpeedKmh = float.TryParse(speedArg, NumberStyles.Float, CultureInfo.InvariantCulture, out float s) && s > 0 ? s : 50f;
             if (m_RouteEndS > 0f) RouteDriver.EndS = m_RouteEndS;
-            if (m_RouteS > 0f) RouteDriver.SeekTo(m_RouteS);
+            SeekRouteDriverToStart();
             RouteDriver.Enabled = true;
             m_Parking = false;
             return true;
         }
+
+        /// <summary>
+        /// ADR 0350: the route autopilot starts where the combination stands - route_s / a moved start, else the baked spawn
+        /// point of the scene (the catalog start, e.g. dk65-06 at 340 m). Before, only route_s was sought: a baked start in
+        /// the middle of the route left the follower at 0 m, its 20-segment window locked on a local minimum (102 m) and the
+        /// combination drove straight off the next bend and rolled over (build #9). Called when the path is set (before a
+        /// trip of the navigation replaces it, ADR 0235), so the distance is one of the scene route.
+        /// </summary>
+        void SeekRouteDriverToStart()
+        {
+            if (route == null || route.points.Length < 2) return;
+            RouteDriver.SeekTo(Mathf.Max(0f, RouteStartS()));
+        }
+
+        /// <summary>Route distance the combination is (re)spawned at: route_s / the resolved start, else the nearest route
+        /// point to the baked spawn point, else 0.</summary>
+        public float RouteStartS() =>
+            m_RouteS >= 0f ? m_RouteS : spawnPoint != null && route != null && route.points.Length > 1 ? NearestRouteS(route, spawnPoint.position) : 0f;
 
         /// <summary>
         /// Launch arguments route_s / route_end (gate 3): spawn the combination at route distance s (heading = route tangent,
