@@ -174,7 +174,13 @@ def real():
     tiles = sorted({t for p in REAL for t in p})
     if not all((ST.REGIONS / t / "roads.graph.json").exists() for t in tiles):
         pytest.skip("region data missing")
-    return SM.run(tiles, base=None)
+    # the generator's D94 (the GIS suite runs at 0 = measured cross-sections; qa.seams and build_world use the default)
+    value = S.GAMEPLAY_LANE_WIDEN_M
+    S.GAMEPLAY_LANE_WIDEN_M = S.GAMEPLAY_LANE_WIDEN_DEFAULT_M
+    try:
+        return SM.run(tiles, base=None)
+    finally:
+        S.GAMEPLAY_LANE_WIDEN_M = value
 
 
 @pytest.mark.parametrize("pair", sorted(REAL))
