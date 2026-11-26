@@ -109,7 +109,7 @@ def test_palette_is_deterministic_and_varied_between_neighbours():
     assert len(set(walls)) >= 4
     assert max(walls.count(w) for w in set(walls)) < 0.45 * len(walls)
     roofs = {BM.rural_shed_pick(b["id"], BM.RURAL_SHED_ROOFS, "rsroof") for b in fl}
-    assert len(roofs) >= 4
+    assert len(roofs) >= 3
 
 
 def test_every_rural_outbuilding_of_both_prototype_tiles_builds():

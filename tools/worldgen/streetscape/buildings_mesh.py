@@ -98,13 +98,27 @@ SMALL_TOWN_SILL_CLEAN = 0.22    # ADR 0348: subtle sill runoff on ~78 % of rural
 # gives (gable / hip / skillion; type 1000 stays flat), boarding / brick / block wall, a concrete plinth band, small
 # barred windows and a personnel door, roof covering of the farm yards of Podlasie (trapezoidal sheet, cement-fibre
 # sheet, ceramic tile). Shares WORKING_VALUE (no survey; photos Commons / owner frames of DK65 sheds).
-RURAL_SHED_WALLS = (("wood_planks", 0.22), ("wood_planks_graphite", 0.12), ("brick_red", 0.26), ("plaster_grey", 0.18),
-                    ("plaster_light", 0.10), ("plaster_cream", 0.12))
-RURAL_SHED_ROOFS = (("roof_metal_graphite", 0.26), ("roof_sheet_grey", 0.26), ("roof_tiles_brown", 0.18),
-                    ("roof_tiles_red", 0.16), ("roof_cement_grey", 0.14))
+# Draw-call budget (lead, s24: <= +2 per camera): ONLY materials the houses of the same chunks already use (plaster_*, the
+# three ROOFS_PITCHED coverings, plinth_dark, facade_atlas windows); variety comes from COLOR_0 (_FACADE_TINT, 0 extra
+# draws), wooden / brick walls (own materials, own wall generator) are not used for outbuildings.
+RURAL_SHED_WALLS = (("plaster_grey", 0.34), ("plaster_light", 0.22), ("plaster_cream", 0.22), ("plaster_beige", 0.22))
+RURAL_SHED_ROOFS = (("roof_metal_graphite", 0.34), ("roof_tiles_brown", 0.33), ("roof_tiles_red", 0.33))
+RURAL_SHED_REVEAL_M = 0.0                # flat atlas opening: the window is the atlas cell, not geometry (wall_with_openings)
+RURAL_SHED_TINT = (0.58, 0.86)            # luminance range of the plaster tint (darker than the houses 0.92-1.08)
 RURAL_SHED_MIN_AREA_M2 = 18.0
 RURAL_SHED_NO_ROOF_FUNCS = {"stacja transformatorowa", "transformer_tower", "garbage_shed"}   # keep their flat box
 RURAL_SHED_WIN = (0.80, 0.50, 1.50)      # window width, height, sill above the reference ground, m (WORKING_VALUE)
+
+
+def rural_shed_shades(key):
+    """COLOR_0 shades of a plaster outbuilding (main wall, gable, side wall, plinth): darker and dirtier than a house."""
+    lo, hi = RURAL_SHED_TINT
+    lum = lo + (hi - lo) * FK.hfloat(key, "rs_lum")
+    warm = (FK.hfloat(key, "rs_warm") - 0.5) * 0.08
+
+    def c(l):
+        return [round(max(0.4, l * (1 + warm)) * 0.5, 4), round(l * 0.5, 4), round(max(0.4, l * (1 - warm)) * 0.5, 4), 1.0]
+    return c(lum), c(lum * 0.94), c(lum * 1.04), [round(max(0.5, lum - 0.12) * 0.5, 4)] * 3 + [1.0]
 
 
 def rural_shed_pick(key, table, salt):
@@ -677,6 +691,23 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
     for (ua, ub, va, vb, depth, kind, mat_in) in [o[:7] for o in ops]:
         back = -n3 * depth
         A, B, C, D = (np.array(P(ua, va)), np.array(P(ub, va)), np.array(P(ub, vb)), np.array(P(ua, vb)))
+        if depth <= 0.0 and isinstance(mat_in, tuple):
+            # props-fix-s24: FLAT atlas opening (depth 0) - the cell carries frame, grille and glass, no reveal / sill
+            # geometry (2 triangles instead of ~18); used by the outbuildings of rural tiles to stay inside the
+            # triangle budget. Every other opening has depth > 0 and takes the path below unchanged.
+            _, rects, fa, fb, ga, gb = mat_in
+            nr = len(rects)
+            for j, (cu, cv, cw, ch) in enumerate(rects):
+                a0, a1 = max(fa, j / nr), min(fb, (j + 1) / nr)
+                if a1 - a0 < 1e-6:
+                    continue
+                t0, t1 = (a0 - fa) / (fb - fa), (a1 - fa) / (fb - fa)
+                Pa, Pb = A + (B - A) * t0, A + (B - A) * t1
+                lu0, lu1 = cu + cw * (a0 * nr - j), cu + cw * (a1 * nr - j)
+                lv0, lv1 = cv + ch * ga, cv + ch * gb
+                acc.quad(layer, "facade_atlas", Pa, Pb, Pb + (D - A), Pa + (D - A),
+                         uv=[[lu0, lv0], [lu1, lv0], [lu1, lv1], [lu0, lv1]])
+            continue
         rv = reveal or "reveal_" + ("hall" if mat.startswith("hall") else "plaster")
         # reveals (facing into the opening)
         acc.quad(layer, rv, A, B, B + back, A + back)          # sill (faces up)
@@ -1147,7 +1178,7 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
         return ops
     if typ == "shed":
         rural = variant.get("rural")
-        if is_main and L > 3.2 and hfloat(key, "gar") < 0.6:
+        if is_main and L > 3.2 and hfloat(key, "gar") < (0.85 if rural else 0.6):
             n = max(1, min(2 if rural else 4, int(L // 3.2)))
             for i in range(n):
                 um = (i + 0.5) * L / n
@@ -1158,9 +1189,9 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
             # ADR 0238 d. props-fix-s24: small barred windows (the `base` cell: 0.9 x 0.45 m window with a grille), one per 3.5-7.5 m of
             # wall, never beside a door, under the eave; walls shorter than 3.6 m stay blank
             ww, wh, ws = RURAL_SHED_WIN
-            nw = 1 if L < 7.5 else 2
+            nw = 1 if L < 5.5 else 2 if L < 9.5 else 3
             for i in range(nw):
-                if hfloat(key, f"rw{i}") > (0.78 if is_main else 0.62):
+                if hfloat(key, f"rw{i}") > (0.92 if is_main else 0.8):
                     continue
                 um = (i + 0.5) * L / nw + (hfloat(key, f"rwj{i}") - 0.5) * 0.8
                 z0 = zref + ws
@@ -1168,7 +1199,7 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
                     continue
                 if any(um + ww / 2 + 0.5 > o[0] and um - ww / 2 - 0.5 < o[1] for o in ops):
                     continue
-                ops.append((um - ww / 2, um + ww / 2, z0, z0 + wh, 0.08, "window", cells("base", hv("rw", i))))
+                ops.append((um - ww / 2, um + ww / 2, z0, z0 + wh, RURAL_SHED_REVEAL_M, "window", cells("base", hv("rw", i))))
         return ops
     sh = sh or {"office": 3.5, "block": 2.8, "house": 2.9}[typ]
     pitch = {"office": 3.0, "block": 3.0, "house": 2.7}[typ]    # house: 2 windows from 6.4 m, 3 from 9.1 m (ADR 0091)
@@ -1993,6 +2024,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                   if (st_mode and typ in ("house", "office") and not wooden and not front and not facades
                       and str(wall).startswith("plaster_"))
                   else None)
+        if shades is None and rural_shed and str(wall).startswith("plaster_"):
+            shades = rural_shed_shades(key)                          # darker, per-building tint (COLOR_0, 0 draws)
         u_acc = 0.0
         ro_blocks = (runoff_blocks(key, float(sum(lens)) + 1.0)
                      if b.get("runoff_shuffle") and typ == "hall" and not front else None)
