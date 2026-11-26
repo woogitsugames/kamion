@@ -1683,7 +1683,8 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                             sec.add_tree_impostor1(tx_e, tx_n, elev.z_at_eff(tx_e, tx_n), th, tname,
                                                    yaw=_hfloat(ck, "yaw") * math.pi, half=half)
             # ADR 0334 r4: overstorey trees above the canopy, 2-6 m behind the curtain front
-            tall_pool = tuple(t for t in species_pool if t != "tree_shrub_0") or ("tree_pine_0",)
+            # overstorey: narrow crowns only (a round linden crown above the canopy read as a floating blob)
+            tall_pool = tuple(t for t in species_pool if t.startswith(("tree_pine", "tree_spruce", "tree_birch"))) or ("tree_pine_0",)
             rkey = f"{P[0, 0]:.0f},{P[0, 1]:.0f}"
             s_cur = FAR_EMERGENT_STEP_M[0] * _hfloat(rkey, "em_s0")
             while s_cur < total_s - 6.0:

@@ -573,9 +573,11 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         float fpt = max(fp, 0.10);
         half rut = (half)(saturate((rhw - abs(blockEdge - rcen)) / fpt + 0.5) * saturate(2.0 * rhw / fp)) * live;
         rut *= 0.55h + 0.45h * smoothstep(0.25h, 0.6h, n1);                       // grass creeping into the rut
+        // r4: grass and one season's wheels - the ruts break up in 2-6 m patches (far away a broken, not a ruled line)
+        rut *= 0.40h + 0.60h * smoothstep(0.30h, 0.70h, KFNoise(local, origin, 2.3, 1071u) * 0.6h + n5 * 0.4h);
         half3 soil = half3(0.215h, 0.180h, 0.120h) * (0.80h + 0.35h * n5);
         soil = lerp(soil * 0.62h, soil, (half)saturate(abs(sr)));               // damp, packed bottom; dry crumbled rim
-        col = lerp(col, soil, rut * (0.50h + 0.40h * n17));
+        col = lerp(col, soil, rut * (0.40h + 0.30h * n17));
         half hump = (half)saturate(1.0 - blockEdge / max(rcen - rhw, 0.05)) * live;
         col = lerp(col, col * half3(0.82h, 0.90h, 0.78h), hump * 0.5h);
         half rk = (half)saturate(0.5 / fp - 0.5);                                // the dent is gone under ~1 px
