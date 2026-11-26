@@ -196,3 +196,6 @@ Właściciel (klik): (1) **Rondo Knyszyn — zostaw szerokie** (priorytet łatwo
 - **D97 (23.11):** głos nawigacji „Kamion GPS” (ADR 0328) zaakceptowany przez właściciela po odsłuchu próbek — zostaje.
 - **D98 (24.11):** most 12 t w Tykocinie — **zostaje z ostrzeżeniem** (opcja c, jak D91): ciężarówka jedzie przez most na Rynek, GPS/HUD ostrzegają. Objazd S8 + Jeżewo (10 kafli z ADR 0288) i cel przed mostem odrzucone na teraz. Analiza: artifacts/tykocin-route-s24/ANALIZA.md.
 - **D99 (24.11):** bramka płynności D69 (≤ 12 klatek > 40 ms) mierzona wg **ADR 0333**: przejazd bez ramki z sondą obciążenia (sysload-sampler), ważny przy ≤ 2 % zakłóconych sekund, liczony do „Cel osiągnięty”, bez startowania agentów w trakcie.
+
+## D100 — nasycenie nieba zostaje ×2 (26.11.2026)
+Przejście cyjan→błękit obok słońca to naturalny gradient wzmocniony nasyceniem nieba ×2 (ADR 0108), nie błąd. Właściciel: „Zostaw ×2”. Porównanie: artifacts/render-artifacts-s24/sbs/crop-sky-before-after.jpg.
