@@ -21,6 +21,15 @@ namespace Game.Editor.VisualQA
         // old strict behaviour (missing tile = error).
         public const string Auto = "auto", None = "none";
 
+        /// <summary>Region root of the opened QA scene (the active one). With neighbours loaded additively
+        /// FindAnyObjectByType may return a neighbour's root (horizon-ring-s24: -Gate3 cameras landed in a random tile).</summary>
+        public static Game.World.WorldRegionRoot StartRoot()
+        {
+            var active = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            var roots = UnityEngine.Object.FindObjectsByType<Game.World.WorldRegionRoot>(FindObjectsSortMode.None);
+            return roots.FirstOrDefault(r => r.gameObject.scene == active) ?? roots.FirstOrDefault();
+        }
+
         public static void Prepare(string qualityTier)
         {
             string requested = EditorTools.Arg("-qaNeighbours", Auto).Trim();
