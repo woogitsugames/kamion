@@ -66,6 +66,7 @@ Shader "Kamion/Vegetation"
         CBUFFER_END
         TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
         TEXTURE2D(_NormalOcc); SAMPLER(sampler_NormalOcc);
+        #include "KamionFarRing.hlsl"   // ADR 0354: far-field curtains (_HLOD_EDGE + renderer user value) clipped beyond loaded tiles
         // Global (WorldInstances, per tier): 1 = cross-fade the two nearest impostor views, 0 = nearest view.
         half _KamionImpostorBlend;
         // ADR 0080 r11 (WorldAtmosphere): x = 1: the ambient includes the sky light transmitted through the leaf,
@@ -158,7 +159,14 @@ Shader "Kamion/Vegetation"
             #pragma fragment frag
             #pragma multi_compile_instancing
             struct A { float4 positionOS : POSITION; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
-            struct V { float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half t : TEXCOORD1; UNITY_VERTEX_OUTPUT_STEREO };
+            struct V
+            {
+                float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half t : TEXCOORD1;
+            #if defined(_HLOD_EDGE)
+                float2 positionWSxz : TEXCOORD2; float3 farOwner : TEXCOORD3;   // ADR 0354 far-field ring clip
+            #endif
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
             V vert(A v)
             {
                 V o;
@@ -167,10 +175,17 @@ Shader "Kamion/Vegetation"
                 o.positionCS = VegClipPos(v.positionOS.xyz, v.uv);
                 o.uv = VegUV(v.uv);
                 o.t = VegBlend(v.uv);
+            #if defined(_HLOD_EDGE)
+                o.positionWSxz = TransformObjectToWorld(v.positionOS.xyz).xz;
+                o.farOwner = KamionFarRingOwner();
+            #endif
                 return o;
             }
             half4 frag(V i) : SV_Target
             {
+            #if defined(_HLOD_EDGE)
+                if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
+            #endif
                 half a = VegAlpha(i.uv, i.t);
                 // Alpha-to-coverage path still discards the fully uncovered texels (as URP Lit): the coverage mask alone
                 // is not applied on every target (A16 Vulkan: cards rendered as opaque quads without this clip).
@@ -267,6 +282,9 @@ Shader "Kamion/Vegetation"
             #elif defined(_HLOD_EDGE) && defined(_KAMION_VEG_FAST)
                 half3 ambL2 : TEXCOORD5;         // L2 SH band of the wall normal (even in n: valid for both faces)
             #endif
+            #if defined(_HLOD_EDGE)
+                float3 farOwner : TEXCOORD6;     // ADR 0354 far-field ring clip
+            #endif
                 UNITY_VERTEX_OUTPUT_STEREO
             };
             V vert(A v)
@@ -301,6 +319,7 @@ Shader "Kamion/Vegetation"
                 o.positionCS = TransformWorldToHClip(o.positionWS);
             #if defined(_HLOD_EDGE)
                 o.fogFactor = KamionFogTauExtra(o.positionWS, o.positionCS.w, max(v.uv1.x, 0.0));
+                o.farOwner = KamionFarRingOwner();
             #else
                 o.fogFactor = KamionFogTau(o.positionWS, o.positionCS.w);
             #endif
@@ -308,6 +327,9 @@ Shader "Kamion/Vegetation"
             }
             half4 frag(V i, bool front : SV_IsFrontFace) : SV_Target
             {
+            #if defined(_HLOD_EDGE)
+                if (KamionFarRingHidden(i.positionWS.xz, i.farOwner)) discard;   // ADR 0354
+            #endif
             #if defined(_IMPOSTOR)
                 half t = i.ambUpT.w;
                 half4 tex, no;
@@ -448,7 +470,13 @@ Shader "Kamion/Vegetation"
             #pragma fragment frag
             #pragma multi_compile_instancing
             struct A { float4 positionOS : POSITION; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
-            struct V { float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half t : TEXCOORD1; };
+            struct V
+            {
+                float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half t : TEXCOORD1;
+            #if defined(_HLOD_EDGE)
+                float2 positionWSxz : TEXCOORD2; float3 farOwner : TEXCOORD3;   // ADR 0354 far-field ring clip
+            #endif
+            };
             V vert(A v)
             {
                 UNITY_SETUP_INSTANCE_ID(v);
@@ -456,10 +484,17 @@ Shader "Kamion/Vegetation"
                 o.positionCS = VegClipPos(v.positionOS.xyz, v.uv);
                 o.uv = VegUV(v.uv);
                 o.t = VegBlend(v.uv);
+            #if defined(_HLOD_EDGE)
+                o.positionWSxz = TransformObjectToWorld(v.positionOS.xyz).xz;
+                o.farOwner = KamionFarRingOwner();
+            #endif
                 return o;
             }
             half4 frag(V i) : SV_Target
             {
+            #if defined(_HLOD_EDGE)
+                if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
+            #endif
                 clip(VegAlpha(i.uv, i.t) - _Cutoff);
                 return 0;
             }

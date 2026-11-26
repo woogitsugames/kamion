@@ -137,6 +137,8 @@ namespace Game.World.Streaming
             public GameObject edgeRoot; public GameObject[] closures; public TileSide[] closureSide; public float[] closureE, closureN; public bool[] closureOpen;
             public GameObject[] groups; public Vector4[] groupBounds;   // (minE, minN, maxE, maxN)
             public GameObject[] farSectors; public TileSide[] farSide;
+            public Vector4[] farLocal;            // far-sector mesh bounds, region-local (minE, minN, maxE, maxN) (ADR 0354)
+            public List<Material> farClones;      // Kamion/World Surface clones with the far-ring clip (ADR 0354), destroyed on unload
             public GameObject apronWhole; public GameObject[] apronPieces; public TileSide[] apronSide;
             public bool warnedApron;
             public bool acquiring, leased;   // pack lease taken through ITileSceneSource (ADR 0273)
@@ -158,6 +160,11 @@ namespace Game.World.Streaming
         int m_LastGc0, m_LastGc1, m_LastGc2;
         int m_RebaseTile = -1;
         ThreadPriority m_PrevPriority;
+        // ADR 0354 far-field ring: loaded tile rectangles (Unity world XZ) for the shader and the sector cull.
+        readonly Vector4[] m_FarRects = new Vector4[FarRing.MaxRects];
+        int m_FarRectCount; bool m_FarRectsWarned;
+        static readonly int k_FarRects = Shader.PropertyToID(FarRing.RectsProperty), k_FarRectCount = Shader.PropertyToID(FarRing.CountProperty);
+        static Shader s_WorldSurface;
 
         // ------------------------------------------------------------------ install
 
@@ -371,6 +378,7 @@ namespace Game.World.Streaming
             Policy.SetPinned(startTile);
             Place(t);
             SetRouteLinks(RouteLinks.LoadDefault(graph));
+            PushFarRects();
         }
 
         /// <summary>Route links to continue the autopilot with (Init loads the shipped ones; tests replace them after Init).</summary>
@@ -756,6 +764,7 @@ namespace Game.World.Streaming
                 t.activateStart = Time.realtimeSinceStartup;
                 if (t.cooker != null) t.cooker.BeginCook();
                 Policy.SetState(i, TileState.Activating);
+                PushFarRects();   // ADR 0354: its chunks start to show - neighbours' far field leaves its rectangle
                 return;
             }
         }
@@ -803,12 +812,14 @@ namespace Game.World.Streaming
                 if (t.root != null) Destroy(t.root.gameObject);
                 if (t.route != null) Destroy(t.route.gameObject);
                 Clear(t);
+                PushFarRects();   // ADR 0354: root gone - the neighbours' far field takes the spot back
                 Policy.SetState(i, TileState.Unloaded);
                 m_UnloadAssetsPending = true;
                 Debug.Log($"[STREAM] unload start region {Graph.Tiles[i].id} (root destroyed)");
                 return;
             }
             Clear(t);
+            PushFarRects();
             t.op = t.scene.IsValid() && t.scene.isLoaded ? SceneManager.UnloadSceneAsync(t.scene) : null;
             if (t.op == null) { Policy.SetState(i, TileState.Unloaded); ReleaseLease(t); }
             Debug.Log($"[STREAM] unload {t.sceneName}");
@@ -900,6 +911,7 @@ namespace Game.World.Streaming
                 }
             }
             for (int i = 0; i < m_Tiles.Length; i++) if (m_Tiles[i].root != null) Place(m_Tiles[i]);
+            PushFarRects();   // ADR 0354: the rectangles are in Unity world space
             Physics.SyncTransforms();
             m_SafePoses?.Offset(offset);   // the safety net's buffer (TryInstallFromLaunch); the net does not listen itself
             FloatingOrigin.Notify(offset);
@@ -948,7 +960,7 @@ namespace Game.World.Streaming
         {
             var closures = new List<GameObject>(); var cs = new List<TileSide>(); var ce = new List<float>(); var cn = new List<float>();
             var groups = new List<GameObject>(); var gb = new List<Vector4>();
-            var far = new List<GameObject>(); var fs = new List<TileSide>();
+            var far = new List<GameObject>(); var fs = new List<TileSide>(); var fl = new List<Vector4>();
             var pieces = new List<GameObject>(); var ps = new List<TileSide>();
             t.apronWhole = null;
             t.edgeRoot = edge != null ? edge.gameObject : null;
@@ -983,9 +995,11 @@ namespace Game.World.Streaming
                             var side = EdgeSides.FarSectorSide(f.name);
                             if (side != TileSide.None)
                             {
-                                far.Add(f.gameObject); fs.Add(side);
-                                // Apply before WorldEdge becomes visible, even with no Ready seams.
-                                f.gameObject.SetActive(EdgeSides.FarSectorMayShow(side, Graph.NeighborSides[t.index]));
+                                far.Add(f.gameObject); fs.Add(side); fl.Add(FarLocalBounds(f));
+                                MarkFarRing(t, f);
+                                // Apply before WorldEdge becomes visible, even with no Ready seams. ADR 0354: all sectors on,
+                                // the shader and PushFarRects trim them; legacy (-farRing off): ADR 0311 graph rule.
+                                f.gameObject.SetActive(FarRing.Enabled || EdgeSides.FarSectorMayShow(side, Graph.NeighborSides[t.index]));
                             }
                         }
                 }
@@ -993,7 +1007,7 @@ namespace Game.World.Streaming
             t.closures = closures.ToArray(); t.closureSide = cs.ToArray(); t.closureE = ce.ToArray(); t.closureN = cn.ToArray();
             t.closureOpen = new bool[t.closures.Length];
             t.groups = groups.ToArray(); t.groupBounds = gb.ToArray();
-            t.farSectors = far.ToArray(); t.farSide = fs.ToArray();
+            t.farSectors = far.ToArray(); t.farSide = fs.ToArray(); t.farLocal = fl.ToArray();
             t.apronPieces = pieces.ToArray(); t.apronSide = ps.ToArray();
             t.apronCorners = false;
             for (int i = 0; i < t.apronSide.Length; i++) t.apronCorners |= EdgeSides.CornerBit(t.apronSide[i]) != 0;
@@ -1014,6 +1028,13 @@ namespace Game.World.Streaming
             t.chunks = System.Array.Empty<GameObject>(); t.nextChunk = 0;
             t.closures = System.Array.Empty<GameObject>(); t.groups = System.Array.Empty<GameObject>();
             t.farSectors = System.Array.Empty<GameObject>(); t.apronPieces = System.Array.Empty<GameObject>(); t.apronWhole = null;
+            t.farLocal = System.Array.Empty<Vector4>();
+            if (t.farClones != null)
+            {
+                foreach (var m in t.farClones)
+                    if (m != null) { if (Application.isPlaying) Destroy(m); else DestroyImmediate(m); }
+                t.farClones.Clear();
+            }
             t.openSides = TileSide.None; t.readyCorners = 0; t.coveredSides = TileSide.None;
         }
 
@@ -1022,6 +1043,114 @@ namespace Game.World.Streaming
             RefreshEdges(tile, -1);
             var nb = Graph.Neighbors[tile];
             for (int k = 0; k < nb.Length; k++) RefreshEdges(nb[k], -1);
+            PushFarRects();
+        }
+
+        // ------------------------------------------------------------------ far-field ring (ADR 0354)
+
+        /// <summary>Region-local XZ bounds of a far-field sector mesh (its transform is the identity under the root).</summary>
+        static Vector4 FarLocalBounds(Transform sector)
+        {
+            if (!sector.TryGetComponent(out MeshFilter mf) || mf.sharedMesh == null) return new Vector4(1f, 1f, -1f, -1f);
+            var b = mf.sharedMesh.bounds;
+            return new Vector4(b.min.x, b.min.z, b.max.x, b.max.z);
+        }
+
+        /// <summary>Marks a far-field sector renderer for the shader clip: user value + a Kamion/World Surface clone with
+        /// <see cref="FarRing.ClipKeyword"/> (per tile, shared by its sectors). The skyline renderer is never marked.</summary>
+        static void MarkFarRing(Tile t, Transform sector)
+        {
+            if (!FarRing.Enabled || !sector.TryGetComponent(out MeshRenderer mr)) return;
+            mr.SetShaderUserValue(FarRing.UserValue);
+            if (s_WorldSurface == null) s_WorldSurface = Shader.Find("Kamion/World Surface");
+            var mats = mr.sharedMaterials;
+            bool changed = false;
+            for (int i = 0; i < mats.Length; i++)
+            {
+                var m = mats[i];
+                if (m == null || m.shader != s_WorldSurface || !m.IsKeywordEnabled("_FAR_FACADE")) continue;
+                if (t.farClones == null) t.farClones = new List<Material>(2);
+                string cloneName = m.name + " (far ring)";
+                Material clone = null;
+                foreach (var c in t.farClones) if (c != null && c.name == cloneName) { clone = c; break; }
+                if (clone == null)
+                {
+                    clone = new Material(m) { name = cloneName, hideFlags = HideFlags.DontSave };
+                    clone.EnableKeyword(FarRing.ClipKeyword);
+                    t.farClones.Add(clone);
+                }
+                mats[i] = clone; changed = true;
+            }
+            if (changed) mr.sharedMaterials = mats;
+        }
+
+        /// <summary>World XZ rectangle (minX, minZ, maxX, maxZ) of a placed tile.</summary>
+        static Vector4 WorldRect(Tile t)
+        {
+            var tr = t.root.transform;
+            Vector3 a = tr.TransformPoint(new Vector3(t.min.x, 0f, t.min.y)), b = tr.TransformPoint(new Vector3(t.max.x, 0f, t.max.y));
+            return new Vector4(Mathf.Min(a.x, b.x), Mathf.Min(a.z, b.z), Mathf.Max(a.x, b.x), Mathf.Max(a.z, b.z));
+        }
+
+        /// <summary>
+        /// Publishes the rectangles of the tiles whose geometry is shown (Activating / Ready) to the far-field shader and
+        /// trims whole sectors (ADR 0354). Called on every tile state change and origin rebase - never per frame.
+        /// Legacy mode (<see cref="FarRing.Enabled"/> false): count 0 (no clip) and the ADR 0311 / 0308 sector rules.
+        /// </summary>
+        void PushFarRects()
+        {
+            if (m_Tiles == null || Policy == null) return;
+            int n = 0;
+            for (int i = 0; i < m_Tiles.Length; i++)
+            {
+                var t = m_Tiles[i];
+                var st = Policy.StateOf(i);
+                if (t.root == null || (st != TileState.Ready && st != TileState.Activating)) continue;
+                if (n == FarRing.MaxRects)
+                {
+                    if (!m_FarRectsWarned) { m_FarRectsWarned = true; Debug.LogWarning($"[STREAM] far ring: more than {FarRing.MaxRects} loaded tiles - the rest overlap the far field"); }
+                    break;
+                }
+                m_FarRects[n++] = WorldRect(t);
+            }
+            for (int k = n; k < m_FarRects.Length; k++) m_FarRects[k] = Vector4.zero;
+            m_FarRectCount = FarRing.Enabled ? n : 0;
+            Shader.SetGlobalVectorArray(k_FarRects, m_FarRects);
+            Shader.SetGlobalFloat(k_FarRectCount, m_FarRectCount);
+            for (int i = 0; i < m_Tiles.Length; i++) ApplyFarSectors(i);
+        }
+
+        void ApplyFarSectors(int tile)
+        {
+            var t = m_Tiles[tile];
+            if (t.root == null || t.farSectors == null) return;
+            Vector3 c = t.root.transform.position;
+            for (int i = 0; i < t.farSectors.Length; i++)
+            {
+                if (t.farSectors[i] == null) continue;
+                bool on;
+                if (FarRing.Enabled)
+                {
+                    var l = t.farLocal[i];
+                    var box = new Vector4(l.x + c.x, l.y + c.z, l.z + c.x, l.w + c.z);
+                    on = FarRing.SectorVisible(box, c.x, c.z, m_FarRects, m_FarRectCount);
+                }
+                else on = EdgeSides.FarSectorMayShow(t.farSide[i], Graph.NeighborSides[tile])   // ADR 0311 (legacy)
+                        && EdgeSides.FarSectorVisible(t.farSide[i], t.coveredSides, t.readyCorners);   // ADR 0308
+                if (t.farSectors[i].activeSelf != on) t.farSectors[i].SetActive(on);
+            }
+        }
+
+        /// <summary>Diagnostics / tests: loaded rectangles published to the far-field shader.</summary>
+        public int FarRectCount => m_FarRectCount;
+        public Vector4 FarRect(int i) => m_FarRects[i];
+        /// <summary>Diagnostics / tests: is far-field sector <paramref name="name"/> (FarField_far_north ...) of a tile on?</summary>
+        public bool FarSectorActive(string regionId, string name)
+        {
+            int i = Graph != null ? Graph.IndexOf(regionId) : -1;
+            if (i < 0 || m_Tiles[i].farSectors == null) return false;
+            foreach (var f in m_Tiles[i].farSectors) if (f != null && f.name == name) return f.activeSelf;
+            return false;
         }
 
         /// <summary>Opens the sides of <paramref name="tile"/> whose neighbour is Ready (both must be Ready), closes the rest.
@@ -1064,10 +1193,7 @@ namespace Game.World.Streaming
                 bool hide = EdgeSides.GroupMayHide(b.x, b.y, b.z, b.w, t.closureE, t.closureN, t.closureOpen, t.closures.Length);
                 if (t.groups[i] != null) t.groups[i].SetActive(!hide);
             }
-            for (int i = 0; i < t.farSectors.Length; i++)
-                if (t.farSectors[i] != null)
-                    t.farSectors[i].SetActive(EdgeSides.FarSectorMayShow(t.farSide[i], Graph.NeighborSides[tile])   // Codex s24: neighbour sectors hidden from start
-                        && EdgeSides.FarSectorVisible(t.farSide[i], covered, corners));                          // ADR 0308: covered sides / corners
+            // Far-field sectors: PushFarRects / ApplyFarSectors after the seams (ADR 0354; the legacy rules live there too).
             if (t.apronPieces.Length > 0)
             {
                 if (t.apronWhole != null) t.apronWhole.SetActive(covered == TileSide.None && corners == 0);
@@ -1145,6 +1271,7 @@ namespace Game.World.Streaming
         void OnDestroy()
         {
             if (Active == this) Active = null;
+            Shader.SetGlobalFloat(k_FarRectCount, 0f);   // ADR 0354: no stale clip in the next scene
             RemoveOriginListener();
             // Scene change (menu, other region): the tile scenes go with it; give back every pack lease still held.
             if (m_Tiles != null) for (int i = 0; i < m_Tiles.Length; i++) ReleaseLease(m_Tiles[i]);

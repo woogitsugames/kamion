@@ -79,6 +79,7 @@ Shader "Kamion/World Surface"
         float _KamionGlassShadowBias;
         #include "KamionLampPools.hlsl"
         #include "VegetationGround.hlsl"
+        #include "KamionFarRing.hlsl"   // ADR 0354 far-field ring clip (_FAR_RING_CLIP clones made by WorldStreamer only)
 
         // ADR 0141 far skyline (_FAR_FACADE = far-field meshes only; their ordinary TEXCOORD_1.x is >= 0). The far-field
         // generator stores -(x + 16) on the tall ring objects ("clamp") and -(x + 4096) on its stand-ins for landmark
@@ -169,6 +170,7 @@ Shader "Kamion/World Surface"
             #pragma multi_compile_instancing
             #pragma shader_feature_local _FAR_FACADE
             #pragma shader_feature_local _FURNITURE_PLINTH
+            #pragma shader_feature_local _FAR_RING_CLIP
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
@@ -198,6 +200,9 @@ Shader "Kamion/World Surface"
             #if defined(_FAR_FACADE)
                 float2 uv1 : TEXCOORD4;
             #endif
+            #if defined(_FAR_RING_CLIP)
+                float3 farOwner : TEXCOORD5;   // ADR 0354
+            #endif
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -218,6 +223,9 @@ Shader "Kamion/World Surface"
                 o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
             #endif
                 o.masks = v.color;
+            #if defined(_FAR_RING_CLIP)
+                o.farOwner = KamionFarRingOwner();
+            #endif
             #if defined(_FAR_FACADE)
                 o.uv1 = v.uv1;
                 if (v.uv1.x <= -15.5)   // ADR 0141 skyline flag: restore the window-grid coordinate, keep it in view
@@ -240,6 +248,9 @@ Shader "Kamion/World Surface"
             half4 frag(Varyings i) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(i);
+            #if defined(_FAR_RING_CLIP)
+                if (KamionFarRingHidden(i.positionWS.xz, i.farOwner)) discard;   // ADR 0354
+            #endif
                 half3 n = normalize(i.normalWS);
                 float2 uvm = ProjectUV(i.positionWS, n);
 
@@ -445,6 +456,7 @@ Shader "Kamion/World Surface"
             #pragma fragment DepthFrag
             #pragma multi_compile_instancing
             #pragma shader_feature_local _FAR_FACADE
+            #pragma shader_feature_local _FAR_RING_CLIP
             struct A
             {
                 float4 positionOS : POSITION;
@@ -453,16 +465,33 @@ Shader "Kamion/World Surface"
             #endif
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
-            struct V { float4 positionCS : SV_POSITION; };
+            struct V
+            {
+                float4 positionCS : SV_POSITION;
+            #if defined(_FAR_RING_CLIP)
+                float2 positionWSxz : TEXCOORD0;
+                float3 farOwner : TEXCOORD1;   // ADR 0354: same clip as ForwardLit
+            #endif
+            };
             V DepthVert(A v)
             {
                 UNITY_SETUP_INSTANCE_ID(v); V o; o.positionCS = TransformObjectToHClip(v.positionOS.xyz);
+            #if defined(_FAR_RING_CLIP)
+                o.positionWSxz = TransformObjectToWorld(v.positionOS.xyz).xz;
+                o.farOwner = KamionFarRingOwner();
+            #endif
             #if defined(_FAR_FACADE)
                 o.positionCS = KamionFarSkyline(o.positionCS, v.uv1.x);   // ADR 0141: same depth as ForwardLit
             #endif
                 return o;
             }
-            half4 DepthFrag(V i) : SV_Target { return 0; }
+            half4 DepthFrag(V i) : SV_Target
+            {
+            #if defined(_FAR_RING_CLIP)
+                if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
+            #endif
+                return 0;
+            }
             ENDHLSL
         }
     }
