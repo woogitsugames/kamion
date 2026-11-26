@@ -495,6 +495,39 @@ Shader "Kamion/World PBR"
                     half lumA = dot(albedo, half3(0.2126, 0.7152, 0.0722));
                     half3 refill = _GrassFill.rgb * clamp(lumA / max(glum, 1e-3), 0.6, 1.4);
                     albedo = lerp(albedo, refill, saturate(soil * 1.6) * (1.0 - keep));
+                    // ---- ADR 0311 dopisek (bank-smear-s24): a ditch bank seen almost edge-on (tykocin route_s0160: 33 deg
+                    // cut slope, eye 2.5 m above the road) packs 3-5 m of planar UV into a few pixels across the bank and
+                    // keeps full detail along it - a footprint 15-100x longer than wide, beyond the sampler's anisotropy
+                    // (PC High 8x). The tile then shows as streaks running along the bank: an olive "smeared texture"
+                    // ribbon (diag render KAMION_QA_DIAG colorby:wpos / nrm, artifacts/bank-smear-s24). On sloped facets
+                    // at such a footprint the tile is read once more with an isotropic footprint (its major axis on both
+                    // axes: the tile mean of that area, no streaks) and only its luminance is kept on the calibrated
+                    // sward colour; normal / occlusion / smoothness detail fade to flat / the tile mean. Flat ground keeps
+                    // the existing distance look (facet-slope gate). +2 fetches inside the branch only. WORKING_VALUE
+                    // thresholds, judged on route_s0160.
+                    {
+                        float2 gx = ddx(uvb), gy = ddy(uvb);
+                        float major2 = max(dot(gx, gx), dot(gy, gy));
+                        float area = abs(gx.x * gy.y - gx.y * gy.x);
+                        half aniso = (half)(major2 / max(area, 1e-12));                   // footprint length / width
+                        // slope of the facet itself: the terrain band's vertex normals are central differences over 2 m
+                        // and read a 33 deg ditch side as ~15 deg next to the bottom of the V
+                        float3 gnf = cross(ddy(pw), ddx(pw));
+                        half gny = (half)(abs(gnf.y) * rsqrt(max(dot(gnf, gnf), 1e-20)));
+                        half graze = smoothstep(4.0h, 12.0h, aniso) * smoothstep(0.98h, 0.88h, gny);
+                        if (graze > 0.0h)
+                        {
+                            float2 gi = float2(sqrt(major2), 0.0);
+                            half3 iso = SAMPLE_TEXTURE2D_GRAD(_BaseMap, sampler_BaseMap, uvb, gi, gi.yx).rgb * _Tint.rgb * _AlbedoScale;
+                            half4 mIso = SAMPLE_TEXTURE2D_GRAD(_MaskMap, sampler_MaskMap, uvb, gi, gi.yx);
+                            half lumI = dot(iso, half3(0.2126, 0.7152, 0.0722));
+                            half3 sward = _GrassFill.rgb * clamp(lumI / max(glum, 1e-3), 0.75, 1.25);
+                            albedo = lerp(albedo, sward, graze);
+                            ao = lerp(ao, mIso.g, graze);
+                            smooth = lerp(smooth, mIso.a * _SmoothnessScale, graze);
+                            tn = normalize(lerp(tn, half3(0.0h, 0.0h, 1.0h), graze));
+                        }
+                    }
                     // ---- ADR 0080: a lawn is not one green. _KamionWet.z = strength (0 = the old look; set per preset).
                     // No extra fetch: the 64 m macro map and the tile's own luminance drive everything.
                     //  - clumps: lusher, darker, greener tufts (clover / fresh growth) in 0.5-4 m mottling;
