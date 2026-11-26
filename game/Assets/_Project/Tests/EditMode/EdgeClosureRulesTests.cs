@@ -101,9 +101,9 @@ namespace Game.Tests
                 EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.E, new[] { 1976.0 }, new[] { 1812.0 }, 400.0));
             CollectionAssert.AreEqual(new[] { "t02" },
                 EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.E, new[] { 1600.0 }, new[] { 1500.0 }, 400.0));
-            CollectionAssert.AreEqual(new[] { "t01" },
+            CollectionAssert.AreEqual(new[] { "t02", "t01" },
                 EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.None, new[] { 1976.0 }, new[] { 1812.0 }, 400.0),
-                "a camera near a corner loads it even without closures on the start tile");
+                "a camera near a corner loads both touching tiles (72 m / 247 m) even without closures on the start tile");
         }
 
         [TestCase(TileState.Unloaded, false)]
