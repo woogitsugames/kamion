@@ -25,7 +25,10 @@ Krytyk fali 11: czerwono-biały szlaban w osi drogi na końcu widoku w prawie ka
 ## Decyzja
 1. `WorldNeighbourQa`: domyślnie `-qaNeighbours auto`. Ładowani są sąsiedzi krawędziowi (N/E/S/W, nie narożni) po tych
    stronach, na których kafel zamyka co najmniej jedną drogę (strona z `Closure.exitSide`, fallback jak w streamerze:
-   `EdgeSides.ClosureSide`). Wybór w czystej funkcji `EdgeClosureRules.QaNeighbourIds` (test EditMode). Sąsiad
+   `EdgeSides.ClosureSide`), **oraz** każdy sąsiad z grafu (także narożny), którego prostokąt leży w promieniu ładowania
+   streamingu (`StreamingSettings.BaseLoadRadiusM` = 400 m) od którejkolwiek kamery kontrolnej — gra miałaby go wtedy
+   w pamięci (przykład: `truck-34` przy spawnie 247 m od narożnego dw671-tykocin-01; bez niego szlaban szwu 02/01
+   zostawał na końcu widoku). Wybór w czystej funkcji `EdgeClosureRules.QaNeighbourIds` (2 testy EditMode). Sąsiad
    niezaimportowany w danym tierze → ostrzeżenie i szew zostaje zamknięty (jak w buildzie bez tego kafla); brak sąsiada
    w grafie (granica świata) → zamknięty. Ładowanie jak dotąd: scena `_Tile` addytywnie, `AdoptVisualQaTile` (gotowanie
    kolizji, `RefreshEdgesAround`) — ta sama logika szwów co w grze.
@@ -36,11 +39,28 @@ Krytyk fali 11: czerwono-biały szlaban w osi drogi na końcu widoku w prawie ka
 ## Konsekwencje
 - Kamery osiowe pokazują to, co kierowca: drogę ciągnącą się w następny kafel. Kamery `edge-*` na szwach wewnętrznych
   pokazują otwarty szew (stan gry); zamknięcia ogląda się przebiegiem `-Neighbours none`.
-- Koszt QA: do 4 dodatkowych scen `_Tile` w edytorze (High ~0,5–0,8 GB pamięci świata każda, ESTIMATED z tile_graph)
+- Koszt QA: do 8 dodatkowych scen `_Tile` (w praktyce 2–3; dw671-tykocin-03: 3) w edytorze (High ~0,5–0,8 GB pamięci świata każda, ESTIMATED z tile_graph)
   i dłuższy przebieg (otwarcie + gotowanie kolizji). Wymaga zaimportowanych sąsiadów w tym samym tierze; bez nich wynik
   jak dotąd (z ostrzeżeniem w logu).
 - Statystyki `stats.txt` (draws/tris) obejmują teraz także geometrię sąsiadów widoczną w kadrze — porównując z falami
   sprzed tej zmiany, użyć `-Neighbours none`.
+
+## Dowody
+`artifacts/world-edge-s24/` (main): `none/` (sam kafel) vs `auto/` (02, 04, 01), High clear 1920x1080, Win64, ta sama
+sesja i kamery; `cmp-*.jpg` (góra none, dół auto), `zoom-route-s2035.png`, logi visual-qa. route-s2035 i truck-34:
+szlaban zniknął, droga ciągnie się w sąsiedni kafel. Szew 03/04 (route-s2035, edge-south): bez szczeliny, schodka,
+przerwy oznakowania i różnicy koloru (visual-critic, przebieg r1: szew 9/10; FAIL r1 za truck-34 → naprawione regułą
+promienia kamer w r2, `auto-r1/` = stan r1).
+
+## Ujawnione przy okazji (stan gry, nie skutek tej zmiany)
+- **Horyzont za załadowanymi kaflami jest pusty** (`auto/edge-north.png`, `edge-east.png`, daleki plan `truck-34`):
+  `EdgeSides.FarSectorMayShow` chowa sektor dalekiego planu kafla w każdym kierunku, w którym graf ma sąsiada, także
+  narożnego (03: E, S, NE, SW → wszystkie cztery sektory). W grze daje to szarą mgłę nad polami tam, gdzie dalszy kafel nie
+  jest wczytany. Zrzuty pojedynczego kafla pokazywały tu fałszywie pełną ścianę lasu i słupy WN. Do osobnego zadania:
+  daleki plan jako pierścień za ostatnim wczytanym kaflem (ADR 0085 / 0308), nie per kafel bieżący.
+- `stats.txt` „instanced (props+trees)” czyta statyczne `WorldInstances.Last` — przy kilku kaflach to licznik ostatnio
+  renderowanego komponentu (często sąsiada), więc w `auto` wygląda na zero. Telemetria, nie render; do poprawy razem z
+  sumowaniem po wszystkich `WorldInstances`.
 
 ## Otwarte
 - W grze szlaban szwu jest widoczny w kadrze, dopóki sąsiad nie jest Ready: na PC dalej niż ~320 m przed szlabanem

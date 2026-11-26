@@ -30,6 +30,14 @@ Krok 3: visual-qa domyślnie dociąga sąsiadów, w których stronę patrzą kam
 - Render A/B (worktree, świeże Library Win64; sceny dw671-tykocin-02/03/04 skopiowane z win-build `_Generated`, poza gitem):
   `pwsh -NoProfile -File artifacts/world-edge-s24/vqa-ab.ps1` (w tle) → `artifacts/world-edge-s24/{none,auto}/`.
 
+## Krok 3 — wynik
+- r1 (`auto-r1/`, sąsiedzi 02, 04): route-s2035 bez szlabanu, szew czysty; visual-critic FAIL — truck-34 nadal szlaban
+  (szew 02/01 przy narożniku) + pusty horyzont.
+- r2 (`auto/`, + reguła promienia ładowania 400 m od kamer → także narożny 01): truck-34 i route-s2035 bez szlabanu.
+- Pusty horyzont = stan gry (`FarSectorMayShow` chowa sektory w stronę każdego sąsiada z grafu, także narożnego) —
+  ujawniony, nie naprawiany tu (ADR 0353 „Ujawnione”). Statystyka instanced w auto = `WorldInstances.Last` (telemetria).
+- EditMode r1: 1439 pass, 4 fail = StartClearance na skopiowanych scenach Low (środowisko); `_Generated` usunięte,
+  powtórka → `artifacts/world-edge-s24/editmode2.out`.
+
 ## Następny krok
-Po renderze: porównać none vs auto (route-s2035 itd.), skopiować do main `artifacts/world-edge-s24/`, testy EditMode
-`pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` (w tle), visual-critic.
+Sprawdzić `editmode2.out` (oczekiwane 0 fail), commit, raport. Nie scalać (lider).
