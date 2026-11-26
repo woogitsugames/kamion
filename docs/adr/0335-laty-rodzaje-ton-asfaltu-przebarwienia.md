@@ -141,3 +141,18 @@ Uwaga P2 nr 3 („koleiny w dali ciemniejsze niż przy kamerze”) — diagnoza 
 5. **Wynik „po”** (to samo podłoże, `rutratio.py`, średnie ściemnienie, stosunek po/przed): ≤ 25 m 0,97–1,01 (bez zmiany przy kamerze); 35–65 m 0,86–0,98; 85–140 m 0,71–0,79 (clear), 0,73–0,76 (overcast). Szczyt p95 z 8,2 → 6,0 % (115–125 m). Zasięg ≤ 25 m nietknięty — kontrast przy kamerze bez zmiany, w dali spada łagodnie do ok. 0,6–0,75 (perspektywa powietrzna).
 6. **Ograniczenia:** pomiar w dali opiera się na 3–6 wierszach pikseli (szum ±30 %); odległości z geometrii wiersza przy h = 2,0 m (dopasowane, nie zmierzone); render „po” ocenił agent, NIE visual-critic (zmiana subtelna, arkusze `artifacts/rut-far-s24/sheets/`); nie sprawdzano Białegostoku C ani telefonu. Po rebase na main import `dw671-tykocin-01` wymagał osobnej poprawki `WorldPbrMaterials.FurnitureSignFronts` (materiały `sign_post*` brane za tablice, ADR 0337).
 7. **Testy:** EditMode Win64 (`AsphaltScopeTests|RoadPaintLaneFieldTests|RoadWearUvContractTests|WorldPbrTintTests`) 32/32 PASS.
+
+## Dopisek render-artifacts-s24 (2026-11-26): pionowe ciemne smugi zbiegające się do horyzontu (krytyk fala 11, P1 #6)
+**Przyczyna (dowód renderem, knyszyn-w High clear).** Ablacja: `_ROADWEAR` wyłączony (`KAMION_QA_DIAG=kwoff:_ROADWEAR`) →
+smugi znikają; cienie wyłączone (`rq_shadow=0`) + przewody wyłączone (`-Wires off`) → smugi bez zmian (to nie cień przewodów
+ani kaskad); maska `decal_tyre` → 0 rendererów w kadrze. Smugi = pasy kół (`wp`, 0,26 / 0,74 pasa) i pas kapania (0,5) z
+`_ROADWEAR`: route-s1846 trzy jednakowo ciemne, ciągłe pasy na pas ruchu, kontrast pasa (najciemniejszy − p10 względem
+renderu bez `_ROADWEAR`) 9–16 pkt %, widoczne do horyzontu, gdzie perspektywa zbiega je w „szyny”.
+
+**Poprawka (WorldPBR, WORKING_VALUE).** `rwDistAtten = 1 − 0,85·smoothstep(15, 90, d)` (było 0,60 / 20–120 m); profil pasa
+koła smoothstep zamiast trójkąta (bez ciemnej linii w środku), szerokość ≥ 0,13 pasa; boczne błądzenie pasów ±5 % szerokości
+pasa z tego samego szumu 38 m co `trackFade` (bez nowego wywołania szumu); mnożnik ściemnienia 1,35 → 0,75; pas kapania
+1,9 → 1,2. Wynik: kontrast pasów 3,5–5 pkt % (wiersze 640–1000 route-s1846), smugi do horyzontu znikają
+(`artifacts/render-artifacts-s24/sbs/crop-road-s1846-before-after.jpg`, `route-s0426-before-vs-after.jpg`).
+Koszt: te same odczyty tekstur, +~4 ALU na piksel jezdni (smoothstep, przesunięcie); draw calle bez zmian; GPU **UNMEASURED**
+(edytor nie jest dowodem — pomiar `pc-metrics` w buildzie).

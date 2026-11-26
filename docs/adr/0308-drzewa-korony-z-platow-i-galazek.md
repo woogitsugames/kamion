@@ -140,3 +140,18 @@ sektor bez sąsiada (np. `far_east` dk65-11 ze 104 ha lasu leżącego na półno
 - Jesion i kasztanowiec ogrodowy używają modeli lipy i klonu.
 - Odległości LOD drzew (20 / 60 m × lodBias) są z czasów telefonu; na PC warto je wydłużyć (zakres rendering-perf).
 - Low: bez zmian w treści poza nowymi siatkami LOD1 / impostorami biblioteki; nie mierzone na telefonie (D73).
+
+## Dopisek render-artifacts-s24 (2026-11-26): ciemne romby w koronach (krytyk fala 11, P0 #3)
+**Przyczyna (dowód).** Drzewa przy ulicy w kaflach z działkami, za małe na instancję biblioteki (r < `LIB_MIN_R_M` 1,6 m;
+w kadrze `knyszyn-w/tykocka-dw671-out` 30 z 46 drzew pasa ulicy, np. jesion/klon r 1,25 m), na High są pełnym drzewem zestawu
+(`garden_tree(lite=False)`). Ten wariant miał wewnątrz korony ciemny 4-boczny „rdzeń” `PLT._core` (occ 0,26, sides=4) — przez
+dziury kart z alfą widać go z ulicy jako ciemny romb o prostych krawędziach (ten sam błąd, który ADR 0170 usunął z wariantu
+lite). Dowód offline (`preview_kit.render`, rdzeń pomalowany na magentę): `artifacts/render-artifacts-s24/preview/kit_full_before_core_magenta.jpg`
+— magenta dokładnie w miejscu rombów. Nie LOD/impostor/crossfade (instancje biblioteki w kadrze nie mają rombów).
+
+**Poprawka.** Wariant pełny bez `_core`; karty korony ciemnieją ku osi (`occ_mid` 0,58–0,68, wachlarz 4 trójkątów — jak lite+core,
+ADR 0170). −6 trójkątów na drzewo (40 → 34 klon/lipa), ta sama liczba draw calli. Low bez zmian (`tris_low` 15 428 = 15 428).
+knyszyn-w po regeneracji: drzewa ogrodowe High 19 010 → 18 302 tris; okna budżetu High −1 000…−3 000 tris.
+Test: `tests/gis/test_horizon_0170.py::test_full_garden_tree_has_no_dark_core_body`.
+Render przed|po (High, pogodnie): `artifacts/render-artifacts-s24/sbs/crop-trees-before-after.jpg` — ostre romby zniknęły, został
+miękki cień środka korony bez krawędzi. Inne kafle z działkami dostaną zmianę przy najbliższej regeneracji (lider).
