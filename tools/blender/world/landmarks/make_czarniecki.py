@@ -394,12 +394,12 @@ def build_head():
         ellipsoid(P, head_p((sx * 0.039, 0.098, 0.008)), (0.017, 0.013, 0.011), HEAD_R, seg=10, rings=6)  # eye
         ellipsoid(P, head_p((sx * 0.104, 0.0, -0.012)), (0.012, 0.028, 0.038), HEAD_R, seg=10, rings=6)   # ear
         tube(P, [head_p((sx * 0.006, 0.128, -0.072)), head_p((sx * 0.05, 0.116, -0.088)), head_p((sx * 0.082, 0.09, -0.125))], [0.019, 0.017, 0.009], sides=8, smooth=3)
-        ellipsoid(P, head_p((sx * 0.036, 0.086, -0.335)), (0.042, 0.04, 0.10), HEAD_R @ rot_y(sx * 8 * D2R))   # forked beard tip
+        ellipsoid(P, head_p((sx * 0.036, 0.150, -0.325)), (0.042, 0.04, 0.10), HEAD_R @ rot_y(sx * 8 * D2R) @ rot_x(-16 * D2R))   # forked beard tip
         ellipsoid(P, head_p((sx * 0.085, 0.035, -0.09)), (0.03, 0.06, 0.075), HEAD_R)                   # side whiskers
     ellipsoid(P, head_p((0, -0.048, -0.012)), (0.117, 0.108, 0.108), HEAD_R, seg=24, rings=14)          # hair, back and sides
-    ellipsoid(P, head_p((0, 0.078, -0.20)), (0.086, 0.068, 0.165), HEAD_R, seg=20, rings=14)            # beard
-    for c, r in (((0, -0.048, -0.012), (0.117, 0.108, 0.108)), ((0, 0.078, -0.20), (0.086, 0.068, 0.165)),
-                 ((0.036, 0.086, -0.335), (0.042, 0.04, 0.10)), ((-0.036, 0.086, -0.335), (0.042, 0.04, 0.10)),
+    ellipsoid(P, head_p((0, 0.108, -0.20)), (0.086, 0.068, 0.165), HEAD_R @ rot_x(-16 * D2R), seg=20, rings=14)            # beard
+    for c, r in (((0, -0.048, -0.012), (0.117, 0.108, 0.108)), ((0, 0.108, -0.20), (0.095, 0.085, 0.165)),
+                 ((0.036, 0.150, -0.325), (0.046, 0.05, 0.10)), ((-0.036, 0.150, -0.325), (0.046, 0.05, 0.10)),
                  ((0.085, 0.035, -0.09), (0.03, 0.06, 0.075)), ((-0.085, 0.035, -0.09), (0.03, 0.06, 0.075))):
         STRAND_PTS.append((np.asarray(c, float), np.asarray(r, float)))
     ob = P.obj("head_src")
@@ -477,7 +477,7 @@ def detail_figure(ob):
             v = Vector(p * 9.0)
             ph = 2.6 * noise.noise(v)
             # strands run down the beard, combed sideways on the hair
-            disp[i] += strand[i] * 0.0055 * math.sin(2 * math.pi * (loc[i, 0] + 0.35 * loc[i, 1]) / 0.030 + ph + 6.0 * loc[i, 2])
+            disp[i] += strand[i] * 0.0075 * math.sin(2 * math.pi * (loc[i, 0] + 0.35 * loc[i, 1]) / 0.040 + ph + 6.0 * loc[i, 2])
             continue
         _, idx, dist = kd.find(Vector(p))
         if dist < 0.105:
