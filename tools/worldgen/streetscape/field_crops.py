@@ -34,7 +34,8 @@ MAIZE_CARD_L = 2 * VA.MAIZE_CELL_M
 MAIZE_H = (2.05, 2.40)           # WORKING_VALUE: fodder maize in mid-August, Podlasie
 MAIZE_SINK_M = 0.10
 MAIZE_ROAD_RANGE_M = 220.0
-MAIZE_SEAM_CLEAR_M = 1.6         # off the strip seam (baulk half-width <= 1.3 m + the thinning crop)
+MAIZE_SEAM_CLEAR_M = 1.6         # off the strip seam (baulk half-width <= 1.3 m + the thinning crop) - r4b: fallback only
+MAIZE_BAULK_GAP_M = 0.25         # r4b: cards this far off the shader's baulk edge (the outer plants lean over it)
 MAIZE_BLOCK_CLEAR_M = 2.8        # off the block border (grass strip / field track)
 MAIZE_ROAD_CLEAR_M = 5.0
 MAIZE_CROSS_SHARE = 0.34         # row cards with a cross card towards the next card row
@@ -50,7 +51,7 @@ MAIZE_OCC = (0.50, 1.0)          # foot (deep in the crop) .. top
 # (MAIZE_EDGE_H x the stand), thinned towards the stop (MAIZE_EDGE_KEEP), jittered and turned off the row line,
 # leaning out; the outermost show the atlas edge cell (single plants, hanging leaves) and a few plants stand in front
 # of the line (strays, MAIZE_STRAY_*). No cross cards there. All WORKING_VALUE (render review on the control cameras).
-MAIZE_EDGE_M = 5.0               # edge zone: ~2 card rows (~7 crop rows) - through a thinned outer row the next one shows
+MAIZE_EDGE_M = 4.0               # edge zone: ~2 card rows (~7 crop rows) - through a thinned outer row the next one shows
 MAIZE_EDGE_H = (0.70, 1.0)       # height factor at the stop .. MAIZE_EDGE_M inside
 MAIZE_EDGE_KEEP = (0.60, 1.0)    # share of edge cards kept at the stop .. inside
 MAIZE_EDGE_JITTER_M = 0.22       # off the row line, either way
@@ -160,13 +161,30 @@ def _baulk_sides(L):
     return own | own_lo, own | own_hi
 
 
-def _edge_dist(g, Q, Lq):
+def baulk_clear(Lq, Q, origin):
+    """r4b: (lower, upper) seam clearance, m: the shader's baulk half-width at Q (KamionFieldMosaic: bw per strip edge
+    from hash 947, swelling with the 5 m noise; the 1.7 m wiggle +-0.3 m is left out) + MAIZE_BAULK_GAP_M. r4a used
+    MAIZE_SEAM_CLEAR_M everywhere - a 1-1.6 m strip of maize painted on the ground without cards beside every baulk
+    (dw671-tykocin-03 edge-north: the corridor stayed). origin None: MAIZE_SEAM_CLEAR_M."""
+    if origin is None:
+        return np.full(len(Q), MAIZE_SEAM_CLEAR_M), np.full(len(Q), MAIZE_SEAM_CLEAR_M)
+    bid = Lq["bid"].astype(np.float64)
+    n5 = VG._kf_noise(Q[:, 0] + origin[0], Q[:, 1] + origin[1], 5.0, 951)
+    out = []
+    for ke in (Lq["k"], Lq["k"] + 1.0):
+        bw = VG.FIELD_BAULK_W[0] + VG.FIELD_BAULK_W[1] * VG._u01(VG._h32(bid, ke, 947))
+        out.append(np.maximum(0.5 * bw * (0.55 + 0.9 * n5), 0.12) + MAIZE_BAULK_GAP_M)
+    return out[0], out[1]
+
+
+def _edge_dist(g, Q, Lq, origin=None):
     """r4: metres from region-local points Q (layout Lq) to the nearest STOP of the card stand: a seam with a baulk
-    (minus the seam clearance), the block border, the road clearance, the end of the card range, the end of the arable
-    ground. Negative = no card here. A seam without a baulk is not a stop (the crop runs on into the next strip)."""
+    (minus its clearance, baulk_clear), the block border, the road clearance, the end of the card range, the end of
+    the arable ground. Negative = no card here. A seam without a baulk is not a stop (the crop runs on)."""
     lo, hi = _baulk_sides(Lq)
     a, w = Lq["across"], Lq["w"]
-    d = np.minimum(np.where(lo, a - MAIZE_SEAM_CLEAR_M, np.inf), np.where(hi, w - a - MAIZE_SEAM_CLEAR_M, np.inf))
+    c_lo, c_hi = baulk_clear(Lq, Q, origin)
+    d = np.minimum(np.where(lo, a - c_lo, np.inf), np.where(hi, w - a - c_hi, np.inf))
     d = np.minimum(d, Lq["block_edge"] - MAIZE_BLOCK_CLEAR_M)
     i, j, ok = g.ij(Q)
     dr = g.dist[j, i]
@@ -222,7 +240,7 @@ def _maize(g, origin, rep):
             ok &= ~g.blocked[j, i]
         Lq = VG.field_layout(Q[:, 0] + ox, Q[:, 1] + oy)
         ok &= Lq["fid"] == (fid0 if fids is None else fids)
-        de = _edge_dist(g, Q, Lq)
+        de = _edge_dist(g, Q, Lq, origin)
         return ok & (de > 0.0), de
 
     zz = np.where((s_idx + m_idx) % 2 == 0, MAIZE_ZIGZAG_M, -MAIZE_ZIGZAG_M)

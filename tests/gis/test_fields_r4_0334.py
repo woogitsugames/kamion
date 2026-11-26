@@ -49,18 +49,16 @@ def test_maize_stand_runs_over_seams_without_a_baulk_and_stops_at_baulks():
     L = VG.field_layout(mid[:, 0] + o[0], mid[:, 1] + o[1])
     lo, hi = FC._baulk_sides(L)
     a, w = L["across"], L["w"]
-    near_lo, near_hi = a < 1.0, (w - a) < 1.0
-    on_plain_seam = (near_lo & ~lo) | (near_hi & ~hi)
-    on_baulk_seam = (near_lo & lo) | (near_hi & hi)
     rows = parts["maize"].V.reshape(-1, 4, 3)[:, :2, :2].mean(1)
     Lr = VG.field_layout(rows[:, 0] + o[0], rows[:, 1] + o[1])
     lo_r, hi_r = FC._baulk_sides(Lr)
     plain_r = ((Lr["across"] < 1.0) & ~lo_r) | (((Lr["w"] - Lr["across"]) < 1.0) & ~hi_r)
     assert plain_r.sum() > 20                                        # r3 left a 3.2 m corridor on every seam
-    # at a baulk the stand keeps off it (strays may stand on its edge, never in the middle of the baulk)
-    assert on_plain_seam.sum() > on_baulk_seam.sum()
-    e_b = np.minimum(np.where(lo, a, np.inf), np.where(hi, w - a, np.inf))
-    assert (e_b[: len(parts["maize"].V) // 4] > FC.MAIZE_SEAM_CLEAR_M - 0.3).all()
+    c_lo, c_hi = FC.baulk_clear(L, mid, o)
+    e_b = np.minimum(np.where(lo, a - c_lo, np.inf), np.where(hi, w - a - c_hi, np.inf))
+    nr = len(parts["maize"].V) // 4
+    assert (e_b[:nr] > -0.3).all() and (e_b[:nr] < 0.6).mean() < 0.2   # off the baulk, but up to it (no corridor)
+    assert (c_lo < FC.MAIZE_SEAM_CLEAR_M).mean() > 0.4
 
 
 def test_maize_margin_is_ragged_not_a_wall_of_cards():
@@ -91,7 +89,7 @@ def test_maize_margin_is_ragged_not_a_wall_of_cards():
     for k in (0, 1):
         Q = C[:, k]
         Lq = VG.field_layout(Q[:, 0] + o[0], Q[:, 1] + o[1])
-        assert (FC._edge_dist(g, Q, Lq) > FC.MAIZE_EDGE_M - 1e-6).all()
+        assert (FC._edge_dist(g, Q, Lq, o) > FC.MAIZE_EDGE_M - 1e-6).all()
 
 
 def test_maize_cards_stay_in_the_triangle_budget():
