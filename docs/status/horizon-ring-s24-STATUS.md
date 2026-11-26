@@ -11,12 +11,24 @@ lider kopiuje do main). Środowisko Unity prywatne: Library + sceny `_Generated`
 - Daleki plan jest skompresowany do pasa ≤ ~660 m za granicą kafla (ADR 0085), więc pokazany w stronę wczytanego
   sąsiada leżałby na jego geometrii; budynki w zarejestrowanych kaflach są już wycięte w generatorze (ADR 0311), lasy i WN nie.
 
-## Krok 2 — wdrożenie (kod napisany, przed kompilacją)
+## Krok 2 — wdrożenie (zrobione, kompiluje się)
 - Decyzja (c): przycinanie na piksel w shaderze + własność „najbliższy wczytany prostokąt”. `FarRing.cs` (bliźniak C#),
-  `KamionFarRing.hlsl`, `WorldSurface` (`_FAR_RING_CLIP`, klon materiału per kafel) i `Vegetation` (`_HLOD_EDGE`),
-  znacznik = renderer user value; `WorldStreamer.PushFarRects` przy każdej zmianie stanu/rebase; całe sektory
-  wyłączane konserwatywnie (`FarRing.SectorVisible`). Przełącznik A/B: `-farRing off` / `KAMION_FAR_RING=off`.
-- Testy: `Tests/EditMode/FarRingTests.cs`.
+  `KamionFarRing.hlsl`, `WorldSurface` (`_FAR_RING_CLIP`, klon materiału per kafel, wariant w
+  `Resources/WorldStreaming/FarRingClipVariants.mat`) i `Vegetation` (`_HLOD_EDGE`), znacznik = renderer user value;
+  `WorldStreamer.PushFarRects` przy każdej zmianie stanu/rebase; całe sektory wyłączane konserwatywnie
+  (`FarRing.SectorVisible`). Przełącznik A/B: `-farRing off` / `KAMION_FAR_RING=off`.
+- Poprawka narzędzia QA: `WorldNeighbourQa.StartRoot` (kamery `-Gate3`/`-qaTruckPose` względem kafla startowego).
+
+## Krok 3 — dowody (zrobione)
+- `vqa-ab.ps1`: 03 (7 kamer) i knyszyn-w (64 kamery), High clear, `-Neighbours auto`, off|on → `*/off`, `*/on`, `cmp-*.jpg`.
+  03 edge-north i knyszyn-w edge-west: las zamiast mgły; reszta kamer bez zmian (≤ 0,9 % pikseli).
+- `vqa-diag.ps1` + `ring-cams-03.json`: kamery diagnostyczne (narożnik 03/01, styk 03/04, widoki z 180 m i 1 km),
+  High `diag-03-r2/`, Low `diag-03-low/`. (`diag-03/` = pierwszy przebieg z kamerami w losowym kaflu — błąd QA, poprawiony.)
+- Koszt (03 High, stats.txt): +6…+14 draw, +65…+130 tys. trójkątów w kadrze; w budżecie docs/06 §6.
+- ADR 0354 (Proposed).
+
+## Krok 4 — testy (w toku)
+`pwsh -NoProfile -File artifacts/horizon-ring-s24/run-tests.ps1` (w tle) → `artifacts/horizon-ring-s24/tests.log`.
 
 ## Następny krok
-`pwsh -NoProfile -File artifacts/horizon-ring-s24/vqa-ab.ps1` (w tle) — kompilacja + render przed (off) | po (on).
+Po testach: wynik do ADR/STATUS, commit; visual-critic (lider — subagent nie tworzy subagentów); nie scalać.
