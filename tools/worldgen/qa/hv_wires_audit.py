@@ -101,7 +101,7 @@ def far_field(region_id: str, recompute: bool) -> dict | None:
     fc = qa["feature_counts"]
     plan = qa.get("power_plan")
     out = {"pylons_drawn": fc.get("pylons", 0),
-           "unwired": plan["unwired_power_pylons"] + plan.get("masts", 0) if plan else fc.get("pylons", 0),
+           "unwired": plan["unwired_power_pylons"] if plan else fc.get("pylons", 0),
            "plan": plan}
     if recompute:
         from streetscape import far_field as FF
