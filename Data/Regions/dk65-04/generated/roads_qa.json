@@ -3142,7 +3142,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 366991,
+  "footprint_nodes": 367007,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3358,9 +3358,22 @@
    "in_chain_ramps": 0,
    "seam_sides": 0
   },
-  "seam_tapers": [],
+  "seam_tapers": [
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w249298671:2559220682-2559220668",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "dk65-05",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   }
+  ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 820,
+   "kerb_tris": 819,
    "parts": 65,
    "side_tris": 23
   },
@@ -3378,7 +3391,7 @@
   },
   "verge_strips": {
    "chunks": 50,
-   "tris": 41612
+   "tris": 41608
   },
   "walled_ramps": []
  }
