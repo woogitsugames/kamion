@@ -230,3 +230,27 @@ w jednej fakturze (`tykocin/route-s1441` x ~1100–1650); (3) cokoły bez rozpry
 Kod: `roofs.weather_col`, `buildings_mesh.roof_age_class / roof_weather`, `plots.block_variant / _block_pilaster`,
 `plot_kit._concrete`, `materials.ROOF_WEATHER / SPLASH_BAND`, `WorldPBR.shader` (`_ROOF_WEATHER`, `_SplashBand`),
 `WorldPbrMaterials.cs`; test `tests/gis/test_weathering_s24.py`; kamery `tools/worldgen/qa/weathering_cameras.py`.
+
+**Wyniki (zmierzone, edytor Win64, High PC 1920 × 1080, clear + overcast; `stats.txt`, szacunek przed SRP batching):**
+- `dw671-tykocin-03` (6 kamer trasy): draw calle **+0** na każdej kamerze (600/519/400/263/173/58), trójkąty klatki +0,0…+0,3 %
+  (daszki 3D i pilastry ogrodzeń).
+- `tykocin`: zestaw materiałów chunków bez zmian (diff `world_manifest.json` — tylko liczby trójkątów); DC +2…+16 na kamerach
+  pochodzą z nieaktualnego punktu odniesienia (kafel w derived main zbudowany w fali 11; od tego czasu zmieniły się
+  `markings`/`furniture` w kodzie main), trójkąty −1,0…+0,2 % (max 1 565 131 < 2 mln High). Ramka `mesh_budget`
+  w `streetscape_qa.json`: maks. +0,6 %.
+- Generator: `roof_weathering` tykocin 386 budynków (stary 123 / PRL 127 / nowy 136); `block_fence_variants` 124 działki
+  (łupany 39, łupany z daszkiem 37, gładki 25, gładki z daszkiem 23).
+- Bit-identyczność: `tests/gis/test_typology_0238.py` (Dojlidy, industrial-C) zielony; `test_weathering_s24.py` sprawdza, że bez
+  opt-in dachy nie mają `COLOR_0`, a `fence_run(bvar=None)` daje identyczną siatkę.
+- Ocena okiem (crop 1:1): na cementówce / dachówce widać zacieki, mech w zakładach przy okapie i rozproszone dachówki-odmieńce
+  (pierwsza wersja z udziałem 6–26 % czytała się jak patchwork — zmniejszona do 3–13 % w grupach); blacha grafitowa zmienia się
+  minimalnie (ciemna baza, mało mchu — zgodnie z rzeczywistością). Ogrodzenia bloczkowe: bloczki w półwiązaniu, zacieki spod
+  czapy, kolory i daszki. Pas przy gruncie: drobiny gleby nieregularne, ale pas na `plinth_dark` z ulicy nadal słaby.
+- Dowody: `artifacts/weathering-s24/{before,after}/<kafel>/High-<clear|overcast>/`, `sbs/` (przed | po, 32 pary),
+  `diag/` (colorby:vcol — `COLOR_0` na dachach). Kamera `wx_zlota_plinth` przeniesiona po renderze PRZED (jej para przed|po
+  nie pokazuje tego samego kadru).
+
+**Otwarte / UNVERIFIED:** siły i udziały `WORKING_VALUE` (bez inwentaryzacji); czas klatki w buildzie Windows
+(`pc-metrics.ps1`, ALU `_ROOF_WEATHER` ~6 szumów wartości na piksel dachu) — po scaleniu; `splash_band` i wiersz `concrete`
+są globalne (każdy kafel po przebudowie / reimporcie), opt-in dotyczy tylko `COLOR_0` dachów i wariantów ogrodzeń;
+lukarny i daszki nad drzwiami bez `COLOR_0` (czyste); ocena `visual-critic` po stronie lidera.

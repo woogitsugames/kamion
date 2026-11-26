@@ -1311,13 +1311,15 @@ Shader "Kamion/World PBR"
                         float2 tid = float2(col, row);
                         half h1 = Hash12(tid + seed * 1.13);
                         half h2 = Hash12(tid * 1.7 + seed + 31.0);
-                        half share = 0.06 + 0.20 * age;
+                        // soaked tiles come in loose groups (a 2-3 m cell lifts / drops the share), replaced ones alone
+                        half grp = ValueNoise12(tid * float2(_RoofTile.x, _RoofTile.y) * 0.45 + seed * 0.31);
+                        half share = (0.03 + 0.10 * age) * (0.4 + 1.2 * grp);
                         half odd = step(1.0 - share, h1);
-                        half3 f = h2 < 0.5 ? half3(0.74, 0.72, 0.70) : (h2 < 0.8 ? half3(1.20, 1.13, 1.05) : half3(0.90, 0.96, 0.88));
+                        half3 f = h2 < 0.55 ? half3(0.84, 0.82, 0.80) : (h2 < 0.8 ? half3(1.12, 1.08, 1.03) : half3(0.94, 0.97, 0.92));
                         half jit = 1.0 + (h2 - 0.5) * 0.10 * (0.3 + 0.7 * age);
                         half3 tf = lerp(half3(1.0, 1.0, 1.0), f, odd) * jit;
                         half tfade = 1.0 - smoothstep(_RoofTile.x * 0.25, _RoofTile.x * 0.8, footprint);
-                        half3 tmean = (1.0 - share * 0.117).xxx;           // mean of tf over many tiles (no tone pop with distance)
+                        half3 tmean = (1.0 - share * 0.06).xxx;           // mean of tf over many tiles (no tone pop with distance)
                         albedo *= lerp(half3(1.0, 1.0, 1.0), lerp(tmean, tf, tfade), _RoofTile.w);
                     }
                     // moss: eave zone (wider on older roofs) and along the ridge, a few tufts anywhere; in the laps
@@ -1329,7 +1331,7 @@ Shader "Kamion/World PBR"
                     half nz = n1 * 0.6 + n2 * 0.4 + 0.18 * lap;
                     half th = 1.02 - 0.70 * mossK * zone;
                     half m = smoothstep(th, th + 0.14, nz) * step(0.001, mossK);
-                    albedo = lerp(albedo, half3(0.060, 0.075, 0.028) * (0.75 + 0.5 * n2), m * 0.85);
+                    albedo = lerp(albedo, half3(0.048, 0.058, 0.030) * (0.75 + 0.5 * n2), m * 0.8);
                     smooth *= 1.0 - 0.6 * m;
                 #if defined(_KAMION_WORLD_DETAIL)
                     half lv = ValueNoise12(ru * 23.0 + seed * 1.9);
@@ -1360,12 +1362,16 @@ Shader "Kamion/World PBR"
                     #if defined(_KAMION_WORLD_DETAIL)
                         float2 cs = float2(i.uv.x, vz) * float2(48.0, 52.0);
                         half dens = saturate(1.0 - vz / (top * 1.7));
-                        sp = step(1.0 - 0.5 * dens * dens, Hash12(floor(cs))) * (1.0 - smoothstep(0.16, 0.42, length(frac(cs) - 0.5)));
+                        float2 ci = floor(cs);
+                        half hp = Hash12(ci), hq = Hash12(ci + 17.3), hr = Hash12(ci + 41.7);
+                        float2 dc = frac(cs) - (0.25 + 0.5 * float2(hq, hr));             // speck off the cell centre
+                        half rad = 0.10 + 0.22 * hr;                                        // and of its own size
+                        sp = step(1.0 - 0.38 * dens * dens, hp) * (1.0 - smoothstep(rad * 0.6, rad, length(dc)));
                         sp *= _SplashBand.z * (1.0 - smoothstep(0.006, 0.02, footprint));
                     #endif
                         half contact = 1.0 - smoothstep(0.0, 0.07, vz);
                         half kb = saturate(band) * _SplashBand.y;
-                        albedo = lerp(albedo, albedo * half3(0.60, 0.56, 0.50), kb);
+                        albedo = lerp(albedo, albedo * half3(0.50, 0.46, 0.40), kb);
                         albedo *= 1.0 - (0.45 * sp + 0.30 * contact) * _SplashBand.y;
                         smooth *= 1.0 - 0.4 * kb;
                     }
