@@ -40,4 +40,4 @@ Krok 3: visual-qa domyślnie dociąga sąsiadów, w których stronę patrzą kam
   powtórka → `artifacts/world-edge-s24/editmode2.out`.
 
 ## Następny krok
-Sprawdzić `editmode2.out` (oczekiwane 0 fail), commit, raport. Nie scalać (lider).
+EditMode r3 (`editmode3.out`): 1438 pass, 0 fail, 153 skip. Zadanie gotowe do przeglądu lidera; nie scalać. Kolejne: daleki plan jako pierścień za wczytanymi kaflami (osobne zadanie), suma WorldInstances w stats.txt.
