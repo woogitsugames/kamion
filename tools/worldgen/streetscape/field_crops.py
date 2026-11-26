@@ -56,9 +56,9 @@ MAIZE_EDGE_KEEP = (0.60, 1.0)    # share of edge cards kept at the stop .. insid
 MAIZE_EDGE_JITTER_M = 0.22       # off the row line, either way
 MAIZE_EDGE_TURN = 0.33           # rad, either way
 MAIZE_EDGE_CELL_D_M = 1.4        # closer than this to the stop: mostly the edge cell (single plants)
-MAIZE_EDGE_CROSS = 0.30          # edge cards with a short card across (a plant group, not a face)
+MAIZE_EDGE_CROSS = 0.22          # edge cards with a short card across (a plant group, not a face)
 MAIZE_STRAY_D_M = 1.7            # edge cards this close to the stop put plants in front of the line
-MAIZE_STRAY_N = (0.55, 0.20)     # P(>= 1 stray), P(2 strays) per such card
+MAIZE_STRAY_N = (0.45, 0.12)     # P(>= 1 stray), P(2 strays) per such card
 MAIZE_STRAY_OUT_M = (0.3, 1.4)   # metres in front of the line
 MAIZE_STRAY_W_M = VA.MAIZE_CELL_M / VA.MAIZE_EDGE_PLANTS
 MAIZE_STRAY_H = (1.45, 2.30)
@@ -382,7 +382,7 @@ def _maize_edge(g, A, B, hk, dirv, fid0, valid, put):
             nrmS = np.column_stack([ov * 0.3, np.ones(m)])
             occS = np.full(m, MAIZE_OCC[0] + 0.22)
             n_stray += put(S - dd, S + dd, hS, leanS, uvs, nrmS, occS, np.full(m, MAIZE_OCC[1]), "maize_edge")
-            cr = ws[4] < 0.5                                        # crossed: seen from every side
+            cr = ws[4] < 0.35                                       # crossed: seen from every side
             if cr.any():
                 dd2 = np.column_stack([-dd[cr, 1], dd[cr, 0]])
                 put(S[cr] - dd2, S[cr] + dd2, hS[cr], leanS[cr], uvs[cr][:, [1, 0, 2, 3]], nrmS[cr], occS[cr],
