@@ -19,3 +19,4 @@
 - DO ZROBIENIA (lider): far_field.py --region <id> dla wszystkich 54 kafli (~3,5 min/kafel, ekstrakcja GIS schematu 14);
   build_world dla 26 kafli z liniami WN/wiezami (lista w raporcie); ocena visual-critic (subagent nie tworzy subagentow).
 - NASTEPNY KROK: brak - czeka na review/scalenie lidera. Nie scalone.
+- 2026-11-26 12:35: fala 12 wystartowala (lancuchy A-E, final, autocommit) na main 9dc336136.
