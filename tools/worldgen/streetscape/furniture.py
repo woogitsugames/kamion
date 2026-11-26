@@ -1191,7 +1191,9 @@ class Lin:
             self.ribbon(collision, P, zb, zt, 0.0, src, both=False, collision=None)
             self.buf.parts[-1].layer = "collision"
 
-    def posts(self, mat, P, spacing, w, d, h, zb=None, src="", ground_feet=False, end_post_min=None):
+    def posts(self, mat, P, spacing, w, d, h, zb=None, src="", ground_feet=False, end_post_min=None, top=True):
+        """Box posts (4 sides + top; top=False: open top - the panel fence's 60 x 40 mm profile at 2.08 m is seen
+        edge-on from the cab and costs 2 of its 10 triangles, budget wave 11)."""
         line = LineString(P)
         L = line.length
         ss = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))]) if spacing is None else np.arange(0, L + 1e-6, spacing)
@@ -1209,7 +1211,7 @@ class Lin:
             c = [q[0], q[1], (ground - 0.3 + z + h) / 2]
             hx, hy, hz = t * w / 2, nn * d / 2, (z + h - ground + 0.3) / 2
             P8 = [np.array(c) + np.append(sx * hx + sy * hy, sz * hz) for sz in (-1, 1) for sy in (-1, 1) for sx in (-1, 1)]
-            faces = [(4, 5, 7, 6), (0, 1, 5, 4), (2, 6, 7, 3), (0, 4, 6, 2), (1, 3, 7, 5)]
+            faces = [(4, 5, 7, 6), (0, 1, 5, 4), (2, 6, 7, 3), (0, 4, 6, 2), (1, 3, 7, 5)][0 if top else 1:]
             base = len(Vs)
             Vs += P8
             for f in faces:
@@ -1365,8 +1367,12 @@ def panel_fence(lin, line, col, key, flexible=False):
             top = np.full(2, level)
             detail = PanelPlinthDetail(lin, (_h(f"{key}:concrete:{i}:{j}") % 256)/255)
             Lin(detail, lin.zsurf).slab("concrete_plinth", board, low, top, .05, key)
-            # Closed prefab ends make the small joints readable without a new material.
+            # Closed prefab ends make the small joints readable without a new material. Budget wave 11 (C stretch_04):
+            # a board end at a bay station sits 8 mm inside the steel post (+-30 mm along the run), so its cap is
+            # hidden behind the post - only the step joints between boards inside a bay keep their caps.
             for end in (0,1):
+                if (end == 0 and j == 0) or (end == 1 and j == len(levels) - 1):
+                    continue
                 q = board[end]
                 v = np.array([[*(q-lateral*.025),low[end]], [*(q+lateral*.025),low[end]],
                               [*(q+lateral*.025),level], [*(q-lateral*.025),level]])
@@ -1423,7 +1429,7 @@ def panel_fence(lin, line, col, key, flexible=False):
                          [(k,count+k+1,count+k) for k in range(count-1)])
         lin.buf.add("furniture",f"{col}_mesh",V,UV,T,src=key)
         lin.buf.add("furniture",f"{col}_mesh",V,UV,T[:,[0,2,1]],src=key)
-    lin.posts(col,P,None,.06,.04,S.FENCE_H+.05,zb=Z,src=key,ground_feet=True)
+    lin.posts(col,P,None,.06,.04,S.FENCE_H+.05,zb=Z,src=key,ground_feet=True,top=False)
 
 
 FENCE_COLOURS = ("fence_green", "fence_anthracite", "fence_galv")
