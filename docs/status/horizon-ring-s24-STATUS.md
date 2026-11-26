@@ -31,6 +31,9 @@ lider kopiuje do main). Środowisko Unity prywatne: Library + sceny `_Generated`
 - r1: 20 fail — include `KamionFarRing.hlsl` względny (testy kopiują WorldSurface do `_Generated`) + zbyt ostrożny cull.
   Poprawione. r2 (`run-tests2.ps1`): **1447 pass, 0 fail, 153 skip** (`editmode-20261127-002815.xml`).
 
+- Render kontrolny po poprawkach (`dw671-tykocin-03/on-final/`: edge-north, truck-34, edge-east) = identyczny z `on/` (0 % pikseli).
+- Uwaga środowiskowa: testy tworzą nowe `Assets/_Generated`, więc parkowanie przez Move-Item zagnieżdża katalog — naprawione ręcznie.
+
 ## Następny krok
 Lider: visual-critic na `artifacts/horizon-ring-s24/**/cmp-*.jpg` (subagent nie tworzy subagentów), przegląd shaderów
 przez rendering-perf, A/B w buildzie #10 wg ADR 0354 „Weryfikacja”. Nie scalać bez przeglądu.
