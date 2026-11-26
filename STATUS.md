@@ -19,9 +19,12 @@
 - [krok 5] r4d (run miedz przy kukurydzy do 220 m), koleiny lamane placami (tramline + droga polna), drzewa nad okapem tylko
   waskie korony. pytest 18 plikow: 236 passed, 1 failed = test_far_field::test_generated_far_field_qa_and_manifests (dane regionu C
   w derived main vs QA, niezalezne od r4). Szkic ADR: artifacts/fields4-s24/adr_r4.md.
-- W toku: `pwsh artifacts/fields4-s24/chain4.ps1` (far_field obu kafli + import + render `vqa/final/`).
-- NASTEPNY KROK: `uv run --no-project --with pillow python artifacts/fields4-s24/compare.py final -v`, wpisac liczby do adr_r4.md,
-  dopisac do docs/adr/0334, commit, raport.
+- [krok 6] Final: far_field obu kafli (nadokapowe tylko sosna/swierk/brzoza), import + render `vqa/final/` (High clear+overcast,
+  std + extra). Draw calle: dw671-03 trasa +0..+1, pola -4..+2; knyszyn-w +7..+9 na 3 kamerach trasy = derived main inny commit
+  (obiekty bez zmian, QA HEAD: tylko -1 chunk banks). ADR 0334 dopisek r4 wpisany. Dowody: main `artifacts/fields4-s24/`
+  (`vqa/{before,after,after2,after3,final}`, `sbs/`, `stats_before_final.txt`, `work/` = skrypty i diagnostyka).
+- Otwarte: gestosc lanu (karty co 2,25 m: lica wzdluz rzedow, labirynt z gory), panele z przerwami na brzegu, laka w dali.
+- NASTEPNY KROK: review + visual-critic (lider); scalenie NIE przez agenta; po scaleniu przebudowa 42 kafli wiejskich + far_field.
 
 # STATUS bank-smear-s24 (smuga na skarpie tykocin route_s0160, ADR 0311 dopisek)
 
