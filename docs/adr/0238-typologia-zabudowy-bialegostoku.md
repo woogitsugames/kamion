@@ -197,3 +197,36 @@ Dla klasy `shed` o powierzchni ≥ 18 m² (z wyjątkiem stacji transformatorowyc
 5. Kod: `buildings_mesh.RURAL_SHED_*`, `rural_shed_pick`, `variant["rural"]` w `facade_openings`, gałąź `rural_shed` w
    `build()` (dach, ściana, `wooden`); testy `tests/gis/test_rural_outbuildings_props_fix_s24.py`.
 **Wartości `WORKING_VALUE`** (udziały materiałów, wymiary okna) — bez inwentaryzacji zagród; do oceny wzrokowej `visual-critic`.
+
+## Dopisek weathering-s24 (26.11, agent `agent-a05410a22b79fbf0c`): zużycie dachów, ogrodzeń bloczkowych i styku ściana-grunt (krytyka s24 fala 11)
+**Objaw** (`artifacts/critic-s24-wave11/CRITIC.md`, ocena „Zużycie” 5/10): (1) dachy czyste jak z katalogu — bez zacieków,
+mchu przy okapie, przebarwionych dachówek (pokrycie nie miało kanału koloru wierzchołków); (2) szare ogrodzenia bloczkowe
+w jednej fakturze (`tykocin/route-s1441` x ~1100–1650); (3) cokoły bez rozprysków, brak ciemniejszego pasa na styku ściana-grunt.
+
+**Decyzja (+0 draw calli, +0 materiałów, +0 tekstur):**
+1. **Dachy — opt-in regionu `facade_rules: roof_weathering: true`** (Białystok bez wpisu = bit-identyczny; test 0238 zielony).
+   `roofs.build(weather=…)` zapisuje `COLOR_0` pokrycia (LOD0 i LOD1): r = wiek, g = mech × ekspozycja (stok północny 1,0,
+   południowy `WEATHER_MOSS_SOUTH` 0,3), b = metry pod kalenicą / 6, a = 0,5 + 0,5 × ziarno budynku. Wiek: `roof_age_class`
+   — reguła działek (`plots.age_class`: powierzchnia + kondygnacje, 1/5 dryfu) i samo pokrycie (stara dachówka, gont,
+   cementówka = stary; blacha = młodsza, chyba że na budynku gospodarczym). `ROOF_WEATHER_AGE` stary 0,70–1,0 / PRL 0,38–0,70 /
+   nowy 0,06–0,28; mech 1,0 / 0,55 / 0,12 (`WORKING_VALUE`). Shader `Kamion/World PBR` `_ROOF_WEATHER` (manifest `roof_weather`):
+   zacieki wzdłuż spadku (szum 2 oktaw rozciągnięty 10–30× w dół, silniejsze ku okapowi), wilgotny pas nad rynną, pojedyncze
+   dachówki ciemne / jaśniejsze (wymienione) / poszarzałe na **siatce setu** (S-dachówka 0,20 × 0,35 m, karpiówka 0,183 × 0,15
+   z półprzesunięciem, zakładkowa 0,233 × 0,35 z półprzesunięciem — udział 4–20 % wg wieku, wygaszane do średniej z odległością),
+   mech w zakładach przy okapie i wzdłuż kalenicy, porosty (Medium+, `_KAMION_WORLD_DETAIL`). Tylko ALU, bez próbkowania.
+   Wierzchołki bez `COLOR_0` (inne regiony, daszki nad drzwiami) dostają a = 0 → dokładny no-op.
+2. **Ogrodzenia bloczkowe — opt-in `facade_rules: block_fence_variants: true`** (`stage.plan_plots` → `rp["fence_variants"]`):
+   działka z ogrodzeniem `concrete` / `wall` losuje deterministycznie wariant `plots.BLOCK_VARIANTS`: bloczek łupany / gładki
+   (wiersz `wall` atlasu), bez lub z **daszkiem 3D** (6 cm, nawis 3,5 cm) i **pilastrami** 0,30 m nad stopniami paneli, w jednym
+   z 5 kolorów `BLOCK_TINTS` (szary, ciepły szary, piaskowy, grafitowy, brązowawy; tint `COLOR_0`). Wiersz `concrete` atlasu
+   `plot_kit` przepisany (globalnie, ten sam układ UV): bloczki BAY_M/6 × 0,167 m w półwiązaniu z własnym tonem (±9 %),
+   fakturą łupaną i ciemniejszymi krawędziami, zacieki spod czapy i słupków 0,6–1,3 m, brudna stopka (rozpryski 0,15–0,3 m), mech.
+3. **Styk ściana-grunt (materiały, globalnie po przebudowie regionu):** manifest `splash_band` = [wysokość, siła, rozpryski]
+   na `plinth_*`, `fieldstone_plinth`, `hall_plinth`, `brick_red`, `panel_concrete`, `plaster_*`, `wood_planks*`, `log_wall_*`
+   → w `_SPLASH` ciemniejszy, brązowszy pas 0,25–0,32 m z postrzępioną górą (szum wzdłuż ściany), drobiny gleby gęstsze
+   ku ziemi (Medium+) i wilgotna linia w ostatnich 7 cm. Wysokość = UV0.v (na cokołach metry nad terenem przy ścianie).
+   `fieldstone_plinth`, drewno i bale dostały też `splash_h` (włącza `_SPLASH`).
+
+Kod: `roofs.weather_col`, `buildings_mesh.roof_age_class / roof_weather`, `plots.block_variant / _block_pilaster`,
+`plot_kit._concrete`, `materials.ROOF_WEATHER / SPLASH_BAND`, `WorldPBR.shader` (`_ROOF_WEATHER`, `_SplashBand`),
+`WorldPbrMaterials.cs`; test `tests/gis/test_weathering_s24.py`; kamery `tools/worldgen/qa/weathering_cameras.py`.
