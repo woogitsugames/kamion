@@ -398,7 +398,8 @@ namespace Game.Editor.VisualQA
                     hud.RefreshNow();
                 }
 
-                ApplyDiagGlobals();   // render-artifacts-s24: KAMION_QA_DIAG shader-global probes (no effect when unset)
+                s_DiagLegendPath = Path.Combine(outDir, qa.id + "_colorby.txt");
+                ApplyDiagGlobals(cam);   // render-artifacts-s24: KAMION_QA_DIAG shader-global probes (no effect when unset)
                 var prevTarget = cam.targetTexture;
                 cam.enabled = true;
                 var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
@@ -548,15 +549,81 @@ namespace Game.Editor.VisualQA
         {
             for (int i = s_DiagPresetRestore.Count - 1; i >= 0; i--) s_DiagPresetRestore[i].f.SetValue(s_DiagPresetRestore[i].p, s_DiagPresetRestore[i].v);
             s_DiagPresetRestore.Clear();
+            foreach (var (r, m) in s_DiagMatRestore) if (r != null) r.sharedMaterials = m;
+            s_DiagMatRestore.Clear();
+            foreach (var m in s_DiagFlat) UnityEngine.Object.DestroyImmediate(m);
+            s_DiagFlat.Clear();
+            if (s_DiagCam != null) { s_DiagCam.renderPostProcessing = s_DiagCamPost; s_DiagCam = null; }
+            if (s_DiagFogSaved) { RenderSettings.fog = s_DiagFog; s_DiagFogSaved = false; }
         }
 
-        static void ApplyDiagGlobals()
+        // bank-smear-s24: "colorby:renderer|material|slot" draws every renderer slot unlit in a flat colour keyed by the
+        // renderer name, the material name or both (post-processing and fog off, so the PNG colour is the key colour within
+        // a few LSB); the legend (key -> 8-bit sRGB) goes to <outDir>/<camera>_colorby.txt for a pixel -> mesh lookup.
+        // GPU-instanced props/trees (WorldInstances) keep their own materials. Measurement only, restored after the render.
+        static readonly System.Collections.Generic.List<(Renderer r, Material[] m)> s_DiagMatRestore = new System.Collections.Generic.List<(Renderer, Material[])>();
+        static readonly System.Collections.Generic.List<Material> s_DiagFlat = new System.Collections.Generic.List<Material>();
+        static UniversalAdditionalCameraData s_DiagCam;
+        static bool s_DiagCamPost, s_DiagFog, s_DiagFogSaved;
+        internal static string s_DiagLegendPath;
+
+        static Color32 DiagKeyColor(int i)
+        {
+            // Well-separated colours: hue by golden ratio, three value/saturation bands.
+            float h = (i * 0.618034f) % 1f;
+            float s = (i % 3) == 0 ? 0.95f : (i % 3) == 1 ? 0.6f : 0.85f;
+            float v = ((i / 3) % 2) == 0 ? 0.95f : 0.6f;
+            return Color.HSVToRGB(h, s, v);
+        }
+
+        static void ApplyDiagColorBy(Camera cam, string mode)
+        {
+            var sh = Shader.Find("Universal Render Pipeline/Unlit");
+            var keys = new System.Collections.Generic.Dictionary<string, Material>();
+            var legend = new System.Text.StringBuilder();
+            foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+            {
+                if (!r.enabled || !r.gameObject.activeInHierarchy) continue;
+                var mats = r.sharedMaterials;
+                var copy = (Material[])mats.Clone();
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    string mn = mats[i] != null ? mats[i].name : "null";
+                    string key = mode == "material" ? mn : mode == "slot" ? r.name + " | " + mn + " #" + i : r.name;
+                    if (!keys.TryGetValue(key, out var flat))
+                    {
+                        var c = DiagKeyColor(keys.Count);
+                        flat = new Material(sh) { hideFlags = HideFlags.DontSave, name = "diag " + key };
+                        flat.SetColor("_BaseColor", (Color)c);
+                        keys[key] = flat;
+                        s_DiagFlat.Add(flat);
+                        legend.AppendLine($"{c.r},{c.g},{c.b}\t{key}");
+                    }
+                    mats[i] = flat;
+                }
+                s_DiagMatRestore.Add((r, copy));
+                r.sharedMaterials = mats;
+            }
+            s_DiagCam = cam.GetUniversalAdditionalCameraData();
+            s_DiagCamPost = s_DiagCam.renderPostProcessing;
+            s_DiagCam.renderPostProcessing = false;
+            s_DiagFog = RenderSettings.fog; s_DiagFogSaved = true; RenderSettings.fog = false;
+            if (!string.IsNullOrEmpty(s_DiagLegendPath)) File.WriteAllText(s_DiagLegendPath, legend.ToString());
+            Debug.Log($"[QA] diag colorby {mode}: {keys.Count} keys on {s_DiagMatRestore.Count} renderers -> {s_DiagLegendPath}");
+        }
+
+        static void ApplyDiagGlobals(Camera cam = null)
         {
             string spec = System.Environment.GetEnvironmentVariable("KAMION_QA_DIAG");
             if (string.IsNullOrEmpty(spec)) return;
             var inv = System.Globalization.CultureInfo.InvariantCulture;
             foreach (var kv in spec.Split(';'))
             {
+                if (kv.StartsWith("colorby:"))
+                {
+                    if (cam != null) ApplyDiagColorBy(cam, kv.Substring(8).Trim());
+                    continue;
+                }
                 if (kv.StartsWith("preset."))
                 {
                     // "preset.clearSkySaturation=1": a float field of the active LightingPreset (EnvironmentLighting pushes
