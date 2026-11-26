@@ -15,7 +15,7 @@ NOTE = "weathering-s24 (ADR 0238/0348 addendum): roof weathering, block fences, 
 # id, (E, N) region-local, heading deg, eye m, pitch deg, fov deg
 CAMS = {
     "tykocin": [("wx_zlota_fence", (305.2, -115.3), 320.0, 1.6, -4.0, 55.0),
-                ("wx_zlota_plinth", (295.0, -117.0), 345.0, 1.6, -6.0, 50.0),
+                ("wx_zlota_plinth", (311.0, -121.0), 240.0, 1.6, -5.0, 50.0),
                 ("wx_roofs_low", (318.0, -123.0), 300.0, 9.0, -8.0, 55.0)],
 }
 
