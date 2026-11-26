@@ -79,3 +79,21 @@ Teren przy far clip nadal blenduje do średniej (`_KamionHazeColor`) — na ten 
 kadrach knyszyn-w; otwarte do sprawdzenia w buildzie na Szosie Knyszyńskiej (kafel bialystok-knyszynska, `UNVERIFIED`).
 Dowody: `artifacts/glass-sky-s24/` (`cmp_away_3.jpg`: przed / po / welon 150 m, `cloudtex/repair_preview.jpg`,
 `crop_t02_sky_after2.jpg`).
+
+## Dopisek 2 render-artifacts-s24 (2026-11-26): jasne okrągłe plamy w chmurach i „szew” nieba (krytyk fala 11, pkt 10)
+**Plamy — przyczyna:** duch flary obiektywu (lens ghost) w HDRI Poly Haven: jasny krąg ~3,5° w cumulusie 18° na wschód i 23°
+poniżej fotografowanego słońca (mapa: lat 23,8° / lon 51,8°; rdzeń G 0,70 przy chmurze 0,45, krycie R 0,93 przy 0,4–0,6).
+`WorldAtmosphere` obraca mapę tak, że słońce zdjęcia leży na słońcu gry, więc plama zawsze wisi w tym samym miejscu względem
+słońca: dla tykocka-dw671-out (kurs 230°, słońce 200°/42°) przewidziane x 762 / y ~140, widoczne x 740 / y 165.
+**Poprawka danych (0 kosztu GPU):** `tools/rendering/clear_clouds_ghost_repair.py` — w 2,3° (+0,8° przejścia) wypełnienie Laplace
+R i G z pierścienia + drobna faktura chmury z sąsiedniego fragmentu tego samego cumulusa; poza tym bajt w bajt bez zmian.
+Rdzeń G 0,705 → 0,481 (pierścień 0,451). Hash w `ClearCloudsSource.json` (`texture_sha256`; poprzedni w
+`texture_sha256_glass_sky`). Test EditMode `ClearCloudsSunTests.LensGhost_IsNotABrightBlotInTheCloud`.
+Render: `artifacts/render-artifacts-s24/sbs/crop-sky-before-after.jpg`.
+
+**„Szew” cyjan|błękit (x~950) — pomiar, bez zmiany shadera.** Profil wierszy nieba na prawo od chmury: wszystkie kanały mają
+stały spadek (R −1,2, G −0,8…−1,2, B −0,2 sRGB / 12 px) — brak skoku wartości i brak załamania pochodnej (Mach). Ablacje:
+`clearSkySaturation` 1 (zamiast 2) i display-cap wyłączony — przejście zostaje w tym samym miejscu (z saturacją 1 o połowę
+słabsze). Teksele LUT chromy (γ co 2,86°) przechodzą co ~70 px, więc nie dają jednej linii. Wniosek: to najstromszy odcinek
+gradientu barwy okołosłonecznej (γ ≈ 25–35°), nie artefakt; wzmocniony celowo przez `clearSkySaturation` 2 (ADR 0108).
+Decyzja o ewentualnym obniżeniu saturacji nieba = kierunek artystyczny (właściciel / visual-critic), nie poprawka błędu.

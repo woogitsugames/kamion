@@ -398,9 +398,11 @@ namespace Game.Editor.VisualQA
                     hud.RefreshNow();
                 }
 
+                ApplyDiagGlobals();   // render-artifacts-s24: KAMION_QA_DIAG shader-global probes (no effect when unset)
                 var prevTarget = cam.targetTexture;
                 cam.enabled = true;
                 var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
+                RestoreDiagPreset();
                 string detailCamera = EditorTools.Arg("-qaStatsDetailCamera", null);
                 string detailPath = EditorTools.Arg("-qaStatsDetailPath", null);
                 stats.AppendLine(SceneStats.Estimate(cam, hasTier ? tierSettings.shadowDistance : QualitySettings.shadowDistance,
@@ -536,6 +538,73 @@ namespace Game.Editor.VisualQA
         /// Renders like the phone: at render scale (URP ignores the asset's render scale for render-texture targets) with
         /// the tier's MSAA on the target, then bilinear upscale to the output size (what URP's final blit does on device).
         /// </summary>
+        /// <summary>render-artifacts-s24 diagnostics: env KAMION_QA_DIAG = "global=value;..." overrides float shader globals
+        /// right before each camera renders (e.g. "_KamionClearSkySaturation=1", "_KamionClearCloudCover=0"); a 4-vector
+        /// global takes "x,y,z,w" ("_KamionSkyCap=0,0,0,0"). Unset = no effect. Measurement only, never in a build.</summary>
+        static readonly System.Collections.Generic.List<(UnityEngine.Object p, System.Reflection.FieldInfo f, float v)> s_DiagPresetRestore =
+            new System.Collections.Generic.List<(UnityEngine.Object, System.Reflection.FieldInfo, float)>();
+
+        static void RestoreDiagPreset()
+        {
+            for (int i = s_DiagPresetRestore.Count - 1; i >= 0; i--) s_DiagPresetRestore[i].f.SetValue(s_DiagPresetRestore[i].p, s_DiagPresetRestore[i].v);
+            s_DiagPresetRestore.Clear();
+        }
+
+        static void ApplyDiagGlobals()
+        {
+            string spec = System.Environment.GetEnvironmentVariable("KAMION_QA_DIAG");
+            if (string.IsNullOrEmpty(spec)) return;
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            foreach (var kv in spec.Split(';'))
+            {
+                if (kv.StartsWith("preset."))
+                {
+                    // "preset.clearSkySaturation=1": a float field of the active LightingPreset (EnvironmentLighting pushes
+                    // the sky globals from the preset before every frame, so a shader global alone would be overwritten).
+                    // The previous value is restored by RestoreDiagPreset after the render; the asset is never saved.
+                    int e = kv.IndexOf('=');
+                    var env = Game.Rendering.EnvironmentLighting.Instance;
+                    var p = env != null ? env.Active : null;
+                    var f = p != null ? p.GetType().GetField(kv.Substring(7, e - 7)) : null;
+                    if (f == null || f.FieldType != typeof(float)) { Debug.LogWarning($"[QA] diag {kv}: no such float field"); continue; }
+                    s_DiagPresetRestore.Add((p, f, (float)f.GetValue(p)));
+                    f.SetValue(p, float.Parse(kv.Substring(e + 1), inv));
+                    Debug.Log($"[QA] diag preset {p.name}.{f.Name} = {kv.Substring(e + 1)}");
+                    continue;
+                }
+                if (kv.StartsWith("kwoff:"))
+                {
+                    // "kwoff:_ROADWEAR": that material keyword off on every renderer (runtime copies, DontSave)
+                    string kw = kv.Substring(6).Trim();
+                    int n = 0;
+                    foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                    {
+                        var mats = r.sharedMaterials;
+                        bool any = false;
+                        for (int mi = 0; mi < mats.Length; mi++)
+                        {
+                            if (mats[mi] == null || !mats[mi].IsKeywordEnabled(kw)) continue;
+                            var g = new Material(mats[mi]) { hideFlags = HideFlags.DontSave };
+                            g.DisableKeyword(kw);
+                            mats[mi] = g; any = true; n++;
+                        }
+                        if (any) r.sharedMaterials = mats;
+                    }
+                    Debug.Log($"[QA] diag keyword {kw} off on {n} material slots");
+                    continue;
+                }
+                int eq = kv.IndexOf('=');
+                if (eq <= 0 || !kv.StartsWith("_")) continue;
+                string name = kv.Substring(0, eq).Trim();
+                var parts = kv.Substring(eq + 1).Split(',');
+                if (parts.Length == 4)
+                    Shader.SetGlobalVector(name, new Vector4(float.Parse(parts[0], inv), float.Parse(parts[1], inv), float.Parse(parts[2], inv), float.Parse(parts[3], inv)));
+                else
+                    Shader.SetGlobalFloat(name, float.Parse(parts[0], inv));
+                Debug.Log($"[QA] diag global {name} = {kv.Substring(eq + 1)}");
+            }
+        }
+
         static Color32[] RenderToPixels(Camera cam, int width, int height, out int count, Action beforeRender = null, int msaa = 1, float scale = 1f)
         {
             int sw = Mathf.Max(16, Mathf.RoundToInt(width * scale)), sh = Mathf.Max(16, Mathf.RoundToInt(height * scale));
