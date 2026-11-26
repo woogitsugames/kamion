@@ -82,11 +82,11 @@ overrides:
       - {osm_way: 1511762688, class: unclassified, edited: '2026-05-10', half_width_m: 7.0, line_epsg2180: [[766748.0, 605262.5], [766739.0, 605283.4], [766699.4, 605359.9], [766676.9, 605399.5], [766642.6, 605456.0]]}
       - {osm_way: 1511762697, class: tertiary, edited: '2026-05-10', half_width_m: 7.0, line_epsg2180: [[766748.0, 604907.0], [766738.4, 604909.0], [766714.5, 604917.7], [766699.0, 604929.1], [766686.0, 604940.0], [766672.4, 604954.0], [766660.9, 604973.4], [766636.4, 605023.8], [766622.9, 605041.5], [766613.8, 605051.0], [766599.6, 605060.8]]}
   # END construction_site
-  # ADR 0351 (props-fix-s24, critic s24 wave 11 pkt 7 + 8): farm outbuildings get the roof of the LoD2 model, boarding /
+  # ADR 0238 d. props-fix-s24 (props-fix-s24, critic s24 wave 11 pkt 7 + 8): farm outbuildings get the roof of the LoD2 model, boarding /
   # brick / block walls, windows and a plinth (were flat white boxes), and the bus stops of the village roads get a
   # steel rural shelter with an opaque back wall (the glass-only BKM shelter read as a red outline from the road).
   # Opt-in per region, so the Bialystok tiles stay bit-identical (ADR 0238).
-  - id: rural-outbuildings-shelters-0351
+  - id: rural-outbuildings-shelters-props-fix-s24
     kind: facade_rules
     rural_outbuildings: true
     rural_shelters: true

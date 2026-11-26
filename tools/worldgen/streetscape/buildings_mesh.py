@@ -92,7 +92,7 @@ REVEAL_SMALL_TOWN_WOOD = 0.08   # ADR 0348: wooden house window reveal 8 cm (8-1
 SMALL_TOWN_PLINTH_HS = (0.35, 0.42, 0.50, 0.58)   # ADR 0336/0348: 0.35-0.58 m plinth band (0.3-0.6 m WORKING_VALUE)
 SMALL_TOWN_LOD1_FRAME_M = 0.10  # ADR 0336: thin LOD1 house window frame on small-town tiles (0 extra draws)
 SMALL_TOWN_SILL_CLEAN = 0.22    # ADR 0348: subtle sill runoff on ~78 % of rural/small-town house windows (WORKING_VALUE)
-# ADR 0351 (rural outbuildings, opt-in per region via `facade_rules: rural_outbuildings: true`): a BDOT10k outbuilding
+# ADR 0238 d. props-fix-s24 (rural outbuildings, opt-in per region via `facade_rules: rural_outbuildings: true`): a BDOT10k outbuilding
 # ("budynek gospodarczy": barn, shed, cowshed, summer kitchen) was one flat-roofed box of grey / cream plaster with a
 # garage door - from the road a white block without windows (review s24 wave 11, P1 8). Rule: the roof the LoD2 model
 # gives (gable / hip / skillion; type 1000 stays flat), boarding / brick / block wall, a concrete plinth band, small
@@ -1155,7 +1155,7 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
         elif is_main and L > 2:
             ops.append((L / 2 - 0.5, L / 2 + 0.5, zref + 0.05, zref + 2.15, 0.06, "door", cells("door_steel", hv("sd"))))
         if rural and L >= 3.6:
-            # ADR 0351: small barred windows (the `base` cell: 0.9 x 0.45 m window with a grille), one per 3.5-7.5 m of
+            # ADR 0238 d. props-fix-s24: small barred windows (the `base` cell: 0.9 x 0.45 m window with a grille), one per 3.5-7.5 m of
             # wall, never beside a door, under the eave; walls shorter than 3.6 m stay blank
             ww, wh, ws = RURAL_SHED_WIN
             nw = 1 if L < 7.5 else 2
@@ -1463,7 +1463,7 @@ def load(fc, origin, overrides, hero=None):
         for b in out:
             b["runoff_shuffle"] = True
     if any(o.get("kind") == "facade_rules" and o.get("rural_outbuildings") for o in overrides):
-        for b in out:                             # ADR 0351, opt-in per region (class `shed` only)
+        for b in out:                             # ADR 0238 d. props-fix-s24, opt-in per region (class `shed` only)
             if (b["typ"] == "shed" and not b["ovr"].get("typology") and b["poly"].area >= RURAL_SHED_MIN_AREA_M2
                     and b["props"].get("function") not in RURAL_SHED_NO_ROOF_FUNCS):
                 b["rural_outbuilding"] = True
@@ -1767,7 +1767,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     for b in blds:
         poly, p, typ = b["poly"], b["props"], b["typ"]
         st_mode = bool(b.get("small_town"))
-        rural_shed = typ == "shed" and bool(b.get("rural_outbuilding"))      # ADR 0351
+        rural_shed = typ == "shed" and bool(b.get("rural_outbuilding"))      # ADR 0238 d. props-fix-s24
         sub = b.get("sub") or TY.DEFAULT_SUBTYPE.get(typ, typ)
         counts[typ] = counts.get(typ, 0) + 1
         ring = np.asarray(poly.exterior.coords)
@@ -1813,7 +1813,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             if wall not in HOUSE_WALL_OVERRIDES:
                 raise ValueError(f"building {b['id']}: unsupported house wall_material {wall!r}")
         elif typ == "shed":
-            wall = (rural_shed_pick(key, RURAL_SHED_WALLS, "rswall") if rural_shed          # ADR 0351
+            wall = (rural_shed_pick(key, RURAL_SHED_WALLS, "rswall") if rural_shed          # ADR 0238 d. props-fix-s24
                     else hpick(key, ["plaster_grey", "plaster_light", "brick_red", "hall_wall_silver"]))
         else:
             wall = b["ovr"].get("wall_material") or hpick(key, TY.PAVILION_WALLS if sub == "pawilon" else OFFICE_WALLS)
@@ -1839,7 +1839,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             wooden = (b["ovr"].get("typology") == "dom_drewniany"
                       or str(b["ovr"].get("wall_material", "")).startswith("wood_planks"))
         if rural_shed and str(wall).startswith("wood_planks"):
-            wooden = True                    # ADR 0351: boarded outbuilding uses the board-wall generator
+            wooden = True                    # ADR 0238 d. props-fix-s24: boarded outbuilding uses the board-wall generator
         if wooden and not rural_shed:
             sub = "dom_drewniany"
         subtypes[sub] = subtypes.get(sub, 0) + 1
@@ -1852,7 +1852,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             roof = RF.plan(poly, p, h, zref, lambda salt: FK.hfloat(key, salt), near, wooden, shape=rshape,
                            pitch_var=st_mode)
         elif rural_shed and rshape != "flat":
-            # ADR 0351: the LoD2 roof type decides (1000 = flat stays flat); no LoD2 -> gable over >= 36 m2, else skillion
+            # ADR 0238 d. props-fix-s24: the LoD2 roof type decides (1000 = flat stays flat); no LoD2 -> gable over >= 36 m2, else skillion
             near = [blds[j]["poly"] for j in btree.query(poly.buffer(0.6)) if blds[j] is not b]
             shp = rshape or (None if p.get("roof_type_lod2") else ("gable" if poly.area >= 36 else "mono"))
             roof = RF.plan(poly, p, h, zref, lambda salt: FK.hfloat(key, salt), near, False, shape=shp)

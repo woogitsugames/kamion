@@ -1,4 +1,4 @@
-"""ADR 0351 (props-fix-s24, critic s24 wave 11 pkt 8): farm outbuildings of the rural tiles get a typology (LoD2 roof,
+"""ADR 0238 d. props-fix-s24 (props-fix-s24, critic s24 wave 11 pkt 8): farm outbuildings of the rural tiles get a typology (LoD2 roof,
 board / brick / block wall, plinth, windows) instead of a flat white box - opt-in per region, so the Bialystok tiles
 stay bit-identical (ADR 0238)."""
 import json
@@ -119,3 +119,62 @@ def test_every_rural_outbuilding_of_both_prototype_tiles_builds():
         assert fl, rid
         buf, rep = _build(fl)
         assert buf.tris("buildings") > 0
+
+
+# ---------------------------------------------------------------- rural bus shelter (same ADR, P1 7)
+def test_rural_shelter_is_opaque_one_slot_and_within_the_bkm_envelope():
+    from streetscape import props as PP
+    for name, colour in PP.RURAL_SHELTERS.items():
+        m, l1, col = PP.bus_shelter_rural(colour)
+        for mesh in (m, l1):
+            mats = {r["mat"] for r in mesh.out()}
+            assert mats == {"shelter_paint"}, (name, mats)      # no glass slot: nothing transparent to vanish
+        allv = np.concatenate([r["V"] for r in m.out()])
+        assert 2.2 <= allv[:, 2].max() <= 3.6                    # fits under the 2.8 m clearance table with the D-15 rack
+        assert abs(allv[:, 0]).max() <= PP.RURAL_SHELTER_HALF_M + 0.2
+        t0 = sum(len(r["T"]) for r in m.out())
+        t1 = sum(len(r["T"]) for r in l1.out())
+        assert t1 < 0.45 * t0 and t1 >= 80, (t0, t1)           # LOD1 keeps posts, back wall, end wall, roof, bench
+        uv = np.concatenate([r["UV"] for r in m.out()])
+        assert uv.min() >= -1e-9 and uv.max() <= 1 + 1e-9, "flat swatches / pictures stay inside the atlas"
+
+
+def test_rural_shelter_uv_swatches_do_not_overlap_the_pictures():
+    from streetscape import props as PP
+    for k in ("green", "brown", "galv", "sheet"):
+        u, v = PP.SHELTER_UV[k]
+        assert v < PP.SHELTER_UV_TIMETABLE[1] - 0.05 and v < PP.SHELTER_UV_D15[1] - 0.05
+
+
+def test_shelter_variant_rural_is_opt_in_and_deterministic():
+    from streetscape import furniture as FU
+    from streetscape import props as PP
+    q = (123.4, -56.7)
+    assert FU.shelter_variant(q) == FU.shelter_variant(q, False)
+    assert FU.shelter_variant(q) not in PP.RURAL_SHELTERS
+    names = {FU.shelter_variant((float(i) * 17.0, float(i) * 3.0), True) for i in range(200)}
+    assert names == set(PP.RURAL_SHELTERS)
+    assert FU.rural_shelters_enabled([{"kind": "facade_rules", "rural_shelters": True}])
+    assert not FU.rural_shelters_enabled([{"kind": "facade_rules", "small_town": True}])
+    assert not FU.rural_shelters_enabled(None)
+
+
+def test_region_overrides_enable_both_rules_only_on_the_prototype_tiles():
+    from streetscape import furniture as FU
+    for rid in ("dk65-07", "dw671-tykocin-03"):
+        _, ovr, _ = _region(rid)
+        assert FU.rural_shelters_enabled(ovr), rid
+    _, ovr, _ = _region("bialystok-industrial-c")
+    assert not FU.rural_shelters_enabled(ovr)
+
+
+def test_atlas_swatch_colours_match_the_bottom_strip():
+    from streetscape import furniture_textures as FT
+    from streetscape import props as PP
+    a = np.asarray(FT.shelter_atlas())
+    n = a.shape[0]
+    for k, c in (("green", FT.SHELTER_GREEN_SRGB), ("brown", FT.SHELTER_BROWN_SRGB), ("galv", FT.SHELTER_GALV_SRGB),
+                 ("sheet", FT.SHELTER_GRAPHITE_SRGB)):
+        u, v = PP.SHELTER_UV[k]
+        px = a[int(round((1 - v) * n)), int(round(u * n))].astype(float)
+        assert np.abs(px - np.array(c)).max() <= 14, (k, px, c)

@@ -61,11 +61,11 @@ overrides:
     crossing_kerb_drops: true
     crossing_tactile: true
     driveway_paving_color: true
-  # ADR 0351 (props-fix-s24, critic s24 wave 11 pkt 7 + 8): farm outbuildings get the roof of the LoD2 model, boarding /
+  # ADR 0238 d. props-fix-s24 (props-fix-s24, critic s24 wave 11 pkt 7 + 8): farm outbuildings get the roof of the LoD2 model, boarding /
   # brick / block walls, windows and a plinth (were flat white boxes), and the bus stops of the village roads get a
   # steel rural shelter with an opaque back wall (the glass-only BKM shelter read as a red outline from the road).
   # Opt-in per region, so the Bialystok tiles stay bit-identical (ADR 0238).
-  - id: rural-outbuildings-shelters-0351
+  - id: rural-outbuildings-shelters-props-fix-s24
     kind: facade_rules
     rural_outbuildings: true
     rural_shelters: true

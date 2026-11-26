@@ -962,8 +962,11 @@ M["vehicle_lod_details"] = {"color": [1.0, 1.0, 1.0], "rough": 0.6, "vehicle_lod
 # - paint_ral1012 / paint_ral3020: U-12a / U-12 / U-5a (ZDM standard 2018, G5-010); linear values of the public sRGB
 #   conversions in furniture_textures (RAL1012_SRGB, RAL3020_SRGB), slightly weathered. WORKING_VALUE.
 M["shelter_paint"] = {"color": [1.0, 1.0, 1.0], "rough": 0.55, "texture": "bus_shelter_atlas"}
-M["shelter_glass_clear"] = {"color": [0.030, 0.040, 0.040], "rough": 0.04, "alpha": 0.10, "blend": True,
-                            "shader": "car_glass", "dust": 0.5, "screen": {"horizon_sky": 0.85, "haze": 0.03}}
+# ADR 0162 d. props-fix-s24: alpha 0.10 -> 0.22 and a lighter blue-grey base: seen from 60-300 m (LOD1 of the BKM shelter) the 10 % sheet
+# vanished and only the red frame stayed (review s24 wave 11, P1 7 "wiata jako czerwony kontur"); a clear pane reads as
+# a faint sky-tinted surface with the bench and the timetable behind it. WORKING_VALUE.
+M["shelter_glass_clear"] = {"color": [0.060, 0.080, 0.085], "rough": 0.04, "alpha": 0.22, "blend": True,
+                            "shader": "car_glass", "dust": 0.5, "screen": {"horizon_sky": 0.85, "haze": 0.06}}
 M["paint_ral1012"] = {"color": [0.52, 0.42, 0.06], "rough": 0.5}
 M["paint_ral3020"] = {"color": [0.55, 0.012, 0.009], "rough": 0.5}
 # ADR 0268 (REVIEW s22 0217 visual P2-11): drive cabinet of a level-crossing barrier - sun-faded orange instead of the

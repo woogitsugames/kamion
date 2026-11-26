@@ -734,6 +734,130 @@ def bus_shelter():
     return bus_shelter_bkm(3, "red")
 
 
+# ---------------------------------------------------------------- rural steel shelter (ADR 0162 d. props-fix-s24)
+# Village / gmina stops along DK65 and DW671 (no BKM): a small steel shelter - 3.0 m of roof run, 1.25 m deep, a mono
+# roof of trapezoidal sheet falling to the back, an OPAQUE back wall and one opaque end wall of sheet with vertical
+# ribs, the other end open, a timber bench along the back wall, a timetable case on the back wall and the D-15 rack
+# over the road-side corner. One material slot (shelter_paint: atlas swatches green / brown / galvanised / graphite).
+# The glass-only BKM frame read as a red outline from the road (review s24 wave 11, P1 7: LOD1 beyond 60 m had posts
+# and a 10 % clear sheet only). Dimensions WORKING_VALUE read off village shelters (Commons, owner frames of DK65).
+RURAL_SHELTER_L_M = 3.0
+RURAL_SHELTER_D_M = 1.25
+RURAL_SHELTER_H_BACK_M = 2.25
+RURAL_SHELTER_H_FRONT_M = 2.50
+RURAL_SHELTER_OVER_BACK_M = 0.25
+RURAL_SHELTER_OVER_FRONT_M = 0.30
+RURAL_SHELTER_OVER_SIDE_M = 0.25
+RURAL_SHELTER_POST_M = 0.09
+RURAL_SHELTER_RIB_M = 0.20          # pitch of the sheet ribs
+SHELTER_UV.update({"green": (0.125, 0.10), "brown": (0.375, 0.10), "galv": (0.625, 0.10), "sheet": (0.875, 0.10)})
+RURAL_SHELTERS = {"bus_shelter_rural": "black", "bus_shelter_rural_green": "green", "bus_shelter_rural_brown": "brown",
+                  "bus_shelter_rural_galv": "galv"}
+RURAL_SHELTER_HALF_M = RURAL_SHELTER_L_M / 2 + RURAL_SHELTER_OVER_SIDE_M
+
+
+def bus_shelter_rural(colour="black"):
+    """Rural steel shelter (constants above). Local frame as bus_shelter_bkm: +y = the road side, +x = the open end,
+    origin on the pavement in the middle of the wall depth. Returns (LOD0, LOD1, collision) meshes."""
+    paint, sheet = SHELTER_UV[colour], SHELTER_UV["sheet"]
+    L, D = RURAL_SHELTER_L_M, RURAL_SHELTER_D_M
+    yb, yf = -D / 2, D / 2
+    y_back = yb - RURAL_SHELTER_OVER_BACK_M
+    y_front = yf + RURAL_SHELTER_OVER_FRONT_M
+    xe = L / 2 + RURAL_SHELTER_OVER_SIDE_M
+    hb, hf = RURAL_SHELTER_H_BACK_M, RURAL_SHELTER_H_FRONT_M
+
+    def zr(y):                                         # roof underside above the pavement at y
+        return hb + (hf - hb) * (y - y_back) / (y_front - y_back)
+
+    px = RURAL_SHELTER_POST_M / 2
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    fr, fr1, sh_, sh1 = Mesh(), Mesh(), Mesh(), Mesh()   # frame (colour swatch), sheet (sheet swatch), LOD0 / LOD1
+    xs = (-L / 2, 0.0, L / 2)
+    for x in xs:
+        for y in (yb, yf):
+            for mm in (fr, fr1):
+                mm.box("p", [x, y, zr(y) / 2], px, px, zr(y) / 2)
+    for mm in (fr, fr1):                                # roof frame: fascia boards on the four edges
+        mm.box("p", [0, y_back + 0.03, hb + 0.05], xe, 0.03, 0.07)
+        mm.box("p", [0, y_front - 0.03, zr(y_front) + 0.06], xe, 0.03, 0.09)
+        for sx in (-1, 1):
+            mm.box("p", [sx * (xe - 0.03), (y_back + y_front) / 2, (zr(y_back) + zr(y_front)) / 2 + 0.07], 0.03,
+                   (y_front - y_back) / 2, 0.06)
+    # back wall: sheet between the foot rail and the roof, rails top / bottom, ribs (LOD0)
+    zb0, zb1 = 0.22, zr(yb) - 0.04
+    for mm in (sh_, sh1):
+        mm.quad("p", [L / 2, yb - px, zb0], [-L / 2, yb - px, zb0], [-L / 2, yb - px, zb1], [L / 2, yb - px, zb1])
+        mm.quad("p", [-L / 2, yb + px, zb0], [L / 2, yb + px, zb0], [L / 2, yb + px, zb1], [-L / 2, yb + px, zb1])
+    # end wall at -x
+    for mm in (sh_, sh1):
+        mm.quad("p", [-L / 2 - px, yf, zb0], [-L / 2 - px, yb, zb0], [-L / 2 - px, yb, zr(yb) - 0.04],
+                [-L / 2 - px, yf, zr(yf) - 0.04])
+        mm.quad("p", [-L / 2 + px, yb, zb0], [-L / 2 + px, yf, zb0], [-L / 2 + px, yf, zr(yf) - 0.04],
+                [-L / 2 + px, yb, zr(yb) - 0.04])
+    for mm in (fr, fr1):
+        mm.box("p", [0, yb, zb0 - 0.03], L / 2, 0.035, 0.035)      # foot rail
+        mm.box("p", [0, yb, zb1 + 0.02], L / 2, 0.035, 0.035)      # head rail under the roof
+    n_rib = int(round(L / RURAL_SHELTER_RIB_M))
+    for k in range(1, n_rib):                                       # trapezoidal ribs on the outside of the back wall
+        x = -L / 2 + k * L / n_rib
+        fr.box("p", [x, yb - px - 0.012, (zb0 + zb1) / 2], 0.022, 0.012, (zb1 - zb0) / 2)
+    n_ribe = int(round(D / RURAL_SHELTER_RIB_M))
+    for k in range(1, n_ribe):                                      # and on the -x end wall
+        y = yb + k * D / n_ribe
+        fr.box("p", [-L / 2 - px - 0.012, y, (zb0 + zr(y) - 0.04) / 2], 0.012, 0.022, (zr(y) - 0.04 - zb0) / 2)
+    # roof: trapezoidal sheet, double sided, ribs along the fall (LOD0)
+    for mm in (sh_, sh1):
+        a = [xe, y_back, hb + 0.08]
+        b = [-xe, y_back, hb + 0.08]
+        c = [-xe, y_front, zr(y_front) + 0.10]
+        d = [xe, y_front, zr(y_front) + 0.10]
+        mm.quad("p", d, c, b, a)
+        mm.quad("p", a, b, c, d)
+    n_rr = int(round(2 * xe / 0.25))
+    for k in range(n_rr + 1):
+        x = -xe + 0.05 + k * (2 * xe - 0.10) / n_rr
+        fr.tube("p", [x, y_back, hb + 0.10], [x, y_front, zr(y_front) + 0.12], 0.012, None, 4, cap=False)
+    # D-15 rack over the road-side corner at +x (as props.bus_shelter_bkm, typ B) and a timetable case on the back wall
+    xr, yr = L / 2 - 0.15, y_front - 0.30
+    zr0 = zr(yr) + 0.15
+    for mm in (fr, fr1):
+        mm.box("p", [xr, yr - D15_RACK_W_M / 2 - 0.03, (zr0 + D15_RACK_H_M + zr(yr)) / 2], 0.03, 0.03,
+               (zr0 + D15_RACK_H_M - zr(yr)) / 2)
+    tmp = Mesh()
+    tmp.box("p", [L / 2 - 0.55, yb + px + 0.02, 1.45], 0.32, 0.02, 0.45)
+    # bench along the back wall (timber slats on two steel legs), as the BKM shelter's bench
+    tw = Mesh()
+    for k in range(2):
+        tw.box("p", [-0.1, yb + px + 0.14 + k * 0.17, SHELTER_SEAT_H_M - 0.0225], 1.05, 0.08, 0.0225)
+    for k in range(2):
+        tw.box("p", [-0.1, yb + px + 0.05, SHELTER_SEAT_H_M + 0.24 + k * 0.16], 1.05, 0.015, 0.05)
+    legs = Mesh()
+    for x in (-1.0, 0.8):
+        legs.box("p", [x, yb + px + 0.2, SHELTER_SEAT_H_M / 2 - 0.02], 0.025, 0.14, SHELTER_SEAT_H_M / 2 - 0.02)
+    for mm, fm, sm in ((m, fr, sh_), (l1, fr1, sh1)):
+        _flat_copy(mm, "shelter_paint", paint, fm)
+        _flat_copy(mm, "shelter_paint", sheet if colour == "black" else paint, sm)
+        _flat_copy(mm, "shelter_paint", SHELTER_UV["wood"], tw)
+        _flat_copy(mm, "shelter_paint", SHELTER_UV["galv"], legs)
+        _flat_copy(mm, "shelter_paint", paint, tmp)
+        for sx in (1, -1):                              # D-15 faces, back to back
+            x = xr + sx * 0.012
+            a = [x, yr + sx * D15_RACK_W_M / 2, zr0]
+            bb = [x, yr - sx * D15_RACK_W_M / 2, zr0]
+            _uv_quad(mm, "shelter_paint", a, bb, [bb[0], bb[1], zr0 + D15_RACK_H_M],
+                     [a[0], a[1], zr0 + D15_RACK_H_M], SHELTER_UV_D15)
+        y = yb + px + 0.042
+        xc = L / 2 - 0.55
+        _uv_quad(mm, "shelter_paint", [xc + 0.28, y, 1.15], [xc - 0.28, y, 1.15], [xc - 0.28, y, 1.75],
+                 [xc + 0.28, y, 1.75], SHELTER_UV_TIMETABLE)
+    # collision: the walled part and the roof slab
+    col.box("collision_steel", [0, 0, hb / 2], L / 2 + 0.05, D / 2 + 0.05, hb / 2)
+    col.box("collision_steel", [0, (y_back + y_front) / 2, (hb + zr(y_front)) / 2 + 0.05], xe,
+            (y_front - y_back) / 2, (zr(y_front) - hb) / 2 + 0.1)
+    return m, l1, col
+
+
 # ---------------------------------------------------------------- road barriers of the ZDM standard (ADR 0162, G5)
 # ZDM Białystok, standard 2018 (research G5-010, SOURCED): panel U-12a "olsztyński": two posts of Ø60.3 mm galvanised
 # tube 2.0 m apart, 1.10 m above the ground (1.50 m long), a loop of Ø48.3 mm tube between them, 0.64 m high (G5
@@ -1011,6 +1135,8 @@ def build_all(sign_codes, boards):
     for name, n in SHELTER_MODULES.items():          # ADR 0162: BKM 5 / 7 / 9 m red, older 7 m graphite
         P[name] = bus_shelter_bkm(n, "red")
     P["bus_shelter_black"] = bus_shelter_bkm(3, "black")
+    for name, colour in RURAL_SHELTERS.items():      # ADR 0162 d. props-fix-s24: rural steel shelters, opt-in per region (furniture.shelter_variant)
+        P[name] = bus_shelter_rural(colour)
     P["railing_u12a"] = railing_u12a()
     P["railing_u12a_post"] = railing_u12a_post()
     P["fence_u12"] = fence_u12()
