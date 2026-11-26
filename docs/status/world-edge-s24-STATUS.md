@@ -1,0 +1,24 @@
+# world-edge-s24 — szlaban w osi drogi w zrzutach visual-qa (CRITIC fala 11 pkt 5)
+
+Gałąź: `worktree-agent-a45822541efad5332`, baza `f4b7a47b9`. Dowody: `C:\Users\matma\Documents\Claude\kamion\artifacts\world-edge-s24\`.
+
+## Krok 1 — rozpoznanie (zrobione)
+- Szlaban = zamknięcie krawędzi kafla `WorldEdgeBuilder` (ADR 0141/0169): jedno `Closure_*` na każdą drogę przecinającą
+  krawędź kafla, `ClosureSetbackM` = 60 m w głąb kafla (`world_edge.authored.json` może skrócić do 8 m). Dane: graf dróg
+  kafla (`ReadExits`), strona wyjścia `exitSide`.
+- Gra (streaming, ADR 0273): `WorldStreamer.RefreshEdges` ukrywa zamknięcie, gdy oba kafle szwu są Ready
+  (`EdgeClosureRules.SeamReady`). Na zewnętrznej krawędzi świata (brak sąsiada w grafie) szlaban zostaje.
+- visual-qa ładuje pojedynczy kafel; sąsiedzi tylko przez `WorldNeighbourQa` (`-qaNeighbours`, domyślnie tylko gdy
+  `needsNeighbourContext` w tile_graph — dziś knyszyn). `scripts/visual-qa.ps1` nie przekazuje `-qaNeighbours`.
+- route_s2035 (dw671-tykocin-03): kamera (94,-878) patrzy na S; szew S (-1024) ~155 m przed kamerą, szlaban (-964) ~95 m;
+  za szwem jest dw671-tykocin-04 (w grafie). Szlaban to więc szew wewnętrzny, nie granica świata.
+- Decyzje właściciela: D95 (szlaban kafla przy rondzie Knyszyn = błąd do usunięcia); brak decyzji o granicy świata.
+
+## Krok 2 — gra ze streamingiem (z logów, bez nowego uruchomienia)
+- Przejazd `win-build/artifacts/win/runs/20261124-122130` (Białystok→Tykocin, PC High): sąsiad Ready przy pojeździe
+  377–384 m od kafla, load 535–566 ms + aktywacja ~0,4 s → szlaban (60 m w głąb) znika ~320 m przed nim. Klatka t=160
+  (~465 m przed szlabanem) — szlabanu nie widać. Wniosek: w środku trasy w grze szlaban nie stoi w osi; to artefakt
+  zrzutów pojedynczego kafla.
+
+## Następny krok
+Krok 3: visual-qa domyślnie dociąga sąsiadów, w których stronę patrzą kamery (WorldNeighbourQa), render przed|po.
