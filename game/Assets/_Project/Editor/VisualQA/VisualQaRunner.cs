@@ -547,6 +547,27 @@ namespace Game.Editor.VisualQA
             var inv = System.Globalization.CultureInfo.InvariantCulture;
             foreach (var kv in spec.Split(';'))
             {
+                if (kv.StartsWith("kwoff:"))
+                {
+                    // "kwoff:_ROADWEAR": that material keyword off on every renderer (runtime copies, DontSave)
+                    string kw = kv.Substring(6).Trim();
+                    int n = 0;
+                    foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                    {
+                        var mats = r.sharedMaterials;
+                        bool any = false;
+                        for (int mi = 0; mi < mats.Length; mi++)
+                        {
+                            if (mats[mi] == null || !mats[mi].IsKeywordEnabled(kw)) continue;
+                            var g = new Material(mats[mi]) { hideFlags = HideFlags.DontSave };
+                            g.DisableKeyword(kw);
+                            mats[mi] = g; any = true; n++;
+                        }
+                        if (any) r.sharedMaterials = mats;
+                    }
+                    Debug.Log($"[QA] diag keyword {kw} off on {n} material slots");
+                    continue;
+                }
                 int eq = kv.IndexOf('=');
                 if (eq <= 0 || !kv.StartsWith("_")) continue;
                 string name = kv.Substring(0, eq).Trim();
