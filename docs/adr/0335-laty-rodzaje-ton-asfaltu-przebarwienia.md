@@ -156,3 +156,58 @@ pasa z tego samego szumu 38 m co `trackFade` (bez nowego wywołania szumu); mno�
 (`artifacts/render-artifacts-s24/sbs/crop-road-s1846-before-after.jpg`, `route-s0426-before-vs-after.jpg`).
 Koszt: te same odczyty tekstur, +~4 ALU na piksel jezdni (smoothstep, przesunięcie); draw calle bez zmian; GPU **UNMEASURED**
 (edytor nie jest dowodem — pomiar `pc-metrics` w buildzie).
+## Dopisek P3: łaty widziane z kabiny, szew osi (gałąź `worktree-agent-a4b13d4540b9ae795` / road-patches-s24, 26.11)
+
+Źródło: krytyk fali 11 (`artifacts/critic-s24-wave11/CRITIC.md` pkt 2 P0 i pkt 4 P1, trzeci raz z rzędu „prostokątne łaty”).
+
+### Diagnoza (render „przed” w worktree = obraz krytyka)
+1. **Szew osi + czarny falisty pas** (`knyszyn-w dk65-goniadzka` x~985–1040): to nie łata, koleina ani szew kafla, tylko
+   `decals.seal_cracks` — „centre construction joint”: pasmo `decal_seal` 12–20 cm, `strength 2,6` (pełne, bez rozbicia
+   makroszumem), meander ±5 cm na falach 5–9 m (ten sam co pęknięcie termiczne). Obok prostych kresek P-1 ciemne pasmo,
+   które co kilka metrów przechodzi z lewej strony kreski na prawą, czyta się jako przeskakująca linia środkowa.
+2. **Jasny twardy prostokąt** (`dw671-tykocin-03 cab-view-b`): jezdnia ma ton `_ROADWEAR` 0,44–1,56 x (szum 90/23/7 m),
+   łata go nie miała — stara łata na ciemnym odcinku wychodziła jasna, świeża na wyblakłym czarna. Przez łatę biegło
+   pęknięcie `decal_seal` (kolejka +20 nad łatą +12).
+3. **Obrys prostokątny z kabiny**: szum obrysu ADR 0335 (2–12 cm) miał długości fal 0,07–0,9 m — z 10–40 m (1,5–6 cm na
+   piksel) każda krawędź to linijka. Zalewka 4–6 cm leżała na rampie alfa krawędzi (0..`fth`+aa) i z odległością znikała.
+
+### Decyzja (0 nowych draw calli, 0 nowych trójkątów łat; WORKING_VALUE)
+1. **Szew osi** (`roads/decals.py`): prosty (meander ±1 cm, `CENTRE_JOINT_AMP_M`), pasmo 6–9 cm (rdzeń 3,5–5,5 cm),
+   `strength 1,7` (< 2,5 → przetarty makroszumem, nie pełny pas). Pęknięcia termiczne / krawędziowe bez zmian.
+2. **Pęknięcia nie przechodzą przez łaty**: polilinia pęknięcia dzielona na odcinki poza obrysem łat łańcucha
+   (`_runs_outside`, margines 15 cm, obrót łaty uwzględniony). Trójkąty pęknięć: knyszyn-w 5 716 → 4 990,
+   dw671-tykocin-03 8 190 → 7 326 (r1).
+3. **Łata dziedziczy ton odcinka** (`WorldPBR`: wspólna funkcja `KamionRoadTone`, ta sama na wstędze i łacie): stara łata
+   w pełni, świeża w 60 % (wyblaknięcie 90 m przyszło później). Kontrast łaty względem jezdni nie zależy już od miejsca.
+4. **Obrys z kabiny**: wędrówka 5–15 cm na falach 0,55 i 1,6 m (amplituda na łatę), wyszczerbienia do 12 cm (szum 0,35 m);
+   frezowanie: każdy koniec z własnym skosem ±3°, 40 % z końcem schodkowym 0,1–0,4 m na połowie szerokości (dwa przejazdy
+   bębna), brzegi podłużne wędrujące; wykop: boki wędrujące, 45 % w kształcie L (narożnik 25–45 % x 30–55 % niewykopany).
+5. **Zalewka 2–4 cm okrakiem na cięciu** (`asphalt_patch_seam.width_m` 0,06 → 0,032, `darkening` 0,75 → 0,80): obrys
+   cofnięty o pół szerokości, zalewka składana z własnym kryciem (0,94) i filtrowana pudełkowo (pod pikselem zachowuje
+   ~pole zamiast znikać); wypełnia fakturę (normalna spłaszczona); gładkość — pkt 7.
+6. **Szorstkość / faktura wg wieku**: świeża łata — ziarno x0,55 i normalna spłaszczona o 35 % (lepiszcze zamyka
+   powierzchnię), stara — ziarno x1,15; ton partii 0,88–1,14 (było 0,82–1,18). Trzy pokolenia (wiek trójmodalny) bez zmian.
+7. **Gładkość łaty i zalewki jak jezdni (r3; główna przyczyna „jasnego prostokąta”)**: zestaw `asphalt_patch` (skan
+   clean_asphalt) ma średnią gładkość 0,34 wobec 0,10 `asphalt_worn` (alfa MaskMap High); pod kątem patrzenia z kabiny
+   łata odbijała niebo i była jasna niezależnie od albedo (sondy `artifacts/road-patches-s24/probe2|probe3`: wiek/rodzaj
+   zakodowane w kolorze potwierdziły ścieżkę `_DECAL_PATCH`; gładkość 0 na 1/3 łaty sprowadziła ją do tonu jezdni).
+   Ograniczenie `smooth <= 0,17 (świeża) .. 0,11 (stara)`, zalewka 0,22 .. 0,14 (ADR 0131: błyszcząca czarna zalewka pod
+   kątem wychodzi biała). Stara łata x0,82 na końcu „aged”, plamistość ±(3–12) % rosnąca z wiekiem, jasny rąbek 0,30 → 0,12.
+
+### Wyniki (edytor, High PC 1920x1080; `artifacts/road-patches-s24/{before,after,after-r1,after-r2}`, arkusze `sheets/`)
+- `dw671-tykocin-03 cab-view-b` (jasność sRGB: łata / jezdnia obok, te same pola): przed **1,17 x** (clear 125,6/107,3),
+  **1,21 x** (overcast 75,9/62,5); r1 i r2 bez zmiany (dominowało odbicie nieba); po r3 **0,92 x** (99,2/107,7) i
+  **0,85 x** (53,8/63,0). Pęknięcie przez łatę zniknęło; stara łata na lewym pasie czyta się słabo, jak powinna.
+- `knyszyn-w dk65-goniadzka`: czarny falisty pas w osi → krótki, prosty, wąski, przetarty odcinek szwu; łata frezowana ma
+  schodkowy koniec z zalewką na cięciu; łata przy krawędzi ma kształt L z cienką ciemną zalewką.
+- Testy: `tests/gis -k "patch or 0335 or shader or seal or 0323 or budget or pbr"` **87 passed, 1 skipped** (nowe:
+  `test_centre_joint_is_straight_and_worn`, `test_seal_cracks_split_at_patches`, `test_crack_seals_do_not_cross_repairs`).
+- Ocena: agent, NIE visual-critic. Otwarte: frez z bliska ma nadal proste cięcia poprzeczne (zgodne z rzeczywistością);
+  zalewka wykopu to ciągła cienka linia — ew. więcej przerw; `route-s0144` (dk65-07) nie przebudowany ani nie renderowany;
+  brak buildu playera Windows i testów EditMode Unity w tej gałęzi.
+
+### Konsekwencje
+- Zalewka 3,2 cm i nowe parametry trafiają do regionu dopiero po przebudowie (`world_manifest`); przebudowane tu tylko
+  `knyszyn-w` i `dw671-tykocin-03` (prywatna kopia derived worktree). Shader działa od razu na każdym regionie
+  (ton, obrys, kształty), ale stare regiony mają zalewkę 6 cm (teraz okrakiem, więc wyraźniejszą).
+- Pozostałe regiony z łatami/pęknięciami po scaleniu: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region <id>`.
