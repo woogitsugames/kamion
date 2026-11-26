@@ -538,6 +538,19 @@ M = {
                         "texture_set": "sett_rows_tint", "set_tile": True},
     "monument_sandstone": {"color": [0.30, 0.275, 0.235], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.6},
     "monument_gilt": {"color": [0.55, 0.40, 0.10], "rough": 0.4, "metal": 0.8},
+    # ADR 0320 dopisek (tykocin-plaza-s24): Czarniecki monument in Tykocin as a hero asset. The stone is weathered
+    # sandstone: the modulation set carries grain, pits and thin rain tails, the asset's COLOR_0 (facade_tint: albedo *=
+    # 2 * rgb) carries the baked large-scale weathering - crust in the hollows, run-off under the ledges, lichen, the
+    # paler renewed block. Colour WORKING_VALUE against Commons 01 / 08 (sunlit stone; a photo is not an albedo).
+    "monument_sandstone_aged": {"color": [0.33, 0.295, 0.225], "rough": 0.92, "texture_set": "sandstone_weathered_tint",
+                                "set_tile": True, "facade_tint": True},
+    # benches and planter boxes of the square: dark stained softwood, per-board wear in COLOR_0 (bleached grey, replaced
+    # pale boards, rubbed seat edge). Starts with "wood_planks" on purpose (tint_linear like every board material).
+    "wood_planks_bench": {"color": [0.105, 0.066, 0.040], "rough": 0.78, "texture_set": "wood_siding", "set_tile": True,
+                          "set_tile_m": [3.0, 2.6], "facade_tint": True},
+    # flower mass of the planters (begonias at the monument, petunias on the edges): foliage set, blossom / leaf colour
+    # per vertex in COLOR_0 (tint = 2 * rgb, so the base sits between red, green and purple)
+    "planter_flowers": {"color": [0.25, 0.08, 0.15], "rough": 0.95, "texture_set": "hedge_foliage", "facade_tint": True},
     "truss_steel": {"color": [0.40, 0.41, 0.41], "rough": 0.62, "metal": 0.15},
     # piers, abutments and footway slabs of the truss bridge: the precast-concrete modulation set projected in world
     # metres like bridge_concrete (viaduct_concrete carries the red cornice paint of the Andersa viaduct: r1 render)

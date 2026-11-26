@@ -18,8 +18,12 @@ class Buffer:
     def __init__(self):
         self.parts = []
 
-    def add(self, layer, mat, vertices, uv, triangles, src="", UV1=None, footprint=False):
+    def add(self, layer, mat, vertices, uv, triangles, src="", UV1=None, footprint=False, COL=None):
         self.parts.append((layer, mat, np.asarray(vertices, float), np.asarray(triangles), src))
+        self.cols = getattr(self, "cols", {})
+        if COL is not None:
+            assert len(COL) == len(vertices) and len(uv) == len(vertices)
+            self.cols[(layer, mat)] = np.asarray(COL, float)
 
 
 class FakeDeck:
@@ -151,19 +155,56 @@ def test_tykocin_square_objects():
     assert TY.build(Buffer(), "knyszyn", [0, 0], [], None, {}) is None
     buf, rep = Buffer(), {}
     r = TY.build(buf, "tykocin", [751371.0, 600319.0], [], lambda e, n: np.zeros_like(e) + 104.0, rep)
-    assert rep[TY.ASSET_ID] is r and r["status"] == "applied" and len(r["benches"]) == 10
-    assert 7.0 <= r["monument"]["height_m"] <= 8.0 and r["tris"]["buildings"] <= 3500
-    assert r["tris"]["buildings_low"] <= 0.6 * r["tris"]["buildings"]
+    assert rep[TY.ASSET_ID] is r and r["status"] == "applied"
+    # ten orthophoto marks: six benches in three variants and four planter boxes; eight more planters at the monument
+    assert len(r["benches"]) == 6 and len(r["planters"]) == 4 + len(TY.MONUMENT_PLANTERS)
+    assert {b["variant"] for b in r["benches"]} == set(TY.BENCH_VARIANTS)
+    # nothing is lined up with a string: every bench is turned by 2-9 degrees, and not all the same way
+    yaws = [b["yaw_off_deg"] for b in r["benches"]]
+    assert all(2.0 <= abs(y) <= 9.0 for y in yaws) and min(yaws) < 0 < max(yaws) and len(set(yaws)) == len(yaws)
+    # budget (ADR 0320 dopisek): the monument is the landmark of the square - hero asset <= 27 k, everything <= 36 k
+    assert 7.0 <= r["monument"]["height_m"] <= 8.0 and r["tris"]["buildings"] <= 36000
+    assert r["tris"]["buildings_low"] <= 0.10 * r["tris"]["buildings"]
     for layer, mat, v, t, src in buf.parts:
         assert np.isfinite(v).all() and src == TY.ASSET_ID
         assert (np.linalg.norm(np.cross(v[t[:, 1]] - v[t[:, 0]], v[t[:, 2]] - v[t[:, 0]]), axis=1) > 1e-9).all()
     gilt = next(v for layer, m, v, t, _ in buf.parts if layer == "buildings" and m == TY.GILT)
-    # the mace is held out to the figure's right (west when it faces south) above its head
-    assert gilt[:, 0].mean() < TY.MONUMENT_EN[0] - 0.6 and gilt[:, 2].max() - 104.0 > r["monument"]["height_m"] - 0.3
+    # the mace is held out to the figure's right (west when it faces south) and forward (south), head high
+    assert gilt[:, 0].mean() < TY.MONUMENT_EN[0] - 0.6 and gilt[:, 1].mean() < TY.MONUMENT_EN[1] - 0.3
+    assert gilt[:, 2].max() - 104.0 > r["monument"]["height_m"] - 0.3
     low = {m for layer, m, *_ in buf.parts if layer == "buildings_low"}
-    assert not low & {TY.SAND, TY.GILT, TY.IRON, TY.STONE, "bench_wood"}
+    assert not low & {TY.GILT, TY.IRON, TY.STONE, "bench_wood"}
+    # weathering / wear travels in COLOR_0 (a = 1) on the stone, the bench wood and the flowers - in both LODs
+    for layer in TY.LAYERS:
+        for mat in (TY.SAND, TY.WOOD, TY.FLOWERS):
+            col = buf.cols[(layer, mat)]
+            assert col.min() >= 0.0 and col.max() <= 1.0 and (col[:, 3] > 0.99).all()
+    stone = buf.cols[("buildings", TY.SAND)][:, :3].mean(1)
+    assert np.percentile(stone, 95) - np.percentile(stone, 5) > 0.25, "the stone must not be one flat tone"
+    wood = buf.cols[("buildings", TY.WOOD)][:, :3].mean(1)
+    assert len(np.unique(np.round(wood, 3))) >= 20, "every board has its own tone"
     r = TY.build(Buffer(), "tykocin", [751371.0, 600319.0], [], lambda e, n: np.full_like(e, np.nan), {})
     assert r["status"] == "skipped" and r["monument"] is None
+
+
+def test_czarniecki_hero_asset_budget_and_provenance():
+    """The Blender asset is in plain git, was built from the committed generator + dims and keeps its LOD budgets."""
+    import hashlib
+    parts, meta = TY.hero()
+    d = TY.HERO_DIR
+    gen = ROOT / "tools" / "blender" / "world" / "landmarks" / "make_czarniecki.py"
+    sha = lambda f: hashlib.sha256(f.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+    assert meta["generator_sha256"] == sha(gen), "re-run make_czarniecki.py (generator changed after the asset was built)"
+    assert meta["dims_sha256"] == sha(d / "dims.json")
+    tris = {lod: sum(len(m["T"]) for m in parts[lod].values()) for lod in ("lod0", "lod1")}
+    assert 15000 <= tris["lod0"] <= 27000 and tris["lod1"] <= 2000 and tris["lod1"] <= 0.08 * tris["lod0"]
+    assert (d / f"{TY.HERO}.npz").stat().st_size < 1_000_000
+    v = np.concatenate([m["V"] for m in parts["lod0"].values()])
+    assert 7.0 <= v[:, 2].max() <= 8.0 and np.abs(v[:, :2]).max() <= 2.5
+    stone = parts["lod0"][TY.SAND]
+    assert stone["COL"].dtype == np.uint8 and (stone["COL"][:, 3] == 255).all() and len(stone["UV"]) == len(stone["V"])
+    # the figure stands on the cornice: plenty of geometry above it (head, arms, fur), not a lathed bottle
+    assert (stone["V"][:, 2] > meta["figure_base_z"]).sum() > 4000
 
 
 def test_square_paving_overrides_are_valid_polygons_around_the_monument():

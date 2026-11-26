@@ -1,0 +1,39 @@
+{
+ "asset": "tykocin_czarniecki",
+ "what": "Monument of Stefan Czarniecki on Plac Czarnieckiego in Tykocin (sandstone, 1762): stone parts of the monument - stepped base, plain block, waisted baroque pedestal with cartouches, figure with the gilt mace.",
+ "frame": "x = figure's right, y = forward (front of the figure), z = up from the paving at the centre of the base; metres",
+ "sources": [
+  "Wikimedia Commons 'Tykocin pomnik Stefana Czarnieckiego 01' (Zala, CC BY-SA 4.0) - front, whole monument",
+  "Wikimedia Commons 'Tykocin pomnik Stefana Czarnieckiego 05' (Zala, CC BY-SA 4.0) - pedestal elevation",
+  "Wikimedia Commons 'Tykocin pomnik Stefana Czarnieckiego 08' (Zala, CC BY-SA 4.0) - figure and base from the front-left",
+  "Wikimedia Commons 'Tykocin, pomnik Stefana Czarnieckiego, 1762 01' (Piotr Widerski, CC BY-SA 3.0 pl) - figure from below, weathered state",
+  "Wikimedia Commons 'Mglisty poranek na placu Czarnieckiego w Tykocinie z pomnikiem' (Krzysztof Poplawski, CC BY 4.0) - monument on the plaza",
+  "Reference only (Data/raw/refs/tykocin-rynek-commons, outside git): proportions and layout were read off the photos; no pixel, scan or photogrammetry of them is used."
+ ],
+ "status": "All sizes WORKING_VALUE: no survey of the monument; heights estimated against the fence (about 1.25 m) and the houses (ADR 0320), proportions from the photos (perspective from below, +-10 %).",
+ "heights_m": {
+  "platform_top": 0.42,
+  "steps_top": 0.90,
+  "block_top": 2.20,
+  "band_top": 2.50,
+  "vase_bottom": 2.60,
+  "vase_top": 4.45,
+  "cornice_top": 4.90,
+  "figure_slab": 0.10,
+  "figure": 2.45
+ },
+ "half_sizes_m": {
+  "platform": 2.45,
+  "steps": [1.95, 1.65, 1.35],
+  "block": 0.90,
+  "vase_belly": 0.93,
+  "vase_neck": 0.60,
+  "cornice": 0.80
+ },
+ "figure": {
+  "pose": "stands frontally, head turned to his right towards the mace; right arm stretched forward-right about horizontally with the gilt mace (bulawa) held upright, forearm in a dark green vambrace; left hand on the sabre hilt at the hip; knee-length belted zupan, fur-lined delia open at the front and thrown back over the right arm; long beard, bare head; helmet at the left foot",
+  "mace_length_m": 0.73,
+  "mace_head_diameter_m": 0.20
+ },
+ "omitted": "inscriptions of the pedestal panels and of the band, heraldry of the cartouches (blank shields), buttons smaller than 15 mm, fingers"
+}
