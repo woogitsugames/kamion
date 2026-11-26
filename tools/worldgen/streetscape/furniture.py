@@ -1047,8 +1047,8 @@ SHELTER_BLACK_SHARE = 0.15
 
 # ADR 0162 d. props-fix-s24: rural steel shelter colours (opt-in per region, `facade_rules: rural_shelters: true`): graphite / green /
 # brown / galvanised. Shares WORKING_VALUE (village shelters on Commons and owner frames of DK65; no inventory).
-RURAL_SHELTER_SHARE = (("bus_shelter_rural", 28), ("bus_shelter_rural_green", 32), ("bus_shelter_rural_brown", 16),
-                       ("bus_shelter_rural_galv", 24))
+RURAL_SHELTER_SHARE = (("bus_shelter_rural", 12), ("bus_shelter_rural_green", 34), ("bus_shelter_rural_brown", 20),
+                       ("bus_shelter_rural_galv", 34))
 
 
 def rural_shelters_enabled(overrides):

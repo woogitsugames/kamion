@@ -36,18 +36,15 @@ FPS i wygląd przełączeń LOD wymagają osobnego przejazdu. Testy obejmują
 końcowy profil skarpy, niezmienność rzeczywistej jezdni DK65-10 oraz otwory
 w sylwetce pylonu. Podgląd offline nie zastępuje renderu Unity.
 
-## Dopisek props-fix-s24 (26.11, agent `agent-a60f5c7ffe98fe7c7`): smuga tekstury na skarpie (krytyka s24 fala 11, pkt 9)
+## Dopisek props-fix-s24 (26.11, agent `agent-a60f5c7ffe98fe7c7`): smuga tekstury na skarpie (krytyka s24 fala 11, pkt 9) - NIEROZWIAZANE
 **Objaw.** `tykocin/High-clear/route-s0160` (x 1050-1750, y 600-1080; krytyk podal kafel `dw671-tykocin-03`, ale `route-s0160`
-jest w `tykocin`): oliwkowo-brazowa, ukosna wstega na skarpie przy krawezniku.
-**Hipoteza 1 - ODRZUCONA (zmierzona).** 99,9 % z 262 520 stromych trojkatow `terrain_lod0` `tykocin` ma wektor normalny w gore, wiec
-`WorldPBR` rzutowalby je z gory. Poprawka shadera (rzut z normalnej geometrycznej) wyrenderowana na tej samej kamerze:
-smuga bez zmian - cofnieta. Skirty chunkow sa niewidoczne, a skarpa ma nachylenie <= 8,4 deg (`dw671-tykocin-03` przy s0157).
-**Przyczyna (zmierzona na GLB).** W `terrain_lod0` leza trojkaty-drzazgi o krawedziach 44-92 m i 1 m (np. `tykocin` chunk 0_6:
-92 / 92 / 1 m, 26 sztuk; chunk 0_7: 44 m, 71 sztuk): to paski trawnika za krawezniem (`roads.meshing._emit_verge`, `:vg`) wlaczane
-do terenu przez `merge_verge_into_terrain`. COLOR_0 (maski gruntu) probkowane jest tylko w wierzcholkach, czyli na koncach
-40-90 m paska, a interpolacja liniowa rozmywa je w ukosna wstege (UV terenu i tak = XZ w metrach, nie jest rozciagane).
-**Decyzja.** `build_world.subdivide_long_edges`: kazdy trojkat paska o najdluzszej krawedzi > `VERGE_MAX_EDGE_M = 3 m` jest dzielony w
-polowie tej krawedzi (wspolne krawedzie = wspolny punkt, bez T-spoin), az zadna krawedz nie przekracza 3 m; wysokosci i normalne
-interpolowane liniowo, wiec powierzchnia sie nie zmienia, a maski czytane sa co <= 3 m. Test:
-`test_verge_strip_triangles_are_split_so_ground_masks_are_sampled_every_3_m`.
-**Poza zakresem:** `WorldSurface.shader` (tier Low) bez zmian; problem jest w danych, wiec dotyczy obu shaderow.
+jest w `tykocin`): oliwkowo-brazowa, ukosna wstega na skarpie przy krawezniku (crop: `artifacts/props-fix-s24/after2/bank-crop.png`).
+**Hipotezy sprawdzone i ODRZUCONE (kazda: zmiana + import Win64 + ten sam render, wstega bez zmian):**
+1. Rzut tekstury z normalnej wierzcholkowej: 99,9 % z 262 520 stromych trojkatow `terrain_lod0` `tykocin` ma wektor normalny w gore, ale
+   poprawka `WorldPBR` (rzut z normalnej geometrycznej) nic nie zmienila - cofnieta.
+2. Trojkaty-drzazgi paskow trawnika (`merge_verge_into_terrain`, krawedzie 44-92 m, COLOR_0 tylko na koncach): dzielenie krawedzi > 3 m
+   usunelo je z GLB (skan: 0 drzazg w `terrain_lod0`), wstega zostala - cofniete.
+3. Nie jest to karta `verge_flora` (manifest `tykocin`: 0 kart) ani nachylenie (skarpa <= 8,4 deg).
+**Stan:** przyczyna nieustalona. Nastepny krok (nie wykonany): zrzut debug tego ujecia z wymuszonym kolorem per material / per primitive
+(`terrain_lod0` vs `road` `verge_grass` vs `curb`), zeby zobaczyc, ktora siatka rysuje wstege; podejrzane: pas `back-of-sidewalk batter`
+i maska `COLOR_0` (R = odleglosc od drogi, B = nieskoszona) przy obrysie drogi `ditch_colours`/`conform`.

@@ -118,7 +118,7 @@ wiat; nadal przezroczyste z bliska, z daleka widoczna tafla odbijająca niebo). 
 rozkładu jazdy na ścianie tylnej, stojak D-15 nad narożnikiem od jezdni (jak BKM). 606 trójkątów LOD0 / 258 LOD1, **1 slot
 materiału** (`shelter_paint`; BKM miał 2), bez nowych tekstur zewnętrznych — cztery próbki koloru (zieleń RAL 6005 po
 przetarciu, brąz RAL 8017, ocynk, grafit) dopisane do dolnego pasa atlasu `bus_shelter_atlas`. Wybór: `facade_rules:
-rural_shelters: true` (`furniture.shelter_variant(q, rural)`, deterministyczny z pozycji przystanku; udziały grafit 28 / zieleń 32 /
-brąz 16 / ocynk 24 %, WORKING_VALUE). Polityka LOD instancji bez zmian (prefiks `bus_shelter` → 60 / 300 m).
+rural_shelters: true` (`furniture.shelter_variant(q, rural)`, deterministyczny z pozycji przystanku; udziały grafit 12 / zieleń 34 /
+brąz 20 / ocynk 34 % (po ocenie krytyka czarny za ciemny), WORKING_VALUE). Polityka LOD instancji bez zmian (prefiks `bus_shelter` → 60 / 300 m).
 **Wartości WORKING_VALUE:** wymiary i kolory wiejskiej wiaty (zdjęcia Commons / klatki właściciela, bez inwentarza przystanków);
 testy `tests/gis/test_rural_outbuildings_props_fix_s24.py` (jeden slot, obwiednia wysokości, UV w atlasie, determinizm wyboru).
