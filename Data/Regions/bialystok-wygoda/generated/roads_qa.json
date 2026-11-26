@@ -1752,7 +1752,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.02,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -1763,9 +1763,9 @@
     2
    ],
    "length_m": 1.3,
-   "max_grade": 0.005,
+   "max_grade": 0.0049,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.048,
+   "profile_rms_vs_nmt_m": 0.046,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -9824,9 +9824,9 @@
     3
    ],
    "length_m": 16.1,
-   "max_grade": 0.0066,
+   "max_grade": 0.0067,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.007,
+   "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.0,
    "width_m": [
     12.25
@@ -14625,8 +14625,8 @@
    "corner 2-3: kerb chamfer 1:4 over 7.4 m (width step 1.84 m)"
   ],
   "j:n13084243030": [
-   "corner 0-1: no fillet fits (alpha 87 deg) -> sharp",
-   "corner 1-2: no fillet fits (alpha 93 deg) -> sharp"
+   "corner 0-1: no fillet fits (alpha 93 deg) -> sharp",
+   "corner 1-2: no fillet fits (alpha 87 deg) -> sharp"
   ],
   "j:n1940137938": [
    "corner 0-1: kerb chamfer 1:4 over 13.7 m (width step 3.42 m)"
@@ -14886,17 +14886,17 @@
   "crossings_skipped": [],
   "crossings_snapped": 190,
   "decals": {
-   "gullies": 1632,
+   "gullies": 1634,
    "oil": 487,
-   "patches": 1188,
+   "patches": 1187,
    "seal_cracks": {
-    "longitudinal": 660,
-    "transverse": 1386,
-    "tris": 37216
+    "longitudinal": 661,
+    "transverse": 1384,
+    "tris": 37194
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 1419669,
+  "footprint_nodes": 1419670,
   "fork_abreast": [],
   "fork_shifts": [
    {
@@ -16241,6 +16241,17 @@
      ]
     },
     {
+     "area_m2": 4.4,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -942.9,
+      -1017.1
+     ]
+    },
+    {
      "area_m2": 4.3,
      "built": true,
      "hatch": false,
@@ -16308,12 +16319,12 @@
     }
    ],
    "islands": [],
-   "kerb_dropped_m": 734.5,
+   "kerb_dropped_m": 743.0,
    "kerb_tris_in_fill": 0,
    "paved": {
     "sliver": {
-     "area_m2": 517.2,
-     "count": 23
+     "area_m2": 521.6,
+     "count": 24
     }
    },
    "rejected": [
@@ -16410,6 +16421,30 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.25,
+    "chain": "c:w1423540479:13084243030-13084243031",
+    "end": "a",
+    "in_tile_m": 1.31,
+    "length_m": 2.63,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.125,
+    "chain": "c:w177912087:2676895268-1883101787",
+    "end": "a",
+    "in_tile_m": 6.67,
+    "length_m": 13.33,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.125,
+    "width_other": 4.75,
+    "width_own": 4.75,
+    "width_seam": 4.75
+   },
+   {
     "chain": "c:w177912090:1883101797-2676895268",
     "end": "a",
     "in_tile_m": 4.25,
@@ -16419,6 +16454,18 @@
     "width_other": 5.25,
     "width_own": 4.75,
     "width_seam": 5.0
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w183629913:7091728256-11549343449",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
    },
    {
     "chain": "c:w188440103:1990070446-1990673911",
@@ -16432,12 +16479,13 @@
     "width_seam": 6.7
    },
    {
+    "axis_offset_m": 0.25,
     "chain": "c:w236771593:1878907045-2202284000",
     "end": "a",
-    "in_tile_m": 12.5,
-    "length_m": 25.0,
+    "in_tile_m": 25.0,
+    "length_m": 50.0,
     "neighbour": "bialystok-bojary",
-    "step_m": 0.25,
+    "step_m": 0.5,
     "width_other": 7.0,
     "width_own": 7.5,
     "width_seam": 7.25
@@ -16452,12 +16500,36 @@
     "width_other": 9.75,
     "width_own": 10.75,
     "width_seam": 10.25
+   },
+   {
+    "axis_offset_m": 0.375,
+    "chain": "c:w278213208:2826290829-1883101785",
+    "end": "a",
+    "in_tile_m": 16.12,
+    "length_m": 32.24,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.375,
+    "width_other": 12.25,
+    "width_own": 12.25,
+    "width_seam": 12.25
+   },
+   {
+    "axis_offset_m": 0.586,
+    "chain": "c:w606396456:1883101787-2562206502",
+    "end": "a",
+    "in_tile_m": 15.31,
+    "length_m": 30.62,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.586,
+    "width_other": 12.25,
+    "width_own": 12.25,
+    "width_seam": 12.25
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 3989,
-   "parts": 418,
-   "side_tris": 717
+   "kerb_tris": 4008,
+   "parts": 425,
+   "side_tris": 712
   },
   "signalised_junctions": 11,
   "through_lines": {
@@ -16474,7 +16546,7 @@
   },
   "verge_strips": {
    "chunks": 57,
-   "tris": 121211
+   "tris": 121304
   },
   "walled_ramps": []
  }

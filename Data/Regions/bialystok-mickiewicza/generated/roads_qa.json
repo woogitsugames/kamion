@@ -2475,7 +2475,7 @@
    "lanes": [
     2
    ],
-   "length_m": 67.7,
+   "length_m": 67.6,
    "max_grade": 0.0231,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.005,
@@ -4483,7 +4483,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.67,
+   "axis_smoothing_dev_max_m": 0.68,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -4494,9 +4494,9 @@
     2
    ],
    "length_m": 10.7,
-   "max_grade": 0.1333,
+   "max_grade": 0.1339,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.38,
+   "profile_rms_vs_nmt_m": 0.385,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -5616,7 +5616,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.01,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -5811,7 +5811,7 @@
     2
    ],
    "length_m": 168.0,
-   "max_grade": 0.0065,
+   "max_grade": 0.0064,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 1.0,
@@ -9463,7 +9463,7 @@
     3
    ],
    "length_m": 86.4,
-   "max_grade": 0.0056,
+   "max_grade": 0.0054,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.0,
@@ -12078,9 +12078,9 @@
     2
    ],
    "length_m": 11.7,
-   "max_grade": 0.0049,
+   "max_grade": 0.0048,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.013,
+   "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -16374,7 +16374,7 @@
     3
    ],
    "length_m": 17.8,
-   "max_grade": 0.0304,
+   "max_grade": 0.0303,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
@@ -20465,17 +20465,17 @@
   ],
   "crossings_snapped": 237,
   "decals": {
-   "gullies": 2015,
+   "gullies": 2014,
    "oil": 665,
    "patches": 1104,
    "seal_cracks": {
     "longitudinal": 567,
     "transverse": 1245,
-    "tris": 33060
+    "tris": 33058
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 1514312,
+  "footprint_nodes": 1514321,
   "fork_abreast": [
    {
     "beside": "c:w540735092:5337608240-5337608245",
@@ -22301,27 +22301,113 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.25,
+    "chain": "c:w107760411:1237906236-1237908750#0",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-dojlidy",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w107760411:1237906236-1237908750#1",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-dojlidy",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.113,
     "chain": "c:w1329465432:2214900139-4380504040",
     "end": "a",
     "in_tile_m": 10.0,
     "length_m": 20.0,
     "neighbour": "bialystok-bojary",
     "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
-    "step_m": 0.0,
+    "step_m": 0.113,
     "width_other": 14.5,
     "width_own": 14.717,
     "width_seam": 14.717
    },
    {
+    "axis_offset_m": 0.25,
+    "chain": "c:w1525885356:13907921967-13907921957",
+    "end": "a",
+    "in_tile_m": 10.75,
+    "length_m": 21.5,
+    "neighbour": "bialystok-dojlidy",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w174386670:1850821418-1850821437",
+    "end": "a",
+    "in_tile_m": 3.6,
+    "length_m": 7.21,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w178218020:1786500809-527835112",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.25,
+    "width_other": 7.5,
+    "width_own": 7.5,
+    "width_seam": 7.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w220005590:2291285756-2291285759",
+    "end": "a",
+    "in_tile_m": 7.94,
+    "length_m": 15.88,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.287,
     "chain": "c:w249690269:1757846728-2294481959",
     "end": "a",
-    "in_tile_m": 13.5,
-    "length_m": 26.99,
+    "in_tile_m": 27.82,
+    "length_m": 55.65,
     "neighbour": "bialystok-bojary",
-    "step_m": 0.27,
+    "step_m": 0.556,
     "width_other": 10.25,
     "width_own": 9.71,
     "width_seam": 9.98
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w317939541:3242745741-3242745730",
+    "end": "a",
+    "in_tile_m": 11.75,
+    "length_m": 23.49,
+    "neighbour": "bialystok-bojary",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
    },
    {
     "chain": "c:w552379027:1237908750-874174756",
@@ -22335,12 +22421,13 @@
     "width_seam": 6.25
    },
    {
+    "axis_offset_m": 0.148,
     "chain": "c:w616184922:4235564522-2725108539",
     "end": "a",
-    "in_tile_m": 10.0,
-    "length_m": 20.0,
+    "in_tile_m": 14.8,
+    "length_m": 29.6,
     "neighbour": "bialystok-dojlidy",
-    "step_m": 0.148,
+    "step_m": 0.296,
     "width_other": 10.454,
     "width_own": 10.75,
     "width_seam": 10.602
@@ -22365,7 +22452,7 @@
   },
   "verge_strips": {
    "chunks": 64,
-   "tris": 137383
+   "tris": 137483
   },
   "walled_ramps": []
  }
