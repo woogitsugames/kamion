@@ -1786,7 +1786,7 @@
     3
    ],
    "length_m": 531.7,
-   "max_grade": 0.0479,
+   "max_grade": 0.0485,
    "overrides": [
     "maczka-viaduct-eastbound-two-lanes"
    ],
@@ -1813,7 +1813,7 @@
     2
    ],
    "length_m": 532.7,
-   "max_grade": 0.0614,
+   "max_grade": 0.0613,
    "overrides": [
     "ortho-lanes-w173990800:1847317038-1847317037"
    ],
@@ -3452,7 +3452,7 @@
     2
    ],
    "length_m": 5.0,
-   "max_grade": 0.0159,
+   "max_grade": 0.0151,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
@@ -8088,7 +8088,7 @@
    "length_m": 13.1,
    "max_grade": 0.0328,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.009,
+   "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -9748,7 +9748,7 @@
     1
    ],
    "length_m": 56.6,
-   "max_grade": 0.0376,
+   "max_grade": 0.0375,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
@@ -12728,8 +12728,7 @@
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ],
   "j:n2640194018": [
-   "corner 2-3: no fillet fits (alpha 97 deg) -> sharp",
-   "corner 3-0: no fillet fits (alpha 83 deg) -> sharp"
+   "corner 3-0: no fillet fits (alpha 81 deg) -> sharp"
   ],
   "j:n2648515258": [
    "corner 2-0: no fillet fits (alpha 132 deg) -> sharp",
@@ -12934,17 +12933,17 @@
   ],
   "crossings_snapped": 166,
   "decals": {
-   "gullies": 1412,
+   "gullies": 1410,
    "oil": 474,
    "patches": 852,
    "seal_cracks": {
     "longitudinal": 440,
     "transverse": 926,
-    "tris": 24938
+    "tris": 24940
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 911640,
+  "footprint_nodes": 911646,
   "fork_abreast": [
    {
     "beside": "c:w173990798:1847317033-1847317040",
@@ -13843,7 +13842,7 @@
     {
      "area_m2": 77.7,
      "reason": "carriageways at different heights",
-     "step_m": 3.18,
+     "step_m": 3.17,
      "why": "merge",
      "xy": [
       958.3,
@@ -13903,21 +13902,11 @@
     {
      "area_m2": 19.3,
      "reason": "carriageways at different heights",
-     "step_m": 3.19,
+     "step_m": 3.18,
      "why": "sliver",
      "xy": [
       943.4,
       29.9
-     ]
-    },
-    {
-     "area_m2": 6.2,
-     "reason": "carriageways at different heights",
-     "step_m": 0.47,
-     "why": "sliver",
-     "xy": [
-      1021.4,
-      50.7
      ]
     },
     {
@@ -13951,8 +13940,8 @@
   },
   "grade_over_limit": [],
   "junction_patches": {
-   "delaunay": 32,
-   "polar": 199,
+   "delaunay": 31,
+   "polar": 200,
    "repaired": 21
   },
   "junctions": 252,
@@ -14005,7 +13994,7 @@
   },
   "markings_overlap_removed_tris": 177,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 501,
+  "nmt_nodes_replaced_under_decks": 502,
   "overrides_applied": [
    {
     "id": "ortho-lanes-w173990800:1847317038-1847317037",
@@ -14122,43 +14111,142 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.25,
+    "chain": "c:w1193586233:2640194018-2357586167",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 7.5,
+    "width_own": 7.5,
+    "width_seam": 7.5
+   },
+   {
+    "axis_offset_m": 0.066,
+    "chain": "c:w1560814294:14201379326-282520580",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.066,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.375,
     "chain": "c:w173990798:1847317033-1847317040",
     "end": "a",
-    "in_tile_m": 18.75,
-    "length_m": 37.5,
+    "in_tile_m": 37.5,
+    "length_m": 75.0,
     "neighbour": "bialystok-industrial-c",
-    "step_m": 0.375,
+    "step_m": 0.75,
     "width_other": 12.25,
     "width_own": 11.5,
     "width_seam": 11.875
    },
    {
+    "axis_offset_m": 0.242,
     "chain": "c:w173990799:1847317047-1847317038",
     "end": "a",
-    "in_tile_m": 12.08,
-    "length_m": 24.15,
+    "in_tile_m": 24.18,
+    "length_m": 48.35,
     "neighbour": "bialystok-industrial-c",
-    "step_m": 0.242,
+    "step_m": 0.484,
     "width_other": 8.983,
     "width_own": 8.5,
     "width_seam": 8.742
    },
    {
+    "axis_offset_m": 0.25,
+    "chain": "c:w227027524:2640194018-2640194041",
+    "end": "a",
+    "in_tile_m": 4.96,
+    "length_m": 9.91,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.125,
+    "chain": "c:w227027719:2357586167-1889474201",
+    "end": "a",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.125,
+    "width_other": 5.75,
+    "width_own": 5.75,
+    "width_seam": 5.75
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w25899481:14201379801-3247818576",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.5,
+    "chain": "c:w25899482:282520572-3247818595",
+    "end": "a",
+    "in_tile_m": 25.0,
+    "length_m": 50.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.5,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.058,
     "chain": "c:w261467997:1847317056-2648515276",
     "end": "a",
     "in_tile_m": 10.0,
     "length_m": 20.0,
     "neighbour": "bialystok-industrial-c",
-    "step_m": 0.058,
+    "step_m": 0.116,
     "width_other": 5.616,
     "width_own": 5.5,
     "width_seam": 5.558
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w270494330:282520577-282520592",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 6.5,
+    "width_own": 6.5,
+    "width_seam": 6.5
+   },
+   {
+    "axis_offset_m": 0.125,
+    "chain": "c:w305072031:2776364438-2776364476",
+    "end": "b",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.125,
+    "width_other": 5.75,
+    "width_own": 5.75,
+    "width_seam": 5.75
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 3994,
-   "parts": 507,
-   "side_tris": 496
+   "kerb_tris": 3992,
+   "parts": 505,
+   "side_tris": 494
   },
   "signalised_junctions": 6,
   "through_lines": {
@@ -14175,7 +14263,7 @@
   },
   "verge_strips": {
    "chunks": 50,
-   "tris": 104045
+   "tris": 103964
   },
   "walled_ramps": [
    {
@@ -14190,7 +14278,7 @@
     "confidence": "medium",
     "max_wall_h_m": 5.88,
     "nmt_fill_max_m": 1.76,
-    "walled_m": 175.4
+    "walled_m": 174.9
    }
   ]
  }
