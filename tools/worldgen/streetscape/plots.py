@@ -1208,18 +1208,71 @@ def stone_post(kit, p, t, z, h, key):
     kit.box(p, t, 0.23, 0.23, z + h, z + h + 0.07, PK.SWATCH["concrete"])
 
 
+# weathering-s24 (critic s24 wave 11: "szare bloczkowe ogrodzenia z jedną fakturą", tykocin route-s1441 x~1100-1650):
+# opt-in per region (`kind: facade_rules`, `block_fence_variants: true`; stage.plan_plots -> rp["fence_variants"]).
+# Every plot whose fence is a block (`concrete`) or rendered (`wall`) fence draws one variant (+0 draws: the same atlas,
+# COLOR_0 tint): split-face block (the `concrete` row) / smooth block wall (the `wall` row), with or without a 3D
+# coping cap and block pilasters, in one of the block colours of Polish garden fences (grey, warm grey, sand, graphite,
+# brownish). Shares and linear multipliers of the grey rows WORKING_VALUE (no survey; refs Data/raw/refs/posesje).
+BLOCK_VARIANT_STYLES = ("concrete", "wall")
+BLOCK_VARIANTS = [  # (name, smooth wall row, coping cap, pilasters, weight)
+    ("split", False, False, False, 0.30),
+    ("split_cap", False, True, True, 0.30),
+    ("smooth", True, False, False, 0.20),
+    ("smooth_cap", True, True, True, 0.20),
+]
+BLOCK_TINTS = [((1.00, 1.00, 1.00), 0.26), ((1.10, 1.03, 0.90), 0.24), ((1.24, 1.10, 0.84), 0.20),
+               ((0.60, 0.62, 0.66), 0.18), ((1.02, 0.84, 0.70), 0.12)]
+BLOCK_CAP_TINTS = [(0.55, 0.56, 0.60), (1.0, 1.0, 1.0), (0.80, 0.70, 0.62)]   # graphite / concrete / brown cap
+BLOCK_CAP = (0.06, 0.035, 0.14)           # coping cap: thickness, overhang past the run end, half depth, m
+BLOCK_PIL_HW = 0.15                       # block pilaster half width, m (0.30 x 0.30 block post)
+
+
+def block_variant(key):
+    """Deterministic block-fence variant of one plot (weathering-s24): dict(name, smooth, cap, pil, tint, cap_tint)."""
+    name, smooth, cap, pil = _pick_w(BLOCK_VARIANTS, key, "bfv")
+    tint = _pick_w(BLOCK_TINTS, key, "bft")
+    ctint = BLOCK_CAP_TINTS[int(hfloat(key, "bfc") * len(BLOCK_CAP_TINTS)) % len(BLOCK_CAP_TINTS)]
+    return {"name": name, "smooth": smooth, "cap": cap, "pil": pil, "tint": tint, "cap_tint": ctint}
+
+
+def _block_pilaster(kit, p, t, z, h, key, qcol):
+    """0.30 m split-face block pilaster (the `concrete` row) with a cap; weathering-s24 block-fence variants."""
+    v0, v1 = PK.row("concrete")
+    dv = (v1 - v0) * min((h + 0.10) / PK.ROW_H_M["concrete"], 1.0)
+    u0, u1 = PK.uspan("concrete", 0.2 + 1.5 * hfloat(key, "pu"), 0.2 + 1.5 * hfloat(key, "pu") + 2 * BLOCK_PIL_HW)
+
+    def uv(k, j):
+        return [(u0, v0), (u1, v0), (u1, v0 + dv), (u0, v0 + dv)][j]
+
+    keep = kit.tint
+    if qcol is not None:
+        kit.tint = list(qcol[0])
+    kit.box(p, t, BLOCK_PIL_HW, BLOCK_PIL_HW, z - 0.10, z + h, uv, top=False)
+    kit.tint = keep
+
+
 LEAN_DEG = {"old": 4.5, "prl": 1.5, "new": 0.0}     # largest lean of a fence post by age class (review 0114 P2-r8-e)
 _INTERMEDIATE_POST_STYLES = ("chainlink", "chainlink_galv", "panel_graphite", "panel_green")
 
 
-def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean_deg=0.0):
+def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean_deg=0.0, bvar=None):
     """One straight fence run a -> b (outward normal n), height h above the ground zf(xy), in panels of SEG_M that
     follow the ground. col: list collecting collision quads. ADR 0124: ONE card per panel (the shader lights both
-    faces; the two cards of ADR 0114 showed a ghost of every bar), and posts of old fences lean up to lean_deg."""
+    faces; the two cards of ADR 0114 showed a ghost of every bar), and posts of old fences lean up to lean_deg.
+    bvar: block-fence variant of the plot (block_variant; weathering-s24) - only `concrete` / `wall` runs use it;
+    None = the code before (bit-identical output)."""
     rowname, _, plinth, post, brick = STYLES[style]
     stone_pl = plinth is not None and plinth[0] == "stone"
     post_fn = stone_post if stone_pl else brick_post
     tcol, keep_tint = style_col(kit, style, key), kit.tint
+    bv = bvar if (bvar is not None and style in BLOCK_VARIANT_STYLES) else None
+    if bv is not None:
+        tcol = [min(2.0 * keep_tint[i] * bv["tint"][i], 2.0) * 0.5 for i in range(3)] + [0.0]
+        if bv["smooth"]:
+            rowname = "wall"
+        elif style == "wall":
+            rowname = "concrete"
     qcol = None if tcol is None else np.tile(tcol, (4, 1))
     stone_col = (np.tile([min(2.0 * keep_tint[i] * _STONE_MASONRY_TINT[i], 2.0) * 0.5 for i in range(3)] + [0.0], (4, 1))
                  if stone_pl else None)
@@ -1267,6 +1320,16 @@ def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean
             A, B = a + t * i0, a + t * i1
             kit.quad([[*A, za + lo], [*B, zb + lo], [*(B + n * lb), zb + h], [*(A + n * la), za + h]],
                      [[u0, v0], [u1, v0], [u1, v1], [u0, v1]], qcol)
+            if bv is not None and bv["cap"]:                  # coping cap over the panel (rigid: za == zb)
+                ct, ov_, hd = BLOCK_CAP
+                ccol = [min(2.0 * keep_tint[i] * bv["cap_tint"][i], 2.0) * 0.5 for i in range(3)] + [0.0]
+                keep_c = kit.tint
+                kit.tint = ccol
+                e0 = ov_ if (k == 0 and ends[0]) else 0.0
+                e1 = ov_ if (k == nb - 1 and ends[1]) else 0.0
+                cm = a + t * (0.5 * (i0 + i1) + 0.5 * (e1 - e0))
+                kit.box(cm, t, 0.5 * (i1 - i0) + 0.5 * (e0 + e1), hd, za + h, za + h + ct, PK.SWATCH["concrete"])
+                kit.tint = keep_c
             if plinth:
                 hw = 0.11 if plinth[0] in ("brick", "stone") else 0.06
                 bv0, bv1 = PK.row("brick")
@@ -1292,6 +1355,10 @@ def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean
                 A, B = a + t * i0, a + t * i1
                 kit.quad([[*(A + n * hw), za + ph], [*(B + n * hw), zb + ph], [*(B - n * hw), zb + ph], [*(A - n * hw), za + ph]],
                          [PK.SWATCH["concrete"]] * 4)
+        if bv is not None and bv["pil"] and k > 0:            # block pilaster over the step between two panels
+            zlo = min(Z[k - 1], Z[k], Z[k + 1])
+            ztop = max(min(Z[k - 1], Z[k]), min(Z[k], Z[k + 1])) + h + (BLOCK_CAP[0] if bv["cap"] else 0.0) + 0.04
+            _block_pilaster(kit, a + t * s0, t, zlo, ztop - zlo, (key, ax, ay, k), qcol)
         if brick and (k > 0 or ends[0]):
             post_fn(kit, a + t * s0, t, z0, h + 0.12, (key, k))
         elif post and k == 0 and ends[0]:
@@ -1943,8 +2010,12 @@ def build(buf, rp, zf, surf_top, report, items=None):
         rep["styles_side"][plot["side_style"]] = rep["styles_side"].get(plot["side_style"], 0) + 1
         zones = shapely.unary_union(plot.get("door_zones") or [Polygon()])
         kit.tag = "fence"
+        bvar = block_variant(key) if rp.get("fence_variants") else None          # weathering-s24, opt-in per region
+        if bvar is not None and any(r["style"] in BLOCK_VARIANT_STYLES for r in lay["runs"]):
+            bfv = rep.setdefault("block_fence_variants", {})
+            bfv[bvar["name"]] = bfv.get(bvar["name"], 0) + 1
         for r in lay["runs"]:
-            fence_run(kit, r["style"], r["a"], r["b"], r["n"], r["h"], zf, key, col, lean_deg=LEAN_DEG[age])
+            fence_run(kit, r["style"], r["a"], r["b"], r["n"], r["h"], zf, key, col, lean_deg=LEAN_DEG[age], bvar=bvar)
             rep["fence_m"][r["style"]] = rep["fence_m"].get(r["style"], 0.0) + float(np.hypot(*(r["b"] - r["a"])))
             rep["fence_step_zone_hits"] += int(LineString([r["a"], r["b"]]).intersects(zones))
         rep["fence_stubs_dropped"] = rep.get("fence_stubs_dropped", 0) + int(lay.get("stubs_dropped", 0))

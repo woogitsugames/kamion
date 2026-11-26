@@ -1,30 +1,12 @@
-# STATUS bank-smear-s24 (smuga na skarpie tykocin route_s0160, ADR 0311 dopisek)
+# STATUS weathering-s24 (dachy: zabrudzenia/mech/przebarwienia; ogrodzenia bloczkowe; pas brudu styk sciana-grunt; ADR 0238/0348 dopisek)
 
-- Worktree `agent-a13a4ba7b73214d27`, galaz `worktree-agent-a13a4ba7b73214d27`; prywatna kopia `Data/raw/derived/tykocin` (reszta derived = junction do main), Library z win-build (Win64).
-- [krok 1] Hook diag `KAMION_QA_DIAG`: `colorby:renderer|material|slot|prim|vcol|vcolb|nrm|wpos`, `mat:<prop>=v`, `noshadows` (VisualQaRunner + Editor/VisualQA/DiagPrimitive.shader).
-- [krok 2] Smuga = `terrain_band`/`M_terrain_grass` (WorldPBR) widziany stycznie (skarpa 33 deg, slad tekstury 15-100x anizotropowy); nie rzut z normalnych (WorldSurface bez zmian).
-- [krok 3] Poprawka: Var trawy z mipmapami (WorldPbrMaterials) + WorldPBR izotropowa probka/kolor darni na stoku przy skrajnej anizotropii. DC bez zmian (780). EditMode 39/39 (w tym GrassVarMipsTests), pytest GIS (shader/materials) 58 passed.
-- Dowody: `artifacts/bank-smear-s24/sbs/` (przed|po, diag). Otwarte: cienka linia sylwetki skarpy zostaje (geometria/karty trawy - lider).
-- NASTEPNY KROK: review + scalenie przez lidera; po scaleniu reimport kafli (tekstura Var trawy zmienia sig importu): `pwsh scripts/import-region.ps1 -Region <id> -BuildTarget Win64`.
-
-# STATUS hv-wires-s24 (przewody WN, CRITIC s24 fala 11 pkt 1)
-
-- [krok 1] Diagnoza: pylony na dk65-07 owner02-seam-n-cab to pylony FAR FIELD (kamera n=1080 > 1024, poza kaflem; dk65-08 nie wczytany).
-  far_field.py dokleja kratownice 27 m co 210 m wzdluz WSZYSTKICH linii z pierscienia (BDOT OT_SULN_L dowolnego napiecia + OSM line/minor_line)
-  i nigdy nie rysuje przewodow; BDOT "slup energetyczny" (glownie slupy SN) tez jako kratownica 26 m. dk65-07 far_field_qa: 307 pylonow, 0 przewodow.
-  Kolor COL_PYLON_STEEL (0.27, 0.285, 0.30) liniowo = ~2.3x jasniej niz pylon_steel w kaflu -> w sloncu bialy.
-- NASTEPNY KROK: audyt wszystkich kafli `uv run --project tools/worldgen python tools/worldgen/qa/hv_wires_audit.py`
-- [krok 2] In-tile: power_supports bierze zmapowane wieze na linii (rzut) -> 31/298 -> 0/308 bez przesla; BDOT slup na linii WN = pylon.
-- [krok 3] Far field: wieze tylko na liniach WN (BDOT wysokiego / OSM >=60kV), przesla z zawisem jako wstegi submesh 0, szew = podpora kafla,
-  ocynk z rozrzutem, maszty bez trawers. dk65-07: 307 -> 31 wiez + 5 masztow, 30 przesel, 0 bez przewodow. ADR 0351, testy tests/gis/test_hv_wires_0351.py.
-- NASTEPNY KROK: import Win64 dk65-07 + knyszyn-w (slot unity) i VQA -> artifacts/hv-wires-s24/
-- [krok 4] far field knyszyn-w: 328 -> 44 wiez + 4 maszty, 44 przesla, 2 podpory szwu (= podpory kafla 737.9/792.2,1024). Kamery hv0351_* dodane.
-  pytest (streetscape, world_v33, far_field*, pylons, hv_wires_0351, qa_tools): 405 passed. Import+VQA czeka na slot unity (skrypt w scratchpadzie).
-- NASTEPNY KROK: po VQA after -> render before (podmiana far_field.glb z main), porownanie, visual-critic
-- [krok 5] Daleki plan: linie SN do 600 m (slupy betonowe + 3 przewody, High). Import Win64 + VQA High-clear dk65-07 i knyszyn-w
-  przed|po: artifacts/hv-wires-s24/{vqa-before,vqa-after,cmp}/ (kopia w main artifacts/hv-wires-s24). knyszyn-w hv0351-seam-n:
-  przewody WN ciagle kafel -> szew -> daleki plan (przed: konczyly sie na szwie). dk65-07 owner02: zamiast 6 bialych kratownic
-  bez przewodow - linia SN dk65-08 (slupy + przewody). Audyt: in-tile wieze bez przesla 31 -> 0; far 17 110 -> 0 w przebudowanych.
-- DO ZROBIENIA (lider): far_field.py --region <id> dla wszystkich 54 kafli (~3,5 min/kafel, ekstrakcja GIS schematu 14);
-  build_world dla 26 kafli z liniami WN/wiezami (lista w raporcie); ocena visual-critic (subagent nie tworzy subagentow).
-- NASTEPNY KROK: brak - czeka na review/scalenie lidera. Nie scalone.
+- Worktree `agent-a05410a22b79fbf0c`, galaz `worktree-agent-a05410a22b79fbf0c`; prywatna kopia `Data/raw/derived/{tykocin,dw671-tykocin-03}` (reszta derived = junction do main), Library z win-build (Win64).
+- [krok 0] Kamery dowodowe `wx_zlota_fence`, `wx_zlota_plinth`, `wx_roofs_low` (tools/worldgen/qa/weathering_cameras.py). Render PRZED (import Win64 + VQA High clear/overcast) w tle: `artifacts/weathering-s24/vqa.ps1 -Phase before`.
+- NASTEPNY KROK: kod generatora (roofs COLOR_0) + shader `_ROOF_WEATHER`, pas `_SplashBand`, warianty ogrodzen bloczkowych.
+- [krok 1] Generator: roofs.weather_col (COLOR_0 r wiek, g mech x ekspozycja N/S, b m pod kalenica/6, a 0.5+0.5 ziarno), BM.roof_age_class/roof_weather (opt-in `facade_rules: roof_weathering: true`); materials ROOF_WEATHER (siatka dachowek setu) + SPLASH_BAND; plot_kit `_concrete` przepisany (bloczki z polwiazaniem, ton per bloczek, zacieki spod czapy, brudna stopka); plots.block_variant (split/split_cap/smooth/smooth_cap x 5 kolorow, opt-in `block_fence_variants: true`). Overrides tykocin + dw671-tykocin-03. Test tests/gis/test_weathering_s24.py.
+- NASTEPNY KROK: po zakonczeniu render PRZED: `uv run --no-project python <scratchpad>/wx_shader.py` + `wx_cs.py` (shader _ROOF_WEATHER/_SplashBand + importer), build_world obu kafli, `vqa.ps1 -Phase after`.
+- [krok 2] Render PRZED (tykocin + dw671-03, High clear/overcast) gotowy: artifacts/weathering-s24/before/. Shader+importer wlaczone; pierwszy PO dla tykocin: efekt za slaby (diag colorby:vcol potwierdza COLOR_0 na dachach) -> wzmocnione (zacieki z filmem brudu, wiecej dachowek-odmiencow, mech), wiek "new" 0,15-0,35.
+- NASTEPNY KROK: chain2.ps1 (przebudowa obu kafli + vqa -Phase after) w toku; potem sbs, crop 1:1, liczby DC/tris ze stats.txt, ADR liczby.
+- [krok 3] Przebudowa obu kafli (prywatne derived), import Win64 + VQA PO (High clear/overcast), strojenie shadera (odmiency 3-13 % w grupach, mech ciemniejszy, drobiny rozpryskow z jitterem). DC dw671-03 +0; tykocin zestaw materialow bez zmian (DC +2..+16 = nieaktualna baza markings/furniture z fali 11), tris -1,0..+0,2 %. pytest: test_weathering_s24 + 0348 + tint_contract + typology_0238 (bit-identycznosc) zielone; EditMode 1476/1477 (1 fail NavVoicePlayer0328 = brak zaimportowanego banku glosu w worktree, niezwiazany).
+- Dowody: artifacts/weathering-s24/{before,after,sbs,diag} (kopia w main artifacts/weathering-s24). ADR 0238 + 0348 dopiski.
+- NASTEPNY KROK (lider): review + scalenie; po scaleniu `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region tykocin` i `--region dw671-tykocin-03` w main + `pwsh scripts/import-region.ps1 -Region <id> -BuildTarget Win64`; visual-critic na sbs/.

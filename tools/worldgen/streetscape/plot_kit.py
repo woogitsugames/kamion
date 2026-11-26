@@ -307,25 +307,60 @@ def _chainlink(rng, h, w, per=HALF_M):
 
 
 def _concrete(rng, h, w, per=HALF_M):
+    """Split-face concrete block fence between block posts (weathering-s24 rewrite; critic s24 wave 11 "szare bloczkowe
+    ogrodzenia z jedną fakturą"): blocks BAY_M / 6 x 0.167 m in half bond, each block its own tone (+-9 %) and split-face
+    grain with darker chipped arrises, 10 mm joints, the 0.1 m cap course from 1.5 m, posts at the bay edges (same layout
+    as the ADR 0114 row: UVs keep), run-off streaks from the cap and the post tops that fade 0.6-1.3 m down, a soiled foot
+    (rain splash, 0.15-0.3 m) and moss in the bottom courses. Colour: neutral grey, the plot tint (plots.BLOCK_TINTS)
+    turns it sand / beige / graphite."""
     hm = ROW_H_M["concrete"]
     X, Y = _grid(h, w, hm, per)
     bay = BAY_M
     xb = (X / bay) % 1.0
-    plate = np.minimum(np.floor(Y / 0.5), 2)
-    yin = Y - plate * 0.5
-    base = np.array([122, 119, 112], np.float32) * (0.9 + 0.2 * _noise(rng, h, w, 30, 60))[..., None]
-    base *= (0.94 + 0.1 * ((np.floor(X / bay) * 7 + plate * 3) % 5) / 4)[..., None]      # plate to plate
+    ch = 0.5 / 3
+    bl = bay / 6
+    c = np.floor(np.minimum(Y, 1.4999) / ch).astype(int)
+    xs = X + (c % 2) * bl / 2
+    bi = np.floor(xs / bl).astype(int)
+    yin, xin = Y - c * ch, xs - bi * bl
+    tone = rng.random((16, int(per / bl) + 3))
+    t = tone[np.clip(c, 0, 15), bi % tone.shape[1]]
+    grain = _noise(rng, h, w, 1.2, 1.2)
+    pits = _noise(rng, h, w, 3.0, 4.0)
+    base = np.array([122, 119, 112], np.float32) * (0.91 + 0.18 * t)[..., None]
+    base *= (0.90 + 0.12 * grain + 0.06 * pits)[..., None]
+    edge = np.minimum(np.minimum(yin, ch - yin), np.minimum(xin, bl - xin))           # metres to the block arris
+    base *= (0.84 + 0.16 * np.clip(edge / 0.018, 0, 1))[..., None]                    # chipped, shadowed arrises
     rgb = _weather(base, rng, h, w, bottom=0.2, grey=0.05)
-    relief = (np.sin(X / 0.32 * 2 * math.pi + plate * 1.7) > 0.86) | ((yin % 0.167) < 0.012)    # split-face emboss
-    rgb[relief & (Y < 1.5)] *= 0.86
-    joint = (yin < 0.012) | (Y > 1.5) & (Y < 1.512)
-    rgb[joint] *= 0.55
+    joint = ((yin < 0.010) | (xin < 0.010)) & (Y < 1.5)
+    rgb[joint] *= 0.58
+    cap = Y >= 1.5
+    rgb[cap] = rgb[cap] * 0.92 + 4
+    rgb[(Y >= 1.5) & (Y < 1.512)] *= 0.5                                              # shadow line under the cap
     post = (np.abs(xb - 0.5) > 0.46)
     rgb[post] = (rgb[post] * 0.9 + 6)
-    edge = (np.abs(np.abs(xb - 0.5) - 0.46) < 0.004)
-    rgb[edge] *= 0.6
-    run = np.clip(_noise(rng, h, w, 50, 1.5) - 0.55, 0, 1) * 2.2 * np.clip((Y - 0.3) / 1.2, 0, 1)    # run-off from the cap
-    rgb *= (1 - 0.4 * run)[..., None]
+    pedge = (np.abs(np.abs(xb - 0.5) - 0.46) < 0.004)
+    rgb[pedge] *= 0.6
+    # run-off from the cap: narrow streaks (strongest under the post tops and in random columns), 0.6-1.3 m long
+    cols = _noise(rng, 1, w, 1.0, 9.0)[0]                                              # per-column streak length / strength
+    sn_ = ndimage.gaussian_filter(rng.random((h, w)), (46, 1.3), mode=("nearest", "wrap"))
+    sn_ = (sn_ - sn_.mean(1, keepdims=True)) / np.maximum(sn_.std(1, keepdims=True), 1e-9)   # z-score per texel row:
+    # the filter's edge padding gives the top and bottom rows more variance (streaks only under the cap otherwise)
+    streak = np.clip((sn_ - 0.5) * 0.75, 0, 1)
+    under_post = np.clip(1.0 - np.abs(np.abs(xb - 0.5) - 0.46) / 0.05, 0, 1)
+    reach = 0.6 + 0.7 * cols[None, :] + 0.3 * under_post
+    fade = np.clip(1.0 - (1.5 - Y) / reach, 0, 1) ** 0.8 * (Y < 1.5)
+    run = np.clip(streak * (0.7 + 0.6 * cols[None, :]) + 0.5 * under_post, 0, 1.0) * fade
+    rgb *= (1 - 0.5 * run)[..., None]
+    rgb[..., 1] += 2.0 * run * (pits - 0.3)                                           # a little green in the wet tracks
+    # soiled foot: rain splash 0.15-0.3 m with specks, damp line at the ground
+    top = 0.15 + 0.15 * _noise(rng, 1, w, 1.0, 14.0)[0][None, :]
+    foot = np.clip(1.0 - Y / top, 0, 1) ** 0.8
+    sn = _noise(rng, h, w, 1.6, 1.6)
+    speck = (sn > 0.80 - 0.12 * np.clip(1.0 - Y / (2 * top), 0, 1)) & (Y < 2 * top)
+    rgb *= (1 - 0.36 * foot)[..., None]
+    rgb[speck] = rgb[speck] * 0.72 + np.array([40, 33, 26], np.float32) * 0.08
+    rgb[..., 0] += 6.0 * foot
     moss = np.clip(_noise(rng, h, w, 6 * SS, 9 * SS) - 0.45, 0, 1) * 2.0 * np.clip((0.45 - Y) / 0.45, 0, 1)
     rgb = rgb * (1 - 0.5 * moss[..., None]) + np.array([66, 78, 50], np.float32) * 0.5 * moss[..., None]
     im = _rgba(h, w, a=1.0)
