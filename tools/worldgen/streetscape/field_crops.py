@@ -42,6 +42,26 @@ MAIZE_ZIGZAG_M = 0.40            # card ends this far off the row line, alternat
                                  # the rows (render review r3: from 14 m up the edge-on rows vanished and only the
                                  # cross cards showed - a hedge maze)
 MAIZE_OCC = (0.50, 1.0)          # foot (deep in the crop) .. top
+# r4 (critic s24 wave 11 "pionowe płaskie ściany bloków", dw671-tykocin-03 edge-north): the stand ended in a flat wall
+# of 3.2 m cards - the side of the outermost card row, the cross cards facing out of a cut, and every row stopping on
+# one line. Seams WITHOUT a baulk (two strips of one holding, same use) are no longer cleared (they left a 3.2 m
+# corridor with the painted rows on the ground). Within MAIZE_EDGE_M of a real stop (a baulk, the block border, a road,
+# the end of the card range, the end of the arable ground) a card is split into single-cell cards of uneven height
+# (MAIZE_EDGE_H x the stand), thinned towards the stop (MAIZE_EDGE_KEEP), jittered and turned off the row line,
+# leaning out; the outermost show the atlas edge cell (single plants, hanging leaves) and a few plants stand in front
+# of the line (strays, MAIZE_STRAY_*). No cross cards there. All WORKING_VALUE (render review on the control cameras).
+MAIZE_EDGE_M = 5.0               # edge zone: ~2 card rows (~7 crop rows) - through a thinned outer row the next one shows
+MAIZE_EDGE_H = (0.70, 1.0)       # height factor at the stop .. MAIZE_EDGE_M inside
+MAIZE_EDGE_KEEP = (0.60, 1.0)    # share of edge cards kept at the stop .. inside
+MAIZE_EDGE_JITTER_M = 0.22       # off the row line, either way
+MAIZE_EDGE_TURN = 0.33           # rad, either way
+MAIZE_EDGE_CELL_D_M = 1.4        # closer than this to the stop: mostly the edge cell (single plants)
+MAIZE_EDGE_CROSS = 0.30          # edge cards with a short card across (a plant group, not a face)
+MAIZE_STRAY_D_M = 1.7            # edge cards this close to the stop put plants in front of the line
+MAIZE_STRAY_N = (0.55, 0.20)     # P(>= 1 stray), P(2 strays) per such card
+MAIZE_STRAY_OUT_M = (0.3, 1.4)   # metres in front of the line
+MAIZE_STRAY_W_M = VA.MAIZE_CELL_M / VA.MAIZE_EDGE_PLANTS
+MAIZE_STRAY_H = (1.45, 2.30)
 BAULK_ROAD_RANGE_M = 90.0
 BAULK_BAND_M = 0.5               # candidates this far from the seam line
 BAULK_RATE = 1.6                 # plants per metre of baulk where the density is 1
@@ -85,6 +105,19 @@ class _Ground:
         self.b = np.asarray(col)[..., 2]
         self.hf, self.zc, self.dist, self.blocked = hf, zc, dist_road, blocked
         self.H, self.W = self.b.shape
+        self._dar = None
+
+    @property
+    def dar(self):
+        """r4: metres to the nearest cell that is not arable (or blocked) - the end of the stand where the polygon ends.
+        The grid border is not a stop (the neighbouring tile carries on)."""
+        if self._dar is None:
+            from scipy import ndimage
+            ok = self.b >= ARABLE_B
+            if self.blocked is not None:
+                ok &= ~self.blocked
+            self._dar = ndimage.distance_transform_edt(ok).astype(np.float32)
+        return self._dar
 
     def ij(self, P):
         i = np.rint(P[:, 0] - self.hf.x0).astype(int)
@@ -113,6 +146,33 @@ def _row_point(L0, rowc, s, ox, oy):
         d = rowc - VG.field_wobble(x, y)
         x, y = L0["sx"] + d * c - s * sn, L0["sy"] + d * sn + s * c
     return np.column_stack([x - ox, y - oy])
+
+
+def _baulk_sides(L):
+    """(lower, upper) seam of the strip carries a baulk - the shader's hasBaulk (own strip or own neighbour)."""
+    zero = np.zeros(L["fid"].shape)
+    bid = L["bid"].astype(np.float64)
+    own = VG._u01(VG._h32(L["fid"].astype(np.float64), zero, 931)) < VG.FIELD_OWN_SHARE_SHADER
+    lo = VG._h32(bid, L["k"] - 1.0, 929)
+    hi = VG._h32(bid, L["k"] + 1.0, 929)
+    own_lo = VG._u01(VG._h32(lo.astype(np.float64), zero, 931)) < VG.FIELD_OWN_SHARE_SHADER
+    own_hi = VG._u01(VG._h32(hi.astype(np.float64), zero, 931)) < VG.FIELD_OWN_SHARE_SHADER
+    return own | own_lo, own | own_hi
+
+
+def _edge_dist(g, Q, Lq):
+    """r4: metres from region-local points Q (layout Lq) to the nearest STOP of the card stand: a seam with a baulk
+    (minus the seam clearance), the block border, the road clearance, the end of the card range, the end of the arable
+    ground. Negative = no card here. A seam without a baulk is not a stop (the crop runs on into the next strip)."""
+    lo, hi = _baulk_sides(Lq)
+    a, w = Lq["across"], Lq["w"]
+    d = np.minimum(np.where(lo, a - MAIZE_SEAM_CLEAR_M, np.inf), np.where(hi, w - a - MAIZE_SEAM_CLEAR_M, np.inf))
+    d = np.minimum(d, Lq["block_edge"] - MAIZE_BLOCK_CLEAR_M)
+    i, j, ok = g.ij(Q)
+    dr = g.dist[j, i]
+    d = np.minimum(d, np.minimum(dr - MAIZE_ROAD_CLEAR_M, MAIZE_ROAD_RANGE_M - dr))
+    d = np.minimum(d, g.dar[j, i] - 0.75)
+    return np.where(ok, d, -1.0)
 
 
 def _maize(g, origin, rep):
@@ -154,56 +214,180 @@ def _maize(g, origin, rep):
     rc = m_idx * pitch
     sc = (s_idx + stag) * MAIZE_CARD_L
 
-    def valid(Q):
-        ok = g.arable(Q, MAIZE_ROAD_CLEAR_M, MAIZE_ROAD_RANGE_M + 2 * MAIZE_CARD_L)
+    def valid(Q, fids=None):
+        """(inside the stand, distance to its nearest stop) at region-local points Q of the strips `fids`."""
+        i, j, ok = g.ij(Q)
+        ok &= g.b[j, i] >= ARABLE_B
+        if g.blocked is not None:
+            ok &= ~g.blocked[j, i]
         Lq = VG.field_layout(Q[:, 0] + ox, Q[:, 1] + oy)
-        ok &= Lq["fid"] == fid0
-        ok &= np.minimum(Lq["across"], Lq["w"] - Lq["across"]) > MAIZE_SEAM_CLEAR_M
-        ok &= Lq["block_edge"] > MAIZE_BLOCK_CLEAR_M
-        return ok, Lq
+        ok &= Lq["fid"] == (fid0 if fids is None else fids)
+        de = _edge_dist(g, Q, Lq)
+        return ok & (de > 0.0), de
 
     zz = np.where((s_idx + m_idx) % 2 == 0, MAIZE_ZIGZAG_M, -MAIZE_ZIGZAG_M)
     half = float(np.sqrt((0.5 * MAIZE_CARD_L) ** 2 - MAIZE_ZIGZAG_M ** 2))
     A = _row_point(L0, rc - zz, sc - half, ox, oy)
     B = _row_point(L0, rc + zz, sc + half, ox, oy)
-    okA, LA = valid(A)
-    okB, LB = valid(B)
+    okA, deA = valid(A)
+    okB, deB = valid(B)
     ok = okA & okB
+    de = np.minimum(deA, deB)
+    edge = ok & (de < MAIZE_EDGE_M)
     hk = VG._h32(key_a, s_idx.astype(np.float64), 1043)
     u1, u2, u3, u4 = (VG._u01(VG._h32(hk.astype(np.float64), np.full(len(hk), float(q)), 1045)) for q in range(4))
-    dirv = np.column_stack([np.cos(L0["th"]), np.sin(L0["th"])])
+    dirv = np.column_stack([np.cos(L0["th"]), np.sin(L0["th"])])        # across the rows
+
+    def put(A_, B_, h, lean, uv, nrm, occ0, occ1, tag):
+        n = len(A_)
+        if not n:
+            return 0
+        a3 = np.column_stack([A_, g.z(A_) - MAIZE_SINK_M])
+        b3 = np.column_stack([B_, g.z(B_) - MAIZE_SINK_M])
+        V, UV, C, T = _quads(a3, b3, h + MAIZE_SINK_M, lean, uv, nrm, occ0, occ1)
+        out.append((V, UV, C, T, tag))
+        return n
 
     def emit(A_, B_, sel, cells, tag):
         n = int(sel.sum())
         if not n:
             return 0
-        a3 = np.column_stack([A_[sel], g.z(A_[sel]) - MAIZE_SINK_M])
-        b3 = np.column_stack([B_[sel], g.z(B_[sel]) - MAIZE_SINK_M])
-        h = MAIZE_H[0] + (MAIZE_H[1] - MAIZE_H[0]) * u1[sel] + MAIZE_SINK_M
+        h = MAIZE_H[0] + (MAIZE_H[1] - MAIZE_H[0]) * u1[sel]
         lean = dirv[sel] * ((u2[sel] - 0.5) * 0.22)[:, None]
-        c0 = np.floor(u3[sel] * (VA.N_MAIZE - cells + 1)) / VA.N_MAIZE
-        ua, ub = c0, c0 + cells / VA.N_MAIZE
-        flip = u4[sel] < 0.5
-        uv = np.column_stack([np.where(flip, ub, ua), np.where(flip, ua, ub),
-                              np.full(n, VA.V_MAIZE[0] + 0.004), np.full(n, VA.V_MAIZE[1] - 0.004)])
+        uv, flip = _cell_uv(u3[sel], u4[sel], cells)
         nrm = np.column_stack([dirv[sel] * (np.where(flip, -0.3, 0.3))[:, None], np.ones(n)])
         tone = 0.86 + 0.18 * u2[sel]
-        V, UV, C, T = _quads(a3, b3, h, lean, uv, nrm, MAIZE_OCC[0] * tone, MAIZE_OCC[1] * tone)
-        out.append((V, UV, C, T, tag))
-        return n
+        return put(A_[sel], B_[sel], h, lean, uv, nrm, MAIZE_OCC[0] * tone, MAIZE_OCC[1] * tone, tag)
 
-    n_row = emit(A, B, ok, 2, "maize")
-    # cross cards: from this card row towards the next, at the middle of the card
-    cs = ok & (u4 < MAIZE_CROSS_SHARE)
+    n_row = emit(A, B, ok & ~edge, 2, "maize")
+    # cross cards: from this card row towards the next, at the middle of the card - not near a stop, where they are
+    # the faces of the cut seen from outside
+    cs = ok & ~edge & (u4 < MAIZE_CROSS_SHARE)
     if cs.any():
         off = (u1 - 0.5) * 0.8 * MAIZE_CARD_L
         A2 = _row_point(L0, rc + 0.15, sc + off, ox, oy)
         B2 = _row_point(L0, rc + pitch - 0.15, sc + off, ox, oy)
-        ok2 = cs & valid(A2)[0] & valid(B2)[0]
+        vA2, dA2 = valid(A2)
+        vB2, dB2 = valid(B2)
+        ok2 = cs & vA2 & vB2 & (np.minimum(dA2, dB2) > MAIZE_EDGE_M)
         n_cross = emit(A2, B2, ok2, 1, "maize_cross")
+    n_edge, n_stray = _maize_edge(g, A[edge], B[edge], hk[edge], dirv[edge], fid0[edge], valid, put)
     rep["maize"] = {"strips": int(len(np.unique(L["fid"]))), "row_cards": n_row, "cross_cards": n_cross,
+                    "edge_cards": n_edge, "strays": n_stray, "edge_zone_m": MAIZE_EDGE_M,
                     "card_row_pitch_m": pitch, "height_m": list(MAIZE_H)}
     return out, n_row, n_cross
+
+
+def _cell_uv(u_cell, u_flip, cells, edge_cell=None):
+    """(N, 4) uv of `cells` consecutive WALL cells of the maize row (or the edge cell where edge_cell), flip flags."""
+    c0 = np.floor(u_cell * (VA.N_MAIZE_WALL - cells + 1)) / VA.N_MAIZE
+    if edge_cell is not None:
+        c0 = np.where(edge_cell, VA.MAIZE_EDGE_CELL / VA.N_MAIZE, c0)
+    ua, ub = c0, c0 + cells / VA.N_MAIZE
+    flip = u_flip < 0.5
+    n = len(c0)
+    return np.column_stack([np.where(flip, ub, ua), np.where(flip, ua, ub),
+                            np.full(n, VA.V_MAIZE[0] + 0.004), np.full(n, VA.V_MAIZE[1] - 0.004)]), flip
+
+
+def _maize_edge(g, A, B, hk, dirv, fid0, valid, put):
+    """r4: the margin of the stand (see MAIZE_EDGE_*). Each 2-cell row card within MAIZE_EDGE_M of a stop becomes two
+    single-cell cards (kept by a share falling towards the stop, lower towards it, jittered off the row and turned,
+    leaning out of the stand), the outermost mostly with the atlas edge cell; plants in front of the line (strays)
+    stand alone or crossed, turned anyhow. Returns (edge cards, stray plants)."""
+    n0 = len(A)
+    if not n0:
+        return 0, 0
+    M = 0.5 * (A + B)
+    n_edge = n_stray = 0
+    for Aa, Bb, side in ((A, M, 0.0), (M, B, 1.0)):
+        hs = VG._h32(hk.astype(np.float64), np.full(n0, 2.0 + side), 1047)
+        v = [VG._u01(VG._h32(hs.astype(np.float64), np.full(n0, float(q)), 1049)) for q in range(10)]
+        C = 0.5 * (Aa + Bb)
+        ok, de = valid(C, fid0)
+        t = np.clip(de / MAIZE_EDGE_M, 0.0, 1.0)
+        keep = ok & (v[0] < MAIZE_EDGE_KEEP[0] + (MAIZE_EDGE_KEEP[1] - MAIZE_EDGE_KEEP[0]) * t)
+        if not keep.any():
+            continue
+        Aa, Bb, C, de, t, dv, hs, fk = Aa[keep], Bb[keep], C[keep], de[keep], t[keep], dirv[keep], hs[keep], fid0[keep]
+        v = [x[keep] for x in v]
+        n = len(C)
+        # outward: down the gradient of the distance to the stop (central differences, 0.6 m)
+        ex, ey = np.array([0.6, 0.0]), np.array([0.0, 0.6])
+        gxd = valid(C + ex, fk)[1] - valid(C - ex, fk)[1]
+        gyd = valid(C + ey, fk)[1] - valid(C - ey, fk)[1]
+        out_v = -np.column_stack([gxd, gyd])
+        ol = np.linalg.norm(out_v, axis=1, keepdims=True)
+        out_v = np.where(ol > 1e-6, out_v / np.maximum(ol, 1e-6), dv)
+        # the card: jittered off the row, turned about its middle
+        jit = dv * ((v[1] - 0.5) * 2.0 * MAIZE_EDGE_JITTER_M)[:, None]
+        ang = (v[2] - 0.5) * 2.0 * MAIZE_EDGE_TURN
+        hv = 0.5 * (Bb - Aa)
+        ca, sa = np.cos(ang), np.sin(ang)
+        hv = np.column_stack([hv[:, 0] * ca - hv[:, 1] * sa, hv[:, 0] * sa + hv[:, 1] * ca])
+        C2 = C + jit
+        h = (MAIZE_H[0] + (MAIZE_H[1] - MAIZE_H[0]) * v[3]) * (MAIZE_EDGE_H[0] + (MAIZE_EDGE_H[1] - MAIZE_EDGE_H[0]) * t) \
+            * (0.90 + 0.16 * v[4])
+        lean = out_v * ((0.10 + 0.32 * (1.0 - t)) * v[5])[:, None] + dv * ((v[6] - 0.5) * 0.20)[:, None]
+        uv, _ = _cell_uv(v[7], v[8], 1, edge_cell=(de < MAIZE_EDGE_CELL_D_M) & (v[9] < 0.75))
+        nrm = np.column_stack([out_v * 0.45, np.ones(n)])
+        tone = 0.88 + 0.18 * v[4]
+        occ0 = (MAIZE_OCC[0] + 0.16 * (1.0 - t)) * tone          # the margin is lit down to the foot
+        n_edge += put(C2 - hv, C2 + hv, h, lean, uv, nrm, occ0, MAIZE_OCC[1] * tone, "maize_edge")
+        # a short card across the row: a plant group seen from the side, not a face
+        xs = v[2] < MAIZE_EDGE_CROSS
+        if xs.any():
+            k = int(xs.sum())
+            a2 = ang[xs] + np.pi / 2 + (v[6][xs] - 0.5) * 0.8
+            hl = 0.5 * VA.MAIZE_CELL_M * (0.55 + 0.4 * v[1][xs])
+            d2 = np.column_stack([np.cos(a2), np.sin(a2)]) * hl[:, None]
+            Cx = C2[xs] + dv[xs] * ((v[5][xs] - 0.5) * 0.6)[:, None]
+            uvx, _ = _cell_uv(v[8][xs], v[7][xs], 1, edge_cell=np.ones(k, bool))
+            n_edge += put(Cx - d2, Cx + d2, h[xs] * (0.85 + 0.12 * v[9][xs]), lean[xs] * 0.7, uvx,
+                          np.column_stack([out_v[xs] * 0.45, np.ones(k)]), occ0[xs], MAIZE_OCC[1] * tone[xs], "maize_edge")
+        # strays in front of the line
+        for q in range(2):
+            hq = VG._h32(hs.astype(np.float64), np.full(n, 20.0 + q), 1051)
+            w = [VG._u01(VG._h32(hq.astype(np.float64), np.full(n, float(r)), 1053)) for r in range(8)]
+            sel = (de < MAIZE_STRAY_D_M) & (w[0] < MAIZE_STRAY_N[q])
+            if not sel.any():
+                continue
+            outd = MAIZE_STRAY_OUT_M[0] + (MAIZE_STRAY_OUT_M[1] - MAIZE_STRAY_OUT_M[0]) * w[1][sel]
+            alongd = (w[2][sel] - 0.5) * VA.MAIZE_CELL_M
+            tv = np.column_stack([-dv[sel, 1], dv[sel, 0]])
+            S = C[sel] + out_v[sel] * outd[:, None] + tv * alongd[:, None]
+            i, j, okS = g.ij(S)
+            okS &= g.dist[j, i] > MAIZE_ROAD_CLEAR_M - 1.5
+            if g.blocked is not None:
+                okS &= ~g.blocked[j, i]
+            okS &= g.b[j, i] >= 0.5                                # on the field or its grass margin, not a yard
+            if not okS.any():
+                continue
+            S = S[okS]
+            ws = [x[sel][okS] for x in w]
+            ov = out_v[sel][okS]
+            m = len(S)
+            a3 = ws[3] * np.pi
+            hw = 0.5 * MAIZE_STRAY_W_M * (0.9 + 0.3 * ws[4])
+            dd = np.column_stack([np.cos(a3), np.sin(a3)]) * hw[:, None]
+            pl = np.floor(ws[5] * VA.MAIZE_EDGE_PLANTS).clip(0, VA.MAIZE_EDGE_PLANTS - 1)
+            u0 = (VA.MAIZE_EDGE_CELL + pl / VA.MAIZE_EDGE_PLANTS) / VA.N_MAIZE
+            u1_ = u0 + 1.0 / (VA.MAIZE_EDGE_PLANTS * VA.N_MAIZE)
+            fl = ws[6] < 0.5
+            uvs = np.column_stack([np.where(fl, u1_, u0), np.where(fl, u0, u1_),
+                                   np.full(m, VA.V_MAIZE[0] + 0.004), np.full(m, VA.V_MAIZE[1] - 0.004)])
+            # the card spans the atlas height (MAIZE_H_M); the painted plants are 1.55-2.3 m of it
+            hS = (MAIZE_STRAY_H[0] + (MAIZE_STRAY_H[1] - MAIZE_STRAY_H[0]) * ws[7]) * (VA.MAIZE_H_M / 2.30)
+            leanS = ov * (0.08 + 0.30 * ws[2])[:, None]
+            nrmS = np.column_stack([ov * 0.3, np.ones(m)])
+            occS = np.full(m, MAIZE_OCC[0] + 0.22)
+            n_stray += put(S - dd, S + dd, hS, leanS, uvs, nrmS, occS, np.full(m, MAIZE_OCC[1]), "maize_edge")
+            cr = ws[4] < 0.5                                        # crossed: seen from every side
+            if cr.any():
+                dd2 = np.column_stack([-dd[cr, 1], dd[cr, 0]])
+                put(S[cr] - dd2, S[cr] + dd2, hS[cr], leanS[cr], uvs[cr][:, [1, 0, 2, 3]], nrmS[cr], occS[cr],
+                    np.full(int(cr.sum()), MAIZE_OCC[1]), "maize_edge")
+    return n_edge, n_stray
 
 
 def _smooth(v, t):
@@ -293,7 +477,7 @@ def build(buf, col, hf, zc, origin, dist_road, blocked, report=None, enabled=Tru
         g = _Ground(col, hf, zc, dist_road, blocked)
         parts, _, _ = _maize(g, origin, rep)
         parts += _baulks(g, origin, rep)
-        for tag in ("maize", "maize_cross", "baulk"):
+        for tag in ("maize", "maize_cross", "maize_edge", "baulk"):
             sel = [p for p in parts if p[4] == tag]
             if not sel:
                 continue

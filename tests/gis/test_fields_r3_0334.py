@@ -143,7 +143,9 @@ def test_maize_cards_stand_on_the_rows_of_maize_strips_at_summer_height():
     mid = V[:, :2, :2].mean(1)
     L = VG.field_layout(mid[:, 0] + o[0], mid[:, 1] + o[1])
     assert (VG.field_use(L, True) == VG.FIELD_USES.index("maize")).all()
-    assert (np.minimum(L["across"], L["w"] - L["across"]) > FC.MAIZE_SEAM_CLEAR_M - 0.3).all()   # off the baulks
+    lo, hi = FC._baulk_sides(L)                                    # r4: off the seams that carry a baulk only
+    e_b = np.minimum(np.where(lo, L["across"], np.inf), np.where(hi, L["w"] - L["across"], np.inf))
+    assert (e_b > FC.MAIZE_SEAM_CLEAR_M - 0.3).all()
     # every card lies on a crop row of the shader: row coordinate = whole multiples of the card-row pitch
     rx, ry = mid[:, 0] + o[0] - L["sx"], mid[:, 1] + o[1] - L["sy"]
     rowc = rx * np.cos(L["th"]) + ry * np.sin(L["th"]) + L["wob"]
