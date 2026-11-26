@@ -481,11 +481,11 @@
    "seal_cracks": {
     "longitudinal": 42,
     "transverse": 81,
-    "tris": 2406
+    "tris": 2216
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 95688,
+  "footprint_nodes": 95672,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -571,7 +571,20 @@
    "in_chain_ramps": 0,
    "seam_sides": 0
   },
-  "seam_tapers": [],
+  "seam_tapers": [
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w286989049:2906547564-1134845514",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "dk65-monki-07",
+    "step_m": 0.25,
+    "width_other": 8.0,
+    "width_own": 8.0,
+    "width_seam": 8.0
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 0,
    "parts": 0,
