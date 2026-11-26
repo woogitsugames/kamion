@@ -5632,7 +5632,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 412498,
+  "footprint_nodes": 412520,
   "fork_abreast": [
    {
     "beside": "c:w703487196:2738025368-1994741002",
@@ -6082,12 +6082,25 @@
   },
   "seam_tapers": [
    {
-    "chain": "c:w876126468:2182588703-2738086003",
+    "axis_offset_m": 0.25,
+    "chain": "c:w306912739:3119387218-2451141347",
     "end": "a",
     "in_tile_m": 12.5,
     "length_m": 25.0,
     "neighbour": "dk8-wasilkow-01",
     "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w876126468:2182588703-2738086003",
+    "end": "a",
+    "in_tile_m": 25.0,
+    "length_m": 50.0,
+    "neighbour": "dk8-wasilkow-01",
+    "step_m": 0.5,
     "width_other": 9.0,
     "width_own": 8.5,
     "width_seam": 8.75

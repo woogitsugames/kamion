@@ -4540,7 +4540,7 @@
    "length_m": 40.6,
    "max_grade": 0.0367,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.016,
+   "profile_rms_vs_nmt_m": 0.015,
    "sidewalk_frac": 0.0,
    "width_m": [
     12.25
@@ -8701,7 +8701,7 @@
     1
    ],
    "length_m": 30.5,
-   "max_grade": 0.026,
+   "max_grade": 0.0261,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.039,
    "sidewalk_frac": 0.0,
@@ -8726,7 +8726,7 @@
    "length_m": 41.4,
    "max_grade": 0.035,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.048,
+   "profile_rms_vs_nmt_m": 0.047,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.75
@@ -12321,7 +12321,7 @@
    "P-8 skipped (lanes continue)": 6,
    "P-8 skipped (off carriageway)": 67
   },
-  "markings_overlap_removed_tris": 220,
+  "markings_overlap_removed_tris": 217,
   "median_fills": [
    {
     "dz_edges_max_m": 0.02,
@@ -13466,43 +13466,46 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.375,
     "chain": "c:w23982184:1847317040-1847317043",
     "end": "a",
-    "in_tile_m": 18.75,
-    "length_m": 37.5,
+    "in_tile_m": 37.5,
+    "length_m": 75.0,
     "neighbour": "bialystok-maczka",
-    "step_m": 0.375,
+    "step_m": 0.75,
     "width_other": 11.5,
     "width_own": 12.25,
     "width_seam": 11.875
    },
    {
+    "axis_offset_m": 0.242,
     "chain": "c:w257367422:1847317049-1847317047",
     "end": "a",
-    "in_tile_m": 12.08,
-    "length_m": 24.15,
+    "in_tile_m": 24.18,
+    "length_m": 48.35,
     "neighbour": "bialystok-maczka",
-    "step_m": 0.242,
+    "step_m": 0.484,
     "width_other": 8.5,
     "width_own": 8.983,
     "width_seam": 8.742
    },
    {
+    "axis_offset_m": 0.058,
     "chain": "c:w606396469:1847317049-1847317056",
     "end": "a",
     "in_tile_m": 10.0,
     "length_m": 20.0,
     "neighbour": "bialystok-maczka",
-    "step_m": 0.058,
+    "step_m": 0.116,
     "width_other": 5.5,
     "width_own": 5.616,
     "width_seam": 5.558
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 4751,
-   "parts": 641,
-   "side_tris": 663
+   "kerb_tris": 4771,
+   "parts": 643,
+   "side_tris": 672
   },
   "signalised_junctions": 10,
   "through_lines": {
@@ -13518,7 +13521,7 @@
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 69557
+   "tris": 69572
   },
   "walled_ramps": [
    {

@@ -3745,7 +3745,7 @@
    "length_m": 543.3,
    "max_grade": 0.0633,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 2.058,
+   "profile_rms_vs_nmt_m": 2.057,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0,
@@ -3954,7 +3954,7 @@
     2
    ],
    "length_m": 25.9,
-   "max_grade": 0.0079,
+   "max_grade": 0.0078,
    "overrides": [
     "dk8-seam-kerb-od005"
    ],
@@ -5737,9 +5737,9 @@
     2
    ],
    "length_m": 5.9,
-   "max_grade": 0.0079,
+   "max_grade": 0.0076,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.01,
+   "profile_rms_vs_nmt_m": 0.013,
    "sidewalk_frac": 0.0,
    "width_m": [
     6.5
@@ -6500,7 +6500,7 @@
    "overrides": [
     "knyszynska-seam-e-link-561326924"
    ],
-   "profile_rms_vs_nmt_m": 0.002,
+   "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 0.0,
    "width_m": [
     6.25
@@ -8687,7 +8687,7 @@
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ],
   "j:n2504239797": [
-   "corner 1-2: arms touch (gap -6.44 m) -> no nose",
+   "corner 1-2: arms touch (gap -6.42 m) -> no nose",
    "corner 2-0: kerb chamfer 1:4 over 7.5 m (width step 1.88 m)"
   ],
   "j:n2504262114": [
@@ -8802,7 +8802,7 @@
   ],
   "crossings_snapped": 55,
   "decals": {
-   "gullies": 1276,
+   "gullies": 1277,
    "oil": 272,
    "patches": 626,
    "seal_cracks": {
@@ -8812,7 +8812,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 676917,
+  "footprint_nodes": 676831,
   "fork_abreast": [
    {
     "beside": "c:w261104557:2927425559-2504239797",
@@ -9024,14 +9024,14 @@
   "gores": {
    "gores": [
     {
-     "area_m2": 183.7,
+     "area_m2": 180.8,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "merge",
      "xy": [
-      469.3,
-      -1000.4
+      469.8,
+      -1000.1
      ]
     },
     {
@@ -9113,11 +9113,11 @@
     }
    ],
    "islands": [],
-   "kerb_dropped_m": 261.0,
+   "kerb_dropped_m": 258.0,
    "kerb_tris_in_fill": 0,
    "paved": {
     "merge": {
-     "area_m2": 183.7,
+     "area_m2": 180.8,
      "count": 1
     },
     "sliver": {
@@ -9278,48 +9278,124 @@
     "width_seam": 5.0
    },
    {
+    "axis_offset_m": 0.215,
     "chain": "c:w242989862:2504262098-2504262143",
     "end": "a",
-    "in_tile_m": 11.55,
-    "length_m": 23.1,
+    "in_tile_m": 22.29,
+    "length_m": 44.58,
     "neighbour": "bialystok-porosly",
-    "step_m": 0.231,
+    "step_m": 0.446,
     "width_other": 8.462,
     "width_own": 8.0,
     "width_seam": 8.231
    },
    {
+    "axis_offset_m": 0.25,
     "chain": "c:w242989866:2504262144-2504262100",
     "end": "a",
-    "in_tile_m": 12.5,
-    "length_m": 25.0,
+    "in_tile_m": 25.0,
+    "length_m": 50.0,
     "neighbour": "bialystok-porosly",
-    "step_m": 0.25,
+    "step_m": 0.5,
     "width_other": 8.5,
     "width_own": 8.0,
     "width_seam": 8.25
    },
    {
+    "axis_offset_m": 0.125,
     "chain": "c:w242989872:3626955210-3626954274",
     "end": "a",
-    "in_tile_m": 10.0,
-    "length_m": 20.0,
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
     "neighbour": "bialystok-porosly",
-    "step_m": 0.125,
+    "step_m": 0.25,
     "width_other": 5.75,
     "width_own": 5.5,
     "width_seam": 5.625
    },
    {
+    "axis_offset_m": 0.25,
     "chain": "c:w261104557:2927425559-2504239797",
+    "end": "a",
+    "in_tile_m": 25.0,
+    "length_m": 50.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.5,
+    "width_other": 8.0,
+    "width_own": 8.5,
+    "width_seam": 8.25
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w281813932:486724275-8595899458",
     "end": "a",
     "in_tile_m": 12.5,
     "length_m": 25.0,
     "neighbour": "bialystok-kleeberga",
     "step_m": 0.25,
-    "width_other": 8.0,
-    "width_own": 8.5,
-    "width_seam": 8.25
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w303982105:5218535214-3084995534",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-porosly",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w309094412:3144063329-3144063341",
+    "end": "b",
+    "in_tile_m": 3.54,
+    "length_m": 7.07,
+    "neighbour": "bialystok-porosly",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w309094412:3144063329-3144063341",
+    "end": "a",
+    "in_tile_m": 3.51,
+    "length_m": 7.02,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w309106711:486724250-2314286232",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-porosly",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w40329438:2314286220-2314345049",
+    "end": "a",
+    "in_tile_m": 5.93,
+    "length_m": 11.86,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 6.5,
+    "width_own": 6.5,
+    "width_seam": 6.5
    },
    {
     "chain": "c:w561326924:3626955261-2504239797",
@@ -9331,10 +9407,22 @@
     "width_other": 5.75,
     "width_own": 6.25,
     "width_seam": 6.0
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w76084085:2315344415-4152871156",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 6.0,
+    "width_own": 6.0,
+    "width_seam": 6.0
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 1379,
+   "kerb_tris": 1375,
    "parts": 228,
    "side_tris": 166
   },
@@ -9352,7 +9440,7 @@
   },
   "verge_strips": {
    "chunks": 59,
-   "tris": 65938
+   "tris": 65896
   },
   "walled_ramps": [
    {
@@ -9367,7 +9455,7 @@
     "confidence": "medium",
     "max_wall_h_m": 4.99,
     "nmt_fill_max_m": 0.21,
-    "walled_m": 162.4
+    "walled_m": 162.5
    }
   ]
  }

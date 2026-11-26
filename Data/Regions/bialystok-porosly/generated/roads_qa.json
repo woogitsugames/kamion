@@ -4164,9 +4164,9 @@
     1
    ],
    "length_m": 27.2,
-   "max_grade": 0.0459,
+   "max_grade": 0.0455,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.045,
+   "profile_rms_vs_nmt_m": 0.046,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.75
@@ -5603,7 +5603,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.01,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -5614,7 +5614,7 @@
     2
    ],
    "length_m": 3.5,
-   "max_grade": 0.0092,
+   "max_grade": 0.0085,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
@@ -12933,8 +12933,8 @@
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ],
   "j:n3144063329": [
-   "corner 0-1: no fillet fits (alpha 89 deg) -> sharp",
-   "corner 1-2: no fillet fits (alpha 91 deg) -> sharp"
+   "corner 0-1: no fillet fits (alpha 86 deg) -> sharp",
+   "corner 1-2: no fillet fits (alpha 94 deg) -> sharp"
   ],
   "j:n3626954252": [
    "corner 2-0: no fillet fits (alpha 58 deg) -> sharp"
@@ -13071,7 +13071,7 @@
   "axis_smoothing_deviation_m": {
    "max": 4.522,
    "p50": 0.0,
-   "p95": 0.443
+   "p95": 0.444
   },
   "bridges": [
    {
@@ -13201,7 +13201,7 @@
   "crossings_skipped": [],
   "crossings_snapped": 71,
   "decals": {
-   "gullies": 1605,
+   "gullies": 1606,
    "oil": 338,
    "patches": 946,
    "seal_cracks": {
@@ -13211,7 +13211,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 804908,
+  "footprint_nodes": 804859,
   "fork_abreast": [
    {
     "beside": "c:w303739901:2504262095-5749430431",
@@ -13952,13 +13952,13 @@
      ]
     },
     {
-     "area_m2": 54.4,
+     "area_m2": 54.0,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "merge",
      "xy": [
-      455.0,
+      454.9,
       1014.0
      ]
     },
@@ -14112,7 +14112,7 @@
      "note": "",
      "why": "merge",
      "xy": [
-      412.1,
+      412.2,
       1015.8
      ]
     },
@@ -14353,7 +14353,7 @@
    "kerb_tris_in_fill": 0,
    "paved": {
     "merge": {
-     "area_m2": 486.6,
+     "area_m2": 486.2,
      "count": 18
     },
     "sliver": {
@@ -14604,8 +14604,8 @@
   "grade_over_limit": [],
   "junction_patches": {
    "delaunay": 24,
-   "polar": 251,
-   "repaired": 12
+   "polar": 250,
+   "repaired": 13
   },
   "junctions": 287,
   "junctions_earclip": [],
@@ -14613,6 +14613,7 @@
    "j:n12061319694",
    "j:n11921627112",
    "j:n2232531344",
+   "j:n3144063329",
    "j:n3509639068",
    "j:n5821207204",
    "j:n2424565144",
@@ -14687,42 +14688,81 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.125,
     "chain": "c:w242989872:3626955210-3626954274",
-    "end": "a",
-    "in_tile_m": 10.0,
-    "length_m": 20.0,
-    "neighbour": "bialystok-knyszynska",
-    "step_m": 0.125,
-    "width_other": 5.5,
-    "width_own": 5.75,
-    "width_seam": 5.625
-   },
-   {
-    "chain": "c:w303739901:2504262095-5749430431",
-    "end": "a",
-    "in_tile_m": 11.55,
-    "length_m": 23.1,
-    "neighbour": "bialystok-knyszynska",
-    "step_m": 0.231,
-    "width_other": 8.0,
-    "width_own": 8.462,
-    "width_seam": 8.231
-   },
-   {
-    "chain": "c:w606396500:5749430428-3626954274",
     "end": "a",
     "in_tile_m": 12.5,
     "length_m": 25.0,
     "neighbour": "bialystok-knyszynska",
     "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.75,
+    "width_seam": 5.625
+   },
+   {
+    "axis_offset_m": 0.215,
+    "chain": "c:w303739901:2504262095-5749430431",
+    "end": "a",
+    "in_tile_m": 22.29,
+    "length_m": 44.58,
+    "neighbour": "bialystok-knyszynska",
+    "step_m": 0.446,
+    "width_other": 8.0,
+    "width_own": 8.462,
+    "width_seam": 8.231
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w303982105:13534439621-3084995534",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-knyszynska",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w309094412:3144063329-3144063344",
+    "end": "a",
+    "in_tile_m": 3.54,
+    "length_m": 7.07,
+    "neighbour": "bialystok-knyszynska",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w309106711:486724250-2845922458",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-knyszynska",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w606396500:5749430428-3626954274",
+    "end": "a",
+    "in_tile_m": 25.0,
+    "length_m": 50.0,
+    "neighbour": "bialystok-knyszynska",
+    "step_m": 0.5,
     "width_other": 8.0,
     "width_own": 8.5,
     "width_seam": 8.25
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 7478,
-   "parts": 927,
+   "kerb_tris": 7482,
+   "parts": 925,
    "side_tris": 899
   },
   "signalised_junctions": 1,
@@ -14739,7 +14779,7 @@
   },
   "verge_strips": {
    "chunks": 62,
-   "tris": 95867
+   "tris": 95707
   },
   "walled_ramps": [
    {

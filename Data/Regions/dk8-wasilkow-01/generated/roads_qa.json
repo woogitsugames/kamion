@@ -2205,7 +2205,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 146041,
+  "footprint_nodes": 146040,
   "fork_abreast": [
    {
     "beside": "c:w876126471:2738085825-1838303412",
@@ -2668,21 +2668,34 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.25,
     "chain": "c:w211148033:2182588693-2182588703",
+    "end": "a",
+    "in_tile_m": 25.0,
+    "length_m": 50.0,
+    "neighbour": "dk8-wasilkow-02",
+    "step_m": 0.5,
+    "width_other": 8.5,
+    "width_own": 9.0,
+    "width_seam": 8.75
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w306912739:3119387218-2451141347",
     "end": "a",
     "in_tile_m": 12.5,
     "length_m": 25.0,
     "neighbour": "dk8-wasilkow-02",
     "step_m": 0.25,
-    "width_other": 8.5,
-    "width_own": 9.0,
-    "width_seam": 8.75
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
    }
   ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 3854,
    "parts": 309,
-   "side_tris": 229
+   "side_tris": 231
   },
   "signalised_junctions": 2,
   "through_lines": {
@@ -2698,7 +2711,7 @@
   },
   "verge_strips": {
    "chunks": 22,
-   "tris": 27279
+   "tris": 27273
   },
   "walled_ramps": []
  }

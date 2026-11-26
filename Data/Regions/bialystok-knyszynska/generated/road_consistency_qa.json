@@ -1,7 +1,7 @@
 {
  "by_kind": {
   "lane_blind_end": 21,
-  "marking_off_carriageway": 3,
+  "marking_off_carriageway": 4,
   "obstacle_in_lane": 1
  },
  "cases": [
@@ -49,11 +49,11 @@
   },
   {
    "chain": "c:w261104557:2927425559-2504239797",
-   "e": 1001.76,
+   "e": 1001.77,
    "junction": null,
    "kind": "marking_off_carriageway",
    "lat": 53.1547653,
-   "lon": 23.0825321,
+   "lon": 23.0825322,
    "n": -718.55,
    "on_route": true,
    "osm_ways": [
@@ -64,11 +64,11 @@
   },
   {
    "chain": "c:w261104557:2927425559-2504239797",
-   "e": 1002.38,
+   "e": 1002.39,
    "junction": null,
    "kind": "marking_off_carriageway",
    "lat": 53.1547671,
-   "lon": 23.0825415,
+   "lon": 23.0825416,
    "n": -718.31,
    "on_route": true,
    "osm_ways": [
@@ -79,12 +79,12 @@
   },
   {
    "chain": "c:w261104557:2927425559-2504239797",
-   "e": 1023.94,
+   "e": 1023.96,
    "junction": null,
    "kind": "marking_off_carriageway",
-   "lat": 53.1547821,
-   "lon": 23.0828658,
-   "n": -715.41,
+   "lat": 53.1547811,
+   "lon": 23.0828659,
+   "n": -715.51,
    "on_route": true,
    "osm_ways": [
     261104557
@@ -455,16 +455,16 @@
   },
   {
    "chain": "c:w40329438:486724246-2314286220",
-   "dist_from_stop_m": 14.0,
-   "e": 1024.38,
+   "dist_from_stop_m": 13.9,
+   "e": 1024.34,
    "junction": "j:n2314286220",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.1529152,
-   "lon": 23.0826949,
-   "n": -923.52,
+   "lat": 53.1529161,
+   "lon": 23.0826944,
+   "n": -923.43,
    "on_route": false,
    "osm_ways": [
     40329438
@@ -472,6 +472,22 @@
    "to_chain": "c:w40329438:2314286220-2314345049",
    "turn_lanes": null,
    "what": "none"
+  },
+  {
+   "chain": "c:w242989872:3626955210-3626954274",
+   "e": 427.35,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1523198,
+   "lon": 23.0737016,
+   "n": -1023.98,
+   "on_route": false,
+   "osm_ways": [
+    242989872,
+    606396501
+   ],
+   "surface": "none",
+   "what": "P-7b"
   },
   {
    "chain": "c:w779083406:7274191899-7274191898",
@@ -490,7 +506,7 @@
    "what": "kerb"
   }
  ],
- "count": 25,
+ "count": 26,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "lane_blind_end": 2,
@@ -517,7 +533,7 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 532,
-  "kerb_tris": 89458,
+  "kerb_tris": 89460,
   "lane_samples": 89287,
   "lane_samples_beyond_tile": 91,
   "lane_samples_in_taper": 20,

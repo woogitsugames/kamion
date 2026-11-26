@@ -3,7 +3,7 @@
   "arrow_no_exit": 17,
   "lane_blind_end": 58,
   "marking_off_carriageway": 2,
-  "obstacle_in_lane": 11
+  "obstacle_in_lane": 13
  },
  "cases": [
   {
@@ -1586,13 +1586,13 @@
   },
   {
    "chain": "c:w178218020:1786500809-527835112",
-   "e": -899.79,
+   "e": -899.72,
    "junction": null,
    "kind": "obstacle_in_lane",
    "lane": 0,
-   "lat": 53.1303987,
-   "lon": 23.1743315,
-   "n": 1023.86,
+   "lat": 53.1303995,
+   "lon": 23.1743327,
+   "n": 1023.95,
    "on_route": false,
    "osm_ways": [
     178218020
@@ -1650,6 +1650,38 @@
    "what": "verge_grass"
   },
   {
+   "chain": "c:w220005590:2291285756-2291285759",
+   "e": -420.67,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1301485,
+   "lon": 23.1814756,
+   "n": 1023.96,
+   "on_route": false,
+   "osm_ways": [
+    220005590
+   ],
+   "s": 0.5,
+   "what": "none"
+  },
+  {
+   "chain": "c:w107760411:1237906236-1237908750#0",
+   "e": 468.43,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.111316,
+   "lon": 23.1929417,
+   "n": -1023.96,
+   "on_route": false,
+   "osm_ways": [
+    107760411
+   ],
+   "s": 0.5,
+   "what": "none"
+  },
+  {
    "chain": "c:w1270622661:3277682817-6284232704",
    "e": 472.79,
    "junction": null,
@@ -1685,7 +1717,7 @@
    "what": "sidewalk"
   }
  ],
- "count": 88,
+ "count": 90,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "arrow_no_exit": 8,
@@ -1714,11 +1746,11 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 1346,
-  "kerb_tris": 160797,
+  "kerb_tris": 160804,
   "lane_samples": 160155,
-  "lane_samples_beyond_tile": 268,
+  "lane_samples_beyond_tile": 266,
   "lane_samples_in_taper": 162,
-  "marking_tris": 18022,
-  "props_checked": 2397
+  "marking_tris": 18028,
+  "props_checked": 2398
  }
 }

@@ -2426,7 +2426,7 @@
     2
    ],
    "length_m": 43.8,
-   "max_grade": 0.06,
+   "max_grade": 0.0599,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.018,
    "sidewalk_frac": 0.0,
@@ -5785,9 +5785,9 @@
     1
    ],
    "length_m": 6.7,
-   "max_grade": 0.0316,
+   "max_grade": 0.0314,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.013,
+   "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.0,
    "width_m": [
     4.75
@@ -9888,7 +9888,7 @@
     2
    ],
    "length_m": 7.9,
-   "max_grade": 0.0182,
+   "max_grade": 0.0181,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
@@ -17209,7 +17209,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.01,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -21232,7 +21232,7 @@
     3
    ],
    "length_m": 65.2,
-   "max_grade": 0.0053,
+   "max_grade": 0.0051,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
@@ -25550,7 +25550,7 @@
   ],
   "crossings_snapped": 244,
   "decals": {
-   "gullies": 2060,
+   "gullies": 2059,
    "oil": 788,
    "patches": 1396,
    "seal_cracks": {
@@ -25560,7 +25560,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 1398260,
+  "footprint_nodes": 1398305,
   "fork_abreast": [
    {
     "alongside_run_m": 17.5,
@@ -27338,8 +27338,8 @@
    "c:w762438188:6031743083-7124110827"
   ],
   "junction_patches": {
-   "delaunay": 63,
-   "polar": 423,
+   "delaunay": 62,
+   "polar": 424,
    "repaired": 40
   },
   "junctions": 526,
@@ -27445,16 +27445,53 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.113,
     "chain": "c:w1329465432:2214900139-4380504040",
     "end": "a",
     "in_tile_m": 10.0,
     "length_m": 20.0,
     "neighbour": "bialystok-mickiewicza",
     "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
-    "step_m": 0.0,
+    "step_m": 0.113,
     "width_other": 14.717,
     "width_own": 14.5,
     "width_seam": 14.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w1423540479:13084243030-13084243031",
+    "end": "a",
+    "in_tile_m": 1.31,
+    "length_m": 2.63,
+    "neighbour": "bialystok-wygoda",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w174386670:1850821418-1850821437",
+    "end": "a",
+    "in_tile_m": 3.6,
+    "length_m": 7.21,
+    "neighbour": "bialystok-mickiewicza",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.125,
+    "chain": "c:w177912087:2676895268-1883101787",
+    "end": "a",
+    "in_tile_m": 6.67,
+    "length_m": 13.33,
+    "neighbour": "bialystok-wygoda",
+    "step_m": 0.125,
+    "width_other": 4.75,
+    "width_own": 4.75,
+    "width_seam": 4.75
    },
    {
     "chain": "c:w177912090:1883101797-2676895268",
@@ -27468,6 +27505,30 @@
     "width_seam": 5.0
    },
    {
+    "axis_offset_m": 0.25,
+    "chain": "c:w178218020:712626202-3242855501",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-mickiewicza",
+    "step_m": 0.25,
+    "width_other": 7.5,
+    "width_own": 7.5,
+    "width_seam": 7.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w183629913:1990070446-11549343449",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-wygoda",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
     "chain": "c:w188440103:1990070446-1990673911",
     "end": "a",
     "in_tile_m": 10.0,
@@ -27479,15 +27540,52 @@
     "width_seam": 6.7
    },
    {
+    "axis_offset_m": 0.25,
+    "chain": "c:w220005590:2291285756-2291285759",
+    "end": "a",
+    "in_tile_m": 7.94,
+    "length_m": 15.88,
+    "neighbour": "bialystok-mickiewicza",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
     "chain": "c:w236771593:1878907045-2202284000",
     "end": "a",
-    "in_tile_m": 12.5,
-    "length_m": 25.0,
+    "in_tile_m": 25.0,
+    "length_m": 50.0,
     "neighbour": "bialystok-wygoda",
-    "step_m": 0.25,
+    "step_m": 0.5,
     "width_other": 7.5,
     "width_own": 7.0,
     "width_seam": 7.25
+   },
+   {
+    "axis_offset_m": 0.375,
+    "chain": "c:w249640396:1857964359-2826290829",
+    "end": "a",
+    "in_tile_m": 16.12,
+    "length_m": 32.24,
+    "neighbour": "bialystok-wygoda",
+    "step_m": 0.375,
+    "width_other": 12.25,
+    "width_own": 12.25,
+    "width_seam": 12.25
+   },
+   {
+    "axis_offset_m": 0.586,
+    "chain": "c:w249640398:2562206502-2478100691",
+    "end": "a",
+    "in_tile_m": 15.31,
+    "length_m": 30.62,
+    "neighbour": "bialystok-wygoda",
+    "step_m": 0.586,
+    "width_other": 12.25,
+    "width_own": 12.25,
+    "width_seam": 12.25
    },
    {
     "chain": "c:w264219602:2185359279-257899854",
@@ -27501,21 +27599,34 @@
     "width_seam": 10.25
    },
    {
+    "axis_offset_m": 0.25,
+    "chain": "c:w317939541:3242745741-3242745730",
+    "end": "a",
+    "in_tile_m": 11.75,
+    "length_m": 23.49,
+    "neighbour": "bialystok-mickiewicza",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.287,
     "chain": "c:w440321721:2294481959-1850821444",
     "end": "a",
-    "in_tile_m": 13.5,
-    "length_m": 26.99,
+    "in_tile_m": 27.82,
+    "length_m": 55.65,
     "neighbour": "bialystok-mickiewicza",
-    "step_m": 0.27,
+    "step_m": 0.556,
     "width_other": 9.71,
     "width_own": 10.25,
     "width_seam": 9.98
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 7770,
-   "parts": 1143,
-   "side_tris": 1552
+   "kerb_tris": 7774,
+   "parts": 1149,
+   "side_tris": 1586
   },
   "signalised_junctions": 19,
   "through_lines": {
@@ -27532,7 +27643,7 @@
   },
   "verge_strips": {
    "chunks": 64,
-   "tris": 170238
+   "tris": 170289
   },
   "walled_ramps": [
    {
