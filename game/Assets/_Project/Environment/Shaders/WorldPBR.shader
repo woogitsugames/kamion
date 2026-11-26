@@ -954,7 +954,7 @@ Shader "Kamion/World PBR"
                             float sk = (i.uv.x < 0.5 ? frac(seed * 17.3) : frac(seed * 23.9)) - 0.5;
                             sk *= 0.10;
                             float endD = borderM.x - (sk * vY + 0.5 * abs(sk) * sizeM.y) - 0.004 * (n3 - 0.5);
-                            float latD = borderM.y - 0.5 * wobAmp - wobAmp * wob - bite - 0.02 * (n2 - 0.5);
+                            float latD = borderM.y - wobAmp * saturate(0.5 + 2.0 * wob) - bite - 0.02 * (n2 - 0.5);
                             float rcn = min((0.04 + 0.16 * frac(seed * 7.13)) * (0.3 + 1.4 * n1), 0.4 * mn);
                             edgeM = RoundedInset(float2(endD, latD), rcn) - 0.006 * n3;
                             // staggered end: subtract the box {distance to that end < st, on one lateral half}
@@ -965,7 +965,7 @@ Shader "Kamion/World PBR"
                             fth = 0.012;
                             hasSeal = 1.0;
                             sw = baseSw;
-                            sealMask = (half)(smoothstep(0.56, 0.42, n1) * step(min(endD, dEnd - st), latD + sw));
+                            sealMask = (half)(smoothstep(0.78, 0.58, n1) * step(min(endD, dEnd - st), latD + sw));
                         }
                         else if (kindF < 2.5)
                         {
@@ -974,7 +974,7 @@ Shader "Kamion/World PBR"
                             // bites along the cut; 45 % L-shaped (a corner box of 25-45 % x 30-55 % never dug: the trench turns or
                             // a second, shorter cut), a continuous hand-poured overband, worn in stretches. WORKING_VALUE.
                             float rc = min(frac(seed * 3.3) < 0.5 ? 0.02 + 0.04 * frac(seed * 7.13) : 0.12 + 0.28 * frac(seed * 7.13), 0.45 * mn);
-                            float2 bW = borderM - 0.5 * wobAmp - wobAmp * wob - bite;
+                            float2 bW = borderM - wobAmp * saturate(0.5 + 2.0 * wob) - bite;
                             edgeM = RoundedInset(bW, rc);
                             edgeM -= 0.012 * (n2 - 0.5) + 0.006 * n3;
                             half notch = (half)step(frac(seed * 9.7), 0.45) * (half)step(1.4, mn);
@@ -985,7 +985,7 @@ Shader "Kamion/World PBR"
                             fth = 0.012;
                             hasSeal = 1.0;
                             sw = baseSw;
-                            sealMask = (half)smoothstep(0.70, 0.52, n1);
+                            sealMask = (half)smoothstep(0.80, 0.60, n1);
                         }
                         else if (kindF < 3.5)
                         {
@@ -1029,8 +1029,10 @@ Shader "Kamion/World PBR"
                                   * (half)step(0.001, sw) * sealMask;
                         alpha = max(alphaPatch, seam * 0.94h);
                         // per-patch tone: 0.88-1.14 x (batch of mix), mottled inside by the 0.9 m noise
-                        half tone = (half)((0.88 + 0.26 * frac(seed * 13.3)) * (kindF > 0.5 ? (0.985 + 0.03 * n1) * (0.97 + 0.06 * n3) : (0.93 + 0.14 * n1)));
-                        albedo *= lerp(_PatchSeam.z, _PatchSeam.w, age) * tone;
+                        half tone = (half)((0.88 + 0.26 * frac(seed * 13.3)) * (kindF > 0.5 ? (1.0 + (0.03 + 0.09 * age) * (n1 - 0.5) * 2.0) * (0.97 + 0.06 * n3) : (0.93 + 0.14 * n1)));
+                        // r2 (render r1, dw671 cab-view-b: an old milled overlay measured 1.17x the road in sRGB, ~1.4x linear -
+                        // the road also carries wheel-path / drip darkening the decal does not): aged end x0.82. WORKING_VALUE.
+                        albedo *= lerp(_PatchSeam.z, _PatchSeam.w * 0.82, age) * tone;
                         // road-patches-s24: inherit the tone of the stretch (KamionRoadTone, same as the ribbon under it): an old
                         // repair has weathered with the road (full tone), a fresh one only partly (the 90 m bleaching came later).
                         albedo *= lerp(half3(1, 1, 1), KamionRoadTone(TransformWorldToObject(pw).xz), (half)lerp(0.6, 1.0, saturate(age * 2.0)));
@@ -1051,7 +1053,7 @@ Shader "Kamion/World PBR"
                             albedo += fleck * 0.018h * (1.0h - 0.5h * age);
                             // a fresh overlay is binder-rich and closed (finer, weaker grain); an old one shows its aggregate
                             albedo *= (1.0 + grain * lerp(0.55h, 1.15h, age)) * (0.96 + 0.08 * macro.a);
-                            albedo *= 1.0 + 0.30 * age * (1.0 - smoothstep(0.0, 0.06, edgeM));
+                            albedo *= 1.0 + 0.12 * age * (1.0 - smoothstep(0.0, 0.06, edgeM));
                             tn = normalize(lerp(tn, half3(0, 0, 1), 0.35h * (1.0h - age)));
                         }
                         // fresh hot-mix is warm black, not blue-grey (critic r3)
