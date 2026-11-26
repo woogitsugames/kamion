@@ -56,6 +56,41 @@ namespace Game.Tests
             Assert.That(holes / (float)n, Is.LessThan(0.02f), "opacity < 0.5 within 2 deg of the photographed sun (zeroed disc)");
         }
 
+        /// <summary>render-artifacts-s24 (critic s24 wave 11 pkt 10, ADR 0332 addendum 2): the HDRI's lens ghost of the sun
+        /// (lat 23.8 / lon 51.8 deg) was a white round blot in a grey cumulus (core luminance G 0.70 vs. 0.46 around).
+        /// tools/rendering/clear_clouds_ghost_repair.py replaces it; its core must not be brighter than the cloud ring.</summary>
+        [Test]
+        public void LensGhost_IsNotABrightBlotInTheCloud()
+        {
+            var tex = Load(out _);
+            var px = tex.GetPixels32();
+            int w = tex.width, h = tex.height;
+            var c = Dir(23.8f, 51.8f);
+            float core = 0f, ring = 0f; int nc = 0, nr = 0;
+            for (int y = 0; y < h; y++)
+            {
+                float lat = 180f * ((y + 0.5f) / h - 0.5f);           // LoadImage: row 0 = bottom
+                if (lat < 17f || lat > 31f) continue;
+                for (int x = 0; x < w; x++)
+                {
+                    float lon = 360f * ((x + 0.5f) / w - 0.5f);
+                    if (lon < 43f || lon > 61f) continue;
+                    float a = Mathf.Acos(Mathf.Clamp(Vector3.Dot(Dir(lat, lon), c), -1f, 1f)) * Mathf.Rad2Deg;
+                    var p = px[y * w + x];
+                    if (a < 1.2f) { core += p.g / 255f; nc++; }
+                    else if (a > 3.2f && a < 5.2f && p.r > 25) { ring += p.g / 255f; nr++; }
+                }
+            }
+            Assert.Greater(nc, 50); Assert.Greater(nr, 200);
+            Assert.That(core / nc, Is.LessThan(ring / nr + 0.08f), "ghost core luminance vs. the cloud ring around it");
+        }
+
+        static Vector3 Dir(float latDeg, float lonDeg)
+        {
+            float la = latDeg * Mathf.Deg2Rad, lo = lonDeg * Mathf.Deg2Rad;
+            return new Vector3(Mathf.Sin(lo) * Mathf.Cos(la), Mathf.Sin(la), Mathf.Cos(lo) * Mathf.Cos(la));
+        }
+
         [Test]
         public void CircumsolarCap_HasNoSoftGlowRing()
         {

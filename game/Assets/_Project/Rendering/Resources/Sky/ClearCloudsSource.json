@@ -11,7 +11,7 @@
   "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/4k/kloofendal_48d_partly_cloudy_puresky_4k.hdr",
   "source_md5": "816340c969d2e60d659051d13ac3c4dc",
   "source_sha256": "3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88",
-  "texture_sha256": "10f81b4d4c8d999ba399f975bddd570fba6f9ba3b484e2d979252d2fe847d916",
+  "texture_sha256": "6e2e5ce49ffd073ee73d02da94333f91034727b33cbc083da2fde47fbf5a9255",
   "width": 4096,
   "height": 2048,
   "sunDirection": {
@@ -26,5 +26,7 @@
   "checked_utc": "2026-11-11T23:02:45.192435+01:00",
   "sampler_note": "ADR 0108 r3: Clear clamps source latitude to +0.5 degrees after sun-alignment rotation, extending valid horizon data into the cut lower hemisphere. Texture and source hashes unchanged. Default other presets 0 retains legacy sampling.",
   "texture_sha256_adr0108": "b643d037e1ee85027147733415529033bb4e35bba3fe117539eb0113697c4c61",
-  "circumsolar_repair": "glass-sky-s24 (ADR 0332 addendum): tools/rendering/clear_clouds_sun_repair.py on the ADR 0108 map - Laplace fill of the zeroed 1.5 deg sun disc (opacity < 0.9 within 3 deg), crisp re-matte (smoothstep 0.30-0.60 + billow noise) of the soft glow ring within 9 deg, feathered to 11.5 deg; outside unchanged"
+  "circumsolar_repair": "glass-sky-s24 (ADR 0332 addendum): tools/rendering/clear_clouds_sun_repair.py on the ADR 0108 map - Laplace fill of the zeroed 1.5 deg sun disc (opacity < 0.9 within 3 deg), crisp re-matte (smoothstep 0.30-0.60 + billow noise) of the soft glow ring within 9 deg, feathered to 11.5 deg; outside unchanged",
+  "texture_sha256_glass_sky": "10f81b4d4c8d999ba399f975bddd570fba6f9ba3b484e2d979252d2fe847d916",
+  "lens_ghost_repair": "render-artifacts-s24 (ADR 0332 addendum 2): tools/rendering/clear_clouds_ghost_repair.py on the glass-sky-s24 map - the HDRI lens ghost of the sun (lat 23.8 / lon 51.8 deg, ~3.5 deg bright disc in a cumulus) replaced within 2.3 deg (+0.8 feather) by a Laplace fill + donor cloud texture; outside unchanged"
 }
