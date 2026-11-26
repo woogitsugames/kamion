@@ -18,5 +18,11 @@ Prywatna kopia derived: `Data/raw/derived/{knyszyn-w,dw671-tykocin-03}` (reszta 
 3. (11:00) Shader r1 (ton jezdni `KamionRoadTone`, obrys 5–15 cm, skos/schodek frezu, L-wykop, zalewka 3,2 cm okrakiem);
    oba kafle przebudowane (szew osi r2 6–9 cm, strength 1,7; pęknięcia: knyszyn-w 5716→4990, dw671-03 8190→7326 tri).
    Testy `tests/gis -k "patch or 0335 or shader or seal or 0323 or budget"` 83 passed. ADR 0335 dopisek P3.
-4. (12:00) dw671 cab-view-b: jasna łata nie reaguje na ton/wiek/gładkość — sondy (`probe*`) w toku: rozdział albedo vs odbicie.
-   Sonda w shaderze oznaczona `DEBUG PROBE` — USUNĄĆ przed commitem (kopia czysta: scratchpad WorldPBR.keep).
+4. (12:10) Przyczyna jasnej łaty: gładkość zestawu asphalt_patch 0,34 vs 0,10 jezdni → odbicie nieba (sondy probe2/3).
+   Shader r3: smooth łaty <= 0,17..0,11, zalewki 0,22..0,14. cab-view-b łata/jezdnia sRGB 1,17 → 0,92 (clear), 1,21 → 0,85 (overcast).
+   Testy 87 passed. ADR 0335 dopisek P3 z wynikami. Dowody skopiowane do main `artifacts/road-patches-s24/`.
+
+## Następny krok (lider)
+Przegląd arkuszy `artifacts/road-patches-s24/sheets/*.jpg`, visual-critic; po scaleniu przebudowa pozostałych regionów
+(`uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region <id>`), kafle knyszyn-w i dw671-tykocin-03
+z tej gałęzi: `robocopy <wt>\Dataaw\derived\<kafel> <main>\Dataaw\derived\<kafel> /E /MT:16` (po imporcie build #10).

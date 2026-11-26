@@ -170,9 +170,27 @@ Uwaga P2 nr 3 („koleiny w dali ciemniejsze niż przy kamerze”) — diagnoza 
    bębna), brzegi podłużne wędrujące; wykop: boki wędrujące, 45 % w kształcie L (narożnik 25–45 % x 30–55 % niewykopany).
 5. **Zalewka 2–4 cm okrakiem na cięciu** (`asphalt_patch_seam.width_m` 0,06 → 0,032, `darkening` 0,75 → 0,80): obrys
    cofnięty o pół szerokości, zalewka składana z własnym kryciem (0,94) i filtrowana pudełkowo (pod pikselem zachowuje
-   ~pole zamiast znikać); świeża błyszcząca 0,5, stara matowa 0,3, wypełnia fakturę (normalna spłaszczona).
+   ~pole zamiast znikać); wypełnia fakturę (normalna spłaszczona); gładkość — pkt 7.
 6. **Szorstkość / faktura wg wieku**: świeża łata — ziarno x0,55 i normalna spłaszczona o 35 % (lepiszcze zamyka
    powierzchnię), stara — ziarno x1,15; ton partii 0,88–1,14 (było 0,82–1,18). Trzy pokolenia (wiek trójmodalny) bez zmian.
+7. **Gładkość łaty i zalewki jak jezdni (r3; główna przyczyna „jasnego prostokąta”)**: zestaw `asphalt_patch` (skan
+   clean_asphalt) ma średnią gładkość 0,34 wobec 0,10 `asphalt_worn` (alfa MaskMap High); pod kątem patrzenia z kabiny
+   łata odbijała niebo i była jasna niezależnie od albedo (sondy `artifacts/road-patches-s24/probe2|probe3`: wiek/rodzaj
+   zakodowane w kolorze potwierdziły ścieżkę `_DECAL_PATCH`; gładkość 0 na 1/3 łaty sprowadziła ją do tonu jezdni).
+   Ograniczenie `smooth <= 0,17 (świeża) .. 0,11 (stara)`, zalewka 0,22 .. 0,14 (ADR 0131: błyszcząca czarna zalewka pod
+   kątem wychodzi biała). Stara łata x0,82 na końcu „aged”, plamistość ±(3–12) % rosnąca z wiekiem, jasny rąbek 0,30 → 0,12.
+
+### Wyniki (edytor, High PC 1920x1080; `artifacts/road-patches-s24/{before,after,after-r1,after-r2}`, arkusze `sheets/`)
+- `dw671-tykocin-03 cab-view-b` (jasność sRGB: łata / jezdnia obok, te same pola): przed **1,17 x** (clear 125,6/107,3),
+  **1,21 x** (overcast 75,9/62,5); r1 i r2 bez zmiany (dominowało odbicie nieba); po r3 **0,92 x** (99,2/107,7) i
+  **0,85 x** (53,8/63,0). Pęknięcie przez łatę zniknęło; stara łata na lewym pasie czyta się słabo, jak powinna.
+- `knyszyn-w dk65-goniadzka`: czarny falisty pas w osi → krótki, prosty, wąski, przetarty odcinek szwu; łata frezowana ma
+  schodkowy koniec z zalewką na cięciu; łata przy krawędzi ma kształt L z cienką ciemną zalewką.
+- Testy: `tests/gis -k "patch or 0335 or shader or seal or 0323 or budget or pbr"` **87 passed, 1 skipped** (nowe:
+  `test_centre_joint_is_straight_and_worn`, `test_seal_cracks_split_at_patches`, `test_crack_seals_do_not_cross_repairs`).
+- Ocena: agent, NIE visual-critic. Otwarte: frez z bliska ma nadal proste cięcia poprzeczne (zgodne z rzeczywistością);
+  zalewka wykopu to ciągła cienka linia — ew. więcej przerw; `route-s0144` (dk65-07) nie przebudowany ani nie renderowany;
+  brak buildu playera Windows i testów EditMode Unity w tej gałęzi.
 
 ### Konsekwencje
 - Zalewka 3,2 cm i nowe parametry trafiają do regionu dopiero po przebudowie (`world_manifest`); przebudowane tu tylko
