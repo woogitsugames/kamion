@@ -179,26 +179,8 @@ def add_sides(t: Tile, net, trims: bool = False):
     """network.assign_sides, first pass (no junction trims): same inputs as roads.pipeline.build. trims=True (ADR 0304):
     then the junctions are built (`junctions.build_junctions` on the osm_context points, as pipeline.build) and the
     second pass runs - the side profile the generator meshes."""
-    from shapely.geometry import LineString, Polygon
-    import shapely
-    o = np.array(t.origin)
-    foot, walk, yards = [], [], None
-    if t.ctx:
-        foot = [LineString(np.array(f["geometry"]) - o) for f in t.ctx["footways"] if len(f["geometry"]) >= 2]
-        walk = [LineString(np.array(f["geometry"]) - o) for f in t.ctx["footways"]
-                if f["highway"] != "path" and len(f["geometry"]) >= 2]
-    if t.streetscape:
-        src = t.streetscape
-        walk += [LineString(np.array(f["geometry"]["coordinates"]) - o) for f in src["bdot10k"]["OT_SKRP_L"]
-                 if f["props"].get("materialnawierzchni") not in (None, "grunt naturalny")]
-        polys = [Polygon(np.array(f["geometry"]["coordinates"][0]) - o) for f in src["bdot10k"]["OT_PTPL_A"]
-                 if f["props"].get("materialnawierzchni") != "grunt naturalny"]
-        polys += [Polygon(np.array(a["geometry"]["coordinates"][0]) - o) for a in src["osm"]["areas"]
-                  if a["tags"].get("amenity") == "parking"]
-        polys += [Polygon(np.array(ov["polygon_epsg2180"]) - o) for ov in t.overrides if ov.get("kind") == "paved_area"]
-        if polys:
-            yards = shapely.union_all([shapely.make_valid(p) for p in polys])
-            shapely.prepare(yards)
+    foot, walk, yards = ST.side_inputs(t.ctx, t.streetscape, t.overrides, t.origin)   # = roads.pipeline.build
+    net.region_id, net.authored = t.id, t.overrides       # implied sidewalks (ADR 0237 D38), as pipeline.build
     Nw.assign_sides(net, foot, built_up=True, walkways=walk, yards=yards)
     net.sides_pass = 2 if trims else 1
     if trims:
@@ -222,12 +204,27 @@ def build_nets(ts: list, pairs: list, taper: bool = True, trims: bool = False) -
         ea, eb = ([e for e in ends[x.id] if e.on_seam(se)] for x in (a, b))
         others[a.id][b.id] = others[a.id].get(b.id, []) + eb
         others[b.id][a.id] = others[b.id].get(a.id, []) + ea
+    # seams-side-s24: nominal side profiles of the seam ends (plain network + junctions + second assign_sides pass,
+    # roads.seam_taper.nominal_sides), the same for both tiles of a pair, agreed per side and imposed on each end
+    sides = {}
+    if taper and trims:
+        for t in ts:
+            sides[t.id] = ST.nominal_sides(t.graph, t.origin, t.overrides, t.ctx, t.streetscape, t.id)
+    side_others = {t.id: {} for t in ts}
+    for a, b, se in pairs:
+        if a.id in sides and b.id in sides:
+            for x, y in ((a, b), (b, a)):
+                ye, ys = sides[y.id]
+                prev = side_others[x.id].get(y.id, ([], {}))
+                side_others[x.id][y.id] = (prev[0] + [e for e in ye if e.on_seam(se)], {**prev[1], **ys})
     for t in ts:
         net = nets[t.id]
         net.nominal_ends = {(e.chain, e.end): e for e in ends[t.id]}
         net.seam_tapers = ST.plan(ends[t.id], others[t.id]) if taper else []
         ST.apply_widths(net, net.seam_tapers)
         add_sides(t, net, trims=trims)
+        net.seam_sides = ST.plan_sides(sides[t.id][0], sides[t.id][1], side_others[t.id]) if t.id in sides else []
+        net.seam_sides_report = ST.apply_sides(net, net.seam_sides)
         ST.apply_shoulders(net, net.seam_tapers)
     return nets
 

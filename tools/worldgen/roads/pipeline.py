@@ -144,24 +144,13 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
             else:
                 net.overrides_stale.append(o["id"])
     pts, foot = ctx_local(ctx, origin)
-    # walkways that make a road "urban" (kerbed): OSM footway/cycleway + BDOT10k paved paths (not forest paths)
+    # walkways that make a road "urban" (kerbed): OSM footway/cycleway + BDOT10k paved paths (not forest paths); paved
+    # yards (BDOT10k plac, parking, authored paved_area) flatten the kerb of a service road. One definition with the
+    # nominal seam sides (seams-side-s24) and qa.seams: roads.seam_taper.side_inputs
     from shapely.geometry import LineString
-    walk = [LineString(np.array(f["geometry"]) - np.array(origin)) for f in ctx["footways"] if f["highway"] != "path"]
     ss = rdir / "generated" / "streetscape_sources.json"
-    yards = None
-    if ss.exists():
-        import shapely
-        from shapely.geometry import Polygon
-        src = json.loads(ss.read_text(encoding="utf-8"))
-        walk += [LineString(np.array(f["geometry"]["coordinates"]) - np.array(origin))
-                 for f in src["bdot10k"]["OT_SKRP_L"] if f["props"].get("materialnawierzchni") not in (None, "grunt naturalny")]
-        polys = [Polygon(np.array(f["geometry"]["coordinates"][0]) - np.array(origin)) for f in src["bdot10k"]["OT_PTPL_A"]
-                 if f["props"].get("materialnawierzchni") != "grunt naturalny"]
-        polys += [Polygon(np.array(a["geometry"]["coordinates"][0]) - np.array(origin)) for a in src["osm"]["areas"]
-                  if a["tags"].get("amenity") == "parking"]
-        polys += [_authored_paved_polygon(o, origin) for o in overrides if o.get("kind") == "paved_area"]
-        yards = shapely.union_all([shapely.make_valid(p) for p in polys])
-        shapely.prepare(yards)
+    src = json.loads(ss.read_text(encoding="utf-8")) if ss.exists() else None
+    foot, walk, yards = ST.side_inputs(ctx, src, overrides, origin)
     # ADR 0188: cycle tracks (OSM) planned once on the network; markings (P-11 + red crossing), the kerb drops of
     # build_world and the streetscape stage (surfaces, paint) all read net.cycle_items
     from streetscape import cycleways as CY
@@ -179,6 +168,10 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     # second pass now that the junction trims are known: side profiles beside another carriageway are checked
     # right up to the junction patch (ADR 0076: verge / kerb of one branch on the lane of the other)
     Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards, trims=True)
+    # seams-side-s24: the side kind at a seam end agreed with the neighbour (both tiles compute both nominal ends from
+    # the data in git with the same code and impose the higher-ranked profile on their own end)
+    net.seam_sides = ST.plan_sides_region(region_id) if built_up else []
+    net_stats["seam_sides"] = ST.apply_sides(net, net.seam_sides)
     net_stats["seam_shoulders"] = ST.apply_shoulders(net, net.seam_tapers)
     hf = hf or P.load_heightfield(terrain_meta, REPO, origin)
     ties_f = rdir / "profile_ties.json"            # ADR 0146: authored profile ties (authored_override, own file)
