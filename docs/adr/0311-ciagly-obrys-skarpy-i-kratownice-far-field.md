@@ -35,3 +35,20 @@ w QA dw671-tykocin-09 daje to górną granicę +34 368 trójkątów (przed odsie
 FPS i wygląd przełączeń LOD wymagają osobnego przejazdu. Testy obejmują
 końcowy profil skarpy, niezmienność rzeczywistej jezdni DK65-10 oraz otwory
 w sylwetce pylonu. Podgląd offline nie zastępuje renderu Unity.
+
+## Dopisek props-fix-s24 (26.11, agent `agent-a60f5c7ffe98fe7c7`): smuga tekstury na skarpie (krytyka s24 fala 11, pkt 9)
+**Objaw.** `tykocin/High-clear/route-s0160` (x 1050–1750, y 600–1080, krytyk podał kafel `dw671-tykocin-03`, ale ujęcie
+`route-s0160` jest w `tykocin`): oliwkowo-brązowa, rozciągnięta ukośna smuga na skarpie przy krawężniku.
+**Przyczyna (zmierzona na GLB `tykocin`, `terrain_lod0`, 8 675 570 trójkątów).** 262 520 trójkątów (3,0 %) ma normalną
+geometryczną z `|n.y| < 0,6` (uskoki przy jezdni, wcięcia drogi, skirty chunków), a **262 192 z nich (99,9 %) ma uśredniony
+wektor normalny skierowany w górę** (`n.y > 0,8`; 8 998 z 64 067 trójkątów o `0,6 ≤ |n.y| < 0,9` też). `WorldPBR.shader`
+wybierał oś rzutu świata z interpolowanej normalnej wierzchołkowej (`|n.y| ≥ 0,7` → płaszczyzna XZ), więc prawie pionowy pasek
+dostawał rzut z góry: jeden rząd tekseli rozciągnięty wzdłuż paska. To nie jest błąd UV (UV terenu = XZ w metrach) ani
+nachylenie skarpy (maks. 8,4° na `dw671-tykocin-03` przy kamerze s0157).
+**Decyzja.** W wariancie terenu (`_GROUNDMASKS`) oś rzutu i ramka styczna (`T`, `B`) wynikają z **normalnej geometrycznej**
+(`cross(ddy(pw), ddx(pw))`, dokładna dla płaskiego trójkąta); oświetlenie nadal z normalnej wierzchołkowej (skirty i uskoki
+świecą jak grunt, jak dotąd). Drogi, rekwizyty, dekale i budynki bez zmian (ten sam kod, słowo kluczowe nieaktywne).
+Koszt: 1 `cross` + 1 `length` na piksel terenu, 0 próbek tekstur. Nie zmieniono geometrii ani normalnych (zmiana normalnych
+przestawiłaby oświetlenie wszystkich spadków).
+**Poza zakresem (do właściciela `Rendering/Shaders`):** `WorldSurface.shader` (tier Low) ma tę samą `ProjectUV(pw, n)` z normalną
+wierzchołkową — ten sam defekt może występować na Low; nie ruszany (katalog nie jest mój).

@@ -105,3 +105,20 @@ Andersa/Putry (−2 draw na tablicę).
 ## Konsekwencje
 - Nowe prototypy i tablice = nowe siatki/tekstury; budżet Low mierzony na kamerach trasy (sekcja „Dowody”).
 - Treść tablic G3 (ODbL baza faktów, zdjęcia CC BY-SA/CC0) — wpis w `docs/LICENSES.md`, atrybucja na ekran licencji.
+
+## Dopisek props-fix-s24 (26.11, agent `agent-a60f5c7ffe98fe7c7`): wiata przystankowa na wsi (krytyka s24 fala 11, pkt 7)
+**Objaw.** `dk65-07/route-s0433` (x 945, y 520) i `drive-kozince` (x 920, y 505): czerwony kontur bez wypełnienia. **Przyczyna**
+(zmierzona w kodzie): prototyp BKM ma od 60 m LOD1 = słupki + jedna szyna oparcia + 3 arkusze szkła `shelter_glass_clear`
+o `alpha = 0,10` — z 100 m zostaje sama ramka w RAL 3020 `(204, 6, 5)`. Wiata BKM jest przy tym wzorem miejskim Białegostoku
+(ADR 0162), nie przystanku gminnego na DK65 / DW671.
+**Decyzja.** (1) `shelter_glass_clear`: alfa 0,10 → 0,22, jaśniejsza baza `(0,06, 0,08, 0,085)`, mgiełka 0,06 (dotyczy wszystkich
+wiat; nadal przezroczyste z bliska, z daleka widoczna tafla odbijająca niebo). (2) Nowy prototyp **`bus_shelter_rural`** (+ `_green`,
+`_brown`, `_galv`): stalowa wiata 3,0 m dachu × 1,25 m, dach pulpitowy z blachy trapezowej opadający do tyłu (2,25 / 2,50 m),
+**nieprzezroczysta** ściana tylna i jedna boczna z blachy z żebrami co 0,2 m, drugi koniec otwarty, ławka z desek, gablota
+rozkładu jazdy na ścianie tylnej, stojak D-15 nad narożnikiem od jezdni (jak BKM). 606 trójkątów LOD0 / 258 LOD1, **1 slot
+materiału** (`shelter_paint`; BKM miał 2), bez nowych tekstur zewnętrznych — cztery próbki koloru (zieleń RAL 6005 po
+przetarciu, brąz RAL 8017, ocynk, grafit) dopisane do dolnego pasa atlasu `bus_shelter_atlas`. Wybór: `facade_rules:
+rural_shelters: true` (`furniture.shelter_variant(q, rural)`, deterministyczny z pozycji przystanku; udziały grafit 28 / zieleń 32 /
+brąz 16 / ocynk 24 %, WORKING_VALUE). Polityka LOD instancji bez zmian (prefiks `bus_shelter` → 60 / 300 m).
+**Wartości WORKING_VALUE:** wymiary i kolory wiejskiej wiaty (zdjęcia Commons / klatki właściciela, bez inwentarza przystanków);
+testy `tests/gis/test_rural_outbuildings_props_fix_s24.py` (jeden slot, obwiednia wysokości, UV w atlasie, determinizm wyboru).
