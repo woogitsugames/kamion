@@ -2,9 +2,10 @@
  "by_kind": {
   "arrow_no_exit": 5,
   "furniture_in_lane": 10,
+  "kerb_on_carriageway": 1,
   "lane_blind_end": 36,
   "marking_off_carriageway": 11,
-  "obstacle_in_lane": 1,
+  "obstacle_in_lane": 2,
   "prop_through_deck": 1
  },
  "cases": [
@@ -232,6 +233,21 @@
     693614875
    ],
    "what": "furniture"
+  },
+  {
+   "chain": "c:w227027719:2357586167-1889474201",
+   "e": 1023.22,
+   "junction": null,
+   "kind": "kerb_on_carriageway",
+   "lat": 53.1596571,
+   "lon": 23.1139796,
+   "n": -54.46,
+   "on_route": true,
+   "osm_ways": [
+    227027719
+   ],
+   "src": "c:w227027719:2357586167-1889474201:R",
+   "what": "kerb"
   },
   {
    "chain": "c:w301702377:2504262148-2504239796",
@@ -468,15 +484,15 @@
   {
    "chain": "c:w309094412:3144063341-3144063344",
    "dist_from_stop_m": 13.9,
-   "e": -1024.13,
+   "e": -1024.16,
    "junction": "j:n3144063341",
    "kind": "lane_blind_end",
    "lane": 0,
    "lanes_in": 1,
    "lanes_out": 1,
-   "lat": 53.1527888,
-   "lon": 23.0826752,
-   "n": -937.65,
+   "lat": 53.1527879,
+   "lon": 23.0826747,
+   "n": -937.75,
    "on_route": false,
    "osm_ways": [
     309094412
@@ -1204,13 +1220,30 @@
    ],
    "surface": "verge_grass",
    "what": "P-14"
+  },
+  {
+   "chain": "c:w270494330:282520577-12763074485",
+   "e": 1023.95,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1533084,
+   "lon": 23.1133825,
+   "n": -762.29,
+   "on_route": false,
+   "osm_ways": [
+    270494330
+   ],
+   "s": 2.5,
+   "what": "none"
   }
  ],
- "count": 64,
+ "count": 66,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "arrow_no_exit": 3,
   "furniture_in_lane": 10,
+  "kerb_on_carriageway": 1,
   "marking_off_carriageway": 9,
   "obstacle_in_lane": 1,
   "prop_through_deck": 1
@@ -1236,11 +1269,11 @@
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 933,
-  "kerb_tris": 125520,
+  "kerb_tris": 125527,
   "lane_samples": 126532,
-  "lane_samples_beyond_tile": 155,
+  "lane_samples_beyond_tile": 153,
   "lane_samples_in_taper": 122,
   "marking_tris": 17459,
-  "props_checked": 1631
+  "props_checked": 1639
  }
 }
