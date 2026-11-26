@@ -1013,6 +1013,25 @@ def tree_dims(r, species, key, in_plot=True):
     return round(H, 2), round(min(cb, 0.45 * H), 2), sprite
 
 
+def _crown_quad(kit, c, z0, sprite, W, H, ang, occ, flip=False, lean=(0.0, 0.0)):
+    """ADR 0352: whole-crown card of the full garden tree as ONE quad (2 triangles; the ADR 0170 fan has 4): the
+    occlusion is given per corner (occ = bottom-left, bottom-right, top-right, top-left), so the crown darkens softly
+    towards its underside and unevenly from side to side instead of towards one vertex on the axis - that fan drew a
+    dark wedge with straight edges into every crown (critic s24 wave 11 # 10 "sztywny gradient", P0 # 3). flip mirrors
+    the painted crown, lean (m, xy) shifts its top: three cards of one tree no longer repeat one outline."""
+    u0, u1, v0, v1 = PLT.PK.sprite(sprite)
+    if flip:
+        u0, u1 = u1, u0
+    rr = np.array([math.cos(ang), math.sin(ang)])
+    d = rr * (W / 2)
+    A, B = np.asarray(c, float) - d, np.asarray(c, float) + d
+    T = np.asarray(lean, float)
+    P = [[*A, z0], [*B, z0], [*(B + T), z0 + H], [*(A + T), z0 + H]]
+    C = [PLT._fol([-rr[0] * 0.9, -rr[1] * 0.9, 0.35], occ[0]), PLT._fol([rr[0] * 0.9, rr[1] * 0.9, 0.35], occ[1]),
+         PLT._fol([rr[0] * 0.6, rr[1] * 0.6, 0.8], occ[2]), PLT._fol([-rr[0] * 0.6, -rr[1] * 0.6, 0.8], occ[3])]
+    kit.quad(P, [[u0, v0], [u1, v0], [u1, v1], [u0, v1]], C)
+
+
 def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False):
     """A broadleaf garden tree in the plot kit (ADR 0163), habit by species: the stem to the crown base, crossed whole-
     crown cards (the habit's silhouette with its limbs), and - full variant of the dense habits - the crown's dark
@@ -1029,7 +1048,9 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
     top = p + lean * (cb / H)
     cc = p + lean * (0.5 + 0.5 * cb / H)                      # axis of the crown
     tr = (0.035 + 0.011 * H) * (0.8 if species == "birch" else 1.0)
-    bark = PLT.PK.SWATCH["concrete" if species == "birch" else "trunk"]
+    # ADR 0352: the stem of a young linden / maple / ash is smooth and grey (the dark `trunk` swatch under a small
+    # round crown read as a chocolate stick: "lizakowe drzewka"); the furrowed dark bark stays on the grown trees
+    bark = PLT.PK.SWATCH["concrete" if species == "birch" else "wood_grey" if not lite and H < 7.5 else "trunk"]
     zt = z + cb + hc * (0.55 if species == "birch" else 0.22)
     if lite:
         for k in range(2):
@@ -1045,8 +1066,21 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         # render-artifacts-s24 (critic wave 11 P0 #3, ADR 0308 addendum): the full variant darkens its cards toward the
         # axis too (it had a 4-sided dark _core instead, seen through the card gaps as straight-edged dark rhombi)
         dense_sp = DENSE[species] > 0.0
-        shade = (0.50 + 0.10 * PLT.hfloat(key, "co", i) if lite and core and dense_sp
-                 else 0.58 + 0.10 * PLT.hfloat(key, "co", i) if not lite and dense_sp else None)
+        if not lite:
+            # ADR 0352: full variant - one quad per card with uneven corner occlusion (see _crown_quad), every card of
+            # the tree with its own width, height, mirror and lean; one brightness level per tree (0.86-1.0)
+            lvl = 0.86 + 0.14 * PLT.hfloat(key, "tl")
+            lo = (0.62 if dense_sp else 0.80) + 0.12 * PLT.hfloat(key, "co", i)
+            sk = 0.10 * (PLT.hfloat(key, "cs", i) - 0.5)
+            occ = [lvl * (lo + sk), lvl * (lo - sk), lvl * (0.96 + 0.04 * PLT.hfloat(key, "ct", i)), lvl * (0.90 + 0.08 * PLT.hfloat(key, "cu", i))]
+            wq = 0.82 + 0.30 * PLT.hfloat(key, "cw", i)
+            hq = 0.90 + 0.16 * PLT.hfloat(key, "ch", i)
+            offq = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.36 * r
+            tip = (np.array([PLT.hfloat(key, "clx", i), PLT.hfloat(key, "cly", i)]) - 0.5) * 0.30 * r
+            _crown_quad(kit, cc + offq, z + cb - 0.02 * hc, sprite, W * wq, hc * hq, a0 + 0.4 + (i + 0.5 * (PLT.hfloat(key, "ca", i) - 0.5)) * math.pi / cards,
+                        occ, flip=PLT.hfloat(key, "cf", i) < 0.5, lean=tip)
+            continue
+        shade = 0.50 + 0.10 * PLT.hfloat(key, "co", i) if core and dense_sp else None
         PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards, occ_mid=shade)
     dense = DENSE[species]
     occ = 0.86 + 0.14 * PLT.hfloat(key, "to")

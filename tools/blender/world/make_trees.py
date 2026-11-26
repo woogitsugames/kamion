@@ -46,7 +46,8 @@ VEG.mkdir(parents=True, exist_ok=True)
 HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "shrub": 2.8,
         "spruce": 21.0, "pineyoung": 5.0, "birchyoung": 6.0, "floor": 0.7,
         "poplar": 24.0,  # ADR 0308: Populus x canadensis / nigra of the roadside rows (WORKING_VALUE)
-        "willow": 13.5}  # 0227 prototype: all dimensions WORKING_VALUE, no measured willow height
+        "willow": 13.5,  # 0227 prototype: all dimensions WORKING_VALUE, no measured willow height
+        "oak": 17.0}     # ADR 0352: Quercus robur, open-grown field / roadside form (WORKING_VALUE)
 # ADR 0187 (forest wall): species of a Podlasie pine / spruce stand that the first six could not stand in for.
 #   spruce      Norway spruce (Picea abies): variants 0, 1 = stand form (live crown from ~0.36-0.46 H, dead stubs
 #               below), variant 2 = open-grown / young form with boughs to the ground (understorey, stand edge).
@@ -59,6 +60,10 @@ HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.
 # leaves_shrub); the only new texture is leaves_spruce.png (streetscape/leaf_textures.py spruce_spray).
 NEW_SPECIES = ("spruce", "pineyoung", "birchyoung", "floor")
 ADDED_0308 = ("poplar",)
+# ADR 0352 (critic s24 wave 11 # 10: no species of the library had a lobed blade or a broad, heavy-limbed crown):
+# pedunculate oak - short stout bole, wide rounded crown on level limbs, the darkest green of the broadleaves.
+# leaves_oak.png: streetscape/leaf_sprays.py (round-lobed blade). Bark: bark_alder (no new texture). 2 variants.
+ADDED_0352 = ("oak",)
 # ADR 0339 r2 (critic r5: pale birch crowns among the pines): linear multiplier of the leaf-card and impostor albedo
 # of a species, applied by the Unity importer (InstanceImporter.FoliageTint) - no re-bake. leaves_birch.png is 1.45 x
 # the linden leaf and 1.85 x the pine needle in linear green (0.120 / 0.083 / 0.065, measured 2026-11-24); x 0.80
@@ -67,7 +72,7 @@ FOLIAGE_TINT = {"birch": [0.74, 0.80, 0.85], "birchyoung": [0.74, 0.80, 0.85]}
 # Variants: one per young species (a thicket is uniform; yaw and height vary per instance) - every variant costs the
 # Low tier up to three instanced draws (LOD1 bark + foliage, impostor). Build 1 with 2 + 2 young variants raised the
 # instanced draws of the forest cameras by 8-30 (artifacts/forest-0187/compare1-dojlidy-Low.tsv).
-NVAR = {"spruce": 3, "pineyoung": 1, "birchyoung": 1, "floor": 2, "willow": 1, "poplar": 2}  # others: 3
+NVAR = {"spruce": 3, "pineyoung": 1, "birchyoung": 1, "floor": 2, "willow": 1, "poplar": 2, "oak": 2}  # others: 3
 IMP_SCALE = {"pineyoung": 0.5}    # impostor views of the pine thicket at half resolution (a filled cone; the airy
 # young birch at half resolution left the trim polygon of ImpostorTrim over 60 % of the frame)
 NO_IMPOSTOR = ("floor",)
@@ -786,6 +791,10 @@ CROWN = {
                   cards=800, size=1.20, hang=.0, r0=.19, bark="bark_alder", lobe=.080),
     "poplar": dict(bole=.19, rmax=.195, peak=.45, base=.50, lo=.80, hi=.72, n_sc=14, rise=(.12, .32), mono=1.0, arch=.85,
                    cards=960, size=1.80, hang=.0, r0=.32, bark="bark_linden", lobe=.072),
+    # ADR 0352: open-grown oak - crown wider than any other species of the set (2 r / H 0.94), widest below the middle,
+    # few heavy limbs that leave the short bole almost level, a flat-domed top; fewer, larger foliage masses (lobe).
+    "oak": dict(bole=.16, rmax=.47, peak=.38, base=.62, lo=.55, hi=.46, n_sc=7, rise=(.14, .34), mono=.42, arch=.28,
+                cards=860, size=2.05, hang=.0, r0=.40, bark="bark_alder", lobe=.125),
 }
 
 
@@ -1664,7 +1673,7 @@ def main():
         # This writes only the requested output directory and must not run during
         # module import, on normal species-only exports, or while r2 is active.
         write_willow_leaf_atlas(VEG / "leaves_willow.png")
-    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES + experimental + ADDED_0308:
+    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES + experimental + ADDED_0308 + ADDED_0352:
         for v in range(NVAR.get(sp, 3)):
             name = f"tree_{sp}_{v}"
             if quick and name != quick:

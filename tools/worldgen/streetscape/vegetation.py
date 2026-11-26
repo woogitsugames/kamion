@@ -42,11 +42,12 @@ MIX = {"iglasty": [0.64, 0.10, 0.02, 0.02, 0.02, 0.0, 0.20], "mieszany": [0.36, 
        "liściasty": [0.0, 0.36, 0.26, 0.22, 0.16, 0.0, 0.0], None: [0.4, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0]}
 HEIGHT = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0),
           "spruce": (14, 25), "pineyoung": (1.5, 5.0), "birchyoung": (2.0, 6.5), "floor": (0.45, 0.9),
-          "poplar": (18, 28)}      # ADR 0308: roadside poplar (tree_rows / overrides only; WORKING_VALUE)
+          "poplar": (18, 28),      # ADR 0308: roadside poplar (tree_rows / overrides only; WORKING_VALUE)
+          "oak": (11, 24)}         # ADR 0352: pedunculate oak (oak_share / rows / overrides; WORKING_VALUE)
 # Prototype variants per species (make_trees.py NVAR; 3 when not listed). The variant is drawn from 0..2 for every
 # tree (unchanged random stream) and folded: spruce canopy trees take the stand forms 0 / 1, young spruce and the
 # open side of a stand take variant 2 (boughs to the ground).
-NVAR = {"pineyoung": 1, "birchyoung": 1, "floor": 2, "poplar": 2}
+NVAR = {"pineyoung": 1, "birchyoung": 1, "floor": 2, "poplar": 2, "oak": 2}
 SPRUCE_OPEN = 2
 SPACING = {"las": 4.5, "zagajnik": 3.2, "zadrzewienie": 6.0}
 # Understorey of a Podlasie pine / mixed stand (v3.4, review r3 X4 "trunks like a fence", r4 W-H8): hazel and
@@ -141,7 +142,7 @@ CHM_MAX_SCALE = 1.45
 # crowns close into one canopy, so the larger cards read less than on a lone birch among pines.
 CHM_MAX_SCALE_BROADLEAF = 1.6
 HREF_DEFAULT = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "spruce": 21.0,
-                "pineyoung": 5.0, "birchyoung": 6.0}     # make_trees.py HREF (library without trees_meta.json)
+                "pineyoung": 5.0, "birchyoung": 6.0, "oak": 17.0}     # make_trees.py HREF (library without trees_meta.json)
 _HREF_CACHE = {}
 
 
@@ -1630,6 +1631,38 @@ def authored_bare_ground(col, hf, origin, overrides, hard_mask):
 MATURE_H_M = {"birch": 20.0, "linden": 24.0, "maple": 22.0, "pine": 24.0}
 
 
+# ADR 0352 (critic s24 wave 11 # 10: every roadside broadleaf was a linden, a maple, a birch or an alder - no tree with a
+# lobed blade and a broad, heavy crown). Pedunculate oak is the commonest big field / roadside / manor tree of Podlasie
+# after the linden, and it comes in groups (an avenue stretch, a clump at a farm), not salt-and-pepper: mature lindens
+# and maples OUTSIDE forest stands turn into oaks inside the patches of a smooth position noise. Forest trees (they
+# carry the stand category `fk` / the HLOD cell `fc`: HLOD bakes, crown line, CHM rules), garden library trees
+# (`tier: high`: the crown radius is the orthophoto's) and authored / OSM-tagged trees keep their species.
+# WORKING_VALUE (no species survey of the tiles): ~1 in 4 of the candidates.
+OAK_FROM = ("tree_linden", "tree_maple")
+OAK_PATCH = (150.0, 0.60, 0.85)     # noise period m, threshold, share of the candidates of a patch that turn oak
+OAK_MIN_H_M = 9.0                   # smaller trees stay (the oak prototype is the mature open-grown form)
+OAK_KEEP_SRC = ("override:", "osm:", "plot:")
+
+
+def oak_share(trees, report):
+    """ADR 0352: tree records with a share of the mature lindens / maples outside forest stands replaced by oaks
+    (see OAK_FROM). Position hash only: no random stream is consumed, other trees are unchanged. Order kept."""
+    out, n = [], 0
+    href = proto_href().get("oak") or [HREF_DEFAULT["oak"]] * NVAR["oak"]
+    for t in trees:
+        src = str(t.get("src", ""))
+        if (t.get("p") in OAK_FROM and "fk" not in t and "fc" not in t and t.get("tier") is None
+                and float(t.get("h", 0.0)) >= OAK_MIN_H_M and not src.startswith(OAK_KEEP_SRC)
+                and _vnoise(float(t["e"]), float(t["n"]), OAK_PATCH[0], "oak") > OAK_PATCH[1]
+                and _hash01(f"oak:{t['e']},{t['n']}") < OAK_PATCH[2]):
+            v = int(_hash01(f"oakv:{t['e']},{t['n']}") * NVAR["oak"]) % NVAR["oak"]
+            t = dict(t, p="tree_oak", v=v, h=round(min(float(t["h"]), CHM_MAX_SCALE * href[min(v, len(href) - 1)]), 1))
+            n += 1
+        out.append(t)
+    report["oak_share"] = {"oaks": n, "candidates_from": list(OAK_FROM), "patch": list(OAK_PATCH)}
+    return out
+
+
 def garden_canopies(trees, rp, report, parts=()):
     """Garden trees that are still instances of the tree library (rule path, `tier: high`): the height is capped at
     the species ceiling of G7 # 12; nothing is widened, raised, moved or added. Other records pass through."""
@@ -1658,7 +1691,7 @@ CLEAR_H_M = 4.7            # WORKING_VALUE: 4.5 m clearance gauge of a rural roa
 CLEAR_MIN_SCALE = 0.6      # ADR 0347: shifted + shrunk trees keep at least this share of their height (see below)
 CROWN_FORM = {"linden": (0.33, 0.17), "maple": (0.375, 0.18), "birch": (0.235, 0.27), "alder": (0.24, 0.22),
               "poplar": (0.195, 0.19), "pine": (0.22, 0.48), "spruce": (0.185, 0.05), "willow": (0.48, 0.20),
-              "pineyoung": (0.34, 0.08), "birchyoung": (0.27, 0.16)}
+              "pineyoung": (0.34, 0.08), "birchyoung": (0.27, 0.16), "oak": (0.47, 0.16)}
 
 
 CLEAR_EDGE_MARGIN_M = 1.5  # WORKING_VALUE (ADR 0347): foliage stays this far from the asphalt edge below CLEAR_H_M - a truck

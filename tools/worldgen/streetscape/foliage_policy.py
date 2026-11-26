@@ -57,7 +57,8 @@ def osm_tree_species(tags, default="linden"):
     text = " ".join(str(tags.get(k, "")) for k in ("species", "genus", "species:pl", "species:en")).casefold()
     for species, names in {"pine": ("pinus", "pine", "sosna"), "birch": ("betula", "birch", "brzoza"),
                            "linden": ("tilia", "linden", "lipa"), "maple": ("acer", "maple", "klon"),
-                           "alder": ("alnus", "alder", "olsza", "olcha")}.items():
+                           "alder": ("alnus", "alder", "olsza", "olcha"),
+                           "oak": ("quercus", "oak", "dąb", "dab ")}.items():      # ADR 0352
         if any(name in text for name in names):
             return species
     return default
