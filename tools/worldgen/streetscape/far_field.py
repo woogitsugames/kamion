@@ -2211,8 +2211,9 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             [ce - ux * w + vx * w, cn - uy * w + vy * w, z],
         ]
 
-    def arm_members(link):
-        for frac, _ in _arm_levels():
+    def arm_members(link, first_only=False):
+        # wave 12 (Low budget 30k): at Low only the arm level that carries the (single) conductor pair is drawn
+        for frac, _ in (_arm_levels()[:1] if first_only else _arm_levels()):
             za = z_ref + h_eff * frac
             sp = arm_l * scale
             left = [ce - vx * sp, cn - vy * sp, za]
@@ -2248,14 +2249,14 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             np.array([(rb[(k + 1) % 4][1] - rb[k][1]),
                       -(rb[(k + 1) % 4][0] - rb[k][0]), 0.0]), view)), reverse=True)[:2]
         rings = [ring_pts(w_bot + (w_top - w_bot) * f, z_bot + (z_top - z_bot) * f)
-                 for f in np.linspace(0.0, 1.0, 4)]
+                 for f in np.linspace(0.0, 1.0, 3)]   # wave 12: 2 lacing panels at Low (30k budget)
         for panel, (lower, upper) in enumerate(zip(rings[:-1], rings[1:])):
             for k in facing:
                 q = (k + 1) % 4
                 a, b = (k, q) if (panel + k) % 2 == 0 else (q, k)
                 ribbon(lower[a], upper[b], 0.075 * scale)
         if arms:
-            arm_members(ribbon)
+            arm_members(ribbon, first_only=True)
         return
 
     # Open lattice, including in Low: solid crossed fins read as grey cones
@@ -2536,7 +2537,7 @@ def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderE
         nseg = min(max(int(math.ceil(L / 20.0)), 3), 5)
     elif tier == "Low":
         hang = [(sx * arm_l, levels[0][1]) for sx in (-1.0, 1.0)]
-        nseg = min(max(int(math.ceil(L / 40.0)), 3), 8)
+        nseg = min(max(int(math.ceil(L / 90.0)), 3), 4)   # wave 12: Low budget 30k (was L/40, cap 8: C Low 32351 tris)
     else:
         hang = [(sx * arm_l, zf) for _, zf in levels for sx in (-1.0, 1.0)] + [(0.0, 1.0)]
         nseg = min(max(int(math.ceil(L / 15.0)), 6), 24)
