@@ -12,3 +12,10 @@
 - [krok 4] far field knyszyn-w: 328 -> 44 wiez + 4 maszty, 44 przesla, 2 podpory szwu (= podpory kafla 737.9/792.2,1024). Kamery hv0351_* dodane.
   pytest (streetscape, world_v33, far_field*, pylons, hv_wires_0351, qa_tools): 405 passed. Import+VQA czeka na slot unity (skrypt w scratchpadzie).
 - NASTEPNY KROK: po VQA after -> render before (podmiana far_field.glb z main), porownanie, visual-critic
+- [krok 5] Daleki plan: linie SN do 600 m (slupy betonowe + 3 przewody, High). Import Win64 + VQA High-clear dk65-07 i knyszyn-w
+  przed|po: artifacts/hv-wires-s24/{vqa-before,vqa-after,cmp}/ (kopia w main artifacts/hv-wires-s24). knyszyn-w hv0351-seam-n:
+  przewody WN ciagle kafel -> szew -> daleki plan (przed: konczyly sie na szwie). dk65-07 owner02: zamiast 6 bialych kratownic
+  bez przewodow - linia SN dk65-08 (slupy + przewody). Audyt: in-tile wieze bez przesla 31 -> 0; far 17 110 -> 0 w przebudowanych.
+- DO ZROBIENIA (lider): far_field.py --region <id> dla wszystkich 54 kafli (~3,5 min/kafel, ekstrakcja GIS schematu 14);
+  build_world dla 26 kafli z liniami WN/wiezami (lista w raporcie); ocena visual-critic (subagent nie tworzy subagentow).
+- NASTEPNY KROK: brak - czeka na review/scalenie lidera. Nie scalone.
