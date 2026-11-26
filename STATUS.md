@@ -9,3 +9,6 @@
 - [krok 3] Far field: wieze tylko na liniach WN (BDOT wysokiego / OSM >=60kV), przesla z zawisem jako wstegi submesh 0, szew = podpora kafla,
   ocynk z rozrzutem, maszty bez trawers. dk65-07: 307 -> 31 wiez + 5 masztow, 30 przesel, 0 bez przewodow. ADR 0351, testy tests/gis/test_hv_wires_0351.py.
 - NASTEPNY KROK: import Win64 dk65-07 + knyszyn-w (slot unity) i VQA -> artifacts/hv-wires-s24/
+- [krok 4] far field knyszyn-w: 328 -> 44 wiez + 4 maszty, 44 przesla, 2 podpory szwu (= podpory kafla 737.9/792.2,1024). Kamery hv0351_* dodane.
+  pytest (streetscape, world_v33, far_field*, pylons, hv_wires_0351, qa_tools): 405 passed. Import+VQA czeka na slot unity (skrypt w scratchpadzie).
+- NASTEPNY KROK: po VQA after -> render before (podmiana far_field.glb z main), porownanie, visual-critic
