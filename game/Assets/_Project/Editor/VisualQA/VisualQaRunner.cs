@@ -549,7 +549,7 @@ namespace Game.Editor.VisualQA
         {
             for (int i = s_DiagPresetRestore.Count - 1; i >= 0; i--) s_DiagPresetRestore[i].f.SetValue(s_DiagPresetRestore[i].p, s_DiagPresetRestore[i].v);
             s_DiagPresetRestore.Clear();
-            foreach (var (r, m) in s_DiagMatRestore) if (r != null) r.sharedMaterials = m;
+            for (int i = s_DiagMatRestore.Count - 1; i >= 0; i--) if (s_DiagMatRestore[i].r != null) s_DiagMatRestore[i].r.sharedMaterials = s_DiagMatRestore[i].m;
             s_DiagMatRestore.Clear();
             foreach (var m in s_DiagFlat) UnityEngine.Object.DestroyImmediate(m);
             s_DiagFlat.Clear();
@@ -578,7 +578,10 @@ namespace Game.Editor.VisualQA
 
         static void ApplyDiagColorBy(Camera cam, string mode)
         {
-            var sh = Shader.Find("Universal Render Pipeline/Unlit");
+            // prim / vcol / vcolb: per-triangle hash, COLOR_0.rgb, COLOR_0.b (DiagPrimitive.shader), keyed per renderer
+            float diagMode = mode == "prim" ? 0f : mode == "vcol" ? 1f : mode == "vcolb" ? 2f : -1f;
+            var sh = diagMode >= 0f ? Shader.Find("Hidden/Kamion/DiagPrimitive") : Shader.Find("Universal Render Pipeline/Unlit");
+            if (diagMode >= 0f) mode = "renderer";
             var keys = new System.Collections.Generic.Dictionary<string, Material>();
             var legend = new System.Text.StringBuilder();
             foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
@@ -595,6 +598,7 @@ namespace Game.Editor.VisualQA
                         var c = DiagKeyColor(keys.Count);
                         flat = new Material(sh) { hideFlags = HideFlags.DontSave, name = "diag " + key };
                         flat.SetColor("_BaseColor", (Color)c);
+                        if (diagMode >= 0f) flat.SetFloat("_Mode", diagMode);
                         keys[key] = flat;
                         s_DiagFlat.Add(flat);
                         legend.AppendLine($"{c.r},{c.g},{c.b}\t{key}");
@@ -622,6 +626,32 @@ namespace Game.Editor.VisualQA
                 if (kv.StartsWith("colorby:"))
                 {
                     if (cam != null) ApplyDiagColorBy(cam, kv.Substring(8).Trim());
+                    continue;
+                }
+                if (kv.StartsWith("mat:"))
+                {
+                    // "mat:_RegionOriginEN=0,0,0,0" / "mat:_GroundTint=0": a material float / vector on every renderer slot
+                    // that has the property (runtime copies, DontSave, restored after the render like colorby)
+                    int e = kv.IndexOf('=');
+                    string prop = kv.Substring(4, e - 4).Trim();
+                    var vs = kv.Substring(e + 1).Split(',');
+                    int n = 0;
+                    foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                    {
+                        var mats = r.sharedMaterials;
+                        bool any = false;
+                        for (int mi = 0; mi < mats.Length; mi++)
+                        {
+                            if (mats[mi] == null || !mats[mi].HasProperty(prop)) continue;
+                            var g = new Material(mats[mi]) { hideFlags = HideFlags.DontSave };
+                            if (vs.Length == 4) g.SetVector(prop, new Vector4(float.Parse(vs[0], inv), float.Parse(vs[1], inv), float.Parse(vs[2], inv), float.Parse(vs[3], inv)));
+                            else g.SetFloat(prop, float.Parse(vs[0], inv));
+                            s_DiagFlat.Add(g);
+                            mats[mi] = g; any = true; n++;
+                        }
+                        if (any) { s_DiagMatRestore.Add((r, r.sharedMaterials)); r.sharedMaterials = mats; }
+                    }
+                    Debug.Log($"[QA] diag material {prop} = {kv.Substring(e + 1)} on {n} slots");
                     continue;
                 }
                 if (kv.StartsWith("preset."))
