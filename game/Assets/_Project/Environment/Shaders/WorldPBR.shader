@@ -1059,10 +1059,17 @@ Shader "Kamion/World PBR"
                         // fresh hot-mix is warm black, not blue-grey (critic r3)
                         albedo *= lerp(half3(1.06, 1.0, 0.93), half3(1, 1, 1), (half)saturate(age * 1.6));
                         albedo *= (half)lerp(0.8, 1.0, saturate(age * 3.0));      // a fresh overlay is clearly darker than the road
+
                         // bitumen overband: dark, smoother when fresh, dusty grey-matt when old; it fills the texture
                         albedo *= 1.0 - seam * _PatchSeam.y * lerp(1.0, 0.55, age);
-                        smooth = lerp(smooth, lerp(0.50, 0.30, age), seam);
                         if (kindF > 0.5) smooth *= lerp(1.12, 0.9, age);
+                        // road-patches-s24 r3: the asphalt_patch set (clean_asphalt scan) has mean smoothness 0.34 vs 0.10 of the
+                        // worn road set; at the cab's grazing view the patch mirrored the sky and read as a PALE plate whatever its
+                        // albedo (probe: smooth = 0 on a third of the patch brought it to the road tone; dw671 cab-view-b +17 % sRGB
+                        // in clear and overcast). A fresh repair is a little closer-textured than the road, an old one the same.
+                        smooth = min(smooth, (half)lerp(0.17, 0.11, age));
+                        // the overband: low gloss too (ADR 0131: a glossy dark sealant out-reflects its 0.03 albedo at grazing view)
+                        smooth = lerp(smooth, lerp(0.22, 0.14, age), seam);
                         tn = normalize(lerp(tn, half3(0, 0, 1), seam * 0.8h));
                     }
                 }
