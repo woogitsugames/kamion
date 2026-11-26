@@ -1130,14 +1130,21 @@ def misc_points(pl, net, src, origin, report, codes):
             continue
         pl.add(proto, p, yaw, src=f"osm:node/{nd['osm_node']}", group=proto)
         cnt[proto] = cnt.get(proto, 0) + 1
+    # ADR 0351: BDOT10k records HV lattice towers as "słup energetyczny" too; one standing on a HV line (OT_SULN_L
+    # "... wysokiego napięcia", within the pylon snap radius) is a pylon, not a concrete MV pole under 110 kV wires
+    hv_lines = [LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
+                for f in src["bdot10k"].get("OT_SULN_L", [])
+                if "wysokiego" in (f["props"].get("rodzaj") or "") and len(f["geometry"]["coordinates"]) > 1]
     for f in src["bdot10k"]["OT_BUWT_P"]:
         if f["props"].get("rodzaj") != "słup energetyczny":
             continue
         q = np.asarray(f["geometry"]["coordinates"]) - origin
         if pl.near("power_pole", q, 4.0) or pl.near("pylon", q, 8.0):
             continue
-        pl.add("power_pole", q, (_h(f["id"]) % 360) * math.pi / 180, src=f"bdot:{f['id']}", group="power_pole")
-        cnt["power_pole"] = cnt.get("power_pole", 0) + 1
+        proto = "pylon" if any(ln.distance(Point(float(q[0]), float(q[1]))) <= SUPPORT_SNAP_M["pylon"]
+                               for ln in hv_lines) else "power_pole"
+        pl.add(proto, q, (_h(f["id"]) % 360) * math.pi / 180, src=f"bdot:{f['id']}", group=proto)
+        cnt[proto] = cnt.get(proto, 0) + 1
     report["points"] = cnt
 
 
@@ -3282,24 +3289,60 @@ def _nearest_support(pl, q, r):
 
 
 def power_supports(pl, P, hv, key, roads_poly, report):
-    """Support points of one line (E, N): angle points + intermediate supports, snapped to mapped poles; adds the
-    missing supports as instances. Returns the support polyline."""
+    """Support points of one line (E, N), in order along it: mapped supports of the line's class standing on it,
+    angle points / ends (snapped to a mapped support within SUPPORT_SNAP_M) and intermediate supports wherever two
+    neighbours are more than SPAN_MAX_M apart; adds the missing supports as instances. Returns the support polyline.
+
+    ADR 0351: a mapped tower between two BDOT10k vertices used to be ignored - the intermediate supports were equal
+    subdivisions of each BDOT segment, so the conductors passed beside a real OSM power=tower (31 of 298 mapped
+    pylons over all tiles stood with no span ending on them) while a rule pylon stood tens of metres from it. Now
+    every mapped support of the class within SUPPORT_SNAP_M of the line is a support at its projection on the line
+    and only the gaps between supports are subdivided."""
     proto = "pylon" if hv else "power_pole"
-    span = SPAN_MAX_M[proto]
-    pts = [P[0]]
-    for a, b in zip(P, P[1:]):
-        L = float(np.hypot(*(b - a)))
-        k = max(1, int(math.ceil(L / span)))
-        pts += [a + (b - a) * (i / k) for i in range(1, k + 1)]
+    span, snap_r = SPAN_MAX_M[proto], SUPPORT_SNAP_M[proto]
+    P = np.asarray(P, float)
+    line = LineString(P)
+    if line.length < 1e-6:
+        return P[:1]
+    cand = []                                          # (s along the line, point, mapped)
+    for p in pl.pts.get(proto, []):
+        q = Point(float(p[0]), float(p[1]))
+        if line.distance(q) <= snap_r:
+            cand.append((float(line.project(q)), np.array([p[0], p[1]], float), True))
+    for v in P:
+        snap = _nearest_support(pl, v, snap_r)
+        if snap is not None:
+            cand.append((float(line.project(Point(float(snap[0]), float(snap[1])))), snap, True))
+        else:
+            cand.append((float(line.project(Point(float(v[0]), float(v[1])))), v.copy(), False))
+    cand.sort(key=lambda c: (c[0], not c[2]))
+    seq = []
+    for c in cand:
+        if seq and np.hypot(*(c[1] - seq[-1][1])) < 1.0:
+            if c[2] and not seq[-1][2]:
+                seq[-1] = c                            # a mapped support replaces the rule point on the same spot
+            continue
+        if seq and c[2] and any(m and np.hypot(*(c[1] - q)) < 1e-3 for _, q, m in seq):
+            continue                                   # mapped support reached twice (projection + vertex snap)
+        seq.append(c)
+    full = [seq[0]]
+    for a, b in zip(seq, seq[1:]):
+        gap = b[0] - a[0]
+        k = max(1, int(math.ceil(gap / span - 1e-9)))
+        for i in range(1, k):
+            g = line.interpolate(a[0] + gap * i / k)
+            full.append((a[0] + gap * i / k, np.array([g.x, g.y], float), False))
+        full.append(b)
     out = []
-    for i, q in enumerate(pts):
+    pts = [c[1] for c in full]
+    for i, (s, q, mapped) in enumerate(full):
         d = (pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)])
         d = d / max(np.linalg.norm(d), 1e-9)
-        snap = _nearest_support(pl, q, SUPPORT_SNAP_M[proto])
-        if snap is not None:
-            out.append(snap)
+        if mapped:
+            out.append(q)
+            report["mapped_supports"] = report.get("mapped_supports", 0) + 1
             for it in pl.items:                        # mapped pole: turn its cross-arm across the line
-                if it["p"] in ("power_pole", "pylon") and abs(it["e"] - snap[0]) < 2e-3 and abs(it["n"] - snap[1]) < 2e-3:
+                if it["p"] in ("power_pole", "pylon") and abs(it["e"] - q[0]) < 2e-3 and abs(it["n"] - q[1]) < 2e-3:
                     it["yaw"] = round(float(yaw_of(d)), 4)
             continue
         if roads_poly is not None and roads_poly.contains(Point(float(q[0]), float(q[1]))):
