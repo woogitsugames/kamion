@@ -83,7 +83,11 @@ ujawnił pusty horyzont).
   na stałe. Brak nowych tekstur i materiałów w assetach (1 klon materiału na wczytany kafel, ~kilka kB).
 - Testy EditMode: `Tests/EditMode/FarRingTests.cs` (9: brak kafli, sąsiad wczytany, pasy współliniowe bez dublowania,
   para narożna, prostokąt właściciela z listy, cull sektora, cull nigdy nie chowa widocznego piksela, przełącznik,
-  przypadek 03 z prawdziwego `tile_graph.json`); stare testy ADR 0311/0308 zostają (tryb A/B).
+  przypadek 03 z prawdziwego `tile_graph.json`); stare testy ADR 0311/0308 zostają (tryb A/B). Pełny EditMode Win64:
+  **1447 pass, 0 fail, 153 skip** (`artifacts/horizon-ring-s24/editmode-20261127-002815.xml`; skopiowane sceny
+  `_Generated` odłożone na czas testów jak w world-edge-s24). Pierwszy przebieg wykrył: include względny łamał testy
+  kopiujące `WorldSurface.shader` (FurniturePlinth i in.) → include absolutny; cull sektora za ostrożny na granicach
+  kafli → dokładne pokrycie sumą prostokątów w komórce.
 
 ## Konsekwencje
 - W grze horyzont za ostatnim wczytanym kaflem jest zawsze zamknięty dalekim planem (las, WN, zabudowa spoza

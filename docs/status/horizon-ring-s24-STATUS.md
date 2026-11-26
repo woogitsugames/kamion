@@ -27,8 +27,10 @@ lider kopiuje do main). Środowisko Unity prywatne: Library + sceny `_Generated`
 - Koszt (03 High, stats.txt): +6…+14 draw, +65…+130 tys. trójkątów w kadrze; w budżecie docs/06 §6.
 - ADR 0354 (Proposed).
 
-## Krok 4 — testy (w toku)
-`pwsh -NoProfile -File artifacts/horizon-ring-s24/run-tests.ps1` (w tle) → `artifacts/horizon-ring-s24/tests.log`.
+## Krok 4 — testy (zrobione)
+- r1: 20 fail — include `KamionFarRing.hlsl` względny (testy kopiują WorldSurface do `_Generated`) + zbyt ostrożny cull.
+  Poprawione. r2 (`run-tests2.ps1`): **1447 pass, 0 fail, 153 skip** (`editmode-20261127-002815.xml`).
 
 ## Następny krok
-Po testach: wynik do ADR/STATUS, commit; visual-critic (lider — subagent nie tworzy subagentów); nie scalać.
+Lider: visual-critic na `artifacts/horizon-ring-s24/**/cmp-*.jpg` (subagent nie tworzy subagentów), przegląd shaderów
+przez rendering-perf, A/B w buildzie #10 wg ADR 0354 „Weryfikacja”. Nie scalać bez przeglądu.
