@@ -5,8 +5,18 @@
 - [krok 1] Diagnoza dw671-tykocin-03 edge-north (`artifacts/fields4-s24/probe_dw03_edgeN.png`): sciany = boki skrajnych rzedow
   kart przy szwach pasow (MAIZE_SEAM_CLEAR 1.6 m po obu stronach KAZDEGO szwu, takze bez miedzy -> korytarz 3.2 m z malowanymi
   rzedami na ziemi = "koleiny jak paski") i koniec kart na krawedzi kafla / bloku / zasiegu 220 m.
-- Render "przed" w toku: `pwsh artifacts/fields4-s24/job.ps1 -Phase before` -> main `artifacts/fields4-s24/vqa/before/`.
-- NASTEPNY KROK: field_crops r4 (brzeg lanu, szwy bez miedzy), shader (koleiny, daleki plan), far_field (krawedz lasu).
+- [krok 2] Render "przed" (main derived, shader main) zrobiony: main `artifacts/fields4-s24/vqa/before/` (High clear+overcast, std + extra).
+- [krok 3] Kod: field_crops r4 (szwy bez miedzy bez korytarza, strefa brzegu 4 m z kartami pojedynczymi / przerzedzonymi /
+  odchylonymi, komorka brzegu w atlasie verge_atlas, rosliny przed linia), r4b (odstep = szerokosc miedzy shadera + 0,25 m),
+  r4c (regula chunkow najpierw, chunk bez prymitywu = koniec lanu, CHUNK_MIN_TRIS 5600); shader (koleiny tramline z profilem,
+  przerzedzenie, chwasty; daleki plan farK: ton pasow, przejazdy wzdluz rzedow, miedze/granice blokow ciemniejsze linie;
+  oktawa warpu 610 m / 28 m + lustro FIELD_WARP_FAR); far_field (kwatery wieku, drzewa nad okapem, zejscie konca biegu).
+  Testy: tests/gis/test_fields_r4_0334.py (8) + r3 + 0334 zielone.
+- [krok 4] after (r4a) dw671-tykocin-03 + knyszyn-w: `vqa/after/`; poprawki r4b/r4c -> przebudowa + `vqa/after2/` w toku
+  (`pwsh artifacts/fields4-s24/chain2.ps1`).
+- UWAGA: derived knyszyn-w z main (przed) rozni sie od QA z HEAD w 25 chunkach -> +7..+9 draw na kilku kamerach trasy knyszyn-w
+  nie pochodzi z r4 (obiekty bez zmian; banks +1 chunk). Do porownan uzywac banks_cmp.py / mat_cmp.py (QA HEAD vs po).
+- NASTEPNY KROK: po after2 -> `uv run --no-project --with pillow python artifacts/fields4-s24/compare.py after2 -v`, ADR 0334 r4, raport.
 
 # STATUS bank-smear-s24 (smuga na skarpie tykocin route_s0160, ADR 0311 dopisek)
 
