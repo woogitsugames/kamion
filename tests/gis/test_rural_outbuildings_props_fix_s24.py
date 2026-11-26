@@ -168,6 +168,19 @@ def test_region_overrides_enable_both_rules_only_on_the_prototype_tiles():
     assert not FU.rural_shelters_enabled(ovr)
 
 
+def test_world_pbr_terrain_projection_follows_the_geometric_normal():
+    """P1 9 (tykocin route_s0160): near-vertical terrain strips with smoothed up-pointing vertex normals were projected on
+    the world XZ plane (one texel row smeared). The terrain variant (_GROUNDMASKS) now picks the projection axis and
+    the tangent frame from the screen-space derivative of the world position."""
+    src = (REPO / "game/Assets/_Project/Environment/Shaders/WorldPBR.shader").read_text(encoding="utf-8")
+    i = src.index("half3 np = n;")
+    block = src[i:i + 1400]
+    assert "#if defined(_GROUNDMASKS)" in block and "cross(ddy(pw), ddx(pw))" in block
+    assert "T = normalize(T - np * dot(T, np));" in block and "B = normalize(B - np * dot(B, np));" in block
+    # non-terrain surfaces keep the vertex-normal projection (roads, props: bit-identical rendering)
+    assert block.index("#endif") < block.index("if (a.y >= 0.7)")
+
+
 def test_atlas_swatch_colours_match_the_bottom_strip():
     from streetscape import furniture_textures as FT
     from streetscape import props as PP
