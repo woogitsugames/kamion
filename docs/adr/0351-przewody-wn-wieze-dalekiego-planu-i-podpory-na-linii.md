@@ -31,7 +31,7 @@ farfield-low-s24 (≤ 2 submesze na sektor). Zgłoszenie: `artifacts/critic-s24-
 - `points()`: BDOT „słup energetyczny” w promieniu 15 m od linii BDOT WN → `pylon`.
 - Szew bez zmian (spójny przy obu wczytanych kaflach): koniec linii przyciętej do bbox ma podporę na krawędzi w obu kaflach.
 
-**Daleki plan (`streetscape/far_field.py`, cache GIS `far-field-gis-cache/13`)**
+**Daleki plan (`streetscape/far_field.py`, cache GIS `far-field-gis-cache/14`)**
 - Linie z klasą napięcia: BDOT `rodzaj … wysokiego napięcia`; OSM `voltage ≥ 60 kV` (minor_line = nie WN; power=line bez
   `voltage` = WN tylko, gdy stoją na niej ≥ 2 zmapowane wieże). Linia OSM pokrywająca się z linią BDOT WN (≥ 70 % próbek
   w 25 m) jest pomijana. Linie WN przycinane do samej krawędzi kafla (nie do marginesu 8 m).
@@ -43,7 +43,12 @@ farfield-low-s24 (≤ 2 submesze na sektor). Zgłoszenie: `artifacts/critic-s24-
 - **Przewody**: przęsło między podporami, krzywa łańcuchowa `furniture.catenary_span` (zwis 1,5 % rozpiętości), pod
   końcami ramion obu wież (6 faz + odgromowy na High, dolna para na Low), jako nieprzezroczyste wstęgi w submeszu 0
   (`far_field_buildings`) — **0 nowych draw calli, kontrakt ≤ 2 submesze/sektor zachowany, bez zmian w C#**. Szerokość:
-  0,6 px widoku 1080 px / 60° w odległości (od krawędzi kafla + 120 m), nie mniej niż 2× `WIRE_HALF_W` (WORKING_VALUE).
+  0,6 px widoku 1080 px / 60° w odległości (od krawędzi kafla + 60 m), nie mniej niż 2× `WIRE_HALF_W`; kolor 0,05
+  (0,11 jak materiał `wire` dawał w słońcu jasnoszare wstęgi na tle nieba, VQA r1) (WORKING_VALUE).
+- **Linie SN** (BDOT `… średniego napięcia`, OSM power=line 1–60 kV) do `MV_FAR_MAX_M` = 600 m od kafla, tylko High:
+  betonowe słupy `props.power_pole` (12 m, trawersa ocynk), podpory jak w kaflu (zmapowane BDOT „słup energetyczny”
+  w 10 m, przęsła ≤ 80 m, łączenie z regułą < 25 m), 3 przewody na H − 0,3 m (−0,8/0/+0,8 m), szew = słup kafla.
+  Kolor betonu 0,16 (0,36 renderował się biało, VQA r1). Dalej niż 600 m słup 12 m ma < 1 px.
 - **Kolor**: ocynk `COL_PYLON_GALV` (0,150; 0,155; 0,160) z rozrzutem na wieżę ±12 % jasności i ±3 % ciepły/zimny (kolor
   wierzchołków, bez materiału i draw calla). WORKING_VALUE, oceniane na klatkach visual-QA.
 
@@ -53,15 +58,16 @@ farfield-low-s24 (≤ 2 submesze na sektor). Zgłoszenie: `artifacts/critic-s24-
 | zmapowane wieże w kaflu bez przęsła | 31 / 298 | 0 / 308 (10 słupów BDOT na liniach WN to teraz wieże) |
 | słupy SN w kaflu bez przęsła | 34 / 60 | 24 / 50 (pozostałe: brak linii w BDOT; bez danych) |
 | kratownice dalekiego planu bez przewodów | 17 110 / 17 110 | 0 (po przebudowie dalekiego planu kafla) |
-| dk65-07 daleki plan | 307 kratownic, 0 przęseł; High 146 898 / Low 15 816 tri | 31 wież + 5 masztów, 30 przęseł; High 95 814 / Low 10 906 tri |
+| dk65-07 daleki plan | 307 kratownic, 0 przęseł; High 146 898 / Low 15 816 tri | 30 wież WN + 5 masztów, 29 przęseł WN; 101 słupów SN, 99 przęseł SN, 7 szwów SN; High 99 214 / Low 10 852 tri |
+| knyszyn-w daleki plan | 328 kratownic, 0 przęseł; High 104 569 / Low 11 830 tri | 44 wieże + 4 maszty, 44 przęsła, 2 szwy WN (= podpory kafla E 737,9 / 792,2); 246 słupów SN, 245 przęseł; High 63 921 / Low 6 934 tri |
 
 ## Konsekwencje
 - Przebudowa: `far_field.py --region <id>` (bez build_world; ~3 min/kafel — ekstrakcja GIS od nowa przez schemat 13) dla
   wszystkich kafli; zmiana w kaflu (podpory) wymaga `build_world.py` kafli z liniami WN: bialystok-bojary, -industrial-c,
   -kleeberga, -maczka, -porosly, dk65-11, dk65-monki-03/-05/-07, knyszyn, monki-e, s8-03/-04/-05 (wieże nie były
   podporami) oraz kafle z wieżami w liczbie zmienionej (lista w `artifacts/hv-wires-s24/audit_after_tile.json`).
-- Pole ze zrzutu krytyka zostaje puste w dalekim planie (linia SN): słupy SN rysuje dopiero kafel dk65-08. Otwarte:
-  linie SN w pobliżu krawędzi (≤ 600 m) jako betonowe słupy + 3 przewody w dalekim planie.
+- Zrzut krytyka (dk65-07 `owner02_seam_n_cab`) pokazuje teraz linię SN dk65-08 jako słupy betonowe z przewodami.
+- Draw calle: 0 nowych (wszystko w submeszu 0 sektora); trójkąty dalekiego planu spadają (mniej kratownic).
 - Test `test_far_field.py` (`fc["pylons"] >= 150` dla bialystok-industrial-c) zmieni znaczenie po przebudowie C (tylko WN +
   maszty) — do przeliczenia przy przebudowie.
 - Wstęgi przewodów nie mają zanikania `_KamionWireFade` ani pikselowej podłogi shadera Wire; przy obu wczytanych kaflach
