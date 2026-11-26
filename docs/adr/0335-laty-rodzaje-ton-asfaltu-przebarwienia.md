@@ -141,3 +141,41 @@ Uwaga P2 nr 3 („koleiny w dali ciemniejsze niż przy kamerze”) — diagnoza 
 5. **Wynik „po”** (to samo podłoże, `rutratio.py`, średnie ściemnienie, stosunek po/przed): ≤ 25 m 0,97–1,01 (bez zmiany przy kamerze); 35–65 m 0,86–0,98; 85–140 m 0,71–0,79 (clear), 0,73–0,76 (overcast). Szczyt p95 z 8,2 → 6,0 % (115–125 m). Zasięg ≤ 25 m nietknięty — kontrast przy kamerze bez zmiany, w dali spada łagodnie do ok. 0,6–0,75 (perspektywa powietrzna).
 6. **Ograniczenia:** pomiar w dali opiera się na 3–6 wierszach pikseli (szum ±30 %); odległości z geometrii wiersza przy h = 2,0 m (dopasowane, nie zmierzone); render „po” ocenił agent, NIE visual-critic (zmiana subtelna, arkusze `artifacts/rut-far-s24/sheets/`); nie sprawdzano Białegostoku C ani telefonu. Po rebase na main import `dw671-tykocin-01` wymagał osobnej poprawki `WorldPbrMaterials.FurnitureSignFronts` (materiały `sign_post*` brane za tablice, ADR 0337).
 7. **Testy:** EditMode Win64 (`AsphaltScopeTests|RoadPaintLaneFieldTests|RoadWearUvContractTests|WorldPbrTintTests`) 32/32 PASS.
+
+## Dopisek P3: łaty widziane z kabiny, szew osi (gałąź `worktree-agent-a4b13d4540b9ae795` / road-patches-s24, 26.11)
+
+Źródło: krytyk fali 11 (`artifacts/critic-s24-wave11/CRITIC.md` pkt 2 P0 i pkt 4 P1, trzeci raz z rzędu „prostokątne łaty”).
+
+### Diagnoza (render „przed” w worktree = obraz krytyka)
+1. **Szew osi + czarny falisty pas** (`knyszyn-w dk65-goniadzka` x~985–1040): to nie łata, koleina ani szew kafla, tylko
+   `decals.seal_cracks` — „centre construction joint”: pasmo `decal_seal` 12–20 cm, `strength 2,6` (pełne, bez rozbicia
+   makroszumem), meander ±5 cm na falach 5–9 m (ten sam co pęknięcie termiczne). Obok prostych kresek P-1 ciemne pasmo,
+   które co kilka metrów przechodzi z lewej strony kreski na prawą, czyta się jako przeskakująca linia środkowa.
+2. **Jasny twardy prostokąt** (`dw671-tykocin-03 cab-view-b`): jezdnia ma ton `_ROADWEAR` 0,44–1,56 x (szum 90/23/7 m),
+   łata go nie miała — stara łata na ciemnym odcinku wychodziła jasna, świeża na wyblakłym czarna. Przez łatę biegło
+   pęknięcie `decal_seal` (kolejka +20 nad łatą +12).
+3. **Obrys prostokątny z kabiny**: szum obrysu ADR 0335 (2–12 cm) miał długości fal 0,07–0,9 m — z 10–40 m (1,5–6 cm na
+   piksel) każda krawędź to linijka. Zalewka 4–6 cm leżała na rampie alfa krawędzi (0..`fth`+aa) i z odległością znikała.
+
+### Decyzja (0 nowych draw calli, 0 nowych trójkątów łat; WORKING_VALUE)
+1. **Szew osi** (`roads/decals.py`): prosty (meander ±1 cm, `CENTRE_JOINT_AMP_M`), pasmo 6–9 cm (rdzeń 3,5–5,5 cm),
+   `strength 1,7` (< 2,5 → przetarty makroszumem, nie pełny pas). Pęknięcia termiczne / krawędziowe bez zmian.
+2. **Pęknięcia nie przechodzą przez łaty**: polilinia pęknięcia dzielona na odcinki poza obrysem łat łańcucha
+   (`_runs_outside`, margines 15 cm, obrót łaty uwzględniony). Trójkąty pęknięć: knyszyn-w 5 716 → 4 990,
+   dw671-tykocin-03 8 190 → 7 326 (r1).
+3. **Łata dziedziczy ton odcinka** (`WorldPBR`: wspólna funkcja `KamionRoadTone`, ta sama na wstędze i łacie): stara łata
+   w pełni, świeża w 60 % (wyblaknięcie 90 m przyszło później). Kontrast łaty względem jezdni nie zależy już od miejsca.
+4. **Obrys z kabiny**: wędrówka 5–15 cm na falach 0,55 i 1,6 m (amplituda na łatę), wyszczerbienia do 12 cm (szum 0,35 m);
+   frezowanie: każdy koniec z własnym skosem ±3°, 40 % z końcem schodkowym 0,1–0,4 m na połowie szerokości (dwa przejazdy
+   bębna), brzegi podłużne wędrujące; wykop: boki wędrujące, 45 % w kształcie L (narożnik 25–45 % x 30–55 % niewykopany).
+5. **Zalewka 2–4 cm okrakiem na cięciu** (`asphalt_patch_seam.width_m` 0,06 → 0,032, `darkening` 0,75 → 0,80): obrys
+   cofnięty o pół szerokości, zalewka składana z własnym kryciem (0,94) i filtrowana pudełkowo (pod pikselem zachowuje
+   ~pole zamiast znikać); świeża błyszcząca 0,5, stara matowa 0,3, wypełnia fakturę (normalna spłaszczona).
+6. **Szorstkość / faktura wg wieku**: świeża łata — ziarno x0,55 i normalna spłaszczona o 35 % (lepiszcze zamyka
+   powierzchnię), stara — ziarno x1,15; ton partii 0,88–1,14 (było 0,82–1,18). Trzy pokolenia (wiek trójmodalny) bez zmian.
+
+### Konsekwencje
+- Zalewka 3,2 cm i nowe parametry trafiają do regionu dopiero po przebudowie (`world_manifest`); przebudowane tu tylko
+  `knyszyn-w` i `dw671-tykocin-03` (prywatna kopia derived worktree). Shader działa od razu na każdym regionie
+  (ton, obrys, kształty), ale stare regiony mają zalewkę 6 cm (teraz okrakiem, więc wyraźniejszą).
+- Pozostałe regiony z łatami/pęknięciami po scaleniu: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region <id>`.
