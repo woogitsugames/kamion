@@ -402,6 +402,7 @@ namespace Game.Editor.VisualQA
                 var prevTarget = cam.targetTexture;
                 cam.enabled = true;
                 var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
+                RestoreDiagPreset();
                 string detailCamera = EditorTools.Arg("-qaStatsDetailCamera", null);
                 string detailPath = EditorTools.Arg("-qaStatsDetailPath", null);
                 stats.AppendLine(SceneStats.Estimate(cam, hasTier ? tierSettings.shadowDistance : QualitySettings.shadowDistance,
@@ -540,6 +541,15 @@ namespace Game.Editor.VisualQA
         /// <summary>render-artifacts-s24 diagnostics: env KAMION_QA_DIAG = "global=value;..." overrides float shader globals
         /// right before each camera renders (e.g. "_KamionClearSkySaturation=1", "_KamionClearCloudCover=0"); a 4-vector
         /// global takes "x,y,z,w" ("_KamionSkyCap=0,0,0,0"). Unset = no effect. Measurement only, never in a build.</summary>
+        static readonly System.Collections.Generic.List<(UnityEngine.Object p, System.Reflection.FieldInfo f, float v)> s_DiagPresetRestore =
+            new System.Collections.Generic.List<(UnityEngine.Object, System.Reflection.FieldInfo, float)>();
+
+        static void RestoreDiagPreset()
+        {
+            for (int i = s_DiagPresetRestore.Count - 1; i >= 0; i--) s_DiagPresetRestore[i].f.SetValue(s_DiagPresetRestore[i].p, s_DiagPresetRestore[i].v);
+            s_DiagPresetRestore.Clear();
+        }
+
         static void ApplyDiagGlobals()
         {
             string spec = System.Environment.GetEnvironmentVariable("KAMION_QA_DIAG");
@@ -547,6 +557,21 @@ namespace Game.Editor.VisualQA
             var inv = System.Globalization.CultureInfo.InvariantCulture;
             foreach (var kv in spec.Split(';'))
             {
+                if (kv.StartsWith("preset."))
+                {
+                    // "preset.clearSkySaturation=1": a float field of the active LightingPreset (EnvironmentLighting pushes
+                    // the sky globals from the preset before every frame, so a shader global alone would be overwritten).
+                    // The previous value is restored by RestoreDiagPreset after the render; the asset is never saved.
+                    int e = kv.IndexOf('=');
+                    var env = Game.Rendering.EnvironmentLighting.Instance;
+                    var p = env != null ? env.Active : null;
+                    var f = p != null ? p.GetType().GetField(kv.Substring(7, e - 7)) : null;
+                    if (f == null || f.FieldType != typeof(float)) { Debug.LogWarning($"[QA] diag {kv}: no such float field"); continue; }
+                    s_DiagPresetRestore.Add((p, f, (float)f.GetValue(p)));
+                    f.SetValue(p, float.Parse(kv.Substring(e + 1), inv));
+                    Debug.Log($"[QA] diag preset {p.name}.{f.Name} = {kv.Substring(e + 1)}");
+                    continue;
+                }
                 if (kv.StartsWith("kwoff:"))
                 {
                     // "kwoff:_ROADWEAR": that material keyword off on every renderer (runtime copies, DontSave)

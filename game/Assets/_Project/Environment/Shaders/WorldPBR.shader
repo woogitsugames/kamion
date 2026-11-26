@@ -665,14 +665,23 @@ Shader "Kamion/World PBR"
                         // P2b (rut-far-s24): same-ground measurement showed the 0.50 / 25-130 m ramp left the final-pixel rut
                         // depth flat to 120 m (near albedo texture hides the stripes, far texture mips away and leaves them as the
                         // only dark lines to the horizon), so: 1.0 <= 20 m -> 0.40 >= 120 m.
-                        half rwDistAtten = (half)(1.0 - 0.60 * smoothstep(20.0, 120.0, rwDist));
+                        // render-artifacts-s24 (critic wave 11 P1 #6 "pionowe ciemne smugi zbiegajace sie do horyzontu";
+                        // measured route-s1846: 3 equally dark continuous bands per lane, -12..-16 %, visible to the horizon;
+                        // gone with _ROADWEAR off, unchanged with shadows / wires off): the bands converge in perspective,
+                        // so their far contrast must die, not halve: 1.0 <= 15 m -> 0.15 >= 90 m. WORKING_VALUE.
+                        half rwDistAtten = (half)(1.0 - 0.85 * smoothstep(15.0, 90.0, rwDist));
+                        // one 38 m object-space noise: the track fade below AND the lateral wander of the wheel paths
+                        // (drivers do not hold the lane line to the centimetre: +-5 % of a lane over tens of metres)
+                        half n38 = (half)ValueNoise12(TransformWorldToObject(pw).xz / 38.0 + 53.0);
                         // wheel paths at ~0.25 / 0.75 of a lane: darker binder-rich, smoother
                         float lc = frac(w.x);
                         // P2b: area-preserving prefilter (box ~ pixel footprint): the stripe widens to >= 1.2 px and its amplitude
                         // drops by the same ratio, so far away it converges to the track's mean darkening instead of aliasing
                         // (the old `* saturate(0.11 / fwx)` shrank the area and never engaged below ~300 m).
-                        half rwW = (half)max(0.11, 1.2 * rwFwx);
-                        half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / rwW) * (0.11h / rwW);
+                        // render-artifacts-s24: smoothstep profile (the linear tent had a dark ridge line in its middle), 0.13 lane
+                        half rwW = (half)max(0.13, 1.2 * rwFwx);
+                        half lw = (half)abs(abs(lc - 0.5 + (n38 - 0.5h) * 0.10h) - 0.24);
+                        half wp = (1.0h - smoothstep(0.0h, rwW, lw)) * (0.13h / rwW);
                         wp *= lerp(1.0h, (half)KAMION_PLATE_WHEEL_KEEP, plate);
                     #if defined(KAMION_RUT_PROBE_OFF)
                         wp = 0;     // measurement probe only (ADR 0335 P2b): final-pixel rut contrast = render(on) - render(off)
@@ -697,8 +706,9 @@ Shader "Kamion/World PBR"
                         half traffic = _AsphaltWear.y * (0.70 + 0.25 * macro.g);
                         // ADR 0335: x1.35 (r1 x1.25 was invisible from the cab, r2 x2.0 read as rails - critic round 3), and the
                         // contrast of a track fades to 35-100 % over 20-60 m stretches (object-space noise)
-                        half trackFade = (half)lerp(0.35, 1.0, smoothstep(0.30, 0.60, ValueNoise12(TransformWorldToObject(pw).xz / 38.0 + 53.0)));
-                        albedo *= 1.0 - wp * 1.35 * trackFade * rwDistAtten * (0.10 * _WheelPolish + traffic) * (1.0 - paintFresh);
+                        // render-artifacts-s24: x1.35 -> x0.75 (with the wider smooth profile: ~-6 % in the path core near the cab)
+                        half trackFade = (half)lerp(0.35, 1.0, smoothstep(0.30, 0.60, n38));
+                        albedo *= 1.0 - wp * 0.75 * trackFade * rwDistAtten * (0.10 * _WheelPolish + traffic) * (1.0 - paintFresh);
                         smooth = lerp(smooth, smooth + 0.12, wp * _WheelPolish * rwDistAtten);
                     #if !defined(_DECAL_PAINT)
                         // gutter: grit, leaves and soot within ~0.6 m of the kerb
@@ -739,7 +749,7 @@ Shader "Kamion/World PBR"
                         half dropNoise = lerp(0.5h, (half)ValueNoise12(pdr / 0.9 + 19.0), (half)saturate(0.45 / rwFpx));
                         half drops = (half)lerp(0.45, 1.0, smoothstep(0.35, 0.65, dropNoise));
                         half drip = saturate(1.0 - abs(lc - 0.5 - wander) / 0.12) * saturate(0.45 + (macro.a - 0.5) * 2.2 + (macro.g - 0.5) * 0.8);
-                        drip *= present * drops * 1.9h;
+                        drip *= present * drops * 1.2h;   // render-artifacts-s24: 1.9 -> 1.2 (read as a third rail per lane)
                         half blot = (half)smoothstep(0.80, 0.88, ValueNoise12(pdr / 0.55 + 23.0)) * (half)saturate(0.35 / rwFpx) * saturate(1.0 - abs(lc - 0.5 - wander) / 0.2) * present;
                         drip = max(drip, blot * 1.8h);
                         drip *= lerp(1.0h, (half)KAMION_PLATE_DRIP_KEEP, plate);
