@@ -795,7 +795,9 @@ M["road_asphalt"] = {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "as
 # repair clearly darker than the road (0.60), an old one near it (0.82). WORKING_VALUE.
 # r3: aged 0.82 x the importer's age tint 1.29 put an old repair exactly on the road tone (render r2: 273 patches in
 # the tile, none readable); 0.55 / 0.68 -> old repair ~0.75 x the road, fresh ~0.47 x.
-M["decal_patch"]["asphalt_patch_seam"] = {"width_m": 0.06, "darkening": 0.75,
+# road-patches-s24 (critic wave 11 pkt 2): the overband is 2-4 cm (width 0.032 x 0.70-1.00 in the shader), straddles
+# the cut and is composited with its own opacity (it used to fade on the alpha ramp of the patch edge); a little darker.
+M["decal_patch"]["asphalt_patch_seam"] = {"width_m": 0.032, "darkening": 0.80,
                                          "fresh_tone": 0.55, "aged_tone": 0.68}
 M["decal_patch"]["asphalt_wear"] = {"low_photo_detail": 0.75}
 # Restore authored wheel wear (0099 halved it in C#). Keep all coefficients visible here.
