@@ -114,6 +114,8 @@ namespace Game.World.Streaming
         /// Reserve the backdrop toward registered neighbours from the first frame, including corners.
         /// Loading/Ready/Unloading must never toggle it: compressed proxies cannot replace real tiles.
         /// Unknown nodes (None, e.g. the separate skyline) are not directional sectors.
+        /// ADR 0354: used only in the A/B mode -farRing off; the streamer otherwise keeps every sector on and the shader
+        /// clips the far field to the ring beyond the loaded tiles (FarRing).
         /// </summary>
         public static bool FarSectorMayShow(TileSide sector, TileSide[] neighbourSides)
         {
