@@ -1,3 +1,12 @@
+# STATUS bank-smear-s24 (smuga na skarpie tykocin route_s0160, ADR 0311 dopisek)
+
+- Worktree `agent-a13a4ba7b73214d27`, galaz `worktree-agent-a13a4ba7b73214d27`; prywatna kopia `Data/raw/derived/tykocin` (reszta derived = junction do main), Library z win-build (Win64).
+- [krok 1] Hook diag `KAMION_QA_DIAG`: `colorby:renderer|material|slot|prim|vcol|vcolb|nrm|wpos`, `mat:<prop>=v`, `noshadows` (VisualQaRunner + Editor/VisualQA/DiagPrimitive.shader).
+- [krok 2] Smuga = `terrain_band`/`M_terrain_grass` (WorldPBR) widziany stycznie (skarpa 33 deg, slad tekstury 15-100x anizotropowy); nie rzut z normalnych (WorldSurface bez zmian).
+- [krok 3] Poprawka: Var trawy z mipmapami (WorldPbrMaterials) + WorldPBR izotropowa probka/kolor darni na stoku przy skrajnej anizotropii. DC bez zmian (780). EditMode 39/39 (w tym GrassVarMipsTests), pytest GIS (shader/materials) 58 passed.
+- Dowody: `artifacts/bank-smear-s24/sbs/` (przed|po, diag). Otwarte: cienka linia sylwetki skarpy zostaje (geometria/karty trawy - lider).
+- NASTEPNY KROK: review + scalenie przez lidera; po scaleniu reimport kafli (tekstura Var trawy zmienia sig importu): `pwsh scripts/import-region.ps1 -Region <id> -BuildTarget Win64`.
+
 # STATUS hv-wires-s24 (przewody WN, CRITIC s24 fala 11 pkt 1)
 
 - [krok 1] Diagnoza: pylony na dk65-07 owner02-seam-n-cab to pylony FAR FIELD (kamera n=1080 > 1024, poza kaflem; dk65-08 nie wczytany).
