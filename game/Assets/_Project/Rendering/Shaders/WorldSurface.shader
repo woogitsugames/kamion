@@ -79,7 +79,7 @@ Shader "Kamion/World Surface"
         float _KamionGlassShadowBias;
         #include "KamionLampPools.hlsl"
         #include "VegetationGround.hlsl"
-        #include "KamionFarRing.hlsl"   // ADR 0354 far-field ring clip (_FAR_RING_CLIP clones made by WorldStreamer only)
+        #include "Assets/_Project/Rendering/Shaders/KamionFarRing.hlsl"   // ADR 0354 far-field ring clip (_FAR_RING_CLIP clones made by WorldStreamer only)
 
         // ADR 0141 far skyline (_FAR_FACADE = far-field meshes only; their ordinary TEXCOORD_1.x is >= 0). The far-field
         // generator stores -(x + 16) on the tall ring objects ("clamp") and -(x + 4096) on its stand-ins for landmark

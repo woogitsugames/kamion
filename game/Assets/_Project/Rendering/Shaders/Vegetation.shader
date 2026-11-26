@@ -66,7 +66,7 @@ Shader "Kamion/Vegetation"
         CBUFFER_END
         TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
         TEXTURE2D(_NormalOcc); SAMPLER(sampler_NormalOcc);
-        #include "KamionFarRing.hlsl"   // ADR 0354: far-field curtains (_HLOD_EDGE + renderer user value) clipped beyond loaded tiles
+        #include "Assets/_Project/Rendering/Shaders/KamionFarRing.hlsl"   // ADR 0354: far-field curtains (_HLOD_EDGE + renderer user value) clipped beyond loaded tiles
         // Global (WorldInstances, per tier): 1 = cross-fade the two nearest impostor views, 0 = nearest view.
         half _KamionImpostorBlend;
         // ADR 0080 r11 (WorldAtmosphere): x = 1: the ambient includes the sky light transmitted through the leaf,

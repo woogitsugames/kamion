@@ -104,16 +104,47 @@ namespace Game.World.Streaming
             return false;
         }
 
-        // Cell inside a loaded rectangle other than the owner's own (geometry inside the owner tile is never clipped).
+        // Cell covered by the union of the loaded rectangles other than the owner's own (geometry inside the owner tile is
+        // never clipped). Exact: the cell is split at every rectangle edge crossing it and each piece's centre is tested.
+        // Stack buffers, no allocation.
         static bool InsideOther(Vector4 cell, float cx, float cz, Vector4[] rects, int count)
         {
-            for (int i = 0; i < count && i < rects.Length; i++)
+            int n = Math.Min(count, rects.Length);
+            Span<float> xs = stackalloc float[2 * MaxRects + 2];
+            Span<float> zs = stackalloc float[2 * MaxRects + 2];
+            int nx = 0, nz = 0;
+            xs[nx++] = cell.x; xs[nx++] = cell.z; zs[nz++] = cell.y; zs[nz++] = cell.w;
+            for (int i = 0; i < n && i < MaxRects; i++)
             {
                 var r = rects[i];
                 if (Contains(r, cx, cz)) continue;
-                if (cell.x >= r.x && cell.z <= r.z && cell.y >= r.y && cell.w <= r.w) return true;
+                if (r.x > cell.x && r.x < cell.z) xs[nx++] = r.x;
+                if (r.z > cell.x && r.z < cell.z) xs[nx++] = r.z;
+                if (r.y > cell.y && r.y < cell.w) zs[nz++] = r.y;
+                if (r.w > cell.y && r.w < cell.w) zs[nz++] = r.w;
             }
-            return false;
+            Sort(xs.Slice(0, nx)); Sort(zs.Slice(0, nz));
+            for (int a = 0; a + 1 < nx; a++)
+                for (int b = 0; b + 1 < nz; b++)
+                {
+                    if (xs[a + 1] - xs[a] <= 0f || zs[b + 1] - zs[b] <= 0f) continue;
+                    float px = 0.5f * (xs[a] + xs[a + 1]), pz = 0.5f * (zs[b] + zs[b + 1]);
+                    bool covered = false;
+                    for (int i = 0; i < n && !covered; i++)
+                        covered = !Contains(rects[i], cx, cz) && Contains(rects[i], px, pz);
+                    if (!covered) return false;
+                }
+            return true;
+        }
+
+        static void Sort(Span<float> v)
+        {
+            for (int i = 1; i < v.Length; i++)
+            {
+                float k = v[i]; int j = i - 1;
+                while (j >= 0 && v[j] > k) { v[j + 1] = v[j]; j--; }
+                v[j + 1] = k;
+            }
         }
 
         static bool OwnedElsewhere(float px, float pz, float cx, float cz, Vector4[] rects, int count, float margin)
