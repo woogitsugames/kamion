@@ -2144,18 +2144,18 @@ RULE_MERGE_M = 60.0              # a rule angle-point tower this close to a mapp
 # critic's frame (dk65-07 owner02_seam_n_cab) looks along such a line of dk65-08 - it was drawn as 27 m towers.
 MV_FAR_MAX_M = 600.0
 MV_RULE_MERGE_M = 25.0
-COL_FAR_CONCRETE = (0.36, 0.355, 0.335)
+COL_FAR_CONCRETE = (0.16, 0.158, 0.15)    # x plaster_white of far_field_buildings: 0.36 rendered white (VQA r1)
 # Galvanised steel (ADR 0351): the tile's pylon_steel is linear 0.115-0.12; COL_PYLON_STEEL 0.27-0.30 (x plaster_white
 # of far_field_buildings) rendered snow white in sun. Per-tower +-12 % brightness / +-3 % warm-cool shift (weathered vs
 # newer zinc), vertex colour only: no material, no draw call. WORKING_VALUE, judged on the visual-QA frames.
 COL_PYLON_GALV = (0.150, 0.155, 0.160)
-COL_FAR_WIRE = (0.110, 0.110, 0.105)   # = materials "wire" (weathered aluminium conductor)
+COL_FAR_WIRE = (0.050, 0.050, 0.048)   # sunlit ribbon of 0.11 read light grey against the sky (VQA r1); real conductors read dark
 # Far conductors are opaque ribbons in submesh 0 (the <= 2 submeshes per sector contract, no Kamion/World Wire there):
 # full width = FAR_WIRE_PX_FRAC px of a 1080 px / 60 deg view at (distance outside the tile + FAR_WIRE_VIEW_M), never
 # under 2 x the tile's WIRE_HALF_W. MSAA / coverage then draw a faint line instead of a shimmering dotted one.
 FAR_WIRE_PX_M = 2.0 * math.tan(math.radians(30.0)) / 1080.0
 FAR_WIRE_PX_FRAC = 0.6
-FAR_WIRE_VIEW_M = 120.0
+FAR_WIRE_VIEW_M = 60.0
 
 
 def galv_colour(key: str) -> tuple:
