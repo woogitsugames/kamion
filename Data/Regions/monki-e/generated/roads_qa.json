@@ -1162,7 +1162,7 @@
     2
    ],
    "length_m": 63.9,
-   "max_grade": 0.0165,
+   "max_grade": 0.0164,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
@@ -5040,11 +5040,11 @@
    "seal_cracks": {
     "longitudinal": 325,
     "transverse": 662,
-    "tris": 17370
+    "tris": 15212
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 573206,
+  "footprint_nodes": 573195,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -5270,7 +5270,68 @@
    "in_chain_ramps": 0,
    "seam_sides": 0
   },
-  "seam_tapers": [],
+  "seam_tapers": [
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w286988943:2906547734-1134831176",
+    "end": "b",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "monki",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w286988943:2906547734-1134831176",
+    "end": "a",
+    "in_tile_m": 7.59,
+    "length_m": 15.18,
+    "neighbour": "dk65-monki-07",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w301042249:3051533167-1134837094",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "dk65-monki-07",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w98071055:14124331695-1134819645",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "monki",
+    "step_m": 0.25,
+    "width_other": 6.5,
+    "width_own": 6.5,
+    "width_seam": 6.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w98072109:1134831176-1134841871",
+    "end": "a",
+    "in_tile_m": 6.67,
+    "length_m": 13.34,
+    "neighbour": "dk65-monki-07",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 283,
    "parts": 16,
@@ -5288,7 +5349,7 @@
   },
   "verge_strips": {
    "chunks": 46,
-   "tris": 44838
+   "tris": 44841
   },
   "walled_ramps": []
  }

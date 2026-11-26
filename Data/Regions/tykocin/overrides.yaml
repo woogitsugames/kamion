@@ -162,3 +162,15 @@ overrides:
       - [[751751.5, 600236.5], [751785.0, 600243.4], [751785.3, 600239.7], [751752.0, 600233.6]]
     reason: 'ESTIMATED: paved walk around the west lawn and the narrow north-west lawn strip (orthophoto 2024).'
     confidence: medium
+  # ADR 0238 d. props-fix-s24 (+ ADR 0162 dopisek props-fix): zagrody dostaja dach LoD2, sciany i cokol, a przystanki wiejskie
+  # stalowa wiate z nieprzezroczysta sciana tylna. Opt-in per region (Bialystok bit-identyczny).
+  - id: rural-outbuildings-shelters-props-fix-s24
+    kind: facade_rules
+    rural_outbuildings: true
+    rural_shelters: true
+    reason: >-
+      Wlaczenie props-fix-s24 w kaflu wiejskim (wzor dk65-07): budynki gospodarcze BDOT10k z dachem LoD2 zamiast plaskich
+      bialych pudel, wiata wiejska zamiast szklanej wiaty BKM. ADR 0238 dopisek d. i ADR 0162 dopisek props-fix.
+      WORKING_VALUE (paleta i wymiary bez pomiaru zagrod).
+    confidence: medium
+    verify: visual-qa High clear (kamery trasy kafla), budzet trojkatow kafla

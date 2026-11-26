@@ -43,8 +43,8 @@
     },
     "chimneys": 16,
     "forest_polygons": 593,
-    "power_lines": 175,
-    "pylons": 406
+    "power_lines": 176,
+    "pylons": 329
   },
   "forest_chm_ring": {
     "chm_share": 0.0,
@@ -59,6 +59,29 @@
     "invalid_or_missing": 0,
     "members": 620,
     "usable_ids": 133679
+  },
+  "power_plan": {
+    "dropped_towers_off_hv_lines": {
+      "power_tower": 2,
+      "słup energetyczny": 1
+    },
+    "lines": 176,
+    "lines_hv_bdot": 34,
+    "lines_hv_osm": 2,
+    "lines_not_hv": 111,
+    "masts": 20,
+    "mv_lines_near": 11,
+    "mv_poles": 60,
+    "mv_seam_supports": 4,
+    "mv_spans": 58,
+    "osm_hv_duplicates_of_bdot": 29,
+    "osm_untagged_dropped": 0,
+    "pylons": 309,
+    "pylons_mapped": 185,
+    "pylons_rule": 124,
+    "seam_supports": 5,
+    "spans": 289,
+    "unwired_power_pylons": 2
   },
   "region": "bialystok-industrial-c",
   "schema": "truck-sim-pl/far-field-qa/1",
@@ -131,47 +154,47 @@
   },
   "tiers": {
     "High": {
-      "bytes": 17318008,
+      "bytes": 20056332,
       "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 23698,
+            "far_field_buildings": 49994,
             "forest_edge_mixed_far_atlas": 10168
           },
           "submeshes": 2,
-          "triangles": 33866,
-          "vertices": 60434
+          "triangles": 60162,
+          "vertices": 113026
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 33535,
+            "far_field_buildings": 14023,
             "forest_edge_mixed_far_atlas": 27838
           },
           "submeshes": 2,
-          "triangles": 61373,
-          "vertices": 102023
+          "triangles": 41861,
+          "vertices": 62999
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 51537,
+            "far_field_buildings": 56749,
             "forest_edge_mixed_far_atlas": 3240
           },
           "submeshes": 2,
-          "triangles": 54777,
-          "vertices": 107199
+          "triangles": 59989,
+          "vertices": 117623
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 21690,
+            "far_field_buildings": 33306,
             "forest_edge_mixed_far_atlas": 12438
           },
           "submeshes": 2,
-          "triangles": 34128,
-          "vertices": 59638
+          "triangles": 45744,
+          "vertices": 82870
         }
       },
-      "sha256": "b2b923aa243f026a0bf858e7c066bceabdf14e8cdae80b4040fb4053f2280aaf",
+      "sha256": "873e6a39f0bee83558e9d5db1fa0ff929a4ea5c28c67057d38641fbb8c721da7",
       "skyline": {
         "landmark_stack_proxies": [
           "ec-bialystok-chimney-1",
@@ -183,51 +206,51 @@
         "submeshes": 1,
         "triangles": 4178
       },
-      "total_triangles": 188322,
-      "total_vertices": 337650
+      "total_triangles": 211934,
+      "total_vertices": 384874
     },
     "Low": {
-      "bytes": 2083420,
+      "bytes": 2333964,
       "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 2252,
+            "far_field_buildings": 5038,
             "forest_edge_mixed_far_atlas": 1352
           },
           "submeshes": 2,
-          "triangles": 3604,
-          "vertices": 6270
+          "triangles": 6390,
+          "vertices": 11842
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 2259,
+            "far_field_buildings": 623,
             "forest_edge_mixed_far_atlas": 3496
           },
           "submeshes": 2,
-          "triangles": 5755,
-          "vertices": 8993
+          "triangles": 4119,
+          "vertices": 5721
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 12785,
+            "far_field_buildings": 13263,
             "forest_edge_mixed_far_atlas": 386
           },
           "submeshes": 2,
-          "triangles": 13171,
-          "vertices": 26069
+          "triangles": 13649,
+          "vertices": 27025
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 2223,
+            "far_field_buildings": 3807,
             "forest_edge_mixed_far_atlas": 1420
           },
           "submeshes": 2,
-          "triangles": 3643,
-          "vertices": 6335
+          "triangles": 5227,
+          "vertices": 9503
         }
       },
-      "sha256": "4ece968f9c999f7bdd210684ac422bc68017753992cacd2f5336cfce1b601126",
+      "sha256": "4f3cbaffb0f7d25dc76978f99faa6d9c08be7e9341cf51c0523cd8a5bd6ebf57",
       "skyline": {
         "landmark_stack_proxies": [
           "ec-bialystok-chimney-1",
@@ -239,8 +262,8 @@
         "submeshes": 1,
         "triangles": 2966
       },
-      "total_triangles": 29139,
-      "total_vertices": 53599
+      "total_triangles": 32351,
+      "total_vertices": 60023
     }
   }
 }

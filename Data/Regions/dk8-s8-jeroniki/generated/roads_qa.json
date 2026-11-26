@@ -556,7 +556,7 @@
     1
    ],
    "length_m": 34.6,
-   "max_grade": 0.0044,
+   "max_grade": 0.0043,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 0.0,
@@ -1856,9 +1856,9 @@
     2
    ],
    "length_m": 17.1,
-   "max_grade": 0.0218,
+   "max_grade": 0.0217,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.016,
+   "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.0,
    "width_m": [
     7.5
@@ -5704,7 +5704,7 @@
    "corner 0-1: no fillet fits (alpha 91 deg) -> sharp",
    "corner 1-2: no fillet fits (alpha 89 deg) -> sharp",
    "corner 0-1: kerb chamfer 1:4 over 6.8 m (width step 1.69 m)",
-   "corner 1-2: kerb chamfer 1:4 over 7.3 m (width step 1.83 m)"
+   "corner 1-2: kerb chamfer 1:4 over 7.3 m (width step 1.82 m)"
   ],
   "j:n13405554554": [
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
@@ -5726,8 +5726,8 @@
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ],
   "j:n2081020070": [
-   "corner 1-2: arms touch (gap -7.98 m) -> no nose",
-   "corner 0-1: kerb chamfer 1:4 over 7.9 m (width step 1.97 m)"
+   "corner 1-2: arms touch (gap -7.97 m) -> no nose",
+   "corner 0-1: kerb chamfer 1:4 over 7.9 m (width step 1.98 m)"
   ],
   "j:n2305516705": [
    "corner 1-2: kerb chamfer 1:4 over 13.1 m (width step 3.27 m)"
@@ -5786,11 +5786,11 @@
    "seal_cracks": {
     "longitudinal": 337,
     "transverse": 708,
-    "tris": 20086
+    "tris": 17836
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 466838,
+  "footprint_nodes": 466827,
   "fork_abreast": [
    {
     "beside": "c:w183639794:8860869967-2081020069",
@@ -6441,43 +6441,106 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.25,
     "chain": "c:w1151440428:3160890441-10712325925",
     "end": "a",
-    "in_tile_m": 12.5,
-    "length_m": 25.0,
+    "in_tile_m": 25.0,
+    "length_m": 50.0,
     "neighbour": "dk65-01",
-    "step_m": 0.25,
+    "step_m": 0.5,
     "width_other": 9.5,
     "width_own": 9.0,
     "width_seam": 9.25
    },
    {
+    "axis_offset_m": 0.125,
     "chain": "c:w1151531629:2081020070-10712325913",
     "end": "a",
-    "in_tile_m": 31.25,
-    "length_m": 62.5,
+    "in_tile_m": 34.61,
+    "length_m": 69.23,
     "neighbour": "dk65-01",
-    "step_m": 0.625,
+    "step_m": 0.75,
     "width_other": 4.5,
     "width_own": 5.75,
     "width_seam": 5.125
    },
    {
+    "axis_offset_m": 0.5,
+    "chain": "c:w1516017271:13236416984-14315731180",
+    "end": "a",
+    "in_tile_m": 17.05,
+    "length_m": 34.11,
+    "neighbour": "dk65-01",
+    "step_m": 0.5,
+    "width_other": 7.5,
+    "width_own": 7.5,
+    "width_seam": 7.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w1517368834:5195148438-3012480675",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "dk65-01",
+    "step_m": 0.25,
+    "width_other": 6.0,
+    "width_own": 6.0,
+    "width_seam": 6.0
+   },
+   {
+    "axis_offset_m": 0.25,
     "chain": "c:w305447699:2081020070-8860869968",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "dk65-01",
+    "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
+    "step_m": 0.25,
+    "width_other": 9.95,
+    "width_own": 10.45,
+    "width_seam": 10.45
+   },
+   {
+    "axis_offset_m": 0.125,
+    "chain": "c:w310634008:3160890433-3160890661",
+    "end": "b",
+    "in_tile_m": 10.0,
+    "length_m": 20.0,
+    "neighbour": "dk65-01",
+    "step_m": 0.125,
+    "width_other": 4.75,
+    "width_own": 4.75,
+    "width_seam": 4.75
+   },
+   {
+    "axis_offset_m": 0.125,
+    "chain": "c:w310634008:3160890433-3160890661",
     "end": "a",
     "in_tile_m": 10.0,
     "length_m": 20.0,
     "neighbour": "dk65-01",
-    "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
-    "step_m": 0.0,
-    "width_other": 9.95,
-    "width_own": 10.45,
-    "width_seam": 10.45
+    "step_m": 0.125,
+    "width_other": 4.75,
+    "width_own": 4.75,
+    "width_seam": 4.75
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w536228352:3160890680-3160890408",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "dk65-01",
+    "step_m": 0.25,
+    "width_other": 6.0,
+    "width_own": 6.0,
+    "width_seam": 6.0
    }
   ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 3221,
-   "parts": 292,
+   "kerb_tris": 3223,
+   "parts": 293,
    "side_tris": 396
   },
   "signalised_junctions": 0,
@@ -6493,7 +6556,7 @@
   },
   "verge_strips": {
    "chunks": 55,
-   "tris": 56317
+   "tris": 56261
   },
   "walled_ramps": [
    {
