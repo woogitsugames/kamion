@@ -1,3 +1,13 @@
+# STATUS fields4-s24 (ADR 0334 r4: brzeg kukurydzy, koleiny, pola w dali, krawedz lasu far_field)
+
+- Worktree `agent-a1e9a7a0a869fb425`, galaz `worktree-agent-a1e9a7a0a869fb425`; Library z win-build (Win64); prywatne kopie
+  `Data/raw/derived/{knyszyn-w,dw671-tykocin-03}`, reszta derived = junction per kafel do main (NIE ruszac wspolnego derived).
+- [krok 1] Diagnoza dw671-tykocin-03 edge-north (`artifacts/fields4-s24/probe_dw03_edgeN.png`): sciany = boki skrajnych rzedow
+  kart przy szwach pasow (MAIZE_SEAM_CLEAR 1.6 m po obu stronach KAZDEGO szwu, takze bez miedzy -> korytarz 3.2 m z malowanymi
+  rzedami na ziemi = "koleiny jak paski") i koniec kart na krawedzi kafla / bloku / zasiegu 220 m.
+- Render "przed" w toku: `pwsh artifacts/fields4-s24/job.ps1 -Phase before` -> main `artifacts/fields4-s24/vqa/before/`.
+- NASTEPNY KROK: field_crops r4 (brzeg lanu, szwy bez miedzy), shader (koleiny, daleki plan), far_field (krawedz lasu).
+
 # STATUS bank-smear-s24 (smuga na skarpie tykocin route_s0160, ADR 0311 dopisek)
 
 - Worktree `agent-a13a4ba7b73214d27`, galaz `worktree-agent-a13a4ba7b73214d27`; prywatna kopia `Data/raw/derived/tykocin` (reszta derived = junction do main), Library z win-build (Win64).
