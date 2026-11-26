@@ -313,6 +313,8 @@ def props(pl, net, assets, roads_poly, bpoly, paved, park_polys, route, report, 
         # point at their origin (notably gatehouses and parked trailers).
         if proto == "gatehouse":
             return 3.5
+        if proto.startswith("bus_shelter_rural"):    # ADR 0162 d. props-fix-s24: 3.5 m roof run of the village steel shelter
+            return 2.4
         if proto.startswith("bus_shelter"):       # ADR 0162: BKM 5 / 7 / 9 m roofs
             return 3.5 if proto in ("bus_shelter", "bus_shelter_black") else 2.8 if proto.endswith("_5m") else 4.6
         if proto.startswith(("trailer_", "tractor_")):

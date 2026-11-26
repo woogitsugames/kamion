@@ -1045,9 +1045,27 @@ SHELTER_LENGTH_SHARE = (("bus_shelter", 44), ("bus_shelter_5m", 29), ("bus_shelt
 SHELTER_BLACK_SHARE = 0.15
 
 
-def shelter_variant(q):
-    """Prototype of the shelter at stop position q (region-local E, N): deterministic, survives a re-import."""
+# ADR 0162 d. props-fix-s24: rural steel shelter colours (opt-in per region, `facade_rules: rural_shelters: true`): graphite / green /
+# brown / galvanised. Shares WORKING_VALUE (village shelters on Commons and owner frames of DK65; no inventory).
+RURAL_SHELTER_SHARE = (("bus_shelter_rural", 12), ("bus_shelter_rural_green", 34), ("bus_shelter_rural_brown", 20),
+                       ("bus_shelter_rural_galv", 34))
+
+
+def rural_shelters_enabled(overrides):
+    return any(o.get("kind") == "facade_rules" and o.get("rural_shelters") for o in overrides or [])
+
+
+def shelter_variant(q, rural=False):
+    """Prototype of the shelter at stop position q (region-local E, N): deterministic, survives a re-import.
+    rural (ADR 0162 d. props-fix-s24): a steel village shelter instead of the BKM one."""
     key = f"{float(q[0]):.0f},{float(q[1]):.0f}"
+    if rural:
+        total = sum(w for _, w in RURAL_SHELTER_SHARE)
+        u = _h(key + ":rural") % total
+        for name, w in RURAL_SHELTER_SHARE:
+            if u < w:
+                return name
+            u -= w
     if _h(key + ":black") % 1000 < SHELTER_BLACK_SHARE * 1000:
         return "bus_shelter_black"
     total = sum(w for _, w in SHELTER_LENGTH_SHARE)
@@ -1059,8 +1077,9 @@ def shelter_variant(q):
     return "bus_shelter"
 
 
-def misc_points(pl, net, src, origin, report, codes):
+def misc_points(pl, net, src, origin, report, codes, overrides=None):
     cnt = {}
+    rural_shelters = rural_shelters_enabled(overrides)
     # JSON-safe source metadata only. Actual road/whole-footprint validation happens before decal emission.
     report["bus_stop_wear_candidates"] = [
         {"osm_node": nd["osm_node"], "ref": nd["tags"].get("ref"), "bus": nd["tags"].get("bus"),
@@ -1085,10 +1104,11 @@ def misc_points(pl, net, src, origin, report, codes):
         hw = float(c.hw_at(s))
         t, nn = c.line.frame(s)
         p = c.line.offset_point(s, sgn * (hw + max(ext, 2.2) + 1.0))
-        proto = shelter_variant(q)
+        proto = shelter_variant(q, rural_shelters)
         pl.add(proto, p, yaw_of(-nn * sgn), src="bus_stop")
         cnt[proto] = cnt.get(proto, 0) + 1
-        half = PP.SHELTER_MODULES.get(proto, 3) * PP.SHELTER_MODULE_M / 2 + PP.SHELTER_SIDE_OVERHANG_M
+        half = (PP.RURAL_SHELTER_HALF_M if proto in PP.RURAL_SHELTERS
+                else PP.SHELTER_MODULES.get(proto, 3) * PP.SHELTER_MODULE_M / 2 + PP.SHELTER_SIDE_OVERHANG_M)
         pb = c.line.offset_point(s + (half + 0.6) * (1 if _h(f"{q[0]:.1f},{q[1]:.1f}:bin") % 2 else -1),
                                  sgn * (hw + max(ext, 2.2) + 0.4))
         pl.add("waste_bin", pb, yaw_of(-nn * sgn), src="bus_stop:bin")

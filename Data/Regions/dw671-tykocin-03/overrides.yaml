@@ -61,3 +61,17 @@ overrides:
     crossing_kerb_drops: true
     crossing_tactile: true
     driveway_paving_color: true
+  # ADR 0238 d. props-fix-s24 (props-fix-s24, critic s24 wave 11 pkt 7 + 8): farm outbuildings get the roof of the LoD2 model, boarding /
+  # brick / block walls, windows and a plinth (were flat white boxes), and the bus stops of the village roads get a
+  # steel rural shelter with an opaque back wall (the glass-only BKM shelter read as a red outline from the road).
+  # Opt-in per region, so the Bialystok tiles stay bit-identical (ADR 0238).
+  - id: rural-outbuildings-shelters-props-fix-s24
+    kind: facade_rules
+    rural_outbuildings: true
+    rural_shelters: true
+    reason: >-
+      Critic s24 wave 11 (dk65-07 drive-kozince x 1400-1610, dk65-goniadzka x 1265-1625): BDOT10k "budynek gospodarczy"
+      rendered as flat-roofed plaster boxes with no windows although LoD2 gives a gable roof; bus stop on the old DK65
+      rendered as a red frame with no infill. WORKING_VALUE palette and dimensions (no survey of the farm yards).
+    confidence: medium
+    verify: visual-qa High clear on drive_kozince, route_s0433 (dk65-07), route_s0157 (dw671-tykocin-03)

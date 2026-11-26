@@ -129,6 +129,11 @@ RAL1012_SRGB = (199, 180, 70)
 SHELTER_GRAPHITE_SRGB = (38, 40, 42)
 SHELTER_WOOD_SRGB = (150, 104, 62)
 SHELTER_ROOF_SRGB = (74, 62, 52)          # smoked multiwall polycarbonate seen in daylight, WORKING_VALUE
+# ADR 0162 d. props-fix-s24: rural steel shelter colours, bottom strip of the atlas (v 0 .. 0.2): moss green (RAL 6005 weathered), RAL 8017
+# chocolate brown, hot-dip galvanised grey. WORKING_VALUE (read off village shelters on Commons / owner frames).
+SHELTER_GREEN_SRGB = (44, 78, 58)
+SHELTER_BROWN_SRGB = (84, 58, 46)
+SHELTER_GALV_SRGB = (142, 146, 148)
 
 
 def shelter_atlas():
@@ -149,6 +154,12 @@ def shelter_atlas():
         amp = 10.0 if k == 2 else 4.0
         a[: n // 8, x0:x1] = np.clip(np.array(c, float)[None, None, :] * (1 + grain[: n // 8, x0:x1, None] * amp / 255 * 3),
                                      0, 255)
+    # ADR 0162 d. props-fix-s24: rural shelter swatches in the bottom strip (rows from v = 0.2 down), one per quarter: green / brown / galvanised
+    # / graphite again (the roof sheet) - the pictures above end at v = 0.25, so the red margin between stays
+    r_strip0 = int(round(0.80 * n))
+    for k, c in enumerate((SHELTER_GREEN_SRGB, SHELTER_BROWN_SRGB, SHELTER_GALV_SRGB, SHELTER_GRAPHITE_SRGB)):
+        x0, x1 = k * n // 4, (k + 1) * n // 4
+        a[r_strip0:, x0:x1] = np.clip(np.array(c, float)[None, None, :] * (1 + grain[r_strip0:, x0:x1, None] * 4.0 / 255 * 3), 0, 255)
     # spare area below the pictures keeps the red swatch (filtered borders of the red never bleed into another colour)
     im = Image.fromarray(a.astype(np.uint8), "RGB")
     d = ImageDraw.Draw(im)
