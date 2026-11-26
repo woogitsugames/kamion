@@ -344,28 +344,11 @@ Shader "Kamion/World PBR"
                 else { um = i.uv.zw; CotangentFrame(n, pw, um, T, B); }
             #else
                 half3 a = abs(n);
-                half3 np = n;
-            #if defined(_GROUNDMASKS)
-                // props-fix-s24 (ADR 0311 dopisek): the terrain mesh carries smoothed vertex normals (steps beside the road,
-                // road cuts and the 1.5 m chunk skirts keep n ~ up). The projection axis chosen from them put near-vertical
-                // strips on the world XZ plane: one texel row smeared along the strip (olive diagonal streak on the
-                // embankment, tykocin route_s0160). The projection and its tangent frame now follow the GEOMETRIC normal
-                // (screen derivatives of the world position, exact for a planar triangle); lighting keeps the vertex normal.
-                {
-                    float3 ngd = cross(ddy(pw), ddx(pw));
-                    float ngl = length(ngd);
-                    if (ngl > 1e-9)
-                    {
-                        np = (half3)(ngd / ngl);
-                        a = abs(np);
-                    }
-                }
-            #endif
                 if (a.y >= 0.7) { um = pw.xz; T = float3(1, 0, 0); B = float3(0, 0, 1); }
                 else if (a.x > a.z) { um = pw.zy; T = float3(0, 0, 1); B = float3(0, 1, 0); }
                 else { um = pw.xy; T = float3(1, 0, 0); B = float3(0, 1, 0); }
-                T = normalize(T - np * dot(T, np));
-                B = normalize(B - np * dot(B, np));
+                T = normalize(T - n * dot(T, n));
+                B = normalize(B - n * dot(B, n));
             #endif
             #if defined(_DECAL_ALPHA) || defined(_DECAL_TYRE)
                 // decals: radial / strip UV in TEXCOORD_0; the albedo set is sampled in world metres beneath

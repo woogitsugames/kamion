@@ -444,6 +444,47 @@ def walled_fill_mask(net, hf):
     return PV_.rasterize_polys(polys, hf)
 
 
+VERGE_MAX_EDGE_M = 3.0      # props-fix-s24: longest edge of a verge strip triangle merged into the terrain, m (WORKING_VALUE)
+
+
+def subdivide_long_edges(V, N, T, max_edge=VERGE_MAX_EDGE_M):
+    """props-fix-s24 (ADR 0311 dopisek): split every triangle whose longest edge exceeds max_edge at the midpoint of that
+    edge (shared edges share one midpoint, so no T-junction), repeated until none is left. The surface does not move (heights
+    and normals are interpolated linearly); what changes is that the per-vertex ground masks (COLOR_0, sampled at the
+    nearest node) are read every <= max_edge metres instead of only at the ends of a 40-90 m verge strip quad, whose
+    linear blend painted an olive ribbon across the embankment (tykocin route_s0160)."""
+    V, N, T = np.asarray(V, float), np.asarray(N, float), np.asarray(T, np.int64)
+    for _ in range(12):
+        P = V[T]
+        e = np.stack([np.linalg.norm(P[:, 1] - P[:, 0], axis=1), np.linalg.norm(P[:, 2] - P[:, 1], axis=1),
+                      np.linalg.norm(P[:, 0] - P[:, 2], axis=1)], 1)
+        k = e.argmax(1)
+        big = e.max(1) > max_edge
+        if not big.any():
+            break
+        mids, Vn, Nn, out = {}, [], [], []
+        base = len(V)
+        for t, kk, b in zip(T, k, big):
+            if not b:
+                out.append(t)
+                continue
+            a_, b_, c_ = t[kk], t[(kk + 1) % 3], t[(kk + 2) % 3]      # edge a-b is the longest, c opposite
+            key = (min(a_, b_), max(a_, b_))
+            m = mids.get(key)
+            if m is None:
+                m = base + len(Vn)
+                mids[key] = m
+                Vn.append((V[a_] + V[b_]) / 2)
+                nm = N[a_] + N[b_]
+                Nn.append(nm / max(np.linalg.norm(nm), 1e-9))
+            out.append(np.array([a_, m, c_]))
+            out.append(np.array([m, b_, c_]))
+        V = np.vstack([V, np.array(Vn)])
+        N = np.vstack([N, np.array(Nn)])
+        T = np.array(out, np.int64)
+    return V, N, T
+
+
 def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
     """ADR 0110: the grass strips behind kerbs (roads.meshing._emit_verge, src "...:vg") become part of the terrain
     primitives of their chunk (LOD0: the 128 m sub-grid they lie in, and LOD1) instead of a `verge_grass` primitive
@@ -464,8 +505,9 @@ def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
             sel = (ci == key[0]) & (cj == key[1]) & (sj * 2 + si == key[2])
             T = p.T[sel]
             u, inv = np.unique(T.ravel(), return_inverse=True)
-            add.setdefault(key, []).append((p.V[u], Nn[u], inv.reshape(-1, 3)))
-            tris += len(T)
+            Vk, Nk, Tk = subdivide_long_edges(p.V[u], Nn[u], inv.reshape(-1, 3), VERGE_MAX_EDGE_M)
+            add.setdefault(key, []).append((Vk, Nk, Tk))
+            tris += len(Tk)
     nsub = (CH.CHUNK_M // CH.SUB_M) ** 2
     for (ci, cj, sub), items in sorted(add.items()):
         V = np.concatenate([it[0] for it in items])

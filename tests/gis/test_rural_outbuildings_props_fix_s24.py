@@ -168,17 +168,26 @@ def test_region_overrides_enable_both_rules_only_on_the_prototype_tiles():
     assert not FU.rural_shelters_enabled(ovr)
 
 
-def test_world_pbr_terrain_projection_follows_the_geometric_normal():
-    """P1 9 (tykocin route_s0160): near-vertical terrain strips with smoothed up-pointing vertex normals were projected on
-    the world XZ plane (one texel row smeared). The terrain variant (_GROUNDMASKS) now picks the projection axis and
-    the tangent frame from the screen-space derivative of the world position."""
-    src = (REPO / "game/Assets/_Project/Environment/Shaders/WorldPBR.shader").read_text(encoding="utf-8")
-    i = src.index("half3 np = n;")
-    block = src[i:i + 1400]
-    assert "#if defined(_GROUNDMASKS)" in block and "cross(ddy(pw), ddx(pw))" in block
-    assert "T = normalize(T - np * dot(T, np));" in block and "B = normalize(B - np * dot(B, np));" in block
-    # non-terrain surfaces keep the vertex-normal projection (roads, props: bit-identical rendering)
-    assert block.index("#endif") < block.index("if (a.y >= 0.7)")
+def test_verge_strip_triangles_are_split_so_ground_masks_are_sampled_every_3_m():
+    """P1 9 (tykocin route_s0160): verge strip quads 40-90 m long x 1 m carried COLOR_0 only at their ends; the linear blend
+    painted an olive ribbon across the embankment. subdivide_long_edges keeps the surface and bounds the edge length."""
+    sys.path.insert(0, str(REPO / "tools" / "worldgen" / "roads"))
+    from roads import build_world as BW
+    V = np.array([[0, 0, 100.0], [1, 0, 100.0], [0, 90, 101.0], [1, 90, 101.0]])
+    N = np.tile([0, 0, 1.0], (4, 1))
+    T = np.array([[0, 1, 3], [0, 3, 2]])
+    V2, N2, T2 = BW.subdivide_long_edges(V, N, T, 3.0)
+    P = V2[T2]
+    e = np.max([np.linalg.norm(P[:, 1] - P[:, 0], axis=1), np.linalg.norm(P[:, 2] - P[:, 1], axis=1),
+                np.linalg.norm(P[:, 0] - P[:, 2], axis=1)], axis=0)
+    assert e.max() <= 3.0 + 1e-9
+    def area(P_):
+        a_, b_ = P_[:, 1, :2] - P_[:, 0, :2], P_[:, 2, :2] - P_[:, 0, :2]
+        return 0.5 * np.abs(a_[:, 0] * b_[:, 1] - a_[:, 1] * b_[:, 0]).sum()
+    assert abs(area(P) - 90.0) < 1e-6                        # same footprint
+    z_plane = lambda x_, y_: 100.0 + y_ / 90.0               # heights stay on the original plane
+    assert np.abs(V2[:, 2] - z_plane(V2[:, 0], V2[:, 1])).max() < 1e-9
+    assert len(T2) < 2500                                     # bounded growth
 
 
 def test_atlas_swatch_colours_match_the_bottom_strip():

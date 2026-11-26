@@ -37,18 +37,17 @@ końcowy profil skarpy, niezmienność rzeczywistej jezdni DK65-10 oraz otwory
 w sylwetce pylonu. Podgląd offline nie zastępuje renderu Unity.
 
 ## Dopisek props-fix-s24 (26.11, agent `agent-a60f5c7ffe98fe7c7`): smuga tekstury na skarpie (krytyka s24 fala 11, pkt 9)
-**Objaw.** `tykocin/High-clear/route-s0160` (x 1050–1750, y 600–1080, krytyk podał kafel `dw671-tykocin-03`, ale ujęcie
-`route-s0160` jest w `tykocin`): oliwkowo-brązowa, rozciągnięta ukośna smuga na skarpie przy krawężniku.
-**Przyczyna (zmierzona na GLB `tykocin`, `terrain_lod0`, 8 675 570 trójkątów).** 262 520 trójkątów (3,0 %) ma normalną
-geometryczną z `|n.y| < 0,6` (uskoki przy jezdni, wcięcia drogi, skirty chunków), a **262 192 z nich (99,9 %) ma uśredniony
-wektor normalny skierowany w górę** (`n.y > 0,8`; 8 998 z 64 067 trójkątów o `0,6 ≤ |n.y| < 0,9` też). `WorldPBR.shader`
-wybierał oś rzutu świata z interpolowanej normalnej wierzchołkowej (`|n.y| ≥ 0,7` → płaszczyzna XZ), więc prawie pionowy pasek
-dostawał rzut z góry: jeden rząd tekseli rozciągnięty wzdłuż paska. To nie jest błąd UV (UV terenu = XZ w metrach) ani
-nachylenie skarpy (maks. 8,4° na `dw671-tykocin-03` przy kamerze s0157).
-**Decyzja.** W wariancie terenu (`_GROUNDMASKS`) oś rzutu i ramka styczna (`T`, `B`) wynikają z **normalnej geometrycznej**
-(`cross(ddy(pw), ddx(pw))`, dokładna dla płaskiego trójkąta); oświetlenie nadal z normalnej wierzchołkowej (skirty i uskoki
-świecą jak grunt, jak dotąd). Drogi, rekwizyty, dekale i budynki bez zmian (ten sam kod, słowo kluczowe nieaktywne).
-Koszt: 1 `cross` + 1 `length` na piksel terenu, 0 próbek tekstur. Nie zmieniono geometrii ani normalnych (zmiana normalnych
-przestawiłaby oświetlenie wszystkich spadków).
-**Poza zakresem (do właściciela `Rendering/Shaders`):** `WorldSurface.shader` (tier Low) ma tę samą `ProjectUV(pw, n)` z normalną
-wierzchołkową — ten sam defekt może występować na Low; nie ruszany (katalog nie jest mój).
+**Objaw.** `tykocin/High-clear/route-s0160` (x 1050-1750, y 600-1080; krytyk podal kafel `dw671-tykocin-03`, ale `route-s0160`
+jest w `tykocin`): oliwkowo-brazowa, ukosna wstega na skarpie przy krawezniku.
+**Hipoteza 1 - ODRZUCONA (zmierzona).** 99,9 % z 262 520 stromych trojkatow `terrain_lod0` `tykocin` ma wektor normalny w gore, wiec
+`WorldPBR` rzutowalby je z gory. Poprawka shadera (rzut z normalnej geometrycznej) wyrenderowana na tej samej kamerze:
+smuga bez zmian - cofnieta. Skirty chunkow sa niewidoczne, a skarpa ma nachylenie <= 8,4 deg (`dw671-tykocin-03` przy s0157).
+**Przyczyna (zmierzona na GLB).** W `terrain_lod0` leza trojkaty-drzazgi o krawedziach 44-92 m i 1 m (np. `tykocin` chunk 0_6:
+92 / 92 / 1 m, 26 sztuk; chunk 0_7: 44 m, 71 sztuk): to paski trawnika za krawezniem (`roads.meshing._emit_verge`, `:vg`) wlaczane
+do terenu przez `merge_verge_into_terrain`. COLOR_0 (maski gruntu) probkowane jest tylko w wierzcholkach, czyli na koncach
+40-90 m paska, a interpolacja liniowa rozmywa je w ukosna wstege (UV terenu i tak = XZ w metrach, nie jest rozciagane).
+**Decyzja.** `build_world.subdivide_long_edges`: kazdy trojkat paska o najdluzszej krawedzi > `VERGE_MAX_EDGE_M = 3 m` jest dzielony w
+polowie tej krawedzi (wspolne krawedzie = wspolny punkt, bez T-spoin), az zadna krawedz nie przekracza 3 m; wysokosci i normalne
+interpolowane liniowo, wiec powierzchnia sie nie zmienia, a maski czytane sa co <= 3 m. Test:
+`test_verge_strip_triangles_are_split_so_ground_masks_are_sampled_every_3_m`.
+**Poza zakresem:** `WorldSurface.shader` (tier Low) bez zmian; problem jest w danych, wiec dotyczy obu shaderow.
