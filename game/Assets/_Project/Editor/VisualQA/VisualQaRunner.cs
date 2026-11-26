@@ -398,6 +398,7 @@ namespace Game.Editor.VisualQA
                     hud.RefreshNow();
                 }
 
+                ApplyDiagGlobals();   // render-artifacts-s24: KAMION_QA_DIAG shader-global probes (no effect when unset)
                 var prevTarget = cam.targetTexture;
                 cam.enabled = true;
                 var world = RenderToPixels(cam, width, height, out _, null, msaa, scale);
@@ -536,6 +537,28 @@ namespace Game.Editor.VisualQA
         /// Renders like the phone: at render scale (URP ignores the asset's render scale for render-texture targets) with
         /// the tier's MSAA on the target, then bilinear upscale to the output size (what URP's final blit does on device).
         /// </summary>
+        /// <summary>render-artifacts-s24 diagnostics: env KAMION_QA_DIAG = "global=value;..." overrides float shader globals
+        /// right before each camera renders (e.g. "_KamionClearSkySaturation=1", "_KamionClearCloudCover=0"); a 4-vector
+        /// global takes "x,y,z,w" ("_KamionSkyCap=0,0,0,0"). Unset = no effect. Measurement only, never in a build.</summary>
+        static void ApplyDiagGlobals()
+        {
+            string spec = System.Environment.GetEnvironmentVariable("KAMION_QA_DIAG");
+            if (string.IsNullOrEmpty(spec)) return;
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            foreach (var kv in spec.Split(';'))
+            {
+                int eq = kv.IndexOf('=');
+                if (eq <= 0 || !kv.StartsWith("_")) continue;
+                string name = kv.Substring(0, eq).Trim();
+                var parts = kv.Substring(eq + 1).Split(',');
+                if (parts.Length == 4)
+                    Shader.SetGlobalVector(name, new Vector4(float.Parse(parts[0], inv), float.Parse(parts[1], inv), float.Parse(parts[2], inv), float.Parse(parts[3], inv)));
+                else
+                    Shader.SetGlobalFloat(name, float.Parse(parts[0], inv));
+                Debug.Log($"[QA] diag global {name} = {kv.Substring(eq + 1)}");
+            }
+        }
+
         static Color32[] RenderToPixels(Camera cam, int width, int height, out int count, Action beforeRender = null, int msaa = 1, float scale = 1f)
         {
             int sw = Mathf.Max(16, Mathf.RoundToInt(width * scale)), sh = Mathf.Max(16, Mathf.RoundToInt(height * scale));

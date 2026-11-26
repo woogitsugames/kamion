@@ -1,3 +1,7 @@
+# STATUS render-artifacts-s24 (krytyk fala 11 pkt 3/6/10: romby w koronach, smugi na asfalcie, szew/plamy nieba)
+- krok 1: (a) PRZYCZYNA potwierdzona offline (`artifacts/render-artifacts-s24/preview/kit_full_before_core_magenta.jpg`): ciemne romby = 4-boczny `_core` (occ 0,26) pełnego drzewa z zestawu działek (High, drzewa przy ulicy r < 1,6 m, nie biblioteka), widoczny przez dziury kart. Poprawka w `plantings.garden_tree`: bez `_core`, karty z `occ_mid` (0,58–0,68); −6 tris/drzewo. Test `test_full_garden_tree_has_no_dark_core_body`. (c) plamy: duch flary obiektywu w HDRI (23,8°/51,8°), skrypt `tools/rendering/clear_clouds_ghost_repair.py` (jeszcze nie zapisany do tekstury). Diag hook `KAMION_QA_DIAG` w VisualQaRunner.
+- NASTĘPNY KROK: czekam na slot Unity (import knyszyn-w + `before`): `pwsh artifacts/render-artifacts-s24/vqa.ps1 -Import -Out before`; potem diagnostyki (rq_shadow=0, -Wires off, Mask :decal_tyre, `_KamionClearSkySaturation=1`), build_world knyszyn-w, `after`.
+
 # STATUS — agent seams-side-s24 (uzgodnienie rodzaju boku na szwie kafli)
 
 # STATUS neon-windows-s24 (ADR 0348: okna i fasady domów wiejskich/Tykocina + warianty płotów)

@@ -1042,7 +1042,11 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         wj = 0.90 + 0.20 * PLT.hfloat(key, "cw", i)          # the crown is not a ball from any side (same in full / lite)
         hj = 0.97 + 0.10 * PLT.hfloat(key, "ch", i)
         off = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.24 * r
-        shade = 0.50 + 0.10 * PLT.hfloat(key, "co", i) if lite and core and DENSE[species] > 0.0 else None
+        # render-artifacts-s24 (critic wave 11 P0 #3, ADR 0308 addendum): the full variant darkens its cards toward the
+        # axis too (it had a 4-sided dark _core instead, seen through the card gaps as straight-edged dark rhombi)
+        dense_sp = DENSE[species] > 0.0
+        shade = (0.50 + 0.10 * PLT.hfloat(key, "co", i) if lite and core and dense_sp
+                 else 0.58 + 0.10 * PLT.hfloat(key, "co", i) if not lite and dense_sp else None)
         PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards, occ_mid=shade)
     dense = DENSE[species]
     occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
@@ -1061,7 +1065,9 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         return
     # the sprays sit INSIDE the habit's silhouette (the crossed cards own the outline; sprays that reached it gave the
     # crown a flat, boxy skirt): they close the gaps between the cards from oblique views and from above
-    PLT._core(kit, cc, z + cb + hc * 0.16, r * 0.46, hc * 0.62, key, sides=4, occ=0.26 * occ, rings=2)
+    # render-artifacts-s24: no dark _core (sides=4, occ 0.26) - from the street it showed through the alpha gaps of the
+    # cards as a dark rhombus with straight edges (knyszyn-w tykocka-dw671-out, critic s24 wave 11 P0 #3; offline proof
+    # artifacts/render-artifacts-s24/preview/kit_full_before_core_magenta.jpg). The shaded middle is the cards' occ_mid.
     n_lo, n_hi = (4, 3) if dense >= 1.0 else (3, 2)
     for i in range(n_lo):                                    # lower tier of sprays
         az = a0 + 2 * math.pi * (i + 0.4 * (PLT.hfloat(key, "sj", i) - 0.5)) / n_lo

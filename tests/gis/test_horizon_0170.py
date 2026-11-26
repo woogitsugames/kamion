@@ -113,3 +113,22 @@ def test_spruce_card_is_green_not_turquoise():
         m = a[..., 3] > 128
         r, g, b = (a[..., i][m].mean() for i in range(3))
         assert b <= 0.72 * g and r <= 0.8 * g and g < 75, (r, g, b)
+
+
+def test_full_garden_tree_has_no_dark_core_body():
+    """render-artifacts-s24 (critic s24 wave 11 P0 #3): the High (full) kit tree's 4-sided dark _core (occ 0.26) showed
+    through the card gaps as straight-edged dark rhombi in the crown (knyszyn-w tykocka-dw671-out). No foliage vertex of
+    the full crown is darker than the cards' shaded middle; the cards darken towards the axis (occ_mid) instead."""
+    for species in ("maple", "linden"):
+        kit = PLT.Kit()
+        PG.garden_tree(kit, np.array([0.0, 0.0]), 0.0, 1.25, 4.7, 1.6, species, "k", lite=False, cards=3)
+        mids = 0
+        for V, C in zip(kit.V, kit.C):
+            fol = C[:, 3] > 0.5
+            if not fol.any():
+                continue
+            occ = np.linalg.norm(C[fol, :3] * 2 - 1, axis=1)
+            assert occ.min() >= 0.5, f"{species}: dark foliage body (occ {occ.min():.2f}) inside the crown"
+            if len(V) == 5 and np.hypot(V[4, 0], V[4, 1]) < 0.4 and occ[4] < 0.75:
+                mids += 1
+        assert mids == 3, f"{species}: three crown cards with a shaded middle"
