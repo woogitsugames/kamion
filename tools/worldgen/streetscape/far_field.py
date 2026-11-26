@@ -2136,6 +2136,7 @@ PYLON_H_M = 32.0                 # = streetscape.props.pylon (one tower height i
 SEAM_TOL_M = 0.5                 # a HV piece end this close to the tile edge is the tile's own seam support
 OSM_DUP_M = 25.0                 # an OSM HV line within this of a BDOT10k HV line for >= OSM_DUP_SHARE is the same line
 OSM_DUP_SHARE = 0.7
+RULE_MERGE_M = 60.0              # a rule angle-point tower this close to a mapped neighbour merges into it (WORKING_VALUE)
 # Galvanised steel (ADR 0351): the tile's pylon_steel is linear 0.115-0.12; COL_PYLON_STEEL 0.27-0.30 (x plaster_white
 # of far_field_buildings) rendered snow white in sun. Per-tower +-12 % brightness / +-3 % warm-cool shift (weathered vs
 # newer zinc), vertex colour only: no material, no draw call. WORKING_VALUE, judged on the visual-QA frames.
@@ -2323,6 +2324,15 @@ def _line_supports(ls: LineString, towers: list[dict], tower_xy: np.ndarray, hal
         if c[2] == "tower" and any(t is c[3] for *_, t in seq):
             continue
         seq.append(c)
+    # A BDOT10k angle point a few tens of metres from a mapped tower is the same tower (vertex digitised off it):
+    # no second tower beside it (dk65-07 ring: 28 m / 44 m "spans" before this). Seam ends are kept.
+    keep = []
+    for i, c in enumerate(seq):
+        if c[2] == "rule" and any(0 <= j < len(seq) and seq[j][2] == "tower"
+                                  and np.hypot(*(seq[j][1] - c[1])) < RULE_MERGE_M for j in (i - 1, i + 1)):
+            continue
+        keep.append(c)
+    seq = keep
     full = [seq[0]]
     for a, b in zip(seq, seq[1:]):
         gap = b[0] - a[0]
