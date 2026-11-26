@@ -124,7 +124,7 @@ def test_shader_ruts_and_far_plan_contract():
     assert "saturate(7.3 / (2.0 * fpr) - 0.5)" in HLSL                # pass streaks filtered across the rows
     assert "farK > 0.0h && !hrow" in HLSL                             # far: passes along the rows
     assert "float fpk = clamp(abs(dot(enDx, gW)) + abs(dot(enDy, gW))" in HLSL   # block border filtered across
-    assert "bc *= 1.0h - 0.40h * farK;" in HLSL                       # baulks darker far away
+    assert "bc *= 1.0h - 0.45h * farK;" in HLSL                       # baulks darker far away
 
 
 def test_far_forest_edge_is_broken():

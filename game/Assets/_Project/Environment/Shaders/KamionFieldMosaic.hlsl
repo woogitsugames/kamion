@@ -324,7 +324,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     // with it the strips of one use part by tone, every strip shows its drill / sprayer passes as long bands along
     // the rows, and baulks and block borders stay as darker lines (below). WORKING_VALUE.
     half farK = (half)saturate((fp - 6.0) / 20.0);
-    half3 col = alb.rgb * (1.0h + dev * (0.12h + 0.22h * farK)) * (1.0h + (driftN - 0.5h) * 0.16h);
+    half3 col = alb.rgb * (1.0h + dev * (0.12h + 0.30h * farK)) * (1.0h + (driftN - 0.5h) * 0.16h);
     half fa = 0.0h;
 
     // ---- r2 headland (uwrocie): where the block border crosses the strips, the last KF_HEADLAND_M (x 0.65..1.35 per
@@ -482,7 +482,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         float pw = 6.0 + 6.0 * KFU01(KFHash((int)fid, 7, 1065u));
         float pIdx = floor((rowc + 0.37 * w) / pw);
         half pt = (half)(KFU01(KFHash((int)fid, (int)pIdx + KF_BLOCK_HASH_OFS * 4, 1067u)) - 0.5);
-        col *= 1.0h + pt * 0.16h * farK * (half)saturate(pw / (2.0 * fpr) - 0.5);
+        col *= 1.0h + pt * 0.26h * farK * (half)saturate(pw / (2.0 * fpr) - 0.5);
     }
     if (rowP > 0.0)
     {
@@ -537,7 +537,7 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     half baulk = hasBaulk ? (half)(saturate((hw - e) / max(fpb, 0.30) + 0.5) * saturate(2.0 * hw / fpb)) : 0.0h;
     // r4 far plan: tall unmown grass, tansy and a bush here and there - a baulk far away reads as a darker line; it
     // keeps up to ~half its strength down to a third of a pixel across (energy-true would drop it to nothing)
-    if (hasBaulk) baulk = max(baulk, (half)(saturate((hw - e) / max(fpb, 0.30) + 0.5) * saturate(6.0 * hw / fpb) * 0.5) * farK);
+    if (hasBaulk) baulk = max(baulk, (half)(saturate((hw - e) / max(fpb, 0.30) + 0.5) * saturate(6.0 * hw / fpb) * 0.65) * farK);
     half thin = hasBaulk ? (half)saturate(1.0 - (e - hw) / (0.6 + 2.2 * n17)) : 0.0h;
     // block border: a wider grass strip, on some borders a field track (two sandy ruts 1.6 m apart in the grass)
     float hbw = (fieldTrack ? 1.9 : 1.2) + (n17 - 0.5) * 1.2 + (n5 - 0.5) * 0.5 + (n1 - 0.5) * 0.3;
@@ -546,13 +546,13 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
     // a darker line far away
     float fpk = clamp(abs(dot(enDx, gW)) + abs(dot(enDy, gW)), 1e-4, fp * 1.5);
     bblock = max(bblock, (half)(saturate((hbw - blockEdge) / max(fpk, 0.30) + 0.5) * saturate(2.0 * hbw / fpk)));
-    bblock = max(bblock, (half)(saturate((hbw - blockEdge) / max(fpk, 0.30) + 0.5) * saturate(6.0 * hbw / fpk) * 0.6) * farK);
+    bblock = max(bblock, (half)(saturate((hbw - blockEdge) / max(fpk, 0.30) + 0.5) * saturate(6.0 * hbw / fpk) * 0.75) * farK);
     thin = max(thin, (half)saturate(1.0 - (blockEdge - hbw) / (0.6 + 2.2 * n17)));
     baulk = max(baulk, max(bblock, margin));
     if (ramp && arable) thin = max(thin, (half)saturate(1.0 - (m.b - thA) / max(2.5 * gl, 1e-3)));
     half3 bc = lerp(half3(0.078h, 0.122h, 0.038h), half3(0.150h, 0.140h, 0.072h), smoothstep(0.50h, 0.85h, n5));
     bc *= 0.85h + 0.30h * n1;
-    bc *= 1.0h - 0.40h * farK;                  // r4: far away the sward's own shadow darkens the line
+    bc *= 1.0h - 0.45h * farK;                  // r4: far away the sward's own shadow darkens the line
     col = lerp(col, lerp(col, bc, 0.55h), thin * thin * (0.25h + 0.70h * n5));
     half bstr = lerp(arable ? 0.92h : 0.35h, 0.92h, margin);     // between two meadows the baulk is only rougher grass
     col = lerp(col, bc, baulk * bstr);
