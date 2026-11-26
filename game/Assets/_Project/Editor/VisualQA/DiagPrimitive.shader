@@ -26,11 +26,19 @@ Shader "Hidden/Kamion/DiagPrimitive"
                 half4 _BaseColor;
                 float _Mode;
             CBUFFER_END
-            struct A { float4 positionOS : POSITION; half4 color : COLOR; };
-            struct V { float4 positionCS : SV_POSITION; half4 color : COLOR; };
-            V vert(A v) { V o; o.positionCS = TransformObjectToHClip(v.positionOS.xyz); o.color = v.color; return o; }
+            struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; half4 color : COLOR; };
+            struct V { float4 positionCS : SV_POSITION; half4 color : COLOR; float3 nWS : TEXCOORD0; float3 pWS : TEXCOORD1; };
+            V vert(A v) { V o; o.pWS = TransformObjectToWorld(v.positionOS.xyz); o.positionCS = TransformWorldToHClip(o.pWS); o.color = v.color; o.nWS = TransformObjectToWorldNormal(v.normalOS); return o; }
             half4 frag(V i, uint pid : SV_PrimitiveID) : SV_Target
             {
+                if (_Mode > 3.5) return half4(frac(i.pWS.x), frac(i.pWS.z), frac(i.pWS.y * 4.0), 1);   // world E / N metre and 25 cm height ramps
+                if (_Mode > 2.5)
+                {
+                    // R = abs(vertex normal y), G = abs(geometric normal y), B = 1 where the two pick a different planar projection (0.7)
+                    float3 g = normalize(cross(ddy(i.pWS), ddx(i.pWS)));
+                    float vy = abs(normalize(i.nWS).y), gy = abs(g.y);
+                    return half4(vy, gy, (vy >= 0.7) != (gy >= 0.7) ? 1 : 0, 1);
+                }
                 if (_Mode > 1.5) return half4(i.color.bbb, 1);
                 if (_Mode > 0.5) return half4(i.color.rgb, 1);
                 uint h = pid * 2654435761u; h ^= h >> 15; h *= 2246822519u; h ^= h >> 13;

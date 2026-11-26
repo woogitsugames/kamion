@@ -68,6 +68,19 @@ namespace Game.World.Import
 
         static Dictionary<string, object> Set(string name) => name != null && Spec().Get(name) is Dictionary<string, object> s ? s : null;
 
+        /// <summary>bank-smear-s24: the set is a grass set read by the _GRASS_DETILE soil refill (its "slots" name a grass
+        /// material), so its Var map (B = bare-soil coverage) needs mips like the BaseColor it is blended with.</summary>
+        public static bool GrassSoilSet(string setName)
+        {
+            if (!(Set(setName)?.Get("slots") is List<object> slots)) return false;
+            foreach (var o in slots)
+                if (o is string id && IsGrassDetile(id)) return true;
+            return false;
+        }
+
+        /// <summary>Materials that get the _GRASS_DETILE keyword (see the material setup below).</summary>
+        public static bool IsGrassDetile(string id) => id == "terrain_grass" || id == "verge_grass" || id == "plot_lawn";
+
         /// <summary>True when the manifest material has a generated set whose files exist for the tier.</summary>
         public static bool Has(Dictionary<string, object> def, string id)
         {
@@ -442,7 +455,7 @@ namespace Game.World.Import
                 // region material carries its origin so terrain and apron of every tile agree along the seams.
                 mat.SetVector("_RegionOriginEN", new Vector4((float)r.AnchorX, (float)r.AnchorY, 1f, 0f));
             }
-            if (id == "terrain_grass" || id == "verge_grass" || id == "plot_lawn")   // plot_lawn: ADR 0114
+            if (IsGrassDetile(id))   // plot_lawn: ADR 0114
             {
                 // Review r5 W-N3: macro-masked bare soil + rotated second sample (ADR 0042). Refill = linear mean of
                 // the grass_verge texels without bare soil (Var.B < 0.1), measured from the Medium BaseColor.
@@ -655,17 +668,24 @@ namespace Game.World.Import
             // the full tier size. -fullPbrMasks restores the old behaviour (comparison builds).
             bool lowFreq = (file.EndsWith("_MaskMap.png") || var) && !EditorTools.HasArg("-fullPbrMasks");
             int apkMax = Mathf.Max(lowFreq ? maxRes / 2 : maxRes, 32);
-            string sig = $"pbr3|{normal}|{srgb}|{var}|{hasAlpha}|{maxRes}|{astc}|{apkMax}";
+            // bank-smear-s24 (ADR 0311 dopisek): the Var map of a grass set carries the bare-soil COVERAGE in B, which the
+            // _GRASS_DETILE refill reads through the trilinear BaseColor sampler. A Var without mips (and point-filtered,
+            // right for the paving id / joint channels read at LOD 0) handed that refill the full-resolution 0/1 soil
+            // texels where BaseColor was already a coarse mip: at grazing views (ditch banks) the refill turned on in
+            // aliased stripes and painted an olive-green smear along the bank (tykocin route_s0160). Grass sets get box-
+            // filtered mips and trilinear filtering, so soil coverage and albedo are filtered alike.
+            bool grassVar = var && GrassSoilSet(setName);
+            string sig = $"pbr3|{normal}|{srgb}|{var}|{hasAlpha}|{maxRes}|{astc}|{apkMax}" + (grassVar ? "|grassVarMips" : "");
             if (copy || ti.userData != sig)
             {
                 ti.textureType = normal ? TextureImporterType.NormalMap : TextureImporterType.Default;
                 ti.sRGBTexture = srgb;
-                ti.mipmapEnabled = !var;
+                ti.mipmapEnabled = !var || grassVar;
                 ti.mipmapFilter = srgb ? TextureImporterMipFilter.KaiserFilter : TextureImporterMipFilter.BoxFilter;
                 ti.alphaSource = hasAlpha ? TextureImporterAlphaSource.FromInput : TextureImporterAlphaSource.None;
                 ti.alphaIsTransparency = false;
                 ti.wrapMode = TextureWrapMode.Repeat;
-                ti.filterMode = var ? FilterMode.Point : FilterMode.Trilinear;
+                ti.filterMode = var && !grassVar ? FilterMode.Point : FilterMode.Trilinear;
                 ti.anisoLevel = 4;
                 ti.maxTextureSize = Mathf.Max(maxRes, 32);
                 ti.textureCompression = TextureImporterCompression.CompressedHQ;

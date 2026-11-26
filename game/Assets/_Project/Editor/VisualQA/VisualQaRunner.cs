@@ -553,6 +553,8 @@ namespace Game.Editor.VisualQA
             s_DiagMatRestore.Clear();
             foreach (var m in s_DiagFlat) UnityEngine.Object.DestroyImmediate(m);
             s_DiagFlat.Clear();
+            foreach (var a in s_DiagLightRestore) a();
+            s_DiagLightRestore.Clear();
             if (s_DiagCam != null) { s_DiagCam.renderPostProcessing = s_DiagCamPost; s_DiagCam = null; }
             if (s_DiagFogSaved) { RenderSettings.fog = s_DiagFog; s_DiagFogSaved = false; }
         }
@@ -563,6 +565,7 @@ namespace Game.Editor.VisualQA
         // GPU-instanced props/trees (WorldInstances) keep their own materials. Measurement only, restored after the render.
         static readonly System.Collections.Generic.List<(Renderer r, Material[] m)> s_DiagMatRestore = new System.Collections.Generic.List<(Renderer, Material[])>();
         static readonly System.Collections.Generic.List<Material> s_DiagFlat = new System.Collections.Generic.List<Material>();
+        static readonly System.Collections.Generic.List<Action> s_DiagLightRestore = new System.Collections.Generic.List<Action>();
         static UniversalAdditionalCameraData s_DiagCam;
         static bool s_DiagCamPost, s_DiagFog, s_DiagFogSaved;
         internal static string s_DiagLegendPath;
@@ -579,7 +582,7 @@ namespace Game.Editor.VisualQA
         static void ApplyDiagColorBy(Camera cam, string mode)
         {
             // prim / vcol / vcolb: per-triangle hash, COLOR_0.rgb, COLOR_0.b (DiagPrimitive.shader), keyed per renderer
-            float diagMode = mode == "prim" ? 0f : mode == "vcol" ? 1f : mode == "vcolb" ? 2f : -1f;
+            float diagMode = mode == "prim" ? 0f : mode == "vcol" ? 1f : mode == "vcolb" ? 2f : mode == "nrm" ? 3f : mode == "wpos" ? 4f : -1f;
             var sh = diagMode >= 0f ? Shader.Find("Hidden/Kamion/DiagPrimitive") : Shader.Find("Universal Render Pipeline/Unlit");
             if (diagMode >= 0f) mode = "renderer";
             var keys = new System.Collections.Generic.Dictionary<string, Material>();
@@ -626,6 +629,19 @@ namespace Game.Editor.VisualQA
                 if (kv.StartsWith("colorby:"))
                 {
                     if (cam != null) ApplyDiagColorBy(cam, kv.Substring(8).Trim());
+                    continue;
+                }
+                if (kv == "noshadows")
+                {
+                    // directional lights render without shadows (restored after the render)
+                    foreach (var l in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+                        if (l.type == LightType.Directional && l.shadows != LightShadows.None)
+                        {
+                            var prev = l.shadows; var light = l;
+                            s_DiagLightRestore.Add(() => light.shadows = prev);
+                            l.shadows = LightShadows.None;
+                        }
+                    Debug.Log($"[QA] diag noshadows on {s_DiagLightRestore.Count} lights");
                     continue;
                 }
                 if (kv.StartsWith("mat:"))
