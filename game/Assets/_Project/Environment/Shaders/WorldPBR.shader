@@ -1298,8 +1298,9 @@ Shader "Kamion/World PBR"
                     half s2 = ValueNoise12(float2((ru.x + seed) * 6.3 + 13.7, vE * 0.30));
                     half streak = saturate((s1 * 0.6 + s2 * 0.4 - 0.42) * 2.6);
                     streak *= smoothstep(0.15, 1.2, vR) * (0.55 + 0.45 * (1.0 - smoothstep(0.5, 5.0, vE)));
-                    half ks = streak * _RoofWeather.y * (0.25 + 0.75 * age);
-                    albedo *= 1.0 - 0.38 * ks;
+                    half ks = streak * _RoofWeather.y * (0.45 + 0.55 * age);
+                    // a dirt film converges every covering to grey-brown: darkens red / brown tile, lifts graphite sheet
+                    albedo = lerp(albedo * (1.0 - 0.30 * ks), half3(0.085, 0.080, 0.070), 0.35 * ks);
                     smooth *= 1.0 - 0.3 * ks;
                     albedo *= 1.0 - 0.20 * age * _RoofWeather.y * (1.0 - smoothstep(0.05, 0.7, vE));   // damp band over the gutter
                     // odd tiles on the grid of the set (row 0 at the eave, half-offset courses for plain / interlocking tile)
@@ -1310,7 +1311,7 @@ Shader "Kamion/World PBR"
                         float2 tid = float2(col, row);
                         half h1 = Hash12(tid + seed * 1.13);
                         half h2 = Hash12(tid * 1.7 + seed + 31.0);
-                        half share = 0.04 + 0.16 * age;
+                        half share = 0.06 + 0.20 * age;
                         half odd = step(1.0 - share, h1);
                         half3 f = h2 < 0.5 ? half3(0.74, 0.72, 0.70) : (h2 < 0.8 ? half3(1.20, 1.13, 1.05) : half3(0.90, 0.96, 0.88));
                         half jit = 1.0 + (h2 - 0.5) * 0.10 * (0.3 + 0.7 * age);
@@ -1321,12 +1322,12 @@ Shader "Kamion/World PBR"
                     }
                     // moss: eave zone (wider on older roofs) and along the ridge, a few tufts anywhere; in the laps
                     half zone = max(1.0 - smoothstep(0.25, 1.4 + 0.8 * age, vE), 0.75 * (1.0 - smoothstep(0.1, 0.55, vR)));
-                    zone = max(zone, 0.25);
+                    zone = max(zone, 0.30);
                     half lap = _RoofTile.y > 0.001 ? smoothstep(0.55, 0.95, frac(ru.y / _RoofTile.y)) : 0.0;
                     half n1 = ValueNoise12(ru * 2.1 + seed);
                     half n2 = ValueNoise12(ru * 6.7 + seed * 0.7 + 5.0);
                     half nz = n1 * 0.6 + n2 * 0.4 + 0.18 * lap;
-                    half th = 1.08 - 0.62 * mossK * zone;
+                    half th = 1.02 - 0.70 * mossK * zone;
                     half m = smoothstep(th, th + 0.14, nz) * step(0.001, mossK);
                     albedo = lerp(albedo, half3(0.060, 0.075, 0.028) * (0.75 + 0.5 * n2), m * 0.85);
                     smooth *= 1.0 - 0.6 * m;

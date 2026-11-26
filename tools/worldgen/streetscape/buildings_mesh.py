@@ -149,8 +149,8 @@ ROOF_LOD1_SMALL_TOWN = {"roof_karp_red": "roof_tiles_red", "roof_tiles_old": "ro
 # old Podlasie houses = old; a pressed metal / sheet roof is younger unless it covers a farm outbuilding).
 # (age lo, age hi), moss: WORKING_VALUE (no survey; refs Data/raw/refs/posesje, tykocin-rynek-commons: old tile roofs
 # carry green-grey moss along the eave and in the laps of the north slope, 1990s+ roofs only a dust film).
-ROOF_WEATHER_AGE = {"old": (0.70, 1.00), "prl": (0.38, 0.70), "new": (0.06, 0.28)}
-ROOF_WEATHER_MOSS = {"old": 1.0, "prl": 0.55, "new": 0.12}
+ROOF_WEATHER_AGE = {"old": (0.70, 1.00), "prl": (0.40, 0.72), "new": (0.15, 0.35)}
+ROOF_WEATHER_MOSS = {"old": 1.0, "prl": 0.60, "new": 0.20}
 ROOF_WEATHER_OLD_MATS = ("roof_tiles_old", "roof_shingles_grey", "roof_cement_grey")
 ROOF_WEATHER_YOUNG_MATS = ("roof_metal_", "roof_sheet_")
 

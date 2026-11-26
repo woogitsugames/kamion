@@ -208,8 +208,8 @@ w jednej fakturze (`tykocin/route-s1441` x ~1100–1650); (3) cokoły bez rozpry
    `roofs.build(weather=…)` zapisuje `COLOR_0` pokrycia (LOD0 i LOD1): r = wiek, g = mech × ekspozycja (stok północny 1,0,
    południowy `WEATHER_MOSS_SOUTH` 0,3), b = metry pod kalenicą / 6, a = 0,5 + 0,5 × ziarno budynku. Wiek: `roof_age_class`
    — reguła działek (`plots.age_class`: powierzchnia + kondygnacje, 1/5 dryfu) i samo pokrycie (stara dachówka, gont,
-   cementówka = stary; blacha = młodsza, chyba że na budynku gospodarczym). `ROOF_WEATHER_AGE` stary 0,70–1,0 / PRL 0,38–0,70 /
-   nowy 0,06–0,28; mech 1,0 / 0,55 / 0,12 (`WORKING_VALUE`). Shader `Kamion/World PBR` `_ROOF_WEATHER` (manifest `roof_weather`):
+   cementówka = stary; blacha = młodsza, chyba że na budynku gospodarczym). `ROOF_WEATHER_AGE` stary 0,70–1,0 / PRL 0,40–0,72 /
+   nowy 0,15–0,35; mech 1,0 / 0,60 / 0,20 (`WORKING_VALUE`). Shader `Kamion/World PBR` `_ROOF_WEATHER` (manifest `roof_weather`):
    zacieki wzdłuż spadku (szum 2 oktaw rozciągnięty 10–30× w dół, silniejsze ku okapowi), wilgotny pas nad rynną, pojedyncze
    dachówki ciemne / jaśniejsze (wymienione) / poszarzałe na **siatce setu** (S-dachówka 0,20 × 0,35 m, karpiówka 0,183 × 0,15
    z półprzesunięciem, zakładkowa 0,233 × 0,35 z półprzesunięciem — udział 4–20 % wg wieku, wygaszane do średniej z odległością),
