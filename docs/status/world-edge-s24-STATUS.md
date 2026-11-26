@@ -22,3 +22,14 @@ Gałąź: `worktree-agent-a45822541efad5332`, baza `f4b7a47b9`. Dowody: `C:\User
 
 ## Następny krok
 Krok 3: visual-qa domyślnie dociąga sąsiadów, w których stronę patrzą kamery (WorldNeighbourQa), render przed|po.
+
+## Krok 3 — poprawka (kod zrobiony, render w toku)
+- `WorldNeighbourQa`: domyślnie `-qaNeighbours auto` (sąsiedzi krawędziowi po stronach z zamknięciami, niezaimportowani
+  pomijani z ostrzeżeniem); `none` = sam kafel; lista = ściśle. `EdgeClosureRules.QaNeighbourIds` + test EditMode.
+  `scripts/visual-qa.ps1 -Neighbours`. ADR 0353 (Proposed).
+- Render A/B (worktree, świeże Library Win64; sceny dw671-tykocin-02/03/04 skopiowane z win-build `_Generated`, poza gitem):
+  `pwsh -NoProfile -File artifacts/world-edge-s24/vqa-ab.ps1` (w tle) → `artifacts/world-edge-s24/{none,auto}/`.
+
+## Następny krok
+Po renderze: porównać none vs auto (route-s2035 itd.), skopiować do main `artifacts/world-edge-s24/`, testy EditMode
+`pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` (w tle), visual-critic.
