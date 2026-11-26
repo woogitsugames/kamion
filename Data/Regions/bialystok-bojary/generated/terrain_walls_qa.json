@@ -5,11 +5,11 @@
   "skirt:sidewalk_paving": 1,
   "skirt:yard_asphalt": 10,
   "skirt:yard_concrete": 2,
-  "skirt:yard_gravel": 3
+  "skirt:yard_gravel": 2
  },
- "count": 25,
+ "count": 24,
  "max_m": 0.389,
- "p99_m": 0.386,
+ "p99_m": 0.387,
  "skirt_area": [
   {
    "e": 418.4,
@@ -73,19 +73,8 @@
    "max_h": 0.32,
    "n": 418.0,
    "points": 1,
-   "run_m": 1.821,
+   "run_m": 1.817,
    "src": "osm:way/894395243:0#0:edge",
-   "visible": true
-  },
-  {
-   "e": -163.1,
-   "exposed_m2": 0.084,
-   "mat": "yard_gravel",
-   "max_h": 0.344,
-   "n": -26.8,
-   "points": 2,
-   "run_m": 0.934,
-   "src": "bdot:e9ec4748-4ac7-4519-8971-52898eda5a45:0#0:edge",
    "visible": true
   },
   {
@@ -208,15 +197,26 @@
    "run_m": 0.748,
    "src": "osm:way/235751134:0#0:edge",
    "visible": true
+  },
+  {
+   "e": -163.1,
+   "exposed_m2": 0.032,
+   "mat": "yard_gravel",
+   "max_h": 0.337,
+   "n": -26.8,
+   "points": 1,
+   "run_m": 0.46,
+   "src": "bdot:e9ec4748-4ac7-4519-8971-52898eda5a45:0#0:edge",
+   "visible": true
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 301,
+ "thin_steep_faces_skipped": 314,
  "thresh_m": 0.15,
  "verge_strips": {
   "max_m": 0.658,
   "skirt": 6,
-  "steep_grass": 91,
+  "steep_grass": 88,
   "worst": [
    "steep_grass",
    "j:n7603515288:corner2:vg",
@@ -248,14 +248,6 @@
    "mat": "sidewalk_paving",
    "n": 336.0,
    "src": "bdot:2BE4B433-0212-1BF0-E053-CC2BA8C0D140:0#0"
-  },
-  {
-   "e": -163.3,
-   "h": 0.344,
-   "kind": "skirt",
-   "mat": "yard_gravel",
-   "n": -27.2,
-   "src": "bdot:e9ec4748-4ac7-4519-8971-52898eda5a45:0#0:edge"
   },
   {
    "e": -1000.1,
