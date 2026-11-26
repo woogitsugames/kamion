@@ -1,0 +1,453 @@
+{
+ "schema": "truck-sim-pl/route-obstacles/1",
+ "adr": "0300",
+ "envelope": {
+  "half_width_m": 1.2,
+  "floor_m": 0.35,
+  "top_m": 3.8
+ },
+ "tiles": [
+  {
+   "tile": "bialystok-industrial-c",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2398.1,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:c-dk8-to-maczka",
+     "length_m": 2171.0,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:c-andersa-to-wygoda",
+     "length_m": 963.0,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:c-dk8-north-to-wasilkow",
+     "length_m": 2755.1,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "bialystok-maczka",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2053.5,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "bialystok-kleeberga",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2221.2,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "bialystok-knyszynska",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2961.5,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszynska-kleeberga-s",
+     "length_m": 666.8,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-01",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 631.5,
+     "no_surface_samples": 3,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:dk65-01-s8-corner",
+     "length_m": 577.5,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-02",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2400.4,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-03",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 484.4,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-04",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2079.5,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-05",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2202.0,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-06",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1701.5,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-07",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 865.6,
+     "no_surface_samples": 3,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-08",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2355.1,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-09",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 352.4,
+     "no_surface_samples": 3,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-10",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2615.4,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dk65-11",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 377.8,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "knyszyn-s",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2420.7,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "knyszyn",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1159.2,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszyn-dk65-to-dw671-w",
+     "length_m": 614.3,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszyn-dk65-to-dk65-w",
+     "length_m": 638.7,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszyn-rynek-to-dw671-w",
+     "length_m": 742.6,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszyn-rynek-to-dk65-w",
+     "length_m": 766.8,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "knyszyn-w",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1988.7,
+     "no_surface_samples": 3,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:knyszyn-w-dw671",
+     "length_m": 598.6,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-01",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2608.5,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-02",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 107.8,
+     "no_surface_samples": 3,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-03",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2191.2,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-04",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1880.5,
+     "no_surface_samples": 3,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-05",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 692.0,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-06",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2154.2,
+     "no_surface_samples": 2,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-07",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1006.4,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-08",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1675.5,
+     "no_surface_samples": 3,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "dw671-tykocin-09",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 1063.0,
+     "no_surface_samples": 0,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  },
+  {
+   "tile": "tykocin",
+   "built": true,
+   "routes": [
+    {
+     "route": "route_start",
+     "length_m": 2558.1,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    },
+    {
+     "route": "link:tykocin-dw671-to-rynek",
+     "length_m": 1309.0,
+     "no_surface_samples": 1,
+     "colliders": [],
+     "visual": []
+    }
+   ]
+  }
+ ],
+ "colliders_total": 0
+}
