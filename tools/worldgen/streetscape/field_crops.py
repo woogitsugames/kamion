@@ -64,6 +64,10 @@ MAIZE_STRAY_OUT_M = (0.3, 1.4)   # metres in front of the line
 MAIZE_STRAY_W_M = VA.MAIZE_CELL_M / VA.MAIZE_EDGE_PLANTS
 MAIZE_STRAY_H = (1.45, 2.30)
 BAULK_ROAD_RANGE_M = 90.0
+# r4d (render review r4c, dw671-tykocin-03 edge-north): between two maize stands beyond BAULK_ROAD_RANGE_M the baulk
+# was a bare painted band between two walls of cards ("koleiny / miedze jak namalowane paski"). A baulk with maize on
+# either side carries sward out to the maize card range, at BAULK_MAIZE_RATE of the density.
+BAULK_MAIZE_RATE = 0.55
 BAULK_BAND_M = 0.5               # candidates this far from the seam line
 BAULK_RATE = 1.6                 # plants per metre of baulk where the density is 1
 BAULK_BORDER_M = (1.4, 2.2)      # block border: the outer part of its grass strip (clear of a field track's ruts)
@@ -420,7 +424,7 @@ def _baulks(g, origin, rep):
     ox, oy = origin
     gx, gy = np.meshgrid(np.arange(g.hf.x0 + 1.0, g.hf.x0 + g.W - 1.0, 1.0), np.arange(g.hf.y1 - g.H + 2.0, g.hf.y1 - 1.0, 1.0))
     P = np.column_stack([gx.ravel(), gy.ravel()])
-    P = P[g.arable(P, VG.FIELD_ROAD_M, BAULK_ROAD_RANGE_M)]
+    P = P[g.arable(P, VG.FIELD_ROAD_M, max(BAULK_ROAD_RANGE_M, MAIZE_ROAD_RANGE_M))]
     if not len(P):
         return []
     ax, ay = P[:, 0] + ox, P[:, 1] + oy
@@ -433,13 +437,24 @@ def _baulks(g, origin, rep):
     fid_n = VG._h32(bid, L["k"] + np.where(up, 1.0, -1.0), 929)
     own_n = VG._u01(VG._h32(fid_n.astype(np.float64), zero, 931)) < VG.FIELD_OWN_SHARE_SHADER
     seam = (e < BAULK_BAND_M) & (own | own_n) & (L["block_edge"] > 3.0)
+    # r4d: beyond the baulk range only the seams of maize strips (this strip or the neighbour), thinner
+    i_, j_, _ = g.ij(P)
+    far = g.dist[j_, i_] >= BAULK_ROAD_RANGE_M
+    mz_i = VG.FIELD_USES.index("maize")
+    use_s = VG.field_use(L, True)
+    r_n = np.where(own_n, VG._u01(VG._h32(fid_n.astype(np.float64), zero, 937)), VG._u01(VG._h32(bid, zero, 939)))
+    use_n = np.minimum(np.searchsorted(np.array([c for _, c in VG.FIELD_USES_ARABLE]), r_n, side="right"),
+                       len(VG.FIELD_USES_ARABLE) - 1)
+    maize_seam = (use_s == mz_i) | (use_n == mz_i)
+    seam &= ~far | maize_seam
     border = (L["block_edge"] >= BAULK_BORDER_M[0]) & (L["block_edge"] < BAULK_BORDER_M[1])
     dens = _smooth(0.6 * VG._kf_noise(ax, ay, BAULK_DENS_M[0], 1051) + 0.4 * VG._kf_noise(ax, ay, BAULK_DENS_M[1], 1053),
                    BAULK_DENS_T)
     ci, cj = np.floor(ax), np.floor(ay)
     u = VG._u01(VG._h32(ci, cj, 1055))
     # a 1 m cell of the 2 x BAULK_BAND_M wide band = 1 m of baulk
-    keep = (seam & (u < dens * BAULK_RATE)) | (border & ~seam & (u < dens * BAULK_BORDER_RATE))
+    keep = (seam & (u < dens * BAULK_RATE * np.where(far, BAULK_MAIZE_RATE, 1.0))) \
+        | (border & ~seam & ~far & (u < dens * BAULK_BORDER_RATE))
     if not keep.any():
         return []
     P, ci, cj, ax, ay, dens = P[keep], ci[keep], cj[keep], ax[keep], ay[keep], dens[keep]
