@@ -369,13 +369,15 @@ void KamionFieldMosaic(float2 local, float2 origin, float footprint, float2 enDx
         float tsr = (dc - tc) / max(thw, 0.05);
         half tvis = (half)saturate(0.9 / fpr - 0.5);
         half track = (half)saturate((thw - abs(dc - tc)) / fpr + 0.5) * tvis;
+        // r4: the stalks of both sides lean over the rut in patches (every few metres) - a broken line, not a ruled one
+        track *= 0.45h + 0.55h * smoothstep(0.30h, 0.70h, KFNoiseSF(rc, rl, 0.9, 3.1, 1069u));
         half tthin = (half)saturate(1.0 - (abs(dc - tc) - thw) / (0.20 + 0.30 * n17)) * tvis;
         half tweed = smoothstep(0.55h, 0.80h, n17 * 0.5h + KFNoise(local, origin, 9.0, 1025u) * 0.5h);
         half3 tsoil = half3(0.150h, 0.112h, 0.072h) * (0.85h + 0.30h * n5);
         tsoil = lerp(tsoil * 0.70h, tsoil * 1.08h, (half)saturate(abs(tsr)));      // damp packed bottom, dry rim
         tsoil = lerp(tsoil, half3(0.070h, 0.110h, 0.035h), tweed * 0.65h);         // weeds in the rut
         col = lerp(col, lerp(col, tsoil, 0.45h) * 0.90h, tthin * (0.35h + 0.40h * n1));  // sparse, bent-in stalks
-        col = lerp(col, tsoil, track * (0.80h - 0.25h * tweed));
+        col = lerp(col, tsoil, track * (0.68h - 0.25h * tweed));
         float dsg = qq < 0.5 * KF_TRAM_M ? 1.0 : -1.0;                             // direction of growing dc
         slopeEN += (half2)(rdir * dsg) * (half)(clamp(tsr, -1.0, 1.0) * 0.40) * track * (half)saturate(0.35 / fpr - 0.5);
         // lodged / thinner patches (wind, wet hollows): darker and duller
