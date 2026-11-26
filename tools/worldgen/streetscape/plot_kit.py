@@ -471,6 +471,34 @@ def _twigs():
     return out or None
 
 
+def _blade_stamps(rng, species, n=10):
+    """ADR 0352: leaf stamps with the blade outline of the species (leaf_sprays.blade: cordate linden, five-lobed
+    maple, rhombic birch), tip up, mean ~1 - the crown cards of the garden trees no longer share one lens-shaped leaf
+    (critic s24 wave 11 # 10). Two-tone blade split at the midrib, like the lens stamps."""
+    from .leaf_sprays import blade
+    outline = np.asarray(blade(species), np.float32)       # x 0..1 petiole -> tip, y = half width
+    half = float(np.abs(outline[:, 1]).max())
+    out = []
+    for k in range(n):
+        h = 64
+        wk = rng.uniform(0.82, 1.08) * (rng.uniform(0.45, 0.75) if rng.random() < 0.2 else 1.0)    # some seen edge-on
+        w = max(int(2 * half * wk * (h - 4)) + 6, 10)
+        im = Image.new("L", (w, h), 0)
+        skew = rng.uniform(-0.06, 0.06)
+        pts = [(w / 2 + (y * wk + skew * x * (1 - x) * 4) * (h - 4), h - 2 - x * (h - 4)) for x, y in outline]
+        ImageDraw.Draw(im).polygon(pts, fill=255)
+        a = np.asarray(im, np.float32) / 255.0
+        x = (np.arange(w) + 0.5)[None, :] / w - 0.5
+        y = (np.arange(h) + 0.5)[:, None] / h
+        tone = 0.92 + 0.18 * (x > 0) + 0.10 * (1 - y)
+        tone = np.where(np.abs(x) < 1.1 / w, tone + 0.22, tone)                 # midrib
+        st = np.zeros((h, w, 4), np.float32)
+        st[..., :3] = tone[..., None]
+        st[..., 3] = a
+        out.append(st)
+    return out
+
+
 def _leaf_stamps(rng, n=10):
     """Drawn broadleaf leaves: a lens-shaped blade with a lighter midrib and a darker lower half, tip up, mean ~1."""
     out = []
@@ -777,6 +805,10 @@ _CROWN = {  # leaf rgb, clusters, leaves per cluster, cluster radius (share of w
     "round": dict(leaf=(66, 98, 46), n=290, per=34, rr=(0.065, 0.105), shade=0.38, fill=0.66, stem=(60, 50, 42), lm=0.085, lobes=0.15),
     "birch": dict(leaf=(98, 126, 58), n=210, per=26, rr=(0.075, 0.125), shade=0.58, fill=0.0, stem=(204, 200, 188), lm=0.06, lobes=0.20),
 }
+# ADR 0352: blade of the habit's species (leaf_sprays.blade) and its drawn length relative to the old lens stamp. The
+# card holds ~66 px / m, so a blade is 6-10 px: the outline reads as the grain of the crown (star-shaped maple blades,
+# small hanging birch triangles, round linden hearts), not as single leaves. Sizes WORKING_VALUE.
+_CROWN_BLADE = {"ovoid": ("linden", 1.0), "round": ("maple", 1.35), "birch": ("birch", 0.85)}
 
 
 def _crown_card(rng, h, w, kind):
@@ -814,9 +846,22 @@ def _crown_card(rng, h, w, kind):
         d.line([(cx, y0), (cx + math.sin(a) * L, y0 - math.cos(a) * L)],
                fill=(tuple(int(v * 0.8) for v in P["stem"]) if kind != "birch" else (74, 62, 54)) + (255,), width=max(2, int(w * 0.014)))
     c[...] = np.asarray(im, np.float32) / np.array([1, 1, 1, 255], np.float32)
-    stamps = _leaf_stamps(rng)
+    blade_sp, blade_k = _CROWN_BLADE[kind]
+    stamps = _blade_stamps(rng, blade_sp)
     S = _Stamper(c, stamps)
-    leaf_px = max(P["lm"] * (w / SPRITE_M["crown_" + kind][0]) * 1.5, 5.0 * SS / 2 + 2.5)
+    leaf_px = max(P["lm"] * (w / SPRITE_M["crown_" + kind][0]) * 1.5, 5.0 * SS / 2 + 2.5) * blade_k
+    if P["fill"] > 0:
+        # ADR 0352 (critic s24 wave 11 P0 # 3 / # 10): the flat shade polygon showed through the leaf gaps as a dark
+        # patch with straight edges. Shaded leaves of the far side cover it and run past its outline, so what shows
+        # between the lit clusters is dark foliage with a leafy edge.
+        for _ in range(int(9.0 * (bot - top) * hw / leaf_px ** 2)):
+            y = rng.uniform(top + 0.04 * h, bot - 0.03 * h)
+            sg = 1 if rng.random() < 0.5 else -1
+            x = cx + sg * half(y, sg) * (P["fill"] + 0.10) * math.sqrt(rng.random())
+            if not (leaf_px * 0.6 < x < w - leaf_px * 0.6 and leaf_px * 0.6 < y < h - 2):
+                continue
+            col = np.array(P["leaf"], np.float32) * rng.uniform(0.30, 0.50) + np.array([6, 3, -5], np.float32) * rng.uniform(-1, 1)
+            S.put(int(rng.integers(len(stamps))), x, y, leaf_px * rng.uniform(0.8, 1.25), rng.uniform(0, 6.2832), col)
     blobs = []
     for i in range(P["n"]):
         t = rng.uniform(0.0, 1.0)
