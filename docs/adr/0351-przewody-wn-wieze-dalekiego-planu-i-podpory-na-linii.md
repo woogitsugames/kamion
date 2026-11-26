@@ -1,0 +1,74 @@
+# ADR 0351 — Przewody WN: wieże dalekiego planu tylko na liniach WN i zawsze z przewodami; zmapowane wieże jako podpory w kaflu
+
+Status: Proposed, 2026-11-26 (agent hv-wires-s24). Numer do potwierdzenia przez lidera.
+Powiązane: ADR 0022 (warstwa `wires`, Kamion/World Wire), 0085 (daleki plan), 0127 (zawieszenie 6 faz + odgromowy pod
+ramionami `props.pylon`), 0162 (słup SN), 0318 / drive-review-s24 #15 (ażurowa kratownica dalekiego planu),
+farfield-low-s24 (≤ 2 submesze na sektor). Zgłoszenie: `artifacts/critic-s24-wave11/CRITIC.md` pkt 1 (P0), zrzut
+`artifacts/regen-wave-11-s24/vqa/dk65-07/High-clear/owner02-seam-n-cab.png` (6 kratownic bez przewodów, śnieżnobiałe).
+
+## Kontekst — przyczyna
+1. **Zrzut dk65-07 to daleki plan, nie kafel.** Kamera `owner02_seam_n_cab` stoi w (533, 1080) — 56 m za północnym szwem;
+   dk65-08 nie jest wczytany, widać `FarField_far_north` kafla dk65-07. W kaflu dk65-07 nie ma żadnej linii WN (BDOT10k
+   OT_SULN_L: 13 linii SN, 0 WN; brak OSM power=tower).
+2. **`far_field.py` stawiał kratownicę 27 m co 210 m wzdłuż KAŻDEJ linii pierścienia** (BDOT10k OT_SULN_L dowolnego napięcia
+   + OSM power=line / minor_line, bez rozróżnienia) i rysował każdy BDOT10k „słup energetyczny” (w większości betonowe
+   słupy SN) jako kratownicę 26 m — **bez żadnego przewodu** (generator dalekiego planu nie miał przewodów w ogóle). Linia na
+   zrzucie to linia SN z dk65-08. dk65-07: 307 kratownic, 1 linia WN w pierścieniu (2,7 km na wschód). Wszystkie 54 kafle
+   z danymi: **17 110 kratownic bez przewodów** w dalekim planie.
+3. **Kolor**: `COL_PYLON_STEEL` (0,27; 0,285; 0,30) liniowo × `plaster_white` materiału `far_field_buildings` — ponad
+   2× jaśniej niż `pylon_steel` kafla (0,115–0,12); w słońcu biel.
+4. **W kaflu (pokrewny błąd)**: `furniture.power_supports` brał za podpory tylko wierzchołki BDOT i równe podziały
+   odcinków (≤ 350 m), przyciągając je do zmapowanej wieży w promieniu 15 m. Wieża OSM między wierzchołkami (nie przy
+   punkcie podziału) zostawała obok przewodu, a reguła stawiała drugą wieżę kilkadziesiąt metrów dalej: **31 z 298**
+   zmapowanych wież w 54 kaflach bez przęsła (kleeberga 5, monki-07 5, monki-05 4, maczka 4, …). Do tego BDOT
+   „słup energetyczny” stojący NA linii WN (wieża) był słupem SN (bojary, monki-05 ×2).
+
+## Decyzja
+**Kafel (`streetscape/furniture.py`)**
+- `power_supports`: każda zmapowana podpora klasy linii (WN → `pylon`, SN → `power_pole`) w promieniu `SUPPORT_SNAP_M`
+  od linii jest podporą w miejscu swojego rzutu; wierzchołki/końce jak dotąd (przyciąganie do zmapowanej, inaczej reguła);
+  dzielone są tylko luki między kolejnymi podporami > `SPAN_MAX_M`. Wynik po kolei wzdłuż linii; raport `mapped_supports`.
+- `points()`: BDOT „słup energetyczny” w promieniu 15 m od linii BDOT WN → `pylon`.
+- Szew bez zmian (spójny przy obu wczytanych kaflach): koniec linii przyciętej do bbox ma podporę na krawędzi w obu kaflach.
+
+**Daleki plan (`streetscape/far_field.py`, cache GIS `far-field-gis-cache/14`)**
+- Linie z klasą napięcia: BDOT `rodzaj … wysokiego napięcia`; OSM `voltage ≥ 60 kV` (minor_line = nie WN; power=line bez
+  `voltage` = WN tylko, gdy stoją na niej ≥ 2 zmapowane wieże). Linia OSM pokrywająca się z linią BDOT WN (≥ 70 % próbek
+  w 25 m) jest pomijana. Linie WN przycinane do samej krawędzi kafla (nie do marginesu 8 m).
+- `power_plan()`: podpory jak w kaflu (zmapowane wieże na linii, wierzchołki, luki ≤ 350 m); wierzchołek reguły < 60 m od
+  zmapowanej sąsiedniej wieży łączy się z nią (`RULE_MERGE_M`); koniec na krawędzi kafla = **podpora szwu** (wieża kafla,
+  bez siatki w dalekim planie, przewody od jej ramion). Wieże poza liniami WN (słupy SN) nie są rysowane; maszty
+  telekomunikacyjne / wieże ciśnień rysowane bez trawers. Raport `power_plan` w `far_field_qa.json`.
+- Wieża = układ `props.pylon` (3 poziomy trawers 20/24/28 m z 32, ramię 4,3 m), skrócona perspektywą jak dotąd.
+- **Przewody**: przęsło między podporami, krzywa łańcuchowa `furniture.catenary_span` (zwis 1,5 % rozpiętości), pod
+  końcami ramion obu wież (6 faz + odgromowy na High, dolna para na Low), jako nieprzezroczyste wstęgi w submeszu 0
+  (`far_field_buildings`) — **0 nowych draw calli, kontrakt ≤ 2 submesze/sektor zachowany, bez zmian w C#**. Szerokość:
+  0,6 px widoku 1080 px / 60° w odległości (od krawędzi kafla + 60 m), nie mniej niż 2× `WIRE_HALF_W`; kolor 0,05
+  (0,11 jak materiał `wire` dawał w słońcu jasnoszare wstęgi na tle nieba, VQA r1) (WORKING_VALUE).
+- **Linie SN** (BDOT `… średniego napięcia`, OSM power=line 1–60 kV) do `MV_FAR_MAX_M` = 600 m od kafla, tylko High:
+  betonowe słupy `props.power_pole` (12 m, trawersa ocynk), podpory jak w kaflu (zmapowane BDOT „słup energetyczny”
+  w 10 m, przęsła ≤ 80 m, łączenie z regułą < 25 m), 3 przewody na H − 0,3 m (−0,8/0/+0,8 m), szew = słup kafla.
+  Kolor betonu 0,16 (0,36 renderował się biało, VQA r1). Dalej niż 600 m słup 12 m ma < 1 px.
+- **Kolor**: ocynk `COL_PYLON_GALV` (0,150; 0,155; 0,160) z rozrzutem na wieżę ±12 % jasności i ±3 % ciepły/zimny (kolor
+  wierzchołków, bez materiału i draw calla). WORKING_VALUE, oceniane na klatkach visual-QA.
+
+## Liczby (audyt `tools/worldgen/qa/hv_wires_audit.py`, 54 kafle)
+| | przed | po |
+|---|---|---|
+| zmapowane wieże w kaflu bez przęsła | 31 / 298 | 0 / 308 (10 słupów BDOT na liniach WN to teraz wieże) |
+| słupy SN w kaflu bez przęsła | 34 / 60 | 24 / 50 (pozostałe: brak linii w BDOT; bez danych) |
+| kratownice dalekiego planu bez przewodów | 17 110 / 17 110 | 0 (po przebudowie dalekiego planu kafla) |
+| dk65-07 daleki plan | 307 kratownic, 0 przęseł; High 146 898 / Low 15 816 tri | 30 wież WN + 5 masztów, 29 przęseł WN; 101 słupów SN, 99 przęseł SN, 7 szwów SN; High 99 214 / Low 10 852 tri |
+| knyszyn-w daleki plan | 328 kratownic, 0 przęseł; High 104 569 / Low 11 830 tri | 44 wieże + 4 maszty, 44 przęsła, 2 szwy WN (= podpory kafla E 737,9 / 792,2); 246 słupów SN, 245 przęseł; High 63 921 / Low 6 934 tri |
+
+## Konsekwencje
+- Przebudowa: `far_field.py --region <id>` (bez build_world; ~3 min/kafel — ekstrakcja GIS od nowa przez schemat 13) dla
+  wszystkich kafli; zmiana w kaflu (podpory) wymaga `build_world.py` kafli z liniami WN: bialystok-bojary, -industrial-c,
+  -kleeberga, -maczka, -porosly, dk65-11, dk65-monki-03/-05/-07, knyszyn, monki-e, s8-03/-04/-05 (wieże nie były
+  podporami) oraz kafle z wieżami w liczbie zmienionej (lista w `artifacts/hv-wires-s24/audit_after_tile.json`).
+- Zrzut krytyka (dk65-07 `owner02_seam_n_cab`) pokazuje teraz linię SN dk65-08 jako słupy betonowe z przewodami.
+- Draw calle: 0 nowych (wszystko w submeszu 0 sektora); trójkąty dalekiego planu spadają (mniej kratownic).
+- Test `test_far_field.py` (`fc["pylons"] >= 150` dla bialystok-industrial-c) zmieni znaczenie po przebudowie C (tylko WN +
+  maszty) — do przeliczenia przy przebudowie.
+- Wstęgi przewodów nie mają zanikania `_KamionWireFade` ani pikselowej podłogi shadera Wire; przy obu wczytanych kaflach
+  sektor jest ukryty i przewody kafla przejmują rolę.

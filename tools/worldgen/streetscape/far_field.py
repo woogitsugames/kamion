@@ -105,7 +105,8 @@ SKYLINE_FLAG_BEYOND = 4096.0   # visible only beyond the far plane (stand-in for
 SKYLINE_MIN_BUILDING_H_M = 24.0   # WORKING_VALUE: >= 8 storeys reads above the tree line from >= 900 m (1.5 deg)
 SKYLINE_MIN_CHIMNEY_H_M = 40.0    # WORKING_VALUE
 SKYLINE_PROXY_MERGE_M = 25.0      # a ring chimney this close to a region landmark stack is the same object
-GIS_CACHE_SCHEMA = "far-field-gis-cache/12"   # 12: BDOT10k / LoD1 of every ring powiat, ring OSM window (0219)
+GIS_CACHE_SCHEMA = "far-field-gis-cache/14"   # 14: power lines as {pts, hv, mv, src, id}, HV/MV clipped at the tile edge (0351)
+#                                                12: BDOT10k / LoD1 of every ring powiat, ring OSM window (0219)
 BDOT_LAYERS = ("OT_PTLZ_A", "OT_BUBD_A", "OT_BUWT_P", "OT_SULN_L")
 OSM_WINDOW_MARGIN_DEG = (0.08, 0.05)   # lon, lat (~5.3 / 5.6 km): a feature is tested by its FIRST node, so the window
 #                                        reaches past the ring; for C it contains the old fixed window 23.08-23.30 E,
@@ -140,7 +141,6 @@ COL_CHIMNEY_CONCRETE = (0.37, 0.36, 0.34)
 COL_CHIMNEY_BRICK = (0.23, 0.09, 0.06)
 COL_CHIMNEY_RED = (0.38, 0.045, 0.035)
 COL_CHIMNEY_WHITE = (0.62, 0.62, 0.60)
-COL_PYLON_STEEL = (0.27, 0.285, 0.30)
 
 
 def _sha256(path: Path) -> str:
@@ -731,8 +731,10 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
     outer_box = box(-RING_MAX_M, -RING_MAX_M, RING_MAX_M, RING_MAX_M)
     ring_zone = outer_box.difference(inner_box)
     forest_ring_zone = ring_zone.difference(_road_exit_corridors(half))
+    power_zone = outer_box.difference(box(-half, -half, half, half))   # ADR 0351: HV lines, exact tile edge
     shapely.prepare(ring_zone)
     shapely.prepare(forest_ring_zone)
+    shapely.prepare(power_zone)
     bbox_2180 = (ox - RING_MAX_M, oy - RING_MAX_M, ox + RING_MAX_M, oy + RING_MAX_M)
 
     lod1_audit = {}
@@ -869,17 +871,26 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                 pylons.append({"id": bid or f"py_{len(pylons)}", "e": round(e, 1), "n": round(n, 1),
                                "h": round(float(h_m or 26.0), 1), "kind": kind, "src": "bdot10k"})
 
-    # 4. BDOT10k OT_SULN_L (overhead power lines -> line directions & additional pylon spans)
+    # 4. BDOT10k OT_SULN_L (overhead power lines). ADR 0351: the voltage class is kept (only HV lines get lattice
+    # towers and conductors in the ring) and a HV line is clipped at the tile edge itself, not at the 8 m margin:
+    # its piece then starts on the same seam point where the tile hangs its last span (streetscape.furniture
+    # power_supports puts a support on the clipped end of the tile's own copy of the line).
     df = _read_bdot(pyogrio, bdot_files["OT_SULN_L"], bbox_2180)
     if df is not None:
         for _, row in df.iterrows():
             geom = shapely.affinity.translate(row.geometry, xoff=-ox, yoff=-oy)
-            if not ring_zone.intersects(geom):
+            kind = str(row.get("RODZAJ") or row.get("rodzaj") or "")
+            hv = "wysokiego" in kind
+            mv = "średniego" in kind
+            zone = power_zone if (hv or mv) else ring_zone
+            if not zone.intersects(geom):
                 continue
-            clipped = shapely.intersection(geom, ring_zone)
+            clipped = shapely.intersection(geom, zone)
+            lid = str(row.get("LOKALNYID") or row.get("lokalnyId") or "").strip()
             for g in getattr(clipped, "geoms", [clipped]):
                 if g.geom_type == "LineString" and g.length >= 60.0:
-                    power_lines.append(np.round(np.asarray(g.coords), 1).tolist())
+                    power_lines.append({"pts": np.round(np.asarray(g.coords), 3).tolist(), "hv": hv, "mv": mv,
+                                        "src": "bdot10k", "id": lid})
 
     # 5. OpenStreetMap PBF supplement (critical for North sector outside city limits + additional buildings/forests/towers)
     if osm_pbf.exists():
@@ -924,6 +935,16 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                 tags = w.tags
                 if not tags or tags.get("power") not in ("line", "minor_line"):
                     return
+                # ADR 0351: voltage class (OSM voltage=* in V, ";" between circuits). power=line without voltage is
+                # undecided (None): power_plan() keeps it as HV only where >= 2 mapped towers stand on it.
+                volts = []
+                for v in str(tags.get("voltage", "")).replace(",", ";").split(";"):
+                    try:
+                        volts.append(float(v.strip()))
+                    except ValueError:
+                        pass
+                hv = False if tags.get("power") == "minor_line" else (max(volts) >= 60000.0 if volts else None)
+                mv = hv is False and tags.get("power") == "line" and bool(volts) and 1000.0 <= max(volts) < 60000.0
                 try:
                     lonlat = [(nd.lon, nd.lat) for nd in w.nodes if nd.location.valid()]
                 except Exception:
@@ -937,12 +958,14 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                 xs, ys = tr.transform(lons, lats)
                 pts = np.column_stack([np.asarray(xs) - ox, np.asarray(ys) - oy])
                 ls = LineString(pts)
-                if not ring_zone.intersects(ls):
+                zone = ring_zone if (hv is False and not mv) else power_zone
+                if not zone.intersects(ls):
                     return
-                clipped = shapely.intersection(ls, ring_zone)
+                clipped = shapely.intersection(ls, zone)
                 for g in getattr(clipped, "geoms", [clipped]):
                     if g.geom_type == "LineString" and g.length >= 60.0:
-                        power_lines.append(np.round(np.asarray(g.coords), 1).tolist())
+                        power_lines.append({"pts": np.round(np.asarray(g.coords), 3).tolist(), "hv": hv, "mv": mv,
+                                            "src": "osm", "id": f"osm_w{w.id}"})
 
             def area(self, a):
                 tags = a.tags
@@ -2104,7 +2127,59 @@ def _add_landmark_stack_proxy(skyline: SectorBuilder, st: dict, elev: BorderElev
         skyline.uv1_flag = prev
 
 
-def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevation, half: float, tier: str, yaw: float = 0.0):
+# ------------------------------------------------------------------------------------------- HV lines (ADR 0351)
+# The ring draws lattice towers only where a HV line runs (BDOT10k OT_SULN_L "... wysokiego napięcia", OSM
+# power=line voltage >= 60 kV, or an untagged OSM power=line carrying >= 2 mapped towers) and hangs the conductors
+# between them. Before ADR 0351 it stood a 27 m tower every 210 m along EVERY ring line (MV and LV included) and
+# drew every BDOT10k "słup energetyczny" (mostly concrete MV poles) as a tower - with no conductor at all
+# (CRITIC s24 wave 11 # 1: dk65-07 owner02_seam_n_cab; 17 110 unwired far-field towers over 54 tiles).
+POWER_KINDS = ("słup energetyczny", "power_tower")
+PYLON_H_M = 32.0                 # = streetscape.props.pylon (one tower height in and outside the tile, WORKING_VALUE)
+SEAM_TOL_M = 0.5                 # a HV piece end this close to the tile edge is the tile's own seam support
+OSM_DUP_M = 25.0                 # an OSM HV line within this of a BDOT10k HV line for >= OSM_DUP_SHARE is the same line
+OSM_DUP_SHARE = 0.7
+RULE_MERGE_M = 60.0              # a rule angle-point tower this close to a mapped neighbour merges into it (WORKING_VALUE)
+# MV lines (BDOT10k "... średniego napięcia", OSM power=line 1-60 kV): concrete poles + 3 conductors of the tile's
+# props.power_pole, High only, only up to MV_FAR_MAX_M outside the tile (a 12 m pole is < 1 px beyond it). The
+# critic's frame (dk65-07 owner02_seam_n_cab) looks along such a line of dk65-08 - it was drawn as 27 m towers.
+MV_FAR_MAX_M = 600.0
+MV_RULE_MERGE_M = 25.0
+COL_FAR_CONCRETE = (0.16, 0.158, 0.15)    # x plaster_white of far_field_buildings: 0.36 rendered white (VQA r1)
+# Galvanised steel (ADR 0351): the tile's pylon_steel is linear 0.115-0.12; COL_PYLON_STEEL 0.27-0.30 (x plaster_white
+# of far_field_buildings) rendered snow white in sun. Per-tower +-12 % brightness / +-3 % warm-cool shift (weathered vs
+# newer zinc), vertex colour only: no material, no draw call. WORKING_VALUE, judged on the visual-QA frames.
+COL_PYLON_GALV = (0.150, 0.155, 0.160)
+COL_FAR_WIRE = (0.050, 0.050, 0.048)   # sunlit ribbon of 0.11 read light grey against the sky (VQA r1); real conductors read dark
+# Far conductors are opaque ribbons in submesh 0 (the <= 2 submeshes per sector contract, no Kamion/World Wire there):
+# full width = FAR_WIRE_PX_FRAC px of a 1080 px / 60 deg view at (distance outside the tile + FAR_WIRE_VIEW_M), never
+# under 2 x the tile's WIRE_HALF_W. MSAA / coverage then draw a faint line instead of a shimmering dotted one.
+FAR_WIRE_PX_M = 2.0 * math.tan(math.radians(30.0)) / 1080.0
+FAR_WIRE_PX_FRAC = 0.6
+FAR_WIRE_VIEW_M = 60.0
+
+
+def galv_colour(key: str) -> tuple:
+    f = 0.88 + 0.24 * _hfloat(key, "galv")
+    w = 0.06 * (_hfloat(key, "galv-hue") - 0.5)
+    r, g, b = COL_PYLON_GALV
+    return (r * f * (1.0 + w), g * f, b * f * (1.0 - w))
+
+
+def _arm_levels() -> list[tuple[float, float]]:
+    """(cross-arm height, conductor height) as fractions of the tower height (streetscape.props.pylon layout)."""
+    from streetscape import props as PR
+    return [(za / PYLON_H_M, (za - PR.PYLON_INSULATOR_M) / PYLON_H_M) for za in PR.PYLON_ARM_Z]
+
+
+def _arm_len() -> float:
+    from streetscape import props as PR
+    return PR.PYLON_ARM_L
+
+
+def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevation, half: float, tier: str,
+               yaw: float = 0.0, arms: bool = True):
+    """Lattice tower (arms=True: three cross-arm levels of streetscape.props.pylon, arms along local v = across the
+    line when yaw = line direction) or a plain lattice mast (arms=False: telecom mast, water tower)."""
     e_raw, n_raw = float(py["e"]), float(py["n"])
     h_raw = max(float(py.get("h") or 26.0), 22.0)
     ce, cn, d_raw, _ = foreshorten_point(e_raw, n_raw, half)
@@ -2120,11 +2195,13 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
     ca, sa = math.cos(yaw), math.sin(yaw)
     ux, uy = ca, sa
     vx, vy = -sa, ca
-    col = (*COL_PYLON_STEEL, 0.0)
+    col = (*galv_colour(str(py.get("id") or f"{e_raw:.1f},{n_raw:.1f}")), 0.0)
+    scale = max(s_h, 0.65)
+    arm_l = _arm_len()
 
-    # Tapered 4-sided lattice mast + 2 double cross-arms
-    w_bot = 2.1 * max(s_h, 0.65)
-    w_top = 0.55 * max(s_h, 0.65)
+    # Tapered 4-sided lattice mast
+    w_bot = 2.1 * scale
+    w_top = 0.55 * scale
 
     def ring_pts(w: float, z: float):
         return [
@@ -2133,6 +2210,17 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             [ce + ux * w + vx * w, cn + uy * w + vy * w, z],
             [ce - ux * w + vx * w, cn - uy * w + vy * w, z],
         ]
+
+    def arm_members(link):
+        for frac, _ in _arm_levels():
+            za = z_ref + h_eff * frac
+            sp = arm_l * scale
+            left = [ce - vx * sp, cn - vy * sp, za]
+            right = [ce + vx * sp, cn + vy * sp, za]
+            top = [ce, cn, za + max(0.75 * s_h, 0.45)]
+            link(left, right, 0.13 * scale)
+            link(left, top, 0.09 * scale)
+            link(top, right, 0.09 * scale)
 
     if tier == "Low":
         # ADR 0318: open lattice remains visible at every distance. At Low's
@@ -2151,7 +2239,6 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             width *= radius / np.linalg.norm(width)
             sec.add_quad0(a - width, a + width, b + width, b - width, col)
 
-        scale = max(s_h, 0.65)
         rb, rt = ring_pts(w_bot, z_bot), ring_pts(w_top, z_top)
         for a, b in zip(rb, rt):
             ribbon(a, b, 0.13 * scale)
@@ -2167,15 +2254,8 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
                 q = (k + 1) % 4
                 a, b = (k, q) if (panel + k) % 2 == 0 else (q, k)
                 ribbon(lower[a], upper[b], 0.075 * scale)
-        for frac, span in ((0.70, 5.2), (0.88, 3.8)):
-            za = z_ref + h_eff * frac
-            sp = span * scale
-            left = [ce - vx * sp, cn - vy * sp, za]
-            right = [ce + vx * sp, cn + vy * sp, za]
-            top = [ce, cn, za + max(0.75 * s_h, 0.45)]
-            ribbon(left, right, 0.13 * scale)
-            ribbon(left, top, 0.09 * scale)
-            ribbon(top, right, 0.09 * scale)
+        if arms:
+            arm_members(ribbon)
         return
 
     # Open lattice, including in Low: solid crossed fins read as grey cones
@@ -2195,7 +2275,6 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             q = (k + 1) % 3
             sec.add_quad0(a + offsets[k], a + offsets[q], b + offsets[q], b + offsets[k], col)
 
-    scale = max(s_h, 0.65)
     rb = ring_pts(w_bot, z_bot)
     rt = ring_pts(w_top, z_top)
     for a, b in zip(rb, rt):
@@ -2210,18 +2289,274 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             a, b = (k, q) if (panel + k) % 2 == 0 else (q, k)
             member(lower[a], upper[b], 0.075 * scale)
             member(upper[k], upper[q], 0.075 * scale)
+    # Three cross-arm levels of the tile's tower (streetscape.props.pylon): the conductors hang under their tips
+    if arms:
+        arm_members(member)
 
-    # Two horizontal cross-arms at 70% and 88% height
-    for frac, span in ((0.70, 5.2), (0.88, 3.8)):
-        za = z_ref + h_eff * frac
-        zh = max(0.75 * s_h, 0.45)
-        sp = span * max(s_h, 0.65)
-        p_l0 = [ce - vx * sp, cn - vy * sp, za]
-        p_r0 = [ce + vx * sp, cn + vy * sp, za]
-        p_mid = [ce, cn, za + zh]
-        member(p_l0, p_r0, 0.13 * scale)
-        member(p_l0, p_mid, 0.09 * scale)
-        member(p_mid, p_r0, 0.09 * scale)
+
+def _on_seam(p, half: float) -> bool:
+    return abs(max(abs(float(p[0])), abs(float(p[1]))) - half) < SEAM_TOL_M
+
+
+def _line_supports(ls: LineString, towers: list[dict], tower_xy: np.ndarray, half: float, cls: str = "pylon",
+                   merge_m: float = RULE_MERGE_M) -> list[dict]:
+    """Supports of one HV piece in order along it - the rule of streetscape.furniture.power_supports (ADR 0351):
+    mapped towers within the pylon snap radius of the line at their projection, angle points / ends (snapped to a
+    mapped tower, else a rule tower; an end on the tile edge is the tile's seam support), gaps over the span maximum
+    subdivided."""
+    from streetscape import furniture as FU
+    snap_r, span = FU.SUPPORT_SNAP_M[cls], FU.SPAN_MAX_M[cls]
+    cand = []
+    if len(tower_xy):
+        d = shapely.distance(ls, shapely.points(tower_xy))
+        for i in np.flatnonzero(d <= snap_r):
+            cand.append((float(ls.project(Point(*tower_xy[i]))), tower_xy[i].copy(), "tower", towers[i]))
+    for v in np.asarray(ls.coords, float):
+        if _on_seam(v, half):
+            cand.append((float(ls.project(Point(*v))), v.copy(), "seam", None))
+            continue
+        if len(tower_xy):
+            dd = np.hypot(*(tower_xy - v).T)
+            i = int(np.argmin(dd))
+            if dd[i] <= snap_r:
+                cand.append((float(ls.project(Point(*tower_xy[i]))), tower_xy[i].copy(), "tower", towers[i]))
+                continue
+        cand.append((float(ls.project(Point(*v))), v.copy(), "rule", None))
+    rank = {"seam": 0, "tower": 1, "rule": 2}
+    cand.sort(key=lambda c: (c[0], rank[c[2]]))
+    seq = []
+    for c in cand:
+        if seq and np.hypot(*(c[1] - seq[-1][1])) < 1.0:
+            if rank[c[2]] < rank[seq[-1][2]]:
+                seq[-1] = c
+            continue
+        if c[2] == "tower" and any(t is c[3] for *_, t in seq):
+            continue
+        seq.append(c)
+    # A BDOT10k angle point a few tens of metres from a mapped tower is the same tower (vertex digitised off it):
+    # no second tower beside it (dk65-07 ring: 28 m / 44 m "spans" before this). Seam ends are kept.
+    keep = []
+    for i, c in enumerate(seq):
+        if c[2] == "rule" and any(0 <= j < len(seq) and seq[j][2] == "tower"
+                                  and np.hypot(*(seq[j][1] - c[1])) < merge_m for j in (i - 1, i + 1)):
+            continue
+        keep.append(c)
+    seq = keep
+    full = [seq[0]]
+    for a, b in zip(seq, seq[1:]):
+        gap = b[0] - a[0]
+        k = max(1, int(math.ceil(gap / span - 1e-9)))
+        for i in range(1, k):
+            g = ls.interpolate(a[0] + gap * i / k)
+            full.append((a[0] + gap * i / k, np.array([g.x, g.y]), "rule", None))
+        full.append(b)
+    out = []
+    pts = [c[1] for c in full]
+    for i, (_, q, kind, tw) in enumerate(full):
+        d = pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)]
+        out.append({"e": float(q[0]), "n": float(q[1]), "kind": kind, "tower": tw,
+                    "yaw": math.atan2(float(d[1]), float(d[0]))})
+    return out
+
+
+def power_plan(gis: dict, half: float = 1024.0, region_id: str | None = None) -> dict:
+    """Far-field HV towers, conductor spans and other masts from the ring GIS (ADR 0351). Pure, no mesh."""
+    lines = [pl for pl in gis.get("power_lines", []) if isinstance(pl, dict)]
+    towers = [p for p in gis["pylons"] if p.get("kind") in POWER_KINDS]
+    masts = [p for p in gis["pylons"] if p.get("kind") not in POWER_KINDS]
+    tower_xy = np.array([[p["e"], p["n"]] for p in towers], float).reshape(-1, 2)
+    stats = {"lines": len(lines), "lines_hv_bdot": 0, "lines_hv_osm": 0, "lines_not_hv": 0,
+             "osm_hv_duplicates_of_bdot": 0, "osm_untagged_dropped": 0}
+    bdot_hv = [LineString(pl["pts"]) for pl in lines if pl["hv"] is True and pl["src"] == "bdot10k"]
+    bdot_union = shapely.union_all(bdot_hv) if bdot_hv else None
+    hv, mv = [], []
+    mv_zone = box(-half - MV_FAR_MAX_M, -half - MV_FAR_MAX_M, half + MV_FAR_MAX_M, half + MV_FAR_MAX_M)
+    for pl in lines:
+        if pl["hv"] is False:
+            stats["lines_not_hv"] += 1
+            if pl.get("mv"):
+                g = shapely.intersection(LineString(pl["pts"]), mv_zone)
+                mv += [x for x in getattr(g, "geoms", [g]) if x.geom_type == "LineString" and x.length >= 20.0]
+            continue
+        ls = LineString(pl["pts"])
+        if pl["src"] != "bdot10k":
+            if bdot_union is not None:
+                s = shapely.points([ls.interpolate(x).coords[0] for x in np.arange(0.0, ls.length + 1e-6, 20.0)])
+                if float(np.mean(shapely.distance(bdot_union, s) < OSM_DUP_M)) >= OSM_DUP_SHARE:
+                    stats["osm_hv_duplicates_of_bdot"] += 1
+                    continue
+            if pl["hv"] is None:
+                from streetscape import furniture as FU
+                on = int(np.sum(shapely.distance(ls, shapely.points(tower_xy)) <= FU.SUPPORT_SNAP_M["pylon"])) \
+                    if len(tower_xy) else 0
+                if on < 2:
+                    stats["osm_untagged_dropped"] += 1
+                    continue
+            stats["lines_hv_osm"] += 1
+        else:
+            stats["lines_hv_bdot"] += 1
+        hv.append(ls)
+
+    supports, spans, used = {}, [], set()
+
+    def key(s):
+        if s["kind"] == "tower":
+            return ("t", id(s["tower"]))
+        return ("p", round(s["e"] * 2.0), round(s["n"] * 2.0))   # 0.5 m: line pieces sharing an end share it
+
+    for ls in hv:
+        seq = _line_supports(ls, towers, tower_xy, half)
+        for s in seq:
+            k = key(s)
+            if k not in supports:
+                tw = s["tower"]
+                supports[k] = {"id": (tw.get("id") if tw else None) or f"hv_{s['e']:.1f}_{s['n']:.1f}",
+                               "e": round(s["e"], 3), "n": round(s["n"], 3), "h": PYLON_H_M, "yaw": s["yaw"],
+                               "seam": s["kind"] == "seam", "mapped": s["kind"] == "tower"}
+            if s["tower"] is not None:
+                used.add(id(s["tower"]))
+        for a, b in zip(seq, seq[1:]):
+            ka, kb = key(a), key(b)
+            if ka != kb and math.hypot(a["e"] - b["e"], a["n"] - b["n"]) >= 5.0:
+                spans.append((supports[ka], supports[kb]))
+    draw = [s for s in supports.values() if not s["seam"]]
+    wired = {id(x) for ab in spans for x in ab}
+    # MV (High only, <= MV_FAR_MAX_M out): poles at the BDOT10k "słup energetyczny" left over by the HV lines
+    poles_left = [p for p in towers if id(p) not in used and p.get("kind") == "słup energetyczny"]
+    pole_xy = np.array([[p["e"], p["n"]] for p in poles_left], float).reshape(-1, 2)
+    mv_sup, mv_spans = {}, []
+    for ls in mv:
+        seq = _line_supports(ls, poles_left, pole_xy, half, cls="power_pole", merge_m=MV_RULE_MERGE_M)
+        for s in seq:
+            k = key(s)
+            if k not in mv_sup:
+                mv_sup[k] = {"id": f"mv_{s['e']:.1f}_{s['n']:.1f}", "e": round(s["e"], 3), "n": round(s["n"], 3),
+                             "yaw": s["yaw"], "seam": s["kind"] == "seam", "mapped": s["kind"] == "tower"}
+            if s["tower"] is not None:
+                used.add(id(s["tower"]))
+        for a, b in zip(seq, seq[1:]):
+            ka, kb = key(a), key(b)
+            if ka != kb and math.hypot(a["e"] - b["e"], a["n"] - b["n"]) >= 5.0:
+                mv_spans.append((mv_sup[ka], mv_sup[kb]))
+    mv_poles = [s for s in mv_sup.values() if not s["seam"]]
+    dropped = {}
+    for p in towers:
+        if id(p) not in used:
+            dropped[p.get("kind")] = dropped.get(p.get("kind"), 0) + 1
+    stats.update({
+        "pylons": len(draw),
+        "pylons_mapped": sum(s["mapped"] for s in draw),
+        "pylons_rule": sum(not s["mapped"] for s in draw),
+        "seam_supports": sum(s["seam"] for s in supports.values()),
+        "spans": len(spans),
+        "unwired_power_pylons": sum(id(s) not in wired for s in draw),
+        "dropped_towers_off_hv_lines": dict(sorted(dropped.items())),
+        "masts": len(masts),
+        "mv_lines_near": len(mv),
+        "mv_poles": len(mv_poles),
+        "mv_spans": len(mv_spans),
+        "mv_seam_supports": sum(s["seam"] for s in mv_sup.values()),
+    })
+    return {"pylons": draw, "spans": spans, "masts": masts, "mv_poles": mv_poles, "mv_spans": mv_spans,
+            "stats": stats}
+
+
+def _add_pole(sectors: dict[str, SectorBuilder], s: dict, elev: BorderElevation, half: float):
+    """MV concrete pole of the tile (props.power_pole: 12 m, cross-arm 0.9 m below the top), foreshortened (ADR 0351)."""
+    from roads import standards as S
+    ce, cn, d_raw, _ = foreshorten_point(float(s["e"]), float(s["n"]), half)
+    _, s_h = foreshorten_scales(d_raw)
+    sec = sectors[sector_of(ce, cn, half)]
+    z0 = elev.z_at_eff(ce, cn) - 0.5
+    H = S.GROUND_PROP_H["power_pole"] * s_h
+    yaw = float(s["yaw"])
+    u = np.array([math.cos(yaw), math.sin(yaw)])
+    v = np.array([-u[1], u[0]])
+    k = max(s_h, 0.65)
+    col = (*COL_FAR_CONCRETE, 0.0)
+    rb, rt = 0.16 * k, 0.09 * k
+    corners = [(-1, -1), (1, -1), (1, 1), (-1, 1)]
+    for i in range(4):
+        a, b = corners[i], corners[(i + 1) % 4]
+        p0 = [ce + (a[0] * u[0] + a[1] * v[0]) * rb, cn + (a[0] * u[1] + a[1] * v[1]) * rb, z0]
+        p1 = [ce + (b[0] * u[0] + b[1] * v[0]) * rb, cn + (b[0] * u[1] + b[1] * v[1]) * rb, z0]
+        p2 = [ce + (b[0] * u[0] + b[1] * v[0]) * rt, cn + (b[0] * u[1] + b[1] * v[1]) * rt, z0 + 0.5 + H]
+        p3 = [ce + (a[0] * u[0] + a[1] * v[0]) * rt, cn + (a[0] * u[1] + a[1] * v[1]) * rt, z0 + 0.5 + H]
+        sec.add_quad0(p0, p1, p2, p3, col)
+    za = z0 + 0.5 + H - 0.5 * s_h
+    arm = 0.9 * k
+    w = 0.05 * k
+    for sgn in (1.0, -1.0):          # two faces of the galvanised cross-arm, across the line
+        a = [ce - v[0] * arm, cn - v[1] * arm, za - w]
+        b = [ce + v[0] * arm, cn + v[1] * arm, za - w]
+        c = [ce + v[0] * arm, cn + v[1] * arm, za + w]
+        d = [ce - v[0] * arm, cn - v[1] * arm, za + w]
+        off = u * w * sgn
+        quad = [[q[0] + off[0], q[1] + off[1], q[2]] for q in (a, b, c, d)]
+        if sgn < 0:
+            quad = quad[::-1]
+        sec.add_quad0(*quad, (*galv_colour(s["id"]), 0.0))
+
+
+def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderElevation, half: float, tier: str,
+              mv: bool = False):
+    """Conductors of one span between two supports (far towers / poles or the tile's seam support) as opaque ribbons
+    in submesh 0 (ADR 0351). HV: under the arm tips of both towers, six phases + earth wire on High, the lowest pair
+    on Low. MV (High only): three conductors on the cross-arm of props.power_pole (-0.8 / 0 / +0.8 m, H - 0.3)."""
+    from streetscape import furniture as FU
+    from roads import standards as S
+    ends = []
+    for s in (a, b):
+        ce, cn, d_raw, _ = foreshorten_point(float(s["e"]), float(s["n"]), half)
+        if tier == "Low" and (mv or d_raw > 2200.0):
+            return
+        _, s_h = foreshorten_scales(d_raw)
+        if mv:
+            s_h = 1.0 if s.get("seam") else s_h
+            ends.append((np.array([ce, cn]), elev.z_at_eff(ce, cn), S.GROUND_PROP_H["power_pole"] * s_h,
+                         1.0 if s.get("seam") else max(s_h, 0.65)))
+            continue
+        h_eff = PYLON_H_M if s.get("seam") else max(float(s.get("h") or PYLON_H_M) * s_h, 14.0)
+        ends.append((np.array([ce, cn]), elev.z_at_eff(ce, cn), h_eff, 1.0 if s.get("seam") else max(s_h, 0.65)))
+    (pa, za0, ha, ka), (pb, zb0, hb, kb) = ends
+    L = float(np.hypot(*(pb - pa)))
+    if L < 5.0:
+        return
+    dvec = (pb - pa) / L
+    nn = np.array([-dvec[1], dvec[0]])
+    mid = (pa + pb) / 2.0
+    sec = sectors[sector_of(float(mid[0]), float(mid[1]), half)]
+    to_tile = -mid / max(float(np.linalg.norm(mid)), 1e-9)
+    normal = np.array([to_tile[0], to_tile[1], 0.0])
+    arm_l = _arm_len()
+    levels = _arm_levels()
+    if mv:
+        hmv = S.GROUND_PROP_H["power_pole"]
+        hang = [(o, (hmv - 0.3) / hmv) for o in (-0.8, 0.0, 0.8)]
+        nseg = min(max(int(math.ceil(L / 20.0)), 3), 5)
+    elif tier == "Low":
+        hang = [(sx * arm_l, levels[0][1]) for sx in (-1.0, 1.0)]
+        nseg = min(max(int(math.ceil(L / 40.0)), 3), 8)
+    else:
+        hang = [(sx * arm_l, zf) for _, zf in levels for sx in (-1.0, 1.0)] + [(0.0, 1.0)]
+        nseg = min(max(int(math.ceil(L / 15.0)), 6), 24)
+    col = (*COL_FAR_WIRE, 0.0)
+    for o, zf in hang:
+        za, zb = za0 + ha * zf, zb0 + hb * zf
+        t, Z, _ = FU.catenary_span(L, za, zb, step=L / nseg)
+        Q = pa[None] + (pb - pa)[None] * t[:, None] + nn[None] * (o * (ka * (1.0 - t) + kb * t))[:, None]
+        d_out = np.array([outside_dist(float(q[0]), float(q[1]), half)[4] for q in Q])
+        hw = np.maximum(0.5 * FAR_WIRE_PX_FRAC * FAR_WIRE_PX_M * (d_out + FAR_WIRE_VIEW_M), FU.WIRE_HALF_W)
+        for i in range(len(Q) - 1):
+            b0 = [Q[i, 0], Q[i, 1], Z[i] - hw[i]]
+            b1 = [Q[i + 1, 0], Q[i + 1, 1], Z[i + 1] - hw[i + 1]]
+            t1 = [Q[i + 1, 0], Q[i + 1, 1], Z[i + 1] + hw[i + 1]]
+            t0 = [Q[i, 0], Q[i, 1], Z[i] + hw[i]]
+            f = np.cross(np.subtract(b1, b0), np.subtract(t0, b0))
+            if float(np.dot(f, normal)) >= 0.0:
+                sec.add_quad0(b0, b1, t1, t0, col, normal=normal)
+            else:
+                sec.add_quad0(b1, b0, t0, t1, col, normal=normal)
 
 
 def _corridor_treelines(half: float = 1024.0, region_id: str = "bialystok-industrial-c") -> list[dict]:
@@ -2312,19 +2647,8 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         "inputs_sha256": stream_inputs,
     }
 
-    # Supplement power line pylons along OT_SULN_L spans where point towers were sparse
-    extra_pylons = []
-    existing_py = [(p["e"], p["n"]) for p in gis["pylons"]]
-    for pl in gis["power_lines"]:
-        line = LineString(pl)
-        L = float(line.length)
-        for s in np.arange(90.0, L - 40.0, 210.0):
-            pt = line.interpolate(float(s))
-            if not any(math.hypot(pt.x - ex, pt.y - en) < 95.0 for ex, en in existing_py):
-                p2 = line.interpolate(min(float(s) + 5.0, L))
-                yaw = math.atan2(p2.y - pt.y, p2.x - pt.x)
-                extra_pylons.append({"id": f"pl_{len(extra_pylons)}", "e": pt.x, "n": pt.y, "h": 27.0, "yaw": yaw})
-                existing_py.append((pt.x, pt.y))
+    # ADR 0351: HV towers + conductor spans (replaces a 27 m tower every 210 m along every ring line, unwired)
+    plan = power_plan(gis, half, region_id)
 
     all_materials = {**SM.M, **FH.materials()}
     FH.far_atlas()                     # ADR 0330 / farfield-low-s24: curtain atlas (no-op when up to date)
@@ -2352,10 +2676,17 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
             _add_landmark_stack_proxy(skyline, st, elev, tier)
         skyline.sort_far_to_near()
 
-        for py in gis["pylons"]:
-            _add_pylon(sectors, py, elev, half, tier, yaw=float(py.get("yaw", 0.4)))
-        for py in extra_pylons:
-            _add_pylon(sectors, py, elev, half, tier, yaw=float(py.get("yaw", 0.0)))
+        for py in plan["pylons"]:
+            _add_pylon(sectors, py, elev, half, tier, yaw=float(py["yaw"]))
+        for py in plan["masts"]:
+            _add_pylon(sectors, py, elev, half, tier, yaw=float(py.get("yaw", 0.4)), arms=False)
+        for a, b in plan["spans"]:
+            _add_span(sectors, a, b, elev, half, tier)
+        if tier == "High":
+            for s in plan["mv_poles"]:
+                _add_pole(sectors, s, elev, half)
+            for a, b in plan["mv_spans"]:
+                _add_span(sectors, a, b, elev, half, tier, mv=True)
 
         glb = GLB(all_materials, compact=compact)
         sector_stats = {}
@@ -2479,7 +2810,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
                 for t in ("block", "hall", "office", "house")
             },
             "chimneys": len(gis["chimneys"]),
-            "pylons": len(gis["pylons"]) + len(extra_pylons),
+            "pylons": len(plan["pylons"]) + len(plan["masts"]),
             "power_lines": len(gis["power_lines"]),
         },
     }
@@ -2494,6 +2825,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         "schema": "truck-sim-pl/far-field-qa/1",
         "region": region_id,
         "feature_counts": src_manifest["feature_counts"],
+        "power_plan": plan["stats"],
         "forest_chm_ring": ring_chm.stats(),
         "appearance_policy": appearance_policy,
         "streaming_building_policy": streaming_policy,
