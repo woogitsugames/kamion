@@ -12,6 +12,28 @@ namespace Game.World.Streaming
             return i >= 0 && graph.Tiles[i].needsNeighbourContext;
         }
 
+        /// <summary>
+        /// Static capture context (visual-qa, world-edge-s24): the edge neighbours of <paramref name="tile"/> on the sides
+        /// where the tile closes at least one road (<paramref name="closedSides"/>). In the game those seams open as soon as
+        /// both tiles are Ready (the neighbour is Ready ~380 m before the seam on PC), so a single-tile render that keeps
+        /// them closed shows a barrier the driver never sees. Sides without a graph neighbour (outer edge of the world)
+        /// stay closed, and corner neighbours are never needed for a closure. Order: N, E, S, W.
+        /// </summary>
+        public static string[] QaNeighbourIds(TileGraph graph, int tile, TileSide closedSides)
+        {
+            if (graph == null || tile < 0 || tile >= graph.Count || closedSides == TileSide.None) return System.Array.Empty<string>();
+            var ids = new System.Collections.Generic.List<string>(4);
+            foreach (var side in k_EdgeSides)
+            {
+                if ((closedSides & side) == 0) continue;
+                int j = graph.NeighborOn(tile, side);
+                if (j >= 0) ids.Add(graph.Tiles[j].id);
+            }
+            return ids.ToArray();
+        }
+
+        static readonly TileSide[] k_EdgeSides = { TileSide.N, TileSide.E, TileSide.S, TileSide.W };
+
         public static bool StreamingRequested(string argument, string region, bool desktop, bool? enabledOverride, TileGraph graph = null) =>
             enabledOverride ?? (argument == "1" ||
                 (string.IsNullOrEmpty(argument) && desktop && NeedsNeighbourContext(graph, region)));

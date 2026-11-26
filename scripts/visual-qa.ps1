@@ -59,7 +59,11 @@ param(
     # D84 cab-view-s24: TSV of mirror heads / windscreen top edge vs the cab-view frames (Editor/VisualQA/CabViewQa.cs)
     [string]$CabViewAudit = '',
     # Steering handwheel angle in degrees (+ = clockwise / right turn, matching VehicleVisuals.LateUpdate).
-    [string]$SteerDeg = ''
+    [string]$SteerDeg = '',
+    # world-edge-s24 (ADR 0353): real neighbour tiles behind the closed seams. 'auto' (default) = edge neighbours on the
+    # sides where the tile closes a road (skipped if not imported in this tier); 'none' = tile alone (closure QA);
+    # or a comma list of graph neighbours (strict: must be imported).
+    [string]$Neighbours = 'auto'
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -92,6 +96,7 @@ if ($Aniso) { $qaArgs += @('-qaAniso', $Aniso) }
 if ($TruckPose) { $qaArgs += @('-qaTruckPose', $TruckPose) }
 if ($CabViewAudit) { $qaArgs += @('-qaCabViewAudit', [IO.Path]::GetFullPath($CabViewAudit, (Get-Location).Path)) }
 if ($SteerDeg -ne '') { $qaArgs += @('-qaSteerDeg', $SteerDeg) }
+if ($Neighbours -ne 'auto') { $qaArgs += @('-qaNeighbours', $(if ($Neighbours) { $Neighbours } else { 'none' })) }
 $runStart = Get-Date
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs -BuildTarget $BuildTarget
 

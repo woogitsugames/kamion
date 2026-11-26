@@ -70,6 +70,23 @@ namespace Game.Tests
             Assert.IsTrue(EdgeSides.FarSectorMayShow(TileSide.None, new[] { TileSide.NE }));
         }
 
+        [Test]
+        public void QaNeighbours_OnlyEdgeNeighboursBehindClosedSides()
+        {
+            // dw671-tykocin-03 layout: E and S edge neighbours, NE / SW corners; the route closes N (outer) and S.
+            var graph = TileGraph.FromJson("{\"schema\":\"truck-sim-pl/tile-graph/1\",\"tiles\":[" +
+                "{\"id\":\"t03\",\"neighbors\":[{\"id\":\"t02\",\"side\":\"E\",\"seamM\":2048},{\"id\":\"t04\",\"side\":\"S\",\"seamM\":2048}," +
+                "{\"id\":\"t01\",\"side\":\"NE\",\"seamM\":0},{\"id\":\"t05\",\"side\":\"SW\",\"seamM\":0}]}," +
+                "{\"id\":\"t01\"},{\"id\":\"t02\"},{\"id\":\"t04\"},{\"id\":\"t05\"}]}");
+            int t03 = graph.IndexOf("t03");
+            CollectionAssert.AreEqual(new[] { "t04" }, EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.N | TileSide.S));
+            CollectionAssert.AreEqual(new[] { "t02", "t04" }, EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.S | TileSide.E));
+            CollectionAssert.IsEmpty(EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.W), "outer edge stays closed");
+            CollectionAssert.IsEmpty(EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.None));
+            CollectionAssert.IsEmpty(EdgeClosureRules.QaNeighbourIds(graph, -1, TileSide.S));
+            CollectionAssert.IsEmpty(EdgeClosureRules.QaNeighbourIds(null, 0, TileSide.S));
+        }
+
         [TestCase(TileState.Unloaded, false)]
         [TestCase(TileState.Loading, false)]
         [TestCase(TileState.Activating, false)]
