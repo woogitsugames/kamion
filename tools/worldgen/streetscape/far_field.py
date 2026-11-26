@@ -105,7 +105,7 @@ SKYLINE_FLAG_BEYOND = 4096.0   # visible only beyond the far plane (stand-in for
 SKYLINE_MIN_BUILDING_H_M = 24.0   # WORKING_VALUE: >= 8 storeys reads above the tree line from >= 900 m (1.5 deg)
 SKYLINE_MIN_CHIMNEY_H_M = 40.0    # WORKING_VALUE
 SKYLINE_PROXY_MERGE_M = 25.0      # a ring chimney this close to a region landmark stack is the same object
-GIS_CACHE_SCHEMA = "far-field-gis-cache/13"   # 13: power lines as {pts, hv, src, id}, HV clipped at the tile edge (0351)
+GIS_CACHE_SCHEMA = "far-field-gis-cache/14"   # 14: power lines as {pts, hv, mv, src, id}, HV/MV clipped at the tile edge (0351)
 #                                                12: BDOT10k / LoD1 of every ring powiat, ring OSM window (0219)
 BDOT_LAYERS = ("OT_PTLZ_A", "OT_BUBD_A", "OT_BUWT_P", "OT_SULN_L")
 OSM_WINDOW_MARGIN_DEG = (0.08, 0.05)   # lon, lat (~5.3 / 5.6 km): a feature is tested by its FIRST node, so the window
@@ -881,14 +881,15 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
             geom = shapely.affinity.translate(row.geometry, xoff=-ox, yoff=-oy)
             kind = str(row.get("RODZAJ") or row.get("rodzaj") or "")
             hv = "wysokiego" in kind
-            zone = power_zone if hv else ring_zone
+            mv = "średniego" in kind
+            zone = power_zone if (hv or mv) else ring_zone
             if not zone.intersects(geom):
                 continue
             clipped = shapely.intersection(geom, zone)
             lid = str(row.get("LOKALNYID") or row.get("lokalnyId") or "").strip()
             for g in getattr(clipped, "geoms", [clipped]):
                 if g.geom_type == "LineString" and g.length >= 60.0:
-                    power_lines.append({"pts": np.round(np.asarray(g.coords), 3).tolist(), "hv": hv,
+                    power_lines.append({"pts": np.round(np.asarray(g.coords), 3).tolist(), "hv": hv, "mv": mv,
                                         "src": "bdot10k", "id": lid})
 
     # 5. OpenStreetMap PBF supplement (critical for North sector outside city limits + additional buildings/forests/towers)
@@ -943,6 +944,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                     except ValueError:
                         pass
                 hv = False if tags.get("power") == "minor_line" else (max(volts) >= 60000.0 if volts else None)
+                mv = hv is False and tags.get("power") == "line" and bool(volts) and 1000.0 <= max(volts) < 60000.0
                 try:
                     lonlat = [(nd.lon, nd.lat) for nd in w.nodes if nd.location.valid()]
                 except Exception:
@@ -956,13 +958,13 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                 xs, ys = tr.transform(lons, lats)
                 pts = np.column_stack([np.asarray(xs) - ox, np.asarray(ys) - oy])
                 ls = LineString(pts)
-                zone = ring_zone if hv is False else power_zone
+                zone = ring_zone if (hv is False and not mv) else power_zone
                 if not zone.intersects(ls):
                     return
                 clipped = shapely.intersection(ls, zone)
                 for g in getattr(clipped, "geoms", [clipped]):
                     if g.geom_type == "LineString" and g.length >= 60.0:
-                        power_lines.append({"pts": np.round(np.asarray(g.coords), 3).tolist(), "hv": hv,
+                        power_lines.append({"pts": np.round(np.asarray(g.coords), 3).tolist(), "hv": hv, "mv": mv,
                                             "src": "osm", "id": f"osm_w{w.id}"})
 
             def area(self, a):
@@ -2137,6 +2139,12 @@ SEAM_TOL_M = 0.5                 # a HV piece end this close to the tile edge is
 OSM_DUP_M = 25.0                 # an OSM HV line within this of a BDOT10k HV line for >= OSM_DUP_SHARE is the same line
 OSM_DUP_SHARE = 0.7
 RULE_MERGE_M = 60.0              # a rule angle-point tower this close to a mapped neighbour merges into it (WORKING_VALUE)
+# MV lines (BDOT10k "... średniego napięcia", OSM power=line 1-60 kV): concrete poles + 3 conductors of the tile's
+# props.power_pole, High only, only up to MV_FAR_MAX_M outside the tile (a 12 m pole is < 1 px beyond it). The
+# critic's frame (dk65-07 owner02_seam_n_cab) looks along such a line of dk65-08 - it was drawn as 27 m towers.
+MV_FAR_MAX_M = 600.0
+MV_RULE_MERGE_M = 25.0
+COL_FAR_CONCRETE = (0.36, 0.355, 0.335)
 # Galvanised steel (ADR 0351): the tile's pylon_steel is linear 0.115-0.12; COL_PYLON_STEEL 0.27-0.30 (x plaster_white
 # of far_field_buildings) rendered snow white in sun. Per-tower +-12 % brightness / +-3 % warm-cool shift (weathered vs
 # newer zinc), vertex colour only: no material, no draw call. WORKING_VALUE, judged on the visual-QA frames.
@@ -2290,13 +2298,14 @@ def _on_seam(p, half: float) -> bool:
     return abs(max(abs(float(p[0])), abs(float(p[1]))) - half) < SEAM_TOL_M
 
 
-def _line_supports(ls: LineString, towers: list[dict], tower_xy: np.ndarray, half: float) -> list[dict]:
+def _line_supports(ls: LineString, towers: list[dict], tower_xy: np.ndarray, half: float, cls: str = "pylon",
+                   merge_m: float = RULE_MERGE_M) -> list[dict]:
     """Supports of one HV piece in order along it - the rule of streetscape.furniture.power_supports (ADR 0351):
     mapped towers within the pylon snap radius of the line at their projection, angle points / ends (snapped to a
     mapped tower, else a rule tower; an end on the tile edge is the tile's seam support), gaps over the span maximum
     subdivided."""
     from streetscape import furniture as FU
-    snap_r, span = FU.SUPPORT_SNAP_M["pylon"], FU.SPAN_MAX_M["pylon"]
+    snap_r, span = FU.SUPPORT_SNAP_M[cls], FU.SPAN_MAX_M[cls]
     cand = []
     if len(tower_xy):
         d = shapely.distance(ls, shapely.points(tower_xy))
@@ -2329,7 +2338,7 @@ def _line_supports(ls: LineString, towers: list[dict], tower_xy: np.ndarray, hal
     keep = []
     for i, c in enumerate(seq):
         if c[2] == "rule" and any(0 <= j < len(seq) and seq[j][2] == "tower"
-                                  and np.hypot(*(seq[j][1] - c[1])) < RULE_MERGE_M for j in (i - 1, i + 1)):
+                                  and np.hypot(*(seq[j][1] - c[1])) < merge_m for j in (i - 1, i + 1)):
             continue
         keep.append(c)
     seq = keep
@@ -2360,10 +2369,14 @@ def power_plan(gis: dict, half: float = 1024.0, region_id: str | None = None) ->
              "osm_hv_duplicates_of_bdot": 0, "osm_untagged_dropped": 0}
     bdot_hv = [LineString(pl["pts"]) for pl in lines if pl["hv"] is True and pl["src"] == "bdot10k"]
     bdot_union = shapely.union_all(bdot_hv) if bdot_hv else None
-    hv = []
+    hv, mv = [], []
+    mv_zone = box(-half - MV_FAR_MAX_M, -half - MV_FAR_MAX_M, half + MV_FAR_MAX_M, half + MV_FAR_MAX_M)
     for pl in lines:
         if pl["hv"] is False:
             stats["lines_not_hv"] += 1
+            if pl.get("mv"):
+                g = shapely.intersection(LineString(pl["pts"]), mv_zone)
+                mv += [x for x in getattr(g, "geoms", [g]) if x.geom_type == "LineString" and x.length >= 20.0]
             continue
         ls = LineString(pl["pts"])
         if pl["src"] != "bdot10k":
@@ -2408,6 +2421,24 @@ def power_plan(gis: dict, half: float = 1024.0, region_id: str | None = None) ->
                 spans.append((supports[ka], supports[kb]))
     draw = [s for s in supports.values() if not s["seam"]]
     wired = {id(x) for ab in spans for x in ab}
+    # MV (High only, <= MV_FAR_MAX_M out): poles at the BDOT10k "słup energetyczny" left over by the HV lines
+    poles_left = [p for p in towers if id(p) not in used and p.get("kind") == "słup energetyczny"]
+    pole_xy = np.array([[p["e"], p["n"]] for p in poles_left], float).reshape(-1, 2)
+    mv_sup, mv_spans = {}, []
+    for ls in mv:
+        seq = _line_supports(ls, poles_left, pole_xy, half, cls="power_pole", merge_m=MV_RULE_MERGE_M)
+        for s in seq:
+            k = key(s)
+            if k not in mv_sup:
+                mv_sup[k] = {"id": f"mv_{s['e']:.1f}_{s['n']:.1f}", "e": round(s["e"], 3), "n": round(s["n"], 3),
+                             "yaw": s["yaw"], "seam": s["kind"] == "seam", "mapped": s["kind"] == "tower"}
+            if s["tower"] is not None:
+                used.add(id(s["tower"]))
+        for a, b in zip(seq, seq[1:]):
+            ka, kb = key(a), key(b)
+            if ka != kb and math.hypot(a["e"] - b["e"], a["n"] - b["n"]) >= 5.0:
+                mv_spans.append((mv_sup[ka], mv_sup[kb]))
+    mv_poles = [s for s in mv_sup.values() if not s["seam"]]
     dropped = {}
     for p in towers:
         if id(p) not in used:
@@ -2421,20 +2452,70 @@ def power_plan(gis: dict, half: float = 1024.0, region_id: str | None = None) ->
         "unwired_power_pylons": sum(id(s) not in wired for s in draw),
         "dropped_towers_off_hv_lines": dict(sorted(dropped.items())),
         "masts": len(masts),
+        "mv_lines_near": len(mv),
+        "mv_poles": len(mv_poles),
+        "mv_spans": len(mv_spans),
+        "mv_seam_supports": sum(s["seam"] for s in mv_sup.values()),
     })
-    return {"pylons": draw, "spans": spans, "masts": masts, "stats": stats}
+    return {"pylons": draw, "spans": spans, "masts": masts, "mv_poles": mv_poles, "mv_spans": mv_spans,
+            "stats": stats}
 
 
-def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderElevation, half: float, tier: str):
-    """Conductors of one HV span between two supports (far towers or the tile's seam tower) as opaque ribbons in
-    submesh 0, under the arm tips of both ends (ADR 0351). High: six phases + earth wire; Low: the lowest pair."""
+def _add_pole(sectors: dict[str, SectorBuilder], s: dict, elev: BorderElevation, half: float):
+    """MV concrete pole of the tile (props.power_pole: 12 m, cross-arm 0.9 m below the top), foreshortened (ADR 0351)."""
+    from roads import standards as S
+    ce, cn, d_raw, _ = foreshorten_point(float(s["e"]), float(s["n"]), half)
+    _, s_h = foreshorten_scales(d_raw)
+    sec = sectors[sector_of(ce, cn, half)]
+    z0 = elev.z_at_eff(ce, cn) - 0.5
+    H = S.GROUND_PROP_H["power_pole"] * s_h
+    yaw = float(s["yaw"])
+    u = np.array([math.cos(yaw), math.sin(yaw)])
+    v = np.array([-u[1], u[0]])
+    k = max(s_h, 0.65)
+    col = (*COL_FAR_CONCRETE, 0.0)
+    rb, rt = 0.16 * k, 0.09 * k
+    corners = [(-1, -1), (1, -1), (1, 1), (-1, 1)]
+    for i in range(4):
+        a, b = corners[i], corners[(i + 1) % 4]
+        p0 = [ce + (a[0] * u[0] + a[1] * v[0]) * rb, cn + (a[0] * u[1] + a[1] * v[1]) * rb, z0]
+        p1 = [ce + (b[0] * u[0] + b[1] * v[0]) * rb, cn + (b[0] * u[1] + b[1] * v[1]) * rb, z0]
+        p2 = [ce + (b[0] * u[0] + b[1] * v[0]) * rt, cn + (b[0] * u[1] + b[1] * v[1]) * rt, z0 + 0.5 + H]
+        p3 = [ce + (a[0] * u[0] + a[1] * v[0]) * rt, cn + (a[0] * u[1] + a[1] * v[1]) * rt, z0 + 0.5 + H]
+        sec.add_quad0(p0, p1, p2, p3, col)
+    za = z0 + 0.5 + H - 0.5 * s_h
+    arm = 0.9 * k
+    w = 0.05 * k
+    for sgn in (1.0, -1.0):          # two faces of the galvanised cross-arm, across the line
+        a = [ce - v[0] * arm, cn - v[1] * arm, za - w]
+        b = [ce + v[0] * arm, cn + v[1] * arm, za - w]
+        c = [ce + v[0] * arm, cn + v[1] * arm, za + w]
+        d = [ce - v[0] * arm, cn - v[1] * arm, za + w]
+        off = u * w * sgn
+        quad = [[q[0] + off[0], q[1] + off[1], q[2]] for q in (a, b, c, d)]
+        if sgn < 0:
+            quad = quad[::-1]
+        sec.add_quad0(*quad, (*galv_colour(s["id"]), 0.0))
+
+
+def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderElevation, half: float, tier: str,
+              mv: bool = False):
+    """Conductors of one span between two supports (far towers / poles or the tile's seam support) as opaque ribbons
+    in submesh 0 (ADR 0351). HV: under the arm tips of both towers, six phases + earth wire on High, the lowest pair
+    on Low. MV (High only): three conductors on the cross-arm of props.power_pole (-0.8 / 0 / +0.8 m, H - 0.3)."""
     from streetscape import furniture as FU
+    from roads import standards as S
     ends = []
     for s in (a, b):
         ce, cn, d_raw, _ = foreshorten_point(float(s["e"]), float(s["n"]), half)
-        if tier == "Low" and d_raw > 2200.0:
+        if tier == "Low" and (mv or d_raw > 2200.0):
             return
         _, s_h = foreshorten_scales(d_raw)
+        if mv:
+            s_h = 1.0 if s.get("seam") else s_h
+            ends.append((np.array([ce, cn]), elev.z_at_eff(ce, cn), S.GROUND_PROP_H["power_pole"] * s_h,
+                         1.0 if s.get("seam") else max(s_h, 0.65)))
+            continue
         h_eff = PYLON_H_M if s.get("seam") else max(float(s.get("h") or PYLON_H_M) * s_h, 14.0)
         ends.append((np.array([ce, cn]), elev.z_at_eff(ce, cn), h_eff, 1.0 if s.get("seam") else max(s_h, 0.65)))
     (pa, za0, ha, ka), (pb, zb0, hb, kb) = ends
@@ -2449,7 +2530,11 @@ def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderE
     normal = np.array([to_tile[0], to_tile[1], 0.0])
     arm_l = _arm_len()
     levels = _arm_levels()
-    if tier == "Low":
+    if mv:
+        hmv = S.GROUND_PROP_H["power_pole"]
+        hang = [(o, (hmv - 0.3) / hmv) for o in (-0.8, 0.0, 0.8)]
+        nseg = min(max(int(math.ceil(L / 20.0)), 3), 5)
+    elif tier == "Low":
         hang = [(sx * arm_l, levels[0][1]) for sx in (-1.0, 1.0)]
         nseg = min(max(int(math.ceil(L / 40.0)), 3), 8)
     else:
@@ -2597,6 +2682,11 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
             _add_pylon(sectors, py, elev, half, tier, yaw=float(py.get("yaw", 0.4)), arms=False)
         for a, b in plan["spans"]:
             _add_span(sectors, a, b, elev, half, tier)
+        if tier == "High":
+            for s in plan["mv_poles"]:
+                _add_pole(sectors, s, elev, half)
+            for a, b in plan["mv_spans"]:
+                _add_span(sectors, a, b, elev, half, tier, mv=True)
 
         glb = GLB(all_materials, compact=compact)
         sector_stats = {}

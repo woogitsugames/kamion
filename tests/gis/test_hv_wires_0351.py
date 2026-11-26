@@ -91,3 +91,30 @@ def test_committed_tiles_have_no_unwired_mapped_pylon(region):
     import hv_wires_audit as A
     t = A.in_tile(region)
     assert t["pylon"]["mapped"] > 0 and t["pylon"]["unwired"] == 0, t["pylon"]["unwired_at"]
+
+
+def test_far_field_mv_line_near_the_tile_gets_poles_and_three_conductors():
+    half = 1024.0
+    mv = {"pts": [[500.0, half], [520.0, half + 900.0]], "hv": False, "mv": True, "src": "bdot10k", "id": "m"}
+    lv = {"pts": [[-500.0, half], [-520.0, half + 900.0]], "hv": False, "mv": False, "src": "osm", "id": "osm_w9"}
+    plan = FF.power_plan(_gis([mv, lv], []), half)
+    st = plan["stats"]
+    assert st["mv_lines_near"] == 1 and st["mv_seam_supports"] == 1 and st["pylons"] == 0
+    # clipped at MV_FAR_MAX_M; spans <= the MV span maximum; every pole wired
+    assert max(p["n"] for p in plan["mv_poles"]) <= half + FF.MV_FAR_MAX_M + 1e-6
+    for a, b in plan["mv_spans"]:
+        assert np.hypot(a["e"] - b["e"], a["n"] - b["n"]) <= FU.SPAN_MAX_M["power_pole"] + 1e-6
+    ends = {id(x) for ab in plan["mv_spans"] for x in ab}
+    assert all(id(p) in ends for p in plan["mv_poles"])
+    elev = FF.BorderElevation(half, [100.0] * 2, [100.0] * 2, [100.0] * 2, [100.0] * 2)
+    sectors = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    a, b = plan["mv_spans"][0]
+    assert a["seam"]
+    FF._add_span(sectors, a, b, elev, half, "High", mv=True)
+    V = sectors["far_north"].primitives()[0]["V"]
+    seam = V[np.isclose(V[:, 1], half, atol=1e-6)]
+    assert len(seam) and np.allclose(seam[:, 2], 111.7, atol=0.1)   # 100 + 12 - 0.3 m: the tile pole's insulators
+    FF._add_pole(sectors, b, elev, half)
+    lows = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    FF._add_span(lows, a, b, elev, half, "Low", mv=True)
+    assert not any(x.primitives() for x in lows.values())     # MV: High only
