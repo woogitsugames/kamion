@@ -82,6 +82,9 @@ Shader "Kamion/World PBR"
         _GrimeTraffic ("Yard grime by traffic (ADR 0194): x open raise, y busy drop, z wall zone m, w 1 = on", Vector) = (0, 0, 15, 0)
         _OilLook ("Oil stain (ADR 0194): x aged smoothness, y fresh smoothness, z coverage gamma, w 1 = on", Vector) = (0, 0, 1, 0)
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
+        _SplashBand ("Ground-contact band (_SPLASH, weathering-s24): x height m, y strength, z spatter, w 1 = on", Vector) = (0.3, 0, 0, 0)
+        _RoofTile ("Roof tile grid (_ROOF_WEATHER): x tile width m, y course m, z half-offset courses 0/1, w odd-tile strength", Vector) = (0.2, 0.35, 0, 0)
+        _RoofWeather ("Roof weathering (_ROOF_WEATHER): x moss, y dirt runs, z lichen, w unused", Vector) = (1, 1, 1, 0)
         _RunoffMap ("Parapet run-off (R soot, G rust; _RUNOFF)", 2D) = "black" {}
         _RunoffStrength ("Parapet run-off strength", Range(0, 1)) = 0.5
         _GroundTint ("Terrain grass ground-mask strength", Range(0, 1)) = 1
@@ -144,6 +147,7 @@ Shader "Kamion/World PBR"
             float _ShadowNormalBiasScale;
             float _NightWindows;
             float4 _RegionOriginEN;   // ADR 0298 field mosaic
+            float4 _SplashBand, _RoofTile, _RoofWeather;   // weathering-s24
         CBUFFER_END
         ENDHLSL
 
@@ -183,6 +187,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _PANELTONE
             #pragma shader_feature_local _NIGHTWIN
             #pragma shader_feature_local _FACADE_TINT
+            #pragma shader_feature_local _ROOF_WEATHER
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
@@ -1272,6 +1277,68 @@ Shader "Kamion/World PBR"
                 albedo *= lerp(half3(1.0h, 1.0h, 1.0h), i.masks.rgb * 2.0h, i.masks.a);
             #endif
 
+                // ---- weathering-s24 (ADR 0238 / 0348 addendum): roof covering weathering from COLOR_0 written by
+                // streetscape.roofs.weather_col: r age, g moss x slope aspect, b metres below the ridge / 6, a = 0.5 + 0.5 x
+                // building seed (>= 0.5 on; vertices without COLOR_0 bake to a = 0 -> exact no-op). UV0 = metres along the
+                // eave / up the slope from the eave. Dirt runs down the fall line (more water toward the eave), a damp
+                // dirty band over the gutter, odd tiles (soaked dark / replaced pale / greyed) on the real tile grid of the
+                // set (_RoofTile), moss in the laps at the eave and along the ridge, lichen crusts (Medium+). ALU only,
+                // no texture fetch. Strengths WORKING_VALUE (refs Data/raw/refs/posesje, tykocin-rynek-commons).
+            #if defined(_ROOF_WEATHER)
+                if (i.masks.a > 0.25)
+                {
+                    half age = i.masks.r;
+                    half mossK = saturate(i.masks.g * _RoofWeather.x);
+                    float vE = max(i.uv.y, 0.0);
+                    float vR = i.masks.b * 6.0;
+                    float seed = (i.masks.a - 0.5) * 200.0;
+                    float2 ru = i.uv.xy;
+                    // dirt runs: two octaves across the slope, stretched 10-30x down it
+                    half s1 = ValueNoise12(float2((ru.x + seed) * 1.9, vE * 0.10 + seed));
+                    half s2 = ValueNoise12(float2((ru.x + seed) * 6.3 + 13.7, vE * 0.30));
+                    half streak = saturate((s1 * 0.6 + s2 * 0.4 - 0.42) * 2.6);
+                    streak *= smoothstep(0.15, 1.2, vR) * (0.55 + 0.45 * (1.0 - smoothstep(0.5, 5.0, vE)));
+                    half ks = streak * _RoofWeather.y * (0.25 + 0.75 * age);
+                    albedo *= 1.0 - 0.38 * ks;
+                    smooth *= 1.0 - 0.3 * ks;
+                    albedo *= 1.0 - 0.20 * age * _RoofWeather.y * (1.0 - smoothstep(0.05, 0.7, vE));   // damp band over the gutter
+                    // odd tiles on the grid of the set (row 0 at the eave, half-offset courses for plain / interlocking tile)
+                    if (_RoofTile.w > 0.001)
+                    {
+                        float row = floor(ru.y / _RoofTile.y);
+                        float col = floor((ru.x + 0.5 * _RoofTile.x * _RoofTile.z * frac(row * 0.5) * 2.0) / _RoofTile.x);
+                        float2 tid = float2(col, row);
+                        half h1 = Hash12(tid + seed * 1.13);
+                        half h2 = Hash12(tid * 1.7 + seed + 31.0);
+                        half share = 0.04 + 0.16 * age;
+                        half odd = step(1.0 - share, h1);
+                        half3 f = h2 < 0.5 ? half3(0.74, 0.72, 0.70) : (h2 < 0.8 ? half3(1.20, 1.13, 1.05) : half3(0.90, 0.96, 0.88));
+                        half jit = 1.0 + (h2 - 0.5) * 0.10 * (0.3 + 0.7 * age);
+                        half3 tf = lerp(half3(1.0, 1.0, 1.0), f, odd) * jit;
+                        half tfade = 1.0 - smoothstep(_RoofTile.x * 0.25, _RoofTile.x * 0.8, footprint);
+                        half3 tmean = (1.0 - share * 0.117).xxx;           // mean of tf over many tiles (no tone pop with distance)
+                        albedo *= lerp(half3(1.0, 1.0, 1.0), lerp(tmean, tf, tfade), _RoofTile.w);
+                    }
+                    // moss: eave zone (wider on older roofs) and along the ridge, a few tufts anywhere; in the laps
+                    half zone = max(1.0 - smoothstep(0.25, 1.4 + 0.8 * age, vE), 0.75 * (1.0 - smoothstep(0.1, 0.55, vR)));
+                    zone = max(zone, 0.25);
+                    half lap = _RoofTile.y > 0.001 ? smoothstep(0.55, 0.95, frac(ru.y / _RoofTile.y)) : 0.0;
+                    half n1 = ValueNoise12(ru * 2.1 + seed);
+                    half n2 = ValueNoise12(ru * 6.7 + seed * 0.7 + 5.0);
+                    half nz = n1 * 0.6 + n2 * 0.4 + 0.18 * lap;
+                    half th = 1.08 - 0.62 * mossK * zone;
+                    half m = smoothstep(th, th + 0.14, nz) * step(0.001, mossK);
+                    albedo = lerp(albedo, half3(0.060, 0.075, 0.028) * (0.75 + 0.5 * n2), m * 0.85);
+                    smooth *= 1.0 - 0.6 * m;
+                #if defined(_KAMION_WORLD_DETAIL)
+                    half lv = ValueNoise12(ru * 23.0 + seed * 1.9);
+                    half lth = 1.0 - 0.28 * saturate(mossK * 1.3) * (0.5 + 0.5 * zone);
+                    half lic = smoothstep(lth, lth + 0.06, lv) * (1.0 - smoothstep(0.01, 0.03, footprint)) * _RoofWeather.z;
+                    albedo = lerp(albedo, half3(0.30, 0.29, 0.22), lic * 0.55);
+                #endif
+                }
+            #endif
+
                 // ---- walls: splash / soil zone above the ground (TEXCOORD_0.y = metres above ground)
             #if defined(_SPLASH)
                 {
@@ -1279,6 +1346,28 @@ Shader "Kamion/World PBR"
                     s *= 0.6 + 0.4 * macro.a;
                     albedo = lerp(albedo, albedo * half3(0.72, 0.70, 0.64), s);
                     smooth *= 1.0 - 0.5 * s;
+                    // weathering-s24: ground-contact band (rain splash + soil thrown up by the drops) _SplashBand.x m high
+                    // with a ragged top, soil specks denser toward the ground (Medium+) and a damp dark line in the last
+                    // 7 cm. i.uv.y = metres above the terrain on plinths (above the reference ground elsewhere).
+                    if (_SplashBand.w > 0.5)
+                    {
+                        float vz = i.uv.y;
+                        half en = ValueNoise12(float2(i.uv.x * 3.1, 7.3)) * 0.6 + ValueNoise12(float2(i.uv.x * 11.0, 2.1)) * 0.4;
+                        float top = _SplashBand.x * (0.65 + 0.6 * en);
+                        half band = (1.0 - smoothstep(top * 0.45, top, vz)) * (0.55 + 0.45 * macro.a);
+                        half sp = 0.0;
+                    #if defined(_KAMION_WORLD_DETAIL)
+                        float2 cs = float2(i.uv.x, vz) * float2(48.0, 52.0);
+                        half dens = saturate(1.0 - vz / (top * 1.7));
+                        sp = step(1.0 - 0.5 * dens * dens, Hash12(floor(cs))) * (1.0 - smoothstep(0.16, 0.42, length(frac(cs) - 0.5)));
+                        sp *= _SplashBand.z * (1.0 - smoothstep(0.006, 0.02, footprint));
+                    #endif
+                        half contact = 1.0 - smoothstep(0.0, 0.07, vz);
+                        half kb = saturate(band) * _SplashBand.y;
+                        albedo = lerp(albedo, albedo * half3(0.60, 0.56, 0.50), kb);
+                        albedo *= 1.0 - (0.45 * sp + 0.30 * contact) * _SplashBand.y;
+                        smooth *= 1.0 - 0.4 * kb;
+                    }
                 }
             #endif
 
