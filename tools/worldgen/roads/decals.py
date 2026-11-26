@@ -75,8 +75,8 @@ SEAL_SURFACES = ("road_asphalt",)   # worn asphalt only: not the resurfaced shar
 # meandered +-5 cm on 5-9 m waves (the same meander as a thermal crack), 12-20 cm wide and solid black (strength 2.6):
 # next to the straight dashes of the centre line it read as the line itself jumping sideways. WORKING_VALUE.
 CENTRE_JOINT_AMP_M = 0.010          # residual waviness of the joint (paver screed / hand pour), was 0.05
-CENTRE_JOINT_W_M = (0.07, 0.11)     # geometry width; ~60 % of it dark in the soft strip profile (4-7 cm core)
-CENTRE_JOINT_STRENGTH = 1.9         # < 2.5: broken up by the macro mottling (worn overband), not a solid band
+CENTRE_JOINT_W_M = (0.06, 0.09)     # geometry width; ~60 % of it dark in the soft strip profile (3.5-5.5 cm core); r2 0.07-0.11 read as a black dash
+CENTRE_JOINT_STRENGTH = 1.7         # < 2.5: broken up by the macro mottling (worn overband); r2 1.9 still near solid
 # Sealed cracks never run across a repair patch (the patch was cut out and re-laid; the crack seal is older): points of a
 # crack polyline inside a patch footprint (+ this margin) are dropped and the polyline split there.
 SEAL_PATCH_MARGIN_M = 0.15
