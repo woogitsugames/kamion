@@ -171,3 +171,29 @@ Dojlidy dodatnie: `route_s0152` +67, `kuronia2_front` +28, `route_s1675` +12 —
 chunk 6_2) i świetliki przesunięte między chunkami (np. 0_2 −76 / 1_2 +80) przy sumie regionu −106;
 `photo_P11-063` −20 (1 767 766). Wszystkie szacunki C < 2 M High. Przyjęte świetliki lidera (+22…+77) nie są już
 potrzebne: wybór siatki daje Δ ≤ 0 na każdej hali.
+
+## Dopisek props-fix-s24 (26.11, agent `agent-a60f5c7ffe98fe7c7`): budynki gospodarcze wsi (krytyka s24 fala 11, pkt 8)
+**Objaw.** `dk65-07/drive-kozince` (x 1400–1610) i `knyszyn-w/dk65-goniadzka` (x 1265–1625): biały pudełkowy budynek bez okien
+i detalu. **Ustalenie typu** (dane, nie zgadywanie): dwa obiekty BDOT10k `budynek gospodarczy` (`2C9A9AB4-440C…` 97,8 m²,
+LoD1 3,77 m, LoD2 4,52 m, okap 2,64 m, `roof_type_lod2 = 1030`; `…749B…` 109,7 m², 4,63 m) — klasa `shed` generatora:
+płaski dach `roof_membrane`, tynk `plaster_grey/light` (w słońcu biały), tylko drzwi garażowe. Model LoD2 podaje dach
+dwuspadowy (1030) — typologia gospodarcza ignorowała go (dopisek 4 „Otwarte” wyżej: „budynki gospodarcze mają zawsze
+płaski dach”). W danych: **157** takich obiektów w `dk65-07` (76 z dachem spadzistym wg LoD2), **462** w `dw671-tykocin-03`
+(184), razem 7 633 (3 603 z dachem spadzistym wg LoD2) w 44 kaflach poza Białymstokiem, lista w `artifacts/props-fix-s24/outbuildings-per-tile.txt`.
+
+**Decyzja (opt-in regionu jak `small_town`, ADR 0336): `facade_rules: rural_outbuildings: true`** (override
+`rural-outbuildings-shelters-props-fix-s24` w `dk65-07` i `dw671-tykocin-03`; kafle Białegostoku bez wpisu = bit-identyczne).
+Dla klasy `shed` o powierzchni ≥ 18 m² (z wyjątkiem stacji transformatorowych / wiat śmietnikowych — płaskie pudełka):
+1. **Dach** z modelu LoD2 przez `roofs.plan` (1030 → dwuspadowy, 1040/1070 → kopertowy, 1010 → pulpitowy, `1000` → zostaje
+   płaski); brak LoD2 → dwuspadowy ≥ 36 m², inaczej pulpitowy. Pochylenie i okap z pomiaru LoD2/LoD1 (jak domy).
+2. **Pokrycie** (WORKING_VALUE): blacha grafitowa 34 %, dachówka brązowa 33 %, czerwona 33 % - trzy pokrycia `ROOFS_PITCHED`, które mają
+   domy tych samych chunków; bez rynien i rur (zagroda).
+3. **Ściana** (WORKING_VALUE): tylko tynki `plaster_grey/light/cream/beige` (34 / 22 / 22 / 22 %) **ciemniejsze od domów** przez `COLOR_0`
+   (`rural_shed_shades`, luminancja 0,58-0,86 wobec 0,92-1,08 domów, ciepły / chłodny odchył, osobny odcień szczytu i boków; `_FACADE_TINT`,
+   0 draw calli); cokół `plinth_dark` 0,3 m. Deski i cegła (pierwsza wersja) wycofane: własne materiały = +20 / +58 draw calli na kamerę.
+4. **Okna i drzwi:** okna z kratą jako **płaska komórka atlasu** `base` (0,80 × 0,50 m, parapet 1,50 m; `wall_with_openings` przy
+   `depth = 0` rysuje 2 trójkąty zamiast ~18 ościeży i parapetu): 1 / 2 / 3 na ścianę < 5,5 / < 9,5 / dłuższą (prawdopodobieństwo 92 % ściana
+   frontowa, 80 % pozostałe); wrota garażowe do 2 na ścianie frontowej (85 %, było 60 %), drzwi personelu. Szczyt bez okna poddasza.
+5. Kod: `buildings_mesh.RURAL_SHED_*`, `rural_shed_pick`, `variant["rural"]` w `facade_openings`, gałąź `rural_shed` w
+   `build()` (dach, ściana, `wooden`); testy `tests/gis/test_rural_outbuildings_props_fix_s24.py`.
+**Wartości `WORKING_VALUE`** (udziały materiałów, wymiary okna) — bez inwentaryzacji zagród; do oceny wzrokowej `visual-critic`.

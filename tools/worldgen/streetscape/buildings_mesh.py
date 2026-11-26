@@ -92,6 +92,44 @@ REVEAL_SMALL_TOWN_WOOD = 0.08   # ADR 0348: wooden house window reveal 8 cm (8-1
 SMALL_TOWN_PLINTH_HS = (0.35, 0.42, 0.50, 0.58)   # ADR 0336/0348: 0.35-0.58 m plinth band (0.3-0.6 m WORKING_VALUE)
 SMALL_TOWN_LOD1_FRAME_M = 0.10  # ADR 0336: thin LOD1 house window frame on small-town tiles (0 extra draws)
 SMALL_TOWN_SILL_CLEAN = 0.22    # ADR 0348: subtle sill runoff on ~78 % of rural/small-town house windows (WORKING_VALUE)
+# ADR 0238 d. props-fix-s24 (rural outbuildings, opt-in per region via `facade_rules: rural_outbuildings: true`): a BDOT10k outbuilding
+# ("budynek gospodarczy": barn, shed, cowshed, summer kitchen) was one flat-roofed box of grey / cream plaster with a
+# garage door - from the road a white block without windows (review s24 wave 11, P1 8). Rule: the roof the LoD2 model
+# gives (gable / hip / skillion; type 1000 stays flat), boarding / brick / block wall, a concrete plinth band, small
+# barred windows and a personnel door, roof covering of the farm yards of Podlasie (trapezoidal sheet, cement-fibre
+# sheet, ceramic tile). Shares WORKING_VALUE (no survey; photos Commons / owner frames of DK65 sheds).
+# Draw-call budget (lead, s24: <= +2 per camera): ONLY materials the houses of the same chunks already use (plaster_*, the
+# three ROOFS_PITCHED coverings, plinth_dark, facade_atlas windows); variety comes from COLOR_0 (_FACADE_TINT, 0 extra
+# draws), wooden / brick walls (own materials, own wall generator) are not used for outbuildings.
+RURAL_SHED_WALLS = (("plaster_grey", 0.34), ("plaster_light", 0.22), ("plaster_cream", 0.22), ("plaster_beige", 0.22))
+RURAL_SHED_ROOFS = (("roof_metal_graphite", 0.34), ("roof_tiles_brown", 0.33), ("roof_tiles_red", 0.33))
+RURAL_SHED_REVEAL_M = 0.0                # flat atlas opening: the window is the atlas cell, not geometry (wall_with_openings)
+RURAL_SHED_TINT = (0.58, 0.86)            # luminance range of the plaster tint (darker than the houses 0.92-1.08)
+RURAL_SHED_MIN_AREA_M2 = 18.0
+RURAL_SHED_NO_ROOF_FUNCS = {"stacja transformatorowa", "transformer_tower", "garbage_shed"}   # keep their flat box
+RURAL_SHED_WIN = (0.80, 0.50, 1.50)      # window width, height, sill above the reference ground, m (WORKING_VALUE)
+
+
+def rural_shed_shades(key):
+    """COLOR_0 shades of a plaster outbuilding (main wall, gable, side wall, plinth): darker and dirtier than a house."""
+    lo, hi = RURAL_SHED_TINT
+    lum = lo + (hi - lo) * FK.hfloat(key, "rs_lum")
+    warm = (FK.hfloat(key, "rs_warm") - 0.5) * 0.08
+
+    def c(l):
+        return [round(max(0.4, l * (1 + warm)) * 0.5, 4), round(l * 0.5, 4), round(max(0.4, l * (1 - warm)) * 0.5, 4), 1.0]
+    return c(lum), c(lum * 0.94), c(lum * 1.04), [round(max(0.5, lum - 0.12) * 0.5, 4)] * 3 + [1.0]
+
+
+def rural_shed_pick(key, table, salt):
+    u, acc = FK.hfloat(key, salt), 0.0
+    for mat, share in table:
+        acc += share
+        if u < acc:
+            return mat
+    return table[-1][0]
+
+
 # ADR 0316: coverings of the ceramic tile roofs. The palette (house_palette) still deals red tile / brown tile / metal
 # sheet, so the neighbour rule and every earlier choice hold; a red tile roof is then, by the house's own hash,
 #   - on a wooden house mostly the old hand-laid S-tile with moss and lichen (`roof_tiles_old`, owner photos of Dom
@@ -653,6 +691,23 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
     for (ua, ub, va, vb, depth, kind, mat_in) in [o[:7] for o in ops]:
         back = -n3 * depth
         A, B, C, D = (np.array(P(ua, va)), np.array(P(ub, va)), np.array(P(ub, vb)), np.array(P(ua, vb)))
+        if depth <= 0.0 and isinstance(mat_in, tuple):
+            # props-fix-s24: FLAT atlas opening (depth 0) - the cell carries frame, grille and glass, no reveal / sill
+            # geometry (2 triangles instead of ~18); used by the outbuildings of rural tiles to stay inside the
+            # triangle budget. Every other opening has depth > 0 and takes the path below unchanged.
+            _, rects, fa, fb, ga, gb = mat_in
+            nr = len(rects)
+            for j, (cu, cv, cw, ch) in enumerate(rects):
+                a0, a1 = max(fa, j / nr), min(fb, (j + 1) / nr)
+                if a1 - a0 < 1e-6:
+                    continue
+                t0, t1 = (a0 - fa) / (fb - fa), (a1 - fa) / (fb - fa)
+                Pa, Pb = A + (B - A) * t0, A + (B - A) * t1
+                lu0, lu1 = cu + cw * (a0 * nr - j), cu + cw * (a1 * nr - j)
+                lv0, lv1 = cv + ch * ga, cv + ch * gb
+                acc.quad(layer, "facade_atlas", Pa, Pb, Pb + (D - A), Pa + (D - A),
+                         uv=[[lu0, lv0], [lu1, lv0], [lu1, lv1], [lu0, lv1]])
+            continue
         rv = reveal or "reveal_" + ("hall" if mat.startswith("hall") else "plaster")
         # reveals (facing into the opening)
         acc.quad(layer, rv, A, B, B + back, A + back)          # sill (faces up)
@@ -1122,13 +1177,29 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
             ops.append((um - 2.0, um + 2.0, zref + 0.02, zref + 4.5, 0.2, "door", "garage_door"))
         return ops
     if typ == "shed":
-        if is_main and L > 3.2 and hfloat(key, "gar") < 0.6:
-            n = max(1, min(4, int(L // 3.2)))
+        rural = variant.get("rural")
+        if is_main and L > 3.2 and hfloat(key, "gar") < (0.85 if rural else 0.6):
+            n = max(1, min(2 if rural else 4, int(L // 3.2)))
             for i in range(n):
                 um = (i + 0.5) * L / n
                 ops.append((um - 1.25, um + 1.25, zref + 0.05, zref + 2.2, 0.1, "door", cells("garage", hv("g", i))))
         elif is_main and L > 2:
             ops.append((L / 2 - 0.5, L / 2 + 0.5, zref + 0.05, zref + 2.15, 0.06, "door", cells("door_steel", hv("sd"))))
+        if rural and L >= 3.6:
+            # ADR 0238 d. props-fix-s24: small barred windows (the `base` cell: 0.9 x 0.45 m window with a grille), one per 3.5-7.5 m of
+            # wall, never beside a door, under the eave; walls shorter than 3.6 m stay blank
+            ww, wh, ws = RURAL_SHED_WIN
+            nw = 1 if L < 5.5 else 2 if L < 9.5 else 3
+            for i in range(nw):
+                if hfloat(key, f"rw{i}") > (0.92 if is_main else 0.8):
+                    continue
+                um = (i + 0.5) * L / nw + (hfloat(key, f"rwj{i}") - 0.5) * 0.8
+                z0 = zref + ws
+                if z0 + wh > ztop - 0.25 or um - ww / 2 < 0.5 or um + ww / 2 > L - 0.5:
+                    continue
+                if any(um + ww / 2 + 0.5 > o[0] and um - ww / 2 - 0.5 < o[1] for o in ops):
+                    continue
+                ops.append((um - ww / 2, um + ww / 2, z0, z0 + wh, RURAL_SHED_REVEAL_M, "window", cells("base", hv("rw", i))))
         return ops
     sh = sh or {"office": 3.5, "block": 2.8, "house": 2.9}[typ]
     pitch = {"office": 3.0, "block": 3.0, "house": 2.7}[typ]    # house: 2 windows from 6.4 m, 3 from 9.1 m (ADR 0091)
@@ -1422,6 +1493,11 @@ def load(fc, origin, overrides, hero=None):
     if any(o.get("kind") == "facade_rules" and o.get("runoff_shuffle") for o in overrides):
         for b in out:
             b["runoff_shuffle"] = True
+    if any(o.get("kind") == "facade_rules" and o.get("rural_outbuildings") for o in overrides):
+        for b in out:                             # ADR 0238 d. props-fix-s24, opt-in per region (class `shed` only)
+            if (b["typ"] == "shed" and not b["ovr"].get("typology") and b["poly"].area >= RURAL_SHED_MIN_AREA_M2
+                    and b["props"].get("function") not in RURAL_SHED_NO_ROOF_FUNCS):
+                b["rural_outbuilding"] = True
     if small_town:                                # ADR 0336, opt-in per region
         for b in out:
             b["small_town"] = True
@@ -1722,6 +1798,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     for b in blds:
         poly, p, typ = b["poly"], b["props"], b["typ"]
         st_mode = bool(b.get("small_town"))
+        rural_shed = typ == "shed" and bool(b.get("rural_outbuilding"))      # ADR 0238 d. props-fix-s24
         sub = b.get("sub") or TY.DEFAULT_SUBTYPE.get(typ, typ)
         counts[typ] = counts.get(typ, 0) + 1
         ring = np.asarray(poly.exterior.coords)
@@ -1767,7 +1844,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             if wall not in HOUSE_WALL_OVERRIDES:
                 raise ValueError(f"building {b['id']}: unsupported house wall_material {wall!r}")
         elif typ == "shed":
-            wall = hpick(key, ["plaster_grey", "plaster_light", "brick_red", "hall_wall_silver"])
+            wall = (rural_shed_pick(key, RURAL_SHED_WALLS, "rswall") if rural_shed          # ADR 0238 d. props-fix-s24
+                    else hpick(key, ["plaster_grey", "plaster_light", "brick_red", "hall_wall_silver"]))
         else:
             wall = b["ovr"].get("wall_material") or hpick(key, TY.PAVILION_WALLS if sub == "pawilon" else OFFICE_WALLS)
         # ADR 0126: authored frontage of a trade pavilion (override `frontage`): its own walls on both LODs
@@ -1791,7 +1869,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # house subtype / wall = not wooden, whatever the footprint rule says
             wooden = (b["ovr"].get("typology") == "dom_drewniany"
                       or str(b["ovr"].get("wall_material", "")).startswith("wood_planks"))
-        if wooden:
+        if rural_shed and str(wall).startswith("wood_planks"):
+            wooden = True                    # ADR 0238 d. props-fix-s24: boarded outbuilding uses the board-wall generator
+        if wooden and not rural_shed:
             sub = "dom_drewniany"
         subtypes[sub] = subtypes.get(sub, 0) + 1
         roof = None
@@ -1802,6 +1882,11 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             near = [blds[j]["poly"] for j in btree.query(poly.buffer(0.6)) if blds[j] is not b]
             roof = RF.plan(poly, p, h, zref, lambda salt: FK.hfloat(key, salt), near, wooden, shape=rshape,
                            pitch_var=st_mode)
+        elif rural_shed and rshape != "flat":
+            # ADR 0238 d. props-fix-s24: the LoD2 roof type decides (1000 = flat stays flat); no LoD2 -> gable over >= 36 m2, else skillion
+            near = [blds[j]["poly"] for j in btree.query(poly.buffer(0.6)) if blds[j] is not b]
+            shp = rshape or (None if p.get("roof_type_lod2") else ("gable" if poly.area >= 36 else "mono"))
+            roof = RF.plan(poly, p, h, zref, lambda salt: FK.hfloat(key, salt), near, False, shape=shp)
         elif typ in ("block", "office") and rshape in ("gable", "hip", "mono") and not front and not facades:
             near = [blds[j]["poly"] for j in btree.query(poly.buffer(0.6)) if blds[j] is not b]
             roof = RF.plan(poly, p, h, zref, lambda salt: FK.hfloat(key, salt), near, False, shape=rshape,
@@ -1869,7 +1954,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             ek_ = f"estate:{int(cx_ // ESTATE_M)}:{int(cy_ // ESTATE_M)}"
             pair_ = (FA.BAL_GROUPS[FA.hint(ek_, "a") % len(FA.BAL_GROUPS)], FA.BAL_GROUPS[FA.hint(ek_, "b") % len(FA.BAL_GROUPS)])
             bal_group = pair_[0] if FK.hfloat(key, "balg") < 0.7 else pair_[1]
-        variant = {"ribbon": typ == "office" and FK.hfloat(key, "ribbon") < 0.5,
+        variant = {"rural": rural_shed, "ribbon": typ == "office" and FK.hfloat(key, "ribbon") < 0.5,
                    "drive_door": typ == "hall" and FK.hfloat(key, "drive") < 0.5, "basement": typ == "block"}
         if typ == "hall" and b["ovr"].get("hall_windows") is False:     # ADR 0185: authored - the photographed
             variant["hall_windows"] = False                             # hall has no row of small windows
@@ -1931,7 +2016,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                     zbase = zb_st
                 else:
                     st_stats["rows_kept"] = st_stats.get("rows_kept", 0) + 1
-        if wooden:
+        if wooden and not rural_shed:
             wall = (b["ovr"]["wall_material"] if str(b["ovr"].get("wall_material", "")).startswith("wood_planks")
                     else wood_paint(key))
         # ADR 0348: 2-3 deterministic plaster shades + plinth shade per rural / small-town plaster house (+0 draws via COLOR_0)
@@ -1939,6 +2024,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                   if (st_mode and typ in ("house", "office") and not wooden and not front and not facades
                       and str(wall).startswith("plaster_"))
                   else None)
+        if shades is None and rural_shed and str(wall).startswith("plaster_"):
+            shades = rural_shed_shades(key)                          # darker, per-building tint (COLOR_0, 0 draws)
         u_acc = 0.0
         ro_blocks = (runoff_blocks(key, float(sum(lens)) + 1.0)
                      if b.get("runoff_shuffle") and typ == "hall" and not front else None)
@@ -2178,7 +2265,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 aw = None
                 if wooden:
                     aw = attic_window(prof, zt, zref, zbase, sh, storeys, f"{key}:{ei}",
-                                      small_town=st_mode, joinery=st_joinery, wooden=True) if pitched else None
+                                      small_town=st_mode, joinery=st_joinery, wooden=True) if (pitched and not rural_shed) else None
                     if aw and aw["op"][2] < zt + 0.12:       # a window across the eave line: no gable window
                         aw = None
                     wood_stats["tris"] += wood_wall(acc, wall, plinth, a, d, nout, L, zbot, zpl, zt, zref, u_acc, ops,
@@ -2191,8 +2278,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                         wall_top_fill(acc, "buildings_low", wall, a, d, prof, lambda u, zt=zt: zt, u_acc, zref)
                     cols = []
                 elif pitched:
-                    aw = attic_window(prof, zt, zref, zbase, sh, storeys, f"{key}:{ei}",
-                                      small_town=st_mode, joinery=st_joinery, wooden=False)
+                    aw = (None if rural_shed else
+                          attic_window(prof, zt, zref, zbase, sh, storeys, f"{key}:{ei}",
+                                       small_town=st_mode, joinery=st_joinery, wooden=False))
                     base_z = lambda u, zt=zt: zt
                     pr = prof
                     if aw:                      # gable end: the column under the ridge rises as a rectangle with the window
@@ -2340,6 +2428,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if pitched:
             st_roofs = st_mode and b.get("small_town_roofs", True)
             default_rmat = (house_pal[key][1] if typ == "house"
+                            else rural_shed_pick(key, RURAL_SHED_ROOFS, "rsroof") if rural_shed
                             else hpick(key, SMALL_TOWN_ROOFS_PITCHED if st_roofs else ROOFS_PITCHED, "roof"))
             rmat = house_roof_material(b, default_rmat)
             if typ == "house":      # ADR 0316; also over an orthophoto-read colour (it says red tile, not which tile)
@@ -2365,7 +2454,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # fascia next to the grey soffit_boards under the short wing overhang)
             eaves.sort(key=lambda e_: -float(np.hypot(*(e_[1] - e_[0]))))
             acc_g = acc if typ == "house" else _L0Only(acc)
-            for k_, (ea, eb, ze) in enumerate(eaves):             # eaves gutters; downpipes on the two longest
+            for k_, (ea, eb, ze) in enumerate([] if rural_shed else eaves):   # eaves gutters (none on a farm outbuilding)
                 le = float(np.hypot(*(eb - ea)))
                 de = (eb - ea) / le
                 ne = np.array([de[1], -de[0]])
