@@ -88,6 +88,18 @@ FAR_MAX_TOP_SLOPE = 0.26
 FAR_EDGE_WOBBLE_M = 5.0
 FAR_SKIRT_MAX_D_M = 2200.0
 FAR_IMPOSTOR_MAX_D_M = 1500.0
+# ADR 0334 r4 (fields4-s24, critic s24 wave 11 pt 10 "prosta krawędź lasu w tle"): the far stand edge read as one
+# smooth band - the +-30 % crown wave is rounded off by the slope limit, the curtain ends at full height where the
+# outline turns away, and nothing stands above the canopy. Now (High tier): compartments of another age - the height
+# steps by 0.62-1.12 x on 70-160 m pieces of the edge (FAR_COMPARTMENT_*; measured CHM heights are left alone), single
+# overstorey trees stand 1.12-1.35 x above the curtain top every FAR_EMERGENT_STEP_M, and an open run end rolls off to
+# FAR_END_FLOOR over FAR_END_TAPER_M with trees stepping down past it. WORKING_VALUE (render review, edge-* cameras).
+FAR_COMPARTMENT_M = 115.0
+FAR_COMPARTMENT_H = (0.62, 1.12)
+FAR_EMERGENT_STEP_M = (38.0, 70.0)
+FAR_EMERGENT_H = (1.12, 1.35)
+FAR_END_FLOOR = 0.30
+FAR_END_TAPER_M = 26.0
 FAR_IMPOSTOR_SPECIES = {
     "conifer": ("tree_pine_0", "tree_pine_1", "tree_spruce_0", "tree_spruce_1", "tree_birch_0", "tree_shrub_0"),
     "broadleaf": ("tree_birch_0", "tree_alder_0", "tree_linden_0", "tree_shrub_0", "tree_shrub_0"),
@@ -1426,7 +1438,14 @@ def _crown_height_wave(e: np.ndarray, n: np.ndarray, h_base: float, half: float 
         r = np.convolve(np.pad(r, 2, mode="edge"), np.array([0.1, 0.2, 0.4, 0.2, 0.1]), mode="valid")
         w = w + 0.10 * r / max(float(np.std(r)), 1e-6)
     h_cls = FAR_BASE_H_M.get(mix, 19.5)
-    h_noise_raw = np.minimum(h_cls * np.clip(w, 0.52, 1.32) * height_mult, cap_quad)
+    # ADR 0334 r4: compartments - a piecewise-constant factor per FAR_COMPARTMENT_M cell of a warped lattice (true
+    # metres), so the canopy steps where the stand age changes instead of only waving
+    wx = np.array([(FH._vnoise2(x, y, 180.0, "ff_cmpx") - 0.5) * 90.0 for x, y in zip(e_raw, n_raw)], dtype=np.float64)
+    wy = np.array([(FH._vnoise2(x, y, 180.0, "ff_cmpy") - 0.5) * 90.0 for x, y in zip(e_raw, n_raw)], dtype=np.float64)
+    cmp = np.array([FAR_COMPARTMENT_H[0] + (FAR_COMPARTMENT_H[1] - FAR_COMPARTMENT_H[0])
+                    * _hfloat(f"{int(np.floor(x / FAR_COMPARTMENT_M))},{int(np.floor(y / FAR_COMPARTMENT_M))}", "ff_cmp")
+                    for x, y in zip(e_raw + wx, n_raw + wy)], dtype=np.float64)
+    h_noise_raw = np.minimum(h_cls * np.clip(w * cmp, 0.42, 1.32) * height_mult, cap_quad)
 
     if ring_chm is not None:
         h_chm_raw, has_chm = ring_chm.sample_heights(e_raw, n_raw, mix)
@@ -1518,12 +1537,12 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
     run = []
 
     def _smooth_end_taper(s: np.ndarray, total_s: float) -> np.ndarray:
-        taper_len = min(16.0, total_s * 0.28)
+        taper_len = min(FAR_END_TAPER_M, total_s * 0.30)        # r4: 16 m / 0.52 left a vertical cut at the run end
         if taper_len < 1.0:
             return np.ones_like(s)
         t = np.minimum(np.clip(s / taper_len, 0.0, 1.0), np.clip((total_s - s) / taper_len, 0.0, 1.0))
-        sm = t * t * (3.0 - 2.0 * t)
-        return 0.52 + 0.48 * sm
+        sm = np.sqrt(t * t * (3.0 - 2.0 * t))                    # a crown's rounded shoulder, not a cone
+        return FAR_END_FLOOR + (1.0 - FAR_END_FLOOR) * sm
 
     def flush_run(r_pts):
         if len(r_pts) < 2:
@@ -1663,6 +1682,50 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                                 th = max(h_loc * (0.54 + 0.36 * _hfloat(ck, "h")), 5.0 * sh_pt)
                             sec.add_tree_impostor1(tx_e, tx_n, elev.z_at_eff(tx_e, tx_n), th, tname,
                                                    yaw=_hfloat(ck, "yaw") * math.pi, half=half)
+            # ADR 0334 r4: overstorey trees above the canopy, 2-6 m behind the curtain front
+            tall_pool = tuple(t for t in species_pool if t != "tree_shrub_0") or ("tree_pine_0",)
+            rkey = f"{P[0, 0]:.0f},{P[0, 1]:.0f}"
+            s_cur = FAR_EMERGENT_STEP_M[0] * _hfloat(rkey, "em_s0")
+            while s_cur < total_s - 6.0:
+                ek = f"{rkey},{s_cur:.0f}"
+                idx = min(max(int(np.searchsorted(s, s_cur, side="right")) - 1, 0), k - 2)
+                frac = float(np.clip((s_cur - s[idx]) / max(float(ds[idx]), 1e-6), 0.0, 1.0))
+                pt = P[idx] * (1.0 - frac) + P[idx + 1] * frac
+                nrm = out_n[idx] * (1.0 - frac) + out_n[idx + 1] * frac
+                nrm = nrm / max(float(np.hypot(nrm[0], nrm[1])), 1e-6)
+                dt_pt = float(d_true[idx] * (1.0 - frac) + d_true[idx + 1] * frac)
+                if dt_pt <= FAR_IMPOSTOR_MAX_D_M and s_cur > 6.0:
+                    sxy_pt, _ = foreshorten_scales(dt_pt)
+                    h_loc = float(ht[idx] * (1.0 - frac) + ht[idx + 1] * frac)
+                    back = (2.0 + 4.0 * _hfloat(ek, "em_b")) * sxy_pt
+                    te, tn = float(pt[0] - nrm[0] * back), float(pt[1] - nrm[1] * back)
+                    th = h_loc * (FAR_EMERGENT_H[0] + (FAR_EMERGENT_H[1] - FAR_EMERGENT_H[0]) * _hfloat(ek, "em_h"))
+                    sec.add_tree_impostor1(te, tn, elev.z_at_eff(te, tn), th, _hpick(ek, list(tall_pool), "em_sp"),
+                                           yaw=_hfloat(ek, "em_y") * math.pi, half=half)
+                s_cur += FAR_EMERGENT_STEP_M[0] + (FAR_EMERGENT_STEP_M[1] - FAR_EMERGENT_STEP_M[0]) * _hfloat(ek, "em_st")
+            # ADR 0334 r4: an open run end steps down in trees past the curtain (the outline turns away there)
+            if np.hypot(*(P[0] - P[-1])) > 2.0:
+                for end, (i_a, i_b) in (("a", (1, 0)), ("b", (k - 2, k - 1))):
+                    tg = P[i_b] - P[i_a]
+                    tg = tg / max(float(np.hypot(tg[0], tg[1])), 1e-6)
+                    dt_e = float(d_true[i_b])
+                    if dt_e > FAR_IMPOSTOR_MAX_D_M:
+                        continue
+                    sxy_e, _ = foreshorten_scales(dt_e)
+                    h_end = float(np.median(ht))
+                    for q, (fwd, hf_) in enumerate(((3.0, 0.72), (8.5, 0.52), (14.0, 0.34))):
+                        ek = f"{P[i_b, 0]:.0f},{P[i_b, 1]:.0f}:{end}{q}"
+                        if _hfloat(ek, "end_keep") > 0.85:
+                            continue
+                        f_ = (fwd + 3.0 * _hfloat(ek, "end_f")) * sxy_e
+                        lat = (2.0 * _hfloat(ek, "end_l") - 1.0) * 4.0 * sxy_e
+                        te = float(P[i_b, 0] + tg[0] * f_ - tg[1] * lat)
+                        tn = float(P[i_b, 1] + tg[1] * f_ + tg[0] * lat)
+                        if outside_dist(te, tn, half)[4] < 10.0:
+                            continue
+                        th = max(h_end * hf_ * (0.85 + 0.3 * _hfloat(ek, "end_h")), 3.0)
+                        sec.add_tree_impostor1(te, tn, elev.z_at_eff(te, tn), th, _hpick(ek, list(tall_pool), "end_sp"),
+                                               yaw=_hfloat(ek, "end_y") * math.pi, half=half)
 
     for a, b in zip(ext[:-1], ext[1:]):
         L = float(np.hypot(b[0] - a[0], b[1] - a[1]))

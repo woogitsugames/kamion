@@ -36,7 +36,8 @@ def test_warp_constants_match_the_shader():
     assert f"KFBand(rc + 0.375, {FC.MAIZE_ROW_M}, 0.30, fpr)" in HLSL   # the card rows stand on the shader's rows
 
 
-def test_layout_warp_bows_the_edges_by_metres_and_inverts():
+def test_layout_warp_bows_the_edges_by_metres_and_inverts(monkeypatch):
+    monkeypatch.setattr(VG, "FIELD_WARP_FAR", ())                  # the r3 octaves (r4 far octave: test_fields_r4_0334)
     rng = np.random.default_rng(5)
     P = rng.uniform(0, 6000, (20000, 2)) + np.array([758000.0, 609000.0])
     dx, dy = VG.field_warp(P[:, 0], P[:, 1])

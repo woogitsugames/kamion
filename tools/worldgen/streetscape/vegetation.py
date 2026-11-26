@@ -1358,13 +1358,15 @@ def field_wobble(x, y):
 # ADR 0334 r3 (fields3-s24): KF_WARP_* - the layout is looked up at a warped position (cell m, amplitude m peak-to-peak
 # per axis, salts of the E and N component), so field edges bow by metres over 50-250 m
 FIELD_WARP = ((230.0, 10.0, 1011, 1013), (53.0, 3.0, 1015, 1017))
+# ADR 0334 r4 (fields4-s24): KF_WARP_X_M / KF_WARP_AX - a wide octave, so a block border 300-1000 m out is no ruled line
+FIELD_WARP_FAR = ((610.0, 28.0, 1061, 1063),)
 
 
 def field_warp(x, y):
     """(dE, dN) metres added to an EPSG:2180 position before the layout lookup (the shader's `lw - local`)."""
     x, y = np.asarray(x, np.float64), np.asarray(y, np.float64)
-    dx = sum((_kf_noise(x, y, s, sa) - 0.5) * a for s, a, sa, _ in FIELD_WARP)
-    dy = sum((_kf_noise(x, y, s, sb) - 0.5) * a for s, a, _, sb in FIELD_WARP)
+    dx = sum((_kf_noise(x, y, s, sa) - 0.5) * a for s, a, sa, _ in FIELD_WARP + FIELD_WARP_FAR)
+    dy = sum((_kf_noise(x, y, s, sb) - 0.5) * a for s, a, _, sb in FIELD_WARP + FIELD_WARP_FAR)
     return dx, dy
 
 
