@@ -66,3 +66,7 @@
 - W toku: przebudowa C (`pwsh -File artifacts/regen-wave-11-s24/redo-one.ps1 -Tile bialystok-industrial-c -Lane 20`), VQA High clear (`pwsh -File artifacts/regen-wave-11-s24/vqa.ps1`) -> C:\Users\matma\Documents\Claude\kamion\artifacts\regen-wave-11-s24\vqa\.
 - Następny krok: po buildzie C -> pytest 5 testów + `tests/gis -k "budget or typology or world_v31 or hero_bridge or ring_0231 or trees_0347 or far_field or seam"`, route_links/tile_graph/katalog, seams, route_obstacles; commit + push.
 - 2026-11-26 09:40: GOTOWE. C przebudowane: stretch_04 High 2 002 342 -> 1 973 898 (margines 1,3 %). route_links/tile_graph/katalog(--check) exit 0 bez zmian w plikach, seams exit 0, route_obstacles colliders 0, pytest 5 testów: 5 passed, tests/gis -k "...": 485 passed / 3 skipped. VQA High clear: C:\Users\matma\Documents\Claude\kamion\artifacts\regen-wave-11-s24\vqa\ (knyszyn-w, dw671-tykocin-03 z widokiem z kabiny, dk65-07, tykocin). Nie scalone do main.
+
+## props-fix-s24 (agent-a60f5c7ffe98fe7c7) — raport krytyka wave 11 pkt 7/8/9
+- [krok 1] (b) typologia budynkow gospodarczych: `buildings_mesh.py` regula `rural_outbuildings` (opt-in `facade_rules`), dach z LoD2, sciany deski/cegla/blok, okna `base`, bez rynien; overrides dw671-tykocin-03 + dk65-07; test `tests/gis/test_rural_outbuildings_0351.py` (6 zielonych).
+- NASTEPNY KROK: (a) wiata wiejska + szklo (props.py/materials.py/furniture.py), (c) diagnoza skarpy; potem build_world obu kafli + import Win64 + visual-qa -> artifacts/props-fix-s24/

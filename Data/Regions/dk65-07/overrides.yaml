@@ -82,3 +82,17 @@ overrides:
       - {osm_way: 1511762688, class: unclassified, edited: '2026-05-10', half_width_m: 7.0, line_epsg2180: [[766748.0, 605262.5], [766739.0, 605283.4], [766699.4, 605359.9], [766676.9, 605399.5], [766642.6, 605456.0]]}
       - {osm_way: 1511762697, class: tertiary, edited: '2026-05-10', half_width_m: 7.0, line_epsg2180: [[766748.0, 604907.0], [766738.4, 604909.0], [766714.5, 604917.7], [766699.0, 604929.1], [766686.0, 604940.0], [766672.4, 604954.0], [766660.9, 604973.4], [766636.4, 605023.8], [766622.9, 605041.5], [766613.8, 605051.0], [766599.6, 605060.8]]}
   # END construction_site
+  # ADR 0351 (props-fix-s24, critic s24 wave 11 pkt 7 + 8): farm outbuildings get the roof of the LoD2 model, boarding /
+  # brick / block walls, windows and a plinth (were flat white boxes), and the bus stops of the village roads get a
+  # steel rural shelter with an opaque back wall (the glass-only BKM shelter read as a red outline from the road).
+  # Opt-in per region, so the Bialystok tiles stay bit-identical (ADR 0238).
+  - id: rural-outbuildings-shelters-0351
+    kind: facade_rules
+    rural_outbuildings: true
+    rural_shelters: true
+    reason: >-
+      Critic s24 wave 11 (dk65-07 drive-kozince x 1400-1610, dk65-goniadzka x 1265-1625): BDOT10k "budynek gospodarczy"
+      rendered as flat-roofed plaster boxes with no windows although LoD2 gives a gable roof; bus stop on the old DK65
+      rendered as a red frame with no infill. WORKING_VALUE palette and dimensions (no survey of the farm yards).
+    confidence: medium
+    verify: visual-qa High clear on drive_kozince, route_s0433 (dk65-07), route_s0157 (dw671-tykocin-03)
