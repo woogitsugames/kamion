@@ -77,7 +77,7 @@ BAULK_CROSS_SHARE = 0.30
 # primitive with the roadside sward (same layer, same material), so the cost is one draw per chunk that had no `banks`
 # primitive before. A chunk is given one only for at least CHUNK_MIN_TRIS triangles of cards (a wall of maize, a run
 # of baulks) - never for a corner of a strip that reaches into it.
-CHUNK_MIN_TRIS = 4000
+CHUNK_MIN_TRIS = 5600              # r4: 4000 -> 5600 (margin cards +40 %: the same chunks earn a primitive as in r3b)
 ARABLE_B = 0.985                 # terrain COLOR_0.b at / above this = inside an arable field (flag 1.00)
 
 
