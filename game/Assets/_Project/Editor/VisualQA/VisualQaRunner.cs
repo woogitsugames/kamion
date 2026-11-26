@@ -143,7 +143,7 @@ namespace Game.Editor.VisualQA
             CabViewQa.ApplyTruckPose(EditorTools.Arg("-qaTruckPose", null));
             if (!string.IsNullOrEmpty(gate3Json))
             {
-                Game.Gameplay.Gate3Cameras.CreateAll(UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>(), null, File.ReadAllText(gate3Json));
+                Game.Gameplay.Gate3Cameras.CreateAll(WorldNeighbourQa.StartRoot(), null, File.ReadAllText(gate3Json));
             }
             var cams = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
                 .Where(c => filter == null || filter.Any(f => Game.Gameplay.Gate3Cameras.Norm(f) == Game.Gameplay.Gate3Cameras.Norm(c.id)))
