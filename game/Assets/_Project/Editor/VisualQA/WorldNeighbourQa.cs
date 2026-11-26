@@ -46,9 +46,15 @@ namespace Game.Editor.VisualQA
             if (auto)
             {
                 var closed = ClosedSides(start, graph, index);
-                ids = EdgeClosureRules.QaNeighbourIds(graph, index, closed)
+                // Camera positions in absolute EPSG:2180 (the start tile sits at the scene origin: no rebase in QA).
+                var tileData = graph.Tiles[index];
+                var cams = UnityEngine.Object.FindObjectsByType<Game.Rendering.ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                var camE = cams.Select(c => tileData.anchorX + c.transform.position.x).ToArray();
+                var camN = cams.Select(c => tileData.anchorY + c.transform.position.z).ToArray();
+                float radius = new StreamingSettings().BaseLoadRadiusM;
+                ids = EdgeClosureRules.QaNeighbourIds(graph, index, closed, camE, camN, radius)
                     .Where(id => Imported(id, content, warn: true)).ToArray();
-                Debug.Log($"[VISUALQA] neighbours auto: {start.regionId} closes roads on {closed}; loading [{string.Join(",", ids)}]");
+                Debug.Log($"[VISUALQA] neighbours auto: {start.regionId} closes roads on {closed}, {cams.Length} cameras, load radius {radius:F0} m; loading [{string.Join(",", ids)}]");
             }
             else ids = requested.Split(',').Select(s => s.Trim()).Where(s => s.Length > 0).ToArray();
             if (ids.Length == 0) return;
