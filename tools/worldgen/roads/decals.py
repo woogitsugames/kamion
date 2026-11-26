@@ -69,6 +69,17 @@ LONGITUDINAL_PER_50M = 1.0          # centre-joint / edge / wheel-path cracks st
 PATCH_DENSITY = 1.8                 # r2: multiplier of the ADR 0194 patch rates (r1: 147 patches on 9.9 km, none in frame)
 SEAL_CLASS_RATE = {"A": 0.25, "S": 0.25, "GP": 0.6, "G": 1.0, "Z": 1.0, "L": 1.1, "D": 1.1}
 SEAL_SURFACES = ("road_asphalt",)   # worn asphalt only: not the resurfaced share, setts, concrete, gravel
+# road-patches-s24 (critic wave 11 pkt 4: "szew osi + czarny falisty pas", dk65-goniadzka): the centre construction joint
+# is the cold joint between the two paver passes - it runs dead straight along the crown (the paver screed follows the
+# string line), and the hand-poured overband over it is narrower than a crack seal and worn in stretches. The old band
+# meandered +-5 cm on 5-9 m waves (the same meander as a thermal crack), 12-20 cm wide and solid black (strength 2.6):
+# next to the straight dashes of the centre line it read as the line itself jumping sideways. WORKING_VALUE.
+CENTRE_JOINT_AMP_M = 0.010          # residual waviness of the joint (paver screed / hand pour), was 0.05
+CENTRE_JOINT_W_M = (0.07, 0.11)     # geometry width; ~60 % of it dark in the soft strip profile (4-7 cm core)
+CENTRE_JOINT_STRENGTH = 1.9         # < 2.5: broken up by the macro mottling (worn overband), not a solid band
+# Sealed cracks never run across a repair patch (the patch was cut out and re-laid; the crack seal is older): points of a
+# crack polyline inside a patch footprint (+ this margin) are dropped and the polyline split there.
+SEAL_PATCH_MARGIN_M = 0.15
 
 
 def hf(*key):
@@ -234,7 +245,33 @@ def seal_band(buf, c, s, lat, width, strength, src):
     return len(T)
 
 
-def seal_cracks(buf, net, cnt):
+def _runs_outside(ss, lat, boxes, margin=SEAL_PATCH_MARGIN_M):
+    """Index ranges [a, b) of the chain-frame polyline (ss, lat) that lie outside every patch footprint
+    (s_c, lat_c, length, width, rot) of the chain; runs shorter than 2 points are dropped (road-patches-s24)."""
+    n = len(ss)
+    if not boxes:
+        return [(0, n)]
+    inside = np.zeros(n, bool)
+    for sc, lc, L, W, rot in boxes:
+        ds, dl = ss - sc, lat - lc
+        cr, sr = math.cos(rot), math.sin(rot)
+        U, V = ds * cr + dl * sr, -ds * sr + dl * cr
+        inside |= (np.abs(U) < 0.5 * L + margin) & (np.abs(V) < 0.5 * W + margin)
+    if not inside.any():
+        return [(0, n)]
+    runs, a = [], None
+    for k in range(n + 1):
+        out = k < n and not inside[k]
+        if out and a is None:
+            a = k
+        elif not out and a is not None:
+            if k - a >= 2:
+                runs.append((a, k))
+            a = None
+    return runs
+
+
+def seal_cracks(buf, net, cnt, patches=None):
     """ADR 0323: sealed (and a few open) cracks of worn asphalt carriageways, by rule and hashed per 50 m window:
     transverse thermal cracks across the carriageway or one half of it, longitudinal cracks along the centre joint of
     two-way roads, 0.3-0.7 m inside the carriageway edge and along a wheel path. Rates scale with the road class and
@@ -251,6 +288,7 @@ def seal_cracks(buf, net, cnt):
         if S.surface_material(c, sec_mid) not in SEAL_SURFACES:
             continue
         cls_rate = SEAL_CLASS_RATE.get(sec_mid.cls, 1.0)
+        boxes = (patches or {}).get(c.id, [])
         for w0 in np.arange(s0, s1, 50.0):
             w1 = min(w0 + 50.0, s1)
             key = (c.id, round(float(w0), 1), "seal")
@@ -277,7 +315,9 @@ def seal_cracks(buf, net, cnt):
                 ss = np.clip(ss, s0 - 1.0, s1 + 1.0)
                 sealed = hf(*key, i, "sealed") < 0.7
                 wd = SEAL_W_M[0] + hf(*key, i, "w") * (SEAL_W_M[1] - SEAL_W_M[0]) if sealed else HAIRLINE_W_M
-                tris += seal_band(buf, c, ss, lat, wd, 2.6 if sealed else 1.3, f"seal:t:{c.id}:{w0:.0f}:{i}")
+                for r, (a, b) in enumerate(_runs_outside(ss, lat, boxes)):
+                    tris += seal_band(buf, c, ss[a:b], lat[a:b], wd, 2.6 if sealed else 1.3,
+                                      f"seal:t:{c.id}:{w0:.0f}:{i}" + (f":{r}" if r else ""))
                 n_t += 1
             # ---- longitudinal
             for i in range(int(math.floor(LONGITUDINAL_PER_50M * rate + hf(*key, "nl")))):
@@ -295,9 +335,10 @@ def seal_cracks(buf, net, cnt):
                     continue
                 hw = np.asarray(c.hw_at(ss), float)
                 kind = hf(*key, i, "lk")
-                if kind < 0.4 and not sec.oneway:             # centre construction joint
+                centre = kind < 0.4 and not sec.oneway
+                if centre:                                    # centre construction joint (straight, road-patches-s24)
                     base = np.zeros(n)
-                    amp = 0.05
+                    amp = CENTRE_JOINT_AMP_M
                 elif kind < 0.8:                              # edge crack, 0.3-0.7 m inside the carriageway edge
                     sgn = 1.0 if hf(*key, i, "side") < 0.5 else -1.0
                     base = sgn * (hw - (0.3 + 0.4 * hf(*key, i, "eo")))
@@ -307,8 +348,14 @@ def seal_cracks(buf, net, cnt):
                     amp = 0.10
                 lat = np.clip(base + _meander(n, 0.6, key + (i, "l"), amp), -hw + 0.06, hw - 0.06)
                 sealed = hf(*key, i, "lsealed") < 0.65
-                wd = SEAL_W_M[0] + hf(*key, i, "lw") * (SEAL_W_M[1] - SEAL_W_M[0]) if sealed else HAIRLINE_W_M
-                tris += seal_band(buf, c, ss, lat, wd, 2.6 if sealed else 1.3, f"seal:l:{c.id}:{w0:.0f}:{i}")
+                if centre and sealed:
+                    wd = CENTRE_JOINT_W_M[0] + hf(*key, i, "lw") * (CENTRE_JOINT_W_M[1] - CENTRE_JOINT_W_M[0])
+                    st = CENTRE_JOINT_STRENGTH
+                else:
+                    wd = SEAL_W_M[0] + hf(*key, i, "lw") * (SEAL_W_M[1] - SEAL_W_M[0]) if sealed else HAIRLINE_W_M
+                    st = 2.6 if sealed else 1.3
+                for r, (a, b) in enumerate(_runs_outside(ss, lat, boxes)):
+                    tris += seal_band(buf, c, ss[a:b], lat[a:b], wd, st, f"seal:l:{c.id}:{w0:.0f}:{i}" + (f":{r}" if r else ""))
                 n_l += 1
     cnt["seal_cracks"] = {"transverse": n_t, "longitudinal": n_l, "tris": int(tris)}
 
@@ -516,6 +563,7 @@ def wheel_path_lat(c, sec, hw, key):
 
 def build(buf, net, juncs, report):
     cnt = {"patches": 0, "oil": 0}
+    footprints = {}                      # road-patches-s24: chain id -> [(s, lat, length, width, rot)] for seal_cracks
     gullies(buf, net, cnt)
     secs = net.sec_list
     for c in net.chains:
@@ -607,6 +655,7 @@ def build(buf, net, juncs, report):
                 placed.append((sc, lat, length, width))
                 if pk == PATCH_MILLED:
                     rot *= 0.35                  # cuts are made across the lane: nearly square to the axis
+                footprints.setdefault(c.id, []).append((float(sc), float(lat), float(length), float(width), float(rot)))
                 patch(buf, c, sc, lat, length, width, rot, patch_age(hf(*key, i, "age")),
                       f"patch:{c.id}:{w0:.0f}:{i}", kind=pk)
                 cnt["patches"] += 1
@@ -654,7 +703,7 @@ def build(buf, net, juncs, report):
                     stain(buf, P0, z_of, 0.25 + hf(j.id, ai, li, m, "r") * 0.35, (j.id, ai, li, m),
                           f"oil:{j.id}:{ai}:{li}:{m}")
                     cnt["oil"] += 1
-    seal_cracks(buf, net, cnt)
+    seal_cracks(buf, net, cnt, footprints)
     compact_wheel_paths(buf, net, juncs, cnt)
     report["decals"] = cnt
     return cnt
