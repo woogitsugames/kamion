@@ -217,7 +217,8 @@ def test_authored_files_present_and_consistent(rid):
     built = (d / "region.yaml").exists()
     # Region-wide rule overrides (e.g. ADR 0196/0336 facade_rules, ADR 0185 building_rules, ADR 0216 lamp_policy)
     # apply to the whole tile via explicit rule flags instead of per-feature `target` + `set`.
-    region_rule_kinds = {"facade_rules", "building_rules", "lamp_policy"}
+    # ADR 0349: `pavement_rules` (kerb drops / tactile paving / driveway colour, opt-in per tile) is region-wide too.
+    region_rule_kinds = {"facade_rules", "building_rules", "lamp_policy", "pavement_rules"}
     meta_keys = {"id", "kind", "reason", "confidence", "verify", "sources", "status_note"}
     for o in ov:
         if o.get("kind") in region_rule_kinds:
