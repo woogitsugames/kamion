@@ -1991,7 +1991,7 @@
    "lanes": [
     2
    ],
-   "length_m": 23.7,
+   "length_m": 23.6,
    "max_grade": 0.0242,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.014,
@@ -2696,7 +2696,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 302876,
+  "footprint_nodes": 302869,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -2814,7 +2814,32 @@
    "in_chain_ramps": 0,
    "seam_sides": 0
   },
-  "seam_tapers": [],
+  "seam_tapers": [
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w1399803717:304399045-12931448128",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "dk65-06",
+    "step_m": 0.25,
+    "width_other": 7.1,
+    "width_own": 7.1,
+    "width_seam": 7.1
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w249298671:2559220682-2559220668",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "dk65-04",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 61,
    "parts": 19,
@@ -2834,7 +2859,7 @@
   },
   "verge_strips": {
    "chunks": 47,
-   "tris": 43487
+   "tris": 43447
   },
   "walled_ramps": []
  }

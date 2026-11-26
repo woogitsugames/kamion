@@ -1220,7 +1220,7 @@
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 109673,
+  "footprint_nodes": 109672,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1373,7 +1373,20 @@
    "in_chain_ramps": 2,
    "seam_sides": 0
   },
-  "seam_tapers": [],
+  "seam_tapers": [
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w1448265994:10712325630-10712325633",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "dk65-05",
+    "step_m": 0.25,
+    "width_other": 7.1,
+    "width_own": 7.1,
+    "width_seam": 7.1
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 151,
    "parts": 59,
