@@ -109,7 +109,7 @@ def test_seal_bands_lie_on_the_carriageway_under_the_paint():
         lift = p.V[:, 2] - z_surf
         assert (lift > DC.LIFT_PATCH - 2e-3).all() and (lift < S.MARKING_LIFT).all(), p.src
         assert (p.UV1[:, 0] < 0).all()                                    # negative length = short end fades
-        assert set(np.round(p.UV1[:, 1], 2)) <= {2.6, 1.3}
+        assert set(np.round(p.UV1[:, 1], 2)) <= {2.6, 1.3, DC.CENTRE_JOINT_STRENGTH}
         assert set(np.round(p.UV[:, 1], 6)) == {0.0, 1.0}
         w = np.hypot(*(p.V[: len(p.V) // 2, :2] - p.V[len(p.V) // 2:, :2]).T)
         assert w.max() <= DC.SEAL_W_M[1] + 1e-6 and w.min() >= DC.HAIRLINE_W_M - 1e-6
@@ -120,11 +120,46 @@ def test_cracks_meander():
     c, _ = _chain(length=3000.0)
     buf, _ = _run([c])
     tr = [p for p in buf.parts if p.src.startswith("seal:t:")]
-    lo = [p for p in buf.parts if p.src.startswith("seal:l:")]
+    lo = [p for p in buf.parts if p.src.startswith("seal:l:")
+          and abs(float(np.mean(p.V[:, 1]))) > 0.1]               # road-patches-s24: the centre joint is straight
     assert tr and lo
     dev_t = [np.ptp(p.V[: len(p.V) // 2, 0]) for p in tr]      # station spread of a transverse crack
     dev_l = [np.ptp(p.V[: len(p.V) // 2, 1]) for p in lo]      # lateral spread of a longitudinal crack
     assert np.median(dev_t) > 0.08 and np.median(dev_l) > 0.05
+
+
+def test_centre_joint_is_straight_and_worn():
+    """road-patches-s24 (critic wave 11 pkt 4): the sealed centre construction joint runs straight along the crown
+    (+-1 cm), narrower than a crack seal and not a solid band - beside the straight dashes the old +-5 cm meander read
+    as the centre line jumping sideways."""
+    c, _ = _chain(length=3000.0)
+    buf, _ = _run([c])
+    cj = [p for p in buf.parts if p.src.startswith("seal:l:") and abs(float(p.UV1[0, 1]) - DC.CENTRE_JOINT_STRENGTH) < 1e-6]
+    assert cj
+    for p in cj:
+        m = len(p.V) // 2
+        axis = 0.5 * (p.V[:m, 1] + p.V[m:, 1])
+        assert np.ptp(axis) <= 2 * DC.CENTRE_JOINT_AMP_M * 1.3 + 1e-6, p.src
+        assert abs(float(np.mean(axis))) < 0.03, p.src
+        w = np.hypot(*(p.V[:m, :2] - p.V[m:, :2]).T)
+        assert w.max() <= DC.CENTRE_JOINT_W_M[1] + 1e-6
+    assert DC.CENTRE_JOINT_STRENGTH < 2.5                                   # broken up by the macro mottling
+
+
+def test_seal_cracks_split_at_patches():
+    """road-patches-s24: a crack seal never runs across a repair patch - the polyline is cut at the patch footprint."""
+    ss = np.linspace(0.0, 20.0, 41)
+    lat = np.zeros_like(ss)
+    assert DC._runs_outside(ss, lat, []) == [(0, 41)]
+    runs = DC._runs_outside(ss, lat, [(10.0, 0.0, 4.0, 2.0, 0.0)])
+    assert len(runs) == 2
+    for a, b in runs:
+        assert (np.abs(ss[a:b] - 10.0) >= 2.0 + DC.SEAL_PATCH_MARGIN_M - 1e-9).all()
+    assert DC._runs_outside(ss, lat, [(10.0, 3.0, 4.0, 2.0, 0.0)]) == [(0, 41)]   # patch beside the crack
+    c, _ = _chain(length=3000.0)
+    buf, _ = _run([c])
+    seals = [p for p in buf.parts if p.mat == DC.SEAL_MAT]
+    assert seals
 
 
 def test_rates_scale_with_class_and_condition(monkeypatch):

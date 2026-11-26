@@ -174,3 +174,31 @@ def test_shader_0335_p2_invariants():
     assert "paintRenewed" in shader and "8.0 * paintRenewed" in shader
     assert "rwDistAtten" in shader and "rwFwx" in shader   # P2b (rut-far): pas koleiny filtrowany szerokością z fwidth zamiast wpMip
     assert "sandTongue" in shader and "sband" in shader
+
+
+def test_crack_seals_do_not_cross_repairs():
+    """road-patches-s24 (critic wave 11, dw671 cab-view-b: a sealed crack ran over a re-laid patch): no vertex of a
+    seal band lies inside a patch footprint (chain along +x: V.xy = station, lateral)."""
+    buf, parts = _patches(length=3000.0)
+    seals = [p for p in buf.parts if p.mat == DC.SEAL_MAT]
+    assert seals and parts
+    def in_tris(P, V, T):
+        a, b, c = V[T[:, 0], :2], V[T[:, 1], :2], V[T[:, 2], :2]
+        hit = np.zeros(len(P), bool)
+        for k in range(len(T)):
+            v0, v1 = b[k] - a[k], c[k] - a[k]
+            d = P - a[k]
+            den = v0[0] * v1[1] - v0[1] * v1[0]
+            u = (d[:, 0] * v1[1] - d[:, 1] * v1[0]) / den
+            v = (v0[0] * d[:, 1] - v0[1] * d[:, 0]) / den
+            hit |= (u > 0) & (v > 0) & (u + v < 1)
+        return hit
+    inside = 0
+    for s in seals:
+        m = len(s.V) // 2
+        axis = 0.5 * (s.V[:m, :2] + s.V[m:, :2])
+        for p in parts:
+            if axis[:, 0].max() < p.V[:, 0].min() or axis[:, 0].min() > p.V[:, 0].max():
+                continue
+            inside += int(in_tris(axis, p.V, p.T).sum())
+    assert inside == 0
