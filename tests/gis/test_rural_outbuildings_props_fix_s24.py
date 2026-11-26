@@ -83,10 +83,14 @@ def test_gable_outbuilding_gets_pitched_roof_windows_and_a_non_plaster_palette()
         roof_mats = [m for m in buf.mats("buildings") if m.startswith("roof_")]
         assert roof_mats, "pitched covering expected"
         assert not any(m == "roof_membrane" for m in buf.mats("buildings"))
-        assert buf.mats("buildings") & {"wood_planks", "wood_planks_graphite", "brick_red", "plaster_grey",
-                                         "plaster_light", "plaster_cream"}
+        # draw-call budget: only materials the houses of the same chunks already use (no wood / brick / sheet / cement roofs)
+        allowed = {"plaster_grey", "plaster_light", "plaster_cream", "plaster_beige", "plinth_dark", "facade_atlas",
+                   "reveal_plaster", "soffit_boards", "hall_flashing", "roof_metal_graphite", "roof_tiles_brown",
+                   "roof_tiles_red"}
+        assert buf.mats("buildings") <= allowed, buf.mats("buildings") - allowed
+        assert buf.mats("buildings") & {"plaster_grey", "plaster_light", "plaster_cream", "plaster_beige"}
         # a blank gable box is ~30 triangles; windows / door reveals, roof planes and plinth add several times that
-        assert buf.tris("buildings") > 120
+        assert buf.tris("buildings") > 60
 
 
 def test_flat_lod2_outbuilding_stays_flat():

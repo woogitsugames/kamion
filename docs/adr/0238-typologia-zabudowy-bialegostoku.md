@@ -186,14 +186,14 @@ płaski dach”). W danych: **157** takich obiektów w `dk65-07` (76 z dachem sp
 Dla klasy `shed` o powierzchni ≥ 18 m² (z wyjątkiem stacji transformatorowych / wiat śmietnikowych — płaskie pudełka):
 1. **Dach** z modelu LoD2 przez `roofs.plan` (1030 → dwuspadowy, 1040/1070 → kopertowy, 1010 → pulpitowy, `1000` → zostaje
    płaski); brak LoD2 → dwuspadowy ≥ 36 m², inaczej pulpitowy. Pochylenie i okap z pomiaru LoD2/LoD1 (jak domy).
-2. **Pokrycie** (WORKING_VALUE): blacha grafitowa 26 %, blacha / eternit szary `roof_sheet_grey` 26 %, dachówka brązowa 18 %,
-   czerwona 16 %, cementowa `roof_cement_grey` 14 % — wyłącznie istniejące zestawy PBR; bez rynien i rur (zagroda).
-3. **Ściana** (WORKING_VALUE): deski `wood_planks` 22 % i `wood_planks_graphite` 12 % (generator ścian drewnianych ADR 0295:
-   listwy, deska narożna, deska cokołowa), cegła `brick_red` 26 %, tynk szary 18 % / jasny 10 % / kremowy 12 %; cokół
-   `plinth_dark` 0,3 m.
-4. **Okna i drzwi:** małe okna z kratą (komórka `base` atlasu fasad, 0,80 × 0,50 m, parapet 1,50 m), 1 na ścianę < 7,5 m i 2 na
-   dłuższej, gdy ściana ≥ 3,6 m i okno zmieści się pod okapem (prawdopodobieństwo 78 % ściana frontowa / 62 % pozostałe);
-   wrota garażowe ≤ 2 (było ≤ 4), drzwi personelu. Szczyt bez okna poddasza.
+2. **Pokrycie** (WORKING_VALUE): blacha grafitowa 34 %, dachówka brązowa 33 %, czerwona 33 % - trzy pokrycia `ROOFS_PITCHED`, które mają
+   domy tych samych chunków; bez rynien i rur (zagroda).
+3. **Ściana** (WORKING_VALUE): tylko tynki `plaster_grey/light/cream/beige` (34 / 22 / 22 / 22 %) **ciemniejsze od domów** przez `COLOR_0`
+   (`rural_shed_shades`, luminancja 0,58-0,86 wobec 0,92-1,08 domów, ciepły / chłodny odchył, osobny odcień szczytu i boków; `_FACADE_TINT`,
+   0 draw calli); cokół `plinth_dark` 0,3 m. Deski i cegła (pierwsza wersja) wycofane: własne materiały = +20 / +58 draw calli na kamerę.
+4. **Okna i drzwi:** okna z kratą jako **płaska komórka atlasu** `base` (0,80 × 0,50 m, parapet 1,50 m; `wall_with_openings` przy
+   `depth = 0` rysuje 2 trójkąty zamiast ~18 ościeży i parapetu): 1 / 2 / 3 na ścianę < 5,5 / < 9,5 / dłuższą (prawdopodobieństwo 92 % ściana
+   frontowa, 80 % pozostałe); wrota garażowe do 2 na ścianie frontowej (85 %, było 60 %), drzwi personelu. Szczyt bez okna poddasza.
 5. Kod: `buildings_mesh.RURAL_SHED_*`, `rural_shed_pick`, `variant["rural"]` w `facade_openings`, gałąź `rural_shed` w
    `build()` (dach, ściana, `wooden`); testy `tests/gis/test_rural_outbuildings_props_fix_s24.py`.
 **Wartości `WORKING_VALUE`** (udziały materiałów, wymiary okna) — bez inwentaryzacji zagród; do oceny wzrokowej `visual-critic`.

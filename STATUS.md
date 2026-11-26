@@ -74,3 +74,4 @@
 - NASTEPNY KROK: po `build-status.txt` (build_world obu kafli) -> `pwsh -File artifacts/props-fix-s24/vqa.ps1` (import Win64 + visual-qa High) -> zestawienia przed|po, visual-critic, ADR dopiski, raport.
 - [krok 3 koniec] (a) PASS warunkowy, (b) PASS, (c) NIEROZWIAZANE (3 hipotezy odrzucone renderem, ADR 0311 dopisek). Dowody: artifacts/props-fix-s24/{sbs,after,after2}. Draw calle +20 (dk65-07) / +50..58 (dw671-03) na kamere.
 - NASTEPNY KROK: debug-render (kolor per primitive) ujecia tykocin route_s0160; poprawki krytyka (b): tynk, wrota, 2-3 okna, mniej materialow (budzet draw calli).
+- [krok 4] zagrody w istniejacych materialach: plaster + COLOR_0 (ciemniejszy), 3 dachy ROOFS_PITCHED, okna plaskie z atlasu (depth 0), 69 tri/zagrode (+11,6 % buildings dk65-07 w harnessie). SMUGA NA SKARPIE (pkt c) OTWARTA: 3 hipotezy odrzucone renderem (ADR 0311 dopisek), nastepny krok = debug-render kolor per primitive tykocin route_s0160.
