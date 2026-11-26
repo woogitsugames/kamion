@@ -107,6 +107,7 @@ class _Ground:
         self.hf, self.zc, self.dist, self.blocked = hf, zc, dist_road, blocked
         self.H, self.W = self.b.shape
         self._dar = None
+        self.off = None          # r4c: cells of chunks without a cards primitive (a stop of the stand)
 
     @property
     def dar(self):
@@ -117,6 +118,8 @@ class _Ground:
             ok = self.b >= ARABLE_B
             if self.blocked is not None:
                 ok &= ~self.blocked
+            if self.off is not None:
+                ok &= ~self.off
             self._dar = ndimage.distance_transform_edt(ok).astype(np.float32)
         return self._dar
 
@@ -491,10 +494,43 @@ def build(buf, col, hf, zc, origin, dist_road, blocked, report=None, enabled=Tru
     yard cell, blocked: bool grid (roads, buildings + margin) or None. Returns the triangle count."""
     rep = {}
     ntri = 0
+    keep = None
     if enabled and col is not None and (np.asarray(col)[..., 2] >= ARABLE_B).any():
         g = _Ground(col, hf, zc, dist_road, blocked)
         parts, _, _ = _maize(g, origin, rep)
         parts += _baulks(g, origin, rep)
+        if chunk_fn is not None:
+            # r4c (render review r4a, knyszyn-w f3_maize_chase): a chunk without its own primitive lost its cards along
+            # the chunk border - a ruled vertical cut through the stand. The chunk rule is decided on this first pass;
+            # the dropped chunks then count as the end of the arable ground (_Ground.dar) and the stand is generated
+            # again, so it ends there with the ragged margin. The keep set stays the one of the first pass.
+            _add_parts(buf, parts, layer)
+            keep = prune_sparse_chunks(buf, chunk_fn, layer, dry=True)
+            buf.parts = [q for q in buf.parts if not q.src.startswith("field_crops:")]
+            n = g.b.shape
+            xs = g.hf.x0 + np.arange(n[1], dtype=np.float64)
+            ys = g.hf.y1 - np.arange(n[0], dtype=np.float64)
+            ci, cj = chunk_fn(*np.meshgrid(xs, ys))
+            kk = np.asarray(ci).astype(np.int64) * 4096 + np.asarray(cj)
+            g.off = ~np.isin(kk, list(keep))
+            g._dar = None
+            rep2 = {}
+            parts, _, _ = _maize(g, origin, rep2)
+            parts += _baulks(g, origin, rep2)
+            rep.update(rep2)
+        ntri = _add_parts(buf, parts, layer)
+    if chunk_fn is not None:
+        rep["chunks"] = prune_sparse_chunks(buf, chunk_fn, layer, keep=keep)
+        ntri = int(sum(len(q.T) for q in buf.parts if q.layer == layer and q.mat == MAT and q.src.startswith("field_crops:")))
+    rep["triangles"] = ntri
+    if report is not None:
+        report["field_crops"] = rep
+    return ntri
+
+
+def _add_parts(buf, parts, layer):
+    ntri = 0
+    if True:
         for tag in ("maize", "maize_cross", "maize_edge", "baulk"):
             sel = [p for p in parts if p[4] == tag]
             if not sel:
@@ -510,23 +546,18 @@ def build(buf, col, hf, zc, origin, dist_road, blocked, report=None, enabled=Tru
             T = np.concatenate(T)
             buf.add(layer, MAT, np.concatenate(V), np.concatenate(UV), T, src="field_crops:" + tag, COL=np.concatenate(C))
             ntri += len(T)
-    if chunk_fn is not None:
-        rep["chunks"] = prune_sparse_chunks(buf, chunk_fn, layer)
-        ntri = int(sum(len(q.T) for q in buf.parts if q.layer == layer and q.mat == MAT and q.src.startswith("field_crops:")))
-    rep["triangles"] = ntri
-    if report is not None:
-        report["field_crops"] = rep
     return ntri
 
 
 SWARD_MIN_TRIS = 60              # roadside sward alone earns the chunk its primitive from this many triangles
 
 
-def prune_sparse_chunks(buf, chunk_fn, layer=LAYER):
+def prune_sparse_chunks(buf, chunk_fn, layer=LAYER, keep=None, dry=False):
     """The draw-call rule (CHUNK_MIN_TRIS): the exporter gives every chunk ONE `banks` primitive of material
     `verge_tufts`, split by triangle centroid. A chunk keeps it if its roadside sward has >= SWARD_MIN_TRIS triangles
     or all its cards together >= CHUNK_MIN_TRIS; otherwise its triangles are removed - with the whole card (4
-    vertices), so no half card is left on the other side of a chunk border. Returns the tally."""
+    vertices), so no half card is left on the other side of a chunk border. Returns the tally. r4c: dry -> only the
+    keep set (chunk keys); keep -> apply that set instead of deciding again."""
     parts = [q for q in buf.parts if q.layer == layer and q.mat == MAT and len(q.T)]
     keys, total, sward = [], {}, {}
     for q in parts:
@@ -540,7 +571,11 @@ def prune_sparse_chunks(buf, chunk_fn, layer=LAYER):
             total[kk] = total.get(kk, 0) + c
             if q.src.startswith("verge_flora:"):
                 sward[kk] = sward.get(kk, 0) + c
-    keep = {k for k, c in total.items() if sward.get(k, 0) >= SWARD_MIN_TRIS or c >= CHUNK_MIN_TRIS}
+    if keep is None:
+        keep = {k for k, c in total.items() if sward.get(k, 0) >= SWARD_MIN_TRIS or c >= CHUNK_MIN_TRIS}
+    if dry:
+        return keep
+    keep = keep & set(total)
     dropped = 0
     for q, k in zip(parts, keys):
         T = np.asarray(q.T)

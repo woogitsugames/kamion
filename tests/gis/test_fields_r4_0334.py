@@ -135,3 +135,38 @@ def test_far_forest_edge_is_broken():
     h = FF._crown_height_wave(e, n, 19.5, mix="mixed")
     step = np.abs(np.diff(h))
     assert h.std() / h.mean() > 0.12 and np.percentile(step, 99) > 3.0 * np.median(step)   # steps, not only a wave
+
+
+def test_a_dropped_chunk_ends_the_stand_with_its_margin_not_a_ruled_cut(monkeypatch):
+    """r4c: the chunk rule is decided first; the stand next to a chunk without a cards primitive ends in edge cards."""
+    o = R3._maize_origin()
+    _, hf, col, dist = R3._crop_world()
+    cell = 250.0
+
+    def chunk_fn(e, n):
+        return (np.clip(np.floor((np.asarray(e) + 250.0) / cell), 0, 1).astype(int),
+                np.clip(np.floor((250.0 - np.asarray(n)) / cell), 0, 1).astype(int))
+    tot = {}
+    b0 = MeshBuf()
+    FC.build(b0, col, hf, np.zeros(hf.z.shape), o, dist, None, {})
+    for p in b0.parts:
+        cen = p.V[np.asarray(p.T)].mean(1)
+        for k in zip(*(a.tolist() for a in chunk_fn(cen[:, 0], cen[:, 1]))):
+            tot[k] = tot.get(k, 0) + 1
+    monkeypatch.setattr(FC, "CHUNK_MIN_TRIS", int(np.median(list(tot.values()))) + 1)   # drop some, keep some
+    buf, rep = MeshBuf(), {}
+    FC.build(buf, col, hf, np.zeros(hf.z.shape), o, dist, None, rep, chunk_fn=chunk_fn)
+    assert 0 < rep["field_crops"]["chunks"]["dropped"] and rep["field_crops"]["chunks"]["with_cards"] > 0
+    rows = next(p for p in buf.parts if p.src == "field_crops:maize").V.reshape(-1, 4, 3)[:, :2, :2]
+    ci, cj = chunk_fn(rows[:, 0, 0], rows[:, 0, 1])
+    keep = {tuple(x) for x in zip(ci.tolist(), cj.tolist())}
+    drop = set(tot) - keep
+    assert keep and drop
+    # distance of every full row card to the border of a dropped chunk (the x = 0 / y = 0 lines of this 2 x 2 split)
+    d = np.full(len(rows), np.inf)
+    for (a, b) in keep:
+        if (1 - a, b) in drop:
+            d = np.minimum(d, np.abs(rows[..., 0]).min(1))
+        if (a, 1 - b) in drop:
+            d = np.minimum(d, np.abs(rows[..., 1]).min(1))
+    assert (d > FC.MAIZE_EDGE_M - 0.5).all()                    # no full card runs up to a dropped chunk
