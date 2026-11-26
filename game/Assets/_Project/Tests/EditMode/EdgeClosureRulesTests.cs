@@ -70,6 +70,42 @@ namespace Game.Tests
             Assert.IsTrue(EdgeSides.FarSectorMayShow(TileSide.None, new[] { TileSide.NE }));
         }
 
+        [Test]
+        public void QaNeighbours_OnlyEdgeNeighboursBehindClosedSides()
+        {
+            // dw671-tykocin-03 layout: E and S edge neighbours, NE / SW corners; the route closes N (outer) and S.
+            var graph = TileGraph.FromJson("{\"schema\":\"truck-sim-pl/tile-graph/1\",\"tiles\":[" +
+                "{\"id\":\"t03\",\"neighbors\":[{\"id\":\"t02\",\"side\":\"E\",\"seamM\":2048},{\"id\":\"t04\",\"side\":\"S\",\"seamM\":2048}," +
+                "{\"id\":\"t01\",\"side\":\"NE\",\"seamM\":0},{\"id\":\"t05\",\"side\":\"SW\",\"seamM\":0}]}," +
+                "{\"id\":\"t01\"},{\"id\":\"t02\"},{\"id\":\"t04\"},{\"id\":\"t05\"}]}");
+            int t03 = graph.IndexOf("t03");
+            CollectionAssert.AreEqual(new[] { "t04" }, EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.N | TileSide.S));
+            CollectionAssert.AreEqual(new[] { "t02", "t04" }, EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.S | TileSide.E));
+            CollectionAssert.IsEmpty(EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.W), "outer edge stays closed");
+            CollectionAssert.IsEmpty(EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.None));
+            CollectionAssert.IsEmpty(EdgeClosureRules.QaNeighbourIds(graph, -1, TileSide.S));
+            CollectionAssert.IsEmpty(EdgeClosureRules.QaNeighbourIds(null, 0, TileSide.S));
+        }
+
+        [Test]
+        public void QaNeighbours_CameraWithinLoadRadiusAddsCornerTile()
+        {
+            var graph = TileGraph.FromJson("{\"schema\":\"truck-sim-pl/tile-graph/1\",\"tiles\":[" +
+                "{\"id\":\"t03\",\"xmin\":0,\"ymin\":0,\"xmax\":2048,\"ymax\":2048,\"neighbors\":[" +
+                "{\"id\":\"t02\",\"side\":\"E\",\"seamM\":2048},{\"id\":\"t01\",\"side\":\"NE\",\"seamM\":0}]}," +
+                "{\"id\":\"t02\",\"xmin\":2048,\"ymin\":0,\"xmax\":4096,\"ymax\":2048}," +
+                "{\"id\":\"t01\",\"xmin\":2048,\"ymin\":2048,\"xmax\":4096,\"ymax\":4096}]}");
+            int t03 = graph.IndexOf("t03");
+            // camera 247 m from the corner tile (spawn near the NE corner): loaded; 600 m away: not
+            CollectionAssert.AreEqual(new[] { "t02", "t01" },
+                EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.E, new[] { 1976.0 }, new[] { 1812.0 }, 400.0));
+            CollectionAssert.AreEqual(new[] { "t02" },
+                EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.E, new[] { 1600.0 }, new[] { 1500.0 }, 400.0));
+            CollectionAssert.AreEqual(new[] { "t02", "t01" },
+                EdgeClosureRules.QaNeighbourIds(graph, t03, TileSide.None, new[] { 1976.0 }, new[] { 1812.0 }, 400.0),
+                "a camera near a corner loads both touching tiles (72 m / 247 m) even without closures on the start tile");
+        }
+
         [TestCase(TileState.Unloaded, false)]
         [TestCase(TileState.Loading, false)]
         [TestCase(TileState.Activating, false)]

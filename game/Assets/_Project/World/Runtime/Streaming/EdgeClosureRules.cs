@@ -12,6 +12,40 @@ namespace Game.World.Streaming
             return i >= 0 && graph.Tiles[i].needsNeighbourContext;
         }
 
+        /// <summary>
+        /// Static capture context (visual-qa, world-edge-s24): the edge neighbours of <paramref name="tile"/> on the sides
+        /// where the tile closes at least one road (<paramref name="closedSides"/>). In the game those seams open as soon as
+        /// both tiles are Ready (the neighbour is Ready ~380 m before the seam on PC), so a single-tile render that keeps
+        /// them closed shows a barrier the driver never sees. Sides without a graph neighbour (outer edge of the world)
+        /// stay closed. Order: N, E, S, W, then the camera-radius neighbours in graph order.
+        /// Second rule (the same as <see cref="StreamingPolicy"/>): any graph neighbour (edge or corner) whose rectangle is
+        /// within <paramref name="loadRadiusM"/> of a camera position (absolute EPSG:2180 east / north) is loaded too - the
+        /// game would have it resident with the vehicle there, so its seams with the ring-1 tiles are open as well (a spawn
+        /// near a tile corner otherwise still shows the closure of the corner seam far down the road).
+        /// </summary>
+        public static string[] QaNeighbourIds(TileGraph graph, int tile, TileSide closedSides,
+            double[] camE = null, double[] camN = null, double loadRadiusM = 0.0)
+        {
+            if (graph == null || tile < 0 || tile >= graph.Count) return System.Array.Empty<string>();
+            var ids = new System.Collections.Generic.List<string>(8);
+            foreach (var side in k_EdgeSides)
+            {
+                if ((closedSides & side) == 0) continue;
+                int j = graph.NeighborOn(tile, side);
+                if (j >= 0) ids.Add(graph.Tiles[j].id);
+            }
+            int cams = camE != null && camN != null ? System.Math.Min(camE.Length, camN.Length) : 0;
+            foreach (int j in graph.Neighbors[tile])
+            {
+                if (ids.Contains(graph.Tiles[j].id)) continue;
+                for (int c = 0; c < cams; c++)
+                    if (graph.DistanceTo(j, camE[c], camN[c]) <= loadRadiusM) { ids.Add(graph.Tiles[j].id); break; }
+            }
+            return ids.ToArray();
+        }
+
+        static readonly TileSide[] k_EdgeSides = { TileSide.N, TileSide.E, TileSide.S, TileSide.W };
+
         public static bool StreamingRequested(string argument, string region, bool desktop, bool? enabledOverride, TileGraph graph = null) =>
             enabledOverride ?? (argument == "1" ||
                 (string.IsNullOrEmpty(argument) && desktop && NeedsNeighbourContext(graph, region)));
