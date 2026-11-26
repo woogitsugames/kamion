@@ -814,11 +814,11 @@
    "seal_cracks": {
     "longitudinal": 112,
     "transverse": 226,
-    "tris": 6738
+    "tris": 6148
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 165995,
+  "footprint_nodes": 165999,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -921,16 +921,53 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.25,
     "chain": "c:w251431118:4165907524-7658870561",
     "end": "b",
-    "in_tile_m": 10.0,
-    "length_m": 20.0,
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
     "neighbour": "s8-05",
     "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
-    "step_m": 0.0,
+    "step_m": 0.25,
     "width_other": 10.45,
     "width_own": 9.95,
     "width_seam": 9.95
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w364773483:3688193108-3688193065",
+    "end": "a",
+    "in_tile_m": 11.94,
+    "length_m": 23.88,
+    "neighbour": "s8-03",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w364773486:3688193065-3688193081",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "s8-03",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w536205570:5194994832-3688193113",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "s8-03",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
    }
   ],
   "sides_on_carriageway_culled": {
@@ -950,7 +987,7 @@
   },
   "verge_strips": {
    "chunks": 34,
-   "tris": 26596
+   "tris": 26600
   },
   "walled_ramps": [
    {

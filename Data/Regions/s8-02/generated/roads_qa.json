@@ -2030,11 +2030,11 @@
    "seal_cracks": {
     "longitudinal": 221,
     "transverse": 431,
-    "tris": 12716
+    "tris": 11418
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 262435,
+  "footprint_nodes": 262437,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -2225,7 +2225,20 @@
    "in_chain_ramps": 0,
    "seam_sides": 0
   },
-  "seam_tapers": [],
+  "seam_tapers": [
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w995612402:13850590511-9193597283",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "s8-01",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 1,
    "parts": 5,
@@ -2243,7 +2256,7 @@
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 35430
+   "tris": 35438
   },
   "walled_ramps": []
  }

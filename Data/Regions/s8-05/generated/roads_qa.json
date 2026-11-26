@@ -1159,11 +1159,11 @@
    "seal_cracks": {
     "longitudinal": 86,
     "transverse": 177,
-    "tris": 5232
+    "tris": 4738
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 132767,
+  "footprint_nodes": 132768,
   "fork_abreast": [
    {
     "alongside_run_m": 20.5,
@@ -1561,13 +1561,14 @@
   },
   "seam_tapers": [
    {
+    "axis_offset_m": 0.25,
     "chain": "c:w251431118:4165907524-7658870561",
     "end": "a",
-    "in_tile_m": 10.0,
-    "length_m": 20.0,
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
     "neighbour": "s8-04",
     "skipped": "lane_edges / width profile without lanes_follow_width on the end section (ADR 0095)",
-    "step_m": 0.0,
+    "step_m": 0.25,
     "width_other": 9.95,
     "width_own": 10.45,
     "width_seam": 10.45
