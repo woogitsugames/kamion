@@ -16,7 +16,12 @@
   (`pwsh artifacts/fields4-s24/chain2.ps1`).
 - UWAGA: derived knyszyn-w z main (przed) rozni sie od QA z HEAD w 25 chunkach -> +7..+9 draw na kilku kamerach trasy knyszyn-w
   nie pochodzi z r4 (obiekty bez zmian; banks +1 chunk). Do porownan uzywac banks_cmp.py / mat_cmp.py (QA HEAD vs po).
-- NASTEPNY KROK: po after2 -> `uv run --no-project --with pillow python artifacts/fields4-s24/compare.py after2 -v`, ADR 0334 r4, raport.
+- [krok 5] r4d (run miedz przy kukurydzy do 220 m), koleiny lamane placami (tramline + droga polna), drzewa nad okapem tylko
+  waskie korony. pytest 18 plikow: 236 passed, 1 failed = test_far_field::test_generated_far_field_qa_and_manifests (dane regionu C
+  w derived main vs QA, niezalezne od r4). Szkic ADR: artifacts/fields4-s24/adr_r4.md.
+- W toku: `pwsh artifacts/fields4-s24/chain4.ps1` (far_field obu kafli + import + render `vqa/final/`).
+- NASTEPNY KROK: `uv run --no-project --with pillow python artifacts/fields4-s24/compare.py final -v`, wpisac liczby do adr_r4.md,
+  dopisac do docs/adr/0334, commit, raport.
 
 # STATUS bank-smear-s24 (smuga na skarpie tykocin route_s0160, ADR 0311 dopisek)
 
