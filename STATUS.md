@@ -20,3 +20,5 @@
 ## codex-dash-items-s24 (2026-11-27)
 - [krok 1] Baza 98bbb8724: ADR 0344 już zawiera teczkę CMR, pasek tachografu i telefon. Zapisano bazowy manifest i panoramę w katalogu dowodów; dostępne kamery FOV 55/70/75.
 - Następny krok: `pwsh artifacts/codex-dash-items-s24/qa.ps1 before`
+- [krok 2] Generator tworzy złożoną kamizelkę z dwiema taśmami i niski kubek w prawej tacce na istniejących slotach Fabric/Plastic. Wyrób obok CMR i tachografu, z dala od zegarów; czeka na pomiar.
+- Następny krok: `pwsh artifacts/codex-dash-items-s24/export.ps1`

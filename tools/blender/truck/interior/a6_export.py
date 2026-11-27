@@ -71,10 +71,10 @@ LOD2_DROP = LOD1_DROP + ("_cst_", "_ctr_", "_bst_", "_btr_", "rocker_icon_", "hv
 SLOT_OF = {
     "MI_Cab_Plastic": ("dash_soft", "dash_lower", "dash_mid", "dash_dark", "trim_insert", "trim_light", "metal_dark",
                        "piano", "grab_dark", "switch", "knob", "gap", "led_off", "lamp_lens", "yellow", "ext_plastic", "frit", "emboss",
-                       "hazard_red", "paper_doc", "paper_tacho", "folder_cover"),
+                       "hazard_red", "paper_doc", "paper_tacho", "folder_cover", "dash_thermos_enamel"),
     "MI_Cab_Leather": ("leather", "leather_wheel", "leather_wheel_perf", "leather_centre", "leather_trim"),
     "MI_Cab_Fabric": ("headliner", "wall_fabric", "mattress", "curtain", "seat_fabric", "blind", "webbing", "thread_wheel",
-                      "dash_cloth"),
+                      "dash_vest", "dash_vest_tape"),
     "MI_Cab_Rubber": ("floor_mat", "rubber"),
     "MI_Cab_Metal": ("satin", "scuff_plate", "chrome", "paint"),
     "MI_Cab_Decal": ("stitch", "stitch_dark", "stitch_wheel", "icons", "grille", "grille_dash"),

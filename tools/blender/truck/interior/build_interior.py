@@ -472,7 +472,10 @@ def build_materials(a):
     M.simple("paper_doc", (0.585, 0.565, 0.520), rough=0.88, spec=0.22)
     M.simple("paper_tacho", (0.60, 0.605, 0.59), rough=0.62, spec=0.33)
     M.pbr("folder_cover", (0.085, 0.105, 0.145), "hardgrain", 0.08, nstr=0.5, rough_add=0.14, spec=0.30)
-    M.pbr("dash_cloth", (0.42, 0.49, 0.54), "fabric", 0.04, nstr=0.85, rough_add=0.16, spec=0.15, sheen=0.35)
+    # Linear albedo, WORKING_VALUE. The sewn bands are diffuse here; the shader has no retroreflective lobe.
+    M.pbr("dash_vest", (0.39, 0.47, 0.065), "fabric", 0.04, nstr=0.55, rough_add=0.12, spec=0.15, sheen=0.25)
+    M.simple("dash_vest_tape", (0.48, 0.49, 0.47), rough=0.66, spec=0.25)
+    M.simple("dash_thermos_enamel", (0.58, 0.55, 0.47), rough=0.43, spec=0.30)
     M.grass("grass")
     M.line_paint("line_paint")
     M.blind("blind")
@@ -1189,7 +1192,7 @@ def build_dash_items():
       1. Document clipboard + two slightly skewed, subtly wavy CMR/waybill sheets in the centre tray;
       2. Narrow curled thermal-paper tachograph printout on the flat dash between binnacle and centre tray;
       3. Low-profile phone mount with a black landscape phone on the left dash corner by the A-pillar;
-      4. Folded muted blue-grey microfibre cloth in the passenger tray.
+      4. Folded high-visibility vest and a capped travel mug lying in the passenger tray.
     Clear of cluster / infotainment sightlines, windscreen wipers, defroster grilles and tray lips."""
     lod0 = G.STATE["q"] > 0.75
     tray_lift = 0.0066 if G.STATE["q"] > 0.5 else 0.0018   # sits on tray ribs on LOD0, on mat floor on LOD1/2
@@ -1394,26 +1397,28 @@ def build_dash_items():
     panel("dash_item_phone_screen", rrect(0.138, 0.064, 0.007, G.Q(3, 1)), ph_c + ph_n * 0.0018, ph_n, ph_up, 0.0012,
           "piano", bev=0.0)
 
-    # ---- 4. Folded microfibre cloth in passenger tray (x in [0.45, 0.89]) ----
-    # Two overlapping folded layers (lower half + slightly offset top flap) so it reads as folded fabric, not a pillow.
-    ccx, ccy, cyaw = 0.570, 1.165, 6.5
-    ang_c = math.radians(cyaw)
-    ca_c, sa_c = math.cos(ang_c), math.sin(ang_c)
-    cw, ch = 0.196, 0.114
+    # Passenger tray: folded vest; the tape crosses the top ply clear of the exposed hem at the right.
+    vx, vy = 0.568, 1.166
+    ang = math.radians(6.5)
+    ca, sa = math.cos(ang), math.sin(ang)
+    vw, vh = 0.190, 0.118
     cnx, cny = G.Q(10, 3), G.Q(6, 2)
+    tape = (-0.55, -0.20, 0.13, 0.48)
+    us = lines(cnx, ()) if lod0 else [-1.0, 0.0, 1.0]
+    us = sorted(set(us).union(tape))
+    cnx = len(us) - 1
     bm = bmesh.new()
     top_g, bot_g = [], []
-    for i in range(cnx + 1):
-        u = -1.0 + 2.0 * i / cnx
+    for u in us:
         tr, br = [], []
         for j in range(cny + 1):
             v = -1.0 + 2.0 * j / cny
             # Soft irregular cloth edge (slight skew at the open corners, straighter along the folded spine at u = -1)
             ew = 1.0 + 0.025 * math.sin(v * 2.8 + 0.4)
             eh = 1.0 + 0.03 * math.cos(u * 2.3 - 0.5) - 0.04 * max(0.0, u - 0.2) * (v * v)
-            lx, ly = u * (cw * 0.5) * ew, v * (ch * 0.5) * eh
-            wx = ccx + lx * ca_c - ly * sa_c
-            wy = ccy + lx * sa_c + ly * ca_c
+            lx, ly = u * (vw * 0.5) * ew, v * (vh * 0.5) * eh
+            wx = vx + lx * ca - ly * sa
+            wy = vy + lx * sa + ly * ca
             zb = dash_surface_z(wx, wy) + tray_lift
             # Flat folded profile: two stacked plies (~5 mm each), top ply ends slightly before u=+1 (natural fold step),
             # gentle soft crease across the middle, rounded spine at u=-1
@@ -1427,8 +1432,10 @@ def build_dash_items():
         top_g.append(tr)
         bot_g.append(br)
     for i in range(cnx):
+        taped = (tape[0] <= us[i] < tape[1]) or (tape[2] <= us[i] < tape[3])
         for j in range(cny):
-            bm.faces.new((top_g[i][j], top_g[i + 1][j], top_g[i + 1][j + 1], top_g[i][j + 1]))
+            face = bm.faces.new((top_g[i][j], top_g[i + 1][j], top_g[i + 1][j + 1], top_g[i][j + 1]))
+            face.material_index = int(taped)
             bm.faces.new((bot_g[i][j], bot_g[i][j + 1], bot_g[i + 1][j + 1], bot_g[i + 1][j]))
     for i in range(cnx):
         bm.faces.new((bot_g[i][0], bot_g[i + 1][0], top_g[i + 1][0], top_g[i][0]))
@@ -1436,9 +1443,29 @@ def build_dash_items():
     for j in range(cny):
         bm.faces.new((bot_g[0][j + 1], bot_g[0][j], top_g[0][j], top_g[0][j + 1]))
         bm.faces.new((bot_g[cnx][j], bot_g[cnx][j + 1], top_g[cnx][j + 1], top_g[cnx][j]))
-    cl = G.finish("dash_item_cloth", bm, "dash_cloth", smooth=True, sharp=55.0)
-    # Subtle fold shading & slightly dusty/worn variation in the weave
-    set_attr_w(cl, "tint_add", lambda co, nr: -0.07 * (1.0 - max(0.0, nr.z)) + 0.04 * (vnoise(co.x * 18.0, co.y * 18.0, 7.0) - 0.5), add=False)
+    vest = G.finish("dash_item_vest", bm, ("dash_vest", "dash_vest_tape"), smooth=True, sharp=55.0)
+    set_attr_w(vest, "tint_add", lambda co, nr: -0.07 * (1.0 - max(0.0, nr.z))
+               + 0.04 * (vnoise(co.x * 18.0, co.y * 18.0, 7.0) - 0.5), add=False)
+
+    # The tray grips the tapered mug on its side. The lid stays behind its lip, below the lower windscreen sightline.
+    mx, my = 0.777, 1.162
+    angle = math.radians(-8.0)
+    axis = V(math.cos(angle), math.sin(angle), 0.0)
+    across = V(-axis.y, axis.x, 0.0)
+    # (axial distance, radius) in metres. Narrow dark foot, enamel body, screw-lid joint and rounded top.
+    profile = [(-0.082, 0.021), (-0.078, 0.024), (-0.072, 0.025), (0.048, 0.029),
+               (0.051, 0.027), (0.055, 0.030), (0.072, 0.030), (0.079, 0.026)]
+    if G.STATE["q"] <= 0.4:
+        profile = [profile[i] for i in (0, 2, 4, 5, 7)]
+    sides = G.Q(20, 6)
+    rings = []
+    for station, radius in profile:
+        centre = V(mx, my, 0) + station * axis
+        centre.z = dash_surface_z(centre.x, centre.y) + tray_lift + radius
+        rings.append([centre + radius * (math.sin(theta) * across + V(0, 0, -math.cos(theta)))
+                      for theta in (2 * math.pi * j / sides for j in range(sides))])
+    loft("dash_item_thermos", rings, ("dash_mid", "dash_thermos_enamel"), cap0=True, cap1=True,
+         mat_seg=lambda _i, row: int(-0.079 <= profile[row][0] < 0.051))
 
 
 def dash_surface_z(x, y):
