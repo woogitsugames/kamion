@@ -79,6 +79,7 @@
     "osm_hv_duplicates_of_bdot": 0,
     "osm_untagged_dropped": 0,
     "pylons": 26,
+    "pylons_dropped_unwired": 0,
     "pylons_mapped": 23,
     "pylons_rule": 3,
     "seam_supports": 2,
@@ -209,17 +210,17 @@
       "total_vertices": 95615
     },
     "Low": {
-      "bytes": 461816,
+      "bytes": 435600,
       "file": "Data/raw/derived/s8-02/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 1113,
+            "far_field_buildings": 959,
             "forest_edge_mixed_far_atlas": 1714
           },
           "submeshes": 2,
-          "triangles": 2827,
-          "vertices": 4407
+          "triangles": 2673,
+          "vertices": 4099
         },
         "far_north": {
           "by_material": {
@@ -241,15 +242,15 @@
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 499,
+            "far_field_buildings": 317,
             "forest_edge_mixed_far_atlas": 132
           },
           "submeshes": 2,
-          "triangles": 631,
-          "vertices": 1163
+          "triangles": 449,
+          "vertices": 799
         }
       },
-      "sha256": "eb032ff6083bc54aec76bfd5bf16a588d4e823f8b4e3f3de0e37e91b3ed29b1b",
+      "sha256": "aabb5fe23000c8e4649d530a8241592f8060623ce7e0bb52cb5ea1873bc0bb64",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -258,8 +259,8 @@
         "submeshes": 1,
         "triangles": 100
       },
-      "total_triangles": 7385,
-      "total_vertices": 11845
+      "total_triangles": 7049,
+      "total_vertices": 11173
     }
   }
 }

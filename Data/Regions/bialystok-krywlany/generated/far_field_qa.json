@@ -76,6 +76,7 @@
     "osm_hv_duplicates_of_bdot": 13,
     "osm_untagged_dropped": 0,
     "pylons": 212,
+    "pylons_dropped_unwired": 0,
     "pylons_mapped": 133,
     "pylons_rule": 79,
     "seam_supports": 0,
@@ -206,47 +207,47 @@
       "total_vertices": 352498
     },
     "Low": {
-      "bytes": 2374456,
+      "bytes": 2235444,
       "file": "Data/raw/derived/bialystok-krywlany/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 957,
+            "far_field_buildings": 773,
             "forest_edge_mixed_far_atlas": 2326
           },
           "submeshes": 2,
-          "triangles": 3283,
-          "vertices": 5013
+          "triangles": 3099,
+          "vertices": 4645
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 10310,
+            "far_field_buildings": 9954,
             "forest_edge_mixed_far_atlas": 1114
           },
           "submeshes": 2,
-          "triangles": 11424,
-          "vertices": 21974
+          "triangles": 11068,
+          "vertices": 21262
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 1891,
+            "far_field_buildings": 1171,
             "forest_edge_mixed_far_atlas": 2560
           },
           "submeshes": 2,
-          "triangles": 4451,
-          "vertices": 7001
+          "triangles": 3731,
+          "vertices": 5561
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 10159,
+            "far_field_buildings": 9637,
             "forest_edge_mixed_far_atlas": 1094
           },
           "submeshes": 2,
-          "triangles": 11253,
-          "vertices": 21767
+          "triangles": 10731,
+          "vertices": 20723
         }
       },
-      "sha256": "862559e7b30e0a778b814312347c65dfd0619c3faf6327e644beddff6fb929fb",
+      "sha256": "d591d96d7571501ba36231782a82830c104e371f8e279baa37993dd0c77a7258",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -255,8 +256,8 @@
         "submeshes": 1,
         "triangles": 2664
       },
-      "total_triangles": 33075,
-      "total_vertices": 61083
+      "total_triangles": 31293,
+      "total_vertices": 57519
     }
   }
 }

@@ -111,7 +111,7 @@ def test_pylon_has_open_lattice_and_crossarms_in_every_tier(tier, yaw):
     v, t = p["V"], p["T"]
     assert np.isfinite(v).all()
     assert t.max() < len(v) < 65536
-    assert len(t) == (38 if tier == "Low" else 222)  # ribbons on Low, triangular members on High (ADR 0351: 3 arm levels)
+    assert len(t) == (22 if tier == "Low" else 222)  # ribbons on Low (wave 12: 2 lacing panels + only the arm level carrying the conductors), triangular members on High (ADR 0351: 3 arm levels)
     assert set(p["COL"][:, 3]) == {0.0}
     assert p["mat"] == "far_field_buildings"
     # Look from both cardinal directions: solid fins filled the whole shaft;

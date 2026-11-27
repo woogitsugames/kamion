@@ -44,7 +44,7 @@
     "chimneys": 5,
     "forest_polygons": 754,
     "power_lines": 165,
-    "pylons": 185
+    "pylons": 184
   },
   "forest_chm_ring": {
     "chm_share": 0.0,
@@ -76,12 +76,13 @@
     "mv_spans": 149,
     "osm_hv_duplicates_of_bdot": 13,
     "osm_untagged_dropped": 0,
-    "pylons": 178,
+    "pylons": 177,
+    "pylons_dropped_unwired": 1,
     "pylons_mapped": 120,
-    "pylons_rule": 58,
+    "pylons_rule": 57,
     "seam_supports": 0,
     "spans": 165,
-    "unwired_power_pylons": 1
+    "unwired_power_pylons": 0
   },
   "region": "dk8-wasilkow-02",
   "schema": "truck-sim-pl/far-field-qa/1",
@@ -154,17 +155,17 @@
   },
   "tiers": {
     "High": {
-      "bytes": 11943960,
+      "bytes": 11919984,
       "file": "Data/raw/derived/dk8-wasilkow-02/world/far_field.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 45082,
+            "far_field_buildings": 44860,
             "forest_edge_mixed_far_atlas": 8804
           },
           "submeshes": 2,
-          "triangles": 53886,
-          "vertices": 102054
+          "triangles": 53664,
+          "vertices": 101610
         },
         "far_north": {
           "by_material": {
@@ -194,7 +195,7 @@
           "vertices": 25165
         }
       },
-      "sha256": "07bcee44ef8e87f14618f0579ff41897a7ff11d3378f70ef06343e283c16eb8d",
+      "sha256": "0d99baa78be2818222de9011c820a7bbc1d222baadf8393c3327a38c73ca3d25",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -203,8 +204,8 @@
         "submeshes": 1,
         "triangles": 190
       },
-      "total_triangles": 143032,
-      "total_vertices": 239010
+      "total_triangles": 142810,
+      "total_vertices": 238566
     },
     "Low": {
       "bytes": 643160,

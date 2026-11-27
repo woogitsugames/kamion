@@ -87,6 +87,7 @@ FAR_MAX_TOP_SLOPE = 0.26
 # crossed-card edge tree impostors (packed in forest_edge_mixed_far_atlas -> 0 extra draw calls). WORKING_VALUE.
 FAR_EDGE_WOBBLE_M = 5.0
 FAR_SKIRT_MAX_D_M = 2200.0
+LOW_HV_MAX_D_M = 2000.0   # wave 12: Low draws HV towers/spans up to 2.0 km (was 2.2 km) - keeps C Low <= 30k tris with 3 lacing panels
 FAR_IMPOSTOR_MAX_D_M = 1500.0
 FAR_IMPOSTOR_SPECIES = {
     "conifer": ("tree_pine_0", "tree_pine_1", "tree_spruce_0", "tree_spruce_1", "tree_birch_0", "tree_shrub_0"),
@@ -2183,7 +2184,7 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
     e_raw, n_raw = float(py["e"]), float(py["n"])
     h_raw = max(float(py.get("h") or 26.0), 22.0)
     ce, cn, d_raw, _ = foreshorten_point(e_raw, n_raw, half)
-    if tier == "Low" and d_raw > 2200.0:
+    if tier == "Low" and d_raw > LOW_HV_MAX_D_M:
         return
     _, s_h = foreshorten_scales(d_raw)
     sec = sectors[sector_of(ce, cn, half)]
@@ -2249,7 +2250,7 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             np.array([(rb[(k + 1) % 4][1] - rb[k][1]),
                       -(rb[(k + 1) % 4][0] - rb[k][0]), 0.0]), view)), reverse=True)[:2]
         rings = [ring_pts(w_bot + (w_top - w_bot) * f, z_bot + (z_top - z_bot) * f)
-                 for f in np.linspace(0.0, 1.0, 3)]   # wave 12: 2 lacing panels at Low (30k budget)
+                 for f in np.linspace(0.0, 1.0, 4)]
         for panel, (lower, upper) in enumerate(zip(rings[:-1], rings[1:])):
             for k in facing:
                 q = (k + 1) % 4
@@ -2420,8 +2421,10 @@ def power_plan(gis: dict, half: float = 1024.0, region_id: str | None = None) ->
             ka, kb = key(a), key(b)
             if ka != kb and math.hypot(a["e"] - b["e"], a["n"] - b["n"]) >= 5.0:
                 spans.append((supports[ka], supports[kb]))
-    draw = [s for s in supports.values() if not s["seam"]]
     wired = {id(x) for ab in spans for x in ab}
+    # wave 12: a support whose only neighbours are < 5 m away has no span - drawing it would be an unwired tower
+    draw = [s for s in supports.values() if not s["seam"] and id(s) in wired]
+    stats["pylons_dropped_unwired"] = sum(1 for s in supports.values() if not s["seam"] and id(s) not in wired)
     # MV (High only, <= MV_FAR_MAX_M out): poles at the BDOT10k "słup energetyczny" left over by the HV lines
     poles_left = [p for p in towers if id(p) not in used and p.get("kind") == "słup energetyczny"]
     pole_xy = np.array([[p["e"], p["n"]] for p in poles_left], float).reshape(-1, 2)
@@ -2509,7 +2512,7 @@ def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderE
     ends = []
     for s in (a, b):
         ce, cn, d_raw, _ = foreshorten_point(float(s["e"]), float(s["n"]), half)
-        if tier == "Low" and (mv or d_raw > 2200.0):
+        if tier == "Low" and (mv or d_raw > LOW_HV_MAX_D_M):
             return
         _, s_h = foreshorten_scales(d_raw)
         if mv:

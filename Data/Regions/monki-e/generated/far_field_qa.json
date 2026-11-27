@@ -75,6 +75,7 @@
     "osm_hv_duplicates_of_bdot": 3,
     "osm_untagged_dropped": 0,
     "pylons": 50,
+    "pylons_dropped_unwired": 0,
     "pylons_mapped": 36,
     "pylons_rule": 14,
     "seam_supports": 4,
@@ -113,8 +114,8 @@
       "Data/Regions/dk65-monki-03/route_start.json": "6007f3636eea090129681e1f2e5a1b7dffcc3b17e6e246e4464c298a1a100275",
       "Data/Regions/dk65-monki-04/route_start.json": "bce1280e7fb784d7560a09c3d521934cb90c373a2efc883e33e108fb1a92ad09",
       "Data/Regions/dk65-monki-05/route_start.json": "5896f4d6203a08b918ac75361df256590593abdb30689a5d9f4c9f9049587104",
-      "Data/Regions/dk65-monki-06/route_start.json": "0942db1acb84ff2fa32e86b548db78b68588f9ceed2cbc05600694b07b726d0a",
-      "Data/Regions/dk65-monki-07/route_start.json": "a4f73f91d0df53158fcf8d2af0c51d6d8bcf7daf5695c3a86be9afe29275381c",
+      "Data/Regions/dk65-monki-06/route_start.json": "282c82ff86eac6afbcd32806497917c7d06801ffddf1b97a10db0df4165a21b8",
+      "Data/Regions/dk65-monki-07/route_start.json": "9a3210c761f1ba551dd1410917a40e068d41b7f6bb53a72545dbb4b44f2d0937",
       "Data/Regions/dk8-korycin-01/route_start.json": "68ba16e5d431d351d98f727c3b4a0d00ec9a50af3a668cbb8b3bec2fcc6c5f2f",
       "Data/Regions/dk8-s8-jeroniki/route_start.json": "e61bfa905fe1a8e4641a375152a45cbfcc240840ddc53ab961567df444a3d261",
       "Data/Regions/dk8-wasilkow-01/route_start.json": "e702768af6f28557918a51be403b267bda951a284240b8c16dc1d47bcd89094e",
@@ -205,17 +206,17 @@
       "total_vertices": 135268
     },
     "Low": {
-      "bytes": 514512,
+      "bytes": 478308,
       "file": "Data/raw/derived/monki-e/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 549,
+            "far_field_buildings": 467,
             "forest_edge_mixed_far_atlas": 982
           },
           "submeshes": 2,
-          "triangles": 1531,
-          "vertices": 2371
+          "triangles": 1449,
+          "vertices": 2207
         },
         "far_north": {
           "by_material": {
@@ -228,24 +229,24 @@
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 1159,
+            "far_field_buildings": 951,
             "forest_edge_mixed_far_atlas": 624
           },
           "submeshes": 2,
-          "triangles": 1783,
-          "vertices": 3141
+          "triangles": 1575,
+          "vertices": 2725
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 739,
+            "far_field_buildings": 565,
             "forest_edge_mixed_far_atlas": 1972
           },
           "submeshes": 2,
-          "triangles": 2711,
-          "vertices": 3957
+          "triangles": 2537,
+          "vertices": 3609
         }
       },
-      "sha256": "b931633b2ae47cef4da8725f3bf21c8feb88960f63994dd3d3c64dca37aabd47",
+      "sha256": "8c8c44702d13635576a5c0b5f1da9b5a4c1101d2208bbad3a4b5d4a07f027c5c",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -254,8 +255,8 @@
         "submeshes": 0,
         "triangles": 0
       },
-      "total_triangles": 8654,
-      "total_vertices": 13334
+      "total_triangles": 8190,
+      "total_vertices": 12406
     }
   }
 }
