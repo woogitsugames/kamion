@@ -38,3 +38,6 @@
 
 - [krok 7] Sprawdzono dobór kamer względem przedziałów cullu na surowych pozycjach prototypów. Do macierzy weszły wjazd na rondo w knyszyn-w i widok placu oraz brzegu w Tykocinie. Surowe pozycje służą do doboru kamer, liczniki będą z visual-QA.
 - Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/batch-qa.ps1 -Phase before -ImportTykocin` (przebieg czeka w kolejce).
+
+- [krok 8] Import Tykocina Win64 zakończony, 64 chunki, sceny Low i High. Przywrócono dwa śledzone pliki metadanych PBR po generatorze. Obie pary scen są gotowe, macierz referencyjna czeka na slot.
+- Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/batch-qa.ps1 -Phase before` (bez ponownego importu).
