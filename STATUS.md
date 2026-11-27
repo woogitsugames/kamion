@@ -23,3 +23,5 @@
 - Następny krok: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-main-verify-s24`, następnie `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64`.
 - Przygotowano prywatne kopie danych zapisywanych przez testy GIS (kafel `bialystok-industrial-c`, cache i BDOT). Pozostałe kafle dostępne jako wejścia przez junctiony.
 - Następny krok po EditMode: `pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64`.
+- EditMode Win64: 1641 testów, 1491 zaliczonych, 150 pominiętych, 0 błędów i niejednoznacznych. Kod 0, 508,08 s z importem. XML: `tests/editmode-20261127-162619.xml`.
+- Następny krok: `pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64`.
