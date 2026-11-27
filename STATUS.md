@@ -32,3 +32,6 @@
 - Następny krok: `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
 - [krok 7] Pełny eksport po zmianach ukończony (64 chunki). `streetscape-after.json` potwierdza 35 832 tris LOD0, 3 284 LOD1 i 230 kolizji. Przebieg oczekuje na slot Unity.
 - Następny krok po imporcie i 8 końcowych PNG: `pwsh artifacts/codex-monument-face-s24/porownania.ps1`.
+- [krok 8] Ukończono Visual QA Unity High Win64 clear i overcast, 4 kamery × 2 pogody × wersje przed i po = 16 PNG. Obejrzano pary, maksymalny bok arkusza 960 px. Wszystkie 73 testy ponownie zielone po końcowym eksporcie. Sloty zwolnione.
+- W kadrze figury czytelne rysy, fałdy i bruzda buławy. Z szerokiego kadru szczegóły twarzy są za małe. W każdym kadrze +151 tris i bez zmiany drawsEst. Dowody i raport: `artifacts/codex-monument-face-s24/WYNIKI.md`.
+- Następny krok dla lidera po ocenie arkuszy: `git merge --no-ff codex-monument-face-s24`, następnie regeneracja Tykocina i import Win64.

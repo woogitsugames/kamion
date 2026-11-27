@@ -264,5 +264,14 @@ Detale odtworzono z tych zdjęć i z ujęcia „08”. Proporcje rzeźbionych de
 | Buława LOD0 | 420 | 504 |
 | Cokół i platforma LOD0 | 11 728 | 10 600 |
 
-Dane pochodzą z metadanych NPZ i z `tykocin_rynek_0320.build` uruchomionego na obydwu wersjach assetu.
-Do limitu Rynku pozostało 168 trójkątów LOD0.
+Dane pochodzą z metadanych NPZ i z pełnych eksportów kafla przed i po zmianie. Do limitu Rynku pozostało
+168 trójkątów LOD0. Wszystkie 73 testy GIS z zestawu 0320, 0221, 0238, v3.1 i hero bridge przeszły po końcowym
+eksporcie.
+
+**Visual QA.** Win64, High, cztery kamery w clear i overcast, po osiem klatek przed i po. W zbliżeniu
+`czarniecki-figure-0320b` oczodół, nos i podział brody odcinają się od reszty twarzy w obu warunkach.
+Fałdy żupana mają czytelniejszy relief, buława odcina się bruzdą na głowicy, a podstawa gruszki ma ciemniejszy
+pas osadu. W szerokim kadrze `look-tykocin-czarniecki` rozróżnienie pojedynczych rysów pozostaje ograniczone.
+Estymacja edytora przed batchingiem SRP daje +151 trójkątów w każdym kadrze i 0 dodatkowych wywołań rysowania.
+Porównania i statystyki są w `artifacts/codex-monument-face-s24/`. Niezależna ocena i pomiar FPS w playerze
+pozostają otwarte.
