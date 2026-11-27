@@ -467,8 +467,10 @@ def build_materials(a):
     M.decal("grille_dash", "grille_mask.png", (0.040, 0.041, 0.043), rough=0.65, alpha_from="mask")
     # ADR 0344 (neon-dash-items-s24): driver items on the dash top (documents, tachograph printout, microfibre cloth)
     # Physical linear albedos (WORKING_VALUE): warm office paper ~0.82, cooler thermal paper ~0.86, muted blue-grey cloth ~0.48
-    M.simple("paper_doc", (0.84, 0.81, 0.75), rough=0.86, spec=0.25)
-    M.simple("paper_tacho", (0.86, 0.87, 0.85), rough=0.60, spec=0.35)
+    # mirror-housing-s24 (critic build #10): office paper is not a white light - linear 0.84 clipped in the sunlit cab
+    # view. Now linear ~0.57 (sRGB ~0.78, the 0.7-0.8 the critic asked for). WORKING_VALUE.
+    M.simple("paper_doc", (0.585, 0.565, 0.520), rough=0.88, spec=0.22)
+    M.simple("paper_tacho", (0.60, 0.605, 0.59), rough=0.62, spec=0.33)
     M.pbr("folder_cover", (0.085, 0.105, 0.145), "hardgrain", 0.08, nstr=0.5, rough_add=0.14, spec=0.30)
     M.pbr("dash_cloth", (0.42, 0.49, 0.54), "fabric", 0.04, nstr=0.85, rough_add=0.16, spec=0.15, sheen=0.35)
     M.grass("grass")
@@ -1192,17 +1194,20 @@ def build_dash_items():
     lod0 = G.STATE["q"] > 0.75
     tray_lift = 0.0066 if G.STATE["q"] > 0.5 else 0.0018   # sits on tray ribs on LOD0, on mat floor on LOD1/2
 
-    def make_draped_sheet(name, cx, cy, w, h, yaw_deg, thick, nx, ny, mat, base_lift, wave_fn, tint_fn=None):
-        """Closed thin draped mesh following dash_surface_z(x, y) + base_lift + wave_fn(u, v), u,v in [-1, 1]."""
+    def make_draped_sheet(name, cx, cy, w, h, yaw_deg, thick, nx, ny, mat, base_lift, wave_fn, tint_fn=None,
+                          us=None, vs=None):
+        """Closed thin draped mesh following dash_surface_z(x, y) + base_lift + wave_fn(u, v), u,v in [-1, 1].
+        us / vs: explicit grid lines instead of nx / ny even steps (fold lines get their own vertex rows)."""
         ang = math.radians(yaw_deg)
         ca, sa = math.cos(ang), math.sin(ang)
         bm = bmesh.new()
         top_grid, bot_grid = [], []
-        for i in range(nx + 1):
-            u = -1.0 + 2.0 * i / nx
+        us = list(us) if us else [-1.0 + 2.0 * i / nx for i in range(nx + 1)]
+        vs = list(vs) if vs else [-1.0 + 2.0 * j / ny for j in range(ny + 1)]
+        nx, ny = len(us) - 1, len(vs) - 1
+        for u in us:
             tr, br = [], []
-            for j in range(ny + 1):
-                v = -1.0 + 2.0 * j / ny
+            for v in vs:
                 lx, ly = u * (w * 0.5), v * (h * 0.5)
                 wx = cx + lx * ca - ly * sa
                 wy = cy + lx * sa + ly * ca
@@ -1241,25 +1246,93 @@ def build_dash_items():
         lambda u, v: 0.0,
         lambda u, v: -0.05 * (0.5 - 0.5 * vnoise(u * 3.0 + 1.0, v * 3.0 + 2.0)),
     )
-    # Bottom sheet (slightly skewed +2.0 deg, subtle dog-ear lift on front-right corner)
+    # mirror-housing-s24 (critic build #10 "papiery jak biala plyta bez zalaman"): on LOD0 both waybills are sheets
+    # that were folded and opened again. Fold lines have their own vertex columns (a narrow V, so the fold reads as
+    # a line, not as a soft wave), the panels between them lie at slightly different angles, and the print (header
+    # boxes, ruled rows, a stamp-sized block) is in the vertex tint on a 6-10 mm grid. LOD1/2 keep the old low grids
+    # (triangle budgets unchanged there).
+    def lines(n, folds, half=0.035):
+        """n even steps on [-1, 1] plus fold columns (f - half, f, f + half)."""
+        g = {round(-1.0 + 2.0 * i / n, 4) for i in range(n + 1)}
+        for f in folds:
+            g = {x for x in g if abs(x - f) > half * 1.6} | {round(f - half, 4), round(f, 4), round(f + half, 4)}
+        return sorted(g)
+
+    def tent(x, f, half):
+        return max(0.0, 1.0 - abs(x - f) / half)
+
+    def letter_fold(u):
+        """Letter fold (three panels): valley at u = -0.34, ridge at u = +0.31; the panels stay nearly flat [m]."""
+        if u < -0.34:
+            return 0.0009 + 0.0009 * (-0.34 - u) / 0.66
+        if u < 0.31:
+            return 0.0009 + 0.0034 * (u + 0.34) / 0.65
+        return 0.0043 - 0.0036 * (u - 0.31) / 0.69
+
+    def print_doc(u, v, seed):
+        """Printed form in the vertex tint (x (1 + t)): header boxes, ruled rows, one dense block; no glyphs."""
+        t = -0.035 * vnoise(u * 2.1 + seed, v * 2.6 + 1.7)                       # handling, uneven tone
+        t -= 0.05 * smooth(0.82, 1.0, max(abs(u), abs(v)))                        # edges yellowed / thumbed
+        inside = smooth(0.0, 0.06, 0.90 - abs(u)) * smooth(0.0, 0.10, 0.84 - abs(v))
+        if v > 0.42:                                                              # header: two boxes
+            t -= 0.20 * inside * (1.0 if u < -0.12 else 0.55 if u > 0.05 else 0.0)
+        else:
+            row = 0.5 + 0.5 * math.sin((v + seed * 0.37) * 17.0)
+            t -= 0.11 * inside * smooth(0.55, 0.80, row) * (0.6 + 0.4 * vnoise(u * 9.0 + seed, v * 3.0))
+            if -0.62 < v < -0.18 and 0.30 < u < 0.74:                             # stamp / signature block
+                t -= 0.13 * inside
+        return t
+
+    if lod0:
+        us0 = lines(24, (-0.34, 0.31))
+        vs0 = lines(10, ())
+        us1 = lines(22, (-0.34, 0.31))
+        vs1 = lines(10, (0.04,), half=0.07)
+    else:
+        us0 = vs0 = us1 = vs1 = None
+
+    def sheet0_z(u, v):
+        if not lod0:
+            return (0.0018 * math.sin(u * 2.4 + 0.4) * (0.5 + 0.5 * v)
+                    + 0.0032 * max(0.0, u - 0.45) * max(0.0, v - 0.2))
+        z = letter_fold(u) - 0.0007 * tent(u, -0.34, 0.07) + 0.0006 * tent(u, 0.31, 0.07)   # panels + the folds
+        z += 0.0006 * math.sin(v * 2.2 + 0.8) * (1.0 - abs(u))                              # panels are not planes
+        return z + 0.0032 * max(0.0, u - 0.45) * max(0.0, v - 0.2)
+
+    def sheet0_tint(u, v):
+        if not lod0:
+            return (-0.06 * smooth(0.45, 0.65, math.sin(v * 14.0)) * smooth(0.0, 0.25, 0.82 - abs(u))
+                    * smooth(0.0, 0.25, 0.78 - abs(v)) - 0.03 * abs(u) * 0.3)
+        return print_doc(u, v, 0.0) - 0.10 * tent(u, -0.34, 0.05) + 0.05 * tent(u, 0.31, 0.05)
+
+    # Bottom sheet (skewed +2.0 deg, dog-ear lift on the front-right corner)
     make_draped_sheet(
         "dash_item_doc_sheet_0", dcx + 0.002, dcy + 0.001, 0.252, 0.114, dyaw + 2.0, 0.0011,
-        G.Q(8, 3), G.Q(5, 2), "paper_doc", tray_lift + 0.0033,
-        lambda u, v: (0.0018 * math.sin(u * 2.4 + 0.4) * (0.5 + 0.5 * v)
-                      + 0.0032 * max(0.0, u - 0.45) * max(0.0, v - 0.2)),
-        lambda u, v: (-0.06 * smooth(0.45, 0.65, math.sin(v * 14.0)) * smooth(0.0, 0.25, 0.82 - abs(u))
-                      * smooth(0.0, 0.25, 0.78 - abs(v)) - 0.03 * abs(u) * 0.3),
-    )
-    # Top sheet (slightly skewed -4.5 deg, softer curl on right edge; dropped on LOD2)
+        G.Q(8, 3), G.Q(5, 2), "paper_doc", tray_lift + 0.0033, sheet0_z, sheet0_tint, us=us0, vs=vs0)
+
+    def sheet1_z(u, v):
+        if not lod0:
+            return (0.0014 * (1.0 - math.cos(u * 1.9)) * 0.6
+                    + 0.0055 * (max(0.0, u - 0.35) ** 1.5) * (0.35 + 0.65 * max(0.0, v + 0.2))
+                    + 0.0025 * max(0.0, -u - 0.55) * max(0.0, -v - 0.2))
+        # lies on the bottom sheet (same letter fold, its own fold lines a few mm off) and was folded once more
+        # across (ridge at v = 0.04); the free right end springs up
+        z = letter_fold(u * 0.94 - 0.02) + 0.0004 * tent(u, 0.31, 0.07) - 0.0005 * tent(u, -0.34, 0.07)
+        z += 0.0019 * tent(v, 0.04, 0.9) * (0.35 + 0.65 * smooth(-0.9, 0.6, u))
+        z += 0.0062 * (max(0.0, u - 0.38) ** 1.5) * (0.35 + 0.65 * max(0.0, v + 0.2))
+        return z + 0.0022 * max(0.0, -u - 0.55) * max(0.0, -v - 0.2)
+
+    def sheet1_tint(u, v):
+        if not lod0:
+            return (-0.07 * smooth(0.55, 0.75, math.sin(v * 16.0 + 0.7)) * smooth(0.0, 0.2, 0.80 - abs(u))
+                    * smooth(0.0, 0.2, 0.72 - abs(v)) - 0.04 * max(0.0, u - 0.5) * 0.5)
+        return (print_doc(u, v, 2.3) - 0.03 - 0.09 * tent(u, -0.34, 0.05) + 0.05 * tent(u, 0.31, 0.05)
+                + 0.045 * tent(v, 0.04, 0.09))
+
+    # Top sheet (skewed -4.5 deg, right end curls up; dropped on LOD2)
     make_draped_sheet(
         "dash_item_doc_sheet_1", dcx - 0.004, dcy - 0.002, 0.228, 0.106, dyaw - 4.5, 0.0010,
-        G.Q(7, 3), G.Q(4, 2), "paper_doc", tray_lift + 0.0052,
-        lambda u, v: (0.0014 * (1.0 - math.cos(u * 1.9)) * 0.6
-                      + 0.0055 * (max(0.0, u - 0.35) ** 1.5) * (0.35 + 0.65 * max(0.0, v + 0.2))
-                      + 0.0025 * max(0.0, -u - 0.55) * max(0.0, -v - 0.2)),
-        lambda u, v: (-0.07 * smooth(0.55, 0.75, math.sin(v * 16.0 + 0.7)) * smooth(0.0, 0.2, 0.80 - abs(u))
-                      * smooth(0.0, 0.2, 0.72 - abs(v)) - 0.04 * max(0.0, u - 0.5) * 0.5),
-    )
+        G.Q(7, 3), G.Q(4, 2), "paper_doc", tray_lift + 0.0052, sheet1_z, sheet1_tint, us=us1, vs=vs1)
     # Metal spring clip holding the left edge of the sheets
     ca_d, sa_d = math.cos(math.radians(dyaw)), math.sin(math.radians(dyaw))
     clx, cly = dcx - 0.122 * ca_d, dcy - 0.122 * sa_d
@@ -1273,13 +1346,21 @@ def build_dash_items():
     make_draped_sheet(
         "dash_item_tacho_strip", tcx, tcy, 0.196, 0.057, tyaw, 0.0009,
         G.Q(14, 5), 2 if G.STATE["q"] > 0.4 else 1, "paper_tacho", 0.0008,
-        # Asymmetric thermal-roll curl (no artificial symmetry): left end curls up 13 mm, right end relaxes to 5 mm
+        # Asymmetric thermal-roll curl (no artificial symmetry): left end curls up 13 mm, right end relaxes to 5 mm;
+        # LOD0: one hard fold where the strip was creased in a pocket (ridge 2.6 mm at u = 0.22)
         lambda u, v: (0.013 * (max(0.0, -u - 0.18) / 0.82) ** 2.3
                       + 0.0055 * (max(0.0, u - 0.35) / 0.65) ** 2.0
-                      + 0.0014 * math.sin(u * 4.2 + 0.5) * (0.65 + 0.35 * v)),
-        # Subtle grey thermal-print bands (header + activity bar, no illegible text)
-        lambda u, v: (-0.08 * smooth(0.55, 0.75, math.sin(u * 22.0)) * smooth(0.0, 0.15, 0.80 - abs(v))
-                      * smooth(0.0, 0.2, 0.85 - abs(u))),
+                      + 0.0014 * math.sin(u * 4.2 + 0.5) * (0.65 + 0.35 * v)
+                      + (0.0026 * tent(u, 0.22, 0.30) if lod0 else 0.0)),
+        # Thermal print: header block, activity rows, pale fold line (no illegible text)
+        (lambda u, v: (-0.16 * smooth(0.0, 0.08, u + 0.86) * smooth(0.0, 0.08, -0.52 - u) * smooth(0.0, 0.2, 0.8 - abs(v))
+                       - 0.11 * smooth(0.50, 0.78, math.sin(u * 30.0)) * smooth(0.0, 0.15, 0.78 - abs(v))
+                       * smooth(0.0, 0.1, u + 0.45) * smooth(0.0, 0.1, 0.9 - u)
+                       + 0.05 * tent(u, 0.22, 0.05) - 0.04 * vnoise(u * 3.0, v * 2.0 + 4.0)))
+        if lod0 else
+        (lambda u, v: (-0.08 * smooth(0.55, 0.75, math.sin(u * 22.0)) * smooth(0.0, 0.15, 0.80 - abs(v))
+                       * smooth(0.0, 0.2, 0.85 - abs(u)))),
+        us=lines(28, (0.22,), half=0.03) if lod0 else None,
     )
 
     # ---- 3. Low-profile phone mount + black phone on left dash corner (x = -0.89, y = 1.155) ----

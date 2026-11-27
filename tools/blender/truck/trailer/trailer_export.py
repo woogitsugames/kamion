@@ -78,7 +78,8 @@ LOD1_DROP = ("_nutind", "_nutwasher", "_stud", "hinge_bolt", "lash_", "toolbox_l
              "air_tank_strap", "mudflap_rib", "leg_foot_lug", "leg_foot_pin", "hubcap_plug", "kingpin_grease",
              "door_groove", "sideguard_groove", "top_rail_groove", "rear_led_", "brake_hose", "ebs_hose",
              "crank_grip_rod", "mudguard_stay", "side_marker_brk", "tension_lever", "stalk_base", "lockhandle",
-             "hinge_barrel", "pallet_latch", "pallet_hinge", "spare_nut", "chock_holder_arm")
+             "hinge_barrel", "pallet_latch", "pallet_hinge", "spare_nut", "chock_holder_arm", "front_post_rivet",
+             "front_post_bolt")
 LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", "caliper", "brake_chamber",
                          "damper", "bellow", "hanger", "trailing_arm", "crossmember", "outrigger", "air_tank", "ebs_",
                          "air_line", "doc_tube", "coupling", "palm_", "socket_", "kingpin", "mudguard_lip",
@@ -89,7 +90,7 @@ LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", 
                          "leg_gearbox", "front_lamp", "rear_marker", "door_centre_seal", "rear_sill_face",
                          "coupler_plate", "front_cross", "crank_hub", "crank_grip", "pallet_rib",
                          "pallet_strap", "spare_hanger", "spare_clamp", "spare_rod", "spare_carrier", "spare_disc",
-                         "chock")
+                         "chock", "front_post_foot", "front_post_cast")
 # ADR 0175 (review s17 P0 Low): the Low tier renders LOD2 at every distance (manifest "tiers"), so the R48 / R104 rear
 # contour, the upper corner marks, the R70-adjacent triangles (R3 class III), the side / front retro-reflectors and the
 # plate are NOT dropped and NOT decimated there - they were missing on the phone tier since the trailer's first LOD2
