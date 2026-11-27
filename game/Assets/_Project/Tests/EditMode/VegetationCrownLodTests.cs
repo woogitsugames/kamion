@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 using Game.Rendering;
 using Game.World;
 using NUnit.Framework;
@@ -8,6 +11,9 @@ namespace Game.Tests
     /// <summary>crown-lod-s24 (critic build #10 TOP 3): tree card distance on High, LOD1 -> impostor cross-fade, leaf fill.</summary>
     public class VegetationCrownLodTests
     {
+        static string ReadShader() =>
+            File.ReadAllText(Path.Combine(Application.dataPath, "_Project/Rendering/Shaders/Vegetation.shader"));
+
         // Cross-fade only for tree prototypes whose last LOD is an impostor.
         [TestCase("tree_maple_0", 3, "M_impostor_tree_maple_0", 60f)]
         [TestCase("tree_shrub_0", 3, "M_impostor_tree_shrub_0", 40f)]
@@ -51,10 +57,45 @@ namespace Game.Tests
         public void ShaderHasFadeAndFill()
         {
             Assert.That(Shader.Find("Kamion/Vegetation"), Is.Not.Null);
-            string src = System.IO.File.ReadAllText(System.IO.Path.Combine(Application.dataPath, "_Project/Rendering/Shaders/Vegetation.shader"));
+            string src = ReadShader();
             StringAssert.Contains("_KamionTreeFade", src);
             StringAssert.Contains("_LodFadeEndM", src);
             StringAssert.Contains("VegCutoffFill", src);
+        }
+
+        [Test]
+        public void ShaderAlphaClippingUsesSharedCoverage()
+        {
+            string src = Regex.Replace(ReadShader(), @"/\*[\s\S]*?\*/|//[^\r\n]*", "");
+            const string sharedClip = @"\bVegClipCoverage\s*\(";
+            const string clip = @"\bclip\s*\(";
+            var coverage = Regex.Match(src, @"\bhalf\s+VegClipCoverage\s*\([^)]*\)\s*\{[\s\S]*?^ {8}\}",
+                RegexOptions.Multiline);
+            Assert.That(coverage.Success, Is.True);
+            StringAssert.Contains("VegCutoffFill(", coverage.Value);
+            StringAssert.Contains("CoverageAlpha(", coverage.Value);
+            Assert.That(coverage.Value, Does.Match(clip));
+            Assert.That(Regex.Matches(src, clip).Count, Is.EqualTo(Regex.Matches(coverage.Value, clip).Count));
+
+            var checkedPasses = new List<string>();
+            foreach (Match pass in Regex.Matches(src, @"\bPass\s*\{\s*Name\s*""([^""]+)""([\s\S]*?)HLSLPROGRAM([\s\S]*?)ENDHLSL"))
+            {
+                string name = pass.Groups[1].Value;
+                string program = pass.Groups[3].Value;
+                Assert.That(program, Does.Not.Match(clip), name);
+                if (!Regex.IsMatch(program, sharedClip)) continue;
+
+                bool shadow = name == "ShadowCaster";
+                Assert.That(program, Does.Match(sharedClip + @"[^;]+,\s*" + (shadow ? "false" : "true") + @"\s*\)"), name);
+                if (!shadow)
+                {
+                    Assert.That(pass.Groups[2].Value, Does.Match(@"AlphaToMask\s+\[_AlphaToMask\]"), name);
+                    Assert.That(program, Does.Match(@"return\s+half4\s*\([^;]+,\s*alpha\s*\)"), name);
+                }
+                checkedPasses.Add(name);
+            }
+            foreach (string name in new[] { "VegetationDepth", "ForwardLit", "ShadowCaster", "DepthOnly" })
+                CollectionAssert.Contains(checkedPasses, name);
         }
     }
 }
