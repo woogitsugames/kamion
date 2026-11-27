@@ -146,6 +146,25 @@ class _Ground:
     def z(self, P):
         return PV.bilinear(self.zc, self.hf, P[:, 0], P[:, 1])
 
+    def unblocked_base(self, A, B):
+        """Test the endpoints and the cells traversed by each card's base on the 1 m mask."""
+        delta = B - A
+        origin = np.array([self.hf.x0, self.hf.y1])
+        # ij rounds to the nearest sample, so cells change at half-metres. Test
+        # between successive crossings even when a card clips a cell's corner.
+        first = np.floor(np.minimum(A, B) - origin + 0.5) + 0.5
+        steps = np.arange(int(np.ceil(np.abs(delta).max())))
+        edges = first[:, None, :] + steps[None, :, None]
+        cuts = np.divide(edges - (A - origin)[:, None, :], delta[:, None, :],
+                         out=np.ones_like(edges), where=delta[:, None, :] != 0)
+        cuts = np.column_stack([np.zeros(len(A)), np.clip(cuts.reshape(len(A), -1), 0.0, 1.0),
+                                np.ones(len(A))])
+        cuts.sort(axis=1)
+        mid = 0.5 * (cuts[:, 1:] + cuts[:, :-1])
+        samples = A[:, None, :] + np.column_stack([cuts, mid])[..., None] * delta[:, None, :]
+        i, j, inside = self.ij(samples.reshape(-1, 2))
+        return (inside & ~self.blocked[j, i]).reshape(len(A), -1).all(axis=1)
+
 
 def _row_point(L0, rowc, s, ox, oy):
     """Region-local point at row coordinate rowc (m across the rows, shader `rowc`) and s metres along, in the block
@@ -266,14 +285,20 @@ def _maize(g, origin, rep):
     dirv = np.column_stack([np.cos(L0["th"]), np.sin(L0["th"])])        # across the rows
 
     def put(A_, B_, h, lean, uv, nrm, occ0, occ1, tag):
-        n = len(A_)
-        if not n:
+        if not len(A_):
+            return 0
+        if tag == "maize_edge" and g.blocked is not None:
+            keep = g.unblocked_base(A_, B_)
+            A_, B_, h, lean, uv, nrm, occ0, occ1 = (
+                v[keep] for v in (A_, B_, h, lean, uv, nrm, occ0, occ1)
+            )
+        if not len(A_):
             return 0
         a3 = np.column_stack([A_, g.z(A_) - MAIZE_SINK_M])
         b3 = np.column_stack([B_, g.z(B_) - MAIZE_SINK_M])
         V, UV, C, T = _quads(a3, b3, h + MAIZE_SINK_M, lean, uv, nrm, occ0, occ1)
         out.append((V, UV, C, T, tag))
-        return n
+        return len(A_)
 
     def emit(A_, B_, sel, cells, tag):
         n = int(sel.sum())

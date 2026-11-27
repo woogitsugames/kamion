@@ -59,3 +59,7 @@
 ### codex-gen-fix-s25 — LOD i determinizm WN
 - Eksport przepuszcza wyłącznie podpory WN z przęseł LOD. QA zapisuje liczniki Low/High. Kanoniczny klucz rozstrzyga remisy. Testy WN 14 PASS, na 54 cache sieroty i różnice po permutacji: 0/0.
 - Następny krok po poprawce masek: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_fields_r3_0334.py tests/gis/test_fields_r4_0334.py`.
+
+### codex-gen-fix-s25 — podstawy kart kukurydzy
+- Sprawdzanie komórek maski po transformacji obejmuje też krótkie karty i strays. Dla pasów 1/3/5 m zniknęło odpowiednio 13/1/1 kart; na podstawie trójkątów 0 przecięć. Testy pól: 21 PASS.
+- Następny krok po zmianie kolejności gatunków: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_treerows_0222.py tests/gis/test_trees_0352.py`.
