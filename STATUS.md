@@ -32,3 +32,5 @@
 - Komenda wznowienia po zatrzymaniu przebiegu: `pwsh artifacts/codex-dash-items-s24/qa.ps1 after`
 - [krok 7] Visual QA PO 18 PNG (PC High, clear/overcast/lowsun), +3 PNG diagnostyczne i +4 PNG A/B starej panoramy na nowej geometrii. cab-driver i cab-view-b: drawsEst 147→147, tris 175 023→175 359. EditMode Win64 1519 passed, 0 failed, 122 skipped. Przywrócono QualitySettings.
 - W standardowym lowsun nowa barwa śladu jest słaba (p95 +1,00 kodu sRGB dla żółci względem błękitu w masce odbicia cab-view-b). Dodatkowy pomiar ze słońcem na wprost: `pwsh artifacts/codex-dash-items-s24/front-sun.ps1`
+- [krok 8] A/B przy słońcu na wprost, azymut 0° i elewacja 42° tylko w QA: widoczny w wycinku słaby ślad barwny. cab-view-b p95 +2,93 poziomu sRGB żółty–niebieski i +0,90 lumy. Przegląd niezależny PASS, P2 kanciasty obrys kamizelki. Preset, panorama docelowa i QualitySettings zweryfikowane po przywróceniu.
+- Następny krok dla lidera po integracji: `Copy-Item artifacts/codex-dash-items-s24/SM_CabInterior_LOD0.fbx art-source/truck/interior/export/`, potem `Game.Editor.Setup.TruckAssetBuilder.BuildBatch` na Win64 z rezerwacją slotów.

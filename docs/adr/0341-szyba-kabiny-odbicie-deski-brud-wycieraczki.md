@@ -147,3 +147,19 @@ wchodzi w prawy dół kadru przy 75°. Kadry `cab-dash` i `cab-trays` pokazują 
 
 Panorama 1024×512 pochodzi z ponownego wypieku Cycles z LOD1 i odpowiadającego mu atlasu AO.
 Shader zachowuje model odbicia z ADR 0341, a geometria pozostaje w dotychczasowych submeshach kabiny.
+
+**Pomiary.** Eksport LOD0 107 305 → 107 641 / 120 000 tris, LOD1 44 457 → 44 619 / 45 000,
+LOD2 21 787 → 21 875 / 22 000. W `DrivingLab` PC High przy 1920×1080 dla `cab-driver` i `cab-view-b-fov70`
+175 023 → 175 359 tris i 147 → 147 `drawsEst` według estymatora przed SRP batchingiem.
+Statyczny mesh kabiny w tym samym przebiegu ma 85 167 → 85 503 tris i 6 → 6 submeshy.
+
+QA przed i po obejmuje `clear`, `overcast`, `lowsun` oraz FOV 55°, 70° i 75°. W osobnej próbie A/B na
+finalnej geometrii zmieniono tylko panoramę. Przy słońcu na wprost (azymut 0°, elewacja 42°, użyte wyłącznie
+w QA) pojawia się delikatne żółtawe zabarwienie po prawej na szybie. Dla `cab-view-b-fov70` w masce odbicia
+mediana przyrostu `(R+G)/2 − B` to +1,61 poziomu sRGB 8-bit, p95 +2,93, a p95 przyrostu lumy +0,90
+(wygładzenie przestrzenne σ 4 px). Przy standardowym `lowsun` p95 wynosi odpowiednio +1,00 i +0,31.
+Rozpoznanie kształtu przedmiotów ułatwia kadr diagnostyczny `rq_glassdbg=2`. W normalnym kadrze pozostaje
+ślad barwny i czytelne tło drogi.
+
+`CHECK PASS`, `SIGHTLINE PASS`, GIS 62/62, EditMode Win64 1519 zaliczonych, 122 pominięte, 0 nieudanych.
+Dowody, pomiary i gotowy FBX LOD0 są w `artifacts/codex-dash-items-s24/`.
