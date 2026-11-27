@@ -1,19 +1,9 @@
-# STATUS neon-outbuildings2-s24 (budynki gospodarcze r2: brama, rynny, blacha z żebrami, cokół i zacieki; dopisek ADR 0238 d. props-fix)
+# STATUS neon-hvfar-s24 (kratownice i przewody WN w dalekim planie; dopisek do ADR 0351)
 
-- Worktree `neon-outbuildings2-s24`, gałąź `neon-outbuildings2-s24`. Nie scalane ani nie pushowane (do przeglądu lidera).
-- Środowisko: prywatne kopie `Data/raw/derived/{dk65-07,knyszyn-w}` (bez zapisu do main), Win64 `game/Library` + `_Generated` lokalnie.
-- [krok 1] Rendery PRZED (`before`, Win64 High PC 1920×1080, clear + overcast): `dk65-07` (`drive-kozince`, `route-s0144`, `route-s0433`) i `knyszyn-w` (`dk65-goniadzka`).
-- [krok 2] Implementacja (+0 materiałów, DC ≤ +0):
-  - `tools/worldgen/streetscape/buildings_mesh.py`: (1) wrota stodoły z pionowych desek (`facade_atlas` wycinek `balf(2/5)`) + 16 tr. nadproża/ościeżnicy/4 zawiasów pasowych w `facade_atlas`, wiejskie `garage(0/1/5)` bez graffiti, także na długiej ścianie okapowej od drogi (`barn_edges`); (2) rynny L (4 tr./okap) i rury spustowe V (4 tr./rura) LOD0-only w `facade_atlas`; (3) `roof_weather` COLOR_0 na spadzistych dachach `rural_outbuildings`; (4) cokół 0,45–0,65 m (slope-safe) i ciemniejszy (`pl 0,38..0,54`) + zacieki pod okapem (`lod0_ro` → `_RUNOFF`).
-  - `game/Assets/_Project/World/Import/WorldPbrMaterials.cs` + `game/Assets/_Project/Environment/Shaders/WorldPBR.shader`: `_RoofWeather.w = 1` dla `roof_metal_*` / `roof_sheet_*` → żebra trapezowe T-18 / faliste w kierunku spadku (`tn.x` + antyaliasing `fwidth`), cieniowanie korytek, zakładki arkuszy co 1,05 m i subtelne przebarwienia/nalot rdzy.
-  - `tests/gis/test_rural_outbuildings_props_fix_s24.py`: +2 testy (wrota/rynny/COLOR_0/cokół/runoff + budżet ≤ +5 % `dk65-07`).
-- [krok 3] `build_world.py --context` (`dk65-07` 521,6 s, `knyszyn-w` 431,3 s):
-  - `dk65-07` `world_manifest.json`: `buildings` LOD0 104 376 → 107 204 (**+2 828 = +2,71 %** ≤ +5 %), `buildings_lod1` +0, 0 nowych materiałów (−1 w `7_1`).
-  - `knyszyn-w` `world_manifest.json`: `buildings` LOD0 140 061 → 142 241 (**+2 180 = +1,56 %**), `buildings_lod1` +0, 0 nowych materiałów (−1 w `0_6`, `2_4`, `3_2`).
-- [krok 4] Import Win64 (`IMPORT_RESULT: OK` oba regiony) + visual-QA PO (`after`, High PC 1920×1080 clear + overcast) + inspekcja PNG i cropów 1:1:
-  - `drive-kozince`: `drawsEst` 459 → 458 (−1), `trisExact` 1 160 324 → 1 160 644 (+320).
-  - `route-s0144`: `drawsEst` 504 → 503 (−1), `trisExact` 993 132 → 993 198 (+66).
-  - `route-s0433`: `drawsEst` 457 → 456 (−1), `trisExact` 1 166 669 → 1 166 989 (+320).
-  - `dk65-goniadzka`: `drawsEst` 328 → 328 (+0), `trisExact` 1 098 119 → 1 098 711 (+592).
-- [krok 5] Dopisek ADR 0238, kopia dowodów do `C:\Users\matma\Documents\Claude\kamion\artifacts\neon-outbuildings2-s24\`, pełny pytest (84/84 zielone), commit końcowy.
-- NASTĘPNY KROK (dla lidera): obejrzeć cropy w `artifacts/neon-outbuildings2-s24/sbs/`, scalić gałąź `neon-outbuildings2-s24` do `main`, a potem przebudować i zaimportować pozostałe kafle z `rural_outbuildings: true`: `pwsh scripts/import-region.ps1 -Region dk65-07 -Build -BuildTarget Win64` (oraz pozostałe kafle wg `artifacts/props-fix-s24/outbuildings-per-tile.txt`).
+- Worktree `neon-hvfar-s24`, gałąź `neon-hvfar-s24`. Nie scalane ani nie pushowane.
+- [krok 1] Zbadano przyczyny „szarej siatki” (ADR 0351, `far_field.py`, `WorldSurface.shader`, zrzuty build #10 i `hv-wires-s24`):
+  - Kompresja radialna zgniata pary wież do 1,6–15 m (`knyszyn-w`: 1,6 m przy d=3,5 km; `dk65-07`: 10,2 m przy d=2,4 km), przy `scale = max(s_h, 0.65)` i 12 poziomych prętach pierścieniowych + 3 poziomach ramion (222 tri/wieża).
+  - 7 nieprzezroczystych wstęg przewodów (`FAR_WIRE_PX_FRAC = 0.6`, ~40 cm przy 550 m) bez zanikania z odległością + 245 przęseł SN do 600 m tworzy poziome pasmo siatki na horyzoncie.
+  - Odpięto junction `Data/raw/derived` (`cmd /c rmdir`), skopiowano prywatnie `knyszyn-w` i `dk65-07` oraz bazowe sceny Win64 (`knyszyn-w`, `dk65-07` i sąsiedzi `-Neighbours auto`) do lokalnego `game/Assets/_Generated/World/`.
+- NASTĘPNY KROK: zająć slot Unity i wyrenderować klatki PRZED (High PC 1920×1080 clear + overcast, `-Neighbours auto` + `none` dla `hv0351-*`):
+  `pwsh scripts/unity-slot.ps1 -Acquire -Owner neon-hvfar-s24 && pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w_High -Width 1920 -Height 1080 -Tier High -Pc -BuildTarget Win64 -Lighting clear -Neighbours auto -Cameras "hv0351-seam-n,hv0351-far-ne,edge-north,edge-east,edge-south,edge-west,cab-view-b-fov70,dk65-fields-nw" -OutputDir artifacts/neon-hvfar-s24/before/knyszyn-w-clear`
