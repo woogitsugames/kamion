@@ -35,3 +35,5 @@
 - Następny krok: pod slotem heavy `& $python -m pytest -q tests/gis`.
 - Kontrola logów EditMode, PlayMode i generatora: brak diagnostyki C# i pięciu wskazanych shaderów. Zapisano osobno ostrzeżenia innych shaderów w WYNIKI.md. Usunięto końcowe spacje z metadanych nowej mapy.
 - Następny krok po zakończeniu GIS: pod slotem heavy `& $python tools/worldgen/roads/build_world.py --region knyszyn-w --no-route-graph`, następnie import i visual-qa High.
+- Pełny GIS: 3160 passed, 12 failed, 6 skipped, 2 xfailed w 7616,42 s. Cztery wymagane pliki budżetowe 62/62 zielone. XML: `tests/gis-20261127-165203.xml`. Przywrócono uboczną zmianę wygenerowanych metadanych zieleni.
+- Następny krok pod slotem heavy: `& $python tools/worldgen/roads/build_world.py --region knyszyn-w --no-route-graph`.
