@@ -59,6 +59,9 @@ namespace Game.UI.Driving
         public Func<string> ReverseCameraLabel;
         /// <summary>Main-mirror render textures shown as insets in the cab view (null = hidden).</summary>
         public Func<Texture> LeftMirrorTexture, RightMirrorTexture;
+        /// <summary>ADR 0340 addendum: class IV (wide-angle) mirror textures for the lower glass of the monitor mirror heads
+        /// (null = the head shows the main glass only).</summary>
+        public Func<Texture> LeftWideMirrorTexture, RightWideMirrorTexture;
         public Action ToggleMirrorInsets;
         public Func<bool> MirrorInsets;
     }
@@ -512,50 +515,157 @@ namespace Game.UI.Driving
             m_Coupling.gameObject.SetActive(false);   // shown with the telemetry panel, developer mode only
         }
 
-        /// <summary>Mirror window (main mirror, portrait; D70): convex glass + film + housing ring (ADR 0340,
-        /// <see cref="MirrorGlassImage"/>, <see cref="MirrorWindowArt"/>); image flipped like a mirror. Children in draw
-        /// order: 0 = glass (render texture), 1 = film (dust on the glass), 2 = housing ring.</summary>
+        /// <summary>
+        /// One mirror window (D70) and, on a monitor, the mirror head around it (ADR 0340 + addendum, critic build #10 p.8).
+        /// Children of the window in draw order: arms, head (moulded housing, behind the glasses), glass (class II render
+        /// texture), film, lip ring, wide-angle pane (class IV glass, film, lip ring). The touch layout shows glass, film
+        /// and ring only (ADR 0079 windows unchanged).
+        /// </summary>
+        sealed class MirrorHead
+        {
+            public bool Right;
+            public RectTransform ArmTop, ArmBottom, Head, Glass, Film, Wide, WideGlassRt, WideFilmRt;
+            public Image Ring, WideRing;
+            public RawImage FilmImage;
+            public MirrorGlassImage WideGlass;
+            public bool WideShown;
+            public Texture WideTexture;
+            public float WideTexAspect;
+        }
+
+        MirrorHead m_HeadL, m_HeadR;
+
+        /// <summary>True while the monitor mirror heads show their wide-angle (class IV) glasses: the owner of the mirrors
+        /// then keeps those cameras rendering (<see cref="RenderTextureMirror.ForceWide"/>).</summary>
+        public bool WideMirrorWindows => m_DesktopApplied && m_D.ShowMirrorWide;
+
+        static RectTransform Fill(string name, Transform parent)
+        {
+            var rt = Rect(name, parent);
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = rt.offsetMax = Vector2.zero;
+            return rt;
+        }
+
+        /// <summary>Mirror window (main mirror, portrait; D70): convex glass + film + housing (ADR 0340,
+        /// <see cref="MirrorGlassImage"/>, <see cref="MirrorWindowArt"/>); image flipped like a mirror.</summary>
         RawImage MirrorInset(string name, out GameObject go)
         {
             var rt = Zone(name, HudLayout.MirrorSize);
             var backing = rt.gameObject.AddComponent<Image>();   // kept for callers that tint the frame; not drawn (the ring is rounded)
             backing.raycastTarget = false; backing.enabled = false;
-            var img = Rect("Image", rt);
-            img.anchorMin = Vector2.zero; img.anchorMax = Vector2.one;
-            var ri = img.gameObject.AddComponent<MirrorGlassImage>();
             bool right = name.EndsWith("R", StringComparison.Ordinal);
+            var h = new MirrorHead { Right = right };
+            if (right) m_HeadR = h; else m_HeadL = h;
+
+            // arms towards the cab (the screen centre), behind the head
+            h.ArmTop = MirrorArm("ArmTop", rt, right);
+            h.ArmBottom = MirrorArm("ArmBottom", rt, right);
+            h.Head = Fill("Head", rt);
+            var head = h.Head.gameObject.AddComponent<Image>();
+            head.sprite = MirrorWindowArt.Head(); head.type = Image.Type.Sliced; head.fillCenter = true; head.raycastTarget = false;
+
+            h.Glass = Fill("Image", rt);
+            var ri = h.Glass.gameObject.AddComponent<MirrorGlassImage>();
             ri.uvRect = new Rect(1f, 0f, -1f, 1f); // mirror image
             ri.raycastTarget = false;
-            var film = Rect("Film", rt);
-            film.anchorMin = Vector2.zero; film.anchorMax = Vector2.one;
-            var fi = film.gameObject.AddComponent<RawImage>();
-            fi.texture = MirrorWindowArt.Film();
-            fi.uvRect = right ? new Rect(1f, 0f, -1f, 1f) : new Rect(0f, 0f, 1f, 1f);   // not the same smear twice
-            fi.raycastTarget = false;
-            var ring = Rect("Housing", rt);
-            ring.anchorMin = Vector2.zero; ring.anchorMax = Vector2.one; ring.offsetMin = ring.offsetMax = Vector2.zero;
-            var hi = ring.gameObject.AddComponent<Image>();
-            hi.type = Image.Type.Sliced; hi.fillCenter = true; hi.raycastTarget = false;
+            h.Film = Fill("Film", rt);
+            h.FilmImage = h.Film.gameObject.AddComponent<RawImage>();
+            h.FilmImage.uvRect = right ? new Rect(1f, 0f, -1f, 1f) : new Rect(0f, 0f, 1f, 1f);   // not the same smear twice
+            h.FilmImage.raycastTarget = false;
+            h.Ring = Fill("Housing", rt).gameObject.AddComponent<Image>();
+            h.Ring.type = Image.Type.Sliced; h.Ring.fillCenter = true; h.Ring.raycastTarget = false;
+
+            // wide-angle (class IV) glass under the main one, inside the same head
+            h.Wide = Rect("Wide", rt);
+            h.Wide.anchorMin = Vector2.zero; h.Wide.anchorMax = new Vector2(1f, 0f); h.Wide.pivot = new Vector2(0f, 1f);
+            h.WideGlassRt = Fill("Image", h.Wide);
+            h.WideGlass = h.WideGlassRt.gameObject.AddComponent<MirrorGlassImage>();
+            h.WideGlass.Curvature = MirrorWindowLayout.WideGlassCurvature;
+            h.WideGlass.raycastTarget = false;
+            h.WideGlass.color = MirrorWindowLayout.GlassTint;
+            h.WideFilmRt = Fill("Film", h.Wide);
+            var wf = h.WideFilmRt.gameObject.AddComponent<RawImage>();
+            wf.texture = MirrorWindowArt.FilmHead();
+            wf.uvRect = right ? new Rect(0f, 0.08f, 1f, 0.5f) : new Rect(1f, 0.08f, -1f, 0.5f);   // lower half of the film, other way round
+            wf.raycastTarget = false;
+            h.WideRing = Fill("Housing", h.Wide).gameObject.AddComponent<Image>();
+            h.WideRing.type = Image.Type.Sliced; h.WideRing.fillCenter = true; h.WideRing.raycastTarget = false;
+            h.Wide.gameObject.SetActive(false);
+
             go = rt.gameObject;
-            MirrorHousingStyle(go, false);
+            MirrorHousingStyle(h, false);
             go.SetActive(false);
             return ri;
         }
 
-        /// <summary>Housing ring and glass inset of a mirror window for the monitor / touch layout (ADR 0340).</summary>
-        static void MirrorHousingStyle(GameObject go, bool desktop)
+        static RectTransform MirrorArm(string name, Transform parent, bool right)
         {
-            float housing = desktop ? MirrorWindowArt.HousingDesktop : MirrorWindowArt.HousingTouch;
+            var a = Rect(name, parent);
+            a.sizeDelta = new Vector2(MirrorWindowArt.ArmLength, MirrorWindowArt.ArmHeight);
+            a.pivot = new Vector2(0f, 0.5f);
+            if (right) a.localScale = new Vector3(-1f, 1f, 1f);
+            var img = a.gameObject.AddComponent<Image>();
+            img.sprite = MirrorWindowArt.Arm(); img.raycastTarget = false;
+            return a;
+        }
+
+        /// <summary>Housing and glass inset of a mirror window for the monitor / touch layout (ADR 0340): the monitor gets
+        /// the whole head (moulded housing, arms, dirt film with the contrast veil), the touch window the thin ring.</summary>
+        static void MirrorHousingStyle(MirrorHead h, bool desktop)
+        {
+            if (h == null) return;
             float inset = desktop ? Game.Controls.DesktopHudLayout.MirrorBezel : MirrorWindowLayout.TouchFrame;   // glass under the ring's lip
-            var t = go.transform;
-            for (int k = 0; k < 2 && k < t.childCount; k++)
+            h.Glass.offsetMin = h.Film.offsetMin = new Vector2(inset, inset);
+            h.Glass.offsetMax = h.Film.offsetMax = new Vector2(-inset, -inset);
+            h.WideGlassRt.offsetMin = h.WideFilmRt.offsetMin = new Vector2(inset, inset);
+            h.WideGlassRt.offsetMax = h.WideFilmRt.offsetMax = new Vector2(-inset, -inset);
+            h.Ring.sprite = MirrorWindowArt.Ring(desktop); h.Ring.color = Color.white;
+            h.WideRing.sprite = MirrorWindowArt.Ring(true); h.WideRing.color = Color.white;
+            h.FilmImage.texture = desktop ? MirrorWindowArt.FilmHead() : MirrorWindowArt.Film();
+            h.Glass.GetComponent<MirrorGlassImage>().color = desktop ? MirrorWindowLayout.GlassTint : Color.white;
+            h.Head.gameObject.SetActive(desktop);
+            h.ArmTop.gameObject.SetActive(desktop);
+            h.ArmBottom.gameObject.SetActive(desktop);
+            if (!desktop) { h.Wide.gameObject.SetActive(false); h.WideShown = false; }
+        }
+
+        /// <summary>Monitor: lays the head out around the window - with or without the wide-angle glass (on change only).</summary>
+        void LayoutMirrorHead(MirrorHead h, Rect window, Rect wide, bool showWide)
+        {
+            float o = MirrorWindowArt.HeadOut + MirrorWindowArt.HeadShadow;
+            float below = showWide ? window.yMin - wide.yMin : 0f;
+            h.Head.offsetMin = new Vector2(-o, -o - below); h.Head.offsetMax = new Vector2(o, o);
+            if (showWide)
             {
-                var g = (RectTransform)t.GetChild(k);
-                g.offsetMin = new Vector2(inset, inset); g.offsetMax = new Vector2(-inset, -inset);
+                h.Wide.anchoredPosition = new Vector2(0f, -Game.Controls.DesktopHudLayout.MirrorWideGap);
+                h.Wide.sizeDelta = new Vector2(0f, wide.height);
             }
-            var ring = t.childCount > 2 ? t.GetChild(2).GetComponent<Image>() : null;
-            if (ring != null) { ring.sprite = MirrorWindowArt.Ring(desktop); ring.color = Color.white; }
-            _ = housing;
+            h.WideShown = showWide;
+            // arms: upper on the main glass, lower at the wide glass (or low on the main glass); towards the screen centre
+            float total = window.height + below;
+            float x = h.Right ? -MirrorWindowArt.HeadOut + 3f : window.width + MirrorWindowArt.HeadOut - 3f;
+            SetArm(h.ArmTop, h.Right, x, window.height - 0.21f * total);
+            SetArm(h.ArmBottom, h.Right, x, window.height - 0.80f * total);
+        }
+
+        static void SetArm(RectTransform a, bool right, float x, float y)
+        {
+            a.anchorMin = a.anchorMax = Vector2.zero;
+            a.anchoredPosition = new Vector2(x, y);
+        }
+
+        /// <summary>Wide-angle pane on / off and its picture (cropped to the pane, mirrored like the main glass).</summary>
+        static void SetWide(MirrorHead h, Func<Texture> src)
+        {
+            var t = h.WideShown && src != null ? src() : null;
+            bool on = t != null;
+            if (h.Wide.gameObject.activeSelf != on) h.Wide.gameObject.SetActive(on);
+            if (!on) return;
+            float ta = t.height > 0 ? t.width / (float)t.height : 1f;
+            if (h.WideTexture == t && Mathf.Approximately(h.WideTexAspect, ta)) return;
+            h.WideTexture = t; h.WideTexAspect = ta;
+            h.WideGlass.texture = t;
+            h.WideGlass.uvRect = MirrorWindowLayout.WideCrop(ta, Game.Controls.DesktopHudLayout.MirrorWideAspect);
         }
 
         // ------------------------------------------------------------------ layout
@@ -903,6 +1013,8 @@ namespace Game.UI.Driving
             }
             SetInset(m_MirrorLGo, m_MirrorL, m_Ctx.LeftMirrorTexture, m_L.ShowMirrorLeft);
             SetInset(m_MirrorRGo, m_MirrorR, m_Ctx.RightMirrorTexture, m_L.ShowMirrorRight);
+            SetWide(m_HeadL, m_Ctx.LeftWideMirrorTexture);
+            SetWide(m_HeadR, m_Ctx.RightWideMirrorTexture);
             if (m_MirrorInsetLabel != null)
             {
                 string ml = m_Ctx.MirrorInsets != null && m_Ctx.MirrorInsets() ? "Lusterka w kabinie: okienka" : "Lusterka w kabinie: rozglądanie";

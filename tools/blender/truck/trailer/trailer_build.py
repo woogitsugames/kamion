@@ -985,20 +985,48 @@ def front_wall():
     z0, z1 = FLOOR + 0.01, TOPRAIL_Z
     rows = [[V((px, Y_FRONT - 0.028 + d, z)) for px, d in prof] for z in (z0, z1)]
     sheet("front_wall", rows, "trl_paint", flip=True, smooth=False)
-    # front corner posts (rounded), header, bottom rail
+    # front corner posts, header, bottom rail.
+    # mirror-housing-s24 (critic build #10 p.8, ADR 0340 addendum): from the cab mirrors the post's front face is the
+    # largest piece of the trailer in the picture (a 0.11 m face seen square-on past the cab corner) and it was one
+    # plain painted column. It is now an extrusion section - keder / lashing channel in the front face, a shallow
+    # groove in the side face - standing in a bolted galvanised foot with a corner casting on top and a rivet row
+    # where the bulkhead sheet is fixed. Outer corner radius and the outline (swing radius, 2.55 m) are unchanged;
+    # the painted face stands 6 mm behind the old one so that the fittings end exactly on the 13.6 m body length.
+    FW = Y_FRONT
+    F = Y_FRONT - 0.006
     for s in (-1, 1):
-        sec = G.rrect(0.11, 0.15, 0.04, n=4)
-        pts = [(s * (1.275 - 0.055) + a, Y_FRONT - 0.075 + b) for a, b in sec]
+        prof = [(1.165, F - 0.150), (1.165, F - 0.004), (1.169, F), (1.181, F), (1.184, F - 0.006), (1.212, F - 0.006),
+                (1.215, F), (1.235, F)]
+        for k in range(1, 6):                               # outer front corner, r = 40 mm (as before)
+            a_ = math.radians(90 - 18 * k)
+            prof.append((1.235 + 0.04 * math.cos(a_), F - 0.04 + 0.04 * math.sin(a_)))
+        prof += [(1.275, F - 0.072), (1.2705, F - 0.076), (1.2705, F - 0.100), (1.275, F - 0.104), (1.275, F - 0.146),
+                 (1.271, F - 0.150)]
+        pts = [(s * a_, b_) for a_, b_ in prof]
         bm = bmesh.new()
-        lo = [bm.verts.new((a, b, FLOOR - 0.02)) for a, b in pts]
-        hi = [bm.verts.new((a, b, ROOF - 0.03)) for a, b in pts]
+        lo = [bm.verts.new((a_, b_, FLOOR - 0.02)) for a_, b_ in pts]
+        hi = [bm.verts.new((a_, b_, ROOF - 0.03)) for a_, b_ in pts]
         nn = len(pts)
         for i in range(nn):
             j = (i + 1) % nn
             bm.faces.new((lo[i], lo[j], hi[j], hi[i]))
         bm.faces.new(list(reversed(lo)))
         bm.faces.new(hi)
-        G.obj_from_bm(f"front_post_{s}", bm, "trl_paint", sharp=50)
+        G.obj_from_bm(f"front_post_{s}", bm, "trl_paint", sharp=40)
+        # galvanised foot (bolted to the bottom rail) and upper corner casting, 4 mm proud of the paint; kept inboard
+        # of x = 1.225 so the front swing radius (2.04 m) is not touched
+        box_mm(f"front_post_foot_{s}", s * 1.168, s * 1.228, F - 0.002, FW - 0.002, FLOOR - 0.02, FLOOR + 0.24, "galv",
+               bev=0.002, seg=1)
+        box_mm(f"front_post_cast_{s}", s * 1.168, s * 1.228, F - 0.002, FW - 0.002, TOPRAIL_Z - 0.06, ROOF - 0.035, "galv",
+               bev=0.002, seg=1)
+        for j, (bx, bz) in enumerate(((1.180, FLOOR + 0.02), (1.216, FLOOR + 0.02), (1.180, FLOOR + 0.20),
+                                      (1.216, FLOOR + 0.20), (1.198, TOPRAIL_Z - 0.03), (1.198, ROOF - 0.07))):
+            cyl(f"front_post_bolt_{s}_{j}", (s * bx, FW - 0.002, bz), 0.009, 0.004, "galv", axis="Y", seg=6)
+        # rivet row of the bulkhead sheet along the inner edge of the post (dome heads, pitch 0.24 m; uneven by a few mm)
+        nr = 9
+        for j in range(nr):
+            rz = FLOOR + 0.42 + j * 0.24 + 0.006 * math.sin(j * 2.3 + s)
+            cyl(f"front_post_rivet_{s}_{j}", (s * 1.173, F + 0.0015, rz), 0.0065, 0.004, "galv", axis="Y", seg=6)
     box_mm("front_header", -1.17, 1.17, Y_FRONT - 0.13, Y_FRONT - 0.002, TOPRAIL_Z - 0.01, ROOF - 0.03, "trl_paint",
            bev=0.006)
     box_mm("front_bottom_rail", -1.17, 1.17, Y_FRONT - 0.12, Y_FRONT - 0.004, FLOOR - 0.02, FLOOR + 0.07, "trl_paint",

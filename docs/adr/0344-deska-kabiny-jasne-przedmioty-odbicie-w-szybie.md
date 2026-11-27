@@ -57,3 +57,32 @@ ADR 0341 dodał w shaderze `Kamion/Truck Glass` (`MI_Ext_Glass`) warstwę odbici
   - Dodano testy regresyjne EditMode `SteeringWheelVisibilityTests.cs` (jeden renderer z wieńcem/przyciskami/piktogramami, aktywność i brak cullingu dla kątów `-540°…+540°` i tierów `Low`..`Ultra` z zapasem `0,6×` `lodBias`, oraz projekcja podów przy `0°`, `+35°`, `+180°`): **16/16 passed** (z `TruckCabGlassTierTests`, `CabInteriorRimAoTests`, `CabInteriorWearTests`).
   - Pętla `visual-qa` (`DrivingLab`, High PC, 1920×1080, `clear` i `overcast`, kamery `cab-driver` i `cab-hub`, kąty `0° / +35° / +180°`): identyczny budżet dla wszystkich kątów (`cab-driver`: `127` obiektów, `147` `drawsEst`, `173 847` tris; `cab-hub`: `21` obiektów, `42` `drawsEst`, `171 727` tris; `+0` draw calli). Dowody w `artifacts/neon-wheel-s24/`.
 
+
+## Dopisek (2026-11-27, `mirror-housing-s24`) — kartki z załamaniami i niższym albedo; kafel ostrzeżenia jako lampka
+
+Źródło: krytyk build #10 („biała kartka na desce”, papiery „jak biała płyta bez załamań”, plakietka POSTOJOWY „płaska jak naklejka
+UI”). Status: Proposed, ocenia `visual-critic`. Wartości `WORKING_VALUE`.
+
+1. **Albedo papieru:** `paper_doc` liniowo (0,84; 0,81; 0,75) → (0,585; 0,565; 0,520) (sRGB ≈ 0,78), `paper_tacho` (0,86; 0,87; 0,85)
+   → (0,60; 0,605; 0,59). Dotyczy wszystkich LOD (kolor wierzchołków). Panorama odbicia w szybie wypieczona ponownie
+   (`bake_windscreen_reflection.py`) — jasne kształty są ciemniejsze o ten sam czynnik (~0,69), czyli refleks z ADR 0344 słabnie
+   proporcjonalnie; nie mierzono ponownie `windscreen_measure.py` (`UNVERIFIED`).
+2. **Załamania (tylko LOD0; LOD1/LOD2 mają stare siatki):** obie kartki CMR to arkusze złożone „na trzy” i rozłożone — linie zgięcia
+   mają własne kolumny wierzchołków (wąskie V, dolina przy u = −0,34, grzbiet przy +0,31), panele leżą pod różnymi kątami, górna
+   kartka ma dodatkowe zgięcie poprzeczne i odstający prawy koniec; nadruk formularza (dwa pola nagłówka, wiersze, blok pieczęci)
+   i przybrudzone krawędzie w tincie wierzchołków, bez tekstu. Pasek tachografu: jedno ostre zgięcie i gęstsze pasma wydruku.
+   Cień kontaktowy kartek pochodzi z atlasu AO (wypieczony ponownie, 4096 spp). Zero nowych tekstur, slotów i draw calli.
+3. **Kafel ostrzeżeń HUD (monitor)** — `DrivingHud.TelltaleLens()`: 9-slice 64 px, biały (kolor kafla go barwi): ciemna ramka z
+   zaokrągleniem i światłem na górnej krawędzi, soczewka cofnięta w ramce (cień pod górną krawędzią, odblask przy dolnej),
+   podświetlenie jaśniejsze w środku niż przy brzegu, miękki cień na panelu. Tekst i kolory z `UiPalette` bez zmian. Dowód kadru:
+   `KAMION_QA_PARK=1` zapala kafel w kamerach kontrolnych (edytor nie ma żywego pojazdu).
+4. **Eksport na maszynie z blokadą SAC:** `a6_export.py --keep-plastic-maps` (analogicznie do `--keep-leather-maps`) zostawia
+   zatwierdzone `T_Cab_Plastic_*` bajt w bajt, gdy krok `plastic_grain.py` przez `uv` nie może wystartować (os error 4551, 27.11).
+
+**Zmierzone (budżet kabiny, docs/07 §3 — osobny budżet wnętrza, limity z `check_export.py`):** LOD0 106 130 → **107 305** / 120 000
+(+1 175, +1,1 %), LOD1 44 457 → 44 457 / 45 000, LOD2 21 787 → 21 787 / 22 000; 22 / 22 / 20 meshy, 0 nowych slotów. `CHECK PASS`,
+`SIGHTLINE PASS`. Kamery kabiny (edytor, PC High, 1920 × 1080, clear) przed | po: `cab-driver` 236 | 236 `drawsEst`, 176 279 | 177 455
+trójkątów; `cab-hub` 43 | 43, 171 755 | 172 931; `cab-dash` 240 | 240, 176 437 | 177 613.
+**Dowody:** `artifacts/mirrors-trailer-s24/r2/` — `cmp_cab-dash.jpg`, `cmp_cab-driver.jpg`, `dash_before_zoom.jpg` | `dash_after_zoom.jpg`, `iter2/tile.jpg` (kafel ×2).
+**Otwarte:** nadruk w tincie ma rozdzielczość siatki (6-10 mm) — z fotela czyta się jako szare wiersze, nie jako formularz; ostry
+druk wymaga pasma w atlasie decali (osobna runda); ocena jasności papieru w słońcu na buildzie Windows.

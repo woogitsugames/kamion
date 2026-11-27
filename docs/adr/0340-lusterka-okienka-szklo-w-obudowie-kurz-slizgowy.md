@@ -86,3 +86,50 @@ przebudowy prefabów).
    obrysowa, klapa schowka, przetłoczenie, zacieki pod rynienką) wymaga rundy modelu kabiny — osobne zadanie.
 4. Promień krzywizny lusterka klasy II wg R46 — `UNVERIFIED`; k = 0,07 to wartość robocza „ledwie widoczna”.
 5. Zrzut z playera (build Windows) po scaleniu — w tym zadaniu dowody są z edytora (kamery kontrolne, tier PC High).
+
+## Dopisek (2026-11-27, `mirror-housing-s24`) — okienko jako głowica lusterka; „szara tafla naczepy” to czoło słupka
+
+Źródło: krytyk build #10 (`artifacts/critic-s24-build10/CRITIC.md` pkt 8: „lusterka bez obudowy / naczepa płaska”). Status: Proposed,
+ocenia `visual-critic` i właściciel (autor nie zatwierdza). Wszystkie wymiary i siły `WORKING_VALUE`.
+
+**Diagnoza (zmierzone na `r2/before/mirror_L.png`, RT natywna i ×3):** jasnoszara kolumna obok lampy obrysowej, którą krytyk
+czyta jako „płaską taflę naczepy”, to **czoło przedniego słupka narożnego** (0,11 m, widziane niemal na wprost obok narożnika kabiny,
+ok. 8-9 % szerokości okienka) — gładki, malowany walec o przekroju zaokrąglonego prostokąta. Firanka to nadal wąski pasek obok.
+
+1. **Głowica lusterka w okienku (monitor; okienka dotykowe ADR 0079 bez zmian).** Prostokąt okienka i szkło klasy II nie zmieniają
+   położenia ani rozmiaru (testy układu 0283/0265 nietknięte). Wokół nich rysowane są (`MirrorWindowArt`, tekstury proceduralne, bez
+   plików i bez marek): `Head()` — formowana obudowa 9-slice wystająca 14 j. poza okienko (zaokrąglenie 27 j., walcowana krawędź
+   oświetlona z góry z pseudonormalnej pola odległości, ziarno tworzywa, kurz na górnej ściance, linia podziału skorup, cień
+   kontaktowy 4 j.); `Arm()` — dwa ramiona (górne, dolne) w stronę kabiny: rura 68 × 54 j. zakończona pionową tuleją zawiasu, jak na
+   modelu TRAKT (`cab-mirrors-left`); stary pierścień ADR 0340 zostaje jako warga/uszczelka przy szkle.
+2. **Szkło szerokokątne (klasa IV) pod szkłem głównym**, w tej samej obudowie: żywa tekstura istniejącego lusterka `MIRROR_Wide*`
+   (bez nowej kamery), szerokość okienka, proporcja 1,30, kadr z dołu tekstury (niebo obcinane pierwsze, `MirrorWindowLayout.WideCrop`,
+   nigdy nie ściskane), krzywizna beczkowa 0,16. To dekoracja okienka, nie strefa: `DesktopHudLayout.SolveMirrorWide` pokazuje ją
+   tylko, gdy oba szkła (z zapasem 18 j.) nie dotykają żadnej strefy HUD (GPS, pasek, panel deweloperski) i mieszczą się w treści;
+   inaczej głowica ma samo szkło główne. Telemetria deweloperska = wyłączone. Okienka główne nigdy się dla niej nie przesuwają
+   (test `MirrorHead0340Tests`, 6 monitorów × 3 rozmiary × 3 położenia × 2 odsunięcia × 128 stanów).
+3. **Harmonogram:** `RenderTextureMirror.ForceWide` (ustawia `DrivingLabBootstrap`, gdy HUD pokazuje szkła IV) dopuszcza lusterka
+   klasy IV jako kandydatów, gdy ich szkło 3D jest poza kadrem. Limit `MirrorsPerFrame` i interwały bez zmian (High: II co 2 klatki,
+   IV co 4 — zapotrzebowanie 1,5 ≤ limit 2; podczas jazdy lusterka IV zajmują sloty, które dotąd dobierała para główna). Koszt w
+   playerze `UNVERIFIED` — do pomiaru `pc-metrics` (polecenie w raporcie); wyłącznik: nie podawać `Left/RightWideMirrorTexture`.
+4. **Szkło mniej „czyste”:** `FilmHead()` 128 × 232 — (a) jednolity welon alfa 0,06 w kolorze szaro-niebieskim (czerń ≈ +0,035,
+   biel ≈ −0,025: kontrast × 0,94), (b) brud trzymany przy wardze (pas kilku procent szerokości, najgęstszy w dolnych rogach,
+   rozbity szumem), (c) zaschnięte krople: 2/3 drobne plamki, 1/3 większe ślady z przerwaną obwódką, część z zaciekiem. Środkowa
+   tercja szkła ≤ 0,16 alfa (test `MirrorHeadArtTests`). Obraz mnożony przez (0,92; 0,94; 0,95) jak materiał szkła 3D.
+5. **Naczepa — słupek przedni jako profil** (`trailer_build.py front_wall()`): kanał kedrowy 28 × 6 mm w czole, rowek 24 × 4,5 mm
+   w ścianie bocznej, stopa i odlew narożny ocynk (4 mm przed lakierem) ze śrubami, rząd 9 nitów blachy czołowej co 0,24 m.
+   Lico lakieru cofnięte o 6 mm, okucia kończą się na obrysie 13,6 m (`physics_crosscheck` PASS); promień naroża i obrys 2,55 m bez
+   zmian. LOD1 traci nity i śruby, LOD2 także stopę i odlew. Taśmy konturowe i odblaski (ADR 0175) nietknięte.
+
+**Zmierzone:** naczepa LOD0 89 000 → 88 999 / 90 000, LOD1 24 499 → 24 496 / 25 000, LOD2 7 847 → 7 849 / 8 000 (`check_export.py`
+PASS; eksport z bake'iem 835 s). Kamery kontrolne (edytor, PC High, 1920 × 1080, clear): `drawsEst` bez zmian na wszystkich 11 kamerach
+(np. `cab-driver` 236 → 236, `trailer-34` 315 → 315). UI: okienko 3 → 6 obrazów (+ obudowa, 2 ramiona), z szybą IV 9 (łącznie
++12 obrazów UI na oba lusterka; rzeczywiste draw calle po batchowaniu uGUI — `UNVERIFIED`). Tekstury proceduralne: 160², 136 × 108,
+128 × 232 RGBA (~230 KB). Testy: EditMode 1481 / 0 / 123 pominięte (`artifacts/tests/editmode-20261127-094616.xml`), PlayMode HUD
+(filtr 5 klas) 56 / 0.
+**Dowody:** `artifacts/mirrors-trailer-s24/r2/` — `before/`, `after/` (11 kamer + `mirror_L/R.png`, `stats.txt`), `cmp_cab-view-b-fov70-hud.jpg`,
+`cmp_mirror_L_native.png`, `iter2/zoom.jpg` (głowice 1:1).
+**Otwarte:** (1) w lusterku nowy słupek daje linię kanału i odlew ze śrubami — zmiana jest mała w pikselach (RT ~211 px szerokości);
+dalszy zysk wymaga decyzji o celowaniu lusterka (ADR 0283) albo większej RT; (2) przełącznik szkła IV w ustawieniach (dziś zawsze,
+gdy się mieści) i jego rozmiar — decyzja właściciela; (3) ramiona kończą się tuleją „w powietrzu” (okienko nie jest przypięte do
+słupka A w 3D) — kierunek artystyczny do oceny; (4) pomiar playera Windows.

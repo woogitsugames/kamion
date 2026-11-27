@@ -66,3 +66,11 @@ i podstawę kierunkowskazu (soczewka i rynienka zostają). Cele decymacji bez zm
 5. Przednia część rynienki w widoku `truck-side` (edytor, słońce) jest jaśniejsza niż tylna
    (`artifacts/cab-side-s24/compare/bok_kabiny_zoom_przed_po.jpg`) — przyczyna nie zdiagnozowana (połysk tworzywa albo
    wypalone AO); do sprawdzenia przy rundzie krytyka.
+
+## Dopisek (2026-11-27, `mirror-housing-s24`) — co z boku zestawu widać w głowicy lusterka po buildzie #10
+
+Bok kabiny bez zmian modelu w tej rundzie. Zmierzone na `artifacts/mirrors-trailer-s24/r2/after/mirror_L.png`: pas kabiny (kratka,
+rynienka, przetłoczenie z tego ADR) pozostaje czytelny; element, który krytyk build #10 opisał jako „płaską szarą taflę naczepy”,
+to czoło przedniego słupka naczepy — przebudowane w dopisku do ADR 0340 (profil z kanałem, stopa, odlew, nity). Dolne szkło
+głowicy (klasa IV, dopisek 0340 pkt 2) pokazuje dolną połać drzwi, stopnie i koła — rozbryzg i zacieki z pkt 8 tego ADR są tam
+widoczne po raz pierwszy w okienku HUD. Dowód: `r2/cmp_cab-view-b-fov70-hud.jpg`. Ocena: `visual-critic`.

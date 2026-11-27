@@ -385,13 +385,24 @@ namespace Game.Editor.VisualQA
                         foreach (var mir in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None))
                         {
                             var mt = mir.Texture;
-                            if (!mir.main) continue;
+                            if (!mir.main)
+                            {
+                                // ADR 0340 addendum: class IV pair for the lower glass of the mirror heads
+                                if (mir.Class != 4 || mir.glass == null) continue;
+                                var truck = mir.GetComponentInParent<Game.Vehicle.Runtime.TruckVisualRig>();
+                                var rootT = truck != null ? truck.transform : mir.transform.root;
+                                if (rootT.InverseTransformPoint(mir.glass.bounds.center).x < 0f) ctx.LeftWideMirrorTexture = () => mt;
+                                else ctx.RightWideMirrorTexture = () => mt;
+                                continue;
+                            }
                             if (mir.phase == 0) ctx.LeftMirrorTexture = () => mt; else ctx.RightMirrorTexture = () => mt;
                         }
                     }
                     // D90 / ADR 0294: cab control cameras render the cab-view HUD (no speed strip over the live dash cluster).
                     bool cabView = CabViewQa.IsCabCameraId(qa.id);
                     ctx.CameraModeOverride = () => cabView ? Game.Cameras.CameraMode.Cab : Game.Cameras.CameraMode.Chase;
+                    // ADR 0344 addendum evidence: KAMION_QA_PARK=1 lights the parking-brake tile (no live vehicle in the editor run)
+                    DrivingHud.QaParkingBrakeTile = Environment.GetEnvironmentVariable("KAMION_QA_PARK") == "1";
                     hud = DrivingHud.Create(uiCam, ctx);
                     hud.OverrideSafeAreaNormalized(new Rect(0.04f, 0f, 0.96f, 1f));
                     hud.SetTelemetryVisible(qa.drivingHudTelemetry);

@@ -17,6 +17,8 @@ namespace Game.Controls
         /// <summary>Player preferences (<see cref="HudPrefsData"/>): size (fraction of the height; &lt;= 0 = default),
         /// vertical drop 0..1, inset towards the centre 0..1.</summary>
         public float MirrorSize, MirrorDrop, MirrorInset;
+        /// <summary>ADR 0340 addendum: the class IV (wide-angle) glass of the mirror head has a picture (both sides).</summary>
+        public bool MirrorWide;
         public bool ReverseView;
         /// <summary>The "Panel" button (developer / lab page) is on screen (extended detail or developer diagnostics).</summary>
         public bool DevToggle;
@@ -33,7 +35,8 @@ namespace Game.Controls
             Width == o.Width && Height == o.Height && Strip == o.Strip && Extended == o.Extended && MirrorLeft == o.MirrorLeft
             && MirrorRight == o.MirrorRight && MirrorAspect == o.MirrorAspect && MirrorSize == o.MirrorSize && MirrorDrop == o.MirrorDrop
             && MirrorInset == o.MirrorInset && ReverseView == o.ReverseView && DevToggle == o.DevToggle && DevPanelOpen == o.DevPanelOpen
-            && Telemetry == o.Telemetry && DevText == o.DevText && Compact == o.Compact && ScreenWidth == o.ScreenWidth;
+            && Telemetry == o.Telemetry && DevText == o.DevText && Compact == o.Compact && ScreenWidth == o.ScreenWidth
+            && MirrorWide == o.MirrorWide;
     }
 
     /// <summary>Monitor HUD zones, content canvas units, origin bottom-left, y up.</summary>
@@ -52,6 +55,11 @@ namespace Game.Controls
         public bool Compact;
         /// <summary>How far the mirror windows may reach outside the content on each side (ultrawide side band; units).</summary>
         public float MirrorOutboard;
+        /// <summary>ADR 0340 addendum: wide-angle (class IV) glass of each mirror head, directly under the main window, same
+        /// width. Decoration of the window, not a zone of its own: shown only when both fit without touching another zone
+        /// (<see cref="ShowMirrorWide"/>); the main windows never move or shrink for it.</summary>
+        public Rect MirrorWideLeft, MirrorWideRight;
+        public bool ShowMirrorWide;
 
         public const int ZoneCount = 10;
         static readonly string[] k_Names = { "Strip", "Telltales", "ReverseView", "MirrorLeft", "MirrorRight", "DevToggle", "DevPanel", "Telemetry", "DevText", "Nav" };
@@ -118,6 +126,15 @@ namespace Game.Controls
         /// housing edge", which read as a raw picture-in-picture rectangle on the build, critic s24 build #5 p. 5). The
         /// window rect itself is unchanged. WORKING_VALUE (owner to judge on the build).</summary>
         public const float MirrorBezel = 6f;
+        /// <summary>ADR 0340 addendum (critic build #10 p.8): gap between the main window and the wide-angle glass under it
+        /// (the head's cross web) [units]. WORKING_VALUE.</summary>
+        public const float MirrorWideGap = 16f;
+        /// <summary>Width / height of the wide-angle glass as drawn. The class IV texture is taller (about 0.9-1.0): the
+        /// window shows its lower part (road, kerb, trailer wheels), cropped, never squashed. WORKING_VALUE.</summary>
+        public const float MirrorWideAspect = 1.30f;
+        /// <summary>Room the mirror head needs around its glasses (moulded edge + contact shadow, Game.UI.Driving.MirrorWindowArt)
+        /// [units]: the wide-angle glass is shown only when this much stays free below it.</summary>
+        public const float MirrorHeadClear = 18f;
 
         public static float StripHeight(bool extended) => StripSize.y + (extended ? ExtendedRowHeight : 0f);
 
@@ -179,7 +196,30 @@ namespace Game.Controls
                 r.Telemetry = new Rect(x0, top - th, tw, th);
             }
             SolveNav(s, ref r);
+            SolveMirrorWide(s, ref r);
         }
+
+        /// <summary>ADR 0340 addendum: the wide-angle glasses under the main windows - only when both main windows are on
+        /// screen and both wide glasses (with the head's edge) clear every other zone; otherwise the heads carry the main
+        /// glass only. Developer telemetry on = off (it uses that column).</summary>
+        static void SolveMirrorWide(in DesktopHudInput s, ref DesktopHudResult r)
+        {
+            r.ShowMirrorWide = false;
+            float wh = r.MirrorLeft.width / MirrorWideAspect;
+            r.MirrorWideLeft = new Rect(r.MirrorLeft.x, r.MirrorLeft.yMin - MirrorWideGap - wh, r.MirrorLeft.width, wh);
+            r.MirrorWideRight = new Rect(r.MirrorRight.x, r.MirrorRight.yMin - MirrorWideGap - wh, r.MirrorRight.width, wh);
+            if (!s.MirrorWide || !r.ShowMirrorLeft || !r.ShowMirrorRight || s.Telemetry || wh < 60f) return;
+            Rect a = Grow(r.MirrorWideLeft, MirrorHeadClear), b = Grow(r.MirrorWideRight, MirrorHeadClear);
+            if (a.yMin < Margin - MirrorHeadClear) return;
+            for (int i = 0; i < DesktopHudResult.ZoneCount; i++)
+            {
+                if (i == 3 || i == 4 || !r.Zone(i, out Rect z)) continue;
+                if (Intersects(a, z) || Intersects(b, z)) return;
+            }
+            r.ShowMirrorWide = true;
+        }
+
+        static Rect Grow(Rect r, float by) => new Rect(r.x - by, r.y - by, r.width + 2f * by, r.height + 2f * by);
 
         /// <summary>GPS widget size (ADR 0150 NavHudLayout: preferred 340 x 440, minimum 220 x 250 units).</summary>
         public static readonly Vector2 NavPreferred = new Vector2(340f, 440f), NavMinimum = new Vector2(220f, 250f);

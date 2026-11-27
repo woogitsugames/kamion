@@ -10,7 +10,7 @@
      "role": "CHASSIS",
      "rig_parent": "Trailer_LOD0",
      "fbx_parent": "Trailer_LOD0",
-     "tris": 29412,
+     "tris": 30144,
      "materials": [
       "MI_Trl_Trim",
       "MI_Trl_Metal",
@@ -33,7 +33,7 @@
      "role": "CURTAIN_L",
      "rig_parent": "Trailer_LOD0",
      "fbx_parent": "Trailer_LOD0",
-     "tris": 8924,
+     "tris": 8793,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Curtain"
@@ -53,7 +53,7 @@
      "role": "CURTAIN_R",
      "rig_parent": "Trailer_LOD0",
      "fbx_parent": "Trailer_LOD0",
-     "tris": 8923,
+     "tris": 8795,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Curtain"
@@ -297,7 +297,7 @@
      "role": "WHEEL_1L",
      "rig_parent": "Trailer_LOD0",
      "fbx_parent": "Trailer_LOD0",
-     "tris": 6247,
+     "tris": 6167,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -331,7 +331,7 @@
      "role": "WHEEL_1R",
      "rig_parent": "Trailer_LOD0",
      "fbx_parent": "Trailer_LOD0",
-     "tris": 6247,
+     "tris": 6167,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -365,7 +365,7 @@
      "role": "WHEEL_2L",
      "rig_parent": "Trailer_LOD0",
      "fbx_parent": "Trailer_LOD0",
-     "tris": 6246,
+     "tris": 6168,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -399,7 +399,7 @@
      "role": "WHEEL_2R",
      "rig_parent": "Trailer_LOD0",
      "fbx_parent": "Trailer_LOD0",
-     "tris": 6247,
+     "tris": 6167,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -433,7 +433,7 @@
      "role": "WHEEL_3L",
      "rig_parent": "Trailer_LOD0",
      "fbx_parent": "Trailer_LOD0",
-     "tris": 6246,
+     "tris": 6168,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -467,7 +467,7 @@
      "role": "WHEEL_3R",
      "rig_parent": "Trailer_LOD0",
      "fbx_parent": "Trailer_LOD0",
-     "tris": 6246,
+     "tris": 6168,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -684,8 +684,8 @@
    },
    "collision": {
     "COL_Body": {
-     "tris": 94,
-     "verts": 49,
+     "tris": 104,
+     "verts": 54,
      "convex": true,
      "parent": "Trailer_LOD0"
     },
@@ -702,11 +702,11 @@
      "parent": "Trailer_LOD0"
     }
    },
-   "tris_total": 89000,
-   "tris_before_decimation": 108202,
-   "decimate_area_budget_k": 422.42,
-   "file_bytes": 9286428,
-   "build_s": 11.2
+   "tris_total": 88999,
+   "tris_before_decimation": 108970,
+   "decimate_area_budget_k": 413.85,
+   "file_bytes": 9238748,
+   "build_s": 17.1
   },
   "LOD1": {
    "file": "art-source/truck/trailer/export/SM_Trailer_LOD1.fbx",
@@ -716,7 +716,7 @@
      "role": "CHASSIS",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 12719,
+     "tris": 12784,
      "materials": [
       "MI_Trl_Trim",
       "MI_Trl_Metal",
@@ -739,7 +739,7 @@
      "role": "CURTAIN_L",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1863,
+     "tris": 1853,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Curtain"
@@ -759,7 +759,7 @@
      "role": "CURTAIN_R",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1862,
+     "tris": 1855,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Curtain"
@@ -999,7 +999,7 @@
      "role": "WHEEL_1L",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1184,
+     "tris": 1174,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1033,7 +1033,7 @@
      "role": "WHEEL_1R",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1190,
+     "tris": 1182,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1067,7 +1067,7 @@
      "role": "WHEEL_2L",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1185,
+     "tris": 1174,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1101,7 +1101,7 @@
      "role": "WHEEL_2R",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1188,
+     "tris": 1181,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1135,7 +1135,7 @@
      "role": "WHEEL_3L",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1184,
+     "tris": 1175,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1169,7 +1169,7 @@
      "role": "WHEEL_3R",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1184,
+     "tris": 1178,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1385,11 +1385,11 @@
     }
    },
    "collision": {},
-   "tris_total": 24499,
-   "tris_before_decimation": 93414,
-   "decimate_area_budget_k": 66.46,
-   "file_bytes": 2715612,
-   "build_s": 8.6
+   "tris_total": 24496,
+   "tris_before_decimation": 93582,
+   "decimate_area_budget_k": 65.79,
+   "file_bytes": 2714892,
+   "build_s": 13.3
   },
   "LOD2": {
    "file": "art-source/truck/trailer/export/SM_Trailer_LOD2.fbx",
@@ -1399,7 +1399,7 @@
      "role": "CHASSIS",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 3111,
+     "tris": 3113,
      "materials": [
       "MI_Trl_Trim",
       "MI_Trl_Paint",
@@ -2063,11 +2063,11 @@
     }
    },
    "collision": {},
-   "tris_total": 7847,
-   "tris_before_decimation": 74282,
-   "decimate_area_budget_k": 13.55,
-   "file_bytes": 1055484,
-   "build_s": 4.9
+   "tris_total": 7849,
+   "tris_before_decimation": 74274,
+   "decimate_area_budget_k": 13.53,
+   "file_bytes": 1055724,
+   "build_s": 8.6
   }
  },
  "units": "metres",
@@ -2094,7 +2094,7 @@
   "LOD2": 0.05,
   "cull": 0.005
  },
- "tris_source_pieces": 108202,
+ "tris_source_pieces": 108970,
  "slots": {
   "Paint": "MI_Trl_Paint",
   "Curtain": "MI_Trl_Curtain",
@@ -2693,8 +2693,8 @@
   },
   "texel_density": {
    "Paint": {
-    "area_m2": 21.74,
-    "uv_coverage": 0.829,
+    "area_m2": 22.06,
+    "uv_coverage": 0.843,
     "px_per_m": {
      "High": 400,
      "Medium": 200,
@@ -2720,11 +2720,11 @@
     }
    },
    "Metal": {
-    "area_m2": 38.73,
-    "uv_coverage": 0.477,
+    "area_m2": 38.85,
+    "uv_coverage": 0.475,
     "px_per_m": {
-     "High": 227,
-     "Medium": 114,
+     "High": 226,
+     "Medium": 113,
      "Low": 57
     }
    },
@@ -2746,7 +2746,7 @@
   "height": 3.996,
   "y_front": 1.6,
   "y_rear": -12.0,
-  "front_swing": 2.0294,
+  "front_swing": 2.0249,
   "overall_length": 13.7315,
   "overall_width": 2.86,
   "tyre_r": 0.536,
@@ -2870,7 +2870,7 @@
    },
    {
     "item": "front swing radius (96/53/EC <= 2.04)",
-    "art": 2.029,
+    "art": 2.025,
     "physics": 2.04,
     "match": true,
     "note": "must be <= 2.04"

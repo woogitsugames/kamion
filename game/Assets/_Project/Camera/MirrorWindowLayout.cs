@@ -87,6 +87,30 @@ namespace Game.Cameras
         public const float GlassCurvature = 0.07f;
         /// <summary>Darkening at the glass corners (0 = none). WORKING_VALUE.</summary>
         public const float GlassVignette = 0.26f;
+        /// <summary>ADR 0340 addendum: barrel strength of the wide-angle (class IV) glass in the monitor mirror head - a
+        /// visibly convex glass (centre magnification ~1.4 at the pane aspect), still monotonic (tested). WORKING_VALUE.</summary>
+        public const float WideGlassCurvature = 0.16f;
+        /// <summary>ADR 0340 addendum: light a silvered glass returns (the modelled mirror glass uses 0.92, 0.93, 0.95) -
+        /// the window picture is no longer brighter than the mirror it stands for.</summary>
+        public static readonly Color GlassTint = new Color(0.92f, 0.94f, 0.95f, 1f);
+
+        /// <summary>
+        /// UV rect (already mirrored left-right, like the main glass) that shows a wide-angle texture of aspect
+        /// <paramref name="textureAspect"/> (width / height) in a pane of <paramref name="paneAspect"/> without squashing:
+        /// a taller texture loses its top (sky) first - 80 % of the crop comes off the top, 20 % off the bottom; a
+        /// wider one is cropped evenly at the sides. Pure.
+        /// </summary>
+        public static Rect WideCrop(float textureAspect, float paneAspect)
+        {
+            if (textureAspect <= 1e-3f || paneAspect <= 1e-3f) return new Rect(1f, 0f, -1f, 1f);
+            if (textureAspect < paneAspect)
+            {
+                float f = textureAspect / paneAspect;
+                return new Rect(1f, (1f - f) * 0.2f, -1f, f);
+            }
+            float g = paneAspect / textureAspect;
+            return new Rect(1f - (1f - g) * 0.5f, 0f, -g, 1f);
+        }
 
         /// <summary>
         /// Barrel map of a glass point: <paramref name="s"/>, <paramref name="t"/> in 0..1 across / along the glass,
