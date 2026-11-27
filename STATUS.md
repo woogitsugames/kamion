@@ -1,16 +1,14 @@
-# STATUS mirror-mounts-s24 (krytyk day27 zestaw 3: wsporniki głowic lusterek, RT ≥ 512×1024 High, odbicie mniej jasne/mgliste; dopisek 2 ADR 0340)
+# STATUS mirror-mounts-s24 (krytyk day27 zestaw 3: wsporniki głowic lusterek, RT ≥ 512×1024 High, ciemniejsze szkło; dopisek 2 ADR 0340)
 
-- Worktree `.claude/worktrees/agent-a788bb43492d27936`, gałąź `worktree-agent-a788bb43492d27936`. Nie scalane, nie pushowane.
+- Worktree `.claude/worktrees/agent-a788bb43492d27936`, gałąź `worktree-agent-a788bb43492d27936`. Nie scalane, nie pushowane. STAN: GOTOWE do oceny `visual-critic`.
 - Środowisko: `game/Library`, `_Generated/{Truck,Trailer}`, `art-source/truck/interior/export` skopiowane z worktree `neon-avenue-s24` (Win64).
-- [krok 1] Rendery PRZED: `artifacts/mirror-mounts-s24/before/` (DrivingLab, PC High, 1920×1080, clear, wszystkie kamery + `mirror_L/R.png` 171×384).
-  Diagnoza: (a) okienka HUD stoją nad lewą krawędzią słupka A / w szybie po prawej; stare ramiona = sztywny kikut 68 j. z tuleją, bez związku z kabiną;
-  (b) RT kl. II 171×384 (szkło TRAKT ma proporcję 0,445, nie 0,55); (c) kamera lusterka bez HDR/post — obraz bez krzywej tonalnej widoku głównego (blady) + welon filmu 0,06.
-- [krok 2] Implementacja (WIP, kompilacja i rendery w toku):
-  - wspornik: `MirrorWindowLayout.SolveMount/AimRight` (czysta geometria), `MirrorWindowArt.Tube()/Foot()` (rura 9-slice + stopa ze śrubami), `DrivingHud.UpdateMirrorMount`
-    — rura pozioma + zastrzał od głowicy do rzutu punktu mocowania na słupku A (`RenderTextureMirror.CabMountWorld`, offsety z `body.py mirrors()`), punkt podaje `DrivingHudContext.Left/RightMirrorMountViewport`.
-  - RT: `VehicleCameraBudget.MainMirrorHeight` + pola tieru `mirrorMainMinWidth/Height` (PC High/Ultra 512×1024 → 512×1151 dla szkła 0,445), mipmapy + trilinear gdy RT > okienko.
-  - obraz: `mirrorPost` (PC High/Ultra) — HDR + post (ta sama gradacja co widok główny) w kamerach lusterek pokazywanych w okienkach HUD; `FilmVeil` 0,06 → 0,03.
-  - A/B: `rq_mirror_main=<px|0>`, `rq_mirror_post=<0|1>`; edytor `KAMION_MIRROR_MAIN`, `KAMION_MIRROR_POST`, `KAMION_QA_MIRROR_MOUNT=0`.
-  - testy: `MirrorMount0340Tests` (EditMode, 8), `MirrorHeadArtTests` (PlayMode) zaktualizowany.
-- NASTĘPNY KROK: `pwsh -File <scratchpad>/run_qa.ps1 -Out iter1 -TestFilter Game.Tests.MirrorMount0340Tests -Bench` (lub ręcznie: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter Game.Tests.MirrorMount0340Tests`,
-  potem `$env:KAMION_MIRROR_DUMP=<dir>; pwsh scripts/visual-qa.ps1 -Scene DrivingLab -Tier High -Pc -Width 1920 -Height 1080 -Lighting clear -BuildTarget Win64 -Cameras cab-view-b-fov70-hud,cab-left,cab-right -OutputDir artifacts/mirror-mounts-s24/iter1`), obejrzeć PNG, poprawić.
+- [krok 1] PRZED: `artifacts/mirror-mounts-s24/before/` (DrivingLab, PC High, 1920×1080, clear; RT kl. II 171×384).
+- [krok 2] Wspornik HUD zakotwiczony w słupku A (`MirrorWindowLayout.SolveMount/AimRight`, `MirrorWindowArt.Tube()/Foot()`, `DrivingHud.UpdateMirrorMount`,
+  `RenderTextureMirror.CabMountWorld/ViewportOf`, `DrivingHudContext.Left/RightMirrorMountViewport`); RT kl. II min 512×1024 na PC High/Ultra → 512×1151
+  (`mirrorMainMinWidth/Height`, mipmapy); `GlassTint` 0,92 → 0,80, `FilmVeil` 0,06 → 0,03; `mirrorPost` (gradacja w kamerze lusterka) zmierzone i wyłączone w tierach.
+- [krok 3] PO: `artifacts/mirror-mounts-s24/after/` + zestawienia (`cmp_*.jpg`, `after_b_L.png`, `after_fov_variants.jpg`). MIRROR_BENCH (edytor): 171×384 3,75/3,77 ms/parę,
+  512×1151 3,57/3,68 (szum), + post 4,27/4,43. `drawsEst`/`trisExact` kabiny bez zmian (147 / 175 023). GPU w playerze UNVERIFIED.
+- [krok 4] Testy: EditMode 1639 / 1516 OK / 0 fail / 123 skip (`artifacts/tests/editmode-20261127-152203.xml`); PlayMode 5 klas HUD/lusterek 54 / 0 (`playmode-20261127-154849.xml`).
+- [krok 5] Dopisek 2 w `docs/adr/0340-*.md`; dowody skopiowane do `C:\Users\matma\Documents\Claude\kamion\artifacts\mirror-mounts-s24\`.
+- NASTĘPNY KROK (lider): `visual-critic` na `artifacts/mirror-mounts-s24/cmp_cab-view-b-fov70-hud.jpg` + `after_b_L.png`; po scaleniu pomiar playera
+  `pwsh scripts/pc-metrics.ps1 -Exe <build> -Scene knyszyn-w -Tier High -Fps 60 -Width 1920 -Height 1080 -DurationSeconds 90 -Class zalecany` (A/B z `rq_mirror_main=0`).

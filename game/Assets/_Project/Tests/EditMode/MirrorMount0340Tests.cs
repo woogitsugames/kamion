@@ -9,7 +9,7 @@ namespace Game.Tests
 {
     /// <summary>
     /// ADR 0340 addendum 2 (critic day27 set 3): the bracket that hangs a monitor mirror head on the cab, the class II
-    /// texture floor of the PC High / Ultra tiers and the grading switch of the mirror pictures shown as HUD windows.
+    /// texture floor of the PC High / Ultra tiers and the (default off) grading switch of the mirror pictures shown as HUD windows.
     /// </summary>
     public class MirrorMount0340Tests
     {
@@ -53,13 +53,13 @@ namespace Game.Tests
             MirrorWindowLayout.SolveMount(k_Head, new Vector2(k_Head.xMax + 1.2f * reach, 100f), out var far);
             Assert.IsFalse(far.Show, "never stretched across the view");
             float prev = 1.01f;
-            for (float d = 0.5f; d <= 1.0f; d += 0.05f)
+            for (int i = 10; i <= 20; i++)
             {
-                MirrorWindowLayout.SolveMount(k_Head, new Vector2(k_Head.xMax - MirrorWindowLayout.MountRootInset + d * reach, 100f), out var m);
+                MirrorWindowLayout.SolveMount(k_Head, new Vector2(k_Head.xMax - MirrorWindowLayout.MountRootInset + i * 0.05f * reach, 100f), out var m);
                 Assert.LessOrEqual(m.Alpha, prev + 1e-5f, "fades monotonically");
                 prev = m.Alpha;
             }
-            Assert.Less(prev, 0.05f);
+            Assert.Less(prev, 0.02f, "gone at the full reach");
             MirrorWindowLayout.SolveMount(k_Head, new Vector2(float.NaN, 0f), out var nan);
             Assert.IsFalse(nan.Show);
         }
@@ -131,14 +131,15 @@ namespace Game.Tests
         public void PcTiers_HighAndUltraHaveTheFloorAndGrading_LowMediumUnchanged()
         {
             var t = PcTierTable.Defaults();
-            Assert.AreEqual(0, t[(int)PcTier.Low].mirrorMainMinHeight); Assert.IsFalse(t[(int)PcTier.Low].mirrorPost);
-            Assert.AreEqual(0, t[(int)PcTier.Medium].mirrorMainMinHeight); Assert.IsFalse(t[(int)PcTier.Medium].mirrorPost);
+            Assert.AreEqual(0, t[(int)PcTier.Low].mirrorMainMinHeight);
+            Assert.AreEqual(0, t[(int)PcTier.Medium].mirrorMainMinHeight);
             foreach (var tier in new[] { PcTier.High, PcTier.Ultra })
             {
                 Assert.GreaterOrEqual(t[(int)tier].mirrorMainMinWidth, 512, tier.ToString());
                 Assert.GreaterOrEqual(t[(int)tier].mirrorMainMinHeight, 1024, tier.ToString());
-                Assert.IsTrue(t[(int)tier].mirrorPost, tier.ToString());
             }
+            // measured (ADR 0340 addendum 2): grading the mirror picture changes its mean by +3 % for +0.3..0.7 ms per pair - off
+            foreach (var s in t) Assert.IsFalse(s.mirrorPost);
             Assert.IsEmpty(PcTierTable.Validate(t));
             t[(int)PcTier.Ultra].mirrorMainMinHeight = 512;
             Assert.IsTrue(PcTierTable.Validate(t).Exists(x => x.Contains("mirrorMainMinHeight decreases")));

@@ -91,8 +91,9 @@ namespace Game.Cameras
         /// visibly convex glass (centre magnification ~1.4 at the pane aspect), still monotonic (tested). WORKING_VALUE.</summary>
         public const float WideGlassCurvature = 0.16f;
         /// <summary>ADR 0340 addendum: light a silvered glass returns (the modelled mirror glass uses 0.92, 0.93, 0.95) -
-        /// the window picture is no longer brighter than the mirror it stands for.</summary>
-        public static readonly Color GlassTint = new Color(0.92f, 0.94f, 0.95f, 1f);
+        /// the window picture is no longer brighter than the mirror it stands for. Addendum 2 (critic day27 set 3:
+        /// "reflection too bright"): 0.92 -> 0.80 (-13 %), the picture sits below the view around it. WORKING_VALUE.</summary>
+        public static readonly Color GlassTint = new Color(0.80f, 0.82f, 0.83f, 1f);
 
         /// <summary>
         /// UV rect (already mirrored left-right, like the main glass) that shows a wide-angle texture of aspect
@@ -141,8 +142,8 @@ namespace Game.Cameras
         // ------------------------------------------------------------------ head bracket (ADR 0340 addendum 2, critic day27 set 3)
 
         /// <summary>Tube / strut thickness and mounting-foot size of the head bracket [canvas units]. WORKING_VALUE.</summary>
-        public const float MountTube = 26f, MountStrut = 16f;
-        public static readonly Vector2 MountFoot = new Vector2(30f, 84f);
+        public const float MountTube = 34f, MountStrut = 21f;
+        public static readonly Vector2 MountFoot = new Vector2(44f, 112f);
         /// <summary>The tube root sits this far under the head's outline; the tube leaves the head no closer than
         /// <see cref="MountEdgePad"/> to its top / bottom (rounded corners) [units].</summary>
         public const float MountRootInset = 4f, MountEdgePad = 34f;

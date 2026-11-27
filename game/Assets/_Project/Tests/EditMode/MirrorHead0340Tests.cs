@@ -117,7 +117,7 @@ namespace Game.Tests
                     prev = uv.x;
                 }
             }
-            Assert.That(MirrorWindowLayout.GlassTint.maxColorComponent, Is.InRange(0.85f, 0.98f), "a mirror returns a little less than it gets");
+            Assert.That(MirrorWindowLayout.GlassTint.maxColorComponent, Is.InRange(0.75f, 0.98f), "a mirror returns less than it gets");
         }
     }
 }
