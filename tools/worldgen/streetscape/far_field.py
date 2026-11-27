@@ -226,6 +226,19 @@ def haze_band(d_true: float) -> str:
     return suf
 
 
+def strip_curtain_mat(stand_mat: str, pts_eff: np.ndarray, half: float = 1024.0) -> str:
+    """far-forest-look-s24 (ADR 0330 addendum 3): haze band of ONE curtain strip by its own median true distance.
+    A stand was banded by its centroid only, so the 3-4 km back edge of a stand reaching to the border kept the near
+    ("") slot - sharp orange trunks and full-contrast crowns at true kilometres. All bands are slots of the same far atlas
+    and submesh, so per-strip banding costs no draw call, vertex or texture. Mix stays the stand's."""
+    if not stand_mat.startswith("forest_edge_") or len(pts_eff) == 0:
+        return stand_mat
+    rest = stand_mat[len("forest_edge_"):]
+    mix = rest.split("_", 1)[0]
+    _, _, d_true = unforeshorten_xy(pts_eff[:, 0], pts_eff[:, 1], half)
+    return f"forest_edge_{mix}{haze_band(float(np.median(d_true)))}"
+
+
 class RingChm:
     """ADR 0330 addendum / ADR 0339: canopy height models (forest_chm.png) of neighbouring tiles overlapping the
     far-field ring (the 24 route tiles with committed CHMs). Deterministic, zero network, opt-in by existing files."""
@@ -1225,7 +1238,12 @@ class SectorBuilder:
         UV = np.vstack([uv_bot, uv_top])
         # ADR 0330 addendum: extra foreshortened distance [m] in TEXCOORD_1.x for shader KamionFogTauExtra
         d_extra = extra_dist_eff(pts_xy[:, 0], pts_xy[:, 1], half)
-        uv1_row = np.column_stack([d_extra, np.zeros(k)])
+        # far-forest-look-s24 (ADR 0330 addendum 3): TEXCOORD_1.y = column height [m], the same on the bottom and top
+        # vertex of a column. Kamion/Vegetation (_HLOD_EDGE) interpolates (v * H, H) and divides per pixel, so v follows
+        # the column height linearly whatever the quad's triangle split: no diagonal crease / sheared crowns where
+        # neighbouring columns differ in height (affine v in two triangles of a trapezoid). 0 = plain v (old data).
+        col_h = np.maximum(np.asarray(z_top, dtype=np.float64) - np.asarray(z_bot, dtype=np.float64), 0.05)
+        uv1_row = np.column_stack([d_extra, col_h])
         UV1 = np.vstack([uv1_row, uv1_row])
 
         base = self.count1
@@ -1564,7 +1582,8 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
         if np.hypot(*(P[0] - P[-1])) > 2.0:
             ht = ht * _smooth_end_taper(s, total_s)
         ht = _limit_top_slope(P, zg - 0.5, ht, max_slope=FAR_MAX_TOP_SLOPE, min_h=3.0)
-        sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **curtain)
+        run_mat = strip_curtain_mat(look["mat"], P, half)   # far-forest-look-s24: band per strip
+        sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **{**curtain, "mat": run_mat})
 
         # ADR 0330 r2 (High tier): patchy undulating undergrowth / shrub mantle skirt in front of outer stand edge
         d_min_run = float(d_true.min())
@@ -1602,7 +1621,7 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                 sub_sink = np.array([0.35 + 0.50 * FH._vnoise2(x, y, 14.0, "ff_skz") for x, y in zip(sub_er, sub_nr)])
                 sub_h = _limit_top_slope(sub_p, sub_zg - sub_sink, sub_h, max_slope=0.30, min_h=2.0)
                 sec.add_curtain1(sub_p, sub_zg - sub_sink, sub_zg + sub_h, face_sign=1.0,
-                                 mat=look["mat"], u_shift=look["u_shift"] + 0.37, u_scale=look["u_scale"],
+                                 mat=run_mat, u_shift=look["u_shift"] + 0.37, u_scale=look["u_scale"],
                                  half=half, v_bot=1.0, v_top=vm_edge)
                 i0 = i1 + 1
 
@@ -1715,7 +1734,8 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                                             ring_chm=ring_chm, height_mult=stand_scale * 1.02,
                                             region_id=region_id) * end_taper
                     ht = _limit_top_slope(P, zg - 0.5, ht, max_slope=FAR_MAX_TOP_SLOPE, min_h=3.0)
-                    sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **curtain)
+                    sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0,
+                                     **{**curtain, "mat": strip_curtain_mat(look["mat"], P, half)})
 
     # 3. Low flat under-canopy shadow base tucked 10 m inside (ADR 0330 r2: capped <= 3.6 m so it never reads as a
     #    green conical hill between curtains)

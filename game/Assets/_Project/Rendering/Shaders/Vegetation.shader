@@ -145,6 +145,22 @@ Shader "Kamion/Vegetation"
         {
             return saturate((a - _Cutoff) / max(fwidth(a), 0.0001) + 0.5);
         }
+
+        // far-forest-look-s24 (ADR 0330 addendum 3): far-field curtains carry the column height H [m] in TEXCOORD1.y
+        // (same on the bottom and top vertex of a column). v * H and H are affine across both triangles of a quad whose
+        // columns differ in height, so v = (v * H) / H follows each column linearly: no diagonal crease or sheared crowns
+        // (plain affine v bends along the triangle split - ADR 0330 r2 limited the slope to 14.6 deg, it did not remove
+        // it). H = 0 (tile HLOD walls without TEXCOORD1, old far fields, the crossed impostors) keeps the plain v.
+        // Packed into the free zw of the non-impostor UV: (u, v, v * H, H); EdgeUV returns (u, v) - one divide per pixel.
+        float4 EdgeUVQ(float4 uv, float h)
+        {
+            return h > 0.0 ? float4(uv.xy, uv.y * h, h) : float4(uv.xy, uv.y, 1.0);
+        }
+        float4 EdgeUV(float4 uv)
+        {
+            float v = uv.z / max(uv.w, 1e-4);
+            return float4(uv.x, v, uv.x, v);
+        }
         ENDHLSL
 
         Pass
@@ -158,7 +174,14 @@ Shader "Kamion/Vegetation"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
-            struct A { float4 positionOS : POSITION; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            struct A
+            {
+                float4 positionOS : POSITION; float2 uv : TEXCOORD0;
+            #if defined(_HLOD_EDGE)
+                float2 uv1 : TEXCOORD1;          // y = curtain column height (far-forest-look-s24)
+            #endif
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
             struct V
             {
                 float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half t : TEXCOORD1;
@@ -178,6 +201,7 @@ Shader "Kamion/Vegetation"
             #if defined(_HLOD_EDGE)
                 o.positionWSxz = TransformObjectToWorld(v.positionOS.xyz).xz;
                 o.farOwner = KamionFarRingOwner();
+                o.uv = EdgeUVQ(o.uv, v.uv1.y);
             #endif
                 return o;
             }
@@ -185,6 +209,7 @@ Shader "Kamion/Vegetation"
             {
             #if defined(_HLOD_EDGE)
                 if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
+                i.uv = EdgeUV(i.uv);
             #endif
                 half a = VegAlpha(i.uv, i.t);
                 // Alpha-to-coverage path still discards the fully uncovered texels (as URP Lit): the coverage mask alone
@@ -262,7 +287,7 @@ Shader "Kamion/Vegetation"
             {
                 float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0;
             #if defined(_HLOD_EDGE)
-                float2 uv1 : TEXCOORD1;          // ADR 0330 addendum: x = extra foreshortened distance [m] on far_field (0 on tile HLOD)
+                float2 uv1 : TEXCOORD1;          // ADR 0330 addendum: x = extra foreshortened distance [m] on far_field (0 on tile HLOD), y = column height (far-forest-look-s24)
             #endif
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -320,6 +345,7 @@ Shader "Kamion/Vegetation"
             #if defined(_HLOD_EDGE)
                 o.fogFactor = KamionFogTauExtra(o.positionWS, o.positionCS.w, max(v.uv1.x, 0.0));
                 o.farOwner = KamionFarRingOwner();
+                o.uv = EdgeUVQ(o.uv, v.uv1.y);
             #else
                 o.fogFactor = KamionFogTau(o.positionWS, o.positionCS.w);
             #endif
@@ -329,6 +355,7 @@ Shader "Kamion/Vegetation"
             {
             #if defined(_HLOD_EDGE)
                 if (KamionFarRingHidden(i.positionWS.xz, i.farOwner)) discard;   // ADR 0354
+                i.uv = EdgeUV(i.uv);
             #endif
             #if defined(_IMPOSTOR)
                 half t = i.ambUpT.w;
@@ -427,7 +454,14 @@ Shader "Kamion/Vegetation"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
             float3 _LightDirection;
             float3 _LightPosition;
-            struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            struct A
+            {
+                float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0;
+            #if defined(_HLOD_EDGE)
+                float2 uv1 : TEXCOORD1;
+            #endif
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
             struct V { float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half t : TEXCOORD1; };
             V vert(A v)
             {
@@ -448,11 +482,17 @@ Shader "Kamion/Vegetation"
             #endif
                 o.positionCS = cs;
                 o.uv = VegUV(v.uv);
+            #if defined(_HLOD_EDGE)
+                o.uv = EdgeUVQ(o.uv, v.uv1.y);
+            #endif
                 o.t = VegBlend(v.uv);
                 return o;
             }
             half4 frag(V i) : SV_Target
             {
+            #if defined(_HLOD_EDGE)
+                i.uv = EdgeUV(i.uv);
+            #endif
                 clip(VegAlpha(i.uv, i.t) - _Cutoff);
                 return 0;
             }
@@ -469,7 +509,14 @@ Shader "Kamion/Vegetation"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
-            struct A { float4 positionOS : POSITION; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            struct A
+            {
+                float4 positionOS : POSITION; float2 uv : TEXCOORD0;
+            #if defined(_HLOD_EDGE)
+                float2 uv1 : TEXCOORD1;          // y = curtain column height (far-forest-look-s24)
+            #endif
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
             struct V
             {
                 float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half t : TEXCOORD1;
@@ -487,6 +534,7 @@ Shader "Kamion/Vegetation"
             #if defined(_HLOD_EDGE)
                 o.positionWSxz = TransformObjectToWorld(v.positionOS.xyz).xz;
                 o.farOwner = KamionFarRingOwner();
+                o.uv = EdgeUVQ(o.uv, v.uv1.y);
             #endif
                 return o;
             }
@@ -494,6 +542,7 @@ Shader "Kamion/Vegetation"
             {
             #if defined(_HLOD_EDGE)
                 if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
+                i.uv = EdgeUV(i.uv);
             #endif
                 clip(VegAlpha(i.uv, i.t) - _Cutoff);
                 return 0;

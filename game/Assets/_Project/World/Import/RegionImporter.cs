@@ -249,7 +249,11 @@ namespace Game.World.Import
                 if (m.Get("collision") is bool col && col) continue;
                 string matPath = $"{r.Dir}/Materials/M_{kv.Key}.mat";
                 var existing = AssetDatabase.LoadAssetAtPath<Material>(matPath);
-                if (existing != null && kv.Key != "far_field_buildings")
+                // far-forest-look-s24: the far-field materials are refreshed like far_field_buildings - reusing an existing
+                // M_forest_edge_mixed_far_atlas kept its old texture import (1024x2048, 9 slots) under a regenerated
+                // far_field.glb whose UVs address the 11-slot 1024x4096 atlas (ADR 0330 r2): wrong slots and smeared
+                // curtains after an edge-only rebuild. VegetationMaterial updates the asset in place (GUID kept).
+                if (existing != null && kv.Key != "far_field_buildings" && !kv.Key.EndsWith("_far_atlas", StringComparison.Ordinal))
                     r.Materials[kv.Key] = existing;
                 else
                     r.Materials[kv.Key] = CreateMaterial(r, kv.Key, m, roadAsphalt);
