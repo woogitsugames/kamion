@@ -47,3 +47,6 @@
 
 - [krok 10] Podłączono zbuforowane reguły prefiksów do WorldInstances, z zachowaniem pierwszeństwa diagnostycznych override'ów cullu. Dodano 30 przypadków EditMode i dopisek ADR 0136.
 - Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/batch-qa.ps1 -Phase after`, następnie `pwsh -File artifacts/codex-props-low-perf-s24/verify.ps1 -Suite all`.
+
+- [krok 11] Visual-QA po i EditMode zakończone (48 PNG, 30/30). Zgłoszenia instancji Tykocin Low 748 → 667, Medium 975 → 882. High ma identyczne liczniki, różnice pikselowe występują głównie na animowanej wodzie. GIS 60/62 + 2 skip z braku lokalnych instancji Białegostoku, uzupełniono prywatną kopię wymaganych JSON.
+- Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/batch-qa.ps1 -Phase repeat` oraz `pwsh -File artifacts/codex-props-low-perf-s24/verify.ps1 -Suite gis`.
