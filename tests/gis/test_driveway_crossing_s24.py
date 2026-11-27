@@ -77,3 +77,21 @@ def test_crossing_edging_runs_along_the_sides_only():
     xs = np.unique(np.round(P[:, 0], 2))
     assert all(min(abs(x - 98.25), abs(x - 101.75)) <= 0.081 for x in xs)        # only along the two long sides
     assert shapely.Point(100.0, 3.6).within(poly)
+
+
+def test_crossing_sides_reach_the_ground():
+    """the crossing ramps over a filled ditch: paving edging and gravel batter run down to the ground beside it"""
+    class B:
+        def __init__(self):
+            self.parts = []
+
+        def add(self, layer, mat, V, UV, T, src=None, **kw):
+            self.parts.append(SimpleNamespace(layer=layer, mat=mat, V=np.asarray(V), UV=np.asarray(UV), T=np.asarray(T)))
+    poly = Polygon([(98.25, 3.52), (101.75, 3.52), (101.75, 8.0), (98.25, 8.0)])
+    V = np.array([[x, y, 100.0] for x, y in poly.exterior.coords[:-1]])
+    zf = lambda q: 99.2                                   # noqa: E731  ground 0.8 m under the crossing
+    for mat, emat in ((PLT.DRIVE_MAT, "curb_concrete"), (PLT.DRIVE_GRAVEL_MAT, PLT.DRIVE_GRAVEL_MAT)):
+        b = B()
+        assert PLT._crossing_edging(b, poly, V, np.zeros((0, 3), int), np.array([0.0, -1.0]), _carriage(), "t", mat=mat, zf=zf) > 0
+        p = b.parts[0]
+        assert p.mat == emat and p.V[:, 2].min() <= 99.2 + 1e-6 and p.UV.shape == (len(p.V), 2)
