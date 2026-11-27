@@ -1,5 +1,5 @@
 {
-  "schema": "kamion.photographic-clouds/1",
+  "schema": "kamion.photographic-clouds/2",
   "asset": "kloofendal_48d_partly_cloudy_puresky",
   "page": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky",
   "license": "CC0 1.0 Universal",
@@ -11,7 +11,7 @@
   "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/4k/kloofendal_48d_partly_cloudy_puresky_4k.hdr",
   "source_md5": "816340c969d2e60d659051d13ac3c4dc",
   "source_sha256": "3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88",
-  "texture_sha256": "6e2e5ce49ffd073ee73d02da94333f91034727b33cbc083da2fde47fbf5a9255",
+  "texture_sha256": "9d710921649b2541faf44a36ceb131c25300b6fbbbf91a81f437e16bf78c8126",
   "width": 4096,
   "height": 2048,
   "sunDirection": {
@@ -19,14 +19,120 @@
     "y": 0.7414659866305633,
     "z": 0.5547432295333827
   },
-  "measured_sun_elevation_deg": 47.8564453125,
-  "cloud_white_linear": 1.8082187175750732,
-  "source_cloud_pixels": 986549,
-  "processing": "Linear HDRI; chromatic blue-gap matte; sun removed within 1.5 degrees; R opacity, G relative luminance^0.7; lower hemisphere opacity zero",
-  "checked_utc": "2026-11-11T23:02:45.192435+01:00",
-  "sampler_note": "ADR 0108 r3: Clear clamps source latitude to +0.5 degrees after sun-alignment rotation, extending valid horizon data into the cut lower hemisphere. Texture and source hashes unchanged. Default other presets 0 retains legacy sampling.",
+  "measured_sun_elevation_deg": 47.8564,
+  "cloud_white_linear": 1.5553984642028809,
+  "source_cloud_pixels": 736548,
+  "processing": "Linear CC0 HDRI; elevation-adaptive soft optical matte (pow 1.35 + edge-localized feather + pinhole clean); circumsolar repair; R opacity, G relative luminance^0.85; lower hemisphere zero",
+  "checked_utc": "2026-11-27T09:21:00.182786+00:00",
+  "sampler_note": "ADR 0108 r3 + ADR 0332 agy-clouds-s24: 3 CC0 PureSky variants selected deterministically by seed/scene/time + meridian mirror, single texture fetch (0 extra GPU cost).",
   "texture_sha256_adr0108": "b643d037e1ee85027147733415529033bb4e35bba3fe117539eb0113697c4c61",
-  "circumsolar_repair": "glass-sky-s24 (ADR 0332 addendum): tools/rendering/clear_clouds_sun_repair.py on the ADR 0108 map - Laplace fill of the zeroed 1.5 deg sun disc (opacity < 0.9 within 3 deg), crisp re-matte (smoothstep 0.30-0.60 + billow noise) of the soft glow ring within 9 deg, feathered to 11.5 deg; outside unchanged",
   "texture_sha256_glass_sky": "10f81b4d4c8d999ba399f975bddd570fba6f9ba3b484e2d979252d2fe847d916",
-  "lens_ghost_repair": "render-artifacts-s24 (ADR 0332 addendum 2): tools/rendering/clear_clouds_ghost_repair.py on the glass-sky-s24 map - the HDRI lens ghost of the sun (lat 23.8 / lon 51.8 deg, ~3.5 deg bright disc in a cumulus) replaced within 2.3 deg (+0.8 feather) by a Laplace fill + donor cloud texture; outside unchanged"
+  "texture_sha256_render_artifacts": "6e2e5ce49ffd073ee73d02da94333f91034727b33cbc083da2fde47fbf5a9255",
+  "variants": [
+    {
+      "id": "T_ClearClouds",
+      "asset": "kloofendal_48d_partly_cloudy_puresky",
+      "style": "scattered fair-weather summer cumulus",
+      "page": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky",
+      "license": "CC0 1.0 Universal",
+      "license_url": "https://polyhaven.com/license",
+      "authors": {
+        "Greg Zaal": "Original",
+        "Jarod Guest": "Sky edits"
+      },
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/4k/kloofendal_48d_partly_cloudy_puresky_4k.hdr",
+      "source_size": 20674857,
+      "source_md5": "816340c969d2e60d659051d13ac3c4dc",
+      "source_sha256": "3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88",
+      "texture_sha256": "9d710921649b2541faf44a36ceb131c25300b6fbbbf91a81f437e16bf78c8126",
+      "width": 4096,
+      "height": 2048,
+      "sunDirection": {
+        "x": 0.3774760124257408,
+        "y": 0.7414659866305633,
+        "z": 0.5547432295333827
+      },
+      "measured_sun_elevation_deg": 47.8564,
+      "cloud_white_linear": 1.5553984642028809,
+      "source_cloud_pixels": 736548,
+      "upper_opaque_share": 0.0889,
+      "upper_wispy_share": 0.5415,
+      "edge_grad_p50_p90_p99": [
+        0.0141,
+        0.0593,
+        0.1715
+      ],
+      "checked_utc": "2026-11-27T09:21:00.182786+00:00"
+    },
+    {
+      "id": "T_ClearClouds_02",
+      "asset": "sunflowers_puresky",
+      "style": "broad summer cumulus with high wispy streaks",
+      "page": "https://polyhaven.com/a/sunflowers_puresky",
+      "license": "CC0 1.0 Universal",
+      "license_url": "https://polyhaven.com/license",
+      "authors": {
+        "Jarod Guest": "Sky Edits",
+        "Sergej Majboroda": "Original"
+      },
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/4k/sunflowers_puresky_4k.hdr",
+      "source_size": 21248671,
+      "source_md5": "7ca3349587930ac40b2eb7720e093839",
+      "source_sha256": "d5bd90316896c6f9619f19752590f1ccac7b7190032aea28b808ccdbbc3b590e",
+      "texture_sha256": "304071eed158719e22e6f31eb75b205e923ea716a914c62490e20550a0fabe53",
+      "width": 4096,
+      "height": 2048,
+      "sunDirection": {
+        "x": 0.431443763277649,
+        "y": 0.6822850109637956,
+        "z": 0.5902062715211973
+      },
+      "measured_sun_elevation_deg": 43.0225,
+      "cloud_white_linear": 1.2172781229019165,
+      "source_cloud_pixels": 1051389,
+      "upper_opaque_share": 0.3206,
+      "upper_wispy_share": 0.4172,
+      "edge_grad_p50_p90_p99": [
+        0.0141,
+        0.0653,
+        0.1978
+      ],
+      "checked_utc": "2026-11-27T09:21:13.016160+00:00"
+    },
+    {
+      "id": "T_ClearClouds_03",
+      "asset": "kloofendal_38d_partly_cloudy_puresky",
+      "style": "airy altocumulus and soft scattered wisps",
+      "page": "https://polyhaven.com/a/kloofendal_38d_partly_cloudy_puresky",
+      "license": "CC0 1.0 Universal",
+      "license_url": "https://polyhaven.com/license",
+      "authors": {
+        "Greg Zaal": "Original",
+        "Jarod Guest": "Sky edits"
+      },
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/4k/kloofendal_38d_partly_cloudy_puresky_4k.hdr",
+      "source_size": 20462635,
+      "source_md5": "f0e9e19f824767c92f36d2af7ae605b8",
+      "source_sha256": "257fa01e23f33197156c4d69234a89111b143f747c8f1a356846256b747d150e",
+      "texture_sha256": "2a422e1eb377c9ab2ba66842ef196e981cf3a92c0e55e64c6c3400d2fd6fca33",
+      "width": 4096,
+      "height": 2048,
+      "sunDirection": {
+        "x": 0.4621486370918853,
+        "y": 0.6134160011086386,
+        "z": 0.6404213041568804
+      },
+      "measured_sun_elevation_deg": 37.8369,
+      "cloud_white_linear": 1.3995361566543574,
+      "source_cloud_pixels": 534521,
+      "upper_opaque_share": 0.1574,
+      "upper_wispy_share": 0.4369,
+      "edge_grad_p50_p90_p99": [
+        0.0196,
+        0.0657,
+        0.1531
+      ],
+      "checked_utc": "2026-11-27T09:21:23.799654+00:00"
+    }
+  ]
 }

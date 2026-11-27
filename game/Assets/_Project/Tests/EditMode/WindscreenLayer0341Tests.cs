@@ -78,5 +78,35 @@ namespace Game.Tests
             Quaternion rel = Quaternion.Inverse(interior.rotation) * ws.transform.rotation;
             Assert.That(Quaternion.Angle(rel, Quaternion.identity), Is.LessThan(0.5f), "windscreen object axes = cab frame");
         }
+
+        [Test]
+        public void WindscreenGrime_HasNoOpaqueDarkInsectDotInUpperSkyWedge()
+        {
+            // agy-clouds-s24 (critic s24 build #10, ADR 0332/0341): an opaque insect splat (B=214) at obj=(-0.314, 1.702)
+            // projected onto screen (1170, 142) in the driver's sky FOV and read as a floating dark pixel in the sky.
+            string fullPath = System.IO.Path.Combine(Application.dataPath, "_Project", "Rendering", "Textures", "Truck", "T_Windscreen_Grime.png");
+            var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false, true);
+            try
+            {
+                Assert.IsTrue(tex.LoadImage(System.IO.File.ReadAllBytes(fullPath)));
+                var px = tex.GetPixels32();
+                int w = tex.width, h = tex.height;
+                int darkSkyPixels = 0;
+                for (int y = 0; y < h; y++)
+                {
+                    // LoadImage: row 0 = bottom (v = 0 = y_min = 0.75 m, height = 1.30 m)
+                    float oy = 0.75f + (y + 0.5f) / h * 1.30f;
+                    if (oy <= 1.45f) continue;
+                    for (int x = 0; x < w; x++)
+                    {
+                        float ox = -1.30f + (x + 0.5f) / w * 2.60f;
+                        if (Mathf.Abs(ox) >= 0.85f) continue;
+                        if (px[y * w + x].b > 60) darkSkyPixels++;
+                    }
+                }
+                Assert.AreEqual(0, darkSkyPixels, "no opaque insect splats (B > 60) in upper-central sky wedge (y > 1.45, |x| < 0.85)");
+            }
+            finally { Object.DestroyImmediate(tex); }
+        }
     }
 }

@@ -97,3 +97,57 @@ stały spadek (R −1,2, G −0,8…−1,2, B −0,2 sRGB / 12 px) — brak skok
 słabsze). Teksele LUT chromy (γ co 2,86°) przechodzą co ~70 px, więc nie dają jednej linii. Wniosek: to najstromszy odcinek
 gradientu barwy okołosłonecznej (γ ≈ 25–35°), nie artefakt; wzmocniony celowo przez `clearSkySaturation` 2 (ADR 0108).
 Decyzja o ewentualnym obniżeniu saturacji nieba = kierunek artystyczny (właściciel / visual-critic), nie poprawka błędu.
+
+## Dopisek 3 agy-clouds-s24 (2026-11-27): ciemny punkt w niebie (x~1170, y~140), miękkie krawędzie chmur i 3 warianty CC0 (krytyk build #10 TOP 10 pkt 10)
+**1. Ciemny punkt w niebie (x~1170, y~140) — diagnoza i naprawa u źródła.**
+To **nie** piksel mapy chmur ani artefakt słońca, lecz **plama owada na przedniej szybie** (`T_Windscreen_Grime.png`, kanał B,
+ADR 0341). Dowód: punkt pojawia się w dokładnie tym samym pikselu ekranu `(1170, 142)` na klatkach build #10 różnych kafli i
+kursów (`knyszyn-w` spadek jasności −49,7 sRGB, `dk65-06` −29,0, `run-stream-on/shot_t0180` −29,7 mimo przesunięcia chmur w dół)
+oraz w baseline visual-qa (`World_knyszyn-w_High`, `cab-driver`, High PC 1920×1080) **zarówno w Clear (−51,3 sRGB), jak i w
+Overcast (−75,7 sRGB, gdzie `T_ClearClouds.png` nie jest próbkowany)**. Projekcja promienia z oka kierowcy
+`EYE_POINT = (−0,55; 1,35; 0,225)` przy FOV 70° (D90) i pochyleniu −6° (`DriverHead.RestPitchDownDeg`) trafia płaszczyznę
+szyby w `obj = (−0,314; 1,702)` — dokładnie środek plamy owada `B = 214` (13 tekseli, `px = (776, 273)`) w górnym klinie
+między polami wycieraczek.
+- **Poprawka u źródła (`tools/rendering/windscreen_grime.py`):** w górnej środkowej strefie szyby poza polami wycieraczek
+  (`y > 1,45 m`, `|x| < 0,85 m`, w cieniu aerodynamicznym dachu/daszka, rzutującej prosto na otwarte niebo z fotela kierowcy)
+  generator nie stawia nieprzezroczystych plam owadów; dolna/środkowa część szyby i krawędzie przy słupkach A zostają bez zmian.
+  Łączne pokrycie brudu `> 0,1`: **3,81 %** (w paśmie 3–6 % ADR 0341; max B w strefie nieba `240 → 50`, 0 pikseli `> 60`).
+- **Zmierzone na `cab-driver` (przed → po):** spadek jasności w `(1170, 142)` Clear `+51,3 → +7,7` sRGB (faktura chmury),
+  Overcast `+75,7 → +1,0` sRGB. Test regresyjny: `WindscreenLayer0341Tests.WindscreenGrime_HasNoOpaqueDarkInsectDotInUpperSkyWedge`.
+
+**2. Chmury Clear: miękkie krawędzie (koniec „watowych sprite'ów”) i 3 warianty CC0 + odbicie południkowe.**
+Przyczyną „watowego” konturu był twardy binarny progowy matte `1 − smooth(0,25; 0,85; blueness)` (ADR 0108, skok krycia w 2–3
+tekselach: gradient krawędzi `p90 = 0,162`, `p99 = 0,459`), płaskie rozjaśnienie luminancji (`^0,70`) i achromatyczne
+`cloudY.xxx` w `Sky.shader` na tle nasyconego ×2 błękitu (D100 zostaje nietknięte). Powtarzalność wynikała z jednej mapy
+zawsze zablokowanej na stałym słońcu `LP_Clear` (200°/42°).
+- **Generator (`tools/rendering/fetch_sky_hdris.py`, `tools/rendering/build_cloud_variants.py`):** 3 zweryfikowane (MD5 + SHA256,
+  `docs/LICENSES.md`) 4K HDRI CC0 Poly Haven Pure Sky → mapy 4096×2048 RGBA (`R` krycie, `G` luminancja `^0,82`):
+  - `T_ClearClouds.png` (wariant 0): `kloofendal_48d_partly_cloudy_puresky` (słońce 47,9°, rozproszone cumulusy) — gradient
+    krawędzi `p90/p99`: `0,162/0,459 → 0,059/0,172` (**2,7× miękcej**); zachowana naprawa tarczy słońca (`holes 0,0 % < 2 %`),
+    otoczki (`semi 3,6 % < 10 %`) i ducha flary (`core−ring +0,039 < +0,08`), usunięte pojedyncze 1–2 px otworki w chmurach.
+  - `T_ClearClouds_02.png` (wariant 1): `sunflowers_puresky` (słońce 43,0°, szerokie cumulusy + pasma cirrusów; `p90/p99 0,065/0,198`).
+  - `T_ClearClouds_03.png` (wariant 2): `kloofendal_38d_partly_cloudy_puresky` (słońce 37,8°, lekkie altocumulusy i pasma;
+    `p90/p99 0,066/0,153`).
+  Matte adaptuje linię bazową błękitu czystego nieba do elewacji (90. percentyl błękitu poza stożkiem słońca), używa ciągłej
+  krzywej optycznej (`w^1,35`) i zlokalizowanego na krawędzi zmiękczenia (σ ≈ 2,5 teksela), zachowując ostrość wnętrz chmur.
+- **Selekcja i odbicie południkowe (`WorldAtmosphere.cs`, `PhotographicClouds`, `RenderOverrides.cs`):**
+  Deterministyczny wybór `(wariant 0..2, odbicie 0..1)` z hasha `(CloudSeed, kanoniczna nazwa sceny bez sufiksu _High/_Low/_Tile,
+  godzina clockHour, sektor azymutu słońca)` + jawne nadpisania QA (`rq_cloudvar`, `rq_cloudmirror`, `rq_cloudseed`).
+  Odbicie Householder względem pionowej płaszczyzny południka słońca (`R = I − 2 r rᵀ`, `r = normalize(up × sourceSun)`)
+  mnożone na CPU w `_KamionClearCloudRotation` zachowuje **dokładne** wyrównanie słońca i poziomu horyzontu (0° przechyłu),
+  podwajając liczbę fizycznie poprawnych układów nieba (3 mapy × 2 = **6 układów**). Leniwe ładowanie tekstury wybranego
+  wariantu (`Resources.Load`) utrzymuje w VRAM wyłącznie 1 aktywną mapę.
+- **Shader (`Sky.shader`, tylko Clear):** subtelne, zachowujące luminancję zabarwienie cienia chmury chłodnym rozproszeniem nieba
+  i oświetlonych wierzchołków ciepłą bielą słońca (`lerp((0,91;0,98;1,13), (1,02;1,00;0,97), smoothstep(0,15;0,85;G))`) oraz
+  miękka krzywa krycia `a · (0,68 + 0,32 · a)`. **D100 (nasycenie nieba ×2) nietknięte** (`dk65-fields-nw` błękit: `B−R 94,9 → 93,2`).
+  **Overcast nietknięty** (`dk65-fields-nw` bez szyby: `mean diff = 0,00000`, `max = 0,0`).
+
+**3. Koszt GPU i pamięci:**
+- **Shader (Clear):** nadal **1** odczyt tekstury (`SAMPLE_TEXTURE2D_GRAD`, **+0** próbek), **0** nowych przebiegów/draw calli/wariantów
+  shadera, **+~6** prostych operacji ALU (`smoothstep`, `lerp`, `mul`, `mad`) na piksel nieba Clear (0 na Overcast/Dusk/Night).
+- **VRAM:** leniwe ładowanie aktywnego wariantu — w czasie jazdy w VRAM 1 tekstura 4096×2048 BC1/ASTC6×6 (**+0 MB VRAM** względem
+  ADR 0108); w paczce buildu +2 skompresowane tekstury (~6,5 MB PNG w repo). Pomiar czasu klatki GPU w playerze Windows: `UNVERIFIED`
+  (do sprawdzenia przy następnym pomiarze `pc-metrics`).
+- **Dowody i testy:** visual-qa przed|po (`World_knyszyn-w_High`, High PC 1920×1080, clear, overcast, var0/1/2, var1_mirror) w
+  `artifacts/agy-clouds-s24/compare/`; EditMode (`ClearCloudsSunTests`, `SkyDisplayCapTests`, `SkyModelTests`, `LightPostPolicyTests`,
+  `WindscreenLayer0341Tests`, `WorldSkyBakeTests`) 39/39 passed (1 skipped: brak zaimportowanego kafla C).

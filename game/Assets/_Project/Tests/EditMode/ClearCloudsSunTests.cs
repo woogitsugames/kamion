@@ -98,5 +98,69 @@ namespace Game.Tests
             Stats(tex, sun, 0f, 9f, out int n, out _, out int semi);
             Assert.That(semi / (float)n, Is.LessThan(0.10f), "semi-transparent share within 9 deg (ADR 0108 map: ~0.31)");
         }
+
+        [Test]
+        public void CloudVariants_AreAvailable_SoftEdged_AndMirrorPreservesSunAndHorizon()
+        {
+            Game.Rendering.PhotographicClouds.ResetCache();
+            Assert.GreaterOrEqual(Game.Rendering.PhotographicClouds.VariantCount, 3, "expected at least 3 CC0 cloud variants (ADR 0332 agy-clouds-s24)");
+            var preset = Game.Rendering.LightingPreset.CreateClear();
+            try
+            {
+                Vector3 sun = preset.CreateModel().SunDirection;
+                for (int i = 0; i < Game.Rendering.PhotographicClouds.VariantCount; i++)
+                {
+                    Assert.IsTrue(Game.Rendering.PhotographicClouds.TryGet(i, out var tex, out var sourceSun), $"variant {i} loaded");
+                    Assert.IsNotNull(tex);
+                    Assert.AreEqual(4096, tex.width, $"variant {i} width");
+                    Assert.AreEqual(2048, tex.height, $"variant {i} height");
+                    var m0 = Game.Rendering.PhotographicClouds.SourceMatrix(sun, sourceSun, false);
+                    var m1 = Game.Rendering.PhotographicClouds.SourceMatrix(sun, sourceSun, true);
+                    Assert.Less(Vector3.Angle(m0.MultiplyVector(sun), sourceSun), 0.05f, $"variant {i} unmirrored sun alignment");
+                    Assert.Less(Vector3.Angle(m1.MultiplyVector(sun), sourceSun), 0.05f, $"variant {i} mirrored sun alignment");
+                    Assert.AreEqual(Vector3.Angle(m0.MultiplyVector(Vector3.up), Vector3.up),
+                                    Vector3.Angle(m1.MultiplyVector(Vector3.up), Vector3.up), 0.05f,
+                                    $"variant {i} mirror must not add horizon roll");
+                }
+                // Deterministic variation across seeds / scenes / hours (and tier suffix invariance Low vs High)
+                Game.Rendering.PhotographicClouds.ResolveVariant(0, "World_knyszyn-w_High", 12f, 200f, out int vHigh, out bool mirHigh, out _);
+                Game.Rendering.PhotographicClouds.ResolveVariant(0, "World_knyszyn-w", 12f, 200f, out int vLow, out bool mirLow, out _);
+                Assert.AreEqual(vHigh, vLow, "Low and High tiers of the same scene must share the cloud variant");
+                Assert.AreEqual(mirHigh, mirLow, "Low and High tiers of the same scene must share the mirror flag");
+                var seen = new System.Collections.Generic.HashSet<int>();
+                for (int seed = 0; seed < 24; seed++)
+                {
+                    Game.Rendering.PhotographicClouds.ResolveVariant(seed, "World_knyszyn-w", 12f, 200f, out int v, out bool mir, out _);
+                    seen.Add(v * 2 + (mir ? 1 : 0));
+                }
+                Assert.GreaterOrEqual(seen.Count, 5, "seeds must span variants and meridian mirrors");
+            }
+            finally { Object.DestroyImmediate(preset); }
+        }
+
+        [Test]
+        public void CloudEdges_AreSoftened_NotHardBinaryCutout()
+        {
+            var tex = Load(out _);
+            var px = tex.GetPixels32();
+            int w = tex.width, h = tex.height;
+            int half = h / 2; // LoadImage row 0 = bottom -> upper hemisphere is rows [half..h)
+            int edgeCount = 0, steepCount = 0;
+            for (int y = half + 4; y < h - 4; y += 2)
+            {
+                for (int x = 0; x < w; x += 2)
+                {
+                    float r = px[y * w + x].r / 255f;
+                    if (r <= 0.05f || r >= 0.95f) continue;
+                    edgeCount++;
+                    float rx = px[y * w + ((x + 1) % w)].r / 255f;
+                    float ry = px[(y + 1) * w + x].r / 255f;
+                    float g = Mathf.Sqrt((rx - r) * (rx - r) + (ry - r) * (ry - r));
+                    if (g > 0.16f) steepCount++;
+                }
+            }
+            Assert.Greater(edgeCount, 50000, "soft transition band should have substantial wispy coverage");
+            Assert.That(steepCount / (float)edgeCount, Is.LessThan(0.05f), "share of steep (>0.16/texel) cutout cliffs at cloud edges");
+        }
     }
 }

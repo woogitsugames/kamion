@@ -20,6 +20,12 @@ namespace Game.Rendering
         public static int? CloudOverride;
         /// <summary>rq_clearcover: clear cloud coverage ablation (null = preset).</summary>
         public static float? ClearCloudCoverOverride;
+        /// <summary>rq_cloudvar: 0..N-1 explicit photographic clear-cloud variant (null = deterministic from seed/scene/time).</summary>
+        public static int? CloudVariantOverride;
+        /// <summary>rq_cloudmirror: explicit sun-meridian mirror of photographic clear clouds (null = deterministic).</summary>
+        public static bool? CloudMirrorOverride;
+        /// <summary>rq_cloudseed: deterministic seed for clear-cloud variant selection (0 = default).</summary>
+        public static int CloudSeed;
         public static bool? HeadlampsOverride;
         /// <summary>rq_haze: false = uniform fog only (null = the tier's).</summary>
         public static bool? HazeOverride;
@@ -153,16 +159,34 @@ namespace Game.Rendering
             float clearCover = q < 0 ? 0f : Mathf.Clamp01(ClearCloudCoverOverride ?? p.clearCloudCover);
             Shader.SetGlobalFloat(k_ClearCloudCover, clearCover);
             Shader.SetGlobalFloat(k_ClearSkySaturation, Mathf.Clamp(p.clearSkySaturation, 1f, 4f));
-            bool photo = clearCover > 0f && PhotographicClouds.TryGet(out _, out _);
+            bool photo = clearCover > 0f && PhotographicClouds.VariantCount > 0;
+            int cloudVar = 0;
+            bool cloudMirror = false;
+            float cloudYawDeg = 0f;
+            Texture2D cloudTex = null;
+            Vector3 cloudSourceSun = Vector3.zero;
+            if (photo)
+            {
+                PhotographicClouds.ResolveVariant(CloudSeed, env.gameObject.scene.name, p.clockHour, p.sunAzimuthDeg,
+                    out cloudVar, out cloudMirror, out cloudYawDeg);
+                if (CloudVariantOverride.HasValue)
+                {
+                    int n = PhotographicClouds.VariantCount;
+                    cloudVar = ((CloudVariantOverride.Value % n) + n) % n;
+                }
+                if (CloudMirrorOverride.HasValue) cloudMirror = CloudMirrorOverride.Value;
+                photo = PhotographicClouds.TryGet(cloudVar, out cloudTex, out cloudSourceSun)
+                     || PhotographicClouds.TryGet(0, out cloudTex, out cloudSourceSun);
+            }
             Shader.SetGlobalFloat(k_ClearCloudPhoto, photo ? 1f : 0f);
             float sourceMinElevation = Mathf.Clamp(p.clearCloudSourceMinElevationDeg, 0f, 5f);
             Shader.SetGlobalVector(k_ClearCloudSourceLimits,
                 new Vector4(0.5f + sourceMinElevation/180f, sourceMinElevation > 0f ? 1f : 0f, 0f, 0f));
-            if (photo && PhotographicClouds.TryGet(out var texture, out var sourceSun))
+            if (photo && cloudTex != null)
             {
-                Shader.SetGlobalTexture(k_ClearCloudTex, texture);
+                Shader.SetGlobalTexture(k_ClearCloudTex, cloudTex);
                 Vector3 sun = env.Model != null ? env.Model.SunDirection : Vector3.up;
-                Shader.SetGlobalMatrix(k_ClearCloudRotation, Matrix4x4.Rotate(PhotographicClouds.SourceRotation(sun, sourceSun)));
+                Shader.SetGlobalMatrix(k_ClearCloudRotation, PhotographicClouds.SourceMatrix(sun, cloudSourceSun, cloudMirror, cloudYawDeg));
             }
             Shader.SetGlobalVector(k_Cloud, new Vector4(contrast, Mathf.Max(q, 0), p.cloudScale, 5f));
             if (contrast > 0f || (clearCover > 0f && !photo))
@@ -179,15 +203,67 @@ namespace Game.Rendering
         }
     }
 
-    /// <summary>CC0 photographic cloud opacity and self-shadowing. Cached once; no frame allocations.</summary>
+    /// <summary>CC0 photographic cloud opacity and self-shadowing (ADR 0108 + ADR 0332 agy-clouds-s24: multi-variant
+    /// soft-edge maps with lazy per-variant loading and sun-meridian mirroring; 1 texture fetch, 0 extra GPU cost).</summary>
     public static class PhotographicClouds
     {
-        [System.Serializable] sealed class Source { public Vector3 sunDirection = Vector3.zero; }
-        static bool s_Loaded;
-        static Texture2D s_Texture;
-        static Vector3 s_Sun;
+        [System.Serializable] sealed class VariantEntry { public string id; public Vector3 sunDirection = Vector3.zero; }
+        [System.Serializable] sealed class Source { public Vector3 sunDirection = Vector3.zero; public VariantEntry[] variants; }
+        static bool s_MetaLoaded;
+        static string[] s_Ids;
+        static Vector3[] s_Suns;
+        static Texture2D[] s_Textures;
+        static bool[] s_TexLoaded;
 
-        public static void ResetCache() { s_Loaded = false; s_Texture = null; }
+        public static void ResetCache()
+        {
+            s_MetaLoaded = false;
+            s_Ids = null;
+            s_Suns = null;
+            s_Textures = null;
+            s_TexLoaded = null;
+        }
+
+        static void EnsureMetadata()
+        {
+            if (s_MetaLoaded) return;
+            s_MetaLoaded = true;
+            var metadata = Resources.Load<TextAsset>("Sky/ClearCloudsSource");
+            var source = metadata != null ? JsonUtility.FromJson<Source>(metadata.text) : null;
+            if (source != null && source.variants != null && source.variants.Length > 0)
+            {
+                int n = source.variants.Length;
+                s_Ids = new string[n];
+                s_Suns = new Vector3[n];
+                s_Textures = new Texture2D[n];
+                s_TexLoaded = new bool[n];
+                for (int i = 0; i < n; i++)
+                {
+                    s_Ids[i] = string.IsNullOrEmpty(source.variants[i].id) ? "T_ClearClouds" : source.variants[i].id;
+                    s_Suns[i] = source.variants[i].sunDirection.normalized;
+                }
+            }
+            else if (source != null && source.sunDirection.sqrMagnitude >= 0.9f)
+            {
+                s_Ids = new[] { "T_ClearClouds" };
+                s_Suns = new[] { source.sunDirection.normalized };
+                s_Textures = new Texture2D[1];
+                s_TexLoaded = new bool[1];
+            }
+            else
+            {
+                s_Ids = System.Array.Empty<string>();
+                s_Suns = System.Array.Empty<Vector3>();
+                s_Textures = System.Array.Empty<Texture2D>();
+                s_TexLoaded = System.Array.Empty<bool>();
+                Debug.LogWarning("[SKY_CLOUDS] Missing photographic cloud map/source axis; using the procedural diagnostic fallback.");
+            }
+        }
+
+        public static int VariantCount
+        {
+            get { EnsureMetadata(); return s_Ids != null ? s_Ids.Length : 0; }
+        }
 
         /// <summary>Align azimuth first, then elevation. A single minimum-angle rotation between suns can roll
         /// the entire sky by tens of degrees when their azimuths differ, despite similar sun altitudes.</summary>
@@ -199,23 +275,87 @@ namespace Game.Rendering
             return Quaternion.FromToRotation(yaw * sun, sourceSun) * yaw;
         }
 
-        public static bool TryGet(out Texture2D texture, out Vector3 sunDirection)
+        /// <summary>Full 3x3 alignment matrix with optional sun-meridian reflection (preserves exact sun alignment and
+        /// horizon level: doubles distinct cloud layouts per HDRI at zero GPU cost) and optional small yaw offset.</summary>
+        public static Matrix4x4 SourceMatrix(Vector3 sun, Vector3 sourceSun, bool mirrorAcrossSun, float yawOffsetDeg = 0f)
         {
-            if (!s_Loaded)
+            var rot = SourceRotation(sun, sourceSun);
+            if (Mathf.Abs(yawOffsetDeg) > 1e-3f)
+                rot = rot * Quaternion.AngleAxis(yawOffsetDeg, Vector3.up);
+            var m = Matrix4x4.Rotate(rot);
+            if (mirrorAcrossSun)
             {
-                s_Loaded = true;
-                s_Texture = Resources.Load<Texture2D>("Sky/T_ClearClouds");
-                var metadata = Resources.Load<TextAsset>("Sky/ClearCloudsSource");
-                var source = metadata != null ? JsonUtility.FromJson<Source>(metadata.text) : null;
-                s_Sun = source != null ? source.sunDirection.normalized : Vector3.zero;
-                if (s_Texture == null || s_Sun.sqrMagnitude < 0.9f)
+                Vector3 right = Vector3.Cross(Vector3.up, sourceSun);
+                if (right.sqrMagnitude > 1e-6f)
                 {
-                    s_Texture = null;
-                    Debug.LogWarning("[SKY_CLOUDS] Missing photographic cloud map/source axis; using the procedural diagnostic fallback.");
+                    right.Normalize();
+                    var r = Matrix4x4.identity;
+                    r.m00 = 1f - 2f * right.x * right.x; r.m01 = -2f * right.x * right.y;      r.m02 = -2f * right.x * right.z;
+                    r.m10 = -2f * right.y * right.x;      r.m11 = 1f - 2f * right.y * right.y; r.m12 = -2f * right.y * right.z;
+                    r.m20 = -2f * right.z * right.x;      r.m21 = -2f * right.z * right.y;      r.m22 = 1f - 2f * right.z * right.z;
+                    m = r * m;
                 }
             }
-            texture = s_Texture;
-            sunDirection = s_Sun;
+            return m;
+        }
+
+        /// <summary>Deterministic variant + meridian-mirror selection from seed, canonical scene name (tier suffix
+        /// stripped so Low/High match), clock hour, and sun azimuth bucket.</summary>
+        public static void ResolveVariant(int seed, string sceneName, float clockHour, float sunAzimuthDeg,
+            out int variantIndex, out bool mirror, out float yawOffsetDeg)
+        {
+            int count = Mathf.Max(VariantCount, 1);
+            string canonical = CanonicalSceneName(sceneName);
+            unchecked
+            {
+                uint h = 2166136261u;
+                h = (h ^ (uint)seed) * 16777619u;
+                for (int i = 0; i < canonical.Length; i++)
+                    h = (h ^ canonical[i]) * 16777619u;
+                h = (h ^ (uint)Mathf.FloorToInt(clockHour)) * 16777619u;
+                h = (h ^ (uint)Mathf.RoundToInt(sunAzimuthDeg / 15f)) * 16777619u;
+                h ^= h >> 16;
+                h *= 2246822519u;
+                h ^= h >> 13;
+                variantIndex = (int)(h % (uint)count);
+                mirror = ((h / (uint)count) & 1u) != 0u;
+            }
+            yawOffsetDeg = 0f;
+        }
+
+        static string CanonicalSceneName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return string.Empty;
+            if (name.EndsWith("_Tile", System.StringComparison.Ordinal)) name = name.Substring(0, name.Length - 5);
+            if (name.EndsWith("_High", System.StringComparison.Ordinal)) name = name.Substring(0, name.Length - 5);
+            else if (name.EndsWith("_Low", System.StringComparison.Ordinal)) name = name.Substring(0, name.Length - 4);
+            return name;
+        }
+
+        public static bool TryGet(out Texture2D texture, out Vector3 sunDirection) => TryGet(0, out texture, out sunDirection);
+
+        public static bool TryGet(int variantIndex, out Texture2D texture, out Vector3 sunDirection)
+        {
+            EnsureMetadata();
+            if (s_Ids == null || s_Ids.Length == 0)
+            {
+                texture = null;
+                sunDirection = Vector3.zero;
+                return false;
+            }
+            int idx = ((variantIndex % s_Ids.Length) + s_Ids.Length) % s_Ids.Length;
+            if (!s_TexLoaded[idx])
+            {
+                s_TexLoaded[idx] = true;
+                s_Textures[idx] = Resources.Load<Texture2D>("Sky/" + s_Ids[idx]);
+                if (s_Textures[idx] == null || s_Suns[idx].sqrMagnitude < 0.9f)
+                {
+                    s_Textures[idx] = null;
+                    Debug.LogWarning($"[SKY_CLOUDS] Missing photographic cloud variant '{s_Ids[idx]}' / source axis.");
+                }
+            }
+            texture = s_Textures[idx];
+            sunDirection = s_Suns[idx];
             return texture != null;
         }
     }

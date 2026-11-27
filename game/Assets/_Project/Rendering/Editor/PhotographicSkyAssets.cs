@@ -12,29 +12,39 @@ namespace Game.Rendering.Editor
             int exit = 1;
             try
             {
-                const string path = "Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png";
-                var importer = AssetImporter.GetAtPath(path) as TextureImporter;
-                if (importer == null) throw new InvalidOperationException("Missing derived CC0 cloud map: " + path);
-                importer.textureType = TextureImporterType.Default;
-                importer.sRGBTexture = false;
-                importer.mipmapEnabled = true;
-                importer.isReadable = false;
-                importer.alphaSource = TextureImporterAlphaSource.None;
-                importer.wrapModeU = TextureWrapMode.Repeat;
-                importer.wrapModeV = TextureWrapMode.Clamp;
-                importer.filterMode = FilterMode.Trilinear;
-                importer.anisoLevel = 1;
-                importer.maxTextureSize = 4096;
-                importer.textureCompression = TextureImporterCompression.CompressedHQ;
-                importer.SetPlatformTextureSettings(new TextureImporterPlatformSettings {
-                    name = "Android", overridden = true, maxTextureSize = 4096,
-                    format = TextureImporterFormat.ASTC_6x6, textureCompression = TextureImporterCompression.CompressedHQ
-                });
-                importer.SaveAndReimport();
+                string[] ids = { "T_ClearClouds", "T_ClearClouds_02", "T_ClearClouds_03" };
+                for (int i = 0; i < ids.Length; i++)
+                {
+                    string path = $"Assets/_Project/Rendering/Resources/Sky/{ids[i]}.png";
+                    var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+                    if (importer == null) throw new InvalidOperationException("Missing derived CC0 cloud map: " + path);
+                    importer.textureType = TextureImporterType.Default;
+                    importer.sRGBTexture = false;
+                    importer.mipmapEnabled = true;
+                    importer.isReadable = false;
+                    importer.alphaSource = TextureImporterAlphaSource.None;
+                    importer.wrapModeU = TextureWrapMode.Repeat;
+                    importer.wrapModeV = TextureWrapMode.Clamp;
+                    importer.filterMode = FilterMode.Trilinear;
+                    importer.anisoLevel = 1;
+                    importer.maxTextureSize = 4096;
+                    importer.textureCompression = TextureImporterCompression.CompressedHQ;
+                    importer.SetPlatformTextureSettings(new TextureImporterPlatformSettings {
+                        name = "Android", overridden = true, maxTextureSize = 4096,
+                        format = TextureImporterFormat.ASTC_6x6, textureCompression = TextureImporterCompression.CompressedHQ
+                    });
+                    importer.SaveAndReimport();
+                }
                 PhotographicClouds.ResetCache();
-                if (!PhotographicClouds.TryGet(out var texture, out var sun) || texture.width != 4096 || texture.height != 2048)
-                    throw new InvalidOperationException("Cloud texture or source axis failed import validation");
-                Debug.Log($"SKY_ASSETS_RESULT: OK width={texture.width} height={texture.height} sourceSun={sun} srgb={importer.sRGBTexture} android={importer.GetPlatformTextureSettings("Android").format}");
+                if (PhotographicClouds.VariantCount != ids.Length)
+                    throw new InvalidOperationException($"Expected {ids.Length} cloud variants, got {PhotographicClouds.VariantCount}");
+                for (int i = 0; i < ids.Length; i++)
+                {
+                    if (!PhotographicClouds.TryGet(i, out var texture, out var sun) || texture.width != 4096 || texture.height != 2048)
+                        throw new InvalidOperationException($"Cloud texture variant {i} ({ids[i]}) or source axis failed import validation");
+                    Debug.Log($"SKY_ASSETS_VARIANT[{i}]: id={ids[i]} width={texture.width} height={texture.height} sourceSun={sun}");
+                }
+                Debug.Log($"SKY_ASSETS_RESULT: OK variants={ids.Length}");
                 exit = 0;
             }
             catch (Exception e) { Debug.LogException(e); Debug.Log("SKY_ASSETS_RESULT: FAILED"); }
