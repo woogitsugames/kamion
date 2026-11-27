@@ -24,3 +24,14 @@
   `crossing_keepout` + verge_flora keepout (103 karty mniej w knyszyn-w). after-r1 obejrzany: zwir w lusterku bez patykow,
   szew osi obok kreski; r2 w toku (rampa + bez fałdy).
 - NASTEPNY KROK: obejrzec `artifacts/axis-driveway-s24/after-r2`, ew. iteracja; testy tests/gis; dopiski ADR 0335/0349.
+- [krok 3, KONIEC] Rundy r2-r5: zjazd tylko w pasie drogowym z rampa do gruntu, boki do gruntu, obrzeze nie na styku
+  z apronem. Finalne `after` / `after-overcast` (r5), porownania `sbs/*-before-after.jpg`; diag-after-material z r4.
+  knyszyn-w: 9 zjazdow prostopadlych (z 11 wiejskich), 37/86 podjazdow zwirowych, 103 karty ziol mniej. drawsEst +1..+6
+  na kamere, tris bez zmian. Testy: road_surface_0323 14/14, driveway_crossing_s24 6/6, banks_verges_0324 8/8 (bez
+  real_network), podzbior tests/gis 229/230 (r7 poprawiony). Dopiski ADR 0335 i 0349. Dowody skopiowane do main
+  `artifacts/axis-driveway-s24/`. Brak: ocena visual-critic (lider), build playera + pc-metrics, EditMode (bez zmian C#).
+- NASTEPNY KROK (lider): review + scalenie galezi `worktree-agent-aa4d26eb3e436ffcb`; visual-critic na
+  `artifacts/axis-driveway-s24/sbs`; po fali 13 przebudowa kafli z drogami wiejskimi/zalewkami:
+  `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region <id>` + import. Prywatny derived
+  knyszyn-w (r5) w `Data/raw/derived/knyszyn-w` worktree — skopiowac do main tylko po decyzji lidera; junctiony odpinac
+  `cmd /c rmdir`.
