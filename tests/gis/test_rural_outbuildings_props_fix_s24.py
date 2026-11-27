@@ -22,7 +22,8 @@ class _Buf:
         self.parts = []
 
     def add(self, layer, mat, V, UV, T, **kw):
-        self.parts.append(SimpleNamespace(layer=layer, mat=mat, V=np.asarray(V, float), T=np.asarray(T).reshape(-1, 3)))
+        self.parts.append(SimpleNamespace(layer=layer, mat=mat, V=np.asarray(V, float),
+                                          T=np.asarray(T).reshape(-1, 3), COL=kw.get("COL")))
 
     def tris(self, layer=None):
         return sum(len(p.T) for p in self.parts if layer in (None, p.layer))
@@ -179,9 +180,8 @@ def test_outbuildings_r2_barn_doors_gutters_roof_weather_plinth_and_runoff():
     assert not any(p.mat == "facade_atlas" for p in buf.parts if p.layer == "buildings_low")
 
     # (3) Roof COLOR_0 weathering written for rural_outbuildings + shader/importer sheet ribs
-    # (ridge cap vertices in the merged submesh carry a=0, roof slope covering vertices carry a >= 0.5)
     roof_l0 = [p for p in buf.parts if p.layer == "buildings" and p.mat.startswith("roof_")]
-    assert roof_l0 and all(p.COL is not None and float((p.COL[:, 3] >= 0.5).mean()) > 0.4 for p in roof_l0)
+    assert roof_l0 and all(p.COL is not None and (p.COL[:, 3] > 0).all() for p in roof_l0)
     pbr = (REPO / "game/Assets/_Project/Environment/Shaders/WorldPBR.shader").read_text(encoding="utf-8")
     imp = (REPO / "game/Assets/_Project/World/Import/WorldPbrMaterials.cs").read_text(encoding="utf-8")
     assert "_RoofWeather.w > 0.5" in pbr and "sheetRibs" in imp
@@ -192,6 +192,52 @@ def test_outbuildings_r2_barn_doors_gutters_roof_weather_plinth_and_runoff():
         assert 0.16 <= pl_col[1] <= 0.30, pl_col
     plaster_l0 = [p for p in buf.parts if p.layer == "buildings" and p.mat.startswith("plaster_")]
     assert plaster_l0 and all(p.UV1 is not None for p in plaster_l0), "under-eave runoff UV1 expected on LOD0 plaster"
+
+
+def test_r4_roof_profiles_and_seed_match_at_both_lods():
+    from streetscape import buildings_mesh as BM
+    from streetscape import materials as MAT
+    from streetscape import roofs as RF
+
+    sheds, _, _, _ = _sheds("dk65-07")
+    profiles = set()
+    seeds = set()
+    saw_felt = saw_cap = False
+    for b in (b for b in sheds if b.get("rural_outbuilding")):
+        buf, _ = _build([b])
+        covers = [p for p in buf.parts if p.mat.startswith("roof_") and p.COL is not None]
+        tagged = [(p, p.COL[p.COL[:, 3] > 0.0]) for p in covers]
+        assert {p.layer for p, colors in tagged if len(colors)} == {"buildings", "buildings_low"}
+        codes = {round(a * 255) for _, colors in tagged for a in colors[:, 3]}
+        assert len(codes) == 1, b["id"]
+        code = codes.pop()
+        if covers[0].mat == "roof_membrane":
+            assert code == 255 and MAT.M["roof_membrane"]["roof_felt"] and MAT.M["roof_membrane"]["vertex_color"]
+            assert all((colors[:, 2] == 64.0 / 255.0).all() for _, colors in tagged)
+            saw_felt = True
+            continue
+        profile, seed = divmod(code - 1, RF.RURAL_ROOF_SEEDS)
+        material = BM.rural_shed_pick(b["id"], BM.RURAL_SHED_ROOFS, "rsroof")
+        assert 1 <= code <= 93 and profile == BM.rural_roof_profile(b["id"], material)
+        assert all(p.mat == material for p in covers)
+        assert all((p.COL[:, 2] < 1).all() for p in covers if p.layer == "buildings_low")
+        saw_cap |= any((p.COL[:, 2] == 1).any() for p in covers)
+        profiles.add(profile)
+        seeds.add(seed)
+    assert profiles == {RF.RURAL_METAL, RF.RURAL_FIBRE_CEMENT, RF.RURAL_CLAY}
+    assert len(seeds) > 10
+    assert saw_felt and saw_cap
+
+
+def test_r4_keeps_an_authored_pitched_covering():
+    sheds, _, _, _ = _sheds("dk65-07", {"bdot:2C9A9AB4-440C-0F0D-E053-CA2BA8C04DCD"})
+    [barn] = sheds
+    override = dict(barn["ovr"], roof_material="roof_tiles_brown")
+    buf, _ = _build([dict(barn, ovr=override)])
+    covers = [p for p in buf.parts if p.mat.startswith("roof_")]
+    assert covers and all(p.mat == "roof_tiles_brown" for p in covers)
+    assert any((p.COL[:, 3] >= 0.5).any() for p in covers if p.COL is not None)
+    assert all(((p.COL[:, 3] == 0.0) | (p.COL[:, 3] >= 0.5)).all() for p in covers if p.COL is not None)
 
 
 def test_barn_doors_are_weathered_grey_brown_r3():

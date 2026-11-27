@@ -883,8 +883,17 @@ RIDGE_UV = {"roof_tiles_red": (0.07, 0.07, 1.0), "roof_tiles_old": (0.07, 0.07, 
 WEATHER_RIDGE_M = 6.0           # COLOR_0.b scale: metres below the ridge / 6 (weathering-s24, shader _ROOF_WEATHER)
 WEATHER_MOSS_SOUTH = 0.30       # moss factor of a slope that falls to the south (north slope = 1; WORKING_VALUE)
 
+# ADR 0238 r4: COLOR_0.a codes 1..93 in UNorm8, three pitched profiles with 31 seeds each.
+# Zero still means uncoloured. The legacy weathering seed occupies 127/128..255.
+RURAL_METAL, RURAL_FIBRE_CEMENT, RURAL_CLAY = range(3)
+RURAL_ROOF_SEEDS = 31
 
-def weather_col(face, d0, sl, uv_v, weather):
+
+def rural_weather_alpha(profile, seed):
+    return (1 + profile * RURAL_ROOF_SEEDS + min(int(seed * RURAL_ROOF_SEEDS), RURAL_ROOF_SEEDS - 1)) / 255.0
+
+
+def weather_col(face, d0, sl, uv_v, weather, rural_profile=None):
     """COLOR_0 of the covering vertices of one face (weathering-s24, Kamion/World PBR _ROOF_WEATHER):
     r = age (dirt runs, odd tiles), g = moss x slope aspect (north slope 1, south WEATHER_MOSS_SOUTH), b = metres below
     the face's ridge / WEATHER_RIDGE_M (0 at the ridge, uv_v = metres above the eave), a = 0.5 + 0.5 x building seed
@@ -904,17 +913,20 @@ def weather_col(face, d0, sl, uv_v, weather):
     col[:, 1] = moss * mf
     col[:, 2] = b
     col[:, 3] = 0.5 + 0.5 * seed
+    if rural_profile is not None:
+        col[:, 2] = np.minimum(b, 254.0 / 255.0)      # 255 marks the ridge/hip cap
+        col[:, 3] = rural_weather_alpha(rural_profile, seed)
     return col
 
 
 def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_layer="buildings_low", soffit_mat=None,
-          step_mat=None, low_mat=None, weather=None):
+          step_mat=None, low_mat=None, weather=None, rural_profile=None):
     """Roof covering (LOD0, LOD1, collision), soffit and fascia (LOD0). Returns the horizontal eave edges
     [(a, b, z_top)] of the covering (outward normal = right of a -> b) for the gutters.
     soffit_mat: material of the soffit under the overhang (default = fascia_mat).
     low_mat: material of the covering on LOD1 (default = mat; ADR 0316: a covering variant of the same colour).
     weather: (age, moss, seed) of the building -> COLOR_0 on the covering (weather_col; weathering-s24, opt-in per
-    region). None = no vertex colours (the output is bit-identical to the code before)."""
+    region). With rural_profile, alpha selects the r4 covering and its seed in the same material submesh."""
     low_mat = low_mat or mat
     exp = covering(poly, roof, ov)
     soffit_mat = soffit_mat or fascia_mat
@@ -928,8 +940,10 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
             xy = T.reshape(-1, 2)
             V = np.column_stack([xy, zfun(xy) + T_TOP])
             UV = np.column_stack([xy @ e, np.asarray(d0(xy)) * roof.sl])
+            if rural_profile in (RURAL_METAL, RURAL_FIBRE_CEMENT):
+                UV[:, 0] = (xy - roof.c) @ e               # keep metre-scale ribs precise in float16 UV0
             idx = np.arange(len(V)).reshape(-1, 3)
-            COL = None if weather is None else weather_col(face, d0, roof.sl, UV[:, 1], weather)
+            COL = None if weather is None else weather_col(face, d0, roof.sl, UV[:, 1], weather, rural_profile)
             acc.add("buildings", mat, V, idx, UV, COL=COL)
             acc.add(low_layer, low_mat, V, idx, UV, COL=COL)
             acc.add("collision", "collision_building", V, idx, UV)
@@ -1018,7 +1032,11 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
             V = np.asarray(V)
             if np.cross(V[1] - V[0], V[5] - V[0])[2] < 0:       # faces look up
                 T = [tr[::-1] for tr in T]
-            acc.add("buildings", mat, V, T, UV)
+            cap_col = None
+            if rural_profile is not None:
+                age, _, seed = weather
+                cap_col = np.tile((age, 0.0, 1.0, rural_weather_alpha(rural_profile, seed)), (len(V), 1))
+            acc.add("buildings", mat, V, T, UV, COL=cap_col)
     return eaves
 
 
