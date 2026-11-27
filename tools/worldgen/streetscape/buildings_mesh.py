@@ -115,6 +115,25 @@ RURAL_SHED_PLINTH_HS = (0.45, 0.50, 0.58, 0.65)     # taller rural plinth (0.45-
 RURAL_SHED_GARAGE_VARIANTS = (0, 1, 5)              # rural double-leaf doors only (no urban graffiti 2/4, no white up-and-over 3)
 RURAL_SHED_BARN_REVEAL_M = 0.0                      # flat atlas leaf (avoids zpl-split double reveals); frame + hardware in _rural_barn_kit
 RURAL_SHED_GUTTER_SWATCHES = ("galv", "steel_grey", "steel_dark")
+# ADR 0238 d. r3 (plaza-barn-fix-s24, critic s24 day 27 pkt 6): the barn leaves showed the atlas cells as painted - a
+# fresh orange-brown trapezoid sheet (balf 2, linear 0.35 / 0.24 / 0.17) and a pale reed mat (balf 5, 0.43 / 0.31 /
+# 0.13) - "too bright, too new". Farm-yard barn doors of Podlasie are boards left to the weather: silver-grey to
+# grey-brown, some tarred dark. Target albedo of the leaf (linear rgb, luminance about 0.17-0.24, WORKING_VALUE against
+# the owner's DK65 frames and Commons photos of Podlasie barns); the COLOR_0 tint = target / cell mean (facade_atlas
+# carries facade_tint since r3: same material, 0 extra draws). Tone picked from the building seed, +-10 % luminance.
+RURAL_BARN_WEATHERED = ((0.235, 0.220, 0.195),    # silver-grey boards (sun side, decades old)
+                        (0.215, 0.180, 0.145),    # grey-brown
+                        (0.200, 0.170, 0.150),    # grey-brown, cooler
+                        (0.165, 0.135, 0.105))    # old tar / oil stain, darkened
+RURAL_BARN_CELL_MEAN = {2: (0.32, 0.22, 0.15), 5: (0.37, 0.26, 0.11)}   # measured on the painted cells (sets_buildings _balf)
+RURAL_BARN_BEAM_TINT = (1.45, 1.18, 0.92)        # steel_grey swatch (0.107, 0.117, 0.122) -> grey-brown timber 0.155 / 0.138 / 0.112
+
+
+def rural_barn_tint(key):
+    """COLOR_0 (tint / 2, a = 1) of a barn door leaf for the two infill cells {2, 5}: weathered board tone of the seed."""
+    tone = np.asarray(RURAL_BARN_WEATHERED[FA.hint(key, "barn_tone") % len(RURAL_BARN_WEATHERED)], float)
+    tone = tone * (0.90 + 0.20 * FK.hfloat(key, "barn_lum"))
+    return {v: (*np.clip(tone / np.asarray(m) * 0.5, 0.0, 1.0).round(4), 1.0) for v, m in RURAL_BARN_CELL_MEAN.items()}
 
 
 def _rural_barn_infill(variant):
@@ -136,15 +155,18 @@ def _rural_barn_kit(acc, a, d, nout, o, key):
     pr = 0.014                              # hardware sits 1.4 cm proud of the flat leaf (zero z-fight)
     um = 0.5 * (u0 + u1)
     uv_dark = FA.swatch_uv("steel_dark")
-    uv_beam = FA.swatch_uv("pvc_brown" if FK.hfloat(key, "bbeam") < 0.65 else "wood")
+    # ADR 0238 d. r3: weathered grey-brown timber (steel_grey swatch x COLOR_0) instead of the fresh orange "wood" /
+    # glossy "pvc_brown" swatches; a third of the frames darker (tarred)
+    uv_beam = FA.swatch_uv("steel_grey")
+    col_beam = (*(np.asarray(RURAL_BARN_BEAM_TINT) * (0.78 if FK.hfloat(key, "bbeam") >= 0.65 else 1.0) * 0.5).round(4), 1.0)
     # timber frame posts + lintel beam proud of the door plane (3 quads = 6 tris)
     fw, lh, fp = 0.09, 0.13, 0.032
     acc.quad("buildings", "facade_atlas", P(u0 - fw, z1, fp), P(u1 + fw, z1, fp),
-             P(u1 + fw, z1 + lh, fp), P(u0 - fw, z1 + lh, fp), uv=uv_beam)
+             P(u1 + fw, z1 + lh, fp), P(u0 - fw, z1 + lh, fp), uv=uv_beam, col=col_beam)
     acc.quad("buildings", "facade_atlas", P(u0 - fw, z0, fp), P(u0, z0, fp),
-             P(u0, z1, fp), P(u0 - fw, z1, fp), uv=uv_beam)
+             P(u0, z1, fp), P(u0 - fw, z1, fp), uv=uv_beam, col=col_beam)
     acc.quad("buildings", "facade_atlas", P(u1, z0, fp), P(u1 + fw, z0, fp),
-             P(u1 + fw, z1, fp), P(u1, z1, fp), uv=uv_beam)
+             P(u1 + fw, z1, fp), P(u1, z1, fp), uv=uv_beam, col=col_beam)
     # centre vertical shadow gap between the two leaves (2 tris)
     acc.quad("buildings", "facade_atlas", P(um - 0.024, z0 + 0.02, pr), P(um + 0.024, z0 + 0.02, pr),
              P(um + 0.024, z1 - 0.01, pr), P(um - 0.024, z1 - 0.01, pr), uv=uv_dark)
@@ -814,7 +836,8 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
                          uv1=uv1, col=col)
     n3 = np.append(nout[:2], 0.0)
     d3 = np.append(d[:2], 0.0)
-    for (ua, ub, va, vb, depth, kind, mat_in) in [o[:7] for o in ops]:
+    for (ua, ub, va, vb, depth, kind, mat_in), o_tint in [(o[:7], o[7] if (o[5] == "barn_door" and len(o) > 7) else None)
+                                                          for o in ops]:
         back = -n3 * depth
         A, B, C, D = (np.array(P(ua, va)), np.array(P(ub, va)), np.array(P(ub, vb)), np.array(P(ua, vb)))
         if depth <= 0.0 and isinstance(mat_in, tuple):
@@ -832,7 +855,7 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
                 lu0, lu1 = cu + cw * (a0 * nr - j), cu + cw * (a1 * nr - j)
                 lv0, lv1 = cv + ch * ga, cv + ch * gb
                 acc.quad(layer, "facade_atlas", Pa, Pb, Pb + (D - A), Pa + (D - A),
-                         uv=[[lu0, lv0], [lu1, lv0], [lu1, lv1], [lu0, lv1]])
+                         uv=[[lu0, lv0], [lu1, lv0], [lu1, lv1], [lu0, lv1]], col=o_tint)
             continue
         rv = reveal or "reveal_" + ("hall" if mat.startswith("hall") else "plaster")
         # reveals (facing into the opening); skip sill on ground-level barn doors (-2 tris per barn door)
@@ -1321,8 +1344,10 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
                     dw = 3.20 if L >= 10.5 else (2.75 if L >= 6.0 else 2.40)
                     um = L * (0.5 if L < 10.0 else (0.36 + 0.28 * hfloat(key, "bd_u")))
                     um = min(max(um, dw / 2 + 0.6), L - dw / 2 - 0.6)
+                    bd = hv("bd")
                     ops.append((um - dw / 2, um + dw / 2, zref + 0.04, zref + 0.04 + dh,
-                                RURAL_SHED_BARN_REVEAL_M, "barn_door", _rural_barn_infill(hv("bd"))))
+                                RURAL_SHED_BARN_REVEAL_M, "barn_door", _rural_barn_infill(bd),
+                                rural_barn_tint(key)[2 if bd % 2 == 0 else 5]))     # ADR 0238 d. r3: weathered leaf
                 else:
                     n = 1 if L < 7.5 else 2
                     for i in range(n):

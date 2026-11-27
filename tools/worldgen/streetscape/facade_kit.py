@@ -105,7 +105,7 @@ def wall_pieces(wwo, acc, a, d, nout, L, zb, zt, ops, u_acc, vref, zsplits, uspl
                         fu = lambda u, m=m, o=o: m[2] + (m[3] - m[2]) * (u - o[0]) / (o[1] - o[0])
                         fv = lambda v, m=m, o=o: m[4] + (m[5] - m[4]) * (v - o[2]) / (o[3] - o[2])
                         m = (m[0], m[1], fu(ua), fu(ub), fv(va), fv(vb))
-                    pc.append((ua - u0, ub - u0, va, vb, o[4], o[5], m))
+                    pc.append((ua - u0, ub - u0, va, vb, o[4], o[5], m, *o[7:]))     # o[7:]: barn tint (ADR 0238 d. r3)
             if col_fn is not None:
                 wwo(acc, layer, mat, a + d * u0, d, nout, u1 - u0, z0, z1, pc, u0=u_acc + u0, vref=vref,
                     col=col_fn(u0, u1, z0, z1, mat), **kw)
