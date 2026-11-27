@@ -999,14 +999,14 @@ Shader "Kamion/World PBR"
                         }
                         else if (kindF < 1.5)
                         {
-                            // MILLED overlay (frezowanie + nakladka): the transverse cuts are straight saw / drum cuts, but each end
+                            // MILLED overlay (frezowanie + nakladka): the transverse cuts follow the drum, but each end
                             // has its own skew (+-3 deg: the cut is marked by eye), and on 40 % of the overlays one end is
                             // staggered by 0.1-0.4 m over half the width (two passes of a 1 m drum). The longitudinal edges follow
                             // the old lane joint, hand-raked: 5-15 cm wander + bites. Sealed along the transverse cuts. WORKING_VALUE.
                             float vY = (i.uv.y - 0.5) * sizeM.y;                                     // lateral m from the axis
                             float sk = (i.uv.x < 0.5 ? frac(seed * 17.3) : frac(seed * 23.9)) - 0.5;
                             sk *= 0.10;
-                            float endD = borderM.x - (sk * vY + 0.5 * abs(sk) * sizeM.y) - 0.004 * (n3 - 0.5);
+                            float endD = borderM.x - (sk * vY + 0.5 * abs(sk) * sizeM.y) - 0.35 * bite;
                             float latD = borderM.y - bite;
                             float rcn = min((0.04 + 0.16 * frac(seed * 7.13)) * (0.3 + 1.4 * n1), 0.4 * mn);
                             edgeM = RoundedInset(float2(endD, latD), rcn) - 0.006 * n3;
@@ -1015,7 +1015,7 @@ Shader "Kamion/World PBR"
                             float dEnd = (frac(seed * 4.3) < 0.5 ? i.uv.x : 1.0 - i.uv.x) * sizeM.x;
                             float sideY = (frac(seed * 2.9) < 0.5 ? vY : -vY) - 0.15 * (frac(seed * 3.3) - 0.5) * sizeM.y;
                             edgeM = st > 0.0 ? min(edgeM, max(dEnd - st, -sideY)) : edgeM;
-                            fth = 0.012;
+                            fth = 0.022;
                             hasSeal = 1.0;
                             sw = baseSw;
                             sealMask = (half)(smoothstep(0.78, 0.58, n1) * step(min(endD, dEnd - st), latD + sw));

@@ -31,3 +31,6 @@
 
 - [krok 4] Stan wyjściowy przebudowany (470,4 s po ekstrakcji), import Win64 OK, 13/13 kamer High PC w clear i overcast. Przejrzano ujęcie DK65 i zbliżenia zjazdów. Włączono kalibrację, maskę i przerywaną zalewkę łaty w shaderze.
 - Następny krok: `pwsh artifacts/codex-patches-edges-s24/qa.ps1 -Stage after`.
+
+- [krok 5] Testy łat, nawierzchni i zjazdów 32/32. Krawędź poprzeczna frezu zachowuje kierunek cięcia i dostaje słabszą składową wyszczerbień niż boki. Generator wariantu po zmianie utrzymał 135 łat i 94 obniżenia.
+- Następny krok: dokończyć `pwsh artifacts/codex-patches-edges-s24/qa.ps1 -Stage after` i uruchomić `compare.py` z uzgodnionym Pythonem.
