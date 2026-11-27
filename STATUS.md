@@ -32,3 +32,6 @@ Następny krok: pwsh scripts/test.ps1 -Platform All -BuildTarget Win64
 
 ADR 0355, docs/08 i rejestr licencji opisują procedurę, strojenie i źródła ośmiu klipów.
 Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting overcast -WiperPhase 0.5
+
+Próby hamulca w PlayMode zaczynają na początku prostej, aby obie perspektywy zmieściły się na placu. Telemetria zapisze ciśnienie i GC w aktualizacjach pisku.
+Następny krok: pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64

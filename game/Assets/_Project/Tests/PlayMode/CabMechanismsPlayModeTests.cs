@@ -61,7 +61,13 @@ namespace Game.Tests
                 Assert.AreEqual(0, audio.BrakeSquealEvents, "parked truck");
                 Debug.Log($"[CAB_MECH] DrivingLab dry={dryClip} wet={audio.LastWiperSweep.name} fastPitch={audio.WiperPlaybackPitch:F2} starts={drive.Starts} parks={drive.Parks} GC={bytes} B/300 updates");
             }
-            finally { Shader.SetGlobalVector(wetness, saved); }
+            finally
+            {
+                Shader.SetGlobalVector(wetness, saved);
+                while (drive.Mode != WiperMode.Off) drive.CycleMode();
+                drive.Step(WiperDrive.SlowSeconds);
+                audio.enabled = true;
+            }
         }
 
         [UnityTest]
@@ -73,7 +79,7 @@ namespace Game.Tests
             var audio = Object.FindAnyObjectByType<TruckAudioController>();
             Assert.IsNotNull(audio);
             Assert.IsTrue(audio.HasAudio);
-            boot.Spawn(DrivingLabBootstrap.LabSpawn.Solo);
+            boot.SpawnAt(DrivingLabBootstrap.LabSpawn.Solo, DrivingLabLayout.Spawn, Quaternion.identity);
             var body = audio.vehicle;
             var previousSimulation = Physics.simulationMode;
             Physics.simulationMode = SimulationMode.Script;
@@ -85,6 +91,8 @@ namespace Game.Tests
                 {
                     audio.rig.SetMode(camera);
                     int before = audio.BrakeSquealEvents;
+                    float minPressure = 1f, maxPressure = 0f;
+                    long bytes = 0;
                     for (int i = 0; i < applications; i++)
                     {
                         var input = body.Input;
@@ -102,15 +110,25 @@ namespace Game.Tests
                             body.Body.linearVelocity = body.transform.forward * (10f / 3.6f);
                             body.Tick(0.01f);
                             Physics.Simulate(0.01f);
+                            int previous = audio.BrakeSquealEvents;
+                            long gcBefore = System.GC.GetAllocatedBytesForCurrentThread();
                             audio.AudioStep(0.01f);
+                            bytes += System.GC.GetAllocatedBytesForCurrentThread() - gcBefore;
+                            if (previous == audio.BrakeSquealEvents) continue;
+                            float pressure = 0f;
+                            foreach (var wheel in body.Model.Wheels)
+                                if (wheel.Contact) pressure = Mathf.Max(pressure, (float)wheel.BrakePressure);
+                            minPressure = Mathf.Min(minPressure, pressure);
+                            maxPressure = Mathf.Max(maxPressure, pressure);
                         }
                         Assert.LessOrEqual(audio.BrakeSquealEvents - start, 1);
                     }
                     int played = audio.BrakeSquealEvents - before;
                     Assert.That(played, Is.InRange(1, applications - 1));
+                    Assert.AreEqual(0L, bytes);
                     string expected = camera == CameraMode.Cab ? "brake_service_squeal_cab" : "brake_service_squeal";
                     Assert.AreEqual(expected, audio.LastBrakeSqueal?.name);
-                    Debug.Log($"[CAB_MECH] DrivingLab service brake speed=10 km/h pedal=0.55 view={camera} events={played}/{applications} clip={audio.LastBrakeSqueal.name}");
+                    Debug.Log($"[CAB_MECH] DrivingLab service brake speed=10 km/h pedal=0.55 view={camera} events={played}/{applications} pressure={minPressure:F3}–{maxPressure:F3} clip={audio.LastBrakeSqueal.name} GC={bytes} B/{applications * 65} updates");
                 }
             }
             finally { Physics.simulationMode = previousSimulation; }
