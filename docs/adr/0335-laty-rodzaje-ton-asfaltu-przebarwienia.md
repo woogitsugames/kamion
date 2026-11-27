@@ -211,3 +211,22 @@ Koszt: te same odczyty tekstur, +~4 ALU na piksel jezdni (smoothstep, przesunię
   `knyszyn-w` i `dw671-tykocin-03` (prywatna kopia derived worktree). Shader działa od razu na każdym regionie
   (ton, obrys, kształty), ale stare regiony mają zalewkę 6 cm (teraz okrakiem, więc wyraźniejszą).
 - Pozostałe regiony z łatami/pęknięciami po scaleniu: `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region <id>`.
+
+## Dopisek axis-driveway-s24 (27.11): szew osi po P3 nadal „pionowy ciemny odcinek” + falisty pas (krytyk build #10 pkt 4)
+
+**Diagnoza** (`KAMION_QA_DIAG=colorby:material`, `artifacts/axis-driveway-s24/diag-before-material/dk65-goniadzka*`):
+oba elementy to `M_decal_seal` — pionowy odcinek = szew osi z P3 leżący DOKŁADNIE w osi (przedłużał kreskę P-1 między
+kreskami, startował/kończył się na krótkim wygaszeniu 0,65/0,9 m), poziomy = dwa połówkowe pęknięcia termiczne
+(pełna czarna zalewka `strength 2,6`, meander ±16 cm) stykające się z nim w „T”. Nie łata, szew kafla ani dylatacja.
+
+**Decyzja** (`roads/decals.py`, 0 nowych draw calli; WORKING_VALUE):
+- szew osi 14–26 cm OBOK linii (strona i odsunięcie per odcinek, `CENTRE_JOINT_OFFSET_M`) — linię maluje się po
+  sznurze po ułożeniu, nie na szwie; krawędź pasma ≥ 2 cm od krawędzi kreski 12 cm; długie wygaszenie końców
+  (dodatnia długość w UV1.x → 2,5/4 m w shaderze, bez zmiany shadera); `CENTRE_JOINT_STRENGTH` 1,7 → 1,25 (stara,
+  przetarta zalewka);
+- pęknięcia poprzeczne: meander 0,16 → 0,09 m (`TRANSVERSE_MEANDER_M`); tylko ~35 % zalewek świeżych (2,6), reszta
+  1,5–2,1 (przetarte makroszumem, szarsze) — nigdy jednolita czarna wstęga.
+- Wynik (`artifacts/axis-driveway-s24/sbs/dk65-goniadzka-before-after.jpg`): szew obok kreski, słaby, z wygaszeniem;
+  pęknięcie cieńsze i szare. drawsEst/trisK kamery bez zmian (170→171, 812k→812k).
+- Testy: `tests/gis/test_road_surface_0323.py` 14/14 (nowy `test_transverse_seals_not_all_solid_black`, zmieniony
+  `test_centre_joint_is_straight_and_worn`). Pozostałe regiony po scaleniu: przebudowa `build_world.py --region <id>`.
