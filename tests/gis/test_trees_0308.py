@@ -74,7 +74,7 @@ def test_atlas_uvs_agree_between_generator_and_tree_builder():
 def test_crown_envelopes_are_closed_and_species_specific():
     ns = isolated()
     C, radius = ns["CROWN"], ns["crown_radius"]
-    assert set(C) == {"linden", "maple", "birch", "alder", "poplar"} and ns["ADDED_0308"] == ("poplar",)
+    assert set(C) == {"linden", "maple", "birch", "alder", "poplar", "oak"} and ns["ADDED_0308"] == ("poplar",)   # oak: ADR 0352
     ph = [0.3, 1.1, 2.0, 4.0]
     for sp, P in C.items():
         prof = [np.mean([radius(P, u, a, ph) for a in np.linspace(0, 6.28, 24)]) for u in np.linspace(0, 1, 21)]

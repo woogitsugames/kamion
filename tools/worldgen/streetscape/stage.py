@@ -425,6 +425,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # no grit strip around the lawns (ADR 0114)
     col = CS.ground_colour(col, site_mask, hf, sites, PV.rasterize_polys)   # ADR 0214: sand on construction sites
     col = VG.authored_bare_ground(col, hf, origin, overrides, mask | bmask)
+    trees = VG.oak_share(trees, vrep)     # ADR 0352: oaks among the mature roadside / field lindens and maples
+    log("oak share", vrep["oak_share"])
     # ADR 0132: grown garden trees of the house plots (orthophoto crowns) join the tree instances - same prototypes,
     # LODs and impostors as every street tree; none closer than 2.5 m to a tree the region already has there
     ptrees = plots.get("trees") or []

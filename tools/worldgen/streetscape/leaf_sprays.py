@@ -5,7 +5,7 @@
 Writes art-source/world/vegetation/leaves_<species>.png: a 2 x 2 atlas (1024 x 1024, RGBA sRGB) of four different
 branchlets. One cell = one leafy twig system seen flat: the twig base sits at the bottom centre of the cell, the leaves
 are drawn with the outline of the species (cordate linden, five-lobed Norway maple, rhombic birch, notched alder, deltoid
-poplar, lanceolate willow), two-tone blades split at the midrib, darker leaves underneath and lighter ones on top.
+poplar, lanceolate willow, round-lobed pedunculate oak - ADR 0352), two-tone blades split at the midrib, darker leaves underneath and lighter ones on top.
 The old cards (leaf_textures.foliage) were round pompons of flat discs around the card centre: every card read as a
 ball, a crown of them as broccoli.
 
@@ -28,21 +28,23 @@ OUT = REPO / "art-source" / "world" / "vegetation"
 CELL = 512                      # one branchlet
 GRID = 2                        # atlas = GRID x GRID cells
 SS = 2                          # supersampling of the drawing
-SPECIES = ("linden", "maple", "birch", "alder", "poplar")    # willow: drawn on request (--only willow), not in the library yet
+SPECIES = ("linden", "maple", "birch", "alder", "poplar", "oak")    # willow: drawn on request (--only willow), not in the library yet
 # base blade colour (sRGB, summer, muted - docs/06); linden / maple / birch / alder = leaf_textures.COL
 COL = {"birch": (100, 116, 50), "alder": (52, 68, 34), "maple": (70, 92, 40), "linden": (74, 94, 42),
-       "poplar": (84, 104, 50), "willow": (104, 118, 78)}
+       "poplar": (84, 104, 50), "willow": (104, 118, 78),
+       "oak": (64, 86, 38)}      # ADR 0352: Quercus robur - the darkest, least yellow green of the set (WORKING_VALUE)
 TWIG = {"birch": (58, 44, 40), "willow": (112, 104, 62)}
 # blade length as a share of the cell, leaves per cell, style of the twig system
 #   spray  = forking twig with alternate leaves (linden, maple, alder, poplar)
 #   strand = long slender twigs fanning from the base with small leaves (birch, willow: the hanging twigs)
 FORM = {"linden": (0.082, 250, "spray"), "maple": (0.128, 125, "spray"), "alder": (0.080, 230, "spray"),
-        "poplar": (0.074, 250, "spray"), "birch": (0.052, 420, "strand"), "willow": (0.105, 330, "strand")}
+        "poplar": (0.074, 250, "spray"), "birch": (0.052, 420, "strand"), "willow": (0.105, 330, "strand"),
+        "oak": (0.118, 170, "spray")}
 # birch: cells 0-1 are upright sprays (the crown mass), cells 2-3 the hanging strands (make_trees `hang` cards);
 # a crown of strand fans alone read as bursts of spikes (preview r1)
 UPRIGHT_CELLS = {"birch": (2, 520)}             # species -> (cells drawn as sprays, their leaf count)
-CARD_M = {"linden": 1.25, "maple": 1.35, "alder": 1.2, "poplar": 1.25, "birch": 1.15, "willow": 1.3}
-SEED = {"linden": 3081, "maple": 3082, "birch": 3083, "alder": 3084, "poplar": 3085, "willow": 3086}
+CARD_M = {"linden": 1.25, "maple": 1.35, "alder": 1.2, "poplar": 1.25, "birch": 1.15, "willow": 1.3, "oak": 1.3}
+SEED = {"linden": 3081, "maple": 3082, "birch": 3083, "alder": 3084, "poplar": 3085, "willow": 3086, "oak": 3087}
 
 
 def blade(species):
@@ -60,6 +62,16 @@ def blade(species):
                     d2 = abs((th - a - side + math.pi) % (2 * math.pi) - math.pi)
                     r = max(r, ln * 0.72 * max(0.0, 1.0 - d2 / 0.20) ** 0.6)
             pts.append((0.42 + 0.58 * r * math.cos(th), 0.58 * r * math.sin(th)))
+        return pts
+    if species == "oak":                                # Quercus robur: obovate, 4-5 rounded lobes a side, short petiole
+        m = 110
+        for side in (1, -1):
+            for k in range(m + 1):
+                x = k / m if side > 0 else 1.0 - k / m
+                env = 0.33 * math.sin(math.pi * min(x, 1.0) ** 1.45) ** 0.72          # widest at ~0.62 of the blade
+                lobe = 0.50 + 0.50 * (0.5 + 0.5 * math.cos(2 * math.pi * (3.6 * x ** 1.1 + (0.10 if side > 0 else 0.34)))) ** 0.8
+                w = env * lobe + 0.018 * math.exp(-((x - 0.03) / 0.03) ** 2)           # the two small auricles at the base
+                pts.append((x, side * w))
         return pts
     n = 64
     for k in range(n):
