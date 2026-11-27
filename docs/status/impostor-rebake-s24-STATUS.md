@@ -39,3 +39,9 @@
 - [krok 8] _n impostora na GPU max 1024 (połowa albedo jak w ADR 0023; pamięć jak przed). post.ps1: atlasy w _Generated
   knyszyn-w / dk65-07, ImpostorTrimBake: 23 / 25 impostorów, średnie pole 41 % / 40 % kwadratu, 0 pominiętych.
 - NASTĘPNY KROK: (w kolejce slotów) `vqa.ps1 -Label after -Audit -AuditReimport`, potem `bash sbs.sh before after sbs`.
+- [krok 9] VQA `after` High clear+overcast (knyszyn-w 8 + dk65-07 58 kamer) OK; pary SBS `artifacts/impostor-rebake-s24/sbs/`
+  (73 × 960 px, `diff.tsv`), zoomy `sbs-zoom/`. Draw calle / trójkąty identyczne na 66 kamerach (`stats-before-after.tsv`).
+  Audyt po: GPU knyszyn-w 36,38 -> 37,50 MB, dk65-07 33,38 -> 34,50 MB (+1,12 MB = młodnik sosny 2048×512).
+  Diagnostyka `impab.ps1` (rq_card=0.2, impostory blisko, stare vs nowe atlasy): `sbs-impab/` — nowe wyraźnie ostrzejsze.
+  Przy normalnym High (impostor > 90 m) zysk subtelny (impostor 130-220 px wysokości przy 1080p).
+- NASTĘPNY KROK: EditMode `editmode2` (trwa), kopia dowodów do main, raport.
