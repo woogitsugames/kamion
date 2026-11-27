@@ -22,3 +22,5 @@
 - Następny krok: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-farring-diag-s24`; skopiować tylko wybrane sceny #10 do bieżącego worktree i uruchomić A/B High.
 - [krok 2] Skopiowano siedem zaimportowanych kafli z buildu #10 do lokalnego game/Assets/_Generated/World. Cztery zestawy budżetowe: 62/62, 154,04 s.
 - Następny krok: `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1` (High, clear/overcast, A/B, colorby:renderer).
+- [krok 3] Archiwalny #10: przejazdy Knyszyn Zachód–Mońki mają aktywny streamer i podobny horyzont z kabiny, ale różne pozycje pojazdu. Archiwalne pomiary PC obu startów nie uruchomiły streamera. Obejrzano 3 pary PNG z przejazdu.
+- Następny krok: dokończyć `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1` po przydziale FIFO, następnie `pwsh artifacts/codex-farring-diag-s24/run-player.ps1` z jawnym `-stream 1`.
