@@ -74,3 +74,16 @@ niż model: skrajnia ADR 0347 liczona jest na nieskalowanej siatce. Rekordy z `g
 ## Weryfikacja
 `tests/gis/test_trees_0352.py` (6), `test_trees_0308.py`, `test_trees_0347.py`; EditMode `VegetationCanopyPolicyTests`,
 `TreeCrownWidthTests`. Rendery przed / po: `artifacts/tree-species-s24/`.
+
+## Wynik (High PC, 1920 × 1080; `artifacts/tree-species-s24/compare/`)
+- `knyszyn-w`, czyste A/B drzew (przed = derived fali 11 z 26.11 13:51, po = ta gałąź), pogodnie i pochmurno, 10 kamer:
+  draw calle instancji (rekwizyty + drzewa) −7…+2 na kamerę (dąb: +1…+2 tam, gdzie stoi); trójkąty instancji −2964…+84;
+  trójkąty sceny −346…−5753. `drawsEst` obiektów kafla +0…+8 na 5 kamerach — to różnica kodu bazowego między falą 11
+  a tą gałęzią (inne scalone zmiany), nie drzew: do potwierdzenia czystym A/B po fali 12.
+- Dęby: `knyszyn-w` 78, `dw671-tykocin-03` 112; skrajnia `violations_after: 0` w obu kaflach.
+- Tekstury dębu: 1 × 1024² + 4 × 1536 × 384, Standalone kompresja automatyczna ≈ 4,5 MB z mipami (WYLICZONE z rozmiarów
+  i 8 bpp, nie zmierzone profilerem — `UNVERIFIED`).
+- **Nie rozwiązane:** małe drzewa ogrodowe zestawu działek (korona < 1,6 m) nadal czytają się jak „lizaki”, a w świetle
+  słonecznym w ich koronach zostaje ciemny klin — to karta skrzyżowana stojąca bokiem do słońca (normalna promieniowa),
+  nie wachlarz `occ_mid` ani wewnętrzne karty (oba usunięte w pełnym wariancie; pochmurno klin znika). Potrzebna inna
+  bryła małego drzewa (np. młode prototypy biblioteki albo karty koron z normalną „w górę”) — poza budżetem tej rundy.
