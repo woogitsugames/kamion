@@ -33,3 +33,5 @@
 - Następna komenda po bazowym visual-QA: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`
 - Testy z portfela budżetowego, chodników ADR 0237 i Knyszyna D38: 123 passed, 234,44 s. Log w `artifacts/codex-sidewalk-var-s24/pytest.log`.
 - Następny krok: po bazowym imporcie i renderach uruchomić `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`.
+- Bazowy import Win64 High i visual-QA clear/overcast zakończyły się sukcesem. Zapisano po 10 PNG, logi i statystyki kamer. GLB road High/Low: 192 589 tris i 120 prymitywów.
+- Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`
