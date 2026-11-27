@@ -71,3 +71,7 @@
 ### codex-gen-fix-s25 — bramki impostorów
 - ADR 0023: atlas 4096 × 1024, wyjątek pineyoung 2048 × 512, granice widoków z zaokrągleniem. Na 18 widokach sosny przy 2048 × 512: odłączone maks. 1,89%, największy element 1,03%. Obejrzano PNG i archiwalne High clear/overcast. Testy atlasów i roślinności: 31 PASS.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py tests/gis/test_far_field.py tests/gis/test_hv_wires_0351.py tests/gis/test_embankment_pylons_s24.py tests/gis/test_fields_r3_0334.py tests/gis/test_fields_r4_0334.py tests/gis/test_treerows_0222.py tests/gis/test_trees_0352.py tests/gis/test_world_v34.py tests/gis/test_vegetation_r2.py`.
+
+### codex-gen-fix-s25 — zweryfikowane i przekazane
+- 224/224 celowanych GIS, w tym 62/62 budżetowych. Low −476 i High −1968 tri WN łącznie. Zero nowych sektorów z WN. Raport i dowody w `artifacts/codex-gen-fix-s25/`.
+- Następny krok lidera: `git diff --stat e8b5d5e8f..codex-gen-fix-s25`, następnie kolejka fali 14 wg `artifacts/regen-wave-14-s24/README.md`.
