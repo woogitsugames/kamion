@@ -26,6 +26,7 @@ Override schema (Data/Regions/<id>/overrides.yaml):
     mixed_sidewalks: true            # shared material and local-street fallback
     older_sidewalks: true            # allow slabs/asphalt in the local-street fallback
     crossing_kerb_drops: true        # kerbs lowered at marked pedestrian crossings
+    cycle_bdot_surface: true        # classify BDOT cycleway surfaces; false preserves the original red finish
     cycle_paver_material: cycle_red  # material of a BDOT10k cycle path laid in blocks (cycle_red | sidewalk_paving)
   - id: ...
     kind: sidewalk_surface
@@ -148,7 +149,7 @@ def bdot_cycle_material(overrides, materialnawierzchni):
     if materialnawierzchni == "grunt naturalny":
         return None
     r = rules_of(overrides)
-    if r is None:
+    if r is None or not r.get("cycle_bdot_surface", True):
         return "cycle_red"
     if materialnawierzchni == "kostka prefabrykowana":
         return material_of(r["cycle_paver_material"]) if r.get("cycle_paver_material") else "cycle_red"

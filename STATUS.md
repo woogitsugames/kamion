@@ -39,3 +39,5 @@
 - Następny krok po `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`: `pwsh artifacts/codex-sidewalk-var-s24/compare.ps1`.
 - Próbkowanie centroidów bazowego GLB wskazało niewielki zasięg kostki czerwonej i asfaltu oraz brak płyt przy ograniczeniu fallbacku do ulic lokalnych. W Tykocinie dopuszczono starszy typ także dla klas secondary/tertiary. Dane źródłowe mają pierwszeństwo.
 - Następne komendy: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after` (w kolejce) i `pwsh artifacts/codex-sidewalk-var-s24/test.ps1` (powtórka po korekcie).
+- Pierwszy przebieg after ujawnił zmianę uboczną 926 m² drogi rowerowej po aktywacji dawnych reguł 0237. Zatrzymano własny proces przed eksportem i zwolniono jego slot. Dodano flagę zachowania wyjściowego wykończenia DDR w Tykocinie oraz test.
+- Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`

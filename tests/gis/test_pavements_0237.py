@@ -341,6 +341,9 @@ def test_bdot_cycle_path_material_follows_the_region_rules():
     assert PVM.bdot_cycle_material([], "grunt naturalny") is None
     assert PVM.bdot_cycle_material(RULES, "kostka prefabrykowana") == "cycle_red"
     assert PVM.bdot_cycle_material(RULES, "masa bitumiczna") == "cycle_asphalt"         # grey DDR asphalt (ADR 0188)
+    sidewalk_only = [dict(RULES[0], mixed_sidewalks=True, cycle_bdot_surface=False)]
+    assert PVM.bdot_cycle_material(sidewalk_only, "masa bitumiczna") == "cycle_red"
+    assert PVM.bdot_cycle_material(sidewalk_only, "grunt naturalny") is None
     grey = [dict(RULES[0], cycle_paver_material="sidewalk_paving")]
     assert PVM.bdot_cycle_material(grey, "kostka prefabrykowana") == "sidewalk_paving"
     assert PV.PATH_SURFACE["płyty betonowe"] == "sidewalk_slabs"
