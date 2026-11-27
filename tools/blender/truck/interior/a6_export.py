@@ -985,6 +985,7 @@ def write_rgba(arr, path, size):
 
 
 KEEP_LEATHER = [False]   # --keep-leather-maps (main)
+KEEP_PLASTIC = [False]   # --keep-plastic-maps (main)
 
 
 def build_textures(out_dir, cab_materials_only=False):
@@ -1057,7 +1058,8 @@ def build_textures(out_dir, cab_materials_only=False):
     # ADR 0112 r2: optional scan keeps this export's sizes, alpha and material slots.
     # Enabled-but-missing sources fail explicitly; there is no synthetic fallback.
     import cc0_leather
-    cc0_leather.apply_runtime_maps(out_dir, skip=("leather",) if KEEP_LEATHER[0] else ())
+    cc0_leather.apply_runtime_maps(out_dir, skip=(("leather",) if KEEP_LEATHER[0] else ())
+                                   + (("plastic",) if KEEP_PLASTIC[0] else ()))
     return written
 
 
@@ -1447,6 +1449,9 @@ def main():
                    help="Geometry / AO re-export in a checkout without the CC0 leather raw scans (cc0/_raw is outside git): "
                         "the committed scan-derived T_Cab_Leather_* maps of --out are kept byte-identical instead of "
                         "being regenerated. Not a fallback: without this flag a missing scan still fails")
+    p.add_argument("--keep-plastic-maps", action="store_true",
+                   help="Like --keep-leather-maps for the committed T_Cab_Plastic_* maps: geometry / AO re-export on a "
+                        "machine where the project Python of the stipple step (plastic_grain.py via uv) cannot start")
     a = p.parse_args(argv)
     out = os.path.abspath(a.out)
     if a.urp_out:   # A6 r3: Blender resolves a relative render path against the drive root, not the cwd
@@ -1471,6 +1476,11 @@ def main():
         import glob
         KEEP_LEATHER[0] = True
         for f in glob.glob(os.path.join(out, "textures", "*", "T_Cab_Leather_*.png")):
+            kept[f] = open(f, "rb").read()
+    if a.keep_plastic_maps:
+        import glob
+        KEEP_PLASTIC[0] = True
+        for f in glob.glob(os.path.join(out, "textures", "*", "T_Cab_Plastic_*.png")):
             kept[f] = open(f, "rb").read()
         if not kept:
             raise FileNotFoundError("--keep-leather-maps: no T_Cab_Leather_* maps under " + os.path.join(out, "textures"))

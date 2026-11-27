@@ -990,8 +990,10 @@ def front_wall():
     # largest piece of the trailer in the picture (a 0.11 m face seen square-on past the cab corner) and it was one
     # plain painted column. It is now an extrusion section - keder / lashing channel in the front face, a shallow
     # groove in the side face - standing in a bolted galvanised foot with a corner casting on top and a rivet row
-    # where the bulkhead sheet is fixed. Outer corner radius and the outline (swing radius, 2.55 m) are unchanged.
-    F = Y_FRONT
+    # where the bulkhead sheet is fixed. Outer corner radius and the outline (swing radius, 2.55 m) are unchanged;
+    # the painted face stands 6 mm behind the old one so that the fittings end exactly on the 13.6 m body length.
+    FW = Y_FRONT
+    F = Y_FRONT - 0.006
     for s in (-1, 1):
         prof = [(1.165, F - 0.150), (1.165, F - 0.004), (1.169, F), (1.181, F), (1.184, F - 0.006), (1.212, F - 0.006),
                 (1.215, F), (1.235, F)]
@@ -1011,15 +1013,15 @@ def front_wall():
         bm.faces.new(list(reversed(lo)))
         bm.faces.new(hi)
         G.obj_from_bm(f"front_post_{s}", bm, "trl_paint", sharp=40)
-        # galvanised foot (bolted to the bottom rail) and upper corner casting, 5 mm proud of the paint; kept inboard
+        # galvanised foot (bolted to the bottom rail) and upper corner casting, 4 mm proud of the paint; kept inboard
         # of x = 1.225 so the front swing radius (2.04 m) is not touched
-        box_mm(f"front_post_foot_{s}", s * 1.168, s * 1.228, F - 0.002, F + 0.005, FLOOR - 0.02, FLOOR + 0.24, "galv",
+        box_mm(f"front_post_foot_{s}", s * 1.168, s * 1.228, F - 0.002, FW - 0.002, FLOOR - 0.02, FLOOR + 0.24, "galv",
                bev=0.002, seg=1)
-        box_mm(f"front_post_cast_{s}", s * 1.168, s * 1.228, F - 0.002, F + 0.005, TOPRAIL_Z - 0.06, ROOF - 0.035, "galv",
+        box_mm(f"front_post_cast_{s}", s * 1.168, s * 1.228, F - 0.002, FW - 0.002, TOPRAIL_Z - 0.06, ROOF - 0.035, "galv",
                bev=0.002, seg=1)
         for j, (bx, bz) in enumerate(((1.180, FLOOR + 0.02), (1.216, FLOOR + 0.02), (1.180, FLOOR + 0.20),
                                       (1.216, FLOOR + 0.20), (1.198, TOPRAIL_Z - 0.03), (1.198, ROOF - 0.07))):
-            cyl(f"front_post_bolt_{s}_{j}", (s * bx, F + 0.008, bz), 0.009, 0.007, "galv", axis="Y", seg=6)
+            cyl(f"front_post_bolt_{s}_{j}", (s * bx, FW - 0.002, bz), 0.009, 0.004, "galv", axis="Y", seg=6)
         # rivet row of the bulkhead sheet along the inner edge of the post (dome heads, pitch 0.24 m; uneven by a few mm)
         nr = 9
         for j in range(nr):
