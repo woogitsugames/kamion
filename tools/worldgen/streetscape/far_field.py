@@ -2183,13 +2183,13 @@ COL_FAR_WIRE = (0.055, 0.056, 0.055)   # dark weathered aluminium; WorldSurface.
 # horizontal bars) and encodes (fadeStart_100m, -(100 + fadeEnd_100m)) in TEXCOORD_1 for WorldSurface.shader distance
 # fade matching Kamion/World Wire (COLOR_0.a stays 0.0, TEXCOORD_1.x >= 0.0). WORKING_VALUE.
 FAR_WIRE_PX_M = 2.0 * math.tan(math.radians(30.0)) / 1080.0
-FAR_WIRE_PX_FRAC = 0.30
-FAR_MV_WIRE_PX_FRAC = 0.24
+FAR_WIRE_PX_FRAC = 0.42
+FAR_MV_WIRE_PX_FRAC = 0.26
 FAR_WIRE_VIEW_M = 60.0
-FAR_WIRE_MAX_HALF_W = 0.085
-FAR_MV_WIRE_MAX_HALF_W = 0.040
-FAR_HV_WIRE_FADE_M = (350.0, 1350.0)
-FAR_MV_WIRE_FADE_M = (180.0, 480.0)
+FAR_WIRE_MAX_HALF_W = 0.095
+FAR_MV_WIRE_MAX_HALF_W = 0.042
+FAR_HV_WIRE_FADE_M = (420.0, 1350.0)
+FAR_MV_WIRE_FADE_M = (200.0, 480.0)
 FAR_WIRE_UV1_SENTINEL = 100.0    # uv1.y = -(100 + fadeEnd_100m) <= -100: disjoint from building facades & skyline (-16)
 
 

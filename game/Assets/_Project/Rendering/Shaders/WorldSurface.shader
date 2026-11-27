@@ -230,13 +230,11 @@ Shader "Kamion/World Surface"
                     float trueDist = p.positionCS.w + farExtra;
                     float fadeStart = v.uv1.x * 100.0;
                     float fadeEnd = (-v.uv1.y - 100.0) * 100.0;
-                    float px = 2.0 * max(p.positionCS.w, 1.0) / (abs(UNITY_MATRIX_P._m11) * max(_ScaledScreenParams.y, 1.0));
-                    float physHalfW = (fadeEnd > 800.0) ? 0.012 : 0.008;
-                    float covVis = pow(saturate((physHalfW / max(px, 1e-4)) / 0.6), 0.5);
+                    // Smooth distance fade into horizon aerial perspective (MSAA already provides geometric
+                    // subpixel coverage on the thin 0.26-0.42 px ribbon; avoid double-attenuating near-seam spans).
                     float distVis = 1.0 - smoothstep(fadeStart, max(fadeEnd, fadeStart + 1.0), trueDist);
-                    float wireVis = saturate(covVis * distVis);
-                    float floorVis = (fadeEnd > 800.0) ? 0.10 : 0.28;
-                    fogTau += (half)(-log(max(lerp(floorVis, 1.0, wireVis), 0.05)));
+                    float floorVis = (fadeEnd > 800.0) ? 0.14 : 0.30;
+                    fogTau += (half)(-log(max(lerp(floorVis, 1.0, distVis), 0.05)));
                     o.uv1.x = distVis;
                 }
                 o.fogFactor = fogTau;
