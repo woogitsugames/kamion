@@ -37,3 +37,5 @@
 - Następny krok po zakończeniu GIS: pod slotem heavy `& $python tools/worldgen/roads/build_world.py --region knyszyn-w --no-route-graph`, następnie import i visual-qa High.
 - Pełny GIS: 3160 passed, 12 failed, 6 skipped, 2 xfailed w 7616,42 s. Cztery wymagane pliki budżetowe 62/62 zielone. XML: `tests/gis-20261127-165203.xml`. Przywrócono uboczną zmianę wygenerowanych metadanych zieleni.
 - Następny krok pod slotem heavy: `& $python tools/worldgen/roads/build_world.py --region knyszyn-w --no-route-graph`.
+- Lokalny `build_world` Knyszyn-W zakończony w 386,0 s. Powstały 64 chunki High i 64 Low. Daleki plan ma 46 753 trójkąty w High i 5746 w Low. Zachowano manifest QA w artefaktach.
+- Następny krok pod slotem heavy: `& $python art-source/world/materials/_src/build_all.py --tier Medium`, potem import High i visual-qa.
