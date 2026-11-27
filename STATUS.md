@@ -50,3 +50,6 @@
 
 - [krok 11] Visual-QA po i EditMode zakończone (48 PNG, 30/30). Zgłoszenia instancji Tykocin Low 748 → 667, Medium 975 → 882. High ma identyczne liczniki, różnice pikselowe występują głównie na animowanej wodzie. GIS 60/62 + 2 skip z braku lokalnych instancji Białegostoku, uzupełniono prywatną kopię wymaganych JSON.
 - Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/batch-qa.ps1 -Phase repeat` oraz `pwsh -File artifacts/codex-props-low-perf-s24/verify.ps1 -Suite gis`.
+
+- [krok 12] Obejrzano wszystkie 48 porównań. High ma równe liczniki w każdej parze. Kontrola po/po odtworzyła zmienność obrazów, przede wszystkim pod wpływem animowanej wody. GIS 62/62, EditMode 30/30. Raport i dowody zapisano w `artifacts/codex-props-low-perf-s24/WYNIKI.md` również w głównym katalogu artefaktów.
+- Następny krok lidera po review: `git merge --no-ff codex-props-low-perf-s24`. Pomiar playera klasy min: `pwsh scripts/pc-metrics.ps1 -Exe <Kamion.exe> -Scene tykocin -Tier Low -Fps 30 -Width 1920 -Height 1080 -DurationSeconds 90 -Class min`.
