@@ -30,3 +30,5 @@
 - Następny krok: po bazowym imporcie i 8 PNG uruchomić `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
 - [krok 6] Bazowy import Win64 High (64 chunki) oraz 8 PNG 1920×1080, cztery kamery clear i overcast. Zapisano przebiegi w `artifacts/codex-monument-face-s24/before/`. Zrzut figury pokazuje zlanie rysów w kadrze z ulicy.
 - Następny krok: `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
+- [krok 7] Pełny eksport po zmianach ukończony (64 chunki). `streetscape-after.json` potwierdza 35 832 tris LOD0, 3 284 LOD1 i 230 kolizji. Przebieg oczekuje na slot Unity.
+- Następny krok po imporcie i 8 końcowych PNG: `pwsh artifacts/codex-monument-face-s24/porownania.ps1`.
