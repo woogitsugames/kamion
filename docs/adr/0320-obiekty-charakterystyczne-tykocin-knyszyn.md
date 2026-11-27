@@ -288,6 +288,17 @@ Generator wydziela stojący kołnierz żupana, nasadę rękawów i guzy na listw
 wygładzane są połączenia w obrębie ramion i delii. Niżej zachowano profile fałd s24. LOD1 powstaje z tych
 samych brył z większym przydziałem trójkątów na głowę. Materiały i procedura wypieku patyny są wspólne z s24.
 
+| Pomiar | s24 | r3 |
+|---|---:|---:|
+| Rynek LOD0 | 35 832 | 35 834 |
+| Rynek LOD1 | 3 284 | 3 334 |
+| Pomnik LOD0 | 26 670 | 26 672 |
+| Pomnik LOD1 | 1 914 | 1 964 |
+| Głowa LOD1 | 110 | 180 |
+
+Rynek zmierzono przez `tykocin_rynek_0320.build()` w pamięci na tej samej płaskiej powierzchni. Do limitu
+36 000 pozostało 166 tris LOD0. Testy GIS dotyczące Rynku, mostu i czterech pakietów budżetowych dały 74 PASS.
+
 Dowody r3 w `artifacts/codex-monument-head-s25/`. Cycles, LOD0, clear i overcast, trzy stałe kamery s24
 oraz dwa ujęcia ¾ z wysokości 1,70 m i z odległości poziomej 6 i 15 m od osi pomnika. Import, regenerację
 kafla `tykocin` i visual QA w Unity zaplanowano na falę 15.

@@ -108,3 +108,7 @@
 ### codex-monument-head-s25 — końcowy wypiek i ADR
 - Złagodzono relief linii włosów na obrysie. Po próbie ważenia zostawiono lokalne wygładzanie high poly i zwykłą decymację. Aktualny NPZ 26 672 / 1 964 tris. Zapisano decyzję r3 w ADR 0320.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -ra -p no:cacheprovider tests/gis/test_truss_bridge_0320.py tests/gis/test_props_grounding_0337.py::test_tykocin_rynek_authored_benches_qa tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`.
+
+### codex-monument-head-s25 — weryfikacja i przekazanie
+- Obejrzano 10 par LOD0 clear/overcast, 2 pary LOD1 i zestawienie ze zdjęciem. Rynek 35 832 → 35 834 / 3 284 → 3 334 tris, pomnik 26 670 → 26 672 / 1 914 → 1 964 tris. GIS 74 PASS. Raport i PNG w artifacts/codex-monument-head-s25/.
+- Następny krok lidera po akceptacji: `git merge --no-ff codex-monument-head-s25`. W fali 15 po zajęciu slotu heavy: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd tools/worldgen/roads/build_world.py --region tykocin`, następnie import Win64 High i visual QA clear/overcast.
