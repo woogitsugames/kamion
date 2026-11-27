@@ -30,3 +30,5 @@
 - Następny krok: dokończyć próby edytora w kolejce unity oraz pozostałe pary `pwsh artifacts/codex-farring-diag-s24/run-player.ps1`.
 - [krok 6] Zakończono i obejrzano 8 par playera #10 High (clear i overcast). Północ DK65: 1,560 / 1,469%; wschód DK65: 0 px; nad wiaduktem Bieżeństwa: 3 / 0 px. Dopisek ADR 0354 z metrykami GPU/VRAM/RAM i zaleceniem zachowania ON.
 - Następny krok: dokończyć oczekujący `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1` i porównać per-renderer TSV z klatkami colorby.
+- [krok 7] Dodatkowe 2 pary z wjazdu na Andersa, skierowane wzdłuż horyzontu: 0 pikseli Δ≥12/255 w obu pogodach. Obejrzano PNG. Razem 20 przebiegów playera.
+- Następny krok: odebrać wyniki oczekującego `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1`.

@@ -140,12 +140,13 @@ ujawnił pusty horyzont).
   maksymalnej różnicy kanału RGB ≥ 12/255 na północ od dw671-tykocin-03 zmienia się **1,278% / 1,279%** kadru
   (las i zabudowa, 01 i 02 Ready w obu wariantach). Na północ od dk65-07 zmienia się **1,560% / 1,469%**
   (linia lasu, 06 Ready, 08 poza promieniem streamingu). Wschodni `hv0351-far-e` na dk65-07 zmienia **0 px**,
-  a podniesione `biezenstwa-above` **3 / 0 px**.
+  podniesione `biezenstwa-above` **3 / 0 px**, a wjazd na Andersa `route-onramp-andersa` **0 / 0 px**.
 - GTX 1070, limit 60 FPS, 8 s próbek po rozgrzewce na wariant, bez utraty fokusu. ON dodaje **17–47 draw calls
-  p95** i około **204–561 tys. trójkątów p95** w licznikach całej klatki. Zmiany p95 GPU **−3,17 do +2,39 ms**
+  p95** i około **204–634 tys. trójkątów p95** w licznikach całej klatki. Poza wjazdem na Andersa zmiany p95 GPU **−3,17 do +2,39 ms**
   mają oba znaki. Zmiany szczytu VRAM procesu **−2,6 do +0,7 MiB**, prywatnej pamięci **−30,0 do +10,5 MiB**.
   To krótkie pomiary na współdzielonej maszynie. Dodatkowe draw calle są powtarzalne, izolowany koszt w ms pozostaje
-  `UNVERIFIED`. W ON p95 całej klatki wynosiło 16,67–16,69 ms.
+  `UNVERIFIED`. Na wjeździe na Andersa p95 całej klatki w ON wynosiło 20,47–20,81 ms, w OFF 36,37–39,91 ms,
+  przy braku różnic w obrazie. Pozostałe kadry w ON osiągały 16,67–16,69 ms.
 - Zalecenie: zachować ON. Jeżeli potrzebna jest większa czytelność horyzontu, poprawić sylwetkę z danych CHM
   selektywnie na odsłoniętych kierunkach, z zachowaniem perspektywy powietrznej ADR 0330. Pary PNG 960 px,
   logi, liczniki i komendy odtworzenia w `artifacts/codex-farring-diag-s24/`.
