@@ -1,0 +1,6 @@
+pwsh -NoProfile -File artifacts/regen-wave-14-s24/chain.ps1 -Tile dk65-monki-03 -WhatIf
+E dk65-monki-03: build_s=236 total_s=284 fala=13
+Plan: po prepare.ps1 -> heavy: build_world --context, far_field, export-route, fidelity -> import serializowany: heavy, Win64, High.
+Python: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\agent-a492e5af856a32ed3\tools\worldgen\.venv\Scripts\python.exe
+What If: Wykonywanie operacji „Uruchom regenerację i import” w lokalizacji docelowej „dk65-monki-03”.
+exit=0; brak katalogu run/; git status identyczny przed i po.
