@@ -47,3 +47,5 @@
 - Następny krok: `pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w_High -Tier High -Pc -BuildTarget Win64 -Width 1920 -Height 1080 -Lighting overcast -Cameras cab-driver,dk65-goniadzka,hv0351-far-ne -OutputDir artifacts/codex-main-verify-s24/visual/after/overcast`.
 - Visual QA Overcast: `VISUALQA_RESULT: OK rendered=3`. Zestawiono 6 nowych PNG z 6 archiwalnymi kadrami odniesienia. Przywrócono uboczny zapis `QualitySettings.asset`.
 - Następny krok: pod slotem heavy `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` po odtworzeniu TRAKT i tekstur.
+- Powtórny EditMode po przygotowaniu zasobów: 1525 zaliczonych, 116 pominiętych, 0 błędów i 0 niejednoznacznych w 202,66 s. XML: `tests/editmode-20261127-194527.xml`. Przywrócono śledzone pliki wygenerowane na potrzeby QA.
+- GOTOWE. Raport, logi, XML i obejrzane PNG zapisane w `artifacts/codex-main-verify-s24/`. Następny krok lidera: `git diff c8ca07835..codex-main-verify-s24 --stat`.
