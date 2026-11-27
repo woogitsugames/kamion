@@ -44,7 +44,7 @@ DIMS = json.loads((OUT / "dims.json").read_text(encoding="utf-8"))
 HZ, HS = DIMS["heights_m"], DIMS["half_sizes_m"]
 STONE, PATINA, GILT, SETT = "monument_sandstone_aged", "monument_bronze_patina", "monument_gilt", "plaza_sett_grey"
 VOXEL = 0.006
-BUDGET = {"lod0": {"figure": 10500, "head": 3800, "cartouches": 1300}, "lod1": {"figure": 520, "head": 180, "cartouches": 96}}
+BUDGET = {"lod0": {"figure": 12200, "head": 3800, "cartouches": 1250}, "lod1": {"figure": 520, "head": 180, "cartouches": 96}}
 ZF = HZ["cornice_top"]                 # top of the cornice = underside of the figure's slab
 SLAB = HZ["figure_slab"]
 RNG = np.random.default_rng(1762)
@@ -226,10 +226,10 @@ def angdiff(th, a):
 
 # ------------------------------------------------------------------------------------------------ the figure
 # z = 0 at the top of the figure's own slab. theta: 0 = his right (+x), 90 deg = front (+y).
-BODY_Z = (0.40, 0.90, 1.38, 1.50, 1.74, 1.93, 2.00, 2.05)
-BODY_A = (0.345, 0.315, 0.275, 0.245, 0.300, 0.325, 0.220, 0.110)        # half width
-BODY_BF = (0.280, 0.255, 0.225, 0.200, 0.235, 0.195, 0.150, 0.105)       # depth to the front
-BODY_BB = (0.270, 0.245, 0.215, 0.190, 0.210, 0.185, 0.150, 0.105)       # depth to the back
+BODY_Z = (0.40, 0.90, 1.38, 1.50, 1.74, 1.88, 1.96, 2.01, 2.04)
+BODY_A = (0.345, 0.315, 0.275, 0.245, 0.295, 0.315, 0.265, 0.165, 0.098)        # half width
+BODY_BF = (0.280, 0.255, 0.225, 0.200, 0.228, 0.205, 0.172, 0.125, 0.092)       # depth to the front
+BODY_BB = (0.270, 0.245, 0.215, 0.190, 0.205, 0.190, 0.162, 0.120, 0.090)       # depth to the back
 HEM_Z = 0.40
 SASH_Z = 1.50
 
@@ -252,6 +252,9 @@ ZUPAN_FOLDS = ((39, 22, 11, 0.048), (70, 11, 9, 0.040), (100, -11, 8, 0.061),
 DELIA_FOLDS = ((-36, 25, 13, 0.046), (-11, 15, 9, 0.065), (21, 5, 10, 0.054),
                (153, -10, 11, 0.059), (188, -17, 10, 0.047), (219, 8, 11, 0.053),
                (254, -13, 14, 0.043), (285, -11, 11, 0.051))
+# Primary long cloth ridges flowing down from both shoulders into the lower delia folds (WORKING_VALUE).
+DELIA_SHOULDER_FOLDS = ((-24, 14, 11, 0.038), (10, -10, 11, 0.034),
+                        (126, -12, 10, 0.034), (154, -10, 10, 0.044), (186, 8, 11, 0.040))
 
 
 def body_r(th, z, folds=True):
@@ -259,7 +262,7 @@ def body_r(th, z, folds=True):
     a, bf, bb = (np.interp(z, BODY_Z, t) for t in (BODY_A, BODY_BF, BODY_BB))
     c, s = np.cos(th), np.sin(th)
     b = np.where(s >= 0, bf, bb)
-    p = 2.5
+    p = 2.5 - 0.5 * float(sstep(1.70, 1.98, z))
     r = (np.abs(c / a) ** p + np.abs(s / b) ** p) ** (-1.0 / p)
     if folds and z < SASH_Z - 0.03:
         t = (z - HEM_Z) / (SASH_Z - 0.03 - HEM_Z)
@@ -273,19 +276,23 @@ def body_r(th, z, folds=True):
 
 def opening(z):
     """Half angle (rad) of the open front of the delia."""
-    return np.interp(z, (0.20, 1.0, 1.5, 1.9, 2.04), (48, 41, 31, 25, 18)) * D2R
+    return np.interp(z, (0.20, 1.0, 1.5, 1.88, 2.02), (48, 41, 31, 25, 19)) * D2R
 
 
 def cloak_r_raw(th, z):
     t = np.clip((z - 0.20) / 1.84, 0, 1)
-    r = body_r(th, z, folds=False) + 0.050 + 0.055 * (1 - t)
+    r = body_r(th, z, folds=False) + 0.044 + 0.060 * (1 - t)
     r += (1 - t) ** 0.65 * fold_relief(th, t, DELIA_FOLDS)
+    sh_env = float(sstep(1.12, 1.48, z) * (1 - sstep(1.90, 2.02, z)))
+    if sh_env > 0.0:
+        sh_t = np.clip((1.98 - z) / 0.85, 0, 1)
+        r += sh_env * fold_relief(th, sh_t, DELIA_SHOULDER_FOLDS)
     wing = np.interp(z, (0.20, 0.60, 1.05, 1.50, 1.86, 2.0), (0.42, 0.80, 1.0, 0.50, 0.0, 0.0))
     r = r + 0.40 * wing * np.exp(-(angdiff(th, 14 * D2R) / (30 * D2R)) ** 2)        # thrown back over the right arm
-    left = sstep(0.95, 1.20, z) * (1 - sstep(1.62, 1.82, z))
-    r = r + 0.085 * left * np.exp(-(angdiff(th, 186 * D2R) / (36 * D2R)) ** 2)      # gathered on the left arm
-    if z > 1.93:
-        r = r * (1 - 0.55 * sstep(1.93, 2.06, z))
+    left = sstep(0.85, 1.25, z) * (1 - sstep(1.75, 1.96, z))
+    r = r + 0.015 * left * np.exp(-(angdiff(th, 194 * D2R) / (44 * D2R)) ** 2)      # softly draped over the left arm
+    if z > 1.86:
+        r = r * (1 - 0.34 * sstep(1.86, 2.05, z))
     return r
 
 
@@ -302,8 +309,8 @@ def edge_point(z, side, lift=0.012):
 
 
 # pose (z above the slab)
-R_SH, R_EL, R_WR, R_FIST = np.array([0.31, 0.0, 1.96]), np.array([0.55, 0.22, 1.91]), np.array([0.76, 0.43, 1.96]), np.array([0.81, 0.48, 1.975])
-L_SH, L_EL, L_WR, L_FIST = np.array([-0.31, 0.0, 1.96]), np.array([-0.44, -0.05, 1.58]), np.array([-0.31, 0.17, 1.47]), np.array([-0.275, 0.215, 1.46])
+R_SH, R_EL, R_WR, R_FIST = np.array([0.285, 0.0, 1.935]), np.array([0.535, 0.185, 1.845]), np.array([0.76, 0.43, 1.96]), np.array([0.81, 0.48, 1.975])
+L_SH, L_EL, L_WR, L_FIST = np.array([-0.275, 0.0, 1.930]), np.array([-0.465, -0.090, 1.615]), np.array([-0.31, 0.17, 1.47]), np.array([-0.275, 0.215, 1.46])
 MACE_AXIS = np.array([-0.25, 0.35, 0.90]) / np.linalg.norm([-0.25, 0.35, 0.90])
 HEAD_C = np.array([0.025, 0.035, 2.275])
 HEAD_R = rot_z(-26 * D2R) @ rot_x(4 * D2R)          # slight lift towards the extended right arm; WORKING_VALUE
@@ -312,6 +319,53 @@ FUR_PTS, FUR_W, STRAND_PTS = [], [], []             # sample points (and strengt
 
 def head_p(p):
     return HEAD_C + HEAD_R @ np.asarray(p, float)
+
+
+def sculpted_sleeve(pool, pts, radii, elbow_s, bend_vec, folds, sides=24, smooth=8, droop=0.0):
+    """Capped sleeve along pts with elbow creases on the inner bend and optional gravity drape."""
+    P0 = np.asarray(pts, float)
+    r0 = np.asarray(radii, float)
+    P = smooth_path(P0, smooth)
+    s0 = np.r_[0, np.cumsum(np.linalg.norm(np.diff(P0, axis=0), axis=1))]
+    s = np.r_[0, np.cumsum(np.linalg.norm(np.diff(P, axis=0), axis=1))]
+    sn = s / s[-1]
+    r_base = np.interp(sn, s0 / s0[-1], r0)
+    bdir = np.asarray(bend_vec, float)
+    bdir = bdir / max(np.linalg.norm(bdir), 1e-9)
+    n = len(P)
+    V = []
+    for i in range(n):
+        a, b = P[max(i - 1, 0)], P[min(i + 1, n - 1)]
+        t = (b - a) / max(np.linalg.norm(b - a), 1e-9)
+        u = bdir - t * np.dot(bdir, t)
+        if np.linalg.norm(u) < 1e-3:
+            u = np.cross(t, [0.0, 0.0, 1.0])
+        u /= np.linalg.norm(u)
+        w = np.cross(t, u)
+        for j in range(sides):
+            th = 2 * math.pi * j / sides
+            d = u * math.cos(th) + w * math.sin(th)
+            rad = r_base[i]
+            # Inner-bend creases around the elbow (cos(th) > 0 faces the bend direction).
+            inner = 0.55 + 0.45 * math.cos(th)
+            for fs, fw, famp in folds:
+                rad += famp * inner * math.exp(-((sn[i] - fs) / fw) ** 2)
+            # Natural gravity drape of a wide Polish sleeve hanging under the arm.
+            if droop > 0.0 and d[2] < 0.0:
+                env = float(sstep(0.15, 0.55, sn[i]) * (1 - 0.35 * sstep(elbow_s, 1.0, sn[i])))
+                rad += droop * env * ((-d[2]) ** 1.4)
+            V.append(P[i] + d * rad)
+    F = []
+    for i in range(n - 1):
+        a, b = i * sides, (i + 1) * sides
+        for j in range(sides):
+            F.append((a + j, a + (j + 1) % sides, b + (j + 1) % sides, b + j))
+    V.extend([P[0], P[-1]])
+    c0, c1 = len(V) - 2, len(V) - 1
+    for j in range(sides):
+        F.append((c0, (j + 1) % sides, j))
+        F.append((c1, (n - 1) * sides + j, (n - 1) * sides + (j + 1) % sides))
+    pool.add(np.array(V), F)
 
 
 def build_figure():
@@ -334,7 +388,7 @@ def build_figure():
     ellipsoid(P, hc + hR @ np.array([0, -0.20, -0.06]), (0.13, 0.10, 0.03), hR @ rot_x(-25 * D2R))        # neck guard
     ellipsoid(P, hc + hR @ np.array([0, 0.0, 0.165]), (0.03, 0.03, 0.04), hR)                           # finial
     # zupan
-    zs = np.r_[np.linspace(HEM_Z, 1.38, 22), 1.44, 1.50, np.linspace(1.56, 2.05, 30)]
+    zs = np.r_[np.linspace(HEM_Z, 1.38, 22), 1.44, 1.50, np.linspace(1.56, 2.04, 34)]
     lathe(P, zs, body_r, zfun=lambda th, z: np.full(len(th), z) + (0.035 * np.sin(3 * th + 1.2) + 0.02 * np.sin(8 * th) if z <= HEM_Z else 0.0))
     # sash with a buckle, the sabre strap running down to his left hip
     lathe(P, (1.435, 1.452, 1.50, 1.548, 1.565), lambda th, z: body_r(th, z, False) + (0.0 if z in (1.435, 1.565) else 0.024))
@@ -356,24 +410,48 @@ def build_figure():
                  [0.010, 0.012, 0.008], sides=10, smooth=4)
         ellipsoid(P, (x, y + 0.014, z), (0.019, 0.016, 0.017), seg=14, rings=9)
     tube(P, seam, 0.019, sides=12, smooth=3)
-    lathe(P, (1.980, 2.018, 2.070, 2.091, 2.100),
-          lambda th, z: body_r(th, z, False) * np.interp(z, (1.980, 2.018, 2.091, 2.100), (1.0, 1.0, 1.12, 1.0)),
-          n=80)
-    # delia: body of the cloak, fur edges, collar
-    zs = np.r_[np.linspace(0.20, 1.74, 28), np.linspace(1.77, 2.06, 24)]
-    lathe(P, zs, cloak_r, n=180, zfun=lambda th, z: np.full(len(th), z) + (0.05 * np.sin(2 * th + 0.4) + 0.025 * np.sin(7 * th) if z <= 0.20 else 0.0))
-    for side in (-1, 1):
-        path = [edge_point(z, side) for z in np.linspace(0.24, 1.98, 26)]
-        tube(P, path, np.interp(np.linspace(0, 1, 26), (0, 0.5, 0.85, 1), (0.072, 0.066, 0.058, 0.048)), sides=16, smooth=3)
-        FUR_PTS.extend(smooth_path(path, 4))
-        FUR_W.extend([1.0] * (len(FUR_PTS) - len(FUR_W)))
-    # The delia rolls over the shoulders and opens over the standing collar.
-    th = np.linspace(118 * D2R, 420 * D2R, 50)
-    collar = np.stack([0.194 * np.cos(th), -0.015 + 0.171 * np.sin(th),
-                       2.027 - 0.031 * np.sin(th) + 0.008 * np.cos(th)], 1)
-    collar_radius = 0.029 + 0.024 * np.sin(np.linspace(0, math.pi, len(th)))**0.55
-    tube(P, collar, collar_radius, sides=16, smooth=0, flat=((0, 0, 1), 0.79))
-    FUR_PTS.extend(collar)
+    # Standing zupan collar: rounded band fitted snugly to the neck (WORKING_VALUE).
+    czs = (1.985, 2.015, 2.045, 2.072, 2.086, 2.092)
+    crx = (0.105, 0.100, 0.097, 0.094, 0.090, 0.078)
+    cry = (0.100, 0.096, 0.094, 0.091, 0.087, 0.075)
+    lathe(P, czs,
+          lambda th, z: (
+              (np.cos(th) / np.interp(z, czs, crx)) ** 2 + (np.sin(th) / np.interp(z, czs, cry)) ** 2
+          ) ** (-0.5) - 0.005 * np.exp(-((angdiff(th, 88 * D2R)) / (7 * D2R)) ** 2),
+          n=96,
+          cfun=lambda z: (0.008 * float(sstep(1.985, 2.085, z)), 0.002),
+          zfun=lambda th, z: np.full(len(th), z) + float(sstep(2.015, 2.086, z)) * (0.008 - 0.012 * np.sin(th)))
+    # delia: body of the cloak with soft shoulder slope and one continuous fur border around the neck
+    zs = np.r_[np.linspace(0.20, 1.74, 28), np.linspace(1.77, 2.05, 32)]
+    lathe(P, zs, cloak_r, n=180,
+          zfun=lambda th, z: np.full(len(th), z)
+          + (0.05 * np.sin(2 * th + 0.4) + 0.025 * np.sin(7 * th) if z <= 0.20 else 0.0)
+          - (0.024 * float(sstep(1.88, 2.04, z)) * (np.cos(th) ** 2) if z > 1.88 else 0.0))
+    right_edge = [edge_point(z, -1) for z in np.linspace(0.24, 1.80, 22)]
+    left_edge = [edge_point(z, 1) for z in np.linspace(1.80, 0.24, 22)]
+    # Smoothly carry the fur border up beside the zupan buttons and hug the body/collar around the neck.
+    def collar_pt(ang_deg, z, dr):
+        th_pt = ang_deg * D2R
+        rad = float(body_r(np.array([th_pt]), z, False)[0]) + dr
+        return np.array([0.004 + rad * math.cos(th_pt), rad * math.sin(th_pt), z])
+    neck_arc = [
+        collar_pt(58.0, 1.89, 0.034),
+        collar_pt(46.0, 1.96, 0.028),
+        collar_pt(12.0, 2.01, 0.024),
+        collar_pt(-40.0, 2.035, 0.026),
+        collar_pt(-90.0, 2.042, 0.028),
+        collar_pt(-140.0, 2.035, 0.026),
+        collar_pt(168.0, 2.01, 0.024),
+        collar_pt(134.0, 1.96, 0.028),
+        collar_pt(122.0, 1.89, 0.034),
+    ]
+    fur_path = right_edge + neck_arc + left_edge
+    r_right = np.interp(np.linspace(0, 1, len(right_edge)), (0, 0.5, 0.9, 1), (0.070, 0.064, 0.050, 0.042))
+    r_neck = np.interp(np.linspace(0, 1, len(neck_arc)), (0.0, 0.5, 1.0), (0.036, 0.029, 0.036))
+    r_left = r_right[::-1]
+    fur_radii = np.r_[r_right, r_neck, r_left]
+    tube(P, fur_path, fur_radii, sides=16, smooth=3)
+    FUR_PTS.extend(smooth_path(fur_path, 3))
     FUR_W.extend([1.0] * (len(FUR_PTS) - len(FUR_W)))
     # fur lining shown on the turned-back wing (his right) - only sample points, the surface is the cloak
     for z in np.linspace(0.45, 1.70, 14):
@@ -382,18 +460,29 @@ def build_figure():
             r = float(cloak_r_raw(np.array([t]), z)[0])
             FUR_PTS.append(np.array([r * math.cos(t), r * math.sin(t), z]))
             FUR_W.append(0.55)
-    # right arm: wide sleeve to the elbow with a fur cuff, vambrace, gauntlet round the mace
-    ellipsoid(P, R_SH + (-0.020, 0.013, -0.023), (0.174, 0.154, 0.128), rot_z(26 * D2R), seg=32, rings=22)
-    tube(P, [R_SH + (0, 0, -0.02), (R_SH + R_EL) / 2 + (0, 0, 0.01), R_EL], [0.125, 0.125, 0.135], sides=16, smooth=4)
+    # right arm: rounded shoulder, sculpted wide sleeve with elbow bend creases, fur cuff, vambrace, gauntlet
+    ellipsoid(P, R_SH + (-0.015, 0.008, -0.015), (0.142, 0.130, 0.112), rot_z(22 * D2R) @ rot_y(14 * D2R), seg=40, rings=28)
+    r_mid = (R_SH + R_EL) / 2 + np.array([0.0, 0.015, 0.006])
+    sculpted_sleeve(
+        P,
+        [R_SH + (-0.01, 0.0, -0.01), R_SH * 0.65 + R_EL * 0.35 + (0.0, 0.01, -0.005), r_mid, R_EL, R_EL + (R_WR - R_EL) * 0.12],
+        [0.112, 0.094, 0.105, 0.122, 0.110],
+        elbow_s=0.86,
+        bend_vec=np.array([-0.15, 0.35, 0.92]),
+        folds=((0.58, 0.070, -0.016), (0.72, 0.055, 0.017), (0.86, 0.055, -0.020)),
+        sides=24,
+        smooth=6,
+        droop=0.048,
+    )
     d = (R_EL - R_SH) / np.linalg.norm(R_EL - R_SH)
-    cuff_c = R_EL + d * 0.01
-    u = np.cross(d, [0, 0, 1.0]); u /= np.linalg.norm(u); w = np.cross(d, u)
-    ring = [cuff_c + (u * math.cos(t) + w * math.sin(t)) * 0.125 for t in np.linspace(0, 2 * math.pi, 16, endpoint=False)]
-    tube(P, ring, 0.062, sides=10, smooth=0, closed=True)
+    cuff_c = R_EL + (R_WR - R_EL) / np.linalg.norm(R_WR - R_EL) * 0.02
+    u = np.cross(R_WR - R_EL, [0, 0, 1.0]); u /= np.linalg.norm(u); w = np.cross((R_WR - R_EL) / np.linalg.norm(R_WR - R_EL), u)
+    ring = [cuff_c + (u * math.cos(t) + w * math.sin(t)) * (0.112 + 0.008 * math.sin(2 * t)) for t in np.linspace(0, 2 * math.pi, 18, endpoint=False)]
+    tube(P, ring, 0.044, sides=12, smooth=0, closed=True)
     FUR_PTS.extend(ring)
     FUR_W.extend([1.0] * (len(FUR_PTS) - len(FUR_W)))
-    # sleeve mouth hanging below the cuff
-    ellipsoid(P, R_EL + (-0.03, -0.03, -0.11), (0.10, 0.12, 0.13), rot_x(18 * D2R))
+    # soft hanging sleeve fold below the cuff
+    ellipsoid(P, R_EL + (-0.032, -0.025, -0.088), (0.072, 0.088, 0.095), rot_x(22 * D2R) @ rot_y(16 * D2R), seg=24, rings=16)
     tube(P, [R_EL, (R_EL + R_WR) / 2, R_WR], [0.068, 0.062, 0.052], sides=12, smooth=3)
     d = R_WR - R_EL
     u = np.cross(d, [0, 0, 1.0]); u /= np.linalg.norm(u)
@@ -408,14 +497,26 @@ def build_figure():
         tube(P, [fingers + (-0.034, 0.034, 0), fingers + (0.014, 0.060, 0), fingers + (0.050, 0.032, 0)],
              radius, sides=10, smooth=4)
     ellipsoid(P, R_WR + (0.0, 0.0, 0.0), (0.066, 0.066, 0.05), seg=12, rings=8)                         # gauntlet cuff
-    # left arm: sleeve, fur cuff on the forearm, hand on the sabre hilt
-    ellipsoid(P, L_SH + (0.027, -0.007, -0.063), (0.153, 0.154, 0.153), rot_y(-22 * D2R), seg=32, rings=22)
-    tube(P, [L_SH + (0, 0, -0.02), (L_SH + L_EL) / 2 + (-0.02, -0.01, 0), L_EL, (L_EL + L_WR) / 2 + (-0.01, 0, -0.02), L_WR], [0.125, 0.125, 0.130, 0.120, 0.10], sides=16, smooth=4)
+    # left arm: softly draped shoulder, tapered sleeve with sharp elbow bend and creases, smaller cuff
+    ellipsoid(P, L_SH + (0.012, 0.005, -0.022), (0.132, 0.128, 0.118), rot_y(-16 * D2R), seg=40, rings=28)
+    l_up = L_SH * 0.55 + L_EL * 0.45 + np.array([-0.012, -0.015, 0.0])
+    l_fore = L_EL * 0.52 + L_WR * 0.48 + np.array([-0.012, 0.015, -0.01])
+    sculpted_sleeve(
+        P,
+        [L_SH + (0.008, 0.0, -0.015), l_up, L_EL, l_fore, L_WR],
+        [0.102, 0.088, 0.104, 0.080, 0.064],
+        elbow_s=0.56,
+        bend_vec=np.array([0.45, 0.85, 0.25]),
+        folds=((0.44, 0.065, -0.015), (0.56, 0.050, -0.022), (0.68, 0.065, 0.014), (0.82, 0.060, -0.009)),
+        sides=24,
+        smooth=6,
+        droop=0.012,
+    )
     d = (L_WR - L_EL) / np.linalg.norm(L_WR - L_EL)
-    cuff_c = L_EL + d * 0.20
+    cuff_c = L_EL + d * 0.22
     u = np.cross(d, [0, 0, 1.0]); u /= np.linalg.norm(u); w = np.cross(d, u)
-    ring = [cuff_c + (u * math.cos(t) + w * math.sin(t)) * 0.115 for t in np.linspace(0, 2 * math.pi, 16, endpoint=False)]
-    tube(P, ring, 0.066, sides=10, smooth=0, closed=True)
+    ring = [cuff_c + (u * math.cos(t) + w * math.sin(t)) * 0.078 for t in np.linspace(0, 2 * math.pi, 18, endpoint=False)]
+    tube(P, ring, 0.036, sides=12, smooth=0, closed=True)
     FUR_PTS.extend(ring)
     FUR_W.extend([1.0] * (len(FUR_PTS) - len(FUR_W)))
     ellipsoid(P, L_FIST, (0.062, 0.07, 0.065), rot_z(-30 * D2R))
@@ -553,18 +654,18 @@ def remesh(ob, voxel=VOXEL, passes=3):
 
 
 def smooth_shoulders(ob):
-    """Blend the shoulder seams after the voxel union, with a fade towards sash and cuffs."""
+    """Lightly blend only the shoulder/armpit voxel seams so primary delia folds stay crisp."""
     weights = ob.vertex_groups.new(name="Shoulders and upper delia")
     co = np.empty(len(ob.data.vertices) * 3, dtype=np.float32)
     ob.data.vertices.foreach_get("co", co)
     x, _, z = co.reshape(-1, 3).T
     z -= ZF + SLAB
-    strength = sstep(1.70, 1.88, z) * (1 - sstep(0.41, 0.52, np.abs(x)))
+    strength = sstep(1.80, 1.94, z) * (1 - sstep(0.32, 0.45, np.abs(x)))
     for i in np.flatnonzero(strength > 0):
         weights.add([int(i)], float(strength[i]), "REPLACE")
     modifier = ob.modifiers.new("Blend carved shoulders", "SMOOTH")
     modifier.vertex_group = weights.name
-    modifier.factor, modifier.iterations = 0.62, 24
+    modifier.factor, modifier.iterations = 0.45, 8
     bpy.ops.object.modifier_apply(modifier=modifier.name)
 
 
@@ -600,13 +701,15 @@ def detail_figure(ob):
             disp[i] += strand[i] * 0.0048 * math.sin(2 * math.pi * (loc[i, 0] + 0.35 * loc[i, 1]) / 0.040 + ph + 6.0 * loc[i, 2])
             continue
         _, idx, dist = kd.find(Vector(p))
-        if dist < 0.105:
-            wgt = (1.0 - float(sstep(0.062, 0.105, dist))) * FUR_W[idx]
+        z_fig = p[2] - base[2]
+        # Tighter fur radius near shoulders/collar so smooth shoulder cloth does not get bumpy.
+        max_d = 0.056 if z_fig > 1.84 else 0.082
+        if dist < max_d:
+            wgt = (1.0 - float(sstep(max_d * 0.58, max_d, dist))) * FUR_W[idx]
             # wavy locks: a stripe pattern whose phase is warped by two octaves of noise, plus fine tufts
             ph = 5.0 * noise.noise(Vector(p * 6.0)) + 2.0 * noise.noise(Vector(p * 15.0 + Vector((3.1, 0.7, 5.2))))
             s = math.sin(2 * math.pi * float(np.dot(p, curl_dir)) / 0.085 + ph)
-            shoulder = float(sstep(1.72, 1.93, p[2] - base[2]) * (1 - sstep(0.37, 0.50, abs(p[0]))))
-            disp[i] += (1 - 0.50 * shoulder) * wgt * (0.0085 * s + 0.0045 * noise.noise(Vector(p * 21.0)))
+            disp[i] += wgt * (0.0075 * s + 0.0032 * noise.noise(Vector(p * 21.0)))
     co2 = co + no * disp[:, None]
     me.vertices.foreach_set("co", co2.ravel())
     me.update()
@@ -617,7 +720,7 @@ def tri_count(ob):
     return int(sum(len(p.vertices) - 2 for p in me.polygons))
 
 
-def decimated(ob, target, name):
+def decimated(ob, target, name, weighted=False):
     """Copy of the object collapsed to about `target` triangles."""
     new = ob.copy()
     new.data = ob.data.copy()
@@ -628,9 +731,30 @@ def decimated(ob, target, name):
     bpy.context.view_layer.objects.active = new
     m = new.modifiers.new("tri", "TRIANGULATE")
     bpy.ops.object.modifier_apply(modifier="tri")
+    if weighted:
+        vg = new.vertex_groups.new(name="CollapsePriority")
+        co = np.empty(len(new.data.vertices) * 3, dtype=np.float32)
+        new.data.vertices.foreach_get("co", co)
+        _, y, z = co.reshape(-1, 3).T
+        z_fig = z - (ZF + SLAB)
+        # Mildly steer quadric collapse away from the front/sides of shoulders, collar and sleeves while keeping lower folds intact.
+        front = sstep(-0.24, 0.02, y)
+        upper = sstep(1.36, 1.66, z_fig)
+        hem = 1.0 - sstep(0.18, 0.55, z_fig)
+        collapse_w = 1.0 - (0.45 * front + 0.28 * upper * front + 0.14 * hem * front)
+        for i in range(len(collapse_w)):
+            vg.add([i], float(collapse_w[i]), "REPLACE")
     m = new.modifiers.new("dec", "DECIMATE")
     m.ratio = min(1.0, target / max(tri_count(new), 1))
+    if weighted:
+        m.vertex_group = "CollapsePriority"
+        m.vertex_group_factor = 0.75
     bpy.ops.object.modifier_apply(modifier="dec")
+    cur = tri_count(new)
+    if cur > int(target * 1.03):
+        m2 = new.modifiers.new("dec2", "DECIMATE")
+        m2.ratio = target / cur
+        bpy.ops.object.modifier_apply(modifier="dec2")
     return new
 
 
@@ -705,7 +829,7 @@ def build_architecture(low=False):
     p_lo, p_hi = vb + 0.30, vt - 0.13
     s_base = np.linspace(-1, 1, 5 if low else 15)
     for mat, cls, seg in profile(low):
-        seg = seg if low else refine(seg, 0.085 if cls in ("vase", "block", "band") else 0.16)
+        seg = seg if low else refine(seg, 0.085 if cls in ("vase", "block", "band") else 0.24)
         if cls == "vase" and not low:
             zs = [p[0] for p in seg]
             hs = [p[1] for p in seg]
@@ -713,8 +837,15 @@ def build_architecture(low=False):
             seg = [(z, float(np.interp(z, zs, hs))) for z in zz]
         d = out.setdefault(mat, {"V": [], "UV": [], "T": [], "cls": [], "n": 0})
         for k in range(4):
-            # Rear face: shared corner heights and silhouette, fewer columns for the vertex bake.
-            s_vals = np.linspace(-1, 1, 9) if not low and k == 2 else s_base
+            # Rear face and flat steps use fewer columns while keeping front and vase vertex-bake resolution.
+            if not low and k == 2:
+                s_vals = np.linspace(-1, 1, 7)
+            elif not low and cls in ("step", "cap", "platform"):
+                s_vals = np.linspace(-1, 1, 9)
+            elif not low and k in (1, 3) and cls in ("block", "band"):
+                s_vals = np.linspace(-1, 1, 13)
+            else:
+                s_vals = s_base
             if cls == "vase" and not low:
                 s_vals = np.unique(np.round(np.r_[s_vals, -0.845, -0.795, 0.795, 0.845], 4))
             if cls == "cornice" and seg[-1][1] == 0.0:
@@ -1082,7 +1213,7 @@ def main():
         low = lod == "lod1"
         tris = {}
         for name, src in (("figure", fig), ("head", head), ("cartouches", cart)):
-            ob = decimated(src, BUDGET[lod][name], f"{name}_{lod}")
+            ob = decimated(src, BUDGET[lod][name], f"{name}_{lod}", weighted=(name == "figure" and not low))
             V, T = mesh_arrays(ob)
             tris[name] = int(len(T))
             N = vertex_normals(V, T)
