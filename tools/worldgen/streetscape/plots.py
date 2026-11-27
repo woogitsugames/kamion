@@ -752,6 +752,47 @@ def door_zones(blds, roads_poly):
     return steps, doors
 
 
+# axis-driveway-s24 (critic build #10 pkt 7: "zjazd jako plaska biala smuga"): a gate in a fence set back 8-14 m from a
+# rural road and oblique to it (knyszyn-w DK65 Obozowa: 41 deg) sent the driveway along the gate normal diagonally over
+# the shoulder and the ditch for up to 14 m, while the ditch was filled (culvert, apply_drops) over only +-(w/2 + 0.4 m)
+# at the point where the diagonal met the asphalt: the paving was draped into the unfilled ditch and over its slopes
+# (a crumpled wedge). A driveway crosses a roadside ditch square to the road on a culvert: beyond this angle from the
+# road normal the crossing leaves the gate ray where it enters the road footprint and runs perpendicular to the
+# carriageway edge, and the ditch is filled at THAT station. WORKING_VALUE.
+CROSS_OBLIQUE_DEG = 12.0
+
+
+def _perpendicular_crossing(c, side, i, m, n, w, d_cw):
+    """(s, pe, q): station, footprint entry of the gate ray and the carriageway-edge point square to the road of the
+    crossing of an oblique gate on a rural side; None for a gate square to the road or one whose crossing would not
+    fit on the chain."""
+    from roads import network as NW
+    s0, _ = c.line.project(m + n * d_cw)
+    t_, nl = c.line.frame(s0)
+    sgn = 1.0 if side == "L" else -1.0
+    out = nl * sgn                                          # from the axis towards this side
+    if abs(float(n @ -out)) >= math.cos(math.radians(CROSS_OBLIQUE_DEG)):
+        return None
+    d = c.side[side]
+    prof = NW.side_profile(int(d["kind"][i]), float(d["h"][i]), float(d["w"][i]), float(d["depth"][i]), int(d["mat"][i]))
+    edge = float(c.hw_at(s0)) + float(prof[-1][2])
+    t_e = None
+    for t in np.arange(0.0, d_cw + 1e-6, 0.25):
+        s_t, lat_t = c.line.project(m + n * t)
+        if lat_t * sgn > 0 and abs(lat_t) <= edge:
+            t_e = t
+            break
+    if t_e is None:
+        return None
+    pe = m + n * t_e
+    s_e, _ = c.line.project(pe)
+    half = w / 2 + 0.4 + DROP_RAMP_M
+    if not (c.t_a + half < s_e < c.length - c.t_b - half):
+        return None
+    q = np.asarray(c.line.offset_point(s_e, sgn * float(c.hw_at(s_e))), float)
+    return float(s_e), pe, q
+
+
 def gate_access(m, n, w, net, carriage, block=None):
     """Way from a gate (centre m, outward normal n, opening w) to the carriageway. Returns (acc, drop):
     acc = None when no carriageway lies within DROP_REACH_M straight ahead or the way crosses `block` (buildings);
@@ -789,6 +830,11 @@ def gate_access(m, n, w, net, carriage, block=None):
         kind, mat = int(d["kind"][i]), int(d["mat"][i])
         acc.update(chain=c.id, side=side, s=float(s), kind=kind, walk=NW.walk_mat(mat), ok=True,
                    kerbed=kind == NW.URBAN and mat != NW.MAT_FLUSH_ROAD)
+        if kind == NW.RURAL:
+            cross = _perpendicular_crossing(c, side, i, m, n, w, d_cw)
+            if cross is not None:
+                s, acc["cross"], acc["q"] = cross[0], (cross[1], cross[2]), cross[2]
+                acc["s"] = float(s)
         if kind in (NW.URBAN, NW.RURAL) and mat != NW.MAT_FLUSH_ROAD:
             drop = {"chain": c.id, "side": side, "s": float(s), "half": w / 2 + 0.4}
     return acc, drop
@@ -1093,7 +1139,7 @@ def paved_items(rp, roads_poly, bpoly, paved):
     for plot in plots:
         hard_u = plot["hard"]
         for k, q in enumerate(_polys(hard_u.difference(taken), 1.0)):
-            out.append({"id": f"plot:{plot['id']}:drive{k}", "poly": q, "mat": DRIVE_MAT, "source": "plot", "parking": False,
+            out.append({"id": f"plot:{plot['id']}:drive{k}", "poly": q, "mat": drive_mat(plot), "source": "plot", "parking": False,
                         "edging": False, "layer": GROUND_LAYER})
         lawn = plot["poly"].difference(taken).difference(hard_u.buffer(0.02))
         lawns = _polys(lawn, 6.0, simplify=0.12)
@@ -2383,6 +2429,103 @@ def build(buf, rp, zf, surf_top, report, items=None):
     return {"keepout": keepout, "lawns": [p["lawn"] for p in plots if p.get("lawn") is not None], "plots": plots, "trees": trees}
 
 
+# axis-driveway-s24 (critic build #10 pkt 7): every plot driveway was `yard_paving` whatever the plot (ADR 0114 budget),
+# although region_plan draws plot["surface"] ("paving" / "gravel", SURFACE_BY_AGE: old plots mostly gravel); the light
+# grey block paving of 86 driveways read as white smears over the verges of a village street. The drive and its verge
+# crossing now follow the plot surface; gravel adds the existing `yard_gravel` (BDOT yards) to the plot ground layer of a
+# chunk with a gravel driveway (+1 draw there, measured in the VQA stats).
+DRIVE_GRAVEL_MAT = "yard_gravel"
+# Block-paved crossings of a rural verge end in a concrete edging along both sides (obrzeze 8 x 30 cm, top 3 cm over the
+# paving - roads.standards EDGING_W / EDGING_H), not on the asphalt edge (the paving meets the carriageway flush).
+CROSS_EDGE_ROAD_CLEAR_M = 0.35
+CROSS_EDGE_PARALLEL = 0.97      # |cos| of a side to the crossing axis (r2: 0.85 also edged the oblique corner filler)
+
+
+def drive_mat(plot):
+    """Surface material of a plot driveway and of its verge crossing (axis-driveway-s24)."""
+    return DRIVE_GRAVEL_MAT if plot.get("surface") == "gravel" else DRIVE_MAT
+
+
+def _crossing_edging(buf, poly, V, T, a, carriage, src, mat=DRIVE_MAT, zf=None, apron=None):
+    """Sides of a verge crossing (boundary runs parallel to the crossing axis `a`), stopped CROSS_EDGE_ROAD_CLEAR_M short
+    of the carriageway; heights from the nearest crossing vertex. Block paving: concrete edging (top EDGING_H over the
+    paving, EDGING_W wide) whose outer face runs down to the ground (the crossing ramps over a filled ditch: a culvert
+    head instead of a slab edge in the air). Gravel: a battered gravel skirt to the ground (1 : 1.5). UV0 = (metres
+    along, metres down) so the faces carry the texture at its scale. apron: the plot's paved drive - no side where the
+    crossing runs on into it (r2: an edging lay across the seam like a dropped pipe). Returns the triangle count."""
+    from roads import standards as S
+    ring = np.asarray(poly.exterior.coords)
+    if not poly.exterior.is_ccw:
+        ring = ring[::-1]
+    Vs, Us, Ts = [], [], []
+    nb = 0
+    for k in range(len(ring) - 1):
+        p0, p1 = ring[k], ring[k + 1]
+        dv = p1 - p0
+        L = float(np.hypot(*dv))
+        if L < 0.5 or abs(float(dv @ a)) / L < CROSS_EDGE_PARALLEL:
+            continue
+        nsub = max(1, int(math.ceil(L / 0.5)))
+        P = p0 + dv * (np.arange(nsub + 1) / nsub)[:, None]
+        keep = shapely.distance(shapely.points(P), carriage) > CROSS_EDGE_ROAD_CLEAR_M
+        if apron is not None and not apron.is_empty:      # r3: not where the apron lies beside the side (seam)
+            o_ = np.array([dv[1], -dv[0]]) / L
+            keep &= shapely.distance(shapely.points(P + o_ * 0.3), apron) > 0.25
+        if keep.sum() < 2:
+            continue
+        P = P[keep]
+        d = dv / L
+        out = np.array([d[1], -d[0]])                       # right of travel = outside for a CCW ring
+        j = np.argmin(((V[None, :, :2] - P[:, None, :]) ** 2).sum(-1), axis=1)
+        z = V[j, 2]
+        zg = np.array([zf(q) for q in P]) if zf is not None else z - S.PAVED_FLANGE
+        n = len(P)
+        sa = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+        if mat == DRIVE_MAT:
+            ew, top = S.EDGING_W, z + S.EDGING_H
+            foot = np.minimum(z - S.PAVED_FLANGE, zg - 0.05)
+            rows = [np.column_stack([P, z]), np.column_stack([P, top]), np.column_stack([P + out * ew, top]),
+                    np.column_stack([P + out * ew, foot])]
+            vv = [np.zeros(n), np.full(n, S.EDGING_H), np.full(n, S.EDGING_H + ew), S.EDGING_H + ew + (top - foot)]
+        else:
+            drop_ = np.maximum(z - zg, 0.0) + 0.05
+            rows = [np.column_stack([P, z]), np.column_stack([P + out * (drop_ * S.EMBANKMENT_SLOPE)[:, None], z - drop_])]
+            vv = [np.zeros(n), drop_ * 1.8]
+        for r in range(len(rows) - 1):
+            for i in range(n - 1):
+                a0_, b0_ = nb + r * n + i, nb + (r + 1) * n + i
+                Ts += [(a0_, b0_ + 1, a0_ + 1), (a0_, b0_, b0_ + 1)]
+        Vs.append(np.vstack(rows))
+        Us.append(np.column_stack([np.tile(sa, len(rows)), np.concatenate(vv)]))
+        nb += len(rows) * n
+    if not Ts:
+        return 0
+    emat = "curb_concrete" if mat == DRIVE_MAT else mat
+    buf.add(GROUND_LAYER, emat, np.concatenate(Vs), np.concatenate(Us), np.asarray(Ts), src=src + ":edge")
+    return len(Ts)
+
+
+def crossing_keepout(rp, pad=0.35):
+    """axis-driveway-s24: plan footprint of every driveway crossing (gate -> carriageway edge, gate width + 2 x pad),
+    where the verge flora (streetscape.verge_flora.build) puts no card: tall forbs of the ditch stood on the paving and
+    read as sticks poking through it in the mirror (critic build #10 pkt 7)."""
+    strips = []
+    for plot in rp.get("plots", ()):
+        acc = plot.get("access")
+        g = plot.get("lay", {}).get("gate")
+        if acc is None or g is None:
+            continue
+        m, n = np.asarray(g["m"], float), np.asarray(g["n"], float)
+        if acc.get("cross") is not None:
+            pe, q = (np.asarray(v, float) for v in acc["cross"])
+            u = (q - pe) / max(float(np.hypot(*(q - pe))), 1e-6)
+            strips.append(LineString([pe - u * 0.6, q + u * 0.6]).buffer(float(g["w"]) / 2 + pad, cap_style="flat"))
+            strips.append(LineString([m - n * 0.3, pe + n * 0.6]).buffer(float(g["w"]) / 2 + pad, cap_style="flat"))
+            continue
+        strips.append(LineString([m - n * 0.3, m + n * (float(acc["d_cw"]) + 0.6)]).buffer(float(g["w"]) / 2 + pad, cap_style="flat"))
+    return shapely.unary_union(strips) if strips else None
+
+
 def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carriage=None, driveway_color=False):
     """Between the gate apron (a paved item, cut at the road footprint) and the carriageway the driveway crosses
     whatever the road profile has there: a footway (stays as it is, lowered with the kerb — or paved in contrasting
@@ -2412,10 +2555,29 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
         # tylko chodnik/nawierzchnia drogi (kerb -> tylna krawedz chodnika), nie caly podjazd do bramy (diagnoza: pas
         # mial dlugosc do ~10 m); dalej zostaje zwykly `yard_paving` podjazdu
         zone = strip.intersection(roads_poly.buffer(0.10)).difference(carriage.buffer(band))
+    elif acc.get("cross") is not None:
+        # axis-driveway-s24: square to the road from where the gate ray enters the footprint (_perpendicular_crossing),
+        # plus the short piece of the gate ray over the footprint edge (no grass wedge between the apron and the strip)
+        pe, q_ = (np.asarray(v, float) for v in acc["cross"])
+        u_ = (q_ - pe) / max(float(np.hypot(*(q_ - pe))), 1e-6)
+        tn_ = np.array([-n[1], n[0]]) * g["w"] / 2           # gate ray half width
+        tu_ = np.array([-u_[1], u_[0]]) * g["w"] / 2         # crossing half width
+        hull = shapely.MultiPoint([tuple(pe + tn_), tuple(pe - tn_), tuple(pe + tu_), tuple(pe - tu_)]).convex_hull
+        strip = shapely.unary_union([LineString([pe - u_ * 0.6, q_ + u_ * 1.0]).buffer(g["w"] / 2, cap_style="flat"), hull])
+        # only over the road footprint: the plot apron (paved_items, cut at the footprint) owns the ground behind it
+        zone = strip.intersection(roads_poly.buffer(0.02)).difference(carriage.buffer(band))
     else:
         strip = LineString([m + n * 0.02, m + n * (L + 1.0)]).buffer(g["w"] / 2, cap_style="flat")
         zone = strip.intersection(roads_poly.buffer(0.35)).difference(carriage.buffer(band))
-    polys = [q for q in _polys(zone, 0.15, simplify=0.01) if q.distance(Point(*m)) < L]
+    polys = [q for q in _polys(zone, 0.15, simplify=0.01) if q.distance(Point(*m)) < L + 0.5]
+    # ruled surface frame: origin + direction from the apron towards the carriageway
+    o_ax, a_ax = (pe, u_) if (acc.get("cross") is not None and not cross_drive) else (m, n)
+    dbg_at = os.environ.get("KAMION_DBG_DRIVE_AT")      # axis-driveway-s24: "e,n,r" - report the crossings near a point
+    dbg = bool(dbg_at) and float(np.hypot(*(m - np.array([float(v) for v in dbg_at.split(",")[:2]])))) < float(dbg_at.split(",")[2])
+    if dbg:
+        print("DBG_DRIVE_AT", src_id, "m", np.round(m, 2).tolist(), "n", np.round(n, 3).tolist(), "w", round(float(g["w"]), 2),
+              "acc", {k: (round(v, 2) if isinstance(v, float) else v) for k, v in acc.items() if k != "q"},
+              "polys", [(round(q.area, 2), np.round(q.bounds, 2).tolist()) for q in polys], flush=True)
     if cross_drive and os.environ.get("KAMION_DBG_DRIVE"):
         for q in polys:
             r_ = q.minimum_rotated_rectangle.exterior.coords
@@ -2449,26 +2611,47 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
         # mesh (1 m / 2 m grid, other triangle split) came through it on the batter of the footprint edge. There the
         # strip is now a ruled surface along the driveway (kerb side -> apron side), never lower than the highest
         # ground sample within 0.8 m + 3 cm.
-        un = (P - m) @ n
+        un = (P - o_ax) @ a_ax
         free = ~on_road
         if free.any() and on_road.any():
             u_in = float(un[on_road].max())                      # last vertex on a road surface, along the driveway
             u_out = float(un.max())
-            tt = np.array([-n[1], n[0]])
+            tt = np.array([-a_ax[1], a_ax[0]])
             pad = (S.PAVED_LIFT + DRIVE_CROSS_LIFT_M + 0.01) if cross_drive else 0.03
+            rural_x = acc.get("cross") is not None and not cross_drive
+            u_min = float(un.min())
             for i in np.nonzero(free)[0]:
-                s_ = float((P[i] - m) @ tt)
-                near_i = on_road & (np.abs((P - m) @ tt - s_) < 0.6)
+                s_ = float((P[i] - o_ax) @ tt)
+                if rural_x:
+                    # axis-driveway-s24: the old footprint (pass 1, ditch unfilled) is wider than the filled crossing
+                    # profile; there the crossing ramps from the road surface down / up to the ground at the apron end
+                    # (it stayed at road height and floated, or folded into the apron). Never under the ground.
+                    near_i = on_road & (np.abs((P - o_ax) @ tt - s_) < 0.6)
+                    za = float(Z[near_i][np.argmin(un[near_i])]) if near_i.any() else Z[i]
+                    ua = float(un[near_i].min()) if near_i.any() else float(un[on_road].min())
+                    zb = zf(o_ax + tt * s_ + a_ax * u_min) + 0.02
+                    f = min(max((ua - un[i]) / max(ua - u_min, 0.05), 0.0), 1.0)
+                    Z[i] = max(za + (zb - za) * f, zf(P[i]) + 0.015)
+                    continue
+                near_i = on_road & (np.abs((P - o_ax) @ tt - s_) < 0.6)
                 za = float(Z[near_i][np.argmax(un[near_i])]) if near_i.any() else Z[i]
                 ua = float(un[near_i].max()) if near_i.any() else u_in
-                zb = zf(m + tt * s_ + n * u_out) + pad
+                zb = zf(o_ax + tt * s_ + a_ax * u_out) + pad
                 f = min(max((un[i] - ua) / max(u_out - ua, 0.05), 0.0), 1.0)
-                ring = max(zf(P[i] + d_ * 0.8) for d_ in (n, -n, tt, -tt, 0 * n))
+                ring = max(zf(P[i] + d_ * 0.8) for d_ in (a_ax, -a_ax, tt, -tt, 0 * a_ax))
                 Z[i] = max(za + (zb - za) * f, ring + pad)
         V = np.column_stack([P, Z])
-        mat = DRIVE_CROSS_MAT if cross_drive else DRIVE_MAT
+        if dbg:
+            zt = np.array([zf(p_) for p_ in P])
+            print("DBG_DRIVE_AT", src_id, "verts", len(P), "on_road", int(on_road.sum()), "Z", round(float(Z.min()), 3),
+                  round(float(Z.max()), 3), "terrain", round(float(zt.min()), 3), round(float(zt.max()), 3),
+                  "top_on_road", (round(float(np.nanmin(top[on_road])), 3), round(float(np.nanmax(top[on_road])), 3)) if on_road.any() else None,
+                  flush=True)
+        mat = DRIVE_CROSS_MAT if cross_drive else drive_mat(plot)
         tag = ":drive_cross" if cross_drive else ":verge"
         buf.add(GROUND_LAYER, mat, V, P.copy(), T, src=src_id + tag, UV1=np.tile([25.0, 25.0], (len(V), 1)))
+        if not footway and not cross_drive:
+            _crossing_edging(buf, poly, V, T, a_ax, carriage, src_id + tag, mat=mat, zf=zf, apron=plot.get("drive"))
         done = 1
     return done
 

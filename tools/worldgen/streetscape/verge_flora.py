@@ -349,11 +349,19 @@ def _turn(key, spread):
     return _h(*key, "a") * math.pi
 
 
-def build(buf, secs, report=None, layer=LAYER, zfn=None):
+def build(buf, secs, report=None, layer=LAYER, zfn=None, keepout=None):
     """Grass / forb cards of every kerbless side strip (see the module docstring, 4.; scatter r5). zfn(e, n): terrain
-    height - lets the shoulder-edge plants of a flat verge stand behind the gravel. Returns the triangle count."""
+    height - lets the shoulder-edge plants of a flat verge stand behind the gravel. keepout: shapely geometry (plan)
+    where no card stands - the paved driveway crossings over the verge / ditch (axis-driveway-s24: tall forbs stood on
+    the paving and read as sticks in the mirror). Returns the triangle count."""
+    import shapely
     ntri = 0
     ncard = {"edge": 0, "slope": 0, "bottom": 0}
+    skipped = 0
+    if keepout is not None and not keepout.is_empty:
+        shapely.prepare(keepout)
+    else:
+        keepout = None
     forms = {}
     for s in secs:
         X = s["X"]
@@ -364,6 +372,12 @@ def build(buf, secs, report=None, layer=LAYER, zfn=None):
         src = s["src"]
 
         def put(zone, k, x, L, lat, ang, w, h, form, key):
+            nonlocal skipped
+            if keepout is not None:
+                p_ = sec.at(k, x / L, lat)
+                if shapely.intersects_xy(keepout, float(p_[0]), float(p_[1])):
+                    skipped += 1
+                    return
             _card(sec, k, x / L, lat, ang, w, h, form, key, V, UV, C, T, zfn=zfn)
             ncard[zone] += 1
             forms[form] = forms.get(form, 0) + 1
@@ -440,6 +454,6 @@ def build(buf, secs, report=None, layer=LAYER, zfn=None):
                     COL=np.asarray(C))
             ntri += len(T)
     if report is not None:
-        report["verge_flora"] = {"sections": len(secs), "cards": ncard, "triangles": ntri,
+        report["verge_flora"] = {"sections": len(secs), "cards": ncard, "triangles": ntri, "keepout_skipped": skipped,
                                  "forms": dict(sorted(forms.items()))}
     return ntri
