@@ -35,3 +35,5 @@
 - Następny krok: `pwsh artifacts/codex-roofs-s24/run-after.ps1`.
 - Krok 7. Prototyp r4 wyeksportowany w prywatnym dk65-07. Manifest i log są w katalogu after.
 - Następny krok w slocie heavy: `pwsh artifacts/codex-roofs-s24/run-vqa.ps1 -Phase after`.
+- Krok 8. Import Win64 r4 i 8 PNG PO gotowe. Obejrzano 14 arkuszy ≤960 px. Visual-critic PASS z P2 dla odległości kamer. Wszystkie pomiary DrawsEst, ShadowDrawsEst i TrisExact przed/po zgodne.
+- Następny krok po regresji GIS: `git diff --check c283addc6`, zapisać pomiary i wynik pytest w ADR 0238.
