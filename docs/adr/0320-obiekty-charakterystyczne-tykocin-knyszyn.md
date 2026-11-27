@@ -236,3 +236,42 @@ przed|po `sbs/tykocin-*.jpg`, `sbs/czarn-side.jpg`. Okiem: pierścień małych s
 jak na Commons 01; petunie na krawędzi placu nasycone (fiolet / róż); rama pola inskrypcji czytelna z kadru cokołu.
 **Otwarte:** nalot cokołu jest umiarkowany (z kadru 10 m czyta się głównie zacieki i ciemniejszy dół) — ocena
 `visual-critic` do zlecenia przez lidera; ławki — różnica bejc widoczna z bliska, z kabiny słabo.
+
+## Dopisek codex-monument-face-s24 — twarz, fałdy i buława
+
+W punkcie 1 przeglądu `critic-s24-day27` twarz zlewała się w jedną plamę. Zdjęcia Commons „1762 01” i „01”
+pokazują odkryte czoło, cofniętą linię włosów, wydatny nos, wąsy i rozdwojoną brodę. Hełm leży przy stopie.
+Detale odtworzono z tych zdjęć i z ujęcia „08”. Proporcje rzeźbionych detali są `WORKING_VALUE`.
+
+- Powierzchnię twarzy ukształtowano ciągłym profilem z zagłębieniami oczodołów i nozdrzy. Wąsy zwężają się przy
+  policzkach, a dwa pasma brody układają się na piersi na różnej wysokości. Remesh głowy ma krok 3,6 mm.
+- Żupan i delia mają fałdy o różnej szerokości i głębokości. Ich grzbiety i węższe zagłębienia zbiegają się ku
+  punktom podparcia tkaniny. Buława ma czytelniejszy trzonek i płytką bruzdę na łączeniu głowicy, widoczną na zdjęciu.
+- Na karwaszu i rękawicy zapisano w `COLOR_0` wypiek AO oraz maski z krzywizny high poly. Ujemna krzywizna,
+  krótkie AO i pionowe ślady spływu wzmacniają zieleń w zagłębieniach. Wypukłe, odsłonięte krawędzie dostają
+  jaśniejszy ton zgodnie z ADR 0331. W piaskowcu mocniej zaznaczono rysy twarzy i pas osadu u podstawy gruszki.
+- Na północnej ścianie cokołu zmniejszono liczbę kolumn siatki LOD0 z 15 do 9 w powierzchniach prostych.
+  Cztery dodatkowe kolumny profilu pola na gruszce i próbki na narożach zachowują położenie. Zysk w budżecie
+  pokrywa gęstszą głowę i buławę.
+
+| Pomiar | Przed | Po |
+|---|---:|---:|
+| Rynek LOD0 | 35 678 | 35 832 |
+| Rynek LOD1 | 3 284 | 3 284 |
+| Pomnik LOD0 | 26 516 | 26 670 |
+| Pomnik LOD1 | 1 914 | 1 914 |
+| Głowa LOD0 | 2 600 | 3 798 |
+| Buława LOD0 | 420 | 504 |
+| Cokół i platforma LOD0 | 11 728 | 10 600 |
+
+Dane pochodzą z metadanych NPZ i z pełnych eksportów kafla przed i po zmianie. Do limitu Rynku pozostało
+168 trójkątów LOD0. Wszystkie 73 testy GIS z zestawu 0320, 0221, 0238, v3.1 i hero bridge przeszły po końcowym
+eksporcie.
+
+**Visual QA.** Win64, High, cztery kamery w clear i overcast, po osiem klatek przed i po. W zbliżeniu
+`czarniecki-figure-0320b` oczodół, nos i podział brody odcinają się od reszty twarzy w obu warunkach.
+Fałdy żupana mają czytelniejszy relief, buława odcina się bruzdą na głowicy, a podstawa gruszki ma ciemniejszy
+pas osadu. W szerokim kadrze `look-tykocin-czarniecki` rozróżnienie pojedynczych rysów pozostaje ograniczone.
+Estymacja edytora przed batchingiem SRP daje +151 trójkątów w każdym kadrze i 0 dodatkowych wywołań rysowania.
+Porównania i statystyki są w `artifacts/codex-monument-face-s24/`. Niezależna ocena i pomiar FPS w playerze
+pozostają otwarte.

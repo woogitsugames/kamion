@@ -1,6 +1,7 @@
 """Stone parts of the Czarniecki monument in Tykocin (ADR 0320 dopisek tykocin-plaza-s24): sculpted figure + pedestal.
 
-    blender -b --factory-startup -P tools/blender/world/landmarks/make_czarniecki.py -- [--render <abs dir>] [--blend]
+    blender -b --factory-startup -P tools/blender/world/landmarks/make_czarniecki.py -- [--output <dir>] [--render <dir>] [--blend]
+    blender -b --factory-startup -P tools/blender/world/landmarks/make_czarniecki.py -- --render-existing --render <abs dir>
 
 Reads  art-source/world/landmarks/tykocin_czarniecki/dims.json (authored sizes and sources, all WORKING_VALUE).
 Writes art-source/world/landmarks/tykocin_czarniecki/tykocin_czarniecki.npz (plain git, ~0.5 MB: the world build must
@@ -13,8 +14,8 @@ Pipeline (skill blender-hero-asset, everything from code, nothing modelled by ha
   2. low poly: quadric collapse to the LOD0 / LOD1 budgets (silhouette kept, flat cloth gets few triangles).
   3. architecture (steps, block, waisted pedestal with recessed panels, cornice): explicit grids swept round the
      square plan, hard edges where the profile is marked sharp.
-  4. bake to COLOR_0 against the HIGH poly (BVH rays): ambient occlusion, cavity dirt, rain shelter, run-off streaks
-     under every ledge, lichen on the weather side, damp foot. World shader path `facade_tint`: albedo *= 2 * rgb.
+  4. bake to COLOR_0 against the HIGH poly (BVH): ambient occlusion, cavity dirt, rain shelter, run-off streaks
+     and lichen for sandstone (`facade_tint`); signed curvature and AO for the metal (`_BRONZE_PATINA`).
   5. export per LOD and material: V (x right, y forward, z up, metres), UV0 (metres), COLOR_0, triangles.
 
 npz keys: "<lod>|<material>|V/UV/COL/T", lod in (lod0, lod1). Materials: monument_sandstone_aged (COLOR_0 = tint / 2,
@@ -43,7 +44,7 @@ DIMS = json.loads((OUT / "dims.json").read_text(encoding="utf-8"))
 HZ, HS = DIMS["heights_m"], DIMS["half_sizes_m"]
 STONE, PATINA, GILT, SETT = "monument_sandstone_aged", "monument_bronze_patina", "monument_gilt", "plaza_sett_grey"
 VOXEL = 0.006
-BUDGET = {"lod0": {"figure": 10500, "head": 2600, "cartouches": 1300}, "lod1": {"figure": 540, "head": 110, "cartouches": 96}}
+BUDGET = {"lod0": {"figure": 10500, "head": 3800, "cartouches": 1300}, "lod1": {"figure": 540, "head": 110, "cartouches": 96}}
 ZF = HZ["cornice_top"]                 # top of the cornice = underside of the figure's slab
 SLAB = HZ["figure_slab"]
 RNG = np.random.default_rng(1762)
@@ -91,7 +92,7 @@ def rot_y(a):
     return np.array([[c, 0, s], [0, 1.0, 0], [-s, 0, c]])
 
 
-def ellipsoid(pool, c, r, R=None, seg=20, rings=12):
+def ellipsoid(pool, c, r, R=None, seg=20, rings=12, deform=None):
     V = [[0, 0, 1.0]]
     for i in range(1, rings):
         ph = math.pi * i / rings
@@ -100,6 +101,8 @@ def ellipsoid(pool, c, r, R=None, seg=20, rings=12):
             V.append([math.sin(ph) * math.cos(th), math.sin(ph) * math.sin(th), math.cos(ph)])
     V.append([0, 0, -1.0])
     V = np.array(V) * np.asarray(r, float)
+    if deform is not None:
+        deform(V)
     if R is not None:
         V = V @ np.asarray(R).T
     V = V + np.asarray(c, float)
@@ -231,6 +234,26 @@ HEM_Z = 0.40
 SASH_Z = 1.50
 
 
+def fold_relief(th, t, folds):
+    """Raised cloth overhangs and their offset, narrower grooves. Values are WORKING_VALUE."""
+    relief = np.zeros_like(th)
+    for angle, drift, width, depth in folds:
+        centre = (angle + drift * t) * D2R
+        crest = angdiff(th, centre) / (width * D2R)
+        groove = angdiff(th, centre + width * 0.90 * D2R) / (width * 0.55 * D2R)
+        relief += depth * (np.exp(-crest**2) - 0.60 * np.exp(-groove**2))
+    return relief
+
+
+# Wide, uneven falls in the fold banks visible in Commons 01 and “1762 01”.
+ZUPAN_FOLDS = ((39, 22, 11, 0.048), (70, 11, 9, 0.040), (100, -11, 8, 0.061),
+               (126, -23, 11, 0.041), (155, -27, 12, 0.031), (226, -10, 15, 0.038),
+               (302, 18, 17, 0.036))
+DELIA_FOLDS = ((-36, 25, 13, 0.046), (-11, 15, 9, 0.065), (21, 5, 10, 0.054),
+               (153, -10, 11, 0.059), (188, -17, 10, 0.047), (219, 8, 11, 0.053),
+               (254, -13, 14, 0.043), (285, -11, 11, 0.051))
+
+
 def body_r(th, z, folds=True):
     z = max(z, HEM_Z)
     a, bf, bb = (np.interp(z, BODY_Z, t) for t in (BODY_A, BODY_BF, BODY_BB))
@@ -239,11 +262,8 @@ def body_r(th, z, folds=True):
     p = 2.5
     r = (np.abs(c / a) ** p + np.abs(s / b) ** p) ** (-1.0 / p)
     if folds and z < SASH_Z - 0.03:
-        k = ((SASH_Z - 0.03 - z) / (SASH_Z - 0.03 - HEM_Z)) ** 0.75          # folds open towards the hem
-        f = 0.55 * np.sin(7 * th + 0.9 + 0.35 * np.sin(2 * th + z)) + 0.45 * np.sin(11 * th + 2.3 - 0.6 * z)
-        r = r * (1 + 0.075 * k * f)
-        # the left front panel of the zupan laps over the right one: a ridge running down left of the centre
-        r = r + 0.030 * k * np.exp(-(angdiff(th, 101 * D2R) / (7 * D2R)) ** 2) - 0.016 * k * np.exp(-(angdiff(th, 88 * D2R) / (6 * D2R)) ** 2)
+        t = (z - HEM_Z) / (SASH_Z - 0.03 - HEM_Z)
+        r += (1 - t) ** 0.73 * fold_relief(th, t, ZUPAN_FOLDS)
     return r
 
 
@@ -255,7 +275,7 @@ def opening(z):
 def cloak_r_raw(th, z):
     t = np.clip((z - 0.20) / 1.84, 0, 1)
     r = body_r(th, z, folds=False) + 0.050 + 0.055 * (1 - t)
-    r = r * (1 + 0.050 * (1 - t) ** 0.7 * (0.6 * np.sin(5 * th + 0.7 + 0.8 * z) + 0.4 * np.sin(9 * th + 2.1 - 0.5 * z)))
+    r += (1 - t) ** 0.65 * fold_relief(th, t, DELIA_FOLDS)
     wing = np.interp(z, (0.20, 0.60, 1.05, 1.50, 1.86, 2.0), (0.42, 0.80, 1.0, 0.50, 0.0, 0.0))
     r = r + 0.40 * wing * np.exp(-(angdiff(th, 14 * D2R) / (30 * D2R)) ** 2)        # thrown back over the right arm
     left = sstep(0.95, 1.20, z) * (1 - sstep(1.62, 1.82, z))
@@ -282,7 +302,7 @@ R_SH, R_EL, R_WR, R_FIST = np.array([0.31, 0.0, 1.96]), np.array([0.55, 0.22, 1.
 L_SH, L_EL, L_WR, L_FIST = np.array([-0.31, 0.0, 1.96]), np.array([-0.44, -0.05, 1.58]), np.array([-0.31, 0.17, 1.47]), np.array([-0.275, 0.215, 1.46])
 MACE_AXIS = np.array([-0.25, 0.35, 0.90]) / np.linalg.norm([-0.25, 0.35, 0.90])
 HEAD_C = np.array([0.025, 0.035, 2.275])
-HEAD_R = rot_z(-24 * D2R) @ rot_x(7 * D2R)          # turned to his right, chin slightly up
+HEAD_R = rot_z(-24 * D2R) @ rot_x(2 * D2R)          # turned to his right, chin nearly level
 FUR_PTS, FUR_W, STRAND_PTS = [], [], []             # sample points (and strength) of fur / hair for the surface detail
 
 
@@ -357,7 +377,18 @@ def build_figure():
     # sleeve mouth hanging below the cuff
     ellipsoid(P, R_EL + (-0.03, -0.03, -0.11), (0.10, 0.12, 0.13), rot_x(18 * D2R))
     tube(P, [R_EL, (R_EL + R_WR) / 2, R_WR], [0.068, 0.062, 0.052], sides=12, smooth=3)
-    ellipsoid(P, R_FIST, (0.068, 0.072, 0.078), rot_z(20 * D2R))
+    d = R_WR - R_EL
+    u = np.cross(d, [0, 0, 1.0]); u /= np.linalg.norm(u)
+    w = np.cross(d / np.linalg.norm(d), u)
+    for t, radius in ((0.44, 0.066), (0.88, 0.056)):
+        ring = [R_EL + d * t + (u * math.cos(a) + w * math.sin(a)) * radius
+                for a in np.linspace(0, 2 * math.pi, 24, endpoint=False)]
+        tube(P, ring, 0.011, sides=10, smooth=0, closed=True)
+    ellipsoid(P, R_FIST, (0.063, 0.063, 0.075), rot_z(20 * D2R))
+    for z, radius in ((-0.046, 0.016), (-0.019, 0.019), (0.010, 0.019), (0.039, 0.018)):
+        fingers = R_FIST + (0, 0, z)
+        tube(P, [fingers + (-0.034, 0.034, 0), fingers + (0.014, 0.060, 0), fingers + (0.050, 0.032, 0)],
+             radius, sides=10, smooth=4)
     ellipsoid(P, R_WR + (0.0, 0.0, 0.0), (0.066, 0.066, 0.05), seg=12, rings=8)                         # gauntlet cuff
     # left arm: sleeve, fur cuff on the forearm, hand on the sabre hilt
     tube(P, [L_SH + (0, 0, -0.02), (L_SH + L_EL) / 2 + (-0.02, -0.01, 0), L_EL, (L_EL + L_WR) / 2 + (-0.01, 0, -0.02), L_WR], [0.125, 0.125, 0.130, 0.120, 0.10], sides=16, smooth=4)
@@ -379,27 +410,46 @@ def build_figure():
     return ob
 
 
+def carve_face(vertices):
+    """Model the brow, sockets, eyelids, nose and cheeks on a continuous stone surface."""
+    x, y, z = vertices.T
+    x *= 0.80 + 0.20 * sstep(-0.13, 0.03, z)  # taper the jaw towards the beard
+    front = sstep(0.030, 0.085, y)
+    depth = 0.052 * np.exp(-(x / 0.019)**2 - ((z + 0.012) / 0.052)**2)
+    depth += 0.022 * np.exp(-(x / 0.023)**2 - ((z + 0.043) / 0.014)**2)
+    for side in (-1, 1):
+        u = side * x
+        socket_z = 0.016 + 0.13 * (u - 0.043) + side * 0.003
+        eye_x = (u - 0.043) / 0.026
+        depth -= 0.032 * np.exp(-eye_x**2 - ((z - socket_z) / 0.022)**2)
+        depth += 0.018 * np.exp(-(eye_x * 1.25)**2 - ((z - socket_z - 0.004) / 0.009)**2)
+        depth += 0.014 * np.exp(-(eye_x * 0.90)**2 - ((z - socket_z - 0.030) / 0.012)**2)
+        depth += 0.015 * np.exp(-((u - 0.063) / 0.021)**2 - ((z + 0.024) / 0.021)**2)
+        depth += 0.020 * np.exp(-((u - 0.018) / 0.013)**2 - ((z + 0.047) / 0.011)**2)
+        depth -= 0.015 * np.exp(-((u - 0.019) / 0.009)**2 - ((z + 0.056) / 0.0065)**2)
+        depth -= 0.010 * np.exp(-((u - 0.032 + 0.35 * (z + 0.056)) / 0.011)**2 - ((z + 0.068) / 0.023)**2)
+    depth -= 0.011 * np.exp(-(x / 0.041)**4 - ((z + 0.089 + 0.12 * x) / 0.007)**2)
+    y += front * depth
+
+
 def build_head():
-    """Head, beard and neck as their own carved block (own triangle budget; it sinks into the fur collar)."""
+    """Keep the uncovered forehead and receding temples seen in Commons 01 and “1762 01”."""
     P = Pool()
-    # neck, head
     tube(P, [(0.0, -0.01, 1.98), HEAD_C + (0, -0.02, -0.08)], [0.085, 0.075], sides=12, smooth=0)
-    ellipsoid(P, head_p((0, 0, 0.03)), (0.104, 0.125, 0.124), HEAD_R, seg=24, rings=16)                 # cranium (bald top)
-    ellipsoid(P, head_p((0, 0.035, -0.05)), (0.086, 0.098, 0.128), HEAD_R, seg=24, rings=16)            # face
-    ellipsoid(P, head_p((0, 0.104, 0.036)), (0.084, 0.028, 0.021), HEAD_R)                              # brow
-    ellipsoid(P, head_p((0, 0.122, -0.012)), (0.019, 0.034, 0.052), HEAD_R @ rot_x(-14 * D2R))          # nose bridge
-    ellipsoid(P, head_p((0, 0.142, -0.046)), (0.024, 0.024, 0.021), HEAD_R)                             # nose tip
+    ellipsoid(P, HEAD_C, (0.107, 0.129, 0.153), HEAD_R, seg=128, rings=80, deform=carve_face)
+    ellipsoid(P, head_p((0, -0.036, -0.009)), (0.115, 0.115, 0.118), HEAD_R, seg=32, rings=22)
     for sx in (-1, 1):
-        ellipsoid(P, head_p((sx * 0.058, 0.086, -0.022)), (0.034, 0.03, 0.03), HEAD_R)                  # cheekbone
-        ellipsoid(P, head_p((sx * 0.039, 0.098, 0.008)), (0.017, 0.013, 0.011), HEAD_R, seg=10, rings=6)  # eye
-        ellipsoid(P, head_p((sx * 0.104, 0.0, -0.012)), (0.012, 0.028, 0.038), HEAD_R, seg=10, rings=6)   # ear
-        tube(P, [head_p((sx * 0.006, 0.128, -0.072)), head_p((sx * 0.05, 0.116, -0.088)), head_p((sx * 0.082, 0.09, -0.125))], [0.019, 0.017, 0.009], sides=8, smooth=3)
-        ellipsoid(P, head_p((sx * 0.036, 0.150, -0.325)), (0.042, 0.04, 0.10), HEAD_R @ rot_y(sx * 8 * D2R) @ rot_x(-16 * D2R))   # forked beard tip
-        ellipsoid(P, head_p((sx * 0.085, 0.035, -0.09)), (0.03, 0.06, 0.075), HEAD_R)                   # side whiskers
-    ellipsoid(P, head_p((0, -0.048, -0.012)), (0.117, 0.108, 0.108), HEAD_R, seg=24, rings=14)          # hair, back and sides
-    ellipsoid(P, head_p((0, 0.108, -0.20)), (0.086, 0.068, 0.165), HEAD_R @ rot_x(-16 * D2R), seg=20, rings=14)            # beard
-    for c, r in (((0, -0.048, -0.012), (0.117, 0.108, 0.108)), ((0, 0.108, -0.20), (0.095, 0.085, 0.165)),
-                 ((0.036, 0.150, -0.325), (0.046, 0.05, 0.10)), ((-0.036, 0.150, -0.325), (0.046, 0.05, 0.10)),
+        ellipsoid(P, head_p((sx * 0.106, 0.012, -0.011)), (0.014, 0.022, 0.037), HEAD_R, seg=16, rings=12)
+        whisker = [(sx * 0.008, 0.120, -0.057), (sx * 0.030, 0.127, -0.069),
+                   (sx * 0.057, 0.111, -0.086), (sx * 0.077, 0.088, -0.115 - sx * 0.004)]
+        tube(P, [head_p(v) for v in whisker], [0.013, 0.019, 0.015, 0.006], sides=14, smooth=5)
+        beard = [(sx * 0.043, 0.092, -0.107), (sx * 0.041, 0.119, -0.186),
+                 (sx * 0.043, 0.156, -0.290), (sx * 0.034, 0.163, -0.395 - sx * 0.014)]
+        tube(P, [head_p(v) for v in beard], [0.042, 0.051, 0.042, 0.015], sides=20, smooth=7)
+        ellipsoid(P, head_p((sx * 0.079, 0.039, -0.081)), (0.031, 0.056, 0.058), HEAD_R)
+    ellipsoid(P, head_p((0, 0.092, -0.157)), (0.077, 0.054, 0.101), HEAD_R @ rot_x(-16 * D2R))
+    for c, r in (((0, -0.040, -0.007), (0.123, 0.117, 0.115)), ((0, 0.110, -0.18), (0.096, 0.087, 0.121)),
+                 ((0.043, 0.147, -0.295), (0.053, 0.065, 0.116)), ((-0.043, 0.147, -0.29), (0.053, 0.065, 0.116)),
                  ((0.085, 0.035, -0.09), (0.03, 0.06, 0.075)), ((-0.085, 0.035, -0.09), (0.03, 0.06, 0.075))):
         STRAND_PTS.append((np.asarray(c, float), np.asarray(r, float)))
     ob = P.obj("head_src")
@@ -585,17 +635,19 @@ def build_architecture(low=False):
     s_base = np.linspace(-1, 1, 5 if low else 15)
     for mat, cls, seg in profile(low):
         seg = seg if low else refine(seg, 0.085 if cls in ("vase", "block", "band") else 0.16)
-        s_vals = s_base
         if cls == "vase" and not low:
-            s_vals = np.unique(np.round(np.r_[s_base, -0.845, -0.795, 0.795, 0.845], 4))
             zs = [p[0] for p in seg]
             hs = [p[1] for p in seg]
             zz = np.unique(np.round(np.r_[zs, p_lo, p_lo + 0.035, p_hi - 0.035, p_hi], 4))
             seg = [(z, float(np.interp(z, zs, hs))) for z in zz]
-        if cls == "cornice" and seg[-1][1] == 0.0:
-            s_vals = np.array([-1.0, 1.0])
         d = out.setdefault(mat, {"V": [], "UV": [], "T": [], "cls": [], "n": 0})
         for k in range(4):
+            # Rear face: shared corner heights and silhouette, fewer columns for the vertex bake.
+            s_vals = np.linspace(-1, 1, 9) if not low and k == 2 else s_base
+            if cls == "vase" and not low:
+                s_vals = np.unique(np.round(np.r_[s_vals, -0.845, -0.795, 0.795, 0.845], 4))
+            if cls == "cornice" and seg[-1][1] == 0.0:
+                s_vals = np.array([-1.0, 1.0])
             nrm = np.array([math.cos(math.pi / 2 * (k + 1)), math.sin(math.pi / 2 * (k + 1)), 0.0])     # k = 0: front (+y)
             tan = np.cross([0, 0, 1.0], nrm)
             ns, nz = len(s_vals), len(seg)
@@ -648,13 +700,18 @@ def inscription_frame(d):
 
 
 def build_mace(low=False):
-    """Gilt bulawa in his right fist: shaft with a pommel, collar and a slightly pear-shaped head."""
+    """Gilt buława with a ring joint across the head, visible in Commons “1762 01”."""
     L, hd = DIMS["figure"]["mace_length_m"], DIMS["figure"]["mace_head_diameter_m"] / 2
     o = R_FIST + np.array([0, 0, ZF + SLAB]) - MACE_AXIS * 0.20
-    prof = [(0.0, 0.0), (0.0, 0.028), (0.03, 0.036), (0.06, 0.024), (L - 2 * hd - 0.05, 0.021), (L - 2 * hd - 0.03, 0.036), (L - 2 * hd - 0.005, 0.03)]
-    for t in np.linspace(0.12, 1.0, 4 if low else 9):
+    neck = L - 2 * hd
+    prof = [(0.0, 0.0), (0.0, 0.030), (0.025, 0.036), (0.052, 0.025),
+            (neck - 0.060, 0.024), (neck - 0.042, 0.034), (neck - 0.008, 0.031)]
+    sections = ((0.12, 0.41, 0.71, 1.0) if low else
+                (0.12, 0.22, 0.33, 0.44, 0.485, 0.50, 0.515, 0.57, 0.68, 0.79, 0.90, 1.0))
+    for t in sections:
         a = math.pi * t
-        prof.append((L - hd - hd * math.cos(a) * (1.0 if t > 0.5 else 1.08), hd * math.sin(a)))
+        radius = hd * math.sin(a) - (0.0045 if not low and t == 0.50 else 0.0)
+        prof.append((L - hd - hd * math.cos(a), radius))
     sides = 6 if low else 14
     u = np.cross(MACE_AXIS, [0, 0, 1.0]); u /= np.linalg.norm(u); w = np.cross(MACE_AXIS, u)
     V, T = [], []
@@ -704,6 +761,40 @@ def occlusion(bvh, V, N, dirs, maxd):
                 hit += 1
         out[i] = 1.0 - hit / len(dirs)
     return out
+
+
+def surface_curvature(bvh, vertices, normals, radius=0.023):
+    """Signed normal change at a fixed footprint on the source sculpt. Convex is positive."""
+    values = np.zeros(len(vertices))
+    for i, (vertex, normal) in enumerate(zip(vertices, normals)):
+        p, n, _, _ = bvh.find_nearest(Vector(vertex), radius)
+        if p is None or n.dot(Vector(normal)) < 0.5:
+            continue
+        axis = Vector((0, 0, 1)) if abs(n.z) < 0.9 else Vector((1, 0, 0))
+        u = n.cross(axis).normalized()
+        v = n.cross(u)
+        samples = []
+        for tangent in (u, -u, v, -v):
+            q, nq, _, _ = bvh.find_nearest(p + radius * tangent, radius)
+            if q is not None and n.dot(nq) > 0.35:
+                samples.append((nq - n).dot(tangent))
+        if samples:
+            values[i] = np.mean(samples)
+    return values
+
+
+def bronze_colors(bvh, vertices, normals, ao, cavity):
+    curvature = surface_curvature(bvh, vertices, normals)
+    concave = sstep(0.02, 0.25, -curvature)
+    convex = sstep(0.22, 0.65, curvature)
+    # Gravity-aligned streaks follow the outside of the gauntlet. Curvature and short AO
+    # put the strongest green in finger cuts and below the raised seams.
+    phase = 112 * vertices[:, 0] - 138 * vertices[:, 1]
+    streak = (0.5 + 0.5 * np.sin(phase + 0.6 * np.sin(0.37 * phase))) ** 5
+    runoff = streak * (0.35 + 0.65 * np.maximum(-normals[:, 2], 0))
+    patina = np.clip(0.59 + 0.63 * (1 - cavity) + 0.24 * concave + 0.16 * runoff - 0.30 * convex, 0, 1)
+    wear = (0.13 + 0.65 * convex) * cavity * (1 - 0.45 * runoff)
+    return np.stack([patina, wear, ao, np.ones(len(vertices))], axis=1)
 
 
 def shelter(bvh, V, N, maxd=6.0):
@@ -797,9 +888,19 @@ def weather_colors(bvh, V, N, cls):
             foot *= 0.65 + 0.7 * fine * blot
             crust += 0.75 * float(np.clip(foot, 0, 1))
         crust += 0.85 * streak[i] * (1.15 if fresh[i] else 1.0)
-        if cls[i] == "fig":
+        if cls[i] in ("fig", "head"):
             _, fk, fd = kd.find(v)
             crust += 0.30 * FUR_W[fk] * float(1 - sstep(0.06, 0.12, fd))
+        if cls[i] == "head":
+            local = (p - (HEAD_C + np.array([0, 0, ZF + SLAB]))) @ HEAD_R
+            # Pick out the facial carving under diffuse light with abrasion at exposed planes
+            # and soot in short, sheltered cuts. Keep pigment continuous across the eyelids.
+            face = float(sstep(0.055, 0.105, local[1]) * sstep(-0.16, -0.07, local[2]))
+            crust += face * 0.48 * (1 - cav[i])
+        if cls[i] == "vase":
+            z = p[2] - HZ["vase_bottom"]
+            damp_belly = float(sstep(-0.01, 0.14, z) * (1 - sstep(0.24, 0.68, z)))
+            crust += damp_belly * (0.16 + 0.23 * blot) * (1 - 0.60 * up)
         crust = float(np.clip(crust, 0, 1))
         washed = (1 - sh[i]) * (0.25 + 0.75 * up) * ao[i]
         base = np.array([1.0, 1.0, 1.0]) * (0.92 + 0.16 * blot) * (0.97 + 0.06 * fine)
@@ -869,13 +970,14 @@ def seg_dist(P, a, b):
 
 # ------------------------------------------------------------------------------------------------ main
 def main():
+    out = Path(arg("--output")) if arg("--output") else OUT
     bpy.ops.wm.read_factory_settings(use_empty=True)
     fig = build_figure()
     cart = build_cartouches()
     head = build_head()
     remesh(fig)
     detail_figure(fig)
-    remesh(head, VOXEL * 0.75)
+    remesh(head, VOXEL * 0.60)
     detail_figure(head)
     remesh(cart, VOXEL * 1.5)
     high = {"figure": mesh_arrays(fig), "head": mesh_arrays(head), "cartouches": mesh_arrays(cart)}
@@ -912,7 +1014,7 @@ def main():
             V, T = mesh_arrays(ob)
             tris[name] = int(len(T))
             N = vertex_normals(V, T)
-            cls = np.full(len(V), "cart" if name == "cartouches" else "fig")
+            cls = np.full(len(V), {"figure": "fig", "head": "head", "cartouches": "cart"}[name])
             COL, ao, cav = weather_colors(bvh, V, N, cls)
             if name != "cartouches":
                 V2, UV, T2, srci = cyl_uv(V, T, (0.0, 0.0), r0=0.30 if name == "figure" else 0.12)
@@ -925,11 +1027,8 @@ def main():
                 a = R_EL + base + (R_WR - R_EL) * 0.30
                 mask_metal = (seg_dist(cen, a, R_WR + base) < 0.088) | (np.linalg.norm((cen - (R_FIST + base)) / np.array([0.085, 0.09, 0.095]), axis=1) < 1.0)
                 Vm, UVm, _, Tm, used = submesh(V2, UV, None, T2, mask_metal)
-                aom, cavm = ao[srci][used], cav[srci][used]
-                nm = N[srci][used]
-                rub = np.clip(0.55 * np.maximum(nm[:, 2], 0) + 0.5 * cavm - 0.25, 0, 1)
-                pat = np.clip(0.55 + 0.6 * (1 - cavm) + 0.2 * (1 - aom), 0, 1)                # painted / oxidised green all over
-                put(lod, PATINA, Vm, UVm, np.stack([pat, rub * 0.5, aom, np.ones(len(Vm))], 1), Tm)
+                source = srci[used]
+                put(lod, PATINA, Vm, UVm, bronze_colors(bvh, Vm, N[source], ao[source], cav[source]), Tm)
             Vs, UVs, COLs, Ts, _ = submesh(V2, UV, COL2, T2, ~mask_metal)
             put(lod, STONE, Vs, UVs, COLs, Ts)
         arch = build_architecture(low)
@@ -952,7 +1051,8 @@ def main():
         arrays[f"{key}|UV"] = d["UV"].astype(np.float32)
         arrays[f"{key}|COL"] = np.clip(np.round(d["COL"] * 255), 0, 255).astype(np.uint8)
         arrays[f"{key}|T"] = d["T"].astype(np.int32)
-    np.savez_compressed(OUT / f"{ASSET}.npz", **arrays)
+    out.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(out / f"{ASSET}.npz", **arrays)
     allv = np.concatenate([d["V"] for k, d in data.items() if k.startswith("lod0")])
     meta = {"asset": ASSET, "generator": "tools/blender/world/landmarks/make_czarniecki.py",
             "generator_sha256": hashlib.sha256(Path(__file__).read_bytes().replace(b"\r\n", b"\n")).hexdigest(),
@@ -961,12 +1061,12 @@ def main():
             "bbox_min": [round(float(x), 3) for x in allv.min(0)], "bbox_max": [round(float(x), 3) for x in allv.max(0)],
             "figure_base_z": ZF, "height_m": round(float(allv[:, 2].max()), 3),
             "materials": sorted({k.split("|")[1] for k in data})}
-    (OUT / f"{ASSET}_meta.json").write_text(json.dumps(meta, indent=1) + "\n", encoding="utf-8", newline="\n")
+    (out / f"{ASSET}_meta.json").write_text(json.dumps(meta, indent=1) + "\n", encoding="utf-8", newline="\n")
     print("CZARNIECKI", json.dumps(stats))
     if arg("--render"):
         render(data, Path(arg("--render")))
     if "--blend" in argv:
-        bpy.ops.wm.save_as_mainfile(filepath=str(OUT / f"{ASSET}.blend"))
+        bpy.ops.wm.save_as_mainfile(filepath=str(out / f"{ASSET}.blend"))
 
 
 # ------------------------------------------------------------------------------------------------ look-dev render
@@ -987,8 +1087,18 @@ def render(data, out_dir):
         me.polygons.foreach_set("use_smooth", [True] * len(me.polygons))
         ca = me.color_attributes.new("Col", "FLOAT_COLOR", "POINT")
         c = d["COL"].copy()
-        if mat != STONE:
-            c[:, :3], c[:, 3] = 0.5, 1.0
+        if mat == PATINA:
+            pat = 0.90 * sstep(0.22, 0.85, c[:, 0])
+            rub = 0.58 * sstep(0.16, 0.82, c[:, 1]) * (1 - 0.75 * pat)
+            base = np.array([0.195, 0.172, 0.122])
+            worn = base + (np.array([0.36, 0.285, 0.180]) - base) * rub[:, None]
+            tinted = worn + (np.array(TINT[mat]) - worn) * pat[:, None]
+            color = tinted * (0.50 + 0.50 * c[:, 2, None])
+        elif mat == STONE:
+            color = 2 * np.array(TINT[mat]) * c[:, :3]
+        else:
+            color = np.broadcast_to(TINT[mat], c[:, :3].shape)
+        c[:, :3], c[:, 3] = color, 1.0
         ca.data.foreach_set("color", c.ravel())
         me.update()
         ob = bpy.data.objects.new(key, me)
@@ -999,12 +1109,7 @@ def render(data, out_dir):
         b = nt.nodes["Principled BSDF"]
         vc = nt.nodes.new("ShaderNodeVertexColor")
         vc.layer_name = "Col"
-        mul = nt.nodes.new("ShaderNodeMixRGB")
-        mul.blend_type = "MULTIPLY"
-        mul.inputs[0].default_value = 1.0
-        mul.inputs[1].default_value = (*[2 * x for x in TINT[mat]], 1)
-        nt.links.new(vc.outputs["Color"], mul.inputs[2])
-        nt.links.new(mul.outputs[0], b.inputs["Base Color"])
+        nt.links.new(vc.outputs["Color"], b.inputs["Base Color"])
         b.inputs["Roughness"].default_value = 0.4 if mat == GILT else 0.9
         b.inputs["Metallic"].default_value = 0.9 if mat == GILT else (0.3 if mat == PATINA else 0.0)
         me.materials.append(m)
@@ -1059,4 +1164,15 @@ def render(data, out_dir):
         bpy.ops.render.render(write_still=True)
 
 
-main()
+if "--render-existing" in argv:
+    if not arg("--render"):
+        raise ValueError("--render-existing requires --render")
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    data = {}
+    with np.load(OUT / f"{ASSET}.npz") as asset:
+        for key in asset:
+            lod, mat, channel = key.split("|")
+            data.setdefault(f"{lod}|{mat}", {})[channel] = asset[key] / 255.0 if channel == "COL" else asset[key]
+    render(data, Path(arg("--render")))
+else:
+    main()
