@@ -48,3 +48,5 @@
 - Następny krok to `& $py -m pytest -q tests/gis/test_world_roads.py --basetemp artifacts/codex-gis-fix-s24/pytest/world-seed4` i powtórka testu eksportu z seedem 9. Utworzono nadrzędny katalog --basetemp po błędzie przygotowania pierwszego przebiegu.
 - Krok 4. Test zjazdu sprawdza wartości 2 cm i rampę zgodnie z ADR 0349. Osiem wariantów testu wieży sprawdza nową sylwetkę ADR 0351 przy właściwym kierunku projekcji.
 - Następny krok to `& $py -m pytest -q tests/gis/test_buildings_r7.py tests/gis/test_embankment_pylons_s24.py tests/gis/test_far_field.py tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`.
+- Krok 5. Po korekcie 82 PASS w trzech plikach, 62 PASS w czterech plikach budżetowych. Porównanie hashy potwierdziło cztery nieaktualne źródła fidelity C. Zapisano tabelę 12 przypadków w WYNIKI.md.
+- Następny krok to porównać pliki GLB z dwóch instancji `pytest -q tests/gis/test_world_roads.py` i uruchomić `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64`.
