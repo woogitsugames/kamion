@@ -142,3 +142,7 @@ Zamyka punkt „Nie rozwiązane” (krytyk build #10: „lizaki”, ciemny klin 
 - Młoda brzoza (wąska karta 0,44) bywa pierzasta i zbyt rzadka. Drzewa lite na High (dalej od ulicy) i > 6,5 m poza
   `garden_trees` (`garden_trial`) zostają przy kartach skrzyżowanych.
 - Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagentów).
+## Dopisek impostor-rebake-s24 (2026-11-27)
+Atlasy impostorów wszystkich gatunków (w tym dąb, topola, młodniki) przebake'owane w 683 × 1024 / widok, pas 4096 × 1024
+(ADR 0023, addendum impostor-rebake-s24); tint per drzewo (`_TreeVar`, `foliage_tint`) bez zmian. Karty widziane krawędzią
+wygaszane w shaderze (`VegCardEdge`, ADR 0308 dopisek impostor-rebake-s24) — ten sam hasz instancji, bez wpływu na tint.
