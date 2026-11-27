@@ -35,3 +35,6 @@ Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 
 
 Próby hamulca w PlayMode zaczynają na początku prostej, aby obie perspektywy zmieściły się na placu. Telemetria zapisze ciśnienie i GC w aktualizacjach pisku.
 Następny krok: pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64
+
+Pierwsze EditMode: 1529 przeszło, 122 pominięto, 1 błąd limitu długości etykiety. Skrócono etykietę do Tryb wycieraczek. Nowe testy EditMode przeszły 11/11.
+Następny krok: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64

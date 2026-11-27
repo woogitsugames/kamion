@@ -84,7 +84,7 @@ namespace Game.Controls
             new DrivingActionDef(IndicatorRight, DrivingActionKind.Button, "Kierunkowskaz w prawo", K("<Keyboard>/period"), K("<Gamepad>/dpad/right")),
             new DrivingActionDef(Hazard, DrivingActionKind.Button, "Światła awaryjne", K("<Keyboard>/h"), K("<Gamepad>/dpad/up")),
             new DrivingActionDef(Horn, DrivingActionKind.Button, "Klakson", K("<Keyboard>/k"), K("<Gamepad>/rightStickPress")),
-            new DrivingActionDef(CycleWipers, DrivingActionKind.Button, "Wycieraczki: następny tryb", K("<Keyboard>/u"), None),
+            new DrivingActionDef(CycleWipers, DrivingActionKind.Button, "Tryb wycieraczek", K("<Keyboard>/u"), None),
             new DrivingActionDef(CycleCamera, DrivingActionKind.Button, "Zmiana kamery", K("<Keyboard>/c", "<Keyboard>/tab"), K("<Gamepad>/buttonNorth")),
             new DrivingActionDef(MirrorInsets, DrivingActionKind.Button, "Lusterka w oknach", K("<Keyboard>/l"), None),
             new DrivingActionDef(HudDetail, DrivingActionKind.Button, "HUD: tryb rozszerzony", K("<Keyboard>/i"), None),
