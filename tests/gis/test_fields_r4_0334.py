@@ -100,7 +100,8 @@ def test_maize_cards_stay_in_the_triangle_budget():
     mz = (VG.field_use(VG.field_layout(x + o[0], y + o[1]), True) == MAIZE) & (col[..., 2] >= FC.ARABLE_B)
     tris = sum(len(parts[k].T) for k in ("maize", "maize_cross", "maize_edge"))
     per_ha = tris / (mz.sum() / 1e4)
-    assert per_ha < 4200, per_ha                                     # r4 ~3 870 / ha on this fixture (margins +36 %)
+    assert per_ha < 6200, per_ha                                     # r4b ~5 710 / ha (rows 1.5 m), r4 ~3 870 (measured)
+    assert FC.MAIZE_CARD_ROWS * FC.MAIZE_ROW_M <= 1.5 + 1e-9       # r4b: no 2.25 m corridors between card rows
 
 
 def test_atlas_edge_cell_holds_single_plants_beside_a_dense_wall():

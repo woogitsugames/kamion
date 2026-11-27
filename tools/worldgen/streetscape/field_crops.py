@@ -29,7 +29,9 @@ from . import verge_flora as VF
 LAYER = VF.LAYER
 MAT = VF.MAT
 MAIZE_ROW_M = 0.75               # the shader's row period (KamionFieldMosaic: KFBand(rc + 0.375, 0.75, ...))
-MAIZE_CARD_ROWS = 3              # a card row every 3rd crop row (2.25 m)
+MAIZE_CARD_ROWS = 2              # r4b: a card row every 2nd crop row (1.5 m; r3/r4: every 3rd, 2.25 m - from the cab the
+                                 # rows seen along their length were flat walls with ground between, from above a maze)
+MAIZE_CARD_TURN = 0.10           # r4b: rad, each row card turned about its middle - no two neighbours on one plane
 MAIZE_CARD_L = 2 * VA.MAIZE_CELL_M
 MAIZE_H = (2.05, 2.40)           # WORKING_VALUE: fodder maize in mid-August, Podlasie
 MAIZE_SINK_M = 0.10
@@ -38,7 +40,7 @@ MAIZE_SEAM_CLEAR_M = 1.6         # off the strip seam (baulk half-width <= 1.3 m
 MAIZE_BAULK_GAP_M = 0.25         # r4b: cards this far off the shader's baulk edge (the outer plants lean over it)
 MAIZE_BLOCK_CLEAR_M = 2.8        # off the block border (grass strip / field track)
 MAIZE_ROAD_CLEAR_M = 5.0
-MAIZE_CROSS_SHARE = 0.34         # row cards with a cross card towards the next card row
+MAIZE_CROSS_SHARE = 0.20         # row cards with a cross card towards the next card row
 MAIZE_ZIGZAG_M = 0.40            # card ends this far off the row line, alternately: no card is edge-on to a view along
                                  # the rows (render review r3: from 14 m up the edge-on rows vanished and only the
                                  # cross cards showed - a hedge maze)
@@ -81,7 +83,7 @@ BAULK_CROSS_SHARE = 0.30
 # primitive with the roadside sward (same layer, same material), so the cost is one draw per chunk that had no `banks`
 # primitive before. A chunk is given one only for at least CHUNK_MIN_TRIS triangles of cards (a wall of maize, a run
 # of baulks) - never for a corner of a strip that reaches into it.
-CHUNK_MIN_TRIS = 5600              # r4: 4000 -> 5600 (margin cards +40 %: the same chunks earn a primitive as in r3b)
+CHUNK_MIN_TRIS = 8400              # r4: 4000 -> 5600 (margin cards +40 %), r4b: -> 8400 (rows 1.5 m: x1.5) - the same chunks earn a primitive
 ARABLE_B = 0.985                 # terrain COLOR_0.b at / above this = inside an arable field (flag 1.00)
 
 
@@ -284,7 +286,12 @@ def _maize(g, origin, rep):
         tone = 0.86 + 0.18 * u2[sel]
         return put(A_[sel], B_[sel], h, lean, uv, nrm, MAIZE_OCC[0] * tone, MAIZE_OCC[1] * tone, tag)
 
-    n_row = emit(A, B, ok & ~edge, 2, "maize")
+    # r4b: every row card turned by up to MAIZE_CARD_TURN about its middle (the middle stays on the row)
+    tr = (u3 - 0.5) * 2.0 * MAIZE_CARD_TURN
+    Mid, hv = 0.5 * (A + B), 0.5 * (B - A)
+    ct, st = np.cos(tr), np.sin(tr)
+    hv = np.column_stack([hv[:, 0] * ct - hv[:, 1] * st, hv[:, 0] * st + hv[:, 1] * ct])
+    n_row = emit(Mid - hv, Mid + hv, ok & ~edge, 2, "maize")
     # cross cards: from this card row towards the next, at the middle of the card - not near a stop, where they are
     # the faces of the cut seen from outside
     cs = ok & ~edge & (u4 < MAIZE_CROSS_SHARE)

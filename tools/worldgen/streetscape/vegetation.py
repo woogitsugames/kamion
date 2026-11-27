@@ -1299,7 +1299,7 @@ FIELD_USES_GRASS = (("meadow_regrowth", 0.30), ("pasture", 0.50), ("meadow_mown"
                     ("meadow_uncut", 1.0))
 FIELD_USES = tuple(n for n, _ in FIELD_USES_ARABLE + FIELD_USES_GRASS)
 FIELD_OWN_SHARE_SHADER = 0.55   # KF_OWN_SHARE
-FIELD_BAULK_W = (1.0, 1.6)      # KF_BAULK_MIN_M, KF_BAULK_SPAN_M
+FIELD_BAULK_W = (0.4, 0.8)      # KF_BAULK_MIN_M, KF_BAULK_SPAN_M (r4b: 0.4-1.2 m per strip edge, was 1.0-2.6)
 
 
 def _h32s(a, b, salt):
