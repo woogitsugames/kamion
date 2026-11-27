@@ -38,3 +38,16 @@
 - Następny krok to `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` z wygenerowanym ciągnikiem.
 - Krok 10. Końcowy EditMode Win64 z prefabem TRAKT: 1524 zielone, 0 niepowodzeń, 122 pominięte. MirrorMount0340Tests 13/13. Zapisano XML, log i wyniki w dopisku 3. Slot zwolniony.
 - Następny krok dla lidera to `git diff c8ca07835..codex-mirror-right-s24` i przegląd zestawień `artifacts/codex-mirror-right-s24/comparison-*.png`.
+
+## codex-review-day27-s24
+- Krok 1. Ustalono migawkę bfaccaf1a i zakres 34 scaleń (33 na pierwszym rodzicu), przeczytano zasady oraz kontekst ADR.
+- Następny krok: `git diff 2d5744863^1 bfaccaf1a -- '*.cs' '*.hlsl' '*.shader' '*.py'`.
+
+- Krok 2. Porównano 34 scalenia z pierwszym rodzicem i sprawdzono połączone ścieżki renderingu, streamingu, HUD i danych. Cztery bramki GIS: 62/62 w 60,29 s.
+- Następny krok: `git diff 2d5744863^1 bfaccaf1a -- tests/gis` oraz izolowane reprodukcje rozbieżności.
+
+- Krok 3. Zweryfikowano 8 znalezisk: 6 ważnych i 2 drobne. Rozszerzone GIS: 289 pass, 9 fail. Obejrzano istniejące pary PNG High clear/overcast. Raport w `artifacts/codex-review-day27-s24/REVIEW.md`.
+- Następny krok dla lidera: `git show codex-review-day27-s24:artifacts/codex-review-day27-s24/REVIEW.md`.
+
+- Krok 4. Sprawdzono istniejącą poprawkę GIS z `c92a9912e`: 9/9 zmienionych przypadków wykonanych w pamięci na kodzie migawki. Uzupełniono raport i opublikowano kopię w katalogu dowodów.
+- Następny krok dla lidera: `git show c92a9912e`, potem ponowny przebieg wskazanych testów po integracji.
