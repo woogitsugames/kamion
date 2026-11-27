@@ -7,6 +7,126 @@ float4 _FurnitureRetroHead0, _FurnitureRetroHead1, _FurnitureRetroHead2, _Furnit
 float4 _FurnitureRetroForward, _FurnitureRetroUp, _FurnitureRetroState;
 float _KamionExposure;
 
+UNITY_INSTANCING_BUFFER_START(KamionSignProps)
+    UNITY_DEFINE_INSTANCED_PROP(float4, _KamionSignWear)
+UNITY_INSTANCING_BUFFER_END(KamionSignProps)
+
+half SignWearHash(float2 p)
+{
+    return (half)frac(sin(dot(p, float2(127.1, 311.7))) * 43758.5453);
+}
+
+half SignWearNoise(float2 p)
+{
+    float2 i = floor(p);
+    float2 f = frac(p);
+    f = f * f * (3.0 - 2.0 * f);
+    half a = SignWearHash(i);
+    half b = SignWearHash(i + float2(1.0, 0.0));
+    half c = SignWearHash(i + float2(0.0, 1.0));
+    half d = SignWearHash(i + float2(1.0, 1.0));
+    return lerp(lerp(a, b, (half)f.x), lerp(c, d, (half)f.x), (half)f.y);
+}
+
+half4 ApplySignWear(float2 uv, half4 wear, inout SurfaceData s)
+{
+    half age = wear.x;
+    half dirt = wear.y;
+    half flags = wear.z;
+    half seed = wear.w;
+
+    half nLow = SignWearNoise(uv * 7.5 + float2(seed * 37.0, 3.1));
+    half nHi = SignWearNoise(uv * 24.0 + float2(1.7, seed * 31.0));
+    half nDirt = 0.65h * nLow + 0.35h * nHi;
+
+    // 1. Foil UV fading: red shifts toward chalky pinkish on older signs; slight yellow/blue chalking
+    half fade = saturate((age - 0.14h) / 0.86h);
+    half redDom = saturate((s.albedo.r - max(s.albedo.g, s.albedo.b)) * 2.4h) * saturate(1.0h - s.albedo.g * 7.0h);
+    half3 fadedPink = half3(0.62h, 0.25h, 0.23h) * (0.92h + 0.16h * nLow);
+    s.albedo = lerp(s.albedo, fadedPink, redDom * fade * 0.72h);
+
+    half maxCh = max(s.albedo.r, max(s.albedo.g, s.albedo.b));
+    half minCh = min(s.albedo.r, min(s.albedo.g, s.albedo.b));
+    half chroma = saturate((maxCh - minCh) * 1.8h) * (1.0h - redDom);
+    half lum = dot(s.albedo, half3(0.2126h, 0.7152h, 0.0722h));
+    s.albedo = lerp(s.albedo, half3(lum, lum, lum) * 1.04h, chroma * fade * 0.22h);
+    s.smoothness *= (1.0h - 0.45h * age);
+
+    // 2. Bottom road dust / splash film preserving central pictogram legibility
+    half bottomRamp = (half)smoothstep(0.50, 0.02, uv.y + (nDirt - 0.5h) * 0.16h);
+    half dustMask = clamp(bottomRamp * (0.35h + 0.90h * dirt) * (0.65h + 0.70h * nDirt) * dirt, 0.0h, 0.55h);
+    half3 dustCol = half3(0.18h, 0.165h, 0.135h) * (0.85h + 0.30h * nHi);
+    s.albedo = lerp(s.albedo, dustCol, dustMask);
+    s.smoothness = lerp(s.smoothness, 0.10h, dustMask);
+
+    half retroAtten = saturate(1.0h - 0.28h * age - 0.50h * dustMask);
+
+    // 3. Localized perimeter edge rust / chipped foil
+    bool hasRust = (flags > 0.20h && flags < 0.52h) || flags > 0.85h;
+    if (hasRust)
+    {
+        half aMin = 1.0h;
+        aMin = min(aMin, SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, saturate(uv + float2( 0.032,  0.000))).a);
+        aMin = min(aMin, SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, saturate(uv + float2(-0.032,  0.000))).a);
+        aMin = min(aMin, SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, saturate(uv + float2( 0.000,  0.032))).a);
+        aMin = min(aMin, SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, saturate(uv + float2( 0.000, -0.032))).a);
+        half rectRim = (half)smoothstep(0.450, 0.495, max(abs(uv.x - 0.5), abs(uv.y - 0.5)));
+        half shapeRim = saturate((1.0h - aMin) * 1.4h);
+        half rim = max(rectRim, shapeRim);
+        half ang = (half)(atan2(uv.y - 0.5, uv.x - 0.5) * 0.15915494 + 0.5);
+        half rustPatch = SignWearNoise(float2(ang * 9.0 + seed * 29.0, seed * 11.0)) * SignWearNoise(uv * 28.0 + float2(seed * 17.0, 2.3));
+        half rustMask = rim * (half)smoothstep(0.30, 0.56, rustPatch);
+        half3 rustCol = lerp(half3(0.11h, 0.042h, 0.018h), half3(0.065h, 0.025h, 0.012h), nHi);
+        s.albedo = lerp(s.albedo, rustCol, rustMask);
+        s.metallic = lerp(s.metallic, 0.35h, rustMask * 0.5h);
+        s.smoothness = lerp(s.smoothness, 0.14h, rustMask);
+        retroAtten *= (1.0h - 0.75h * rustMask);
+    }
+
+    // 4. Single small weathered anonymous sticker in an opaque corner margin
+    if (flags > 0.52h)
+    {
+        float2 cand[3];
+        if (seed < 0.34h)      { cand[0] = float2(0.24, 0.24); cand[1] = float2(0.28, 0.76); cand[2] = float2(0.39, 0.30); }
+        else if (seed < 0.68h) { cand[0] = float2(0.76, 0.24); cand[1] = float2(0.72, 0.76); cand[2] = float2(0.61, 0.30); }
+        else                   { cand[0] = float2(0.28, 0.76); cand[1] = float2(0.24, 0.24); cand[2] = float2(0.39, 0.70); }
+
+        float2 stPos = cand[0];
+        bool stValid = false;
+        [unroll]
+        for (int k = 0; k < 3; k++)
+        {
+            float2 c = cand[k];
+            half ca = min(
+                min(SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, c).a,
+                    SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, c + float2(0.030, 0.022)).a),
+                SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, c - float2(0.030, 0.022)).a
+            );
+            if (!stValid && ca > 0.90h) { stPos = c; stValid = true; }
+        }
+        if (stValid)
+        {
+            float ang = (seed - 0.5) * 0.55;
+            float cs = cos(ang), sn = sin(ang);
+            float2 d = uv - stPos;
+            float2 q = float2(cs * d.x + sn * d.y, -sn * d.x + cs * d.y);
+            float2 box = abs(q) - float2(0.036, 0.022);
+            half stMask = 1.0h - (half)smoothstep(0.0, 0.004, max(box.x, box.y));
+            if (stMask > 0.001h)
+            {
+                half3 stAccent = seed < 0.35h ? half3(0.22h, 0.38h, 0.36h) : (seed < 0.70h ? half3(0.48h, 0.32h, 0.16h) : half3(0.42h, 0.19h, 0.18h));
+                half band = (half)smoothstep(-0.003, 0.003, q.y);
+                half3 stCol = lerp(half3(0.66h, 0.63h, 0.54h), stAccent, band * 0.65h) * (0.88h + 0.20h * nHi);
+                s.albedo = lerp(s.albedo, stCol, stMask * 0.90h);
+                s.smoothness = lerp(s.smoothness, 0.18h, stMask);
+                retroAtten *= (1.0h - 0.80h * stMask);
+            }
+        }
+    }
+
+    return half4(retroAtten, 0, 0, 0);
+}
+
 float FurnitureHeadReturn(float4 source, float3 positionWS, float3 normalWS, float3 viewWS, float highBeam)
 {
     if (source.w <= 0.0) return 0.0;
@@ -76,6 +196,13 @@ void FurnitureSignFragment(
     SurfaceData surfaceData;
     InitializeStandardLitSurfaceData(input.uv, surfaceData);
 
+    half4 signWear = (half4)UNITY_ACCESS_INSTANCED_PROP(KamionSignProps, _KamionSignWear);
+    half retroAtten = 1.0h;
+    if (dot(signWear, half4(1, 1, 1, 1)) > 0.001h)
+    {
+        retroAtten = ApplySignWear(input.uv, signWear, surfaceData).x;
+    }
+
 #ifdef LOD_FADE_CROSSFADE
     LODFadeCrossFade(input.positionCS);
 #endif
@@ -92,7 +219,7 @@ void FurnitureSignFragment(
 
     half4 color = UniversalFragmentPBR(inputData, surfaceData);
     #if defined(_FURNITURE_RETRO)
-    color.rgb += FurnitureReturnedLight(inputData.positionWS, inputData.normalWS, inputData.viewDirectionWS) * surfaceData.albedo;
+    color.rgb += FurnitureReturnedLight(inputData.positionWS, inputData.normalWS, inputData.viewDirectionWS) * surfaceData.albedo * retroAtten;
     #endif
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));

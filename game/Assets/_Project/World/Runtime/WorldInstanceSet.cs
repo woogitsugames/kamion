@@ -80,8 +80,12 @@ namespace Game.World
         public short[] rotations = Array.Empty<short>();
         [Tooltip("Compact TRS: scale x, y, z as IEEE half (3 per instance)")]
         public ushort[] scales = Array.Empty<ushort>();
+        [Tooltip("Optional per-instance sign/post wear RGBA8 (0..255 -> 0..1), empty if unused")]
+        public Color32[] instanceWear = Array.Empty<Color32>();
         public Hlod[] hlods = Array.Empty<Hlod>();
         public HlodGroup[] hlodGroups = Array.Empty<HlodGroup>();
+
+        public bool HasWear => instanceWear != null && instanceWear.Length > 0 && instanceWear.Length == Count;
 
         bool Compact => positions != null && positions.Length > 0;
 

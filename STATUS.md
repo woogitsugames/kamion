@@ -13,5 +13,10 @@
   - `sign_post` LOD0 podniesiony z 10 do 12 boków (72 tris) pod profilowanie U-kanałowe w shaderze bez nowych prototypów i draw calli.
   - `sign_post_galv` z `"shader": "Kamion/Furniture Post"`.
   - Deterministyczne `sign_wear_params()` per znak: przechył słupka ±1,5° wokół podstawy (`tilt`, `pivot_dy`), wektor `wear` dla słupka (`finish` ocynk vs malowany szaro-biały, U-kanałowy `L`/`D`, wiek/korozja, wariant spangle/ziarno) oraz tarcz (`age` blaknięcie, `dirt` brud od dołu, `flags` rdza krawędziowa / pojedyncza naklejka, `seed`).
-- NASTĘPNY KROK: implementacja w C# (`WorldInstanceSet.cs`, `InstanceImporter.cs`, `WorldInstances.cs`) oraz shaderach (`FurnitureSignForward.hlsl`, `FurniturePost.shader`), potem testy Unity (`FurnitureSignTests`, `WorldInstancesRenderGcTests`) i przebudowa `dk65-07`:
-  `pwsh scripts/test.ps1 -Platform EditMode -Filter FurnitureSignTests -BuildTarget Win64`
+- [krok 3] Warstwa C# i shadery + testy Unity / Python:
+  - `WorldInstanceSet.cs` (`instanceWear` Color32[]), `InstanceImporter.cs` (macierz przechyłu wokół podstawy `pivot_dy` + zapis `instanceWear`), `WorldInstances.cs` (per-instance `MaterialPropertyBlock` `_KamionSignWear` bez nowych draw calli).
+  - `FurnitureSignForward.hlsl` (`ApplySignWear`: wyblaknięcie UV czerwieni→róż, kurz od dołu, rdza krawędziowa, pojedyncze wlepki, spadek retrorefleksji) oraz `FurniturePost.shader` (`Kamion/Furniture Post`: U-kanałowy profil 50×30 mm na 12-boku, ocynk zwietrzały vs malowany szaro-biały, korozja u podstawy).
+  - Poprawka `built_up.py` / `limit_signs.py` (`net` opcjonalny w `_place`).
+  - Testy: Unity `EditMode FurnitureSignTests` 16/16 passed, `PlayMode WorldInstancesRenderGcTests` 1/1 passed (zero GC); Python `test_signs_p1_0279` + `test_direction_signs_0236` + `test_signs_wear_s24` (46 passed, 1 skipped), `test_props_grounding_0337` + `test_furniture_signs_0120` + `test_furniture_r1` (37 passed), `test_hero_bridge` + `test_typology_0238` (34 passed).
+- NASTĘPNY KROK: dokończyć przebudowę `dk65-07`, potem import Unity i `visual-qa` PO (`clear` + `overcast`):
+  `pwsh scripts/import-region.ps1 -Region dk65-07 -Tiers High -BuildTarget Win64`

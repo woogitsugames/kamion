@@ -323,7 +323,7 @@ namespace Game.World.Import
             }
 
             // ---- instances ----
-            var items = new List<(long cell, bool forest, int proto, Matrix4x4 m, bool highOnly)>();
+            var items = new List<(long cell, bool forest, int proto, Matrix4x4 m, bool highOnly, Color32 wear)>();
             colliders = new Colliders();
             var corridor = r.Chunks.Where(c => c.Corridor).ToList();
             float minE = r.Chunks.Min(c => c.Min.x), minN = r.Chunks.Min(c => c.Min.y);
@@ -422,7 +422,21 @@ namespace Game.World.Import
                     else
                     {
                         float sz = it.Get("sz") != null ? (float)Num(it.Get("sz")) : 1f;
-                        m = Matrix4x4.TRS(new Vector3(e, z, n), Quaternion.Euler(0f, -yaw * Mathf.Rad2Deg, 0f), new Vector3(1f, sz, 1f));
+                        var yawQ = Quaternion.Euler(0f, -yaw * Mathf.Rad2Deg, 0f);
+                        var pos = new Vector3(e, z, n);
+                        if (it.Get("tilt") is List<object> tiltList && tiltList.Count >= 2)
+                        {
+                            float txDeg = (float)Num(tiltList[0]);
+                            float tyDeg = (float)Num(tiltList[1]);
+                            float pivotDy = it.Get("pivot_dy") != null ? (float)Num(it.Get("pivot_dy")) : 0f;
+                            var tiltQ = Quaternion.Euler(tyDeg, 0f, -txDeg);
+                            var basePos = new Vector3(e, z - pivotDy, n);
+                            m = Matrix4x4.TRS(basePos, tiltQ, Vector3.one) * Matrix4x4.TRS(new Vector3(0f, pivotDy, 0f), yawQ, new Vector3(1f, sz, 1f));
+                        }
+                        else
+                        {
+                            m = Matrix4x4.TRS(pos, yawQ, new Vector3(1f, sz, 1f));
+                        }
                     }
                     int pi = Proto(p);
                     if (pi < 0) continue;
@@ -437,10 +451,16 @@ namespace Game.World.Import
                         colliders.Barriers.Add(bar);
                         continue;
                     }
+                    Color32 wearCol = default;
+                    if (it.Get("wear") is List<object> wearList && wearList.Count >= 4)
+                    {
+                        byte B(object v) => (byte)Mathf.Clamp(Mathf.RoundToInt((float)Num(v) * 255f), 0, 255);
+                        wearCol = new Color32(B(wearList[0]), B(wearList[1]), B(wearList[2]), B(wearList[3]));
+                    }
                     bool highOnly = IsHighOnly(it.Get("tier"));
                     long drawCellKey = HighOnlyCellKey(DetailCellKey(cellKey, p.StartsWith("fab_", StringComparison.Ordinal)), highOnly);
-                    items.Add((drawCellKey, forest && !highOnly, pi, m, highOnly));
-                    if (contactOf.TryGetValue(pi, out int cpi)) items.Add((cellKey, false, cpi, m, false));
+                    items.Add((drawCellKey, forest && !highOnly, pi, m, highOnly, wearCol));
+                    if (contactOf.TryGetValue(pi, out int cpi)) items.Add((cellKey, false, cpi, m, false, default));
                     // no collider for a high-only instance: collision must not depend on the tier (ADR 0132 p. 17)
                     if (!highOnly && colMeshes.TryGetValue(p, out var cb) && cb.HasValue && corridor.Any(c => e >= c.Min.x && e < c.Max.x && n >= c.Min.y && n < c.Max.y))
                         colliders.Items.Add((p, m, cb.Value));
@@ -451,6 +471,13 @@ namespace Game.World.Import
                 items.Select(it => it.proto).ToArray(), items.Select(it => it.highOnly || protos[it.proto].name.StartsWith("fab_", StringComparison.Ordinal)).ToArray());
             var stored = storageOrder.Select(i => items[i]).ToArray();
             var mats = stored.Select(it => it.m).ToArray();
+            bool anyWear = false;
+            for (int i = 0; i < stored.Length; i++)
+            {
+                var w = stored[i].wear;
+                if ((w.r | w.g | w.b | w.a) != 0) { anyWear = true; break; }
+            }
+            set.instanceWear = anyWear ? stored.Select(it => it.wear).ToArray() : Array.Empty<Color32>();
             // Each partition is already sorted. Record its contiguous runs before merging the run order;
             // sorting individual matrices again would reintroduce the unstable equal-key permutation.
             var orderedRuns = new List<(long cell, bool forest, int proto, int start, int count, bool highOnly)>();
