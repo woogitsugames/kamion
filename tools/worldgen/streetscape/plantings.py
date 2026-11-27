@@ -1033,7 +1033,7 @@ def _crown_quad(kit, c, z0, sprite, W, H, ang, occ, flip=False, lean=(0.0, 0.0))
     kit.quad(P, [[u0, v0], [u1, v0], [u1, v1], [u0, v1]], C)
 
 
-def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False):
+def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False, young=None):
     """A broadleaf garden tree in the plot kit (ADR 0163), habit by species: the stem to the crown base, crossed whole-
     crown cards (the habit's silhouette with its limbs), and - full variant of the dense habits - the crown's dark
     core and leaf sprays lying on its skin, so it is a volume from every side and from above, not a paper cross.
@@ -1043,10 +1043,11 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
     separate dark core: build 2 had one and it showed as a box under the cards (review s17 0170 P1)."""
     p = np.asarray(p, float)
     sprite = sprite or HABIT[species]
-    if not lite and H < small_trees.YOUNG_H_MAX_M:
+    if not lite and (H < small_trees.YOUNG_H_MAX_M if young is None else young):
         # ADR 0352 addendum (garden-trees-s24): the full variant of a small tree is a stem with lobes of foliage on
         # boughs (20-21 triangles), not three whole-crown cards crossed on the axis (14): those were a ball on a stick
-        # with a dark wedge between the cards facing away from the sun
+        # with a dark wedge between the cards facing away from the sun. young=True: garden_trees() - every tree that
+        # stays a kit tree on High has a crown radius below LIB_MIN_R_M, also the slender ones (birch) above 6.5 m
         small_trees.young_tree(kit, p, z, r, H, cb, species, sprite, key)
         return
     hc = H - cb
@@ -1651,7 +1652,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
                 kit.low = "only"                             # High: the library instance below
             elif t["near"]:
                 kit.low = False
-                garden_tree(kit, p, z, r, H, cb, sp, key, sprite=sprite)
+                garden_tree(kit, p, z, r, H, cb, sp, key, sprite=sprite, young=True)
                 kit.low = "only"
             garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2, sprite=sprite, core=bool(t["near"]))
         if not _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
