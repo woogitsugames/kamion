@@ -59,8 +59,8 @@ PLATFORM_TOP, FENCE_HALF, FENCE_H = 0.42, 2.20, 1.25
 # planters with red begonias round the monument: (right, forward) of the box centre in the monument frame, ESTIMATED
 # from Commons 01 / 08 and the fog photo (boxes outside the chain, two per side)
 MONUMENT_PLANTERS = ((-1.9, 3.75), (2.0, 3.7), (3.75, 1.55), (3.7, -1.7), (-3.7, 1.6), (-3.75, -1.5), (-1.6, -3.7), (1.75, -3.75))
-BEGONIA = ((1.9, 0.10, 0.22), (2.0, 0.22, 0.30), (1.7, 0.08, 0.16))      # tint x the FLOWERS colour: reds
-PETUNIA = ((0.85, 0.45, 1.9), (1.9, 1.5, 1.9), (1.2, 0.3, 1.6))          # purple, pale pink, magenta
+BEGONIA = ((1.45, 0.10, 0.20), (1.65, 0.20, 0.30), (1.2, 0.08, 0.15))     # tint x the FLOWERS colour: reds
+PETUNIA = ((0.50, 0.35, 1.00), (1.05, 0.90, 1.15), (0.70, 0.30, 0.90))   # purple, pale pink, magenta
 LEAF = ((0.13, 0.95, 0.12), (0.10, 0.75, 0.09), (0.18, 1.15, 0.14))
 BENCH_VARIANTS = ("arms", "plain", "backless")
 
@@ -173,8 +173,8 @@ def _monument(acc, layer, at, z):
         acc.add(layer, IRON, np.array(V), T)
     # blank notice boards on the front of the fence (Commons 01: small plates and a framed double board)
     front = np.r_[at, 0.] + f * (FENCE_HALF + .03)
-    for off, hw, hh, zc, framed in ((-1.35, .24, .17, .78, False), (-.72, .11, .15, .78, False), (.0, .46, .26, .72, True),
-                                    (1.38, .25, .17, .80, False)):
+    for off, hw, hh, zc, framed in ((-1.30, .17, .12, .80, False), (-.80, .08, .11, .80, False), (.0, .36, .21, .74, True),
+                                    (1.36, .16, .12, .82, False)):
         c = front + r * off + up * (h0 + zc)
         if framed:
             acc.box(layer, IRON, c, r * (hw + .04), f * .014, up * (hh + .04))
@@ -244,8 +244,8 @@ def _flowers(acc, layer, c, z, t, n, hl, hw, hgt, palette, key):
             hh = hgt * (1 - max(abs(u) ** 4, abs(v) ** 2)) ** 0.5 * (0.65 + 0.6 * _h(key, "h", i, j)) if inner else -0.02
             spill = 1.0 if inner else 1.07                      # the plants hang over the rim
             V.append(c3 + t3 * u * hl * spill + n3 * v * hw * spill + np.array([0, 0, hh]))
-            pal = palette if _h(key, "c", i, j) < 0.58 else LEAF
-            cc = np.array(pal[int(_h(key, "k", i, j) * len(pal)) % len(pal)]) * (0.75 + 0.35 * _h(key, "s", i, j))
+            pal = palette if _h(key, "c", i, j) < (0.45 if low else 0.14) else LEAF
+            cc = np.array(pal[int(_h(key, "k", i, j) * len(pal)) % len(pal)]) * (0.70 + 0.35 * _h(key, "s", i, j))
             COL.append([*np.clip(cc * 0.5, 0, 1), 1.0])
     for j in range(nv):
         for i in range(nu):
@@ -256,22 +256,26 @@ def _flowers(acc, layer, c, z, t, n, hl, hw, hgt, palette, key):
     if low:
         return
     V, COL, T = [], [], []
-    for k in range(16):                                         # tufts standing out of the mound
-        u, v = 1.7 * _h(key, "tu", k) - 0.85, 1.5 * _h(key, "tv", k) - 0.75
-        base = c3 + t3 * u * hl + n3 * v * hw + np.array([0, 0, hgt * (0.35 + 0.4 * (1 - max(abs(u), abs(v))))])
+    UV = []
+    for k in range(64):                                         # small tufts standing out of the mound (leaves, blossoms)
+        u, v = 1.9 * _h(key, "tu", k) - 0.95, 1.8 * _h(key, "tv", k) - 0.9
+        base = c3 + t3 * u * hl + n3 * v * hw + np.array([0, 0, hgt * (0.25 + 0.5 * (1 - max(abs(u) ** 2, abs(v) ** 2)))])
         a = math.pi * _h(key, "ta", k)
-        d = (t3 * math.cos(a) + n3 * math.sin(a)) * (0.07 + 0.05 * _h(key, "tw", k))
-        lean = (t3 * (_h(key, "tl", k) - .5) + n3 * (_h(key, "tm", k) - .5)) * 0.10 + np.array([0, 0, 0.11 + 0.09 * _h(key, "th", k)])
-        pal = palette if _h(key, "tc", k) < 0.75 else LEAF
-        cc = np.clip(np.array(pal[k % len(pal)]) * (0.8 + 0.4 * _h(key, "ts", k)) * 0.5, 0, 1)
-        dark = np.clip(np.array(LEAF[k % len(LEAF)]) * 0.5, 0, 1)
+        hwq = 0.022 + 0.026 * _h(key, "tw", k)
+        d = (t3 * math.cos(a) + n3 * math.sin(a)) * hwq
+        hq = 0.035 + 0.05 * _h(key, "th", k)
+        lean = (t3 * (_h(key, "tl", k) - .5) + n3 * (_h(key, "tm", k) - .5)) * 0.14 + np.array([0, 0, hq])
+        pal = palette if _h(key, "tc", k) < 0.72 else LEAF
+        cc = np.clip(np.array(pal[int(_h(key, "tp", k) * len(pal)) % len(pal)]) * (0.75 + 0.45 * _h(key, "ts", k)) * 0.5, 0, 1)
+        dark = np.clip(np.array(LEAF[k % len(LEAF)]) * 0.5 * 0.8, 0, 1)
+        u0, v0 = 1.5 * _h(key, "uu", k), 1.5 * _h(key, "uv", k)
         for face in (1, -1):
             b = len(V)
-            V += [base - d * face, base + d * face, base + d * face + lean, base - d * face + lean]
-            COL += [[*dark, 1.0], [*dark, 1.0], [*cc, 1.0], [*cc, 1.0]]
+            V += [base - d * face, base + d * face, base + d * face * 0.7 + lean, base - d * face * 0.7 + lean]
+            UV += [(u0, v0), (u0 + 2 * hwq, v0), (u0 + 2 * hwq, v0 + hq), (u0, v0 + hq)]
+            COL += [[*(dark * 0.5 + cc * 0.5), 1.0], [*(dark * 0.5 + cc * 0.5), 1.0], [*cc, 1.0], [*cc, 1.0]]
             T += [[b, b + 1, b + 2], [b, b + 2, b + 3]]
-    V = np.array(V)
-    acc.add(layer, FLOWERS, V, T, V[:, :2].copy(), COL=np.array(COL))
+    acc.add(layer, FLOWERS, np.array(V), T, np.array(UV), COL=np.array(COL))
 
 
 def _planter(acc, layer, at, z, t, hl, hw, h, flower_h, palette, key):
@@ -287,7 +291,7 @@ def _planter(acc, layer, at, z, t, hl, hw, h, flower_h, palette, key):
         for j in range(rows):                                   # three boards per side, each its own tone
             z0 = .06 + (h - .06) * j / rows
             z1 = .06 + (h - .06) * (j + 1) / rows - (.0 if low else .008)
-            g = 0.36 + 0.30 * _h(key, "b", k, j) + 0.25 * age
+            g = 0.20 + 0.16 * _h(key, "b", k, j) + 0.16 * age
             col = np.array([g, g * (0.97 + 0.05 * age), g * (0.90 + 0.14 * age)])     # greyer with age
             if j == 0 and not low:
                 col = col * 0.72                                # splash-soiled bottom board
@@ -324,10 +328,10 @@ def _bench(acc, layer, at, z, t, n, variant, key, z_at):
     swap = int(_h(key, "swap") * 9)                             # index of a replaced (pale, new) board; >= count = none
 
     def slat_col(i, front=False):
-        g = 0.42 + 0.22 * _h(key, "g", i) + 0.36 * age
+        g = 0.24 + 0.14 * _h(key, "g", i) + 0.26 * age
         col = np.array([g, g * (0.96 + 0.06 * age), g * (0.86 + 0.20 * age)])
         if i == swap:
-            col = np.array([0.98, 0.84, 0.62])                  # replaced board: fresh pale softwood
+            col = np.array([0.80, 0.66, 0.46])                  # replaced board: fresh pale softwood
         if front:
             col = col * 1.22 + 0.04                             # edge rubbed by legs and coats
         return np.clip(col, 0.05, 0.98)

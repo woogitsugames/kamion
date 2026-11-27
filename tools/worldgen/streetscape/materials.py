@@ -542,7 +542,7 @@ M = {
     # sandstone: the modulation set carries grain, pits and thin rain tails, the asset's COLOR_0 (facade_tint: albedo *=
     # 2 * rgb) carries the baked large-scale weathering - crust in the hollows, run-off under the ledges, lichen, the
     # paler renewed block. Colour WORKING_VALUE against Commons 01 / 08 (sunlit stone; a photo is not an albedo).
-    "monument_sandstone_aged": {"color": [0.33, 0.295, 0.225], "rough": 0.92, "texture_set": "sandstone_weathered_tint",
+    "monument_sandstone_aged": {"color": [0.37, 0.335, 0.265], "rough": 0.92, "texture_set": "sandstone_weathered_tint",
                                 "set_tile": True, "facade_tint": True},
     # benches and planter boxes of the square: dark stained softwood, per-board wear in COLOR_0 (bleached grey, replaced
     # pale boards, rubbed seat edge). Starts with "wood_planks" on purpose (tint_linear like every board material).

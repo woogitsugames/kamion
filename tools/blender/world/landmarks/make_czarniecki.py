@@ -733,6 +733,11 @@ def weather_colors(bvh, V, N, cls):
     cav = occlusion(bvh, V, N, hemi_dirs(20, 2), 0.07)
     sh = shelter(bvh, V, N)
     streak = streak_field(V, N, cls)
+    # the carved fur holds soot and algae (Commons "1762 01": fur bands and lining clearly darker than the zupan)
+    kd = KDTree(len(FUR_PTS))
+    for k, q in enumerate(FUR_PTS):
+        kd.insert(Vector(q + np.array([0, 0, ZF + SLAB])), k)
+    kd.balance()
     col = np.empty((len(V), 4))
     fresh = np.isin(cls, ("block", "step", "cap"))            # the lower parts were renewed: paler, cleaner stone
     for i in range(len(V)):
@@ -744,11 +749,14 @@ def weather_colors(bvh, V, N, cls):
         down = max(-n[2], 0.0)
         # black crust: in creases and where the rain never washes the stone; rain-washed fronts stay pale
         crust = 0.85 * (1 - cav[i]) ** 1.1 + 0.50 * sh[i] * (0.35 + 0.65 * down) + 0.42 * (1 - ao[i]) ** 1.5
-        crust = 1.25 * crust * (0.75 + 0.5 * blot) + 0.85 * streak[i]
+        crust = 1.05 * crust * (0.75 + 0.5 * blot) + 0.85 * streak[i]
         # dirt lies on ledges and shoulders that the rain does not rinse clean
         crust += 0.20 * up * (0.4 + 0.6 * fine) * (0.3 + 0.7 * sh[i])
         if fresh[i]:
             crust *= 0.45
+        if cls[i] == "fig":
+            _, fk, fd = kd.find(v)
+            crust += 0.30 * FUR_W[fk] * float(1 - sstep(0.06, 0.12, fd))
         crust = float(np.clip(crust, 0, 1))
         washed = (1 - sh[i]) * (0.25 + 0.75 * up) * ao[i]
         base = np.array([1.0, 1.0, 1.0]) * (0.92 + 0.16 * blot) * (0.97 + 0.06 * fine)
@@ -766,7 +774,7 @@ def weather_colors(bvh, V, N, cls):
         lich = sstep(0.52, 0.80, 0.5 + 0.5 * noise.noise(v * 5.1 + Vector((2, 9, 4)))) * (0.25 + 0.75 * north) * (0.35 + 0.65 * up + 0.3 * sh[i])
         damp = float(1 - sstep(0.0, 0.5, p[2])) * 0.55 + (float(1 - sstep(HZ["steps_top"], HZ["steps_top"] + 0.35, p[2])) * 0.25 if p[2] > HZ["platform_top"] else 0.0)
         g = float(np.clip(lich * (0.5 if fresh[i] else 0.9) + damp * (0.4 + 0.6 * fine) * (0.5 + 0.5 * north), 0, 1))
-        tint = tint * (1 - g) + tint * np.array([0.60, 0.72, 0.46]) * g
+        tint = tint * (1 - g) + tint * np.array([0.70, 0.76, 0.56]) * g
         tint = tint * (0.50 + 0.50 * ao[i])
         col[i, :3] = np.clip(tint * 0.5, 0.04, 0.98)
         col[i, 3] = 1.0
@@ -919,7 +927,7 @@ def main():
 
 
 # ------------------------------------------------------------------------------------------------ look-dev render
-TINT = {STONE: (0.33, 0.295, 0.225), PATINA: (0.06, 0.132, 0.092), GILT: (0.55, 0.40, 0.10), SETT: (0.285, 0.282, 0.272)}
+TINT = {STONE: (0.37, 0.335, 0.265), PATINA: (0.06, 0.132, 0.092), GILT: (0.55, 0.40, 0.10), SETT: (0.285, 0.282, 0.272)}
 
 
 def render(data, out_dir):
