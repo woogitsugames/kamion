@@ -522,6 +522,12 @@ namespace Game.World.Import
             var mat = LookDevAssets.WorldMaterial(path, surface, albedo, rough, metal, decal, bg);
             // Terrain reads the generator's ground masks from COLOR_0 (forest floor, unmown grass, bare soil).
             if (mat.HasProperty("_GroundMasks")) mat.SetFloat("_GroundMasks", id == "terrain_grass" ? 1f : 0f);
+            if (id == "roof_membrane")
+            {
+                if (m.Get("roof_felt") is bool felt && felt) mat.EnableKeyword("_ROOF_FELT");
+                else mat.DisableKeyword("_ROOF_FELT");
+                EditorUtility.SetDirty(mat);
+            }
             return mat;
         }
 
@@ -764,6 +770,7 @@ namespace Game.World.Import
                         if (def.Get("texture") != null) uv = true;
                         if (def.Get("window_grid") != null && nd.Primitives[i].Uv1 != null) uv1 = true;   // far facades (ADR 0015)
                         if (def.Get("vertex_color") is bool vc && vc && nd.Primitives[i].Colors != null) colors = true;
+                        if (def.Get("roof_felt") is bool felt && felt && nd.Primitives[i].Colors != null) uv = true;
                         // PBR sets (ADR 0022): mesh UV in metres, road wear / decal data in TEXCOORD_1
                         WorldPbrMaterials.Channels(def, id, out bool p0, out bool p1, out bool pc);
                         uv |= p0 && nd.Primitives[i].Uv0 != null;

@@ -26,3 +26,6 @@
 - Następny krok: `pwsh artifacts/codex-roofs-s24/run-vqa.ps1 -Phase before`.
 - Krok 4. Zapisano decyzję r4 w ADR 0238, odniesienie do ortofoto GUGiK oraz wagi WORKING_VALUE. Import bazowy przygotowuje zestawy PBR w worktree.
 - Następny krok po renderach PRZED: zastosować poprawkę shaderów i uruchomić `& $py -m pytest tests/gis/test_rural_outbuildings_props_fix_s24.py -q` w slocie heavy.
+
+- Krok 5. Zapisano implementację obu shaderów i importu w commicie WIP. Do zakończenia renderów PRZED pliki Unity na dysku celowo pozostają w wersji r3. Win64 import r3 zwrócił IMPORT_RESULT: OK. Ponowny visual-qa na nazwie sceny World_dk65-07_High czeka na slot heavy.
+- Następny krok po dwóch udanych renderach PRZED: `git checkout -- game/Assets/_Project/Environment/Shaders/WorldPBR.shader game/Assets/_Project/Rendering/Shaders/WorldSurface.shader game/Assets/_Project/World/Import/RegionImporter.cs`, potem `pwsh artifacts/codex-roofs-s24/run-world-after.ps1`.

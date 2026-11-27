@@ -170,6 +170,7 @@ Shader "Kamion/World Surface"
             #pragma multi_compile_instancing
             #pragma shader_feature_local _FAR_FACADE
             #pragma shader_feature_local _FURNITURE_PLINTH
+            #pragma shader_feature_local _ROOF_FELT
             #pragma shader_feature_local _FAR_RING_CLIP
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -185,6 +186,9 @@ Shader "Kamion/World Surface"
             struct Attributes
             {
                 float4 positionOS : POSITION; float3 normalOS : NORMAL; half4 color : COLOR;
+            #if defined(_ROOF_FELT)
+                float2 roofUV : TEXCOORD0;
+            #endif
             #if defined(_FAR_FACADE)
                 float2 uv1 : TEXCOORD1;
             #endif
@@ -197,6 +201,9 @@ Shader "Kamion/World Surface"
                 half3 normalWS : TEXCOORD1;
                 half fogFactor : TEXCOORD2;
                 half4 masks : TEXCOORD3;
+            #if defined(_ROOF_FELT)
+                float2 roofUV : TEXCOORD6;
+            #endif
             #if defined(_FAR_FACADE)
                 float2 uv1 : TEXCOORD4;
             #endif
@@ -242,6 +249,9 @@ Shader "Kamion/World Surface"
                 o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
             #endif
                 o.masks = v.color;
+            #if defined(_ROOF_FELT)
+                o.roofUV = v.roofUV;
+            #endif
             #if defined(_FAR_RING_CLIP)
                 o.farOwner = KamionFarRingOwner();
             #endif
@@ -314,6 +324,24 @@ Shader "Kamion/World Surface"
                     half heightAboveGround = i.masks.g - 0.25h;
                     half dirt = saturate(1.0h - max(heightAboveGround, 0.0h) / _FurnitureDetail.y) * _FurnitureDetail.z;
                     albedo *= grain * lerp(half3(1, 1, 1), half3(0.62, 0.57, 0.48), dirt);
+                }
+            #endif
+            #if defined(_ROOF_FELT)
+                // ADR 0238 r4: age and seed in COLOR_0.rg, B = 64/255 is the felt marker. UV0 is in roll metres.
+                if (i.masks.a > 0.5h && abs(i.masks.b - 64.0h / 255.0h) < 0.002h)
+                {
+                    float seed = i.masks.g;
+                    float across = i.roofUV.y / 0.95 + seed;
+                    float row = floor(across);
+                    float along = i.roofUV.x / 2.9 + seed * 7.17 + frac(row * 0.5);
+                    float footprint = max(length(fwidth(i.roofUV)), 0.001);
+                    float seamDist = abs(frac(across + 0.5) - 0.5) * 0.95;
+                    half seam = (1.0h - smoothstep(0.012, 0.042 + footprint, seamDist)) * saturate(0.055 / footprint);
+                    float rollHash = frac(sin(dot(float2(floor(along), row) + seed, float2(12.9898, 78.233))) * 43758.5453);
+                    half repair = step(0.86h, rollHash) * (1.0h - smoothstep(0.24, 0.92, footprint));
+                    half edge = smoothstep(0.02, 0.09, min(frac(along), 1.0 - frac(along)));
+                    half tone = lerp(0.51h, 0.73h, (seed + i.masks.r) * 0.5h);
+                    albedo *= tone * (1.0h - 0.22h * seam - 0.34h * repair * edge);
                 }
             #endif
                 albedo = saturate(albedo);

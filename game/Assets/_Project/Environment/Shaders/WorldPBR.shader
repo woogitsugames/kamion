@@ -1281,99 +1281,156 @@ Shader "Kamion/World PBR"
                 // set (_RoofTile), moss in the laps at the eave and along the ridge, lichen crusts (Medium+). ALU only,
                 // no texture fetch. Strengths WORKING_VALUE (refs Data/raw/refs/posesje, tykocin-rynek-commons).
             #if defined(_ROOF_WEATHER)
-                if (i.masks.a > 0.25)
+                if (i.masks.a > 0.0)
                 {
+                    // ADR 0238 r4: three rural profiles x 31 seeds in alpha bytes 1..93.
+                    // The legacy weather seed starts at byte 127/128, and zero is uncoloured.
+                    float roofCode = round(i.masks.a * 255.0);
+                    bool ruralRoof = roofCode <= 93.0;
+                    float profile = floor((roofCode - 1.0) / 31.0);
+                    bool galv = ruralRoof && profile == 0.0;
+                    bool fibre = ruralRoof && profile == 1.0;
+                    bool clay = ruralRoof && profile == 2.0;
+                    bool ridgeCap = ruralRoof && i.masks.b > (254.5 / 255.0);
                     half age = i.masks.r;
-                    half mossK = saturate(i.masks.g * _RoofWeather.x);
+                    half mossK = saturate(i.masks.g * (fibre ? 1.35 : galv ? 0.25 : _RoofWeather.x));
                     float vE = max(i.uv.y, 0.0);
                     float vR = i.masks.b * 6.0;
                     float seed = (i.masks.a - 0.5) * 200.0;
                     float2 ru = i.uv.xy;
-                    // dirt runs: two octaves across the slope, stretched 10-30x down it
-                    half s1 = ValueNoise12(float2((ru.x + seed) * 1.9, vE * 0.10 + seed));
-                    half s2 = ValueNoise12(float2((ru.x + seed) * 6.3 + 13.7, vE * 0.30));
-                    half streak = saturate((s1 * 0.6 + s2 * 0.4 - 0.42) * 2.6);
-                    streak *= smoothstep(0.15, 1.2, vR) * (0.55 + 0.45 * (1.0 - smoothstep(0.5, 5.0, vE)));
-                    half ks = streak * _RoofWeather.y * (0.45 + 0.55 * age);
-                    // a dirt film converges every covering to grey-brown: darkens red / brown tile, lifts graphite sheet
-                    albedo = lerp(albedo * (1.0 - 0.30 * ks), half3(0.085, 0.080, 0.070), 0.35 * ks);
-                    smooth *= 1.0 - 0.3 * ks;
-                    albedo *= 1.0 - 0.20 * age * _RoofWeather.y * (1.0 - smoothstep(0.05, 0.7, vE));   // damp band over the gutter
-                    // odd tiles on the grid of the set (row 0 at the eave, half-offset courses for plain / interlocking tile)
-                    if (_RoofTile.w > 0.001)
+                    if (ruralRoof)
                     {
-                        float row = floor(ru.y / _RoofTile.y);
-                        float col = floor((ru.x + 0.5 * _RoofTile.x * _RoofTile.z * frac(row * 0.5) * 2.0) / _RoofTile.x);
-                        float2 tid = float2(col, row);
-                        half h1 = Hash12(tid + seed * 1.13);
-                        half h2 = Hash12(tid * 1.7 + seed + 31.0);
-                        // soaked tiles come in loose groups (a 2-3 m cell lifts / drops the share), replaced ones alone
-                        half grp = ValueNoise12(tid * float2(_RoofTile.x, _RoofTile.y) * 0.45 + seed * 0.31);
-                        half share = (0.03 + 0.10 * age) * (0.4 + 1.2 * grp);
-                        half odd = step(1.0 - share, h1);
-                        half3 f = h2 < 0.55 ? half3(0.84, 0.82, 0.80) : (h2 < 0.8 ? half3(1.12, 1.08, 1.03) : half3(0.94, 0.97, 0.92));
-                        half jit = 1.0 + (h2 - 0.5) * 0.10 * (0.3 + 0.7 * age);
-                        half3 tf = lerp(half3(1.0, 1.0, 1.0), f, odd) * jit;
-                        half tfade = 1.0 - smoothstep(_RoofTile.x * 0.25, _RoofTile.x * 0.8, footprint);
-                        half3 tmean = (1.0 - share * 0.06).xxx;           // mean of tf over many tiles (no tone pop with distance)
-                        albedo *= lerp(half3(1.0, 1.0, 1.0), lerp(tmean, tf, tfade), _RoofTile.w);
+                        float toneSeed = (roofCode - 1.0 - profile * 31.0) / 30.0;
+                        seed = toneSeed * 100.0;
+                        half tone = lerp(0.83h, 1.18h, frac(seed * 0.427 + age * 0.29));
+                        if (clay)
+                        {
+                            half luma = dot(albedo, half3(0.2126h, 0.7152h, 0.0722h));
+                            albedo = lerp(albedo, luma * half3(1.10h, 0.92h, 0.82h), 0.20h + 0.30h * age) * tone;
+                            smooth *= 0.77h;
+                        }
+                        else
+                        {
+                            albedo = tone * (galv
+                                ? lerp(half3(0.115h, 0.127h, 0.132h), half3(0.235h, 0.246h, 0.247h), toneSeed)
+                                : half3(0.162h, 0.157h, 0.145h));
+                            smooth = galv ? 0.34h : 0.16h;
+                            metal = galv ? 0.27h : 0.0h;    // oxidised zinc or porous fibre cement
+                            tn = half3(0.0h, 0.0h, 1.0h);
+                            ao = 1.0h;
+                        }
                     }
-                    // neon-outbuildings2-s24 (ADR 0238 d. props-fix r2): down-slope ribs (trapezoidal T-18 / corrugated
-                    // sheet), sheet lap joints (~1.05 m), and subtle weathering / rust / fade variation on metal/sheet roofs
-                    // (0 extra draws, 0 extra textures, anti-shimmer filtered via fwidth(ru.x)). WORKING_VALUE.
-                    if (_RoofWeather.w > 0.5)
+                    // Caps keep their geometry and the per-building tone. Their UVs run across the cap, not up a slope.
+                    if (!ridgeCap)
                     {
-                        half isCorr = (half)step(0.65, frac(seed * 0.371));     // 65 % trapezoidal T-18, 35 % corrugated
-                        float pitch = lerp(0.20, 0.14, (float)isCorr);
-                        float fwx = max(fwidth(ru.x), 1e-4);
-                        half ribFade = (half)saturate(pitch * 0.55 / fwx);
-                        float ph = frac((ru.x + seed * 0.13) / pitch);
-                        // Trapezoidal profile: trough [0..0.46], rise [0.46..0.58], crest [0.58..0.88], fall [0.88..1.0]
-                        half hTrap = (half)(smoothstep(0.45, 0.58, ph) * (1.0 - smoothstep(0.87, 0.99, ph)));
-                        half sTrap = (half)(smoothstep(0.44, 0.51, ph) * (1.0 - smoothstep(0.54, 0.60, ph))
-                                          - smoothstep(0.86, 0.92, ph) * (1.0 - smoothstep(0.95, 1.0, ph)));
-                        // Corrugated profile: sine wave along eave (ribs run down-slope)
-                        half hCorr = (half)(0.5 - 0.5 * cos(ph * 6.2831853));
-                        half sCorr = (half)(sin(ph * 6.2831853) * 0.72);
-                        half ribH = lerp(hTrap, hCorr, isCorr);
-                        half ribSlope = lerp(sTrap * 0.85h, sCorr, isCorr);
-                        // Replace flat metal-tile course normal with strong down-slope rib normal (anti-aliased at distance)
-                        tn = normalize(lerp(half3(0.0h, 0.0h, 1.0h), tn, 0.25h) + half3(-ribSlope * ribFade, 0.0h, 0.0h));
-                        // Trough AO + crest catchlight along the slope
-                        albedo *= lerp(1.0h, lerp(0.80h, 1.18h, ribH), ribFade);
-                        ao *= lerp(1.0h, lerp(0.80h, 1.0h, ribH), ribFade);
-                        smooth = lerp(smooth * 0.78h, smooth * 1.12h, ribH * ribFade);
-                        // Per-sheet lap seams (~1.05 m wide sheets) + per-sheet tone drift + per-building oxidised grey tint
-                        float sheetId = floor((ru.x + seed * 0.19) / 1.05);
-                        half shHash = (half)Hash12(float2(sheetId, floor(seed * 3.1) + 7.0));
-                        float lapDist = abs(frac((ru.x + seed * 0.19) / 1.05) - 0.5) * 1.05;
-                        half lapLine = (1.0h - (half)smoothstep(0.008, 0.025 + fwx, 0.525 - lapDist)) * (half)saturate(0.04 / fwx);
-                        half bTone = lerp(0.88h, 1.48h, (half)frac(seed * 0.173) * saturate(age * 1.15h));
-                        albedo *= bTone * (1.0h + (shHash - 0.5h) * (0.14h + 0.12h * age)) * (1.0h - 0.24h * lapLine);
-                        // Subtle rust / oxidised streaks in rib troughs & along sheet laps on aged outbuildings
-                        half rNoise = (half)ValueNoise12(float2((ru.x + seed) * 2.4, vE * 0.28 + seed * 0.7));
-                        half rMask = smoothstep(0.56h, 0.84h, rNoise + 0.18h * (1.0h - ribH) + 0.15h * lapLine)
-                                   * saturate((age - 0.30h) * 1.4h) * (0.55h + 0.45h * (1.0h - (half)smoothstep(0.6, 4.5, vE)));
-                        albedo = lerp(albedo, half3(0.11h, 0.055h, 0.032h) * (0.85h + 0.3h * rNoise), rMask * 0.48h);
-                        smooth *= 1.0h - 0.45h * rMask;
+                        // dirt runs: two octaves across the slope, stretched 10-30x down it
+                        half s1 = ValueNoise12(float2((ru.x + seed) * 1.9, vE * 0.10 + seed));
+                        half s2 = ValueNoise12(float2((ru.x + seed) * 6.3 + 13.7, vE * 0.30));
+                        half streak = saturate((s1 * 0.6 + s2 * 0.4 - 0.42) * 2.6);
+                        streak *= smoothstep(0.15, 1.2, vR) * (0.55 + 0.45 * (1.0 - smoothstep(0.5, 5.0, vE)));
+                        half dirtStrength = fibre ? 1.22h : galv ? 0.80h : _RoofWeather.y;
+                        half ks = streak * dirtStrength * (0.45 + 0.55 * age);
+                        // a dirt film converges every covering to grey-brown: darkens red / brown tile, lifts graphite sheet
+                        albedo = lerp(albedo * (1.0 - 0.30 * ks), half3(0.085, 0.080, 0.070), 0.35 * ks);
+                        smooth *= 1.0 - 0.3 * ks;
+                        albedo *= 1.0 - 0.20 * age * dirtStrength * (1.0 - smoothstep(0.05, 0.7, vE));   // damp band over the gutter
+                        // odd tiles on the grid of the set (row 0 at the eave, half-offset courses for plain / interlocking tile)
+                        if ((!ruralRoof || clay) && _RoofTile.w > 0.001)
+                        {
+                            float row = floor(ru.y / _RoofTile.y);
+                            float col = floor((ru.x + 0.5 * _RoofTile.x * _RoofTile.z * frac(row * 0.5) * 2.0) / _RoofTile.x);
+                            float2 tid = float2(col, row);
+                            half h1 = Hash12(tid + seed * 1.13);
+                            half h2 = Hash12(tid * 1.7 + seed + 31.0);
+                            // soaked tiles come in loose groups (a 2-3 m cell lifts / drops the share), replaced ones alone
+                            half grp = ValueNoise12(tid * float2(_RoofTile.x, _RoofTile.y) * 0.45 + seed * 0.31);
+                            half share = (0.03 + 0.10 * age) * (0.4 + 1.2 * grp);
+                            half odd = step(1.0 - share, h1);
+                            half3 f = h2 < 0.55 ? half3(0.84, 0.82, 0.80) : (h2 < 0.8 ? half3(1.12, 1.08, 1.03) : half3(0.94, 0.97, 0.92));
+                            half jit = 1.0 + (h2 - 0.5) * 0.10 * (0.3 + 0.7 * age);
+                            half3 tf = lerp(half3(1.0, 1.0, 1.0), f, odd) * jit;
+                            half tfade = 1.0 - smoothstep(_RoofTile.x * 0.25, _RoofTile.x * 0.8, footprint);
+                            half3 tmean = (1.0 - share * 0.06).xxx;           // mean of tf over many tiles (no tone pop with distance)
+                            albedo *= lerp(half3(1.0, 1.0, 1.0), lerp(tmean, tf, tfade), _RoofTile.w);
+                        }
+                        // neon-outbuildings2-s24 (ADR 0238 d. props-fix r2): down-slope ribs (trapezoidal T-18 / corrugated
+                        // sheet), sheet lap joints (~1.05 m), and subtle weathering / rust / fade variation on metal/sheet roofs
+                        // (0 extra draws, 0 extra textures, anti-shimmer filtered via fwidth(ru.x)). WORKING_VALUE.
+                        if (galv || fibre || (!ruralRoof && _RoofWeather.w > 0.5))
+                        {
+                            half isCorr = ruralRoof ? (fibre ? 1.0h : 0.0h) : (half)step(0.65, frac(seed * 0.371));
+                            float pitch = fibre ? 0.177 : lerp(0.20, 0.14, (float)isCorr);
+                            float fwx = max(fwidth(ru.x), 1e-4);
+                            half ribFade = (half)saturate(pitch * 0.55 / fwx);
+                            float ph = frac((ru.x + seed * 0.13) / pitch);
+                            // Trapezoidal profile: trough [0..0.46], rise [0.46..0.58], crest [0.58..0.88], fall [0.88..1.0]
+                            half hTrap = (half)(smoothstep(0.45, 0.58, ph) * (1.0 - smoothstep(0.87, 0.99, ph)));
+                            half sTrap = (half)(smoothstep(0.44, 0.51, ph) * (1.0 - smoothstep(0.54, 0.60, ph))
+                                              - smoothstep(0.86, 0.92, ph) * (1.0 - smoothstep(0.95, 1.0, ph)));
+                            // Corrugated profile: sine wave along eave (ribs run down-slope)
+                            half hCorr = (half)(0.5 - 0.5 * cos(ph * 6.2831853));
+                            half sCorr = (half)(sin(ph * 6.2831853) * 0.72);
+                            half ribH = lerp(hTrap, hCorr, isCorr);
+                            half ribSlope = lerp(sTrap * 0.85h, sCorr, isCorr);
+                            // Replace flat metal-tile course normal with strong down-slope rib normal (anti-aliased at distance)
+                            tn = normalize(lerp(half3(0.0h, 0.0h, 1.0h), tn, 0.25h) + half3(-ribSlope * ribFade, 0.0h, 0.0h));
+                            // Trough AO + crest catchlight along the slope
+                            albedo *= lerp(1.0h, lerp(0.80h, 1.18h, ribH), ribFade);
+                            ao *= lerp(1.0h, lerp(0.80h, 1.0h, ribH), ribFade);
+                            smooth = lerp(smooth * 0.78h, smooth * 1.12h, ribH * ribFade);
+                            // Per-sheet lap seams (~1.05 m wide sheets) + per-sheet tone drift + per-building oxidised grey tint
+                            float sheetId = floor((ru.x + seed * 0.19) / 1.05);
+                            half shHash = (half)Hash12(float2(sheetId, floor(seed * 3.1) + 7.0));
+                            float lapDist = abs(frac((ru.x + seed * 0.19) / 1.05) - 0.5) * 1.05;
+                            half lapLine = (1.0h - (half)smoothstep(0.008, 0.025 + fwx, 0.525 - lapDist)) * (half)saturate(0.04 / fwx);
+                            half bTone = ruralRoof ? 1.0h : lerp(0.88h, 1.48h, (half)frac(seed * 0.173) * saturate(age * 1.15h));
+                            albedo *= bTone * (1.0h + (shHash - 0.5h) * (0.14h + 0.12h * age))
+                                      * (1.0h - 0.24h * lapLine);
+                            if (galv)
+                            {
+                                // A replaced strip is an entire sheet, with the transition hidden in the side seam.
+                                half replaced = step(0.91h, shHash) * age * (1.0h - smoothstep(0.20, 0.76, footprint));
+                                albedo = lerp(albedo, albedo * 1.42h, replaced);
+                                smooth += 0.16h * replaced;
+                            }
+                            if (fibre)
+                            {
+                                half stains = smoothstep(0.49h, 0.80h, ValueNoise12(ru * float2(1.3, 0.72) + seed * 0.61));
+                                float courseDist = abs(frac(vE / 1.42 + 0.5) - 0.5) * 1.42;
+                                half course = (1.0h - smoothstep(0.012, 0.035 + footprint, courseDist))
+                                            * saturate(0.05 / footprint);
+                                albedo *= 1.0h - 0.36h * stains * (0.6h + 0.4h * age) - 0.20h * course;
+                            }
+                            else
+                            {
+                                // Subtle rust / oxidised streaks in rib troughs & along sheet laps on aged outbuildings
+                                half rNoise = (half)ValueNoise12(float2((ru.x + seed) * 2.4, vE * 0.28 + seed * 0.7));
+                                half rMask = smoothstep(0.56h, 0.84h, rNoise + 0.18h * (1.0h - ribH) + 0.15h * lapLine)
+                                           * saturate((age - 0.30h) * 1.4h) * (0.55h + 0.45h * (1.0h - (half)smoothstep(0.6, 4.5, vE)));
+                                albedo = lerp(albedo, half3(0.11h, 0.055h, 0.032h) * (0.85h + 0.3h * rNoise), rMask * 0.48h);
+                                smooth *= 1.0h - 0.45h * rMask;
+                            }
+                        }
+                        // moss: eave zone (wider on older roofs) and along the ridge, a few tufts anywhere; in the laps
+                        half zone = max(1.0 - smoothstep(0.25, 1.4 + 0.8 * age, vE), 0.75 * (1.0 - smoothstep(0.1, 0.55, vR)));
+                        zone = max(zone, 0.30);
+                        half lap = ((!ruralRoof || clay) && _RoofTile.y > 0.001)
+                            ? smoothstep(0.55, 0.95, frac(ru.y / _RoofTile.y)) : 0.0;
+                        half n1 = ValueNoise12(ru * 2.1 + seed);
+                        half n2 = ValueNoise12(ru * 6.7 + seed * 0.7 + 5.0);
+                        half nz = n1 * 0.6 + n2 * 0.4 + 0.18 * lap;
+                        half th = 1.02 - 0.70 * mossK * zone;
+                        half m = smoothstep(th, th + 0.14, nz) * step(0.001, mossK);
+                        albedo = lerp(albedo, half3(0.048, 0.058, 0.030) * (0.75 + 0.5 * n2), m * 0.8);
+                        smooth *= 1.0 - 0.6 * m;
+                    #if defined(_KAMION_WORLD_DETAIL)
+                        half lv = ValueNoise12(ru * 23.0 + seed * 1.9);
+                        half lth = 1.0 - 0.28 * saturate(mossK * 1.3) * (0.5 + 0.5 * zone);
+                        half lic = smoothstep(lth, lth + 0.06, lv) * (1.0 - smoothstep(0.01, 0.03, footprint))
+                                   * (fibre ? 0.9h : galv ? 0.10h : _RoofWeather.z);
+                        albedo = lerp(albedo, half3(0.30, 0.29, 0.22), lic * 0.55);
+                    #endif
                     }
-                    // moss: eave zone (wider on older roofs) and along the ridge, a few tufts anywhere; in the laps
-                    half zone = max(1.0 - smoothstep(0.25, 1.4 + 0.8 * age, vE), 0.75 * (1.0 - smoothstep(0.1, 0.55, vR)));
-                    zone = max(zone, 0.30);
-                    half lap = _RoofTile.y > 0.001 ? smoothstep(0.55, 0.95, frac(ru.y / _RoofTile.y)) : 0.0;
-                    half n1 = ValueNoise12(ru * 2.1 + seed);
-                    half n2 = ValueNoise12(ru * 6.7 + seed * 0.7 + 5.0);
-                    half nz = n1 * 0.6 + n2 * 0.4 + 0.18 * lap;
-                    half th = 1.02 - 0.70 * mossK * zone;
-                    half m = smoothstep(th, th + 0.14, nz) * step(0.001, mossK);
-                    albedo = lerp(albedo, half3(0.048, 0.058, 0.030) * (0.75 + 0.5 * n2), m * 0.8);
-                    smooth *= 1.0 - 0.6 * m;
-                #if defined(_KAMION_WORLD_DETAIL)
-                    half lv = ValueNoise12(ru * 23.0 + seed * 1.9);
-                    half lth = 1.0 - 0.28 * saturate(mossK * 1.3) * (0.5 + 0.5 * zone);
-                    half lic = smoothstep(lth, lth + 0.06, lv) * (1.0 - smoothstep(0.01, 0.03, footprint)) * _RoofWeather.z;
-                    albedo = lerp(albedo, half3(0.30, 0.29, 0.22), lic * 0.55);
-                #endif
                 }
             #endif
 
