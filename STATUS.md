@@ -23,3 +23,6 @@
 
 - [krok 2] Skopiowano dane knyszyn-w i tykocina do prywatnego katalogu derived. Przygotowano pomiar Win64 PC 1920×1080 na sześciu kamerach każdego kafla i osobne przebiegi High w clear i overcast.
 - Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/qa.ps1 -Phase before -Import`.
+
+- [krok 3] Kandydat w `artifacts/codex-props-low-perf-s24/prep/` skompilowany z bieżącymi źródłami i referencjami Roslyn. Wszystkie 30 przypadków NUnit przeszło poza Unity. Źródła używane przez Unity są na etapie referencyjnym, a pomiar czeka na slot Unity.
+- Następny krok po pomiarze bazowym: `Copy-Item artifacts/codex-props-low-perf-s24/prep/WorldInstances.cs,artifacts/codex-props-low-perf-s24/prep/WorldPropTierPolicy.cs game/Assets/_Project/World/Runtime/`.
