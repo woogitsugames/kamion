@@ -16,3 +16,7 @@
 - GOTOWE DO SCALENIA PRZEZ LIDERA.
 - NASTĘPNY KROK (lider): przejrzeć diff na `neon-avenue-s24` i dowody w `artifacts/neon-avenue-s24/sbs/`, scalić gałąź, a następnie w kolejnej fali regeneracji przebudować kafle z szpalerami (`knyszyn-w`, `dk65-01..11`, `dw671-tykocin-*`, `dk65-monki-*`):
   `git merge --no-ff neon-avenue-s24`
+
+## codex-monument-face-s24
+- [krok 1] Przeczytano reguły, ADR 0320 i krytykę. Punkt odniesienia plaza-barn-fix-s24: Rynek 35 678 tris LOD0, głowa 2 600 tris, stan clear w istniejących dowodach.
+- Następny krok: przygotować prywatny kafel i wykonać pomiar bazowy: `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase before`.
