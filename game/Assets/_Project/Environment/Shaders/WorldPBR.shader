@@ -11,7 +11,7 @@
 // the road: road_concrete joints follow the carriageway).
 // Layers (keywords): _ROADWEAR (TEXCOORD_1 = lane coordinate, distance to the carriageway edge: polished wheel paths,
 // gutter grime), _CRACKS (16 m crack layer, faded by the macro wear mask so whole stretches stay sound),
-// _DECAL_PATCH (TEXCOORD_1.x = age: new black patch -> greyed like the road), _DECAL_ALPHA (alpha-blended decals:
+// _DECAL_PATCH (TEXCOORD_1.x = age; TEXCOORD_1.y = kind + seed), _DECAL_ALPHA (alpha-blended decals:
 // oil atlas 2x2 picked by TEXCOORD_1.y, tyre scrub profile across TEXCOORD_0.y, opacity x TEXCOORD_1.y), _GROUNDMASKS (terrain COLOR_0:
 // R road distance / 20 m, G forest floor, B unmown, A bare soil), _SPLASH (walls: splash / dirt zone above the ground
 // from TEXCOORD_0.y = metres above ground).
@@ -928,8 +928,16 @@ Shader "Kamion/World PBR"
             #if defined(_DECAL_PATCH)
                 {
                     half age = saturate(i.uv.z);
-                    albedo = lerp(albedo, albedo * _AgeTint, age * 0.85);
-                    smooth *= 1.0 - 0.45 * age;
+                    // ADR 0335: 1 milled overlay, 2 trench, 3 hot mix, 4 rut fill.
+                    // Kind 0 uses the original mask and age response for yard repairs and old data.
+                    float wRaw = i.uv.w;
+                    float kindF = (wRaw >= 1.0 && wRaw < 5.0) ? floor(wRaw) : 0.0;
+                    bool roadRepair = kindF > 0.5 && _PatchSeam.x > 0.0;
+                    if (!roadRepair)
+                    {
+                        albedo = lerp(albedo, albedo * _AgeTint, age * 0.85);
+                        smooth *= 1.0 - 0.45 * age;
+                    }
                     if (_PatchSeam.x > 0.0)
                     {
                         // UV0 is normalised once per complete repair before chunk clipping (yard_wear.py).
@@ -956,22 +964,19 @@ Shader "Kamion/World PBR"
                         // hand-poured bitumen overband along them.
                         // ADR 0335 P2: keep bitumen overband width physical and even across opposite edges (0.70-1.00 x
                         // _PatchSeam.x, i.e. 4.2-6.0 cm); perimeter gaps modulate opacity (`sealMask`), not width.
-                        float wRaw = i.uv.w;
-                        // ADR 0335: roads.decals encodes the repair KIND in the integer part of TEXCOORD_1.y
-                        // (kind + 0.02 + 0.96 * seed): 1 milled overlay, 2 trench backfill, 3 hot-mix pothole blob,
-                        // 4 rut fill; 0 / older data / yard repairs keep the ADR 0323 mask above.
-                        float kindF = (wRaw >= 1.0 && wRaw < 5.0) ? floor(wRaw) : 0.0;
-                        float seed = kindF > 0.5 ? frac(wRaw) : wRaw;
+                        float seed = roadRepair ? frac(wRaw) : wRaw;
                         float mn = min(sizeM.x, sizeM.y);
-                        float2 on = TransformWorldToObject(pw).xz + seed * 97.0;
+                        float2 objectXZ = TransformWorldToObject(pw).xz;
+                        float2 on = objectXZ + seed * 97.0;
                         float n1 = ValueNoise12(on / 0.9), n2 = ValueNoise12(on / 0.28), n3 = ValueNoise12(on / 0.07);
-                        // road-patches-s24 (critic wave 11 pkt 2, third time "prostokatne laty"): the 2-12 cm outline noise of
-                        // ADR 0335 sat at 0.07-0.9 m wavelengths - from the cab (10-40 m, 1.5-6 cm per pixel) every edge read as a
-                        // ruler line. Low-frequency wander (0.55 / 1.6 m) of 5-15 cm per patch, spalled bites (0.35 m noise,
-                        // up to 12 cm deep) and kind-specific cuts (skewed / staggered mill ends, L-notched trenches).
-                        float wob = (ValueNoise12(on / 1.6 + 13.0) - 0.5) * 0.7 + (ValueNoise12(on / 0.55 + 29.0) - 0.5) * 0.3;
-                        float wobAmp = 0.05 + 0.10 * frac(seed * 6.17);                              // 5-15 cm per patch
-                        float bite = smoothstep(0.74, 0.92, ValueNoise12(on / 0.35 + 61.0)) * (0.05 + 0.07 * frac(seed * 2.33));
+                        // Keep the sub-pixel teeth from aliasing in a grazing view. The broad inset
+                        // still breaks up the profile when the fine teeth fade.
+                        float2 gp = on - 45.0 * floor(on / 45.0);
+                        float fpx = max(length(fwidth(pw.xz)), 1e-4);
+                        float broad = ValueNoise12(on / 0.72 + 13.0);
+                        float chips = ValueNoise12(gp / 0.095 + 29.0);
+                        float bite = min(mn * 0.19, 0.025 + 0.20 * broad * broad
+                                                 + 0.045 * chips * saturate(0.095 / fpx));
                         float aa;
                         // bitumen overband 2-4 cm (_PatchSeam.x = 0.032 m -> 2.2-3.2 cm), straddling the cut
                         float baseSw = _PatchSeam.x * (0.70 + 0.30 * n2);
@@ -1002,7 +1007,7 @@ Shader "Kamion/World PBR"
                             float sk = (i.uv.x < 0.5 ? frac(seed * 17.3) : frac(seed * 23.9)) - 0.5;
                             sk *= 0.10;
                             float endD = borderM.x - (sk * vY + 0.5 * abs(sk) * sizeM.y) - 0.004 * (n3 - 0.5);
-                            float latD = borderM.y - wobAmp * saturate(0.5 + 2.0 * wob) - bite - 0.02 * (n2 - 0.5);
+                            float latD = borderM.y - bite;
                             float rcn = min((0.04 + 0.16 * frac(seed * 7.13)) * (0.3 + 1.4 * n1), 0.4 * mn);
                             edgeM = RoundedInset(float2(endD, latD), rcn) - 0.006 * n3;
                             // staggered end: subtract the box {distance to that end < st, on one lateral half}
@@ -1022,7 +1027,7 @@ Shader "Kamion/World PBR"
                             // bites along the cut; 45 % L-shaped (a corner box of 25-45 % x 30-55 % never dug: the trench turns or
                             // a second, shorter cut), a continuous hand-poured overband, worn in stretches. WORKING_VALUE.
                             float rc = min(frac(seed * 3.3) < 0.5 ? 0.02 + 0.04 * frac(seed * 7.13) : 0.12 + 0.28 * frac(seed * 7.13), 0.45 * mn);
-                            float2 bW = borderM - wobAmp * saturate(0.5 + 2.0 * wob) - bite;
+                            float2 bW = borderM - bite;
                             edgeM = RoundedInset(bW, rc);
                             edgeM -= 0.012 * (n2 - 0.5) + 0.006 * n3;
                             half notch = (half)step(frac(seed * 9.7), 0.45) * (half)step(1.4, mn);
@@ -1054,10 +1059,9 @@ Shader "Kamion/World PBR"
                             // pointed / ragged ends over the first 12 % of the length, soft sides with 3-6 cm noise.
                             float t = 1.0 - abs(i.uv.x * 2.0 - 1.0);               // 0 at the ends, 1 in the middle
                             float taper = smoothstep(0.0, 0.14, t);
-                            float2 ro = TransformWorldToObject(pw).xz;
-                            float wv = 0.6 + 0.55 * ValueNoise12(ro / 3.2 + seed * 31.0);
+                            float wv = 0.6 + 0.55 * ValueNoise12(objectXZ / 3.2 + seed * 31.0);
                             float latD = (0.5 - abs(i.uv.y - 0.5)) * sizeM.y - 0.5 * sizeM.y * (1.0 - wv * lerp(0.15, 1.0, taper));
-                            float endD = borderM.x - 0.25 * ValueNoise12(ro / 0.5 + seed * 7.0) - 0.02;
+                            float endD = borderM.x - 0.25 * ValueNoise12(objectXZ / 0.5 + seed * 7.0) - 0.02;
                             edgeM = min(latD - 0.045 * (n2 * 0.7 + n1 * 0.5) - bite, endD);
                             fth = 0.035;
                             hasSeal = step(frac(seed * 11.7), 0.3);
@@ -1075,49 +1079,41 @@ Shader "Kamion/World PBR"
                         // box-filtered band |edgeM| < sHalf; sub-pixel bands keep (roughly) their area instead of vanishing
                         half seam = (half)(saturate((sHalf + 0.5 * aa - abs(edgeM)) / aa) * saturate(3.0 * sHalf / aa))
                                   * (half)step(0.001, sw) * sealMask;
-                        alpha = max(alphaPatch, seam * 0.94h);
-                        // per-patch tone: 0.88-1.14 x (batch of mix), mottled inside by the 0.9 m noise
-                        half tone = (half)((0.88 + 0.26 * frac(seed * 13.3)) * (kindF > 0.5 ? (1.0 + (0.03 + 0.09 * age) * (n1 - 0.5) * 2.0) * (0.97 + 0.06 * n3) : (0.93 + 0.14 * n1)));
-                        // r2 (render r1, dw671 cab-view-b: an old milled overlay measured 1.17x the road in sRGB, ~1.4x linear -
-                        // the road also carries wheel-path / drip darkening the decal does not): aged end x0.82. WORKING_VALUE.
-                        albedo *= lerp(_PatchSeam.z, _PatchSeam.w * 0.82, age) * tone;
-                        // road-patches-s24: inherit the tone of the stretch (KamionRoadTone, same as the ribbon under it): an old
-                        // repair has weathered with the road (full tone), a fresh one only partly (the 90 m bleaching came later).
-                        albedo *= lerp(half3(1, 1, 1), KamionRoadTone(TransformWorldToObject(pw).xz), (half)lerp(0.6, 1.0, saturate(age * 2.0)));
-                        if (kindF > 0.5)
+                        half3 roadTone = KamionRoadTone(objectXZ);
+                        if (roadRepair)
                         {
-                            // ADR 0335 (render r1: patches read as flat dark plates): aggregate grain (3.5 cm and 13 cm
-                            // value noise, the fine one fades with the pixel footprint) and macro mottling; an old repair
-                            // ravels along its edge (lighter 0-6 cm rim). WORKING_VALUE.
-                            float fpx = max(length(fwidth(pw.xz)), 1e-4);
-                            // The lattice hash (Hash12) loses precision at cell indices of 1e4-1e5 and turns into 0.5-1 m
-                            // blotches (render r5: translucent-looking clouds in a trench patch): wrap the object-space
-                            // coordinate to a 45 m period first - the break of a wrap line is invisible in random grain.
-                            float2 gp = on - 45.0 * floor(on / 45.0);
-                            half grain = (half)((ValueNoise12(gp / 0.035) - 0.5) * 0.30 * saturate(0.05 / fpx)
-                                               + (ValueNoise12(gp / 0.13 + 7.0) - 0.5) * 0.15);
-                            // light aggregate flecks in the (dark) binder, fading with distance
-                            half fleck = (half)smoothstep(0.70, 0.86, ValueNoise12(gp / 0.011 + 3.0)) * (half)saturate(0.04 / fpx);
-                            albedo += fleck * 0.018h * (1.0h - 0.5h * age);
-                            // a fresh overlay is binder-rich and closed (finer, weaker grain); an old one shows its aggregate
-                            albedo *= (1.0 + grain * lerp(0.55h, 1.15h, age)) * (0.96 + 0.08 * macro.a);
-                            albedo *= 1.0 + 0.12 * age * (1.0 - smoothstep(0.0, 0.06, edgeM));
-                            tn = normalize(lerp(tn, half3(0, 0, 1), 0.35h * (1.0h - age)));
-                        }
-                        // fresh hot-mix is warm black, not blue-grey (critic r3)
-                        albedo *= lerp(half3(1.06, 1.0, 0.93), half3(1, 1, 1), (half)saturate(age * 1.6));
-                        albedo *= (half)lerp(0.8, 1.0, saturate(age * 3.0));      // a fresh overlay is clearly darker than the road
+                            // The clean scan is calibrated at 0.062 linear; worn asphalt
+                            // starts at 0.08 * 0.90 before traffic wear. Use the whole local
+                            // road tone at every age. Some young batches have light aggregate.
+                            half batch = (half)lerp(0.93, 1.02, frac(seed * 13.3));
+                            half young = 1.0h - (half)smoothstep(0.15, 0.5, age);
+                            half pale = (half)step(0.55, frac(seed * 19.13)) * young;
+                            half grain = (half)((ValueNoise12(gp / 0.035) - 0.5) * 0.18 * saturate(0.05 / fpx)
+                                               + (ValueNoise12(gp / 0.13 + 7.0) - 0.5) * 0.09);
+                            albedo *= roadTone * (0.072h / 0.062h) * (batch + 0.11h * pale)
+                                    * (1.0h + grain * lerp(0.5h, 1.0h, age) + 0.035h * (n1 - 0.5h));
+                            smooth = min(smooth, lerp(0.12h, 0.10h, age));
+                            tn = normalize(lerp(tn, half3(0, 0, 1), 0.28h * young));
 
-                        // bitumen overband: dark, smoother when fresh, dusty grey-matt when old; it fills the texture
-                        albedo *= 1.0 - seam * _PatchSeam.y * lerp(1.0, 0.55, age);
-                        if (kindF > 0.5) smooth *= lerp(1.12, 0.9, age);
-                        // road-patches-s24 r3: the asphalt_patch set (clean_asphalt scan) has mean smoothness 0.34 vs 0.10 of the
-                        // worn road set; at the cab's grazing view the patch mirrored the sky and read as a PALE plate whatever its
-                        // albedo (probe: smooth = 0 on a third of the patch brought it to the road tone; dw671 cab-view-b +17 % sRGB
-                        // in clear and overcast). A fresh repair is a little closer-textured than the road, an old one the same.
-                        smooth = min(smooth, (half)lerp(0.17, 0.11, age));
-                        // the overband: low gloss too (ADR 0131: a glossy dark sealant out-reflects its 0.03 albedo at grazing view)
-                        smooth = lerp(smooth, lerp(0.22, 0.14, age), seam);
+                            // Even a saw-cut trench has intact stretches between spots
+                            // of sealant. Keep the centre opaque where repairs cover paint.
+                            seam *= (half)smoothstep(0.48, 0.73, ValueNoise12(on / 0.46 + 53.0));
+                            alpha = max(alphaPatch * ((kindF == 2.0 || kindF == 3.0) ? 1.0h : 0.84h), seam * 0.58h);
+                            albedo *= 1.0h - seam * _PatchSeam.y * lerp(0.55h, 0.30h, age);
+                            smooth = lerp(smooth, 0.13h, seam);
+                        }
+                        else
+                        {
+                            alpha = max(alphaPatch, seam * 0.94h);
+                            half tone = (half)((0.88 + 0.26 * frac(seed * 13.3)) * (0.93 + 0.14 * n1));
+                            albedo *= lerp(_PatchSeam.z, _PatchSeam.w * 0.82, age) * tone;
+                            albedo *= lerp(half3(1, 1, 1), roadTone, (half)lerp(0.6, 1.0, saturate(age * 2.0)));
+                            albedo *= lerp(half3(1.06, 1.0, 0.93), half3(1, 1, 1), (half)saturate(age * 1.6));
+                            albedo *= (half)lerp(0.8, 1.0, saturate(age * 3.0));
+                            albedo *= 1.0 - seam * _PatchSeam.y * lerp(1.0, 0.55, age);
+                            smooth = min(smooth, (half)lerp(0.17, 0.11, age));
+                            smooth = lerp(smooth, lerp(0.22, 0.14, age), seam);
+                        }
                         tn = normalize(lerp(tn, half3(0, 0, 1), seam * 0.8h));
                     }
                 }

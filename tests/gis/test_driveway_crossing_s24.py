@@ -79,6 +79,25 @@ def test_driveway_ramp_reuses_continuous_shoulder_in_both_meshes():
         np.testing.assert_allclose(gravel.V[1::2, 1], 4.58)
 
 
+def test_rural_driveway_joins_at_final_asphalt_toe():
+    from roads.meshing import MeshBuf
+
+    carriage = _carriage(hw=3.8)
+    roads = _carriage(hw=8.0)
+    gate = {"m": np.array([100.0, 9.0]), "n": np.array([0.0, -1.0]), "w": 3.5}
+    plot = {"lay": {"gate": gate}, "access": {"d_cw": 5.42, "kind": NW.RURAL}, "surface": "gravel"}
+    surf = SimpleNamespace(top=lambda e, n: 99.964 - 0.03 * (n - 3.8))
+    buf = MeshBuf()
+    assert PLT._verge_overlay(buf, plot, surf, "drive", lambda p: surf.top(*p), roads, carriage) == 1
+    overlay = next(p for p in buf.parts if p.src == "drive:verge")
+    # The join follows the widened asphalt edge, with clearance for the footprint
+    # grid and enough height to resolve depth ordering over the shoulder.
+    assert 3.8 < overlay.V[:, 1].min() < 3.82
+    toe = overlay.V[np.isclose(overlay.V[:, 1], overlay.V[:, 1].min())]
+    lift = toe[:, 2] - np.array([surf.top(e, n) for e, n in toe[:, :2]])
+    assert np.all((lift > 0.0) & (lift < 0.005))
+
+
 def test_drive_material_follows_the_plot_surface():
     assert PLT.drive_mat({"surface": "gravel"}) == PLT.DRIVE_GRAVEL_MAT
     assert PLT.drive_mat({"surface": "paving"}) == PLT.DRIVE_MAT

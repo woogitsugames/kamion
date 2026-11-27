@@ -28,3 +28,6 @@
 
 - [krok 3] Pełny audyt kopii z main: 80/128 GLB różni się od manifestu. Uruchomiono bazową regenerację na kodzie przed zmianą. Przygotowano pomiar PNG i dopiski ADR.
 - Następny krok: dokończyć `pwsh artifacts/codex-patches-edges-s24/baseline.ps1`, potem sprawdzić PNG clear i overcast.
+
+- [krok 4] Stan wyjściowy przebudowany (470,4 s po ekstrakcji), import Win64 OK, 13/13 kamer High PC w clear i overcast. Przejrzano ujęcie DK65 i zbliżenia zjazdów. Włączono kalibrację, maskę i przerywaną zalewkę łaty w shaderze.
+- Następny krok: `pwsh artifacts/codex-patches-edges-s24/qa.ps1 -Stage after`.
