@@ -1,12 +1,6 @@
-# STATUS weathering-s24 (dachy: zabrudzenia/mech/przebarwienia; ogrodzenia bloczkowe; pas brudu styk sciana-grunt; ADR 0238/0348 dopisek)
+# STATUS far-forest-look-s24 (daleki plan lasu: smugi kurtyn, perspektywa powietrzna, widok z wysoka; dopiski ADR 0330/0354)
 
-- Worktree `agent-a05410a22b79fbf0c`, galaz `worktree-agent-a05410a22b79fbf0c`; prywatna kopia `Data/raw/derived/{tykocin,dw671-tykocin-03}` (reszta derived = junction do main), Library z win-build (Win64).
-- [krok 0] Kamery dowodowe `wx_zlota_fence`, `wx_zlota_plinth`, `wx_roofs_low` (tools/worldgen/qa/weathering_cameras.py). Render PRZED (import Win64 + VQA High clear/overcast) w tle: `artifacts/weathering-s24/vqa.ps1 -Phase before`.
-- NASTEPNY KROK: kod generatora (roofs COLOR_0) + shader `_ROOF_WEATHER`, pas `_SplashBand`, warianty ogrodzen bloczkowych.
-- [krok 1] Generator: roofs.weather_col (COLOR_0 r wiek, g mech x ekspozycja N/S, b m pod kalenica/6, a 0.5+0.5 ziarno), BM.roof_age_class/roof_weather (opt-in `facade_rules: roof_weathering: true`); materials ROOF_WEATHER (siatka dachowek setu) + SPLASH_BAND; plot_kit `_concrete` przepisany (bloczki z polwiazaniem, ton per bloczek, zacieki spod czapy, brudna stopka); plots.block_variant (split/split_cap/smooth/smooth_cap x 5 kolorow, opt-in `block_fence_variants: true`). Overrides tykocin + dw671-tykocin-03. Test tests/gis/test_weathering_s24.py.
-- NASTEPNY KROK: po zakonczeniu render PRZED: `uv run --no-project python <scratchpad>/wx_shader.py` + `wx_cs.py` (shader _ROOF_WEATHER/_SplashBand + importer), build_world obu kafli, `vqa.ps1 -Phase after`.
-- [krok 2] Render PRZED (tykocin + dw671-03, High clear/overcast) gotowy: artifacts/weathering-s24/before/. Shader+importer wlaczone; pierwszy PO dla tykocin: efekt za slaby (diag colorby:vcol potwierdza COLOR_0 na dachach) -> wzmocnione (zacieki z filmem brudu, wiecej dachowek-odmiencow, mech), wiek "new" 0,15-0,35.
-- NASTEPNY KROK: chain2.ps1 (przebudowa obu kafli + vqa -Phase after) w toku; potem sbs, crop 1:1, liczby DC/tris ze stats.txt, ADR liczby.
-- [krok 3] Przebudowa obu kafli (prywatne derived), import Win64 + VQA PO (High clear/overcast), strojenie shadera (odmiency 3-13 % w grupach, mech ciemniejszy, drobiny rozpryskow z jitterem). DC dw671-03 +0; tykocin zestaw materialow bez zmian (DC +2..+16 = nieaktualna baza markings/furniture z fali 11), tris -1,0..+0,2 %. pytest: test_weathering_s24 + 0348 + tint_contract + typology_0238 (bit-identycznosc) zielone; EditMode 1476/1477 (1 fail NavVoicePlayer0328 = brak zaimportowanego banku glosu w worktree, niezwiazany).
-- Dowody: artifacts/weathering-s24/{before,after,sbs,diag} (kopia w main artifacts/weathering-s24). ADR 0238 + 0348 dopiski.
-- NASTEPNY KROK (lider): review + scalenie; po scaleniu `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region tykocin` i `--region dw671-tykocin-03` w main + `pwsh scripts/import-region.ps1 -Region <id> -BuildTarget Win64`; visual-critic na sbs/.
+- Worktree `agent-a3176de6fa331c9d3`, galaz `worktree-agent-a3176de6fa331c9d3`. Nie scalac (lider).
+- [krok 0] Analiza: UV kurtyn far_north dw671-03 (glb main) — shear <= 14,6 deg, aniso u/v <= 2,5 => geometria UV NIE jest zrodlem smug 30 deg.
+  d_extra (TEXCOORD_1.x) obecne (p50 434 m N). Kopia Library + scen z win-build w tle (`artifacts/far-forest-look-s24/copy-env.ps1`).
+- NASTEPNY KROK: render PRZED (visual-qa -Neighbours auto, dw671-tykocin-03 + knyszyn-w, High clear/overcast) i diagnoza w Unity.
