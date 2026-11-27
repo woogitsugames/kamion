@@ -59,6 +59,7 @@ Shader "Kamion/Vegetation"
         #pragma multi_compile_local _ _IMPOSTOR _HLOD_EDGE
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;
+            float4 _BaseMap_TexelSize;
             half4 _BaseColor;
             half _Cutoff;
             half _Transmission;
@@ -208,6 +209,22 @@ Shader "Kamion/Vegetation"
         #endif
         }
 
+        // crown-lod-s24: a minified leaf card resolves its leaf gaps to single pixels - with a fixed 0.5 cutoff every crown
+        // beyond ~2 texels per pixel read as a speckle of sky pixels (player A/B build #10: 0.2 % isolated sky pixels in a
+        // crown with A2C, 0.9 % without). Where the texture is minified (mip level > 1) the cutoff is lowered by up to
+        // _KamionTreeFade.w (global, WorldInstances; 0 = off): gaps narrower than a pixel close, larger ones stay.
+        // Same derivative-based value in the depth and colour passes. Not on the faded-out cards (cutoff > 1).
+        half VegCutoffFill(float2 uv, half cutoff)
+        {
+        #if defined(_HLOD_EDGE)
+            return cutoff;
+        #else
+            float2 t = uv * _BaseMap_TexelSize.zw;
+            float m = 0.5 * log2(max(max(dot(ddx(t), ddx(t)), dot(ddy(t), ddy(t))), 1e-8));
+            return cutoff >= 1.0 ? cutoff : cutoff - (half)(_KamionTreeFade.w * saturate(m - 1.0));
+        #endif
+        }
+
         // far-forest-look-s24 (ADR 0330 addendum 3): far-field curtains carry the column height H [m] in TEXCOORD1.y
         // (same on the bottom and top vertex of a column). v * H and H are affine across both triangles of a quad whose
         // columns differ in height, so v = (v * H) / H follows each column linearly: no diagonal crease or sheared crowns
@@ -274,6 +291,7 @@ Shader "Kamion/Vegetation"
                 i.uv = EdgeUV(i.uv);
             #endif
                 half a = VegAlpha(i.uv, i.t.x);
+                i.t.y = VegCutoffFill(i.uv.xy, i.t.y);
                 // Alpha-to-coverage path still discards the fully uncovered texels (as URP Lit): the coverage mask alone
                 // is not applied on every target (A16 Vulkan: cards rendered as opaque quads without this clip).
                 if (_AlphaToMask > 0.5) { half c = CoverageAlpha(a, i.t.y); clip(c - 0.0001); return half4(0, 0, 0, c); }
@@ -451,6 +469,7 @@ Shader "Kamion/Vegetation"
                 // Same coverage as the depth pass: fragments outside the leaf would otherwise paint over samples whose
                 // depth is still the background's.
                 half alpha = 1.0;
+                i.fogFactor.y = VegCutoffFill(i.uv.xy, i.fogFactor.y);
                 if (_AlphaToMask > 0.5) { alpha = CoverageAlpha(tex.a, i.fogFactor.y); clip(alpha - 0.0001); }
                 else clip(tex.a - i.fogFactor.y);
             #if !defined(_HLOD_EDGE)

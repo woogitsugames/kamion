@@ -114,6 +114,9 @@ namespace Game.World
         static readonly int k_LodFadeEnd = Shader.PropertyToID("_LodFadeEndM");
         /// <summary>crown-lod-s24: cross-fade band = last 25 % of the LOD1 distance (WORKING_VALUE; High 67.5-90 m).</summary>
         public const float TreeFadeBand = 0.25f;
+        /// <summary>crown-lod-s24: alpha cutoff reduction of minified leaf cards / impostors (Kamion/Vegetation VegCutoffFill;
+        /// WORKING_VALUE from the knyszyn-w spawn view; rq_leaffill A/B).</summary>
+        public const float LeafMipFill = 0.15f;
         float m_PoleCull;
 
         // Vegetation settings of the active tier (QualityProfile, ADR 0012 / device runs); the serialized fields below are
@@ -420,7 +423,7 @@ namespace Game.World
             float far = cam.farClipPlane, far2 = far;   // far2: the chunk-merge loop runs before cells (same limit)
             float treeLs = Mathf.Min(scale, m_TreeCard) * RenderOverrides.AbTreeCardScale;
             bool fade = m_LodFade && m_FadeEnd != null && m_SimpleFoliage;
-            Shader.SetGlobalVector(k_TreeFade, new Vector4(treeLs, TreeFadeBand, fade ? 1f : 0f, 0f));
+            Shader.SetGlobalVector(k_TreeFade, new Vector4(treeLs, TreeFadeBand, fade ? 1f : 0f, RenderOverrides.LeafFill ?? LeafMipFill));
             // Power-line conductors (Kamion/World Wire) fade out with the cull distance of the poles that carry them
             // (REVIEW r4 W-H2: wires hung in the air over the DK8 forest on Low after the poles were culled).
             if (m_PoleCull > 0f)
