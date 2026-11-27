@@ -247,6 +247,10 @@ def main() -> None:
         write_sfx(name, x, is_loop, "ext", grp)
         write_sfx(s76.cab_name(name, is_loop), limit(sl.cab_filter(x, is_loop, prof)), is_loop, "cab", grp)
 
+    from cab_mechanisms import clips as cab_mechanism_clips
+    for name, x, perspective in cab_mechanism_clips():
+        write_sfx(name, x, False, perspective, "mech")
+
     if not args.no_previews:
         for n_ in ("tyre_concrete_loop", "tyre_cobbles_loop", "tyre_squeal_loop", "retarder_loop", "compressor_loop"):
             x, _ = sf.read(OUT / "sfx" / f"{n_}.wav")

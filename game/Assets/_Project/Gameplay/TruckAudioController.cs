@@ -34,7 +34,7 @@ namespace Game.Gameplay
     /// recordings in both sets (no procedural version exists).
     /// </summary>
     [DefaultExecutionOrder(250)]
-    public sealed class TruckAudioController : MonoBehaviour, IEngineAudioState
+    public sealed partial class TruckAudioController : MonoBehaviour, IEngineAudioState
     {
         public VehicleBody vehicle;
         public CameraRig rig;
@@ -181,6 +181,7 @@ namespace Game.Gameplay
             go.SetActive(true);
 
             m_OneShot = Source("Pneumatics", null, false, new Vector3(0f, 0.9f, wb * 0.5f), 64);
+            SetupCabMechanisms(wb);
             var road = new Vector3(0f, 0.5f, wb * 0.5f);
             for (int i = 0; i < LayerMath.SurfaceCount; i++)
             {
@@ -363,6 +364,7 @@ namespace Game.Gameplay
 
             var m = vehicle.Model;
             float v = Mathf.Abs((float)m.SpeedForward);
+            UpdateCabMechanisms(m, v * 3.6f, dt, spatial);
             float vn = Mathf.Clamp01(v / 25f);
             UpdateTyres(m, v, dt);
             if (m_Wind.Valid) m_Wind.Set(windVolume * Mathf.Lerp(1f, m_El ? elCabWindFactor : cabWindFactor, m_Interior) * Mathf.Pow(vn, 2.2f), 1f, m_Interior);
@@ -660,6 +662,6 @@ namespace Game.Gameplay
         }
 
         /// <summary>Called after a respawn: avoids one-shots for the state jump.</summary>
-        public void ResetEvents() { m_Drive.Reset(); m_HasPrev = false; m_BrakePeak = 0f; m_BrakeHeld = 0f; m_PrevCouple = -1; m_BumpCooldown = 0.5f; }
+        public void ResetEvents() { m_Drive.Reset(); m_HasPrev = false; m_BrakePeak = 0f; m_BrakeHeld = 0f; m_PrevCouple = -1; m_BumpCooldown = 0.5f; m_BrakeSquealGate = default; }
     }
 }

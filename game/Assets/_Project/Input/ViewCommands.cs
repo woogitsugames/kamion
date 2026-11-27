@@ -15,11 +15,12 @@ namespace Game.Controls
         public bool ToggleMirrorInsets;
         /// <summary>One-shot: monitor HUD minimal / extended (ADR 0283).</summary>
         public bool ToggleHudDetail;
+        public bool CycleWipers;
         /// <summary>Horn held.</summary>
         public bool Horn;
         /// <summary>Look-around rate this frame [deg/s], x = yaw right, y = pitch up (already shaped).</summary>
         public Vector2 LookDegS;
 
-        public void Clear() { CycleCamera = false; ToggleMirrorInsets = false; ToggleHudDetail = false; Horn = false; LookDegS = Vector2.zero; }
+        public void Clear() => this = default;
     }
 }

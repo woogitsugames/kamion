@@ -213,7 +213,7 @@ namespace Game.Editor.VisualQA
                 RenderTextureMirror.ForceRender = RenderTextureMirror.ForceWide = qa.includeDrivingHud && qa.drivingHudMirrorInsets;
                 foreach (var m in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None)) m.RenderNow();
                 MirrorDump.BenchOnce();   // ADR 0342: KAMION_MIRROR_BENCH=1 - GPU cost of the mirror configurations (interleaved, synced)
-                // Optional steering-wheel handwheel angle (deg, positive = clockwise / right turn, matching VehicleVisuals).
+                // Optional steering-wheel angle and wiper pose, matching VehicleVisuals.
                 var savedSteer = new System.Collections.Generic.List<(Transform t, Quaternion rot)>();
                 string steerArg = EditorTools.Arg("-qaSteerDeg", null);
                 if (!string.IsNullOrEmpty(steerArg) && float.TryParse(steerArg, System.Globalization.NumberStyles.Float,
@@ -225,6 +225,23 @@ namespace Game.Editor.VisualQA
                         savedSteer.Add((vv.steeringWheel, vv.steeringWheel.localRotation));
                         vv.steeringWheel.localRotation = vv.steeringWheel.localRotation * Quaternion.AngleAxis(-steerDeg, Vector3.forward);
                     }
+                }
+                string wiperArg = EditorTools.Arg("-qaWiperPhase", null);
+                if (!string.IsNullOrEmpty(wiperArg))
+                {
+                    float phase = float.Parse(wiperArg, System.Globalization.CultureInfo.InvariantCulture);
+                    int found = 0;
+                    foreach (var vv in UnityEngine.Object.FindObjectsByType<VehicleVisuals>(FindObjectsSortMode.None))
+                    {
+                        var (left, right) = vv.FindWipers();
+                        if (left == null || right == null) continue;
+                        found++;
+                        savedSteer.Add((left, left.localRotation));
+                        savedSteer.Add((right, right.localRotation));
+                        left.localRotation *= WiperDrive.Rotation(phase, WiperDrive.LeftSweepDegrees);
+                        right.localRotation *= WiperDrive.Rotation(phase, WiperDrive.RightSweepDegrees);
+                    }
+                    if (found == 0) throw new InvalidOperationException("Wiper pose requested, but no TRAKT wiper pivots were found");
                 }
                 // Art truck (A7): tier binding, lamp state and the cab fill for this camera (LateUpdate does not run here).
                 foreach (var rig in UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)) rig.Apply();

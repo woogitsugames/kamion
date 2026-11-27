@@ -165,6 +165,7 @@ namespace Game.Editor.Audio
             lib.crowCaw = Pair("bird_crow_caw", "bird_crow_caw_cab");
             lib.indicatorTick = Pair("indicator_tick", "indicator_tick_cab");
             lib.indicatorTock = Pair("indicator_tock", "indicator_tock_cab");
+            WireCabMechanisms(lib);
             lib.birdSparrow = Sfx("bird_sparrow");
             lib.birdTit = Sfx("bird_tit");
             // ADR 0176 (tools/audio/synth0176.py)
@@ -287,6 +288,30 @@ namespace Game.Editor.Audio
             lib.elTyreSqueal = Pair("el_tyre_squeal_loop", "el_tyre_squeal_cab_loop");
             Debug.Log($"[AUDIO] ElevenLabs set imported: {man.clips.Length} loops, {man.sfx.Length} sfx ({man.generator})");
             return man.clips.Length + man.sfx.Length;
+        }
+
+        /// <summary>Refresh the four procedural pairs without regenerating the rest of the bank.</summary>
+        public static void ImportCabMechanismsBatch()
+        {
+            var lib = AssetDatabase.LoadAssetAtPath<VehicleAudioLibrary>(ResourcesDir + "/VehicleAudioLibrary.asset");
+            if (lib == null) throw new InvalidOperationException("VehicleAudioLibrary missing; run ImportBatch first");
+            WireCabMechanisms(lib);
+            if (!lib.wiperDry.IsValid || !lib.wiperWet.IsValid || !lib.wiperPark.IsValid || !lib.brakeServiceSqueal.IsValid ||
+                lib.wiperDry.cab == null || lib.wiperWet.cab == null || lib.wiperPark.cab == null || lib.brakeServiceSqueal.cab == null)
+                throw new InvalidDataException("Missing procedural WAVs in " + ClipsDir + "/sfx");
+            EditorUtility.SetDirty(lib);
+            AssetDatabase.SaveAssets();
+        }
+
+        static void WireCabMechanisms(VehicleAudioLibrary lib)
+        {
+            AudioClip LoadClip(string name) => AssetDatabase.LoadAssetAtPath<AudioClip>($"{ClipsDir}/sfx/{name}.wav");
+            VehicleAudioLibrary.PerspectivePair Pair(string name) =>
+                new VehicleAudioLibrary.PerspectivePair { ext = LoadClip(name), cab = LoadClip(name + "_cab") };
+            lib.wiperDry = Pair("wiper_dry");
+            lib.wiperWet = Pair("wiper_wet");
+            lib.wiperPark = Pair("wiper_park");
+            lib.brakeServiceSqueal = Pair("brake_service_squeal");
         }
 
         static T LoadOrCreate<T>(string path) where T : ScriptableObject

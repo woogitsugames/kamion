@@ -35,6 +35,7 @@ namespace TruckSim.Audio
         public AudioClip birdSparrow, birdTit;
         [Tooltip("ADR 0145: tyre scrub in tight slow turns (procedural placeholder, tools/audio/sfx_layers.tyre_scrub_loop).")]
         public PerspectivePair tyreScrub;
+        public PerspectivePair wiperDry, wiperWet, wiperPark, brakeServiceSqueal;
 
         [Header("ADR 0176: synthesised driveline layers (tools/audio/synth0176.py; no free recording exists)")]
         [Tooltip("Retarder rotor blade-pass tone and oil-flow loops at 1000 rpm propshaft (pitch = shaft rpm / 1000).")]

@@ -44,6 +44,9 @@ namespace Game.Vehicle.Runtime
         public VehicleDataAsset Data => data;
         public bool Initialized => Model != null;
         public UnityGroundQuery Ground => m_Ground;
+        public WiperDrive Wipers { get; } = new WiperDrive();
+
+        void Update() => Wipers.Step(Time.deltaTime);
 
         /// <summary>Driver command used for the next fixed step (set by the input bridge or by tests).</summary>
         public DriverInput Input;
