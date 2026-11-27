@@ -39,8 +39,8 @@
 #define KF_TRAM_M 18.0          // WORKING_VALUE: tramline spacing (sprayer boom 18 m), two wheel tracks 1.8 m apart
 #define KF_OWN_SHARE 0.55      // Podlasie strip farms: neighbouring strips are separate holdings (own crop)
 #define KF_HEADLAND_M 9.0      // WORKING_VALUE: headland (uwrocie) at the strip end, ~ one sprayer pass
-#define KF_BAULK_MIN_M 1.0     // WORKING_VALUE: baulk (miedza) width range, per strip edge
-#define KF_BAULK_SPAN_M 1.6
+#define KF_BAULK_MIN_M 0.4     // WORKING_VALUE: baulk (miedza) width range, per strip edge (r4b: 0.4-1.2 m, a typical
+#define KF_BAULK_SPAN_M 0.8    // Podlasie miedza; r1-r4: 1.0-2.6 m read as a grass track between two stands)
 // ADR 0334 r2 (fields2-s24, critic build #8 P1#6): the strip edges meander - value noise of 71 / 17 / 5 m cells added
 // to the strip coordinate (metres peak-to-peak). Python mirror: vegetation.field_wobble (salts 983, 953, 951).
 #define KF_WOB_L_M 71.0
