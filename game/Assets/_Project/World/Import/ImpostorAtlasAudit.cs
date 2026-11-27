@@ -34,7 +34,7 @@ namespace Game.World.Import
                     {
                         // the PC settings of InstanceImporter.ImportTexture (kept in sync by hand; measurement only)
                         ti.npotScale = InstanceImporter.ImpostorNpotScale;
-                        ti.maxTextureSize = InstanceImporter.ImpostorMaxSize;
+                        ti.maxTextureSize = p.EndsWith("_n.png") ? InstanceImporter.ImpostorNormalMaxSize : InstanceImporter.ImpostorMaxSize;
                         ti.SaveAndReimport();
                     }
                     ti.GetSourceTextureWidthAndHeight(out int sw, out int sh);

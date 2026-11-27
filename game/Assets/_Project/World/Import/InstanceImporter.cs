@@ -728,6 +728,8 @@ namespace Game.World.Import
         /// <summary>PC importer of the tree impostor atlases (impostor_tree_*.png / _n.png; ImpostorAtlasAudit measures it).</summary>
         public const TextureImporterNPOTScale ImpostorNpotScale = TextureImporterNPOTScale.ToNearest;
         public const int ImpostorMaxSize = 2048;
+        /// <summary>_n (normal + sky visibility) at half the albedo resolution on the GPU, as ADR 0023 (smooth crown normals).</summary>
+        public const int ImpostorNormalMaxSize = 1024;
 
         public static Texture2D ImportTexture(RegionImporter.Result r, string png, bool clamp, bool linear = false)
         {
@@ -771,7 +773,7 @@ namespace Game.World.Import
             }
             ti.filterMode = FilterMode.Trilinear;
             ti.anisoLevel = forestEdge ? 8 : (text ? 4 : 2);
-            ti.maxTextureSize = farAtlas && !linear ? 4096 : file.StartsWith("impostor_tree_") ? ImpostorMaxSize : 2048;
+            ti.maxTextureSize = farAtlas && !linear ? 4096 : file.StartsWith("impostor_tree_") ? (linear ? ImpostorNormalMaxSize : ImpostorMaxSize) : 2048;
             // explicit: NPOT atlases with npotScale None are stored uncompressed (ADR 0025). Tree impostors are power-of-two
             // since impostor-rebake-s24 (4096 x 1024 strip, _n 2048 x 512): the PC max size (2048) gives a 2x supersampled
             // 2048 x 512 copy at the old memory (the 1536 x 384 strip used to be stretched up to 2048 x 512).
