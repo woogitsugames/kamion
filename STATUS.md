@@ -30,3 +30,5 @@
 - Następny krok: `pwsh artifacts/codex-dash-items-s24/qa.ps1 after`
 - [krok 6] Budżety GIS: 62/62 passed (0221, 0238, world v31, hero bridge). Slot heavy zajęty na bieżący przebieg; QA PO czeka w kolejce Unity.
 - Komenda wznowienia po zatrzymaniu przebiegu: `pwsh artifacts/codex-dash-items-s24/qa.ps1 after`
+- [krok 7] Visual QA PO 18 PNG (PC High, clear/overcast/lowsun), +3 PNG diagnostyczne i +4 PNG A/B starej panoramy na nowej geometrii. cab-driver i cab-view-b: drawsEst 147→147, tris 175 023→175 359. EditMode Win64 1519 passed, 0 failed, 122 skipped. Przywrócono QualitySettings.
+- W standardowym lowsun nowa barwa śladu jest słaba (p95 +1,00 kodu sRGB dla żółci względem błękitu w masce odbicia cab-view-b). Dodatkowy pomiar ze słońcem na wprost: `pwsh artifacts/codex-dash-items-s24/front-sun.ps1`
