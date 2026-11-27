@@ -108,8 +108,18 @@ def test_seal_bands_lie_on_the_carriageway_under_the_paint():
         z_surf = 100.0 - 0.02 * np.abs(p.V[:, 1])
         lift = p.V[:, 2] - z_surf
         assert (lift > DC.LIFT_PATCH - 2e-3).all() and (lift < S.MARKING_LIFT).all(), p.src
-        assert (p.UV1[:, 0] < 0).all()                                    # negative length = short end fades
-        assert set(np.round(p.UV1[:, 1], 2)) <= {2.6, 1.3, DC.CENTRE_JOINT_STRENGTH}
+        m_ = len(p.V) // 2
+        off_ = abs(float(np.mean(0.5 * (p.V[:m_, 1] + p.V[m_:, 1]))))
+        cj = p.src.startswith("seal:l:") and DC.CENTRE_JOINT_OFFSET_M[0] - 0.03 <= off_ <= DC.CENTRE_JOINT_OFFSET_M[1] + 0.03
+        if cj:                                                            # axis-driveway-s24: long end fades
+            assert (p.UV1[:, 0] > 0).all(), p.src
+        else:
+            assert (p.UV1[:, 0] < 0).all()                                # negative length = short end fades
+        st = set(np.round(p.UV1[:, 1], 4))
+        assert len(st) == 1
+        x = st.pop()
+        assert x in {2.6, 1.3, round(DC.CENTRE_JOINT_STRENGTH, 4)} or \
+            DC.SEAL_AGED_STRENGTH[0] - 1e-4 <= x <= DC.SEAL_AGED_STRENGTH[1] + 1e-4, (p.src, x)
         assert set(np.round(p.UV[:, 1], 6)) == {0.0, 1.0}
         w = np.hypot(*(p.V[: len(p.V) // 2, :2] - p.V[len(p.V) // 2:, :2]).T)
         assert w.max() <= DC.SEAL_W_M[1] + 1e-6 and w.min() >= DC.HAIRLINE_W_M - 1e-6
@@ -121,11 +131,11 @@ def test_cracks_meander():
     buf, _ = _run([c])
     tr = [p for p in buf.parts if p.src.startswith("seal:t:")]
     lo = [p for p in buf.parts if p.src.startswith("seal:l:")
-          and abs(float(np.mean(p.V[:, 1]))) > 0.1]               # road-patches-s24: the centre joint is straight
+          and abs(float(p.UV1[0, 1]) - DC.CENTRE_JOINT_STRENGTH) > 1e-6]   # road-patches-s24: the centre joint is straight
     assert tr and lo
     dev_t = [np.ptp(p.V[: len(p.V) // 2, 0]) for p in tr]      # station spread of a transverse crack
     dev_l = [np.ptp(p.V[: len(p.V) // 2, 1]) for p in lo]      # lateral spread of a longitudinal crack
-    assert np.median(dev_t) > 0.08 and np.median(dev_l) > 0.05
+    assert np.median(dev_t) > 0.05 and np.median(dev_l) > 0.05     # axis-driveway-s24: transverse meander +-9 cm
 
 
 def test_centre_joint_is_straight_and_worn():
@@ -140,10 +150,27 @@ def test_centre_joint_is_straight_and_worn():
         m = len(p.V) // 2
         axis = 0.5 * (p.V[:m, 1] + p.V[m:, 1])
         assert np.ptp(axis) <= 2 * DC.CENTRE_JOINT_AMP_M * 1.3 + 1e-6, p.src
-        assert abs(float(np.mean(axis))) < 0.03, p.src
+        # axis-driveway-s24: beside the painted centre line (12 cm dash), never under it
+        off = abs(float(np.mean(axis)))
+        assert DC.CENTRE_JOINT_OFFSET_M[0] - 0.02 <= off <= DC.CENTRE_JOINT_OFFSET_M[1] + 0.02, p.src
         w = np.hypot(*(p.V[:m, :2] - p.V[m:, :2]).T)
         assert w.max() <= DC.CENTRE_JOINT_W_M[1] + 1e-6
-    assert DC.CENTRE_JOINT_STRENGTH < 2.5                                   # broken up by the macro mottling
+        assert off - w.max() / 2 >= 0.06 + 0.02, p.src                      # band edge clear of the dash edge
+        assert float(p.UV1[0, 0]) > 0.0, p.src                               # long end fades, not a cut-off stub
+    assert DC.CENTRE_JOINT_STRENGTH < 1.5                                   # mostly broken up by the macro mottling
+    assert {round(float(np.sign(np.mean(0.5 * (p.V[:len(p.V) // 2, 1] + p.V[len(p.V) // 2:, 1])))), 0) for p in cj} == {-1.0, 1.0}
+
+
+def test_transverse_seals_not_all_solid_black():
+    """axis-driveway-s24 (critic build #10 pkt 4 "czarny falisty pas"): only a share of the sealed thermal cracks is a
+    fresh solid band; the rest is aged (strength < 2.5, mottled)."""
+    c, _ = _chain(length=3000.0)
+    buf, _ = _run([c])
+    st = [float(p.UV1[0, 1]) for p in buf.parts if p.src.startswith("seal:t:")]
+    assert st
+    solid = sum(1 for x in st if x >= 2.5)
+    aged = sum(1 for x in st if DC.SEAL_AGED_STRENGTH[0] - 1e-6 <= x <= DC.SEAL_AGED_STRENGTH[1] + 1e-6)
+    assert 0 < solid < aged
 
 
 def test_seal_cracks_split_at_patches():

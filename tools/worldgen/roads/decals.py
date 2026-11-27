@@ -76,7 +76,19 @@ SEAL_SURFACES = ("road_asphalt",)   # worn asphalt only: not the resurfaced shar
 # next to the straight dashes of the centre line it read as the line itself jumping sideways. WORKING_VALUE.
 CENTRE_JOINT_AMP_M = 0.010          # residual waviness of the joint (paver screed / hand pour), was 0.05
 CENTRE_JOINT_W_M = (0.06, 0.09)     # geometry width; ~60 % of it dark in the soft strip profile (3.5-5.5 cm core); r2 0.07-0.11 read as a black dash
-CENTRE_JOINT_STRENGTH = 1.7         # < 2.5: broken up by the macro mottling (worn overband); r2 1.9 still near solid
+CENTRE_JOINT_STRENGTH = 1.25        # < 2.5: broken up by the macro mottling (worn overband); r2 1.9 near solid, P3 1.7 (axis-driveway-s24 1.25)
+# axis-driveway-s24 (critic build #10 pkt 4: "szew osi + czarny falisty pas" still in dk65-goniadzka after P3): the joint
+# lay ON the axis, so between two dashes it read as a dark continuation of the dash ("pionowy ciemny odcinek w osi"),
+# began and ended within 0.65 / 0.9 m (short-end fade) and stopped on a transverse seal (a "T"). The centre line is
+# painted on a string line after paving, not on the joint: the joint runs 14-26 cm beside the line (side and offset per
+# stretch), clear of the 12 cm dash with its 3.5-5.5 cm core; it fades in / out over the long 2.5 / 4 m ends, and the
+# overband is older than the thermal-crack seals (strength 1.25: mostly broken up). Transverse thermal-crack seals: a
+# crack across the mat wanders less than the old +-16 cm (wavelengths 1.2-9 m) - +-9 cm; only ~35 % are fresh solid
+# black (2.6), the rest aged 1.5-2.1 (mottled, greyer), never a uniform black ribbon. All WORKING_VALUE.
+CENTRE_JOINT_OFFSET_M = (0.14, 0.26)
+TRANSVERSE_MEANDER_M = 0.09         # was 0.16
+SEAL_FRESH_SHARE = 0.35             # sealed transverse cracks with a fresh solid black overband
+SEAL_AGED_STRENGTH = (1.5, 2.1)
 # Sealed cracks never run across a repair patch (the patch was cut out and re-laid; the crack seal is older): points of a
 # crack polyline inside a patch footprint (+ this margin) are dropped and the polyline split there.
 SEAL_PATCH_MARGIN_M = 0.15
@@ -219,8 +231,9 @@ def _decimate_polyline(s, lat, tol, max_seg):
     return np.array(sorted(keep))
 
 
-def seal_band(buf, c, s, lat, width, strength, src):
-    """Soft band along the chain-frame polyline (s, lat): vertices on the road surface (crossfall + profile)."""
+def seal_band(buf, c, s, lat, width, strength, src, long_fade=False):
+    """Soft band along the chain-frame polyline (s, lat): vertices on the road surface (crossfall + profile).
+    long_fade: positive length in UV1.x = the shader's long 2.5 / 4 m end fades (axis-driveway-s24, centre joint)."""
     s = np.asarray(s, float)
     lat = np.asarray(lat, float)
     if len(s) < 2:
@@ -240,7 +253,7 @@ def seal_band(buf, c, s, lat, width, strength, src):
     ss = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(C, axis=0).T))])
     T = np.array([(i, i + 1, m + i + 1) for i in range(m - 1)] + [(i, m + i + 1, m + i) for i in range(m - 1)])
     uv = np.column_stack([np.tile(ss, 2), np.repeat([0.0, 1.0], m)])
-    uv1 = np.column_stack([np.full(2 * m, -ss[-1]), np.full(2 * m, strength)])
+    uv1 = np.column_stack([np.full(2 * m, ss[-1] if long_fade else -ss[-1]), np.full(2 * m, strength)])
     buf.add("markings", SEAL_MAT, V, uv, T, src=src, UV1=uv1)
     return len(T)
 
@@ -311,12 +324,18 @@ def seal_cracks(buf, net, cnt, patches=None):
                 n = max(3, int(math.ceil((hi - lo) / 0.35)) + 1)
                 lat = np.linspace(lo, hi, n)
                 skew = (hf(*key, i, "skew") - 0.5) * 0.18     # +-5 deg off square
-                ss = sc + (lat - lat[0]) * skew + _meander(n, 0.35, key + (i, "t"), 0.16)
+                ss = sc + (lat - lat[0]) * skew + _meander(n, 0.35, key + (i, "t"), TRANSVERSE_MEANDER_M)
                 ss = np.clip(ss, s0 - 1.0, s1 + 1.0)
                 sealed = hf(*key, i, "sealed") < 0.7
                 wd = SEAL_W_M[0] + hf(*key, i, "w") * (SEAL_W_M[1] - SEAL_W_M[0]) if sealed else HAIRLINE_W_M
+                # axis-driveway-s24: only a share of the sealed cracks carries a fresh solid black overband
+                if sealed:
+                    st_t = 2.6 if hf(*key, i, "fresh") < SEAL_FRESH_SHARE else \
+                        SEAL_AGED_STRENGTH[0] + hf(*key, i, "age") * (SEAL_AGED_STRENGTH[1] - SEAL_AGED_STRENGTH[0])
+                else:
+                    st_t = 1.3
                 for r, (a, b) in enumerate(_runs_outside(ss, lat, boxes)):
-                    tris += seal_band(buf, c, ss[a:b], lat[a:b], wd, 2.6 if sealed else 1.3,
+                    tris += seal_band(buf, c, ss[a:b], lat[a:b], wd, st_t,
                                       f"seal:t:{c.id}:{w0:.0f}:{i}" + (f":{r}" if r else ""))
                 n_t += 1
             # ---- longitudinal
@@ -337,7 +356,9 @@ def seal_cracks(buf, net, cnt, patches=None):
                 kind = hf(*key, i, "lk")
                 centre = kind < 0.4 and not sec.oneway
                 if centre:                                    # centre construction joint (straight, road-patches-s24)
-                    base = np.zeros(n)
+                    # axis-driveway-s24: beside the painted centre line, not under it (side + offset per stretch)
+                    off = CENTRE_JOINT_OFFSET_M[0] + hf(*key, i, "lo") * (CENTRE_JOINT_OFFSET_M[1] - CENTRE_JOINT_OFFSET_M[0])
+                    base = np.full(n, off if hf(*key, i, "lside") < 0.5 else -off)
                     amp = CENTRE_JOINT_AMP_M
                 elif kind < 0.8:                              # edge crack, 0.3-0.7 m inside the carriageway edge
                     sgn = 1.0 if hf(*key, i, "side") < 0.5 else -1.0
@@ -355,7 +376,8 @@ def seal_cracks(buf, net, cnt, patches=None):
                     wd = SEAL_W_M[0] + hf(*key, i, "lw") * (SEAL_W_M[1] - SEAL_W_M[0]) if sealed else HAIRLINE_W_M
                     st = 2.6 if sealed else 1.3
                 for r, (a, b) in enumerate(_runs_outside(ss, lat, boxes)):
-                    tris += seal_band(buf, c, ss[a:b], lat[a:b], wd, st, f"seal:l:{c.id}:{w0:.0f}:{i}" + (f":{r}" if r else ""))
+                    tris += seal_band(buf, c, ss[a:b], lat[a:b], wd, st, f"seal:l:{c.id}:{w0:.0f}:{i}" + (f":{r}" if r else ""),
+                                      long_fade=centre)
                 n_l += 1
     cnt["seal_cracks"] = {"transverse": n_t, "longitudinal": n_l, "tris": int(tris)}
 
