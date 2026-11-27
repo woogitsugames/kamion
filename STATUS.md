@@ -17,3 +17,8 @@
   - `dk65-goniadzka`: `drawsEst` 328 → 328 (+0), `trisExact` 1 098 119 → 1 098 711 (+592).
 - [krok 5] Dopisek ADR 0238, kopia dowodów do `C:\Users\matma\Documents\Claude\kamion\artifacts\neon-outbuildings2-s24\`, pełny pytest (84/84 zielone), commit końcowy.
 - NASTĘPNY KROK (dla lidera): obejrzeć cropy w `artifacts/neon-outbuildings2-s24/sbs/`, scalić gałąź `neon-outbuildings2-s24` do `main`, a potem przebudować i zaimportować pozostałe kafle z `rural_outbuildings: true`: `pwsh scripts/import-region.ps1 -Region dk65-07 -Build -BuildTarget Win64` (oraz pozostałe kafle wg `artifacts/props-fix-s24/outbuildings-per-tile.txt`).
+
+## codex-patches-edges-s24
+
+- [krok 1] Przeczytane zasady i ADR-y. Zastąpiono junction prywatną kopią derived `knyszyn-w`; SHA pierwszej bryły zgodny z manifestem, Python 3.12.16 dostępny. Kamery i shim zapisane w lokalnych artefaktach.
+- Następny krok: `pwsh artifacts/codex-patches-edges-s24/qa.ps1 -Stage before`.
