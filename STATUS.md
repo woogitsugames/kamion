@@ -37,3 +37,6 @@
 - Następny krok w slocie heavy: `pwsh artifacts/codex-roofs-s24/run-vqa.ps1 -Phase after`.
 - Krok 8. Import Win64 r4 i 8 PNG PO gotowe. Obejrzano 14 arkuszy ≤960 px. Visual-critic PASS z P2 dla odległości kamer. Wszystkie pomiary DrawsEst, ShadowDrawsEst i TrisExact przed/po zgodne.
 - Następny krok po regresji GIS: `git diff --check c283addc6`, zapisać pomiary i wynik pytest w ADR 0238.
+- Krok 9. Regresja GIS 87/87. Profile siatek dk65-07: blacha 77, eternit 43, ceramika 33, papa 4. Dopisek r4 zawiera pomiary oraz ograniczenia visual-qa.
+- Dowody skopiowano do C:\Users\matma\Documents\Claude\kamion\artifacts\codex-roofs-s24, w tym manifest prototypu. Pliki derived prototypu pozostają w prywatnej kopii worktree.
+- Następny krok lidera po przeglądzie: `git merge --no-ff codex-roofs-s24`, potem `& $py tools/worldgen/roads/build_world.py --region dk65-07 --context` w slocie heavy.

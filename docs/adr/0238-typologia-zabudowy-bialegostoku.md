@@ -362,8 +362,8 @@ regułę dla budynków objętych `facade_rules: rural_outbuildings: true` i resp
 - **Blacha trapezowa i ocynk** mają chłodnoszary ton z ziarna budynku, żebra w kierunku spadku, zacieki i rzadsze jaśniejsze
   pasy wymienionej blachy na szerokość arkusza.
 - **Eternit falisty** ma żebra o przekroju sinusoidalnym, zakłady poprzeczne, plamy i mech przy okapie.
-- **Ceramika** korzysta z istniejących zestawów brązowej i czerwonej dachówki ze stonowaną barwą zmienną per budynek. Ceramika przypada
-  32% dachów z materiałem bazowym dachówki. W pozostałych dachach spadzistych podział blacha / eternit to 56% / 44%
+- **Ceramika** korzysta z istniejących zestawów brązowej i czerwonej dachówki ze stonowaną barwą zmienną per budynek.
+  Reguła przypisuje ceramikę 32% dachów z materiałem bazowym dachówki. W pozostałych dachach spadzistych podział blacha / eternit to 56% / 44%
   (`WORKING_VALUE`, bez inwentaryzacji terenowej).
 - **Papa** na płaskich dachach korzysta z dotychczasowego `roof_membrane`. Wariant r4 jest ciemniejszy, z zakładami równoległymi
   do dłuższej osi budynku i lokalnymi prostokątnymi naprawami. Pokrycia spadziste i papa mają ten sam wybór w LOD0 i LOD1.
@@ -372,3 +372,25 @@ regułę dla budynków objętych `facade_rules: rural_outbuildings: true` i resp
   zakresie A ≥ 127. `_ROOF_WEATHER` wykorzystuje istniejące materiały i UV0. Papa korzysta z `_ROOF_FELT` w
   `WorldSurface` oraz znacznika B = 64/255 i A = 1. UV0 w metrach względem środka budynku utrzymuje położenie szwów
   przy zmianie początku świata. Shader ogranicza kontrast detalu w oddali na podstawie rozmiaru piksela.
+
+**Weryfikacja `dk65-07`.** Odczyt profili z siatek generatora dał 77 dachów z blachą, 43 z eternitem, 33 z ceramiką
+i 4 z papą. Eksport r3 → r4 zachował układ materiałów i liczbę trójkątów w każdym z 64 chunków. Suma zabudowy
+LOD0 107 204 → 107 204 i LOD1 15 241 → 15 241. Brak nowych materiałów, tekstur i draw calli.
+
+Import obu wersji na Win64 i visual-qa High PC (domyślny import zestawów PBR Medium, 1920 × 1080, clear i overcast).
+`drawsEst` przed SRP batching jest identyczne w obu pogodach i wersjach:
+
+| Kamera | Draw calls r3 → r4 | Trójkąty r3 → r4 |
+| --- | ---: | ---: |
+| drive-kozince | 236 → 236 | 654 973 → 654 973 |
+| route-s0144 | 297 → 297 | 621 420 → 621 420 |
+| route-s0433 | 236 → 236 | 654 973 → 654 973 |
+| top-kozince | 110 → 110 | 400 710 → 400 710 |
+
+**Visual-critic PASS.** Blacha południowej stodoły w `top-kozince` ma widoczne żebra, jaśniejsze pasy i miejscowe zacieki.
+Szara połać odcina się od ceramiki także z drogi w `drive-kozince` i `route-s0433`. P2. Zadane kamery nie pozwalają
+potwierdzić z bliska papy, eternitu i mchu przy okapie. Koszt ALU w playerze oraz migotanie w ruchu są `UNVERIFIED`.
+
+**Testy.** 87/87 w `test_rural_outbuildings_props_fix_s24`, `test_typology_0238`, `test_budget_0221`,
+`test_world_v31`, `test_hero_bridge` i `test_weathering_s24`. Dowody w `artifacts/codex-roofs-s24/` obejmują manifesty,
+logi, 16 PNG, 14 arkuszy porównawczych do 960 px i pomiary per kamera.
