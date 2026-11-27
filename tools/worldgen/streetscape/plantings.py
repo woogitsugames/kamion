@@ -1095,7 +1095,9 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
             c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.30
             PLT._skin_card(kit, c, z + cb + hc * 0.30, az, r * 1.05, hc * 0.42, "shrub_a", 0.36 + 0.14 * PLT.hfloat(key, "ut", i), occ,
                            flip=i % 2 == 1)
-    if lite or dense <= 0.0:
+    # ADR 0352: no inner sprays in a small crown (< 6.5 m): the tilted `shrub_a` cards facing away from the sun stood in
+    # the crown as dark wedges with straight edges (render after r1, tykocka-dw671-out); three uneven cards carry it
+    if lite or dense <= 0.0 or H < 6.5:
         return
     # the sprays sit INSIDE the habit's silhouette (the crossed cards own the outline; sprays that reached it gave the
     # crown a flat, boxy skirt): they close the gaps between the cards from oblique views and from above
