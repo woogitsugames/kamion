@@ -87,3 +87,8 @@ niż model: skrajnia ADR 0347 liczona jest na nieskalowanej siatce. Rekordy z `g
   słonecznym w ich koronach zostaje ciemny klin — to karta skrzyżowana stojąca bokiem do słońca (normalna promieniowa),
   nie wachlarz `occ_mid` ani wewnętrzne karty (oba usunięte w pełnym wariancie; pochmurno klin znika). Potrzebna inna
   bryła małego drzewa (np. młode prototypy biblioteki albo karty koron z normalną „w górę”) — poza budżetem tej rundy.
+
+## Dopisek crown-lod-s24 (2026-11-27)
+`Vegetation.shader` po ręcznym scaleniu 0352 + 0354 kompiluje się (d3d11) bez błędów; dwa ostrzeżenia fxc obecne już
+w buildzie #10 (`VegAlpha`, `VegShadow`) usunięte. `_TreeVar` bez zmian; nowe: cross-fade LOD1 → impostor i fill
+zminiaturyzowanych liści (ADR 0308, dopisek crown-lod-s24) — ten sam hasz instancji, tint identyczny na obu LOD w paśmie.

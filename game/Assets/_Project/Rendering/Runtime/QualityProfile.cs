@@ -60,6 +60,7 @@ namespace Game.Rendering
             [Tooltip("Cull distance of trees and shrubs (m × LOD bias), caps the baked impostor distance")] public float treeCullM;
             [Tooltip("Tree LODs that cast shadows: bit 0 = LOD0, bit 1 = LOD1 (impostors never)")] public int treeShadowLodMask;
             [Tooltip("Alpha-to-coverage on leaf cards / impostors (needs MSAA; smooth edges, costs coverage work on the GPU)")] public bool leafAlphaToCoverage;
+            [Tooltip("crown-lod-s24: LOD1 leaf cards -> impostor cross-fade over the last 25 % of the LOD1 distance (both drawn there; leaf-shaped dissolve, no screen pattern). Off = hard switch")] public bool treeLodFade;
             [Tooltip("Leaf cards / impostors use Kamion/Vegetation (depth pass + ZTest Equal colour pass, Lambert) instead of URP Lit. " +
                      "A16 DK8 forest: the Lit leaves were fragment bound (ADR 0013)")] public bool simpleFoliage;
             [Tooltip("Forest HLOD (ADR 0015): beyond this distance (m, camera to the 64 m cell bounds) a cell's forest trees are " +
