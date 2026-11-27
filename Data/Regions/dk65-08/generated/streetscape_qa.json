@@ -26,6 +26,11 @@
   "lod1_house_openings_framed": 0,
   "pavilion_fronts": 0,
   "roof_masts": [],
+  "roof_weathering": {
+   "new": 10,
+   "old": 25,
+   "prl": 28
+  },
   "roofs_other": {
    "gospodarczy:gable:None": 35,
    "gospodarczy:hip:None": 1,
@@ -78,10 +83,10 @@
   "ways": 0
  },
  "field_bales": {
-  "edge": 4,
+  "edge": 3,
   "enabled": true,
-  "row": 26,
-  "silage": 18,
+  "row": 24,
+  "silage": 15,
   "straw": 12
  },
  "furniture": {
@@ -4377,19 +4382,19 @@
     "by_category_high": {
      "buildings": 10753,
      "forest_hlod": 130193,
-     "furniture": 22627,
-     "props": 6182,
+     "furniture": 23373,
+     "props": 5942,
      "roads": 37005,
      "terrain": 893166,
      "trees_lod0": 21056,
      "trees_lod1": 10320,
-     "trees_lod2": 6230,
-     "water": 10680
+     "trees_lod2": 6246,
+     "water": 11290
     },
     "by_category_low": {
      "buildings": 3524,
      "forest_hlod": 60699,
-     "furniture": 6670,
+     "furniture": 6762,
      "props": 2368,
      "roads": 37005,
      "terrain": 231582,
@@ -4400,51 +4405,51 @@
     "camera": "route_s0147",
     "materials_high": 45,
     "materials_low": 45,
-    "tris_high": 1148212,
-    "tris_low": 347866
+    "tris_high": 1149344,
+    "tris_low": 347958
    },
    {
     "by_category_high": {
      "buildings": 3295,
      "forest_hlod": 108582,
-     "furniture": 23851,
+     "furniture": 24949,
      "props": 6486,
      "roads": 39956,
      "terrain": 816292,
-     "trees_lod0": 13478,
-     "trees_lod1": 3716,
-     "trees_lod2": 5038,
-     "water": 14742
+     "trees_lod0": 12776,
+     "trees_lod1": 4264,
+     "trees_lod2": 5058,
+     "water": 17802
     },
     "by_category_low": {
      "buildings": 2788,
      "forest_hlod": 54961,
-     "furniture": 2261,
+     "furniture": 2287,
      "props": 2412,
      "roads": 39956,
      "terrain": 211787,
-     "trees_lod1": 3634,
-     "trees_lod2": 1482,
+     "trees_lod1": 3086,
+     "trees_lod2": 1496,
      "water": 0
     },
     "camera": "route_s0442",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 1035436,
-    "tris_low": 319281
+    "tris_high": 1039460,
+    "tris_low": 318773
    },
    {
     "by_category_high": {
      "buildings": 2555,
      "forest_hlod": 85550,
-     "furniture": 22870,
+     "furniture": 23942,
      "props": 13262,
      "roads": 41041,
      "terrain": 799469,
      "trees_lod0": 174024,
      "trees_lod1": 442544,
-     "trees_lod2": 7720,
-     "water": 14708
+     "trees_lod2": 7722,
+     "water": 18554
     },
     "by_category_low": {
      "buildings": 2555,
@@ -4454,27 +4459,27 @@
      "roads": 41041,
      "terrain": 207014,
      "trees_lod1": 75070,
-     "trees_lod2": 4448,
+     "trees_lod2": 4452,
      "water": 0
     },
     "camera": "route_s0736",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 1603743,
-    "tris_low": 386572
+    "tris_high": 1608663,
+    "tris_low": 386576
    },
    {
     "by_category_high": {
      "buildings": 10452,
      "forest_hlod": 53845,
-     "furniture": 22109,
-     "props": 9973,
+     "furniture": 23181,
+     "props": 9913,
      "roads": 36125,
      "terrain": 694470,
      "trees_lod0": 109144,
      "trees_lod1": 297124,
-     "trees_lod2": 8062,
-     "water": 15797
+     "trees_lod2": 8056,
+     "water": 19107
     },
     "by_category_low": {
      "buildings": 2555,
@@ -4484,80 +4489,80 @@
      "roads": 36125,
      "terrain": 179872,
      "trees_lod1": 49624,
-     "trees_lod2": 3318,
+     "trees_lod2": 3316,
      "water": 0
     },
     "camera": "route_s1030",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 1257101,
-    "tris_low": 318042
+    "tris_high": 1261417,
+    "tris_low": 318040
    },
    {
     "by_category_high": {
      "buildings": 17497,
      "forest_hlod": 32570,
-     "furniture": 20462,
+     "furniture": 21534,
      "props": 9797,
      "roads": 31071,
      "terrain": 651321,
      "trees_lod0": 10452,
      "trees_lod1": 202696,
-     "trees_lod2": 5710,
-     "water": 12347
+     "trees_lod2": 5704,
+     "water": 14097
     },
     "by_category_low": {
      "buildings": 2555,
      "forest_hlod": 30890,
-     "furniture": 5593,
+     "furniture": 6201,
      "props": 3838,
      "roads": 31071,
      "terrain": 166266,
      "trees_lod1": 5298,
-     "trees_lod2": 1406,
+     "trees_lod2": 1408,
      "water": 0
     },
     "camera": "route_s1325",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 993923,
-    "tris_low": 246917
+    "tris_high": 996739,
+    "tris_low": 247527
    },
    {
     "by_category_high": {
      "buildings": 10527,
      "forest_hlod": 20003,
-     "furniture": 15248,
+     "furniture": 16274,
      "props": 4827,
      "roads": 24450,
      "terrain": 575308,
      "trees_lod0": 354,
      "trees_lod1": 7286,
-     "trees_lod2": 3208,
-     "water": 12721
+     "trees_lod2": 3202,
+     "water": 13644
     },
     "by_category_low": {
      "buildings": 1611,
      "forest_hlod": 20361,
-     "furniture": 10776,
+     "furniture": 11802,
      "props": 2961,
      "roads": 24450,
      "terrain": 147730,
      "trees_lod1": 276,
-     "trees_lod2": 1238,
+     "trees_lod2": 1234,
      "water": 0
     },
     "camera": "route_s1619",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 673932,
-    "tris_low": 209403
+    "tris_high": 675875,
+    "tris_low": 210425
    },
    {
     "by_category_high": {
      "buildings": 95,
      "forest_hlod": 10233,
-     "furniture": 4035,
+     "furniture": 4171,
      "props": 1650,
      "roads": 10748,
      "terrain": 477979,
@@ -4569,7 +4574,7 @@
     "by_category_low": {
      "buildings": 18,
      "forest_hlod": 11120,
-     "furniture": 3351,
+     "furniture": 3487,
      "props": 1092,
      "roads": 10748,
      "terrain": 123675,
@@ -4580,8 +4585,8 @@
     "camera": "route_s1914",
     "materials_high": 33,
     "materials_low": 33,
-    "tris_high": 1025177,
-    "tris_low": 209100
+    "tris_high": 1025313,
+    "tris_low": 209236
    },
    {
     "by_category_high": {
@@ -4617,19 +4622,19 @@
     "by_category_high": {
      "buildings": 8757,
      "forest_hlod": 97692,
-     "furniture": 14471,
+     "furniture": 14563,
      "props": 5032,
      "roads": 22168,
      "terrain": 619758,
      "trees_lod0": 18528,
      "trees_lod1": 64300,
-     "trees_lod2": 6516,
-     "water": 7290
+     "trees_lod2": 6528,
+     "water": 7856
     },
     "by_category_low": {
      "buildings": 1738,
      "forest_hlod": 48153,
-     "furniture": 6146,
+     "furniture": 6238,
      "props": 2186,
      "roads": 22168,
      "terrain": 160160,
@@ -4640,21 +4645,21 @@
     "camera": "top_seam_s",
     "materials_high": 43,
     "materials_low": 43,
-    "tris_high": 864512,
-    "tris_low": 247759
+    "tris_high": 865182,
+    "tris_low": 247851
    },
    {
     "by_category_high": {
      "buildings": 1759,
      "forest_hlod": 116091,
-     "furniture": 18640,
+     "furniture": 19666,
      "props": 4818,
      "roads": 38329,
      "terrain": 816281,
-     "trees_lod0": 22468,
-     "trees_lod1": 229602,
-     "trees_lod2": 6478,
-     "water": 12025
+     "trees_lod0": 26210,
+     "trees_lod1": 229272,
+     "trees_lod2": 6480,
+     "water": 15085
     },
     "by_category_low": {
      "buildings": 1759,
@@ -4663,28 +4668,28 @@
      "props": 2218,
      "roads": 38329,
      "terrain": 210509,
-     "trees_lod1": 9970,
-     "trees_lod2": 2782,
+     "trees_lod1": 11126,
+     "trees_lod2": 2786,
      "water": 0
     },
     "camera": "top_site_597",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 1266491,
-    "tris_low": 329006
+    "tris_high": 1273991,
+    "tris_low": 330166
    },
    {
     "by_category_high": {
      "buildings": 8283,
      "forest_hlod": 75146,
-     "furniture": 13215,
+     "furniture": 13959,
      "props": 6168,
      "roads": 34121,
      "terrain": 763988,
      "trees_lod0": 128892,
      "trees_lod1": 341742,
-     "trees_lod2": 7846,
-     "water": 11743
+     "trees_lod2": 7832,
+     "water": 14005
     },
     "by_category_low": {
      "buildings": 1126,
@@ -4694,32 +4699,32 @@
      "roads": 34121,
      "terrain": 196167,
      "trees_lod1": 57042,
-     "trees_lod2": 2574,
+     "trees_lod2": 2572,
      "water": 0
     },
     "camera": "top_mid",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 1391144,
-    "tris_low": 354908
+    "tris_high": 1394136,
+    "tris_low": 354906
    },
    {
     "by_category_high": {
      "buildings": 5559,
      "forest_hlod": 38754,
-     "furniture": 8310,
+     "furniture": 9054,
      "props": 5002,
      "roads": 22271,
      "terrain": 626434,
      "trees_lod0": 348,
      "trees_lod1": 22810,
-     "trees_lod2": 3444,
-     "water": 8531
+     "trees_lod2": 3434,
+     "water": 8805
     },
     "by_category_low": {
      "buildings": 776,
      "forest_hlod": 35169,
-     "furniture": 5955,
+     "furniture": 6699,
      "props": 3299,
      "roads": 22271,
      "terrain": 160766,
@@ -4730,8 +4735,8 @@
     "camera": "top_site_1656",
     "materials_high": 46,
     "materials_low": 46,
-    "tris_high": 741463,
-    "tris_low": 230014
+    "tris_high": 742471,
+    "tris_low": 230758
    },
    {
     "by_category_high": {
@@ -4767,44 +4772,44 @@
     "by_category_high": {
      "buildings": 3161,
      "forest_hlod": 103688,
-     "furniture": 23237,
+     "furniture": 24335,
      "props": 6272,
      "roads": 39956,
      "terrain": 782500,
      "trees_lod0": 12152,
-     "trees_lod1": 19332,
-     "trees_lod2": 6064,
-     "water": 14742
+     "trees_lod1": 20788,
+     "trees_lod2": 6084,
+     "water": 17802
     },
     "by_category_low": {
      "buildings": 2654,
      "forest_hlod": 53302,
-     "furniture": 2261,
+     "furniture": 2287,
      "props": 2402,
      "roads": 39956,
      "terrain": 203083,
      "trees_lod1": 2972,
-     "trees_lod2": 1652,
+     "trees_lod2": 1664,
      "water": 0
     },
     "camera": "drive_597",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 1011104,
-    "tris_low": 308282
+    "tris_high": 1016738,
+    "tris_low": 308320
    },
    {
     "by_category_high": {
      "buildings": 10452,
      "forest_hlod": 49029,
-     "furniture": 22109,
+     "furniture": 23181,
      "props": 6827,
      "roads": 36125,
      "terrain": 679067,
      "trees_lod0": 117956,
      "trees_lod1": 311568,
-     "trees_lod2": 9048,
-     "water": 15797
+     "trees_lod2": 9050,
+     "water": 19107
     },
     "by_category_low": {
      "buildings": 2555,
@@ -4814,74 +4819,74 @@
      "roads": 36125,
      "terrain": 175264,
      "trees_lod1": 54324,
-     "trees_lod2": 2628,
+     "trees_lod2": 2626,
      "water": 0
     },
     "camera": "drive_1150",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 1257978,
-    "tris_low": 318214
+    "tris_high": 1262362,
+    "tris_low": 318212
    },
    {
     "by_category_high": {
      "buildings": 10527,
      "forest_hlod": 20003,
-     "furniture": 15248,
+     "furniture": 16274,
      "props": 4930,
      "roads": 24450,
      "terrain": 548195,
      "trees_lod0": 354,
      "trees_lod1": 5734,
-     "trees_lod2": 3218,
-     "water": 12721
+     "trees_lod2": 3210,
+     "water": 13644
     },
     "by_category_low": {
      "buildings": 1611,
      "forest_hlod": 20361,
-     "furniture": 10776,
+     "furniture": 11802,
      "props": 3201,
      "roads": 24450,
      "terrain": 141330,
      "trees_lod1": 276,
-     "trees_lod2": 1156,
+     "trees_lod2": 1152,
      "water": 0
     },
     "camera": "drive_1656",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 645380,
-    "tris_low": 203161
+    "tris_high": 647321,
+    "tris_low": 204183
    },
    {
     "by_category_high": {
      "buildings": 17803,
      "forest_hlod": 107744,
-     "furniture": 22979,
+     "furniture": 24051,
      "props": 16754,
      "roads": 41041,
      "terrain": 844777,
      "trees_lod0": 150806,
      "trees_lod1": 340378,
-     "trees_lod2": 10566,
-     "water": 12348
+     "trees_lod2": 10582,
+     "water": 12622
     },
     "by_category_low": {
      "buildings": 2861,
      "forest_hlod": 42199,
-     "furniture": 7344,
+     "furniture": 7762,
      "props": 3534,
      "roads": 41041,
      "terrain": 218907,
      "trees_lod1": 70704,
-     "trees_lod2": 3410,
+     "trees_lod2": 3396,
      "water": 0
     },
     "camera": "rev_2000",
     "materials_high": 48,
     "materials_low": 48,
-    "tris_high": 1565196,
-    "tris_low": 390000
+    "tris_high": 1566558,
+    "tris_low": 390404
    }
   ],
   "lod_policy": {
@@ -4987,21 +4992,21 @@
     "materials": 33,
     "trees": 2039,
     "tris_forest_hlod": 1967,
-    "tris_high_static": 149405,
-    "tris_low_static": 43889
+    "tris_high_static": 149687,
+    "tris_low_static": 44171
    },
    {
     "chunk": "0_4",
-    "instances": 1530,
+    "instances": 1527,
     "materials": 35,
     "trees": 1513,
     "tris_forest_hlod": 1277,
-    "tris_high_static": 145448,
-    "tris_low_static": 39527
+    "tris_high_static": 145494,
+    "tris_low_static": 39573
    },
    {
     "chunk": "0_5",
-    "instances": 755,
+    "instances": 756,
     "materials": 1,
     "trees": 755,
     "tris_forest_hlod": 832,
@@ -5010,27 +5015,27 @@
    },
    {
     "chunk": "0_6",
-    "instances": 3551,
+    "instances": 3555,
     "materials": 1,
-    "trees": 3551,
+    "trees": 3555,
     "tris_forest_hlod": 3682,
     "tris_high_static": 135168,
     "tris_low_static": 33792
    },
    {
     "chunk": "0_7",
-    "instances": 1730,
+    "instances": 1728,
     "materials": 1,
-    "trees": 1730,
+    "trees": 1728,
     "tris_forest_hlod": 1899,
     "tris_high_static": 135168,
     "tris_low_static": 33792
    },
    {
     "chunk": "1_0",
-    "instances": 1494,
+    "instances": 1498,
     "materials": 1,
-    "trees": 1494,
+    "trees": 1498,
     "tris_forest_hlod": 1693,
     "tris_high_static": 135168,
     "tris_low_static": 33792
@@ -5046,12 +5051,12 @@
    },
    {
     "chunk": "1_2",
-    "instances": 3019,
+    "instances": 3017,
     "materials": 28,
-    "trees": 3013,
+    "trees": 3011,
     "tris_forest_hlod": 2190,
-    "tris_high_static": 141087,
-    "tris_low_static": 39598
+    "tris_high_static": 141223,
+    "tris_low_static": 39734
    },
    {
     "chunk": "1_3",
@@ -5059,23 +5064,23 @@
     "materials": 43,
     "trees": 1737,
     "tris_forest_hlod": 1197,
-    "tris_high_static": 153949,
-    "tris_low_static": 48778
+    "tris_high_static": 154557,
+    "tris_low_static": 49386
    },
    {
     "chunk": "1_4",
-    "instances": 345,
+    "instances": 348,
     "materials": 15,
-    "trees": 340,
+    "trees": 343,
     "tris_forest_hlod": 455,
     "tris_high_static": 136594,
     "tris_low_static": 34401
    },
    {
     "chunk": "1_5",
-    "instances": 2509,
+    "instances": 2506,
     "materials": 1,
-    "trees": 2506,
+    "trees": 2504,
     "tris_forest_hlod": 2331,
     "tris_high_static": 135168,
     "tris_low_static": 33792
@@ -5091,36 +5096,36 @@
    },
    {
     "chunk": "1_7",
-    "instances": 1368,
+    "instances": 1372,
     "materials": 17,
-    "trees": 1368,
+    "trees": 1369,
     "tris_forest_hlod": 1466,
     "tris_high_static": 136822,
     "tris_low_static": 34632
    },
    {
     "chunk": "2_0",
-    "instances": 116,
+    "instances": 110,
     "materials": 1,
-    "trees": 116,
+    "trees": 110,
     "tris_forest_hlod": 114,
     "tris_high_static": 135168,
     "tris_low_static": 33792
    },
    {
     "chunk": "2_1",
-    "instances": 4416,
+    "instances": 4415,
     "materials": 1,
-    "trees": 4416,
+    "trees": 4415,
     "tris_forest_hlod": 4054,
     "tris_high_static": 135168,
     "tris_low_static": 33792
    },
    {
     "chunk": "2_2",
-    "instances": 3018,
+    "instances": 3020,
     "materials": 27,
-    "trees": 3005,
+    "trees": 3007,
     "tris_forest_hlod": 2926,
     "tris_high_static": 141774,
     "tris_low_static": 39022
@@ -5136,9 +5141,9 @@
    },
    {
     "chunk": "2_4",
-    "instances": 3070,
+    "instances": 3069,
     "materials": 15,
-    "trees": 3059,
+    "trees": 3058,
     "tris_forest_hlod": 3203,
     "tris_high_static": 139916,
     "tris_low_static": 38540
@@ -5172,9 +5177,9 @@
    },
    {
     "chunk": "3_0",
-    "instances": 1325,
+    "instances": 1326,
     "materials": 1,
-    "trees": 1321,
+    "trees": 1322,
     "tris_forest_hlod": 1556,
     "tris_high_static": 135168,
     "tris_low_static": 33792
@@ -5226,9 +5231,9 @@
    },
    {
     "chunk": "3_6",
-    "instances": 3053,
+    "instances": 3055,
     "materials": 1,
-    "trees": 3051,
+    "trees": 3053,
     "tris_forest_hlod": 2990,
     "tris_high_static": 135168,
     "tris_low_static": 33792
@@ -5244,9 +5249,9 @@
    },
    {
     "chunk": "4_0",
-    "instances": 1443,
+    "instances": 1442,
     "materials": 1,
-    "trees": 1442,
+    "trees": 1440,
     "tris_forest_hlod": 1739,
     "tris_high_static": 135168,
     "tris_low_static": 33792
@@ -5280,45 +5285,45 @@
    },
    {
     "chunk": "4_4",
-    "instances": 3842,
+    "instances": 3843,
     "materials": 2,
-    "trees": 3841,
+    "trees": 3842,
     "tris_forest_hlod": 4154,
     "tris_high_static": 135263,
     "tris_low_static": 33887
    },
    {
     "chunk": "4_5",
-    "instances": 4016,
+    "instances": 4015,
     "materials": 15,
-    "trees": 3999,
+    "trees": 3998,
     "tris_forest_hlod": 2262,
     "tris_high_static": 139802,
     "tris_low_static": 38426
    },
    {
     "chunk": "4_6",
-    "instances": 1082,
+    "instances": 1087,
     "materials": 11,
-    "trees": 1070,
+    "trees": 1075,
     "tris_forest_hlod": 799,
     "tris_high_static": 139657,
     "tris_low_static": 38281
    },
    {
     "chunk": "4_7",
-    "instances": 1384,
+    "instances": 1382,
     "materials": 16,
-    "trees": 1380,
+    "trees": 1382,
     "tris_forest_hlod": 1473,
     "tris_high_static": 136442,
     "tris_low_static": 34566
    },
    {
     "chunk": "5_0",
-    "instances": 2222,
+    "instances": 2224,
     "materials": 1,
-    "trees": 2219,
+    "trees": 2221,
     "tris_forest_hlod": 2788,
     "tris_high_static": 135168,
     "tris_low_static": 33792
@@ -5370,12 +5375,12 @@
    },
    {
     "chunk": "5_6",
-    "instances": 696,
+    "instances": 695,
     "materials": 28,
-    "trees": 675,
+    "trees": 674,
     "tris_forest_hlod": 240,
-    "tris_high_static": 140736,
-    "tris_low_static": 38756
+    "tris_high_static": 140762,
+    "tris_low_static": 38782
    },
    {
     "chunk": "5_7",
@@ -5383,14 +5388,14 @@
     "materials": 31,
     "trees": 1547,
     "tris_forest_hlod": 1468,
-    "tris_high_static": 148505,
-    "tris_low_static": 44798
+    "tris_high_static": 148571,
+    "tris_low_static": 44864
    },
    {
     "chunk": "6_0",
-    "instances": 29,
+    "instances": 27,
     "materials": 1,
-    "trees": 29,
+    "trees": 27,
     "tris_forest_hlod": 0,
     "tris_high_static": 135168,
     "tris_low_static": 33792
@@ -5406,9 +5411,9 @@
    },
    {
     "chunk": "6_2",
-    "instances": 3449,
+    "instances": 3447,
     "materials": 1,
-    "trees": 3446,
+    "trees": 3444,
     "tris_forest_hlod": 3455,
     "tris_high_static": 135168,
     "tris_low_static": 33792
@@ -5460,18 +5465,18 @@
    },
    {
     "chunk": "7_0",
-    "instances": 73,
-    "materials": 9,
-    "trees": 56,
+    "instances": 77,
+    "materials": 8,
+    "trees": 60,
     "tris_forest_hlod": 0,
     "tris_high_static": 137747,
     "tris_low_static": 36371
    },
    {
     "chunk": "7_1",
-    "instances": 3648,
+    "instances": 3647,
     "materials": 7,
-    "trees": 3631,
+    "trees": 3630,
     "tris_forest_hlod": 3049,
     "tris_high_static": 137331,
     "tris_low_static": 35955
@@ -5565,6 +5570,11 @@
   },
   "big_trees": 0,
   "bins": 17,
+  "block_fence_variants": {
+   "smooth": 2,
+   "smooth_cap": 3,
+   "split_cap": 2
+  },
   "bushes": 45,
   "canopy": true,
   "crossing_kerb": {
@@ -6657,11 +6667,11 @@
   },
   "thujas": 191,
   "track_drives": 4,
-  "tris": 15224,
+  "tris": 16388,
   "tris_by": {
    "bins": 306,
    "bush": 636,
-   "fence": 7264,
+   "fence": 8428,
    "flowers": 592,
    "gate": 2532,
    "overgrowth": 300,
@@ -6672,19 +6682,19 @@
   },
   "tris_by_low": {
    "bins": 306,
-   "fence": 7264,
+   "fence": 8428,
    "gate": 2532,
    "spruce": 100,
    "thuja_row": 2590,
    "thuja_single": 24
   },
-  "tris_low": 12816,
+  "tris_low": 13980,
   "verge_overlays": 12,
   "wickets": 25
  },
  "region": "dk65-08",
  "road_clearance": {
-  "checked": 180413,
+  "checked": 180421,
   "clear_h_m": 4.7,
   "edge_margin_m": 1.5,
   "lowered": 1,
@@ -6700,11 +6710,11 @@
  "terrain_soft_nodes": 10546,
  "vegetation": {
   "farmland": {
-   "b_mean_after": 0.2922,
-   "b_mean_before": 0.6261,
-   "b_std_after": 0.2242,
-   "b_std_before": 0.2612,
-   "cells_m2": 1174794,
+   "b_mean_after": 0.2927,
+   "b_mean_before": 0.6259,
+   "b_std_after": 0.2241,
+   "b_std_before": 0.2611,
+   "cells_m2": 1168139,
    "encoding": "COLOR_0.b flag (0.00 grassland, 1.00 arable), mosaic per pixel (ADR 0298 / 0334 r3)",
    "garden_b_mean_after": 0.281,
    "garden_b_mean_before": 0.6184,
@@ -6712,12 +6722,12 @@
    "garden_b_std_before": 0.2593,
    "garden_cells_m2": 33344,
    "layout": "ESTIMATED strips (no cadastral parcels in the repo)",
-   "share": 0.2798,
-   "strip_stubs_removed": 267
+   "share": 0.2782,
+   "strip_stubs_removed": 287
   },
   "field_plants": {
-   "baulk": 336,
-   "clump": 68,
+   "baulk": 344,
+   "clump": 73,
    "fallow": 7
   },
   "forest_chm": {
@@ -6798,15 +6808,15 @@
   },
   "tree_stands": [],
   "trees": {
-   "tree_alder": 2721,
-   "tree_birch": 8669,
-   "tree_birchyoung": 8708,
+   "tree_alder": 2722,
+   "tree_birch": 8670,
+   "tree_birchyoung": 8711,
    "tree_floor": 17147,
    "tree_linden": 853,
    "tree_maple": 4544,
    "tree_pine": 70693,
-   "tree_pineyoung": 17651,
-   "tree_shrub": 27545,
+   "tree_pineyoung": 17650,
+   "tree_shrub": 27549,
    "tree_spruce": 39029
   },
   "understorey": 35467
