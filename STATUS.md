@@ -26,3 +26,5 @@
 - Następny krok: dokończyć `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1` po przydziale FIFO, następnie `pwsh artifacts/codex-farring-diag-s24/run-player.ps1` z jawnym `-stream 1`.
 - [krok 4] Skorygowano polecenia weryfikacji ADR 0354: porównanie wymaga jawnego `-stream 1` w obu wariantach. Zapisano tymczasowe WYNIKI.md i skrypty odtworzenia w katalogu artefaktów.
 - Następny krok: dokończyć czekający `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1`; polecenie jest pierwsze w kolejce heavy.
+- [krok 5] Player #10 High clear, stałe dw671-tykocin-03/edge-north, dwa identyczne kafle Ready: OFF → ON 647 → 694 draw calls p95, 1 399 592 → 1 633 470 trójkątów p95, 1,278% pikseli Δ≥12/255. Obejrzana para PNG pokazuje las i zabudowę.
+- Następny krok: dokończyć próby edytora w kolejce unity oraz pozostałe pary `pwsh artifacts/codex-farring-diag-s24/run-player.ps1`.
