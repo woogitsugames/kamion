@@ -1,16 +1,7 @@
-# STATUS far-forest-look-s24 (daleki plan lasu: smugi kurtyn, perspektywa powietrzna, widok z wysoka; dopiski ADR 0330/0354)
+# STATUS agy-clouds-s24 (chmury: warianty, miękkie krawędzie i usunięcie „kropki” na niebie; dopisek ADR 0332)
 
-- Worktree `agent-a3176de6fa331c9d3`, galaz `worktree-agent-a3176de6fa331c9d3`. Nie scalac (lider).
-- Srodowisko: Library + sceny kafli skopiowane z win-build; `Data/raw/*` = junction do main, `Data/raw/derived/*` junction
-  poza prywatnymi kopiami `dw671-tykocin-03`, `knyszyn-w` (w nich nowy far_field.glb). Junctiony odpinac `cmd /c rmdir`.
-- [krok 0-1] Probe (`Editor/VisualQA/FarFieldProbe.cs`): import win-build (zrodlo obrazow horizon-ring-s24) NIEAKTUALNY —
-  atlas 1024x2048, geometria sprzed r2 (shear v do 66 deg), las 03 edge-north 144 m / 9,6 deg. Aktualne derived: 385+ m, 2,1 deg.
-- [krok 2] Poprawki: (a) Vegetation.shader `_HLOD_EDGE` v rzutowe (v*H, H w zw uv; H = TEXCOORD1.y); (b) far_field.py:
-  TEXCOORD_1.y = wysokosc kolumny + pasmo zamglenia per pas; (c) RegionImporter.LoadForEdge odswieza material `*_far_atlas`
-  (wczesniej stary atlas zostawal po przebudowie krawedzi).
-- [krok 3] Render before|after (03 + knyszyn-w, High clear/overcast, -Neighbours auto, diag, zoom) — drawsEst/trisK identyczne
-  na 42 kamerach; A/B mgly (hazeGroundFactor=10) potwierdza mgle na kurtynach. EditMode 1448/0/152. pytest far_field 147/1
-  (fail istniejacy: sha glb C w main). Dopiski ADR 0330 (dopisek 3) i 0354. KONIEC zadania agenta.
-- NASTEPNY KROK (lider): review + scalenie; potem `far_field.py --region <id>` dla wszystkich kafli i RebuildEdgeBatch
-  (`Unity -batchmode -executeMethod Game.World.Import.WorldEdgeBuilder.RebuildEdgeBatch -region <id> -buildTarget Win64`)
-  w win-build; ponowny render dowodow ADR 0354.
+- Worktree `agy-clouds-s24`, gałąź `agy-clouds-s24`. Nie scalać / nie pushować (lider).
+- [krok 0] Baseline visual-qa przed zmianami: `World_knyszyn-w_High`, `-Pc -Tier High -BuildTarget Win64`, 1920×1080, clear + overcast (`artifacts/agy-clouds-s24/before/{clear,overcast}/`).
+- [krok 1] Diagnoza ciemnego punktu x~1170, y~140: obecny w IDENTYCZNYM pikselu `(1170, 142)` na klatkach build #10 różnych kafli i kursów (`knyszyn-w` drop 49,7 sRGB, `dk65-06` drop 29,0, `stream-on/t0180` drop 29,7) ORAZ w baseline visual-qa BOTH clear (drop 50,0) i overcast (drop 75,3 — gdzie `T_ClearClouds.png` nie jest próbkowany). Projekcja promienia z `EYE_POINT=(-0.55,1.35,0.225)` przy FOV 70° / pitch −6° (D90 / `DriverHead.RestPitchDownDeg`) trafia w `obj=(-0.314, 1.702)` — dokładnie plama owada `B=214` (13 tekseli, `px=(776, 273)`) w `T_Windscreen_Grime.png` (górny klin poza polami wycieraczek, ADR 0341).
+- [krok 2] Poprawka u źródła: `tools/rendering/windscreen_grime.py` pomija nieprzezroczyste plamy owadów poza polami wycieraczek w górnej środkowej strefie nieba (`y > 1.45 m`, `|x| < 0.85 m`, w cieniu aerodynamicznym dachu/daszka) i zregenerowano `T_Windscreen_Grime.png`.
+- NASTĘPNY KROK: zbudować 3 warianty miękkich map chmur CC0 (Poly Haven PureSky) + zmiękczenie krawędzi i selekcja z ziarna/pory dnia bez wzrostu kosztu GPU (`tools/rendering/build_cloud_variants.py`, `WorldAtmosphere.cs`, `Sky.shader`).

@@ -211,8 +211,12 @@ def build(seed: int):
             tang = math.atan2(cy - py, cx - px) + math.pi / 2
             splat(B, cx, cy, size * rng.uniform(3, 6), size * 0.7, tang, rng.uniform(0.1, 0.2))
         else:
-            # Outside the sweeps, but thinned in the upper wedge between the two sweeps: a dense patch there read as a
-            # dotted column against the overcast sky (after2 review); real remains thin out above the roof deflector line.
+            # Outside the sweeps: in the upper central pane (above the roof-deflector/visor wake line y > 1.45 m,
+            # |x| < 0.85 m) isolated dark opaque splats project directly onto open sky from the driver's seat and read
+            # as a dead pixel / floating dark dot in the sky (critic s24 build #10 x~1170, y~142 = obj -0.314, 1.702;
+            # agy-clouds-s24, ADR 0332/0341). Keep opaque splats on the lower/mid pane and side-pillar margins only.
+            if cy > 1.45 and abs(cx) < 0.85:
+                continue
             if rng.random() < 0.35 + 0.5 * (cy - GLASS_Y[0]) / (GLASS_Y[1] - GLASS_Y[0]):
                 continue
             size *= 0.8
