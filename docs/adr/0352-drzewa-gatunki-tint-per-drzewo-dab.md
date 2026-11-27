@@ -168,3 +168,26 @@ Wszystkie wartości poniżej są `WORKING_VALUE` (brak inwentaryzacji dendrometr
 - **Ocena wizualna (SBS `artifacts/neon-avenue-s24/sbs/`)**: w `knyszyn-w` (`route-s1562`, `route-s0710`, `dk65-goniadzka`, `dk65-north-edge-in`, `route-s1278`) i `dk65-07` (`drive-wood`, `route-s0144`, `route-s0721`) zniknął „wzór stempla”: wyraźne różnice wysokości i pokroju koron (dąb, brzoza, lipa/klon), otwarte luki, przesunięcia poprzeczne i zróżnicowanie wariantów przy zachowanej czystej skrajni drogi. W `tykocka-dw671-out` widoczne blisko ulicy niskie drzewa to karty działkowe `plot_kit` (poza zakresem szpalerów — otwarty punkt ADR 0352 wyżej).
 - **Testy**: `test_trees_0352.py` (+ nowy test `test_avenue_rows_break_twin_clones_and_stay_within_library_and_clearance`), `test_treerows_0222.py`, `test_trees_0308.py`, `test_trees_0347.py` (wszystkie 28 kafli korytarza zielone; jedyna usterka w `test_profile_table_matches_the_glb` to pre-existing różnica CRLF vs LF w hashu `trees_meta.json`, przy 29/29 identycznych prototypach), `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py` (62/62 zielone).
 - **Po scaleniu (lider)**: przebudować (`build_world.py` + `import-region.ps1`) kafle z szpalerami przydrożnymi (korytarz DK65 `dk65-01…11`, `knyszyn*`, `dw671-tykocin-*`, `dk65-monki-*`) — wtedy zmiana obejmie także odcinek ze zrzutu `shot_t0180.png` (build #10).
+## Dopisek agy-garden-var-s24 (2026-11-27): małe drzewa ogrodowe — usunięcie „lizaka” i wariacja per egzemplarz (+0 DC)
+Zamyka uwagę krytyka `artifacts/critic-s24-day27/CRITIC.md` pkt 2 („jedno »lizak« zostało; powtarzalność”).
+
+### Diagnoza
+- W `small_trees.young_tree` formy `vase` i `lean` z małymi przechyłami dolnych płatów (0,04–0,30 rad) i całokoronowymi kartami `crown_ovoid` / `crown_round` (`v_lo = 0`) składały się w zwartą, symetryczną bryłę na prostym pniu bez widocznych konarów (`_bough` był pojedynczym płaskim trójkątem schowanym w koronie); młoda brzoza (`slim = 0,72`) dawała dwa wąskie „kolce”.
+- Wszystkie małe drzewa tej samej średnicy koronowej z ortofoto miały prawie identyczną wysokość (klamp 3,5 m u owocowych, 4,3–5,5 m u liściastych), jednakowy pion i brak różnic odcienia/jasności (`WorldPlotKit.shader` czytał z `COLOR_0` wyłącznie skalar `occ`, bez tintu per drzewo jak `Vegetation.shader` `_TreeVar`).
+
+### Decyzja (`tools/worldgen/streetscape/small_trees.py`, `plantings.py`, `plots.py`, `WorldPlotKit.shader`)
+1. **Konary 3D pod koroną i brak „lizaka” (`young_tree`, `orchard_tree`)**:
+   - Pień `young_tree` kończy się na rozwidleniu **poniżej korony** (`fork_k` zależne od gatunku: `birch` 0,92 z wygiętym przewodnikiem i `concrete`/`trunk`, `ash` 0,88, `linden` 0,84, `maple` 0,78, `chestnut` 0,76) i dzieli na 3 konary z dwóch skrzyżowanych pasów (`_strip`, widoczne z każdej strony).
+   - 6 asymetrycznych płatów liści (3 osadzone od połowy długości konarów + 3 przesunięte górne z domieszką `shrub_a`/`apple_b`, przycięte u spodu `v_lo`, `twist` 0,65–0,95 rad, bez pojedynczych cienkich kart na osi); 4 formy: `YOUNG_FORMS = ("forked", "lean", "broad", "tiered")` oraz `ORCHARD_FORMS = ("open", "flat", "upright", "leaning")`.
+   - Brzoza: pełniejsza szerokość płata (bez `slim = 0,72`), piętrowe gałęzie wzdłuż przewodnika.
+   - `tree_dims`: wyższe minimum podstawy korony w działkach dla brzozy (1,50 m), jesionu (1,42 m), lipy (1,35 m) względem klonu/kasztanowca (1,30 m) oraz `cb_k` 0,15–0,19.
+2. **Zmienność per egzemplarz bez nowych draw calli**:
+   - Pełny obrót `0..2π`, przechył całej bryły z normalnymi wierzchołków do **±4°** (`_tilt_tree`), skala **0,7–1,3** w `garden_trees` i `plots` (`H` młode `3,2–6,4 m`, owocowe `2,7–6,2 m`).
+   - Tint per drzewo jak ADR 0352 (`±11 %` jasności, `±5 %` odcienia + kępy `±12 %` w lokalnych metrach chunka) przeniesiony w `TEXCOORD_1` (`Kit.uv1`, `WorldPlotKit.shader`: aktywne przy `fol > 0,5 && uv1.x > 0,1`; płoty, żywopłoty, krzewy i trzciny z domyślnym `uv1.x <= 0,1` bez zmian).
+- Wszystkie proporcje `WORKING_VALUE`.
+
+### Wynik (`knyszyn-w`, czyste A/B względem `main` `5e3b465b3`, High PC 1920 × 1080, `clear` + `overcast`; `artifacts/agy-garden-var-s24/`)
+- `streetscape_qa`: `trees` 808 → 808; `tris_high` 17 188 → 19 132 (**+1 944**), `tris_low` 15 428 → 15 428 (**+0**); młode pełne (164 szt.): `3 384 → 5 328` tris (20,6 → 32,5 / drzewo), owocowe (121 szt.): `5 600 → 5 600` (46,3 / drzewo).
+- Visual-QA (11 kamer `garden-trees`, `clear` i `overcast`): **draw calle `dDraws = 0`**, `shadowDraws` +0, `instDraws` +0 na wszystkich 11 kamerach; `tris` sceny `+0…+1 362` (`tykocka-dw671-out`: `490 762 → 491 081`, `+319` = `+0,06 %`).
+- Testy: `test_small_trees_0352.py` (5), `test_trees_0352.py`, `test_trees_0347.py`, `test_trees_0308.py`, `test_house_greenery_0163.py`, `test_horizon_0170.py`, `test_buildings_r9.py`, `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py` — zielone.
+
