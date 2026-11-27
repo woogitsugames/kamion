@@ -254,3 +254,71 @@ Kod: `roofs.weather_col`, `buildings_mesh.roof_age_class / roof_weather`, `plots
 (`pc-metrics.ps1`, ALU `_ROOF_WEATHER` ~6 szumów wartości na piksel dachu) — po scaleniu; `splash_band` i wiersz `concrete`
 są globalne (każdy kafel po przebudowie / reimporcie), opt-in dotyczy tylko `COLOR_0` dachów i wariantów ogrodzeń;
 lukarny i daszki nad drzwiami bez `COLOR_0` (czyste); ocena `visual-critic` po stronie lidera.
+
+## Dopisek neon-outbuildings2-s24 (27.11, gałąź `neon-outbuildings2-s24`): budynki gospodarcze r2 — brama, rynny, blacha z żebrami, cokół i zacieki (krytyka s24 build #10, pkt 9)
+**Objaw (`artifacts/critic-s24-build10/CRITIC.md` pkt 9).** Mimo nadania dachów LoD2 i okien w `props-fix-s24`, budynki
+gospodarcze przy DK65 (`dk65-07/drive-kozince`, `route-s0144`, `route-s0433` oraz `knyszyn-w/dk65-goniadzka`) nadal
+czytały się z drogi jako jednokolorowe bryły bez wrót (na długiej ścianie okapowej od drogi stały tylko małe okienka, a
+brama wypadała na krótkiej ścianie szczytowej albo z tyłu; mniejsze garaże dostawały miejskie warianty z graffiti), bez
+rynien i rur spustowych, ze zbyt niskim i jasnym cokołem (0,30 m ginące na skarpie), bez zacieków pod okapem oraz z
+idealnie płaskim szarym dachem z blachy (`roof_metal_graphite` bez `COLOR_0` i bez żeber w kierunku spadku).
+
+**Decyzja (rozszerzenie opt-in `facade_rules: rural_outbuildings: true`; +0 materiałów, DC +0, Białystok bit-identyczny):**
+1. **Wrota stodoły / garażu (`buildings_mesh.py`):**
+   - Na długiej ścianie okapowej od strony drogi (`L ≥ 7,5 m`, `barn_edges`; a dla wielkich stodół przejazdowych
+     `area ≥ 120 m²` lub `L ≥ 12 m` po obu długich stronach) oraz na ścianie frontowej (`is_main`) generowane są
+     szerokie wrota stodoły (`2,40–3,20 m × ≤ 2,35 m`, `WORKING_VALUE`) z pionowych desek (wycinek wnętrza komórek
+     `facade_atlas` `balf(2)` / `balf(5)` bez stalowej ramy balustrady, więc UV istniejących kafli nie zmieniają się).
+   - Okucia i oprawa LOD0-only (`_rural_barn_kit`, 16 trójkątów w swatchach `facade_atlas`, +0 draw calli): drewniana
+     belka nadproża i słupki ościeżnicy wystające 3,2 cm, środkowa ciemna szczelina między skrzydłami oraz 4 kute czarne
+     zawiasy pasowe (`steel_dark`).
+   - Mniejsze budynki / garaże (`L < 6 m`, 35 %) dostają wyłącznie wiejskie dwuskrzydłowe warianty `garage` `(0, 1, 5)`
+     (ciemnozielone / ciemnobrązowe / rdzawe — wycofane miejskie graffiti `2, 4` oraz biała brama uchylna `3`).
+   - Wrota rysowane jako płaska komórka (`RURAL_SHED_BARN_REVEAL_M = 0`), żeby podział ściany na cokół `zpl` w
+     `wall_pieces` nie podwajał trójkątów ościeży; wrażenie wnęki daje wystająca belka nadproża i słupki ościeżnicy.
+2. **Rynny i rury spustowe (LOD0-only, +0 draw calli):**
+   - `_rural_gutter` (prosty profil L: przód + spód = **4 trójkąty/okap**) i `_rural_downpipe` (prosty profil V: 2
+     skośne ścianki = **4 trójkąty/rura**, 1 rura dla `< 75 m²`, 2 dla `≥ 75 m²`), wyłącznie w warstwie `"buildings"`
+     (LOD0) i wyłącznie w materiale `facade_atlas` (swatche `galv` / `steel_grey` / `steel_dark`, spójne z dachem;
+     `facade_atlas` jest w 100 % chunków z budynkami gospodarczymi, bez dokładania `downpipe` do chunków bez domów).
+3. **Dach z blachy trapezowej / falistej (`WorldPbrMaterials.cs`, `WorldPBR.shader`, `buildings_mesh.py`):**
+   - Spadziste dachy `rural_outbuildings` zawsze zapisują `COLOR_0` przez `roofs.build(weather=roof_weather(..., rural_shed=True))`
+     (wiek `old` 60 % / `prl` 40 %).
+   - `WorldPbrMaterials.cs` ustawia `_RoofWeather.w = 1` dla materiałów `roof_metal_*` i `roof_sheet_*` (bez zmiany
+     7-elementowej tablicy `ROOF_WEATHER` w `materials.py`).
+   - W `WorldPBR.shader` (`#if defined(_ROOF_WEATHER)`, aktywne tylko przy `i.masks.a > 0.25` → dokładny no-op na dachach
+     bez `COLOR_0`): żebra w kierunku spadku (`ru.x`) z deterministycznym wyborem profilu per budynek (65 % trapezówka
+     T-18 co 0,20 m, 35 % blacha falista co 0,14 m; `WORKING_VALUE`), pochylenie normalnej stycznej `tn.x` z filtrem
+     anty-shimmer `fwidth(ru.x)`, cieniowanie korytek (AO + albedo + smoothness), zakładki arkuszy co 1,05 m ze
+     zróżnicowaniem odcienia arkusza i subtelnym nalotem rdzy/utlenienia na starszych stodołach.
+4. **Cokół i zacieki pod okapem (`buildings_mesh.py`):**
+   - Wysokość cokołu `rural_shed` podniesiona z 0,30 m do `RURAL_SHED_PLINTH_HS = (0.45, 0.50, 0.58, 0.65)` m z korektą
+     pod spadek terenu (`zg85 + 0,35 m`, jak `small_town`); kolor cokołu w `rural_shed_shades` przyciemniony z
+     `0,50–0,74` do `0,38–0,54` (ciepło-ziemisty beton/kamień ~0,09–0,13 linear po `_FACADE_TINT`, plus `_SPLASH`/`_SplashBand`).
+   - Zacieki pod okapem: dla `rural_shed` na tynkach `plaster_*` włączono `lod0_ro` (`TEXCOORD_1` od linii okapu `zt` w
+     dół ściany → istniejąca warstwa `_RUNOFF` / `T_parapet_runoff.png`, +0 trójkątów, +0 draw calli).
+
+**Budżet i testy (zmierzone, przed/po):**
+- Pełny `build_world.py --context` (`world_manifest.json`):
+  - `dk65-07`: warstwa `buildings` LOD0 104 376 → 107 204 (**+2 828 = +2,71 %**, limit ≤ +5 %), `buildings_lod1` +0;
+    0 nowych materiałów na żadnym z 64 chunków (chunk `7_1` stracił nieużywane `reveal_plaster`, −1 materiał).
+  - `knyszyn-w`: warstwa `buildings` LOD0 140 061 → 142 241 (**+2 180 = +1,56 %**), `buildings_lod1` +0;
+    0 nowych materiałów (3 chunki `0_6`, `2_4`, `3_2` straciły `reveal_plaster`, −1 materiał).
+- Visual-QA (edytor Win64, High PC 1920×1080, `clear` + `overcast`; `stats.txt` przed → po, przed SRP batching):
+  - `dk65-07/drive-kozince`: `drawsEst` 459 → **458** (−1), `trisExact` 1 160 324 → 1 160 644 (+320).
+  - `dk65-07/route-s0144`: `drawsEst` 504 → **503** (−1), `trisExact` 993 132 → 993 198 (+66).
+  - `dk65-07/route-s0433`: `drawsEst` 457 → **456** (−1), `trisExact` 1 166 669 → 1 166 989 (+320).
+  - `knyszyn-w/dk65-goniadzka`: `drawsEst` 328 → **328** (+0), `shadowDrawsEst` 336 → 336 (+0), `trisExact` 1 098 119 → 1 098 711 (+592).
+- Ocena okiem (`clear` + `overcast`, cropy 1:1 w `artifacts/neon-outbuildings2-s24/sbs/`): na stodołach w `dk65-goniadzka`,
+  `drive-kozince`, `route-s0433` i `route-s0144` wyraźnie czytelne dwuskrzydłowe wrota z pionowych desek z nadprożem,
+  ościeżnicą i 4 kutymi zawiasami, ciągła rynna okapowa i narożne rury spustowe, żebra blachy trapezowej/falistej w
+  kierunku spadku z delikatnymi przebarwieniami bez mory, ciemniejszy/wyższy cokół oraz miękkie zacieki pod okapem.
+- Testy: `test_rural_outbuildings_props_fix_s24` (13/13), `test_weathering_s24`, `test_typology_0238` (Białystok C +
+  Dojlidy bit-identyczne), `test_budget_0221`, `test_world_v31`, `test_hero_bridge` — łącznie 84/84 zielone; Unity
+  EditMode 0 błędów kompilacji C#/shaderów.
+- Dowody: `artifacts/neon-outbuildings2-s24/{before,after}/{dk65-07,knyszyn-w}/High-{clear,overcast}/` oraz `sbs/` (8 par
+  pełnych + 8 cropów 1:1 przed|po).
+- **Otwarte / UNVERIFIED:** proporcje i wagi (`WORKING_VALUE`, bez inwentaryzacji terenowej); czas klatki w buildzie
+  Windows (`pc-metrics.ps1`) i przebudowa pozostałych kafli z `rural_outbuildings: true` poza `dk65-07` i `knyszyn-w` —
+  po scaleniu przez lidera.
+
