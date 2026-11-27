@@ -155,3 +155,38 @@ knyszyn-w po regeneracji: drzewa ogrodowe High 19 010 → 18 302 tris; okna bud�
 Test: `tests/gis/test_horizon_0170.py::test_full_garden_tree_has_no_dark_core_body`.
 Render przed|po (High, pogodnie): `artifacts/render-artifacts-s24/sbs/crop-trees-before-after.jpg` — ostre romby zniknęły, został
 miękki cień środka korony bez krawędzi. Inne kafle z działkami dostaną zmianę przy najbliższej regeneracji (lider).
+
+## Dopisek crown-lod-s24 (2026-11-27): stipple na krawędziach koron i „topiąca się” plama (krytyk build #10, TOP 3)
+**Diagnoza (pomiar, nie hipoteza).** Widok spawnu `knyszyn-w` z buildu #10 odtworzony (kamera `cab-driver`, edytor High PC,
+oraz player build #10 / build gałęzi, `artifacts/crown-lod-s24/`).
+- `Kamion/Vegetation` **nie ma** LOD crossfade (zero `LOD_FADE_CROSSFADE`); `WorldInstances` przełączał LOD twardo:
+  High `treeCardLodScale` 1,0 → LOD0 < 20 m, LOD1 < 60 m, impostor dalej.
+- **Plama = impostor.** A/B `rq_card=1.5` zamienia rozmytą plamę (x ~1010–1170) na ostre karty LOD1: drzewo stoi w 60–90 m,
+  a impostor (6 widoków 256 × 384 px, liniowy blend dwóch widoków 60° od siebie = podwójny obraz) zajmuje tam ~190 px.
+- **Stipple = alfa-test przerw między liśćmi ~1 px, nie dither.** Player build #10, korona klonu: izolowane piksele nieba
+  0,21 % z A2C, 0,93 % bez A2C (`-rq_a2c 0`), 0,96 % przy MSAA 1 → A2C już łagodzi, LOD crossfade nie istnieje, więc to nie
+  dither crossfade'u. Próba „snap A2C do pełnych próbek” (gaszenie ordered dither NVIDIA): 0,9 % pikseli zmienionych,
+  różnicy nie widać → odrzucona i usunięta. Edytorowe VQA nie odtwarza A2C playera (inne proporcje pikseli) — stipple
+  oceniany tylko w playerze.
+
+**Decyzja.**
+1. High `treeCardLodScale` 1,0 → **1,5** (karty LOD1 do 90 m; Ultra 1,5 → 2,0, monotoniczność tierów). `WORKING_VALUE`.
+2. **Cross-fade LOD1 → impostor** na ostatnich 25 % dystansu LOD1 (High 67,5–90 m; `WorldInstances.TreeFadeBand`):
+   w paśmie rysowane są oba LOD drzewa (per instancja), a `Kamion/Vegetation` (`VegCutoff`) podnosi cutoff kart ponad 1
+   i obniża cutoff impostora z ponad 1 do własnego — przejście kształtem liści / tekseli (dissolve w teksturze), bez wzoru
+   ekranowego i bez skoku. Odległość liczona per instancja w etapie wierzchołków (te same wartości w przebiegu głębi i koloru).
+   Przełącznik tieru `treeLodFade` (PC Medium/High/Ultra tak, Low nie; profil mobilny: nie), A/B `rq_lodfade 0|1`.
+   Pień LOD1 (kora, nieprzezroczysty) nadal przełącza się twardo na końcu pasma — widoczne słabo, otwarte.
+3. **Blend widoków impostora** `smoothstep(0,3; 0,7)` zamiast liniowego: jeden ostry widok dla większości azymutów,
+   przejście tylko w środkowych 24° sektora.
+4. **Fill zminiaturyzowanych liści** (`VegCutoffFill`): gdzie tekstura liści jest pomniejszona (mip > 1), cutoff spada
+   o do 0,3 (`WorldInstances.LeafMipFill`, `WORKING_VALUE`; A/B `rq_leaffill`). Player, korona klonu: piksele mieszane
+   (krawędzie przerw) 8,2 % → 4,2 %, izolowane niebo 0,01 % → 0,00 %; duże prześwity zostają. 0,45 zlewało korony w masę.
+5. `Vegetation.shader` po ręcznym scaleniu 0352 + 0354: kompiluje się bez błędów; dwa ostrzeżenia fxc z buildu #10
+   (`potentially uninitialized variable` w `VegAlpha` i `VegShadow`) usunięte — build gałęzi: 0 ostrzeżeń `Kamion/Vegetation`.
+6. Poprawka narzędzia: `rq_a2c 0` działa w edytorowym VQA (kopie materiałów brały stare `m_LeafA2C`).
+
+**Koszt (edytor, High PC 1920 × 1080, pogodnie, `artifacts/crown-lod-s24/compare-before2-after2.md`).** `drawsEst` obiektów
+kafla bez zmian na 8 kamerach; draw calle instancji +0…+11 (cab-driver 96 → 106), trójkąty instancji +3,6k…+17k
+(cab-driver 47,3k → 58,7k), trójkąty cieni instancji +3,6k…+17k (karty LOD1 rzucają cień, `treeShadowLodMask` 3).
+Czas klatki: patrz `pc-metrics` niżej.
