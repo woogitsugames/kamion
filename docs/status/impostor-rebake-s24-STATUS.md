@@ -33,3 +33,6 @@
 - [krok 6] EditMode Win64 (editmode1, kod gałęzi, atlasy w trakcie rebake'u): 1632 / 1513 pass / 1 fail / 118 skip.
   Jedyny fail: StartClearanceTests("dk65-07") — scena dk65-07 skopiowana z worktree win-build jest starsza niż dane
   trasy w tej gałęzi (środowisko, nie zmiana). ImpostorTrimTests (w tym nowy) zielone.
+- [krok 7] Pełny rebake OK (4825 s, 28 drzew): 28 × impostor 4096×1024 + _n 2048×512, trees.glb bez zmian (deterministyczny),
+  trees_lod2.glb 62 MB (osadzone PNG; LFS), trees_meta bez zmian treści. Commit be0fca977.
+- NASTĘPNY KROK: (trwa) post.ps1 (kopie do _Generated + ImpostorTrimBake) + `vqa.ps1 -Label after -Audit`, potem sbs.sh.
