@@ -36,3 +36,6 @@
 - [krok 7] Pełny rebake OK (4825 s, 28 drzew): 28 × impostor 4096×1024 + _n 2048×512, trees.glb bez zmian (deterministyczny),
   trees_lod2.glb 62 MB (osadzone PNG; LFS), trees_meta bez zmian treści. Commit be0fca977.
 - NASTĘPNY KROK: (trwa) post.ps1 (kopie do _Generated + ImpostorTrimBake) + `vqa.ps1 -Label after -Audit`, potem sbs.sh.
+- [krok 8] _n impostora na GPU max 1024 (połowa albedo jak w ADR 0023; pamięć jak przed). post.ps1: atlasy w _Generated
+  knyszyn-w / dk65-07, ImpostorTrimBake: 23 / 25 impostorów, średnie pole 41 % / 40 % kwadratu, 0 pominiętych.
+- NASTĘPNY KROK: (w kolejce slotów) `vqa.ps1 -Label after -Audit -AuditReimport`, potem `bash sbs.sh before after sbs`.
