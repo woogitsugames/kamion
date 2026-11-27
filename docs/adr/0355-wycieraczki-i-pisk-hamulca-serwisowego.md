@@ -73,3 +73,25 @@ oraz `wav-measurements.txt`.
 Pełny PlayMode na tej bazie wymagał lokalnej regeneracji brakującej mapy
 `bialystok-krywlany` poleceniem
 `& $python tools/ui/build_nav_map.py --region bialystok-krywlany`.
+
+## Dopisek (`agy-horn-rattle-s24`): klakson (HUD PC + synteza pneumatyczna) i grzechot naczepy/sprzęgu (ADR 0142)
+
+Zamknięto kolejne dwa punkty otwarte od ADR 0142 („przycisk klaksonu na HUD; grzechot naczepy”), spójnie ze wzorcami ADR 0355:
+
+1. **Klakson pneumatyczny + przycisk w HUD PC (`DesktopHudLayout` / `DrivingHud.Desktop` / `TruckAudioController`)**
+   - Klawisz `K` (`DrivingActionCatalog.Horn`, domyślnie `<Keyboard>/k` i `<Gamepad>/rightStickPress`, zmienialny w menu wiązań `InputBindingsPanel`) naprawiono w `DrivingLabBootstrap` tak, aby respektował `Keyboard.Enabled` zamiast sztywnego odczytu `kb.kKey.isPressed`. Klawisz `H` pozostaje przypisany do świateł awaryjnych (`DrivingActionCatalog.Hazard`).
+   - W HUD PC (`DesktopHudLayout`, strefa `DesktopHorn` `136 × 52 u` w stylu matowej tablicy `UiPalette.HudPanel`, podpis `Klakson`) dodano widget `HornButtonWidget` (`IPointerDownHandler`/`IPointerUpHandler`) po lewej stronie dolnego bloku wskaźników (`AudioCues.HornHudHeld` niezależny od `AudioCues.HornHeld`).
+   - Synteza proceduralna w `tools/audio/horn_rattle.py` generuje parę pętli mono 48 kHz (`horn_air_loop.wav` `1,000 s`, peak `−3,00 dBFS`, RMS `−16,15 dBFS`; `horn_air_cab_loop.wav` `1,000 s`, peak `−5,79 dBFS`, RMS `−17,80 dBFS`) z dwutonowych trąb pneumatycznych (~`192 Hz` i ~`238 Hz`, parzyste + nieparzyste składowe mosiężne + szum wypływu powietrza `1,2–5,2 kHz`), używaną przez zestaw proceduralny w `VehicleAudioLibrary.hornAir` (zestaw ElevenLabs zachowuje `elHorn`). Podtrzymanie minimalnego impulsu (`HornMinBlastSeconds = 0,22 s`, `WORKING_VALUE`) rozróżnia krótkie naciśnięcie od przytrzymania.
+
+2. **Grzechot naczepy i siodła (`TrailerRattleGate` / `TruckAudioController.CabMechanisms`)**
+   - Struktura wartościowa `TrailerRattleGate` (zero alokacji GC) wylicza pobudzenie z fizyki sprzężonej naczepy: `|TrailerModel.LocalAcceleration.y|`, prędkości ugięcia osi `Wheels[i].CompressionRate`, dynamicznego odchylenia nacisku siodła względem wygładzonej bazy (`FifthWheel.KingpinLoadLocal.y`), prędkości jazdy (`MinSpeedKmh = 1,5 km/h`), nawierzchni szorstkich (`Cobbles`/`Gravel`/`Grass`) oraz chwili sprzęgnięcia (`SinceCoupled`).
+   - Stochastyczny generator zdarzeń wyzwala 4 pary klipów mono 48 kHz (`trailer_rattle_{chain_a,chain_b,tarp_a,kingpin}(_cab).wav`, czasy `0,220–0,400 s`, peak `−3,50..−4,00 dBFS` na zewnątrz i `−4,95..−13,61 dBFS` w kabinie) z losową modulacją głośności i wysokości; w kabinie poziom jest cichszy (`cabTrailerRattleFactor = 0,35 × trailerRattleVolume = 0,55`).
+
+3. **Weryfikacja (`agy-horn-rattle-s24`, Win64)**
+   - `tools/audio/tests/test_horn_rattle.py`: `3 passed`.
+   - PlayMode Win64 (filtr `HornRattlePlayModeTests;CabMechanismsPlayModeTests;PcHudGc0244Tests;ElevenLabsFxAudioTests;AudioLayersTests`): `16 total, 16 passed, 0 failed, 0 inconclusive`.
+     - `DrivingLab_ProceduralHorn_ShortPressVsHold_HudButton_ZeroGc`: krótkie muśnięcie 30 ms osiąga `short_peak = 0,900`, przytrzymanie w kabinie `hold_cab_vol = 0,630` (< `short_ext_vol = 0,900`), przycisk HUD `hud_hold = 0,900`, `gc_bytes = 0/300`.
+     - `DrivingLab_TrailerRattle_BumpsAndCobbles_QuieterInCab_ZeroGc`: gładki asfalt `flat = 0` zdarzeń; pas przeszkód `DrivingLab` (progi 8/15 cm, próg zwalniający, koleiny) daje `ext_events = 27`, `cab_events = 25`, `peak_ay = 7,41 m/s2`, `peak_compRate = 2,00 m/s`, `gc_bytes = 0/1800`.
+   - EditMode Win64: `1694 total, 1572 passed, 0 failed, 122 skipped (Skipped:Ignored)`, w tym `HornRattleTests` `6/6` i `HudRedesign0283Tests` `21/21`.
+   - Telemetria zdarzeń, pomiary WAV i zrzuty visual-qa (`before`/`after`/`sbs`) zapisano w `artifacts/agy-horn-rattle-s24/`.
+

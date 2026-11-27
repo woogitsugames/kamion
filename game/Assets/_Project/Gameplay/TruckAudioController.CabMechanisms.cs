@@ -131,7 +131,6 @@ namespace Game.Gameplay
                         totalFz += fz;
                         int sid = tw[i].SurfaceId;
                         if (sid == 3 || sid == 4 || sid == 5) roughFz += fz;
-                        else if (sid == 2) roughFz += 0.35f * fz;
                     }
                 }
                 rough = totalFz > 1f ? roughFz / totalFz : 0f;

@@ -21,14 +21,14 @@ namespace Game.Gameplay
     {
         // WORKING_VALUE: thresholds & timing tuned for 40 t combination over curbs, ruts, cobbles and gravel.
         public const float MinSpeedKmh = 1.5f;
-        public const float VerticalAccelThresholdMs2 = 1.1f;
-        public const float SuspensionRateThresholdMs = 0.22f;
+        public const float VerticalAccelThresholdMs2 = 1.6f;
+        public const float SuspensionRateThresholdMs = 0.28f;
         public const float MinHitInterval = 0.06f;
         public const float MaxHitInterval = 0.30f;
         public const float ExcitationDecayTau = 0.28f;
 
         double m_LastSimTime;
-        float m_PrevWheelRate, m_PrevKingpinLoadN, m_LastVerticalExcitation;
+        float m_SmoothedKingpinLoadN, m_LastVerticalExcitation;
         float m_Energy, m_Cooldown;
         bool m_HasSim, m_KingpinDominant;
 
@@ -74,18 +74,18 @@ namespace Game.Gameplay
                 float simDt = Mathf.Max((float)(simTime - m_LastSimTime), 1e-4f);
                 if (m_HasSim)
                 {
-                    float wheelAccel = Math.Abs(signedPeakCompRateMs - m_PrevWheelRate) / simDt;
-                    float kingpinJolt = Math.Abs(kingpinLoadN - m_PrevKingpinLoadN) / Mathf.Max(trailerMassKg, 5000f) / simDt;
-                    m_LastVerticalExcitation = Mathf.Max(Math.Abs(bodyVertAccelMs2), Mathf.Max(0.55f * wheelAccel, 0.70f * kingpinJolt));
-                    m_KingpinDominant = kingpinJolt > Math.Abs(bodyVertAccelMs2) && kingpinJolt > 0.55f * wheelAccel;
+                    m_SmoothedKingpinLoadN = LayerMath.ExponentialStep(m_SmoothedKingpinLoadN, kingpinLoadN, simDt, 0.14f, 0.14f);
+                    float kingpinImpulse = Math.Abs(kingpinLoadN - m_SmoothedKingpinLoadN) / Mathf.Max(trailerMassKg, 5000f) * 3.8f;
+                    float bodyAy = Math.Abs(bodyVertAccelMs2);
+                    m_LastVerticalExcitation = Mathf.Max(bodyAy, kingpinImpulse);
+                    m_KingpinDominant = kingpinImpulse > bodyAy && kingpinImpulse > VerticalAccelThresholdMs2;
                 }
                 else
                 {
+                    m_SmoothedKingpinLoadN = kingpinLoadN;
                     m_LastVerticalExcitation = Math.Abs(bodyVertAccelMs2);
                     m_KingpinDominant = false;
                 }
-                m_PrevWheelRate = signedPeakCompRateMs;
-                m_PrevKingpinLoadN = kingpinLoadN;
                 m_HasSim = true;
                 m_LastSimTime = simTime;
             }

@@ -163,16 +163,22 @@ namespace Game.Tests
                 var body = audio.vehicle;
                 audio.ResetEvents();
                 body.SetMoving(10f, 6); // 36 km/h
-                for (int i = 0; i < 40; i++) { body.Tick(0.01f); Physics.Simulate(0.01f); } // settle spawn
+                for (int i = 0; i < 80; i++) { body.Tick(0.01f); Physics.Simulate(0.01f); audio.AudioStep(0.01f); } // settle spawn suspension
                 audio.ResetEvents();
+                for (int i = 0; i < 10; i++) { body.Tick(0.01f); Physics.Simulate(0.01f); audio.AudioStep(0.01f); } // warm up gate baseline
                 int beforeFlat = audio.TrailerRattleEvents;
+                float flatMaxAy = 0f, flatMaxComp = 0f;
                 for (int i = 0; i < 150; i++)
                 {
                     var inp = body.Input; inp.Throttle = 0.25f; inp.Brake = 0f; inp.ParkingBrake = false; body.Input = inp;
                     body.Tick(0.01f); Physics.Simulate(0.01f); audio.AudioStep(0.01f);
+                    var tm = body.Trailer.Model;
+                    flatMaxAy = Mathf.Max(flatMaxAy, Mathf.Abs((float)tm.LocalAcceleration.y));
+                    foreach (var w in tm.Wheels)
+                        if (w.Contact) flatMaxComp = Mathf.Max(flatMaxComp, Mathf.Abs((float)w.CompressionRate));
                 }
                 int flatEvents = audio.TrailerRattleEvents - beforeFlat;
-                Assert.AreEqual(0, flatEvents, "smooth flat asphalt must not rattle");
+                Assert.AreEqual(0, flatEvents, $"smooth flat asphalt must not rattle (maxAy={flatMaxAy:F2}, maxComp={flatMaxComp:F2})");
 
                 // B) DrivingLab obstacle lane (x = 100 m: 8 cm platform, 15 cm platform, speed bump, ruts) in Chase vs Cab
                 int extEvents = 0, cabEvents = 0;
