@@ -26,3 +26,5 @@
 - Następny krok po zakończeniu eksportu i QA PRZED: `pwsh artifacts/codex-dash-items-s24/install-export.ps1`
 - [krok 4] Unity Win64 zbudowało bazowe prefaby TRAKT/naczepy. Visual QA PRZED, DrivingLab PC High 1920×1080, 15 PNG w warunkach clear, overcast i lowsun, w tym cab-driver, cab-view-b i FOV 55/75.
 - Następny krok po zakończeniu Blendera: `pwsh artifacts/codex-dash-items-s24/install-export.ps1`
+- [krok 5] Eksport LOD0/1/2 z AO 4096 spp, CHECK PASS i SIGHTLINE PASS. Trójkąty 107 305→107 641, 44 457→44 619, 21 787→21 875. Ponowny bake panoramy z LOD1, dopiski ADR 0341 i licencji. Przywrócono QualitySettings po pomiarze PRZED.
+- Następny krok: `pwsh artifacts/codex-dash-items-s24/qa.ps1 after`

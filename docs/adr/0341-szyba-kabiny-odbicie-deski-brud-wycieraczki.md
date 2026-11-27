@@ -131,3 +131,19 @@ LowSun prosto w słońce (knyszyn-w, kurs 60°): wachlarz kilkunastu cienkich ł
 krawędziach i jeden miękki pas przy słońcu (`cmp_lowsun.jpg`, `lowsun_after2_crop.jpg`). Overcast: różnica przed/po
 średnio 0,04–0,10 poziomu (warstwy w świetle rozproszonym bez zmian). Dowody: `artifacts/glass-sky-s24/`
 (`before*/`, `after2/`, `dbg3*/`). Telefon i build Windows: niezmierzone (`UNVERIFIED`).
+
+## Dopisek codex-dash-items-s24 (2026-11-27) — druga partia jasnych przedmiotów
+
+ADR 0344 wprowadził dokumenty CMR, pasek z tachografu, telefon i mikrofibrę. W tacce pasażera złożona
+kamizelka z dwiema szarymi taśmami zastępuje mikrofibrę i sąsiaduje z kremowym kubkiem termicznym na boku.
+Położenie, rozmiary i kolory są danymi generatora `build_dash_items` (`WORKING_VALUE`). Taśmy mają kolor
+rozproszony pod istniejącym materiałem Fabric. Kubek korzysta ze slotu Plastic, łącznie z ciemną zakrętką.
+
+Kubek przysunięto do krawędzi tacki od strony kierowcy i obniżono jego profil po próbie promieniami.
+W finalnym ustawieniu przy próbkowaniu trójkątów i dziewięciu pozycji oka w polu ±20 mm kamizelka
+zakrywa 0 z 99 540, a kubek 0 z 81 072 próbkowanych kierunków do wcześniej odsłoniętej części przedniej
+szyby. Projekcja na 16:9 umieszcza kubek poza prostym kadrem 55°, 70° i 75°, a krawędź kamizelki
+wchodzi w prawy dół kadru przy 75°. Kadry `cab-dash` i `cab-trays` pokazują tackę pasażera.
+
+Panorama 1024×512 pochodzi z ponownego wypieku Cycles z LOD1 i odpowiadającego mu atlasu AO.
+Shader zachowuje model odbicia z ADR 0341, a geometria pozostaje w dotychczasowych submeshach kabiny.
