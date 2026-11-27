@@ -75,3 +75,7 @@
 ### codex-gen-fix-s25 — zweryfikowane i przekazane
 - 224/224 celowanych GIS, w tym 62/62 budżetowych. Low −476 i High −1968 tri WN łącznie. Zero nowych sektorów z WN. Raport i dowody w `artifacts/codex-gen-fix-s25/`.
 - Następny krok lidera: `git diff --stat e8b5d5e8f..codex-gen-fix-s25`, następnie kolejka fali 14 wg `artifacts/regen-wave-14-s24/README.md`.
+
+### codex-seams-dk65-s25 — odtworzenie audytu
+- Na dk65-04 / dk65-05 odtworzono 0 FAIL, 4 UWAGA i 1 PRZEJŚCIE. Ostrzeżenia dotyczą dwóch dróg bocznych. Pliki audytu zapisane przed błędem kodowania konsoli; kolejne uruchomienia z PYTHONIOENCODING=utf-8.
+- Następny krok: cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd C:/Users/matma/Documents/Claude/kamion/artifacts/codex-seams-dk65-s25/probe.py.
