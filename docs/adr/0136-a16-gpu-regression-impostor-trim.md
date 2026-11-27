@@ -146,3 +146,18 @@ p99 klatki 33,6–33,9 w 2 z 3 przejazdów, PSS 875–906 MB, bateria 29–30 °
 - Karty liści LOD0/LOD1 (`leaves_*.png` pokrycie 23–48 %) — ta sama technika na kartach w `trees.glb` (osobna siatka per karta).
 - Ściany HLOD: górne ~12 % atlasu puste — przycięcie w `forest_hlod.py` (mały zysk).
 - Treść s11–s12 (+1,5–2 ms rozproszone): budżet per runda dla agentów treści (pomiar `rq_ab off:m.<prefix>` na A16 przed scaleniem).
+
+## S24 — limity wybranych propsów na PC Low i Medium
+
+D73 przenosi bramkę wydajności na Windows. Dane A16 z rundy 2 wskazały na zaparkowane auta, a ADR 0153 ograniczył już liczbę podsiatek ich dalszych LOD. W tej rundzie `WorldPropTierPolicy` ustala limity według prefiksu prototypu. `WorldInstances` buforuje reguły per prototyp przy alokacji i zmianie aktywnego tieru. Działa to także dla wcześniej zaimportowanych zestawów.
+
+| Prefiks | Low: limit m / skala LOD / cienie | Medium: limit m / skala LOD / cienie |
+|---|---|---|
+| `car_`, `van_` | 150 / 0,8 / wył. | 225 / 0,9 / wg maski |
+| `tractor_`, `trailer_` | 150 / 1 / wg maski | 225 / 1 / wg maski |
+| `contact_` | 150 / 1 / wg maski (zero) | 225 / 1 / wg maski (zero) |
+| `fab_` | 50 / 1 / wył. | 70 / 1 / wg maski |
+
+Wartości to `WORKING_VALUE`. Limity są górną granicą istniejącego cullu przy `distanceScale=1`. Korekta LOD aut osobowych i vanów mnoży skalę widoku, a podłoga LOD0 16 m nadal obowiązuje. Plamy kontaktowe są współdzielone według specyfikacji, więc mają wspólny limit ze wszystkimi właścicielami. Na pozostałych prefiksach, High/Ultra i na urządzeniach mobilnych obowiązuje dotychczasowa polityka. Znaki, lampy, przystanki i dominanty zachowują swoje zasady. Diagnostyczne `rq_vehcull` oraz `rq_ab vc:<m>` mają pierwszeństwo przed limitem pojazdów i ich plam.
+
+Pomiary visual-QA opisano w `artifacts/codex-props-low-perf-s24/WYNIKI.md`. Liczniki `drawsEst` i `shadowDrawsEst` dotyczą obiektów sceny, a instancje mają osobne `draws` i `shadowCasterDraws`. Ten ostatni licznik obejmuje zgłoszenia przed odcięciem kaskad URP. Wynik klasy PC min (Low 30 fps, ADR 0266) wymaga przebiegu w playerze.

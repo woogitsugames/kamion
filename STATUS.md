@@ -44,3 +44,6 @@
 
 - [krok 9] Visual-QA przed zakończone. Zapisano 48 PNG i osiem plików stats.txt (PC 1920×1080, sześć kamer każdego kafla). Tykocin miał 106 rozbieżności SHA względem manifestu, oba przebiegi użyją tych samych scen.
 - Następny krok: `Copy-Item artifacts/codex-props-low-perf-s24/prep/WorldInstances.cs game/Assets/_Project/World/Runtime/`.
+
+- [krok 10] Podłączono zbuforowane reguły prefiksów do WorldInstances, z zachowaniem pierwszeństwa diagnostycznych override'ów cullu. Dodano 30 przypadków EditMode i dopisek ADR 0136.
+- Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/batch-qa.ps1 -Phase after`, następnie `pwsh -File artifacts/codex-props-low-perf-s24/verify.ps1 -Suite all`.
