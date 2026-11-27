@@ -33,3 +33,5 @@
 - Następny krok: `pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64`.
 - Powtórny PlayMode Win64 na scenie z gita i odtworzonych prefabach: 224 testy, 207 zaliczonych, 0 błędów, 17 pominiętych. XML: `tests/playmode-20261127-164429.xml`.
 - Następny krok: pod slotem heavy `& $python -m pytest -q tests/gis`.
+- Kontrola logów EditMode, PlayMode i generatora: brak diagnostyki C# i pięciu wskazanych shaderów. Zapisano osobno ostrzeżenia innych shaderów w WYNIKI.md. Usunięto końcowe spacje z metadanych nowej mapy.
+- Następny krok po zakończeniu GIS: pod slotem heavy `& $python tools/worldgen/roads/build_world.py --region knyszyn-w --no-route-graph`, następnie import i visual-qa High.
