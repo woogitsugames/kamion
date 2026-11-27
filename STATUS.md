@@ -123,3 +123,5 @@
 - 2026-11-28 codex-wave15-prep-s25 — skrypty i kolejki 5/54 gotowe. Dry-run dk65-04, parser PowerShell i podstawiony blok Unity OK. Budżety 62/62 PASS. Następny krok: `git diff --check HEAD^`.
 
 - 2026-11-28 codex-wave15-prep-s25 — README i WYNIKI gotowe, z kolejnością integracji i zakresem 5/54. Unity i generatory odłożone do końca fali 14. Następny krok lidera: `git log --oneline main..codex-wave15-prep-s25`.
+
+- 2026-11-28 codex-wave15-prep-s25 — potwierdzono stronę szwu z bbox, zgodność kopii dowodów i czyste drzewo. Następny krok lidera po fali 14: `git log --oneline main..codex-wave15-prep-s25`.

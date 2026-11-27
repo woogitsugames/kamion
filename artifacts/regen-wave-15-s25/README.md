@@ -8,7 +8,7 @@
 | --- | --- | --- | ---: | ---: | ---: |
 | A | `bialystok-mickiewicza` | Podpięcie pięciu słupów do linii SN z OSM | 12 038 | 13 168 | 12 |
 | B | `bialystok-industrial-c` | Raport fidelity C i manifest do porównania bajtów GLB | 2 230 | 3 477 | 13 |
-| C | `dk65-04` | Zachodnia strona szwu Sadowa / Szkolna i scena kontrolna | 1 184 | 1 490 | 13 |
+| C | `dk65-04` | Południowa strona szwu Sadowa / Szkolna i scena kontrolna | 1 184 | 1 490 | 13 |
 | D | `dk65-05` | Przywrócony koniec Sadowej w sieci, nawierzchni i kolizji | 917 | 1 226 | 13 |
 | E | `tykocin` | Pomnik Czarnieckiego r3/r4 z main | 908 | 1 171 | 13 |
 
@@ -20,7 +20,7 @@ Pomiar Sadowej znalazł **1 pasujący fragment w 11 380 krawędziach 54 grafów*
 
 ## Czasy
 
-Czasy historyczne pochodzą z kolejki fali 14, sporządzonej z udanych wpisów fali 13 oraz fali 12 dla Mickiewicza i Wygody. Fala 14 trwała podczas przygotowania. Do przydziału sortowano malejąco według `total_s` i dokładano kafel do najkrótszego łańcucha. Mickiewicza sam wyznacza ścieżkę krytyczną małej kolejki. W pełnej kolejce łańcuchy mają **21 989–22 196 s** prac Python każdy, czyli około **6 h 7 min** w równoległym wykonaniu według historycznych wag.
+Czasy historyczne pochodzą z kolejki fali 14, sporządzonej z udanych wpisów fali 13 oraz fali 12 dla Mickiewicza i Wygody. Fala 14 trwała podczas przygotowania. Do przydziału sortowano malejąco według `total_s` i dokładano kafel do najkrótszego łańcucha. Mickiewicza sam wyznacza ścieżkę krytyczną małej kolejki. W pełnej kolejce łańcuchy mają **21 989–22 196 s** prac Python każdy, czyli około **6 h 10 min** w równoległym wykonaniu według historycznych wag.
 
 | Wariant | Najdłuższy łańcuch Python | Praca Python łącznie | Rezerwa czasu na całość |
 | --- | ---: | ---: | ---: |
