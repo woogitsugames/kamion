@@ -1,4 +1,5 @@
-"""ADR 0352 addendum (garden-trees-s24): small garden trees of the plot kit as lobes / clumps on limbs."""
+"""ADR 0352 addendum (garden-trees-s24 / agy-garden-var-s24): small garden trees of the plot kit as forked boughs +
+asymmetric clumps, with per-instance scale (0.7-1.3), +-4 deg tilt, 4 forms and per-tree UV1 tint."""
 import sys
 from pathlib import Path
 
@@ -27,23 +28,28 @@ def _split(kit):
 def test_young_tree_budget_forms_and_envelope():
     forms = set()
     shapes = []
+    uv1s = set()
     for sp, r, H, cb in (("linden", 1.25, 4.7, 1.6), ("maple", 1.5, 4.6, 1.3), ("birch", 1.2, 5.6, 1.3), ("ash", 1.0, 4.0, 1.3)):
-        for k in range(12):
+        for k in range(16):
             kit = PLT.Kit()
             forms.add(ST.young_tree(kit, np.zeros(2), 0.0, r, H, cb, sp, PG.HABIT[sp], (sp, k)))
-            assert _tris(kit) <= 1.5 * OLD_YOUNG_TRIS                              # + 50 % at most
+            assert _tris(kit) <= 38                                                # 3 crossed-strip boughs + 6 lobes (<= 44 cap)
             V, UV, T, C, fol = _split(kit)
+            uv1 = kit.out_uv1()
+            assert uv1 is not None and (uv1[:, 0] > 0.5).all()                     # per-tree tint active
+            uv1s.add((round(float(uv1[0, 0]), 3), round(float(uv1[0, 1]), 3)))
             rad = np.hypot(V[fol][:, 0], V[fol][:, 1])
-            assert rad.max() <= 1.9 * r, (sp, k, rad.max())                        # quad corners (transparent); the painted crown ends inside
-            assert V[fol][:, 2].max() <= H * 1.06 and V[fol][:, 2].min() >= cb - 0.12 * (H - cb) - 0.05
-            assert (~fol).sum() >= 12 + 6                                          # 3-sided stem + boughs
-            u0, u1, v0, v1 = PK.sprite(PG.HABIT[sp])                               # species crown card of ADR 0352, same atlas
-            assert (UV[fol][:, 0] >= min(u0, u1) - 1e-6).all() and (UV[fol][:, 0] <= max(u0, u1) + 1e-6).all()
+            assert rad.max() <= 1.9 * r, (sp, k, rad.max())
+            assert V[fol][:, 2].max() <= H * 1.08 and V[fol][:, 2].min() >= cb - 0.12 * (H - cb) - 0.15
+            assert (~fol).sum() >= 12 + 24                                         # 3-sided stem + 3 crossed-strip boughs
+            u0, u1, v0, v1 = PK.sprite(PG.HABIT[sp])
+            assert ((UV[fol][:, 0] >= min(u0, u1) - 1e-6) & (UV[fol][:, 0] <= max(u0, u1) + 1e-6)).sum() >= 12
             occ = np.linalg.norm(C[fol, :3] * 2 - 1, axis=1)
             assert occ.min() >= 0.6                                                # no dark body
             shapes.append(np.round(np.ptp(V[fol], axis=0) / r, 2).tolist())
-    assert forms == set(ST.YOUNG_FORMS)
+    assert forms == set(ST.YOUNG_FORMS) and len(ST.YOUNG_FORMS) == 4
     assert len({tuple(s) for s in shapes}) == len(shapes)                          # no two trees alike
+    assert len(uv1s) > 10                                                          # distinct per-tree tints
 
 
 def test_young_tree_lobes_do_not_cross_on_the_axis_and_are_not_flat():
@@ -65,20 +71,43 @@ def test_young_tree_lobes_do_not_cross_on_the_axis_and_are_not_flat():
 
 def test_orchard_tree_has_limbs_clumps_and_no_core():
     forms = set()
-    for k in range(16):
+    for k in range(24):
         kit = PLT.Kit()
         forms.add(PLT.fruit_tree(kit, np.zeros(2), 0.0, 4.2, ("f", k), r=1.7))
         assert _tris(kit) <= 1.5 * OLD_ORCHARD_TRIS and _tris(kit) in (40, 50)
         V, UV, T, C, fol = _split(kit)
+        assert kit.out_uv1() is not None
         occ = np.linalg.norm(C[fol, :3] * 2 - 1, axis=1)
         assert occ.min() >= 0.6                                                    # the old _core had 0.22-0.26
         hv0, hv1 = PK.row("hedge")
         assert not ((UV[fol][:, 1] >= hv0) & (UV[fol][:, 1] <= hv1)).any()         # no dense hedge row (= the core's texture)
         n_limbs = ((~fol).sum() - 12) // 8
         assert n_limbs in (3, 4)                                                   # crossed strips, seen from every side
-        assert V[fol][:, 2].max() <= 4.2 + 0.4 and V[fol][:, 2].min() >= 0.3
-        assert 1.2 <= np.hypot(V[fol][:, 0], V[fol][:, 1]).max() <= 1.9 * 1.7
-    assert forms == set(ST.ORCHARD_FORMS)
+        assert V[fol][:, 2].max() <= 4.2 + 0.45 and V[fol][:, 2].min() >= 0.3
+        assert 1.2 <= np.hypot(V[fol][:, 0], V[fol][:, 1]).max() <= 1.95 * 1.7
+    assert forms == set(ST.ORCHARD_FORMS) and len(ST.ORCHARD_FORMS) == 4
+
+
+def test_garden_trees_vary_scale_tint_and_species_branch_height():
+    """agy-garden-var-s24: neighboring identical orthophoto crowns get varied 0.7-1.3x scale and distinct UV1 tints,
+    while birch/ash attach first branches higher than maple/chestnut."""
+    from types import SimpleNamespace
+    from shapely.geometry import box
+    parts = [SimpleNamespace(layer=ly, mat="plot_kit",
+                             V=np.array([[-15.0, 2.0, 0.0], [18.0, 2.0, 0.0], [18.0, 15.0, 0.0], [-15.0, 15.0, 0.0]]),
+                             T=np.array([[0, 1, 2], [0, 2, 3]])) for ly in ("plots", "plots_low")]
+    buf = SimpleNamespace(parts=parts, add=lambda l, m, V, UV, T, **k: parts.append(
+        SimpleNamespace(layer=l, mat=m, V=np.asarray(V), T=np.asarray(T), kw=k)))
+    plot = {"id": "p", "key": "p", "poly": box(-15, -15, 15, 15),
+            "foot": box(-4, -4, 4, 4),
+            "lay": {"runs": [], "gate": None, "wicket": None, "wickets": []}}
+    crowns = [{"plot": "p", "key": ("c", i), "p": np.array([-10.0 + i * 2.5, 8.0]), "r": 1.35,
+               "in_plot": True, "near": True, "kind": "broadleaf"} for i in range(12)]
+    rep = PG.garden_trees(buf, {"plots": [plot], "garden_trees": crowns}, lambda q: 0.0, {})
+    hs = [t["h_m"] for t in rep["list"] if t["species"] != "fruit"]
+    assert len(hs) >= 6 and max(hs) / min(hs) >= 1.35, hs                          # 0.7-1.3x scale spread across same r
+    assert any("UV1" in p.kw for p in parts[1:] if p.layer == "plots")
+    assert PG.tree_dims(1.4, "birch", "k")[1] > PG.tree_dims(1.4, "maple", "k")[1]  # birch attaches higher than maple
 
 
 def test_crown_cards_have_a_rounded_underside():

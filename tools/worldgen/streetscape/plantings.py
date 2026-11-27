@@ -873,7 +873,8 @@ def _emit(buf, kit, groups, half, src, rep, strict=True):
                     return False
     for layer, o in outs:
         if o is not None:
-            buf.add(layer, "plot_kit", o[0], o[1], o[2], src=src, COL=o[3])
+            uv1 = kit.out_uv1(low=(layer == PLT.KIT_LAYER_LOW))
+            buf.add(layer, "plot_kit", o[0], o[1], o[2], src=src, COL=o[3], **({"UV1": uv1} if uv1 is not None else {}))
             rep["tris_high" if layer == PLT.KIT_LAYER else "tris_low"] += len(o[2])
     return True
 
@@ -998,10 +999,13 @@ def tree_dims(r, species, key, in_plot=True):
     top = G7["ceiling_m"][species]
     H = min(max(H, TREE_H_MIN_M if species != "fruit" else 3.5), top)
     base_min = G7["crown_base_min_m"] if in_plot else G7["crown_base_strip_m"]
+    if in_plot and species in ("birch", "ash", "linden"):
+        base_min = {"birch": 1.50, "ash": 1.42, "linden": 1.35}[species]
     sprite = HABIT.get(species)
     if species in ("maple", "ash", "chestnut") and PLT.hfloat(key, "g7-habit") < OVATE_SHARE:
         sprite = "crown_ovoid"                               # a younger / shaded tree: taller than wide
-    cb = max(G7["crown_base_per_h"] * H, base_min)
+    cb_k = {"birch": 0.19, "ash": 0.17, "linden": 0.16, "maple": 0.15, "chestnut": 0.15}.get(species, G7["crown_base_per_h"])
+    cb = max(cb_k * H, base_min)
     if sprite is not None:
         wm, hm = PLT.PK.SPRITE_M[sprite]
         for _ in range(3):
@@ -1010,7 +1014,7 @@ def tree_dims(r, species, key, in_plot=True):
                 H = min(cb + D / (CARD_STRETCH[1] * wm / hm), top)
             elif st < CARD_STRETCH[0]:
                 H = max(cb + D / (CARD_STRETCH[0] * wm / hm), TREE_H_MIN_M)
-            cb = max(G7["crown_base_per_h"] * H, base_min)
+            cb = max(cb_k * H, base_min)
     return round(H, 2), round(min(cb, 0.45 * H), 2), sprite
 
 
@@ -1044,12 +1048,19 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
     p = np.asarray(p, float)
     sprite = sprite or HABIT[species]
     if not lite and (H < small_trees.YOUNG_H_MAX_M if young is None else young):
-        # ADR 0352 addendum (garden-trees-s24): the full variant of a small tree is a stem with lobes of foliage on
-        # boughs (20-21 triangles), not three whole-crown cards crossed on the axis (14): those were a ball on a stick
-        # with a dark wedge between the cards facing away from the sun. young=True: garden_trees() - every tree that
-        # stays a kit tree on High has a crown radius below LIB_MIN_R_M, also the slender ones (birch) above 6.5 m
+        # ADR 0352 addendum (garden-trees-s24 / agy-garden-var-s24): full variant of a small tree is a forked stem
+        # with 3D boughs and asymmetric lobes of foliage (small_trees.young_tree).
         small_trees.young_tree(kit, p, z, r, H, cb, species, sprite, key)
         return
+    prev_uv1 = kit.uv1
+    kit.uv1 = small_trees._tree_uv1(key)
+    try:
+        _garden_tree_cards(kit, p, z, r, H, cb, species, key, lite=lite, cards=cards, sprite=sprite, core=core)
+    finally:
+        kit.uv1 = prev_uv1
+
+
+def _garden_tree_cards(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False):
     hc = H - cb
     a0 = PLT.hfloat(key, "ty") * 6.2832
     lean = (np.array([PLT.hfloat(key, "tlx"), PLT.hfloat(key, "tly")]) - 0.5) * 0.06 * H
@@ -1643,6 +1654,10 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
         kit.tag = "g7_garden_tree"                           # group is left out alone, not with its whole plot
         inst = None
         if sp == "fruit":
+            sc = 0.70 + 0.60 * PLT.hfloat(key, "g7-sc")
+            sr = sc * (0.88 + 0.24 * PLT.hfloat(key, "g7-sr"))
+            H = round(min(max(H * sc, 2.7), 6.2), 2)
+            r = round(min(max(r * sr, 0.95), 2.3), 2)
             if t["near"]:
                 kit.low = False
                 PLT.fruit_tree(kit, p, z, H, key, r=r)
@@ -1652,10 +1667,16 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
             inst = library_instance(t, sp, H, z, key)
             if inst is not None:
                 kit.low = "only"                             # High: the library instance below
-            elif t["near"]:
-                kit.low = False
-                garden_tree(kit, p, z, r, H, cb, sp, key, sprite=sprite, young=True)
-                kit.low = "only"
+            else:
+                sc = 0.70 + 0.60 * PLT.hfloat(key, "g7-sc")
+                sr = sc * (0.88 + 0.24 * PLT.hfloat(key, "g7-sr"))
+                H = round(min(max(H * sc, 3.2), 6.4), 2)
+                r = round(min(max(r * sr, 0.95), 2.1), 2)
+                cb = round(min(cb * sc, 0.32 * H), 2)
+                if t["near"]:
+                    kit.low = False
+                    garden_tree(kit, p, z, r, H, cb, sp, key, sprite=sprite, young=True)
+                    kit.low = "only"
             garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2, sprite=sprite, core=bool(t["near"]))
         if not _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
             continue
