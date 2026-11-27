@@ -14,8 +14,8 @@ overrides:
     sidewalk_bdot: true
     crossing_kerb_drops: true
     reason: >-
-      Prefer surveyed surface tags and BDOT10k where present. On unmapped local streets the mix of blocks,
-      slabs and older asphalt is WORKING_VALUE. At marked crossings reuse the ADR 0237 kerb profile.
+      Prefer surveyed surface tags and BDOT10k where present. On unmapped streets the mix of blocks, slabs
+      and older asphalt is WORKING_VALUE. At marked crossings reuse the ADR 0237 kerb profile.
   - id: tykocin-rynek-north-grey-blocks-s24
     kind: sidewalk_surface
     surface: paving_grey

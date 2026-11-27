@@ -87,7 +87,7 @@ def test_surface_types_have_materials_with_existing_texture_sets():
 def test_town_fallback_is_stable_by_way_and_yields_to_sourced_surfaces():
     points = np.array([[10.0, 10.0], [100.0, 100.0]])
     highways = {way: "residential" for way in range(1, 101)}
-    highways[101] = "secondary"
+    highways[101] = "primary"
     rules = {"mixed_sidewalks": True, "older_sidewalks": True}
     zones = PVM.Zones(rules, way_highway=highways)
     seen = set()

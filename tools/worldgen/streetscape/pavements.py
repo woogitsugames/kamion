@@ -424,6 +424,7 @@ def _nearest(lines, pts, dmax):
 
 MIXED_SURFACES = ("paving_grey", "paving_red", "slabs", "asphalt")
 LOCAL_TOWN_STREETS = {"residential", "living_street", "unclassified", "service"}
+OLDER_TOWN_STREETS = LOCAL_TOWN_STREETS | {"secondary", "tertiary"}
 
 
 def _seed(key):
@@ -432,16 +433,19 @@ def _seed(key):
 
 def _town_surface(way, zones):
     """Fallback for unmapped surfaces. Same OSM way, both sides and all chunks."""
-    if way is None or zones.way_highway.get(way) not in LOCAL_TOWN_STREETS:
+    highway = zones.way_highway.get(way)
+    older = zones.rules.get("older_sidewalks") and highway in OLDER_TOWN_STREETS
+    local = highway in LOCAL_TOWN_STREETS
+    if way is None or not (local or older):
         return DEFAULT
     roll = _seed(way)
     # Shares are WORKING_VALUE. Keep the older surfaces off streets covered by the owner's paving feedback.
-    if zones.rules.get("older_sidewalks"):
+    if older:
         if roll < 0.12:
             return "asphalt"
         if roll < 0.28:
             return "slabs"
-    return "paving_red" if 0.28 <= roll < 0.46 else DEFAULT
+    return "paving_red" if local and 0.28 <= roll < 0.46 else DEFAULT
 
 
 def surface_types(cen, way, zones: Zones, layer="road"):

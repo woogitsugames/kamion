@@ -161,8 +161,8 @@ UNVERIFIED, niemodelowane; sklep / zakład pogrzebowy / blok z muralem (bez mare
 `pavement_rules.mixed_sidewalks` włącza wspólny materiał chodnika. Kolejność wyboru to
 override, OSM, BDOT10k, typologia i domyślna szara kostka. Gdy brakuje danych, klasy lokalne
 dostają wariant według stabilnego skrótu identyfikatora OSM way. Obie strony i wszystkie chunki
-odcinka dostają to samo rozstrzygnięcie. Odcinki z płytami 35 × 35 cm i asfaltem są dopuszczone
-w tym fallbacku przez `older_sidewalks`. Udziały fallbacku oraz pigment czerwieni są
+odcinka dostają to samo rozstrzygnięcie. `older_sidewalks` dopuszcza płyty 35 × 35 cm i asfalt
+na ulicach lokalnych oraz klasach `secondary` i `tertiary`. Udziały fallbacku oraz pigment czerwieni są
 `WORKING_VALUE`. W Knyszynie fallback zachowuje kostkę zgodnie z uwagą właściciela.
 Wpisy `sidewalk_surface` pozostają sposobem na wprowadzenie potwierdzonych miejscowych różnic.
 
@@ -171,9 +171,9 @@ wierzchołki zachowują osobne wartości koloru i wspólną normalną geometrycz
 barwi szary skan kostki na czerwono albo pobiera istniejący skan płyt lub asfaltu.
 Płytę i kostkę różnicują też dotychczasowe maski wymian nawierzchni z ADR 0349. Asfalt
 ma własną maskę ciemniejszego uzupełnienia. Każdy wariant korzysta z tego samego prymitywu
-w obrębie warstwy i chunka. Eksport nawierzchni nie kontaktuje się z siecią.
+w obrębie warstwy i chunka.
 
 Krawężnik używa UV1 wzdłuż prefabrykatów i ziarna z identyfikatora pasa. Ton betonu zmienia się
 między prefabrykatami, a miejscowe ubytki na górnej krawędzi od strony jezdni są symulowane
-kolorem i chropowatością. Rozmiar i częstość ubytków są `WORKING_VALUE`. Obniżenia oznakowanych
+kolorem, chropowatością i normalną. Rozmiar i częstość ubytków są `WORKING_VALUE`. Obniżenia oznakowanych
 przejść używają istniejącej reguły tego ADR (2 cm, rampy 1 m, poza płytami skrzyżowań i mostami).

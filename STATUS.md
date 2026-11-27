@@ -37,3 +37,5 @@
 - Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`
 - W bazowym GLB pomierzono geometrię chodnika przy północnej pierzei. Chodnik nie należy do pasa OSM way 630270670, więc override ma obrys przestrzenny wokół pierzei i obejmuje istniejącą geometrię przy jej wschodnim wlocie.
 - Następny krok po `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`: `pwsh artifacts/codex-sidewalk-var-s24/compare.ps1`.
+- Próbkowanie centroidów bazowego GLB wskazało niewielki zasięg kostki czerwonej i asfaltu oraz brak płyt przy ograniczeniu fallbacku do ulic lokalnych. W Tykocinie dopuszczono starszy typ także dla klas secondary/tertiary. Dane źródłowe mają pierwszeństwo.
+- Następne komendy: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after` (w kolejce) i `pwsh artifacts/codex-sidewalk-var-s24/test.ps1` (powtórka po korekcie).
