@@ -21,3 +21,5 @@
 
 - Punkt startowy `c8ca07835`. Przeczytane instrukcje i ADR 0332, 0335, 0340 (dopisek 2), 0349. Worktree czysty przed dopiskiem.
 - Następny krok: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-main-verify-s24`, następnie `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64`.
+- Przygotowano prywatne kopie danych zapisywanych przez testy GIS (kafel `bialystok-industrial-c`, cache i BDOT). Pozostałe kafle dostępne jako wejścia przez junctiony.
+- Następny krok po EditMode: `pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64`.
