@@ -43,3 +43,5 @@
 - Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`
 - Pierwszy kompletny eksport potwierdził 3 rodzaje nawierzchni, 2057 → 2057 tris samej klasyfikacji, 192 589 → 192 609 tris drogi i 120 → 120 prymitywów (High/Low). Włączono czerwony odcinek demonstracyjny przy Bernardyńskiej (`WORKING_VALUE`, obrys z GLB), żeby zbadać czwarty wariant w Tykocinie.
 - Następny krok: po zakończeniu bieżącego importu przenieść pomiary pośrednie do `after-three-materials`, powtórzyć `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after` z bliskim kadrem Bernardyńskiej.
+- Pośredni Win64 High i oba przebiegi visual-QA (10 kamer, clear/overcast) zakończyły się sukcesem. Pliki w `after-three-materials`. Dodano trzy prywatne kadry kontrolne mierzone z GLB na Bernardyńskiej, Puchalskiego i Sokołowskiej.
+- Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after` dla finalnych czterech nawierzchni.
