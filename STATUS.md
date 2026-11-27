@@ -29,3 +29,5 @@
 - Następny krok: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` pod slotem heavy i unity, następnie cztery testy budżetowe GIS.
 - Krok 5. Pełny EditMode Win64 zakończony kodem 0. Wynik 1517 passed, 0 failed, 116 skipped. Oba nowe przypadki doboru przez graf przeszły.
 - Następny krok: `& 'C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/agent-a492e5af856a32ed3/tools/worldgen/.venv/Scripts/python.exe' -m pytest tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py` pod slotem heavy i z PYTHONPATH bieżącego worktree.
+- Krok 6. GIS 62/62 passed, EditMode Sky/Cloud i powiązane fixtury 41 passed / 1 skipped. Dowody PNG, pomiary i XML skopiowano do `C:/Users/matma/Documents/Claude/kamion/artifacts/codex-clouds-horizon-s24/` i sprawdzono SHA256 kopii. Sloty zwolnione.
+- Następny krok dla lidera: `git log --oneline 51158d988..codex-clouds-horizon-s24`, przejrzeć A/B i sprawdzić przejście kafli w playerze na następnym przejeździe DK65.

@@ -181,3 +181,6 @@ W domyślnym Clear (ziarno 0) `knyszyn-w` wybrał mapę 2 bez odbicia, a `dk65-0
 różnica na pełnym kadrze sięgała 1 poziomu sRGB w 1 / 4 pikselach odpowiednio. Obejrzane kadry, logi i pomiary są
 w `artifacts/codex-clouds-horizon-s24/`. Import lokalnego cache GLB ostrzegł o 80 / 98 różnicach SHA względem
 manifestów. Pary przed i po wykorzystują te same zaimportowane sceny.
+
+Gates po zmianie. EditMode Win64 1517 passed, 0 failed i 116 skipped. Z tego Sky/Cloud i powiązane fixtury
+41 passed i 1 skipped. Cztery wskazane pliki testów budżetowych GIS dały 62 passed.
