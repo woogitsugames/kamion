@@ -290,6 +290,16 @@ def roof_weather(b, key, rmat, wooden=False, rural_shed=False):
     return round(age, 4), round(moss, 4), round(FK.hfloat(key, "rws"), 4)
 
 
+def rural_roof_profile(key, material):
+    """ADR 0238 r4, WORKING_VALUE: keep clay on the existing tile texture sets."""
+    pick = FK.hfloat(key, "r4cover")
+    if material in ("roof_tiles_brown", "roof_tiles_red"):
+        if pick < 0.36:
+            return RF.RURAL_CLAY
+        pick = (pick - 0.36) / 0.64
+    return RF.RURAL_METAL if pick < 0.56 else RF.RURAL_FIBRE_CEMENT
+
+
 def roof_variant(key, material, wooden, small_town=False):
     """The covering of a rule-chosen tile roof (see KARP_SHARE); other materials pass through."""
     if material != "roof_tiles_red":
@@ -1130,7 +1140,12 @@ def ring_edges(ring):
     return [(c[i], c[(i + 1) % len(c)]) for i in range(len(c))]
 
 
-def roof_flat(acc, layer, poly, z, mat="roof_membrane", attic=0.3, skylights=False, key=""):
+def roof_flat(acc, layer, poly, z, mat="roof_membrane", attic=0.3, skylights=False, key="", covering_col=None):
+    if covering_col is not None:
+        ang = _angle(poly)
+        ca, sa = math.cos(ang), math.sin(ang)
+        axes = np.array([[ca, -sa], [sa, ca]])
+        center = np.asarray(poly.centroid.coords[0])
     inner = poly.buffer(-0.25, join_style="mitre")
     if inner.is_empty or attic <= 0:
         inner, attic = poly, 0.0
@@ -1144,7 +1159,12 @@ def roof_flat(acc, layer, poly, z, mat="roof_membrane", attic=0.3, skylights=Fal
         cr = (T[:, 1, 0] - T[:, 0, 0]) * (T[:, 2, 1] - T[:, 0, 1]) - (T[:, 1, 1] - T[:, 0, 1]) * (T[:, 2, 0] - T[:, 0, 0])
         T[cr < 0] = T[cr < 0][:, [0, 2, 1]]
         V = np.concatenate([T.reshape(-1, 2), np.full((len(T) * 3, 1), z - attic)], axis=1)
-        acc.add(layer, mat, V, np.arange(len(V)).reshape(-1, 3), V[:, :2])
+        uv = V[:, :2]
+        col = None
+        if covering_col is not None:
+            uv = (uv - center) @ axes
+            col = np.tile(covering_col, (len(V), 1))
+        acc.add(layer, mat, V, np.arange(len(V)).reshape(-1, 3), uv, COL=col)
         if attic > 0:   # attic: inner faces + cap
             for ring in [g.exterior, *g.interiors]:
                 cc = np.asarray(ring.coords)
@@ -2642,6 +2662,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                             else rural_shed_pick(key, RURAL_SHED_ROOFS, "rsroof") if rural_shed
                             else hpick(key, SMALL_TOWN_ROOFS_PITCHED if st_roofs else ROOFS_PITCHED, "roof"))
             rmat = house_roof_material(b, default_rmat)
+            rural_profile = (rural_roof_profile(key, rmat)
+                             if rural_shed and "roof_material" not in b["ovr"] else None)
             if typ == "house":      # ADR 0316; also over an orthophoto-read colour (it says red tile, not which tile)
                 rmat = roof_variant(key, rmat, wooden, small_town=st_roofs)
             if st_mode:
@@ -2661,7 +2683,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                              step_mat=wall,       # ADR 0107: wall faces closing the steps of a MultiRoof
                              low_mat=roof_l1_map.get(rmat),
                              weather=(roof_weather(b, key, rmat, wooden, rural_shed)
-                                      if (b.get("roof_weather") or rural_shed) else None))
+                                      if (b.get("roof_weather") or rural_shed) else None),
+                             rural_profile=rural_profile)
             if b.get("roof_weather"):
                 rw_stats[roof_age_class(b, key, rmat, wooden, rural_shed)] += 1
             # ADR 0097 (review 0094 P2-c "wiatrownica biała vs szara"): with a tile roof the fascia / verge boards are
@@ -2713,11 +2736,15 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                     FK.dormer(acc, sp, wall, rmat, "reveal_plaster", dwin, fascia_mat=dfascia)
                     st_stats["dormers"] += 1
         else:
+            felt_col = None
+            if rural_shed and "roof_material" not in b["ovr"]:
+                age, _, seed = roof_weather(b, key, "roof_membrane", wooden, rural_shed)
+                felt_col = (age, seed, 64.0 / 255.0, 1.0)      # _ROOF_FELT marker, distinct from missing vertex colour
             roof_flat(acc, "buildings", poly, zeave, attic=0.3 if typ in ("hall", "office", "block") else 0.15,
-                      skylights=typ == "hall" and not front, key=key)
+                      skylights=typ == "hall" and not front, key=key, covering_col=felt_col)
             # LOD1 roof stays one flat polygon (an attic inset is invisible from the road and cost 1.3 MiB in Low);
             # the coping ledge (5 cm above the roof) reads as the attic rim
-            roof_flat(acc, "buildings_low", poly, zeave, attic=0.0)
+            roof_flat(acc, "buildings_low", poly, zeave, attic=0.0, covering_col=felt_col)
             # lift / plant rooms break the box top; ADR 0200: authored `machine_rooms: false` - the photographed
             # roof has none (masts and cable trays only)
             tall_office = typ == "office" and storeys >= 5 and b["ovr"].get("machine_rooms", True)

@@ -20,3 +20,5 @@
 ## codex-roofs-s24 — dachy budynków gospodarczych r4
 - Krok 1. Odczytano zasady, ADR 0238 i uwagę krytyka. Kafel dk65-07 skopiowano do prywatnego Data/raw/derived.
 - Następny krok w slocie heavy: `& $py tools/worldgen/roads/build_world.py --region dk65-07 --context` (stan bazowy r3).
+- Krok 2. Generator koduje wariant i ziarno w COLOR_0 w obu LOD-ach. Zachowano podział na materiały r3 oraz jawne override pokrycia. Dodano testy kodowania, pokrycia płaskiego i override.
+- Następny krok po eksporcie stanu bazowego: `pwsh artifacts/codex-roofs-s24/run-vqa.ps1 -Phase before`.

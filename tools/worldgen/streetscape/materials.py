@@ -64,7 +64,7 @@ M = {
     "hall_wall_ivory": {"color": [0.52, 0.47, 0.36], "rough": 0.5, "metal": 0.2, "texture_set": "sandwich_ribbed"},
     "hall_plinth": {"color": [0.25, 0.25, 0.24], "rough": 0.9, "texture_set": "concrete_precast"},
     "hall_flashing": {"color": [0.045, 0.05, 0.055], "rough": 0.5, "metal": 0.3},
-    "roof_membrane": {"color": [0.07, 0.07, 0.07], "rough": 0.85},
+    "roof_membrane": {"color": [0.07, 0.07, 0.07], "rough": 0.85, "vertex_color": True, "roof_felt": True},
     "skylight": {"color": [0.55, 0.57, 0.58], "rough": 0.3},
     "reveal_hall": {"color": [0.30, 0.31, 0.31], "rough": 0.6},
     # ADR 0091: reveals are painted white with the insulation (was 0.40 warm grey = the wall tone, so the opening
