@@ -2,7 +2,7 @@
 
 Przejrzałem 34 scalenia osiągalne z `main` w migawce `bfaccaf1a120dadf73b87c47c95942a384d4aba5`, w tym 33 na pierwszym rodzicu i wewnętrzne scalenie `4835292a0`. Zakres wyznaczyło `git log --merges --since="2026-11-27 00:00" main` z lokalną strefą CET. Porównałem każde scalenie do pierwszego rodzica, sprawdziłem pliki zmienione względem obojga rodziców i prześledziłem wspólne ścieżki w końcowej migawce. Pliki i linie poniżej odnoszą się do tej migawki. Łączny diff od `2d5744863^1` obejmuje 841 ścieżek, w tym 157 plików C#, shaderów, HLSL, Pythona i PowerShella.
 
-**Wynik: 6 ważnych, 2 drobne, 0 krytycznych.** Cztery obowiązkowe bramki GIS przeszły. Rozszerzony przebieg 21 zmienionych plików testowych ujawnił 9 niepowodzeń, które wynikają z dwóch rozbieżności między asercjami a wdrożonymi zmianami. Na danych 54 kafli wykryłem ponadto niespójności grafu WN po redukcji LOD.
+**Potwierdzone znaleziska obejmują 6 ważnych i 2 drobne.** Nie stwierdziłem błędu krytycznego. Cztery obowiązkowe bramki GIS przeszły. Rozszerzony przebieg 21 zmienionych plików testowych ujawnił 9 niepowodzeń, które wynikają z dwóch rozbieżności między asercjami a wdrożonymi zmianami. Na danych 54 kafli wykryłem ponadto niespójności grafu WN po redukcji LOD.
 
 ## Ważne
 
@@ -22,7 +22,7 @@ Przejrzałem 34 scalenia osiągalne z `main` w migawce `bfaccaf1a120dadf73b87c47
 
 `_maize_edge` sprawdza położenie `C`, po czym przesuwa i obraca kartę. Po tej transformacji zapisuje oba końce bez ponownego sprawdzenia maski `blocked`. Krótkie karty poprzeczne mają tę samą lukę. Test miedz bada środki kart, a końcową asercję o odstępie ogranicza przez `[:nr]` do zwykłych rzędów.
 
-**Dowód i scenariusz.** Na scenie syntetycznej z helperów `_crop_world()` i `_maize_origin()` z `test_fields_r3_0334.py` ustawiłem `blocked[:, 250:251] = True` i wywołałem `field_crops.build`. Sprawdziłem końce u podstawy kart przez `_Ground.ij`. **13 z 7303 kart `maize_edge` ma koniec w masce**, a środki 3 kart też są w masce. Dla słupka maski szerokości 3 m oraz 5 m pozostała po 1 karcie z końcem w masce. Zwykłe rzędy i ich poprzeczki miały w tych próbach 0 takich kart. Maska w ścieżce produkcyjnej obejmuje m.in. przeszkody i ich margines.
+**Dowód i scenariusz.** Na scenie syntetycznej z helperów `_crop_world()` i `_maize_origin()` z `test_fields_r3_0334.py` ustawiłem `blocked[:, 250:251] = True` i wywołałem `field_crops.build`. Sprawdziłem końce u podstawy kart przez `_Ground.ij`. **13 z 7303 kart `maize_edge` ma koniec w masce**, a środki 3 kart też są w masce. Dla pasów maski o szerokości 3 m i 5 m pozostała po 1 karcie z końcem w masce. Zwykłe rzędy i ich poprzeczki miały w tych próbach 0 takich kart. Maska w ścieżce produkcyjnej obejmuje m.in. przeszkody i ich margines.
 
 **Poprawka.** Sprawdzić podstawę po transformacji, w tym końce i punkty pośrednie odcinka, pod kątem `blocked`. Reguła nieregularnej krawędzi może nadal dopuszczać rośliny na trawiastym marginesie. Rozszerzyć test o maskę przeszkody i sprawdzać rzeczywiste trójkąty eksportowe kart brzegowych.
 
@@ -62,6 +62,8 @@ Przejrzałem 34 scalenia osiągalne z `main` w migawce `bfaccaf1a120dadf73b87c47
 
 **Poprawka.** W istniejącym teście oczekiwać wartości dla zjazdu i sprawdzać rampę oraz zachowanie wysokości poza zjazdem. Oddzielny przypadek powinien potwierdzać respektowanie jawnego `h` dla przejścia.
 
+Gotowa poprawka obu testów jest w commicie `c92a9912e` na `codex-gis-fix-s24`. Odczytałem oba pliki przez `git show` i wykonałem dziewięć zmienionych przypadków w pamięci z modułami z migawki `bfaccaf1a`. Wynik **9/9**. Właściwy przebieg pytest po integracji pozostaje do wykonania.
+
 ## Drobne
 
 ### 7. Kolejność przęseł wejściowych zmienia wybór podpór WN
@@ -93,7 +95,7 @@ Ziarno jest stabilne, ale indeks zwrócony przez `rng.choice` jest interpretowan
 | Obliczenia i reprodukcje z punktów 1, 2, 5–8 | Wskazany Python 3.12.16, NumPy 2.5.4, Shapely 2.2.0, bieżący worktree w `PYTHONPATH` |
 | Pętla jazdy oraz HUD | Analiza ścieżek Update/FixedUpdate, obsługi wejścia, wycieraczek, audio, instancji i HUD nie potwierdziła nowych stałych alokacji GC ani przeniesienia fizyki do Update. Alokacje w przebudowie buforów i materiałów sprawdzono osobno. Pomiar GC w playerze `UNVERIFIED`. |
 
-Odtworzenie rozszerzonego przebiegu z tego worktree, na wskazanym interpreterze:
+Rozszerzony przebieg można powtórzyć z tego worktree na wskazanym interpreterze.
 
 ```powershell
 $python = 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\agent-a492e5af856a32ed3\tools\worldgen\.venv\Scripts\python.exe'
@@ -147,4 +149,4 @@ Zgodnie z zakresem nie uruchamiałem Unity, `build_world`, nowego importu ani vi
 
 ## Następny krok dla lidera
 
-W pierwszej kolejności rozszerzyć audyt WN na graf po redukcji LOD i naprawić oba czerwone testy. Potem poprawić geometrię marginesu, ujednolicić przebiegi roślinności i sprawdzić cykl życia klonów materiałów w playerze. Raport można odczytać poleceniem `git show codex-review-day27-s24:artifacts/codex-review-day27-s24/REVIEW.md`.
+W pierwszej kolejności rozszerzyć audyt WN na graf po redukcji LOD, sprawdzić diff `git show c92a9912e` i po zintegrowaniu poprawek powtórzyć GIS. Potem poprawić geometrię marginesu, ujednolicić przebiegi roślinności i sprawdzić cykl życia klonów materiałów w playerze. Raport można odczytać poleceniem `git show codex-review-day27-s24:artifacts/codex-review-day27-s24/REVIEW.md`.
