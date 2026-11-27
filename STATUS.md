@@ -34,3 +34,6 @@
 
 - [krok 5] Testy łat, nawierzchni i zjazdów 32/32. Krawędź poprzeczna frezu zachowuje kierunek cięcia i dostaje słabszą składową wyszczerbień niż boki. Generator wariantu po zmianie utrzymał 135 łat i 94 obniżenia.
 - Następny krok: dokończyć `pwsh artifacts/codex-patches-edges-s24/qa.ps1 -Stage after` i uruchomić `compare.py` z uzgodnionym Pythonem.
+
+- [krok 6] Prywatny wariant po zmianach wyeksportowany w 559,7 s po ekstrakcji. GLB High+Low: 2418 → 2418 prymitywów, te same grupy per kafel. Kamery bazowe mają identyczny SHA-256. Budżet generatora (najcięższa kamera High) 1 113 412 → 1 119 979 trójkątów.
+- Następny krok: dokończyć import i rendery `qa.ps1 -Stage after`, a następnie uruchomić `compare.py` i wymagane testy GIS.
