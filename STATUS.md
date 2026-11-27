@@ -29,3 +29,6 @@ Następny krok: pwsh scripts/test.ps1 -BuildTarget Win64
 
 Zaimportowano 8 klipów w Unity Win64, wpisano referencje do biblioteki i dodano testy logiki oraz przejazdu w DrivingLab.
 Następny krok: pwsh scripts/test.ps1 -Platform All -BuildTarget Win64
+
+ADR 0355, docs/08 i rejestr licencji opisują procedurę, strojenie i źródła ośmiu klipów.
+Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting overcast -WiperPhase 0.5

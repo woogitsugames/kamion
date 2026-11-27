@@ -1,0 +1,52 @@
+# ADR 0355 — Wycieraczki i pisk hamulca serwisowego
+
+Status: proposed (codex-audio-wipers-s24, 2026-11-27).
+
+## Kontekst
+
+ADR 0142 pozostawił niepodłączone wycieraczki i pisk hamulca serwisowego. ADR 0341
+opisuje zaparkowane pióra, a eksport TRAKT-a udostępnia osie `WIPER_L_LOD0` i
+`WIPER_R_LOD0` z potomnymi LOD1/2. Pisk hamulca serwisowego jest osobnym
+zdarzeniem względem pisku opon w poślizgu (ADR 0145).
+
+## Decyzja
+
+- Domyślny klawisz **U** cyklicznie zmienia tryb wył. → przerywany → 1 → 2 → wył.
+  Akcję można przypisać w Ustawieniach sterowania także na padzie. Klikalna etykieta
+  w HUD (**Panel → Zestaw…**) pokazuje tryb i wykonuje tę samą zmianę.
+- `WiperDrive` na pojeździe prowadzi fazę ruchu i liczniki startu oraz powrotu do
+  spoczynku. Ruch piór korzysta z wyeksportowanej osi i kąta −95°. Wspólny zegar
+  uruchamia klip silnika i tarcia obu suwów na starcie, a osobny stuk przy końcu.
+  Zmiana biegu obowiązuje od następnego cyklu. Wyłączenie pozwala dokończyć
+  bieżący cykl. Czasy `WORKING_VALUE`: 1,20 s (przerywany i 1), 0,80 s (2),
+  2,40 s przerwy po zaparkowaniu w trybie przerywanym.
+- Presety oświetlenia nie symulują deszczu. Przy rozpoczęciu cyklu silnik audio
+  wybiera mokrą wersję, gdy istniejąca globalna wilgotność `_KamionWet.x` wynosi
+  co najmniej 0,25 (`WORKING_VALUE`). Obydwa standardowe presety clear
+  i overcast są suche. Scenariusz mokry można uruchomić przez `-rq_wet 1`.
+- Pisk hamulca serwisowego może wystąpić po 0,10 s ciągłego spełnienia warunków:
+  moduł prędkości w przedziale [1, 15) km/h, maksymalne ciśnienie komory koła
+  ciągnika z kontaktem 22–65% maksimum i żądanie hamulca serwisowego 12–75%.
+  Postojowy i Hill Hold blokują zdarzenie. Jedna próba losowania (28%) na
+  aplikację, ponowne uzbrojenie po spadku żądania poniżej 8%, odstęp co najmniej
+  3 s pomiędzy zdarzeniami. Progi, czasy i poziomy miksu są `WORKING_VALUE`.
+- Oba zestawy audio korzystają z tych samych własnych klipów. Każde zdarzenie
+  wybiera perspektywę przy starcie. Hamulec dochodzi z okolic przedniej osi
+  i ma filtrowaną wersję kabinową. Źródła powstają przy inicjalizacji.
+
+## Odtworzenie
+
+`tools/audio/render_all.py --no-previews` uwzględnia nowe pary w pełnym banku.
+Samodzielna regeneracja przy użyciu interpretera z NumPy i SciPy:
+
+```powershell
+& $python tools/audio/cab_mechanisms.py game/Assets/_Project/Audio/Generated/Clips/sfx
+. scripts/env.ps1
+Invoke-UnityBatch -LogFile (Join-Path $LogsDir 'import-cab-mechanisms.log') -BuildTarget Win64 -Arguments @('-executeMethod', 'Game.Editor.Audio.VehicleAudioImporter.ImportCabMechanismsBatch')
+```
+
+Przed uruchomieniem Unity obowiązuje slot repozytorium. Do porównania statycznego
+użyj `scripts/visual-qa.ps1 -Scene DrivingLab -Pc -Tier High -BuildTarget Win64`
+z `-Lighting clear|overcast` oraz `-WiperPhase 0.5` dla punktu nawrotu.
+Kalibracja brzmienia na słuchawkach i pomiar synchronizacji wyjścia audio
+z klatkami playera pozostają `UNVERIFIED`.
